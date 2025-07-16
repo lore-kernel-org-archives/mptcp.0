@@ -1,109 +1,82 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7D212BE640;
-	Tue, 15 Jul 2025 18:43:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFB1DEACE;
+	Wed, 16 Jul 2025 00:39:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752605031; cv=none; b=J0PVbvFRXs4lDZj5+FBs2WdKknmTv1mHifiN086J3Sho51a+m0U+REj4QZDNiYLR3K8KO7Q1xs+59M43gkDAIkYjswVCQ4Rp/suO6QdrJzkJ5oMzefs8iqy2hzM3hCDmpmmZptcUFCk7HtlEdLhlhHKqd8RVFCHxCTXdsXov3YM=
+	t=1752626397; cv=none; b=C6C9jlpPfbGlmQwXZWM5h2rxqiSqCv1xhyWBA8RnQKuCxyZ4W74QuqOYE7EpWSyktdr2OKtCtDMqxsVHAcnzBZZhlzY6ArVUWZFurmR+CjVlOOpQCAH43sRPSdtWLPEAsB1+u8GsZ7V8DF2Nu0F3zMxyOFAkZevIf8EQghZ4UzA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752605031; c=relaxed/simple;
-	bh=bYWiZR1eTZ8EGDhusWSCdTYKC+ZSADShQnvxVOLvoMM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=dbGqVJPChBWbRlv8T3JF4Z8/V6YXK5Uzm5m4RcChxjuWbz+3SVqkZWa6ECj83mPWUw/Tv21Fs0YeG+ii/kkEqhkhd6OadXa0svklgMAT46poIJwMO89FwDtNYWQJuCRNx+O6QpI/3ondXykQiOfJEj7ovAu/Lt8QpodqLTo6CDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=POFu4SQ6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1752626397; c=relaxed/simple;
+	bh=2jvDQ7D/joRUgBAMi1PNempDhuHm6nOs68Sd7roppcI=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=PrhRXI9wRVaLmJ9Q1rMhZX6A8h4rHnhxSUW1TNopHoali+Dc686amF8mLbl/mlF6YyP1TdQSg833P5EFigeYr8t+pOYIlB4g2cVP9bSh9w42vENCjHdUN5xNwvvPgH0oFXFlgKg03PyrAnrdImEIFxnzTTkILununXPXdVBXM7M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EsiFkweh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="POFu4SQ6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46300C4CEE3;
-	Tue, 15 Jul 2025 18:43:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EsiFkweh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37282C4CEE3;
+	Wed, 16 Jul 2025 00:39:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752605031;
-	bh=bYWiZR1eTZ8EGDhusWSCdTYKC+ZSADShQnvxVOLvoMM=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=POFu4SQ6CGPu2l3zuP3ifTTaMGCKRSZXdUv1uR12tFA2aw6ip5F4BHt0TAvc8yf09
-	 GDy7f+hKgIAzGwP6tOqWGcKsugXXybIeHLfZ85plsG0+7jNZ2VnWLWME/YIFxnqAdy
-	 Hq4r8JBKH6NguM3hXUXBUMrogM+FjDo5hErmAU4kIO+y3ey3bekEFo8T2JNqxVjWxm
-	 9dvqjcCHVdyY8va8xFhw3eZ3gVrlcdR6xmRzIG7b+xgDokupEGNMerdGBtMFmiI/Nz
-	 zWZRCZz0qzbRHsWdTsPUpkkuFFBULg0LX2X2+moWamveVSmGbcka3nhvaDw0Q/gNvg
-	 JJWe0nRv83diw==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Tue, 15 Jul 2025 20:43:29 +0200
-Subject: [PATCH net v2 2/2] selftests: mptcp: connect: also cover checksum
+	s=k20201202; t=1752626396;
+	bh=2jvDQ7D/joRUgBAMi1PNempDhuHm6nOs68Sd7roppcI=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=EsiFkwehWj0aZE3h2RMY8MISbHf5OiT8nNVWeFXKYEFFP7J0oqaONdvZiZ1eQnjAJ
+	 juv+Xisoondbqcon/eKduiqv993Kb9IOBA6XZfhSP8qzRGISTk7EnlvybMYanwHj5X
+	 XTc5NcwXAPUL4aYz50sw+chjiX2bEwpo2kwan7J9ViKDSjeFD42rBjI7VcqMeZ3h4y
+	 j4bCQnmQwE1kfyiPlKabHQ+bSHkOJjKW3JLiAIW+dDxIH8tjQFOSPWQwRAonrmBVyl
+	 QzUwfVM+8DQsbFxMo53IDMV10owx+1PZZc6S05d7MjV1xRV1qFG1oLI+/CCtaoiQZD
+	 iTXKPM8U8Tu0A==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EAE11383BA30;
+	Wed, 16 Jul 2025 00:40:17 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250715-net-mptcp-sft-connect-alt-v2-2-8230ddd82454@kernel.org>
-References: <20250715-net-mptcp-sft-connect-alt-v2-0-8230ddd82454@kernel.org>
-In-Reply-To: <20250715-net-mptcp-sft-connect-alt-v2-0-8230ddd82454@kernel.org>
-To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
- Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
- Shuah Khan <shuah@kernel.org>, Christoph Paasch <cpaasch@openai.com>, 
- Davide Caratti <dcaratti@redhat.com>
-Cc: Florian Westphal <fw@strlen.de>, linux-kernel@vger.kernel.org, 
- netdev@vger.kernel.org, linux-kselftest@vger.kernel.org, 
- "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, stable@vger.kernel.org
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2174; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=bYWiZR1eTZ8EGDhusWSCdTYKC+ZSADShQnvxVOLvoMM=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDLKFsa06FzyF8+Z5v3qu8br4ytDilJmH4zcse5i374gD
- u7oOKUjHaUsDGJcDLJiiizSbZH5M59X8ZZ4+VnAzGFlAhnCwMUpABPp92RkmFG6jbXuZVf11sju
- b/FRIrkBc3cxX9rH1yvzumfhw7Xukgz/s1ff2SO5xDG6p2Lhtwwmh0K2jFlqnZdyvmo92vZ9l8E
- DbgA=
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net 0/3] mptcp: fix fallback-related races
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <175262641675.629458.14397813490608443353.git-patchwork-notify@kernel.org>
+Date: Wed, 16 Jul 2025 00:40:16 +0000
+References: <20250714-net-mptcp-fallback-races-v1-0-391aff963322@kernel.org>
+In-Reply-To: <20250714-net-mptcp-fallback-races-v1-0-391aff963322@kernel.org>
+To: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev, martineau@kernel.org, geliang@kernel.org,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ horms@kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org, syzbot+5cf807c20386d699b524@syzkaller.appspotmail.com
 
-The checksum mode has been added a while ago, but it is only validated
-when manually launching mptcp_connect.sh with "-C".
+Hello:
 
-The different CIs were then not validating these MPTCP Connect tests
-with checksum enabled. To make sure they do, add a new test program
-executing mptcp_connect.sh with the checksum mode.
+This series was applied to netdev/net.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-Fixes: 94d66ba1d8e4 ("selftests: mptcp: enable checksum in mptcp_connect.sh")
-Cc: stable@vger.kernel.org
-Reviewed-by: Geliang Tang <geliang@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
-Notes:
- - v2: force using a different prefix in the subtests to avoid having
-       the same test names in all mptcp_connect*.sh selftests.
----
- tools/testing/selftests/net/mptcp/Makefile                  | 2 +-
- tools/testing/selftests/net/mptcp/mptcp_connect_checksum.sh | 5 +++++
- 2 files changed, 6 insertions(+), 1 deletion(-)
+On Mon, 14 Jul 2025 18:41:43 +0200 you wrote:
+> This series contains 3 fixes somewhat related to various races we have
+> while handling fallback.
+> 
+> The root cause of the issues addressed here is that the check for
+> "we can fallback to tcp now" and the related action are not atomic. That
+> also applies to fallback due to MP_FAIL -- where the window race is even
+> wider.
+> 
+> [...]
 
-diff --git a/tools/testing/selftests/net/mptcp/Makefile b/tools/testing/selftests/net/mptcp/Makefile
-index c6b030babba8cf888101d6af44f3e56fe5ab831b..4c7e51336ab25c662f02719f1632fa2d27d148f1 100644
---- a/tools/testing/selftests/net/mptcp/Makefile
-+++ b/tools/testing/selftests/net/mptcp/Makefile
-@@ -5,7 +5,7 @@ top_srcdir = ../../../../..
- CFLAGS += -Wall -Wl,--no-as-needed -O2 -g -I$(top_srcdir)/usr/include $(KHDR_INCLUDES)
- 
- TEST_PROGS := mptcp_connect.sh mptcp_connect_mmap.sh mptcp_connect_sendfile.sh \
--	      pm_netlink.sh mptcp_join.sh diag.sh \
-+	      mptcp_connect_checksum.sh pm_netlink.sh mptcp_join.sh diag.sh \
- 	      simult_flows.sh mptcp_sockopt.sh userspace_pm.sh
- 
- TEST_GEN_FILES = mptcp_connect pm_nl_ctl mptcp_sockopt mptcp_inq mptcp_diag
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect_checksum.sh b/tools/testing/selftests/net/mptcp/mptcp_connect_checksum.sh
-new file mode 100755
-index 0000000000000000000000000000000000000000..ce93ec2f107fba2a699387188932a2680bc9ded7
---- /dev/null
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect_checksum.sh
-@@ -0,0 +1,5 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+
-+MPTCP_LIB_KSFT_TEST="$(basename "${0}" .sh)" \
-+	"$(dirname "${0}")/mptcp_connect.sh" -C "${@}"
+Here is the summary with links:
+  - [net,1/3] mptcp: make fallback action and fallback decision atomic
+    https://git.kernel.org/netdev/net/c/f8a1d9b18c5e
+  - [net,2/3] mptcp: plug races between subflow fail and subflow creation
+    https://git.kernel.org/netdev/net/c/def5b7b2643e
+  - [net,3/3] mptcp: reset fallback status gracefully at disconnect() time
+    https://git.kernel.org/netdev/net/c/da9b2fc7b73d
 
+You are awesome, thank you!
 -- 
-2.48.1
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
