@@ -1,96 +1,101 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BF662F5093;
-	Wed, 16 Jul 2025 10:28:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1A511C2335;
+	Wed, 16 Jul 2025 14:26:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752661711; cv=none; b=oEuZMys7TeU0Q8dwWh/cxqdInK79uHaVvMBaambL6j/mSXnc7dZ1IYs8kkzMxdqpwa901Ie6n5vf/JuCquFleiufJiOBfJfcG4rGPIlb/DwP8vxcPsZVpfxZ3d0rZQcVz1Mdu11jUOvBmj4SrJFRFG/4EqthuUblTY+TdPfYSe8=
+	t=1752675965; cv=none; b=dRx0tSIVPVOlvbvPt+cdKYUUiOJw5/MyuhePheTJLjndYWOvYLNZhNikZwfogliguRzkJ7+jtUjRen7g+erT/jrKVkVz1QOpEHqTGwPjInYa4XKPcpz8+4u7bWQSJ9OZUZ5DpNc+B0+qpz1LcW8Glgpe7szwCFs71ftf3r00V58=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752661711; c=relaxed/simple;
-	bh=ATxwF3oK0AHq0rXjzmSH/f3UnehAxyGxmt7OLGdPkmA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Q9UYqrIzeb9viZqFoZqsQIBq4q68WHCsqhF3n0+CJY7udQ8UrxbHrt2xvdMYos508IyS9U1xxH7Gn7jU7oreNqbmpYvXQA5eV9cnN5JXJVKoVSWkCWuXG2+TbLS6DUYHi59ruSOwdVRwFmT5Z8nWdWVHdRU8yEjZOl7E0asQylM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mYcQbXxG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1752675965; c=relaxed/simple;
+	bh=N9SUrkNq3KKn2zkzbDNcNNFbAR128RbgvLOba/W9yP4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ef2wKTx7o5SfRms0TdXeaOTaHwmW7DGKhozdctRitbljFbIPKeJo8gPFk7iYYZtDi4+gIw+o3t9ktB7dLFWRb7wZfkyhDVYxJsojU5IdBIoyZMFigFpRM/GCjfSz6VSdwqrsXA4i7SZHL4N5cd6WiA+vDOV4QD/jM1boCXnZYiM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MdvsUVtw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mYcQbXxG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20169C4CEF1;
-	Wed, 16 Jul 2025 10:28:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MdvsUVtw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D93A4C4CEE7;
+	Wed, 16 Jul 2025 14:26:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752661710;
-	bh=ATxwF3oK0AHq0rXjzmSH/f3UnehAxyGxmt7OLGdPkmA=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=mYcQbXxGtb1oAsBu7hrvRL8MiKu5qcMJm8rztJIBHtSKFwrcXckcdNnxLHFxq6d+q
-	 xULshS0b4cD/g4A6YwJLfM2shtVbpDWPEuSo3LGKJhHt4rpvNkzYuUs0LoS/rGSVTw
-	 x7kOWJo49ozFTNyVnv2Gooc+JHD8e1t3pU8OweKRkFwRdd0ODEmWuNACcgFG6Mbmaa
-	 nFk2zw7aMDeJw0k69MrQx6SSWOhpannQfJBu+IXxChr49Gh5JzztMkYzz+fw1myz7F
-	 JWZoMcr9nYQWbCN+tgNxhcicT0UKjOBV6Aao/BaH3UR6x69F3XMxPUWQZjnoJ10/EE
-	 oSKVbuGVTRn0A==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Wed, 16 Jul 2025 12:28:06 +0200
-Subject: [PATCH net-next 4/4] mptcp: fix typo in a comment
+	s=k20201202; t=1752675964;
+	bh=N9SUrkNq3KKn2zkzbDNcNNFbAR128RbgvLOba/W9yP4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=MdvsUVtwD7/K4fZw4qsxwDfsfa4G2P48z430/9vSItOs18NVSN/V15Phg1hxiF9B9
+	 xQ42plymaXG4hmUGtDN9PwDvvIs7e9W33RCzzTG3u7PNj96kyDiwr/eLiNcHqA+0iR
+	 gSTn1NwxK9dOS0GxGshLdH654wF8z2BAR91+m16lP9uQn/+QQ/PLR8ovzgdtKsyn5x
+	 QBxpOgr3fSgE81Gx59A7N4/rhTbJefEUOyHJITtpszB0oYpihmk5U3783e/nK66EA7
+	 c3m1ucMb8z10K+fBjSqgeOmC5X0M8eZgh7RfcyXel81eWYzrozWP9pf49j1LseC55M
+	 7ig9rUiLxK7Ig==
+Date: Wed, 16 Jul 2025 07:26:02 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, Geliang
+ Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Simon
+ Horman <horms@kernel.org>, Shuah Khan <shuah@kernel.org>, Christoph Paasch
+ <cpaasch@openai.com>, Davide Caratti <dcaratti@redhat.com>, Florian
+ Westphal <fw@strlen.de>, linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ stable@vger.kernel.org
+Subject: Re: [PATCH net v2 0/2] selftests: mptcp: connect: cover alt modes
+Message-ID: <20250716072602.386a8963@kernel.org>
+In-Reply-To: <20250715185308.2ad30691@kernel.org>
+References: <20250715-net-mptcp-sft-connect-alt-v2-0-8230ddd82454@kernel.org>
+	<20250715185308.2ad30691@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250716-net-next-mptcp-tcp_maxseg-v1-4-548d3a5666f6@kernel.org>
-References: <20250716-net-next-mptcp-tcp_maxseg-v1-0-548d3a5666f6@kernel.org>
-In-Reply-To: <20250716-net-next-mptcp-tcp_maxseg-v1-0-548d3a5666f6@kernel.org>
-To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
- Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
- Neal Cardwell <ncardwell@google.com>, Kuniyuki Iwashima <kuniyu@google.com>, 
- David Ahern <dsahern@kernel.org>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
- moyuanhao <moyuanhao3676@163.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1302; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=Ik5twdxPJJpwUw1wx5+zdFE+/xcyShWLAB0UWSDSQCY=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDLK6/Yr7A6LzDKVuiq8TLFL+QZT//dFC1uLZ1mem/uBc
- 1rMayeZjlIWBjEuBlkxRRbptsj8mc+reEu8/Cxg5rAygQxh4OIUgIksDWNkWLazomR2icXrXsut
- BbUbc544Oaksk+ZoqvOv8+Zd0RbTz/A/1XbPLu9f0SuezBGuOFBxzHHXIxn3iL+bfbMtsmbMKfB
- lBQA=
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-From: moyuanhao <moyuanhao3676@163.com>
+On Tue, 15 Jul 2025 18:53:08 -0700 Jakub Kicinski wrote:
+> On Tue, 15 Jul 2025 20:43:27 +0200 Matthieu Baerts (NGI0) wrote:
+> > mptcp_connect.sh can be executed manually with "-m <MODE>" and "-C" to
+> > make sure everything works as expected when using "mmap" and "sendfile"
+> > modes instead of "poll", and with the MPTCP checksum support.
+> >=20
+> > These modes should be validated, but they are not when the selftests are
+> > executed via the kselftest helpers. It means that most CIs validating
+> > these selftests, like NIPA for the net development trees and LKFT for
+> > the stable ones, are not covering these modes.
+> >=20
+> > To fix that, new test programs have been added, simply calling
+> > mptcp_connect.sh with the right parameters.
+> >=20
+> > The first patch can be backported up to v5.6, and the second one up to
+> > v5.14. =20
+>=20
+> Looks like the failures that Paolo flagged yesterday:
+>=20
+> https://lore.kernel.org/all/a7a89aa2-7354-42c7-8219-99a3cafd3b33@redhat.c=
+om/
+>=20
+> are back as soon as this hit NIPA :(
+>=20
+> https://netdev.bots.linux.dev/contest.html?branch=3Dnet-next-2025-07-16--=
+00-00&executor=3Dvmksft-mptcp&pw-n=3D0&pass=3D0
+>=20
+> No idea why TBH, the tests run sequentially and connect.sh run before
+> any of the new ones.
+>=20
+> I'm gonna leave it in patchwork in case the next run is clean,
+> please use pw-bot to discard them if they keep failing.
 
-This patch fixes the follow spelling mistake in a comment:
+It failed again on the latest run, in a somewhat more concerning way :(
 
-  greter -> greater
+# (duration 30279ms) [FAIL] file received by server does not match (in, out=
+):
+# -rw------- 1 root root 5171914 Jul 16 05:24 /tmp/tmp.W2c96hxSIz
+# Trailing bytes are:=20
+# w,=D1=90)-rw------- 1 root root 5166208 Jul 16 05:24 /tmp/tmp.s33PNcrN6M
+# Trailing bytes are:=20
+# (<v /&^<=D6=B1rnFsaC7INFO: with peek mode: saveAfterPeek
 
-Signed-off-by: moyuanhao <moyuanhao3676@163.com>
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
-Notes:
- - The same patch has already been sent to the netdev ML, but when
-   net-next was closed:
-   https://lore.kernel.org/20250530181004.261417-1-moyuanhao3676@163.com
----
- net/mptcp/protocol.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+https://netdev-3.bots.linux.dev/vmksft-mptcp/results/211121/4-mptcp-connect=
+-sh/stdout
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 5f904fc5ac4c63e8b6c7c9aa79f17e8dcdf1a007..fe3135cd778a98d4f270d684c101af30d261ee71 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1377,7 +1377,7 @@ struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk)
- 	 * - estimate the faster flow linger time
- 	 * - use the above to estimate the amount of byte transferred
- 	 *   by the faster flow
--	 * - check that the amount of queued data is greter than the above,
-+	 * - check that the amount of queued data is greater than the above,
- 	 *   otherwise do not use the picked, slower, subflow
- 	 * We select the subflow with the shorter estimated time to flush
- 	 * the queued mem, which basically ensure the above. We just need
-
--- 
-2.48.1
-
+BTW feeding the random data into hexdump-like formatter seems
+advisable? :P
