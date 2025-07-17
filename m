@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBC204503B
-	for <mptcp@lists.linux.dev>; Thu, 17 Jul 2025 23:45:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E3C949641;
+	Thu, 17 Jul 2025 23:49:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752795943; cv=none; b=C15+sB70SL2e55zC7b8JUORxvJ0BJ93d5eGvVzPxuYSEmQ/ujBJL0ZMHec1Uh13BmqMmstTOyjlf0lVc1r/nlW0EARGl3IWKTIMaHzDIiMZvuZIfd8nUVd2r0YR0ySPjMIW+sehxO5KGrvUVCI8t8BeIVH9/3bhi4448DJoEq/0=
+	t=1752796170; cv=none; b=dkgy4qG5ZIGgnp5tRtnxXwwqRRhBbVYwqqtCX4+D6pItYxYz9qrVX34re3Ljnb4WAmCHqpexMIuB5ag9GHcCMV9uZaBQtR5667Ir0Cdpi/SW+HkYbpPwgx2F/Z8ZcEYJpZmT1xHkAvTo/tLwhrBFiGfDHErZQ1sN4BK7lAQeql0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752795943; c=relaxed/simple;
-	bh=bnZqs/PH2VEIrGKqSXqhQwkVRAQB7Grx5p4URVRzYi0=;
+	s=arc-20240116; t=1752796170; c=relaxed/simple;
+	bh=Cq5Mb8Ty0pSJRETR6msxyZq2CIyD0ENwG1KIzU6IlZY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lReRYKk4Iju6wRY0QT11xmoNbRACgljL10k9xr0/Mcu/opMpsTAgovkht72UYjXrYfgLCynSigU0N57v+2L5wUqG7fNVojNKjYI90SsDNnZax/xgq+dJH+GJ9F2DrTf+Q4XjBVyYr+CeLsbjZWJpLOFmvO6LoF3lRo31EGxyKic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X1FQWUrX; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=FJ6IPCbhJRh1B+DH2iwFbEH76Dbq4DPygsjI2EUV9G0ihnRmivqCYaHwG0h01PR/Le8dbYrbE6RXvjqqnBMLuzKdszfZ1rzOXWlCM9B5yLZ5Prs1tuTcQb/KVmv7EOTLgvZmscAn+0W04EtaGJFYEX6uMnkRm9CHgT5DTZ5kJpY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IwysKk9h; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X1FQWUrX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D75CC4CEE3;
-	Thu, 17 Jul 2025 23:45:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IwysKk9h"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 166E5C4CEE3;
+	Thu, 17 Jul 2025 23:49:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752795943;
-	bh=bnZqs/PH2VEIrGKqSXqhQwkVRAQB7Grx5p4URVRzYi0=;
+	s=k20201202; t=1752796170;
+	bh=Cq5Mb8Ty0pSJRETR6msxyZq2CIyD0ENwG1KIzU6IlZY=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=X1FQWUrXbpokDqVRhKgJX5RraeADmPaksmUCDikehGG8coP2Vq2+tROXJ1eWRwx3c
-	 WAe4+JwcuxEw4ZUL2fuY/E8EUd56FOF9XAcrRZJPJ/cTQuf3mc/bhxgcX266lr97Fu
-	 KjO0BPGx8UUXZx932OeicXvB/B4fl9X9Q5w9wAGbU7v/Lti7/rPUuMLQgcMUgK9oA5
-	 6idBT4UU6kC3mPjp9mmI34CVS8kXDzwi9XuHjaS8Ygn+ggM1opgJMOdkqlDBh75uH4
-	 jdaFfKuAJr2l3V2riASekmMFPgIf8EHKPtbAWVGHNNixFOI3OsL4csipAPFUC1fmAk
-	 mBm4Dgm+IErKQ==
-Message-ID: <708ea5a4-0a5b-40f0-82bc-edc97fd2e821@kernel.org>
-Date: Fri, 18 Jul 2025 01:45:40 +0200
+	b=IwysKk9hK55wp0s40tpFq0FJaGdXT3fBVuRsgcwTY2b4PikHBECgcX7hWobbtH02d
+	 SyCaMenwQY4z2/ELRZUUX+TUOhIjqPJpP1PRz3gwWJiHdn/XuLhAK059cHIsz7yn8s
+	 7g0oIm39p4AIdmaJSKba/msqYMi31gUbrh0swxnCIr9uhwHPNjwVmyn8C/j2MWeLeJ
+	 R+leE+CIC862qdTM9oCLcgJK3afjaudHiWIzODec6ms5GDL+mHH8LQyjCbV53OYzqK
+	 EHQERsD5FBJJneDBbOAGJLKDCac5ZJYBxnoGbTBw9Kz3Lv2yWL34hoc8+gO8rjS5J3
+	 8s0lisJfycLMg==
+Message-ID: <9175b633-b61f-4ca0-9023-c99dff4f53f0@kernel.org>
+Date: Fri, 18 Jul 2025 01:49:24 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,11 +35,22 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next] Squash to "tcp: add tcp_sock_set_maxseg"
+Subject: Re: [PATCH net v2 0/2] selftests: mptcp: connect: cover alt modes
 Content-Language: en-GB, fr-BE
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <a1dd4d6e5774b37769645f1b415b2e843822e2b4.1752716203.git.tanggeliang@kylinos.cn>
+To: Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>,
+ Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Simon Horman <horms@kernel.org>,
+ Shuah Khan <shuah@kernel.org>, Christoph Paasch <cpaasch@openai.com>,
+ Davide Caratti <dcaratti@redhat.com>, Florian Westphal <fw@strlen.de>,
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kselftest@vger.kernel.org
+References: <20250715-net-mptcp-sft-connect-alt-v2-0-8230ddd82454@kernel.org>
+ <20250715185308.2ad30691@kernel.org> <20250716072602.386a8963@kernel.org>
+ <ae6d333a-f3b2-4463-b930-b4caf56b39f8@kernel.org>
+ <20250716083632.72854bd5@kernel.org>
+ <e46aadbf-51c6-4e09-bdaa-374698b406f3@kernel.org>
+ <20250717074242.1ef5d441@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -85,32 +96,42 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <a1dd4d6e5774b37769645f1b415b2e843822e2b4.1752716203.git.tanggeliang@kylinos.cn>
+In-Reply-To: <20250717074242.1ef5d441@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+Hi Jakub,
 
-On 17/07/2025 03:37, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
+On 17/07/2025 16:42, Jakub Kicinski wrote:
+> On Wed, 16 Jul 2025 18:35:11 +0200 Matthieu Baerts wrote:
+>>>> And just to be sure, no CPU or IO overload at that moment? I didn't see
+>>>> such errors reported by our CI, but I can try to reproduce them locally
+>>>> in different conditions.  
+>>>
+>>> None that I can see. The test run ~10min after all the builds completed,
+>>> and we wait now for the CPU load to die down and writeback to finish
+>>> before we kick off VMs. The VMs for various tests are running at that
+>>> point, the CPU util averaged across cores is 66%.  
+>>
+>> Thank you for having checked, and for the explanations!
+>>
+>> OK, so maybe running stress-ng in parallel to be able to reproduce the
+>> issue might not help. We will investigate.
 > 
-> Set the return value of tcp_sock_set_maxseg() to err.
+> connect tests failed again overnight. Now I see why Paolo was
+> responding on Eric's series, that seems like a more likely culprit..
 
-Good catch!
+Good point, Paolo was certainly right, as always :)
 
-Now in our tree:
+We do need to investigate. Note that it might be hard for me to do that
+the next few days as I'm travelling for work, but we are tracking the issue:
 
-- 1250f401ac70: "squashed" in "tcp: add tcp_sock_set_maxseg"
+  https://github.com/multipath-tcp/mptcp_net-next/issues/574
 
-New patches for t/upstream:
-- 1250f401ac70: Squash to "tcp: add tcp_sock_set_maxseg"
-- 4243d759a096: Squash to "mptcp: add TCP_MAXSEG sockopt support"
-- Results: d196b0945719..eb948f761895 (export)
-
-Tests are now in progress:
-
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/4c4a8f3705b5a68dec06d5bdcbe08409aa15ab84/checks
+I see that you already marked the mptcp-connect-sh selftest as ignored,
+so I guess we are not causing other troubles with the CI. (We could then
+also apply this series here and ignore the new tests, but it is also
+fine for me to wait.)
 
 Cheers,
 Matt
