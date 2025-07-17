@@ -1,145 +1,142 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31082881E
-	for <mptcp@lists.linux.dev>; Thu, 17 Jul 2025 23:15:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01A28881E
+	for <mptcp@lists.linux.dev>; Thu, 17 Jul 2025 23:20:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752794135; cv=none; b=qGLKqvkx1AA53h3IMx59qdTwNDuS1g9KTHsdYryFze5Dm7DJ2G8qLlkVoB6A21Xt9F3rput4yJdK6w2VrcjpWx5McZkTJ6qhsY8VROYi9wvzwogltHBpz/g37p6VLElenOLhrB8NMB1Jba8mWvO/iSARZTwFd/bGudM6YPC5L4w=
+	t=1752794401; cv=none; b=bciByH4Sbc9CqAa0aISbViGKs/YuaAgrzpaKF5f99BVBawxm5OQk3ZeOnriCZoYYNDNN1f5ksPDuiHWel/Uf+7gby6FLMtuFsLsFCeTaOjZJu8ZFffD0gYwW5PHhvc/Edr45bKxFDHTH24iPtTvncCYtXuejq2mI+JYOyLGlBZs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752794135; c=relaxed/simple;
-	bh=BoMel4jkyIBF7CvhxYA2kXkr1dN59q9WaLnOQAVtL5c=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=gEpXAyjnndazVqIFrH9uz0/MEW31YqFqgA0kCvmjLFtydT7ZaoiMJ/Pvpu0AUR26FUJ2mg+HhqlvVnILNqPXB/aSKEBYMNqd2jmeZx0SHU/wu5jUmUryOwYRkqFNbNBaV9R28/cV4e5LoqSTv2niQFNUITeg1gCOZwI3WFrHAbw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LXFyzebz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1752794401; c=relaxed/simple;
+	bh=UHBe8dtJkBpzVAfpPPO5FTYOZOJwAVVqNnxcva7QEiU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=m8+QOeLIwCLUo5/rPRjZXgiYjVg0GgzXOjl3UAKG1vHR5EB9JZ/GxbtknelNe1jTiE0+wUB6yrNHWOnZu7UVGDLeUqjNdqZyLss1qUUT0BnfAdSW6npl4Jxgx2Q8DZNUcd+pMkwZMFPoqdStBxBMHp1t0DWZGUlBVRetP10Gjls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A6vPAvnT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LXFyzebz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D97EC4CEE3;
-	Thu, 17 Jul 2025 23:15:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A6vPAvnT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC639C4CEE3;
+	Thu, 17 Jul 2025 23:19:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752794134;
-	bh=BoMel4jkyIBF7CvhxYA2kXkr1dN59q9WaLnOQAVtL5c=;
-	h=From:Date:Subject:To:Cc:From;
-	b=LXFyzebzg/eU4CSYdyjVETl1QuBNRxvhVV4Y/Cu5RCN9LEUY2dxPy6dJ1KhXU+Vf0
-	 fLZ3z2gljDzHYDsQOCl4/ooeB2P606IihjD9sfMs8ZilZK7V6qIkTw5l7n8+LPvjWt
-	 /CzcDekjupgen60NcLeTtX7pYHo/lSLB2CArfMsHEUiMKIdKDBCe2g+FymmUHsaai1
-	 AuWN9gAyiB69NPLnOYqG0bNChlGOsL5DBm2w+c0IKpzjQ9caF+3xNa7ons2vJiNg31
-	 N2Qm8nJed9mWYpUmQVbqIMTxHcwhEx0MjJQ58TP3nrP7XNAG3u0V9mAXAlY32ZK0D9
-	 ZmzoC7sLGvGew==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Fri, 18 Jul 2025 01:15:28 +0200
-Subject: [PATCH mptcp-next] mptcp: set ADD_ADDR retrans timeout to 1sec
+	s=k20201202; t=1752794400;
+	bh=UHBe8dtJkBpzVAfpPPO5FTYOZOJwAVVqNnxcva7QEiU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=A6vPAvnTmayJc/8OL3yMdxNFvddcMzalXG9CkE/qJTldED7aLuM8AkjDaS0OZa2Kn
+	 aW/ZZ4cfbPaP5w9PcEv9x94NOTjgPPWsOyH8EkiFMhpo1KvakwXoJ/U83HQ4X0o7P9
+	 CGzMBmi7lwu8kWgHQvmpnWJmUDM4LDflHNFglJyOpCJ1WFsiNtp22fIDs0n1EdxDqc
+	 n5kEegdUtYzdNGlNNDYu2630+kXcCEDEA+LjJ90NaUs4as8bMKU8CXgrfww0CxgCrR
+	 nEdnz6zsHaDkI/tQvLU91PhkQKX61k9k3Yl0kwy6pCKhS2G8ROxhYXwG7xupSDM1hf
+	 cnqddyqp3Wa7Q==
+Message-ID: <d350af56-86c5-435c-b9eb-601862b61834@kernel.org>
+Date: Fri, 18 Jul 2025 01:19:57 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-next] Squash to "mptcp: add TCP_MAXSEG sockopt
+ support"
+Content-Language: en-GB, fr-BE
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <ba6be90c7ee54384bc8e3ee5b35e3b0166d03aff.1752717857.git.tanggeliang@kylinos.cn>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <ba6be90c7ee54384bc8e3ee5b35e3b0166d03aff.1752717857.git.tanggeliang@kylinos.cn>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250718-mptcp-add_addr_timeout_1-v1-1-58749cbe8b87@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAA+EeWgC/yWMQQqAIBAAvxJ7TkijjL4SIaVr7SETtQiivyd1m
- MMcZm6IGAgj9MUNAU+KtLssvCxAr5NbkJHJDqISTSV5xzaftGeTMSoTVKIN9yMpzsTcSClabWt
- tIec+oKXrWw/wVw6vBOPzvCaaY6N2AAAA
-X-Change-ID: 20250718-mptcp-add_addr_timeout_1-2b57726cf3cf
-To: mptcp@lists.linux.dev
-Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4061; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=BoMel4jkyIBF7CvhxYA2kXkr1dN59q9WaLnOQAVtL5c=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDIqW0RVyhiTxfTtvUWW3Xi18ZRK6JWPBTU/18Q/S5nRx
- Th11YYjHaUsDGJcDLJiiizSbZH5M59X8ZZ4+VnAzGFlAhnCwMUpABOZ84WR4enZ28ezu/a6h79e
- UnHrzhZvTkWuj1fzjvhc5zOZvnzqqo8M/+x/nYmxFL3G122ZvvX6GlVh5v5f0+11ItrE57mxSu3
- /ywkA
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-It doesn't really make sense to wait 2 minutes -- the previous default
-value -- to retransmit the ADD_ADDR if the echo has not been received in
-between: that's way too long to react.
+Hi Geliang,
 
-Switching to 1 second by default, which seems like a good default value,
-and can be increased for particular cases.
+On 17/07/2025 04:05, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
+> 
+> A cleanup for mptcp_setsockopt_all_sf(), to make it return once only.
+> 
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> ---
+>  net/mptcp/sockopt.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+> index 379a02a46b7b..2c267aff95be 100644
+> --- a/net/mptcp/sockopt.c
+> +++ b/net/mptcp/sockopt.c
+> @@ -803,16 +803,16 @@ static int mptcp_setsockopt_all_sf(struct mptcp_sock *msk, int level,
+>  				   unsigned int optlen)
+>  {
+>  	struct mptcp_subflow_context *subflow;
+> +	int ret = 0;
+>  
+>  	mptcp_for_each_subflow(msk, subflow) {
+>  		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
+> -		int ret = 0;
 
-Later on, we could eventually use a timeout based on the sRTT, with an
-exponential backoff, which would be more reactive [1].
+We also missed the assignment to 0, while just after it is assigned to
+something else. (But I guess the compiler will optimise that.)
+>  		ret = tcp_setsockopt(ssk, level, optname, optval, optlen);
+>  		if (ret)
+> -			return ret;
+> +			break;
 
-Note: the documentation has been updated accordingly, and the selftests
-are keeping the previous timeout when using a broadcast IP not to have
-retransmissions in this case, which would cause troubles with the
-different counters depending on how fast the test will run.
+I don't really see a problem to return here directly, because there was
+no lock or similar, but why not.
 
-Link: https://github.com/multipath-tcp/mptcp_net-next/issues/576 [1]
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- Documentation/networking/mptcp-sysctl.rst       | 5 ++---
- net/mptcp/ctrl.c                                | 2 +-
- tools/testing/selftests/net/mptcp/mptcp_join.sh | 3 +++
- 3 files changed, 6 insertions(+), 4 deletions(-)
+- 4243d759a096: "squashed" in "mptcp: add TCP_MAXSEG sockopt support"
 
-diff --git a/Documentation/networking/mptcp-sysctl.rst b/Documentation/networking/mptcp-sysctl.rst
-index 5bfab01eff5a9db89e1484787953241c16e147cf..14059d2cac1b3467d6a8c9c4362f5a0b427b726d 100644
---- a/Documentation/networking/mptcp-sysctl.rst
-+++ b/Documentation/networking/mptcp-sysctl.rst
-@@ -12,10 +12,9 @@ add_addr_timeout - INTEGER (seconds)
- 	resent to an MPTCP peer that has not acknowledged a previous
- 	ADD_ADDR message.
- 
--	The default value matches TCP_RTO_MAX. This is a per-namespace
--	sysctl.
-+	This is a per-namespace sysctl.
- 
--	Default: 120
-+	Default: 1
- 
- allow_join_initial_addr_port - BOOLEAN
- 	Allow peers to send join requests to the IP address and port number used
-diff --git a/net/mptcp/ctrl.c b/net/mptcp/ctrl.c
-index fed40dae5583a35914da2cb1c52f37830d72705e..92873457c47ea6b04137cece0200317a94b13e0d 100644
---- a/net/mptcp/ctrl.c
-+++ b/net/mptcp/ctrl.c
-@@ -97,7 +97,7 @@ const char *mptcp_get_scheduler(const struct net *net)
- static void mptcp_pernet_set_defaults(struct mptcp_pernet *pernet)
- {
- 	pernet->mptcp_enabled = 1;
--	pernet->add_addr_timeout = TCP_RTO_MAX;
-+	pernet->add_addr_timeout = HZ;	/* 1 second */
- 	pernet->blackhole_timeout = 3600;
- 	pernet->syn_retrans_before_tcp_fallback = 2;
- 	atomic_set(&pernet->active_disable_times, 0);
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index b8af65373b3ada96472347171924ad3a6cf14777..87a9d022d31160a8ff6185b3a117a73841512f9a 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -2429,6 +2429,7 @@ remove_tests()
- 		pm_nl_set_limits $ns1 3 3
- 		pm_nl_add_endpoint $ns1 10.0.12.1 flags signal
- 		# broadcast IP: no packet for this address will be received on ns1
-+		ip netns exec ${ns1} sysctl -q net.mptcp.add_addr_timeout=120
- 		pm_nl_add_endpoint $ns1 224.0.0.1 flags signal
- 		pm_nl_add_endpoint $ns1 10.0.3.1 flags signal
- 		pm_nl_set_limits $ns2 2 2
-@@ -3846,6 +3847,7 @@ endpoint_tests()
- 		pm_nl_set_limits $ns2 3 3
- 		pm_nl_add_endpoint $ns1 10.0.2.1 id 1 flags signal
- 		# broadcast IP: no packet for this address will be received on ns1
-+		ip netns exec ${ns1} sysctl -q net.mptcp.add_addr_timeout=120
- 		pm_nl_add_endpoint $ns1 224.0.0.1 id 2 flags signal
- 		pm_nl_add_endpoint $ns1 10.0.1.1 id 42 flags signal
- 		{ test_linkfail=4 speed=5 \
-@@ -3919,6 +3921,7 @@ endpoint_tests()
- 		pm_nl_set_limits $ns1 0 2
- 		pm_nl_set_limits $ns2 1 2
- 		# broadcast IP: no packet for this address will be received on ns1
-+		ip netns exec ${ns1} sysctl -q net.mptcp.add_addr_timeout=120
- 		pm_nl_add_endpoint $ns1 224.0.0.1 id 2 flags signal
- 		pm_nl_add_endpoint $ns2 10.0.3.2 id 3 flags subflow
- 		{ test_linkfail=4 speed=20 \
+>  	}
+> -	return 0;
+> +	return ret;
+>  }
+>  
+>  static int mptcp_setsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
 
----
-base-commit: d196b09457190bc11ffca2867d5c12beb5a4759e
-change-id: 20250718-mptcp-add_addr_timeout_1-2b57726cf3cf
-
-Best regards,
+Cheers,
+Matt
 -- 
-Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Sponsored by the NGI0 Core fund.
 
