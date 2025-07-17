@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01A28881E
-	for <mptcp@lists.linux.dev>; Thu, 17 Jul 2025 23:20:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBC204503B
+	for <mptcp@lists.linux.dev>; Thu, 17 Jul 2025 23:45:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752794401; cv=none; b=bciByH4Sbc9CqAa0aISbViGKs/YuaAgrzpaKF5f99BVBawxm5OQk3ZeOnriCZoYYNDNN1f5ksPDuiHWel/Uf+7gby6FLMtuFsLsFCeTaOjZJu8ZFffD0gYwW5PHhvc/Edr45bKxFDHTH24iPtTvncCYtXuejq2mI+JYOyLGlBZs=
+	t=1752795943; cv=none; b=C15+sB70SL2e55zC7b8JUORxvJ0BJ93d5eGvVzPxuYSEmQ/ujBJL0ZMHec1Uh13BmqMmstTOyjlf0lVc1r/nlW0EARGl3IWKTIMaHzDIiMZvuZIfd8nUVd2r0YR0ySPjMIW+sehxO5KGrvUVCI8t8BeIVH9/3bhi4448DJoEq/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752794401; c=relaxed/simple;
-	bh=UHBe8dtJkBpzVAfpPPO5FTYOZOJwAVVqNnxcva7QEiU=;
+	s=arc-20240116; t=1752795943; c=relaxed/simple;
+	bh=bnZqs/PH2VEIrGKqSXqhQwkVRAQB7Grx5p4URVRzYi0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=m8+QOeLIwCLUo5/rPRjZXgiYjVg0GgzXOjl3UAKG1vHR5EB9JZ/GxbtknelNe1jTiE0+wUB6yrNHWOnZu7UVGDLeUqjNdqZyLss1qUUT0BnfAdSW6npl4Jxgx2Q8DZNUcd+pMkwZMFPoqdStBxBMHp1t0DWZGUlBVRetP10Gjls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A6vPAvnT; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=lReRYKk4Iju6wRY0QT11xmoNbRACgljL10k9xr0/Mcu/opMpsTAgovkht72UYjXrYfgLCynSigU0N57v+2L5wUqG7fNVojNKjYI90SsDNnZax/xgq+dJH+GJ9F2DrTf+Q4XjBVyYr+CeLsbjZWJpLOFmvO6LoF3lRo31EGxyKic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X1FQWUrX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A6vPAvnT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC639C4CEE3;
-	Thu, 17 Jul 2025 23:19:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X1FQWUrX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D75CC4CEE3;
+	Thu, 17 Jul 2025 23:45:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752794400;
-	bh=UHBe8dtJkBpzVAfpPPO5FTYOZOJwAVVqNnxcva7QEiU=;
+	s=k20201202; t=1752795943;
+	bh=bnZqs/PH2VEIrGKqSXqhQwkVRAQB7Grx5p4URVRzYi0=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=A6vPAvnTmayJc/8OL3yMdxNFvddcMzalXG9CkE/qJTldED7aLuM8AkjDaS0OZa2Kn
-	 aW/ZZ4cfbPaP5w9PcEv9x94NOTjgPPWsOyH8EkiFMhpo1KvakwXoJ/U83HQ4X0o7P9
-	 CGzMBmi7lwu8kWgHQvmpnWJmUDM4LDflHNFglJyOpCJ1WFsiNtp22fIDs0n1EdxDqc
-	 n5kEegdUtYzdNGlNNDYu2630+kXcCEDEA+LjJ90NaUs4as8bMKU8CXgrfww0CxgCrR
-	 nEdnz6zsHaDkI/tQvLU91PhkQKX61k9k3Yl0kwy6pCKhS2G8ROxhYXwG7xupSDM1hf
-	 cnqddyqp3Wa7Q==
-Message-ID: <d350af56-86c5-435c-b9eb-601862b61834@kernel.org>
-Date: Fri, 18 Jul 2025 01:19:57 +0200
+	b=X1FQWUrXbpokDqVRhKgJX5RraeADmPaksmUCDikehGG8coP2Vq2+tROXJ1eWRwx3c
+	 WAe4+JwcuxEw4ZUL2fuY/E8EUd56FOF9XAcrRZJPJ/cTQuf3mc/bhxgcX266lr97Fu
+	 KjO0BPGx8UUXZx932OeicXvB/B4fl9X9Q5w9wAGbU7v/Lti7/rPUuMLQgcMUgK9oA5
+	 6idBT4UU6kC3mPjp9mmI34CVS8kXDzwi9XuHjaS8Ygn+ggM1opgJMOdkqlDBh75uH4
+	 jdaFfKuAJr2l3V2riASekmMFPgIf8EHKPtbAWVGHNNixFOI3OsL4csipAPFUC1fmAk
+	 mBm4Dgm+IErKQ==
+Message-ID: <708ea5a4-0a5b-40f0-82bc-edc97fd2e821@kernel.org>
+Date: Fri, 18 Jul 2025 01:45:40 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,11 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next] Squash to "mptcp: add TCP_MAXSEG sockopt
- support"
+Subject: Re: [PATCH mptcp-next] Squash to "tcp: add tcp_sock_set_maxseg"
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <ba6be90c7ee54384bc8e3ee5b35e3b0166d03aff.1752717857.git.tanggeliang@kylinos.cn>
+References: <a1dd4d6e5774b37769645f1b415b2e843822e2b4.1752716203.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,54 +85,32 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <ba6be90c7ee54384bc8e3ee5b35e3b0166d03aff.1752717857.git.tanggeliang@kylinos.cn>
+In-Reply-To: <a1dd4d6e5774b37769645f1b415b2e843822e2b4.1752716203.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 17/07/2025 04:05, Geliang Tang wrote:
+On 17/07/2025 03:37, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> A cleanup for mptcp_setsockopt_all_sf(), to make it return once only.
-> 
-> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-> ---
->  net/mptcp/sockopt.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-> index 379a02a46b7b..2c267aff95be 100644
-> --- a/net/mptcp/sockopt.c
-> +++ b/net/mptcp/sockopt.c
-> @@ -803,16 +803,16 @@ static int mptcp_setsockopt_all_sf(struct mptcp_sock *msk, int level,
->  				   unsigned int optlen)
->  {
->  	struct mptcp_subflow_context *subflow;
-> +	int ret = 0;
->  
->  	mptcp_for_each_subflow(msk, subflow) {
->  		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
-> -		int ret = 0;
+> Set the return value of tcp_sock_set_maxseg() to err.
 
-We also missed the assignment to 0, while just after it is assigned to
-something else. (But I guess the compiler will optimise that.)
->  		ret = tcp_setsockopt(ssk, level, optname, optval, optlen);
->  		if (ret)
-> -			return ret;
-> +			break;
+Good catch!
 
-I don't really see a problem to return here directly, because there was
-no lock or similar, but why not.
+Now in our tree:
 
-- 4243d759a096: "squashed" in "mptcp: add TCP_MAXSEG sockopt support"
+- 1250f401ac70: "squashed" in "tcp: add tcp_sock_set_maxseg"
 
->  	}
-> -	return 0;
-> +	return ret;
->  }
->  
->  static int mptcp_setsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
+New patches for t/upstream:
+- 1250f401ac70: Squash to "tcp: add tcp_sock_set_maxseg"
+- 4243d759a096: Squash to "mptcp: add TCP_MAXSEG sockopt support"
+- Results: d196b0945719..eb948f761895 (export)
+
+Tests are now in progress:
+
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/4c4a8f3705b5a68dec06d5bdcbe08409aa15ab84/checks
 
 Cheers,
 Matt
