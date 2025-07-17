@@ -1,133 +1,145 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9135433AC;
-	Wed, 16 Jul 2025 16:35:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B58710A1F;
+	Thu, 17 Jul 2025 01:25:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752683719; cv=none; b=hiCXVyuLSX3vCbICgfklJgF9u/0vY7EBOQxDQZM0c3OGg14k4GuZT5y+f9fcq0CVjKZLjAhz4HpO1oHJLp8bLDVu6dkbbmOrCckhEOiU+1HFrKshL6ORhDNjsFLwDIOUZl9Oo29jK7x16ShErzigaG/r9jKQybvbbqzoUGDrIZ4=
+	t=1752715553; cv=none; b=VYwmMbGcSC5BcIkgjGxnNtrE28ASPxuGCB1nKoT7lyV9DoqpHIIpUqyXkQdHmQoWaUdcpd6jVOKn9gi8GrkAwHegpFt4VRpLKplN1Ig/Iydk5DCAj6bgjcKct9Ddm+a6Cn+WSHcRPruyZr8eog4UesTDH/xciNbXDIHXjCcv6EU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752683719; c=relaxed/simple;
-	bh=fmClr32Q4msr69AXsHeosKKjatBXvD+V9yqILAzONGk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aoeTXK+LzuN4CPTSb5/LeloBOytMfgW0wD8A26pkoyatOTXR/WtF++mtmtIBReCka7Hn8zsm26BZWumSHYTW9478YLehqFC/dlU9kkxBYPRxJ7GD91LaJkHVNezarFy7rQN27olAsf5LaBpHNc8DLVXigVa/KFMOWruBtwFNZaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kU2tvkbr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1752715553; c=relaxed/simple;
+	bh=eJW4DqvpNT9WZHN3RA/qOqnzpM5aERTsDG8vrMculSo=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=uuWU51yhULpNM4dYMtYxA1ThQGlI1EopM6J8+m/Ccj6k9IVgu6H+iEZnpjQftXNU8gJXbQRfYywA075W/r+ARx4DBEoDKB0yBVijDlWBhd0FxeHiHxgKF1cSoSSML2UFAaviCMn1IcKYlmZZs5rQPjA+3cWzwqsSUN6RxX0F11Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RVbIPsGh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kU2tvkbr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 850D5C4CEE7;
-	Wed, 16 Jul 2025 16:35:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RVbIPsGh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37EACC4CEE7;
+	Thu, 17 Jul 2025 01:25:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752683717;
-	bh=fmClr32Q4msr69AXsHeosKKjatBXvD+V9yqILAzONGk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=kU2tvkbrA58raN8cljGdVARUQniEUwtda+Zmqi7IbA+mS8FxlGcKi2KBox6SU+o7b
-	 tHCSzg3XWjarbBElfre0JDpV+fILOfYboXgkvGx2PaxWH9xyoCC/TOaZqOF/azGl8H
-	 8GrNCFdl4nTinSQ0A1TGmKPj9avPco8HAzpN5RquezleMSEvyAULRg5MaTj0et5CAp
-	 JhztAPtMEDSK7cUfECfoOuUQLxn0AXtT60vg+ll/Qc3MCQqf0KAtAwejBi3T7la45z
-	 KYJWMpUh8+pugutyGQU/20kZbL99TsCer929mlmMiX8lcIs6mnT+y1vaCmqgYNEL8K
-	 /2wCcYbqxGOSQ==
-Message-ID: <e46aadbf-51c6-4e09-bdaa-374698b406f3@kernel.org>
-Date: Wed, 16 Jul 2025 18:35:11 +0200
+	s=k20201202; t=1752715553;
+	bh=eJW4DqvpNT9WZHN3RA/qOqnzpM5aERTsDG8vrMculSo=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=RVbIPsGhNQVhy08SIkFMzDX9E2ZHDYGh89e3uIeEPpmPlh83AIxGQNQRQb5G0KL55
+	 mO0BZ5TQx07gVZg9HSW5YhW+dY2kCj1vT5frvFTbO3HBa/lWPGPdROFdhhK4N9v5kq
+	 B9OO0vX52zs9SBBtPN/AhJ0QV3f5HgNAIzrMgOQvDRj6M27mOzzDuznSzB/QdvydyV
+	 bRWY9Ko9VYTL2u2Cxv3YiI7OqDqF8gN/YLOJgMmGC/KXSaW63HfskGCC9MSHMeWjkd
+	 UJYaH1MqafFkrbArQzhNzQTdrjXRIPlSJxnvk+YJSFO0B2B+Bz71f9InJXcraWJ62i
+	 ykhdavSsQtRnw==
+Message-ID: <fe04c8823b6d17fc45430f4991322f400228ba1e.camel@kernel.org>
+Subject: Re: [PATCH net-next 2/4] tcp: add tcp_sock_set_maxseg
+From: Geliang Tang <geliang@kernel.org>
+To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, mptcp@lists.linux.dev, 
+ Mat Martineau <martineau@kernel.org>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet	 <edumazet@google.com>, Jakub Kicinski
+ <kuba@kernel.org>, Paolo Abeni	 <pabeni@redhat.com>, Simon Horman
+ <horms@kernel.org>, Neal Cardwell	 <ncardwell@google.com>, Kuniyuki
+ Iwashima <kuniyu@google.com>, David Ahern	 <dsahern@kernel.org>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Thu, 17 Jul 2025 09:25:45 +0800
+In-Reply-To: <20250716-net-next-mptcp-tcp_maxseg-v1-2-548d3a5666f6@kernel.org>
+References: 
+	<20250716-net-next-mptcp-tcp_maxseg-v1-0-548d3a5666f6@kernel.org>
+	 <20250716-net-next-mptcp-tcp_maxseg-v1-2-548d3a5666f6@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.56.0-1 
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH net v2 0/2] selftests: mptcp: connect: cover alt modes
-Content-Language: en-GB, fr-BE
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>,
- Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
- Simon Horman <horms@kernel.org>, Shuah Khan <shuah@kernel.org>,
- Christoph Paasch <cpaasch@openai.com>, Davide Caratti <dcaratti@redhat.com>,
- Florian Westphal <fw@strlen.de>, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org, linux-kselftest@vger.kernel.org,
- stable@vger.kernel.org
-References: <20250715-net-mptcp-sft-connect-alt-v2-0-8230ddd82454@kernel.org>
- <20250715185308.2ad30691@kernel.org> <20250716072602.386a8963@kernel.org>
- <ae6d333a-f3b2-4463-b930-b4caf56b39f8@kernel.org>
- <20250716083632.72854bd5@kernel.org>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <20250716083632.72854bd5@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 16/07/2025 17:36, Jakub Kicinski wrote:
-> On Wed, 16 Jul 2025 16:55:21 +0200 Matthieu Baerts wrote:
->>>> Looks like the failures that Paolo flagged yesterday:
->>>>
->>>> https://lore.kernel.org/all/a7a89aa2-7354-42c7-8219-99a3cafd3b33@redhat.com/
->>>>
->>>> are back as soon as this hit NIPA :(
->>>>
->>>> https://netdev.bots.linux.dev/contest.html?branch=net-next-2025-07-16--00-00&executor=vmksft-mptcp&pw-n=0&pass=0
->>>>
->>>> No idea why TBH, the tests run sequentially and connect.sh run before
->>>> any of the new ones.  
->>
->> And just to be sure, no CPU or IO overload at that moment? I didn't see
->> such errors reported by our CI, but I can try to reproduce them locally
->> in different conditions.
+Hi Matt,
+
+On Wed, 2025-07-16 at 12:28 +0200, Matthieu Baerts (NGI0) wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> None that I can see. The test run ~10min after all the builds completed,
-> and we wait now for the CPU load to die down and writeback to finish
-> before we kick off VMs. The VMs for various tests are running at that
-> point, the CPU util averaged across cores is 66%.
+> Add a helper tcp_sock_set_maxseg() to directly set the TCP_MAXSEG
+> sockopt from kernel space.
+> 
+> This new helper will be used in the following patch from MPTCP.
+> 
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> Acked-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> ---
+>  include/linux/tcp.h |  1 +
+>  net/ipv4/tcp.c      | 23 ++++++++++++++---------
+>  2 files changed, 15 insertions(+), 9 deletions(-)
+> 
+> diff --git a/include/linux/tcp.h b/include/linux/tcp.h
+> index
+> 1a5737b3753d06165bc71e257a261bcd7a0085ce..57e478bfaef20369f5dba1cff54
+> 0e52c9302ebf4 100644
+> --- a/include/linux/tcp.h
+> +++ b/include/linux/tcp.h
+> @@ -621,6 +621,7 @@ void tcp_sock_set_nodelay(struct sock *sk);
+>  void tcp_sock_set_quickack(struct sock *sk, int val);
+>  int tcp_sock_set_syncnt(struct sock *sk, int val);
+>  int tcp_sock_set_user_timeout(struct sock *sk, int val);
+> +int tcp_sock_set_maxseg(struct sock *sk, int val);
+>  
+>  static inline bool dst_tcp_usec_ts(const struct dst_entry *dst)
+>  {
+> diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
+> index
+> 31149a0ac849192b46c67dd569efeeeb0a041a0b..c9cdc4e99c4f11a75471b8895b9
+> c52ad8da3a7ff 100644
+> --- a/net/ipv4/tcp.c
+> +++ b/net/ipv4/tcp.c
+> @@ -3751,6 +3751,19 @@ int tcp_set_window_clamp(struct sock *sk, int
+> val)
+>  	return 0;
+>  }
+>  
+> +int tcp_sock_set_maxseg(struct sock *sk, int val)
+> +{
+> +	/* Values greater than interface MTU won't take effect.
+> However
+> +	 * at the point when this call is done we typically don't
+> yet
+> +	 * know which interface is going to be used
+> +	 */
+> +	if (val && (val < TCP_MIN_MSS || val > MAX_TCP_WINDOW))
+> +		return -EINVAL;
+> +
+> +	tcp_sk(sk)->rx_opt.user_mss = val;
+> +	return 0;
+> +}
+> +
+>  /*
+>   *	Socket option code for TCP.
+>   */
+> @@ -3883,15 +3896,7 @@ int do_tcp_setsockopt(struct sock *sk, int
+> level, int optname,
+>  
+>  	switch (optname) {
+>  	case TCP_MAXSEG:
+> -		/* Values greater than interface MTU won't take
+> effect. However
+> -		 * at the point when this call is done we typically
+> don't yet
+> -		 * know which interface is going to be used
+> -		 */
+> -		if (val && (val < TCP_MIN_MSS || val >
+> MAX_TCP_WINDOW)) {
+> -			err = -EINVAL;
+> -			break;
+> -		}
+> -		tp->rx_opt.user_mss = val;
+> +		tcp_sock_set_maxseg(sk, val);
 
-Thank you for having checked, and for the explanations!
+Sorry, I forgot to set the return value here, it should be:
 
-OK, so maybe running stress-ng in parallel to be able to reproduce the
-issue might not help. We will investigate.
+		err = tcp_sock_set_maxseg(sk, val);
 
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
+I'll send a squash-to patch to fix this.
 
+Thanks,
+-Geliang
+
+>  		break;
+>  
+>  	case TCP_NODELAY:
