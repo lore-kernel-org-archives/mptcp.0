@@ -1,55 +1,55 @@
 Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6932F2417EF
-	for <mptcp@lists.linux.dev>; Mon, 21 Jul 2025 20:36:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ADD4242925
+	for <mptcp@lists.linux.dev>; Mon, 21 Jul 2025 20:36:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753130203; cv=none; b=BtqrbHPjQTe8uPjasEIKJ+8QoVvstGaXVwbNY3qPnOs0QfYufPpIeECpcTEtF5bxp/DCZ4A/2O28Mw4qkPRLYP1nW9Z5+VJV973uipX0vIo54ZEh9fd37TKbxza889UluiDyRLv3joWw5122B4TpdAJEXdDnbjdaPjgvvqBaWVs=
+	t=1753130205; cv=none; b=eyogiHrlbTX2+qNyKs066HQqRsz1hAsDYL/s4Eal8YGhu/9q1hmZm1QjcnHjWeD05Kj7B6VJdPMWGxcePrPo+0SnIryLWVWwLqpvHwfShG/eQ05z4O5/q2nITa9PNMp3rkdRpRCsolZQV9lR4nz3Id8GfwYWuWohJHo1kGXDctU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753130203; c=relaxed/simple;
-	bh=i5GAzC5L1kuCCltZ38C9FzfkiUrjLYUlG5NNBN2V574=;
+	s=arc-20240116; t=1753130205; c=relaxed/simple;
+	bh=i+zfIWSk5Yyh+CsgJiQoi9JopyK74XFsgZ0y4qXuiVE=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=QKNFNb8qgLPBt0oWwfcfP7kFLj6Izy3ixAY8TtIrsy3HgnwlQmQcgY84FDjxq5gZciHJ50QTr36lWWCTG1S54EBI/2Dh+50KiX5ueN9eFtsaBRhosoo3ak/YDV28JxQohfh2zZEA9miBjvh9Py/jdAjoz0+EgtkoSeBUV95e/5Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--kuniyu.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=va5gvQuC; arc=none smtp.client-ip=209.85.215.202
+	 To:Cc:Content-Type; b=XrludAxXUNasRErvcc/NoaHotAVi5OHlvtQORdBGUhwSeUeiY+17g/Y4wHxIlB4JerCLFruP2aeqWJvQ2bhhzKE5pia3szYy5xI0z8U76mt8ACGTBaxSun5A1fSeiOIl8ftgnLf2dla2VmxxFvgWjBDv0XllQVDZYT16dmMNNCs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--kuniyu.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gCeZl1It; arc=none smtp.client-ip=209.85.215.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--kuniyu.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="va5gvQuC"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b2c36951518so5326843a12.2
-        for <mptcp@lists.linux.dev>; Mon, 21 Jul 2025 13:36:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gCeZl1It"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b39280167fdso3400442a12.0
+        for <mptcp@lists.linux.dev>; Mon, 21 Jul 2025 13:36:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1753130202; x=1753735002; darn=lists.linux.dev;
+        d=google.com; s=20230601; t=1753130203; x=1753735003; darn=lists.linux.dev;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ssPdZm4XAVciTYPYdUcIXie5OXrS2r8M4cSNBMi+lG4=;
-        b=va5gvQuCUU8PxZlOn3XdGLcjggsdeByV8H5o9r7hcPfGoHuSFiqZl92uiaf43siawb
-         0L1hVIyRu+nogYFDUcUPqtaofnoEAQSJ6bgJbrhxfF21sQLr7IODDRe3E1k94DlZ46lD
-         EdsXDBPdbuvvORmoUyu0MVtjvDSH+CUC5Lbmkd+wToD87+iGrKQ8XCSfwhcmOk26uIZU
-         1RKNWFD6Eyy9AKTN9oosB5D66PsHNTZgh6WtYlkfiKvtzIAUYoyd25ZoRdhTEoWeHJzg
-         kRdB9HI0QiFiQV9TZXQicSRMs2gyMiYFwoZ21y158slT/HbZtSoamUbS/WfnmRco+7q1
-         LZ9Q==
+        bh=gOvDOtNuHuKEQ0AG8licv0sCiHFkG4hjeCZ8hfYKZ/g=;
+        b=gCeZl1ItfO+BcBDmdtcCeaXa68e5KfbmXh3BDeaGS9egtVF7JNhRLE3K+UGUjLRGPF
+         ljma7uQ7j0n+UKf5dk6eOs/Glkmq4IRrY+VmA0U6SGAu/+GckqZPs8i8oEGKjvNI4xoF
+         BudpJqKNMQc+tAGFQJv01ImlO+C1DkU+M/VsF2lxH7EkhK0puO4XAxzwjl+ILb/omKBY
+         E+T9DnjhxGChTBQTVbcCE9dsQDrZjobqsm9dmu0hMkISATK/v8ZRXozBj5TrbaljDtea
+         KO0g2QYGX9OSWLLd/InJVkUqWZSeyYNLsZjcpOJjOnoXcimPU1T70tubA2lT35+UaorK
+         olfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753130202; x=1753735002;
+        d=1e100.net; s=20230601; t=1753130203; x=1753735003;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ssPdZm4XAVciTYPYdUcIXie5OXrS2r8M4cSNBMi+lG4=;
-        b=YTwmxXQy30gNkz4Ui3/Tonuu3hO8vOgWXHcdVka7UFADcvlLp8qvX9JXn8HXn3XHom
-         snOA6VhAaVkcT0uMelTgb1lqvCxUx6I+5z1KvS55TEgx9nYunGYOhwXOliB+KtSLFvvp
-         1I7Slsy/liODLI0RmL8HDvwAYayiLg6mR01iwRVhag0FA+z8xPLw92BrF8yxoNONEsXl
-         +ZzoXFJhb+80i3nRq4+unIH7aioSFTAxFayn0NaOryIrdbEtlTrN6Ic5CpxtD8yqSFS1
-         pW5UvQkmxy1sayGdyNE9Pr08hKWDy8TUU52FcOM6wjaFgew3M8Tdh5hl224D9yD61IKG
-         0GPQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXXxj0lRDNpiX8MoPzLRlwI/SX/LdmgyJSGXcezRB5WDac2dyPyJlRT8DWLkS9jyNdMQ4kavg==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yxz3/Ee5dh0YrHtc3SdZhIluPsLQOUUm6tYGZQae6dIyvFnjgtv
-	Y26Lp86PM+lfGJmyJeVovOlmAw9JF4xlQFwdMsLfT7m5Vqix0NjG2PqaErRtB/j/vkP4l8uK4Gk
-	D4J3smQ==
-X-Google-Smtp-Source: AGHT+IH0bPuHNRYQE3IBCaVT7B1b82DZOEQMUavwyW5ZrY7G02YZ/hUnE3IIWK5LKSPidRIy8Lw1sZSx8D4=
-X-Received: from pfblj15.prod.google.com ([2002:a05:6a00:71cf:b0:746:18ec:d11a])
- (user=kuniyu job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:9188:b0:233:f0c6:a8a4
- with SMTP id adf61e73a8af0-2390dc51bc4mr34981014637.31.1753130201882; Mon, 21
- Jul 2025 13:36:41 -0700 (PDT)
-Date: Mon, 21 Jul 2025 20:35:29 +0000
+        bh=gOvDOtNuHuKEQ0AG8licv0sCiHFkG4hjeCZ8hfYKZ/g=;
+        b=GFuzsgIXDvK8o0+RnpQKQIsBPn82Dke72axK1hJZZTSAHcWnnWuuG8srQSLhpifZ6r
+         e4lBN4yMThYZwrNGYmxUGe0Jr8hyK90dh1QM4J/myfdpwgzksXD56zWURagM3kGZSyLu
+         XdG61ve/uHHV2zDINWjIp4vTvDgMAVA3HdvYcWmXECR1c15va6q28C0VFN2CQCtAqe/G
+         P0WNiS4BLZtQZ5OEpS5We4HUJ6PyFHiZsPkXGpjU5EVsp/e7CtgYbyzQ6HYqOlKVSaeO
+         ywcQBCLu6o5g13aJQgS/w5lDiGuwBmabzSxtuoFqB65HJPM+43iZKWdA+igsF+nT7vA7
+         1TWw==
+X-Forwarded-Encrypted: i=1; AJvYcCVpP+7iY+mfAhh3e4G/5IwY2xpa3FvIIqj49kulqR1x2Kry3ScF3f1evLKIRkHXQ2e0tWysmw==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzklBdoLxe/FY8Iwpyas6A/qzuLzNPPUNv9Pq/wIe8SvMsWzSud
+	wG92DiB+K+h+CEhnVG5J7tUrMSFNrKbsIbWaG5+npr4KB/6VvfSj1/BFKMGqw5pPLkFQ2rNEcLU
+	Ro9Q02A==
+X-Google-Smtp-Source: AGHT+IFVGe379XDWUF+9CY2yjFXvtKB+09OD1v073Z06Drs+S2iB6DNfmLq4LLNVW9Zv/pSwEo/nmwsHGbs=
+X-Received: from pfbkx24.prod.google.com ([2002:a05:6a00:6f18:b0:747:7188:c30])
+ (user=kuniyu job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:9150:b0:234:4f62:9b3e
+ with SMTP id adf61e73a8af0-237d701a40cmr37381983637.27.1753130203466; Mon, 21
+ Jul 2025 13:36:43 -0700 (PDT)
+Date: Mon, 21 Jul 2025 20:35:30 +0000
 In-Reply-To: <20250721203624.3807041-1-kuniyu@google.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 Mime-Version: 1.0
 References: <20250721203624.3807041-1-kuniyu@google.com>
 X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
-Message-ID: <20250721203624.3807041-11-kuniyu@google.com>
-Subject: [PATCH v1 net-next 10/13] net: Define sk_memcg under CONFIG_MEMCG.
+Message-ID: <20250721203624.3807041-12-kuniyu@google.com>
+Subject: [PATCH v1 net-next 11/13] net-memcg: Add memory.socket_isolated knob.
 From: Kuniyuki Iwashima <kuniyu@google.com>
 To: "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
 	Jakub Kicinski <kuba@kernel.org>, Neal Cardwell <ncardwell@google.com>, Paolo Abeni <pabeni@redhat.com>, 
@@ -74,56 +74,140 @@ Cc: Simon Horman <horms@kernel.org>, Geliang Tang <geliang@kernel.org>,
 	cgroups@vger.kernel.org, linux-mm@kvack.org
 Content-Type: text/plain; charset="UTF-8"
 
-Except for sk_clone_lock(), all accesses to sk->sk_memcg
-is done under CONFIG_MEMCG.
+Some networking protocols have their own global memory accounting,
+and such memory is also charged to memcg as sock in memory.stat.
 
-As a bonus, let's define sk->sk_memcg under CONFIG_MEMCG.
+Such sockets are subject to the global limit, thus affected by a
+noisy neighbour outside the cgroup.
+
+We will decouple the global memory accounting if configured.
+
+Let's add a per-memcg knob to control that.
+
+The value will be saved in each socket when created and will
+persist through the socket's lifetime.
 
 Signed-off-by: Kuniyuki Iwashima <kuniyu@google.com>
 ---
- include/net/sock.h | 2 ++
- net/core/sock.c    | 4 ++++
- 2 files changed, 6 insertions(+)
+ Documentation/admin-guide/cgroup-v2.rst | 16 +++++++++++
+ include/linux/memcontrol.h              |  6 ++++
+ include/net/sock.h                      |  3 ++
+ mm/memcontrol.c                         | 37 +++++++++++++++++++++++++
+ 4 files changed, 62 insertions(+)
 
+diff --git a/Documentation/admin-guide/cgroup-v2.rst b/Documentation/admin-guide/cgroup-v2.rst
+index bd98ea3175ec1..2428707b7d27d 100644
+--- a/Documentation/admin-guide/cgroup-v2.rst
++++ b/Documentation/admin-guide/cgroup-v2.rst
+@@ -1878,6 +1878,22 @@ The following nested keys are defined.
+ 	Shows pressure stall information for memory. See
+ 	:ref:`Documentation/accounting/psi.rst <psi>` for details.
+ 
++  memory.socket_isolated
++	A read-write single value file which exists on non-root cgroups.
++	The default value is "0".
++
++	Some networking protocols (e.g., TCP, UDP) implement their own memory
++	accounting for socket buffers.
++
++	This memory is also charged to a non-root cgroup as sock in memory.stat.
++
++	Since per-protocol limits such as /proc/sys/net/ipv4/tcp_mem and
++	/proc/sys/net/ipv4/udp_mem are global, memory allocation for socket
++	buffers may fail even when the cgroup has available memory.
++
++	Sockets created with socket_isolated set to 1 are no longer subject
++	to these global protocol limits.
++
+ 
+ Usage Guidelines
+ ~~~~~~~~~~~~~~~~
+diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
+index 211712ec57d1a..7d5d43e3b49e6 100644
+--- a/include/linux/memcontrol.h
++++ b/include/linux/memcontrol.h
+@@ -226,6 +226,12 @@ struct mem_cgroup {
+ 	 */
+ 	bool oom_group;
+ 
++	/*
++	 * If set, MEMCG_SOCK memory is charged on memcg only,
++	 * otherwise, memcg and sk->sk_prot->memory_allocated.
++	 */
++	bool socket_isolated;
++
+ 	int swappiness;
+ 
+ 	/* memory.events and memory.events.local */
 diff --git a/include/net/sock.h b/include/net/sock.h
-index efb2f659236d4..16fe0e5afc587 100644
+index 16fe0e5afc587..5e8c73731531c 100644
 --- a/include/net/sock.h
 +++ b/include/net/sock.h
-@@ -443,7 +443,9 @@ struct sock {
- 	__cacheline_group_begin(sock_read_rxtx);
- 	int			sk_err;
- 	struct socket		*sk_socket;
-+#ifdef CONFIG_MEMCG
- 	struct mem_cgroup	*sk_memcg;
-+#endif
- #ifdef CONFIG_XFRM
- 	struct xfrm_policy __rcu *sk_policy[2];
- #endif
-diff --git a/net/core/sock.c b/net/core/sock.c
-index 5537ca2638588..ab6953d295dfa 100644
---- a/net/core/sock.c
-+++ b/net/core/sock.c
-@@ -2512,8 +2512,10 @@ struct sock *sk_clone_lock(const struct sock *sk, const gfp_t priority)
+@@ -2597,6 +2597,9 @@ static inline gfp_t gfp_memcg_charge(void)
+ }
  
- 	sock_reset_flag(newsk, SOCK_DONE);
+ #ifdef CONFIG_MEMCG
++
++#define MEMCG_SOCK_ISOLATED	1UL
++
+ static inline struct mem_cgroup *mem_cgroup_from_sk(const struct sock *sk)
+ {
+ 	return sk->sk_memcg;
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index d7f4e31f4e625..0a55c12a6679b 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -4645,6 +4645,37 @@ static ssize_t memory_reclaim(struct kernfs_open_file *of, char *buf,
+ 	return nbytes;
+ }
  
-+#ifdef CONFIG_MEMCG
- 	/* sk->sk_memcg will be populated at accept() time */
- 	newsk->sk_memcg = NULL;
-+#endif
++static int memory_socket_isolated_show(struct seq_file *m, void *v)
++{
++	struct mem_cgroup *memcg = mem_cgroup_from_seq(m);
++
++	seq_printf(m, "%d\n", READ_ONCE(memcg->socket_isolated));
++
++	return 0;
++}
++
++static ssize_t memory_socket_isolated_write(struct kernfs_open_file *of,
++					    char *buf, size_t nbytes, loff_t off)
++{
++	struct mem_cgroup *memcg = mem_cgroup_from_css(of_css(of));
++	int ret, socket_isolated;
++
++	buf = strstrip(buf);
++	if (!buf)
++		return -EINVAL;
++
++	ret = kstrtoint(buf, 0, &socket_isolated);
++	if (ret)
++		return ret;
++
++	if (socket_isolated != 0 && socket_isolated != MEMCG_SOCK_ISOLATED)
++		return -EINVAL;
++
++	WRITE_ONCE(memcg->socket_isolated, socket_isolated);
++
++	return nbytes;
++}
++
+ static struct cftype memory_files[] = {
+ 	{
+ 		.name = "current",
+@@ -4716,6 +4747,12 @@ static struct cftype memory_files[] = {
+ 		.flags = CFTYPE_NS_DELEGATABLE,
+ 		.write = memory_reclaim,
+ 	},
++	{
++		.name = "socket_isolated",
++		.flags = CFTYPE_NOT_ON_ROOT,
++		.seq_show = memory_socket_isolated_show,
++		.write = memory_socket_isolated_write,
++	},
+ 	{ }	/* terminate */
+ };
  
- 	cgroup_sk_clone(&newsk->sk_cgrp_data);
- 
-@@ -4452,7 +4454,9 @@ static int __init sock_struct_check(void)
- 
- 	CACHELINE_ASSERT_GROUP_MEMBER(struct sock, sock_read_rxtx, sk_err);
- 	CACHELINE_ASSERT_GROUP_MEMBER(struct sock, sock_read_rxtx, sk_socket);
-+#ifdef CONFIG_MEMCG
- 	CACHELINE_ASSERT_GROUP_MEMBER(struct sock, sock_read_rxtx, sk_memcg);
-+#endif
- 
- 	CACHELINE_ASSERT_GROUP_MEMBER(struct sock, sock_write_rxtx, sk_lock);
- 	CACHELINE_ASSERT_GROUP_MEMBER(struct sock, sock_write_rxtx, sk_reserved_mem);
 -- 
 2.50.0.727.gbf7dc18ff4-goog
 
