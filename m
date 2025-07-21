@@ -1,55 +1,55 @@
 Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9866D241695
-	for <mptcp@lists.linux.dev>; Mon, 21 Jul 2025 20:36:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4146F24292E
+	for <mptcp@lists.linux.dev>; Mon, 21 Jul 2025 20:36:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753130200; cv=none; b=mgTorPRaAN6la5MKaIa4PvI8K+G/SdB2Ro3ijWtx/dhVnC+38B4AOuT8h/7vFv/6bKRGoSXQEQuM2qRy2JGUDpmxPWVU99b/YfeLXaeYM3z5JlPT4j+d/l1MY+kvSnacdFMubF/Mkf//e6sM26YJ3gHWhcza88WTzUH03HC2qSo=
+	t=1753130202; cv=none; b=J+rRJyh4edhxIalW337kYKa+C+7jiSMeebdhOoldVEs5TkDJlFX5R0ut5giAXzxL1nMkGUCe/11cMpsuGRB0t7CXiLsbCSt4JKhyo7iWI0ujFTL280QDYdjq6s0gRUOgm9FbHcOh7L//hgHfCk8N2QzNAsmHPWLQfZ9IrV4ZfUI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753130200; c=relaxed/simple;
-	bh=Np33N9r0abllKVI2quaOtsW8GKG8UR/+pGRXFZjdmVg=;
+	s=arc-20240116; t=1753130202; c=relaxed/simple;
+	bh=vZGJ9wL2tKP1C/bt03aiYtXRl3GT/mAQoyMnOiZ1Zas=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=mFX+xjKKUitlsCgDE/JyVxrM+43WfL+k0ArJW58rGEXhEVnYzhKkXQ6k5FQ31+TQoQwh8mzw5XIBegI+xIjjO/TLXdWx9pnT0zvaIZvlT8lAU/0lnSREMV46lmaDfU18A7kXPhaPJm7I2lPob4GAq+/BTpy7/faT78l3x25chFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--kuniyu.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=m9zXSvtC; arc=none smtp.client-ip=209.85.216.73
+	 To:Cc:Content-Type; b=Dsi7S9SUcuFuJt1CJJQ5L+ACG3m1uS9O4Ugc5qJ7oVoryaWruNnDaxUv/B47vuGUkw5PXeb9uxruiyvin79W8Qm8JRUG52zrCj+AeoISdsit++GbVXbOvzH76hQukYjm2P/NeumEjKEWGKPf6u4uPJvkPAkV25YJ5wCK4FW1fBA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--kuniyu.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=x4XZG5o4; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--kuniyu.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="m9zXSvtC"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-311ef4fb5eeso4608966a91.1
-        for <mptcp@lists.linux.dev>; Mon, 21 Jul 2025 13:36:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="x4XZG5o4"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-3138f5e8ff5so4826825a91.3
+        for <mptcp@lists.linux.dev>; Mon, 21 Jul 2025 13:36:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1753130198; x=1753734998; darn=lists.linux.dev;
+        d=google.com; s=20230601; t=1753130201; x=1753735001; darn=lists.linux.dev;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=vzkCcE7y2iiEKWHZNkTKmLOP5up72GHF++8nWGJ0fgE=;
-        b=m9zXSvtCuCoWmlCU6UMFlXa4bq1emtZhcIuyR2eBfLEiRrlvmvKWW6r2N+HvAQju7a
-         7etM9RrFobifKkq68gEFW9Ji/kCk1kWqGkn4S9s5brMJWv6MIHYH7+lo2+D5lEw/0ndU
-         kVVjyO04RD7TgDIwY+SE/9PZa4wBqaZjXDKs0z/eZxLofK86FE+T5HubzbHZbWTL0XTp
-         jRWXMGgGZoIwnQXzUmRhdI90gN8A6JJnCkwxmW1EIuXfi1ywGwau6EXK14hOe+VSe+Hi
-         24b0LQYvkBRqu4rRKbxJkgJncviiPF4c0+ckKsr3FHTihLKXBSJcURbFHnAEhtIc9SrM
-         JNxw==
+        bh=y8n9gDKu0Z+DKg5LJ3hwVCmIJaGqgWwDHBafRHDkb0E=;
+        b=x4XZG5o4RF1Z0bBe3xl3OMfFQLTqiTF3tkGgBsWhS7kwNQX+QUxuu1TFpGhfPvt6tO
+         M42LTcKm8FNrft99JpCmv6PoWCU1DNnYknq3NAuchLcXlyRYy7YlhhzK4XbSCA1MuEL/
+         r7fMDfRQsG6p1LJBMUpBdaG78nKiEuKZ97pstuPu8+m5A0j9nqc+r+i31oPhYd70I1qB
+         Ae3N+xYL+0BcYxBZMatCRCsCxdd//5Rxxmwxm94PXFcwvEqEv6Lw1gITEJtzY6dgoUj1
+         DrNz3eCH1CmVNGUbwAY7Lp91EhJ9QPC2OOdThMDrdEXHoESnbXgn3IXMn8ncv3H1Che2
+         gMyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753130198; x=1753734998;
+        d=1e100.net; s=20230601; t=1753130201; x=1753735001;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vzkCcE7y2iiEKWHZNkTKmLOP5up72GHF++8nWGJ0fgE=;
-        b=FM/qRgzN6IAwDFvVtErGd1Lk/hoMBht1ZiueAIHHPC0nLIu5DpD3iocSVWFkMrGrPE
-         ZOh6DbrH+5bCS3ehRjHlLK0EusCbV8gVsGQd6+FGcBB2/PsQHTGc81xRb6/fBpNFp65D
-         dXaqReSY4FLcLCPv+YTQ1SFZMRpTU0KuzYT/awbQEfKq7SgJSeFDnh9FtkCgyXqgPNfq
-         zpSD2+iEYuSj660NhEKl5xaEON8Ko9FoSFQqsSxY/j1965a/vnBfYaqkXRi2KM3zUskj
-         6ySqe8OiQ+r/6n58xO++AQEO20ZDDq5XhHBkHmOwDrYPEDUygW8+zTwaQrjd3YxYZVA9
-         Y7sQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVuwzcVqwzGCCV7BCmjIqbr8hRJynxP2B0bHk9/BFVfdRhvXOuqdz+WrknbFspSfnXlFnkLCw==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzTLauFOzk1U06i1U3JoCFrcdaGeuiuGu6b+E8TvnECmVrMlI73
-	CPgaQI7oER/dZJzi+PdPqaxFMhlY3oOAlop4GWSps7ypQ7tU5VcIj/0jBIgatiknOb1Jq89N+vA
-	1N98Nhg==
-X-Google-Smtp-Source: AGHT+IE6OSr24etnKRAVeW0ucA3S4ktB5FCi5MdQH2kT6HggNuPbZhFVkCzC2ipGvzXe9c/IyTBVfm1pHvo=
-X-Received: from pjbhk17.prod.google.com ([2002:a17:90b:2251:b0:31e:3c57:ffc8])
- (user=kuniyu job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3e8c:b0:310:c8ec:4192
- with SMTP id 98e67ed59e1d1-31e3e1cf38fmr1125302a91.10.1753130197825; Mon, 21
- Jul 2025 13:36:37 -0700 (PDT)
-Date: Mon, 21 Jul 2025 20:35:26 +0000
+        bh=y8n9gDKu0Z+DKg5LJ3hwVCmIJaGqgWwDHBafRHDkb0E=;
+        b=aVTYHHa8csKu8drugBfVtICRsM6toPRsHzbX2MupLL+8CEMqwfy9H7zcaFiEHNcBj2
+         aybffNClWNempiNE+Ui+TRalPo1BVm1MTLlnsZ89pq0huShkJGJikH2ibyl0T9hdsq1P
+         zpv8ay07tfMhSOcgdfDGlL++vAXhlqIYlf/twCRC9/xUYWL3+a+42oIaOR91DgJ2ei+D
+         jONpb5nWSDE86hhJtbfb4IyB/0s4i5V02MvqNIRuxGw5mZUVTMMdU+3j7GzAicmvWjud
+         aidF+yp5Rzr3rmaBa15jyIJU70HNEiJbOvy7RYBNa7r4P5Q4dDIMuzR8f2NZx8AZrsaS
+         5ckA==
+X-Forwarded-Encrypted: i=1; AJvYcCVzCSoiUu6cGUTvw6L0S8MK6FKNmbZpMhEyAvmVkaXbdES3twAPvnWfqtz1H9Ih2yric+0JpA==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yw5IDgGyMELtGc4qZeu1ziZAm8aXSXVcuwEoUTz0LQ5HGk31zVo
+	KXm7TP5vSlLM0d2nnWuS8O8Ie2xbvt+hQM1At5AJUxv0ErwPtW04j/9ppcE4bhrVs/YoDsqr5QA
+	Zr3PpsQ==
+X-Google-Smtp-Source: AGHT+IFqBDBMTU4J8DYFBRw9/E8jIm7feevzb9voFXceLD2erJ4yjibft5LsmkvUX4Te4RL5m3uzw1eIikw=
+X-Received: from pjb8.prod.google.com ([2002:a17:90b:2f08:b0:311:a879:981f])
+ (user=kuniyu job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:544f:b0:312:26d9:d5b2
+ with SMTP id 98e67ed59e1d1-31c9f2b5292mr34202138a91.0.1753130200564; Mon, 21
+ Jul 2025 13:36:40 -0700 (PDT)
+Date: Mon, 21 Jul 2025 20:35:28 +0000
 In-Reply-To: <20250721203624.3807041-1-kuniyu@google.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 Mime-Version: 1.0
 References: <20250721203624.3807041-1-kuniyu@google.com>
 X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
-Message-ID: <20250721203624.3807041-8-kuniyu@google.com>
-Subject: [PATCH v1 net-next 07/13] net-memcg: Introduce mem_cgroup_sk_enabled().
+Message-ID: <20250721203624.3807041-10-kuniyu@google.com>
+Subject: [PATCH v1 net-next 09/13] net-memcg: Pass struct sock to mem_cgroup_sk_under_memory_pressure().
 From: Kuniyuki Iwashima <kuniyu@google.com>
 To: "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
 	Jakub Kicinski <kuba@kernel.org>, Neal Cardwell <ncardwell@google.com>, Paolo Abeni <pabeni@redhat.com>, 
@@ -74,56 +74,105 @@ Cc: Simon Horman <horms@kernel.org>, Geliang Tang <geliang@kernel.org>,
 	cgroups@vger.kernel.org, linux-mm@kvack.org
 Content-Type: text/plain; charset="UTF-8"
 
-The socket memcg feature is enabled by a static key and
-only works for non-root cgroup.
+We will store a flag in the lowest bit of sk->sk_memcg.
 
-We check both conditions in many places.
+Then, we cannot pass the raw pointer to mem_cgroup_under_socket_pressure().
 
-Let's factorise it as a helper function.
+Let's pass struct sock to it and rename the function to match other
+functions starting with mem_cgroup_sk_.
+
+Note that the helper is moved to sock.h to use mem_cgroup_from_sk().
 
 Signed-off-by: Kuniyuki Iwashima <kuniyu@google.com>
 ---
+ include/linux/memcontrol.h | 18 ------------------
  include/net/proto_memory.h |  2 +-
- include/net/sock.h         | 10 ++++++++++
+ include/net/sock.h         | 21 +++++++++++++++++++++
  include/net/tcp.h          |  2 +-
- net/core/sock.c            |  6 +++---
- net/ipv4/tcp_output.c      |  2 +-
- net/mptcp/subflow.c        |  2 +-
- 6 files changed, 17 insertions(+), 7 deletions(-)
+ 4 files changed, 23 insertions(+), 20 deletions(-)
 
+diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
+index 9ccbcddbe3b8e..211712ec57d1a 100644
+--- a/include/linux/memcontrol.h
++++ b/include/linux/memcontrol.h
+@@ -1605,19 +1605,6 @@ bool mem_cgroup_sk_charge(const struct sock *sk, unsigned int nr_pages,
+ 			  gfp_t gfp_mask);
+ void mem_cgroup_sk_uncharge(const struct sock *sk, unsigned int nr_pages);
+ 
+-static inline bool mem_cgroup_under_socket_pressure(struct mem_cgroup *memcg)
+-{
+-#ifdef CONFIG_MEMCG_V1
+-	if (!cgroup_subsys_on_dfl(memory_cgrp_subsys))
+-		return !!memcg->tcpmem_pressure;
+-#endif /* CONFIG_MEMCG_V1 */
+-	do {
+-		if (time_before(jiffies, READ_ONCE(memcg->socket_pressure)))
+-			return true;
+-	} while ((memcg = parent_mem_cgroup(memcg)));
+-	return false;
+-}
+-
+ int alloc_shrinker_info(struct mem_cgroup *memcg);
+ void free_shrinker_info(struct mem_cgroup *memcg);
+ void set_shrinker_bit(struct mem_cgroup *memcg, int nid, int shrinker_id);
+@@ -1649,11 +1636,6 @@ static inline void mem_cgroup_sk_uncharge(const struct sock *sk,
+ {
+ }
+ 
+-static inline bool mem_cgroup_under_socket_pressure(struct mem_cgroup *memcg)
+-{
+-	return false;
+-}
+-
+ static inline void set_shrinker_bit(struct mem_cgroup *memcg,
+ 				    int nid, int shrinker_id)
+ {
 diff --git a/include/net/proto_memory.h b/include/net/proto_memory.h
-index a6ab2f4f5e28a..859e63de81c49 100644
+index 859e63de81c49..8e91a8fa31b52 100644
 --- a/include/net/proto_memory.h
 +++ b/include/net/proto_memory.h
-@@ -31,7 +31,7 @@ static inline bool sk_under_memory_pressure(const struct sock *sk)
- 	if (!sk->sk_prot->memory_pressure)
+@@ -32,7 +32,7 @@ static inline bool sk_under_memory_pressure(const struct sock *sk)
  		return false;
  
--	if (mem_cgroup_sockets_enabled && sk->sk_memcg &&
-+	if (mem_cgroup_sk_enabled(sk) &&
- 	    mem_cgroup_under_socket_pressure(sk->sk_memcg))
+ 	if (mem_cgroup_sk_enabled(sk) &&
+-	    mem_cgroup_under_socket_pressure(sk->sk_memcg))
++	    mem_cgroup_sk_under_memory_pressure(sk))
  		return true;
  
+ 	return !!READ_ONCE(*sk->sk_prot->memory_pressure);
 diff --git a/include/net/sock.h b/include/net/sock.h
-index 811f95ea8d00c..3efdf680401dd 100644
+index 3efdf680401dd..efb2f659236d4 100644
 --- a/include/net/sock.h
 +++ b/include/net/sock.h
-@@ -2599,11 +2599,21 @@ static inline struct mem_cgroup *mem_cgroup_from_sk(const struct sock *sk)
+@@ -2604,6 +2604,22 @@ static inline bool mem_cgroup_sk_enabled(const struct sock *sk)
  {
- 	return sk->sk_memcg;
+ 	return mem_cgroup_sockets_enabled && mem_cgroup_from_sk(sk);
  }
 +
-+static inline bool mem_cgroup_sk_enabled(const struct sock *sk)
++static inline bool mem_cgroup_sk_under_memory_pressure(const struct sock *sk)
 +{
-+	return mem_cgroup_sockets_enabled && mem_cgroup_from_sk(sk);
++	struct mem_cgroup *memcg = mem_cgroup_from_sk(sk);
++
++#ifdef CONFIG_MEMCG_V1
++	if (!cgroup_subsys_on_dfl(memory_cgrp_subsys))
++		return !!memcg->tcpmem_pressure;
++#endif /* CONFIG_MEMCG_V1 */
++	do {
++		if (time_before(jiffies, READ_ONCE(memcg->socket_pressure)))
++			return true;
++	} while ((memcg = parent_mem_cgroup(memcg)));
++
++	return false;
 +}
  #else
  static inline struct mem_cgroup *mem_cgroup_from_sk(const struct sock *sk)
  {
- 	return NULL;
+@@ -2614,6 +2630,11 @@ static inline bool mem_cgroup_sk_enabled(const struct sock *sk)
+ {
+ 	return false;
  }
 +
-+static inline bool mem_cgroup_sk_enabled(const struct sock *sk)
++static inline bool mem_cgroup_sk_under_memory_pressure(const struct sock *sk)
 +{
 +	return false;
 +}
@@ -131,75 +180,18 @@ index 811f95ea8d00c..3efdf680401dd 100644
  
  static inline long sock_rcvtimeo(const struct sock *sk, bool noblock)
 diff --git a/include/net/tcp.h b/include/net/tcp.h
-index b3815d1043400..f9a0eb242e65c 100644
+index f9a0eb242e65c..9ffe971a1856b 100644
 --- a/include/net/tcp.h
 +++ b/include/net/tcp.h
-@@ -275,7 +275,7 @@ extern unsigned long tcp_memory_pressure;
- /* optimized version of sk_under_memory_pressure() for TCP sockets */
+@@ -276,7 +276,7 @@ extern unsigned long tcp_memory_pressure;
  static inline bool tcp_under_memory_pressure(const struct sock *sk)
  {
--	if (mem_cgroup_sockets_enabled && sk->sk_memcg &&
-+	if (mem_cgroup_sk_enabled(sk) &&
- 	    mem_cgroup_under_socket_pressure(sk->sk_memcg))
+ 	if (mem_cgroup_sk_enabled(sk) &&
+-	    mem_cgroup_under_socket_pressure(sk->sk_memcg))
++	    mem_cgroup_sk_under_memory_pressure(sk))
  		return true;
  
-diff --git a/net/core/sock.c b/net/core/sock.c
-index 000940ecf360e..ab658fe23e1e6 100644
---- a/net/core/sock.c
-+++ b/net/core/sock.c
-@@ -1032,7 +1032,7 @@ static int sock_reserve_memory(struct sock *sk, int bytes)
- 	bool charged;
- 	int pages;
- 
--	if (!mem_cgroup_sockets_enabled || !sk->sk_memcg || !sk_has_account(sk))
-+	if (!mem_cgroup_sk_enabled(sk) || !sk_has_account(sk))
- 		return -EOPNOTSUPP;
- 
- 	if (!bytes)
-@@ -3271,7 +3271,7 @@ int __sk_mem_raise_allocated(struct sock *sk, int size, int amt, int kind)
- 	sk_memory_allocated_add(sk, amt);
- 	allocated = sk_memory_allocated(sk);
- 
--	if (mem_cgroup_sockets_enabled && sk->sk_memcg) {
-+	if (mem_cgroup_sk_enabled(sk)) {
- 		memcg = sk->sk_memcg;
- 		charged = mem_cgroup_charge_skmem(memcg, amt, gfp_memcg_charge());
- 		if (!charged)
-@@ -3398,7 +3398,7 @@ void __sk_mem_reduce_allocated(struct sock *sk, int amount)
- {
- 	sk_memory_allocated_sub(sk, amount);
- 
--	if (mem_cgroup_sockets_enabled && sk->sk_memcg)
-+	if (mem_cgroup_sk_enabled(sk))
- 		mem_cgroup_uncharge_skmem(sk->sk_memcg, amount);
- 
- 	if (sk_under_global_memory_pressure(sk) &&
-diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
-index b616776e3354c..4e0af5c824c1a 100644
---- a/net/ipv4/tcp_output.c
-+++ b/net/ipv4/tcp_output.c
-@@ -3566,7 +3566,7 @@ void sk_forced_mem_schedule(struct sock *sk, int size)
- 	sk_forward_alloc_add(sk, amt << PAGE_SHIFT);
- 	sk_memory_allocated_add(sk, amt);
- 
--	if (mem_cgroup_sockets_enabled && sk->sk_memcg)
-+	if (mem_cgroup_sk_enabled(sk))
- 		mem_cgroup_charge_skmem(sk->sk_memcg, amt,
- 					gfp_memcg_charge() | __GFP_NOFAIL);
- }
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index f21d90fb1a19d..5325642bcbbce 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -1722,7 +1722,7 @@ static void mptcp_attach_cgroup(struct sock *parent, struct sock *child)
- 	}
- #endif /* CONFIG_SOCK_CGROUP_DATA */
- 
--	if (mem_cgroup_sockets_enabled && parent->sk_memcg)
-+	if (mem_cgroup_sk_enabled(parent))
- 		mem_cgroup_sk_inherit(parent, child);
- }
- 
+ 	return READ_ONCE(tcp_memory_pressure);
 -- 
 2.50.0.727.gbf7dc18ff4-goog
 
