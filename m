@@ -1,73 +1,72 @@
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
+Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17FA62EAB7E
-	for <mptcp@lists.linux.dev>; Tue, 22 Jul 2025 14:37:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94A0228C017
+	for <mptcp@lists.linux.dev>; Tue, 22 Jul 2025 14:38:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753195048; cv=none; b=oE/A2gyn38txVUhdgZDKdkGCpDipQA4KiqUEQh8cJTyMI6b8x+WwBPqwYPrgDBINstu3YeGBrqNeQifGHoF4YZ24OiQSfUY1Ore+IV50WCa4ZVf7vKitJXaPilyao/sfSGwBdApEUpsQ0f5HkISXmn5Ef7rNXbzNWN/uXj+D+as=
+	t=1753195098; cv=none; b=cz8XtlwHBaCUmzq5gOiwvuT0uhB2rRh6ODa/6DZTJaO3M7BlYwybXmUetEVVQ6TvZQ/xIq5iZ3ax53SepgQcRVQZXzo9C6OnwwO+cgSTn96pLY+uft/daoJ1VQz5tGV68N46F7mkDOYVupGkiGh6Z1te3CSc0N8z4DSaIrG6L68=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753195048; c=relaxed/simple;
-	bh=ogGcW5syfHAy99iS0KaNWz31X1S4P+kdHYMMRHVaghw=;
+	s=arc-20240116; t=1753195098; c=relaxed/simple;
+	bh=os2DYnIMBSE/kMJQ/4ssNfzgbbajAEFKtkzZf35uM/U=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KUPOt89noI01P84hmHyhUcVwM4Vjv4JMTxbwlQtk+xvY453wa/SnpJy32Lz5PADxhG0JqQuOg6yV3iREOf7IKnvrvVSL2Z5olDGRM+WL8WJOlFfK2ZTy+fEG4TJ2CSNG1ZW7FAgdljVIGVmEW5hkPEYkqQs7NalcZ3MwJqHgKhg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=o8xEcfSp; arc=none smtp.client-ip=209.85.160.181
+	 To:Cc:Content-Type; b=HaN0uFCvgxWoTYkYouW+w3cghwobsG5b0aMdhXApgRmIHOCRHXDQSZBvXcQsqLCZw+hmTC2cNyUpwnmHJ4Ij8yRyM+VKwHnBZsZoKFfPQV/u8bEjwgBMlbZGsRpwSpljreLZwcV5NAZc/YLYzkvTRzBFZIWr7o8iyZYviHK6etc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Plai8R3P; arc=none smtp.client-ip=209.85.219.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="o8xEcfSp"
-Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-4abc0a296f5so48719111cf.0
-        for <mptcp@lists.linux.dev>; Tue, 22 Jul 2025 07:37:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Plai8R3P"
+Received: by mail-qv1-f50.google.com with SMTP id 6a1803df08f44-7048c49f1f1so46466796d6.0
+        for <mptcp@lists.linux.dev>; Tue, 22 Jul 2025 07:38:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1753195046; x=1753799846; darn=lists.linux.dev;
+        d=google.com; s=20230601; t=1753195094; x=1753799894; darn=lists.linux.dev;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ogGcW5syfHAy99iS0KaNWz31X1S4P+kdHYMMRHVaghw=;
-        b=o8xEcfSpgJkAV3hg9+1JwZpIcfST5G7USIRnh6f4RaszdVLBMqQqvzMB4yTKT9BXg5
-         7DlO4L/C1AeWPEBvnJlKaZqxrJS+Gkit3+rNtZTeTW/Tzlz1SIuCeJA8hvikgdGsAHoB
-         NgwD5N7QpKzfjXG4evCTnOmvES7DjtbAIyYOUpTRcqpxaOQLsAiWd5qGkg/fk6YgbE7g
-         tbJOiAV6+oqW3Zj7Nc7N20rGoXfBcZv/9rBEKH4KUZ+LeOlKPZElZHGckyMb0HQSfmly
-         eAtC5YJ94bL5Gc0D7m4G7cJc1B1HKhtwPvoowy+pt1UDelWBa7h7aRst1gIeQeb8FXun
-         wDxQ==
+        bh=vn4gJyDMnXhPbLwCQpWenpbaZRFD72gmw0empnN1AaA=;
+        b=Plai8R3PmcvDa2D3BfVMm5HoC1HVBU+d6a7m3sZ0f8V4UmT+O3bW8TQA/PHXrkg2qa
+         4cAzjfjLdK6g/64bbhdDtQY4+iwR8Xtzy+zMjdw8fwyq8z3Fn/1PrqOw025F+4VJMRaX
+         N9d5jP70xIo8l+vJ4fiLmir+y2XiUulxhSg9Sv5vbY18W+1F/TlUJSP59qg3Tw9vTMYm
+         VKTTfhNb8h1KIxVMAx4QcBf9p38YF3EkkV80PEZ+V8dhO8hEEmXMcGUejAhKhDfwAH0K
+         q54DjLw4iFDLqi3cd+aUFXn803TEkaP/o6WDvXkEapvrO6Vfcatbi8kyFijHE1iZLfOj
+         Jmbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753195046; x=1753799846;
+        d=1e100.net; s=20230601; t=1753195094; x=1753799894;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ogGcW5syfHAy99iS0KaNWz31X1S4P+kdHYMMRHVaghw=;
-        b=v0bbH2LANQHMYvm734qUETH+A3b9iamT1a+BIPN1MqF4tWcleoOoGR8EfJq2yD/Vus
-         r72phOi4dbyMKmjip4koOfB/7XqiGS7AvVgflqWOxxJWZ1zVIlnYJ/uIQFe9DPYf5qZK
-         ndJB+j/D0GmYXGFhbvgtIPNlPuDAN/+3F/xj/jkfzi41C7ho++BzQPv6evjdxXT/fLsY
-         91Her59pApTiIp1Imh6RFxyb3xIM4LuaUYvME3m5amjuwUopSaWgevXDO2SV77yD9+Df
-         SKTZ/VBpLpnNOKp13fSrZsO2ALsjDQl+UTvxzOI59yLNitYVCo7uJI2teVkSKPp5q+7A
-         pPeQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVmC8rjPBZyvgynawJwGzBa2Mb6n5uRFMY6Lu47JptAAFhQtZrdRJuwyRgzqcozdGw1+CH5kw==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzbT6nXlpsy8DBxMsgih0G4FoK+DOx2ERanuQEz0lICPBf1kRQP
-	8GMTas0d2J20CBwB3vCtfZ4h4Qr8FuZUnm/TNY9JyHZDX9RwxyO1JAzkubak6+KRUSCsu6EbWkj
-	nK3u0OW60aziyC3BuOZDiTehSNUmO8/8HyxDrGATQ
-X-Gm-Gg: ASbGncuOsbQ3+B305u7o4vLjdxwhxLuYrbgUhXajW5/xXcrl2TMpMPo7DUQ3swRDxK0
-	NyseW9qXQU6Bw3H9OY5rNbt7FJw++JCP3y+MZgjTUWuoDqPCuEgm/qkHffIowTDUgvsZ9079YBd
-	RYzF3pIhxey6YWlFbY76t5YGXdN6cPcRVaKwdwlh9D71zagJr2yxhFFVHwgHWc3J//YlaDda3I1
-	eotIg==
-X-Google-Smtp-Source: AGHT+IHh/lY3G2VVyGGsILbI95GYxwwe31jY4DMEtEPuVbiqIy2WoiqiCRLo4vbR/BymSRXtvDDARRkbJMlep7SRIZY=
-X-Received: by 2002:a05:622a:5815:b0:4a7:6ddf:f7d6 with SMTP id
- d75a77b69052e-4ab93c7d56amr387332941cf.10.1753195045666; Tue, 22 Jul 2025
- 07:37:25 -0700 (PDT)
+        bh=vn4gJyDMnXhPbLwCQpWenpbaZRFD72gmw0empnN1AaA=;
+        b=Vb1rIt2GrUQS4rLxgS/y6fBELJ27VlDlEgX1WZlloeTEU1EhcqExjgV5Fn0WrfNQYD
+         r+4mzwoZYoTXuKoV/QLScI8Mo6dEfPpaguwVwhE7J4xJmAl/Olxpyh5EvD/QRC+FtUKa
+         3h/Sz/zdUxy3HDQt/BqXN2r+8XA4Nm4ZphAfQJVAxTg0vUd8llUFkd2KdnrDPwPguoL3
+         7+AbTGSg6TadzR+ZnxEpWVxbS4N3iPfkur4yKyj7iyfcgW5P7BvajNX6w0Z1wGLxLXSb
+         YhySlSFp06tty35DHHx+mIKCEAWTpFFL2Sqa6S/aVZdoYY2N9RuohvmnNspqPrDIVogu
+         6HGA==
+X-Forwarded-Encrypted: i=1; AJvYcCW2EWMC1BOrryfkbwr+TBzf6GpGy9jgV8UT+aGn5LaTkQ4MwSBdBLvb+o7SZxGkvs0S+bP/Nw==@lists.linux.dev
+X-Gm-Message-State: AOJu0YyWdvTXXN+Gq6D2XLV0YJKmjFUevgQ88kK36/MZz8HOrwu+m+1t
+	WcC4SP3kO+Hkrg9GLJ00s9i/1+qJxLug1DQGSQ4tZLfnfsBBV4TJkHfhAfc3f4+a4Iwc6QqPRWA
+	LsjuJvVqscTM5mmI+03wJP1QLHF63niTwgY1nhEHu
+X-Gm-Gg: ASbGncsXj+QVLnU966KC9f2Z92oq3zNTBdNuAJmMgonUsZrPEQSmOMZblDoqCdsNqLm
+	p3aMv3xehrhKwLXOITPlkeuCBrTp4ZgDvEUueAoFouJPTvbhP02E1MpTLXGjEESKUQnAMox//U9
+	OA5OokdKpxG4W8hGBqgGYORzGQ8wlibV2XM+UNYYSXolL43VNxh89wtzxF+aJS4RR3NsQL5uYok
+	oJEGA==
+X-Google-Smtp-Source: AGHT+IH7wiXrlu0TBmC9UV2qMcDz1px3wXYN9maWZ0wBhcAItzqiY44+P1BWoDs4fyTq/fL+do1VMmfi2vruAWutpv4=
+X-Received: by 2002:a05:6214:6207:b0:704:f736:7353 with SMTP id
+ 6a1803df08f44-704f736739emr250100436d6.25.1753195093977; Tue, 22 Jul 2025
+ 07:38:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250721203624.3807041-1-kuniyu@google.com> <20250721203624.3807041-5-kuniyu@google.com>
-In-Reply-To: <20250721203624.3807041-5-kuniyu@google.com>
+References: <20250721203624.3807041-1-kuniyu@google.com> <20250721203624.3807041-6-kuniyu@google.com>
+In-Reply-To: <20250721203624.3807041-6-kuniyu@google.com>
 From: Eric Dumazet <edumazet@google.com>
-Date: Tue, 22 Jul 2025 07:37:14 -0700
-X-Gm-Features: Ac12FXw_PVmGWG71LBM_RvH4ODSBv72aWxnT33PfI7UhVcDC69sZUBCPONqRMjA
-Message-ID: <CANn89i+p45mE7MTEmf+_fYA_fKXnzMRXiDXNDdkrHVimcYMFRA@mail.gmail.com>
-Subject: Re: [PATCH v1 net-next 04/13] net: Call trace_sock_exceed_buf_limit()
- for memcg failure with SK_MEM_RECV.
+Date: Tue, 22 Jul 2025 07:38:03 -0700
+X-Gm-Features: Ac12FXxlsXsI3zGI0AVZPAQnuIlcT_-ASbHpDgM34ehNdBuFJw1M1IUr8BHKjK0
+Message-ID: <CANn89iLBoSc+x2n0w44HQp8CKumWBkqgYQEOi-enLahFTY02wQ@mail.gmail.com>
+Subject: Re: [PATCH v1 net-next 05/13] net: Clean up __sk_mem_raise_allocated().
 To: Kuniyuki Iwashima <kuniyu@google.com>
 Cc: "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, 
 	Neal Cardwell <ncardwell@google.com>, Paolo Abeni <pabeni@redhat.com>, 
@@ -84,16 +83,17 @@ Content-Transfer-Encoding: quoted-printable
 On Mon, Jul 21, 2025 at 1:36=E2=80=AFPM Kuniyuki Iwashima <kuniyu@google.co=
 m> wrote:
 >
-> Initially, trace_sock_exceed_buf_limit() was invoked when
-> __sk_mem_raise_allocated() failed due to the memcg limit or the
-> global limit.
+> In __sk_mem_raise_allocated(), charged is initialised as true due
+> to the weird condition removed in the previous patch.
 >
-> However, commit d6f19938eb031 ("net: expose sk wmem in
-> sock_exceed_buf_limit tracepoint") somehow suppressed the event
-> only when memcg failed to charge for SK_MEM_RECV, although the
-> memcg failure for SK_MEM_SEND still triggers the event.
+> It makes the variable unreliable by itself, so we have to check
+> another variable, memcg, in advance.
 >
-> Let's restore the event for SK_MEM_RECV.
+> Also, we will factorise the common check below for memcg later.
+>
+>     if (mem_cgroup_sockets_enabled && sk->sk_memcg)
+>
+> As a prep, let's initialise charged as false and memcg as NULL.
 >
 > Signed-off-by: Kuniyuki Iwashima <kuniyu@google.com>
 
