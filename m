@@ -1,73 +1,72 @@
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
+Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A26B2EA73B
-	for <mptcp@lists.linux.dev>; Tue, 22 Jul 2025 14:33:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7746A2E92C7
+	for <mptcp@lists.linux.dev>; Tue, 22 Jul 2025 14:34:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753194833; cv=none; b=IdFMspAlBTVFNbXXr76jQXTXCtVO5ddctlUP6nyxBvAE5sIEXJN2ZEWsEIyFnYQfi6qp9j7Y2B5p6gmLn7KTtmX71Ft7Fr9jeZ1Q2BkIDORGXOT++4JLz84ymnYjOK0B5KyI4gKjrd1gN6QEwZVixlTbEAdjgnLGxwMfeKYjvxQ=
+	t=1753194886; cv=none; b=I0i0kH7VWt+wEiFc3sxuVZw13mm4KUC6ZhZq+vckvL3ZCSdBtvb6Ttmup6qhMKGKwOMnYx6KKiRw8AC08AMoGX0uto6G7vuOY5mB4NvIwSGYaH+SHb26ErlIw6IIeYKuPmD8n/hap9FeAD+nWa22WDvHBvvEz3O2eftghhsGW5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753194833; c=relaxed/simple;
-	bh=1XuOmXMmaaWqnvpqCFWTGZCIySJ+eeucJi/seDLbNI8=;
+	s=arc-20240116; t=1753194886; c=relaxed/simple;
+	bh=k1yUYuQxhxPejZAVd5Osy9ksEslSrueRAJCbWso5h7U=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dd7wA2z8AOkoPp0Vvi9ijtws9Q/L0EXIE5dGJvnQ0RT+pl4Mynn4nfKEVlmcXBpiP4djFuSysoI+LlHvSXQHir+1dYQ9VhxZqTgSLyy+krABTTyBrnhgNDdreRAkbxePa8qL831INxd35fVO84iCKUTRhMJZBB+LDbHbZepR8zg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Hcg9cZ1d; arc=none smtp.client-ip=209.85.160.169
+	 To:Cc:Content-Type; b=Ym/LZSrAgT5LIxdXMpba264LBXGwt/xLXNHFtkGKMmmj0LfJdf4Qr+o1tD6BlVu0xXGXLz+cx3wBK+An82z+PX9Pnj6KKiIFrhJao+UplODRg6DV2lWuIErZZIFjzd2tdeopaN+Ho1i4bh+MgxEw9/C7la02AaYZni/8bWDV4Ow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KvPiYgKc; arc=none smtp.client-ip=209.85.222.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Hcg9cZ1d"
-Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-4ab9ba884c6so69631031cf.0
-        for <mptcp@lists.linux.dev>; Tue, 22 Jul 2025 07:33:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KvPiYgKc"
+Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-7e050bd078cso510233685a.3
+        for <mptcp@lists.linux.dev>; Tue, 22 Jul 2025 07:34:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1753194829; x=1753799629; darn=lists.linux.dev;
+        d=google.com; s=20230601; t=1753194883; x=1753799683; darn=lists.linux.dev;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=1XuOmXMmaaWqnvpqCFWTGZCIySJ+eeucJi/seDLbNI8=;
-        b=Hcg9cZ1dwSy2gGlNS0/Fv9GodPd6ZvlKnFtPwEa53K2hvRtGFRFdXZ+URIcQ71N/M5
-         WcLNPWdATvqT6EGq0fpp2HO4/FZ82Y7LLB32QxQyGu/h25BTEPoHyyodjhi2rByNnxrO
-         GAqkYpo0Vrc2vzqQ/NwplxL14rWZFzxVFjL9ioWxHdu/68l29hbL45QGTLHV/fZnz3NF
-         moN3h6nxnd/4b57luR1FJ7QpcgKMTXDlUa4i5Ys2n9xv2QtG3Vhudkb7eagdRdNXtsCn
-         FXK6egI+/PtxJ/X97D7hjLHFIKPcTKZTYe81dF8QFqMyn6Z3AiVWN0UUP44uTkWM0cBF
-         cHQA==
+        bh=k1yUYuQxhxPejZAVd5Osy9ksEslSrueRAJCbWso5h7U=;
+        b=KvPiYgKcgsZJpfGkr/Gq4jImDdnOaP8JCsZxw+ORTBR8tKDVIsKcrONLxoiSw3qvL/
+         FUPCAGVqT1d2soqoyffRcEQQx4vAXFprvzPkwrpjs32Qm+rd/U5ku2hpLBv6aLfxMicY
+         ztKHEiP6eUYDTraHgH2Q9iZ+NeltOGvcJe8Y8hA5rpIy9Yr56K2GT2cfFXd3yJJQnlDC
+         kHkxt/S6vHDPbrazdKszHgQtdEodJvPho9IxEx/MJJbHISue8nIq4pR5eIhhIfjBTaO4
+         o6e4VVkE9Mg3ohI9pg89Pby/Lt669iVDu32XypRPDorNEfTAqOX3zISL01eApQjbA/ZO
+         Icpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753194829; x=1753799629;
+        d=1e100.net; s=20230601; t=1753194883; x=1753799683;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=1XuOmXMmaaWqnvpqCFWTGZCIySJ+eeucJi/seDLbNI8=;
-        b=I5ta0VEElDEs2nvarsPQ3F9KJH7q2LUy5QYEyQKygfpFQSEsIXfxklwccxtAeRsQh8
-         PzeVoS2EvC+07PJGh/9owsJzfMgQ5HtdDHyNRE/J8nsyAGT/jLCsXpY5oCwGQ5derOfJ
-         0xmGqJQ17C2H87W6lzTF1ljx5RTDOj+eAkNXP7T0svRaLbvR6M/LlUj45bZ/imxB6wq0
-         kXAIb0YiEk3U5H9RTTidVxO6zbyFZiE0E1VcDnim2toNWPG3bO9nQnpWimOr+lz6To+f
-         D3ZmVWuG71/G3sSB6Aete8uOrh70P19yVYTv+3xSm9B7b782XmKcWb9/9sy3CWmSlFLz
-         gG7Q==
-X-Forwarded-Encrypted: i=1; AJvYcCW7BulZM5esgqr6CVRd8lY8lm1zLUwZeBKX7IPpamfNPC7NFBTxYPAYyGbS44Nkwxma7237Ig==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzCKn4dS9iANfsuxE8fhNvJRbs1vrz0wt/AjH4LMklM1jfpcrQw
-	ehgQUnTaJV1kYo7uGClzb2ck+1rc6xEE0r5nHsM8jBcf9vdx21lkLUy/0DzmfBZ11LoCsW+7HX9
-	0MEz/gImxBJY7VPKi/fJzCtqpR2TcdEfZoYUagvOz
-X-Gm-Gg: ASbGncufj3ZcGO1ULQntls4aQHn/Vv6syo/ZucTU4lQEpaLfF6w4/kkK6s2NQ8pyCCR
-	xbsm+tnMr7VlzHIdUHmd7N+XhvJzuHUWBqrV68wJL+2Ydz8n8h0Z2BRiiFPZV2h80yQ1bglG9Uy
-	g6j0EF9H0Oi5BrrILcwqbKDFdf66VYgmL3Du0pYSkFWYjRt8aEu0ifP9Pg+e+Jj5amjUrTcfqEV
-	EzJLw==
-X-Google-Smtp-Source: AGHT+IE5/xC629Z41/ewG1rGRd/vRIyn4/fPdY4AoJKCJUc80AhvNP/9QCPniM9G42/4UNQXgbiL4QSwJejVESK33OU=
-X-Received: by 2002:a05:622a:248e:b0:4aa:105c:a0d5 with SMTP id
- d75a77b69052e-4ae5b8c53e8mr53665791cf.16.1753194828653; Tue, 22 Jul 2025
- 07:33:48 -0700 (PDT)
+        bh=k1yUYuQxhxPejZAVd5Osy9ksEslSrueRAJCbWso5h7U=;
+        b=qP8bzEJKYp6/05ABieK7K4xw3Rij2gNJhcZIQYFc/0Tm6zq3nMbkVLmP1PAropBxJM
+         13TdsPgbJZVXs+VjDc3HjiaXhAAEpN03R2lE1WIRuHhd32YSntbqAPnX/3MN4Lup5Iqh
+         ZfKN0OrKFmal487cmtyG0DUdf4hyi3NG12GjVC1qj0EBVNqyY2l2OZ9KA5gY4E4VRDTY
+         c25YhqCzHVZreX4K5pwAH5vA9FHWa1IsMkZm1/6NVTXU19Fx7gxDBXshhEk+kqG7s3GJ
+         QJsgw+19boHz/Y24w8reIJx7Y4hPDpHsYUm6CKVHMq0PTYAiIFmgKG5dzni4xJzLPtb7
+         VGng==
+X-Forwarded-Encrypted: i=1; AJvYcCVq9rY1sIhKRLZORUeE1gMW9+9kuk7O4DjhMc/EE3yzRDrkZ5qamB7mWqZ+1ctJxajn4d8M4w==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwqSYH++SJqsY0BIGc8uVwZo7JUt3D14ocGY2LODMRJGrXSTBSp
+	OmidNhtLApuPL7uhoKaVZsb7PhLriQJofzNTU11SbYMBen3mvc/TgFOVHm3aiwU3Cz8WkipaJDI
+	K6T6hW/G0f/C5uHYZeac8Hi1BJxFPhoHPWcy6lBJ+
+X-Gm-Gg: ASbGncskm7VZF0rSul5BK5iVFJJJf1JNtuNQzhZJo+BJTBbQGW3PXQ7EsoDoWA/kRza
+	Ii2ACfcI9epsiQOMZEkCImlxL8BQKFSYOrKxoU+UoDOrmlt52NaMReEOkK6MzqFqBfACJvyKN0X
+	SMFMMsKOFVwFE4VOqi6qlkFuC9eLV67ElGUhP5gFu3wk2CjGz47yGNDCfCS7Vs9mzH2849hzYBM
+	ID3ew==
+X-Google-Smtp-Source: AGHT+IFiji1w7r7AjCXlHaxfMjOrdW8jkVVGDDlvc9QhWhAg0vDKfADaHSk4qJ9skd7E3tmPFXgzgJZBnGJrSQTiafg=
+X-Received: by 2002:a05:620a:28c4:b0:7e3:3ba7:f072 with SMTP id
+ af79cd13be357-7e34356b85bmr3408946185a.13.1753194882975; Tue, 22 Jul 2025
+ 07:34:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250721203624.3807041-1-kuniyu@google.com> <20250721203624.3807041-3-kuniyu@google.com>
-In-Reply-To: <20250721203624.3807041-3-kuniyu@google.com>
+References: <20250721203624.3807041-1-kuniyu@google.com> <20250721203624.3807041-4-kuniyu@google.com>
+In-Reply-To: <20250721203624.3807041-4-kuniyu@google.com>
 From: Eric Dumazet <edumazet@google.com>
-Date: Tue, 22 Jul 2025 07:33:36 -0700
-X-Gm-Features: Ac12FXxIYBSQCB7BH6twTSCxBz7O9cZS9s2CNGBOnfVcy_wDobXLwLt6phukhSA
-Message-ID: <CANn89i+ju=N_JNoCqSMaa7eG-70aXk6ZuNGdjc39cpUFQVvhEQ@mail.gmail.com>
-Subject: Re: [PATCH v1 net-next 02/13] mptcp: Use tcp_under_memory_pressure()
- in mptcp_epollin_ready().
+Date: Tue, 22 Jul 2025 07:34:32 -0700
+X-Gm-Features: Ac12FXzGLru6M1-g50J2KyQVjtZB32-ZEYTqBFpNaueaVx_KJKwNZF50EJpN3Ps
+Message-ID: <CANn89iJkNYHLGqXCTFgG2rEp3S05VVkWi9=2HedGqqfw6YF+uQ@mail.gmail.com>
+Subject: Re: [PATCH v1 net-next 03/13] tcp: Simplify error path in inet_csk_accept().
 To: Kuniyuki Iwashima <kuniyu@google.com>
 Cc: "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, 
 	Neal Cardwell <ncardwell@google.com>, Paolo Abeni <pabeni@redhat.com>, 
@@ -84,12 +83,14 @@ Content-Transfer-Encoding: quoted-printable
 On Mon, Jul 21, 2025 at 1:36=E2=80=AFPM Kuniyuki Iwashima <kuniyu@google.co=
 m> wrote:
 >
-> Some conditions used in mptcp_epollin_ready() are the same as
-> tcp_under_memory_pressure().
+> When an error occurs in inet_csk_accept(), what we should do is
+> only call release_sock() and set the errno to arg->err.
 >
-> We will modify tcp_under_memory_pressure() in the later patch.
+> But the path jumps to another label, which introduces unnecessary
+> initialisation and tests for newsk.
 >
-> Let's use tcp_under_memory_pressure() instead.
+> Let's simplify the error path and remove the redundant NULL
+> checks for newsk.
 >
 > Signed-off-by: Kuniyuki Iwashima <kuniyu@google.com>
 
