@@ -1,72 +1,72 @@
-Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A657B289812
-	for <mptcp@lists.linux.dev>; Tue, 22 Jul 2025 14:58:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AC1C239E9E
+	for <mptcp@lists.linux.dev>; Tue, 22 Jul 2025 15:00:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753196341; cv=none; b=dyeQrB37wlp5vC/CNj/hlGAZ1zdxuKeN+J1zklU29rRJVObB4D392dd1KWuL2rZkC63uJdQLrnFxOs9wui48zIUuAtSFKsu1iOCMpMj0d4qBrLeMiaV353oiEGvnmk6kjBmuQH08JoocXxrEDq1OOFduq1LYH3G+gfk5n7EgX+g=
+	t=1753196448; cv=none; b=L5hV85SdjIYaHTp23SfrR3q1uD3fO+oGpVc1ASQmSGAwHjj8dvsqaUowHd60RdRUrV72Vm1xXMAnH8UnmyiCdpJC2ABioB47P4A/MOcxosBqAqJyY+vubuURafa4vyqwu1zvAOFacAAJD2/1sPoa7CoDycw7vwIyLEHSrS6lGBs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753196341; c=relaxed/simple;
-	bh=CiqwsXqS9XffgcdUNt4OEyIxE8kyMoj+z790mtcu3ik=;
+	s=arc-20240116; t=1753196448; c=relaxed/simple;
+	bh=+nxKNO4a2BCMIJuvj3w0sl1mqftW1a06HRS7ZufxTrM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=m/k4BuH7WoPA9ux8GOQbrw1b30NINkk0VUaK07SoHonldWzFeC0+gP5gGVWoPBe7kpow+CZRmKFDGfXPuAZ8n5otgKTCFzD0AT7J9XsjAqD+N4RFAkeiLZW1e0nOXts3aBThfMLOuRiDJ5FXXwHJTvxnkDh0EwYenaX4TdYT+9I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=C10Ev3A6; arc=none smtp.client-ip=209.85.160.180
+	 To:Cc:Content-Type; b=hiT/Q24MoraWjU5Ay5oJIFLEfskL07b5yJxFW3+JKWuDp/0uzUkfQwPMnmjEDhwfuab2yQkDP3NXNk53VnPg32Yb0Piu6XT5dJPJYSfK2njIpL3N2DCeZxTp35e5KBV8d+2ER5IfyEmNP32T6Ql8OivufVGQZ74vJNkySKzebzs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eMtqm6C6; arc=none smtp.client-ip=209.85.160.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="C10Ev3A6"
-Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-4abac5b1f28so49939391cf.0
-        for <mptcp@lists.linux.dev>; Tue, 22 Jul 2025 07:58:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eMtqm6C6"
+Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-4ab81d016c8so77587281cf.1
+        for <mptcp@lists.linux.dev>; Tue, 22 Jul 2025 08:00:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1753196338; x=1753801138; darn=lists.linux.dev;
+        d=google.com; s=20230601; t=1753196445; x=1753801245; darn=lists.linux.dev;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=CiqwsXqS9XffgcdUNt4OEyIxE8kyMoj+z790mtcu3ik=;
-        b=C10Ev3A6PY5gQJTixgatQizgK0/50SfZF0+2L1F4e+7f4wqt+RDDjBkZJmuVhzAj1X
-         VoTf4L+0ISraLzu9xBmNa9IknjltJ/Zj6UfpByrMK7yjddTyvj7v3VDIVGtsAo8ekukB
-         5YbEYSugbUiFi3RPsYaxWBfsKZSe0EclxJcr7pnkY5WD45CilwlVo3QLGQYLVi+LHb5V
-         QYOaqMgmIemPdq+PS1GvmOs7nD4Hot/0yrSCftxwFhNwNeqFiIsqp6BxQWCUMQwS9h0P
-         huXYvWaJ5vLv2dagBP5lvJk7yrtPHoxxLzee1RVdYEzbmvrbwe2XgHzyUwU2Wz+zXRMF
-         V2+Q==
+        bh=+nxKNO4a2BCMIJuvj3w0sl1mqftW1a06HRS7ZufxTrM=;
+        b=eMtqm6C60aktfidId0LQb46dKF/fk6R3DKJcXc2YG6RiHDCm0e6kgZTltgQ08HLkt+
+         gPdqwlQktnoKDTapo5B0jjMtePIq8/tH2vLzl3eSyWpCCAONqRIiNLTQ+KwcmcZ/3Y00
+         qeVA+xBmuEq5X2zR7Z9L0fU/1sjZFKHSqcir5J+XuQBWmKNAPyiBVNlsUn1a4SyMdULX
+         V7ATyl4gkSHBgdLbsDUcrMBrBgkXYwayuaaQK2h+uLwc371H40Q5KaaU7V8pUOPImJqv
+         lcwUwNx7Z9W5ldbRFIzQxY62Tuxe7pyKoAp1vkEMJlBUySb3k7P7LHbkcDLd5KIF80+e
+         K80w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753196338; x=1753801138;
+        d=1e100.net; s=20230601; t=1753196445; x=1753801245;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=CiqwsXqS9XffgcdUNt4OEyIxE8kyMoj+z790mtcu3ik=;
-        b=h4jM4ehmUACfHJb2CJJDo6rtyTL9riMwos1+uVys+QlLdLZJOHurFC1WOM/W0Oqh1d
-         jQX9LFan557DlyIBwfR2JPwJcj88R+Re4IupW+y2W1N1ObpUk2Pq9KMddpun1grAyUBN
-         bjbtOrq3NdS6QrRuyPNdgrsj50oK+DvL5HSyJ3jreMnu5+QXVnyU2wje+huM7EN7Inu0
-         Uun+bcRy4mYkxYeWjH45wWEyth2xfHud+NvXt1+u+qcUQ0ieSDEbHTVDmBiGHgWp08c5
-         AGvZPaTNZW5FAaAnTL4Le57kvMdOCNUrYSc3+yzJxs0/3iyWTXq5vvJpFVtQCkYq1xhL
-         OqAg==
-X-Forwarded-Encrypted: i=1; AJvYcCWzs4EZShUKGcZewOyfEcvYGUYfI1SJla7YQs4NmV2SACQ0x2FhuRI6tFf2LEszvfMrx+vGqg==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxDj6XopfNG9rDsfjojR3QfdkBLP87sM1ZW617Q/5MIJYe73H+m
-	MqQ6pYnRx3+wN4otnebG1sPN/k0fPCFgoa+xBYbhWx4fAauOS4CI5uvbPfQ6ymFJluXTpiYpXNS
-	Fdds3Cd69Kz0rN8LeZ5cBjRn6sWsued6DJgLqmZUZ
-X-Gm-Gg: ASbGncsoJdXppqOkc7/BXsqYwsMgJEorfvo/HbvAGm+xCFYDxERfrEFY9PxF3UdZfdf
-	mhk+dcXzAbCVqllZSiK2B/iSrdL+3PEWr7Kku/HpxcsQwRt9TYmw9I255Us7EoNPHWfuDFbF2yB
-	2YGCaroG+cvrtRJxEsOlXX8J1eLPFdIm6SZrfsj3SDmGQTWRF8MIsphiqQNocXEXk57fY55kRc7
-	SlxEg==
-X-Google-Smtp-Source: AGHT+IG2yg147JK4Oinx02ez69SdDMukiZsmWmT/iPx1WpvOc0p35m3lKJjL6O102z1pXoYruFzug+iTBIemqmhssxc=
-X-Received: by 2002:ac8:7d12:0:b0:4ab:7125:99aa with SMTP id
- d75a77b69052e-4aba3e33f4bmr306580691cf.49.1753196338060; Tue, 22 Jul 2025
- 07:58:58 -0700 (PDT)
+        bh=+nxKNO4a2BCMIJuvj3w0sl1mqftW1a06HRS7ZufxTrM=;
+        b=Arsf1IrmryvBQuPyCetXmw86G1S6ZsU6fgbvmIjzT8BVba9zFj2G/i2vdnDoIasyKf
+         ev4TtAPgDijTMjZIto0Dbo5rJwbI5mVjRgMY5SNDGs8ScVEWrRdqV3KRp7NHCnynFvyY
+         KcNLld36dZhx6yHtLem93UDUTJVQVGfw8tMz+xIXGJXT8+kbhXHUz+vvuJEls0nENSEY
+         GY6uHvNIz2u0/OOG51wWau8q9WsxicQ6g7hlqmy3nNOCJ2OuCNUu6jVe47SW7KFs7S1O
+         UaW0Pupm1R/hdf3wn6bqxQ19DADDaYUaNfU7p7E0i0+MHo250IFe25qpDR/jCUhNmchK
+         8SjQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXcw5MDjVKQRVQOpIkwfHMgiJcIE06Jcm7mF5ZYqQ1+tOBpYNSNDt+67Io1IbR4KFqCLIXOQQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwPUdMR6Av1RpsTA7gJKhBsYsHom9mso2eXWZPwwyHjBAmXH5ZT
+	Cr0295o+94oUFVOF3daiVWlsez5hiSV2qG1w1KXhCny33g0/gt5/MGIdVZf4oXjctK4RoWeGBmJ
+	P1W9outsmi5gpXYy0Xicgx6ChXrY77HcT6Hk5uv3z
+X-Gm-Gg: ASbGncvjucPk+/K4kmaeWBMUhOiQIW80zDKYuuGnpIDPCIY7QPvfUTvrgYvSEeb4oT1
+	7WV378P/9VaH2auJmozdDfg6Bmfg6oGzwg0fRITQHXi3gL1yEPNbDKtF1iZqJ3wwS6UEsXiethq
+	TbuESH8YnHNn4f0RUUZq11gehP5GyI8FtKptScIeLQSazML7ThXsQH8QgLkpP3F7Ip/9kQVbQLb
+	kdyEw==
+X-Google-Smtp-Source: AGHT+IEAwdtOOJZle/vAWN8RPtXy4MisNzaqxiiiStWuk5ZuXoX4lqwhlAmVuPypXJlxrGh34p2aRu8UWxGzVff9IMU=
+X-Received: by 2002:ac8:5d4c:0:b0:49b:eb1d:18ad with SMTP id
+ d75a77b69052e-4ab93dbed7cmr385323141cf.41.1753196444364; Tue, 22 Jul 2025
+ 08:00:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250721203624.3807041-1-kuniyu@google.com> <20250721203624.3807041-11-kuniyu@google.com>
-In-Reply-To: <20250721203624.3807041-11-kuniyu@google.com>
+References: <20250721203624.3807041-1-kuniyu@google.com> <20250721203624.3807041-12-kuniyu@google.com>
+In-Reply-To: <20250721203624.3807041-12-kuniyu@google.com>
 From: Eric Dumazet <edumazet@google.com>
-Date: Tue, 22 Jul 2025 07:58:46 -0700
-X-Gm-Features: Ac12FXxT4R5nqDZoq6He5N2XHgjugFXTSeJd14lK7mmXsqA2ix7EK8BukOpBfNg
-Message-ID: <CANn89iKo45xre19BCkTRQSym7WCWxAbXOD77+F35OJ0eubmdew@mail.gmail.com>
-Subject: Re: [PATCH v1 net-next 10/13] net: Define sk_memcg under CONFIG_MEMCG.
+Date: Tue, 22 Jul 2025 08:00:31 -0700
+X-Gm-Features: Ac12FXxzCSficlnnF49FJ-AwqyidP1dhOSx-V9OvnBpoHWZaDg3cQQfRkuFyMag
+Message-ID: <CANn89i+mvoZ4rqtow2SRR0ZRB9gS4an9syCLuXyqcW=4-8Ek4g@mail.gmail.com>
+Subject: Re: [PATCH v1 net-next 11/13] net-memcg: Add memory.socket_isolated knob.
 To: Kuniyuki Iwashima <kuniyu@google.com>
 Cc: "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, 
 	Neal Cardwell <ncardwell@google.com>, Paolo Abeni <pabeni@redhat.com>, 
@@ -83,11 +83,20 @@ Content-Transfer-Encoding: quoted-printable
 On Mon, Jul 21, 2025 at 1:36=E2=80=AFPM Kuniyuki Iwashima <kuniyu@google.co=
 m> wrote:
 >
-> Except for sk_clone_lock(), all accesses to sk->sk_memcg
-> is done under CONFIG_MEMCG.
+> Some networking protocols have their own global memory accounting,
+> and such memory is also charged to memcg as sock in memory.stat.
 >
-> As a bonus, let's define sk->sk_memcg under CONFIG_MEMCG.
+> Such sockets are subject to the global limit, thus affected by a
+> noisy neighbour outside the cgroup.
+>
+> We will decouple the global memory accounting if configured.
+>
+> Let's add a per-memcg knob to control that.
+>
+> The value will be saved in each socket when created and will
+> persist through the socket's lifetime.
 >
 > Signed-off-by: Kuniyuki Iwashima <kuniyu@google.com>
+> ---
 
 Reviewed-by: Eric Dumazet <edumazet@google.com>
