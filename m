@@ -1,72 +1,73 @@
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD6A52EA748
-	for <mptcp@lists.linux.dev>; Tue, 22 Jul 2025 14:30:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A26B2EA73B
+	for <mptcp@lists.linux.dev>; Tue, 22 Jul 2025 14:33:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753194624; cv=none; b=PZjuN6WZQYcXErX5Pir7GcEAXb3UPCRRgFFiB6r4GX1izKpKf8b8TfG1CTHtnYo9TAZQBZ48XhUiQSGGLM3I8GxcBfkzECmAYmvemjC3sum+apg56Lw38uWZkKUVrQXoayqGIlKTiCOZhqgXkIoGvcfOd5CL3FMqXVEDeZSTAQ8=
+	t=1753194833; cv=none; b=IdFMspAlBTVFNbXXr76jQXTXCtVO5ddctlUP6nyxBvAE5sIEXJN2ZEWsEIyFnYQfi6qp9j7Y2B5p6gmLn7KTtmX71Ft7Fr9jeZ1Q2BkIDORGXOT++4JLz84ymnYjOK0B5KyI4gKjrd1gN6QEwZVixlTbEAdjgnLGxwMfeKYjvxQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753194624; c=relaxed/simple;
-	bh=g8o6ReDW6MUKFXt64vm9RKofRiF0JKVVbYD+Mf8uO7s=;
+	s=arc-20240116; t=1753194833; c=relaxed/simple;
+	bh=1XuOmXMmaaWqnvpqCFWTGZCIySJ+eeucJi/seDLbNI8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LHud9J/p/ZUPffStpG/fCG8yRwNFo3hIHgoyDLJg4ohLx3iaxkeoqID5dLoM+MKqWev2yAMMBbrONL9IBwYMKl+4RdSxw+UM7NltXWIrseuFhmIO9/LJXN/2xBb3vO+EPshIo91LMBy7jIEDK/VJ9oyrztncIKLomnFFXZe2QRU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=j3eooSfV; arc=none smtp.client-ip=209.85.160.171
+	 To:Cc:Content-Type; b=dd7wA2z8AOkoPp0Vvi9ijtws9Q/L0EXIE5dGJvnQ0RT+pl4Mynn4nfKEVlmcXBpiP4djFuSysoI+LlHvSXQHir+1dYQ9VhxZqTgSLyy+krABTTyBrnhgNDdreRAkbxePa8qL831INxd35fVO84iCKUTRhMJZBB+LDbHbZepR8zg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Hcg9cZ1d; arc=none smtp.client-ip=209.85.160.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="j3eooSfV"
-Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-4abc0a296f5so48639521cf.0
-        for <mptcp@lists.linux.dev>; Tue, 22 Jul 2025 07:30:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Hcg9cZ1d"
+Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-4ab9ba884c6so69631031cf.0
+        for <mptcp@lists.linux.dev>; Tue, 22 Jul 2025 07:33:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1753194621; x=1753799421; darn=lists.linux.dev;
+        d=google.com; s=20230601; t=1753194829; x=1753799629; darn=lists.linux.dev;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Zs6B7ByVFqNhd4M7cO2OVqmSjId/nOtkp1oMTcQiG7s=;
-        b=j3eooSfVAFirzz8CvQAqkd5+IIfYlB5rmw75/oJn6NS00GFRcykjnNv5Y1qrZhlRJf
-         k6ky+S3xP79Mg73RI8IdWWvWF8peDuOUAxBbJ6I7B4zwj6/PjzY13P0rEPMhnmLdy9zw
-         uanKpicItC+/lHdGtzOnKmQkWC9Gb7BPKauM0zqCF6GvFjk2bC8//IpZBwal2ehXImZB
-         4ojJa4Ruuzugx5gRCcIUeurSSPqKwjM5x1PvKHmFQH9a2qi9WWL78hhFqV1P0sKTlIQO
-         sq0NwDkRb6X48/SJXuDobdLn70BoQibybjeVG8IWip3cuznnIIwq4VXPx/Rh11+RvInE
-         Jn0Q==
+        bh=1XuOmXMmaaWqnvpqCFWTGZCIySJ+eeucJi/seDLbNI8=;
+        b=Hcg9cZ1dwSy2gGlNS0/Fv9GodPd6ZvlKnFtPwEa53K2hvRtGFRFdXZ+URIcQ71N/M5
+         WcLNPWdATvqT6EGq0fpp2HO4/FZ82Y7LLB32QxQyGu/h25BTEPoHyyodjhi2rByNnxrO
+         GAqkYpo0Vrc2vzqQ/NwplxL14rWZFzxVFjL9ioWxHdu/68l29hbL45QGTLHV/fZnz3NF
+         moN3h6nxnd/4b57luR1FJ7QpcgKMTXDlUa4i5Ys2n9xv2QtG3Vhudkb7eagdRdNXtsCn
+         FXK6egI+/PtxJ/X97D7hjLHFIKPcTKZTYe81dF8QFqMyn6Z3AiVWN0UUP44uTkWM0cBF
+         cHQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753194621; x=1753799421;
+        d=1e100.net; s=20230601; t=1753194829; x=1753799629;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Zs6B7ByVFqNhd4M7cO2OVqmSjId/nOtkp1oMTcQiG7s=;
-        b=iBEFLliIrRdw3MbW6+pwC5VSXUtWLSkfK9ynnJagXNYWz5TQAOBRhB/KlCDJbvykVx
-         o41SX/lyfTvKPYG7rv2eUFIdj3F1yKNs+9G2pt9ieEU4zK4UEnfhF19u3QXof8WXW58z
-         zqtbQglqmBabsQA29Naxlt5pDvHMg+PsuxQu0Qlo2oU9nz32H1hP28r00KPJ7NfnYB1g
-         o49YkrB3D5nwdP/RhCGz9Er+elCYYE3SiGhPgZxWp43dN0y8+1Idbsb2zQrWkeSPjcz3
-         sUAt0y/VD5DieZHkGpEtkVuyKvTAFN44tEzD0PX4bW9slt3+ZXPiVjUzYqk6gASe5SLU
-         NzUg==
-X-Forwarded-Encrypted: i=1; AJvYcCWYivotvPDWDv91eXqWXGzo7P6/yIWl+aUtQB2/B9Njtb07i5m5O68D72W4Ydk4BNXh5hSJnA==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxA5DzfTXq8Ph8x46u9m5faCr4zzqmVXAZaUIeVkPWekNAr1ewV
-	3++bacbFX1O6Vv8gbZfJlW+v5Uva++uQoOtgDhXfftokA1rhdTx9jLLvZr91/86ek0fRH06Jxq+
-	p4Ak1AlSGfq/AVPP6JIAsKYFZbVGDTqKcRBUVYpOk
-X-Gm-Gg: ASbGncsQCQ/ZTwfbguYTb984n2GjdurQCE4VksA0TnqSqrRhpdf8Pg4mj7CtnStvnlJ
-	M8KCPOvwoC/uQuhW/8AEdMx5B8fjJnhTI60c+kvb/ugRDtpfAlOGmSgs3o6JnLIWo0wUiboM9h8
-	jItS2pZZcqsbGT8sYyDIEpZ7WxLQvW+4UOX4ymK2Ju3HcZjqFsQcI1adj0HDlERWtJHYveu4YHt
-	VBVQZXw0FCXb1ar
-X-Google-Smtp-Source: AGHT+IHQ1F/XNS6EEtYUtpk/olOEZA/Va6cGJiS4hiBQzXMnDQFWPRfhrIeUbeCE+v3wAGiJbMRJO1Xiv4/aKrsvrGs=
-X-Received: by 2002:ac8:5d4c:0:b0:49b:eb1d:18ad with SMTP id
- d75a77b69052e-4ab93dbed7cmr383658691cf.41.1753194620995; Tue, 22 Jul 2025
- 07:30:20 -0700 (PDT)
+        bh=1XuOmXMmaaWqnvpqCFWTGZCIySJ+eeucJi/seDLbNI8=;
+        b=I5ta0VEElDEs2nvarsPQ3F9KJH7q2LUy5QYEyQKygfpFQSEsIXfxklwccxtAeRsQh8
+         PzeVoS2EvC+07PJGh/9owsJzfMgQ5HtdDHyNRE/J8nsyAGT/jLCsXpY5oCwGQ5derOfJ
+         0xmGqJQ17C2H87W6lzTF1ljx5RTDOj+eAkNXP7T0svRaLbvR6M/LlUj45bZ/imxB6wq0
+         kXAIb0YiEk3U5H9RTTidVxO6zbyFZiE0E1VcDnim2toNWPG3bO9nQnpWimOr+lz6To+f
+         D3ZmVWuG71/G3sSB6Aete8uOrh70P19yVYTv+3xSm9B7b782XmKcWb9/9sy3CWmSlFLz
+         gG7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCW7BulZM5esgqr6CVRd8lY8lm1zLUwZeBKX7IPpamfNPC7NFBTxYPAYyGbS44Nkwxma7237Ig==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzCKn4dS9iANfsuxE8fhNvJRbs1vrz0wt/AjH4LMklM1jfpcrQw
+	ehgQUnTaJV1kYo7uGClzb2ck+1rc6xEE0r5nHsM8jBcf9vdx21lkLUy/0DzmfBZ11LoCsW+7HX9
+	0MEz/gImxBJY7VPKi/fJzCtqpR2TcdEfZoYUagvOz
+X-Gm-Gg: ASbGncufj3ZcGO1ULQntls4aQHn/Vv6syo/ZucTU4lQEpaLfF6w4/kkK6s2NQ8pyCCR
+	xbsm+tnMr7VlzHIdUHmd7N+XhvJzuHUWBqrV68wJL+2Ydz8n8h0Z2BRiiFPZV2h80yQ1bglG9Uy
+	g6j0EF9H0Oi5BrrILcwqbKDFdf66VYgmL3Du0pYSkFWYjRt8aEu0ifP9Pg+e+Jj5amjUrTcfqEV
+	EzJLw==
+X-Google-Smtp-Source: AGHT+IE5/xC629Z41/ewG1rGRd/vRIyn4/fPdY4AoJKCJUc80AhvNP/9QCPniM9G42/4UNQXgbiL4QSwJejVESK33OU=
+X-Received: by 2002:a05:622a:248e:b0:4aa:105c:a0d5 with SMTP id
+ d75a77b69052e-4ae5b8c53e8mr53665791cf.16.1753194828653; Tue, 22 Jul 2025
+ 07:33:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250721203624.3807041-1-kuniyu@google.com> <20250721203624.3807041-2-kuniyu@google.com>
-In-Reply-To: <20250721203624.3807041-2-kuniyu@google.com>
+References: <20250721203624.3807041-1-kuniyu@google.com> <20250721203624.3807041-3-kuniyu@google.com>
+In-Reply-To: <20250721203624.3807041-3-kuniyu@google.com>
 From: Eric Dumazet <edumazet@google.com>
-Date: Tue, 22 Jul 2025 07:30:09 -0700
-X-Gm-Features: Ac12FXzou9QrF6H0tl3cLlJlr49JVeNU-g_6k8oOer2kAmc56xaiC2vvAezaFAw
-Message-ID: <CANn89iJQ_CDgAsDQ_cZC=fJJ9Vk5+Yk=RmmS=r3ds9abOqr-nw@mail.gmail.com>
-Subject: Re: [PATCH v1 net-next 01/13] mptcp: Fix up subflow's memcg when CONFIG_SOCK_CGROUP_DATA=n.
+Date: Tue, 22 Jul 2025 07:33:36 -0700
+X-Gm-Features: Ac12FXxIYBSQCB7BH6twTSCxBz7O9cZS9s2CNGBOnfVcy_wDobXLwLt6phukhSA
+Message-ID: <CANn89i+ju=N_JNoCqSMaa7eG-70aXk6ZuNGdjc39cpUFQVvhEQ@mail.gmail.com>
+Subject: Re: [PATCH v1 net-next 02/13] mptcp: Use tcp_under_memory_pressure()
+ in mptcp_epollin_ready().
 To: Kuniyuki Iwashima <kuniyu@google.com>
 Cc: "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, 
 	Neal Cardwell <ncardwell@google.com>, Paolo Abeni <pabeni@redhat.com>, 
@@ -83,29 +84,13 @@ Content-Transfer-Encoding: quoted-printable
 On Mon, Jul 21, 2025 at 1:36=E2=80=AFPM Kuniyuki Iwashima <kuniyu@google.co=
 m> wrote:
 >
-> When sk_alloc() allocates a socket, mem_cgroup_sk_alloc() sets
-> sk->sk_memcg based on the current task.
+> Some conditions used in mptcp_epollin_ready() are the same as
+> tcp_under_memory_pressure().
 >
-> MPTCP subflow socket creation is triggered from userspace or
-> an in-kernel worker.
+> We will modify tcp_under_memory_pressure() in the later patch.
 >
-> In the latter case, sk->sk_memcg is not what we want.  So, we fix
-> it up from the parent socket's sk->sk_memcg in mptcp_attach_cgroup().
+> Let's use tcp_under_memory_pressure() instead.
 >
-> Although the code is placed under #ifdef CONFIG_MEMCG, it is buried
-> under #ifdef CONFIG_SOCK_CGROUP_DATA.
->
-> The two configs are orthogonal.  If CONFIG_MEMCG is enabled without
-> CONFIG_SOCK_CGROUP_DATA, the subflow's memory usage is not charged
-> correctly.
->
-> Let's move the code out of the wrong ifdef guard.
->
-> Note that sk->sk_memcg is freed in sk_prot_free() and the parent
-> sk holds the refcnt of memcg->css here, so we don't need to use
-> css_tryget().
->
-> Fixes: 3764b0c5651e3 ("mptcp: attach subflow socket to parent cgroup")
 > Signed-off-by: Kuniyuki Iwashima <kuniyu@google.com>
 
 Reviewed-by: Eric Dumazet <edumazet@google.com>
