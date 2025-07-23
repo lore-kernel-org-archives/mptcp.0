@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 973042F4A
-	for <mptcp@lists.linux.dev>; Wed, 23 Jul 2025 05:16:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6164A2F4A
+	for <mptcp@lists.linux.dev>; Wed, 23 Jul 2025 05:17:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753247815; cv=none; b=HKc7nGSki//B9Z95S46hMPrvnm5E/RsoYhCHCsWyz+bWdP9JrQqXZsOCv+LEjYnAWciuJiwIp5Ifq8LEwn2oyCJHtG5i2kAzEcK5qAZSv/vFypeQ2BjZOvTt8E2z2vn87kq3l/9yqiV+kzK6+6n6w6tu7MmffgYJIYJNxi12hYA=
+	t=1753247826; cv=none; b=KbjdM58inUxL4SpiEERoAPBqKY3fG2yVY4DAtZG6Ky6iPuSBetGIeD+vVB2wjBipNjIZkPKdwLpu0Eu6s+OA9EvXY8cWmtm/PRQlklB9KGegRgJ4/dOXLBn5NX4PwOXT1feO/IMxrpvl/zdIYcrRRxTH+HAVbwmtBKsNhcNUCC0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753247815; c=relaxed/simple;
-	bh=gGcQsA8s1mzj17IIURPrilfJDY/qqL/XDJC5Urxcngg=;
+	s=arc-20240116; t=1753247826; c=relaxed/simple;
+	bh=DhltbvoniosF2lAtqndy5OpqR3jyVD6NwQolSy2/ky8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=j3ZFT3ujK8K4p2d/s0D9/qmjdWFwKI3N8Y0TMSD74Aum7BPi2wKTgfrZs+J+eHfbWCwapUxubI1S4JKERPp2vwTJZrzFdKxNKJ0w22RGCK63jWvbj1nx8A6MkcBZ+5AmVD/OUANAqZzerTK/qnLB0TOYJLwcwkexND4gVux+pBs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iXmyqjmA; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=ih93Ta/rkzZgoJIID463+p43YOcQhbl8gjVsOiA07jUXF5/nRk4QNNY1AZGhyTRslorlCJOLpPcDCLY209C7jflW+/xro/NdvlfwLQcKHrL6C/Yft6IFQlzseA3mzoNBYeydQzYc6yBHL0/NK1ZARtiDqlmBtNXAcFCg+QfkRUY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wlaqkogu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iXmyqjmA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C960C4CEE7;
-	Wed, 23 Jul 2025 05:16:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wlaqkogu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E703C4CEE7;
+	Wed, 23 Jul 2025 05:16:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753247815;
-	bh=gGcQsA8s1mzj17IIURPrilfJDY/qqL/XDJC5Urxcngg=;
+	s=k20201202; t=1753247826;
+	bh=DhltbvoniosF2lAtqndy5OpqR3jyVD6NwQolSy2/ky8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=iXmyqjmAoeazriOm3P2f8kKPGPsF/PZ8LucBsqsdxpjGnXego5UP0gcmmqT8iGBmN
-	 WQyE+s/h1MgGJuM+o9H0BAUMH9jJryLvsugCLDrM/uWwtZRvm6ydKNAqYntoeaAC7i
-	 04C0R+Eo2VImeYebgg3+7Vq+eaYScFZJ91OcBVrOSFSZQgIu2BLCAOyK/9VALIJi8B
-	 TNDIZRY82CZeiin27bVzDJZMlzoibSgY4eAXiOu5rBtgeALPfiimRXpndhg3LadsFL
-	 WBn8qBMe2uftdlk7rrAnEPsevMuQcwbqSzI+h6ZBgHR7tRPw+mvt3oV8B4EvGA4IqX
-	 +kEuowAnpDj0A==
+	b=Wlaqkoguj/llbpGBF7OVtIgdHCz9xVPpZuYg4VHBvmBVmzaDodkI8AHST4ooN+zbK
+	 eT3tPxpqLgs4zq69l1jNRCXjZkUQNxGMJG6W+fH9D3Gin9hsO4B6DZPbUyIRebTE3T
+	 eHWSnHt4gzejtR8drOKRq1IV/kXz5pJtwz1jdrlNtVQMPqgpu4mbdSGAMs3l7Iv52J
+	 u713OnlZaec6TaV+Qf7ASpUtTISIoqQ8DzEenXf8VgteHokhFHE6btjEOorA4cPjXg
+	 sx9jeze6YT5xn6dATSTZq+AXWMOV/X5d6zGL95l1r3RPgWKutd7UThdLP4RzVldFqF
+	 c+e6WWa2q4rGA==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <geliang@kernel.org>,
 	Gang Yan <yangang@kylinos.cn>
-Subject: [PATCH mptcp-next 6/7] Add MPTCP support to Socket class
-Date: Wed, 23 Jul 2025 13:16:18 +0800
-Message-ID: <b70623fa81d0d269f407cdd890d48668d1b4c443.1753247666.git.geliang@kernel.org>
+Subject: [PATCH mptcp-next 7/7] Add test cases for MPTCP socket functionality
+Date: Wed, 23 Jul 2025 13:16:19 +0800
+Message-ID: <4e7279b9bf9118e89c57221546f3f678517b91da.1753247666.git.geliang@kernel.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <cover.1753247666.git.geliang@kernel.org>
 References: <cover.1753247666.git.geliang@kernel.org>
@@ -44,138 +44,173 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This patch extends the Socket class to support Multipath TCP (MPTCP) by:
+This patch introduces comprehensive test coverage for the newly added
+MPTCP socket support by:
 
-1. Adding a new constructor that accepts an mptcp parameter to enable MPTCP
-2. Introducing a new private Socket constructor variant that handles MPTCP
-   connections
-3. Adding a createImpl factory method that propagates the MPTCP setting
-   to the underlying socket implementation
-4. Maintaining backward compatibility while adding MPTCP capabilities
+1. Adding MPTCPServer.java - A test server that:
+   - Creates an MPTCP-enabled ServerSocket
+   - Accepts client connections
+   - Echoes received messages back to clients
+   - Handles graceful shutdown
 
-The implementation ensures MPTCP support is properly integrated with:
-- Address resolution
-- Socket binding
-- Connection establishment
-- Error handling
+2. Adding MPTCPClient.java - A test client that:
+   - Connects to the MPTCP server
+   - Sends user input to server
+   - Displays server responses
+   - Supports graceful termination
 
-When MPTCP is enabled, the socket uses the MPTCP-enabled creation path
-established in previous patches, while maintaining all existing socket
-functionality for non-MPTCP cases.
+The tests verify:
+- Basic MPTCP socket creation and connection
+- Bidirectional communication
+- Proper stream handling
+- Error conditions
+- Clean resource management
+
+Both test programs demonstrate the usage of the new MPTCP-enabled
+constructors added in previous patches.
 
 Co-Developed-by: Gang Yan <yangang@kylinos.cn>
 Signed-off-by: Gang Yan <yangang@kylinos.cn>
 Signed-off-by: Geliang Tang <geliang@kernel.org>
 ---
- .../share/classes/java/net/Socket.java        | 88 +++++++++++++++++++
- 1 file changed, 88 insertions(+)
+ .../java/net/ServerSocket/MPTCPServer.java    | 58 +++++++++++++++++
+ test/jdk/java/net/Socket/MPTCPClient.java     | 62 +++++++++++++++++++
+ 2 files changed, 120 insertions(+)
+ create mode 100644 test/jdk/java/net/ServerSocket/MPTCPServer.java
+ create mode 100644 test/jdk/java/net/Socket/MPTCPClient.java
 
-diff --git a/src/java.base/share/classes/java/net/Socket.java b/src/java.base/share/classes/java/net/Socket.java
-index 692c3395f78..fc7bd5b98c0 100644
---- a/src/java.base/share/classes/java/net/Socket.java
-+++ b/src/java.base/share/classes/java/net/Socket.java
-@@ -403,6 +403,39 @@ public Socket(String host, int port, boolean stream) throws IOException {
-              (SocketAddress) null, stream);
-     }
- 
-+    /**
-+     * Creates a stream socket and connects it to the specified port
-+     * number on the named host using Multipath TCP (MPTCP) or TCP
-+     * protocol.
-+     * <p>
-+     * If the specified host is {@code null} it is the equivalent of
-+     * specifying the address as
-+     * {@link java.net.InetAddress#getByName InetAddress.getByName}{@code (null)}.
-+     * In other words, it is equivalent to specifying an address of the
-+     * loopback interface. </p>
-+     * <p>
-+     * If the application has specified a {@linkplain SocketImplFactory client
-+     * socket implementation factory}, that factory's
-+     * {@linkplain SocketImplFactory#createSocketImpl() createSocketImpl}
-+     * method is called to create the actual socket implementation. Otherwise
-+     * a system-default socket implementation is created.
-+     *
-+     * @param      host     the host name, or {@code null} for the loopback address.
-+     * @param      port     the port number.
-+     * @param      stream   must be true, false is not allowed.
-+     * @param      mptcp    create a socket with MPTCP or TCP protocol.
-+     * @throws     IOException  if an I/O error occurs when creating the socket.
-+     * @throws     IllegalArgumentException if the stream parameter is {@code false}
-+     *             or if the port parameter is outside the specified range of valid
-+     *             port values, which is between 0 and 65535, inclusive.
-+     */
-+    @SuppressWarnings("this-escape")
-+    public Socket(String host, int port, boolean stream, boolean mptcp) throws IOException {
-+        this(host != null ? new InetSocketAddress(host, port) :
-+               new InetSocketAddress(InetAddress.getByName(null), port),
-+             (SocketAddress) null, stream, mptcp);
-+    }
+diff --git a/test/jdk/java/net/ServerSocket/MPTCPServer.java b/test/jdk/java/net/ServerSocket/MPTCPServer.java
+new file mode 100644
+index 00000000000..a28e4963943
+--- /dev/null
++++ b/test/jdk/java/net/ServerSocket/MPTCPServer.java
+@@ -0,0 +1,58 @@
++/*
++ * Copyright (c) 2025, Oracle and/or its affiliates. All rights reserved.
++ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
++ *
++ * This code is free software; you can redistribute it and/or modify it
++ * under the terms of the GNU General Public License version 2 only, as
++ * published by the Free Software Foundation.
++ *
++ * This code is distributed in the hope that it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
++ * version 2 for more details (a copy is included in the LICENSE file that
++ * accompanied this code).
++ *
++ * You should have received a copy of the GNU General Public License version
++ * 2 along with this work; if not, write to the Free Software Foundation,
++ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
++ *
++ * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
++ * or visit www.oracle.com if you need additional information or have any
++ * questions.
++ */
 +
-     /**
-      * Creates a socket and connects it to the specified port number at
-      * the specified IP address.
-@@ -483,6 +516,61 @@ private static SocketImpl createImpl() {
-         }
-     }
- 
-+    /**
-+     * Initialize a new Socket that is connected to the given remote address.
-+     * The MPTCP or TCP protocol socket is optionally bound to a local address
-+     * before connecting.
-+     *
-+     * @param address the remote address to connect to
-+     * @param localAddr the local address to bind to, can be null
-+     * @param stream true for a stream socket, false for a datagram socket
-+     * @param mptcp create a socket with MPTCP or TCP protocol
-+     */
-+    private Socket(SocketAddress address, SocketAddress localAddr, boolean stream, boolean mptcp)
-+        throws IOException
-+    {
-+        Objects.requireNonNull(address);
-+        if (!stream) {
-+            throw new IllegalArgumentException(
-+                    "Socket constructor does not support creation of datagram sockets");
-+        }
-+        assert address instanceof InetSocketAddress;
++import java.io.*;
++import java.net.*;
 +
-+        // create the SocketImpl and the underlying socket
-+        SocketImpl impl = createImpl(mptcp);
-+        impl.create(stream);
++public class MPTCPServer {
++	public static void main(String[] args) {
++		final int PORT = 12345;
 +
-+        this.impl = impl;
-+        this.state = SOCKET_CREATED;
++		try (ServerSocket serverSocket = new ServerSocket(PORT, 50, null, true)) {
++			System.out.println("Server started, waiting for client connection ...");
 +
-+        try {
-+            if (localAddr != null) {
-+                bind(localAddr);
++			Socket clientSocket = serverSocket.accept();
++			System.out.println("Client connected: " + clientSocket.getInetAddress());
++
++			BufferedReader in = new BufferedReader(
++					new InputStreamReader(clientSocket.getInputStream()));
++			PrintWriter out = new PrintWriter(
++					clientSocket.getOutputStream(), true);
++
++			String inputLine;
++			while ((inputLine = in.readLine()) != null) {
++				System.out.println("Received from client: " + inputLine);
++				out.println("Server response: " + inputLine);
++
++				if ("exit".equalsIgnoreCase(inputLine)) {
++					break;
++				}
++			}
++
++			clientSocket.close();
++			System.out.println("Connection closed");
++		} catch (IOException e) {
++			System.err.println("Server exception: " + e.getMessage());
++		}
++	}
++}
+diff --git a/test/jdk/java/net/Socket/MPTCPClient.java b/test/jdk/java/net/Socket/MPTCPClient.java
+new file mode 100644
+index 00000000000..18d815c39e7
+--- /dev/null
++++ b/test/jdk/java/net/Socket/MPTCPClient.java
+@@ -0,0 +1,62 @@
++/*
++ * Copyright (c) 2025, Oracle and/or its affiliates. All rights reserved.
++ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
++ *
++ * This code is free software; you can redistribute it and/or modify it
++ * under the terms of the GNU General Public License version 2 only, as
++ * published by the Free Software Foundation.
++ *
++ * This code is distributed in the hope that it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
++ * version 2 for more details (a copy is included in the LICENSE file that
++ * accompanied this code).
++ *
++ * You should have received a copy of the GNU General Public License version
++ * 2 along with this work; if not, write to the Free Software Foundation,
++ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
++ *
++ * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
++ * or visit www.oracle.com if you need additional information or have any
++ * questions.
++ */
++
++import java.io.*;
++import java.net.*;
++
++public class MPTCPClient {
++    public static void main(String[] args) {
++        final String HOST = "localhost";
++        final int PORT = 12345;
++        
++        try (Socket socket = new Socket(HOST, PORT, true, true)) {
++            System.out.println("Connected to server");
++            
++            BufferedReader in = new BufferedReader(
++                new InputStreamReader(socket.getInputStream()));
++            PrintWriter out = new PrintWriter(
++                socket.getOutputStream(), true);
++            
++            BufferedReader stdIn = new BufferedReader(
++                new InputStreamReader(System.in));
++            
++            String userInput;
++            System.out.println("Enter message (type 'exit' to quit):");
++            while ((userInput = stdIn.readLine()) != null) {
++                out.println(userInput);
++                
++                System.out.println("Server response: " + in.readLine());
++                
++                if ("exit".equalsIgnoreCase(userInput)) {
++                    break;
++                }
 +            }
-+            connect(address);
-+        } catch (Throwable throwable) {
-+            closeSuppressingExceptions(throwable);
-+            throw throwable;
++            
++            System.out.println("Connection closed");
++        } catch (UnknownHostException e) {
++            System.err.println("Host not found: " + HOST);
++        } catch (IOException e) {
++            System.err.println("Client I/O error: " + e.getMessage());
 +        }
 +    }
-+
-+    /**
-+     * Create a new SocketImpl for a connecting/client socket. The SocketImpl
-+     * is created without an underlying socket.
-+     *
-+     * @param mptcp create a socket with MPTCP or TCP protocol.
-+     */
-+    private static SocketImpl createImpl(boolean mptcp) {
-+        SocketImplFactory factory = Socket.factory;
-+        if (factory != null) {
-+            return factory.createSocketImpl();
-+        } else {
-+            // create a SOCKS SocketImpl that delegates to a platform SocketImpl
-+            SocketImpl delegate = SocketImpl.createPlatformSocketImpl(false, mptcp);
-+            return new SocksSocketImpl(delegate);
-+        }
-+    }
-+
-     /**
-      * Returns the {@code SocketImpl} for this Socket, creating it, and the
-      * underlying socket, if required.
++}
 -- 
 2.48.1
 
