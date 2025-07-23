@@ -1,146 +1,164 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-185.mta0.migadu.com (out-185.mta0.migadu.com [91.218.175.185])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76A362F5080;
-	Wed, 23 Jul 2025 14:32:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93BC71E5B63
+	for <mptcp@lists.linux.dev>; Wed, 23 Jul 2025 17:28:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.185
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753281165; cv=none; b=B+W01GBTDF90tnDxlM0zFH8SJFI20WHFs5SieOn/MDyXaglsAfJ89CuBaZmdmBMdC0+ZoP3jZwBySTV/MLdtnktURN8+XexgeyKIA0k6qXWokAyBtjsthhOt3DkhVOD3Vd56C5uzl6i724IU+c0c2E5mNVRWT8bx9EkuyPrcAEE=
+	t=1753291717; cv=none; b=FI3SOo27pp2ucLxx6PzVE+v1vPXEm9+8NAJYFVKpy09n/9A7v6JEB68elrP+c0KkDixYW5UQHwTllQVhHzS9hHUqAoHMp0W95oRBhMMS07iIyrGVu7tJQB1G15bnF/ZYvZHw5IjkPbzpRGEsbfaqbO4kl7UCraDJjiV6K0twNmI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753281165; c=relaxed/simple;
-	bh=Ofi++0IIDP8SlKC9LhxSvwNwUbH/5CbcHsC75xl40/Q=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=S0+IINQNDUZoThUxHq7+0vQM3RxVHAXJnh5qEU02Tbm4GH7VBReOuiNRbP4+dPCgEnHgZJvQA54GSFmv5S+OznsAIxVnsHRBzqr4AhP3hBKS5AdwKtWywn2gzGy//GnPn9PEu/IWfXh1NmG055o58kWveuPzigMaXK/u/xzE14E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NWcmL0vJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1753291717; c=relaxed/simple;
+	bh=xsqvkM5ANWjuaNC0gtr6n/xNah8JyVbYdJB0M1dk4CM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MJ7AiGCXZ0q/20hMyKs1G2LS8U+LBV/EcEAHL7jwHx+xPd99EWr6oMydvWlKhIbfzcOWYObF0Je5cZ51ZUq6tXz/oy0hj+Ko3G3RPnGuU+mu1oj+nMR9i08ky1cWkcTv0YKpeXlgSwyLzTgk5MTf4L47Hlm9c40w5bGfRxIHg/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ESWzRUlq; arc=none smtp.client-ip=91.218.175.185
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NWcmL0vJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EC30C4CEF8;
-	Wed, 23 Jul 2025 14:32:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753281165;
-	bh=Ofi++0IIDP8SlKC9LhxSvwNwUbH/5CbcHsC75xl40/Q=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=NWcmL0vJiqkhIqxz2O7+kXQqwCOkX6GxMRQiDmeVtAtgqfL6WryaPk3kwsOlsozMs
-	 M4O7F+2ZVzk4t3XV+bNgleWOjAZierrcUD1Cu6HtEu8pE8b3DOZ/in3LyQ/obegk+v
-	 pHzQNcWsSL2MrzpHf9xgn8xSeJoHSoFneqplV5hrsVAMBdt+XK6vIkT9Dk0g05lICO
-	 IOrnglzz38coAe4WUQ2mte4mm18iXADZKrFnuaDBnpvUz4JIqp4ITGShBCztFgL80k
-	 W9BgPo3QRXNJd60dpm7ABFeTqhqocLTPxriQd4Y6cj+zbBC7y2G5MDpR/h6hm4avaR
-	 WTeUB0c9GR05A==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Wed, 23 Jul 2025 16:32:24 +0200
-Subject: [PATCH net-next 2/2] mptcp: remove pr_fallback()
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ESWzRUlq"
+Date: Wed, 23 Jul 2025 10:28:23 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1753291711;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qLskRxgcaK46IteoEZp426l7L5IGh6tRkZFLXTMPYHM=;
+	b=ESWzRUlqs6B4VD+/4WgG/ogXmFBi6o1zZ3IV91rTtlqqEkHOEbbnPDCCErhFN1QBEAGin0
+	/zZmVczzek5Vw8cW8ES8kNVxGGMyKG0Rak8FJBlCiztIvQUzcivlWh1J+4DbHaMmr1BdjB
+	yc8628umd6E/3vJ9+wU0EEwgEZK4RUg=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Shakeel Butt <shakeel.butt@linux.dev>
+To: Kuniyuki Iwashima <kuniyu@google.com>
+Cc: Eric Dumazet <edumazet@google.com>, 
+	Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>, Tejun Heo <tj@kernel.org>, 
+	"David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, 
+	Neal Cardwell <ncardwell@google.com>, Paolo Abeni <pabeni@redhat.com>, 
+	Willem de Bruijn <willemb@google.com>, Matthieu Baerts <matttbe@kernel.org>, 
+	Mat Martineau <martineau@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Michal Hocko <mhocko@kernel.org>, Roman Gushchin <roman.gushchin@linux.dev>, 
+	Andrew Morton <akpm@linux-foundation.org>, Simon Horman <horms@kernel.org>, 
+	Geliang Tang <geliang@kernel.org>, Muchun Song <muchun.song@linux.dev>, 
+	Kuniyuki Iwashima <kuni1840@gmail.com>, netdev@vger.kernel.org, mptcp@lists.linux.dev, 
+	cgroups@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH v1 net-next 13/13] net-memcg: Allow decoupling memcg from
+ global protocol memory accounting.
+Message-ID: <e6qunyonbd4yxgf3g7gyc4435ueez6ledshde6lfdq7j5nslsh@xl7mcmaczfmk>
+References: <z7kkbenhkndwyghwenwk6c4egq3ky4zl36qh3gfiflfynzzojv@qpcazlpe3l7b>
+ <CANn89iLg-VVWqbWvLg__Zz=HqHpQzk++61dbOyuazSah7kWcDg@mail.gmail.com>
+ <jc6z5d7d26zunaf6b4qtwegdoljz665jjcigb4glkb6hdy6ap2@2gn6s52s6vfw>
+ <CAAVpQUAJCLaOr7DnOH9op8ySFN_9Ky__easoV-6E=scpRaUiJQ@mail.gmail.com>
+ <p4fcser5zrjm4ut6lw4ejdr7gn2gejrlhy2u2btmhajiiheoax@ptacajypnvlw>
+ <CAAVpQUAk4F__D7xdWpt0SEE4WEM_-6V1P7DUw9TGaV=pxZ+tgw@mail.gmail.com>
+ <xjtbk6g2a3x26sqqrdxbm2vxgxmm3nfaryxlxwipwohsscg7qg@64ueif57zont>
+ <CAAVpQUAL09OGKZmf3HkjqqkknaytQ59EXozAVqJuwOZZucLR0Q@mail.gmail.com>
+ <jmbszz4m7xkw7fzolpusjesbreaczmr4i64kynbs3zcoehrkpj@lwso5soc4dh3>
+ <CAAVpQUCv+CpKkX9Ryxa5ATG3CC0TGGE4EFeGt4Xnu+0kV7TMZg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250723-net-next-mptcp-track-fallbacks-v1-2-a83cce08f2d5@kernel.org>
-References: <20250723-net-next-mptcp-track-fallbacks-v1-0-a83cce08f2d5@kernel.org>
-In-Reply-To: <20250723-net-next-mptcp-track-fallbacks-v1-0-a83cce08f2d5@kernel.org>
-To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
- Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2937; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=pvITh45m9tlJ1IVW1aV52DIg50KtDjJIKxh9qo4dlt4=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDIaPrXWT4gJynyTu5ddRuxHLUOt8vKACqdtr9duWdbWf
- MmS+7J3RykLgxgXg6yYIot0W2T+zOdVvCVefhYwc1iZQIYwcHEKwET+LmZkuOZxoPb2A/19CR+b
- NbZFP5isHGPpNemy0i/rCqknly/9XcnI0GP+7aZi5Lrokmvf+BZ63v3y4ANfz9vVNb0/7DZaHrm
- awAUA
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAAVpQUCv+CpKkX9Ryxa5ATG3CC0TGGE4EFeGt4Xnu+0kV7TMZg@mail.gmail.com>
+X-Migadu-Flow: FLOW_OUT
 
-From: Paolo Abeni <pabeni@redhat.com>
+Cc Tejun & Michal to get their opinion on memcg vs cgroup vs BPF
+options.
 
-We can now track fully the fallback status of a given connection via the
-relevant mibs, the mentioned helper is redundant. Remove it completely.
+On Tue, Jul 22, 2025 at 07:35:52PM -0700, Kuniyuki Iwashima wrote:
+[...]
+> >
+> > Running workloads in root cgroup is not normal and comes with a warning
+> > of no isolation provided.
+> >
+> > I looked at the patch again to understand the modes you are introducing.
+> > Initially, I thought the series introduced multiple modes, including an
+> > option to exclude network memory from memcg accounting. However, if I
+> > understand correctly, that is not the case—the opt-out applies only to
+> > the global TCP/UDP accounting. That’s a relief, and I apologize for the
+> > misunderstanding.
+> >
+> > If I’m correct, you need a way to exclude a workload from the global
+> > TCP/UDP accounting, and currently, memcg serves as a convenient
+> > abstraction for the workload. Please let me know if I misunderstood.
+> 
+> Correct.
+> 
+> Currently, memcg by itself cannot guarantee that memory allocation for
+> socket buffer does not fail even when memory.current < memory.max
+> due to the global protocol limits.
+> 
+> It means we need to increase the global limits to
+> 
+> (bytes of TCP socket buffer in each cgroup) * (number of cgroup)
+> 
+> , which is hard to predict, and I guess that's the reason why you
+> or Wei set tcp_mem[] to UINT_MAX so that we can ignore the global
+> limit.
 
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- net/mptcp/options.c  | 1 -
- net/mptcp/protocol.c | 1 -
- net/mptcp/protocol.h | 3 ---
- net/mptcp/subflow.c  | 4 ----
- 4 files changed, 9 deletions(-)
+No that was not the reason. The main reason behind max tcp_mem global
+limit was it was not needed as memcg should account and limit the
+network memory. I think the reason you don't want tcp_mem global limit
+unlimited now is you have internal feature to let workloads opt out of
+the memcg accounting of network memory which is causing isolation
+issues.
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 6cf02344249a65d00b5832ebb69dd39d6e5fe98e..70c0ab0ecf905d282e5dc6c1b21ffc6476c8d71b 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -982,7 +982,6 @@ static bool check_fully_established(struct mptcp_sock *msk, struct sock *ssk,
- 			MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_FALLBACKFAILED);
- 			goto reset;
- 		}
--		pr_fallback(msk);
- 		return false;
- 	}
- 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 88bf092f230abbecddc965b4242f711a5ba9d6b6..9a287b75c1b31bac9c35581db996e39e594872e0 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1167,7 +1167,6 @@ static void mptcp_update_infinite_map(struct mptcp_sock *msk,
- 	}
- 
- 	mptcp_subflow_ctx(ssk)->send_infinite_map = 0;
--	pr_fallback(msk);
- }
- 
- #define MPTCP_MAX_GSO_SIZE (GSO_LEGACY_MAX_SIZE - (MAX_TCP_HEADER + 1))
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 912f048994a196304a80cde90747d4a512fb3d3d..b15d7fab5c4b66c6fb7a7cbdc91d49547ada6a94 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -1257,13 +1257,10 @@ static inline bool mptcp_try_fallback(struct sock *ssk, int fb_mib)
- 	return true;
- }
- 
--#define pr_fallback(a) pr_debug("%s:fallback to TCP (msk=%p)\n", __func__, a)
--
- static inline void mptcp_early_fallback(struct mptcp_sock *msk,
- 					struct mptcp_subflow_context *subflow,
- 					int fb_mib)
- {
--	pr_fallback(msk);
- 	subflow->request_mptcp = 0;
- 	WARN_ON_ONCE(!__mptcp_try_fallback(msk, fb_mib));
- }
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 600e59bba363f9b3350d9d65ca729cba4badb304..3f1b62a9fe889ab1ac07f2a210b9de050436b37e 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -551,7 +551,6 @@ static void subflow_finish_connect(struct sock *sk, const struct sk_buff *skb)
- 				goto do_reset;
- 			}
- 
--			pr_fallback(msk);
- 			goto fallback;
- 		}
- 
-@@ -1855,14 +1854,11 @@ static void subflow_state_change(struct sock *sk)
- {
- 	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
- 	struct sock *parent = subflow->conn;
--	struct mptcp_sock *msk;
- 
- 	__subflow_state_change(sk);
- 
--	msk = mptcp_sk(parent);
- 	if (subflow_simultaneous_connect(sk)) {
- 		WARN_ON_ONCE(!mptcp_try_fallback(sk, MPTCP_MIB_SIMULTCONNFALLBACK));
--		pr_fallback(msk);
- 		subflow->conn_finished = 1;
- 		mptcp_propagate_state(parent, sk, subflow, NULL);
- 	}
+> 
+> But we should keep tcp_mem[] within a sane range in the first place.
+> 
+> This series allows us to configure memcg limits only and let memcg
+> guarantee no failure until it fully consumes memory.max.
+> 
+> The point is that memcg should not be affected by the global limits,
+> and this is orthogonal with the assumption that every workload should
+> be running under memcg.
+> 
+> 
+> >
+> > Now memcg is one way to represent the workload. Another more natural, at
+> > least to me, is the core cgroup. Basically cgroup.something interface.
+> > BPF is yet another option.
+> >
+> > To me cgroup seems preferrable but let's see what other memcg & cgroup
+> > folks think. Also note that for cgroup and memcg the interface will need
+> > to be hierarchical.
+> 
+> As the root cgroup doesn't have the knob, these combinations are
+> considered hierarchical:
+> 
+> (parent, child) = (0, 0), (0, 1), (1, 1)
+> 
+> and only the pattern below is not considered hierarchical
+> 
+> (parent, child) = (1, 0)
+> 
+> Let's say we lock the knob at the first socket creation like your
+> idea above.
+> 
+> If a parent and its child' knobs are (0, 0) and the child creates a
+> socket, the child memcg is locked as 0.  When the parent enables
+> the knob, we must check all child cgroups as well.  Or, we lock
+> the all parents' knobs when a socket is created in a child cgroup
+> with knob=0 ?  In any cases we need a global lock.
+> 
+> Well, I understand that the hierarchical semantics is preferable
+> for cgroup but I think it does not resolve any real issue and rather
+> churns the code unnecessarily.
 
--- 
-2.50.0
+All this is implementation detail and I am asking about semantics. More
+specifically:
 
+1. Will the root be non-isolated always?
+2. If a cgroup is isolated, does it mean all its desendants are
+   isolated?
+3. Will there ever be a reasonable use-case where there is non-isolated
+   sub-tree under an isolated ancestor?
+
+Please give some thought to the above (and related) questions.
+
+I am still not convinced that memcg is the right home for this opt-out
+feature. I have CCed cgroup folks to get their opinion as well.
