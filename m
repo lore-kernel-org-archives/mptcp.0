@@ -1,91 +1,81 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D26582E36F0;
-	Fri, 25 Jul 2025 01:49:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F65B2417DE;
+	Fri, 25 Jul 2025 18:39:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753408144; cv=none; b=CElM15XSPSf1pLcIrDQX2ZTwAN6rLexT9SO2ZtUukCtbuKhNiY/FFn/4UfeCq8hR8lEZGgfzPPjDYCTCvDKgvI8D/AL9A0F9Z2PW3vzJMHrpVR3gS+4sQ7UWHsm0dHrJkLO7wvlZqQnFg3cV5K3J5WoPjmdFZ+DkhiNSZuyzEFU=
+	t=1753468795; cv=none; b=aFgPp7a7/cDO0QHkka7MXkjab/g3lweKP8Fdwy2+s0FhdSN1rvoIfNCkJ1xYqhk+4nphxttj8bkX+UX2IsuqxOWGbVEdheC7iXTzuL7Q6Kyaz7AEq/JOZVbDJ6kKFfDoFf1FKesi2jCEly9akAbjFJtR137RLt7zlNraJ7NI3ec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753408144; c=relaxed/simple;
-	bh=B9lc7fM1jtUNpSTwiyxqs6LzGFpaNCIpPSEYy36++8Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=i7j6nONN7tVhXmmnjCYvkFBMAUOalyLmqrtKkKJuBROIJKXkBPuRNfE+eY7q40mg9y+WvG1XNrq7AV+HPPoK209rORY4BqfCRC2pKD+BBz9hlO8ASWbipoz0EoxlbhG7VDoL78GzQjFTjjBhlWylWCHj4bTq8ChSQRRC/768eaY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ljK7JmZQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1753468795; c=relaxed/simple;
+	bh=edIATgke8NGOyIpM94wZwgosXYqSaSxcFFOIOzilcck=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=f+eMsolk1QXx21vhG2hCQO3rR4/ZaT9i2oEut7oAz7HXnJ489KxXup/OFHh7Iv9bInmdDvP3DFoVAbn3FRy/WTM2PDNP268rbrvvfwPocqcptT0wWxIGt9/0X+6QHaZexx8JJ20nLJiQFkQ0lM7jv2CwFtaM/bVEwJjJpfTpq9o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rMa+0sD/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ljK7JmZQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 282F6C4CEF8;
-	Fri, 25 Jul 2025 01:49:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rMa+0sD/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A57D8C4CEE7;
+	Fri, 25 Jul 2025 18:39:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753408144;
-	bh=B9lc7fM1jtUNpSTwiyxqs6LzGFpaNCIpPSEYy36++8Q=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=ljK7JmZQNB6d1Y/lUQP5CBvKozqg+TyROpDUceazY6iMAN8OuIt6uHoqKKI1QqhQQ
-	 VPS7JDHxK37SG0cOun0Bluuge524GKVNPuV9c1x0SNM9Fm24CkO/aPLHI1Isvl3Nx5
-	 Ly3pcKP4ToDd4xBEgAzi9qRYb9uXHGDDKAETosrcvBsC4u6MUdKm8dg0eosxnVcGdF
-	 2Djc58PEZKUsOWJqougd3xp2AGJqp160jdWiimNOc/Ni0ejvzqzzvzi8nFN0MVc2L1
-	 Ifq1//hazBkRKLIzPfjZWkVa1KwrehqzM/6l1q7j/HQeF+//VaRosSmsswp8lAl275
-	 756B6ApoYH2Dg==
-Date: Thu, 24 Jul 2025 18:49:02 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Kuniyuki Iwashima <kuniyu@google.com>
-Cc: Shakeel Butt <shakeel.butt@linux.dev>, Eric Dumazet
- <edumazet@google.com>, Michal =?UTF-8?B?S291dG7DvQ==?= <mkoutny@suse.com>,
- Tejun Heo <tj@kernel.org>, "David S. Miller" <davem@davemloft.net>, Neal
- Cardwell <ncardwell@google.com>, Paolo Abeni <pabeni@redhat.com>, Willem de
- Bruijn <willemb@google.com>, Matthieu Baerts <matttbe@kernel.org>, Mat
- Martineau <martineau@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
- Michal Hocko <mhocko@kernel.org>, Roman Gushchin
- <roman.gushchin@linux.dev>, Andrew Morton <akpm@linux-foundation.org>,
- Simon Horman <horms@kernel.org>, Geliang Tang <geliang@kernel.org>, Muchun
- Song <muchun.song@linux.dev>, Kuniyuki Iwashima <kuni1840@gmail.com>,
- netdev@vger.kernel.org, mptcp@lists.linux.dev, cgroups@vger.kernel.org,
- linux-mm@kvack.org
-Subject: Re: [PATCH v1 net-next 13/13] net-memcg: Allow decoupling memcg
- from global protocol memory accounting.
-Message-ID: <20250724184902.139eff3c@kernel.org>
-In-Reply-To: <CAAVpQUDMj_1p6sVeo=bZ_u34HSX7V3WM6hYG3wHyyCACKrTKmQ@mail.gmail.com>
-References: <z7kkbenhkndwyghwenwk6c4egq3ky4zl36qh3gfiflfynzzojv@qpcazlpe3l7b>
-	<CANn89iLg-VVWqbWvLg__Zz=HqHpQzk++61dbOyuazSah7kWcDg@mail.gmail.com>
-	<jc6z5d7d26zunaf6b4qtwegdoljz665jjcigb4glkb6hdy6ap2@2gn6s52s6vfw>
-	<CAAVpQUAJCLaOr7DnOH9op8ySFN_9Ky__easoV-6E=scpRaUiJQ@mail.gmail.com>
-	<p4fcser5zrjm4ut6lw4ejdr7gn2gejrlhy2u2btmhajiiheoax@ptacajypnvlw>
-	<CAAVpQUAk4F__D7xdWpt0SEE4WEM_-6V1P7DUw9TGaV=pxZ+tgw@mail.gmail.com>
-	<xjtbk6g2a3x26sqqrdxbm2vxgxmm3nfaryxlxwipwohsscg7qg@64ueif57zont>
-	<CAAVpQUAL09OGKZmf3HkjqqkknaytQ59EXozAVqJuwOZZucLR0Q@mail.gmail.com>
-	<jmbszz4m7xkw7fzolpusjesbreaczmr4i64kynbs3zcoehrkpj@lwso5soc4dh3>
-	<CAAVpQUCv+CpKkX9Ryxa5ATG3CC0TGGE4EFeGt4Xnu+0kV7TMZg@mail.gmail.com>
-	<e6qunyonbd4yxgf3g7gyc4435ueez6ledshde6lfdq7j5nslsh@xl7mcmaczfmk>
-	<CAAVpQUDMj_1p6sVeo=bZ_u34HSX7V3WM6hYG3wHyyCACKrTKmQ@mail.gmail.com>
+	s=k20201202; t=1753468794;
+	bh=edIATgke8NGOyIpM94wZwgosXYqSaSxcFFOIOzilcck=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=rMa+0sD/aCuywy2NNQyUHVhLdVxJPPGgood/OKrrIkFq8aZpBgD96k+9O4IDn0e5e
+	 j6pQXIx4RPxyxlrptoTTIsHtblq8ZKaYFbaTa1WN1RqJSdzm5H6XlOeJWbUlVA6Ooa
+	 zfRp8YfpZwny2u0Vrd2T955NqpySKJCSyKj8aJps3mDmjuxNA8O68NADoU7fAE+fuz
+	 IOaGqDzWMCYKnYiUcF/1fnKg2+gi8PSYNSgF7f7D2+x03Zin0WA+vye2eFEGNSy/HJ
+	 RX6DKh4/+a9OZzOB23Jo16o8kgimHLKJzx+1CTmnI9O34g89Bh5CctHYcjg8NVlZSK
+	 Zi7hsmKFGp9NQ==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70CB9383BF5B;
+	Fri, 25 Jul 2025 18:40:13 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next 0/2] mptcp: track more fallback cases
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <175346881226.3231025.5908283026020682892.git-patchwork-notify@kernel.org>
+Date: Fri, 25 Jul 2025 18:40:12 +0000
+References: 
+ <20250723-net-next-mptcp-track-fallbacks-v1-0-a83cce08f2d5@kernel.org>
+In-Reply-To: 
+ <20250723-net-next-mptcp-track-fallbacks-v1-0-a83cce08f2d5@kernel.org>
+To: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev, martineau@kernel.org, geliang@kernel.org,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ horms@kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Wed, 23 Jul 2025 11:06:14 -0700 Kuniyuki Iwashima wrote:
-> > 3. Will there ever be a reasonable use-case where there is non-isolated
-> >    sub-tree under an isolated ancestor?  
-> 
-> I think no, but again, we need to think about the scenario above,
-> otherwise, your ideal semantics is just broken.
-> 
-> Also, "no reasonable scenario" does not always mean "we must
-> prevent the scenario".
-> 
-> If there's nothing harmful, we can just let it be, especially if such
-> restriction gives nothing andrather hurts performance with no
-> good reason.
+Hello:
 
-Stating the obvious perhaps but it's probably too late in the release
-cycle to get enough agreement here to merge the series. So I'll mark
-it as Deferred.
+This series was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-While I'm typing, TBH I'm not sure I'm following the arguments about
-making the property hierarchical. Since the memory limit gets inherited
-I don't understand why the property of being isolated would not.
-Either I don't understand the memcg enough, or I don't understand your
-intended semantics. Anyway..
+On Wed, 23 Jul 2025 16:32:22 +0200 you wrote:
+> This series has two patches linked to fallback to TCP:
+> 
+> - Patch 1: additional MIB counters for remaining error code paths around
+>   fallback
+> 
+> - Patch 2: remove dedicated pr_debug() linked to fallback now that
+>   everything should be covered by dedicated MIB counters.
+> 
+> [...]
+
+Here is the summary with links:
+  - [net-next,1/2] mptcp: track fallbacks accurately via mibs
+    https://git.kernel.org/netdev/net-next/c/c65c2e3bae69
+  - [net-next,2/2] mptcp: remove pr_fallback()
+    https://git.kernel.org/netdev/net-next/c/829fec0244b4
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
