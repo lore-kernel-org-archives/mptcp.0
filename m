@@ -1,130 +1,91 @@
-Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ECEC2153F1
-	for <mptcp@lists.linux.dev>; Thu, 24 Jul 2025 08:06:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D26582E36F0;
+	Fri, 25 Jul 2025 01:49:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753344421; cv=none; b=Na+rmC+6UFgD+cULuxXxKmHu9rX8DZtsoa4UvQ7w3V3U+gtE7TQ5KeKHwfWkWMOkqzYpt9tG+Gxf7j4TUfnm+SVd70X+GR9K0Bdu65T1lXzW/oN5SZAaZM2bs9GoYHkXPiAyxwbkcLMMoawhsv9g3rFhFFHr9IuLet4E3tOqrPs=
+	t=1753408144; cv=none; b=CElM15XSPSf1pLcIrDQX2ZTwAN6rLexT9SO2ZtUukCtbuKhNiY/FFn/4UfeCq8hR8lEZGgfzPPjDYCTCvDKgvI8D/AL9A0F9Z2PW3vzJMHrpVR3gS+4sQ7UWHsm0dHrJkLO7wvlZqQnFg3cV5K3J5WoPjmdFZ+DkhiNSZuyzEFU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753344421; c=relaxed/simple;
-	bh=OZFOKNK5YtJkVgXQfgqv+EfqKToXvIfMA/KUsVdX8TE=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=rnm0Baklp220I2qnX7gVnJv+chx8mtjLSjJnNzBLb/+Dn8sAdwj/sI5ozEXvIUjqeFPlO6NGlrNYsrRTRKXGLAzqE+ZC3VeKDpCDoK3aDds1Kgkxmfo5qEVNAgEOIsnOonCbc02t468sqMtMk4T+sKsac4yZw0PCWEYPXGRS04w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ndKEkX4B; arc=none smtp.client-ip=209.85.219.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1753408144; c=relaxed/simple;
+	bh=B9lc7fM1jtUNpSTwiyxqs6LzGFpaNCIpPSEYy36++8Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=i7j6nONN7tVhXmmnjCYvkFBMAUOalyLmqrtKkKJuBROIJKXkBPuRNfE+eY7q40mg9y+WvG1XNrq7AV+HPPoK209rORY4BqfCRC2pKD+BBz9hlO8ASWbipoz0EoxlbhG7VDoL78GzQjFTjjBhlWylWCHj4bTq8ChSQRRC/768eaY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ljK7JmZQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ndKEkX4B"
-Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-6fb0eb0f0fbso9968386d6.1
-        for <mptcp@lists.linux.dev>; Thu, 24 Jul 2025 01:06:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1753344419; x=1753949219; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=anpcGybAk4WLMFmK+WJAtf8jeWA+fWpfnkS/jWbgQWw=;
-        b=ndKEkX4BA4RH90F6Y5JGWAw9f7tdEPkk4yU7rcv6wIIQUdVHPtFu4BVOFbz7UDcbGL
-         SMS156uTlBRwyTb1kdbT6INkfpMjn7ZHdwiC1SbjB/ai8T8zSch1tSCn68zYk96Zx8jJ
-         ooBojpnkQ9ptF/6p3SHb8LDrgdR2Qwkrxh5tniTYTpnADqr9W1UlX4/tOGJUQ7qeP+6t
-         u0VBtRfSRLXuPkJYnkGP09XodvhvBfzJgZIn9SUZ8w0LpKIvCChSa0lhOR2+aeNnh1/x
-         pF0mwzvGQrbWl0C98w6Fl3SVI8T5VgY0n7j3BC5bYeMrQi9xFZBFXE0DHY6cjuTnwZQE
-         +GPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753344419; x=1753949219;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=anpcGybAk4WLMFmK+WJAtf8jeWA+fWpfnkS/jWbgQWw=;
-        b=fz8w8637NVUYby6crm66Hj5OYNbagiQ/VUmgkFdvdgHxwKF3LY6lJ5DWSdoYtiT6Li
-         g6rd03srZCcjAG+drRU6QTV0osr3u7zJImUyFh31urqQ0tNvyXSt9gsfgl8wpOijQyHS
-         S7xlaHpXYokvDhzs46/UMLRc0T8OMKdE8peUKYpMWsIDQ/ND7xRGuIB9C/mdUqZ3eJlj
-         FNQ3TYjLgQL8X6lZJvTvHdlQhKgc2c1GQZhxu6xN8wjzlver3U3eBpSM7xo9VQ1z7Eu1
-         hlDfDNgqZiemXMpNARaPXNSjpL0s9O+ilvIoJwdRGOiR5W69KTge22gVZ4n1kLNQq8dV
-         Gp2A==
-X-Gm-Message-State: AOJu0YxM2IEips8sKsH//3hn+UDLI8PLNumSvihGjvIypXZp5PQ0clQl
-	yA+yMRmesFUeztaLpmtJG5QsIfNZTsxycaB09pLdZKV6bNfyM+rquH2RgtQG
-X-Gm-Gg: ASbGncsRdpTBfvRlqCW7z5+H4EeE/AOka+kwWu1N8sEA6vQdY7pOA9tyavbk3Xo/B05
-	CVBYt5nwY+J57OJby2TZP+C0XZsn/jGIAPTNLkh45QrRQdvyT2YoDgewYntEnQW2D9eeg0loNwT
-	8wnR4y/z7vplQhb7iPEU3vsHyTYdnrvM9Gkf46a+alsAVkveX9Etv4H50BAUZT+I65nPOTzq+1X
-	zyS/c6xN9emItDktSEKWxPHjJdqCBUtzv6Qfi1eLEk9ULphRh45P0m1mnLfvR8YYxQkFXKV/yLZ
-	4XyEn5/BdUdokfWX1RwM0+HDmoHbxG39qr6hGem7M+iLSyqKohzj4Me7vWJriXHTL/pRMOiiOVB
-	37dptV4mySnuW4HWNhVMqqr1bKUl44wVSs9o=
-X-Google-Smtp-Source: AGHT+IHAFBiOiiA68hL/2/wpz4tbr37IgKhZa5Kv9695HTVLeTbOCpEAbSu8IIIkSoZIVbT9MzHdrw==
-X-Received: by 2002:a05:6214:f22:b0:707:102d:9b5b with SMTP id 6a1803df08f44-70713dd7128mr10521706d6.23.1753344418815;
-        Thu, 24 Jul 2025 01:06:58 -0700 (PDT)
-Received: from [127.0.0.1] ([4.236.159.113])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-7070fcf227csm10103236d6.100.2025.07.24.01.06.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Jul 2025 01:06:57 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <tanggeliang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <9c663fc37767d9036379afdbc83cd8874a7b2fc9.1753337130.git.tanggeliang@kylinos.cn>
-References:
- <9c663fc37767d9036379afdbc83cd8874a7b2fc9.1753337130.git.tanggeliang@kylinos.cn>
-Subject: Re: [PATCH mptcp-next] mptcp: remove redundant orig_offset in
- carve_data_frag
-Message-ID: <596ced53-6bd3-437c-739e-4d38530c68ed@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 24 Jul 2025 08:06:57 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ljK7JmZQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 282F6C4CEF8;
+	Fri, 25 Jul 2025 01:49:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1753408144;
+	bh=B9lc7fM1jtUNpSTwiyxqs6LzGFpaNCIpPSEYy36++8Q=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=ljK7JmZQNB6d1Y/lUQP5CBvKozqg+TyROpDUceazY6iMAN8OuIt6uHoqKKI1QqhQQ
+	 VPS7JDHxK37SG0cOun0Bluuge524GKVNPuV9c1x0SNM9Fm24CkO/aPLHI1Isvl3Nx5
+	 Ly3pcKP4ToDd4xBEgAzi9qRYb9uXHGDDKAETosrcvBsC4u6MUdKm8dg0eosxnVcGdF
+	 2Djc58PEZKUsOWJqougd3xp2AGJqp160jdWiimNOc/Ni0ejvzqzzvzi8nFN0MVc2L1
+	 Ifq1//hazBkRKLIzPfjZWkVa1KwrehqzM/6l1q7j/HQeF+//VaRosSmsswp8lAl275
+	 756B6ApoYH2Dg==
+Date: Thu, 24 Jul 2025 18:49:02 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Kuniyuki Iwashima <kuniyu@google.com>
+Cc: Shakeel Butt <shakeel.butt@linux.dev>, Eric Dumazet
+ <edumazet@google.com>, Michal =?UTF-8?B?S291dG7DvQ==?= <mkoutny@suse.com>,
+ Tejun Heo <tj@kernel.org>, "David S. Miller" <davem@davemloft.net>, Neal
+ Cardwell <ncardwell@google.com>, Paolo Abeni <pabeni@redhat.com>, Willem de
+ Bruijn <willemb@google.com>, Matthieu Baerts <matttbe@kernel.org>, Mat
+ Martineau <martineau@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
+ Michal Hocko <mhocko@kernel.org>, Roman Gushchin
+ <roman.gushchin@linux.dev>, Andrew Morton <akpm@linux-foundation.org>,
+ Simon Horman <horms@kernel.org>, Geliang Tang <geliang@kernel.org>, Muchun
+ Song <muchun.song@linux.dev>, Kuniyuki Iwashima <kuni1840@gmail.com>,
+ netdev@vger.kernel.org, mptcp@lists.linux.dev, cgroups@vger.kernel.org,
+ linux-mm@kvack.org
+Subject: Re: [PATCH v1 net-next 13/13] net-memcg: Allow decoupling memcg
+ from global protocol memory accounting.
+Message-ID: <20250724184902.139eff3c@kernel.org>
+In-Reply-To: <CAAVpQUDMj_1p6sVeo=bZ_u34HSX7V3WM6hYG3wHyyCACKrTKmQ@mail.gmail.com>
+References: <z7kkbenhkndwyghwenwk6c4egq3ky4zl36qh3gfiflfynzzojv@qpcazlpe3l7b>
+	<CANn89iLg-VVWqbWvLg__Zz=HqHpQzk++61dbOyuazSah7kWcDg@mail.gmail.com>
+	<jc6z5d7d26zunaf6b4qtwegdoljz665jjcigb4glkb6hdy6ap2@2gn6s52s6vfw>
+	<CAAVpQUAJCLaOr7DnOH9op8ySFN_9Ky__easoV-6E=scpRaUiJQ@mail.gmail.com>
+	<p4fcser5zrjm4ut6lw4ejdr7gn2gejrlhy2u2btmhajiiheoax@ptacajypnvlw>
+	<CAAVpQUAk4F__D7xdWpt0SEE4WEM_-6V1P7DUw9TGaV=pxZ+tgw@mail.gmail.com>
+	<xjtbk6g2a3x26sqqrdxbm2vxgxmm3nfaryxlxwipwohsscg7qg@64ueif57zont>
+	<CAAVpQUAL09OGKZmf3HkjqqkknaytQ59EXozAVqJuwOZZucLR0Q@mail.gmail.com>
+	<jmbszz4m7xkw7fzolpusjesbreaczmr4i64kynbs3zcoehrkpj@lwso5soc4dh3>
+	<CAAVpQUCv+CpKkX9Ryxa5ATG3CC0TGGE4EFeGt4Xnu+0kV7TMZg@mail.gmail.com>
+	<e6qunyonbd4yxgf3g7gyc4435ueez6ledshde6lfdq7j5nslsh@xl7mcmaczfmk>
+	<CAAVpQUDMj_1p6sVeo=bZ_u34HSX7V3WM6hYG3wHyyCACKrTKmQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+On Wed, 23 Jul 2025 11:06:14 -0700 Kuniyuki Iwashima wrote:
+> > 3. Will there ever be a reasonable use-case where there is non-isolated
+> >    sub-tree under an isolated ancestor?  
+> 
+> I think no, but again, we need to think about the scenario above,
+> otherwise, your ideal semantics is just broken.
+> 
+> Also, "no reasonable scenario" does not always mean "we must
+> prevent the scenario".
+> 
+> If there's nothing harmful, we can just let it be, especially if such
+> restriction gives nothing andrather hurts performance with no
+> good reason.
 
-Thank you for your modifications, that's great!
+Stating the obvious perhaps but it's probably too late in the release
+cycle to get enough agreement here to merge the series. So I'll mark
+it as Deferred.
 
-Our CI did some validations and here is its report:
-
-- KVM Validation: normal: Unstable: 1 failed test(s): =
-selftest_mptcp_connect =F0=9F=94=B4
-- KVM Validation: debug: Unstable: 1 =
-failed test(s): selftest_mptcp_connect =F0=9F=94=B4
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Unstable: 1 failed test(s):=
- bpftest_test_progs-no_alu32_mptcp =F0=9F=94=B4
-- Task: https://github.=
-com/multipath-tcp/mptcp_net-next/actions/runs/16489452196
-
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/981465434acb
-Patchwork: https://patchwork.kernel.=
-org/project/mptcp/list/?series=3D985365
-
-
-If there are some issues, you can=
- reproduce them using the same environment as
-the one used by the CI thanks=
- to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
-
-
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 Core)
+While I'm typing, TBH I'm not sure I'm following the arguments about
+making the property hierarchical. Since the memory limit gets inherited
+I don't understand why the property of being isolated would not.
+Either I don't understand the memcg enough, or I don't understand your
+intended semantics. Anyway..
