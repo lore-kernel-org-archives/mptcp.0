@@ -1,102 +1,71 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C048A1A83F7;
-	Mon, 28 Jul 2025 09:15:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E5A4266F00;
+	Mon, 28 Jul 2025 13:29:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753694131; cv=none; b=RQiImwuhXJEDlWWYIggySINENTxamB8Xhj8MT0ug+pGvedWf/IFS2OFHOa/gqun6MSkzWRP5AkkQ2rDrF8kKvcFK+geS01GCXZ8qQXzuhzG6R936To8DQEhMxshh5z44uW13ZJJGwGVnaWI2vpCsWX7j7ZsHxxtLK6kSYY4CzmA=
+	t=1753709373; cv=none; b=Zw0ZbBrRRHNGJK/+l5CeteuI3FMRPaSBnKcbc5U0nQ9yUZC3+6eETgvW+HHR5+LHkxdet6Q/7r8B5rnFG95/riK0FmkB1NyslIO8GJ0WQkxQ7ZYW3KLtfIsmv7UPXjfhr+mYi1G5ASTe2L4k6t5l8e/PKfpeC24arZRbj+GkOuw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753694131; c=relaxed/simple;
-	bh=/z4nAMGjbg9eq/WyFM+G90fDZlxTQvo0pkTNi0ZO8/c=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jKISC7i3gmaN4KsQrro9OnSJ8uFxLL5GK1cgBgsOCoGPJFnyFL7VAomffkOC/Trq8bZraHhx8M+kk/PsuR1uoz4MEzm8oK/DNDFGEnV8W6GO5XY7ZVSMxHUjBiVTVFenH6vU53UCOJi6b9p5ZyP1EzqT4QxEnRPur8GY7us2b+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WtHq4evV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1753709373; c=relaxed/simple;
+	bh=M8Vhj+B3+aLfbEzYphDOwa08D5g90EcE1xf4Qjj7kZI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tz6Ls4FcDmBxcF0e3VVS1zhsDW6KXGB70QgdEr9dnNtb+QctHp8Joep8n9Mlv6wsnVttvbdKB46JwXCIYpn1SznDczqSFezERdpScW96Ki1fIjIdIuqfkKCO4cgnsTpcEWe8w2PS0VBX4hj/EluZHkHVzPjFAg7MKD1xOuykmxc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R+ZdoY/G; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WtHq4evV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4B16C4CEF4;
-	Mon, 28 Jul 2025 09:15:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R+ZdoY/G"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11E5DC4CEE7;
+	Mon, 28 Jul 2025 13:29:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753694131;
-	bh=/z4nAMGjbg9eq/WyFM+G90fDZlxTQvo0pkTNi0ZO8/c=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=WtHq4evVP7Kejo2vDGOSYJVA+U/RguGMw15Gam/XITfvAbRptZK8KxXBO5OXtf5RH
-	 OBsKH5Ttg6DQrVaHrLRUzmkISXJILuScB/5tIgUnbOZ1WasBajQNZXRUitegAuoWqc
-	 ht+BoUGFjiqHNoe5JydHVOye/Bxri9LcsulWqVyK+Oos7qzE9XMPoQP9y5oEPMtPAu
-	 Zw82R3SRmkwIhf8JNrhgM/ONRvkwRv570/ISflH1n2r5b6Xt6ny5OkXtCRHczVq29Y
-	 +Ksky5UUK+E5ZchU96Lgjx/eSHrbLns8iOyeIPPXK+YphxZQgm8ioBucEdOAOaP7zK
-	 Thb8NopsbOejA==
+	s=k20201202; t=1753709373;
+	bh=M8Vhj+B3+aLfbEzYphDOwa08D5g90EcE1xf4Qjj7kZI=;
+	h=From:To:Cc:Subject:Date:From;
+	b=R+ZdoY/GjAh+aQmlxaZp60w0Qry15jPksUPM+dh7Zkmg2Kj2FvHQVsnfPf0o09sa3
+	 DAPGpDMTs39qo+fgdvV5Row9FglaMpFcxs6PTuy7LXBVoS45tJjflILbOlgxb0z+Dl
+	 YJcf8ny8mY+u3LHIE7LXlxaBqQqeG9oVXxNs5wxloQq8FQ+PTukNS8mRl4CSH3nGDU
+	 KkON3RXOZ/EymWKxeWctauaI291kzTbZnLys99AjhRcu97LMFEC0Zuyr1uh5g+xotx
+	 GPvwnzVIAKD8wfqFS8zbeNeQWtx3X2+HUFfUVAlkC9SCSoJ5oHYP0jw0HFa3N5etK7
+	 GzemJE6GVTNrA==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 To: mptcp@lists.linux.dev,
 	stable@vger.kernel.org,
 	gregkh@linuxfoundation.org
-Cc: Paolo Abeni <pabeni@redhat.com>,
-	sashal@kernel.org,
-	"Matthieu Baerts (NGI0)" <matttbe@kernel.org>,
-	Jakub Kicinski <kuba@kernel.org>
-Subject: [PATCH 6.6.y 3/3] mptcp: reset fallback status gracefully at disconnect() time
-Date: Mon, 28 Jul 2025 11:14:51 +0200
-Message-ID: <20250728091448.3494479-8-matttbe@kernel.org>
+Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>,
+	sashal@kernel.org
+Subject: [PATCH 6.1.y 0/3] mptcp: fix recent failed backports (20250721)
+Date: Mon, 28 Jul 2025 15:29:20 +0200
+Message-ID: <20250728132919.3904847-5-matttbe@kernel.org>
 X-Mailer: git-send-email 2.50.0
-In-Reply-To: <20250728091448.3494479-5-matttbe@kernel.org>
-References: <20250728091448.3494479-5-matttbe@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1694; i=matttbe@kernel.org; h=from:subject; bh=KDTgPScFQXodrdXEbeZB+zJKYm2D1b5M+u5QUzHsyjg=; b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDLa7aepvKlOerDjQvxlSdd13a9WXlmSFKRoJtC9b0fGp 3hz07m6HaUsDGJcDLJiiizSbZH5M59X8ZZ4+VnAzGFlAhnCwMUpABOpyGL4wymiyeYkfPhectLn jSErFqy8kdu3dVfxTt/DmRWz7wictWRk6OIsTf5a2cYV7Z95+4HAv0eXz874vL33g5XF2ev1ooF 13AA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=916; i=matttbe@kernel.org; h=from:subject; bh=M8Vhj+B3+aLfbEzYphDOwa08D5g90EcE1xf4Qjj7kZI=; b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDLaqw1eVPo+C1OZoLjM1VfLKlP+2IGUciOWWztYE5cvl 1C1l1TvKGVhEONikBVTZJFui8yf+byKt8TLzwJmDisTyBAGLk4BmMiZSwz/sw79ueY7JXfW/PQ1 oocs+guV1mbEPszRPybt5OueIxPyiJGh/V63yDK5rXd+XJy38FnDxKuJZhWGxWxbix1DyvtdqkJ 5AQ==
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 Content-Transfer-Encoding: 8bit
 
-From: Paolo Abeni <pabeni@redhat.com>
+Greg recently reported 3 patches that could not be applied without
+conflicts in v6.1:
 
-commit da9b2fc7b73d147d88abe1922de5ab72d72d7756 upstream.
+ - f8a1d9b18c5e ("mptcp: make fallback action and fallback decision atomic")
+ - def5b7b2643e ("mptcp: plug races between subflow fail and subflow creation")
+ - da9b2fc7b73d ("mptcp: reset fallback status gracefully at disconnect() time")
 
-mptcp_disconnect() clears the fallback bit unconditionally, without
-touching the associated flags.
+Conflicts have been resolved, and documented in each patch.
 
-The bit clear is safe, as no fallback operation can race with that --
-all subflow are already in TCP_CLOSE status thanks to the previous
-FASTCLOSE -- but we need to consistently reset all the fallback related
-status.
+Paolo Abeni (3):
+  mptcp: make fallback action and fallback decision atomic
+  mptcp: plug races between subflow fail and subflow creation
+  mptcp: reset fallback status gracefully at disconnect() time
 
-Also acquire the relevant lock, to avoid fouling static analyzers.
+ net/mptcp/options.c  |  3 ++-
+ net/mptcp/pm.c       |  8 ++++++-
+ net/mptcp/protocol.c | 55 ++++++++++++++++++++++++++++++++++++--------
+ net/mptcp/protocol.h | 27 +++++++++++++++++-----
+ net/mptcp/subflow.c  | 30 +++++++++++++++---------
+ 5 files changed, 95 insertions(+), 28 deletions(-)
 
-Fixes: b29fcfb54cd7 ("mptcp: full disconnect implementation")
-Cc: stable@vger.kernel.org
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Link: https://patch.msgid.link/20250714-net-mptcp-fallback-races-v1-3-391aff963322@kernel.org
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- net/mptcp/protocol.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index d95fc113d317..e3f09467b36b 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -3208,7 +3208,16 @@ static int mptcp_disconnect(struct sock *sk, int flags)
- 	 * subflow
- 	 */
- 	mptcp_destroy_common(msk, MPTCP_CF_FASTCLOSE);
-+
-+	/* The first subflow is already in TCP_CLOSE status, the following
-+	 * can't overlap with a fallback anymore
-+	 */
-+	spin_lock_bh(&msk->fallback_lock);
-+	msk->allow_subflows = true;
-+	msk->allow_infinite_fallback = true;
- 	WRITE_ONCE(msk->flags, 0);
-+	spin_unlock_bh(&msk->fallback_lock);
-+
- 	msk->cb_flags = 0;
- 	msk->recovery = false;
- 	msk->can_ack = false;
 -- 
 2.50.0
 
