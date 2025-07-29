@@ -1,130 +1,137 @@
-Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B062E287277
-	for <mptcp@lists.linux.dev>; Tue, 29 Jul 2025 10:24:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DA8F1A83ED
+	for <mptcp@lists.linux.dev>; Tue, 29 Jul 2025 14:22:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753784693; cv=none; b=mRu06JgSocShAEyduDzITN0OYAX1xGqpY+UQ5hSeVko5fIkvm89lBkvAaSL5HniHDxWYm6kjQo0H1xIXFQbXsdJIwgIEqJasdjxluCYaGOhZP24D/CC9ihNNW4c4ZeDqte6cUQVIgwarcbcmZ0JocaztyfJbdOTuAt1uDmbJLUs=
+	t=1753798972; cv=none; b=rnOh/u+Ps4CMwqnC96sMizhEmU3WvpTnotdDBNDaAH335MN9QYFH2rZnOPQOL4jje3+avpAPQYJoHMjDBlLn42VBKzYexLSCndllVD7dHsaasgP4N24yVdo3mBhQ3xz+szsmcN6jNH8PNGYVDR75eg0LtfeMAdI38XP17rnw7Xs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753784693; c=relaxed/simple;
-	bh=99lfJhLDGHRm2mq/HNYIzTgUvNaPwYaPpf7V+MejLxA=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=c+WooKc5RK4RWy1HcbfVwld1SL5Pfy3WoxwnedegYJBgZkrFpS3XokFaTl152nfgQGEH4H+Gw66LrfM03EIWbQ6SXuMDe9G/kROuZmgPCotENVc3CugsTSo4UdGtz+1l0c8D3l+FA5wGMFOoxO5IcGMs7FDfCLbdCZqwNjJBbFo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WS9d29Fv; arc=none smtp.client-ip=209.85.222.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1753798972; c=relaxed/simple;
+	bh=n/B1V47tIX2IzjUKv7W7NbvhxGtBrYglLmbZLfK4Y84=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uMkyUl0O4a0hK8y5Qyk2iPljfNA669CrmuYSqWjTnJGmf3IykgpvRs4sbJIRsz3yDR2puTWOM+yaVSxySCyu+MusVkc9oFZisasXClU85k/00v3cBSIlWHXc5TrYAeiz3xfhFYxRTk8FMvroIsg08ae0vJSufr8JYvhm5Z73b8c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=vqlIU1dp; arc=none smtp.client-ip=209.85.160.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WS9d29Fv"
-Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-7dfd667e539so575380885a.2
-        for <mptcp@lists.linux.dev>; Tue, 29 Jul 2025 03:24:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="vqlIU1dp"
+Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-4ab39fb71dbso58128541cf.3
+        for <mptcp@lists.linux.dev>; Tue, 29 Jul 2025 07:22:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1753784690; x=1754389490; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=s3Me0CIAmeq93kyb5+5DzV6PqResCSof9KegYhIQi5c=;
-        b=WS9d29FvaconqqjpS2NJAPPkFKmePQXq5KgB+dKcXdHP76E9h/yvxKSiZou5vWcSGf
-         eiuU1sl/GCNL1cHF2szGOGFjE7TLn71eravHMRLJxpcovUs+Wt7CrFxsATGrZEg0iQfF
-         u4eUrqhuOlXrKpz1F5GmJ5LDV2rFFDw3GagUZdHw0nZPDS8fsqXKXWT9W/FkKJFXlnUr
-         ZTETt8JvxWnDvhWUu2pMoU91hl/pVH8x36dfpvnoUQPIdYYB2SOw6stwZRvnDOJwIs2l
-         /3XJRWfcUjW49KcGMHJ7fxGnc9x7nhJ7/2H8XZW8PPguIpv6oRLRzQMzASBjmVlOw/wA
-         RWTg==
+        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1753798969; x=1754403769; darn=lists.linux.dev;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=COkIEuiWzegLgJMToflCtnJ3/8gZZNZmKmrpqxdoDwA=;
+        b=vqlIU1dp6VNLHHdtpnQoBwg9aeimJbeFO1GRRBh/WAx11KzQ6IurNUErydUKEC6ssM
+         j28Vgurkgq7MZm2YasNO+xqntD2o0EC8XIf2mIhE34+XL8cF8Q4J/7nngPSQkvVmtsd8
+         nP1SvSbR9FCBFJQ6d7n4jmL8WnsfshbcuktIZe4/ahHStCVT/I4WEWxLTR2KewVoN23v
+         +WKdCaKzQkTj0z77gXCoQL/EtseGvi/Th0Eh5adSTxMbwQO/G0km8y/qIO+QzkfQFLMI
+         HN/KxS3jI/v3l4Xkkb+BdYE11eAxdHz3n3vWyfzkn5TBaW51aGJYlPrMFZVirSFli6gu
+         mZwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753784690; x=1754389490;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=s3Me0CIAmeq93kyb5+5DzV6PqResCSof9KegYhIQi5c=;
-        b=evACe1nzFgMNxHNEL5gxTHs9yS1JMK276m73Cqar4MO/ND87ka+WSq02xDCuiCRusa
-         5nXQkAWPbHIr+c3H6oxL4ZqVaYb3KkNMq4N8SFL+/UsJH0dC4eP7lY8fzgH13dN5TRAZ
-         Ht08Yv4S7oN1QpWhMXIRejY1ynoRRMdbss/dpzXELmYSHcbZtp2srlrq7Fr2DnRO2f/v
-         GswEzI7Arhl/kDTgm+pmrDWDpkzO1DrMnvtgFZ23IlbWH8hVZDExVjIRVkKKXk/ziZLj
-         ObExqgpF3625mJzWbEVpPdQLXXj+sDTtCbp5bthsiXqQ53wW9UiJLQEiO7cCYHI4L66e
-         0Uew==
-X-Gm-Message-State: AOJu0Yy8wT+OkMmJmpgVOaKiwo69FLIRBOhl31PL9RHATwyCpGJJun5+
-	yCKFMWaTky2cZiH7Jtd0MPkkQAw2ghTJ/jVctHC9bexDZegADvvBp/OZei5THFU=
-X-Gm-Gg: ASbGncv6ObkD1jrxPa8p5+iCG/eDkoRArd+2ZaMysbeXllf4NQV59j2jBp0lS7E0ngd
-	0x5Xk1z7WLMqVL7HaOYs670L/m37hZKygJdwdR78A/JASGfDvoHUEW6SRv5BsI84vbo96PwPhFj
-	YzNC+e8PRo3nK/WhWUhoPj5xs0HoNi0CuF/fjuU8mXaqdXCV+zHNGps3haOwsrADqDLqmrgLX/W
-	g6ZxpP2EwlhUixYV7AY9U0dDndtv3h2EaTuA1urq9AZnypLpJXWuTQrrI5RZLboQbDwOiGlbl4M
-	ZRY705Ucn4ahCnvv3khK9xovDaY69EmOyv6kOnCXS9Qi01Z3hCjm9l4YDXRa+DQY4LXTMb3mSxp
-	C9vBxGjOAx94bj3I7n9c/yZjCxf6+BVYdriiC
-X-Google-Smtp-Source: AGHT+IFEbAGYfFWjG5EKwI4+2ekMpYezpUZeu9ExIvx6PNFVLGlgRIudH7xFzsnVo0ek3YHpLDiVQg==
-X-Received: by 2002:a05:620a:720b:b0:7d3:90ab:814a with SMTP id af79cd13be357-7e63bf60f26mr1652321985a.24.1753784690539;
-        Tue, 29 Jul 2025 03:24:50 -0700 (PDT)
-Received: from [127.0.0.1] ([68.154.119.209])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7e6432939cesm403468485a.22.2025.07.29.03.24.49
+        d=1e100.net; s=20230601; t=1753798969; x=1754403769;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=COkIEuiWzegLgJMToflCtnJ3/8gZZNZmKmrpqxdoDwA=;
+        b=YkbL1cBjai3Ji66rVfFA9HG65vuAEbO2zKGrNu9JsG9bLQnRw7Q4SuBv8uT4JnUSNE
+         zlwqgWG1ckKRqsyxPIobXPePxzT2FPl4/0ncMemy4uAljLAWcEzvbZ9Vcbhs7HDeP4Sl
+         VlzoLHZUK9TbVemRlZ1UklRbN6LmQTqEve+l1JSwECIetj2a69lJiEyAFe+reH4iB3py
+         BX14RuxPreoRf6Crf/GeORZmryYfcmrURidiw8gxIUZV3rpBv2XJ8/s62sR11ELd/j20
+         Wur2PoDRYl7dJpIEudZoFnS6oj+qWthVOaa4ZQG/eawGGKfGoBklSINUwK+osMRi6OAA
+         Erxw==
+X-Forwarded-Encrypted: i=1; AJvYcCX3EADSmUkkSRybBTOXt6yfw916MHBSQSUm6nVIj76yUhpaAQUFYvK8b1JfGx7m5h+ObsKJoQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yw9i8VFrU0qJEsQ+gvI75b21eQwUrkzDUpgbmunBCrGkuT4CXGN
+	kx+JI9ZKnwVkszzDXmFQnyeMShol2HhZ9VDj01jJiBUEidbOqdkeR/WotbljDMPCz8M=
+X-Gm-Gg: ASbGncsZK8KK7XTDb5OsjuTIgblv+SFlzlNWPtLDV6y2Mjv8IwkXepUOFpPeA4FjcIS
+	egxgLRIuK5plRuoYqHr38+n+yHdqb2lhj5IoWNvz+QLg0gp0c6Ysgecv+rEk69kXdNMKZo/wQC2
+	6FSgxoNKTneOgX0+9CQNE6ncMo8jGVzEag/eswmXjrNF0Mer6IlKi3ID6UlduE2Y7HSmOz5KlPx
+	CLq/IaCx0RHKumY65f8kGB0hKfn/9I0Zj6z45cAvmfv0tsjUeNerFyqHTL09NslgiSPkKbRZD10
+	L0/xlw21ymfyOJWcChSUSVjoWdgkStqGRPNbbgfdOovonWLEcWRZC2fv20eW7RxrJmMBkeMw3YX
+	kYHtee1PANy8OxTq1HtozpsEP39JMQc84
+X-Google-Smtp-Source: AGHT+IEUceVkl40iNUbmH8CG0B9SvtBCZGSM71xkMe4dIMOtKKEAU9bj+x0vh8grcAXbbZcW59/UVg==
+X-Received: by 2002:a05:622a:3:b0:4a9:7725:b1be with SMTP id d75a77b69052e-4ae8ef406d4mr180745941cf.8.1753798968930;
+        Tue, 29 Jul 2025 07:22:48 -0700 (PDT)
+Received: from localhost ([2603:7000:c01:2716:365a:60ff:fe62:ff29])
+        by smtp.gmail.com with UTF8SMTPSA id d75a77b69052e-4aea7d724d0sm38853931cf.23.2025.07.29.07.22.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Jul 2025 03:24:49 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <tanggeliang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <cover.1753777199.git.tanggeliang@kylinos.cn>
-References: <cover.1753777199.git.tanggeliang@kylinos.cn>
-Subject: Re: [PATCH mptcp-next 0/3] mptcp: improve ADD_ADDR timeout
- handling
-Message-ID: <bf590aa7-5a40-8e88-6d16-a878b2becb4e@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 29 Jul 2025 10:24:49 +0000
+        Tue, 29 Jul 2025 07:22:48 -0700 (PDT)
+Date: Tue, 29 Jul 2025 10:22:46 -0400
+From: Johannes Weiner <hannes@cmpxchg.org>
+To: Kuniyuki Iwashima <kuniyu@google.com>
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Neal Cardwell <ncardwell@google.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Willem de Bruijn <willemb@google.com>,
+	Matthieu Baerts <matttbe@kernel.org>,
+	Mat Martineau <martineau@kernel.org>,
+	Michal Hocko <mhocko@kernel.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Simon Horman <horms@kernel.org>, Geliang Tang <geliang@kernel.org>,
+	Muchun Song <muchun.song@linux.dev>,
+	Kuniyuki Iwashima <kuni1840@gmail.com>, netdev@vger.kernel.org,
+	mptcp@lists.linux.dev, cgroups@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH v1 net-next 13/13] net-memcg: Allow decoupling memcg from
+ global protocol memory accounting.
+Message-ID: <20250729142246.GF54289@cmpxchg.org>
+References: <20250721203624.3807041-1-kuniyu@google.com>
+ <20250721203624.3807041-14-kuniyu@google.com>
+ <20250728160737.GE54289@cmpxchg.org>
+ <CAAVpQUBYsRGkYsvf2JMTD+0t8OH41oZxmw46WTfPhEprTaS+Pw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAAVpQUBYsRGkYsvf2JMTD+0t8OH41oZxmw46WTfPhEprTaS+Pw@mail.gmail.com>
 
-Hi Geliang,
+On Mon, Jul 28, 2025 at 02:41:38PM -0700, Kuniyuki Iwashima wrote:
+> On Mon, Jul 28, 2025 at 9:07 AM Johannes Weiner <hannes@cmpxchg.org> wrote:
+> >
+> > On Mon, Jul 21, 2025 at 08:35:32PM +0000, Kuniyuki Iwashima wrote:
+> > > Some protocols (e.g., TCP, UDP) implement memory accounting for socket
+> > > buffers and charge memory to per-protocol global counters pointed to by
+> > > sk->sk_proto->memory_allocated.
+> > >
+> > > When running under a non-root cgroup, this memory is also charged to the
+> > > memcg as sock in memory.stat.
+> > >
+> > > Even when memory usage is controlled by memcg, sockets using such protocols
+> > > are still subject to global limits (e.g., /proc/sys/net/ipv4/tcp_mem).
+> > >
+> > > This makes it difficult to accurately estimate and configure appropriate
+> > > global limits, especially in multi-tenant environments.
+> > >
+> > > If all workloads were guaranteed to be controlled under memcg, the issue
+> > > could be worked around by setting tcp_mem[0~2] to UINT_MAX.
+> > >
+> > > In reality, this assumption does not always hold, and a single workload
+> > > that opts out of memcg can consume memory up to the global limit,
+> > > becoming a noisy neighbour.
+> >
+> > Yes, an uncontrolled cgroup can consume all of a shared resource and
+> > thereby become a noisy neighbor. Why is network memory special?
+> >
+> > I assume you have some other mechanisms for curbing things like
+> > filesystem caches, anon memory, swap etc. of such otherwise
+> > uncontrolled groups, and this just happens to be your missing piece.
+> 
+> I think that's the tcp_mem[] knob, limiting tcp mem globally for
+> the "uncontrolled" cgroup.  But we can't use it because the
+> "controlled" cgroup is also limited by this knob.
 
-Thank you for your modifications, that's great!
+No, I was really asking what you do about other types of memory
+consumed by such uncontrolled cgroups.
 
-Our CI did some validations and here is its report:
-
-- KVM Validation: normal: Unstable: 2 failed test(s): packetdrill_add_addr =
-selftest_mptcp_connect =F0=9F=94=B4
-- KVM Validation: debug: Unstable: 3 =
-failed test(s): packetdrill_add_addr packetdrill_sockopts =
-selftest_mptcp_connect_checksum =F0=9F=94=B4
-- KVM Validation: btf-normal =
-(only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only =
-bpftest_all): Success! =E2=9C=85
-- Task: https://github.=
-com/multipath-tcp/mptcp_net-next/actions/runs/16591166379
-
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/4e382e2fda74
-Patchwork: https://patchwork.kernel.=
-org/project/mptcp/list/?series=3D986638
-
-
-If there are some issues, you can=
- reproduce them using the same environment as
-the one used by the CI thanks=
- to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
-
-
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 Core)
+You can't have uncontrolled groups and complain about their resource
+consumption.
