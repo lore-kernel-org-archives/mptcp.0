@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D81D19E7D0
-	for <mptcp@lists.linux.dev>; Wed, 30 Jul 2025 22:05:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 584E219C556
+	for <mptcp@lists.linux.dev>; Wed, 30 Jul 2025 22:05:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753913104; cv=none; b=H0T9rVUWmzr4vO1I88ti9lOsG8V6fKpokJ4AiYdJc3vrJZYzmI/avG67dG6UxanpJgCfALXauknVZRq5aVPmxCuBTmla2xvFuj32u6Fd4+Tf55nz2yvxh812ch3H4BEvzFf1DBOmzEjxftjWTPNYSx1wcHjpwovxHfpF4qOhAuU=
+	t=1753913108; cv=none; b=g8vh35PxVJH04+jTIeccjgE8vuUcKXKlfgWrZxDMgiTHjLrzcCpPM01b2RW+irniKeu6+unvt1sKNKVcEYqPWOy7uy0BKGVRKYnZM8C9pLOktCQwsR9nBGExePMWXxqphDMBvs/3sqcT71Kp8yRXigA6NJ2+50illrIIGXg//4U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753913104; c=relaxed/simple;
-	bh=930a9eit/ejj/gv4cKREiOY1au3LObeFPugKoZ4VmTg=;
+	s=arc-20240116; t=1753913108; c=relaxed/simple;
+	bh=1VWu9eryvHD5IRmSi++l5Tq0qE1UKGuQ/Qlbh8jSNL0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dj7pnlG7sLilqOshqn8KrdhB5KQhuCudJlFQaU9E7AAEWiNLc9ljaPb6RyNbT/D2NtOvMUex+DK4skTMMCVyIsq0E3cfc4ndazh/xXgwpOfpGVw4dj+6T/WEUqDJRWSqBIPi2MGE/Xqjxr/yOjch19rNwVMwrds22aFg438oV8o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YZuV1Bbb; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=Ppyxrk+o59C1HdM1ezxsibfWn15PVg8Pg0zlGQsJVmZZcOhkJ+uAeuCZ85eum1FlubPH+lxi11aSI+lDd4t6J+uYhUO2UwalkympWpIW6bFQksX1FlytUquQrJ7dDr0yrUC8hP8h6hzfM222QVhCOHJ+yeXJAbEkWSxuEbbxr8o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L4tjT4IN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YZuV1Bbb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7309AC4CEE3;
-	Wed, 30 Jul 2025 22:05:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L4tjT4IN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20C2AC4CEE3;
+	Wed, 30 Jul 2025 22:05:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753913104;
-	bh=930a9eit/ejj/gv4cKREiOY1au3LObeFPugKoZ4VmTg=;
+	s=k20201202; t=1753913107;
+	bh=1VWu9eryvHD5IRmSi++l5Tq0qE1UKGuQ/Qlbh8jSNL0=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=YZuV1Bbbr5IYWDAdcisZgDnsucHJ0E8GLsOXNResi0VSy6jVUXCJ/OI69R9Nd5P/y
-	 1PaN8KF6w3VPlx/RIWrohRLx2zMIHF/6/c2MCqUEFJvD61RZ8GhjGORpwICyFRnVvh
-	 OTeHlaMmErATI6/OTmNO/0eMk0NpoUhpjQDoWn25dAijJq9sq86IpRbs1xTAxA53hb
-	 JBq6hP6AnBEx38QvIeFqCRIwmsED1cfhoV8sRFAwSgkEpwwS6y0qn+MJkoKCO3a+W+
-	 dGKyp/wYyw4bvXqFOFgFgF/HID3ja73y/uaLovAiR9XsmtRuk8MiHs3hvbwgqoBaEW
-	 gX5wOWGYQoPgg==
-Message-ID: <6c890c6c-fa91-4310-b07d-fa7207341aae@kernel.org>
-Date: Thu, 31 Jul 2025 00:05:01 +0200
+	b=L4tjT4INzFmiZnutJrb08cSDn6tm7Wi18f/66lCDU7DbA5X5ikaTIbmPfgol/c4WS
+	 WC9Xo7gghPdE+5hnvdQZIe/gSkF9rtdGnIvVzRFQgWnOUa5bGGXJFMWBdFNhVJGuZU
+	 1KmKqfJPEAFPz333BMPn8iUZJ0IZnPfLe0shL5CEe70O6/cqzcFbOr15ShvrYGE8Jm
+	 QShnTKS3auYuN7s57tGJJvq/b6dwp+tPW1/7Gpm/1Zj3JnZawDDJNUgfA8qZ+j7r09
+	 tYnaP3T+LVZYQq7t/sAwe8FoMgDtJKP0s+6o7UgEPQDo5NbZ0PqGzFm7Mqy82s/OHw
+	 1+5H8M/zInYWw==
+Message-ID: <f61f46ed-9619-4c15-8bb6-81aba5a5e06c@kernel.org>
+Date: Thu, 31 Jul 2025 00:05:06 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next 5/7] Add MPTCP support to ServerSocket class
+Subject: Re: [PATCH mptcp-next 6/7] Add MPTCP support to Socket class
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Gang Yan <yangang@kylinos.cn>
 References: <cover.1753247666.git.geliang@kernel.org>
- <f5c39ac151fc97dd3625f5a48398716a483794d2.1753247666.git.geliang@kernel.org>
+ <b70623fa81d0d269f407cdd890d48668d1b4c443.1753247666.git.geliang@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,35 +86,24 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <f5c39ac151fc97dd3625f5a48398716a483794d2.1753247666.git.geliang@kernel.org>
+In-Reply-To: <b70623fa81d0d269f407cdd890d48668d1b4c443.1753247666.git.geliang@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
 On 23/07/2025 07:16, Geliang Tang wrote:
-> This patch extends ServerSocket to support Multipath TCP (MPTCP) by:
+> This patch extends the Socket class to support Multipath TCP (MPTCP) by:
 > 
-> 1. Adding a new constructor that accepts an mptcp parameter to enable
->    MPTCP
-> 2. Introducing a new createImpl factory method that propagates the MPTCP
->    setting to the underlying socket implementation
-> 3. Maintaining all existing functionality while adding MPTCP capabilities
-> 
-> The new constructor follows the same pattern as existing ServerSocket
-> constructors but adds the mptcp parameter to control protocol selection.
-> When enabled, the implementation uses the MPTCP-enabled socket creation
-> path established in previous patches.
+> 1. Adding a new constructor that accepts an mptcp parameter to enable MPTCP
+> 2. Introducing a new private Socket constructor variant that handles MPTCP
+>    connections
+> 3. Adding a createImpl factory method that propagates the MPTCP setting
+>    to the underlying socket implementation
+> 4. Maintaining backward compatibility while adding MPTCP capabilities
 
-Similar to my comment in patch 2/7, I don't know what is best in this
-project, but maybe instead of duplicating helpers, you could have the
-previous helper calling the new extension?
-
-So ServerSocket(int port, int backlog, InetAddress bindAddr) would call
-the new one with 'mptcp' as new parameter? Same for createImpl()?
-
-But not sure what the Java maintainers prefer. Maybe they are OK with
-what you suggested.
+Same here: the new helper could be called from the existing Socket() one
+instead of duplicating the code.
 
 Cheers,
 Matt
