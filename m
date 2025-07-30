@@ -1,171 +1,452 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CBA91F1921
-	for <mptcp@lists.linux.dev>; Wed, 30 Jul 2025 07:23:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B52A47E1;
+	Wed, 30 Jul 2025 09:13:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753860180; cv=none; b=pbt61iPbGKhC5+o+Bg7HfKSSiW0u4sega5oD9Xskm0hDnRtizhf5/8IXu7tnd3bOLrt965v2SXksa1272LTc3JlXWGGQWI0jiJUuHSXIGmbNKzQUKtbP6AVxTcMKCH7rARlAWQ2yvPrfNpMnRK8K9sahoto9FyyqDQ5bfLp1nKM=
+	t=1753866803; cv=none; b=DGAJWZcDkLhK8Gdw+D7WjPhfPjWHDsUyvplC6tWq65Lr4KMZxiCmD6GNbU3x29nq/m1XU21bYeenkc0eIfqWjfGl5CQFBGCi/X+nyn1Khs3j7CZjd7L/O4xbqoG9nvnaUTs67ETyyeV7SqQKBgZQ/oBDERwvVk0hZA5tG2lbMy0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753860180; c=relaxed/simple;
-	bh=1NHsVCQEBPxU9SneQfXnxPcuLRPYwsuZLkpyI39muCY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lyCGH1bnI5wGqf5fL1KUpAZYYwruNaiUJKa8Z6I2vC7/khnxPeshrnhfFwcg/4RQVZOM0dnVfMbCTaIFkczG+MBiN0XoKdC1hkWWTQOjzZquV4TdkmzV6rIAu6F99/TU1J/w/zEIPPg6Gw1EgrzyGeF+A+cTCH3Q76kmptcaKa4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XwHAkLkN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1753866803; c=relaxed/simple;
+	bh=4HMRYDK/kLJI2fQUBfik08j6Hybfs+TQ3+XmyIJ27lk=;
+	h=Subject:To:Cc:From:Date:In-Reply-To:Message-ID:MIME-Version:
+	 Content-Type; b=lM5cQwVZnx488F0OyXVUPm8LqJrnD6QKNsPSIy+eqFUrY96P6Yx2KGgK5C8EwOLBir31CyQ+aLX4A8hcWDLkZydQNJsG+XGForV+opNPryYOjL6ePmdUi0Qv+d2jkoZsxDqSU0XHJ4cBKFyws4+YmrdUZovxS7oSgI39PgQtfUc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=hqNFcmLA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XwHAkLkN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77007C4CEF6;
-	Wed, 30 Jul 2025 07:22:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753860180;
-	bh=1NHsVCQEBPxU9SneQfXnxPcuLRPYwsuZLkpyI39muCY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=XwHAkLkNRKTvinxIWZPoY/nkqyrrZ0mrBdhlnk2onedOO5VkcaLzvwaQZClU2IoBc
-	 881AE4Bbr8C46e54re2wjzC5RrM63KZGL6EQlEcrccu/isfLOlu9zv/uHUccw2juk5
-	 UxtLIp8vHoSe9l7YMc0FxraevBUYfsFf3E1q2jJ6xdBhDF4+IaI+RazTrKLJ1hdVEE
-	 Cp9mJ7aOVpbq+RpmcjuLmLP4frGLcj3Hp7LYyOe3U31vLL3a5Zbw+PEnOwTzVe3q74
-	 yN8mwGiV3xlOdCfoSLEG9uX+WcYQvIGeUV9Wd95sSeIu5R7O3/mtECmThUhkKr0nlR
-	 JsypxT/RHvSWg==
-From: Geliang Tang <geliang@kernel.org>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next 3/3] selftests: mptcp: add TCP_MD5SIG tests in sockopt
-Date: Wed, 30 Jul 2025 15:22:45 +0800
-Message-ID: <42b549e570e3505028f96509196c2623cab93299.1753859907.git.tanggeliang@kylinos.cn>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <cover.1753859907.git.tanggeliang@kylinos.cn>
-References: <cover.1753859907.git.tanggeliang@kylinos.cn>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="hqNFcmLA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3EBE7C4CEF5;
+	Wed, 30 Jul 2025 09:13:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1753866803;
+	bh=4HMRYDK/kLJI2fQUBfik08j6Hybfs+TQ3+XmyIJ27lk=;
+	h=Subject:To:Cc:From:Date:In-Reply-To:From;
+	b=hqNFcmLANGCDs981CKY0o7o/kOgt1PQq06oFsBAQ8TjU63AwNEENDgpFxtCezTjIl
+	 yw2mePmjlka5N41CNDTHbeT2yPDR/Jd5yZeEtT9UfUQ54zJfemx2Ou5sfdmiPuyh27
+	 oKW3ze4nxQ1UjhQlJZmAeUMqpHVbCw72yOua5+9s=
+Subject: Patch "mptcp: make fallback action and fallback decision atomic" has been added to the 6.6-stable tree
+To: gregkh@linuxfoundation.org,kuba@kernel.org,matttbe@kernel.org,mptcp@lists.linux.dev,pabeni@redhat.com,sashal@kernel.org,syzbot+5cf807c20386d699b524@syzkaller.appspotmail.com
+Cc: <stable-commits@vger.kernel.org>
+From: <gregkh@linuxfoundation.org>
+Date: Wed, 30 Jul 2025 11:13:04 +0200
+In-Reply-To: <20250728091448.3494479-6-matttbe@kernel.org>
+Message-ID: <2025073004-camera-humbling-e666@gregkh>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=ANSI_X3.4-1968
 Content-Transfer-Encoding: 8bit
+X-stable: commit
+X-Patchwork-Hint: ignore 
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Add test cases for TCP_MD5SIG and TCP_MD5SIG_EXT socket options:
-- Enable CONFIG_TCP_MD5SIG in test config
-- Implement test functions for both options:
-  - test_tcp_md5sig_sockopt() - sets basic MD5 key
-  - test_tcp_md5sig_ext_sockopt() - sets extended MD5 with flags
-- Tests run on both IPv4/IPv6 during server setup
+This is a note to let you know that I've just added the patch titled
 
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+    mptcp: make fallback action and fallback decision atomic
+
+to the 6.6-stable tree which can be found at:
+    http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
+
+The filename of the patch is:
+     mptcp-make-fallback-action-and-fallback-decision-atomic.patch
+and it can be found in the queue-6.6 subdirectory.
+
+If you, or anyone else, feels it should not be added to the stable tree,
+please let <stable@vger.kernel.org> know about it.
+
+
+From stable+bounces-164896-greg=kroah.com@vger.kernel.org Mon Jul 28 11:15:30 2025
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Date: Mon, 28 Jul 2025 11:14:49 +0200
+Subject: mptcp: make fallback action and fallback decision atomic
+To: mptcp@lists.linux.dev, stable@vger.kernel.org, gregkh@linuxfoundation.org
+Cc: Paolo Abeni <pabeni@redhat.com>, sashal@kernel.org, Matthieu Baerts <matttbe@kernel.org>, syzbot+5cf807c20386d699b524@syzkaller.appspotmail.com, Jakub Kicinski <kuba@kernel.org>
+Message-ID: <20250728091448.3494479-6-matttbe@kernel.org>
+
+From: Paolo Abeni <pabeni@redhat.com>
+
+commit f8a1d9b18c5efc76784f5a326e905f641f839894 upstream.
+
+Syzkaller reported the following splat:
+
+  WARNING: CPU: 1 PID: 7704 at net/mptcp/protocol.h:1223 __mptcp_do_fallback net/mptcp/protocol.h:1223 [inline]
+  WARNING: CPU: 1 PID: 7704 at net/mptcp/protocol.h:1223 mptcp_do_fallback net/mptcp/protocol.h:1244 [inline]
+  WARNING: CPU: 1 PID: 7704 at net/mptcp/protocol.h:1223 check_fully_established net/mptcp/options.c:982 [inline]
+  WARNING: CPU: 1 PID: 7704 at net/mptcp/protocol.h:1223 mptcp_incoming_options+0x21a8/0x2510 net/mptcp/options.c:1153
+  Modules linked in:
+  CPU: 1 UID: 0 PID: 7704 Comm: syz.3.1419 Not tainted 6.16.0-rc3-gbd5ce2324dba #20 PREEMPT(voluntary)
+  Hardware name: QEMU Ubuntu 24.04 PC (i440FX + PIIX, 1996), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+  RIP: 0010:__mptcp_do_fallback net/mptcp/protocol.h:1223 [inline]
+  RIP: 0010:mptcp_do_fallback net/mptcp/protocol.h:1244 [inline]
+  RIP: 0010:check_fully_established net/mptcp/options.c:982 [inline]
+  RIP: 0010:mptcp_incoming_options+0x21a8/0x2510 net/mptcp/options.c:1153
+  Code: 24 18 e8 bb 2a 00 fd e9 1b df ff ff e8 b1 21 0f 00 e8 ec 5f c4 fc 44 0f b7 ac 24 b0 00 00 00 e9 54 f1 ff ff e8 d9 5f c4 fc 90 <0f> 0b 90 e9 b8 f4 ff ff e8 8b 2a 00 fd e9 8d e6 ff ff e8 81 2a 00
+  RSP: 0018:ffff8880a3f08448 EFLAGS: 00010246
+  RAX: 0000000000000000 RBX: ffff8880180a8000 RCX: ffffffff84afcf45
+  RDX: ffff888090223700 RSI: ffffffff84afdaa7 RDI: 0000000000000001
+  RBP: ffff888017955780 R08: 0000000000000001 R09: 0000000000000000
+  R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+  R13: ffff8880180a8910 R14: ffff8880a3e9d058 R15: 0000000000000000
+  FS:  00005555791b8500(0000) GS:ffff88811c495000(0000) knlGS:0000000000000000
+  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  CR2: 000000110c2800b7 CR3: 0000000058e44000 CR4: 0000000000350ef0
+  Call Trace:
+   <IRQ>
+   tcp_reset+0x26f/0x2b0 net/ipv4/tcp_input.c:4432
+   tcp_validate_incoming+0x1057/0x1b60 net/ipv4/tcp_input.c:5975
+   tcp_rcv_established+0x5b5/0x21f0 net/ipv4/tcp_input.c:6166
+   tcp_v4_do_rcv+0x5dc/0xa70 net/ipv4/tcp_ipv4.c:1925
+   tcp_v4_rcv+0x3473/0x44a0 net/ipv4/tcp_ipv4.c:2363
+   ip_protocol_deliver_rcu+0xba/0x480 net/ipv4/ip_input.c:205
+   ip_local_deliver_finish+0x2f1/0x500 net/ipv4/ip_input.c:233
+   NF_HOOK include/linux/netfilter.h:317 [inline]
+   NF_HOOK include/linux/netfilter.h:311 [inline]
+   ip_local_deliver+0x1be/0x560 net/ipv4/ip_input.c:254
+   dst_input include/net/dst.h:469 [inline]
+   ip_rcv_finish net/ipv4/ip_input.c:447 [inline]
+   NF_HOOK include/linux/netfilter.h:317 [inline]
+   NF_HOOK include/linux/netfilter.h:311 [inline]
+   ip_rcv+0x514/0x810 net/ipv4/ip_input.c:567
+   __netif_receive_skb_one_core+0x197/0x1e0 net/core/dev.c:5975
+   __netif_receive_skb+0x1f/0x120 net/core/dev.c:6088
+   process_backlog+0x301/0x1360 net/core/dev.c:6440
+   __napi_poll.constprop.0+0xba/0x550 net/core/dev.c:7453
+   napi_poll net/core/dev.c:7517 [inline]
+   net_rx_action+0xb44/0x1010 net/core/dev.c:7644
+   handle_softirqs+0x1d0/0x770 kernel/softirq.c:579
+   do_softirq+0x3f/0x90 kernel/softirq.c:480
+   </IRQ>
+   <TASK>
+   __local_bh_enable_ip+0xed/0x110 kernel/softirq.c:407
+   local_bh_enable include/linux/bottom_half.h:33 [inline]
+   inet_csk_listen_stop+0x2c5/0x1070 net/ipv4/inet_connection_sock.c:1524
+   mptcp_check_listen_stop.part.0+0x1cc/0x220 net/mptcp/protocol.c:2985
+   mptcp_check_listen_stop net/mptcp/mib.h:118 [inline]
+   __mptcp_close+0x9b9/0xbd0 net/mptcp/protocol.c:3000
+   mptcp_close+0x2f/0x140 net/mptcp/protocol.c:3066
+   inet_release+0xed/0x200 net/ipv4/af_inet.c:435
+   inet6_release+0x4f/0x70 net/ipv6/af_inet6.c:487
+   __sock_release+0xb3/0x270 net/socket.c:649
+   sock_close+0x1c/0x30 net/socket.c:1439
+   __fput+0x402/0xb70 fs/file_table.c:465
+   task_work_run+0x150/0x240 kernel/task_work.c:227
+   resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
+   exit_to_user_mode_loop+0xd4/0xe0 kernel/entry/common.c:114
+   exit_to_user_mode_prepare include/linux/entry-common.h:330 [inline]
+   syscall_exit_to_user_mode_work include/linux/entry-common.h:414 [inline]
+   syscall_exit_to_user_mode include/linux/entry-common.h:449 [inline]
+   do_syscall_64+0x245/0x360 arch/x86/entry/syscall_64.c:100
+   entry_SYSCALL_64_after_hwframe+0x77/0x7f
+  RIP: 0033:0x7fc92f8a36ad
+  Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+  RSP: 002b:00007ffcf52802d8 EFLAGS: 00000246 ORIG_RAX: 00000000000001b4
+  RAX: 0000000000000000 RBX: 00007ffcf52803a8 RCX: 00007fc92f8a36ad
+  RDX: 0000000000000000 RSI: 000000000000001e RDI: 0000000000000003
+  RBP: 00007fc92fae7ba0 R08: 0000000000000001 R09: 0000002800000000
+  R10: 00007fc92f700000 R11: 0000000000000246 R12: 00007fc92fae5fac
+  R13: 00007fc92fae5fa0 R14: 0000000000026d00 R15: 0000000000026c51
+   </TASK>
+  irq event stamp: 4068
+  hardirqs last  enabled at (4076): [<ffffffff81544816>] __up_console_sem+0x76/0x80 kernel/printk/printk.c:344
+  hardirqs last disabled at (4085): [<ffffffff815447fb>] __up_console_sem+0x5b/0x80 kernel/printk/printk.c:342
+  softirqs last  enabled at (3096): [<ffffffff840e1be0>] local_bh_enable include/linux/bottom_half.h:33 [inline]
+  softirqs last  enabled at (3096): [<ffffffff840e1be0>] inet_csk_listen_stop+0x2c0/0x1070 net/ipv4/inet_connection_sock.c:1524
+  softirqs last disabled at (3097): [<ffffffff813b6b9f>] do_softirq+0x3f/0x90 kernel/softirq.c:480
+
+Since we need to track the 'fallback is possible' condition and the
+fallback status separately, there are a few possible races open between
+the check and the actual fallback action.
+
+Add a spinlock to protect the fallback related information and use it
+close all the possible related races. While at it also remove the
+too-early clearing of allow_infinite_fallback in __mptcp_subflow_connect():
+the field will be correctly cleared by subflow_finish_connect() if/when
+the connection will complete successfully.
+
+If fallback is not possible, as per RFC, reset the current subflow.
+
+Since the fallback operation can now fail and return value should be
+checked, rename the helper accordingly.
+
+Fixes: 0530020a7c8f ("mptcp: track and update contiguous data status")
+Cc: stable@vger.kernel.org
+Reported-by: Matthieu Baerts <matttbe@kernel.org>
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/570
+Reported-by: syzbot+5cf807c20386d699b524@syzkaller.appspotmail.com
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/555
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Link: https://patch.msgid.link/20250714-net-mptcp-fallback-races-v1-1-391aff963322@kernel.org
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+[ Conflicts in protocol.h, because commit 6ebf6f90ab4a ("mptcp: add
+  mptcpi_subflows_total counter") is not in this version, and this
+  causes conflicts in the context. Commit 65b02260a0e0 ("mptcp: export
+  mptcp_subflow_early_fallback()") is also not in this version, and
+  moves code from protocol.c to protocol.h, but the modification can
+  still apply there. ]
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- tools/testing/selftests/net/mptcp/config      |  1 +
- .../selftests/net/mptcp/mptcp_sockopt.c       | 67 +++++++++++++++++++
- 2 files changed, 68 insertions(+)
+ net/mptcp/options.c  |    3 ++-
+ net/mptcp/protocol.c |   42 ++++++++++++++++++++++++++++++++++++------
+ net/mptcp/protocol.h |   24 ++++++++++++++++++------
+ net/mptcp/subflow.c  |   11 +++++------
+ 4 files changed, 61 insertions(+), 19 deletions(-)
 
-diff --git a/tools/testing/selftests/net/mptcp/config b/tools/testing/selftests/net/mptcp/config
-index 968d440c03fe..d9022261b6f8 100644
---- a/tools/testing/selftests/net/mptcp/config
-+++ b/tools/testing/selftests/net/mptcp/config
-@@ -34,3 +34,4 @@ CONFIG_NET_ACT_PEDIT=m
- CONFIG_NET_CLS_ACT=y
- CONFIG_NET_CLS_FW=m
- CONFIG_NET_SCH_INGRESS=m
-+CONFIG_TCP_MD5SIG=y
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-index 9934a68df237..b99d7bce96ee 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-+++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-@@ -25,6 +25,7 @@
- #include <netinet/in.h>
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -979,8 +979,9 @@ static bool check_fully_established(stru
+ 		if (subflow->mp_join)
+ 			goto reset;
+ 		subflow->mp_capable = 0;
++		if (!mptcp_try_fallback(ssk))
++			goto reset;
+ 		pr_fallback(msk);
+-		mptcp_do_fallback(ssk);
+ 		return false;
+ 	}
  
- #include <linux/tcp.h>
-+#include <arpa/inet.h>
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -623,10 +623,9 @@ static bool mptcp_check_data_fin(struct
  
- static int pf = AF_INET;
- 
-@@ -127,6 +128,15 @@ struct so_state {
- #define MIN(a, b) ((a) < (b) ? (a) : (b))
- #endif
- 
-+struct tcp_md5sig_ext {
-+	struct __kernel_sockaddr_storage tcpm_addr;
-+	unsigned short	__tcpm_pad1;
-+	unsigned short	tcpm_keylen;
-+	unsigned char	tcpm_key[TCP_MD5SIG_MAXKEYLEN];
-+	unsigned int	tcpm_flags;
-+	unsigned int	tcpm_ifindex;
-+};
-+
- static void die_perror(const char *msg)
+ static void mptcp_dss_corruption(struct mptcp_sock *msk, struct sock *ssk)
  {
- 	perror(msg);
-@@ -697,6 +707,60 @@ static int xaccept(int s)
- 	return fd;
+-	if (READ_ONCE(msk->allow_infinite_fallback)) {
++	if (mptcp_try_fallback(ssk)) {
+ 		MPTCP_INC_STATS(sock_net(ssk),
+ 				MPTCP_MIB_DSSCORRUPTIONFALLBACK);
+-		mptcp_do_fallback(ssk);
+ 	} else {
+ 		MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_DSSCORRUPTIONRESET);
+ 		mptcp_subflow_reset(ssk);
+@@ -887,6 +886,14 @@ static bool __mptcp_finish_join(struct m
+ 	if (sk->sk_state != TCP_ESTABLISHED)
+ 		return false;
+ 
++	spin_lock_bh(&msk->fallback_lock);
++	if (__mptcp_check_fallback(msk)) {
++		spin_unlock_bh(&msk->fallback_lock);
++		return false;
++	}
++	mptcp_subflow_joined(msk, ssk);
++	spin_unlock_bh(&msk->fallback_lock);
++
+ 	/* attach to msk socket only after we are sure we will deal with it
+ 	 * at close time
+ 	 */
+@@ -895,7 +902,6 @@ static bool __mptcp_finish_join(struct m
+ 
+ 	mptcp_subflow_ctx(ssk)->subflow_id = msk->subflow_id++;
+ 	mptcp_sockopt_sync_locked(msk, ssk);
+-	mptcp_subflow_joined(msk, ssk);
+ 	mptcp_stop_tout_timer(sk);
+ 	__mptcp_propagate_sndbuf(sk, ssk);
+ 	return true;
+@@ -1231,10 +1237,14 @@ static void mptcp_update_infinite_map(st
+ 	mpext->infinite_map = 1;
+ 	mpext->data_len = 0;
+ 
++	if (!mptcp_try_fallback(ssk)) {
++		mptcp_subflow_reset(ssk);
++		return;
++	}
++
+ 	MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_INFINITEMAPTX);
+ 	mptcp_subflow_ctx(ssk)->send_infinite_map = 0;
+ 	pr_fallback(msk);
+-	mptcp_do_fallback(ssk);
  }
  
-+static void test_tcp_md5sig_sockopt(int fd)
-+{
-+	const char *peer_ip = (pf == AF_INET) ? "127.0.0.1" : "::1";
-+	const char *key = "0123456789";
-+	size_t key_len = strlen(key);
-+	struct tcp_md5sig md5sig;
-+	struct sockaddr_in *addr;
-+
-+	memset(&md5sig, 0, sizeof(md5sig));
-+	addr = (struct sockaddr_in *)&md5sig.tcpm_addr;
-+	addr->sin_family = pf;
-+
-+	if (inet_pton(pf, peer_ip, &addr->sin_addr) != 1)
-+		die_perror("inet_pton failed");
-+
-+	if (key_len > sizeof(md5sig.tcpm_key))
-+		die_perror("Key too long\n");
-+
-+	memcpy(md5sig.tcpm_key, key, key_len);
-+	md5sig.tcpm_keylen = key_len;
-+
-+	if (setsockopt(fd, IPPROTO_TCP, TCP_MD5SIG, &md5sig, sizeof(md5sig)))
-+		die_perror("setsockopt(TCP_MD5SIG) failed");
-+}
-+
-+static void test_tcp_md5sig_ext_sockopt(int sockfd)
-+{
-+	const char *peer_ip = (pf == AF_INET) ? "127.0.0.1" : "::1";
-+	const char *key = "0123456789";
-+	size_t key_len = strlen(key);
-+	struct tcp_md5sig_ext md5ext;
-+	struct sockaddr_in *addr;
-+	int ifindex = 2;
-+
-+	memset(&md5ext, 0, sizeof(md5ext));
-+	addr = (struct sockaddr_in *)&md5ext.tcpm_addr;
-+	addr->sin_family = pf;
-+
-+	if (inet_pton(pf, peer_ip, &addr->sin_addr) != 1)
-+		die_perror("inet_pton failed");
-+
-+	if (key_len > TCP_MD5SIG_MAXKEYLEN)
-+		die_perror("Key too long\n");
-+
-+	memcpy(md5ext.tcpm_key, key, key_len);
-+	md5ext.tcpm_keylen = key_len;
-+
-+	md5ext.tcpm_ifindex = ifindex;
-+	md5ext.tcpm_flags = TCP_MD5SIG_FLAG_IFINDEX;
-+
-+	if (setsockopt(sockfd, IPPROTO_TCP, TCP_MD5SIG_EXT, &md5ext, sizeof(md5ext)))
-+		die_perror("setsockopt(TCP_MD5SIG_EXT) failed");
-+}
-+
- static int server(int pipefd)
+ #define MPTCP_MAX_GSO_SIZE (GSO_LEGACY_MAX_SIZE - (MAX_TCP_HEADER + 1))
+@@ -2606,9 +2616,9 @@ static void mptcp_check_fastclose(struct
+ 
+ static void __mptcp_retrans(struct sock *sk)
  {
- 	int fd = -1, r;
-@@ -721,6 +785,9 @@ static int server(int pipefd)
- 
- 	process_one_client(r, pipefd);
- 
-+	test_tcp_md5sig_sockopt(fd);
-+	test_tcp_md5sig_ext_sockopt(fd);
++	struct mptcp_sendmsg_info info = { .data_lock_held = true, };
+ 	struct mptcp_sock *msk = mptcp_sk(sk);
+ 	struct mptcp_subflow_context *subflow;
+-	struct mptcp_sendmsg_info info = {};
+ 	struct mptcp_data_frag *dfrag;
+ 	struct sock *ssk;
+ 	int ret, err;
+@@ -2653,6 +2663,18 @@ static void __mptcp_retrans(struct sock
+ 			info.sent = 0;
+ 			info.limit = READ_ONCE(msk->csum_enabled) ? dfrag->data_len :
+ 								    dfrag->already_sent;
 +
++			/*
++			 * make the whole retrans decision, xmit, disallow
++			 * fallback atomic
++			 */
++			spin_lock_bh(&msk->fallback_lock);
++			if (__mptcp_check_fallback(msk)) {
++				spin_unlock_bh(&msk->fallback_lock);
++				release_sock(ssk);
++				return;
++			}
++
+ 			while (info.sent < info.limit) {
+ 				ret = mptcp_sendmsg_frag(sk, ssk, dfrag, &info);
+ 				if (ret <= 0)
+@@ -2668,6 +2690,7 @@ static void __mptcp_retrans(struct sock
+ 					 info.size_goal);
+ 				WRITE_ONCE(msk->allow_infinite_fallback, false);
+ 			}
++			spin_unlock_bh(&msk->fallback_lock);
+ 
+ 			release_sock(ssk);
+ 		}
+@@ -2801,6 +2824,7 @@ static void __mptcp_init_sock(struct soc
+ 	msk->subflow_id = 1;
+ 
+ 	mptcp_pm_data_init(msk);
++	spin_lock_init(&msk->fallback_lock);
+ 
+ 	/* re-use the csk retrans timer for MPTCP-level retrans */
+ 	timer_setup(&msk->sk.icsk_retransmit_timer, mptcp_retransmit_timer, 0);
+@@ -3599,7 +3623,13 @@ bool mptcp_finish_join(struct sock *ssk)
+ 
+ 	/* active subflow, already present inside the conn_list */
+ 	if (!list_empty(&subflow->node)) {
++		spin_lock_bh(&msk->fallback_lock);
++		if (__mptcp_check_fallback(msk)) {
++			spin_unlock_bh(&msk->fallback_lock);
++			return false;
++		}
+ 		mptcp_subflow_joined(msk, ssk);
++		spin_unlock_bh(&msk->fallback_lock);
+ 		mptcp_propagate_sndbuf(parent, ssk);
+ 		return true;
+ 	}
+@@ -3712,7 +3742,7 @@ static void mptcp_subflow_early_fallback
+ 					 struct mptcp_subflow_context *subflow)
+ {
+ 	subflow->request_mptcp = 0;
+-	__mptcp_do_fallback(msk);
++	WARN_ON_ONCE(!__mptcp_try_fallback(msk));
+ }
+ 
+ static int mptcp_connect(struct sock *sk, struct sockaddr *uaddr, int addr_len)
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -334,6 +334,10 @@ struct mptcp_sock {
+ 	u32		subflow_id;
+ 	u32		setsockopt_seq;
+ 	char		ca_name[TCP_CA_NAME_MAX];
++
++	spinlock_t	fallback_lock;	/* protects fallback and
++					 * allow_infinite_fallback
++					 */
+ };
+ 
+ #define mptcp_data_lock(sk) spin_lock_bh(&(sk)->sk_lock.slock)
+@@ -1097,25 +1101,32 @@ static inline bool mptcp_check_fallback(
+ 	return __mptcp_check_fallback(msk);
+ }
+ 
+-static inline void __mptcp_do_fallback(struct mptcp_sock *msk)
++static inline bool __mptcp_try_fallback(struct mptcp_sock *msk)
+ {
+ 	if (test_bit(MPTCP_FALLBACK_DONE, &msk->flags)) {
+ 		pr_debug("TCP fallback already done (msk=%p)\n", msk);
+-		return;
++		return true;
+ 	}
+-	if (WARN_ON_ONCE(!READ_ONCE(msk->allow_infinite_fallback)))
+-		return;
++	spin_lock_bh(&msk->fallback_lock);
++	if (!msk->allow_infinite_fallback) {
++		spin_unlock_bh(&msk->fallback_lock);
++		return false;
++	}
++
+ 	set_bit(MPTCP_FALLBACK_DONE, &msk->flags);
++	spin_unlock_bh(&msk->fallback_lock);
++	return true;
+ }
+ 
+-static inline void mptcp_do_fallback(struct sock *ssk)
++static inline bool mptcp_try_fallback(struct sock *ssk)
+ {
+ 	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk);
+ 	struct sock *sk = subflow->conn;
+ 	struct mptcp_sock *msk;
+ 
+ 	msk = mptcp_sk(sk);
+-	__mptcp_do_fallback(msk);
++	if (!__mptcp_try_fallback(msk))
++		return false;
+ 	if (READ_ONCE(msk->snd_data_fin_enable) && !(ssk->sk_shutdown & SEND_SHUTDOWN)) {
+ 		gfp_t saved_allocation = ssk->sk_allocation;
+ 
+@@ -1127,6 +1138,7 @@ static inline void mptcp_do_fallback(str
+ 		tcp_shutdown(ssk, SEND_SHUTDOWN);
+ 		ssk->sk_allocation = saved_allocation;
+ 	}
++	return true;
+ }
+ 
+ #define pr_fallback(a) pr_debug("%s:fallback to TCP (msk=%p)\n", __func__, a)
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -524,9 +524,11 @@ static void subflow_finish_connect(struc
+ 	mptcp_get_options(skb, &mp_opt);
+ 	if (subflow->request_mptcp) {
+ 		if (!(mp_opt.suboptions & OPTION_MPTCP_MPC_SYNACK)) {
++			if (!mptcp_try_fallback(sk))
++				goto do_reset;
++
+ 			MPTCP_INC_STATS(sock_net(sk),
+ 					MPTCP_MIB_MPCAPABLEACTIVEFALLBACK);
+-			mptcp_do_fallback(sk);
+ 			pr_fallback(msk);
+ 			goto fallback;
+ 		}
+@@ -1350,7 +1352,7 @@ fallback:
+ 			return true;
+ 		}
+ 
+-		if (!READ_ONCE(msk->allow_infinite_fallback)) {
++		if (!mptcp_try_fallback(ssk)) {
+ 			/* fatal protocol error, close the socket.
+ 			 * subflow_error_report() will introduce the appropriate barriers
+ 			 */
+@@ -1366,8 +1368,6 @@ reset:
+ 			WRITE_ONCE(subflow->data_avail, MPTCP_SUBFLOW_NODATA);
+ 			return false;
+ 		}
+-
+-		mptcp_do_fallback(ssk);
+ 	}
+ 
+ 	skb = skb_peek(&ssk->sk_receive_queue);
+@@ -1612,7 +1612,6 @@ int __mptcp_subflow_connect(struct sock
+ 	/* discard the subflow socket */
+ 	mptcp_sock_graft(ssk, sk->sk_socket);
+ 	iput(SOCK_INODE(sf));
+-	WRITE_ONCE(msk->allow_infinite_fallback, false);
+ 	mptcp_stop_tout_timer(sk);
  	return 0;
- }
  
--- 
-2.48.1
+@@ -1790,7 +1789,7 @@ static void subflow_state_change(struct
+ 
+ 	msk = mptcp_sk(parent);
+ 	if (subflow_simultaneous_connect(sk)) {
+-		mptcp_do_fallback(sk);
++		WARN_ON_ONCE(!mptcp_try_fallback(sk));
+ 		pr_fallback(msk);
+ 		subflow->conn_finished = 1;
+ 		mptcp_propagate_state(parent, sk, subflow, NULL);
 
+
+Patches currently in stable-queue which might be from matttbe@kernel.org are
+
+queue-6.6/selftests-mptcp-connect-also-cover-alt-modes.patch
+queue-6.6/selftests-mptcp-connect-also-cover-checksum.patch
+queue-6.6/mptcp-plug-races-between-subflow-fail-and-subflow-creation.patch
+queue-6.6/mptcp-make-fallback-action-and-fallback-decision-atomic.patch
+queue-6.6/mptcp-reset-fallback-status-gracefully-at-disconnect-time.patch
