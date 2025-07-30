@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 882B92236EE
-	for <mptcp@lists.linux.dev>; Wed, 30 Jul 2025 22:03:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E0CE19C556
+	for <mptcp@lists.linux.dev>; Wed, 30 Jul 2025 22:04:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753913034; cv=none; b=r8mFeiuP6mRqOi/YGdt/AIk7TZZlIhlpcSdphq0tJ5+tmJbElW9LYjMW6mTkHJMAG4Wjd5lbU7T53XHUn9DAC2pxdZ/lS+8G9dmYIQ2C8QOyWfv176NKODBfVNp+f+D5AOYtWrko8h+7epEx52dHfzmg9vCskTC5CbLLHPiTxCs=
+	t=1753913068; cv=none; b=N8EW6ZOzd6R9FXSkV8TnWjaION0X7NTEpNpBUiJuStOoBYDyVvYgCMp5fmxtPc+/dNkEB0PKwb72dBhVCRp2EMlWw2Xs4CFrbb0rMw7IJhEl146U2mQaj1VAVTEo/e8BJ5/B5YnBXlhdNlBMGVk6Wt1drriHCVrYvgNgtmhPlaQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753913034; c=relaxed/simple;
-	bh=WQnIdrez9sN48UxvjVPcxFXhDLQivik1ZyJhs9D63ls=;
+	s=arc-20240116; t=1753913068; c=relaxed/simple;
+	bh=oDB+082Pfb32uQDmgMiPW/pN5HG48NXKtFcdLAb7E8Q=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=h5/uBok/rdCnxGGUkvge7CnDzdeu8XlZUrXb6nACDWGghtgo3uBOtXFG7ZX754xMCnNyckUvG+32gRrcpzs1B/b8ZS7A/N18tJyOtFBy8yHsHKUfvldAhnGTEr7nWM81+LmsBUddu0hEcfCGm0gpiNPXaGHqBzxeBl2fbttsSmU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uhUdBYIt; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=VZRpDDMRDf7TXWCNllQtGkkI+a5K2eSHtHdUpY1jZNdVNs1dyP0G9gCIFPyxePuYaCa0G2QV7LgU1KWb/+JMZq7i/qXu6x4JxJpj5KD9oQ5Y0Zsgy93IiZUxn7hgP0cOJR4gRZe2ccpb79C1OdwAnLi8BXE90IXY0YXkaJOYmTM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J6Crz4P5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uhUdBYIt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A825C4CEE3;
-	Wed, 30 Jul 2025 22:03:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J6Crz4P5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8042C4CEE3;
+	Wed, 30 Jul 2025 22:04:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753913034;
-	bh=WQnIdrez9sN48UxvjVPcxFXhDLQivik1ZyJhs9D63ls=;
+	s=k20201202; t=1753913067;
+	bh=oDB+082Pfb32uQDmgMiPW/pN5HG48NXKtFcdLAb7E8Q=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=uhUdBYItKaoD1tx/fJRFaUzyPH8jWc8QW9QIg6O/l8dLbqHN/J3Ad1OBy8MvGsTS1
-	 NOuTDn5b2XCsqoBK34wyXW3q0Inws7Ycoi+JMWD54iLmMiq3qbx+ecBXoJIc6PMaGi
-	 Km3DQo8iY0LnsGrHCSGyDjPVUTJWAWt3+sD5Xc2egT19F3WS72Z4skeVj/m7eMsHO+
-	 pCvn+fhX6HaLiiSrCUTN3ImCCaa+5Bz1FgHxsw5OOHU2NLh6cQEzMpJLEXVbzV++XT
-	 qFUjjkS5G4Nsnf9s0FJzjhvDDaINJ/zNkkvz8yFgiYxkY/961uKfLh2iAK4kI1nC0e
-	 WgoXynG8K9lKg==
-Message-ID: <4fe3f272-4ce0-4ae3-9f59-02bcaf6231de@kernel.org>
-Date: Thu, 31 Jul 2025 00:03:51 +0200
+	b=J6Crz4P5xt5A7C/zRFGtFKhsrof6bsnhMoTGGipSDvjwYC6XarmpRJ/XDpm9s/VFz
+	 0HBSH62INceqk1+t2OrCFn+4rDWVz/AkGn+LbWZzxyi/YlQlMJCANhFwxABIScOZea
+	 ZJgCS0JIdxuhokV0xpZil3W3EgBt0TPkfQQLvJPmyQ766oqDBbceXSGogXjBDhWCAF
+	 SyHIkuE3VTPCgLdS0YwOOKhEFwVwrxjndKAstPs1Z3ZAPJ7tezu/zjx1Ax6NFwpNlB
+	 xzqFHOZfbYzR3cTu7JIsuqK5b2GBoUZLJuhuo4pJdPTbcgYoO5Lyek/PIHaJad8gYr
+	 VR8764Noub3IQ==
+Message-ID: <6ce1f0b6-105d-46a5-8257-38bf36182a88@kernel.org>
+Date: Thu, 31 Jul 2025 00:04:25 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next 1/7] Add MPTCP support for socket creation
+Subject: Re: [PATCH mptcp-next 2/7] Add MPTCP server socket creation support
+Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Gang Yan <yangang@kylinos.cn>
 References: <cover.1753247666.git.geliang@kernel.org>
- <d97fe07c2fb587f1672bcfa73524daab035ed61c.1753247666.git.geliang@kernel.org>
+ <931ce3edf07175a81607cfb0c00319c262462bc5.1753247666.git.geliang@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
-Content-Language: en-GB, fr-BE
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -86,112 +86,61 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <d97fe07c2fb587f1672bcfa73524daab035ed61c.1753247666.git.geliang@kernel.org>
+In-Reply-To: <931ce3edf07175a81607cfb0c00319c262462bc5.1753247666.git.geliang@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
 On 23/07/2025 07:16, Geliang Tang wrote:
-> This patch extends the socket creation functionality to support Multipath
-> TCP (MPTCP) by adding a new 'mptcp' parameter to the native socket0 method.
-> When enabled, the socket will be created with the IPPROTO_MPTCP protocol
-> for stream sockets.
+> This patch introduces new methods to create server sockets with Multipath
+> TCP (MPTCP) support:
 > 
-> The changes include:
-> 1. Added the 'mptcp' parameter to socket0 method declarations in Net.java
-> 2. Modified the native implementations in both Unix and Windows Net.c files
->    to handle the new parameter and set the appropriate protocol
-> 3. Updated all call sites to pass 'false' for the new parameter to maintain
->    existing behavior (MPTCP disabled by default)
+> 1. Added an overloaded 'serverSocket' method that accepts an 'mptcp'
+>    parameter to enable MPTCP
+> 2. Added a convenience method 'mptcpServerSocket()' for creating
+>    MPTCP-enabled server sockets using the unspecified protocol family by
+>    default
+> 
+> The changes maintain backward compatibility while providing explicit MPTCP
+> support for server socket creation. The new methods leverage the existing
+> socket0 infrastructure with the MPTCP flag added in the previous patch.
 > 
 > Co-Developed-by: Gang Yan <yangang@kylinos.cn>
 > Signed-off-by: Gang Yan <yangang@kylinos.cn>
 > Signed-off-by: Geliang Tang <geliang@kernel.org>
 > ---
->  src/java.base/share/classes/sun/nio/ch/Net.java | 6 +++---
->  src/java.base/unix/native/libnio/ch/Net.c       | 5 +++--
->  src/java.base/windows/native/libnio/ch/Net.c    | 2 +-
->  3 files changed, 7 insertions(+), 6 deletions(-)
+>  src/java.base/share/classes/sun/nio/ch/Net.java | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
 > 
 > diff --git a/src/java.base/share/classes/sun/nio/ch/Net.java b/src/java.base/share/classes/sun/nio/ch/Net.java
-> index 9ec7975a35c..c086429380b 100644
+> index c086429380b..aa3ed087d2c 100644
 > --- a/src/java.base/share/classes/sun/nio/ch/Net.java
 > +++ b/src/java.base/share/classes/sun/nio/ch/Net.java
-> @@ -488,7 +488,7 @@ static FileDescriptor socket() throws IOException {
->      static FileDescriptor socket(ProtocolFamily family, boolean stream) throws IOException {
->          boolean preferIPv6 = isIPv6Available() &&
->              (family != StandardProtocolFamily.INET);
-> -        return IOUtil.newFD(socket0(preferIPv6, stream, false, FAST_LOOPBACK));
-> +        return IOUtil.newFD(socket0(preferIPv6, stream, false, FAST_LOOPBACK, false));
+> @@ -501,6 +501,16 @@ static FileDescriptor serverSocket(ProtocolFamily family) {
+>          return IOUtil.newFD(socket0(preferIPv6, true, true, FAST_LOOPBACK, false));
 >      }
 >  
->      static FileDescriptor serverSocket() {
-> @@ -498,12 +498,12 @@ static FileDescriptor serverSocket() {
->      static FileDescriptor serverSocket(ProtocolFamily family) {
->          boolean preferIPv6 = isIPv6Available() &&
->              (family != StandardProtocolFamily.INET);
-> -        return IOUtil.newFD(socket0(preferIPv6, true, true, FAST_LOOPBACK));
-> +        return IOUtil.newFD(socket0(preferIPv6, true, true, FAST_LOOPBACK, false));
->      }
->  
+> +    static FileDescriptor serverSocket(ProtocolFamily family, boolean mptcp) {
+> +        boolean preferIPv6 = isIPv6Available() &&
+> +            (family != StandardProtocolFamily.INET);
+> +        return IOUtil.newFD(socket0(preferIPv6, true, true, FAST_LOOPBACK, mptcp));
+> +    }
+> +
+> +    static FileDescriptor mptcpServerSocket() {
+
+I didn't check what is usually being done, but is this new helper really
+needed? Is it not enough with the new serverSocket() extension?
+
+Also, could you not have serverSocket(ProtocolFamily family) calling the
+new serverSocket(family, false) instead of duplicating the code above?
+
+> +        return serverSocket(UNSPEC, true);
+> +    }
+> +
 >      // Due to oddities SO_REUSEADDR on Windows reuse is ignored
 >      private static native int socket0(boolean preferIPv6, boolean stream, boolean reuse,
-> -                                      boolean fastLoopback);
-> +                                      boolean fastLoopback, boolean mptcp);
->  
->      public static void bind(FileDescriptor fd, InetAddress addr, int port)
->          throws IOException
-> diff --git a/src/java.base/unix/native/libnio/ch/Net.c b/src/java.base/unix/native/libnio/ch/Net.c
-> index 28c1814f422..1b08539873f 100644
-> --- a/src/java.base/unix/native/libnio/ch/Net.c
-> +++ b/src/java.base/unix/native/libnio/ch/Net.c
-> @@ -255,13 +255,14 @@ Java_sun_nio_ch_Net_canUseIPv6OptionsWithIPv4LocalAddress0(JNIEnv* env, jclass c
->  
->  JNIEXPORT jint JNICALL
->  Java_sun_nio_ch_Net_socket0(JNIEnv *env, jclass cl, jboolean preferIPv6,
-> -                            jboolean stream, jboolean reuse, jboolean ignored)
-> +                            jboolean stream, jboolean reuse, jboolean ignored, jboolean mptcp)
-
-(I don't know if there is a limit for the number of chars per lines,
-maybe you need to go to the next line?)
-
->  {
->      int fd;
->      int type = (stream ? SOCK_STREAM : SOCK_DGRAM);
->      int domain = (ipv6_available() && preferIPv6) ? AF_INET6 : AF_INET;
-> +    int protocol = (stream && mptcp) ? IPPROTO_MPTCP : 0;
-
-I guess you will still need to check if IPPROTO_MPTCP is defined for old
-systems, or the ones not using Linux. Something like that:
-
-    int protocol =
-#ifdef IPPROTO_MPTCP
-                   (stream && mptcp) ? IPPROTO_MPTCP :
-#endif
-                   0;
-
-(or another style, I don't know what is usually being used here.)
-
->  
-> -    fd = socket(domain, type, 0);
-> +    fd = socket(domain, type, protocol);
->      if (fd < 0) {
->          return handleSocketError(env, errno);
->      }
-> diff --git a/src/java.base/windows/native/libnio/ch/Net.c b/src/java.base/windows/native/libnio/ch/Net.c
-> index 814f502c48a..c563aa9f031 100644
-> --- a/src/java.base/windows/native/libnio/ch/Net.c
-> +++ b/src/java.base/windows/native/libnio/ch/Net.c
-> @@ -152,7 +152,7 @@ Java_sun_nio_ch_Net_canUseIPv6OptionsWithIPv4LocalAddress0(JNIEnv* env, jclass c
->  
->  JNIEXPORT jint JNICALL
->  Java_sun_nio_ch_Net_socket0(JNIEnv *env, jclass cl, jboolean preferIPv6,
-> -                            jboolean stream, jboolean reuse, jboolean fastLoopback)
-> +                            jboolean stream, jboolean reuse, jboolean fastLoopback, jboolean mptcp)
->  {
->      SOCKET s;
->      int domain = (preferIPv6) ? AF_INET6 : AF_INET;
+>                                        boolean fastLoopback, boolean mptcp);
 
 Cheers,
 Matt
