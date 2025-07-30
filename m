@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E0CE19C556
-	for <mptcp@lists.linux.dev>; Wed, 30 Jul 2025 22:04:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D81D19E7D0
+	for <mptcp@lists.linux.dev>; Wed, 30 Jul 2025 22:05:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753913068; cv=none; b=N8EW6ZOzd6R9FXSkV8TnWjaION0X7NTEpNpBUiJuStOoBYDyVvYgCMp5fmxtPc+/dNkEB0PKwb72dBhVCRp2EMlWw2Xs4CFrbb0rMw7IJhEl146U2mQaj1VAVTEo/e8BJ5/B5YnBXlhdNlBMGVk6Wt1drriHCVrYvgNgtmhPlaQ=
+	t=1753913104; cv=none; b=H0T9rVUWmzr4vO1I88ti9lOsG8V6fKpokJ4AiYdJc3vrJZYzmI/avG67dG6UxanpJgCfALXauknVZRq5aVPmxCuBTmla2xvFuj32u6Fd4+Tf55nz2yvxh812ch3H4BEvzFf1DBOmzEjxftjWTPNYSx1wcHjpwovxHfpF4qOhAuU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753913068; c=relaxed/simple;
-	bh=oDB+082Pfb32uQDmgMiPW/pN5HG48NXKtFcdLAb7E8Q=;
+	s=arc-20240116; t=1753913104; c=relaxed/simple;
+	bh=930a9eit/ejj/gv4cKREiOY1au3LObeFPugKoZ4VmTg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VZRpDDMRDf7TXWCNllQtGkkI+a5K2eSHtHdUpY1jZNdVNs1dyP0G9gCIFPyxePuYaCa0G2QV7LgU1KWb/+JMZq7i/qXu6x4JxJpj5KD9oQ5Y0Zsgy93IiZUxn7hgP0cOJR4gRZe2ccpb79C1OdwAnLi8BXE90IXY0YXkaJOYmTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J6Crz4P5; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=dj7pnlG7sLilqOshqn8KrdhB5KQhuCudJlFQaU9E7AAEWiNLc9ljaPb6RyNbT/D2NtOvMUex+DK4skTMMCVyIsq0E3cfc4ndazh/xXgwpOfpGVw4dj+6T/WEUqDJRWSqBIPi2MGE/Xqjxr/yOjch19rNwVMwrds22aFg438oV8o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YZuV1Bbb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J6Crz4P5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8042C4CEE3;
-	Wed, 30 Jul 2025 22:04:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YZuV1Bbb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7309AC4CEE3;
+	Wed, 30 Jul 2025 22:05:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753913067;
-	bh=oDB+082Pfb32uQDmgMiPW/pN5HG48NXKtFcdLAb7E8Q=;
+	s=k20201202; t=1753913104;
+	bh=930a9eit/ejj/gv4cKREiOY1au3LObeFPugKoZ4VmTg=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=J6Crz4P5xt5A7C/zRFGtFKhsrof6bsnhMoTGGipSDvjwYC6XarmpRJ/XDpm9s/VFz
-	 0HBSH62INceqk1+t2OrCFn+4rDWVz/AkGn+LbWZzxyi/YlQlMJCANhFwxABIScOZea
-	 ZJgCS0JIdxuhokV0xpZil3W3EgBt0TPkfQQLvJPmyQ766oqDBbceXSGogXjBDhWCAF
-	 SyHIkuE3VTPCgLdS0YwOOKhEFwVwrxjndKAstPs1Z3ZAPJ7tezu/zjx1Ax6NFwpNlB
-	 xzqFHOZfbYzR3cTu7JIsuqK5b2GBoUZLJuhuo4pJdPTbcgYoO5Lyek/PIHaJad8gYr
-	 VR8764Noub3IQ==
-Message-ID: <6ce1f0b6-105d-46a5-8257-38bf36182a88@kernel.org>
-Date: Thu, 31 Jul 2025 00:04:25 +0200
+	b=YZuV1Bbbr5IYWDAdcisZgDnsucHJ0E8GLsOXNResi0VSy6jVUXCJ/OI69R9Nd5P/y
+	 1PaN8KF6w3VPlx/RIWrohRLx2zMIHF/6/c2MCqUEFJvD61RZ8GhjGORpwICyFRnVvh
+	 OTeHlaMmErATI6/OTmNO/0eMk0NpoUhpjQDoWn25dAijJq9sq86IpRbs1xTAxA53hb
+	 JBq6hP6AnBEx38QvIeFqCRIwmsED1cfhoV8sRFAwSgkEpwwS6y0qn+MJkoKCO3a+W+
+	 dGKyp/wYyw4bvXqFOFgFgF/HID3ja73y/uaLovAiR9XsmtRuk8MiHs3hvbwgqoBaEW
+	 gX5wOWGYQoPgg==
+Message-ID: <6c890c6c-fa91-4310-b07d-fa7207341aae@kernel.org>
+Date: Thu, 31 Jul 2025 00:05:01 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next 2/7] Add MPTCP server socket creation support
+Subject: Re: [PATCH mptcp-next 5/7] Add MPTCP support to ServerSocket class
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Gang Yan <yangang@kylinos.cn>
 References: <cover.1753247666.git.geliang@kernel.org>
- <931ce3edf07175a81607cfb0c00319c262462bc5.1753247666.git.geliang@kernel.org>
+ <f5c39ac151fc97dd3625f5a48398716a483794d2.1753247666.git.geliang@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,61 +86,35 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <931ce3edf07175a81607cfb0c00319c262462bc5.1753247666.git.geliang@kernel.org>
+In-Reply-To: <f5c39ac151fc97dd3625f5a48398716a483794d2.1753247666.git.geliang@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
 On 23/07/2025 07:16, Geliang Tang wrote:
-> This patch introduces new methods to create server sockets with Multipath
-> TCP (MPTCP) support:
+> This patch extends ServerSocket to support Multipath TCP (MPTCP) by:
 > 
-> 1. Added an overloaded 'serverSocket' method that accepts an 'mptcp'
->    parameter to enable MPTCP
-> 2. Added a convenience method 'mptcpServerSocket()' for creating
->    MPTCP-enabled server sockets using the unspecified protocol family by
->    default
+> 1. Adding a new constructor that accepts an mptcp parameter to enable
+>    MPTCP
+> 2. Introducing a new createImpl factory method that propagates the MPTCP
+>    setting to the underlying socket implementation
+> 3. Maintaining all existing functionality while adding MPTCP capabilities
 > 
-> The changes maintain backward compatibility while providing explicit MPTCP
-> support for server socket creation. The new methods leverage the existing
-> socket0 infrastructure with the MPTCP flag added in the previous patch.
-> 
-> Co-Developed-by: Gang Yan <yangang@kylinos.cn>
-> Signed-off-by: Gang Yan <yangang@kylinos.cn>
-> Signed-off-by: Geliang Tang <geliang@kernel.org>
-> ---
->  src/java.base/share/classes/sun/nio/ch/Net.java | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/src/java.base/share/classes/sun/nio/ch/Net.java b/src/java.base/share/classes/sun/nio/ch/Net.java
-> index c086429380b..aa3ed087d2c 100644
-> --- a/src/java.base/share/classes/sun/nio/ch/Net.java
-> +++ b/src/java.base/share/classes/sun/nio/ch/Net.java
-> @@ -501,6 +501,16 @@ static FileDescriptor serverSocket(ProtocolFamily family) {
->          return IOUtil.newFD(socket0(preferIPv6, true, true, FAST_LOOPBACK, false));
->      }
->  
-> +    static FileDescriptor serverSocket(ProtocolFamily family, boolean mptcp) {
-> +        boolean preferIPv6 = isIPv6Available() &&
-> +            (family != StandardProtocolFamily.INET);
-> +        return IOUtil.newFD(socket0(preferIPv6, true, true, FAST_LOOPBACK, mptcp));
-> +    }
-> +
-> +    static FileDescriptor mptcpServerSocket() {
+> The new constructor follows the same pattern as existing ServerSocket
+> constructors but adds the mptcp parameter to control protocol selection.
+> When enabled, the implementation uses the MPTCP-enabled socket creation
+> path established in previous patches.
 
-I didn't check what is usually being done, but is this new helper really
-needed? Is it not enough with the new serverSocket() extension?
+Similar to my comment in patch 2/7, I don't know what is best in this
+project, but maybe instead of duplicating helpers, you could have the
+previous helper calling the new extension?
 
-Also, could you not have serverSocket(ProtocolFamily family) calling the
-new serverSocket(family, false) instead of duplicating the code above?
+So ServerSocket(int port, int backlog, InetAddress bindAddr) would call
+the new one with 'mptcp' as new parameter? Same for createImpl()?
 
-> +        return serverSocket(UNSPEC, true);
-> +    }
-> +
->      // Due to oddities SO_REUSEADDR on Windows reuse is ignored
->      private static native int socket0(boolean preferIPv6, boolean stream, boolean reuse,
->                                        boolean fastLoopback, boolean mptcp);
+But not sure what the Java maintainers prefer. Maybe they are OK with
+what you suggested.
 
 Cheers,
 Matt
