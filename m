@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 596812222CB
-	for <mptcp@lists.linux.dev>; Wed, 30 Jul 2025 10:16:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91B7524676D
+	for <mptcp@lists.linux.dev>; Wed, 30 Jul 2025 10:16:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753870600; cv=none; b=afpQIFe7PhjXBUhq2cCdEoqdaJOTKjilFUyeQLBlBcKpMqAerKGiF2OFSv/2RP1yKgwlkfb0XHflr0aOsLGNAgYcKXq4B8MW02Yu/xEpFfWQwFmtv8q5y0EpYZi8MKsF/LblEakoOkoCNXMLcTKUBV1meGbN15mhqHAe9I9G/ns=
+	t=1753870611; cv=none; b=Hc+ZYDxm3NT4PWXUyb0a+xOHqx1jHcMfGYePID32ZTDCnxrsJStOCANWOpK2k0704vZNYv6sjS5f8ef2Gtxdn4XMxJCs+P5RcMefMch7Xz80ZtsSXGrmYzi+DztZ740UR4Km8VmlF5eutXC4R8/IvCxJc1Sk70jL1y8JY/fnJvM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753870600; c=relaxed/simple;
-	bh=d5R1ydpTZoMJolA2EuAl/hRZpEFT2SVz1MxPZYMCoCk=;
+	s=arc-20240116; t=1753870611; c=relaxed/simple;
+	bh=CWJ/MQxQ47qUexoNZ1Okvtc69MdLp5XgaPqIL5p8G7E=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DoerLnAXnA+qlQcpk+L2b7q3PcXeIBOX4i8ir9o3BhxNy2q70OYwTxzAipfszEZ6bA0mzOq02U2wzECq23BhN+iYoD/dWrC19GleB4EyCj87RGXagWKPMHangTHVNUSEz3VAebqaAn/cKpKi0dee2ppoLS1B9s71Gi1eLpnheQA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kaeG2mMC; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=PSXrsDor7Nekznyj6cqlRXzBt/v3y3YoO5GM/eanV2Y09irMM9Y1B9sRICxbFtVFORX5yH1wJjfu4QInoBxNuJQVP5BOisOun6pPk0dqRnJBcER7kkPMPi/hVtLW+HWCG8f7KNrGpyeEC+Ph+/OrC03jLAtJR25Xu8fJFR+Igcw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D0dHBrxn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kaeG2mMC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18A46C4CEF9;
-	Wed, 30 Jul 2025 10:16:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D0dHBrxn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 783CCC4CEE7;
+	Wed, 30 Jul 2025 10:16:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753870598;
-	bh=d5R1ydpTZoMJolA2EuAl/hRZpEFT2SVz1MxPZYMCoCk=;
+	s=k20201202; t=1753870611;
+	bh=CWJ/MQxQ47qUexoNZ1Okvtc69MdLp5XgaPqIL5p8G7E=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=kaeG2mMCTeG0KeexTmdyZu5qFg9U7RcLMS2oKlqfMbfKuLpl3aWgDm6LIRp8pTMes
-	 Sf7wMGqRhpJyYTPH4ubJe9NTL5uk3ubyFz+TLJASsA7HzB99Y+ZD2cD8OBDZJV9C/P
-	 baUfsBXUq7CQZ7DwQzBHAqNWBpJNAPR6rLigrPto0Pz7TVnX5YSISdxi69TSH6e1cV
-	 /W/s4wlodFr2YSTXKW1AXXi924bD/FHNp0AA2lGeqMxDWv/RRwZ+hKJGIu47mJdERU
-	 gouqAGm3FF993h+5l8uqRvwVHTFPB5EKulz9IfswWY5buYY8XgqNRpIQWhxeyqyvym
-	 eVyFHASGuz3Dw==
-Message-ID: <d8fdbff7-2153-46a4-8342-8bef9c965227@kernel.org>
-Date: Wed, 30 Jul 2025 12:16:35 +0200
+	b=D0dHBrxn5Je27ZIL7rX3cQpNlqC1+3E7bOof72Br2WKrpKX3EHZpHaGaMbgI5OUFT
+	 SDmM9YjB9DOHyV9mZ88/WkEUeEkWiby2pi+fyGbhS3e+PKFdCX5HbVEUBOKAgvtXWk
+	 Fd9SC1VkI+9Wr6oZ2o/5D++DZhnPktWmQwzs53yB03W6S+fLbSWcXZoEsw2T+7ydRZ
+	 h9eO9IMpYOVSkq705AoH56jcVH3cuouVoOlQjhppbsMmrV2lLNCF0F6t8zilwqIUpm
+	 +jD+AgYH/cg4Kfhdq7a9apyFmgeI7fp5UuoXvW7uEjrLvyd620YvzKbiHBDnPJ4zDq
+	 hpjpnMIm/tr+g==
+Message-ID: <0c847528-bda7-4a88-a26b-d4265fff233a@kernel.org>
+Date: Wed, 30 Jul 2025 12:16:48 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next 2/3] mptcp: setsockopt support for TCP_MD5SIG
+Subject: Re: [PATCH mptcp-next 3/3] selftests: mptcp: add TCP_MD5SIG tests in
+ sockopt
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1753859907.git.tanggeliang@kylinos.cn>
- <7f2aaa80eef99f64ff6d7a48ce0a6bf06d1cacab.1753859907.git.tanggeliang@kylinos.cn>
+ <42b549e570e3505028f96509196c2623cab93299.1753859907.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,7 +87,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <7f2aaa80eef99f64ff6d7a48ce0a6bf06d1cacab.1753859907.git.tanggeliang@kylinos.cn>
+In-Reply-To: <42b549e570e3505028f96509196c2623cab93299.1753859907.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -95,60 +96,24 @@ Hi Geliang,
 On 30/07/2025 09:22, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> This adds setsockopt support for TCP_MD5SIG and TCP_MD5SIG_EXT options.
-> The implementation:
-> - Allows setting these options (getsockopt remains unsupported)
-> - Applies them only to the first subflow
-> - Maintains MD5 compatibility limitations with MPTCP
-> 
-> Note that TCP_MD5SIG and TCP_MD5SIG_EXT are unsupported for TCP too.
-> 
-> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-> ---
->  net/mptcp/sockopt.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-> index b264185b810d..5b3e54f7d803 100644
-> --- a/net/mptcp/sockopt.c
-> +++ b/net/mptcp/sockopt.c
-> @@ -567,10 +567,12 @@ static bool mptcp_supported_sockopt(int level, int optname)
->  		case TCP_FASTOPEN_CONNECT:
->  		case TCP_FASTOPEN_KEY:
->  		case TCP_FASTOPEN_NO_COOKIE:
-> +		case TCP_MD5SIG:
-> +		case TCP_MD5SIG_EXT:
->  			return true;
->  		}
->  
-> -		/* TCP_MD5SIG, TCP_MD5SIG_EXT are not supported, MD5 is not compatible with MPTCP */
-> +		/* MD5 is not compatible with MPTCP */
+> Add test cases for TCP_MD5SIG and TCP_MD5SIG_EXT socket options:
+> - Enable CONFIG_TCP_MD5SIG in test config
+> - Implement test functions for both options:
+>   - test_tcp_md5sig_sockopt() - sets basic MD5 key
+>   - test_tcp_md5sig_ext_sockopt() - sets extended MD5 with flags
+> - Tests run on both IPv4/IPv6 during server setup
 
-Maybe best to update this comment too and move it on top of "case
-TCP_MD5SIG":
+It looks like you set the socket option, but you don't check if MD5 is
+correctly used without MPTCP.
 
-  /* MD5 will force a fallback to TCP: OK to set while not connected */
+It might be better to check this feature with packetdrill:
 
->  
->  		/* TCP_REPAIR, TCP_REPAIR_QUEUE, TCP_QUEUE_SEQ, TCP_REPAIR_OPTIONS,
->  		 * TCP_REPAIR_WINDOW are not supported, better avoid this mess
-> @@ -834,6 +836,8 @@ static int mptcp_setsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
->  	case TCP_FASTOPEN_CONNECT:
->  	case TCP_FASTOPEN_KEY:
->  	case TCP_FASTOPEN_NO_COOKIE:
-> +	case TCP_MD5SIG:
-> +	case TCP_MD5SIG_EXT:
->  		return mptcp_setsockopt_first_sf_only(msk, SOL_TCP, optname,
->  						      optval, optlen);
+- set it before/after the listen(), but before an accept(), then check
+if the server replies without MPTCP, but with MD5.
+- if it is set on an establish MPTCP connection (MPTCP still being
+used), an error should be returned.
 
-Just to be sure, can you check if this option will correctly fail if the
-setsockopt(TCP_MD5SIG*) are used after the establishment of the connection?
-
-I think it is important to set these MD5 options only if the connection
-is in CLOSED or LISTENED state. I don't think we want to deal with this
-socket option for ongoing MPTCP connections.
-
->  	}
+Also, you will need to adapt "mptcp_unsupported_sockopts.pkt" test.
 
 Cheers,
 Matt
