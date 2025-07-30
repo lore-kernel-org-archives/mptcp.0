@@ -1,121 +1,87 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6627B1F8725
-	for <mptcp@lists.linux.dev>; Wed, 30 Jul 2025 10:19:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D573280327;
+	Wed, 30 Jul 2025 10:28:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753870745; cv=none; b=LLAZxof7Wesh8qPC2+PMLMTvqyzg5A5P7FGJn/uMqi4JWhhVsJzZyAqr8/CmFnjboPoftcCORYefEeqx13bTi8Nm1IjDq4X8cUUjH199j5UzbZoXdzUKSt1L6mvtHOqRlRHBJCS+fJREiyjE0Qm1w4jiaUbd//8r6JA8hVF+23E=
+	t=1753871304; cv=none; b=rsPvcGG1milOFLm1DFSzl+9jfmebkYBZDTqEw53zLB/7lxZj78/n/By3/FMUCEv6GvZTdGR96G6MTUdhf3FhZyFBjaJBZC4vZ4tIEbCfxDCnsvjGD0o7CSSvuSi5gYR/lWam90aDo3H7yuBzYais74rheynBsDa6o5Fs49vbev0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753870745; c=relaxed/simple;
-	bh=bRzVqkAgN9mI9qdze/yJnL+M2GRJ3YislG4GczoQDpA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=T6z7m9zAw8nX2JSU5zPuFHAmit1Xr39rxJDWHBLGEBn5PFaV9jnRVya2hGZtC+IsfOHhJ0gcUs+rXU25dSHUmw1LzgQZ267WWKsY9wlZBVdvPexrSwrbJmiwXENzMRKRhT/Ao+cBhkmnt+DCx9AByqNV3Q4jNkYIrnbnkj/GZ0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jkoc0dqR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1753871304; c=relaxed/simple;
+	bh=4eKEE2oxKbUIMvYdq08YttHSJ7A8EjT8Lsx2ym/M6vo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=qdzrcB6CHRxcr8upyWmRMgnBGQI9MwcVCER9CpZ65wtQta7wXmmyWVtwZy7kokgCkxLOhrv+SXPHn0aCtkp0blMn4NM/1lFO5OagD2MyLwSl945JZSSnOzr1Xs/YrSslNZE8KCHG8LaBkCkaJhuVaKkvwY2sy1laTvtFgJqGbtc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YgKjAiG7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jkoc0dqR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71896C4CEE7;
-	Wed, 30 Jul 2025 10:19:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YgKjAiG7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 872DBC4CEE7;
+	Wed, 30 Jul 2025 10:28:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753870745;
-	bh=bRzVqkAgN9mI9qdze/yJnL+M2GRJ3YislG4GczoQDpA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Jkoc0dqRkd3QGAjDCfgER8LT6JOqgP9NNPEEW979x1IPh9dvI4EEP/sm8BlbwxVak
-	 1oQqkyRySbhuNkVpNbbwfm3+ZuoI/R9w4N9M3OdimL9m7O2REWiLoxvTeimfc9O0Dv
-	 3ukgqPiAkx/KP0xpa2Skoh6BbA5hcSdkhqebPAKQm0osqHKFScTRVu3fr8p7RBFPhl
-	 jArvWsLAeqDmeFvp7KkTYwFAnfUOnbRA2Cn42QaN3u10BgENrjOE0G3zZGfwQg3upF
-	 IOA2MYGeQthmZGR60hvTYC+YolEs6jj0s8wysKOrzLa2K9nTjrWRiWJxK7f27B6W3V
-	 +FgE8KfafCVLw==
-Message-ID: <efae7b0b-91d5-4ce6-bd6c-f6d8a67b8bea@kernel.org>
-Date: Wed, 30 Jul 2025 12:19:02 +0200
+	s=k20201202; t=1753871303;
+	bh=4eKEE2oxKbUIMvYdq08YttHSJ7A8EjT8Lsx2ym/M6vo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=YgKjAiG72PZoFwf8rEaGtF5fQm5ZNisHDGDep8lmpt4uGKn58KzRK4J7hauI1zXh2
+	 hqPHklpx/Gb1OssojVDsVUb+SHDYb09jBolSe0vt23uzKlYHF88KKqiQ67uyP+Nk+1
+	 exGv9o/3v5dTmIFrQp/MbFnnY07/Ti73DFrXIsLSI7P1enVPAfHLwDKS7fDUZBKJc3
+	 /mtctazUfNFXgJ+i74jrXCeknYvosCTHFmaApPMdI6SM8ZnhqvuSPodNtB3d4exThU
+	 OBi+vUG+mJfSLWxXfRK9isfAfx9hL2NHHDviIzsNNF/24mNISyQD6J8c146PF27+fj
+	 Or7mKR6ZI7Brw==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+To: mptcp@lists.linux.dev,
+	stable@vger.kernel.org,
+	gregkh@linuxfoundation.org
+Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>,
+	sashal@kernel.org
+Subject: [PATCH 5.15.y 0/3] mptcp: fix recent failed backports (20250728)
+Date: Wed, 30 Jul 2025 12:28:07 +0200
+Message-ID: <20250730102806.1405622-5-matttbe@kernel.org>
+X-Mailer: git-send-email 2.50.0
+In-Reply-To: <2025072839-wildly-gala-e85f@gregkh>
+References: <2025072839-wildly-gala-e85f@gregkh>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next 0/3] mptcp: TCP_MD5SIG support
-Content-Language: en-GB, fr-BE
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1753859907.git.tanggeliang@kylinos.cn>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <cover.1753859907.git.tanggeliang@kylinos.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1399; i=matttbe@kernel.org; h=from:subject; bh=4eKEE2oxKbUIMvYdq08YttHSJ7A8EjT8Lsx2ym/M6vo=; b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDI6P29ft+tOguMLmcRUC6Y7rxsbkj6uyv2tcqQzvK4j9 JfflYSmjlIWBjEuBlkxRRbptsj8mc+reEu8/Cxg5rAygQxh4OIUgIm0szL8jz/dV70m+LyRwbPT Dk3HJZ5/O+FWu+jqc59iw+m//U7nvWf4H6K0XmH2J/O8xbuS6udpXmyQr2Jj7/6leVhvk6PX9yQ NJgA=
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+Content-Transfer-Encoding: 8bit
 
-Hi Geliang,
+Greg recently reported 2 patches that could not be applied without
+conflicts in v5.15:
 
-On 30/07/2025 09:22, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
-> 
-> This series introduces support for TCP_MD5SIG socket options in MPTCP along
-> with code improvements and test cases:
-> 
-> Patch 1: Refactors TCP_MAXSEG getsockopt handling to improve code
-> consistency
-> Patch 2: Adds setsockopt support for TCP_MD5SIG/TCP_MD5SIG_EXT (first
-> subflow only)
-> Patch 3: Implements selftests for the new MD5SIG functionality
+ - 37848a456fc3 ("selftests: mptcp: connect: also cover alt modes")
+ - fdf0f60a2bb0 ("selftests: mptcp: connect: also cover checksum")
 
-Thank you for looking at that!
+The first one has been resolved by Sasha in [1].
 
-I have some comments, please see the individual patches.
+An additional backport was needed to fix issues when running the new
+sendfile test:
 
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/575
+ - df9e03aec3b1 ("selftests: mptcp: make sendfile selftest work")
 
-Can you copy/move this tag to patch 2/3 please?
+Conflicts have been resolved, and documented in each patch.
 
-(Also, I think patch 2 might be seen as a fix, similar to what has been
-done with TCP_KEEP*, etc.)
+Link: https://lore.kernel.org/20250729142019.2718195-1-sashal@kernel.org [1]
 
-Cheers,
-Matt
+Florian Westphal (1):
+  selftests: mptcp: make sendfile selftest work
+
+Matthieu Baerts (NGI0) (2):
+  selftests: mptcp: connect: also cover alt modes
+  selftests: mptcp: connect: also cover checksum
+
+ tools/testing/selftests/net/mptcp/Makefile    |  3 ++-
+ .../selftests/net/mptcp/mptcp_connect.c       | 26 ++++++++++++-------
+ .../net/mptcp/mptcp_connect_checksum.sh       |  5 ++++
+ .../selftests/net/mptcp/mptcp_connect_mmap.sh |  5 ++++
+ .../net/mptcp/mptcp_connect_sendfile.sh       |  5 ++++
+ 5 files changed, 34 insertions(+), 10 deletions(-)
+ create mode 100755 tools/testing/selftests/net/mptcp/mptcp_connect_checksum.sh
+ create mode 100755 tools/testing/selftests/net/mptcp/mptcp_connect_mmap.sh
+ create mode 100755 tools/testing/selftests/net/mptcp/mptcp_connect_sendfile.sh
+
 -- 
-Sponsored by the NGI0 Core fund.
+2.50.0
 
