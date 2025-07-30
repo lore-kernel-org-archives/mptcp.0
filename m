@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 584E219C556
-	for <mptcp@lists.linux.dev>; Wed, 30 Jul 2025 22:05:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3533D19C556
+	for <mptcp@lists.linux.dev>; Wed, 30 Jul 2025 22:08:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753913108; cv=none; b=g8vh35PxVJH04+jTIeccjgE8vuUcKXKlfgWrZxDMgiTHjLrzcCpPM01b2RW+irniKeu6+unvt1sKNKVcEYqPWOy7uy0BKGVRKYnZM8C9pLOktCQwsR9nBGExePMWXxqphDMBvs/3sqcT71Kp8yRXigA6NJ2+50illrIIGXg//4U=
+	t=1753913295; cv=none; b=taKZk+ixzVWfqEo8huF9BvYAT946iF8cDuHHMj8cAZhsHbj4eiUA1BUb8cGyG3v94PJT8RVgbhuEWuL9v08ivPOk8VfAUBKV029OX4BUbTI+V1clYafJeWSAOWpESDQVpkHznI5EnAOuFsJaannGXfV4q3BnXfrmOLst3EqWYGo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753913108; c=relaxed/simple;
-	bh=1VWu9eryvHD5IRmSi++l5Tq0qE1UKGuQ/Qlbh8jSNL0=;
+	s=arc-20240116; t=1753913295; c=relaxed/simple;
+	bh=nbyshDVxbjEDSPqIXuJt4DJPAMSOr0O1AsN1tJ4+muE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ppyxrk+o59C1HdM1ezxsibfWn15PVg8Pg0zlGQsJVmZZcOhkJ+uAeuCZ85eum1FlubPH+lxi11aSI+lDd4t6J+uYhUO2UwalkympWpIW6bFQksX1FlytUquQrJ7dDr0yrUC8hP8h6hzfM222QVhCOHJ+yeXJAbEkWSxuEbbxr8o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L4tjT4IN; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=YItFTRQi3odxJJks97sFlc2274kAJzarKrcVevgO/OZ4fKh5IEeupLKLmHvJZdIEKybBZTjRP1S3FiZ4UtftMtlP+PHP372PkdzmLYMP1J84AoryLAQgCNa5yep3YP9MEUNb3QDlDXbiH4v4wTFqUCRZgQ0xu3x4mjcMZm4ZNfc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TFO2FhPP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L4tjT4IN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20C2AC4CEE3;
-	Wed, 30 Jul 2025 22:05:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TFO2FhPP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF473C4CEE3;
+	Wed, 30 Jul 2025 22:08:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753913107;
-	bh=1VWu9eryvHD5IRmSi++l5Tq0qE1UKGuQ/Qlbh8jSNL0=;
+	s=k20201202; t=1753913293;
+	bh=nbyshDVxbjEDSPqIXuJt4DJPAMSOr0O1AsN1tJ4+muE=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=L4tjT4INzFmiZnutJrb08cSDn6tm7Wi18f/66lCDU7DbA5X5ikaTIbmPfgol/c4WS
-	 WC9Xo7gghPdE+5hnvdQZIe/gSkF9rtdGnIvVzRFQgWnOUa5bGGXJFMWBdFNhVJGuZU
-	 1KmKqfJPEAFPz333BMPn8iUZJ0IZnPfLe0shL5CEe70O6/cqzcFbOr15ShvrYGE8Jm
-	 QShnTKS3auYuN7s57tGJJvq/b6dwp+tPW1/7Gpm/1Zj3JnZawDDJNUgfA8qZ+j7r09
-	 tYnaP3T+LVZYQq7t/sAwe8FoMgDtJKP0s+6o7UgEPQDo5NbZ0PqGzFm7Mqy82s/OHw
-	 1+5H8M/zInYWw==
-Message-ID: <f61f46ed-9619-4c15-8bb6-81aba5a5e06c@kernel.org>
-Date: Thu, 31 Jul 2025 00:05:06 +0200
+	b=TFO2FhPPhhZ3HI1yBwHgs4iLVR+0dKP3pewwTKjktBvFKFC2knT1ppirB6IPOYMRc
+	 nhzhtZoYlUAFpsdu+kDU4UzVMoT+IDlsfSoPS1Tr6CLQejcAz3fAOoK+mLjXKNwES7
+	 tSO7sFap4eKXQ57sR0BiKJ4teAvw9+OYCTwUWHIfiGng8cAB9tO0VZvnEeg3mInDrA
+	 KIan6NKkyeq2tsybLretbkj7LPZq1Dp9fIOXR2if/liJdc996fsBsyzMRxIpIILzNd
+	 emnS5GqlvncGt7O2LrmGsX8MktjNrjD6oA+REfSyO/0bmvmfdbWxBnp6oS6kLwlls/
+	 QahCpeuZofr3g==
+Message-ID: <588668b8-349a-42a5-a6a8-8a8bf1de0bf6@kernel.org>
+Date: Thu, 31 Jul 2025 00:08:10 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next 6/7] Add MPTCP support to Socket class
+Subject: Re: [PATCH mptcp-next 7/7] Add test cases for MPTCP socket
+ functionality
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Gang Yan <yangang@kylinos.cn>
 References: <cover.1753247666.git.geliang@kernel.org>
- <b70623fa81d0d269f407cdd890d48668d1b4c443.1753247666.git.geliang@kernel.org>
+ <4e7279b9bf9118e89c57221546f3f678517b91da.1753247666.git.geliang@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,24 +87,45 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <b70623fa81d0d269f407cdd890d48668d1b4c443.1753247666.git.geliang@kernel.org>
+In-Reply-To: <4e7279b9bf9118e89c57221546f3f678517b91da.1753247666.git.geliang@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
 On 23/07/2025 07:16, Geliang Tang wrote:
-> This patch extends the Socket class to support Multipath TCP (MPTCP) by:
+> This patch introduces comprehensive test coverage for the newly added
+> MPTCP socket support by:
 > 
-> 1. Adding a new constructor that accepts an mptcp parameter to enable MPTCP
-> 2. Introducing a new private Socket constructor variant that handles MPTCP
->    connections
-> 3. Adding a createImpl factory method that propagates the MPTCP setting
->    to the underlying socket implementation
-> 4. Maintaining backward compatibility while adding MPTCP capabilities
+> 1. Adding MPTCPServer.java - A test server that:
+>    - Creates an MPTCP-enabled ServerSocket
+>    - Accepts client connections
+>    - Echoes received messages back to clients
+>    - Handles graceful shutdown
+> 
+> 2. Adding MPTCPClient.java - A test client that:
+>    - Connects to the MPTCP server
+>    - Sends user input to server
+>    - Displays server responses
+>    - Supports graceful termination
+> 
+> The tests verify:
+> - Basic MPTCP socket creation and connection
+> - Bidirectional communication
+> - Proper stream handling
+> - Error conditions
+> - Clean resource management
+> 
+> Both test programs demonstrate the usage of the new MPTCP-enabled
+> constructors added in previous patches.
 
-Same here: the new helper could be called from the existing Socket() one
-instead of duplicating the code.
+I don't know what is usually being done here, but these tests will not
+be used by a CI I guess. Is it an issue?
+If that's normal, no need to add something like a README to explain how
+to test that?
+
+Also, these tests don't check if MPTCP is being used, nor have pre-check
+to see if the system supports MPTCP (otherwise the test will fail).
 
 Cheers,
 Matt
