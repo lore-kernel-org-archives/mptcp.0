@@ -1,122 +1,132 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D29CE1E5B64;
-	Wed, 30 Jul 2025 09:13:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38C0B635
+	for <mptcp@lists.linux.dev>; Wed, 30 Jul 2025 09:20:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753866809; cv=none; b=P790SKxa4k/ROAwoSNHWDVxFYZdzOHZ8EmgjWnI6ghTBow9qkToyqCbyT0BWYCejbuBFAzFh62OJ2ZM4E+Rg7lI+6Xl+InHLDxx+22gbYCzIzM7W61FttRGXnr09swGMWoAj8cVOEWo+cxHE42CQqtgIdyYm3i2JQMoP5K6IJoU=
+	t=1753867226; cv=none; b=jXfgLIVTMTm7GG6hinkgDg5sQtDv6U5r3HiDV+4e+ryWITDPnn2fiF/zRy6yaTe3cXhfJBB4/zrWaEjwo7HsV1z1/1ZtoenCz0UoNQEGCC9CwuTxBW0OwiMTt9K296QzrlVGifZTdTYsA5z73jaB5ZYizZsrOL6dMmQCIVEhItA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753866809; c=relaxed/simple;
-	bh=RTerptDMBrbs3uXMAzF/CtryWEIRu+xDVS0fwWFc9Sg=;
-	h=Subject:To:Cc:From:Date:In-Reply-To:Message-ID:MIME-Version:
-	 Content-Type; b=p9mO3aFPVieFEgtAFgymPyJ+Wk4kzVLj2ZY2ype7kKP2n7N0KLKoMp2e85oMURWmUVsqny8Hk9AtKiW0fylYK1/FU/zckSwFIcsHJjJYLeVvpPVd/wXMditoLcYMNU1ZvzpC+4boVakFMwRBsAYAROIy5lWSB8TvAYdBpejxmF4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=VZQCPNaf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1753867226; c=relaxed/simple;
+	bh=rZ6pJ0rFV4EUrnMvw6LJh28ztK8ZOAtuufIkAf8yEb4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=O13MkoVQ1Lxp6h/AbOdokmR0Veu9ZM8o/MMqsGwZEVMSNl2zzZA7Ym0PVEHA5jsnilzN58Uw8PDFtqgdeTFEfV4dlbOndoHODjUYv6ClUxDwnAmUu3eY6aZPFqkK1vh7sR7NuhVSC00wUM+24IAWtRTgtkK0nARbcvt3vWxRQV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C1h0KMWh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="VZQCPNaf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4AAF3C4CEF5;
-	Wed, 30 Jul 2025 09:13:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1753866809;
-	bh=RTerptDMBrbs3uXMAzF/CtryWEIRu+xDVS0fwWFc9Sg=;
-	h=Subject:To:Cc:From:Date:In-Reply-To:From;
-	b=VZQCPNaf/Lj4K2SpEeyvRWiAo5ceW8UKHn5T+1sLKpF8L/+56w2JEuTo2mdJlipjS
-	 0Ueeus5pVf8yR843hlw947qAYMIvtbv5EEOmwlUBKrEghcolJ1C5FTwpo9Sj0PSflU
-	 Ydu047Zj67fE+FquMCq4TqSSssCDRkNDS9qs1j+0=
-Subject: Patch "mptcp: reset fallback status gracefully at disconnect() time" has been added to the 6.6-stable tree
-To: gregkh@linuxfoundation.org,kuba@kernel.org,matttbe@kernel.org,mptcp@lists.linux.dev,pabeni@redhat.com,sashal@kernel.org
-Cc: <stable-commits@vger.kernel.org>
-From: <gregkh@linuxfoundation.org>
-Date: Wed, 30 Jul 2025 11:13:04 +0200
-In-Reply-To: <20250728091448.3494479-8-matttbe@kernel.org>
-Message-ID: <2025073004-ferocity-uplifting-2364@gregkh>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C1h0KMWh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D1FEC4CEF6;
+	Wed, 30 Jul 2025 09:20:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1753867225;
+	bh=rZ6pJ0rFV4EUrnMvw6LJh28ztK8ZOAtuufIkAf8yEb4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=C1h0KMWhxiyqxDyhP0nr/fj+hgllL+5bbnH0c/Lb2zmeWok34TnqiTbBnTwmqUVNI
+	 SGcRlgo7sMBcK2ODsyDq6eKorp6cnd0bGSSOauNn1rSFkZQX44xxQ2+xwx3D0h1HhR
+	 37NT4i289ZM9eGd0ND+9UuqvTNXb/w87llFTdgqBpMpkl+/PsBcKj0HI56Uw+6XlHB
+	 x3uvw6Kn1Nrk+W/oDw8UR8HjFcLA8pJpzMlWlATkISGqRI7VZ5jGEeUXRjvJSh65MT
+	 YEQ+wr5u2M3/HEr6ThyNJQRc/brujDoSsJHt2bwPrnLwUIXTGXCZtZggwDVsCDuDYD
+	 1KrOKqhEx+MvA==
+Message-ID: <093a3307-d9d8-416c-a354-eb29d0eabc2a@kernel.org>
+Date: Wed, 30 Jul 2025 11:20:22 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ANSI_X3.4-1968
-Content-Transfer-Encoding: 8bit
-X-stable: commit
-X-Patchwork-Hint: ignore 
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-next 0/3] mptcp: improve ADD_ADDR timeout handling
+Content-Language: en-GB, fr-BE
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <cover.1753777199.git.tanggeliang@kylinos.cn>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <cover.1753777199.git.tanggeliang@kylinos.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+Hi Geliang,
 
-This is a note to let you know that I've just added the patch titled
+On 29/07/2025 10:22, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
+> 
+> This series optimizes MPTCP's ADD_ADDR retransmission timeout:
+> 
+> 1. Renames sysctl to add_addr_timeout_max for clearer semantics
+> 2. Makes timeout adaptive to subflow RTT
+> 3. Updates selftests for the rename
+> 
+> The adaptive timeout improves subflow establishment responsiveness
+> while maintaining reliability through the max timeout cap. The rename
+> provides better configuration clarity.
 
-    mptcp: reset fallback status gracefully at disconnect() time
+Thank you for working on that. I have some comments, please see the
+individual patches.
 
-to the 6.6-stable tree which can be found at:
-    http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/576
 
-The filename of the patch is:
-     mptcp-reset-fallback-status-gracefully-at-disconnect-time.patch
-and it can be found in the queue-6.6 subdirectory.
+Better to (also) put that in the last patch closing the ticket, so
+GitHub can automatically close it when this patch will be applied.
 
-If you, or anyone else, feels it should not be added to the stable tree,
-please let <stable@vger.kernel.org> know about it.
+> Geliang Tang (3):
+>   mptcp: rename add_addr_timeout to add_addr_timeout_max
+>   mptcp: make ADD_ADDR timeout adaptive to subflow RTT
+>   selftests: mptcp: update for add_addr_timeout_max rename
+> 
+>  Documentation/networking/mptcp-sysctl.rst     |  6 ++---
+>  net/mptcp/ctrl.c                              | 12 ++++-----
+>  net/mptcp/pm.c                                | 27 ++++++++++++++++---
+>  net/mptcp/protocol.h                          |  2 +-
+>  .../testing/selftests/net/mptcp/mptcp_join.sh |  8 +++---
+>  5 files changed, 38 insertions(+), 17 deletions(-)
+> 
 
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
 
-From stable+bounces-164898-greg=kroah.com@vger.kernel.org Mon Jul 28 11:15:34 2025
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Mon, 28 Jul 2025 11:14:51 +0200
-Subject: mptcp: reset fallback status gracefully at disconnect() time
-To: mptcp@lists.linux.dev, stable@vger.kernel.org, gregkh@linuxfoundation.org
-Cc: Paolo Abeni <pabeni@redhat.com>, sashal@kernel.org, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, Jakub Kicinski <kuba@kernel.org>
-Message-ID: <20250728091448.3494479-8-matttbe@kernel.org>
-
-From: Paolo Abeni <pabeni@redhat.com>
-
-commit da9b2fc7b73d147d88abe1922de5ab72d72d7756 upstream.
-
-mptcp_disconnect() clears the fallback bit unconditionally, without
-touching the associated flags.
-
-The bit clear is safe, as no fallback operation can race with that --
-all subflow are already in TCP_CLOSE status thanks to the previous
-FASTCLOSE -- but we need to consistently reset all the fallback related
-status.
-
-Also acquire the relevant lock, to avoid fouling static analyzers.
-
-Fixes: b29fcfb54cd7 ("mptcp: full disconnect implementation")
-Cc: stable@vger.kernel.org
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Link: https://patch.msgid.link/20250714-net-mptcp-fallback-races-v1-3-391aff963322@kernel.org
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/mptcp/protocol.c |    9 +++++++++
- 1 file changed, 9 insertions(+)
-
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -3208,7 +3208,16 @@ static int mptcp_disconnect(struct sock
- 	 * subflow
- 	 */
- 	mptcp_destroy_common(msk, MPTCP_CF_FASTCLOSE);
-+
-+	/* The first subflow is already in TCP_CLOSE status, the following
-+	 * can't overlap with a fallback anymore
-+	 */
-+	spin_lock_bh(&msk->fallback_lock);
-+	msk->allow_subflows = true;
-+	msk->allow_infinite_fallback = true;
- 	WRITE_ONCE(msk->flags, 0);
-+	spin_unlock_bh(&msk->fallback_lock);
-+
- 	msk->cb_flags = 0;
- 	msk->recovery = false;
- 	msk->can_ack = false;
-
-
-Patches currently in stable-queue which might be from matttbe@kernel.org are
-
-queue-6.6/selftests-mptcp-connect-also-cover-alt-modes.patch
-queue-6.6/selftests-mptcp-connect-also-cover-checksum.patch
-queue-6.6/mptcp-plug-races-between-subflow-fail-and-subflow-creation.patch
-queue-6.6/mptcp-make-fallback-action-and-fallback-decision-atomic.patch
-queue-6.6/mptcp-reset-fallback-status-gracefully-at-disconnect-time.patch
