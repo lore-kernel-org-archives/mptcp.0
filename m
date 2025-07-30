@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EEEB2701DC
-	for <mptcp@lists.linux.dev>; Wed, 30 Jul 2025 09:26:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 596812222CB
+	for <mptcp@lists.linux.dev>; Wed, 30 Jul 2025 10:16:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753867593; cv=none; b=CDxuMtSK9drU4lappgiyQKi1H8iHxol4D4xaBM+AJWPii5c7BZhWjMU8CnGbaZj54G+EEAlUKia2v7s6oSmN1oFoWBWU9iCLYjWiqN5QN5wOFN5JdCAQV7nwzq4Sx+lOUo+b/44QBxfgt6jbmUy+QRdKGQ+xt/11Cs33rPv/nRQ=
+	t=1753870600; cv=none; b=afpQIFe7PhjXBUhq2cCdEoqdaJOTKjilFUyeQLBlBcKpMqAerKGiF2OFSv/2RP1yKgwlkfb0XHflr0aOsLGNAgYcKXq4B8MW02Yu/xEpFfWQwFmtv8q5y0EpYZi8MKsF/LblEakoOkoCNXMLcTKUBV1meGbN15mhqHAe9I9G/ns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753867593; c=relaxed/simple;
-	bh=Oupd8v7v/yV0IA8x5j15YyTCDRJRUrF7SiDH5X3HtfQ=;
+	s=arc-20240116; t=1753870600; c=relaxed/simple;
+	bh=d5R1ydpTZoMJolA2EuAl/hRZpEFT2SVz1MxPZYMCoCk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pXjvsGHheIzIYtgBEct4Y6euwSE4QttGOuiSbr1nI9e9wcna/2pgoutBMuVkeMZtXgqyDeUHvsAKzA074ULMIRRMcSscwpkwyrVXoR+tXm1a/m7Sr282JlOK3WoRsZJIvYJZpOD+nfHUnm+lU2H3UHZtGb2UJ8a5HBVT/7qwe/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NXdVmzUO; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=DoerLnAXnA+qlQcpk+L2b7q3PcXeIBOX4i8ir9o3BhxNy2q70OYwTxzAipfszEZ6bA0mzOq02U2wzECq23BhN+iYoD/dWrC19GleB4EyCj87RGXagWKPMHangTHVNUSEz3VAebqaAn/cKpKi0dee2ppoLS1B9s71Gi1eLpnheQA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kaeG2mMC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NXdVmzUO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8714C4CEE7;
-	Wed, 30 Jul 2025 09:26:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kaeG2mMC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18A46C4CEF9;
+	Wed, 30 Jul 2025 10:16:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753867592;
-	bh=Oupd8v7v/yV0IA8x5j15YyTCDRJRUrF7SiDH5X3HtfQ=;
+	s=k20201202; t=1753870598;
+	bh=d5R1ydpTZoMJolA2EuAl/hRZpEFT2SVz1MxPZYMCoCk=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=NXdVmzUOIOW+3ZVrfVFqbGdzTSy9M23VzoxiB5sFX50FrV56u0A1D0qn7UIk1emNx
-	 pVUl9mcQ0/oS4cgo79f7GIYT6r581MghfwedZCfo5VLbFgWT2OcM4xI/XCQ3ExZxrT
-	 0dw6YM5av9XkV14ru/JiTAUVS32U9kSOqEpbBjVQ8be7oEKyzx66rL8Pplj6ME7BHy
-	 310RMSjhbrr09EMKIVh1k2w33hrlRLEdH6dyFIXvbyUk11w/jhrnckS2hSiKWDK0k3
-	 GLs3yq52dA1XMTB4nyLc7s9pXiRTiAAHT/sh4X0GXGWXOYWBpGMaXaTPZ7OWm5WTKX
-	 8o0yZ1bI6aS5Q==
-Message-ID: <6230d0d8-3e01-43ce-8811-87298d996b78@kernel.org>
-Date: Wed, 30 Jul 2025 11:26:30 +0200
+	b=kaeG2mMCTeG0KeexTmdyZu5qFg9U7RcLMS2oKlqfMbfKuLpl3aWgDm6LIRp8pTMes
+	 Sf7wMGqRhpJyYTPH4ubJe9NTL5uk3ubyFz+TLJASsA7HzB99Y+ZD2cD8OBDZJV9C/P
+	 baUfsBXUq7CQZ7DwQzBHAqNWBpJNAPR6rLigrPto0Pz7TVnX5YSISdxi69TSH6e1cV
+	 /W/s4wlodFr2YSTXKW1AXXi924bD/FHNp0AA2lGeqMxDWv/RRwZ+hKJGIu47mJdERU
+	 gouqAGm3FF993h+5l8uqRvwVHTFPB5EKulz9IfswWY5buYY8XgqNRpIQWhxeyqyvym
+	 eVyFHASGuz3Dw==
+Message-ID: <d8fdbff7-2153-46a4-8342-8bef9c965227@kernel.org>
+Date: Wed, 30 Jul 2025 12:16:35 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next 3/3] selftests: mptcp: update for
- add_addr_timeout_max rename
+Subject: Re: [PATCH mptcp-next 2/3] mptcp: setsockopt support for TCP_MD5SIG
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1753777199.git.tanggeliang@kylinos.cn>
- <3b138f3ba5f4aaa354a5df678218b47cd7aace8a.1753777199.git.tanggeliang@kylinos.cn>
+References: <cover.1753859907.git.tanggeliang@kylinos.cn>
+ <7f2aaa80eef99f64ff6d7a48ce0a6bf06d1cacab.1753859907.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,23 +86,69 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <3b138f3ba5f4aaa354a5df678218b47cd7aace8a.1753777199.git.tanggeliang@kylinos.cn>
+In-Reply-To: <7f2aaa80eef99f64ff6d7a48ce0a6bf06d1cacab.1753859907.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 29/07/2025 10:22, Geliang Tang wrote:
+On 30/07/2025 09:22, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> Update MPTCP selftests to use the renamed sysctl variable
-> add_addr_timeout_max. This aligns tests with the kernel change.
+> This adds setsockopt support for TCP_MD5SIG and TCP_MD5SIG_EXT options.
+> The implementation:
+> - Allows setting these options (getsockopt remains unsupported)
+> - Applies them only to the first subflow
+> - Maintains MD5 compatibility limitations with MPTCP
+> 
+> Note that TCP_MD5SIG and TCP_MD5SIG_EXT are unsupported for TCP too.
+> 
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> ---
+>  net/mptcp/sockopt.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+> index b264185b810d..5b3e54f7d803 100644
+> --- a/net/mptcp/sockopt.c
+> +++ b/net/mptcp/sockopt.c
+> @@ -567,10 +567,12 @@ static bool mptcp_supported_sockopt(int level, int optname)
+>  		case TCP_FASTOPEN_CONNECT:
+>  		case TCP_FASTOPEN_KEY:
+>  		case TCP_FASTOPEN_NO_COOKIE:
+> +		case TCP_MD5SIG:
+> +		case TCP_MD5SIG_EXT:
+>  			return true;
+>  		}
+>  
+> -		/* TCP_MD5SIG, TCP_MD5SIG_EXT are not supported, MD5 is not compatible with MPTCP */
+> +		/* MD5 is not compatible with MPTCP */
 
-This should not be needed, see my comment on patch 1/3.
+Maybe best to update this comment too and move it on top of "case
+TCP_MD5SIG":
 
-What you will probably need to adapt is the packetdrill tests dedicated
-to the ADD_ADDR: mptcp/add_addr. These tests expect a retransmission
-every second, because net.mptcp.add_addr_timeout sysctl knob is set to 1.
+  /* MD5 will force a fallback to TCP: OK to set while not connected */
+
+>  
+>  		/* TCP_REPAIR, TCP_REPAIR_QUEUE, TCP_QUEUE_SEQ, TCP_REPAIR_OPTIONS,
+>  		 * TCP_REPAIR_WINDOW are not supported, better avoid this mess
+> @@ -834,6 +836,8 @@ static int mptcp_setsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
+>  	case TCP_FASTOPEN_CONNECT:
+>  	case TCP_FASTOPEN_KEY:
+>  	case TCP_FASTOPEN_NO_COOKIE:
+> +	case TCP_MD5SIG:
+> +	case TCP_MD5SIG_EXT:
+>  		return mptcp_setsockopt_first_sf_only(msk, SOL_TCP, optname,
+>  						      optval, optlen);
+
+Just to be sure, can you check if this option will correctly fail if the
+setsockopt(TCP_MD5SIG*) are used after the establishment of the connection?
+
+I think it is important to set these MD5 options only if the connection
+is in CLOSED or LISTENED state. I don't think we want to deal with this
+socket option for ongoing MPTCP connections.
+
+>  	}
 
 Cheers,
 Matt
