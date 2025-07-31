@@ -1,182 +1,155 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB78F2BDC38;
-	Thu, 31 Jul 2025 11:24:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03EAB2D0C76
+	for <mptcp@lists.linux.dev>; Thu, 31 Jul 2025 13:39:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753961069; cv=none; b=j2c6ph1T/oFU51axozmn+kg/Df4X/SugKrwQwivbaoA48ZXT4OdEImrFM/MK7S9A86d+1RRlurtd/VAMHD2evVEWt81CMhp4AXGVLXM50h70E5oWQSnPgvecucb4oFNIo8dof5nWK3DUOOwMG1oP6yMg0ECGINcao8SZdnOw2N4=
+	t=1753969144; cv=none; b=VHkXBv8l4ZJsgrwKGX25mDrJ+q4hFzI8g+8Xejx2zsUGsV3kiRgg7X3V357/xsd2aNkfBr3j0/vmUXG1NIDc0m8fWVtoKleUcKzO5KZd5c33wgP8R7fSS7s5aNx0qQdGEnc0j1KET+ei3cqI0wgDV/i7fj0IkdWhjcCczEh9d5w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753961069; c=relaxed/simple;
-	bh=p4f9HLKx6WzT9jNMNqLMGwTM73cjvY8OTDsMvc7A11M=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=k3JjzXGlgai4lfpkhDReCyhLdPSUAsoQiZL9noLQwMIOrpQ2WrzEMm/UJ482VqW5jAQ7p9qiFq1tZZzzeh2y2KP0xQnR81wR/Oy/H7WZg09RbZc5B31UTC+NXDa+eN6vX1XnXr1P6dAveEPRHfrGUfPgZpf+xGfKV822mViQdP0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UDyf6dNZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1753969144; c=relaxed/simple;
+	bh=kOpGIhGHdpLiDUIPN5tfSWZvVyiUegYsJVHK2hDz4Zk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kL3bRTsbe/3wfM9gZ1v8YBNCnekVTeoWuT3zFsuhyya2kows7+/jipJv9uPoHQLEoDxeu3N56JV5Oi8KMfV5dtBzrOKahkqT1vMsESuRdu57crD9MrzJxEfKDx2/v2knP/8eZgZX4S4dsgAsUMi+Kbv3YghqYFeHOQk8ty8SF9w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=CkrAz40Z; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UDyf6dNZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3F95C4CEF6;
-	Thu, 31 Jul 2025 11:24:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753961068;
-	bh=p4f9HLKx6WzT9jNMNqLMGwTM73cjvY8OTDsMvc7A11M=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=UDyf6dNZPoUMKXr97mF6WboHWiOtgh3i2Fir1tpCamsOxWgWQznwRkxzEp0MtaiRy
-	 h6FI4awdIhbVOMW/BzejNG+XwcBn2zj1ctjbBFqx+PFrV7dAPX1YnDzynC1fIm6ICF
-	 LoRDSI3qk9yumIAzLZFlhVk6G9NXpIgxwVJay79qbW3aO9MXUavMC1zC2fA1+kaqMN
-	 wGtAYlkgucj2EKHanIKg6ArdRIkzWiPLlH4caU7RrFo/1gWmYgy/yCo5L+fUwF2SMp
-	 rRYLfsjCWRYlkMHFayQ+DDBE75G1gxY4454p3zz7/7DvEqSlRQuCzCeZB8NcFgh1rj
-	 HuKVgPSW6V6dQ==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-To: mptcp@lists.linux.dev,
-	stable@vger.kernel.org,
-	gregkh@linuxfoundation.org
-Cc: Paolo Abeni <pabeni@redhat.com>,
-	sashal@kernel.org,
-	Dipanjan Das <mail.dipanjan.das@gmail.com>,
-	Mat Martineau <mathew.j.martineau@linux.intel.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	"Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Subject: [PATCH 5.15.y 6/6] mptcp: do not queue data on closed subflows
-Date: Thu, 31 Jul 2025 13:24:00 +0200
-Message-ID: <20250731112353.2638719-14-matttbe@kernel.org>
-X-Mailer: git-send-email 2.50.0
-In-Reply-To: <20250731112353.2638719-8-matttbe@kernel.org>
-References: <20250731112353.2638719-8-matttbe@kernel.org>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="CkrAz40Z"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-45617887276so5503635e9.2
+        for <mptcp@lists.linux.dev>; Thu, 31 Jul 2025 06:39:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1753969140; x=1754573940; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=jnez6DValapR3ZUUqRysmzvL+YRs62blvNyrOJaANrI=;
+        b=CkrAz40ZNFctsQsK9JVB2/7WqQRKBD95KHEajfljrNog9JKLj7XiSrw7IUqemyBycJ
+         N7RRjC3hCclPZHO6IJkix27OW4k5pJZlaP0x7XmUa6y26r5ikvCGGh0JqMu7HmAFOgZq
+         0uNfdO/ms14ipyoZ0c8Bos1sgA0mzzpekgmJl+7EClDYfFNulegwN40/g61CvzIEnxkV
+         obxWe6HLSb+CQMjxFKHU+jthgrH5hVVwMigdGgMsTTyNnM83DlESZxbfUaMKkoXSv7a5
+         hvO94uF/08m2fCPsuhWatxUhoviMImvgiLWl3iLxI2iHHf/zTVQvYYV0J5Cla/2cLfzI
+         n+eg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1753969140; x=1754573940;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jnez6DValapR3ZUUqRysmzvL+YRs62blvNyrOJaANrI=;
+        b=nfpYpqfrOuRMunn4qNfpziHejV1Yqe8jqUxwuVyrDdM6voROUsgjZb6hTXHmXfl+FJ
+         wRvjq2s1Lm0F/7bL+3pGm6M76CDyr8y9nztId0P3KRvpEh17WJEhTGPqr0puao2F/8c2
+         wUO5wjHe6cMMd7lAx3bHPiuD73KsGJIxImfNz5Sl+7ZDTNX6RJugV5MIpuz6Nyb5pmnT
+         mgZK1iXvNCh/uR6BMeKFNuZr+Dnzp9TuaXR366nBM5wFHbXQj7IWxnC6ACIiopT1uF5X
+         SpiGOtXyRWb1bW4aaHkTKZJYsOO0leKmcy/ZHWI7D49uip4acTE06EHGgRuhIqjt5wSp
+         vTfw==
+X-Forwarded-Encrypted: i=1; AJvYcCVYjcMZTrDTGkwkVHTJjooRB2/YTsF5Ox0rg/NHV4D1QAWNIGcQsDQHfV6hE1C33tTknCt3JQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxG34aVCX2MKhMYF8MwBuHwdidopuUrlT5hqyUIm4MUsSkQvZj8
+	hNqC5z0n7bcrNX8K3MzkvoIirmbNeQXaKOmt3CfvMVthz82Lg3oBz2ac/gIFCs6eQ9Q=
+X-Gm-Gg: ASbGncsI0PXmqNX3BZ97YOsCVwE74ZDkbBiZZTqQeL8yM1LpC8IMAk9PzRV3tRgLPRz
+	MrwEZTbwDAgSbDM5JLpXYmS9PuGJPIxOjx1DVw/J2R0hZBpjNt8BkahvVNo1Fzae8esHlQ+Yh2V
+	pAMew+/JoB++BvNZ3iiSLQJN5AU9uGF8XNzdxxla93CtxoHksXIIrMPGyoG3eHSHRJabj7fal+Y
+	gDq9AXwXd5MqOI4VMab3Oe1B/AMZ2pFUa86JKtmFZL3osDWHiWOIbVsMKb0wqsKYd4Fm2i1Bhg7
+	MfdUCKY8C765wjAJw4Ijq1buxCmt6yZIqLLjOLuGG2T6X3FwOGfio5hX5GdwJ+WL9sJZxmn+rQM
+	N8OxBsr9dXVT4k8/0Xo0GOenCUMeV7JdXwOlEFcCVBQ==
+X-Google-Smtp-Source: AGHT+IFFm9zky0SxbktFrrzQ+NTv6G8i6eERwaMpUiFW2QYSxbmEiN7oSr8vkltvo3nUOZWrxX7dIw==
+X-Received: by 2002:a05:600c:8114:b0:456:23aa:8c8 with SMTP id 5b1f17b1804b1-45892b9e4bcmr69774445e9.13.1753969140187;
+        Thu, 31 Jul 2025 06:39:00 -0700 (PDT)
+Received: from blackdock.suse.cz (nat2.prg.suse.com. [195.250.132.146])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b79c4534b3sm2409107f8f.47.2025.07.31.06.38.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 31 Jul 2025 06:38:59 -0700 (PDT)
+Date: Thu, 31 Jul 2025 15:38:57 +0200
+From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
+To: Kuniyuki Iwashima <kuniyu@google.com>
+Cc: "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+	Neal Cardwell <ncardwell@google.com>, Paolo Abeni <pabeni@redhat.com>, 
+	Willem de Bruijn <willemb@google.com>, Matthieu Baerts <matttbe@kernel.org>, 
+	Mat Martineau <martineau@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Michal Hocko <mhocko@kernel.org>, Roman Gushchin <roman.gushchin@linux.dev>, 
+	Shakeel Butt <shakeel.butt@linux.dev>, Andrew Morton <akpm@linux-foundation.org>, 
+	Simon Horman <horms@kernel.org>, Geliang Tang <geliang@kernel.org>, 
+	Muchun Song <muchun.song@linux.dev>, Kuniyuki Iwashima <kuni1840@gmail.com>, netdev@vger.kernel.org, 
+	mptcp@lists.linux.dev, cgroups@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH v1 net-next 13/13] net-memcg: Allow decoupling memcg from
+ global protocol memory accounting.
+Message-ID: <fq3wlkkedbv6ijj7pgc7haopgafoovd7qem7myccqg2ot43kzk@dui4war55ufk>
+References: <20250721203624.3807041-1-kuniyu@google.com>
+ <20250721203624.3807041-14-kuniyu@google.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5163; i=matttbe@kernel.org; h=from:subject; bh=U0XNF1CDFKt2Tpezty8ofYSiZ9LjPTlhIFxPrOSkEQY=; b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDK6g8KqwwVcVy9eMn3uB/7vS4/F2ETyb2uSrvjxL5Hz5 4GJXMEbO0pZGMS4GGTFFFmk2yLzZz6v4i3x8rOAmcPKBDKEgYtTACZyKIKRob/1c/yUqlmy5ox3 nri8ybzps/F911+vm6ti1ofm7PJ+U83I8HAZ/5T2/Ei5uWevnVtw103hzffGXw69lzvnu/9ItF+ 9mg8A
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="2gxvsfqre7jriys5"
+Content-Disposition: inline
+In-Reply-To: <20250721203624.3807041-14-kuniyu@google.com>
 
-From: Paolo Abeni <pabeni@redhat.com>
 
-commit c886d70286bf3ad411eb3d689328a67f7102c6ae upstream.
+--2gxvsfqre7jriys5
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v1 net-next 13/13] net-memcg: Allow decoupling memcg from
+ global protocol memory accounting.
+MIME-Version: 1.0
 
-Dipanjan reported a syzbot splat at close time:
+On Mon, Jul 21, 2025 at 08:35:32PM +0000, Kuniyuki Iwashima <kuniyu@google.=
+com> wrote:
+> Some protocols (e.g., TCP, UDP) implement memory accounting for socket
+> buffers and charge memory to per-protocol global counters pointed to by
+> sk->sk_proto->memory_allocated.
+>=20
+> When running under a non-root cgroup, this memory is also charged to the
+> memcg as sock in memory.stat.
+>=20
+> Even when memory usage is controlled by memcg, sockets using such protoco=
+ls
+> are still subject to global limits (e.g., /proc/sys/net/ipv4/tcp_mem).
 
-WARNING: CPU: 1 PID: 10818 at net/ipv4/af_inet.c:153
-inet_sock_destruct+0x6d0/0x8e0 net/ipv4/af_inet.c:153
-Modules linked in: uio_ivshmem(OE) uio(E)
-CPU: 1 PID: 10818 Comm: kworker/1:16 Tainted: G           OE
-5.19.0-rc6-g2eae0556bb9d #2
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
-1.13.0-1ubuntu1.1 04/01/2014
-Workqueue: events mptcp_worker
-RIP: 0010:inet_sock_destruct+0x6d0/0x8e0 net/ipv4/af_inet.c:153
-Code: 21 02 00 00 41 8b 9c 24 28 02 00 00 e9 07 ff ff ff e8 34 4d 91
-f9 89 ee 4c 89 e7 e8 4a 47 60 ff e9 a6 fc ff ff e8 20 4d 91 f9 <0f> 0b
-e9 84 fe ff ff e8 14 4d 91 f9 0f 0b e9 d4 fd ff ff e8 08 4d
-RSP: 0018:ffffc9001b35fa78 EFLAGS: 00010246
-RAX: 0000000000000000 RBX: 00000000002879d0 RCX: ffff8881326f3b00
-RDX: 0000000000000000 RSI: ffff8881326f3b00 RDI: 0000000000000002
-RBP: ffff888179662674 R08: ffffffff87e983a0 R09: 0000000000000000
-R10: 0000000000000005 R11: 00000000000004ea R12: ffff888179662400
-R13: ffff888179662428 R14: 0000000000000001 R15: ffff88817e38e258
-FS:  0000000000000000(0000) GS:ffff8881f5f00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000020007bc0 CR3: 0000000179592000 CR4: 0000000000150ee0
-Call Trace:
- <TASK>
- __sk_destruct+0x4f/0x8e0 net/core/sock.c:2067
- sk_destruct+0xbd/0xe0 net/core/sock.c:2112
- __sk_free+0xef/0x3d0 net/core/sock.c:2123
- sk_free+0x78/0xa0 net/core/sock.c:2134
- sock_put include/net/sock.h:1927 [inline]
- __mptcp_close_ssk+0x50f/0x780 net/mptcp/protocol.c:2351
- __mptcp_destroy_sock+0x332/0x760 net/mptcp/protocol.c:2828
- mptcp_worker+0x5d2/0xc90 net/mptcp/protocol.c:2586
- process_one_work+0x9cc/0x1650 kernel/workqueue.c:2289
- worker_thread+0x623/0x1070 kernel/workqueue.c:2436
- kthread+0x2e9/0x3a0 kernel/kthread.c:376
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:302
- </TASK>
+IIUC the envisioned use case is that some cgroups feed from global
+resource and some from their own limit.
+It means the admin knows both:
+  a) how to configure individual cgroup,
+  b) how to configure global limit (for the rest).
+So why cannot they stick to a single model only?
 
-The root cause of the problem is that an mptcp-level (re)transmit can
-race with mptcp_close() and the packet scheduler checks the subflow
-state before acquiring the socket lock: we can try to (re)transmit on
-an already closed ssk.
+> This makes it difficult to accurately estimate and configure appropriate
+> global limits, especially in multi-tenant environments.
+>=20
+> If all workloads were guaranteed to be controlled under memcg, the issue
+> could be worked around by setting tcp_mem[0~2] to UINT_MAX.
+>=20
+> In reality, this assumption does not always hold, and a single workload
+> that opts out of memcg can consume memory up to the global limit,
+> becoming a noisy neighbour.
 
-Fix the issue checking again the subflow socket status under the
-subflow socket lock protection. Additionally add the missing check
-for the fallback-to-tcp case.
+That doesn't like a good idea to remove limits from possibly noisy
+units.
 
-Fixes: d5f49190def6 ("mptcp: allow picking different xmit subflows")
-Reported-by: Dipanjan Das <mail.dipanjan.das@gmail.com>
-Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- net/mptcp/protocol.c |  8 +++++++-
- net/mptcp/protocol.h | 11 +++++++----
- 2 files changed, 14 insertions(+), 5 deletions(-)
+> Let's decouple memcg from the global per-protocol memory accounting.
+>=20
+> This simplifies memcg configuration while keeping the global limits
+> within a reasonable range.
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 6e9d1a749950..bf2b9ba1c734 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1350,6 +1350,9 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
- 			 info->limit > dfrag->data_len))
- 		return 0;
- 
-+	if (unlikely(!__tcp_can_send(ssk)))
-+		return -EAGAIN;
-+
- 	/* compute send limit */
- 	info->mss_now = tcp_send_mss(ssk, &info->size_goal, info->flags);
- 	copy = info->size_goal;
-@@ -1512,7 +1515,8 @@ static struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk)
- 	if (__mptcp_check_fallback(msk)) {
- 		if (!msk->first)
- 			return NULL;
--		return sk_stream_memory_free(msk->first) ? msk->first : NULL;
-+		return __tcp_can_send(msk->first) &&
-+		       sk_stream_memory_free(msk->first) ? msk->first : NULL;
- 	}
- 
- 	/* re-use last subflow, if the burst allow that */
-@@ -1638,6 +1642,8 @@ void __mptcp_push_pending(struct sock *sk, unsigned int flags)
- 
- 			ret = mptcp_sendmsg_frag(sk, ssk, dfrag, &info);
- 			if (ret <= 0) {
-+				if (ret == -EAGAIN)
-+					continue;
- 				mptcp_push_release(ssk, &info);
- 				goto out;
- 			}
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index cfb6aa72515e..8d05fb205a31 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -599,16 +599,19 @@ void mptcp_info2sockaddr(const struct mptcp_addr_info *info,
- 			 struct sockaddr_storage *addr,
- 			 unsigned short family);
- 
-+static inline bool __tcp_can_send(const struct sock *ssk)
-+{
-+	/* only send if our side has not closed yet */
-+	return ((1 << inet_sk_state_load(ssk)) & (TCPF_ESTABLISHED | TCPF_CLOSE_WAIT));
-+}
-+
- static inline bool __mptcp_subflow_active(struct mptcp_subflow_context *subflow)
- {
--	struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
--
- 	/* can't send if JOIN hasn't completed yet (i.e. is usable for mptcp) */
- 	if (subflow->request_join && !subflow->fully_established)
- 		return false;
- 
--	/* only send if our side has not closed yet */
--	return ((1 << ssk->sk_state) & (TCPF_ESTABLISHED | TCPF_CLOSE_WAIT));
-+	return __tcp_can_send(mptcp_subflow_tcp_sock(subflow));
- }
- 
- void mptcp_subflow_set_active(struct mptcp_subflow_context *subflow);
--- 
-2.50.0
+I think this is a configuration issue only, i.e. instead of preserving
+the global limit because of _some_ memcgs, the configuration management
+could have a default memcg limit that is substituted to those memcgs so
+that there's no risk of runaways even in absence of global limit.
 
+Regards,
+Michal
+
+--2gxvsfqre7jriys5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQRCE24Fn/AcRjnLivR+PQLnlNv4CAUCaItx7wAKCRB+PQLnlNv4
+COjkAP0UcZBWkhc+vB0FfA1p+pH/BzzZDKA27tR3sA4T4P3PBQEAyknqdHl6GIJ5
+yIxBX8DBx92ijoCOGSF1vaocgD203AQ=
+=iTKX
+-----END PGP SIGNATURE-----
+
+--2gxvsfqre7jriys5--
