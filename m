@@ -1,129 +1,129 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 525FE15533F;
-	Thu, 31 Jul 2025 19:51:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B2F223ABB1
+	for <mptcp@lists.linux.dev>; Thu, 31 Jul 2025 21:26:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753991510; cv=none; b=MC6mOEZeJgjBw/d8qLPiR4FK6ffr+Bb6KgCmOAPjvrn7OzRjBB4gi5wYBCLPLiWSFOvZCC5//Am+2yPBAgUocxRAi2hLvSlbycXmvy+7HSGpfpYXMwa9shGDmIUUfbJXXYuzIW5+w9/4MnqeN32djeGWo2CF6FPT1tgh1VI+WuI=
+	t=1753997182; cv=none; b=P0m+w6zJtT72opH8XrjglsC5DZnmuowCpbISgIZyWgxi3JnZG2GQzvNyVn6v/qMmUvQKyw8ZDhOpImaAOz75KiAE+Z0pzvbUwR+MRlZ2wXTIX2I7oEZjGNvmtzVDmY5Xoeb7NCaJkBPt4REx2/Anp75+mzGI8VCk9/qdJEs5BO4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753991510; c=relaxed/simple;
-	bh=1qfpjMOR5vF3iZR9DfglRY8NdvKOMGgslvAE/13smbI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FGOux3QHcW9ysNc/rKn2l2F9c1Pfjq+OZA5s4x6mM5K+pNO3MKKZYO8TijTkHpSRafJaSs9oyKfwDlzxz/uLCaiZszoDZTuJUbsAj5pEHOjkOPnDMtI8iFiQGBVDKAMCJedoPMq716jg5pk44GdVSN3P9vIRIFglh5EqPs6w2jU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fMh8iAjJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1753997182; c=relaxed/simple;
+	bh=FYpqQChL+Oj5nYw0SI8tdyA6pPCBAuNa0gLhqtdddyc=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=GoGwi7HVTN0r0Qjz/abyZOar/c7k3sKOBFoSQdWNZWOhKlZIzBtoAvdphdz2mXdMjZlpRI/yp3ifX3wtSkbrJMvUzQtXTXyi2dqknjGpSP9ynrVBqPHYid6cBh4rrSGiRySj48zC6dOjrqGa79NbA7j2v8/c/d0WijacZxswQxE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UxLdfqWn; arc=none smtp.client-ip=209.85.166.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fMh8iAjJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87110C4CEEF;
-	Thu, 31 Jul 2025 19:51:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753991510;
-	bh=1qfpjMOR5vF3iZR9DfglRY8NdvKOMGgslvAE/13smbI=;
-	h=From:To:Cc:Subject:Date:From;
-	b=fMh8iAjJIY9hpRrLsQi9rcA2U5YxO6+Q3GXsKqXbR5eZ8epkFgScT7KlWdhF5gUNl
-	 wd5tO3+hyOa/b6L3280JZsr0crgiuSUoaDCBYUYCz+zfmUyx8Zvd2LvhUndIIIdvMG
-	 cWSD6zmJetD82vubKyF3wLBVowt2gIDpumaacSZQxUg8ZtndGUVBr7aweB1zf/+NuR
-	 N8RgffbURpsVWynN5YksLekyDkprDgdFXRbd1IcvxvpYfV70IIz3+S0Ex+vp24FP0G
-	 2UYBvXh0JtI0drr4/NHyg8gVDgwgd5EGHm7Pwtit88TnC0Xz2hG1TQTTfj00F62ptK
-	 u6MX2Zmw1DJ+g==
-From: Eric Biggers <ebiggers@kernel.org>
-To: Matthieu Baerts <matttbe@kernel.org>,
-	Mat Martineau <martineau@kernel.org>,
-	Geliang Tang <geliang@kernel.org>,
-	netdev@vger.kernel.org,
-	mptcp@lists.linux.dev
-Cc: linux-crypto@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Paolo Abeni <pabeni@redhat.com>,
-	Eric Biggers <ebiggers@kernel.org>
-Subject: [PATCH net] mptcp: use HMAC-SHA256 library instead of open-coded HMAC
-Date: Thu, 31 Jul 2025 12:50:54 -0700
-Message-ID: <20250731195054.84119-1-ebiggers@kernel.org>
-X-Mailer: git-send-email 2.50.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UxLdfqWn"
+Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-3e40212e6ceso6208845ab.0
+        for <mptcp@lists.linux.dev>; Thu, 31 Jul 2025 14:26:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1753997180; x=1754601980; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uZKaw+nSdAbcnf2E4GbsSwu4JazF3aS/iuVoxogPSJw=;
+        b=UxLdfqWnTuClHSswbGoFD5HgXQiIg2zSO6Q78e9Vn4cIFcTPD6Y4YeBAMS6JNnEcjn
+         +hEmPp3EotXqxEPjVITaor7G7trKz38wNbLTx4FHaQsd/qwuOmTAGus3eiRImi7lbFS2
+         umTSszGbKj9ljCtstLLmXkbIISa4xWIsAJ2RZS8g+m3ITnWysK2fvK3zwexEdzl+rSFT
+         Lza7ijecaZMMnWx67Nxx5AnlED8yTUFj8T306nfvpFSqB8ZZvPKoESx988IQkFQfG2ws
+         pCD6KMqYrN8b9VAqQFnmtsS9tZMBncaWo19pwd09uAIxkbHaVcye9r5V1+PCiBk+Prnn
+         9HvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1753997180; x=1754601980;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=uZKaw+nSdAbcnf2E4GbsSwu4JazF3aS/iuVoxogPSJw=;
+        b=lptUiGMQ617qf2LXnKW7FnLLPzOqVjin3knZlV+6sAHkD6GfdQS/vq4/8U3UWYPUEc
+         xjnCutmphdpVODJEL9B4XQq7VkQhRVcf2X17WJDYdOqmbW/A8G1i2PBMmHioDfvkDm+t
+         JKuTz8cOiiKzxb2zozVlpEuXYCRZAnainQHP8iQR6KWZ8udJRRbH3swrdN2CtqiUrKPg
+         axybkfvhtjL0fvkWZkXTm+13ofApdIsRWiLZ6t/iE6lVMNeTy+fmDr5N78WuisEIedt+
+         WC7dsciIi6NKoeAfXmUm5RayEpbrY7VXP75W6wbSaVtv0qBscq2QNoCZg/goeoeIoS+9
+         EO2g==
+X-Gm-Message-State: AOJu0Yyp2M/jf81S7K1ijfCl2LFVkabk7S7wRsbVt29FDnJ9ok94z2Tt
+	fioAXQt4UqEzKfR/b1nT7sEhIdY8OJ32YEJJdWu1MTQ34PxkolXF7tA=
+X-Gm-Gg: ASbGncvLJ8pM7idar2a1wAJ0cZfK/sieXPnSXi7aI/ayV+G70Cvymi6rEpd3Dx77yjn
+	gcc/KL2czpjYuQSudqgwAW5Ra2YSKFlrd0/ilDbvmf1yBuxpKca1jcvBhuRspwp587Yfp2gFVv8
+	a0+QfwFn6B7nJa+IcA0XrNBrAti9wmu3EEzCj0XWJ9EYAxME9sK1xH6jZBfAoSWSaJVPJMofCUt
+	0kwRPLwNzb5eAj3Ol0QaJhHfV6/hW6MnDGHh+CWhgGeIMLjn/KcuoYjryFJgh2Fl1Hl7LJpEI8s
+	nFFZC87VTQoufrA3thrOdWOefPhfDe2rqPznVs5nrPWX2S0uA9E1chiInYLtVAZuhigdf5udDW/
+	Ww7jbZ2cO98WIZYBm31FVMDO0pLdCiZbIewtU
+X-Google-Smtp-Source: AGHT+IF2rFK229xfHGmAVCBEqapmzBVnYasHWg6mXMlEiyUGiOilhZHzmtCQG9q9syC4u++5nD7oeg==
+X-Received: by 2002:a05:6e02:378a:b0:3e3:d093:2069 with SMTP id e9e14a558f8ab-3e3f6252f8bmr154054695ab.12.1753997180336;
+        Thu, 31 Jul 2025 14:26:20 -0700 (PDT)
+Received: from [127.0.0.1] ([52.176.138.176])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-50a55da432fsm792283173.79.2025.07.31.14.26.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 31 Jul 2025 14:26:19 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20250731195054.84119-1-ebiggers@kernel.org>
+References: <20250731195054.84119-1-ebiggers@kernel.org>
+Subject: Re: [PATCH net] mptcp: use HMAC-SHA256 library instead of
+ open-coded HMAC
+Message-ID: <d954dc12-4e4f-7749-ab81-b033a7bd31d6@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 31 Jul 2025 21:26:18 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Now that there are easy-to-use HMAC-SHA256 library functions, use these
-in net/mptcp/crypto.c instead of open-coding the HMAC algorithm.
+Hi Eric,
 
-Remove the WARN_ON_ONCE() for messages longer than SHA256_DIGEST_SIZE.
-The new implementation handles all message lengths correctly.
+Thank you for your modifications, that's great!
 
-The mptcp-crypto KUnit test still passes after this change.
+Our CI did some validations and here is its report:
 
-Signed-off-by: Eric Biggers <ebiggers@kernel.org>
----
- net/mptcp/crypto.c | 35 ++---------------------------------
- 1 file changed, 2 insertions(+), 33 deletions(-)
+- KVM Validation: normal: Success! =E2=9C=85
+- KVM Validation: debug: =
+Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success=
+! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =
+=E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
+uns/16658838455
 
-diff --git a/net/mptcp/crypto.c b/net/mptcp/crypto.c
-index b08ba959ac4fd..31948e18d97da 100644
---- a/net/mptcp/crypto.c
-+++ b/net/mptcp/crypto.c
-@@ -20,11 +20,10 @@
-  *       Brandon Heller <brandonh@stanford.edu>
-  */
- 
- #include <linux/kernel.h>
- #include <crypto/sha2.h>
--#include <linux/unaligned.h>
- 
- #include "protocol.h"
- 
- #define SHA256_DIGEST_WORDS (SHA256_DIGEST_SIZE / 4)
- 
-@@ -41,43 +40,13 @@ void mptcp_crypto_key_sha(u64 key, u32 *token, u64 *idsn)
- 		*idsn = be64_to_cpu(*((__be64 *)&mptcp_hashed_key[6]));
- }
- 
- void mptcp_crypto_hmac_sha(u64 key1, u64 key2, u8 *msg, int len, void *hmac)
- {
--	u8 input[SHA256_BLOCK_SIZE + SHA256_DIGEST_SIZE];
--	u8 key1be[8];
--	u8 key2be[8];
--	int i;
-+	__be64 key[2] = { cpu_to_be64(key1), cpu_to_be64(key2) };
- 
--	if (WARN_ON_ONCE(len > SHA256_DIGEST_SIZE))
--		len = SHA256_DIGEST_SIZE;
--
--	put_unaligned_be64(key1, key1be);
--	put_unaligned_be64(key2, key2be);
--
--	/* Generate key xored with ipad */
--	memset(input, 0x36, SHA256_BLOCK_SIZE);
--	for (i = 0; i < 8; i++)
--		input[i] ^= key1be[i];
--	for (i = 0; i < 8; i++)
--		input[i + 8] ^= key2be[i];
--
--	memcpy(&input[SHA256_BLOCK_SIZE], msg, len);
--
--	/* emit sha256(K1 || msg) on the second input block, so we can
--	 * reuse 'input' for the last hashing
--	 */
--	sha256(input, SHA256_BLOCK_SIZE + len, &input[SHA256_BLOCK_SIZE]);
--
--	/* Prepare second part of hmac */
--	memset(input, 0x5C, SHA256_BLOCK_SIZE);
--	for (i = 0; i < 8; i++)
--		input[i] ^= key1be[i];
--	for (i = 0; i < 8; i++)
--		input[i + 8] ^= key2be[i];
--
--	sha256(input, SHA256_BLOCK_SIZE + SHA256_DIGEST_SIZE, hmac);
-+	hmac_sha256_usingrawkey((const u8 *)key, sizeof(key), msg, len, hmac);
- }
- 
- #if IS_MODULE(CONFIG_MPTCP_KUNIT_TEST)
- EXPORT_SYMBOL_GPL(mptcp_crypto_hmac_sha);
- #endif
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/d5f8f0fd881e
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D987466
 
-base-commit: d6084bb815c453de27af8071a23163a711586a6c
--- 
-2.50.1
 
+If there are some issues, you can reproduce them using the same =
+environment as
+the one used by the CI thanks to a docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
