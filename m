@@ -1,148 +1,133 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 652062C3273
-	for <mptcp@lists.linux.dev>; Thu, 31 Jul 2025 13:39:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFB6613DBA0
+	for <mptcp@lists.linux.dev>; Thu, 31 Jul 2025 16:02:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753969153; cv=none; b=uURiVvITpBlDiK/yE53WTiP8xDbomPHFk35FE16bovJ4hCU3nG2nZbTSxsAxBMREqC1/e0dnx+a82fM14mzzFSb/XMYHWHQm2bYVqpmT6cFbjcd2H1EQYh4bNXcXRJGFfmSDsc7rszDuRYyXTHlOiBmVodHHUuoGqVkaqlrF0A4=
+	t=1753977741; cv=none; b=dtPEo3JxvkQnzGNj7SKKcJK5q+6VyqG88iw66JyjVtnd8KspB+zfS8G7rzL0yinjwntFpQ5Z/GDHsbkCTk5hMtSHQF49tn4BUwU76zAdEI0ePNB2AI7AW1TfZSOZFCexnBsEoOanENcqYWV+6e/YS7m3CzQic0DQJc39ofZ7LIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753969153; c=relaxed/simple;
-	bh=b0p3P4TSj0m67jYyynFdzfNgF0dMZsVUy/M9Sl8OXsw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mN5vHHD9ragZZ/RNVAOpJPuSPuUqsjjprq0BH5QoFTXGAZupJOOA7AVxZDOIGm1OxddNXAWqmCPcWIMSms5934EfRhW2R/a4e+PzEseRUH5itmH5vVpjWdKoQh0jqsF6k61CopwXARl7JUMrLDK7IVT12eKlzUrFlliRFSaM6oc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Vipnpdei; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1753977741; c=relaxed/simple;
+	bh=SaiAFvjsbAixRHehEj6kY73Sao1RXq1xuyWlPELxqZM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=OZkivHI3vkvMwwcCwIyXfNUAr+ADCDsJ2GvA6TG/TCQd1Sclh0HooyBxqBKUv9PEzlnxTQGdro2bZ8Z4wtJ67QywfMVAPsMLkF2GDz5pui7EoFJwJjv0p3quFpJKiAGZhkWNLhD0EoI2A4T5/IQScFH/ffDmk+cA+Cyp1Z13y6Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=openai.com; spf=pass smtp.mailfrom=openai.com; dkim=pass (1024-bit key) header.d=openai.com header.i=@openai.com header.b=U51XXhS6; arc=none smtp.client-ip=209.85.208.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=openai.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=openai.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Vipnpdei"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3b78bca0890so679670f8f.3
-        for <mptcp@lists.linux.dev>; Thu, 31 Jul 2025 06:39:11 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=openai.com header.i=@openai.com header.b="U51XXhS6"
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-32b7113ed6bso11742241fa.1
+        for <mptcp@lists.linux.dev>; Thu, 31 Jul 2025 09:02:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1753969150; x=1754573950; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=TTMiwDI5I7ZpdDu7u29+O3OSLlyCf5CWJBCKHAd19vQ=;
-        b=Vipnpdei9dm+WGS9UMixQWUQmRBTeVK8ZZQAmB8WSpq0eu4Zyww7LbqBikzigw33XV
-         x/whGO7FHhuRf1fPqfZV/t+FNXIMRqA6BBetmXivsq38s+lRFYsyzGI8Ul2m32Qsgg9O
-         pFc06sYG4YhXKXjchYGXda4+ftU1L+KKG4lgiZ+Rt2doDHDlIJ9Kk99yR55sRYr6yQz7
-         ubvXC196VmxpGg+zS6mg/VnNDdsiDnSUBSfpqQJF1GkPG3l/WKWsrEKffNqtEghfKd9J
-         lIfwuEkA6xdtc1xGCQN2pYKZ/roYe+QhX7uuq548CpfB5eQLV+Hol1P2QO/yZCUE42wQ
-         jkWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753969150; x=1754573950;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=openai.com; s=google; t=1753977737; x=1754582537; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=TTMiwDI5I7ZpdDu7u29+O3OSLlyCf5CWJBCKHAd19vQ=;
-        b=hA/C5e3CECkxJuduZoJOEUkEXz2x47K67j5OsxeXm47akuFfeNTo+A2vm989AT+svb
-         XXHHBna0hcep0+oo1CBGxeCo7rd+M6Hh2Nl+hZBJSSfIred6pMxHLJVLKm/x/JtTZ0sP
-         xxMYmyjqfGLALEI7gc75cItTG4Wxk+JfOvJ2VhOMIoRGHH06fXG6iVbfrNYYGMojzmpq
-         pmZGdLHX7CNOqozSYNlX3Qg5hCxM9XG8Yna5JaHogb3rjvkY4wKmO9zNuxIWezO+/lbH
-         9aorOYbVM+bXaw1NYEpZJJi6k0L9yIKCEhjHIK1J4NOZNPC/jJoWok8Q9HTPSx2LGLMD
-         o+0g==
-X-Forwarded-Encrypted: i=1; AJvYcCU5pUab2GevynFSpZ9oEWYZcRGPEBI+QrMPuAawQOxWx8dRnCiod+lwvuWmuMTvvUrZqJiVJQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxBC32VudCC2czr/1jIu4lfRoa9uwCK6AigmeqHrD5E+1aPb4RV
-	26LRn1fITXE1epZWNgNdFTqMiAchrrgVtzYHG9+GjDLWtcepXXtP0hUswhG+RZ9WbDQ=
-X-Gm-Gg: ASbGncv+C6V8AxqXTp0tLFa713muEksLOCioZGojOPmuhKSUjPjlCHIs6nxKTJ8PIXf
-	0cUt3IotbWHBpGCFiSyeuVJhAKr6G7VunnBr/EooB+rtwCNteSucBpJ+hP8R/Kj1volUkGxM0tb
-	/KhyeYljfwn5HfsQ4FEpRWWrIEj3YFERwYMZM20jDHtNTClln1jy0dxRciYNGdbNz9BPA0eAAK3
-	HA61s9UzAPRUcj7c66H/ET3WBU7NaLp1KuwgkfhqXI28Hqw5YCBVs8eqsZlH32+u3xFzwXXyhQc
-	8c21eu8mT4TRDGaCb6Fbg0XFsnb+y3xwNUV8pcd0wsQmkZnXY2jXEE7wPAB3vnW/eKHnVzt64/W
-	f8eURjStWwXsl9drz1qICiyO9aVG63OCBorN5esn5svoIlsXzvXVs
-X-Google-Smtp-Source: AGHT+IHYvsEIX5itHKow1mLcVDqvWDuNXSbVTG7QQc1tvuwHoyl4F7TOUm51Nd1pmo+PXsqydNAs+w==
-X-Received: by 2002:a05:6000:40c9:b0:3b7:7c3b:1073 with SMTP id ffacd0b85a97d-3b794fffcd7mr6922320f8f.52.1753969149579;
-        Thu, 31 Jul 2025 06:39:09 -0700 (PDT)
-Received: from blackdock.suse.cz (nat2.prg.suse.com. [195.250.132.146])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b79c4532c4sm2448753f8f.36.2025.07.31.06.39.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 31 Jul 2025 06:39:08 -0700 (PDT)
-Date: Thu, 31 Jul 2025 15:39:06 +0200
-From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
-To: Kuniyuki Iwashima <kuniyu@google.com>
-Cc: "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-	Neal Cardwell <ncardwell@google.com>, Paolo Abeni <pabeni@redhat.com>, 
-	Willem de Bruijn <willemb@google.com>, Matthieu Baerts <matttbe@kernel.org>, 
-	Mat Martineau <martineau@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Michal Hocko <mhocko@kernel.org>, Roman Gushchin <roman.gushchin@linux.dev>, 
-	Shakeel Butt <shakeel.butt@linux.dev>, Andrew Morton <akpm@linux-foundation.org>, 
-	Simon Horman <horms@kernel.org>, Geliang Tang <geliang@kernel.org>, 
-	Muchun Song <muchun.song@linux.dev>, Kuniyuki Iwashima <kuni1840@gmail.com>, netdev@vger.kernel.org, 
-	mptcp@lists.linux.dev, cgroups@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH v1 net-next 11/13] net-memcg: Add memory.socket_isolated
- knob.
-Message-ID: <pvygtpy4b7napeudlk5dtbacgvqf6j4lrr5nhye6obrwv2ss2o@ubxpyqwf56pz>
-References: <20250721203624.3807041-1-kuniyu@google.com>
- <20250721203624.3807041-12-kuniyu@google.com>
+        bh=SaiAFvjsbAixRHehEj6kY73Sao1RXq1xuyWlPELxqZM=;
+        b=U51XXhS6DPwQ5AQ1QR7xnewovhlNcAMBgLR0nuEWHm/DHDSoZvkNx+ENQn+TYActa/
+         gElwItLDAedTxi0cB/FuINdjfA+sMxKrcdnz+Fq40dXZLyw/mZ0N0c4fiJ5ZeX4BjVE+
+         SWwRG8RxI5gGNyMHak2JlqkWwJtTbhgHTvtJA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1753977737; x=1754582537;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SaiAFvjsbAixRHehEj6kY73Sao1RXq1xuyWlPELxqZM=;
+        b=ivV2nipd5Pi9zTQKQAVknPAlQ4y74V0VfseE0su5J6B1GkH8b/RGqXAXBg7iBsUTgT
+         gs7Qx5WQ0kehaRwFcT9irvtx05+uBsYFuOevqi4jUHqkFrFH7QLrSQwGJXC3xCPKyvIW
+         3cWPO3iS8/nG0PjkP1g/r6CRcqA1zEuXN+HuWKmRrgzrmFUnwmyHDxp53Hsvd+CFg6Z+
+         86SYZewfaJUxHrMqhADz9k33CN+cNMa0hjBBgYN0k+SuD2cpt50SF9wvAtLEun8LTlvw
+         W7WBqS0G3zED5lFG0YsPfZah9C/erQErHk99Dyerd4pKCSQ7EZck/tpkq65/2Yrwtmo1
+         K6fw==
+X-Forwarded-Encrypted: i=1; AJvYcCXlaCa4mhtPUK+ioJVKZmaychpfj4UnRvL9OCb+ofCH3FR39dezrKOgiyB65eScT5wqnQ8d7A==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yz+YvCc4q3HkqjeCIzdGX+MS3aklJoyIK9tc3PYVIeUCyfi+OcM
+	wUndsuBKSad1TMBxhxGn8pleSGVClde/yfyCcus82muL88lFb5meWehAhurM6qEDqymTaAYMsq+
+	xmRnC3+6dWTgAd5F8xspbAF/xgICG2/Jx1KzT4+0UDg==
+X-Gm-Gg: ASbGncseWgZII658C1mBNusEI0MMfaurhTFUz2TkbTZXgf6+1tXC+CEynvtHo0srKLr
+	hy98+wLF7Jmemhgl7/Uysza+LywWJPQcbbpOn5jxiyGVKuA7ncGCwyId2/yY/dbRkGBmtp7Z/f0
+	1PGm8WoeRe5XZn3+ntTIdR6jK2/QUCGHtFtVB3vjOwiEIPQ2rFC4ncHxeU8vEpwcOktwZs4ZaMD
+	09aPw==
+X-Google-Smtp-Source: AGHT+IFLavFeg0RCMc42UogBxUxJ897pNl3YNiu937KvpqfZTRWu7RCzyBrGH4qkWA881+Z5B6hIFMC7OqFS8u/p/1M=
+X-Received: by 2002:a05:651c:1402:b0:332:197e:f746 with SMTP id
+ 38308e7fff4ca-33224a54833mr19825471fa.6.1753977736055; Thu, 31 Jul 2025
+ 09:02:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="wvv7vwafoorhn7v5"
-Content-Disposition: inline
-In-Reply-To: <20250721203624.3807041-12-kuniyu@google.com>
-
-
---wvv7vwafoorhn7v5
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
+References: <cover.1753859907.git.tanggeliang@kylinos.cn> <7f2aaa80eef99f64ff6d7a48ce0a6bf06d1cacab.1753859907.git.tanggeliang@kylinos.cn>
+ <CADg4-L9m2=4d56kEpy48YYAaEhAe66m6fuG8qN_MdGi9W_GURg@mail.gmail.com> <9aa94cff-872b-4831-9f38-ce291f2c0a9f@kernel.org>
+In-Reply-To: <9aa94cff-872b-4831-9f38-ce291f2c0a9f@kernel.org>
+From: Christoph Paasch <cpaasch@openai.com>
+Date: Thu, 31 Jul 2025 09:02:04 -0700
+X-Gm-Features: Ac12FXxiYv9I6RI2-Rm89xMcQPNj6tjT44CDpPA0bUgSHO_4op2vw3r4XTzGfI4
+Message-ID: <CADg4-L-yMQ8k82sVGjzPPq_yNWoWnGOrYXdYOOJmXJmmQNoC-A@mail.gmail.com>
+Subject: Re: [PATCH mptcp-next 2/3] mptcp: setsockopt support for TCP_MD5SIG
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev, 
+	Geliang Tang <tanggeliang@kylinos.cn>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v1 net-next 11/13] net-memcg: Add memory.socket_isolated
- knob.
-MIME-Version: 1.0
 
-Hello  Kuniyuki.
+On Thu, Jul 31, 2025 at 2:40=E2=80=AFAM Matthieu Baerts <matttbe@kernel.org=
+> wrote:
+>
+> Hi Christoph,
+>
+> On 31/07/2025 00:19, Christoph Paasch wrote:
+> > Hello!
+> >
+> > On Wed, Jul 30, 2025 at 12:22=E2=80=AFAM Geliang Tang <geliang@kernel.o=
+rg> wrote:
+> >>
+> >> From: Geliang Tang <tanggeliang@kylinos.cn>
+> >>
+> >> This adds setsockopt support for TCP_MD5SIG and TCP_MD5SIG_EXT options=
+.
+> >> The implementation:
+> >> - Allows setting these options (getsockopt remains unsupported)
+> >> - Applies them only to the first subflow
+> >> - Maintains MD5 compatibility limitations with MPTCP
+> >>
+> >> Note that TCP_MD5SIG and TCP_MD5SIG_EXT are unsupported for TCP too.
+> >
+> > Is there even enough option-space to have co-existence of MPTCP with
+> > TCP_MD5 ? I don't think so, right ?
+> >
+> > The only way they can co-exist is if a bunch of other options are
+> > disabled. And in that case, do we really want to use non-MD5 on
+> > subsequent subflows ? I doubt that, because the goal of TCP-MD5 is to
+> > "improve" security.
+>
+> Correct, there is not enough space, and it doesn't make sense to use
+> MPTCP with TCP_MD5.
+>
+> The patch description should be clearer about that: supporting TCP_MD5
+> makes sense when MPTCP is used by default when creating a socket. With
+> Go, all "stream" listening sockets are MPTCP sockets. MPTCP might not be
+> used, but without this series, we have a "regression" compared to TCP
+> because TCP_MD5 cannot be used.
+>
+> See: https://github.com/multipath-tcp/mptcp_net-next/issues/575
+>
+> > So, shouldn't we rather disable MPTCP always when an app sets TCP_MD5SI=
+G ?
+>
+> Yes, but no need to do anything else, because a fallback will be done in
+> mptcp_connect() and subflow_check_req(). (even if I guess an extra
+> protection is always OK there).
 
-On Mon, Jul 21, 2025 at 08:35:30PM +0000, Kuniyuki Iwashima <kuniyu@google.=
-com> wrote:
-> --- a/Documentation/admin-guide/cgroup-v2.rst
-> +++ b/Documentation/admin-guide/cgroup-v2.rst
-> @@ -1878,6 +1878,22 @@ The following nested keys are defined.
->  	Shows pressure stall information for memory. See
->  	:ref:`Documentation/accounting/psi.rst <psi>` for details.
-> =20
-> +  memory.socket_isolated
-> +	A read-write single value file which exists on non-root cgroups.
-> +	The default value is "0".
+Alright! Now I see the code in subflow_check_req(). But, it looks like
+we send a RST, no ? I can give it a try later.
 
-Such attributes don't fit well into hierarchy.
-What are expectations in non-root non-leaf cgroups?
 
-Also the global limit is not so much different from a memcg limit
-configured on ancestors. This provision thus looks like handling only
-one particular case.
+Christoph
 
-> +
-> +	Some networking protocols (e.g., TCP, UDP) implement their own memory
-> +	accounting for socket buffers.
-> +
-> +	This memory is also charged to a non-root cgroup as sock in memory.stat.
-> +
-> +	Since per-protocol limits such as /proc/sys/net/ipv4/tcp_mem and
-> +	/proc/sys/net/ipv4/udp_mem are global, memory allocation for socket
-> +	buffers may fail even when the cgroup has available memory.
-> +
-> +	Sockets created with socket_isolated set to 1 are no longer subject
-> +	to these global protocol limits.
-
-What happens when it's changed during lifetime of cgroup?
-
-Thanks,
-Michal
-
---wvv7vwafoorhn7v5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQRCE24Fn/AcRjnLivR+PQLnlNv4CAUCaItx+AAKCRB+PQLnlNv4
-CKBoAQCcPd3B8EVlIuJkCxAatf+KBj5iSIWjGLHkL/wZBSIiOAD/Td1vVJkjNLj+
-ooVS07G9ZINI6535eRR8nUFbbc4lGwI=
-=8P5/
------END PGP SIGNATURE-----
-
---wvv7vwafoorhn7v5--
+>
+> Cheers,
+> Matt
+> --
+> Sponsored by the NGI0 Core fund.
+>
