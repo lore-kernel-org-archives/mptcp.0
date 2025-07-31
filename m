@@ -1,196 +1,150 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACB931C07C3
-	for <mptcp@lists.linux.dev>; Thu, 31 Jul 2025 17:10:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB338A29
+	for <mptcp@lists.linux.dev>; Thu, 31 Jul 2025 19:18:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753981840; cv=none; b=hWzTL1I86VbZpfRtnjUvc5p3hcF9pk7kpfTcik7K8u6ZivEQoXi++6L6/z9/uxr5iQS5wGzCHo7JCIhuU0UtgcOAA5+PgAjqXhZZV59HAzyA+qC921l4aOKdAnusYstShATQuMvy9gyz+SPXFkN/gst9+QMki+GgVbzEtxUO36s=
+	t=1753989539; cv=none; b=nf1bQ5H6qJRkVqsqsvlQqZuEw+XvrW0UOFndegIMsFNZBIE8Hq77xgQutbZvjdwAjDOJQX4QU/7Hzqxk0V5DOHIzUbBRV+hvGkizhwgKvIcuVJA9AK0YWGQWYuOX0fSDvdf2tU+Wlzn9esYLi2iGp2ebE+9PKVviN5955uzPUvU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753981840; c=relaxed/simple;
-	bh=1mx9hC7JoIqXpSXhTnTHFL4jhC2tGIUO3ArQf8kBNhE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=G/vun+CzHvxVLIR4o1psYlfV91BXVOBtzdiZZvEN6IzeSVrHd4QEDCjFehWO2TF2L749FbEBeVQ6fM4bcCHXyIzxDDcjJubfqYokzvP2Xjo4rAYohaQgSuMzestoMTl54jd7Rdtz8fF7MKQw1nCdPRqaT5HkFi/iZquxPwNDE+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uAYrcZcy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1753989539; c=relaxed/simple;
+	bh=0qYWDYplg4ufycWoAkw6wlTyMby4anLZUS9sqSQiAl0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QTxfPDq02NKOw3xqHMcUkvBQTezmH5xJ78EkTuEhU2NB6xxlhVuffI2TG+MJahXTlVcqHenWtjp/N/fMdN78mOP+ITEr6dmaKvUgPx1KfpWWGYUnlAlusvOMjfKTwPJ001JS8+NiNJ6daJgZnyTtMHTl6b2ord/yWbuoQdqa1H4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=openai.com; spf=pass smtp.mailfrom=openai.com; dkim=pass (1024-bit key) header.d=openai.com header.i=@openai.com header.b=fv+pKPrW; arc=none smtp.client-ip=209.85.208.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=openai.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=openai.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uAYrcZcy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5347FC4CEEF;
-	Thu, 31 Jul 2025 17:10:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753981840;
-	bh=1mx9hC7JoIqXpSXhTnTHFL4jhC2tGIUO3ArQf8kBNhE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=uAYrcZcyyvy+RFDB1rdtukcc68e3B0XV2AJ9fkPKefcbuHgbzEK7tPZy9246Q9neU
-	 vWyIwBYLHkF0YEb8kw0OR+B+d9bXCXiES4wfpfXAeU8I7mkJ60/mOq8AxJGCYTQ6GZ
-	 Y80XWJ7iQi47gG5B4qtWHerxVDsympdW9YlkK4tE2cosjiGgovhrtlR8MtB8KgCGj6
-	 IoZRSS7SUnh2NmO+UiWqJzWjFldov4/Vjx8YKMOFqPmo+hcKFrmmN1C00A52HEx4OW
-	 H6JXbeQE/LlskMg0oRV1BXo+JtB1xsypX6lDRS8jEU7qL5eWjb9DkiFtg+6EojATeu
-	 M2Q40nDNgPcGA==
-Message-ID: <3a3d7649-0034-48ad-8f8e-1fa1c1fa9f66@kernel.org>
-Date: Thu, 31 Jul 2025 19:10:36 +0200
+	dkim=pass (1024-bit key) header.d=openai.com header.i=@openai.com header.b="fv+pKPrW"
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-3322f5413easo10305191fa.2
+        for <mptcp@lists.linux.dev>; Thu, 31 Jul 2025 12:18:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=openai.com; s=google; t=1753989536; x=1754594336; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aUihJRmUIuhIgLO8HEMOgsiuYtoOxK4DrDG7wZt5Azo=;
+        b=fv+pKPrWlI1EUrBmdeuNnJthPRlGC4pCtHbM2dtdMjciSIfEXfqZPf4IT+B7vpkqZy
+         ZJUMJWta/mw6niJJVlR+iEZA2BSUX1R2cO6NutaBt1EkRGiF27SkHdOPTMtRN2WFw8fW
+         y/ZSwWcumHi4YbLtp6EP9ucDIQZAUurfWP2Bc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1753989536; x=1754594336;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=aUihJRmUIuhIgLO8HEMOgsiuYtoOxK4DrDG7wZt5Azo=;
+        b=K3scGIN/Trap9NWcOK+v6tPoX3ySSu7UJZh3lLCWvKDPiTgCGc3O2s3tdQci2LRIxn
+         BFr+zRxj1GUTCezgCJ7leedKHBGPfY4L8b1CyeH/Y3EdMTsDL7UBGG9tti/F1De4yHuc
+         DrpIKhSQN8af5R9EQveUg+u1GoNN5CF848dSRbFV7a29nnk5EPwoyKUCQYhumjSWteCr
+         1uy2K7qLc9vrtbRjdhmW8coS6rHs5IjHSIPhvvzB6QpVL4B4p5AhEM7prcrQWkiToB7o
+         3j32snKdGC2uZcg0AFHbhpUC/izAzNPswvU0skC4HeSRB9+/PeJzyJ4WlniexaAM4Ib5
+         Zmeg==
+X-Gm-Message-State: AOJu0YwOOHXjkXE4nME3RwtI6EwLn58ZU3mUFV/J9KYCpIIWV1f6qtLS
+	/YQEs4Nr7adiUI30aU3/Ng5F0uHTl3XnHN36phbfkaKaWEEI+1cTPt9odYmBwSxkyqarYxYI6d9
+	a7ka5+g37xhB9Km21p53vBsMkSqJUONx2AM9jG4bvfpfHOLU+fdsSlP0=
+X-Gm-Gg: ASbGncv61CBRuVwX4j+7Viq8I/S7JNHq/6gXM0Tt8EyD7gFVvxJc2cu/PzDmAKup8O2
+	C+JQ+AL27rFzIPS5BAgp3jyJR89wVoDOfI6GSROLUTO7QnGrJogClFxNZ9tdsnMaef/UzOnOsTB
+	J+RCKjAjSHbJ2HuJibVhY+abv8lWx/u6sbIFFGOTGpJMU31qh81LEoMxknhnzHfoaC99z2ASynM
+	lUSdw==
+X-Google-Smtp-Source: AGHT+IFK83NOBgFPrdZhmLELYMF0ZqYGy7e7KLmjeNR7ZKfMSS2IsBuv3pHMUIirepu7sCtqMqUhBf/RX0zGEzfRRyU=
+X-Received: by 2002:a05:651c:2155:b0:32a:6aa0:217b with SMTP id
+ 38308e7fff4ca-33224ba41dbmr19700581fa.25.1753989535791; Thu, 31 Jul 2025
+ 12:18:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next 2/3] mptcp: setsockopt support for TCP_MD5SIG
-Content-Language: en-GB, fr-BE
-To: Christoph Paasch <cpaasch@openai.com>
-Cc: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev,
- Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1753859907.git.tanggeliang@kylinos.cn>
- <7f2aaa80eef99f64ff6d7a48ce0a6bf06d1cacab.1753859907.git.tanggeliang@kylinos.cn>
- <CADg4-L9m2=4d56kEpy48YYAaEhAe66m6fuG8qN_MdGi9W_GURg@mail.gmail.com>
- <9aa94cff-872b-4831-9f38-ce291f2c0a9f@kernel.org>
- <CADg4-L-yMQ8k82sVGjzPPq_yNWoWnGOrYXdYOOJmXJmmQNoC-A@mail.gmail.com>
- <1ad7ce24-1120-427f-96bb-2bdb35c04c7b@kernel.org>
- <CADg4-L8wqCTT-_n7HibsceThvUCGJ44X2RkRXm=9hiAf4Nn5Wg@mail.gmail.com>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <CADg4-L8wqCTT-_n7HibsceThvUCGJ44X2RkRXm=9hiAf4Nn5Wg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <cover.1753946671.git.tanggeliang@kylinos.cn> <291bace9364966f432580ba13121bd59677f5d3e.1753946671.git.tanggeliang@kylinos.cn>
+In-Reply-To: <291bace9364966f432580ba13121bd59677f5d3e.1753946671.git.tanggeliang@kylinos.cn>
+From: Christoph Paasch <cpaasch@openai.com>
+Date: Thu, 31 Jul 2025 12:18:44 -0700
+X-Gm-Features: Ac12FXysw4rrAiOHNfsQYiLuqpTAEflhAT7VULsS5tb5msCOT9L3Z2l-nB4k01Y
+Message-ID: <CADg4-L8S1bqK6f6YUWuoEJOziYL-Q0DZY5p2DFStKA4mFi02mg@mail.gmail.com>
+Subject: Re: [PATCH mptcp-next v2 2/2] mptcp: setsockopt support for TCP_MD5SIG
+To: Geliang Tang <geliang@kernel.org>
+Cc: mptcp@lists.linux.dev, Geliang Tang <tanggeliang@kylinos.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Christoph,
+On Thu, Jul 31, 2025 at 12:28=E2=80=AFAM Geliang Tang <geliang@kernel.org> =
+wrote:
+>
+> From: Geliang Tang <tanggeliang@kylinos.cn>
+>
+> This adds setsockopt support for TCP_MD5SIG and TCP_MD5SIG_EXT options.
+> The implementation:
+> - Allows setting these options (getsockopt remains unsupported)
+> - Applies them only to the first subflow
+> - Forces fallback to TCP (since MD5 isn't compatible with MPTCP)
+>
+> Setting these options triggers fallback to TCP to maintain MD5
+> compatibility.
+>
+> Note that TCP_MD5SIG and TCP_MD5SIG_EXT are unsupported for TCP too.
 
-On 31/07/2025 19:02, Christoph Paasch wrote:
-> 
-> 
-> On Thu, Jul 31, 2025 at 9:08 AM Matthieu Baerts <matttbe@kernel.org
-> <mailto:matttbe@kernel.org>> wrote:
-> 
->     On 31/07/2025 18:02, Christoph Paasch wrote:
->     > On Thu, Jul 31, 2025 at 2:40 AM Matthieu Baerts
->     <matttbe@kernel.org <mailto:matttbe@kernel.org>> wrote:
->     >>
->     >> Hi Christoph,
->     >>
->     >> On 31/07/2025 00:19, Christoph Paasch wrote:
->     >>> Hello!
->     >>>
->     >>> On Wed, Jul 30, 2025 at 12:22 AM Geliang Tang
->     <geliang@kernel.org <mailto:geliang@kernel.org>> wrote:
->     >>>>
->     >>>> From: Geliang Tang <tanggeliang@kylinos.cn
->     <mailto:tanggeliang@kylinos.cn>>
->     >>>>
->     >>>> This adds setsockopt support for TCP_MD5SIG and TCP_MD5SIG_EXT
->     options.
->     >>>> The implementation:
->     >>>> - Allows setting these options (getsockopt remains unsupported)
->     >>>> - Applies them only to the first subflow
->     >>>> - Maintains MD5 compatibility limitations with MPTCP
->     >>>>
->     >>>> Note that TCP_MD5SIG and TCP_MD5SIG_EXT are unsupported for TCP
->     too.
->     >>>
->     >>> Is there even enough option-space to have co-existence of MPTCP with
->     >>> TCP_MD5 ? I don't think so, right ?
->     >>>
->     >>> The only way they can co-exist is if a bunch of other options are
->     >>> disabled. And in that case, do we really want to use non-MD5 on
->     >>> subsequent subflows ? I doubt that, because the goal of TCP-MD5
->     is to
->     >>> "improve" security.
->     >>
->     >> Correct, there is not enough space, and it doesn't make sense to use
->     >> MPTCP with TCP_MD5.
->     >>
->     >> The patch description should be clearer about that: supporting
->     TCP_MD5
->     >> makes sense when MPTCP is used by default when creating a socket.
->     With
->     >> Go, all "stream" listening sockets are MPTCP sockets. MPTCP might
->     not be
->     >> used, but without this series, we have a "regression" compared to TCP
->     >> because TCP_MD5 cannot be used.
->     >>
->     >> See: https://github.com/multipath-tcp/mptcp_net-next/issues/575
->     <https://github.com/multipath-tcp/mptcp_net-next/issues/575>
->     >>
->     >>> So, shouldn't we rather disable MPTCP always when an app sets
->     TCP_MD5SIG ?
->     >>
->     >> Yes, but no need to do anything else, because a fallback will be
->     done in
->     >> mptcp_connect() and subflow_check_req(). (even if I guess an extra
->     >> protection is always OK there).
->     >
->     > Alright! Now I see the code in subflow_check_req(). But, it looks like
->     > we send a RST, no ? I can give it a try later.
-> 
->     Oh, you are right, I missed that.
-> 
->     Then probably we need to force a fallback if
->     mptcp_setsockopt_first_sf_only() was successful.
-> 
->     (@Geliang: that's why we do need the Packetdrill test :) )
-> 
-> 
-> Speaking of packetdrill :-) what is the status on upstreaming the MPTCP
-> changes to packetdrill? (Sorry for these questions - I’m catching up on
-> stuff ;-))
+Just wondering : What does the above line mean ? "unsupported for TCP too" =
+?
 
-:)
 
-The status is still the same as a few years ago: we are still
-maintaining a public fork [1], and work is still needed to make it
-"upstreamable". As far as I know, nobody is actively looking at that.
+Christoph
 
-Note that the MPTCP docker dev env image [2] -- used by devs and the CI
--- is using this packetdrill version.
-
-[1] https://github.com/multipath-tcp/packetdrill/
-[2]
-https://github.com/multipath-tcp/mptcp-upstream-virtme-docker#packetdrill
-
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
-
+>
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/575
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> ---
+>  net/mptcp/sockopt.c | 12 ++++++++++--
+>  1 file changed, 10 insertions(+), 2 deletions(-)
+>
+> diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+> index b264185b810d..3ffdeca694be 100644
+> --- a/net/mptcp/sockopt.c
+> +++ b/net/mptcp/sockopt.c
+> @@ -13,6 +13,7 @@
+>  #include <net/tcp.h>
+>  #include <net/mptcp.h>
+>  #include "protocol.h"
+> +#include "mib.h"
+>
+>  #define MIN_INFO_OPTLEN_SIZE           16
+>  #define MIN_FULL_INFO_OPTLEN_SIZE      40
+> @@ -567,11 +568,12 @@ static bool mptcp_supported_sockopt(int level, int =
+optname)
+>                 case TCP_FASTOPEN_CONNECT:
+>                 case TCP_FASTOPEN_KEY:
+>                 case TCP_FASTOPEN_NO_COOKIE:
+> +               /* MD5 will force a fallback to TCP: OK to set while not =
+connected */
+> +               case TCP_MD5SIG:
+> +               case TCP_MD5SIG_EXT:
+>                         return true;
+>                 }
+>
+> -               /* TCP_MD5SIG, TCP_MD5SIG_EXT are not supported, MD5 is n=
+ot compatible with MPTCP */
+> -
+>                 /* TCP_REPAIR, TCP_REPAIR_QUEUE, TCP_QUEUE_SEQ, TCP_REPAI=
+R_OPTIONS,
+>                  * TCP_REPAIR_WINDOW are not supported, better avoid this=
+ mess
+>                  */
+> @@ -830,6 +832,12 @@ static int mptcp_setsockopt_sol_tcp(struct mptcp_soc=
+k *msk, int optname,
+>                 /* See tcp.c: TCP_DEFER_ACCEPT does not fail */
+>                 mptcp_setsockopt_first_sf_only(msk, SOL_TCP, optname, opt=
+val, optlen);
+>                 return 0;
+> +#ifdef CONFIG_TCP_MD5SIG
+> +       case TCP_MD5SIG:
+> +       case TCP_MD5SIG_EXT:
+> +               __mptcp_try_fallback(msk, MPTCP_MIB_MD5SIGFALLBACK);
+> +               fallthrough;
+> +#endif
+>         case TCP_FASTOPEN:
+>         case TCP_FASTOPEN_CONNECT:
+>         case TCP_FASTOPEN_KEY:
+> --
+> 2.48.1
+>
+>
