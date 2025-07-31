@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FBAE187FEC
-	for <mptcp@lists.linux.dev>; Thu, 31 Jul 2025 09:40:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DFA02AE6C
+	for <mptcp@lists.linux.dev>; Thu, 31 Jul 2025 10:00:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753954810; cv=none; b=HjIgBF+HhcRcNhz9v2T/EA0nKsukYaORB8xUf+S9+TRi9kyWQ3gexo3qtgcsrKIRy4M+Ep4uh2X6YhKlbb9M4jQyfu9cnqkiTwXYQ1ecU5vIvkz/DoKiSS7cagckbGuOQcORyIMTV3AsOg0gDoeIU/XAKQ1bzZRi3qGMSMgPjUw=
+	t=1753956000; cv=none; b=QGC63ZWrgqh6FT+3gRoXq5FEJGb8JKmqtZlLtBmg12gL1GYvQA6LGeostRbcnl5jjwPwpCnVKBJ2qIM1s11NSMuDudfBcz6T+lWyjsorY0232L9eCi+CtgjM7Mzs6wniQm2rWtiZVm+Vy9rHDQpqXGunJnL8H6oZ0U7we0YvU+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753954810; c=relaxed/simple;
-	bh=JEfHYf0pBTzHeU0qKVAJM+6WiW1S4XsBV0ZP7nh1d0I=;
+	s=arc-20240116; t=1753956000; c=relaxed/simple;
+	bh=QeKUVb4lpwhFP4ae4SyPkUvf9Mi0i/yZg/Q0hULVNwU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hYy02+8m5xl8fycu0khJ83LBCCa1C9ovN83logimaEjhXbhl+d8CnmWEd6M6CSymgHy6Y8pC8BgrBs1AgiwPXD5t5tNiWVf65eXlOgsZ32xY7Y1CVJSnRPC3s3fLsl1WYQpYd45ptDFRwjdlF0sdeyJM3dbFIvwq+fXZ1YUkadM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ra6kK1lF; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=KX6NTdq1GJtZeuWO2fuHY7m/eLcyzsLRm1fDPI7tWSR2Bz41i8Azu0rOZZct3K/eQDvlq3dknhLA5oPiUGpKgF9UAhs0nYNdEqEmdXb0Yq5jnJSnNGUTqzWtVLQQl8/7Bf0rQwjRwhZ3FdD+YzSJR9MtOLqvdGW6AzRbtW1wKu0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P/8mOZ5N; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ra6kK1lF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28460C4CEF6;
-	Thu, 31 Jul 2025 09:40:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P/8mOZ5N"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 668D0C4CEEF;
+	Thu, 31 Jul 2025 09:59:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753954810;
-	bh=JEfHYf0pBTzHeU0qKVAJM+6WiW1S4XsBV0ZP7nh1d0I=;
+	s=k20201202; t=1753956000;
+	bh=QeKUVb4lpwhFP4ae4SyPkUvf9Mi0i/yZg/Q0hULVNwU=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Ra6kK1lFnNFaI/pr8Vol+KRU2MHUmTLEOPuyoj1QyQKkVD2aSibzVxBOnUZ86EgAV
-	 khrikAhNEnN2ttwQ7f0G8xWe1i/E1Q/jPCda6bbjVMysUT4eHOKT3s+s4EA2j5wYPO
-	 7ITKZwbLuSkr+0SWbI3msxrBlnnG36pM+sm8jt7gyb/TCcIG5k2XJKeuRPTeZTnnO4
-	 O2Cyy0n9uI+2LV2pMLA18lrnzgkmbjYY+/+6iOe445+XJvnvZljFl0D08/8OJiJ9w3
-	 8DgwOM6psgrTDHDxyIHYfToWJbkWhEqJdJQkl4VqQ/b6sEBJnMvE7LwtqEZINs4ez9
-	 hZ0gkBjgCtVOg==
-Message-ID: <9aa94cff-872b-4831-9f38-ce291f2c0a9f@kernel.org>
-Date: Thu, 31 Jul 2025 11:40:06 +0200
+	b=P/8mOZ5Nc1eHzOjxtb5DigqrW7/E6IRbys1c9PjeRLyzFIwNdgPV6VYcukowXNvog
+	 0hbp0PKTJGlqi/WvQUHNElFXdvBH/wa6PC/uh/ItTAszy/0CqsLTuWkQE/tVfeK2rm
+	 Tl57fej+K45bS3EcChjLBnSNfkVXU8eMwNZyOg85kw2zEKJn6oRIbNp5QF9WfA1KqQ
+	 +wvxVmNaQWm7JYxl36sWm2bijjw396uvS4g8tVNk0khk89Do/l7/96YV2dY1MLg2vL
+	 pOsIS1/BRifSaHyvT+4vYQKrJs0Z5aScRvw3ME2sXLcLgf5v7LjaclzggXlYdAjA3F
+	 FhIGSpwfmDXdw==
+Message-ID: <9f6237d3-a8eb-4dce-bea1-baefbd6ef59c@kernel.org>
+Date: Thu, 31 Jul 2025 11:59:57 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next 2/3] mptcp: setsockopt support for TCP_MD5SIG
+Subject: Re: [PATCH mptcp-next v2 2/2] mptcp: setsockopt support for
+ TCP_MD5SIG
 Content-Language: en-GB, fr-BE
-To: Christoph Paasch <cpaasch@openai.com>, Geliang Tang <geliang@kernel.org>
-Cc: mptcp@lists.linux.dev, Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1753859907.git.tanggeliang@kylinos.cn>
- <7f2aaa80eef99f64ff6d7a48ce0a6bf06d1cacab.1753859907.git.tanggeliang@kylinos.cn>
- <CADg4-L9m2=4d56kEpy48YYAaEhAe66m6fuG8qN_MdGi9W_GURg@mail.gmail.com>
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <cover.1753946671.git.tanggeliang@kylinos.cn>
+ <291bace9364966f432580ba13121bd59677f5d3e.1753946671.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,51 +87,98 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <CADg4-L9m2=4d56kEpy48YYAaEhAe66m6fuG8qN_MdGi9W_GURg@mail.gmail.com>
+In-Reply-To: <291bace9364966f432580ba13121bd59677f5d3e.1753946671.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Christoph,
+Hi Geliang,
 
-On 31/07/2025 00:19, Christoph Paasch wrote:
-> Hello!
+Thank you for the new version.
+
+On 31/07/2025 09:27, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> On Wed, Jul 30, 2025 at 12:22 AM Geliang Tang <geliang@kernel.org> wrote:
->>
->> From: Geliang Tang <tanggeliang@kylinos.cn>
->>
->> This adds setsockopt support for TCP_MD5SIG and TCP_MD5SIG_EXT options.
->> The implementation:
->> - Allows setting these options (getsockopt remains unsupported)
->> - Applies them only to the first subflow
->> - Maintains MD5 compatibility limitations with MPTCP
->>
->> Note that TCP_MD5SIG and TCP_MD5SIG_EXT are unsupported for TCP too.
+> This adds setsockopt support for TCP_MD5SIG and TCP_MD5SIG_EXT options.
+> The implementation:
+> - Allows setting these options (getsockopt remains unsupported)
+> - Applies them only to the first subflow
+> - Forces fallback to TCP (since MD5 isn't compatible with MPTCP)
 > 
-> Is there even enough option-space to have co-existence of MPTCP with
-> TCP_MD5 ? I don't think so, right ?
+> Setting these options triggers fallback to TCP to maintain MD5
+> compatibility.
 > 
-> The only way they can co-exist is if a bunch of other options are
-> disabled. And in that case, do we really want to use non-MD5 on
-> subsequent subflows ? I doubt that, because the goal of TCP-MD5 is to
-> "improve" security.
+> Note that TCP_MD5SIG and TCP_MD5SIG_EXT are unsupported for TCP too.
+> 
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/575
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> ---
+>  net/mptcp/sockopt.c | 12 ++++++++++--
+>  1 file changed, 10 insertions(+), 2 deletions(-)
+> 
+> diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+> index b264185b810d..3ffdeca694be 100644
+> --- a/net/mptcp/sockopt.c
+> +++ b/net/mptcp/sockopt.c
+> @@ -13,6 +13,7 @@
+>  #include <net/tcp.h>
+>  #include <net/mptcp.h>
+>  #include "protocol.h"
+> +#include "mib.h"
+>  
+>  #define MIN_INFO_OPTLEN_SIZE		16
+>  #define MIN_FULL_INFO_OPTLEN_SIZE	40
+> @@ -567,11 +568,12 @@ static bool mptcp_supported_sockopt(int level, int optname)
+>  		case TCP_FASTOPEN_CONNECT:
+>  		case TCP_FASTOPEN_KEY:
+>  		case TCP_FASTOPEN_NO_COOKIE:
+> +		/* MD5 will force a fallback to TCP: OK to set while not connected */
+> +		case TCP_MD5SIG:
+> +		case TCP_MD5SIG_EXT:
+>  			return true;
+>  		}
+>  
+> -		/* TCP_MD5SIG, TCP_MD5SIG_EXT are not supported, MD5 is not compatible with MPTCP */
+> -
+>  		/* TCP_REPAIR, TCP_REPAIR_QUEUE, TCP_QUEUE_SEQ, TCP_REPAIR_OPTIONS,
+>  		 * TCP_REPAIR_WINDOW are not supported, better avoid this mess
+>  		 */
+> @@ -830,6 +832,12 @@ static int mptcp_setsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
+>  		/* See tcp.c: TCP_DEFER_ACCEPT does not fail */
+>  		mptcp_setsockopt_first_sf_only(msk, SOL_TCP, optname, optval, optlen);
+>  		return 0;
+> +#ifdef CONFIG_TCP_MD5SIG
+> +	case TCP_MD5SIG:
+> +	case TCP_MD5SIG_EXT:
+> +		__mptcp_try_fallback(msk, MPTCP_MIB_MD5SIGFALLBACK);
 
-Correct, there is not enough space, and it doesn't make sense to use
-MPTCP with TCP_MD5.
+I don't think that's a good idea to do just that: here, you will do a
+fallback even if the options are not correct. Please this helper can
+return false if a fallback is not possible, and a reset will be needed.
 
-The patch description should be clearer about that: supporting TCP_MD5
-makes sense when MPTCP is used by default when creating a socket. With
-Go, all "stream" listening sockets are MPTCP sockets. MPTCP might not be
-used, but without this series, we have a "regression" compared to TCP
-because TCP_MD5 cannot be used.
+I think it would be easier to simply limit the use of this option for
+listened and closed state: a fallback will be done in mptcp_connect()
+and subflow_check_req().
 
-See: https://github.com/multipath-tcp/mptcp_net-next/issues/575
+If I'm not mistaken, mptcp_setsockopt_first_sf_only() will limit to the
+first subflow, before the establishment of the connection
+(__mptcp_nmpc_sk() is explicitly checking the state), no?
 
-> So, shouldn't we rather disable MPTCP always when an app sets TCP_MD5SIG ?
+Then all you require is to add the two 'case', no? If yes, please add a
+Fixes tag:
 
-Yes, but no need to do anything else, because a fallback will be done in
-mptcp_connect() and subflow_check_req(). (even if I guess an extra
-protection is always OK there).
+Fixes: d9e4c1291810 ("mptcp: only admit explicitly supported sockopt")
+
+And add something like this in the commit message:
+
+  Supporting TCP_MD5 socket option is required when MPTCP is used by
+  default when creating a socket, to keep the same behaviour as with
+  TCP. TCP_MD5 is not compatible with MPTCP, and it will cause a
+  fallback to TCP at the connection request, if MPTCP was requested.
+  This then fixes a "regression" compared to TCP.
+
+
+One last thing, please also send the new packetdrill test on GitHub when
+sending a next version.
 
 Cheers,
 Matt
