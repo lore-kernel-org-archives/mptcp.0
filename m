@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1661829C344
-	for <mptcp@lists.linux.dev>; Thu, 31 Jul 2025 07:28:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEF67E55B
+	for <mptcp@lists.linux.dev>; Thu, 31 Jul 2025 07:49:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753946880; cv=none; b=NRg80R2m//bQ6p1+mIuwTvOA3jxbIZ2IiG2WLPPSTKGPbGH/KaaVOTSzDz9a+I6y2I6pOTK4STS2pk+X2NO+B4h8D5zQobdrzTXBjxwbFo8GVwj4GhX33Dg3sOf7asTArGO0Kqf3yWUkAbt1It6uQyOnECJ7Nu2evINSy5mPabw=
+	t=1753948157; cv=none; b=p24HX5ZGwkCEoKhtSGw2Kf5hUMfcxsNqWfrO6H2AQWu14AOzVQV25MqsWkW6QYzN8NuB7G7BhM2WgffBjDglNNIZ/81R+KUBJ+PGiTeAry1Sn+MwnOz4bJJNpRowep9wq2h2J6LpigCdOVhtZauLhhZGj8QnFJ08u5ZoaCxvXeU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753946880; c=relaxed/simple;
-	bh=uH/A4rjgC5yNN8V6d1q0cBQ6pc0XBRtoWsVL/CAC+Cs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TrhsVKJZ9Y5VyxcbHGU1MmnD/5la7Vxwrk+gEvrGbHc6ygO2ydJcbIk8UhpZCGBXW1VBkS6XMMlIzzanZm3TP+aZe3nEN/+v/q4nCezTOm/kCvO5JAr03LjjD6IAoIDtUl8RKVybV4wb8YCzOBqNPYshha7rXXtH2juIRx6g7Yo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tdYXRPJ7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1753948157; c=relaxed/simple;
+	bh=q8JJEE2vuphFJnm1iDB/5dSdMW3dVIqLCYILHoojSTw=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=UIyWh9V7Us12uZsEJ1bw8wWl+GlnE0MR5dtPSLj1qYpUFmiWPbCiNuDaX2rJr7D58ShRMI0YGoPSfJdrt+MW+lcZPGdM1yYx1ECz5bZHHf0IIOy76qb3nSYeveqs0njkV8eRW28vtH6NTj8LQZlJOBk5ysc42WX9eWlMuKD/3TQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YmB57+9l; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tdYXRPJ7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBF3EC4CEEF;
-	Thu, 31 Jul 2025 07:27:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YmB57+9l"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFE6CC4CEEF;
+	Thu, 31 Jul 2025 07:49:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753946880;
-	bh=uH/A4rjgC5yNN8V6d1q0cBQ6pc0XBRtoWsVL/CAC+Cs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=tdYXRPJ7e3tzoscQqHOuMiblKuDIK9sH0AwywxRWjJX/xG9Zdp9iV/Rg0j/G70UL8
-	 IZgTewG4EgA1f857H0Hfz8FoifdKJ3Y4Spib5yggBr0KHMML3FtEdwCwHkZw8qIrzx
-	 BXfMfRydGuwQgp9z33euPOKTUyVpc7D7mbL5tIIgKKAvN2Mn2tnqNvuqylQu5DJPau
-	 OYetB6xR1rIIrUPdiJ/ffssMPKjW7O9D5MqWx02Mv+J/VbOoiNLzoTgNSNrTdD/nWC
-	 2QDU+3pzQuqpl7xampnmuOwSxnBQjM48IFydPzZmHSxcZb7eaMLqVEv2ZjbijCGqoX
-	 b2vsW7I2TtnKg==
+	s=k20201202; t=1753948156;
+	bh=q8JJEE2vuphFJnm1iDB/5dSdMW3dVIqLCYILHoojSTw=;
+	h=Subject:From:To:Date:In-Reply-To:References:From;
+	b=YmB57+9lxRMSaWXKqQSWcGyKm3GsYf1kieORkNhXfeKfgVEtX6Vvtcfm10ojcJXoV
+	 zmOb2DGZeeyvPCSSYUsG6uyzTRvpI7UJZoFEsOycUjY4y1dsEPCSNPla1YfbYaL/Qr
+	 EW3st31tS7X2hi/PzZMLuoz5sykMGWW+CxBSQ1ANBxUInHmvl6one2N1yCZ4taXw/K
+	 mBwlScRcyUJoY9V4WmrpuQA7CLzxiitjLQhzQnzkjj30HyZLwcvtBWd16oG07HgAdX
+	 agaJpuupJxtbq8Q6mryi02oixPe3sg30SdLDdid2AzRwU+fSsZczjuVBHb4ochNINm
+	 tJVMVPCVNDqYg==
+Message-ID: <411af696051518c1ef0a6a918626491a1fdc807d.camel@kernel.org>
+Subject: Re: [PATCH mptcp-next 0/7] Add MPTCP support to Java Networking API
 From: Geliang Tang <geliang@kernel.org>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v2 2/2] mptcp: setsockopt support for TCP_MD5SIG
-Date: Thu, 31 Jul 2025 15:27:48 +0800
-Message-ID: <291bace9364966f432580ba13121bd59677f5d3e.1753946671.git.tanggeliang@kylinos.cn>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <cover.1753946671.git.tanggeliang@kylinos.cn>
-References: <cover.1753946671.git.tanggeliang@kylinos.cn>
+To: Matthieu Baerts <matttbe@kernel.org>, mptcp@lists.linux.dev
+Date: Thu, 31 Jul 2025 15:49:13 +0800
+In-Reply-To: <0e6a7026-e1cf-43b1-9ed3-829abe78a69b@kernel.org>
+References: <cover.1753247666.git.geliang@kernel.org>
+	 <0e6a7026-e1cf-43b1-9ed3-829abe78a69b@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.56.0-1 
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -43,65 +44,97 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+Hi Matt,
 
-This adds setsockopt support for TCP_MD5SIG and TCP_MD5SIG_EXT options.
-The implementation:
-- Allows setting these options (getsockopt remains unsupported)
-- Applies them only to the first subflow
-- Forces fallback to TCP (since MD5 isn't compatible with MPTCP)
+On Thu, 2025-07-31 at 00:03 +0200, Matthieu Baerts wrote:
+> Hi Geliang,
+> 
+> On 23/07/2025 07:16, Geliang Tang wrote:
+> > The Multipath TCP (MPTCP) protocol (v1 / RFC 8684) has been added
+> > in
+> > the upstream Linux kernel since v5.6.
+> > 
+> > This patch series introduces comprehensive Multipath TCP (MPTCP)
+> > support
+> > to the Java Networking API, enabling applications to leverage
+> > MPTCP's
+> > capabilities for improved reliability and throughput.
+> 
+> Thank you for having looked at that.
+> 
+> > The implementation provides:
+> > 1. Core infrastructure for MPTCP socket creation (Patch 1)
+> > 2. Server and client socket creation APIs (Patches 2-3)
+> > 3. Integration with NIO socket implementation (Patch 4)
+> > 4. High-level Socket and ServerSocket support (Patches 5-6)
+> > 5. Comprehensive test cases (Patch 7)
+> > 
+> > Key features:
+> > - Backward compatible API extensions
+> > - Platform-independent implementation
+> > - Explicit MPTCP enablement through new constructors
+> > - Full integration with existing socket functionality
+> > - Test coverage for basic MPTCP operations
+> > 
+> > The changes maintain all existing functionality while adding MPTCP
+> > capabilities. When MPTCP is not enabled or not supported by the
+> > system, the
+> > implementation gracefully falls back to regular TCP behavior.
+> 
+> I don't think it is the case: if the system doesn't support it, an
+> error
+> will be returned.
+> 
+> If the other host doesn't support it or didn't request it, a fallback
+> will be done.
+> 
+> Also, don't hesitate to share a link to https://mptcp.dev to help
+> reviewers understanding what MPTCP is.
+> 
+> > This work enables Java applications to benefit from MPTCP's
+> > capabilities:
+> > - Seamless handover between network interfaces
+> > - Aggregated bandwidth from multiple paths
+> > - Improved resilience to network failures
+> > 
+> > The implementation has been tested on Linux systems with MPTCP
+> > kernel
+> > support enabled.
+> > 
+> > https://github.com/openjdk/jdk
+> I have a few comments, but I don't know the project, and I didn't
+> code
+> in Java for a while. Then, feel free to send this version or an
+> updated
+> one to the Java Net maintainers (not sure how, but I'm sure you will
+> figure out :) ). Do not hesitate to share the link here.
 
-Setting these options triggers fallback to TCP to maintain MD5
-compatibility.
+How about I submit a pull request to openjdk?
 
-Note that TCP_MD5SIG and TCP_MD5SIG_EXT are unsupported for TCP too.
-
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/575
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
----
- net/mptcp/sockopt.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
-
-diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-index b264185b810d..3ffdeca694be 100644
---- a/net/mptcp/sockopt.c
-+++ b/net/mptcp/sockopt.c
-@@ -13,6 +13,7 @@
- #include <net/tcp.h>
- #include <net/mptcp.h>
- #include "protocol.h"
-+#include "mib.h"
- 
- #define MIN_INFO_OPTLEN_SIZE		16
- #define MIN_FULL_INFO_OPTLEN_SIZE	40
-@@ -567,11 +568,12 @@ static bool mptcp_supported_sockopt(int level, int optname)
- 		case TCP_FASTOPEN_CONNECT:
- 		case TCP_FASTOPEN_KEY:
- 		case TCP_FASTOPEN_NO_COOKIE:
-+		/* MD5 will force a fallback to TCP: OK to set while not connected */
-+		case TCP_MD5SIG:
-+		case TCP_MD5SIG_EXT:
- 			return true;
- 		}
- 
--		/* TCP_MD5SIG, TCP_MD5SIG_EXT are not supported, MD5 is not compatible with MPTCP */
--
- 		/* TCP_REPAIR, TCP_REPAIR_QUEUE, TCP_QUEUE_SEQ, TCP_REPAIR_OPTIONS,
- 		 * TCP_REPAIR_WINDOW are not supported, better avoid this mess
- 		 */
-@@ -830,6 +832,12 @@ static int mptcp_setsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
- 		/* See tcp.c: TCP_DEFER_ACCEPT does not fail */
- 		mptcp_setsockopt_first_sf_only(msk, SOL_TCP, optname, optval, optlen);
- 		return 0;
-+#ifdef CONFIG_TCP_MD5SIG
-+	case TCP_MD5SIG:
-+	case TCP_MD5SIG_EXT:
-+		__mptcp_try_fallback(msk, MPTCP_MIB_MD5SIGFALLBACK);
-+		fallthrough;
-+#endif
- 	case TCP_FASTOPEN:
- 	case TCP_FASTOPEN_CONNECT:
- 	case TCP_FASTOPEN_KEY:
--- 
-2.48.1
-
+> 
+> > Geliang Tang (7):
+> >   Add MPTCP support for socket creation
+> >   Add MPTCP server socket creation support
+> >   Add MPTCP client socket creation support
+> >   Add MPTCP support to NioSocketImpl
+> >   Add MPTCP support to ServerSocket class
+> >   Add MPTCP support to Socket class
+> >   Add test cases for MPTCP socket functionality
+> > 
+> >  .../share/classes/java/net/ServerSocket.java  | 66 ++++++++++++++
+> >  .../share/classes/java/net/Socket.java        | 88
+> > +++++++++++++++++++
+> >  .../share/classes/java/net/SocketImpl.java    |  8 ++
+> >  .../share/classes/sun/nio/ch/Net.java         | 26 +++++-
+> >  .../classes/sun/nio/ch/NioSocketImpl.java     | 19 +++-
+> >  src/java.base/unix/native/libnio/ch/Net.c     |  5 +-
+> >  src/java.base/windows/native/libnio/ch/Net.c  |  2 +-
+> >  .../java/net/ServerSocket/MPTCPServer.java    | 58 ++++++++++++
+> >  test/jdk/java/net/Socket/MPTCPClient.java     | 62 +++++++++++++
+> >  9 files changed, 326 insertions(+), 8 deletions(-)
+> >  create mode 100644 test/jdk/java/net/ServerSocket/MPTCPServer.java
+> >  create mode 100644 test/jdk/java/net/Socket/MPTCPClient.java
+> > 
+> 
+> Cheers,
+> Matt
