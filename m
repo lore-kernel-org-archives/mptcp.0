@@ -1,97 +1,70 @@
-Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 407FE136348
-	for <mptcp@lists.linux.dev>; Thu, 31 Jul 2025 02:58:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE328323D
+	for <mptcp@lists.linux.dev>; Thu, 31 Jul 2025 07:27:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753930725; cv=none; b=J4rP3zrhxA2HT/tKuhcaZhkI33ref/gaz7pZ96h1qtLB4bqpD87orjFtTG76XdqN8AZ3pLuftLUfIwQ8027oFStFueahMpFh4UjtCsg1gtUrhgXwZSJuA6ypRGCHt7cwyIo+pGwXj2Ai5xuysfJvpJx3z6DDByd1BFVNOwj7un8=
+	t=1753946876; cv=none; b=O2KMlMO/BHR3ElZ5mSdqMxmc7D/hwugva+XBLipjyW9XAeKQt2dck1vESiEtgY2aw5Zw23COTutpDAy6hzcu9JnWsC68Amun2y5ksTKfvr0TX/iYfar5HNogsLQK9OW06Fau/o50T5LiwakLkpSIUnr5sucE6ujtPWm5wvwQZdw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753930725; c=relaxed/simple;
-	bh=hO4jQq8PLpE3srsD0rPnbC1MtEeo3jkBhYPUfq1jFi8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=emzGC4bHv7cKUNCcFQ+3/QXjqL03OPh94qWJtpNHdG85cOiBgOZDadve9g/QCjDaLhEUoEkdVwmS2SuG//MIj7zNj49/EXwWaSlle9eL4F+3H2Mo6qAwVRScYeJqP8vqult3bu2RWk79esohf4PBoLTQWVSjDbw8sj1oMvsdu1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=qODRXZlu; arc=none smtp.client-ip=91.218.175.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1753946876; c=relaxed/simple;
+	bh=RUjHrt/uciwuXOwDYpC9VxjofL1WBAGMH1n8eqnvUXI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bQM9tnjnEQw3F7ElBHpOo85n8hrnupiJlHo9aP3DCljsudpth120Gct4wFXgtO1m8KDglfpUDdlzcYT4cvFQbgB+brLS5rxm1RIqWX7LSXJ+2gYzoBUXy/NyOu5+0gatCW8asCl+B3rI6Ozi6bWjVZTvkOEhPuT++0SwseJRrVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K5RHdhs4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="qODRXZlu"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1753930720;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hO4jQq8PLpE3srsD0rPnbC1MtEeo3jkBhYPUfq1jFi8=;
-	b=qODRXZluoTdZwsqIuRfPB+EmJlGTteKL3nnL/Ucebe10AjPqn+1D455FmrTHJPFgnZI0Jh
-	JMNnJ6aM2zKV+49b9RReayHJAoHS8GgGkLFGaAFI3DdlOr+/X3+3i7whoAoR7V9v4nUV5l
-	Lb4LEniPT+7zzehE3Z3mfWCDC1JYkBE=
-From: Roman Gushchin <roman.gushchin@linux.dev>
-To: Kuniyuki Iwashima <kuniyu@google.com>
-Cc: "David S. Miller" <davem@davemloft.net>,  Eric Dumazet
- <edumazet@google.com>,  Jakub Kicinski <kuba@kernel.org>,  Neal Cardwell
- <ncardwell@google.com>,  Paolo Abeni <pabeni@redhat.com>,  Willem de
- Bruijn <willemb@google.com>,  Matthieu Baerts <matttbe@kernel.org>,  Mat
- Martineau <martineau@kernel.org>,  Johannes Weiner <hannes@cmpxchg.org>,
-  Michal Hocko <mhocko@kernel.org>,  Shakeel Butt <shakeel.butt@linux.dev>,
-  Andrew Morton <akpm@linux-foundation.org>,  Simon Horman
- <horms@kernel.org>,  Geliang Tang <geliang@kernel.org>,  Muchun Song
- <muchun.song@linux.dev>,  Kuniyuki Iwashima <kuni1840@gmail.com>,
-  netdev@vger.kernel.org,  mptcp@lists.linux.dev,  cgroups@vger.kernel.org,
-  linux-mm@kvack.org
-Subject: Re: [PATCH v1 net-next 13/13] net-memcg: Allow decoupling memcg
- from global protocol memory accounting.
-In-Reply-To: <20250721203624.3807041-14-kuniyu@google.com> (Kuniyuki
-	Iwashima's message of "Mon, 21 Jul 2025 20:35:32 +0000")
-References: <20250721203624.3807041-1-kuniyu@google.com>
-	<20250721203624.3807041-14-kuniyu@google.com>
-Date: Wed, 30 Jul 2025 19:58:32 -0700
-Message-ID: <87pldhf4mf.fsf@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K5RHdhs4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58547C4CEEF;
+	Thu, 31 Jul 2025 07:27:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1753946876;
+	bh=RUjHrt/uciwuXOwDYpC9VxjofL1WBAGMH1n8eqnvUXI=;
+	h=From:To:Cc:Subject:Date:From;
+	b=K5RHdhs4o7SrYWIAiuaj2+rsmn/kR0lAO4F4bxqZqO6HTHxa4zn7JbgJRZriQFEkJ
+	 50qQJjkCwlePw24tEzluOGIbNP6Gsf+S6J5zulw6+tlSTH1qDsCQcuAGMQ4SR7bDXM
+	 9sxAP5YRJbpfYYEQt/gXMsTZDn1nggyeXcr4Zqpr5wyxHQxuT9iBxrxDBlmHrK0r84
+	 QQawFSMdNwe4pL4S1GHHTqlzCyuqmqn7ByfhomcZ9Uq4xPxN/J8SNFeQFvLqJ1IHoo
+	 f6dfNlEdO7bfHNVbiPEL4FZaU4u361SCTufAEOwA8N6iisZBsD5pKC8eLlq9dDAIkI
+	 v99kuMYhbcfrg==
+From: Geliang Tang <geliang@kernel.org>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v2 0/2] mptcp: TCP_MD5SIG support
+Date: Thu, 31 Jul 2025 15:27:46 +0800
+Message-ID: <cover.1753946671.git.tanggeliang@kylinos.cn>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
 
-Kuniyuki Iwashima <kuniyu@google.com> writes:
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
-> Some protocols (e.g., TCP, UDP) implement memory accounting for socket
-> buffers and charge memory to per-protocol global counters pointed to by
-> sk->sk_proto->memory_allocated.
->
-> When running under a non-root cgroup, this memory is also charged to the
-> memcg as sock in memory.stat.
->
-> Even when memory usage is controlled by memcg, sockets using such protocols
-> are still subject to global limits (e.g., /proc/sys/net/ipv4/tcp_mem).
->
-> This makes it difficult to accurately estimate and configure appropriate
-> global limits, especially in multi-tenant environments.
->
-> If all workloads were guaranteed to be controlled under memcg, the issue
-> could be worked around by setting tcp_mem[0~2] to UINT_MAX.
->
-> In reality, this assumption does not always hold, and a single workload
-> that opts out of memcg can consume memory up to the global limit,
-> becoming a noisy neighbour.
->
-> Let's decouple memcg from the global per-protocol memory accounting.
->
-> This simplifies memcg configuration while keeping the global limits
-> within a reasonable range.
+v2:
+ - trigger fallback to TCP.
+ - check CONFIG_TCP_MD5SIG.
+ - update MD5 comment.
+ - drop selftests, packetdrill tests will be added later.
 
-I don't think it should be a memcg feature. In fact, it doesn't have
-much to do with cgroups at all (it's not hierarchical, it doesn't
-control the resource allocation, and in the end it controls an
-alternative to memory cgroups memory accounting system).
+This series introduces support for TCP_MD5SIG socket options in MPTCP along
+with code improvements:
 
-Instead, it can be a per-process prctl option.
+Patch 1: Refactors TCP_MAXSEG getsockopt handling to improve code
+consistency
+Patch 2: Adds setsockopt support for TCP_MD5SIG/TCP_MD5SIG_EXT (first
+subflow only)
 
-(Assuming the feature is really needed - I'm also curious why some
-processes have to be excluded from the memcg accounting - it sounds like
-generally a bad idea).
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/575
 
-Thanks
+Geliang Tang (2):
+  mptcp: Handle TCP_MAXSEG getsockopt in common case
+  mptcp: setsockopt support for TCP_MD5SIG
+
+ net/mptcp/sockopt.c | 16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
+
+-- 
+2.48.1
+
