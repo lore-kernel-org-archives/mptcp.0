@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F1C8F4FA
-	for <mptcp@lists.linux.dev>; Thu, 31 Jul 2025 09:33:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FBAE187FEC
+	for <mptcp@lists.linux.dev>; Thu, 31 Jul 2025 09:40:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753954402; cv=none; b=gzofDVipT8UFkrAlsg8tcSIajn2co+ZPl5Lxi4b5NA1lKyUctA8tNj5/Amd3mSnZ3WQBrfCpB02gD28Jwf6riUKkxpJfEdmPKQbHMroH3VnNQZMFEMYeG8VAIsZfVWD9xHpxEbmDt5QR86WwVmv5JVzb9sa5ZtcdJZ3DW6K+df8=
+	t=1753954810; cv=none; b=HjIgBF+HhcRcNhz9v2T/EA0nKsukYaORB8xUf+S9+TRi9kyWQ3gexo3qtgcsrKIRy4M+Ep4uh2X6YhKlbb9M4jQyfu9cnqkiTwXYQ1ecU5vIvkz/DoKiSS7cagckbGuOQcORyIMTV3AsOg0gDoeIU/XAKQ1bzZRi3qGMSMgPjUw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753954402; c=relaxed/simple;
-	bh=o8WwYnC31MBA7tm6FBSsW3cZmj3FKK0BzB0PPq/5qWY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
-	 In-Reply-To:Content-Type; b=isb0Z9Pv2FAJsdMHengaTn4mSHACWp1pHmuIopUoLgiYARPvm+gltqVcnrLwWGYXbBtPeODIpVwCFaqdXatYsn3gbn8UPkAOg47tbhIkGTfFJurJBllTpVplUYqZxSC81R7Twj5lzVX8Xd7YKh2y0WYdnhbcoQoM5iIKFqMsemY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bbS/sH6q; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1753954810; c=relaxed/simple;
+	bh=JEfHYf0pBTzHeU0qKVAJM+6WiW1S4XsBV0ZP7nh1d0I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hYy02+8m5xl8fycu0khJ83LBCCa1C9ovN83logimaEjhXbhl+d8CnmWEd6M6CSymgHy6Y8pC8BgrBs1AgiwPXD5t5tNiWVf65eXlOgsZ32xY7Y1CVJSnRPC3s3fLsl1WYQpYd45ptDFRwjdlF0sdeyJM3dbFIvwq+fXZ1YUkadM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ra6kK1lF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bbS/sH6q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 356F1C4CEEF;
-	Thu, 31 Jul 2025 09:33:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ra6kK1lF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28460C4CEF6;
+	Thu, 31 Jul 2025 09:40:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753954401;
-	bh=o8WwYnC31MBA7tm6FBSsW3cZmj3FKK0BzB0PPq/5qWY=;
-	h=Date:Subject:To:References:From:Cc:In-Reply-To:From;
-	b=bbS/sH6qy2+OTYeHWdhCR9PmCnhLhTv5f4miM7KVpM1khQblqEQ6vA9QxBT47KcYY
-	 24zywo2ova/CHkPBLwmiIgtoSaS09pZE2+Mb945L9kKdEtCLeLKGZS4THR1qdBH6PL
-	 0BgyeudEpO9HXzpiquGw/n+smP0p1mqihwU5Cd3E+xjEVWt41GeBsbw+dTs8ekQQEK
-	 PzChDN12wjaaundnQ+p9QsIKthYr/46AIjvjl8+ekobp1Fnaj6p5lyjYfaRv95CQR2
-	 S4Raspyk0tzCCRJs5tFdUD90Hp6S9UFU9sntOWExHTR+EGqG/0eC+fLfhfw3DQcRaV
-	 0e+pJ6l8pLSyQ==
-Message-ID: <f92c4481-1f5b-4475-8c5e-a5c0a6a807a6@kernel.org>
-Date: Thu, 31 Jul 2025 11:33:19 +0200
+	s=k20201202; t=1753954810;
+	bh=JEfHYf0pBTzHeU0qKVAJM+6WiW1S4XsBV0ZP7nh1d0I=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Ra6kK1lFnNFaI/pr8Vol+KRU2MHUmTLEOPuyoj1QyQKkVD2aSibzVxBOnUZ86EgAV
+	 khrikAhNEnN2ttwQ7f0G8xWe1i/E1Q/jPCda6bbjVMysUT4eHOKT3s+s4EA2j5wYPO
+	 7ITKZwbLuSkr+0SWbI3msxrBlnnG36pM+sm8jt7gyb/TCcIG5k2XJKeuRPTeZTnnO4
+	 O2Cyy0n9uI+2LV2pMLA18lrnzgkmbjYY+/+6iOe445+XJvnvZljFl0D08/8OJiJ9w3
+	 8DgwOM6psgrTDHDxyIHYfToWJbkWhEqJdJQkl4VqQ/b6sEBJnMvE7LwtqEZINs4ez9
+	 hZ0gkBjgCtVOg==
+Message-ID: <9aa94cff-872b-4831-9f38-ce291f2c0a9f@kernel.org>
+Date: Thu, 31 Jul 2025 11:40:06 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,14 +35,14 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next 0/7] Add MPTCP support to Java Networking API
+Subject: Re: [PATCH mptcp-next 2/3] mptcp: setsockopt support for TCP_MD5SIG
 Content-Language: en-GB, fr-BE
-To: Geliang Tang <geliang@kernel.org>
-References: <cover.1753247666.git.geliang@kernel.org>
- <0e6a7026-e1cf-43b1-9ed3-829abe78a69b@kernel.org>
- <411af696051518c1ef0a6a918626491a1fdc807d.camel@kernel.org>
+To: Christoph Paasch <cpaasch@openai.com>, Geliang Tang <geliang@kernel.org>
+Cc: mptcp@lists.linux.dev, Geliang Tang <tanggeliang@kylinos.cn>
+References: <cover.1753859907.git.tanggeliang@kylinos.cn>
+ <7f2aaa80eef99f64ff6d7a48ce0a6bf06d1cacab.1753859907.git.tanggeliang@kylinos.cn>
+ <CADg4-L9m2=4d56kEpy48YYAaEhAe66m6fuG8qN_MdGi9W_GURg@mail.gmail.com>
 From: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -87,86 +87,51 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <411af696051518c1ef0a6a918626491a1fdc807d.camel@kernel.org>
+In-Reply-To: <CADg4-L9m2=4d56kEpy48YYAaEhAe66m6fuG8qN_MdGi9W_GURg@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi Geliang,
+Hi Christoph,
 
-On 31/07/2025 09:49, Geliang Tang wrote:
-> Hi Matt,
+On 31/07/2025 00:19, Christoph Paasch wrote:
+> Hello!
 > 
-> On Thu, 2025-07-31 at 00:03 +0200, Matthieu Baerts wrote:
->> Hi Geliang,
+> On Wed, Jul 30, 2025 at 12:22 AM Geliang Tang <geliang@kernel.org> wrote:
 >>
->> On 23/07/2025 07:16, Geliang Tang wrote:
->>> The Multipath TCP (MPTCP) protocol (v1 / RFC 8684) has been added
->>> in
->>> the upstream Linux kernel since v5.6.
->>>
->>> This patch series introduces comprehensive Multipath TCP (MPTCP)
->>> support
->>> to the Java Networking API, enabling applications to leverage
->>> MPTCP's
->>> capabilities for improved reliability and throughput.
+>> From: Geliang Tang <tanggeliang@kylinos.cn>
 >>
->> Thank you for having looked at that.
+>> This adds setsockopt support for TCP_MD5SIG and TCP_MD5SIG_EXT options.
+>> The implementation:
+>> - Allows setting these options (getsockopt remains unsupported)
+>> - Applies them only to the first subflow
+>> - Maintains MD5 compatibility limitations with MPTCP
 >>
->>> The implementation provides:
->>> 1. Core infrastructure for MPTCP socket creation (Patch 1)
->>> 2. Server and client socket creation APIs (Patches 2-3)
->>> 3. Integration with NIO socket implementation (Patch 4)
->>> 4. High-level Socket and ServerSocket support (Patches 5-6)
->>> 5. Comprehensive test cases (Patch 7)
->>>
->>> Key features:
->>> - Backward compatible API extensions
->>> - Platform-independent implementation
->>> - Explicit MPTCP enablement through new constructors
->>> - Full integration with existing socket functionality
->>> - Test coverage for basic MPTCP operations
->>>
->>> The changes maintain all existing functionality while adding MPTCP
->>> capabilities. When MPTCP is not enabled or not supported by the
->>> system, the
->>> implementation gracefully falls back to regular TCP behavior.
->>
->> I don't think it is the case: if the system doesn't support it, an
->> error
->> will be returned.
->>
->> If the other host doesn't support it or didn't request it, a fallback
->> will be done.
->>
->> Also, don't hesitate to share a link to https://mptcp.dev to help
->> reviewers understanding what MPTCP is.
->>
->>> This work enables Java applications to benefit from MPTCP's
->>> capabilities:
->>> - Seamless handover between network interfaces
->>> - Aggregated bandwidth from multiple paths
->>> - Improved resilience to network failures
->>>
->>> The implementation has been tested on Linux systems with MPTCP
->>> kernel
->>> support enabled.
->>>
->>> https://github.com/openjdk/jdk
->> I have a few comments, but I don't know the project, and I didn't
->> code
->> in Java for a while. Then, feel free to send this version or an
->> updated
->> one to the Java Net maintainers (not sure how, but I'm sure you will
->> figure out :) ). Do not hesitate to share the link here.
+>> Note that TCP_MD5SIG and TCP_MD5SIG_EXT are unsupported for TCP too.
 > 
-> How about I submit a pull request to openjdk?
+> Is there even enough option-space to have co-existence of MPTCP with
+> TCP_MD5 ? I don't think so, right ?
+> 
+> The only way they can co-exist is if a bunch of other options are
+> disabled. And in that case, do we really want to use non-MD5 on
+> subsequent subflows ? I doubt that, because the goal of TCP-MD5 is to
+> "improve" security.
 
-I don't think that is that simple... Apparently you need to sign the
-OCA, create a bug report, then later on, send a PR:
+Correct, there is not enough space, and it doesn't make sense to use
+MPTCP with TCP_MD5.
 
-  https://openjdk.org/guide/#i-have-a-patch-what-do-i-do
+The patch description should be clearer about that: supporting TCP_MD5
+makes sense when MPTCP is used by default when creating a socket. With
+Go, all "stream" listening sockets are MPTCP sockets. MPTCP might not be
+used, but without this series, we have a "regression" compared to TCP
+because TCP_MD5 cannot be used.
 
-Not that easy to contribute...
+See: https://github.com/multipath-tcp/mptcp_net-next/issues/575
+
+> So, shouldn't we rather disable MPTCP always when an app sets TCP_MD5SIG ?
+
+Yes, but no need to do anything else, because a fallback will be done in
+mptcp_connect() and subflow_check_req(). (even if I guess an extra
+protection is always OK there).
 
 Cheers,
 Matt
