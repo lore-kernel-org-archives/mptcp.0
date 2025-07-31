@@ -1,63 +1,63 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03EAB2D0C76
-	for <mptcp@lists.linux.dev>; Thu, 31 Jul 2025 13:39:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 652062C3273
+	for <mptcp@lists.linux.dev>; Thu, 31 Jul 2025 13:39:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753969144; cv=none; b=VHkXBv8l4ZJsgrwKGX25mDrJ+q4hFzI8g+8Xejx2zsUGsV3kiRgg7X3V357/xsd2aNkfBr3j0/vmUXG1NIDc0m8fWVtoKleUcKzO5KZd5c33wgP8R7fSS7s5aNx0qQdGEnc0j1KET+ei3cqI0wgDV/i7fj0IkdWhjcCczEh9d5w=
+	t=1753969153; cv=none; b=uURiVvITpBlDiK/yE53WTiP8xDbomPHFk35FE16bovJ4hCU3nG2nZbTSxsAxBMREqC1/e0dnx+a82fM14mzzFSb/XMYHWHQm2bYVqpmT6cFbjcd2H1EQYh4bNXcXRJGFfmSDsc7rszDuRYyXTHlOiBmVodHHUuoGqVkaqlrF0A4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753969144; c=relaxed/simple;
-	bh=kOpGIhGHdpLiDUIPN5tfSWZvVyiUegYsJVHK2hDz4Zk=;
+	s=arc-20240116; t=1753969153; c=relaxed/simple;
+	bh=b0p3P4TSj0m67jYyynFdzfNgF0dMZsVUy/M9Sl8OXsw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kL3bRTsbe/3wfM9gZ1v8YBNCnekVTeoWuT3zFsuhyya2kows7+/jipJv9uPoHQLEoDxeu3N56JV5Oi8KMfV5dtBzrOKahkqT1vMsESuRdu57crD9MrzJxEfKDx2/v2knP/8eZgZX4S4dsgAsUMi+Kbv3YghqYFeHOQk8ty8SF9w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=CkrAz40Z; arc=none smtp.client-ip=209.85.128.44
+	 Content-Type:Content-Disposition:In-Reply-To; b=mN5vHHD9ragZZ/RNVAOpJPuSPuUqsjjprq0BH5QoFTXGAZupJOOA7AVxZDOIGm1OxddNXAWqmCPcWIMSms5934EfRhW2R/a4e+PzEseRUH5itmH5vVpjWdKoQh0jqsF6k61CopwXARl7JUMrLDK7IVT12eKlzUrFlliRFSaM6oc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Vipnpdei; arc=none smtp.client-ip=209.85.221.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="CkrAz40Z"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-45617887276so5503635e9.2
-        for <mptcp@lists.linux.dev>; Thu, 31 Jul 2025 06:39:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Vipnpdei"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3b78bca0890so679670f8f.3
+        for <mptcp@lists.linux.dev>; Thu, 31 Jul 2025 06:39:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1753969140; x=1754573940; darn=lists.linux.dev;
+        d=suse.com; s=google; t=1753969150; x=1754573950; darn=lists.linux.dev;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=jnez6DValapR3ZUUqRysmzvL+YRs62blvNyrOJaANrI=;
-        b=CkrAz40ZNFctsQsK9JVB2/7WqQRKBD95KHEajfljrNog9JKLj7XiSrw7IUqemyBycJ
-         N7RRjC3hCclPZHO6IJkix27OW4k5pJZlaP0x7XmUa6y26r5ikvCGGh0JqMu7HmAFOgZq
-         0uNfdO/ms14ipyoZ0c8Bos1sgA0mzzpekgmJl+7EClDYfFNulegwN40/g61CvzIEnxkV
-         obxWe6HLSb+CQMjxFKHU+jthgrH5hVVwMigdGgMsTTyNnM83DlESZxbfUaMKkoXSv7a5
-         hvO94uF/08m2fCPsuhWatxUhoviMImvgiLWl3iLxI2iHHf/zTVQvYYV0J5Cla/2cLfzI
-         n+eg==
+        bh=TTMiwDI5I7ZpdDu7u29+O3OSLlyCf5CWJBCKHAd19vQ=;
+        b=Vipnpdei9dm+WGS9UMixQWUQmRBTeVK8ZZQAmB8WSpq0eu4Zyww7LbqBikzigw33XV
+         x/whGO7FHhuRf1fPqfZV/t+FNXIMRqA6BBetmXivsq38s+lRFYsyzGI8Ul2m32Qsgg9O
+         pFc06sYG4YhXKXjchYGXda4+ftU1L+KKG4lgiZ+Rt2doDHDlIJ9Kk99yR55sRYr6yQz7
+         ubvXC196VmxpGg+zS6mg/VnNDdsiDnSUBSfpqQJF1GkPG3l/WKWsrEKffNqtEghfKd9J
+         lIfwuEkA6xdtc1xGCQN2pYKZ/roYe+QhX7uuq548CpfB5eQLV+Hol1P2QO/yZCUE42wQ
+         jkWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753969140; x=1754573940;
+        d=1e100.net; s=20230601; t=1753969150; x=1754573950;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=jnez6DValapR3ZUUqRysmzvL+YRs62blvNyrOJaANrI=;
-        b=nfpYpqfrOuRMunn4qNfpziHejV1Yqe8jqUxwuVyrDdM6voROUsgjZb6hTXHmXfl+FJ
-         wRvjq2s1Lm0F/7bL+3pGm6M76CDyr8y9nztId0P3KRvpEh17WJEhTGPqr0puao2F/8c2
-         wUO5wjHe6cMMd7lAx3bHPiuD73KsGJIxImfNz5Sl+7ZDTNX6RJugV5MIpuz6Nyb5pmnT
-         mgZK1iXvNCh/uR6BMeKFNuZr+Dnzp9TuaXR366nBM5wFHbXQj7IWxnC6ACIiopT1uF5X
-         SpiGOtXyRWb1bW4aaHkTKZJYsOO0leKmcy/ZHWI7D49uip4acTE06EHGgRuhIqjt5wSp
-         vTfw==
-X-Forwarded-Encrypted: i=1; AJvYcCVYjcMZTrDTGkwkVHTJjooRB2/YTsF5Ox0rg/NHV4D1QAWNIGcQsDQHfV6hE1C33tTknCt3JQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxG34aVCX2MKhMYF8MwBuHwdidopuUrlT5hqyUIm4MUsSkQvZj8
-	hNqC5z0n7bcrNX8K3MzkvoIirmbNeQXaKOmt3CfvMVthz82Lg3oBz2ac/gIFCs6eQ9Q=
-X-Gm-Gg: ASbGncsI0PXmqNX3BZ97YOsCVwE74ZDkbBiZZTqQeL8yM1LpC8IMAk9PzRV3tRgLPRz
-	MrwEZTbwDAgSbDM5JLpXYmS9PuGJPIxOjx1DVw/J2R0hZBpjNt8BkahvVNo1Fzae8esHlQ+Yh2V
-	pAMew+/JoB++BvNZ3iiSLQJN5AU9uGF8XNzdxxla93CtxoHksXIIrMPGyoG3eHSHRJabj7fal+Y
-	gDq9AXwXd5MqOI4VMab3Oe1B/AMZ2pFUa86JKtmFZL3osDWHiWOIbVsMKb0wqsKYd4Fm2i1Bhg7
-	MfdUCKY8C765wjAJw4Ijq1buxCmt6yZIqLLjOLuGG2T6X3FwOGfio5hX5GdwJ+WL9sJZxmn+rQM
-	N8OxBsr9dXVT4k8/0Xo0GOenCUMeV7JdXwOlEFcCVBQ==
-X-Google-Smtp-Source: AGHT+IFFm9zky0SxbktFrrzQ+NTv6G8i6eERwaMpUiFW2QYSxbmEiN7oSr8vkltvo3nUOZWrxX7dIw==
-X-Received: by 2002:a05:600c:8114:b0:456:23aa:8c8 with SMTP id 5b1f17b1804b1-45892b9e4bcmr69774445e9.13.1753969140187;
-        Thu, 31 Jul 2025 06:39:00 -0700 (PDT)
+        bh=TTMiwDI5I7ZpdDu7u29+O3OSLlyCf5CWJBCKHAd19vQ=;
+        b=hA/C5e3CECkxJuduZoJOEUkEXz2x47K67j5OsxeXm47akuFfeNTo+A2vm989AT+svb
+         XXHHBna0hcep0+oo1CBGxeCo7rd+M6Hh2Nl+hZBJSSfIred6pMxHLJVLKm/x/JtTZ0sP
+         xxMYmyjqfGLALEI7gc75cItTG4Wxk+JfOvJ2VhOMIoRGHH06fXG6iVbfrNYYGMojzmpq
+         pmZGdLHX7CNOqozSYNlX3Qg5hCxM9XG8Yna5JaHogb3rjvkY4wKmO9zNuxIWezO+/lbH
+         9aorOYbVM+bXaw1NYEpZJJi6k0L9yIKCEhjHIK1J4NOZNPC/jJoWok8Q9HTPSx2LGLMD
+         o+0g==
+X-Forwarded-Encrypted: i=1; AJvYcCU5pUab2GevynFSpZ9oEWYZcRGPEBI+QrMPuAawQOxWx8dRnCiod+lwvuWmuMTvvUrZqJiVJQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxBC32VudCC2czr/1jIu4lfRoa9uwCK6AigmeqHrD5E+1aPb4RV
+	26LRn1fITXE1epZWNgNdFTqMiAchrrgVtzYHG9+GjDLWtcepXXtP0hUswhG+RZ9WbDQ=
+X-Gm-Gg: ASbGncv+C6V8AxqXTp0tLFa713muEksLOCioZGojOPmuhKSUjPjlCHIs6nxKTJ8PIXf
+	0cUt3IotbWHBpGCFiSyeuVJhAKr6G7VunnBr/EooB+rtwCNteSucBpJ+hP8R/Kj1volUkGxM0tb
+	/KhyeYljfwn5HfsQ4FEpRWWrIEj3YFERwYMZM20jDHtNTClln1jy0dxRciYNGdbNz9BPA0eAAK3
+	HA61s9UzAPRUcj7c66H/ET3WBU7NaLp1KuwgkfhqXI28Hqw5YCBVs8eqsZlH32+u3xFzwXXyhQc
+	8c21eu8mT4TRDGaCb6Fbg0XFsnb+y3xwNUV8pcd0wsQmkZnXY2jXEE7wPAB3vnW/eKHnVzt64/W
+	f8eURjStWwXsl9drz1qICiyO9aVG63OCBorN5esn5svoIlsXzvXVs
+X-Google-Smtp-Source: AGHT+IHYvsEIX5itHKow1mLcVDqvWDuNXSbVTG7QQc1tvuwHoyl4F7TOUm51Nd1pmo+PXsqydNAs+w==
+X-Received: by 2002:a05:6000:40c9:b0:3b7:7c3b:1073 with SMTP id ffacd0b85a97d-3b794fffcd7mr6922320f8f.52.1753969149579;
+        Thu, 31 Jul 2025 06:39:09 -0700 (PDT)
 Received: from blackdock.suse.cz (nat2.prg.suse.com. [195.250.132.146])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b79c4534b3sm2409107f8f.47.2025.07.31.06.38.58
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b79c4532c4sm2448753f8f.36.2025.07.31.06.39.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 31 Jul 2025 06:38:59 -0700 (PDT)
-Date: Thu, 31 Jul 2025 15:38:57 +0200
+        Thu, 31 Jul 2025 06:39:08 -0700 (PDT)
+Date: Thu, 31 Jul 2025 15:39:06 +0200
 From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
 To: Kuniyuki Iwashima <kuniyu@google.com>
 Cc: "David S. Miller" <davem@davemloft.net>, 
@@ -70,11 +70,11 @@ Cc: "David S. Miller" <davem@davemloft.net>,
 	Simon Horman <horms@kernel.org>, Geliang Tang <geliang@kernel.org>, 
 	Muchun Song <muchun.song@linux.dev>, Kuniyuki Iwashima <kuni1840@gmail.com>, netdev@vger.kernel.org, 
 	mptcp@lists.linux.dev, cgroups@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH v1 net-next 13/13] net-memcg: Allow decoupling memcg from
- global protocol memory accounting.
-Message-ID: <fq3wlkkedbv6ijj7pgc7haopgafoovd7qem7myccqg2ot43kzk@dui4war55ufk>
+Subject: Re: [PATCH v1 net-next 11/13] net-memcg: Add memory.socket_isolated
+ knob.
+Message-ID: <pvygtpy4b7napeudlk5dtbacgvqf6j4lrr5nhye6obrwv2ss2o@ubxpyqwf56pz>
 References: <20250721203624.3807041-1-kuniyu@google.com>
- <20250721203624.3807041-14-kuniyu@google.com>
+ <20250721203624.3807041-12-kuniyu@google.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -82,74 +82,67 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="2gxvsfqre7jriys5"
+	protocol="application/pgp-signature"; boundary="wvv7vwafoorhn7v5"
 Content-Disposition: inline
-In-Reply-To: <20250721203624.3807041-14-kuniyu@google.com>
+In-Reply-To: <20250721203624.3807041-12-kuniyu@google.com>
 
 
---2gxvsfqre7jriys5
+--wvv7vwafoorhn7v5
 Content-Type: text/plain; protected-headers=v1; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v1 net-next 13/13] net-memcg: Allow decoupling memcg from
- global protocol memory accounting.
+Subject: Re: [PATCH v1 net-next 11/13] net-memcg: Add memory.socket_isolated
+ knob.
 MIME-Version: 1.0
 
-On Mon, Jul 21, 2025 at 08:35:32PM +0000, Kuniyuki Iwashima <kuniyu@google.=
+Hello  Kuniyuki.
+
+On Mon, Jul 21, 2025 at 08:35:30PM +0000, Kuniyuki Iwashima <kuniyu@google.=
 com> wrote:
-> Some protocols (e.g., TCP, UDP) implement memory accounting for socket
-> buffers and charge memory to per-protocol global counters pointed to by
-> sk->sk_proto->memory_allocated.
->=20
-> When running under a non-root cgroup, this memory is also charged to the
-> memcg as sock in memory.stat.
->=20
-> Even when memory usage is controlled by memcg, sockets using such protoco=
-ls
-> are still subject to global limits (e.g., /proc/sys/net/ipv4/tcp_mem).
+> --- a/Documentation/admin-guide/cgroup-v2.rst
+> +++ b/Documentation/admin-guide/cgroup-v2.rst
+> @@ -1878,6 +1878,22 @@ The following nested keys are defined.
+>  	Shows pressure stall information for memory. See
+>  	:ref:`Documentation/accounting/psi.rst <psi>` for details.
+> =20
+> +  memory.socket_isolated
+> +	A read-write single value file which exists on non-root cgroups.
+> +	The default value is "0".
 
-IIUC the envisioned use case is that some cgroups feed from global
-resource and some from their own limit.
-It means the admin knows both:
-  a) how to configure individual cgroup,
-  b) how to configure global limit (for the rest).
-So why cannot they stick to a single model only?
+Such attributes don't fit well into hierarchy.
+What are expectations in non-root non-leaf cgroups?
 
-> This makes it difficult to accurately estimate and configure appropriate
-> global limits, especially in multi-tenant environments.
->=20
-> If all workloads were guaranteed to be controlled under memcg, the issue
-> could be worked around by setting tcp_mem[0~2] to UINT_MAX.
->=20
-> In reality, this assumption does not always hold, and a single workload
-> that opts out of memcg can consume memory up to the global limit,
-> becoming a noisy neighbour.
+Also the global limit is not so much different from a memcg limit
+configured on ancestors. This provision thus looks like handling only
+one particular case.
 
-That doesn't like a good idea to remove limits from possibly noisy
-units.
+> +
+> +	Some networking protocols (e.g., TCP, UDP) implement their own memory
+> +	accounting for socket buffers.
+> +
+> +	This memory is also charged to a non-root cgroup as sock in memory.stat.
+> +
+> +	Since per-protocol limits such as /proc/sys/net/ipv4/tcp_mem and
+> +	/proc/sys/net/ipv4/udp_mem are global, memory allocation for socket
+> +	buffers may fail even when the cgroup has available memory.
+> +
+> +	Sockets created with socket_isolated set to 1 are no longer subject
+> +	to these global protocol limits.
 
-> Let's decouple memcg from the global per-protocol memory accounting.
->=20
-> This simplifies memcg configuration while keeping the global limits
-> within a reasonable range.
+What happens when it's changed during lifetime of cgroup?
 
-I think this is a configuration issue only, i.e. instead of preserving
-the global limit because of _some_ memcgs, the configuration management
-could have a default memcg limit that is substituted to those memcgs so
-that there's no risk of runaways even in absence of global limit.
-
-Regards,
+Thanks,
 Michal
 
---2gxvsfqre7jriys5
+--wvv7vwafoorhn7v5
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYKAB0WIQRCE24Fn/AcRjnLivR+PQLnlNv4CAUCaItx7wAKCRB+PQLnlNv4
-COjkAP0UcZBWkhc+vB0FfA1p+pH/BzzZDKA27tR3sA4T4P3PBQEAyknqdHl6GIJ5
-yIxBX8DBx92ijoCOGSF1vaocgD203AQ=
-=iTKX
+iHUEABYKAB0WIQRCE24Fn/AcRjnLivR+PQLnlNv4CAUCaItx+AAKCRB+PQLnlNv4
+CKBoAQCcPd3B8EVlIuJkCxAatf+KBj5iSIWjGLHkL/wZBSIiOAD/Td1vVJkjNLj+
+ooVS07G9ZINI6535eRR8nUFbbc4lGwI=
+=8P5/
 -----END PGP SIGNATURE-----
 
---2gxvsfqre7jriys5--
+--wvv7vwafoorhn7v5--
