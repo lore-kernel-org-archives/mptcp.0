@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8CA71DE4DB
-	for <mptcp@lists.linux.dev>; Thu, 31 Jul 2025 16:08:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACB931C07C3
+	for <mptcp@lists.linux.dev>; Thu, 31 Jul 2025 17:10:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753978125; cv=none; b=kT1RtY6+I5DteWC1GulJQFB2DvC1s7iiQukOVnNG3Sm4lcsFWLZ3lXK/pSblGZz8Z9Rcn6kYikLAmQvcOS5On7KSIf472B9FYJ80CXHAgnCvRxzmVCaNnjhVxPj+bNDRo7YCS04Mvlg511LCS38iU1SyimfQCRPAF8n3WOTS6hw=
+	t=1753981840; cv=none; b=hWzTL1I86VbZpfRtnjUvc5p3hcF9pk7kpfTcik7K8u6ZivEQoXi++6L6/z9/uxr5iQS5wGzCHo7JCIhuU0UtgcOAA5+PgAjqXhZZV59HAzyA+qC921l4aOKdAnusYstShATQuMvy9gyz+SPXFkN/gst9+QMki+GgVbzEtxUO36s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753978125; c=relaxed/simple;
-	bh=awYNW00sDQMlQzG0kbpIzUkcOBQBI0DV1i0CCypDk5I=;
+	s=arc-20240116; t=1753981840; c=relaxed/simple;
+	bh=1mx9hC7JoIqXpSXhTnTHFL4jhC2tGIUO3ArQf8kBNhE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=O4bDOnu7S6F+WxaF10x3A+75QiszwnxtGd4sVWRCE/u+hWBlyhTT95KBJIMbhJ/+NKUs1N1PIdIqTykVXHTBOyirqsKpHSgGhIMVgKng2LrRAN1JVZVeeGAQC2oSO259mF2We8wwe6xNGb6PLVxQbLWngorsuuhOgJebzkGXDi8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LdT1urU9; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=G/vun+CzHvxVLIR4o1psYlfV91BXVOBtzdiZZvEN6IzeSVrHd4QEDCjFehWO2TF2L749FbEBeVQ6fM4bcCHXyIzxDDcjJubfqYokzvP2Xjo4rAYohaQgSuMzestoMTl54jd7Rdtz8fF7MKQw1nCdPRqaT5HkFi/iZquxPwNDE+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uAYrcZcy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LdT1urU9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82CBCC4CEEF;
-	Thu, 31 Jul 2025 16:08:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uAYrcZcy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5347FC4CEEF;
+	Thu, 31 Jul 2025 17:10:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753978124;
-	bh=awYNW00sDQMlQzG0kbpIzUkcOBQBI0DV1i0CCypDk5I=;
+	s=k20201202; t=1753981840;
+	bh=1mx9hC7JoIqXpSXhTnTHFL4jhC2tGIUO3ArQf8kBNhE=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=LdT1urU9ZFYBLWWZgSjud2wMEjIyKHDD2NwWnxrgvksy6oZ75jWAtb2NmMBtallCW
-	 EveqsOSImKad+F8eiAj4zvq0IDr8snrCiPzs+sEtGNOjxzqN1MlBk7kxIINSCvSr6D
-	 U0KBCZ0Rh2zGErchO8RFLGREJZRg6VKLmGTgifSTII4ugXj3GiYJScUxc88qJLTKy6
-	 2NwlUDmmp20rwe+w4PY04dglWRa5x/ehJXlkcH8ak4L8tJYKMbHLyTnbhGxLfqxTJa
-	 TKV+gZUUqxYhJbIJp8dAVn3OOXU9yMcqEVIvYD4/MEuTjvDNykHXe/vC4kyTqFMPby
-	 AqUWJtkUAX2lA==
-Message-ID: <1ad7ce24-1120-427f-96bb-2bdb35c04c7b@kernel.org>
-Date: Thu, 31 Jul 2025 18:08:41 +0200
+	b=uAYrcZcyyvy+RFDB1rdtukcc68e3B0XV2AJ9fkPKefcbuHgbzEK7tPZy9246Q9neU
+	 vWyIwBYLHkF0YEb8kw0OR+B+d9bXCXiES4wfpfXAeU8I7mkJ60/mOq8AxJGCYTQ6GZ
+	 Y80XWJ7iQi47gG5B4qtWHerxVDsympdW9YlkK4tE2cosjiGgovhrtlR8MtB8KgCGj6
+	 IoZRSS7SUnh2NmO+UiWqJzWjFldov4/Vjx8YKMOFqPmo+hcKFrmmN1C00A52HEx4OW
+	 H6JXbeQE/LlskMg0oRV1BXo+JtB1xsypX6lDRS8jEU7qL5eWjb9DkiFtg+6EojATeu
+	 M2Q40nDNgPcGA==
+Message-ID: <3a3d7649-0034-48ad-8f8e-1fa1c1fa9f66@kernel.org>
+Date: Thu, 31 Jul 2025 19:10:36 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -45,6 +45,8 @@ References: <cover.1753859907.git.tanggeliang@kylinos.cn>
  <CADg4-L9m2=4d56kEpy48YYAaEhAe66m6fuG8qN_MdGi9W_GURg@mail.gmail.com>
  <9aa94cff-872b-4831-9f38-ce291f2c0a9f@kernel.org>
  <CADg4-L-yMQ8k82sVGjzPPq_yNWoWnGOrYXdYOOJmXJmmQNoC-A@mail.gmail.com>
+ <1ad7ce24-1120-427f-96bb-2bdb35c04c7b@kernel.org>
+ <CADg4-L8wqCTT-_n7HibsceThvUCGJ44X2RkRXm=9hiAf4Nn5Wg@mail.gmail.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -90,64 +92,102 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <CADg4-L-yMQ8k82sVGjzPPq_yNWoWnGOrYXdYOOJmXJmmQNoC-A@mail.gmail.com>
+In-Reply-To: <CADg4-L8wqCTT-_n7HibsceThvUCGJ44X2RkRXm=9hiAf4Nn5Wg@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On 31/07/2025 18:02, Christoph Paasch wrote:
-> On Thu, Jul 31, 2025 at 2:40 AM Matthieu Baerts <matttbe@kernel.org> wrote:
->>
->> Hi Christoph,
->>
->> On 31/07/2025 00:19, Christoph Paasch wrote:
->>> Hello!
->>>
->>> On Wed, Jul 30, 2025 at 12:22 AM Geliang Tang <geliang@kernel.org> wrote:
->>>>
->>>> From: Geliang Tang <tanggeliang@kylinos.cn>
->>>>
->>>> This adds setsockopt support for TCP_MD5SIG and TCP_MD5SIG_EXT options.
->>>> The implementation:
->>>> - Allows setting these options (getsockopt remains unsupported)
->>>> - Applies them only to the first subflow
->>>> - Maintains MD5 compatibility limitations with MPTCP
->>>>
->>>> Note that TCP_MD5SIG and TCP_MD5SIG_EXT are unsupported for TCP too.
->>>
->>> Is there even enough option-space to have co-existence of MPTCP with
->>> TCP_MD5 ? I don't think so, right ?
->>>
->>> The only way they can co-exist is if a bunch of other options are
->>> disabled. And in that case, do we really want to use non-MD5 on
->>> subsequent subflows ? I doubt that, because the goal of TCP-MD5 is to
->>> "improve" security.
->>
->> Correct, there is not enough space, and it doesn't make sense to use
->> MPTCP with TCP_MD5.
->>
->> The patch description should be clearer about that: supporting TCP_MD5
->> makes sense when MPTCP is used by default when creating a socket. With
->> Go, all "stream" listening sockets are MPTCP sockets. MPTCP might not be
->> used, but without this series, we have a "regression" compared to TCP
->> because TCP_MD5 cannot be used.
->>
->> See: https://github.com/multipath-tcp/mptcp_net-next/issues/575
->>
->>> So, shouldn't we rather disable MPTCP always when an app sets TCP_MD5SIG ?
->>
->> Yes, but no need to do anything else, because a fallback will be done in
->> mptcp_connect() and subflow_check_req(). (even if I guess an extra
->> protection is always OK there).
+Hi Christoph,
+
+On 31/07/2025 19:02, Christoph Paasch wrote:
 > 
-> Alright! Now I see the code in subflow_check_req(). But, it looks like
-> we send a RST, no ? I can give it a try later.
+> 
+> On Thu, Jul 31, 2025 at 9:08 AM Matthieu Baerts <matttbe@kernel.org
+> <mailto:matttbe@kernel.org>> wrote:
+> 
+>     On 31/07/2025 18:02, Christoph Paasch wrote:
+>     > On Thu, Jul 31, 2025 at 2:40 AM Matthieu Baerts
+>     <matttbe@kernel.org <mailto:matttbe@kernel.org>> wrote:
+>     >>
+>     >> Hi Christoph,
+>     >>
+>     >> On 31/07/2025 00:19, Christoph Paasch wrote:
+>     >>> Hello!
+>     >>>
+>     >>> On Wed, Jul 30, 2025 at 12:22 AM Geliang Tang
+>     <geliang@kernel.org <mailto:geliang@kernel.org>> wrote:
+>     >>>>
+>     >>>> From: Geliang Tang <tanggeliang@kylinos.cn
+>     <mailto:tanggeliang@kylinos.cn>>
+>     >>>>
+>     >>>> This adds setsockopt support for TCP_MD5SIG and TCP_MD5SIG_EXT
+>     options.
+>     >>>> The implementation:
+>     >>>> - Allows setting these options (getsockopt remains unsupported)
+>     >>>> - Applies them only to the first subflow
+>     >>>> - Maintains MD5 compatibility limitations with MPTCP
+>     >>>>
+>     >>>> Note that TCP_MD5SIG and TCP_MD5SIG_EXT are unsupported for TCP
+>     too.
+>     >>>
+>     >>> Is there even enough option-space to have co-existence of MPTCP with
+>     >>> TCP_MD5 ? I don't think so, right ?
+>     >>>
+>     >>> The only way they can co-exist is if a bunch of other options are
+>     >>> disabled. And in that case, do we really want to use non-MD5 on
+>     >>> subsequent subflows ? I doubt that, because the goal of TCP-MD5
+>     is to
+>     >>> "improve" security.
+>     >>
+>     >> Correct, there is not enough space, and it doesn't make sense to use
+>     >> MPTCP with TCP_MD5.
+>     >>
+>     >> The patch description should be clearer about that: supporting
+>     TCP_MD5
+>     >> makes sense when MPTCP is used by default when creating a socket.
+>     With
+>     >> Go, all "stream" listening sockets are MPTCP sockets. MPTCP might
+>     not be
+>     >> used, but without this series, we have a "regression" compared to TCP
+>     >> because TCP_MD5 cannot be used.
+>     >>
+>     >> See: https://github.com/multipath-tcp/mptcp_net-next/issues/575
+>     <https://github.com/multipath-tcp/mptcp_net-next/issues/575>
+>     >>
+>     >>> So, shouldn't we rather disable MPTCP always when an app sets
+>     TCP_MD5SIG ?
+>     >>
+>     >> Yes, but no need to do anything else, because a fallback will be
+>     done in
+>     >> mptcp_connect() and subflow_check_req(). (even if I guess an extra
+>     >> protection is always OK there).
+>     >
+>     > Alright! Now I see the code in subflow_check_req(). But, it looks like
+>     > we send a RST, no ? I can give it a try later.
+> 
+>     Oh, you are right, I missed that.
+> 
+>     Then probably we need to force a fallback if
+>     mptcp_setsockopt_first_sf_only() was successful.
+> 
+>     (@Geliang: that's why we do need the Packetdrill test :) )
+> 
+> 
+> Speaking of packetdrill :-) what is the status on upstreaming the MPTCP
+> changes to packetdrill? (Sorry for these questions - I’m catching up on
+> stuff ;-))
 
-Oh, you are right, I missed that.
+:)
 
-Then probably we need to force a fallback if
-mptcp_setsockopt_first_sf_only() was successful.
+The status is still the same as a few years ago: we are still
+maintaining a public fork [1], and work is still needed to make it
+"upstreamable". As far as I know, nobody is actively looking at that.
 
-(@Geliang: that's why we do need the Packetdrill test :) )
+Note that the MPTCP docker dev env image [2] -- used by devs and the CI
+-- is using this packetdrill version.
+
+[1] https://github.com/multipath-tcp/packetdrill/
+[2]
+https://github.com/multipath-tcp/mptcp-upstream-virtme-docker#packetdrill
 
 Cheers,
 Matt
