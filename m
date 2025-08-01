@@ -1,44 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C2D334CF9
-	for <mptcp@lists.linux.dev>; Fri,  1 Aug 2025 03:01:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40B2F33987
+	for <mptcp@lists.linux.dev>; Fri,  1 Aug 2025 06:07:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754017299; cv=none; b=tzhMDa9cY5hPfKU9szEOsWJNtTlIwcm9vSGZKDXPcUzU/mpk7p3q72/usgtlpBxK4FHm7x+MzHw0NAkC1IbM+Npq2uHSqtOkb0sWDtYOavrC3VfG7RPrqpqDESZIB/E79iJo984ehDLy32QeQNroAsraHCDn3nuq0Nz42q4ab1w=
+	t=1754028457; cv=none; b=LYDv0/PKq+si/vhUvBSY1rn+ucTOjnS/lWo5MIKwufyvA4iu3dPQHfHUqmz2ao/6qEauZV2P3R2Jrc7d97KUAec+FPRcWjBIKJVMGZJpf8SVdrnCvSC1d0/vjxPfgdQ+2R3Ckl7wyMsZKNAZ4iZ5f1n/6B05Y+7ssJLjjHNBzuc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754017299; c=relaxed/simple;
-	bh=4AJKkBqzWe6JllOs4Webj7ZpOoT8Mdc4syvqYhPC7Cs=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=e3ZPY14T97fjeFjTvk8zf9tbN9gsROoUZeanLBPD1+u1Eq9fOmoG2mtQVw5inqzCLLTirJLjSfHmBQ9aKMbvdx5a2mnXKqqk0bZVFcmMr6dGnA52xc8Qz9uDqkUWuxc+DCwVLSYPiClkPi+MLcafSWc/h7M7ZWCE24N1bH/NZ5M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FIdAWCyf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1754028457; c=relaxed/simple;
+	bh=uyw1CugfhawkAkgYLc59ndnr8SziKHAORYD16ejuUb0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aPZ2CKCcZSm4LVoyt9+PHW5/Iw2e/OOpiKunWo+KYceDkKBb83ZdXqtWD1YiyInSXu0ooVGyL3YB8eQUxBpc9qBsg3G9hDsBLsebsT8y347qMRX7AjcMTo50iZKY87yp7Clasa9ji/fYnN4PnrKGo06vT8Y37VYLDvCLGHgnRIU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VRRwokk5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FIdAWCyf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 704A6C4CEEF;
-	Fri,  1 Aug 2025 03:01:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VRRwokk5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3233C4CEE7;
+	Fri,  1 Aug 2025 06:07:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754017298;
-	bh=4AJKkBqzWe6JllOs4Webj7ZpOoT8Mdc4syvqYhPC7Cs=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=FIdAWCyfMYf97SDuU0Gm4kwaoMmnADN4Kf8YBi4uV+drhZh3bX2F7/WWB4v4Dwp+Q
-	 rGRs1GqyHdeTdwpjQPrj0WCvCshHr7hkps9LoxoNCEUnrH/EKjSQG4bKkyocFWtZIi
-	 oY12xVaiHpTCeyquDROU6mNRERwZ2EBqxUHW44NzbSMjIGkSHQNjBHsj9X9Ovrto7P
-	 tAiL7Zax65JGcO6Xx1JF6k/DNv2Hfqou/0ld/US1Z7sC1TkIBw4iiGGGLMuKKIN1i/
-	 +C67WjbbLeElfIOiGQHu1FeCW7/kFHV1ugGuRV5s4IlRSRNnlczwDc0mjo/mc426vO
-	 KnpUYYYNZGMjw==
-Message-ID: <bcf2fe86d9fd4a8c4300db90ec4a8af32b074bdd.camel@kernel.org>
-Subject: Re: [PATCH mptcp-next v2 2/2] mptcp: setsockopt support for
- TCP_MD5SIG
+	s=k20201202; t=1754028456;
+	bh=uyw1CugfhawkAkgYLc59ndnr8SziKHAORYD16ejuUb0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=VRRwokk5/GQ6k5Wb/DmzHnOaqRGbjpXcJNliYTyfnspbRTYaej+hqmbTUzut2Jvct
+	 cRIYcm1XxxDghp9ZHK721d2g9BTr2z3jPAtvHssSTt6kiZszYGitTiyw702X8it2TA
+	 wMNlZ6pUgsP0ssyoBIOmSGXGQasj8TJjphIY7KxtajUs7CpqfNjAnBc6qV527c1K/P
+	 KTZ2UO7FkpOihoOE+d3KUEdXDLukAe2qpmUGqCxHTbgIcUMtdgnUs22PW+W6agF5mk
+	 O8VG9/r1EUUxpIIvuGnpYP1FB/bWAWZwlphxifH85oQ1D85K7+ZEKScPpnLrap/Pjz
+	 IJb6wsCtrwsEA==
 From: Geliang Tang <geliang@kernel.org>
-To: Christoph Paasch <cpaasch@openai.com>
-Cc: mptcp@lists.linux.dev, Geliang Tang <tanggeliang@kylinos.cn>
-Date: Fri, 01 Aug 2025 11:01:35 +0800
-In-Reply-To: <CADg4-L8S1bqK6f6YUWuoEJOziYL-Q0DZY5p2DFStKA4mFi02mg@mail.gmail.com>
-References: <cover.1753946671.git.tanggeliang@kylinos.cn>
-	 <291bace9364966f432580ba13121bd59677f5d3e.1753946671.git.tanggeliang@kylinos.cn>
-	 <CADg4-L8S1bqK6f6YUWuoEJOziYL-Q0DZY5p2DFStKA4mFi02mg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.56.0-1 
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v2] mptcp: adapt ADD_ADDR timeout to maximum subflow RTO
+Date: Fri,  1 Aug 2025 14:07:32 +0800
+Message-ID: <40706ad511220729207ccd7cf48e320e4d0d7dea.1754028199.git.tanggeliang@kylinos.cn>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -47,97 +40,100 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi Christoph,
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
-On Thu, 2025-07-31 at 12:18 -0700, Christoph Paasch wrote:
-> On Thu, Jul 31, 2025 at 12:28 AM Geliang Tang <geliang@kernel.org>
-> wrote:
-> > 
-> > From: Geliang Tang <tanggeliang@kylinos.cn>
-> > 
-> > This adds setsockopt support for TCP_MD5SIG and TCP_MD5SIG_EXT
-> > options.
-> > The implementation:
-> > - Allows setting these options (getsockopt remains unsupported)
-> > - Applies them only to the first subflow
-> > - Forces fallback to TCP (since MD5 isn't compatible with MPTCP)
-> > 
-> > Setting these options triggers fallback to TCP to maintain MD5
-> > compatibility.
-> > 
-> > Note that TCP_MD5SIG and TCP_MD5SIG_EXT are unsupported for TCP
-> > too.
-> 
-> Just wondering : What does the above line mean ? "unsupported for TCP
-> too" ?
+Currently the ADD_ADDR option is retransmitted with a fixed timeout. This
+patch makes the retransmission timeout adaptive by using the maximum RTO
+among all the subflows, while still capping it at the configured maximum
+value (add_addr_timeout_max). This improves responsiveness when
+establishing new subflows.
 
-It should be:
+Specifically:
+1. Adds mptcp_adjust_add_addr_timeout() helper to compute the adaptive
+timeout.
+2. Uses maximum subflow RTO (icsk_rto) when available.
+3. Applies exponential backoff based on retransmission count.
+4. Maintains fallback to configured max timeout when no RTO data exists.
 
-TCP_MD5SIG and TCP_MD5SIG_EXT getsockopts are unsupported for TCP too.
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/576
+Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+---
+v2:
+ - do not rename add_addr_timeout
+ - use icsk->icsk_rto instead of tp->srtt_us
+ - increase the time after each retransmission
+v1:
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1753777199.git.tanggeliang@kylinos.cn/
+---
+ net/mptcp/pm.c | 34 +++++++++++++++++++++++++++++++---
+ 1 file changed, 31 insertions(+), 3 deletions(-)
 
-Thanks,
--Geliang
+diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+index 687dbb59d084..22198609be2f 100644
+--- a/net/mptcp/pm.c
++++ b/net/mptcp/pm.c
+@@ -268,6 +268,28 @@ int mptcp_pm_mp_prio_send_ack(struct mptcp_sock *msk,
+ 	return -EINVAL;
+ }
+ 
++static unsigned int mptcp_adjust_add_addr_timeout(struct mptcp_sock *msk,
++						  const struct net *net,
++						  u8 retrans_times)
++{
++	unsigned int timeout = mptcp_get_add_addr_timeout(net);
++	struct mptcp_subflow_context *subflow;
++	unsigned int icsk_rto = 0;
++
++	mptcp_for_each_subflow(msk, subflow) {
++		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
++		struct inet_connection_sock *icsk = inet_csk(ssk);
++
++		if (icsk->icsk_rto > icsk_rto)
++			icsk_rto = icsk->icsk_rto;
++	}
++
++	if (icsk_rto && icsk_rto < timeout)
++		timeout = icsk_rto;
++
++	return timeout << retrans_times;
++}
++
+ static void mptcp_pm_add_timer(struct timer_list *timer)
+ {
+ 	struct mptcp_pm_add_entry *entry = timer_container_of(entry, timer,
+@@ -302,7 +324,9 @@ static void mptcp_pm_add_timer(struct timer_list *timer)
+ 
+ 	if (entry->retrans_times < ADD_ADDR_RETRANS_MAX)
+ 		sk_reset_timer(sk, timer,
+-			       jiffies + mptcp_get_add_addr_timeout(sock_net(sk)));
++			       jiffies + mptcp_adjust_add_addr_timeout(msk,
++								       sock_net(sk),
++								       entry->retrans_times));
+ 
+ 	spin_unlock_bh(&msk->pm.lock);
+ 
+@@ -354,7 +378,9 @@ bool mptcp_pm_alloc_anno_list(struct mptcp_sock *msk,
+ 			return false;
+ 
+ 		sk_reset_timer(sk, &add_entry->add_timer,
+-			       jiffies + mptcp_get_add_addr_timeout(net));
++			       jiffies + mptcp_adjust_add_addr_timeout(msk,
++								       net,
++								       add_entry->retrans_times));
+ 		return true;
+ 	}
+ 
+@@ -370,7 +396,9 @@ bool mptcp_pm_alloc_anno_list(struct mptcp_sock *msk,
+ 
+ 	timer_setup(&add_entry->add_timer, mptcp_pm_add_timer, 0);
+ 	sk_reset_timer(sk, &add_entry->add_timer,
+-		       jiffies + mptcp_get_add_addr_timeout(net));
++		       jiffies + mptcp_adjust_add_addr_timeout(msk,
++							       net,
++							       add_entry->retrans_times));
+ 
+ 	return true;
+ }
+-- 
+2.48.1
 
-> 
-> 
-> Christoph
-> 
-> > 
-> > Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/575
-> > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-> > ---
-> >  net/mptcp/sockopt.c | 12 ++++++++++--
-> >  1 file changed, 10 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-> > index b264185b810d..3ffdeca694be 100644
-> > --- a/net/mptcp/sockopt.c
-> > +++ b/net/mptcp/sockopt.c
-> > @@ -13,6 +13,7 @@
-> >  #include <net/tcp.h>
-> >  #include <net/mptcp.h>
-> >  #include "protocol.h"
-> > +#include "mib.h"
-> > 
-> >  #define MIN_INFO_OPTLEN_SIZE           16
-> >  #define MIN_FULL_INFO_OPTLEN_SIZE      40
-> > @@ -567,11 +568,12 @@ static bool mptcp_supported_sockopt(int
-> > level, int optname)
-> >                 case TCP_FASTOPEN_CONNECT:
-> >                 case TCP_FASTOPEN_KEY:
-> >                 case TCP_FASTOPEN_NO_COOKIE:
-> > +               /* MD5 will force a fallback to TCP: OK to set
-> > while not connected */
-> > +               case TCP_MD5SIG:
-> > +               case TCP_MD5SIG_EXT:
-> >                         return true;
-> >                 }
-> > 
-> > -               /* TCP_MD5SIG, TCP_MD5SIG_EXT are not supported,
-> > MD5 is not compatible with MPTCP */
-> > -
-> >                 /* TCP_REPAIR, TCP_REPAIR_QUEUE, TCP_QUEUE_SEQ,
-> > TCP_REPAIR_OPTIONS,
-> >                  * TCP_REPAIR_WINDOW are not supported, better
-> > avoid this mess
-> >                  */
-> > @@ -830,6 +832,12 @@ static int mptcp_setsockopt_sol_tcp(struct
-> > mptcp_sock *msk, int optname,
-> >                 /* See tcp.c: TCP_DEFER_ACCEPT does not fail */
-> >                 mptcp_setsockopt_first_sf_only(msk, SOL_TCP,
-> > optname, optval, optlen);
-> >                 return 0;
-> > +#ifdef CONFIG_TCP_MD5SIG
-> > +       case TCP_MD5SIG:
-> > +       case TCP_MD5SIG_EXT:
-> > +               __mptcp_try_fallback(msk,
-> > MPTCP_MIB_MD5SIGFALLBACK);
-> > +               fallthrough;
-> > +#endif
-> >         case TCP_FASTOPEN:
-> >         case TCP_FASTOPEN_CONNECT:
-> >         case TCP_FASTOPEN_KEY:
-> > --
-> > 2.48.1
-> > 
-> > 
