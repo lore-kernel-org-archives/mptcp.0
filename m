@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CD01149C7B
-	for <mptcp@lists.linux.dev>; Fri,  1 Aug 2025 15:09:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 754A126FA54;
+	Fri,  1 Aug 2025 15:18:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754060974; cv=none; b=ZhHVs56GIbzlfyR5iJmpBLrpoVYTFRoCFPBPuQeqJUMKGT0GKeLvuJevBGR9PXr1Lrf53vHVIaZup9QzuN9EnAXcYLFyy9N5zMsD+HTv/Paw2mEeNoJYozvGcvQY4IWj5XdJ5kve++s2zw2DSS1ExZBNcRrw9Njdw7i90iJcn6A=
+	t=1754061481; cv=none; b=mjnLvgY4dng4mkr5o6eHWe32Jn5NmYH/ORgfRQ4YFai++sCCUZoVr9m5+t6OY/6m3+0b4W2K+Q9/Ha9GJs0k3186w5ZNuGZlVfVSz7gj5e0mxX9cFqvbyxZIH7T3sKfTirix/S6PNr8gbyNhsfn4VkoKlh1qJI+W+PTzixdmVqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754060974; c=relaxed/simple;
-	bh=ZLNF8f/Grtk1YXub9diUO19DCW+j8DQyPw/33G8rfM4=;
+	s=arc-20240116; t=1754061481; c=relaxed/simple;
+	bh=foIr1t1FXk+cD/2GYbCBY/2aovvYRyH8Hi4VffLVJy0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Aix465bOtCpMCdoF1Lm8lfufCUfFM63pcNP3CN3sI/u44nJjbku1xRbVmiNYxd8yRUZUYD0j+Gz9IrrspLe8x/azjdkMjw7x4l3AWuZfPbUtPIFmKRdsZ7wD6wi9iwvy+FfFUk4hCxK+eMxeFFGsg8EwoM28PBy4L6Kkp+TwYi8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=osReMqSw; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=VzC60TCoyBXYuFFUAiA3WIFM/Qr+99SPU1Y96ejpfREv4titQMSFGqIM1Vv6/tDGNZINrVckM5W3CQerd3fklCswXQemC592y0PgFrOtmXbGQvN/9DljNpn8dXF9iiYonvCCgzvcgO4oJlMZDAQNuEw3+IClX+4xzckvRzBOeUI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZGbooI8Y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="osReMqSw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE8E6C4CEE7;
-	Fri,  1 Aug 2025 15:09:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZGbooI8Y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62BF4C4CEE7;
+	Fri,  1 Aug 2025 15:17:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754060974;
-	bh=ZLNF8f/Grtk1YXub9diUO19DCW+j8DQyPw/33G8rfM4=;
+	s=k20201202; t=1754061480;
+	bh=foIr1t1FXk+cD/2GYbCBY/2aovvYRyH8Hi4VffLVJy0=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=osReMqSwOKD1rxuOhtZTaHe/DhS0O/KfsE6GmGGAW09FBk9z2h0lfAfL9abPqkqZs
-	 z1JFjFwhFE2qEDY9RgenKm2QM45NomXm/hXg8jXO7N3MaeiV2roMgvGQMUUcE3tEj8
-	 41qOM+iVSt8dJCbZVJ8FFt/8QPTIb6wgasNYwznfYlSzdhR7tfZoiF+ZEJf/i6l66t
-	 ojGV/oWDz3IyMCMYXiZeHtudPoXFF7EyDGD9wSmond4dQVbB6D7rfrlkuPAVUcp9OH
-	 BMgsFPWR5QgQ7o1A19Ika/2ixQY+Z59JSUNS5t56EBKo3WgePFplvpn1NWmXld7PDe
-	 jdsFuz9KDQu8w==
-Message-ID: <90483931-6902-495a-9ea2-51d0a72ac004@kernel.org>
-Date: Fri, 1 Aug 2025 17:09:30 +0200
+	b=ZGbooI8YQVwPLc060y++wBkGU1MgDxOMaZA1jurjIozfZscChLCuSSo7Exq6cJnDD
+	 xa1EepAgTdE6YkUJXBeo2KKGkeYUnea6VmE7kZND9zj0YqQVDtrIztlBalQxHtXsDX
+	 dcTSCJJLCOCXHk2aQ3O15q4VI9bukXXFCq5ackkMYU+ekjhW7+UJJyxVRb1LHGnunl
+	 hlw5KpP/+GyIZa7fTKqhIn1kQ9q48jNk9hHusGKD+YZmONpSxPfbz1Q+xKM5Tc2xxz
+	 xLdBb9nJuAUO3wHVpVnQa00p1lT9dD+sBHzxf9Oz/oXu4vrQ7vPhNIgoHWKZGHaWa4
+	 Ccs0SmimRR8oA==
+Message-ID: <59a973c8-4cf1-46b4-960e-a54c64ffdaed@kernel.org>
+Date: Fri, 1 Aug 2025 17:17:56 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,17 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next] Squash-to "mptcp: setsockopt support for
- TCP_MD5SIG"
+Subject: Re: [PATCH net] mptcp: use HMAC-SHA256 library instead of open-coded
+ HMAC
 Content-Language: en-GB, fr-BE
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <684f802c11ee237dd54b4922edeb5d31a2d364b8.1754028954.git.tanggeliang@kylinos.cn>
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Paolo Abeni <pabeni@redhat.com>, Mat Martineau <martineau@kernel.org>,
+ Geliang Tang <geliang@kernel.org>, netdev@vger.kernel.org,
+ mptcp@lists.linux.dev
+References: <20250731195054.84119-1-ebiggers@kernel.org>
+ <245ef75d-44d5-4b66-9f28-68182f177fad@kernel.org>
+ <20250731214156.GB1312@quark>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,63 +91,52 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <684f802c11ee237dd54b4922edeb5d31a2d364b8.1754028954.git.tanggeliang@kylinos.cn>
+In-Reply-To: <20250731214156.GB1312@quark>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+Hi Eric,
 
-On 01/08/2025 08:16, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
+On 31/07/2025 23:41, Eric Biggers wrote:
+> On Thu, Jul 31, 2025 at 11:27:50PM +0200, Matthieu Baerts wrote:
+>> Hi Eric,
+>>
+>> On 31/07/2025 21:50, Eric Biggers wrote:
+>>> Now that there are easy-to-use HMAC-SHA256 library functions, use these
+>>> in net/mptcp/crypto.c instead of open-coding the HMAC algorithm.
+>>>
+>>> Remove the WARN_ON_ONCE() for messages longer than SHA256_DIGEST_SIZE.
+>>> The new implementation handles all message lengths correctly.
+>>>
+>>> The mptcp-crypto KUnit test still passes after this change.
+>>
+>> Thank you for this patch! It is a good idea, and it looks good to me!
+>>
+>> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+>>
+>> One small detail: net-next is currently closed [1], and I don't think
+>> this patch can be applied in -net. So except if you plan to take it in
+>> the libcrypto tree for 6.17 -- but that's probably strange -- what I can
+>> do is to apply it in the MPTCP tree, and send it to net-next later on.
+>> Is this OK for you?
+>>
+>> [1] https://patchwork.hopto.org/net-next.html
+>>
+>> Cheers,
+>> Matt
+>> --
 > 
-> Based-on: <cover.1753946671.git.tanggeliang@kylinos.cn>
-> 
-> Please update the commit log:
-> '''
-> Supporting TCP_MD5 socket option is required when MPTCP is used by
-> default when creating a socket, to keep the same behaviour as with
-> TCP. TCP_MD5 is not compatible with MPTCP, and it will cause a
-> fallback to TCP at the connection request, if MPTCP was requested.
-> This then fixes a "regression" compared to TCP.
-> 
-> This adds setsockopt support for TCP_MD5SIG and TCP_MD5SIG_EXT options.
-> The implementation:
-> - Allows setting these options (getsockopt remains unsupported)
-> - Applies them only to the first subflow
-> - Forces fallback to TCP (since MD5 isn't compatible with MPTCP)
-> 
-> Setting these options triggers fallback to TCP to maintain MD5
-> compatibility.
-> 
-> Note that TCP_MD5SIG and TCP_MD5SIG_EXT getsockopts are unsupported for
-> TCP too.
-> 
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/575
-> Fixes: d9e4c1291810 ("mptcp: only admit explicitly supported sockopt")
-> '''
-> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-> ---
->  net/mptcp/sockopt.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-> index 3ffdeca694be..55925ffc9051 100644
-> --- a/net/mptcp/sockopt.c
-> +++ b/net/mptcp/sockopt.c
-> @@ -835,7 +835,9 @@ static int mptcp_setsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
->  #ifdef CONFIG_TCP_MD5SIG
->  	case TCP_MD5SIG:
->  	case TCP_MD5SIG_EXT:
-> -		__mptcp_try_fallback(msk, MPTCP_MIB_MD5SIGFALLBACK);
-> +		if (!((1 << sk->sk_state) & (TCPF_CLOSE | TCPF_LISTEN)) ||
-> +		    !__mptcp_try_fallback(msk, MPTCP_MIB_MD5SIGFALLBACK))
-> +			return 0;
+> The MPTCP tree (and then net-next) for 6.18 is fine.  I know this isn't
+> a great time to send patches, but I just happened to have some time now.
 
-Should we not call __mptcp_try_fallback() only if
-mptcp_setsockopt_first_sf_only() was successful?
+No problem, having this patch now is fine for MPTCP. I just queued it
+for 6.18.
 
-Do not forget the Packetdrill test. Probably better to have this test
-before applying these patches.
+Applied in our tree (feat. for net-next):
+
+New patches for t/upstream:
+- 1eadc6f75c43: mptcp: use HMAC-SHA256 library instead of open-coded HMAC
+- Results: 94c274f914c9..5c7ec796258e (export)
 
 Cheers,
 Matt
