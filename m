@@ -1,136 +1,185 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C336627E1C8
-	for <mptcp@lists.linux.dev>; Thu, 31 Jul 2025 23:51:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0344C2E3705
+	for <mptcp@lists.linux.dev>; Fri,  1 Aug 2025 03:00:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754005917; cv=none; b=a5nAb4qYPK7ohqrzbrMfwIR1hxrvgkn21W6ONuOOayavfi8CfFdawUaifw603MZ6T7Or/AdRgJUM7eeIrly5DxkLcN/9ovBPSEIH2BOdmyFnrZp/BJgqZ3urXqNV1FtLFwSxaPwuyc0Q3voDzNz1ybk6ULFHIbA8ln3IoMR2VUs=
+	t=1754017221; cv=none; b=GZ+4pFcsM8RbQLJLRcIsH5wp4GfeC2sGcK//sf5a4zptW3VorYZhK4TLczs4MobnbLHT+W5T+Bodpq8GsuDuH7f47E0YmW23U42Hfe2kbnKJ1IPxT0wkkqwLH9i/QR+szNdev6gfudCpNl7ShLMANuVzFok7Qx8s0PpyFrniEtQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754005917; c=relaxed/simple;
-	bh=TsBYoTolo2tufsEqEbhWRrPEmFDJFyPBTlMs+f63jG4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PmIryd0xbOOPcx301ie32q7OJQAH0Q4KlV1mbgT86XV251fVFoHe+JvOJSn38+BNMUm2R3/2j9zcYN175Esp738vegOOu6x+P83wZ9BKm8nqoe+Tch79skAA6B66frVGG2nmpXXWHkvK5gp9O6DrL2rdFnvUs6pIGj9LwxFF+Gs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Sd2V1WDD; arc=none smtp.client-ip=209.85.216.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1754017221; c=relaxed/simple;
+	bh=PFSbTKaN1kSzsuJOi16NyvnAD3TOdyM3kK2VodoG9bc=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=c2P9ddhDh9GtYq/RKw4RgHJNoasbMEPgTFFQBr/FQJpkNvmb2U3n3IKfA5/r2Mbe2Rw3U3bVqZxnUQinn2giMxupoggDcVi41QrOl2BYT54m8ERFY1L5cRbQDxvp/KrtKaaGI1EpkEcI3cJee72pQW5pl8S0ykGY9BJ5R6QsYLI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P8Gky0qt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Sd2V1WDD"
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-31f28d0495fso1600609a91.1
-        for <mptcp@lists.linux.dev>; Thu, 31 Jul 2025 16:51:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1754005915; x=1754610715; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=x1pY4t9vVS5jlHwuXly55Cv9xSzwUaUm6zW230XbJ2A=;
-        b=Sd2V1WDDHQAhUIPtDwrmlrjzc9+KDIYyJR5wqfQi9dtYnyvB/we/4BdNogDY5Mbi1O
-         5o5h6+Wz1JD9NmzTVxs6zFzlSU2wyudc6DotsPX0V2H/4S0u4eAq8mR+tkkAENwTgKID
-         W9EmfKDOzNiomf8N6I1mO2TbClTM4TNw5Hgl/mUD2I8WnRy4oGd6kwjy+rzVGJgpjTNx
-         XQQRCmo9puI6u7ECyWdw9sKdrYzPVXQOF/5hsKi6V+zLzxCZmc4BXhvq5iQ9N1VJaw8c
-         l9oyYu6Ize9rEB2rsgHvM1xsjl7dbWaKgcKjs6DL68ncS4Vpopr5DJtxdOHr/hAzcP/6
-         X01A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754005915; x=1754610715;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=x1pY4t9vVS5jlHwuXly55Cv9xSzwUaUm6zW230XbJ2A=;
-        b=XGWgvNxQ6XNWqNneFYeNYyLTk33UmLv1dmIAdy3IiKQ6yqSPXiYuD25zHbBt7Hm5ie
-         5vHPm2bQQLpkK990l4UjzfHL2MTWvPDA5OKsIzFJttAyiGf0lqrV0DZGAd0velNGGrJq
-         LdKCJaQCuUahzsjYmlDKMNr5hPAEyrcXwoktkDRIr2okkx4Ult/vw87JEP/RzlnaR7wY
-         81sbX5uCF0FD7CDrx20RuiOKRumy+IRGSRIo4UcT0nT9YopK9lV+5VG+ZpAZHk1zrlQ1
-         v3qzpkQEcvRUnutqWKG1yT3RXaXERMHkUcY+gVzJacfxK8J0sBX+dLlzxYaOjVti+ebf
-         7qog==
-X-Forwarded-Encrypted: i=1; AJvYcCXUmO/ub79tX2rjkc7yFVbi+gxoV5qK9IqS3yR1nWE9Ys6DEIvP/utRqZRppmndEAYMfcPBDg==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yzuw+plwnjCxQ4BQRkL7L7oy7gXB9CHNSWI97xzS46b7Nq79d24
-	Fg7/MQW5izm0OfO2RFHNU8xj9Ttz9VYna7QirzCqBRbD23lWl1x2kr3VIUe88A61be2Zt0dU26d
-	WqWXD6M9VeNX7KLhdMw+hsZi8YoXMElU0dqU9Vo7Q
-X-Gm-Gg: ASbGncvQZzUaXg81+U1zEIgLuMO+etMkKwxg0/u060xqVv+IMV+khOv9j4AkCzJDDT3
-	tf/onhfQVM5IJLtdvz0u6SS/oKe4stYBQag1x4Rl+maHBmKzdjoHl3YIAvEI9zg6RI9B4wEds+e
-	l/jmrmR6AG+xtibj6M75dNqUNkq6axx+EhoAco9b6e9cxdgYAB38rReR0/sh3hs252M2ffs/ukg
-	c7UWZsqyAaeTS0IdoYl2fb7Z1z4BMN3H7BcZ7a+N00UDOQg
-X-Google-Smtp-Source: AGHT+IGMdr5+ZltYc/B0msRqSn8S05vopIUSrPrZpbCyE1ibrXKKkFxzUCv9+aOryf0B15tqU6r7DGOpYwl+1TOpJ8U=
-X-Received: by 2002:a17:90b:3952:b0:31e:ec58:62e2 with SMTP id
- 98e67ed59e1d1-31f5de4197dmr12628654a91.19.1754005914820; Thu, 31 Jul 2025
- 16:51:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P8Gky0qt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 492A6C4CEEF;
+	Fri,  1 Aug 2025 03:00:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1754017220;
+	bh=PFSbTKaN1kSzsuJOi16NyvnAD3TOdyM3kK2VodoG9bc=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=P8Gky0qt+ULi6IsoK8SLgUWQG2o09k31hWdTV8gIS1QNCJ/B74LlWV0MDgdlYf4+y
+	 j5MeuqZbhEEBmcfTkOtUZJgydxZZX2S5tUU/g1UexMArxLV+enO+++s6tUnpLm2djE
+	 WYyWXvtAjiPAsd4vUMHo7UociSkAyAZS9YaV3c8Zg96G0fUim6WQHs7fbbXNIwf0mg
+	 HRUWHYZWKQRN1NI5NfG1VtADx8EiZ8RlD1qogwV/CsoSxTtO2hQyaA5Z2m64qlcyaQ
+	 wglAFpWgg56SiQAz05z3anUZ5KmHRLwU476NGe6qT1ZR9k1IIbBIkooqmkbqYmeK2T
+	 hewZa/8SmFOjw==
+Message-ID: <34edc365d26db1b51671f34d85e9ca2d7bd72dde.camel@kernel.org>
+Subject: Re: [PATCH mptcp-next v2 2/2] mptcp: setsockopt support for
+ TCP_MD5SIG
+From: Geliang Tang <geliang@kernel.org>
+To: Matthieu Baerts <matttbe@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Date: Fri, 01 Aug 2025 11:00:14 +0800
+In-Reply-To: <9f6237d3-a8eb-4dce-bea1-baefbd6ef59c@kernel.org>
+References: <cover.1753946671.git.tanggeliang@kylinos.cn>
+	 <291bace9364966f432580ba13121bd59677f5d3e.1753946671.git.tanggeliang@kylinos.cn>
+	 <9f6237d3-a8eb-4dce-bea1-baefbd6ef59c@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.56.0-1 
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250721203624.3807041-1-kuniyu@google.com> <20250721203624.3807041-14-kuniyu@google.com>
- <fq3wlkkedbv6ijj7pgc7haopgafoovd7qem7myccqg2ot43kzk@dui4war55ufk>
-In-Reply-To: <fq3wlkkedbv6ijj7pgc7haopgafoovd7qem7myccqg2ot43kzk@dui4war55ufk>
-From: Kuniyuki Iwashima <kuniyu@google.com>
-Date: Thu, 31 Jul 2025 16:51:43 -0700
-X-Gm-Features: Ac12FXyRo64aj2tAOXgVRHN2Olp9-pPfFQKxGBKy5bgLlQjCQOCZQOdKisc5o28
-Message-ID: <CAAVpQUAFAsmPPF0gRMqDNWJmktegk6w=s1TPS9hGJpHQzXT-sg@mail.gmail.com>
-Subject: Re: [PATCH v1 net-next 13/13] net-memcg: Allow decoupling memcg from
- global protocol memory accounting.
-To: =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>
-Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Neal Cardwell <ncardwell@google.com>, Paolo Abeni <pabeni@redhat.com>, 
-	Willem de Bruijn <willemb@google.com>, Matthieu Baerts <matttbe@kernel.org>, 
-	Mat Martineau <martineau@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Michal Hocko <mhocko@kernel.org>, Roman Gushchin <roman.gushchin@linux.dev>, 
-	Shakeel Butt <shakeel.butt@linux.dev>, Andrew Morton <akpm@linux-foundation.org>, 
-	Simon Horman <horms@kernel.org>, Geliang Tang <geliang@kernel.org>, 
-	Muchun Song <muchun.song@linux.dev>, Kuniyuki Iwashima <kuni1840@gmail.com>, netdev@vger.kernel.org, 
-	mptcp@lists.linux.dev, cgroups@vger.kernel.org, linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jul 31, 2025 at 6:39=E2=80=AFAM Michal Koutn=C3=BD <mkoutny@suse.co=
-m> wrote:
->
-> On Mon, Jul 21, 2025 at 08:35:32PM +0000, Kuniyuki Iwashima <kuniyu@googl=
-e.com> wrote:
-> > Some protocols (e.g., TCP, UDP) implement memory accounting for socket
-> > buffers and charge memory to per-protocol global counters pointed to by
-> > sk->sk_proto->memory_allocated.
-> >
-> > When running under a non-root cgroup, this memory is also charged to th=
-e
-> > memcg as sock in memory.stat.
-> >
-> > Even when memory usage is controlled by memcg, sockets using such proto=
-cols
-> > are still subject to global limits (e.g., /proc/sys/net/ipv4/tcp_mem).
->
-> IIUC the envisioned use case is that some cgroups feed from global
-> resource and some from their own limit.
-> It means the admin knows both:
->   a) how to configure individual cgroup,
->   b) how to configure global limit (for the rest).
-> So why cannot they stick to a single model only?
->
-> > This makes it difficult to accurately estimate and configure appropriat=
-e
-> > global limits, especially in multi-tenant environments.
-> >
-> > If all workloads were guaranteed to be controlled under memcg, the issu=
-e
-> > could be worked around by setting tcp_mem[0~2] to UINT_MAX.
-> >
-> > In reality, this assumption does not always hold, and a single workload
-> > that opts out of memcg can consume memory up to the global limit,
-> > becoming a noisy neighbour.
->
-> That doesn't like a good idea to remove limits from possibly noisy
-> units.
->
-> > Let's decouple memcg from the global per-protocol memory accounting.
-> >
-> > This simplifies memcg configuration while keeping the global limits
-> > within a reasonable range.
->
-> I think this is a configuration issue only, i.e. instead of preserving
-> the global limit because of _some_ memcgs, the configuration management
-> could have a default memcg limit that is substituted to those memcgs so
-> that there's no risk of runaways even in absence of global limit.
+Hi Matt,
 
-Doesn't that end up implementing another tcp_mem[] which now
-enforce limits on uncontrolled cgroups (memory.max =3D=3D max) ?
-Or it will simply end up with the system-wide OOM killer ?
+On Thu, 2025-07-31 at 11:59 +0200, Matthieu Baerts wrote:
+> Hi Geliang,
+> 
+> Thank you for the new version.
+> 
+> On 31/07/2025 09:27, Geliang Tang wrote:
+> > From: Geliang Tang <tanggeliang@kylinos.cn>
+> > 
+> > This adds setsockopt support for TCP_MD5SIG and TCP_MD5SIG_EXT
+> > options.
+> > The implementation:
+> > - Allows setting these options (getsockopt remains unsupported)
+> > - Applies them only to the first subflow
+> > - Forces fallback to TCP (since MD5 isn't compatible with MPTCP)
+> > 
+> > Setting these options triggers fallback to TCP to maintain MD5
+> > compatibility.
+> > 
+> > Note that TCP_MD5SIG and TCP_MD5SIG_EXT are unsupported for TCP
+> > too.
+> > 
+> > Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/575
+> > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> > ---
+> >  net/mptcp/sockopt.c | 12 ++++++++++--
+> >  1 file changed, 10 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+> > index b264185b810d..3ffdeca694be 100644
+> > --- a/net/mptcp/sockopt.c
+> > +++ b/net/mptcp/sockopt.c
+> > @@ -13,6 +13,7 @@
+> >  #include <net/tcp.h>
+> >  #include <net/mptcp.h>
+> >  #include "protocol.h"
+> > +#include "mib.h"
+> >  
+> >  #define MIN_INFO_OPTLEN_SIZE		16
+> >  #define MIN_FULL_INFO_OPTLEN_SIZE	40
+> > @@ -567,11 +568,12 @@ static bool mptcp_supported_sockopt(int
+> > level, int optname)
+> >  		case TCP_FASTOPEN_CONNECT:
+> >  		case TCP_FASTOPEN_KEY:
+> >  		case TCP_FASTOPEN_NO_COOKIE:
+> > +		/* MD5 will force a fallback to TCP: OK to set
+> > while not connected */
+> > +		case TCP_MD5SIG:
+> > +		case TCP_MD5SIG_EXT:
+> >  			return true;
+> >  		}
+> >  
+> > -		/* TCP_MD5SIG, TCP_MD5SIG_EXT are not supported,
+> > MD5 is not compatible with MPTCP */
+> > -
+> >  		/* TCP_REPAIR, TCP_REPAIR_QUEUE, TCP_QUEUE_SEQ,
+> > TCP_REPAIR_OPTIONS,
+> >  		 * TCP_REPAIR_WINDOW are not supported, better
+> > avoid this mess
+> >  		 */
+> > @@ -830,6 +832,12 @@ static int mptcp_setsockopt_sol_tcp(struct
+> > mptcp_sock *msk, int optname,
+> >  		/* See tcp.c: TCP_DEFER_ACCEPT does not fail */
+> >  		mptcp_setsockopt_first_sf_only(msk, SOL_TCP,
+> > optname, optval, optlen);
+> >  		return 0;
+> > +#ifdef CONFIG_TCP_MD5SIG
+> > +	case TCP_MD5SIG:
+> > +	case TCP_MD5SIG_EXT:
+> > +		__mptcp_try_fallback(msk,
+> > MPTCP_MIB_MD5SIGFALLBACK);
+> 
+> I don't think that's a good idea to do just that: here, you will do a
+> fallback even if the options are not correct. Please this helper can
+> return false if a fallback is not possible, and a reset will be
+> needed.
+
+Yes, here the return value of __mptcp_try_fallback() needs to be
+checked:
+
+ if (!__mptcp_try_fallback(msk, MPTCP_MIB_MD5SIGFALLBACK))
+	 return 0;
+
+> 
+> I think it would be easier to simply limit the use of this option for
+> listened and closed state: 
+
+Yes, the state of sk needs to be checked too:
+
+ if (!((1 << sk->sk_state) & (TCPF_CLOSE | TCPF_LISTEN)) ||
+     !__mptcp_try_fallback(msk, MPTCP_MIB_MD5SIGFALLBACK))
+ 	return 0;
+
+Do you think this will work?
+
+> a fallback will be done in mptcp_connect()
+> and subflow_check_req().
+
+When running the selftests of patch 3 in v1, no fallback is done in
+mptcp_connect() and subflow_check_req(). Since both
+rcu_access_pointer(tcp_sk(ssk)->md5sig_info) and
+rcu_access_pointer(tcp_sk(sk_listener)->md5sig_info) are NULL. So we do
+need to fallback in mptcp_setsockopt_sol_tcp().
+
+Thanks,
+-Geliang
+
+> 
+> If I'm not mistaken, mptcp_setsockopt_first_sf_only() will limit to
+> the
+> first subflow, before the establishment of the connection
+> (__mptcp_nmpc_sk() is explicitly checking the state), no?
+> 
+> Then all you require is to add the two 'case', no? If yes, please add
+> a
+> Fixes tag:
+> 
+> Fixes: d9e4c1291810 ("mptcp: only admit explicitly supported
+> sockopt")
+> 
+> And add something like this in the commit message:
+> 
+>   Supporting TCP_MD5 socket option is required when MPTCP is used by
+>   default when creating a socket, to keep the same behaviour as with
+>   TCP. TCP_MD5 is not compatible with MPTCP, and it will cause a
+>   fallback to TCP at the connection request, if MPTCP was requested.
+>   This then fixes a "regression" compared to TCP.
+> 
+> 
+> One last thing, please also send the new packetdrill test on GitHub
+> when
+> sending a next version.
+> 
+> Cheers,
+> Matt
