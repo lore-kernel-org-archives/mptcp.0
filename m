@@ -1,147 +1,192 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E5CCE571
-	for <mptcp@lists.linux.dev>; Sat,  2 Aug 2025 09:20:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D4EE22069A
+	for <mptcp@lists.linux.dev>; Sat,  2 Aug 2025 09:38:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754126408; cv=none; b=NAAWF0nTlUB9ic+qknvvWMb7xVWEPwGkRi5uEI4v3pt7gvo4DhkwTkek3Lv26aeoSYb1oJwyCFPoZlw72pkYuZABoiGjgYbVTYr0jn+sYpmBenO/T4HN8oWiSJPpwfdRnAcCRA2KlPd+4jMBvsc7ccEvn+ooB3ADqS7MPRC7n9w=
+	t=1754127492; cv=none; b=bNzDn4dp97trohIa5fNTnc7Hml3dT5nAAcxjvxc2aN1j/JDj3SRmBtV1wZ1qN+z8XvBDO3KFm1g/bcp5fm+GnnqBuvbo3ok98S+hlbKcNwM7J9TzuBexn9Yt16wCWU/xSmbeN2aSk+KALeCz1h6CUTpIaCpWmLjJpDhM5oYtZzk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754126408; c=relaxed/simple;
-	bh=JEfwSZb9HQjo0OZrUvC5KagnaR1iX5qNLQBUVmOyaY8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HkCN2/ZpyT8C7Dc5RiNoML3QuMjzfZ/n2IOMMnhiOV67xKTDnyNYc9rVlIfjigH7lKB70Y+zVUTr9TRKXMrJpgWCJj6ag4Chlu9Tae+Pci4NV6P8t8q/3z+5q8WyQRq1Lyxi9+6d/nGMj1n4sb0IAi67wDjiKLn2fn0q5i1Nm3Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kNoKYiHa; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1754127492; c=relaxed/simple;
+	bh=sMiFkFoOf2d7QDvVgHKIArOQyy1GWOSYHxoJlFGdf/g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jWbxI4M1IWt4TGxTVpqFVEtnz4AoAokrJ3J5iJh0dIM+8+gFZTgsuTQocH/k8DUDj8M1cfgyyO1UnO79/JHOFnH0fASrkZP+DRKZZ+To3lNr50qCr4tnZ9XCPBV2b71FCHXTKjIviTN7y0mGAMyGMtQ9NW9UfBjGt9zuJeK1Fgo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MbchF8i7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kNoKYiHa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 298C1C4CEFA;
-	Sat,  2 Aug 2025 09:20:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MbchF8i7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA9C7C4CEEF;
+	Sat,  2 Aug 2025 09:38:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754126407;
-	bh=JEfwSZb9HQjo0OZrUvC5KagnaR1iX5qNLQBUVmOyaY8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=kNoKYiHaqlqECzFYS0SDIefioWQs3DEAG27KWxd6GRvuw702fJ2Q477dX7mgmqto+
-	 KG87umYcG6SMssPbfNiEEAUK2tYAAc9HtdyCf6CR2GmG2fmySHQAnzXz42aG6dAgZE
-	 8VmcjV5aa0EG/KzE+wWk/FglpzHJKQDwW20HMnjpGSd9FfsavtRNJ8VPz84iIFm3ZD
-	 BimWIrWvhirIBJ/nWpxerbcSOukMqQi2Z90BOfIJdJ/lIBqm0QdxUUYLLH3TtEOKVR
-	 0ZP6sQLJMJ4NPYJcrzRb+/7S6H3QmzoBALckRR+qcwyhqvq3hgtbWWdI7aaAvsw6cO
-	 lUV/l9tSiIHug==
-From: Geliang Tang <geliang@kernel.org>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next 3/3] mptcp: add IPV6_UNICAST_HOPS sockopt support
-Date: Sat,  2 Aug 2025 17:19:57 +0800
-Message-ID: <0fd13a7bb3ca420a1e68f49fe93e7baada72890b.1754126092.git.tanggeliang@kylinos.cn>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <cover.1754126092.git.tanggeliang@kylinos.cn>
-References: <cover.1754126092.git.tanggeliang@kylinos.cn>
+	s=k20201202; t=1754127491;
+	bh=sMiFkFoOf2d7QDvVgHKIArOQyy1GWOSYHxoJlFGdf/g=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=MbchF8i7LjwMrqqGRv4zBOTjZTHq8Z+jwakZy9eJIDsZied7C7LXEhcxrrrTHbcqX
+	 DLVH8CGZjmV3RAYho7dQR3nysnkvZkSDCWkhLgssq48y2BsIFCNmWbAw0QuJ3suLWM
+	 LcXtdm8E+Rg1s3JhtDVCVHjgN/e/y+K1mD7sPvmW+99sEyknBGAE62jXpHxsNz2V0V
+	 /7+sYmzIwHvB9BhdLRxHQ72rYD18+fuLE7q7hmI4xAqlMBb9jk2T/mTVMSTKghyQZ3
+	 reD2mrTwlPud7CLbOMKpGhEpPt7rNXHP5i6wCtCHEz2RzJjJNHxEX1U3DqtfwxKini
+	 Rz/Is96qx6IaQ==
+Message-ID: <34cc29ec-8e1b-4b82-9b82-1f645d455842@kernel.org>
+Date: Sat, 2 Aug 2025 11:38:08 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-next v3 2/2] mptcp: setsockopt support for
+ TCP_MD5SIG
+Content-Language: en-GB, fr-BE
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <cover.1754091681.git.tanggeliang@kylinos.cn>
+ <8bba29599d026ff96f5b4d5aaf90f087137fc578.1754091681.git.tanggeliang@kylinos.cn>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <8bba29599d026ff96f5b4d5aaf90f087137fc578.1754091681.git.tanggeliang@kylinos.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+Hi Geliang,
 
-Implement setsockopt/getsockopt support for IPV6_UNICAST_HOPS in MPTCP:
-1. Adds mptcp_setsockopt_v6_set_hops() to handle IPV6_UNICAST_HOPS:
-   - Applies hop limit to the MPTCP socket
-   - Propagates hop limit to all IPv6 subflows
-   - Uses conditional compilation for CONFIG_MPTCP_IPV6
-2. Adds getsockopt handler for IPV6_UNICAST_HOPS:
-   - Retrieves hop limit from inet6_sk(sk)->hop_limit
-   - Falls back to net->ipv6.devconf_all->hop_limit when not set
-3. Syncs hop limit to new subflows in sync_socket_options()
-4. Maintains option sequence counter for consistency
+On 02/08/2025 01:42, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
+> 
+> Supporting TCP_MD5 socket option is required when MPTCP is used by
+> default when creating a socket, to keep the same behaviour as with
+> TCP. TCP_MD5 is not compatible with MPTCP, and it will cause a
+> fallback to TCP at the connection request, if MPTCP was requested.
+> This then fixes a "regression" compared to TCP.
+> 
+> This patch adds setsockopt support for TCP_MD5SIG and TCP_MD5SIG_EXT
+> options. The implementation:
+>  - Allow setting these options (getsockopt remains unsupported)
+>  - Apply them only to the first subflow
+>  - Trigger fallback to TCP to maintain MD5 compatibility
+> 
+> Note that getsockopt for these options remains unsupported, consistent
+> with TCP.
+> 
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/575
+> Fixes: d9e4c1291810 ("mptcp: only admit explicitly supported sockopt")
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> ---
+>  net/mptcp/sockopt.c | 19 +++++++++++++++++--
+>  1 file changed, 17 insertions(+), 2 deletions(-)
+> 
+> diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+> index 006849741813..4dec3c372772 100644
+> --- a/net/mptcp/sockopt.c
+> +++ b/net/mptcp/sockopt.c
+> @@ -13,6 +13,7 @@
+>  #include <net/tcp.h>
+>  #include <net/mptcp.h>
+>  #include "protocol.h"
+> +#include "mib.h"
+>  
+>  #define MIN_INFO_OPTLEN_SIZE		16
+>  #define MIN_FULL_INFO_OPTLEN_SIZE	40
+> @@ -596,11 +597,12 @@ static bool mptcp_supported_sockopt(int level, int optname)
+>  		case TCP_FASTOPEN_CONNECT:
+>  		case TCP_FASTOPEN_KEY:
+>  		case TCP_FASTOPEN_NO_COOKIE:
+> +		/* MD5 will force a fallback to TCP: OK to set while not connected */
+> +		case TCP_MD5SIG:
+> +		case TCP_MD5SIG_EXT:
+>  			return true;
+>  		}
+>  
+> -		/* TCP_MD5SIG, TCP_MD5SIG_EXT are not supported, MD5 is not compatible with MPTCP */
+> -
+>  		/* TCP_REPAIR, TCP_REPAIR_QUEUE, TCP_QUEUE_SEQ, TCP_REPAIR_OPTIONS,
+>  		 * TCP_REPAIR_WINDOW are not supported, better avoid this mess
+>  		 */
+> @@ -865,6 +867,19 @@ static int mptcp_setsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
+>  	case TCP_FASTOPEN_NO_COOKIE:
+>  		return mptcp_setsockopt_first_sf_only(msk, SOL_TCP, optname,
+>  						      optval, optlen);
+> +#ifdef CONFIG_TCP_MD5SIG
 
-This enables applications to control IPv6 hop limits in MPTCP connections
-using standard IPv6 socket options, ensuring consistent behavior across
-all subflows.
+Do we need this? mptcp_setsockopt_first_sf_only() should return an error
+coming from tcp_setsockopt() if TCP_MD5SIG(_EXT) is not supported, no?
 
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/296
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
----
- net/mptcp/sockopt.c | 37 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
+> +	case TCP_MD5SIG:
+> +	case TCP_MD5SIG_EXT:
+> +		if (!((1 << sk->sk_state) & (TCPF_CLOSE | TCPF_LISTEN)))
+> +			return -EINVAL;
 
-diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-index cc13006b5dc9..11663250bade 100644
---- a/net/mptcp/sockopt.c
-+++ b/net/mptcp/sockopt.c
-@@ -413,6 +413,34 @@ static int mptcp_setsockopt_v6_set_tclass(struct mptcp_sock *msk, int optname,
- 	return 0;
- }
- 
-+static int mptcp_setsockopt_v6_set_hops(struct mptcp_sock *msk, int optname,
-+					sockptr_t optval, unsigned int optlen)
-+{
-+#if IS_ENABLED(CONFIG_MPTCP_IPV6)
-+	struct mptcp_subflow_context *subflow;
-+	struct sock *sk = (struct sock *)msk;
-+	int err, val;
-+
-+	err = ipv6_setsockopt(sk, SOL_IPV6, optname, optval, optlen);
-+	if (err)
-+		return err;
-+
-+	lock_sock(sk);
-+	sockopt_seq_inc(msk);
-+	val = READ_ONCE(inet6_sk(sk)->hop_limit);
-+	mptcp_for_each_subflow(msk, subflow) {
-+		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
-+		bool slow;
-+
-+		slow = lock_sock_fast(ssk);
-+		WRITE_ONCE(inet6_sk(ssk)->hop_limit, val);
-+		unlock_sock_fast(ssk, slow);
-+	}
-+	release_sock(sk);
-+#endif
-+
-+	return 0;
-+}
- static int mptcp_setsockopt_v6(struct mptcp_sock *msk, int optname,
- 			       sockptr_t optval, unsigned int optlen)
- {
-@@ -457,6 +485,8 @@ static int mptcp_setsockopt_v6(struct mptcp_sock *msk, int optname,
- 		break;
- 	case IPV6_TCLASS:
- 		return mptcp_setsockopt_v6_set_tclass(msk, optname, optval, optlen);
-+	case IPV6_UNICAST_HOPS:
-+		return mptcp_setsockopt_v6_set_hops(msk, optname, optval, optlen);
- 	}
- 
- 	return ret;
-@@ -1530,6 +1560,7 @@ static int mptcp_getsockopt_v6(struct mptcp_sock *msk, int optname,
- 			       char __user *optval, int __user *optlen)
- {
- 	struct sock *sk = (void *)msk;
-+	int val;
- 
- 	switch (optname) {
- 	case IPV6_V6ONLY:
-@@ -1544,6 +1575,11 @@ static int mptcp_getsockopt_v6(struct mptcp_sock *msk, int optname,
- 	case IPV6_TCLASS:
- 		return mptcp_put_int_option(msk, optval, optlen,
- 					    inet6_sk(sk)->tclass);
-+	case IPV6_UNICAST_HOPS:
-+		val = READ_ONCE(inet6_sk(sk)->hop_limit);
-+		if (val < 0)
-+			val = READ_ONCE(sock_net(sk)->ipv6.devconf_all->hop_limit);
-+		return mptcp_put_int_option(msk, optval, optlen, val);
- 	}
- 
- 	return -EOPNOTSUPP;
-@@ -1616,6 +1652,7 @@ static void sync_socket_options(struct mptcp_sock *msk, struct sock *ssk)
- 	__ip_sock_set_tos(ssk, inet_sk(sk)->tos);
- 	WRITE_ONCE(inet6_sk(ssk)->tclass, inet6_sk(sk)->tclass);
- 	WRITE_ONCE(inet_sk(ssk)->uc_ttl, inet_sk(sk)->uc_ttl);
-+	WRITE_ONCE(inet6_sk(ssk)->hop_limit, inet6_sk(sk)->hop_limit);
- 
- 	if (sk->sk_userlocks & tx_rx_locks) {
- 		ssk->sk_userlocks |= sk->sk_userlocks & tx_rx_locks;
+If I'm not mistaken, this check is not needed, because the same check
+will be done in mptcp_setsockopt_first_sf_only(): it should only change
+something on the first sufblow, before the connection, no?
+
+> +		ret = mptcp_setsockopt_first_sf_only(msk, SOL_TCP, optname,
+> +						     optval, optlen);
+> +		if (ret)
+> +			return ret;
+> +		if (!__mptcp_try_fallback(msk, MPTCP_MIB_MD5SIGFALLBACK))
+> +			return -EINVAL;
+
+If the fallback is done before the connection, it should not fail. Maybe
+use WARN_ON_ONCE(!__mptcp_try_fallback(msk, <MIB>)) instead?
+
+  if (ret == 0)
+      WARN_ON_ONCE(!__mptcp_try_fallback(msk, <MIB>))
+
+  return ret;
+
+
+> +		return 0;
+> +#endif
+>  	}
+>  
+>  	ret = mptcp_get_int_option(msk, optval, optlen, &val);
+
+Cheers,
+Matt
 -- 
-2.48.1
+Sponsored by the NGI0 Core fund.
 
