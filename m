@@ -1,130 +1,147 @@
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B61515853B
-	for <mptcp@lists.linux.dev>; Sat,  2 Aug 2025 23:28:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC48D11CBA
+	for <mptcp@lists.linux.dev>; Sat,  2 Aug 2025 23:52:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754177284; cv=none; b=IZLHo5765KDE5yq0iuDStwHdHcfQ2nOt6ixGxMvsaYNU1D0MMQSiAvCUkCl2qMzBh2VnQ9a+f0adnJSbo3dqwvZ5dkS/NIdylHz3OFXsoyCvsuq1B4cZkmK5jHIvM10UkyatX7bX/bRb+D0Sz9Mb3lneVd3CBjyOuh8+iFyfKKg=
+	t=1754178752; cv=none; b=F0myw+WG6LMesPSBw/DOpfSeuIJgC4Zk22cWOsw3Xty7RTHa+/syhkW8YayL/k95mDp4cCHYM71y5xNY69+PH2CCMkrCCqDjsh6VphrMmD7SS9LTR/zba8zTSjSKhXPYa6guxY/B8zwAYmv08yfUy3Li0veHSa217fr8768wCgA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754177284; c=relaxed/simple;
-	bh=KUXfBjjn1jIZ5UVA+yPK8aZJ9rTG+sUqQhSlvUgmpIA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=K7Ofuie5LSQ0jOJQvfP7J4HzFAW5X1EbTSxKYVEHshCMxoSLOi4R3wt3xEA+4bQ11hcvmYD1GQGfDdJVLwlwsh1rbhSJDAKGAsiHh/szi/fa1xT+ajXOcYZKeV3JcYbH9BKOVGX3MbhmmWxh5vjctBwcqaoUmy23IQMOEup7VEw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=openai.com; spf=pass smtp.mailfrom=openai.com; dkim=pass (1024-bit key) header.d=openai.com header.i=@openai.com header.b=Ilkd/hqA; arc=none smtp.client-ip=209.85.208.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=openai.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=openai.com
+	s=arc-20240116; t=1754178752; c=relaxed/simple;
+	bh=Q9QdlX9iRwg5358aQvt7Nk0+FfIalsM7HdXambuk3fA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=j3YBr95A8U+exFXSuvCduWahf0R+70i8GUhYhokRCJefk/azpADhEKfTticNLdM5YJliMx6sVqez9xLx8TAHts6G0LxY9Y4nc8WrF4Q+Wbcormp4YRGMa6LS8Y1m6Mo5xi/SkLcX2VHArNuyzPbAT0riz8zk+eDA3mRJhiOD/C4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qly+Fl2O; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=openai.com header.i=@openai.com header.b="Ilkd/hqA"
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-32cd0dfbdb8so20809541fa.0
-        for <mptcp@lists.linux.dev>; Sat, 02 Aug 2025 16:28:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=openai.com; s=google; t=1754177280; x=1754782080; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=B6olMFL9Ou85FIabjDt4N0E9Yvq2EKBLDWt9dRDCtEI=;
-        b=Ilkd/hqAgCJbaLzjK4O8WBVH6jOBpVN00HWiA5+h/OkBizWKwxcDen+isHXrAlj8R0
-         dziJhFnMAp8EW/gUMENyn9DMNi/DUzKrPUII0ZaX7UBSMI4d7GN+HgKhhAbcZqBJze/G
-         D56hoUz/XUSuCg62zrHuZ49W1PULr6xP3TELw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754177280; x=1754782080;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=B6olMFL9Ou85FIabjDt4N0E9Yvq2EKBLDWt9dRDCtEI=;
-        b=J9ShjswcO6Blx+LrHrINLZxoaOaoUY8shib75rrZHXSRDBz15gwT3h5Mg4u7BKkT3T
-         xupFIj9l90HUQhF+JgYgNFyexEBPtoX+EfSgdRKeN2KEZ7hrGj65oRC365lsjuhxuqI1
-         aZNCtZ5BCPt5Xpu9urWMMKOK7VmLq9xTlEfMi5qrt3czG4UdsPb/anJu2EzyWi3TLQ/r
-         /qoKrMs2POvVx6KDMPHd2Eyojxjz/gYZR+MB1iaE7uNVqhwc2+I0+zTTG04FO5xASv26
-         ii2G2xg6/Q0Xpi86qU/5Ac6lNcI29zR0CuCw3vOiFg5SpiSBcdUAA2e3O0BQZeo4uw58
-         qPhA==
-X-Gm-Message-State: AOJu0YySZiE4ZZxr9v/TV1xumEE8IPIidacEd09P8Ica7L2a7ciYOUl1
-	CEjsi6zcV0GCmFAusqmzas3z3U8IHeLSz/BQxCflqLruKFaaydhooBwPHfU/ttoAvKM2E77i1Zs
-	7IlKMlWo36LxGNOMX98e7/JCy8ZGybYLQpmW1QIc9hw==
-X-Gm-Gg: ASbGncspv7pNoBwrIpEJweHZXBI1hv3zQ2q3EI4FmJTVI6w6MPyFckNjLrCGOFyz1u1
-	qcbzvtH+0lv6eYaJswFws140XfL/ruuBmQJTabi3VIDLgSJ2fprub9DbAb69k5hlwdw8oRz6fQD
-	goqRsxHoe8WN5ulDV+eE9p9Rr9UKXW2y3eqTW08sfTqHGWKRTe5EbAXW7d2MwBA2TE4lYbAzx/c
-	zvYAQ==
-X-Google-Smtp-Source: AGHT+IHt9vawUAV3aexaEygmJFB3JaMnKJZUu4CpXtu6d5HMrWeZ7XMb5Tk+7gStvwBcOnD+yMc5xkoDo9JEXryW+WE=
-X-Received: by 2002:a2e:a58d:0:b0:32b:9c54:4ca1 with SMTP id
- 38308e7fff4ca-3325682a36bmr10361221fa.39.1754177279987; Sat, 02 Aug 2025
- 16:27:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qly+Fl2O"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 77529C4CEF7;
+	Sat,  2 Aug 2025 23:52:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1754178752;
+	bh=Q9QdlX9iRwg5358aQvt7Nk0+FfIalsM7HdXambuk3fA=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=qly+Fl2OQ0ZvkDnK5dbZwu+ohvVkRvuoniODXQr2PX94s7DoPrBVN2K3cOaPrcDIg
+	 J6hYyIUvt6OcflamtjjsX696S5M1mykjFANEVksI+c7Au8k7YRql4C0mKbV/AHKGma
+	 zDtz5iVN5i4NFAmTDaYoaUkYdRvwjK0ogULoFfr4GF1QulX+07o/ywIHb/NTpIO3Jk
+	 SfVV9yJKr71/pDzyeESmHbW/UNvKKW9GNL54Pg2TjzvcXM/8DSS6i6Ajzma7SaJSeb
+	 1BqCEIHFetNXfqRJ+SpLDgmGFX1QTNBeHVbaCb0vStdNjj5CTmXP2tG54rOkv+VnPy
+	 9CQZnOrg7EIHQ==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61176C87FD2;
+	Sat,  2 Aug 2025 23:52:32 +0000 (UTC)
+From: Christoph Paasch via B4 Relay <devnull+cpaasch.openai.com@kernel.org>
+Date: Sat, 02 Aug 2025 16:52:22 -0700
+Subject: [PATCH mptcp-next 1/2] mptcp: Add support for SO_MAX_PACING_RATE
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1754135958.git.tanggeliang@kylinos.cn>
-In-Reply-To: <cover.1754135958.git.tanggeliang@kylinos.cn>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250802-b4-mptcp_setsockopt-v1-1-50d4905a4c2b@openai.com>
+References: <20250802-b4-mptcp_setsockopt-v1-0-50d4905a4c2b@openai.com>
+In-Reply-To: <20250802-b4-mptcp_setsockopt-v1-0-50d4905a4c2b@openai.com>
+To: MPTCP Upstream <mptcp@lists.linux.dev>, 
+ Matthieu Baerts <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>, 
+ Geliang Tang <geliang@kernel.org>
+Cc: Christoph Paasch <cpaasch@openai.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1754178751; l=3129;
+ i=cpaasch@openai.com; s=20250712; h=from:subject:message-id;
+ bh=N2ba+scj44k7tcJAqXwLJ7NphQMBR1SHDfj9Nxl+Mbg=;
+ b=kbvG78jNcooG74sFqFb4/lLzfhnc1f0DfQhpGjPLTwKPcnW4NGFi+6JfSsrQLAsF0YMwfjs1Q
+ 1aE1EogCFfnAj9hOGg02kU6OLt5/Wvh36abwuw6NGOzyt3P+WzGzhEq
+X-Developer-Key: i=cpaasch@openai.com; a=ed25519;
+ pk=1HRHZlVUZPziMZvsAQFvP7n5+uEosTDAjXmNXykdxdg=
+X-Endpoint-Received: by B4 Relay for cpaasch@openai.com/20250712 with
+ auth_id=459
+X-Original-From: Christoph Paasch <cpaasch@openai.com>
+Reply-To: cpaasch@openai.com
+
 From: Christoph Paasch <cpaasch@openai.com>
-Date: Sat, 2 Aug 2025 16:27:48 -0700
-X-Gm-Features: Ac12FXyGAVMJ45_OebPzMvjngYmm4revEdLVx9qY66d7DZtGDAU6j24G2N1HP4s
-Message-ID: <CADg4-L_VUj4xXLWiUAVF0pGvguwTHPbrh4ixFanaqkWJqOfvkg@mail.gmail.com>
-Subject: Re: [PATCH mptcp-next v4 0/2] mptcp: TCP_MD5SIG support
-To: Geliang Tang <geliang@kernel.org>
-Cc: mptcp@lists.linux.dev, Geliang Tang <tanggeliang@kylinos.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Sat, Aug 2, 2025 at 5:01=E2=80=AFAM Geliang Tang <geliang@kernel.org> wr=
-ote:
->
-> From: Geliang Tang <tanggeliang@kylinos.cn>
->
-> v4:
->  - drop CONFIG_TCP_MD5SIG check.
->  - drop sk_state check.
->  - use WARN_ON_ONCE for __mptcp_try_fallback().
->
-> v3:
->  - limit the use of these options for listened and closed state.
->  - check the return value of __mptcp_try_fallback().
->
-> v2:
->  - trigger fallback to TCP.
->  - check CONFIG_TCP_MD5SIG.
->  - update MD5 comment.
->  - drop selftests, packetdrill tests will be added later.
->
-> This series introduces support for TCP_MD5SIG socket options in MPTCP alo=
-ng
-> with code improvements:
->
-> Patch 1: Refactors TCP_MAXSEG getsockopt handling to improve code
-> consistency
-> Patch 2: Adds setsockopt support for TCP_MD5SIG/TCP_MD5SIG_EXT (first
-> subflow only)
->
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/575
->
-> Geliang Tang (2):
->   mptcp: Handle TCP_MAXSEG getsockopt in common case
->   mptcp: setsockopt support for TCP_MD5SIG
->
->  net/mptcp/sockopt.c | 18 +++++++++++++-----
->  1 file changed, 13 insertions(+), 5 deletions(-)
+Add support for SO_MAX_PACING_RATE. It will limit the rate of each
+individual TCP subflow to the specified rate.
 
-When I run these 2 patches, I get a reset from the server :
+Signed-off-by: Christoph Paasch <cpaasch@openai.com>
+---
+ net/mptcp/sockopt.c | 31 ++++++++++++++++++++++++++++++-
+ 1 file changed, 30 insertions(+), 1 deletion(-)
 
-23:24:48.285068 enP22p3s0f0np0 Out IP 10.221.81.117.35206 >
-10.221.81.118.1234: Flags [S], seq 314447609, win 64240, options
-[nop,nop,md5 shared secret not supplied with -M, can't check -
-bab9b1ba60e4d55efb3d475ee4222311,mss 1460,nop,nop,sackOK,nop,wscale
-0], length 0
-23:24:48.285172 enP22p3s0f0np0 In  IP 10.221.81.118.1234 >
-10.221.81.117.35206: Flags [R.], seq 0, ack 314447610, win 0, options
-[nop,nop,md5 shared secret not supplied with -M, can't check -
-c3bb41109aead9863e97f9cc4e12e7d2], length 0
+diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+index 2c267aff95bec90d341de9f9e136b9d2df9b8e13..a79dfeb54a3fe0d8c26a1836ae5dda9fd2fdddea 100644
+--- a/net/mptcp/sockopt.c
++++ b/net/mptcp/sockopt.c
+@@ -308,6 +308,7 @@ static int mptcp_setsockopt_sol_socket(struct mptcp_sock *msk, int optname,
+ 
+ 		ret = sk_setsockopt(ssk, SOL_SOCKET, optname, optval, optlen);
+ 		if (ret == 0) {
++			/* Record the option at the msk for subsequent subflows */
+ 			if (optname == SO_REUSEPORT)
+ 				sk->sk_reuseport = ssk->sk_reuseport;
+ 			else if (optname == SO_REUSEADDR)
+@@ -340,6 +341,25 @@ static int mptcp_setsockopt_sol_socket(struct mptcp_sock *msk, int optname,
+ 								optval, optlen);
+ 	case SO_LINGER:
+ 		return mptcp_setsockopt_sol_socket_linger(msk, optval, optlen);
++	case SO_MAX_PACING_RATE: {
++		struct mptcp_subflow_context *subflow;
++
++		ret = sock_setsockopt(sk->sk_socket, SOL_SOCKET, optname, optval, optlen);
++		if (ret < 0)
++			return ret;
++
++		lock_sock(sk);
++		sockopt_seq_inc(msk);
++
++		mptcp_for_each_subflow(msk, subflow) {
++			struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
++
++			sk_setsockopt(ssk, SOL_SOCKET, optname, optval, optlen);
++		}
++
++		release_sock(sk);
++		break;
++	}
+ 	case SO_RCVLOWAT:
+ 	case SO_RCVTIMEO_OLD:
+ 	case SO_RCVTIMEO_NEW:
+@@ -373,7 +393,6 @@ static int mptcp_setsockopt_sol_socket(struct mptcp_sock *msk, int optname,
+ 	 * explicitly the sk_protocol field
+ 	 *
+ 	 * SO_PEEK_OFF is unsupported, as it is for plain TCP
+-	 * SO_MAX_PACING_RATE is unsupported, we must be careful with subflows
+ 	 * SO_CNX_ADVICE is currently unsupported, could possibly be relevant,
+ 	 * but likely needs careful design
+ 	 *
+@@ -1532,6 +1551,7 @@ static void sync_socket_options(struct mptcp_sock *msk, struct sock *ssk)
+ {
+ 	static const unsigned int tx_rx_locks = SOCK_RCVBUF_LOCK | SOCK_SNDBUF_LOCK;
+ 	struct sock *sk = (struct sock *)msk;
++	unsigned long max_pacing_rate;
+ 
+ 	if (ssk->sk_prot->keepalive) {
+ 		if (sock_flag(sk, SOCK_KEEPOPEN))
+@@ -1579,6 +1599,15 @@ static void sync_socket_options(struct mptcp_sock *msk, struct sock *ssk)
+ 	tcp_sock_set_keepcnt(ssk, msk->keepalive_cnt);
+ 	tcp_sock_set_maxseg(ssk, msk->maxseg);
+ 
++	/* Keep pacing settings in sync as well. */
++	max_pacing_rate = READ_ONCE(sk->sk_max_pacing_rate);
++
++	WRITE_ONCE(ssk->sk_max_pacing_rate, max_pacing_rate);
++	if (max_pacing_rate != ~0UL)
++		cmpxchg(&ssk->sk_pacing_status, SK_PACING_NONE, SK_PACING_NEEDED);
++	if (READ_ONCE(ssk->sk_pacing_rate) > max_pacing_rate)
++		WRITE_ONCE(ssk->sk_pacing_rate, max_pacing_rate);
++
+ 	inet_assign_bit(TRANSPARENT, ssk, inet_test_bit(TRANSPARENT, sk));
+ 	inet_assign_bit(FREEBIND, ssk, inet_test_bit(FREEBIND, sk));
+ 	inet_assign_bit(BIND_ADDRESS_NO_PORT, ssk, inet_test_bit(BIND_ADDRESS_NO_PORT, sk));
 
-My test program simply creates a socket (IPPROTO_MPTCP), sets
-TCP_MD5SIG and connects.
-
-When I use IPPROTO_TCP, everything works.
-
-I haven't even tried removing wscale,... to make space in the
-TCP-options to try combining both TCP_MD5 and MPTCP.
+-- 
+2.50.1
 
 
-Christoph
