@@ -1,192 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f41.google.com (mail-io1-f41.google.com [209.85.166.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D4EE22069A
-	for <mptcp@lists.linux.dev>; Sat,  2 Aug 2025 09:38:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 579BCA920
+	for <mptcp@lists.linux.dev>; Sat,  2 Aug 2025 10:52:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754127492; cv=none; b=bNzDn4dp97trohIa5fNTnc7Hml3dT5nAAcxjvxc2aN1j/JDj3SRmBtV1wZ1qN+z8XvBDO3KFm1g/bcp5fm+GnnqBuvbo3ok98S+hlbKcNwM7J9TzuBexn9Yt16wCWU/xSmbeN2aSk+KALeCz1h6CUTpIaCpWmLjJpDhM5oYtZzk=
+	t=1754131923; cv=none; b=k8cKfgvIkU37G55RNGV7j8TBOZRgiiUNTOdLAFfJs6euHn3lCPFSXi1qUaxBb3/10v7cqzu3DjcWsDwL+KKNPus51fgyxcfh627alRuONBaMdhmZepVZzRK9pTdVtJ8CNUpC7bMWIv94QhhWvOCDRVTrf6mTDzqRH73U4IsSYxg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754127492; c=relaxed/simple;
-	bh=sMiFkFoOf2d7QDvVgHKIArOQyy1GWOSYHxoJlFGdf/g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jWbxI4M1IWt4TGxTVpqFVEtnz4AoAokrJ3J5iJh0dIM+8+gFZTgsuTQocH/k8DUDj8M1cfgyyO1UnO79/JHOFnH0fASrkZP+DRKZZ+To3lNr50qCr4tnZ9XCPBV2b71FCHXTKjIviTN7y0mGAMyGMtQ9NW9UfBjGt9zuJeK1Fgo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MbchF8i7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1754131923; c=relaxed/simple;
+	bh=yAQFFgQ5XmhQwfh8Mz3q7/2tJ4HbCJIuTSnpCxbMbqo=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=V0l0a1DjL9d6XI1GTqn4nWCwle2HWh+o3/lJsVpMqrcvnKpwN+prR3i+luVnJ2ARKbEt8mUQfyoCPSQ75PZ7J7VUTZNAhK6bm3iCluFEkZYzBuECj7V5MxxJx5aHxFA51f4zK4t12QfgPgHoK4hbFqrB1rD5NaX/a3X0R1FD5xA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=clZxAF6W; arc=none smtp.client-ip=209.85.166.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MbchF8i7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA9C7C4CEEF;
-	Sat,  2 Aug 2025 09:38:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754127491;
-	bh=sMiFkFoOf2d7QDvVgHKIArOQyy1GWOSYHxoJlFGdf/g=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=MbchF8i7LjwMrqqGRv4zBOTjZTHq8Z+jwakZy9eJIDsZied7C7LXEhcxrrrTHbcqX
-	 DLVH8CGZjmV3RAYho7dQR3nysnkvZkSDCWkhLgssq48y2BsIFCNmWbAw0QuJ3suLWM
-	 LcXtdm8E+Rg1s3JhtDVCVHjgN/e/y+K1mD7sPvmW+99sEyknBGAE62jXpHxsNz2V0V
-	 /7+sYmzIwHvB9BhdLRxHQ72rYD18+fuLE7q7hmI4xAqlMBb9jk2T/mTVMSTKghyQZ3
-	 reD2mrTwlPud7CLbOMKpGhEpPt7rNXHP5i6wCtCHEz2RzJjJNHxEX1U3DqtfwxKini
-	 Rz/Is96qx6IaQ==
-Message-ID: <34cc29ec-8e1b-4b82-9b82-1f645d455842@kernel.org>
-Date: Sat, 2 Aug 2025 11:38:08 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="clZxAF6W"
+Received: by mail-io1-f41.google.com with SMTP id ca18e2360f4ac-87c017978e6so103981439f.1
+        for <mptcp@lists.linux.dev>; Sat, 02 Aug 2025 03:52:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1754131921; x=1754736721; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BRTsawlW7ULK7AzJyMtWaZDnjINoTxAGiUhLWWO7WDI=;
+        b=clZxAF6WapzRZcNN0aNvDpuQtvwQDw9jfQGxAwQqeOpMUgrinZNWgl1b3ViVWqGvih
+         VlgaXI92WxhODPaDoywtrTm506gPa6dyPrCmp2cuuCA0tsstGI07DM2LiaB+JGPgq5Ih
+         Mp5u1rAUsWFPUS0rStBBmHhhyxUXy4zeYLmisvKbzlB0JL/g7Du8zvCcMLQ2T1sYXpBH
+         lpteakjicrZGkFJHtYwg2wuCvdgmYQuwCEvH6SL7iXzVpSIPrXlwMyc1shZqmLor6HsG
+         h7r1vdfZjIwKSoo8aQXyEz7i4AifNfIPVn8fsjwOru5Q97+JkTZhyhuQTlILlzP9fcfa
+         ixrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1754131921; x=1754736721;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=BRTsawlW7ULK7AzJyMtWaZDnjINoTxAGiUhLWWO7WDI=;
+        b=bWEh+t6HbDgzqRVlaPogAKW5pXsv6LrHhteiFX8g+PvSQzLyxJd7DyaDkEGuIhTa7z
+         Zf0bwtaSQpmdTdmtYCSyOP3AdOqW1OxGF5ULUqDYvNF3Wj/JPSZqDG1mP7C+5U8TC7Fi
+         c8Z+Jq/2RDyQQyrFoBwKiOFjb+aoCPDvoM4ea0QJeAQBqvRPaqx5dA5614qmusFg/H7I
+         HBv8jBw0XPH7AxcEFkymOkMrQRaztmK9UYxZUz8JuSehh6pebHMbhqPydEJFYchvByYg
+         WQRACfHzMJSQGLYRErOrswlPUadZ4Q2tpRMBYHzlaspEhFgHkJq1L6+z5hh8rbgPQFZ6
+         7PoQ==
+X-Gm-Message-State: AOJu0Yw38E9SG8e3iNkthH4uv5gZ4xNfzLki9fUth6NvCi01yRhuB6VJ
+	qIDolo9z/NgFGI1UVOBkiMo8UAuQTXvKr1X5iXLUeRpLPY1gtN1HPUFdxujWyws=
+X-Gm-Gg: ASbGncvS48IOwLuraa5JCYJRf6m6MWwBfhtvuBNlTJPDu2mgR1+4eT8KVyyQy8zThv6
+	xcpl+XEPQMVVGo8Mim+lQJlokHrQuN+vl2/eqyzw8b2BWIfOsXPbDEMYsnOALI/UcWfFVXODItt
+	cwnNAGAnSgk5jfIE98t+HvQMJzPg1MV2KpOD3mDj6uYxuoJKMVwk0aG94NBvF8P6LumNj6byKdV
+	owGv/ynwsCJ79USir1cWTnZQLlUvzrI0caKv0ORcf1isYUcQi2r57Jswnf+iwWD9mco64ZhsSr/
+	clZJZhnIO5gmJm3SfHGzr+CSgNI/YzKBf42LDSH/gZGecoFno7XOTHErageEbJ8GWXu8Yqwohos
+	w6CgKhjBhf1lUtTDZ8wXaMc+uialtVLEEjhs=
+X-Google-Smtp-Source: AGHT+IFsldrJl8sPbfgshswKCngqjdiDGv2GJRgkaDxT0q4P0fP1T/prIUTpUVnPq8VgnItGicz57w==
+X-Received: by 2002:a05:6602:1614:b0:881:4b5e:fa9d with SMTP id ca18e2360f4ac-88167e039bfmr490972039f.0.1754131921377;
+        Sat, 02 Aug 2025 03:52:01 -0700 (PDT)
+Received: from [127.0.0.1] ([52.176.139.81])
+        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-8816b8c6c1esm28350139f.4.2025.08.02.03.52.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 02 Aug 2025 03:52:00 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Geliang Tang <tanggeliang@kylinos.cn>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <40706ad511220729207ccd7cf48e320e4d0d7dea.1754028199.git.tanggeliang@kylinos.cn>
+References:
+ <40706ad511220729207ccd7cf48e320e4d0d7dea.1754028199.git.tanggeliang@kylinos.cn>
+Subject: Re: [PATCH mptcp-next v2] mptcp: adapt ADD_ADDR timeout to maximum
+ subflow RTO
+Message-ID: <bed65315-5242-b1de-f0f0-04c7c558ba9e@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Sat, 02 Aug 2025 10:51:59 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v3 2/2] mptcp: setsockopt support for
- TCP_MD5SIG
-Content-Language: en-GB, fr-BE
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1754091681.git.tanggeliang@kylinos.cn>
- <8bba29599d026ff96f5b4d5aaf90f087137fc578.1754091681.git.tanggeliang@kylinos.cn>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <8bba29599d026ff96f5b4d5aaf90f087137fc578.1754091681.git.tanggeliang@kylinos.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 02/08/2025 01:42, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
-> 
-> Supporting TCP_MD5 socket option is required when MPTCP is used by
-> default when creating a socket, to keep the same behaviour as with
-> TCP. TCP_MD5 is not compatible with MPTCP, and it will cause a
-> fallback to TCP at the connection request, if MPTCP was requested.
-> This then fixes a "regression" compared to TCP.
-> 
-> This patch adds setsockopt support for TCP_MD5SIG and TCP_MD5SIG_EXT
-> options. The implementation:
->  - Allow setting these options (getsockopt remains unsupported)
->  - Apply them only to the first subflow
->  - Trigger fallback to TCP to maintain MD5 compatibility
-> 
-> Note that getsockopt for these options remains unsupported, consistent
-> with TCP.
-> 
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/575
-> Fixes: d9e4c1291810 ("mptcp: only admit explicitly supported sockopt")
-> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-> ---
->  net/mptcp/sockopt.c | 19 +++++++++++++++++--
->  1 file changed, 17 insertions(+), 2 deletions(-)
-> 
-> diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-> index 006849741813..4dec3c372772 100644
-> --- a/net/mptcp/sockopt.c
-> +++ b/net/mptcp/sockopt.c
-> @@ -13,6 +13,7 @@
->  #include <net/tcp.h>
->  #include <net/mptcp.h>
->  #include "protocol.h"
-> +#include "mib.h"
->  
->  #define MIN_INFO_OPTLEN_SIZE		16
->  #define MIN_FULL_INFO_OPTLEN_SIZE	40
-> @@ -596,11 +597,12 @@ static bool mptcp_supported_sockopt(int level, int optname)
->  		case TCP_FASTOPEN_CONNECT:
->  		case TCP_FASTOPEN_KEY:
->  		case TCP_FASTOPEN_NO_COOKIE:
-> +		/* MD5 will force a fallback to TCP: OK to set while not connected */
-> +		case TCP_MD5SIG:
-> +		case TCP_MD5SIG_EXT:
->  			return true;
->  		}
->  
-> -		/* TCP_MD5SIG, TCP_MD5SIG_EXT are not supported, MD5 is not compatible with MPTCP */
-> -
->  		/* TCP_REPAIR, TCP_REPAIR_QUEUE, TCP_QUEUE_SEQ, TCP_REPAIR_OPTIONS,
->  		 * TCP_REPAIR_WINDOW are not supported, better avoid this mess
->  		 */
-> @@ -865,6 +867,19 @@ static int mptcp_setsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
->  	case TCP_FASTOPEN_NO_COOKIE:
->  		return mptcp_setsockopt_first_sf_only(msk, SOL_TCP, optname,
->  						      optval, optlen);
-> +#ifdef CONFIG_TCP_MD5SIG
+Thank you for your modifications, that's great!
 
-Do we need this? mptcp_setsockopt_first_sf_only() should return an error
-coming from tcp_setsockopt() if TCP_MD5SIG(_EXT) is not supported, no?
+Our CI did some validations and here is its report:
 
-> +	case TCP_MD5SIG:
-> +	case TCP_MD5SIG_EXT:
-> +		if (!((1 << sk->sk_state) & (TCPF_CLOSE | TCPF_LISTEN)))
-> +			return -EINVAL;
+- KVM Validation: normal: Unstable: 1 failed test(s): selftest_mptcp_join =
+=F0=9F=94=B4
+- KVM Validation: debug: Unstable: 1 failed test(s): =
+selftest_mptcp_join =F0=9F=94=B4
+- KVM Validation: btf-normal (only =
+bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only =
+bpftest_all): Success! =E2=9C=85
+- Task: https://github.=
+com/multipath-tcp/mptcp_net-next/actions/runs/16692214960
 
-If I'm not mistaken, this check is not needed, because the same check
-will be done in mptcp_setsockopt_first_sf_only(): it should only change
-something on the first sufblow, before the connection, no?
-
-> +		ret = mptcp_setsockopt_first_sf_only(msk, SOL_TCP, optname,
-> +						     optval, optlen);
-> +		if (ret)
-> +			return ret;
-> +		if (!__mptcp_try_fallback(msk, MPTCP_MIB_MD5SIGFALLBACK))
-> +			return -EINVAL;
-
-If the fallback is done before the connection, it should not fail. Maybe
-use WARN_ON_ONCE(!__mptcp_try_fallback(msk, <MIB>)) instead?
-
-  if (ret == 0)
-      WARN_ON_ONCE(!__mptcp_try_fallback(msk, <MIB>))
-
-  return ret;
+Initiator: Matthieu Baerts (NGI0)
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/7df5036763d7
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D987572
 
 
-> +		return 0;
-> +#endif
->  	}
->  
->  	ret = mptcp_get_int_option(msk, optval, optlen, &val);
+If there are some issues, you can reproduce them using the same =
+environment as
+the one used by the CI thanks to a docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
 
 Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
-
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
