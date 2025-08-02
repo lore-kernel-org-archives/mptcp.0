@@ -1,119 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D7AE19D8AC
-	for <mptcp@lists.linux.dev>; Fri,  1 Aug 2025 23:43:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A4D21494C3;
+	Sat,  2 Aug 2025 02:38:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754091787; cv=none; b=hBxF1EYzsRI/GhWmDcQBUibTtL+EcYMHqrhYCxNojLhPJIydIW9J9w5c8WN536Qhr7wt0PAToE3JKlGnM8jMGd1huTQePHs73MHiq2Ljn7KVeDppx0+WzcJZuXUUlrgUa/vcOzKtZY/iFj+nvQO3XnE3o5FhEQks6e+OYWcEe9s=
+	t=1754102303; cv=none; b=s4+CdQyxNgMwJ3KfnTq1MmLee2TBltCPomG0Sb0P+IPHxND/DwOAWOzaW/m2+f9EhTo1dKWFVye2GUAhdv5BQn51pu5h15/fsgxmVJivy259tRCwoGuPBS1Er2jK2/Faj033ZgpRGQ7s/Nk8tDtaAZ7MVyBPqWQw7BFKOmdaQBo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754091787; c=relaxed/simple;
-	bh=c9cwKbeK41U0E7n+E2ZjEEcWPo+44alPYoSfiC9gfaU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZMQ03vSq7vRYm1xQfmfyW8y3VHxfr4V5yjuCJP+zJIM+qNoSQlRbT9FWdUlWc4y3m2fVFSITX6MMXFKQ0jNFsXB+s+iTtD7+dJH9pa6EZJVVA8ekYgaqXSwtrqL7/9O30ziGeWjjYSj50HlhetLE1XtjcKaanv4ZPQ9U3CQRtFM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RDwsDUlG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1754102303; c=relaxed/simple;
+	bh=ZbUnigqjMiWRvXf1Vsb31pn+EsM+BvIdQrsRp7gvb2E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NkWZiJgAJY23minOdFlEn6FPL0qoulhIJzurAM6xMWzjOstx0dsav4agxk1PCzxka5c4keZpBDw00+V/d/o3XplJQscxijWc60VI+gBIxJH/+6lJot1i2PKr78NtWLvDq+V01YuV3kiuUKE9ZnBYmYlb7rQlleNIx0ptfcl/F1I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GRZf+TX8; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RDwsDUlG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5CDBC4CEEB;
-	Fri,  1 Aug 2025 23:43:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754091786;
-	bh=c9cwKbeK41U0E7n+E2ZjEEcWPo+44alPYoSfiC9gfaU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=RDwsDUlGreuNtEdjxLZCM3ndXxdZZsXKpBMzvxD/jQznhxKA+H9V7OHUHISHHNO+P
-	 BvxGvvkF6gw2Bb5i+q2e0Rpwhj30G2qzFt/df/6kCR+CFZxtjmEkZzh0mE8TwWroKr
-	 wQEU6+qUC+r3SxX/9HM63y5Q9Y7AQ8qPn0LNDrLciNTusMKB4tq6Xa9rkmvw7d3Sjc
-	 PoAekttXpbfuGnzLtZ8XckrV6s71Mq063Jdbmb/6SWKBLwzBt/FNb1Fo2YUL0JNfRM
-	 WFdCBL9XI5D/oNvHZfF1COrVKs64HoE3TwB+8YuDcJfosUB8kx9cAMTN3g+qoavlxN
-	 +zP8C7q9O/z0g==
-From: Geliang Tang <geliang@kernel.org>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v3 2/2] mptcp: setsockopt support for TCP_MD5SIG
-Date: Sat,  2 Aug 2025 07:42:56 +0800
-Message-ID: <8bba29599d026ff96f5b4d5aaf90f087137fc578.1754091681.git.tanggeliang@kylinos.cn>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <cover.1754091681.git.tanggeliang@kylinos.cn>
-References: <cover.1754091681.git.tanggeliang@kylinos.cn>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GRZf+TX8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1754102302; x=1785638302;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ZbUnigqjMiWRvXf1Vsb31pn+EsM+BvIdQrsRp7gvb2E=;
+  b=GRZf+TX81PvU/LTPks+ceZkUSNz0BBncCcw65VlIrO/VpQVQ5fx75K+a
+   I8uW3mYjot7gIyMT8rKHadL1TqtjaVrzM1fxwHgi5PCEPsKqM5f/ol7vN
+   6C4OAdSRF3guWkYW1xynOwNeF9zgCOeCxuatXkbTkZtyY4CEglmRBmSLC
+   Ovr2IhzDcGzk2kXhmeqAJOnfBzuY+xfD+9PYTGtARU2pUourSW+ju7W8Q
+   /UwwhpWsz5hdxEV7FQLYNVngEEVZfIRwNRoHj7HHc3Tf7IyBO1EqDiUV5
+   Bngoy8gKM+ULCom0XotCrpN0o/LrKfv51dBvPm/9zyLD6SIQboZ8/Naow
+   g==;
+X-CSE-ConnectionGUID: 2o/WhnmETUuTsiDPBROtZw==
+X-CSE-MsgGUID: v9qipLTEQnmH3AZFnjhbrA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11508"; a="56589965"
+X-IronPort-AV: E=Sophos;i="6.17,258,1747724400"; 
+   d="scan'208";a="56589965"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Aug 2025 19:38:18 -0700
+X-CSE-ConnectionGUID: bfvueePKSMG9qWQB01eY6A==
+X-CSE-MsgGUID: Jrn93eOMQGupIadafhWg8Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.17,258,1747724400"; 
+   d="scan'208";a="162991220"
+Received: from lkp-server01.sh.intel.com (HELO 160750d4a34c) ([10.239.97.150])
+  by orviesa006.jf.intel.com with ESMTP; 01 Aug 2025 19:38:17 -0700
+Received: from kbuild by 160750d4a34c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1ui28U-00056o-27;
+	Sat, 02 Aug 2025 02:38:14 +0000
+Date: Sat, 2 Aug 2025 10:37:16 +0800
+From: kernel test robot <lkp@intel.com>
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: oe-kbuild-all@lists.linux.dev, Geliang Tang <tanggeliang@kylinos.cn>
+Subject: Re: [PATCH mptcp-next] mptcp: implement IPV6_TCLASS socket option
+ support
+Message-ID: <202508021003.tEAjvv2S-lkp@intel.com>
+References: <7979be7e1b82de6ba2eeb8dbda37e1e443636862.1754042175.git.tanggeliang@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7979be7e1b82de6ba2eeb8dbda37e1e443636862.1754042175.git.tanggeliang@kylinos.cn>
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+Hi Geliang,
 
-Supporting TCP_MD5 socket option is required when MPTCP is used by
-default when creating a socket, to keep the same behaviour as with
-TCP. TCP_MD5 is not compatible with MPTCP, and it will cause a
-fallback to TCP at the connection request, if MPTCP was requested.
-This then fixes a "regression" compared to TCP.
+kernel test robot noticed the following build errors:
 
-This patch adds setsockopt support for TCP_MD5SIG and TCP_MD5SIG_EXT
-options. The implementation:
- - Allow setting these options (getsockopt remains unsupported)
- - Apply them only to the first subflow
- - Trigger fallback to TCP to maintain MD5 compatibility
+[auto build test ERROR on mptcp/export]
+[also build test ERROR on mptcp/export-net linus/master v6.16 next-20250801]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Note that getsockopt for these options remains unsupported, consistent
-with TCP.
+url:    https://github.com/intel-lab-lkp/linux/commits/Geliang-Tang/mptcp-implement-IPV6_TCLASS-socket-option-support/20250801-175837
+base:   https://github.com/multipath-tcp/mptcp_net-next.git export
+patch link:    https://lore.kernel.org/r/7979be7e1b82de6ba2eeb8dbda37e1e443636862.1754042175.git.tanggeliang%40kylinos.cn
+patch subject: [PATCH mptcp-next] mptcp: implement IPV6_TCLASS socket option support
+config: openrisc-defconfig (https://download.01.org/0day-ci/archive/20250802/202508021003.tEAjvv2S-lkp@intel.com/config)
+compiler: or1k-linux-gcc (GCC) 15.1.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250802/202508021003.tEAjvv2S-lkp@intel.com/reproduce)
 
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/575
-Fixes: d9e4c1291810 ("mptcp: only admit explicitly supported sockopt")
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
----
- net/mptcp/sockopt.c | 19 +++++++++++++++++--
- 1 file changed, 17 insertions(+), 2 deletions(-)
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202508021003.tEAjvv2S-lkp@intel.com/
 
-diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-index 006849741813..4dec3c372772 100644
---- a/net/mptcp/sockopt.c
-+++ b/net/mptcp/sockopt.c
-@@ -13,6 +13,7 @@
- #include <net/tcp.h>
- #include <net/mptcp.h>
- #include "protocol.h"
-+#include "mib.h"
- 
- #define MIN_INFO_OPTLEN_SIZE		16
- #define MIN_FULL_INFO_OPTLEN_SIZE	40
-@@ -596,11 +597,12 @@ static bool mptcp_supported_sockopt(int level, int optname)
- 		case TCP_FASTOPEN_CONNECT:
- 		case TCP_FASTOPEN_KEY:
- 		case TCP_FASTOPEN_NO_COOKIE:
-+		/* MD5 will force a fallback to TCP: OK to set while not connected */
-+		case TCP_MD5SIG:
-+		case TCP_MD5SIG_EXT:
- 			return true;
- 		}
- 
--		/* TCP_MD5SIG, TCP_MD5SIG_EXT are not supported, MD5 is not compatible with MPTCP */
--
- 		/* TCP_REPAIR, TCP_REPAIR_QUEUE, TCP_QUEUE_SEQ, TCP_REPAIR_OPTIONS,
- 		 * TCP_REPAIR_WINDOW are not supported, better avoid this mess
- 		 */
-@@ -865,6 +867,19 @@ static int mptcp_setsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
- 	case TCP_FASTOPEN_NO_COOKIE:
- 		return mptcp_setsockopt_first_sf_only(msk, SOL_TCP, optname,
- 						      optval, optlen);
-+#ifdef CONFIG_TCP_MD5SIG
-+	case TCP_MD5SIG:
-+	case TCP_MD5SIG_EXT:
-+		if (!((1 << sk->sk_state) & (TCPF_CLOSE | TCPF_LISTEN)))
-+			return -EINVAL;
-+		ret = mptcp_setsockopt_first_sf_only(msk, SOL_TCP, optname,
-+						     optval, optlen);
-+		if (ret)
-+			return ret;
-+		if (!__mptcp_try_fallback(msk, MPTCP_MIB_MD5SIGFALLBACK))
-+			return -EINVAL;
-+		return 0;
-+#endif
- 	}
- 
- 	ret = mptcp_get_int_option(msk, optval, optlen, &val);
+All errors (new ones prefixed by >>):
+
+   or1k-linux-ld: net/mptcp/sockopt.o: in function `mptcp_setsockopt_v6':
+>> sockopt.c:(.text+0x854): undefined reference to `ipv6_setsockopt'
+>> sockopt.c:(.text+0x854): relocation truncated to fit: R_OR1K_INSN_REL_26 against undefined symbol `ipv6_setsockopt'
+
 -- 
-2.48.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
