@@ -1,99 +1,136 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A4D21494C3;
-	Sat,  2 Aug 2025 02:38:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C91E1E5729
+	for <mptcp@lists.linux.dev>; Sat,  2 Aug 2025 07:38:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754102303; cv=none; b=s4+CdQyxNgMwJ3KfnTq1MmLee2TBltCPomG0Sb0P+IPHxND/DwOAWOzaW/m2+f9EhTo1dKWFVye2GUAhdv5BQn51pu5h15/fsgxmVJivy259tRCwoGuPBS1Er2jK2/Faj033ZgpRGQ7s/Nk8tDtaAZ7MVyBPqWQw7BFKOmdaQBo=
+	t=1754120317; cv=none; b=AUBKv28E+PmqxRZmVyAobmE0HCCunufZiySkKL9GAEpZ8gX4G0KH2kHPpbx/KYVcQ6MiNzV+DBGd+jf1RvAa5I4ASxBwzMqKCnTSx5E1+f/SaQM0EdThjlee2S42DpNXquCcQK66qlEpFMf/ghVlRymDDfUf6vHY4N3kVrlTq5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754102303; c=relaxed/simple;
-	bh=ZbUnigqjMiWRvXf1Vsb31pn+EsM+BvIdQrsRp7gvb2E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NkWZiJgAJY23minOdFlEn6FPL0qoulhIJzurAM6xMWzjOstx0dsav4agxk1PCzxka5c4keZpBDw00+V/d/o3XplJQscxijWc60VI+gBIxJH/+6lJot1i2PKr78NtWLvDq+V01YuV3kiuUKE9ZnBYmYlb7rQlleNIx0ptfcl/F1I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GRZf+TX8; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1754120317; c=relaxed/simple;
+	bh=S80WTPrINUPLKJuHscgiHMRl66+MeiCTXHK9tXKoY9k=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=T1HPsjIiyPNhJHnarsmpE0JiYYMLCOE5mWvAxJxWeda2U37N0ZNBrOPHmf5qywN7sLcQSvdV2gBBvScsnT3A4yWewF0b9hTnXVv2Jz8idPCGVULcg4AofokAJ1fwE+Lvy/5+ZD1F0awaQNSJvHtfYeBx3icrCW5axnVK96rou6w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KVU40yim; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GRZf+TX8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1754102302; x=1785638302;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ZbUnigqjMiWRvXf1Vsb31pn+EsM+BvIdQrsRp7gvb2E=;
-  b=GRZf+TX81PvU/LTPks+ceZkUSNz0BBncCcw65VlIrO/VpQVQ5fx75K+a
-   I8uW3mYjot7gIyMT8rKHadL1TqtjaVrzM1fxwHgi5PCEPsKqM5f/ol7vN
-   6C4OAdSRF3guWkYW1xynOwNeF9zgCOeCxuatXkbTkZtyY4CEglmRBmSLC
-   Ovr2IhzDcGzk2kXhmeqAJOnfBzuY+xfD+9PYTGtARU2pUourSW+ju7W8Q
-   /UwwhpWsz5hdxEV7FQLYNVngEEVZfIRwNRoHj7HHc3Tf7IyBO1EqDiUV5
-   Bngoy8gKM+ULCom0XotCrpN0o/LrKfv51dBvPm/9zyLD6SIQboZ8/Naow
-   g==;
-X-CSE-ConnectionGUID: 2o/WhnmETUuTsiDPBROtZw==
-X-CSE-MsgGUID: v9qipLTEQnmH3AZFnjhbrA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11508"; a="56589965"
-X-IronPort-AV: E=Sophos;i="6.17,258,1747724400"; 
-   d="scan'208";a="56589965"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Aug 2025 19:38:18 -0700
-X-CSE-ConnectionGUID: bfvueePKSMG9qWQB01eY6A==
-X-CSE-MsgGUID: Jrn93eOMQGupIadafhWg8Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.17,258,1747724400"; 
-   d="scan'208";a="162991220"
-Received: from lkp-server01.sh.intel.com (HELO 160750d4a34c) ([10.239.97.150])
-  by orviesa006.jf.intel.com with ESMTP; 01 Aug 2025 19:38:17 -0700
-Received: from kbuild by 160750d4a34c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1ui28U-00056o-27;
-	Sat, 02 Aug 2025 02:38:14 +0000
-Date: Sat, 2 Aug 2025 10:37:16 +0800
-From: kernel test robot <lkp@intel.com>
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: oe-kbuild-all@lists.linux.dev, Geliang Tang <tanggeliang@kylinos.cn>
-Subject: Re: [PATCH mptcp-next] mptcp: implement IPV6_TCLASS socket option
- support
-Message-ID: <202508021003.tEAjvv2S-lkp@intel.com>
-References: <7979be7e1b82de6ba2eeb8dbda37e1e443636862.1754042175.git.tanggeliang@kylinos.cn>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KVU40yim"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8570AC4CEEF;
+	Sat,  2 Aug 2025 07:38:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1754120317;
+	bh=S80WTPrINUPLKJuHscgiHMRl66+MeiCTXHK9tXKoY9k=;
+	h=From:To:Cc:Subject:Date:From;
+	b=KVU40yimi1+TELy3s/VQnyMQT44fimJeR+y+atYWCNe0pfA1Y5HDX+rFHpvbTVqWI
+	 ooriRV7OU5WZUdV94oYt0+4kbOhlsblIvdwZLLiC0hvBo1Waug3wQCfGQD8M+D+m8t
+	 hoI04xgBrB1JZaYeDfhOXPEYjSxA82NutTh7l7C3XUXR7XPGoJ6q2Q+YXnUi89aU0x
+	 ibYbankUVObP9ekC+AXoMXvMXS5RwzRXojyYijCFVhP8YBPVl858gv+raq4UEdhG9Y
+	 RerT0z9EmjDVV6nD5TLD8WZOLhW8yoT0ElNBQV19yi6RK+d/AW/v9esIVjfy1sabzs
+	 OeowYNaPj2njg==
+From: Geliang Tang <geliang@kernel.org>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>,
+	kernel test robot <lkp@intel.com>
+Subject: [PATCH mptcp-next v2] mptcp: implement IPV6_TCLASS socket option support
+Date: Sat,  2 Aug 2025 15:38:31 +0800
+Message-ID: <ca2083bad7afa47302f362e75886d528c97aa5ce.1754120241.git.tanggeliang@kylinos.cn>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7979be7e1b82de6ba2eeb8dbda37e1e443636862.1754042175.git.tanggeliang@kylinos.cn>
+Content-Transfer-Encoding: 8bit
 
-Hi Geliang,
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
-kernel test robot noticed the following build errors:
+This patch adds full support for the IPV6_TCLASS socket option in MPTCP,
+ensuring consistent traffic class handling across all subflows.
 
-[auto build test ERROR on mptcp/export]
-[also build test ERROR on mptcp/export-net linus/master v6.16 next-20250801]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Key changes:
+1. setsockopt(IPV6_TCLASS):
+   - First sets the traffic class value on the main MPTCP socket
+   - Propagates the new value to all existing subflows
+   - Uses lock synchronization to ensure atomic updates
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Geliang-Tang/mptcp-implement-IPV6_TCLASS-socket-option-support/20250801-175837
-base:   https://github.com/multipath-tcp/mptcp_net-next.git export
-patch link:    https://lore.kernel.org/r/7979be7e1b82de6ba2eeb8dbda37e1e443636862.1754042175.git.tanggeliang%40kylinos.cn
-patch subject: [PATCH mptcp-next] mptcp: implement IPV6_TCLASS socket option support
-config: openrisc-defconfig (https://download.01.org/0day-ci/archive/20250802/202508021003.tEAjvv2S-lkp@intel.com/config)
-compiler: or1k-linux-gcc (GCC) 15.1.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250802/202508021003.tEAjvv2S-lkp@intel.com/reproduce)
+2. getsockopt(IPV6_TCLASS):
+   - Returns the current traffic class value stored in the main socket's
+     inet6_sk structure
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202508021003.tEAjvv2S-lkp@intel.com/
+This implementation mirrors the existing IPv4 TOS handling (IP_TOS) and
+ensures QoS settings are consistently applied to all underlying TCP
+connections in the MPTCP session.
 
-All errors (new ones prefixed by >>):
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202508021003.tEAjvv2S-lkp@intel.com/
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/568
+Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+---
+v2:
+ - check CONFIG_MPTCP_IPV6 to fix the build error reported by kernel
+   test robot.
+---
+ net/mptcp/sockopt.c | 34 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
 
-   or1k-linux-ld: net/mptcp/sockopt.o: in function `mptcp_setsockopt_v6':
->> sockopt.c:(.text+0x854): undefined reference to `ipv6_setsockopt'
->> sockopt.c:(.text+0x854): relocation truncated to fit: R_OR1K_INSN_REL_26 against undefined symbol `ipv6_setsockopt'
-
+diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+index 2c267aff95be..1d5b80caf507 100644
+--- a/net/mptcp/sockopt.c
++++ b/net/mptcp/sockopt.c
+@@ -384,6 +384,35 @@ static int mptcp_setsockopt_sol_socket(struct mptcp_sock *msk, int optname,
+ 	return -EOPNOTSUPP;
+ }
+ 
++static int mptcp_setsockopt_v6_set_tclass(struct mptcp_sock *msk, int optname,
++					  sockptr_t optval, unsigned int optlen)
++{
++#if IS_ENABLED(CONFIG_MPTCP_IPV6)
++	struct mptcp_subflow_context *subflow;
++	struct sock *sk = (struct sock *)msk;
++	int err, val;
++
++	err = ipv6_setsockopt(sk, SOL_IPV6, optname, optval, optlen);
++	if (err)
++		return err;
++
++	lock_sock(sk);
++	sockopt_seq_inc(msk);
++	val = READ_ONCE(inet6_sk(sk)->tclass);
++	mptcp_for_each_subflow(msk, subflow) {
++		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
++		bool slow;
++
++		slow = lock_sock_fast(ssk);
++		inet6_sk(ssk)->tclass = val;
++		unlock_sock_fast(ssk, slow);
++	}
++	release_sock(sk);
++#endif
++
++	return 0;
++}
++
+ static int mptcp_setsockopt_v6(struct mptcp_sock *msk, int optname,
+ 			       sockptr_t optval, unsigned int optlen)
+ {
+@@ -426,6 +455,8 @@ static int mptcp_setsockopt_v6(struct mptcp_sock *msk, int optname,
+ 
+ 		release_sock(sk);
+ 		break;
++	case IPV6_TCLASS:
++		return mptcp_setsockopt_v6_set_tclass(msk, optname, optval, optlen);
+ 	}
+ 
+ 	return ret;
+@@ -1475,6 +1506,9 @@ static int mptcp_getsockopt_v6(struct mptcp_sock *msk, int optname,
+ 	case IPV6_FREEBIND:
+ 		return mptcp_put_int_option(msk, optval, optlen,
+ 					    inet_test_bit(FREEBIND, sk));
++	case IPV6_TCLASS:
++		return mptcp_put_int_option(msk, optval, optlen,
++					    inet6_sk(sk)->tclass);
+ 	}
+ 
+ 	return -EOPNOTSUPP;
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.48.1
+
