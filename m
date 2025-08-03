@@ -1,127 +1,90 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C173B13C8FF
-	for <mptcp@lists.linux.dev>; Sun,  3 Aug 2025 12:11:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A891413C8FF
+	for <mptcp@lists.linux.dev>; Sun,  3 Aug 2025 12:13:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754223087; cv=none; b=MpZTsH0oZvemfnxplvECRlufsTIOVnslQk/tRpmYGoy+oOoXrsPAJz80JCczPN4ukaElPoEHRkIXi8SK/NoimVQ59Mrr/3tTgX9mDVyzBWpq4P1GPR0tJ5CO/9B32vkcBkPYMHonocpSCPKu9uPK1sr+QxklKKhZOuz2hqjsCKg=
+	t=1754223235; cv=none; b=OiDzYOTYDO5vmaz6YQIbnScP0pRhEEzEWE2i2JNj8h+8OEFHpbzKBSaYdqBYtjKn+eLWEgNQgZ0rxhM7maujSJf+pdAE5W2NE8rdEXPEPn7zgIFQ4X9QBzQhioNbChLmh26EDzls1mL5zub1H7EXMJZD/zVLMcBeTyqWD6sjiPY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754223087; c=relaxed/simple;
-	bh=6f0XeqedX3MF+m5SborIjIPcn7pwv2pBU6rilDvRWFM=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=tQPaoa6RoK2MBG1h4fcuqn5/0EywoUpHZSBae0S8oYtcc4eQpJ4rEkJnlgBF517QqodLIyECRDyqD7mlVmXwUJS2veRNvkbHyi/rBtSetjw4oQP+BrHomhBbX5KE+EfgZqKnyMXOL9B8o75H0vjvZxesmQNAgfIACsvEd4sD+aA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mpr9490N; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1754223235; c=relaxed/simple;
+	bh=LpiI+GZNegbVR3JlI2m00qncyl4JyKZeylLqkjn3NNU=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=UYesYb08KWOMlovyuCtLlOxZI4adlktyHhMRgkZX0qKOAwswlzl3n2xQzDjFkNLAyCr3nrEgn7ikZj+Y4fKAnYWtU7wIJmO7GlSDjbQVNzUH31BsKEv5w2PggGzDm8xe5bWYwcqMEbDl6rLl04vd4oZditfmxnyS7mVQXFkYTTM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WdUvhBgc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mpr9490N"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58DEFC4CEEB;
-	Sun,  3 Aug 2025 12:11:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WdUvhBgc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BFCB4C4CEEB;
+	Sun,  3 Aug 2025 12:13:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754223087;
-	bh=6f0XeqedX3MF+m5SborIjIPcn7pwv2pBU6rilDvRWFM=;
-	h=Date:Subject:From:To:References:In-Reply-To:From;
-	b=mpr9490Nc2pUpKqm55i5KRHIRNJuN+rDcR7QyuJWfDDpNz0u/DQlIFtOf/6J6vEYw
-	 RlF2UfAeZ1DxzAPdMJMFdzt3xdzwxtoa3MITyYVJqFpkIHJnmlHkUqKO0kL2D8iAdu
-	 QMxgJh4Bv8xqskmDbdQX36I7PBiCK0bkwCoD9hUZFLKc/qE+jpqVcsDH9njUwtGXnE
-	 6uaR9Gp5IdeEWfszKg7t+2Th4AipFfAGb2zc380VAfl2wWcqvqBBMoOWk4sE2Cs7l/
-	 qA95zziTt26E7ypehb3CzUYDkVLa0eV1PAVGfdkls8GKDoSEXtsnYFFg/XwnwCYi5K
-	 1ergyFmvM6ZCg==
-Message-ID: <690613e8-e926-4ed9-b8d4-9f214bc0997c@kernel.org>
-Date: Sun, 3 Aug 2025 14:11:24 +0200
+	s=k20201202; t=1754223235;
+	bh=LpiI+GZNegbVR3JlI2m00qncyl4JyKZeylLqkjn3NNU=;
+	h=From:Subject:Date:To:Cc:From;
+	b=WdUvhBgcir/fPAlkeKlkhScXUey8H3qziTUr/uF1PwJqfi24yR9Zfvf8FGg0w7bbm
+	 nJJT2CBE6YVYAARs3w4sd4anPc1g0IFktVtYMX2U5WyS8xu71DWRToBr0NL5ai/RJi
+	 y2oJ4ZwFmSt5Lyubpo85QtZsNeCvVokshidwe/sgF/V9H8bKjlGA1e0o4sLS1YHdAw
+	 AFdbfz5rqQQEWMNUs2FqIr+PjGsnT6R86eOgGLCrBBdaUQFZXF6/Iicap+jH2zf1cZ
+	 Kaxw4za7ZYWAjJq+lvDLbD0dV+C0zd4y23kiOXZJMknJKVEJeHpLM9NhVL9T448jik
+	 aJ/EpxbpA8sZg==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH mptcp-net 0/2] selftests: mptcp: connect: fix C23 extension
+ warning
+Date: Sun, 03 Aug 2025 14:13:42 +0200
+Message-Id: <20250803-sft-mptcp-warn-gcc-v1-0-6d87808721ea@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next 2/2] selftests: Add tests for
- SO_MAX_PACING_RATE
-Content-Language: en-GB, fr-BE
-From: Matthieu Baerts <matttbe@kernel.org>
-To: cpaasch@openai.com, MPTCP Upstream <mptcp@lists.linux.dev>,
- Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>
-References: <20250802-b4-mptcp_setsockopt-v1-0-50d4905a4c2b@openai.com>
- <20250802-b4-mptcp_setsockopt-v1-2-50d4905a4c2b@openai.com>
- <fec77e23-020c-4bdb-b937-df11685dd6ca@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <fec77e23-020c-4bdb-b937-df11685dd6ca@kernel.org>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAHZSj2gC/yWMQQqAIBBFrxKzbsBMK7pKtBCbahaZqFQQ3T2p5
+ eO//26IFJgi9MUNgQ6OvLsMVVmAXY1bCHnKDFJILTpRY5wTbj5Zj6cJDhdrUXV5Ue2kG0mQjz7
+ QzNcXHeB3HSUYn+cFJfuRNG8AAAA=
+X-Change-ID: 20250803-sft-mptcp-warn-gcc-4808047d562e
+To: mptcp@lists.linux.dev
+Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1327; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=LpiI+GZNegbVR3JlI2m00qncyl4JyKZeylLqkjn3NNU=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDL6g+pLd+ZGMsQ7FC47GKgXIb/qTbpsM+uTM4fN1rY3e
+ 4rLZYR2lLIwiHExyIopski3RebPfF7FW+LlZwEzh5UJZAgDF6cATIQrjOF/8LXMCb89Yxwul5+T
+ qws6VBK5wTPT2/a3x+3g/ijbCfw/GP5w5Zvec7/1q++dtOiSG1ukT8+9tNZF9eCee7WvIpyrJOX
+ ZAQ==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-On 03/08/2025 14:04, Matthieu Baerts wrote:
-> Hi Christoph,
-> 
-> On 03/08/2025 01:52, Christoph Paasch via B4 Relay wrote:
->> From: Christoph Paasch <cpaasch@openai.com>
->>
->> Add a test to check the API for SO_MAX_PACING_RATE in MPTCP.
-> 
-> This test only checks if some values can be set or not, but most of that
-> is checked by the code in net/core/sock.c, not really related to MPTCP.
-> Do you think it is worth it?
-> 
-> Could we eventually have a test checking the expected rate when using
-> multiple subflows? Or would it be too complex? I guess not something
-> easy to do with Packetdrill, right?
+GCC was complaining about the new label:
 
-Also, when I do a "make" in the selftests, I get this, not sure why:
+  mptcp_connect.c:187:2: warning: label followed by a declaration is a C23 extension [-Wc23-extensions]
+    187 |         int err = getaddrinfo(node, service, hints, res);
+        |         ^
 
-> # make
->   CC       mptcp_sockopt
-> mptcp_sockopt.c: In function 'test_so_max_pacing_rate':
-> mptcp_sockopt.c:791:32: warning: ignoring return value of 'asprintf' declared with attribute 'warn_unused_result' [-Wunused-result]
->   791 |                         (void) asprintf(&msg, "setsockopt SO_MAX_PACING_RATE to %lu", in);
->       |                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> mptcp_sockopt.c:800:31: warning: ignoring return value of 'asprintf' declared with attribute 'warn_unused_result' [-Wunused-result]
->   800 |                         (void)asprintf(&msg, "getsockopt SO_MAX_PACING_RATE expected %lu", in);
->       |                               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  mptcp_inq.c:79:2: warning: label followed by a declaration is a C23 extension [-Wc23-extensions]
+     79 |         int err = getaddrinfo(node, service, hints, res);
+        |         ^
 
-Cheers,
-Matt
+  mptcp_sockopt.c:166:2: warning: label followed by a declaration is a C23 extension [-Wc23-extensions]
+    166 |         int err = getaddrinfo(node, service, hints, res);
+        |         ^
+
+Simply declare 'err' before the label to avoid this warning.
+
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+Matthieu Baerts (NGI0) (2):
+      selftests: mptcp: connect: fix C23 extension warning
+      selftests: mptcp: sockopt: fix C23 extension warning
+
+ tools/testing/selftests/net/mptcp/mptcp_connect.c | 5 +++--
+ tools/testing/selftests/net/mptcp/mptcp_inq.c     | 5 +++--
+ tools/testing/selftests/net/mptcp/mptcp_sockopt.c | 5 +++--
+ 3 files changed, 9 insertions(+), 6 deletions(-)
+---
+base-commit: 5c7ec796258e1599e2033ae0f40434b2ba6ca21c
+change-id: 20250803-sft-mptcp-warn-gcc-4808047d562e
+
+Best regards,
 -- 
-Sponsored by the NGI0 Core fund.
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
