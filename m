@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01E80156677
-	for <mptcp@lists.linux.dev>; Sun,  3 Aug 2025 11:34:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD3832BAF7
+	for <mptcp@lists.linux.dev>; Sun,  3 Aug 2025 11:59:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754220860; cv=none; b=I5bh4gLDzbim5NoA4UHomjD2rGzayV589vQmg78GCSeLpQDHieSdF8Kvy5rXTWDNekG5vKqx3iGyLWHdbqNJKjqKQ3yKy5ug4ozxZ8y4FH5TDQJfszx9mfL0jCEAFlC1X6zZLAFa+yN6Q7+CY2B3MzZ2BqqVT7p/HSfdbi3lCFk=
+	t=1754222353; cv=none; b=BeWZPUIui8LtvTqfM0IwJlxx+nLyhVGiWM+hsxXMm/vTeMXkXKbvUt5FmmEpVUWY66ZHRM9H1iOctJZ+vHKnMsPQX2pwwVauY0h6hk1dffN2R9MgZxfS2qlyDD1aKn7f4kSSZV3/DD7mykOrzMttSmoPQW1lqK8PmhwAs2PmwCc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754220860; c=relaxed/simple;
-	bh=8r23KVdCwfByH6glvIg6dmJB00uxGNTshJLjEwbAss4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lmOcoN2B+VXPpOjs4nYgyHGbhX3d0MARIyRdAb9gZb3CvMxZPZcB/W/FOmYWy6RmOydBZDM7uEGqgVFb5aOV1raJn9V1tZaQs+Jch6lgl3CwG+Q6+gCHnc1hKSj/MUuTAEFzKbCf5qeYWbFquDHUZwei92r5shPBQYwDUoRER1o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SEFJeBHy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1754222353; c=relaxed/simple;
+	bh=HFrnlQK2ppL/ZQ9naqFHsCUbcc9DYO04NYQM0dnHPZc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=DidasXa3HxCiOBKx18Xm7eHlXl1uxIJWG4YxP9z6i3cZgM6By1pNmQnBsU7xdEKBpJsU/ilWzqEX5TCavGgHAYyWvlCtM0t+FcitHf1AtbNYrNvWMryliy3qVaV3kpT7bBKBvHhZIt3lMg6TEQCHnEQS3Xo75GrAQ2y7YpVZy5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HuFhx2w3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SEFJeBHy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEE95C4CEEB;
-	Sun,  3 Aug 2025 11:34:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HuFhx2w3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CF57C4CEEB;
+	Sun,  3 Aug 2025 11:59:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754220858;
-	bh=8r23KVdCwfByH6glvIg6dmJB00uxGNTshJLjEwbAss4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=SEFJeBHyOVpw0sdXbXAocxLj73TCsKT7MdHh96xBVzOJJ/LGs+Az78jA2VvcS8Adf
-	 YgCvtqEts29qa7sKNaMpTMd2C8rVsdqNhVpfnZkSgdhukjqKiTQoTPiEEe9cpxEF+j
-	 ZZIL7NtsRRX4BHtXjKw93u0AOyV4tetgdHsvxqmZPBphftsIXF5ODw1wXu3NBj7lCD
-	 WEL95FpTdj48civbwaCR7NWhyegexO46o+DHt2gaF6g4w58AeyWaO8juz3W8dHfY5u
-	 qtT2RgS0/7XgZhujv10+LpSj2zam4lfwXtUdfX1B4mMDgg3fmQS8oIPnyUjvN6IfDw
-	 9Pm8PF8FviUsw==
-Message-ID: <87804b8f-22e2-4ae6-b546-fc00adcadddf@kernel.org>
-Date: Sun, 3 Aug 2025 13:34:15 +0200
+	s=k20201202; t=1754222353;
+	bh=HFrnlQK2ppL/ZQ9naqFHsCUbcc9DYO04NYQM0dnHPZc=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=HuFhx2w3zqjDraqHEP+xER6On0F+m5FqQ61SXSsy+cEztmxQD7AWMZYsvDN080l3Z
+	 61cCyMOh2KynVn5FhPdlAxSbjjMJ1GzTMZDSL/P/XFOXTGHajsfBGF0rn8GV88yTgd
+	 cqD7GiYc5YKxE9fFIvrOayezDdSTJLC5eSCh/53Xgt7ef2WGGSYU+Fw5hxScnrg248
+	 hCvbsnBLMcHqe5a3a8mZV06cI7+ZZJWTWZCylZ3LWvKOh/K6e16pmTc8fNhABegWuR
+	 utRp3O9wSyCDb6eBFJwKyBzNtKP2ju1C4BAO9PSv1cLuWaxTZ8kJylMRsFkIrfuBXC
+	 okyaLo0+qzkfA==
+Message-ID: <51b8f99d-bc47-47ea-9cb7-797c261503c7@kernel.org>
+Date: Sun, 3 Aug 2025 13:59:10 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,11 +35,11 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next 0/3] mptcp: add more sockopts
+Subject: Re: [PATCH mptcp-next 0/2] mptcp: Add support for SO_MAX_PACING_RATE
 Content-Language: en-GB, fr-BE
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1754126092.git.tanggeliang@kylinos.cn>
+To: cpaasch@openai.com, MPTCP Upstream <mptcp@lists.linux.dev>,
+ Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>
+References: <20250802-b4-mptcp_setsockopt-v1-0-50d4905a4c2b@openai.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -85,39 +85,18 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <cover.1754126092.git.tanggeliang@kylinos.cn>
+In-Reply-To: <20250802-b4-mptcp_setsockopt-v1-0-50d4905a4c2b@openai.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+Hi Christoph,
 
-On 02/08/2025 11:19, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
-> 
-> Add sockopt support for IPV6_TCLASS, IP_TTL and IPV6_UNICAST_HOPS.
-> 
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/568
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/296
-> 
-> Geliang Tang (3):
->   mptcp: add IPV6_TCLASS sockopt support
->   mptcp: add IP_TTL sockopt support
->   mptcp: add IPV6_UNICAST_HOPS sockopt support
+On 03/08/2025 01:52, Christoph Paasch via B4 Relay wrote:
+> Pass it to all subflows. Also, add a selftest.
 
-Each of these patches are adding a new dedicated helper, doing almost
-the same.
+Thank you for looking at that!
 
-Maybe we can do better. I proposed something like that a few years ago:
-
-  https://patchwork.kernel.org/project/mptcp/list/?series=763505&state=*
-
-I can eventually look at updating it.
-
-But before, please add the packetdrill tests: that's the most important
-part. The modifications in the kernel look simple, but without the
-tests, we cannot do the validation. Because each off these socket
-options changes something in the packet sent to the wire, I think it
-would be better to use Packetdrill for the tests.
+I have a few suggestions, please see my individual comments.
 
 Cheers,
 Matt
