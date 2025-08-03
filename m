@@ -1,168 +1,255 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9A7E13AA2F
-	for <mptcp@lists.linux.dev>; Sat,  2 Aug 2025 23:52:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 937F92E3705;
+	Sun,  3 Aug 2025 02:21:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754178753; cv=none; b=hVkWwjNXyaOscFrYdw4F3cgfe2zOosJlUOu1Ci5PR7UwpI2Wi6yKbgela4jR0olqWEDhR226frkL4wHd57OAipFWNjTW6kk1LemYa+9iJPDWi3948KGI4S+uK5/959PLV4856q1cuhqPnvgsQ1PLExjLkeyk1hENX5mSviONDCo=
+	t=1754187673; cv=none; b=DoefWNgdYvbajnSnFV6tuOs6vkXY6U3qePF3M159ZUNc15JJz1qvoXqgtBT2cZCcpLQ1DaN3HNCO6Js3Vo86pD8e1jgh+49ZZfBwQxr2mt9Oh6cTm/45vYM0NTBd66u8/xi7HlpXa85h4u+euIEfl7VuQiqI/b/oITcRIiSS/gk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754178753; c=relaxed/simple;
-	bh=4JqamOJ2ckFWLindYgKjV16ep5iGfgUzHIAMtSt8IfI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=f4A4nKeXQTspKbHj/RNtwFZZTnNo5RgxniBJ5rwgx2B5oYjli6gv9h6z57AJh+lnFn7RJCaxNbZOmPNLP3qwKyQU5ynvJAYrrOfx/Y+2okAjGXQ3Tv/b7ELccwbp6Ztc5u89AK8pXpf7BDoOAAacRGx5XJ1aHr7PtuhVmMGmS8c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=neqsRH5m; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1754187673; c=relaxed/simple;
+	bh=K7+haCZ/AANMxksMV3B0s0xfpe8EEaHSfghe1TYpWeU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DASXd277G7fn1hVtOcFEyT10MKz9pnhl79ci5l1NV/U0IAonWW2QqtzafkjXR09p3pO6ZDowbHICSWQCL7YkIUs0G9Vt9frojbcymaSYAoffa3m2iaYlqVpGW6hRTVcatqZJ2yGG+UovkbzDmvecmpuiRsOo5kuHeud+qvL9tn4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aWasgsgv; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="neqsRH5m"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 89394C4CEF9;
-	Sat,  2 Aug 2025 23:52:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754178752;
-	bh=4JqamOJ2ckFWLindYgKjV16ep5iGfgUzHIAMtSt8IfI=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=neqsRH5mQ5W5IPQNpWoEttE6VX+8d5E3VIhDgO9wSrSwj9pL8f6d2mAU4rrZPlKyX
-	 mQ/Mbbn/OrlaaozEsL0LTS6kbR9pZpptzpP9NSUpoCXb6FI56w6K0Ef15VBxP1SPz0
-	 fQCakP6b+cSGzFan1twNnzkKChGj/HKMMlHubWUklsBpWFhkp/4gilw9hsD9ycu7Bh
-	 0OZi6m9DwOiuz0F4FQ8ONiEn3iZbFq5PZmWBBHcLA99LY9z9nMgZ50B66vn1ca7c0I
-	 EnP5uKJ8PYXqJaapZ9vdDx+wAyCk6DC5gKRnpzKGO56SMsvWd/HAR/VOrMeqWMsezn
-	 Axj9+lbDiNkyQ==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FCCAC87FDB;
-	Sat,  2 Aug 2025 23:52:32 +0000 (UTC)
-From: Christoph Paasch via B4 Relay <devnull+cpaasch.openai.com@kernel.org>
-Date: Sat, 02 Aug 2025 16:52:23 -0700
-Subject: [PATCH mptcp-next 2/2] selftests: Add tests for SO_MAX_PACING_RATE
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aWasgsgv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1754187670; x=1785723670;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=K7+haCZ/AANMxksMV3B0s0xfpe8EEaHSfghe1TYpWeU=;
+  b=aWasgsgvNnoE7Rcw/ml9gofaiJihgMZQR622SJ+ujun2k50SoEAzi7aW
+   1g3arqoxhFGLGAE3tbJCfCR2hZdIsyVYTFA0bGTnG7Q0V1cBJVpAyomPH
+   ZNyblEWTY357znGFEE9s1Q5W8nk5saJAsnycjntPONcgU+OCDNT3Jmnd+
+   SbmhCvx2Pm6Vdb35AMCi+LBbBrehVB4z6RNewulUoTn02E2KDb5rZJMja
+   YrH60MT6cW5PXHqMcCUqedc5rsXbFdZ7pQBkny2uBg7mEkFo04XEBqvoo
+   5BbpGpWVbUtXdMIWWxItnTLL3roECIRtIHvQdo7WpHdPImigvVQE2VgQp
+   A==;
+X-CSE-ConnectionGUID: tzlKUxywSXSf4g2weEGPLw==
+X-CSE-MsgGUID: odOAWLv7RMqzTRUyxRJdbA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11510"; a="81933750"
+X-IronPort-AV: E=Sophos;i="6.17,258,1747724400"; 
+   d="scan'208";a="81933750"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Aug 2025 19:21:09 -0700
+X-CSE-ConnectionGUID: xxnokUtGRRu8n6MUpRV6PQ==
+X-CSE-MsgGUID: nAU/i3I/To+E0vdCR4Ns9w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.17,258,1747724400"; 
+   d="scan'208";a="163144606"
+Received: from lkp-server01.sh.intel.com (HELO 160750d4a34c) ([10.239.97.150])
+  by orviesa010.jf.intel.com with ESMTP; 02 Aug 2025 19:21:07 -0700
+Received: from kbuild by 160750d4a34c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uiOLQ-0005jA-2B;
+	Sun, 03 Aug 2025 02:21:04 +0000
+Date: Sun, 3 Aug 2025 10:20:12 +0800
+From: kernel test robot <lkp@intel.com>
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Geliang Tang <tanggeliang@kylinos.cn>
+Subject: Re: [PATCH mptcp-next 3/3] mptcp: add IPV6_UNICAST_HOPS sockopt
+ support
+Message-ID: <202508030946.WcaovHBw-lkp@intel.com>
+References: <0fd13a7bb3ca420a1e68f49fe93e7baada72890b.1754126092.git.tanggeliang@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250802-b4-mptcp_setsockopt-v1-2-50d4905a4c2b@openai.com>
-References: <20250802-b4-mptcp_setsockopt-v1-0-50d4905a4c2b@openai.com>
-In-Reply-To: <20250802-b4-mptcp_setsockopt-v1-0-50d4905a4c2b@openai.com>
-To: MPTCP Upstream <mptcp@lists.linux.dev>, 
- Matthieu Baerts <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>, 
- Geliang Tang <geliang@kernel.org>
-Cc: Christoph Paasch <cpaasch@openai.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1754178751; l=3352;
- i=cpaasch@openai.com; s=20250712; h=from:subject:message-id;
- bh=gOr7CBsY//YX/X8nlYFqDWpnQ4w3KSIQzDe9v6s9fe4=;
- b=SdwAulYfjpSHTT/XgJkmFgmJ8ib1eiRiFSEpOUk1JGtEsPwexlftLG+inCyYF+wVW54LWbzSd
- 2C425JNpMtNDRhGS2l8p2vAzwixQGJq8H8yOv3/U5cIiMD7XvwjLCg0
-X-Developer-Key: i=cpaasch@openai.com; a=ed25519;
- pk=1HRHZlVUZPziMZvsAQFvP7n5+uEosTDAjXmNXykdxdg=
-X-Endpoint-Received: by B4 Relay for cpaasch@openai.com/20250712 with
- auth_id=459
-X-Original-From: Christoph Paasch <cpaasch@openai.com>
-Reply-To: cpaasch@openai.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0fd13a7bb3ca420a1e68f49fe93e7baada72890b.1754126092.git.tanggeliang@kylinos.cn>
 
-From: Christoph Paasch <cpaasch@openai.com>
+Hi Geliang,
 
-Add a test to check the API for SO_MAX_PACING_RATE in MPTCP.
+kernel test robot noticed the following build errors:
 
-Signed-off-by: Christoph Paasch <cpaasch@openai.com>
----
- tools/testing/selftests/net/mptcp/mptcp_sockopt.c | 74 +++++++++++++++++++++++
- 1 file changed, 74 insertions(+)
+[auto build test ERROR on mptcp/export]
+[also build test ERROR on mptcp/export-net linus/master v6.16 next-20250801]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-index 9934a68df23708ecb413c4ab26523989e3b9f158..c7608df4cc2685478c3343646bfa1ed1f957000f 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-+++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-@@ -762,6 +762,79 @@ static void test_ip_tos_sockopt(int fd)
- 		xerror("expect socklen_t == -1");
- }
- 
-+static void test_so_max_pacing_rate(int fd)
-+{
-+	/* SO_MAX_PACING_RATE is a unsigned long value in bytes/sec. Validate basic
-+	 * set/get semantics and a few edge cases for getsockopt() lengths.
-+	 */
-+	unsigned long in, out;
-+	socklen_t s;
-+	int r;
-+
-+	/* Try a few representative values, including 0 (unlimited),
-+	 * small, medium and a large one.
-+	 */
-+	unsigned long tests[] = {
-+	    0U,
-+	    1U,
-+	    10U * 1000U * 1000U, /* 10 MB/s */
-+	    5U * 1024 * 1024 * 1024 /* 5 GB/s - tests that 64-bit unsigned long correctly works */
-+	};
-+
-+	for (size_t i = 0; i < sizeof(tests) / sizeof(unsigned long); i++) {
-+		in = tests[i];
-+
-+		r = setsockopt(fd, SOL_SOCKET, SO_MAX_PACING_RATE, &in, sizeof(in));
-+		if (r != 0) {
-+			char *msg;
-+			(void)asprintf(&msg, "setsockopt SO_MAX_PACING_RATE to %lu", in);
-+			die_perror(msg);
-+		}
-+
-+		out = ~in; /* poison */
-+		s = sizeof(out);
-+		r = getsockopt(fd, SOL_SOCKET, SO_MAX_PACING_RATE, &out, &s);
-+		if (r != 0) {
-+			char *msg;
-+			(void)asprintf(&msg, "getsockopt SO_MAX_PACING_RATE expected %lu", in);
-+			die_perror(msg);
-+		}
-+
-+		if (s != sizeof(out))
-+			xerror("SO_MAX_PACING_RATE length %d != %zu", s, sizeof(out));
-+
-+		if (out != in)
-+			xerror("SO_MAX_PACING_RATE %u != %u", out, in);
-+
-+		/* Query with zero-length buffer. Kernel should succeed and not write. */
-+		s = 0;
-+		r = getsockopt(fd, SOL_SOCKET, SO_MAX_PACING_RATE, &out, &s);
-+		if (r != 0)
-+			die_perror("getsockopt SO_MAX_PACING_RATE len=0");
-+		if (s != 0)
-+			xerror("expect socklen_t == 0 for SO_MAX_PACING_RATE");
-+
-+		/* Query with negative length should fail with -EINVAL and leave s unchanged. */
-+		s = -1;
-+		r = getsockopt(fd, SOL_SOCKET, SO_MAX_PACING_RATE, &out, &s);
-+		if (r != -1 && errno != EINVAL)
-+			die_perror("getsockopt SO_MAX_PACING_RATE did not indicate -EINVAL");
-+		if (s != -1)
-+			xerror("expect socklen_t == -1 for SO_MAX_PACING_RATE");
-+	}
-+
-+	/* Invalid set: zero length should fail. */
-+	in = 1234U;
-+	r = setsockopt(fd, SOL_SOCKET, SO_MAX_PACING_RATE, &in, 0);
-+	if (r != -1 && errno != EINVAL)
-+		die_perror("setsockopt SO_MAX_PACING_RATE len=0 did not indicate -EINVAL");
-+
-+	/* Invalid set: too short length should fail. */
-+	r = setsockopt(fd, SOL_SOCKET, SO_MAX_PACING_RATE, &in, 1);
-+	if (r != -1 && errno != EINVAL)
-+		die_perror("setsockopt SO_MAX_PACING_RATE short len did not indicate -EINVAL");
-+}
-+
- static int client(int pipefd)
- {
- 	int fd = -1;
-@@ -780,6 +853,7 @@ static int client(int pipefd)
- 	}
- 
- 	test_ip_tos_sockopt(fd);
-+	test_so_max_pacing_rate(fd);
- 
- 	connect_one_server(fd, pipefd);
- 
+url:    https://github.com/intel-lab-lkp/linux/commits/Geliang-Tang/mptcp-add-IPV6_TCLASS-sockopt-support/20250802-212226
+base:   https://github.com/multipath-tcp/mptcp_net-next.git export
+patch link:    https://lore.kernel.org/r/0fd13a7bb3ca420a1e68f49fe93e7baada72890b.1754126092.git.tanggeliang%40kylinos.cn
+patch subject: [PATCH mptcp-next 3/3] mptcp: add IPV6_UNICAST_HOPS sockopt support
+config: x86_64-buildonly-randconfig-006-20250803 (https://download.01.org/0day-ci/archive/20250803/202508030946.WcaovHBw-lkp@intel.com/config)
+compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250803/202508030946.WcaovHBw-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202508030946.WcaovHBw-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+>> net/mptcp/sockopt.c:1581:34: error: no member named 'ipv6' in 'struct net'
+    1581 |                         val = READ_ONCE(sock_net(sk)->ipv6.devconf_all->hop_limit);
+         |                                         ~~~~~~~~~~~~  ^
+   include/asm-generic/rwonce.h:49:33: note: expanded from macro 'READ_ONCE'
+      49 |         compiletime_assert_rwonce_type(x);                              \
+         |                                        ^
+   include/asm-generic/rwonce.h:36:35: note: expanded from macro 'compiletime_assert_rwonce_type'
+      36 |         compiletime_assert(__native_word(t) || sizeof(t) == sizeof(long long),  \
+         |                                          ^
+   include/linux/compiler_types.h:533:10: note: expanded from macro '__native_word'
+     533 |         (sizeof(t) == sizeof(char) || sizeof(t) == sizeof(short) || \
+         |                 ^
+   include/linux/compiler_types.h:572:22: note: expanded from macro 'compiletime_assert'
+     572 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+         |                             ^~~~~~~~~
+   include/linux/compiler_types.h:560:23: note: expanded from macro '_compiletime_assert'
+     560 |         __compiletime_assert(condition, msg, prefix, suffix)
+         |                              ^~~~~~~~~
+   include/linux/compiler_types.h:552:9: note: expanded from macro '__compiletime_assert'
+     552 |                 if (!(condition))                                       \
+         |                       ^~~~~~~~~
+>> net/mptcp/sockopt.c:1581:34: error: no member named 'ipv6' in 'struct net'
+    1581 |                         val = READ_ONCE(sock_net(sk)->ipv6.devconf_all->hop_limit);
+         |                                         ~~~~~~~~~~~~  ^
+   include/asm-generic/rwonce.h:49:33: note: expanded from macro 'READ_ONCE'
+      49 |         compiletime_assert_rwonce_type(x);                              \
+         |                                        ^
+   include/asm-generic/rwonce.h:36:35: note: expanded from macro 'compiletime_assert_rwonce_type'
+      36 |         compiletime_assert(__native_word(t) || sizeof(t) == sizeof(long long),  \
+         |                                          ^
+   include/linux/compiler_types.h:533:39: note: expanded from macro '__native_word'
+     533 |         (sizeof(t) == sizeof(char) || sizeof(t) == sizeof(short) || \
+         |                                              ^
+   include/linux/compiler_types.h:572:22: note: expanded from macro 'compiletime_assert'
+     572 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+         |                             ^~~~~~~~~
+   include/linux/compiler_types.h:560:23: note: expanded from macro '_compiletime_assert'
+     560 |         __compiletime_assert(condition, msg, prefix, suffix)
+         |                              ^~~~~~~~~
+   include/linux/compiler_types.h:552:9: note: expanded from macro '__compiletime_assert'
+     552 |                 if (!(condition))                                       \
+         |                       ^~~~~~~~~
+>> net/mptcp/sockopt.c:1581:34: error: no member named 'ipv6' in 'struct net'
+    1581 |                         val = READ_ONCE(sock_net(sk)->ipv6.devconf_all->hop_limit);
+         |                                         ~~~~~~~~~~~~  ^
+   include/asm-generic/rwonce.h:49:33: note: expanded from macro 'READ_ONCE'
+      49 |         compiletime_assert_rwonce_type(x);                              \
+         |                                        ^
+   include/asm-generic/rwonce.h:36:35: note: expanded from macro 'compiletime_assert_rwonce_type'
+      36 |         compiletime_assert(__native_word(t) || sizeof(t) == sizeof(long long),  \
+         |                                          ^
+   include/linux/compiler_types.h:534:10: note: expanded from macro '__native_word'
+     534 |          sizeof(t) == sizeof(int) || sizeof(t) == sizeof(long))
+         |                 ^
+   include/linux/compiler_types.h:572:22: note: expanded from macro 'compiletime_assert'
+     572 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+         |                             ^~~~~~~~~
+   include/linux/compiler_types.h:560:23: note: expanded from macro '_compiletime_assert'
+     560 |         __compiletime_assert(condition, msg, prefix, suffix)
+         |                              ^~~~~~~~~
+   include/linux/compiler_types.h:552:9: note: expanded from macro '__compiletime_assert'
+     552 |                 if (!(condition))                                       \
+         |                       ^~~~~~~~~
+>> net/mptcp/sockopt.c:1581:34: error: no member named 'ipv6' in 'struct net'
+    1581 |                         val = READ_ONCE(sock_net(sk)->ipv6.devconf_all->hop_limit);
+         |                                         ~~~~~~~~~~~~  ^
+   include/asm-generic/rwonce.h:49:33: note: expanded from macro 'READ_ONCE'
+      49 |         compiletime_assert_rwonce_type(x);                              \
+         |                                        ^
+   include/asm-generic/rwonce.h:36:35: note: expanded from macro 'compiletime_assert_rwonce_type'
+      36 |         compiletime_assert(__native_word(t) || sizeof(t) == sizeof(long long),  \
+         |                                          ^
+   include/linux/compiler_types.h:534:38: note: expanded from macro '__native_word'
+     534 |          sizeof(t) == sizeof(int) || sizeof(t) == sizeof(long))
+         |                                             ^
+   include/linux/compiler_types.h:572:22: note: expanded from macro 'compiletime_assert'
+     572 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+         |                             ^~~~~~~~~
+   include/linux/compiler_types.h:560:23: note: expanded from macro '_compiletime_assert'
+     560 |         __compiletime_assert(condition, msg, prefix, suffix)
+         |                              ^~~~~~~~~
+   include/linux/compiler_types.h:552:9: note: expanded from macro '__compiletime_assert'
+     552 |                 if (!(condition))                                       \
+         |                       ^~~~~~~~~
+>> net/mptcp/sockopt.c:1581:34: error: no member named 'ipv6' in 'struct net'
+    1581 |                         val = READ_ONCE(sock_net(sk)->ipv6.devconf_all->hop_limit);
+         |                                         ~~~~~~~~~~~~  ^
+   include/asm-generic/rwonce.h:49:33: note: expanded from macro 'READ_ONCE'
+      49 |         compiletime_assert_rwonce_type(x);                              \
+         |                                        ^
+   include/asm-generic/rwonce.h:36:48: note: expanded from macro 'compiletime_assert_rwonce_type'
+      36 |         compiletime_assert(__native_word(t) || sizeof(t) == sizeof(long long),  \
+         |                                                       ^
+   include/linux/compiler_types.h:572:22: note: expanded from macro 'compiletime_assert'
+     572 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+         |                             ^~~~~~~~~
+   include/linux/compiler_types.h:560:23: note: expanded from macro '_compiletime_assert'
+     560 |         __compiletime_assert(condition, msg, prefix, suffix)
+         |                              ^~~~~~~~~
+   include/linux/compiler_types.h:552:9: note: expanded from macro '__compiletime_assert'
+     552 |                 if (!(condition))                                       \
+         |                       ^~~~~~~~~
+>> net/mptcp/sockopt.c:1581:34: error: no member named 'ipv6' in 'struct net'
+    1581 |                         val = READ_ONCE(sock_net(sk)->ipv6.devconf_all->hop_limit);
+         |                                         ~~~~~~~~~~~~  ^
+   include/asm-generic/rwonce.h:50:14: note: expanded from macro 'READ_ONCE'
+      50 |         __READ_ONCE(x);                                                 \
+         |                     ^
+   include/asm-generic/rwonce.h:44:65: note: expanded from macro '__READ_ONCE'
+      44 | #define __READ_ONCE(x)  (*(const volatile __unqual_scalar_typeof(x) *)&(x))
+         |                                                                  ^
+   include/linux/compiler_types.h:522:13: note: expanded from macro '__unqual_scalar_typeof'
+     522 |                 _Generic((x),                                           \
+         |                           ^
+>> net/mptcp/sockopt.c:1581:34: error: no member named 'ipv6' in 'struct net'
+    1581 |                         val = READ_ONCE(sock_net(sk)->ipv6.devconf_all->hop_limit);
+         |                                         ~~~~~~~~~~~~  ^
+   include/asm-generic/rwonce.h:50:14: note: expanded from macro 'READ_ONCE'
+      50 |         __READ_ONCE(x);                                                 \
+         |                     ^
+   include/asm-generic/rwonce.h:44:72: note: expanded from macro '__READ_ONCE'
+      44 | #define __READ_ONCE(x)  (*(const volatile __unqual_scalar_typeof(x) *)&(x))
+         |                                                                         ^
+   7 errors generated.
+
+
+vim +1581 net/mptcp/sockopt.c
+
+  1558	
+  1559	static int mptcp_getsockopt_v6(struct mptcp_sock *msk, int optname,
+  1560				       char __user *optval, int __user *optlen)
+  1561	{
+  1562		struct sock *sk = (void *)msk;
+  1563		int val;
+  1564	
+  1565		switch (optname) {
+  1566		case IPV6_V6ONLY:
+  1567			return mptcp_put_int_option(msk, optval, optlen,
+  1568						    sk->sk_ipv6only);
+  1569		case IPV6_TRANSPARENT:
+  1570			return mptcp_put_int_option(msk, optval, optlen,
+  1571						    inet_test_bit(TRANSPARENT, sk));
+  1572		case IPV6_FREEBIND:
+  1573			return mptcp_put_int_option(msk, optval, optlen,
+  1574						    inet_test_bit(FREEBIND, sk));
+  1575		case IPV6_TCLASS:
+  1576			return mptcp_put_int_option(msk, optval, optlen,
+  1577						    inet6_sk(sk)->tclass);
+  1578		case IPV6_UNICAST_HOPS:
+  1579			val = READ_ONCE(inet6_sk(sk)->hop_limit);
+  1580			if (val < 0)
+> 1581				val = READ_ONCE(sock_net(sk)->ipv6.devconf_all->hop_limit);
+  1582			return mptcp_put_int_option(msk, optval, optlen, val);
+  1583		}
+  1584	
+  1585		return -EOPNOTSUPP;
+  1586	}
+  1587	
 
 -- 
-2.50.1
-
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
