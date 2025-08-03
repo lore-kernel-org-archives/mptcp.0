@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB990A55
-	for <mptcp@lists.linux.dev>; Sun,  3 Aug 2025 06:08:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ACBBA55
+	for <mptcp@lists.linux.dev>; Sun,  3 Aug 2025 06:10:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754201308; cv=none; b=RH1JbN/ChLIhLojo9kvD5CKUU66bFU0R2JqO/ppoJsXLjgewwZyJ8lyk2drN7fdkKjA6XR3c9Hoxr68LRMwVmaW0pOTlVMSqamgFcO9yYPBx5ya1mARE13a7CwwhywIvqii2BYoPxmoQ2OR1S5PA+/EqhOlRG717cNLF6nFtfd8=
+	t=1754201459; cv=none; b=JzRPPLo+7iQUaXJHVVsC8Fr2rm6cQh8ujddJxSNi4vdJaPQmx0IkdNKMmvFs7xNDKu1dyy2BrU0O85CNRx+aNhZsTdhBG79dqQRE4QOrVTd2LU+nZHvMIM9TJOvFWfxiu6s5J45yg7isCZvMt/IyJhnM4DLCS56J2/5En3+rxXA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754201308; c=relaxed/simple;
-	bh=NRfX/EvFAmfqvpba+m/qtJjCSpRfJcHosncGttafsEE=;
+	s=arc-20240116; t=1754201459; c=relaxed/simple;
+	bh=wFzQQk+cJdDqgumfwUIQM2pze6CGSDafGEthgd9l+VU=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=HLTL7U5AzrXTGUEuDdaPcXeoDOISpIbBuhdgSxAFSAgJ1XP4FrlgevJA7tvz7KFA/bbrSSL08Os5Ug3RSMb2QTThHT0siwTW1JOnzLaslObqE4IFtASkBGCjOYaBj5bHaXG8cFq1QoII4EE9jmXdpEDzIbBhVF8hqez7CTv0fU8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i1pNm2VS; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=nlX9RfROAqv6tkylpga7ZsQuCHKZcY+PxI5cvyOGFNQKpzKO6Ip1w56f6zEoWFbL8HxQHLKqYZeu/UqnlblrJ3lQ5b37LsV4FdOu9SagV5XehlFC2OBrlbRruLWlN4QHi0u0YSf/LLdWO3i7eyRFo4m5pjejyQ+2x/73GwUlYck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G0PlZa5O; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i1pNm2VS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB61BC4CEEB;
-	Sun,  3 Aug 2025 06:08:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G0PlZa5O"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3ABEAC4CEEB;
+	Sun,  3 Aug 2025 06:10:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754201308;
-	bh=NRfX/EvFAmfqvpba+m/qtJjCSpRfJcHosncGttafsEE=;
+	s=k20201202; t=1754201458;
+	bh=wFzQQk+cJdDqgumfwUIQM2pze6CGSDafGEthgd9l+VU=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=i1pNm2VS0Ycu/XBs3g8uztcK1OwkO4pKck3Z8JFYRWRjI1SVpHyGbS3q4ACYuCw2D
-	 j7p1teD6TmOajVYHbWt/Qj4F4LVv6jCq+gQiogwZ0hEyjqzwfL/thwPbu/O07EM803
-	 UUxkEb45oUwM9xOgGpTLdscDRIGD6Vso+yGHbfWVyMW7zXRSrO0vRj9FmLJZC5/2Kd
-	 mqWWeTjk3CgvD53hwRNCGROUKE1M933cp/+TeQ4jR52SlOEKyHPZC2rH6AAV+O73XP
-	 Rvow4daHtiTgDGiiZs+hPWW16e7buFHFSHc+pJoJGlNy7WG1EvRr53WOlZrti79Kel
-	 f7VRKalxCWNaA==
-Message-ID: <b9904fbaff1e65d1b25edbf21a18be4ad74fe41a.camel@kernel.org>
+	b=G0PlZa5Oc9nSWk9fzCDNdeiaTd/Y1oghxGPfowq//yR9Xh/I92LTK9k9Y+aFLGDf5
+	 rnwawT41gxn4CAXiZPtVtfbyWuumLQyN2g05LHggIUGy2sYcQDe25LyCzrG+NTOzEf
+	 NZ2Pw62HYCmRxQKo+l6R83jJ9GYXmdh21DMgpo8GCGYqPAbD12jfjYysRCFdv8PvbU
+	 PY8It2r/bCiJoNc5JOedjoQVLBDjINwxJswWUkKqW0psFHGhq2dtbX/kBUd/3qI+Uj
+	 zu++kf+8S6VZBfYEnGMOuLBhGMTO+AxEl+hPowRLPxNiC81Yxzr1/P+5S6BR80SIs1
+	 q70Mj311vdwMw==
+Message-ID: <0567166cba36ca9d7d0181984ae703eea7068712.camel@kernel.org>
 Subject: Re: [PATCH mptcp-next v4 0/2] mptcp: TCP_MD5SIG support
 From: Geliang Tang <geliang@kernel.org>
 To: Christoph Paasch <cpaasch@openai.com>
 Cc: mptcp@lists.linux.dev, Geliang Tang <tanggeliang@kylinos.cn>
-Date: Sun, 03 Aug 2025 14:06:27 +0800
+Date: Sun, 03 Aug 2025 14:10:45 +0800
 In-Reply-To: <CADg4-L_VUj4xXLWiUAVF0pGvguwTHPbrh4ixFanaqkWJqOfvkg@mail.gmail.com>
 References: <cover.1754135958.git.tanggeliang@kylinos.cn>
 	 <CADg4-L_VUj4xXLWiUAVF0pGvguwTHPbrh4ixFanaqkWJqOfvkg@mail.gmail.com>
@@ -113,7 +113,7 @@ out of
  	 * TCP option space.
  	 */
 -	if (rcu_access_pointer(tcp_sk(sk_listener)->md5sig_info)) {
-+	if (rcu_access_pointer(tcp_sk(sk_listener)->md5sig_info) ||
++	if (rcu_access_pointer(tcp_sk(sk_listener)->md5sig_info) &&
 +	    !__mptcp_check_fallback(mptcp_sk(listener->conn))) {
  		subflow_add_reset_reason(skb, MPTCP_RST_EMPTCP);
  		return -EINVAL;
