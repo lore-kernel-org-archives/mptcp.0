@@ -1,39 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C03D1E130F
-	for <mptcp@lists.linux.dev>; Sun,  3 Aug 2025 14:08:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D59752E36F4
+	for <mptcp@lists.linux.dev>; Mon,  4 Aug 2025 06:14:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754230088; cv=none; b=V26A+8p0/m4wEHWbFSvniCRqveebUgP3pMsTRBCSkNIL5AyaMF4w9U57zzhYAX8P4ybmfx19ARofVwDy0V7Cfwdrb/OXi5Ny46EW8W4yh1kmWOncxSHo7QYPsMbNobcxjAZilHS40ZXVmpZfvQHhsXRezATRR8vcW/n+Yr6YtdA=
+	t=1754288064; cv=none; b=ejOVHXn3gfgKQ1vRXZ4rKh3Bav9vPPMc6MFhAIBSj9gZUgE/uhG/Zl0fwYoJXLAaNZ06qBQu6KaOqChfcYDiUQ182vC7iwEQYsh/6E4elnVX72vKv2hNlJ0PF02oALOb2rBEia4iNOt/FPOk7bqjZcGdjqcr3kkNMXPk4RAEtco=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754230088; c=relaxed/simple;
-	bh=ye+TQwwgKo6PKjXqeQhMfy7GC7bU3uzTkPL6lc8BxMs=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=NvbxXwtbeDmZ27C5aIKluZhceyyn+1fBptIMAMF6WufhSVpgLP1dijPjoOxkw1lGYARRUnnH9Alqa2YEzdxRNxjCT9IPelrOs16JcSmGFtrRTKNnS23exR3OCNM2wluhOpnDtAYEFVcPYkd/qFM2LmZqlwRVmAHvO2Kn0bUnQPQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MURs+uLO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1754288064; c=relaxed/simple;
+	bh=o7WfVbbAwoH02lbkOeJPGFGXIrpfkWcmSFf/Q8SGRBM=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=XhByRioJkImJN4D+m5GH9YcEghzOgZBMy07Z9XvTC+DRXtDWAGCVzQ02VQlZD04yzCoYI4sqr2XF/kIfZNaX9OWm8EnPHoGZO6WgD71Co+RgEmBYrikcCl17JxpidM8xLcXm1kOCkCx9xvK+LP5MHR0xB5h359UyIZsmZ3Nw7FU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XtxlqzM5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MURs+uLO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8748C4CEEB;
-	Sun,  3 Aug 2025 14:08:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XtxlqzM5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19F81C4CEE7;
+	Mon,  4 Aug 2025 06:14:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754230087;
-	bh=ye+TQwwgKo6PKjXqeQhMfy7GC7bU3uzTkPL6lc8BxMs=;
-	h=Subject:From:To:Date:In-Reply-To:References:From;
-	b=MURs+uLOqjQYsS9y7tXNu+FIOV+joL7EuFMLBBgteeIPSNgt7OPlWUUi7HIZOLsbM
-	 VCoK+i5/hX+46/bVadY7us/z7tDSqd5mgmEQhZu3SjdrXDaYFNn5YMW0rRko+8Sy4V
-	 AM5igdg/yAk9vbFSMPgnAp+ltg+yd+pxjLujn0UBWMYqHWYgxXP1yxeRGJieATdM1G
-	 ge0wvr69QcddR2gOFpG4lnbikyM5F83IB6uF9VS6awP6ircBNb5V5jdR3VasyWQlOu
-	 wSMn6ftUflozAeSUaZYk9AVzBBKqqBPCLdt5STQldlzvUxxRVrGsqZNUFTd6e1+QbD
-	 Si5SBbsucVmBg==
-Message-ID: <7bc26a32ca9ce941ddc0040be77dab18c8b55256.camel@kernel.org>
-Subject: Re: [PATCH mptcp-net 0/2] selftests: mptcp: connect: fix C23
- extension warning
+	s=k20201202; t=1754288064;
+	bh=o7WfVbbAwoH02lbkOeJPGFGXIrpfkWcmSFf/Q8SGRBM=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=XtxlqzM5s8YmpK0UHwG49K+GSg1KDFird5m5cT9cUcR4vgGPaNjEhbfRPkMxiLyju
+	 ew/MqEmWtG/Z/yJaJhf7EbEFwAuvLbgKd+uNLO3qAkneVaBj37MOL84aqYmx4utQwF
+	 aV6lIFsuLfs0d3UzLf3XUfDZW1AM+bp/n8EHlGX/HwcPpE+K1R4njg4OXWgdNVhyW+
+	 tALdPEvv1YvEJNgiZRkdCarqv3ivKrl0DIB3XzR9VKslUrB3mtnCUXOUEP4hDjQnnV
+	 f/f8S7/cXPoLptA8tsc7QKSbz/BGWAR4eHsKB6ruhv8lc/Yc8tylGA4U9E8X5KWRZa
+	 kBKbGvuaojQJg==
+Message-ID: <5bb6d1597f1b95fa3e47235092ae8b64209d8bce.camel@kernel.org>
+Subject: Re: [PATCH mptcp-next v4 0/2] mptcp: TCP_MD5SIG support
 From: Geliang Tang <geliang@kernel.org>
-To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, mptcp@lists.linux.dev
-Date: Sun, 03 Aug 2025 22:08:04 +0800
-In-Reply-To: <20250803-sft-mptcp-warn-gcc-v1-0-6d87808721ea@kernel.org>
-References: <20250803-sft-mptcp-warn-gcc-v1-0-6d87808721ea@kernel.org>
+To: Matthieu Baerts <matttbe@kernel.org>, Christoph Paasch
+ <cpaasch@openai.com>
+Cc: mptcp@lists.linux.dev, Geliang Tang <tanggeliang@kylinos.cn>
+Date: Mon, 04 Aug 2025 14:14:10 +0800
+In-Reply-To: <2370b313-4d83-458a-bfe9-9b0e556e9926@kernel.org>
+References: <cover.1754135958.git.tanggeliang@kylinos.cn>
+	 <CADg4-L_VUj4xXLWiUAVF0pGvguwTHPbrh4ixFanaqkWJqOfvkg@mail.gmail.com>
+	 <0567166cba36ca9d7d0181984ae703eea7068712.camel@kernel.org>
+	 <2370b313-4d83-458a-bfe9-9b0e556e9926@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 User-Agent: Evolution 3.56.0-1 
 Precedence: bulk
@@ -46,46 +50,124 @@ Content-Transfer-Encoding: 8bit
 
 Hi Matt,
 
-On Sun, 2025-08-03 at 14:13 +0200, Matthieu Baerts (NGI0) wrote:
-> GCC was complaining about the new label:
+On Sun, 2025-08-03 at 09:47 +0200, Matthieu Baerts wrote:
+> Hi Geliang,
 > 
->   mptcp_connect.c:187:2: warning: label followed by a declaration is
-> a C23 extension [-Wc23-extensions]
->     187 |         int err = getaddrinfo(node, service, hints, res);
->         |         ^
+> On 03/08/2025 08:10, Geliang Tang wrote:
+> > Hi Christoph,
+> > 
+> > On Sat, 2025-08-02 at 16:27 -0700, Christoph Paasch wrote:
+> > > On Sat, Aug 2, 2025 at 5:01 AM Geliang Tang <geliang@kernel.org>
+> > > wrote:
+> > > > 
+> > > > From: Geliang Tang <tanggeliang@kylinos.cn>
+> > > > 
+> > > > v4:
+> > > >  - drop CONFIG_TCP_MD5SIG check.
+> > > >  - drop sk_state check.
+> > > >  - use WARN_ON_ONCE for __mptcp_try_fallback().
+> > > > 
+> > > > v3:
+> > > >  - limit the use of these options for listened and closed
+> > > > state.
+> > > >  - check the return value of __mptcp_try_fallback().
+> > > > 
+> > > > v2:
+> > > >  - trigger fallback to TCP.
+> > > >  - check CONFIG_TCP_MD5SIG.
+> > > >  - update MD5 comment.
+> > > >  - drop selftests, packetdrill tests will be added later.
+> > > > 
+> > > > This series introduces support for TCP_MD5SIG socket options in
+> > > > MPTCP along
+> > > > with code improvements:
+> > > > 
+> > > > Patch 1: Refactors TCP_MAXSEG getsockopt handling to improve
+> > > > code
+> > > > consistency
+> > > > Patch 2: Adds setsockopt support for TCP_MD5SIG/TCP_MD5SIG_EXT
+> > > > (first
+> > > > subflow only)
+> > > > 
+> > > > Closes:
+> > > > https://github.com/multipath-tcp/mptcp_net-next/issues/575
+> > > > 
+> > > > Geliang Tang (2):
+> > > >   mptcp: Handle TCP_MAXSEG getsockopt in common case
+> > > >   mptcp: setsockopt support for TCP_MD5SIG
+> > > > 
+> > > >  net/mptcp/sockopt.c | 18 +++++++++++++-----
+> > > >  1 file changed, 13 insertions(+), 5 deletions(-)
+> > > 
+> > > When I run these 2 patches, I get a reset from the server :
+> > > 
+> > > 23:24:48.285068 enP22p3s0f0np0 Out IP 10.221.81.117.35206 >
+> > > 10.221.81.118.1234: Flags [S], seq 314447609, win 64240, options
+> > > [nop,nop,md5 shared secret not supplied with -M, can't check -
+> > > bab9b1ba60e4d55efb3d475ee4222311,mss
+> > > 1460,nop,nop,sackOK,nop,wscale
+> > > 0], length 0
+> > > 23:24:48.285172 enP22p3s0f0np0 In  IP 10.221.81.118.1234 >
+> > > 10.221.81.117.35206: Flags [R.], seq 0, ack 314447610, win 0,
+> > > options
+> > > [nop,nop,md5 shared secret not supplied with -M, can't check -
+> > > c3bb41109aead9863e97f9cc4e12e7d2], length 0
+> > > 
+> > 
+> > Yes, indeed, I got this reset too. This patch can fix it:
+> > 
+> > diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> > index 69e773059844..b22daf8c4526 100644
+> > --- a/net/mptcp/subflow.c
+> > +++ b/net/mptcp/subflow.c
+> > @@ -165,7 +165,8 @@ static int subflow_check_req(struct
+> > request_sock
+> > *req,
+> >  	/* no MPTCP if MD5SIG is enabled on this socket or we may
+> > run
+> > out of
+> >  	 * TCP option space.
+> >  	 */
+> > -	if (rcu_access_pointer(tcp_sk(sk_listener)->md5sig_info))
+> > {
+> > +	if (rcu_access_pointer(tcp_sk(sk_listener)->md5sig_info)
+> > &&
+> > +	    !__mptcp_check_fallback(mptcp_sk(listener->conn))) {
 > 
->   mptcp_inq.c:79:2: warning: label followed by a declaration is a C23
-> extension [-Wc23-extensions]
->      79 |         int err = getaddrinfo(node, service, hints, res);
->         |         ^
+> If __mptcp_check_fallback() is true, does it mean we will accept
+> SYN+MPC+MD5?
 > 
->   mptcp_sockopt.c:166:2: warning: label followed by a declaration is
-> a C23 extension [-Wc23-extensions]
->     166 |         int err = getaddrinfo(node, service, hints, res);
->         |         ^
+> Should we not have something like that?
 > 
-> Simply declare 'err' before the label to avoid this warning.
-> 
-> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+>   if (__mptcp_check_fallback())
+>       return 0;
 
-LGTM!
+Yes, this is much better, I'll update it in v5.
 
-Reviewed-by: Geliang Tang <geliang@kernel.org>
+> 
+> Please provide packetdrill tests: for the client and server side. For
+> the server side, with and without MPTCP in the injected SYN.
+
+Adding MD5SIG tests to packetdrill is not easy, as packetdrill
+currently does not accept struct tcp_md5sig as a parameter for
+setsockopt calls. This makes it difficult to express the following
+operation in packetdrill:
+
+setsockopt(sockfd, IPPROTO_TCP, TCP_MD5SIG, &md5sig, sizeof(md5sig))
+
+Integer parameters for setsockopt, on the other hand, are
+straightforward to represent. For example:
+
++0.0  setsockopt(3, SOL_SOCKET, SO_REUSEADDR, [1], 4) = 0
+
+Do I need to extend packetdrill to support struct tcp_md5sig? I'm
+uncertain and would like your advice.
 
 Thanks,
 -Geliang
 
-> ---
-> Matthieu Baerts (NGI0) (2):
->       selftests: mptcp: connect: fix C23 extension warning
->       selftests: mptcp: sockopt: fix C23 extension warning
 > 
->  tools/testing/selftests/net/mptcp/mptcp_connect.c | 5 +++--
->  tools/testing/selftests/net/mptcp/mptcp_inq.c     | 5 +++--
->  tools/testing/selftests/net/mptcp/mptcp_sockopt.c | 5 +++--
->  3 files changed, 9 insertions(+), 6 deletions(-)
-> ---
-> base-commit: 5c7ec796258e1599e2033ae0f40434b2ba6ca21c
-> change-id: 20250803-sft-mptcp-warn-gcc-4808047d562e
+> (+ adapt the one causing issues)
 > 
-> Best regards,
+> Cheers,
+> Matt
