@@ -1,128 +1,187 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8DE41DAC95
-	for <mptcp@lists.linux.dev>; Wed,  6 Aug 2025 15:16:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2239B18024
+	for <mptcp@lists.linux.dev>; Wed,  6 Aug 2025 15:27:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754493367; cv=none; b=b5YQRXblNHG8Sgwg/QSZ2lRY5MXxkS5O+ztecTPz4psZqekF13pF9Lv+Am+PGCWSU+XTp4YdMZiHNJNXBEPCMvoYYBph6C9JKGmTG8YhFZLYet3bctwY0l7LyJZgNnFNNEqPexgJqxB8I2KR8v386SzZaH9QG55b1Bl1pDbKJxs=
+	t=1754494069; cv=none; b=qep1zSamxhbYLnmSiWd7MH/AVl/jc9whXb22PUCpQmy3FqbFixJExRhBF2UB5ZNbwVflUvszMG98vpSUpefpVFfbynMqrxlqchymEgfD5ryinBxaqxq10YNYRjINn5mM/X+yUsqRkxXd8KYJahgiXAyFK9nczsyjGosIQasQMNI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754493367; c=relaxed/simple;
-	bh=4YAFU5tpUt86LgJGza5Drqj8cJR+BjW69roRbIAvSdI=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=SC2QkFeUpyZCg/g/n7NtiPxrJBSCmDjmVX4rrBv/k6xsLEpIHh8EtItrGPsspdcgDx8JVVYO4bZwTI2GNEPpvpah+UL6iJX8L+wAJScz7ItvMqobepmRCxw4ssXiG+TW3+MSspqBDbeThriH6MiERKgTmPZEM0Yu8ajGSZ3I/MY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ghnlQv0O; arc=none smtp.client-ip=209.85.216.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1754494069; c=relaxed/simple;
+	bh=RF5RmcmJ6qhoayOP/xM2wf27z1sm9yo0jTfPmpaxTUc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Q0Cs1gFt8r9XCUJNQ/J2I+j6EyZXdD+LmaEQEI/NwHnVhvAQF9M7qPqHpSocIInzu5EK0fxVXupvdiMRlgoRlfjcFUGblsyMYoZTbDY9sIBo2lAcANLQPzgBVT8J9fJJHMIDOTEXF3gP0M0Ze4eA3bnLuk2Q7wm2To6IhpFpsmw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gwOfwx1Q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ghnlQv0O"
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-32138e0d9adso46232a91.2
-        for <mptcp@lists.linux.dev>; Wed, 06 Aug 2025 08:16:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1754493365; x=1755098165; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CAlEFv5gk0P283pNFegQKrbYQPOdCSmBBcZ0u2oY2Ao=;
-        b=ghnlQv0OX/txDG/RHh1meLHWgY6vn38Hm/DHg4DG4TwL6N+DN9QQbtMirntM7ynC0l
-         amgB7RpIXgu2MNH3LN8mMYq5BWi0N7gZRTFr+B2EDEZw6Tzljbo89Y2OTPylCSVwcZsb
-         tf9XHBnFv/wZ/PoTOTCpczODaCgj9qyWpalXOk7YIodUgHpPYP3Mk82UoXbPaqjISPEZ
-         qAyir9xwk6TzBvwu5nFCOUrEsWb4GMG6+8rK46DcdZ+2T38vyQMtgeqLmhJNzblUahL/
-         tmXOknsOll3qG2dvkHCWU6QRNWNy2HT0a2Ggft/hoCl0ZeJjGAOcejkPtJZE6lq3t0c7
-         82cg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754493365; x=1755098165;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=CAlEFv5gk0P283pNFegQKrbYQPOdCSmBBcZ0u2oY2Ao=;
-        b=AREQ8ltu5GqTtWouXj1zAMxc1dh7ycLKvqt35bMP0dI9UulNlQekOt4e239i0WXR8t
-         5cAA8sD8k+otPpfLSTbiTsoLmcdD/GjOXAWdrnZnCkghPu84cy+arCpAw8g95ftkIFdb
-         W47kKFDIWAdmq38edMs4kyrQRvT8yVQMeCSobAO3a/1n3t0iqRIlIrX9OdYJ1K9TcjLX
-         Jp3VMbq8tVxncHpz/8xbNsCUHBNnTnt5L1F9cjvpCO5a7IUAxezrkGkksB8Y8G5o6lOA
-         Tl8uMPijQaM5QarVtFE3T4mgIlcNfvwiMiULccbTcfAHmTyfv2mqYtdUaiFDZjwqinzh
-         P55Q==
-X-Gm-Message-State: AOJu0Yw9VJMC1mulZSD7Mn3tbBG4Yo6O3s88o72OJlDPUZr+P2K+BQUF
-	JheE9LdlHoeNS77mHxHzdM9eFDdP8kI9tKDH5XvK1EzALXJ5CbLIK/7mhPi3A/0=
-X-Gm-Gg: ASbGncsFtgjXSHzhqQMa8rrasc3GEbAItlZGMJy21RMkuh39irpoicBcUpYeU6a/O/H
-	KzMOf+5t/L89c8YMShAwbx5dVbiHbnzN4pqdL56Nb51yCpmxvrRYRGqDxEfSC3NB4N8kkcB3wuU
-	s/XLEbwaT104X0Z5176aiz8iLz8yEcZSQdF57TsUHJu5D6kjx6HpSLpk9D3jBcuc4g7Sr3VgD72
-	i1h+aycSNgcqEZNymVZdcM72Aavm0dXVa0xN6nDq/iE71ahTmHhPRR6MREF+yEd0vaQggERRqJS
-	9OsQDCm4HCk3mXbeO1groX9UTfnwPhQdgFWwr3TRoHWzQKcXdoUVZPE2B84XqDjjH0vCyHkGB/d
-	87dqukpiIGlB0pTc7kUlg3CinsbcPqQ/0uT7qIw==
-X-Google-Smtp-Source: AGHT+IEt2Fmyh8PasDJYKoID0wCEqHxGXkA/YExuV7zABZpxbvKBbrlXJ/3vh8qFfVcFm7DxiGamdw==
-X-Received: by 2002:a17:90b:380a:b0:31f:36da:3f85 with SMTP id 98e67ed59e1d1-32167520ee1mr5163559a91.17.1754493364926;
-        Wed, 06 Aug 2025 08:16:04 -0700 (PDT)
-Received: from [127.0.0.1] ([172.182.226.198])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-32102acbc56sm9044956a91.2.2025.08.06.08.16.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Aug 2025 08:16:04 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <tanggeliang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <cover.1754449726.git.tanggeliang@kylinos.cn>
-References: <cover.1754449726.git.tanggeliang@kylinos.cn>
-Subject: Re: [PATCH mptcp-net 0/2] mptcp: disable add_addr retrans
-Message-ID: <e60d31c0-6711-c08e-ea7b-4b1bb4d54e80@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 06 Aug 2025 15:16:03 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gwOfwx1Q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E86E4C4CEE7;
+	Wed,  6 Aug 2025 15:27:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1754494068;
+	bh=RF5RmcmJ6qhoayOP/xM2wf27z1sm9yo0jTfPmpaxTUc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=gwOfwx1QbD4z6ruZxAkjVqRDQcx/nanbZDUDZCVSPYhujHOhqc1J3snEjiUF8TKkB
+	 Y4CdoUd8gHWikJJo6ylwB9st372PFCs/cVS2siCK/f8SkfVacdRmvDtKwcuH+PtNnz
+	 TQj/3Nnw8x/igKPmtE46bn3A70tQ7Li6+a4Tg0iz0EAuIN6gYbUAp8whmUREt4hJPY
+	 ZGXs6B9mVs4/7HDNB3rQnJaOC0tdU2QU61hjy6xehYTFd37O52Jt//GXEc/G/5BBZo
+	 qwasT/NMOvplceKYVoK2GyOCbkSRLCuweXPtlvSdjXmw3+jc+fy6il6iwASYF4Ynb6
+	 w7o5VJzapFFeg==
+Message-ID: <026cc9b6-4a9e-4f7a-9ff1-3f974f144912@kernel.org>
+Date: Wed, 6 Aug 2025 17:27:44 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-net 1/2] mptcp: disable add_addr retransmission when
+ timeout is 0
+Content-Language: en-GB, fr-BE
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <cover.1754449726.git.tanggeliang@kylinos.cn>
+ <3e852490c11a12a42cb15712305be368372bd078.1754449726.git.tanggeliang@kylinos.cn>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <3e852490c11a12a42cb15712305be368372bd078.1754449726.git.tanggeliang@kylinos.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-Thank you for your modifications, that's great!
+Thank you for looking at that!
 
-Our CI did some validations and here is its report:
+On 06/08/2025 05:11, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
+> 
+> When add_addr_timeout is set to 0, it indicates that ADD_ADDR
+> retransmissions should be disabled. This patch implements the logic to skip
+> retransmissions when the timeout value is zero.
 
-- KVM Validation: normal: Unstable: 1 failed test(s): =
-selftest_mptcp_connect_checksum =F0=9F=94=B4
-- KVM Validation: debug: =
-Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): =
-Unstable: 1 failed test(s): bpftest_test_progs-no_alu32_mptcp =F0=9F=94=B4
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/167786=
-50073
+I think the description should show there was an issue when previously
+set to 0, e.g.
 
-Initiator: Matthieu Baerts (NGI0)
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/eaa0db57b54e
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D988603
+  When add_addr_timeout was set to 0, this caused the ADD_ADDR to be
+  retransmitted immediately, which looks like a buggy behaviour.
+  Instead, interpret 0 as "no retransmissions needed".
 
+> The documentation is updated to explicitly state that setting the timeout
+> to 0 disables retransmission.
 
-If there are some issues, you can reproduce them using the same =
-environment as
-the one used by the CI thanks to a docker image, e.g.:
+Good idea!
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+> Suggested-by: Matthieu Baerts <matttbe@kernel.org>
 
-For more details:
+Thanks!
 
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+If it is seen as a fix, you can add a Fixes tag corresponding to the
+introduction of this sysctl knob.
 
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> ---
+>  Documentation/networking/mptcp-sysctl.rst | 2 ++
+>  net/mptcp/pm.c                            | 7 ++++++-
+>  2 files changed, 8 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/networking/mptcp-sysctl.rst b/Documentation/networking/mptcp-sysctl.rst
+> index 5bfab01eff5a..1683c139821e 100644
+> --- a/Documentation/networking/mptcp-sysctl.rst
+> +++ b/Documentation/networking/mptcp-sysctl.rst
+> @@ -12,6 +12,8 @@ add_addr_timeout - INTEGER (seconds)
+>  	resent to an MPTCP peer that has not acknowledged a previous
+>  	ADD_ADDR message.
+>  
+> +	Do not retransmit if set to 0.
+> +
+>  	The default value matches TCP_RTO_MAX. This is a per-namespace
+>  	sysctl.
+>  
+> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+> index 687dbb59d084..5dec018fdda2 100644
+> --- a/net/mptcp/pm.c
+> +++ b/net/mptcp/pm.c
+> @@ -274,6 +274,7 @@ static void mptcp_pm_add_timer(struct timer_list *timer)
+>  							      add_timer);
+>  	struct mptcp_sock *msk = entry->sock;
+>  	struct sock *sk = (struct sock *)msk;
+> +	unsigned int timeout;
+>  
+>  	pr_debug("msk=%p\n", msk);
+>  
+> @@ -291,6 +292,10 @@ static void mptcp_pm_add_timer(struct timer_list *timer)
+>  		goto out;
+>  	}
+>  
+> +	timeout = mptcp_get_add_addr_timeout(sock_net(sk));
+> +	if (!timeout)
+> +		goto out;
 
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+I think it would be better to patch mptcp_pm_alloc_anno_list(): without
+that, it means sk_reset_timer() will cause mptcp_pm_add_timer() to be
+called for no reasons. It looks better to prevent this, no?
+
+(In fact, it is maybe enough to only patch mptcp_pm_alloc_anno_list(), no?)
+
+> +
+>  	spin_lock_bh(&msk->pm.lock);
+>  
+>  	if (!mptcp_pm_should_add_signal_addr(msk)) {
+> @@ -302,7 +307,7 @@ static void mptcp_pm_add_timer(struct timer_list *timer)
+>  
+>  	if (entry->retrans_times < ADD_ADDR_RETRANS_MAX)
+>  		sk_reset_timer(sk, timer,
+> -			       jiffies + mptcp_get_add_addr_timeout(sock_net(sk)));
+> +			       jiffies + timeout);
+>  
+>  	spin_unlock_bh(&msk->pm.lock);
+>  
 
 Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
+
