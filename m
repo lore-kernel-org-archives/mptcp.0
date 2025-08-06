@@ -1,128 +1,149 @@
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C077291C01
-	for <mptcp@lists.linux.dev>; Wed,  6 Aug 2025 15:29:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C24E72E370A
+	for <mptcp@lists.linux.dev>; Wed,  6 Aug 2025 15:31:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754494172; cv=none; b=F3i9DGd8zz5Au/+1EhSaRtk8frP8F6mnc/qO0CX+imPT6LC/GBkuIVzEBj48YfugyQoS44GR1fUjSnkufJBOSJaf52me1tVKon7FSLHY8uzQuv5EHHoWAJSCQhIO/DzmpgoAO08ikd0ITi/LdnRlPFoGhJi7SF18JcBNWrncUog=
+	t=1754494284; cv=none; b=P0Q531ohWqvDeTbwtpYsbdVAzTfaLnhZya8lwbJfyBgoQltzfiTfbCD/gTdJ3leu7lg1Vzv6j1R3pIwn/J7spmzRdnkZWKDxNxpn61vlHIfjoPFA9mDKcRYItRFS5ODTTtI3OvYaajIwj+IEFymMGjNYE1Um42DC+hBqqomOIdc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754494172; c=relaxed/simple;
-	bh=WjuMKnVMomJQpnTRdf70eaWbWdoBCyB4E6wXOxWgkq8=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=OUluFVUeYP6ZM205uHjW1gU/4nK0OL8kLFeeTxkNNnRT2Sb5xBo6oYqwi2Uz3CnrdMCkxEo+M0fUkvm3rOYpyVOo64ENNGKD3M9pej/fyP4iydxIBvcppRXhKs7VpsQsxqGC8SDRCyKrBl5PNEYQqaj0tREgppykQxzYAtwtUuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UYvIPcuv; arc=none smtp.client-ip=209.85.160.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1754494284; c=relaxed/simple;
+	bh=23pOPckepvT+FkequsQV5iEopxlUu37UI7x10eTNI8k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=smpkWzDtbup13izA20gchUwT6E4aAADqWmcwJjFs52/YZ4rxipmoKYu6OEITempENX6vn5nUCl7Ao2DuWbf9Kg1vDWuhSMrL8VAOwDzRfnBds30D3H7rMoGabMn3mMf6w+NlrT9txMEUGjr2ermZjn0DH6v0ipAGIfbyrsQh88k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cpivWo4X; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UYvIPcuv"
-Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-4aeb2f73fc0so215511cf.2
-        for <mptcp@lists.linux.dev>; Wed, 06 Aug 2025 08:29:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1754494169; x=1755098969; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kdyNBGIeLcEul1wmiE24FnxaawOtBnJwLwQHiA7GHOs=;
-        b=UYvIPcuvc5hlPvw4sek7f85AVCbWHEMSkd5H/G0YaOzJDkg5E1CyqSKigPwEEu45Ip
-         UYyRmz6570vGITEgREkp5NbU3Voi0S+gaCKvqkvVOJm2ht+nPSUJvqURduGKFNMzWZ3/
-         YiXBz0gczfU9YMudZcPXLfH9s7AbLKkatU+OpV62QXtYADWpsJT84a7viD0P51DBZ9hK
-         Sk5Q6oPszKtmcLng83qrlVyYsqWpxBAt5u4KqT7yg21F5WZAgCJnb4ZEKqxVFhr8A8Hj
-         UkAwWQHArDh5L+QX6y2Oqx6o66xuipwV5EaPiBkzLCFiDsnmKDeg84X3bblHTK0BIu4R
-         yRIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754494169; x=1755098969;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=kdyNBGIeLcEul1wmiE24FnxaawOtBnJwLwQHiA7GHOs=;
-        b=dxgdoVTdwVQ+Mknv4LBu2NxG5PXDQaAQoEpmmOll+s/A1cA6o4zxMPSa9G7twJj1f1
-         LyzBaSOGtXjPIvbT7sWmumrBu0HgGiAUWXYtg8xISoHvi2AxeEu7Do1uxC6U0IOB5H/l
-         uCTdiwUtuas8FUlvpXgGzTzbpSaWfqXOBFRH1upb+BpGTTYM/DGPGr5/DFANS8JZ4dt7
-         CBCu7DjU8wstQHTRPrWNauini79b6D37f2DR7s4nNeurHbOsLi69DMJtvcC1tMURoBbw
-         cVGFro/nsW/NGS9jSwqwMhGoReFoLYR6iWJxWw2kDOO+h/Wv473Z7Quuy8JNJgjqNK0O
-         V37Q==
-X-Gm-Message-State: AOJu0YyNxauBWoasbbxsP6EwPBP00E7VTeU7aQa/+v8wMN98AFgqhL/F
-	udVp6aS6K/5ri7CgmqQo96GVrktuaavkaj2+xhuQo71znx2KfI2LFXFB1KCX
-X-Gm-Gg: ASbGncuNYI1YjkuPdcBJZP0oU9fNCWucqNxEmzZSQy5UG5Iuocgi0L/8nBrPH4r58c5
-	k7R7bCePIeu7zQGG7d7YLr0tlumMmwoe5w1V7oL92bf/4StU3qOAxd5oqLXkxVwwbwlhjsBM+fD
-	gcyqtxr9vVtgANUCFYHaWQdBNhz117CX3hT1aYnpPds8D1wN64IWYBVQwmI/vk0ttsxCqpVJE9M
-	7tNP1t1xbNmOqB1hzuROsKyinmGwL8JGJZCo/OAkxpYEbHd+wwWTJUSSzb9S9NozDlYCKD/CaeN
-	5V1zkzK9/8wAT+0xj8iVuSnlaccZKS2pNS5HkZJ8csTaXtFLvStz+WOSKGnmnUTrK2Ud3NDAUQJ
-	WsVvAhckMRgyWGEueUjB/1GN1AwiH2IPQ0NphJmDPmgom6A==
-X-Google-Smtp-Source: AGHT+IFzRA0fmEB72LJWfya3EHNz/JYghkIkr1vfs1CtsDI9FnToeHL9BojMUlJJn8WuDXEsQ0IKPQ==
-X-Received: by 2002:a05:620a:6cca:b0:7d3:fb3a:675b with SMTP id af79cd13be357-7e814dae35emr442244085a.35.1754494169264;
-        Wed, 06 Aug 2025 08:29:29 -0700 (PDT)
-Received: from [127.0.0.1] ([20.109.38.114])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7e67f5bee91sm835481185a.32.2025.08.06.08.29.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Aug 2025 08:29:28 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <tanggeliang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <cover.1754449947.git.tanggeliang@kylinos.cn>
-References: <cover.1754449947.git.tanggeliang@kylinos.cn>
-Subject: Re: [PATCH mptcp-next v3 0/3] mptcp: improve ADD_ADDR timeout
- handling
-Message-ID: <c59fed78-9dee-af6e-c844-e450c7d0cd27@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 06 Aug 2025 15:29:28 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cpivWo4X"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86744C4CEE7;
+	Wed,  6 Aug 2025 15:31:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1754494284;
+	bh=23pOPckepvT+FkequsQV5iEopxlUu37UI7x10eTNI8k=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=cpivWo4Xz6i0uxxktzeO2fhhjTkl/GNv406Ts0YiXwfRQHGPFQ/m+QU5q8P3bG/if
+	 Yc1xSWLWKfZe4PKvziweqHfIK3mevI1dx+4CqBdXHvQCc+G5qXHOjk6kgnqOeFK24i
+	 vDutU3b5jxTmJOZA7g8PBfGyqU9VWguh0L7qwnW7M5Ar2eJV8KLUog0havHvTiEXtN
+	 Mr47GULTFuZ9OvpcVupzdlRIloKt47tor1ltSxaIk7q8V8c44Jm1tBnAO5txqVOcCI
+	 CISkr+O8SYxa5rqGDhs8mbYtB1J4wR8HTWgfGlUN0DMT144e5xPwVdrmKgvltYMHo0
+	 +C5hBxY2VtAIA==
+Message-ID: <e6124c20-78cd-46d5-94e4-8afb54c319f3@kernel.org>
+Date: Wed, 6 Aug 2025 17:31:19 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-next v3 1/3] mptcp: remove duplicate sk_reset_timer
+ call
+Content-Language: en-GB, fr-BE
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <cover.1754449947.git.tanggeliang@kylinos.cn>
+ <f9f437aeb4bfd2ea461045c932c836ffea96227b.1754449947.git.tanggeliang@kylinos.cn>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <f9f437aeb4bfd2ea461045c932c836ffea96227b.1754449947.git.tanggeliang@kylinos.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-Thank you for your modifications, that's great!
+On 06/08/2025 05:17, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
+> 
+> sk_reset_timer() was called twice in mptcp_pm_alloc_anno_list. Simplify the
+> code by using a 'goto' statement to eliminate the duplication.
+> 
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> ---
+>  net/mptcp/pm.c | 8 +++-----
+>  1 file changed, 3 insertions(+), 5 deletions(-)
+> 
+> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+> index 5dec018fdda2..1330af6a2154 100644
+> --- a/net/mptcp/pm.c
+> +++ b/net/mptcp/pm.c
+> @@ -348,7 +348,6 @@ bool mptcp_pm_alloc_anno_list(struct mptcp_sock *msk,
+>  {
+>  	struct mptcp_pm_add_entry *add_entry = NULL;
+>  	struct sock *sk = (struct sock *)msk;
+> -	struct net *net = sock_net(sk);
+>  
+>  	lockdep_assert_held(&msk->pm.lock);
+>  
+> @@ -358,9 +357,7 @@ bool mptcp_pm_alloc_anno_list(struct mptcp_sock *msk,
+>  		if (WARN_ON_ONCE(mptcp_pm_is_kernel(msk)))
+>  			return false;
+>  
+> -		sk_reset_timer(sk, &add_entry->add_timer,
+> -			       jiffies + mptcp_get_add_addr_timeout(net));
+> -		return true;
+> +		goto out;
 
-Our CI did some validations and here is its report:
+Good idea, but maybe better to have a more explicit label, e.g. reset_timer.
 
-- KVM Validation: normal: Unstable: 2 failed test(s): packetdrill_add_addr =
-selftest_mptcp_connect =F0=9F=94=B4
-- KVM Validation: debug: Unstable: 1 =
-failed test(s): selftest_mptcp_connect =F0=9F=94=B4
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/167786=
-76332
-
-Initiator: Matthieu Baerts (NGI0)
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/287779d926ff
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D988606
-
-
-If there are some issues, you can reproduce them using the same =
-environment as
-the one used by the CI thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+>  	}
+>  
+>  	add_entry = kmalloc(sizeof(*add_entry), GFP_ATOMIC);
+> @@ -374,8 +371,9 @@ bool mptcp_pm_alloc_anno_list(struct mptcp_sock *msk,
+>  	add_entry->retrans_times = 0;
+>  
+>  	timer_setup(&add_entry->add_timer, mptcp_pm_add_timer, 0);
+> +out:
+>  	sk_reset_timer(sk, &add_entry->add_timer,
+> -		       jiffies + mptcp_get_add_addr_timeout(net));
+> +		       jiffies + mptcp_get_add_addr_timeout(sock_net(sk)));
+>  
+>  	return true;
+>  }
 
 Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
+
