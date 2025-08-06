@@ -1,139 +1,128 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5598D18BBB9
-	for <mptcp@lists.linux.dev>; Wed,  6 Aug 2025 14:46:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8DE41DAC95
+	for <mptcp@lists.linux.dev>; Wed,  6 Aug 2025 15:16:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754491595; cv=none; b=sktNf/4ZHi4494kzJoYJqb5uzXHeDE9F/INmaWDOvmeocRv2Po0Tt/CuDZjOW3E0afPC32j3IjWNUkp7dIlswmsRVEmgiVh8UUK7Jlu2jnU74O/S2JX0aZ7t68opJGu1ihPzLHcvy1Bt5bsbj5V6ttC5PE26BpdMDWYNFEzxI5s=
+	t=1754493367; cv=none; b=b5YQRXblNHG8Sgwg/QSZ2lRY5MXxkS5O+ztecTPz4psZqekF13pF9Lv+Am+PGCWSU+XTp4YdMZiHNJNXBEPCMvoYYBph6C9JKGmTG8YhFZLYet3bctwY0l7LyJZgNnFNNEqPexgJqxB8I2KR8v386SzZaH9QG55b1Bl1pDbKJxs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754491595; c=relaxed/simple;
-	bh=lXZueAvEjYs8Ryb/qM/0TwgSS1SwO8TB61QgXAAlVcY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=atzIh8fqzgf8jFyxti97FAa7UISB0bVcXVHhZmUWVWD5wehOIEshTAl1al0b4PCsTQ3tRfBUMOu08ldXINied2PmtglU9l4jQNm6Kq9xXVNlDhY/M7XVD/yCE2hIjGb61j99C0OLA8nnn4NfMloJ0TJIqu2Jq6H0h0ZmhIRM2dY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FmifXvtA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1754493367; c=relaxed/simple;
+	bh=4YAFU5tpUt86LgJGza5Drqj8cJR+BjW69roRbIAvSdI=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=SC2QkFeUpyZCg/g/n7NtiPxrJBSCmDjmVX4rrBv/k6xsLEpIHh8EtItrGPsspdcgDx8JVVYO4bZwTI2GNEPpvpah+UL6iJX8L+wAJScz7ItvMqobepmRCxw4ssXiG+TW3+MSspqBDbeThriH6MiERKgTmPZEM0Yu8ajGSZ3I/MY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ghnlQv0O; arc=none smtp.client-ip=209.85.216.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FmifXvtA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EDD2C4CEE7;
-	Wed,  6 Aug 2025 14:46:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754491594;
-	bh=lXZueAvEjYs8Ryb/qM/0TwgSS1SwO8TB61QgXAAlVcY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=FmifXvtAwerYkxhLg8o+zk14WawE32UIzuSVVCRWRLls+KLW8zItoptxrhpP9L/Dc
-	 dkulc1BButOwGMFR+GSmlPZ5Nftf4CvyzkmKVw+PQTb7B3qzSnyc0vKxPTBAtIiOZS
-	 jz3CYAv/+zPzihRNnvQU5/yczx9hJXA6KLDLd2bAHZjU0kvmFjDsR6rQf18EomkhRR
-	 iiIl38Y0ojVXWWpNJckVE9IWnshSgtIl48sYMadTEhRwquwBU7ksjtylL5v4/7ICrl
-	 5/cn7BckqJfv+dXJ9CuMHUCWOApcuxkKHMiwh5+IN1xyn2mzRu3WG12UuR70VCvd0C
-	 18fsplp1Rr/qg==
-Message-ID: <76c43980-94ca-4bbb-917c-a61021bdd548@kernel.org>
-Date: Wed, 6 Aug 2025 16:46:31 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ghnlQv0O"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-32138e0d9adso46232a91.2
+        for <mptcp@lists.linux.dev>; Wed, 06 Aug 2025 08:16:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1754493365; x=1755098165; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CAlEFv5gk0P283pNFegQKrbYQPOdCSmBBcZ0u2oY2Ao=;
+        b=ghnlQv0OX/txDG/RHh1meLHWgY6vn38Hm/DHg4DG4TwL6N+DN9QQbtMirntM7ynC0l
+         amgB7RpIXgu2MNH3LN8mMYq5BWi0N7gZRTFr+B2EDEZw6Tzljbo89Y2OTPylCSVwcZsb
+         tf9XHBnFv/wZ/PoTOTCpczODaCgj9qyWpalXOk7YIodUgHpPYP3Mk82UoXbPaqjISPEZ
+         qAyir9xwk6TzBvwu5nFCOUrEsWb4GMG6+8rK46DcdZ+2T38vyQMtgeqLmhJNzblUahL/
+         tmXOknsOll3qG2dvkHCWU6QRNWNy2HT0a2Ggft/hoCl0ZeJjGAOcejkPtJZE6lq3t0c7
+         82cg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1754493365; x=1755098165;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=CAlEFv5gk0P283pNFegQKrbYQPOdCSmBBcZ0u2oY2Ao=;
+        b=AREQ8ltu5GqTtWouXj1zAMxc1dh7ycLKvqt35bMP0dI9UulNlQekOt4e239i0WXR8t
+         5cAA8sD8k+otPpfLSTbiTsoLmcdD/GjOXAWdrnZnCkghPu84cy+arCpAw8g95ftkIFdb
+         W47kKFDIWAdmq38edMs4kyrQRvT8yVQMeCSobAO3a/1n3t0iqRIlIrX9OdYJ1K9TcjLX
+         Jp3VMbq8tVxncHpz/8xbNsCUHBNnTnt5L1F9cjvpCO5a7IUAxezrkGkksB8Y8G5o6lOA
+         Tl8uMPijQaM5QarVtFE3T4mgIlcNfvwiMiULccbTcfAHmTyfv2mqYtdUaiFDZjwqinzh
+         P55Q==
+X-Gm-Message-State: AOJu0Yw9VJMC1mulZSD7Mn3tbBG4Yo6O3s88o72OJlDPUZr+P2K+BQUF
+	JheE9LdlHoeNS77mHxHzdM9eFDdP8kI9tKDH5XvK1EzALXJ5CbLIK/7mhPi3A/0=
+X-Gm-Gg: ASbGncsFtgjXSHzhqQMa8rrasc3GEbAItlZGMJy21RMkuh39irpoicBcUpYeU6a/O/H
+	KzMOf+5t/L89c8YMShAwbx5dVbiHbnzN4pqdL56Nb51yCpmxvrRYRGqDxEfSC3NB4N8kkcB3wuU
+	s/XLEbwaT104X0Z5176aiz8iLz8yEcZSQdF57TsUHJu5D6kjx6HpSLpk9D3jBcuc4g7Sr3VgD72
+	i1h+aycSNgcqEZNymVZdcM72Aavm0dXVa0xN6nDq/iE71ahTmHhPRR6MREF+yEd0vaQggERRqJS
+	9OsQDCm4HCk3mXbeO1groX9UTfnwPhQdgFWwr3TRoHWzQKcXdoUVZPE2B84XqDjjH0vCyHkGB/d
+	87dqukpiIGlB0pTc7kUlg3CinsbcPqQ/0uT7qIw==
+X-Google-Smtp-Source: AGHT+IEt2Fmyh8PasDJYKoID0wCEqHxGXkA/YExuV7zABZpxbvKBbrlXJ/3vh8qFfVcFm7DxiGamdw==
+X-Received: by 2002:a17:90b:380a:b0:31f:36da:3f85 with SMTP id 98e67ed59e1d1-32167520ee1mr5163559a91.17.1754493364926;
+        Wed, 06 Aug 2025 08:16:04 -0700 (PDT)
+Received: from [127.0.0.1] ([172.182.226.198])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-32102acbc56sm9044956a91.2.2025.08.06.08.16.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Aug 2025 08:16:04 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Geliang Tang <tanggeliang@kylinos.cn>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <cover.1754449726.git.tanggeliang@kylinos.cn>
+References: <cover.1754449726.git.tanggeliang@kylinos.cn>
+Subject: Re: [PATCH mptcp-net 0/2] mptcp: disable add_addr retrans
+Message-ID: <e60d31c0-6711-c08e-ea7b-4b1bb4d54e80@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 06 Aug 2025 15:16:03 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v4 0/2] mptcp: TCP_MD5SIG support
-To: Geliang Tang <geliang@kernel.org>, Christoph Paasch <cpaasch@openai.com>
-Cc: mptcp@lists.linux.dev, Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1754135958.git.tanggeliang@kylinos.cn>
- <CADg4-L_VUj4xXLWiUAVF0pGvguwTHPbrh4ixFanaqkWJqOfvkg@mail.gmail.com>
- <0567166cba36ca9d7d0181984ae703eea7068712.camel@kernel.org>
- <2370b313-4d83-458a-bfe9-9b0e556e9926@kernel.org>
- <5bb6d1597f1b95fa3e47235092ae8b64209d8bce.camel@kernel.org>
-From: Matthieu Baerts <matttbe@kernel.org>
-Content-Language: en-GB, fr-BE
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <5bb6d1597f1b95fa3e47235092ae8b64209d8bce.camel@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 04/08/2025 08:14, Geliang Tang wrote:
-> On Sun, 2025-08-03 at 09:47 +0200, Matthieu Baerts wrote:
+Thank you for your modifications, that's great!
 
-(...)
+Our CI did some validations and here is its report:
 
->> Please provide packetdrill tests: for the client and server side. For
->> the server side, with and without MPTCP in the injected SYN.
-> 
-> Adding MD5SIG tests to packetdrill is not easy, as packetdrill
-> currently does not accept struct tcp_md5sig as a parameter for
-> setsockopt calls. This makes it difficult to express the following
-> operation in packetdrill:
-> 
-> setsockopt(sockfd, IPPROTO_TCP, TCP_MD5SIG, &md5sig, sizeof(md5sig))
-> 
-> Integer parameters for setsockopt, on the other hand, are
-> straightforward to represent. For example:
-> 
-> +0.0  setsockopt(3, SOL_SOCKET, SO_REUSEADDR, [1], 4) = 0
-> 
-> Do I need to extend packetdrill to support struct tcp_md5sig? I'm
-> uncertain and would like your advice.
+- KVM Validation: normal: Unstable: 1 failed test(s): =
+selftest_mptcp_connect_checksum =F0=9F=94=B4
+- KVM Validation: debug: =
+Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): =
+Unstable: 1 failed test(s): bpftest_test_progs-no_alu32_mptcp =F0=9F=94=B4
+- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/167786=
+50073
 
-I see that Packetdrill can parse packet with the TCP_MD5 option, see:
+Initiator: Matthieu Baerts (NGI0)
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/eaa0db57b54e
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D988603
 
-  gtests/net/tcp/md5/md5-only-on-client-ack.pkt
 
-But indeed, there is nothing planned to fill tcp_md5sig structure. I
-guess you need more than 32 bits.
+If there are some issues, you can reproduce them using the same =
+environment as
+the one used by the CI thanks to a docker image, e.g.:
 
-Could you eventually try to add a new type of optval, similar to others
-that have been added in run_system_call.c:syscall_setsockopt()?
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
 
-If not, maybe we could do the tests in the selftests, but it looks like
-that will be a lot of code and infrastructure to test something that
-might be quick and short (and easier to maintain) with packetdrill, no?
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
 
 Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
-
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
