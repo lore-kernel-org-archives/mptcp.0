@@ -1,37 +1,36 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2D2D199EAD
-	for <mptcp@lists.linux.dev>; Thu,  7 Aug 2025 18:00:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE990221737
+	for <mptcp@lists.linux.dev>; Thu,  7 Aug 2025 18:14:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754589656; cv=none; b=MScxIYIYaiY2CSACGEg0m1Nq2pwTZtA6O3cW4r60/byb0l839XUGF+qeVhVe5zHGBKD4f15SNWiScka58SvpYnkN2n7HpztJWACQdETqZQuh2V0TC1UcZLTo0r7CRyLOX6o1cpUDF144c4SoOaTmk7WnN7/QZOSXumPRnNU07n4=
+	t=1754590484; cv=none; b=u5kXLwF+1MS6KNU+My6e6SQF8pVkbF0hsz9kf/Eer6IZ+urKiOHlu3eKNijKTrR2lXaFl1JhbyPL1e08WAFr0ifXuOimHwyEY3HjtZVxlv5PALhGiiX12YI45tL3wWld/i6ciB/SOOqtsujrZaLOcByb094RgyFlQpaY93XUMEs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754589656; c=relaxed/simple;
-	bh=qq8/7k5VNb8u6FI2ZGGprys4sRi/CPgeVm9GiMjefxA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=hO2ssqfQn/qIVTY252xb5rGfjWQ6lKyr3Ia+62LKcmauV5qYsyVPRbtjuf9XzYQ+jwRz2XItvvpzQVg31ZLiQump/cy577hnIUZmN1dbJAz8yjj6JS45u9k/tcqBkiCyGB15CvR93jzx5jjU7FAf/eeP+zqTyqIwUpMYVLZRl/k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nJo0aG6/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1754590484; c=relaxed/simple;
+	bh=oLYSZLIl7NLmwtnxstROfILYip6EfKpPrkuWApfMS9Q=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=YmGWY97HHckfXd9vIsI5bUMLRwD1nJvP+luZR8LWPBWA1dAEieg2Yfe6rSUt38KWO9cqRnLrnJ75pC1/N0wPBoT+K6t/7CkEYciui0PVRjp8+XX73kZCnNDDiGVEGyq5AMM/gPoeXIChmxJPeFlqULKMWrddtStBS130vbbQOnc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gSAgs+2b; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nJo0aG6/"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 4E0EAC4CEEB;
-	Thu,  7 Aug 2025 18:00:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gSAgs+2b"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 726F8C4CEEB;
+	Thu,  7 Aug 2025 18:14:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754589656;
-	bh=qq8/7k5VNb8u6FI2ZGGprys4sRi/CPgeVm9GiMjefxA=;
+	s=k20201202; t=1754590483;
+	bh=oLYSZLIl7NLmwtnxstROfILYip6EfKpPrkuWApfMS9Q=;
 	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=nJo0aG6/7VpW1gWAkg4LxJwNTJqPOX79jv4u5SmyBBJ3fmlemqpMeg5QQmUuDsov+
-	 dPXm/4Q4y7CoQ3W4juSwVJfp6Vb4C41bjW4o3DWTGFgVv7bDbBmVVjM6o/3UfnEZql
-	 EwRGPFkg6+5Z867bUxMKz7XwYixbT0J1cWUfYbM1zdhVuch2tTW+HzIySNdPczaY8M
-	 Upsj9x1AQA0GwUwN1lTUwDGpBeLWnia4WLUiVmGuGx846892vCYjuExr0gibYTG8Y9
-	 840Vkwm2p2ezr+tmlvuP9zjeaN9eXUF1qi86tjm75ni1Epp0nYkPNApU54AqaZFV3M
-	 T0c5pXoKR2j5w==
+	b=gSAgs+2boUDtve/PCcvT+5TryZc+zEK51gdIGvq3sICQ7lrOmUUmSay9L7m12U8bP
+	 vCbOPklx//cB8e+aEJDDpktCIn/IeXIgBLuVGAEN8v653prEbEeZ/zcmA0SXXU1QNh
+	 1xYCYbrNpOJgZvbSV1Cf9pdu2+xdJEPyohyMGjoTenDVVnNM0vkvBgHFIW1Kt/SFWS
+	 bNjBF7wRn3MlevPJhLia6URRJjM465+g4U/VVmIuagQ69rqRnTBMpBpqSgx5u40uiS
+	 +HxzEOM16tfXQpZNQx71pCNahY5Fp1iqlEmsjYOKzt0lSOpOFGwycXxj7bxJYgVJ/3
+	 ZUPHI5GyudglQ==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CF5DC87FD2;
-	Thu,  7 Aug 2025 18:00:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EB9DC87FCF;
+	Thu,  7 Aug 2025 18:14:43 +0000 (UTC)
 From: Christoph Paasch via B4 Relay <devnull+cpaasch.openai.com@kernel.org>
-Date: Thu, 07 Aug 2025 11:00:43 -0700
-Subject: [PATCH mptcp-net] mptcp: drop skb if MPTCP skb extension
- allocation fails
+Date: Thu, 07 Aug 2025 11:14:37 -0700
+Subject: [PATCH mptcp-next] mptcp: record subflows in RPS table
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -40,21 +39,21 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250807-mptcp_fixes-v1-1-adfd79a88b5e@openai.com>
-X-B4-Tracking: v=1; b=H4sIAMrplGgC/x2LQQqAIBAAvyJ7TjBLkr4SEaFr7SETjQjEvyceh
- 5nJkDASJphZhogvJbp9hb5jYM7dH8jJVgYppBJaKH6Fx4TN0YeJWzuhGJXUbpBQjxCxiTos0EL
- u8YG1lB/ElEvRaAAAAA==
-X-Change-ID: 20250805-mptcp_fixes-dd7e04528f32
+Message-Id: <20250807-b4-mptcp_perf-v1-1-e89cc14179cc@openai.com>
+X-B4-Tracking: v=1; b=H4sIAAztlGgC/x2MWwqAIBAArxL73YLai7pKRFSutR+ZaEQg3T3xc
+ 2BmIgTyTAGGIoKnhwNfNoEsC9iOxe6ErBODEqoRXSVxrfF09+ZmR96gUL1UWtembVZIjfNk+M2
+ /EbKHlt4bpu/7AQZ4m2lrAAAA
+X-Change-ID: 20250731-b4-mptcp_perf-02912dd4f65b
 To: MPTCP Upstream <mptcp@lists.linux.dev>, 
  Matthieu Baerts <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>, 
  Geliang Tang <geliang@kernel.org>
 Cc: Christoph Paasch <cpaasch@openai.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1754589655; l=2141;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1754590482; l=2520;
  i=cpaasch@openai.com; s=20250712; h=from:subject:message-id;
- bh=cDu7fm+K+qrA4QGkMHR4UGKNLCJ4l1vGPJHGz1BXj7Q=;
- b=3IVigu2/vvnoS3I1uCE6On7M7tERMd7/bqlrx5kIQ0TNLhuAGZSONyadaxBt+kZIF8qwD3vtT
- B18jy5Mr60cCNomt+Mr3i12HPPZ49mPxkZCdba9KpeJ9BK72bfDqaAc
+ bh=FJ3ox47iJ4biHGad51VRAfWRAzrLGfltGE4gslXghQ8=;
+ b=wv+rXLZfbxXWuVn+Z5RG6Yr5X/2CwyFJGbOm3Q7T21GnBH1dRLaklEBCbSjLsgVY2Swr0uRaE
+ eQKOZewkOAcAeyjdgOxJC3xROIGezplcDt2blATh4r/DK1xZwT5GO3q
 X-Developer-Key: i=cpaasch@openai.com; a=ed25519;
  pk=1HRHZlVUZPziMZvsAQFvP7n5+uEosTDAjXmNXykdxdg=
 X-Endpoint-Received: by B4 Relay for cpaasch@openai.com/20250712 with
@@ -64,59 +63,79 @@ Reply-To: cpaasch@openai.com
 
 From: Christoph Paasch <cpaasch@openai.com>
 
-When skb_ext_add(skb, SKB_EXT_MPTCP) fails in mptcp_incoming_options(),
-we used to return true, letting the segment proceed through the TCP
-receive path without a DSS mapping. Such segments can leave inconsistent
-mapping state and trigger a mid-stream fallback to TCP, which in testing
-collapsed (by artificially forcing failures in skb_ext_add) throughput
-to zero.
+Accelerated Receive Flow Steering (aRFS) relies on sockets recording
+their RX flow hash into the rps_sock_flow_table so that incoming packets
+are steered to the CPU where the application runs.
 
-Return false instead so the TCP input path drops the skb (see
-tcp_data_queue() and step-7 processing). This is the safer choice
-under memory pressure: it preserves MPTCP correctness and provides
-backpressure to the sender.
+With MPTCP, the application interacts with the parent MPTCP socket while
+data is carried over per-subflow TCP sockets. Without recording these
+subflows, aRFS cannot steer interrupts and RX processing for the flows
+to the desired CPU.
 
-Control packets remain unaffected: ACK updates and DATA_FIN handling
-happen before attempting the extension allocation, and tcp_reset()
-continues to ignore the return value.
+Record all subflows in the RPS table by calling sock_rps_record_flow()
+for each subflow at the start of mptcp_sendmsg() and mptcp_recvmsg().
 
-With this change, MPTCP continues to work at high throughput if we
-artificially inject failures into skb_ext_add.
+It does not by itself improve throughput, but ensures that IRQ and RX
+processing are directed to the right CPU, which is a
+prerequisite for effective aRFS.
 
-Fixes: 6787b7e350d3 ("mptcp: avoid processing packet if a subflow reset")
 Signed-off-by: Christoph Paasch <cpaasch@openai.com>
 ---
- net/mptcp/options.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ net/mptcp/protocol.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 3c08beffbfea13597f14df17b1636b154e471398..d47b8a9bc2df2f14645b1b3d3e10fea1b38567b1 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -1119,7 +1119,9 @@ static bool add_addr_hmac_valid(struct mptcp_sock *msk,
- 	return hmac == mp_opt->ahmac;
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 4b510e04724f5c8be08a00a1cc03093bcd031905..86f1fc5be47bd5f6dc8bf40a488de32f253c1beb 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -12,6 +12,7 @@
+ #include <linux/sched/signal.h>
+ #include <linux/atomic.h>
+ #include <net/aligned_data.h>
++#include <net/rps.h>
+ #include <net/sock.h>
+ #include <net/inet_common.h>
+ #include <net/inet_hashtables.h>
+@@ -1740,6 +1741,17 @@ static u32 mptcp_send_limit(const struct sock *sk)
+ 	return limit - not_sent;
  }
  
--/* Return false if a subflow has been reset, else return true */
-+/* Return false in case of error (or subflow has been reset),
-+ * else return true.
-+ */
- bool mptcp_incoming_options(struct sock *sk, struct sk_buff *skb)
++static void mptcp_rps_record_subflows(const struct mptcp_sock *msk)
++{
++	struct mptcp_subflow_context *subflow;
++
++	mptcp_for_each_subflow(msk, subflow) {
++		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
++
++		sock_rps_record_flow(ssk);
++	}
++}
++
+ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
  {
- 	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
-@@ -1223,7 +1225,7 @@ bool mptcp_incoming_options(struct sock *sk, struct sk_buff *skb)
+ 	struct mptcp_sock *msk = mptcp_sk(sk);
+@@ -1753,6 +1765,8 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
  
- 	mpext = skb_ext_add(skb, SKB_EXT_MPTCP);
- 	if (!mpext)
--		return true;
-+		return false;
+ 	lock_sock(sk);
  
- 	memset(mpext, 0, sizeof(*mpext));
++	mptcp_rps_record_subflows(msk);
++
+ 	if (unlikely(inet_test_bit(DEFER_CONNECT, sk) ||
+ 		     msg->msg_flags & MSG_FASTOPEN)) {
+ 		int copied_syn = 0;
+@@ -2131,6 +2145,8 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
+ 		goto out_err;
+ 	}
  
++	mptcp_rps_record_subflows(msk);
++
+ 	timeo = sock_rcvtimeo(sk, flags & MSG_DONTWAIT);
+ 
+ 	len = min_t(size_t, len, INT_MAX);
 
 ---
-base-commit: dc818e7d153ed5ff81b9fcec7baa3b4b78725f89
-change-id: 20250805-mptcp_fixes-dd7e04528f32
+base-commit: f756e5bb29fa59378c111a2401fc64e44cd53442
+change-id: 20250731-b4-mptcp_perf-02912dd4f65b
 
 Best regards,
 -- 
