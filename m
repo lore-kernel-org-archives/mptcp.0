@@ -1,77 +1,132 @@
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31AFF26D4FB
-	for <mptcp@lists.linux.dev>; Thu,  7 Aug 2025 16:35:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FA361E2823
+	for <mptcp@lists.linux.dev>; Thu,  7 Aug 2025 17:03:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754584540; cv=none; b=KXacNvocJQEdTJQ51giflsYJ+tF9JleHxMZWyuWGC+9VsMXlzqYkpU5/PWtfkKTrLyGofwBUqxzuJUI75xnrRr6IUvI2CniQJb1Lv5zbl+TbVCVL7FXx++9LfTDbR3jHj8ImQQ4W9qB1Be5Ki4ZUzXBlKFaZpW9c4QeG/Qj7NE8=
+	t=1754586236; cv=none; b=G5UIScvMjklsFKSKRxLaR/FzSLIZNlxTD8IwpjGuN0hMK5r7KNH3ZUU+6S4hrP+qBVOk0+sBop3WszgbsuHKCRilWI4eAM8jh0ce0+15rD/eqwMW4aKECxP2voUWNufet6Ym7Jtbfw81HyeAOhDRFDWwKxJ03a6UnjgxE0bLGdo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754584540; c=relaxed/simple;
-	bh=7RQwLbSJWi+hraZnI7hwuEiLO4sUtHMtDgDPdjCCSVo=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=CHK7Q4ekcYITsXAgIiQXLG817izySL5iYtp3tAqYoAAu+T6SW3G0FRjINL1YosOg3urSBSzg9hoYS/8OFpgtm0Myv0n2o77g5eRmCMy6bROqpHYKwLyVkDkdofrjKlQ67xEnuO+Muyug7m8wPCJg8gIH3R6VoTtuDP/PH3Fqojs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=openai.com; spf=pass smtp.mailfrom=openai.com; dkim=pass (1024-bit key) header.d=openai.com header.i=@openai.com header.b=S6clkLi0; arc=none smtp.client-ip=209.85.167.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=openai.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=openai.com
+	s=arc-20240116; t=1754586236; c=relaxed/simple;
+	bh=KFXfoapVvb2Hzwe9ZyJ/6JiBvQ+lHc5pJTaVOiwecvY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=Z7FEQneEVhD4O6yvVSdSwwQEWDQl0m17W+qOkN+7RFyRBp9i2FxMXMfIEqGEneE98yjAYZ2n+9zL1pu9k2Fot/T4YWZMX79XS9w4nJe95/A6yk0pzGztRe8A4w5oNNoLA3DnAPJPgY9dGf1+sFoi7oSV3aazwPfEC9s+lNyJhSE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R+5oh0BS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=openai.com header.i=@openai.com header.b="S6clkLi0"
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-55b7454c6b0so1259596e87.3
-        for <mptcp@lists.linux.dev>; Thu, 07 Aug 2025 09:35:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=openai.com; s=google; t=1754584537; x=1755189337; darn=lists.linux.dev;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=7RQwLbSJWi+hraZnI7hwuEiLO4sUtHMtDgDPdjCCSVo=;
-        b=S6clkLi0HDbyuNz8tiOc2HZtu1kZwebnsX3ow5bxqpt6RrZUY7BmPXCBkumf1pqNwK
-         Aq2knl66JubpZQlSgB3a5WIuTsLB8gSVGhn04zFf7g4l6GpIAGekqMma0SUSVZ+EfpLs
-         eTIOSKhhO9zWUF6NyDj4SrkFtaWgaKTzdU/VE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754584537; x=1755189337;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=7RQwLbSJWi+hraZnI7hwuEiLO4sUtHMtDgDPdjCCSVo=;
-        b=Q8Q3vCpalQfwVq90exN+F7sEaCI90BeFmNu8lXeTQ1gS22yGY/rjC5OFiWunVaqyyz
-         lUZwZxYcbV0izFJdX9WN6bcjzGwKMCN4koTq6f0BjkOoNIzpdju31oYJ3YeYNm8OsoE9
-         +IySV1uYxSiQpOfcz78vwjvkluUWWbeVvr5N324Nsf8NMVtDgXziOTEJpv3SW54+LZgj
-         2dz9XYB59NBW3xfvBiOzD+ALJhqTnYi8JVgDxM1ThTQ4mxwOtDX1E4VaGjqbjWHLa1J7
-         EmAinHdDTrloho/+Z5aORmblShBvub0+m++4ZDZQn2vp9ZBC7a8CSsGdvY7lFWVVYPmT
-         ZN4g==
-X-Gm-Message-State: AOJu0YzvQ/+xXzS0Ou9JPozAGrpFfPoGYI1WTYZNZ2QYiINnA8dfAi0W
-	tWCklQNkLi81lIpYDKuUq8Jis1qtdaaHd8JTevk9yiTyTX/IRRXp3E6MzDAfPLv8NxSA3rDLfua
-	y6/oKYOUt08VcuXH49cC92VJEPatBXOn/tzfJUZ2kVs3CW9Ikh9SEwDk=
-X-Gm-Gg: ASbGncv0NVRVZ/ta3ltDuUAXqwJDRErrOA4N4xFl/6ty9dV7MQoeEq71Rek1bu03YpY
-	ceEbKloPuVhr1DGMT7Q9UsnetDbdT8V15iujdErLffiZzt+aE6L/+SsKou1yXVCqnkpmMF6jZ6Q
-	m+BHBCYqZ9JjF7ojMOZJE0whqWBCNDyzwnuF+WNNH1gxE7R+tqPvuv7sevP42TmIxIm1binFahS
-	HaykA==
-X-Google-Smtp-Source: AGHT+IEDDx0ndUnEo6oBWBuv2oe759L/PDeTEkq+rgKpL9jkoqguMMZmAvGJnU4IfE4Of2zx+ehc3M6H3Cex3Z6AGz0=
-X-Received: by 2002:a05:6512:3c88:b0:55b:838c:d900 with SMTP id
- 2adb3069b0e04-55caf2f43aamr1963730e87.19.1754584536867; Thu, 07 Aug 2025
- 09:35:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R+5oh0BS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D92B4C4CEEB;
+	Thu,  7 Aug 2025 17:03:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1754586235;
+	bh=KFXfoapVvb2Hzwe9ZyJ/6JiBvQ+lHc5pJTaVOiwecvY=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=R+5oh0BS82I9quwJCz7ZBN1VvdmNP9qKR9mIiOAt+H53w8QarfPOv8ZcB1PHzSb1m
+	 H7ks1DpoMM9vOTalSTBDivIYz43wD41ZOy+D03bu8ZSo16ygo/KzujfMaBnazcn5AN
+	 0yh/7GVGxZjGvnZjf4LkgKL7Lh4XLUuihAUDkgCipA/QhN3aif4SfY/ZoOnNEa3rkn
+	 M7YNsNSlNefge+hFmq1MpXRQb+2OcSuAWhHn/KgrjIIdudKEVsKGKA2Qu+Lqa4eF5L
+	 UBpG3nHE9FTlI+1+00/k+JueKBhq1+aZY7onS5WRQ0+6uhrUFDSCMHjrvKGYWwYLie
+	 OzZTT/lxyBYDA==
+Message-ID: <f833716b-32e5-4ec8-845c-294c519e1b2e@kernel.org>
+Date: Thu, 7 Aug 2025 19:03:52 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: Christoph Paasch <cpaasch@openai.com>
-Date: Thu, 7 Aug 2025 09:35:25 -0700
-X-Gm-Features: Ac12FXzeefWy8TVjk0rA2LaRCSXFyurNoW0argSapgxuSrbn36BvXhFiTlM3k2k
-Message-ID: <CADg4-L8X3_O5O67NfcE5PUeNWWDBqa1cbQ0L9L0Ti_Mn-m-7Jw@mail.gmail.com>
-Subject: .b4-config in export and export-net
-To: MPTCP Upstream <mptcp@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: .b4-config in export and export-net
+Content-Language: en-GB, fr-BE
+To: Christoph Paasch <cpaasch@openai.com>,
+ MPTCP Upstream <mptcp@lists.linux.dev>
+References: <CADg4-L8X3_O5O67NfcE5PUeNWWDBqa1cbQ0L9L0Ti_Mn-m-7Jw@mail.gmail.com>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <CADg4-L8X3_O5O67NfcE5PUeNWWDBqa1cbQ0L9L0Ti_Mn-m-7Jw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hello!
+Hi Christoph,
 
-Is there a reason we have the .b4-config files ? And specifically them
-having the same name ?
+On 07/08/2025 18:35, Christoph Paasch wrote:
+> Is there a reason we have the .b4-config files ?
 
-Because, when managing different branches based off either export or
-export-net it creates a conflict when merging everything together to
-have a single branch with all my changes.
+Yes, to help people using 'b4', to use the right prefix and to send to
+the ML (no need to run --auto-to-cc)
 
-Would it be possible to have .b4-config files with different names for
-export and export-net ?
+>  And specifically them having the same name ?
 
+It has to have this name for b4 to work as expected.
 
-Christoph
+> Because, when managing different branches based off either export or
+> export-net it creates a conflict when merging everything together to
+> have a single branch with all my changes.
+
+export and export-net share the same history:
+ - export-net is on top of net
+ - export is on top of net-next, but merged with net, "almost" on top of
+export-net
+
+In other words, why do you need to merge both?
+
+Please also note that these branches are rewritten regularly. You might
+want to use 'for-review' and 'for-review-net' if you want a continuous
+history.
+
+> Would it be possible to have .b4-config files with different names for
+> export and export-net ?
+
+We cannot rename them. We could remove them, but I think they are
+helpful. If you need to use these branches, can you not add an extra
+commit removing these files? Or a '.gitattributes' to give instructions
+about how to merge these files? Or pass that to 'git merge', or use
+rerere, or ... :)
+
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
+
