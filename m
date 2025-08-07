@@ -1,122 +1,125 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E63AD43146
-	for <mptcp@lists.linux.dev>; Thu,  7 Aug 2025 17:51:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2D2D199EAD
+	for <mptcp@lists.linux.dev>; Thu,  7 Aug 2025 18:00:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754589080; cv=none; b=joF6ajFWcpTTtCtRHNuHbE1m5bdktCx+akgGMY/DtFoXKkVevai37x9I2LmSwP0qOYzANFZmSJdDpnQxp/u/U0MREmK8vZxg/d94apBJpO69G8d/hRJbUsmmCbTiv510a4z2R5Tu4qUrCkJ38bx/Uouz6qND1yV5LZ8cyjwEWeA=
+	t=1754589656; cv=none; b=MScxIYIYaiY2CSACGEg0m1Nq2pwTZtA6O3cW4r60/byb0l839XUGF+qeVhVe5zHGBKD4f15SNWiScka58SvpYnkN2n7HpztJWACQdETqZQuh2V0TC1UcZLTo0r7CRyLOX6o1cpUDF144c4SoOaTmk7WnN7/QZOSXumPRnNU07n4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754589080; c=relaxed/simple;
-	bh=GuN1jH2XkXjG/USNatBRKZOmLWLHfAExst0T1e1cPoE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NhSywHYi5E65IYDdlgi1zryGBBB9FVY5nMyrvvOWJNyNA/lzQvcxjFQe64kgsYOPbdEk4RRiZDFl2sZT8Rz5fqa1ZyP+ix4E+QgqVbSNuK8Ien8pCiINdE8uRP1Uyg4seO0yvp7uc/tFYyL9xwUYR5uDz3/AvCzWt36OQ+CT8Mk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=openai.com; spf=pass smtp.mailfrom=openai.com; dkim=pass (1024-bit key) header.d=openai.com header.i=@openai.com header.b=B7UQdEzF; arc=none smtp.client-ip=209.85.167.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=openai.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=openai.com
+	s=arc-20240116; t=1754589656; c=relaxed/simple;
+	bh=qq8/7k5VNb8u6FI2ZGGprys4sRi/CPgeVm9GiMjefxA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=hO2ssqfQn/qIVTY252xb5rGfjWQ6lKyr3Ia+62LKcmauV5qYsyVPRbtjuf9XzYQ+jwRz2XItvvpzQVg31ZLiQump/cy577hnIUZmN1dbJAz8yjj6JS45u9k/tcqBkiCyGB15CvR93jzx5jjU7FAf/eeP+zqTyqIwUpMYVLZRl/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nJo0aG6/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=openai.com header.i=@openai.com header.b="B7UQdEzF"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-55b96b154bdso1261522e87.0
-        for <mptcp@lists.linux.dev>; Thu, 07 Aug 2025 10:51:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=openai.com; s=google; t=1754589076; x=1755193876; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6bQe4XFO+fr7ySAU0chXpDFzN9nVHM7VFqfRezmjMbE=;
-        b=B7UQdEzFcyoeUXSk1LCrWErx3hkMug1Na+/inyb/UlTK/mGxlvCRu7ct2D5F31Kkdf
-         FR9Owen7jn78rcNCDTvkkmFtJR3PpC0q4ef8QogJ28psJNfFNmIVe7F/3m+D/8hp7kfp
-         GFICXBWPVIl/3pEuGepiAYjR1IkD60/M39S+E=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754589076; x=1755193876;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6bQe4XFO+fr7ySAU0chXpDFzN9nVHM7VFqfRezmjMbE=;
-        b=uCXtrR0Gxwi+TwmVLyR95Kg1E+QpADNpuw5weIrQsQ0M37yEeMrGFzMQWe4TLRAflz
-         kxfDUvCVkr+RzAMIBwBvPLuEdOYd9S8eNc+0RdG3p50LJ6Ts59LAShRFTS33wnQ/V/zr
-         20hXOXsJ5nU74m6ZLgg4VISBYdGVABpuU4Cq59hulOQZdW28Ju2Uon1r2zIMChOSEh9d
-         Tna+Dvwi+EYg86kIrEifrgwsKzJxA5CQJ93vdVsu0jZXWR+knc/y7nhM4wCplxPGOqEp
-         5g6UrPKUAcKFKvr5JPjfmfMq5gyHaZoEFXs2bIIy6nCpE19b7SU1c2cXqZBTXWGF6kmx
-         MC2Q==
-X-Gm-Message-State: AOJu0YzanNo9vIYU98ScWiOdyXPH9bHy3RNmK37vEahq3nBuSKg0eJzd
-	nxBk3vvkVK0UVUk1/72DDQf9LqCFglfLPJcyHVSUazqWmeeEa2PI5loCPIJphuJ6luNkQs/RUAF
-	S8qGVfHokUW4uz2lieC/viFKd1blBMixCxbzTvK9K4w==
-X-Gm-Gg: ASbGncsXjmVD/lsPtM8PdJJDvyR36IsOoud+oi8NZrOSPRj9GYEXjwKXa7h7EOVGwNL
-	gq07hHdRgrkK9IfY1U/l2FFB3ZsM8Wkg6fhcdoscWdPVkydyJ97XuX8f8JN7bROCAPDzV5WMk9m
-	UbCK6XiDustRSrTQSGCgAADpXWO4D+AsBJvwMNR/SkfF0pCZsoFaMkmsx+MpQFJqqemSEQPqhew
-	piQ0R14Ps0Wr4XM
-X-Google-Smtp-Source: AGHT+IE4H3r2U/PVcm9D5Lw6kpI9EGAhFrAPvACHcUqTUPiDbfgNh0cl87ShgXZSK3aOHebpgHRCIDvIx7Q4TNFHWB4=
-X-Received: by 2002:a05:6512:3f0c:b0:55b:973b:d9bf with SMTP id
- 2adb3069b0e04-55cbe6285b4mr232689e87.5.1754589075892; Thu, 07 Aug 2025
- 10:51:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nJo0aG6/"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 4E0EAC4CEEB;
+	Thu,  7 Aug 2025 18:00:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1754589656;
+	bh=qq8/7k5VNb8u6FI2ZGGprys4sRi/CPgeVm9GiMjefxA=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=nJo0aG6/7VpW1gWAkg4LxJwNTJqPOX79jv4u5SmyBBJ3fmlemqpMeg5QQmUuDsov+
+	 dPXm/4Q4y7CoQ3W4juSwVJfp6Vb4C41bjW4o3DWTGFgVv7bDbBmVVjM6o/3UfnEZql
+	 EwRGPFkg6+5Z867bUxMKz7XwYixbT0J1cWUfYbM1zdhVuch2tTW+HzIySNdPczaY8M
+	 Upsj9x1AQA0GwUwN1lTUwDGpBeLWnia4WLUiVmGuGx846892vCYjuExr0gibYTG8Y9
+	 840Vkwm2p2ezr+tmlvuP9zjeaN9eXUF1qi86tjm75ni1Epp0nYkPNApU54AqaZFV3M
+	 T0c5pXoKR2j5w==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CF5DC87FD2;
+	Thu,  7 Aug 2025 18:00:56 +0000 (UTC)
+From: Christoph Paasch via B4 Relay <devnull+cpaasch.openai.com@kernel.org>
+Date: Thu, 07 Aug 2025 11:00:43 -0700
+Subject: [PATCH mptcp-net] mptcp: drop skb if MPTCP skb extension
+ allocation fails
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CADg4-L8X3_O5O67NfcE5PUeNWWDBqa1cbQ0L9L0Ti_Mn-m-7Jw@mail.gmail.com>
- <f833716b-32e5-4ec8-845c-294c519e1b2e@kernel.org>
-In-Reply-To: <f833716b-32e5-4ec8-845c-294c519e1b2e@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250807-mptcp_fixes-v1-1-adfd79a88b5e@openai.com>
+X-B4-Tracking: v=1; b=H4sIAMrplGgC/x2LQQqAIBAAvyJ7TjBLkr4SEaFr7SETjQjEvyceh
+ 5nJkDASJphZhogvJbp9hb5jYM7dH8jJVgYppBJaKH6Fx4TN0YeJWzuhGJXUbpBQjxCxiTos0EL
+ u8YG1lB/ElEvRaAAAAA==
+X-Change-ID: 20250805-mptcp_fixes-dd7e04528f32
+To: MPTCP Upstream <mptcp@lists.linux.dev>, 
+ Matthieu Baerts <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>, 
+ Geliang Tang <geliang@kernel.org>
+Cc: Christoph Paasch <cpaasch@openai.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1754589655; l=2141;
+ i=cpaasch@openai.com; s=20250712; h=from:subject:message-id;
+ bh=cDu7fm+K+qrA4QGkMHR4UGKNLCJ4l1vGPJHGz1BXj7Q=;
+ b=3IVigu2/vvnoS3I1uCE6On7M7tERMd7/bqlrx5kIQ0TNLhuAGZSONyadaxBt+kZIF8qwD3vtT
+ B18jy5Mr60cCNomt+Mr3i12HPPZ49mPxkZCdba9KpeJ9BK72bfDqaAc
+X-Developer-Key: i=cpaasch@openai.com; a=ed25519;
+ pk=1HRHZlVUZPziMZvsAQFvP7n5+uEosTDAjXmNXykdxdg=
+X-Endpoint-Received: by B4 Relay for cpaasch@openai.com/20250712 with
+ auth_id=459
+X-Original-From: Christoph Paasch <cpaasch@openai.com>
+Reply-To: cpaasch@openai.com
+
 From: Christoph Paasch <cpaasch@openai.com>
-Date: Thu, 7 Aug 2025 10:51:04 -0700
-X-Gm-Features: Ac12FXyfhpb19KcrVxMIYX19n06dJSRvtjeipOlpnk5SNX65reZNhpW3ON3BiHA
-Message-ID: <CADg4-L_wscbqmn_D+SjwYsgnJPP9AcVire4Ae4AjMMzoZyaFaA@mail.gmail.com>
-Subject: Re: .b4-config in export and export-net
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: MPTCP Upstream <mptcp@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Aug 7, 2025 at 10:03=E2=80=AFAM Matthieu Baerts <matttbe@kernel.org=
-> wrote:
->
-> Hi Christoph,
->
-> On 07/08/2025 18:35, Christoph Paasch wrote:
-> > Is there a reason we have the .b4-config files ?
->
-> Yes, to help people using 'b4', to use the right prefix and to send to
-> the ML (no need to run --auto-to-cc)
->
-> >  And specifically them having the same name ?
->
-> It has to have this name for b4 to work as expected.
->
-> > Because, when managing different branches based off either export or
-> > export-net it creates a conflict when merging everything together to
-> > have a single branch with all my changes.
->
-> export and export-net share the same history:
->  - export-net is on top of net
->  - export is on top of net-next, but merged with net, "almost" on top of
-> export-net
->
-> In other words, why do you need to merge both?
+When skb_ext_add(skb, SKB_EXT_MPTCP) fails in mptcp_incoming_options(),
+we used to return true, letting the segment proceed through the TCP
+receive path without a DSS mapping. Such segments can leave inconsistent
+mapping state and trigger a mid-stream fallback to TCP, which in testing
+collapsed (by artificially forcing failures in skb_ext_add) throughput
+to zero.
 
-I have a branch with some fixes (based on top of export-net) and
-another with a feature (based on top of export).
+Return false instead so the TCP input path drops the skb (see
+tcp_data_queue() and step-7 processing). This is the safer choice
+under memory pressure: it preserves MPTCP correctness and provides
+backpressure to the sender.
 
-When I want to run tests (or in general do dev-work), I want to do
-this on top of all my branches together, so I merge them.
+Control packets remain unaffected: ACK updates and DATA_FIN handling
+happen before attempting the extension allocation, and tcp_reset()
+continues to ignore the return value.
 
-> Please also note that these branches are rewritten regularly. You might
-> want to use 'for-review' and 'for-review-net' if you want a continuous
-> history.
+With this change, MPTCP continues to work at high throughput if we
+artificially inject failures into skb_ext_add.
 
-I rebase my branches on top of export / export-net / ... regularly.
+Fixes: 6787b7e350d3 ("mptcp: avoid processing packet if a subflow reset")
+Signed-off-by: Christoph Paasch <cpaasch@openai.com>
+---
+ net/mptcp/options.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-> > Would it be possible to have .b4-config files with different names for
-> > export and export-net ?
->
-> We cannot rename them. We could remove them, but I think they are
-> helpful. If you need to use these branches, can you not add an extra
-> commit removing these files? Or a '.gitattributes' to give instructions
-> about how to merge these files? Or pass that to 'git merge', or use
-> rerere, or ... :)
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index 3c08beffbfea13597f14df17b1636b154e471398..d47b8a9bc2df2f14645b1b3d3e10fea1b38567b1 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -1119,7 +1119,9 @@ static bool add_addr_hmac_valid(struct mptcp_sock *msk,
+ 	return hmac == mp_opt->ahmac;
+ }
+ 
+-/* Return false if a subflow has been reset, else return true */
++/* Return false in case of error (or subflow has been reset),
++ * else return true.
++ */
+ bool mptcp_incoming_options(struct sock *sk, struct sk_buff *skb)
+ {
+ 	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
+@@ -1223,7 +1225,7 @@ bool mptcp_incoming_options(struct sock *sk, struct sk_buff *skb)
+ 
+ 	mpext = skb_ext_add(skb, SKB_EXT_MPTCP);
+ 	if (!mpext)
+-		return true;
++		return false;
+ 
+ 	memset(mpext, 0, sizeof(*mpext));
+ 
 
-Ok, .git/info/attributes does the job for me.
+---
+base-commit: dc818e7d153ed5ff81b9fcec7baa3b4b78725f89
+change-id: 20250805-mptcp_fixes-dd7e04528f32
 
-Thanks,
-Christoph
+Best regards,
+-- 
+Christoph Paasch <cpaasch@openai.com>
+
+
