@@ -1,144 +1,128 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE990221737
-	for <mptcp@lists.linux.dev>; Thu,  7 Aug 2025 18:14:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E40514A06
+	for <mptcp@lists.linux.dev>; Thu,  7 Aug 2025 19:46:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754590484; cv=none; b=u5kXLwF+1MS6KNU+My6e6SQF8pVkbF0hsz9kf/Eer6IZ+urKiOHlu3eKNijKTrR2lXaFl1JhbyPL1e08WAFr0ifXuOimHwyEY3HjtZVxlv5PALhGiiX12YI45tL3wWld/i6ciB/SOOqtsujrZaLOcByb094RgyFlQpaY93XUMEs=
+	t=1754595968; cv=none; b=c8RV6PQ2TJjidcoNI3h9J2PdTXOIO75xvooQpUHsxr3RJP+sM7Qch6jIexpb5BYZm3O5KIrQNldecjadBdfGYbZWS8yLbL06nIT0YyH46DNgjv0DWiAIC/0N+mcKwLrc3dZtpjD4RNCx95K4+o49Op10baCG1we8JScq5Nhw+1c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754590484; c=relaxed/simple;
-	bh=oLYSZLIl7NLmwtnxstROfILYip6EfKpPrkuWApfMS9Q=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=YmGWY97HHckfXd9vIsI5bUMLRwD1nJvP+luZR8LWPBWA1dAEieg2Yfe6rSUt38KWO9cqRnLrnJ75pC1/N0wPBoT+K6t/7CkEYciui0PVRjp8+XX73kZCnNDDiGVEGyq5AMM/gPoeXIChmxJPeFlqULKMWrddtStBS130vbbQOnc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gSAgs+2b; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1754595968; c=relaxed/simple;
+	bh=WXE+cYscnbzCEQXq/iibomJ3pXUbK/1cIQySkC9Kmfg=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=SXaaKNi28yX5vW6ZJ7HjTmO1DgoNfvHw5dqyWPLnZyz+Q1Sn/LXCmLjoKNWZBrS1PWYVFnJl8XGdRQJPyZgKTq+jDo16vVhHPl+11kuZ/qb/SsDdOic46g1rPakCE/ZIMSVu1tBo59cdV35RqjkPI1EYTxV1BttW/iVty/IlCx8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LKndWRAB; arc=none smtp.client-ip=209.85.219.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gSAgs+2b"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 726F8C4CEEB;
-	Thu,  7 Aug 2025 18:14:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754590483;
-	bh=oLYSZLIl7NLmwtnxstROfILYip6EfKpPrkuWApfMS9Q=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=gSAgs+2boUDtve/PCcvT+5TryZc+zEK51gdIGvq3sICQ7lrOmUUmSay9L7m12U8bP
-	 vCbOPklx//cB8e+aEJDDpktCIn/IeXIgBLuVGAEN8v653prEbEeZ/zcmA0SXXU1QNh
-	 1xYCYbrNpOJgZvbSV1Cf9pdu2+xdJEPyohyMGjoTenDVVnNM0vkvBgHFIW1Kt/SFWS
-	 bNjBF7wRn3MlevPJhLia6URRJjM465+g4U/VVmIuagQ69rqRnTBMpBpqSgx5u40uiS
-	 +HxzEOM16tfXQpZNQx71pCNahY5Fp1iqlEmsjYOKzt0lSOpOFGwycXxj7bxJYgVJ/3
-	 ZUPHI5GyudglQ==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EB9DC87FCF;
-	Thu,  7 Aug 2025 18:14:43 +0000 (UTC)
-From: Christoph Paasch via B4 Relay <devnull+cpaasch.openai.com@kernel.org>
-Date: Thu, 07 Aug 2025 11:14:37 -0700
-Subject: [PATCH mptcp-next] mptcp: record subflows in RPS table
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LKndWRAB"
+Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-707365f4d47so14644396d6.1
+        for <mptcp@lists.linux.dev>; Thu, 07 Aug 2025 12:46:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1754595966; x=1755200766; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7JY+7v7Nd02zuSB4PCwmOr4n/5ZDpefrkt55DA/VjRk=;
+        b=LKndWRABlr0vf+UbSUVsSpPZFk4Myr9EEzyd+HTTElIeUhyKB1izcZgWpVNLfW3OFt
+         TnbiT2cUPtC3bKc1dVNINNM70/27SCx/Mkvq9Am1zCZjk2rcoEJcS1YunZbItKrtwjre
+         EAkt7r5FLvuWXAxh12PahCNVvPxRCbEuZE/fcu3XPLWkYyJkFmVIBlRBPVbhdFwKnySd
+         R1e42o0g1bjjm9qGL9Nk3QTFOWTbWLUf8/sjM508fz7kvopor9yZnKkQjfdNT9nSkCdb
+         3ZxyhvI3WscJc1mKvIUNQRB9774dmzEmYOZlqeNq53Xbwu4FTl9hNLLnaTzDhH1WET0n
+         CIUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1754595966; x=1755200766;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=7JY+7v7Nd02zuSB4PCwmOr4n/5ZDpefrkt55DA/VjRk=;
+        b=lOcWpcOxCuaOWDgKhn0tvELPDr5GOjPaAsU9ytMro8TaoIuaVefFYNwGvh6DuOdM7l
+         nwoF6t2pBmiLnfp7187d4ntwaMA5mdYYG726EOZUMr+JEpSP7RiiaFpH67RIwiFU2qnQ
+         ViUzr3zDReMcKCifo28C7XguO168G2pTjqvGtYoyWcwYxxbtTROgJuc9QH+j1SnqG2UT
+         L1Bavxr2kDeBdptGRhkCcDnMrl395nOPpHaoezzNzIJvBpfVQWgba2yPkriQLyaX33tH
+         of9Eb8biYkogcqzH+yXiDjtWfMVwqbXmMdjcEj31mTNpBwZu/oVnZ9G6oqInytC5y2tt
+         w/iw==
+X-Gm-Message-State: AOJu0Yzlvae6rL6JQzv2vesOXRGF217kwnBEYWIfphELDCLIUp89v8lB
+	CqWYxcoRPpqz6RHhac9cj418NyqddxWDhpoX3m/yGpf7bfeX/z1SLPDcMD01
+X-Gm-Gg: ASbGncsB/1g+BN4BPgEMFKaZ+p2F74SAN3EexRB0BoWYLiPB1AsDOpw/pbsNimBOrds
+	Quga79tvD9feyZqQK46OLPs/losz9KyFNUaTzl7ZZzaEiINroC674ClIGEpbR4T9eLc0tyLWRU+
+	ApEHsfoep1386RJaCV5O/6LruYrxbW8pKa66wtowij7EEFVm5hDB8ZrLky2CJmK1J5lqac4g4Jb
+	wbcV1BDEVc0g0a2xIe4JtA/3PVpdcrq76TD9v6N/h/vDMHm72/GhwTIGNRpHM9IqKfXT55jf9fx
+	F3krcgdn5ZQnMb2HPROgMenzXt4QQQpNIq1Pd/CZqGaRO0yPFBVtfFnwhCYf5Hkd6p/gXQmiAQv
+	bbnHbXuX8f6uwc+LIxZim8SWn2YvsRMujDA==
+X-Google-Smtp-Source: AGHT+IHcDpuo/6PEsYeLH5ILDELdCR57kpmtsCuu2K9kEMn27Jt4YCEsXCKFDHIJmsc3CxkSTDb78w==
+X-Received: by 2002:ad4:4e52:0:b0:709:9979:24f with SMTP id 6a1803df08f44-709997904c6mr9259796d6.19.1754595965791;
+        Thu, 07 Aug 2025 12:46:05 -0700 (PDT)
+Received: from [127.0.0.1] ([172.214.44.0])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-7077c9da46esm103726906d6.3.2025.08.07.12.46.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Aug 2025 12:46:04 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Christoph Paasch <cpaasch@openai.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20250807-b4-mptcp_perf-v1-1-e89cc14179cc@openai.com>
+References: <20250807-b4-mptcp_perf-v1-1-e89cc14179cc@openai.com>
+Subject: Re: [PATCH mptcp-next] mptcp: record subflows in RPS table
+Message-ID: <c4777ed7-0b1f-9fb2-a589-d7f8ffe4f881@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 07 Aug 2025 19:46:04 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250807-b4-mptcp_perf-v1-1-e89cc14179cc@openai.com>
-X-B4-Tracking: v=1; b=H4sIAAztlGgC/x2MWwqAIBAArxL73YLai7pKRFSutR+ZaEQg3T3xc
- 2BmIgTyTAGGIoKnhwNfNoEsC9iOxe6ErBODEqoRXSVxrfF09+ZmR96gUL1UWtembVZIjfNk+M2
- /EbKHlt4bpu/7AQZ4m2lrAAAA
-X-Change-ID: 20250731-b4-mptcp_perf-02912dd4f65b
-To: MPTCP Upstream <mptcp@lists.linux.dev>, 
- Matthieu Baerts <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>, 
- Geliang Tang <geliang@kernel.org>
-Cc: Christoph Paasch <cpaasch@openai.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1754590482; l=2520;
- i=cpaasch@openai.com; s=20250712; h=from:subject:message-id;
- bh=FJ3ox47iJ4biHGad51VRAfWRAzrLGfltGE4gslXghQ8=;
- b=wv+rXLZfbxXWuVn+Z5RG6Yr5X/2CwyFJGbOm3Q7T21GnBH1dRLaklEBCbSjLsgVY2Swr0uRaE
- eQKOZewkOAcAeyjdgOxJC3xROIGezplcDt2blATh4r/DK1xZwT5GO3q
-X-Developer-Key: i=cpaasch@openai.com; a=ed25519;
- pk=1HRHZlVUZPziMZvsAQFvP7n5+uEosTDAjXmNXykdxdg=
-X-Endpoint-Received: by B4 Relay for cpaasch@openai.com/20250712 with
- auth_id=459
-X-Original-From: Christoph Paasch <cpaasch@openai.com>
-Reply-To: cpaasch@openai.com
 
-From: Christoph Paasch <cpaasch@openai.com>
+Hi Christoph,
 
-Accelerated Receive Flow Steering (aRFS) relies on sockets recording
-their RX flow hash into the rps_sock_flow_table so that incoming packets
-are steered to the CPU where the application runs.
+Thank you for your modifications, that's great!
 
-With MPTCP, the application interacts with the parent MPTCP socket while
-data is carried over per-subflow TCP sockets. Without recording these
-subflows, aRFS cannot steer interrupts and RX processing for the flows
-to the desired CPU.
+Our CI did some validations and here is its report:
 
-Record all subflows in the RPS table by calling sock_rps_record_flow()
-for each subflow at the start of mptcp_sendmsg() and mptcp_recvmsg().
+- KVM Validation: normal: Success! =E2=9C=85
+- KVM Validation: debug: =
+Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success=
+! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =
+=E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
+uns/16812537653
 
-It does not by itself improve throughput, but ensures that IRQ and RX
-processing are directed to the right CPU, which is a
-prerequisite for effective aRFS.
-
-Signed-off-by: Christoph Paasch <cpaasch@openai.com>
----
- net/mptcp/protocol.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
-
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 4b510e04724f5c8be08a00a1cc03093bcd031905..86f1fc5be47bd5f6dc8bf40a488de32f253c1beb 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -12,6 +12,7 @@
- #include <linux/sched/signal.h>
- #include <linux/atomic.h>
- #include <net/aligned_data.h>
-+#include <net/rps.h>
- #include <net/sock.h>
- #include <net/inet_common.h>
- #include <net/inet_hashtables.h>
-@@ -1740,6 +1741,17 @@ static u32 mptcp_send_limit(const struct sock *sk)
- 	return limit - not_sent;
- }
- 
-+static void mptcp_rps_record_subflows(const struct mptcp_sock *msk)
-+{
-+	struct mptcp_subflow_context *subflow;
-+
-+	mptcp_for_each_subflow(msk, subflow) {
-+		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
-+
-+		sock_rps_record_flow(ssk);
-+	}
-+}
-+
- static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
- {
- 	struct mptcp_sock *msk = mptcp_sk(sk);
-@@ -1753,6 +1765,8 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
- 
- 	lock_sock(sk);
- 
-+	mptcp_rps_record_subflows(msk);
-+
- 	if (unlikely(inet_test_bit(DEFER_CONNECT, sk) ||
- 		     msg->msg_flags & MSG_FASTOPEN)) {
- 		int copied_syn = 0;
-@@ -2131,6 +2145,8 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
- 		goto out_err;
- 	}
- 
-+	mptcp_rps_record_subflows(msk);
-+
- 	timeo = sock_rcvtimeo(sk, flags & MSG_DONTWAIT);
- 
- 	len = min_t(size_t, len, INT_MAX);
-
----
-base-commit: f756e5bb29fa59378c111a2401fc64e44cd53442
-change-id: 20250731-b4-mptcp_perf-02912dd4f65b
-
-Best regards,
--- 
-Christoph Paasch <cpaasch@openai.com>
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/8452b3707158
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D989208
 
 
+If there are some issues, you can reproduce them using the same =
+environment as
+the one used by the CI thanks to a docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
