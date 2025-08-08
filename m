@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC86C83CC7
-	for <mptcp@lists.linux.dev>; Fri,  8 Aug 2025 02:45:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F4941684AC
+	for <mptcp@lists.linux.dev>; Fri,  8 Aug 2025 02:45:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754621126; cv=none; b=Xri3ANv0WsWV/LbkKVVdpQgw7mayFX2BsghU7DLd6ql04v0Luf3aeJFSUtPc+ebtoem6AMF41hyUqbkBvE0vYtOTS3sTvdkB8jksjJxRapPz1OUS+cqJP4rwc/yahiTEUxa+PMF8QvwD9sBenm8sdDhrDBo3j6nkIATDLxolCSA=
+	t=1754621128; cv=none; b=f8NqCZJzkk+897uIzVjRY2KzZ+/6TkhNK6pz2bt5F2PkKG8vFV2bRFwsUTSzmpdTAJD7kj7q4WHNh8hiSJ+NUC8NI+fQKAEFtk3MJn91e+fw43gRv85Q1RD4PBWHTWt89r6MVqz7t6jlyHsLCQNk5on+CetcZAIx9NijpdaPS98=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754621126; c=relaxed/simple;
-	bh=BTIoI8T1orRCkdAfASX32D0EECBLQsnOa3P/iDP/Zl0=;
+	s=arc-20240116; t=1754621128; c=relaxed/simple;
+	bh=GlTXWNex+oZ5YxaE/dM0qkUjTNEm0qmafNpl5FjKtN4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZqvMyw6uq7Jt6oK2fbP9hJdmlI0aFD7McvxyDFa0Sh8OxuFYevVPSxmviKl7493lsiveIxyF1jGvfZAE9o8MUqF0HHCYrWF8ie69TiXL9+XEND+vqPyebVVKIL1TfkbXfSL1IgCqG3W1TdOpZ383854Msz9merLgXNj9deHP4xY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PnPFraHu; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=UHBpG9er5uIikaFh52T30gIsjZw5J5h1EA4X824G/cqpG6Locjcfm+cXoeJcF13X7MN7e4meSJyDsi0q1c0IxLSUve+OpcJAJAjO+ygenaC0e7PAHscaLLLa3Vdm4NUnhMTHYmCdMJ+ryP7Ia4BAoRQC58MqSXzqWONicGklOXY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GGFRHciY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PnPFraHu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A74CC4CEF1;
-	Fri,  8 Aug 2025 02:45:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GGFRHciY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A21B1C4CEEB;
+	Fri,  8 Aug 2025 02:45:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754621125;
-	bh=BTIoI8T1orRCkdAfASX32D0EECBLQsnOa3P/iDP/Zl0=;
+	s=k20201202; t=1754621127;
+	bh=GlTXWNex+oZ5YxaE/dM0qkUjTNEm0qmafNpl5FjKtN4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=PnPFraHupArGKz294uWxcyvlkuYnKhqMmNr6wJGS4crgffXMFVcGJkAR+nt+S89b/
-	 1/N5NyURXEx4/h/6tiasAhMYDDK2GOMCR/PJtP7K/k7VNffvWC0xJRm5n6hojhqRFg
-	 r6O/IzG47UVcg+L0CTSrc4rYmprdsMV4uUvOZ8LYE4bFX55vT7mY57lQHPxH0/auQp
-	 OWHZcnNcwWN9yfmUcKsa9vcAneYTfYt+i3STbKzrQIGC+GnzLJ+wYVjehkw27M5Xes
-	 b7p5csfAF+PlgqbxIoogKz9FRzjcBMmnpOYCB9alZGQK8IVcmSXD52/veQEEOmAs8s
-	 G1kk6tCJC8PYg==
+	b=GGFRHciYhGdAUQntoaIB7W79m8vRT0bwPZIXOQ1mFGifpx8yRc817QUAH0ifdlO2c
+	 ueFKmWh7fnyJ8ogaPRUTqKXKp5EP8VOyIdRrzbNZyOaFkhzYZMrwvVOsslqA7unDJU
+	 STV4hTZNeZzsL9Ax6HiUO5M7fGACbelMoUXrp9rouVwG8ZjX/G2dWRYNaZ5jJx/aK8
+	 r+vWN+CVKq9j0V4s2TO6cB2JyZteuNrWoE3GfqbauLc7KYGPDlogIIuPlNSSkS75YZ
+	 ZrdMWaMv4zPwg1T2FMy4mDchjxUZV8hLgorrS3Xy3/SaHW5iUHuzuF0nVsabMLyMr3
+	 9pKwf4mYBgQ6g==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next 4/8] selftests: mptcp: sockopt: rename pipefd to ipcfd
-Date: Fri,  8 Aug 2025 10:45:05 +0800
-Message-ID: <653a76c5131b687a850996f962d1173e95e2c601.1754620968.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next 5/8] selftests: mptcp: sockopt: add TCP_INQ client processing
+Date: Fri,  8 Aug 2025 10:45:06 +0800
+Message-ID: <dafd8d4d93bd4aa531b13ffa9c021721c24abad2.1754620968.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <cover.1754620968.git.tanggeliang@kylinos.cn>
 References: <cover.1754620968.git.tanggeliang@kylinos.cn>
@@ -45,102 +45,202 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Rename pipefd to ipcfd to better reflect its generalized purpose since
-it now handles both pipes and Unix domain sockets. This naming improves
-code clarity for IPC channel handling.
+Implement process_one_client_inq() to handle TCP_INQ-specific client
+logic including:
+- Setting TCP_INQ sockopt
+- Validating INQ values via cmsg
+- Handling large data transfers with INQ checks
+- Verifying FIN sequence INQ semantics
+
+These codes are from mptcp_inq.c.
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- .../selftests/net/mptcp/mptcp_sockopt.c       | 25 ++++++++++---------
- 1 file changed, 13 insertions(+), 12 deletions(-)
+ .../selftests/net/mptcp/mptcp_sockopt.c       | 157 +++++++++++++++++-
+ 1 file changed, 156 insertions(+), 1 deletion(-)
 
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-index 9558c68a62e7..f767caa55a0a 100644
+index f767caa55a0a..d68db3f0d5f5 100644
 --- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
 +++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-@@ -722,7 +722,7 @@ static int xaccept(int s)
- 	return fd;
+@@ -21,6 +21,7 @@
+ #include <sys/types.h>
+ #include <sys/wait.h>
+ #include <sys/random.h>
++#include <sys/ioctl.h>
+ 
+ #include <netdb.h>
+ #include <netinet/in.h>
+@@ -712,6 +713,157 @@ static void process_one_client(int fd, int pipefd)
+ 	close(fd);
  }
  
--static int server(int pipefd)
-+static int server(int ipcfd)
++static void get_tcp_inq(struct msghdr *msgh, unsigned int *inqv)
++{
++	struct cmsghdr *cmsg;
++
++	for (cmsg = CMSG_FIRSTHDR(msgh); cmsg ; cmsg = CMSG_NXTHDR(msgh, cmsg)) {
++		if (cmsg->cmsg_level == IPPROTO_TCP && cmsg->cmsg_type == TCP_CM_INQ) {
++			memcpy(inqv, CMSG_DATA(cmsg), sizeof(*inqv));
++			return;
++		}
++	}
++
++	xerror("could not find TCP_CM_INQ cmsg type");
++}
++
++static void process_one_client_inq(int fd, int unixfd)
++{
++	unsigned int tcp_inq;
++	size_t expect_len;
++	char msg_buf[4096];
++	char buf[4096];
++	char tmp[16];
++	struct iovec iov = {
++		.iov_base = buf,
++		.iov_len = 1,
++	};
++	struct msghdr msg = {
++		.msg_iov = &iov,
++		.msg_iovlen = 1,
++		.msg_control = msg_buf,
++		.msg_controllen = sizeof(msg_buf),
++	};
++	ssize_t ret, tot;
++	int on = 1;
++
++	if (-1 == setsockopt(fd, IPPROTO_TCP, TCP_INQ, &on, sizeof(on)))
++		die_perror("setsockopt");
++
++	ret = write(unixfd, "xmit", 4);
++	assert(ret == 4);
++
++	ret = read(unixfd, &expect_len, sizeof(expect_len));
++	assert(ret == (ssize_t)sizeof(expect_len));
++
++	if (expect_len > sizeof(buf))
++		xerror("expect len %zu exceeds buffer size", expect_len);
++
++	for (;;) {
++		struct timespec req;
++		unsigned int queued;
++
++		ret = ioctl(fd, FIONREAD, &queued);
++		if (ret < 0)
++			die_perror("FIONREAD");
++		if (queued > expect_len)
++			xerror("FIONREAD returned %u, but only %zu expected\n",
++			       queued, expect_len);
++		if (queued == expect_len)
++			break;
++
++		req.tv_sec = 0;
++		req.tv_nsec = 1000 * 1000ul;
++		nanosleep(&req, NULL);
++	}
++
++	/* read one byte, expect cmsg to return expected - 1 */
++	ret = recvmsg(fd, &msg, 0);
++	if (ret < 0)
++		die_perror("recvmsg");
++
++	if (msg.msg_controllen == 0)
++		xerror("msg_controllen is 0");
++
++	get_tcp_inq(&msg, &tcp_inq);
++
++	assert((size_t)tcp_inq == (expect_len - 1));
++
++	iov.iov_len = sizeof(buf);
++	ret = recvmsg(fd, &msg, 0);
++	if (ret < 0)
++		die_perror("recvmsg");
++
++	/* should have gotten exact remainder of all pending data */
++	assert(ret == (ssize_t)tcp_inq);
++
++	/* should be 0, all drained */
++	get_tcp_inq(&msg, &tcp_inq);
++	assert(tcp_inq == 0);
++
++	/* request a large swath of data. */
++	ret = write(unixfd, "huge", 4);
++	assert(ret == 4);
++
++	ret = read(unixfd, &expect_len, sizeof(expect_len));
++	assert(ret == (ssize_t)sizeof(expect_len));
++
++	/* peer should send us a few mb of data */
++	if (expect_len <= sizeof(buf))
++		xerror("expect len %zu too small\n", expect_len);
++
++	tot = 0;
++	do {
++		iov.iov_len = sizeof(buf);
++		ret = recvmsg(fd, &msg, 0);
++		if (ret < 0)
++			die_perror("recvmsg");
++
++		tot += ret;
++
++		get_tcp_inq(&msg, &tcp_inq);
++
++		if (tcp_inq > expect_len - tot)
++			xerror("inq %d, remaining %d total_len %d\n",
++			       tcp_inq, expect_len - tot, (int)expect_len);
++
++		assert(tcp_inq <= expect_len - tot);
++	} while ((size_t)tot < expect_len);
++
++	ret = write(unixfd, "shut", 4);
++	assert(ret == 4);
++
++	/* wait for hangup. Should have received one more byte of data. */
++	ret = read(unixfd, tmp, sizeof(tmp));
++	assert(ret == 6);
++	assert(strncmp(tmp, "closed", 6) == 0);
++
++	sleep(1);
++
++	iov.iov_len = 1;
++	ret = recvmsg(fd, &msg, 0);
++	if (ret < 0)
++		die_perror("recvmsg");
++	assert(ret == 1);
++
++	get_tcp_inq(&msg, &tcp_inq);
++
++	/* tcp_inq should be 1 due to received fin. */
++	assert(tcp_inq == 1);
++
++	iov.iov_len = 1;
++	ret = recvmsg(fd, &msg, 0);
++	if (ret < 0)
++		die_perror("recvmsg");
++
++	/* expect EOF */
++	assert(ret == 0);
++	get_tcp_inq(&msg, &tcp_inq);
++	assert(tcp_inq == 1);
++
++	close(fd);
++}
++
+ static int xaccept(int s)
  {
- 	int fd = -1, r;
- 
-@@ -738,13 +738,13 @@ static int server(int pipefd)
- 		break;
- 	}
- 
--	r = write(pipefd, "conn", 4);
-+	r = write(ipcfd, "conn", 4);
- 	assert(r == 4);
- 
+ 	int fd = accept(s, NULL, 0);
+@@ -744,7 +896,10 @@ static int server(int ipcfd)
  	alarm(15);
  	r = xaccept(fd);
  
--	process_one_client(r, pipefd);
-+	process_one_client(r, ipcfd);
+-	process_one_client(r, ipcfd);
++	if (inq)
++		process_one_client_inq(r, ipcfd);
++	else
++		process_one_client(r, ipcfd);
  
  	return 0;
  }
-@@ -787,7 +787,7 @@ static void test_ip_tos_sockopt(int fd)
- 		xerror("expect socklen_t == -1");
- }
- 
--static int client(int pipefd)
-+static int client(int ipcfd)
- {
- 	int fd = -1;
- 
-@@ -806,7 +806,7 @@ static int client(int pipefd)
- 
- 	test_ip_tos_sockopt(fd);
- 
--	connect_one_server(fd, pipefd);
-+	connect_one_server(fd, ipcfd);
- 
- 	return 0;
- }
-@@ -853,31 +853,32 @@ int main(int argc, char *argv[])
- {
- 	int e1, e2, wstatus;
- 	pid_t s, c, ret;
--	int pipefds[2];
-+	int ipcfds[2];
- 
- 	parse_opts(argc, argv);
- 
- 	init_rng();
- 
--	e1 = pipe(pipefds);
-+	e1 = inq ? socketpair(AF_UNIX, SOCK_DGRAM, 0, ipcfds) :
-+		   pipe(ipcfds);
- 	if (e1 < 0)
- 		die_perror("pipe");
- 
- 	s = xfork();
- 	if (s == 0)
--		return server(pipefds[1]);
-+		return server(ipcfds[1]);
- 
--	close(pipefds[1]);
-+	close(ipcfds[1]);
- 
- 	/* wait until server bound a socket */
--	e1 = read(pipefds[0], &e1, 4);
-+	e1 = read(ipcfds[0], &e1, 4);
- 	assert(e1 == 4);
- 
- 	c = xfork();
- 	if (c == 0)
--		return client(pipefds[0]);
-+		return client(ipcfds[0]);
- 
--	close(pipefds[0]);
-+	close(ipcfds[0]);
- 
- 	ret = waitpid(s, &wstatus, 0);
- 	if (ret == -1)
 -- 
 2.48.1
 
