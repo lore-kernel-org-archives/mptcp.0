@@ -1,130 +1,95 @@
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77D6C4A06
-	for <mptcp@lists.linux.dev>; Thu,  7 Aug 2025 19:49:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67FE5156678
+	for <mptcp@lists.linux.dev>; Fri,  8 Aug 2025 02:45:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754596189; cv=none; b=aI1xknnapI0W2DdL1yYAqJJk2xCg3P+6ZUUBtOTtX2axlKN9Hb1dR8LYzNmHF/xnJOJGCV8jA+wthrzz7db+CnPmKq+uQNcXmtyCZb+m5STIcCWqepE/O3AREWlAyTVIM1xL7wG4wE5Q0YXykzdZW6BBdrt+ebFAN2Akp76sZ2A=
+	t=1754621116; cv=none; b=r7jjITpAMuQCoQzKHnQ54kx5ZmxrbSSZUOsnmZJ+wJo+hRiRRn+QLsrwUYTPNVAISflELMbby0pHrg6pjHzYCzM6uXsbTC6K2UtCQuDm0rXUiEi4jPlJKYL5rYnkFpypskllDQ9MyaPI13ymoq27dHQlUX2j2zRBEfQ7g3PwrQE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754596189; c=relaxed/simple;
-	bh=K5or4jXvD7zRNbFqYvMcQJCuLbV+y1TsbQPl+v36VAw=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=PJzst/ta9xZujHukw9wYsH1KL2ZU/rs4KB322sVKmmClcRIWYeAhaOaJSHH/6CTXwezI7XlyTSkVAsm/7/fiCcYSfptrDlRfZR1SzFJE5EzScPTgAamgiSiZO0U9w5i8Z9BdsEU3zS/rpWaWj5v4XszWQacl5DUjJlm6EmMDv3A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HmJEZxqT; arc=none smtp.client-ip=209.85.160.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1754621116; c=relaxed/simple;
+	bh=XRL/m0Hr9LaV14bo3kkWj7YRlrt+v5bNdn2XmnobjQM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bdUZOVUEvv8RFxdtCWosIl5c7bG6hKd9wNEKEO1PfupOpuxtJ/oFXu15YNRNfRqQZdkSDqk5Mz56SHuWK4cK4ekRsXeibfzipjpGOJeT5uZQ9kLy2rg2ozic13g7Y8j9Xy/rfVPwP6P/WHU74WefzfUgVLO1XUgmJUdjA2EJyJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jAuM27Pe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HmJEZxqT"
-Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-4af14096b9eso18788351cf.3
-        for <mptcp@lists.linux.dev>; Thu, 07 Aug 2025 12:49:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1754596187; x=1755200987; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KS0FQkBVRNL+DOyq/Fzl4T2ppWxuj5+7Hy5Xcztz84Y=;
-        b=HmJEZxqTBPJLegL1NGtfpxxtvyhf2DSgdLulWlh+9EQdFQolyhYPEbAhN3695kGmEV
-         BL93Qz6kbWVwbiMVLZK166nAUv+QnF/Y9DV7QuF0eJvSYoxHRT6cYBhiGpv9jFGh7L6d
-         qhnh/oTO6lmneeFCx/x3IEwbzs77hPKdGhIHCUc3BGv8yT4WnQDLw4jHhr/osoqfk+BK
-         t99MjYjPIdnT8uA9tQ9ptUC6Xdb5DQW7REnEw+kk/NUkvKeNklTtGhrLwPXP6aINUSm6
-         K409387Fc6yOkvYSYUCvcQ9eBQtoPeH7pz5P5W64WoLy+2BEZmEi7ZW7R0i7ZvBfgy10
-         Ef9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754596187; x=1755200987;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=KS0FQkBVRNL+DOyq/Fzl4T2ppWxuj5+7Hy5Xcztz84Y=;
-        b=SOZAbYafJbiMANt/KEuj3UMi5WXjiSju3diDhAoh/IcwbJ1jyu+v5TU5FhU03mCPrt
-         kqX3MUouorYcqOBgfvUvtIlnd2g4v51jpoRYLTeanjCJlJkgOAacGWLobwJgVR7X6oFc
-         1NUTtsRh6P8Yk1EsqXoAveNbXW29uKRl8WHi8KZbuSkXuSIbo1IZwB4vb8ewrrkYTriu
-         5116sgVC3f6zCMupOsGwgdmyAUXuS26y5iuJj4b9wyEaN066aP2SQzS4/MYx0Arb121B
-         8VlI8NSOQkP8TZQOyLWiuYBM/Zu3v/da/5yIiGVrEQgczl/Bf11LRdCwpUO8cPKoDcLo
-         mrhg==
-X-Gm-Message-State: AOJu0YxFM5bSE4EwxrZTYqdz9RhfID0tRTNqBv/D5eUWeOfw2ozR60TF
-	dfi7r4+zpuT3gZTuH0r2p62JXZLirZHee6Cza3S8Tzgb3ECiuyvvfM220vtzrfA=
-X-Gm-Gg: ASbGncu4Wc9IGK5d7ZgJaFG7lz9kutlhHvoyeuzRhFWa6XFxUSK+NuZGAn027C02bdB
-	OAytaliiCg1KSQU9LD3s5vvsVVreoRopoAF2eHJUP/fNPerbk6mafif/0KmeFAXoqy/BHvMlkE0
-	KiTvrt5XAkDNggdN86jVW5lYhbgNExN995nyAReUBi/NPJm682AehwE01FnK56JGxK9kQuxtUJK
-	/mAqS3q7CfvWdQbuvaIHVbEotwvdt/pIJwkxljilT4wUgEJ+axk3kyuxzcGUN427Nob3ALAK5/c
-	DzfjV+n7c6Rk2nG0L57OJ0rpYH68wTgl123t24yf2iaq7ZqcBPvDVqbFXygFg+XFjGoeOp6fS6U
-	UiY+Px4OsiT2o934CEKLVmGwDv5JIwOf296y/
-X-Google-Smtp-Source: AGHT+IHkkrrkJO9vxFQ/mKvoqiciYenAoxqB4xsrJHXOmWLBpOlwSdkJNBje0Ts8w1UhVQVFhRl8oQ==
-X-Received: by 2002:a05:622a:1a97:b0:4ab:57eb:24b3 with SMTP id d75a77b69052e-4b0aed2362emr8392041cf.37.1754596187178;
-        Thu, 07 Aug 2025 12:49:47 -0700 (PDT)
-Received: from [127.0.0.1] ([172.214.44.211])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4b06ea8cec8sm53172531cf.25.2025.08.07.12.49.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Aug 2025 12:49:46 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Christoph Paasch <cpaasch@openai.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20250807-mptcp_fixes-v1-1-adfd79a88b5e@openai.com>
-References: <20250807-mptcp_fixes-v1-1-adfd79a88b5e@openai.com>
-Subject: Re: [PATCH mptcp-net] mptcp: drop skb if MPTCP skb extension
- allocation fails
-Message-ID: <4da984d2-b20e-2549-3853-418aed07bd15@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 07 Aug 2025 19:49:46 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jAuM27Pe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7AA14C4CEF1;
+	Fri,  8 Aug 2025 02:45:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1754621115;
+	bh=XRL/m0Hr9LaV14bo3kkWj7YRlrt+v5bNdn2XmnobjQM=;
+	h=From:To:Cc:Subject:Date:From;
+	b=jAuM27Pe7Cvvqi5N+GwMGbq01s1HBHOoqulPHinR6A32Vi/PkuEk32+jex40TpbqY
+	 /P+vz+YhGCezedJZWJXKykiq1Uk/EAXDk1HPE6RCY+v+10sKot+hrADRcTQc7+smPi
+	 kfHa3sS4vy6hCHyR6fwR/WgIPg413QPIqHvmg3knI9w/hetqHyQbJoI2ViErqsQGir
+	 XhkRG+gMMVxKVhGSGVcOiijHy1NwPMbz/qEjVzIrJqLG4IY5JhF+Y6K3f7ff/9NzqO
+	 ZFgu+qYRqptQsLLMqOv6wqeOpuYXrBkNP+n4jfk8c4/MngyZQzZ65cyLGxihNk2k80
+	 7hgkah1RAvjIA==
+From: Geliang Tang <geliang@kernel.org>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next 0/8] selftests/mptcp: consolidate TCP_INQ testing into sockopt
+Date: Fri,  8 Aug 2025 10:45:01 +0800
+Message-ID: <cover.1754620968.git.tanggeliang@kylinos.cn>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Hi Christoph,
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Thank you for your modifications, that's great!
+This series consolidates the TCP_INQ test functionality from mptcp_inq
+into mptcp_sockopt, simplifying the test suite while maintaining full
+test coverage. The key changes include:
 
-Our CI did some validations and here is its report:
+1. Adding necessary protocol arguments and IPC improvements to sockopt
+2. Implementing TCP_INQ test logic within the sockopt test binary
+3. Migrating test execution to use the enhanced sockopt binary
+4. Removing the now-obsolete mptcp_inq test binary
 
-- KVM Validation: normal: Unstable: 1 failed test(s): =
-selftest_mptcp_connect =F0=9F=94=B4
-- KVM Validation: debug: Success! =
-=E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =
-=E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =
-=E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
-uns/16812517311
+The consolidation provides several benefits:
+- Reduces code duplication by sharing common infrastructure
+- Simplifies maintenance with a single test binary
+- Maintains identical test coverage for TCP_INQ functionality
+- Improves code clarity with better IPC naming
+- Enhances flexibility through new protocol selection options
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/afb4495bb7ee
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D989206
+The series is structured as follows:
 
+Patch 1:  Simplifies RNG initialization using getrandom
+Patch 2:  Adds protocol selection arguments for tx/rx paths
+Patch 3:  Introduces '-i' option to enable TCP_INQ testing
+Patch 4:  Renames pipefd to ipcfd for better IPC abstraction
+Patch 5:  Implements TCP_INQ client processing logic
+Patch 6:  Adds TCP_INQ server connection handling
+Patch 7:  Updates test script to use sockopt instead of inq
+Patch 8:  Removes the obsolete mptcp_inq binary
 
-If there are some issues, you can reproduce them using the same =
-environment as
-the one used by the CI thanks to a docker image, e.g.:
+The changes maintain backward compatibility while extending
+functionality, and all tests pass with the same coverage as before.
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+Geliang Tang (8):
+  selftests: mptcp: sockopt: use getrandom for initialization
+  selftests: mptcp: sockopt: add protocol arguments
+  selftests: mptcp: sockopt: add inq argument
+  selftests: mptcp: sockopt: rename pipefd to ipcfd
+  selftests: mptcp: sockopt: add TCP_INQ client processing
+  selftests: mptcp: sockopt: add TCP_INQ server connection
+  selftests: mptcp: replace mptcp_inq with sockopt
+  selftests: mptcp: remove obsolete mptcp_inq
 
-For more details:
+ tools/testing/selftests/net/mptcp/.gitignore  |   1 -
+ tools/testing/selftests/net/mptcp/Makefile    |   2 +-
+ tools/testing/selftests/net/mptcp/mptcp_inq.c | 608 ------------------
+ .../selftests/net/mptcp/mptcp_sockopt.c       | 347 +++++++++-
+ .../selftests/net/mptcp/mptcp_sockopt.sh      |   6 +-
+ 5 files changed, 321 insertions(+), 643 deletions(-)
+ delete mode 100644 tools/testing/selftests/net/mptcp/mptcp_inq.c
 
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+-- 
+2.48.1
 
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
