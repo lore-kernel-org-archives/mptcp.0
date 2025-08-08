@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18C772AE74;
-	Fri,  8 Aug 2025 09:19:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 214E52110
+	for <mptcp@lists.linux.dev>; Fri,  8 Aug 2025 12:47:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754644772; cv=none; b=lX7FpA1jIg+llP4HikmzKgn5BjtEVvx4lWJKEcVWi339qqG8nT4XXFoF+WLDBFwzeahJCAGbMuCEw/oedNNBV2J7n7O40MQ1XFX9fzi2W0d2RNW6nOnDr2TGRRfdaGDGKYZBWmaxNq1UEbV4gl5VnQTMJliEW62PY4GH7ocHmcY=
+	t=1754657240; cv=none; b=Zf4F36vqbHOSSr2EvHSaNkCAy3ZPyUnDcVuGg/Md259fbBC0acyJ+0XcmdWkEY30nkg7MqGstSY2UITZI+xg0ddAlLq4qZUdZ543SVgsj+bVziWAwW1ddhgD35misoSB48xEM51PrrWjX0uZysAKg5YBsLFkSydZ7SBPDhBvjBo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754644772; c=relaxed/simple;
-	bh=UNGRcrHpudJn0w1urLqBMR5FBKNY7aoHD0a4DiJoAxo=;
+	s=arc-20240116; t=1754657240; c=relaxed/simple;
+	bh=eojbkIBC083LYF9l2Um6ycWSow17E4uZxVppSh0bt2s=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BftaOc3j+Cc632tTQx8EWqlV4Hw5J+6Qu+RhmWN/HuVcbCWcgU6eNBHot93G5nx5EY+ufyXpqHeBNV7PenX9AE7gR9vY0OB08pZwzQWjeszrfCTktVoW4flsAHiAfVGqw8yivOalOH0wRVrHyDkqNp+R3gehAZNnFUxVDshXbnY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sDNNwmSz; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=iTPddVnlXfhKvwGAL56rxV35ZH/qHPyO64I9+fEBFV8ZOtYADL9uQALlws8a1oe1XL5VR78/4Kvss4QaM70SRP7B4oQ3vP39XsHniWwWiLWnF/JclkUzhg0831moAkF5Y1fKn4B/07ozKbVoy6tf/MuCNNq544t8Abr+NtVYFNs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ubsRc+iZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sDNNwmSz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42DACC4CEED;
-	Fri,  8 Aug 2025 09:19:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ubsRc+iZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECD55C4CEED;
+	Fri,  8 Aug 2025 12:47:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754644771;
-	bh=UNGRcrHpudJn0w1urLqBMR5FBKNY7aoHD0a4DiJoAxo=;
+	s=k20201202; t=1754657237;
+	bh=eojbkIBC083LYF9l2Um6ycWSow17E4uZxVppSh0bt2s=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=sDNNwmSzuV6K6E49l6/7w4x04nxM8m2PFrSfClS/AKcLclw41aWIzJeT6INSUiv4P
-	 kDl9RhCjOmWJ4EzxRuwRe2IGBGYrAGOvj+vEpV3gloJdycaCgkIqw83wf729wcUPjj
-	 OQ7hAsJ3REkLl3SqY6EAIg0l6W7sibBMmOWyHMNuj3ZA8Z12zjDljCvu4Nt8SV1jui
-	 ke6aHNILH2np4asSUv7VBMd9XceFW4OZYdFlYVdnQ0DujaMyo0To8ZK2vFlFDFhDl2
-	 P3kyYXdEZQB91ROboSPaoyzcU2Y0XgJmdH7Gn/mgKlVPFku8dRurU1AAK7VrIjhxOp
-	 AaSn0a9hSAVFQ==
-Message-ID: <af73992f-e683-4ccd-9ff5-28f6147ea43e@kernel.org>
-Date: Fri, 8 Aug 2025 11:19:23 +0200
+	b=ubsRc+iZj4GewzKxl4uWAc5fw5BE5KydWXZdA1qAIiPLvAverVgb3oCyfKMSo8vgU
+	 3w2QpYBehnQ1CpoYSy98F4BEYVXY1JYw8oOOn3B5BirDrF0UmH/Zz6VEAVpwdlu4F4
+	 5GoKsfdQu06rQV9k7VVMsSwG4YUmLaGnUg8kmOvbQoTFWJcZaqIw/IMNoUwFlTBoBk
+	 WjlaZamvtFmOS1O4B2uUirBWmt8XchMPpZBKjrV6n02EGA/6LpFEMZ4/8m5++pkFmH
+	 oKkoyxSir/pLQz9pMu/Pmc3wRFmhBLVkA0+/mMDp6Jo8nSvBMV564xtWA2yz4VgCNT
+	 2tEH+VbYXFhsw==
+Message-ID: <cfe07742-5470-4991-854a-0c6067af35d6@kernel.org>
+Date: Fri, 8 Aug 2025 14:47:14 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,24 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: BPF selftest: mptcp subtest failing
+Subject: Re: .b4-config in export and export-net
 Content-Language: en-GB, fr-BE
-To: Harshvardhan Jha <harshvardhan.j.jha@oracle.com>,
- Mat Martineau <martineau@kernel.org>, Andrii Nakryiko <andrii@kernel.org>,
- Eduard Zingerman <eddyz87@gmail.com>
-Cc: Geliang Tang <geliang@kernel.org>, Mykola Lysenko <mykolal@fb.com>,
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
- Yonghong Song <yonghong.song@linux.dev>,
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
- Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
- Jiri Olsa <jolsa@kernel.org>, Shuah Khan <shuah@kernel.org>,
- mptcp@lists.linux.dev, bpf@vger.kernel.org, linux-kselftest@vger.kernel.org,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- stable@vger.kernel.org
-References: <b1f933f6-545d-4f2e-a006-4e5568656c38@oracle.com>
- <da46ad00-910f-4eb1-9b74-14bd76fc8910@kernel.org>
- <84125c5e-ed99-4158-9a59-e1a97435c626@oracle.com>
+To: Christoph Paasch <cpaasch@openai.com>
+Cc: MPTCP Upstream <mptcp@lists.linux.dev>
+References: <CADg4-L8X3_O5O67NfcE5PUeNWWDBqa1cbQ0L9L0Ti_Mn-m-7Jw@mail.gmail.com>
+ <f833716b-32e5-4ec8-845c-294c519e1b2e@kernel.org>
+ <CADg4-L_wscbqmn_D+SjwYsgnJPP9AcVire4Ae4AjMMzoZyaFaA@mail.gmail.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -98,118 +87,68 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <84125c5e-ed99-4158-9a59-e1a97435c626@oracle.com>
+In-Reply-To: <CADg4-L_wscbqmn_D+SjwYsgnJPP9AcVire4Ae4AjMMzoZyaFaA@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Harshvardhan,
-
-On 08/08/2025 09:00, Harshvardhan Jha wrote:
-> Hi Matthieu,
-> 
-> On 07/08/25 7:51 PM, Matthieu Baerts wrote:
->> Hi Harshvardhan,
+On 07/08/2025 19:51, Christoph Paasch wrote:
+> On Thu, Aug 7, 2025 at 10:03 AM Matthieu Baerts <matttbe@kernel.org> wrote:
 >>
->> On 07/08/2025 05:50, Harshvardhan Jha wrote:
->>> Hi there,
->>> I have explicitly disabled mptpcp by default on my custom kernel and
->>> this seems to be causing the test case to fail. Even after enabling
->>> mtpcp via sysctl command or adding an entry to /etc/sysctl.conf this
->>> fails. I don't think this test should be failing and should account for
->>> cases where mptcp has not been enabled by default?
->> It looks like the test is failing because it expects MPTCP to be enabled
->> by default. Or, said differently, it doesn't expect the kernel to be
->> modified without adapting the corresponding tests :)
+>> Hi Christoph,
 >>
->>> This is the custom patch I had applied on the LTS v6.12.36 kernel and
->>> tested it:
->>>
->>> diff --git a/net/mptcp/ctrl.c b/net/mptcp/ctrl.c
->>> index dd595d9b5e50c..bdcc4136e92ef 100644
->>> --- a/net/mptcp/ctrl.c
->>> +++ b/net/mptcp/ctrl.c
->>> @@ -89,7 +89,7 @@ const char *mptcp_get_scheduler(const struct net *net)
->>>  
->>>  static void mptcp_pernet_set_defaults(struct mptcp_pernet *pernet)
->>>  {
->>> -	pernet->mptcp_enabled = 1;
->>> +	pernet->mptcp_enabled = 0;
->>>  	pernet->add_addr_timeout = TCP_RTO_MAX;
->>>  	pernet->blackhole_timeout = 3600;
->>>  	atomic_set(&pernet->active_disable_times, 0);
->> First, I have the same question as the one I asked to RedHat devs: do
->> you still need to keep MPTCP disabled by default? If I remember well, on
->> RHEL side, they started to do that when they backported MPTCP on a
->> previous stable version, as an experimental feature. They left it like
->> that later mostly for internal process reasons I think. But honestly,
->> today, it no longer makes sense to do that and annoys users: all other
->> Linux distributions enable MPTCP by default without patching the kernel
->> like you did.
+>> On 07/08/2025 18:35, Christoph Paasch wrote:
+>>> Is there a reason we have the .b4-config files ?
+>>
+>> Yes, to help people using 'b4', to use the right prefix and to send to
+>> the ML (no need to run --auto-to-cc)
+>>
+>>>  And specifically them having the same name ?
+>>
+>> It has to have this name for b4 to work as expected.
+>>
+>>> Because, when managing different branches based off either export or
+>>> export-net it creates a conflict when merging everything together to
+>>> have a single branch with all my changes.
+>>
+>> export and export-net share the same history:
+>>  - export-net is on top of net
+>>  - export is on top of net-next, but merged with net, "almost" on top of
+>> export-net
+>>
+>> In other words, why do you need to merge both?
 > 
-> We had observed issues with mptcpd daemon failing before when we had
-> this enabled by default. The mtpcpd userspace fix is yet to be integrated.
-
-If net.mptcp.enabled is set to 0 by default, I guess most mptcpd unit
-tests will be skipped. If you have issues when MPTCP is enabled by
-default, there might be real issues in mptcpd that would need to be
-fixed (or more likely, RHEL devs didn't noticed most tests were skipped,
-and there are probably some dependences missing for these tests).
-
-But that's a different topic.
-
-> However, shouldn't the testcase be robust enough to handle that scenario
-> regardless?
-
-It should not be needed: these tests run in a dedicated netns where it
-expects the kernel to have MPTCP enabled by default. If this behaviour
-is changed without adapting the tests, that's normal to have issues.
-This is not an issue with the upstream kernel.
-
->> If you don't want to revert this patch, I guess you can modify the BPF
->> selftests in 'prog_tests/mptcp.c' to set 'sysctl net.mptcp.enabled=1' in
->> each netns created by the test. But again, not changing the default
->> kernel behaviour sounds like a better solution.
+> I have a branch with some fixes (based on top of export-net) and
+> another with a feature (based on top of export).
 > 
-> Even after changing /etc/sysctl.conf which is supposed to keep mptcp
-> enabled across reboots this issue occurs.
+> When I want to run tests (or in general do dev-work), I want to do
+> this on top of all my branches together, so I merge them.
 
-/etc/sysctl.conf needs a userspace daemon to load it and apply the
-changes. In these tests, dedicated netns are created, and this file is
-not read. That's the whole purpose of using netns: not to have to handle
-default config changed on the host, just use the default values from the
-kernel. Plus, it is cleaner to use netns: no need to revert changes
-after, tests can be executed in parallel without impacting others, etc.
+It makes sense.
 
-> I agree with what you have stated, mptcp should be enabled by default
-> and the userspace fix should be incorporated ideally, however I still
-> believe that the test case shouldn't be giving a false negative as it is
-> in this case.
+Personally, I usually only create branches on top of "export", because
+"export" is already on top of "net" (synced daily), so no need to be on
+top of just "export-net" most of the time.
 
-I don't think these tests have to handle every possible modifications
-done by a custom kernel. If you have to modify the behaviour, then you
-also need to adapt everything related to that. That's why I don't
-recommend to change the behaviour.
-
-> The false negatives seem to be occurring since this commit I believe:
-> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?id=df8d3ba55b4fa1d6aed8449971ee50757cb0732f
-
-I don't think so, this commit changes MPTCP selftests, not the BPF ones
-you have issues with. I guess you wanted to refer to this commit:
-
-  02d6a057c7be ("selftests/bpf: run mptcp in a dedicated netns")
-
-> This does the opposite of you have mentioned in certain functions.
-
-The MPTCP selftests are setting net.mptcp.enabled=1, because RHEL devs
-added them a while ago, while it was making sense, and we lefted them
-there, even after the refactoring you mentioned. But we should probably
-remove them indeed, because it is not needed.
-> I suppose adding all these lines back might do the trick:
+>> Please also note that these branches are rewritten regularly. You might
+>> want to use 'for-review' and 'for-review-net' if you want a continuous
+>> history.
 > 
-> ip netns exec $netns sysctl -q net.mptcp.enabled=1
+> I rebase my branches on top of export / export-net / ... regularly.
 
-For your issue, yes. But again, not changing the default kernel
-behaviour sounds like a better solution.
+Excellent! A regular user of 'git rebase --onto' then :)
+
+>>> Would it be possible to have .b4-config files with different names for
+>>> export and export-net ?
+>>
+>> We cannot rename them. We could remove them, but I think they are
+>> helpful. If you need to use these branches, can you not add an extra
+>> commit removing these files? Or a '.gitattributes' to give instructions
+>> about how to merge these files? Or pass that to 'git merge', or use
+>> rerere, or ... :)
+> 
+> Ok, .git/info/attributes does the job for me.
+
+Great, easier!
 
 Cheers,
 Matt
