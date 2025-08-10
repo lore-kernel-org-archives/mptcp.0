@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B11238FA3
-	for <mptcp@lists.linux.dev>; Sun, 10 Aug 2025 15:03:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FA3F38FA3
+	for <mptcp@lists.linux.dev>; Sun, 10 Aug 2025 15:03:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754838205; cv=none; b=ARRPc2y/f6bIu0OmKQKAN6Y7VHiV7NapVI4YJrnOgE16C5hvcGSjUDW9nRjGbnWFOmFx4yIXxUeFOnkO61d4kGH//Yd4Nz7QQ2Cjpl1GipooGpgE6LhGLpZ3/Y3RUyYBqCjWitokGbjTMh83ouXzIMSRBB6QjvBb25D3Tqb9KrA=
+	t=1754838207; cv=none; b=iX1qr0k1cf17hvCxNJheyXSxjfwNChb1aPOzUeGqO7+G983nguSSNicbthaVwipxjEp6onN2FMx4lVi87KPdM2xJE3xiOIUqf4JaPzU3pfIFx+FJ1KI9TEdH08ACIf9O+PDRU9jB4/TJTNxGvA8WINClKYjEVg9Wz+8AWMguj10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754838205; c=relaxed/simple;
-	bh=IdP1/0uoCn7T2M0wHaYAVrCQE4QTUWCEl9HRoTR0gm4=;
+	s=arc-20240116; t=1754838207; c=relaxed/simple;
+	bh=FXaP8LmOWlsBaBWAwSKhBIGAEFBW94wcci3e8HWKcbY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=soZ6icQ8kap/aNEkn3tcFTPf46rtxOHWowzrThSzW8QB30iYqQtT4T+A6h02Bzej6qZewsERKBUVN8Xnkf//QbwfNF7+c4qpOie+ihpT6tHdl8tE6mqSnrTE51qQo4Lu0eaQ+wZ4WIx6wn3KZxSW4BGwI7jR5jiOBzOi2qgxIDc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zop2drz4; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=K+WIrEBDTua9GxTrjSccyQEY8E11UsJ8GDyh9Qy3OMmyUC79Iz7OP2QMhrAKb9RM+lYh5bsOIvxLM3Hs+fWdywmZEgH4Z20Ut6CcmXqbBwkGl1JGAmKM5cQEvukYaBm+2d7MDO3pfJYRxe7f6ROLBVWwKcxy88+hTW0LW5R0i5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GjPxAmdo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zop2drz4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 808CDC4CEF6;
-	Sun, 10 Aug 2025 15:03:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GjPxAmdo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FB6AC4CEF6;
+	Sun, 10 Aug 2025 15:03:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754838205;
-	bh=IdP1/0uoCn7T2M0wHaYAVrCQE4QTUWCEl9HRoTR0gm4=;
+	s=k20201202; t=1754838206;
+	bh=FXaP8LmOWlsBaBWAwSKhBIGAEFBW94wcci3e8HWKcbY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Zop2drz4sMd0kl3SCmu7ZLAYSFTtKHl/88s8LPxt8uTfiqfN2NSc/iwQeVaLFEECA
-	 rkoLXVooqrTQj246Q5nkY7DZQWCPnmTKCMbB1fHaoyfjVVb4ZroxT8vWmn+ZudMNfM
-	 xjzn6HvaVGhySxthnmxBV54Gf2URaDd6NbFPGusEoiFPXDDbzQqkAopLu6BLgwSFpn
-	 sV/9WBU3E82jwjkJwd7zQZL8W4MKPCAjAmmnhOboaRNFnOZ6L2i4C12QQaLQYf71Kn
-	 Q0kjpOhkJYN3wWc5MYi6wpEM3HCEtQs8nNlCFpNTgYLmBvNwR22pzgl81oe2shRQII
-	 jLiRLhHQnr9RQ==
+	b=GjPxAmdoQt9ohzHHhaqiI5UVAUGrKQ2saRsh7/XK6yY8jhLCE8QwMk/R7GXH4Pp+h
+	 wrcN2MyVUqUkmKpH84BEGPP8aG7H0dQZ8uZOEfUFmLHuJskhdU6cwa9iPLwiUGao2k
+	 PIre/4OLKKIWm+M7u+KlopftKvhspQgwpPlGOj/V1743f3e5M14GPOEP5lfb2ASTyx
+	 symD//np0nYonjfaY1DkaQstR2FOCO7IUf9v5ZXGsBdOByj8daeLJIC+4B5LAGv0NU
+	 PcdmfEtbBjwrIwBKFQiTSAPiyapwk4YerbVNzx4ohzLYfxynZfJFCcyfq6zm9vnSJU
+	 vjFVQGQMzn3Yw==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v5 7/8] selftests: mptcp: sockopt: handle MD5 in connection processing
-Date: Sun, 10 Aug 2025 23:02:26 +0800
-Message-ID: <32204198e538e6d0cf978d459351e498ade0be21.1754837808.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v5 8/8] selftests: mptcp: sockopt: add TCP_MD5SIG test cases
+Date: Sun, 10 Aug 2025 23:02:27 +0800
+Message-ID: <35a1318c6a7354507348168b194939b4c2060f76.1754837808.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <cover.1754837808.git.tanggeliang@kylinos.cn>
 References: <cover.1754837808.git.tanggeliang@kylinos.cn>
@@ -45,50 +45,97 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Adjust connection handling to accommodate MD5-enabled connections:
-1. Skip getsockopt checks during MD5 tests
-2. Relax rcv_delta validation for MD5 connections
-3. Add proper conditional checks for MD5 test scenarios
+Implement automated tests for TCP_MD5SIG and TCP_MD5SIG_EXT:
+1. Enable required kernel config options
+2. Add test execution framework
+3. Implement IPv4/IPv6 test cases
+4. Add VRF interface handling for extended MD5 tests
+5. Integrate tests into existing test suite
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- tools/testing/selftests/net/mptcp/mptcp_sockopt.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ tools/testing/selftests/net/mptcp/config      |  3 ++
+ .../selftests/net/mptcp/mptcp_sockopt.sh      | 49 +++++++++++++++++++
+ 2 files changed, 52 insertions(+)
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-index 72c1f6016e97..6a9240b01ea7 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-+++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-@@ -648,6 +648,9 @@ static void do_getsockopt_mptcp_full_info(struct so_state *s, int fd)
- 
- static void do_getsockopts(struct so_state *s, int fd, size_t r, size_t w)
- {
-+	if (md5)
-+		return;
-+
- 	do_getsockopt_mptcp_info(s, fd, w);
- 
- 	do_getsockopt_tcp_info(s, fd, r, w);
-@@ -723,7 +726,8 @@ static void connect_one_server(int fd, int pipefd)
- 	if (eof)
- 		total += 1; /* sequence advances due to FIN */
- 
--	assert(s.mptcpi_rcv_delta == (uint64_t)total);
-+	if (s.mptcpi_rcv_delta)
-+		assert(s.mptcpi_rcv_delta == (uint64_t)total);
- 	close(fd);
+diff --git a/tools/testing/selftests/net/mptcp/config b/tools/testing/selftests/net/mptcp/config
+index 968d440c03fe..efb402d6c2c8 100644
+--- a/tools/testing/selftests/net/mptcp/config
++++ b/tools/testing/selftests/net/mptcp/config
+@@ -34,3 +34,6 @@ CONFIG_NET_ACT_PEDIT=m
+ CONFIG_NET_CLS_ACT=y
+ CONFIG_NET_CLS_FW=m
+ CONFIG_NET_SCH_INGRESS=m
++CONFIG_TCP_MD5SIG=y
++CONFIG_NET_L3_MASTER_DEV=y
++CONFIG_NET_VRF=y
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
+index 41201c5fa6af..969ad1e9cbf2 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
+@@ -348,6 +348,54 @@ do_tcpinq_tests()
+ 	return $?
  }
  
-@@ -868,7 +872,8 @@ static void process_one_client(int fd, int pipefd)
- 		xerror("expected EOF, got %lu", ret3);
++do_tcpmd5_test()
++{
++	print_title "TCP_MD5 $*"
++	ip netns exec "$ns_sbox" ./mptcp_sockopt "$@"
++	local lret=$?
++	if [ $lret -ne 0 ];then
++		ret=$lret
++		mptcp_lib_pr_fail
++		mptcp_lib_result_fail "TCP_MD5: $*"
++		return $lret
++	fi
++
++	mptcp_lib_pr_ok
++	mptcp_lib_result_pass "TCP_MD5: $*"
++	return $lret
++}
++
++do_tcpmd5_tests()
++{
++	local lret=0
++
++	do_tcpmd5_test -m "md5,key=123456"
++	lret=$?
++	if [ $lret -ne 0 ] ; then
++		return $lret
++	fi
++	do_tcpmd5_test -6 -m "md5,key=123456"
++	lret=$?
++	if [ $lret -ne 0 ] ; then
++		return $lret
++	fi
++
++	ip netns exec "$ns_sbox" ip link add vrf-test type vrf table 100
++	vrf=$(ip netns exec "$ns_sbox" ip link show vrf-test |
++				       awk -F':' '{print $1; exit}')
++	do_tcpmd5_test -m "md5ext,prefix=1,index=$vrf,key=654321"
++	lret=$?
++	if [ $lret -ne 0 ] ; then
++		ip netns exec "$ns_sbox" ip link del vrf-test
++		return $lret
++	fi
++	do_tcpmd5_test -6 -m "md5ext,prefix=1,index=$vrf,key=654321"
++	lret=$?
++
++	ip netns exec "$ns_sbox" ip link del vrf-test
++	return $lret
++}
++
+ sin=$(mktemp)
+ sout=$(mktemp)
+ cin=$(mktemp)
+@@ -363,6 +411,7 @@ run_tests $ns1 $ns2 dead:beef:1::1
  
- 	do_getsockopts(&s, fd, ret, ret2);
--	if (s.mptcpi_rcv_delta != (uint64_t)ret + 1)
-+	if (s.mptcpi_rcv_delta &&
-+	    s.mptcpi_rcv_delta != (uint64_t)ret + 1)
- 		xerror("mptcpi_rcv_delta %" PRIu64 ", expect %" PRIu64, s.mptcpi_rcv_delta, ret + 1, s.mptcpi_rcv_delta - ret);
+ do_mptcp_sockopt_tests
+ do_tcpinq_tests
++do_tcpmd5_tests
  
- 	/* be nice when running on top of older kernel */
+ mptcp_lib_result_print_all_tap
+ exit $ret
 -- 
 2.48.1
 
