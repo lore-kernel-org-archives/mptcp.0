@@ -1,40 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FA3F38FA3
-	for <mptcp@lists.linux.dev>; Sun, 10 Aug 2025 15:03:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39B051C6FE5
+	for <mptcp@lists.linux.dev>; Sun, 10 Aug 2025 15:39:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754838207; cv=none; b=iX1qr0k1cf17hvCxNJheyXSxjfwNChb1aPOzUeGqO7+G983nguSSNicbthaVwipxjEp6onN2FMx4lVi87KPdM2xJE3xiOIUqf4JaPzU3pfIFx+FJ1KI9TEdH08ACIf9O+PDRU9jB4/TJTNxGvA8WINClKYjEVg9Wz+8AWMguj10=
+	t=1754840378; cv=none; b=bAZk6jcDRfbaO02jYML5FDeAOgXcRJDeJG8uEg0iUeh3GtDsSTWCYG2rvnK7sLo8U9EhTpc43IuAODPVPaQIKqsgDsf7an3yS1jFWyJQPjQ3YITU4sJYEeCw9OGLPBWp1Md6hP2ajowW18OSyxlpEKPcYYf7eBGnIKkxziIkrt4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754838207; c=relaxed/simple;
-	bh=FXaP8LmOWlsBaBWAwSKhBIGAEFBW94wcci3e8HWKcbY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=K+WIrEBDTua9GxTrjSccyQEY8E11UsJ8GDyh9Qy3OMmyUC79Iz7OP2QMhrAKb9RM+lYh5bsOIvxLM3Hs+fWdywmZEgH4Z20Ut6CcmXqbBwkGl1JGAmKM5cQEvukYaBm+2d7MDO3pfJYRxe7f6ROLBVWwKcxy88+hTW0LW5R0i5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GjPxAmdo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1754840378; c=relaxed/simple;
+	bh=AXyFME8hPqDw6ZeiGZhLVvGW8AqPe5r1HS39bwV60Pk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=apMuZ877pVjRQLzmYey8GItwpF6H/p16uCaP1SDwrR5E7ZpAnexl1iLUCdzjzcxtY1ICk5MB2Bvz7Sln6lVM4sdFC24melDglQ2dtlt1NtmWfON/7jcCVjp0qvg893ex72oFFHafdjlb/h9f40uMZ5QBhgHqlEfn1rQK9lNXItc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jnGyF5yP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GjPxAmdo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FB6AC4CEF6;
-	Sun, 10 Aug 2025 15:03:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jnGyF5yP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BDA9C4CEEB;
+	Sun, 10 Aug 2025 15:39:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754838206;
-	bh=FXaP8LmOWlsBaBWAwSKhBIGAEFBW94wcci3e8HWKcbY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=GjPxAmdoQt9ohzHHhaqiI5UVAUGrKQ2saRsh7/XK6yY8jhLCE8QwMk/R7GXH4Pp+h
-	 wrcN2MyVUqUkmKpH84BEGPP8aG7H0dQZ8uZOEfUFmLHuJskhdU6cwa9iPLwiUGao2k
-	 PIre/4OLKKIWm+M7u+KlopftKvhspQgwpPlGOj/V1743f3e5M14GPOEP5lfb2ASTyx
-	 symD//np0nYonjfaY1DkaQstR2FOCO7IUf9v5ZXGsBdOByj8daeLJIC+4B5LAGv0NU
-	 PcdmfEtbBjwrIwBKFQiTSAPiyapwk4YerbVNzx4ohzLYfxynZfJFCcyfq6zm9vnSJU
-	 vjFVQGQMzn3Yw==
+	s=k20201202; t=1754840377;
+	bh=AXyFME8hPqDw6ZeiGZhLVvGW8AqPe5r1HS39bwV60Pk=;
+	h=From:To:Cc:Subject:Date:From;
+	b=jnGyF5yPECV7kqOeOeSV+Vuu72ee+yIl+greagrPQZOeJdi1WqhRXXQB4blpwNABH
+	 CERDSbF8bWh+pNtPomkkh8HR2ZxV7SZG5aUvyNXYHcCX/3K75zopGo4Y1EzrtJnExp
+	 TyKTN0JM1+KltmQzMTzL4/XZ4yN6yfL/mzLWSEwbDJ1SH8wCi/9P6aeOyEAmjTPjuM
+	 8titR6IN7hbj/9oRSiGIoTiAOdaPoY6YPriFKLlv9WB+mwyxASc6+qY3jgWajyPsoG
+	 EyMNIQSHgzPqcNHTqZJKBHrWPf38lGp9pOflMoFaNOPrdB495iB0IA38ql5R5E1rSA
+	 Y1Dnzm7fVfe8w==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v5 8/8] selftests: mptcp: sockopt: add TCP_MD5SIG test cases
-Date: Sun, 10 Aug 2025 23:02:27 +0800
-Message-ID: <35a1318c6a7354507348168b194939b4c2060f76.1754837808.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next] tcp: md5: remove redundant l3flag variable
+Date: Sun, 10 Aug 2025 23:38:52 +0800
+Message-ID: <93d3186f303d1242a0bde737aeda97959c1eb5cc.1754840319.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.48.1
-In-Reply-To: <cover.1754837808.git.tanggeliang@kylinos.cn>
-References: <cover.1754837808.git.tanggeliang@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -45,97 +42,109 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Implement automated tests for TCP_MD5SIG and TCP_MD5SIG_EXT:
-1. Enable required kernel config options
-2. Add test execution framework
-3. Implement IPv4/IPv6 test cases
-4. Add VRF interface handling for extended MD5 tests
-5. Integrate tests into existing test suite
+The l3flag variable was redundant as it duplicated the value of
+the 'flags' variable which already contains the interface index flag
+status from cmd.tcpm_flags. This cleanup simplifies the code by
+eliminating unnecessary variable duplication.
+
+Changes:
+1. Remove l3flag variable declarations
+2. Replace l3flag usage with existing 'flags' variable
+3. Maintain identical functionality with reduced complexity
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- tools/testing/selftests/net/mptcp/config      |  3 ++
- .../selftests/net/mptcp/mptcp_sockopt.sh      | 49 +++++++++++++++++++
- 2 files changed, 52 insertions(+)
+ net/ipv4/tcp_ipv4.c | 7 ++-----
+ net/ipv6/tcp_ipv6.c | 9 +++------
+ 2 files changed, 5 insertions(+), 11 deletions(-)
 
-diff --git a/tools/testing/selftests/net/mptcp/config b/tools/testing/selftests/net/mptcp/config
-index 968d440c03fe..efb402d6c2c8 100644
---- a/tools/testing/selftests/net/mptcp/config
-+++ b/tools/testing/selftests/net/mptcp/config
-@@ -34,3 +34,6 @@ CONFIG_NET_ACT_PEDIT=m
- CONFIG_NET_CLS_ACT=y
- CONFIG_NET_CLS_FW=m
- CONFIG_NET_SCH_INGRESS=m
-+CONFIG_TCP_MD5SIG=y
-+CONFIG_NET_L3_MASTER_DEV=y
-+CONFIG_NET_VRF=y
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-index 41201c5fa6af..969ad1e9cbf2 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-@@ -348,6 +348,54 @@ do_tcpinq_tests()
- 	return $?
- }
+diff --git a/net/ipv4/tcp_ipv4.c b/net/ipv4/tcp_ipv4.c
+index 84d3d556ed80..e04cd0652ab3 100644
+--- a/net/ipv4/tcp_ipv4.c
++++ b/net/ipv4/tcp_ipv4.c
+@@ -1519,7 +1519,6 @@ static int tcp_v4_parse_md5_keys(struct sock *sk, int optname,
+ 	const union tcp_md5_addr *addr;
+ 	u8 prefixlen = 32;
+ 	int l3index = 0;
+-	bool l3flag;
+ 	u8 flags;
  
-+do_tcpmd5_test()
-+{
-+	print_title "TCP_MD5 $*"
-+	ip netns exec "$ns_sbox" ./mptcp_sockopt "$@"
-+	local lret=$?
-+	if [ $lret -ne 0 ];then
-+		ret=$lret
-+		mptcp_lib_pr_fail
-+		mptcp_lib_result_fail "TCP_MD5: $*"
-+		return $lret
-+	fi
-+
-+	mptcp_lib_pr_ok
-+	mptcp_lib_result_pass "TCP_MD5: $*"
-+	return $lret
-+}
-+
-+do_tcpmd5_tests()
-+{
-+	local lret=0
-+
-+	do_tcpmd5_test -m "md5,key=123456"
-+	lret=$?
-+	if [ $lret -ne 0 ] ; then
-+		return $lret
-+	fi
-+	do_tcpmd5_test -6 -m "md5,key=123456"
-+	lret=$?
-+	if [ $lret -ne 0 ] ; then
-+		return $lret
-+	fi
-+
-+	ip netns exec "$ns_sbox" ip link add vrf-test type vrf table 100
-+	vrf=$(ip netns exec "$ns_sbox" ip link show vrf-test |
-+				       awk -F':' '{print $1; exit}')
-+	do_tcpmd5_test -m "md5ext,prefix=1,index=$vrf,key=654321"
-+	lret=$?
-+	if [ $lret -ne 0 ] ; then
-+		ip netns exec "$ns_sbox" ip link del vrf-test
-+		return $lret
-+	fi
-+	do_tcpmd5_test -6 -m "md5ext,prefix=1,index=$vrf,key=654321"
-+	lret=$?
-+
-+	ip netns exec "$ns_sbox" ip link del vrf-test
-+	return $lret
-+}
-+
- sin=$(mktemp)
- sout=$(mktemp)
- cin=$(mktemp)
-@@ -363,6 +411,7 @@ run_tests $ns1 $ns2 dead:beef:1::1
+ 	if (optlen < sizeof(cmd))
+@@ -1532,7 +1531,6 @@ static int tcp_v4_parse_md5_keys(struct sock *sk, int optname,
+ 		return -EINVAL;
  
- do_mptcp_sockopt_tests
- do_tcpinq_tests
-+do_tcpmd5_tests
+ 	flags = cmd.tcpm_flags & TCP_MD5SIG_FLAG_IFINDEX;
+-	l3flag = cmd.tcpm_flags & TCP_MD5SIG_FLAG_IFINDEX;
  
- mptcp_lib_result_print_all_tap
- exit $ret
+ 	if (optname == TCP_MD5SIG_EXT &&
+ 	    cmd.tcpm_flags & TCP_MD5SIG_FLAG_PREFIX) {
+@@ -1541,8 +1539,7 @@ static int tcp_v4_parse_md5_keys(struct sock *sk, int optname,
+ 			return -EINVAL;
+ 	}
+ 
+-	if (optname == TCP_MD5SIG_EXT && cmd.tcpm_ifindex &&
+-	    cmd.tcpm_flags & TCP_MD5SIG_FLAG_IFINDEX) {
++	if (optname == TCP_MD5SIG_EXT && cmd.tcpm_ifindex && flags) {
+ 		struct net_device *dev;
+ 
+ 		rcu_read_lock();
+@@ -1570,7 +1567,7 @@ static int tcp_v4_parse_md5_keys(struct sock *sk, int optname,
+ 	/* Don't allow keys for peers that have a matching TCP-AO key.
+ 	 * See the comment in tcp_ao_add_cmd()
+ 	 */
+-	if (tcp_ao_required(sk, addr, AF_INET, l3flag ? l3index : -1, false))
++	if (tcp_ao_required(sk, addr, AF_INET, flags ? l3index : -1, false))
+ 		return -EKEYREJECTED;
+ 
+ 	return tcp_md5_do_add(sk, addr, AF_INET, prefixlen, l3index, flags,
+diff --git a/net/ipv6/tcp_ipv6.c b/net/ipv6/tcp_ipv6.c
+index 7577e7eb2c97..b2bfc5f03393 100644
+--- a/net/ipv6/tcp_ipv6.c
++++ b/net/ipv6/tcp_ipv6.c
+@@ -610,7 +610,6 @@ static int tcp_v6_parse_md5_keys(struct sock *sk, int optname,
+ 	union tcp_ao_addr *addr;
+ 	int l3index = 0;
+ 	u8 prefixlen;
+-	bool l3flag;
+ 	u8 flags;
+ 
+ 	if (optlen < sizeof(cmd))
+@@ -623,7 +622,6 @@ static int tcp_v6_parse_md5_keys(struct sock *sk, int optname,
+ 		return -EINVAL;
+ 
+ 	flags = cmd.tcpm_flags & TCP_MD5SIG_FLAG_IFINDEX;
+-	l3flag = cmd.tcpm_flags & TCP_MD5SIG_FLAG_IFINDEX;
+ 
+ 	if (optname == TCP_MD5SIG_EXT &&
+ 	    cmd.tcpm_flags & TCP_MD5SIG_FLAG_PREFIX) {
+@@ -635,8 +633,7 @@ static int tcp_v6_parse_md5_keys(struct sock *sk, int optname,
+ 		prefixlen = ipv6_addr_v4mapped(&sin6->sin6_addr) ? 32 : 128;
+ 	}
+ 
+-	if (optname == TCP_MD5SIG_EXT && cmd.tcpm_ifindex &&
+-	    cmd.tcpm_flags & TCP_MD5SIG_FLAG_IFINDEX) {
++	if (optname == TCP_MD5SIG_EXT && cmd.tcpm_ifindex && flags) {
+ 		struct net_device *dev;
+ 
+ 		rcu_read_lock();
+@@ -671,7 +668,7 @@ static int tcp_v6_parse_md5_keys(struct sock *sk, int optname,
+ 		 * See the comment in tcp_ao_add_cmd()
+ 		 */
+ 		if (tcp_ao_required(sk, addr, AF_INET,
+-				    l3flag ? l3index : -1, false))
++				    flags ? l3index : -1, false))
+ 			return -EKEYREJECTED;
+ 		return tcp_md5_do_add(sk, addr,
+ 				      AF_INET, prefixlen, l3index, flags,
+@@ -683,7 +680,7 @@ static int tcp_v6_parse_md5_keys(struct sock *sk, int optname,
+ 	/* Don't allow keys for peers that have a matching TCP-AO key.
+ 	 * See the comment in tcp_ao_add_cmd()
+ 	 */
+-	if (tcp_ao_required(sk, addr, AF_INET6, l3flag ? l3index : -1, false))
++	if (tcp_ao_required(sk, addr, AF_INET6, flags ? l3index : -1, false))
+ 		return -EKEYREJECTED;
+ 
+ 	return tcp_md5_do_add(sk, addr, AF_INET6, prefixlen, l3index, flags,
 -- 
 2.48.1
 
