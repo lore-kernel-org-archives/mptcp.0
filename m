@@ -1,55 +1,55 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD0252E03EF
-	for <mptcp@lists.linux.dev>; Mon, 11 Aug 2025 17:31:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B95E2E06D2
+	for <mptcp@lists.linux.dev>; Mon, 11 Aug 2025 17:31:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754933510; cv=none; b=qDA8wHn6fXZ6Ys6o/mo81QE+ZlV8E4DkV17ZqQblBV9YV5Fvm/odguXSk1HB7BzIhNenExsT18YjTbpSaU50oDlJkoAn0GR3QmuqFW+9aOxdDA/SqR+tMarJMOhwD7avMTOl/AKDA0RvOY+IQNgEZ/02xiBaqkR4zJQnc/LYdvk=
+	t=1754933513; cv=none; b=gT+RpLEEDIAzzHCwbQlSibLRE3rIzXRd5MxrjzzOQPFJ4K59igl3A1aBOWWXeKk8uU0nCs/1TdKJzwL3WlrVPFf7lMqXLZXbuJBiZagv11KLWfNn0okyH0Latqde/b/54DOx0YZFVDZPkYjoqUT0FqpBTt0TXYpv8VyA3YW70RQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754933510; c=relaxed/simple;
-	bh=xkRERDS1LDhtc4ABopT6NOBLc6UTOqA/kGMvd9jxHhM=;
+	s=arc-20240116; t=1754933513; c=relaxed/simple;
+	bh=dOLfm9I4B2TFecBHydDXiOPMuM6Ln7/l9lzWDNQH6Dc=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=gfnh6VLB4cVR9JVMhr6WVfNMrKgqnDwVfGjwqmpWHF7Vdamg//5s65bMW1dYxVRyRFQ8oPVhqy8gCVacz1MmwypcTSggsQ/SK96k7TZZKzpUzO8l+jQzaMKBJQbmQg+bX+xNgkqEVaPsP+Od/oC6HkajOQ2MkrX5YMp6xo11prw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--kuniyu.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LcvOqR+/; arc=none smtp.client-ip=209.85.215.202
+	 To:Cc:Content-Type; b=KpfzUjvZrQVVycm7ilDAcKAxvtMCAzUue1pbXEnbKHiD2cUHvJzIHagRYZbLDEubFNNGBPYBq8uzExnp3wny+2jJmNnlevk+IxjucS1SjkRkOYO+0/8b4o5+RHrsJffxixmQczoi4binqY5asSU6Q+oqifOn3AWL14vxkeEHtYU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--kuniyu.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uZhY7aEV; arc=none smtp.client-ip=209.85.210.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--kuniyu.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LcvOqR+/"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b44fdfe7b8dso1245880a12.2
-        for <mptcp@lists.linux.dev>; Mon, 11 Aug 2025 10:31:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uZhY7aEV"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-76bcd829ff1so4350589b3a.1
+        for <mptcp@lists.linux.dev>; Mon, 11 Aug 2025 10:31:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1754933508; x=1755538308; darn=lists.linux.dev;
+        d=google.com; s=20230601; t=1754933509; x=1755538309; darn=lists.linux.dev;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=wvflH4mEPAWQ6li4TrYWNHfiAFRxuWfsFRk3VY+0HGw=;
-        b=LcvOqR+/Ba+ypMal4eN+UxMlA6kb1oedasUSQPo//Pm755tofcypYjFhbBKfgBEeBz
-         SnAmuH6RvKxT87VCabOHS/QZnb7ZLejzlMNuZ4nP9S1mo07PF82KoU+XxJaXMGsIV5FA
-         BPyeck0gz5zpmtUOn3YztyYdtAEtBsW4Fkdwe6+7W7v4/T0voT+1Si9k8TSvhuCILY+T
-         kzJrE506B6RuHKaqCguIf0quLTRgVgoneMI8kyqFyhK3bKQHAD16N3gSfIptMV6SjPBP
-         ZG+p2cuyJMl8z1alefkwpw1mrVp7/BKEhuhgrBtJDzk6YsGncLQj7Z5XdsGM86QXPJYi
-         RxeA==
+        bh=k7SLf/b1TNrP6kPGA7P5mGSIp2EjjMSQCEcOICNla1I=;
+        b=uZhY7aEV/AUt0F8dEscWRYodOX/+qCyhYBCswvvissi2+P4z7Rwglit1mcS6VY+E/U
+         bqVrvs50DeZmtI8AjP7Bf1AOOycGR8gZhlEmgqIKxrYUQ+Yvn2kpvtTR/VaoEDEjT2Rp
+         dxv0eAD3KJJ/y6HcLYzXhAM2NO61uFWxxWdBY8b062pxa/znSgL7iOEVpGG+DdpccnOi
+         uTZNdIBXpAhHFXcLJR0fOmCQmQa18AtLznJECQer3PZPb57ClcaHnUsCKV6FzU3YsfaR
+         IOhqyrGvZRemTbnIyddOz7Quh7oTX+pF/cD4OoOLtBwBjF14cN8JrwVzYQj65m6zQjn5
+         edqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754933508; x=1755538308;
+        d=1e100.net; s=20230601; t=1754933509; x=1755538309;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wvflH4mEPAWQ6li4TrYWNHfiAFRxuWfsFRk3VY+0HGw=;
-        b=Pi4G9CRs9HoKQo8vpIkXRTTtkZr5Czoa4EQWs2p45ijWfQGRPlqJTLip/i6kv9Nr+E
-         2f1/P/yGxSDk1pEInY9d2OQNbYw0+nYL0f773ar3EOqz6DrKmchtN8crW2OgfYLdOqCh
-         uWH8R4h5GR69UDfuLvC0tXY3gDxHmpzpgQpq+BPzw55O5Ma75DpKZbMdtkVJ5uVQW2z4
-         H7yI0xt65AKXl6SeppS+AZSafNJCpfz09je5mZE6wNiqPJWulsHCpWIQCA90LAbE3uUH
-         n3J3l58A+x1QQUVBdoK1SqWhlHDoUnlpQQJruG6DEhp/n64F+5+buMc7zdaGRwgL3qqP
-         kxNA==
-X-Forwarded-Encrypted: i=1; AJvYcCWcwmGcNbBlpr5fP/0A2W0WjTJbh5WuhFr7BX0CbPkEFjw56BAzo/89j822U6SDnPJVj4xl3g==@lists.linux.dev
-X-Gm-Message-State: AOJu0YywaMsmiz8gr053nWj0tJgNjNqE3WeSkhSE0DXWqGypbaFzjfyE
-	RiGu1Lc/VbIkyRtUpn3q06FSk+wWXP9SEd1/qoZZolj/uAlusN7a5cufcTxhhKhuyIlDIZ5NlXf
-	PCJub5A==
-X-Google-Smtp-Source: AGHT+IHWru/esDMIorV9KwapH35BgNKYXxj+gZBO2aUFirZsNJPkvzOa2N5vDdIDqP57DTCGbEd9T+ROCI0=
-X-Received: from pjbgf4.prod.google.com ([2002:a17:90a:c7c4:b0:312:ea08:fa64])
- (user=kuniyu job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:3d85:b0:206:a9bd:a3a3
- with SMTP id adf61e73a8af0-2409a968d13mr468882637.24.1754933507942; Mon, 11
- Aug 2025 10:31:47 -0700 (PDT)
-Date: Mon, 11 Aug 2025 17:30:39 +0000
+        bh=k7SLf/b1TNrP6kPGA7P5mGSIp2EjjMSQCEcOICNla1I=;
+        b=F1h4fHVDTTotKeYTzczrfm1+tAGK6D4+7yurUKemRWPkn4eUu6W8l8MBq4RsNSpEtv
+         kygYIx4vvysRb1EbgchvPPfMen/2xo06T8DL7RwPGJRFdQMdilLRntgI5KdCOaq4qY1K
+         PllnM26HF0pbQNUIqFzUS/OKdb9+ZX83IU+/F7xbcOCApCejYr2+M2JYe4/P/yxQ2N3x
+         eRYUT0WZ35A1htGCqO+D89QTPz8VUL3mA8HpZKYO/IBGFEgo4fXLnJoUFOAVVHFSSJkM
+         dKktqUI6BajAhiv4789A5Vv/loNB2WISQ2dICRrK3DE3h0COn57QqMPpM2BL4/kc8C1M
+         v9Tw==
+X-Forwarded-Encrypted: i=1; AJvYcCWcdcGjMsy2g15EJs5V4JXoDzSzLEJ7PG/K7bPAvodLS0nmUqoGgiVEHmBAhjCGSY9NBPkHrg==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzP11j+PdsBhv7/phQuU1I2btBT0/J9a4KYZ7dYuplVvj1emC4m
+	2+JVi9p3NTsSlXMf0kpb/cuVLQu9D+0LTnE5sck0J8u4xII6EGijOV88v/iblu0lAwn78N7QRoN
+	ydFdu2w==
+X-Google-Smtp-Source: AGHT+IEkxOxyR4soNgLW4++VFX6C582L+cnGEVtxtVwkEQ3Ypcq86ke6b4X42kPLmM6zLuE6ldq4TTZy3Ic=
+X-Received: from pgbee13.prod.google.com ([2002:a05:6a02:458d:b0:b42:c17:47ac])
+ (user=kuniyu job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:892f:b0:240:9af2:71cb
+ with SMTP id adf61e73a8af0-2409af27360mr180384637.20.1754933509378; Mon, 11
+ Aug 2025 10:31:49 -0700 (PDT)
+Date: Mon, 11 Aug 2025 17:30:40 +0000
 In-Reply-To: <20250811173116.2829786-1-kuniyu@google.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -59,8 +59,9 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 Mime-Version: 1.0
 References: <20250811173116.2829786-1-kuniyu@google.com>
 X-Mailer: git-send-email 2.51.0.rc0.155.g4a0f42376b-goog
-Message-ID: <20250811173116.2829786-12-kuniyu@google.com>
-Subject: [PATCH v2 net-next 11/12] net-memcg: Store MEMCG_SOCK_ISOLATED in sk->sk_memcg.
+Message-ID: <20250811173116.2829786-13-kuniyu@google.com>
+Subject: [PATCH v2 net-next 12/12] net-memcg: Decouple controlled memcg from
+ global protocol memory accounting.
 From: Kuniyuki Iwashima <kuniyu@google.com>
 To: "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
 	Jakub Kicinski <kuba@kernel.org>, Neal Cardwell <ncardwell@google.com>, Paolo Abeni <pabeni@redhat.com>, 
@@ -75,123 +76,391 @@ Cc: Simon Horman <horms@kernel.org>, Geliang Tang <geliang@kernel.org>,
 	mptcp@lists.linux.dev, cgroups@vger.kernel.org, linux-mm@kvack.org
 Content-Type: text/plain; charset="UTF-8"
 
-We will decouple sockets from the global protocol memory accounting
-if the cgroup's memory.max is not "max" (PAGE_COUNTER_MAX).
+Some protocols (e.g., TCP, UDP) implement memory accounting for socket
+buffers and charge memory to per-protocol global counters pointed to by
+sk->sk_proto->memory_allocated.
 
-memory.max can change at any time, so we must snapshot the state
-for each socket to ensure consistency.
+When running under a non-root cgroup, this memory is also charged to the
+memcg as "sock" in memory.stat.
 
-Given sk->sk_memcg can be accessed in the fast path, it would
-be preferable to place the flag field in the same cache line as
-sk->sk_memcg.
+Even when a memcg controls memory usage, sockets of such protocols are
+still subject to global limits (e.g., /proc/sys/net/ipv4/tcp_mem).
 
-However, struct sock does not have such a 1-byte hole.
+This makes it difficult to accurately estimate and configure appropriate
+global limits, especially in multi-tenant environments.
 
-Let's store the flag in the lowest bit of sk->sk_memcg and add
-a helper to check the bit.
+If all workloads were guaranteed to be controlled under memcg, the issue
+could be worked around by setting tcp_mem[0~2] to UINT_MAX.
 
-In the next patch, if mem_cgroup_sk_isolated() returns true,
-the socket will not be charged to sk->sk_prot->memory_allocated.
+In reality, this assumption does not always hold, and processes that
+belong to the root cgroup or opt out of memcg can consume memory up to
+the global limit, becoming a noisy neighbour.
+
+Let's decouple memcg from the global per-protocol memory accounting if
+it has a finite memory.max (!= "max").
+
+We still keep charging memory to memcg and protocol duplicately if
+memcg has "max" in memory.max because TCP allows only 10% of physical
+memory by default.
+
+This simplifies memcg configuration while keeping the global limits
+within a reasonable range.
+
+If mem_cgroup_sk_isolated(sk) returns true, the per-protocol memory
+accounting is skipped.
+
+In inet_csk_accept(), we need to reclaim counts that are already charged
+for child sockets because we do not allocate sk->sk_memcg until accept().
+
+Note that trace_sock_exceed_buf_limit() will always show 0 as accounted
+for the isolated sockets, but this can be obtained via memory.stat.
+
+Tested with a script that creates local socket pairs and send()s a
+bunch of data without recv()ing.
+
+Setup:
+
+  # mkdir /sys/fs/cgroup/test
+  # echo $$ >> /sys/fs/cgroup/test/cgroup.procs
+  # sysctl -q net.ipv4.tcp_mem="1000 1000 1000"
+
+Without setting memory.max:
+
+  # prlimit -n=524288:524288 bash -c "python3 pressure.py" &
+  # cat /sys/fs/cgroup/test/memory.stat | grep sock
+  sock 22642688
+  # ss -tn | head -n 5
+  State Recv-Q Send-Q Local Address:Port  Peer Address:Port
+  ESTAB 2000   0          127.0.0.1:34479    127.0.0.1:53188
+  ESTAB 2000   0          127.0.0.1:34479    127.0.0.1:49972
+  ESTAB 2000   0          127.0.0.1:34479    127.0.0.1:53868
+  ESTAB 2000   0          127.0.0.1:34479    127.0.0.1:53554
+  # nstat | grep Pressure || echo no pressure
+  TcpExtTCPMemoryPressures        1                  0.0
+
+With memory.max:
+
+  # echo $((64 * 1024 ** 3)) > /sys/fs/cgroup/test/memory.max
+  # prlimit -n=524288:524288 bash -c "python3 pressure.py" &
+  # cat /sys/fs/cgroup/test/memory.stat | grep sock
+  sock 2757468160
+  # ss -tn | head -n 5
+  State Recv-Q Send-Q  Local Address:Port  Peer Address:Port
+  ESTAB 111000 0           127.0.0.1:36019    127.0.0.1:49026
+  ESTAB 110000 0           127.0.0.1:36019    127.0.0.1:45630
+  ESTAB 110000 0           127.0.0.1:36019    127.0.0.1:44870
+  ESTAB 111000 0           127.0.0.1:36019    127.0.0.1:45274
+  # nstat | grep Pressure || echo no pressure
+  no pressure
 
 Signed-off-by: Kuniyuki Iwashima <kuniyu@google.com>
 ---
 v2:
-  * Set MEMCG_SOCK_ISOLATED based on memory.max instead of
-    a dedicated knob
+  * Add sk_should_enter_memory_pressure() for
+    tcp_enter_memory_pressure() calls not in core
+  * Update example in changelog
 ---
- include/net/sock.h | 23 ++++++++++++++++++++++-
- mm/memcontrol.c    | 14 ++++++++++++--
- 2 files changed, 34 insertions(+), 3 deletions(-)
+ include/net/proto_memory.h      | 15 ++++++--
+ include/net/tcp.h               | 10 ++++--
+ net/core/sock.c                 | 64 ++++++++++++++++++++++-----------
+ net/ipv4/inet_connection_sock.c | 18 ++++++++--
+ net/ipv4/tcp.c                  |  3 +-
+ net/ipv4/tcp_output.c           | 10 ++++--
+ net/mptcp/protocol.c            |  4 ++-
+ net/tls/tls_device.c            |  3 +-
+ 8 files changed, 93 insertions(+), 34 deletions(-)
 
-diff --git a/include/net/sock.h b/include/net/sock.h
-index 1c49ea13af4a..29ba5fdaafd6 100644
---- a/include/net/sock.h
-+++ b/include/net/sock.h
-@@ -2597,9 +2597,18 @@ static inline gfp_t gfp_memcg_charge(void)
+diff --git a/include/net/proto_memory.h b/include/net/proto_memory.h
+index 8e91a8fa31b5..8e8432b13515 100644
+--- a/include/net/proto_memory.h
++++ b/include/net/proto_memory.h
+@@ -31,13 +31,22 @@ static inline bool sk_under_memory_pressure(const struct sock *sk)
+ 	if (!sk->sk_prot->memory_pressure)
+ 		return false;
+ 
+-	if (mem_cgroup_sk_enabled(sk) &&
+-	    mem_cgroup_sk_under_memory_pressure(sk))
+-		return true;
++	if (mem_cgroup_sk_enabled(sk)) {
++		if (mem_cgroup_sk_under_memory_pressure(sk))
++			return true;
++
++		if (mem_cgroup_sk_isolated(sk))
++			return false;
++	}
+ 
+ 	return !!READ_ONCE(*sk->sk_prot->memory_pressure);
  }
  
- #ifdef CONFIG_MEMCG
-+
-+#define MEMCG_SOCK_ISOLATED	1UL
-+#define MEMCG_SOCK_FLAG_MASK	MEMCG_SOCK_ISOLATED
-+#define MEMCG_SOCK_PTR_MASK	~(MEMCG_SOCK_FLAG_MASK)
-+
- static inline struct mem_cgroup *mem_cgroup_from_sk(const struct sock *sk)
- {
--	return sk->sk_memcg;
-+	unsigned long val = (unsigned long)sk->sk_memcg;
-+
-+	val &= MEMCG_SOCK_PTR_MASK;
-+
-+	return (struct mem_cgroup *)val;
- }
- 
- static inline bool mem_cgroup_sk_enabled(const struct sock *sk)
-@@ -2607,6 +2616,13 @@ static inline bool mem_cgroup_sk_enabled(const struct sock *sk)
- 	return mem_cgroup_sockets_enabled && mem_cgroup_from_sk(sk);
- }
- 
-+static inline bool mem_cgroup_sk_isolated(const struct sock *sk)
++static inline bool sk_should_enter_memory_pressure(struct sock *sk)
 +{
-+	struct mem_cgroup *memcg = sk->sk_memcg;
-+
-+	return (unsigned long)memcg & MEMCG_SOCK_ISOLATED;
++	return !mem_cgroup_sk_enabled(sk) || !mem_cgroup_sk_isolated(sk);
 +}
 +
- static inline bool mem_cgroup_sk_under_memory_pressure(const struct sock *sk)
+ static inline long
+ proto_memory_allocated(const struct proto *prot)
  {
- 	struct mem_cgroup *memcg = mem_cgroup_from_sk(sk);
-@@ -2634,6 +2650,11 @@ static inline bool mem_cgroup_sk_enabled(const struct sock *sk)
+diff --git a/include/net/tcp.h b/include/net/tcp.h
+index 2936b8175950..0191a4585bba 100644
+--- a/include/net/tcp.h
++++ b/include/net/tcp.h
+@@ -275,9 +275,13 @@ extern unsigned long tcp_memory_pressure;
+ /* optimized version of sk_under_memory_pressure() for TCP sockets */
+ static inline bool tcp_under_memory_pressure(const struct sock *sk)
+ {
+-	if (mem_cgroup_sk_enabled(sk) &&
+-	    mem_cgroup_sk_under_memory_pressure(sk))
+-		return true;
++	if (mem_cgroup_sk_enabled(sk)) {
++		if (mem_cgroup_sk_under_memory_pressure(sk))
++			return true;
++
++		if (mem_cgroup_sk_isolated(sk))
++			return false;
++	}
+ 
+ 	return READ_ONCE(tcp_memory_pressure);
+ }
+diff --git a/net/core/sock.c b/net/core/sock.c
+index ab6953d295df..755540215570 100644
+--- a/net/core/sock.c
++++ b/net/core/sock.c
+@@ -1046,17 +1046,21 @@ static int sock_reserve_memory(struct sock *sk, int bytes)
+ 	if (!charged)
+ 		return -ENOMEM;
+ 
+-	/* pre-charge to forward_alloc */
+-	sk_memory_allocated_add(sk, pages);
+-	allocated = sk_memory_allocated(sk);
+-	/* If the system goes into memory pressure with this
+-	 * precharge, give up and return error.
+-	 */
+-	if (allocated > sk_prot_mem_limits(sk, 1)) {
+-		sk_memory_allocated_sub(sk, pages);
+-		mem_cgroup_sk_uncharge(sk, pages);
+-		return -ENOMEM;
++	if (!mem_cgroup_sk_isolated(sk)) {
++		/* pre-charge to forward_alloc */
++		sk_memory_allocated_add(sk, pages);
++		allocated = sk_memory_allocated(sk);
++
++		/* If the system goes into memory pressure with this
++		 * precharge, give up and return error.
++		 */
++		if (allocated > sk_prot_mem_limits(sk, 1)) {
++			sk_memory_allocated_sub(sk, pages);
++			mem_cgroup_sk_uncharge(sk, pages);
++			return -ENOMEM;
++		}
+ 	}
++
+ 	sk_forward_alloc_add(sk, pages << PAGE_SHIFT);
+ 
+ 	WRITE_ONCE(sk->sk_reserved_mem,
+@@ -3153,8 +3157,11 @@ bool sk_page_frag_refill(struct sock *sk, struct page_frag *pfrag)
+ 	if (likely(skb_page_frag_refill(32U, pfrag, sk->sk_allocation)))
+ 		return true;
+ 
+-	sk_enter_memory_pressure(sk);
++	if (sk_should_enter_memory_pressure(sk))
++		sk_enter_memory_pressure(sk);
++
+ 	sk_stream_moderate_sndbuf(sk);
++
  	return false;
  }
- 
-+static inline bool mem_cgroup_sk_isolated(const struct sock *sk)
-+{
-+	return false;
-+}
-+
- static inline bool mem_cgroup_sk_under_memory_pressure(const struct sock *sk)
+ EXPORT_SYMBOL(sk_page_frag_refill);
+@@ -3267,18 +3274,30 @@ int __sk_mem_raise_allocated(struct sock *sk, int size, int amt, int kind)
  {
- 	return false;
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index d32b7a547f42..cb5b8a9d21db 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -4995,6 +4995,16 @@ void mem_cgroup_migrate(struct folio *old, struct folio *new)
- DEFINE_STATIC_KEY_FALSE(memcg_sockets_enabled_key);
- EXPORT_SYMBOL(memcg_sockets_enabled_key);
+ 	bool memcg_enabled = false, charged = false;
+ 	struct proto *prot = sk->sk_prot;
+-	long allocated;
+-
+-	sk_memory_allocated_add(sk, amt);
+-	allocated = sk_memory_allocated(sk);
++	long allocated = 0;
  
-+static void mem_cgroup_sk_set(struct sock *sk, const struct mem_cgroup *memcg)
-+{
-+	unsigned long val = (unsigned long)memcg;
+ 	if (mem_cgroup_sk_enabled(sk)) {
++		bool isolated = mem_cgroup_sk_isolated(sk);
 +
-+	if (READ_ONCE(memcg->memory.max) != PAGE_COUNTER_MAX)
-+		val |= MEMCG_SOCK_ISOLATED;
+ 		memcg_enabled = true;
+ 		charged = mem_cgroup_sk_charge(sk, amt, gfp_memcg_charge());
+-		if (!charged)
 +
-+	sk->sk_memcg = (struct mem_cgroup *)val;
-+}
++		if (isolated && charged)
++			return 1;
 +
- void mem_cgroup_sk_alloc(struct sock *sk)
++		if (!charged) {
++			if (!isolated) {
++				sk_memory_allocated_add(sk, amt);
++				allocated = sk_memory_allocated(sk);
++			}
++
+ 			goto suppress_allocation;
++		}
+ 	}
+ 
++	sk_memory_allocated_add(sk, amt);
++	allocated = sk_memory_allocated(sk);
++
+ 	/* Under limit. */
+ 	if (allocated <= sk_prot_mem_limits(sk, 0)) {
+ 		sk_leave_memory_pressure(sk);
+@@ -3357,7 +3376,8 @@ int __sk_mem_raise_allocated(struct sock *sk, int size, int amt, int kind)
+ 
+ 	trace_sock_exceed_buf_limit(sk, prot, allocated, kind);
+ 
+-	sk_memory_allocated_sub(sk, amt);
++	if (allocated)
++		sk_memory_allocated_sub(sk, amt);
+ 
+ 	if (charged)
+ 		mem_cgroup_sk_uncharge(sk, amt);
+@@ -3396,11 +3416,15 @@ EXPORT_SYMBOL(__sk_mem_schedule);
+  */
+ void __sk_mem_reduce_allocated(struct sock *sk, int amount)
  {
- 	struct mem_cgroup *memcg;
-@@ -5013,7 +5023,7 @@ void mem_cgroup_sk_alloc(struct sock *sk)
- 	if (!cgroup_subsys_on_dfl(memory_cgrp_subsys) && !memcg1_tcpmem_active(memcg))
- 		goto out;
- 	if (css_tryget(&memcg->css))
--		sk->sk_memcg = memcg;
-+		mem_cgroup_sk_set(sk, memcg);
- out:
- 	rcu_read_unlock();
- }
-@@ -5035,7 +5045,7 @@ void mem_cgroup_sk_inherit(const struct sock *sk, struct sock *newsk)
+-	sk_memory_allocated_sub(sk, amount);
+-
+-	if (mem_cgroup_sk_enabled(sk))
++	if (mem_cgroup_sk_enabled(sk)) {
+ 		mem_cgroup_sk_uncharge(sk, amount);
  
- 	mem_cgroup_sk_free(newsk);
- 	css_get(&memcg->css);
--	newsk->sk_memcg = memcg;
-+	mem_cgroup_sk_set(newsk, memcg);
++		if (mem_cgroup_sk_isolated(sk))
++			return;
++	}
++
++	sk_memory_allocated_sub(sk, amount);
++
+ 	if (sk_under_global_memory_pressure(sk) &&
+ 	    (sk_memory_allocated(sk) < sk_prot_mem_limits(sk, 0)))
+ 		sk_leave_memory_pressure(sk);
+diff --git a/net/ipv4/inet_connection_sock.c b/net/ipv4/inet_connection_sock.c
+index 0ef1eacd539d..9d56085f7f54 100644
+--- a/net/ipv4/inet_connection_sock.c
++++ b/net/ipv4/inet_connection_sock.c
+@@ -22,6 +22,7 @@
+ #include <net/tcp.h>
+ #include <net/sock_reuseport.h>
+ #include <net/addrconf.h>
++#include <net/proto_memory.h>
+ 
+ #if IS_ENABLED(CONFIG_IPV6)
+ /* match_sk*_wildcard == true:  IPV6_ADDR_ANY equals to any IPv6 addresses
+@@ -710,7 +711,6 @@ struct sock *inet_csk_accept(struct sock *sk, struct proto_accept_arg *arg)
+ 
+ 	if (mem_cgroup_sockets_enabled) {
+ 		gfp_t gfp = GFP_KERNEL | __GFP_NOFAIL;
+-		int amt = 0;
+ 
+ 		/* atomically get the memory usage, set and charge the
+ 		 * newsk->sk_memcg.
+@@ -719,15 +719,27 @@ struct sock *inet_csk_accept(struct sock *sk, struct proto_accept_arg *arg)
+ 
+ 		mem_cgroup_sk_alloc(newsk);
+ 		if (mem_cgroup_from_sk(newsk)) {
++			int amt;
++
+ 			/* The socket has not been accepted yet, no need
+ 			 * to look at newsk->sk_wmem_queued.
+ 			 */
+ 			amt = sk_mem_pages(newsk->sk_forward_alloc +
+ 					   atomic_read(&newsk->sk_rmem_alloc));
++			if (amt) {
++				/* This amt is already charged globally to
++				 * sk_prot->memory_allocated due to lack of
++				 * sk_memcg until accept(), thus we need to
++				 * reclaim it here if newsk is isolated.
++				 */
++				if (mem_cgroup_sk_isolated(newsk))
++					sk_memory_allocated_sub(newsk, amt);
++
++				mem_cgroup_sk_charge(newsk, amt, gfp);
++			}
++
+ 		}
+ 
+-		if (amt)
+-			mem_cgroup_sk_charge(newsk, amt, gfp);
+ 		kmem_cache_charge(newsk, gfp);
+ 
+ 		release_sock(newsk);
+diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
+index 71a956fbfc55..dcbd49e2f8af 100644
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -908,7 +908,8 @@ struct sk_buff *tcp_stream_alloc_skb(struct sock *sk, gfp_t gfp,
+ 		}
+ 		__kfree_skb(skb);
+ 	} else {
+-		sk->sk_prot->enter_memory_pressure(sk);
++		if (sk_should_enter_memory_pressure(sk))
++			tcp_enter_memory_pressure(sk);
+ 		sk_stream_moderate_sndbuf(sk);
+ 	}
+ 	return NULL;
+diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
+index dfbac0876d96..f7aa86661219 100644
+--- a/net/ipv4/tcp_output.c
++++ b/net/ipv4/tcp_output.c
+@@ -3574,12 +3574,18 @@ void sk_forced_mem_schedule(struct sock *sk, int size)
+ 	delta = size - sk->sk_forward_alloc;
+ 	if (delta <= 0)
+ 		return;
++
+ 	amt = sk_mem_pages(delta);
+ 	sk_forward_alloc_add(sk, amt << PAGE_SHIFT);
+-	sk_memory_allocated_add(sk, amt);
+ 
+-	if (mem_cgroup_sk_enabled(sk))
++	if (mem_cgroup_sk_enabled(sk)) {
+ 		mem_cgroup_sk_charge(sk, amt, gfp_memcg_charge() | __GFP_NOFAIL);
++
++		if (mem_cgroup_sk_isolated(sk))
++			return;
++	}
++
++	sk_memory_allocated_add(sk, amt);
  }
  
- /**
+ /* Send a FIN. The caller locks the socket for us.
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 9a287b75c1b3..1a4089b05a16 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -16,6 +16,7 @@
+ #include <net/inet_common.h>
+ #include <net/inet_hashtables.h>
+ #include <net/protocol.h>
++#include <net/proto_memory.h>
+ #include <net/tcp_states.h>
+ #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+ #include <net/transp_v6.h>
+@@ -1016,8 +1017,9 @@ static void mptcp_enter_memory_pressure(struct sock *sk)
+ 	mptcp_for_each_subflow(msk, subflow) {
+ 		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
+ 
+-		if (first)
++		if (first && sk_should_enter_memory_pressure(sk))
+ 			tcp_enter_memory_pressure(ssk);
++
+ 		sk_stream_moderate_sndbuf(ssk);
+ 
+ 		first = false;
+diff --git a/net/tls/tls_device.c b/net/tls/tls_device.c
+index f672a62a9a52..92a4c16b904a 100644
+--- a/net/tls/tls_device.c
++++ b/net/tls/tls_device.c
+@@ -371,7 +371,8 @@ static int tls_do_allocation(struct sock *sk,
+ 	if (!offload_ctx->open_record) {
+ 		if (unlikely(!skb_page_frag_refill(prepend_size, pfrag,
+ 						   sk->sk_allocation))) {
+-			READ_ONCE(sk->sk_prot)->enter_memory_pressure(sk);
++			if (sk_should_enter_memory_pressure(sk))
++				READ_ONCE(sk->sk_prot)->enter_memory_pressure(sk);
+ 			sk_stream_moderate_sndbuf(sk);
+ 			return -ENOMEM;
+ 		}
 -- 
 2.51.0.rc0.155.g4a0f42376b-goog
 
