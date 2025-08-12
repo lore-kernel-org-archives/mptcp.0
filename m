@@ -1,128 +1,168 @@
-Received: from mail-io1-f42.google.com (mail-io1-f42.google.com [209.85.166.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EF342DE6FC
-	for <mptcp@lists.linux.dev>; Tue, 12 Aug 2025 10:39:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13C8D2F4A0D;
+	Tue, 12 Aug 2025 15:09:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754995178; cv=none; b=BlRb0GEDLqq25zf1paWQWF2OoiRT0N9xeiZUyOJ7ZPr91rU5SrU/twfmy+/3JhZkxGP0hFytGD6D8uQIAk7csU+reIPwM4dFwECV65JvmAFKW8RJjfWGg79kbMiW+l2iQ++zehRXIUEk7rlWC06zq+Is9ZByRxQcMvaY/aabWTw=
+	t=1755011365; cv=none; b=HegIEg02tGTAKyHuQTVmAOR5xMcRFofrzIzaNUvD3o0NcAIp8shlAD+N+DHEGXH5iYrUrj7/2zmbWT8BF4vCXQIqxsUjDf21Xt0G9IYkgSuu4VKFZAM+Z0yRpzaY7htiFH8qKbvOluouHMrdBK8gi7QHLb4UeyspvY58YYMAnZU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754995178; c=relaxed/simple;
-	bh=IRv+GqqQL7JDwT2krlTQFLJHTmSmIBRIf45hmwJShi0=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=glmKL67h/uXmqQAjxYO5lkmtCBAvSHBzE1U7jWdop1+MhogSf4jygFtAAd0XtQEXidYZOtw/vuYZbV7/4VSe8PHIljhEpQT1e4jCTUfq8Wes35IPzzZTIbRAkFfwi4hLeJqAqGRCtwRRbwqSh6dRj3ITwKyz5g4iRaY+Uy4OZao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XmXj14j1; arc=none smtp.client-ip=209.85.166.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1755011365; c=relaxed/simple;
+	bh=x9Q2uf+Vcwv+UGHML2zmP1ZdgpCoiBIGCjX2Ui0X2/w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uYukIzFijhVAWBARPxpmXNSyb6Gk+x/Bnpri8Z1bAVpLsnKmPI9chNiOyOlN+RPth/L3GRbEtWF8MpB8pbQkAu72uWzKTxFVxwKRQI/19S+YaEWklicU6zLT61CeBf7c2WI4l38BKtf7UthpgzLAzQdKwXHlo6wRQQemw37AyEg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=j6a/LmrW; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XmXj14j1"
-Received: by mail-io1-f42.google.com with SMTP id ca18e2360f4ac-86cdb330b48so318894439f.0
-        for <mptcp@lists.linux.dev>; Tue, 12 Aug 2025 03:39:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1754995176; x=1755599976; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=K4EHe1NbkK1CIKiuPNPfX8Pb1/305PUTvW/urlmuhqc=;
-        b=XmXj14j1tL0hDFuETY32+wjplb2DuYyM81dlt7SiTHRPh8/vz760Hv2lT7rCY2S0aM
-         vK68XfGk4arejRSDBNxLqT+l09EaRSMALCaWFJ4+E6HB3XTWB/4WmtV9livVl929KmqK
-         R81ejY2P5icuIyNnwvH3m2QgW+VT0Qc4EaxuJXm9Ti45QJmx7MMfWg1ZyqlEgprBORPt
-         LQvHUtjCKfpx2kE1olNi/Uh0YuTr58D60hB4I3YeDK0Ep34Giyo65dBk6YQ+RcqUImbn
-         59m3obW8g3NlB+lwypLYvxk0AiPIaPRDp5akPvfJCFPR+MM5WZ2NkMapKl0VwBeFQMyx
-         Rm4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754995176; x=1755599976;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=K4EHe1NbkK1CIKiuPNPfX8Pb1/305PUTvW/urlmuhqc=;
-        b=sBsu8yHp2EAG8nC5xhWT62+Krw669unSYusDsZ6UGpqBNGDfgVtVfPNnUkDjLz5l8O
-         RjndX5vP9O1+lTboWw9L93jEZhCoNygNn2SItcUR2T1czWnoS8HyKyih0NT/OcnJKrm3
-         ZfGr0oP8/cPFTSL8YZYl8PMMQS223jb3eFf6lO/uTX0My0/NzjvDsQMjk0Ma744coVWy
-         JkOFQykrelfT4jVDcxzwgo9YqMfhRC5+L9Mxzdg5A+87gGf1GHhCJQkIa2odnGnSYgNN
-         cr56bHixDzSsqmTkiHzmChD+n5w/Web7u6zHycklIdoNrqg+qKzYShEYa3OZIbXK5Mu7
-         eDOw==
-X-Gm-Message-State: AOJu0YzD0Oov6tG1hjWt31Nyea1XPZnJyVvjpKKUfjNzvgfPNXSqoXOr
-	MMlCVur97QESw9Tht5UEljwrvBfamA2/35kxwg7RSIY6wTqci1ngJFEmSATh
-X-Gm-Gg: ASbGnctnTMq07iD3EUHOlucA3IAG6vN23n00z1wKpANwdWom6H1cxpoMw2BLryhA+SE
-	0VQeD4CKji55e3KPJFZq7VSWhcc6oXVjdW/Mto7/Utt9NYYfsCreaMGJL4lZ59m1E+yLS9lVTfs
-	E2uA2aYD6Jwl5gM/lr+b97NzMQO7xMTC5Ia8NS2vNCdSqdOWz36AJF37IGxQLjfEiXcy1yObYx+
-	jinjUBgVLiFK1Yw2f7LcCFJPCrMMoi0pPLRTcISYo2g1AWGMqj/WsRmsFn8iJB7Tr9d3ha/3roG
-	YKZXfczb4CPavJXV5E7lyMp1jfqydLGUdF+4folAMmvkyJyYs7uDrTTScgBDTqhd/cseBv5ZnAW
-	ll9jVrGQlDmXK5pk67DHbd2M99XdYkY8oMloQ
-X-Google-Smtp-Source: AGHT+IHvWuH30K1jIgKRHWDksJ3KyqD/eB9LnTBQe1Vt19TiD/swxeswHkFHRq+USu1HhbLtRn+Y2g==
-X-Received: by 2002:a05:6602:160c:b0:881:82bb:94b2 with SMTP id ca18e2360f4ac-8841bf27d2amr618452339f.13.1754995176421;
-        Tue, 12 Aug 2025 03:39:36 -0700 (PDT)
-Received: from [127.0.0.1] ([135.232.185.16])
-        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-883f19b58d4sm346874239f.28.2025.08.12.03.39.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Aug 2025 03:39:35 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <tanggeliang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <cover.1754986557.git.tanggeliang@kylinos.cn>
-References: <cover.1754986557.git.tanggeliang@kylinos.cn>
-Subject: Re: [PATCH mptcp-next 0/6] refactor MPTCP socket option handling
-Message-ID: <34478fbe-bbe4-da8b-a7da-4d5ae76edec4@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 12 Aug 2025 10:39:34 +0000
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="j6a/LmrW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1755011365; x=1786547365;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=x9Q2uf+Vcwv+UGHML2zmP1ZdgpCoiBIGCjX2Ui0X2/w=;
+  b=j6a/LmrWXBgLv9urS0KH+sV/1qT9dJNRQ4XJwZi4mK2bHLyfkIX2LOcs
+   rrbfXSkqQnlL/b3ypICQhjK1BZ1spUJKl3B35+fFdJsbJWNDFIZoz2K7g
+   tpe8ttIwrGjt9jiFpdhv23p9pw7myEYIxyNeRIc5MKD4d+PyckCJuFfNJ
+   QsK4HQvntmV7cTg6yELqVXygIYRjl4Xzs+ASck6g4KU00AsEYUHFqEVcz
+   zl/VCloSgL5EIP4YHKu1hUAhxcgWfKCCdyazOuEZGrIDvSaTP5OYLDDvC
+   bSxAgKur6W3p9gVlCnHFAyJHEDMdJXqqzEYuia4Fqkr5dakSHfE3ToDAF
+   w==;
+X-CSE-ConnectionGUID: udQ85VJIQqWlckGJ++1FAA==
+X-CSE-MsgGUID: 3xFqW7fATyyGzo7/Jx01sg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11520"; a="67554587"
+X-IronPort-AV: E=Sophos;i="6.17,284,1747724400"; 
+   d="scan'208";a="67554587"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2025 08:09:24 -0700
+X-CSE-ConnectionGUID: rS845/2TQf+XLHduchzOWQ==
+X-CSE-MsgGUID: c+qvQ3xoQPqHerCxvYIYcA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.17,284,1747724400"; 
+   d="scan'208";a="165444512"
+Received: from lkp-server02.sh.intel.com (HELO 4ea60e6ab079) ([10.239.97.151])
+  by orviesa010.jf.intel.com with ESMTP; 12 Aug 2025 08:09:18 -0700
+Received: from kbuild by 4ea60e6ab079 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1ulqcl-0006v9-2T;
+	Tue, 12 Aug 2025 15:09:15 +0000
+Date: Tue, 12 Aug 2025 23:08:38 +0800
+From: kernel test robot <lkp@intel.com>
+To: Kuniyuki Iwashima <kuniyu@google.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Neal Cardwell <ncardwell@google.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Willem de Bruijn <willemb@google.com>,
+	Matthieu Baerts <matttbe@kernel.org>,
+	Mat Martineau <martineau@kernel.org>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Michal Hocko <mhocko@kernel.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
+	Tejun Heo <tj@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, netdev@vger.kernel.org,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	Simon Horman <horms@kernel.org>, Geliang Tang <geliang@kernel.org>,
+	Muchun Song <muchun.song@linux.dev>,
+	Mina Almasry <almasrymina@google.com>,
+	Kuniyuki Iwashima <kuniyu@google.com>, mptcp@lists.linux.dev,
+	cgroups@vger.kernel.org
+Subject: Re: [PATCH v2 net-next 12/12] net-memcg: Decouple controlled memcg
+ from global protocol memory accounting.
+Message-ID: <202508122213.H31XXZsm-lkp@intel.com>
+References: <20250811173116.2829786-13-kuniyu@google.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250811173116.2829786-13-kuniyu@google.com>
 
-Hi Geliang,
+Hi Kuniyuki,
 
-Thank you for your modifications, that's great!
+kernel test robot noticed the following build errors:
 
-Our CI did some validations and here is its report:
+[auto build test ERROR on net-next/main]
 
-- KVM Validation: normal: Unstable: 1 failed test(s): =
-selftest_mptcp_connect =F0=9F=94=B4
-- KVM Validation: debug: Unstable: 1 =
-failed test(s): packetdrill_mp_join =F0=9F=94=B4
-- KVM Validation: =
-btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: =
-btf-debug (only bpftest_all): Success! =E2=9C=85
-- Task: https://github.=
-com/multipath-tcp/mptcp_net-next/actions/runs/16903519178
+url:    https://github.com/intel-lab-lkp/linux/commits/Kuniyuki-Iwashima/mptcp-Fix-up-subflow-s-memcg-when-CONFIG_SOCK_CGROUP_DATA-n/20250812-013522
+base:   net-next/main
+patch link:    https://lore.kernel.org/r/20250811173116.2829786-13-kuniyu%40google.com
+patch subject: [PATCH v2 net-next 12/12] net-memcg: Decouple controlled memcg from global protocol memory accounting.
+config: csky-randconfig-002-20250812 (https://download.01.org/0day-ci/archive/20250812/202508122213.H31XXZsm-lkp@intel.com/config)
+compiler: csky-linux-gcc (GCC) 10.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250812/202508122213.H31XXZsm-lkp@intel.com/reproduce)
 
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/54fd10adb571
-Patchwork: https://patchwork.kernel.=
-org/project/mptcp/list/?series=3D990414
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202508122213.H31XXZsm-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   In file included from include/linux/cleanup.h:5,
+                    from include/linux/irqflags.h:17,
+                    from include/asm-generic/cmpxchg.h:15,
+                    from arch/csky/include/asm/cmpxchg.h:162,
+                    from include/asm-generic/atomic.h:12,
+                    from arch/csky/include/asm/atomic.h:199,
+                    from include/linux/atomic.h:7,
+                    from include/crypto/aead.h:11,
+                    from net/tls/tls_device.c:32:
+   net/tls/tls_device.c: In function 'tls_do_allocation':
+>> net/tls/tls_device.c:374:8: error: implicit declaration of function 'sk_should_enter_memory_pressure'; did you mean 'tcp_enter_memory_pressure'? [-Werror=implicit-function-declaration]
+     374 |    if (sk_should_enter_memory_pressure(sk))
+         |        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/compiler.h:57:52: note: in definition of macro '__trace_if_var'
+      57 | #define __trace_if_var(cond) (__builtin_constant_p(cond) ? (cond) : __trace_if_value(cond))
+         |                                                    ^~~~
+   net/tls/tls_device.c:374:4: note: in expansion of macro 'if'
+     374 |    if (sk_should_enter_memory_pressure(sk))
+         |    ^~
+   cc1: some warnings being treated as errors
 
 
-If there are some issues, you can=
- reproduce them using the same environment as
-the one used by the CI thanks=
- to a docker image, e.g.:
+vim +374 net/tls/tls_device.c
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+   363	
+   364	static int tls_do_allocation(struct sock *sk,
+   365				     struct tls_offload_context_tx *offload_ctx,
+   366				     struct page_frag *pfrag,
+   367				     size_t prepend_size)
+   368	{
+   369		int ret;
+   370	
+   371		if (!offload_ctx->open_record) {
+   372			if (unlikely(!skb_page_frag_refill(prepend_size, pfrag,
+   373							   sk->sk_allocation))) {
+ > 374				if (sk_should_enter_memory_pressure(sk))
+   375					READ_ONCE(sk->sk_prot)->enter_memory_pressure(sk);
+   376				sk_stream_moderate_sndbuf(sk);
+   377				return -ENOMEM;
+   378			}
+   379	
+   380			ret = tls_create_new_record(offload_ctx, pfrag, prepend_size);
+   381			if (ret)
+   382				return ret;
+   383	
+   384			if (pfrag->size > pfrag->offset)
+   385				return 0;
+   386		}
+   387	
+   388		if (!sk_page_frag_refill(sk, pfrag))
+   389			return -ENOMEM;
+   390	
+   391		return 0;
+   392	}
+   393	
 
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
-
-
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 Core)
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
