@@ -1,127 +1,106 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F9E72D877B
-	for <mptcp@lists.linux.dev>; Mon, 11 Aug 2025 20:05:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BC311531F9
+	for <mptcp@lists.linux.dev>; Tue, 12 Aug 2025 07:46:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754942724; cv=none; b=fvhD2QvHor13btYpqREteEzUaSm1tPCDmTNTzcVyn61fChj3sxd6XyKcMPFY2k0LtncI7wRgWcYzHk4UikmaSZZIouFrME3oZmhnzBb/xWUdJmJCASJmosUXwcplT6YEfjvVgK3RPfyCYv3z+ylfSAdO4lLlg4P2NYVYK3qX4+c=
+	t=1754984805; cv=none; b=bLnMF4BFXIZ67kwNxZTu0tS/y0YAA9K6+GLzj4xEtjN2WeSfvhHT2IlaStm9IMDyF3VxpWW50PYag7BmLvfY9Tz9IUbHIBGo884+B/kjt3Q2sHPG5EB+0HtW3t4UYBKTJfusJSHc8f1Hqc8GvnNkJfpkyWPRgHvM8xDZqLJGdio=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754942724; c=relaxed/simple;
-	bh=RUK3Bht6Kxkdn4nEJnzf1Kpm77iRAeFSZfn/fzG40BM=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=DnqHRTYz/ucif7hc+hOuLRnTwMUvBYKXNb4VD/nsPmz14S2rx15+rFIJjg/4r9Ga54PmkaqEdLuGf87iGqwBY70hOt04aBuUIs5wWozLdMI9LIGsl7ULALX1umQnw66xm9LZZigOIinnDZnvmkgTfvU07g1tneNpLgXwJzDKTLg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MTw7iVbC; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MTw7iVbC"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-769a21bd4d5so4458285b3a.0
-        for <mptcp@lists.linux.dev>; Mon, 11 Aug 2025 13:05:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1754942722; x=1755547522; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=b5SOBA5cRBzTWwljWt3gRJo2nnNwtZkMn7In7P1HLfg=;
-        b=MTw7iVbC/cbuPSgiSXvnW6dY7gfBeccknfZyEn3Zu1pHw2nuKbGinXP7EhyjvJrMl2
-         1qOnIbuBgHmRhAc4a9/zR5t1H7Hqjywufjav6PYe5Srd2bH7il5wEVXKoKQPVo7vrm9r
-         EtznAOmQN9Iv8qO9OALvb1His3KORvpNpMXaQQdk4/XmgsBauBxNtZorWRAWZEfy0ZgT
-         5ANGMf2w01LrjMbTopabG/gGYWXbqqrwAZzaLeT4y/lMluMYhv/ZyV2nJAd5UT7/uY6A
-         RdnWm/yves/afzH3shwY0Kn/akXPpgds9CrCnLLeQUZUiN92E3fr9hDSxjOjc+IGAQsc
-         LBew==
+	s=arc-20240116; t=1754984805; c=relaxed/simple;
+	bh=7veAhauFbzmeZ6VPaXhAIl+1EidQymqZFBkfOM5A+nY=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:Cc:
+	 Content-Type; b=Yt0aXXK47/7Lkfge79z35ONkZmiKAllZ+DVJqDKUUDyACJU6u4045mAt4wiJMMv/TBm+GKYEE7jU9yC1IdK73SjZMhgsoJuNWdeaBtuCox+T4SR4zFcHBi4TPTCXRZTWvzdp54uot3MWRN3ko1P3/UOCC1FQMpy6R2+OXoEjYyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-8841c18a4bfso147324139f.1
+        for <mptcp@lists.linux.dev>; Tue, 12 Aug 2025 00:46:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754942722; x=1755547522;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=b5SOBA5cRBzTWwljWt3gRJo2nnNwtZkMn7In7P1HLfg=;
-        b=b3GFl3tluLltEQN72bIag5XXHaGekcbblTukHARGaMt0k6HocV0jGpoX4hvxCEs1VM
-         6jCclZRKc6JkakfTdMSnteWdR6dbn3IdrnS4D4jkNgimkX5/FcNDfY0x2hmlTf3TteQR
-         vRpyLnqHm/B0WaphDquoc6X1QdwoABIHeSTwCCtUfDQ8CIR4KmHGfn01iWnLMeVf9Ixq
-         y43kEk3FcDMvfbWOHHY2JmVlyeB8OeQ/fW7Yip4SLksW8DRitm5yzxa0lU6N/UbTar5i
-         zAW+FeuCffl6rCWhNl5WCssOHlxmsrL9fLBLmmMzoVQy74Gk2AzEZ7VljMzFTkKPVVVL
-         dVAw==
-X-Gm-Message-State: AOJu0YyUp3rZesP/oR1RX6nIIgGZMhr+GfuuJ+yeuXJz5S9K7yeh0/Oq
-	iAUa/Knd/AQCvBP8KYlIOjiuaT9FjV/Mv04FkJIGQwPqG+ZF6ZLzGw+dZdfi
-X-Gm-Gg: ASbGnctxk++Q0MiPT1KUuIdCy60g0CFgwW5S+SHbiXyEs0KoEeutQZP7m6THBNYwtnr
-	m1DKHfnI89IMl2MnyPLdImzQxDz0Fd6YKmcoA1iO5FNNC3i0kixOjARHP8f/jcWL+g9kjApRm4S
-	TAx2jDHEb2Df9xc4RVpHd+TKuyaVbXWR8U4qaqbDosovxHD0zgJEGQmefGBODMKX7WV4+vDLVMq
-	dFa0k5/M1uWNfQ7biZi1gyO+PzNm3FaGGeoLEzFtQBA2pVGGT4pYy0emIegVBQhnG3nedjeGmT/
-	ya/XUnB1TNpXSJEVajaYOLLORJNZr14D1zHLd5gVCT4lyLuFkSv0fVzpwuzguhLi00Wx1BCJ/NS
-	kSAnlkCioa7/3FB5RGM1ko1TLyH0cEN5UUzIbjHAIdBeIHSfC
-X-Google-Smtp-Source: AGHT+IFhYpYe4yDNwrAzt8Av8wgZQS8eaGWsxStkPiIBRYKGdeD3eNYImQNzPZ7JpUVg5eGtGs9VCw==
-X-Received: by 2002:a05:6a20:a10b:b0:240:9929:d8e6 with SMTP id adf61e73a8af0-2409a8e9a6amr1078338637.19.1754942722401;
-        Mon, 11 Aug 2025 13:05:22 -0700 (PDT)
-Received: from [127.0.0.1] ([172.182.225.165])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-76bd6aacc4fsm26393665b3a.118.2025.08.11.13.05.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Aug 2025 13:05:21 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Kuniyuki Iwashima <kuniyu@google.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20250811173116.2829786-1-kuniyu@google.com>
-References: <20250811173116.2829786-1-kuniyu@google.com>
-Subject: Re: [PATCH v2 net-next 00/12] net-memcg: Decouple controlled memcg
- from sk->sk_prot->memory_allocated.
-Message-ID: <0ba13037-1272-6508-6b4d-8631aa3239d0@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 11 Aug 2025 20:05:20 +0000
+        d=1e100.net; s=20230601; t=1754984803; x=1755589603;
+        h=cc:to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Umk1YoadKdpa6fyzaimwqq35auuAfEV1rwGDtpJveWA=;
+        b=Oowug0s2Ggj/os4t/nNqKo7zjWJQ/OzbJPj4ZNixEecFDP/tZSIyfgE11M6TWujeGz
+         8M5QlACGoJaT8eTTRm6vwvkfXJiXR17rYtdMvdmsAhSHcVTnVpsYNJ2lxVRHGKA2Kbvd
+         joHpGjGSZtdlqxkKtE3w5OqmKg5f75Ay2+B7XwUm+TqAR6vpVpu6jgp3F97b3603fP3r
+         5r6bltSgGm6QwqSAY63sqMzqSBDkSd6FUZDpajgc7DcETkEZHRjYrw7wsCAQn1D34xas
+         P/1T+U88DQGo9c02vN3FOShigGlv19qIKmkQHlNHLM7+ED58/jzly1kGvNaBCN0fREQM
+         o+4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCU5onlXzqbyuuQeD9HbPw6PqV1eM0LcQX2Pe6Nyr0lauJafzPTM03Cx5Tu4/Iz3SDAgYUs2QA==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yx+2XTrkGTQa103T025dsHREf6bZhdtYcYAy9tfPgyuxmVVOBSK
+	LRGFgXdX/lNG7DJey2TLSovybmR3FDVJHqDRNpyv7XyjpLu3Ik6vwU5dya9Qh6qycdzMa3n88Gv
+	TnPvECuWPbzdbfzic+Kk10V7aLvxy6NZDjHta9tMBv/7545vOo8q5vstywpM=
+X-Google-Smtp-Source: AGHT+IGMO5NHQ7t/8SdMDmkMxxHOO+f+f98qggqnhfBOuHrFo4tBxoy7lI5+nUzI68F7dY4bFrEZVQmeL1OqGTmyoq+dADo+nkMr
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-Received: by 2002:a05:6602:7187:b0:881:9412:c917 with SMTP id
+ ca18e2360f4ac-8841bcc009bmr501638939f.0.1754984803514; Tue, 12 Aug 2025
+ 00:46:43 -0700 (PDT)
+Date: Tue, 12 Aug 2025 00:46:43 -0700
+In-Reply-To: <20250811173116.2829786-1-kuniyu@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <689af163.050a0220.7f033.0112.GAE@google.com>
+Subject: [syzbot ci] Re: net-memcg: Decouple controlled memcg from sk->sk_prot->memory_allocated.
+From: syzbot ci <syzbot+cic0c8bc3087cfc855@syzkaller.appspotmail.com>
+To: akpm@linux-foundation.org, almasrymina@google.com, cgroups@vger.kernel.org, 
+	davem@davemloft.net, edumazet@google.com, geliang@kernel.org, 
+	hannes@cmpxchg.org, horms@kernel.org, kuba@kernel.org, kuni1840@gmail.com, 
+	kuniyu@google.com, linux-mm@kvack.org, martineau@kernel.org, 
+	matttbe@kernel.org, mhocko@kernel.org, mkoutny@suse.com, 
+	mptcp@lists.linux.dev, muchun.song@linux.dev, ncardwell@google.com, 
+	netdev@vger.kernel.org, pabeni@redhat.com, roman.gushchin@linux.dev, 
+	shakeel.butt@linux.dev, tj@kernel.org, willemb@google.com
+Cc: syzbot@lists.linux.dev, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Kuniyuki,
+syzbot ci has tested the following series
 
-Thank you for your modifications, that's great!
+[v2] net-memcg: Decouple controlled memcg from sk->sk_prot->memory_allocated.
+https://lore.kernel.org/all/20250811173116.2829786-1-kuniyu@google.com
+* [PATCH v2 net-next 01/12] mptcp: Fix up subflow's memcg when CONFIG_SOCK_CGROUP_DATA=n.
+* [PATCH v2 net-next 02/12] mptcp: Use tcp_under_memory_pressure() in mptcp_epollin_ready().
+* [PATCH v2 net-next 03/12] tcp: Simplify error path in inet_csk_accept().
+* [PATCH v2 net-next 04/12] net: Call trace_sock_exceed_buf_limit() for memcg failure with SK_MEM_RECV.
+* [PATCH v2 net-next 05/12] net: Clean up __sk_mem_raise_allocated().
+* [PATCH v2 net-next 06/12] net-memcg: Introduce mem_cgroup_from_sk().
+* [PATCH v2 net-next 07/12] net-memcg: Introduce mem_cgroup_sk_enabled().
+* [PATCH v2 net-next 08/12] net-memcg: Pass struct sock to mem_cgroup_sk_(un)?charge().
+* [PATCH v2 net-next 09/12] net-memcg: Pass struct sock to mem_cgroup_sk_under_memory_pressure().
+* [PATCH v2 net-next 10/12] net: Define sk_memcg under CONFIG_MEMCG.
+* [PATCH v2 net-next 11/12] net-memcg: Store MEMCG_SOCK_ISOLATED in sk->sk_memcg.
+* [PATCH v2 net-next 12/12] net-memcg: Decouple controlled memcg from global protocol memory accounting.
 
-Our CI did some validations and here is its report:
+and found the following issue:
+kernel build error
 
-- KVM Validation: normal: Success! =E2=9C=85
-- KVM Validation: debug: =
-Unstable: 1 failed test(s): selftest_mptcp_connect_checksum =F0=9F=94=B4
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/168879=
-00670
+Full report is available here:
+https://ci.syzbot.org/series/6fc666d9-cfec-413c-a98c-75c91ad6c07d
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/cdda85bb77ee
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D990160
+***
 
+kernel build error
 
-If there are some issues, you can reproduce them using the same =
-environment as
-the one used by the CI thanks to a docker image, e.g.:
+tree:      net-next
+URL:       https://kernel.googlesource.com/pub/scm/linux/kernel/git/netdev/net-next.git
+base:      37816488247ddddbc3de113c78c83572274b1e2e
+arch:      amd64
+compiler:  Debian clang version 20.1.7 (++20250616065708+6146a88f6049-1~exp1~20250616065826.132), Debian LLD 20.1.7
+config:    https://ci.syzbot.org/builds/a5d5d856-2809-4eee-87ca-2cd1630214ae/config
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+net/tls/tls_device.c:374:8: error: call to undeclared function 'sk_should_enter_memory_pressure'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
 
-For more details:
+***
 
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+If these findings have caused you to resend the series or submit a
+separate fix, please add the following tag to your commit message:
+Tested-by: syzbot@syzkaller.appspotmail.com
 
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+---
+This report is generated by a bot. It may contain errors.
+syzbot ci engineers can be reached at syzkaller@googlegroups.com.
