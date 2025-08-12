@@ -1,55 +1,55 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3F8D2FF140
-	for <mptcp@lists.linux.dev>; Tue, 12 Aug 2025 17:58:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 848DD2FF14F
+	for <mptcp@lists.linux.dev>; Tue, 12 Aug 2025 17:59:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755021541; cv=none; b=l8PdycYFrePZOoySvO5EvtF+h74UQbrcd13wVhiVsP6ATbZuzjGkDL1mTIZiBSqwzjjB+h38OzT6SWGnXEvGShWieVBO8C4rXbJ8Q/D3fTavSbk5kvWZX4tl5bfo+Q2XGDx+eW04ULwtUZRvWljrk9YQhj2k4lECPfwvZjDDRfc=
+	t=1755021541; cv=none; b=n1PkYaASBuxOcu91JYSIFPFgE3GbhADKBZyx5TibWE1xAtAgi51zyTjgdTm+K30joITEepeQqKMe7fspOTFosEYkV8VAOO4UZVIuwzpTVpg3y8tZMJGOWqwElRVGtqcvYN+lM8IWiq3evSDW/tYe8KlHJStqcin/RtxedBSY4ww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1755021541; c=relaxed/simple;
-	bh=gUdtY93TVXd8U7THwQpainuRObH4njplELc5maxDEW8=;
+	bh=xhnYwO7GL1+CtMhfwDFOhfD57z1pVtgWyVGZ0fjlUoI=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=pl5vVNoLljaUOmoPxCoWeQAydcDoGoSJvNZNzD3TvC3SohT8PLAWMgweO//cCbxgy+838GaRPJiO8ROQm2R0h3yLAXUhP6fOxywq4IrzmRqGNm8WroR+LbDTt4/U6CNMigBvBbb+uKHbPLLWKTxgc9P9Wa05pWnM4yskL+Flrl8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--kuniyu.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kSelYudz; arc=none smtp.client-ip=209.85.210.202
+	 To:Cc:Content-Type; b=C7A6Vk+q127rqsac7YJ/4lkHX2KXkl4xi/Vb7iHOo0x18xytz74xBNTLGjeQikPz4Vzw8L0rO5IxrLFDLQuqYjiHfOWRIy5MucJtT0sT2GHE8l4zU9lVjyaGjelPgkrWeRLqpxuyeKslFiYEqi+/monVEzEhZDGQG3mzpKQJ7k8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--kuniyu.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GuvzjAUJ; arc=none smtp.client-ip=209.85.210.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--kuniyu.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kSelYudz"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-76bf8e79828so10966342b3a.3
-        for <mptcp@lists.linux.dev>; Tue, 12 Aug 2025 10:58:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GuvzjAUJ"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-76bcd829ff1so5473253b3a.1
+        for <mptcp@lists.linux.dev>; Tue, 12 Aug 2025 10:59:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1755021538; x=1755626338; darn=lists.linux.dev;
+        d=google.com; s=20230601; t=1755021540; x=1755626340; darn=lists.linux.dev;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=nBs0EYqfbWl9UFV+H52iOxDMUVB4Qqo6amOw5/a/xOY=;
-        b=kSelYudzuYmGdHgqM/LC57zkX90reQMdbmILUXGpgrFqB/ISCPYeFwb4mMio9dQpOF
-         vCJXMb0Q9SlHQnzuAAkK36JnHLrNZy7raB8s8eDAqNC/ZikX81d+JNjNxfQ4A+8NkYdg
-         Uoa0AH22xBowicrMwP+XWlsAFfXQjrcSkdfiW7LDzPOpBpuqrgpS/8QxyXSqo4A1WDtt
-         kElf9+0myBMPxVV/2B3cI6aTXsBLVCjJ2hpqzGD0kWrzrJFrkCSFbcBYH4jqQYJqqH/G
-         ZaHfqhZgdbX6B2ZrjCYGGH5zpJwxSMIr1gSNQsFiwL2sj6DAibUcUCQfI6CgZdMBBQNI
-         cVtA==
+        bh=B5rCQpTg40XvAN0nRmC8PJTXTHlgnacsK7xSr02TOwk=;
+        b=GuvzjAUJFb1P5twyf/0FT5HN5HN4Kgv385x+NNXuseIgUCXHtRfUG3sJIcOzNQLA5+
+         dGaDLxKaLza5VtP4y83mb0QQsZbsQP5HsOlSvxi9Nidx41HsXJ3zRxebg4d15gT197fY
+         W1V/KJGxSTc2wG0pryEEvQW9EDaiu4m3Aig8yycLjW9OsYGD4Ji9h+q0sjls3KGFqo3i
+         uiLZzEI2eF8PLyHJR2ltmd+EzmpYXjWSvzv2D1ZH4p0RKK7UYo7m07SpWZVL9DjVoETd
+         GY3rdGVWuWtK0rGBQ1fjD4cFy2tk9vZzGcBeTVJwBCTYjSn8B9B3GmT0DJhqXMw7hayz
+         VbCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755021538; x=1755626338;
+        d=1e100.net; s=20230601; t=1755021540; x=1755626340;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nBs0EYqfbWl9UFV+H52iOxDMUVB4Qqo6amOw5/a/xOY=;
-        b=DtRrIP9p+ZpI7lsmhUZy8YkfGU5Q/FaU6tncg03SdpNNA7LEBSnZaxpD/rF+DdmISG
-         PAoH2CQ8TeMURm80GsS3T9riwTmVB2T7DA1/kbimhd/Qq++nviUNgY7QsBdxjgagYElZ
-         1m7Cs+6yMnug3/t+Gt5qNDnvivxqq4aYOGNLBkHNaGbpsCGxaXO5vpDt7bP7V5p6ef+X
-         l0mT/tCRngwbaRfDcBoZDYnYz2O1QOumw0y0IHVgadU/CxqN9G+7y0EEER5poT91Qar2
-         cL0mxPmGF19+p6EDyIYEa0pel74UMVtwoY/KMZul6kiZ0jyPDScuoNYJmYiz0y5+tMWa
-         QXcQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVEJ1jw93ozWzH+D5fae/mKsA8GfkrxFTe30yUzLGhbLQEwAXjyvdcBMMf7uOLJW6CcW9pWRA==@lists.linux.dev
-X-Gm-Message-State: AOJu0YyZDNTqVNDNUva1nXEdAIrM+nyp01LQZsBzD5RPmLkJ7EOMMmtO
-	EaQp9YEnxDKDDgjL6QIKBxqbjiMUrZwE5LNvgcYLfJX+uVVDQTOZ9IzJF5ywpElrytHDIVj64cF
-	XDKZjkw==
-X-Google-Smtp-Source: AGHT+IFYsGjbaobi8vNz9wbDh44fnvU9qpjmhcBJj3ep2W5xNnuwjJPdvlexzH+8pKUpV2yp3JlpFVyM3a8=
-X-Received: from pfblu20.prod.google.com ([2002:a05:6a00:7494:b0:746:18ec:d11a])
- (user=kuniyu job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:9985:b0:23d:d612:3dfa
- with SMTP id adf61e73a8af0-240a8bc1fe5mr267608637.40.1755021538144; Tue, 12
- Aug 2025 10:58:58 -0700 (PDT)
-Date: Tue, 12 Aug 2025 17:58:20 +0000
+        bh=B5rCQpTg40XvAN0nRmC8PJTXTHlgnacsK7xSr02TOwk=;
+        b=t30HVmRQu7Y0ShguHv4xRcPfqjuxmNjs6nLeDeQ4BYuy38QggeXouGUbqoCXyiOHWQ
+         n/HWv8zblO0u5H7WPcpl93WYSCLT7UqWC18XoXtoQWM98xjxu6betMFQWfHz2qYBDSun
+         Q3mUe19Hvqr+twWpk9eDjWa0dHEUHyxaOc8zuuEya7FyLu4j+fygCkQWfXV0z/ik+b6B
+         Fb9iP6WTMIiw+v00au+QzCHwzvakJugZPqIHv30kKYuwIK7w/GpXGpACdjfPhJM7ukhD
+         KbO1I3dT9nLaGhXOsKi67vm/yJpOXIxz7Q+lbW0SdGXgmoWwnFpae4jYdKEE9c2biyvW
+         a6xg==
+X-Forwarded-Encrypted: i=1; AJvYcCWi8VTkWKOnWBgSv350ym3aNAfvc+wbqlPGyJiFKOyoEr/Ku+f8C8NokDOtoAhfdM7Svh43Zg==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwfwBq/TeO/PwuMiihnYfnbgc4fyVAZGOFEygMbiWZA3gFxMGsc
+	pd9Ax3LdPUTgagEiGqoA4yoBtdsRyVgPWAONUa5n8kPkedSA+KEH2p13AZSTjvzMq7AD+50FwLN
+	W57H0cw==
+X-Google-Smtp-Source: AGHT+IFWOE5iaFIohAGKeh/7bkm49sAtcTJw3E8VuXd5fFWE4AD9T9o/O9JzYSwQSyIb+xne5Odsyex1rCE=
+X-Received: from plblh11.prod.google.com ([2002:a17:903:290b:b0:240:39eb:1e8c])
+ (user=kuniyu job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:440f:b0:240:127:85f1
+ with SMTP id d9443c01a7336-2430d0fc548mr1608415ad.18.1755021539728; Tue, 12
+ Aug 2025 10:58:59 -0700 (PDT)
+Date: Tue, 12 Aug 2025 17:58:21 +0000
 In-Reply-To: <20250812175848.512446-1-kuniyu@google.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 Mime-Version: 1.0
 References: <20250812175848.512446-1-kuniyu@google.com>
 X-Mailer: git-send-email 2.51.0.rc0.205.g4a044479a3-goog
-Message-ID: <20250812175848.512446-3-kuniyu@google.com>
-Subject: [PATCH v3 net-next 02/12] mptcp: Use tcp_under_memory_pressure() in mptcp_epollin_ready().
+Message-ID: <20250812175848.512446-4-kuniyu@google.com>
+Subject: [PATCH v3 net-next 03/12] tcp: Simplify error path in inet_csk_accept().
 From: Kuniyuki Iwashima <kuniyu@google.com>
 To: "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
 	Jakub Kicinski <kuba@kernel.org>, Neal Cardwell <ncardwell@google.com>, Paolo Abeni <pabeni@redhat.com>, 
@@ -75,34 +75,61 @@ Cc: Simon Horman <horms@kernel.org>, Geliang Tang <geliang@kernel.org>,
 	mptcp@lists.linux.dev, cgroups@vger.kernel.org, linux-mm@kvack.org
 Content-Type: text/plain; charset="UTF-8"
 
-Some conditions used in mptcp_epollin_ready() are the same as
-tcp_under_memory_pressure().
+When an error occurs in inet_csk_accept(), what we should do is
+only call release_sock() and set the errno to arg->err.
 
-We will modify tcp_under_memory_pressure() in the later patch.
+But the path jumps to another label, which introduces unnecessary
+initialisation and tests for newsk.
 
-Let's use tcp_under_memory_pressure() instead.
+Let's simplify the error path and remove the redundant NULL
+checks for newsk.
 
 Signed-off-by: Kuniyuki Iwashima <kuniyu@google.com>
 Reviewed-by: Eric Dumazet <edumazet@google.com>
 ---
- net/mptcp/protocol.h | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ net/ipv4/inet_connection_sock.c | 15 +++++++--------
+ 1 file changed, 7 insertions(+), 8 deletions(-)
 
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index b15d7fab5c4b..a1787a1344ac 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -788,9 +788,7 @@ static inline bool mptcp_epollin_ready(const struct sock *sk)
- 	 * as it can always coalesce them
- 	 */
- 	return (data_avail >= sk->sk_rcvlowat) ||
--	       (mem_cgroup_sockets_enabled && sk->sk_memcg &&
--		mem_cgroup_under_socket_pressure(sk->sk_memcg)) ||
--	       READ_ONCE(tcp_memory_pressure);
-+		tcp_under_memory_pressure(sk);
- }
+diff --git a/net/ipv4/inet_connection_sock.c b/net/ipv4/inet_connection_sock.c
+index 1e2df51427fe..724bd9ed6cd4 100644
+--- a/net/ipv4/inet_connection_sock.c
++++ b/net/ipv4/inet_connection_sock.c
+@@ -706,9 +706,9 @@ struct sock *inet_csk_accept(struct sock *sk, struct proto_accept_arg *arg)
+ 		spin_unlock_bh(&queue->fastopenq.lock);
+ 	}
  
- int mptcp_set_rcvlowat(struct sock *sk, int val);
+-out:
+ 	release_sock(sk);
+-	if (newsk && mem_cgroup_sockets_enabled) {
++
++	if (mem_cgroup_sockets_enabled) {
+ 		gfp_t gfp = GFP_KERNEL | __GFP_NOFAIL;
+ 		int amt = 0;
+ 
+@@ -732,18 +732,17 @@ struct sock *inet_csk_accept(struct sock *sk, struct proto_accept_arg *arg)
+ 
+ 		release_sock(newsk);
+ 	}
++
+ 	if (req)
+ 		reqsk_put(req);
+ 
+-	if (newsk)
+-		inet_init_csk_locks(newsk);
+-
++	inet_init_csk_locks(newsk);
+ 	return newsk;
++
+ out_err:
+-	newsk = NULL;
+-	req = NULL;
++	release_sock(sk);
+ 	arg->err = error;
+-	goto out;
++	return NULL;
+ }
+ EXPORT_SYMBOL(inet_csk_accept);
+ 
 -- 
 2.51.0.rc0.205.g4a044479a3-goog
 
