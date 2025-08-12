@@ -1,169 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f49.google.com (mail-io1-f49.google.com [209.85.166.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EAA32DECD6
-	for <mptcp@lists.linux.dev>; Tue, 12 Aug 2025 09:32:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B6E22E401
+	for <mptcp@lists.linux.dev>; Tue, 12 Aug 2025 10:19:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754991174; cv=none; b=jO6iBuAReH5BPeSaxll8tIAiuUjCV7ewm44doRy0PmjW4s51z0su869zoMPosJC1Eb+leGL/df1Nz/mRyzSYKCNsldEPbKnBl5YfKYsTq34UCgB/npuZh+KfLiqRt5RH7L6TneA+EDE1w3s+Huckrwnu8qYmH0Raa16SmW2HjtA=
+	t=1754993968; cv=none; b=CrhAwZw2bbhFV3wEEVrLGiqrR12c2CH1P32NX4UaF2yhZX1gDkFGmgp//7s+aaRN3zONNj63f6gLq7HZPj8V3bRd02B8rOmNVB1EdV6tdV/lG/fR8oyQIgEnogojzeHNQpn/ge4XbsGtaLxnF9acVOJ0b0uod2bHsUjtQOqdxCI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754991174; c=relaxed/simple;
-	bh=4f8yjgAtTTfbmio2yZdZXXaX/i4qv1YrwQXcVG9QhzE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NCqCs8Zm50DZKTIvvIYPQvvTmjj+HUKL7w4wQa93CoICGWUY4p43gZWS4DWC9AJFJUPxydWOhN3/LDtWh8o+mqI8FfNIyAMaLlsrfLHURVgFjIeQIHUayFvWyPSxhasaemz0nJUL5oD1BsDLgZCOSrWixTjEE9MCN4yayZOy4ao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UOqGPWnk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1754993968; c=relaxed/simple;
+	bh=yqXBVQ4N7B1aTpjMRoH1rcgFRbkimC0W7vKTg/26NQU=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=U9G4GwRqVzdKI03bHMXwlYeE0gRqO/s0AEb05agZj+VMRrlCnR3EjXENHkH7kinWIO92C/1PHVfXgqbVFdJohPj3gAPDx84zhI5XTLlMEAb5I/Gnrn2TbtVTXZ81degB8WdhlTG5G9MVr03213eHG7OOwfZAqMju1gCcxIx64FE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UFuMK8l4; arc=none smtp.client-ip=209.85.166.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UOqGPWnk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADE0CC4CEF0;
-	Tue, 12 Aug 2025 09:32:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754991173;
-	bh=4f8yjgAtTTfbmio2yZdZXXaX/i4qv1YrwQXcVG9QhzE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=UOqGPWnklZ43WPawI6XihstpFsyhzMyRo7QbJ5ynvZov+0ViTf1R2wS8UClIqQSvg
-	 pwyrLlc0nibwr0OWPKu11cWM/HnijJbq5ZenFfKAZhZC4pG12+hcQ2EbpJID0bgweZ
-	 yxDq5WsCynI+5CrvT7lrbcwU2shlmKZt0jZ1dfxyVM92sewOPiGxfMtrHXOgJJIz73
-	 +Ppqc1so2aTJo5cHlkWnJ8TGJImYI5t5pMD1chgg+XBGVOeW0y91ZSQqsra6uakKgO
-	 HqomNz6s0rVgPBIjl901eRC1/eqxbSlld0h+syuy4Ymd+pfDp/sIjVRwAmPlzHfIhT
-	 8reQOmOBOz5MA==
-Message-ID: <dd9b0ae8-581e-4306-b575-1a3dc07eef67@kernel.org>
-Date: Tue, 12 Aug 2025 11:32:49 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UFuMK8l4"
+Received: by mail-io1-f49.google.com with SMTP id ca18e2360f4ac-87c0166df31so330031539f.3
+        for <mptcp@lists.linux.dev>; Tue, 12 Aug 2025 03:19:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1754993966; x=1755598766; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ehMMRZT1ubFk5Xdjqi+SlHbOgEhlBdpSTxW0e+w2shY=;
+        b=UFuMK8l4KIQpl9xsq2uUeLnHJqK+nh+rxgqnifQ71jhT9Q6TkB2F5mTXuuXfJ6GX/h
+         eeBqztKP1y7+GU0/59aviKPHi09QNCjXgSKg2mD1HvHCE0sWah1Xrk4VdgxAPeG2qL5Q
+         yKMqAANHH51HTcAhetgt4xv5bcGrkd9anXmYcbeAVseVmqgd0SM5a5Q5Ek6LlJYI9WRf
+         3zVeggegVX5gCY10Msso9X/YdKBp6mE5sCbNfKFbpcUAZkjBMszMF8e4hBuZvGSsjaax
+         ireyfxd4YK+rt6E+0cdEk1289N4XDz/qcyOqM/D3YOAgaSTMPGSZgEKYVZhsJZ9OAQi4
+         4TMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1754993966; x=1755598766;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=ehMMRZT1ubFk5Xdjqi+SlHbOgEhlBdpSTxW0e+w2shY=;
+        b=Lcpy6jUqjRDxQdjLsk8HJR9SOrvOd7zhfflwy1iDvGaK/x/hqS1tGq8zCDEeg+yp8p
+         FEw8OyhbBXwKyzF9HD1DRGNnO9u/UyDKsNv6rc/7yCymcef8GuMhPxVVV2WSVmDfukEe
+         R890AKgcIBKvi+jySVxf/UrMqdXCM+5MpzwXu61zzljRQHuhvP8rl5vyXkCaafIOGKOW
+         JgVWXVW0aAJkiX+i1eYczXq/lS1pNkue0L9ISXrgtiL6vAnoWOcOdWUMMVX7Ivj2E71r
+         zw9crHLySGz+i8VCSfr45V6ayofpR/dJ2c5yEadVs6FuEKNC4QW5w/29BINihNXd+Oj+
+         gpGA==
+X-Gm-Message-State: AOJu0YzN1Ma5ec4I7HjqMUV7n5pDZRi/bXqG32ifVTXAVX0fSviKTlee
+	MJW3TvLPbHxS8lMWuvOUACE+T5Yq5kg5Z287w2vexWfMHM7/D+ZuMgoecvsd
+X-Gm-Gg: ASbGncsRrI0kvVf2rTzqx0zZB9S6TXX6YXb9/880B2eHqyVP5377F5tRUwr/7XeBl2l
+	pXz5Kz3AbIXXnVdiAXbDUPdEmGh5lQxXjeAEIG02H/YnlYH9DUa4DdNWc1Zj5zd50Juu2Mq+3ci
+	xkTWZEBf9JRx7XBGyOgTo+INI1/vJWfznFxsjg1CffsBf1bAWMfBV4M2j4oqpajEWWzawMx4iAh
+	KpTfR5Fr9S5RAKDV1BRcuCsTRuGd1qUTiiDa6Zc1NFXjjFGM1//E5FlASNnS2zZV403BDxDvTAd
+	B/M9Iq7WIisGw4JyE/lqch1r2hLN3qB3lAYK3QV/c+B9z+DKj9DNu5tnRSVRWp9Q6ZyxKiWhSIW
+	VDVm1kKxuVeR3BmMX5Q2bbC0Ndv7MFKWB7HWkroHh9TC8al8=
+X-Google-Smtp-Source: AGHT+IGvTBiRnDLSJcAL96IMeaXSHtJlQ8n+lgUhFZ2H9CQM64eyTzows4X3Uzos5QQza81ht7qsdQ==
+X-Received: by 2002:a05:6602:6403:b0:884:e57:9f1 with SMTP id ca18e2360f4ac-8840e570f10mr1295129539f.2.1754993966156;
+        Tue, 12 Aug 2025 03:19:26 -0700 (PDT)
+Received: from [127.0.0.1] ([135.232.232.66])
+        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-883f18bace4sm367595039f.7.2025.08.12.03.19.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Aug 2025 03:19:25 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Geliang Tang <tanggeliang@kylinos.cn>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <cover.1754986785.git.tanggeliang@kylinos.cn>
+References: <cover.1754986785.git.tanggeliang@kylinos.cn>
+Subject: Re: [PATCH mptcp-next v2 0/3] mptcp: add more sockopts
+Message-ID: <897206f2-501c-0451-18d4-af0a3e543ef8@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 12 Aug 2025 10:19:24 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v3 2/3] mptcp: make ADD_ADDR retransmission
- timeout adaptive
-Content-Language: en-GB, fr-BE
-To: Geliang Tang <geliang@kernel.org>, Christoph Paasch <cpaasch@openai.com>
-Cc: mptcp@lists.linux.dev, Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1754449947.git.tanggeliang@kylinos.cn>
- <c559f29eea1e019b6d25a35f05bbeb85fdd578e1.1754449947.git.tanggeliang@kylinos.cn>
- <eb6c0e4d-938c-4712-83b2-ee12bd70aa12@kernel.org>
- <f42defcb7fe7db02283fed5def29623cbc6a24d7.camel@kernel.org>
- <b0a4ebe8-0dfd-4c15-89bf-98c4f7cfebc0@kernel.org>
- <78799855faff1bb19cdec5210ca5edf302d39974.camel@kernel.org>
- <5d4dfa60-7604-4b45-becf-8df8bd0667ed@kernel.org>
- <CADg4-L8iLwmp6GCscWCq9vwPTyavgi54i5KSjLPneULQHvwB9Q@mail.gmail.com>
- <1e636ef3-6756-4638-89ab-2a013df9454a@kernel.org>
- <2c6f89d333cb88760c566f85f843b6fa56b00152.camel@kernel.org>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <2c6f89d333cb88760c566f85f843b6fa56b00152.camel@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
 Hi Geliang,
 
-On 12/08/2025 11:20, Geliang Tang wrote:
-> On Tue, 2025-08-12 at 10:39 +0200, Matthieu Baerts wrote:
->> On 11/08/2025 17:34, Christoph Paasch wrote:
+Thank you for your modifications, that's great!
 
-(...)
+Our CI did some validations and here is its report:
 
->>> Why wouldn't icsk_rto not be good enough ? We just need a
->>> reasonable
->>> number here.
->>
->> I didn't have time to investigate in between, but is icsk_rto not
->> updated only when needed (@Geliang: did you check?). So could it be
->> possible that at the beginning of the connection, the value is not
->> correct?
->>
->> If yes, why not using __tcp_set_rto()?
->>
->>> And, I must say that 2 x __tcp_set_rto() seems a bit
->>> arbitrary. Let's just use icsk_rto. Does it really matter that it
->>> is
->>> not updated very frequently ?
->>
->> Maybe yes.
->>
->> @Geliang: but before sending a new version, please check my comment:
->>
->>   https://github.com/multipath-tcp/packetdrill/pull/166
->>
->> Especially this part:
->>
->>> 0.65s looks a lot to me: The 3rd ACK at line 15 should be injected
->>> with a delay of 0.01s.
->>>
->>> What are the values of icsk->icsk_rto, tp->srtt_us, tp->rttvar_us,
->>> __tcp_set_rto(tp) and the one you set for the timer when scheduling
->>> each retransmissions and when running this test?
->>>
->>> (for the rto value in jiffies, please convert them to usec like the
->>> others → jiffies_to_usecs())
->>
->> Sharing such info when running the packetdrill tests using a non
->> debug
->> kernel (and ideally also sharing the output of packetdrill, when
->> running
->> it with the extra -vvvv), would help better understand the situation
->> here.
-> 
-> Here is the debug patch based on v4:
+- KVM Validation: normal: Unstable: 1 failed test(s): =
+selftest_mptcp_connect_checksum =F0=9F=94=B4
+- KVM Validation: debug: =
+Unstable: 1 failed test(s): packetdrill_mp_capable =F0=9F=94=B4
+- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/169035=
+40842
 
-(...)
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/e5177b226ee9
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D990418
 
-Thank you for having checked! I suggest discussing the logs on the
-packetdrill ticket where I just asked you to check when not all the
-packetdrill tests are executed in parallel, certainly taking all CPU
-resources:
 
-  https://github.com/multipath-tcp/packetdrill/pull/166
-> In this test, __tcp_set_rto(tp) is the same as icsk->icsk_rto.
+If there are some issues, you can reproduce them using the same =
+environment as
+the one used by the CI thanks to a docker image, e.g.:
 
-That's interesting. Then maybe we can simply use icsk_rto if that's easier.
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
 
 Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
-
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
