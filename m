@@ -1,93 +1,53 @@
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22ABE2AE90
-	for <mptcp@lists.linux.dev>; Wed, 13 Aug 2025 20:21:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08D972FD7BF
+	for <mptcp@lists.linux.dev>; Wed, 13 Aug 2025 20:54:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755116511; cv=none; b=UlFK5pCdR6bDF7vB6M22S+8c81YZ7J8B+rN1pqcy7UwJb1i+ruOz//cOUC7jjc68n1L1Fv8BN1orCZddQgw5gEgzXdBA/jTBLsjhOikKH/2nNm/r4WbvDq5MTl9n4rKqcsoU4WsGGm5TVgpqYbgbUOcktXvcY6q8Yn7O9f1Qx6Q=
+	t=1755118453; cv=none; b=QNWdgzuHJV2sj4E0ygdUthdgDkGPT1Hcu0qdmTF4DDcgXcJdXyW/QPyYHIEpUBqkciMvvmtJ2EwUxqXv/oYvM2t/QJcg9q4HIk6qssQbsJp6gPXnvhCFcGWdCHKNBmihhwmOA7dTeaL3IfkhNqqOcYW0u77x8Pi0yKhkbGOucxo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755116511; c=relaxed/simple;
-	bh=spEw6iTr/TlKdoJ9qRoclMR04HEh7O0DeIyHVYrMPS4=;
+	s=arc-20240116; t=1755118453; c=relaxed/simple;
+	bh=9DH8u6qIUtGbxO9LA7iEGvsWUvMMlo8SaH3exJ2B8QU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Hgy9Wd8kHymPxGdfFnMbtoB+pCa7cjw4PdpjJoCERZSZwd0s2AX+CBfk+iN8lVpR4xgOVqRl8FAhxhfX6FIqEuR20mtLaoEdFHykRIdGhlHzWb/sFm9wc0WutDryUor8YChvSq4wtAjVuopLtyJwUpKe/pMXYmiEE6DiKdskVrQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=nHOMatVK; arc=none smtp.client-ip=209.85.222.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=K28soA3vBOZwRkCyHgT6bgx3MDEatmaVGx3PY8IKz0rkHGV88gwPlyDZWrPa69ZouRPLXO4ReoQji9wrp8m6pnWvX/rAnK/wtKiXm15ajmvEgl332YCS3tlX7YeLdBF8cBcDTa89GdxxlfDcGX/HwS9tKekA4qWcg1NoFwpH3dQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=PoBWnEIx; arc=none smtp.client-ip=91.218.175.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="nHOMatVK"
-Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-7e8706a6863so26142185a.3
-        for <mptcp@lists.linux.dev>; Wed, 13 Aug 2025 13:21:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1755116508; x=1755721308; darn=lists.linux.dev;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=H30kUHUoAp0mgFKEUbjujIS0Xnkk94c0v9Jq8jaPeYc=;
-        b=nHOMatVKeA4JRXyipCoMFC5KNc2jpw/7s+xN9TnNaC4ZhyJprIjveWKgMQsP9ey9el
-         vTI1aCl3pMGKE4wUQotdJckivfFtzJFgzMrSUBjb5y2uhL9EnVR1iI1ZnhMePymsDLfT
-         /BuAGy9PZZ7Cp/yCDgiA/gtAUxq2M8QfMonbOqZN0Wt4ypQrdlaRK1wCk37o+Q/abbcG
-         3ViRnmbU/fhTQ8zRI4HZfjGRnOcZ+VNlMZAFTrngZpzV5bQs7Xvm0o6H06puNvrkE7Gi
-         dol1wYPX3W0tIXQx2nmpEg8YrKJFZadTsuGnrnvZk65Db7CZfRRQxuxjCebaWsPQBzbg
-         5Kfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755116508; x=1755721308;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=H30kUHUoAp0mgFKEUbjujIS0Xnkk94c0v9Jq8jaPeYc=;
-        b=BM84eGe2RPKq2/1xXu3bC1FMtxWBldW0ZflTkuNqpO049cAqNAiJ6t8DIYyDUHvoDC
-         KNXXWOx+hzPbWu37h0y/odUY0ybPeCT7/64XJzqBvjhN1AB4MhJE5Pm8/hnbxplYcgSx
-         TeI0gb1GTjM5pKf73Gp0DZMWvCGBPggI9dO1FwE+OKFF+F30dW1iq8dH4zY6TykCCSMr
-         ThckpX5KfC3qQnEfOROgEi27RQEuoxlIvT/I6pjkAo3lMR7MA3h5tR2hFgvAY6SsfZga
-         KG+OJshJXpNI0dpFZTsJjqKWkeoymYVka16BWUQsdW6zpsz97tCbiycVSHdSIZiYAr3/
-         JFfg==
-X-Forwarded-Encrypted: i=1; AJvYcCWPMKsDCMo3zQghZCy+Asc0IuW18fZko0Rq3vbz6DKn1DVzkXNm9ORFPKDykOCPvl9Ft8uKQw==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwCdC/tPnpcc3GH926n9+YpLbLCx45/Qgn5SZcYLvPD2WBY7fXX
-	oItaPRVC2+21wigJhpH6zbQJN2pm7KCc7Ynjbiew03r2bqb5iTbnhKSXCJcpkUf1zXK/Z3iTo2P
-	7IawN
-X-Gm-Gg: ASbGncvlYeZptnQXPk/lwun3r57B8t/mz2JjgjlfqPTBhpCX9oUCoxrcKVzRWXeRE+l
-	vLJrUTt4ks6TVwzhGi3pcEbtYuvHG3iM1qq/8QkMmAtEPdADAVKklMPpGWsG7VSrsgseG3zEu/y
-	iE3NEHFd04mhffXHVRi90/bAhPoHxY5ijJknQGMyBPzHoOmIm5SFziljK+Ox7NI6koPgmtaX7S8
-	SFleo38JOli/B5AMoRIazrMzzkWVk7dszUFtmG8YW1CrjngR1iphIxbVNX9wjIFcZ1t5sT9V7sU
-	pblkAnYNkvmXDxAtO20URorpQDd79LrBgwdD+YfdpzkNmSrBrtLPKEyDULH+ygAAFyLbOd/2MFM
-	u4ASqzUZFP26ezVmtoWcsFQ==
-X-Google-Smtp-Source: AGHT+IHL4RX8mGUQFHn3xTKxG6noHoTer9v5afSRdyTGpU+E2ho9o1DxodPcyvf3+YYPPRrSEMF5JQ==
-X-Received: by 2002:a05:620a:3bd2:b0:7e3:28f3:8a5 with SMTP id af79cd13be357-7e87045d632mr87942885a.28.1755116507799;
-        Wed, 13 Aug 2025 13:21:47 -0700 (PDT)
-Received: from localhost ([2603:7000:c01:2716:929a:4aff:fe16:c778])
-        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7e8079cfcc9sm1486333285a.29.2025.08.13.13.21.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Aug 2025 13:21:46 -0700 (PDT)
-Date: Wed, 13 Aug 2025 16:21:42 -0400
-From: Johannes Weiner <hannes@cmpxchg.org>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="PoBWnEIx"
+Date: Wed, 13 Aug 2025 13:53:58 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1755118445;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=BnHjAcE2afHw2ZH4ahTMmzFeMhbV05T1AU89RXbzZLs=;
+	b=PoBWnEIxIcfMYl/tlSSwqrpgpdkIgUnt+/l5CiIfW4q7tMLS63s9dpu3LCinuWGdf2pZLI
+	PFouMpIDd+OtRzFJ0DZjD6mxEhmzKK6mUYtO0jIMBKS2DPJrYVw2hs6FmH7tH0tstH4dSA
+	7GSmRfkdmXKgTvsCjyX68rxPSWqhU08=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Shakeel Butt <shakeel.butt@linux.dev>
 To: Kuniyuki Iwashima <kuniyu@google.com>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Neal Cardwell <ncardwell@google.com>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Willem de Bruijn <willemb@google.com>,
-	Matthieu Baerts <matttbe@kernel.org>,
-	Mat Martineau <martineau@kernel.org>,
-	Michal Hocko <mhocko@kernel.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
-	Tejun Heo <tj@kernel.org>, Simon Horman <horms@kernel.org>,
-	Geliang Tang <geliang@kernel.org>,
-	Muchun Song <muchun.song@linux.dev>,
-	Mina Almasry <almasrymina@google.com>,
-	Kuniyuki Iwashima <kuni1840@gmail.com>, netdev@vger.kernel.org,
-	mptcp@lists.linux.dev, cgroups@vger.kernel.org, linux-mm@kvack.org
+Cc: "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+	Neal Cardwell <ncardwell@google.com>, Paolo Abeni <pabeni@redhat.com>, 
+	Willem de Bruijn <willemb@google.com>, Matthieu Baerts <matttbe@kernel.org>, 
+	Mat Martineau <martineau@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Michal Hocko <mhocko@kernel.org>, Roman Gushchin <roman.gushchin@linux.dev>, 
+	Andrew Morton <akpm@linux-foundation.org>, Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>, 
+	Tejun Heo <tj@kernel.org>, Simon Horman <horms@kernel.org>, 
+	Geliang Tang <geliang@kernel.org>, Muchun Song <muchun.song@linux.dev>, 
+	Mina Almasry <almasrymina@google.com>, Kuniyuki Iwashima <kuni1840@gmail.com>, netdev@vger.kernel.org, 
+	mptcp@lists.linux.dev, cgroups@vger.kernel.org, linux-mm@kvack.org, bpf@vger.kernel.org
 Subject: Re: [PATCH v3 net-next 12/12] net-memcg: Decouple controlled memcg
  from global protocol memory accounting.
-Message-ID: <20250813202142.GB115258@cmpxchg.org>
+Message-ID: <oafk5om7v5vtxjmo5rtwy6ullprfaf6mk2lh4km7alj3dtainn@jql2rih5es4n>
 References: <20250812175848.512446-1-kuniyu@google.com>
  <20250812175848.512446-13-kuniyu@google.com>
- <20250813130009.GA114408@cmpxchg.org>
- <CAAVpQUB-xnx_29Hw-_Z4EbtJKkJT1_BCfXcQM7OpCO09goF+ew@mail.gmail.com>
+ <w6klr435a4rygmnifuujg6x4k77ch7cwoq6dspmyknqt24cpjz@bbz4wzmxjsfk>
+ <CAAVpQUCU=VJxA6NKx+O1_zwzzZOxUEsG9mY+SNK+bzb=dj9s5w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -97,44 +57,121 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAAVpQUB-xnx_29Hw-_Z4EbtJKkJT1_BCfXcQM7OpCO09goF+ew@mail.gmail.com>
+In-Reply-To: <CAAVpQUCU=VJxA6NKx+O1_zwzzZOxUEsG9mY+SNK+bzb=dj9s5w@mail.gmail.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Wed, Aug 13, 2025 at 11:43:15AM -0700, Kuniyuki Iwashima wrote:
-> On Wed, Aug 13, 2025 at 6:00 AM Johannes Weiner <hannes@cmpxchg.org> wrote:
-> This change stop double-charging by opting out of _the
-> networking layer one_ because it interferes with memcg
-> and complicates configuration of memory.max and the
-> global networking limit.
-
-No, we do want the global limits as a backstop - even if every single
-cgroup in the system has its own memory limit.
-
-Sure, from a fairness POV, we want socket buffers accounted towards
-the containers' memory footprint and subject to their limits.
-
-But that doesn't imply that we can let the cgroup limit be the only
-thing curbing an explosion in socket buffers.
-
-This isn't about fairness, but about host stability.
-
-The MM can easily get rid of file cache and heap pages, but it has
-limited to no control over the socket buffer lifetime. If you split a
-1TB host into 8 containers limited to ~128G, that doesn't mean you
-want to allow up to 1TB of memory in socket buffers. That could make
-low memory situations unrecoverable.
-
-> > Maybe their socket buffers is the only thing that happens
-> > to matter to *you*, but this is in no way a generic, universal,
-> > upstreamable solution. Knob or auto-detection is not the issue.
+On Wed, Aug 13, 2025 at 11:19:31AM -0700, Kuniyuki Iwashima wrote:
+> On Wed, Aug 13, 2025 at 12:11 AM Shakeel Butt <shakeel.butt@linux.dev> wrote:
 > >
-> > Nacked-by: Johannes Weiner <hannes@cmpxchg.org>
+> > On Tue, Aug 12, 2025 at 05:58:30PM +0000, Kuniyuki Iwashima wrote:
+> > > Some protocols (e.g., TCP, UDP) implement memory accounting for socket
+> > > buffers and charge memory to per-protocol global counters pointed to by
+> > > sk->sk_proto->memory_allocated.
+> > >
+> > > When running under a non-root cgroup, this memory is also charged to the
+> > > memcg as "sock" in memory.stat.
+> > >
+> > > Even when a memcg controls memory usage, sockets of such protocols are
+> > > still subject to global limits (e.g., /proc/sys/net/ipv4/tcp_mem).
+> > >
+> > > This makes it difficult to accurately estimate and configure appropriate
+> > > global limits, especially in multi-tenant environments.
+> > >
+> > > If all workloads were guaranteed to be controlled under memcg, the issue
+> > > could be worked around by setting tcp_mem[0~2] to UINT_MAX.
+> > >
+> > > In reality, this assumption does not always hold, and processes that
+> > > belong to the root cgroup or opt out of memcg can consume memory up to
+> > > the global limit, becoming a noisy neighbour.
+> >
+> > Processes running in root memcg (I am not sure what does 'opt out of
+> > memcg means')
 > 
-> Please let me know if this nack still applies with the
-> explanation above.
+> Sorry, I should've clarified memory.max==max (and same
+> up to all ancestors as you pointed out below) as opt-out,
+> where memcg works but has no effect.
+> 
+> 
+> > means admin has intentionally allowed scenarios where
+> 
+> Not really intentionally, but rather reluctantly because the admin
+> cannot guarantee memory.max solely without tcp_mem=UINT_MAX.
+> We should not disregard the cause that the two mem accounting are
+> coupled now.
+> 
+> 
+> > noisy neighbour situation can happen, so I am not really following your
+> > argument here.
+> 
+> So basically here I meant with tcp_mem=UINT_MAX any process
+> can be noisy neighbour unnecessarily.
 
-Yes, for one I think it's an unacceptable behavioral change of the
-sysctl semantics.
+Only if there are processes in cgroups with unlimited memory limits.
 
-But my wider point is that I think you're trying to fix something that
-is a direct result of a flawed approach to containerization, and it
-would make much more sense to address that instead.
+I think you are still missing the point. So, let me be very clear:
+
+Please stop using the "processes in cgroup with memory.max==max can be
+source of isolation issues" argument. Having unlimited limit means you
+don't want isolation. More importantly you don't really need this
+argument for your work. It is clear (to me at least) that we want global
+TCP memory accounting to be decoupled from memcg accounting. Using the
+flawed argument is just making your series controversial.
+
+[...]
+> > Why not start with just two global options (maybe start with boot
+> > parameter)?
+> >
+> > Option 1: Existing behavior where memcg and global TCP accounting are
+> > coupled.
+> >
+> > Option 2: Completely decouple memcg and global TCP accounting i.e. use
+> > mem_cgroup_sockets_enabled to either do global TCP accounting or memcg
+> > accounting.
+> >
+> > Keep the option 1 default.
+> >
+> > I assume you want third option where a mix of these options can happen
+> > i.e. some sockets are only accounted to a memcg and some are accounted
+> > to both memcg and global TCP.
+> 
+> Yes because usually not all memcg have memory.max configured
+> and we do not want to allow unlimited TCP memory for them.
+> 
+> Option 2 works for processes in the root cgroup but doesn't for
+> processes in non-root cgroup with memory.max == max.
+> 
+> A good example is system processes managed by systemd where
+> we do not want to specify memory.max but want a global seatbelt.
+> 
+> Note this is how it works _now_, and we want to _preserve_ the case.
+> Does this make sense  ? > why decouple only for some
+> 
+
+I hope I am very clear to stop using the memory.max == max argument.
+
+> 
+> > I would recommend to make that a followup
+> > patch series. Keep this series simple and non-controversial.
+> 
+> I can separate the series, but I'd like to make sure the
+> Option 2 is a must for you or Meta configured memory.max
+> for all cgroups ?  I didn't think it's likely but if there's a real
+> use case, I'm happy to add a boot param.
+> 
+> The only diff would be boot param addition and the condition
+> change in patch 11 so simplicity won't change.
+
+I am not sure if option 2 will be used by Meta or someone else, so no
+objection from me to not pursue it. However I don't want some possibly
+userspace policy to opt-in in one or the other accounting mechanism in
+the kernel.
+
+What I think is the right approach is to have BPF struct ops based
+approach with possible callback 'is this socket under pressure' or maybe
+'is this socket isolated' and then you can do whatever you want in those
+callbacks. In this way your can follow the same approach of caching the
+result in kernel (lower bits of sk->sk_memcg).
+
+I am CCing bpf list to get some suggestions or concerns on this
+approach.
+
