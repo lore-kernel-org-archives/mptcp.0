@@ -1,31 +1,31 @@
-Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
+Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2702014658D
-	for <mptcp@lists.linux.dev>; Wed, 13 Aug 2025 01:47:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2E601A5BA0
+	for <mptcp@lists.linux.dev>; Wed, 13 Aug 2025 01:49:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755049670; cv=none; b=QlX8j0+n1Wj95pLyd3itEiMJ8uOrpJqn8CYevu2RkALUDh5kcRc+ktDqm6A7t/Wq1KsZqi+4C391PUqSluvf+bfgYTtAAb9rN177ZiZR6SpLeHEiZJPPUZHyf8LAihYnDiZ7hmQ8E7hG276Ss2l53TBQPwpMbEgwd4LBgVqnZ0Y=
+	t=1755049786; cv=none; b=o7/N9fuikrexVy2XY+JWQ/xgJeKfDATSWrCnonrbMLXKN9DJ+Q1/qEHSaCbIFUB2RWQtvvtMTjXRz+ojCT9UjeUAa/jvY3VrN9CCKycR9vSnYpnFe3GxMt4CwSv6C07VOTKKJdBxmDmkGYSnqgDxJU74wDrAJprnVg1OdtaPilo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755049670; c=relaxed/simple;
-	bh=zMF9GFXJ6Qj3YiII9M3bcvYpqiCjR5wzUFfq8z/K6XI=;
+	s=arc-20240116; t=1755049786; c=relaxed/simple;
+	bh=y8eBs0fHI7CmVwCx02H3JMhe4sR4fjcsdxnZfKRbvCM=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=oCHeE/NNv11HSB85+mdi3IOLyAS6VjSG3J8udrgoz4nwxGvnRMWDUizN4AvuOVUDDA8EQtq3Tckzp/0aBKye4a9bp4qC5WQRGfKuRXV5NJe1D7nvXhdWiJX9WSmTnN5PZ1y+BF9Nno6UwRp4fcrAvz+CSOcxcfJsqxYj7Atjat0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=FTYQkOUv; arc=none smtp.client-ip=95.215.58.187
+	 MIME-Version:Content-Type; b=koPdRBbWZIKKClpVNNRZWCKFcGeDckaR1VX6t6Aj7/fGH7Xb1X64ENbzU/cp43LAGFDTKopfgsr/j2fCplsg2R1B3MMCg5LHq5bUbkEq+bgn4wpFd4J/TlsPP5G7Rkx0b8unioFTTJdscFzzia7hZtL2DDso6YyCphKun94kJyk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=dF5AdvKR; arc=none smtp.client-ip=95.215.58.189
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="FTYQkOUv"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="dF5AdvKR"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1755049666;
+	t=1755049780;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=zMF9GFXJ6Qj3YiII9M3bcvYpqiCjR5wzUFfq8z/K6XI=;
-	b=FTYQkOUvj+t/XYrp4P59mJ9IAnMlXI/vjuCXT/xnTdWOvZYRD6kb6A4LK6bymUccbHK/bj
-	0RWM80egWzvTKhb2lAJ6vtM6tCh9v8LwUgu+kRILBruyR9dKc9+q+UErTnzZrEFFb1tqYk
-	Lv9ceKaVO01aJ+JpG804qpDDA6xiocQ=
+	bh=y8eBs0fHI7CmVwCx02H3JMhe4sR4fjcsdxnZfKRbvCM=;
+	b=dF5AdvKR2ca/0Id6PcyQBrt5ubWxMZGHTzaPtosUH84mRPw/rz0ZtN0RXNgT+qna999apu
+	RBTv6rLYEKBdLApJ1ypjDqATumzw0aXP/UyfSY5X9mPvS8YQph8ScVbB7RyO0vyJbiQD2t
+	oCWzMrZeb/bNRLTfrs79xT2u9H5kJAs=
 From: Roman Gushchin <roman.gushchin@linux.dev>
 To: Kuniyuki Iwashima <kuniyu@google.com>
 Cc: "David S. Miller" <davem@davemloft.net>,  Eric Dumazet
@@ -40,14 +40,14 @@ Cc: "David S. Miller" <davem@davemloft.net>,  Eric Dumazet
  <muchun.song@linux.dev>,  Mina Almasry <almasrymina@google.com>,  Kuniyuki
  Iwashima <kuni1840@gmail.com>,  netdev@vger.kernel.org,
   mptcp@lists.linux.dev,  cgroups@vger.kernel.org,  linux-mm@kvack.org
-Subject: Re: [PATCH v3 net-next 08/12] net-memcg: Pass struct sock to
- mem_cgroup_sk_(un)?charge().
-In-Reply-To: <20250812175848.512446-9-kuniyu@google.com> (Kuniyuki Iwashima's
-	message of "Tue, 12 Aug 2025 17:58:26 +0000")
+Subject: Re: [PATCH v3 net-next 09/12] net-memcg: Pass struct sock to
+ mem_cgroup_sk_under_memory_pressure().
+In-Reply-To: <20250812175848.512446-10-kuniyu@google.com> (Kuniyuki Iwashima's
+	message of "Tue, 12 Aug 2025 17:58:27 +0000")
 References: <20250812175848.512446-1-kuniyu@google.com>
-	<20250812175848.512446-9-kuniyu@google.com>
-Date: Tue, 12 Aug 2025 18:47:36 -0700
-Message-ID: <87sehwq9fr.fsf@linux.dev>
+	<20250812175848.512446-10-kuniyu@google.com>
+Date: Tue, 12 Aug 2025 18:49:28 -0700
+Message-ID: <87ms84q9cn.fsf@linux.dev>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -61,13 +61,12 @@ Kuniyuki Iwashima <kuniyu@google.com> writes:
 
 > We will store a flag in the lowest bit of sk->sk_memcg.
 >
-> Then, we cannot pass the raw pointer to mem_cgroup_charge_skmem()
-> and mem_cgroup_uncharge_skmem().
+> Then, we cannot pass the raw pointer to mem_cgroup_under_socket_pressure().
 >
-> Let's pass struct sock to the functions.
+> Let's pass struct sock to it and rename the function to match other
+> functions starting with mem_cgroup_sk_.
 >
-> While at it, they are renamed to match other functions starting
-> with mem_cgroup_sk_.
+> Note that the helper is moved to sock.h to use mem_cgroup_from_sk().
 >
 > Signed-off-by: Kuniyuki Iwashima <kuniyu@google.com>
 > Reviewed-by: Eric Dumazet <edumazet@google.com>
