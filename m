@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 412C62EACF6
-	for <mptcp@lists.linux.dev>; Wed, 13 Aug 2025 13:50:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BCFC2D73AC
+	for <mptcp@lists.linux.dev>; Wed, 13 Aug 2025 14:09:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755093022; cv=none; b=JwRk2owfo4LgcoO0tox94fVVXYGTCM/4Jfr4g3PcXq8vQuOvzR/Mrkj1rEvVWOIQSOZO50hc4yrK5JyiZss1U8TUc4EIAreFv/z9w3nyRxyj9Mne03ePqCtRj2hm7M863EzsCLiWmGn87DQRBMCMxAnr5cw/socdZJP82Jxu/Xs=
+	t=1755094154; cv=none; b=ItVb5r6zphav6DdxqNAUVopW5Kvz1b6K/XXDhkilHCc4B9dQQDo1aQR3EJq2GxlPrWJbFMP3YvfqnAVxA0ESHjXxg8xST1b5XtfcZWLDxw/0vx8e6Z7h2LA/4dNitHOErNPUCYXDxW5NoPwTGeBaXhuhvcTXl1euNt4o/CRIMg4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755093022; c=relaxed/simple;
-	bh=C4lGoihg4BF09jvqRzz0kY9G564WVOBx6+YTIZS0PX8=;
+	s=arc-20240116; t=1755094154; c=relaxed/simple;
+	bh=pyxOZjm2Czlh0Wl6y926JMMkbY7CJrh/6C7gM6DeEx8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mx+SuIQ0rMlLxyAsiInadQS/lMPLX/YBkm7KAB1Gfc1DfPkiDTT7eubdqRhdoDKGs8akzvWQ9UhYNXxtOujoaQhjKO6asJgwQ1wasyQaabjURRmK7HBvwq/8ZAYlUcK1kPRWbLy3p0etCP5TEMhpbMVKVW/AGn1kpk1rGfbEKBc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=durikAEu; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=LmoKkVS3pm4b24mzBseAoChpgE7OFwewk3sOF633HnNAK3MwTDMqor6jQ3qqLKq1Zx7q2QBA4rbLd9f4dKRIbvVZfRqLG5KxoW3UVcI1JFw3js63teZ4CKz5jdwCoXlmeSXW2c3A7mraCIuQZoqk9fAq079JjIkBq2R8hoYnPaM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rCrrrGwx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="durikAEu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26599C4CEEB;
-	Wed, 13 Aug 2025 13:50:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rCrrrGwx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BA7AC4CEEB;
+	Wed, 13 Aug 2025 14:09:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755093021;
-	bh=C4lGoihg4BF09jvqRzz0kY9G564WVOBx6+YTIZS0PX8=;
+	s=k20201202; t=1755094154;
+	bh=pyxOZjm2Czlh0Wl6y926JMMkbY7CJrh/6C7gM6DeEx8=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=durikAEuDjP1rbDe/s4bMLyK0LTiZsCnFkwErWsYkFTbnMfPHMykw2yRXATU4IIvk
-	 uRj/fw4cm4GrCPFAvXdefNOnup1Sp+HDq+S5udc350VhtVmQ6hbG16jU4VuTgQ0JPR
-	 qrLXcngClD1+v6iDfX8S4FSFzbypw015Z7pavhTxPphwFkB0BMAVT5pZ0zmQFCkilt
-	 vzA7CNB0yEAByXULW0lo3DCHCV3FQSPiYHPfEmTprKvulDJ2Zqy4H+MoTr+aWvZFXO
-	 0HmMb2JPzovQiuuJ1vwb4AHUv4NEBYSFGCwASiXQuhqzOKn/RPP6u9OkwtDrAFfZ+a
-	 Y6zQTykKgnaMg==
-Message-ID: <c5b98b9f-b975-4400-a106-8aef482162f0@kernel.org>
-Date: Wed, 13 Aug 2025 15:50:18 +0200
+	b=rCrrrGwxIas7p8oOqx07ojB5MGyRMPl6Wn2l7sPf7bXq8BObD64XB9QCw20yC0AIf
+	 WTl4qg7kO62fPrvlHibJmgOyk8Eco/G/cxpPoKwYeUHNmhxgfbiYBwGt3toEZruZ3S
+	 RHj5b6sfSE2kB3TRcSRPDXz00jEj8AWTgUNCYBuzmF//ZUEg2+M95X8L+fkpkX8p6S
+	 X4nWz4Oww28Fh3KvMp7WrB5AGJm4keJcVshgkJhEt83uJe3F0JRhRLAqwKAFJS1spm
+	 rOtcTSdtdfeF7EsvVfYSfATHY4GXSzw3FpeNZF/80xF2mNVyCOIEfjo/u1sRn2WkXf
+	 VBz6HQBywWIlA==
+Message-ID: <24d5de7e-4fac-43d7-ade0-7c11ae1fa3f1@kernel.org>
+Date: Wed, 13 Aug 2025 16:09:10 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,11 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next] mptcp: remove redundant orig_offset in
- carve_data_frag
+Subject: Re: [PATCH mptcp-next] tcp: md5: remove redundant l3flag variable
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <9c663fc37767d9036379afdbc83cd8874a7b2fc9.1753337130.git.tanggeliang@kylinos.cn>
+References: <93d3186f303d1242a0bde737aeda97959c1eb5cc.1754840319.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,51 +85,27 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <9c663fc37767d9036379afdbc83cd8874a7b2fc9.1753337130.git.tanggeliang@kylinos.cn>
+In-Reply-To: <93d3186f303d1242a0bde737aeda97959c1eb5cc.1754840319.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 24/07/2025 08:05, Geliang Tang wrote:
+On 10/08/2025 17:38, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> mptcp_carve_data_frag() already receives struct page_frag via its 'pfrag'
-> parameter, making the separate 'orig_offset' parameter redundant since it
-> merely duplicates pfrag->offset.
+> The l3flag variable was redundant as it duplicated the value of
+> the 'flags' variable which already contains the interface index flag
+> status from cmd.tcpm_flags. This cleanup simplifies the code by
+> eliminating unnecessary variable duplication.
 > 
-> Simplify the function signature by removing this unnecessary parameter
-> and directly accessing the offset from struct pfrag internally.
-> 
-> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-> ---
->  net/mptcp/protocol.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 4b510e04724f..ca7b9ed9657a 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -1039,9 +1039,9 @@ static bool mptcp_page_frag_refill(struct sock *sk, struct page_frag *pfrag)
->  }
->  
->  static struct mptcp_data_frag *
-> -mptcp_carve_data_frag(const struct mptcp_sock *msk, struct page_frag *pfrag,
-> -		      int orig_offset)
-> +mptcp_carve_data_frag(const struct mptcp_sock *msk, struct page_frag *pfrag)
->  {
-> +	int orig_offset = pfrag->offset;
->  	int offset = ALIGN(orig_offset, sizeof(long));
+> Changes:
+> 1. Remove l3flag variable declarations
+> 2. Replace l3flag usage with existing 'flags' variable
+> 3. Maintain identical functionality with reduced complexity
 
-We still need to respect the reversed Xmas tree order [1].
-
-Also, this kind of clean-up makes more sense when it is part of a larger
-series modifying code around. When it is alone, it usually creates more
-noise and network maintainers would like to avoid them, see [2]. So
-please, include this patch in a future series modifying code around.
-
-[1] https://docs.kernel.org/process/maintainer-netdev.html#rcs
-[2] https://docs.kernel.org/process/maintainer-netdev.html#clean-up-patches
+Thank you for sharing this, but because this is not related to MPTCP, do
+not hesitate to send that directly to the Netdev mailing list.
 
 Cheers,
 Matt
