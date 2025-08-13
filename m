@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BCFC2D73AC
-	for <mptcp@lists.linux.dev>; Wed, 13 Aug 2025 14:09:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16EFE19D88F
+	for <mptcp@lists.linux.dev>; Wed, 13 Aug 2025 14:19:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755094154; cv=none; b=ItVb5r6zphav6DdxqNAUVopW5Kvz1b6K/XXDhkilHCc4B9dQQDo1aQR3EJq2GxlPrWJbFMP3YvfqnAVxA0ESHjXxg8xST1b5XtfcZWLDxw/0vx8e6Z7h2LA/4dNitHOErNPUCYXDxW5NoPwTGeBaXhuhvcTXl1euNt4o/CRIMg4=
+	t=1755094783; cv=none; b=hBr8iXNxOc0adSyHQfjWQuwCzcnk324q/JhNfpp9tvvYdveqKmavgkeFogSIcKYQjacveUPKF80rUHtAmbxWNyZN0DhJGht9j7YchDujk3Se6WEo8wOf1exULuWHIg70n7U8Du4jZYaE46jKqiZLREZ6LeCgm+Z3jatcVaoeLNk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755094154; c=relaxed/simple;
-	bh=pyxOZjm2Czlh0Wl6y926JMMkbY7CJrh/6C7gM6DeEx8=;
+	s=arc-20240116; t=1755094783; c=relaxed/simple;
+	bh=UK4ECrajve9HVjwFprLiIyaWQH2iobXzU4sZXqFEwRQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LmoKkVS3pm4b24mzBseAoChpgE7OFwewk3sOF633HnNAK3MwTDMqor6jQ3qqLKq1Zx7q2QBA4rbLd9f4dKRIbvVZfRqLG5KxoW3UVcI1JFw3js63teZ4CKz5jdwCoXlmeSXW2c3A7mraCIuQZoqk9fAq079JjIkBq2R8hoYnPaM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rCrrrGwx; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=IGVsXtnLToeZInvyaF3BnErP4pXStiFYbkNWr80ELtpHlQr/p88i/WzxD69W4EQOt4gRL1SHf47WhWnq2qf1KVkXvY534HUTdiA1N62XG0yJ71ze4YWCmFOJxKIobfyDKSl7MA0gIj1AcgF+uRFXcqK7xENLa3c5iAQGEmIB7KM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ja1uDXSF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rCrrrGwx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BA7AC4CEEB;
-	Wed, 13 Aug 2025 14:09:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ja1uDXSF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9328C4CEEB;
+	Wed, 13 Aug 2025 14:19:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755094154;
-	bh=pyxOZjm2Czlh0Wl6y926JMMkbY7CJrh/6C7gM6DeEx8=;
+	s=k20201202; t=1755094782;
+	bh=UK4ECrajve9HVjwFprLiIyaWQH2iobXzU4sZXqFEwRQ=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=rCrrrGwxIas7p8oOqx07ojB5MGyRMPl6Wn2l7sPf7bXq8BObD64XB9QCw20yC0AIf
-	 WTl4qg7kO62fPrvlHibJmgOyk8Eco/G/cxpPoKwYeUHNmhxgfbiYBwGt3toEZruZ3S
-	 RHj5b6sfSE2kB3TRcSRPDXz00jEj8AWTgUNCYBuzmF//ZUEg2+M95X8L+fkpkX8p6S
-	 X4nWz4Oww28Fh3KvMp7WrB5AGJm4keJcVshgkJhEt83uJe3F0JRhRLAqwKAFJS1spm
-	 rOtcTSdtdfeF7EsvVfYSfATHY4GXSzw3FpeNZF/80xF2mNVyCOIEfjo/u1sRn2WkXf
-	 VBz6HQBywWIlA==
-Message-ID: <24d5de7e-4fac-43d7-ade0-7c11ae1fa3f1@kernel.org>
-Date: Wed, 13 Aug 2025 16:09:10 +0200
+	b=ja1uDXSF+M3ayDNLzAGl8xCuRd/29h6yjcKS6Y2oWsgBX3jpoQuxwlkD0yIxaqOu6
+	 /bW+O4BtMMQ5bJoG6uLV2mQTjEc8fwI2deRSO+7Utl34Gx/yQjCd/7bbTWOpox8g9f
+	 TCCQX5qdwOmgcmA9B5s0i6BFoQ2V0rnwvtmXYM80K+ap6OoZBVLg+gNTkhzxEfSc6I
+	 KPUpTEb2VLVQWdfNhb3XhSfGCm+dtg8sCF6g+4y9YVdkLBfSM6hvrTQbGhB0n6YTdX
+	 0DrEtRrp7aZRkGfM7bZc2u+lUwX9XdOYRc6Q7CvmdZnz9D/BSjSaK01YZVPzkdRK6G
+	 oDWvWr+8AVcvg==
+Message-ID: <13f5d33c-1404-4252-8d7d-e64cfa6f066c@kernel.org>
+Date: Wed, 13 Aug 2025 16:19:39 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,11 +35,11 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next] tcp: md5: remove redundant l3flag variable
+Subject: Re: [PATCH mptcp-net v2 0/3] mptcp: disable add_addr retrans
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <93d3186f303d1242a0bde737aeda97959c1eb5cc.1754840319.git.tanggeliang@kylinos.cn>
+References: <cover.1754534416.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -85,27 +85,44 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <93d3186f303d1242a0bde737aeda97959c1eb5cc.1754840319.git.tanggeliang@kylinos.cn>
+In-Reply-To: <cover.1754534416.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 10/08/2025 17:38, Geliang Tang wrote:
+On 07/08/2025 04:44, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> The l3flag variable was redundant as it duplicated the value of
-> the 'flags' variable which already contains the interface index flag
-> status from cmd.tcpm_flags. This cleanup simplifies the code by
-> eliminating unnecessary variable duplication.
+> v2:
+>  - move "remove duplicate sk_reset_timer call" into this set.
+>  - check add_addr timeout value in mptcp_pm_alloc_anno_list() too.
 > 
-> Changes:
-> 1. Remove l3flag variable declarations
-> 2. Replace l3flag usage with existing 'flags' variable
-> 3. Maintain identical functionality with reduced complexity
+> This series enhances MPTCP's ADD_ADDR retransmission mechanism by:
+> 
+> 1. Adding support for disabling retransmissions when add_addr_timeout
+> is set to 0
+> 2. Modifying the self-tests to leverage this new capability
+> 
+> The first patch implements the core functionality change in the MPTCP
+> subsystem, while the second patch updates the selftests to use this
+> feature for stabilizing a specific test case.
+> 
+> These changes provide more control over ADD_ADDR behavior and improve
+> test reliability by eliminating race conditions caused by unexpected
+> retransmissions.
+> 
+> Patch 1: Remove duplicate sk_reset_timer call
+> Patch 2: When add_addr_timeout is 0, skip retransmission entirely
+> Patch 3: Disable retransmissions in "delete re-add signal" test
 
-Thank you for sharing this, but because this is not related to MPTCP, do
-not hesitate to send that directly to the Netdev mailing list.
+Thank you for the new version. It looks good to me:
+
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+
+I will just check with Mat if we consider this as a fix or not. I think
+it is, but the behaviour is slightly changed, even if it is to avoid a
+buggy one. I will then apply these patches after the next bi-weekly meeting.
 
 Cheers,
 Matt
