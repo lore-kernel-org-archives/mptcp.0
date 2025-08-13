@@ -1,31 +1,31 @@
-Received: from out-183.mta1.migadu.com (out-183.mta1.migadu.com [95.215.58.183])
+Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CF2F19A288
-	for <mptcp@lists.linux.dev>; Wed, 13 Aug 2025 01:44:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D205B137C52
+	for <mptcp@lists.linux.dev>; Wed, 13 Aug 2025 01:46:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755049493; cv=none; b=tWCAg3dW/txCdLHeGvXz0B3XEkMPodRpsVyfO9ySzFAeKkb82vH59kaNJnkustXGkBZNEQNw+FOtZRa1WFhMDQ0YITcPSGAuQdWedKtVlntiYGVyOtU9A1Dk2cXEwczYn6QoqbwV0XvpI7XmwtIrdx4DYysH89nU3AKlWrt6rVw=
+	t=1755049613; cv=none; b=TbSQeh1C9Yl3NgYeKuw24N/xyi9abrDSiuk7caBbixXAk4ibVINBeKbghLSomFBijcMgBDMEwv4mMH3GMgh8n0vIsUvwee38NAedgNrohd8g1uQ6wpXmJUNt2GjQyIZ4WLOXOJUMSzCplmePn8Y9UNwn3gFsG3OkrQketVaOMHQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755049493; c=relaxed/simple;
-	bh=Ju3IzyV+nwWw8q+CMiCFqvNpGRTMi3k8lIo6iD9B+wU=;
+	s=arc-20240116; t=1755049613; c=relaxed/simple;
+	bh=8cimGdearmvYVQCy5FWmG8x9rA0b5/NI1ufddvwaDAw=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=YriaL9s7evu63gW+dI/OS39fqyCKHXMb1c8g1LYFMm9pE894nmxIeFa7Aj2XQIm1Rx9ZfAFfUDQR1lfyjO7W+mPZq9PlsmWWXcfr5uuSYSrEXXzBrUcFCHeTF77Ble7zWVj/AVXf3S3lWOyymV+LrhViN6/q9VZ/8fMVMtw2FDQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=TwZO/Qjo; arc=none smtp.client-ip=95.215.58.183
+	 MIME-Version:Content-Type; b=TZ/EcWIuK466nrJGFP794h8Hds0USx0NOYNOOQq+laRgjz0QG5Xk89GK6NyH+L3Sx4Ap/t2TcD8gY7u4h/7jlOc6GbjVds2q37YHAbEQ/ZcBn8Zcq9LeghPvTvLtAvx+oOSGZxFOW79M5pUhDUsWAfHkMHrLc+RdQfNVtfNmTP0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=evfVPnTg; arc=none smtp.client-ip=91.218.175.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="TwZO/Qjo"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="evfVPnTg"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1755049488;
+	t=1755049599;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Ju3IzyV+nwWw8q+CMiCFqvNpGRTMi3k8lIo6iD9B+wU=;
-	b=TwZO/Qjoduloapf+VZQpI0rUDmTFkgAESYLuJYnaWNHEEM+EQaaOnbYY8PGxarfopE7Y94
-	EINdZ9pz8+M8c8wqcwMip29gm8stLwLlpcMaZrd2kJerqmJakkQlaHXsLDHYMaC3b0XvRr
-	aUiFD+0ONOTF7aFJex9Mmqj+Cgk2SpE=
+	bh=8cimGdearmvYVQCy5FWmG8x9rA0b5/NI1ufddvwaDAw=;
+	b=evfVPnTgHBhA7AgQGRCHcwiqrgOLYAmg6DPpQQtrxVPp8a6y8pvPbiBeqN3gS8rxKUoiLV
+	TCqpB+VncP3f1jKieCNBCXbddW8YQuRWO/bJfrbxAr50x0SFMoB9a8FCZZSnKP+UM+hKI+
+	Jyy1cHE3qlMr1nyxI89fKAUrUQM6YGE=
 From: Roman Gushchin <roman.gushchin@linux.dev>
 To: Kuniyuki Iwashima <kuniyu@google.com>
 Cc: "David S. Miller" <davem@davemloft.net>,  Eric Dumazet
@@ -40,14 +40,14 @@ Cc: "David S. Miller" <davem@davemloft.net>,  Eric Dumazet
  <muchun.song@linux.dev>,  Mina Almasry <almasrymina@google.com>,  Kuniyuki
  Iwashima <kuni1840@gmail.com>,  netdev@vger.kernel.org,
   mptcp@lists.linux.dev,  cgroups@vger.kernel.org,  linux-mm@kvack.org
-Subject: Re: [PATCH v3 net-next 06/12] net-memcg: Introduce
- mem_cgroup_from_sk().
-In-Reply-To: <20250812175848.512446-7-kuniyu@google.com> (Kuniyuki Iwashima's
-	message of "Tue, 12 Aug 2025 17:58:24 +0000")
+Subject: Re: [PATCH v3 net-next 07/12] net-memcg: Introduce
+ mem_cgroup_sk_enabled().
+In-Reply-To: <20250812175848.512446-8-kuniyu@google.com> (Kuniyuki Iwashima's
+	message of "Tue, 12 Aug 2025 17:58:25 +0000")
 References: <20250812175848.512446-1-kuniyu@google.com>
-	<20250812175848.512446-7-kuniyu@google.com>
-Date: Tue, 12 Aug 2025 18:44:36 -0700
-Message-ID: <874iucro57.fsf@linux.dev>
+	<20250812175848.512446-8-kuniyu@google.com>
+Date: Tue, 12 Aug 2025 18:46:29 -0700
+Message-ID: <87y0roq9hm.fsf@linux.dev>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -59,18 +59,12 @@ X-Migadu-Flow: FLOW_OUT
 
 Kuniyuki Iwashima <kuniyu@google.com> writes:
 
-> We will store a flag in the lowest bit of sk->sk_memcg.
+> The socket memcg feature is enabled by a static key and
+> only works for non-root cgroup.
 >
-> Then, directly dereferencing sk->sk_memcg will be illegal, and we
-> do not want to allow touching the raw sk->sk_memcg in many places.
+> We check both conditions in many places.
 >
-> Let's introduce mem_cgroup_from_sk().
->
-> Other places accessing the raw sk->sk_memcg will be converted later.
->
-> Note that we cannot define the helper as an inline function in
-> memcontrol.h as we cannot access any fields of struct sock there
-> due to circular dependency, so it is placed in sock.h.
+> Let's factorise it as a helper function.
 >
 > Signed-off-by: Kuniyuki Iwashima <kuniyu@google.com>
 > Reviewed-by: Eric Dumazet <edumazet@google.com>
