@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16EFE19D88F
-	for <mptcp@lists.linux.dev>; Wed, 13 Aug 2025 14:19:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37A5F2EE29F
+	for <mptcp@lists.linux.dev>; Wed, 13 Aug 2025 14:54:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755094783; cv=none; b=hBr8iXNxOc0adSyHQfjWQuwCzcnk324q/JhNfpp9tvvYdveqKmavgkeFogSIcKYQjacveUPKF80rUHtAmbxWNyZN0DhJGht9j7YchDujk3Se6WEo8wOf1exULuWHIg70n7U8Du4jZYaE46jKqiZLREZ6LeCgm+Z3jatcVaoeLNk=
+	t=1755096842; cv=none; b=HWSeExr0Fea0VrKjYlIYQb7oSrynK+vuN4i8L7aFxyue4zE27YlqG1un7XkZHnBP4aHU6OiT/Y7EbJT3Fi+wYCG55JRUw2RH5nGr9QRUGxHENPSvhoZFN3TNmnApLcRDL1Ni3mGFEWcp0hoM9tS6on1WCpuvi06zgY4H08X8kas=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755094783; c=relaxed/simple;
-	bh=UK4ECrajve9HVjwFprLiIyaWQH2iobXzU4sZXqFEwRQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IGVsXtnLToeZInvyaF3BnErP4pXStiFYbkNWr80ELtpHlQr/p88i/WzxD69W4EQOt4gRL1SHf47WhWnq2qf1KVkXvY534HUTdiA1N62XG0yJ71ze4YWCmFOJxKIobfyDKSl7MA0gIj1AcgF+uRFXcqK7xENLa3c5iAQGEmIB7KM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ja1uDXSF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1755096842; c=relaxed/simple;
+	bh=+9CtScc3gTUY9mBf745Ywoefi6UUC9jnOqd5tGnh5rw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
+	 In-Reply-To:Content-Type; b=Qfu6nDWgpjqgn97nouzBE/d8ejr/L3pKLkMXM+KpP/Oo7EoGX/8GlnnqhD6c+qxtqjqax9nDqy9ow9LXb5eGxy20QF9YXlSYjqZVB/nRKUx2DyRBpghoL0Die38PD3AvzBtsVmcQp7NjIo+b0ZWQqm2lM7PFQmCqDavFY3PoLhs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QCm+zkIV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ja1uDXSF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9328C4CEEB;
-	Wed, 13 Aug 2025 14:19:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QCm+zkIV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF243C4CEEB;
+	Wed, 13 Aug 2025 14:54:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755094782;
-	bh=UK4ECrajve9HVjwFprLiIyaWQH2iobXzU4sZXqFEwRQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ja1uDXSF+M3ayDNLzAGl8xCuRd/29h6yjcKS6Y2oWsgBX3jpoQuxwlkD0yIxaqOu6
-	 /bW+O4BtMMQ5bJoG6uLV2mQTjEc8fwI2deRSO+7Utl34Gx/yQjCd/7bbTWOpox8g9f
-	 TCCQX5qdwOmgcmA9B5s0i6BFoQ2V0rnwvtmXYM80K+ap6OoZBVLg+gNTkhzxEfSc6I
-	 KPUpTEb2VLVQWdfNhb3XhSfGCm+dtg8sCF6g+4y9YVdkLBfSM6hvrTQbGhB0n6YTdX
-	 0DrEtRrp7aZRkGfM7bZc2u+lUwX9XdOYRc6Q7CvmdZnz9D/BSjSaK01YZVPzkdRK6G
-	 oDWvWr+8AVcvg==
-Message-ID: <13f5d33c-1404-4252-8d7d-e64cfa6f066c@kernel.org>
-Date: Wed, 13 Aug 2025 16:19:39 +0200
+	s=k20201202; t=1755096841;
+	bh=+9CtScc3gTUY9mBf745Ywoefi6UUC9jnOqd5tGnh5rw=;
+	h=Date:Subject:To:References:From:Cc:In-Reply-To:From;
+	b=QCm+zkIVneklcOS3Tfo1x7R6gZk3pqglcONXvfNOYLXW6JkFqkiA0R8V+36iQE2dr
+	 fC2sD4HnPaL1/WCo5bC4AUb+teawFGW8RHjadIb5UXU1POF3zsMLX2c6rxnOTR3lQF
+	 DRLZjPdayAtdZRM2gJ/+Af/qcSLu1c3cM8fx4fmO0BlJ7GyNLEgTIcVjcKsXLJm8Rg
+	 5G5OJauPiZwE5sUHgBVcPGQ+4UQ3mf0zRyW6rZUtKBC8wdfGbzTHeV00L07iBkRGaw
+	 DZzkgifrhKRIl5kQN+e6IV7uYzCIxkePdXOjXrR9PyCmWtrQdjPC4sMd5T+t+e0XY9
+	 B/MRyzo0v8IAg==
+Message-ID: <2f037b38-c9f4-44a0-857c-0f65cbd50688@kernel.org>
+Date: Wed, 13 Aug 2025 16:53:58 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net v2 0/3] mptcp: disable add_addr retrans
+Subject: Re: [PATCH mptcp-next] mptcp: record subflows in RPS table
 Content-Language: en-GB, fr-BE
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1754534416.git.tanggeliang@kylinos.cn>
+To: cpaasch@openai.com
+References: <20250807-b4-mptcp_perf-v1-1-e89cc14179cc@openai.com>
 From: Matthieu Baerts <matttbe@kernel.org>
+Cc: MPTCP Upstream <mptcp@lists.linux.dev>, Geliang Tang
+ <geliang@kernel.org>, Mat Martineau <martineau@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -85,44 +86,76 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <cover.1754534416.git.tanggeliang@kylinos.cn>
+In-Reply-To: <20250807-b4-mptcp_perf-v1-1-e89cc14179cc@openai.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+Hi Christoph,
 
-On 07/08/2025 04:44, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
+On 07/08/2025 20:14, Christoph Paasch via B4 Relay wrote:
+> From: Christoph Paasch <cpaasch@openai.com>
 > 
-> v2:
->  - move "remove duplicate sk_reset_timer call" into this set.
->  - check add_addr timeout value in mptcp_pm_alloc_anno_list() too.
+> Accelerated Receive Flow Steering (aRFS) relies on sockets recording
+> their RX flow hash into the rps_sock_flow_table so that incoming packets
+> are steered to the CPU where the application runs.
 > 
-> This series enhances MPTCP's ADD_ADDR retransmission mechanism by:
+> With MPTCP, the application interacts with the parent MPTCP socket while
+> data is carried over per-subflow TCP sockets. Without recording these
+> subflows, aRFS cannot steer interrupts and RX processing for the flows
+> to the desired CPU.
 > 
-> 1. Adding support for disabling retransmissions when add_addr_timeout
-> is set to 0
-> 2. Modifying the self-tests to leverage this new capability
+> Record all subflows in the RPS table by calling sock_rps_record_flow()
+> for each subflow at the start of mptcp_sendmsg() and mptcp_recvmsg().
 > 
-> The first patch implements the core functionality change in the MPTCP
-> subsystem, while the second patch updates the selftests to use this
-> feature for stabilizing a specific test case.
-> 
-> These changes provide more control over ADD_ADDR behavior and improve
-> test reliability by eliminating race conditions caused by unexpected
-> retransmissions.
-> 
-> Patch 1: Remove duplicate sk_reset_timer call
-> Patch 2: When add_addr_timeout is 0, skip retransmission entirely
-> Patch 3: Disable retransmissions in "delete re-add signal" test
+> It does not by itself improve throughput, but ensures that IRQ and RX
+> processing are directed to the right CPU, which is a
+> prerequisite for effective aRFS.
 
-Thank you for the new version. It looks good to me:
+Thank you for looking at that!
 
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> Signed-off-by: Christoph Paasch <cpaasch@openai.com>
+> ---
+>  net/mptcp/protocol.c | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+> 
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 4b510e04724f5c8be08a00a1cc03093bcd031905..86f1fc5be47bd5f6dc8bf40a488de32f253c1beb 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -12,6 +12,7 @@
+>  #include <linux/sched/signal.h>
+>  #include <linux/atomic.h>
+>  #include <net/aligned_data.h>
+> +#include <net/rps.h>
+>  #include <net/sock.h>
+>  #include <net/inet_common.h>
+>  #include <net/inet_hashtables.h>
+> @@ -1740,6 +1741,17 @@ static u32 mptcp_send_limit(const struct sock *sk)
+>  	return limit - not_sent;
+>  }
+>  
+> +static void mptcp_rps_record_subflows(const struct mptcp_sock *msk)
+> +{
+> +	struct mptcp_subflow_context *subflow;
+> +
+> +	mptcp_for_each_subflow(msk, subflow) {
+> +		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
+> +
+> +		sock_rps_record_flow(ssk);
 
-I will just check with Mat if we consider this as a fix or not. I think
-it is, but the behaviour is slightly changed, even if it is to avoid a
-buggy one. I will then apply these patches after the next bi-weekly meeting.
+Should we eventually open code this RPS function and directly call
+sock_rps_record_flow_hash()? If RPS is not needed, no need to go through
+the subflow list. So we could add: #ifdef CONFIG_RPS + &rfs_needed
+before the for_each, then check the state for each subflow, no?
+
+Or maybe such optimisation is not worth it?
+
+While at it, I see that sock_rps_record_flow() is called in
+__inet_accept(), inet(6)_sendmsg and inet(6)_recvmsg, but with the msk.
+I guess that's OK, right?
+Also, is sock_rps_record_flow() called when a subflow is "accept()ed",
+or is there something else to do there for this subflow to copy TCP's
+behaviour?
 
 Cheers,
 Matt
