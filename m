@@ -1,32 +1,31 @@
-Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
+Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8D7314A60F
-	for <mptcp@lists.linux.dev>; Thu, 14 Aug 2025 21:44:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFC65279DCC
+	for <mptcp@lists.linux.dev>; Thu, 14 Aug 2025 21:51:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755207868; cv=none; b=Lz40ZNZ2ANWw6N2xFFiA+9kBxZ0+K6omO97c7zgJHVgiXKPR7cHVDnIbNIKkHPG6mjRZ9OkMaW6FJdzTip5bkHTqOO7oW0b15fm5rjuzGmo3rRWj8c4cKXD10y5YqmtxuPP9iT7G7cu3BgH7k8aKFjRh00u4RW/+dfPc5SRRb4o=
+	t=1755208277; cv=none; b=lL0ZiMrdO25zYczECrWXEcOrzZ/hhPhmg2Bdeh1PyXls4Xye0/s9JGN19MM0CMYRxHk+79/M3yjMZYtJggNqhwsnL0nR9DEAgb7ZsEkiTpV7qhUXt9CqXdHksaNaiB8EDfDPyNvY9O8n0jFueIJgmZnFKoCuh2lR5fVvFpGWjw0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755207868; c=relaxed/simple;
-	bh=DUPr5MQoUxFFoqkAGNzRO/DGWT8OKJ2LYBfoUBU+Xww=;
+	s=arc-20240116; t=1755208277; c=relaxed/simple;
+	bh=0qDayALLGpfPGGJVeOJH1w5pS9wW9PEZgPAEEihPeWY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p3qmW/U1wvOvg/fem20WfoSaT1MuaSm3JD5ZDlvacIN9gXfWoIlRqZ3PQxSuh4PtxVfEA8r7Asg+JjZH4I0o9h2lxBtAFYt2toKHlIBXePHY1F1Oq1fdWU5G5p4H9R8iB1U6vGRWBmvOvw6YsW4k2BT33RRf41XuZXXNoI/UsyU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=t1Lffbdo; arc=none smtp.client-ip=95.215.58.172
+	 Content-Type:Content-Disposition:In-Reply-To; b=lMTlkcY7gffYR4y2IBrwN5UkvrJhIOob1CswlVdHKtdqJ3gazLrE3W0OPm1XwoYnCsl2iSg2HEhUVvG5X3/TxbcOXVn0MoAtVZ7QLjf1mEx992rIIetbJflA7X6sMX12CqLq4rTotHo6O71Vm+SA8+DUSC8iNMPz7yVmaj4yD2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=cEDXn7WY; arc=none smtp.client-ip=91.218.175.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="t1Lffbdo"
-Date: Thu, 14 Aug 2025 14:44:12 -0700
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="cEDXn7WY"
+Date: Thu, 14 Aug 2025 14:51:05 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1755207863;
+	t=1755208273;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=19ByPHkfjF5Lwww0ZNwzVRVwJ3xsKPEqJn5AnAvA/3U=;
-	b=t1Lffbdo8V4eR10ikc1QCrxW10AzvrgCdPZA5YBsQ6+OleiyAIQA4YUzCr+08bP8URWDg8
-	I3WGm7qBbMemh6lNZgLU3P0L13FkBioWFv+J8o7EcD+mc9jCxyJL+fK14ZPQz1+kwyZCWI
-	y3C6iL3Q61oALehShym+eszZC21gE8E=
+	bh=NFRVQUUs9c39FN0bau/fEfOu6gLqtTA31f+AF65Xi8g=;
+	b=cEDXn7WYmz3adjgl8K9+j7MUS3BpjExjj4/2Wvq5fB8rljL6y2EotLQy7s1S6y81j6XHSU
+	vxGNLQ1U7dZC3PADsPBXTtzOdmoRlQuswEVOf8phOkOjl/YvN/OXmWCO0o6hhF9kk2Ie4f
+	ANYAM7/5GxYduANX2ISMKvkT9lVZ1Vg=
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 From: Shakeel Butt <shakeel.butt@linux.dev>
 To: Kuniyuki Iwashima <kuniyu@google.com>
@@ -41,116 +40,38 @@ Cc: "David S. Miller" <davem@davemloft.net>,
 	Geliang Tang <geliang@kernel.org>, Muchun Song <muchun.song@linux.dev>, 
 	Mina Almasry <almasrymina@google.com>, Kuniyuki Iwashima <kuni1840@gmail.com>, netdev@vger.kernel.org, 
 	mptcp@lists.linux.dev, cgroups@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH v4 net-next 01/10] mptcp: Fix up subflow's memcg when
- CONFIG_SOCK_CGROUP_DATA=n.
-Message-ID: <cs5uvm72eyzqljcxtmienkmmth54pqqjmlyya5vf3twncbp7u5@jfnktl43r5se>
+Subject: Re: [PATCH v4 net-next 06/10] net-memcg: Introduce
+ mem_cgroup_from_sk().
+Message-ID: <yaxx7v7ftzhaivt36qy7ov32u2su5anv6eoqk6f4dspgf57ttu@6ab2n4cp5hbi>
 References: <20250814200912.1040628-1-kuniyu@google.com>
- <20250814200912.1040628-2-kuniyu@google.com>
+ <20250814200912.1040628-7-kuniyu@google.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250814200912.1040628-2-kuniyu@google.com>
+In-Reply-To: <20250814200912.1040628-7-kuniyu@google.com>
 X-Migadu-Flow: FLOW_OUT
 
-On Thu, Aug 14, 2025 at 08:08:33PM +0000, Kuniyuki Iwashima wrote:
-> When sk_alloc() allocates a socket, mem_cgroup_sk_alloc() sets
-> sk->sk_memcg based on the current task.
+On Thu, Aug 14, 2025 at 08:08:38PM +0000, Kuniyuki Iwashima wrote:
+> We will store a flag in the lowest bit of sk->sk_memcg.
 > 
-> MPTCP subflow socket creation is triggered from userspace or
-> an in-kernel worker.
+> Then, directly dereferencing sk->sk_memcg will be illegal, and we
+> do not want to allow touching the raw sk->sk_memcg in many places.
 > 
-> In the latter case, sk->sk_memcg is not what we want.  So, we fix
-> it up from the parent socket's sk->sk_memcg in mptcp_attach_cgroup().
+> Let's introduce mem_cgroup_from_sk().
 > 
-> Although the code is placed under #ifdef CONFIG_MEMCG, it is buried
-> under #ifdef CONFIG_SOCK_CGROUP_DATA.
+> Other places accessing the raw sk->sk_memcg will be converted later.
 > 
-> The two configs are orthogonal.  If CONFIG_MEMCG is enabled without
-> CONFIG_SOCK_CGROUP_DATA, the subflow's memory usage is not charged
-> correctly.
+> Note that we cannot define the helper as an inline function in
+> memcontrol.h as we cannot access any fields of struct sock there
+> due to circular dependency, so it is placed in sock.h.
 > 
-> Let's wrap sock_create_kern() for subflow with set_active_memcg()
-> using the parent sk->sk_memcg.
-> 
-> Fixes: 3764b0c5651e3 ("mptcp: attach subflow socket to parent cgroup")
-> Suggested-by: Michal Koutný <mkoutny@suse.com>
 > Signed-off-by: Kuniyuki Iwashima <kuniyu@google.com>
-> ---
->  mm/memcontrol.c     |  5 ++++-
->  net/mptcp/subflow.c | 11 +++--------
->  2 files changed, 7 insertions(+), 9 deletions(-)
-> 
-> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> index 8dd7fbed5a94..450862e7fd7a 100644
-> --- a/mm/memcontrol.c
-> +++ b/mm/memcontrol.c
-> @@ -5006,8 +5006,11 @@ void mem_cgroup_sk_alloc(struct sock *sk)
->  	if (!in_task())
->  		return;
->  
-> +	memcg = current->active_memcg;
-> +
+> Reviewed-by: Eric Dumazet <edumazet@google.com>
+> Acked-by: Roman Gushchin <roman.gushchin@linux.dev>
 
-Use active_memcg() instead of current->active_memcg and do before the
-!in_task() check.
-
-Basically something like following:
-
-	memcg = active_memcg();
-	/* Do not associate the sock with unrelated interrupted task's memcg. */
-	if (!in_task() && !memcg)
-		return;
-
->  	rcu_read_lock();
-> -	memcg = mem_cgroup_from_task(current);
-> +	if (likely(!memcg))
-> +		memcg = mem_cgroup_from_task(current);
->  	if (mem_cgroup_is_root(memcg))
->  		goto out;
->  	if (!cgroup_subsys_on_dfl(memory_cgrp_subsys) && !memcg1_tcpmem_active(memcg))
-> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> index 3f1b62a9fe88..a4809054ea6c 100644
-> --- a/net/mptcp/subflow.c
-> +++ b/net/mptcp/subflow.c
-> @@ -1717,14 +1717,6 @@ static void mptcp_attach_cgroup(struct sock *parent, struct sock *child)
->  	/* only the additional subflows created by kworkers have to be modified */
->  	if (cgroup_id(sock_cgroup_ptr(parent_skcd)) !=
->  	    cgroup_id(sock_cgroup_ptr(child_skcd))) {
-> -#ifdef CONFIG_MEMCG
-> -		struct mem_cgroup *memcg = parent->sk_memcg;
-> -
-> -		mem_cgroup_sk_free(child);
-> -		if (memcg && css_tryget(&memcg->css))
-> -			child->sk_memcg = memcg;
-> -#endif /* CONFIG_MEMCG */
-> -
->  		cgroup_sk_free(child_skcd);
->  		*child_skcd = *parent_skcd;
->  		cgroup_sk_clone(child_skcd);
-> @@ -1757,6 +1749,7 @@ int mptcp_subflow_create_socket(struct sock *sk, unsigned short family,
->  {
->  	struct mptcp_subflow_context *subflow;
->  	struct net *net = sock_net(sk);
-> +	struct mem_cgroup *memcg;
->  	struct socket *sf;
->  	int err;
->  
-> @@ -1766,7 +1759,9 @@ int mptcp_subflow_create_socket(struct sock *sk, unsigned short family,
->  	if (unlikely(!sk->sk_socket))
->  		return -EINVAL;
->  
-> +	memcg = set_active_memcg(sk->sk_memcg);
->  	err = sock_create_kern(net, family, SOCK_STREAM, IPPROTO_TCP, &sf);
-> +	set_active_memcg(memcg);
->  	if (err)
->  		return err;
->  
-> -- 
-> 2.51.0.rc1.163.g2494970778-goog
-> 
+Acked-by: Shakeel Butt <shakeel.butt@linux.dev>
