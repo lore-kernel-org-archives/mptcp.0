@@ -1,119 +1,169 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97CBB156CA
-	for <mptcp@lists.linux.dev>; Thu, 14 Aug 2025 03:16:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81A692FF660
+	for <mptcp@lists.linux.dev>; Thu, 14 Aug 2025 03:32:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755141418; cv=none; b=KEnixxCWlbAakeAIGEAUYoRTyNFAKgLSQlCkB31d5GHJTVoRfoAOVZd0OPqwgH5kH2/nNT0AX6goBpaX+SOofsVrPcQufX3B1S9MYbfJcjACqwI2BuMpInpSWueVoat+97P9IYS07xmQLxU9Lo27Q1JxIM+aTGQEQi9GTT3eHIg=
+	t=1755142331; cv=none; b=PjqOABymDzakpduRacovK3oloZCMMXCL99d6wvJ+Wua+8wbUcWqE7j3pUqgAiL8IWx3C/N+h8+x1Q5qragiLBu33c7F5StyWe0CdcwtMejLRpQpIvZ5T97HyRwmTymXFC0WUPp7j01rJW8CvdYtRrYuUfSOtT3k/85mEI7DiWMo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755141418; c=relaxed/simple;
-	bh=/HmptWy8FaUiEHPS+t2fPyVIbtJ/nhrAIsESOpsf0vw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZGvhwHE1dfys6tdrYgC1Rxk4QNitoivEGrvUpSeDGnn2qUbOiehlIuEQpWJTlfOacwu2oY2wj3+wOl2rNPCOquFeSif+lR0K3dY/4spMTv0B4adq56JX+5OBlRy84oG879mHkXpGiHTYKYwf8gFMPnVK6tAOoI7ACaRkn+/uDzE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 1de494e678bd11f0b29709d653e92f7d-20250814
-X-CTIC-Tags:
-	HR_CC_AS_FROM, HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CTE_8B
-	HR_CTT_MISS, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME
-	HR_SJ_DIGIT_LEN, HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM
-	HR_SJ_PHRASE, HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT
-	HR_TO_NO_NAME, IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED, SA_TRUSTED
-	SA_EXISTED, SN_EXISTED, SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS
-	CIE_BAD, CIE_GOOD, CIE_GOOD_SPF, GTI_FG_BS, GTI_RG_INFO
-	GTI_C_BU, AMN_T1, AMN_GOOD, AMN_C_TI, AMN_C_BU
-	ABX_MISS_RDNS
-X-CID-O-RULE: Release_Ham
-X-CID-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.45,REQID:4f45a389-24b9-4164-b9c8-92079c9a9ee9,IP:10,
-	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
-	ON:release,TS:-5
-X-CID-INFO: VERSION:1.1.45,REQID:4f45a389-24b9-4164-b9c8-92079c9a9ee9,IP:10,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:-5
-X-CID-META: VersionHash:6493067,CLOUDID:4aab64a0399c95390b914f38b31ef0a6,BulkI
-	D:2508141116512XGJVZZO,BulkQuantity:0,Recheck:0,SF:17|19|24|44|66|78|81|82
-	|102,TC:nil,Content:0|50,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil,QS:ni
-	l,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:
-	0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
-X-UUID: 1de494e678bd11f0b29709d653e92f7d-20250814
-X-User: yangang@kylinos.cn
-Received: from yangang-thinkpad-t14-gen-1.. [(223.70.159.239)] by mailgw.kylinos.cn
-	(envelope-from <yangang@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 2141648522; Thu, 14 Aug 2025 11:16:49 +0800
-From: Gang Yan <yangang@kylinos.cn>
-To: mptcp@lists.linux.dev
-Cc: Gang Yan <yangang@kylinos.cn>
-Subject: [PATCH mptcp-next v2 2/2] selftests: net: mptcp: add fallback checks in chk_join_nr
-Date: Thu, 14 Aug 2025 11:16:24 +0800
-Message-ID: <9140453b80a6c0f31118b733785b8d498c17836b.1755139312.git.yangang@kylinos.cn>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.1755139312.git.yangang@kylinos.cn>
-References: <cover.1755139312.git.yangang@kylinos.cn>
+	s=arc-20240116; t=1755142331; c=relaxed/simple;
+	bh=EPG5wg+jHgnjds7AcGH4Fx9JNWMgrlmp7Au8zw6rq2E=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VIDoCXhYEMczYmeaxtScCtq0vFakheYehhAf7bWXnSRqgT7G5FPrY/a+NqqWC4NKeNhUs4UUILV8Fmj6nOGncwiR1Ir29pG5miTixyBFkmgQdr9Eu7V/+cAhpRyUr3yfJlFIaIsq2+3hVy8J5WDwsayrfG9SUEWB1yzI79aMqDo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=openai.com; spf=pass smtp.mailfrom=openai.com; dkim=pass (1024-bit key) header.d=openai.com header.i=@openai.com header.b=Sfk4sZZm; arc=none smtp.client-ip=209.85.167.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=openai.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=openai.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=openai.com header.i=@openai.com header.b="Sfk4sZZm"
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-55ce526ac04so455937e87.2
+        for <mptcp@lists.linux.dev>; Wed, 13 Aug 2025 20:32:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=openai.com; s=google; t=1755142328; x=1755747128; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iNARoZDoO9DuMTTSWl+sAj3EwpZbT9Zrtbft7WDRyiQ=;
+        b=Sfk4sZZmaeosdqIPqlqmE8DskhdFPBIrbEQA2x+aWeRKp47K/1gZXcC20zwVqzytsS
+         Vs2wds3DPeSWvzSyTwmvTvwUxB7TADKAP5mkUXzxAfyxcwepFRuYdHWKVjo6IvHuGuCx
+         aPLibjgWjxFBXua0Z3C8xT8a6YIcj4EY0Rxo0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1755142328; x=1755747128;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=iNARoZDoO9DuMTTSWl+sAj3EwpZbT9Zrtbft7WDRyiQ=;
+        b=wxlsmrT54TIEDIliqDZU/sOp4El6pXDYTL0VAdoVX6pCn+Rd/v4Xwvm5uLykt5wBwT
+         tKBzYxPOhWPtBaudCszSZWEJ1BPMM52N55XTWNSgnI+nT0lGtUzUn5OAi3nm1C9LTpi+
+         3NOtXOlog5V/dg851ibJdKeLRQ2/8+v9wNK468Z5VD4LiMiLqZH2GE4H12CrRv8qC5GJ
+         49KX9vgFNRkRVqJVTbH80ehaxYgFAyfTunwxKiFYlSBL12+UVNZSGnS+UhLXcEGl+fOC
+         GKgNXYIOpgYyMmK47UKBx8V1MqDPbg+bTIPGSVPk7wzcHH3lVPVq+REjg/6e3ESX50py
+         kOwg==
+X-Gm-Message-State: AOJu0Ywb+H2zsnKfZxyMcIopWDpiaKrByxaf0iOIBSr4qKvFZyB1/ojN
+	J07ZL9Bz4ew/VCKRRu94ymNpbF5qoL/ZQRJvLIy1UQqfLRRArXVF1re2WI7KCb8r7ryRHHYxTL3
+	5znA/lvjP7Lxv23gt/tdaTtbO4EpynpGbnrK/3Q/jgw==
+X-Gm-Gg: ASbGncu9A4lA02LSFO++Os0EpvCi+OfU0AJnX2xMR2ZAe0TPZ20Wb8EUY/5zRuFS2VN
+	6uXF15gjzPkx6pWOglkGwGcaFcHf6Uh+JoZ3B7ZWJxyHRzdoxj6jeYDGrZXECu6qUyz887rwiT/
+	ek+IWt38Yt/Nyc1rfOws6Srj5RVf4QIuAZqv4x744cfHgwILdbdXxH98Znn2V31RviHGnTvAreW
+	Mz3jA==
+X-Google-Smtp-Source: AGHT+IFEjhDzLdhWHT+zceRMmBx7YQzdRgU6EVKs/yIo1Web8OQC5eFWU78w2bg/uviOv8XACzLOixoCsI9ZBYt+6dE=
+X-Received: by 2002:a05:6512:6cf:b0:553:d910:9344 with SMTP id
+ 2adb3069b0e04-55ce6339ec2mr296125e87.45.1755142327593; Wed, 13 Aug 2025
+ 20:32:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250807-b4-mptcp_perf-v1-1-e89cc14179cc@openai.com> <2f037b38-c9f4-44a0-857c-0f65cbd50688@kernel.org>
+In-Reply-To: <2f037b38-c9f4-44a0-857c-0f65cbd50688@kernel.org>
+From: Christoph Paasch <cpaasch@openai.com>
+Date: Wed, 13 Aug 2025 20:31:56 -0700
+X-Gm-Features: Ac12FXyos46rcqORlP25gAvlroFwAr6ogareuSG9QL-7GNfqSpYP-XnDhUYtjIo
+Message-ID: <CADg4-L9YE8guQWz1xDovoyyHrb723WaurRoeWJZ5P+J=OVrRDg@mail.gmail.com>
+Subject: Re: [PATCH mptcp-next] mptcp: record subflows in RPS table
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: MPTCP Upstream <mptcp@lists.linux.dev>, Geliang Tang <geliang@kernel.org>, 
+	Mat Martineau <martineau@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-This patch can track these counters in each namespace and check if they
-don't have unexpected values in tests.
+On Wed, Aug 13, 2025 at 7:54=E2=80=AFAM Matthieu Baerts <matttbe@kernel.org=
+> wrote:
+>
+> Hi Christoph,
+>
+> On 07/08/2025 20:14, Christoph Paasch via B4 Relay wrote:
+> > From: Christoph Paasch <cpaasch@openai.com>
+> >
+> > Accelerated Receive Flow Steering (aRFS) relies on sockets recording
+> > their RX flow hash into the rps_sock_flow_table so that incoming packet=
+s
+> > are steered to the CPU where the application runs.
+> >
+> > With MPTCP, the application interacts with the parent MPTCP socket whil=
+e
+> > data is carried over per-subflow TCP sockets. Without recording these
+> > subflows, aRFS cannot steer interrupts and RX processing for the flows
+> > to the desired CPU.
+> >
+> > Record all subflows in the RPS table by calling sock_rps_record_flow()
+> > for each subflow at the start of mptcp_sendmsg() and mptcp_recvmsg().
+> >
+> > It does not by itself improve throughput, but ensures that IRQ and RX
+> > processing are directed to the right CPU, which is a
+> > prerequisite for effective aRFS.
+>
+> Thank you for looking at that!
+>
+> > Signed-off-by: Christoph Paasch <cpaasch@openai.com>
+> > ---
+> >  net/mptcp/protocol.c | 16 ++++++++++++++++
+> >  1 file changed, 16 insertions(+)
+> >
+> > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> > index 4b510e04724f5c8be08a00a1cc03093bcd031905..86f1fc5be47bd5f6dc8bf40=
+a488de32f253c1beb 100644
+> > --- a/net/mptcp/protocol.c
+> > +++ b/net/mptcp/protocol.c
+> > @@ -12,6 +12,7 @@
+> >  #include <linux/sched/signal.h>
+> >  #include <linux/atomic.h>
+> >  #include <net/aligned_data.h>
+> > +#include <net/rps.h>
+> >  #include <net/sock.h>
+> >  #include <net/inet_common.h>
+> >  #include <net/inet_hashtables.h>
+> > @@ -1740,6 +1741,17 @@ static u32 mptcp_send_limit(const struct sock *s=
+k)
+> >       return limit - not_sent;
+> >  }
+> >
+> > +static void mptcp_rps_record_subflows(const struct mptcp_sock *msk)
+> > +{
+> > +     struct mptcp_subflow_context *subflow;
+> > +
+> > +     mptcp_for_each_subflow(msk, subflow) {
+> > +             struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
+> > +
+> > +             sock_rps_record_flow(ssk);
+>
+> Should we eventually open code this RPS function and directly call
+> sock_rps_record_flow_hash()? If RPS is not needed, no need to go through
+> the subflow list. So we could add: #ifdef CONFIG_RPS + &rfs_needed
+> before the for_each, then check the state for each subflow, no?
+>
+> Or maybe such optimisation is not worth it?
 
-Signed-off-by: Gang Yan <yangang@kylinos.cn>
----
- tools/testing/selftests/net/mptcp/mptcp_join.sh | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+IMO it's not worth it. Because it would also mean that we pull in more
+of non-MPTCP things over to MPTCP files.
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 2c1f0704bc17..ac9e9d4fed59 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -74,6 +74,8 @@ unset join_create_err
- unset join_bind_err
- unset join_connect_err
- 
-+unset ns1_fb
-+unset ns2_fb
- unset infinite_map_tx_fb
- unset dss_corruption_fb
- unset simult_conn_fb
-@@ -1582,6 +1584,20 @@ chk_join_nr()
- 	join_syn_tx="${join_syn_tx:-${syn_nr}}" \
- 		chk_join_tx_nr
- 
-+	if [[ -n "$ns1_fb" ]]; then
-+		eval "$ns1_fb" \
-+			chk_fallback_nr ${ns1}
-+	else
-+		chk_fallback_nr ${ns1}
-+	fi
-+
-+	if [[ -n "$ns2_fb" ]]; then
-+		eval "$ns2_fb" \
-+			chk_fallback_nr ${ns2}
-+	else
-+		chk_fallback_nr ${ns2}
-+	fi
-+
- 	if $validate_checksum; then
- 		chk_csum_nr $csum_ns1 $csum_ns2
- 		chk_fail_nr $fail_nr $fail_nr
-@@ -3435,6 +3451,7 @@ fail_tests()
- 		join_csum_ns1=+1 join_csum_ns2=+0 \
- 			join_fail_nr=1 join_rst_nr=0 join_infi_nr=1 \
- 			join_corrupted_pkts="$(pedit_action_pkts)" \
-+			ns1_fb="dss_fb=1" ns2_fb="infinite_map_tx_fb=1" \
- 			chk_join_nr 0 0 0
- 		chk_fail_nr 1 -1 invert
- 	fi
--- 
-2.43.0
+> While at it, I see that sock_rps_record_flow() is called in
+> __inet_accept(), inet(6)_sendmsg and inet(6)_recvmsg, but with the msk.
+> I guess that's OK, right?
 
+AFAICS, that should be alright. sk_rxhash should not be set on an msk.
+Even on the passive opener side, we clone msk from the ssk, but at
+that point sk_rxhash is not set yet. (I may be wrong of course, I'm
+still not super familiar with the source-code...)
+
+> Also, is sock_rps_record_flow() called when a subflow is "accept()ed",
+> or is there something else to do there for this subflow to copy TCP's
+> behaviour?
+
+For new subflows, I don't think we can easily do that. Because
+sock_rps_record_flow() records the CPU on which it is running. From
+what I see, when new subflows get accepted, that is not happening in
+the application's context necessarily. So, we have to wait for a
+recvmsg/sendmsg.
+
+
+Christoph
+
+>
+> Cheers,
+> Matt
+> --
+> Sponsored by the NGI0 Core fund.
+>
