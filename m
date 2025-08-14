@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E46AD22A4FE
-	for <mptcp@lists.linux.dev>; Thu, 14 Aug 2025 10:36:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31CF7301032
+	for <mptcp@lists.linux.dev>; Thu, 14 Aug 2025 10:56:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755167808; cv=none; b=ZqrEEg9rhme9c8aD3QeBwtLezbMEuXfMpZD8xC8P8KHXsRSSCkB4A4V7ayXQ4yuh1JP1aKKCnQ3RZmeOSkTvbwQmUpJlpkYuNjIhlMLdaifiyYYQ2HckBhl2ueD6SksfTIJ5qr0zOtqjv8BR7rUG60xEFB/jLNFYDYSta+l7qIs=
+	t=1755168987; cv=none; b=KiYtcKHjLU0Uf/wTB0TNmdXEf6xsYrYrINQy0m2OmQ5u5+pbsZecFlOQxTHfisupRu8KDYFYm5tRtTmKzqXLXLmdapdnX1pIGfiqQ6riEwKG25QR3ogqw7yhOMEFtYFJCMQTz1MtHXBBur3uzS6gb5jZvzA5GHv9/s/C6FnNYGQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755167808; c=relaxed/simple;
-	bh=o6deTlii0notVfaEBxhTC4dbEw1ozM0fVKhkR9PAXMk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
-	 In-Reply-To:Content-Type; b=Q8B4PC4dOa5Li7VgpPI9OshItxGUnlwGYE36mU1QvFQHoVLdATN3iRI7nv+YBzku64xCBBZPwZvTwEsOThivfZ1nvSE6u81/EIhsG/8QnqscR+TuFjovJju0Juxz6nYSuqvVFPJOCaWvrXXMOtIvUOU0uE98g4SWBpNxS+jkQWs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t1t0Mv6N; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1755168987; c=relaxed/simple;
+	bh=klxKvQnml2hMVUfKHtfdQ0ENxc8yu4fqw77xehXuPKg=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=JOp87V12bseYTC6OZtY+OFRtXDX92wlxaNueNltaRdJPMBusO/DWuVkc4ZziYee64y4C2IIAtuBLhBUcId7XViPxZiVZAQvaCyji0mZfmm8BhaXBkJxk0C5CVSLKBL5OH/alAOZsiIa3yUmxBL1w5QA5fnewOW6iuaeeCYoV1Mw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O3DCQ3Dq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t1t0Mv6N"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5352BC4CEED;
-	Thu, 14 Aug 2025 10:36:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O3DCQ3Dq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AAFB5C4CEEF;
+	Thu, 14 Aug 2025 10:56:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755167806;
-	bh=o6deTlii0notVfaEBxhTC4dbEw1ozM0fVKhkR9PAXMk=;
-	h=Date:Subject:To:References:From:Cc:In-Reply-To:From;
-	b=t1t0Mv6NH9VVvzoWXHwhjh90ER/FcOAkVY6F+rPNevlwY/yH2+HqLFsHHq8nz6q4+
-	 jnCmwRlvH5zNQ+eZ0LEla455TrqgNb3u55y/nFoP6ZPaonITHVDb6SBR8Xsqr0QEMp
-	 uIriPpwkBNErzaTKDsCvqMyw3Rz+txoHMi/3jUmaudMQeEH7qlRVcoIjBc5OUmaB8k
-	 AblJSgklXq0pxbZFBkrc52NA/mhcVsKbmLx37kXl5TWdbsUdfTQDnu2yvHrstZAtd/
-	 p4gTkUKMisoo5EoZOCKKIt1Yg1tobNjVRMSgsrSGEq4gjIhHgYXF29adiTIk7c1wn2
-	 FBJDVgST+s+Eg==
-Message-ID: <cc200e35-8509-43d2-b3ff-49c959dbc557@kernel.org>
-Date: Thu, 14 Aug 2025 12:36:42 +0200
+	s=k20201202; t=1755168986;
+	bh=klxKvQnml2hMVUfKHtfdQ0ENxc8yu4fqw77xehXuPKg=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=O3DCQ3Dqm60Fz5/aHfBAa92G5CtlpuW8EXEzS4DnGU4pSmWKnoRe02C5NHtFxz9kI
+	 saXWSxUrSFq/UQvyPhrj7+1BJMfj4BWlhyrRTQ40YSLZYE8Rg9An6QYI+kKrHtV8ob
+	 kRb8N89Kr2Xi91eniSOIDGSuIB9DkCFo6tmvzXqrgluF54ybzQtJzwQOLC4LHWPJke
+	 jcr1g9ElftRXNSrlp6OkekUM1Y7GeEdATFVtnAiN9xpQ7aXA3M2HhEhXcrS9QVsqv4
+	 N61s/RtVQXA91E5JRRoLzWV+1Z56Q+wqllMrOugE0QDHHIeY9ChptHiMYtlkT3cQ0s
+	 UzmQrdkZoYgew==
+Message-ID: <9bf0b83f-7b11-439f-a50a-07ecb157a2ae@kernel.org>
+Date: Thu, 14 Aug 2025 12:56:23 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,9 +38,12 @@ User-Agent: Mozilla Thunderbird Beta
 Subject: Re: [PATCH mptcp-net] mptcp: drop skb if MPTCP skb extension
  allocation fails
 Content-Language: en-GB, fr-BE
-To: cpaasch@openai.com
-References: <20250807-mptcp_fixes-v1-1-adfd79a88b5e@openai.com>
 From: Matthieu Baerts <matttbe@kernel.org>
+To: cpaasch@openai.com
+Cc: MPTCP Upstream <mptcp@lists.linux.dev>, Geliang Tang
+ <geliang@kernel.org>, Mat Martineau <martineau@kernel.org>
+References: <20250807-mptcp_fixes-v1-1-adfd79a88b5e@openai.com>
+ <cc200e35-8509-43d2-b3ff-49c959dbc557@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -85,49 +88,59 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-Cc: MPTCP Upstream <mptcp@lists.linux.dev>, Geliang Tang
- <geliang@kernel.org>, Mat Martineau <martineau@kernel.org>
-In-Reply-To: <20250807-mptcp_fixes-v1-1-adfd79a88b5e@openai.com>
+In-Reply-To: <cc200e35-8509-43d2-b3ff-49c959dbc557@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Christoph,
-
-On 07/08/2025 20:00, Christoph Paasch via B4 Relay wrote:
-> From: Christoph Paasch <cpaasch@openai.com>
+On 14/08/2025 12:36, Matthieu Baerts wrote:
+> Hi Christoph,
 > 
-> When skb_ext_add(skb, SKB_EXT_MPTCP) fails in mptcp_incoming_options(),
-> we used to return true, letting the segment proceed through the TCP
-> receive path without a DSS mapping. Such segments can leave inconsistent
-> mapping state and trigger a mid-stream fallback to TCP, which in testing
-> collapsed (by artificially forcing failures in skb_ext_add) throughput
-> to zero.
+> On 07/08/2025 20:00, Christoph Paasch via B4 Relay wrote:
+>> From: Christoph Paasch <cpaasch@openai.com>
+>>
+>> When skb_ext_add(skb, SKB_EXT_MPTCP) fails in mptcp_incoming_options(),
+>> we used to return true, letting the segment proceed through the TCP
+>> receive path without a DSS mapping. Such segments can leave inconsistent
+>> mapping state and trigger a mid-stream fallback to TCP, which in testing
+>> collapsed (by artificially forcing failures in skb_ext_add) throughput
+>> to zero.
+>>
+>> Return false instead so the TCP input path drops the skb (see
+>> tcp_data_queue() and step-7 processing). This is the safer choice
+>> under memory pressure: it preserves MPTCP correctness and provides
+>> backpressure to the sender.
+>>
+>> Control packets remain unaffected: ACK updates and DATA_FIN handling
+>> happen before attempting the extension allocation, and tcp_reset()
+>> continues to ignore the return value.
+>>
+>> With this change, MPTCP continues to work at high throughput if we
+>> artificially inject failures into skb_ext_add.
 > 
-> Return false instead so the TCP input path drops the skb (see
-> tcp_data_queue() and step-7 processing). This is the safer choice
-> under memory pressure: it preserves MPTCP correctness and provides
-> backpressure to the sender.
+> Good catch!
 > 
-> Control packets remain unaffected: ACK updates and DATA_FIN handling
-> happen before attempting the extension allocation, and tcp_reset()
-> continues to ignore the return value.
+> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 > 
-> With this change, MPTCP continues to work at high throughput if we
-> artificially inject failures into skb_ext_add.
+> BTW, how did you detect this error? Just in case it would be interesting
+> to have our CI running additional automated tests if that's possible and
+> how you got the error.
 
-Good catch!
+(we can discuss ↑ later on, this shouldn't block the application of the
+patches :) )
 
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Applied in our tree (fixes for -net):
 
-BTW, how did you detect this error? Just in case it would be interesting
-to have our CI running additional automated tests if that's possible and
-how you got the error.
+New patches for t/upstream-net and t/upstream:
+- 9c1c7316b15d: mptcp: drop skb if MPTCP skb extension allocation fails
+- Results: 3240257a2f06..d412bf5ae17a (export-net)
+- Results: c0563ee9fbbf..64863e4ad387 (export)
 
-> Fixes: 6787b7e350d3 ("mptcp: avoid processing packet if a subflow reset")
+Tests are now in progress:
 
-I guess we could even point to 648ef4b88673 ("mptcp: Implement MPTCP
-receive path"), but for the backports, that will be the same, so fine
-like that.
+- export-net:
+https://github.com/multipath-tcp/mptcp_net-next/commit/16f23c2d3a821edca65217999c16db17c0ea1fce/checks
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/a5222ce1146fbd007b59cfb0d36974816c7d1b86/checks
 
 Cheers,
 Matt
