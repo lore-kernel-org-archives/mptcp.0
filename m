@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31CF7301032
-	for <mptcp@lists.linux.dev>; Thu, 14 Aug 2025 10:56:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B01928EA72
+	for <mptcp@lists.linux.dev>; Thu, 14 Aug 2025 11:20:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755168987; cv=none; b=KiYtcKHjLU0Uf/wTB0TNmdXEf6xsYrYrINQy0m2OmQ5u5+pbsZecFlOQxTHfisupRu8KDYFYm5tRtTmKzqXLXLmdapdnX1pIGfiqQ6riEwKG25QR3ogqw7yhOMEFtYFJCMQTz1MtHXBBur3uzS6gb5jZvzA5GHv9/s/C6FnNYGQ=
+	t=1755170420; cv=none; b=VhNvMeOFyupJTCxBnel0IuWuaHLME5faRQLYIFuM9oLV2B00DDjyfjdszzotGi5jKYvCUhdiyQG3wVMOhJtmja4VcG6YOTsGtrjX1AHiLfIOlS1Fps4LdUzOFiDceZf6patiiSuyVMyS/6gWz2xw+PiaiPexmCMZeXJN7ghj4Do=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755168987; c=relaxed/simple;
-	bh=klxKvQnml2hMVUfKHtfdQ0ENxc8yu4fqw77xehXuPKg=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=JOp87V12bseYTC6OZtY+OFRtXDX92wlxaNueNltaRdJPMBusO/DWuVkc4ZziYee64y4C2IIAtuBLhBUcId7XViPxZiVZAQvaCyji0mZfmm8BhaXBkJxk0C5CVSLKBL5OH/alAOZsiIa3yUmxBL1w5QA5fnewOW6iuaeeCYoV1Mw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O3DCQ3Dq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1755170420; c=relaxed/simple;
+	bh=R43SBnHYnqIuSmmxWGGScX1mW+VcB1zRwPwVwHqMXwM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VFVit4bUUq3LUKcKfHOYxIvpc8M+ze43XC4La7SDo/ExFZi7c7Yj5yPkMOAich/xHt/urVZp3FVOHeY4EG28kAvruWiFJ9/c9y9Q4f6ZBTF87Y8QOXjW4pwLXuijYcGbLSdX5zJIIiRrDhpewFSjA6qJaYaCCnLtVc1dLHg/euk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GY2WFQhG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O3DCQ3Dq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AAFB5C4CEEF;
-	Thu, 14 Aug 2025 10:56:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GY2WFQhG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2EEEC4CEEF;
+	Thu, 14 Aug 2025 11:20:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755168986;
-	bh=klxKvQnml2hMVUfKHtfdQ0ENxc8yu4fqw77xehXuPKg=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=O3DCQ3Dqm60Fz5/aHfBAa92G5CtlpuW8EXEzS4DnGU4pSmWKnoRe02C5NHtFxz9kI
-	 saXWSxUrSFq/UQvyPhrj7+1BJMfj4BWlhyrRTQ40YSLZYE8Rg9An6QYI+kKrHtV8ob
-	 kRb8N89Kr2Xi91eniSOIDGSuIB9DkCFo6tmvzXqrgluF54ybzQtJzwQOLC4LHWPJke
-	 jcr1g9ElftRXNSrlp6OkekUM1Y7GeEdATFVtnAiN9xpQ7aXA3M2HhEhXcrS9QVsqv4
-	 N61s/RtVQXA91E5JRRoLzWV+1Z56Q+wqllMrOugE0QDHHIeY9ChptHiMYtlkT3cQ0s
-	 UzmQrdkZoYgew==
-Message-ID: <9bf0b83f-7b11-439f-a50a-07ecb157a2ae@kernel.org>
-Date: Thu, 14 Aug 2025 12:56:23 +0200
+	s=k20201202; t=1755170416;
+	bh=R43SBnHYnqIuSmmxWGGScX1mW+VcB1zRwPwVwHqMXwM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=GY2WFQhG1ZLls7FgQzZwZsqwajhYqfvBv/9q0qGJ2rYd5wf+9cw3KtjTcZJb66ri7
+	 unQXA84TSHXuXJyOMifDmCRSmshrsId7xxCREJCoutedgovhkdYowSijT5LNnhFpNv
+	 dek5YJBQPWpTH9hipmU+sfEH1MN2V6Q/nEFhd+kOdLB8nVMuTzGAjtLESfdcVxvXHT
+	 i4dQHDUpc4lG+zSK+8TDhXpyPl+MsXrfDvGddJAYt7aKVZyzhkGpgLLUKHKSjKgAwW
+	 1027anmXximxrKiY242oonPSQCOR5bxco1AfJ7hUFT4gLCEL3OVCPV6RjxBRBY2hwz
+	 Al631BMf5d3zQ==
+Message-ID: <4d933d54-fff1-4a9d-9601-753b8cddf934@kernel.org>
+Date: Thu, 14 Aug 2025 13:20:13 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,15 +35,15 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net] mptcp: drop skb if MPTCP skb extension
- allocation fails
+Subject: Re: [PATCH mptcp-next] mptcp: record subflows in RPS table
 Content-Language: en-GB, fr-BE
-From: Matthieu Baerts <matttbe@kernel.org>
-To: cpaasch@openai.com
+To: Christoph Paasch <cpaasch@openai.com>
 Cc: MPTCP Upstream <mptcp@lists.linux.dev>, Geliang Tang
  <geliang@kernel.org>, Mat Martineau <martineau@kernel.org>
-References: <20250807-mptcp_fixes-v1-1-adfd79a88b5e@openai.com>
- <cc200e35-8509-43d2-b3ff-49c959dbc557@kernel.org>
+References: <20250807-b4-mptcp_perf-v1-1-e89cc14179cc@openai.com>
+ <2f037b38-c9f4-44a0-857c-0f65cbd50688@kernel.org>
+ <CADg4-L9YE8guQWz1xDovoyyHrb723WaurRoeWJZ5P+J=OVrRDg@mail.gmail.com>
+From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -88,59 +88,116 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <cc200e35-8509-43d2-b3ff-49c959dbc557@kernel.org>
+In-Reply-To: <CADg4-L9YE8guQWz1xDovoyyHrb723WaurRoeWJZ5P+J=OVrRDg@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On 14/08/2025 12:36, Matthieu Baerts wrote:
-> Hi Christoph,
-> 
-> On 07/08/2025 20:00, Christoph Paasch via B4 Relay wrote:
->> From: Christoph Paasch <cpaasch@openai.com>
+Hi Christoph,
+
+On 14/08/2025 05:31, Christoph Paasch wrote:
+> On Wed, Aug 13, 2025 at 7:54 AM Matthieu Baerts <matttbe@kernel.org> wrote:
 >>
->> When skb_ext_add(skb, SKB_EXT_MPTCP) fails in mptcp_incoming_options(),
->> we used to return true, letting the segment proceed through the TCP
->> receive path without a DSS mapping. Such segments can leave inconsistent
->> mapping state and trigger a mid-stream fallback to TCP, which in testing
->> collapsed (by artificially forcing failures in skb_ext_add) throughput
->> to zero.
+>> Hi Christoph,
 >>
->> Return false instead so the TCP input path drops the skb (see
->> tcp_data_queue() and step-7 processing). This is the safer choice
->> under memory pressure: it preserves MPTCP correctness and provides
->> backpressure to the sender.
+>> On 07/08/2025 20:14, Christoph Paasch via B4 Relay wrote:
+>>> From: Christoph Paasch <cpaasch@openai.com>
+>>>
+>>> Accelerated Receive Flow Steering (aRFS) relies on sockets recording
+>>> their RX flow hash into the rps_sock_flow_table so that incoming packets
+>>> are steered to the CPU where the application runs.
+>>>
+>>> With MPTCP, the application interacts with the parent MPTCP socket while
+>>> data is carried over per-subflow TCP sockets. Without recording these
+>>> subflows, aRFS cannot steer interrupts and RX processing for the flows
+>>> to the desired CPU.
+>>>
+>>> Record all subflows in the RPS table by calling sock_rps_record_flow()
+>>> for each subflow at the start of mptcp_sendmsg() and mptcp_recvmsg().
+>>>
+>>> It does not by itself improve throughput, but ensures that IRQ and RX
+>>> processing are directed to the right CPU, which is a
+>>> prerequisite for effective aRFS.
 >>
->> Control packets remain unaffected: ACK updates and DATA_FIN handling
->> happen before attempting the extension allocation, and tcp_reset()
->> continues to ignore the return value.
+>> Thank you for looking at that!
 >>
->> With this change, MPTCP continues to work at high throughput if we
->> artificially inject failures into skb_ext_add.
+>>> Signed-off-by: Christoph Paasch <cpaasch@openai.com>
+>>> ---
+>>>  net/mptcp/protocol.c | 16 ++++++++++++++++
+>>>  1 file changed, 16 insertions(+)
+>>>
+>>> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+>>> index 4b510e04724f5c8be08a00a1cc03093bcd031905..86f1fc5be47bd5f6dc8bf40a488de32f253c1beb 100644
+>>> --- a/net/mptcp/protocol.c
+>>> +++ b/net/mptcp/protocol.c
+>>> @@ -12,6 +12,7 @@
+>>>  #include <linux/sched/signal.h>
+>>>  #include <linux/atomic.h>
+>>>  #include <net/aligned_data.h>
+>>> +#include <net/rps.h>
+>>>  #include <net/sock.h>
+>>>  #include <net/inet_common.h>
+>>>  #include <net/inet_hashtables.h>
+>>> @@ -1740,6 +1741,17 @@ static u32 mptcp_send_limit(const struct sock *sk)
+>>>       return limit - not_sent;
+>>>  }
+>>>
+>>> +static void mptcp_rps_record_subflows(const struct mptcp_sock *msk)
+>>> +{
+>>> +     struct mptcp_subflow_context *subflow;
+>>> +
+>>> +     mptcp_for_each_subflow(msk, subflow) {
+>>> +             struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
+>>> +
+>>> +             sock_rps_record_flow(ssk);
+>>
+>> Should we eventually open code this RPS function and directly call
+>> sock_rps_record_flow_hash()? If RPS is not needed, no need to go through
+>> the subflow list. So we could add: #ifdef CONFIG_RPS + &rfs_needed
+>> before the for_each, then check the state for each subflow, no?
+>>
+>> Or maybe such optimisation is not worth it?
 > 
-> Good catch!
+> IMO it's not worth it. Because it would also mean that we pull in more
+> of non-MPTCP things over to MPTCP files.
+
+Good point for the maintenance!
+
+But then, what about adding a small helper in include/net/rps.h? Here we
+could have this at the top of mptcp_rps_record_subflows():
+
+  if (!sock_rps_record_needed())   /* with likely()? */
+      return;
+
+I'm suggesting this because rfs is disabled by default, so it sounds
+better to check that before iterating over different subflows for
+nothing, no?
+
+>> While at it, I see that sock_rps_record_flow() is called in
+>> __inet_accept(), inet(6)_sendmsg and inet(6)_recvmsg, but with the msk.
+>> I guess that's OK, right?
 > 
-> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> AFAICS, that should be alright. sk_rxhash should not be set on an msk.
+> Even on the passive opener side, we clone msk from the ssk, but at
+> that point sk_rxhash is not set yet. (I may be wrong of course, I'm
+> still not super familiar with the source-code...)
+
+Thank you for having looked! I guess you would have seen issues when
+testing if there was a problem with that, so no need to investigate more.
+
+>> Also, is sock_rps_record_flow() called when a subflow is "accept()ed",
+>> or is there something else to do there for this subflow to copy TCP's
+>> behaviour?
 > 
-> BTW, how did you detect this error? Just in case it would be interesting
-> to have our CI running additional automated tests if that's possible and
-> how you got the error.
+> For new subflows, I don't think we can easily do that. Because
+> sock_rps_record_flow() records the CPU on which it is running. From
+> what I see, when new subflows get accepted, that is not happening in
+> the application's context necessarily. So, we have to wait for a
+> recvmsg/sendmsg.
 
-(we can discuss ↑ later on, this shouldn't block the application of the
-patches :) )
-
-Applied in our tree (fixes for -net):
-
-New patches for t/upstream-net and t/upstream:
-- 9c1c7316b15d: mptcp: drop skb if MPTCP skb extension allocation fails
-- Results: 3240257a2f06..d412bf5ae17a (export-net)
-- Results: c0563ee9fbbf..64863e4ad387 (export)
-
-Tests are now in progress:
-
-- export-net:
-https://github.com/multipath-tcp/mptcp_net-next/commit/16f23c2d3a821edca65217999c16db17c0ea1fce/checks
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/a5222ce1146fbd007b59cfb0d36974816c7d1b86/checks
+Ah yes, of course, we should not do it there for additional subflows!
+And for the first subflow, I think that it will be done because when an
+accept() is triggered from the userspace, mptcp_stream_accept(msk, arg)
+will call inet_csk_accept(ssk, arg) that will end up doing that I think.
 
 Cheers,
 Matt
