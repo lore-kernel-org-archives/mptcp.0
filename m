@@ -1,73 +1,73 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09475283C9C
-	for <mptcp@lists.linux.dev>; Thu, 14 Aug 2025 23:22:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 846D728751A
+	for <mptcp@lists.linux.dev>; Thu, 14 Aug 2025 23:27:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755213764; cv=none; b=DEpH89RuEIw9INYJX8X+NEv8NG2vHvmpSMHxmLR81f9tu965fyihjsY67jXGpY6d9DJUKf+o7BQSvIKaoAheIcOaaDinOXK96b+v67uBoAePgh5IcB5UHzf4k5DqJVcbJko60tD2zH89bSn+J/lAQZptnS2iTQqnM010+jvozfU=
+	t=1755214065; cv=none; b=Lsha5CI/HUBNsFlrh5kk7WU5p86zVI79Pw8oD8PdkZ/hx84OSsnG/LVZAzFhZUqb7H7J/UF/FXrMuD3BaAxg9GZFXHRbvVWNo4Y2coXBoyXrhkUiENyo8UaCDbS2nKkiSTIYjkUi9fupIF7tLMpk8vFB4iBaKLfEIcjFfQvVL/I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755213764; c=relaxed/simple;
-	bh=YQ7YCZjjUdesfp/4AmnBBp2EwgfrYAy7oWynoXY99mk=;
+	s=arc-20240116; t=1755214065; c=relaxed/simple;
+	bh=cNrWzSWBbJ3DFgnD1h7xjqM4iq2jyeXReFXRG/RQUaA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jGT18FKappBkmfpVhsMg21AhrBvkeSQeQzrnhcSWJ6QkqC0Kq5vOgCtpe7nem2OjhDLWQqR8Ft0aLDu7srZA0rJ2TEcEcTJ0UKQZtLbbceXp9v26L0Kzlf8uSFFb69gimW1jaUx1RPTou5qOGJcBmf7TAGAO6wNJKT2HlweZx7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=q8aHQ+XZ; arc=none smtp.client-ip=209.85.214.182
+	 To:Cc:Content-Type; b=Y1M0F8Zsemg3SnROWgrieqW5QZ/8SZSEA2ESxSbYfVdRlpC/lZ7PMP6M2LcDTtVtf5u3HalTYnvCvxET4oLhiRlXJo5xrtV/b5dtfiesUz9jBMUeyEZm7Aa9rqsbJ3dolUfLlHvuWZIAf5JcB9TwybR7RmucTy7RWZNKXRk/AwY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=a9vUSna/; arc=none smtp.client-ip=209.85.215.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="q8aHQ+XZ"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2445818eb6eso12253605ad.2
-        for <mptcp@lists.linux.dev>; Thu, 14 Aug 2025 16:22:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="a9vUSna/"
+Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-b4716fb8e74so1231628a12.0
+        for <mptcp@lists.linux.dev>; Thu, 14 Aug 2025 16:27:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1755213762; x=1755818562; darn=lists.linux.dev;
+        d=google.com; s=20230601; t=1755214064; x=1755818864; darn=lists.linux.dev;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=YQ7YCZjjUdesfp/4AmnBBp2EwgfrYAy7oWynoXY99mk=;
-        b=q8aHQ+XZHIz7EdLf5tejDy4Pn5sIbbd6WAzzpmqQ62S70yNw2+BqmdL1pvWS3IsOq7
-         8i4azgu/Tlq7dGIQWOvaKCd8N3QohcgK1TtTtMnysh7YmGSLFOH1YtIl97uN2FK0Z/CE
-         f4pLHHJtZy86+4a8iyFokI79K/xpRXKqBf55+3vTGBeY4MU9t2X0HORiH1G9VqrsHMX0
-         hNSMwzCBTRLtAp4UEUgFiiNqAvdpFMgYKx9vEQke8WCgIhUtEozuKT93LNJ/7SQpTNZe
-         OMMug8SG5hGRVAPGpoWM8wWAvnL485OPAduBYdKUU414i4NdNikxZh8jKO4QgrtZigbE
-         ISKg==
+        bh=zJte4ardeN85Du6oFLbjV2pOyfXJ8yitINHiZm+Srao=;
+        b=a9vUSna/yV7wSpv0v56NGezvqpDn4aKjbjaTSqJ+EuclPheIPX53H9Z87rxfxSuSDm
+         X3XLMby/rQZLaX3x7pQ8UAVBZjH8VJ5dCmJng7jnAAdlQBFJP+e+IncA89WmCsgjFRuL
+         VrKC7nD2z2qllsGgKlnyMsCkN5zYXdwD1sVn1xsv8T1v8qvimhiUvEhRDiDg+0nzmTqp
+         f+f96E9hUhxPW8XjhFAMyMJDnGO0ZOnwUGL2tAYtoT+Juob5EbFlJwKRIs8cJaHBzuuf
+         U6Yy1CnCm8bjqi58G9CUmr+kNWSEtPiogzoWR/ct/kcvSb47o1zYU3XhhkFDRYREWy3C
+         0wIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755213762; x=1755818562;
+        d=1e100.net; s=20230601; t=1755214064; x=1755818864;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=YQ7YCZjjUdesfp/4AmnBBp2EwgfrYAy7oWynoXY99mk=;
-        b=JTiQ4ESe4wA4P8gSbU5ZqOzVb9HvoBKxj7+olL8SEfcra0OJ9Q+GIOOuQqJkdaMR7H
-         NchPMy2WkbpbQsk1HUhIBfMVsNEaPbwfDzGle50+2Ga6hrmvhntE8/GmIG0glQ/JK2NK
-         kTCbTQ33JORlVX9g+6lhmtTj6yWwUOThjnsByg5/r+myHIUxmH5E0esBhqaX76h3fRjw
-         Bwv+QRwv0ocKqHYibkuFAWa/0MKAFlWJgDNwVEVaAL1/fgsiJPg7xLX6yJvM4E1XTV8a
-         3TZOQYVSK1yhh5tomIaeBsWTh3hEHU2vf9OTfvQbqJZtC1h2UeigsKEEoe0XROX+Up1j
-         0q+A==
-X-Forwarded-Encrypted: i=1; AJvYcCVp7NHf8lGqOJ8oJhgJhOEIKXum+8e7BOdEq2UAf7ktLhXJm13cXMiR1+btgU0Vwvv6B0AUqw==@lists.linux.dev
-X-Gm-Message-State: AOJu0Ywxu+VAq/M5je7rF4tbW4wjr2kt3P4fhK7UEVs6MPcK8ITeXhb9
-	yhJRgoY//tkMqspFrIDQbyGHVPFxPLyjAOqicQqkwQJQ5Iig7NgGVcXmHxWhOI0SRRp1QqwDH0S
-	UMmIAQ0XOaHVvRT+g4MHx76Vf47P+SpdyrWlmkR4WYIXbPONsQra2Exy3
-X-Gm-Gg: ASbGncvEN0gGJB6eWCBYpGJRHjAO7Yq+vJOqNaRWg2bhDmLQiUJX4j0lgROgZwHrUMi
-	i9CzF1VYWmviXbiBI/cHb7aJ3XmdFwWCIjnLYVoW9unbVvKDwdbKM4U1Fhy4+tLmL8F+Ek/59nd
-	LCzVJGICjv0zp5v22G3pMCyuc+cjwUHbfRQtG66Zy9AT/3Sl35lgbzjasUh1P+F3qo7Ri/sm4rL
-	HE1FUHE3iZA4AgB1A/ORDwtUP6Rkvay7LxoBCsNcwejgNuvYyocaWtt
-X-Google-Smtp-Source: AGHT+IG+GzkTFoWSxjI/UBpeB+AhhE8U81bSEVut4K3CLnycOTHj2PFasfm2kLor4XHXf2jf8tiH2o7md6AgbgQhI+o=
-X-Received: by 2002:a17:903:2444:b0:23f:c945:6067 with SMTP id
- d9443c01a7336-244586c3d33mr71675685ad.41.1755213762138; Thu, 14 Aug 2025
- 16:22:42 -0700 (PDT)
+        bh=zJte4ardeN85Du6oFLbjV2pOyfXJ8yitINHiZm+Srao=;
+        b=XZ30bg2vNULLxQnHJCrIPbRsCd7XOPLwSj8F4DDWOOKZmL657OpPTFTYaQFy+5H6s1
+         nhvQ8ISHLT5hU+TOagSJCJ+nXEf6CMC+xmcrF28GqVbS9zrjzzZ7U+BMShxaaU38byCK
+         spVu/LxxqNyJchoFj8fGcT1X268V2VOvu66oTi/tjOjBx3ZPCFkv1ZGKnUfO5kx1/97o
+         9VWo2NaZx4KukTCyoloWIXdScBQDgv/jTNpsd3epvc8AALhDYT7rMKhH1SoNEIh1TgIW
+         X5jDenO64nH6QwVf/Y/ROlsBNPFrwqyt25oU03Ctz6me9vyg6tXzSitX+PBjEUE+8eaJ
+         UY1Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXD8vM9YHj0Lbk0SHMVepcEoJFZ4Pp+AK56R6aiCFqD7kgfIEp9TuEG+PhI1YxpGTiFHzHSfw==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yy0VWZid4EMDaeQ6ZUXJkGsIsshVj2TUbDA3xhCg6SS6g6GTYUs
+	eOV2JWNX47kLOD4bDP9FZgdp07c8N7Ek3MuUTVNwdHKGk/uPziRdaoB2JEJf/cCirzfzMixVDdM
+	kEifSv+YQnDLcjrUl5VPTweCyAG42ySxHS4swbQfZ
+X-Gm-Gg: ASbGnctbCmdYQoEh181WOl9UIKonxvzFo9kIR1Krr5EA6b+CyxtJhr4YqT5lt95q2RY
+	VUHxJpQTTet3NZd1UFS3JN8rXfQ+2IWUtTDJX7Xmtbhw6RqiZYCLHIiANEgPbGSkEdOPsFzYrrL
+	DyMgKMHwfHBQoXcBWKY6pptIB3bZQ1XUpafS9pGesYIrgoVeoMu8RIA3VeoM31gNawKRKjLC/sb
+	WxVWJOs4wFJ7l2DR6lswVG6/GX+cAWF7brC1WbGnzimPA==
+X-Google-Smtp-Source: AGHT+IEHit+6v/zQOrDIYEMP+S59QKYaphBAhA88+cWD0rCmrcxwlIgGARBzu1jGkGqvO/cZmUpqkxnAjxS8w/4Lc8g=
+X-Received: by 2002:a17:902:e78e:b0:235:f078:4746 with SMTP id
+ d9443c01a7336-244586dbef9mr70544725ad.42.1755214063557; Thu, 14 Aug 2025
+ 16:27:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250814200912.1040628-1-kuniyu@google.com> <20250814200912.1040628-10-kuniyu@google.com>
- <pl47mmcmxu53ptfa5ubd7dhzsmpxhsz2qxpscquih4773iykjf@3uhfasbornxc> <7pbqwjm4yl3oxebibihbdqkdusamnnui5ypzhfh32pxfkcordq@o3hottcdlavs>
-In-Reply-To: <7pbqwjm4yl3oxebibihbdqkdusamnnui5ypzhfh32pxfkcordq@o3hottcdlavs>
+References: <20250814200912.1040628-1-kuniyu@google.com> <20250814200912.1040628-2-kuniyu@google.com>
+ <cs5uvm72eyzqljcxtmienkmmth54pqqjmlyya5vf3twncbp7u5@jfnktl43r5se>
+In-Reply-To: <cs5uvm72eyzqljcxtmienkmmth54pqqjmlyya5vf3twncbp7u5@jfnktl43r5se>
 From: Kuniyuki Iwashima <kuniyu@google.com>
-Date: Thu, 14 Aug 2025 16:22:31 -0700
-X-Gm-Features: Ac12FXwLp2y7n2f70IACCfZi6vRBARC4QHPOIBg0j8Z8siCHACfmll_htqDpnyQ
-Message-ID: <CAAVpQUDxXZaYz98hen3ariCek4s9TQ9JxWqS_zRoDK=ON-asbQ@mail.gmail.com>
-Subject: Re: [PATCH v4 net-next 09/10] net-memcg: Pass struct sock to mem_cgroup_sk_under_memory_pressure().
+Date: Thu, 14 Aug 2025 16:27:31 -0700
+X-Gm-Features: Ac12FXwI-hCJioucwxG326FRr7yD4nkwLO0ruxEaSqR9_-vI1XwEMNZdtXGsZVw
+Message-ID: <CAAVpQUDyy9f7=LNZc2ka2RiOhR3_eOhEb+Nih37HnF0_cdrJqA@mail.gmail.com>
+Subject: Re: [PATCH v4 net-next 01/10] mptcp: Fix up subflow's memcg when CONFIG_SOCK_CGROUP_DATA=n.
 To: Shakeel Butt <shakeel.butt@linux.dev>
 Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
 	Jakub Kicinski <kuba@kernel.org>, Neal Cardwell <ncardwell@google.com>, Paolo Abeni <pabeni@redhat.com>, 
@@ -82,26 +82,61 @@ Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Aug 14, 2025 at 3:10=E2=80=AFPM Shakeel Butt <shakeel.butt@linux.de=
+On Thu, Aug 14, 2025 at 2:44=E2=80=AFPM Shakeel Butt <shakeel.butt@linux.de=
 v> wrote:
 >
-> On Thu, Aug 14, 2025 at 03:00:05PM -0700, Shakeel Butt wrote:
-> > On Thu, Aug 14, 2025 at 08:08:41PM +0000, Kuniyuki Iwashima wrote:
-> > > We will store a flag in the lowest bit of sk->sk_memcg.
-> > >
-> > > Then, we cannot pass the raw pointer to mem_cgroup_under_socket_press=
-ure().
-> > >
-> > > Let's pass struct sock to it and rename the function to match other
-> > > functions starting with mem_cgroup_sk_.
-> > >
-> > > Note that the helper is moved to sock.h to use mem_cgroup_from_sk().
+> On Thu, Aug 14, 2025 at 08:08:33PM +0000, Kuniyuki Iwashima wrote:
+> > When sk_alloc() allocates a socket, mem_cgroup_sk_alloc() sets
+> > sk->sk_memcg based on the current task.
 > >
-> > Please keep it in the memcontrol.h.
+> > MPTCP subflow socket creation is triggered from userspace or
+> > an in-kernel worker.
 > >
+> > In the latter case, sk->sk_memcg is not what we want.  So, we fix
+> > it up from the parent socket's sk->sk_memcg in mptcp_attach_cgroup().
+> >
+> > Although the code is placed under #ifdef CONFIG_MEMCG, it is buried
+> > under #ifdef CONFIG_SOCK_CGROUP_DATA.
+> >
+> > The two configs are orthogonal.  If CONFIG_MEMCG is enabled without
+> > CONFIG_SOCK_CGROUP_DATA, the subflow's memory usage is not charged
+> > correctly.
+> >
+> > Let's wrap sock_create_kern() for subflow with set_active_memcg()
+> > using the parent sk->sk_memcg.
+> >
+> > Fixes: 3764b0c5651e3 ("mptcp: attach subflow socket to parent cgroup")
+> > Suggested-by: Michal Koutn=C3=BD <mkoutny@suse.com>
+> > Signed-off-by: Kuniyuki Iwashima <kuniyu@google.com>
+> > ---
+> >  mm/memcontrol.c     |  5 ++++-
+> >  net/mptcp/subflow.c | 11 +++--------
+> >  2 files changed, 7 insertions(+), 9 deletions(-)
+> >
+> > diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> > index 8dd7fbed5a94..450862e7fd7a 100644
+> > --- a/mm/memcontrol.c
+> > +++ b/mm/memcontrol.c
+> > @@ -5006,8 +5006,11 @@ void mem_cgroup_sk_alloc(struct sock *sk)
+> >       if (!in_task())
+> >               return;
+> >
+> > +     memcg =3D current->active_memcg;
+> > +
 >
-> Oh is this due to struct sock is not yet defined and thus sk->sk_memcg
-> will build fail?
+> Use active_memcg() instead of current->active_memcg and do before the
+> !in_task() check.
 
-Right, we can't touch any field of struct sock in memcontrol.h as
-noted in patch 6.
+Why not reuse the !in_task() check here ?
+We never use int_active_memcg for socket and also
+know int_active_memcg is always NULL here.
+
+
+>
+> Basically something like following:
+>
+>         memcg =3D active_memcg();
+>         /* Do not associate the sock with unrelated interrupted task's me=
+mcg. */
+>         if (!in_task() && !memcg)
+>                 return;
