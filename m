@@ -1,139 +1,266 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EEB22DA758
-	for <mptcp@lists.linux.dev>; Thu, 14 Aug 2025 12:30:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19C891D5CEA
+	for <mptcp@lists.linux.dev>; Thu, 14 Aug 2025 14:36:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755174628; cv=none; b=F5OwQOGxxlQ7aP3msviEoo8bt9AuNXtS8+idGzZ9PRyUWQeaZd1XLLH7zM8xs9fEBCd8iCCzYHxWlw5Y/9bPJaUxcR4JYyh6FZX3zZ0B5TYgfyuctS9AoLXih+t6GyPS28Zt00WsLg/CCwEG6sUZRUesIKMGEHc/p7xZLs5CnSA=
+	t=1755182162; cv=none; b=KS8YkbEnvCjcGU1gu0BNNZFEszOUXwPWotVg+f7o3qu52cvMckxXgfX149PPbGRYqoH7T3a8P8Az1kQbmS/D56hGQSEpsPxhQKD3KaN7dyWFEZbSGU2xVMr4OLMTqYycNimKB4AqD50WiyShxt7orsHaYIGRSS9+xiNipTu6ZfI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755174628; c=relaxed/simple;
-	bh=1PE9vqqyAAJHt2b4anvd33upg87s7/sb4TrxyKMVNKg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sK2e8xOfQZKWoIML5zCCPZ2XLyEMi2e5FztzSPQN5ZbhRC0x7RjeB7A1QQDmpR12ats1RBeVpLarAtr9VqeYTk3vyFJ2/HLGL6AlSsle61Ou82iGlKWayLhUWLDqqIKariDazZ3NNTxTti6TOTc18YQnpgHCXfnKT3HQQ2Hcp0g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=V00ZauvQ; arc=none smtp.client-ip=209.85.221.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1755182162; c=relaxed/simple;
+	bh=jPJVUYBZalovfrMqoNKJRwmSyTsMZF9zKQxhGQAh0uk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=CUVAEhhrabwo3AwpZduHfM1+lHfBctD2lMp2MYSGMkPkn7yvXcym0rcVas7fBqQFd8xs7Zd2z8BbVk+7kWhvpyCqp+jyBndc9nfnOiB0Uf98hBBZqSZR4eGXm2z+HCtLJJteEaZxReWZXX3EmUcdPhV8Qui3lYoqJcKUm+LSpEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rrkqUoRu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="V00ZauvQ"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3b9dc56ff66so435592f8f.1
-        for <mptcp@lists.linux.dev>; Thu, 14 Aug 2025 05:30:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1755174625; x=1755779425; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=fJ1w1vX016HZnhf51EVaJqwNMCPhdOvsodT4l6hbFIE=;
-        b=V00ZauvQYbLvwEjVX7WIh6E//5KywuOSoJia7b5smDUejiL7bqPbQWx0GwKYvt8NXv
-         rSyZe7C6VImyakYQ7i+6FmaYvOz6nFS49+E1UqsOY5yTDwB+iT6izy5aSz0rt3+cX8fq
-         xuvgXNInVt9ZLt4vVjgja8bGMQFLi5GW9nbIw1vi300F3Z8maZQejCsMiqepMx7apdtN
-         r6o7lybt9lIFjOIGLbJerjrVoOno9SKEqe72ez0XoPuV5E7A/Nm3UU2dJ4E8JqJcssd9
-         nF5lr5+TCVrBXOx4MPzzgh3CLLgrPaS8n34+CKV2QhC1AFgQHFVE4Ug9W7KehPZNAIg6
-         Rh0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755174625; x=1755779425;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fJ1w1vX016HZnhf51EVaJqwNMCPhdOvsodT4l6hbFIE=;
-        b=xDijYS8Toz1G8WzB/Fm40kr/4pNegv2HHWvx/sNzfBbaXKYiHBCR2/0/hlWDXg8MCv
-         sZdImVLAyA4sWcW5zmUGKOG06EaCUBWo2Mj0gJtet8LHJoC7AlX/euK86byDmQ7D/UK1
-         j3z68FDF0zmbjaH9Bu9OPfxlOdt1fuI+B/p4EWcseyRf9lIMNL1/rJHBixp/2klmSKp1
-         mQ/KNE2TWAClWAuaNJ8BFwanJ1SCQKA2gmeXZtRzMjx9QAvWrIZU6uHj1pgO74u7gdt/
-         K3vRZUn0v6h0zGBa9wCVMm2pyTKRU+o2RQHCmjEU1Va9u+AjDgFn7QCqwXPcFyMARNOJ
-         FIKw==
-X-Forwarded-Encrypted: i=1; AJvYcCUFspiSz9yePejgC158jYrZvyYmVPvxfD8wWGPcXVHSbJEU52mQJUQ73L8tWK2btDtnkMSMbQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0YykNPaPvY6Ef/LvkPrwBfv1b0znfcNaEgAHqei4WQpJhk24wF5I
-	3YfxeuOWEm36W1rLnaWDEndn3xk/1sa6LbKYr4cEbDvyH162kGxL1e/98cR07/B0EGU=
-X-Gm-Gg: ASbGncvHo+MC2jPjHF+gOHC4m4AD8Ctf1CHYaMl8+KU8HGikSYb4uMKHHkpBfqch3RL
-	3A7dgA1IGck2H1jzrrtGLOCidC5XncyRVxORzUIK5pqqU8USK6uvVioy3M5ziX6okN7fiyR6jPE
-	3CWEN9bVAML72pP5r9+/5/z4uXvaXie2ec7Y66JKn6v5/zr3bqp9/WakYlTAGoXlwtEnfew2uqS
-	c6Tonrw1Or65cYQSVwL6vjgjjZuul8wbJN/Ext4QAauKkCgcnDl+aHdBKl1IYR/k8o0K8ZnJpSc
-	8H2oeH+NxZ+PLj67FozGkz/MuiBRCe6nHA/MbordfoOLYcruW8umtbawSOD9tIPSCYOruT/xKH8
-	Xu0lCaEVkVfSszkb7GllFBIj99He2JbrEwpqG2suA2w==
-X-Google-Smtp-Source: AGHT+IEcamlanLgHj4e3UiHXnuoZFx6EM5i/6/BHJ22GOTsUGejY8ezIfKRRmd/gWCi23iogf+4+lg==
-X-Received: by 2002:a05:6000:3111:b0:3b7:974d:5359 with SMTP id ffacd0b85a97d-3b9fc359a99mr2276811f8f.32.1755174624685;
-        Thu, 14 Aug 2025 05:30:24 -0700 (PDT)
-Received: from blackdock.suse.cz (nat2.prg.suse.com. [195.250.132.146])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-241d1f0fb4asm348329055ad.60.2025.08.14.05.30.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Aug 2025 05:30:23 -0700 (PDT)
-Date: Thu, 14 Aug 2025 14:30:05 +0200
-From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
-To: Kuniyuki Iwashima <kuniyu@google.com>
-Cc: "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-	Neal Cardwell <ncardwell@google.com>, Paolo Abeni <pabeni@redhat.com>, 
-	Willem de Bruijn <willemb@google.com>, Matthieu Baerts <matttbe@kernel.org>, 
-	Mat Martineau <martineau@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Michal Hocko <mhocko@kernel.org>, Roman Gushchin <roman.gushchin@linux.dev>, 
-	Shakeel Butt <shakeel.butt@linux.dev>, Andrew Morton <akpm@linux-foundation.org>, 
-	Tejun Heo <tj@kernel.org>, Simon Horman <horms@kernel.org>, 
-	Geliang Tang <geliang@kernel.org>, Muchun Song <muchun.song@linux.dev>, 
-	Mina Almasry <almasrymina@google.com>, Kuniyuki Iwashima <kuni1840@gmail.com>, netdev@vger.kernel.org, 
-	mptcp@lists.linux.dev, cgroups@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH v3 net-next 01/12] mptcp: Fix up subflow's memcg when
- CONFIG_SOCK_CGROUP_DATA=n.
-Message-ID: <ukfrq6ybrbb2yds5duyj2ms6i7xgssjsywzgknxctfgkpzupor@tjxbuiil5ptt>
-References: <20250812175848.512446-1-kuniyu@google.com>
- <20250812175848.512446-2-kuniyu@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rrkqUoRu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0BAAC4CEED;
+	Thu, 14 Aug 2025 14:36:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1755182161;
+	bh=jPJVUYBZalovfrMqoNKJRwmSyTsMZF9zKQxhGQAh0uk=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=rrkqUoRu1zs07VR5IrRfGBRE+KahOr6AAR1zl+E5xKFXf/ySGPO/I/kB9MFKs4S4c
+	 HCnKl1lGxqDQUYCrhrdqYdC8yR+fiy5gFOer64XGHOdVC8pFWVR1JYsmTdxatmZdX3
+	 3FwSb89bgGFviSRHrQ3QmZUvIRgw9r36mBfyHj0ViUWOSd5Nzbwn5vE24iCDJNiqHF
+	 r+130uehXCymrGEdd5V11BCtG+lEwbvGRHMHRvl3Z0oV4IH1nSGNP0HZA9EZANEgMo
+	 6X0tbZReIlSz1Iwj6BID/bIdAfCZKOWVwVDJCH1Ml39nqxk5XtiZw2OMcisu2sqs3Y
+	 FHXkQB0EsxJ2Q==
+Message-ID: <03fba60e-2c01-4570-9809-43d83a89f88a@kernel.org>
+Date: Thu, 14 Aug 2025 16:35:58 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="xhbunld2ijovocqb"
-Content-Disposition: inline
-In-Reply-To: <20250812175848.512446-2-kuniyu@google.com>
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-next v2 1/2] selftests: net: mptcp: add checks for
+ fallback counters
+Content-Language: en-GB, fr-BE
+To: Gang Yan <yangang@kylinos.cn>, mptcp@lists.linux.dev
+References: <cover.1755139312.git.yangang@kylinos.cn>
+ <cda4fc3f4b901c1919adfc0ce4258be0b80e7ea9.1755139312.git.yangang@kylinos.cn>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <cda4fc3f4b901c1919adfc0ce4258be0b80e7ea9.1755139312.git.yangang@kylinos.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+Hi Gang,
 
---xhbunld2ijovocqb
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v3 net-next 01/12] mptcp: Fix up subflow's memcg when
- CONFIG_SOCK_CGROUP_DATA=n.
-MIME-Version: 1.0
+On 14/08/2025 05:16, Gang Yan wrote:
+> Recently, some mib counters about fallback has been added, this patch
+> provides a helper to check the expected behavior of these mib counters
+> during the test execution.
 
-Hello.
+Thank you for the patch.
 
-On Tue, Aug 12, 2025 at 05:58:19PM +0000, Kuniyuki Iwashima <kuniyu@google.=
-com> wrote:
-> When sk_alloc() allocates a socket, mem_cgroup_sk_alloc() sets
-> sk->sk_memcg based on the current task.
->=20
-> MPTCP subflow socket creation is triggered from userspace or
-> an in-kernel worker.
+But alone, it doesn't make sense, and it is harder to review without
+knowing how the helper is going to be used. Better to squash the two
+patches together.
 
-I somewhat remembered
-d752a4986532c ("net: memcg: late association of sock to memcg")
+I think having patches dedicated to the introduction of new helpers only
+make sense when such helpers will be used on another subsystem
+(different maintainers) or when moving existing code to a new helper to
+be re-used elsewhere. But here, I think it causes more troubles.
 
-but IIUC this MPTCP codepath, the socket would never be visible to
-userspace nor manipulated from a proper process context, so there is no
-option to defer the association in similar fashion, correct?
+> 
+> Link: https://github.com/multipath-tcp/mptcp_net-next/issues/571
+> Signed-off-by: Gang Yan <yangang@kylinos.cn>
+> ---
+>  .../testing/selftests/net/mptcp/mptcp_join.sh | 98 +++++++++++++++++++
+>  1 file changed, 98 insertions(+)
+> 
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> index b8af65373b3a..2c1f0704bc17 100755
+> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> @@ -74,6 +74,15 @@ unset join_create_err
+>  unset join_bind_err
+>  unset join_connect_err
+>  
+> +unset infinite_map_tx_fb
+> +unset dss_corruption_fb
+> +unset simult_conn_fb
+> +unset mpc_passive_fb
+> +unset mpc_active_fb
+> +unset mpc_data_fb
+> +unset MD5_Sig_fb
 
-Then, I wonder whether this isn't a scenario for
-	o =3D set_active_memcg(sk->sk_memcg);
-	newsk =3D  sk_alloc();
-	...
-	set_active_memcg(o);
+No need to use capital letters here.
 
-i.e. utilize the existing remote charging infra instead of introducing
-specific mem_cgroup_sk_inherit() helper.
+> +unset dss_fb
 
-Regards,
-Michal
+It might make more sense to use the "fb_" prefix, instead of the suffix,
+similar to what has been done with "join_" above.
 
---xhbunld2ijovocqb
-Content-Type: application/pgp-signature; name="signature.asc"
+> +
+>  # generated using "nfbpf_compile '(ip && (ip[54] & 0xf0) == 0x30) ||
+>  #				  (ip6 && (ip6[74] & 0xf0) == 0x30)'"
+>  CBPF_MPTCP_SUBOPTION_ADD_ADDR="14,
+> @@ -1399,6 +1408,95 @@ chk_join_tx_nr()
+>  	print_results "join Tx" ${rc}
+>  }
+>  
+> +chk_fallback_nr()
+> +{
+> +	local infinite_map_tx=${infinite_map_tx_fb:-0}
+> +	local dss_corruption=${dss_corruption_fb:-0}
+> +	local simult_conn=${simult_conn_fb:-0}
+> +	local mpc_passive=${mpc_passive_fb:-0}
+> +	local mpc_active=${mpc_active_fb:-0}
+> +	local mpc_data=${mpc_data_fb:-0}
+> +	local MD5_Sig=${MD5_Sig_fb:-0}
+> +	local dss=${dss_fb:-0}
 
------BEGIN PGP SIGNATURE-----
+No need to respect the reverse Xmas tree declaration for the variables
+here in bash. I think it is better here (and above with the unset) to
+follow the same order as below, when they are used, so it is easy to
+check if they are all used correctly.
 
-iHUEABYKAB0WIQRCE24Fn/AcRjnLivR+PQLnlNv4CAUCaJ3WwQAKCRB+PQLnlNv4
-CAoVAQCrDITNqluusq0b12YFFhfY1gKK4Q8uAHs/KsISm9RelwD+JxaqxOrcmstY
-zyqaWiykc0r7xJAjUUU3so6cKm+/lQg=
-=6bNw
------END PGP SIGNATURE-----
+> +	local rc=${KSFT_PASS}
+> +	local ns=$1
+> +	local count
+> +
+> +	count=$(mptcp_lib_get_counter ${ns} "MPTcpExtMPCapableFallbackACK")
+> +	if [ -z "$count" ]; then
+> +		rc=${KSFT_SKIP}
+> +	elif [ "$count" != "$mpc_passive" ]; then
+> +		rc=${KSFT_FAIL}
+> +		print_check "mpc passive fallback "
 
---xhbunld2ijovocqb--
+All your "print_check" here and below have an extra whitespace before
+the last double quote: why? I don't think it is needed.
+
+> +		fail_test "got $count mpc passive fallback[s] expected $mpc_passive"
+
+Because this helper is used twice, we need to know which direction had
+an issue: can you pass that info (connector/listener or ns2/ns1) as
+argument to this helper, and adding it to "print_check" and "fail_test"?
+Same below.
+> +	fi
+> +
+> +	count=$(mptcp_lib_get_counter ${ns} "MPTcpExtMPCapableFallbackSYNACK")
+> +	if [ -z "$count" ]; then
+> +		rc=${KSFT_SKIP}
+> +	elif [ "$count" != "$mpc_active" ]; then
+> +		rc=${KSFT_FAIL}
+> +		print_check "mpc active fallback "
+> +		fail_test "got $count mpc active fallback[s] expected $mpc_active"
+> +	fi
+> +
+> +	count=$(mptcp_lib_get_counter ${ns} "MPTcpExtDSSCorruptionFallback")
+> +	if [ -z "$count" ]; then
+> +		rc=${KSFT_SKIP}
+> +	elif [ "$count" != "$dss_corruption" ]; then
+> +		rc=${KSFT_FAIL}
+> +		print_check "dss corruption fallback "
+> +		fail_test "got $count dss corruption fallback[s] expected $dss_corruption"
+> +	fi
+> +
+> +	count=$(mptcp_lib_get_counter ${ns} "MPTcpExtInfiniteMapTx")
+> +	if [ -z "$count" ]; then
+> +		rc=${KSFT_SKIP}
+> +	elif [ "$count" != "$infinite_map_tx" ]; then
+> +		rc=${KSFT_FAIL}
+> +		print_check "infinite map tx fallback "
+> +		fail_test "got $count infinite map tx fallback[s] expected $infinite_map_tx"
+> +	fi
+> +
+> +	count=$(mptcp_lib_get_counter ${ns} "MPTcpExtMPCapableDataFallback")
+> +	if [ -z "$count" ]; then
+> +		rc=${KSFT_SKIP}
+> +	elif [ "$count" != "$mpc_data" ]; then
+> +		rc=${KSFT_FAIL}
+> +		print_check "mpc data fallback "
+> +		fail_test "got $count mpc data fallback[s] expected $mpc_data"
+> +	fi
+> +
+> +	count=$(mptcp_lib_get_counter ${ns} "MPTcpExtMD5SigFallback")
+> +	if [ -z "$count" ]; then
+> +		rc=${KSFT_SKIP}
+> +	elif [ "$count" != "$MD5_Sig" ]; then
+> +		rc=${KSFT_FAIL}
+> +		print_check "MD5 Sig fallback "
+> +		fail_test "got $count MD5 Sig fallback[s] expected $MD5_Sig"
+> +	fi
+> +
+> +	count=$(mptcp_lib_get_counter ${ns} "MPTcpExtDssFallback")
+> +	if [ -z "$count" ]; then
+> +		rc=${KSFT_SKIP}
+> +	elif [ "$count" != "$dss" ]; then
+> +		rc=${KSFT_FAIL}
+> +		print_check "dss fallback "
+> +		fail_test "got $count dss fallback[s] expected $dss"
+> +	fi
+> +
+> +	count=$(mptcp_lib_get_counter ${ns} "MPTcpExtSimultConnectFallback")
+> +	if [ -z "$count" ]; then
+> +		rc=${KSFT_SKIP}
+> +	elif [ "$count" != "$simult_conn" ]; then
+> +		rc=${KSFT_FAIL}
+> +		print_check "simult conn fallback "
+> +		fail_test "got $count simult conn fallback[s] expected $simult_conn"
+> +	fi
+> +
+> +	print_results "check fallback nr" ${rc}
+
+Just "fallback"?
+
+EDIT: see the next patch: you should have a different message per netns.
+
+> +}
+> +
+>  chk_join_nr()
+>  {
+>  	local syn_nr=$1
+
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
+
