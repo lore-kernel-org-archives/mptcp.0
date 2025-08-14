@@ -1,169 +1,131 @@
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81A692FF660
-	for <mptcp@lists.linux.dev>; Thu, 14 Aug 2025 03:32:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A1BF1EF389
+	for <mptcp@lists.linux.dev>; Thu, 14 Aug 2025 04:34:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755142331; cv=none; b=PjqOABymDzakpduRacovK3oloZCMMXCL99d6wvJ+Wua+8wbUcWqE7j3pUqgAiL8IWx3C/N+h8+x1Q5qragiLBu33c7F5StyWe0CdcwtMejLRpQpIvZ5T97HyRwmTymXFC0WUPp7j01rJW8CvdYtRrYuUfSOtT3k/85mEI7DiWMo=
+	t=1755146055; cv=none; b=NBsWNaHvh/45jPXu6IaTchOcauS9puioren1+NIto80+o3+YFmiPSVDYlNQHIZOGtdQ9FkraZu9+8xvOtuy0FLFqI5qd4i7CHQg3GBBvJ92nX3NzTU8w0vXBMGp2AdDlfycaqnLgQnL8vJ2A8nJhoULQllVuAyRi+jIT7nPdiZg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755142331; c=relaxed/simple;
-	bh=EPG5wg+jHgnjds7AcGH4Fx9JNWMgrlmp7Au8zw6rq2E=;
+	s=arc-20240116; t=1755146055; c=relaxed/simple;
+	bh=1jpYMe9Rs3tolynO9B73W/0DpudggFG/LEClC4JR1AM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VIDoCXhYEMczYmeaxtScCtq0vFakheYehhAf7bWXnSRqgT7G5FPrY/a+NqqWC4NKeNhUs4UUILV8Fmj6nOGncwiR1Ir29pG5miTixyBFkmgQdr9Eu7V/+cAhpRyUr3yfJlFIaIsq2+3hVy8J5WDwsayrfG9SUEWB1yzI79aMqDo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=openai.com; spf=pass smtp.mailfrom=openai.com; dkim=pass (1024-bit key) header.d=openai.com header.i=@openai.com header.b=Sfk4sZZm; arc=none smtp.client-ip=209.85.167.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=openai.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=openai.com
+	 To:Cc:Content-Type; b=uAp5A0s+tkwdnIc5a6/RI6afANkjKgIE3biTONANf8QHYU4MD3XRQPJ2w6qQLJUufNWeudmt4eAFSdcLZUd+jkY2t10mx201GhShWoJSr9/EuiA8fjr6m9vA4dBALMliHr5smTIMwGc387m/IfI1EmYcEHYrRj3rHC6bTrJfiWs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=brzl2ikM; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=openai.com header.i=@openai.com header.b="Sfk4sZZm"
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-55ce526ac04so455937e87.2
-        for <mptcp@lists.linux.dev>; Wed, 13 Aug 2025 20:32:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="brzl2ikM"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-244581caca6so3602015ad.2
+        for <mptcp@lists.linux.dev>; Wed, 13 Aug 2025 21:34:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=openai.com; s=google; t=1755142328; x=1755747128; darn=lists.linux.dev;
+        d=google.com; s=20230601; t=1755146053; x=1755750853; darn=lists.linux.dev;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=iNARoZDoO9DuMTTSWl+sAj3EwpZbT9Zrtbft7WDRyiQ=;
-        b=Sfk4sZZmaeosdqIPqlqmE8DskhdFPBIrbEQA2x+aWeRKp47K/1gZXcC20zwVqzytsS
-         Vs2wds3DPeSWvzSyTwmvTvwUxB7TADKAP5mkUXzxAfyxcwepFRuYdHWKVjo6IvHuGuCx
-         aPLibjgWjxFBXua0Z3C8xT8a6YIcj4EY0Rxo0=
+        bh=1jpYMe9Rs3tolynO9B73W/0DpudggFG/LEClC4JR1AM=;
+        b=brzl2ikMsqP3jqgXnlyihnnPhEtyJeif3gMK+MaiFx+0jbaVNiF5tk/vJAIHXiw/Zk
+         zE47V/6Vi5gLv1mNC2xLLNTIWXRfbqgDq30+MV3uELQkmNd6jCwzLeFG1FRNJvUnZO3O
+         jAz5spzMpGT46wBh0gXIfRAez7qxpMVmVthL1Jy8WuJryLDs1mcizd3IMyaCsonBknJD
+         Y5eRxhbxlkNe1LZOL+FadodYreqMuPN4ZDaeNGsvRf+4p4IB0bGy8Hvk4CGNM0UxfWeQ
+         FSjgqXkQFPyH4dAe8OaynRyD60pxUqfI60EOfbY6KTcGlegD0fcM1O6E7l/Q00k8cLAJ
+         BpqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755142328; x=1755747128;
+        d=1e100.net; s=20230601; t=1755146053; x=1755750853;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=iNARoZDoO9DuMTTSWl+sAj3EwpZbT9Zrtbft7WDRyiQ=;
-        b=wxlsmrT54TIEDIliqDZU/sOp4El6pXDYTL0VAdoVX6pCn+Rd/v4Xwvm5uLykt5wBwT
-         tKBzYxPOhWPtBaudCszSZWEJ1BPMM52N55XTWNSgnI+nT0lGtUzUn5OAi3nm1C9LTpi+
-         3NOtXOlog5V/dg851ibJdKeLRQ2/8+v9wNK468Z5VD4LiMiLqZH2GE4H12CrRv8qC5GJ
-         49KX9vgFNRkRVqJVTbH80ehaxYgFAyfTunwxKiFYlSBL12+UVNZSGnS+UhLXcEGl+fOC
-         GKgNXYIOpgYyMmK47UKBx8V1MqDPbg+bTIPGSVPk7wzcHH3lVPVq+REjg/6e3ESX50py
-         kOwg==
-X-Gm-Message-State: AOJu0Ywb+H2zsnKfZxyMcIopWDpiaKrByxaf0iOIBSr4qKvFZyB1/ojN
-	J07ZL9Bz4ew/VCKRRu94ymNpbF5qoL/ZQRJvLIy1UQqfLRRArXVF1re2WI7KCb8r7ryRHHYxTL3
-	5znA/lvjP7Lxv23gt/tdaTtbO4EpynpGbnrK/3Q/jgw==
-X-Gm-Gg: ASbGncu9A4lA02LSFO++Os0EpvCi+OfU0AJnX2xMR2ZAe0TPZ20Wb8EUY/5zRuFS2VN
-	6uXF15gjzPkx6pWOglkGwGcaFcHf6Uh+JoZ3B7ZWJxyHRzdoxj6jeYDGrZXECu6qUyz887rwiT/
-	ek+IWt38Yt/Nyc1rfOws6Srj5RVf4QIuAZqv4x744cfHgwILdbdXxH98Znn2V31RviHGnTvAreW
-	Mz3jA==
-X-Google-Smtp-Source: AGHT+IFEjhDzLdhWHT+zceRMmBx7YQzdRgU6EVKs/yIo1Web8OQC5eFWU78w2bg/uviOv8XACzLOixoCsI9ZBYt+6dE=
-X-Received: by 2002:a05:6512:6cf:b0:553:d910:9344 with SMTP id
- 2adb3069b0e04-55ce6339ec2mr296125e87.45.1755142327593; Wed, 13 Aug 2025
- 20:32:07 -0700 (PDT)
+        bh=1jpYMe9Rs3tolynO9B73W/0DpudggFG/LEClC4JR1AM=;
+        b=P4eEUh8epJFqaAHxAuxrFs7VvagLy8pQ4LTWwRMs/5eC3TkcEV/Zc9WsxkpklItSlX
+         Pj0iXSVdeAD0iSiAiP63q9dgz3flUl/oOd/4HIybtNsd8mJoC0W7gkAtJasPG3o3usKw
+         gXQWoto2c9g8M/wbJTKl4lrQQcqxl13GWagRm+sWsmIJvX9JQPqvJxFqH1oaht1TnzW7
+         +2n+DoCwHW9KlBfDPy2wHJbvW8grxizlHjGneVkH9KzjBF3NBsNPJqtMJ2jaGv5gMf5d
+         EGOyeWXMlotPrJVahD3GmLaoesk+niI7/xQ/BnSMKtU01BvQYHOh8DTXdURqohUdxtO4
+         D2gQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUX2KDu/FhIzEOwxWwY4bVGZL/gkDPaY/v116pYvKGcdNURKOYq5VaJQdGTGtXjDrlb8MOd/A==@lists.linux.dev
+X-Gm-Message-State: AOJu0YyH+EC6e1+d8OtZOXSzkKQxxxFwNZvJwkbEU64iCAMUIEClOKJW
+	alM5Y0sfcsFoMa5Bb37yl6lYE12K2ZuoWGjejBqfQSkcLHDi0EpTmj+mTooK2Hb4hoAP1ULjjyJ
+	bDpBm9t3Z+Jxfi+xrF7pGNAi2OvOArzhL1WEi5Dd/
+X-Gm-Gg: ASbGncvoRQgyASoXrGISLKGBrwGanjUNOo0LQbBm6U2Ar0NAjzhH5LRTryo3v+f4hZe
+	suHch+t0LUgWtmqxcUZpYrkAzya2jpfw/tLScb47t2BgFM0p57/rlo72UzIQIOoF3A8ClF8LQ9w
+	XnN+rfsvBGfBo7riKfqxDAFooUV1O09Ueo+JDI0BiFDl+ufJFfITSV0FPJanE8preqqhCDecFAK
+	ejtuS5fnOhJYbpPYVTfSRXHACsCnKH2iwArwkebR3u3XCCSNIe6UOzFnA==
+X-Google-Smtp-Source: AGHT+IGwKj8+FeXsQR4WunSW0QBU4S01IHDhpLwKH7+wQspVHInHE5tXI45S3ELL33wWwQ08lPI1qcfPuEc+19ZHTWs=
+X-Received: by 2002:a17:903:19cd:b0:240:5c38:7555 with SMTP id
+ d9443c01a7336-244584ede2fmr22257795ad.5.1755146052777; Wed, 13 Aug 2025
+ 21:34:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250807-b4-mptcp_perf-v1-1-e89cc14179cc@openai.com> <2f037b38-c9f4-44a0-857c-0f65cbd50688@kernel.org>
-In-Reply-To: <2f037b38-c9f4-44a0-857c-0f65cbd50688@kernel.org>
-From: Christoph Paasch <cpaasch@openai.com>
-Date: Wed, 13 Aug 2025 20:31:56 -0700
-X-Gm-Features: Ac12FXyos46rcqORlP25gAvlroFwAr6ogareuSG9QL-7GNfqSpYP-XnDhUYtjIo
-Message-ID: <CADg4-L9YE8guQWz1xDovoyyHrb723WaurRoeWJZ5P+J=OVrRDg@mail.gmail.com>
-Subject: Re: [PATCH mptcp-next] mptcp: record subflows in RPS table
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: MPTCP Upstream <mptcp@lists.linux.dev>, Geliang Tang <geliang@kernel.org>, 
-	Mat Martineau <martineau@kernel.org>
+References: <20250812175848.512446-1-kuniyu@google.com> <20250812175848.512446-13-kuniyu@google.com>
+ <w6klr435a4rygmnifuujg6x4k77ch7cwoq6dspmyknqt24cpjz@bbz4wzmxjsfk>
+ <CAAVpQUCU=VJxA6NKx+O1_zwzzZOxUEsG9mY+SNK+bzb=dj9s5w@mail.gmail.com>
+ <oafk5om7v5vtxjmo5rtwy6ullprfaf6mk2lh4km7alj3dtainn@jql2rih5es4n> <e6c8fa06-c76c-49e7-a027-0a7b610f1e9c@linux.dev>
+In-Reply-To: <e6c8fa06-c76c-49e7-a027-0a7b610f1e9c@linux.dev>
+From: Kuniyuki Iwashima <kuniyu@google.com>
+Date: Wed, 13 Aug 2025 21:34:01 -0700
+X-Gm-Features: Ac12FXwCislSz3BViv-OIQ8p6QupR93n7L2582VKpwYhsHhniE6ipCNyQvXHe4w
+Message-ID: <CAAVpQUD6hCY2FDWKVnoiQ59RmovLizTPCC+ZNqB=oyP5B4-2Aw@mail.gmail.com>
+Subject: Re: [PATCH v3 net-next 12/12] net-memcg: Decouple controlled memcg
+ from global protocol memory accounting.
+To: Martin KaFai Lau <martin.lau@linux.dev>
+Cc: Shakeel Butt <shakeel.butt@linux.dev>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+	Neal Cardwell <ncardwell@google.com>, Paolo Abeni <pabeni@redhat.com>, 
+	Willem de Bruijn <willemb@google.com>, Matthieu Baerts <matttbe@kernel.org>, 
+	Mat Martineau <martineau@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Michal Hocko <mhocko@kernel.org>, Roman Gushchin <roman.gushchin@linux.dev>, 
+	Andrew Morton <akpm@linux-foundation.org>, =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>, 
+	Tejun Heo <tj@kernel.org>, Simon Horman <horms@kernel.org>, Geliang Tang <geliang@kernel.org>, 
+	Muchun Song <muchun.song@linux.dev>, Mina Almasry <almasrymina@google.com>, 
+	Kuniyuki Iwashima <kuni1840@gmail.com>, netdev@vger.kernel.org, mptcp@lists.linux.dev, 
+	cgroups@vger.kernel.org, linux-mm@kvack.org, bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Aug 13, 2025 at 7:54=E2=80=AFAM Matthieu Baerts <matttbe@kernel.org=
-> wrote:
+On Wed, Aug 13, 2025 at 5:55=E2=80=AFPM Martin KaFai Lau <martin.lau@linux.=
+dev> wrote:
 >
-> Hi Christoph,
->
-> On 07/08/2025 20:14, Christoph Paasch via B4 Relay wrote:
-> > From: Christoph Paasch <cpaasch@openai.com>
-> >
-> > Accelerated Receive Flow Steering (aRFS) relies on sockets recording
-> > their RX flow hash into the rps_sock_flow_table so that incoming packet=
-s
-> > are steered to the CPU where the application runs.
-> >
-> > With MPTCP, the application interacts with the parent MPTCP socket whil=
+> On 8/13/25 1:53 PM, Shakeel Butt wrote:
+> > What I think is the right approach is to have BPF struct ops based
+> > approach with possible callback 'is this socket under pressure' or mayb=
 e
-> > data is carried over per-subflow TCP sockets. Without recording these
-> > subflows, aRFS cannot steer interrupts and RX processing for the flows
-> > to the desired CPU.
+> > 'is this socket isolated' and then you can do whatever you want in thos=
+e
+> > callbacks. In this way your can follow the same approach of caching the
+> > result in kernel (lower bits of sk->sk_memcg).
 > >
-> > Record all subflows in the RPS table by calling sock_rps_record_flow()
-> > for each subflow at the start of mptcp_sendmsg() and mptcp_recvmsg().
-> >
-> > It does not by itself improve throughput, but ensures that IRQ and RX
-> > processing are directed to the right CPU, which is a
-> > prerequisite for effective aRFS.
+> > I am CCing bpf list to get some suggestions or concerns on this
+> > approach.
 >
-> Thank you for looking at that!
+> I have quickly looked at the set. In patch 11, it sets a bit in sk->sk_me=
+mcg.
 >
-> > Signed-off-by: Christoph Paasch <cpaasch@openai.com>
-> > ---
-> >  net/mptcp/protocol.c | 16 ++++++++++++++++
-> >  1 file changed, 16 insertions(+)
-> >
-> > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> > index 4b510e04724f5c8be08a00a1cc03093bcd031905..86f1fc5be47bd5f6dc8bf40=
-a488de32f253c1beb 100644
-> > --- a/net/mptcp/protocol.c
-> > +++ b/net/mptcp/protocol.c
-> > @@ -12,6 +12,7 @@
-> >  #include <linux/sched/signal.h>
-> >  #include <linux/atomic.h>
-> >  #include <net/aligned_data.h>
-> > +#include <net/rps.h>
-> >  #include <net/sock.h>
-> >  #include <net/inet_common.h>
-> >  #include <net/inet_hashtables.h>
-> > @@ -1740,6 +1741,17 @@ static u32 mptcp_send_limit(const struct sock *s=
-k)
-> >       return limit - not_sent;
-> >  }
-> >
-> > +static void mptcp_rps_record_subflows(const struct mptcp_sock *msk)
-> > +{
-> > +     struct mptcp_subflow_context *subflow;
-> > +
-> > +     mptcp_for_each_subflow(msk, subflow) {
-> > +             struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
-> > +
-> > +             sock_rps_record_flow(ssk);
+> On the bpf side, there are already cgroup bpf progs that can do bpf_setso=
+ckopt
+> on a sk, so the same can be done here. The bpf_setsockopt does not have t=
+o set
+> option/knob that is only available in the uapi in case we don't want to e=
+xpose
+> this to the user space.
 >
-> Should we eventually open code this RPS function and directly call
-> sock_rps_record_flow_hash()? If RPS is not needed, no need to go through
-> the subflow list. So we could add: #ifdef CONFIG_RPS + &rfs_needed
-> before the for_each, then check the state for each subflow, no?
->
-> Or maybe such optimisation is not worth it?
+> The cgroup bpf prog (BPF_CGROUP_INET_SOCK_CREATE) can already be run when=
+ a
+> "inet" sock is created. This hook (i.e. attach_type) does not have access=
+ to
+> bpf_setsockopt but should be easy to add.
 
-IMO it's not worth it. Because it would also mean that we pull in more
-of non-MPTCP things over to MPTCP files.
+Okay, I will try the bpf_setsockopt() approach.
+Should I post patch 1-10 to net-next separately ?
+They are pure net material to gather memcg code under CONFIG_MEMCG.
 
-> While at it, I see that sock_rps_record_flow() is called in
-> __inet_accept(), inet(6)_sendmsg and inet(6)_recvmsg, but with the msk.
-> I guess that's OK, right?
-
-AFAICS, that should be alright. sk_rxhash should not be set on an msk.
-Even on the passive opener side, we clone msk from the ssk, but at
-that point sk_rxhash is not set yet. (I may be wrong of course, I'm
-still not super familiar with the source-code...)
-
-> Also, is sock_rps_record_flow() called when a subflow is "accept()ed",
-> or is there something else to do there for this subflow to copy TCP's
-> behaviour?
-
-For new subflows, I don't think we can easily do that. Because
-sock_rps_record_flow() records the CPU on which it is running. From
-what I see, when new subflows get accepted, that is not happening in
-the application's context necessarily. So, we have to wait for a
-recvmsg/sendmsg.
-
-
-Christoph
 
 >
-> Cheers,
-> Matt
-> --
-> Sponsored by the NGI0 Core fund.
->
+> For more comprehensive mem charge policy that needs new bpf hook, that pr=
+obably
+> will need struct_ops instead of another cgroup attach_type but that will =
+be
+> implementation details.
