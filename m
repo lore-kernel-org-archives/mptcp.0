@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19C891D5CEA
-	for <mptcp@lists.linux.dev>; Thu, 14 Aug 2025 14:36:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADB2B1AAE28
+	for <mptcp@lists.linux.dev>; Thu, 14 Aug 2025 14:36:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755182162; cv=none; b=KS8YkbEnvCjcGU1gu0BNNZFEszOUXwPWotVg+f7o3qu52cvMckxXgfX149PPbGRYqoH7T3a8P8Az1kQbmS/D56hGQSEpsPxhQKD3KaN7dyWFEZbSGU2xVMr4OLMTqYycNimKB4AqD50WiyShxt7orsHaYIGRSS9+xiNipTu6ZfI=
+	t=1755182167; cv=none; b=AmcV/l79D2OF8AhuT36bbRvRC22KLFxIlWrunohj0VZljEvx0iRzM+euDEsNfyoiZHp8Zv4azHcDkXFbh86d1IMCSxCKYUw/uKGTPaAcEpfgEWYxNP+cqP6NBr8xWzodmqwKqAAZSdUKJiw0sBNQe74IpH53jTwUHjwitUhBJ5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755182162; c=relaxed/simple;
-	bh=jPJVUYBZalovfrMqoNKJRwmSyTsMZF9zKQxhGQAh0uk=;
+	s=arc-20240116; t=1755182167; c=relaxed/simple;
+	bh=DcO4ZZitkEdwD2MEtSdqVvCb/f5KC26g9S2t+C6rliE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=CUVAEhhrabwo3AwpZduHfM1+lHfBctD2lMp2MYSGMkPkn7yvXcym0rcVas7fBqQFd8xs7Zd2z8BbVk+7kWhvpyCqp+jyBndc9nfnOiB0Uf98hBBZqSZR4eGXm2z+HCtLJJteEaZxReWZXX3EmUcdPhV8Qui3lYoqJcKUm+LSpEM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rrkqUoRu; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=F+nmcPjL5MoEXkLTBRPnha7EeF2ib15LVBiGs5H2Quw8BOuLcfN3FCkGmMkTVi3BgIIWKSlPtbnoYBZO7yEym12KwCg3Anj5F2bU8LItDJuuhJq1d6BsR+iqaM1RnC54bTTz4dbnyQEvYc+RGE6oDpl8xV5P75ASkfXQH9OYzhY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=op/LqTEn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rrkqUoRu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0BAAC4CEED;
-	Thu, 14 Aug 2025 14:36:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="op/LqTEn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60785C4CEEF;
+	Thu, 14 Aug 2025 14:36:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755182161;
-	bh=jPJVUYBZalovfrMqoNKJRwmSyTsMZF9zKQxhGQAh0uk=;
+	s=k20201202; t=1755182167;
+	bh=DcO4ZZitkEdwD2MEtSdqVvCb/f5KC26g9S2t+C6rliE=;
 	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=rrkqUoRu1zs07VR5IrRfGBRE+KahOr6AAR1zl+E5xKFXf/ySGPO/I/kB9MFKs4S4c
-	 HCnKl1lGxqDQUYCrhrdqYdC8yR+fiy5gFOer64XGHOdVC8pFWVR1JYsmTdxatmZdX3
-	 3FwSb89bgGFviSRHrQ3QmZUvIRgw9r36mBfyHj0ViUWOSd5Nzbwn5vE24iCDJNiqHF
-	 r+130uehXCymrGEdd5V11BCtG+lEwbvGRHMHRvl3Z0oV4IH1nSGNP0HZA9EZANEgMo
-	 6X0tbZReIlSz1Iwj6BID/bIdAfCZKOWVwVDJCH1Ml39nqxk5XtiZw2OMcisu2sqs3Y
-	 FHXkQB0EsxJ2Q==
-Message-ID: <03fba60e-2c01-4570-9809-43d83a89f88a@kernel.org>
-Date: Thu, 14 Aug 2025 16:35:58 +0200
+	b=op/LqTEntUMEAPH/Wa1HDiCxEp8nTLaENcisXwnYrdaA+htwTY0C/QHTilLol0WZC
+	 EpwiN0tQJqJMTO8un/aZONXiuOWLe+q8mrsT9eKcI+o5FYM87uYtdVFHTSTYMlNS1h
+	 RT8knoqTUzddk09fgSGK6db2/GpN1PVYaXLyFnfERGtAqG3ED0awHY3rC6IWwdCB6O
+	 MoRicL263lXDRy4OIyJuByRlz8rhT8097q0sjKpF5n5k0RcazZeiPH9hHfq2Or6WvX
+	 ToNw0XLiGowJX4+NVzWvpT5WAHI62MqhePXpBA/UuIaJDpYcJ18jRWB7V/1GVy2hnw
+	 WdF2RffhI2SfA==
+Message-ID: <077fb775-f533-4709-abef-44d95e676ee8@kernel.org>
+Date: Thu, 14 Aug 2025 16:36:05 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v2 1/2] selftests: net: mptcp: add checks for
- fallback counters
+Subject: Re: [PATCH mptcp-next v2 2/2] selftests: net: mptcp: add fallback
+ checks in chk_join_nr
 Content-Language: en-GB, fr-BE
 To: Gang Yan <yangang@kylinos.cn>, mptcp@lists.linux.dev
 References: <cover.1755139312.git.yangang@kylinos.cn>
- <cda4fc3f4b901c1919adfc0ce4258be0b80e7ea9.1755139312.git.yangang@kylinos.cn>
+ <9140453b80a6c0f31118b733785b8d498c17836b.1755139312.git.yangang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,178 +86,91 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <cda4fc3f4b901c1919adfc0ce4258be0b80e7ea9.1755139312.git.yangang@kylinos.cn>
+In-Reply-To: <9140453b80a6c0f31118b733785b8d498c17836b.1755139312.git.yangang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Gang,
+
 
 On 14/08/2025 05:16, Gang Yan wrote:
-> Recently, some mib counters about fallback has been added, this patch
-> provides a helper to check the expected behavior of these mib counters
-> during the test execution.
-
-Thank you for the patch.
-
-But alone, it doesn't make sense, and it is harder to review without
-knowing how the helper is going to be used. Better to squash the two
-patches together.
-
-I think having patches dedicated to the introduction of new helpers only
-make sense when such helpers will be used on another subsystem
-(different maintainers) or when moving existing code to a new helper to
-be re-used elsewhere. But here, I think it causes more troubles.
-
+> This patch can track these counters in each namespace and check if they
+> don't have unexpected values in tests.
 > 
-> Link: https://github.com/multipath-tcp/mptcp_net-next/issues/571
 > Signed-off-by: Gang Yan <yangang@kylinos.cn>
 > ---
->  .../testing/selftests/net/mptcp/mptcp_join.sh | 98 +++++++++++++++++++
->  1 file changed, 98 insertions(+)
+>  tools/testing/selftests/net/mptcp/mptcp_join.sh | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
 > 
 > diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> index b8af65373b3a..2c1f0704bc17 100755
+> index 2c1f0704bc17..ac9e9d4fed59 100755
 > --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
 > +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> @@ -74,6 +74,15 @@ unset join_create_err
+> @@ -74,6 +74,8 @@ unset join_create_err
 >  unset join_bind_err
 >  unset join_connect_err
 >  
-> +unset infinite_map_tx_fb
-> +unset dss_corruption_fb
-> +unset simult_conn_fb
-> +unset mpc_passive_fb
-> +unset mpc_active_fb
-> +unset mpc_data_fb
-> +unset MD5_Sig_fb
-
-No need to use capital letters here.
-
-> +unset dss_fb
-
-It might make more sense to use the "fb_" prefix, instead of the suffix,
-similar to what has been done with "join_" above.
-
-> +
->  # generated using "nfbpf_compile '(ip && (ip[54] & 0xf0) == 0x30) ||
->  #				  (ip6 && (ip6[74] & 0xf0) == 0x30)'"
->  CBPF_MPTCP_SUBOPTION_ADD_ADDR="14,
-> @@ -1399,6 +1408,95 @@ chk_join_tx_nr()
->  	print_results "join Tx" ${rc}
->  }
+> +unset ns1_fb
+> +unset ns2_fb
+>  unset infinite_map_tx_fb
+>  unset dss_corruption_fb
+>  unset simult_conn_fb
+> @@ -1582,6 +1584,20 @@ chk_join_nr()
+>  	join_syn_tx="${join_syn_tx:-${syn_nr}}" \
+>  		chk_join_tx_nr
 >  
-> +chk_fallback_nr()
-> +{
-> +	local infinite_map_tx=${infinite_map_tx_fb:-0}
-> +	local dss_corruption=${dss_corruption_fb:-0}
-> +	local simult_conn=${simult_conn_fb:-0}
-> +	local mpc_passive=${mpc_passive_fb:-0}
-> +	local mpc_active=${mpc_active_fb:-0}
-> +	local mpc_data=${mpc_data_fb:-0}
-> +	local MD5_Sig=${MD5_Sig_fb:-0}
-> +	local dss=${dss_fb:-0}
+> +	if [[ -n "$ns1_fb" ]]; then
 
-No need to respect the reverse Xmas tree declaration for the variables
-here in bash. I think it is better here (and above with the unset) to
-follow the same order as below, when they are used, so it is easy to
-check if they are all used correctly.
+Detail: you can use simple [], like in most places in this file.
 
-> +	local rc=${KSFT_PASS}
-> +	local ns=$1
-> +	local count
-> +
-> +	count=$(mptcp_lib_get_counter ${ns} "MPTcpExtMPCapableFallbackACK")
-> +	if [ -z "$count" ]; then
-> +		rc=${KSFT_SKIP}
-> +	elif [ "$count" != "$mpc_passive" ]; then
-> +		rc=${KSFT_FAIL}
-> +		print_check "mpc passive fallback "
-
-All your "print_check" here and below have an extra whitespace before
-the last double quote: why? I don't think it is needed.
-
-> +		fail_test "got $count mpc passive fallback[s] expected $mpc_passive"
-
-Because this helper is used twice, we need to know which direction had
-an issue: can you pass that info (connector/listener or ns2/ns1) as
-argument to this helper, and adding it to "print_check" and "fail_test"?
-Same below.
+> +		eval "$ns1_fb" \
+> +			chk_fallback_nr ${ns1}
+> +	else
+> +		chk_fallback_nr ${ns1}
 > +	fi
 > +
-> +	count=$(mptcp_lib_get_counter ${ns} "MPTcpExtMPCapableFallbackSYNACK")
-> +	if [ -z "$count" ]; then
-> +		rc=${KSFT_SKIP}
-> +	elif [ "$count" != "$mpc_active" ]; then
-> +		rc=${KSFT_FAIL}
-> +		print_check "mpc active fallback "
-> +		fail_test "got $count mpc active fallback[s] expected $mpc_active"
-> +	fi
-> +
-> +	count=$(mptcp_lib_get_counter ${ns} "MPTcpExtDSSCorruptionFallback")
-> +	if [ -z "$count" ]; then
-> +		rc=${KSFT_SKIP}
-> +	elif [ "$count" != "$dss_corruption" ]; then
-> +		rc=${KSFT_FAIL}
-> +		print_check "dss corruption fallback "
-> +		fail_test "got $count dss corruption fallback[s] expected $dss_corruption"
-> +	fi
-> +
-> +	count=$(mptcp_lib_get_counter ${ns} "MPTcpExtInfiniteMapTx")
-> +	if [ -z "$count" ]; then
-> +		rc=${KSFT_SKIP}
-> +	elif [ "$count" != "$infinite_map_tx" ]; then
-> +		rc=${KSFT_FAIL}
-> +		print_check "infinite map tx fallback "
-> +		fail_test "got $count infinite map tx fallback[s] expected $infinite_map_tx"
-> +	fi
-> +
-> +	count=$(mptcp_lib_get_counter ${ns} "MPTcpExtMPCapableDataFallback")
-> +	if [ -z "$count" ]; then
-> +		rc=${KSFT_SKIP}
-> +	elif [ "$count" != "$mpc_data" ]; then
-> +		rc=${KSFT_FAIL}
-> +		print_check "mpc data fallback "
-> +		fail_test "got $count mpc data fallback[s] expected $mpc_data"
-> +	fi
-> +
-> +	count=$(mptcp_lib_get_counter ${ns} "MPTcpExtMD5SigFallback")
-> +	if [ -z "$count" ]; then
-> +		rc=${KSFT_SKIP}
-> +	elif [ "$count" != "$MD5_Sig" ]; then
-> +		rc=${KSFT_FAIL}
-> +		print_check "MD5 Sig fallback "
-> +		fail_test "got $count MD5 Sig fallback[s] expected $MD5_Sig"
-> +	fi
-> +
-> +	count=$(mptcp_lib_get_counter ${ns} "MPTcpExtDssFallback")
-> +	if [ -z "$count" ]; then
-> +		rc=${KSFT_SKIP}
-> +	elif [ "$count" != "$dss" ]; then
-> +		rc=${KSFT_FAIL}
-> +		print_check "dss fallback "
-> +		fail_test "got $count dss fallback[s] expected $dss"
-> +	fi
-> +
-> +	count=$(mptcp_lib_get_counter ${ns} "MPTcpExtSimultConnectFallback")
-> +	if [ -z "$count" ]; then
-> +		rc=${KSFT_SKIP}
-> +	elif [ "$count" != "$simult_conn" ]; then
-> +		rc=${KSFT_FAIL}
-> +		print_check "simult conn fallback "
-> +		fail_test "got $count simult conn fallback[s] expected $simult_conn"
-> +	fi
-> +
-> +	print_results "check fallback nr" ${rc}
+> +	if [[ -n "$ns2_fb" ]]; then
 
-Just "fallback"?
+Same here for simple [].
 
-EDIT: see the next patch: you should have a different message per netns.
+> +		eval "$ns2_fb" \
+> +			chk_fallback_nr ${ns2}
+> +	else
+> +		chk_fallback_nr ${ns2}
+> +	fi
 
-> +}
+This will print this for each test:
+
+   #       check fallback nr                   [ OK ]
+   #       check fallback nr                   [ OK ]
+
+Not pretty... Also, it might be confusing to have all these "fallback"
+lines when we don't expect any fallbacks.
+
+What about printing it only in case of error? (or only once? but still
+confusing / not worth it when printed for all tests?)
+
+
+You could have another helper containing the code here above, and instead:
+
+  rc=${KSFT_PASS}
+  chk_fallback_nr_all || rc=${?}
+
+  if [ "$rc" != "${KSFT_PASS}" ]; then
+      print_results "fallback" ${rc}
+  fi
+
 > +
->  chk_join_nr()
->  {
->  	local syn_nr=$1
+>  	if $validate_checksum; then
+>  		chk_csum_nr $csum_ns1 $csum_ns2
+>  		chk_fail_nr $fail_nr $fail_nr
+> @@ -3435,6 +3451,7 @@ fail_tests()
+>  		join_csum_ns1=+1 join_csum_ns2=+0 \
+>  			join_fail_nr=1 join_rst_nr=0 join_infi_nr=1 \
+>  			join_corrupted_pkts="$(pedit_action_pkts)" \
+> +			ns1_fb="dss_fb=1" ns2_fb="infinite_map_tx_fb=1" \
+>  			chk_join_nr 0 0 0
+>  		chk_fail_nr 1 -1 invert
+>  	fi
 
 Cheers,
 Matt
