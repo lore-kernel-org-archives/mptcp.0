@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADB2B1AAE28
-	for <mptcp@lists.linux.dev>; Thu, 14 Aug 2025 14:36:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8A2418A6B0
+	for <mptcp@lists.linux.dev>; Thu, 14 Aug 2025 14:41:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755182167; cv=none; b=AmcV/l79D2OF8AhuT36bbRvRC22KLFxIlWrunohj0VZljEvx0iRzM+euDEsNfyoiZHp8Zv4azHcDkXFbh86d1IMCSxCKYUw/uKGTPaAcEpfgEWYxNP+cqP6NBr8xWzodmqwKqAAZSdUKJiw0sBNQe74IpH53jTwUHjwitUhBJ5A=
+	t=1755182497; cv=none; b=ezgBZYcCSCMotUmM6I7EOUh8OTFxBcA6dOwd9j82xCDkZt6cccvUZNkwm313pL4VkgBZAdpQRr7HYBqzt3RERWn4gt5Eu9Y7xP+QD6AE0Vo+Ss6C28lPTTu82T/PPIKlPA41/OagT5q8axR64ZFWRRkSC0fV4zbr3RLx/3CpY9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755182167; c=relaxed/simple;
-	bh=DcO4ZZitkEdwD2MEtSdqVvCb/f5KC26g9S2t+C6rliE=;
+	s=arc-20240116; t=1755182497; c=relaxed/simple;
+	bh=Q3RLucfmPh8Kr0pGtENe20ibL+hhSS4hhTaJkq3cUxk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=F+nmcPjL5MoEXkLTBRPnha7EeF2ib15LVBiGs5H2Quw8BOuLcfN3FCkGmMkTVi3BgIIWKSlPtbnoYBZO7yEym12KwCg3Anj5F2bU8LItDJuuhJq1d6BsR+iqaM1RnC54bTTz4dbnyQEvYc+RGE6oDpl8xV5P75ASkfXQH9OYzhY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=op/LqTEn; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=G4GW+bjRbcgVrHqy0tuedip2mnF5jCz1ipBlvFZWFydnqe3ZPSV2fINbRVq7e7+EV+x1axN5Q+oEKzm1+PeFkknjGVBoXSP6XEW9E4br1kcg0aDtKt6Qr0FCtSDzKbhioykUL0pi9K+2dtbb1nh2BARuNkqAnA7zn3mZ6E1KJn4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E9RKbhMI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="op/LqTEn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60785C4CEEF;
-	Thu, 14 Aug 2025 14:36:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E9RKbhMI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95BFFC4CEED;
+	Thu, 14 Aug 2025 14:41:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755182167;
-	bh=DcO4ZZitkEdwD2MEtSdqVvCb/f5KC26g9S2t+C6rliE=;
+	s=k20201202; t=1755182497;
+	bh=Q3RLucfmPh8Kr0pGtENe20ibL+hhSS4hhTaJkq3cUxk=;
 	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=op/LqTEntUMEAPH/Wa1HDiCxEp8nTLaENcisXwnYrdaA+htwTY0C/QHTilLol0WZC
-	 EpwiN0tQJqJMTO8un/aZONXiuOWLe+q8mrsT9eKcI+o5FYM87uYtdVFHTSTYMlNS1h
-	 RT8knoqTUzddk09fgSGK6db2/GpN1PVYaXLyFnfERGtAqG3ED0awHY3rC6IWwdCB6O
-	 MoRicL263lXDRy4OIyJuByRlz8rhT8097q0sjKpF5n5k0RcazZeiPH9hHfq2Or6WvX
-	 ToNw0XLiGowJX4+NVzWvpT5WAHI62MqhePXpBA/UuIaJDpYcJ18jRWB7V/1GVy2hnw
-	 WdF2RffhI2SfA==
-Message-ID: <077fb775-f533-4709-abef-44d95e676ee8@kernel.org>
-Date: Thu, 14 Aug 2025 16:36:05 +0200
+	b=E9RKbhMI/UG5M7rapL3g8fdY62O9jatf+elrHztVAMaF58zcNX9JLD9RZnUqydEZx
+	 b9MQEoQE4AhGDO7o6lJ29pSZpUm1wD91F5JB8R1KVg4WjC+IV9HWDhYtHZNqW2f345
+	 wMWRYDYxRX1CY3gaKvF2yJ5MnjZkQXhxVLDKtEbjILJmzQzZmaq/u1xWKTwwg4+QIu
+	 CH2HebyoKONX5lW1Sut3o7IPesZYZLYBxNNZi9k06Az9/pZ2DyM9duw1EpCWEUHKoh
+	 QvFQNEvZ2yt9NeTYlcM1uCglAYzsbL6DqS02g8KFFYT8WvjCprno/Ap9wIazLa6kYQ
+	 vzUJx9O+fOv3Q==
+Message-ID: <42d39ee7-1ff9-4e70-9aaa-6445e4e7da9e@kernel.org>
+Date: Thu, 14 Aug 2025 16:41:34 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v2 2/2] selftests: net: mptcp: add fallback
- checks in chk_join_nr
+Subject: Re: [RFC mptcp-next] selftests: mptcp: Add a test for self-conn
+ fallback
 Content-Language: en-GB, fr-BE
-To: Gang Yan <yangang@kylinos.cn>, mptcp@lists.linux.dev
-References: <cover.1755139312.git.yangang@kylinos.cn>
- <9140453b80a6c0f31118b733785b8d498c17836b.1755139312.git.yangang@kylinos.cn>
+To: GangYan <gang.yan@linux.dev>, mptcp@lists.linux.dev
+References: <20250814065818.34804-1-yangang@kylinos.cn>
+ <ab7a5df2-2ab7-f5b2-3597-c247ea027913@gmail.com>
+ <aJ2k-JhkBmIAfdoX@yangang-ThinkPad-T14-Gen-1>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,91 +87,43 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <9140453b80a6c0f31118b733785b8d498c17836b.1755139312.git.yangang@kylinos.cn>
+In-Reply-To: <aJ2k-JhkBmIAfdoX@yangang-ThinkPad-T14-Gen-1>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
+Hi Gang,
 
-
-On 14/08/2025 05:16, Gang Yan wrote:
-> This patch can track these counters in each namespace and check if they
-> don't have unexpected values in tests.
+On 14/08/2025 10:57, GangYan wrote:
+>> On Thu, Aug 14, 2025 at 08:51:13AM +0000, MPTCP CI wrote:
+> Hi Matt,
 > 
-> Signed-off-by: Gang Yan <yangang@kylinos.cn>
-> ---
->  tools/testing/selftests/net/mptcp/mptcp_join.sh | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
+> I noticed the 'MPTCP_MIB_SIMULTCONNFALLBACK' is not coverd by selftests
+> through 'code_coverage'. So, I add a test according to issue#35, and I
+> would like to seek your advice on the following points:
 > 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> index 2c1f0704bc17..ac9e9d4fed59 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> @@ -74,6 +74,8 @@ unset join_create_err
->  unset join_bind_err
->  unset join_connect_err
->  
-> +unset ns1_fb
-> +unset ns2_fb
->  unset infinite_map_tx_fb
->  unset dss_corruption_fb
->  unset simult_conn_fb
-> @@ -1582,6 +1584,20 @@ chk_join_nr()
->  	join_syn_tx="${join_syn_tx:-${syn_nr}}" \
->  		chk_join_tx_nr
->  
-> +	if [[ -n "$ns1_fb" ]]; then
+> -Is it suitable to add a test like this patch to cover this part of code?
+> -If yes, please give me some feedback on modification suggestions about
+> this patch.
 
-Detail: you can use simple [], like in most places in this file.
+Good idea to cover this.
 
-> +		eval "$ns1_fb" \
-> +			chk_fallback_nr ${ns1}
-> +	else
-> +		chk_fallback_nr ${ns1}
-> +	fi
-> +
-> +	if [[ -n "$ns2_fb" ]]; then
+My fear is that this test might be unstable, no?
 
-Same here for simple [].
+Is it not easier to reproduce this with Packetdrill test? e.g.
 
-> +		eval "$ns2_fb" \
-> +			chk_fallback_nr ${ns2}
-> +	else
-> +		chk_fallback_nr ${ns2}
-> +	fi
+> `../common/defaults.sh`
+> 
+>  0 socket(..., SOCK_STREAM|SOCK_NONBLOCK, IPPROTO_MPTCP) = 3
+> +0 connect(3, ..., ...) = -1 EINPROGRESS (Operation now in progress)
+> 
+> +0 > S  0:0(0)                 <mss 1460, sackOK, TS val 100 ecr 0,   nop, wscale 8, mpcapable v1 flags[flag_h] nokey>
+> +0 < S  0:0(0) win 1000        <mss 1460, sackOK, TS val 407 ecr 0,   nop, wscale 8, mpcapable v1 flags[flag_h] nokey>
+> +0 > S. 0:0(0) ack 1           <mss 1460, sackOK, TS val 330 ecr 0,   nop, wscale 8, mpcapable v1 flags[flag_h] nokey>
+> +0 < S. 0:0(0) ack 1 win 65535 <mss 1460, sackOK, TS val 700 ecr 100, nop, wscale 8, mpcapable v1 flags[flag_h] key[skey=2]>
+> +0 >  . 1:1(0)     ack 1 <nop, nop, TS val 845707014 ecr 700, nop, nop, sack 0:1>
+Then check the MIB counter.
 
-This will print this for each test:
-
-   #       check fallback nr                   [ OK ]
-   #       check fallback nr                   [ OK ]
-
-Not pretty... Also, it might be confusing to have all these "fallback"
-lines when we don't expect any fallbacks.
-
-What about printing it only in case of error? (or only once? but still
-confusing / not worth it when printed for all tests?)
-
-
-You could have another helper containing the code here above, and instead:
-
-  rc=${KSFT_PASS}
-  chk_fallback_nr_all || rc=${?}
-
-  if [ "$rc" != "${KSFT_PASS}" ]; then
-      print_results "fallback" ${rc}
-  fi
-
-> +
->  	if $validate_checksum; then
->  		chk_csum_nr $csum_ns1 $csum_ns2
->  		chk_fail_nr $fail_nr $fail_nr
-> @@ -3435,6 +3451,7 @@ fail_tests()
->  		join_csum_ns1=+1 join_csum_ns2=+0 \
->  			join_fail_nr=1 join_rst_nr=0 join_infi_nr=1 \
->  			join_corrupted_pkts="$(pedit_action_pkts)" \
-> +			ns1_fb="dss_fb=1" ns2_fb="infinite_map_tx_fb=1" \
->  			chk_join_nr 0 0 0
->  		chk_fail_nr 1 -1 invert
->  	fi
+(Note: I didn't check, the alignment is not OK, just wrote it very quickly)
 
 Cheers,
 Matt
