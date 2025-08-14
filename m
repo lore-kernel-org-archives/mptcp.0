@@ -1,90 +1,84 @@
-Received: from out-170.mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBA7684039
-	for <mptcp@lists.linux.dev>; Thu, 14 Aug 2025 00:55:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EC892FF65E
+	for <mptcp@lists.linux.dev>; Thu, 14 Aug 2025 03:16:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755132905; cv=none; b=mUklgILXvAW2zsOH13uNI+OT3x30GN0VH1RIudJr5cnbTaCDocdkpUgjPOe1hYYDf1mEEtmRsE5vRr6HaL1KwCSB4ZjSclCkKDZ/3x7wDPCs3b/x0nohbUdLXZfB//sUXq6+sn9DO8bPRejrlO3AUnOxTFqgOWytLMPLOUeu9FY=
+	t=1755141411; cv=none; b=FgBC6WMLybxBU+UlygzwQsxkVSwxQQf+oLhoT/6t61SBSvHMXG+/limXGt6AeJB4UuGpcSji/Efc0aRpynqeNZIKa+mSWcPvb9U20HipMo1x7zaB32E6ljPu7g4x6jSvH7YsPAAa9JEQ+wTuogN7MBCSSH1NMplw4hLb+tyYmoc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755132905; c=relaxed/simple;
-	bh=JydQgnfv1smbfa7kiZsNg0dRzfJLvvk2h3GZdX1R0Ow=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IqHnUkPRJwZOS2RT2oKwGribeNKR76nZF+ZaXZAmM8Hfn3HWIN3ghBxQ09kUPs+qDpSbYcJyrIciD23eI0fCszJfItY3rTxCLzfluxOM2+jVaIoZpgKCnoRfho7w/C3hnqR+XQ/V3NYVQQtM/hZiCmXMLlC9sITJZhyTR06KwK8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=j6HQjTqi; arc=none smtp.client-ip=91.218.175.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="j6HQjTqi"
-Message-ID: <e6c8fa06-c76c-49e7-a027-0a7b610f1e9c@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1755132890;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WdHhV4i8i+lWGHS2gl9FLlu2TgUgJbbs4bD/Zxld7c4=;
-	b=j6HQjTqifsSO2Uppl1+E8juWlz85WB6Puvvo38zR0af1UA37Dw9SimZLmZuB9dm1eOcmBg
-	ClajNZt92ETnf/J4hcXbQq43iGyGJsz35Oj+8z3oHgpyWVoPyIp+xlvpV5UK78DWgLMmi1
-	7Au6epSZeq1y5zb1TVkFgVNw6Q6r0ZU=
-Date: Wed, 13 Aug 2025 17:54:43 -0700
+	s=arc-20240116; t=1755141411; c=relaxed/simple;
+	bh=dNi3wkL1Uy1LIbgT/X03+hnOA8OX7ScUoasl7qvDt/0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XGROmg6qeSFtwFbMv+licoOaSVWj5ADv6iLtYTPOass8hSTfGNttviV2vpPfYNT8jb5yUw8mFu6FeFalTScSxLgrceXUkHirmkw9T08pjOvOXBYY7wedGu6ETIWAAOfuH0gDa0IiC9I4kmlWed9socIPkVGxFwcyboul15uHApA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 18664b2278bd11f0b29709d653e92f7d-20250814
+X-CTIC-Tags:
+	HR_CC_AS_FROM, HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CTE_8B
+	HR_CTT_MISS, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME
+	HR_SJ_DIGIT_LEN, HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM
+	HR_SJ_PHRASE, HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT
+	HR_TO_NO_NAME, IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED, SA_TRUSTED
+	SA_EXISTED, SN_EXISTED, SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS
+	UD_TRUSTED, CIE_BAD, CIE_GOOD, CIE_GOOD_SPF, GTI_FG_BS
+	GTI_C_TF, GTI_C_CI, GTI_FG_IT, GTI_RG_INFO, GTI_C_BU
+	AMN_T1, AMN_GOOD, AMN_C_TI, AMN_C_BU, ABX_MISS_RDNS
+X-CID-O-RULE: Release_Ham
+X-CID-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:2ffe7ca2-9576-4252-a38c-461707b1a788,IP:10,
+	URL:0,TC:0,Content:0,EDM:25,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACT
+	ION:release,TS:20
+X-CID-INFO: VERSION:1.1.45,REQID:2ffe7ca2-9576-4252-a38c-461707b1a788,IP:10,UR
+	L:0,TC:0,Content:0,EDM:25,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:20
+X-CID-META: VersionHash:6493067,CLOUDID:66ccb5ff5e8987fca94b3a779d7e9de3,BulkI
+	D:250814111642ZW1GSDM0,BulkQuantity:0,Recheck:0,SF:17|19|24|44|66|78|102,T
+	C:nil,Content:0|50,EDM:5,IP:-2,URL:1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:n
+	il,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI,
+	TF_CID_SPAM_ULS
+X-UUID: 18664b2278bd11f0b29709d653e92f7d-20250814
+X-User: yangang@kylinos.cn
+Received: from yangang-thinkpad-t14-gen-1.. [(223.70.159.239)] by mailgw.kylinos.cn
+	(envelope-from <yangang@kylinos.cn>)
+	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
+	with ESMTP id 928982074; Thu, 14 Aug 2025 11:16:40 +0800
+From: Gang Yan <yangang@kylinos.cn>
+To: mptcp@lists.linux.dev
+Cc: Gang Yan <yangang@kylinos.cn>
+Subject: [PATCH mptcp-next v2 0/2] selftests: check fallback mib counter
+Date: Thu, 14 Aug 2025 11:16:22 +0800
+Message-ID: <cover.1755139312.git.yangang@kylinos.cn>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Subject: Re: [PATCH v3 net-next 12/12] net-memcg: Decouple controlled memcg
- from global protocol memory accounting.
-To: Shakeel Butt <shakeel.butt@linux.dev>,
- Kuniyuki Iwashima <kuniyu@google.com>
-Cc: "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Neal Cardwell <ncardwell@google.com>, Paolo Abeni <pabeni@redhat.com>,
- Willem de Bruijn <willemb@google.com>, Matthieu Baerts <matttbe@kernel.org>,
- Mat Martineau <martineau@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
- Michal Hocko <mhocko@kernel.org>, Roman Gushchin <roman.gushchin@linux.dev>,
- Andrew Morton <akpm@linux-foundation.org>, =?UTF-8?Q?Michal_Koutn=C3=BD?=
- <mkoutny@suse.com>, Tejun Heo <tj@kernel.org>,
- Simon Horman <horms@kernel.org>, Geliang Tang <geliang@kernel.org>,
- Muchun Song <muchun.song@linux.dev>, Mina Almasry <almasrymina@google.com>,
- Kuniyuki Iwashima <kuni1840@gmail.com>, netdev@vger.kernel.org,
- mptcp@lists.linux.dev, cgroups@vger.kernel.org, linux-mm@kvack.org,
- bpf@vger.kernel.org
-References: <20250812175848.512446-1-kuniyu@google.com>
- <20250812175848.512446-13-kuniyu@google.com>
- <w6klr435a4rygmnifuujg6x4k77ch7cwoq6dspmyknqt24cpjz@bbz4wzmxjsfk>
- <CAAVpQUCU=VJxA6NKx+O1_zwzzZOxUEsG9mY+SNK+bzb=dj9s5w@mail.gmail.com>
- <oafk5om7v5vtxjmo5rtwy6ullprfaf6mk2lh4km7alj3dtainn@jql2rih5es4n>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Martin KaFai Lau <martin.lau@linux.dev>
-In-Reply-To: <oafk5om7v5vtxjmo5rtwy6ullprfaf6mk2lh4km7alj3dtainn@jql2rih5es4n>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
 
-On 8/13/25 1:53 PM, Shakeel Butt wrote:
-> What I think is the right approach is to have BPF struct ops based
-> approach with possible callback 'is this socket under pressure' or maybe
-> 'is this socket isolated' and then you can do whatever you want in those
-> callbacks. In this way your can follow the same approach of caching the
-> result in kernel (lower bits of sk->sk_memcg).
-> 
-> I am CCing bpf list to get some suggestions or concerns on this
-> approach.
+These patches can add a verification step to check the expected behavior
+of these MIB counters during the test execution.
 
-I have quickly looked at the set. In patch 11, it sets a bit in sk->sk_memcg.
+Link: https://github.com/multipath-tcp/mptcp_net-next/issues/571
 
-On the bpf side, there are already cgroup bpf progs that can do bpf_setsockopt 
-on a sk, so the same can be done here. The bpf_setsockopt does not have to set 
-option/knob that is only available in the uapi in case we don't want to expose 
-this to the user space.
+------
+Changelog
+  v2:
+    - add a helper which can check all the fallback mib counters.
+    - put the 'chk_fallback_nr' in 'chk_join_nr' like chk_join_tx_nr.
 
-The cgroup bpf prog (BPF_CGROUP_INET_SOCK_CREATE) can already be run when a 
-"inet" sock is created. This hook (i.e. attach_type) does not have access to 
-bpf_setsockopt but should be easy to add.
+Gang Yan (2):
+  selftests: net: mptcp: add checks for fallback counters
+  selftests: net: mptcp: add fallback checks in chk_join_nr
 
-For more comprehensive mem charge policy that needs new bpf hook, that probably 
-will need struct_ops instead of another cgroup attach_type but that will be 
-implementation details.
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 115 ++++++++++++++++++
+ 1 file changed, 115 insertions(+)
+
+-- 
+2.43.0
+
