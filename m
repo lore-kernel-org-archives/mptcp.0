@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F78021FF5D
-	for <mptcp@lists.linux.dev>; Fri, 15 Aug 2025 10:39:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA1B3286417
+	for <mptcp@lists.linux.dev>; Fri, 15 Aug 2025 11:00:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755254399; cv=none; b=Jj0+57lgd2XIlIa1I8jrHoHM2bLa4sEpDfnaWK3HeYgvCLCaI9NJSQxQBfvgEvIOSSCclKkntk0cyjOl8emsDNVM2A2n+TH0t/RqsAb+0iQ0kHqDpH1Tg927Mb2spWfmLtsYtIAlGnVYNKd6cQRamx8Y0F9HtGuOQeR7Fm68fuI=
+	t=1755255653; cv=none; b=BREOQmVEoziSFeoexKZRlAKMScmkYZvzQi+kE7yLsYqI8s2/cPQCBuMWnbOoOt3M4knAOvnGQai91J4d7pC824GKj0RdtmJgvwr0P48cfiCr6jvDKgGtUH3pn6mQFRDOxRyhfhS8Hn0iKxmnW8fp45damkqprYpX6WL2uSbuPBs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755254399; c=relaxed/simple;
-	bh=o0qy4hIYEUwnQ5tOAtQG6KodJsJjY/1AFrWA8nZR51E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
-	 In-Reply-To:Content-Type; b=LYTNqSPmHkvCLSTeXB/7v0Xk1nOHbYNlbHwTxx4LtpHqXvxUVTtvB2ovvhmONdMjawyFSh5jigh2+YwZNLT+QIDiwhMdqzmB9USP7gwaFifwP3Cm0DsRHWUOajm9FwdAKSWNZgtm4R9YiYxQNQjUbjGa+xdPE1QHFg68o60N1/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HHO8FfEr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1755255653; c=relaxed/simple;
+	bh=tIMGLNlVLzrgsLVdKvS3w7uex4B7IEf7fOr+qV8iUFg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DJ0QywADoMxx6FL8Zh8YfkH6fZe3JCGJABF1ryZ/KKzTICuFvULQ6uzFDklFdm4SmktBZeDwCJCU4ixJOlkfcYTil1W9vFgrxYsMl/iA5TpOXWm79kiqKa6sgTOaK73XbfieNNdcrCzZ3JRFybsYNxvsHH3Lcpawl6Y9JzSOu4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Is0OLzBP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HHO8FfEr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 357EAC4CEEB;
-	Fri, 15 Aug 2025 10:39:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Is0OLzBP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5423C4CEEB;
+	Fri, 15 Aug 2025 11:00:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755254398;
-	bh=o0qy4hIYEUwnQ5tOAtQG6KodJsJjY/1AFrWA8nZR51E=;
-	h=Date:Subject:To:References:From:Cc:In-Reply-To:From;
-	b=HHO8FfErchxsjv6CiH9E+64CiHsWQKpYtQ9CP0SXYVM41xXxPQ3iStFJFH1WyX8M5
-	 Dbh8EiV1/AZYzlM1pVolt32QEaDUycOmIVEN2EdFsBlYnja0JMFyr0rTopF4gHN7QA
-	 FjHlBHENToZPCQ7UYDIxmSO7GXttKsGS2XkLas9uI7A9Tr6mgjLPiPiea0XyFPzkT9
-	 1VIRXuvQjqg832865dSiN+UOD8Ti/T918xV/uOdboPmULzZVXzPyc9wGQU5qZMWO0h
-	 lWbGgYPgrOjBF2vnRADoRzPPpAz5Gp3PjWmCmmly4kQwIrcIfaDGJv5WXr47Q3Y2EB
-	 JFdDmQENmukog==
-Message-ID: <c952a5ca-463d-4ec2-ab47-70e8fc4193fe@kernel.org>
-Date: Fri, 15 Aug 2025 12:39:55 +0200
+	s=k20201202; t=1755255652;
+	bh=tIMGLNlVLzrgsLVdKvS3w7uex4B7IEf7fOr+qV8iUFg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Is0OLzBPaIwQDahJGwLc+anjqNCxlueujxINpmTI/XeqK5E2N+J1vQIGZArChdgo2
+	 lV9woCj/APQ4V9mjMurXIr/3ZpeGR/U4bsvQbeyerquCweoACzxP0V6AsUdLUyvxTi
+	 30gdwp7WSAwow8a20Q+YpKPfnP9Q69VCVrUnYbNgLerYVImzXklrPoAlrRw6hWnGit
+	 iPYBEa1uO43YvJh7GeUwP9jkeGZj5q3eMRJ3ZYdMWu8byHDgCO4SIRcTvGLEjWh488
+	 tva5Lp4CI7ryGRl+zD5FUd9XxSZQr9EqTFCFNdeRiyCp/MuUsUxl+ahZzR+co1tcVg
+	 eXQ/h3Vbv2FOw==
+Message-ID: <e8ddeb7f-2603-45c4-8324-d715c2c10630@kernel.org>
+Date: Fri, 15 Aug 2025 13:00:49 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,15 +35,14 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v3] selftests: net: mptcp: add checks for
- fallback counters
+Subject: Re: [PATCH mptcp-net 0/2] mptcp: pm: kernel: flush: do not reset
+ ADD_ADDR limit
 Content-Language: en-GB, fr-BE
-To: GangYan <gang.yan@linux.dev>
-References: <20250815073140.29077-1-yangang@kylinos.cn>
- <62e44bb3-957d-4676-95ec-2ceedba2e9c1@kernel.org>
- <aJ76OvpQPr3wuNuT@yangang-ThinkPad-T14-Gen-1>
+To: Mat Martineau <martineau@kernel.org>
+Cc: mptcp@lists.linux.dev, Thomas Dreibholz <dreibh@simula.no>
+References: <20250806-mptcp-pm-flush-limit-v1-0-9f83699e0863@kernel.org>
+ <89bfba12-6c8d-d873-6390-905e5c5da63a@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
-Cc: MPTCP Linux <mptcp@lists.linux.dev>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -88,62 +87,56 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <aJ76OvpQPr3wuNuT@yangang-ThinkPad-T14-Gen-1>
+In-Reply-To: <89bfba12-6c8d-d873-6390-905e5c5da63a@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi Gang,
+Hi Mat,
 
-On 15/08/2025 11:13, GangYan wrote:
->> On Fri, Aug 15, 2025 at 10:24:18AM +0200, Matthieu Baerts wrote:
->> 15 Aug 2025 09:32:11 Gang Yan <yangang@kylinos.cn>:
+On 14/08/2025 02:25, Mat Martineau wrote:
+> On Wed, 6 Aug 2025, Matthieu Baerts (NGI0) wrote:
+> 
+>> A flush of the MPTCP endpoints should not affect the MPTCP limits. In
+>> other words, 'ip mptcp endpoint flush' should not change 'ip mptcp
+>> limits'.
 >>
->>> Recently, some mib counters about fallback has been added, this patch
->>> provides a method to check the expected behavior of these mib counters
->>> during the test execution.
->>>
->>> Link: https://github.com/multipath-tcp/mptcp_net-next/issues/571
->>> Signed-off-by: Gang Yan <yangang@kylinos.cn>
+>> But it was the case. Patch 1 fixes the issue, and Patch 2 modified
+>> pm_netlink.sh selftest to validate the modification on the kernel side.
+>>
+>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+>> ---
+>> Matthieu Baerts (NGI0) (2):
+>>      mptcp: pm: kernel: flush: do not reset ADD_ADDR limit
+>>      selftests: mptcp: pm: check flush doesn't reset limits
+>>
+>> net/mptcp/pm_kernel.c                           | 1 -
+>> tools/testing/selftests/net/mptcp/pm_netlink.sh | 1 +
+>> 2 files changed, 1 insertion(+), 1 deletion(-)
+>> ---
+>> base-commit: 8353c34f924e5fb87e86e5587e15df160add9a44
+>> change-id: 20250806-mptcp-pm-flush-limit-c5a2d74fc2ea
+>>
+> 
+> Series LGTM, thanks Matthieu!
+> 
+> Reviewed-by: Mat Martineau <martineau@kernel.org>
 
-(...)
->>> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
->>> index b8af65373b3a..898779a9af58 100755
->>> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
->>> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+Thank you for the review!
 
-(...)
+Now in our tree (fixes for -net):
 
->>> +chk_fallback_nr_all()
->>> +{
->>> +   local netns=("ns1" "ns2")
->>> +   local fb_ns=("fb_ns1" "fb_ns2")
->>> +   local rc=${KSFT_PASS}
->>> +
->>> +   for i in 0 1; do
+New patches for t/upstream-net and t/upstream:
+- 7f177b98bfef: mptcp: pm: kernel: flush: do not reset ADD_ADDR limit
+- d62e61868bae: selftests: mptcp: pm: check flush doesn't reset limits
+- Results: e81a6d054101..3f23a1fbaa6a (export-net)
+- Results: 6e5604790ba7..7c14230bb733 (export)
 
-I forgot to add: 'i' should be declared as 'local' as well.
+Tests are now in progress:
 
->>> +       if [ -n "${!fb_ns[i]}" ]; then
->>> +           eval "${!fb_ns[i]}" \
->>> +               chk_fallback_nr ${netns[i]} || rc={?}
->>> +       else
->>> +           chk_fallback_nr ${netns[i]} || rc={?}
-> CI has reported some errors in 'rc={?}'
-
-I guess the issue is with ${netns[i]}: is it not enough to add double
-quotes around it?
-
-  chk_fallback_nr "${netns[i]}" || rc={?}
-
-or explicitly use the variable $i?
-
-  chk_fallback_nr "${netns[$i]}" || rc={?}
-
-(same above)
-
->  I'll fix this in the next version
-
-OK, I will wait for the next version.
+- export-net:
+https://github.com/multipath-tcp/mptcp_net-next/commit/af6558fbffb5f4001db78a0b124920bc4555ae7a/checks
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/0e9edf26da4f62d2781a9cdca55e6e6af18d5c0e/checks
 
 Cheers,
 Matt
