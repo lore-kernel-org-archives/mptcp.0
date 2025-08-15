@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA1B3286417
-	for <mptcp@lists.linux.dev>; Fri, 15 Aug 2025 11:00:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA19A72627
+	for <mptcp@lists.linux.dev>; Fri, 15 Aug 2025 14:57:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755255653; cv=none; b=BREOQmVEoziSFeoexKZRlAKMScmkYZvzQi+kE7yLsYqI8s2/cPQCBuMWnbOoOt3M4knAOvnGQai91J4d7pC824GKj0RdtmJgvwr0P48cfiCr6jvDKgGtUH3pn6mQFRDOxRyhfhS8Hn0iKxmnW8fp45damkqprYpX6WL2uSbuPBs=
+	t=1755269859; cv=none; b=uVKDO3hyidEwIvapxOlkxlQYWtAJf1LzKjRoumR4HqRnMC6PcQy0jqNFydVsVgUTbE0kefSuVR/c58LFL8tT1t5NWep+NE8f/Fk3ACQ6XoGNd7KB0EJYyNnShwOJK2vaxblP4mXJEGU0Rwp41OF/Vs6PrPdlosKVm1oU3MEoiyc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755255653; c=relaxed/simple;
-	bh=tIMGLNlVLzrgsLVdKvS3w7uex4B7IEf7fOr+qV8iUFg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DJ0QywADoMxx6FL8Zh8YfkH6fZe3JCGJABF1ryZ/KKzTICuFvULQ6uzFDklFdm4SmktBZeDwCJCU4ixJOlkfcYTil1W9vFgrxYsMl/iA5TpOXWm79kiqKa6sgTOaK73XbfieNNdcrCzZ3JRFybsYNxvsHH3Lcpawl6Y9JzSOu4w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Is0OLzBP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1755269859; c=relaxed/simple;
+	bh=+Ig6xkelRGNdEcATvO2/+fGY0YbSqCc1RGYNzHV+KSs=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=ZKSjcZb2wGtnBh0Ns1R7jtbqWePuzcf5eT1GIRdVgqy+WhCghssRsy0GYf2dF5BPyaweaE7lWOv+SYXpSAbfeZekhfUKDimcsunFf9fymC8GBbI6L2sxqn1zN1PPysD3NSBA4ofJGSF6LbEijtzdO9rQ1jBpFl8ZiM+wXMTI1Dk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pqlywjjE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Is0OLzBP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5423C4CEEB;
-	Fri, 15 Aug 2025 11:00:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pqlywjjE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D38CC4CEEB;
+	Fri, 15 Aug 2025 14:57:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755255652;
-	bh=tIMGLNlVLzrgsLVdKvS3w7uex4B7IEf7fOr+qV8iUFg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Is0OLzBPaIwQDahJGwLc+anjqNCxlueujxINpmTI/XeqK5E2N+J1vQIGZArChdgo2
-	 lV9woCj/APQ4V9mjMurXIr/3ZpeGR/U4bsvQbeyerquCweoACzxP0V6AsUdLUyvxTi
-	 30gdwp7WSAwow8a20Q+YpKPfnP9Q69VCVrUnYbNgLerYVImzXklrPoAlrRw6hWnGit
-	 iPYBEa1uO43YvJh7GeUwP9jkeGZj5q3eMRJ3ZYdMWu8byHDgCO4SIRcTvGLEjWh488
-	 tva5Lp4CI7ryGRl+zD5FUd9XxSZQr9EqTFCFNdeRiyCp/MuUsUxl+ahZzR+co1tcVg
-	 eXQ/h3Vbv2FOw==
-Message-ID: <e8ddeb7f-2603-45c4-8324-d715c2c10630@kernel.org>
-Date: Fri, 15 Aug 2025 13:00:49 +0200
+	s=k20201202; t=1755269856;
+	bh=+Ig6xkelRGNdEcATvO2/+fGY0YbSqCc1RGYNzHV+KSs=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=pqlywjjExHl4uCXcW6wLqyN/uc6XZBZxrhMEZ7U8rBdwN1G3QEkl5gu0gjlSumxVZ
+	 hQGVcvLoFOAJqC93FuDdbHckNWQtBrAGW5/u8BqAfl75N0v5pq+tD6DDeSGZDh2Z/Z
+	 27HQ32SxoTJsZrHSGp1km807Z1g8gJKcIaoq5e5B9eX9WKp+7GxgkJJaktfDBk5VrA
+	 Sm0VDwpd5/nzbVjty9dwHCly1VenHchXqUUe677wlKXO3p0T5gogG9NS2FtdeyuM1/
+	 3GbRdJVWa/ve4dPDR59Xc922WOrt3g6RvBuZEf+hkadIvfU9LhwmR56RbyWbzZ+vOd
+	 TRjqXkmGHbsWA==
+Message-ID: <355d1b7b-07bd-4cc2-81ae-235dd0835f41@kernel.org>
+Date: Fri, 15 Aug 2025 16:57:33 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,14 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net 0/2] mptcp: pm: kernel: flush: do not reset
- ADD_ADDR limit
+Subject: Re: [PATCH mptcp-net v2 0/3] mptcp: disable add_addr retrans
 Content-Language: en-GB, fr-BE
-To: Mat Martineau <martineau@kernel.org>
-Cc: mptcp@lists.linux.dev, Thomas Dreibholz <dreibh@simula.no>
-References: <20250806-mptcp-pm-flush-limit-v1-0-9f83699e0863@kernel.org>
- <89bfba12-6c8d-d873-6390-905e5c5da63a@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <cover.1754534416.git.tanggeliang@kylinos.cn>
+ <13f5d33c-1404-4252-8d7d-e64cfa6f066c@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -87,56 +86,63 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <89bfba12-6c8d-d873-6390-905e5c5da63a@kernel.org>
+In-Reply-To: <13f5d33c-1404-4252-8d7d-e64cfa6f066c@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Mat,
+Hi Geliang,
 
-On 14/08/2025 02:25, Mat Martineau wrote:
-> On Wed, 6 Aug 2025, Matthieu Baerts (NGI0) wrote:
+On 13/08/2025 16:19, Matthieu Baerts wrote:
+> Hi Geliang,
 > 
->> A flush of the MPTCP endpoints should not affect the MPTCP limits. In
->> other words, 'ip mptcp endpoint flush' should not change 'ip mptcp
->> limits'.
+> On 07/08/2025 04:44, Geliang Tang wrote:
+>> From: Geliang Tang <tanggeliang@kylinos.cn>
 >>
->> But it was the case. Patch 1 fixes the issue, and Patch 2 modified
->> pm_netlink.sh selftest to validate the modification on the kernel side.
+>> v2:
+>>  - move "remove duplicate sk_reset_timer call" into this set.
+>>  - check add_addr timeout value in mptcp_pm_alloc_anno_list() too.
 >>
->> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
->> ---
->> Matthieu Baerts (NGI0) (2):
->>      mptcp: pm: kernel: flush: do not reset ADD_ADDR limit
->>      selftests: mptcp: pm: check flush doesn't reset limits
+>> This series enhances MPTCP's ADD_ADDR retransmission mechanism by:
 >>
->> net/mptcp/pm_kernel.c                           | 1 -
->> tools/testing/selftests/net/mptcp/pm_netlink.sh | 1 +
->> 2 files changed, 1 insertion(+), 1 deletion(-)
->> ---
->> base-commit: 8353c34f924e5fb87e86e5587e15df160add9a44
->> change-id: 20250806-mptcp-pm-flush-limit-c5a2d74fc2ea
+>> 1. Adding support for disabling retransmissions when add_addr_timeout
+>> is set to 0
+>> 2. Modifying the self-tests to leverage this new capability
 >>
+>> The first patch implements the core functionality change in the MPTCP
+>> subsystem, while the second patch updates the selftests to use this
+>> feature for stabilizing a specific test case.
+>>
+>> These changes provide more control over ADD_ADDR behavior and improve
+>> test reliability by eliminating race conditions caused by unexpected
+>> retransmissions.
+>>
+>> Patch 1: Remove duplicate sk_reset_timer call
+>> Patch 2: When add_addr_timeout is 0, skip retransmission entirely
+>> Patch 3: Disable retransmissions in "delete re-add signal" test
 > 
-> Series LGTM, thanks Matthieu!
+> Thank you for the new version. It looks good to me:
 > 
-> Reviewed-by: Mat Martineau <martineau@kernel.org>
+> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> 
+> I will just check with Mat if we consider this as a fix or not. I think
+> it is, but the behaviour is slightly changed, even if it is to avoid a
+> buggy one. I will then apply these patches after the next bi-weekly meeting.
 
-Thank you for the review!
-
-Now in our tree (fixes for -net):
+Applied to our tree (fixes for -net):
 
 New patches for t/upstream-net and t/upstream:
-- 7f177b98bfef: mptcp: pm: kernel: flush: do not reset ADD_ADDR limit
-- d62e61868bae: selftests: mptcp: pm: check flush doesn't reset limits
-- Results: e81a6d054101..3f23a1fbaa6a (export-net)
-- Results: 6e5604790ba7..7c14230bb733 (export)
+- 144959b26e16: mptcp: remove duplicate sk_reset_timer call
+- 5ca4045882f9: mptcp: disable add_addr retransmission when timeout is 0
+- 230c29e8aa90: selftests: mptcp: disable add_addr retrans in endpoint_tests
+- Results: 3f23a1fbaa6a..077ce244fe7b (export-net)
+- Results: 7c14230bb733..186cac2c4d81 (export)
 
 Tests are now in progress:
 
 - export-net:
-https://github.com/multipath-tcp/mptcp_net-next/commit/af6558fbffb5f4001db78a0b124920bc4555ae7a/checks
+https://github.com/multipath-tcp/mptcp_net-next/commit/097661ebac60d8cf1b143a91f6f11c71ef9fc5f5/checks
 - export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/0e9edf26da4f62d2781a9cdca55e6e6af18d5c0e/checks
+https://github.com/multipath-tcp/mptcp_net-next/commit/576e85a3c313b3b1ea09f8369458e2c31784b99b/checks
 
 Cheers,
 Matt
