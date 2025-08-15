@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4368E4315F
-	for <mptcp@lists.linux.dev>; Fri, 15 Aug 2025 15:29:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BE3330496C
+	for <mptcp@lists.linux.dev>; Fri, 15 Aug 2025 15:35:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755271789; cv=none; b=uWnLMczyKFjNuREK8g0QlLfmfHJsEgT8rtatVg82XeFNlXf1dIE1mVm3DIXnv4EEouAP6aBzkKCQ60/9LXOkynRSq3YHHoAS7gvnjuvKtyUb0XBSVIegFvQAbidW4piFY3+hcJYtQq7G7zXAbHyJYBPLzUwyWWSFSarNhkvW4Ks=
+	t=1755272151; cv=none; b=qXnmoPm8cqRGX3r6ybly5Jk68nlkH+Z8TFsCZdwk27KrztUpCqyO7+fQVG7xhYJC0FZ/YpOGMbIvrPViX85WQxyMI9oUJfms/F2k3GTR0FQfTRaBMv8MfT3mGFVEdHgbjJLKPRNIHu4snzObYyGH6RYcCM3mqX5ZELBwUKa6s8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755271789; c=relaxed/simple;
-	bh=WPnYyGNSWZsMLSb7varqKtmRK3YyFxu4t6nf41GF4Eg=;
+	s=arc-20240116; t=1755272151; c=relaxed/simple;
+	bh=ATmNg6ufUJ9C6McAnbQUBKIH32ABla8Sh/kn0MOZHyI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=L/9a+f7f6j8mF7xGo2H08gVd908hicKHes387+QkKMETXsOoLYkDONaIQu1wvllanzeXyedQkGz63a2V+wuLQXAXJBAyWzfKp2ar72z6LEZEphmyzRXJ6Ap7iaFTVUY/d3lMLRrjjXOBPIBOygfDB1/nnX8vhar5+sAWKj5Lajw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qXNuFyMj; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=QZCDTeyD7N9990qk6eEOO2jBmk0zS59VAxVYBY3H6G7q9ammoHogwXzKOwuV1zWADvO48CuHozfWPrSnutUtfe0d1Pfyh+9LYyFPIkcPXgTpdw1pM+267HKjh1zfST2/2C3aj95jxO8SuJe3vMR7dD1Zjz6aqhlwabnYYOvBsb8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mDp+nd9X; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qXNuFyMj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 432CDC4CEEB;
-	Fri, 15 Aug 2025 15:29:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mDp+nd9X"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71105C4CEEB;
+	Fri, 15 Aug 2025 15:35:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755271789;
-	bh=WPnYyGNSWZsMLSb7varqKtmRK3YyFxu4t6nf41GF4Eg=;
+	s=k20201202; t=1755272151;
+	bh=ATmNg6ufUJ9C6McAnbQUBKIH32ABla8Sh/kn0MOZHyI=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=qXNuFyMj47DJt/IADQMQLxcXnEsYjgY8BIbUcT2YwXGE8EAXc15sOInmTmajaRYeD
-	 9j66Ooof0jSo/9AAo4B7E74IrVQvPhfcd1REYmErKoDGTRUu5WCUTaxyWDPVEO7+Fl
-	 h8md2XQXaVJptI2yp4A7vdfPokUmqQL78uSLcP6J7SjLJpJbPYSoHpCoA9KkHwMtDJ
-	 5NlqlsDGDFP8vqEKKc/oPrGbKN11RrqwsdV0D05RLo4XqtsVSvFpuYmEwSQlnxkwHz
-	 xWJaOq0i/ILK69xjZQ+4I1tNeChXp9mv9wZdkkSwCxn5KoUI9m1g4kTbL2B2YFxBbi
-	 SHjGZ0IWfIGpg==
-Message-ID: <eae1b929-f9a6-4416-af33-750cf936febc@kernel.org>
-Date: Fri, 15 Aug 2025 17:29:45 +0200
+	b=mDp+nd9Xcm+lU0AhuFwc9+kWdJypH+42HT8wCq3VT9AmqDgN/OSNlumTx2h+kEWjE
+	 3WIVp0EYNCPW8tMHe58OpKvPLg1flXqliqXEnmMAuQWnatsanF6Sx+CWQxfTVb+4Ks
+	 KOiFjJxMAb0+W9MiaUj5D7lSM/1kNdHd4M0RXBm4zmuw2WQNG4Mphp5xNWoUPVl6wJ
+	 u+dk4OJ86p6yJ5U629FSxCYjfSmeJDLyobGQHa9wlEgp4PaG2gDgiJp8SQHBdqREkq
+	 3pJh737Xpt8A6NNcPBhigl9n3hCuCh25TbLypTtMK9gdUlRrUdYizz6BKzxpxsMwB8
+	 SPpvhHoX60nEw==
+Message-ID: <56bf2171-2aed-4c65-a421-6f539ae1040a@kernel.org>
+Date: Fri, 15 Aug 2025 17:35:48 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,14 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v4 1/2] mptcp: make ADD_ADDR retransmission
- timeout adaptive
+Subject: Re: [PATCH mptcp-next] mptcp: set ADD_ADDR retrans timeout to 1sec
 Content-Language: en-GB, fr-BE
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>,
- Christoph Paasch <cpaasch@openai.com>
-References: <cover.1754987655.git.tanggeliang@kylinos.cn>
- <a0d3e4caeb991f06de2ce2692b4c00c57c0460e6.1754987655.git.tanggeliang@kylinos.cn>
+To: Mat Martineau <martineau@kernel.org>
+Cc: mptcp@lists.linux.dev
+References: <20250718-mptcp-add_addr_timeout_1-v1-1-58749cbe8b87@kernel.org>
+ <46d54c22-17b6-ce11-df8f-89add3c607d6@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -88,67 +86,70 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <a0d3e4caeb991f06de2ce2692b4c00c57c0460e6.1754987655.git.tanggeliang@kylinos.cn>
+In-Reply-To: <46d54c22-17b6-ce11-df8f-89add3c607d6@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Geliang,
+Hi Mat,
 
-On 12/08/2025 10:39, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
+Thank you for your review!
+
+On 14/08/2025 02:20, Mat Martineau wrote:
+> On Fri, 18 Jul 2025, Matthieu Baerts (NGI0) wrote:
 > 
-> Currently the ADD_ADDR option is retransmitted with a fixed timeout. This
-> patch makes the retransmission timeout adaptive by using the maximum RTO
-> among all the subflows, while still capping it at the configured maximum
-> value (add_addr_timeout_max). This improves responsiveness when
-> establishing new subflows.
+>> It doesn't really make sense to wait 2 minutes -- the previous default
+>> value -- to retransmit the ADD_ADDR if the echo has not been received in
+>> between: that's way too long to react.
+>>
+>> Switching to 1 second by default, which seems like a good default value,
+>> and can be increased for particular cases.
+>>
+>> Later on, we could eventually use a timeout based on the sRTT, with an
+>> exponential backoff, which would be more reactive [1].
+>>
+>> Note: the documentation has been updated accordingly, and the selftests
+>> are keeping the previous timeout when using a broadcast IP not to have
+>> retransmissions in this case, which would cause troubles with the
+>> different counters depending on how fast the test will run.
+>>
+>> Link: https://github.com/multipath-tcp/mptcp_net-next/issues/576 [1]
+>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+>> ---
+>> Documentation/networking/mptcp-sysctl.rst       | 5 ++---
+>> net/mptcp/ctrl.c                                | 2 +-
+>> tools/testing/selftests/net/mptcp/mptcp_join.sh | 3 +++
+>> 3 files changed, 6 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/Documentation/networking/mptcp-sysctl.rst b/
+>> Documentation/networking/mptcp-sysctl.rst
+>> index
+>> 5bfab01eff5a9db89e1484787953241c16e147cf..14059d2cac1b3467d6a8c9c4362f5a0b427b726d 100644
+>> --- a/Documentation/networking/mptcp-sysctl.rst
+>> +++ b/Documentation/networking/mptcp-sysctl.rst
+>> @@ -12,10 +12,9 @@ add_addr_timeout - INTEGER (seconds)
+>>     resent to an MPTCP peer that has not acknowledged a previous
+>>     ADD_ADDR message.
+>>
+>> -    The default value matches TCP_RTO_MAX. This is a per-namespace
+>> -    sysctl.
+>> +    This is a per-namespace sysctl.
+>>
+>> -    Default: 120
+>> +    Default: 1
 > 
-> Specifically:
-> 1. Adds mptcp_adjust_add_addr_timeout() helper to compute the adaptive
-> timeout.
-> 2. Uses maximum subflow RTO (icsk_rto) when available.
-> 3. Applies exponential backoff based on retransmission count.
-> 4. Maintains fallback to configured max timeout when no RTO data exists.
-
-I might be good to add a note about the behavioural change:
-
-  This slightly change the behaviour of the MPTCP "add_addr_timeout"
-  sysctl knob to be used as a maximum instead of a fixed value, but this
-  is seen as an improvement: the ADD_ADDR might be sent quicker than
-  before to improve the overall MPTCP connection. Also, the default
-  value is set at 2 min, which was way too big, and caused the ADD_ADDR
-  not to be retransmitted for connections shorter than 2 minutes.
-
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/576
-> Reviewed-by: Christoph Paasch <cpaasch@openai.com>
-> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-> ---
->  Documentation/networking/mptcp-sysctl.rst |  4 ++--
->  net/mptcp/pm.c                            | 28 +++++++++++++++++++----
->  2 files changed, 26 insertions(+), 6 deletions(-)
+> Hi Matthieu -
 > 
-> diff --git a/Documentation/networking/mptcp-sysctl.rst b/Documentation/networking/mptcp-sysctl.rst
-> index 1683c139821e..2b8e8fb99ee2 100644
-> --- a/Documentation/networking/mptcp-sysctl.rst
-> +++ b/Documentation/networking/mptcp-sysctl.rst
-> @@ -8,8 +8,8 @@ MPTCP Sysfs variables
->  ===============================
->  
->  add_addr_timeout - INTEGER (seconds)
-> -	Set the timeout after which an ADD_ADDR control message will be
-> -	resent to an MPTCP peer that has not acknowledged a previous
-> +	Set the maximum value of timeout after which an ADD_ADDR control message
-> +	will be resent to an MPTCP peer that has not acknowledged a previous
->  	ADD_ADDR message.
-
-I suggest adding this at the end:
-
-  A dynamically estimated retransmission timeout based on the estimated
-  connection round-trip-time is used if this value is lower than the
-  maximum one.
-
-I can do that when applying the patch. I can update the text if needed
-later on.
+> I definitely agree that TCP_RTO_MAX is too large. After reading Paolo's
+> feedback, I'm thinking 1 second might be a little aggressive. It seems
+> like satellite links and heavily loaded mobile networks (plus a little
+> buffer bloat) can lead to round trip latencies that can be hundreds of
+> milliseconds. With exponential backoff, I think a slightly higher number
+> would work. I noticed TCP_TIMEOUT_FALLBACK is 3 seconds, that might be a
+> good starting point?
+Indeed, probably setting 3 seconds seems better. But I think this
+modification is no longer needed now that we have Geliang's series:
+"mptcp: improve ADD_ADDR timeout handling". So I'm going to archive this
+patch.
 
 Cheers,
 Matt
