@@ -1,126 +1,146 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3100E3176E2
-	for <mptcp@lists.linux.dev>; Fri, 15 Aug 2025 17:39:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C747929A303
+	for <mptcp@lists.linux.dev>; Fri, 15 Aug 2025 20:17:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755279569; cv=none; b=UoTNG6VE4aJD4CurUlINENAG/2oMe0RCsP7dE3YNEJQwPzLz5QXZgAjWZsVvTUa6xjOF4XPVC+a3ROBYRpYSLzfvNe2hhRq66ZJa4jzTDKP7b5ZGmLSHVpzNV/2cONXyDhteZObzzq1Yb4il9tNjXjA+v4wTHkBngt5lJ+0mNrQ=
+	t=1755289056; cv=none; b=E10V1SEAzHCmmGK8XL0zJCM97jMPmlhShezEvY7RMwQZNYBL8x4eJLmaJaUHRVGLbBFxDIW0IlePlsx89aATFZUbK3J5HDpph06aqBRAmFL2RNtZvmHMAOJVgSZMkjVhiux9Ip7cgZD+/GBeKEay2pPmifDOGuZPCdPggbqGfTk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755279569; c=relaxed/simple;
-	bh=DzG0LZlHGH3bOOtZ8yuLvRlkiHDfO2BsTKY54JW4yq4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LL6MmEGPKz/VErEWyZ8i9BWZ6fPhVMvkBVQWyh2ZbvHTj41dWuVT+JCP4zGBG0c7mbv3c+HfjyahVIhk6s1QjqaaJYBSSWpZmri81iuDc4VnQS2yE2qZKiEmhAP6WDyxhqeDO9B8aGlqkugIJ2meO9rcwuCdBZ//WKQnLzMBC3k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=dK1tDxdR; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1755289056; c=relaxed/simple;
+	bh=llcTD+zSiOG3Kd78oaB5lSAH9fReOnOetwZy90bEHOM=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=QmPiyJaAh++cATx0Ll2avNvyTEtauvEEwJQ386mXQkGduT0MFPMJE8rgfvUQuz9+jAlZrsw2oSg0jg3tSmtL3cW/XSoSQNCycebXVoDnevzsUI4rHkmziXjelnsLrnIlSGKGsFBBOG2R0GZrNhtMhYXnFCmgEpJgxDWYNlxjZ84=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--kuniyu.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ByTsRH2d; arc=none smtp.client-ip=209.85.215.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--kuniyu.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="dK1tDxdR"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-45a1b0c82eeso15808515e9.3
-        for <mptcp@lists.linux.dev>; Fri, 15 Aug 2025 10:39:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ByTsRH2d"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b47173ae5b9so1692384a12.1
+        for <mptcp@lists.linux.dev>; Fri, 15 Aug 2025 13:17:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1755279565; x=1755884365; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=DzG0LZlHGH3bOOtZ8yuLvRlkiHDfO2BsTKY54JW4yq4=;
-        b=dK1tDxdRIP6J87fC/HM55XRLgAgTXlg44ztN+gwpV1ih8vvTDZ2WUVwvOFDMgy+Udh
-         XVda3ooIEBlACPLaVuGHMfW84gPC2hWJml+5NpuW2kuA1Jn2xYVKRsZOO3jbPkW0QISE
-         ozHDq9RbXdK64Bn47j4dr4J1/ry0fiRUAOKg2c4eE7KZ2qKXDx/T47BdMQ6vhRxlVkcg
-         gtQBYNWBHBHbycFtzsmJT66kMZUMQJbtjfh20aMrO83rDLxc3V/Ghat+X6ZVHxZYf3nD
-         +KsGoaxXWJRAB2PByN2+GPyCIEILk85MrvSgIxIsF5omh6cdceo1+d9f+l16WGZO/Tse
-         XaYw==
+        d=google.com; s=20230601; t=1755289054; x=1755893854; darn=lists.linux.dev;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=2PRNy71eyK2aZPpC5gSBBIxfuZRCi4H6U9oHXzC7IIg=;
+        b=ByTsRH2d6Un5ogWJctF7Zw8n0kVxcB3DfaJ5Wjuhy8ynLsMhQPyGSkX5ka5jJbJP0F
+         5nDYl/a2gDw6FmWJdziptatMQofXSaxwU5MzBHeabzwXIT0aI/iHp8cJwbkDqgWXZcCg
+         1/RbScwWe5jYlmT2FeT790nuaYqEDFwlYRfGTTDTdkSiixWGMLrdEBY+MDqX+inGT/Xo
+         nEjwrJsi5+xNfoJHG68zLcS59pgky0XwCMpSuGlFPipsQJDDYY7KzwAHFt27oScrPl96
+         DlzKl3av6ofC/gLuQYrcJGkq6cc/tGqUr53d+Ww5vUcI1SuEuvuqWjCVeYzlWmwTWcRZ
+         tGLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755279565; x=1755884365;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DzG0LZlHGH3bOOtZ8yuLvRlkiHDfO2BsTKY54JW4yq4=;
-        b=pdOr8pvnpocb37NavgwBPW+oR0Rm7aQdB+1NwYj3JmnN+jzS8MVxLgZNbKfagvkND8
-         VWXRa6CpmMAqNnNGjW1v/yusFUMRYDP1Fdgzrp0qApi+PkMr2ogfPjcxZhMoIjaaEq9Z
-         reAIAsUnJYBSZA83CMmuWYCDy0979bV6MODpRnwRojukjaZn7vY2BXZu/rDCyb+LHj0m
-         c079rupODI/EA+DXkP46P3O8KNWVaTpmIUT/8+yM/6dwYuJZopApLPt28ul4X4QEP2jc
-         dzPqn9XNM0vx0wHeoL1cstFPhnmKFijdBBy1zbfDdsnmGX8x3smKsj0VfjQJS7BoS+cQ
-         gw5Q==
-X-Forwarded-Encrypted: i=1; AJvYcCV9Qk+Wx5leOw6xdkpikU+VjVc/stOiacpiqz9W3hP8uBi9IjHNmwvp2NWoWqqPq3eGlQQh6A==@lists.linux.dev
-X-Gm-Message-State: AOJu0YypRya0p4XFKpgvvsfS+q+++JqDqlxOZepkCh/TMLPVvtWoNTuS
-	pVwnydQPAn1egUI34CAR6j4Q+yN2qwhW7dUSJ9udd+nMmq92Xqn1JB7C5Hq1gXDfZk4=
-X-Gm-Gg: ASbGncu89WEn95ehMZit7fR8DXDFkWYZQrU2QHylfwO2euVky+ceuVQSa6IlF3cu3Jf
-	5Duzk0NwdNQe1ok/ABwCX6KujJu+5hCsJ7AYGPwN6A/FG6eKfJFz0lIWbuRtki2O9tiHeZPkEWr
-	dmkHF5zff6zIsBsPpetQ4raDgLNUDiNNj7AxOHb9BlQkn4+i/46Bkso+7QYNauzeLtKZS+6R3rd
-	KnVEyv6EWzLzeDPXpL6aMWNAx6AKk088L3SGO6+EcMocW4WHZ+rPiwUriooMbRQYvV/W2JiCxAy
-	ne8f2WzpG19KvEbi3Uyhc+oxNG3cmea/VXQqldFm5pA6KTzrpSMb7ZWxx9/9/GQ93AaHt6VA+qB
-	/EQaHXdUd5XCJEtuO9mAEZZzxQ7szbYFoLvCEk+eS8A==
-X-Google-Smtp-Source: AGHT+IEQtqoj7OJMpPUFnt1ji9bSa+u38yG5PGpHc7mF3c26ryzthKx7wFt40yjy8HfsIxTJ4Rr5hA==
-X-Received: by 2002:a05:6000:2289:b0:3b8:d0bb:7541 with SMTP id ffacd0b85a97d-3bb68fdd5efmr2396919f8f.40.1755279565547;
-        Fri, 15 Aug 2025 10:39:25 -0700 (PDT)
-Received: from blackdock.suse.cz (nat2.prg.suse.com. [195.250.132.146])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-323311233cdsm4872522a91.21.2025.08.15.10.39.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Aug 2025 10:39:24 -0700 (PDT)
-Date: Fri, 15 Aug 2025 19:39:06 +0200
-From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
-To: Kuniyuki Iwashima <kuniyu@google.com>
-Cc: Shakeel Butt <shakeel.butt@linux.dev>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Neal Cardwell <ncardwell@google.com>, 
-	Paolo Abeni <pabeni@redhat.com>, Willem de Bruijn <willemb@google.com>, 
-	Matthieu Baerts <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, 
-	Roman Gushchin <roman.gushchin@linux.dev>, Andrew Morton <akpm@linux-foundation.org>, 
-	Tejun Heo <tj@kernel.org>, Simon Horman <horms@kernel.org>, 
-	Geliang Tang <geliang@kernel.org>, Muchun Song <muchun.song@linux.dev>, 
-	Mina Almasry <almasrymina@google.com>, Kuniyuki Iwashima <kuni1840@gmail.com>, netdev@vger.kernel.org, 
-	mptcp@lists.linux.dev, cgroups@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH v4 net-next 01/10] mptcp: Fix up subflow's memcg when
- CONFIG_SOCK_CGROUP_DATA=n.
-Message-ID: <gmiwpzpgcnnzg2jjhonfcchkbv7zrzgbawvgfgfwrjmvvihqdc@gaq7bbe4ktwc>
-References: <20250814200912.1040628-1-kuniyu@google.com>
- <20250814200912.1040628-2-kuniyu@google.com>
- <cs5uvm72eyzqljcxtmienkmmth54pqqjmlyya5vf3twncbp7u5@jfnktl43r5se>
- <CAAVpQUDyy9f7=LNZc2ka2RiOhR3_eOhEb+Nih37HnF0_cdrJqA@mail.gmail.com>
- <r3czpatkdegf7aoo3ezvrvzuqkixsb557okybueig4fcuknku3@jkgzexpt7dnq>
- <CAAVpQUAx9SyA96b_UYofbhM2TPgAGSqq_=-g6ERqmbCZP04-PA@mail.gmail.com>
- <kr6cv3njfdjzc2wcrixudszd2szzcso7ikpm6d5xsxe7rfppjs@5bvfwpelgj6f>
- <CAAVpQUCMcm8sKbNqW9o6Ov1MtC67Z--NTv9me1xcYgCkbJxK5g@mail.gmail.com>
- <CAAVpQUBO8TXjjtt++kF0R-qs-Utn-eY5o321NyAALEYTfq0xGw@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1755289054; x=1755893854;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=2PRNy71eyK2aZPpC5gSBBIxfuZRCi4H6U9oHXzC7IIg=;
+        b=NUDGPijhh0xMGfRQ9qUhYqbo46O+6vU0x+S8rSjpfzA3XDENVcKdBYF2trrZAS1aJH
+         1fIApMsdNi8KWuTiS5HhlEzVQRX6OUwwnHH2XqVZFr5YLzHzdQ+oPKiPFc8ZGkXNWDRd
+         +ETp2z9cgOtE6B1ciKyYus/2pCT0yQ4enpMekxjYW/FiQKsh0S4f94gcWcR+fCp9Oyqy
+         osdIxT2c9DTBjoQzv6WgWrLj2czz40+UXt3InakDGjMxASYcxb+3/OS9V081I+W9ywto
+         wUNsSa/g37g4kG1AG1atR59IWWBpSroMQLw6QptPWljaKcRW2Ccwahn+Ye5SBA93wFeS
+         2Xng==
+X-Forwarded-Encrypted: i=1; AJvYcCURrpgRQfTP861vCzFRhtXfrn+vy0lkE9qGZb2mVXGGgOA3d7agXbugRB/xTDWBTw7SyEcRYQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxWWTqUOLjw+Dm38E7jtPdPGkTLty9o4241xPGmqJrN/LCVmFAl
+	9M2lsAVba/vrMf6eTpmOKNa/ULbJ2szkIfM1cx8sTscCO1AyRs0UgAxJpcDznggN8JOh53ham63
+	UTcgnrA==
+X-Google-Smtp-Source: AGHT+IHmaMP4DwtVSKqH4dVqDx4zRe8jIMCHyyumzBMZfK2MDVM9bvEJ6Kw/6qH1LxunWf0RV1NxlfpDR00=
+X-Received: from pgww10.prod.google.com ([2002:a05:6a02:2c8a:b0:b42:2672:b159])
+ (user=kuniyu job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:6a27:b0:240:5f9:6359
+ with SMTP id adf61e73a8af0-240d2f1add1mr5795559637.34.1755289053981; Fri, 15
+ Aug 2025 13:17:33 -0700 (PDT)
+Date: Fri, 15 Aug 2025 20:16:08 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="y4wp3wkqhrel3mvn"
-Content-Disposition: inline
-In-Reply-To: <CAAVpQUBO8TXjjtt++kF0R-qs-Utn-eY5o321NyAALEYTfq0xGw@mail.gmail.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.51.0.rc1.163.g2494970778-goog
+Message-ID: <20250815201712.1745332-1-kuniyu@google.com>
+Subject: [PATCH v5 net-next 00/10] net-memcg: Gather memcg code under CONFIG_MEMCG.
+From: Kuniyuki Iwashima <kuniyu@google.com>
+To: "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Neal Cardwell <ncardwell@google.com>, Paolo Abeni <pabeni@redhat.com>, 
+	Willem de Bruijn <willemb@google.com>, Matthieu Baerts <matttbe@kernel.org>, 
+	Mat Martineau <martineau@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Michal Hocko <mhocko@kernel.org>, Roman Gushchin <roman.gushchin@linux.dev>, 
+	Shakeel Butt <shakeel.butt@linux.dev>, Andrew Morton <akpm@linux-foundation.org>, 
+	"=?UTF-8?q?Michal=20Koutn=C3=BD?=" <mkoutny@suse.com>, Tejun Heo <tj@kernel.org>
+Cc: Simon Horman <horms@kernel.org>, Geliang Tang <geliang@kernel.org>, 
+	Muchun Song <muchun.song@linux.dev>, Mina Almasry <almasrymina@google.com>, 
+	Kuniyuki Iwashima <kuniyu@google.com>, Kuniyuki Iwashima <kuni1840@gmail.com>, netdev@vger.kernel.org, 
+	mptcp@lists.linux.dev, cgroups@vger.kernel.org, linux-mm@kvack.org
+Content-Type: text/plain; charset="UTF-8"
+
+This series converts most sk->sk_memcg access to helper functions
+under CONFIG_MEMCG and finally defines sk_memcg under CONFIG_MEMCG.
+
+This is v5 of the series linked below but without core changes
+that decoupled memcg and global socket memory accounting.
+
+I will defer the changes to a follow-up series that will use BPF
+to store a flag in sk->sk_memcg.
 
 
---y4wp3wkqhrel3mvn
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Subject: Re: [PATCH v4 net-next 01/10] mptcp: Fix up subflow's memcg when
- CONFIG_SOCK_CGROUP_DATA=n.
-MIME-Version: 1.0
+Overview of the series:
 
-On Fri, Aug 15, 2025 at 10:24:12AM -0700, Kuniyuki Iwashima <kuniyu@google.com> wrote:
-> and we need to manually copy the memcg anyway..
-
-(Is that in a later patch?)
-
-But fair enough :-/
+  patch 1 is a trivial fix for MPTCP
+  patch 2 ~ 9 move sk->sk_memcg accesses to a single place
+  patch 10 moves sk_memcg under CONFIG_MEMCG
 
 
-Michal
+Changes:
+  v5:
+    * Patch 1
+      * Don't use set_active_memcg() and restore
+        mem_cgroup_sk_inherit()
 
---y4wp3wkqhrel3mvn
-Content-Type: application/pgp-signature; name="signature.asc"
+  v4: https://lore.kernel.org/netdev/20250814200912.1040628-1-kuniyu@google.com/
+    * Drop patch 11 & 12
+    * Patch 1
+      * Use set_active_memcg()
 
------BEGIN PGP SIGNATURE-----
+  v3: https://lore.kernel.org/netdev/20250812175848.512446-1-kuniyu@google.com/
+    * Patch 12
+      * Fix build failrue for kTLS (include <net/proto_memory.h>)
 
-iHUEABYKAB0WIQRCE24Fn/AcRjnLivR+PQLnlNv4CAUCaJ9wuAAKCRB+PQLnlNv4
-CH4YAQC8zojrNNQgYpmFJQUBnZHfg4T+IF01Rw6OCepycZuaVgD8Cfgdr1bVXJly
-2vehjqtlGG8wN1oo3l6EVENniEd0yAo=
-=/lQI
------END PGP SIGNATURE-----
+  v2: https://lore.kernel.org/netdev/20250811173116.2829786-1-kuniyu@google.com/
+    * Remove per-memcg knob
+    * Patch 11
+      * Set flag on sk_memcg based on memory.max
+    * Patch 12
+      * Add sk_should_enter_memory_pressure() and cover
+        tcp_enter_memory_pressure() calls
+      * Update examples in changelog
 
---y4wp3wkqhrel3mvn--
+  v1: https://lore.kernel.org/netdev/20250721203624.3807041-1-kuniyu@google.com/
+
+
+Kuniyuki Iwashima (10):
+  mptcp: Fix up subflow's memcg when CONFIG_SOCK_CGROUP_DATA=n.
+  mptcp: Use tcp_under_memory_pressure() in mptcp_epollin_ready().
+  tcp: Simplify error path in inet_csk_accept().
+  net: Call trace_sock_exceed_buf_limit() for memcg failure with
+    SK_MEM_RECV.
+  net: Clean up __sk_mem_raise_allocated().
+  net-memcg: Introduce mem_cgroup_from_sk().
+  net-memcg: Introduce mem_cgroup_sk_enabled().
+  net-memcg: Pass struct sock to mem_cgroup_sk_(un)?charge().
+  net-memcg: Pass struct sock to mem_cgroup_sk_under_memory_pressure().
+  net: Define sk_memcg under CONFIG_MEMCG.
+
+ include/linux/memcontrol.h      | 45 ++++++++++++++++++--------------
+ include/net/proto_memory.h      |  4 +--
+ include/net/sock.h              | 46 +++++++++++++++++++++++++++++++++
+ include/net/tcp.h               |  4 +--
+ mm/memcontrol.c                 | 40 +++++++++++++++++++++-------
+ net/core/sock.c                 | 38 ++++++++++++++-------------
+ net/ipv4/inet_connection_sock.c | 19 +++++++-------
+ net/ipv4/tcp_output.c           |  5 ++--
+ net/mptcp/protocol.h            |  4 +--
+ net/mptcp/subflow.c             | 11 +++-----
+ 10 files changed, 142 insertions(+), 74 deletions(-)
+
+-- 
+2.51.0.rc1.163.g2494970778-goog
+
