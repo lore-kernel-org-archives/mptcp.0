@@ -1,55 +1,55 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58D452C1788
-	for <mptcp@lists.linux.dev>; Fri, 15 Aug 2025 20:17:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A412D2BEFE2
+	for <mptcp@lists.linux.dev>; Fri, 15 Aug 2025 20:17:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755289063; cv=none; b=oC53NbbxiWZ9bbTBa2g+aVaGt3FfJ62krBg4eZ2BZI+VpSYUG1rsW4Cgobk364Dm5+0XEQOhrc2rioJtdIsHb+SdfEMGrppNzFzNNXZIfX6X5I7ajQ4p8EvS6OooOQpDC069Z26RYibqNLdp0yS0D2BF3dba0k324I5Q9kROc5o=
+	t=1755289065; cv=none; b=RCGCL3WzyR69pRvtcI0+lRc+1UCYIyPbBeKmjEtehnHM0xySbGEMi9Az9BdkrXIHfOmHYx4qAQUi4zAdDdrekhAVDIrdKZiziEXNqKiBXCNQo6McnARQyeaqHK92onEuvmP8DpyzG2SU6tfGJDQXLTSu0rYexm554YmvFnclFcc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755289063; c=relaxed/simple;
-	bh=49AUVqRZ9QX0gApoGVu2lLYolROcKxAhbfDoW1MZFwo=;
+	s=arc-20240116; t=1755289065; c=relaxed/simple;
+	bh=P1p5zDYS1xHxFKHg6WTbv/b+iunvjNvMXhiBxP982n8=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=ZmUVMgHqKDGbKqBddAbD9+VebRykdcBOS8k4N/yfikeG3erCXGDJiKdUlKgyozjmjtr80p+nitmG/MKurHq8iUXQmqfUFt/kvZTMOALz9LdpeNrPwcenaqOktzRhKPONmRRhUBUEkdfjSe4gAqSdcp6n0kU2DPaqV82+P0pF6M8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--kuniyu.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yWVJEcmw; arc=none smtp.client-ip=209.85.214.202
+	 To:Cc:Content-Type; b=R/oi8mkABDTpa7oIS4yi1ANbmkTOUD6BK2BPEkoNbwWs3ADI0wt/uvrK4xzorQ1ZwvkDhoixdO8nH/N9Zg8sh2pYb6M5cMKSpaAb8LtLULjdp2jmLpL+L25ymZDQRgd7cEQyckZygedL2aoVC9w3ibfGW+Y/EED5La/IFmcnHm4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--kuniyu.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jFcQuG7/; arc=none smtp.client-ip=209.85.210.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--kuniyu.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yWVJEcmw"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-244581950a1so25982795ad.2
-        for <mptcp@lists.linux.dev>; Fri, 15 Aug 2025 13:17:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jFcQuG7/"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-76e2e614889so2160209b3a.0
+        for <mptcp@lists.linux.dev>; Fri, 15 Aug 2025 13:17:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1755289062; x=1755893862; darn=lists.linux.dev;
+        d=google.com; s=20230601; t=1755289063; x=1755893863; darn=lists.linux.dev;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=jLtDPiqLV2EwRjVXqP4rO8+jmE13TnvcBQt499JidQE=;
-        b=yWVJEcmwxdDDhHDcbZSdXm9Asrh/0eMzMIZQReS1yVmLoRHBOM4PbPtePoWZPk8291
-         yUNp4zTVTxWQv0tUfDXCivZABLa9J2dUNAzy9sqegCs8Y6Us1SuANQCu4XbSAsRf7f9X
-         7ic3G8p/DPYhvp9+q410QNmRBaC/LUq3kJ02u/DdTyVfZ5RpriMHERk9NBKE/4QKuTDO
-         C7+pz+bq7Yc7CLfNAyP5rkMGDRdhMQHCFjiSM7+9kSMzVeDfbi7YDTYZQS5J7BNFxNkF
-         hnOSJ2b6zUODX5LR9fblTX1NO29NwurC2j8Yg2KJf7B7QBDoQY9rM2581d8CY3Wr09qL
-         uzaw==
+        bh=NEvnK6Pj3gN8OdhZL7LCF5Umn99zHVRI3UVJuWX8S7Q=;
+        b=jFcQuG7/RcVIeWvxbMskpzWAP0CVkeSAUXY9fnmdnOFi6cyskXKf4MNpD6/k+nXbAk
+         7hkDjM6ZCc8RZhoCGwFWetdWHsj6aqtkwf8ckmiP6+3DFoe8/cYhICrI/wi/oIDZ8ALT
+         5VpgFjYN0T1g6SBSw3oe0Ay17FV7cGMLOx4PHngy9gPo2yfoqxG/oCQ6SfMwR5LOM129
+         TFpEeG2T9wOe+3vi71+wwtIGH6e5HmDbJU6zaGO6ho7lk/reFBfmGSUEK1ROutjk6zm3
+         wlZjyFzLOZYOFu/a0MNUL4Wql1/qdbP3kcUM8EMQ7/ZERmidPRHnLxDJU+76xee2ETMA
+         JHAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755289062; x=1755893862;
+        d=1e100.net; s=20230601; t=1755289063; x=1755893863;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jLtDPiqLV2EwRjVXqP4rO8+jmE13TnvcBQt499JidQE=;
-        b=FNwGL4K6u7cjBXyUHdPwBK/NsgOnO7LVxwnWXjqRZYURjsbkyQ4y0l/OyGfmYM2LYa
-         mIUrGVnM9IcXpQYXox6y5aEs9ukKFkuiMokQlD931CrSC5bBS37nWtaKmIcHegeMvKmQ
-         GLUQS4tBxzYWmhrZd0MV+duN1HKNSDSUlV+ui+sVF09FbJ8F87kpa/JqXOSvcG8jlmJB
-         fgJ3uEhPAthJU73U1dm855kwHHxq2cXB1oUnxbLl96JAmcWLI3JlsjeiH4sw4ocq2a8N
-         JXwTPVf1M+mjNmcWGV8QS6CUUP8OdnNNQ5dF6P7XPpTbYufL5dN/Wl+519iQ/hDQZLqK
-         ESZw==
-X-Forwarded-Encrypted: i=1; AJvYcCWGF+lEDoltcl9S9HW7MVwwLuocLk+P0TyNYQTx22uUaV3Dtmrx/Rq01F8uc0xdDAgTjxZAzg==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxaLaz/zGA/50Mp4VeR8hLaxo6E/KFsIW4H/gYqO9EFXRPohUH0
-	7qSRdBXGTHpsdYMVl6sRaH7uRlUksIy6b0iYJU0ElSh2ajJX3CuF4nSxSN6aRJ1wXP7TAcHXto9
-	sjWpY6w==
-X-Google-Smtp-Source: AGHT+IGYcQH7/mF6y+bCQF+wvj8byumWi1k0Tu655xRzdfVqKzsBybbZLpijTnLaQewu7vlc+0MtmLwfX5c=
-X-Received: from plbmn15.prod.google.com ([2002:a17:903:a4f:b0:243:5a:ee2a])
- (user=kuniyu job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:32c8:b0:240:3239:21c7
- with SMTP id d9443c01a7336-2446d89d237mr56657975ad.37.1755289061594; Fri, 15
- Aug 2025 13:17:41 -0700 (PDT)
-Date: Fri, 15 Aug 2025 20:16:13 +0000
+        bh=NEvnK6Pj3gN8OdhZL7LCF5Umn99zHVRI3UVJuWX8S7Q=;
+        b=rSomSKjO67lNx8xdt2RY+d5W7KxQjsHodLY1w/fNcusNObuy+RVeOfMHKTXdbJL5qN
+         WPL/qOG5RdVQesBDTve5uCs0TinSi64fOV8uEko1Pzgk5IaSlbMuWez4F+53VbvJiykW
+         hEB2yXdmvvuUtERESpYl2xkTtxq6j83t2rE/H6/52Q12zoHmSH/UCOJPann800XqAyo+
+         dJs5+OSN4DBfU4VMDwQg3mKg8qpQkRAx1OhdkIvFCPJo824xTmqxdEQ+m1EO/skSF9cR
+         OXZzWC2XV6Y+5eEZWw+ScJ5qy+qvq6lADuvod/msWaYCMqlPbKPMb2VIW4HC1LAD9dSd
+         XD6g==
+X-Forwarded-Encrypted: i=1; AJvYcCX8CFkkJeg3Cm6JNvuRHVx/Fh35oxzzHjiUsJkvVtGDYDFUiAGkXVtI2iZzDYZJhL7BA6xxBw==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxBIjv5ZTBGSOA19viTuNlEiSlAO07Xdvj5ElU4tsblHA+ERQQf
+	8yzFta6IdSsdGcgMToN3q5f3Xg5mhBDZcBe4zYT5fkiRKj11Fss8yl3uxm0YjY/3WAi8Wt6FZpU
+	laL4pvA==
+X-Google-Smtp-Source: AGHT+IGxIv0S/KYNNnJUfMwOQqTXy3ZcIqfpFjU2Pag6qHi+6din+ir3U6VMwmjnJzZZKWJVJdk8nIATIm8=
+X-Received: from pfblg21.prod.google.com ([2002:a05:6a00:7095:b0:76b:d868:8052])
+ (user=kuniyu job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:1391:b0:748:323f:ba21
+ with SMTP id d2e1a72fcca58-76e516e9174mr461779b3a.1.1755289063124; Fri, 15
+ Aug 2025 13:17:43 -0700 (PDT)
+Date: Fri, 15 Aug 2025 20:16:14 +0000
 In-Reply-To: <20250815201712.1745332-1-kuniyu@google.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 Mime-Version: 1.0
 References: <20250815201712.1745332-1-kuniyu@google.com>
 X-Mailer: git-send-email 2.51.0.rc1.163.g2494970778-goog
-Message-ID: <20250815201712.1745332-6-kuniyu@google.com>
-Subject: [PATCH v5 net-next 05/10] net: Clean up __sk_mem_raise_allocated().
+Message-ID: <20250815201712.1745332-7-kuniyu@google.com>
+Subject: [PATCH v5 net-next 06/10] net-memcg: Introduce mem_cgroup_from_sk().
 From: Kuniyuki Iwashima <kuniyu@google.com>
 To: "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
 	Jakub Kicinski <kuba@kernel.org>, Neal Cardwell <ncardwell@google.com>, Paolo Abeni <pabeni@redhat.com>, 
@@ -75,57 +75,98 @@ Cc: Simon Horman <horms@kernel.org>, Geliang Tang <geliang@kernel.org>,
 	mptcp@lists.linux.dev, cgroups@vger.kernel.org, linux-mm@kvack.org
 Content-Type: text/plain; charset="UTF-8"
 
-In __sk_mem_raise_allocated(), charged is initialised as true due
-to the weird condition removed in the previous patch.
+We will store a flag in the lowest bit of sk->sk_memcg.
 
-It makes the variable unreliable by itself, so we have to check
-another variable, memcg, in advance.
+Then, directly dereferencing sk->sk_memcg will be illegal, and we
+do not want to allow touching the raw sk->sk_memcg in many places.
 
-Also, we will factorise the common check below for memcg later.
+Let's introduce mem_cgroup_from_sk().
 
-    if (mem_cgroup_sockets_enabled && sk->sk_memcg)
+Other places accessing the raw sk->sk_memcg will be converted later.
 
-As a prep, let's initialise charged as false and memcg as NULL.
+Note that we cannot define the helper as an inline function in
+memcontrol.h as we cannot access any fields of struct sock there
+due to circular dependency, so it is placed in sock.h.
 
 Signed-off-by: Kuniyuki Iwashima <kuniyu@google.com>
 Reviewed-by: Eric Dumazet <edumazet@google.com>
+Acked-by: Roman Gushchin <roman.gushchin@linux.dev>
+Acked-by: Shakeel Butt <shakeel.butt@linux.dev>
 ---
- net/core/sock.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ include/net/sock.h              | 12 ++++++++++++
+ mm/memcontrol.c                 | 13 +++++++++----
+ net/ipv4/inet_connection_sock.c |  2 +-
+ 3 files changed, 22 insertions(+), 5 deletions(-)
 
-diff --git a/net/core/sock.c b/net/core/sock.c
-index 380bc1aa6982..000940ecf360 100644
---- a/net/core/sock.c
-+++ b/net/core/sock.c
-@@ -3263,15 +3263,16 @@ EXPORT_SYMBOL(sk_wait_data);
-  */
- int __sk_mem_raise_allocated(struct sock *sk, int size, int amt, int kind)
+diff --git a/include/net/sock.h b/include/net/sock.h
+index c8a4b283df6f..811f95ea8d00 100644
+--- a/include/net/sock.h
++++ b/include/net/sock.h
+@@ -2594,6 +2594,18 @@ static inline gfp_t gfp_memcg_charge(void)
+ 	return in_softirq() ? GFP_ATOMIC : GFP_KERNEL;
+ }
+ 
++#ifdef CONFIG_MEMCG
++static inline struct mem_cgroup *mem_cgroup_from_sk(const struct sock *sk)
++{
++	return sk->sk_memcg;
++}
++#else
++static inline struct mem_cgroup *mem_cgroup_from_sk(const struct sock *sk)
++{
++	return NULL;
++}
++#endif
++
+ static inline long sock_rcvtimeo(const struct sock *sk, bool noblock)
  {
--	struct mem_cgroup *memcg = mem_cgroup_sockets_enabled ? sk->sk_memcg : NULL;
- 	struct proto *prot = sk->sk_prot;
--	bool charged = true;
-+	struct mem_cgroup *memcg = NULL;
-+	bool charged = false;
- 	long allocated;
+ 	return noblock ? 0 : READ_ONCE(sk->sk_rcvtimeo);
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index 46713b9ece06..d8a52d1d08fa 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -5020,19 +5020,24 @@ void mem_cgroup_sk_alloc(struct sock *sk)
  
- 	sk_memory_allocated_add(sk, amt);
- 	allocated = sk_memory_allocated(sk);
+ void mem_cgroup_sk_free(struct sock *sk)
+ {
+-	if (sk->sk_memcg)
+-		css_put(&sk->sk_memcg->css);
++	struct mem_cgroup *memcg = mem_cgroup_from_sk(sk);
++
++	if (memcg)
++		css_put(&memcg->css);
+ }
  
--	if (memcg) {
-+	if (mem_cgroup_sockets_enabled && sk->sk_memcg) {
-+		memcg = sk->sk_memcg;
- 		charged = mem_cgroup_charge_skmem(memcg, amt, gfp_memcg_charge());
- 		if (!charged)
- 			goto suppress_allocation;
-@@ -3358,7 +3359,7 @@ int __sk_mem_raise_allocated(struct sock *sk, int size, int amt, int kind)
+ void mem_cgroup_sk_inherit(const struct sock *sk, struct sock *newsk)
+ {
++	struct mem_cgroup *memcg;
++
+ 	if (sk->sk_memcg == newsk->sk_memcg)
+ 		return;
  
- 	sk_memory_allocated_sub(sk, amt);
+ 	mem_cgroup_sk_free(newsk);
  
--	if (memcg && charged)
-+	if (charged)
- 		mem_cgroup_uncharge_skmem(memcg, amt);
+-	if (sk->sk_memcg)
+-		css_get(&sk->sk_memcg->css);
++	memcg = mem_cgroup_from_sk(sk);
++	if (memcg)
++		css_get(&memcg->css);
  
- 	return 0;
+ 	newsk->sk_memcg = sk->sk_memcg;
+ }
+diff --git a/net/ipv4/inet_connection_sock.c b/net/ipv4/inet_connection_sock.c
+index 724bd9ed6cd4..93569bbe00f4 100644
+--- a/net/ipv4/inet_connection_sock.c
++++ b/net/ipv4/inet_connection_sock.c
+@@ -718,7 +718,7 @@ struct sock *inet_csk_accept(struct sock *sk, struct proto_accept_arg *arg)
+ 		lock_sock(newsk);
+ 
+ 		mem_cgroup_sk_alloc(newsk);
+-		if (newsk->sk_memcg) {
++		if (mem_cgroup_from_sk(newsk)) {
+ 			/* The socket has not been accepted yet, no need
+ 			 * to look at newsk->sk_wmem_queued.
+ 			 */
 -- 
 2.51.0.rc1.163.g2494970778-goog
 
