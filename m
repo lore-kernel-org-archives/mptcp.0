@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35E052C0F9B
-	for <mptcp@lists.linux.dev>; Fri, 15 Aug 2025 15:24:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4368E4315F
+	for <mptcp@lists.linux.dev>; Fri, 15 Aug 2025 15:29:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755271448; cv=none; b=ji6QTCNv4IqxG1HaArB0KOb2/wVIr1YvMgYIUhtSOOodRSixqMFfW4uUOzLWPRt2zOnaIdcIe9hInu5U/NgbwFvGJF5Mn7spvU1ZdV9+TqKq1j383E/r+rOP7Sy57DIPv9tVJvkz9PPYVRDtoksTRked5FmItllV5IaI9DqqyfQ=
+	t=1755271789; cv=none; b=uWnLMczyKFjNuREK8g0QlLfmfHJsEgT8rtatVg82XeFNlXf1dIE1mVm3DIXnv4EEouAP6aBzkKCQ60/9LXOkynRSq3YHHoAS7gvnjuvKtyUb0XBSVIegFvQAbidW4piFY3+hcJYtQq7G7zXAbHyJYBPLzUwyWWSFSarNhkvW4Ks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755271448; c=relaxed/simple;
-	bh=9s8v0VT3fwRToiSPH3SSBfqhvPClUexcIPKkwxSluiU=;
+	s=arc-20240116; t=1755271789; c=relaxed/simple;
+	bh=WPnYyGNSWZsMLSb7varqKtmRK3YyFxu4t6nf41GF4Eg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XCSpsbnDRrn/2rzAbWIBRX1ma9MHXA7ZictzWANIF62No9ngVEYKspMKuzijHyzKcX1L+Ow3vZowYpGVdJpswWOAjQ3aPZ2wKxumHIMyDUevO5Oqp7toemIgc9p7k3+U7nCfPCQjiNTophwPxLhWAzyd346TZlegsjCxhCaio24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jnicKLiG; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=L/9a+f7f6j8mF7xGo2H08gVd908hicKHes387+QkKMETXsOoLYkDONaIQu1wvllanzeXyedQkGz63a2V+wuLQXAXJBAyWzfKp2ar72z6LEZEphmyzRXJ6Ap7iaFTVUY/d3lMLRrjjXOBPIBOygfDB1/nnX8vhar5+sAWKj5Lajw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qXNuFyMj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jnicKLiG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A71FC4CEEB;
-	Fri, 15 Aug 2025 15:24:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qXNuFyMj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 432CDC4CEEB;
+	Fri, 15 Aug 2025 15:29:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755271447;
-	bh=9s8v0VT3fwRToiSPH3SSBfqhvPClUexcIPKkwxSluiU=;
+	s=k20201202; t=1755271789;
+	bh=WPnYyGNSWZsMLSb7varqKtmRK3YyFxu4t6nf41GF4Eg=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=jnicKLiG2wxluS5qnbNS37YZqLRMCUastnK4cGEMBYl/WijRx6pZF3wxkAhWojI5i
-	 jw/f7mvDVXVLSV7jtXRphJgagPPYmqnJGYUg8t7EVbmu8TywOg71ZQMlmxpX6L/I4N
-	 23wQ27i5C+w9211jdNbLjRikoWhZhm52pQurkz6QKmbiBytNaThcJVS19mpAu+WBSM
-	 9fnf2mTZof2eBpXS4B7UEDoaaYLm5z6+fYtv3R7vy2/6u6LZN2DQ7sA20lGpu69B4W
-	 SJaPaM3HHDIu7MgPzYzkyGzdYRaU2Filo8oldoPZvH/FuvVpkgXnebkvqZbzLB4Nw1
-	 60r/BRSDUI2eg==
-Message-ID: <b177fb78-0e80-4aa9-b7fb-3fcf90c6fb61@kernel.org>
-Date: Fri, 15 Aug 2025 17:24:04 +0200
+	b=qXNuFyMj47DJt/IADQMQLxcXnEsYjgY8BIbUcT2YwXGE8EAXc15sOInmTmajaRYeD
+	 9j66Ooof0jSo/9AAo4B7E74IrVQvPhfcd1REYmErKoDGTRUu5WCUTaxyWDPVEO7+Fl
+	 h8md2XQXaVJptI2yp4A7vdfPokUmqQL78uSLcP6J7SjLJpJbPYSoHpCoA9KkHwMtDJ
+	 5NlqlsDGDFP8vqEKKc/oPrGbKN11RrqwsdV0D05RLo4XqtsVSvFpuYmEwSQlnxkwHz
+	 xWJaOq0i/ILK69xjZQ+4I1tNeChXp9mv9wZdkkSwCxn5KoUI9m1g4kTbL2B2YFxBbi
+	 SHjGZ0IWfIGpg==
+Message-ID: <eae1b929-f9a6-4416-af33-750cf936febc@kernel.org>
+Date: Fri, 15 Aug 2025 17:29:45 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,14 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v4 0/2] mptcp: improve ADD_ADDR timeout
- handling
+Subject: Re: [PATCH mptcp-next v4 1/2] mptcp: make ADD_ADDR retransmission
+ timeout adaptive
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Cc: Geliang Tang <tanggeliang@kylinos.cn>,
+ Christoph Paasch <cpaasch@openai.com>
 References: <cover.1754987655.git.tanggeliang@kylinos.cn>
+ <a0d3e4caeb991f06de2ce2692b4c00c57c0460e6.1754987655.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,7 +88,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <cover.1754987655.git.tanggeliang@kylinos.cn>
+In-Reply-To: <a0d3e4caeb991f06de2ce2692b4c00c57c0460e6.1754987655.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -95,15 +97,58 @@ Hi Geliang,
 On 12/08/2025 10:39, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> v4:
->  - rollback to v2, just use icsk->icsk_rto.
+> Currently the ADD_ADDR option is retransmitted with a fixed timeout. This
+> patch makes the retransmission timeout adaptive by using the maximum RTO
+> among all the subflows, while still capping it at the configured maximum
+> value (add_addr_timeout_max). This improves responsiveness when
+> establishing new subflows.
+> 
+> Specifically:
+> 1. Adds mptcp_adjust_add_addr_timeout() helper to compute the adaptive
+> timeout.
+> 2. Uses maximum subflow RTO (icsk_rto) when available.
+> 3. Applies exponential backoff based on retransmission count.
+> 4. Maintains fallback to configured max timeout when no RTO data exists.
 
-Thank you for the v4. Thanks to the previous measurements you did, the
-new version looks good to me:
+I might be good to add a note about the behavioural change:
 
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+  This slightly change the behaviour of the MPTCP "add_addr_timeout"
+  sysctl knob to be used as a maximum instead of a fixed value, but this
+  is seen as an improvement: the ADD_ADDR might be sent quicker than
+  before to improve the overall MPTCP connection. Also, the default
+  value is set at 2 min, which was way too big, and caused the ADD_ADDR
+  not to be retransmitted for connections shorter than 2 minutes.
 
-I have one small comment in patch 1/2, but that's not blocking.
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/576
+> Reviewed-by: Christoph Paasch <cpaasch@openai.com>
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> ---
+>  Documentation/networking/mptcp-sysctl.rst |  4 ++--
+>  net/mptcp/pm.c                            | 28 +++++++++++++++++++----
+>  2 files changed, 26 insertions(+), 6 deletions(-)
+> 
+> diff --git a/Documentation/networking/mptcp-sysctl.rst b/Documentation/networking/mptcp-sysctl.rst
+> index 1683c139821e..2b8e8fb99ee2 100644
+> --- a/Documentation/networking/mptcp-sysctl.rst
+> +++ b/Documentation/networking/mptcp-sysctl.rst
+> @@ -8,8 +8,8 @@ MPTCP Sysfs variables
+>  ===============================
+>  
+>  add_addr_timeout - INTEGER (seconds)
+> -	Set the timeout after which an ADD_ADDR control message will be
+> -	resent to an MPTCP peer that has not acknowledged a previous
+> +	Set the maximum value of timeout after which an ADD_ADDR control message
+> +	will be resent to an MPTCP peer that has not acknowledged a previous
+>  	ADD_ADDR message.
+
+I suggest adding this at the end:
+
+  A dynamically estimated retransmission timeout based on the estimated
+  connection round-trip-time is used if this value is lower than the
+  maximum one.
+
+I can do that when applying the patch. I can update the text if needed
+later on.
 
 Cheers,
 Matt
