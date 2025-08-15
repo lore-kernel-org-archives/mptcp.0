@@ -1,221 +1,266 @@
-Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 570D72BDC2E
-	for <mptcp@lists.linux.dev>; Fri, 15 Aug 2025 02:31:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA1222DCF42
+	for <mptcp@lists.linux.dev>; Fri, 15 Aug 2025 07:32:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755225082; cv=none; b=vBOxVPoqMiwnLB9JyZ9royToTOKxIsZGptVOIlPKlsE7q9zLB8UTTn1ktoAxkubEQ9E+6Wxovq3Uon05X3ztoMQiqlmfcoZRE3tzvLI22hGMk8dh56TkJGmsCa9lVzS1iwGjC2g1e7FCixaYc3TKWxwePxjRYHDmA8I2FAvDEvg=
+	t=1755243130; cv=none; b=RcAvM/ybL7dGfqLnSJtAFk3zUpOT8vqBsG3Fk2WyBrWGVXbB1SJpza62rfrg1/HzZa9ZSLx4tGEXTN7fmoxzi3nEIPjqIHM4L/ajaxU3u9po7AiwbvA98V58qC+PozX/EOkCRiR4DfziUbtTp5m5n74dJX2oOJuRYRs8EGcfo9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755225082; c=relaxed/simple;
-	bh=qT2uL3TSbpLxV1OGxvbcmHAxQOjkb9fdYhdqFdG7X4Q=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=D2Tb/dMrIzOQ5Xl9B7a0YCBT30zimYE3sIhFEOkIi6RARhCoB+wHZF7QNTAiB8A/0iExeYPjamLNFRTht1waayv1b1yFYRJUiB8q32ndOsaKv2GCMhCgEKTs4QqhfmRkBJmIoUu+BaVyzMzEKv2H6FKoERipNg3arSNB56DhYgc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Yo03yUeR; arc=none smtp.client-ip=209.85.215.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Yo03yUeR"
-Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-b472da8ff0eso17844a12.3
-        for <mptcp@lists.linux.dev>; Thu, 14 Aug 2025 19:31:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1755225079; x=1755829879; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hwJrICMvn5YZZg5OvFRoWR/jD5Y72+/VemdMMNlTNAY=;
-        b=Yo03yUeRIAMpK3N6yXJ5BkE6i6IENiVzCiMnF6Jl6w8byrN6FFjNn7llC085gZ6rsW
-         0VZ3uIL0stls0Jj5o8WuloX9gKB0ki/LZMz9jNp3XPDjBMpJnQXh4C0Lq7lMqLvJ14aK
-         +2khRWe9tNFr2HTQ2riWD35Bhmmfwh9EJl78lhkABgsXNmrWpVbjV8oxshZh4tpEhJhb
-         9FauIu6M/AOhlqaEfxJiMM+Nq89ZPRVU8gK82KuARPMwBywic5Id+JSmYQEzre2d7vlb
-         T+mo1uambCWc2vN2BpqOMCFc5QkoD3HPLAeR9hKgBw3RNqUfoU1CDAycl053DzH9rWJM
-         AsjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755225079; x=1755829879;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hwJrICMvn5YZZg5OvFRoWR/jD5Y72+/VemdMMNlTNAY=;
-        b=ep5g7UxzBAprdCayNFkkM1ru590S7dhXBmfQm8xkogF55myV4JyFUoj3elDDbIqhrL
-         sCc2KKQH0Z8YjIzUMnWwPafXCToOGSynIO6n6/gH0381h5BoUIrkLDCt7PcKZM8oBgHV
-         jLmKCJ9fMlNizJD+llBX0AsxFde5cw+1TKuRRzfxQjJzNYulgeTPFH8bW7UtgavNzNLI
-         9CPD3rCacerA1mXJsKBG19lnbAIruQuKjSXuWux9SIjJX9psuEHrkAYl5Iv2fdj4tjoy
-         IHKs1FKCz8a6YVI41ae7AksjP0p3usLzA+tL+n6v6dPntwkqBP8J4FHCvPVriWqMGB5Z
-         Acvw==
-X-Forwarded-Encrypted: i=1; AJvYcCXh3OXwvWn2NCs+RRgACjYyBUbMMGbJcEAhwi/LXvFnTX+wn26iiuwJ6LYyqXtI/s8crq6AOg==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yyt9NmohrtmZ3u0RDrWIv4LtJNqSZe91hRonaLEj8feyqBf9tv5
-	1lqOa7a4VAAAOa8cGXpsVosE7fxNG4kM304/stHAvT3qGEqJouWe7xxv7CkgZUR4B5SG1aC6S+8
-	vjfFrKX08fV0QlqaWp4kPb1i+Sis916MSaBrTGkb4
-X-Gm-Gg: ASbGnctPB/7GfKmJVxBoUoWVdxkPZjR/t2Scgm+doUAS42HiyMSFqYq1A1INQypEKI4
-	bqPSiQKz7ON/bwwc0elXPSET7KHBpw6XIBdJiPjSMo4TuTOCUQUT3272BAt9gmtT/XU9tc1EbB5
-	gEG+Y0sc69p3xwvqtjPWSAQaCxpboy+2USaDO8emznqEt+gVFT7uGHby5kwm8jZgGZn8iX/4T6I
-	R+UsF7nqi3hc2zxB9uXyShGOJeOP+h295pQwhmjPc6TpwPLwqj6iYRg
-X-Google-Smtp-Source: AGHT+IEwYQ5eDN0UwWpz8ZWif2tlMoHHE0vvfDGyA+lewx7O9B0FGbBkW3rn66Hd2jfvfyy3r38VK778LZowgwK8wBM=
-X-Received: by 2002:a17:902:cec4:b0:235:c9a7:d5f5 with SMTP id
- d9443c01a7336-2446d71ea77mr6091625ad.13.1755225079199; Thu, 14 Aug 2025
- 19:31:19 -0700 (PDT)
+	s=arc-20240116; t=1755243130; c=relaxed/simple;
+	bh=d1uY3JmgzrFc+A32kT8kA/1FSYMRFLH0wUQih9446tw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TnYLQMcXKduYMKO6djxGYpaydn4IczdNBfaE+gwGCSgqQl1H/0VlYSMXtzaGyqOcSMihh2BbGxAzMzBpX8Rc6oDmrfG+crDDpStLeA8oP+HE2KzXvN13vLKgwGaD0w/XCnaggk8eOcxcL5yTCmmUW1bRQSZ04koYsj/o1APo1Hc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: e9c6003a79a911f0b29709d653e92f7d-20250815
+X-CTIC-Tags:
+	HR_CC_AS_FROM, HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CTE_8B
+	HR_CTT_MISS, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME
+	HR_SJ_DIGIT_LEN, HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM
+	HR_SJ_PHRASE, HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT
+	HR_TO_NO_NAME, IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED, SA_TRUSTED
+	SA_EXISTED, SN_EXISTED, SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS
+	UD_TRUSTED, CIE_BAD, CIE_GOOD, CIE_GOOD_SPF, GTI_FG_BS
+	GTI_C_CI, GTI_FG_IT, GTI_RG_INFO, GTI_C_BU, AMN_T1
+	AMN_GOOD, AMN_C_TI, AMN_C_BU, ABX_MISS_RDNS
+X-CID-O-RULE: Release_Ham
+X-CID-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:a6c7121b-f0ac-4038-bb9c-b2b859661567,IP:10,
+	URL:0,TC:0,Content:0,EDM:25,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACT
+	ION:release,TS:20
+X-CID-INFO: VERSION:1.1.45,REQID:a6c7121b-f0ac-4038-bb9c-b2b859661567,IP:10,UR
+	L:0,TC:0,Content:0,EDM:25,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:20
+X-CID-META: VersionHash:6493067,CLOUDID:6e26cadf8c8e3aa56a5ca39bdf4496e4,BulkI
+	D:250815153202H9ZS6XZR,BulkQuantity:0,Recheck:0,SF:17|19|24|44|66|78|102,T
+	C:nil,Content:0|50,EDM:5,IP:-2,URL:1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:n
+	il,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI,
+	TF_CID_SPAM_ULS
+X-UUID: e9c6003a79a911f0b29709d653e92f7d-20250815
+X-User: yangang@kylinos.cn
+Received: from yangang-thinkpad-t14-gen-1.. [(223.70.159.239)] by mailgw.kylinos.cn
+	(envelope-from <yangang@kylinos.cn>)
+	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
+	with ESMTP id 38302188; Fri, 15 Aug 2025 15:31:52 +0800
+From: Gang Yan <yangang@kylinos.cn>
+To: mptcp@lists.linux.dev
+Cc: Gang Yan <yangang@kylinos.cn>
+Subject: [PATCH mptcp-next v3] selftests: net: mptcp: add checks for fallback counters
+Date: Fri, 15 Aug 2025 15:31:40 +0800
+Message-ID: <20250815073140.29077-1-yangang@kylinos.cn>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250814200912.1040628-1-kuniyu@google.com> <20250814200912.1040628-2-kuniyu@google.com>
- <cs5uvm72eyzqljcxtmienkmmth54pqqjmlyya5vf3twncbp7u5@jfnktl43r5se>
- <CAAVpQUDyy9f7=LNZc2ka2RiOhR3_eOhEb+Nih37HnF0_cdrJqA@mail.gmail.com>
- <r3czpatkdegf7aoo3ezvrvzuqkixsb557okybueig4fcuknku3@jkgzexpt7dnq>
- <CAAVpQUAx9SyA96b_UYofbhM2TPgAGSqq_=-g6ERqmbCZP04-PA@mail.gmail.com> <kr6cv3njfdjzc2wcrixudszd2szzcso7ikpm6d5xsxe7rfppjs@5bvfwpelgj6f>
-In-Reply-To: <kr6cv3njfdjzc2wcrixudszd2szzcso7ikpm6d5xsxe7rfppjs@5bvfwpelgj6f>
-From: Kuniyuki Iwashima <kuniyu@google.com>
-Date: Thu, 14 Aug 2025 19:31:08 -0700
-X-Gm-Features: Ac12FXx0oP3F9dx8jnlPn8DV0XXtg4bMkD2eiCckKKtAFl_RyUY4z0YgVFHXtPQ
-Message-ID: <CAAVpQUCMcm8sKbNqW9o6Ov1MtC67Z--NTv9me1xcYgCkbJxK5g@mail.gmail.com>
-Subject: Re: [PATCH v4 net-next 01/10] mptcp: Fix up subflow's memcg when CONFIG_SOCK_CGROUP_DATA=n.
-To: Shakeel Butt <shakeel.butt@linux.dev>
-Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Neal Cardwell <ncardwell@google.com>, Paolo Abeni <pabeni@redhat.com>, 
-	Willem de Bruijn <willemb@google.com>, Matthieu Baerts <matttbe@kernel.org>, 
-	Mat Martineau <martineau@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Michal Hocko <mhocko@kernel.org>, Roman Gushchin <roman.gushchin@linux.dev>, 
-	Andrew Morton <akpm@linux-foundation.org>, =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>, 
-	Tejun Heo <tj@kernel.org>, Simon Horman <horms@kernel.org>, Geliang Tang <geliang@kernel.org>, 
-	Muchun Song <muchun.song@linux.dev>, Mina Almasry <almasrymina@google.com>, 
-	Kuniyuki Iwashima <kuni1840@gmail.com>, netdev@vger.kernel.org, mptcp@lists.linux.dev, 
-	cgroups@vger.kernel.org, linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Aug 14, 2025 at 6:06=E2=80=AFPM Shakeel Butt <shakeel.butt@linux.de=
-v> wrote:
->
-> On Thu, Aug 14, 2025 at 05:05:56PM -0700, Kuniyuki Iwashima wrote:
-> > On Thu, Aug 14, 2025 at 4:46=E2=80=AFPM Shakeel Butt <shakeel.butt@linu=
-x.dev> wrote:
-> > >
-> > > On Thu, Aug 14, 2025 at 04:27:31PM -0700, Kuniyuki Iwashima wrote:
-> > > > On Thu, Aug 14, 2025 at 2:44=E2=80=AFPM Shakeel Butt <shakeel.butt@=
-linux.dev> wrote:
-> > > > >
-> > > > > On Thu, Aug 14, 2025 at 08:08:33PM +0000, Kuniyuki Iwashima wrote=
-:
-> > > > > > When sk_alloc() allocates a socket, mem_cgroup_sk_alloc() sets
-> > > > > > sk->sk_memcg based on the current task.
-> > > > > >
-> > > > > > MPTCP subflow socket creation is triggered from userspace or
-> > > > > > an in-kernel worker.
-> > > > > >
-> > > > > > In the latter case, sk->sk_memcg is not what we want.  So, we f=
-ix
-> > > > > > it up from the parent socket's sk->sk_memcg in mptcp_attach_cgr=
-oup().
-> > > > > >
-> > > > > > Although the code is placed under #ifdef CONFIG_MEMCG, it is bu=
-ried
-> > > > > > under #ifdef CONFIG_SOCK_CGROUP_DATA.
-> > > > > >
-> > > > > > The two configs are orthogonal.  If CONFIG_MEMCG is enabled wit=
-hout
-> > > > > > CONFIG_SOCK_CGROUP_DATA, the subflow's memory usage is not char=
-ged
-> > > > > > correctly.
-> > > > > >
-> > > > > > Let's wrap sock_create_kern() for subflow with set_active_memcg=
-()
-> > > > > > using the parent sk->sk_memcg.
-> > > > > >
-> > > > > > Fixes: 3764b0c5651e3 ("mptcp: attach subflow socket to parent c=
-group")
-> > > > > > Suggested-by: Michal Koutn=C3=BD <mkoutny@suse.com>
-> > > > > > Signed-off-by: Kuniyuki Iwashima <kuniyu@google.com>
-> > > > > > ---
-> > > > > >  mm/memcontrol.c     |  5 ++++-
-> > > > > >  net/mptcp/subflow.c | 11 +++--------
-> > > > > >  2 files changed, 7 insertions(+), 9 deletions(-)
-> > > > > >
-> > > > > > diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> > > > > > index 8dd7fbed5a94..450862e7fd7a 100644
-> > > > > > --- a/mm/memcontrol.c
-> > > > > > +++ b/mm/memcontrol.c
-> > > > > > @@ -5006,8 +5006,11 @@ void mem_cgroup_sk_alloc(struct sock *sk=
-)
-> > > > > >       if (!in_task())
-> > > > > >               return;
-> > > > > >
-> > > > > > +     memcg =3D current->active_memcg;
-> > > > > > +
-> > > > >
-> > > > > Use active_memcg() instead of current->active_memcg and do before=
- the
-> > > > > !in_task() check.
-> > > >
-> > > > Why not reuse the !in_task() check here ?
-> > > > We never use int_active_memcg for socket and also
-> > > > know int_active_memcg is always NULL here.
-> > > >
-> > >
-> > > If we are making mem_cgroup_sk_alloc() work with set_active_memcg()
-> > > infra then make it work for both in_task() and !in_task() contexts.
-> >
-> > Considering e876ecc67db80, then I think we should add
-> > set_active_memcg_in_task() and active_memcg_in_task().
-> >
-> > or at least we need WARN_ON() if we want to place active_memcg()
-> > before the in_task() check, but this looks ugly.
-> >
-> >         memcg =3D active_memcg();
-> >         if (!in_task() && !memcg)
-> >                 return;
-> >         DEBUG_NET_WARN_ON_ONCE(!in_task() && memcg))
->
-> You don't have to use the code as is. It is just an example. Basically I
-> am asking if in future someone does the following:
->
->         // in !in_task() context
->         old_memcg =3D set_active_memcg(new_memcg);
->         sk =3D sk_alloc();
->         set_active_memcg(old_memcg);
->
-> mem_cgroup_sk_alloc() should work and associate the sk with the
-> new_memcg.
->
-> You can manually inline active_memcg() function to avoid multiple
-> in_task() checks like below:
+Recently, some mib counters about fallback has been added, this patch
+provides a method to check the expected behavior of these mib counters
+during the test execution.
 
-Will do so, thanks!
+Link: https://github.com/multipath-tcp/mptcp_net-next/issues/571
+Signed-off-by: Gang Yan <yangang@kylinos.cn>
 
+------
+Changelog:
+  v3:
+    - Squash into a single patch.
+    - Using 'fb_' as a prefix instead of the suffix for variables.
+    - Adjust the order of mib counters to check, ensuring it matches the
+      variable declaration.
+    - The namespace('ns1'/'ns2') is included in the output of 
+      'chk_fallback_nr', like:
+      "ns2 infinite map tx fallback        [IGNO] (flaky) got 1 infinite map tx fallback[s] in ns2 expected 0"
+    - Add a new helper named 'chk_fallback_nr_all', which prints only
+      when an error occurs.
+    - Fix some code style issues.
+ 
+  v2:
+    - add a helper which can check all the fallback mib counters.
+    - put the 'chk_fallback_nr' in 'chk_join_nr' like chk_join_tx_nr.
 
->
-> void mem_cgroup_sk_alloc(struct sock *sk)
-> {
->         struct mem_cgroup *memcg;
->
->         if (!mem_cgroup_sockets_enabled)
->                 return;
->
->         if (!in_task()) {
->                 memcg =3D this_cpu_read(int_active_memcg);
->
->                 /*
->                  * Do not associate the sock with unrelated interrupted
->                  * task's memcg.
->                  */
->                 if (!memcg)
->                         return;
->         } else {
->                 memcg =3D current->active_memcg;
->         }
->
->         rcu_read_lock();
->         if (likely(!memcg))
->                 memcg =3D mem_cgroup_from_task(current);
->         if (mem_cgroup_is_root(memcg))
->                 goto out;
->         if (!cgroup_subsys_on_dfl(memory_cgrp_subsys) && !memcg1_tcpmem_a=
-ctive(memcg))
->                 goto out;
->         if (css_tryget(&memcg->css))
->                 sk->sk_memcg =3D memcg;
-> out:
->         rcu_read_unlock();
-> }
->
+Notes:
+
+Hi Matt,
+
+I wanted to apologize for splitting the changes into multiple commits,
+my intention was to ease the review process, but it unfortunately
+backfired.
+
+Thanks for your valuable suggestions, I've made some improvements based
+on your feedback.
+
+Please take another look at the updated changes.
+
+Best regards,
+Gang
+
+---
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 123 ++++++++++++++++++
+ 1 file changed, 123 insertions(+)
+
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+index b8af65373b3a..898779a9af58 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -74,6 +74,17 @@ unset join_create_err
+ unset join_bind_err
+ unset join_connect_err
+ 
++unset fb_ns1
++unset fb_ns2
++unset fb_infinite_map_tx
++unset fb_dss_corruption
++unset fb_simult_conn
++unset fb_mpc_passive
++unset fb_mpc_active
++unset fb_mpc_data
++unset fb_md5_sig
++unset fb_dss
++
+ # generated using "nfbpf_compile '(ip && (ip[54] & 0xf0) == 0x30) ||
+ #				  (ip6 && (ip6[74] & 0xf0) == 0x30)'"
+ CBPF_MPTCP_SUBOPTION_ADD_ADDR="14,
+@@ -1399,6 +1410,115 @@ chk_join_tx_nr()
+ 	print_results "join Tx" ${rc}
+ }
+ 
++chk_fallback_nr()
++{
++	local infinite_map_tx=${fb_infinite_map_tx:-0}
++	local dss_corruption=${fb_dss_corruption:-0}
++	local simult_conn=${fb_simult_conn:-0}
++	local mpc_passive=${fb_mpc_passive:-0}
++	local mpc_active=${fb_mpc_active:-0}
++	local mpc_data=${fb_mpc_data:-0}
++	local md5_sig=${fb_md5_sig:-0}
++	local dss=${fb_dss:-0}
++	local rc=${KSFT_PASS}
++	local ns=$1
++	local count
++
++	count=$(mptcp_lib_get_counter ${!ns} "MPTcpExtInfiniteMapTx")
++	if [ -z "$count" ]; then
++		rc=${KSFT_SKIP}
++	elif [ "$count" != "$infinite_map_tx" ]; then
++		rc=${KSFT_FAIL}
++		print_check "$ns infinite map tx fallback"
++		fail_test "got $count infinite map tx fallback[s] in $ns expected $infinite_map_tx"
++	fi
++
++	count=$(mptcp_lib_get_counter ${!ns} "MPTcpExtDSSCorruptionFallback")
++	if [ -z "$count" ]; then
++		rc=${KSFT_SKIP}
++	elif [ "$count" != "$dss_corruption" ]; then
++		rc=${KSFT_FAIL}
++		print_check "$ns dss corruption fallback"
++		fail_test "got $count dss corruption fallback[s] in $ns expected $dss_corruption"
++	fi
++
++	count=$(mptcp_lib_get_counter ${!ns} "MPTcpExtSimultConnectFallback")
++	if [ -z "$count" ]; then
++		rc=${KSFT_SKIP}
++	elif [ "$count" != "$simult_conn" ]; then
++		rc=${KSFT_FAIL}
++		print_check "$ns simult conn fallback"
++		fail_test "got $count simult conn fallback[s] in $ns expected $simult_conn"
++	fi
++
++	count=$(mptcp_lib_get_counter ${!ns} "MPTcpExtMPCapableFallbackACK")
++	if [ -z "$count" ]; then
++		rc=${KSFT_SKIP}
++	elif [ "$count" != "$mpc_passive" ]; then
++		rc=${KSFT_FAIL}
++		print_check "$ns mpc passive fallback"
++		fail_test "got $count mpc passive fallback[s] in $ns expected $mpc_passive"
++	fi
++
++	count=$(mptcp_lib_get_counter ${!ns} "MPTcpExtMPCapableFallbackSYNACK")
++	if [ -z "$count" ]; then
++		rc=${KSFT_SKIP}
++	elif [ "$count" != "$mpc_active" ]; then
++		rc=${KSFT_FAIL}
++		print_check "$ns mpc active fallback"
++		fail_test "got $count mpc active fallback[s] in $ns expected $mpc_active"
++	fi
++
++	count=$(mptcp_lib_get_counter ${!ns} "MPTcpExtMPCapableDataFallback")
++	if [ -z "$count" ]; then
++		rc=${KSFT_SKIP}
++	elif [ "$count" != "$mpc_data" ]; then
++		rc=${KSFT_FAIL}
++		print_check "$ns mpc data fallback"
++		fail_test "got $count mpc data fallback[s] in $ns expected $mpc_data"
++	fi
++
++	count=$(mptcp_lib_get_counter ${!ns} "MPTcpExtMD5SigFallback")
++	if [ -z "$count" ]; then
++		rc=${KSFT_SKIP}
++	elif [ "$count" != "$md5_sig" ]; then
++		rc=${KSFT_FAIL}
++		print_check "$ns MD5 Sig fallback"
++		fail_test "got $count MD5 Sig fallback[s] in $ns expected $MD5_Sig"
++	fi
++
++	count=$(mptcp_lib_get_counter ${!ns} "MPTcpExtDssFallback")
++	if [ -z "$count" ]; then
++		rc=${KSFT_SKIP}
++	elif [ "$count" != "$dss" ]; then
++		rc=${KSFT_FAIL}
++		print_check "$ns dss fallback"
++		fail_test "got $count dss fallback[s] in $ns expected $dss"
++	fi
++
++	return $rc
++}
++
++chk_fallback_nr_all()
++{
++	local netns=("ns1" "ns2")
++	local fb_ns=("fb_ns1" "fb_ns2")
++	local rc=${KSFT_PASS}
++
++	for i in 0 1; do
++		if [ -n "${!fb_ns[i]}" ]; then
++			eval "${!fb_ns[i]}" \
++				chk_fallback_nr ${netns[i]} || rc={?}
++		else
++			chk_fallback_nr ${netns[i]} || rc={?}
++		fi
++	done
++
++	if [ "$rc" != "${KSFT_PASS}" ]; then
++		print_results "fallback" $rc
++	fi
++}
++
+ chk_join_nr()
+ {
+ 	local syn_nr=$1
+@@ -1484,6 +1604,8 @@ chk_join_nr()
+ 	join_syn_tx="${join_syn_tx:-${syn_nr}}" \
+ 		chk_join_tx_nr
+ 
++	chk_fallback_nr_all
++
+ 	if $validate_checksum; then
+ 		chk_csum_nr $csum_ns1 $csum_ns2
+ 		chk_fail_nr $fail_nr $fail_nr
+@@ -3337,6 +3459,7 @@ fail_tests()
+ 		join_csum_ns1=+1 join_csum_ns2=+0 \
+ 			join_fail_nr=1 join_rst_nr=0 join_infi_nr=1 \
+ 			join_corrupted_pkts="$(pedit_action_pkts)" \
++			fb_ns1="fb_dss=1" fb_ns2="fb_infinite_map_tx=1" \
+ 			chk_join_nr 0 0 0
+ 		chk_fail_nr 1 -1 invert
+ 	fi
+-- 
+2.43.0
+
