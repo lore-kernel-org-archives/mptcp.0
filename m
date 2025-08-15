@@ -1,55 +1,55 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0FFE2C0F7F
-	for <mptcp@lists.linux.dev>; Fri, 15 Aug 2025 20:17:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58D452C1788
+	for <mptcp@lists.linux.dev>; Fri, 15 Aug 2025 20:17:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755289062; cv=none; b=UfsGO8x+3Bc405hL48Ha1q/lBv8fi/n6L4U03EjbjXDTY9kUaYhaYN+vJrMfFtbToNKXfcqJ/QjzHHzC8subEYOYUoZ1QU9TIX5GNIDX+vR0+I3gdYCB5G6MZ3Laz+n4cwcj7oiTIpOrORpELkl6uFtbzAMoL3g3Gd4MSa3MqeQ=
+	t=1755289063; cv=none; b=oC53NbbxiWZ9bbTBa2g+aVaGt3FfJ62krBg4eZ2BZI+VpSYUG1rsW4Cgobk364Dm5+0XEQOhrc2rioJtdIsHb+SdfEMGrppNzFzNNXZIfX6X5I7ajQ4p8EvS6OooOQpDC069Z26RYibqNLdp0yS0D2BF3dba0k324I5Q9kROc5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755289062; c=relaxed/simple;
-	bh=Vk6bFDmVR0eydWLS78TqNF3dMof+YgbdfAs4lP1WhE0=;
+	s=arc-20240116; t=1755289063; c=relaxed/simple;
+	bh=49AUVqRZ9QX0gApoGVu2lLYolROcKxAhbfDoW1MZFwo=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=QMP0duxveQ03oLQopUE3/pzGrc/CnwZCi1a9Lru/gmMR5MJnPF6JqnU+0ULzn19KqcffG0nk6HbxtmLdHbbKw9aUEk6WLwpkfCZ9C/BoLEHvux+i2kz9Dv9lpZnEdloHh5V3TqX8PS9ZwELpucDqql/jhr9iQ6DJpOsUF+K7lpw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--kuniyu.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dcc9Do0V; arc=none smtp.client-ip=209.85.215.202
+	 To:Cc:Content-Type; b=ZmUVMgHqKDGbKqBddAbD9+VebRykdcBOS8k4N/yfikeG3erCXGDJiKdUlKgyozjmjtr80p+nitmG/MKurHq8iUXQmqfUFt/kvZTMOALz9LdpeNrPwcenaqOktzRhKPONmRRhUBUEkdfjSe4gAqSdcp6n0kU2DPaqV82+P0pF6M8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--kuniyu.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yWVJEcmw; arc=none smtp.client-ip=209.85.214.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--kuniyu.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dcc9Do0V"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b4716fb2508so1769564a12.0
-        for <mptcp@lists.linux.dev>; Fri, 15 Aug 2025 13:17:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yWVJEcmw"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-244581950a1so25982795ad.2
+        for <mptcp@lists.linux.dev>; Fri, 15 Aug 2025 13:17:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1755289060; x=1755893860; darn=lists.linux.dev;
+        d=google.com; s=20230601; t=1755289062; x=1755893862; darn=lists.linux.dev;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=UCan40y/zjv6ovcMCtQie3VVVYhwoaYNuUUlLHYJCrc=;
-        b=dcc9Do0VTHmrfCOn8t/ytm9+Gy7I3foKqNoZ03rUygaIF5ZsY5hqUqZ+kZ+Ex6rwLd
-         2B38hZ1caNcG6VM1t9bNtkPy83+u2n5aZTpMRiShNnCAM+RY8PBKakfjiGB8OWkmFKQK
-         FS+1+sE8tEsy3cUuru8qcHdgObUrXsV4ce7CdlrdOjbFsLIFH8ua2m1jj8xY7oHh4uNj
-         0N2ST63BOV6ds3Ed2CgFjDG+gc+WXsW1RW/1YzKySKSsb2/lKOMsGIbd2yj8XTwO3Hmb
-         cAiiEsPwSFO7oOb3Uo+jiDeC2iXfKgQwPTOe48EbtPSuOVB563RrgLOd7xj6ejFKb8o0
-         O1xQ==
+        bh=jLtDPiqLV2EwRjVXqP4rO8+jmE13TnvcBQt499JidQE=;
+        b=yWVJEcmwxdDDhHDcbZSdXm9Asrh/0eMzMIZQReS1yVmLoRHBOM4PbPtePoWZPk8291
+         yUNp4zTVTxWQv0tUfDXCivZABLa9J2dUNAzy9sqegCs8Y6Us1SuANQCu4XbSAsRf7f9X
+         7ic3G8p/DPYhvp9+q410QNmRBaC/LUq3kJ02u/DdTyVfZ5RpriMHERk9NBKE/4QKuTDO
+         C7+pz+bq7Yc7CLfNAyP5rkMGDRdhMQHCFjiSM7+9kSMzVeDfbi7YDTYZQS5J7BNFxNkF
+         hnOSJ2b6zUODX5LR9fblTX1NO29NwurC2j8Yg2KJf7B7QBDoQY9rM2581d8CY3Wr09qL
+         uzaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755289060; x=1755893860;
+        d=1e100.net; s=20230601; t=1755289062; x=1755893862;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=UCan40y/zjv6ovcMCtQie3VVVYhwoaYNuUUlLHYJCrc=;
-        b=AwgVtvB/R95uVNEIx4SnUM1Qx3Bpb/PgkHLhV7EIlSTvkEKxzMFgM9d3ScOmCI0QYV
-         AXDQMSgYwbsIApRaVsStQHopRPZoJMsJRIRjbUD+EJ3Mpd99AkhPY3gj4em3n5z9bhKP
-         LbBA1QxWi7dyV0b1wUy/lfco98r9IW6c4PhhIHCOn8h3x9r3O6Bzexscxf+logQcMNY0
-         Q2/Q1B7nfhrW4Y19gl0mLp3BhXzCCtVNwAO4ZIbyS7olapECdPvcynZEt+8woh8ZTrDX
-         f4QYhvNW3RsHvj9zOh+deezVVg3w4Tj8nmFuQ+dKJnXdcu+PXyobNREhx4qrejl7D/Qd
-         FlqA==
-X-Forwarded-Encrypted: i=1; AJvYcCUFNkVMlPHA0AGhmzI5mos035nkKj7k+DDNf9pltwQFw89Kahk2Tbw+cquyLigftvxdSQF+6Q==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxDc/rt3/IcMib3pw1Np+ZjPcTDLzodiBG4AZeI0oIe3TqEssfS
-	VL/Wyb2RSJpBV55pyj1jpTzeGTDZyQWUHkFIVrq8ssjGVg3ghJ75zDRZ4a+4telgGy0eIz6EfrM
-	h0EcvBg==
-X-Google-Smtp-Source: AGHT+IG+NKmG4fQxWApznT/iNlBlE89VZOBkEiuZXVixRsMQFotYGpJhNutY1IkiTXx8XPjH7buaFadPEzU=
-X-Received: from plgo12.prod.google.com ([2002:a17:902:d4cc:b0:23f:f3c5:dfc9])
- (user=kuniyu job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:22c4:b0:23f:b112:2eaa
- with SMTP id d9443c01a7336-2446d8fe30fmr49723005ad.41.1755289060168; Fri, 15
- Aug 2025 13:17:40 -0700 (PDT)
-Date: Fri, 15 Aug 2025 20:16:12 +0000
+        bh=jLtDPiqLV2EwRjVXqP4rO8+jmE13TnvcBQt499JidQE=;
+        b=FNwGL4K6u7cjBXyUHdPwBK/NsgOnO7LVxwnWXjqRZYURjsbkyQ4y0l/OyGfmYM2LYa
+         mIUrGVnM9IcXpQYXox6y5aEs9ukKFkuiMokQlD931CrSC5bBS37nWtaKmIcHegeMvKmQ
+         GLUQS4tBxzYWmhrZd0MV+duN1HKNSDSUlV+ui+sVF09FbJ8F87kpa/JqXOSvcG8jlmJB
+         fgJ3uEhPAthJU73U1dm855kwHHxq2cXB1oUnxbLl96JAmcWLI3JlsjeiH4sw4ocq2a8N
+         JXwTPVf1M+mjNmcWGV8QS6CUUP8OdnNNQ5dF6P7XPpTbYufL5dN/Wl+519iQ/hDQZLqK
+         ESZw==
+X-Forwarded-Encrypted: i=1; AJvYcCWGF+lEDoltcl9S9HW7MVwwLuocLk+P0TyNYQTx22uUaV3Dtmrx/Rq01F8uc0xdDAgTjxZAzg==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxaLaz/zGA/50Mp4VeR8hLaxo6E/KFsIW4H/gYqO9EFXRPohUH0
+	7qSRdBXGTHpsdYMVl6sRaH7uRlUksIy6b0iYJU0ElSh2ajJX3CuF4nSxSN6aRJ1wXP7TAcHXto9
+	sjWpY6w==
+X-Google-Smtp-Source: AGHT+IGYcQH7/mF6y+bCQF+wvj8byumWi1k0Tu655xRzdfVqKzsBybbZLpijTnLaQewu7vlc+0MtmLwfX5c=
+X-Received: from plbmn15.prod.google.com ([2002:a17:903:a4f:b0:243:5a:ee2a])
+ (user=kuniyu job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:32c8:b0:240:3239:21c7
+ with SMTP id d9443c01a7336-2446d89d237mr56657975ad.37.1755289061594; Fri, 15
+ Aug 2025 13:17:41 -0700 (PDT)
+Date: Fri, 15 Aug 2025 20:16:13 +0000
 In-Reply-To: <20250815201712.1745332-1-kuniyu@google.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -59,9 +59,8 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 Mime-Version: 1.0
 References: <20250815201712.1745332-1-kuniyu@google.com>
 X-Mailer: git-send-email 2.51.0.rc1.163.g2494970778-goog
-Message-ID: <20250815201712.1745332-5-kuniyu@google.com>
-Subject: [PATCH v5 net-next 04/10] net: Call trace_sock_exceed_buf_limit() for
- memcg failure with SK_MEM_RECV.
+Message-ID: <20250815201712.1745332-6-kuniyu@google.com>
+Subject: [PATCH v5 net-next 05/10] net: Clean up __sk_mem_raise_allocated().
 From: Kuniyuki Iwashima <kuniyu@google.com>
 To: "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
 	Jakub Kicinski <kuba@kernel.org>, Neal Cardwell <ncardwell@google.com>, Paolo Abeni <pabeni@redhat.com>, 
@@ -76,37 +75,57 @@ Cc: Simon Horman <horms@kernel.org>, Geliang Tang <geliang@kernel.org>,
 	mptcp@lists.linux.dev, cgroups@vger.kernel.org, linux-mm@kvack.org
 Content-Type: text/plain; charset="UTF-8"
 
-Initially, trace_sock_exceed_buf_limit() was invoked when
-__sk_mem_raise_allocated() failed due to the memcg limit or the
-global limit.
+In __sk_mem_raise_allocated(), charged is initialised as true due
+to the weird condition removed in the previous patch.
 
-However, commit d6f19938eb031 ("net: expose sk wmem in
-sock_exceed_buf_limit tracepoint") somehow suppressed the event
-only when memcg failed to charge for SK_MEM_RECV, although the
-memcg failure for SK_MEM_SEND still triggers the event.
+It makes the variable unreliable by itself, so we have to check
+another variable, memcg, in advance.
 
-Let's restore the event for SK_MEM_RECV.
+Also, we will factorise the common check below for memcg later.
+
+    if (mem_cgroup_sockets_enabled && sk->sk_memcg)
+
+As a prep, let's initialise charged as false and memcg as NULL.
 
 Signed-off-by: Kuniyuki Iwashima <kuniyu@google.com>
 Reviewed-by: Eric Dumazet <edumazet@google.com>
 ---
- net/core/sock.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ net/core/sock.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
 diff --git a/net/core/sock.c b/net/core/sock.c
-index 7c26ec8dce63..380bc1aa6982 100644
+index 380bc1aa6982..000940ecf360 100644
 --- a/net/core/sock.c
 +++ b/net/core/sock.c
-@@ -3354,8 +3354,7 @@ int __sk_mem_raise_allocated(struct sock *sk, int size, int amt, int kind)
- 		}
- 	}
+@@ -3263,15 +3263,16 @@ EXPORT_SYMBOL(sk_wait_data);
+  */
+ int __sk_mem_raise_allocated(struct sock *sk, int size, int amt, int kind)
+ {
+-	struct mem_cgroup *memcg = mem_cgroup_sockets_enabled ? sk->sk_memcg : NULL;
+ 	struct proto *prot = sk->sk_prot;
+-	bool charged = true;
++	struct mem_cgroup *memcg = NULL;
++	bool charged = false;
+ 	long allocated;
  
--	if (kind == SK_MEM_SEND || (kind == SK_MEM_RECV && charged))
--		trace_sock_exceed_buf_limit(sk, prot, allocated, kind);
-+	trace_sock_exceed_buf_limit(sk, prot, allocated, kind);
+ 	sk_memory_allocated_add(sk, amt);
+ 	allocated = sk_memory_allocated(sk);
+ 
+-	if (memcg) {
++	if (mem_cgroup_sockets_enabled && sk->sk_memcg) {
++		memcg = sk->sk_memcg;
+ 		charged = mem_cgroup_charge_skmem(memcg, amt, gfp_memcg_charge());
+ 		if (!charged)
+ 			goto suppress_allocation;
+@@ -3358,7 +3359,7 @@ int __sk_mem_raise_allocated(struct sock *sk, int size, int amt, int kind)
  
  	sk_memory_allocated_sub(sk, amt);
  
+-	if (memcg && charged)
++	if (charged)
+ 		mem_cgroup_uncharge_skmem(memcg, amt);
+ 
+ 	return 0;
 -- 
 2.51.0.rc1.163.g2494970778-goog
 
