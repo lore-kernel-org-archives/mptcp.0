@@ -1,75 +1,252 @@
-Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A058DEEAB
-	for <mptcp@lists.linux.dev>; Fri, 15 Aug 2025 23:52:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 988BC2036ED
+	for <mptcp@lists.linux.dev>; Sat, 16 Aug 2025 07:18:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755301974; cv=none; b=EEGkZYv/6vc/sPlGr1udsLek1VpYq/Rsh5ySKtoMNI8OcfrGmzLD1igjN7PDgBlc1jT+/IswfJgDzj8Aabkrr2864xTbxtJpHZBW0O9ytJ6qw0mi4Bj9SlTsbPJCn9BKsnS3aKRjzM1i0d2Uyb0TWP0joBR6eQA31NKy4/ol8t8=
+	t=1755328713; cv=none; b=itusjS6A0z6/QHkty3PP2w9r2nBWsp66+w5t+2Cmh8/gZiaVKR+2DG+Y0NEQrWEg+NHvWBL/aXaIUorvRfHpNi863vecuMFmww6gMrXMV0Sb/cTSGphMihmM7Sk3MuSN6GGxsQQs51W9iov28aHB7cCUzr3whjPTsaSbJohloc4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755301974; c=relaxed/simple;
-	bh=DwhAXyRjwbbyTokqiNuVIVxgm2HNQRbCisfELT54B5Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QwBKvxEgYix0dqerTZ69BN7+8p1l/0X1IBVqUYnfzP+ZIFjsho0wjhN5tsrW84SEwEaMusIXyO34RRQZRSLeOpMseCl27+RrzoKETA5iLIFJobURoNwpHkGzvHQQZ2hxtF5qSRYJ6si5l4nP8BnQyWsFTgDa3zkAFutqlh8clvI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Dtc29LYM; arc=none smtp.client-ip=91.218.175.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Dtc29LYM"
-Date: Fri, 15 Aug 2025 16:52:35 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1755301970;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=44mrTSttEiykRrZrwK94sCaa7posB77laqbOo+14xpM=;
-	b=Dtc29LYMtA/hYmueZXIsJmfMnkavasnCVPDJHF3t9HUseuMaeHO/I9+XMGcy1dd5Di3tAR
-	z0q5EKjvP/AqSn7PrGOGunGBOrSSw0noHpc4QA0/sLDYOUKHzqJRU+/NPRnaoIbhCNJ4qw
-	ENJpET8DF5R6dD8KrMALzgQIYWjwpC8=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: Kuniyuki Iwashima <kuniyu@google.com>
-Cc: "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-	Neal Cardwell <ncardwell@google.com>, Paolo Abeni <pabeni@redhat.com>, 
-	Willem de Bruijn <willemb@google.com>, Matthieu Baerts <matttbe@kernel.org>, 
-	Mat Martineau <martineau@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Michal Hocko <mhocko@kernel.org>, Roman Gushchin <roman.gushchin@linux.dev>, 
-	Andrew Morton <akpm@linux-foundation.org>, Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>, 
-	Tejun Heo <tj@kernel.org>, Simon Horman <horms@kernel.org>, 
-	Geliang Tang <geliang@kernel.org>, Muchun Song <muchun.song@linux.dev>, 
-	Mina Almasry <almasrymina@google.com>, Kuniyuki Iwashima <kuni1840@gmail.com>, netdev@vger.kernel.org, 
-	mptcp@lists.linux.dev, cgroups@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH v5 net-next 05/10] net: Clean up
- __sk_mem_raise_allocated().
-Message-ID: <ntttvqtkf4epnw2cstpjvdrokzkhgjcc42asuxrmoesk2pmvw7@hvnlluilnvbc>
-References: <20250815201712.1745332-1-kuniyu@google.com>
- <20250815201712.1745332-6-kuniyu@google.com>
+	s=arc-20240116; t=1755328713; c=relaxed/simple;
+	bh=ZtM+RgvmOz3fjnPragzA5b/5R/bSm08j0B1LEAQUFm0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Wtaz3xdUSDLhFV+hz8KWsFJs2kTzUFrMwUOl+2ok1pdOJuugdAurvvAvgNkGBcHNcfKCLY1ddjwaOALCTZNW4Mc9fIS6vE+iLM1PF6eKpbPnkR131s6Js6ByOfoHzp9l+YtYcqsvC3PN4KS2rm0CY0OwvIhLw8UjVtN9yw3ABmc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 2f9c7bf87a7111f0b29709d653e92f7d-20250816
+X-CTIC-Tags:
+	HR_CC_AS_FROM, HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CTE_8B
+	HR_CTT_MISS, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME
+	HR_SJ_DIGIT_LEN, HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM
+	HR_SJ_PHRASE, HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT
+	HR_TO_NO_NAME, IP_UNTRUSTED, SRC_UNTRUSTED, IP_UNFAMILIAR, SRC_UNFAMILIAR
+	DN_TRUSTED, SRC_TRUSTED, SA_TRUSTED, SA_EXISTED, SN_EXISTED
+	SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS, UD_TRUSTED, CIE_BAD
+	CIE_GOOD_SPF, CIE_UNKNOWN, GTI_FG_BS, GTI_C_CI, GTI_FG_IT
+	GTI_RG_INFO, GTI_C_BU, AMN_T1, AMN_GOOD, AMN_C_TI
+	AMN_C_BU, ABX_MISS_RDNS
+X-CID-O-RULE: Release_Ham
+X-CID-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:512866ae-fa17-43e6-95a0-ce31f71c8fef,IP:10,
+	URL:0,TC:0,Content:0,EDM:25,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTI
+	ON:release,TS:30
+X-CID-INFO: VERSION:1.1.45,REQID:512866ae-fa17-43e6-95a0-ce31f71c8fef,IP:10,UR
+	L:0,TC:0,Content:0,EDM:25,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:30
+X-CID-META: VersionHash:6493067,CLOUDID:18a8dfe451f4bd380fd7bd9e362ec60f,BulkI
+	D:2508161518223X6QBYT9,BulkQuantity:0,Recheck:0,SF:17|19|23|43|66|74|78|10
+	2,TC:nil,Content:0|50,EDM:5,IP:-2,URL:1,File:nil,RT:nil,Bulk:nil,QS:nil,BE
+	C:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_ULS
+X-UUID: 2f9c7bf87a7111f0b29709d653e92f7d-20250816
+X-User: yangang@kylinos.cn
+Received: from yangang-thinkpad-t14-gen-1.. [(221.221.50.113)] by mailgw.kylinos.cn
+	(envelope-from <yangang@kylinos.cn>)
+	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
+	with ESMTP id 1774144175; Sat, 16 Aug 2025 15:18:19 +0800
+From: Gang Yan <yangang@kylinos.cn>
+To: mptcp@lists.linux.dev
+Cc: Gang Yan <yangang@kylinos.cn>
+Subject: [PATCH mptcp-next v4] selftests: net: mptcp: add checks for fallback counters
+Date: Sat, 16 Aug 2025 15:18:14 +0800
+Message-ID: <20250816071814.10087-1-yangang@kylinos.cn>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250815201712.1745332-6-kuniyu@google.com>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
 
-On Fri, Aug 15, 2025 at 08:16:13PM +0000, Kuniyuki Iwashima wrote:
-> In __sk_mem_raise_allocated(), charged is initialised as true due
-> to the weird condition removed in the previous patch.
-> 
-> It makes the variable unreliable by itself, so we have to check
-> another variable, memcg, in advance.
-> 
-> Also, we will factorise the common check below for memcg later.
-> 
->     if (mem_cgroup_sockets_enabled && sk->sk_memcg)
-> 
-> As a prep, let's initialise charged as false and memcg as NULL.
-> 
-> Signed-off-by: Kuniyuki Iwashima <kuniyu@google.com>
-> Reviewed-by: Eric Dumazet <edumazet@google.com>
+Recently, some mib counters about fallback has been added, this patch
+provides a method to check the expected behavior of these mib counters
+during the test execution.
 
-Reviewed-by: Shakeel Butt <shakeel.butt@linux.dev>
+Link: https://github.com/multipath-tcp/mptcp_net-next/issues/571
+Signed-off-by: Gang Yan <yangang@kylinos.cn>
+------
+Changelog:
+  v4:
+    - Modify the 'MD5_SIG' to 'md5_sig'.
+    - Fix the warnings of shellcheck caused by 'rc={?}', it should be
+      'rc=$?'
+  v3:
+    - Squash into a single patch.
+    - Using 'fb_' as a prefix instead of the suffix for variables.
+    - Adjust the order of mib counters to check, ensuring it matches the
+      variable declaration.
+    - The namespace('ns1'/'ns2') is included in the output of
+      'chk_fallback_nr', like:
+      "ns2 infinite map tx fallback        [IGNO] (flaky) got 1 infinite map tx fallback[s] in ns2 expected 0"
+    - Add a new helper named 'chk_fallback_nr_all', which prints only
+      when an error occurs.
+    - Fix some code style issues.
+
+  v2:
+    - add a helper which can check all the fallback mib counters.
+    - put the 'chk_fallback_nr' in 'chk_join_nr' like chk_join_tx_nr.
+---
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 123 ++++++++++++++++++
+ 1 file changed, 123 insertions(+)
+
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+index b8af65373b3a..12b27c6e6566 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -74,6 +74,17 @@ unset join_create_err
+ unset join_bind_err
+ unset join_connect_err
+ 
++unset fb_ns1
++unset fb_ns2
++unset fb_infinite_map_tx
++unset fb_dss_corruption
++unset fb_simult_conn
++unset fb_mpc_passive
++unset fb_mpc_active
++unset fb_mpc_data
++unset fb_md5_sig
++unset fb_dss
++
+ # generated using "nfbpf_compile '(ip && (ip[54] & 0xf0) == 0x30) ||
+ #				  (ip6 && (ip6[74] & 0xf0) == 0x30)'"
+ CBPF_MPTCP_SUBOPTION_ADD_ADDR="14,
+@@ -1399,6 +1410,115 @@ chk_join_tx_nr()
+ 	print_results "join Tx" ${rc}
+ }
+ 
++chk_fallback_nr()
++{
++	local infinite_map_tx=${fb_infinite_map_tx:-0}
++	local dss_corruption=${fb_dss_corruption:-0}
++	local simult_conn=${fb_simult_conn:-0}
++	local mpc_passive=${fb_mpc_passive:-0}
++	local mpc_active=${fb_mpc_active:-0}
++	local mpc_data=${fb_mpc_data:-0}
++	local md5_sig=${fb_md5_sig:-0}
++	local dss=${fb_dss:-0}
++	local rc=${KSFT_PASS}
++	local ns=$1
++	local count
++
++	count=$(mptcp_lib_get_counter ${!ns} "MPTcpExtInfiniteMapTx")
++	if [ -z "$count" ]; then
++		rc=${KSFT_SKIP}
++	elif [ "$count" != "$infinite_map_tx" ]; then
++		rc=${KSFT_FAIL}
++		print_check "$ns infinite map tx fallback"
++		fail_test "got $count infinite map tx fallback[s] in $ns expected $infinite_map_tx"
++	fi
++
++	count=$(mptcp_lib_get_counter ${!ns} "MPTcpExtDSSCorruptionFallback")
++	if [ -z "$count" ]; then
++		rc=${KSFT_SKIP}
++	elif [ "$count" != "$dss_corruption" ]; then
++		rc=${KSFT_FAIL}
++		print_check "$ns dss corruption fallback"
++		fail_test "got $count dss corruption fallback[s] in $ns expected $dss_corruption"
++	fi
++
++	count=$(mptcp_lib_get_counter ${!ns} "MPTcpExtSimultConnectFallback")
++	if [ -z "$count" ]; then
++		rc=${KSFT_SKIP}
++	elif [ "$count" != "$simult_conn" ]; then
++		rc=${KSFT_FAIL}
++		print_check "$ns simult conn fallback"
++		fail_test "got $count simult conn fallback[s] in $ns expected $simult_conn"
++	fi
++
++	count=$(mptcp_lib_get_counter ${!ns} "MPTcpExtMPCapableFallbackACK")
++	if [ -z "$count" ]; then
++		rc=${KSFT_SKIP}
++	elif [ "$count" != "$mpc_passive" ]; then
++		rc=${KSFT_FAIL}
++		print_check "$ns mpc passive fallback"
++		fail_test "got $count mpc passive fallback[s] in $ns expected $mpc_passive"
++	fi
++
++	count=$(mptcp_lib_get_counter ${!ns} "MPTcpExtMPCapableFallbackSYNACK")
++	if [ -z "$count" ]; then
++		rc=${KSFT_SKIP}
++	elif [ "$count" != "$mpc_active" ]; then
++		rc=${KSFT_FAIL}
++		print_check "$ns mpc active fallback"
++		fail_test "got $count mpc active fallback[s] in $ns expected $mpc_active"
++	fi
++
++	count=$(mptcp_lib_get_counter ${!ns} "MPTcpExtMPCapableDataFallback")
++	if [ -z "$count" ]; then
++		rc=${KSFT_SKIP}
++	elif [ "$count" != "$mpc_data" ]; then
++		rc=${KSFT_FAIL}
++		print_check "$ns mpc data fallback"
++		fail_test "got $count mpc data fallback[s] in $ns expected $mpc_data"
++	fi
++
++	count=$(mptcp_lib_get_counter ${!ns} "MPTcpExtMD5SigFallback")
++	if [ -z "$count" ]; then
++		rc=${KSFT_SKIP}
++	elif [ "$count" != "$md5_sig" ]; then
++		rc=${KSFT_FAIL}
++		print_check "$ns MD5 Sig fallback"
++		fail_test "got $count MD5 Sig fallback[s] in $ns expected $md5_sig"
++	fi
++
++	count=$(mptcp_lib_get_counter ${!ns} "MPTcpExtDssFallback")
++	if [ -z "$count" ]; then
++		rc=${KSFT_SKIP}
++	elif [ "$count" != "$dss" ]; then
++		rc=${KSFT_FAIL}
++		print_check "$ns dss fallback"
++		fail_test "got $count dss fallback[s] in $ns expected $dss"
++	fi
++
++	return $rc
++}
++
++chk_fallback_nr_all()
++{
++	local netns=("ns1" "ns2")
++	local fb_ns=("fb_ns1" "fb_ns2")
++	local rc=${KSFT_PASS}
++
++	for i in 0 1; do
++		if [ -n "${!fb_ns[i]}" ]; then
++			eval "${!fb_ns[i]}" \
++				chk_fallback_nr ${netns[i]} || rc=$?
++		else
++			chk_fallback_nr ${netns[i]} || rc=$?
++		fi
++	done
++
++	if [ "$rc" != "${KSFT_PASS}" ]; then
++		print_results "fallback" $rc
++	fi
++}
++
+ chk_join_nr()
+ {
+ 	local syn_nr=$1
+@@ -1484,6 +1604,8 @@ chk_join_nr()
+ 	join_syn_tx="${join_syn_tx:-${syn_nr}}" \
+ 		chk_join_tx_nr
+ 
++	chk_fallback_nr_all
++
+ 	if $validate_checksum; then
+ 		chk_csum_nr $csum_ns1 $csum_ns2
+ 		chk_fail_nr $fail_nr $fail_nr
+@@ -3337,6 +3459,7 @@ fail_tests()
+ 		join_csum_ns1=+1 join_csum_ns2=+0 \
+ 			join_fail_nr=1 join_rst_nr=0 join_infi_nr=1 \
+ 			join_corrupted_pkts="$(pedit_action_pkts)" \
++			fb_ns1="fb_dss=1" fb_ns2="fb_infinite_map_tx=1" \
+ 			chk_join_nr 0 0 0
+ 		chk_fail_nr 1 -1 invert
+ 	fi
+-- 
+2.43.0
+
