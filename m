@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FD5D28DF01;
-	Sun, 17 Aug 2025 13:50:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14D3D258ED0
+	for <mptcp@lists.linux.dev>; Mon, 18 Aug 2025 10:52:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755438638; cv=none; b=cq2NQyRJOUKVCaXEueBoUBbbj534UNwbT1ZBuJXaZxmLAMvIamh2Ap0dQKsM2gjCZPXRoNhXIVqNX2ZLJqih1329wJMgr+xkj6lZni5kw/FiGQyhgEzWuHB2otFfdNVAaVA033mrcBv+0rZcP/ZJ+8IZAJKkjzXvRafnNqoIO6w=
+	t=1755514350; cv=none; b=pza2FtdOIPikRMs33eLZZyI/falkQ5IpMxXBSRRwdTBLMPZaq85K6CxPfzQr2in/UcTRght/a0sBw+9VOPnahlJzyA4ZOVcdwi6jhNNfrJckdctWAymLijpdC3FsO4VJUvevPpL1i8/ajnE7VZK5ZTm2lMg0GklsoAf8utsmDtU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755438638; c=relaxed/simple;
-	bh=CvRA/zD+d6lUsBKE5WdIBRx3QjzdFVyMYUsNuuNZ2I4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PIugEXhU6r/L1c3cjnYar7DfAjq4LP90Iek6OWrovC7nYpq82JWRBfgehsDNs8KHuZXqePc+QjU7Oj2cxMTV4usItt5oRJWzkuCHLHhAYme3PWMIZmtjb4Gf6rH9Iam07+lQhB45aDSxzUDfAuj5Q92Zl7GKiFN8tcpJr2/H16M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AzajT6UP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1755514350; c=relaxed/simple;
+	bh=4MIZLeMbXxDAxZTtNIkGBG6zQaGLasTEFtNaagbbYXE=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=BGhk0upFpqG1700aPlHTkQIxxOeoKwuqnc36gINBtKjHGW+5qI/McnVIp3gA3rgNlwZ2zAsTQnmEwv8uuXrusta8up9cTN05h5KE34/eKSA8EK5/QQPBPO05J/OFV8r6C5GD1YEoMaLDVU9RFddEgEpp8osHjFEPFmU2bB+Ew4k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YWBdSQUy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AzajT6UP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C751C4CEF1;
-	Sun, 17 Aug 2025 13:50:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YWBdSQUy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CB39C4CEED;
+	Mon, 18 Aug 2025 10:52:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755438638;
-	bh=CvRA/zD+d6lUsBKE5WdIBRx3QjzdFVyMYUsNuuNZ2I4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=AzajT6UPnlejpZlGWJXNuMiz0BaHDA1Q3tgiaBQ6h/fpFSvV86NzZhuwlSVGK+vqa
-	 0kYAyA9SDPJwbkUxb9SkZHGUPoQ+z0Zn3ClnmptMyIsjIsvKqE9HbNroANrHtHdpLj
-	 iIQN7H4rXW1PCqkopGwxbGcC/UchWSf71+pRcJrwcTwlse/IGDiBP8mOu8csEmOnQc
-	 nS1RP4c5SRaEn6uuju6djqHasGTn+FP8G0tVEDawRxJsoM9apqm68Eut2vquV7YDmV
-	 A9M3vMumeiWG3qBteaL4cR+6sKA5y+/gqaaLMhcXikZ8H355NAsyTYTtclGtuwpr/a
-	 4XH2i2PjUlEvg==
-Message-ID: <2c241887-fa46-44ab-a518-43d9ae339009@kernel.org>
-Date: Sun, 17 Aug 2025 15:50:30 +0200
+	s=k20201202; t=1755514349;
+	bh=4MIZLeMbXxDAxZTtNIkGBG6zQaGLasTEFtNaagbbYXE=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=YWBdSQUyUsLTq+w8ZzMtb/P8jZ4XvwyCR4SvYoM1+rxMYiDyOTLc5vhbO5ODI29rB
+	 Gr4Yi891KdV/jXck3wK1IOV8sJ18nWxNNeVq7fgTW9jRFhfOzhNHVkwHZcWQ8y01HR
+	 jwsZAjQw1eeoye168NgH3+mJ8Pg614HSuW6BOcHj1mrLcDqkFKsKbLDD/i9KKQUo3b
+	 I7j/9kCV0GLkx2BZ6vhQ19cJfN4dEicDNg9HApvc/Ta3RYEB88rrWryaRKyav+x8jD
+	 wqFxKbw+J3cmlFqWkfSsrPeFduml3GXYbHDhQUz0f11X4ldjGM6attAATmTt/o7mBj
+	 xGmZyYm1f1cPA==
+Message-ID: <61592f54-9dbc-4ae2-b45f-b93bbf409feb@kernel.org>
+Date: Mon, 18 Aug 2025 12:52:27 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,21 +35,14 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH net 0/8] mptcp: misc fixes for v6.17-rc
+Subject: Re: [PATCH mptcp-next v4 0/2] mptcp: improve ADD_ADDR timeout
+ handling
 Content-Language: en-GB, fr-BE
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>,
- Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
- Simon Horman <horms@kernel.org>, Jianguo Wu <wujianguo@chinatelecom.cn>,
- Shuah Khan <shuah@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-doc@vger.kernel.org,
- Christoph Paasch <cpaasch@openai.com>, stable@vger.kernel.org,
- Thomas Dreibholz <dreibh@simula.no>
-References: <20250815-net-mptcp-misc-fixes-6-17-rc2-v1-0-521fe9957892@kernel.org>
- <20250816112712.209644c8@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <cover.1754987655.git.tanggeliang@kylinos.cn>
+ <b177fb78-0e80-4aa9-b7fb-3fcf90c6fb61@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -94,41 +87,39 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20250816112712.209644c8@kernel.org>
+In-Reply-To: <b177fb78-0e80-4aa9-b7fb-3fcf90c6fb61@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Jakub,
+Hi Geliang,
 
-On 16/08/2025 20:27, Jakub Kicinski wrote:
-> On Fri, 15 Aug 2025 19:28:18 +0200 Matthieu Baerts (NGI0) wrote:
->> Here are various fixes:
->>
->> - Patch 1: Better handling SKB extension allocation failures. A fix for
->>   v5.7.
->>
->> - Patches 2, 3: Avoid resetting MPTCP limits when flushing MPTCP
->>   endpoints. With a validation in the selftests. Fixes for v5.7.
->>
->> - Patches 4, 5, 6: Disallow '0' as ADD_ADDR retransmission timeout.
->>   With a preparation patch, and a validation in the selftests. Fixes for
->>   v5.11.
->>
->> - Patches 8, 9: Fix C23 extension warnings in the selftests, spotted by
->>   GCC. Fixes for v6.16.
+On 15/08/2025 17:24, Matthieu Baerts wrote:
+> Hi Geliang,
 > 
-> userspace_pm.sh which hasn't flaked in 1000 runs has flaked last night,
-> with this series applied:
-> https://netdev-3.bots.linux.dev/vmksft-mptcp/results/255941/8-userspace-pm-sh/
+> On 12/08/2025 10:39, Geliang Tang wrote:
+>> From: Geliang Tang <tanggeliang@kylinos.cn>
+>>
+>> v4:
+>>  - rollback to v2, just use icsk->icsk_rto.
+> 
+> Thank you for the v4. Thanks to the previous measurements you did, the
+> new version looks good to me:
+> 
+> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> 
+> I have one small comment in patch 1/2, but that's not blocking.
 
-Thank you for the notification!
+Now in our tree (with this suggestion ↑ -- feat. for -next):
 
-> Looks unrelated but also quite strange?
+New patches for t/upstream:
+- 34c96ea5123b: mptcp: make ADD_ADDR retransmission timeout adaptive
+- 5d56ac514943: selftests: mptcp: remove add_addr_timeout settings
+- Results: d89b1338067d..de0b36f41cae (export)
 
-Indeed: the whole series should not affect the behaviour validated by
-the selftests. The error messages are not very useful, and the test was
-not really slower than usual. Our CI never complained about that either.
-I will monitor that!
+Tests are now in progress:
+
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/b44eb4c28d8623dfa68674caab04d9f7f07846ef/checks
 
 Cheers,
 Matt
