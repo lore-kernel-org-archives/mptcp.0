@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14D3D258ED0
-	for <mptcp@lists.linux.dev>; Mon, 18 Aug 2025 10:52:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5791D132117
+	for <mptcp@lists.linux.dev>; Mon, 18 Aug 2025 11:01:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755514350; cv=none; b=pza2FtdOIPikRMs33eLZZyI/falkQ5IpMxXBSRRwdTBLMPZaq85K6CxPfzQr2in/UcTRght/a0sBw+9VOPnahlJzyA4ZOVcdwi6jhNNfrJckdctWAymLijpdC3FsO4VJUvevPpL1i8/ajnE7VZK5ZTm2lMg0GklsoAf8utsmDtU=
+	t=1755514880; cv=none; b=df3PAil+JRK4Yhc3huGszQ/iYhtnccaEdc/hXColUeWVHjqqUIv1UMTCjf2+bLpulAiKHQcQnP8xHH+ruQQQSt4WGFH63O39hE9Wtnj8WQly1+T9FaDaDm6Qkp4hh/Y07Rui+m/itsQkZfSD5/e4C9y3/Y/2EPf6fok3y5ScxuU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755514350; c=relaxed/simple;
-	bh=4MIZLeMbXxDAxZTtNIkGBG6zQaGLasTEFtNaagbbYXE=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=BGhk0upFpqG1700aPlHTkQIxxOeoKwuqnc36gINBtKjHGW+5qI/McnVIp3gA3rgNlwZ2zAsTQnmEwv8uuXrusta8up9cTN05h5KE34/eKSA8EK5/QQPBPO05J/OFV8r6C5GD1YEoMaLDVU9RFddEgEpp8osHjFEPFmU2bB+Ew4k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YWBdSQUy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1755514880; c=relaxed/simple;
+	bh=jg2wP8kJOjeJq5vNFXXZ8nTZ21dwNqFRGw3yvnPwg6o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=mTcfxe9B2bmPiCwpZ8cbnr9Mp0J/EUrsRbP2fBpZuJ3oTfg9pov17JYXLAPcMHpfqbbOFp2PSY3Y4hurnZM/0P1ay+n9K1+Zv0+uaLBgmhmwh4z2HbkVyQ+6A6BzCq/t5Y29RLu8AG66ICcoXuykZ/NOKgED/+gqQgw9NflpB5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i7L4JCUs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YWBdSQUy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CB39C4CEED;
-	Mon, 18 Aug 2025 10:52:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i7L4JCUs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96F7EC4CEEB;
+	Mon, 18 Aug 2025 11:01:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755514349;
-	bh=4MIZLeMbXxDAxZTtNIkGBG6zQaGLasTEFtNaagbbYXE=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=YWBdSQUyUsLTq+w8ZzMtb/P8jZ4XvwyCR4SvYoM1+rxMYiDyOTLc5vhbO5ODI29rB
-	 Gr4Yi891KdV/jXck3wK1IOV8sJ18nWxNNeVq7fgTW9jRFhfOzhNHVkwHZcWQ8y01HR
-	 jwsZAjQw1eeoye168NgH3+mJ8Pg614HSuW6BOcHj1mrLcDqkFKsKbLDD/i9KKQUo3b
-	 I7j/9kCV0GLkx2BZ6vhQ19cJfN4dEicDNg9HApvc/Ta3RYEB88rrWryaRKyav+x8jD
-	 wqFxKbw+J3cmlFqWkfSsrPeFduml3GXYbHDhQUz0f11X4ldjGM6attAATmTt/o7mBj
-	 xGmZyYm1f1cPA==
-Message-ID: <61592f54-9dbc-4ae2-b45f-b93bbf409feb@kernel.org>
-Date: Mon, 18 Aug 2025 12:52:27 +0200
+	s=k20201202; t=1755514880;
+	bh=jg2wP8kJOjeJq5vNFXXZ8nTZ21dwNqFRGw3yvnPwg6o=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=i7L4JCUs5ISuLq4YwZqi6ncDnt/UIw92Y3Rf22Tu2tQGRBXxlFTh+PVLaXIRZfo2Y
+	 WSftAkF5W4P+3o2zaveV9oTzO+g6l27Ue/6r+020wAfsNilmzZmh4su4yiPYy67sga
+	 7UGe0tojkytpLGNqIfwgWRhkq36y+6tbtlZkj2djUU/dWhIK5qQjMeP2ZhNBXm25Ep
+	 6eBYnlfiKLtIdSRiNBEx5cNoR8cawlGSi9da/Reb9EZdbCeo6Rj59/2LhC6gsrhdVj
+	 +LjGolOHaV75JJOaMWXQ664dhlJsR0RTdaUxidMxZCmSqBSO8FQYFiom6KatXyT+GB
+	 +T1V2ehnFyJhg==
+Message-ID: <b7650dd9-9de6-426e-b969-2556776a90de@kernel.org>
+Date: Mon, 18 Aug 2025 13:01:17 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,14 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v4 0/2] mptcp: improve ADD_ADDR timeout
- handling
+Subject: Re: [PATCH mptcp-next v4] selftests: net: mptcp: add checks for
+ fallback counters
 Content-Language: en-GB, fr-BE
+To: Gang Yan <yangang@kylinos.cn>, mptcp@lists.linux.dev
+References: <20250816071814.10087-1-yangang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1754987655.git.tanggeliang@kylinos.cn>
- <b177fb78-0e80-4aa9-b7fb-3fcf90c6fb61@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -87,39 +85,44 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <b177fb78-0e80-4aa9-b7fb-3fcf90c6fb61@kernel.org>
+In-Reply-To: <20250816071814.10087-1-yangang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+Hi Gang,
 
-On 15/08/2025 17:24, Matthieu Baerts wrote:
-> Hi Geliang,
+On 16/08/2025 09:18, Gang Yan wrote:
+> Recently, some mib counters about fallback has been added, this patch
+> provides a method to check the expected behavior of these mib counters
+> during the test execution.
 > 
-> On 12/08/2025 10:39, Geliang Tang wrote:
->> From: Geliang Tang <tanggeliang@kylinos.cn>
->>
->> v4:
->>  - rollback to v2, just use icsk->icsk_rto.
-> 
-> Thank you for the v4. Thanks to the previous measurements you did, the
-> new version looks good to me:
-> 
-> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> 
-> I have one small comment in patch 1/2, but that's not blocking.
+> Link: https://github.com/multipath-tcp/mptcp_net-next/issues/571
+> Signed-off-by: Gang Yan <yangang@kylinos.cn>
+> ------
 
-Now in our tree (with this suggestion ↑ -- feat. for -next):
+Note: there should be only 3 dashes ("---") to be considered as a comment.
+
+> Changelog:
+>   v4:
+>     - Modify the 'MD5_SIG' to 'md5_sig'.
+>     - Fix the warnings of shellcheck caused by 'rc={?}', it should be
+>       'rc=$?'
+
+Thank you for the new version!
+
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+
+Now in our tree (I removed the extra 'net' prefix we don't usually add,
+and used the "Closes" tag):
 
 New patches for t/upstream:
-- 34c96ea5123b: mptcp: make ADD_ADDR retransmission timeout adaptive
-- 5d56ac514943: selftests: mptcp: remove add_addr_timeout settings
-- Results: d89b1338067d..de0b36f41cae (export)
+- 8ac83ce766d6: selftests: mptcp: add checks for fallback counters
+- Results: de0b36f41cae..27427f653031 (export)
 
 Tests are now in progress:
 
 - export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/b44eb4c28d8623dfa68674caab04d9f7f07846ef/checks
+https://github.com/multipath-tcp/mptcp_net-next/commit/9dc9ed97e819c1c4910cae46098ab65f0eb3e20e/checks
 
 Cheers,
 Matt
