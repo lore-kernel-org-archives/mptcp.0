@@ -1,37 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFD3117BB21
-	for <mptcp@lists.linux.dev>; Tue, 19 Aug 2025 09:00:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50E1249620
+	for <mptcp@lists.linux.dev>; Tue, 19 Aug 2025 09:00:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755594020; cv=none; b=aj7bBweRrqw58QYSJ1sa+GCb32s3A4+VshBN3OV+mqcb7PBm93+iGjNZyiCjaBsfPvHW4ZX4f5Ps0NZ4T2EUecdV2478zL5u2hpNFhmdP4H0yJAv9oH9kPt9KMVznXu2p3+yNyFafWUva4krOBrF+eOEHTXqN1DLcJn/4QJ6F9U=
+	t=1755594023; cv=none; b=CSy0v4IwE7ZTGdsvpNLHIRarTRZYkS8cmJoutmI6TynFlFHe8QjYmX7DUpmdiDdwSmyjDNfkJlUgvXG/JM0SGkUz3kI3yTngKpNusncYEuhfulAhxs9qyh2wp21hPuBCT8MoX89sPxZIL64Qor7aUBw0S1K+shFaGFgLmE2ISvY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755594020; c=relaxed/simple;
-	bh=Xy4w+3+NgaDMQWHgddc85Ud+8nbmg5+UWwOjgzEZvws=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iCENS33M8YHr5mnrs93ZkSGdytXEDmLNC4TyrX3ImpwY9zk7t+D23lUiEpf634soarkfe/SEM43rXAh3tDkGxB7KBR9cBrqrzj0U7kDA/QTsSW2BMFCACXZlEiVOlYal2ByZWR9k5bPOKolbqKl9jxTqC0wsSG5RKR4P2EeKQr4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AnvXSHWK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1755594023; c=relaxed/simple;
+	bh=NJT4+JH/beYnnBG5m1sP4mD6wPxpGeugeXCHrlk138A=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=iUYG1kxIe/nQR9W2pywApaeOt2Scdu4U3jNiF6ZKnDu/oaJG5RNRcfjcoYnX8wb0vFti0FCWya1zsP3a+jV8fNL2h6xFVHA/WBCOmSROah0i3Zfj0Hed50KUznkhMWjBCFgV5w+VcC7Y5Sre9F5l8bq6R6WvubJiFugPIn3gcFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KSCfrQJW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AnvXSHWK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F6EAC4CEF1;
-	Tue, 19 Aug 2025 09:00:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KSCfrQJW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8A9DC113D0;
+	Tue, 19 Aug 2025 09:00:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755594020;
-	bh=Xy4w+3+NgaDMQWHgddc85Ud+8nbmg5+UWwOjgzEZvws=;
-	h=From:To:Cc:Subject:Date:From;
-	b=AnvXSHWKWsuJkk8KpMfMjoqC8nncsBm6EpV8GOQoNVtt5ih9XFk+AvOJ+iQsDKJXy
-	 nyudnBrzUa3HWZJI4xgKD7utu6A6ozUt3saY2VxoV0DgKiUsA/hpC7ziFjZLQ1Ah1c
-	 ZTmq2iYKDR5pP5vbIT9HgwwCaJYjGnJTNyZaVxBAZiszZoWXl8uYpmyWjL/NE45kg9
-	 fwNivZEsP2CJ3H45btbXD8nUO7v6XNu0F6HOFi6TP5fgRfVBZm1re3fxXPdI5zqTeP
-	 rvRp/NrF/uqTVmYvT+C4LEcIp6AwWQMCCc9veNzsdLe+sX2ro2QfRVcOvab3InKFoG
-	 Sg0RguT9Qlwtg==
+	s=k20201202; t=1755594022;
+	bh=NJT4+JH/beYnnBG5m1sP4mD6wPxpGeugeXCHrlk138A=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=KSCfrQJW+ShLFdRE4ZItLL9G6rkmZuX8ZlLGp43cP/Vjrf1LdJGEwRfZY1SvhTkak
+	 UNPXnMNeBFwvCiRfmohz7HwpRiJZDdrOTxGO4Aw5ymOqKMKQ0vT+x5IvGfjf/rxg+U
+	 WGPm8PU5g652P1i54bIDAPXrWUOlxTBJorCPb6TlwnhDonLkk8jBPYG7lTfII46A6a
+	 4HY2BS0RQ8ymjr42rnXb3aQ73uO2SY9aeWu65fhuEVlJZ/VHeeEM2MZp9Zo8myuEin
+	 aNRlZ29T8WzaiFiGFe0P9pO0bHUqg15L5vMoSH7DE2xUFqfDRxKP6CIE8sAfGU7XK5
+	 QEGxKVjNJ7LRg==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next 00/11] selftests: cover more MPTCP socket options
-Date: Tue, 19 Aug 2025 17:00:06 +0800
-Message-ID: <cover.1755592822.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next 01/11] selftests: mptcp: sockopt: improve test output clarity
+Date: Tue, 19 Aug 2025 17:00:07 +0800
+Message-ID: <1300935de56f6192e9314a2293a6679595a3a138.1755592822.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.48.1
+In-Reply-To: <cover.1755592822.git.tanggeliang@kylinos.cn>
+References: <cover.1755592822.git.tanggeliang@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -42,46 +45,68 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-This series significantly expands MPTCP socket option test coverage
-by adding validation for 10 more socket options:
+Refine test output to print detailed titles for SOL_MPTCP socket option
+tests in both IPv4 and IPv6 contexts. This enhances readability and
+distinctly separates v4/v6 results. The output now explicitly labels
+each test phase and result, making failures easier to identify.
 
-1. SO_REUSEADDR/SO_REUSEPORT - Test socket reuse capabilities
-2. SO_BINDTODEVICE/SO_BINDTOIFINDEX - Validate interface binding
-3. IP_TOS - Verify Type of Service handling
-4. IP_FREEBIND - Test free address binding
-5. IP_TRANSPARENT - Validate transparent proxying
-6. IP_BIND_ADDRESS_NO_PORT - Test deferred port binding
-7. IP_LOCAL_PORT_RANGE - Check local port range restriction
-8. IPV6_V6ONLY - Verify IPv6-only sockets
+Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+---
+ .../selftests/net/mptcp/mptcp_sockopt.sh       | 18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
 
-Each commit systematically adds:
-- Setsockopt/getsockopt operations in mptcp_sockopt.c
-- Dedicated test cases in mptcp_sockopt.sh
-- IPv4 and IPv6 coverage
-- Error handling and edge case validation
-
-The new tests verify that MPTCP correctly propagates socket options to
-subflows and maintains consistent behavior across address families.
-
-Link: https://github.com/multipath-tcp/mptcp_net-next/issues/525
-
-Geliang Tang (11):
-  selftests: mptcp: sockopt: improve test output clarity
-  selftests: mptcp: sockopt: add SO_REUSEADDR test helper
-  selftests: mptcp: sockopt: add SO_REUSEPORT test
-  selftests: mptcp: sockopt: add SO_BINDTODEVICE test
-  selftests: mptcp: sockopt: add SO_BINDTOIFINDEX test
-  selftests: mptcp: sockopt: add IP_TOS socket option test
-  selftests: mptcp: sockopt: add IP_FREEBIND tests
-  selftests: mptcp: sockopt: add IP_TRANSPARENT tests
-  selftests: mptcp: sockopt: add IP_BIND_ADDRESS_NO_PORT test
-  selftests: mptcp: sockopt: add IP_LOCAL_PORT_RANGE test
-  selftests: mptcp: sockopt: add IPV6_V6ONLY test
-
- .../selftests/net/mptcp/mptcp_sockopt.c       | 359 +++++++++++++++---
- .../selftests/net/mptcp/mptcp_sockopt.sh      |  94 ++++-
- 2 files changed, 403 insertions(+), 50 deletions(-)
-
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
+index 418a903c3a4d..375d1eabe4f7 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
+@@ -261,28 +261,32 @@ do_mptcp_sockopt_tests()
+ 	ip netns exec "$ns_sbox" ./mptcp_sockopt
+ 	lret=$?
+ 
+-	print_title "SOL_MPTCP sockopt v4"
++	mptcp_lib_print_info "sockopt v4"
+ 	if [ $lret -ne 0 ]; then
+-		mptcp_lib_pr_fail
++		mptcp_lib_pr_fail "sockopt v4"
+ 		mptcp_lib_result_fail "sockopt v4"
+ 		ret=$lret
+ 		return
+ 	fi
++
++	print_title "SOL_MPTCP sockopt v4"
+ 	mptcp_lib_pr_ok
+-	mptcp_lib_result_pass "sockopt v4"
++	mptcp_lib_result_pass "SOL_MPTCP sockopt v4"
+ 
+ 	ip netns exec "$ns_sbox" ./mptcp_sockopt -6
+ 	lret=$?
+ 
+-	print_title "SOL_MPTCP sockopt v6"
++	mptcp_lib_print_info "sockopt v6"
+ 	if [ $lret -ne 0 ]; then
+-		mptcp_lib_pr_fail
++		mptcp_lib_pr_fail "sockopt v6"
+ 		mptcp_lib_result_fail "sockopt v6"
+ 		ret=$lret
+ 		return
+ 	fi
++
++	print_title "SOL_MPTCP sockopt v6"
+ 	mptcp_lib_pr_ok
+-	mptcp_lib_result_pass "sockopt v6"
++	mptcp_lib_result_pass "SOL_MPTCP sockopt v6"
+ }
+ 
+ run_tests()
+@@ -329,6 +333,8 @@ do_tcpinq_tests()
+ 		return
+ 	fi
+ 
++	mptcp_lib_print_info "sockopt TCP_INQ"
++
+ 	local args
+ 	for args in "-t tcp" "-r tcp"; do
+ 		do_tcpinq_test $args
 -- 
 2.48.1
 
