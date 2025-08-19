@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50E1249620
-	for <mptcp@lists.linux.dev>; Tue, 19 Aug 2025 09:00:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5168E1519B4
+	for <mptcp@lists.linux.dev>; Tue, 19 Aug 2025 09:00:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755594023; cv=none; b=CSy0v4IwE7ZTGdsvpNLHIRarTRZYkS8cmJoutmI6TynFlFHe8QjYmX7DUpmdiDdwSmyjDNfkJlUgvXG/JM0SGkUz3kI3yTngKpNusncYEuhfulAhxs9qyh2wp21hPuBCT8MoX89sPxZIL64Qor7aUBw0S1K+shFaGFgLmE2ISvY=
+	t=1755594025; cv=none; b=kewIfAjyj2sQWbfXdzsgiQ9B7EojD8CxLylVCB2lB7+Md9BATYmHsnRp3rl0DWFVicdGkp3q/T9Jv35iAT115Ue5VsYPzDr+TdllYbuBGbMcxgXhu/UsKbg1J48hy6WfKjGXJov/wrBy5c1jQYRzI/Rn1jb7TQDPgpGpVoGC1/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755594023; c=relaxed/simple;
-	bh=NJT4+JH/beYnnBG5m1sP4mD6wPxpGeugeXCHrlk138A=;
+	s=arc-20240116; t=1755594025; c=relaxed/simple;
+	bh=kjG2VT11AYy8yUjzSilUvgWK3zdVU19UDMRHXulFNGg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=iUYG1kxIe/nQR9W2pywApaeOt2Scdu4U3jNiF6ZKnDu/oaJG5RNRcfjcoYnX8wb0vFti0FCWya1zsP3a+jV8fNL2h6xFVHA/WBCOmSROah0i3Zfj0Hed50KUznkhMWjBCFgV5w+VcC7Y5Sre9F5l8bq6R6WvubJiFugPIn3gcFE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KSCfrQJW; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=BUp+1fnd+mHStjMm5rRywxpLW0rtGIowK1wTUMvFm5LEKG1SxbFfqihIs5mcZWgUJ7cVeNqxLqXk2BGwN8SowPrrONx7jJ1J9xhrBH0tdkY4XLwpBEV8jTuxIrIZ5tMVwMAYzwQ4n6k96lBgyQZ+yVg2HF/xYxAjDnKZVWZdvqg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R72nrxhH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KSCfrQJW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8A9DC113D0;
-	Tue, 19 Aug 2025 09:00:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R72nrxhH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92BB4C4CEF1;
+	Tue, 19 Aug 2025 09:00:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755594022;
-	bh=NJT4+JH/beYnnBG5m1sP4mD6wPxpGeugeXCHrlk138A=;
+	s=k20201202; t=1755594024;
+	bh=kjG2VT11AYy8yUjzSilUvgWK3zdVU19UDMRHXulFNGg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KSCfrQJW+ShLFdRE4ZItLL9G6rkmZuX8ZlLGp43cP/Vjrf1LdJGEwRfZY1SvhTkak
-	 UNPXnMNeBFwvCiRfmohz7HwpRiJZDdrOTxGO4Aw5ymOqKMKQ0vT+x5IvGfjf/rxg+U
-	 WGPm8PU5g652P1i54bIDAPXrWUOlxTBJorCPb6TlwnhDonLkk8jBPYG7lTfII46A6a
-	 4HY2BS0RQ8ymjr42rnXb3aQ73uO2SY9aeWu65fhuEVlJZ/VHeeEM2MZp9Zo8myuEin
-	 aNRlZ29T8WzaiFiGFe0P9pO0bHUqg15L5vMoSH7DE2xUFqfDRxKP6CIE8sAfGU7XK5
-	 QEGxKVjNJ7LRg==
+	b=R72nrxhHodlRVo7GiP+KxhPD+DtWIwNhQZOy4XQKkVBEbaDfkRXhKRJ2jpyBdkpx/
+	 HRbIXKpN+aiC9MfDRq4E3xKGL0T/g0f87aYX/sSqOdGx1yXvlZH5W6HT9lkkFJMGNZ
+	 zOMHQW3rg0F30R9NesXx/o1loOy6AdACp0XG5RH59LlC09CdEG+iDNFHi91h86/5/5
+	 fv40E1ylyDMWpgBT28oCY6Qg2vcd5wS1nA8SBenBFbPavEsMaZFp3NzdYh40acXJqH
+	 p8LYHAJ2p4YsoU0teyCG6DlHXteWpriqefW0E+11N5XP9bHr1OFQ3ls6rwZYr5Q/uJ
+	 hcqzVL1py6MwQ==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next 01/11] selftests: mptcp: sockopt: improve test output clarity
-Date: Tue, 19 Aug 2025 17:00:07 +0800
-Message-ID: <1300935de56f6192e9314a2293a6679595a3a138.1755592822.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next 02/11] selftests: mptcp: sockopt: add SO_REUSEADDR test helper
+Date: Tue, 19 Aug 2025 17:00:08 +0800
+Message-ID: <7aa9e087d000568d122699abc0236b0d81d8f691.1755592822.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <cover.1755592822.git.tanggeliang@kylinos.cn>
 References: <cover.1755592822.git.tanggeliang@kylinos.cn>
@@ -45,68 +45,125 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Refine test output to print detailed titles for SOL_MPTCP socket option
-tests in both IPv4 and IPv6 contexts. This enhances readability and
-distinctly separates v4/v6 results. The output now explicitly labels
-each test phase and result, making failures easier to identify.
+Introduce helper functions to set and verify the SO_REUSEADDR socket
+option. This includes:
+- do_setsockopt_reuseaddr() to set the option
+- do_getsockopt_reuseaddr() to validate the value
+- Integration into IPv4/IPv6 test flows
+- Explicit result reporting in the test script
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- .../selftests/net/mptcp/mptcp_sockopt.sh       | 18 ++++++++++++------
- 1 file changed, 12 insertions(+), 6 deletions(-)
+ .../selftests/net/mptcp/mptcp_sockopt.c       | 34 ++++++++++++++++---
+ .../selftests/net/mptcp/mptcp_sockopt.sh      |  8 +++++
+ 2 files changed, 38 insertions(+), 4 deletions(-)
 
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
+index e934dd26a59d..a91709aeca06 100644
+--- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
++++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
+@@ -182,6 +182,19 @@ static void xgetaddrinfo(const char *node, const char *service,
+ 	}
+ }
+ 
++static void do_setsockopt_reuseaddr(int fd)
++{
++	int one = 1;
++
++	if (setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &one, sizeof(one)))
++		perror("setsockopt(SO_REUSEADDR)");
++}
++
++static void do_setsockopts(int fd)
++{
++	do_setsockopt_reuseaddr(fd);
++}
++
+ static int sock_listen_mptcp(const char * const listenaddr,
+ 			     const char * const port)
+ {
+@@ -195,7 +208,6 @@ static int sock_listen_mptcp(const char * const listenaddr,
+ 	hints.ai_family = pf;
+ 
+ 	struct addrinfo *a, *addr;
+-	int one = 1;
+ 
+ 	xgetaddrinfo(listenaddr, port, &hints, &addr);
+ 	hints.ai_family = pf;
+@@ -205,9 +217,7 @@ static int sock_listen_mptcp(const char * const listenaddr,
+ 		if (sock < 0)
+ 			continue;
+ 
+-		if (-1 == setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &one,
+-				     sizeof(one)))
+-			perror("setsockopt");
++		do_setsockopts(sock);
+ 
+ 		if (bind(sock, a->ai_addr, a->ai_addrlen) == 0)
+ 			break; /* success */
+@@ -246,6 +256,8 @@ static int sock_connect_mptcp(const char * const remoteaddr,
+ 		if (sock < 0)
+ 			continue;
+ 
++		do_setsockopts(sock);
++
+ 		if (connect(sock, a->ai_addr, a->ai_addrlen) == 0)
+ 			break; /* success */
+ 
+@@ -554,6 +566,18 @@ static void do_getsockopt_mptcp_full_info(struct so_state *s, int fd)
+ 	assert(!memcmp(&sfinfo->addrs, &s->addrs, sizeof(struct mptcp_subflow_addrs)));
+ }
+ 
++static void do_getsockopt_reuseaddr(int fd)
++{
++	socklen_t len;
++	int reuse;
++
++	len = sizeof(reuse);
++	if (getsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &reuse, &len))
++		perror("getsockopt(SO_REUSEADDR)");
++
++	assert(reuse == 1);
++}
++
+ static void do_getsockopts(struct so_state *s, int fd, size_t r, size_t w)
+ {
+ 	do_getsockopt_mptcp_info(s, fd, w);
+@@ -564,6 +588,8 @@ static void do_getsockopts(struct so_state *s, int fd, size_t r, size_t w)
+ 
+ 	if (r)
+ 		do_getsockopt_mptcp_full_info(s, fd);
++
++	do_getsockopt_reuseaddr(fd);
+ }
+ 
+ static void connect_one_server(int fd, int pipefd)
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-index 418a903c3a4d..375d1eabe4f7 100755
+index 375d1eabe4f7..2f6b16cd51af 100755
 --- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
 +++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-@@ -261,28 +261,32 @@ do_mptcp_sockopt_tests()
- 	ip netns exec "$ns_sbox" ./mptcp_sockopt
- 	lret=$?
- 
--	print_title "SOL_MPTCP sockopt v4"
-+	mptcp_lib_print_info "sockopt v4"
- 	if [ $lret -ne 0 ]; then
--		mptcp_lib_pr_fail
-+		mptcp_lib_pr_fail "sockopt v4"
- 		mptcp_lib_result_fail "sockopt v4"
- 		ret=$lret
- 		return
- 	fi
-+
-+	print_title "SOL_MPTCP sockopt v4"
+@@ -273,6 +273,10 @@ do_mptcp_sockopt_tests()
  	mptcp_lib_pr_ok
--	mptcp_lib_result_pass "sockopt v4"
-+	mptcp_lib_result_pass "SOL_MPTCP sockopt v4"
+ 	mptcp_lib_result_pass "SOL_MPTCP sockopt v4"
  
++	print_title "SO_REUSEADDR sockopt v4"
++	mptcp_lib_pr_ok
++	mptcp_lib_result_pass "SO_REUSEADDR sockopt v4"
++
  	ip netns exec "$ns_sbox" ./mptcp_sockopt -6
  	lret=$?
  
--	print_title "SOL_MPTCP sockopt v6"
-+	mptcp_lib_print_info "sockopt v6"
- 	if [ $lret -ne 0 ]; then
--		mptcp_lib_pr_fail
-+		mptcp_lib_pr_fail "sockopt v6"
- 		mptcp_lib_result_fail "sockopt v6"
- 		ret=$lret
- 		return
- 	fi
-+
-+	print_title "SOL_MPTCP sockopt v6"
+@@ -287,6 +291,10 @@ do_mptcp_sockopt_tests()
+ 	print_title "SOL_MPTCP sockopt v6"
  	mptcp_lib_pr_ok
--	mptcp_lib_result_pass "sockopt v6"
-+	mptcp_lib_result_pass "SOL_MPTCP sockopt v6"
+ 	mptcp_lib_result_pass "SOL_MPTCP sockopt v6"
++
++	print_title "SO_REUSEADDR sockopt v6"
++	mptcp_lib_pr_ok
++	mptcp_lib_result_pass "SO_REUSEADDR sockopt v6"
  }
  
  run_tests()
-@@ -329,6 +333,8 @@ do_tcpinq_tests()
- 		return
- 	fi
- 
-+	mptcp_lib_print_info "sockopt TCP_INQ"
-+
- 	local args
- 	for args in "-t tcp" "-r tcp"; do
- 		do_tcpinq_test $args
 -- 
 2.48.1
 
