@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FE1B31577D
-	for <mptcp@lists.linux.dev>; Tue, 19 Aug 2025 09:00:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9559315779
+	for <mptcp@lists.linux.dev>; Tue, 19 Aug 2025 09:00:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755594036; cv=none; b=X01PXucWQR6wzIVrO++bLbJzKu1dEbRtqbSdN5y+XBD4gGFU1rXS09nXHWCTtyleqbvYUBj8wQ494q9UUVTnRzkFMJVWrcQsesRxdEEvqpUB5+q2c54mtoRJ5DDeR/WXIvYdfL5P5JPaNqzanZTOhKI53W+iLlRaYPp1iaXuOvw=
+	t=1755594038; cv=none; b=pZgDeDZNDrYTPAW8UInqMCWZs+AUovBOoTlP1/Fw8f1IyzAOWQOFyEnX6kZmPLr9Z7bPqfdndVK3DOsMekw/W3IPZQ0vv8ap/YPKqZvOj+gBA0v3Q/1Hw/bqaJY1BuSnrtftQaHEXJ/HY0dLZpncO6jh8Fpmiv9SyIYVJPXHb1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755594036; c=relaxed/simple;
-	bh=gAnSShawOksymIf9itbH5poxQY94AOV5E34yjtagJu0=;
+	s=arc-20240116; t=1755594038; c=relaxed/simple;
+	bh=huId9eEblWu60Eo75YpwbQrUGA7hIi+zvdlRHKWU2RU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Hc7k9+JhpSF39esdFWHSl23EDvp7PM5SWuKiVYMQpHV9PhdjJLkyNVeDzbFJcirEAWnl9zZJvdqbQ3caf9/7q5A5Kyp2VXZKGNrpwei773sXvB2/C/Pn7XkMkn4lMsTaC7D7+EuvyzDbwwT7WEW/3sjD1JD4jkabsAKUZ6/QuGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NUjRqWZI; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=uYcYukj6fDWWQnMTJGatiC/DahC+tliYYs+/eUhJfgWeTCQfQCPp1FKWf2UYFNpysvwVE24Ddu/YJF4drQCY0Zg+/Mmn71i9kMpwbVSP7wYOwZ8YXfO19QL8138q/BPIhuSjFeVB+HGI48D3jG0EYg4FsqeopVtjZZb7nivuGZc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NlvWHR6G; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NUjRqWZI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 706D4C116B1;
-	Tue, 19 Aug 2025 09:00:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NlvWHR6G"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 644D1C4CEF1;
+	Tue, 19 Aug 2025 09:00:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755594035;
-	bh=gAnSShawOksymIf9itbH5poxQY94AOV5E34yjtagJu0=;
+	s=k20201202; t=1755594037;
+	bh=huId9eEblWu60Eo75YpwbQrUGA7hIi+zvdlRHKWU2RU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=NUjRqWZIEyv3amWPgltI2QLg8n5TB1H2umCHtZcl64PLgqKWC2KFGA8QV0372TkBf
-	 +D7fTns3SeS7hANkltQVz4jU6kNOCw4L+7lLg6XkXhlS2ddKt3P1xjef8mbSAIWEhQ
-	 cPdvHEVaqbs97cmP3F3L2Q/LN42KDDahhxtvQYisCnGMPamHS4iUM/kv56wdUUs5pl
-	 HabS3rFvbfnbUCdxlcETrMQuQ+q3piLkDBDqi10oHsIM4+UboVCLE/Z9oUmBDVAK88
-	 k715jJnxG0H8q+0ijtezrXEEWM2emkpQw0SxNsoDbf5ysQQN5N1u3ACXTehfwqLVrS
-	 QTlur2xumVQJg==
+	b=NlvWHR6GbN+Z4M823HCej1c+sv0g+PoQzL8K9SkpZiAjEIFkCK8K2FSfeELinj9qx
+	 jlKpbKyfHiSsZqxj4GPQx9AaF3E8J2XmdsKOvEkD/tkuWvW5G7wejWV9HZmY9g6GPC
+	 XorHNzaNIK+G1cJYKuzPGLO+eK+K5ULnaxqvn10itqrsvppWyItsTrQTcu8rywbmxj
+	 qQR1AGIl+R9F+rqEoFfiiyWvi9/6mutsp2ZnWT3858F05qjQDrqF48v2Gsj6QpYOON
+	 IUJlS95WHHuyOKxMozq1QU2OUxSrkb3yenBCVqv1A8ORHGnniUTKMiiU5nEtRJX60R
+	 +2tUphU1mMgSQ==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next 07/11] selftests: mptcp: sockopt: add IP_FREEBIND tests
-Date: Tue, 19 Aug 2025 17:00:13 +0800
-Message-ID: <611145c75ad6579a523a03c4305139174c2f5ae4.1755592822.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next 08/11] selftests: mptcp: sockopt: add IP_TRANSPARENT tests
+Date: Tue, 19 Aug 2025 17:00:14 +0800
+Message-ID: <754dcbcd5da7af5eb8a44393002f74864fbb8830.1755592822.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <cover.1755592822.git.tanggeliang@kylinos.cn>
 References: <cover.1755592822.git.tanggeliang@kylinos.cn>
@@ -45,11 +45,11 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Add tests for IP_FREEBIND (IPv4) and IPV6_FREEBIND (IPv6):
-- Setsockopt helpers to enable FREEBIND
-- Getsockopt validation of the enabled state
-- Test integration for both address families
-- Script result reporting
+Implement tests for transparent socket options:
+- IP_TRANSPARENT (IPv4) and IPV6_TRANSPARENT (IPv6)
+- Setsockopt and getsockopt helpers
+- State verification after setting
+- IPv4/IPv6 coverage in test script
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
@@ -58,44 +58,44 @@ Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
  2 files changed, 45 insertions(+)
 
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-index 3bef535ce981..1e7cacdebc72 100644
+index 1e7cacdebc72..fe54c333e455 100644
 --- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
 +++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-@@ -241,6 +241,21 @@ static void do_setsockopt_tos(int fd)
- 		die_perror("setsockopt(IP_TOS)");
+@@ -256,6 +256,21 @@ static void do_setsockopt_freebind(int fd)
+ 		perror("setsockopt(IP_FREEBIND)");
  }
  
-+static void do_setsockopt_freebind(int fd)
++static void do_setsockopt_transparent(int fd)
 +{
-+	int optname = IP_FREEBIND;
++	int optname = IP_TRANSPARENT;
 +	int level = SOL_IP;
 +	int enable = 1;
 +
 +	if (pf == AF_INET6) {
 +		level = SOL_IPV6;
-+		optname = IPV6_FREEBIND;
++		optname = IPV6_TRANSPARENT;
 +	}
 +
 +	if (setsockopt(fd, level, optname, &enable, sizeof(enable)))
-+		perror("setsockopt(IP_FREEBIND)");
++		perror("setsockopt(IP_TRANSPARENT)");
 +}
 +
  static void do_setsockopts(int fd)
  {
  	do_setsockopt_reuseaddr(fd);
-@@ -248,6 +263,7 @@ static void do_setsockopts(int fd)
- 	do_setsockopt_bindtodevice(fd);
+@@ -264,6 +279,7 @@ static void do_setsockopts(int fd)
  	do_setsockopt_bindtoifindex(fd);
  	do_setsockopt_tos(fd);
-+	do_setsockopt_freebind(fd);
+ 	do_setsockopt_freebind(fd);
++	do_setsockopt_transparent(fd);
  }
  
  static int sock_listen_mptcp(const char * const listenaddr,
-@@ -704,6 +720,25 @@ static void do_getsockopt_tos(int fd)
- 		xerror("expect socklen_t == -1");
+@@ -739,6 +755,25 @@ static void do_getsockopt_freebind(int fd)
+ 	assert(enable == 1);
  }
  
-+static void do_getsockopt_freebind(int fd)
++static void do_getsockopt_transparent(int fd)
 +{
 +	int optname = IP_FREEBIND;
 +	int level = SOL_IP;
@@ -109,7 +109,7 @@ index 3bef535ce981..1e7cacdebc72 100644
 +
 +	len = sizeof(enable);
 +	if (getsockopt(fd, level, optname, &enable, &len))
-+		die_perror("getsockopt(IP_FREEBIND)");
++		die_perror("getsockopt(IP_TRANSPARENT)");
 +
 +	assert(enable == 1);
 +}
@@ -117,38 +117,38 @@ index 3bef535ce981..1e7cacdebc72 100644
  static void do_getsockopts(struct so_state *s, int fd, size_t r, size_t w)
  {
  	do_getsockopt_mptcp_info(s, fd, w);
-@@ -724,6 +759,8 @@ static void do_getsockopts(struct so_state *s, int fd, size_t r, size_t w)
- 	do_getsockopt_bindtoifindex(fd);
- 
+@@ -761,6 +796,8 @@ static void do_getsockopts(struct so_state *s, int fd, size_t r, size_t w)
  	do_getsockopt_tos(fd);
+ 
+ 	do_getsockopt_freebind(fd);
 +
-+	do_getsockopt_freebind(fd);
++	do_getsockopt_transparent(fd);
  }
  
  static void connect_one_server(int fd, int pipefd)
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-index 9972012d08f6..b5054533872b 100755
+index b5054533872b..ed73ad7bba66 100755
 --- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
 +++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-@@ -293,6 +293,10 @@ do_mptcp_sockopt_tests()
+@@ -297,6 +297,10 @@ do_mptcp_sockopt_tests()
  	mptcp_lib_pr_ok
- 	mptcp_lib_result_pass "IP_TOS sockopt v4"
+ 	mptcp_lib_result_pass "IP_FREEBIND sockopt v4"
  
-+	print_title "IP_FREEBIND sockopt v4"
++	print_title "IP_TRANSPARENT sockopt v4"
 +	mptcp_lib_pr_ok
-+	mptcp_lib_result_pass "IP_FREEBIND sockopt v4"
++	mptcp_lib_result_pass "IP_TRANSPARENT sockopt v4"
 +
  	ip netns exec "$ns_sbox" ./mptcp_sockopt -6
  	lret=$?
  
-@@ -327,6 +331,10 @@ do_mptcp_sockopt_tests()
- 	print_title "IP_TOS sockopt v6"
+@@ -335,6 +339,10 @@ do_mptcp_sockopt_tests()
+ 	print_title "IPV6_FREEBIND sockopt v6"
  	mptcp_lib_pr_ok
- 	mptcp_lib_result_pass "IP_TOS sockopt v6"
+ 	mptcp_lib_result_pass "IPV6_FREEBIND sockopt v6"
 +
-+	print_title "IPV6_FREEBIND sockopt v6"
++	print_title "IPV6_TRANSPARENT sockopt v6"
 +	mptcp_lib_pr_ok
-+	mptcp_lib_result_pass "IPV6_FREEBIND sockopt v6"
++	mptcp_lib_result_pass "IPV6_TRANSPARENT sockopt v6"
  }
  
  run_tests()
