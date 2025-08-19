@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AB1C1519B4
-	for <mptcp@lists.linux.dev>; Tue, 19 Aug 2025 09:00:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C16231A054
+	for <mptcp@lists.linux.dev>; Tue, 19 Aug 2025 09:00:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755594027; cv=none; b=Zxwn5wbgspJNrDI/uYWQgApZXyF7yl5IvlPg6zS9X9+lQmx4Bf49QHc1izT5TWEecu7t9IGmMZ1y1DZlpuhCcdwssUo5zo9K7U28+ffO4AxRgZfZxdlWs3Ij7q/8/CVd99O/L5LDSLJ6EB7GpjfWtlbUu+8AHPUPgkLQKPdH9eI=
+	t=1755594030; cv=none; b=f3NpdZMu1D8tFOHyePraLrdrrPADg2kVbSlJKpa4Dr2t+u4ETZSK4YzH+VJrmO1nY9JkZgCoD7L9loFzCvu6vdCjHYJjqOTfJ5QwM/5ng6gdOYu4/OrQlBT95gWgxWz752fjInatFZkjlgS3C5TXI4KlBjOjjyxZS8JiuOUpRT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755594027; c=relaxed/simple;
-	bh=dZBxhS3jH11eOCvg4+CIOW5Er1caEa7iBADykiM1MMI=;
+	s=arc-20240116; t=1755594030; c=relaxed/simple;
+	bh=Z1qk1/ZDPKobj+mm3LAy/LCsv+6hoaK8lxJFYM87v4s=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Z1p+6v3qZYfWKUipExsbkHK79zOwpdQrr1Hze76kUT1HV8Ie46MkGuQjchOdMBvfj7GXfibpPLlf7Adf7v3dTVtX4YSB8ChcDprvUvOXEHqj4XRDFCI2ShDfHmoJddpyYxrVs5T3X3pllBpk2I999BgzU6nHD/vYNfPoV0M7TWw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I0zT+AGm; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=mugNHPpZFviRiQWlF4fYemIMKXzaBWZS8XG7xzeyd4AWY0E/Iwv6/pDj+3O67H66zFcgG5hbMoTG4U/z2u7vFKXswLfUvj3OiERuTT0eEwHNNZnuQwkrTyZqNSKQChbvn+C70YM7CYb2uHeY0I6PtRTrFtDYgkl13f7d8/AqInU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sXxfBCKG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I0zT+AGm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B9C4C113D0;
-	Tue, 19 Aug 2025 09:00:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sXxfBCKG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90152C113D0;
+	Tue, 19 Aug 2025 09:00:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755594026;
-	bh=dZBxhS3jH11eOCvg4+CIOW5Er1caEa7iBADykiM1MMI=;
+	s=k20201202; t=1755594029;
+	bh=Z1qk1/ZDPKobj+mm3LAy/LCsv+6hoaK8lxJFYM87v4s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=I0zT+AGm2GSDlSM8bS9V6sNGJ+KhEQFNmB1NIOCnUyTOh9r2+kxD7Eb4ABDVZQmgb
-	 aXHhWgHy9WvjJz0qvEr3X7NMUpvsG0M7nEBL8BGOJa2a3y0XLw6kp30aShx1mF4Cqe
-	 a+5rxJO8yXASvS9qEdKaiS7d74WVpsyhQnD7fZFWt+6a6nWV0H1atwYJ9zbpbDG6eM
-	 ljq4KWYAXAO1xA6QO7J5pUjHzgPxUdqMEAdZzCr4vJ03eZBUPy/Cu3v4JnVvSQDr2T
-	 ppPJLz+fshu7Ed8S7fDK+8bXe7Ren8Mmf/SsjizviGkQ7PokAH6HWLZvsu5KOGNHaR
-	 JUEuzdPme7dyA==
+	b=sXxfBCKGxVl+X3bf8CAL13GS0Q8fjWG/AMNUeRQgI75Z7ml6qLPaANjGvjO3ygPMp
+	 TckCWTm/lvQmS8Ic3PARJeD5jTGZAX+4PIuIS+AQpIANJeHW8J9BIVobDulyCCrskk
+	 A0aG2msxpAdCQITO0PFCj+e+xSjfeK1wGwwXqtD/XfRRpZXIHc4wgbqh9tnlo/xSH9
+	 VC7eI39Au1UB8AXUtak4n4pef5Bsj1d0t7t3YpuQBVBKxa3ZcWxCU3WJJJRzmRyP5/
+	 5P6RFIQpNNuMsdIekY1cdZW12DKy+1/Odaynl9bFBuYG3mGVpf9mwXpfyDUy76BjtB
+	 jDGrNMQ9cNcQg==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next 03/11] selftests: mptcp: sockopt: add SO_REUSEPORT test
-Date: Tue, 19 Aug 2025 17:00:09 +0800
-Message-ID: <2258943db59b817193a56ffe1953089d46f7d538.1755592822.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next 04/11] selftests: mptcp: sockopt: add SO_BINDTODEVICE test
+Date: Tue, 19 Aug 2025 17:00:10 +0800
+Message-ID: <95adea00b5a39d25ffa2f02fa050ea0928c402c6.1755592822.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <cover.1755592822.git.tanggeliang@kylinos.cn>
 References: <cover.1755592822.git.tanggeliang@kylinos.cn>
@@ -45,92 +45,102 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Implement comprehensive testing for the SO_REUSEPORT socket option:
-- Setsockopt and getsockopt helpers for SO_REUSEPORT
-- Verification of the set value
-- Integration into both client/server workflows
-- IPv4 and IPv6 test coverage
+Add tests for the SO_BINDTODEVICE socket option:
+- Binds sockets to the loopback device ("lo")
+- Verifies the binding via getsockopt
+- Includes IPv4 and IPv6 test cases
+- Reports results explicitly in the test script
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- .../selftests/net/mptcp/mptcp_sockopt.c       | 23 +++++++++++++++++++
- .../selftests/net/mptcp/mptcp_sockopt.sh      |  8 +++++++
- 2 files changed, 31 insertions(+)
+ .../selftests/net/mptcp/mptcp_sockopt.c       | 25 +++++++++++++++++++
+ .../selftests/net/mptcp/mptcp_sockopt.sh      |  8 ++++++
+ 2 files changed, 33 insertions(+)
 
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-index a91709aeca06..816d71706f7d 100644
+index 816d71706f7d..df4f85f129f7 100644
 --- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
 +++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-@@ -190,9 +190,18 @@ static void do_setsockopt_reuseaddr(int fd)
- 		perror("setsockopt(SO_REUSEADDR)");
+@@ -23,6 +23,7 @@
+ 
+ #include <netdb.h>
+ #include <netinet/in.h>
++#include <net/if.h>
+ 
+ #include <linux/tcp.h>
+ 
+@@ -198,10 +199,20 @@ static void do_setsockopt_reuseport(int fd)
+ 		perror("setsockopt(SO_REUSEPORT)");
  }
  
-+static void do_setsockopt_reuseport(int fd)
++static void do_setsockopt_bindtodevice(int fd)
 +{
-+	int one = 1;
++	const char *interface = "lo";
 +
-+	if (setsockopt(fd, SOL_SOCKET, SO_REUSEPORT, &one, sizeof(one)))
-+		perror("setsockopt(SO_REUSEPORT)");
++	if (setsockopt(fd, SOL_SOCKET, SO_BINDTODEVICE,
++		       interface, strlen(interface)))
++		perror("setsockopt(SO_BINDTODEVICE)");
 +}
 +
  static void do_setsockopts(int fd)
  {
  	do_setsockopt_reuseaddr(fd);
-+	do_setsockopt_reuseport(fd);
+ 	do_setsockopt_reuseport(fd);
++	do_setsockopt_bindtodevice(fd);
  }
  
  static int sock_listen_mptcp(const char * const listenaddr,
-@@ -578,6 +587,18 @@ static void do_getsockopt_reuseaddr(int fd)
+@@ -599,6 +610,18 @@ static void do_getsockopt_reuseport(int fd)
  	assert(reuse == 1);
  }
  
-+static void do_getsockopt_reuseport(int fd)
++static void do_getsockopt_bindtodevice(int fd)
 +{
++	char ifname[IFNAMSIZ] = { 0 };
 +	socklen_t len;
-+	int reuse;
 +
-+	len = sizeof(reuse);
-+	if (getsockopt(fd, SOL_SOCKET, SO_REUSEPORT, &reuse, &len))
-+		perror("getsockopt(SO_REUSEPORT)");
++	len = sizeof(ifname);
++	if (getsockopt(fd, SOL_SOCKET, SO_BINDTODEVICE, ifname, &len))
++		die_perror("getsockopt(SO_BINDTODEVICE)");
 +
-+	assert(reuse == 1);
++	assert(!memcmp(ifname, "lo", len));
 +}
 +
  static void do_getsockopts(struct so_state *s, int fd, size_t r, size_t w)
  {
  	do_getsockopt_mptcp_info(s, fd, w);
-@@ -590,6 +611,8 @@ static void do_getsockopts(struct so_state *s, int fd, size_t r, size_t w)
- 		do_getsockopt_mptcp_full_info(s, fd);
- 
+@@ -613,6 +636,8 @@ static void do_getsockopts(struct so_state *s, int fd, size_t r, size_t w)
  	do_getsockopt_reuseaddr(fd);
+ 
+ 	do_getsockopt_reuseport(fd);
 +
-+	do_getsockopt_reuseport(fd);
++	do_getsockopt_bindtodevice(fd);
  }
  
  static void connect_one_server(int fd, int pipefd)
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-index 2f6b16cd51af..271d9777da54 100755
+index 271d9777da54..948e54b50c43 100755
 --- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
 +++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-@@ -277,6 +277,10 @@ do_mptcp_sockopt_tests()
+@@ -281,6 +281,10 @@ do_mptcp_sockopt_tests()
  	mptcp_lib_pr_ok
- 	mptcp_lib_result_pass "SO_REUSEADDR sockopt v4"
+ 	mptcp_lib_result_pass "SO_REUSEPORT sockopt v4"
  
-+	print_title "SO_REUSEPORT sockopt v4"
++	print_title "SO_BINDTODEVICE sockopt v4"
 +	mptcp_lib_pr_ok
-+	mptcp_lib_result_pass "SO_REUSEPORT sockopt v4"
++	mptcp_lib_result_pass "SO_BINDTODEVICE sockopt v4"
 +
  	ip netns exec "$ns_sbox" ./mptcp_sockopt -6
  	lret=$?
  
-@@ -295,6 +299,10 @@ do_mptcp_sockopt_tests()
- 	print_title "SO_REUSEADDR sockopt v6"
+@@ -303,6 +307,10 @@ do_mptcp_sockopt_tests()
+ 	print_title "SO_REUSEPORT sockopt v6"
  	mptcp_lib_pr_ok
- 	mptcp_lib_result_pass "SO_REUSEADDR sockopt v6"
+ 	mptcp_lib_result_pass "SO_REUSEPORT sockopt v6"
 +
-+	print_title "SO_REUSEPORT sockopt v6"
++	print_title "SO_BINDTODEVICE sockopt v6"
 +	mptcp_lib_pr_ok
-+	mptcp_lib_result_pass "SO_REUSEPORT sockopt v6"
++	mptcp_lib_result_pass "SO_BINDTODEVICE sockopt v6"
  }
  
  run_tests()
