@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C16231A054
-	for <mptcp@lists.linux.dev>; Tue, 19 Aug 2025 09:00:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DDFF22424E
+	for <mptcp@lists.linux.dev>; Tue, 19 Aug 2025 09:00:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755594030; cv=none; b=f3NpdZMu1D8tFOHyePraLrdrrPADg2kVbSlJKpa4Dr2t+u4ETZSK4YzH+VJrmO1nY9JkZgCoD7L9loFzCvu6vdCjHYJjqOTfJ5QwM/5ng6gdOYu4/OrQlBT95gWgxWz752fjInatFZkjlgS3C5TXI4KlBjOjjyxZS8JiuOUpRT0=
+	t=1755594031; cv=none; b=s5wq+MfYIYCXBxgqGPgqraQBPEzaW8ThbL7Fx5bI+Et8W93N6bV8IOyTZCyhh+pkIeVRPESAOJHD1iyhFxjOHbDuRQ/+uwkjmuPWCfuDOitCOcZ4A/VGgQqLnzW1pg2tV1F+RAVACSS92bD6ER2mag7FBoOsiRAvbH+aQtr8qf0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755594030; c=relaxed/simple;
-	bh=Z1qk1/ZDPKobj+mm3LAy/LCsv+6hoaK8lxJFYM87v4s=;
+	s=arc-20240116; t=1755594031; c=relaxed/simple;
+	bh=J87gRu+lhUbmNeEj0rm9Cx+3jrK/nERyWETPs/7IZWw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mugNHPpZFviRiQWlF4fYemIMKXzaBWZS8XG7xzeyd4AWY0E/Iwv6/pDj+3O67H66zFcgG5hbMoTG4U/z2u7vFKXswLfUvj3OiERuTT0eEwHNNZnuQwkrTyZqNSKQChbvn+C70YM7CYb2uHeY0I6PtRTrFtDYgkl13f7d8/AqInU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sXxfBCKG; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=QLqQIg8kIfNSjoc1WJKXQdk7YbRv+c2UsRw6MIsHjTJqkMoh+WSfrqj7BfqMnkInW6kWW6qi9lQ1+RcL5PsdiCyFlzRs2OEL/lTqG9AOD1Btha0veN3N7u53cYcSblBdrivWZJgPdk8I8P0OdR37CHAkoksNPSwq3KPqU71ZnNY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fha2bkCP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sXxfBCKG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90152C113D0;
-	Tue, 19 Aug 2025 09:00:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fha2bkCP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0DCFC116B1;
+	Tue, 19 Aug 2025 09:00:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755594029;
-	bh=Z1qk1/ZDPKobj+mm3LAy/LCsv+6hoaK8lxJFYM87v4s=;
+	s=k20201202; t=1755594031;
+	bh=J87gRu+lhUbmNeEj0rm9Cx+3jrK/nERyWETPs/7IZWw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=sXxfBCKGxVl+X3bf8CAL13GS0Q8fjWG/AMNUeRQgI75Z7ml6qLPaANjGvjO3ygPMp
-	 TckCWTm/lvQmS8Ic3PARJeD5jTGZAX+4PIuIS+AQpIANJeHW8J9BIVobDulyCCrskk
-	 A0aG2msxpAdCQITO0PFCj+e+xSjfeK1wGwwXqtD/XfRRpZXIHc4wgbqh9tnlo/xSH9
-	 VC7eI39Au1UB8AXUtak4n4pef5Bsj1d0t7t3YpuQBVBKxa3ZcWxCU3WJJJRzmRyP5/
-	 5P6RFIQpNNuMsdIekY1cdZW12DKy+1/Odaynl9bFBuYG3mGVpf9mwXpfyDUy76BjtB
-	 jDGrNMQ9cNcQg==
+	b=fha2bkCP2BzfX+2tup/KBV76RLmaa9z3GFi+GY6oe/z6cPg4CCt8Lo5Np4HpURgD0
+	 kwkbXb45AlvsLVecBLIugfq6lWnDIAZxRWO7IgEJpS+sG+HAZNmzMDZ1BB6bGhKnLN
+	 nYVO/cDk4rvGbN9nZKNA1qhjxsvwAIvms08dMNoaPeuUuDMyZwUN5qFXnv7uQjysJJ
+	 2R0S0DV9OE/p3jTbnKKfBbaZWFXMtTh0xBVHfko3H9tDHtb1sRZzNAaR68UF9TZouH
+	 qRoFG53EZSi8Q0F6QV2tWyTj7hGr3vC7XuoI4LvRWvFgeWmoZMIKNQI1rQI2TMLW3w
+	 AMHeCNcImqnEQ==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next 04/11] selftests: mptcp: sockopt: add SO_BINDTODEVICE test
-Date: Tue, 19 Aug 2025 17:00:10 +0800
-Message-ID: <95adea00b5a39d25ffa2f02fa050ea0928c402c6.1755592822.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next 05/11] selftests: mptcp: sockopt: add SO_BINDTOIFINDEX test
+Date: Tue, 19 Aug 2025 17:00:11 +0800
+Message-ID: <0888dbece9afe24eab9e838fec4d3809d2afc3e5.1755592822.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <cover.1755592822.git.tanggeliang@kylinos.cn>
 References: <cover.1755592822.git.tanggeliang@kylinos.cn>
@@ -45,102 +45,119 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Add tests for the SO_BINDTODEVICE socket option:
-- Binds sockets to the loopback device ("lo")
-- Verifies the binding via getsockopt
-- Includes IPv4 and IPv6 test cases
-- Reports results explicitly in the test script
+Implement tests for the SO_BINDTOIFINDEX socket option:
+- Uses ioctl to get the loopback interface index
+- Sets the option to bind to "lo"
+- Validates the bound index via getsockopt
+- Supports both IPv4 and IPv6
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- .../selftests/net/mptcp/mptcp_sockopt.c       | 25 +++++++++++++++++++
- .../selftests/net/mptcp/mptcp_sockopt.sh      |  8 ++++++
- 2 files changed, 33 insertions(+)
+ .../selftests/net/mptcp/mptcp_sockopt.c       | 41 +++++++++++++++++++
+ .../selftests/net/mptcp/mptcp_sockopt.sh      |  8 ++++
+ 2 files changed, 49 insertions(+)
 
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-index 816d71706f7d..df4f85f129f7 100644
+index df4f85f129f7..25456e540cad 100644
 --- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
 +++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-@@ -23,6 +23,7 @@
+@@ -20,6 +20,7 @@
+ #include <sys/socket.h>
+ #include <sys/types.h>
+ #include <sys/wait.h>
++#include <sys/ioctl.h>
  
  #include <netdb.h>
  #include <netinet/in.h>
-+#include <net/if.h>
- 
- #include <linux/tcp.h>
- 
-@@ -198,10 +199,20 @@ static void do_setsockopt_reuseport(int fd)
- 		perror("setsockopt(SO_REUSEPORT)");
+@@ -208,11 +209,36 @@ static void do_setsockopt_bindtodevice(int fd)
+ 		perror("setsockopt(SO_BINDTODEVICE)");
  }
  
-+static void do_setsockopt_bindtodevice(int fd)
++static int get_ifindex(int fd, const char *ifname)
 +{
-+	const char *interface = "lo";
++	struct ifreq ifr;
 +
-+	if (setsockopt(fd, SOL_SOCKET, SO_BINDTODEVICE,
-+		       interface, strlen(interface)))
-+		perror("setsockopt(SO_BINDTODEVICE)");
++	memset(&ifr, 0, sizeof(ifr));
++	strncpy(ifr.ifr_name, ifname, IFNAMSIZ);
++
++	if (ioctl(fd, SIOCGIFINDEX, &ifr) < 0) {
++		perror("ioctl");
++		return -1;
++	}
++
++	return ifr.ifr_ifindex;
++}
++
++static void do_setsockopt_bindtoifindex(int fd)
++{
++	int ifindex = get_ifindex(fd, "lo");
++
++	if (setsockopt(fd, SOL_SOCKET, SO_BINDTOIFINDEX,
++		       &ifindex, sizeof(ifindex)))
++		perror("setsockopt(SO_BINDTOIFINDEX)");
 +}
 +
  static void do_setsockopts(int fd)
  {
  	do_setsockopt_reuseaddr(fd);
  	do_setsockopt_reuseport(fd);
-+	do_setsockopt_bindtodevice(fd);
+ 	do_setsockopt_bindtodevice(fd);
++	do_setsockopt_bindtoifindex(fd);
  }
  
  static int sock_listen_mptcp(const char * const listenaddr,
-@@ -599,6 +610,18 @@ static void do_getsockopt_reuseport(int fd)
- 	assert(reuse == 1);
+@@ -622,6 +648,19 @@ static void do_getsockopt_bindtodevice(int fd)
+ 	assert(!memcmp(ifname, "lo", len));
  }
  
-+static void do_getsockopt_bindtodevice(int fd)
++static void do_getsockopt_bindtoifindex(int fd)
 +{
-+	char ifname[IFNAMSIZ] = { 0 };
 +	socklen_t len;
++	int ifindex;
 +
-+	len = sizeof(ifname);
-+	if (getsockopt(fd, SOL_SOCKET, SO_BINDTODEVICE, ifname, &len))
-+		die_perror("getsockopt(SO_BINDTODEVICE)");
++	len = sizeof(ifindex);
++	if (getsockopt(fd, SOL_SOCKET, SO_BINDTOIFINDEX,
++		       &ifindex, &len))
++		die_perror("getsockopt(SO_BINDTOIFINDEX)");
 +
-+	assert(!memcmp(ifname, "lo", len));
++	assert(ifindex == get_ifindex(fd, "lo"));
 +}
 +
  static void do_getsockopts(struct so_state *s, int fd, size_t r, size_t w)
  {
  	do_getsockopt_mptcp_info(s, fd, w);
-@@ -613,6 +636,8 @@ static void do_getsockopts(struct so_state *s, int fd, size_t r, size_t w)
- 	do_getsockopt_reuseaddr(fd);
- 
+@@ -638,6 +677,8 @@ static void do_getsockopts(struct so_state *s, int fd, size_t r, size_t w)
  	do_getsockopt_reuseport(fd);
+ 
+ 	do_getsockopt_bindtodevice(fd);
 +
-+	do_getsockopt_bindtodevice(fd);
++	do_getsockopt_bindtoifindex(fd);
  }
  
  static void connect_one_server(int fd, int pipefd)
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-index 271d9777da54..948e54b50c43 100755
+index 948e54b50c43..8eae13f4da38 100755
 --- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
 +++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-@@ -281,6 +281,10 @@ do_mptcp_sockopt_tests()
+@@ -285,6 +285,10 @@ do_mptcp_sockopt_tests()
  	mptcp_lib_pr_ok
- 	mptcp_lib_result_pass "SO_REUSEPORT sockopt v4"
+ 	mptcp_lib_result_pass "SO_BINDTODEVICE sockopt v4"
  
-+	print_title "SO_BINDTODEVICE sockopt v4"
++	print_title "SO_BINDTOIFINDEX sockopt v4"
 +	mptcp_lib_pr_ok
-+	mptcp_lib_result_pass "SO_BINDTODEVICE sockopt v4"
++	mptcp_lib_result_pass "SO_BINDTOIFINDEX sockopt v4"
 +
  	ip netns exec "$ns_sbox" ./mptcp_sockopt -6
  	lret=$?
  
-@@ -303,6 +307,10 @@ do_mptcp_sockopt_tests()
- 	print_title "SO_REUSEPORT sockopt v6"
+@@ -311,6 +315,10 @@ do_mptcp_sockopt_tests()
+ 	print_title "SO_BINDTODEVICE sockopt v6"
  	mptcp_lib_pr_ok
- 	mptcp_lib_result_pass "SO_REUSEPORT sockopt v6"
+ 	mptcp_lib_result_pass "SO_BINDTODEVICE sockopt v6"
 +
-+	print_title "SO_BINDTODEVICE sockopt v6"
++	print_title "SO_BINDTOIFINDEX sockopt v6"
 +	mptcp_lib_pr_ok
-+	mptcp_lib_result_pass "SO_BINDTODEVICE sockopt v6"
++	mptcp_lib_result_pass "SO_BINDTOIFINDEX sockopt v6"
  }
  
  run_tests()
