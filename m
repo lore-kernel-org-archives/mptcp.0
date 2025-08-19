@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBA7124167B
-	for <mptcp@lists.linux.dev>; Tue, 19 Aug 2025 18:05:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C01424167B
+	for <mptcp@lists.linux.dev>; Tue, 19 Aug 2025 18:05:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755626736; cv=none; b=tEsqN4cua8Tvg5GkoFwqBaGuloRxKAgKtwzCUdOTikkmdurQahTP7DvjRb0Q4rDuEUcwL3v/1QnsZB2dnXhhlQurkII3lmwAuGPStU4o3I+WaKTcN1Yk5n565TtKgTXzE9zJoEhpHk7G6s50J5iachqd6tkXQrwK8zaApfNi7k0=
+	t=1755626738; cv=none; b=FnG0y+VvJ1rvThkMxPFPJ+Uppt5aJpg/whS7xyZhs41ES0J5aLF01Qk5Eol41TI4FbVskXsOuV895lOEq2EJ9Lzhh5L+vjA7J5E6P+QgSn/QacdSO2jyuvgnTDIKj/otoFSt4EYyOfsUdvf/taPKNIT0riXEhaizyWmIzrgTnUI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755626736; c=relaxed/simple;
-	bh=bwqiHDo59aLWTqIGmAjdVp9Gs2B6ml5/S4ZCOhwBcFs=;
+	s=arc-20240116; t=1755626738; c=relaxed/simple;
+	bh=kII41+dM+vQtQ5Kg9K89T0gp87e86s2kbSzYvsqn4bE=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To; b=bbWz3yWfrLUMVFJGh1M4HqwCf6z0A54YCR6RKGzkF5q0+mYoKyhW200wdu6hn/ymElBp1Wha00YAUDkJYe3K9ggJHD2+K/KDXv5tbQhZp6XE7xlsfBhbQUurJ/sLubB1XCvYvf3Qmkr6du0Ks63t8azpO0l5uF+cvU0QS6u2jgE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r+acDqlA; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To; b=kf2k6sDgmbm/GS8O2t9gjgJWwT6Y0jkNrmuBWgjJQsCsDOmX33Tc+mpEm2sW6oMHv01QUQajQTOrcPuXefPb1kdBFeQ28tj90aQwat44fyx+FoJG+ujEa4oQkcq/RiK2ADgeEybBkSraV6nsih3R9YO+Qpq0Fs5SwqvhMqfpWbY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CtQvtT8a; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r+acDqlA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 083A0C4CEF4
-	for <mptcp@lists.linux.dev>; Tue, 19 Aug 2025 18:05:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CtQvtT8a"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA3CEC116B1
+	for <mptcp@lists.linux.dev>; Tue, 19 Aug 2025 18:05:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755626736;
-	bh=bwqiHDo59aLWTqIGmAjdVp9Gs2B6ml5/S4ZCOhwBcFs=;
+	s=k20201202; t=1755626737;
+	bh=kII41+dM+vQtQ5Kg9K89T0gp87e86s2kbSzYvsqn4bE=;
 	h=From:Date:Subject:References:In-Reply-To:To:From;
-	b=r+acDqlAlhePVxS+LkPdDnNYdXOjizU+4+LAurlWsvB+3FF7QF0ttf8qg8Uj6PJD3
-	 588i/BCJLT5WWRJdlCIxy7CWxwWFWjWjyhcbhWnS2sA10T7309FyPK4U4SNec2wG6b
-	 EBAJp74IrYb98U7+uE9DdCkwl+IEtFcTT5qwi+uyfr/6nC4j7nkqkfZpEWGuaL2WCI
-	 34RTr3MOhh/nMzDCQ4K1o2IfyCJ8QFuRPWn0D9W+xDOXiTRR4Ge+tLDrfI62boeicB
-	 H7P7TqU4kb3sTrvim0/VdOgNGTWarXJPpK3rmsSIus6PFdGLcEHFoWaOLVzx7OI/wQ
-	 YuPajrcZynZKw==
+	b=CtQvtT8aflDvXBPtSGrn2rQeB8gtU17/EOH3gBDuJIjmWZGOwY+3Li/p6zvd+xmSu
+	 I/2a28fO5vzmDyt8roLe4s8sBnwVeGVjYykKPOhj9HRx+kS/NQqLlSwF5czpnZaINx
+	 6tMaf7cS0Yt6288xZBw4VlfBSEnZCh1Ov+5CPhneoAAgiscas76tXG1Aj0s1GaBgHm
+	 3PYg/taBF/kYMirGQmGJicsCs4FNgnCn1gb6rOVBGJ7GEeREfw164lyvx9uGe37Jtu
+	 4WJBQbFnd90n3H5/rYLBN5H41a1v7GQu3UbAiknHw2iMiuG/Mmo7CuuTeZS6Tr60yC
+	 Zij6gWSXahi5w==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Tue, 19 Aug 2025 20:05:21 +0200
-Subject: [PATCH mptcp-net 1/3] selftests: mptcp: connect: catch IO errors
- on listen side
+Date: Tue, 19 Aug 2025 20:05:22 +0200
+Subject: [PATCH mptcp-net 2/3] selftests: mptcp: avoid spurious errors on
+ TCP disconnect
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,68 +38,101 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250819-sft-mptcp-disc-err-v1-1-9d0cf296bc13@kernel.org>
+Message-Id: <20250819-sft-mptcp-disc-err-v1-2-9d0cf296bc13@kernel.org>
 References: <20250819-sft-mptcp-disc-err-v1-0-9d0cf296bc13@kernel.org>
 In-Reply-To: <20250819-sft-mptcp-disc-err-v1-0-9d0cf296bc13@kernel.org>
 To: mptcp@lists.linux.dev
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2077; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=bwqiHDo59aLWTqIGmAjdVp9Gs2B6ml5/S4ZCOhwBcFs=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDKW7HlzLTPo4cYvhyZ+ZbpyOUP8HLvti2iZklLuX2sZL
- NK1uNgyO0pZGMS4GGTFFFmk2yLzZz6v4i3x8rOAmcPKBDKEgYtTACZSXMnwVyQy/exCnejvLzk4
- t/Tf8np+JMdpU8Vk7s43m/qmb5hSNIXhr4y824bI5N3ntnKmbYhtr130e9t8dXNZXitvD7F05sz
- 7HAA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3994; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=kII41+dM+vQtQ5Kg9K89T0gp87e86s2kbSzYvsqn4bE=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDKW7HnrFjVTo5Vlytdr/d9uqbQ07mY5sLzZ8vypNsvOP
+ 1z2LdkOHaUsDGJcDLJiiizSbZH5M59X8ZZ4+VnAzGFlAhnCwMUpABNZuorhv19D24v5C4Nb9tzK
+ W7HGYldZwse63nMXerJrAqsvHpWw3cLwz0S2X2vht2X2v+bJ9jXefTBJ9OyFdX5+T8UPh50qO/F
+ tMg8A
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-IO errors were correctly printed to stderr, and propagated up to the
-main loop for the server side, but the returned value was ignored. As a
-consequence, the program for the listener side was no longer exiting
-with an error code in case of IO issues.
+The disconnect test-case, with 'plain' TCP sockets generates spurious
+errors, e.g.
 
-Because of that, some issues might not have been seen. But very likely,
-most issues either had an effect on the client side, or the file
-transfer was not the expected one, e.g. the connection got reset before
-the end. Still, it is better to fix this.
+  07 ns1 TCP   -> ns1 (dead:beef:1::1:10006) MPTCP
+  read: Connection reset by peer
+  read: Connection reset by peer
+  (duration   155ms) [FAIL] client exit code 3, server 3
 
-The main consequence of this issue is the error that was reported by the
-selftests: the received and sent files were different, and the MIB
-counters were not printed. Also, when such errors happened during the
-'disconnect' tests, the program tried to continue until the timeout.
+  netns ns1-FloSdv (listener) socket stat for 10006:
+  TcpActiveOpens                  2                  0.0
+  TcpPassiveOpens                 2                  0.0
+  TcpEstabResets                  2                  0.0
+  TcpInSegs                       274                0.0
+  TcpOutSegs                      276                0.0
+  TcpOutRsts                      3                  0.0
+  TcpExtPruneCalled               2                  0.0
+  TcpExtRcvPruned                 1                  0.0
+  TcpExtTCPPureAcks               104                0.0
+  TcpExtTCPRcvCollapsed           2                  0.0
+  TcpExtTCPBacklogCoalesce        42                 0.0
+  TcpExtTCPRcvCoalesce            43                 0.0
+  TcpExtTCPChallengeACK           1                  0.0
+  TcpExtTCPFromZeroWindowAdv      42                 0.0
+  TcpExtTCPToZeroWindowAdv        41                 0.0
+  TcpExtTCPWantZeroWindowAdv      13                 0.0
+  TcpExtTCPOrigDataSent           164                0.0
+  TcpExtTCPDelivered              165                0.0
+  TcpExtTCPRcvQDrop               1                  0.0
 
-Now when an IO error is detected, the program exits directly with an
-error.
+In the failing scenarios (TCP -> MPTCP), the involved sockets are
+actually plain TCP ones, as fallbacks for passive sockets at 2WHS time
+cause the MPTCP listeners to actually create 'plain' TCP sockets.
 
-Fixes: 05be5e273c84 ("selftests: mptcp: add disconnect tests")
+Similar to commit 218cc166321f ("selftests: mptcp: avoid spurious errors
+on disconnect"), the root cause is in the user-space bits: the test
+program tries to disconnect as soon as all the pending data has been
+spooled, generating an RST. If such option reaches the peer before the
+latter has reached the closed status, the TCP socket will report an
+error to the user-space, as per protocol specification, causing the
+above failure. Note that it looks like this issue got more visible since
+the "tcp: receiver changes" series from commit 06baf9bfa6ca ("Merge
+branch 'tcp-receiver-changes'").
+
+Address the issue by explicitly waiting for all the relevant TCP sockets
+to reach a closed status before performing the disconnect. More
+precisely, the test program now waits if there are still some sockets in
+ESTABLISHED, FIN_WAIT_1, LAST_ACK, or CLOSING. So there is a reconnect
+only in case of FIN_WAIT_2, CLOSE_WAIT, TIME_WAIT, and CLOSED sockets.
+
+While at it, use 'ss' with '-n' to avoid resolving service names which
+is not needed here.
+
+Fixes: 218cc166321f ("selftests: mptcp: avoid spurious errors on disconnect")
+Suggested-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- tools/testing/selftests/net/mptcp/mptcp_connect.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ tools/testing/selftests/net/mptcp/mptcp_connect.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-index 4f07ac9fa207cb08a934582b98d688d0b9512f97..c1586a7286123a509495ac319fd624b98f0bfd18 100644
+index c1586a7286123a509495ac319fd624b98f0bfd18..00b0307b7da2236fd3ba4ec4b6cec91b6b4b2538 100644
 --- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
 +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-@@ -1112,6 +1112,8 @@ int main_loop_s(int listensock)
- 	salen = sizeof(ss);
- 	remotesock = accept(listensock, (struct sockaddr *)&ss, &salen);
- 	if (remotesock >= 0) {
-+		int err;
-+
- 		maybe_close(listensock);
- 		check_sockaddr(pf, &ss, salen);
- 		check_getpeername(remotesock, &ss, salen);
-@@ -1125,7 +1127,9 @@ int main_loop_s(int listensock)
- 		SOCK_TEST_TCPULP(remotesock, 0);
+@@ -1251,7 +1251,7 @@ void xdisconnect(int fd)
+ 	else
+ 		xerror("bad family");
  
- 		memset(&winfo, 0, sizeof(winfo));
--		copyfd_io(fd, remotesock, 1, true, &winfo);
-+		err = copyfd_io(fd, remotesock, 1, true, &winfo);
-+		if (err)
-+			return err;
- 	} else {
- 		perror("accept");
- 		return 1;
+-	strcpy(cmd, "ss -M | grep -q ");
++	strcpy(cmd, "ss -Mnt state established state fin-wait-1 state last-ack state closing | grep -q ");
+ 	cmdlen = strlen(cmd);
+ 	if (!inet_ntop(addr.ss_family, raw_addr, &cmd[cmdlen],
+ 		       sizeof(cmd) - cmdlen))
+@@ -1261,7 +1261,7 @@ void xdisconnect(int fd)
+ 
+ 	/*
+ 	 * wait until the pending data is completely flushed and all
+-	 * the MPTCP sockets reached the closed status.
++	 * the sockets reached the closed status.
+ 	 * disconnect will bypass/ignore/drop any pending data.
+ 	 */
+ 	for (i = 0; ; i += msec_sleep) {
 
 -- 
 2.50.0
