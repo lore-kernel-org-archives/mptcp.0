@@ -1,143 +1,102 @@
-Received: from mail-io1-f78.google.com (mail-io1-f78.google.com [209.85.166.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FEDE305063
-	for <mptcp@lists.linux.dev>; Wed, 20 Aug 2025 12:41:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D27F2BEC28;
+	Wed, 20 Aug 2025 15:00:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755693691; cv=none; b=MrFR0COwkwh90Uv0pGHnox2hN8O90buioBvbv5+Q+koKkygmxp03HLdlFX4icBd3hyw/fDzURpo7nSGx1RUypqmKxLOMSZSbMfQlaSgc0x2fcMfc25ez3PkDXdhGf80qT4vtWHDDeIy3vvhniqJ1N1+JqCynyFnjMwF1wp19hdY=
+	t=1755702014; cv=none; b=cNXQTEqCsiSSazZ+kWnVe1KekoxJXW+ZOOLhrXuQaXn9SRh5Q7YJfKIN78HRR27sn4VUBxJAIt+2EalWwUMUAtI1U9S4TVO3qj0NcpsQsy8OKYrR7obxQY62Bt3/HovT5zp5uefulYly3FLvEevIbi+ckLw55yB9Nb27zJI3fY8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755693691; c=relaxed/simple;
-	bh=x78F7lRawwe1Z0wXQDL/XNv/NO5uAviym5okoWYCCG4=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=bkxMSEYZDLm0NKTdRwEAvUDot4oCREYvgg7ApL4J4IzUDZ+pphXECiaHg4zSSresQKfS0RItyV+J+0K3Yf+tldBu+gb3W7G88zA8XDm/VXWmfWa61grkZHgVSeT+5GzYNnwzOsSoueuGmeuPpBiRbTYzJWfrKHyyQuDcS8z5exo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f78.google.com with SMTP id ca18e2360f4ac-88432e3c4ffso675528639f.3
-        for <mptcp@lists.linux.dev>; Wed, 20 Aug 2025 05:41:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755693688; x=1756298488;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=79PojQnQKnnfTCReFZXRMGbZgUX1Dqbfz+VlKTtOi18=;
-        b=QwI38p4uXpy0YCDGsYwCy4ztej4UBQv0p3tSETT45Zy763nkFNKG1eVApkS8wiMWuJ
-         6oa3bfj2drIYhN/Zopd9vCpcwVLgA388jN/AAI5VYBk/MHk7zs/a4TOBq1kqxa10jGfJ
-         DWWcIDIn4supXT5bX0NZb3/vFVdIabd0RaYcat+LQITnhXrkT5G+OgGX6nHB3E8IKwR4
-         VcupxU5U1ZSbQ6jyukLBaZO7qN5Z7gDujXLaCBVgISTgkDks6vG6vqAfc8ieIZxuIPZ5
-         XR2RdsTUAIDudJnrRF2fE3LOV3GRfFMYuFqEw38YxskUdVuheTqJF5zSXVXDpNElH+EH
-         9v4A==
-X-Forwarded-Encrypted: i=1; AJvYcCV0lUNsfPb2jY/6AyL3qiOTP1oV8138oKIZmsxhzerqbxupSSDhvNcPdBB2JNwU/pQbZrI1/Q==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yx0NAQerx00njuFs2JrdptD6+tucg+gCcWq3J1X9mA90hwHwz+3
-	CMP5SP5aNtDbd1gUDMSZSEyHAHXYIyLaUUXlWo5If8eP0la8+06Q8LNfNH/QaYX6Ri6tDnXWzBH
-	JBMerji7UgmeZXqhqzk3MN9z/I1CVrjPn5675vE+HHrp6kisD+1yoFMPkEIE=
-X-Google-Smtp-Source: AGHT+IFbfTZVAfWArENtiYam9/cfnU1Ih1mBxJ8G64Cy9UG+vCbIq/2GwOYnouO9KA9ie9GdDmE6X0qZekWRu8sDNSc09b/nGd6w
+	s=arc-20240116; t=1755702014; c=relaxed/simple;
+	bh=5VGDh1deFiHXVnIppXw95FTI+vfIah2j7mM90eoiq7U=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=gSmhgZc+9mGClk3a39KvJ3xYq5kuez8gpJa26xgadsGpuz1OjXv/jka4zRUOE7De4RufIb12n8sBl/q/gxbnl03z36E9ZIQYXIRxUOdQHKiX7G6a/p/lsEhcI6N0G0Me5/1ZXCBx/dkS91t0vdLHY0VbAf2xBtLtUXFfflsAGoA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PuCHCwzO; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PuCHCwzO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1EC3C4CEE7;
+	Wed, 20 Aug 2025 15:00:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1755702014;
+	bh=5VGDh1deFiHXVnIppXw95FTI+vfIah2j7mM90eoiq7U=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=PuCHCwzOkC+TBoUD7rnBo3Wg1ej0Od39GERmYmfaz6tHGalTfP+RfciJl+qNjgu5z
+	 TPSNNyzZEBYYDwgxAvb4rqNf7gjt04mViK0eISjRBas7drErS9Gfe/VpMU9Lp5r4nl
+	 w1kzGAQbEwksJDLWMQAxnunKieLdJpwYwm55uhOVgyJ2Qlnb69fdLeMH5olssKVHjZ
+	 Nv3WjN6tXI9clLIVHWceMZzaXouR5DaamwVzFRFfmdlJLv8RyMgAeO3sIrmzcnntbQ
+	 BRU/v73nkMORi/iT3oTf40wQKLhPxQZOZgHToNWtTpJQtUCbdQv3BV71uNpQD5ac6m
+	 HIdM6uf+VRD0Q==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id AE423383BF4E;
+	Wed, 20 Aug 2025 15:00:24 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:388b:b0:87c:1d65:3aeb with SMTP id
- ca18e2360f4ac-884717e502bmr595120439f.2.1755693688491; Wed, 20 Aug 2025
- 05:41:28 -0700 (PDT)
-Date: Wed, 20 Aug 2025 05:41:28 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <68a5c278.050a0220.3d78fd.0000.GAE@google.com>
-Subject: [syzbot] [mptcp?] WARNING in subflow_data_ready (4)
-From: syzbot <syzbot+0ff6b771b4f7a5bce83b@syzkaller.appspotmail.com>
-To: davem@davemloft.net, edumazet@google.com, geliang@kernel.org, 
-	horms@kernel.org, kuba@kernel.org, linux-kernel@vger.kernel.org, 
-	martineau@kernel.org, matttbe@kernel.org, mptcp@lists.linux.dev, 
-	netdev@vger.kernel.org, pabeni@redhat.com, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v5 net-next 00/10] net-memcg: Gather memcg code under
+ CONFIG_MEMCG.
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <175570202351.267477.6309911387508861679.git-patchwork-notify@kernel.org>
+Date: Wed, 20 Aug 2025 15:00:23 +0000
+References: <20250815201712.1745332-1-kuniyu@google.com>
+In-Reply-To: <20250815201712.1745332-1-kuniyu@google.com>
+To: Kuniyuki Iwashima <kuniyu@google.com>
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ ncardwell@google.com, pabeni@redhat.com, willemb@google.com,
+ matttbe@kernel.org, martineau@kernel.org, hannes@cmpxchg.org,
+ mhocko@kernel.org, roman.gushchin@linux.dev, shakeel.butt@linux.dev,
+ akpm@linux-foundation.org, mkoutny@suse.com, tj@kernel.org, horms@kernel.org,
+ geliang@kernel.org, muchun.song@linux.dev, almasrymina@google.com,
+ kuni1840@gmail.com, netdev@vger.kernel.org, mptcp@lists.linux.dev,
+ cgroups@vger.kernel.org, linux-mm@kvack.org
 
-Hello,
+Hello:
 
-syzbot found the following issue on:
+This series was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-HEAD commit:    b19a97d57c15 Merge tag 'pull-fixes' of git://git.kernel.or..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=174817a2580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=b7511150b112b9c3
-dashboard link: https://syzkaller.appspot.com/bug?extid=0ff6b771b4f7a5bce83b
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+On Fri, 15 Aug 2025 20:16:08 +0000 you wrote:
+> This series converts most sk->sk_memcg access to helper functions
+> under CONFIG_MEMCG and finally defines sk_memcg under CONFIG_MEMCG.
+> 
+> This is v5 of the series linked below but without core changes
+> that decoupled memcg and global socket memory accounting.
+> 
+> I will defer the changes to a follow-up series that will use BPF
+> to store a flag in sk->sk_memcg.
+> 
+> [...]
 
-Unfortunately, I don't have any reproducer for this issue yet.
+Here is the summary with links:
+  - [v5,net-next,01/10] mptcp: Fix up subflow's memcg when CONFIG_SOCK_CGROUP_DATA=n.
+    https://git.kernel.org/netdev/net-next/c/68889dfd547b
+  - [v5,net-next,02/10] mptcp: Use tcp_under_memory_pressure() in mptcp_epollin_ready().
+    https://git.kernel.org/netdev/net-next/c/1068b48ed108
+  - [v5,net-next,03/10] tcp: Simplify error path in inet_csk_accept().
+    https://git.kernel.org/netdev/net-next/c/e2afa83296bb
+  - [v5,net-next,04/10] net: Call trace_sock_exceed_buf_limit() for memcg failure with SK_MEM_RECV.
+    https://git.kernel.org/netdev/net-next/c/9d85c565a7b7
+  - [v5,net-next,05/10] net: Clean up __sk_mem_raise_allocated().
+    https://git.kernel.org/netdev/net-next/c/bd4aa2337374
+  - [v5,net-next,06/10] net-memcg: Introduce mem_cgroup_from_sk().
+    https://git.kernel.org/netdev/net-next/c/f7161b234f2e
+  - [v5,net-next,07/10] net-memcg: Introduce mem_cgroup_sk_enabled().
+    https://git.kernel.org/netdev/net-next/c/43049b0db038
+  - [v5,net-next,08/10] net-memcg: Pass struct sock to mem_cgroup_sk_(un)?charge().
+    https://git.kernel.org/netdev/net-next/c/bb178c6bc085
+  - [v5,net-next,09/10] net-memcg: Pass struct sock to mem_cgroup_sk_under_memory_pressure().
+    https://git.kernel.org/netdev/net-next/c/b2ffd10cddde
+  - [v5,net-next,10/10] net: Define sk_memcg under CONFIG_MEMCG.
+    https://git.kernel.org/netdev/net-next/c/bf64002c94fc
 
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/d900f083ada3/non_bootable_disk-b19a97d5.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/d6e98c49ae62/vmlinux-b19a97d5.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/c90ded1d8e17/bzImage-b19a97d5.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+0ff6b771b4f7a5bce83b@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-WARNING: CPU: 3 PID: 33 at net/mptcp/subflow.c:1515 subflow_data_ready+0x40b/0x7c0 net/mptcp/subflow.c:1515
-Modules linked in:
-CPU: 3 UID: 0 PID: 33 Comm: ksoftirqd/3 Not tainted syzkaller #0 PREEMPT(full) 
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-RIP: 0010:subflow_data_ready+0x40b/0x7c0 net/mptcp/subflow.c:1515
-Code: 89 ee e8 78 61 3c f6 40 84 ed 75 21 e8 8e 66 3c f6 44 89 fe bf 07 00 00 00 e8 c1 61 3c f6 41 83 ff 07 74 09 e8 76 66 3c f6 90 <0f> 0b 90 e8 6d 66 3c f6 48 89 df e8 e5 ad ff ff 31 ff 89 c5 89 c6
-RSP: 0018:ffffc900006cf338 EFLAGS: 00010246
-RAX: 0000000000000000 RBX: ffff888031acd100 RCX: ffffffff8b7f2abf
-RDX: ffff88801e6ea440 RSI: ffffffff8b7f2aca RDI: 0000000000000005
-RBP: 0000000000000000 R08: 0000000000000005 R09: 0000000000000007
-R10: 0000000000000004 R11: 0000000000002c10 R12: ffff88802ba69900
-R13: 1ffff920000d9e67 R14: ffff888046f81800 R15: 0000000000000004
-FS:  0000000000000000(0000) GS:ffff8880d69bc000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000560fc0ca1670 CR3: 0000000032c3a000 CR4: 0000000000352ef0
-Call Trace:
- <TASK>
- tcp_data_queue+0x13b0/0x4f90 net/ipv4/tcp_input.c:5197
- tcp_rcv_state_process+0xfdf/0x4ec0 net/ipv4/tcp_input.c:6922
- tcp_v6_do_rcv+0x492/0x1740 net/ipv6/tcp_ipv6.c:1672
- tcp_v6_rcv+0x2976/0x41e0 net/ipv6/tcp_ipv6.c:1918
- ip6_protocol_deliver_rcu+0x188/0x1520 net/ipv6/ip6_input.c:438
- ip6_input_finish+0x1e4/0x4b0 net/ipv6/ip6_input.c:489
- NF_HOOK include/linux/netfilter.h:318 [inline]
- NF_HOOK include/linux/netfilter.h:312 [inline]
- ip6_input+0x105/0x2f0 net/ipv6/ip6_input.c:500
- dst_input include/net/dst.h:471 [inline]
- ip6_rcv_finish net/ipv6/ip6_input.c:79 [inline]
- NF_HOOK include/linux/netfilter.h:318 [inline]
- NF_HOOK include/linux/netfilter.h:312 [inline]
- ipv6_rcv+0x264/0x650 net/ipv6/ip6_input.c:311
- __netif_receive_skb_one_core+0x12d/0x1e0 net/core/dev.c:5979
- __netif_receive_skb+0x1d/0x160 net/core/dev.c:6092
- process_backlog+0x442/0x15e0 net/core/dev.c:6444
- __napi_poll.constprop.0+0xba/0x550 net/core/dev.c:7494
- napi_poll net/core/dev.c:7557 [inline]
- net_rx_action+0xa9f/0xfe0 net/core/dev.c:7684
- handle_softirqs+0x216/0x8e0 kernel/softirq.c:579
- run_ksoftirqd kernel/softirq.c:968 [inline]
- run_ksoftirqd+0x3a/0x60 kernel/softirq.c:960
- smpboot_thread_fn+0x3f7/0xae0 kernel/smpboot.c:160
- kthread+0x3c2/0x780 kernel/kthread.c:463
- ret_from_fork+0x5d7/0x6f0 arch/x86/kernel/process.c:148
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
- </TASK>
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
