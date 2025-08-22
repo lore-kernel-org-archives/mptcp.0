@@ -1,52 +1,51 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D0D630DED8;
-	Fri, 22 Aug 2025 14:18:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C31230E0F2;
+	Fri, 22 Aug 2025 14:43:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755872315; cv=none; b=SrRn9CMEpFNhdVdejNbGbUpEOOPMBG9HmGo9Ln3i31MvrWEjZ3MNoIZ4qh7f+CchUda47NnYcxT4ObuY2kIvkhiM9Kq+N7tbr0BiR+4ar2AX3lojTZFkUv/V89Y7FXc3do985/9WRwDjO0cjMEvg3mSAxxGtuYZmo4k3abdlhTU=
+	t=1755873818; cv=none; b=A3yqRxta92TS76QiZDVw+8/t8Z6to23Z/L3PQhKPmJJxz+sit8tlCv4NGr+rwaL+gSvVCPItnPULnQMNGAmE4v1m4hEo5CL0mazTApln6/lDnXhQbVzp4yfJZlOPu2Zg8iG/TYEojhP47OZ57Igh+RrvhmqpmTCCt17rUAhsKG0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755872315; c=relaxed/simple;
-	bh=6bFa9fPxNY3+q5whHPEc+1EaORiYqtuwfH3QyCrobYA=;
+	s=arc-20240116; t=1755873818; c=relaxed/simple;
+	bh=qRISSD0T4GCUU5yfMH4uUcJGBBZhh2NGiVvlvLAJsls=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GU8TAaArkuGmtsS0bOx2ry8IaDVsQ1JyMGJqiRJVCHJ2z9+u+JNNJavNkH9p9ioGUYcr9kAfSNxcX0pTvqnc4vwAxCoNA3aYuTYBj7eYaNwlu2KVQf7FHoLv6oxfGxzyLXrtzzJY8xT3XICK9L8z6G+yyBl1Wb/SlpDu203SZ9k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u0VmuuER; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=BJQ7DSYc0iOWcjOwAb0o21+m3eTwoKcyEc382wFO+OsHdAOXQy0da6OcE8RItqx3aV+PvSabFibw4+Vc4T/yIVIKredMUU6ByCc/nwp/Gf+kuVOLtkNBm+rP+3xOk0bIHKSz+2DVUv/E79hSgc/ReBXlPHvSfiWFhSisdjOst30=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FmVWSfFx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u0VmuuER"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35401C113CF;
-	Fri, 22 Aug 2025 14:18:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FmVWSfFx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B057C113D0;
+	Fri, 22 Aug 2025 14:43:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755872313;
-	bh=6bFa9fPxNY3+q5whHPEc+1EaORiYqtuwfH3QyCrobYA=;
+	s=k20201202; t=1755873817;
+	bh=qRISSD0T4GCUU5yfMH4uUcJGBBZhh2NGiVvlvLAJsls=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=u0VmuuER3NUzjs25xmrHUXxcdJo2GrfiuzDw6ZurIgH3g4YXhkr/w5VezVU0BuBgE
-	 HvwDqobXnK2p/S6dxk3DsvlkhRSEyv7OMPk9tvQaqrISqew+i1HLs5udoi8l5Sxo6/
-	 opm4hQCxeUEUYcyhcvydo2y8yh/loggWKD3xRkInc9U5kcB+PE9CduOX3II28QkIaL
-	 GX/kr8kw3lo0pCuTrLurrsGsoBC9hkluuLYbSjlLPCzAjBTa5/qagzKXgt3bQ2mmMS
-	 PT8uM0a0KXY2F7cWo4A0pFGROrNazY0asR96TyPkhFY9e3VCxJiK8jHCzYMgHKHwuN
-	 JcYcn014t5g1w==
+	b=FmVWSfFxfvPzNW9yF8I6Ns5tut7zVDaSFvHmN1oA2XbGQ8KYIU8DWdS/AKzPoUD3c
+	 fzC6YUROLgK/YpqaR7g++EcUrj4mEkbXWPsldcmzeOM90SZX/W6Q9WWc06nC30T8l0
+	 zzrEYQ23P7peIafDaCqzJaRPBnySFirOEzjo58iy+WpxbVcTkXjwQDV6OeP3BmRgMC
+	 h4vToYfXTaV8WJhF2yFMtbtvYcRFUeu60mzVS/80lb0QqnThy2xIy1kg6G1/j/YVw0
+	 WPTQnNBxQu7MeHaSWOySL0A4V5hRCbYlOvI1fac5BkgGFoCG4vlLCcTC/hdBznuhcI
+	 8C5Fysnp0AO5Q==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-To: mptcp@lists.linux.dev,
-	stable@vger.kernel.org,
+To: stable@vger.kernel.org,
 	gregkh@linuxfoundation.org
-Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>,
-	sashal@kernel.org,
+Cc: MPTCP Upstream <mptcp@lists.linux.dev>,
+	"Matthieu Baerts (NGI0)" <matttbe@kernel.org>,
 	Mat Martineau <martineau@kernel.org>,
 	Jakub Kicinski <kuba@kernel.org>
-Subject: [PATCH 5.15.y 2/2] selftests: mptcp: pm: check flush doesn't reset limits
-Date: Fri, 22 Aug 2025 16:18:19 +0200
-Message-ID: <20250822141816.61599-6-matttbe@kernel.org>
+Subject: [PATCH 5.10.y] selftests: mptcp: pm: check flush doesn't reset limits
+Date: Fri, 22 Aug 2025 16:43:29 +0200
+Message-ID: <20250822144328.108718-2-matttbe@kernel.org>
 X-Mailer: git-send-email 2.50.0
-In-Reply-To: <20250822141816.61599-4-matttbe@kernel.org>
-References: <20250822141816.61599-4-matttbe@kernel.org>
+In-Reply-To: <2025082203-populate-sublease-ef51@gregkh>
+References: <2025082203-populate-sublease-ef51@gregkh>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1989; i=matttbe@kernel.org; h=from:subject; bh=6bFa9fPxNY3+q5whHPEc+1EaORiYqtuwfH3QyCrobYA=; b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDJW1Og4NLl8E5v8UfRvymfThzsz12hVnLvy7Hl69omc8 0U9R5496yhlYRDjYpAVU2SRbovMn/m8irfEy88CZg4rE8gQBi5OAZiIfTDDf7f8Jcp/Pj6c7bOA YcvbjSnvt1tbL2CMU1RoSJR7yiIb+IiR4azBBs3bHS9Ef/h2zrwtef9P18WvD4rlent8p1RJcW2 9xwIA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2332; i=matttbe@kernel.org; h=from:subject; bh=qRISSD0T4GCUU5yfMH4uUcJGBBZhh2NGiVvlvLAJsls=; b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDJWNAnu/bps+XZ/2+DLnuGVS48t6DuhtlTS9bLSiUDHi 0v6f+j96ChlYRDjYpAVU2SRbovMn/m8irfEy88CZg4rE8gQBi5OAZiIizHD/7rngS/9NH6xzD+S Var9w4qnz791R/7+q9bHepyT1xqkqzMy/P3DX9CdEerO8vqwzB8b5yfnbiXcN66Yd2zny1+Jz5+ VcgAA
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 Content-Transfer-Encoding: 8bit
 
@@ -76,14 +75,20 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
   still be done at the same place, without using the new helper. ]
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
+Note: this patch is validating the upstream's parent patch, commit
+68fc0f4b0d25 ("mptcp: pm: kernel: flush: do not reset ADD_ADDR limit"),
+which has not been queued in the v5.10 queue yet. I'm already sending
+this patch, because I got the FAILED notification, and the resolution is
+the same as previous patches I sent earlier today.
+---
  tools/testing/selftests/net/mptcp/pm_netlink.sh | 1 +
  1 file changed, 1 insertion(+)
 
 diff --git a/tools/testing/selftests/net/mptcp/pm_netlink.sh b/tools/testing/selftests/net/mptcp/pm_netlink.sh
-index 306372b1526a..68e05bd3526e 100755
+index fff6f74ebe16..7d194f5c2939 100755
 --- a/tools/testing/selftests/net/mptcp/pm_netlink.sh
 +++ b/tools/testing/selftests/net/mptcp/pm_netlink.sh
-@@ -131,6 +131,7 @@ ip netns exec $ns1 ./pm_nl_ctl limits 1 9
+@@ -130,6 +130,7 @@ ip netns exec $ns1 ./pm_nl_ctl limits 1 9
  check "ip netns exec $ns1 ./pm_nl_ctl limits" "$default_limits" "subflows above hard limit"
  
  ip netns exec $ns1 ./pm_nl_ctl limits 8 8
