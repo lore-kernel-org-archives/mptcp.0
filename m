@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76FBE393DCA;
-	Fri, 22 Aug 2025 13:44:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 001732FC037;
+	Fri, 22 Aug 2025 13:45:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755870295; cv=none; b=E8WzSZESzuahZI/vqx23K4mTz/5/elcifqeMUvQMjccQPcMWewVjOM/S8e2VjP8FBazp/cxvzP+tEYzoc5tyoQyVRHp7QbuyivvKbA5OpMwkVNufnWyhF3SlavXOt9m1uF3FAC4+k5Hs70hu5W4MfFK/Wm2IaytS5kJ7YiOkWJk=
+	t=1755870302; cv=none; b=WA7PoaDcBFuqufu8bAeiQrPqpKNWc/jWFisSE0Xq1GytgARyx+3EMfDBFaDIL19TSz4PJUPOeNWxyJAP3RMxzeanjKiY3WtF3jlSfYuNMkTZ6g+5FzLG6b8EMzBhz3eY3Oib/HcMbuinTs5cCEvSwjvmAVuGpHx3Uhopp+bcZLE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755870295; c=relaxed/simple;
-	bh=EIwHuyxP2MSL6+7eZkVRxuERPInFHTczjz2SaeTDb5w=;
+	s=arc-20240116; t=1755870302; c=relaxed/simple;
+	bh=xI/f9mBgeAfjIahCp7z7rr87cw0ANBZFpcGl2UMIGbI=;
 	h=Subject:To:Cc:From:Date:In-Reply-To:Message-ID:MIME-Version:
-	 Content-Type; b=fFs2qjTVGph143B2eBBFCN9DKcHY2THbuv3zZYe75jeJamaPy1eP9Do55FIO5IB6xxaDTPVLAq0voJTRcMt92RmG1QGVTVyNqaRIxrCxksccExxeQrisU2juSXc2Qkbd6iCgqS7XdomjokHUs/4CRnUM/vvqj6tPscTWEd0PLMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=lEux/KIp; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type; b=AsQzTQXU0lLpu668gq0vvkGs5P1c//qiYzWRpmXHus/dxQw0vhx2WYphApYMbb0LzUGJiiLU5aDVBGebUcCVxNPkc8lLTEEaOKkJxb8Ii04t9NVj8SJjAKwJ8LqdLMM18Fwqz61Dxu5eTxKGfPSouRiZMj/Zp7Lj+VLG0JYZNX8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=crm0p/f1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="lEux/KIp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26940C4CEED;
-	Fri, 22 Aug 2025 13:44:53 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="crm0p/f1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 046E8C113CF;
+	Fri, 22 Aug 2025 13:45:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1755870294;
-	bh=EIwHuyxP2MSL6+7eZkVRxuERPInFHTczjz2SaeTDb5w=;
+	s=korg; t=1755870301;
+	bh=xI/f9mBgeAfjIahCp7z7rr87cw0ANBZFpcGl2UMIGbI=;
 	h=Subject:To:Cc:From:Date:In-Reply-To:From;
-	b=lEux/KIpfWYB+tEk+vJT7H1Ogjy8moIIPid64ko/S38bO5tzv+f73w2/FGQoeB845
-	 7YnHsLh89zKLoHXQi0fJdBta2JTD3IgVoGUUZvNixdQJQXXxCcabRzRL5PAt8vv1dp
-	 NKterWKWWfR3minX81pWDs8qQ+GLF7u6egDWHEjY=
-Subject: Patch "mptcp: do not queue data on closed subflows" has been added to the 5.15-stable tree
-To: davem@davemloft.net,gregkh@linuxfoundation.org,mail.dipanjan.das@gmail.com,mathew.j.martineau@linux.intel.com,matttbe@kernel.org,mptcp@lists.linux.dev,pabeni@redhat.com,sashal@kernel.org
+	b=crm0p/f1w0SCa1Sa0+gmPGtwY4j3Y2ikU7rmkozv7Z6PeObIVjFatK4hBH0LYsHNf
+	 A9RvOHvbw3r7HKJtTPWso1d5dYGg0T8MoIWEHgvYfFxjevJaAfVHj8cTkqeS6jYsMK
+	 qdWClrWUkpk9vnEbZUjbSq1p/MLAqf0K+v1EZMWs=
+Subject: Patch "mptcp: fix error mibs accounting" has been added to the 5.15-stable tree
+To: gregkh@linuxfoundation.org,kuba@kernel.org,mathew.j.martineau@linux.intel.com,matttbe@kernel.org,mptcp@lists.linux.dev,pabeni@redhat.com,sashal@kernel.org
 Cc: <stable-commits@vger.kernel.org>
 From: <gregkh@linuxfoundation.org>
-Date: Fri, 22 Aug 2025 15:44:33 +0200
-In-Reply-To: <20250731112353.2638719-14-matttbe@kernel.org>
-Message-ID: <2025082233-employer-pulverize-b1ba@gregkh>
+Date: Fri, 22 Aug 2025 15:44:34 +0200
+In-Reply-To: <20250731112353.2638719-10-matttbe@kernel.org>
+Message-ID: <2025082234-unchain-washboard-afab@gregkh>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -44,149 +44,74 @@ X-Patchwork-Hint: ignore
 
 This is a note to let you know that I've just added the patch titled
 
-    mptcp: do not queue data on closed subflows
+    mptcp: fix error mibs accounting
 
 to the 5.15-stable tree which can be found at:
     http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
 
 The filename of the patch is:
-     mptcp-do-not-queue-data-on-closed-subflows.patch
+     mptcp-fix-error-mibs-accounting.patch
 and it can be found in the queue-5.15 subdirectory.
 
 If you, or anyone else, feels it should not be added to the stable tree,
 please let <stable@vger.kernel.org> know about it.
 
 
-From stable+bounces-165651-greg=kroah.com@vger.kernel.org Thu Jul 31 13:24:31 2025
+From stable+bounces-165647-greg=kroah.com@vger.kernel.org Thu Jul 31 13:24:24 2025
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Thu, 31 Jul 2025 13:24:00 +0200
-Subject: mptcp: do not queue data on closed subflows
+Date: Thu, 31 Jul 2025 13:23:56 +0200
+Subject: mptcp: fix error mibs accounting
 To: mptcp@lists.linux.dev, stable@vger.kernel.org, gregkh@linuxfoundation.org
-Cc: Paolo Abeni <pabeni@redhat.com>, sashal@kernel.org, Dipanjan Das <mail.dipanjan.das@gmail.com>, Mat Martineau <mathew.j.martineau@linux.intel.com>, "David S. Miller" <davem@davemloft.net>, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Message-ID: <20250731112353.2638719-14-matttbe@kernel.org>
+Cc: Paolo Abeni <pabeni@redhat.com>, sashal@kernel.org, Mat Martineau <mathew.j.martineau@linux.intel.com>, Jakub Kicinski <kuba@kernel.org>, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Message-ID: <20250731112353.2638719-10-matttbe@kernel.org>
 
 From: Paolo Abeni <pabeni@redhat.com>
 
-commit c886d70286bf3ad411eb3d689328a67f7102c6ae upstream.
+commit 0c1f78a49af721490a5ad70b73e8b4d382465dae upstream.
 
-Dipanjan reported a syzbot splat at close time:
+The current accounting for MP_FAIL and FASTCLOSE is not very
+accurate: both can be increased even when the related option is
+not really sent. Move the accounting into the correct place.
 
-WARNING: CPU: 1 PID: 10818 at net/ipv4/af_inet.c:153
-inet_sock_destruct+0x6d0/0x8e0 net/ipv4/af_inet.c:153
-Modules linked in: uio_ivshmem(OE) uio(E)
-CPU: 1 PID: 10818 Comm: kworker/1:16 Tainted: G           OE
-5.19.0-rc6-g2eae0556bb9d #2
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
-1.13.0-1ubuntu1.1 04/01/2014
-Workqueue: events mptcp_worker
-RIP: 0010:inet_sock_destruct+0x6d0/0x8e0 net/ipv4/af_inet.c:153
-Code: 21 02 00 00 41 8b 9c 24 28 02 00 00 e9 07 ff ff ff e8 34 4d 91
-f9 89 ee 4c 89 e7 e8 4a 47 60 ff e9 a6 fc ff ff e8 20 4d 91 f9 <0f> 0b
-e9 84 fe ff ff e8 14 4d 91 f9 0f 0b e9 d4 fd ff ff e8 08 4d
-RSP: 0018:ffffc9001b35fa78 EFLAGS: 00010246
-RAX: 0000000000000000 RBX: 00000000002879d0 RCX: ffff8881326f3b00
-RDX: 0000000000000000 RSI: ffff8881326f3b00 RDI: 0000000000000002
-RBP: ffff888179662674 R08: ffffffff87e983a0 R09: 0000000000000000
-R10: 0000000000000005 R11: 00000000000004ea R12: ffff888179662400
-R13: ffff888179662428 R14: 0000000000000001 R15: ffff88817e38e258
-FS:  0000000000000000(0000) GS:ffff8881f5f00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000020007bc0 CR3: 0000000179592000 CR4: 0000000000150ee0
-Call Trace:
- <TASK>
- __sk_destruct+0x4f/0x8e0 net/core/sock.c:2067
- sk_destruct+0xbd/0xe0 net/core/sock.c:2112
- __sk_free+0xef/0x3d0 net/core/sock.c:2123
- sk_free+0x78/0xa0 net/core/sock.c:2134
- sock_put include/net/sock.h:1927 [inline]
- __mptcp_close_ssk+0x50f/0x780 net/mptcp/protocol.c:2351
- __mptcp_destroy_sock+0x332/0x760 net/mptcp/protocol.c:2828
- mptcp_worker+0x5d2/0xc90 net/mptcp/protocol.c:2586
- process_one_work+0x9cc/0x1650 kernel/workqueue.c:2289
- worker_thread+0x623/0x1070 kernel/workqueue.c:2436
- kthread+0x2e9/0x3a0 kernel/kthread.c:376
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:302
- </TASK>
-
-The root cause of the problem is that an mptcp-level (re)transmit can
-race with mptcp_close() and the packet scheduler checks the subflow
-state before acquiring the socket lock: we can try to (re)transmit on
-an already closed ssk.
-
-Fix the issue checking again the subflow socket status under the
-subflow socket lock protection. Additionally add the missing check
-for the fallback-to-tcp case.
-
-Fixes: d5f49190def6 ("mptcp: allow picking different xmit subflows")
-Reported-by: Dipanjan Das <mail.dipanjan.das@gmail.com>
-Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Fixes: eb7f33654dc1 ("mptcp: add the mibs for MP_FAIL")
+Fixes: 1e75629cb964 ("mptcp: add the mibs for MP_FASTCLOSE")
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+[ Conflicts, because commit f284c0c77321 ("mptcp: implement fastclose
+  xmit path") is not in this version. That's OK, the new helper added
+  by this commit doesn't need to be modified. ]
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/mptcp/protocol.c |    8 +++++++-
- net/mptcp/protocol.h |   11 +++++++----
- 2 files changed, 14 insertions(+), 5 deletions(-)
+ net/mptcp/options.c |    1 +
+ net/mptcp/subflow.c |    4 +---
+ 2 files changed, 2 insertions(+), 3 deletions(-)
 
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1350,6 +1350,9 @@ static int mptcp_sendmsg_frag(struct soc
- 			 info->limit > dfrag->data_len))
- 		return 0;
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -793,6 +793,7 @@ static bool mptcp_established_options_mp
+ 	opts->fail_seq = subflow->map_seq;
  
-+	if (unlikely(!__tcp_can_send(ssk)))
-+		return -EAGAIN;
-+
- 	/* compute send limit */
- 	info->mss_now = tcp_send_mss(ssk, &info->size_goal, info->flags);
- 	copy = info->size_goal;
-@@ -1512,7 +1515,8 @@ static struct sock *mptcp_subflow_get_se
- 	if (__mptcp_check_fallback(msk)) {
- 		if (!msk->first)
- 			return NULL;
--		return sk_stream_memory_free(msk->first) ? msk->first : NULL;
-+		return __tcp_can_send(msk->first) &&
-+		       sk_stream_memory_free(msk->first) ? msk->first : NULL;
+ 	pr_debug("MP_FAIL fail_seq=%llu\n", opts->fail_seq);
++	MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_MPFAILTX);
+ 
+ 	return true;
+ }
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -963,10 +963,8 @@ static enum mapping_status validate_data
+ 				 subflow->map_data_csum);
+ 	if (unlikely(csum)) {
+ 		MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_DATACSUMERR);
+-		if (subflow->mp_join || subflow->valid_csum_seen) {
++		if (subflow->mp_join || subflow->valid_csum_seen)
+ 			subflow->send_mp_fail = 1;
+-			MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_MPFAILTX);
+-		}
+ 		return subflow->mp_join ? MAPPING_INVALID : MAPPING_DUMMY;
  	}
  
- 	/* re-use last subflow, if the burst allow that */
-@@ -1638,6 +1642,8 @@ void __mptcp_push_pending(struct sock *s
- 
- 			ret = mptcp_sendmsg_frag(sk, ssk, dfrag, &info);
- 			if (ret <= 0) {
-+				if (ret == -EAGAIN)
-+					continue;
- 				mptcp_push_release(ssk, &info);
- 				goto out;
- 			}
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -599,16 +599,19 @@ void mptcp_info2sockaddr(const struct mp
- 			 struct sockaddr_storage *addr,
- 			 unsigned short family);
- 
--static inline bool __mptcp_subflow_active(struct mptcp_subflow_context *subflow)
-+static inline bool __tcp_can_send(const struct sock *ssk)
- {
--	struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
-+	/* only send if our side has not closed yet */
-+	return ((1 << inet_sk_state_load(ssk)) & (TCPF_ESTABLISHED | TCPF_CLOSE_WAIT));
-+}
- 
-+static inline bool __mptcp_subflow_active(struct mptcp_subflow_context *subflow)
-+{
- 	/* can't send if JOIN hasn't completed yet (i.e. is usable for mptcp) */
- 	if (subflow->request_join && !subflow->fully_established)
- 		return false;
- 
--	/* only send if our side has not closed yet */
--	return ((1 << ssk->sk_state) & (TCPF_ESTABLISHED | TCPF_CLOSE_WAIT));
-+	return __tcp_can_send(mptcp_subflow_tcp_sock(subflow));
- }
- 
- void mptcp_subflow_set_active(struct mptcp_subflow_context *subflow);
 
 
 Patches currently in stable-queue which might be from matttbe@kernel.org are
