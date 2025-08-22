@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76F9C284669;
-	Fri, 22 Aug 2025 13:45:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13132303C9F;
+	Fri, 22 Aug 2025 13:45:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755870334; cv=none; b=Y99cHvKJikI3YIHNqdWOPjvMpCCO/zv7UEU9HKjxHUgSopg3VaD2cJIHyq9hFWlXjQO0NCLUJx5yQ6zZgAB3yobWE7Pz26Nw1VDwUFxhGuzQnBCK5O8ObvplWXGrVxKQv68olkBiis5tyIK69ZpvYlJNuZP+bwKW+XWYRhYeH9s=
+	t=1755870338; cv=none; b=Sd+tJs/d3q7LqqJ7tJ0Lt3PCT3yECK0D4Q9972Q4buCmN4lfxJuxvnw+bzBlnQSm+UCfcGaZj9pDfW5nhe2BhE9HIXihCQysHWIrNzWw1MGshCKp8AIOWE4dm48yJQ2QTx8SNfOrNhVAzT4KUTc1PmXCDqAvhP6nFk6I2Vu3kMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755870334; c=relaxed/simple;
-	bh=Wp7+a/WAuDHp8kuPpWvyhF28Aqap+EkRbWtrJQHHdjM=;
+	s=arc-20240116; t=1755870338; c=relaxed/simple;
+	bh=9ybqVg4oxEq397ZY1b4uJbXRBRd4RadRwVVh+S4Dh5k=;
 	h=Subject:To:Cc:From:Date:In-Reply-To:Message-ID:MIME-Version:
-	 Content-Type; b=ftNJ8iRaOQtAFIHicKxjmONdxGKVlOxqlaMd6+HOlEO6X4ADQcKuFYqDKLN+msxuI2yGy0jzwqNloXHxTbh1WoRw6GefmOCIrSh+zQujY7+x0vbxE0HWFyaoVAMg9Us9PFNTLOIkb5xWQOeuqmz8RgmONDTq7kBWJm3rnpDAVrI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=AVC5XAgl; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type; b=jbNHClIrSqcXqXbHRkwffVgXIYkaUfoR3EWmx8/CkDXQ/J5okQw2iBudysdrOhFB1cvqPhnDjMNl16H4dMWcJR86OIpBuZDW1CmHh8+VovOY0ATkCkHFNNEBtQk2K62Q7faRIcbzqLedh9wGCvtbTjFS26d7baCIC33HLCnStKU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=dENqYfkC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="AVC5XAgl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F15EFC4CEED;
-	Fri, 22 Aug 2025 13:45:33 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="dENqYfkC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D70EC4CEED;
+	Fri, 22 Aug 2025 13:45:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1755870334;
-	bh=Wp7+a/WAuDHp8kuPpWvyhF28Aqap+EkRbWtrJQHHdjM=;
+	s=korg; t=1755870337;
+	bh=9ybqVg4oxEq397ZY1b4uJbXRBRd4RadRwVVh+S4Dh5k=;
 	h=Subject:To:Cc:From:Date:In-Reply-To:From;
-	b=AVC5XAgllATrJe8QpUWBH15/u4XDVoHe1HVBrbKJv0DljaLGOAUiagDTpvkF8QAmV
-	 1Hhr0+CTn5ot1ilemyNpLhotWL7Op6sOtnkEru7yQOmxnjOrVs7HkEcHp4+459mtI8
-	 6ptFG44oUt7rd4LOCW5jLy7jWCXS+JjtPnYYF4Lg=
-Subject: Patch "selftests: mptcp: Initialize variables to quiet gcc 12 warnings" has been added to the 5.15-stable tree
-To: gregkh@linuxfoundation.org,kuba@kernel.org,mathew.j.martineau@linux.intel.com,matttbe@kernel.org,mptcp@lists.linux.dev,pabeni@redhat.com,sashal@kernel.org
+	b=dENqYfkCBEx9+yqxXZ/ImlzA6Q8pxrht63FCeiLahg40RQbt1O+00EzrbYDb36lmQ
+	 F9aAuz4b4kI7yhTyrCN9d7GE/cjyw3hvCP8h2lLg1i9G788n1lTJqymNB1VRPznaAG
+	 a1i0SenrDnJsG71vqJ6i5yRyo4BrHj5+rMPQOMgk=
+Subject: Patch "selftests: mptcp: make sendfile selftest work" has been added to the 5.15-stable tree
+To: davem@davemloft.net,fw@strlen.de,gregkh@linuxfoundation.org,mathew.j.martineau@linux.intel.com,matttbe@kernel.org,mptcp@lists.linux.dev,sashal@kernel.org,xmu@redhat.com
 Cc: <stable-commits@vger.kernel.org>
 From: <gregkh@linuxfoundation.org>
 Date: Fri, 22 Aug 2025 15:44:35 +0200
-In-Reply-To: <20250731112353.2638719-12-matttbe@kernel.org>
-Message-ID: <2025082235-playlist-blinks-9590@gregkh>
+In-Reply-To: <20250730102806.1405622-6-matttbe@kernel.org>
+Message-ID: <2025082235-contempt-unleveled-5b8f@gregkh>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -44,63 +44,110 @@ X-Patchwork-Hint: ignore
 
 This is a note to let you know that I've just added the patch titled
 
-    selftests: mptcp: Initialize variables to quiet gcc 12 warnings
+    selftests: mptcp: make sendfile selftest work
 
 to the 5.15-stable tree which can be found at:
     http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
 
 The filename of the patch is:
-     selftests-mptcp-initialize-variables-to-quiet-gcc-12-warnings.patch
+     selftests-mptcp-make-sendfile-selftest-work.patch
 and it can be found in the queue-5.15 subdirectory.
 
 If you, or anyone else, feels it should not be added to the stable tree,
 please let <stable@vger.kernel.org> know about it.
 
 
-From stable+bounces-165649-greg=kroah.com@vger.kernel.org Thu Jul 31 13:24:27 2025
+From stable+bounces-165496-greg=kroah.com@vger.kernel.org Wed Jul 30 12:28:51 2025
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Thu, 31 Jul 2025 13:23:58 +0200
-Subject: selftests: mptcp: Initialize variables to quiet gcc 12 warnings
+Date: Wed, 30 Jul 2025 12:28:08 +0200
+Subject: selftests: mptcp: make sendfile selftest work
 To: mptcp@lists.linux.dev, stable@vger.kernel.org, gregkh@linuxfoundation.org
-Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>, sashal@kernel.org, Paolo Abeni <pabeni@redhat.com>, Jakub Kicinski <kuba@kernel.org>, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Message-ID: <20250731112353.2638719-12-matttbe@kernel.org>
+Cc: Florian Westphal <fw@strlen.de>, sashal@kernel.org, Xiumei Mu <xmu@redhat.com>, Mat Martineau <mathew.j.martineau@linux.intel.com>, "David S. Miller" <davem@davemloft.net>, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Message-ID: <20250730102806.1405622-6-matttbe@kernel.org>
 
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+From: Florian Westphal <fw@strlen.de>
 
-commit fd37c2ecb21f7aee04ccca5f561469f07d00063c upstream.
+commit df9e03aec3b14970df05b72d54f8ac9da3ab29e1 upstream.
 
-In a few MPTCP selftest tools, gcc 12 complains that the 'sock' variable
-might be used uninitialized. This is a false positive because the only
-code path that could lead to uninitialized access is where getaddrinfo()
-fails, but the local xgetaddrinfo() wrapper exits if such a failure
-occurs.
+When the selftest got added, sendfile() on mptcp sockets returned
+-EOPNOTSUPP, so running 'mptcp_connect.sh -m sendfile' failed
+immediately.
 
-Initialize the 'sock' variable anyway to allow the tools to build with
-gcc 12.
+This is no longer the case, but the script fails anyway due to timeout.
+Let the receiver know once the sender has sent all data, just like
+with '-m mmap' mode.
+
+v2: need to respect cfg_wait too, as pm_userspace.sh relied
+on -m sendfile to keep the connection open (Mat Martineau)
 
 Fixes: 048d19d444be ("mptcp: add basic kselftest for mptcp")
-Acked-by: Paolo Abeni <pabeni@redhat.com>
+Reported-by: Xiumei Mu <xmu@redhat.com>
+Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Signed-off-by: Florian Westphal <fw@strlen.de>
 Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-[ mptcp_inq.c and mptcp_sockopt.c are not in this version. The fix can
-  still be applied in mptcp_connect.c without conflicts. ]
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- tools/testing/selftests/net/mptcp/mptcp_connect.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/testing/selftests/net/mptcp/mptcp_connect.c |   26 ++++++++++++++--------
+ 1 file changed, 17 insertions(+), 9 deletions(-)
 
 --- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
 +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-@@ -188,7 +188,7 @@ static void set_mark(int fd, uint32_t ma
- static int sock_listen_mptcp(const char * const listenaddr,
- 			     const char * const port)
+@@ -451,6 +451,18 @@ static void set_nonblock(int fd)
+ 	fcntl(fd, F_SETFL, flags | O_NONBLOCK);
+ }
+ 
++static void shut_wr(int fd)
++{
++	/* Close our write side, ev. give some time
++	 * for address notification and/or checking
++	 * the current status
++	 */
++	if (cfg_wait)
++		usleep(cfg_wait);
++
++	shutdown(fd, SHUT_WR);
++}
++
+ static int copyfd_io_poll(int infd, int peerfd, int outfd, bool *in_closed_after_out)
  {
--	int sock;
-+	int sock = -1;
- 	struct addrinfo hints = {
- 		.ai_protocol = IPPROTO_TCP,
- 		.ai_socktype = SOCK_STREAM,
+ 	struct pollfd fds = {
+@@ -528,14 +540,7 @@ static int copyfd_io_poll(int infd, int
+ 					/* ... and peer also closed already */
+ 					break;
+ 
+-				/* ... but we still receive.
+-				 * Close our write side, ev. give some time
+-				 * for address notification and/or checking
+-				 * the current status
+-				 */
+-				if (cfg_wait)
+-					usleep(cfg_wait);
+-				shutdown(peerfd, SHUT_WR);
++				shut_wr(peerfd);
+ 			} else {
+ 				if (errno == EINTR)
+ 					continue;
+@@ -666,7 +671,7 @@ static int copyfd_io_mmap(int infd, int
+ 		if (err)
+ 			return err;
+ 
+-		shutdown(peerfd, SHUT_WR);
++		shut_wr(peerfd);
+ 
+ 		err = do_recvfile(peerfd, outfd);
+ 		*in_closed_after_out = true;
+@@ -690,6 +695,9 @@ static int copyfd_io_sendfile(int infd,
+ 		err = do_sendfile(infd, peerfd, size);
+ 		if (err)
+ 			return err;
++
++		shut_wr(peerfd);
++
+ 		err = do_recvfile(peerfd, outfd);
+ 		*in_closed_after_out = true;
+ 	}
 
 
 Patches currently in stable-queue which might be from matttbe@kernel.org are
