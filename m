@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32B1A22DA02;
-	Fri, 22 Aug 2025 13:45:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0BB02D662E;
+	Fri, 22 Aug 2025 13:45:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755870325; cv=none; b=KQptLla2ze1H1LnKbFmgt1wpHi/OsmoGTi9a36sU4NSIkNHcbei6ijU5yDq84S9Tc0Bpp4Bk+Z4p4/+azVIOMGSXFrv0vt0448IaiYjRzCMCvJu1LrrEORxlb0vlrdV6FDtP041rWHGumtcMwniqKcsjHM245G9Ez6+WIk7XlbY=
+	t=1755870328; cv=none; b=WLkyj4zRVk+uKZ9muvP5ddR4C0S4H2BUgJnk4Pjf58UwLgQyuNaaV4Stt2qSYC45bgzhp9h88RGdrvqqRXhDymku1lYIuf69ZBwJySrzxHEVE1CIm5cYFIn1ly00aoUT/m0mENd7ElSN/w0PXHv25cDt5GMZC7tkA5G+KKB/4b8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755870325; c=relaxed/simple;
-	bh=xPoSbJmIIED60u4usz3FpvuUtHKLs8JXXnV8liZr0so=;
+	s=arc-20240116; t=1755870328; c=relaxed/simple;
+	bh=WFNpCzTBZcc6BX2NMdeAohk9XCl5NlL3w/87tj52M9U=;
 	h=Subject:To:Cc:From:Date:In-Reply-To:Message-ID:MIME-Version:
-	 Content-Type; b=ERrFZSaS8QOckMD8obrV2xdt6r4GlinZMprGstecNqZ/tQ/niFOeUFg8JU010ZVITSa9lSITB5uNHMJ3qfksvpEqwOncdHJbKnmnYht6BgruJh+2yw2Kr88TJKUQE9Dvz+KQam3VmxPllzzf/SPXYqB8Tgj0jKB9+6QJamb21FY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=gAc/ueKw; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type; b=ewoMEON+Gt1vdHz/IVdORwGGj/ssyAu8byHIX3qCF7QVRauKhvIKPCDM7gPRe7FXVZUAnVmqBllMGx1ru+5ZM30t9blam0DC6h8nP3sWaeoyXCoc9fWJQNDa454vnqwA3JeK3aEoq/FItl/AuDnPx8S2breLe+KiOhyhoNtzpXg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=xLjDHUCf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="gAc/ueKw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 483EBC4CEED;
-	Fri, 22 Aug 2025 13:45:24 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="xLjDHUCf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4FF5AC4CEED;
+	Fri, 22 Aug 2025 13:45:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1755870324;
-	bh=xPoSbJmIIED60u4usz3FpvuUtHKLs8JXXnV8liZr0so=;
+	s=korg; t=1755870327;
+	bh=WFNpCzTBZcc6BX2NMdeAohk9XCl5NlL3w/87tj52M9U=;
 	h=Subject:To:Cc:From:Date:In-Reply-To:From;
-	b=gAc/ueKwHOTZIm4hBp1LlUZtEsgqdJg8eXSBpH2BKK9OeLaItk7BIWBY9sPnPYI2P
-	 gV8ocuY7uqMmA37f8FEildDTUHVRXQOE0Yu/bnILzKdB277RQYwEUnyBpjehQem/be
-	 QY5ATQ/XG2JgjL5b8KDW1Ab4wDxaIj00OQD0RJnI=
-Subject: Patch "mptcp: drop unused sk in mptcp_push_release" has been added to the 5.15-stable tree
-To: geliang.tang@suse.com,gregkh@linuxfoundation.org,kuba@kernel.org,mathew.j.martineau@linux.intel.com,matthieu.baerts@tessares.net,matttbe@kernel.org,mptcp@lists.linux.dev,sashal@kernel.org
+	b=xLjDHUCfpRiBc50GICKFHd5fJ8WN1cVmhLGSzc5uwsVhCVV+j39fmyHfmg0XQ20Iy
+	 EfNm0T0GhzJRLmEEl2SAz9XLwvcv5WwnLy0QI223v2ismO/lTGE0OrFEkZbxk87MrK
+	 3lpFEScf2TIhweTD6/FkH5ZZtAsUGIDOSL71ZR/g=
+Subject: Patch "selftests: mptcp: connect: also cover alt modes" has been added to the 5.15-stable tree
+To: geliang@kernel.org,gregkh@linuxfoundation.org,kuba@kernel.org,matttbe@kernel.org,mptcp@lists.linux.dev,sashal@kernel.org
 Cc: <stable-commits@vger.kernel.org>
 From: <gregkh@linuxfoundation.org>
-Date: Fri, 22 Aug 2025 15:44:34 +0200
-In-Reply-To: <20250731112353.2638719-13-matttbe@kernel.org>
-Message-ID: <2025082233-undead-proofing-1165@gregkh>
+Date: Fri, 22 Aug 2025 15:44:35 +0200
+In-Reply-To: <20250730102806.1405622-7-matttbe@kernel.org>
+Message-ID: <2025082235-twisted-snuff-6c61@gregkh>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -44,86 +44,89 @@ X-Patchwork-Hint: ignore
 
 This is a note to let you know that I've just added the patch titled
 
-    mptcp: drop unused sk in mptcp_push_release
+    selftests: mptcp: connect: also cover alt modes
 
 to the 5.15-stable tree which can be found at:
     http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
 
 The filename of the patch is:
-     mptcp-drop-unused-sk-in-mptcp_push_release.patch
+     selftests-mptcp-connect-also-cover-alt-modes.patch
 and it can be found in the queue-5.15 subdirectory.
 
 If you, or anyone else, feels it should not be added to the stable tree,
 please let <stable@vger.kernel.org> know about it.
 
 
-From stable+bounces-165650-greg=kroah.com@vger.kernel.org Thu Jul 31 13:24:29 2025
+From stable+bounces-165497-greg=kroah.com@vger.kernel.org Wed Jul 30 12:28:53 2025
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Thu, 31 Jul 2025 13:23:59 +0200
-Subject: mptcp: drop unused sk in mptcp_push_release
+Date: Wed, 30 Jul 2025 12:28:09 +0200
+Subject: selftests: mptcp: connect: also cover alt modes
 To: mptcp@lists.linux.dev, stable@vger.kernel.org, gregkh@linuxfoundation.org
-Cc: Geliang Tang <geliang.tang@suse.com>, sashal@kernel.org, Matthieu Baerts <matthieu.baerts@tessares.net>, Mat Martineau <mathew.j.martineau@linux.intel.com>, Jakub Kicinski <kuba@kernel.org>, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Message-ID: <20250731112353.2638719-13-matttbe@kernel.org>
+Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, sashal@kernel.org, Geliang Tang <geliang@kernel.org>, Jakub Kicinski <kuba@kernel.org>
+Message-ID: <20250730102806.1405622-7-matttbe@kernel.org>
 
-From: Geliang Tang <geliang.tang@suse.com>
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 
-commit b8e0def397d7753206b1290e32f73b299a59984c upstream.
+[ Upstream commit 37848a456fc38c191aedfe41f662cc24db8c23d9 ]
 
-Since mptcp_set_timeout() had removed from mptcp_push_release() in
-commit 33d41c9cd74c5 ("mptcp: more accurate timeout"), the argument
-sk in mptcp_push_release() became useless. Let's drop it.
+The "mmap" and "sendfile" alternate modes for mptcp_connect.sh/.c are
+available from the beginning, but only tested when mptcp_connect.sh is
+manually launched with "-m mmap" or "-m sendfile", not via the
+kselftests helpers.
 
-Fixes: 33d41c9cd74c5 ("mptcp: more accurate timeout")
-Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-Signed-off-by: Geliang Tang <geliang.tang@suse.com>
-Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+The MPTCP CI was manually running "mptcp_connect.sh -m mmap", but not
+"-m sendfile". Plus other CIs, especially the ones validating the stable
+releases, were not validating these alternate modes.
+
+To make sure these modes are validated by these CIs, add two new test
+programs executing mptcp_connect.sh with the alternate modes.
+
+Fixes: 048d19d444be ("mptcp: add basic kselftest for mptcp")
+Cc: stable@vger.kernel.org
+Reviewed-by: Geliang Tang <geliang@kernel.org>
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Link: https://patch.msgid.link/20250715-net-mptcp-sft-connect-alt-v2-1-8230ddd82454@kernel.org
 Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Stable-dep-of: c886d70286bf ("mptcp: do not queue data on closed subflows")
+[ Drop userspace_pm.sh from TEST_PROGS ]
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/mptcp/protocol.c |    9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ tools/testing/selftests/net/mptcp/Makefile                  |    3 ++-
+ tools/testing/selftests/net/mptcp/mptcp_connect_mmap.sh     |    5 +++++
+ tools/testing/selftests/net/mptcp/mptcp_connect_sendfile.sh |    5 +++++
+ 3 files changed, 12 insertions(+), 1 deletion(-)
+ create mode 100755 tools/testing/selftests/net/mptcp/mptcp_connect_mmap.sh
+ create mode 100755 tools/testing/selftests/net/mptcp/mptcp_connect_sendfile.sh
 
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1568,8 +1568,7 @@ static struct sock *mptcp_subflow_get_se
- 	return NULL;
- }
+--- a/tools/testing/selftests/net/mptcp/Makefile
++++ b/tools/testing/selftests/net/mptcp/Makefile
+@@ -5,7 +5,8 @@ KSFT_KHDR_INSTALL := 1
  
--static void mptcp_push_release(struct sock *sk, struct sock *ssk,
--			       struct mptcp_sendmsg_info *info)
-+static void mptcp_push_release(struct sock *ssk, struct mptcp_sendmsg_info *info)
- {
- 	tcp_push(ssk, 0, info->mss_now, tcp_sk(ssk)->nonagle, info->size_goal);
- 	release_sock(ssk);
-@@ -1626,7 +1625,7 @@ void __mptcp_push_pending(struct sock *s
- 			 * the last round, release prev_ssk
- 			 */
- 			if (ssk != prev_ssk && prev_ssk)
--				mptcp_push_release(sk, prev_ssk, &info);
-+				mptcp_push_release(prev_ssk, &info);
- 			if (!ssk)
- 				goto out;
+ CFLAGS =  -Wall -Wl,--no-as-needed -O2 -g  -I$(top_srcdir)/usr/include
  
-@@ -1639,7 +1638,7 @@ void __mptcp_push_pending(struct sock *s
+-TEST_PROGS := mptcp_connect.sh pm_netlink.sh mptcp_join.sh diag.sh \
++TEST_PROGS := mptcp_connect.sh mptcp_connect_mmap.sh mptcp_connect_sendfile.sh \
++	      pm_netlink.sh mptcp_join.sh diag.sh \
+ 	      simult_flows.sh mptcp_sockopt.sh
  
- 			ret = mptcp_sendmsg_frag(sk, ssk, dfrag, &info);
- 			if (ret <= 0) {
--				mptcp_push_release(sk, ssk, &info);
-+				mptcp_push_release(ssk, &info);
- 				goto out;
- 			}
- 
-@@ -1654,7 +1653,7 @@ void __mptcp_push_pending(struct sock *s
- 
- 	/* at this point we held the socket lock for the last subflow we used */
- 	if (ssk)
--		mptcp_push_release(sk, ssk, &info);
-+		mptcp_push_release(ssk, &info);
- 
- out:
- 	/* ensure the rtx timer is running */
+ TEST_GEN_FILES = mptcp_connect pm_nl_ctl
+--- /dev/null
++++ b/tools/testing/selftests/net/mptcp/mptcp_connect_mmap.sh
+@@ -0,0 +1,5 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0
++
++MPTCP_LIB_KSFT_TEST="$(basename "${0}" .sh)" \
++	"$(dirname "${0}")/mptcp_connect.sh" -m mmap "${@}"
+--- /dev/null
++++ b/tools/testing/selftests/net/mptcp/mptcp_connect_sendfile.sh
+@@ -0,0 +1,5 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0
++
++MPTCP_LIB_KSFT_TEST="$(basename "${0}" .sh)" \
++	"$(dirname "${0}")/mptcp_connect.sh" -m sendfile "${@}"
 
 
 Patches currently in stable-queue which might be from matttbe@kernel.org are
