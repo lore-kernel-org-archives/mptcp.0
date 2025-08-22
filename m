@@ -1,96 +1,69 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C29FC2E7641;
-	Fri, 22 Aug 2025 14:11:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6216731283B;
+	Fri, 22 Aug 2025 14:18:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755871902; cv=none; b=VjmW6KkvlXJ/iySThIJXZUpWAQzIA+LKcmxtconFBSrKM11AbFprLJQZWymu9K0Jxqzh7LDrV3eXJzAc1yRzrbAWbWce/9gLzqo0oOM4b1iaf0aw2kc0M9LFWThrVKsIAygGiiE0CLO9TgjyWDpbZS9KT1fpcefQ+JWvZanTWs4=
+	t=1755872310; cv=none; b=sqomGO79OoNC2uiclKXUxiUi6bcFVmoJAYQC2/EgP/oY450IPO7uDV3PTseSp03hrgCCpvVrlgoNYUmhmVVWDFzGa2pReGGckj6T+6Vjzd521AuoAX0wDlLXIDR3nvQkTASm/il2isHIpsDhNc2gglgJltVmSbWpnbk0uDScnAw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755871902; c=relaxed/simple;
-	bh=I0mg1j0nvO9uGzt4aZjTCOu1YQrmacl35sqTUv51k9I=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UXvYngfHxEViVDEFzPuaOjfbpgBEB5ll2MEGrWKsOxf75vLMFGkliDdkqvXWW0PMvKytdjCsSeXFCRdr8twMQ4uJYKEnRXx8QsQvCJ+uRfsaBbu/upRlcpHnlp6kZwaMuk4KrKhjvMVwDZejmONo0jQDWhIcWMnCPdvj2Yq+qMM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jEItV1aA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1755872310; c=relaxed/simple;
+	bh=YPHXDD9oTZ7YqUQcqBqzUk/QY6MAFjCqpYNcHsVGKJg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SFbHYkKBiFwTMqjlLEK/MUU6X1okrHQfJK9/V1m4hyRW6NVypgKI9Nux4TEosWYLgJ1Z58ChCHWrLpgVIrRdjTaxoCqtd+kS07IgGggrf1BkhNLtBXEUAHuzybGcQfTi5zeMMTbod/ZYskl0m9r3F6xV9joCKu/5+1pbKikQFnM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XhrGcV8N; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jEItV1aA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD968C116B1;
-	Fri, 22 Aug 2025 14:11:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XhrGcV8N"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCB98C113CF;
+	Fri, 22 Aug 2025 14:18:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755871902;
-	bh=I0mg1j0nvO9uGzt4aZjTCOu1YQrmacl35sqTUv51k9I=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=jEItV1aAADRZjpo/RV6HTveB8zkKbZjcOB9wgLUV8ASTzqcDTxWknyPmwxulaY4L/
-	 L1kbfkFRGV5YdWVxn6p0mhYuv73B7Dgci4bhLHDBvGzM+xwQjxOlEOdtUBBFjg2bZa
-	 PIVu3khuy2F+joJSHsWJIGkUcYkNCAVZ1kR5NnCh79ffmZXbQgYGjILq923lIZZ54N
-	 3TXUD9yJlRS5uHHfyWRDrPwKvbDMPrtGZqlqfpu0Eehpg2Jd5LuidC9S5MNd/OlWDf
-	 g7OUY8/6UOmem3Fnu24kWLZ5FfQnJO6PX238x4MMzClt4dhbG6VuPXV9WrVkD3SjN1
-	 a9ytNr6kQu91Q==
+	s=k20201202; t=1755872309;
+	bh=YPHXDD9oTZ7YqUQcqBqzUk/QY6MAFjCqpYNcHsVGKJg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=XhrGcV8NJtEN4taRM5lAwcaYXzkiAEn0nqDqw0sG/+tsH5vPJVHg/JX46LNiXlLbv
+	 kPp5TNRHqsqzOAsrqrqdiya41ks5g1PEjtXmsDw8cb2PWFHBGsY13wa9b514rKpCa4
+	 OT7vfz5XaiNSBKLf+rM/IUqoulXaXU7QaAaQvaJsA9a9Cb58AlJfujX0mwf+qojUBK
+	 /lTYTg4IByuXynJvswkllfkFZbfS+fCrrm9u9EUZN12K3bGTCQAuJTt6eVoely7P1o
+	 flxm9FBOWrFLotysmhCHbZZ/6PfDcCZu8ke2SqQlyseQiBQM2xEDOH5KX8IYkJQY53
+	 HNjd3B5QCPm+g==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 To: mptcp@lists.linux.dev,
 	stable@vger.kernel.org,
 	gregkh@linuxfoundation.org
 Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>,
-	sashal@kernel.org,
-	Mat Martineau <martineau@kernel.org>,
-	Jakub Kicinski <kuba@kernel.org>
-Subject: [PATCH 6.1.y 3/3] selftests: mptcp: pm: check flush doesn't reset limits
-Date: Fri, 22 Aug 2025 16:11:28 +0200
-Message-ID: <20250822141124.49727-8-matttbe@kernel.org>
+	sashal@kernel.org
+Subject: [PATCH 5.15.y 0/2] mptcp: fix recent failed backports (20250822)
+Date: Fri, 22 Aug 2025 16:18:17 +0200
+Message-ID: <20250822141816.61599-4-matttbe@kernel.org>
 X-Mailer: git-send-email 2.50.0
-In-Reply-To: <20250822141124.49727-5-matttbe@kernel.org>
-References: <20250822141124.49727-5-matttbe@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1989; i=matttbe@kernel.org; h=from:subject; bh=I0mg1j0nvO9uGzt4aZjTCOu1YQrmacl35sqTUv51k9I=; b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDJWVE3cfUn+ycJlSSm/W7pfv9t8r13y+oE5ShwzjZ6Je Ys/+yG7taOUhUGMi0FWTJFFui0yf+bzKt4SLz8LmDmsTCBDGLg4BWAi/xMY/sppM4itLxLo7Nbc qndvz7ncV5XPee9rXuOv/Kpffcxtlxcjw2QvwZ8fP3r9WMuwzHi/5iOzyS7XLT4/LH+W3HvDLf9 sBT8A
+X-Developer-Signature: v=1; a=openpgp-sha256; l=742; i=matttbe@kernel.org; h=from:subject; bh=YPHXDD9oTZ7YqUQcqBqzUk/QY6MAFjCqpYNcHsVGKJg=; b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDJW1GhWuqd/njRtyt583as/prgY5h7j0tdcGZxwsErz0 mnDtItvOkpZGMS4GGTFFFmk2yLzZz6v4i3x8rOAmcPKBDKEgYtTACYiIsTwv6xjXVTSj+cn4r+y HRG4E1h1bW3YMrkXQZPKTs3Z+/F1Qggjw4xd4RVHnkx0ik239vgtWfXwvHmNugCvgJHv2iPFYhY 1jAA=
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 Content-Transfer-Encoding: 8bit
 
-commit 452690be7de2f91cc0de68cb9e95252875b33503 upstream.
+Greg recently reported the following patches could not be applied
+without conflicts in this tree:
 
-This modification is linked to the parent commit where the received
-ADD_ADDR limit was accidentally reset when the endpoints were flushed.
+ - f5ce0714623c ("mptcp: disable add_addr retransmission when timeout is 0")
+ - 452690be7de2 ("selftests: mptcp: pm: check flush doesn't reset limits")
 
-To validate that, the test is now flushing endpoints after having set
-new limits, and before checking them.
+Conflicts have been resolved, and documented in each patch.
 
-The 'Fixes' tag here below is the same as the one from the previous
-commit: this patch here is not fixing anything wrong in the selftests,
-but it validates the previous fix for an issue introduced by this commit
-ID.
+Geliang Tang (1):
+  mptcp: disable add_addr retransmission when timeout is 0
 
-Fixes: 01cacb00b35c ("mptcp: add netlink-based PM")
-Cc: stable@vger.kernel.org
-Reviewed-by: Mat Martineau <martineau@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Link: https://patch.msgid.link/20250815-net-mptcp-misc-fixes-6-17-rc2-v1-3-521fe9957892@kernel.org
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-[ Conflicts in pm_netlink.sh, because some refactoring have been done
-  later on: commit 3188309c8ceb ("selftests: mptcp: netlink:
-  add 'limits' helpers") and commit c99d57d0007a ("selftests: mptcp: use
-  pm_nl endpoint ops") are not in this version. The same operation can
-  still be done at the same place, without using the new helper. ]
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- tools/testing/selftests/net/mptcp/pm_netlink.sh | 1 +
- 1 file changed, 1 insertion(+)
+Matthieu Baerts (NGI0) (1):
+  selftests: mptcp: pm: check flush doesn't reset limits
 
-diff --git a/tools/testing/selftests/net/mptcp/pm_netlink.sh b/tools/testing/selftests/net/mptcp/pm_netlink.sh
-index d02e0d63a8f9..1b0ed849c617 100755
---- a/tools/testing/selftests/net/mptcp/pm_netlink.sh
-+++ b/tools/testing/selftests/net/mptcp/pm_netlink.sh
-@@ -131,6 +131,7 @@ ip netns exec $ns1 ./pm_nl_ctl limits 1 9
- check "ip netns exec $ns1 ./pm_nl_ctl limits" "$default_limits" "subflows above hard limit"
- 
- ip netns exec $ns1 ./pm_nl_ctl limits 8 8
-+ip netns exec $ns1 ./pm_nl_ctl flush
- check "ip netns exec $ns1 ./pm_nl_ctl limits" "accept 8
- subflows 8" "set limits"
- 
+ Documentation/networking/mptcp-sysctl.rst       |  2 ++
+ net/mptcp/pm_netlink.c                          | 13 ++++++++++---
+ tools/testing/selftests/net/mptcp/pm_netlink.sh |  1 +
+ 3 files changed, 13 insertions(+), 3 deletions(-)
+
 -- 
 2.50.0
 
