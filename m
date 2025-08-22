@@ -1,129 +1,107 @@
-Received: from mail-io1-f46.google.com (mail-io1-f46.google.com [209.85.166.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFA411DF271
-	for <mptcp@lists.linux.dev>; Thu, 21 Aug 2025 11:22:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F412A20EB
+	for <mptcp@lists.linux.dev>; Fri, 22 Aug 2025 01:04:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755775322; cv=none; b=jcgLNXfJK24W5ICLs3EXKt8775817CNAKX4FznCI6FQIvU3rhmrcnoTd9xdVLkBCgw3Vn6ErbNX31UYaEAjJRO6Cd3OLFiKhTMEyYr0wDijcSW3c13j9IgAd+kM7ae9FUKyRst+TNTp6vt2kOlBuBPOVWmCM/l91z8KUplMrA00=
+	t=1755824692; cv=none; b=Sx5xaiw3LJSvNtGOPONpq+BPZpfbLff4S238VS8518Su//0qwhMcAVGFTzLIlrhAWi0JsDHZGfJ0igW5s8UgW3R0eBc1Y5RtaVCTO+KcyNnYbrQn9kj1+zkIRI4UuEYWc7Ql9Nwqu2qOXQHNG/2sh+mrl5uZtmJ2KwR2vYnYWtI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755775322; c=relaxed/simple;
-	bh=WR6ADfRAvmXmq3wYrZqQF0LONF0lkwsYg5NJsBJJbdw=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=fGvLR55RqDfbD15LXuZWToG7vu0y0u1rcNtAXD3oP8UFdNKzL2OEvRrym0eZHyWxf8J0VIunhk5v6lyP3k1koHMCL1pP3eK0u2KFT10thTSwmXj6076H43hL75ABx/T3yVlISkkRmQ5UuZ6SG2vTUgd6jUBr6DCAuQgZIN17j3k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ORIgks6O; arc=none smtp.client-ip=209.85.166.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1755824692; c=relaxed/simple;
+	bh=gHd/wSUWdt8ehHl6nzTyd6xf1ZckuW7ljm2srabTdmg=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=iUc2VDupwmUOL0kd+VHl6FPsRdqHtFywzjvKLqWaebl8u2bstW9xrGqS29p1CAPludBWQbozk/YOOa8urxnxvO+ivA66e20E/W/nGkzDnE+S9prgg2rzEWsgqGG3JI71rB+7W9mCq/IuWcCshZ/HlznNDmUN6kO7EB/TPS5g558=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lospt6fz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ORIgks6O"
-Received: by mail-io1-f46.google.com with SMTP id ca18e2360f4ac-88432cbf3fbso68845039f.0
-        for <mptcp@lists.linux.dev>; Thu, 21 Aug 2025 04:22:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1755775320; x=1756380120; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ktnoi9XgkT7ruOAWbe97meT+mxYzKmWb1kNhn835JWU=;
-        b=ORIgks6OtvuG1DDIs+JlTUTxVDXZoNiLVsOkdIP4iaKb5EGW/eTzdfsj/9DpiO4HtI
-         udvgP6Lcp9VbCeGudLLaxA4iG8lkRvunUZ8a4A7WO+88AoCjA9ruSAM4ERRCAHmonfhb
-         0YiPczesuy0Cti2RxgiSzZYn5dXfB7pnYfrb9b1mYr6/CVYtDcvoFRhCQy4Tidu0VBLC
-         T0VaMF6hhbBSAL+fWQOop5CyVzaniVeAEt1yEv4webleOy8Up3A7TVPuDatU34SnaoP/
-         8zB53zzaXcPxDlj9KU9W1Bj7vLZCUa8hM3f/3Oo2V+o9YRdr97dHZ+EmY5X7yd6CmYi4
-         nKFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755775320; x=1756380120;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=ktnoi9XgkT7ruOAWbe97meT+mxYzKmWb1kNhn835JWU=;
-        b=JTlUXZ2uxhWWPRsbjSbPCqmOa8oV5NG3RvNpi9am9W5jnjLcFH29HxhynNte+GDcM+
-         rbxol5kHjwCB0RkXi2wy744/ydp3B3RbKoffAQiGWXlydOmachQZIOdtMIpUGpBP6e9l
-         OSK1oGqrlNUgkhSDr7LjSnuBtqQrIrpXh8OxBXioo/xUyc/KNGsINybv5lR8mMRDpKW0
-         qnchfzWHFaJkPxZJ2/mlzwQmZ+YQyEv9HQQf7AwmMpoczbFbNkeNEMrOkwGyLj85Yb/l
-         WF+Z0ktbQB/X0H+NvNYXxvKOqQpyD9GMufSPHEpDxCZx78Ug6Jz+prIy+6onPuhSOnOS
-         vJ+w==
-X-Gm-Message-State: AOJu0Yz4A7vBz4UzErygCWWgqTXS3/QFEhcuZNJgHByKsoBsMvZoEG9J
-	W9hQvuxlx3NGlCvRVEO94vrVgpnuYCIFYPZJ3F4+9Jc+DAOkMmKR/DfqCuUv
-X-Gm-Gg: ASbGnctvsEV+ubPP4rsHL08+AtdIeNRqIJLBExU8w1kFZiU4wTrSySExj6e/ajfqDjy
-	XaKsY46HqCDVJbn2wQxPs0JOkZV5e3yvfBtiLpRdSAaLYkt0/nKWWcY9tUBe+YmaUj4F01XFpla
-	icwreotBH5ci62ifSiE5po1faPqhgwtX5BPE2of9PQKa946oGlQ0IFODq6s2aiOgmyxyfOE2Oyu
-	whvaGKLMPu2+zCnFHjzkr9ZmgDNhKnJM2sbkGmWqLxXyAlsYzP5Box25Nb64GO2uJiClZ1BIMvL
-	Ew/Z65rA1JUfD8v2kdsIaJB8jDSjRAo93/o3WzyE3Xhye6WWckw0vURen2xJTZ1Xn2Ob7eTMXXZ
-	Y8ehPSi7BsJ4+2ROqg46a1xtAJS3oT8M52iww
-X-Google-Smtp-Source: AGHT+IGdKR0w6j+reCTLa7+mgZ9LdDY13+GzZhQoA6r13Oy0ssyAT+KiGgE/3+tO/mk+aw1ujo4akA==
-X-Received: by 2002:a05:6602:14c3:b0:879:c609:f5a1 with SMTP id ca18e2360f4ac-886b48a1839mr397668139f.12.1755775319615;
-        Thu, 21 Aug 2025 04:21:59 -0700 (PDT)
-Received: from [127.0.0.1] ([52.165.251.249])
-        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-8843f9c47a4sm646543739f.21.2025.08.21.04.21.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Aug 2025 04:21:58 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <tanggeliang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <cover.1755680616.git.tanggeliang@kylinos.cn>
-References: <cover.1755680616.git.tanggeliang@kylinos.cn>
-Subject: Re: [PATCH mptcp-next v2 00/10] selftests: cover more MPTCP socket
- options
-Message-ID: <1db07cdd-e376-eba2-cedf-3285532c97d3@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 21 Aug 2025 11:21:57 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lospt6fz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 694D8C4CEEB;
+	Fri, 22 Aug 2025 01:04:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1755824691;
+	bh=gHd/wSUWdt8ehHl6nzTyd6xf1ZckuW7ljm2srabTdmg=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=Lospt6fzKGdEB/ETkxbul2Wc4Bu0kDaXBNfvG0LGBiG0p+S71KF9JAN5pGVBEz4Bz
+	 wS5+VuuhB5k0OBnL0DEEZIWoQaMLsV/GsI3rdrTgdfn+JAqKzeGLx2Qxr4sNUpIZJ/
+	 DuewpNBo+u6asVXHBLct8YnG5Ony35QXPozsOKzGlntFsmYyCzDBKVAF1ARcYTGsHw
+	 lw+jUT81KRLw3tyiqclNB2gIbeOsC4wSROCXhot3EMfT4hGCtYJnlcB3l7Oj9wQeyh
+	 dD0pQ2MsMm4mZu2ftPX6e0N3KCiADtz1TE02SsU73Nv12/wLhTrmNqG7YhgCl95FhQ
+	 4q+2ISQbyerxQ==
+Date: Thu, 21 Aug 2025 18:04:50 -0700 (PDT)
+From: Mat Martineau <martineau@kernel.org>
+To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-net 3/3] selftests: mptcp: print trailing bytes
+ with hexdump
+In-Reply-To: <20250819-sft-mptcp-disc-err-v1-3-9d0cf296bc13@kernel.org>
+Message-ID: <63cac2fd-a90f-e165-c0b3-85584e81ef37@kernel.org>
+References: <20250819-sft-mptcp-disc-err-v1-0-9d0cf296bc13@kernel.org> <20250819-sft-mptcp-disc-err-v1-3-9d0cf296bc13@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-Hi Geliang,
+On Tue, 19 Aug 2025, Matthieu Baerts (NGI0) wrote:
 
-Thank you for your modifications, that's great!
+> If hexdump or busybox hexdump is available.
+>
+> This is better than printing random bytes in the terminal.
+>
+> Suggested-by: Jakub Kicinski <kuba@kernel.org>
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> ---
+> tools/testing/selftests/net/mptcp/mptcp_lib.sh | 12 +++++++++++-
+> 1 file changed, 11 insertions(+), 1 deletion(-)
+>
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+> index 09cd24b2ae466205dacbdf8289eb86c08534c475..20ce95c9d35538a03c1c3cac843657d258fc9715 100644
+> --- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+> @@ -382,9 +382,19 @@ mptcp_lib_make_file() {
+>
+> # $1: file
+> mptcp_lib_print_file_err() {
+> +	local end
+> +
+> 	ls -l "${1}" 1>&2
+> 	echo "Trailing bytes are: "
+> -	tail -c 27 "${1}"
+> +	end=$(tail -c 32 "${1}")
+> +	if command -v hexdump >/dev/null; then
 
-Our CI did some validations and here is its report:
+Hi Matthieu -
 
-- KVM Validation: normal: Success! =E2=9C=85
-- KVM Validation: debug: =
-Unstable: 3 failed test(s): packetdrill_syscalls selftest_mptcp_connect_che=
-cksum selftest_mptcp_join =F0=9F=94=B4
-- KVM Validation: btf-normal (only =
-bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only =
-bpftest_all): Success! =E2=9C=85
-- Task: https://github.=
-com/multipath-tcp/mptcp_net-next/actions/runs/17122626757
+How about:
 
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/bda4263505d6
-Patchwork: https://patchwork.kernel.=
-org/project/mptcp/list/?series=3D993905
+tail -c 32 "${1}" | od -t x1
+
+'od' is in the posix spec so it should be on more systems than hexdump 
+(it's in coreutils along with 'tail', for example). Also, today I learned 
+that 'od' can format hexadecimal...
 
 
-If there are some issues, you can=
- reproduce them using the same environment as
-the one used by the CI thanks=
- to a docker image, e.g.:
+> +		echo "${end}" | hexdump -C | head -n2
+> +	elif busybox hexdump --help 2>/dev/null; then
+> +		echo "${end}" | busybox hexdump -C | head -n2
+> +	else
+> +		echo "${end}"
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+Would be best to avoid fallback to raw binary (hence the 'od' suggestion 
+above).
 
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
+- Mat
 
 
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 Core)
+> +		echo
+> +	fi
+> }
+>
+> # $1: input file ; $2: output file ; $3: what kind of file
+>
+> -- 
+> 2.50.0
+>
+>
+>
