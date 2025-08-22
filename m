@@ -1,42 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD626301476;
-	Fri, 22 Aug 2025 14:11:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0C1B301476;
+	Fri, 22 Aug 2025 14:11:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755871898; cv=none; b=P+f7aIzBav5iNDEmbwro3uIY/0SjhR/u8bDLFt9b5gVGjd/xPWl4Bajs/bdVI/GiPpxkYdK5z1f1hsoaxLF09cTbizIHn381qkwI6sK0HvDqCeVENmDpkOC+2L8dyc9G7AAqFnG9ltpS2vUMT/9coyue3F07VUbgIpgC8pZVags=
+	t=1755871900; cv=none; b=j+fM5yQswcBP3QUsc3pmRGPwj1nOb4Yq2IR78at9IMOl6cpeWrmWYWhvEhxJbHxUR/VO1zzi1tFgTYT9qHPYXpNr/rT4E6HYVIMAoDMltWbQJ17FFRoUNEcXKdoRgCMcf6eX7qcNN06CHSAg+OdTEGCRTCAXZtA1T7DKjBoAhfc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755871898; c=relaxed/simple;
-	bh=QL4GYMJbSZ6dyHAFhMKO1oa83YsyaIzDSU+abRsULds=;
+	s=arc-20240116; t=1755871900; c=relaxed/simple;
+	bh=DPH3pE/IpR/sUauAYMSTs2YvC1Rabf+jlHM13SPcVAE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kmFkOWYwd0K+utyoHwHBC48qsVnGa8j85N2CWEsvkwd2eaJtLMeb7uk2cS/0UAhISXp6kx1X3Jo/Hn3t6/hQHaXuliPUCXaALJOZbWC5NvqtgLbS6b65sx1CVSRy8g+SJ+GJPjvBDHrectPkU3niYDDNZks1jLGOF8Nw65l1KrQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pTEtbMcn; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=NS4r+ryYiV6iZDgnhq4l641nAOLIQgHwvbsmysVycR742Ji9w8o2JnuU8zg0SzG6Xr0vaIlA8mWRLKOwhdVCLfb0Srk/2Nkc0V80M09zFvMRim9IxGb3L2ObBcU1z6xKGOwdslP/+bOh4ZKZtoZSe3VLXt2Ahn1e7NZhsXdO94o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c5NAsfWL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pTEtbMcn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4ACF8C4CEED;
-	Fri, 22 Aug 2025 14:11:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c5NAsfWL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A6FDC4CEED;
+	Fri, 22 Aug 2025 14:11:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755871898;
-	bh=QL4GYMJbSZ6dyHAFhMKO1oa83YsyaIzDSU+abRsULds=;
+	s=k20201202; t=1755871900;
+	bh=DPH3pE/IpR/sUauAYMSTs2YvC1Rabf+jlHM13SPcVAE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=pTEtbMcnIO+tU04ZO6A31LCfDvT9swn5alWDpB5/sVIS8nqoji7HdcPeh0QhFTFfg
-	 lChF6BQuBIfOLjysR2gFGy9OyxdFxFwueqfP+5SadbjaRNMkeZxk3cp5rw8MyFIDIJ
-	 tME1oldJYtmDvDBnF2zbKa40uxKVxmgauA5TkwruvaxVeIGOGncAKb87DYy+LW1o+X
-	 L8vmrRGPg3826/Rx7bBeWKSg6rIr8hoCMXnNc57zJ8atn7OKlB/oXZCQ+fnbRVJiyq
-	 QUB4mu+OfdHvvAm+8jSSUu426tdpP9lmQFWonAHmL/ZgVQ4p9PAzjz4t6og8+Fw2n5
-	 1JVkfDstsTCKw==
+	b=c5NAsfWL5YZ0GNeNILyMe3fSmc4TQ42HtzHQHjkUBDSKaKp5GfCB8LYHLRbN95zwm
+	 DHidrz2sAKN6qd+e4IEUUxd24D7JqN1FMaGfKSEUQ6xBKw3VguOzmmq3BR5PLNJpIj
+	 9razyKwur01D7lcdSNR4PHU1zyZ7g7M4TKqxNE02AePRXRh0MUIEUZrxla37DRqDH3
+	 7w221TrpdFJ6mQJGLySV4qwd2fO8kYWMq6tZ0ECQFxWdivbWPUq/3I8EVDwG86Jjp1
+	 bFAP1e/tmFgNXAxhKECXeqN5HnatP9dovAzKxaTxL8/cxxxEFJIw6fb2rcv3uKMbDM
+	 N3c28/6ZFsVvQ==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 To: mptcp@lists.linux.dev,
 	stable@vger.kernel.org,
 	gregkh@linuxfoundation.org
 Cc: Geliang Tang <tanggeliang@kylinos.cn>,
 	sashal@kernel.org,
-	"Matthieu Baerts (NGI0)" <matttbe@kernel.org>,
+	Matthieu Baerts <matttbe@kernel.org>,
 	Jakub Kicinski <kuba@kernel.org>
-Subject: [PATCH 6.1.y 1/3] mptcp: remove duplicate sk_reset_timer call
-Date: Fri, 22 Aug 2025 16:11:26 +0200
-Message-ID: <20250822141124.49727-6-matttbe@kernel.org>
+Subject: [PATCH 6.1.y 2/3] mptcp: disable add_addr retransmission when timeout is 0
+Date: Fri, 22 Aug 2025 16:11:27 +0200
+Message-ID: <20250822141124.49727-7-matttbe@kernel.org>
 X-Mailer: git-send-email 2.50.0
 In-Reply-To: <20250822141124.49727-5-matttbe@kernel.org>
 References: <20250822141124.49727-5-matttbe@kernel.org>
@@ -46,60 +46,103 @@ List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1915; i=matttbe@kernel.org; h=from:subject; bh=bfxKbZFjBnL2xMZSujES+vx02mx+j+wc/8FOKuhNaSo=; b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDJWVPW/cDrfv/Rv6JqozEvWBxrLCuzlil7MKK1j/pZhy f1C7OXejlIWBjEuBlkxRRbptsj8mc+reEu8/Cxg5rAygQxh4OIUgIksecXI8E2/gjVd44LQn65P m/Pr91ZopAcViJUKuURvVv0w3a9HkuF/0u236d+4ig76FBW9VJCztOJLC52xRLa3Mzhf+p2ufQM 7AA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3467; i=matttbe@kernel.org; h=from:subject; bh=xq0E52XpZNwSZtXFiRZqObJZaOBTpWGLcJv/JmPWX5g=; b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDJWVE043uTyJnWiwkMVD6X8G9FbAjtiX9SJ+d89bL4jT XXXkvqnHaUsDGJcDLJiiizSbZH5M59X8ZZ4+VnAzGFlAhnCwMUpABNZmcPI8DV7x3bNhTypSWKH Jbn4L8xy218oJ7Do4dMIVrllC5TqljD8D3j9L2XljXzBWwy9TLWhMlw/uHQfbEk7tExB+oX6hFk 7OAA=
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-commit 5d13349472ac8abcbcb94407969aa0fdc2e1f1be upstream.
+commit f5ce0714623cffd00bf2a83e890d09c609b7f50a upstream.
 
-sk_reset_timer() was called twice in mptcp_pm_alloc_anno_list.
+When add_addr_timeout was set to 0, this caused the ADD_ADDR to be
+retransmitted immediately, which looks like a buggy behaviour. Instead,
+interpret 0 as "no retransmissions needed".
 
-Simplify the code by using a 'goto' statement to eliminate the
-duplication.
-
-Note that this is not a fix, but it will help backporting the following
-patch. The same "Fixes" tag has been added for this reason.
+The documentation is updated to explicitly state that setting the timeout
+to 0 disables retransmission.
 
 Fixes: 93f323b9cccc ("mptcp: add a new sysctl add_addr_timeout")
 Cc: stable@vger.kernel.org
+Suggested-by: Matthieu Baerts <matttbe@kernel.org>
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Link: https://patch.msgid.link/20250815-net-mptcp-misc-fixes-6-17-rc2-v1-4-521fe9957892@kernel.org
+Link: https://patch.msgid.link/20250815-net-mptcp-misc-fixes-6-17-rc2-v1-5-521fe9957892@kernel.org
 Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 [ Before commit e4c28e3d5c09 ("mptcp: pm: move generic PM helpers to
   pm.c"), mptcp_pm_alloc_anno_list() was in pm_netlink.c. The same patch
   can be applied there without conflicts. ]
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- net/mptcp/pm_netlink.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ Documentation/networking/mptcp-sysctl.rst |  2 ++
+ net/mptcp/pm_netlink.c                    | 13 ++++++++++---
+ 2 files changed, 12 insertions(+), 3 deletions(-)
 
+diff --git a/Documentation/networking/mptcp-sysctl.rst b/Documentation/networking/mptcp-sysctl.rst
+index 213510698014..722b4395e91b 100644
+--- a/Documentation/networking/mptcp-sysctl.rst
++++ b/Documentation/networking/mptcp-sysctl.rst
+@@ -20,6 +20,8 @@ add_addr_timeout - INTEGER (seconds)
+ 	resent to an MPTCP peer that has not acknowledged a previous
+ 	ADD_ADDR message.
+ 
++	Do not retransmit if set to 0.
++
+ 	The default value matches TCP_RTO_MAX. This is a per-namespace
+ 	sysctl.
+ 
 diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index bb1a02e3dc3f..59d6e701d854 100644
+index 59d6e701d854..cf9244a3644f 100644
 --- a/net/mptcp/pm_netlink.c
 +++ b/net/mptcp/pm_netlink.c
-@@ -383,9 +383,7 @@ bool mptcp_pm_alloc_anno_list(struct mptcp_sock *msk,
- 		if (WARN_ON_ONCE(mptcp_pm_is_kernel(msk)))
- 			return false;
+@@ -304,6 +304,7 @@ static void mptcp_pm_add_timer(struct timer_list *timer)
+ 	struct mptcp_pm_add_entry *entry = from_timer(entry, timer, add_timer);
+ 	struct mptcp_sock *msk = entry->sock;
+ 	struct sock *sk = (struct sock *)msk;
++	unsigned int timeout;
  
--		sk_reset_timer(sk, &add_entry->add_timer,
--			       jiffies + mptcp_get_add_addr_timeout(net));
--		return true;
-+		goto reset_timer;
+ 	pr_debug("msk=%p\n", msk);
+ 
+@@ -321,6 +322,10 @@ static void mptcp_pm_add_timer(struct timer_list *timer)
+ 		goto out;
  	}
  
- 	add_entry = kmalloc(sizeof(*add_entry), GFP_ATOMIC);
-@@ -399,6 +397,7 @@ bool mptcp_pm_alloc_anno_list(struct mptcp_sock *msk,
- 	add_entry->retrans_times = 0;
++	timeout = mptcp_get_add_addr_timeout(sock_net(sk));
++	if (!timeout)
++		goto out;
++
+ 	spin_lock_bh(&msk->pm.lock);
+ 
+ 	if (!mptcp_pm_should_add_signal_addr(msk)) {
+@@ -332,7 +337,7 @@ static void mptcp_pm_add_timer(struct timer_list *timer)
+ 
+ 	if (entry->retrans_times < ADD_ADDR_RETRANS_MAX)
+ 		sk_reset_timer(sk, timer,
+-			       jiffies + mptcp_get_add_addr_timeout(sock_net(sk)));
++			       jiffies + timeout);
+ 
+ 	spin_unlock_bh(&msk->pm.lock);
+ 
+@@ -374,6 +379,7 @@ bool mptcp_pm_alloc_anno_list(struct mptcp_sock *msk,
+ 	struct mptcp_pm_add_entry *add_entry = NULL;
+ 	struct sock *sk = (struct sock *)msk;
+ 	struct net *net = sock_net(sk);
++	unsigned int timeout;
+ 
+ 	lockdep_assert_held(&msk->pm.lock);
+ 
+@@ -398,8 +404,9 @@ bool mptcp_pm_alloc_anno_list(struct mptcp_sock *msk,
  
  	timer_setup(&add_entry->add_timer, mptcp_pm_add_timer, 0);
-+reset_timer:
- 	sk_reset_timer(sk, &add_entry->add_timer,
- 		       jiffies + mptcp_get_add_addr_timeout(net));
+ reset_timer:
+-	sk_reset_timer(sk, &add_entry->add_timer,
+-		       jiffies + mptcp_get_add_addr_timeout(net));
++	timeout = mptcp_get_add_addr_timeout(net);
++	if (timeout)
++		sk_reset_timer(sk, &add_entry->add_timer, jiffies + timeout);
  
+ 	return true;
+ }
 -- 
 2.50.0
 
