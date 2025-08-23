@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADB2724C669;
-	Sat, 23 Aug 2025 14:53:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 689AC2E54AD;
+	Sat, 23 Aug 2025 14:53:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755960827; cv=none; b=sVbdnPzCXsenHEK2tmUFEPc4e1gI5j69xqng1T053vWD5STXit3qj9Abp8s4iOwWZOwx4+VFRjY/+D+8gJywGrzrnxJ4NJcMDo7go97b6IkdAqlGOs9R5me9G4b7dNbYarxgQT7EnlhgY1T2mN5atEw4y8Z2zJ2mNvPCqx3AyQM=
+	t=1755960831; cv=none; b=EWYYL0mV+W85fW138iyyfJJDtRyGIpJJJzq3xnYivLb7eNuadGK0B8wAq9ABavs6dbzIrvkJ1jTgRhxxqQr1L0rtfgfOb9TcUusLDDYxPnjPEleGwv9bb3Q9bGsNIKh7uWnGxtawNjQnI10JDGhOjVOCo2YiCH6EBKJnlTpZ/RE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755960827; c=relaxed/simple;
-	bh=bkR7ok2Fe1mqUjbfAt05JJx/lJmr3DU9ajrheIGjoHg=;
+	s=arc-20240116; t=1755960831; c=relaxed/simple;
+	bh=nHDvfFStYuuUkZFG08YYKdZnt8QL0Taevk/S5ROu3bE=;
 	h=Subject:To:Cc:From:Date:In-Reply-To:Message-ID:MIME-Version:
-	 Content-Type; b=nXhgDFJLxCSb8cTzDm8pJLdUzFZNsmwyOfBV/SVqxoau9s5ZNHihd6JgDfyLNk56swvZz0cR/aOMGe8fLscZkrMo9P801msKYnZxrzirBpIDvAHtt4iA3v7A2uBq2IVVLMyW6TW5PQbcbMBA4Ozy/gHhbH/Yp5/5HskOfd0qY58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=2CP5Xo3h; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type; b=QzUIfPwSHOp/9Z9D/ultsG2qbQMg3oaS74QhhhCSVIQswwN4R1yMGWljAczGVddzaP+bLrfJotQHCQvjv0N5RhwrWHRTs1ReMm8eGjY8QUj+B63rMqpk8eG3o7C70nq0PxzMjoaoRaqCFHsiNFYbDP6rVh9Lhez2UYiwPt0tHSw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=R2bmjNX6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="2CP5Xo3h"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28863C4CEE7;
-	Sat, 23 Aug 2025 14:53:46 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="R2bmjNX6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 791CDC4CEE7;
+	Sat, 23 Aug 2025 14:53:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1755960827;
-	bh=bkR7ok2Fe1mqUjbfAt05JJx/lJmr3DU9ajrheIGjoHg=;
+	s=korg; t=1755960830;
+	bh=nHDvfFStYuuUkZFG08YYKdZnt8QL0Taevk/S5ROu3bE=;
 	h=Subject:To:Cc:From:Date:In-Reply-To:From;
-	b=2CP5Xo3hHEGfhLkjQvJD62dRX027zO6kgBUfqABV6+eUmTn5XnFNqCpd7LJy8m3x3
-	 GACYpahu57029ZjX1+8djTIbWS0GUKNjB+zvHMleECx5ZgkH6oxY8sgETPHFNgs3N3
-	 iImSsYnYq1541Q86GIMvk3Muhb2drdeWbrM5X6as=
-Subject: Patch "mptcp: remove duplicate sk_reset_timer call" has been added to the 6.6-stable tree
-To: gregkh@linuxfoundation.org,kuba@kernel.org,matttbe@kernel.org,mptcp@lists.linux.dev,sashal@kernel.org,tanggeliang@kylinos.cn
+	b=R2bmjNX6/q01mdxB1uacLEcXHoTlJkMemNUQEDcMkQKWnid8Vk57vUH+GvJa+1dc1
+	 XmrwXQdU8HEOx2ufoNQY5dQ9/eIQucpK9n7aevTnz7OpFkuGPjNTACv6zn/eWaPwM+
+	 llSen3vr3f75xpFTvIpTW7R+t8z+sGGp9yOpYyMw=
+Subject: Patch "selftests: mptcp: pm: check flush doesn't reset limits" has been added to the 6.6-stable tree
+To: gregkh@linuxfoundation.org,kuba@kernel.org,martineau@kernel.org,matttbe@kernel.org,mptcp@lists.linux.dev,sashal@kernel.org
 Cc: <stable-commits@vger.kernel.org>
 From: <gregkh@linuxfoundation.org>
 Date: Sat, 23 Aug 2025 16:53:35 +0200
-In-Reply-To: <20250822141059.48927-6-matttbe@kernel.org>
-Message-ID: <2025082335-alienable-slideshow-962d@gregkh>
+In-Reply-To: <20250822141059.48927-8-matttbe@kernel.org>
+Message-ID: <2025082335-flyaway-enviable-8e6c@gregkh>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -44,75 +44,68 @@ X-Patchwork-Hint: ignore
 
 This is a note to let you know that I've just added the patch titled
 
-    mptcp: remove duplicate sk_reset_timer call
+    selftests: mptcp: pm: check flush doesn't reset limits
 
 to the 6.6-stable tree which can be found at:
     http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
 
 The filename of the patch is:
-     mptcp-remove-duplicate-sk_reset_timer-call.patch
+     selftests-mptcp-pm-check-flush-doesn-t-reset-limits.patch
 and it can be found in the queue-6.6 subdirectory.
 
 If you, or anyone else, feels it should not be added to the stable tree,
 please let <stable@vger.kernel.org> know about it.
 
 
-From stable+bounces-172411-greg=kroah.com@vger.kernel.org Fri Aug 22 16:15:31 2025
+From stable+bounces-172413-greg=kroah.com@vger.kernel.org Fri Aug 22 16:17:21 2025
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Fri, 22 Aug 2025 16:11:01 +0200
-Subject: mptcp: remove duplicate sk_reset_timer call
+Date: Fri, 22 Aug 2025 16:11:03 +0200
+Subject: selftests: mptcp: pm: check flush doesn't reset limits
 To: mptcp@lists.linux.dev, stable@vger.kernel.org, gregkh@linuxfoundation.org
-Cc: Geliang Tang <tanggeliang@kylinos.cn>, sashal@kernel.org, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, Jakub Kicinski <kuba@kernel.org>
-Message-ID: <20250822141059.48927-6-matttbe@kernel.org>
+Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, sashal@kernel.org, Mat Martineau <martineau@kernel.org>, Jakub Kicinski <kuba@kernel.org>
+Message-ID: <20250822141059.48927-8-matttbe@kernel.org>
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 
-commit 5d13349472ac8abcbcb94407969aa0fdc2e1f1be upstream.
+commit 452690be7de2f91cc0de68cb9e95252875b33503 upstream.
 
-sk_reset_timer() was called twice in mptcp_pm_alloc_anno_list.
+This modification is linked to the parent commit where the received
+ADD_ADDR limit was accidentally reset when the endpoints were flushed.
 
-Simplify the code by using a 'goto' statement to eliminate the
-duplication.
+To validate that, the test is now flushing endpoints after having set
+new limits, and before checking them.
 
-Note that this is not a fix, but it will help backporting the following
-patch. The same "Fixes" tag has been added for this reason.
+The 'Fixes' tag here below is the same as the one from the previous
+commit: this patch here is not fixing anything wrong in the selftests,
+but it validates the previous fix for an issue introduced by this commit
+ID.
 
-Fixes: 93f323b9cccc ("mptcp: add a new sysctl add_addr_timeout")
+Fixes: 01cacb00b35c ("mptcp: add netlink-based PM")
 Cc: stable@vger.kernel.org
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Reviewed-by: Mat Martineau <martineau@kernel.org>
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Link: https://patch.msgid.link/20250815-net-mptcp-misc-fixes-6-17-rc2-v1-4-521fe9957892@kernel.org
+Link: https://patch.msgid.link/20250815-net-mptcp-misc-fixes-6-17-rc2-v1-3-521fe9957892@kernel.org
 Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-[ Before commit e4c28e3d5c09 ("mptcp: pm: move generic PM helpers to
-  pm.c"), mptcp_pm_alloc_anno_list() was in pm_netlink.c. The same patch
-  can be applied there without conflicts. ]
+[ Conflicts in pm_netlink.sh, because some refactoring have been done
+  later on: commit 3188309c8ceb ("selftests: mptcp: netlink:
+  add 'limits' helpers") and commit c99d57d0007a ("selftests: mptcp: use
+  pm_nl endpoint ops") are not in this version. The same operation can
+  still be done at the same place, without using the new helper. ]
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/mptcp/pm_netlink.c |    5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ tools/testing/selftests/net/mptcp/pm_netlink.sh |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -373,9 +373,7 @@ bool mptcp_pm_alloc_anno_list(struct mpt
- 		if (WARN_ON_ONCE(mptcp_pm_is_kernel(msk)))
- 			return false;
+--- a/tools/testing/selftests/net/mptcp/pm_netlink.sh
++++ b/tools/testing/selftests/net/mptcp/pm_netlink.sh
+@@ -134,6 +134,7 @@ ip netns exec $ns1 ./pm_nl_ctl limits 1
+ check "ip netns exec $ns1 ./pm_nl_ctl limits" "$default_limits" "subflows above hard limit"
  
--		sk_reset_timer(sk, &add_entry->add_timer,
--			       jiffies + mptcp_get_add_addr_timeout(net));
--		return true;
-+		goto reset_timer;
- 	}
- 
- 	add_entry = kmalloc(sizeof(*add_entry), GFP_ATOMIC);
-@@ -389,6 +387,7 @@ bool mptcp_pm_alloc_anno_list(struct mpt
- 	add_entry->retrans_times = 0;
- 
- 	timer_setup(&add_entry->add_timer, mptcp_pm_add_timer, 0);
-+reset_timer:
- 	sk_reset_timer(sk, &add_entry->add_timer,
- 		       jiffies + mptcp_get_add_addr_timeout(net));
+ ip netns exec $ns1 ./pm_nl_ctl limits 8 8
++ip netns exec $ns1 ./pm_nl_ctl flush
+ check "ip netns exec $ns1 ./pm_nl_ctl limits" "accept 8
+ subflows 8" "set limits"
  
 
 
