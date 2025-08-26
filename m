@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19B5B29ACDB
-	for <mptcp@lists.linux.dev>; Tue, 26 Aug 2025 09:29:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD97A2F99A8
+	for <mptcp@lists.linux.dev>; Tue, 26 Aug 2025 09:29:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756200590; cv=none; b=Vm6nM83bHEyAh4MKjvUSIebExZ8O+E66tBVaoNETVfzAW3M08AY49Im+Y86mKTlmBvAhSHKARXEnfOkZfmiqd3DbsOaoc9N/v4e0QCOptCY+QqDyA0ZsVz2STkKsl2OoX3dzgDkys+42kLhny5tvKeNfNf1ghsHKs4J+NWy/WjE=
+	t=1756200591; cv=none; b=uJfodj/jmZ3B9y7xfM80wc3kC5ofvC3Yfiq+JSC8JNMWx3+ul5MEcBVeNnwK3yYTZJr8YsGQ6NuCJGbLEI708zn2IdfefWB4oZ2bUlkCI9SI1NklDK32GNVU7wEnCtn2XGis/Iydp+VAbdrc/ho94P44E+4GAw6HSSp2X2g7V/I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756200590; c=relaxed/simple;
-	bh=I6S0BVneL2OavfY3dEAfQM6f0qmK4LFuDqvUd0mChDI=;
+	s=arc-20240116; t=1756200591; c=relaxed/simple;
+	bh=ut0LZqG+bpXm01iCKmp6mOogHMIbdycntYYmCYxtPvw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Swro1Axe/N8TIcVHbzaBMVUiZsYptJy2N0wFHpoG+amVRPTky6Z+E+q9RQ8Di65755o075VGoikrHkYqixuo1w5e9d/CY+H7GoLGRayvvOcm0xDUJ2aqBdGdn+UhTy53I05OpVR9K5dwHdpJelMO7DNwTGZ9qpYe2AHfvZ5J43M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qm02LcyM; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=EA5UPdgul+0IOKG6SOXOcxrjDXCjhPljxvLiniNcNIzIZQ4CEipFDTnGEr0u3BbIKFkXqCae7Nnl7dOJ1Tsv2xotrMEjiRpTyv4KLV9GzMnFyVHANCQ5Be/Idumq+LlS/zEJoQdPxdlBM3ZUucwHWIKdj6h6iFTzXf5fn27XrxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T/b8+ysQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qm02LcyM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A539C4CEF1;
-	Tue, 26 Aug 2025 09:29:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T/b8+ysQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28BBCC116C6;
+	Tue, 26 Aug 2025 09:29:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756200589;
-	bh=I6S0BVneL2OavfY3dEAfQM6f0qmK4LFuDqvUd0mChDI=;
+	s=k20201202; t=1756200591;
+	bh=ut0LZqG+bpXm01iCKmp6mOogHMIbdycntYYmCYxtPvw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Qm02LcyMxjlcudS0MBPFsmJullC9Kngwjuh71VvnYWe6I7DluB9N4EcB33zvAy7oz
-	 LgMBTdJX9NGEyGf7axjXXrXKAOXZIayKKRclLTCsFGpbgvccP1bCEJQM8hW/j0ibk5
-	 TW06nL4HZBtibJ3mnlunDVR+fnxVcfLItIeqClAWRRIpVCvdVk7rRocITRrMxR3fQB
-	 yuLJUGmWenBugf1l3i+WxXtMXXDPXDA1DZvQM5DZMO5ip8JX7BdY9sFMxwGXRWT4Hy
-	 F53jUisHOJ3WObgD3swmInrzEE5cE3alZ/ERWM9rUg99howKEc0GYuunCsNgO2GghU
-	 RJWekq4EdVpeA==
+	b=T/b8+ysQ6dNGj4R5o8TEDgz8GuGtYnX7SKulZdxpE7JsY0L/uZ52VSyG02eEV4Dpo
+	 MDBd+V4YZoMw8kO69qK2zxkOFteWrDRMVzoAVuZwbsGBT7KahRCYh3Cu5QKwqNEd4j
+	 bONrO4CIEXMzisBf6j1XdhMQafRnzSgo3M1b0rSe7ublmGnIRxqFqOwe2geLtEqycJ
+	 3aR9mONdsaZtA9tYkQXvfZJ6tJ5KFb9QMSN9tUkTNovmIEDt+G3sHJDReD1yty8M7O
+	 +iOKzs4+cGBtVXqPTnzaadBed7yz7U2HJoK4UeFWaJiJQ8drq2Ct2VZC16tInOxI9o
+	 HxGHjgiImTNCg==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v3 03/14] selftests: mptcp: sockopt: add inq argument
-Date: Tue, 26 Aug 2025 17:29:27 +0800
-Message-ID: <a9b81925838676866dfda8881f08a2645042b6af.1756200029.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v3 04/14] selftests: mptcp: sockopt: set TCP_INQ on accepted sockets
+Date: Tue, 26 Aug 2025 17:29:28 +0800
+Message-ID: <434baf239967e120a815419972c5ddb57453ed75.1756200029.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <cover.1756200029.git.tanggeliang@kylinos.cn>
 References: <cover.1756200029.git.tanggeliang@kylinos.cn>
@@ -45,55 +45,48 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Introduce -i option to enable TCP_INQ testing. This prepares for
-consolidating TCP_INQ tests into a single binary by adding the necessary
-command-line interface.
+Add helper functions to conditionally set TCP_INQ sockopt on accepted
+sockets when running in inq mode. This ensures proper testing of TCP_CM_INQ
+functionality by enabling the required socket option on both ends of the
+connection. This setup is necessary for validating TCP_CM_INQ behavior
+during TCP_INQ-specific tests.
+
+These codes are from mptcp_inq.c.
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- tools/testing/selftests/net/mptcp/mptcp_sockopt.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ tools/testing/selftests/net/mptcp/mptcp_sockopt.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-index 05caa9a57ac4..cb3d8dc34997 100644
+index cb3d8dc34997..366e4aa4df0b 100644
 --- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
 +++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-@@ -30,6 +30,7 @@
- static int pf = AF_INET;
- static int proto_tx = IPPROTO_MPTCP;
- static int proto_rx = IPPROTO_MPTCP;
-+static bool inq;
- 
- #ifndef IPPROTO_MPTCP
- #define IPPROTO_MPTCP 262
-@@ -138,7 +139,7 @@ static void die_perror(const char *msg)
- 
- static void die_usage(int r)
- {
--	fprintf(stderr, "Usage: mptcp_sockopt [-6] [-t tcp|mptcp] [-r tcp|mptcp]\n");
-+	fprintf(stderr, "Usage: mptcp_sockopt [-6] [-t tcp|mptcp] [-r tcp|mptcp] [-i]\n");
- 	exit(r);
+@@ -715,6 +715,14 @@ static void process_one_client(int fd, int pipefd)
+ 	close(fd);
  }
  
-@@ -277,7 +278,7 @@ static void parse_opts(int argc, char **argv)
++static void do_setsockopt_inq(int fd)
++{
++	int on = 1;
++
++	if (setsockopt(fd, IPPROTO_TCP, TCP_INQ, &on, sizeof(on)))
++		die_perror("setsockopt(TCP_INQ)");
++}
++
+ static int xaccept(int s)
  {
- 	int c;
+ 	int fd = accept(s, NULL, 0);
+@@ -722,6 +730,9 @@ static int xaccept(int s)
+ 	if (fd < 0)
+ 		die_perror("accept");
  
--	while ((c = getopt(argc, argv, "h6t:r:")) != -1) {
-+	while ((c = getopt(argc, argv, "h6t:r:i")) != -1) {
- 		switch (c) {
- 		case 'h':
- 			die_usage(0);
-@@ -291,6 +292,9 @@ static void parse_opts(int argc, char **argv)
- 		case 'r':
- 			proto_rx = protostr_to_num(optarg);
- 			break;
-+		case 'i':
-+			inq = true;
-+			break;
- 		default:
- 			die_usage(1);
- 			break;
++	if (inq)
++		do_setsockopt_inq(fd);
++
+ 	return fd;
+ }
+ 
 -- 
 2.48.1
 
