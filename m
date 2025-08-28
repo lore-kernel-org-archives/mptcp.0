@@ -1,55 +1,55 @@
 Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C435324166D
-	for <mptcp@lists.linux.dev>; Thu, 28 Aug 2025 16:06:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CAF4298994
+	for <mptcp@lists.linux.dev>; Thu, 28 Aug 2025 16:12:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756397206; cv=none; b=dilpxSkeIOIr0oF6XeJkZV9cKrcMnwfe19bQszU3B33L/RHQhysv9C8wH45/hpaJJWyfPW5nAfzhtoxWOVM/+JVDZ1ynLOapUJnMEgFEXz2d5PzRpDeDDE7C+cfZeXSHIp2/i/ZfDMNdZ3dI2X8Gx8hkCmrKJKX9xrgZL/+G9hg=
+	t=1756397575; cv=none; b=SPt0FbpGj6jhV10AtMRvxrTF4Mt4tdIG3xTi8Au3iZNQm3U7tX4EM9YAMf0YmBlnEVIMRQ1L6ixcBVMXfgoiq6kTOFGGZiQ6KGOilFKfpsxPi0ATESjE1Qzr0gF3H5qSlije+HpSHiSrtQSkRKvdnLuZl+XIibJodmFrG5B3Sfw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756397206; c=relaxed/simple;
-	bh=Wndmiuu7rqGlnyrzJklujdi+w1nsc1H0JRVe8sWkzYI=;
+	s=arc-20240116; t=1756397575; c=relaxed/simple;
+	bh=4B2eJw1KpiYme0YPN/U/4sST30EYcOA/PKrK8BjlP2g=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=I5SdTQio0bM+3qY/xbDqDoYZgYn9pVevP4k+xi3W6IQzs2Y6UuDtCJ8d0YPpRShGklBCCuL6A/mponlshg27GjtHcrFWYz7jSUPq/rvM9Lfb3QolBwiNL2bvKL7puQ0/sIygWdaeMzQ9NQKsvQrdl+gcO28e/10S3LzeX1Eh6Iw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=openai.com; spf=pass smtp.mailfrom=openai.com; dkim=pass (1024-bit key) header.d=openai.com header.i=@openai.com header.b=JalORRiV; arc=none smtp.client-ip=209.85.208.172
+	 To:Cc:Content-Type; b=mgznZtlCtXMVWIw6ihRzDU4BiQKDWE1KnrbNxkWcIPzELPuqIYtL7J8rRkATSGuAdM8iJe6X8EKO6gdWVZKmH4Zd3F/4A538vGmPMDpTPwLrN6CH/rjCtD009HT0FhqtaYJcx6QrFrXtFx4dip6/E1B5Vjsch+WXdDl3J0IsRzk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=openai.com; spf=pass smtp.mailfrom=openai.com; dkim=pass (1024-bit key) header.d=openai.com header.i=@openai.com header.b=NdmEYcNy; arc=none smtp.client-ip=209.85.208.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=openai.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=openai.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=openai.com header.i=@openai.com header.b="JalORRiV"
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-336674f95e7so8424351fa.1
-        for <mptcp@lists.linux.dev>; Thu, 28 Aug 2025 09:06:44 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=openai.com header.i=@openai.com header.b="NdmEYcNy"
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-336a73cb9ddso5770311fa.1
+        for <mptcp@lists.linux.dev>; Thu, 28 Aug 2025 09:12:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=openai.com; s=google; t=1756397203; x=1757002003; darn=lists.linux.dev;
+        d=openai.com; s=google; t=1756397572; x=1757002372; darn=lists.linux.dev;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=W14VqhiTF0/pXSt3jmnac8H7Z5/6b7GEl2tf83G4UFk=;
-        b=JalORRiVWn0Aqg1sb4uVtxRKx1QRRl9DMGq3o9VmQRgMamAMCAQHMPaKRwKmQN/ZLH
-         SZruMBEFkQAjef44ldWo7WYuoQ5XPiwzBYPbapDNzCf9o0OQ7wpt8QSBnkyegPT1rqwK
-         0R71uJc+W1L/AGjrWfSOgO6Y1DnwakdJySNmk=
+        bh=MzmOcn89CaW2l5U7vqEPxzkV+D1BuPsU6i7VsNSaD64=;
+        b=NdmEYcNyZywNUEfCu0mwwBz0OMWmjUScB8fTNSRg2+8mokZritYgBGElMpw2ZJLMpZ
+         0qwv4yYAWGul460t4lwENpZ6N6hAjBh/ISY20k5ist/ehcuRTthJJ8dHgU5T+c5YufQv
+         KYq8hQr0JKcMCGl6uo0eh+LVFMWpqu8Im0tRM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756397203; x=1757002003;
+        d=1e100.net; s=20230601; t=1756397572; x=1757002372;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=W14VqhiTF0/pXSt3jmnac8H7Z5/6b7GEl2tf83G4UFk=;
-        b=Tl+53ir/zs7KL0uPuRjL/hHqjZ9amix3ajgY8PPP3vVFmhDaV5zaRDMOqR6ttWwPkU
-         IKKW3ENxYSsONj2j6gYqsbU4T4gyxHF+0+9ZtDBTOWhaZIToEAbX549HN8VxN/y1qN+Q
-         Rwtw+Xsf+JBxo83l3gOL881lIbpH5+CTKCmSKXb7yjfeDlNeUKyJx3lQYLuSSvOKxq4k
-         4V+MbLlVggrd+U26SZbNN0x1Nb/uKmYpFyad+Zub1LEPxyqF175jSo4A8MdAN1A4fupe
-         sP60zmIAABHoaU0ptlAFIdYtMdMi+dJrNXuzB5GHD8In2j2WRwZaqunKN4D9eiW0Kkuz
-         wDrw==
-X-Gm-Message-State: AOJu0YwSh+PihbXMaW9ZMTf2Navm5le3pzC6CXVQEVoJdVciqpdjiv2S
-	Fmj3+ugCkemIp/jJjCP5MuPS9QkmLS6CMpf4fBU5s3tLiE6k74k/c4ueFwzqrEX8SOpqmidhRTA
-	hlYfuo6OuQQRt//40k0t26ZLRLT6CBjpBwu14Y5LjDg==
-X-Gm-Gg: ASbGncuG6elxdLzSdFHjQI010eXCe4ckHXA/+45nahdXSWsBs7e7pTCFqv/t+1EcSHj
-	rUrJGsHJSvKqFL0aDSjL5XhgfBNPFd+HJyLr2Y7KyoyXEEf0BnU+j4A/a8lGQwuP/UUbmvsRUD5
-	DYMt8PNAeB0/YTuE2NXm/vXSaLrXTfNfhLj3d504FFoZNwNqdNeRCxizPjIc0vJ7ptSAS1lFNMF
-	09nkrwD8GCtZwc7fF8CuYKuBaLb1dch9P10uINWXQVFCMDx3RMKAf4LsCW9/rw=
-X-Google-Smtp-Source: AGHT+IGk58BzpKHD5ogWoPlGN/winrvs7qXnKimKjBKrbd8Ea20qqUWalldT47//Vec/WlACNBEg2+re/TuYlHfRZBc=
-X-Received: by 2002:a2e:a553:0:b0:336:9cbe:3948 with SMTP id
- 38308e7fff4ca-3369cbe3e5emr12348881fa.23.1756397202830; Thu, 28 Aug 2025
- 09:06:42 -0700 (PDT)
+        bh=MzmOcn89CaW2l5U7vqEPxzkV+D1BuPsU6i7VsNSaD64=;
+        b=Ro1CVRd498uFbfvDDa+9Aj98AkzEYlXCxzr+x/oIX9QIvOg7AdaLkz21KOcoaO19GU
+         U62wpK48RBTeoS7NhgDHyeexIVoQaXHx3ITYHVV4FgOHQU5oi4dv9o60AfAM488BCSLM
+         U5O2jkLD+yTMsRAYwJQV/attESmGgB6jeaAaf9lkAUdi00zXKE0Gf5DyDUu/N04cNuZz
+         fVIuL6B9hk/NYuGQT5IFQQB840nM5VYqJQt8fB9brfSZb3uF1LEJFKbrOmKwkVIbb2Jt
+         xlXbXzINmEi0AlWz3z3vTebSo4sfVVaVMRkUiabDSm5cBqyNXS5RYujHUN168EcesGtc
+         o+9w==
+X-Gm-Message-State: AOJu0YxB4PgF69mJA5AGO1SG54GBuieDaQbDa+dGr6mfAZEFp/ut2cI+
+	Vbp4cjAj9GVgfrwukZ1aZbKbNjI+r6KQBTNDiSGifsbW+qEa4a+srkeua0l7uhysdBZI4wrEJD5
+	IUWl4ScYVBsKunoJzzQC2z6xJfEOHRPSah1HoAxyi1bzbXAbGywUIBG8=
+X-Gm-Gg: ASbGncsjhA4Ig715YX7a/mUguPHudip279XFeMOjQhemIuNOTF76WQqfowrLv5ey9fj
+	jP2FKkrPqJOXvGg+7dkkkiU5IPHSxF6yE+fO85HhmVup4mJcJqgt1WW082NzpvqFdok25rZCiig
+	f/NiQftuoh1J/kT5YZgAv2qVyrJz0WL74e3noY7zKjsDRSs1fUelShGvdym6sAlf1uWKcvghcvS
+	mQQxnETv/oppHon/inIii+Zdnywfm02w2bvIqOPZSp8FK3Y4z9l1tmzHH+hqSEWIRp6vEeTYQ==
+X-Google-Smtp-Source: AGHT+IHD2M4hrAPQnypYMHtmTikzEUCsYJ7in/1o/7Ue9lwQDgsQ3QGq3EUtYjsOzwCvnu4lvx5BofDrMbm02vv9gQE=
+X-Received: by 2002:a2e:a9a9:0:b0:32b:4773:7a80 with SMTP id
+ 38308e7fff4ca-33650f3e3c5mr70292961fa.25.1756397571512; Thu, 28 Aug 2025
+ 09:12:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -57,21 +57,18 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 References: <20250825-b4-mptcp_perf-v2-0-5d2d68dfa8af@openai.com>
- <20250825-b4-mptcp_perf-v2-1-5d2d68dfa8af@openai.com> <1d98d911-34a7-42cd-b963-26eede462547@kernel.org>
-In-Reply-To: <1d98d911-34a7-42cd-b963-26eede462547@kernel.org>
+ <20250825-b4-mptcp_perf-v2-2-5d2d68dfa8af@openai.com> <c4c9247d-f1a3-4b2a-8a9a-600e151f6124@kernel.org>
+In-Reply-To: <c4c9247d-f1a3-4b2a-8a9a-600e151f6124@kernel.org>
 From: Christoph Paasch <cpaasch@openai.com>
-Date: Thu, 28 Aug 2025 09:06:31 -0700
-X-Gm-Features: Ac12FXx8RnnQHmenHADLJMpdyKf4-ElopoKZLmL-ElVYclrv3x9mVtvEccEUhbk
-Message-ID: <CADg4-L_UZY0rYDx4w-cX03oMhsEyCND3qc_mPxYEAquE63x_5w@mail.gmail.com>
-Subject: Re: [PATCH mptcp-next v2 1/2] net: Add rfs_needed() helper
+Date: Thu, 28 Aug 2025 09:12:40 -0700
+X-Gm-Features: Ac12FXy5cA4r7hZkz1ABmk8iVey1h7KmyFSbidFVfAVpZVDQUJPGeckqgb2Vl48
+Message-ID: <CADg4-L_+4+e57PFhCTqZBVSg=Y6DW6suK9HSxGUvYfvRXYob3w@mail.gmail.com>
+Subject: Re: [PATCH mptcp-next v2 2/2] mptcp: record subflows in RPS table
 To: Matthieu Baerts <matttbe@kernel.org>
 Cc: MPTCP Upstream <mptcp@lists.linux.dev>, Mat Martineau <martineau@kernel.org>, 
 	Geliang Tang <geliang@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-
-[resend without HTML - how do I turn on "Plain Text Mode" in the gmail app =
-???]
 
 On Thu, Aug 28, 2025 at 8:50=E2=80=AFAM Matthieu Baerts <matttbe@kernel.org=
 > wrote:
@@ -81,58 +78,114 @@ On Thu, Aug 28, 2025 at 8:50=E2=80=AFAM Matthieu Baerts <matttbe@kernel.org=
 > On 26/08/2025 06:30, Christoph Paasch via B4 Relay wrote:
 > > From: Christoph Paasch <cpaasch@openai.com>
 > >
-> > Add a helper to check if RFS is needed or not. Allows to make the code =
-a
-> > bit cleaner and the next patch to have MPTCP use this helper to decide
-> > whether or not to iterate over the subflows.
+> > Accelerated Receive Flow Steering (aRFS) relies on sockets recording
+> > their RX flow hash into the rps_sock_flow_table so that incoming packet=
+s
+> > are steered to the CPU where the application runs.
 > >
-> > tun_flow_update() was calling sock_rps_record_flow_hash() regardless of
-> > the state of rfs_needed. This was not really a bug as sock_flow_table
-> > simply ends up being NULL and thus everything will be fine.
-> > This commit here thus also implicitly makes tun_flow_update() respect
-> > the state of rfs_needed.
+> > With MPTCP, the application interacts with the parent MPTCP socket whil=
+e
+> > data is carried over per-subflow TCP sockets. Without recording these
+> > subflows, aRFS cannot steer interrupts and RX processing for the flows
+> > to the desired CPU.
+> >
+> > Record all subflows in the RPS table by calling sock_rps_record_flow()
+> > for each subflow at the start of mptcp_sendmsg(), mptcp_recvmsg() and
+> > mptcp_stream_accept(), by using the new helper
+> > mptcp_rps_record_subflows().
+> >
+> > It does not by itself improve throughput, but ensures that IRQ and RX
+> > processing are directed to the right CPU, which is a
+> > prerequisite for effective aRFS.
 >
-> Thank you for having added this new helper!
+> Thank you for the v2! I just have two small questions below, but I don't
+> think they are blocking.
 >
-> Acked-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
->
-> > Suggested-by: Matthieu Baerts <matttbe@kernel.org>
 > > Signed-off-by: Christoph Paasch <cpaasch@openai.com>
 > > ---
-> >  include/net/rps.h | 85 ++++++++++++++++++++++++++++++++++++-----------=
---------
-> >  1 file changed, 56 insertions(+), 29 deletions(-)
+> >  net/mptcp/protocol.c | 21 +++++++++++++++++++++
+> >  1 file changed, 21 insertions(+)
 > >
-> > diff --git a/include/net/rps.h b/include/net/rps.h
-> > index d8ab3a08bcc4882e2ad9c84c22ef26b254c14680..a89d2822a257a1fcf54e972=
-2fdc22d01c28cc87b 100644
-> > --- a/include/net/rps.h
-> > +++ b/include/net/rps.h
->
-> (...)
-> > @@ -144,6 +132,45 @@ static inline void sock_rps_delete_flow(const stru=
-ct sock *sk)
-> >                       WRITE_ONCE(table->ents[index], RPS_NO_CPU);
-> >       }
-> >       rcu_read_unlock();
-> > +}
-> > +#endif /* CONFIG_RPS */
-> > +
-> > +static inline bool rfs_is_needed(void)
+> > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> > index 4b510e04724f5c8be08a00a1cc03093bcd031905..543506b6a011af782083818=
+57ab9c1962cbc6636 100644
+> > --- a/net/mptcp/protocol.c
+> > +++ b/net/mptcp/protocol.c
+> > @@ -12,6 +12,7 @@
+> >  #include <linux/sched/signal.h>
+> >  #include <linux/atomic.h>
+> >  #include <net/aligned_data.h>
+> > +#include <net/rps.h>
+> >  #include <net/sock.h>
+> >  #include <net/inet_common.h>
+> >  #include <net/inet_hashtables.h>
+> > @@ -1740,6 +1741,20 @@ static u32 mptcp_send_limit(const struct sock *s=
+k)
+> >       return limit - not_sent;
+> >  }
+> >
+> > +static void mptcp_rps_record_subflows(const struct mptcp_sock *msk)
 > > +{
-> > +#ifdef CONFIG_RPS
-> > +     return static_branch_unlikely(&rfs_needed);
-> > +#else
-> > +     return false;
-> > +#endif
+> > +     struct mptcp_subflow_context *subflow;
+> > +
+> > +     if (!rfs_is_needed())
+> > +             return;
+> > +
+> > +     mptcp_for_each_subflow(msk, subflow) {
+> > +             struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
+> > +
+> > +             sock_rps_record_flow(ssk);
 >
-> It looks strange to see all these #ifdef/#else inside the functions,
-> instead of "empty" functions at the end when CONFIG_RPS is not defined
-> as it is usually being done. But I see you are following what is
-> currently being done in this file, so all good!
+> I guess we don't want to call _sock_rps_record_flow() here to avoid
+> calling rfs_is_needed() multiple times in a row, because it is just an
+> extra static branch check?
 
-Yes, I also prefer the style with the empty function. But also yes, I
-just followed the style of the file.
+IMO, the _sock_rps_* functions are not meant to be called  from
+outside rps.h. They are just in the rps.h file so that they can be
+static inline.
+In any case, the _sock_rps_* functions are guarded by #ifdef CONFIG_RPS.
+
+> > +     }
+> > +}
+> > +
+> >  static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t l=
+en)
+> >  {
+> >       struct mptcp_sock *msk =3D mptcp_sk(sk);
+> > @@ -1753,6 +1768,8 @@ static int mptcp_sendmsg(struct sock *sk, struct =
+msghdr *msg, size_t len)
+> >
+> >       lock_sock(sk);
+> >
+> > +     mptcp_rps_record_subflows(msk);
+> > +
+> >       if (unlikely(inet_test_bit(DEFER_CONNECT, sk) ||
+> >                    msg->msg_flags & MSG_FASTOPEN)) {
+> >               int copied_syn =3D 0;
+> > @@ -2131,6 +2148,8 @@ static int mptcp_recvmsg(struct sock *sk, struct =
+msghdr *msg, size_t len,
+> >               goto out_err;
+> >       }
+> >
+> > +     mptcp_rps_record_subflows(msk);
+> > +
+> >       timeo =3D sock_rcvtimeo(sk, flags & MSG_DONTWAIT);
+> >
+> >       len =3D min_t(size_t, len, INT_MAX);
+> > @@ -3921,6 +3940,8 @@ static int mptcp_stream_accept(struct socket *soc=
+k, struct socket *newsock,
+> >                               mptcp_sock_graft(ssk, newsock);
+> >               }
+> >
+> > +             mptcp_rps_record_subflows(msk);
+>
+> Out of curiosity, why not calling sock_rps_record_flow(ssk) here?
+
+Again, primarily to keep the code clean. MPTCP-code calls
+mptcp_rps_record_subflows, which calls sock_rps_record_flow() which
+calls the _sock_rps helpers. In my opinion that is a better structure
+and flow.
+No real pure technical reason.
 
 
 Christoph
