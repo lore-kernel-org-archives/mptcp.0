@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D03C12E2288
-	for <mptcp@lists.linux.dev>; Thu, 28 Aug 2025 16:25:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54E65320CD6
+	for <mptcp@lists.linux.dev>; Thu, 28 Aug 2025 16:27:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756398314; cv=none; b=oi9FrZeL8L4b9C7IfU/xBOZHyhxHNY8aGdMflOuhpvPlpH/WQY4FkkJuIpEM61pQLqt4Pi3zk3pmAXt3hTBMOrXlU9OkNQJ3A40hVzO/BzdGuCx+QCVqmGWW8yl2MwkCGtLf+NcGq8J+B9LyZyn02VJIs8fL/NqBTxUMWp+zK2I=
+	t=1756398466; cv=none; b=Pomo59fB613lUMGm15T5k9Yzzr7nrd5rlQqk1Pr4OzZYDps/X6xkE0yuPiPn10H7VklyY2aCft0QQ1R5cSFdugYdytX/FBjlknmrrGPmja+k+Ir+O6Ck8wfrjhJH34j35daJ5ICqGLL0pPLeVilBCtytOFgBunX9Jp/780yD6qs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756398314; c=relaxed/simple;
-	bh=eJ7i6uRiTUcfqDj8/PsTe68mNuPCuBHoCqK0JbbDZ7k=;
+	s=arc-20240116; t=1756398466; c=relaxed/simple;
+	bh=LDOGMD07nZoZP/OEJ4Sz7BYQyWHi4vvsvEEV8Dxv5HY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BbaldVmIxJkHT7ExYbIrVnTzNS0SInJAQtdNC7ovneHoCnKxOrdndWa7VpI9EV4zDHzsBsvj9NgDibC2JJrrhkfNXe9nPVxliiY1R5QQRRjaUg33d9oTUzSvAXb/5S4fu9I0h3B7eD8ZIN8YYU6z6yQYA8h/ojqB+IdE9gZ0fxs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ty3PbAAQ; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=Wi2NJEH6uK9WPcsAP6R8A5RetEjOIW8hXDD2MNPoICCwBuPkkZrBb51VDL/uzwjFaTtTtJaQgPaCquExI5ftyCfhamRqoDNot+dGzt9KJGMriV3HHNjf3b5AsaNzl0fRMvlvpckOiH5j77II2qEnAtlE92hIyrnAZgakBZIMgjo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ye7lnoZ9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ty3PbAAQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 403ACC4CEEB;
-	Thu, 28 Aug 2025 16:25:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ye7lnoZ9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9688C4CEEB;
+	Thu, 28 Aug 2025 16:27:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756398314;
-	bh=eJ7i6uRiTUcfqDj8/PsTe68mNuPCuBHoCqK0JbbDZ7k=;
+	s=k20201202; t=1756398465;
+	bh=LDOGMD07nZoZP/OEJ4Sz7BYQyWHi4vvsvEEV8Dxv5HY=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ty3PbAAQauL3bWriWUsAch8hrPC26xG+1nhQ6s+d/szkG8C5lruOtGVSMcka72N4D
-	 roP9DKXGsnnXzyTjxTVp42yh6goBMdG0aolLa7UsFidNgEsZEXw1B/UkC19ZvNcyPQ
-	 aCtgyA8dkte6O/8mChZb9isQnNhR3qR9NWnshJPB1kcH95cOcYCPqs2qSNtBrF6yuv
-	 bj92WS923Ae/zmNO73ru7q9/mC/bLheIMRhHbgpc62QfqN/i0jjfe+qSeLj79IeexM
-	 VYbMFQW25ceJzcNyRFD0bLYN9JcV6Ndas7knC6pY08wS81n1e7v+D0vIWcsiTctsMZ
-	 TpoqG7/2mmecw==
-Message-ID: <9b9ebd90-0b55-4d61-b436-ff43e01333af@kernel.org>
-Date: Thu, 28 Aug 2025 18:25:11 +0200
+	b=Ye7lnoZ9IetoQeKuugThFeHoicBtAX1c2385zeE5etPkekVHNRcnY7fcE/Yh4f7WK
+	 YZxavyJzbeQL9Pechfmo1V5GHnvR+JhS97s2O64TJ/bgj3Rz38jcjghvl0VV/J6pSG
+	 IPsOeMjM5dNlyRgT2boKM+FEE6Z6HnuLWCTP9c3qqtdqhkJ9z4eW5m2QZSVeNBPVZO
+	 o2YHyhMmbU6JNIO6tQY6ICBghvHQemcmwZy8HErf33pFmUI+aHPpwLQSLMHtLDdghX
+	 s1zvFiuJIf5KV2ZChetGKQYEvmiWbA9E/gKcZKslRUjuSwbHOxYwn3katSUxWM/sqC
+	 9ICl/+EYKYgww==
+Message-ID: <43f3ba6e-84d2-4ee8-b4fa-ffe6cc0354c7@kernel.org>
+Date: Thu, 28 Aug 2025 18:27:42 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,15 +35,18 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v2 2/2] mptcp: record subflows in RPS table
+Subject: Re: [PATCH mptcp-next 1/2] mptcp: Add support for SO_MAX_PACING_RATE
 Content-Language: en-GB, fr-BE
 To: Christoph Paasch <cpaasch@openai.com>
 Cc: MPTCP Upstream <mptcp@lists.linux.dev>,
  Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>
-References: <20250825-b4-mptcp_perf-v2-0-5d2d68dfa8af@openai.com>
- <20250825-b4-mptcp_perf-v2-2-5d2d68dfa8af@openai.com>
- <c4c9247d-f1a3-4b2a-8a9a-600e151f6124@kernel.org>
- <CADg4-L_+4+e57PFhCTqZBVSg=Y6DW6suK9HSxGUvYfvRXYob3w@mail.gmail.com>
+References: <20250802-b4-mptcp_setsockopt-v1-0-50d4905a4c2b@openai.com>
+ <20250802-b4-mptcp_setsockopt-v1-1-50d4905a4c2b@openai.com>
+ <f15385c8-cbec-4434-9dcb-5a0e71581314@kernel.org>
+ <CADg4-L9n4YeoTPU05rsNLqSW3+Q5aY-1xOSburpvi02uHbPQAA@mail.gmail.com>
+ <f1882de4-a03f-4955-84cc-3ddd34e430a6@kernel.org>
+ <70da4df6-d954-460b-a089-a1171d7b2dd9@kernel.org>
+ <CADg4-L9yyiqhGkTSk0m2e5AXSzOuYM4q1-QTTUgUkgxjEW+v_A@mail.gmail.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -89,126 +92,55 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <CADg4-L_+4+e57PFhCTqZBVSg=Y6DW6suK9HSxGUvYfvRXYob3w@mail.gmail.com>
+In-Reply-To: <CADg4-L9yyiqhGkTSk0m2e5AXSzOuYM4q1-QTTUgUkgxjEW+v_A@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On 28/08/2025 18:12, Christoph Paasch wrote:
-> On Thu, Aug 28, 2025 at 8:50 AM Matthieu Baerts <matttbe@kernel.org> wrote:
+Hi Christoph,
+
+On 28/08/2025 18:13, Christoph Paasch wrote:
+> On Thu, Aug 28, 2025 at 3:45 AM Matthieu Baerts <matttbe@kernel.org> wrote:
+>> On 04/08/2025 19:38, Matthieu Baerts wrote:
+>>> On 04/08/2025 19:05, Christoph Paasch wrote:
+
+(...)
+
+>>>> Back to my use-case. I can see why we don't want to use
+>>>> SO_MAX_PACING_RATE for that, if that's what we (the community) agree
+>>>> on.
+>>>> In that case, I guess it needs to be a new MPTCP-specific option ?
+>>>
+>>> I guess we can support both behaviours: one to limit per MPTCP
+>>> connection, and the other one per subflow.
+>>>
+>>> One would be set via setsockopt(SOL_SOCKET, SO_MAX_PACING_RATE), and the
+>>> other one with setsockopt(SOL_MPTCP, XXX). I guess SO_MAX_PACING_RATE
+>>> should be for the whole MPTCP connection, no? In this case, I guess we
+>>> should not change the behaviour: not doing a limit per subflow when
+>>> using SO_MAX_PACING_RATE in some versions, then switching to a limit per
+>>> connection, right?
+>>>
+>>> If so, would it be OK to limit per subflow via something like:
+>>>
+>>>   setsockopt(SOL_MPTCP, MPTCP_SUBFLOW_MAX_PACING_RATE)
+>>>
+>>> WDYT?
+>>>
+>>> Or directly implement SO_MAX_PACING_RATE? :)
 >>
->> Hi Christoph,
->>
->> On 26/08/2025 06:30, Christoph Paasch via B4 Relay wrote:
->>> From: Christoph Paasch <cpaasch@openai.com>
->>>
->>> Accelerated Receive Flow Steering (aRFS) relies on sockets recording
->>> their RX flow hash into the rps_sock_flow_table so that incoming packets
->>> are steered to the CPU where the application runs.
->>>
->>> With MPTCP, the application interacts with the parent MPTCP socket while
->>> data is carried over per-subflow TCP sockets. Without recording these
->>> subflows, aRFS cannot steer interrupts and RX processing for the flows
->>> to the desired CPU.
->>>
->>> Record all subflows in the RPS table by calling sock_rps_record_flow()
->>> for each subflow at the start of mptcp_sendmsg(), mptcp_recvmsg() and
->>> mptcp_stream_accept(), by using the new helper
->>> mptcp_rps_record_subflows().
->>>
->>> It does not by itself improve throughput, but ensures that IRQ and RX
->>> processing are directed to the right CPU, which is a
->>> prerequisite for effective aRFS.
->>
->> Thank you for the v2! I just have two small questions below, but I don't
->> think they are blocking.
->>
->>> Signed-off-by: Christoph Paasch <cpaasch@openai.com>
->>> ---
->>>  net/mptcp/protocol.c | 21 +++++++++++++++++++++
->>>  1 file changed, 21 insertions(+)
->>>
->>> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
->>> index 4b510e04724f5c8be08a00a1cc03093bcd031905..543506b6a011af78208381857ab9c1962cbc6636 100644
->>> --- a/net/mptcp/protocol.c
->>> +++ b/net/mptcp/protocol.c
->>> @@ -12,6 +12,7 @@
->>>  #include <linux/sched/signal.h>
->>>  #include <linux/atomic.h>
->>>  #include <net/aligned_data.h>
->>> +#include <net/rps.h>
->>>  #include <net/sock.h>
->>>  #include <net/inet_common.h>
->>>  #include <net/inet_hashtables.h>
->>> @@ -1740,6 +1741,20 @@ static u32 mptcp_send_limit(const struct sock *sk)
->>>       return limit - not_sent;
->>>  }
->>>
->>> +static void mptcp_rps_record_subflows(const struct mptcp_sock *msk)
->>> +{
->>> +     struct mptcp_subflow_context *subflow;
->>> +
->>> +     if (!rfs_is_needed())
->>> +             return;
->>> +
->>> +     mptcp_for_each_subflow(msk, subflow) {
->>> +             struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
->>> +
->>> +             sock_rps_record_flow(ssk);
->>
->> I guess we don't want to call _sock_rps_record_flow() here to avoid
->> calling rfs_is_needed() multiple times in a row, because it is just an
->> extra static branch check?
+>> If that's easier, MPTCP_SUBFLOW_MAX_PACING_RATE (pacing per subflow) can
+>> be introduced first, then SO_MAX_PACING_RATE (pacing per connection)
+>> when someone has the opportunity to implement it later on. In this case,
+>> this series would only need a few adaptations to switch to SOL_MPTCP.
 > 
-> IMO, the _sock_rps_* functions are not meant to be called  from
-> outside rps.h. They are just in the rps.h file so that they can be
-> static inline.
-> In any case, the _sock_rps_* functions are guarded by #ifdef CONFIG_RPS.
+> Yes, I will do that eventually. But right now, other things have
+> higher priority for me.
 
-Thank you for the explanation, fine by me!
+No worries, that's not urgent!
+> If you feel like it, feel free to pick these patches up :)
 
->>> +     }
->>> +}
->>> +
->>>  static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
->>>  {
->>>       struct mptcp_sock *msk = mptcp_sk(sk);
->>> @@ -1753,6 +1768,8 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
->>>
->>>       lock_sock(sk);
->>>
->>> +     mptcp_rps_record_subflows(msk);
->>> +
->>>       if (unlikely(inet_test_bit(DEFER_CONNECT, sk) ||
->>>                    msg->msg_flags & MSG_FASTOPEN)) {
->>>               int copied_syn = 0;
->>> @@ -2131,6 +2148,8 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
->>>               goto out_err;
->>>       }
->>>
->>> +     mptcp_rps_record_subflows(msk);
->>> +
->>>       timeo = sock_rcvtimeo(sk, flags & MSG_DONTWAIT);
->>>
->>>       len = min_t(size_t, len, INT_MAX);
->>> @@ -3921,6 +3940,8 @@ static int mptcp_stream_accept(struct socket *sock, struct socket *newsock,
->>>                               mptcp_sock_graft(ssk, newsock);
->>>               }
->>>
->>> +             mptcp_rps_record_subflows(msk);
->>
->> Out of curiosity, why not calling sock_rps_record_flow(ssk) here?
-> 
-> Again, primarily to keep the code clean. MPTCP-code calls
-> mptcp_rps_record_subflows, which calls sock_rps_record_flow() which
-> calls the _sock_rps helpers. In my opinion that is a better structure
-> and flow.
-> No real pure technical reason.
-
-I see, I understand the logic there, and I just noticed the code above
-is doing a mptcp_for_each_subflow() as well, fine to call the mptcp_
-version here then!
-
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+I wish I would have time to pick them up :)
+Maybe later!
 
 Cheers,
 Matt
