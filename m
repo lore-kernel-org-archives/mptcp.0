@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08AA11F9F47
-	for <mptcp@lists.linux.dev>; Thu, 28 Aug 2025 15:34:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F36EA1E502
+	for <mptcp@lists.linux.dev>; Thu, 28 Aug 2025 15:50:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756395288; cv=none; b=LrAFW0/1NCY4oIaPg6l4TVIbyXKWe1s6iS2KH3NzYBi6Lf9V+bEaY14IZ3ts1FAGyBafDhWiq5LNg4+1lcXEXSUZnxbJcXa9bRSiBPU+TrHPSXiqEKObyIbUQjT/e0qYFX/LJa3qGEA8AJ/cze9NEbgKy8izJmW5jAIc6tbTqPY=
+	t=1756396223; cv=none; b=X4+fOOGRwlHJ6UNwfNgzKm1ybGRTsQPgVDhV3VS6oDKX4Nhp6JkXEUve+4ifynLUqIFh5gaTN2GZWK+tmHAZDaadTqIIBdtS9CgCKum6hL/A8l3rMTi8suayKmW1zyFSVUfR6no3lj4lsssOinmQcpSf/cnelyj+/7yKMnnRX4I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756395288; c=relaxed/simple;
-	bh=VjEzr9WU3twQkOWXWGBxl/puSHpbC/Pwg6PpCyZImTw=;
+	s=arc-20240116; t=1756396223; c=relaxed/simple;
+	bh=qcvcS+1LhRHL23qPF/ns7QyeONBgggyPLrzT0Vi+fWU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=lXn96Z/tGaCkwzv70Bbapgs4TEChgMOL0KkFvUcgH7WjiNAwfx2XIh9lS0c2H9Oiu8GdsWmJ5b3nMyPxaW5fW2oYNGgmwz3mYAsclcm/uOLLQNzg7UtwEaoXKw8xW1Ei416gkM6hImvWUBoW9XXowcXM/aWI+0PBv089MfPiH24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eVdi4hPf; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=buSkuK6OW1aiifLYAgGq0CynX9sj8coR44b/k1mO9Rd6VK0IfciHoBDYHXT+YyFfN6edxA6eso9A0CF5IjWDzVyCaoWgpIaJDbs3Fm+gUu/NxkmOMiWmUV1a0vmmLknumVRK6zUuCsna9uK4SJOOIpCDeKAC5UIVs7aHGDeOqv4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QdiaugO6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eVdi4hPf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0169AC4CEEB;
-	Thu, 28 Aug 2025 15:34:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QdiaugO6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99E1BC4CEEB;
+	Thu, 28 Aug 2025 15:50:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756395287;
-	bh=VjEzr9WU3twQkOWXWGBxl/puSHpbC/Pwg6PpCyZImTw=;
+	s=k20201202; t=1756396222;
+	bh=qcvcS+1LhRHL23qPF/ns7QyeONBgggyPLrzT0Vi+fWU=;
 	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=eVdi4hPfLbHzu9qxhwqCr87UxDghXNWLP1v1yae3O5cI4HDJCTh27/lZPW+2r/964
-	 9kSHqXKna7FW8hD4sy0K0NZEenTqnp9c/CwPdvWYYA+IuqK9BanCfDFVD9OdPvj3Qz
-	 DZYCva056vd/aJHgaSFjFlk0R+gwO9kPypgidqUmw51LmInoUzbgGA0F609FlWdvF/
-	 tnAKZNUjGWBvagFOBz/xmpi5RBcBHoXtSL3QDakSz/eon9kESGZx2lg77Kr5zU/kGU
-	 t2yuZjoJL9aPwd7vq0qUxh+nDwNW7pnALwAapxYL851YHkYdnmqOw1Ol+INQW4qmYs
-	 yvUqhf+6zKQKg==
-Message-ID: <d4c74f72-2595-4fea-8a3c-10bb374e5b06@kernel.org>
-Date: Thu, 28 Aug 2025 17:34:44 +0200
+	b=QdiaugO6UA5apDJGYOSE5rWDJy3QpsGFX4IrnSszz2ZYRzU7le3ztOEFWsRHI8xRN
+	 Ebvr1ah2FOEDK/cv54qCt0gPo31WC/ItzHiETaNHGfrAwn93p2fFRrdKLW8OJwJJJV
+	 0DVCqjC+4W4XTT3U3xTSMu/toCfXos20zGgmrzBh9HmRB92yjG92FpqwCbbPiPP0kl
+	 NtFUBQI3NkPdlmE6O1VjPjTAqVLf3qw11EsFT5D2qUij4o6JlecfopZlA26NZjy5fM
+	 wXnk4pA4csnBXwTYY/ccFRU2BkVHGGcr8z62ScG8DUNx5bXlck7If89V5wg+VyrGbf
+	 yKIKaUjxtGODQ==
+Message-ID: <1d98d911-34a7-42cd-b963-26eede462547@kernel.org>
+Date: Thu, 28 Aug 2025 17:50:19 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,10 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: Adding notify-flags=skip_link_local causes errors in mptcp daemon
+Subject: Re: [PATCH mptcp-next v2 1/2] net: Add rfs_needed() helper
 Content-Language: en-GB, fr-BE
-To: Harshvardhan Jha <harshvardhan.j.jha@oracle.com>, mptcp@lists.linux.dev
-References: <05f302dd-2afd-4775-9099-5c34c23e462e@oracle.com>
+To: cpaasch@openai.com, MPTCP Upstream <mptcp@lists.linux.dev>,
+ Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>
+References: <20250825-b4-mptcp_perf-v2-0-5d2d68dfa8af@openai.com>
+ <20250825-b4-mptcp_perf-v2-1-5d2d68dfa8af@openai.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -84,90 +86,60 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <05f302dd-2afd-4775-9099-5c34c23e462e@oracle.com>
+In-Reply-To: <20250825-b4-mptcp_perf-v2-1-5d2d68dfa8af@openai.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Harshvardhan,
+Hi Christoph,
 
-On 28/08/2025 16:28, Harshvardhan Jha wrote:
-> I have been using mptcpd version 12 on my system and observed this issue:
+On 26/08/2025 06:30, Christoph Paasch via B4 Relay wrote:
+> From: Christoph Paasch <cpaasch@openai.com>
 > 
-> systemd[1]: Started mptcp.service - Multipath TCP service.
-> mptcpd[2996]: MPTCP address advertiser path manager initialized.
-> mptcpd[2996]: MPTCP single-subflow-per-interface path manager initialized.
-> mptcpd[2996]: add_addr: too many addresses or duplicate one: -16: Device
-> or resource busy
-
-Thank you for having reported this!
-
-> After extensive debugging I found out that this was due to the custom
-> flags I had added to my configuration:
-> addr-flags=subflow
-> notify-flags=existing,skip_link_local,skip_loopback
+> Add a helper to check if RFS is needed or not. Allows to make the code a
+> bit cleaner and the next patch to have MPTCP use this helper to decide
+> whether or not to iterate over the subflows.
 > 
-> Keeping the first flag as is doesn't change much and only the
-> skip_link_local part of the second flag is what causes the issue
-> mentioned above.
+> tun_flow_update() was calling sock_rps_record_flow_hash() regardless of
+> the state of rfs_needed. This was not really a bug as sock_flow_table
+> simply ends up being NULL and thus everything will be fine.
+> This commit here thus also implicitly makes tun_flow_update() respect
+> the state of rfs_needed.
 
-Do you mean that with the following configuration ...
+Thank you for having added this new helper!
 
-  addr-flags=subflow
-  notify-flags=existing,skip_loopback
+Acked-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-... you don't have this "too many addresses or duplicate one" error in
-mptcpd logs, which means it might be due to the "skip_link_local" flag?
-
-The "too many addresses or duplicate one" error seems to suggest either:
-
-- too many MPTCP endpoints have been added
-- or some endpoints cannot be added because they are already there
-- (or the help message is wrong)
-
-... which is strange, because "skip_link_local" is supposed to insert
-fewer endpoints.
-
-When looking at the kernel code (dev version), I think the "-16: Device
-or resource busy" is supposed to happen only if the userspace tries to
-add an MPTCP endpoint with a specific ID, and this ID has already been
-taken. Which makes me suspect the following: is it possible either NM
->=1.40 is being used, or mptcpd has been restarted after a crash, no?
-
-By default, NetworkManager >=1.40 will add MPTCP endpoints, see this note:
-
-  https://www.mptcp.dev/pm.html#automatic-configuration
-
-Are you using NM >= 1.40?
-
-If no, what's your kernel version, and the output of 'ip addr show up',
-but also 'ip mptcp endpoint' before and after having started 'mptcpd'?
-
-
-> The version doesn't matter, I installed mptcpd built from source on the
-> main branch and upon adding these flags to
-> /usr/local/etc/mptcpd/mptcpd.conf this issue still appears.
+> Suggested-by: Matthieu Baerts <matttbe@kernel.org>
+> Signed-off-by: Christoph Paasch <cpaasch@openai.com>
+> ---
+>  include/net/rps.h | 85 ++++++++++++++++++++++++++++++++++++-------------------
+>  1 file changed, 56 insertions(+), 29 deletions(-)
 > 
-> I will remove this option for now but Fedora had added this way back in
-> 2021 so I'm not sure whether removing this will cause any unwanted
-> regressions or not.
+> diff --git a/include/net/rps.h b/include/net/rps.h
+> index d8ab3a08bcc4882e2ad9c84c22ef26b254c14680..a89d2822a257a1fcf54e9722fdc22d01c28cc87b 100644
+> --- a/include/net/rps.h
+> +++ b/include/net/rps.h
 
-I don't know if this note related to NM is well visible in the package
-description in Fedora and others. On Debian and related, there is this note:
+(...)
+> @@ -144,6 +132,45 @@ static inline void sock_rps_delete_flow(const struct sock *sk)
+>  			WRITE_ONCE(table->ents[index], RPS_NO_CPU);
+>  	}
+>  	rcu_read_unlock();
+> +}
+> +#endif /* CONFIG_RPS */
+> +
+> +static inline bool rfs_is_needed(void)
+> +{
+> +#ifdef CONFIG_RPS
+> +	return static_branch_unlikely(&rfs_needed);
+> +#else
+> +	return false;
+> +#endif
 
->  By default, this daemon will load the 'addr_adv' plugin from the
->  'mptcpd-plugins' package, which will add MPTCP endpoints with the
->  'subflow' flag ("client" mode) for the default in-kernel path-manager.
->  Note that this is something NetworkManager does by default. Having
->  several daemons configuring the MPTCP endpoints at the same time
->  should be avoided. This daemon is usually recommended when
->  NetworkManager is not available, or when advanced per-connection path
->  management is needed, using the userspace path-manager and a
->  custom-made made plugin using the C API.
-
-See: https://salsa.debian.org/debian/mptcpd/-/commit/66c1e8864a9
-
-Do not hesitate to add a similar note in Fedora packages if it is
-missing, that should help people.
+It looks strange to see all these #ifdef/#else inside the functions,
+instead of "empty" functions at the end when CONFIG_RPS is not defined
+as it is usually being done. But I see you are following what is
+currently being done in this file, so all good!
 
 Cheers,
 Matt
