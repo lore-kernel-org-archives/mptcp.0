@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F36EA1E502
-	for <mptcp@lists.linux.dev>; Thu, 28 Aug 2025 15:50:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE08E1E502
+	for <mptcp@lists.linux.dev>; Thu, 28 Aug 2025 15:50:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756396223; cv=none; b=X4+fOOGRwlHJ6UNwfNgzKm1ybGRTsQPgVDhV3VS6oDKX4Nhp6JkXEUve+4ifynLUqIFh5gaTN2GZWK+tmHAZDaadTqIIBdtS9CgCKum6hL/A8l3rMTi8suayKmW1zyFSVUfR6no3lj4lsssOinmQcpSf/cnelyj+/7yKMnnRX4I=
+	t=1756396255; cv=none; b=cCqChMkL3i5gqV9OCw9uB5NSo91k/YrLRmYh7iPjOvZtbjc4S0K33biiiObDMOUJ+Avm7jZaijE9vfA0jt4zHpGmzhdSsTJwMOj+8XcsS2mp0mZNhE4de2ip0SczsYhmS7knR8CVD7vXO8mRnXhaayJKnYpWzstxyfgUdgU0js8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756396223; c=relaxed/simple;
-	bh=qcvcS+1LhRHL23qPF/ns7QyeONBgggyPLrzT0Vi+fWU=;
+	s=arc-20240116; t=1756396255; c=relaxed/simple;
+	bh=DLm+CGa4uAtXEqNafVMSvMN9FbQ4SzfGObvDLiCirBo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=buSkuK6OW1aiifLYAgGq0CynX9sj8coR44b/k1mO9Rd6VK0IfciHoBDYHXT+YyFfN6edxA6eso9A0CF5IjWDzVyCaoWgpIaJDbs3Fm+gUu/NxkmOMiWmUV1a0vmmLknumVRK6zUuCsna9uK4SJOOIpCDeKAC5UIVs7aHGDeOqv4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QdiaugO6; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=LgSTIt9vSihAeC9L9iUad1XU7fUwerp2wo5nAkj23cJaDsjE5S8nRmeulN5dxpMSJ5FSWUD8osnFgTJdfMfr3wCuw9meZ70GGW4zMmqMKOtSNlWZno5yIi72zEmQD/9gqjOvNZti6pGRp3jxAxyftMvOxaRBch3Af2MQN9YDHzQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ieuc9dYQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QdiaugO6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99E1BC4CEEB;
-	Thu, 28 Aug 2025 15:50:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ieuc9dYQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94F7FC4CEEB;
+	Thu, 28 Aug 2025 15:50:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756396222;
-	bh=qcvcS+1LhRHL23qPF/ns7QyeONBgggyPLrzT0Vi+fWU=;
+	s=k20201202; t=1756396255;
+	bh=DLm+CGa4uAtXEqNafVMSvMN9FbQ4SzfGObvDLiCirBo=;
 	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=QdiaugO6UA5apDJGYOSE5rWDJy3QpsGFX4IrnSszz2ZYRzU7le3ztOEFWsRHI8xRN
-	 Ebvr1ah2FOEDK/cv54qCt0gPo31WC/ItzHiETaNHGfrAwn93p2fFRrdKLW8OJwJJJV
-	 0DVCqjC+4W4XTT3U3xTSMu/toCfXos20zGgmrzBh9HmRB92yjG92FpqwCbbPiPP0kl
-	 NtFUBQI3NkPdlmE6O1VjPjTAqVLf3qw11EsFT5D2qUij4o6JlecfopZlA26NZjy5fM
-	 wXnk4pA4csnBXwTYY/ccFRU2BkVHGGcr8z62ScG8DUNx5bXlck7If89V5wg+VyrGbf
-	 yKIKaUjxtGODQ==
-Message-ID: <1d98d911-34a7-42cd-b963-26eede462547@kernel.org>
-Date: Thu, 28 Aug 2025 17:50:19 +0200
+	b=Ieuc9dYQhZ/LeJ8f43wYN9wc+rStKiMSL8zeLudg0j0UUdYGYQz5LQPb4oXD/c/gU
+	 DvfJfhjV/tYrVFF52FbqhM205iW3/9CntlefKqU8P6/N+KINpQD+hnsJCnNkgQksma
+	 RlaFurcRKCHeKmW8Xn+ivzQeBmy7+YNBXOzmIkm/rll30xeOAl7YdpUqCzs/Ycu5Bp
+	 g0xq1iyFzrGKgECJ6sqESjBYyoqW+NfpClZccG+hC3oEARy/3wEH3w8XKjqBLvb9P4
+	 MpwZZ3UqAlM80SPGKLHLZVof9f+0zFR8tYJJtioNaExUUZySfRKP3Sisco0QzPxYKU
+	 k/BWktrbszcmw==
+Message-ID: <c4c9247d-f1a3-4b2a-8a9a-600e151f6124@kernel.org>
+Date: Thu, 28 Aug 2025 17:50:52 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v2 1/2] net: Add rfs_needed() helper
+Subject: Re: [PATCH mptcp-next v2 2/2] mptcp: record subflows in RPS table
 Content-Language: en-GB, fr-BE
 To: cpaasch@openai.com, MPTCP Upstream <mptcp@lists.linux.dev>,
  Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>
 References: <20250825-b4-mptcp_perf-v2-0-5d2d68dfa8af@openai.com>
- <20250825-b4-mptcp_perf-v2-1-5d2d68dfa8af@openai.com>
+ <20250825-b4-mptcp_perf-v2-2-5d2d68dfa8af@openai.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,7 +86,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20250825-b4-mptcp_perf-v2-1-5d2d68dfa8af@openai.com>
+In-Reply-To: <20250825-b4-mptcp_perf-v2-2-5d2d68dfa8af@openai.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -95,51 +95,101 @@ Hi Christoph,
 On 26/08/2025 06:30, Christoph Paasch via B4 Relay wrote:
 > From: Christoph Paasch <cpaasch@openai.com>
 > 
-> Add a helper to check if RFS is needed or not. Allows to make the code a
-> bit cleaner and the next patch to have MPTCP use this helper to decide
-> whether or not to iterate over the subflows.
+> Accelerated Receive Flow Steering (aRFS) relies on sockets recording
+> their RX flow hash into the rps_sock_flow_table so that incoming packets
+> are steered to the CPU where the application runs.
 > 
-> tun_flow_update() was calling sock_rps_record_flow_hash() regardless of
-> the state of rfs_needed. This was not really a bug as sock_flow_table
-> simply ends up being NULL and thus everything will be fine.
-> This commit here thus also implicitly makes tun_flow_update() respect
-> the state of rfs_needed.
+> With MPTCP, the application interacts with the parent MPTCP socket while
+> data is carried over per-subflow TCP sockets. Without recording these
+> subflows, aRFS cannot steer interrupts and RX processing for the flows
+> to the desired CPU.
+> 
+> Record all subflows in the RPS table by calling sock_rps_record_flow()
+> for each subflow at the start of mptcp_sendmsg(), mptcp_recvmsg() and
+> mptcp_stream_accept(), by using the new helper
+> mptcp_rps_record_subflows().
+> 
+> It does not by itself improve throughput, but ensures that IRQ and RX
+> processing are directed to the right CPU, which is a
+> prerequisite for effective aRFS.
 
-Thank you for having added this new helper!
+Thank you for the v2! I just have two small questions below, but I don't
+think they are blocking.
 
-Acked-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-
-> Suggested-by: Matthieu Baerts <matttbe@kernel.org>
 > Signed-off-by: Christoph Paasch <cpaasch@openai.com>
 > ---
->  include/net/rps.h | 85 ++++++++++++++++++++++++++++++++++++-------------------
->  1 file changed, 56 insertions(+), 29 deletions(-)
+>  net/mptcp/protocol.c | 21 +++++++++++++++++++++
+>  1 file changed, 21 insertions(+)
 > 
-> diff --git a/include/net/rps.h b/include/net/rps.h
-> index d8ab3a08bcc4882e2ad9c84c22ef26b254c14680..a89d2822a257a1fcf54e9722fdc22d01c28cc87b 100644
-> --- a/include/net/rps.h
-> +++ b/include/net/rps.h
-
-(...)
-> @@ -144,6 +132,45 @@ static inline void sock_rps_delete_flow(const struct sock *sk)
->  			WRITE_ONCE(table->ents[index], RPS_NO_CPU);
->  	}
->  	rcu_read_unlock();
-> +}
-> +#endif /* CONFIG_RPS */
-> +
-> +static inline bool rfs_is_needed(void)
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 4b510e04724f5c8be08a00a1cc03093bcd031905..543506b6a011af78208381857ab9c1962cbc6636 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -12,6 +12,7 @@
+>  #include <linux/sched/signal.h>
+>  #include <linux/atomic.h>
+>  #include <net/aligned_data.h>
+> +#include <net/rps.h>
+>  #include <net/sock.h>
+>  #include <net/inet_common.h>
+>  #include <net/inet_hashtables.h>
+> @@ -1740,6 +1741,20 @@ static u32 mptcp_send_limit(const struct sock *sk)
+>  	return limit - not_sent;
+>  }
+>  
+> +static void mptcp_rps_record_subflows(const struct mptcp_sock *msk)
 > +{
-> +#ifdef CONFIG_RPS
-> +	return static_branch_unlikely(&rfs_needed);
-> +#else
-> +	return false;
-> +#endif
+> +	struct mptcp_subflow_context *subflow;
+> +
+> +	if (!rfs_is_needed())
+> +		return;
+> +
+> +	mptcp_for_each_subflow(msk, subflow) {
+> +		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
+> +
+> +		sock_rps_record_flow(ssk);
 
-It looks strange to see all these #ifdef/#else inside the functions,
-instead of "empty" functions at the end when CONFIG_RPS is not defined
-as it is usually being done. But I see you are following what is
-currently being done in this file, so all good!
+I guess we don't want to call _sock_rps_record_flow() here to avoid
+calling rfs_is_needed() multiple times in a row, because it is just an
+extra static branch check?
+
+> +	}
+> +}
+> +
+>  static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
+>  {
+>  	struct mptcp_sock *msk = mptcp_sk(sk);
+> @@ -1753,6 +1768,8 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
+>  
+>  	lock_sock(sk);
+>  
+> +	mptcp_rps_record_subflows(msk);
+> +
+>  	if (unlikely(inet_test_bit(DEFER_CONNECT, sk) ||
+>  		     msg->msg_flags & MSG_FASTOPEN)) {
+>  		int copied_syn = 0;
+> @@ -2131,6 +2148,8 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
+>  		goto out_err;
+>  	}
+>  
+> +	mptcp_rps_record_subflows(msk);
+> +
+>  	timeo = sock_rcvtimeo(sk, flags & MSG_DONTWAIT);
+>  
+>  	len = min_t(size_t, len, INT_MAX);
+> @@ -3921,6 +3940,8 @@ static int mptcp_stream_accept(struct socket *sock, struct socket *newsock,
+>  				mptcp_sock_graft(ssk, newsock);
+>  		}
+>  
+> +		mptcp_rps_record_subflows(msk);
+
+Out of curiosity, why not calling sock_rps_record_flow(ssk) here?
+
+> +
+>  		/* Do late cleanup for the first subflow as necessary. Also
+>  		 * deal with bad peers not doing a complete shutdown.
+>  		 */
+> 
 
 Cheers,
 Matt
