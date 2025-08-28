@@ -1,207 +1,121 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A67AB1C01
-	for <mptcp@lists.linux.dev>; Thu, 28 Aug 2025 08:47:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 930B82E0910
+	for <mptcp@lists.linux.dev>; Thu, 28 Aug 2025 09:57:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756370853; cv=none; b=quJTeviJE/txs0Y9e+GJ5wQQeUGzBnPi4UI7tQwvtHFjl60GAhCUvxGgsJij5+d8X6tptvkcsHQnT8a5iLDfzL1zXlsZU6S/WrX0K8yV+So3rb27DoZaoFTbz4slNgd9qpMY0r1MJDJ7HlrnEXSs2GD/L/bQw34eXyDKbs7qVc8=
+	t=1756375067; cv=none; b=Qglp+ymJRuR07924n10dQkFiPqvc1PA9vXwuQQ7PIUTD/pStt47KODoA3gm7C33Z9yR5uh85afGsqNPilxz7qo4SwzzxuJ8fTqbGCPn21cdPXdMyt0k2UhYKJc6Gb1GhT7Ib3tLur6LRmP0bmU725BBClUNRNM96b7zeXOfcXuY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756370853; c=relaxed/simple;
-	bh=Jbit38OgaSNes+cq9bsPdRsjQnPdKCKhDdp4KVU19e8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dPLkWe64yH4qZHbolFnMUcGoLq3tLxJArvEb1/17Vy8eTpHPPxJPwo2PCI1EGUqugoZMaZz2KqSwf03cS8+v0ekXVmt100UTpdo57AEDVxdWJMK/3OOCD2Ygnd9BB+k+FFWCKBBUxmn2spTccNEF1IHmnBBMMpgnyzkAgc7R6ac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FOJeYv2F; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1756375067; c=relaxed/simple;
+	bh=6qx8D/MCHXbncICp1SypSotl9suCaLdfxv9P932c++E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BlllmjXC+Zm/vo854VobYzRAqk2N+FNSjnrA3wIjELXrspyMJmvbWo32ipKBUs64vMEH1LgLtLt9kxFWttEzAQjq2DiZWHeUs14+/a/yH5at1UZ0GCQthOv33ploeJ8tuYBQ+YVXKlWKN03E8hgVnufw/OlpFgBHDf8t7HaT5ak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eBWgQx+m; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FOJeYv2F"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FD1EC4CEF5;
-	Thu, 28 Aug 2025 08:47:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eBWgQx+m"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 546E6C4CEEB;
+	Thu, 28 Aug 2025 09:57:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756370851;
-	bh=Jbit38OgaSNes+cq9bsPdRsjQnPdKCKhDdp4KVU19e8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=FOJeYv2FFZNeYrYV4NWaQ8Bp8StxpQoyfWviw4PWFwPT+iJC0Dza4YgZDcNIKuK7x
-	 dlkkN+/pccn/+W7RjecWstXDl4TOswKLZeEH6es4wCmI1Eim8R8/jvCPxnCDtep+aQ
-	 1inCGIiCmVKMqCyjBqdiAdv1r8+5LOntfDhuDFgX603BbrfzGVIC++A98p0TzOpu6g
-	 B0YtGBJoXVWxlUc4m/CXDioiEA5drJf9zNOjhkMZVKgFlhoWbdE93F4KX0+ETRzYP3
-	 FRexgw7qvmKw7FbfVjdM9825dDVL4ughjVQGVJ37rDzlJw0mxBmkgIlPV8K0RpIyvG
-	 XYiV8n3u4jPeg==
-From: Geliang Tang <geliang@kernel.org>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <geliang@kernel.org>,
-	Gang Yan <yangang@kylinos.cn>
-Subject: [PATCH mptcp-next v2 3/3] Add test cases for MPTCP socket functionality
-Date: Thu, 28 Aug 2025 16:47:15 +0800
-Message-ID: <d549b3e3ecb5bd62d0a9f1e66125fa7d63daf6b9.1756369940.git.tanggeliang@kylinos.cn>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <cover.1756369940.git.tanggeliang@kylinos.cn>
-References: <cover.1756369940.git.tanggeliang@kylinos.cn>
+	s=k20201202; t=1756375067;
+	bh=6qx8D/MCHXbncICp1SypSotl9suCaLdfxv9P932c++E=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=eBWgQx+mep0vz2yAI1vaPjL91PwJayNpequFcsYmRVaXISsKAEV2oLmqucI39fQrq
+	 vtFLlaNymwhvakWfDBBTz5P4z4Grvq4l1M00SJKk7QUN4NKlOfGWKUXiVLq1vqNx2A
+	 mon2q/dCHJDJgF3wHk9txAsY5Fzt3NUm1PzvbNEzRKJHABk0PCA3FAxXgqVjyDVH0D
+	 nbDNm8maUcfsnbIoB6AMI34iJe6O9/VneTWEn2a965Z2toHOl2InE4EHMOcs3k2+N5
+	 b0XJi1BQJ1fll+jVNW83CfDVtAWCdjNnMKEN69lUWCBcIa2F5blFkruqOwpZ+EMxt/
+	 4k+m43uxFSCXw==
+Message-ID: <3a401acb-bcc6-4885-a1a4-7aa88ed55cb5@kernel.org>
+Date: Thu, 28 Aug 2025 11:57:44 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-next v2 0/3] Add MPTCP support to Java Networking
+ API
+Content-Language: en-GB, fr-BE
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <cover.1756369940.git.tanggeliang@kylinos.cn>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <cover.1756369940.git.tanggeliang@kylinos.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-This patch adds comprehensive test coverage for the MPTCP socket
-implementation by introducing two test programs:
+Hi Geliang,
 
-1. MPTCPServer.java - an echo server that uses MPTCP-enabled ServerSocket
-2. MPTCPClient.java - a client that connects to the server using MPTCP
-   Socket
+On 28/08/2025 10:47, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
+> 
+> v2:
+>  - drop redundant helpers as Matt suggested.
+>  - squash into fewer patches.
+>  - use "JNI_TRUE" and "(void)mptcp" in Java_sun_nio_ch_Net_socket0 as
+>    Xiang Gao suggested.
+> 
+> The Multipath TCP (MPTCP) protocol (v1 / RFC 8684) has been added in
+> the upstream Linux kernel since v5.6. See https://mptcp.dev.
+> 
+> This patch series introduces comprehensive Multipath TCP (MPTCP)
+> support to the Java Networking API, enabling applications to leverage
+> MPTCP's capabilities for improved reliability and throughput.
 
-The tests verify:
-- MPTCP socket creation and connection establishment
-- Bidirectional communication over MPTCP subflows
-- Proper stream handling and error conditions
-- Graceful shutdown and resource cleanup
+Thank you for the new version! Feel free to start the process to
+upstream these patches [1]. Don't hesitate to share here the link to the
+new ticket.
 
-These tests demonstrate the usage of the new MPTCP-enabled constructors and
-provide a functional validation of the MPTCP implementation.
+[1] https://openjdk.org/guide/#i-have-a-patch-what-do-i-do
 
-Co-Developed-by: Gang Yan <yangang@kylinos.cn>
-Signed-off-by: Gang Yan <yangang@kylinos.cn>
-Signed-off-by: Geliang Tang <geliang@kernel.org>
----
- .../java/net/ServerSocket/MPTCPServer.java    | 58 +++++++++++++++++
- test/jdk/java/net/Socket/MPTCPClient.java     | 62 +++++++++++++++++++
- 2 files changed, 120 insertions(+)
- create mode 100644 test/jdk/java/net/ServerSocket/MPTCPServer.java
- create mode 100644 test/jdk/java/net/Socket/MPTCPClient.java
-
-diff --git a/test/jdk/java/net/ServerSocket/MPTCPServer.java b/test/jdk/java/net/ServerSocket/MPTCPServer.java
-new file mode 100644
-index 00000000000..a28e4963943
---- /dev/null
-+++ b/test/jdk/java/net/ServerSocket/MPTCPServer.java
-@@ -0,0 +1,58 @@
-+/*
-+ * Copyright (c) 2025, Oracle and/or its affiliates. All rights reserved.
-+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
-+ *
-+ * This code is free software; you can redistribute it and/or modify it
-+ * under the terms of the GNU General Public License version 2 only, as
-+ * published by the Free Software Foundation.
-+ *
-+ * This code is distributed in the hope that it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
-+ * version 2 for more details (a copy is included in the LICENSE file that
-+ * accompanied this code).
-+ *
-+ * You should have received a copy of the GNU General Public License version
-+ * 2 along with this work; if not, write to the Free Software Foundation,
-+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
-+ *
-+ * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
-+ * or visit www.oracle.com if you need additional information or have any
-+ * questions.
-+ */
-+
-+import java.io.*;
-+import java.net.*;
-+
-+public class MPTCPServer {
-+	public static void main(String[] args) {
-+		final int PORT = 12345;
-+
-+		try (ServerSocket serverSocket = new ServerSocket(PORT, 50, null, true)) {
-+			System.out.println("Server started, waiting for client connection ...");
-+
-+			Socket clientSocket = serverSocket.accept();
-+			System.out.println("Client connected: " + clientSocket.getInetAddress());
-+
-+			BufferedReader in = new BufferedReader(
-+					new InputStreamReader(clientSocket.getInputStream()));
-+			PrintWriter out = new PrintWriter(
-+					clientSocket.getOutputStream(), true);
-+
-+			String inputLine;
-+			while ((inputLine = in.readLine()) != null) {
-+				System.out.println("Received from client: " + inputLine);
-+				out.println("Server response: " + inputLine);
-+
-+				if ("exit".equalsIgnoreCase(inputLine)) {
-+					break;
-+				}
-+			}
-+
-+			clientSocket.close();
-+			System.out.println("Connection closed");
-+		} catch (IOException e) {
-+			System.err.println("Server exception: " + e.getMessage());
-+		}
-+	}
-+}
-diff --git a/test/jdk/java/net/Socket/MPTCPClient.java b/test/jdk/java/net/Socket/MPTCPClient.java
-new file mode 100644
-index 00000000000..18d815c39e7
---- /dev/null
-+++ b/test/jdk/java/net/Socket/MPTCPClient.java
-@@ -0,0 +1,62 @@
-+/*
-+ * Copyright (c) 2025, Oracle and/or its affiliates. All rights reserved.
-+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
-+ *
-+ * This code is free software; you can redistribute it and/or modify it
-+ * under the terms of the GNU General Public License version 2 only, as
-+ * published by the Free Software Foundation.
-+ *
-+ * This code is distributed in the hope that it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
-+ * version 2 for more details (a copy is included in the LICENSE file that
-+ * accompanied this code).
-+ *
-+ * You should have received a copy of the GNU General Public License version
-+ * 2 along with this work; if not, write to the Free Software Foundation,
-+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
-+ *
-+ * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
-+ * or visit www.oracle.com if you need additional information or have any
-+ * questions.
-+ */
-+
-+import java.io.*;
-+import java.net.*;
-+
-+public class MPTCPClient {
-+    public static void main(String[] args) {
-+        final String HOST = "localhost";
-+        final int PORT = 12345;
-+        
-+        try (Socket socket = new Socket(HOST, PORT, true, true)) {
-+            System.out.println("Connected to server");
-+            
-+            BufferedReader in = new BufferedReader(
-+                new InputStreamReader(socket.getInputStream()));
-+            PrintWriter out = new PrintWriter(
-+                socket.getOutputStream(), true);
-+            
-+            BufferedReader stdIn = new BufferedReader(
-+                new InputStreamReader(System.in));
-+            
-+            String userInput;
-+            System.out.println("Enter message (type 'exit' to quit):");
-+            while ((userInput = stdIn.readLine()) != null) {
-+                out.println(userInput);
-+                
-+                System.out.println("Server response: " + in.readLine());
-+                
-+                if ("exit".equalsIgnoreCase(userInput)) {
-+                    break;
-+                }
-+            }
-+            
-+            System.out.println("Connection closed");
-+        } catch (UnknownHostException e) {
-+            System.err.println("Host not found: " + HOST);
-+        } catch (IOException e) {
-+            System.err.println("Client I/O error: " + e.getMessage());
-+        }
-+    }
-+}
+Cheers,
+Matt
 -- 
-2.48.1
+Sponsored by the NGI0 Core fund.
 
