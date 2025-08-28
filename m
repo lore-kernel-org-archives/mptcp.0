@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 930B82E0910
-	for <mptcp@lists.linux.dev>; Thu, 28 Aug 2025 09:57:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65FFE30BB9F
+	for <mptcp@lists.linux.dev>; Thu, 28 Aug 2025 10:45:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756375067; cv=none; b=Qglp+ymJRuR07924n10dQkFiPqvc1PA9vXwuQQ7PIUTD/pStt47KODoA3gm7C33Z9yR5uh85afGsqNPilxz7qo4SwzzxuJ8fTqbGCPn21cdPXdMyt0k2UhYKJc6Gb1GhT7Ib3tLur6LRmP0bmU725BBClUNRNM96b7zeXOfcXuY=
+	t=1756377911; cv=none; b=u5OVuUcxiBBlhGfgMyKxnG76VSm9z0Pn4NP9mcHD02N+ngjku7yYEak6ORShQW9rFAL7gXx4sqQ+po+dbW9E+x7IprmtGtLaPoP6RCgQeuUgRGGBObVWVD5vEJ5gbu9rx2ErbAYuDx/KmoIJdykfK+YiCDrh0QoGtXMcJrCjJGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756375067; c=relaxed/simple;
-	bh=6qx8D/MCHXbncICp1SypSotl9suCaLdfxv9P932c++E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BlllmjXC+Zm/vo854VobYzRAqk2N+FNSjnrA3wIjELXrspyMJmvbWo32ipKBUs64vMEH1LgLtLt9kxFWttEzAQjq2DiZWHeUs14+/a/yH5at1UZ0GCQthOv33ploeJ8tuYBQ+YVXKlWKN03E8hgVnufw/OlpFgBHDf8t7HaT5ak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eBWgQx+m; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1756377911; c=relaxed/simple;
+	bh=EdkbzML8qzCK3QhlJhra7b8jXYqcvX6yVws8hssHMJ8=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=O6KFMEqm85ON0r8uuZ/1IGKKxnydavv2tkJ5UKOq5lkuL4/9Or96jsbZxziQsexM2hOEwtEi5dZNDve/xBDyCWYj5RP7mjTdp+KgN/e/DfosAbp6Q7QCp3CkNUlzGR3kaONVGWLmDQY3KCvSXkI9gNzGcc8cXw55WLWv7uJPtXU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lERQNnJ/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eBWgQx+m"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 546E6C4CEEB;
-	Thu, 28 Aug 2025 09:57:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lERQNnJ/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B883EC4CEEB;
+	Thu, 28 Aug 2025 10:45:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756375067;
-	bh=6qx8D/MCHXbncICp1SypSotl9suCaLdfxv9P932c++E=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=eBWgQx+mep0vz2yAI1vaPjL91PwJayNpequFcsYmRVaXISsKAEV2oLmqucI39fQrq
-	 vtFLlaNymwhvakWfDBBTz5P4z4Grvq4l1M00SJKk7QUN4NKlOfGWKUXiVLq1vqNx2A
-	 mon2q/dCHJDJgF3wHk9txAsY5Fzt3NUm1PzvbNEzRKJHABk0PCA3FAxXgqVjyDVH0D
-	 nbDNm8maUcfsnbIoB6AMI34iJe6O9/VneTWEn2a965Z2toHOl2InE4EHMOcs3k2+N5
-	 b0XJi1BQJ1fll+jVNW83CfDVtAWCdjNnMKEN69lUWCBcIa2F5blFkruqOwpZ+EMxt/
-	 4k+m43uxFSCXw==
-Message-ID: <3a401acb-bcc6-4885-a1a4-7aa88ed55cb5@kernel.org>
-Date: Thu, 28 Aug 2025 11:57:44 +0200
+	s=k20201202; t=1756377911;
+	bh=EdkbzML8qzCK3QhlJhra7b8jXYqcvX6yVws8hssHMJ8=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=lERQNnJ/ZbeAUVcQibSqU8hsT79VA+goVFMwE1Gn6C71467oTYqELqeDslQvxSkFk
+	 uG+aeiDOayLSgk7niLfz0AmYyzauKrd6tFrU4VmqNEBylYAocsH4gPsVJ1/NA5gHyt
+	 7oHXhOy8BrrrlAUN1MJQzcROPZIcTlFpcV5M+HX8UPiZkTXOPzTIjiknf7rLvapUfv
+	 /JsEXbnBPKHOtQh5H/bN7iJ2WYeTBZ57SVubfqChk8YDkpDmLR3q/PYEukCFACZnRR
+	 P+/czjEw6VJZZo0mDhc0KZ5aHNm5vU0zQZt1zCU3YqptRtMh6ptCGefM0jUoFad4b5
+	 lz74jNjvZHiCw==
+Message-ID: <70da4df6-d954-460b-a089-a1171d7b2dd9@kernel.org>
+Date: Thu, 28 Aug 2025 12:45:07 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,17 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v2 0/3] Add MPTCP support to Java Networking
- API
+Subject: Re: [PATCH mptcp-next 1/2] mptcp: Add support for SO_MAX_PACING_RATE
 Content-Language: en-GB, fr-BE
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1756369940.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
+To: Christoph Paasch <cpaasch@openai.com>
+Cc: MPTCP Upstream <mptcp@lists.linux.dev>,
+ Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>
+References: <20250802-b4-mptcp_setsockopt-v1-0-50d4905a4c2b@openai.com>
+ <20250802-b4-mptcp_setsockopt-v1-1-50d4905a4c2b@openai.com>
+ <f15385c8-cbec-4434-9dcb-5a0e71581314@kernel.org>
+ <CADg4-L9n4YeoTPU05rsNLqSW3+Q5aY-1xOSburpvi02uHbPQAA@mail.gmail.com>
+ <f1882de4-a03f-4955-84cc-3ddd34e430a6@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -86,33 +90,221 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <cover.1756369940.git.tanggeliang@kylinos.cn>
+In-Reply-To: <f1882de4-a03f-4955-84cc-3ddd34e430a6@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Geliang,
+Hi Christoph,
 
-On 28/08/2025 10:47, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
+On 04/08/2025 19:38, Matthieu Baerts wrote:
+> Hi Christoph,
 > 
-> v2:
->  - drop redundant helpers as Matt suggested.
->  - squash into fewer patches.
->  - use "JNI_TRUE" and "(void)mptcp" in Java_sun_nio_ch_Net_socket0 as
->    Xiang Gao suggested.
+> Thank you for your reply!
 > 
-> The Multipath TCP (MPTCP) protocol (v1 / RFC 8684) has been added in
-> the upstream Linux kernel since v5.6. See https://mptcp.dev.
+> On 04/08/2025 19:05, Christoph Paasch wrote:
+>> On Sun, Aug 3, 2025 at 5:01 AM Matthieu Baerts <matttbe@kernel.org> wrote:
+>>>
+>>> Hi Christoph,
+>>>
+>>> Thank you for looking at that!
+>>>
+>>> On 03/08/2025 01:52, Christoph Paasch via B4 Relay wrote:
+>>>> From: Christoph Paasch <cpaasch@openai.com>
+>>>>
+>>>> Add support for SO_MAX_PACING_RATE. It will limit the rate of each
+>>>> individual TCP subflow to the specified rate.
+>>>
+>>> Applying the same rate for each subflow seems easier, but should we do that?
+>>
+>> I guess the arguments can go both ways...
+>>
+>>> I mean: if I have an app and I set SO_MAX_PACING_RATE at 1Mbps, at the
+>>> end, data will be sent at 1Mbps * number of subflows. Is it not strange?
+>>> On the other hand, implementing it globally with all the subflows might
+>>> be quite complex I guess as currently, this rate limit is done by TC I
+>>> think, no?
+>>
+>> Yes, it is done by the fq-sch qdisc (which is the most efficient), but
+>> can also be done by TCP itself if fq is not present.
 > 
-> This patch series introduces comprehensive Multipath TCP (MPTCP)
-> support to the Java Networking API, enabling applications to leverage
-> MPTCP's capabilities for improved reliability and throughput.
+> Oh nice, I thought SO_MAX_PACING_RATE could only work with fq.
+> 
+>>> I guess the scheduler could set sk_max_pacing_rate for each
+>>> subflow, but how to distribute it amongst all subflows? Equally? It
+>>> depends on the limit of each subflow I guess.
+>>
+>> I think that would be tricky to get right. I think a better approach
+>> would be what I outline below.
+>>
+>>> At the end, what's the "common" use case with SO_MAX_PACING_RATE? If the
+>>> goal is just to apply a "vague" max limit to avoid abuses, that's maybe
+>>> OK with a limit per subflow. If the goal is to limit at a precise value,
+>>> that's possibly strange like that, e.g. using iperf3 with --fq-rate and
+>>> seeing more than expected.
+>>
+>> AFAICS, there are a few use-cases:
+>> - For things like streaming media where one knows the bitrate of the
+>> video/audio and one can reduce TCP burstiness by using
+>> SO_MAX_PACING_RATE (there is a netflix paper about that -
+>> https://brucespang.com/papers/sammy.pdf?utm_source=chatgpt.com)
+> 
+> (I wonder what source you are using :-D )
+> 
+> Funny, this paper was mentioned recently at the IETF:
+> 
+> https://datatracker.ietf.org/meeting/123/materials/agenda-123-iccrg-01
+> 
+>> - When one wants to literally slow down the data-transfer speed in
+>> order to intentionally avoid competing with other flows along the
+>> paths (that's my use-case).
+>>
+>> I guess the question is what is the intention of SO_MAX_PACING_RATE ?
+>> I guess you are right that it is mostly about limiting the entire
+>> MPTCP-connection. Maybe it is even possible to implement it in such a
+>> way at the qdisc layer, but so that tcp_update_skb_after_send() takes
+>> information at the MPTCP-layer into account and/or __tcp_transmit_skb
+>> uses MPTCP-info when calling skb_set_delivery_time(). That's a whole
+>> new endeavour :-)
+> 
+> That would be great to have such support at the qdisc layer!
+> 
+>> Back to my use-case. I can see why we don't want to use
+>> SO_MAX_PACING_RATE for that, if that's what we (the community) agree
+>> on.
+>> In that case, I guess it needs to be a new MPTCP-specific option ?
+> 
+> I guess we can support both behaviours: one to limit per MPTCP
+> connection, and the other one per subflow.
+> 
+> One would be set via setsockopt(SOL_SOCKET, SO_MAX_PACING_RATE), and the
+> other one with setsockopt(SOL_MPTCP, XXX). I guess SO_MAX_PACING_RATE
+> should be for the whole MPTCP connection, no? In this case, I guess we
+> should not change the behaviour: not doing a limit per subflow when
+> using SO_MAX_PACING_RATE in some versions, then switching to a limit per
+> connection, right?
+> 
+> If so, would it be OK to limit per subflow via something like:
+> 
+>   setsockopt(SOL_MPTCP, MPTCP_SUBFLOW_MAX_PACING_RATE)
+> 
+> WDYT?
+> 
+> Or directly implement SO_MAX_PACING_RATE? :)
 
-Thank you for the new version! Feel free to start the process to
-upstream these patches [1]. Don't hesitate to share here the link to the
-new ticket.
+If that's easier, MPTCP_SUBFLOW_MAX_PACING_RATE (pacing per subflow) can
+be introduced first, then SO_MAX_PACING_RATE (pacing per connection)
+when someone has the opportunity to implement it later on. In this case,
+this series would only need a few adaptations to switch to SOL_MPTCP.
 
-[1] https://openjdk.org/guide/#i-have-a-patch-what-do-i-do
+>>>> Signed-off-by: Christoph Paasch <cpaasch@openai.com>
+>>>> ---
+>>>>  net/mptcp/sockopt.c | 31 ++++++++++++++++++++++++++++++-
+>>>>  1 file changed, 30 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+>>>> index 2c267aff95bec90d341de9f9e136b9d2df9b8e13..a79dfeb54a3fe0d8c26a1836ae5dda9fd2fdddea 100644
+>>>> --- a/net/mptcp/sockopt.c
+>>>> +++ b/net/mptcp/sockopt.c
+>>>> @@ -308,6 +308,7 @@ static int mptcp_setsockopt_sol_socket(struct mptcp_sock *msk, int optname,
+>>>>
+>>>>               ret = sk_setsockopt(ssk, SOL_SOCKET, optname, optval, optlen);
+>>>>               if (ret == 0) {
+>>>> +                     /* Record the option at the msk for subsequent subflows */
+>>>
+>>> (unrelated: maybe not needed?)
+>>
+>> Just wanted to improve the readability of the code here :)
+> 
+> ah ok :)
+> 
+>>
+>>>>                       if (optname == SO_REUSEPORT)
+>>>>                               sk->sk_reuseport = ssk->sk_reuseport;
+>>>>                       else if (optname == SO_REUSEADDR)
+>>>> @@ -340,6 +341,25 @@ static int mptcp_setsockopt_sol_socket(struct mptcp_sock *msk, int optname,
+>>>>                                                               optval, optlen);
+>>>>       case SO_LINGER:
+>>>>               return mptcp_setsockopt_sol_socket_linger(msk, optval, optlen);
+>>>> +     case SO_MAX_PACING_RATE: {
+>>>> +             struct mptcp_subflow_context *subflow;
+>>>> +
+>>>> +             ret = sock_setsockopt(sk->sk_socket, SOL_SOCKET, optname, optval, optlen);
+>>>> +             if (ret < 0)
+>>>> +                     return ret;
+>>>> +
+>>>> +             lock_sock(sk);
+>>>> +             sockopt_seq_inc(msk);
+>>>> +
+>>>> +             mptcp_for_each_subflow(msk, subflow) {
+>>>> +                     struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
+>>>> +
+>>>> +                     sk_setsockopt(ssk, SOL_SOCKET, optname, optval, optlen);
+>>>> +             }
+>>>> +
+>>>> +             release_sock(sk);
+>>>> +             break;
+>>>
+>>> It might be better to move this block in a generic helper.
+>>>
+>>> (and we should probably refactor more code to use such helpers, similar
+>>> to what was suggested there:
+>>> https://patchwork.kernel.org/project/mptcp/list/?series=763505&state=*)
+>>
+>> Yes - this entire file needs some love :-)
+> 
+> True! :)
+> 
+>>>> +     }
+>>>>       case SO_RCVLOWAT:
+>>>>       case SO_RCVTIMEO_OLD:
+>>>>       case SO_RCVTIMEO_NEW:
+>>>> @@ -373,7 +393,6 @@ static int mptcp_setsockopt_sol_socket(struct mptcp_sock *msk, int optname,
+>>>>        * explicitly the sk_protocol field
+>>>>        *
+>>>>        * SO_PEEK_OFF is unsupported, as it is for plain TCP
+>>>> -      * SO_MAX_PACING_RATE is unsupported, we must be careful with subflows
+>>>>        * SO_CNX_ADVICE is currently unsupported, could possibly be relevant,
+>>>>        * but likely needs careful design
+>>>>        *
+>>>> @@ -1532,6 +1551,7 @@ static void sync_socket_options(struct mptcp_sock *msk, struct sock *ssk)
+>>>>  {
+>>>>       static const unsigned int tx_rx_locks = SOCK_RCVBUF_LOCK | SOCK_SNDBUF_LOCK;
+>>>>       struct sock *sk = (struct sock *)msk;
+>>>> +     unsigned long max_pacing_rate;
+>>>>
+>>>>       if (ssk->sk_prot->keepalive) {
+>>>>               if (sock_flag(sk, SOCK_KEEPOPEN))
+>>>> @@ -1579,6 +1599,15 @@ static void sync_socket_options(struct mptcp_sock *msk, struct sock *ssk)
+>>>>       tcp_sock_set_keepcnt(ssk, msk->keepalive_cnt);
+>>>>       tcp_sock_set_maxseg(ssk, msk->maxseg);
+>>>>
+>>>> +     /* Keep pacing settings in sync as well. */
+>>>> +     max_pacing_rate = READ_ONCE(sk->sk_max_pacing_rate);
+>>>> +
+>>>> +     WRITE_ONCE(ssk->sk_max_pacing_rate, max_pacing_rate);
+>>>> +     if (max_pacing_rate != ~0UL)
+>>>> +             cmpxchg(&ssk->sk_pacing_status, SK_PACING_NONE, SK_PACING_NEEDED);
+>>>> +     if (READ_ONCE(ssk->sk_pacing_rate) > max_pacing_rate)
+>>>> +             WRITE_ONCE(ssk->sk_pacing_rate, max_pacing_rate);
+>>>
+>>> Would it not be easier for the maintenance to export some code from
+>>>
+>>>   net/core/sock.c
+>>>
+>>> doing the same, and calling it from there and here?
+>>
+>> IMO the cleanest way in sync_socket_options() would be that for each
+>> option we reconstruct a sockptr_t and call sk_setsockopt().
+>>
+>> WDYT ?
+> 
+> Yes, that would be excellent. I didn't have the chance to explore this.
+> Also, I don't know if we can call sk_setsockopt() for each supported
+> option (or maybe fine?), maybe we should limit to the ones that have
+> been modified, no?
+> 
+> Cheers,
+> Matt
 
 Cheers,
 Matt
