@@ -1,180 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5FC643164
-	for <mptcp@lists.linux.dev>; Fri, 29 Aug 2025 20:33:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 284884A11
+	for <mptcp@lists.linux.dev>; Fri, 29 Aug 2025 20:54:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756499636; cv=none; b=f98Sx0iPh4n/lJ41LFQbX7zi44DGw5KsNRgXqHNMY94U49YVJMEQ/qJuKRbi482YG/uPh3dGpME4XjM+N8BElYiS5Kfma+BKtdaOjRydjWUiTcTFgwSGygq7cxlYysphsy3RWTu7pvfhDrY7rG7z6p7AtrmxALU6KNQptVqeUBs=
+	t=1756500856; cv=none; b=OmvT0D0e94YhP1N3EZ14fXF+L5Yr2Zn/rYiAjnqG4UqTGP0dyWyXAvLAtgP/2wTkRoq1td51fCVhg7TA4qb7hVYhssP100qmPRMv680AbYaT7KdRL1BbXerSCEaSpf+VVamaIAOnoLmMxJh4HzOqrQ+B/9DQ+8tWYgfdN16SdLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756499636; c=relaxed/simple;
-	bh=Tq08SLZzDAhqrGXS5HqJEDTMk09WlVZl7E9I2C+nylg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=kzURBhcySAi/kubV7MDFthzeJ0hoFsCPe0Gf8OHBei6Vnk0Ez5FUrSGTp0Ma3hU4FCeTYAwktPvOwMuknFZT/3Ou+fTg8+kc29l99eWK1jh7aU1+u+0+QUNF3Ls9z4sMR2ONTbp2AOhpKhBDTbqnC1zt4EFaBcviM0MtSH9fNT0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ba522DNr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1756500856; c=relaxed/simple;
+	bh=O2EkeLSia+dmZis9TbKSGzYt0dzGrwVcHEVMcA7m0j4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=K3KZX5YKz5LoObp++Ypj7iQyYZjjIHxdsYtr7sgj0M/3WR1upd3PGKtirrYpKutPbicwA1tjxhSDOBzrVYJrelsRi+Zte5sB1G4Znjl5XzuXuxzzwNmAw+2bBS25zC+NrnzEL+LQuW+b7VeABl0JXOvwVyGsMSvrcFd24Kpfl3o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=openai.com; spf=pass smtp.mailfrom=openai.com; dkim=pass (1024-bit key) header.d=openai.com header.i=@openai.com header.b=DtoC4sJS; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=openai.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=openai.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ba522DNr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B399FC4CEF6;
-	Fri, 29 Aug 2025 20:33:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756499636;
-	bh=Tq08SLZzDAhqrGXS5HqJEDTMk09WlVZl7E9I2C+nylg=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=ba522DNrbRKc9uVANA+cW7gAunOqVaSq77oKbMuB4mr5QmdmBxxKhl+clRLucEgOc
-	 4oxJ6bQv2RRYfgZq513++AGvRRp13RcjkJAvuIaWbBFe/gqo9o45kl53hL+wt9Bhoy
-	 UM9M93lLS9uTkEbgduEHHp3AvxdqkqnDXQPl959oUE5/BfJ7B6UZM/bOq0Lz3kuCBm
-	 /loZjCa7mPfmRH5ZKYg4owZulSXf8xU43gz+Khj0icpJ+X2XUtEqEehU9H8jv2M6XN
-	 m3vszdrbRmjSrY7LIW0mcTiBYAGARhQrkgmdQIdhTOI+vrsR35ssiVqIagTuCyryoX
-	 N2411qGyhXikg==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Fri, 29 Aug 2025 22:33:39 +0200
-Subject: [PATCH RFC mptcp-net 7/7] mptcp: pm: nl: announce deny-join-id0
- attribute
+	dkim=pass (1024-bit key) header.d=openai.com header.i=@openai.com header.b="DtoC4sJS"
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-55f4cf36c00so2819773e87.1
+        for <mptcp@lists.linux.dev>; Fri, 29 Aug 2025 13:54:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=openai.com; s=google; t=1756500852; x=1757105652; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hwJq7H//9mhoJqxp25Bag85O/wC8SbMpE8f4yoH82F0=;
+        b=DtoC4sJSTojkFpj+7HqW5NEZkqlfFfZiD3T3mydGZYlJwhi6gJus6gY9G1eItm5cGW
+         31WpRszWTNPYY8BVixF7OG75+LmNJiJuhMiXP9jFBYU/wz39k5f3Wg81evzCuP2IyKLt
+         hVsfKPHoU51ddi8AfumvKLtnGf/B/jwq7vVp4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756500852; x=1757105652;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hwJq7H//9mhoJqxp25Bag85O/wC8SbMpE8f4yoH82F0=;
+        b=lBqnoeVSqhsm/5zibpA2MnN6WUoorlWWCZcjPe5cNNTd04G/kMJ0DIgoGj0/3j58TP
+         NMBczfhGBK3baKX0TZo+2Ndwywlmoy7ap0PWnQupUg4gxjPY2jYYP35YaACrBwD1KvMU
+         vF3MN78/3lqLGcHR8Ltk89OkKtDMwONZ5myea5hxnZ57vv4IkfMvjWm4WGy9eHTiMpux
+         jrkl11/vT5Us2TOn8QsOaIz3lmpRdMtixjbqEvTmhEPIfPGyOD4DTBXisVMsKHVD08pv
+         HCBoDTTV7QdM1kLplQdE8Bij2GA3dZ5H42LDpL3FtUfaAMHJjwVxQJTPQaENWXgO5fz5
+         7Wfw==
+X-Gm-Message-State: AOJu0YxStjBlRrU8q2bluKU1DdCCksxqM/cIFOyg0CChB5gCZwr5XcBW
+	0GDefgp3db2+Dmni82J6lX1gQG6R0/WEd2eXvv4z4OoJ1VOiZY1/+d+pKC6eo0IF4xodJBvO5xz
+	pS2fZ7/09Xmsl5YY3TJhUg08s4OfREAZShX6ugqjm8g==
+X-Gm-Gg: ASbGnct8IX8BfAkpFHN6g6wgNx0vKLgRZRjiBh0kVhEEh4Xt9NEG75ca1qiA2AQC5Ah
+	aRdE6VNnkUI46Y6FgWdkyow2/oVQJUvGlt7jBzAEEu2WyJX9CwB1l06668KzzbtJtGGc21PP3OS
+	oM6hPg+IkD29rX1TypUd4VgS88P8sYb/dB3G4D2mmlgthP3KeP17Rp7i+rT2gNg/SAmSxe/8MWb
+	1xa6xKh9u5AEimOxBYwLLGISOi7EOj5GKNtJUB9mzCcFSp903ja937YjVJU1fI=
+X-Google-Smtp-Source: AGHT+IEWQYHHt4UBA96/VWM7JYU+9goSoUa1mrzFbe0K1l3Ye5IplxsT45UWr0wDXl4UuMnh8kpL3qCrYd3dzao2GKA=
+X-Received: by 2002:a05:6512:3ba2:b0:55f:7050:954a with SMTP id
+ 2adb3069b0e04-55f70509760mr13068e87.55.1756500852146; Fri, 29 Aug 2025
+ 13:54:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250829-mptcp-pm-user-c-flag-v1-7-78b25dda7708@kernel.org>
-References: <20250829-mptcp-pm-user-c-flag-v1-0-78b25dda7708@kernel.org>
-In-Reply-To: <20250829-mptcp-pm-user-c-flag-v1-0-78b25dda7708@kernel.org>
-To: mptcp@lists.linux.dev
-Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5615; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=Tq08SLZzDAhqrGXS5HqJEDTMk09WlVZl7E9I2C+nylg=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDI28a2N+iJfHMlSFLRooeYTfebfHZ8+OK262ZastubB1
- u9zcvp+d5SyMIhxMciKKbJIt0Xmz3xexVvi5WcBM4eVCWQIAxenAExE6DDDP/UGs9bO+raTpeuX
- tGczqfx4xPE2YMH8k+wLv91xYzHvvM3wv1A8QzezjYM95xjj7oNmyUw1DF9ydhs7Zl44z73IIlq
- bFQA=
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+References: <20250829-mptcp-pm-user-c-flag-v1-0-78b25dda7708@kernel.org> <20250829-mptcp-pm-user-c-flag-v1-2-78b25dda7708@kernel.org>
+In-Reply-To: <20250829-mptcp-pm-user-c-flag-v1-2-78b25dda7708@kernel.org>
+From: Christoph Paasch <cpaasch@openai.com>
+Date: Fri, 29 Aug 2025 13:54:01 -0700
+X-Gm-Features: Ac12FXxigH5V1fcBtsB39z2IWAmjXbF6_hSqWM7DBoOo5e9N-iRwm-gsowLAiqA
+Message-ID: <CADg4-L_yzQo7Xs3aVL=sBY2M6OwZ=XDHCTdaS3KyiZa0hOct0g@mail.gmail.com>
+Subject: Re: [PATCH mptcp-net 2/7] mptcp: pm: userspace: respect deny_join_id0 attr
+To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-During the connection establishment, a peer can tell the other that it
-cannot establish new subflows to the initial IP address and port by
-setting the 'C' flag [1]. Doing so makes sense when the sender is behind
-a strict NAT, operating behind a legacy Layer 4 load balancer, or using
-anycast IP address for example.
+On Fri, Aug 29, 2025 at 1:33=E2=80=AFPM Matthieu Baerts (NGI0)
+<matttbe@kernel.org> wrote:
+>
+> During the connection establishment, a peer can tell the other that it
+> cannot establish new subflows to the initial IP address and port by
+> setting the 'C' flag [1]. The RFC8684 is strict about that:
+>
+>   (...) therefore the receiver MUST NOT try to open any additional
+>   subflows toward this address and port.
+>
+> It is then important not to let the userspace PM establishing such
+> subflows, and return an error (ECONNREFUSED) if it tries to do so.
+>
+> Fixes: 702c2f646d42 ("mptcp: netlink: allow userspace-driven subflow esta=
+blishment")
+> Link: https://datatracker.ietf.org/doc/html/rfc8684\#section-3.1-20.6 [1]
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> ---
+>  net/mptcp/pm_userspace.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>
+> diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
+> index 1911fe1799fa38a53381247a830a9a0daf1c4492..9968dc9a8b45112114953f668=
+48ea22c971136d6 100644
+> --- a/net/mptcp/pm_userspace.c
+> +++ b/net/mptcp/pm_userspace.c
+> @@ -391,6 +391,12 @@ int mptcp_pm_nl_subflow_create_doit(struct sk_buff *=
+skb, struct genl_info *info)
+>         if (err < 0)
+>                 goto create_err;
+>
+> +       if (READ_ONCE(msk->pm.remote_deny_join_id0) && addr_r.id =3D=3D 0=
+) {
 
-When this 'C' flag is set, the path-managers must then not try to
-establish new subflow to the other peer's initial IP address and port.
-The in-kernel PM has access to this info, but the userspace PM didn't.
+If userspace wants to, it could still work around that by still using
+the initial subflow's IP-address and just use a non-zero address-ID.
 
-When a new connection is created and established, the Netlink events
-will now contain a new deny-join-id0 attribute. When set to 1, it means
-no other subflow to the initial IP address and port -- which is part of
-the event -- can be established.
+Is that really a concern ? Sure, the IETF-draft says "MUST NOT", and
+so, shouldn't we leave it up to the userspace PM to make that decision
+?
 
-Link: https://datatracker.ietf.org/doc/html/rfc8684#section-3.1-20.6 [1]
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/532
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
-This patch is marked as an RFC, just so we can agree on the attribute
-type: should we use a new dedicated attribute, or start using flags? It
-even looks like we have defined a "flags" attribute, but it is currently
-not used. Using "flags" would allow us to save some bytes, and in this
-case, 'server-side' should have used "flags" too. The problem with the
-flags is that the userspace cannot tell if a new flag is unset because
-the kernel doesn't support it, or because it doesn't need to be set. But
-is it really an issue? If the kernel doesn't support it, the userspace
-will probably not know what to do anyway. So fine to use flags? Or not
-needed, because it is unlikely to add new attributes later on?
 
-If yes, I suggest:
-- switching 'flags' to u32 instead of u16 because it doesn't change
-  anything, and it is currently not used
-- deprecating the 'server-side' attribute, and adding it in the flags
-  (but keeping it for the moment, maybe we can remove it in a few
-  versions?)
-- adding deny-join-id0 as a flag: MPTCP_PM_EVENT_FLAG_DENY_JOIN_ID0
+Christoph
 
-If no, we can use what is proposed here.
-
-In any cases, I would like to add a test. I initially added one in
-userspace_pm.sh, but due to "mptcp: pm: userspace: respect deny_join_id0
-attr", it is no longer possible to set allow_join_initial_addr_port
-sysctl knob to 0 there, as the value is no longer ignored by the
-userspace PM. Probably best to add a test in mptcp_join.sh.
----
- Documentation/netlink/specs/mptcp_pm.yaml | 7 +++++--
- include/uapi/linux/mptcp_pm.h             | 5 +++--
- net/mptcp/pm_netlink.c                    | 4 ++++
- 3 files changed, 12 insertions(+), 4 deletions(-)
-
-diff --git a/Documentation/netlink/specs/mptcp_pm.yaml b/Documentation/netlink/specs/mptcp_pm.yaml
-index d15335684ec3d6256505f2b3887ce5818eb57462..0b53d8b5b4524b6026009cfa4510e7a6e141acf1 100644
---- a/Documentation/netlink/specs/mptcp_pm.yaml
-+++ b/Documentation/netlink/specs/mptcp_pm.yaml
-@@ -28,13 +28,13 @@ definitions:
-           traffic-patterns it can take a long time until the
-           MPTCP_EVENT_ESTABLISHED is sent.
-           Attributes: token, family, saddr4 | saddr6, daddr4 | daddr6, sport,
--          dport, server-side.
-+          dport, server-side, deny-join-id0.
-       -
-         name: established
-         doc: >-
-           A MPTCP connection is established (can start new subflows).
-           Attributes: token, family, saddr4 | saddr6, daddr4 | daddr6, sport,
--          dport, server-side.
-+          dport, server-side, deny-join-id0.
-       -
-         name: closed
-         doc: >-
-@@ -266,6 +266,9 @@ attribute-sets:
-       -
-         name: server-side
-         type: u8
-+      -
-+        name: deny-join-id0
-+        type: u8
- 
- operations:
-   list:
-diff --git a/include/uapi/linux/mptcp_pm.h b/include/uapi/linux/mptcp_pm.h
-index 6ac84b2f636ca22935c191c645449fb62b673899..6c751c488e51d6ab711607189041d5e2ea222e4e 100644
---- a/include/uapi/linux/mptcp_pm.h
-+++ b/include/uapi/linux/mptcp_pm.h
-@@ -16,10 +16,10 @@
-  *   good time to allocate memory and send ADD_ADDR if needed. Depending on the
-  *   traffic-patterns it can take a long time until the MPTCP_EVENT_ESTABLISHED
-  *   is sent. Attributes: token, family, saddr4 | saddr6, daddr4 | daddr6,
-- *   sport, dport, server-side.
-+ *   sport, dport, server-side, deny-join-id0.
-  * @MPTCP_EVENT_ESTABLISHED: A MPTCP connection is established (can start new
-  *   subflows). Attributes: token, family, saddr4 | saddr6, daddr4 | daddr6,
-- *   sport, dport, server-side.
-+ *   sport, dport, server-side, deny-join-id0.
-  * @MPTCP_EVENT_CLOSED: A MPTCP connection has stopped. Attribute: token.
-  * @MPTCP_EVENT_ANNOUNCED: A new address has been announced by the peer.
-  *   Attributes: token, rem_id, family, daddr4 | daddr6 [, dport].
-@@ -126,6 +126,7 @@ enum mptcp_event_attr {
- 	MPTCP_ATTR_RESET_REASON,
- 	MPTCP_ATTR_RESET_FLAGS,
- 	MPTCP_ATTR_SERVER_SIDE,
-+	MPTCP_ATTR_DENY_JOIN_ID0,
- 
- 	__MPTCP_ATTR_MAX
- };
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 50aaf259959aeaf36e7ab954c6f7957eaf2bc390..93455b63ef80395ff19f40d84cd28438a3578b98 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -415,6 +415,10 @@ static int mptcp_event_created(struct sk_buff *skb,
- 	if (nla_put_u8(skb, MPTCP_ATTR_SERVER_SIDE, READ_ONCE(msk->pm.server_side)))
- 		return -EMSGSIZE;
- 
-+	if (nla_put_u8(skb, MPTCP_ATTR_DENY_JOIN_ID0,
-+		       READ_ONCE(msk->pm.remote_deny_join_id0)))
-+		return -EMSGSIZE;
-+
- 	return mptcp_event_add_subflow(skb, ssk);
- }
- 
-
--- 
-2.50.1
-
+> +               GENL_SET_ERR_MSG(info, "deny join id0");
+> +               err =3D -ECONNREFUSED;
+> +               goto create_err;
+> +       }
+> +
+>         if (!mptcp_pm_addr_families_match(sk, &entry.addr, &addr_r)) {
+>                 GENL_SET_ERR_MSG(info, "families mismatch");
+>                 err =3D -EINVAL;
+>
+> --
+> 2.50.1
+>
+>
