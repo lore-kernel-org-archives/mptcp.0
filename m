@@ -1,115 +1,105 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 778FB2033A
-	for <mptcp@lists.linux.dev>; Sat, 30 Aug 2025 00:58:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 939BB2FF16F;
+	Mon,  1 Sep 2025 09:40:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756515518; cv=none; b=CTon4T5FYPlTWVyYRBp3ZeO8Moc32zXkxRlCODcq4wySNhLPRISKylpxpPMaS5Isegfx5yOqudjQfrcq6m3FI6qYqf/NuWEww/T9sykTreucXt5dO3OttUfjw5z/X9P1IC6qM6HyvRHlsviVGmpFsrjIMkIH+U2F5HpbzDOcQZE=
+	t=1756719601; cv=none; b=eUcIB6Y15knpAlPykjzNdy32+FnGY3sVQZnx65YeMfd/wrAO6hfRe1hRwRYAG17D16gYzlye0BT5J33qmN+OVqXOtxZpqhuYaVIbSjjgFrbWNYffxEAV8gzRJ8kGQqgE5I6LtC8t6zi0hqTmgJ4l8/ri+YCcJTMi0VPHZwIsGyE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756515518; c=relaxed/simple;
-	bh=7hY5EwM7fp1/WNjhsR0W9UF0vc09is6prLxgCXkYgTU=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=u3MtTX1VJvTfz6MNKx3qIhdSQOOVaN6Tp9p5VwUDBao0HqOj7T5JOrMDL45/WWpxHMfyn29k2LXUKAiskG4/lsetSB5bL/x4Twr2lQgkXVlpFUMt/0MVa/37ZmrxE9aAWIBOtyjnzrpaikcTFQxTJ8JSg8ImWUiblTnxJtR9o+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RQDAe3PQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1756719601; c=relaxed/simple;
+	bh=A5Tl+xbMpqKmmcwfLLF9FVQa1SsSWKl0bEyUbormmWU=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=NVpngQsA7AeCUFM+/TSMwATA4lJordaZgg54H1AtYcWQ1PMdEEwWd/dLl6KdaAa1dw28aTdwov5HmfrrUUBmUF+b4QfVcUIbKqo10dQo85mU6BtLCTV/bkVDJjtw7934RDakcH8pXLhpp1gdtdizHQ5NoFnzlKF75gaKWtVSB7Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PA5DV3WK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RQDAe3PQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E62A0C4CEF0;
-	Sat, 30 Aug 2025 00:58:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PA5DV3WK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D54D4C4CEF0;
+	Mon,  1 Sep 2025 09:39:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756515518;
-	bh=7hY5EwM7fp1/WNjhsR0W9UF0vc09is6prLxgCXkYgTU=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=RQDAe3PQg/f5WpuPGElhmj91v8qyDdMioGl1qkKydoJUlzGOE4QPcM0VeLGf2WmK9
-	 8UsBqfyva44E1TbPpTk0vbXKpgGLxuD4/JovU0Q5K/LbdlwmTmhJov0yUnyESxrG/w
-	 bP7P+jFNNcjsOApdnpIZzA2AJrE6R92UuXFqvc0pXx0GcsgqZC40fpNlpVyg1vxqQ7
-	 KD1VtCzIFCOcyypXhTPUOq3uUGw9hSMmv2Qy0u0yPQ3e1GCJ059jd/U+WjK6i8138p
-	 oW+smBQ9azbFN1r7vWJyt+qHb2WKk/UNfX4kwcZKDggjlwt+smKAFjMima5pm/41nK
-	 9HrJDNmbTa46w==
-Date: Fri, 29 Aug 2025 17:58:37 -0700 (PDT)
-From: Mat Martineau <martineau@kernel.org>
-To: Christoph Paasch <cpaasch@openai.com>
-cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-net 2/7] mptcp: pm: userspace: respect deny_join_id0
- attr
-In-Reply-To: <CADg4-L_yzQo7Xs3aVL=sBY2M6OwZ=XDHCTdaS3KyiZa0hOct0g@mail.gmail.com>
-Message-ID: <9de05bc0-fcf6-364f-b143-fb72cb8c4cae@kernel.org>
-References: <20250829-mptcp-pm-user-c-flag-v1-0-78b25dda7708@kernel.org> <20250829-mptcp-pm-user-c-flag-v1-2-78b25dda7708@kernel.org> <CADg4-L_yzQo7Xs3aVL=sBY2M6OwZ=XDHCTdaS3KyiZa0hOct0g@mail.gmail.com>
+	s=k20201202; t=1756719600;
+	bh=A5Tl+xbMpqKmmcwfLLF9FVQa1SsSWKl0bEyUbormmWU=;
+	h=From:Subject:Date:To:Cc:From;
+	b=PA5DV3WK15MlJ2GaGAu+Fy+5qwrJOXW6XfiU5TuPF/s0hRJhQCAjVDKNj1Xx/vdoD
+	 1waJuLa/O+KsoKJKCTLoZF0stpatnHWN7ccf2J26+Vn0jBbg7OHmO6Wh1rsfgHwP56
+	 Yb6ayWBBaNk8Oe46iTNSTFOk6aCW3YSju2hOnYD1Xn3vr0SxMdvpDU4sS3+CiGskR8
+	 0PTIGry1hNqEyXrwfBJiEyE+9x1oZ4aFQAgnjvKCLwtd61RwlA+30DjuBiNjFM8n3W
+	 h+zR9L7nmMyYW9jp58H1XecLcuHZ7/HQsL085zrFfxxL18lpo64Fd0OD7x/EvWJA66
+	 eaybc+HsPCGsg==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH net-next 0/6] mptcp: misc. features for v6.18
+Date: Mon, 01 Sep 2025 11:39:09 +0200
+Message-Id: <20250901-net-next-mptcp-misc-feat-6-18-v1-0-80ae80d2b903@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="0-143989299-1756515517=:73212"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAL1ptWgC/zWMMQqEMBAAvyJb30KycBr9ilwR4ka3MIYkSED8+
+ wXBYoopZi7InIQzTN0FiU/JcoQm+tOB22xYGWVpDqToqwyNGLg0asE9Fhdxl+zQsy3YozY4EHl
+ rBtsrr6E9YmIv9fnP8Kbwu+8/Su9uoHkAAAA=
+X-Change-ID: 20250829-net-next-mptcp-misc-feat-6-18-722fa87a60f1
+To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
+ Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+ "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
+ Eric Biggers <ebiggers@kernel.org>, Christoph Paasch <cpaasch@openai.com>, 
+ Gang Yan <yangang@kylinos.cn>, Geliang Tang <geliang@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1463; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=A5Tl+xbMpqKmmcwfLLF9FVQa1SsSWKl0bEyUbormmWU=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDK2Zj75+3Bdm8TZJ981i79oS83s2T9h3nSFvC0++zZJ7
+ 5SzPtxU0lHKwiDGxSArpsgi3RaZP/N5FW+Jl58FzBxWJpAhDFycAjCRQi2G/2Fbwy6dV10iFGx5
+ iGGJ2cyyljOyAqd1Qjf8m6eVcTOCiYXhn2VxweyARbevL81RLlGt+SLmvNng2bWVzwxjzG0Dt6j
+ t4AMA
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+This series contains 4 independent new features:
 
---0-143989299-1756515517=:73212
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8BIT
+- Patch 1: use HMAC-SHA256 library instead of open-coded HMAC.
 
-On Fri, 29 Aug 2025, Christoph Paasch wrote:
+- Patches 2-3: make ADD_ADDR retransmission timeout adaptive + simplify
+  selftests.
 
-> On Fri, Aug 29, 2025 at 1:33 PM Matthieu Baerts (NGI0)
-> <matttbe@kernel.org> wrote:
->>
->> During the connection establishment, a peer can tell the other that it
->> cannot establish new subflows to the initial IP address and port by
->> setting the 'C' flag [1]. The RFC8684 is strict about that:
->>
->>   (...) therefore the receiver MUST NOT try to open any additional
->>   subflows toward this address and port.
->>
->> It is then important not to let the userspace PM establishing such
->> subflows, and return an error (ECONNREFUSED) if it tries to do so.
->>
->> Fixes: 702c2f646d42 ("mptcp: netlink: allow userspace-driven subflow establishment")
->> Link: https://datatracker.ietf.org/doc/html/rfc8684\#section-3.1-20.6 [1]
->> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
->> ---
->>  net/mptcp/pm_userspace.c | 6 ++++++
->>  1 file changed, 6 insertions(+)
->>
->> diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
->> index 1911fe1799fa38a53381247a830a9a0daf1c4492..9968dc9a8b45112114953f66848ea22c971136d6 100644
->> --- a/net/mptcp/pm_userspace.c
->> +++ b/net/mptcp/pm_userspace.c
->> @@ -391,6 +391,12 @@ int mptcp_pm_nl_subflow_create_doit(struct sk_buff *skb, struct genl_info *info)
->>         if (err < 0)
->>                 goto create_err;
->>
->> +       if (READ_ONCE(msk->pm.remote_deny_join_id0) && addr_r.id == 0) {
->
-> If userspace wants to, it could still work around that by still using
-> the initial subflow's IP-address and just use a non-zero address-ID.
->
-> Is that really a concern ? Sure, the IETF-draft says "MUST NOT", and
-> so, shouldn't we leave it up to the userspace PM to make that decision
-> ?
->
+- Patch 4: selftests: check for unexpected fallback counter increments.
 
-I concur with Christoph on this one, I think the PM (userspace or kernel) 
-is responsible for this aspect of the protocol so it doesn't need to be 
-double-checked here.
+- Patches 5-6: record subflows in RPS table, for aRFS support.
 
-- Mat
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+Christoph Paasch (2):
+      net: Add rfs_needed() helper
+      mptcp: record subflows in RPS table
 
->
->> +               GENL_SET_ERR_MSG(info, "deny join id0");
->> +               err = -ECONNREFUSED;
->> +               goto create_err;
->> +       }
->> +
->>         if (!mptcp_pm_addr_families_match(sk, &entry.addr, &addr_r)) {
->>                 GENL_SET_ERR_MSG(info, "families mismatch");
->>                 err = -EINVAL;
->>
->> --
->> 2.50.1
->>
->>
->
->
---0-143989299-1756515517=:73212--
+Eric Biggers (1):
+      mptcp: use HMAC-SHA256 library instead of open-coded HMAC
+
+Gang Yan (1):
+      selftests: mptcp: add checks for fallback counters
+
+Geliang Tang (2):
+      mptcp: make ADD_ADDR retransmission timeout adaptive
+      selftests: mptcp: remove add_addr_timeout settings
+
+ Documentation/networking/mptcp-sysctl.rst       |   8 +-
+ include/net/rps.h                               |  85 ++++++++++------
+ net/mptcp/crypto.c                              |  35 +------
+ net/mptcp/pm.c                                  |  28 +++++-
+ net/mptcp/protocol.c                            |  21 ++++
+ tools/testing/selftests/net/mptcp/mptcp_join.sh | 126 +++++++++++++++++++++++-
+ 6 files changed, 231 insertions(+), 72 deletions(-)
+---
+base-commit: d23ad54de795ec0054f90ecb03b41e8f2c410f3a
+change-id: 20250829-net-next-mptcp-misc-feat-6-18-722fa87a60f1
+
+Best regards,
+-- 
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
+
