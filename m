@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED5B730F549
-	for <mptcp@lists.linux.dev>; Mon,  1 Sep 2025 10:08:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 818812FB985
+	for <mptcp@lists.linux.dev>; Mon,  1 Sep 2025 10:22:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756721337; cv=none; b=nbdY8pqYP9TRokQvkcaeEkhSXc7Uq5Jq+iiT2bfPZxCD833kJLQAieCtqyQdpkwKsOanfEGzZ5XPmwCGh7MaGZmojlqF1pAbe0AnoGYm9no2OW70jmr/2ph23BPj4JAii1/zujzSRf61w1igVrOAXu6JgowYaIkdQB52jFAlDao=
+	t=1756722142; cv=none; b=Gxkcmkh1y6EdakIgKheq+OaPc7gKvpb1ajVcJH9Ax9v1KSJPdvIxWUTJPqmCTxQtAloLIitZYw18BNtJVLMoOeYS+CSlfa8lurSwHyZsUThbENRVbDtwrM/weoK9OMEJEnhzwVVCVf20gyrY/GDA5jBAo+o301ko5JooZRk4Au0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756721337; c=relaxed/simple;
-	bh=h3EFOgl7vbDyS9f3AHHoAGwDAr2s1fYv+Ej50/6X8Kw=;
+	s=arc-20240116; t=1756722142; c=relaxed/simple;
+	bh=Q0KIyy+hyHy/v5Av0nwwRddQpw5nUuACNtX1jY+SPb8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ozSdENhy4EP6MHmfXECOO2nMiPIgWEieRbM7hAaY5me/lLLzYvqLkxoPhusmoMSbd7kOsfIe4E2SUALW0cKyyqnBdqeMVAaTROyTCOVxDUP/RuLEsDcwV7vLRO1HP7pMD0aTpRKyOMYnHOmymKO24iTSqdutk1ni9RKwhSHrhSg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CjcxogF/; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=WbfLJXfQPbr+XK+troG5gLgL830QjE53frSF6jt/m1L/GM3M0JOWb8V7+DzYkfBsRgxU3qS9qavgGCzWscYsFP7PrYamfuB4lkmqfbwnZEgkd3novvQpKvLLkZohiTHownwIP7NyhxgTp2GTdG4AZ3t6y6VZN8bvCQ4jnNr13ec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Uc4l/S0B; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CjcxogF/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C213AC4CEF4;
-	Mon,  1 Sep 2025 10:08:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Uc4l/S0B"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D933C4CEF0;
+	Mon,  1 Sep 2025 10:22:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756721336;
-	bh=h3EFOgl7vbDyS9f3AHHoAGwDAr2s1fYv+Ej50/6X8Kw=;
+	s=k20201202; t=1756722142;
+	bh=Q0KIyy+hyHy/v5Av0nwwRddQpw5nUuACNtX1jY+SPb8=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=CjcxogF/cozEtKq7V02xCIypMBvnzQoRZhomDeHAROxLJONRRj5csoLicjd4r7SUN
-	 HUadUchDy+tEPJSxaZ/xsZkqHbgtK2n4O0t05+9LyP3zoeqGEJpSll+Rc1cI9rAvqX
-	 6XVsXF/18So07zFOGuZA8P6ZY64osi1zi7VxN9LSvXd68k+GFkni/GX1qwfkBScRze
-	 rK/y7XlDJyy+NEIG+U7LQD9shDON0QGhXn00ZnjsMe/XrsmjJCgGPOHwNvsLsd1VaP
-	 Cl7+azV3C3HwuF0GUI2cl+oR+ABnxziXI7llvf0d4rVrTmiyE7m5/pMtWmYuwMyx8n
-	 8213VS37z6DJA==
-Message-ID: <8d4ba38a-e19d-408b-b81d-a75362d170e2@kernel.org>
-Date: Mon, 1 Sep 2025 12:08:53 +0200
+	b=Uc4l/S0BQ8Hf11uIEyTQnCF7wKc6GZ3RVPnVFHrrsJqyaLCNhNQE+MBTa6s+LR85S
+	 HpUv33suHvh2Wra31aThBEScsbhhh3FvF1gs/KoTEn8SoiBfCwRMLQScwqJUGD4aCw
+	 Q6fHo80JKkndCRIk8iOfJFScMk+hT+MbTb10jYTOIqxgX8u2reCFDprjJqu8xBifA1
+	 hqv8NI1IMsM068MCBf6jTcSSaoFo/00MbmvWB6D1+NzPNYv0Fk6SWOiull4NpeRugX
+	 KvmSX09RGq4A42tCcY8SH+DuHP8N0ZQTQg81kkdqjFdze4OX41GfoWxxB49MFw3rIH
+	 Kp/dfMOTZT98w==
+Message-ID: <64fce482-7dc7-4643-a73c-7491522f8589@kernel.org>
+Date: Mon, 1 Sep 2025 12:22:19 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,16 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net 2/7] mptcp: pm: userspace: respect deny_join_id0
- attr
+Subject: Re: [PATCH mptcp-next v2 0/2] Squash to "implement mptcp read_sock"
+ v9
 Content-Language: en-GB, fr-BE
-To: Mat Martineau <martineau@kernel.org>,
- Christoph Paasch <cpaasch@openai.com>
-Cc: mptcp@lists.linux.dev
-References: <20250829-mptcp-pm-user-c-flag-v1-0-78b25dda7708@kernel.org>
- <20250829-mptcp-pm-user-c-flag-v1-2-78b25dda7708@kernel.org>
- <CADg4-L_yzQo7Xs3aVL=sBY2M6OwZ=XDHCTdaS3KyiZa0hOct0g@mail.gmail.com>
- <9de05bc0-fcf6-364f-b143-fb72cb8c4cae@kernel.org>
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <cover.1756458375.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -90,98 +86,28 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <9de05bc0-fcf6-364f-b143-fb72cb8c4cae@kernel.org>
+In-Reply-To: <cover.1756458375.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Christoph, Mat,
+Hi Geliang,
 
-On 30/08/2025 02:58, Mat Martineau wrote:
-> On Fri, 29 Aug 2025, Christoph Paasch wrote:
+On 29/08/2025 11:10, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
->> On Fri, Aug 29, 2025 at 1:33 PM Matthieu Baerts (NGI0)
->> <matttbe@kernel.org> wrote:
->>>
->>> During the connection establishment, a peer can tell the other that it
->>> cannot establish new subflows to the initial IP address and port by
->>> setting the 'C' flag [1]. The RFC8684 is strict about that:
->>>
->>>   (...) therefore the receiver MUST NOT try to open any additional
->>>   subflows toward this address and port.
->>>
->>> It is then important not to let the userspace PM establishing such
->>> subflows, and return an error (ECONNREFUSED) if it tries to do so.
->>>
->>> Fixes: 702c2f646d42 ("mptcp: netlink: allow userspace-driven subflow
->>> establishment")
->>> Link: https://datatracker.ietf.org/doc/html/rfc8684\#section-3.1-20.6
->>> [1]
->>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
->>> ---
->>>  net/mptcp/pm_userspace.c | 6 ++++++
->>>  1 file changed, 6 insertions(+)
->>>
->>> diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
->>> index
->>> 1911fe1799fa38a53381247a830a9a0daf1c4492..9968dc9a8b45112114953f66848ea22c971136d6 100644
->>> --- a/net/mptcp/pm_userspace.c
->>> +++ b/net/mptcp/pm_userspace.c
->>> @@ -391,6 +391,12 @@ int mptcp_pm_nl_subflow_create_doit(struct
->>> sk_buff *skb, struct genl_info *info)
->>>         if (err < 0)
->>>                 goto create_err;
->>>
->>> +       if (READ_ONCE(msk->pm.remote_deny_join_id0) && addr_r.id == 0) {
->>
->> If userspace wants to, it could still work around that by still using
->> the initial subflow's IP-address and just use a non-zero address-ID.
+> v2:
+>  - a new squash-to patch for "mptcp: implement .read_sock".
 
-Good point, I missed that!
+When the series is a few days old, and has not been reviewed yet, I
+think it is easier if you send a new version instead of squash-to patches.
 
->> Is that really a concern ? Sure, the IETF-draft says "MUST NOT", and
->> so, shouldn't we leave it up to the userspace PM to make that decision
->> ?
->>
-> 
-> I concur with Christoph on this one, I think the PM (userspace or
-> kernel) is responsible for this aspect of the protocol so it doesn't
-> need to be double-checked here.
+I think such squash-to patches are good when patches have already been
+applied, or when you realised you forgot something minor just after
+having send a series with a few patches. (For the latter, it might be
+interesting to use '--in-reply-to $PREVIOUS_COVER_LETTER'.)
 
-Indeed, we could leave it up to the different PMs to make that decision.
-Initially, I didn't have this patch, and I had a simple patch setting
-the corresponding sysctl to 0 in userspace_pm.sh, just to check the
-event was correctly announced. But when writing the last patch's commit
-message ("mptcp: pm: nl: announce deny-join-id0 attribute"), I realised
-that the main missing feature was a way for the userspace daemon to know
-that the C flag was set. We cannot backport patch 7/7, but we can
-backport this one, and have a way to know this info on older kernels. I
-should have mentioned that in the commit message.
-
-In this case, I think we have a few options:
-
-- Keep this patch, but update the commit message to make it clearer
-what's its purpose, see [1]
-
-- Same, but revert it after patch 7/7 on net-next.
-
-- Keep it, but also check for the address and port.
-
-- Drop it.
-
-What would you prefer?
-
-Personally, I think we should keep it, at least for stable, but we don't
-need to check for the address and port: even if it is easy to check, it
-might be good to let a way for the userspace to still create such subflow.
-
-[1]: The last paragraph in this commit message would then be:
-
-> It is then important to let the userspace daemon know it is not allowed
-> to establish such subflows, and return an error (ECONNREFUSED) if it
-> tries to do so. Note that the userspace daemon will still be able to
-> establish subflows to the initial IP address and port, but by giving a
-> different remote ID: that's OK, that's its responsibility ; worst case,
-> the MP_JOIN is rejected by the other peer.
+When the v10 will be posted, I can check with Paolo if he is planning to
+continue the review of this series.
 
 Cheers,
 Matt
