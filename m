@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 934C7253F11
-	for <mptcp@lists.linux.dev>; Tue,  2 Sep 2025 08:44:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DFA125A352
+	for <mptcp@lists.linux.dev>; Tue,  2 Sep 2025 08:45:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756802695; cv=none; b=O2OMtF9X4RTA68QCMi4EkN756kF72d1B61xTeaICHhHHV8bkigtjuiytSvFFeWbL7BcwcKmSlcDdFKZYu4W0SFAqNgGAsG9XJG5Uh7buOwuZvYJ7d0VOcWtbxXvKjXWr932Gbr8mYOSrY++nq0BRMhX1RdynoznaLUuDOWkFIA0=
+	t=1756802709; cv=none; b=HuV8FCqywcWv677gDVZiISjOyvWtMGR4be8AY071Wu7KNwElErtIXgDB6fE/3RKuIMrAxVEU6T3SfhYLPXOzrcT/gSeTkCadrY9QyePPrHnUHg7xvLLQ5Tur0fVZyM9TEgosSruxT2BsDabwOUKznVkjf1SYO2sF6DySS+L2abs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756802695; c=relaxed/simple;
-	bh=vq9+zyIg4kYDYlQfjE4/8KV0x9Vh36QCmHIPuV2fr68=;
+	s=arc-20240116; t=1756802709; c=relaxed/simple;
+	bh=u8nwTLl5OQOlftjKLsQ2eZFxywZvGX395KB7yADMR4A=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=obAYwAeHHa2QF2XjSfu/PtRDmeCm6vHhq7whY1KlGzO6/W0J7eCSmCXLOGQdom+3qKPaaXwX0Z9mXPpDgO+hXAColCxzc6zAkYcACwwDG1hi0iJwNYJkXJIURDLCoycsjPnPtTzA2NUmOKfAkFIG2fH0/YlAnTtknwJOUBG77CI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jrE9lHpN; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=nkThK5ssPho9ExomAduNwDDYgmA0IyOdN6UF0X6G+QZAgjRH4VtXW9S4xitADGUpV33JvKf48zW2T93XNFlS2XLzy6I/o6VorybKMGzEgjDcg86I3iOixrF/K7HVZPt+H2LGVJ6joUXieZE4lhacUvDecWJht6BDKZlxYImG92I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G2pvmJDV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jrE9lHpN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77E4EC4CEED;
-	Tue,  2 Sep 2025 08:44:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G2pvmJDV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D7E0C4CEF5;
+	Tue,  2 Sep 2025 08:45:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756802694;
-	bh=vq9+zyIg4kYDYlQfjE4/8KV0x9Vh36QCmHIPuV2fr68=;
+	s=k20201202; t=1756802709;
+	bh=u8nwTLl5OQOlftjKLsQ2eZFxywZvGX395KB7yADMR4A=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=jrE9lHpNUOfmJDeZAZsBUGH7lPNTqMvT+ffzLFS0/lcRJMs/yFF2T9DmUeupCMVQZ
-	 4AljiyT3SuasoaSWMAp3ZceeeX9q2AZTDRmSRlIChUkc/HtxKJE0NrSwQig1bE0fim
-	 R1WJ9hjxOHbpR1uqOjRrxUK3FkLjYfEi0i/3GkvYNRCTj8kQVMgLGAfY/Kyi5tdjDg
-	 oUTZsM6Zwg0M1y/CTAMmgTibqzNXZ6s5EwyBpWeRnJ80j1rRyNNpxuN3werWOHwWfi
-	 caCvN6rrmmDEFWk7zGEf0tOUyQmvKVX8XM5lh+Y7EnMJ44mN8fY/inQL9XiBQT3sez
-	 cfHsVuJYzKh1w==
-Message-ID: <d712d30d-b0d9-491d-ae54-9c71cb20bbbf@kernel.org>
-Date: Tue, 2 Sep 2025 10:44:51 +0200
+	b=G2pvmJDV+E0BRhmsK1aVJG0+AQa74arRFwbIbCSqQTUNDVcVt8PEUGpr7KtTUo+H7
+	 /PwqJ1A2Na73TQBHb78nMOXfDIyGMXhkwHqBBwdCkF/zezVnlAdRCzBQe7BjKEh6P9
+	 DkvGNR6dVo03/ZiYP3++LnHItIlQjRLVi+vhhRYwbwOFN9iVjfhH1BBTox+u9FPJby
+	 edBLvdNAODPK5DBq+nEJMZ2FSQyfzXQPhHEHZx+9ePPa0z7xLnWji7AtI6h+LcvjQJ
+	 PynDNW4Qliz/X8QlLlG9ydxM3kRp4xm/EsMb3NkUDwv3U53c027gaT0JgHRTAl+PGT
+	 KlofHIO07X8TQ==
+Message-ID: <3760bdb4-50e7-42f9-a1e8-1eef4bdef6b6@kernel.org>
+Date: Tue, 2 Sep 2025 10:45:06 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net 1/3] selftests: mptcp: close server file
+Subject: Re: [PATCH mptcp-net 2/3] selftests: mptcp: avoid double closing pipe
  descriptor
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1756776801.git.tanggeliang@kylinos.cn>
- <8e614206c3e57d7d87e983f8f8c157387052a595.1756776801.git.tanggeliang@kylinos.cn>
+ <89eb6eb8c01d871fddbd38a457c13eda1a55eb9e.1756776801.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,26 +87,25 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <8e614206c3e57d7d87e983f8f8c157387052a595.1756776801.git.tanggeliang@kylinos.cn>
+In-Reply-To: <89eb6eb8c01d871fddbd38a457c13eda1a55eb9e.1756776801.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
+Thank you for the fixes.
+
 On 02/09/2025 03:38, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> The server file descriptor ('fd') is opened in server() but never closed.
-> While accepted connections are properly closed in process_one_client(),
-> the main listening socket remains open, causing a resource leak.
-> 
-> This patch ensures the server fd is properly closed after processing
-> clients, bringing the sockopt and inq test cases in line with proper
-> resource cleanup practices.
+> The pipe descriptor (pipefds[0]) is already closed in main() after
+> the client() function completes, making the explicit close in
+> connect_one_server() redundant and potentially harmful.
 
-Thanks!
+Mmh, the close() are done from different processes, after fork(), no?
 
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+If yes, each process should close the fd, and what was done was correct.
+Or did I miss something?
 
 Cheers,
 Matt
