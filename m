@@ -1,38 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4CDBC2D1
-	for <mptcp@lists.linux.dev>; Tue,  2 Sep 2025 02:35:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 122F9212F89
+	for <mptcp@lists.linux.dev>; Tue,  2 Sep 2025 02:35:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756780513; cv=none; b=uhYP1TevjsWRvkn6B+8jXONXmdjWOzfpGPEY1i8XydPJwxzcXcta2Gg4KKINb8KvMKY9JYOLqjMCLRHpiBa6XXgI6Z99f+NYf5n7x8lIk+V9WjgUzrizlvX4NDD6GatsjBRcNYRl9hVk9d6YN2Xb0BLEVpE0LDkrDEdriRtE3wU=
+	t=1756780515; cv=none; b=UyNWvIUxPv3WbhpZLL1lK4XnUo1VwvZQYpq2qR0OK1lrTWAJMBGoCNsFxopyuvJjIewJ+ukKCrp9oeoZ9FAXzSjEukY5JszcOVHp0KNvfgSTSl3BAn7cbE5jjBwzKXkO4oEknknoVS2ITQHhpsAh82mZomkP/4oq8swLKOZMZyE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756780513; c=relaxed/simple;
-	bh=Pykskwwp8qZH4CptxGNkVBFJWN0QF4c7cXkxDCazJn4=;
+	s=arc-20240116; t=1756780515; c=relaxed/simple;
+	bh=moMuiFOgVUkY7ROKiCerLa/pgI+I7obr2rAWzku1UgU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RCZXGAUNZGzLtzBm4l3H7KIYM4a0D+sA6RTmLA0+lzA7p3aEY7lgQHGik3W6xSAHehMDGwgL4UUmaL4yDS+gppyKUUxr+nQOAXvkChMULsCMA/4QUKEoA/IRkVQboOrETvW8QjTN2Nk0XxFLQ+EBOhk9M31FNPxRgPHxkJCMvD0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VUVsan80; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=pwf3TiB+NMoCPTSiTBGQtB+hLW4YpoLJQYhNFBMn00kc8DGyGFqstIGiyBcvf+x3Lfqie5s+lsKKy97fHLFs3VZEXuhsIXR9j5atT4lSikYhwfCy6FIZFh5Sx+GjUCbou8msESyb5DhRTeqZNxDqvJKjhL2XjYpc8Jdp+BUz11U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WtTd24wJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VUVsan80"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 369A8C4CEF0;
-	Tue,  2 Sep 2025 02:35:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WtTd24wJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58F7EC4CEF1;
+	Tue,  2 Sep 2025 02:35:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756780512;
-	bh=Pykskwwp8qZH4CptxGNkVBFJWN0QF4c7cXkxDCazJn4=;
+	s=k20201202; t=1756780514;
+	bh=moMuiFOgVUkY7ROKiCerLa/pgI+I7obr2rAWzku1UgU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=VUVsan80VXAzC7ul44M2vhSYEB7fCQDhCaSlnQX80/m+1JFaHSpNULt6ohmiFFcwI
-	 UZRZEHL7aCfdvJBuPdB5YkUpLlO9vy9YZEb2hl34mDfabjNUAlusuhVqvC9WrN0Ky7
-	 NR8snZi2MHTDGGjtoONbLUMxZmTvTUSAvTzBgjQMxih6yAahrUrBKLN4GBm4d1VsFl
-	 DRd8SC8Ewxsz9Q/229AvfzKe48V+F7bv37qq53hbDYbmD1bHWMrZSodVi13bvXtijQ
-	 U8pS13X4sR79ZmUJyRk8CGvjSLVwfTudexkoVyMLNLWXuYc9RS9rx+ms07W52uvCD0
-	 RbHbkFHGqUKFg==
+	b=WtTd24wJshvFcjWdFxnXFFXPdPOfKSxWN8VObqBUfd09jEsfWGHHfcYKjez8m83DU
+	 xGaKgB/1wSZJMlmQbWGR9CFhzn2KpbzB5BfdxIYzkfHbcdtFwfjCh6phNPoc1cBwk6
+	 j/OJgCEW7nlESHmPIIAs4dZAjEjx5+cL0sXJTy7XhniRWGJn4OetkzN8wJ1ivRRnIl
+	 TqiHujt4lW9lNU3UnK4bokLij9DhSYtw3Ag8Dj6VZ8Cq1O/zdwWAhUIJewsUS9/plo
+	 XRvmNERZtpchfTfKrPmsNlhrJynGr5dZokbButYM9OgHncUaaWVGMo/960Vr1Zt5iF
+	 M+IO8TVVFbtiQ==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>,
-	Hannes Reinecke <hare@kernel.org>
-Subject: [PATCH mptcp-next v10 2/9] mptcp: implement .read_sock
-Date: Tue,  2 Sep 2025 10:34:53 +0800
-Message-ID: <53276621ab42624e6a6ddb58869eabfb049b87b0.1756780274.git.tanggeliang@kylinos.cn>
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v10 3/9] tcp: drop release and lock again in splice_read
+Date: Tue,  2 Sep 2025 10:34:54 +0800
+Message-ID: <89fd2ab6630a8aceceef58273faae8db195ef2e6.1756780274.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <cover.1756780274.git.tanggeliang@kylinos.cn>
 References: <cover.1756780274.git.tanggeliang@kylinos.cn>
@@ -46,126 +45,30 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-nvme_tcp_try_recv() needs to call .read_sock interface of struct
-proto_ops, but it's not implemented in MPTCP.
+In the main loop of tcp_splice_read(), release_sock() is invoked to release
+the socket lock, and then lock_sock() is immediately invoked to hold the
+socket lock again.
 
-This patch implements it with reference to __tcp_read_sock() and
-__mptcp_recvmsg_mskq().
+It looks like these two calls are useless, so let's drop them.
 
-Corresponding to tcp_recv_skb(), a new helper for MPTCP named
-mptcp_recv_skb() is added to peek a skb from sk->sk_receive_queue.
-
-Compared with __mptcp_recvmsg_mskq(), mptcp_read_sock() uses
-sk->sk_rcvbuf as the max read length. The LISTEN status is checked
-before the while loop, and mptcp_recv_skb() and mptcp_cleanup_rbuf()
-are invoked after the loop. In the loop, all flags checks for
-__mptcp_recvmsg_mskq() are removed.
-
-Reviewed-by: Hannes Reinecke <hare@kernel.org>
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- net/mptcp/protocol.c | 74 ++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 74 insertions(+)
+ net/ipv4/tcp.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index df82584a6f7a..f55185410e5b 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -4039,6 +4039,78 @@ static __poll_t mptcp_poll(struct file *file, struct socket *sock,
- 	return mask;
- }
+diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
+index c9eb94a6c41a..c6425f13afd0 100644
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -866,8 +866,6 @@ ssize_t tcp_splice_read(struct socket *sock, loff_t *ppos,
  
-+static struct sk_buff *mptcp_recv_skb(struct sock *sk, u32 *off)
-+{
-+	struct sk_buff *skb;
-+	u32 offset;
-+
-+	if (skb_queue_empty(&sk->sk_receive_queue))
-+		__mptcp_move_skbs(sk);
-+
-+	while ((skb = skb_peek(&sk->sk_receive_queue)) != NULL) {
-+		offset = MPTCP_SKB_CB(skb)->offset;
-+		if (offset < skb->len) {
-+			*off = offset;
-+			return skb;
-+		}
-+		mptcp_eat_recv_skb(sk, skb);
-+	}
-+	return NULL;
-+}
-+
-+/*
-+ * Note:
-+ *	- It is assumed that the socket was locked by the caller.
-+ */
-+static int mptcp_read_sock(struct sock *sk, read_descriptor_t *desc,
-+			   sk_read_actor_t recv_actor)
-+{
-+	struct mptcp_sock *msk = mptcp_sk(sk);
-+	size_t len = sk->sk_rcvbuf;
-+	struct sk_buff *skb;
-+	int copied = 0;
-+	u32 offset;
-+
-+	if (sk->sk_state == TCP_LISTEN)
-+		return -ENOTCONN;
-+	while ((skb = mptcp_recv_skb(sk, &offset)) != NULL) {
-+		u32 data_len = skb->len - offset;
-+		u32 size = min_t(size_t, len - copied, data_len);
-+		int count;
-+
-+		count = recv_actor(desc, skb, offset, size);
-+		if (count <= 0) {
-+			if (!copied)
-+				copied = count;
-+			break;
-+		}
-+
-+		copied += count;
-+
-+		if (count < data_len) {
-+			MPTCP_SKB_CB(skb)->offset += count;
-+			MPTCP_SKB_CB(skb)->map_seq += count;
-+			msk->bytes_consumed += count;
-+			break;
-+		}
-+
-+		mptcp_eat_recv_skb(sk, skb);
-+		msk->bytes_consumed += count;
-+
-+		if (copied >= len)
-+			break;
-+	}
-+
-+	mptcp_rcv_space_adjust(msk, copied);
-+
-+	if (copied > 0) {
-+		mptcp_recv_skb(sk, &offset);
-+		mptcp_cleanup_rbuf(msk, copied);
-+	}
-+
-+	return copied;
-+}
-+
- static const struct proto_ops mptcp_stream_ops = {
- 	.family		   = PF_INET,
- 	.owner		   = THIS_MODULE,
-@@ -4059,6 +4131,7 @@ static const struct proto_ops mptcp_stream_ops = {
- 	.recvmsg	   = inet_recvmsg,
- 	.mmap		   = sock_no_mmap,
- 	.set_rcvlowat	   = mptcp_set_rcvlowat,
-+	.read_sock	   = mptcp_read_sock,
- };
+ 		if (!tss.len || !timeo)
+ 			break;
+-		release_sock(sk);
+-		lock_sock(sk);
  
- static struct inet_protosw mptcp_protosw = {
-@@ -4163,6 +4236,7 @@ static const struct proto_ops mptcp_v6_stream_ops = {
- 	.compat_ioctl	   = inet6_compat_ioctl,
- #endif
- 	.set_rcvlowat	   = mptcp_set_rcvlowat,
-+	.read_sock	   = mptcp_read_sock,
- };
- 
- static struct proto mptcp_v6_prot;
+ 		if (sk->sk_err || sk->sk_state == TCP_CLOSE ||
+ 		    (sk->sk_shutdown & RCV_SHUTDOWN) ||
 -- 
 2.48.1
 
