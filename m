@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45E1425394A
-	for <mptcp@lists.linux.dev>; Tue,  2 Sep 2025 01:40:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFFBE25394A
+	for <mptcp@lists.linux.dev>; Tue,  2 Sep 2025 01:40:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756777213; cv=none; b=uae3PBesdi8BiSeOBMuTVORt+w5XK7GzBQHIRxecAlrcW7dPPBzxEXKvoLfLaW9QWsI8B14w+3OUkDBtoUg6gFrEMdJPZOlBlnJUDOHVeTMMMG+4lb6d+nP6N0Rcv4+GPo8YsMJB1rsDx5IWoweqzvD/yf10BaZxARWLTq4H5UM=
+	t=1756777215; cv=none; b=J1jN9itnFFHkiXiOy/QZ9HxmzfokNSHvIx5pxL3n1VfKyXD368bxpMZ828JPQKRQcILDOs2NG/b8Afc90r+xiowGyzIlqDHdy19nu/pNfkeHa7V3rMOPKTb/pV67t6oGE5ex2yeQ2LfWTjzaMo8AG7sIYuFlXId1Xfc0U5CoKOA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756777213; c=relaxed/simple;
-	bh=qv/R6VlR0Ya235mdL8rMVlFg2qcCFoC70y+dlx/+/zk=;
+	s=arc-20240116; t=1756777215; c=relaxed/simple;
+	bh=N0PpTmwHLu+Em/S81z+ucoyuCaiVgNCgR1UacoKaWKs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NA0MNsecrI2Kc7ue9XnLXnPL6kBfTdKcB5qPno+o21Rm69DByimK3ERNFE7jMNCvXbcB+iNbakH75XIUWgrs2LM6sperFaWnBKXGwLMGkHjto/r/4br5RGqoj55VqJhyrWE3sqMmkpW8JmDE/F8KctZ/Gnn8DbrHoNU2tFPXozY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GV8NeDdA; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=WDK42NswxixcJLshQMkp1I0DwAKSY1cOqkHovRQQ08dtIt3iP9lbHuWOkZ5hudqAT3Uj0CTERWtXMch03MznZhBZAleq/jN6f2d+mwUm7vDAGS3iEhBkWJAsV/PL4koexTcVxF5KkStMWzoBS29CoN12QBtHkYqed3wHM08od/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y4eOFrSI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GV8NeDdA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BD79C4CEF4;
-	Tue,  2 Sep 2025 01:40:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y4eOFrSI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55F36C4CEF7;
+	Tue,  2 Sep 2025 01:40:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756777212;
-	bh=qv/R6VlR0Ya235mdL8rMVlFg2qcCFoC70y+dlx/+/zk=;
+	s=k20201202; t=1756777214;
+	bh=N0PpTmwHLu+Em/S81z+ucoyuCaiVgNCgR1UacoKaWKs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=GV8NeDdApzYyeWv3tlQ4y+aE/iuuWl5EXuSfVbdBYHAVBWnNoKD/HAL1PwSLO736V
-	 YyKSBQ3WRj8GY+hsd8e7f4G8njM4/gi8X+bBTcGl585DgcpY2dDRO5DdnMK9IMDnFE
-	 BaaEiakt9XPhuV++N13ghQ6FtR68qilqN7MWgHW4D69mSu/DNI6dFQG1Zg8tle9tO6
-	 12jHs7i4CWkrCf3KlvqamTIPAS0WOpnr9pm7uR2DKJh4eZ3kZGK1FQXmyzDetHhOpz
-	 BtqLFf5iRglz9RH6eBh+tC8wbYYH2A1yzXjjIOnJ8xycAOhZ1CAHtuGke1ZeGvslIv
-	 dZ1ISbE+EyXAA==
+	b=Y4eOFrSIouefxPvoVVvFK7DuRiYoHbmbWxtKbHFtflRmZTCAGtInBtT0flNXNRvnH
+	 yV1UXXvGXo0Lw5DKEQE4aFZFxx8aNvFQAhKy/z5sAENYO/6Oe/BTx2yApMrR9CZd/i
+	 5Kz9Vg+6wbpHv8wbPY8BHNZhxUFpOrGALRJAY2lAxHpH61/LgPPYUr62ShbOwX2oZe
+	 tZznpy03NLTxsF2GYR1TDi9mgSLIrH1E1t41K0S9EngfjZ/6j1BTFyXevGffsY6ojC
+	 z6RRbyky2odUF81aWkDkixHV2Vzj3EouN1prnwWQzpL7CW2IWdHWngMwL/jhBd97X1
+	 PDWTm4On8IJ0g==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-net 2/3] selftests: mptcp: avoid double closing pipe descriptor
-Date: Tue,  2 Sep 2025 09:38:35 +0800
-Message-ID: <89eb6eb8c01d871fddbd38a457c13eda1a55eb9e.1756776801.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-net 3/3] selftests: mptcp: sockopt: fix variable check in error reporting
+Date: Tue,  2 Sep 2025 09:38:36 +0800
+Message-ID: <f4b4c993422545c2301ab38175e2788bd489ba8e.1756776801.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <cover.1756776801.git.tanggeliang@kylinos.cn>
 References: <cover.1756776801.git.tanggeliang@kylinos.cn>
@@ -45,47 +45,35 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-The pipe descriptor (pipefds[0]) is already closed in main() after
-the client() function completes, making the explicit close in
-connect_one_server() redundant and potentially harmful.
+The error message for mptcpi_bytes_acked comparison incorrectly
+references 'ret2' instead of 'ret'. Since the comparison is between
+mptcpi_bytes_acked and 'ret', the error output should consistently
+use 'ret' for both the expected value and difference calculation.
 
-This patch removes the unnecessary close operations in both the sockopt
-and inq test cases to prevent double-closing of file descriptors, which
-could lead to undefined behavior if the descriptor is reused.
+This patch corrects the variable usage in the error output to ensure
+accurate debugging information when the assertion fails.
 
-Fixes: ce9979129a0b ("selftests: mptcp: add mptcp getsockopt test cases")
-Fixes: b51880568f20 ("selftests: mptcp: add inq test case")
+Fixes: 5dcff89e1455 ("selftests: mptcp: explicitly tests aggregate counters")
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- tools/testing/selftests/net/mptcp/mptcp_inq.c     | 2 --
- tools/testing/selftests/net/mptcp/mptcp_sockopt.c | 1 -
- 2 files changed, 3 deletions(-)
+ tools/testing/selftests/net/mptcp/mptcp_sockopt.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_inq.c b/tools/testing/selftests/net/mptcp/mptcp_inq.c
-index 40f2a1b24763..5e2b5913121f 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_inq.c
-+++ b/tools/testing/selftests/net/mptcp/mptcp_inq.c
-@@ -314,8 +314,6 @@ static void connect_one_server(int fd, int unixfd)
- 	close(fd);
- 	ret = write(unixfd, "closed", 6);
- 	assert(ret == 6);
--
--	close(unixfd);
- }
- 
- static void get_tcp_inq(struct msghdr *msgh, unsigned int *inqv)
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-index b44b6c9b0550..8d590629a8e9 100644
+index 8d590629a8e9..a61508270a5c 100644
 --- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
 +++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-@@ -593,7 +593,6 @@ static void connect_one_server(int fd, int pipefd)
- 	/* un-block server */
- 	ret = read(pipefd, buf2, 4);
- 	assert(ret == 4);
--	close(pipefd);
+@@ -680,8 +680,8 @@ static void process_one_client(int fd, int pipefd)
+ 			       s.last_sample.mptcpi_bytes_received - ret);
+ 		if (s.last_sample.mptcpi_bytes_acked != ret)
+ 			xerror("mptcpi_bytes_acked %" PRIu64 ", expect %" PRIu64,
+-			       s.last_sample.mptcpi_bytes_acked, ret2,
+-			       s.last_sample.mptcpi_bytes_acked - ret2);
++			       s.last_sample.mptcpi_bytes_acked, ret,
++			       s.last_sample.mptcpi_bytes_acked - ret);
+ 	}
  
- 	assert(strncmp(buf2, "xmit", 4) == 0);
- 
+ 	close(fd);
 -- 
 2.48.1
 
