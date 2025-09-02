@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6B602E92B8
-	for <mptcp@lists.linux.dev>; Tue,  2 Sep 2025 08:45:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52B482D5945
+	for <mptcp@lists.linux.dev>; Tue,  2 Sep 2025 09:22:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756802717; cv=none; b=MypQrX0sVEYely6bewNoxhwhdv8ND7OhRUcIxnQx4efjVgiwGhrKJb33evNPLzeXBf2Wa9+Hq0P/h4abtrFcpFfqtWp4tCan1Cq1WsVhc33kgicFT4i0a4qIj6arcZ+R1k8ZD9/rMI2B0FOzP6dgZXU6rkxp1uBXB7+cMHwSdLk=
+	t=1756804969; cv=none; b=MhEDXDZmeR44kUEXgplnyYCTHu/FeRvLMN0rV3+ZbtvICzwIoeHnr3Ko9fqQtrPfg0F6rQKwvOazdWGegjMbHQeGAgLVnuBsbytBVuiq5m/QaXAkWnIZX/Ymw2le280YcNnNbC8tyLdIYnqLEfOQm8OOpK4Y0CwqabJZCLZNutA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756802717; c=relaxed/simple;
-	bh=Wia4dmIRXv5H7FuxQss8/6wPuzAnLahdTxFyZHVXrGI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Iy11+qqLjDnCaf2a+0l3RH31owF6fyrVNiStj+okxFaROcjWR/crP809+y0yR+eSPBn2n2H4FfiSka05hsCHB/IEHrjkTRXUfj0xxi/tzcXipeaeH4idW6esF0SOJ4iwgLkk4jMXHb6vzboX4700kW/JyLsKByZul4e39KrHhqo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IZfH/7Az; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1756804969; c=relaxed/simple;
+	bh=2DnikCQCPpkXbCk+F4dWRpwG7HNsfHjSke5Ohccfk8I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=oOjiW5X4tJS+/pmQiqNCPFYIvPuGPdj8uaTqkER1f2+1kYrj6SrN6fYW+zI/8PrX4stTWNmInNDL6afIUJZDFa5/v7mReO0t5MojsTOV1C5BdCNXhnnJjwRvYM/mtBH8a5xcpnjmtDdR+agh8GJgPw8YSozDQex6He/ENA3gpfs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FJqixO8o; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IZfH/7Az"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13EDBC4CEED;
-	Tue,  2 Sep 2025 08:45:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FJqixO8o"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1983DC4CEED;
+	Tue,  2 Sep 2025 09:22:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756802715;
-	bh=Wia4dmIRXv5H7FuxQss8/6wPuzAnLahdTxFyZHVXrGI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=IZfH/7AzDkSNyhvFP3PTgeWInono9QwK3P+zt+e1AG1Bz9hdpk136YhBw0i3tdxSa
-	 lijbh3MNaqcmZFtoygF5JxltOEkE369OqJb6J2G+6TvKoosBqwGRpfYf3z1Zf7B27u
-	 WKv8Jubb3kM8cqfjP8JYfGo4N15OMsZITK6SbFODuftjf0r6hjiXJV3OZVIbechRpt
-	 g3BB2puvlJUB+8zitzc0yUqyq9U7OrbKA4qNuwsA6Sd78/H/uv04n5TA6SOh8gakC5
-	 L7P6OZp9QjUTYYkJHIQFxJ/o2dZRhClg5KQcqBlgAGdmtM8BVq6tx86YF0C3t3NocY
-	 kxHvRgyQlgvrg==
-Message-ID: <795a3eca-67f1-4c65-bfee-75e9eb1ca4dc@kernel.org>
-Date: Tue, 2 Sep 2025 10:45:13 +0200
+	s=k20201202; t=1756804968;
+	bh=2DnikCQCPpkXbCk+F4dWRpwG7HNsfHjSke5Ohccfk8I=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=FJqixO8ompvZCUTTu2QKfuQR+2ZGZnOHz+8p3ckFE8yT/dZBA7LuNWiU3OvjabjcA
+	 rQFStt0i403WPl8fxiAzhmHvwgDdUOUhmpm6RiaIRThhS2+oSQFclwJPPfZihBxn1J
+	 uD74BEUxdoYXDOJyAc8Dww4Dfklx6OvdPDSKXglUmf5/nwhoU8cbixoAXx+vXs572t
+	 asVpDZb7XaDLVwR/px4XZnnkwuHv00BdZWhtW3JywR8eCDeRe+RA5p+lSrRrUzV/uK
+	 4aFwGPV8f9DoeosMJGFWQGbrJkHRoIfjFUl6e41QmADsoudN23HyCWlq+IJ7r+cyy1
+	 uf16J4UclEkOA==
+Message-ID: <9d7fc977-0f91-4bc5-a88c-8c14829c3429@kernel.org>
+Date: Tue, 2 Sep 2025 11:22:45 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,14 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net 3/3] selftests: mptcp: sockopt: fix variable
- check in error reporting
+Subject: Re: Adding notify-flags=skip_link_local causes errors in mptcp daemon
 Content-Language: en-GB, fr-BE
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1756776801.git.tanggeliang@kylinos.cn>
- <f4b4c993422545c2301ab38175e2788bd489ba8e.1756776801.git.tanggeliang@kylinos.cn>
+To: Harshvardhan Jha <harshvardhan.j.jha@oracle.com>, mptcp@lists.linux.dev
+References: <05f302dd-2afd-4775-9099-5c34c23e462e@oracle.com>
+ <d4c74f72-2595-4fea-8a3c-10bb374e5b06@kernel.org>
+ <f6fee54e-cba1-4292-8ec8-f959bda48348@oracle.com>
+ <2cf621b7-ae02-48d0-81f1-1c56e24fd13a@kernel.org>
+ <52b23670-87fc-4e88-92c6-5a4b2ed6cf27@oracle.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,60 +88,83 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <f4b4c993422545c2301ab38175e2788bd489ba8e.1756776801.git.tanggeliang@kylinos.cn>
+In-Reply-To: <52b23670-87fc-4e88-92c6-5a4b2ed6cf27@oracle.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+Hi Harshvardhan,
 
-On 02/09/2025 03:38, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
+On 02/09/2025 10:21, Harshvardhan Jha wrote:
+> On 29/08/25 2:11 PM, Matthieu Baerts wrote:
+>> On 29/08/2025 04:28, Harshvardhan Jha wrote:
+>>> On 28/08/25 9:04 PM, Matthieu Baerts wrote:
+>>>> On 28/08/2025 16:28, Harshvardhan Jha wrote:
+
+(...)
+
+>>>>> I will remove this option for now but Fedora had added this way back in
+>>>>> 2021 so I'm not sure whether removing this will cause any unwanted
+>>>>> regressions or not.
+>>>> I don't know if this note related to NM is well visible in the package
+>>>> description in Fedora and others. On Debian and related, there is this note:
+>>>>
+>>>>>  By default, this daemon will load the 'addr_adv' plugin from the
+>>>>>  'mptcpd-plugins' package, which will add MPTCP endpoints with the
+>>>>>  'subflow' flag ("client" mode) for the default in-kernel path-manager.
+>>>>>  Note that this is something NetworkManager does by default. Having
+>>>>>  several daemons configuring the MPTCP endpoints at the same time
+>>>>>  should be avoided. This daemon is usually recommended when
+>>>>>  NetworkManager is not available, or when advanced per-connection path
+>>>>>  management is needed, using the userspace path-manager and a
+>>>>>  custom-made made plugin using the C API.
+>>> Is this for all config options in /usr/local/etc/mptcpd/mptcpd.conf?
+>>>
+>>> This note only mentioned subflow so I felt it seems to be related to the
+>>> addr-flags=subflow flag only. Please correct me if I'm wrong here.
+>> This note is explaining the default behaviour: in short, the same as
+>> what NM >= 1.40 will do. As mentioned, mptcpd should then be used when
+>> NM is not, or for its main purpose: when the userspace path-manager is
+>> used on the kernel side. That's not the default behaviour, and it is for
+>> advanced usages: when a use-case is not covered by the in-kernel PM.
+>>
+>>   https://urldefense.com/v3/__https://docs.kernel.org/next/networking/mptcp.html*path-manager__;Iw!!ACWV5N9M2RV99hQ!IpYyHXknDf7OI13aAkdo-amupYoR7R-gsFQtsQwMZh29C_9taCiFSCK5C-JcJZ8-C4bv53kqSPUSzjpemFSPvx02$ 
 > 
-> The error message for mptcpi_bytes_acked comparison incorrectly
-> references 'ret2' instead of 'ret'. Since the comparison is between
-> mptcpi_bytes_acked and 'ret', the error output should consistently
-> use 'ret' for both the expected value and difference calculation.
+> I went through this and set net.mptcp.pm_type = 0 however I'm still
+> getting the error when I start the daemon and use the same options in
+> the mpcpd.conf file.
 > 
-> This patch corrects the variable usage in the error output to ensure
-> accurate debugging information when the assertion fails.
-> 
-> Fixes: 5dcff89e1455 ("selftests: mptcp: explicitly tests aggregate counters")
-> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-> ---
->  tools/testing/selftests/net/mptcp/mptcp_sockopt.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-> index 8d590629a8e9..a61508270a5c 100644
-> --- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-> @@ -680,8 +680,8 @@ static void process_one_client(int fd, int pipefd)
->  			       s.last_sample.mptcpi_bytes_received - ret);
->  		if (s.last_sample.mptcpi_bytes_acked != ret)
->  			xerror("mptcpi_bytes_acked %" PRIu64 ", expect %" PRIu64,
-> -			       s.last_sample.mptcpi_bytes_acked, ret2,
-> -			       s.last_sample.mptcpi_bytes_acked - ret2);
-> +			       s.last_sample.mptcpi_bytes_acked, ret,
-> +			       s.last_sample.mptcpi_bytes_acked - ret);
+> Shouldn't net.mptcp.pm_type sysctl flag prevent this from happening?
 
-Good catch! But I also just noticed there is one extra argument: you
-have 2 "%", but 3 arguments after the string.
+Sorry, I'm a bit lost:
 
-I guess the error should be:
+- net.mptcp.pm_type is set to 0 (in-kernel PM) by default
 
-  "mptcpi_bytes_acked %" PRIu64 ", expect %" PRIu64 ", diff %" PRIu64,
-  (...)
+- mptcpd can handle both the in-kernel PM, and the userspace one
 
-(Same for the others above.) If yes, can you add this as part of the
-same commit?
+- mptcpd's initial goal was to handle the userspace PM (pm_type=1), but:
 
-  selftests: mptcp: sockopt: fix error messages
+  - the in-kernel PM has been upstreamed in the Linux kernel first, and
+    the mptcpd's 'addr_adv' plugin got added to "simply" add available
+    IP addresses as MPTCP endpoints (in short, the same as executing:
+    'ip mptcp endpoint add <IP> dev <IFACE> <FLAG>' for each IP address)
 
-(with a note about the fact the wrong variable was used)
+  - for the userspace PM, the idea is that people can create new plugins
+    to cover their own particular use-case. So no good default plugin
+    using the 'userspace' interfaces, only examples that can be adapted.
 
->  	}
->  
->  	close(fd);
+  - so to be useful for more users, mptcpd loads 'addr_adv' by default
+
+  - NM is now doing the same as this 'addr_adv' plugin, so conflicting
+
+Today, mptcpd is then useful when NM is not used, or when someone want
+to use a custom PM with the 'userspace PM'. Before that, it is then
+required to build such custom PM, and set net.mptcp.pm_type=1.
+
+It also means that 'mptcpd' is now mostly useful for advanced MPTCP users.
+
+Note that the 'mptcpd' project also includes 'mptcpize' which is not
+reserved for advanced users (more the opposite). So some people might
+install the 'mptcpd' service but not requiring it.
 
 Cheers,
 Matt
