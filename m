@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DFA125A352
-	for <mptcp@lists.linux.dev>; Tue,  2 Sep 2025 08:45:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6B602E92B8
+	for <mptcp@lists.linux.dev>; Tue,  2 Sep 2025 08:45:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756802709; cv=none; b=HuV8FCqywcWv677gDVZiISjOyvWtMGR4be8AY071Wu7KNwElErtIXgDB6fE/3RKuIMrAxVEU6T3SfhYLPXOzrcT/gSeTkCadrY9QyePPrHnUHg7xvLLQ5Tur0fVZyM9TEgosSruxT2BsDabwOUKznVkjf1SYO2sF6DySS+L2abs=
+	t=1756802717; cv=none; b=MypQrX0sVEYely6bewNoxhwhdv8ND7OhRUcIxnQx4efjVgiwGhrKJb33evNPLzeXBf2Wa9+Hq0P/h4abtrFcpFfqtWp4tCan1Cq1WsVhc33kgicFT4i0a4qIj6arcZ+R1k8ZD9/rMI2B0FOzP6dgZXU6rkxp1uBXB7+cMHwSdLk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756802709; c=relaxed/simple;
-	bh=u8nwTLl5OQOlftjKLsQ2eZFxywZvGX395KB7yADMR4A=;
+	s=arc-20240116; t=1756802717; c=relaxed/simple;
+	bh=Wia4dmIRXv5H7FuxQss8/6wPuzAnLahdTxFyZHVXrGI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nkThK5ssPho9ExomAduNwDDYgmA0IyOdN6UF0X6G+QZAgjRH4VtXW9S4xitADGUpV33JvKf48zW2T93XNFlS2XLzy6I/o6VorybKMGzEgjDcg86I3iOixrF/K7HVZPt+H2LGVJ6joUXieZE4lhacUvDecWJht6BDKZlxYImG92I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G2pvmJDV; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=Iy11+qqLjDnCaf2a+0l3RH31owF6fyrVNiStj+okxFaROcjWR/crP809+y0yR+eSPBn2n2H4FfiSka05hsCHB/IEHrjkTRXUfj0xxi/tzcXipeaeH4idW6esF0SOJ4iwgLkk4jMXHb6vzboX4700kW/JyLsKByZul4e39KrHhqo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IZfH/7Az; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G2pvmJDV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D7E0C4CEF5;
-	Tue,  2 Sep 2025 08:45:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IZfH/7Az"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13EDBC4CEED;
+	Tue,  2 Sep 2025 08:45:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756802709;
-	bh=u8nwTLl5OQOlftjKLsQ2eZFxywZvGX395KB7yADMR4A=;
+	s=k20201202; t=1756802715;
+	bh=Wia4dmIRXv5H7FuxQss8/6wPuzAnLahdTxFyZHVXrGI=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=G2pvmJDV+E0BRhmsK1aVJG0+AQa74arRFwbIbCSqQTUNDVcVt8PEUGpr7KtTUo+H7
-	 /PwqJ1A2Na73TQBHb78nMOXfDIyGMXhkwHqBBwdCkF/zezVnlAdRCzBQe7BjKEh6P9
-	 DkvGNR6dVo03/ZiYP3++LnHItIlQjRLVi+vhhRYwbwOFN9iVjfhH1BBTox+u9FPJby
-	 edBLvdNAODPK5DBq+nEJMZ2FSQyfzXQPhHEHZx+9ePPa0z7xLnWji7AtI6h+LcvjQJ
-	 PynDNW4Qliz/X8QlLlG9ydxM3kRp4xm/EsMb3NkUDwv3U53c027gaT0JgHRTAl+PGT
-	 KlofHIO07X8TQ==
-Message-ID: <3760bdb4-50e7-42f9-a1e8-1eef4bdef6b6@kernel.org>
-Date: Tue, 2 Sep 2025 10:45:06 +0200
+	b=IZfH/7AzDkSNyhvFP3PTgeWInono9QwK3P+zt+e1AG1Bz9hdpk136YhBw0i3tdxSa
+	 lijbh3MNaqcmZFtoygF5JxltOEkE369OqJb6J2G+6TvKoosBqwGRpfYf3z1Zf7B27u
+	 WKv8Jubb3kM8cqfjP8JYfGo4N15OMsZITK6SbFODuftjf0r6hjiXJV3OZVIbechRpt
+	 g3BB2puvlJUB+8zitzc0yUqyq9U7OrbKA4qNuwsA6Sd78/H/uv04n5TA6SOh8gakC5
+	 L7P6OZp9QjUTYYkJHIQFxJ/o2dZRhClg5KQcqBlgAGdmtM8BVq6tx86YF0C3t3NocY
+	 kxHvRgyQlgvrg==
+Message-ID: <795a3eca-67f1-4c65-bfee-75e9eb1ca4dc@kernel.org>
+Date: Tue, 2 Sep 2025 10:45:13 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net 2/3] selftests: mptcp: avoid double closing pipe
- descriptor
+Subject: Re: [PATCH mptcp-net 3/3] selftests: mptcp: sockopt: fix variable
+ check in error reporting
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1756776801.git.tanggeliang@kylinos.cn>
- <89eb6eb8c01d871fddbd38a457c13eda1a55eb9e.1756776801.git.tanggeliang@kylinos.cn>
+ <f4b4c993422545c2301ab38175e2788bd489ba8e.1756776801.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,25 +87,60 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <89eb6eb8c01d871fddbd38a457c13eda1a55eb9e.1756776801.git.tanggeliang@kylinos.cn>
+In-Reply-To: <f4b4c993422545c2301ab38175e2788bd489ba8e.1756776801.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-Thank you for the fixes.
-
 On 02/09/2025 03:38, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> The pipe descriptor (pipefds[0]) is already closed in main() after
-> the client() function completes, making the explicit close in
-> connect_one_server() redundant and potentially harmful.
+> The error message for mptcpi_bytes_acked comparison incorrectly
+> references 'ret2' instead of 'ret'. Since the comparison is between
+> mptcpi_bytes_acked and 'ret', the error output should consistently
+> use 'ret' for both the expected value and difference calculation.
+> 
+> This patch corrects the variable usage in the error output to ensure
+> accurate debugging information when the assertion fails.
+> 
+> Fixes: 5dcff89e1455 ("selftests: mptcp: explicitly tests aggregate counters")
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> ---
+>  tools/testing/selftests/net/mptcp/mptcp_sockopt.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
+> index 8d590629a8e9..a61508270a5c 100644
+> --- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
+> @@ -680,8 +680,8 @@ static void process_one_client(int fd, int pipefd)
+>  			       s.last_sample.mptcpi_bytes_received - ret);
+>  		if (s.last_sample.mptcpi_bytes_acked != ret)
+>  			xerror("mptcpi_bytes_acked %" PRIu64 ", expect %" PRIu64,
+> -			       s.last_sample.mptcpi_bytes_acked, ret2,
+> -			       s.last_sample.mptcpi_bytes_acked - ret2);
+> +			       s.last_sample.mptcpi_bytes_acked, ret,
+> +			       s.last_sample.mptcpi_bytes_acked - ret);
 
-Mmh, the close() are done from different processes, after fork(), no?
+Good catch! But I also just noticed there is one extra argument: you
+have 2 "%", but 3 arguments after the string.
 
-If yes, each process should close the fd, and what was done was correct.
-Or did I miss something?
+I guess the error should be:
+
+  "mptcpi_bytes_acked %" PRIu64 ", expect %" PRIu64 ", diff %" PRIu64,
+  (...)
+
+(Same for the others above.) If yes, can you add this as part of the
+same commit?
+
+  selftests: mptcp: sockopt: fix error messages
+
+(with a note about the fact the wrong variable was used)
+
+>  	}
+>  
+>  	close(fd);
 
 Cheers,
 Matt
