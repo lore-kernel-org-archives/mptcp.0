@@ -1,116 +1,87 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEEA124BBEB
-	for <mptcp@lists.linux.dev>; Wed,  3 Sep 2025 15:25:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9807155333;
+	Wed,  3 Sep 2025 22:20:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756913155; cv=none; b=R59cdpTCP5eyiPRLKOOA6l7YCefYv++ztO0XXF58ThaSoe3RS//QiGKlKS8CdHz0cQO6cQEUkWXHFfBIqhgCpz4s3D+CTizM8C3yE89kd6kTAE3emo+9H9oYMUB/RUtCnGjYJ+FmnBrn/bbidD016b1D0lSSsN16EVErD3XFtyI=
+	t=1756938011; cv=none; b=fmsm0jJmws+oo9W0qFEpEtvOwWlsM0K0Vggo7+tYEp/XB2vtKiji5PL6988Q7f0usx+eX50avZ6793xHM+s4DE0Bfqvi5sjYtAZ3NRsAz9SrIByjLTVhoBQyaIE734AF9TwLeF6Z5Y5yf1sMzRd0SNSpTDacKZn/0KCB3a5/Ubc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756913155; c=relaxed/simple;
-	bh=ydV7BJjFtFFUmAEaewN0+9xPuG6OMwwwgVrSrg240UY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TMqlLVQCfJrw9Qmv/u9fodCIfeUO+vUxe1XVJaxlPLupOGxxEqoNfBHXLZwPMy/FvrhNOZEmUQpkopYP6Z0ITdWulzIcYlDZRtGI9hL4cRbiFgL7/JwG4vPDlM5uRm6oKmNdr//GKaeOnS3QuUlfqH8GuK36aS9eTXleC5Dc5o0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b2cLthrR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1756938011; c=relaxed/simple;
+	bh=kEQv67VDFw8VqkSZh6w4o5ygDSRenhNdCMzd2IORFro=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=PpEsk5hAbEpEwLPVV67lXELOcrKGD5VzWgps8Mgvhp9kPRjc6vzHjXqEm6ezksokqA8HrRTyAgh4yNr868k3glVLsB36pWb0qy+M3KKqgy6ei7kZHYzRRjo3UnZ/fhd8XEjiX4GnrXIsKhn4hJJa3GhggoMWTsXTk1OSVFSP7Gk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BrcT5Sga; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b2cLthrR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA635C4CEF0;
-	Wed,  3 Sep 2025 15:25:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BrcT5Sga"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 685E9C4CEE7;
+	Wed,  3 Sep 2025 22:20:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756913154;
-	bh=ydV7BJjFtFFUmAEaewN0+9xPuG6OMwwwgVrSrg240UY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=b2cLthrREIJVKXO0L/x3bo/z1Cou6trCY5jrpZeQ7Cq51+puSgiox9uM8DX/B3/0s
-	 6r+Xgx+kachvC5ujeTGW3yrNFIjgNSbD9bX0x7vzrQEENjOG32EPyiYaP0nQgV0As+
-	 ZnbxnOyovRp9SO//hmHt/QO87EezMa+WjXeWQHwak1pSPDY8hMhMiqJ+GunbLYDDRU
-	 CM6u9xNFxljBkufIC+XHcmsnS3qBtlmWzRm+FzfdAnBMwn3uxQd0oMDfxJa8a17tLh
-	 YSEx2DxKBDu3V5LsBjwQgD8H+CE+Qq1nSJDt8SKzEMmPGPlPyTEBz+sXz8aySTg5dG
-	 8vPvffuJlA1Xw==
-Message-ID: <a539b5d5-01f0-4027-8272-f1941f8c1d0c@kernel.org>
-Date: Wed, 3 Sep 2025 17:25:51 +0200
+	s=k20201202; t=1756938011;
+	bh=kEQv67VDFw8VqkSZh6w4o5ygDSRenhNdCMzd2IORFro=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=BrcT5SgaqTJiIXUkMeXSAGAbBMJKM9nLu+dPZJAlg5+BiNDOiM1Yk3VD9/gNQtIGh
+	 mm99RtV+V6oJkP0a8eaFqibCU7JTflrxTiVYWZkWSSweqJQKra7FRdpTRGTXkmF/Ho
+	 SXGFpvaFCzoVNM0OulbJ67VhImSUP/Zs1UHKP6kQloMUZeyirdfmjwi7JG3Ww8ynry
+	 Un6J98/4h6aXaxLK+/ict7h5M1LXulkJwdyI4HOaP8YDYfyvTQDIiTi4wA86cargJn
+	 C9j6xk58tu1Lm4lhDRM32WAKTWNnF7O6ub8dtAWQ8ar2c1mcMqlBTw9HuSw2O8P+uA
+	 eXVgopCLvtUnw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADED8383C259;
+	Wed,  3 Sep 2025 22:20:17 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net v2 3/3] selftests: mptcp: sockopt: fix error
- messages
-Content-Language: en-GB, fr-BE
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1756872050.git.geliang@kernel.org>
- <fff9e4c04b934f0fe311cd5b83b68e468f443e45.1756872050.git.geliang@kernel.org>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <fff9e4c04b934f0fe311cd5b83b68e468f443e45.1756872050.git.geliang@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next v2 0/4] mptcp: misc. features for v6.18
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <175693801650.1219827.13681989499903923218.git-patchwork-notify@kernel.org>
+Date: Wed, 03 Sep 2025 22:20:16 +0000
+References: 
+ <20250902-net-next-mptcp-misc-feat-6-18-v2-0-fa02bb3188b1@kernel.org>
+In-Reply-To: 
+ <20250902-net-next-mptcp-misc-feat-6-18-v2-0-fa02bb3188b1@kernel.org>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev, martineau@kernel.org, geliang@kernel.org,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ horms@kernel.org, shuah@kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ ebiggers@kernel.org, yangang@kylinos.cn, cpaasch@openai.com
 
-Hi Geliang,
+Hello:
 
-On 03/09/2025 06:08, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
+This series was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
+
+On Tue, 02 Sep 2025 23:11:32 +0200 you wrote:
+> This series contains 4 independent new features:
 > 
-> This patch fixes several issues in the error reporting of the MPTCP sockopt
-> selftest:
+> - Patch 1: use HMAC-SHA256 library instead of open-coded HMAC.
 > 
-> 1. Add diff calculation: The error messages for counter mismatches now
->    include the actual difference ('diff') between the expected and received
->    values, making debugging significantly easier.
+> - Patch 2: selftests: check for unexpected fallback counter increments.
+> 
+> - Patches 3-4: record subflows in RPS table, for aRFS support.
+> 
+> [...]
 
-This could be interpreted as a new feature while it is a fix. What about:
+Here is the summary with links:
+  - [net-next,v2,1/4] mptcp: use HMAC-SHA256 library instead of open-coded HMAC
+    https://git.kernel.org/netdev/net-next/c/2d5be5629ce7
+  - [net-next,v2,2/4] selftests: mptcp: add checks for fallback counters
+    https://git.kernel.org/netdev/net-next/c/3fff72f827ad
+  - [net-next,v2,3/4] net: Add rfs_needed() helper
+    https://git.kernel.org/netdev/net-next/c/929324913e0c
+  - [net-next,v2,4/4] mptcp: record subflows in RPS table
+    https://git.kernel.org/netdev/net-next/c/3bd4f98a4e2c
 
-  Fix diff not printed: The error messages for counter mismatches had
-  the actual difference ('diff') as argument, but it was missing in the
-  format string. Displaying it makes the debugging easier.
-
-Cheers,
-Matt
+You are awesome, thank you!
 -- 
-Sponsored by the NGI0 Core fund.
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
