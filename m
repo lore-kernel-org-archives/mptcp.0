@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83C964D8D1
-	for <mptcp@lists.linux.dev>; Wed,  3 Sep 2025 14:48:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEEA124BBEB
+	for <mptcp@lists.linux.dev>; Wed,  3 Sep 2025 15:25:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756910929; cv=none; b=PwzoOlyD5e1GhalrTAUUFGhjvAFBmVXvN97HgVs7wKX1aonDi7OMrPEc/GGYBMsayLJuCxzHMOijITYpHvnwWRyBTCu66BEuIHf6fdg8LXVc8RbNaKLlaFQz0vyktfki4mrrf+ASfVZA2a1G5R1k+RCmT9S179r9FKgADp7n9f8=
+	t=1756913155; cv=none; b=R59cdpTCP5eyiPRLKOOA6l7YCefYv++ztO0XXF58ThaSoe3RS//QiGKlKS8CdHz0cQO6cQEUkWXHFfBIqhgCpz4s3D+CTizM8C3yE89kd6kTAE3emo+9H9oYMUB/RUtCnGjYJ+FmnBrn/bbidD016b1D0lSSsN16EVErD3XFtyI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756910929; c=relaxed/simple;
-	bh=464v9xKPjEec/gxd3y+hWWVe1mfXY/sE8K/2Rk6k7XA=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=gyyJF7tFswZmjcQrcy8iPTwGgXH4WRMg51U9cWdSXR1jF2SVA9gbyKs4pPRTQv2MbAR3/wdJZ0yTz/6ShNuF1vTeZsG6R9UXtWK51jd4Uiv4M0RtwdAdKEOQJf7ihQzY+n0vRJBxMnxJRxIrNSUrMK033V0OIllyyyqmi/Hblws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FQ93V1vV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1756913155; c=relaxed/simple;
+	bh=ydV7BJjFtFFUmAEaewN0+9xPuG6OMwwwgVrSrg240UY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TMqlLVQCfJrw9Qmv/u9fodCIfeUO+vUxe1XVJaxlPLupOGxxEqoNfBHXLZwPMy/FvrhNOZEmUQpkopYP6Z0ITdWulzIcYlDZRtGI9hL4cRbiFgL7/JwG4vPDlM5uRm6oKmNdr//GKaeOnS3QuUlfqH8GuK36aS9eTXleC5Dc5o0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b2cLthrR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FQ93V1vV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64FD9C4CEE7;
-	Wed,  3 Sep 2025 14:48:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b2cLthrR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA635C4CEF0;
+	Wed,  3 Sep 2025 15:25:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756910929;
-	bh=464v9xKPjEec/gxd3y+hWWVe1mfXY/sE8K/2Rk6k7XA=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=FQ93V1vVoHP6RLu8+OXdhj51lOzfEU+5G6HP9hisKNAW4k6VVY7Ak/SyEENgt+gfF
-	 munnmRaJo1uREm8KTOPW+gwhg7nUDJZUq6DZGCxGzd1D3WqD1UP8N1DpvZ7Tm/uL5v
-	 /sp8tQFg2UwabOLlfkCsaaj9NVARXqZ1B8hxIs9C0O03hEF2lMoqfdXyg6fV1zJkDK
-	 KiYGjMeOFMbsYymjIKVJZuBLv67n+b0ouzv3d1uWadVHpd0b3Xe28yR2IP/8ficbBk
-	 OTcEUJifyyQqHi5FDXA6j2EJPZqCZnIeyL2oVJR7TX5FiiWrLyrgmUHm414mQ+8KpW
-	 89NgOshJdGecA==
-Message-ID: <2fa5c27a-336e-4551-9ce1-090f7210dd05@kernel.org>
-Date: Wed, 3 Sep 2025 16:48:45 +0200
+	s=k20201202; t=1756913154;
+	bh=ydV7BJjFtFFUmAEaewN0+9xPuG6OMwwwgVrSrg240UY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=b2cLthrREIJVKXO0L/x3bo/z1Cou6trCY5jrpZeQ7Cq51+puSgiox9uM8DX/B3/0s
+	 6r+Xgx+kachvC5ujeTGW3yrNFIjgNSbD9bX0x7vzrQEENjOG32EPyiYaP0nQgV0As+
+	 ZnbxnOyovRp9SO//hmHt/QO87EezMa+WjXeWQHwak1pSPDY8hMhMiqJ+GunbLYDDRU
+	 CM6u9xNFxljBkufIC+XHcmsnS3qBtlmWzRm+FzfdAnBMwn3uxQd0oMDfxJa8a17tLh
+	 YSEx2DxKBDu3V5LsBjwQgD8H+CE+Qq1nSJDt8SKzEMmPGPlPyTEBz+sXz8aySTg5dG
+	 8vPvffuJlA1Xw==
+Message-ID: <a539b5d5-01f0-4027-8272-f1941f8c1d0c@kernel.org>
+Date: Wed, 3 Sep 2025 17:25:51 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,15 +35,14 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net v2 2/3] selftests: mptcp: close IPC descriptor
- on server side
+Subject: Re: [PATCH mptcp-net v2 3/3] selftests: mptcp: sockopt: fix error
+ messages
 Content-Language: en-GB, fr-BE
-From: Matthieu Baerts <matttbe@kernel.org>
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1756872050.git.geliang@kernel.org>
- <64f5ec5170dd363b19af13fd127a77baa8288104.1756872050.git.geliang@kernel.org>
- <d512f8fc-a0ac-4c23-9a13-0b5c4e1ed20f@kernel.org>
+ <fff9e4c04b934f0fe311cd5b83b68e468f443e45.1756872050.git.geliang@kernel.org>
+From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -88,31 +87,27 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <d512f8fc-a0ac-4c23-9a13-0b5c4e1ed20f@kernel.org>
+In-Reply-To: <fff9e4c04b934f0fe311cd5b83b68e468f443e45.1756872050.git.geliang@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 03/09/2025 13:57, Matthieu Baerts wrote:
-> Hi Geliang,
+On 03/09/2025 06:08, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> On 03/09/2025 06:08, Geliang Tang wrote:
->> From: Geliang Tang <tanggeliang@kylinos.cn>
->>
->> The client-side function 'connect_one_server()' correctly closes the IPC
->> descriptor (a pipe or UNIX socket) after use. However, the server-side
->> functions 'process_one_client()' in both 'mptcp_sockopt.c' and 'mptcp_inq.c'
+> This patch fixes several issues in the error reporting of the MPTCP sockopt
+> selftest:
+> 
+> 1. Add diff calculation: The error messages for counter mismatches now
+>    include the actual difference ('diff') between the expected and received
+>    values, making debugging significantly easier.
 
-FYI, checkpatch is complaining that this line is too long.
+This could be interpreted as a new feature while it is a fix. What about:
 
-https://github.com/multipath-tcp/mptcp_net-next/actions/runs/17423040753
-
-Because it is not an output of a log, can you go to the next line after
-max 72 chars please?
-
-(I didn't check, but there are other similar errors reported by
-checkpatch. *If they make sense*, don't hesitate to fix them as well)
+  Fix diff not printed: The error messages for counter mismatches had
+  the actual difference ('diff') as argument, but it was missing in the
+  format string. Displaying it makes the debugging easier.
 
 Cheers,
 Matt
