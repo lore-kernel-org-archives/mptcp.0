@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66A08223DFD
-	for <mptcp@lists.linux.dev>; Wed,  3 Sep 2025 04:08:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 361482D0C73
+	for <mptcp@lists.linux.dev>; Wed,  3 Sep 2025 04:08:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756872502; cv=none; b=ba5U7nvdcCnvlr8fkdHb97w3q/brv9GAGoIESoA30W0gP34U+gV199mClbG2Bf4QmLk7TEzECP7S2Sn2/pUg1HoY56w7tIIAAiGCARt7SJytj5L0lmnBeIUvQL0EiPr3SRT5ICr4cTjnucFSRYGmVbq6yyfB7LVX/JnIAOGe6mI=
+	t=1756872504; cv=none; b=uawWfhsav7E2hQyVkrDZ/b29qxiNxaCE+DheQtG4o5rXNQhRoQ8AkoVpxGMpCzs2NLWl1wO/A3e2vzZj1cP12oXR8D6aA67ROveZFGjIaLQ2rS5xIeQ0OVoCixvEoXMkNSjU1s851q2cvR9IDdBw9QMNx9g6vgA0KpFOAz+IQ9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756872502; c=relaxed/simple;
-	bh=dpkBHUYN4Vg7h4pvAnDxvc5Wg0hOujhjmAO2Gdt4dNg=;
+	s=arc-20240116; t=1756872504; c=relaxed/simple;
+	bh=+LfHFjHJwNi0aG5LdIJTJQwDWkDAMV2Rq2FSJe64h3o=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MqUaVsacCSLYSjOwM3EGx1MR7C61cACtyBg8tpcbZq4rscnKAFzWjXuxNgWJ8vjuj+eyMVv9w4okzF8p3k5ETk4vhNWL5k9ccsk8eStnjpd+gDS914FRShj1FZhhmdTLk0U7P7KOpAlDL+9NDsdChm6GWs6GdMjeLnTe+87BLjM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VCNLmUHm; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=FEWUPRn+QKhxECN0fliET4LiBHLKcjNqKSOx4AFDY/W82UlCSwnBUpIFRR6PlJ0tij0na0xzQcKP43S3jzBvrrqeRo2v87n8oMbVoo3c/X/mBRroJtuUTsH8VW6uL1+NYuXXPx93ARUVZKBx2jh6eCYobtzwRSnUZ42AAH4c20c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QkdnFxhS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VCNLmUHm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEA33C4CEF1;
-	Wed,  3 Sep 2025 04:08:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QkdnFxhS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8856DC4CEF0;
+	Wed,  3 Sep 2025 04:08:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756872501;
-	bh=dpkBHUYN4Vg7h4pvAnDxvc5Wg0hOujhjmAO2Gdt4dNg=;
+	s=k20201202; t=1756872503;
+	bh=+LfHFjHJwNi0aG5LdIJTJQwDWkDAMV2Rq2FSJe64h3o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=VCNLmUHmS6fr5uaKqXMnImsB+uHkq0Hd94eFClFFFVz/TYpJm6LY/PP5lVifojVBx
-	 pBXdzenmH5Z8Tr+U1bYqw3EeGU0u8zpujpCUKpJYuNs2nCgni1pNMmJY233BLiaJkL
-	 nQThBan0g8MCpb/sp5bIiu8DQXsD1AzTeeBJ1Q3F7W54hiMhJpSNtYPJ5jYekQL+mf
-	 JOven61q6WzoDj9LjD25OycvuJcbaQerk6sZBkX+0SJdXSO5HeUGtgkL65B7st+PUC
-	 giVqzYI8oMpuVzHgeHf+uXYH/pJZcbi7rCe7ihZzhg2nDHyJj5oPuW/hwd1Naj6TVh
-	 EOoWzTsUNvIag==
+	b=QkdnFxhSj3bS1JQLdAEc3D1Q8G0rrmDXfvj0h5RyUBbPECJoYXWL/gFwnOxPz95IJ
+	 Ik+5O5uHplYIQc727XBL4xhijjs6To0O6nbRu//zY2dTIW802H2VT081QvilI10LqS
+	 Lx47mJs+3hja87vHxIj56Vg1nOesp+w9iHyDbGb7OcRQDx/DneeloiPipLxc2Od6+J
+	 taT8hlZFxd33ZArJA1Cs+2Dz6Aq3mJd/0gmNI0c06IBAYDr2EcY6sDxbzvdqWFm455
+	 8YROCRSZN7FrbZksDImJvMauD2fDgkPhMEev1I9zjDvDz5dcTGVPpMk6XQ2+trnPYM
+	 cdVcs8bCoqdSg==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-net v2 2/3] selftests: mptcp: close IPC descriptor on server side
-Date: Wed,  3 Sep 2025 12:08:06 +0800
-Message-ID: <64f5ec5170dd363b19af13fd127a77baa8288104.1756872050.git.geliang@kernel.org>
+Subject: [PATCH mptcp-net v2 3/3] selftests: mptcp: sockopt: fix error messages
+Date: Wed,  3 Sep 2025 12:08:07 +0800
+Message-ID: <fff9e4c04b934f0fe311cd5b83b68e468f443e45.1756872050.git.geliang@kernel.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <cover.1756872050.git.geliang@kernel.org>
 References: <cover.1756872050.git.geliang@kernel.org>
@@ -45,49 +45,66 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-The client-side function 'connect_one_server()' correctly closes the IPC
-descriptor (a pipe or UNIX socket) after use. However, the server-side
-functions 'process_one_client()' in both 'mptcp_sockopt.c' and 'mptcp_inq.c'
-were missing the corresponding 'close()' call for their IPC descriptors.
+This patch fixes several issues in the error reporting of the MPTCP sockopt
+selftest:
 
-This omission could lead to resource leaks (file descriptors) in the test
-server processes over time.
+1. Add diff calculation: The error messages for counter mismatches now
+   include the actual difference ('diff') between the expected and received
+   values, making debugging significantly easier.
 
-This patch adds the missing 'close(pipefd)' and 'close(unixfd)' calls in the
-server-side code, ensuring symmetric and correct resource cleanup.
+2. Fix variable usage: The error check for 'mptcpi_bytes_acked' incorrectly
+   used 'ret2' (sent bytes) for both the expected value and the difference
+   calculation. It now correctly uses 'ret' (received bytes), which is the
+   expected value for bytes_acked.
 
-Fixes: ce9979129a0b ("selftests: mptcp: add mptcp getsockopt test cases")
-Fixes: b51880568f20 ("selftests: mptcp: add inq test case")
+3. Fix off-by-one in diff: The calculation for the 'mptcpi_rcv_delta' diff
+   was 's.mptcpi_rcv_delta - ret', which is off-by-one. It has been corrected
+   to 's.mptcpi_rcv_delta - (ret + 1)' to match the expected value in the
+   condition above it.
+
+Fixes: 5dcff89e1455 ("selftests: mptcp: explicitly tests aggregate counters")
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- tools/testing/selftests/net/mptcp/mptcp_inq.c     | 1 +
- tools/testing/selftests/net/mptcp/mptcp_sockopt.c | 1 +
- 2 files changed, 2 insertions(+)
+ .../testing/selftests/net/mptcp/mptcp_sockopt.c  | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_inq.c b/tools/testing/selftests/net/mptcp/mptcp_inq.c
-index 40f2a1b24763..6a282ec21fd7 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_inq.c
-+++ b/tools/testing/selftests/net/mptcp/mptcp_inq.c
-@@ -462,6 +462,7 @@ static void process_one_client(int fd, int unixfd)
- 	get_tcp_inq(&msg, &tcp_inq);
- 	assert(tcp_inq == 1);
- 
-+	close(unixfd);
- 	close(fd);
- }
- 
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-index b44b6c9b0550..b616af36c16f 100644
+index b616af36c16f..56dfd02c5d01 100644
 --- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
 +++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-@@ -685,6 +685,7 @@ static void process_one_client(int fd, int pipefd)
- 			       s.last_sample.mptcpi_bytes_acked - ret2);
+@@ -667,22 +667,26 @@ static void process_one_client(int fd, int pipefd)
+ 
+ 	do_getsockopts(&s, fd, ret, ret2);
+ 	if (s.mptcpi_rcv_delta != (uint64_t)ret + 1)
+-		xerror("mptcpi_rcv_delta %" PRIu64 ", expect %" PRIu64, s.mptcpi_rcv_delta, ret + 1, s.mptcpi_rcv_delta - ret);
++		xerror("mptcpi_rcv_delta %" PRIu64 ", expect %" PRIu64 ", diff %" PRId64,
++		       s.mptcpi_rcv_delta, ret + 1, s.mptcpi_rcv_delta - (ret + 1));
+ 
+ 	/* be nice when running on top of older kernel */
+ 	if (s.pkt_stats_avail) {
+ 		if (s.last_sample.mptcpi_bytes_sent != ret2)
+-			xerror("mptcpi_bytes_sent %" PRIu64 ", expect %" PRIu64,
++			xerror("mptcpi_bytes_sent %" PRIu64 ", expect %" PRIu64
++			       ", diff %" PRId64,
+ 			       s.last_sample.mptcpi_bytes_sent, ret2,
+ 			       s.last_sample.mptcpi_bytes_sent - ret2);
+ 		if (s.last_sample.mptcpi_bytes_received != ret)
+-			xerror("mptcpi_bytes_received %" PRIu64 ", expect %" PRIu64,
++			xerror("mptcpi_bytes_received %" PRIu64 ", expect %" PRIu64
++			       ", diff %" PRId64,
+ 			       s.last_sample.mptcpi_bytes_received, ret,
+ 			       s.last_sample.mptcpi_bytes_received - ret);
+ 		if (s.last_sample.mptcpi_bytes_acked != ret)
+-			xerror("mptcpi_bytes_acked %" PRIu64 ", expect %" PRIu64,
+-			       s.last_sample.mptcpi_bytes_acked, ret2,
+-			       s.last_sample.mptcpi_bytes_acked - ret2);
++			xerror("mptcpi_bytes_acked %" PRIu64 ", expect %" PRIu64
++			       ", diff %" PRId64,
++			       s.last_sample.mptcpi_bytes_acked, ret,
++			       s.last_sample.mptcpi_bytes_acked - ret);
  	}
  
-+	close(pipefd);
- 	close(fd);
- }
- 
+ 	close(pipefd);
 -- 
 2.48.1
 
