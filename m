@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CF032F3C3F
-	for <mptcp@lists.linux.dev>; Wed,  3 Sep 2025 11:57:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83C964D8D1
+	for <mptcp@lists.linux.dev>; Wed,  3 Sep 2025 14:48:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756900639; cv=none; b=OZEFO2VQEFZ7sQbAYeZ5FnMIT09qIOijQF4zm+YAWfRY9K5lOYL+lynKYEQbuGJ1Bp76V0drq2f4pKuPXQWIXA8quytV4PlCloGMoR0SF0Rs/+2vvsCOJlhTtJI7kRI7hSx2k6sN/+POlyQmCSKFDNKynwwzZTg0StRC6BN/ebk=
+	t=1756910929; cv=none; b=PwzoOlyD5e1GhalrTAUUFGhjvAFBmVXvN97HgVs7wKX1aonDi7OMrPEc/GGYBMsayLJuCxzHMOijITYpHvnwWRyBTCu66BEuIHf6fdg8LXVc8RbNaKLlaFQz0vyktfki4mrrf+ASfVZA2a1G5R1k+RCmT9S179r9FKgADp7n9f8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756900639; c=relaxed/simple;
-	bh=VP/ae0NFudY7mB6L0WjmrYxTZ7crkDcKkT6M6U3pPzw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=m9NKsqTBsjv5oP4M4ra/G/t5GKfi66IP+rmzTj5W9zbv1HDrxCq1/Y7Mtnr1eeP8ZONXi5LfUizBctm6AQvRoYfrtipnUAXkjjWi2TzviQDjOAqe/WEHMUkQa82w9DTFFrZCI5EnV9ymstz4Zqhjume4nn2wTMpdJ93NV3klPnA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wytp5HsB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1756910929; c=relaxed/simple;
+	bh=464v9xKPjEec/gxd3y+hWWVe1mfXY/sE8K/2Rk6k7XA=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=gyyJF7tFswZmjcQrcy8iPTwGgXH4WRMg51U9cWdSXR1jF2SVA9gbyKs4pPRTQv2MbAR3/wdJZ0yTz/6ShNuF1vTeZsG6R9UXtWK51jd4Uiv4M0RtwdAdKEOQJf7ihQzY+n0vRJBxMnxJRxIrNSUrMK033V0OIllyyyqmi/Hblws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FQ93V1vV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wytp5HsB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67BC1C4CEF0;
-	Wed,  3 Sep 2025 11:57:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FQ93V1vV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64FD9C4CEE7;
+	Wed,  3 Sep 2025 14:48:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756900639;
-	bh=VP/ae0NFudY7mB6L0WjmrYxTZ7crkDcKkT6M6U3pPzw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Wytp5HsBaT5b3BjGqKEsa67qaAWbo/gXrz4gcJvFfngVG4p91vEkgrcuRWpqUf2VM
-	 qEq8JRbylsUAPCdoQSxLAWZMcbJlXxyAR9Yo/1ysehkZEpkvJa1ek8n4hW3Ws7q77H
-	 0r5JbRFoLTrYQ59+/HmX3moNZrGsoNrtPsfVpvCqMTJcKsIwUPe+58IAD15ML1q9+u
-	 8AFAPP6XfKmssSz9Y3u6wQ43jo/A50jhvFxtYldJuWp3SDWSRl41ePmMcMs3NdnbgP
-	 A24YABPFZ1hPSKY1VtsBnGT4y7CBER3OvigkSXNDUfTYP5YrjiXPEoaOg/RYT9A9pJ
-	 NV6VsCHFS9k+g==
-Message-ID: <d512f8fc-a0ac-4c23-9a13-0b5c4e1ed20f@kernel.org>
-Date: Wed, 3 Sep 2025 13:57:14 +0200
+	s=k20201202; t=1756910929;
+	bh=464v9xKPjEec/gxd3y+hWWVe1mfXY/sE8K/2Rk6k7XA=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=FQ93V1vVoHP6RLu8+OXdhj51lOzfEU+5G6HP9hisKNAW4k6VVY7Ak/SyEENgt+gfF
+	 munnmRaJo1uREm8KTOPW+gwhg7nUDJZUq6DZGCxGzd1D3WqD1UP8N1DpvZ7Tm/uL5v
+	 /sp8tQFg2UwabOLlfkCsaaj9NVARXqZ1B8hxIs9C0O03hEF2lMoqfdXyg6fV1zJkDK
+	 KiYGjMeOFMbsYymjIKVJZuBLv67n+b0ouzv3d1uWadVHpd0b3Xe28yR2IP/8ficbBk
+	 OTcEUJifyyQqHi5FDXA6j2EJPZqCZnIeyL2oVJR7TX5FiiWrLyrgmUHm414mQ+8KpW
+	 89NgOshJdGecA==
+Message-ID: <2fa5c27a-336e-4551-9ce1-090f7210dd05@kernel.org>
+Date: Wed, 3 Sep 2025 16:48:45 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,11 +38,12 @@ User-Agent: Mozilla Thunderbird Beta
 Subject: Re: [PATCH mptcp-net v2 2/3] selftests: mptcp: close IPC descriptor
  on server side
 Content-Language: en-GB, fr-BE
+From: Matthieu Baerts <matttbe@kernel.org>
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1756872050.git.geliang@kernel.org>
  <64f5ec5170dd363b19af13fd127a77baa8288104.1756872050.git.geliang@kernel.org>
-From: Matthieu Baerts <matttbe@kernel.org>
+ <d512f8fc-a0ac-4c23-9a13-0b5c4e1ed20f@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -87,37 +88,31 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <64f5ec5170dd363b19af13fd127a77baa8288104.1756872050.git.geliang@kernel.org>
+In-Reply-To: <d512f8fc-a0ac-4c23-9a13-0b5c4e1ed20f@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 03/09/2025 06:08, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
+On 03/09/2025 13:57, Matthieu Baerts wrote:
+> Hi Geliang,
 > 
-> The client-side function 'connect_one_server()' correctly closes the IPC
-> descriptor (a pipe or UNIX socket) after use. However, the server-side
-> functions 'process_one_client()' in both 'mptcp_sockopt.c' and 'mptcp_inq.c'
-> were missing the corresponding 'close()' call for their IPC descriptors.
-> 
-> This omission could lead to resource leaks (file descriptors) in the test
-> server processes over time.
-> 
-> This patch adds the missing 'close(pipefd)' and 'close(unixfd)' calls in the
-> server-side code, ensuring symmetric and correct resource cleanup.
+> On 03/09/2025 06:08, Geliang Tang wrote:
+>> From: Geliang Tang <tanggeliang@kylinos.cn>
+>>
+>> The client-side function 'connect_one_server()' correctly closes the IPC
+>> descriptor (a pipe or UNIX socket) after use. However, the server-side
+>> functions 'process_one_client()' in both 'mptcp_sockopt.c' and 'mptcp_inq.c'
 
-I don't know if we need such patch. I mean: yes, that's better to close
-such FD before closing the application, but then:
+FYI, checkpatch is complaining that this line is too long.
 
-- it is strange to close it in the middle of a function
-(process_one_client()), and not where it has been created (main())
+https://github.com/multipath-tcp/mptcp_net-next/actions/runs/17423040753
 
-- if I'm not mistaken, unixfds[0] / pipefds[0] are not closed in the
-server process.
+Because it is not an output of a log, can you go to the next line after
+max 72 chars please?
 
-So if you really want to fix that, I think it would be better to close
-all these unix FD in the 'main()' function, no?
+(I didn't check, but there are other similar errors reported by
+checkpatch. *If they make sense*, don't hesitate to fix them as well)
 
 Cheers,
 Matt
