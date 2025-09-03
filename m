@@ -1,37 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C73B2C235D
-	for <mptcp@lists.linux.dev>; Wed,  3 Sep 2025 04:08:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EBFA2745C
+	for <mptcp@lists.linux.dev>; Wed,  3 Sep 2025 04:08:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756872498; cv=none; b=p+w75QiteOUmc7DHd15+cOJEKag+ye2bRIKv4Gg6noJYXOUdFo8gWsisaTcCO2nGzBKDik7YTdJJQOJ81MmwjTlzeot5Q5Zgbyv5rKqdeAtbR+l7K3u17+RR0ckRkWuMhKHR11Sy61v7ddh+Eq1hdxvaW6AWsDJ00VdBMjYxP9g=
+	t=1756872500; cv=none; b=eZN5hC0mqvnD9wUWjtb3qp8H5Mn2SkKisvym00Lj+0RXnr4tpOwvnA32vBGT2Nr4Jte5gmmAFCKvosQ6fLNLmz6dSA8c668czIUmFQCaXTNN31B+BFDg8u876+4kS9S5p4Eijn915GgcP+6ujnmycVBuYvLXxalVdAKGcp0IPc0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756872498; c=relaxed/simple;
-	bh=MoIjvRK73js51lPSqjTSQ/0yVprC6j01NJulkgbep3I=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EwX9sfdzPSAnuR3/icvMiddbTHDDKVAT00FQDZSLlLebJoOw1Fwz8o/YgW7hxcdjdBHD2ffaQdq7cwuJjpIMu0DNS1wtLpagLcBzu96VfkjCbSrIryAx6I+xsAoE0pK3N+PlAVYwpxhiveZzDxSJCmoUISt1JIApyytFWRkjuok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gBXcozuP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1756872500; c=relaxed/simple;
+	bh=aiXTTuw2UIb2y41v9oYjV4fdJ73E3L3TLpAB+zwsV4Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=QvtJpmxOHv3OEC4RVNBEkP0SMYcVn3PZ0/mWElRuF1b17BYf37Cv9ElTreOUUGuMPdwV7t+axjdxBCKc9e86+MwTiBAW35eCqxQ/jctGCIwJNUnm2bZArwPLnV3HzA3Sto2tgKoys6bRUKo5Ils0PO6F4Qpc0S23UyvmRb3wOWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VHi/KP3b; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gBXcozuP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 199CCC4CEF0;
-	Wed,  3 Sep 2025 04:08:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VHi/KP3b"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A110BC4CEF1;
+	Wed,  3 Sep 2025 04:08:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756872498;
-	bh=MoIjvRK73js51lPSqjTSQ/0yVprC6j01NJulkgbep3I=;
-	h=From:To:Cc:Subject:Date:From;
-	b=gBXcozuPqKw6MqYYdnKtb2pOEL4DnAz4BSbJ3YlQjThuqjfl1eu0eXi6XIMOOC6bz
-	 bvSppi9t8qZlgdQW9Moa3zpOQa681FBh8Z7wbQLhC0IFpOJJdGbXeHxuBBXccD21jK
-	 3hWmjOwdFS31OzP7pRSv42sdVIjDxP25Rzf9dEpu8Nt63SYsyCIoXrh5IzSPM//CcP
-	 KqzGB+tba6xt4Z9FSU3YtvOfNNqOpYsNIW0z/zkoJoGtc3wPf9BEpZd4cxHpRMorKZ
-	 P0PlKOPg8ySN3wzNhCaqHe2e0zDGwu+StoHjWl8KI8ofb0/6P+LD/lPZl2c6sCt+F5
-	 KIZDNP25iQOfQ==
+	s=k20201202; t=1756872500;
+	bh=aiXTTuw2UIb2y41v9oYjV4fdJ73E3L3TLpAB+zwsV4Y=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=VHi/KP3bxOF4NUPkhv/tIPsUUzmnqfdhfmw4PuNFVmnUzCZQ/pcartEP4Ftt0Dpv3
+	 XJcnug5rIT2FQ63fdwZhClVjsWLYFHgmHKNeoZYj8ldAYSLRFDxJadVoTs4CWQ4S9L
+	 hEO1+APdyMLiFiOswVnqgMIe5fFKjaOFqmXM6bgsPLG9lQcIuYXhFcFBw7nAHzVaab
+	 cKQycRFvA0Sw9YIp0DmpnXhusHyNjW4VNe3BFafaXdXvCThqB2kQUt3mQbbUVvgNNH
+	 amI3a5sTK50/bVBwkUE5Np2NaXYcckITcshjX9n8wVgg6MUu8TUG4IRQrpQ/dVALFk
+	 NTR16as1Ow3gg==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
-Cc: Geliang Tang <geliang@kernel.org>
-Subject: [PATCH mptcp-net v2 0/3] misc fixes for sockopt selftests
-Date: Wed,  3 Sep 2025 12:08:04 +0800
-Message-ID: <cover.1756872050.git.geliang@kernel.org>
+Cc: Geliang Tang <tanggeliang@kylinos.cn>,
+	"Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH mptcp-net v2 1/3] selftests: mptcp: close server file descriptor
+Date: Wed,  3 Sep 2025 12:08:05 +0800
+Message-ID: <c53a738a9beac02ab5f43baff9a70a36be87eca8.1756872050.git.geliang@kernel.org>
 X-Mailer: git-send-email 2.48.1
+In-Reply-To: <cover.1756872050.git.geliang@kernel.org>
+References: <cover.1756872050.git.geliang@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -40,24 +44,49 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-v2:
- - patch 2: we should address this resource leak by adding the missing
-   close() calls on the server side, rather than by removing the correct
-   existing ones on the client side.
- - patch 3: fix more error messages as Matt suggested.
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
-This patch series addresses several resource management issues in the MPTCP
-sockopt selftests.
+The server file descriptor ('fd') is opened in server() but never closed.
+While accepted connections are properly closed in process_one_client(),
+the main listening socket remains open, causing a resource leak.
 
-Geliang Tang (3):
-  selftests: mptcp: close server file descriptor
-  selftests: mptcp: close IPC descriptor on server side
-  selftests: mptcp: sockopt: fix error messages
+This patch ensures the server fd is properly closed after processing
+clients, bringing the sockopt and inq test cases in line with proper
+resource cleanup practices.
 
- tools/testing/selftests/net/mptcp/mptcp_inq.c  |  2 ++
- .../selftests/net/mptcp/mptcp_sockopt.c        | 18 ++++++++++++------
- 2 files changed, 14 insertions(+), 6 deletions(-)
+Fixes: ce9979129a0b ("selftests: mptcp: add mptcp getsockopt test cases")
+Fixes: b51880568f20 ("selftests: mptcp: add inq test case")
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+---
+ tools/testing/selftests/net/mptcp/mptcp_inq.c     | 1 +
+ tools/testing/selftests/net/mptcp/mptcp_sockopt.c | 1 +
+ 2 files changed, 2 insertions(+)
 
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_inq.c b/tools/testing/selftests/net/mptcp/mptcp_inq.c
+index f3bcaa48df8f..40f2a1b24763 100644
+--- a/tools/testing/selftests/net/mptcp/mptcp_inq.c
++++ b/tools/testing/selftests/net/mptcp/mptcp_inq.c
+@@ -502,6 +502,7 @@ static int server(int unixfd)
+ 
+ 	process_one_client(r, unixfd);
+ 
++	close(fd);
+ 	return 0;
+ }
+ 
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
+index e934dd26a59d..b44b6c9b0550 100644
+--- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
++++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
+@@ -722,6 +722,7 @@ static int server(int pipefd)
+ 
+ 	process_one_client(r, pipefd);
+ 
++	close(fd);
+ 	return 0;
+ }
+ 
 -- 
 2.48.1
 
