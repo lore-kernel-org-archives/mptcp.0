@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D153F32F775
-	for <mptcp@lists.linux.dev>; Wed,  3 Sep 2025 10:49:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CF032F3C3F
+	for <mptcp@lists.linux.dev>; Wed,  3 Sep 2025 11:57:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756896563; cv=none; b=kSbRjcekvOshAuTkG84bH0zv7Evc5AHPI049Xv9+UBjRbRIPNftsPpxLPOSM58+iCmj/GkGGePKFIjUbhi5Oi4fi5SEU2mwKSZhtpOg1s5U7+LPlszh+q88bsanaKhIv3bY/z0PWX2NM8LMbtGbvLPzXMAAUCYw/BoYbPaFeFMk=
+	t=1756900639; cv=none; b=OZEFO2VQEFZ7sQbAYeZ5FnMIT09qIOijQF4zm+YAWfRY9K5lOYL+lynKYEQbuGJ1Bp76V0drq2f4pKuPXQWIXA8quytV4PlCloGMoR0SF0Rs/+2vvsCOJlhTtJI7kRI7hSx2k6sN/+POlyQmCSKFDNKynwwzZTg0StRC6BN/ebk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756896563; c=relaxed/simple;
-	bh=e8Ihvjc9MaqyOudc40bYIM4+n2fMWFBA5nUtxbnhMtw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=a1mbVMlsjJthre7lsmU1OpqQZLrjuPottAg/t+rcxa2SJn7Ro033whvAZDlhxGyHvdxyRNrCIiBtzTe1dxqFeXn1dXDg3l8Jubul3lRuCfKJ1wkqO+QbMpGrC/5aGd3N4KCSS9YvBUAWevIPbshDu7xrXtGVD5rx4t8t3NdBt80=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q1uFOlVE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1756900639; c=relaxed/simple;
+	bh=VP/ae0NFudY7mB6L0WjmrYxTZ7crkDcKkT6M6U3pPzw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=m9NKsqTBsjv5oP4M4ra/G/t5GKfi66IP+rmzTj5W9zbv1HDrxCq1/Y7Mtnr1eeP8ZONXi5LfUizBctm6AQvRoYfrtipnUAXkjjWi2TzviQDjOAqe/WEHMUkQa82w9DTFFrZCI5EnV9ymstz4Zqhjume4nn2wTMpdJ93NV3klPnA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wytp5HsB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q1uFOlVE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9C28C4CEF0;
-	Wed,  3 Sep 2025 10:49:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wytp5HsB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67BC1C4CEF0;
+	Wed,  3 Sep 2025 11:57:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756896563;
-	bh=e8Ihvjc9MaqyOudc40bYIM4+n2fMWFBA5nUtxbnhMtw=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=q1uFOlVESh+yD/daXm5ydJz5BAQk1aTkIwlR9sZDiyA+INuyx9QnwoYKg24i9FHg0
-	 l/Yp7MZT8MluPtIyQBSGG+1lzF12xHHcgq0TctU+JLf9wg4fs7ym6IjVKVSUlQa22C
-	 +Xpac+3iX0vSV5ymm0vz7m91JsSmOS04Clo62TkLV4gAYjj1PO92z8lzwOMOlXiew4
-	 Uv7rVKdeCVjCLnyhtrJHTJ5zOXwaSIVH+oMuapYoUreM0rTBLi3yXsit8oALrMf3XJ
-	 4Z/4hKDFgfnN4j3ZM6vK3SLykD68zAUHuBYLrw4ZI5u7DZrk6k1dCyasClvza9kjnF
-	 fy220WioePiug==
-Message-ID: <cd0b8546-902e-4d68-bcbe-01b31e370034@kernel.org>
-Date: Wed, 3 Sep 2025 12:49:19 +0200
+	s=k20201202; t=1756900639;
+	bh=VP/ae0NFudY7mB6L0WjmrYxTZ7crkDcKkT6M6U3pPzw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Wytp5HsBaT5b3BjGqKEsa67qaAWbo/gXrz4gcJvFfngVG4p91vEkgrcuRWpqUf2VM
+	 qEq8JRbylsUAPCdoQSxLAWZMcbJlXxyAR9Yo/1ysehkZEpkvJa1ek8n4hW3Ws7q77H
+	 0r5JbRFoLTrYQ59+/HmX3moNZrGsoNrtPsfVpvCqMTJcKsIwUPe+58IAD15ML1q9+u
+	 8AFAPP6XfKmssSz9Y3u6wQ43jo/A50jhvFxtYldJuWp3SDWSRl41ePmMcMs3NdnbgP
+	 A24YABPFZ1hPSKY1VtsBnGT4y7CBER3OvigkSXNDUfTYP5YrjiXPEoaOg/RYT9A9pJ
+	 NV6VsCHFS9k+g==
+Message-ID: <d512f8fc-a0ac-4c23-9a13-0b5c4e1ed20f@kernel.org>
+Date: Wed, 3 Sep 2025 13:57:14 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v2 0/3] Add MPTCP support to Java Networking
- API
+Subject: Re: [PATCH mptcp-net v2 2/3] selftests: mptcp: close IPC descriptor
+ on server side
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-References: <cover.1756369940.git.tanggeliang@kylinos.cn>
- <3a401acb-bcc6-4885-a1a4-7aa88ed55cb5@kernel.org>
- <2dc597d59d3aff65b2955f5accf0a14e2c788cf5.camel@kernel.org>
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <cover.1756872050.git.geliang@kernel.org>
+ <64f5ec5170dd363b19af13fd127a77baa8288104.1756872050.git.geliang@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,179 +87,37 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <2dc597d59d3aff65b2955f5accf0a14e2c788cf5.camel@kernel.org>
+In-Reply-To: <64f5ec5170dd363b19af13fd127a77baa8288104.1756872050.git.geliang@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 03/09/2025 08:16, Geliang Tang wrote:
-> Hi Matt,
+On 03/09/2025 06:08, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> On Thu, 2025-08-28 at 11:57 +0200, Matthieu Baerts wrote:
->> Hi Geliang,
->>
->> On 28/08/2025 10:47, Geliang Tang wrote:
->>> From: Geliang Tang <tanggeliang@kylinos.cn>
->>>
->>> v2:
->>>  - drop redundant helpers as Matt suggested.
->>>  - squash into fewer patches.
->>>  - use "JNI_TRUE" and "(void)mptcp" in Java_sun_nio_ch_Net_socket0
->>> as
->>>    Xiang Gao suggested.
->>>
->>> The Multipath TCP (MPTCP) protocol (v1 / RFC 8684) has been added
->>> in
->>> the upstream Linux kernel since v5.6. See https://mptcp.dev.
->>>
->>> This patch series introduces comprehensive Multipath TCP (MPTCP)
->>> support to the Java Networking API, enabling applications to
->>> leverage
->>> MPTCP's capabilities for improved reliability and throughput.
->>
->> Thank you for the new version! Feel free to start the process to
->> upstream these patches [1]. Don't hesitate to share here the link to
->> the
->> new ticket.
->>
->> [1] https://openjdk.org/guide/#i-have-a-patch-what-do-i-do
->>
+> The client-side function 'connect_one_server()' correctly closes the IPC
+> descriptor (a pipe or UNIX socket) after use. However, the server-side
+> functions 'process_one_client()' in both 'mptcp_sockopt.c' and 'mptcp_inq.c'
+> were missing the corresponding 'close()' call for their IPC descriptors.
 > 
-> I followed the instructions and "Signed the OCA" on August 1st, but it
-> is still in the "Under Review" status.
+> This omission could lead to resource leaks (file descriptors) in the test
+> server processes over time.
+> 
+> This patch adds the missing 'close(pipefd)' and 'close(unixfd)' calls in the
+> server-side code, ensuring symmetric and correct resource cleanup.
 
-Thank you for having started this! This is a shame it takes time, that's
-not helping to get new contributors.
-> For the second step, "Socialize your change", I would like to send the
-> following letter to net-dev@openjdk.org:
+I don't know if we need such patch. I mean: yes, that's better to close
+such FD before closing the application, but then:
 
-Good idea, thank you for sharing this.
+- it is strange to close it in the middle of a function
+(process_one_client()), and not where it has been created (main())
 
-> '''
-> Hi OpenJDK maintainers,
-> 
-> I hope this message finds you well. The purpose of this letter is to
-> propose the integration of Multipath TCP (MPTCP) support into OpenJDK.
-> We have developed a set of patches to enable this functionality and are
-> eager to submit it for upstream inclusion. We would greatly appreciate
-> your feedback and opinions on this contribution.
-> 
-> 1. Introduction
-> 
-> Multipath TCP (MPTCP), as standardized in RFC 8684, is a major
-> evolution of the TCP protocol. It enables a transport connection to use
-> multiple network paths simultaneously for redundancy, resilience, and
-> bandwidth aggregation. Since its introduction in Linux kernel v5.6, it
-> has become a key technology for modern networking, particularly on
-> mobile devices with multiple interfaces (e.g., Wi-Fi and cellular).
-> 
-> Key benefits include:
-> 
->     Bandwidth Aggregation: Combine the bandwidth of multiple network
-> links.
-> 
->     Seamless Handover: Maintain connections when switching networks
-> without dropping the session.
-> 
->     Improved Resilience: Traffic is automatically rerouted if one path
-> fails.
-> 
-> For more details, see the project website: https://mptcp.dev.
-> 
-> 2. Technical Background
-> 
-> On a supporting system like Linux, an MPTCP socket is created by
-> specifying the IPPROTO_MPTCP protocol in the socket() system call:
+- if I'm not mistaken, unixfds[0] / pipefds[0] are not closed in the
+server process.
 
-Maybe add something like: "instead of IPPROTO_TCP (or 0)"
-> 
->     int fd = socket(AF_INET, SOCK_STREAM, IPPROTO_MPTCP);
-> 
-> This creates a socket that looks like a standard TCP socket to the
-> application but uses the MPTCP protocol stack underneath.
-
-It might be interesting to add something here to say that with the Java
-API, it is possible to create "stream" sockets, but it is not possible
-to change the last argument, which blocks apps to ask to use MPTCP.
-
-> 3. Proposed Java API Changes
-> 
-> The goal is to allow Java applications to opt-in to using MPTCP when
-> creating sockets, without breaking existing code. The proposed changes
-> are additive and backward-compatible.
-> 
-> The core idea is to add a boolean mptcp parameter through the API
-> layers, from the public Socket class down to the native system call.
-> 
-> 4. Implementation Plan
-> 
-> The implementation involves changes across four layers of the JDK:
-> 
-> JNI Layer (sun.nio.ch.Net):
-> 
-> Modify Java_sun_nio_ch_Net_socket0 to accept a new jboolean mptcp
-> parameter.
-> 
->     The native implementation will be updated to use this parameter:
-> 
->     int protocol = mptcp == JNI_TRUE ? IPPROTO_MPTCP : 0;
->     fd = socket(domain, type, protocol);
-> 
-> NIO Layer (sun.nio.ch):
-> 
->     Add the mptcp parameter to the Net.socket() and Net.serverSocket()
-> methods.
-> 
->     Propagate the parameter down to the JNI call.
-> 
-> Socket Implementation Layer (java.net):
-> 
->     Add the mptcp parameter to the constructor of NioSocketImpl.
-> 
->     Within NioSocketImpl, pass the parameter to the Net.socket() or
-> Net.serverSocket() calls.
-> 
-> Public API Layer (java.net.Socket & java.net.ServerSocket):
-> 
->     Add new constructors that accept the mptcp parameter.
-> 
->     Example:
-> 
->         // Proposed new constructor
->         public Socket(String host, int port, boolean stream, boolean
-> mptcp) throws IOException {
->             // ... implementation that passes 'mptcp' to NioSocketImpl
->         }
-> 
-> 5. Full Implementation
-> 
-> The complete working implementation for this proposal is available for
-> review:
-> 
-> https://github.com/openjdk/jdk/compare/master...geliangtang:jdk:master
-> 
-> We look forward to your valuable feedback and suggestions on this
-> proposal.
-
-Maybe good to add something like: we can create a new issue for this
-feature, and submit a proper pull request after if that's OK for you. We
-didn't do that yet because we noticed that it is recommended to send
-more explanations to this list first.
-
-Thanks, it looks good!
-
-> Best regards,
-> The MPTCP Upstream Developers
-> '''
-> 
-> Please review this letter for me.
-> 
-> Thanks,
-> -Geliang
-> 
->> Cheers,
->> Matt
+So if you really want to fix that, I think it would be better to close
+all these unix FD in the 'main()' function, no?
 
 Cheers,
 Matt
