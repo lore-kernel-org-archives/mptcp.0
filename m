@@ -1,132 +1,200 @@
-Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF8182F3C3F
-	for <mptcp@lists.linux.dev>; Thu,  4 Sep 2025 13:53:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C28681DF97F
+	for <mptcp@lists.linux.dev>; Thu,  4 Sep 2025 14:54:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756993983; cv=none; b=Smu1HpHq7DsInVUutmLgjyEldTmYCzHjTBu+iBJtOqtoXYrNB4rnWD8yKXp/uiX8WlthCs41w2C6CaXNT20QEeo9XKLGRq+bVZeilaKQjFmqwnE5c8rJC3WfFdDTe9v5cQ2d5sIsa2sG7tPcSlsRjE8Zxwe76LB2fdYW3+RSQes=
+	t=1756997652; cv=none; b=rd1tZAYS3NmdQcjYnNXUDxQ3HLO6LqyYYCQZiFJpRAlH7cU1YyXPqajSD5K1oYBSiUiGuqiWkM9Y364SRSuy615ycjr2voU/PfXe5A4i+jmMMPdT/GKK+3KXVYB+rAi/xmAlvyjIaPiUi+B9y3vP8bpnaGkaUyscs9o/z/a/ouE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756993983; c=relaxed/simple;
-	bh=WLqARZddXhJbBSVaz5NmnriYLiB1gf2MmIGEtLJTJFA=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=OwVQtwqlPxswnWtg1nmOFGEcvcEfkVdh7ZWx++gcmElULwNvB8u/MSHk53wjsAXx0ReYFvrUQ4AzQfOVTJP2g5TrUscsMyI3I/0qECK9S5f3bhEv2i/BPznLXF1U9iQ0QkKQHQRSLoq0ZLiQH6PPC/RH3d0AlIV26IbD96f3Sqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X1ie2naz; arc=none smtp.client-ip=209.85.222.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1756997652; c=relaxed/simple;
+	bh=V/gP6j0lSeR3KdVzO+ilFVJlulH3EOIJmCWKFnNkGjA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=TSBCalGqlpdmMzrm+IzRDyd6AajAImrdc6cwb8iohZPgYkF5JBUAIv4dA7zAZNAVkGfEqebocTUgNgeVRHQTKthzXup+b1rhirix7jZqzMxRpcjQADtuZNfr+1CyEIautagaF8homXRDC+dfHqqZ1OmeGZcKTriSaGExUTVn2eE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pA0KVNy2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X1ie2naz"
-Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-80e3612e1a7so112360485a.0
-        for <mptcp@lists.linux.dev>; Thu, 04 Sep 2025 06:53:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1756993979; x=1757598779; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZFpvcFGH5WKZLdpyWI2Re5zPhk05mS/1rMN0XEQ5Rpc=;
-        b=X1ie2nazjte4zAc6Yy/T3i6xJW8ALO++YgLbpGjBcHmgPTSPanAH5Nqf8gBOqvYAUJ
-         B0AJx4mP7jZHbxjelKyoIzl5y4VYBaPgxIs3gQMyNIrGANJcRFlZgf2bXMp6o/tX9JUj
-         7CSDJE8BWwhVyS0rfnoKlbdDuLu2lEO9laXFEplsYCB971B2AlH+7sVk0Mrlm9mXfsqK
-         Bu0dtBzPs7pUQKXS4tcxYTwt3tF4bgK6V2k9K6p12gEWoJkxwiqBHrfQCrMXuCdD3cQp
-         alLGMNDg4Fhtn/RhXrvpDYnnnwkqlLZu6gJz8ENOlXi0L82VyjRL1V/Z2eV43/OsL1yZ
-         OwpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756993979; x=1757598779;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=ZFpvcFGH5WKZLdpyWI2Re5zPhk05mS/1rMN0XEQ5Rpc=;
-        b=NbTrPTP7sAO6ZVSnO+mHXujtrUMxeH8UjrYOwVqqVDksZU5OkhP2yST5rA5BAP2F8C
-         he1mByCddU0ml5sktUTZSIATMVJCvv1edkdfFMjzQJ9qpk9WKQPhFJ9fC0V8ixPSIjcj
-         5j+ZQFqKsrWMPDS1wqrdVVL6KO/zKYfs5tZehpExoVVDKtbFgOA+qLZhOFf7Ff981Fmu
-         MBgjOLKj1XnpskIKndaAh+9FI9cUEtdF96d/3H+lvbMnejkU3HGREcTTcqMXTchzMxLG
-         rXFc6DuplORtrT8cApKIj+OkmBN3fQ9RN2JLbTlMgrrrOXmI4sbSkTIw8Gqah1XjsjXT
-         J3sw==
-X-Gm-Message-State: AOJu0YzUw/i2jGLu6hfAqcFqC1D0GLPDMG4ZtT152MrLdLLYQyzv1zPy
-	Vgus6Ch0uD850ORm5JaRd4fmpvAhCJGqaFjue7EqECYzdytmnOentn8=
-X-Gm-Gg: ASbGncsXWZcdhv/O5WRgiMqsA4sRNZZXqkM+oVl5YN0BVRlLNWiEJWBWgaeaTGNefSr
-	UxMl7D9u+7DVbrOsim1Nlq9X8jM1fqUJX/KnrfbM/7nq4csydXGOKQa563FCMvUl+Qc9zhz6hU0
-	ORupY4wvd4KQ76RUHiowrrDOZEXpE0x27azYJyB+r42vmMlXmaFAJzIRqDrTWOmDREPZao8eA57
-	FlFFGwy1nQ13neOHBR9GH9RBybqhemUcudYWpZr91RaNpnjkZ8gHgES0HGITn6UdM1eMirhAKv9
-	eXBWzR1nOns0ca4e2ydmQwzMggmM4FFAcQa3rnd6chKYIyZlnzHvo3hEqRmmWRrCiBDZMZjzPaV
-	1SK2Kqkg1nP0N8snjTeG78cirArkVs8qL0T0rU0hgaLdsKw==
-X-Google-Smtp-Source: AGHT+IGSZy9CGqbTuvTMhvL480/TjmTtqpVDqcFh+9e3FB50REoq5MrFlHeNvmiNdbmzYHkmFB4Qrw==
-X-Received: by 2002:a05:620a:2587:b0:7fc:23c3:cf78 with SMTP id af79cd13be357-7ff2bf5203bmr2070793185a.66.1756993979229;
-        Thu, 04 Sep 2025 06:52:59 -0700 (PDT)
-Received: from [127.0.0.1] ([20.161.28.176])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-80aac520d75sm285459785a.69.2025.09.04.06.52.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Sep 2025 06:52:58 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <20250904-sft-mptcp-join-add_addr-no-retrans-v2-0-a019e6678628@kernel.org>
-References:
- <20250904-sft-mptcp-join-add_addr-no-retrans-v2-0-a019e6678628@kernel.org>
-Subject: Re: [PATCH mptcp-next v2 0/3] mptcp: fixes for adaptive ADD_ADDR
- retransmission timeout
-Message-ID: <2b09caab-f7b2-4fdb-dc97-ad223d3069c9@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 04 Sep 2025 13:52:58 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pA0KVNy2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE4FAC4CEF0
+	for <mptcp@lists.linux.dev>; Thu,  4 Sep 2025 14:54:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756997652;
+	bh=V/gP6j0lSeR3KdVzO+ilFVJlulH3EOIJmCWKFnNkGjA=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=pA0KVNy2XryD2SHmoTICoST3u0E94j38uh9ULhQeEF3dvOVYhELhWk+lX3uk/yesX
+	 jFrYZlfG93m4OaDJyNFjZWp2aE0RiH98PxTW6h6gwCqonyxnBi6efexopZ2hYErqxN
+	 Ax6bPn9oQJYxeFQA+ilxYM1Y2gLQ637KSy3OmAc1gc8EmyiZwr6BU6Wo5+Z6MRwuJ3
+	 8THb0kRCTvEnCX8kSRCjK7gBV+4FS8NP5tKnSotRzox80ls0lQjdU808s4+iky8EPa
+	 q0QjFaCU8GEmc4u7ubZ6QmSjKJQstKJD7TrzptYg6gFf9qZSTnBSzEMDF2+Hqu9BXF
+	 2AeKG0/h+VaDA==
+Message-ID: <cde1771d-2383-42cb-97e3-92d53e42b381@kernel.org>
+Date: Thu, 4 Sep 2025 16:54:09 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-next v2 2/3] selftests: mptcp: join: tolerate more
+ ADD_ADDR
+Content-Language: en-GB, fr-BE
+To: MPTCP Linux <mptcp@lists.linux.dev>
+References: <20250904-sft-mptcp-join-add_addr-no-retrans-v2-0-a019e6678628@kernel.org>
+ <20250904-sft-mptcp-join-add_addr-no-retrans-v2-2-a019e6678628@kernel.org>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <20250904-sft-mptcp-join-add_addr-no-retrans-v2-2-a019e6678628@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Matthieu,
+On 04/09/2025 13:38, Matthieu Baerts (NGI0) wrote:
+> ADD_ADDR can be retransmitted, and with, the parent commit, these
+> retransmissions can be sent quicker: from 2 minutes to less than one
+> second.
+> 
+> To avoid false positives where retransmitted ADD_ADDR causes higher
+> counters than expected, it is required to be more tolerant. Errors are
+> now only reported when fewer ADD_ADDRs have been sent/received, except
+> if no ADD_ADDR are expected.
+> 
+> Before the parent commit, the tolerance was present for each tests where
+> the ADD_ADDR could be retransmitted in a reasonable time (1 sec). Now
+> that all tests can have retransmitted ADD_ADDR, it is normal to apply
+> the same tolerance for all tests.
+> 
+> An alternative could be to disable the ADD_ADDR retransmissions by
+> default, but that's changing the default kernel behaviour. Plus,
+> ADD_ADDR retransmissions can be required for some tests. To avoid adding
+> exceptions to many tests, it seems better to increase the tolerance.
+> 
+> Later, we could add a new MIB counter to identify the ADD_ADDR
+> retransmissions, and remove the tolerance when this counter is
+> available.
+> 
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> ---
+>  tools/testing/selftests/net/mptcp/mptcp_join.sh | 19 +++++++------------
+>  1 file changed, 7 insertions(+), 12 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> index 2f046167a0b6cc6fb5531a033d8d95c9ea399cf9..be49712f91155a1f14f6cc21776764d65a897c27 100755
+> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> @@ -358,6 +358,7 @@ reset_with_add_addr_timeout()
+>  		tables="${ip6tables}"
+>  	fi
+>  
+> +	# set a maximum, to avoid too long timeout with exponential backoff
+>  	ip netns exec $ns1 sysctl -q net.mptcp.add_addr_timeout=1
+>  
+>  	if ! ip netns exec $ns2 $tables -A OUTPUT -p tcp \
+> @@ -1669,7 +1670,6 @@ chk_add_nr()
+>  	local tx=""
+>  	local rx=""
+>  	local count
+> -	local timeout
+>  
+>  	if [[ $ns_invert = "invert" ]]; then
+>  		ns_tx=$ns2
+> @@ -1678,15 +1678,13 @@ chk_add_nr()
+>  		rx=" server"
+>  	fi
+>  
+> -	timeout=$(ip netns exec ${ns_tx} sysctl -n net.mptcp.add_addr_timeout)
+> -
+>  	print_check "add addr rx${rx}"
+>  	count=$(mptcp_lib_get_counter ${ns_rx} "MPTcpExtAddAddr")
+>  	if [ -z "$count" ]; then
+>  		print_skip
+> -	# if the test configured a short timeout tolerate greater then expected
+> -	# add addrs options, due to retransmissions
+> -	elif [ "$count" != "$add_nr" ] && { [ "$timeout" -gt 1 ] || [ "$count" -lt "$add_nr" ]; }; then
+> +	# Tolerate more ADD_ADDR then expected (if any), due to retransmissions
+> +	elif [ "$count" -lt "$add_nr" ] ||
+> +	     { [ "$count" != "$add_nr" ] && [ "$add_nr" != 0 ]; }; then
 
-Thank you for your modifications, that's great!
+Arf, it should be:
 
-Our CI did some validations and here is its report:
+  "$add_nr" == 0
+>  		fail_test "got $count ADD_ADDR[s] expected $add_nr"
+>  	else
+>  		print_ok
+> @@ -1774,18 +1772,15 @@ chk_add_tx_nr()
+>  {
+>  	local add_tx_nr=$1
+>  	local echo_tx_nr=$2
+> -	local timeout
+>  	local count
+>  
+> -	timeout=$(ip netns exec $ns1 sysctl -n net.mptcp.add_addr_timeout)
+> -
+>  	print_check "add addr tx"
+>  	count=$(mptcp_lib_get_counter ${ns1} "MPTcpExtAddAddrTx")
+>  	if [ -z "$count" ]; then
+>  		print_skip
+> -	# if the test configured a short timeout tolerate greater then expected
+> -	# add addrs options, due to retransmissions
+> -	elif [ "$count" != "$add_tx_nr" ] && { [ "$timeout" -gt 1 ] || [ "$count" -lt "$add_tx_nr" ]; }; then
+> +	# Tolerate more ADD_ADDR then expected (if any), due to retransmissions
+> +	elif [ "$count" -lt "$add_tx_nr" ] ||
+> +	     { [ "$count" != "$add_tx_nr" ] && [ "$add_tx_nr" != 0 ]; }; then
 
-- KVM Validation: normal: Unstable: 1 failed test(s): =
-selftest_mptcp_connect =F0=9F=94=B4
-- KVM Validation: debug: Unstable: 3 =
-failed test(s): packetdrill_add_addr selftest_mptcp_connect_checksum =
-selftest_mptcp_join =F0=9F=94=B4
-- KVM Validation: btf-normal (only =
-bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only =
-bpftest_all): Success! =E2=9C=85
-- Task: https://github.=
-com/multipath-tcp/mptcp_net-next/actions/runs/17463051487
+Same here:
 
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/7003d852301a
-Patchwork: https://patchwork.kernel.=
-org/project/mptcp/list/?series=3D998827
+  "$add_tx_nr" == 0
 
+If there is nothing else, I can fix that when applying the patches.
 
-If there are some issues, you can=
- reproduce them using the same environment as
-the one used by the CI thanks=
- to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
-
-
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
+>  		fail_test "got $count ADD_ADDR[s] TX, expected $add_tx_nr"
+>  	else
+>  		print_ok
+> 
 
 Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 Core)
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
+
