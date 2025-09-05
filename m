@@ -1,124 +1,113 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E47830C634
-	for <mptcp@lists.linux.dev>; Fri,  5 Sep 2025 10:56:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3190323BCE7
+	for <mptcp@lists.linux.dev>; Fri,  5 Sep 2025 18:19:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757069800; cv=none; b=U0CbMB6BRf7LuH3ruRwqg/I+mgSgEfqTJqrugZuTPvPlvRhwFl90s6Rx0pvoZk/ZrM5dH96KTi9Ijkhp994CMYbemPqnikCxFz/0Qiw5OwYnkQjidxCfsIt9CzXSaxxcmXFCY1iw1bXNXsN/pfdKFW6u6YKRzzAXTX9GyfFEJ6c=
+	t=1757096356; cv=none; b=uSGbqz2pZJaKNC3XCUUUhUo6FHkRKCiqA2wR39SkavP/D9/XVKqP4giDEE8du+EV3ngHP3OFMkADwjPrG6mm3gfamposLKWniSrbBYHoN/LZxVLckCctv6M+WnicFNFxYYegl8+nkSqIlmDihU+fHoyrrcKDqAuAc5CLCR+JjXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757069800; c=relaxed/simple;
-	bh=ZJsc+9bXJXx6ozpNJt+QyqBVaflzXqNUo3QOvyZh25w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GSM5Geo0BND7H85ScX960mSJZ5hBN8ez66VHhR4AuX0oMIkeijJj9CH1ozsye8hES5TCcRQ/EzBTPGWckX5Eji94dg50Lm9YPLJ6952o5RJDg9iodwW3QKFhF9fKqyxeyo/H437aXJsWOkoB/ly88CXyWYG8ZaxHHJWJNA6seZs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nj6EwZp0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1757096356; c=relaxed/simple;
+	bh=Iihxuinu7ht5VuPhqiYuepxTuYMTXiFUefLxpFODc64=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Uu4URIZUN/r6lgcBnZnddkFMSQMTZP1Hkj6q/DQA6157QK3iMvNogpIv7LQObBDk7EBFnIy3fsv+dLHIfeNQ9S0foeYqEqzP1tEFCXjHiPhpbEjOQGYjd8VV8aseP5z8LmZKzVC/tLhwhARnfrQSsH5vamxmZpIRf6p2l/78XPA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ax44pBTs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nj6EwZp0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F40F0C4CEF1;
-	Fri,  5 Sep 2025 10:56:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ax44pBTs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E0F9C4CEF7;
+	Fri,  5 Sep 2025 18:19:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757069799;
-	bh=ZJsc+9bXJXx6ozpNJt+QyqBVaflzXqNUo3QOvyZh25w=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Nj6EwZp0OyQYlHgpQrwjtxzKYdwOyqlZRNv5tYwudT22NI5FTXQTC4pttdSyuTbqj
-	 eonZDjTGhZ4U/NUUFPfsVDjqI8CAex9tTvB0wTXKwxkdRITpruhIgmBRokNj6rg5cH
-	 iyz4M7C/6eTEfjmnElm5jYC2+GuZYug81LV61CknoARh5YHlkx0K6t3mrtWQFDYHtw
-	 SpXnFpGbbqcQLzzAhAEVSoCGhRpiVSalT+d+dG8Fj0dwh1NlDlVCQkZZwdCm2y3MH3
-	 4xmdzBZonoAkqUuG6XU3knAJt84RUp2RAOLNOWhRuj3C6l17j23KVdhSQeuMDy8xYx
-	 6bw0Qv1H2h+Xw==
-Message-ID: <ac8a93b2-5cf5-4dbc-8876-bfbfb50d5d96@kernel.org>
-Date: Fri, 5 Sep 2025 12:56:36 +0200
+	s=k20201202; t=1757096355;
+	bh=Iihxuinu7ht5VuPhqiYuepxTuYMTXiFUefLxpFODc64=;
+	h=From:Subject:Date:To:Cc:From;
+	b=Ax44pBTsioYxpkJkp34/PqjYdGwBJFGkFwiFK2zRRMqBrUxuYlLWtvXe6RmVJyjhp
+	 Yza+gi9zeb07vRF1Nagam15KjXI4DWsk2GgFOFu8uLvUVoNJF1U+fuE/LlGgMrwcUv
+	 6avGOIvU8TM4L5Z6GQA7kuXYiwOObUMXje6o2ctm6Lql8V0j1+0SXVMe99zOIVOlT1
+	 Bw+zYbnf+o3Qedg6ubUGP5ZHaQi3ri3JTG93/GYGhyj+dPCskQDAH+JS8TIk0aw4lT
+	 2ar9HXh0K8Mm8LvGbqRSTPwm75c4EA0q9TVbWg2BSF1Mp5brigOUxDy2uCv5z8ri17
+	 KaUoB3iwlANdg==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH mptcp-net v2 0/5] selftests: mptcp: avoid spurious errors
+ on TCP disconnect
+Date: Fri, 05 Sep 2025 20:18:49 +0200
+Message-Id: <20250905-sft-mptcp-disc-err-v2-0-dfb3b6b4a877@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v2 0/3] mptcp: fixes for adaptive ADD_ADDR
- retransmission timeout
-Content-Language: en-GB, fr-BE
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <geliang@kernel.org>
-References: <20250904-sft-mptcp-join-add_addr-no-retrans-v2-0-a019e6678628@kernel.org>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <20250904-sft-mptcp-join-add_addr-no-retrans-v2-0-a019e6678628@kernel.org>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAIkpu2gC/22NwQ6CMBBEf4Xs2TVtCWA9+R+Gg20XaNTSbBuiI
+ fy7DVw9TubNmxUSsacE12oFpsUnP4cS1KkCOz3CSOhdyaCEasRFtJiGjO+YbUTnk0VixrpuOtO
+ 12lhnoAwj0+A/u/QOBxsoQ1+qyac883e/W+QOHGap/5kXiQK1E3ZQujVW1rcncaDXeeYR+m3bf
+ rcBUD7AAAAA
+X-Change-ID: 20250806-sft-mptcp-disc-err-3357b769bcdb
+To: mptcp@lists.linux.dev
+Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2660; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=Iihxuinu7ht5VuPhqiYuepxTuYMTXiFUefLxpFODc64=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDJ2a85ruPyH8Z3zzguXbmz89eZjv1KU1tftp+OM/qRUX
+ ttzLbdQrKOUhUGMi0FWTJFFui0yf+bzKt4SLz8LmDmsTCBDGLg4BWAiU10Z/hn0nz3xVEtR3zf2
+ N9dJ1Zm+arrz+6xWGEXJLlf/ICz06h7DL+Z5L5TV1jivNdSM3OxwsW4qSy9nd/9fjR7FmA0KbF4
+ K/AA=
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hi Geliang,
+This should fix the recent instabilities seen by MPTCP and NIPA CIs
+where the 'mptcp_connect.sh' tests fail regularly when running the
+'disconnect' subtests with "plain" TCP sockets, e.g.
 
-On 04/09/2025 13:38, Matthieu Baerts (NGI0) wrote:
-> The recent patch "mptcp: make ADD_ADDR retransmission timeout adaptive"
-> seems causing some unstable tests, see the links below.
-> 
-> The modification in the selftest is reverted, and more tolerance is
-> added instead.
-> 
-> While at it, slow down some signalling tests.
+  # INFO: disconnect
+  # 63 ns1 MPTCP -> ns1 (10.0.1.1:20001      ) MPTCP     (duration   996ms) [ OK ]
+  # 64 ns1 MPTCP -> ns1 (10.0.1.1:20002      ) TCP       (duration   851ms) [ OK ]
+  # 65 ns1 TCP   -> ns1 (10.0.1.1:20003      ) MPTCP     Unexpected revents: POLLERR/POLLNVAL(19)
+  # (duration   896ms) [FAIL] file received by server does not match (in, out):
+  # -rw-r--r-- 1 root root 11112852 Aug 19 09:16 /tmp/tmp.hlJe5DoMoq.disconnect
+  # Trailing bytes are:
+  # /{ga 6@=#.8:-rw------- 1 root root 10085368 Aug 19 09:16 /tmp/tmp.blClunilxx
+  # Trailing bytes are:
+  # /{ga 6@=#.8:66 ns1 MPTCP -> ns1 (dead:beef:1::1:20004) MPTCP     (duration   987ms) [ OK ]
+  # 67 ns1 MPTCP -> ns1 (dead:beef:1::1:20005) TCP       (duration   911ms) [ OK ]
+  # 68 ns1 TCP   -> ns1 (dead:beef:1::1:20006) MPTCP     (duration   980ms) [ OK ]
+  # [FAIL] Tests of the full disconnection have failed
 
-Thank you for the review!
+Patch 3 fixes this issue, but a fix in MPTCP in patch 1 is also needed
+to fix MPTCP behaviour, and simplify patch 3. Patches 2 and 4 improve
+some errors reported by the selftests, and patch 5 helps with the
+debugging. I guess all these patches can be sent to 'net'
 
-Now in our tree, with the suggested fix:
+Note: Patch 1 will cause errors in Packetdrill, that's normal, see [1].
 
-New patches for t/upstream:
-- a37ad3e9fe07: "squashed" patch 1/3 in "selftests: mptcp: remove
-add_addr_timeout settings"
-- 97cd737c96db: selftests: mptcp: join: tolerate more ADD_ADDR
-- 1782e66db572: selftests: mptcp: join: allow more time to send ADD_ADDR
-- Results: b908f5af710b..9335a0684b09 (export)
+Link: https://github.com/multipath-tcp/packetdrill/pull/171 [1]
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+Changes in v2:
+- Patch 1: new
+- Patch 3: no more state filtering needed thanks to patch 1
+- Patch 4: switch from hexdump to od (Mat)
+- Patch 5: new
+- Link to v1: https://lore.kernel.org/r/20250819-sft-mptcp-disc-err-v1-0-9d0cf296bc13@kernel.org
 
-Tests are now in progress:
+---
+Matthieu Baerts (NGI0) (5):
+      mptcp: propagate shutdown to subflows when possible
+      selftests: mptcp: connect: catch IO errors on listen side
+      selftests: mptcp: avoid spurious errors on TCP disconnect
+      selftests: mptcp: print trailing bytes with od
+      selftests: mptcp: connect: print pcap suffix
 
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/f109be59e49a8e13d97704bde7c726ff26835034/checks
+ net/mptcp/protocol.c                               | 16 ++++++++++++++++
+ tools/testing/selftests/net/mptcp/mptcp_connect.c  | 10 +++++++---
+ tools/testing/selftests/net/mptcp/mptcp_connect.sh |  6 +++++-
+ tools/testing/selftests/net/mptcp/mptcp_lib.sh     |  2 +-
+ 4 files changed, 29 insertions(+), 5 deletions(-)
+---
+base-commit: 9335a0684b0967cc704105e953f2a9d893fbcf57
+change-id: 20250806-sft-mptcp-disc-err-3357b769bcdb
 
-Cheers,
-Matt
+Best regards,
 -- 
-Sponsored by the NGI0 Core fund.
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
