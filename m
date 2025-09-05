@@ -1,187 +1,256 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C7861F4190
-	for <mptcp@lists.linux.dev>; Fri,  5 Sep 2025 09:00:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85E9E2868B3
+	for <mptcp@lists.linux.dev>; Fri,  5 Sep 2025 09:52:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757062831; cv=none; b=utJlzzzHQhltyXSzMzAldPK86eJQNYsEb58N+yGxN/a4/fKb+SnoB8L8dw7hUmOolsP2urw56X++PBxeEs2zzk0Y+QX6lxEEiUEPEdbl/v7Z5KWE5ZTcVAsbHC5d1MHKPsOmE3B66EgwhJQcXi8sGs3ck2PxKZEQln77JtzjsLo=
+	t=1757065928; cv=none; b=cC1meprnlzEVAJ31x4uXzbZGzo+rLFTQGxyHUjtNYBwBDMkBbdZhXz+UPbMGhDxjC3Vp99o0n0o+f6Qzo+TaX3f57jRmRz+JA0JrRaaG5SpzbXkYdyCOkI5j2xFTgog86BVnhEgW4JQ3WNSA/CxS/hsbfgOk2d2iz9aq2GhBnMk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757062831; c=relaxed/simple;
-	bh=sX5+iKnEPZtgzup2fJOaFwSt/b4LZT9+FWhEQKYxa+0=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=BKN2E0PHPCn1z3XFRPTAqwRaJnPy+1xcbikS9RphkQqUqHoDgIhdiA7L88Y66XKoYilEsu1L1GK4iLYqG/h1xVqZucrn4A6tWdo8cFJJN23wkqgu2C5J7QuKcyGt7rIkLFJZcWwMSVrpW8xKzJqCfuoRBYH8PHbcpGNecq9kujQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=obbHgR2q; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1757065928; c=relaxed/simple;
+	bh=pOkJTqgurHN5NPWGf8REdYeDvSdgnz2RA4oq+D13dMU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=Q47G4xm0tOYGS6VRPcrig+uUbxz03wgw8eOBW8EWE5m5yxU9iMFpFHPraC1mf4bB5//AfwUSMODrnN013sCV9X4kF69kS8VSXnx/0YoTbtQCML1g4xSCzHYV6oZ6Q89hgtGWBDCIDHSRqIZT85MfkK4c80Yfs/P+qUep3Z9PDwo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hf8ae2H8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="obbHgR2q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFB6DC4CEF1;
-	Fri,  5 Sep 2025 09:00:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hf8ae2H8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77F0DC4CEF1;
+	Fri,  5 Sep 2025 09:52:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757062830;
-	bh=sX5+iKnEPZtgzup2fJOaFwSt/b4LZT9+FWhEQKYxa+0=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=obbHgR2qzp9nSvKcyo0+hXtMBVoEM2YctMDSVZ4MHsxjF3Dd1vBb8Zg4DT5NXCpZs
-	 oE4jRZF+5xptltZek4gISQ86SLoPaGhDiH4flFY/e6lHp3Lb4Cpy/yF3AV+2NU0G/z
-	 bkEhPrEwBCmWixdEn2f3Qn0zVb9772JJaSenJaCf27omoqwWhW1GcMB/VBIBkYntjQ
-	 st2uF0cm0NZkwUOz86fdgWh6iPPaNVtzVPgn3awoFTUPK/eGWOqw+WYPwSUCMgK4X1
-	 iS8PG1HaFrgPsMCoxYignw9WCmG+N9NaQQdhaC+3HaBkavrjh87IVzW7gSqmtjS38B
-	 FqUhoRg3LJv8g==
-Message-ID: <cd91d2ed160abe3e5b99b06ed985c8d0dddf1b20.camel@kernel.org>
-Subject: Re: Add Multipath TCP (MPTCP) Support to the Java Networking API
-From: Geliang Tang <geliang@kernel.org>
-To: Matthieu Baerts <matttbe@kernel.org>, Mat Martineau
- <martineau@kernel.org>,  Gang Yan <yangang@kylinos.cn>, Xiang Gao
- <gaoxiang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Date: Fri, 05 Sep 2025 17:00:20 +0800
-In-Reply-To: <00cc9a4fa008cd346c8c12a044d5c41b5af58a6f.camel@kernel.org>
-References: <00cc9a4fa008cd346c8c12a044d5c41b5af58a6f.camel@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.56.0-1 
+	s=k20201202; t=1757065928;
+	bh=pOkJTqgurHN5NPWGf8REdYeDvSdgnz2RA4oq+D13dMU=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=Hf8ae2H8yiFPifzXOcwuXCF27y/kX4I/mqetAnsHE532L66GpCl2M7M2eroMxlNMd
+	 vDZae9MlIWb2yVv9YwaLprWtOnWPu1lDUIx2klHodndMxfRqyKYOEO0TuO5KRX23kO
+	 8lOvIFpt5e2eOpr/ZPaSdzm+pvTVTqyuhimHh89KVAFqmXc5CrAqHDF7SkiQT53amO
+	 0m5GEcO8rkxliybHwIgubPCubyud46Rc1cFCtnnRe2znyNgrBxOHOfCR1jpI9j6ghg
+	 1kWyLlLClSzs7YeF1PrB0pyNW0q23NZJ6jggLknEplNhiQXYX75FyFuUrfksmQlCr+
+	 C2jezvaFKm5zg==
+Message-ID: <5fad60c8-d218-4087-a7bf-a65cee6b86aa@kernel.org>
+Date: Fri, 5 Sep 2025 11:52:05 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-next v2 2/3] selftests: mptcp: join: tolerate more
+ ADD_ADDR
+Content-Language: en-GB, fr-BE
+To: Geliang Tang <geliang@kernel.org>, MPTCP Linux <mptcp@lists.linux.dev>
+References: <20250904-sft-mptcp-join-add_addr-no-retrans-v2-0-a019e6678628@kernel.org>
+ <20250904-sft-mptcp-join-add_addr-no-retrans-v2-2-a019e6678628@kernel.org>
+ <cde1771d-2383-42cb-97e3-92d53e42b381@kernel.org>
+ <21ee1ae6c2d86739387e3e9709fbd630d5e5bdc5.camel@kernel.org>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <21ee1ae6c2d86739387e3e9709fbd630d5e5bdc5.camel@kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi,
+Hi Geliang,
 
-I just received a message that this email was not delivered: Your
-message to net-dev awaits moderator approval, reason: Post by non-
-member to a members-only list. So I had to subscribe to the openjdk
-net-dev and core-libs-dev mailing lists and resend the email.
+On 05/09/2025 10:16, Geliang Tang wrote:
+> Hi Matt,
+> 
+> Thanks for this new version, and thanks for the explanation in v1.
+> 
+> On Thu, 2025-09-04 at 16:54 +0200, Matthieu Baerts wrote:
+>> On 04/09/2025 13:38, Matthieu Baerts (NGI0) wrote:
+>>> ADD_ADDR can be retransmitted, and with, the parent commit, these
+>>> retransmissions can be sent quicker: from 2 minutes to less than
+>>> one
+>>> second.
+>>>
+>>> To avoid false positives where retransmitted ADD_ADDR causes higher
+>>> counters than expected, it is required to be more tolerant. Errors
+>>> are
+>>> now only reported when fewer ADD_ADDRs have been sent/received,
+>>> except
+>>> if no ADD_ADDR are expected.
+>>>
+>>> Before the parent commit, the tolerance was present for each tests
+>>> where
+>>> the ADD_ADDR could be retransmitted in a reasonable time (1 sec).
+>>> Now
+>>> that all tests can have retransmitted ADD_ADDR, it is normal to
+>>> apply
+>>> the same tolerance for all tests.
+>>>
+>>> An alternative could be to disable the ADD_ADDR retransmissions by
+>>> default, but that's changing the default kernel behaviour. Plus,
+>>> ADD_ADDR retransmissions can be required for some tests. To avoid
+>>> adding
+>>> exceptions to many tests, it seems better to increase the
+>>> tolerance.
+>>>
+>>> Later, we could add a new MIB counter to identify the ADD_ADDR
+>>> retransmissions, and remove the tolerance when this counter is
+>>> available.
+>>>
+>>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+>>> ---
+>>>  tools/testing/selftests/net/mptcp/mptcp_join.sh | 19 +++++++------
+>>> ------
+>>>  1 file changed, 7 insertions(+), 12 deletions(-)
+>>>
+>>> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+>>> b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+>>> index
+>>> 2f046167a0b6cc6fb5531a033d8d95c9ea399cf9..be49712f91155a1f14f6cc217
+>>> 76764d65a897c27 100755
+>>> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+>>> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+>>> @@ -358,6 +358,7 @@ reset_with_add_addr_timeout()
+>>>  		tables="${ip6tables}"
+>>>  	fi
+>>>  
+>>> +	# set a maximum, to avoid too long timeout with
+>>> exponential backoff
+>>>  	ip netns exec $ns1 sysctl -q net.mptcp.add_addr_timeout=1
+>>>  
+>>>  	if ! ip netns exec $ns2 $tables -A OUTPUT -p tcp \
+>>> @@ -1669,7 +1670,6 @@ chk_add_nr()
+>>>  	local tx=""
+>>>  	local rx=""
+>>>  	local count
+>>> -	local timeout
+>>>  
+>>>  	if [[ $ns_invert = "invert" ]]; then
+>>>  		ns_tx=$ns2
+>>> @@ -1678,15 +1678,13 @@ chk_add_nr()
+>>>  		rx=" server"
+>>>  	fi
+>>>  
+>>> -	timeout=$(ip netns exec ${ns_tx} sysctl -n
+>>> net.mptcp.add_addr_timeout)
+>>> -
+>>>  	print_check "add addr rx${rx}"
+>>>  	count=$(mptcp_lib_get_counter ${ns_rx} "MPTcpExtAddAddr")
+>>>  	if [ -z "$count" ]; then
+>>>  		print_skip
+>>> -	# if the test configured a short timeout tolerate greater
+>>> then expected
+>>> -	# add addrs options, due to retransmissions
+>>> -	elif [ "$count" != "$add_nr" ] && { [ "$timeout" -gt 1 ]
+>>> || [ "$count" -lt "$add_nr" ]; }; then
+>>> +	# Tolerate more ADD_ADDR then expected (if any), due to
+>>> retransmissions
+>>> +	elif [ "$count" -lt "$add_nr" ] ||
+>>> +	     { [ "$count" != "$add_nr" ] && [ "$add_nr" != 0 ]; };
+>>> then
+>>
+>> Arf, it should be:
+>>
+>>   "$add_nr" == 0
+> 
+> It should indeed be "$add_nr" == 0.
+> 
+> nit:
+> 
+> Is it possible to keep the same order as before when checking
+> "$timeout", just replace [ "$timeout" -gt 1 ] with [ "$add_nr" == 0 ]?
+> 
+> That is:
+> 
+> elif [ "$count" != "$add_nr" ] && { [ "$add_nr" == 0 ] || [ "$count" -
+> lt "$add_nr" ]; }; then
+> 
+> Although they are actually the same, I usually try to keep it
+> consistent with the original code.
 
-If you want to reply to this email in the future, please subscribe to
-these two mailing lists before replying:
+Good point, even if I found the check "-lt || (-gt && = 0)" maybe more
+logical, with the v2, we are closer to the original code, I can do this
+modification.
 
-https://mail.openjdk.org/mailman/listinfo/net-dev
-https://mail.openjdk.org/mailman/listinfo/core-libs-dev
+> 
+>>>  		fail_test "got $count ADD_ADDR[s] expected
+>>> $add_nr"
+>>>  	else
+>>>  		print_ok
+>>> @@ -1774,18 +1772,15 @@ chk_add_tx_nr()
+>>>  {
+>>>  	local add_tx_nr=$1
+>>>  	local echo_tx_nr=$2
+>>> -	local timeout
+>>>  	local count
+>>>  
+>>> -	timeout=$(ip netns exec $ns1 sysctl -n
+>>> net.mptcp.add_addr_timeout)
+>>> -
+>>>  	print_check "add addr tx"
+>>>  	count=$(mptcp_lib_get_counter ${ns1} "MPTcpExtAddAddrTx")
+>>>  	if [ -z "$count" ]; then
+>>>  		print_skip
+>>> -	# if the test configured a short timeout tolerate greater
+>>> then expected
+>>> -	# add addrs options, due to retransmissions
+>>> -	elif [ "$count" != "$add_tx_nr" ] && { [ "$timeout" -gt 1
+>>> ] || [ "$count" -lt "$add_tx_nr" ]; }; then
+>>> +	# Tolerate more ADD_ADDR then expected (if any), due to
+>>> retransmissions
+>>> +	elif [ "$count" -lt "$add_tx_nr" ] ||
+>>> +	     { [ "$count" != "$add_tx_nr" ] && [ "$add_tx_nr" != 0
+>>> ]; }; then
+>>
+>> Same here:
+>>
+>>   "$add_tx_nr" == 0
+>>
+>> If there is nothing else, I can fix that when applying the patches.
+> 
+> No need to send a v3, please fix it when applying it.
+> 
+> Reviewed-by: Geliang Tang <geliang@kernel.org>
 
-Thanks,
--Geliang
+Thanks!
 
-On Fri, 2025-09-05 at 09:43 +0800, Geliang Tang wrote:
-> Hi OpenJDK maintainers,
-> 
-> I hope this message finds you well. The purpose of this letter is to
-> propose the integration of Multipath TCP (MPTCP) support into
-> OpenJDK.
-> We have developed a set of patches to enable this functionality and
-> are
-> eager to submit it for upstream inclusion. We would greatly
-> appreciate
-> your feedback and opinions on this contribution.
-> 
-> 1. Introduction
-> 
-> Multipath TCP (MPTCP), as standardized in RFC 8684, is a major
-> evolution of the TCP protocol. It enables a transport connection to
-> use
-> multiple network paths simultaneously for redundancy, resilience, and
-> bandwidth aggregation. Since its introduction in Linux kernel v5.6,
-> it
-> has become a key technology for modern networking, particularly on
-> mobile devices with multiple interfaces (e.g., Wi-Fi and cellular).
-> 
-> Key benefits include:
-> 
->     Bandwidth Aggregation: Combine the bandwidth of multiple network
-> links.
-> 
->     Seamless Handover: Maintain connections when switching networks
-> without dropping the session.
-> 
->     Improved Resilience: Traffic is automatically rerouted if one
-> path
-> fails.
-> 
-> For more details, see the project website: https://mptcp.dev.
-> 
-> 2. Technical Background
-> 
-> On a supporting system like Linux, an MPTCP socket is created by
-> specifying the IPPROTO_MPTCP protocol in the socket() system call
-> instead of IPPROTO_TCP (or 0):
-> 
->     int fd = socket(AF_INET, SOCK_STREAM, IPPROTO_MPTCP);
-> 
-> This creates a socket that looks like a standard TCP socket to the
-> application but uses the MPTCP protocol stack underneath.
-> 
-> With the Java API, it is possible to create "stream" sockets, but it
-> is
-> not possible to change the last argument, which blocks apps to ask to
-> use MPTCP.
-> 
-> 3. Proposed Java API Changes
-> 
-> The goal is to allow Java applications to opt-in to using MPTCP when
-> creating sockets, without breaking existing code. The proposed
-> changes
-> are additive and backward-compatible.
-> 
-> The core idea is to add a boolean mptcp parameter through the API
-> layers, from the public Socket class down to the native system call.
-> 
-> 4. Implementation Plan
-> 
-> The implementation involves changes across four layers of the JDK:
-> 
-> JNI Layer (sun.nio.ch.Net):
-> 
-> Modify Java_sun_nio_ch_Net_socket0 to accept a new jboolean mptcp
-> parameter.
-> 
->     The native implementation will be updated to use this parameter:
-> 
->     int protocol = mptcp == JNI_TRUE ? IPPROTO_MPTCP : 0;
->     fd = socket(domain, type, protocol);
-> 
-> NIO Layer (sun.nio.ch):
-> 
->     Add the mptcp parameter to the Net.socket() and
-> Net.serverSocket()
-> methods.
-> 
->     Propagate the parameter down to the JNI call.
-> 
-> Socket Implementation Layer (java.net):
-> 
->     Add the mptcp parameter to the constructor of NioSocketImpl.
-> 
->     Within NioSocketImpl, pass the parameter to the Net.socket() or
-> Net.serverSocket() calls.
-> 
-> Public API Layer (java.net.Socket & java.net.ServerSocket):
-> 
->     Add new constructors that accept the mptcp parameter.
-> 
->     Example:
-> 
->         // Proposed new constructor
->         public Socket(String host, int port, boolean stream, boolean
-> mptcp) throws IOException {
->             // ... implementation that passes 'mptcp' to
-> NioSocketImpl
->         }
-> 
-> 5. Full Implementation
-> 
-> The complete working implementation for this proposal is available
-> for
-> review:
-> 
-> https://github.com/openjdk/jdk/compare/master...geliangtang:jdk:master
-> 
-> We look forward to your valuable feedback and suggestions on this
-> proposal.
-> 
-> we can create a new issue for this feature, and submit a proper pull
-> request after if that's OK for you. We didn't do that yet because we
-> noticed that it is recommended to send more explanations to this list
-> first.
-> 
-> Best regards,
-> MPTCP Upstream Developers
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
+
