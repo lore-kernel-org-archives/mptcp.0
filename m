@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3C20283FF5
-	for <mptcp@lists.linux.dev>; Fri,  5 Sep 2025 23:42:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1457BA4A
+	for <mptcp@lists.linux.dev>; Fri,  5 Sep 2025 23:49:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757115772; cv=none; b=cRhxJ+pbnxHmUf+SUgArV/d0RJHNAgl2QYmTSdcFG8MYlAnDYev0gSOcqEtY4/ACJXMS+Ir4yWEyl4rfzh2/49J0hqqM3SMsTZWj0T1MSaKt7bhpPXHJgqynvIiqcm2Rmjtbv+ljl4A9ogeUk1o+VhzPwiArsqt7ClPcsAmoMi8=
+	t=1757116189; cv=none; b=VM1fuKgnkn+XZ2xjy8JZDyRvpznHKR2bNfInHwT98iVpUbNcdgup8zGgYN3Zv32e6OYb03yYf8EuO+zdqGeiGf6b9sm9TxqdVf9xuJIyiiN+gd9Bz7Wy9xgfDXMa1XMWO45rVmjfFCxg3/m8smdZ6ntatjkndH7JpqJOsc8FAdA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757115772; c=relaxed/simple;
-	bh=4pegDz6mA+HSowRpao6lmvY23H6o4Q6EaOnalmDKvXE=;
+	s=arc-20240116; t=1757116189; c=relaxed/simple;
+	bh=yM7W2oSvoTKPL3cpKqLsScGs0TNYS39p6i+a8S+OiV8=;
 	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=lj8jYGna8CJsE+pIp4kUjUzTMbd/oXid/Bb+5GC0ResXyRSBUDyMyuo/vlGpC461j767PiSKW75IcCKPZ2mFk0xjZ1xK/aeTX3g7ivyItqBp1FAQ24Zcm7KttWNuyy2T0zZSJddqqVy78e77c87S2mUu8HT5gBX5vt6nOEMD8BQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WNSTmUcS; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=Rq4OF7nLxQgIy8i2mAIeSJX714EBBa/sdxBiGHzObggLcCfD7hnbBKghds8eEpFKI6yE4U+j0xLWlsHY9hEAF58SR7TNlDJlUJ6HBT0Tr6fjpX0kmmcmMR85N3+1K/MsTPMN2Dpo9izNsUtDl3NF3nsJGxib76FrVq635inVAxU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S5gwJXU5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WNSTmUcS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8555CC4CEF1;
-	Fri,  5 Sep 2025 23:42:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S5gwJXU5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E42DBC4CEF1;
+	Fri,  5 Sep 2025 23:49:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757115772;
-	bh=4pegDz6mA+HSowRpao6lmvY23H6o4Q6EaOnalmDKvXE=;
+	s=k20201202; t=1757116187;
+	bh=yM7W2oSvoTKPL3cpKqLsScGs0TNYS39p6i+a8S+OiV8=;
 	h=Subject:From:To:Date:In-Reply-To:References:From;
-	b=WNSTmUcSRKnkPPledAbFDhWG48N0Ocj0oM56YDgxPaYrbN6PTjArNDxPQjfoJzOeh
-	 dixhwjq2MrVNl8/3QbiLJTSWGvpCY5uopQkTyFP0/G/ls021VzqkXvXD+MOE/aN3Eu
-	 V9XgCz1dUko/urckJrhU6TwSQyPwz1FrukSdelwzJ4z7aOuvFO0jHKxiFlpkG7/1HI
-	 N0P9bJUg//4kj/OUCfz/XQMfk2yv4ne60Of0aye6vUEGFKQQrMtCGA3QTim2qFvuwf
-	 OblfmQyAw9sTl6j43Aq7kUqoVMagZNbSlNPm41icxV6CcL7ivBJKkR520GCSZRYqRu
-	 fqkbqZ/fkWSRA==
-Message-ID: <0ebf9d7a70ebc16b66b6c609606b28791a145d04.camel@kernel.org>
-Subject: Re: [PATCH mptcp-net v2 4/5] selftests: mptcp: print trailing bytes
- with od
+	b=S5gwJXU53Nms2F2t7P5owYAIWPL6muCDgxgi7A0qVmSM1ZgBq3znQCastnAi9aUHn
+	 1tXCsfX6ezofEDnWzLV13nJkgQp/OPbCbChxteuhYTYFxWVJwP/D30wHVjLGRGac+k
+	 akG+0OyDRaze84PxS67UpoYHx4mNvu0AceuGugkvY9s38qesChC0lYLQvVGFUBOKtf
+	 8xc9uUKoZb898pizOTS2VZ3pILBtERqD/EVhi95mbd4u5aijUBIOJ4zXl7y63XHmtW
+	 WvtBNTdgPyJ8xe4PG0c6039YYqQdXfH5Vcbx+g0IcRI2WFFYmT8bMf2dnNRkfErrbF
+	 Jm6rO6GgmB2Vw==
+Message-ID: <39e9e5644c96315181e19d5db1b2b44cb48fbf8a.camel@kernel.org>
+Subject: Re: [PATCH mptcp-net v2 2/5] selftests: mptcp: connect: catch IO
+ errors on listen side
 From: Geliang Tang <geliang@kernel.org>
 To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, mptcp@lists.linux.dev
-Date: Sat, 06 Sep 2025 07:42:49 +0800
-In-Reply-To: <20250905-sft-mptcp-disc-err-v2-4-dfb3b6b4a877@kernel.org>
+Date: Sat, 06 Sep 2025 07:49:44 +0800
+In-Reply-To: <20250905-sft-mptcp-disc-err-v2-2-dfb3b6b4a877@kernel.org>
 References: <20250905-sft-mptcp-disc-err-v2-0-dfb3b6b4a877@kernel.org>
-	 <20250905-sft-mptcp-disc-err-v2-4-dfb3b6b4a877@kernel.org>
+	 <20250905-sft-mptcp-disc-err-v2-2-dfb3b6b4a877@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 User-Agent: Evolution 3.56.0-1 
 Precedence: bulk
@@ -46,46 +46,65 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
 On Fri, 2025-09-05 at 20:18 +0200, Matthieu Baerts (NGI0) wrote:
-> This is better than printing random bytes in the terminal.
+> IO errors were correctly printed to stderr, and propagated up to the
+> main loop for the server side, but the returned value was ignored. As
+> a
+> consequence, the program for the listener side was no longer exiting
+> with an error code in case of IO issues.
 > 
-> Note Jakub suggested 'hexdump', but Mat found out that this tool is
-> not
-> often installed by default. 'od' can do a similar job, and it is in
+> Because of that, some issues might not have been seen. But very
+> likely,
+> most issues either had an effect on the client side, or the file
+> transfer was not the expected one, e.g. the connection got reset
+> before
+> the end. Still, it is better to fix this.
+> 
+> The main consequence of this issue is the error that was reported by
 > the
-> POSIX specs and available in coreutils, so it should be on more
-> systems.
+> selftests: the received and sent files were different, and the MIB
+> counters were not printed. Also, when such errors happened during the
+> 'disconnect' tests, the program tried to continue until the timeout.
 > 
-> Suggested-by: Jakub Kicinski <kuba@kernel.org>
-> Suggested-by: Mat Martineau <martineau@kernel.org>
+> Now when an IO error is detected, the program exits directly with an
+> error.
+> 
+> Fixes: 05be5e273c84 ("selftests: mptcp: add disconnect tests")
 > Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 > ---
-> v2: switch to 'od', and no more check for its presence (Mat)
-> ---
->  tools/testing/selftests/net/mptcp/mptcp_lib.sh | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  tools/testing/selftests/net/mptcp/mptcp_connect.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
 > 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-> b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c
+> b/tools/testing/selftests/net/mptcp/mptcp_connect.c
 > index
-> 09cd24b2ae466205dacbdf8289eb86c08534c475..d62e653d48b0f2ef7a01e289fa0
-> be8907825667d 100644
-> --- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-> @@ -384,7 +384,7 @@ mptcp_lib_make_file() {
->  mptcp_lib_print_file_err() {
->  	ls -l "${1}" 1>&2
->  	echo "Trailing bytes are: "
-> -	tail -c 27 "${1}"
-> +	tail -c 32 "${1}" | od -x | head -n2
+> 4f07ac9fa207cb08a934582b98d688d0b9512f97..c1586a7286123a509495ac319fd
+> 624b98f0bfd18 100644
+> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+> @@ -1112,6 +1112,8 @@ int main_loop_s(int listensock)
+>  	salen = sizeof(ss);
+>  	remotesock = accept(listensock, (struct sockaddr *)&ss,
+> &salen);
+>  	if (remotesock >= 0) {
+> +		int err;
+> +
+>  		maybe_close(listensock);
+>  		check_sockaddr(pf, &ss, salen);
+>  		check_getpeername(remotesock, &ss, salen);
+> @@ -1125,7 +1127,9 @@ int main_loop_s(int listensock)
+>  		SOCK_TEST_TCPULP(remotesock, 0);
+>  
+>  		memset(&winfo, 0, sizeof(winfo));
+> -		copyfd_io(fd, remotesock, 1, true, &winfo);
+> +		err = copyfd_io(fd, remotesock, 1, true, &winfo);
+> +		if (err)
+> +			return err;
 
-nit:
-
-It shows more bytes (32) here, but it wasn't mentioned in the commit
-log.
+The file descriptor (fd) should be closed before returning.
 
 Thanks,
 -Geliang
 
->  }
->  
->  # $1: input file ; $2: output file ; $3: what kind of file
+>  	} else {
+>  		perror("accept");
+>  		return 1;
