@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96DE62BDC27
-	for <mptcp@lists.linux.dev>; Fri,  5 Sep 2025 10:05:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00D4C2BE63F
+	for <mptcp@lists.linux.dev>; Fri,  5 Sep 2025 10:11:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757066722; cv=none; b=lSNuzRRzYlk2DWsyTIzA29JtJONn5Jd8AU2WA7g6Tbkc/xpp4j1evXMgtiLD8x+vJaaX0YyVRucXAPom5gMl67KH0uYubB1xzVlgTHuEtsFIIgmEBR7FZFp4cL1b0RRKGd9TLwV/T1xZrwHYG3XaY2//Sbs+h7htZeRALyHOB0k=
+	t=1757067088; cv=none; b=CtxNnyZhKSLJgpjUwZR3/FaktRbG6F5hOXq8uy3R1Sh1m+q6TCYAlWLIIOhjIlar/L/KX943BDiKFSvywZxkjugB0vuSyuKjVuT4HDbmE/JnHo4t3a2iAgXdfX1/QUOnUfTKwDi1jblZf0leZT0SfqJqW14ssUdJpa8EzVeUJ4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757066722; c=relaxed/simple;
+	s=arc-20240116; t=1757067088; c=relaxed/simple;
 	bh=ygluPnuwRBC+xyMfU07riKM/p3N34l1isKMkvlwjRu4=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=tAAqL2o/sxBifBzKA6D7ssN3IG0uL/vA/w7iIJGf6oEZkDW8PAStA8L4qPp8OghL1PZOC9hCfSea8aYEYTHqt7K8cYTa4/Nsf++dvBdapuSrbDVNMHhaoDs2skKw++Yw83Ne1tBOpPoE33d5UgQ4+USE9UIBVwUXMQWWRXRLaTE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hd5GWLSq; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=VngIdQvHawD7gp/jsUqURGNbO4cTn0DU7HwGMZMYqqn3+7mPIYSvkYDDxAAfxbdJxEueAF1mbnT92LNXlJMER/Bcrx/IPk6P2nJuyH+Loi82mHN/8nQ20TyHFOLN+Xr/tUQ7QeuuH3ACXn9mbK1saWdG9wFwoJpBkfqnSEx7RNo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aEq2rI//; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hd5GWLSq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F6A6C4CEF1;
-	Fri,  5 Sep 2025 10:05:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aEq2rI//"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81464C4CEF7;
+	Fri,  5 Sep 2025 10:11:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757066722;
+	s=k20201202; t=1757067087;
 	bh=ygluPnuwRBC+xyMfU07riKM/p3N34l1isKMkvlwjRu4=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=Hd5GWLSq7i/jCVExAf+E/8tuti041qWZJCaHeqZwJsG7YUkjewBFM0I9xaIQY9Z70
-	 EXB3gY/YRezjeOsu511EBOuxiNJ7+ItscbTkFfxzuM6UzNTDXcUCsN+TiTn562/9rs
-	 SmvvGE5ax06CIk7qTg2NQwQySqXVWvJ2enCDO5Bnj4/7DIobFrX/PlKWpCmKRt08Jy
-	 pljQAu6eZFMEHcsOqsHfW1IwILLaTGOI5EWB9kCAgjfkp7W0f2WKgFeN23cAh4tG3U
-	 NrRjhIk3sGAs0E4yCtXS5N9uXSVl7KFuQ1NIyBA6Sy0mhlAv9MVIHrJEp++Yr73qIb
-	 6PZmcdE0QxAMA==
-Message-ID: <7de753a3852e66e42e3087e14e94de9a95b3ed59.camel@kernel.org>
+	b=aEq2rI//OuMxVpRlpm+2+JCQvDFDXSpX5nFenWs3xwwFhxbkRxPzgc9tFmY4/vWrN
+	 P481z4RroTwx6jnZ1yVtJqqmkhAQbKoTfUHlS8RqebaJYfhMElKR5A6r8lQA5fyPj6
+	 54Z/lZzLeSoXemndKD0WotfeUjjNVRDLx3m+KZVLEaadzjPUStl6m9Fqs8Dhjs2dQ/
+	 NcI+bB81y/dsO8LiPLHj5CevWQaKsq8c0CZ6117YnaNscDsC3nJ2LtmOmcFEVwQWvc
+	 TpE4TgPDdvIMS6ddQ64yd0iBoflf4BPO+pd0JtUI5+XAERW8XDwBOzZm30ehxEs5yC
+	 rSNidQmy98n0w==
+Message-ID: <c01f7f30efd2f9fb3185f9ad82579eca8a613ac3.camel@kernel.org>
 Subject: Re: Add Multipath TCP (MPTCP) Support to the Java Networking API
 From: Geliang Tang <geliang@kernel.org>
 To: Alan Bateman <alan.bateman@oracle.com>, net-dev@openjdk.org, 
@@ -36,10 +36,10 @@ Cc: Matthieu Baerts <matttbe@kernel.org>, Mat Martineau
  <martineau@kernel.org>, 	mptcp@lists.linux.dev, Gang Yan
  <yangang@kylinos.cn>, Xiang Gao	 <gaoxiang@kylinos.cn>,
  core-libs-dev@openjdk.org
-Date: Fri, 05 Sep 2025 18:05:15 +0800
+Date: Fri, 05 Sep 2025 18:11:22 +0800
 In-Reply-To: <7403952e-14c1-4ba2-871e-0e2174fd5167@oracle.com>
 References: <da3912a3e0b03974305513219621856d33f82219.camel@kernel.org>
-	 <7403952e-14c1-4ba2-871e-0e2174fd5167@oracle.com>
+		 <7403952e-14c1-4ba2-871e-0e2174fd5167@oracle.com>
 Content-Type: text/plain; charset="UTF-8"
 User-Agent: Evolution 3.56.0-1 
 Precedence: bulk
