@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D00E723BCE7
-	for <mptcp@lists.linux.dev>; Fri,  5 Sep 2025 18:19:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 216F326D4D4
+	for <mptcp@lists.linux.dev>; Fri,  5 Sep 2025 18:19:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757096356; cv=none; b=SK1w6Y2E4TlZuw8pCFAEBv8i+DQzeg4GQPD76R9xn4tT6gB+vHmoBK4uv5VwGvEDimfhCzNSPWROdMoDbmi7HaoRO01w/JKS4ch5FYKCKgPomQyz6x627hy+GGVQ3v0adk1+Nse7aBeiwYZMapmJSJ6dqqAr09HcXpEldjQqvzU=
+	t=1757096358; cv=none; b=i5yJ9ftiFm5lnGHelLz3emuUtB8y8WBUOH+qdCqpcMeePCLAjs8l4QNbPCXF8/RpkLsLTyO12Ttmd+KA9boMOiAsh93Pr7AhLG1LmUX62vT985cPtLL8+lqGPQ2/gSQYxjeOwJ7jVvfa+DwUHjlvdc7d11dMedoH/xZEkg87Zlc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757096356; c=relaxed/simple;
-	bh=YXQ+CwIoJ9h5qstPz2KMyddL8vl2xQ2lQH4Wjo+XiZc=;
+	s=arc-20240116; t=1757096358; c=relaxed/simple;
+	bh=TMdldyvLvCde8aHH3evkvxxwz/C/7SndolubxyHXYss=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=RagMEwsNT8W/tPLg7BSYacyKV3Pu6lKn224dpBKqpnVYmSkIV/KEk+iFCv74vbKd4Soo6Yv8MCiKoYKgifnXHGMN591sRZgfDNC8YL6C+DXgB9+Hj87XPKureS60p1/Gtsx4UTtYwT1uFxLEl6OLmwH6VLmGQ22qqu73Mbsf1HA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t4vYuQev; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=nfjfzxwQ5pjzbVnx15/8aLldDzBarm4qvQFfEDJGHnlvB21JWiTGgXdmD7bnQEVEJiEh7n4xc1r3IkDp1AhTY3mTmVnkSCdE1yC1lSZK0bufqa8jBu2+R27zZhGR+KZKYsiMnX8n4hlsEg4yDGWoHjbdFM+ERPksziPdTsY3a7Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BkrAdrIK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t4vYuQev"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E44CC4CEF4;
-	Fri,  5 Sep 2025 18:19:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BkrAdrIK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C2D0C4CEF1;
+	Fri,  5 Sep 2025 18:19:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757096356;
-	bh=YXQ+CwIoJ9h5qstPz2KMyddL8vl2xQ2lQH4Wjo+XiZc=;
+	s=k20201202; t=1757096357;
+	bh=TMdldyvLvCde8aHH3evkvxxwz/C/7SndolubxyHXYss=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=t4vYuQevKZcrQgofY0cUihG22h8dItpgjLb5i4eLS2CuxpwY1qPmePs7hbiNnuAlG
-	 0vG2hX7+uySkcRopKfUQQ5ZJwg7RpSXc8ujoWwVSJTuuUZMySVH50u2CHBWWgmrNQ1
-	 K7YQxZmNhKEN2L/lZn9+sjUn6OprxRvaTXzZuSCg2RyZJgaSZoPKxOPHlJWGmwtMgA
-	 m0LpmdnOJKQAqo6OeNsvjfwJBriZbe3wq9HO53sQhmPeYuqZrGyszhAwjNXVJi4WdF
-	 KZ91fC06JegzimjNdk++CfUgIPqCm8e7oKDWrWZC0WbDu+t9ROBzAxfQUm4xGdHbuX
-	 LTQhD15rpYiFw==
+	b=BkrAdrIK78DjRQ0gQKCaF5r8Q9dLxEYFD/ws+7gGSsWg3XPi4a/qztRnywkHFxoRB
+	 9lXeKl00CYbA7GjyUtOuViSo2focJLR35K8eoc7YSGovDJd11vvVfic7kxs7LxSuKR
+	 8kCJEhheC5iNj5wDT/6fiu+SXyZm9Cj5rrWaxzygT7/dOwGrDeQ/1rbTvuKvznMU7n
+	 z/uePiOUesAeKkgJ5nrR11GUpXEivw5jYStFaGboKA0XtSNHcuOiq+SVJZSwFBK+wa
+	 UQHuw3FJ25JQZOuT0Kmuj6SaDZwoCWmZzYie87uDgZSKaobRNZwKoC1EvwBfMggvtZ
+	 d5hkRbs9UHhkw==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Fri, 05 Sep 2025 20:18:50 +0200
-Subject: [PATCH mptcp-net v2 1/5] mptcp: propagate shutdown to subflows
- when possible
+Date: Fri, 05 Sep 2025 20:18:51 +0200
+Subject: [PATCH mptcp-net v2 2/5] selftests: mptcp: connect: catch IO
+ errors on listen side
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,84 +38,69 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250905-sft-mptcp-disc-err-v2-1-dfb3b6b4a877@kernel.org>
+Message-Id: <20250905-sft-mptcp-disc-err-v2-2-dfb3b6b4a877@kernel.org>
 References: <20250905-sft-mptcp-disc-err-v2-0-dfb3b6b4a877@kernel.org>
 In-Reply-To: <20250905-sft-mptcp-disc-err-v2-0-dfb3b6b4a877@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2364; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=YXQ+CwIoJ9h5qstPz2KMyddL8vl2xQ2lQH4Wjo+XiZc=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDJ2a873cd71ylvs8KR9k5YrJm6MeG7nYzDJY1Y4005N7
- b23PPYd6ChlYRDjYpAVU2SRbovMn/m8irfEy88CZg4rE8gQBi5OAZhIwgxGhm/Fdql3vJvPe879
- 8FdRzu7U3C0TN57mvDIrK9FDSuGpZwgjw0bh0uKFf66tum54lOtaWKTLW4Ucs0nnmSYfN+bqzQ4
- +wwIA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2077; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=TMdldyvLvCde8aHH3evkvxxwz/C/7SndolubxyHXYss=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDJ2a86/uupYycyjj0+vbTQ1Xy70TJx/b5+ypFXP3PwnL
+ iuiHH+bd5SyMIhxMciKKbJIt0Xmz3xexVvi5WcBM4eVCWQIAxenAExE6RXDf09Ne8sv83V+LuWK
+ MLE5+uzNrLJzn2yKLq6UXbnP6VjpNnZGhobLJzftNHhoyn6pimFjUHDSFf6WlxVrZ4sKLpucmrz
+ mChMA
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-When the MPTCP DATA FIN have been ACKed, there is no more MPTCP related
-metadata to exchange, and all subflows can be safely shutdown.
+IO errors were correctly printed to stderr, and propagated up to the
+main loop for the server side, but the returned value was ignored. As a
+consequence, the program for the listener side was no longer exiting
+with an error code in case of IO issues.
 
-Before this patch, the subflows were actually terminated at 'close()'
-time. That's certainly fine most of the time, but not when the userspace
-'shutdown()' a connection, without close()ing it. When doing so, the
-subflows were staying in LAST_ACK state on one side -- and consequently
-in FIN_WAIT2 on the other side -- until the 'close()' of the MPTCP
-socket.
+Because of that, some issues might not have been seen. But very likely,
+most issues either had an effect on the client side, or the file
+transfer was not the expected one, e.g. the connection got reset before
+the end. Still, it is better to fix this.
 
-Now, when the DATA FIN have been ACKed, all subflows are shutdown. A
-consequence of this is that the TCP 'FIN' flag can be set earlier now,
-but the end result is the same. This affects the packetdrill tests
-looking at the end of the MPTCP connections, but for a good reason.
+The main consequence of this issue is the error that was reported by the
+selftests: the received and sent files were different, and the MIB
+counters were not printed. Also, when such errors happened during the
+'disconnect' tests, the program tried to continue until the timeout.
 
-Fixes: 3721b9b64676 ("mptcp: Track received DATA_FIN sequence number and add related helpers")
-Fixes: 16a9a9da1723 ("mptcp: Add helper to process acks of DATA_FIN")
+Now when an IO error is detected, the program exits directly with an
+error.
+
+Fixes: 05be5e273c84 ("selftests: mptcp: add disconnect tests")
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- net/mptcp/protocol.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ tools/testing/selftests/net/mptcp/mptcp_connect.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 1c26acf6c4145896ecbb5c7f7004121c66a20649..9feb9f437c2bdfff392249e7ad00edd09ba67ac3 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -372,6 +372,20 @@ static void mptcp_close_wake_up(struct sock *sk)
- 		sk_wake_async(sk, SOCK_WAKE_WAITD, POLL_IN);
- }
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+index 4f07ac9fa207cb08a934582b98d688d0b9512f97..c1586a7286123a509495ac319fd624b98f0bfd18 100644
+--- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
++++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+@@ -1112,6 +1112,8 @@ int main_loop_s(int listensock)
+ 	salen = sizeof(ss);
+ 	remotesock = accept(listensock, (struct sockaddr *)&ss, &salen);
+ 	if (remotesock >= 0) {
++		int err;
++
+ 		maybe_close(listensock);
+ 		check_sockaddr(pf, &ss, salen);
+ 		check_getpeername(remotesock, &ss, salen);
+@@ -1125,7 +1127,9 @@ int main_loop_s(int listensock)
+ 		SOCK_TEST_TCPULP(remotesock, 0);
  
-+static void mptcp_shutdown_subflows(struct mptcp_sock *msk)
-+{
-+	struct mptcp_subflow_context *subflow;
-+
-+	mptcp_for_each_subflow(msk, subflow) {
-+		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
-+		bool slow;
-+
-+		slow = lock_sock_fast(ssk);
-+		tcp_shutdown(ssk, SEND_SHUTDOWN);
-+		unlock_sock_fast(ssk, slow);
-+	}
-+}
-+
- /* called under the msk socket lock */
- static bool mptcp_pending_data_fin_ack(struct sock *sk)
- {
-@@ -396,6 +410,7 @@ static void mptcp_check_data_fin_ack(struct sock *sk)
- 			break;
- 		case TCP_CLOSING:
- 		case TCP_LAST_ACK:
-+			mptcp_shutdown_subflows(msk);
- 			mptcp_set_state(sk, TCP_CLOSE);
- 			break;
- 		}
-@@ -564,6 +579,7 @@ static bool mptcp_check_data_fin(struct sock *sk)
- 			mptcp_set_state(sk, TCP_CLOSING);
- 			break;
- 		case TCP_FIN_WAIT2:
-+			mptcp_shutdown_subflows(msk);
- 			mptcp_set_state(sk, TCP_CLOSE);
- 			break;
- 		default:
+ 		memset(&winfo, 0, sizeof(winfo));
+-		copyfd_io(fd, remotesock, 1, true, &winfo);
++		err = copyfd_io(fd, remotesock, 1, true, &winfo);
++		if (err)
++			return err;
+ 	} else {
+ 		perror("accept");
+ 		return 1;
 
 -- 
 2.51.0
