@@ -1,161 +1,131 @@
-Received: from skyblue.cherry.relay.mailchannels.net (skyblue.cherry.relay.mailchannels.net [23.83.223.167])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D07F1146585
-	for <mptcp@lists.linux.dev>; Sat,  6 Sep 2025 00:43:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.223.167
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757119395; cv=pass; b=p77Fv5xvohufFWOCLJ4Gx1Fv7HTDOmnCZLoZuEIs1iDT0QGpF9+KQ8yrKmJXVK1lCCQfuvTN5qV5nfz56/avTgcdN09ZdOvjZJRuk6dT7Nt29WVghQ0A9k23eN9xQw5kQe+ESt7iIKxFffLXkk6hHvVH5ubjo/k8Ach6ZLnORGs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757119395; c=relaxed/simple;
-	bh=WvVgPknsoh+orVwJyLL8s+U0TpN7DdgUwGDzywQz9lI=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=fyFv5G4h2IEgq7DUHikaRNgBYFX9z4vlh+NFx0B3k4Mp+6gCPZ/32AYs4dEsSbKRDqIZI9/YEiZ0jRFCurm97lrd1lp5FE1nRHPN9+h0sgYNKIHDsYpi4ghUvji4Qzu3U29wUkYPHWig6ZDXlHWjNC4IO0JjLqSwad63VymbXL8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=templeofstupid.com; spf=pass smtp.mailfrom=templeofstupid.com; dkim=pass (2048-bit key) header.d=templeofstupid.com header.i=@templeofstupid.com header.b=XB2QLy1l; arc=pass smtp.client-ip=23.83.223.167
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=templeofstupid.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=templeofstupid.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D387A42A99
+	for <mptcp@lists.linux.dev>; Sat,  6 Sep 2025 00:45:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1757119519; cv=none; b=Ztf+5RffghYJrerjU0L9QuxwFMdrL+C6eW/EsPcRtR5MOoFSlACybvU10Gd5VfQjoZ2DyOi3/RnXpWk1NVxUvvbb/mL5k/BbTTfDCZEzb538aIuRirFSDUhcIoxKe4IDhWGAo/vajqBQkmEa8mDZqGyoPzhNiKsvZP1zzW4NfMo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1757119519; c=relaxed/simple;
+	bh=mDjP4ksMnoYHDfX8r7SyAErBoiSEV8mz6+QBYMbpHrA=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=nbKTlLYulmq6lc3SeIdI43GFGU/XJXS0sIw/68DoXPabIA/sLXW7jCJMFDQaSzrQ1slv/jt+ru5wYwgWZ+Hh9tyyPvJjnWZIOiB8ASipMCoY2li/+glzT1Ka+zK7nUIva1V1XKBI1x2sr88LzAWIv5yK5z2iKk2Nt1SOxbCO2pA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qXRqlFfe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=templeofstupid.com header.i=@templeofstupid.com header.b="XB2QLy1l"
-X-Sender-Id: dreamhost|x-authsender|kjlx@templeofstupid.com
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id BC54125138
-	for <mptcp@lists.linux.dev>; Sat,  6 Sep 2025 00:43:06 +0000 (UTC)
-Received: from pdx1-sub0-mail-a309.dreamhost.com (100-101-146-44.trex-nlb.outbound.svc.cluster.local [100.101.146.44])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 625EF24C22
-	for <mptcp@lists.linux.dev>; Sat,  6 Sep 2025 00:43:06 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1757119386; a=rsa-sha256;
-	cv=none;
-	b=xq8ApAiJvAKV8L31QS2vhOI1PH7v6kIkSxfc1ytzBSngLRHn/5DUmjA3YtvT2ZcoBV/slv
-	EMuPZ/XYG+/R+04w5v8rCJUMZPfyitFZ6Lh0HTPaWb10aBbtFdVfuii+eaXilqzWAp/Kph
-	C1+buW2b+g+l7r+tqVAuEaZ71PiDDySkHruqgQ4UcruKvI71/P0gZvBOq65xJg3Jo46szL
-	dbXRkOcJg7GEhRBITrAGBD1nOF7Oex87SC8kAWcHgdStE4dcE5Tmpcerm6cNIVHHEcUKvD
-	8FSWsukXn+SuKOr1FGHkDemjIFZAFO6RrtkFvV1Zd5XvzVn13dCVl1ID52XtPA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1757119386;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 dkim-signature; bh=djnk/mvzW8JgrM/aEd1q2IUDriPKm9TV+QHUIYoTH20=;
-	b=sGRJEAFQuyrwJntkdcumAev3+8TbfmxVGIl0AD4w3d9FfcLrFdD0eSxMZ/VIdGOWOz9kbj
-	YVpLlmXuARlcOw0G2mBAeymfNH81am75AQo+uMgVienwAhhBJs2NippDZnjonDRCYHYYy6
-	s720LoadMZbFC6FdhU904jsYsHJQcJNmwgBrdOHMGrSsYfpYzbgULXtGuuQnd4a9mkQRA/
-	9FbX+O+qMfa574TBT0c7JbJPJnJI2WcU6CRLumnbUmSpQw6pwD7PdxPDlpOrQpoWQ/9Oxu
-	ocF/kG3q1tsXxNGRIhKCflhOslFY/oRtg8dUYq03Hb/cC9W95QwKes7v+X6LXA==
-ARC-Authentication-Results: i=1;
-	rspamd-c79647f57-zr5nf;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=kjlx@templeofstupid.com
-X-Sender-Id: dreamhost|x-authsender|kjlx@templeofstupid.com
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|kjlx@templeofstupid.com
-X-MailChannels-Auth-Id: dreamhost
-X-Whimsical-Madly: 0bee82e73cff3140_1757119386640_2599585453
-X-MC-Loop-Signature: 1757119386640:473041748
-X-MC-Ingress-Time: 1757119386640
-Received: from pdx1-sub0-mail-a309.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.101.146.44 (trex/7.1.3);
-	Sat, 06 Sep 2025 00:43:06 +0000
-Received: from kmjvbox.templeofstupid.com (c-73-70-109-47.hsd1.ca.comcast.net [73.70.109.47])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kjlx@templeofstupid.com)
-	by pdx1-sub0-mail-a309.dreamhost.com (Postfix) with ESMTPSA id 4cJZFQ1FKzzGm
-	for <mptcp@lists.linux.dev>; Fri,  5 Sep 2025 17:43:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=templeofstupid.com;
-	s=dreamhost; t=1757119386;
-	bh=djnk/mvzW8JgrM/aEd1q2IUDriPKm9TV+QHUIYoTH20=;
-	h=Date:From:To:Cc:Subject:Content-Type;
-	b=XB2QLy1lI69MOFqrWqLt9AYDTmRyy4IBOWUwpOy/x7TlRaI+g5Zmxj616mJW6T5xe
-	 Z6doqS0rSho/av0HBz5NBXN/A3UXpUxMSX4Sxi8C0Y4wxF/9ieMsOFszG2U9pVj913
-	 1r7bv4NOnzWMsmjAYJ7T1v5E0WNX+Etj4beMrnZzALWJbisphxxbzGcSCZMWrWcP2l
-	 YkA12D8sgwqu6eVfWf4PNO6mDrn6Gc87drJfZ5ENwV2N/1jKFMCLmgTFOz+1dDqzfz
-	 1FW8/qT18xDfYbkONV5qNXK0T6QS0MkIjW0gjVDQYkNvXkn2NbuDJfPQXAuo8++RVQ
-	 L7iid3XT5Y9Rw==
-Received: from johansen (uid 1000)
-	(envelope-from kjlx@templeofstupid.com)
-	id e0263
-	by kmjvbox.templeofstupid.com (DragonFly Mail Agent v0.13);
-	Fri, 05 Sep 2025 17:43:04 -0700
-Date: Fri, 5 Sep 2025 17:43:04 -0700
-From: Krister Johansen <kjlx@templeofstupid.com>
-To: Matthieu Baerts <matttbe@kernel.org>,
-	Mat Martineau <martineau@kernel.org>
-Cc: Geliang Tang <geliang@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>, Florian Westphal <fw@strlen.de>,
-	netdev@vger.kernel.org, mptcp@lists.linux.dev,
-	linux-kernel@vger.kernel.org, David Reaver <me@davidreaver.com>
-Subject: [PATCH mptcp] mptcp: sockopt: make sync_socket_options propagate
- SOCK_KEEPOPEN
-Message-ID: <aLuDmBsgC7wVNV1J@templeofstupid.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qXRqlFfe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 194F9C4CEF1;
+	Sat,  6 Sep 2025 00:45:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1757119519;
+	bh=mDjP4ksMnoYHDfX8r7SyAErBoiSEV8mz6+QBYMbpHrA=;
+	h=Subject:From:To:Date:In-Reply-To:References:From;
+	b=qXRqlFfeE75ZzTB95BpPSs1DnqDU9ARMCuF5VmxbPIeODaDCRdlW9nEFWAnPG226r
+	 A9HsPyyOwNgI3XZ9ehM0KI355aYoMqshHnPmRXDpfkBUGx9j8wekdldYUO0rQzIo/U
+	 6meSJ202LfVfgNXU4BhNCQ97aJynvu4u8gWwZT7jCYGt7QHGyWroZB8HPm3gAq/eKQ
+	 gub6oWKp8pneoedbuj/slPqcNAnEq6bkW2zCixCsIM2wxR23wIBpx+wG0/oIQtVHTF
+	 NZyepRQpCCx5dJLD9GAe4xFD0/o5mD+h3X6VnRQYq205uvOcdodVMBnF21awhJJv4N
+	 3Crp4wooNu/rQ==
+Message-ID: <9f2a05ac6034fb33f579302a0ede2ec13eb6c915.camel@kernel.org>
+Subject: Re: [PATCH mptcp-net v2 1/5] mptcp: propagate shutdown to subflows
+ when possible
+From: Geliang Tang <geliang@kernel.org>
+To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, mptcp@lists.linux.dev
+Date: Sat, 06 Sep 2025 08:45:16 +0800
+In-Reply-To: <20250905-sft-mptcp-disc-err-v2-1-dfb3b6b4a877@kernel.org>
+References: <20250905-sft-mptcp-disc-err-v2-0-dfb3b6b4a877@kernel.org>
+	 <20250905-sft-mptcp-disc-err-v2-1-dfb3b6b4a877@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.56.0-1 
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-Users reported a scenario where MPTCP connections that were configured
-with SO_KEEPALIVE prior to connect would fail to enable their keepalives
-if MTPCP fell back to TCP mode.
+On Fri, 2025-09-05 at 20:18 +0200, Matthieu Baerts (NGI0) wrote:
+> When the MPTCP DATA FIN have been ACKed, there is no more MPTCP
+> related
+> metadata to exchange, and all subflows can be safely shutdown.
+> 
+> Before this patch, the subflows were actually terminated at 'close()'
+> time. That's certainly fine most of the time, but not when the
+> userspace
+> 'shutdown()' a connection, without close()ing it. When doing so, the
+> subflows were staying in LAST_ACK state on one side -- and
+> consequently
+> in FIN_WAIT2 on the other side -- until the 'close()' of the MPTCP
+> socket.
+> 
+> Now, when the DATA FIN have been ACKed, all subflows are shutdown. A
+> consequence of this is that the TCP 'FIN' flag can be set earlier
+> now,
+> but the end result is the same. This affects the packetdrill tests
+> looking at the end of the MPTCP connections, but for a good reason.
+> 
+> Fixes: 3721b9b64676 ("mptcp: Track received DATA_FIN sequence number
+> and add related helpers")
+> Fixes: 16a9a9da1723 ("mptcp: Add helper to process acks of DATA_FIN")
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> ---
+>  net/mptcp/protocol.c | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+> 
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index
+> 1c26acf6c4145896ecbb5c7f7004121c66a20649..9feb9f437c2bdfff392249e7ad0
+> 0edd09ba67ac3 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -372,6 +372,20 @@ static void mptcp_close_wake_up(struct sock *sk)
+>  		sk_wake_async(sk, SOCK_WAKE_WAITD, POLL_IN);
+>  }
+>  
+> +static void mptcp_shutdown_subflows(struct mptcp_sock *msk)
+> +{
+> +	struct mptcp_subflow_context *subflow;
+> +
+> +	mptcp_for_each_subflow(msk, subflow) {
+> +		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
+> +		bool slow;
+> +
+> +		slow = lock_sock_fast(ssk);
+> +		tcp_shutdown(ssk, SEND_SHUTDOWN);
+> +		unlock_sock_fast(ssk, slow);
+> +	}
+> +}
+> +
+>  /* called under the msk socket lock */
+>  static bool mptcp_pending_data_fin_ack(struct sock *sk)
+>  {
+> @@ -396,6 +410,7 @@ static void mptcp_check_data_fin_ack(struct sock
+> *sk)
+>  			break;
+>  		case TCP_CLOSING:
+>  		case TCP_LAST_ACK:
+> +			mptcp_shutdown_subflows(msk);
+>  			mptcp_set_state(sk, TCP_CLOSE);
+>  			break;
+>  		}
+> @@ -564,6 +579,7 @@ static bool mptcp_check_data_fin(struct sock *sk)
+>  			mptcp_set_state(sk, TCP_CLOSING);
+>  			break;
+>  		case TCP_FIN_WAIT2:
+> +			mptcp_shutdown_subflows(msk);
 
-After investigating, this affects keepalives for any connection where
-sync_socket_options is called on a socket that is in the closed or
-listening state.  Joins are handled properly. For connects,
-sync_socket_options is called when the socket is still in the closed
-state.  The tcp_set_keepalive() function does not act on sockets that
-are closed or listening, hence keepalive is not immediately enabled.
-Since the SO_KEEPOPEN flag is absent, it is not enabled later in the
-connect sequence via tcp_finish_connect.  Setting the keepalive via
-sockopt after connect does work, but would not address any subsequently
-created flows.
+I think we should not directly call mptcp_shutdown_subflows() within
+mptcp_check_data_fin() and mptcp_check_data_fin_ack(), but should
+instead call it after these functions return and the sk state is
+TCP_CLOSE. This ensures that the original purpose of these two
+functions remains unchanged.
 
-Fortunately, the fix here is straight-forward: set SOCK_KEEPOPEN on the
-subflow when calling sync_socket_options.
+WDYT?
 
-The fix was valdidated both by using tcpdump to observe keeplaive
-packets not being sent before the fix, and being sent after the fix.  It
-was also possible to observe via ss that the keepalive timer was not
-enabled on these sockets before the fix, but was enabled afterwards.
+Thanks,
+-Geliang
 
-Fixes: 1b3e7ede1365 ("mptcp: setsockopt: handle SO_KEEPALIVE and SO_PRIORITY")
-Cc: stable@vger.kernel.org
-Signed-off-by: Krister Johansen <kjlx@templeofstupid.com>
----
- net/mptcp/sockopt.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
-
-diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-index 2c267aff95be..13108e9f982b 100644
---- a/net/mptcp/sockopt.c
-+++ b/net/mptcp/sockopt.c
-@@ -1532,13 +1532,11 @@ static void sync_socket_options(struct mptcp_sock *msk, struct sock *ssk)
- {
- 	static const unsigned int tx_rx_locks = SOCK_RCVBUF_LOCK | SOCK_SNDBUF_LOCK;
- 	struct sock *sk = (struct sock *)msk;
-+	int kaval = !!sock_flag(sk, SOCK_KEEPOPEN);
- 
--	if (ssk->sk_prot->keepalive) {
--		if (sock_flag(sk, SOCK_KEEPOPEN))
--			ssk->sk_prot->keepalive(ssk, 1);
--		else
--			ssk->sk_prot->keepalive(ssk, 0);
--	}
-+	if (ssk->sk_prot->keepalive)
-+		ssk->sk_prot->keepalive(ssk, kaval);
-+	sock_valbool_flag(ssk, SOCK_KEEPOPEN, kaval);
- 
- 	ssk->sk_priority = sk->sk_priority;
- 	ssk->sk_bound_dev_if = sk->sk_bound_dev_if;
-
-base-commit: 319f7385f22c85618235ab0169b80092fa3c7696
--- 
-2.43.0
-
+>  			mptcp_set_state(sk, TCP_CLOSE);
+>  			break;
+>  		default:
