@@ -1,40 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D387A42A99
-	for <mptcp@lists.linux.dev>; Sat,  6 Sep 2025 00:45:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA354A944;
+	Sat,  6 Sep 2025 01:29:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757119519; cv=none; b=Ztf+5RffghYJrerjU0L9QuxwFMdrL+C6eW/EsPcRtR5MOoFSlACybvU10Gd5VfQjoZ2DyOi3/RnXpWk1NVxUvvbb/mL5k/BbTTfDCZEzb538aIuRirFSDUhcIoxKe4IDhWGAo/vajqBQkmEa8mDZqGyoPzhNiKsvZP1zzW4NfMo=
+	t=1757122148; cv=none; b=CspALBO4/Ao05ycdaWBVTgeyYPaliU/wKqJgkRPqQukWBABEwKWchvXSTIGksdctBkCuZ8zoqs8t2D5wFkLW4nK3wHz95Lm3VVFI+VxxvK+3TGGjtVDC24t+CpaP1v7pmHGH0qnuCjgsx16GMQBQAeEGSoR10oW7E8cMoCH1tqw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757119519; c=relaxed/simple;
-	bh=mDjP4ksMnoYHDfX8r7SyAErBoiSEV8mz6+QBYMbpHrA=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=nbKTlLYulmq6lc3SeIdI43GFGU/XJXS0sIw/68DoXPabIA/sLXW7jCJMFDQaSzrQ1slv/jt+ru5wYwgWZ+Hh9tyyPvJjnWZIOiB8ASipMCoY2li/+glzT1Ka+zK7nUIva1V1XKBI1x2sr88LzAWIv5yK5z2iKk2Nt1SOxbCO2pA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qXRqlFfe; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1757122148; c=relaxed/simple;
+	bh=LzitgvyrHgnJrhbLuGvEj9PVO8+obvo3+maTh6Lztc8=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=RViUPZ7Zq3SfnmdjZ4Myhet58wBsZBNb33xIDV2sXgauCVwCqYdw4n4TiTpdWwc6jlCQa89A1uH2EhGYlY9jTl6OAxlYcK4PFiqQN8HSPRGUhx2ucL86YlJD8SakFAql/ooHmClXfBIYpPI55+pJ77an+2krFXnJZ460BF66jVc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=abbouuqv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qXRqlFfe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 194F9C4CEF1;
-	Sat,  6 Sep 2025 00:45:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="abbouuqv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC336C4CEF1;
+	Sat,  6 Sep 2025 01:29:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757119519;
-	bh=mDjP4ksMnoYHDfX8r7SyAErBoiSEV8mz6+QBYMbpHrA=;
-	h=Subject:From:To:Date:In-Reply-To:References:From;
-	b=qXRqlFfeE75ZzTB95BpPSs1DnqDU9ARMCuF5VmxbPIeODaDCRdlW9nEFWAnPG226r
-	 A9HsPyyOwNgI3XZ9ehM0KI355aYoMqshHnPmRXDpfkBUGx9j8wekdldYUO0rQzIo/U
-	 6meSJ202LfVfgNXU4BhNCQ97aJynvu4u8gWwZT7jCYGt7QHGyWroZB8HPm3gAq/eKQ
-	 gub6oWKp8pneoedbuj/slPqcNAnEq6bkW2zCixCsIM2wxR23wIBpx+wG0/oIQtVHTF
-	 NZyepRQpCCx5dJLD9GAe4xFD0/o5mD+h3X6VnRQYq205uvOcdodVMBnF21awhJJv4N
-	 3Crp4wooNu/rQ==
-Message-ID: <9f2a05ac6034fb33f579302a0ede2ec13eb6c915.camel@kernel.org>
-Subject: Re: [PATCH mptcp-net v2 1/5] mptcp: propagate shutdown to subflows
- when possible
+	s=k20201202; t=1757122148;
+	bh=LzitgvyrHgnJrhbLuGvEj9PVO8+obvo3+maTh6Lztc8=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=abbouuqv7zwrLqz8j+ZHxzmmEtPuIgox60zFy5ynhS0cwFfBhfumOxSAVC2+NCP8J
+	 /O8GpA/tAIkoICTsQu0pTWFT9nEvqT6us0Qek30PzKotVcTx3vmjhzD1t94sk/L82w
+	 +USXQrcbGF5dR2J7yWmQBOa2GtXwM5i8QACmXYbhSblCIks78bUxEyjhSRQrDtuPE7
+	 Ut4BYUw4a6qtzBK5r7NWZ5OwZyNwBKtGXnQvQMqU1HuwcqKDqDZJZZNAVKetyZZe/6
+	 3+k9faBesMxq8JgrGhf42Hjm5UZkevk1+aU7IshwRZNIquyVDe/VCr/hTOBS5dGhEk
+	 QNEYIWiUa8ZvA==
+Message-ID: <802a2629b135d7f69f42f7bac5a5350374ed2570.camel@kernel.org>
+Subject: Re: [PATCH mptcp] mptcp: sockopt: make sync_socket_options
+ propagate SOCK_KEEPOPEN
 From: Geliang Tang <geliang@kernel.org>
-To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, mptcp@lists.linux.dev
-Date: Sat, 06 Sep 2025 08:45:16 +0800
-In-Reply-To: <20250905-sft-mptcp-disc-err-v2-1-dfb3b6b4a877@kernel.org>
-References: <20250905-sft-mptcp-disc-err-v2-0-dfb3b6b4a877@kernel.org>
-	 <20250905-sft-mptcp-disc-err-v2-1-dfb3b6b4a877@kernel.org>
+To: Krister Johansen <kjlx@templeofstupid.com>, Matthieu Baerts
+	 <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>
+Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>,  Jakub Kicinski	 <kuba@kernel.org>, Paolo Abeni
+ <pabeni@redhat.com>, Simon Horman	 <horms@kernel.org>, Florian Westphal
+ <fw@strlen.de>, netdev@vger.kernel.org, 	mptcp@lists.linux.dev,
+ linux-kernel@vger.kernel.org, David Reaver	 <me@davidreaver.com>
+Date: Sat, 06 Sep 2025 09:29:01 +0800
+In-Reply-To: <aLuDmBsgC7wVNV1J@templeofstupid.com>
+References: <aLuDmBsgC7wVNV1J@templeofstupid.com>
 Content-Type: text/plain; charset="UTF-8"
 User-Agent: Evolution 3.56.0-1 
 Precedence: bulk
@@ -45,87 +50,75 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On Fri, 2025-09-05 at 20:18 +0200, Matthieu Baerts (NGI0) wrote:
-> When the MPTCP DATA FIN have been ACKed, there is no more MPTCP
-> related
-> metadata to exchange, and all subflows can be safely shutdown.
-> 
-> Before this patch, the subflows were actually terminated at 'close()'
-> time. That's certainly fine most of the time, but not when the
-> userspace
-> 'shutdown()' a connection, without close()ing it. When doing so, the
-> subflows were staying in LAST_ACK state on one side -- and
-> consequently
-> in FIN_WAIT2 on the other side -- until the 'close()' of the MPTCP
-> socket.
-> 
-> Now, when the DATA FIN have been ACKed, all subflows are shutdown. A
-> consequence of this is that the TCP 'FIN' flag can be set earlier
-> now,
-> but the end result is the same. This affects the packetdrill tests
-> looking at the end of the MPTCP connections, but for a good reason.
-> 
-> Fixes: 3721b9b64676 ("mptcp: Track received DATA_FIN sequence number
-> and add related helpers")
-> Fixes: 16a9a9da1723 ("mptcp: Add helper to process acks of DATA_FIN")
-> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> ---
->  net/mptcp/protocol.c | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
-> 
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index
-> 1c26acf6c4145896ecbb5c7f7004121c66a20649..9feb9f437c2bdfff392249e7ad0
-> 0edd09ba67ac3 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -372,6 +372,20 @@ static void mptcp_close_wake_up(struct sock *sk)
->  		sk_wake_async(sk, SOCK_WAKE_WAITD, POLL_IN);
->  }
->  
-> +static void mptcp_shutdown_subflows(struct mptcp_sock *msk)
-> +{
-> +	struct mptcp_subflow_context *subflow;
-> +
-> +	mptcp_for_each_subflow(msk, subflow) {
-> +		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
-> +		bool slow;
-> +
-> +		slow = lock_sock_fast(ssk);
-> +		tcp_shutdown(ssk, SEND_SHUTDOWN);
-> +		unlock_sock_fast(ssk, slow);
-> +	}
-> +}
-> +
->  /* called under the msk socket lock */
->  static bool mptcp_pending_data_fin_ack(struct sock *sk)
->  {
-> @@ -396,6 +410,7 @@ static void mptcp_check_data_fin_ack(struct sock
-> *sk)
->  			break;
->  		case TCP_CLOSING:
->  		case TCP_LAST_ACK:
-> +			mptcp_shutdown_subflows(msk);
->  			mptcp_set_state(sk, TCP_CLOSE);
->  			break;
->  		}
-> @@ -564,6 +579,7 @@ static bool mptcp_check_data_fin(struct sock *sk)
->  			mptcp_set_state(sk, TCP_CLOSING);
->  			break;
->  		case TCP_FIN_WAIT2:
-> +			mptcp_shutdown_subflows(msk);
+Hi Krister,
 
-I think we should not directly call mptcp_shutdown_subflows() within
-mptcp_check_data_fin() and mptcp_check_data_fin_ack(), but should
-instead call it after these functions return and the sk state is
-TCP_CLOSE. This ensures that the original purpose of these two
-functions remains unchanged.
+On Fri, 2025-09-05 at 17:43 -0700, Krister Johansen wrote:
+> Users reported a scenario where MPTCP connections that were
+> configured
+> with SO_KEEPALIVE prior to connect would fail to enable their
+> keepalives
+> if MTPCP fell back to TCP mode.
+> 
+> After investigating, this affects keepalives for any connection where
+> sync_socket_options is called on a socket that is in the closed or
+> listening state.  Joins are handled properly. For connects,
+> sync_socket_options is called when the socket is still in the closed
+> state.  The tcp_set_keepalive() function does not act on sockets that
+> are closed or listening, hence keepalive is not immediately enabled.
+> Since the SO_KEEPOPEN flag is absent, it is not enabled later in the
+> connect sequence via tcp_finish_connect.  Setting the keepalive via
+> sockopt after connect does work, but would not address any
+> subsequently
+> created flows.
+> 
+> Fortunately, the fix here is straight-forward: set SOCK_KEEPOPEN on
+> the
+> subflow when calling sync_socket_options.
+> 
+> The fix was valdidated both by using tcpdump to observe keeplaive
+> packets not being sent before the fix, and being sent after the fix. 
+> It
+> was also possible to observe via ss that the keepalive timer was not
+> enabled on these sockets before the fix, but was enabled afterwards.
+> 
+> Fixes: 1b3e7ede1365 ("mptcp: setsockopt: handle SO_KEEPALIVE and
+> SO_PRIORITY")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Krister Johansen <kjlx@templeofstupid.com>
 
-WDYT?
+Thanks for this fix. Good catch!
 
-Thanks,
+Reviewed-by: Geliang Tang <geliang@kernel.org>
+
 -Geliang
 
->  			mptcp_set_state(sk, TCP_CLOSE);
->  			break;
->  		default:
+> ---
+>  net/mptcp/sockopt.c | 10 ++++------
+>  1 file changed, 4 insertions(+), 6 deletions(-)
+> 
+> diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+> index 2c267aff95be..13108e9f982b 100644
+> --- a/net/mptcp/sockopt.c
+> +++ b/net/mptcp/sockopt.c
+> @@ -1532,13 +1532,11 @@ static void sync_socket_options(struct
+> mptcp_sock *msk, struct sock *ssk)
+>  {
+>  	static const unsigned int tx_rx_locks = SOCK_RCVBUF_LOCK |
+> SOCK_SNDBUF_LOCK;
+>  	struct sock *sk = (struct sock *)msk;
+> +	int kaval = !!sock_flag(sk, SOCK_KEEPOPEN);
+>  
+> -	if (ssk->sk_prot->keepalive) {
+> -		if (sock_flag(sk, SOCK_KEEPOPEN))
+> -			ssk->sk_prot->keepalive(ssk, 1);
+> -		else
+> -			ssk->sk_prot->keepalive(ssk, 0);
+> -	}
+> +	if (ssk->sk_prot->keepalive)
+> +		ssk->sk_prot->keepalive(ssk, kaval);
+> +	sock_valbool_flag(ssk, SOCK_KEEPOPEN, kaval);
+>  
+>  	ssk->sk_priority = sk->sk_priority;
+>  	ssk->sk_bound_dev_if = sk->sk_bound_dev_if;
+> 
+> base-commit: 319f7385f22c85618235ab0169b80092fa3c7696
