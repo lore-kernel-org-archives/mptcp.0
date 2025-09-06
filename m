@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C01222ECD3A
-	for <mptcp@lists.linux.dev>; Sat,  6 Sep 2025 13:56:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69BA82DFA22
+	for <mptcp@lists.linux.dev>; Sat,  6 Sep 2025 13:58:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757167008; cv=none; b=TUZg1GNZ1PK6F6eCOAGVvSve+WuueiMQcEkpIkDhfyJsNu775UuP2NDC0nuTGD1Y8f0y0XY2Vrg+m12j9fdYrInKBfrK/C6nak7RDfffebm8e2C5f+BdyhHk8mxxdZhUa0GdEyL0bK5ZpyGI+fzHpkSPwJWh4fEy24ZU3UHyRk4=
+	t=1757167131; cv=none; b=lsNtWLLhKWbLu7OX+bJPNVpM4/99FdKBDLI4rSHVL/mPvHreyqIBJq0P6/mloZnvsNz8ojPFMvCWUKffp/va4gV/RjU+KmWHJvUnGU4DzVAp0gphVLSyrRyK5SG7+QwJAH2oXPti7AvEAaAT2qjbF8iUI4QWjcDktqIee0EcckY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757167008; c=relaxed/simple;
-	bh=nG0LQvtADPnzMzD2PQWdoROLv0tQnKTErTFAZzju0BY=;
+	s=arc-20240116; t=1757167131; c=relaxed/simple;
+	bh=TdIKhOuP91xtO+kBpMlPti49xxPy7PKfqvjKtUlqiK4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=CPPpkAZyPKSniqKEO4ehtP2ylyd0KGQox5knjYA2Bke7Z9peR+Uf9QybhMpSsXt0zy7df2+DKYgCubKDbc5ImidzBbyOpmKFFhhjgm0e6hH5c66629MOBRjdYB46D0igu3RYnXRZ5OrPYKLPikehvojvywnMLFVyXS/F4FcgC3o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cJA504MD; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=PUTbGQuy8L5jfx9i+5FIFuxjuoStJoffrjPg3yBI0uBp9Y67PPthdMWrCN3HTLKG/QrE6lHfXZ4IOaxpxAkEuVH4DjPPsZ9qNVpLzlChKwcV16PHHvdG7L7NWjKJR+/bj/C+eFD1pZ4s801O3V7NNFBRoNGsouETQcxmxyw2MMU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HViaGdRx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cJA504MD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9A16C4CEE7;
-	Sat,  6 Sep 2025 13:56:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HViaGdRx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60E85C4CEE7;
+	Sat,  6 Sep 2025 13:58:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757167008;
-	bh=nG0LQvtADPnzMzD2PQWdoROLv0tQnKTErTFAZzju0BY=;
+	s=k20201202; t=1757167130;
+	bh=TdIKhOuP91xtO+kBpMlPti49xxPy7PKfqvjKtUlqiK4=;
 	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=cJA504MDsgPy2VVBASP+5+X9Z7xi+k9/8FAgZGSxHhFxlKwG2+UeH6L9mkTD3D8ii
-	 Gs4dy333RW7SSZKheaguitSr7kqrTiW+ZLiigLFPc889yUqLH512Vri49LEXbiDBq1
-	 E8Z163x12VO9q3f931pF9qUSaBjh3DNgS2IBX/4Xm/mcXKf3jOU2srnAAaWTbu5iGD
-	 fqCZRiKaUv4ZgpvtNGTSeDp9CGBNzBdmEBu5QN7+tx6LZ19jJiLT1xDw0152r+Zo+D
-	 AdIqsgH8Fk45M/orlC9lz5fckg2f5HdkyIbb5E+zk9EEakbTajTecBUzP2IbhzO7Zm
-	 8gmhUWehv5CZw==
-Message-ID: <b396773f-65ed-4e15-960d-b3acc871f443@kernel.org>
-Date: Sat, 6 Sep 2025 15:56:45 +0200
+	b=HViaGdRx7zXBpB+dK6AAroLlYOmDM8eiwktsGuOXe/WUXiYmLd2wLp7YWpplnhD38
+	 peu6wU9gqlioRpxS3dENZxyWInQOlJ5tsCys09X4I+D3RkrhJOx5Os+bZ6AR7keSQs
+	 4jPBllxft3hCZ7eRHGfXt5CI2exoKVPu8xiMMqUYLq7AI7oOeY/yiHjy0M42pyKOFa
+	 U0qOqybENhjymGtO1oHhifBLyd+xpKHWvQq7uIAPSyvNJsu/RF5EhiOBdDBoexQgZK
+	 09VXR/RyAx/8X/kfAnEUi/mqQmz9mKQwe6uoqK2agte2HKjsye2uAxAQUQKrWSTwZ/
+	 hiOaNhSW8+eQA==
+Message-ID: <79233605-a9e5-4406-9310-bb34063bafee@kernel.org>
+Date: Sat, 6 Sep 2025 15:58:48 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net v2 4/5] selftests: mptcp: print trailing bytes
- with od
+Subject: Re: [PATCH mptcp-net v2 5/5] selftests: mptcp: connect: print pcap
+ suffix
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 References: <20250905-sft-mptcp-disc-err-v2-0-dfb3b6b4a877@kernel.org>
- <20250905-sft-mptcp-disc-err-v2-4-dfb3b6b4a877@kernel.org>
- <0ebf9d7a70ebc16b66b6c609606b28791a145d04.camel@kernel.org>
+ <20250905-sft-mptcp-disc-err-v2-5-dfb3b6b4a877@kernel.org>
+ <5ee562f1700818c635d79828b057a94943527e80.camel@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,56 +87,40 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <0ebf9d7a70ebc16b66b6c609606b28791a145d04.camel@kernel.org>
+In-Reply-To: <5ee562f1700818c635d79828b057a94943527e80.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 Hi Geliang,
 
-On 06/09/2025 01:42, Geliang Tang wrote:
+On 06/09/2025 01:39, Geliang Tang wrote:
+> Hi Matt,
+> 
+> Thanks for this v2.
+> 
 > On Fri, 2025-09-05 at 20:18 +0200, Matthieu Baerts (NGI0) wrote:
->> This is better than printing random bytes in the terminal.
+>> To be able to find which capture files have been produced after
+>> several
+>> runs.
 >>
->> Note Jakub suggested 'hexdump', but Mat found out that this tool is
->> not
->> often installed by default. 'od' can do a similar job, and it is in
->> the
->> POSIX specs and available in coreutils, so it should be on more
->> systems.
+>> This suffix was not printed anywhere before.
 >>
->> Suggested-by: Jakub Kicinski <kuba@kernel.org>
->> Suggested-by: Mat Martineau <martineau@kernel.org>
+>> While at it, always use the same prefix by taking info from ns1,
+>> instead
+>> of "$connector_ns", which is sometimes ns1, sometimes ns2 in the
+>> subtests.
+>>
 >> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 >> ---
->> v2: switch to 'od', and no more check for its presence (Mat)
->> ---
->>  tools/testing/selftests/net/mptcp/mptcp_lib.sh | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
->> b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
->> index
->> 09cd24b2ae466205dacbdf8289eb86c08534c475..d62e653d48b0f2ef7a01e289fa0
->> be8907825667d 100644
->> --- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
->> +++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
->> @@ -384,7 +384,7 @@ mptcp_lib_make_file() {
->>  mptcp_lib_print_file_err() {
->>  	ls -l "${1}" 1>&2
->>  	echo "Trailing bytes are: "
->> -	tail -c 27 "${1}"
->> +	tail -c 32 "${1}" | od -x | head -n2
+>>  tools/testing/selftests/net/mptcp/mptcp_connect.sh | 6 +++++-
 > 
-> nit:
-> 
-> It shows more bytes (32) here, but it wasn't mentioned in the commit
-> log.
+> Just wondering, is it necessary to synchronize this modification to
+> mptcp_join.sh to maintain consistency?
 
-Good point, I can add this when applying the patches:
+I don't think that's needed: there is already a similar message in
+mptcp_join.sh:
 
-  Show a few more bytes, just to fill in the two lines.
-
-Would that be OK?
+  Capturing traffic for test $MPTCP_LIB_TEST_COUNTER into $capfile
 
 Cheers,
 Matt
