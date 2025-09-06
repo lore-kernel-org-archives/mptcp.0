@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69BA82DFA22
-	for <mptcp@lists.linux.dev>; Sat,  6 Sep 2025 13:58:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF56418FDDB
+	for <mptcp@lists.linux.dev>; Sat,  6 Sep 2025 14:00:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757167131; cv=none; b=lsNtWLLhKWbLu7OX+bJPNVpM4/99FdKBDLI4rSHVL/mPvHreyqIBJq0P6/mloZnvsNz8ojPFMvCWUKffp/va4gV/RjU+KmWHJvUnGU4DzVAp0gphVLSyrRyK5SG7+QwJAH2oXPti7AvEAaAT2qjbF8iUI4QWjcDktqIee0EcckY=
+	t=1757167233; cv=none; b=iXOUYCjSnMIRlbWTjGSHYS9SflL5pT9jFlkiSUz13Qg5qSQMz56BXRwGp4+IxQxHzwCxFU1Xo1v9+TKsVETiUKZ0vBFJ1+IcSY8adQOj+Ifi7yPMk9kgRLzuVqyi6xEi9sAOT1HjnCSBVaHFBk6Sfg9wmva341QdVNJYGoAYjpc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757167131; c=relaxed/simple;
-	bh=TdIKhOuP91xtO+kBpMlPti49xxPy7PKfqvjKtUlqiK4=;
+	s=arc-20240116; t=1757167233; c=relaxed/simple;
+	bh=luEhERJ/TU2hke3Q2KVuf1crc/cesPTW8kBVqtgW9+E=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=PUTbGQuy8L5jfx9i+5FIFuxjuoStJoffrjPg3yBI0uBp9Y67PPthdMWrCN3HTLKG/QrE6lHfXZ4IOaxpxAkEuVH4DjPPsZ9qNVpLzlChKwcV16PHHvdG7L7NWjKJR+/bj/C+eFD1pZ4s801O3V7NNFBRoNGsouETQcxmxyw2MMU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HViaGdRx; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=pU4FMNHLS0X77+/MjBXoXz5TnyxfuZ7yNJpOc9oLa7wdRQUFpGlzoxiN/s2f1SY0vdZMhFF+GvytSAleA2ZMin/fN7T2IdrwF5MDmrqC+h6g+ri3tRTgaENa36X2AcOCiOzhSOsasJOkKI9OjHrPbyOSE83tc8FSbCqa+7/M6SQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OJCP0llI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HViaGdRx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60E85C4CEE7;
-	Sat,  6 Sep 2025 13:58:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OJCP0llI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02102C4CEE7
+	for <mptcp@lists.linux.dev>; Sat,  6 Sep 2025 14:00:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757167130;
-	bh=TdIKhOuP91xtO+kBpMlPti49xxPy7PKfqvjKtUlqiK4=;
+	s=k20201202; t=1757167233;
+	bh=luEhERJ/TU2hke3Q2KVuf1crc/cesPTW8kBVqtgW9+E=;
 	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=HViaGdRx7zXBpB+dK6AAroLlYOmDM8eiwktsGuOXe/WUXiYmLd2wLp7YWpplnhD38
-	 peu6wU9gqlioRpxS3dENZxyWInQOlJ5tsCys09X4I+D3RkrhJOx5Os+bZ6AR7keSQs
-	 4jPBllxft3hCZ7eRHGfXt5CI2exoKVPu8xiMMqUYLq7AI7oOeY/yiHjy0M42pyKOFa
-	 U0qOqybENhjymGtO1oHhifBLyd+xpKHWvQq7uIAPSyvNJsu/RF5EhiOBdDBoexQgZK
-	 09VXR/RyAx/8X/kfAnEUi/mqQmz9mKQwe6uoqK2agte2HKjsye2uAxAQUQKrWSTwZ/
-	 hiOaNhSW8+eQA==
-Message-ID: <79233605-a9e5-4406-9310-bb34063bafee@kernel.org>
-Date: Sat, 6 Sep 2025 15:58:48 +0200
+	b=OJCP0llIcQmzl7482P62VmvKVr+v86L+T6LfCadN9upSpqZ0yXCSA7bW6FvUYZGoW
+	 ZhOVhk0bVzT37OG9MRw3tMpKmvjDyy7lZC27Zq9llTQ7VagyHP7aB33rk3J0it80tI
+	 XOWySg/u6NuWZf9/dVlwNHVwBHXX0B97DbEnm1Z44wTHlKElHYIr8keq6AEWWBLKjf
+	 n67BYaUYMFlKKyV9h78S9Nw4cM5RwkHL1sW3BMrcCIti4V1P26OMZ4KR1XaOxY3g6J
+	 C+meZ6JdL9hqCPPBqeGGkaHQnJXc6QkBJI+KGE6B+qY9AuPDGU4MkWYlFzcTJER3WH
+	 v+dJNltkzZ12Q==
+Message-ID: <15895091-8920-4b0a-af01-589cff45ad48@kernel.org>
+Date: Sat, 6 Sep 2025 16:00:31 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net v2 5/5] selftests: mptcp: connect: print pcap
- suffix
+Subject: Re: [PATCH mptcp-net v2 0/5] selftests: mptcp: avoid spurious errors
+ on TCP disconnect
 Content-Language: en-GB, fr-BE
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+To: mptcp@lists.linux.dev
 References: <20250905-sft-mptcp-disc-err-v2-0-dfb3b6b4a877@kernel.org>
- <20250905-sft-mptcp-disc-err-v2-5-dfb3b6b4a877@kernel.org>
- <5ee562f1700818c635d79828b057a94943527e80.camel@kernel.org>
+ <5eb648c1-4723-7f9b-ae35-5c6aeccf256a@gmail.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,40 +86,27 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <5ee562f1700818c635d79828b057a94943527e80.camel@kernel.org>
+In-Reply-To: <5eb648c1-4723-7f9b-ae35-5c6aeccf256a@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi Geliang,
+Hello,
 
-On 06/09/2025 01:39, Geliang Tang wrote:
-> Hi Matt,
+On 05/09/2025 22:46, MPTCP CI wrote:
+> Hi Matthieu,
 > 
-> Thanks for this v2.
+> Thank you for your modifications, that's great!
 > 
-> On Fri, 2025-09-05 at 20:18 +0200, Matthieu Baerts (NGI0) wrote:
->> To be able to find which capture files have been produced after
->> several
->> runs.
->>
->> This suffix was not printed anywhere before.
->>
->> While at it, always use the same prefix by taking info from ns1,
->> instead
->> of "$connector_ns", which is sometimes ns1, sometimes ns2 in the
->> subtests.
->>
->> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
->> ---
->>  tools/testing/selftests/net/mptcp/mptcp_connect.sh | 6 +++++-
+> Our CI did some validations and here is its report:
 > 
-> Just wondering, is it necessary to synchronize this modification to
-> mptcp_join.sh to maintain consistency?
+> - KVM Validation: normal: Unstable: 3 failed test(s): packetdrill_dss packetdrill_fastopen packetdrill_syscalls 🔴
+> - KVM Validation: debug: Unstable: 3 failed test(s): packetdrill_dss packetdrill_fastopen packetdrill_syscalls 🔴
 
-I don't think that's needed: there is already a similar message in
-mptcp_join.sh:
+As mentioned in the cover letter, these failures were expected:
 
-  Capturing traffic for test $MPTCP_LIB_TEST_COUNTER into $capfile
+Note: Patch 1 will cause errors in Packetdrill, that's normal, see:
+
+  https://github.com/multipath-tcp/packetdrill/pull/171
 
 Cheers,
 Matt
