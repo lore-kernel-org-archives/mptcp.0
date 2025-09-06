@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F00D414A0B5;
-	Sat,  6 Sep 2025 13:26:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDE5C2ECEA9
+	for <mptcp@lists.linux.dev>; Sat,  6 Sep 2025 13:42:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757165187; cv=none; b=ZFWE0S57d1GpGxP9ItmTz2sK9I0eWkurRts+B/wjHf/4GjC2Lkqlzdu6K9sRr1y4Pv1xbDlqinxPJzOrAdApUVTqLQW50sqIZKeZncHpcLC/dQj0XJfvnNUhuvdyCEgXeRD2zJFz98ka8/cguD/vU6dwhXrgEA/FdcgizPERMC0=
+	t=1757166154; cv=none; b=qfCHgzDS1xXiiWuz8EpuXurTMOParYkACOy3wT0Yj1OG6x4VrF/NlGcpVo6hi0I4zEqxzeJl/RYEiltN/quL4zwXSEuOjG6NhmHM095e4urtqfaY+4QGy942bl8hFOWi4JZUl9dZraFMi8MR24xqnw5sqVo/+9yJKrpcc+1zWN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757165187; c=relaxed/simple;
-	bh=KrsqLP75fjTSQuxH9MYCwhh9T8LNrNFu1KfyBXwrQJg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oHD2OCZv3NRo4NFTi+6lTWyDobZgkEiEKPG1DgJYk6GqkX/A3MeAcaDDfups9kSCrB2qcpMw+eck0IUfhcIK8AaEH9Q5eV+mIgkKth1GS3obh3Eck9t7tgc2IQh/KCIwgERjy8gUadK/C8DF6YTaImkL7LbOfjvpqfgO8XkrO6c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N/24qotB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1757166154; c=relaxed/simple;
+	bh=SwbNg3VR+w3ZzRrLiuvlUK28gJqMniv7lW8dxgX0JVs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=ehKpN7tFmSVSWTcB7RoNYL8JvYBa5CCm5qCIF1ugpp/ZygGuQ/hrQpD+A+Hasia+IJQamvZHtsW6x90j4sFe6uZx08rcLaPjOlQtFQGkTjjGeJPq/V1uj1FsYFhOt1kYButE0VoegP14ImjESSAOnhEdg6Jjj4WeRUluTkUHGv4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F/7toklB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N/24qotB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7051EC4CEE7;
-	Sat,  6 Sep 2025 13:26:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F/7toklB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AB99C4CEE7;
+	Sat,  6 Sep 2025 13:42:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757165186;
-	bh=KrsqLP75fjTSQuxH9MYCwhh9T8LNrNFu1KfyBXwrQJg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=N/24qotBiUUiNc8CNgb4AtFv0+/smr42/eghiBNtOly429j8oHFDiEOYUFeyE5gYY
-	 TVPfw6JaAUPo8mjUsuc0FEWbaLSRmT9EuecFBVw7bOte5zK5P++/HCncATslysDkR0
-	 LV+VcP4QLSEUaVjpHKfDl5ibekp5TQOzCYR88LE5kE3yOBIKMY1V2ie9OhuWjpUuKj
-	 KbMYjaEgQCwK/7nzEY39XIcWJSGFAN064wz81/eyTFv4bq2X3RnpvnI5lamVy1DvLa
-	 Yls3jmWm8om/MGylaEv9/Mko7xPQ01ISxV5WKt6F3I42kwyZZLW2ImVGxf55h779/5
-	 ZI2eHHJuTk9Gw==
-Message-ID: <ab6ff5d8-2ef1-44de-b6db-8174795028a1@kernel.org>
-Date: Sat, 6 Sep 2025 15:26:20 +0200
+	s=k20201202; t=1757166153;
+	bh=SwbNg3VR+w3ZzRrLiuvlUK28gJqMniv7lW8dxgX0JVs=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=F/7toklBdbkbUYzcfZ4/j8iGKvocHkpUEpbvRLVshL27rJajI+TvUnuI+X5AC2gXF
+	 7Ut5VtWG0odLpRXPtXZJB/EvunwGMM4PMGN329wSEfgtqfs8LC/7su4Y3ASIW9wrNF
+	 BdfLu2RKj7tfXDQrwKe9lj84nQSAqzGVEXnIvtp9jPCaKeJy229UCGh9Ka/Fn2ZVPS
+	 4059VilYPcDblEbkEnIwY+7zvE5LP5eGxTYNGvwHitdcXGgnhxMH6S9c4nxuDBr9h8
+	 AYctMPCgwdYUJm7/m2Rf8RS1P8x3MvB3s6VnwOev7cru+N0GxVwXkS0OP5E1vr6EKW
+	 QoVu0qaGCbq2Q==
+Message-ID: <aa8f9007-71cb-4c82-b235-bd585da19922@kernel.org>
+Date: Sat, 6 Sep 2025 15:42:30 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,18 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp] mptcp: sockopt: make sync_socket_options propagate
- SOCK_KEEPOPEN
+Subject: Re: [PATCH mptcp-net v2 1/5] mptcp: propagate shutdown to subflows
+ when possible
 Content-Language: en-GB, fr-BE
-To: Krister Johansen <kjlx@templeofstupid.com>,
- Mat Martineau <martineau@kernel.org>
-Cc: Geliang Tang <geliang@kernel.org>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Simon Horman <horms@kernel.org>, Florian Westphal <fw@strlen.de>,
- netdev@vger.kernel.org, mptcp@lists.linux.dev, linux-kernel@vger.kernel.org,
- David Reaver <me@davidreaver.com>
-References: <aLuDmBsgC7wVNV1J@templeofstupid.com>
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+References: <20250905-sft-mptcp-disc-err-v2-0-dfb3b6b4a877@kernel.org>
+ <20250905-sft-mptcp-disc-err-v2-1-dfb3b6b4a877@kernel.org>
+ <9f2a05ac6034fb33f579302a0ede2ec13eb6c915.camel@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -92,45 +87,102 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <aLuDmBsgC7wVNV1J@templeofstupid.com>
+In-Reply-To: <9f2a05ac6034fb33f579302a0ede2ec13eb6c915.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Krister,
+Hi Geliang,
 
-On 06/09/2025 02:43, Krister Johansen wrote:
-> Users reported a scenario where MPTCP connections that were configured
-> with SO_KEEPALIVE prior to connect would fail to enable their keepalives
-> if MTPCP fell back to TCP mode.
+On 06/09/2025 02:45, Geliang Tang wrote:
+> On Fri, 2025-09-05 at 20:18 +0200, Matthieu Baerts (NGI0) wrote:
+>> When the MPTCP DATA FIN have been ACKed, there is no more MPTCP
+>> related
+>> metadata to exchange, and all subflows can be safely shutdown.
+>>
+>> Before this patch, the subflows were actually terminated at 'close()'
+>> time. That's certainly fine most of the time, but not when the
+>> userspace
+>> 'shutdown()' a connection, without close()ing it. When doing so, the
+>> subflows were staying in LAST_ACK state on one side -- and
+>> consequently
+>> in FIN_WAIT2 on the other side -- until the 'close()' of the MPTCP
+>> socket.
+>>
+>> Now, when the DATA FIN have been ACKed, all subflows are shutdown. A
+>> consequence of this is that the TCP 'FIN' flag can be set earlier
+>> now,
+>> but the end result is the same. This affects the packetdrill tests
+>> looking at the end of the MPTCP connections, but for a good reason.
+>>
+>> Fixes: 3721b9b64676 ("mptcp: Track received DATA_FIN sequence number
+>> and add related helpers")
+>> Fixes: 16a9a9da1723 ("mptcp: Add helper to process acks of DATA_FIN")
+>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+>> ---
+>>  net/mptcp/protocol.c | 16 ++++++++++++++++
+>>  1 file changed, 16 insertions(+)
+>>
+>> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+>> index
+>> 1c26acf6c4145896ecbb5c7f7004121c66a20649..9feb9f437c2bdfff392249e7ad0
+>> 0edd09ba67ac3 100644
+>> --- a/net/mptcp/protocol.c
+>> +++ b/net/mptcp/protocol.c
+>> @@ -372,6 +372,20 @@ static void mptcp_close_wake_up(struct sock *sk)
+>>  		sk_wake_async(sk, SOCK_WAKE_WAITD, POLL_IN);
+>>  }
+>>  
+>> +static void mptcp_shutdown_subflows(struct mptcp_sock *msk)
+>> +{
+>> +	struct mptcp_subflow_context *subflow;
+>> +
+>> +	mptcp_for_each_subflow(msk, subflow) {
+>> +		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
+>> +		bool slow;
+>> +
+>> +		slow = lock_sock_fast(ssk);
+>> +		tcp_shutdown(ssk, SEND_SHUTDOWN);
+>> +		unlock_sock_fast(ssk, slow);
+>> +	}
+>> +}
+>> +
+>>  /* called under the msk socket lock */
+>>  static bool mptcp_pending_data_fin_ack(struct sock *sk)
+>>  {
+>> @@ -396,6 +410,7 @@ static void mptcp_check_data_fin_ack(struct sock
+>> *sk)
+>>  			break;
+>>  		case TCP_CLOSING:
+>>  		case TCP_LAST_ACK:
+>> +			mptcp_shutdown_subflows(msk);
+>>  			mptcp_set_state(sk, TCP_CLOSE);
+>>  			break;
+>>  		}
+>> @@ -564,6 +579,7 @@ static bool mptcp_check_data_fin(struct sock *sk)
+>>  			mptcp_set_state(sk, TCP_CLOSING);
+>>  			break;
+>>  		case TCP_FIN_WAIT2:
+>> +			mptcp_shutdown_subflows(msk);
 > 
-> After investigating, this affects keepalives for any connection where
-> sync_socket_options is called on a socket that is in the closed or
-> listening state.  Joins are handled properly. For connects,
-> sync_socket_options is called when the socket is still in the closed
-> state.  The tcp_set_keepalive() function does not act on sockets that
-> are closed or listening, hence keepalive is not immediately enabled.
-> Since the SO_KEEPOPEN flag is absent, it is not enabled later in the
-> connect sequence via tcp_finish_connect.  Setting the keepalive via
-> sockopt after connect does work, but would not address any subsequently
-> created flows.
-> 
-> Fortunately, the fix here is straight-forward: set SOCK_KEEPOPEN on the
-> subflow when calling sync_socket_options.
-> 
-> The fix was valdidated both by using tcpdump to observe keeplaive
-> packets not being sent before the fix, and being sent after the fix.  It
-> was also possible to observe via ss that the keepalive timer was not
-> enabled on these sockets before the fix, but was enabled afterwards.
+> I think we should not directly call mptcp_shutdown_subflows() within
+> mptcp_check_data_fin() and mptcp_check_data_fin_ack(), but should
+> instead call it after these functions return and the sk state is
+> TCP_CLOSE. This ensures that the original purpose of these two
+> functions remains unchanged.
 
+Thank you for the review. I'm not sure to understand what you mean about
+the "original purpose": they both set the appropriated actions when
+DATA_FIN have been received. Here, I do want to shut the subflows down
+when the DATA_FIN ACK are received, so that's the good spot, no?
 
-Thank you for the fix! Indeed, the SOCK_KEEPOPEN flag was missing! This
-patch looks good to me as well:
+Note that commit 3721b9b64676 ("mptcp: Track received DATA_FIN sequence
+number and add related helpers") already had a hint of what should have
+been done: see the "Close subflows now?" comment, later removed in
+commit e16163b6e2b7 ("mptcp: refactor shutdown and close").
 
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-
-
-@Netdev Maintainers: please apply this patch in 'net' directly. But I
-can always re-send it later if preferred.
+Or maybe do you mean their original name "check_data_fin(_ack)" is
+confusing? The "check" here is not just to check if the DATA_FIN (ACK)
+was set, but to check actions related to them.
 
 Cheers,
 Matt
