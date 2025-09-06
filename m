@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9442E2EBDCF;
-	Sat,  6 Sep 2025 12:59:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F00D414A0B5;
+	Sat,  6 Sep 2025 13:26:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757163597; cv=none; b=ts9sRZO+xjKbrbxg3yVV3H9lTg7guUTWwKWgQRQxmQDi0UroiCUiOwDcfDNsS+X4JyeX9H4HlaoKfYG8Vq0L2rY/Zw6GmjUaMv+petuZpQDrlLRPjwsmLpGLmlVQU4rdb6F1NmhPfY0n/Ijf7gN6TDazPowMuSLYIHGxAKCIMOA=
+	t=1757165187; cv=none; b=ZFWE0S57d1GpGxP9ItmTz2sK9I0eWkurRts+B/wjHf/4GjC2Lkqlzdu6K9sRr1y4Pv1xbDlqinxPJzOrAdApUVTqLQW50sqIZKeZncHpcLC/dQj0XJfvnNUhuvdyCEgXeRD2zJFz98ka8/cguD/vU6dwhXrgEA/FdcgizPERMC0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757163597; c=relaxed/simple;
-	bh=dPHHOFQzeKso8XCobbIJUr1GuQ9B1WljENCofqy1yaw=;
+	s=arc-20240116; t=1757165187; c=relaxed/simple;
+	bh=KrsqLP75fjTSQuxH9MYCwhh9T8LNrNFu1KfyBXwrQJg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=q2koswFrLizRsZqulq+8sAQTWnJSr4Xqouz+cu3fGT7MJ27k4M0Q0HNXsd70y5ro6FKZg3vjQFog9eV9ojnZgEqyRUBHfB3REH6h39qbRqKNMtxQYlIWvvCJDWMpyo/eajuL1ZTGADf3otPewawYPkzayZllAsJBmMGBuXkAq7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IQ42NY5Y; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=oHD2OCZv3NRo4NFTi+6lTWyDobZgkEiEKPG1DgJYk6GqkX/A3MeAcaDDfups9kSCrB2qcpMw+eck0IUfhcIK8AaEH9Q5eV+mIgkKth1GS3obh3Eck9t7tgc2IQh/KCIwgERjy8gUadK/C8DF6YTaImkL7LbOfjvpqfgO8XkrO6c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N/24qotB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IQ42NY5Y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 653A7C4CEE7;
-	Sat,  6 Sep 2025 12:59:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N/24qotB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7051EC4CEE7;
+	Sat,  6 Sep 2025 13:26:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757163597;
-	bh=dPHHOFQzeKso8XCobbIJUr1GuQ9B1WljENCofqy1yaw=;
+	s=k20201202; t=1757165186;
+	bh=KrsqLP75fjTSQuxH9MYCwhh9T8LNrNFu1KfyBXwrQJg=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=IQ42NY5YOLr866fPj4gplhFU0OKJtYXQK/5LeA0b6dCBzavnIfnD690vR/GlmVRnC
-	 x6eb9GxIoDOQRVtWmXnDGbbS5FHK+NwZsy7bwUV6Jzn4PIBBGnGHLHNAKIehAyiso3
-	 MpH5y7QAedUSEVTkD+HqQA6eT+DoYRAYHpTPuJVUrOQP5aU5y+9enxuyX/Egf+UuJr
-	 oPjqBzejdXTApHYDAyLFhBRQJiTZuuRukAwiBL6vyM0a1TAyaXfsLHPhhNimQZvi1z
-	 dTwV6rh7UZz1yxW2drXenpFAVfgFeFUpFpJyCLXNuY3uo2e3DSHhju52hIjfWmjqaX
-	 d8ZZkrEa6MDrw==
-Message-ID: <83f2156f-83d8-4b41-84a2-64ea0a9908f4@kernel.org>
-Date: Sat, 6 Sep 2025 14:59:50 +0200
+	b=N/24qotBiUUiNc8CNgb4AtFv0+/smr42/eghiBNtOly429j8oHFDiEOYUFeyE5gYY
+	 TVPfw6JaAUPo8mjUsuc0FEWbaLSRmT9EuecFBVw7bOte5zK5P++/HCncATslysDkR0
+	 LV+VcP4QLSEUaVjpHKfDl5ibekp5TQOzCYR88LE5kE3yOBIKMY1V2ie9OhuWjpUuKj
+	 KbMYjaEgQCwK/7nzEY39XIcWJSGFAN064wz81/eyTFv4bq2X3RnpvnI5lamVy1DvLa
+	 Yls3jmWm8om/MGylaEv9/Mko7xPQ01ISxV5WKt6F3I42kwyZZLW2ImVGxf55h779/5
+	 ZI2eHHJuTk9Gw==
+Message-ID: <ab6ff5d8-2ef1-44de-b6db-8174795028a1@kernel.org>
+Date: Sat, 6 Sep 2025 15:26:20 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,20 +35,19 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH v2 net-next 5/9] mptcp: snmp: do not use SNMP_MIB_SENTINEL
- anymore
-To: Eric Dumazet <edumazet@google.com>, "David S . Miller"
- <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>
-Cc: Simon Horman <horms@kernel.org>, David Ahern <dsahern@kernel.org>,
- Jamie Bainbridge <jamie.bainbridge@gmail.com>,
- Abhishek Rawal <rawal.abhishek92@gmail.com>, netdev@vger.kernel.org,
- eric.dumazet@gmail.com, Mat Martineau <martineau@kernel.org>,
- Geliang Tang <geliang@kernel.org>, MPTCP Linux <mptcp@lists.linux.dev>
-References: <20250905165813.1470708-1-edumazet@google.com>
- <20250905165813.1470708-6-edumazet@google.com>
-From: Matthieu Baerts <matttbe@kernel.org>
+Subject: Re: [PATCH mptcp] mptcp: sockopt: make sync_socket_options propagate
+ SOCK_KEEPOPEN
 Content-Language: en-GB, fr-BE
+To: Krister Johansen <kjlx@templeofstupid.com>,
+ Mat Martineau <martineau@kernel.org>
+Cc: Geliang Tang <geliang@kernel.org>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Simon Horman <horms@kernel.org>, Florian Westphal <fw@strlen.de>,
+ netdev@vger.kernel.org, mptcp@lists.linux.dev, linux-kernel@vger.kernel.org,
+ David Reaver <me@davidreaver.com>
+References: <aLuDmBsgC7wVNV1J@templeofstupid.com>
+From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -93,18 +92,45 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20250905165813.1470708-6-edumazet@google.com>
+In-Reply-To: <aLuDmBsgC7wVNV1J@templeofstupid.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Eric,
+Hi Krister,
 
-On 05/09/2025 18:58, Eric Dumazet wrote:
-> Use ARRAY_SIZE(), so that we know the limit at compile time.
+On 06/09/2025 02:43, Krister Johansen wrote:
+> Users reported a scenario where MPTCP connections that were configured
+> with SO_KEEPALIVE prior to connect would fail to enable their keepalives
+> if MTPCP fell back to TCP mode.
+> 
+> After investigating, this affects keepalives for any connection where
+> sync_socket_options is called on a socket that is in the closed or
+> listening state.  Joins are handled properly. For connects,
+> sync_socket_options is called when the socket is still in the closed
+> state.  The tcp_set_keepalive() function does not act on sockets that
+> are closed or listening, hence keepalive is not immediately enabled.
+> Since the SO_KEEPOPEN flag is absent, it is not enabled later in the
+> connect sequence via tcp_finish_connect.  Setting the keepalive via
+> sockopt after connect does work, but would not address any subsequently
+> created flows.
+> 
+> Fortunately, the fix here is straight-forward: set SOCK_KEEPOPEN on the
+> subflow when calling sync_socket_options.
+> 
+> The fix was valdidated both by using tcpdump to observe keeplaive
+> packets not being sent before the fix, and being sent after the fix.  It
+> was also possible to observe via ss that the keepalive timer was not
+> enabled on these sockets before the fix, but was enabled afterwards.
 
-Thank you for having done this modification in MPTCP as well!
+
+Thank you for the fix! Indeed, the SOCK_KEEPOPEN flag was missing! This
+patch looks good to me as well:
 
 Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+
+
+@Netdev Maintainers: please apply this patch in 'net' directly. But I
+can always re-send it later if preferred.
 
 Cheers,
 Matt
