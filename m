@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2409818BC3B
-	for <mptcp@lists.linux.dev>; Mon,  8 Sep 2025 17:22:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE1F128399;
+	Mon,  8 Sep 2025 17:31:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757352173; cv=none; b=Ra01c41guj3h7mkXYkU5RSdavoaXNX/MGRds7pGwXjFx3bGWlUpPFqyjR3vk2oEPTFPjTbZ742QDTLpDfxOGdnd7T+a3zUagmMaUdH/vA71mEop2Eg8cepGmRxE9dZxtsxiHghfDpfDG3ZS9OshVIvnrrvl9MLZ1TTjEvPfPwmg=
+	t=1757352709; cv=none; b=RXt+8fPeLht4hOLPaWnvZEJ3AJMhXdO8G6xRQIZOtRHJBzNAwljQivOnKaPDlQoLb6qivPmPoAkI1z8tlZKltvJMMxPut/BbXC0ifkclRLRB+gcpuBCUif0t/laeb4u+g7yU3NPgcy4IHaH7GeqBivpO+pkeo2ZW9CIfvzqZ7cM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757352173; c=relaxed/simple;
-	bh=s22dBdLBa5LGCSr3B9n2t9WBTj8xZAZ8FH+BO604cKc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=qz0N12GOa+DriZ8o8/dkDwAgaSPzE0ya+XoSRvH2K9pfZTun4vagUIH/w20aVdVn7qBWVzVskfO7uJvewC41jUsWD+qX27E6p9xHmxRbhxze/EkRVpTotZsd5VU6BdFSSYzFAtilct7XKjT+1+9H+FpZ3QozG1C/9fVygEam1As=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=demjOcoz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1757352709; c=relaxed/simple;
+	bh=+GJvdWbYdEkO2iexLk7YraWW+Q1K7c80iEct8a7Ig08=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=myFgTMlijUpivlObkhpf9SM+gz/89mPcn1pnyCqQIs0INvVmEk64ufNcAb1Pqx2BAII23TTy3jgGE74BgI9AsNKHwaH4bbLYxFeaKDE7aU9HRF0mA5/nZeYUx45aFGiIarY6u3WKBvrZzTFmmOWwpGt25uO9c5FTH6UxCTb3/7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nKb0Vaa6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="demjOcoz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97FF3C4CEF1
-	for <mptcp@lists.linux.dev>; Mon,  8 Sep 2025 17:22:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nKb0Vaa6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2627C4CEF1;
+	Mon,  8 Sep 2025 17:31:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757352173;
-	bh=s22dBdLBa5LGCSr3B9n2t9WBTj8xZAZ8FH+BO604cKc=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=demjOcozT7h8zZVJ59+nMDX2m0tdeeRg8vloHfztHqsEnvpxioYFizVt/7zNYzS1V
-	 Pm6OYjItmHmnbL4MfT6arXE+BT2FYX0cvirYsXfHN1WxOcR2ndvbKPMKridfnCO3HO
-	 GALVxLywjO7Mp4/olv19+d90KWjfwdYlSD4OW4GdB5DrKyB+0W90HQ58j/g9TTmDHm
-	 5lDJQ6YlqwdlogEJL+Wn3xXutAminCBu8247p1LfZ5VuIF9vnIKN0u2eh67/RoSjl3
-	 ZnkMg17Xi9d/3dfdjfFcMAJtAqZsM4HKf6bcjPYyyFznKK5U2hfhFg9QFSOtGIY+8v
-	 hI+oHdKGfp3Kw==
-Message-ID: <7a3a1796-5375-4f31-aa76-4a194ee13eab@kernel.org>
-Date: Mon, 8 Sep 2025 19:22:50 +0200
+	s=k20201202; t=1757352708;
+	bh=+GJvdWbYdEkO2iexLk7YraWW+Q1K7c80iEct8a7Ig08=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=nKb0Vaa6R6NYNEhMOdCuSCZp+oUbllfgqCTq09Di+mi3HR05l7lLTtqUXO2QiPh5D
+	 2TkhXqVhsnCGDCILeuJ3Th5CZnGG/+Qy0vxAG1rQ7kOTmpDbwoxX0SpIlmc6yizT2u
+	 PBjtsWe4axam2aOM6I6nsko6txOuJ921r9tItcjIzmsK4kpJs9uFkg+dnjPocJxG6E
+	 i08+j0L54EyL4hquPoVsrO70xn22r89elZosE1O65Jzv/BIyWhEOE9/iwQNlQFw4EX
+	 gEEuvbp2hHx3njq3vEXg+8sgwjfCPgqFs8D8t63V0nQP0r8cronoUzyfFtmzjAPQDa
+	 lV0LtmAheILWg==
+Message-ID: <23a66a02-7de9-40c5-995d-e701cb192f8b@kernel.org>
+Date: Mon, 8 Sep 2025 19:31:43 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,11 +35,21 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net 0/7] mptcp: pm: nl: announce deny-join-id0
- attribute
+Subject: Re: [PATCH mptcp] mptcp: sockopt: make sync_socket_options propagate
+ SOCK_KEEPOPEN
 Content-Language: en-GB, fr-BE
-To: MPTCP Linux <mptcp@lists.linux.dev>
-References: <20250829-mptcp-pm-user-c-flag-v1-0-78b25dda7708@kernel.org>
+To: Krister Johansen <kjlx@templeofstupid.com>
+Cc: Geliang Tang <geliang@kernel.org>, Mat Martineau <martineau@kernel.org>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Simon Horman <horms@kernel.org>, Florian Westphal <fw@strlen.de>,
+ netdev@vger.kernel.org, mptcp@lists.linux.dev, linux-kernel@vger.kernel.org,
+ David Reaver <me@davidreaver.com>
+References: <aLuDmBsgC7wVNV1J@templeofstupid.com>
+ <ab6ff5d8-2ef1-44de-b6db-8174795028a1@kernel.org>
+ <83191d507b7bc9b0693568c2848319932e6b974e.camel@kernel.org>
+ <78d4a7b8-8025-493a-805c-a4c5d26836a8@kernel.org>
+ <aL8RoSniweGJgm3h@templeofstupid.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -85,72 +95,108 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20250829-mptcp-pm-user-c-flag-v1-0-78b25dda7708@kernel.org>
+In-Reply-To: <aL8RoSniweGJgm3h@templeofstupid.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hello,
+Hi Krister,
 
-On 29/08/2025 22:33, Matthieu Baerts (NGI0) wrote:
-> During the connection establishment, a peer can tell the other that it
-> cannot establish new subflows to the initial IP address and port by
-> setting the 'C' flag [1]. Doing so makes sense when the sender is behind
-> a strict NAT, operating behind a legacy Layer 4 load balancer, or using
-> anycast IP address for example.
+On 08/09/2025 19:25, Krister Johansen wrote:
+> On Mon, Sep 08, 2025 at 07:13:12PM +0200, Matthieu Baerts wrote:
+>> Hi Geliang,
+>>
+>> On 07/09/2025 02:51, Geliang Tang wrote:
+>>> Hi Matt,
+>>>
+>>> On Sat, 2025-09-06 at 15:26 +0200, Matthieu Baerts wrote:
+>>>> Hi Krister,
+>>>>
+>>>> On 06/09/2025 02:43, Krister Johansen wrote:
+>>>>> Users reported a scenario where MPTCP connections that were
+>>>>> configured
+>>>>> with SO_KEEPALIVE prior to connect would fail to enable their
+>>>>> keepalives
+>>>>> if MTPCP fell back to TCP mode.
+>>>>>
+>>>>> After investigating, this affects keepalives for any connection
+>>>>> where
+>>>>> sync_socket_options is called on a socket that is in the closed or
+>>>>> listening state.  Joins are handled properly. For connects,
+>>>>> sync_socket_options is called when the socket is still in the
+>>>>> closed
+>>>>> state.  The tcp_set_keepalive() function does not act on sockets
+>>>>> that
+>>>>> are closed or listening, hence keepalive is not immediately
+>>>>> enabled.
+>>>>> Since the SO_KEEPOPEN flag is absent, it is not enabled later in
+>>>>> the
+>>>>> connect sequence via tcp_finish_connect.  Setting the keepalive via
+>>>>> sockopt after connect does work, but would not address any
+>>>>> subsequently
+>>>>> created flows.
+>>>>>
+>>>>> Fortunately, the fix here is straight-forward: set SOCK_KEEPOPEN on
+>>>>> the
+>>>>> subflow when calling sync_socket_options.
+>>>>>
+>>>>> The fix was valdidated both by using tcpdump to observe keeplaive
+>>>>> packets not being sent before the fix, and being sent after the
+>>>>> fix.  It
+>>>>> was also possible to observe via ss that the keepalive timer was
+>>>>> not
+>>>>> enabled on these sockets before the fix, but was enabled
+>>>>> afterwards.
+>>>>
+>>>>
+>>>> Thank you for the fix! Indeed, the SOCK_KEEPOPEN flag was missing!
+>>>> This
+>>>> patch looks good to me as well:
+>>>>
+>>>> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+>>>>
+>>>>
+>>>> @Netdev Maintainers: please apply this patch in 'net' directly. But I
+>>>> can always re-send it later if preferred.
+>>>
+>>> nit:
+>>>
+>>> I just noticed his patch breaks 'Reverse X-Mas Tree' order in
+>>> sync_socket_options(). If you think any changes are needed, please
+>>> update this when you re-send it.
+>>
+>> Sure, I can do the modification and send it with other fixes we have.
 > 
-> When this 'C' flag is set, the path-managers must then not try to
-> establish new subflow to the other peer's initial IP address and port.
-> The in-kernel PM has access to this info, but the userspace PM didn't.
-> 
-> The last patch is adding the new attribute in the Netlink events. Please
-> see the note with a question about how to add this new attribute.
-> 
-> But before that, a few fixes have been added:
-> 
-> - Patch 1: add remote_deny_join_id0 info on passive connections. A fix
->   for v5.14.
-> 
-> - Patch 2: respect the deny_join_id0 attribute by blocking the creation
->   of new subflows to the initial IP address and port if set. A fix for
->   v5.19.
-> 
-> - Patch 3: record the deny_join_id0 info when TFO is used. A fix for
->   v6.2.
-> 
-> - Patch 4: fix a wrong attribute type in the Netlink MPTCP specs. A fix
->   for v6.7.
-> 
-> - Patch 5: stop mentioning net.mptcp.pm_type in the doc as it is
->   deprecated. A fix for v6.15.
-> 
-> - Patch 6: support Shellcheck v0.11.0 in the MPTCP selftests.
-> 
-> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> ---
-> Matthieu Baerts (NGI0) (7):
->       mptcp: set remote_deny_join_id0 on SYN recv
->       mptcp: pm: userspace: respect deny_join_id0 attr
->       mptcp: tfo: record 'deny join id0' info
+> Thanks for the reviews, Geliang and Matt.  If you'd like me to fix the
+> formatting up and send a v2, I'm happy to do that as well.  Just let me
+> know.
 
->       netlink: specs: mptcp: fix if-idx attribute type
->       doc: mptcp: net.mptcp.pm_type is deprecated
->       selftests: mptcp: shellcheck: support v0.11.0
+I was going to apply this diff:
 
-I just applied these last 3 patches, reviewed by Geliang (Thanks)
+> diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+> index 13108e9f982b..2abe6f1e9940 100644
+> --- a/net/mptcp/sockopt.c
+> +++ b/net/mptcp/sockopt.c
+> @@ -1532,11 +1532,12 @@ static void sync_socket_options(struct mptcp_sock *msk, struct sock *ssk)
+>  {
+>         static const unsigned int tx_rx_locks = SOCK_RCVBUF_LOCK | SOCK_SNDBUF_LOCK;
+>         struct sock *sk = (struct sock *)msk;
+> -       int kaval = !!sock_flag(sk, SOCK_KEEPOPEN);
+> +       bool keep_open;
+>  
+> +       keep_open = sock_flag(sk, SOCK_KEEPOPEN);
+>         if (ssk->sk_prot->keepalive)
+> -               ssk->sk_prot->keepalive(ssk, kaval);
+> -       sock_valbool_flag(ssk, SOCK_KEEPOPEN, kaval);
+> +               ssk->sk_prot->keepalive(ssk, keep_open);
+> +       sock_valbool_flag(ssk, SOCK_KEEPOPEN, keep_open);
+>  
+>         ssk->sk_priority = sk->sk_priority;
+>         ssk->sk_bound_dev_if = sk->sk_bound_dev_if;
 
-New patches for t/upstream-net and t/upstream:
-- 7dae247dbfe1: netlink: specs: mptcp: fix if-idx attribute type
-- ef0f22271156: doc: mptcp: net.mptcp.pm_type is deprecated
-- f44e77b81e04: selftests: mptcp: shellcheck: support v0.11.0
-- Results: 64d8ee7c00d0..d449a1cf7863 (export-net)
-- Results: 64f95ae49169..f6a1bd069542 (export)
+(sock_flag() returns a bool, and 'keep_open' is maybe clearer)
 
-Tests are now in progress:
-
-- export-net:
-https://github.com/multipath-tcp/mptcp_net-next/commit/bdfdb385586b1310d7789298f64a9a4075d879c5/checks
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/9c5417b6ec48952bda958c08960c129f69f0314a/checks
+But up to you, I really don't mind if you prefer to send the v2 by
+yourself, just let me know.
 
 Cheers,
 Matt
