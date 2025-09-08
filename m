@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CF623126C5;
-	Mon,  8 Sep 2025 17:13:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D6673126DB
+	for <mptcp@lists.linux.dev>; Mon,  8 Sep 2025 17:16:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757351598; cv=none; b=RG3iUYSLPTbvrfTqhF8hGc3HoKq43ax0wkvXoSbowIR/gEdztrbuLKTQDSXxkOqnJd0iev88AKFS8ZTPAhzKtRuQ/MpWkMaA/KaOVwDfXI/H6M81+KnWOdZUD7I3yp1J1lnOh5i6xY0tKByRn6ESOMy3U7bHiHVtPk4Y9VId0RA=
+	t=1757351773; cv=none; b=UcpgoZDaTUUVfQmVHHpcsasHbXeNWsoyGFZTL1L3N+q0JZc8tw3c9zv8HjxNc5WWtNdFKTgas3fbN4Zgh+/bdG9/h388VVstx9xm8dBjJAW4OiYPProf0Ju6WCl6PKcbJLrp5gylbwjNAp5g47yMeTtBA49BFM8F8llqMlslOm4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757351598; c=relaxed/simple;
-	bh=Vlw2PodGlpH6M6DPQXMu0NrJCErZpds2VD2me/d72cY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Rfw0Kftuo3XnbU3OyiU2ivmeNTPqljkuhSuEYj+2jcmkvW7oaCA1Zk82Uytijh5tnAPqyPNghYo+gtibNfgcm85e39LqwA9E/zQ/1YB3QI8Dr79AzVbiBtF3ny+aQx9FSwuY0aASeJVL77TYAlBEAL5k3ogJqoY0kVuwySFdTmU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oW3qbeNr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1757351773; c=relaxed/simple;
+	bh=Hs+gWkOlbzzT2YICZ9kx8jveGKfVRXUpVN2Xvm1IhTY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=Y9RyDNddCAn3HzGHQvXDMHaApc2YT1dxus6gCotRRXsrCP4v3zvkhgRjKMcWqnZKHhtqSVCNQlZCs7iuatFC7exTi2UohHcttQpQUJ6EVaqMOzhZL/krMpyhCkTEfP0KVKQIJNsN0nIEquGPZFFzB28tjjoXxJe4d2hcqp4tjnY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PD9gR6ba; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oW3qbeNr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFFFFC4CEF1;
-	Mon,  8 Sep 2025 17:13:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PD9gR6ba"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BFF0C4CEF5;
+	Mon,  8 Sep 2025 17:16:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757351597;
-	bh=Vlw2PodGlpH6M6DPQXMu0NrJCErZpds2VD2me/d72cY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=oW3qbeNrlpu8ppgXT95Ck44viN5TsYegZgq8XIwZwWZnDOKV44i1sCeK2QsgFLj0r
-	 1u3NMyU/RCl3GBOuY2UT0SOBCzd9a1OE0W4I86J+CoZDlIPKxXN+HfdTg5roVmdKLO
-	 O384f6851628Gs+xQpMTDOiJ56kjHbuM3f3v+pO2Yxs0JYO7CbAo1B4azsBhrrCEEb
-	 0QTT+npqO5YC2xvWPHH4mQ+Ha3mYGzeHH8jTO4gehYL8vdhtnugeBWNcX8fvqIKbpe
-	 DdRS7giCEC5BDdLEy8diIMP5em+gh7JH7Fd9A+GytemIQokIUjK4pOLe/Sc5QzCBDc
-	 2HBVDVjzKGysA==
-Message-ID: <78d4a7b8-8025-493a-805c-a4c5d26836a8@kernel.org>
-Date: Mon, 8 Sep 2025 19:13:12 +0200
+	s=k20201202; t=1757351772;
+	bh=Hs+gWkOlbzzT2YICZ9kx8jveGKfVRXUpVN2Xvm1IhTY=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=PD9gR6ba6oD3ueDFMWdQFhM2j69H1Vg/+UN+lNV6ksAbTOd51mBiQwbmE8PxEbSgy
+	 FDEMKqmmElo0GA+wcJgO3izIITXw47W/WjR8eMhU2rUdWgLTnMuzmcavwFb4DIiOk8
+	 rq32DlQOqkVpL/QklMubjcwqr7mUmNu2MDO9r4yl2c/L+hE+8Eq7jcCsBbMMhtGbLP
+	 qzBC7AVwJHvmpIEYg8dxapAjM8+56eNYUS2iqJsTPlS7o4Ze2lQ5nCJ3FOXZ4rCpOd
+	 AEq0gfLp6I3TWK95Ece7E2BjFj1i6XEZs6WZmIhoukUGAaVbXiyJuaTGzBi/cjpTBg
+	 rypANZ6HoieSw==
+Message-ID: <2bea37bc-4ef2-439c-a71f-55e460a7edd6@kernel.org>
+Date: Mon, 8 Sep 2025 19:16:09 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,21 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp] mptcp: sockopt: make sync_socket_options propagate
- SOCK_KEEPOPEN
+Subject: Re: [PATCH mptcp-net 4/7] netlink: specs: mptcp: fix if-idx attribute
+ type
 Content-Language: en-GB, fr-BE
-To: Geliang Tang <geliang@kernel.org>,
- Krister Johansen <kjlx@templeofstupid.com>,
- Mat Martineau <martineau@kernel.org>
-Cc: "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
- Florian Westphal <fw@strlen.de>, netdev@vger.kernel.org,
- mptcp@lists.linux.dev, linux-kernel@vger.kernel.org,
- David Reaver <me@davidreaver.com>
-References: <aLuDmBsgC7wVNV1J@templeofstupid.com>
- <ab6ff5d8-2ef1-44de-b6db-8174795028a1@kernel.org>
- <83191d507b7bc9b0693568c2848319932e6b974e.camel@kernel.org>
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+References: <20250829-mptcp-pm-user-c-flag-v1-0-78b25dda7708@kernel.org>
+ <20250829-mptcp-pm-user-c-flag-v1-4-78b25dda7708@kernel.org>
+ <f6f2bdcba4fed92a6257c2faeafb65b570551773.camel@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -95,74 +87,44 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <83191d507b7bc9b0693568c2848319932e6b974e.camel@kernel.org>
+In-Reply-To: <f6f2bdcba4fed92a6257c2faeafb65b570551773.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 Hi Geliang,
 
-On 07/09/2025 02:51, Geliang Tang wrote:
+On 06/09/2025 16:16, Geliang Tang wrote:
 > Hi Matt,
 > 
-> On Sat, 2025-09-06 at 15:26 +0200, Matthieu Baerts wrote:
->> Hi Krister,
+> On Fri, 2025-08-29 at 22:33 +0200, Matthieu Baerts (NGI0) wrote:
+>> This attribute is used as a signed number in the code in
+>> pm_netlink.c:
 >>
->> On 06/09/2025 02:43, Krister Johansen wrote:
->>> Users reported a scenario where MPTCP connections that were
->>> configured
->>> with SO_KEEPALIVE prior to connect would fail to enable their
->>> keepalives
->>> if MTPCP fell back to TCP mode.
->>>
->>> After investigating, this affects keepalives for any connection
->>> where
->>> sync_socket_options is called on a socket that is in the closed or
->>> listening state.  Joins are handled properly. For connects,
->>> sync_socket_options is called when the socket is still in the
->>> closed
->>> state.  The tcp_set_keepalive() function does not act on sockets
->>> that
->>> are closed or listening, hence keepalive is not immediately
->>> enabled.
->>> Since the SO_KEEPOPEN flag is absent, it is not enabled later in
->>> the
->>> connect sequence via tcp_finish_connect.  Setting the keepalive via
->>> sockopt after connect does work, but would not address any
->>> subsequently
->>> created flows.
->>>
->>> Fortunately, the fix here is straight-forward: set SOCK_KEEPOPEN on
->>> the
->>> subflow when calling sync_socket_options.
->>>
->>> The fix was valdidated both by using tcpdump to observe keeplaive
->>> packets not being sent before the fix, and being sent after the
->>> fix.  It
->>> was also possible to observe via ss that the keepalive timer was
->>> not
->>> enabled on these sockets before the fix, but was enabled
->>> afterwards.
+>>   nla_put_s32(skb, MPTCP_ATTR_IF_IDX, ssk->sk_bound_dev_if))
 >>
+>> The specs should then reflect that. Note that other 'if-idx'
+>> attributes
+>> from the same .yaml file use a signed number as well.
 >>
->> Thank you for the fix! Indeed, the SOCK_KEEPOPEN flag was missing!
->> This
->> patch looks good to me as well:
->>
->> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
->>
->>
->> @Netdev Maintainers: please apply this patch in 'net' directly. But I
->> can always re-send it later if preferred.
+>> Fixes: bc8aeb2045e2 ("Documentation: netlink: add a YAML spec for
+>> mptcp")
+>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 > 
-> nit:
+> Patches 4-6 LGTM!
 > 
-> I just noticed his patch breaks 'Reverse X-Mas Tree' order in
-> sync_socket_options(). If you think any changes are needed, please
-> update this when you re-send it.
+> Reviewed-by: Geliang Tang <geliang@kernel.org>
+> 
+> [mptcp-net,4/7] netlink: specs: mptcp: fix if-idx attribute type
+> [mptcp-net,5/7] doc: mptcp: net.mptcp.pm_type is deprecated
+> [mptcp-net,6/7] selftests: mptcp: shellcheck: support v0.11.0 
+> 
+> These three patches are relatively independent and can be removed from
+> this series. They should be merged into the export branch first and do
+> not need to be included in the v2 iteration. I changed the states of
+> them as "Queued".
 
-Sure, I can do the modification and send it with other fixes we have.
-
-pw-bot: cr
+These patches were ordered by kernel versions these patches should be
+backported to. But good idea, I can apply and send them today so it is done.
 
 Cheers,
 Matt
