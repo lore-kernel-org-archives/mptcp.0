@@ -1,130 +1,84 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86D3D275AF6;
-	Tue,  9 Sep 2025 09:08:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E33522CBD9;
+	Tue,  9 Sep 2025 14:04:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757408933; cv=none; b=NNLVc+mCKYxAT1zCUEBApy5aF6SZidTZSNddojCkVcxInRzJ2wjumgD6e/Bv9vi9TrqssD7MzBVeTtvxDi/lCs2yhJJVHb+JNJQwnWhxgkQ/Aq/Aws3I5bPoNaD4BK849c8ZHzOvGwJKzZRcDwZ3wJoPaEPfiO2GS1MbuhCsJas=
+	t=1757426656; cv=none; b=RtvlGG07oZQAYRtz77jDYK3ypIblQwqVxQWd5Lk20rJ+0NLYCUYz4H85tkMbUg8SVuyDVMtuDdRTgyNza5rPFmESxBxr2BIf1Rj5cZl67z2eHN0bei+UslH9bw0bg2HeHQD9wo4F7WrOkSlDp3fgyYHgH34RefJCRPBiNXTDrAI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757408933; c=relaxed/simple;
-	bh=xLTgjOJF7T21LC8sF0nxtV8tQ0ng117cCSlpwqQDozc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hFXr4M9YINku3a1hpvW/hmuKU6v8osXn6D0kqa3dpHJ/tOmrTCJ8rQuocH2OmzBLf1fk0wIEPktJYFwr6F99csi16xGhyn9Pfi3Qtfxru/UhNdo7Dghgxr4NaW0GSdiskrPif8AD445GT55Sg9O5lZvjqFhFKo+h+ECWzjTaFOY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qjDu9fUK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1757426656; c=relaxed/simple;
+	bh=bHE6tkhyuFOU4Er3uXFFGJEiL3T/RozdMiR0OMaLsJ8=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=FTgljDeotQcT/HhgNJQvrQhScij14RR3SrieBgLSgVn4YUFNawKaQ/dNIfhJitPuwuFdF3XoB4dJW7v4QwAEiCBdgc18G0Uic9XvzHA2WZsY36OeZGWgnBm3FjYG7Cdlv48ErRHbonTinKsXz5tZ5mcalhJPRbtkckabCwRWo2c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jUZQjaEt; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qjDu9fUK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD3EFC4CEF4;
-	Tue,  9 Sep 2025 09:08:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757408933;
-	bh=xLTgjOJF7T21LC8sF0nxtV8tQ0ng117cCSlpwqQDozc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=qjDu9fUKJ/wZbf7niBEGb/jhHURFT5XxYb+rNU8sRzhm6tK8o3/+I0Qof2L4S/PWN
-	 4OI6jMeUYorQ2qm8yfFkP3bQ1MRcdjrxVVs3lt8VyV2v4apwp29RzvmmIDMghTiOLW
-	 m3TvgHx96VN8A1BrK0MULUCJQkXrdOKDk8rf5Pe/UHoEh/hyshF9FifPD9qlQbiTeh
-	 rop8E1xtwDzR9M3hzzF7RGElJptHl0MG72eJozuYeoZD8yp7dwu2sumPLUpCgU4sKs
-	 pxChowa4nlh/wRvkgJdteDZXUV6lXlmIRvTJtXccvQjSr5RYmftuM3iyHWLA7DRoru
-	 i47/RlekHBdKg==
-Message-ID: <8f0bc70f-1657-4938-88e8-532ffb7c1a12@kernel.org>
-Date: Tue, 9 Sep 2025 11:08:46 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jUZQjaEt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1757426655; x=1788962655;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=bHE6tkhyuFOU4Er3uXFFGJEiL3T/RozdMiR0OMaLsJ8=;
+  b=jUZQjaEtBi/ZevpKTUQ+b3BOmw/kuavHtBBXyiHuKPTMVehCro0slDnQ
+   0iiQ6GvxxQikksIpcCco3PJgSwXBt14c2rYgnRjy2CsyDP5WeMA0iais3
+   9kb7t5H055Y5aMvUSMlrNnighrYRBuydWw+pKTQyWkPfvr9/6Uxgv5NfW
+   BxKZg/EtBJWAen5ykXhZrfqB4XOT2sEJphEwW3GxI1WvJtTaBTEnIJG+/
+   eZsY1ZwrK5vcGcQPd1hm8Kpk6q7LEFUjC5zomDEHNHXF7Xtm/XoIb5+vM
+   v4yXhxcs7a4zKXhi+SbngUzEC/irnuWTiAlzlKKX809JiSkblU/TwrlY2
+   Q==;
+X-CSE-ConnectionGUID: KhY89LSWT1CTGkvA6GBOGg==
+X-CSE-MsgGUID: ErN6IDXwTn+TwNoJSuQTzw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="59661675"
+X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
+   d="scan'208";a="59661675"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2025 07:04:09 -0700
+X-CSE-ConnectionGUID: qH78s8DGQrinxnjbmXX5jQ==
+X-CSE-MsgGUID: feZHev2wSuizhO+3NpUhog==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,251,1751266800"; 
+   d="scan'208";a="203865569"
+Received: from lkp-server01.sh.intel.com (HELO 114d98da2b6c) ([10.239.97.150])
+  by orviesa002.jf.intel.com with ESMTP; 09 Sep 2025 07:04:08 -0700
+Received: from kbuild by 114d98da2b6c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uvyx3-0004vp-1g;
+	Tue, 09 Sep 2025 14:04:05 +0000
+Date: Tue, 9 Sep 2025 22:03:38 +0800
+From: kernel test robot <lkp@intel.com>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, mptcp@lists.linux.dev
+Subject: [mptcp:export-net 2/9] .b4-config: warning: ignored by one of the
+ .gitignore files
+Message-ID: <202509092140.B2VtiCnC-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH net 1/3] netlink: specs: mptcp: fix if-idx attribute type
-Content-Language: en-GB, fr-BE
-To: Donald Hunter <donald.hunter@gmail.com>
-Cc: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Simon Horman <horms@kernel.org>, Davide Caratti <dcaratti@redhat.com>,
- Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>,
- netdev@vger.kernel.org, mptcp@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
- stable@vger.kernel.org
-References: <20250908-net-mptcp-misc-fixes-6-17-rc5-v1-0-5f2168a66079@kernel.org>
- <20250908-net-mptcp-misc-fixes-6-17-rc5-v1-1-5f2168a66079@kernel.org>
- <m2plc0ui9z.fsf@gmail.com>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <m2plc0ui9z.fsf@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Hi Donald,
+tree:   https://github.com/multipath-tcp/mptcp_net-next.git export-net
+head:   001322eb512dfb2de4444190c10e82cf2f328d87
+commit: b0f2b972f6eeb989a7118b49bd45f0d52f962218 [2/9] DO-NOT-MERGE: git markup: net
+config: i386-randconfig-r113-20250909 (https://download.01.org/0day-ci/archive/20250909/202509092140.B2VtiCnC-lkp@intel.com/config)
+compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250909/202509092140.B2VtiCnC-lkp@intel.com/reproduce)
 
-On 09/09/2025 10:44, Donald Hunter wrote:
-> "Matthieu Baerts (NGI0)" <matttbe@kernel.org> writes:
-> 
->> This attribute is used as a signed number in the code in pm_netlink.c:
->>
->>   nla_put_s32(skb, MPTCP_ATTR_IF_IDX, ssk->sk_bound_dev_if))
->>
->> The specs should then reflect that. Note that other 'if-idx' attributes
->> from the same .yaml file use a signed number as well.
-> 
-> Note that mptcp_pm_parse_entry has this, which should maybe be fixed at
-> the same time:
-> 
-> 	u32 val = nla_get_s32(tb[MPTCP_PM_ADDR_ATTR_IF_IDX]);
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202509092140.B2VtiCnC-lkp@intel.com/
 
-Good catch!
+All warnings (new ones prefixed by >>):
 
-This should be fixed in a dedicated patch, because this fixes commit:
-ef0da3b8a2f1 ("mptcp: move address attribute into mptcp_addr_info"), a
-different commit than the one being fixed here.
+>> .b4-config: warning: ignored by one of the .gitignore files
+   .git_markup: warning: ignored by one of the .gitignore files
 
-I can send that separately later on if that's OK.
-
-Cheers,
-Matt
 -- 
-Sponsored by the NGI0 Core fund.
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
