@@ -1,84 +1,123 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E33522CBD9;
-	Tue,  9 Sep 2025 14:04:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C44A33469FB
+	for <mptcp@lists.linux.dev>; Tue,  9 Sep 2025 14:33:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757426656; cv=none; b=RtvlGG07oZQAYRtz77jDYK3ypIblQwqVxQWd5Lk20rJ+0NLYCUYz4H85tkMbUg8SVuyDVMtuDdRTgyNza5rPFmESxBxr2BIf1Rj5cZl67z2eHN0bei+UslH9bw0bg2HeHQD9wo4F7WrOkSlDp3fgyYHgH34RefJCRPBiNXTDrAI=
+	t=1757428430; cv=none; b=a3Z/TkKJWf/gr6dmTFnhFNtph4Ck5KWuZkwsfs//X1w2N7Oi6KKFc/qwNrfdvVoqxYhw7R5x7b8zDeAuNOdyBWLvgHL5BZ8PvdIGKsegFDg5DpnGHEDBkMV8t/wqW29Z2uIe7q51iS0aZVmq3YBy/K8XDZzUz8JKDciNjwEOS1I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757426656; c=relaxed/simple;
-	bh=bHE6tkhyuFOU4Er3uXFFGJEiL3T/RozdMiR0OMaLsJ8=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=FTgljDeotQcT/HhgNJQvrQhScij14RR3SrieBgLSgVn4YUFNawKaQ/dNIfhJitPuwuFdF3XoB4dJW7v4QwAEiCBdgc18G0Uic9XvzHA2WZsY36OeZGWgnBm3FjYG7Cdlv48ErRHbonTinKsXz5tZ5mcalhJPRbtkckabCwRWo2c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jUZQjaEt; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1757428430; c=relaxed/simple;
+	bh=nPkJ2HD9URqXPc6DZqvW+SUx9mOCJUfpOiiWRUeJ/Ck=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=gEEqD3VHEZdrSCETUV2YHDZ65kiXNOiMtD7h5EmDwENQ6HVYKlk3QTckSu31dRXC7sff4pYmDxlaqH/3DfCwbjta30ZaFr70tZLX6J5ABzlV08O6RMrgDJDmnKxlH+fX4comXUo03xeOfpVA10gfq20PLqVuHI3zLa9pUi14up4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tNyWmklj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jUZQjaEt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1757426655; x=1788962655;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=bHE6tkhyuFOU4Er3uXFFGJEiL3T/RozdMiR0OMaLsJ8=;
-  b=jUZQjaEtBi/ZevpKTUQ+b3BOmw/kuavHtBBXyiHuKPTMVehCro0slDnQ
-   0iiQ6GvxxQikksIpcCco3PJgSwXBt14c2rYgnRjy2CsyDP5WeMA0iais3
-   9kb7t5H055Y5aMvUSMlrNnighrYRBuydWw+pKTQyWkPfvr9/6Uxgv5NfW
-   BxKZg/EtBJWAen5ykXhZrfqB4XOT2sEJphEwW3GxI1WvJtTaBTEnIJG+/
-   eZsY1ZwrK5vcGcQPd1hm8Kpk6q7LEFUjC5zomDEHNHXF7Xtm/XoIb5+vM
-   v4yXhxcs7a4zKXhi+SbngUzEC/irnuWTiAlzlKKX809JiSkblU/TwrlY2
-   Q==;
-X-CSE-ConnectionGUID: KhY89LSWT1CTGkvA6GBOGg==
-X-CSE-MsgGUID: ErN6IDXwTn+TwNoJSuQTzw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="59661675"
-X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
-   d="scan'208";a="59661675"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2025 07:04:09 -0700
-X-CSE-ConnectionGUID: qH78s8DGQrinxnjbmXX5jQ==
-X-CSE-MsgGUID: feZHev2wSuizhO+3NpUhog==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,251,1751266800"; 
-   d="scan'208";a="203865569"
-Received: from lkp-server01.sh.intel.com (HELO 114d98da2b6c) ([10.239.97.150])
-  by orviesa002.jf.intel.com with ESMTP; 09 Sep 2025 07:04:08 -0700
-Received: from kbuild by 114d98da2b6c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uvyx3-0004vp-1g;
-	Tue, 09 Sep 2025 14:04:05 +0000
-Date: Tue, 9 Sep 2025 22:03:38 +0800
-From: kernel test robot <lkp@intel.com>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, mptcp@lists.linux.dev
-Subject: [mptcp:export-net 2/9] .b4-config: warning: ignored by one of the
- .gitignore files
-Message-ID: <202509092140.B2VtiCnC-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tNyWmklj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D161C4CEF4;
+	Tue,  9 Sep 2025 14:33:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1757428430;
+	bh=nPkJ2HD9URqXPc6DZqvW+SUx9mOCJUfpOiiWRUeJ/Ck=;
+	h=From:Subject:Date:To:Cc:From;
+	b=tNyWmkljlrpYGuwAIJ/0sp0MFrNAsHFeP4sRZner6TV8VU+FtFplNFij0j1BI125p
+	 nY0zWOqsozSYjqRucGHAt4NV9SJlM/Yzx0ODIfBRYpggcsku9hyXuAa9FDTIaPBYq2
+	 R6PtuuW/JQ6ZkSwRkV+izpIYLtkhsa64sLOCqrNpmYxba8RHWSrJg1ZgYDglKOGzYl
+	 8c4nWeAZCoBXymUunfsKbi2Js8BQrPuBtGuTXTaiSuPsVY+/NEHR+LEz/SARbV/UWe
+	 k+sltJKmSdJ31ugSqsGeZYUSp/QbYeGjLSQojRPDHne/FsMbJsQlHluuxNnj6K/48H
+	 QSiydRwO45Czw==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH mptcp-net v2 0/5] mptcp: pm: nl: announce deny-join-id0
+ attribute
+Date: Tue, 09 Sep 2025 16:33:29 +0200
+Message-Id: <20250909-mptcp-pm-user-c-flag-v2-0-a6f9542481c5@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIALk6wGgC/22NwQ6CMBBEf4Xs2TVLEyx68j8Ih9ou0AilaSvRE
+ P7dpl49Tmbemx0iB8sRbtUOgTcb7epyEKcK9KTcyGhNziBINCQF4eKT9ugXfGUSNQ6zGlFJ0xi
+ piPRlgIz6wIN9F20HP8Jxgj5Xk41pDZ9yuNVlUNytuP53bzUSyvYhGmOUlNTenxwcz+c1jNAfx
+ /EF8aIFd8QAAAA=
+X-Change-ID: 20250720-mptcp-pm-user-c-flag-a7d5d7a00c6f
+To: MPTCP Upstream <mptcp@lists.linux.dev>
+Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
+ Donald Hunter <donald.hunter@gmail.com>, 
+ Marek Majkowski <marek@cloudflare.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2759; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=nPkJ2HD9URqXPc6DZqvW+SUx9mOCJUfpOiiWRUeJ/Ck=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDIOWB1b+e7kh2/efPMWsDBrpS/8uERqr02IX8oF36nPf
+ 1Yy7X13taOUhUGMi0FWTJFFui0yf+bzKt4SLz8LmDmsTCBDGLg4BWAi/zoZfrPxV5z/dCn5WpwV
+ Z8orpsO1f96uZFhmsUmU60zVFDH9H2sZGU5/kMvYMuHA7P23f/TUOTY22ckd6xLOeuX4u7VyP7/
+ cRQ4A
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-tree:   https://github.com/multipath-tcp/mptcp_net-next.git export-net
-head:   001322eb512dfb2de4444190c10e82cf2f328d87
-commit: b0f2b972f6eeb989a7118b49bd45f0d52f962218 [2/9] DO-NOT-MERGE: git markup: net
-config: i386-randconfig-r113-20250909 (https://download.01.org/0day-ci/archive/20250909/202509092140.B2VtiCnC-lkp@intel.com/config)
-compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250909/202509092140.B2VtiCnC-lkp@intel.com/reproduce)
+During the connection establishment, a peer can tell the other one that
+it cannot establish new subflows to the initial IP address and port by
+setting the 'C' flag [1]. Doing so makes sense when the sender is behind
+a strict NAT, operating behind a legacy Layer 4 load balancer, or using
+anycast IP address for example.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202509092140.B2VtiCnC-lkp@intel.com/
+When this 'C' flag is set, the path-managers must then not try to
+establish new subflows to the other peer's initial IP address and port.
+The in-kernel PM has access to this info, but the userspace PM didn't,
+not letting the userspace daemon able to respect the RFC8684.
 
-All warnings (new ones prefixed by >>):
+Here are a few fixes related to this 'C' flag (aka 'deny-join-id0'):
 
->> .b4-config: warning: ignored by one of the .gitignore files
-   .git_markup: warning: ignored by one of the .gitignore files
+- Patch 1: fix a small typo in if-idx type. A fix for v5.10.
 
+- Patch 2: add remote_deny_join_id0 info on passive connections. A fix
+  for v5.14.
+
+- Patch 3: let the userspace PM daemon know about the deny_join_id0
+  attribute, so when set, it can avoid creating new subflows to the
+  initial IP address and port. A fix for v5.19.
+
+- Patch 4: a validation for the previous commit.
+
+- Patch 5: record the deny_join_id0 info when TFO is used. A fix for
+  v6.2.
+
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+Changes in v2:
+- Former patches 4-6 have been already applied
+- Former patch 2 has been dropped (Christoph)
+- Patch 1 is new, not linked to deny-join-id0
+- Patch 3 replaces former patch 2, and was linked to former patch 7, but
+  now using 'flags' instead of a new dedicated attribute (Mat)
+- Notes: changes for net-next, and the deprecation of server-flags will
+  be part of another series.
+- Link to v1: https://lore.kernel.org/r/20250829-mptcp-pm-user-c-flag-v1-0-78b25dda7708@kernel.org
+
+---
+Matthieu Baerts (NGI0) (5):
+      mptcp: pm: netlink: fix if-idx type
+      mptcp: set remote_deny_join_id0 on SYN recv
+      mptcp: pm: nl: announce deny-join-id0 flag
+      selftests: mptcp: userspace pm: validate deny-join-id0 flag
+      mptcp: tfo: record 'deny join id0' info
+
+ Documentation/netlink/specs/mptcp_pm.yaml         |  4 ++--
+ include/uapi/linux/mptcp.h                        |  2 ++
+ include/uapi/linux/mptcp_pm.h                     |  4 ++--
+ net/mptcp/options.c                               |  6 +++---
+ net/mptcp/pm_netlink.c                            |  9 ++++++++-
+ net/mptcp/subflow.c                               |  4 ++++
+ tools/testing/selftests/net/mptcp/pm_nl_ctl.c     |  7 +++++++
+ tools/testing/selftests/net/mptcp/userspace_pm.sh | 14 +++++++++++---
+ 8 files changed, 39 insertions(+), 11 deletions(-)
+---
+base-commit: 12e66f7051b4b535a990cd20c149d76a98ec68c3
+change-id: 20250720-mptcp-pm-user-c-flag-a7d5d7a00c6f
+
+Best regards,
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
+
