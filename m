@@ -1,119 +1,101 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E41EB352FE5
-	for <mptcp@lists.linux.dev>; Tue,  9 Sep 2025 16:30:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ECC430504D
+	for <mptcp@lists.linux.dev>; Tue,  9 Sep 2025 16:30:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757435405; cv=none; b=mPZHcEyg/3N+6csgLltZOPERcNrzQyGxEu0p9AA4mRjEZIu1BopyiBvYqBQnD0k0NDMHm8wF4PdAIFqWFPOYyOg5Xa188MjaCYGDs/gyBepAxwG603qFNob5giGotv7tWUhwvsRrjwMumP3etB+n0ufffipKLVhZWuo/7ZzzwZI=
+	t=1757435439; cv=none; b=aSfmkKlpL9mtLpUka/OyrxbFVvsy3qANsSe1W1df7TQ6n25HLvnSyhGiyJBthtJTtqN3//n0J/6cI3uAqucwP1HqNcCiN8PhFiKfvRRv5QHKYgvFUiu40pfZO5m6Hp3bslfJN4uQ7u2szSW6I7qpoj6MVPLK53usnqYrVHLigec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757435405; c=relaxed/simple;
-	bh=YqvN+ajkzWS2+jPTmF0Y7lSRBEScX41DO0RxHT/aVyI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=oaVLh9WaU89suFFzi7ZDj0b92w90w0JGoYYFyG7QDf62Yg84/TqWzt/h7FXNhVo47dqfZmXZr4hDZAKHgLNh1eWHWWt4h4CXulk3mNQIOVJnPrNJtiRy7AXWwvyoC32GdY8HJO9D8DSBQV2FPt7EOagypwiUrOgpqvEj3SBQsZo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nwXOR3b+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1757435439; c=relaxed/simple;
+	bh=/EtDA45ORjx85opna1gKwT9tBpHZTm+5MT5OoJsyA2c=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Et0ligKXYpzPpYdh/pYZH5qRsXmVKPWnrXkfGaNbRNftf8ZyZ6k7XaMnHoE9ZL+vpwJRmIQTmQuyFPVmYQTE18Ft/79BmKLL7jEqcj1RKzb/YNx90FdtDRbXhACaqF6VcPezUeaJH/5W9rU0a65O0ye1kPz+gzDGqoVX+NP+rPI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O7/9J4JF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nwXOR3b+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3228EC4CEF9
-	for <mptcp@lists.linux.dev>; Tue,  9 Sep 2025 16:30:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O7/9J4JF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38206C4CEF4;
+	Tue,  9 Sep 2025 16:30:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757435404;
-	bh=YqvN+ajkzWS2+jPTmF0Y7lSRBEScX41DO0RxHT/aVyI=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=nwXOR3b+csrcyAu0ZePCDUo2PsqOxrx0W4wHPDW5EP9D5FMhNBNMPAsbrllz7ufga
-	 sCbemYZxKkA17cQKl6zm0bcS7qXxeXngBBVvJoNBt+YHSssoyTaBRjaV4ZWG0fF8yI
-	 ENXMoEDoeAP7PLOEcNHg8nNWCQLZmYi3AvsBEts4wFuSPSrus/GexGKXSMsWaleCY8
-	 oot50YXKNxepEBuF1CTGL70OgBU9pnCb6J/srX8hb18MkeMoNg9ZugOVsROen1BZOK
-	 g2anyIfY0N5ZRrDTUFc2qnfA5uewLwTFZ2X/coGGCHFPPhfDu/fgyfQBTmFuJlJtsF
-	 rXoeVB36+onpw==
-Message-ID: <0e8edd2f-5267-4c9e-ba67-21924029bafc@kernel.org>
-Date: Tue, 9 Sep 2025 18:30:00 +0200
+	s=k20201202; t=1757435438;
+	bh=/EtDA45ORjx85opna1gKwT9tBpHZTm+5MT5OoJsyA2c=;
+	h=From:Subject:Date:To:Cc:From;
+	b=O7/9J4JFtoTMueYmmA2O4wDla5U6oL4sbtVKmyD+8MYPl8nOw5yyF5Xe8eyaufszp
+	 08HvzebUq9YctTtm1UweQSsvylk1HqiQ3bCZmydcgIPx1rhneWY4ZsrJHRNMRcXo0q
+	 2koAv0TEpT9dYDTuTgJyKYizf/e1ceCxD27dYg4tVqi+v5WZ4yH8/Iam9I62XYVer0
+	 fbkSpBMtUXFOF5rjpTREy/N+s5jfHbKZV6DY/fLzOu91KYih9C+RtkEqLtUS3GsO64
+	 7czOiCrHQOcQK2RHCxG7DMKJbcoak8u8xauH5W2pK85AGnUCQoqJ0vArGj9/GPXCf1
+	 DNncPPPLDu5LA==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH mptcp-next 0/4] mptcp: pm: netlink: announce server-side
+ flag
+Date: Tue, 09 Sep 2025 18:30:12 +0200
+Message-Id: <20250909-mptcp-pm-user-server-side-flag-v1-0-cb8e2b8d1c0c@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net v2 0/5] mptcp: pm: nl: announce deny-join-id0
- attribute
-Content-Language: en-GB, fr-BE
-To: mptcp@lists.linux.dev
-References: <20250909-mptcp-pm-user-c-flag-v2-0-a6f9542481c5@kernel.org>
- <99fe5173-d03c-9428-ff35-864e2876665b@gmail.com>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <99fe5173-d03c-9428-ff35-864e2876665b@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIABVWwGgC/13OzQ6CMAwA4FchPbukG2xjvIrxsHVFlwgiIDExv
+ LtDjAcPTdP05+sLJh4TT9AULxh5SVO69bmQhwLo4vszixRzDQqVRodOdMNMgxg68cibIseypRR
+ ZtFd/FkpWVFfBYVAS8pFh5DY9P8AR9t2enzOc9t7I90c25+/Aj2yKD2gV/oG0M95GHa1HJNM2i
+ 9qk4CcWdOu6NOf/FRvTWtQyVEGX2juHFBWSrFy0xruaydRUwmld30GBqDoEAQAA
+X-Change-ID: 20250909-mptcp-pm-user-server-side-flag-214c84b90b21
+To: MPTCP Upstream <mptcp@lists.linux.dev>
+Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1834; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=/EtDA45ORjx85opna1gKwT9tBpHZTm+5MT5OoJsyA2c=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDIOhGnsXB+nGH9b5pj/3N+d1RM+hYYWqXDYnL/i8r/k4
+ e8li27ldpSyMIhxMciKKbJIt0Xmz3xexVvi5WcBM4eVCWQIAxenAEzkkSjD/2L/tOiI8wuk6jk/
+ HPM/cuiowxX+fUkaqbXbS05tmFDocYSRYeZD050aol8+Lp9Qo9xSlbw5bMGBV+ENzs+6Pqi9bOT
+ 7wQQA
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hello,
+Now that the 'flags' attribute is used, it seems interesting to add one
+flag for 'server-side', a boolean value.
 
-On 09/09/2025 18:27, MPTCP CI wrote:
-> Hi Matthieu,
-> 
-> Thank you for your modifications, that's great!
-> 
-> Our CI did some validations and here is its report:
-> 
-> - KVM Validation: normal: Success! ✅
-> - KVM Validation: debug: Critical: KMemLeak ❌
+Here are a few patches related to the 'server-side' attribute:
 
-It looks like this one is linked to:
+- Patch 1: only announce this attribute on the server side.
 
-  https://github.com/multipath-tcp/mptcp_net-next/issues/583
+- Patch 2: announce the 'server-side' flag when this is the case.
 
-(and maybe a false positive?)
+- Patch 3: deprecate the 'server-side' attribute.
 
-Anyway, for this series, we can then read:
+- Patch 4: use the 'server-side' flag in the selftests.
 
-  KVM Validation: debug: Success! ✅
+Based-on: <20250909-mptcp-pm-user-c-flag-v2-0-a6f9542481c5@kernel.org>
 
-Cheers,
-Matt
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+Matthieu Baerts (NGI0) (4):
+      mptcp: pm: netlink: only add server-side attr when true
+      mptcp: pm: netlink: announce server-side flag
+      mptcp: pm: netlink: deprecate server-side attribute
+      selftests: mptcp: pm: get server-side flag
+
+ Documentation/netlink/specs/mptcp_pm.yaml         | 5 +++--
+ include/uapi/linux/mptcp.h                        | 1 +
+ include/uapi/linux/mptcp_pm.h                     | 4 ++--
+ net/mptcp/pm_netlink.c                            | 9 +++++++--
+ tools/testing/selftests/net/mptcp/pm_nl_ctl.c     | 9 ++++++++-
+ tools/testing/selftests/net/mptcp/userspace_pm.sh | 2 +-
+ 6 files changed, 22 insertions(+), 8 deletions(-)
+---
+base-commit: 12e66f7051b4b535a990cd20c149d76a98ec68c3
+change-id: 20250909-mptcp-pm-user-server-side-flag-214c84b90b21
+prerequisite-change-id: 20250720-mptcp-pm-user-c-flag-a7d5d7a00c6f:v2
+prerequisite-patch-id: cc65204dc8620f1675f8b8cbdf6dc0fecf20379e
+prerequisite-patch-id: 88640c51fc66f4d630e2f99db72c18830273fc83
+prerequisite-patch-id: 5773e6ceede07a2c43550774eddad1c32cde67e0
+prerequisite-patch-id: f9196f35eff69835799db4312e82c795f1b15eb0
+prerequisite-patch-id: 8ec26f3fe4baa5128ac2f01f7284184bbb0e651b
+
+Best regards,
 -- 
-Sponsored by the NGI0 Core fund.
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
