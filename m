@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 724C833EB14
-	for <mptcp@lists.linux.dev>; Tue,  9 Sep 2025 14:33:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC78834AAE6
+	for <mptcp@lists.linux.dev>; Tue,  9 Sep 2025 14:33:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757428433; cv=none; b=HW8tRD3reN3ZBw8z3CDQ481XZAnxjyneK/o5ZkM0nLCcqv1dyJxtv1rgag+s5C+zbvk52u3AKj0fOH9nm/5rhrWsMuOVWj+xMd/d+k9SyrIVPR6VDw+/u0Pv/2f8YaUPvxCtMBvvhBtoEw09JU7yk+4rDBbrdKz2W31Lsy7LAlE=
+	t=1757428434; cv=none; b=jGEwdon7PHouZc4pZ38Ydw5/Yq4iD8AdwYUWB8BT//i5oGKMU9hYaNU8EoPBFq/jLkp0XaunByCUph/10mqCXeOd+r/SeBVUlrpUraLQxHeI6ynuvJhIUac2+n0P+uAyM9wmNiQTPHjqtZIoDQGIjQ6wHa9xwlKMyhjvpqRhogg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757428433; c=relaxed/simple;
-	bh=KJMs/owg2K/+WxGOQz3WbPqoN0gy13nceIjRxNYwCbQ=;
+	s=arc-20240116; t=1757428434; c=relaxed/simple;
+	bh=WT4n6Liho45omjO3GNmG9PPgJc/I24mqljKnIRJ2Buo=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=pIzQu8ZC0LBbtD20bVgclhec+4WU3/48gqg72kLPZuh3Rm7fnbEIbSuc9o8sie/mpw/KhF63y0Tn/eQ9V/eqR2siNmIVw0p+HJHvp5CGq6wE1WhxNL5pDuvaxyoLbdJwik1/0l329+voJLvIKorStd5E9PqbrqHphjGztjmXUIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a+Y4BCsb; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=twe1mfuAQZQYXUN1K00JX9vf10825fULnChP2j1/G+R40D2EB/lH6QYdaAFDQLRMJbLH2OXxorEKPQ0r9t3ksvaB78UoekvQCNjuX0w1CIvKlZpYvcEdzLzO6ldxii43J5RVwhUgqrLqFhYWTeLGYYe4nD33Trt19P3rfLvscvk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cCZOY6/y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a+Y4BCsb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA537C4CEF8;
-	Tue,  9 Sep 2025 14:33:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cCZOY6/y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE613C4CEF4;
+	Tue,  9 Sep 2025 14:33:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757428433;
-	bh=KJMs/owg2K/+WxGOQz3WbPqoN0gy13nceIjRxNYwCbQ=;
+	s=k20201202; t=1757428434;
+	bh=WT4n6Liho45omjO3GNmG9PPgJc/I24mqljKnIRJ2Buo=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=a+Y4BCsbXCs/5BDlVEHVF4GHkgDEnvggcBvQbfk9E2Ya1bfPsxPfnw9e+im0RFeie
-	 S/xlt+Y2LGxiOcgI7YOP9nMYv0MLXCnJSHN5hk+iXkdpHqZSzJcNvqhlUu6Wbm6bFF
-	 cA59G3u04sKrJTzfGfu9L9UiKhPhyyND9L5+XHD8O9DjO9JxPbSPjXUHsp4JHck+nq
-	 MBTfxUCRrSoLd5mL04ihk8Zip4/q8942yO2AoUomfyAUovICMixDOOWTQBOcokPEPp
-	 XdtbPl1aGUZqGuBVPFAcBcdNqcWiLwYk2OrGCGcYW+d9T6ySBQTYXhwI6ydGX7AgCG
-	 NhHXODvgBWtRQ==
+	b=cCZOY6/ysxfrUGLOcZ/YLOkZW3eGXpMQCiR7V3/GTWHcWOB5qRzWJVo2hcxbjMshL
+	 +DLWxQt0kiluZATsNCYS15OmL6jNOGowxVW1XG+c90SDxYaB7W4/n3X9bqFm2wcla0
+	 DN7ZWjI4OlmBwC7PP6kyjCM1Zk6KBxERV+Fw4R1ncebKL+JeVifhRnMNfNZMaO2ULV
+	 ckC4B7+MW22dpXzk533XP+XzbWYSn1rQLC95n8eFL/OoD3rP37VDPVP5ZkXwZlhb67
+	 tQKXTp0vxDAL7U8hfBNyq1Nx/gZsaDKlFzHA6KqZVPNBx9UO5fzD2Ucu/oKtfDMKpC
+	 LIMG2VsJi5Pbw==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Tue, 09 Sep 2025 16:33:32 +0200
-Subject: [PATCH mptcp-net v2 3/5] mptcp: pm: nl: announce deny-join-id0
- flag
+Date: Tue, 09 Sep 2025 16:33:33 +0200
+Subject: [PATCH mptcp-net v2 4/5] selftests: mptcp: userspace pm: validate
+ deny-join-id0 flag
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,137 +38,100 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250909-mptcp-pm-user-c-flag-v2-3-a6f9542481c5@kernel.org>
+Message-Id: <20250909-mptcp-pm-user-c-flag-v2-4-a6f9542481c5@kernel.org>
 References: <20250909-mptcp-pm-user-c-flag-v2-0-a6f9542481c5@kernel.org>
 In-Reply-To: <20250909-mptcp-pm-user-c-flag-v2-0-a6f9542481c5@kernel.org>
 To: MPTCP Upstream <mptcp@lists.linux.dev>
-Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
- Marek Majkowski <marek@cloudflare.com>
+Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5286; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=KJMs/owg2K/+WxGOQz3WbPqoN0gy13nceIjRxNYwCbQ=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDIOWJ3ymt2z/lPzLwGDeSI8t3bFyVlLfVwaPK/I0Up65
- tq3om6iHaUsDGJcDLJiiizSbZH5M59X8ZZ4+VnAzGFlAhnCwMUpABOpXsjwP1Jqi13eo51nF61J
- CPTovvyq3fz37zKfhAdO51RMnsm9i2BkuP84iENyDm/2qWrWyyG/F99Nfv/qQcCtkLNi1rbSiae
- juQA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3765; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=WT4n6Liho45omjO3GNmG9PPgJc/I24mqljKnIRJ2Buo=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDIOWJ2+ISDsWXnv0SXHS8Esp+O+HgsKP2afJeY5l/07j
+ 1bH7TtaHaUsDGJcDLJiiizSbZH5M59X8ZZ4+VnAzGFlAhnCwMUpABNZvJOR4Thfk/fBB/u/6/Ie
+ CPPd+yPy2enQ0N2LhYsPpUQf1RLa+ICRYfVNVqX0CqMn6lXTNOWiTvMGVO46o3Pg5VGH7b+vhRV
+ c5QUA
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-During the connection establishment, a peer can tell the other one that
-it cannot establish new subflows to the initial IP address and port by
-setting the 'C' flag [1]. Doing so makes sense when the sender is behind
-a strict NAT, operating behind a legacy Layer 4 load balancer, or using
-anycast IP address for example.
+The previous commit adds the MPTCP_PM_EV_FLAG_DENY_JOIN_ID0 flag. Make
+sure it is correctly announced when it should.
 
-When this 'C' flag is set, the path-managers must then not try to
-establish new subflows to the other peer's initial IP address and port.
-The in-kernel PM has access to this info, but the userspace PM didn't.
+The 'Fixes' tag here below is the same as the one from the previous
+commit: this patch here is not fixing anything wrong in the selftests,
+but it validates the previous fix for an issue introduced by this commit
+ID.
 
-The RFC8684 [1] is strict about that:
-
-  (...) therefore the receiver MUST NOT try to open any additional
-  subflows toward this address and port.
-
-So it is important to tell the userspace about that as it is responsible
-for the respect of this flag.
-
-When a new connection is created and established, the Netlink events
-now contain the existing but not currently used 'flags' attribute. When
-MPTCP_PM_EV_FLAG_DENY_JOIN_ID0 is set, it means no other subflows
-to the initial IP address and port -- info that are also part of the
-event -- can be established.
-
-Link: https://datatracker.ietf.org/doc/html/rfc8684#section-3.1-20.6 [1]
 Fixes: 702c2f646d42 ("mptcp: netlink: allow userspace-driven subflow establishment")
-Reported-by: Marek Majkowski <marek@cloudflare.com>
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/532
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
-v2:
- - now seen as a 'fix' (Christoph)
- - use 'flags' instead of a new dedicated attribute (Mat)
----
- Documentation/netlink/specs/mptcp_pm.yaml | 4 ++--
- include/uapi/linux/mptcp.h                | 2 ++
- include/uapi/linux/mptcp_pm.h             | 4 ++--
- net/mptcp/pm_netlink.c                    | 7 +++++++
- 4 files changed, 13 insertions(+), 4 deletions(-)
+ tools/testing/selftests/net/mptcp/pm_nl_ctl.c     |  7 +++++++
+ tools/testing/selftests/net/mptcp/userspace_pm.sh | 14 +++++++++++---
+ 2 files changed, 18 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/netlink/specs/mptcp_pm.yaml b/Documentation/netlink/specs/mptcp_pm.yaml
-index d15335684ec3d6256505f2b3887ce5818eb57462..d1b4829b580ad09baf4afd73b67abd7b4ef6883a 100644
---- a/Documentation/netlink/specs/mptcp_pm.yaml
-+++ b/Documentation/netlink/specs/mptcp_pm.yaml
-@@ -28,13 +28,13 @@ definitions:
-           traffic-patterns it can take a long time until the
-           MPTCP_EVENT_ESTABLISHED is sent.
-           Attributes: token, family, saddr4 | saddr6, daddr4 | daddr6, sport,
--          dport, server-side.
-+          dport, server-side, [flags].
-       -
-         name: established
-         doc: >-
-           A MPTCP connection is established (can start new subflows).
-           Attributes: token, family, saddr4 | saddr6, daddr4 | daddr6, sport,
--          dport, server-side.
-+          dport, server-side, [flags].
-       -
-         name: closed
-         doc: >-
-diff --git a/include/uapi/linux/mptcp.h b/include/uapi/linux/mptcp.h
-index 67d015df8893cc1390a483bda034191525b8fef0..5fd5b4cf75ca1e0099e0effa351507d3ab002f1e 100644
---- a/include/uapi/linux/mptcp.h
-+++ b/include/uapi/linux/mptcp.h
-@@ -31,6 +31,8 @@
- #define MPTCP_INFO_FLAG_FALLBACK		_BITUL(0)
- #define MPTCP_INFO_FLAG_REMOTE_KEY_RECEIVED	_BITUL(1)
- 
-+#define MPTCP_PM_EV_FLAG_DENY_JOIN_ID0		_BITUL(0)
+diff --git a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
+index 994a556f46c15163bae6cb517c371801f0cd6e3b..93fea3442216c8fef43731a99c1d5710f234b150 100644
+--- a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
++++ b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
+@@ -188,6 +188,13 @@ static int capture_events(int fd, int event_group)
+ 					fprintf(stderr, ",error:%u", *(__u8 *)RTA_DATA(attrs));
+ 				else if (attrs->rta_type == MPTCP_ATTR_SERVER_SIDE)
+ 					fprintf(stderr, ",server_side:%u", *(__u8 *)RTA_DATA(attrs));
++				else if (attrs->rta_type == MPTCP_ATTR_FLAGS) {
++					__u16 flags = *(__u16 *)RTA_DATA(attrs);
 +
- #define MPTCP_PM_ADDR_FLAG_SIGNAL                      (1 << 0)
- #define MPTCP_PM_ADDR_FLAG_SUBFLOW                     (1 << 1)
- #define MPTCP_PM_ADDR_FLAG_BACKUP                      (1 << 2)
-diff --git a/include/uapi/linux/mptcp_pm.h b/include/uapi/linux/mptcp_pm.h
-index 6ac84b2f636ca22935c191c645449fb62b673899..7359d34da446b94be148b363079120db03ba8549 100644
---- a/include/uapi/linux/mptcp_pm.h
-+++ b/include/uapi/linux/mptcp_pm.h
-@@ -16,10 +16,10 @@
-  *   good time to allocate memory and send ADD_ADDR if needed. Depending on the
-  *   traffic-patterns it can take a long time until the MPTCP_EVENT_ESTABLISHED
-  *   is sent. Attributes: token, family, saddr4 | saddr6, daddr4 | daddr6,
-- *   sport, dport, server-side.
-+ *   sport, dport, server-side, [flags].
-  * @MPTCP_EVENT_ESTABLISHED: A MPTCP connection is established (can start new
-  *   subflows). Attributes: token, family, saddr4 | saddr6, daddr4 | daddr6,
-- *   sport, dport, server-side.
-+ *   sport, dport, server-side, [flags].
-  * @MPTCP_EVENT_CLOSED: A MPTCP connection has stopped. Attribute: token.
-  * @MPTCP_EVENT_ANNOUNCED: A new address has been announced by the peer.
-  *   Attributes: token, rem_id, family, daddr4 | daddr6 [, dport].
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 2225b1c5b96666cd4121854c967a7f3a79824047..483ddbb9ec406a3e965376ee5a833ae295896a02 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -408,6 +408,7 @@ static int mptcp_event_created(struct sk_buff *skb,
- 			       const struct sock *ssk)
- {
- 	int err = nla_put_u32(skb, MPTCP_ATTR_TOKEN, READ_ONCE(msk->token));
-+	u16 flags = 0;
++					/* only print when present, easier */
++					if (flags & MPTCP_PM_EV_FLAG_DENY_JOIN_ID0)
++						fprintf(stderr, ",deny_join_id0:1");
++				}
  
- 	if (err)
- 		return err;
-@@ -415,6 +416,12 @@ static int mptcp_event_created(struct sk_buff *skb,
- 	if (nla_put_u8(skb, MPTCP_ATTR_SERVER_SIDE, READ_ONCE(msk->pm.server_side)))
- 		return -EMSGSIZE;
+ 				attrs = RTA_NEXT(attrs, msg_len);
+ 			}
+diff --git a/tools/testing/selftests/net/mptcp/userspace_pm.sh b/tools/testing/selftests/net/mptcp/userspace_pm.sh
+index 970c329735ff14f87f0048ba0030dc7edaaa86bc..0801d57a9710406a5942af742719f694e3907558 100755
+--- a/tools/testing/selftests/net/mptcp/userspace_pm.sh
++++ b/tools/testing/selftests/net/mptcp/userspace_pm.sh
+@@ -201,6 +201,9 @@ make_connection()
+ 		is_v6="v4"
+ 	fi
  
-+	if (READ_ONCE(msk->pm.remote_deny_join_id0))
-+		flags |= MPTCP_PM_EV_FLAG_DENY_JOIN_ID0;
++	# set this on the server side only: will not affect the rest
++	ip netns exec "$ns1" sysctl -q net.mptcp.allow_join_initial_addr_port=0
 +
-+	if (flags && nla_put_u16(skb, MPTCP_ATTR_FLAGS, flags))
-+		return -EMSGSIZE;
-+
- 	return mptcp_event_add_subflow(skb, ssk);
- }
+ 	:>"$client_evts"
+ 	:>"$server_evts"
  
+@@ -223,23 +226,28 @@ make_connection()
+ 	local client_token
+ 	local client_port
+ 	local client_serverside
++	local client_nojoin
+ 	local server_token
+ 	local server_serverside
++	local server_nojoin
+ 
+ 	client_token=$(mptcp_lib_evts_get_info token "$client_evts")
+ 	client_port=$(mptcp_lib_evts_get_info sport "$client_evts")
+ 	client_serverside=$(mptcp_lib_evts_get_info server_side "$client_evts")
++	client_nojoin=$(mptcp_lib_evts_get_info deny_join_id0 "$client_evts")
+ 	server_token=$(mptcp_lib_evts_get_info token "$server_evts")
+ 	server_serverside=$(mptcp_lib_evts_get_info server_side "$server_evts")
++	server_nojoin=$(mptcp_lib_evts_get_info deny_join_id0 "$server_evts")
+ 
+ 	print_test "Established IP${is_v6} MPTCP Connection ns2 => ns1"
+-	if [ "$client_token" != "" ] && [ "$server_token" != "" ] && [ "$client_serverside" = 0 ] &&
+-		   [ "$server_serverside" = 1 ]
++	if [ "${client_token}" != "" ] && [ "${server_token}" != "" ] &&
++	   [ "${client_serverside}" = 0 ] && [ "${server_serverside}" = 1 ] &&
++	   [ "${client_nojoin:-0}" = 1 ] && [ "${server_nojoin:-0}" = 0 ]
+ 	then
+ 		test_pass
+ 		print_title "Connection info: ${client_addr}:${client_port} -> ${connect_addr}:${app_port}"
+ 	else
+-		test_fail "Expected tokens (c:${client_token} - s:${server_token}) and server (c:${client_serverside} - s:${server_serverside})"
++		test_fail "Expected tokens (c:${client_token} - s:${server_token}), server (c:${client_serverside} - s:${server_serverside}), nojoin (c:${client_nojoin} - s:${server_nojoin})"
+ 		mptcp_lib_result_print_all_tap
+ 		exit ${KSFT_FAIL}
+ 	fi
 
 -- 
 2.51.0
