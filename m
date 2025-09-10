@@ -1,42 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1981919E97A
-	for <mptcp@lists.linux.dev>; Wed, 10 Sep 2025 18:17:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB27E1DDDD
+	for <mptcp@lists.linux.dev>; Wed, 10 Sep 2025 18:45:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757528254; cv=none; b=rljPEPoPP1ubB1WaJcp6s+V8YoFx4TeV0uaszVcff2dcgq8XQkTkVoB6iRKokOtpJvMJQ+CImMdaIfn47YLU+4NeFxJzJTX1XZ63ZwbuvWeUwmH49xdNEHloohk1P4vLo8J1f/nsxkgjFZAtbZ4ZGYXZ1gRwZvwYojUj0CDH5QI=
+	t=1757529948; cv=none; b=Jeh4syuUihJRgu/k1/rXsLG4I0YD0qXhAJBchPKVNfRx/EKJWgEpOaPDvtSGc9uKNNieAOWqsDX+HN5clz/FLLLCDw1f/hE5SoYi2jb0NQDVEDZnn+QJILmEpZi8r9mUhDjabb1F0Gyabp8ZkVKC7CQ3wtFNFZJs5pnVTiu26uU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757528254; c=relaxed/simple;
-	bh=r7eLh1TCjLodVnZfBwVfuIE8EK3Z8/QX1Ya2AAsf37Q=;
+	s=arc-20240116; t=1757529948; c=relaxed/simple;
+	bh=YBLZU/tluiWd69sbYuhRnP9ta4A/ZMuMXdgjv+RbN+s=;
 	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=RuCqb2saxuiqhfnt94k5xe6N+kg1993AwFkFQqQZhzC0fCPA1sbL0SqRchKAgMsVOeenRKT7JedUK1LOtbIldC0W/q12gwf5IzYl8ZBhXsezTdDFyTgenbvr6+J9YkJORUsJL+9zkdVZR48D28vvMJ+e983NRl2c8BYTl9MR7Yk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c7qedTzK; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=rZNMRG5EkGKGmSilvbT0FGLFxT7u8uTWBxHhINk+9v49Mw9wmYvRWcc6YPi2glv5JZs47cBCAF5kNwx9vxHF9uriYzzQCx6V4Rtr6hvVocuWDtbxHz86WNnJZW9MzTarJ6X6hcmJwLJVhiTTl9BJhFF6nHOibyYMK7poqjDa8uE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QkUFTwYo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c7qedTzK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83DCDC4CEEB;
-	Wed, 10 Sep 2025 18:17:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QkUFTwYo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70319C4CEEB;
+	Wed, 10 Sep 2025 18:45:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757528253;
-	bh=r7eLh1TCjLodVnZfBwVfuIE8EK3Z8/QX1Ya2AAsf37Q=;
+	s=k20201202; t=1757529947;
+	bh=YBLZU/tluiWd69sbYuhRnP9ta4A/ZMuMXdgjv+RbN+s=;
 	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=c7qedTzKv2ymDCiA0qF9iQL8oZ9fwmJsaEHmyW2+e9eT8yyxsOuBdwAKJ8zeqrVmn
-	 xNCv/qUi/KZAMt5A7gvUPbaYfY0Jq7ThP4mhuh35m3w/dSElFJDghLglzHFS/MQSBi
-	 ojoN2NIgI9qIpnT/fW6v0EQPTfxB+HFXSCE9R4hpX8ntiY3IjUdI+kdk6tJhKLiELC
-	 hmTKDAlhYen+nJUp5z3mU0buqHmN9jw1IfeV/8S60nfkf0MwYLmE0PhnatNJe60Pru
-	 QNikDRyyM7HcCFAx26HzU1yefy9AeVli6XcWrYCI/qSu13/IENWKCjKmO3Fz0e+ZN6
-	 3s43e41mBjJWg==
-Date: Wed, 10 Sep 2025 11:17:32 -0700 (PDT)
+	b=QkUFTwYo0b2b+3fQ3HI7YN6Sj1o01TV4D1EpPISwNyYrAwqn8iMC4gbNtlENnWF6d
+	 aNuocXT9VJUBFoocF8xyHfLlP6TMHW2BWcdRB+wCSxrPqeAXkXJ75533ZUKNppP1MH
+	 ++b1xkpMvZILtMIS0E6rif0VHn0IWsD0csUFXQ82nnJkEbZwWtd/nAGW1eYU37ZSIG
+	 xuZo6zfaj0/LLMsIqX4KUPmmkjzyUgZouxipcTQ2GnNAalj7mB9JShDm8k/r38CNQB
+	 SRcHTKaBCZgVV917/lBxVFOcM+WytjUGV/TzAAl5JHu1yo++A1TGwiQ116L4AXbzP/
+	 98sKciVRIoqvw==
+Date: Wed, 10 Sep 2025 11:45:46 -0700 (PDT)
 From: Mat Martineau <martineau@kernel.org>
 To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-cc: MPTCP Upstream <mptcp@lists.linux.dev>, 
-    Donald Hunter <donald.hunter@gmail.com>, 
-    Marek Majkowski <marek@cloudflare.com>
-Subject: Re: [PATCH mptcp-net v2 0/5] mptcp: pm: nl: announce deny-join-id0
- attribute
-In-Reply-To: <20250909-mptcp-pm-user-c-flag-v2-0-a6f9542481c5@kernel.org>
-Message-ID: <ced8a24b-14ed-745a-13e2-b0b805116863@kernel.org>
-References: <20250909-mptcp-pm-user-c-flag-v2-0-a6f9542481c5@kernel.org>
+cc: MPTCP Upstream <mptcp@lists.linux.dev>
+Subject: Re: [PATCH mptcp-net v3 5/5] selftests: mptcp: connect: print pcap
+ suffix
+In-Reply-To: <20250910-sft-mptcp-disc-err-v3-5-6799fa467d77@kernel.org>
+Message-ID: <84941759-e288-3ab6-220e-f455a9f5ecf4@kernel.org>
+References: <20250910-sft-mptcp-disc-err-v3-0-6799fa467d77@kernel.org> <20250910-sft-mptcp-disc-err-v3-5-6799fa467d77@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -45,81 +43,56 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-On Tue, 9 Sep 2025, Matthieu Baerts (NGI0) wrote:
+On Wed, 10 Sep 2025, Matthieu Baerts (NGI0) wrote:
 
-> During the connection establishment, a peer can tell the other one that
-> it cannot establish new subflows to the initial IP address and port by
-> setting the 'C' flag [1]. Doing so makes sense when the sender is behind
-> a strict NAT, operating behind a legacy Layer 4 load balancer, or using
-> anycast IP address for example.
+> To be able to find which capture files have been produced after several
+> runs.
 >
-> When this 'C' flag is set, the path-managers must then not try to
-> establish new subflows to the other peer's initial IP address and port.
-> The in-kernel PM has access to this info, but the userspace PM didn't,
-> not letting the userspace daemon able to respect the RFC8684.
->
-> Here are a few fixes related to this 'C' flag (aka 'deny-join-id0'):
->
-> - Patch 1: fix a small typo in if-idx type. A fix for v5.10.
->
-> - Patch 2: add remote_deny_join_id0 info on passive connections. A fix
->  for v5.14.
->
-> - Patch 3: let the userspace PM daemon know about the deny_join_id0
->  attribute, so when set, it can avoid creating new subflows to the
->  initial IP address and port. A fix for v5.19.
->
-> - Patch 4: a validation for the previous commit.
->
-> - Patch 5: record the deny_join_id0 info when TFO is used. A fix for
->  v6.2.
->
-> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> ---
-> Changes in v2:
-> - Former patches 4-6 have been already applied
-> - Former patch 2 has been dropped (Christoph)
-> - Patch 1 is new, not linked to deny-join-id0
-> - Patch 3 replaces former patch 2, and was linked to former patch 7, but
->  now using 'flags' instead of a new dedicated attribute (Mat)
-> - Notes: changes for net-next, and the deprecation of server-flags will
->  be part of another series.
-> - Link to v1: https://lore.kernel.org/r/20250829-mptcp-pm-user-c-flag-v1-0-78b25dda7708@kernel.org
+> This suffix was not printed anywhere before.
 >
 
-Hi Matthieu -
+One quick change before upstreaming: s/suffix/prefix/
 
-v2 full series LGTM, thanks for reworking to use the existing 'flags' 
-attribute. Agree with the plans for net-next and deprecation of 
-server-flags.
+Otherwise LGTM:
 
 Reviewed-by: Mat Martineau <martineau@kernel.org>
 
-
-> ---
-> Matthieu Baerts (NGI0) (5):
->      mptcp: pm: netlink: fix if-idx type
->      mptcp: set remote_deny_join_id0 on SYN recv
->      mptcp: pm: nl: announce deny-join-id0 flag
->      selftests: mptcp: userspace pm: validate deny-join-id0 flag
->      mptcp: tfo: record 'deny join id0' info
+> While at it, always use the same prefix by taking info from ns1, instead
+> of "$connector_ns", which is sometimes ns1, sometimes ns2 in the
+> subtests.
 >
-> Documentation/netlink/specs/mptcp_pm.yaml         |  4 ++--
-> include/uapi/linux/mptcp.h                        |  2 ++
-> include/uapi/linux/mptcp_pm.h                     |  4 ++--
-> net/mptcp/options.c                               |  6 +++---
-> net/mptcp/pm_netlink.c                            |  9 ++++++++-
-> net/mptcp/subflow.c                               |  4 ++++
-> tools/testing/selftests/net/mptcp/pm_nl_ctl.c     |  7 +++++++
-> tools/testing/selftests/net/mptcp/userspace_pm.sh | 14 +++++++++++---
-> 8 files changed, 39 insertions(+), 11 deletions(-)
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 > ---
-> base-commit: 12e66f7051b4b535a990cd20c149d76a98ec68c3
-> change-id: 20250720-mptcp-pm-user-c-flag-a7d5d7a00c6f
+> tools/testing/selftests/net/mptcp/mptcp_connect.sh | 6 +++++-
+> 1 file changed, 5 insertions(+), 1 deletion(-)
 >
-> Best regards,
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+> index c2ab9f7f0d2133559bb18ce884b613d21d1ec5f0..47ecb5b3836eb5c64787bda0f6f1cc7c3af338aa 100755
+> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+> @@ -211,6 +211,11 @@ if $checksum; then
+> 	done
+> fi
+>
+> +if $capture; then
+> +	rndh="${ns1:4}"
+> +	mptcp_lib_pr_info "Packet capture files will have this prefix: ${rndh}-"
+> +fi
+> +
+> set_ethtool_flags() {
+> 	local ns="$1"
+> 	local dev="$2"
+> @@ -361,7 +366,6 @@ do_transfer()
+>
+> 	if $capture; then
+> 		local capuser
+> -		local rndh="${connector_ns:4}"
+> 		if [ -z $SUDO_USER ] ; then
+> 			capuser=""
+> 		else
+>
 > -- 
-> Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> 2.51.0
 >
 >
 >
