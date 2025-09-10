@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3E742264BD;
-	Wed, 10 Sep 2025 01:50:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B5F3200C2;
+	Wed, 10 Sep 2025 02:20:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757469008; cv=none; b=no5zcPKloI4EtOQJf9kC5X+13Cmih+o2/MCWeUQfR/mONIZRowB/hxyGe7e784ULQNzacet/G57nwrtJVFgRefIQvlbdIQdhRlLZ4/r8wH2/ISUBoc/WAGjiQa5oyf7Xd/qHoYGQ/e3JWTDvjRYZVMEri2F89AAEuurK5DwVc5U=
+	t=1757470807; cv=none; b=HxsA1xz4zUphSHkDt/cbazWU3tNBbMaaBh9Vwnm6wCAjYL5zPLPFXwh/9SLnXRyGyKI8ymu6CJswsv8NhTqbGXIEDaLAw0vB+OkEAwDt++dUuO8fTKFILTCtdCzNeij+5P8YfWI/4NCIiDVDdYB+n4LL0kOsPoD95nh74knRTaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757469008; c=relaxed/simple;
-	bh=31ynHaSExIvuDjwFnZXBu1eJN+TxHwjKcZZvJ6vRyiw=;
+	s=arc-20240116; t=1757470807; c=relaxed/simple;
+	bh=dIL5T/VhrMyP+D+xxxmzNfI252wmfOv3usV7QGTLrY0=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=iVUffFC9UYpkr7hXsfCCEeSc4rmikwBrXdCgpMlxP1llJgIjMc0WRUxmbaW0aW7/kkGgCRq8Q+iaByOiiNCPaoKKDCnPU1q7Hqd6ztFp/I1BpI4VfvX1CdEFffBnjseDZk6xAhkan2j8/94y0BqQPjBFaFVbUFaow+z5S0t24QY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ERPEx6gW; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=rIDQOBXXKSE3oHTN57GpIlBnb6jneNgk2Ixg+/iadXM1B0sNB0UHU+0nYwXm6wr7g8cFaSbPLaSzQkBTMRHIDohUpgq1W6fZU+AuDWCuZ/ehybNYokAek7lFg9BNdZyEGlxOt3kVOnT1VbasR1b82mmINQSE4C1MliA+3+NEjT4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DKKsildu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ERPEx6gW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B44BC4CEF4;
-	Wed, 10 Sep 2025 01:50:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DKKsildu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B02EC4CEF4;
+	Wed, 10 Sep 2025 02:20:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757469008;
-	bh=31ynHaSExIvuDjwFnZXBu1eJN+TxHwjKcZZvJ6vRyiw=;
+	s=k20201202; t=1757470807;
+	bh=dIL5T/VhrMyP+D+xxxmzNfI252wmfOv3usV7QGTLrY0=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=ERPEx6gWeL3OsSIDwqsS85e9D0L2BOG2I8nnz8It68KBzFjRKlIx7+37//AxqCphC
-	 5LJbO/3lmVaBYHEG7Bb5vV+aP82/3W6DJE7uYtQpPtk+IC4owCuSCVXUfY+QTB+S20
-	 XZsgmB6kB0ak5RI+cX9vAEIHh7wYcIC/RKpZWqJWdLQxHdHcWIw2RrRQBAPsnDMQBf
-	 hj7M2LMpAsdTmf96RV/jLIhIxC/CrhSsKYDDKOA6zz6xJDttvyBrSiYlw+YT+1d0qv
-	 dyFHbJdGi47h3yRt+j8l/rV+2xf6XtE9F5p5EOMKD+G9WoQhDK5iDYcUzWqEHdKh3d
-	 LM58qe8WA/gEQ==
+	b=DKKsildunjBuorqMDrDI7xVFFgvS7AvRsE/H9FOcIl6I7Rvp9Dk7wievMK9/osc/o
+	 h3Q3BQnD79NY3IVowhKlxhCN8L2SMlYCfAkINp2WeQ6jmecptDYLJCwaJp8lPP6Qik
+	 muD9YdTNr1aUjIE4mW5S9GnW0H+6NV0uCU/bGOLBB1oFCQPn0yqQdWQeUPlvTW2408
+	 dQyRoAX5nSvnClv8Y/dc0sbydgMGBGxVZCCeIHDtnpPw21wR1g+fIzFAFzRJsshP1B
+	 6SAleUdXYMi/jJd1kWz70J0rQOjI+pgJ9d+5bsfmkwTSfjYwllRhV5yZz7uNqEIDpQ
+	 erHNKOR/mJnpA==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id AE05C383BF69;
-	Wed, 10 Sep 2025 01:50:12 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70C37383BF69;
+	Wed, 10 Sep 2025 02:20:11 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -37,46 +37,48 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net v2] mptcp: sockopt: make sync_socket_options propagate
- SOCK_KEEPOPEN
+Subject: Re: [PATCH net-next 0/3] mptcp: make ADD_ADDR retransmission timeout
+ adaptive
 From: patchwork-bot+netdevbpf@kernel.org
 Message-Id: 
- <175746901150.871782.13982454785645572183.git-patchwork-notify@kernel.org>
-Date: Wed, 10 Sep 2025 01:50:11 +0000
-References: <aL8dYfPZrwedCIh9@templeofstupid.com>
-In-Reply-To: <aL8dYfPZrwedCIh9@templeofstupid.com>
-To: Krister Johansen <kjlx@templeofstupid.com>
-Cc: matttbe@kernel.org, martineau@kernel.org, geliang@kernel.org,
+ <175747081026.879618.4585653911597992298.git-patchwork-notify@kernel.org>
+Date: Wed, 10 Sep 2025 02:20:10 +0000
+References: 
+ <20250907-net-next-mptcp-add_addr-retrans-adapt-v1-0-824cc805772b@kernel.org>
+In-Reply-To: 
+ <20250907-net-next-mptcp-add_addr-retrans-adapt-v1-0-824cc805772b@kernel.org>
+To: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev, martineau@kernel.org, geliang@kernel.org,
  davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- horms@kernel.org, fw@strlen.de, netdev@vger.kernel.org,
- mptcp@lists.linux.dev, linux-kernel@vger.kernel.org, me@davidreaver.com
+ horms@kernel.org, corbet@lwn.net, shuah@kernel.org, netdev@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, cpaasch@openai.com
 
 Hello:
 
-This patch was applied to netdev/net.git (main)
+This series was applied to netdev/net-next.git (main)
 by Jakub Kicinski <kuba@kernel.org>:
 
-On Mon, 8 Sep 2025 11:16:01 -0700 you wrote:
-> Users reported a scenario where MPTCP connections that were configured
-> with SO_KEEPALIVE prior to connect would fail to enable their keepalives
-> if MTPCP fell back to TCP mode.
+On Sun, 07 Sep 2025 17:32:41 +0200 you wrote:
+> Currently, the MPTCP ADD_ADDR notifications are retransmitted after a
+> fixed timeout controlled by the net.mptcp.add_addr_timeout sysctl knob,
+> if the corresponding "echo" packets are not received before. This can be
+> too slow (or too quick), especially with a too cautious default value
+> set to 2 minutes.
 > 
-> After investigating, this affects keepalives for any connection where
-> sync_socket_options is called on a socket that is in the closed or
-> listening state.  Joins are handled properly. For connects,
-> sync_socket_options is called when the socket is still in the closed
-> state.  The tcp_set_keepalive() function does not act on sockets that
-> are closed or listening, hence keepalive is not immediately enabled.
-> Since the SO_KEEPOPEN flag is absent, it is not enabled later in the
-> connect sequence via tcp_finish_connect.  Setting the keepalive via
-> sockopt after connect does work, but would not address any subsequently
-> created flows.
+> - Patch 1: make ADD_ADDR retransmission timeout adaptive, using the
+>   TCP's retransmission timeout. The corresponding sysctl knob is now
+>   used as a maximum value.
 > 
 > [...]
 
 Here is the summary with links:
-  - [net,v2] mptcp: sockopt: make sync_socket_options propagate SOCK_KEEPOPEN
-    https://git.kernel.org/netdev/net/c/648de37416b3
+  - [net-next,1/3] mptcp: make ADD_ADDR retransmission timeout adaptive
+    https://git.kernel.org/netdev/net-next/c/30549eebc4d8
+  - [net-next,2/3] selftests: mptcp: join: tolerate more ADD_ADDR
+    https://git.kernel.org/netdev/net-next/c/63c31d42cf6f
+  - [net-next,3/3] selftests: mptcp: join: allow more time to send ADD_ADDR
+    https://git.kernel.org/netdev/net-next/c/e2cda6343bfe
 
 You are awesome, thank you!
 -- 
