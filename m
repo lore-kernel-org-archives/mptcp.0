@@ -1,113 +1,125 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 690BD2798F8
-	for <mptcp@lists.linux.dev>; Wed, 10 Sep 2025 17:05:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1981919E97A
+	for <mptcp@lists.linux.dev>; Wed, 10 Sep 2025 18:17:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757523933; cv=none; b=PPIqa9AruqrhrYeFiFSwP2UxdeKIB5s5mS1xdYnXuv43Hu25MSgAb2G9xwrB5l0uDBUFXgZAB7vg7MVK4AZmmZhIadcUYP3br/MzpVIj3Ai8zb6tBUVw3on4XFNYygw2ZG76lOGD47EA6SVQSFQYrN3U87SY9kjDy72cBHPoibw=
+	t=1757528254; cv=none; b=rljPEPoPP1ubB1WaJcp6s+V8YoFx4TeV0uaszVcff2dcgq8XQkTkVoB6iRKokOtpJvMJQ+CImMdaIfn47YLU+4NeFxJzJTX1XZ63ZwbuvWeUwmH49xdNEHloohk1P4vLo8J1f/nsxkgjFZAtbZ4ZGYXZ1gRwZvwYojUj0CDH5QI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757523933; c=relaxed/simple;
-	bh=et1CLOonA88Ym16EvrJgOkknU3na0+ciJShV5pL6u8Y=;
-	h=Message-ID:Date:MIME-Version:From:To:Cc:Subject:Content-Type; b=pb2aVBRFHNhe5KXyVpEOGPP8aQ8/zGYiiOd1imCYHS9cjAM1GAFZPEnmlYzmleKN8C3mYhY9x/fZLk2UEVmr2uHtIIOvEftx3xW87XyukEAYG5i4KgMw3Id/6CtK3KSJVpjldFmkNwL68IJ2gGmi0/uwmMveTXHDEfyaBRMgOAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bsbTTBJy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1757528254; c=relaxed/simple;
+	bh=r7eLh1TCjLodVnZfBwVfuIE8EK3Z8/QX1Ya2AAsf37Q=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=RuCqb2saxuiqhfnt94k5xe6N+kg1993AwFkFQqQZhzC0fCPA1sbL0SqRchKAgMsVOeenRKT7JedUK1LOtbIldC0W/q12gwf5IzYl8ZBhXsezTdDFyTgenbvr6+J9YkJORUsJL+9zkdVZR48D28vvMJ+e983NRl2c8BYTl9MR7Yk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c7qedTzK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bsbTTBJy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61F00C4CEEB;
-	Wed, 10 Sep 2025 17:05:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c7qedTzK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83DCDC4CEEB;
+	Wed, 10 Sep 2025 18:17:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757523931;
-	bh=et1CLOonA88Ym16EvrJgOkknU3na0+ciJShV5pL6u8Y=;
-	h=Date:From:To:Cc:Subject:From;
-	b=bsbTTBJyHAn8ryjac+W/+XTqsJhcyrNgrfJXlo2xZcMwSNKOdMoE4eRY85U7wEYkk
-	 MxzgsagZUq3riYaYSiW6Vle96QVKmzpHUMYijCkjpNGgFNHYOSvZ2kUG/IVSthVlFc
-	 GIe3TZjoocV5tDbGSBLLT+fYlussaGTHg7gLKRzB/G/Ij8BUu8Y7oyoyWQUOIX5hIE
-	 Pk0oE85L+qlosidVhl3GWKqTe/V9wwAQh9CbXlhm/1qquSbhYRtrIvxjh8UVJCgnXi
-	 isvc/MV81WDojM25/Z7mCjCQLK66jurOfORuj02AfkHQhGdk5DjNGzkMgOc0TBKci4
-	 eWDt0CIcDvNkg==
-Message-ID: <6ddd8121-331b-4f93-b0ce-5eb7871ac553@kernel.org>
-Date: Wed, 10 Sep 2025 19:05:28 +0200
+	s=k20201202; t=1757528253;
+	bh=r7eLh1TCjLodVnZfBwVfuIE8EK3Z8/QX1Ya2AAsf37Q=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=c7qedTzKv2ymDCiA0qF9iQL8oZ9fwmJsaEHmyW2+e9eT8yyxsOuBdwAKJ8zeqrVmn
+	 xNCv/qUi/KZAMt5A7gvUPbaYfY0Jq7ThP4mhuh35m3w/dSElFJDghLglzHFS/MQSBi
+	 ojoN2NIgI9qIpnT/fW6v0EQPTfxB+HFXSCE9R4hpX8ntiY3IjUdI+kdk6tJhKLiELC
+	 hmTKDAlhYen+nJUp5z3mU0buqHmN9jw1IfeV/8S60nfkf0MwYLmE0PhnatNJe60Pru
+	 QNikDRyyM7HcCFAx26HzU1yefy9AeVli6XcWrYCI/qSu13/IENWKCjKmO3Fz0e+ZN6
+	 3s43e41mBjJWg==
+Date: Wed, 10 Sep 2025 11:17:32 -0700 (PDT)
+From: Mat Martineau <martineau@kernel.org>
+To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+cc: MPTCP Upstream <mptcp@lists.linux.dev>, 
+    Donald Hunter <donald.hunter@gmail.com>, 
+    Marek Majkowski <marek@cloudflare.com>
+Subject: Re: [PATCH mptcp-net v2 0/5] mptcp: pm: nl: announce deny-join-id0
+ attribute
+In-Reply-To: <20250909-mptcp-pm-user-c-flag-v2-0-a6f9542481c5@kernel.org>
+Message-ID: <ced8a24b-14ed-745a-13e2-b0b805116863@kernel.org>
+References: <20250909-mptcp-pm-user-c-flag-v2-0-a6f9542481c5@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-From: Matthieu Baerts <matttbe@kernel.org>
-Content-Language: en-GB, fr-BE
-To: Geliang Tang <geliang@kernel.org>
-Cc: MPTCP Linux <mptcp@lists.linux.dev>, Mat Martineau <martineau@kernel.org>
-Subject: Patchwork: Prioritising the queue
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-Hi Geliang,
+On Tue, 9 Sep 2025, Matthieu Baerts (NGI0) wrote:
 
-As you may have noticed regarding the reviews of your patches, we are
-lagging a bit behind, sorry for that.
+> During the connection establishment, a peer can tell the other one that
+> it cannot establish new subflows to the initial IP address and port by
+> setting the 'C' flag [1]. Doing so makes sense when the sender is behind
+> a strict NAT, operating behind a legacy Layer 4 load balancer, or using
+> anycast IP address for example.
+>
+> When this 'C' flag is set, the path-managers must then not try to
+> establish new subflows to the other peer's initial IP address and port.
+> The in-kernel PM has access to this info, but the userspace PM didn't,
+> not letting the userspace daemon able to respect the RFC8684.
+>
+> Here are a few fixes related to this 'C' flag (aka 'deny-join-id0'):
+>
+> - Patch 1: fix a small typo in if-idx type. A fix for v5.10.
+>
+> - Patch 2: add remote_deny_join_id0 info on passive connections. A fix
+>  for v5.14.
+>
+> - Patch 3: let the userspace PM daemon know about the deny_join_id0
+>  attribute, so when set, it can avoid creating new subflows to the
+>  initial IP address and port. A fix for v5.19.
+>
+> - Patch 4: a validation for the previous commit.
+>
+> - Patch 5: record the deny_join_id0 info when TFO is used. A fix for
+>  v6.2.
+>
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> ---
+> Changes in v2:
+> - Former patches 4-6 have been already applied
+> - Former patch 2 has been dropped (Christoph)
+> - Patch 1 is new, not linked to deny-join-id0
+> - Patch 3 replaces former patch 2, and was linked to former patch 7, but
+>  now using 'flags' instead of a new dedicated attribute (Mat)
+> - Notes: changes for net-next, and the deprecation of server-flags will
+>  be part of another series.
+> - Link to v1: https://lore.kernel.org/r/20250829-mptcp-pm-user-c-flag-v1-0-78b25dda7708@kernel.org
+>
 
-Here is the list of pending series:
+Hi Matthieu -
 
-- only remove entry from local_addr_list when sending a REMOVE_ADDR
-- mptcp: TCP_MD5SIG support
-- refactor MPTCP socket option handling
-- mptcp: add more sockopts
-- selftests: consolidate TCP_INQ testing into sockopt
-- implement mptcp read_sock
+v2 full series LGTM, thanks for reworking to use the existing 'flags' 
+attribute. Agree with the plans for net-next and deprecation of 
+server-flags.
 
-(+ the WIP ones marked as "changes-requested")
+Reviewed-by: Mat Martineau <martineau@kernel.org>
 
-Can you help us to prioritise this list please? Which ones should we
-start with? Priorities can be given based on the dependences and/or your
-own priorities for example. With that, we can iterate over them one by one.
 
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
-
+> ---
+> Matthieu Baerts (NGI0) (5):
+>      mptcp: pm: netlink: fix if-idx type
+>      mptcp: set remote_deny_join_id0 on SYN recv
+>      mptcp: pm: nl: announce deny-join-id0 flag
+>      selftests: mptcp: userspace pm: validate deny-join-id0 flag
+>      mptcp: tfo: record 'deny join id0' info
+>
+> Documentation/netlink/specs/mptcp_pm.yaml         |  4 ++--
+> include/uapi/linux/mptcp.h                        |  2 ++
+> include/uapi/linux/mptcp_pm.h                     |  4 ++--
+> net/mptcp/options.c                               |  6 +++---
+> net/mptcp/pm_netlink.c                            |  9 ++++++++-
+> net/mptcp/subflow.c                               |  4 ++++
+> tools/testing/selftests/net/mptcp/pm_nl_ctl.c     |  7 +++++++
+> tools/testing/selftests/net/mptcp/userspace_pm.sh | 14 +++++++++++---
+> 8 files changed, 39 insertions(+), 11 deletions(-)
+> ---
+> base-commit: 12e66f7051b4b535a990cd20c149d76a98ec68c3
+> change-id: 20250720-mptcp-pm-user-c-flag-a7d5d7a00c6f
+>
+> Best regards,
+> -- 
+> Matthieu Baerts (NGI0) <matttbe@kernel.org>
+>
+>
+>
