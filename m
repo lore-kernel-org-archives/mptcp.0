@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8413730F801
-	for <mptcp@lists.linux.dev>; Wed, 10 Sep 2025 08:30:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6CEB30F7F1
+	for <mptcp@lists.linux.dev>; Wed, 10 Sep 2025 08:56:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757493024; cv=none; b=Oi7gN1v4gQ3lZUTCvkXwV7byVoRFUEc3DoxRQGgcU6qrdt2myfJxNzlXGBLxGoyyJQk/NiP/MEGJKT9Urf/o0KXE7+q7cZmZeB9ROvjIH6SHlyk//xIrabehjnD+9VkYPXmnaTcdzgnVaG3HkSkhihPEG1HKjmNaNDEWC0wgs/E=
+	t=1757494614; cv=none; b=Ex5UvSktyP3nUjoI06TAes+OTSsJPDk1qwMV+yjaLFkUQUBqAW8I2WJ5jkXsv1kqF1LJZyISJRP+B3p3WEPUjDawwilXvCdzSTRCO6bl1xOtN6HjUGhV2PnukTVZX7vfufAf2ayEalWJHI1juDL6RkSHBk7RgeW07QZY81IzJok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757493024; c=relaxed/simple;
-	bh=h4KVD+sxzemZeSUWfFbX+FHGxROYfYTo6D4m/Pnj15Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mtOld/f41vswLbo/b8eNfxlvKZjgItNwrr2rMDh3MgMwhz8zeLnDZXmz0jKv8OL01i0jDsR2/hYlYKi54hQDXvkm3yiuqQMuXBbluHnlfJVS3kqIMYf8Uc9nv0rFk4QO5pjIcW9K911m/EPzeGfasbvVXoe5O6u3GpV9ILXhMp0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kmubm+Ea; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1757494614; c=relaxed/simple;
+	bh=DD/vEiluEzBbdx4bXyWpg7i78Xv7DEwzIm5YUVmLHfM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=k0fChv+srHJtxwp0CgjqhLz5HLrVWhRY1yzKvsSInL6/gGrgJoX/3os55FZnJUPXGwpC+do0lBVY9yc2w4/FHnLnmm1t5OqQZWlb4VdHtEs4QWWx+butX0HzztafQBqrSt1GsbWMA2RLzQv1ILNfi8HGMXqpMa+cOCjESb8gd6w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zia8wUGy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kmubm+Ea"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98579C4CEF0;
-	Wed, 10 Sep 2025 08:30:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zia8wUGy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9776C4CEFA;
+	Wed, 10 Sep 2025 08:56:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757493024;
-	bh=h4KVD+sxzemZeSUWfFbX+FHGxROYfYTo6D4m/Pnj15Y=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Kmubm+Eaway4vTXmKdom2Tvb7e6pvWiCpwv/ZOEmJz15M17nIgR9ujleuLeS5ge5o
-	 Ur7KFeeaSIkTSk//j2e7bNCNpb/SZN238iCp+xOQYanzQgqLyboNKOkPd4FyckOxWt
-	 MIowNhTvuPHGFzuPeT6ISuo9FN2BmjJn8bxXm2f0Vz+fqh5l9LQUZ98A6OQvU1Xc1m
-	 q7TNcPCp13fyLjRfdw9ZL1muo5XbRwR2KpHcoVVOGxZKLux9Hr8LKW9cNrkuqfItb5
-	 F/bnB9QnNPtiw8oqrNoYR2qzCBz6a8hl1RNzxwgFr05JCYzGtFMwueR06RhjHIC4yy
-	 vQAVIz/Y2wAcQ==
-Message-ID: <5c80d904-2e21-4023-8040-622fe01ba641@kernel.org>
-Date: Wed, 10 Sep 2025 10:30:21 +0200
+	s=k20201202; t=1757494613;
+	bh=DD/vEiluEzBbdx4bXyWpg7i78Xv7DEwzIm5YUVmLHfM=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=Zia8wUGyIVp4c/TbHDC0Y8DI2F4EYBdRsyqqqkBogw4AtlEkOaJMYlt53gaNRr89A
+	 EQ78qljRvsea8Z2bZA44oYJKqd0IQ/qcInvbIHJQVFU7iyl6zbeG48dQ+6kr/nF24a
+	 0H95gN193og5FoxYUev7gT4NkOHE9v37bYlRbNeuvYH3g9QJAh2mudwAMEM51rQyeh
+	 beJeE/Y2FO9MoC5q2wLcjDCKAgu1h5znksN5dtpa/9ftZbdsEGlt2qXv0TmmR98ZG/
+	 AsdwAqwgazU5TaLdKupSKRVUb69ZUCJpg9wfSdnicH5WTQoi4bdMDwRntNzaDJwS0B
+	 +/hHvNQIH/nZg==
+Message-ID: <6906f6ca-742c-4e06-8fa7-9bc996816525@kernel.org>
+Date: Wed, 10 Sep 2025 10:56:49 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,15 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net v2 1/5] mptcp: pm: netlink: fix if-idx type
+Subject: Re: [PATCH mptcp-net v2 2/5] selftests: mptcp: connect: catch IO
+ errors on listen side
 Content-Language: en-GB, fr-BE
-To: MPTCP Upstream <mptcp@lists.linux.dev>
-Cc: Donald Hunter <donald.hunter@gmail.com>
-References: <20250909-mptcp-pm-user-c-flag-v2-0-a6f9542481c5@kernel.org>
- <20250909-mptcp-pm-user-c-flag-v2-1-a6f9542481c5@kernel.org>
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+References: <20250905-sft-mptcp-disc-err-v2-0-dfb3b6b4a877@kernel.org>
+ <20250905-sft-mptcp-disc-err-v2-2-dfb3b6b4a877@kernel.org>
+ <39e9e5644c96315181e19d5db1b2b44cb48fbf8a.camel@kernel.org>
+ <cf2fe151-78d8-414c-adf5-6fd62e6a1f44@kernel.org>
+ <a55a9d1b123dae37f0478072d9eda0f6e6be7078.camel@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,29 +89,137 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20250909-mptcp-pm-user-c-flag-v2-1-a6f9542481c5@kernel.org>
+In-Reply-To: <a55a9d1b123dae37f0478072d9eda0f6e6be7078.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hello,
+Hi Geliang,
 
-On 09/09/2025 16:33, Matthieu Baerts (NGI0) wrote:
-> As pointed out by Donald, when parsing an entry, the wrong type was set
-> for the temp value: this value is signed.
+On 10/09/2025 04:44, Geliang Tang wrote:
+> Hi Matt,
 > 
-> There are no real issues here, because the intermediate variable was
-> only wrong for the sign, not for the size, and the final variable had
-> the right sign. But this feels wrong, and is confusing.
+> On Sat, 2025-09-06 at 15:54 +0200, Matthieu Baerts wrote:
+>> Hi Geliang,
+>>
+>> On 06/09/2025 01:49, Geliang Tang wrote:
+>>> On Fri, 2025-09-05 at 20:18 +0200, Matthieu Baerts (NGI0) wrote:
+>>>> IO errors were correctly printed to stderr, and propagated up to
+>>>> the
+>>>> main loop for the server side, but the returned value was
+>>>> ignored. As
+>>>> a
+>>>> consequence, the program for the listener side was no longer
+>>>> exiting
+>>>> with an error code in case of IO issues.
+>>>>
+>>>> Because of that, some issues might not have been seen. But very
+>>>> likely,
+>>>> most issues either had an effect on the client side, or the file
+>>>> transfer was not the expected one, e.g. the connection got reset
+>>>> before
+>>>> the end. Still, it is better to fix this.
+>>>>
+>>>> The main consequence of this issue is the error that was reported
+>>>> by
+>>>> the
+>>>> selftests: the received and sent files were different, and the
+>>>> MIB
+>>>> counters were not printed. Also, when such errors happened during
+>>>> the
+>>>> 'disconnect' tests, the program tried to continue until the
+>>>> timeout.
+>>>>
+>>>> Now when an IO error is detected, the program exits directly with
+>>>> an
+>>>> error.
+>>>>
+>>>> Fixes: 05be5e273c84 ("selftests: mptcp: add disconnect tests")
+>>>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+>>>> ---
+>>>>  tools/testing/selftests/net/mptcp/mptcp_connect.c | 6 +++++-
+>>>>  1 file changed, 5 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c
+>>>> b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+>>>> index
+>>>> 4f07ac9fa207cb08a934582b98d688d0b9512f97..c1586a7286123a509495ac3
+>>>> 19fd
+>>>> 624b98f0bfd18 100644
+>>>> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
+>>>> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+>>>> @@ -1112,6 +1112,8 @@ int main_loop_s(int listensock)
+>>>>  	salen = sizeof(ss);
+>>>>  	remotesock = accept(listensock, (struct sockaddr *)&ss,
+>>>> &salen);
+>>>>  	if (remotesock >= 0) {
+>>>> +		int err;
+>>>> +
+>>>>  		maybe_close(listensock);
+>>>>  		check_sockaddr(pf, &ss, salen);
+>>>>  		check_getpeername(remotesock, &ss, salen);
+>>>> @@ -1125,7 +1127,9 @@ int main_loop_s(int listensock)
+>>>>  		SOCK_TEST_TCPULP(remotesock, 0);
+>>>>  
+>>>>  		memset(&winfo, 0, sizeof(winfo));
+>>>> -		copyfd_io(fd, remotesock, 1, true, &winfo);
+>>>> +		err = copyfd_io(fd, remotesock, 1, true,
+>>>> &winfo);
+>>>> +		if (err)
+>>>> +			return err;
+>>>
+>>> The file descriptor (fd) should be closed before returning.
+>>
+>> I do agree it would be better to do so, but when you look in this
+>> file,
+>> most errors paths don't close the FD, because that's the exit path.
+>>
+>> 'fd' will need to be closed, 'remotesock' as well, but same when it
+>> was
+>> not possible to create 'fd'. Also, I guess 'listensock' is never
+>> closed.
+>> Honestly, I don't think we need to increase the complexity, and close
+>> them, just for the tests. It would be different if the FD were reused
+>> later on, but I don't think we need to spend time on these details
+>> when
+>> this test program is about to close.
+> 
+> What I mean here is not to return directly, something like:
+> 
+> '''
+> int err = 0;
+> 
+> if (remotesock >= 0) {
+>     ... ...
+>     err = copyfd_io(fd, remotesock, 1, true, &winfo);
+> }
+> 
+> if (cfg_input)
+>     close(fd);
+> 
+> if (!err && --cfg_repeat > 0)
+>     goto again;
+> 
+> return err;
+> '''
+> 
+> WDYT?
 
-As pointed out by Jakub in [1], this patch can go to -next.
+I do agree it is better. But again, I think there is no need to do that
+in this patch, because most error exit paths in this file don't close
+the fd's. That makes the patch longer and slightly more complex -- which
+can cause more troubles during the backports -- just for the exit error
+path. But because I keep being reminded by net maintainers that this
+series is needed to fix CI noises (and real issues), I want to move on,
+and I'm going to send a v3 with this modification.
 
-I suggest modifying the commit message when applying the patch by
-removing the Fixes that, and adding:
-
-  ... and is confusing, so fixing this small typo introduced in commit
-  ef0da3b8a2f1 ("mptcp: move address attribute into mptcp_addr_info").
-
-[1] https://lore.kernel.org/20250909184221.02b070b0@kernel.org
+> I will send a patch to close remotesock and listensock later.
+> 
+> Thanks,
+> -Geliang
+> 
+>>
+>> Cheers,
+>> Matt
 
 Cheers,
 Matt
