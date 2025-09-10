@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6CEB30F7F1
-	for <mptcp@lists.linux.dev>; Wed, 10 Sep 2025 08:56:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FDEC3115BB
+	for <mptcp@lists.linux.dev>; Wed, 10 Sep 2025 08:56:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757494614; cv=none; b=Ex5UvSktyP3nUjoI06TAes+OTSsJPDk1qwMV+yjaLFkUQUBqAW8I2WJ5jkXsv1kqF1LJZyISJRP+B3p3WEPUjDawwilXvCdzSTRCO6bl1xOtN6HjUGhV2PnukTVZX7vfufAf2ayEalWJHI1juDL6RkSHBk7RgeW07QZY81IzJok=
+	t=1757494619; cv=none; b=J0wUxPCBzIayP9wmaVfza4BqEfJCceiO9BeNN2SdvwEdrsPcmfZ4xc7bz6aD4/npyJm3jeonUR00lnDpQ2gfJV3VsagQi3RQ1nYz/Rv2RgzmmtjxW6wLn4jrq159652/LqE/bUe3vjTi5TYU8nsPNl0sd+E3qrdf7QZSwNd53wY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757494614; c=relaxed/simple;
-	bh=DD/vEiluEzBbdx4bXyWpg7i78Xv7DEwzIm5YUVmLHfM=;
+	s=arc-20240116; t=1757494619; c=relaxed/simple;
+	bh=1kvJyLRA3qorOtEizalZAbRK41ujlJ31rNQpgw/YD5c=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=k0fChv+srHJtxwp0CgjqhLz5HLrVWhRY1yzKvsSInL6/gGrgJoX/3os55FZnJUPXGwpC+do0lBVY9yc2w4/FHnLnmm1t5OqQZWlb4VdHtEs4QWWx+butX0HzztafQBqrSt1GsbWMA2RLzQv1ILNfi8HGMXqpMa+cOCjESb8gd6w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zia8wUGy; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=aZs4/tJxcociOXhQxjlwmzmLiz/LAKQMbFr2TrziGUek3D1a3waNybMRq8xpvR1ITWHUf0rkGsQCR227vsV4ao+74ofY/AdsJK8UTM5mROz8ieg2Nxl65/BCpVwdwUd+IT+9G2lmodEZI0alhtXCaUJNvKkNOSlOn4x5+9tb08o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tbIQzedN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zia8wUGy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9776C4CEFA;
-	Wed, 10 Sep 2025 08:56:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tbIQzedN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93DBAC4CEF5;
+	Wed, 10 Sep 2025 08:56:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757494613;
-	bh=DD/vEiluEzBbdx4bXyWpg7i78Xv7DEwzIm5YUVmLHfM=;
+	s=k20201202; t=1757494619;
+	bh=1kvJyLRA3qorOtEizalZAbRK41ujlJ31rNQpgw/YD5c=;
 	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=Zia8wUGyIVp4c/TbHDC0Y8DI2F4EYBdRsyqqqkBogw4AtlEkOaJMYlt53gaNRr89A
-	 EQ78qljRvsea8Z2bZA44oYJKqd0IQ/qcInvbIHJQVFU7iyl6zbeG48dQ+6kr/nF24a
-	 0H95gN193og5FoxYUev7gT4NkOHE9v37bYlRbNeuvYH3g9QJAh2mudwAMEM51rQyeh
-	 beJeE/Y2FO9MoC5q2wLcjDCKAgu1h5znksN5dtpa/9ftZbdsEGlt2qXv0TmmR98ZG/
-	 AsdwAqwgazU5TaLdKupSKRVUb69ZUCJpg9wfSdnicH5WTQoi4bdMDwRntNzaDJwS0B
-	 +/hHvNQIH/nZg==
-Message-ID: <6906f6ca-742c-4e06-8fa7-9bc996816525@kernel.org>
-Date: Wed, 10 Sep 2025 10:56:49 +0200
+	b=tbIQzedNhO/k//lwI6v4+36HJJIBwpYS1Wd6lLIIuqj2s/wkznvcAF7sduKvWkPJ2
+	 2bGq5oL0hpODMChkjAH90aQTYH36QQwyOteRLA96hEOyXrI2lop6CLFACdudZBRe4v
+	 W/Y5spocNKRGu0pPZL2Z9S3Q7qQaxJrxidv3BNAG8KdxqH0VqXcER3e/FdBtFiwTjt
+	 s8sJ3gv/0DIY9yfWhbvV9Oiv8pWXQwuuicaDBVdrHCj1s+dtjLqMv/3abkG52vrer+
+	 6SEziOrFHEOIvCDlZZoI1Od1LrX1JMYTrsRdMBFlvt+/8zeZqQty7RLTmiahZYN5sk
+	 BZIOaGQlqD7hg==
+Message-ID: <ba475884-ee50-4f4c-8a54-2fd10a7c2611@kernel.org>
+Date: Wed, 10 Sep 2025 10:56:58 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,15 +35,15 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net v2 2/5] selftests: mptcp: connect: catch IO
- errors on listen side
+Subject: Re: [PATCH mptcp-net v2 1/5] mptcp: propagate shutdown to subflows
+ when possible
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 References: <20250905-sft-mptcp-disc-err-v2-0-dfb3b6b4a877@kernel.org>
- <20250905-sft-mptcp-disc-err-v2-2-dfb3b6b4a877@kernel.org>
- <39e9e5644c96315181e19d5db1b2b44cb48fbf8a.camel@kernel.org>
- <cf2fe151-78d8-414c-adf5-6fd62e6a1f44@kernel.org>
- <a55a9d1b123dae37f0478072d9eda0f6e6be7078.camel@kernel.org>
+ <20250905-sft-mptcp-disc-err-v2-1-dfb3b6b4a877@kernel.org>
+ <9f2a05ac6034fb33f579302a0ede2ec13eb6c915.camel@kernel.org>
+ <aa8f9007-71cb-4c82-b235-bd585da19922@kernel.org>
+ <b76b31112598ee1e4774e1fd0cb68162c5633a3d.camel@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -89,137 +89,152 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <a55a9d1b123dae37f0478072d9eda0f6e6be7078.camel@kernel.org>
+In-Reply-To: <b76b31112598ee1e4774e1fd0cb68162c5633a3d.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 Hi Geliang,
 
-On 10/09/2025 04:44, Geliang Tang wrote:
+On 10/09/2025 05:24, Geliang Tang wrote:
 > Hi Matt,
 > 
-> On Sat, 2025-09-06 at 15:54 +0200, Matthieu Baerts wrote:
+> On Sat, 2025-09-06 at 15:42 +0200, Matthieu Baerts wrote:
 >> Hi Geliang,
 >>
->> On 06/09/2025 01:49, Geliang Tang wrote:
+>> On 06/09/2025 02:45, Geliang Tang wrote:
 >>> On Fri, 2025-09-05 at 20:18 +0200, Matthieu Baerts (NGI0) wrote:
->>>> IO errors were correctly printed to stderr, and propagated up to
+>>>> When the MPTCP DATA FIN have been ACKed, there is no more MPTCP
+>>>> related
+>>>> metadata to exchange, and all subflows can be safely shutdown.
+>>>>
+>>>> Before this patch, the subflows were actually terminated at
+>>>> 'close()'
+>>>> time. That's certainly fine most of the time, but not when the
+>>>> userspace
+>>>> 'shutdown()' a connection, without close()ing it. When doing so,
 >>>> the
->>>> main loop for the server side, but the returned value was
->>>> ignored. As
->>>> a
->>>> consequence, the program for the listener side was no longer
->>>> exiting
->>>> with an error code in case of IO issues.
+>>>> subflows were staying in LAST_ACK state on one side -- and
+>>>> consequently
+>>>> in FIN_WAIT2 on the other side -- until the 'close()' of the
+>>>> MPTCP
+>>>> socket.
 >>>>
->>>> Because of that, some issues might not have been seen. But very
->>>> likely,
->>>> most issues either had an effect on the client side, or the file
->>>> transfer was not the expected one, e.g. the connection got reset
->>>> before
->>>> the end. Still, it is better to fix this.
+>>>> Now, when the DATA FIN have been ACKed, all subflows are
+>>>> shutdown. A
+>>>> consequence of this is that the TCP 'FIN' flag can be set earlier
+>>>> now,
+>>>> but the end result is the same. This affects the packetdrill
+>>>> tests
+>>>> looking at the end of the MPTCP connections, but for a good
+>>>> reason.
 >>>>
->>>> The main consequence of this issue is the error that was reported
->>>> by
->>>> the
->>>> selftests: the received and sent files were different, and the
->>>> MIB
->>>> counters were not printed. Also, when such errors happened during
->>>> the
->>>> 'disconnect' tests, the program tried to continue until the
->>>> timeout.
->>>>
->>>> Now when an IO error is detected, the program exits directly with
->>>> an
->>>> error.
->>>>
->>>> Fixes: 05be5e273c84 ("selftests: mptcp: add disconnect tests")
+>>>> Fixes: 3721b9b64676 ("mptcp: Track received DATA_FIN sequence
+>>>> number
+>>>> and add related helpers")
+>>>> Fixes: 16a9a9da1723 ("mptcp: Add helper to process acks of
+>>>> DATA_FIN")
 >>>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 >>>> ---
->>>>  tools/testing/selftests/net/mptcp/mptcp_connect.c | 6 +++++-
->>>>  1 file changed, 5 insertions(+), 1 deletion(-)
+>>>>  net/mptcp/protocol.c | 16 ++++++++++++++++
+>>>>  1 file changed, 16 insertions(+)
 >>>>
->>>> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c
->>>> b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+>>>> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
 >>>> index
->>>> 4f07ac9fa207cb08a934582b98d688d0b9512f97..c1586a7286123a509495ac3
->>>> 19fd
->>>> 624b98f0bfd18 100644
->>>> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
->>>> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
->>>> @@ -1112,6 +1112,8 @@ int main_loop_s(int listensock)
->>>>  	salen = sizeof(ss);
->>>>  	remotesock = accept(listensock, (struct sockaddr *)&ss,
->>>> &salen);
->>>>  	if (remotesock >= 0) {
->>>> +		int err;
->>>> +
->>>>  		maybe_close(listensock);
->>>>  		check_sockaddr(pf, &ss, salen);
->>>>  		check_getpeername(remotesock, &ss, salen);
->>>> @@ -1125,7 +1127,9 @@ int main_loop_s(int listensock)
->>>>  		SOCK_TEST_TCPULP(remotesock, 0);
+>>>> 1c26acf6c4145896ecbb5c7f7004121c66a20649..9feb9f437c2bdfff392249e
+>>>> 7ad0
+>>>> 0edd09ba67ac3 100644
+>>>> --- a/net/mptcp/protocol.c
+>>>> +++ b/net/mptcp/protocol.c
+>>>> @@ -372,6 +372,20 @@ static void mptcp_close_wake_up(struct sock
+>>>> *sk)
+>>>>  		sk_wake_async(sk, SOCK_WAKE_WAITD, POLL_IN);
+>>>>  }
 >>>>  
->>>>  		memset(&winfo, 0, sizeof(winfo));
->>>> -		copyfd_io(fd, remotesock, 1, true, &winfo);
->>>> +		err = copyfd_io(fd, remotesock, 1, true,
->>>> &winfo);
->>>> +		if (err)
->>>> +			return err;
+>>>> +static void mptcp_shutdown_subflows(struct mptcp_sock *msk)
+>>>> +{
+>>>> +	struct mptcp_subflow_context *subflow;
+>>>> +
+>>>> +	mptcp_for_each_subflow(msk, subflow) {
+>>>> +		struct sock *ssk =
+>>>> mptcp_subflow_tcp_sock(subflow);
+>>>> +		bool slow;
+>>>> +
+>>>> +		slow = lock_sock_fast(ssk);
+>>>> +		tcp_shutdown(ssk, SEND_SHUTDOWN);
+>>>> +		unlock_sock_fast(ssk, slow);
+>>>> +	}
+>>>> +}
+>>>> +
+>>>>  /* called under the msk socket lock */
+>>>>  static bool mptcp_pending_data_fin_ack(struct sock *sk)
+>>>>  {
+>>>> @@ -396,6 +410,7 @@ static void mptcp_check_data_fin_ack(struct
+>>>> sock
+>>>> *sk)
+>>>>  			break;
+>>>>  		case TCP_CLOSING:
+>>>>  		case TCP_LAST_ACK:
+>>>> +			mptcp_shutdown_subflows(msk);
+>>>>  			mptcp_set_state(sk, TCP_CLOSE);
+>>>>  			break;
+>>>>  		}
+>>>> @@ -564,6 +579,7 @@ static bool mptcp_check_data_fin(struct sock
+>>>> *sk)
+>>>>  			mptcp_set_state(sk, TCP_CLOSING);
+>>>>  			break;
+>>>>  		case TCP_FIN_WAIT2:
+>>>> +			mptcp_shutdown_subflows(msk);
 >>>
->>> The file descriptor (fd) should be closed before returning.
+>>> I think we should not directly call mptcp_shutdown_subflows()
+>>> within
+>>> mptcp_check_data_fin() and mptcp_check_data_fin_ack(), but should
+>>> instead call it after these functions return and the sk state is
+>>> TCP_CLOSE. This ensures that the original purpose of these two
+>>> functions remains unchanged.
 >>
->> I do agree it would be better to do so, but when you look in this
->> file,
->> most errors paths don't close the FD, because that's the exit path.
+>> Thank you for the review. I'm not sure to understand what you mean
+>> about
+>> the "original purpose": they both set the appropriated actions when
+>> DATA_FIN have been received. Here, I do want to shut the subflows
+>> down
+>> when the DATA_FIN ACK are received, so that's the good spot, no?
 >>
->> 'fd' will need to be closed, 'remotesock' as well, but same when it
->> was
->> not possible to create 'fd'. Also, I guess 'listensock' is never
->> closed.
->> Honestly, I don't think we need to increase the complexity, and close
->> them, just for the tests. It would be different if the FD were reused
->> later on, but I don't think we need to spend time on these details
->> when
->> this test program is about to close.
+>> Note that commit 3721b9b64676 ("mptcp: Track received DATA_FIN
+>> sequence
+>> number and add related helpers") already had a hint of what should
+>> have
+>> been done: see the "Close subflows now?" comment, later removed in
+>> commit e16163b6e2b7 ("mptcp: refactor shutdown and close").
+>>
+>> Or maybe do you mean their original name "check_data_fin(_ack)" is
+>> confusing? The "check" here is not just to check if the DATA_FIN
+>> (ACK)
+>> was set, but to check actions related to them.
 > 
-> What I mean here is not to return directly, something like:
+> I mean not to modify mptcp_check_data_fin and mptcp_check_data_fin_ack,
+> but to check TCP_CLOSE in mptcp_worker(), something like:
 > 
-> '''
-> int err = 0;
-> 
-> if (remotesock >= 0) {
->     ... ...
->     err = copyfd_io(fd, remotesock, 1, true, &winfo);
-> }
-> 
-> if (cfg_input)
->     close(fd);
-> 
-> if (!err && --cfg_repeat > 0)
->     goto again;
-> 
-> return err;
-> '''
-> 
-> WDYT?
+> @@ -2749,6 +2749,9 @@ static void mptcp_worker(struct work_struct
+> *work)
+>         mptcp_check_data_fin_ack(sk);
+>         mptcp_check_data_fin(sk);
+>  
+> +       if (sk->sk_state == TCP_CLOSE)
+> +               mptcp_shutdown_subflows(msk);
+> +
+>         if (test_and_clear_bit(MPTCP_WORK_CLOSE_SUBFLOW, &msk->flags))
+>                 __mptcp_close_subflow(sk);
 
-I do agree it is better. But again, I think there is no need to do that
-in this patch, because most error exit paths in this file don't close
-the fd's. That makes the patch longer and slightly more complex -- which
-can cause more troubles during the backports -- just for the exit error
-path. But because I keep being reminded by net maintainers that this
-series is needed to fix CI noises (and real issues), I want to move on,
-and I'm going to send a v3 with this modification.
+No, we should only do that when receiving the DATA_FIN ACK, when
+transitioning from FIN_WAIT_2/LAST_ACK to CLOSE.
 
-> I will send a patch to close remotesock and listensock later.
-> 
-> Thanks,
-> -Geliang
-> 
->>
->> Cheers,
->> Matt
+I do think these data_fin functions are the best place, in the
+operations linked to the state machine, not here in the worker.
+
+> Another option is to call mptcp_shutdown_subflows in
+> mptcp_close_wake_up, which one do you think is better?
+
+No, that's not linked to 'waking up the userspace'.
 
 Cheers,
 Matt
