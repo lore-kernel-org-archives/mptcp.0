@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7A152BE02B
-	for <mptcp@lists.linux.dev>; Wed, 10 Sep 2025 08:57:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F9732BE02B
+	for <mptcp@lists.linux.dev>; Wed, 10 Sep 2025 08:57:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757494634; cv=none; b=GP/tgpITBUJ5HgyVxdeWgkXNIsqGDT41KIrMeUWN5QM18WEiUvwBSnVHH3DR/b0hBGpmJLqrJeNnl278JZcGuKei7mfiLWW3tJxcx1NqP/4asq8aPBUE1RPKnDZ5sa69SHReNTfYwjQUMGOZQYcnZox+eDYCBqTiuaCzp7Ywmnk=
+	t=1757494636; cv=none; b=bedPWcP9QNAqUMpGgKOM+rspoLT3lqNTpT1uiwGRqAXZYYcY8sK2ooSd48n0rS5LpfnxnQL1O12iubhZ4HG0a4J1KmAZCUKdzGBXNbiOON5G4WBhFAIkGm29YyZ5U6UCU7Mc4y6EUVPMxEozc4633+AzeInGLOXaYVeoVRm6bPk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757494634; c=relaxed/simple;
-	bh=eGvVqn/hZvn/VJdprEJxXpPfUCbq93HDV6WW9B9uRlY=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=fGRmiUmGPWDkt/kGgCYtR7dJlHHSYUuso+r6pmlvigIWxwPMTvbuBPIhP46xIs1UCToXzeWBKRv149v8xvwpJA2rHtNH9IjawXc2UMsVeIZcgOCnBqBDo1sAR+J15wvO1pF9q5lZFlV5hotp+dWF23MlcGNsjW2qW2qo37eE5Tk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a0IBxuhE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1757494636; c=relaxed/simple;
+	bh=2TuCSot+tgof1qm88VFRk5On/QBtwO1fQNg3xtP6bSc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=TipAdKQ++9If6wHZEClaHGGXXfQt21Pb0lcG0J6kh/eAR7nm7IruKg6tDc8D8EFDRmWYZW7rdlgqgNvRRDikqhrrOqHKoFx6kd2JMjGwbXW2jo++opln5Zqv8luArmc8N/SRrcQw1Jo03RtFlpiVaV2CwycS/njh4C6xoGcqe58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=quAuISlb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a0IBxuhE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7D5FC4CEF0;
-	Wed, 10 Sep 2025 08:57:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="quAuISlb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 949A9C4CEF0;
+	Wed, 10 Sep 2025 08:57:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757494633;
-	bh=eGvVqn/hZvn/VJdprEJxXpPfUCbq93HDV6WW9B9uRlY=;
-	h=From:Subject:Date:To:Cc:From;
-	b=a0IBxuhEC2YWoYvw2Ht6X0fNRP25kNhedgKQSgn4KLHAOXnNZmWQFznhAMeFK/DjU
-	 EExf9+/rsyB7x/0VTaYe3BDMfajf+ZcEzKqHMehdSQYEanlZG3C7VlmaAlmjNO6a4S
-	 KcalKnaMbzYl1tOeTqbmAfcN2Q4YraCH6FrzM27kS8skYhFuEvJeUUuXHE0XX4n5nJ
-	 RbPR7/MiNkSLn2x1rcF3gn9zBEWc5iSSRekv0wldlfu7zrI3snHbNWpfXbAMrBoJWK
-	 fkGKP4rHFVuinVYlRMfCo65obz6OiV7X8FkoXJHKyEGOP7eUbqOIXkK5NW1VEm/9id
-	 pnfj4MQw617XA==
+	s=k20201202; t=1757494636;
+	bh=2TuCSot+tgof1qm88VFRk5On/QBtwO1fQNg3xtP6bSc=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=quAuISlbKXE6z/lN39276sOX71+I+2Z6Nb3ceMem4s2+1IORaZzjj3wG/7hkhQNeF
+	 A5FwEpm6QqOnw2ycKrp4FfjWOSQ3EqfdwmUzQb+6WDWCc6LZE+EMa57k+uJNNoqMFX
+	 3fskXTo3GH69IVcOXU4Ff2MZo6NdWXVq4jrZj3jlEU7AxFQq54bcxdU7oyr5qisuze
+	 /19rAVtNAgTEQQaWVivtEWyTnwHGMQ5r34P8GwwtGvZV7FG7/UbHpwK4pbLbQFSn5K
+	 04t3uZdwSDgCKjbZ2WqmWvWIxugTGysLH2KKV85X8tybTjmt5CliyzjRNpsQQp3Di4
+	 K42djxjloXE7g==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Subject: [PATCH mptcp-net v3 0/5] selftests: mptcp: avoid spurious errors
+Date: Wed, 10 Sep 2025 10:55:49 +0200
+Subject: [PATCH mptcp-net v3 3/5] selftests: mptcp: avoid spurious errors
  on TCP disconnect
-Date: Wed, 10 Sep 2025 10:55:46 +0200
-Message-Id: <20250910-sft-mptcp-disc-err-v3-0-6799fa467d77@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,81 +38,104 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIABI9wWgC/23NQQ7CIBAF0KsY1mIoWCiuvIdxUWBoiUobIETT9
- O4SujAmXf7M/28WFCE4iOhyWFCA7KKbfAnseEB67P0A2JmSESW0JR3hONqEX3PSMzYuagwhYMZ
- aoQSXShuFynAOYN27oje0dT0kdC+n0cU0hU99l5ta2ORG7sm5wQRLQ7SlkivdsOsDgofnaQpD9
- TL9GZK0uwYthrGKKa7OfSfEn7Gu6xd2sWAwBAEAAA==
-X-Change-ID: 20250806-sft-mptcp-disc-err-3357b769bcdb
+Message-Id: <20250910-sft-mptcp-disc-err-v3-3-6799fa467d77@kernel.org>
+References: <20250910-sft-mptcp-disc-err-v3-0-6799fa467d77@kernel.org>
+In-Reply-To: <20250910-sft-mptcp-disc-err-v3-0-6799fa467d77@kernel.org>
 To: MPTCP Upstream <mptcp@lists.linux.dev>
 Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2887; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=eGvVqn/hZvn/VJdprEJxXpPfUCbq93HDV6WW9B9uRlY=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDIO2qYoZ5mrndVpkpxYcT4s2eNXrTVLeOmUhdWZLkn8q
- j2n5+R1lLIwiHExyIopski3RebPfF7FW+LlZwEzh5UJZAgDF6cATCTrBSPDe+M69SWevKG63lNi
- rz1N+NR8X8h1L8+Hv/eXT7Db/2WlGSPDjDzGpTaXGnwblkQcTC95zLpjerjKpQ2CLF21YqvLzv5
- mBAA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3925; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=2TuCSot+tgof1qm88VFRk5On/QBtwO1fQNg3xtP6bSc=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDIO2qZtniV3ZVJHia3Sx4KNLZHK7Xlup0O1pZfveqLIu
+ /NWuX94RykLgxgXg6yYIot0W2T+zOdVvCVefhYwc1iZQIYwcHEKwERiRRkZepPVEthOnsp2WKT2
+ S+/UqyXeE9rVNKaHhjfnOCa+9F+wiJFh5neej9MvHjHSrAyvfmQZaLEoUzKw7dGUxxN4g3p9+M6
+ wAwA=
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-This should fix the recent instabilities seen by MPTCP and NIPA CIs
-where the 'mptcp_connect.sh' tests fail regularly when running the
-'disconnect' subtests with "plain" TCP sockets, e.g.
+The disconnect test-case, with 'plain' TCP sockets generates spurious
+errors, e.g.
 
-  # INFO: disconnect
-  # 63 ns1 MPTCP -> ns1 (10.0.1.1:20001      ) MPTCP     (duration   996ms) [ OK ]
-  # 64 ns1 MPTCP -> ns1 (10.0.1.1:20002      ) TCP       (duration   851ms) [ OK ]
-  # 65 ns1 TCP   -> ns1 (10.0.1.1:20003      ) MPTCP     Unexpected revents: POLLERR/POLLNVAL(19)
-  # (duration   896ms) [FAIL] file received by server does not match (in, out):
-  # -rw-r--r-- 1 root root 11112852 Aug 19 09:16 /tmp/tmp.hlJe5DoMoq.disconnect
-  # Trailing bytes are:
-  # /{ga 6@=#.8:-rw------- 1 root root 10085368 Aug 19 09:16 /tmp/tmp.blClunilxx
-  # Trailing bytes are:
-  # /{ga 6@=#.8:66 ns1 MPTCP -> ns1 (dead:beef:1::1:20004) MPTCP     (duration   987ms) [ OK ]
-  # 67 ns1 MPTCP -> ns1 (dead:beef:1::1:20005) TCP       (duration   911ms) [ OK ]
-  # 68 ns1 TCP   -> ns1 (dead:beef:1::1:20006) MPTCP     (duration   980ms) [ OK ]
-  # [FAIL] Tests of the full disconnection have failed
+  07 ns1 TCP   -> ns1 (dead:beef:1::1:10006) MPTCP
+  read: Connection reset by peer
+  read: Connection reset by peer
+  (duration   155ms) [FAIL] client exit code 3, server 3
 
-Patch 3 fixes this issue, but a fix in MPTCP in patch 1 is also needed
-to fix MPTCP behaviour, and simplify patch 3. Patches 2 and 4 improve
-some errors reported by the selftests, and patch 5 helps with the
-debugging. I guess all these patches can be sent to 'net'
+  netns ns1-FloSdv (listener) socket stat for 10006:
+  TcpActiveOpens                  2                  0.0
+  TcpPassiveOpens                 2                  0.0
+  TcpEstabResets                  2                  0.0
+  TcpInSegs                       274                0.0
+  TcpOutSegs                      276                0.0
+  TcpOutRsts                      3                  0.0
+  TcpExtPruneCalled               2                  0.0
+  TcpExtRcvPruned                 1                  0.0
+  TcpExtTCPPureAcks               104                0.0
+  TcpExtTCPRcvCollapsed           2                  0.0
+  TcpExtTCPBacklogCoalesce        42                 0.0
+  TcpExtTCPRcvCoalesce            43                 0.0
+  TcpExtTCPChallengeACK           1                  0.0
+  TcpExtTCPFromZeroWindowAdv      42                 0.0
+  TcpExtTCPToZeroWindowAdv        41                 0.0
+  TcpExtTCPWantZeroWindowAdv      13                 0.0
+  TcpExtTCPOrigDataSent           164                0.0
+  TcpExtTCPDelivered              165                0.0
+  TcpExtTCPRcvQDrop               1                  0.0
 
-Note: Patch 1 will cause errors in Packetdrill, that's normal, see [1].
+In the failing scenarios (TCP -> MPTCP), the involved sockets are
+actually plain TCP ones, as fallbacks for passive sockets at 2WHS time
+cause the MPTCP listeners to actually create 'plain' TCP sockets.
 
-Link: https://github.com/multipath-tcp/packetdrill/pull/171 [1]
+Similar to commit 218cc166321f ("selftests: mptcp: avoid spurious errors
+on disconnect"), the root cause is in the user-space bits: the test
+program tries to disconnect as soon as all the pending data has been
+spooled, generating an RST. If such option reaches the peer before the
+connection has reached the closed status, the TCP socket will report an
+error to the user-space, as per protocol specification, causing the
+above failure. Note that it looks like this issue got more visible since
+the "tcp: receiver changes" series from commit 06baf9bfa6ca ("Merge
+branch 'tcp-receiver-changes'").
+
+Address the issue by explicitly waiting for the TCP sockets (-t) to
+reach a closed status before performing the disconnect. More precisely,
+the test program now waits for plain TCP sockets or TCP subflows in
+addition to the MPTCP sockets that were already monitored.
+
+While at it, use 'ss' with '-n' to avoid resolving service names, which
+is not needed here.
+
+Fixes: 218cc166321f ("selftests: mptcp: avoid spurious errors on disconnect")
+Suggested-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
-Changes in v3:
-- Patch 2: close some FDs in case of errors (Geliang)
-- Patch 4: mention there are now more bytes (Geliang)
-- Link to v2: https://lore.kernel.org/r/20250905-sft-mptcp-disc-err-v2-0-dfb3b6b4a877@kernel.org
-
-Changes in v2:
-- Patch 1: new
-- Patch 3: no more state filtering needed thanks to patch 1
-- Patch 4: switch from hexdump to od (Mat)
-- Patch 5: new
-- Link to v1: https://lore.kernel.org/r/20250819-sft-mptcp-disc-err-v1-0-9d0cf296bc13@kernel.org
-
+- v2: no more state filtering needed, thanks to the fix in the kernel
 ---
-Matthieu Baerts (NGI0) (5):
-      mptcp: propagate shutdown to subflows when possible
-      selftests: mptcp: connect: catch IO errors on listen side
-      selftests: mptcp: avoid spurious errors on TCP disconnect
-      selftests: mptcp: print trailing bytes with od
-      selftests: mptcp: connect: print pcap suffix
+ tools/testing/selftests/net/mptcp/mptcp_connect.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
- net/mptcp/protocol.c                               | 16 ++++++++++++++++
- tools/testing/selftests/net/mptcp/mptcp_connect.c  | 11 ++++++-----
- tools/testing/selftests/net/mptcp/mptcp_connect.sh |  6 +++++-
- tools/testing/selftests/net/mptcp/mptcp_lib.sh     |  2 +-
- 4 files changed, 28 insertions(+), 7 deletions(-)
----
-base-commit: 1e51af26b216c689f6d75872290bb0de1eeaae34
-change-id: 20250806-sft-mptcp-disc-err-3357b769bcdb
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+index 1408698df0999730d9a9a4ad6a6362a4ab122d54..b148cadb96d0b735901c92a1e4417f29c263dd90 100644
+--- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
++++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+@@ -1248,7 +1248,7 @@ void xdisconnect(int fd)
+ 	else
+ 		xerror("bad family");
+ 
+-	strcpy(cmd, "ss -M | grep -q ");
++	strcpy(cmd, "ss -Mnt | grep -q ");
+ 	cmdlen = strlen(cmd);
+ 	if (!inet_ntop(addr.ss_family, raw_addr, &cmd[cmdlen],
+ 		       sizeof(cmd) - cmdlen))
+@@ -1258,7 +1258,7 @@ void xdisconnect(int fd)
+ 
+ 	/*
+ 	 * wait until the pending data is completely flushed and all
+-	 * the MPTCP sockets reached the closed status.
++	 * the sockets reached the closed status.
+ 	 * disconnect will bypass/ignore/drop any pending data.
+ 	 */
+ 	for (i = 0; ; i += msec_sleep) {
 
-Best regards,
 -- 
-Matthieu Baerts (NGI0) <matttbe@kernel.org>
+2.51.0
 
