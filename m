@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C206A2C11CB;
-	Wed, 10 Sep 2025 08:27:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8413730F801
+	for <mptcp@lists.linux.dev>; Wed, 10 Sep 2025 08:30:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757492872; cv=none; b=FgBoWTwfeL+qUMmPnzw7Dh9UHONJQE28QPv8pjwr9UJPlCuiQGrK2O7w10xTWoyMZXGox31mDZSYLt0EG9CZ9O49qBMbHfCDAX7FlQMiVjbFnd5JkNIMMKQX5QfUtvHaNoE/UByMXxjtdMZ6cHc+us8NqHSgX1Uyy2qLrzynKQo=
+	t=1757493024; cv=none; b=Oi7gN1v4gQ3lZUTCvkXwV7byVoRFUEc3DoxRQGgcU6qrdt2myfJxNzlXGBLxGoyyJQk/NiP/MEGJKT9Urf/o0KXE7+q7cZmZeB9ROvjIH6SHlyk//xIrabehjnD+9VkYPXmnaTcdzgnVaG3HkSkhihPEG1HKjmNaNDEWC0wgs/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757492872; c=relaxed/simple;
-	bh=Jn3IN7T2ibSeH1qEfh+8dD2heAvbWrgUf8A3kjq+o8s=;
+	s=arc-20240116; t=1757493024; c=relaxed/simple;
+	bh=h4KVD+sxzemZeSUWfFbX+FHGxROYfYTo6D4m/Pnj15Y=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bcEiZ2IpH810sptrbIWb94LKyJlDebHz99XgPYBmXZjUUfNrBKv60uFjJmzLIc5kNQcgC+kELMLAu5mbPUiJXtG75mcMcywDjQSdNxOMsl//sE7q6tYkWiXAsws8RsziTzD+EA3sxLQfNqRqZ+6f3pxxGEZwa90tNHgVN6PMXv8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eoqKSXG1; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=mtOld/f41vswLbo/b8eNfxlvKZjgItNwrr2rMDh3MgMwhz8zeLnDZXmz0jKv8OL01i0jDsR2/hYlYKi54hQDXvkm3yiuqQMuXBbluHnlfJVS3kqIMYf8Uc9nv0rFk4QO5pjIcW9K911m/EPzeGfasbvVXoe5O6u3GpV9ILXhMp0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kmubm+Ea; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eoqKSXG1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A019C4CEF0;
-	Wed, 10 Sep 2025 08:27:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kmubm+Ea"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98579C4CEF0;
+	Wed, 10 Sep 2025 08:30:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757492872;
-	bh=Jn3IN7T2ibSeH1qEfh+8dD2heAvbWrgUf8A3kjq+o8s=;
+	s=k20201202; t=1757493024;
+	bh=h4KVD+sxzemZeSUWfFbX+FHGxROYfYTo6D4m/Pnj15Y=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=eoqKSXG1NFiQZvwJ08l76u8K77C7dwsDjo0A2Y+LYZZpO24VrRutl1WCVVhs0Q2un
-	 I4IMxyX5Sui3u2D/0dzzHC0uRdo9z1U4qSVeLzBBo8nY6Fh2VYB0K/x6jt699v9R8t
-	 6d5f1AZ+I6f6uzOvWLCxrv25DHXCFSMsyOsX25dO2CIVxU3T/3cAuuqWBhrnJurM4y
-	 cbt5wdVmqPbwKlcDTd4nmmjaSO4CvtiQO+6hN6MqIigzMu8PjhBUHjVx6EngDNdscG
-	 9pI+OM62HnyzHLQ2D6Cn6V0vE5pRkKihtwEwD92l4RgofPOZno22s5tsDGjt5OzD+S
-	 YG4XxzCYZxzPQ==
-Message-ID: <704358b3-22c9-42d2-b7d7-08f435b2991f@kernel.org>
-Date: Wed, 10 Sep 2025 10:27:44 +0200
+	b=Kmubm+Eaway4vTXmKdom2Tvb7e6pvWiCpwv/ZOEmJz15M17nIgR9ujleuLeS5ge5o
+	 Ur7KFeeaSIkTSk//j2e7bNCNpb/SZN238iCp+xOQYanzQgqLyboNKOkPd4FyckOxWt
+	 MIowNhTvuPHGFzuPeT6ISuo9FN2BmjJn8bxXm2f0Vz+fqh5l9LQUZ98A6OQvU1Xc1m
+	 q7TNcPCp13fyLjRfdw9ZL1muo5XbRwR2KpHcoVVOGxZKLux9Hr8LKW9cNrkuqfItb5
+	 F/bnB9QnNPtiw8oqrNoYR2qzCBz6a8hl1RNzxwgFr05JCYzGtFMwueR06RhjHIC4yy
+	 vQAVIz/Y2wAcQ==
+Message-ID: <5c80d904-2e21-4023-8040-622fe01ba641@kernel.org>
+Date: Wed, 10 Sep 2025 10:30:21 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,23 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH net 1/3] netlink: specs: mptcp: fix if-idx attribute type
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Donald Hunter <donald.hunter@gmail.com>,
- Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
- Davide Caratti <dcaratti@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
- Shuah Khan <shuah@kernel.org>, netdev@vger.kernel.org,
- mptcp@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
- stable@vger.kernel.org
-References: <20250908-net-mptcp-misc-fixes-6-17-rc5-v1-0-5f2168a66079@kernel.org>
- <20250908-net-mptcp-misc-fixes-6-17-rc5-v1-1-5f2168a66079@kernel.org>
- <m2plc0ui9z.fsf@gmail.com> <8f0bc70f-1657-4938-88e8-532ffb7c1a12@kernel.org>
- <20250909184221.02b070b0@kernel.org>
-From: Matthieu Baerts <matttbe@kernel.org>
+Subject: Re: [PATCH mptcp-net v2 1/5] mptcp: pm: netlink: fix if-idx type
 Content-Language: en-GB, fr-BE
+To: MPTCP Upstream <mptcp@lists.linux.dev>
+Cc: Donald Hunter <donald.hunter@gmail.com>
+References: <20250909-mptcp-pm-user-c-flag-v2-0-a6f9542481c5@kernel.org>
+ <20250909-mptcp-pm-user-c-flag-v2-1-a6f9542481c5@kernel.org>
+From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -96,34 +86,29 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20250909184221.02b070b0@kernel.org>
+In-Reply-To: <20250909-mptcp-pm-user-c-flag-v2-1-a6f9542481c5@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Jakub,
+Hello,
 
-On 10/09/2025 03:42, Jakub Kicinski wrote:
-> On Tue, 9 Sep 2025 11:08:46 +0200 Matthieu Baerts wrote:
->>> Note that mptcp_pm_parse_entry has this, which should maybe be fixed at
->>> the same time:
->>>
->>> 	u32 val = nla_get_s32(tb[MPTCP_PM_ADDR_ATTR_IF_IDX]);  
->>
->> Good catch!
+On 09/09/2025 16:33, Matthieu Baerts (NGI0) wrote:
+> As pointed out by Donald, when parsing an entry, the wrong type was set
+> for the temp value: this value is signed.
 > 
-> indeed!
-> 
->> This should be fixed in a dedicated patch, because this fixes commit:
->> ef0da3b8a2f1 ("mptcp: move address attribute into mptcp_addr_info"), a
->> different commit than the one being fixed here.
-> 
-> int = u32 is unlikely to cause issues AFAIU. We recently applied 
-> a bunch of such fixes to net-next. I think this can also go to -next.
+> There are no real issues here, because the intermediate variable was
+> only wrong for the sign, not for the size, and the final variable had
+> the right sign. But this feels wrong, and is confusing.
 
-Good point, in our tree, I will queue this patch for -next:
+As pointed out by Jakub in [1], this patch can go to -next.
 
+I suggest modifying the commit message when applying the patch by
+removing the Fixes that, and adding:
 
-https://lore.kernel.org/20250909-mptcp-pm-user-c-flag-v2-1-a6f9542481c5@kernel.org
+  ... and is confusing, so fixing this small typo introduced in commit
+  ef0da3b8a2f1 ("mptcp: move address attribute into mptcp_addr_info").
+
+[1] https://lore.kernel.org/20250909184221.02b070b0@kernel.org
 
 Cheers,
 Matt
