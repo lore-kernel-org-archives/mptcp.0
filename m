@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB27E1DDDD
-	for <mptcp@lists.linux.dev>; Wed, 10 Sep 2025 18:45:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43A342D2487
+	for <mptcp@lists.linux.dev>; Wed, 10 Sep 2025 19:03:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757529948; cv=none; b=Jeh4syuUihJRgu/k1/rXsLG4I0YD0qXhAJBchPKVNfRx/EKJWgEpOaPDvtSGc9uKNNieAOWqsDX+HN5clz/FLLLCDw1f/hE5SoYi2jb0NQDVEDZnn+QJILmEpZi8r9mUhDjabb1F0Gyabp8ZkVKC7CQ3wtFNFZJs5pnVTiu26uU=
+	t=1757530993; cv=none; b=AO+8ASxeecPDW7l0QCi12NBTkc3ecKZ9mfOq3rMEkuTlW+icCDk2vWjZ1y5VIhRsObzQ+yUFPK33svKoRYjgJOUkOAnW6oCAFnbeCZ8Mr1I7rya9+ouJlE9Mdye52YyDyiw7/Pe2ft9qv23plWJV23XtVQBUnRifjM4/Qjp1ob4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757529948; c=relaxed/simple;
-	bh=YBLZU/tluiWd69sbYuhRnP9ta4A/ZMuMXdgjv+RbN+s=;
+	s=arc-20240116; t=1757530993; c=relaxed/simple;
+	bh=qAJPfwsCKGLpKF2eE9S2bZkD2pA5FwfnHEEKVifL/RI=;
 	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=rZNMRG5EkGKGmSilvbT0FGLFxT7u8uTWBxHhINk+9v49Mw9wmYvRWcc6YPi2glv5JZs47cBCAF5kNwx9vxHF9uriYzzQCx6V4Rtr6hvVocuWDtbxHz86WNnJZW9MzTarJ6X6hcmJwLJVhiTTl9BJhFF6nHOibyYMK7poqjDa8uE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QkUFTwYo; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=nPDy6JQe7vMgZlWWCb1NxnkQJFUuxrggnRgGi2GA/CvD7k/Fi8XsCTrg4NTbEouTjOd2Z6C7VgaNA58Fg63/uOOmA5GX0sD9S4qTLqxtl9JGKEAl4ceboffd2+HQIIv0skfy66PUhtjlonkBVbinsc46dDZ4v2uFUZt1TgU8lns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qYxRonJr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QkUFTwYo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70319C4CEEB;
-	Wed, 10 Sep 2025 18:45:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qYxRonJr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C77EFC4CEEB;
+	Wed, 10 Sep 2025 19:03:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757529947;
-	bh=YBLZU/tluiWd69sbYuhRnP9ta4A/ZMuMXdgjv+RbN+s=;
+	s=k20201202; t=1757530992;
+	bh=qAJPfwsCKGLpKF2eE9S2bZkD2pA5FwfnHEEKVifL/RI=;
 	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=QkUFTwYo0b2b+3fQ3HI7YN6Sj1o01TV4D1EpPISwNyYrAwqn8iMC4gbNtlENnWF6d
-	 aNuocXT9VJUBFoocF8xyHfLlP6TMHW2BWcdRB+wCSxrPqeAXkXJ75533ZUKNppP1MH
-	 ++b1xkpMvZILtMIS0E6rif0VHn0IWsD0csUFXQ82nnJkEbZwWtd/nAGW1eYU37ZSIG
-	 xuZo6zfaj0/LLMsIqX4KUPmmkjzyUgZouxipcTQ2GnNAalj7mB9JShDm8k/r38CNQB
-	 SRcHTKaBCZgVV917/lBxVFOcM+WytjUGV/TzAAl5JHu1yo++A1TGwiQ116L4AXbzP/
-	 98sKciVRIoqvw==
-Date: Wed, 10 Sep 2025 11:45:46 -0700 (PDT)
+	b=qYxRonJr3KOgwDNDfz4XMAOWi9cGrhbcSjBhRJ2p2cCnTYYRCSgBxm4JCFlgemXwF
+	 O6JMp+VeVI6Sc1gr/O9mjbq3fM9owHGfGkifAk+yy07lNhgmG5fHg2sMORFbaoOaGe
+	 lxHgS2wa40sLaMFwtbuIu06gFxHQ32rvAsZJIhKwA38WSIH7YbOy02Haaa9/6Dt4Rf
+	 lxOLtBZDl1R8+GEDYBgUHUZzagoegJTT1cI4qwS8NdJSQK3/s0R3J1FGl1XdptmzrN
+	 tBKarzjq/pcRdQUKPVrXWaikMeen0jxxdpVKIrh9c64sFE+CCSUySZpd5xxIzI4lQg
+	 vlp3yZSyVK44Q==
+Date: Wed, 10 Sep 2025 12:03:12 -0700 (PDT)
 From: Mat Martineau <martineau@kernel.org>
 To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 cc: MPTCP Upstream <mptcp@lists.linux.dev>
-Subject: Re: [PATCH mptcp-net v3 5/5] selftests: mptcp: connect: print pcap
- suffix
-In-Reply-To: <20250910-sft-mptcp-disc-err-v3-5-6799fa467d77@kernel.org>
-Message-ID: <84941759-e288-3ab6-220e-f455a9f5ecf4@kernel.org>
-References: <20250910-sft-mptcp-disc-err-v3-0-6799fa467d77@kernel.org> <20250910-sft-mptcp-disc-err-v3-5-6799fa467d77@kernel.org>
+Subject: Re: [PATCH mptcp-net v3 0/5] selftests: mptcp: avoid spurious errors
+ on TCP disconnect
+In-Reply-To: <20250910-sft-mptcp-disc-err-v3-0-6799fa467d77@kernel.org>
+Message-ID: <13b53a08-0be4-fdf7-d8ef-58671c96e964@kernel.org>
+References: <20250910-sft-mptcp-disc-err-v3-0-6799fa467d77@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -43,56 +43,82 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII; format=flowed
 
+
 On Wed, 10 Sep 2025, Matthieu Baerts (NGI0) wrote:
 
-> To be able to find which capture files have been produced after several
-> runs.
+> This should fix the recent instabilities seen by MPTCP and NIPA CIs
+> where the 'mptcp_connect.sh' tests fail regularly when running the
+> 'disconnect' subtests with "plain" TCP sockets, e.g.
 >
-> This suffix was not printed anywhere before.
+>  # INFO: disconnect
+>  # 63 ns1 MPTCP -> ns1 (10.0.1.1:20001      ) MPTCP     (duration   996ms) [ OK ]
+>  # 64 ns1 MPTCP -> ns1 (10.0.1.1:20002      ) TCP       (duration   851ms) [ OK ]
+>  # 65 ns1 TCP   -> ns1 (10.0.1.1:20003      ) MPTCP     Unexpected revents: POLLERR/POLLNVAL(19)
+>  # (duration   896ms) [FAIL] file received by server does not match (in, out):
+>  # -rw-r--r-- 1 root root 11112852 Aug 19 09:16 /tmp/tmp.hlJe5DoMoq.disconnect
+>  # Trailing bytes are:
+>  # /{ga 6@=#.8:-rw------- 1 root root 10085368 Aug 19 09:16 /tmp/tmp.blClunilxx
+>  # Trailing bytes are:
+>  # /{ga 6@=#.8:66 ns1 MPTCP -> ns1 (dead:beef:1::1:20004) MPTCP     (duration   987ms) [ OK ]
+>  # 67 ns1 MPTCP -> ns1 (dead:beef:1::1:20005) TCP       (duration   911ms) [ OK ]
+>  # 68 ns1 TCP   -> ns1 (dead:beef:1::1:20006) MPTCP     (duration   980ms) [ OK ]
+>  # [FAIL] Tests of the full disconnection have failed
 >
+> Patch 3 fixes this issue, but a fix in MPTCP in patch 1 is also needed
+> to fix MPTCP behaviour, and simplify patch 3. Patches 2 and 4 improve
+> some errors reported by the selftests, and patch 5 helps with the
+> debugging. I guess all these patches can be sent to 'net'
+>
+> Note: Patch 1 will cause errors in Packetdrill, that's normal, see [1].
+>
+> Link: https://github.com/multipath-tcp/packetdrill/pull/171 [1]
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> ---
+> Changes in v3:
+> - Patch 2: close some FDs in case of errors (Geliang)
+> - Patch 4: mention there are now more bytes (Geliang)
+> - Link to v2: https://lore.kernel.org/r/20250905-sft-mptcp-disc-err-v2-0-dfb3b6b4a877@kernel.org
 
-One quick change before upstreaming: s/suffix/prefix/
+Hi Matthieu -
 
-Otherwise LGTM:
+Patch 5 I acked separately, one minor fix in the commit message but no 
+need for v4.
+
+Patches 1-4 LGTM. Even though it's possible (in patch 1) that a shutdown 
+may be attempted on a subflow that doesn't need it, tcp_shutdown() has the 
+logic to handle that.
 
 Reviewed-by: Mat Martineau <martineau@kernel.org>
 
-> While at it, always use the same prefix by taking info from ns1, instead
-> of "$connector_ns", which is sometimes ns1, sometimes ns2 in the
-> subtests.
+
 >
-> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> Changes in v2:
+> - Patch 1: new
+> - Patch 3: no more state filtering needed thanks to patch 1
+> - Patch 4: switch from hexdump to od (Mat)
+> - Patch 5: new
+> - Link to v1: https://lore.kernel.org/r/20250819-sft-mptcp-disc-err-v1-0-9d0cf296bc13@kernel.org
+>
 > ---
-> tools/testing/selftests/net/mptcp/mptcp_connect.sh | 6 +++++-
-> 1 file changed, 5 insertions(+), 1 deletion(-)
+> Matthieu Baerts (NGI0) (5):
+>      mptcp: propagate shutdown to subflows when possible
+>      selftests: mptcp: connect: catch IO errors on listen side
+>      selftests: mptcp: avoid spurious errors on TCP disconnect
+>      selftests: mptcp: print trailing bytes with od
+>      selftests: mptcp: connect: print pcap suffix
 >
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-> index c2ab9f7f0d2133559bb18ce884b613d21d1ec5f0..47ecb5b3836eb5c64787bda0f6f1cc7c3af338aa 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-> @@ -211,6 +211,11 @@ if $checksum; then
-> 	done
-> fi
+> net/mptcp/protocol.c                               | 16 ++++++++++++++++
+> tools/testing/selftests/net/mptcp/mptcp_connect.c  | 11 ++++++-----
+> tools/testing/selftests/net/mptcp/mptcp_connect.sh |  6 +++++-
+> tools/testing/selftests/net/mptcp/mptcp_lib.sh     |  2 +-
+> 4 files changed, 28 insertions(+), 7 deletions(-)
+> ---
+> base-commit: 1e51af26b216c689f6d75872290bb0de1eeaae34
+> change-id: 20250806-sft-mptcp-disc-err-3357b769bcdb
 >
-> +if $capture; then
-> +	rndh="${ns1:4}"
-> +	mptcp_lib_pr_info "Packet capture files will have this prefix: ${rndh}-"
-> +fi
-> +
-> set_ethtool_flags() {
-> 	local ns="$1"
-> 	local dev="$2"
-> @@ -361,7 +366,6 @@ do_transfer()
->
-> 	if $capture; then
-> 		local capuser
-> -		local rndh="${connector_ns:4}"
-> 		if [ -z $SUDO_USER ] ; then
-> 			capuser=""
-> 		else
->
+> Best regards,
 > -- 
-> 2.51.0
+> Matthieu Baerts (NGI0) <matttbe@kernel.org>
 >
 >
 >
