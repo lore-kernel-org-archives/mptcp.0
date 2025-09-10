@@ -1,130 +1,192 @@
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42A75245005
-	for <mptcp@lists.linux.dev>; Wed, 10 Sep 2025 11:20:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD86C29ACC3
+	for <mptcp@lists.linux.dev>; Wed, 10 Sep 2025 17:00:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757503231; cv=none; b=M+DqZ3tSF/mbaqZgRwad+0kw9zpWOwATM/dbXPxT7GIxlsKaL/QuSR3BLFAPp2Zn7TCtOx9P0jNdpQ1sGBzNRPvlvjKIxjw1yH39O7mhEpIG3TKwmazDxOxVYdnpLv3nKUT2w1zakMNK8PeHDETD4v2kjq6dPFTgfUUlfptTWoQ=
+	t=1757523614; cv=none; b=ta035Y41EEHQ7YVGZNmWF60D55HJhaXLDcuZ7y1viFkMgLM78/2C9ovLLuwLxnQdZOWakXMVG0zD5ZmAQVDMvJacvbH4cTsQUnllGg1gLdL4iHSS+DDqWEawnehJtG2u0JNQlbhpsPiR6MzQvw3Kj4wdBHInb3wowHX+5T3bL5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757503231; c=relaxed/simple;
-	bh=AHOgiQEaYXj7eTbeLMCicKJNUy0zFe7UISIcxnwbniU=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=FR3XsEHzjKe0Gs+XOmXOv2kBtq9MknWwt5m/h8PXuQnVjftvmRSIxONi1k1v4MtAmgQ/LJ2Po4rs2UbkpdyYPg4J5t+TaXZGkeRYBaTTdBWlK6GtL2bVEOVRTUyKvOfW17muBazAHNU+Ym3D+6/DpYav6B8wzwm0megH9rJFqd4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LAh8MQUe; arc=none smtp.client-ip=209.85.160.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1757523614; c=relaxed/simple;
+	bh=rYwSHBfz4zcpqBoMpWmSP4CgfxNaS/eIZy5R8qo4phA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Q87tTlLuVpG0H6Ljdmno75CSlX8BgaYwiqV422fhDd5UdC5DBGhnjaMz3Xw+zneW+DgRkXZi2N2R8NvI32lkaSOH833pmhL527Yyern8JGtJFktdvfkO6IqiVff+GGZ5T+YlbguJ8okBY3sbzvqQNiHt8KXCgTphEN4zadej+GU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tcd9WbDL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LAh8MQUe"
-Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-4b6304714a1so1291711cf.2
-        for <mptcp@lists.linux.dev>; Wed, 10 Sep 2025 04:20:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1757503229; x=1758108029; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7rDtsBCwnLkBArKkbL+RQV/Ab7+PBZZLDdHJk4f/wQ8=;
-        b=LAh8MQUexPsb2eFKDW7GCLjmmLPjfLaj5mgRSExmFXxAUkTn49gujSfurB8zvSA9wD
-         7uFJ61edNPXrmzRunxGMefS4TGX5l9jsntnpx97HHlaiBO9L6h8bSl4mJvb67NkCWyhO
-         SXlYcJA2zUrkcoz9XTzwaN7GaT3vh616Vx9h95nJk5jPJQpvAH/N9XGiSMKn6am7eDLC
-         GXZLPo/bzf4wGDFgYSb3imCtPLkJ+2hLJOqsKxdMlgSesAycMSFJsNdIIwHCASp+Nit+
-         MtREFCTOa8kAJqtQ2iJLr57wbyJ7AhnUtfv6+2QTyDUcdXlZiNFI6IS6HT2+rEtQ6hQp
-         rOMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757503229; x=1758108029;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=7rDtsBCwnLkBArKkbL+RQV/Ab7+PBZZLDdHJk4f/wQ8=;
-        b=crCb4OIbnVQm5zj6iwGnc20QEv/7p/rRtOm9YY93llmr3KgpRBfvjoGVka8k68sPVX
-         08ncfgn98Q09yhlcXWfvASK7SU9IQgS31W3E49OHaLtxLDnsApdOToje5bk3Gb8RNF7s
-         peHStrVpHWiciIfCD+7F4SYhyT6wnvuEpQ02cOXlbO0AIY19RLZYpzXM0XBcv9gfCkEQ
-         zQa1yhB9oQwUfV2ptM7L67ootBDy/GKdTbmVFwk1DOZ3ssdVQPvwqflP7/3y1wSeHR/H
-         nXqBLRMljmkzBem/y+3RTEUE4s0ON0LGLper/azLWmotQRoTezrHH3I2hH+V0u6R39QC
-         YUKg==
-X-Gm-Message-State: AOJu0Yw7HNK6YrYdCMfIJqao9zSqUXP+4YAuWJ3Ip3IOUWytGWyB0OGJ
-	FhKm604AwPl1aDYXnabMhHPHyJ3rIYsIyu6Auqd/LV2ezwlGsVofvgg=
-X-Gm-Gg: ASbGnct7OdRzz4U8XRTBwDW503w3l8ANXwsAiWobLxJRbJN2QcfpqNbnr4z1St+dcn6
-	RiKyn0AtD8zNJlrBqUbdMy5QTbRCd6eX0t6KjJfuIM2WxeO2qIcAEosbh5eS6ghmsuCwA6Vz32k
-	P8iINIRhxBp04B1OJAY2PtrSTmE2wcHWIyUcrPZxL0hCURDQZaokEZFjfR7jSJVuwFBpjUgyI3i
-	EA6l2kLR1JfwRQ4Uhj2BU+mcjdEzYGGnHF9vRMqtWIq1vhQ2r2XAw6QBMGg42CxWbSZHnT00AGu
-	XpbPYwQUOlbx+oJ+6MpoL2KgwKfJSggEEIuJ8hOKUoXnR44Egk3u9xbMLc0tfPxY9gS1kSPOrlW
-	EjqEBli0hjFII/BtDubojnaTjyZO2aUAQ+GQ=
-X-Google-Smtp-Source: AGHT+IHo3FaeqpJ7Ys7BqPfQ7ntGpsB44tym0uRbZQKYE2Xop8k1v/kgZc5rSd9y4GpS+U71ISxIrw==
-X-Received: by 2002:a05:622a:5a07:b0:4b6:2360:2ed with SMTP id d75a77b69052e-4b623600480mr48408551cf.16.1757503229078;
-        Wed, 10 Sep 2025 04:20:29 -0700 (PDT)
-Received: from [127.0.0.1] ([48.214.53.118])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-81d97fdcc6fsm123409085a.42.2025.09.10.04.20.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Sep 2025 04:20:28 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20250910-sft-mptcp-disc-err-v3-0-6799fa467d77@kernel.org>
-References: <20250910-sft-mptcp-disc-err-v3-0-6799fa467d77@kernel.org>
-Subject: Re: [PATCH mptcp-net v3 0/5] selftests: mptcp: avoid spurious
- errors on TCP disconnect
-Message-ID: <afaa2b07-460c-1751-a668-a3696668de80@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 10 Sep 2025 11:20:27 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tcd9WbDL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3F38C4CEEB;
+	Wed, 10 Sep 2025 17:00:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1757523613;
+	bh=rYwSHBfz4zcpqBoMpWmSP4CgfxNaS/eIZy5R8qo4phA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=tcd9WbDLC8tRrZRcdcM+SV7sQ7R9V0QSfw72X98IBRj7pph77/j0jqvONWjv8oNBk
+	 XXviPZw6USMBcPCCEWlf0P7T+zdfz4uWxOyC1D239kDYw0fExaeM2zyOSs5B9KoBVe
+	 XATKgeYW8Xbjh9aFxr+uZzgaoUapXBoVhOELNI7OhQHY1LPIzyOPc+J5dAWO0wQQpY
+	 btOBEHtfQSdZqq5xZDUxH/A51cTDg7aZ6c229zF2VXFJTLxePVo919r6HU0YwSZ60g
+	 7PXRYRVCv/oZWTfHuWIAM6sOibe60z/rxDTt9mBOW5uv1H1/Umz11XIiaQ4mYmpVhh
+	 o+dLqsxlAc28g==
+Message-ID: <76dd22aa-7071-4f55-a8ed-21283bf8c2cf@kernel.org>
+Date: Wed, 10 Sep 2025 19:00:10 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-net v2 2/3] selftests: mptcp: close IPC descriptor
+ on server side
+Content-Language: en-GB, fr-BE
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <cover.1756872050.git.geliang@kernel.org>
+ <64f5ec5170dd363b19af13fd127a77baa8288104.1756872050.git.geliang@kernel.org>
+ <d512f8fc-a0ac-4c23-9a13-0b5c4e1ed20f@kernel.org>
+ <ea8ac8aff352d819b9caa0abee2ae272991bd2ff.camel@kernel.org>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <ea8ac8aff352d819b9caa0abee2ae272991bd2ff.camel@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Matthieu,
+Hi Geliang,
 
-Thank you for your modifications, that's great!
+On 04/09/2025 10:26, Geliang Tang wrote:
+> Hi Matt,
+> 
+> On Wed, 2025-09-03 at 13:57 +0200, Matthieu Baerts wrote:
+>> Hi Geliang,
+>>
+>> On 03/09/2025 06:08, Geliang Tang wrote:
+>>> From: Geliang Tang <tanggeliang@kylinos.cn>
+>>>
+>>> The client-side function 'connect_one_server()' correctly closes
+>>> the IPC
+>>> descriptor (a pipe or UNIX socket) after use. However, the server-
+>>> side
+>>> functions 'process_one_client()' in both 'mptcp_sockopt.c' and
+>>> 'mptcp_inq.c'
+>>> were missing the corresponding 'close()' call for their IPC
+>>> descriptors.
+>>>
+>>> This omission could lead to resource leaks (file descriptors) in
+>>> the test
+>>> server processes over time.
+>>>
+>>> This patch adds the missing 'close(pipefd)' and 'close(unixfd)'
+>>> calls in the
+>>> server-side code, ensuring symmetric and correct resource cleanup.
+>>
+>> I don't know if we need such patch. I mean: yes, that's better to
+>> close
+>> such FD before closing the application, but then:
+>>
+>> - it is strange to close it in the middle of a function
+>> (process_one_client()), and not where it has been created (main())
+>>
+> 
+> Yes, close it in main() is much better. I added close(pipefds[1]) after
+> calling server(pipefds[1]) in the new version instead of adding
+> close(pipefd) in process_one_client().
+> 
+>> - if I'm not mistaken, unixfds[0] / pipefds[0] are not closed in the
+>> server process.
+> 
+> Yes, indeed. close(pipefds[0]) is missing in the server process too.
+> 
+>> So if you really want to fix that, I think it would be better to
+>> close
+>> all these unix FD in the 'main()' function, no?
+> 
+> I also moved 'close(pipefd)' from connect_one_server() to main(), just
+> after calling client(pipefds[0]). And here's the new version:
+> 
+>         e1 = pipe(pipefds);
+>         if (e1 < 0)
+>                 die_perror("pipe");
+> 
+>         s = xfork();
+>         if (s == 0) {
+>                 close(pipefds[0]);
+>                 ret = server(pipefds[1]);
+>                 close(pipefds[1]);
+>                 return ret;
+>         }
+> 
+>         close(pipefds[1]);
+> 
+>         /* wait until server bound a socket */
+>         e1 = read(pipefds[0], &e1, 4); 
+>         assert(e1 == 4); 
+> 
+>         c = xfork();
+>         if (c == 0) {
+>                 ret = client(pipefds[0]);
+>                 close(pipefds[0]);
+>                 return ret;
+>         }
+> 
+>         close(pipefds[0]);
+> 
+> Is this better?
 
-Our CI did some validations and here is its report:
+(sorry, I thought I replied...)
 
-- KVM Validation: normal: Unstable: 3 failed test(s): packetdrill_dss =
-packetdrill_fastopen packetdrill_syscalls =F0=9F=94=B4
-- KVM Validation: debug: Unstable: 3 failed test(s): packetdrill_dss =
-packetdrill_fastopen packetdrill_syscalls =F0=9F=94=B4
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/176090=
-32414
+Yes, that looks more manageable like that: all close() by the "function
+owner" (where they have been opened).
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/4c0b302d6616
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1000860
-
-
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+Also, please don't bother about closing all FD in the error exit paths,
+e.g. in xfork(), etc. when xerror() is called. These are more unexpected
+errors, and closing everything properly is this case, for the selftests
+is not a priority, and might cause issues if the code is more complex (+
+issues for the backports, etc.)
 
 Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
+
