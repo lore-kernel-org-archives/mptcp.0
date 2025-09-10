@@ -1,33 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD86C29ACC3
-	for <mptcp@lists.linux.dev>; Wed, 10 Sep 2025 17:00:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 690BD2798F8
+	for <mptcp@lists.linux.dev>; Wed, 10 Sep 2025 17:05:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757523614; cv=none; b=ta035Y41EEHQ7YVGZNmWF60D55HJhaXLDcuZ7y1viFkMgLM78/2C9ovLLuwLxnQdZOWakXMVG0zD5ZmAQVDMvJacvbH4cTsQUnllGg1gLdL4iHSS+DDqWEawnehJtG2u0JNQlbhpsPiR6MzQvw3Kj4wdBHInb3wowHX+5T3bL5A=
+	t=1757523933; cv=none; b=PPIqa9AruqrhrYeFiFSwP2UxdeKIB5s5mS1xdYnXuv43Hu25MSgAb2G9xwrB5l0uDBUFXgZAB7vg7MVK4AZmmZhIadcUYP3br/MzpVIj3Ai8zb6tBUVw3on4XFNYygw2ZG76lOGD47EA6SVQSFQYrN3U87SY9kjDy72cBHPoibw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757523614; c=relaxed/simple;
-	bh=rYwSHBfz4zcpqBoMpWmSP4CgfxNaS/eIZy5R8qo4phA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Q87tTlLuVpG0H6Ljdmno75CSlX8BgaYwiqV422fhDd5UdC5DBGhnjaMz3Xw+zneW+DgRkXZi2N2R8NvI32lkaSOH833pmhL527Yyern8JGtJFktdvfkO6IqiVff+GGZ5T+YlbguJ8okBY3sbzvqQNiHt8KXCgTphEN4zadej+GU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tcd9WbDL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1757523933; c=relaxed/simple;
+	bh=et1CLOonA88Ym16EvrJgOkknU3na0+ciJShV5pL6u8Y=;
+	h=Message-ID:Date:MIME-Version:From:To:Cc:Subject:Content-Type; b=pb2aVBRFHNhe5KXyVpEOGPP8aQ8/zGYiiOd1imCYHS9cjAM1GAFZPEnmlYzmleKN8C3mYhY9x/fZLk2UEVmr2uHtIIOvEftx3xW87XyukEAYG5i4KgMw3Id/6CtK3KSJVpjldFmkNwL68IJ2gGmi0/uwmMveTXHDEfyaBRMgOAU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bsbTTBJy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tcd9WbDL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3F38C4CEEB;
-	Wed, 10 Sep 2025 17:00:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bsbTTBJy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61F00C4CEEB;
+	Wed, 10 Sep 2025 17:05:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757523613;
-	bh=rYwSHBfz4zcpqBoMpWmSP4CgfxNaS/eIZy5R8qo4phA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=tcd9WbDLC8tRrZRcdcM+SV7sQ7R9V0QSfw72X98IBRj7pph77/j0jqvONWjv8oNBk
-	 XXviPZw6USMBcPCCEWlf0P7T+zdfz4uWxOyC1D239kDYw0fExaeM2zyOSs5B9KoBVe
-	 XATKgeYW8Xbjh9aFxr+uZzgaoUapXBoVhOELNI7OhQHY1LPIzyOPc+J5dAWO0wQQpY
-	 btOBEHtfQSdZqq5xZDUxH/A51cTDg7aZ6c229zF2VXFJTLxePVo919r6HU0YwSZ60g
-	 7PXRYRVCv/oZWTfHuWIAM6sOibe60z/rxDTt9mBOW5uv1H1/Umz11XIiaQ4mYmpVhh
-	 o+dLqsxlAc28g==
-Message-ID: <76dd22aa-7071-4f55-a8ed-21283bf8c2cf@kernel.org>
-Date: Wed, 10 Sep 2025 19:00:10 +0200
+	s=k20201202; t=1757523931;
+	bh=et1CLOonA88Ym16EvrJgOkknU3na0+ciJShV5pL6u8Y=;
+	h=Date:From:To:Cc:Subject:From;
+	b=bsbTTBJyHAn8ryjac+W/+XTqsJhcyrNgrfJXlo2xZcMwSNKOdMoE4eRY85U7wEYkk
+	 MxzgsagZUq3riYaYSiW6Vle96QVKmzpHUMYijCkjpNGgFNHYOSvZ2kUG/IVSthVlFc
+	 GIe3TZjoocV5tDbGSBLLT+fYlussaGTHg7gLKRzB/G/Ij8BUu8Y7oyoyWQUOIX5hIE
+	 Pk0oE85L+qlosidVhl3GWKqTe/V9wwAQh9CbXlhm/1qquSbhYRtrIvxjh8UVJCgnXi
+	 isvc/MV81WDojM25/Z7mCjCQLK66jurOfORuj02AfkHQhGdk5DjNGzkMgOc0TBKci4
+	 eWDt0CIcDvNkg==
+Message-ID: <6ddd8121-331b-4f93-b0ce-5eb7871ac553@kernel.org>
+Date: Wed, 10 Sep 2025 19:05:28 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,16 +34,11 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net v2 2/3] selftests: mptcp: close IPC descriptor
- on server side
-Content-Language: en-GB, fr-BE
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1756872050.git.geliang@kernel.org>
- <64f5ec5170dd363b19af13fd127a77baa8288104.1756872050.git.geliang@kernel.org>
- <d512f8fc-a0ac-4c23-9a13-0b5c4e1ed20f@kernel.org>
- <ea8ac8aff352d819b9caa0abee2ae272991bd2ff.camel@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
+Content-Language: en-GB, fr-BE
+To: Geliang Tang <geliang@kernel.org>
+Cc: MPTCP Linux <mptcp@lists.linux.dev>, Mat Martineau <martineau@kernel.org>
+Subject: Patchwork: Prioritising the queue
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -89,101 +83,28 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <ea8ac8aff352d819b9caa0abee2ae272991bd2ff.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 04/09/2025 10:26, Geliang Tang wrote:
-> Hi Matt,
-> 
-> On Wed, 2025-09-03 at 13:57 +0200, Matthieu Baerts wrote:
->> Hi Geliang,
->>
->> On 03/09/2025 06:08, Geliang Tang wrote:
->>> From: Geliang Tang <tanggeliang@kylinos.cn>
->>>
->>> The client-side function 'connect_one_server()' correctly closes
->>> the IPC
->>> descriptor (a pipe or UNIX socket) after use. However, the server-
->>> side
->>> functions 'process_one_client()' in both 'mptcp_sockopt.c' and
->>> 'mptcp_inq.c'
->>> were missing the corresponding 'close()' call for their IPC
->>> descriptors.
->>>
->>> This omission could lead to resource leaks (file descriptors) in
->>> the test
->>> server processes over time.
->>>
->>> This patch adds the missing 'close(pipefd)' and 'close(unixfd)'
->>> calls in the
->>> server-side code, ensuring symmetric and correct resource cleanup.
->>
->> I don't know if we need such patch. I mean: yes, that's better to
->> close
->> such FD before closing the application, but then:
->>
->> - it is strange to close it in the middle of a function
->> (process_one_client()), and not where it has been created (main())
->>
-> 
-> Yes, close it in main() is much better. I added close(pipefds[1]) after
-> calling server(pipefds[1]) in the new version instead of adding
-> close(pipefd) in process_one_client().
-> 
->> - if I'm not mistaken, unixfds[0] / pipefds[0] are not closed in the
->> server process.
-> 
-> Yes, indeed. close(pipefds[0]) is missing in the server process too.
-> 
->> So if you really want to fix that, I think it would be better to
->> close
->> all these unix FD in the 'main()' function, no?
-> 
-> I also moved 'close(pipefd)' from connect_one_server() to main(), just
-> after calling client(pipefds[0]). And here's the new version:
-> 
->         e1 = pipe(pipefds);
->         if (e1 < 0)
->                 die_perror("pipe");
-> 
->         s = xfork();
->         if (s == 0) {
->                 close(pipefds[0]);
->                 ret = server(pipefds[1]);
->                 close(pipefds[1]);
->                 return ret;
->         }
-> 
->         close(pipefds[1]);
-> 
->         /* wait until server bound a socket */
->         e1 = read(pipefds[0], &e1, 4); 
->         assert(e1 == 4); 
-> 
->         c = xfork();
->         if (c == 0) {
->                 ret = client(pipefds[0]);
->                 close(pipefds[0]);
->                 return ret;
->         }
-> 
->         close(pipefds[0]);
-> 
-> Is this better?
+As you may have noticed regarding the reviews of your patches, we are
+lagging a bit behind, sorry for that.
 
-(sorry, I thought I replied...)
+Here is the list of pending series:
 
-Yes, that looks more manageable like that: all close() by the "function
-owner" (where they have been opened).
+- only remove entry from local_addr_list when sending a REMOVE_ADDR
+- mptcp: TCP_MD5SIG support
+- refactor MPTCP socket option handling
+- mptcp: add more sockopts
+- selftests: consolidate TCP_INQ testing into sockopt
+- implement mptcp read_sock
 
-Also, please don't bother about closing all FD in the error exit paths,
-e.g. in xfork(), etc. when xerror() is called. These are more unexpected
-errors, and closing everything properly is this case, for the selftests
-is not a priority, and might cause issues if the code is more complex (+
-issues for the backports, etc.)
+(+ the WIP ones marked as "changes-requested")
+
+Can you help us to prioritise this list please? Which ones should we
+start with? Priorities can be given based on the dependences and/or your
+own priorities for example. With that, we can iterate over them one by one.
 
 Cheers,
 Matt
