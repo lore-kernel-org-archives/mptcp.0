@@ -1,229 +1,104 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3EE32DF14B
-	for <mptcp@lists.linux.dev>; Thu, 11 Sep 2025 09:43:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28CF62EBB98
+	for <mptcp@lists.linux.dev>; Thu, 11 Sep 2025 09:57:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757583797; cv=none; b=pZViMvCMQANGyFm1tNBfjC84CZc0zrTMk+RFpAJdJqyBjQW7yXuJ37aSeZj1GGzJyW11fRcz4bOpYyrlPuT4xzhaYcqa1fpYTrX/M5bn8EJcQeZ1zzkk6bYXzDIfXMoSECLdXpQysaLtxphvtVo0UZhQXLuHH39tZVq4AoLBQ2s=
+	t=1757584647; cv=none; b=b1+VFpEHg+GrmEb/D0rbnN1aIRRDYmi8Xn3U5zleFVff0wyVnlruEhkELoCSpv1ckLi0c2oGcRMBkZ8SrMb7IrqoChZycQUV3g3K/D4eys0THW1CIX+sr+yxqd9wuKvdwrJ2OtYoFq1mTWWRhcGwj5suPuX8XOWXhblUTTnF/cc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757583797; c=relaxed/simple;
-	bh=ymr7mkz1NIO+9W2O3ZoB3dpVDnkazvrXzkhK5cT1GIs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lPkJQlWNVHhileE+Xjw33E2DS3W5It4AwIYORvVEsrO3MyFjdEDDh5tS8AN5qrv0086QMSeFviMo14kcJdKBKxT/9IFNaN0j3b/gTqYQ8oB8snQPro18tCRybu6fNbNAJsIJOabKPgUypKvSg9fgBWThc3qQTDzzVdtGfU5uj1s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MiaWMY1/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1757584647; c=relaxed/simple;
+	bh=dDCFLN4tclGhJlAiHRI2T/c5mo/3qWQ4BNmDF7sKf0c=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=okpUiSGGRCS8AFXVWAE99ede0UL3T7AYQBpq4Kqvwic+/qN9xyJgMdLZXSlYvFnq4VT5k0x5juK8UbBBmvdpYpnX7JFmhYY5K3CwmVGkXBMDWG7fGZuNGmZEzwxZQ4hceqJ3Vq2SeYfttrUxIo1kGALw19Ts7zwbsT1HteV70hU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DxGZTFZh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MiaWMY1/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CFAEC4CEF0;
-	Thu, 11 Sep 2025 09:43:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DxGZTFZh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2EA0C4CEF0;
+	Thu, 11 Sep 2025 09:57:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757583796;
-	bh=ymr7mkz1NIO+9W2O3ZoB3dpVDnkazvrXzkhK5cT1GIs=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=MiaWMY1/Z/QDHZA9kIcAXu7ciWbh/m9NwCxmv+G59RRFxFifCzTjmihGyaVhPRuKt
-	 bltNtprM4fDfWl/f8mBDLLExlzcAOcovOdwk/E8xLwRBc8wOIraQDB26JijO/2+Ygt
-	 ot39j7n3T2Qj543GiTMcbl9WpuLyy3/PILejfudx/KulrUmIOf+pgdwM83lHuJJTNf
-	 0gVyrn4vOLUr/COapSV4HsWH8yG7Y9duWbzUmmVC8Z6RNMKGmlGELMFFXbyjgjW4lr
-	 vhcEPPmiFkJ+zGRZyCJLttSZdut/BnfGztPaWDkDde3xfu80GojXo/wyKAGE7YRp6j
-	 BiTgzribozJ5A==
-Message-ID: <e898a582-ebf8-43f4-be78-3ce2dc780b50@kernel.org>
-Date: Thu, 11 Sep 2025 11:43:13 +0200
+	s=k20201202; t=1757584646;
+	bh=dDCFLN4tclGhJlAiHRI2T/c5mo/3qWQ4BNmDF7sKf0c=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=DxGZTFZhg7Ac0DOhzK+0hBvXi4EaM4eHWFB39v+VcERq1IA4X4fUynV/EDTOo4atk
+	 GShfkIAnarN5OLz52443LI70loN/rymPQmLB41yXXDFTLfOrBbZod0h7xULgI1xkda
+	 +xRzJUfFT71WtUaoL9baalFeVNO4Op2GoOc/wJNwHBRK86d+y4Ez4uOEguEq6ANH7O
+	 2vIxg7L7e2VaKwQjNTp5fFHFp6qe3v7JQnAPjj3skM6/hm3m+XZXnBqvNhWIWaFYHD
+	 8zO+VUzGRg6rIfXCKfC6lsD4FfxEvrRFo/zeRPv4JHTV7/P3wnTe+zpQzDU8oKhs/k
+	 4eHdaoXOtQ+fQ==
+Message-ID: <36cc4557dbabf935e9a4e027f1e76aeed3caea42.camel@kernel.org>
+Subject: Re: Patchwork: Prioritising the queue
+From: Geliang Tang <geliang@kernel.org>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: MPTCP Linux <mptcp@lists.linux.dev>, Mat Martineau <martineau@kernel.org>
+Date: Thu, 11 Sep 2025 17:57:22 +0800
+In-Reply-To: <6ddd8121-331b-4f93-b0ce-5eb7871ac553@kernel.org>
+References: <6ddd8121-331b-4f93-b0ce-5eb7871ac553@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.56.0-1 
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net v2 2/3] selftests: mptcp: close IPC descriptor
- on server side
-Content-Language: en-GB, fr-BE
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1756872050.git.geliang@kernel.org>
- <64f5ec5170dd363b19af13fd127a77baa8288104.1756872050.git.geliang@kernel.org>
- <d512f8fc-a0ac-4c23-9a13-0b5c4e1ed20f@kernel.org>
- <ea8ac8aff352d819b9caa0abee2ae272991bd2ff.camel@kernel.org>
- <76dd22aa-7071-4f55-a8ed-21283bf8c2cf@kernel.org>
- <3b2ba3137ec9ed4f4f418f94bf14c85c0d99f724.camel@kernel.org>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <3b2ba3137ec9ed4f4f418f94bf14c85c0d99f724.camel@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+Hi Matt,
 
-On 11/09/2025 11:13, Geliang Tang wrote:
-> Hi Matt,
+On Wed, 2025-09-10 at 19:05 +0200, Matthieu Baerts wrote:
+> Hi Geliang,
 > 
-> On Wed, 2025-09-10 at 19:00 +0200, Matthieu Baerts wrote:
->> Hi Geliang,
->>
->> On 04/09/2025 10:26, Geliang Tang wrote:
->>> Hi Matt,
->>>
->>> On Wed, 2025-09-03 at 13:57 +0200, Matthieu Baerts wrote:
->>>> Hi Geliang,
->>>>
->>>> On 03/09/2025 06:08, Geliang Tang wrote:
->>>>> From: Geliang Tang <tanggeliang@kylinos.cn>
->>>>>
->>>>> The client-side function 'connect_one_server()' correctly
->>>>> closes
->>>>> the IPC
->>>>> descriptor (a pipe or UNIX socket) after use. However, the
->>>>> server-
->>>>> side
->>>>> functions 'process_one_client()' in both 'mptcp_sockopt.c' and
->>>>> 'mptcp_inq.c'
->>>>> were missing the corresponding 'close()' call for their IPC
->>>>> descriptors.
->>>>>
->>>>> This omission could lead to resource leaks (file descriptors)
->>>>> in
->>>>> the test
->>>>> server processes over time.
->>>>>
->>>>> This patch adds the missing 'close(pipefd)' and 'close(unixfd)'
->>>>> calls in the
->>>>> server-side code, ensuring symmetric and correct resource
->>>>> cleanup.
->>>>
->>>> I don't know if we need such patch. I mean: yes, that's better to
->>>> close
->>>> such FD before closing the application, but then:
->>>>
->>>> - it is strange to close it in the middle of a function
->>>> (process_one_client()), and not where it has been created
->>>> (main())
->>>>
->>>
->>> Yes, close it in main() is much better. I added close(pipefds[1])
->>> after
->>> calling server(pipefds[1]) in the new version instead of adding
->>> close(pipefd) in process_one_client().
->>>
->>>> - if I'm not mistaken, unixfds[0] / pipefds[0] are not closed in
->>>> the
->>>> server process.
->>>
->>> Yes, indeed. close(pipefds[0]) is missing in the server process
->>> too.
->>>
->>>> So if you really want to fix that, I think it would be better to
->>>> close
->>>> all these unix FD in the 'main()' function, no?
->>>
->>> I also moved 'close(pipefd)' from connect_one_server() to main(),
->>> just
->>> after calling client(pipefds[0]). And here's the new version:
->>>
->>>         e1 = pipe(pipefds);
->>>         if (e1 < 0)
->>>                 die_perror("pipe");
->>>
->>>         s = xfork();
->>>         if (s == 0) {
->>>                 close(pipefds[0]);
->>>                 ret = server(pipefds[1]);
->>>                 close(pipefds[1]);
->>>                 return ret;
->>>         }
->>>
->>>         close(pipefds[1]);
->>>
->>>         /* wait until server bound a socket */
->>>         e1 = read(pipefds[0], &e1, 4); 
->>>         assert(e1 == 4); 
->>>
->>>         c = xfork();
->>>         if (c == 0) {
->>>                 ret = client(pipefds[0]);
->>>                 close(pipefds[0]);
->>>                 return ret;
->>>         }
->>>
->>>         close(pipefds[0]);
->>>
->>> Is this better?
->>
->> (sorry, I thought I replied...)
->>
->> Yes, that looks more manageable like that: all close() by the
->> "function
->> owner" (where they have been opened).
->>
->> Also, please don't bother about closing all FD in the error exit
->> paths,
->> e.g. in xfork(), etc. when xerror() is called. These are more
->> unexpected
->> errors, and closing everything properly is this case, for the
->> selftests
->> is not a priority, and might cause issues if the code is more complex
->> (+
->> issues for the backports, etc.)
+> As you may have noticed regarding the reviews of your patches, we are
+> lagging a bit behind, sorry for that.
 > 
-> I agree, the priority is really low. I think there is no need to
-> backport these three patches. Should I change them to -next from -net
-> in v3 and treat them as cleanups instead of fixes?
+> Here is the list of pending series:
+> 
+> - only remove entry from local_addr_list when sending a REMOVE_ADDR
+> - mptcp: TCP_MD5SIG support
+> - refactor MPTCP socket option handling
+> - mptcp: add more sockopts
+> - selftests: consolidate TCP_INQ testing into sockopt
+> - implement mptcp read_sock
+> 
+> (+ the WIP ones marked as "changes-requested")
+> 
+> Can you help us to prioritise this list please? Which ones should we
+> start with? Priorities can be given based on the dependences and/or
+> your
+> own priorities for example. With that, we can iterate over them one
+> by one.
 
-Good point. For the selftests, if the problems you identified are not
-causing issues or confusions, probably best not to target net then.
+All my queued patches can be divided into three groups: Path manager,
+NVMe over MPTCP, and sockopts. These three groups have no dependencies
+on each other.
 
-So here, if fd's should have been closed just before exiting, that's
-fine, no real harm. We would have backported a patch if fd were reused
-but not closed, or many connections were created one after the other,
-but not closed, etc. → there the impact could be visible.
+1. Path manager has two sets:
+- "BPF path manager, part 6"
+- "only remove entry from local_addr_list when sending a REMOVE_ADDR"
+These two are not directly dependent on each other. "BPF path manager,
+part 6" has higher priority, as there is a part 7 still queued.
 
-For the 3rd patch, it is different, it might be interesting to backport
-it if error messages are wrong or confusing.
+2. NVMe over MPTCP has only one patch set:
+- "implement mptcp read_sock"
+Its priority is not as high as the BPF path manager, but there is
+another set called "NVMe over MPTCP" queued in my tree.
 
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
+3. The rest are all sockopt-related and have lower priority:
+- "refactor MPTCP socket option handling" is still valid and does not
+depend on any other patches.
+- "mptcp: add more sockopts" depends on the previous set and is still
+valid.
+- "misc fixes for sockopt selftests" has been reviewed and requires a
+v3. I have marked its status as "Changes Requested".
+- "selftests: consolidate TCP_INQ testing into sockopt" will conflict
+with the previous set, so I have marked it as "Superseded".
+- "mptcp: TCP_MD5SIG support" depends on the previous set, and I have
+marked it as "Superseded" too.
 
+Thanks,
+-Geliang
+
+> 
+> Cheers,
+> Matt
