@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3887C2E6114
-	for <mptcp@lists.linux.dev>; Thu, 11 Sep 2025 09:04:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6255D26E71F
+	for <mptcp@lists.linux.dev>; Thu, 11 Sep 2025 09:13:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757581468; cv=none; b=V66FPFXCJeNEd1bOffWTk/Pkp3pDXJHFp/q/qVSEkuXekUbuH0h+q33Dv10SKMBNlbJ7JK+yu65hpv3NSGOwcTc+gfvQ6twvJxpfXv3Gl9/rMSDKgicuxIVd9ZVg8x7tmpZ6j3QZjq96RsjsxTIKQ+nsOuwNmGtp59CZGCcjMkQ=
+	t=1757582030; cv=none; b=IkZe5C/QHf1OAkFAdKOXCt+A2TCnTzEaAo+nPF2YnxukwYIGL+o1SdxFWLyLlhAgBu2lbfTuqalBml+zJQ3y87CF23EUSYUWQ6qJlNyVKLNuqBjmm0NC2vU88PFCit4sMwdBHPaIOAIQ74ffv0rtp4FGeWix9rLQCxtgV8ARTOQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757581468; c=relaxed/simple;
-	bh=3XVFVOdrik57ET1azcaVVTOVAdDlVMdYgImnrfcK9SA=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=asP0SFOjbPEgnWU4WhH3E1ZPUex1tdooxSUBOc9xkA/OoVc8dSZdvRJdHbJUWFQiNp1VpBOflSfGeHhZ/MfCbPcDKqpEf+jvi2WOFSOyHS2XJLEpiNoGcIjgcJJyev9z4sAoaRUxHZLBsB+2Ptlh68Bk4SWzSyIwV96WjuIpc3k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oSADbe/O; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1757582030; c=relaxed/simple;
+	bh=YjHdrOGNj9bQnkZ5Sfb55sQCm/nCJBTqPxTbCrb5RWg=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=nHrXZ/15ilXsNyOowcbd70pHWHATHzKEtAitkNeqrDsj1gy+0mM5IeulzwcttHcO/FuNg9Z6n+NpXl6fsxwrs/9N9x+6NTjz9B4ehRWPZ3uMadU2uX0llMapGAv+TpjZXrE12SQfOkOiLOH3NOVog/y30vX/wCgC+/aLZFyd7V4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vrk0K//K; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oSADbe/O"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 020F2C4CEF0;
-	Thu, 11 Sep 2025 09:04:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vrk0K//K"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7703C4CEF0;
+	Thu, 11 Sep 2025 09:13:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757581467;
-	bh=3XVFVOdrik57ET1azcaVVTOVAdDlVMdYgImnrfcK9SA=;
-	h=Subject:From:To:Date:In-Reply-To:References:From;
-	b=oSADbe/OkPQZoTRiRjD/XU6R9+hgOJUpLEHu5SfEUdITjMMRU8fM2n8B8hkUVtrKF
-	 vz1ZAqyUaeIfJdBe5k32AHRbmSlpwKd40d60CiQ6RPUk2fDuhUAJfsQzxr6HQmLr2C
-	 4IzDwlewoiD1gDNjuHxKt3BP7AlsWP7OQC0MLPTcYpPYRVGWdPdr9mTxHn3oITSep3
-	 xi5MfyADn2psWdGyEJoGbE9t9R9sNN35uLVh+7qAt/M/39SrJEKGBQ2Dh5q5EhnEzJ
-	 qMMuev+datITAjsgMbj5ROPJ9acwEWLZmiInw2bA3n1+XE19lA6019ROUtlIkS5/ZJ
-	 rKZ7U61JGbYqQ==
-Message-ID: <e740db7c89cf40416c2688ad8ff8a617c7bbafec.camel@kernel.org>
-Subject: Re: [PATCH mptcp-next 4/4] selftests: mptcp: pm: get server-side
- flag
+	s=k20201202; t=1757582029;
+	bh=YjHdrOGNj9bQnkZ5Sfb55sQCm/nCJBTqPxTbCrb5RWg=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=Vrk0K//K9qUI59bUWGH2dH6F1WsTqiTPGqMYYXBWO4HovhgkyGD/upI0thX3Ntxio
+	 WHo82E6TeJB24F4/4R0y0nnqW7VUSOzQMSpXvA1nKq+spR+3JQ7OM34/ZcgsDoFjwg
+	 yYfsUSUvVP0gewIntl0Ybw4oKBfTedu5SyMCK/O2MCFLXNyFk20HUjcEGa4Wxaiqzu
+	 zvtaUu/Is44LNjo8kPEraV0YWKWsN77Sx7xjMG/NYqr8fzf56kykd7XYKDIggBnake
+	 2dlcpuAzjHx3ta5veJxYL75Fp8WnOecHOCVsZTr9OOSvnT5MfKJE3PYpkekIBYPY8n
+	 L0wssdULOA96Q==
+Message-ID: <3b2ba3137ec9ed4f4f418f94bf14c85c0d99f724.camel@kernel.org>
+Subject: Re: [PATCH mptcp-net v2 2/3] selftests: mptcp: close IPC descriptor
+ on server side
 From: Geliang Tang <geliang@kernel.org>
-To: Matthieu Baerts <matttbe@kernel.org>, MPTCP Upstream
- <mptcp@lists.linux.dev>
-Date: Thu, 11 Sep 2025 17:04:23 +0800
-In-Reply-To: <1f62d970-631e-4031-a386-2b1db50642fb@kernel.org>
-References: 
-	<20250909-mptcp-pm-user-server-side-flag-v1-0-cb8e2b8d1c0c@kernel.org>
-	 <20250909-mptcp-pm-user-server-side-flag-v1-4-cb8e2b8d1c0c@kernel.org>
-	 <20639f7f4b2616afaa4c4e511a13aa8ad49c8d90.camel@kernel.org>
-	 <1f62d970-631e-4031-a386-2b1db50642fb@kernel.org>
+To: Matthieu Baerts <matttbe@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Date: Thu, 11 Sep 2025 17:13:45 +0800
+In-Reply-To: <76dd22aa-7071-4f55-a8ed-21283bf8c2cf@kernel.org>
+References: <cover.1756872050.git.geliang@kernel.org>
+	 <64f5ec5170dd363b19af13fd127a77baa8288104.1756872050.git.geliang@kernel.org>
+	 <d512f8fc-a0ac-4c23-9a13-0b5c4e1ed20f@kernel.org>
+	 <ea8ac8aff352d819b9caa0abee2ae272991bd2ff.camel@kernel.org>
+	 <76dd22aa-7071-4f55-a8ed-21283bf8c2cf@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 User-Agent: Evolution 3.56.0-1 
 Precedence: bulk
@@ -51,104 +51,120 @@ Content-Transfer-Encoding: 8bit
 
 Hi Matt,
 
-On Thu, 2025-09-11 at 10:35 +0200, Matthieu Baerts wrote:
+On Wed, 2025-09-10 at 19:00 +0200, Matthieu Baerts wrote:
 > Hi Geliang,
 > 
-> On 11/09/2025 10:16, Geliang Tang wrote:
+> On 04/09/2025 10:26, Geliang Tang wrote:
 > > Hi Matt,
 > > 
-> > On Tue, 2025-09-09 at 18:30 +0200, Matthieu Baerts (NGI0) wrote:
-> > > server-side info linked to the MPTCP connect/established events
-> > > can
-> > > now
-> > > come from the flags, in addition to the dedicated attribute.
+> > On Wed, 2025-09-03 at 13:57 +0200, Matthieu Baerts wrote:
+> > > Hi Geliang,
 > > > 
-> > > The attribute is now deprecated -- in favour of the new flag, and
-> > > will
-> > > be removed later on.
+> > > On 03/09/2025 06:08, Geliang Tang wrote:
+> > > > From: Geliang Tang <tanggeliang@kylinos.cn>
+> > > > 
+> > > > The client-side function 'connect_one_server()' correctly
+> > > > closes
+> > > > the IPC
+> > > > descriptor (a pipe or UNIX socket) after use. However, the
+> > > > server-
+> > > > side
+> > > > functions 'process_one_client()' in both 'mptcp_sockopt.c' and
+> > > > 'mptcp_inq.c'
+> > > > were missing the corresponding 'close()' call for their IPC
+> > > > descriptors.
+> > > > 
+> > > > This omission could lead to resource leaks (file descriptors)
+> > > > in
+> > > > the test
+> > > > server processes over time.
+> > > > 
+> > > > This patch adds the missing 'close(pipefd)' and 'close(unixfd)'
+> > > > calls in the
+> > > > server-side code, ensuring symmetric and correct resource
+> > > > cleanup.
 > > > 
-> > > Print this info only once.
+> > > I don't know if we need such patch. I mean: yes, that's better to
+> > > close
+> > > such FD before closing the application, but then:
 > > > 
-> > > Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> > > ---
-> > >  tools/testing/selftests/net/mptcp/pm_nl_ctl.c | 9 ++++++++-
-> > >  1 file changed, 8 insertions(+), 1 deletion(-)
+> > > - it is strange to close it in the middle of a function
+> > > (process_one_client()), and not where it has been created
+> > > (main())
 > > > 
-> > > diff --git a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
-> > > b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
-> > > index
-> > > 93fea3442216c8fef43731a99c1d5710f234b150..d4981b76693bbddca741694
-> > > 37a5
-> > > 40ad6294cf1d5 100644
-> > > --- a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
-> > > +++ b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
-> > > @@ -2,6 +2,7 @@
-> > >  
-> > >  #include <errno.h>
-> > >  #include <error.h>
-> > > +#include <stdbool.h>
-> > >  #include <stdio.h>
-> > >  #include <stdlib.h>
-> > >  #include <string.h>
-> > > @@ -113,6 +114,8 @@ static int capture_events(int fd, int
-> > > event_group)
-> > >  		error(1, errno, "could not join the "
-> > > MPTCP_PM_EV_GRP_NAME " mcast group");
-> > >  
-> > >  	do {
-> > > +		bool server_side = false;
-> > > +
-> > >  		FD_ZERO(&rfds);
-> > >  		FD_SET(fd, &rfds);
-> > >  		res_len = NLMSG_ALIGN(sizeof(struct nlmsghdr)) +
-> > > @@ -187,18 +190,22 @@ static int capture_events(int fd, int
-> > > event_group)
-> > >  				else if (attrs->rta_type ==
-> > > MPTCP_ATTR_ERROR)
-> > >  					fprintf(stderr,
-> > > ",error:%u",
-> > > *(__u8 *)RTA_DATA(attrs));
-> > >  				else if (attrs->rta_type ==
-> > > MPTCP_ATTR_SERVER_SIDE)
-> > > -					fprintf(stderr,
-> > > ",server_side:%u", *(__u8 *)RTA_DATA(attrs));
 > > 
-> > It is a little strange that server_side is displayed at the end. It
-> > changes the original display order.  It is better to display it in
-> > the
-> > original position, but check whether the server_side flag is false:
+> > Yes, close it in main() is much better. I added close(pipefds[1])
+> > after
+> > calling server(pipefds[1]) in the new version instead of adding
+> > close(pipefd) in process_one_client().
+> > 
+> > > - if I'm not mistaken, unixfds[0] / pipefds[0] are not closed in
+> > > the
+> > > server process.
+> > 
+> > Yes, indeed. close(pipefds[0]) is missing in the server process
+> > too.
+> > 
+> > > So if you really want to fix that, I think it would be better to
+> > > close
+> > > all these unix FD in the 'main()' function, no?
+> > 
+> > I also moved 'close(pipefd)' from connect_one_server() to main(),
+> > just
+> > after calling client(pipefds[0]). And here's the new version:
+> > 
+> >         e1 = pipe(pipefds);
+> >         if (e1 < 0)
+> >                 die_perror("pipe");
+> > 
+> >         s = xfork();
+> >         if (s == 0) {
+> >                 close(pipefds[0]);
+> >                 ret = server(pipefds[1]);
+> >                 close(pipefds[1]);
+> >                 return ret;
+> >         }
+> > 
+> >         close(pipefds[1]);
+> > 
+> >         /* wait until server bound a socket */
+> >         e1 = read(pipefds[0], &e1, 4); 
+> >         assert(e1 == 4); 
+> > 
+> >         c = xfork();
+> >         if (c == 0) {
+> >                 ret = client(pipefds[0]);
+> >                 close(pipefds[0]);
+> >                 return ret;
+> >         }
+> > 
+> >         close(pipefds[0]);
+> > 
+> > Is this better?
 > 
-> I'm not sure to understand why it is strange: the output is read by
-> scripts, the order should not matter, right?
+> (sorry, I thought I replied...)
+> 
+> Yes, that looks more manageable like that: all close() by the
+> "function
+> owner" (where they have been opened).
+> 
+> Also, please don't bother about closing all FD in the error exit
+> paths,
+> e.g. in xfork(), etc. when xerror() is called. These are more
+> unexpected
+> errors, and closing everything properly is this case, for the
+> selftests
+> is not a priority, and might cause issues if the code is more complex
+> (+
+> issues for the backports, etc.)
 
-I mean the original display order of "./pm_nl_ctl events" is:
-
-type:1,token:2327950928,server_side:1,family:10,saddr6:::ffff:10.0.1.1,
-daddr6:::ffff:10.0.1.2,sport:10000,dport:40004,loc_id:0,rem_id:0
-
-With this patch, the order is changed:
-
-type:1,token:1072969578,family:10,saddr6:::ffff:10.0.1.1,daddr6:::ffff:
-10.0.1.2,sport:10000,dport:42484,loc_id:0,rem_id:0,server_side:1
-
-If an application still uses code like this to parse server_side, an
-error will occur.
-
-sscanf(str, "type:%u,token:%u,server_side:%u",
-       &type, &token, &server_side);
-
-So it makes sense to keep the original order. But up to you.
+I agree, the priority is really low. I think there is no need to
+backport these three patches. Should I change them to -next from -net
+in v3 and treat them as cleanups instead of fixes?
 
 Thanks,
 -Geliang
 
-> 
-> Plus the order depends on what was received by the kernel, not where
-> they are printed here.
-> 
-> Do you really think it is worth it changing this patch and making
-> longer
-> just to keep an order that we don't currently fully control here?
 > 
 > Cheers,
 > Matt
