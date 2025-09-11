@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A18492C3258
-	for <mptcp@lists.linux.dev>; Thu, 11 Sep 2025 08:02:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 360712D6E76
+	for <mptcp@lists.linux.dev>; Thu, 11 Sep 2025 08:10:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757577770; cv=none; b=HGjR+FtTsYO4lqOn9tMiBuqNXZZ+pi3/g0wKHkzyHxNTiyw83gj0E5zwGZBu+laDAoMR4hlIrNcQ9IgEv4ysz6uOARaljCgG5yawVQkVRJvBRIQj613s+kEhiAbGS6CCJUuUy1b33kbcKPUC+IY5/iIWEY5P/8X5pF8cRw+FcCI=
+	t=1757578233; cv=none; b=XLiUalWC24mjsHbKNIEC6dla6ujcMxWy0KWCUCXVOeak2nGlEF83tL7GLh6j0/JffIP446RTkNMg7VVG4L5alakn10pwoS+HKhJ3nwOKPouIkKHtjmULmVRjC/Ce1uZWh6sJ6cNjFsCiwy+IUOWSeWF7WWnbKVucTidt0KmBdmo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757577770; c=relaxed/simple;
-	bh=1RA62wHr8CoXR5n6RYfFpqsZ+lrlI9RxYironCdTfcI=;
+	s=arc-20240116; t=1757578233; c=relaxed/simple;
+	bh=gQIfAO52H8PZl2V+wff9rGPkCAPuOLK4Af9TKIWsYMQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Tbe9Gq0K21yDocFmCkhONxTheZ3Soizt765J1uKXYnlW0Cowln1W1gNtg/IZWzKY3eWgMK/u5x5Thnsqw1hI/yQCsrDLDapTDazjxwHstlhizQ/WEHMgPQQY724/Umojq7lOfsit5p+mQvmFHh1KkmZDdtK5oNXvrMW7NU2UzrA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dzm/IbMK; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=vD2VZrZUucojjqXyh7KU54tknT+s7EBHojaC5AboxCAokKELl6eur8YPIy1r7I2CCrZxW0QRV1aIUyInW5Wvu5nGkc/PuuiQc6hYEThXSU5dHEjnjym11usItvMrZz5ce7PzpTDnLySVkAZnVFon9dZsmZ3bADkJ8k0w+U/pmWc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BwcPRdfO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dzm/IbMK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 093EFC4CEF1;
-	Thu, 11 Sep 2025 08:02:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BwcPRdfO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE1C4C4CEF5;
+	Thu, 11 Sep 2025 08:10:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757577770;
-	bh=1RA62wHr8CoXR5n6RYfFpqsZ+lrlI9RxYironCdTfcI=;
+	s=k20201202; t=1757578232;
+	bh=gQIfAO52H8PZl2V+wff9rGPkCAPuOLK4Af9TKIWsYMQ=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=dzm/IbMK+E8ULQdlb4oYVEjp7GX5hoK5mNzzAUj0SROzGvya9usQI76tXdIhuDoRm
-	 C4iMARQAikeFhd3KmlTwkwDNYG4TWF+Gm8KbIuvaPHlp8TNoNdhBPMIn7MSXsE27ns
-	 E/oFN/ewGNZceBX3i8c5aRBOYJYPp12BQZIWhoSBO3o7dk732pOVFHI5mIiR0VL8Nm
-	 Adv3Na4SHrCxGPMOVwW5cq/IWFwuKA+YR5nAST1xHI9vt7dCxb3ajYmnjjTVEerYfR
-	 Kf7W6XDm8Pum/UU1gAAgg/Z2jcjF4KUNwi+0z4lZ9mHup/igDpklMwBliE7da1Ydan
-	 x/jjrvHsXssgA==
-Message-ID: <c3d5dc57-ebd3-49a8-99e4-a40910ec85d8@kernel.org>
-Date: Thu, 11 Sep 2025 10:02:45 +0200
+	b=BwcPRdfOWW/jpC0DtAJRBPyH99aksjJZnvaEgt6DeX6WlM95x2ADnWA2bOvT5fnGW
+	 Fmz/GscFxsEGZK9loqGflrAi692+KMAFMKNIbexcBFR+0128k3TovLEWS2fMlYGV8l
+	 9z4h2n40g2P3x+ESu0AWU9UZtHvT79cWsLpIsQz7w891ivKpGiujePpOQrXpQ30z11
+	 6azoeszNYJLEiRMskzbj1H95sfHipjPgFWDowU6pzcAfeN6MzRFYyobAUrcrRb7Dk9
+	 G781cp02ONaVWb2xZsOn/fguJWaVE//EPc6+csTBtndZnKz7t0w0cewkv7DXNVbrqh
+	 XfHVpg2R7alaA==
+Message-ID: <520496c9-afdf-448b-ae81-087ebcbd034c@kernel.org>
+Date: Thu, 11 Sep 2025 10:10:29 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,15 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net v3 0/5] selftests: mptcp: avoid spurious errors
- on TCP disconnect
+Subject: Re: [PATCH mptcp-net v2 0/5] mptcp: pm: nl: announce deny-join-id0
+ attribute
 Content-Language: en-GB, fr-BE
-To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>
-Cc: MPTCP Upstream <mptcp@lists.linux.dev>
-References: <20250910-sft-mptcp-disc-err-v3-0-6799fa467d77@kernel.org>
- <13b53a08-0be4-fdf7-d8ef-58671c96e964@kernel.org>
+To: Mat Martineau <martineau@kernel.org>
+Cc: MPTCP Upstream <mptcp@lists.linux.dev>,
+ Donald Hunter <donald.hunter@gmail.com>,
+ Marek Majkowski <marek@cloudflare.com>
+References: <20250909-mptcp-pm-user-c-flag-v2-0-a6f9542481c5@kernel.org>
+ <ced8a24b-14ed-745a-13e2-b0b805116863@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,98 +89,83 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <13b53a08-0be4-fdf7-d8ef-58671c96e964@kernel.org>
+In-Reply-To: <ced8a24b-14ed-745a-13e2-b0b805116863@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi Geliang, Mat,
+Hi Mat,
 
-On 10/09/2025 21:03, Mat Martineau wrote:
+On 10/09/2025 20:17, Mat Martineau wrote:
+> On Tue, 9 Sep 2025, Matthieu Baerts (NGI0) wrote:
 > 
-> On Wed, 10 Sep 2025, Matthieu Baerts (NGI0) wrote:
-> 
->> This should fix the recent instabilities seen by MPTCP and NIPA CIs
->> where the 'mptcp_connect.sh' tests fail regularly when running the
->> 'disconnect' subtests with "plain" TCP sockets, e.g.
+>> During the connection establishment, a peer can tell the other one that
+>> it cannot establish new subflows to the initial IP address and port by
+>> setting the 'C' flag [1]. Doing so makes sense when the sender is behind
+>> a strict NAT, operating behind a legacy Layer 4 load balancer, or using
+>> anycast IP address for example.
 >>
->>  # INFO: disconnect
->>  # 63 ns1 MPTCP -> ns1 (10.0.1.1:20001      ) MPTCP     (duration  
->> 996ms) [ OK ]
->>  # 64 ns1 MPTCP -> ns1 (10.0.1.1:20002      ) TCP       (duration  
->> 851ms) [ OK ]
->>  # 65 ns1 TCP   -> ns1 (10.0.1.1:20003      ) MPTCP     Unexpected
->> revents: POLLERR/POLLNVAL(19)
->>  # (duration   896ms) [FAIL] file received by server does not match
->> (in, out):
->>  # -rw-r--r-- 1 root root 11112852 Aug 19 09:16 /tmp/
->> tmp.hlJe5DoMoq.disconnect
->>  # Trailing bytes are:
->>  # /{ga 6@=#.8:-rw------- 1 root root 10085368 Aug 19 09:16 /tmp/
->> tmp.blClunilxx
->>  # Trailing bytes are:
->>  # /{ga 6@=#.8:66 ns1 MPTCP -> ns1 (dead:beef:1::1:20004) MPTCP    
->> (duration   987ms) [ OK ]
->>  # 67 ns1 MPTCP -> ns1 (dead:beef:1::1:20005) TCP       (duration  
->> 911ms) [ OK ]
->>  # 68 ns1 TCP   -> ns1 (dead:beef:1::1:20006) MPTCP     (duration  
->> 980ms) [ OK ]
->>  # [FAIL] Tests of the full disconnection have failed
+>> When this 'C' flag is set, the path-managers must then not try to
+>> establish new subflows to the other peer's initial IP address and port.
+>> The in-kernel PM has access to this info, but the userspace PM didn't,
+>> not letting the userspace daemon able to respect the RFC8684.
 >>
->> Patch 3 fixes this issue, but a fix in MPTCP in patch 1 is also needed
->> to fix MPTCP behaviour, and simplify patch 3. Patches 2 and 4 improve
->> some errors reported by the selftests, and patch 5 helps with the
->> debugging. I guess all these patches can be sent to 'net'
+>> Here are a few fixes related to this 'C' flag (aka 'deny-join-id0'):
 >>
->> Note: Patch 1 will cause errors in Packetdrill, that's normal, see [1].
+>> - Patch 1: fix a small typo in if-idx type. A fix for v5.10.
 >>
->> Link: https://github.com/multipath-tcp/packetdrill/pull/171 [1]
+>> - Patch 2: add remote_deny_join_id0 info on passive connections. A fix
+>>  for v5.14.
+>>
+>> - Patch 3: let the userspace PM daemon know about the deny_join_id0
+>>  attribute, so when set, it can avoid creating new subflows to the
+>>  initial IP address and port. A fix for v5.19.
+>>
+>> - Patch 4: a validation for the previous commit.
+>>
+>> - Patch 5: record the deny_join_id0 info when TFO is used. A fix for
+>>  v6.2.
+>>
 >> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 >> ---
->> Changes in v3:
->> - Patch 2: close some FDs in case of errors (Geliang)
->> - Patch 4: mention there are now more bytes (Geliang)
->> - Link to v2: https://lore.kernel.org/r/20250905-sft-mptcp-disc-err-
->> v2-0-dfb3b6b4a877@kernel.org
+>> Changes in v2:
+>> - Former patches 4-6 have been already applied
+>> - Former patch 2 has been dropped (Christoph)
+>> - Patch 1 is new, not linked to deny-join-id0
+>> - Patch 3 replaces former patch 2, and was linked to former patch 7, but
+>>  now using 'flags' instead of a new dedicated attribute (Mat)
+>> - Notes: changes for net-next, and the deprecation of server-flags will
+>>  be part of another series.
+>> - Link to v1: https://lore.kernel.org/r/20250829-mptcp-pm-user-c-flag-
+>> v1-0-78b25dda7708@kernel.org
+>>
 > 
 > Hi Matthieu -
 > 
-> Patch 5 I acked separately, one minor fix in the commit message but no
-> need for v4.
-
-Good catch! Fixed!
-
-> Patches 1-4 LGTM. Even though it's possible (in patch 1) that a shutdown
-> may be attempted on a subflow that doesn't need it, tcp_shutdown() has
-> the logic to handle that.
-
-Indeed, that's why I didn't add extra checks before calling
-tcp_shutdown(). I just added this note in the commit message:
-
- Note that tcp_shutdown() will check the subflow state, so no need to do
- that again before calling it.
-
+> v2 full series LGTM, thanks for reworking to use the existing 'flags'
+> attribute. Agree with the plans for net-next and deprecation of server-
+> flags.
+> 
 > Reviewed-by: Mat Martineau <martineau@kernel.org>
 
-Thank you for the review here and in the packetdrill PR (applied and
-backported)!
+Thank you for the review!
 
 Now in our tree (fixes for -net):
 
 New patches for t/upstream-net and t/upstream:
-- 8cc6e542f150: mptcp: propagate shutdown to subflows when possible
-- 07cc3161a4a6: selftests: mptcp: connect: catch IO errors on listen side
-- 4f6152573302: selftests: mptcp: avoid spurious errors on TCP disconnect
-- 42c1206d2751: selftests: mptcp: print trailing bytes with od
-- 83fd25a7e401: selftests: mptcp: connect: print pcap prefix
-- Results: c62821417a96..c3bb5aa20b8e (export-net)
-- Results: 623fb42fecc5..6ff9d54223e3 (export)
+- 0da1c0ce6ea6: mptcp: pm: netlink: fix if-idx type
+- 02cda1074a73: mptcp: set remote_deny_join_id0 on SYN recv
+- a09491ca4e0f: mptcp: pm: nl: announce deny-join-id0 flag
+- 6eae6b2bd22f: selftests: mptcp: userspace pm: validate deny-join-id0 flag
+- 401a4e407eaa: mptcp: tfo: record 'deny join id0' info
+- Results: c3bb5aa20b8e..28a9147c96c2 (export-net)
+- Results: 6ff9d54223e3..9d5b2844a3ca (export)
 
 Tests are now in progress:
 
 - export-net:
-https://github.com/multipath-tcp/mptcp_net-next/commit/b6b24ce1bd89c893d3e7f9262f7a9b92aaa19736/checks
+https://github.com/multipath-tcp/mptcp_net-next/commit/1bb915f2a5144a56b8fa183b1141d05268ac0f97/checks
 - export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/bf5738cace8ab21e5bba9ebe1d8fa7175407f222/checks
+https://github.com/multipath-tcp/mptcp_net-next/commit/42b19ffa9551df01889230fa9e6228e61b18bffc/checks
 
 Cheers,
 Matt
