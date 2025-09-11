@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A62CA3101B9
-	for <mptcp@lists.linux.dev>; Thu, 11 Sep 2025 10:29:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F416734F476
+	for <mptcp@lists.linux.dev>; Thu, 11 Sep 2025 16:32:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757586540; cv=none; b=K51Ek1Ysr3YCOB6dJT7E8qOZLADIExXMS96uO21l5m9JhfhOVI/pZOEUIqk+UNij+zneVIWHMVMmTXuELtaCviAdmiCsvYiUdrVrIzMBWwRvuWhM5gCv/Cul6oIpTZKnlgFTQCnTKVam4LOLEuA8Vo8VP44YCYJss/hQs6VH36w=
+	t=1757608361; cv=none; b=bVOHLNk/dk3bker6Ciz+wrtTBdbV0mwmZj16IVAs9nNJRVAiuvjqEcT5lAQGLZz0T38BHNJueGTrfjUrM08UsoioBILBid2RSe1qI0i03k6fD1Kqpw9WsiYZKJjI9SkhHu/ZrwCyHvAhMluXPrO6QM7n15fGAgP29O8YoZIvp74=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757586540; c=relaxed/simple;
-	bh=b1uC8Gnbw2d8hCGsPGSpLi4OmOxfJufpgp9Mcq3XYG0=;
+	s=arc-20240116; t=1757608361; c=relaxed/simple;
+	bh=94nbIyuut35EuEucNVXDI08rvqSIqqie0rPeE1yf6sc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=PiDIe67Sfao6rlb+H2itgY3UpeVytpmVgLAQFZxAjjTNnGA03XT7QPCBb4ZCQBkBH0zoAMKv9nG1b937LoLpkBl3LB9fLwovhqEgcIK5mwMER5oTpCPuCEziL6n9feFNgnTU7MmixUcqS7QBvgVPI4rBp2EOeGpV4i+0yCz6lQE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PeUD/WK+; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=QpLeT1XSGiD0jbYGo3ultE9J5L9NeNq3qeq1kX/o0AEx5jcG4XiV7DLkm0TgtHg1DfCZiEygHtf2WoFymw8ct0MJrxIj3TN6ifZ57IGJTqH94fRSV0WTn76a7syEWgecw4rNOOovFdY59mG17+QX/EmRbWRIJpWQvQbG4Q6IS10=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ltVkQBsM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PeUD/WK+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B66DC4CEF1;
-	Thu, 11 Sep 2025 10:28:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ltVkQBsM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28DDAC4CEF0
+	for <mptcp@lists.linux.dev>; Thu, 11 Sep 2025 16:32:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757586540;
-	bh=b1uC8Gnbw2d8hCGsPGSpLi4OmOxfJufpgp9Mcq3XYG0=;
+	s=k20201202; t=1757608360;
+	bh=94nbIyuut35EuEucNVXDI08rvqSIqqie0rPeE1yf6sc=;
 	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=PeUD/WK+/IZXpUtq9moidJq4YJZkCnMQf9KLNjQSggtTc/QKgLeW0WXaLFzuJ5nzi
-	 jBQWZux7PUyyFiHNuevKPBiMO1wFgIJW/4SYnpUPsxdHjtcVccS/stbxq2GYt7g+qc
-	 k/uwMFLQXvGP9fcDYKT7qecQyNkWaIzVA7FkCyLGROnGTlLKatIoZAGkHIuFUOPfMA
-	 h03t+Ys8BIErtt+XpO2oCCQYlZrUpkK2PUmKaqbU+sl/V4fDR5F3e4yrpaP6PBz7Bu
-	 iNnvfszCjsJJxxryX1V62LyD/AhYC1/iFlkK6ukstKW0AqxDDoFkyT/umNmzVvUBCm
-	 njwqWECIywZxA==
-Message-ID: <7b3db008-5813-408f-8f95-e59719def2f3@kernel.org>
-Date: Thu, 11 Sep 2025 12:28:57 +0200
+	b=ltVkQBsMGw/tShsZrDss5aKuD1F0UptV8yxOjkewJFhZNbFPgeq+wRPm+n4MKjFyw
+	 IdRMrVHaNScOCxDm//Mksm5gq4jT4RwC6AOBlVhqGRIUJ3g63ppIjRGXum8Sw5MX4Q
+	 eYDK2KFHKaSCjsjlyuQzKpfDIfDGfUbCIEDGWdvRHlUhA528P+r+pb3CmgY5U5WkOV
+	 3kPBqquJfS9KrLAqvlhp5GW1yxPKulwxLqtUj1PnzzclgevH+CzT5N4UwtX/8o5ogU
+	 EMle693qn5ddyYzImgaLFmrs1fvs66ITxmD1lgBmkkHRf1oNKfiYHQfuphWnRcaEmC
+	 XSkb4yUfDDbxA==
+Message-ID: <ba8c54a8-3ad8-4ae5-879b-05f6b6a45319@kernel.org>
+Date: Thu, 11 Sep 2025 18:32:38 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,16 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next 4/4] selftests: mptcp: pm: get server-side flag
+Subject: Re: [PATCH mptcp-net v3 1/5] mptcp: propagate shutdown to subflows
+ when possible
 Content-Language: en-GB, fr-BE
-To: Geliang Tang <geliang@kernel.org>, MPTCP Upstream <mptcp@lists.linux.dev>
-References: <20250909-mptcp-pm-user-server-side-flag-v1-0-cb8e2b8d1c0c@kernel.org>
- <20250909-mptcp-pm-user-server-side-flag-v1-4-cb8e2b8d1c0c@kernel.org>
- <20639f7f4b2616afaa4c4e511a13aa8ad49c8d90.camel@kernel.org>
- <1f62d970-631e-4031-a386-2b1db50642fb@kernel.org>
- <e740db7c89cf40416c2688ad8ff8a617c7bbafec.camel@kernel.org>
- <0cbcf551-9839-436c-93bb-d7275a12a1a5@kernel.org>
- <51c4f038acf4a596bc9c90c32c9ab6dd74312b00.camel@kernel.org>
+To: MPTCP Linux <mptcp@lists.linux.dev>
+References: <20250910-sft-mptcp-disc-err-v3-0-6799fa467d77@kernel.org>
+ <20250910-sft-mptcp-disc-err-v3-1-6799fa467d77@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -90,158 +86,54 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <51c4f038acf4a596bc9c90c32c9ab6dd74312b00.camel@kernel.org>
+In-Reply-To: <20250910-sft-mptcp-disc-err-v3-1-6799fa467d77@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+Hello,
 
-On 11/09/2025 12:05, Geliang Tang wrote:
-> On Thu, 2025-09-11 at 11:35 +0200, Matthieu Baerts wrote:
->> Hi Geliang,
->>
->> On 11/09/2025 11:04, Geliang Tang wrote:
->>> Hi Matt,
->>>
->>> On Thu, 2025-09-11 at 10:35 +0200, Matthieu Baerts wrote:
->>>> Hi Geliang,
->>>>
->>>> On 11/09/2025 10:16, Geliang Tang wrote:
->>>>> Hi Matt,
->>>>>
->>>>> On Tue, 2025-09-09 at 18:30 +0200, Matthieu Baerts (NGI0)
->>>>> wrote:
->>>>>> server-side info linked to the MPTCP connect/established
->>>>>> events
->>>>>> can
->>>>>> now
->>>>>> come from the flags, in addition to the dedicated attribute.
->>>>>>
->>>>>> The attribute is now deprecated -- in favour of the new flag,
->>>>>> and
->>>>>> will
->>>>>> be removed later on.
->>>>>>
->>>>>> Print this info only once.
->>>>>>
->>>>>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
->>>>>> ---
->>>>>>  tools/testing/selftests/net/mptcp/pm_nl_ctl.c | 9 ++++++++-
->>>>>>  1 file changed, 8 insertions(+), 1 deletion(-)
->>>>>>
->>>>>> diff --git a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
->>>>>> b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
->>>>>> index
->>>>>> 93fea3442216c8fef43731a99c1d5710f234b150..d4981b76693bbddca74
->>>>>> 1694
->>>>>> 37a5
->>>>>> 40ad6294cf1d5 100644
->>>>>> --- a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
->>>>>> +++ b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
->>>>>> @@ -2,6 +2,7 @@
->>>>>>  
->>>>>>  #include <errno.h>
->>>>>>  #include <error.h>
->>>>>> +#include <stdbool.h>
->>>>>>  #include <stdio.h>
->>>>>>  #include <stdlib.h>
->>>>>>  #include <string.h>
->>>>>> @@ -113,6 +114,8 @@ static int capture_events(int fd, int
->>>>>> event_group)
->>>>>>  		error(1, errno, "could not join the "
->>>>>> MPTCP_PM_EV_GRP_NAME " mcast group");
->>>>>>  
->>>>>>  	do {
->>>>>> +		bool server_side = false;
->>>>>> +
->>>>>>  		FD_ZERO(&rfds);
->>>>>>  		FD_SET(fd, &rfds);
->>>>>>  		res_len = NLMSG_ALIGN(sizeof(struct
->>>>>> nlmsghdr)) +
->>>>>> @@ -187,18 +190,22 @@ static int capture_events(int fd, int
->>>>>> event_group)
->>>>>>  				else if (attrs->rta_type ==
->>>>>> MPTCP_ATTR_ERROR)
->>>>>>  					fprintf(stderr,
->>>>>> ",error:%u",
->>>>>> *(__u8 *)RTA_DATA(attrs));
->>>>>>  				else if (attrs->rta_type ==
->>>>>> MPTCP_ATTR_SERVER_SIDE)
->>>>>> -					fprintf(stderr,
->>>>>> ",server_side:%u", *(__u8 *)RTA_DATA(attrs));
->>>>>
->>>>> It is a little strange that server_side is displayed at the
->>>>> end. It
->>>>> changes the original display order.  It is better to display it
->>>>> in
->>>>> the
->>>>> original position, but check whether the server_side flag is
->>>>> false:
->>>>
->>>> I'm not sure to understand why it is strange: the output is read
->>>> by
->>>> scripts, the order should not matter, right?
->>>
->>> I mean the original display order of "./pm_nl_ctl events" is:
->>>
->>> type:1,token:2327950928,server_side:1,family:10,saddr6:::ffff:10.0.
->>> 1.1,
->>> daddr6:::ffff:10.0.1.2,sport:10000,dport:40004,loc_id:0,rem_id:0
->>>
->>> With this patch, the order is changed:
->>>
->>> type:1,token:1072969578,family:10,saddr6:::ffff:10.0.1.1,daddr6:::f
->>> fff:
->>> 10.0.1.2,sport:10000,dport:42484,loc_id:0,rem_id:0,server_side:1
->>>
->>> If an application still uses code like this to parse server_side,
->>> an
->>> error will occur.
->>>
->>> sscanf(str, "type:%u,token:%u,server_side:%u",
->>>        &type, &token, &server_side);
->>>
->>> So it makes sense to keep the original order. But up to you.
->>
->> I hope no applications are doing that: this pm_nl_ctl tool lists the
+On 10/09/2025 10:55, Matthieu Baerts (NGI0) wrote:
+> When the MPTCP DATA FIN have been ACKed, there is no more MPTCP related
+> metadata to exchange, and all subflows can be safely shutdown.
 > 
-> I do use this in BPF path manager selftests under development.
-
-Probably best to avoid that. Can you not split based on ',' (strtok*())
-and take the values for the keys you are interested in?
-
->> arguments in the order it receives it, but this order is set by the
->> kernel and can change. In other words, this order is not fixed in
->> stone.
->>
->> Plus this tool is for the selftests, I don't think other people are
->> using it. 'ip mptcp' is probably used instead. And even they should
->> not
->> expect the order to be fixed.
->>
->> So I don't think we need to increase the complexity here if it is not
->> needed.
+> Before this patch, the subflows were actually terminated at 'close()'
+> time. That's certainly fine most of the time, but not when the userspace
+> 'shutdown()' a connection, without close()ing it. When doing so, the
+> subflows were staying in LAST_ACK state on one side -- and consequently
+> in FIN_WAIT2 on the other side -- until the 'close()' of the MPTCP
+> socket.
 > 
-> Sure. I have no comments then. Please add my tag for this set:
-> 
-> Reviewed-by: Geliang Tang <geliang@kernel.org>
+> Now, when the DATA FIN have been ACKed, all subflows are shutdown. A
+> consequence of this is that the TCP 'FIN' flag can be set earlier now,
+> but the end result is the same. This affects the packetdrill tests
+> looking at the end of the MPTCP connections, but for a good reason.
 
-Thanks! (Please next time send this as a reply to the cover-letter, so
-the tag will be automatically propagated to each patch.)
+FYI, I don't know if it is linked to this patch, but the CI recently
+complained about the "dss_fin_retrans_*" tests, in debug mode only:
 
-Now in our tree (feat. for net-next):
+> # dss_fin_retrans_close_wait.pkt:27: error handling packet: timing error: expected outbound packet in relative time range +0.200000~+0.300000 sec but happened at -0.017265 sec
+> # script packet:  0.791882 . 1:1(0) ack 2 <dss dack4 3007449510 dsn8 8067261375896427910 ssn 0 dll 1 no_checksum flags: MmAF,nop,nop>
+> # actual packet:  0.574617 . 1:1(0) ack 2 win 1050 <dss dack4 3007449510 dsn8 8067261375896427910 ssn 0 dll 1 no_checksum flags: MmAF,nop,nop>
 
-New patches for t/upstream:
-- 419c5f213113: mptcp: pm: netlink: only add server-side attr when true
-- 7a32b2ee28a7: mptcp: pm: netlink: announce server-side flag
-- ed9ca7fac132: mptcp: pm: netlink: deprecate server-side attribute
-- 65cb7a9d4d5e: selftests: mptcp: pm: get server-side flag
-- Results: 9d5b2844a3ca..7b11ba96fa1d (export)
+> # dss_fin_retrans_established.pkt:21: error handling packet: timing error: expected outbound packet in relative time range +0.200000~+0.300000 sec but happened at -0.021432 sec
+> # script packet:  0.791877 . 1:1(0) ack 1 <dss dack4 3007449509 dsn8 8629039693965256448 ssn 0 dll 1 no_checksum flags: MmAF,nop,nop>
+> # actual packet:  0.570445 . 1:1(0) ack 1 win 1050 <dss dack4 3007449509 dsn8 8629039693965256448 ssn 0 dll 1 no_checksum flags: MmAF,nop,nop>
 
-Tests are now in progress:
+> # dss_fin_retrans_close_wait.pkt:27: error handling packet: timing error: expected outbound packet in relative time range +0.200000~+0.300000 sec but happened at -0.095031 sec
+> # script packet:  0.745018 . 1:1(0) ack 2 <dss dack4 3007449510 dsn8 18052974533214962003 ssn 0 dll 1 no_checksum flags: MmAF,nop,nop>
+> # actual packet:  0.449987 . 1:1(0) ack 2 win 1050 <dss dack4 3007449510 dsn8 18052974533214962003 ssn 0 dll 1 no_checksum flags: MmAF,nop,nop>
 
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/d1dac2258ca371e5cfcd46487e28590da3162f9b/checks
+I'm not able to reproduce this issue on my side to get more details
+about the previous delays. Please also note that a few weeks ago, I also
+reduced the tolerance by a factor of 4.
+
+Because it is happening only in "debug" mode, I just re-increased a bit
+the tolerance on the CI side. But if you have an idea of what could
+cause the kernel to emit the retransmission faster than expected, feel
+free to share :)
+
+https://github.com/multipath-tcp/mptcp_net-next/actions/runs/17638263507
+https://github.com/multipath-tcp/mptcp_net-next/actions/runs/17638077933
 
 Cheers,
 Matt
