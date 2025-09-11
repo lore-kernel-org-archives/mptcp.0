@@ -1,46 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2305D22578A
-	for <mptcp@lists.linux.dev>; Thu, 11 Sep 2025 08:45:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3887C2E6114
+	for <mptcp@lists.linux.dev>; Thu, 11 Sep 2025 09:04:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757580356; cv=none; b=BPoI7p6T49KovFO/yf+Kr6cWm0sRgU2QNs49YoBCOgcUgT3meHAv1OYVWUimolMd2yoWe/3gxl3HdMLxYPAuG3JkCil4BaXJeKaJJ+Ozb0dylcsODByDj1E1B88oLtnG5eHXGC8qAz9cYvpD+flZdGhciRMV1dKtZ2CHSAID468=
+	t=1757581468; cv=none; b=V66FPFXCJeNEd1bOffWTk/Pkp3pDXJHFp/q/qVSEkuXekUbuH0h+q33Dv10SKMBNlbJ7JK+yu65hpv3NSGOwcTc+gfvQ6twvJxpfXv3Gl9/rMSDKgicuxIVd9ZVg8x7tmpZ6j3QZjq96RsjsxTIKQ+nsOuwNmGtp59CZGCcjMkQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757580356; c=relaxed/simple;
-	bh=fB7SOsP7VbI5Dk2vw4DvARJOcQyxGAUj2G14O6teVp8=;
+	s=arc-20240116; t=1757581468; c=relaxed/simple;
+	bh=3XVFVOdrik57ET1azcaVVTOVAdDlVMdYgImnrfcK9SA=;
 	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=HvvRQ1vLY4YR29x3NadOje4MuHZlHjcHKCtzZSwnLOxlH3OKRPGDLzm9Z0TTWP9ZTdt/qOGXyGUoOXXTbuNGeJrpHMPZJK80+u0kQvRc1JhbYVtRS/jixfgk6Ynz9+vGb/jlSqxEKXj8muN1sXtKZPTeSlnkoda6+qVTcHpTeJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ur2391sB; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=asP0SFOjbPEgnWU4WhH3E1ZPUex1tdooxSUBOc9xkA/OoVc8dSZdvRJdHbJUWFQiNp1VpBOflSfGeHhZ/MfCbPcDKqpEf+jvi2WOFSOyHS2XJLEpiNoGcIjgcJJyev9z4sAoaRUxHZLBsB+2Ptlh68Bk4SWzSyIwV96WjuIpc3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oSADbe/O; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ur2391sB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7229C4CEF1;
-	Thu, 11 Sep 2025 08:45:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oSADbe/O"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 020F2C4CEF0;
+	Thu, 11 Sep 2025 09:04:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757580355;
-	bh=fB7SOsP7VbI5Dk2vw4DvARJOcQyxGAUj2G14O6teVp8=;
+	s=k20201202; t=1757581467;
+	bh=3XVFVOdrik57ET1azcaVVTOVAdDlVMdYgImnrfcK9SA=;
 	h=Subject:From:To:Date:In-Reply-To:References:From;
-	b=Ur2391sBACqdaKf//s0lv+VgBDp8fYgQNIDwdILI1oB8U8Pgjb7uVwyOTqHkM1zjK
-	 NOYs9OB3s3kOYyPGrAPt0c3IELd1YrgFIiV8A8IPSw7mflQk+dw2bAWG1XsBMb70pl
-	 sywTR5npTxabHx/uemp06mzpzwB1Zmzvv4SQT1apqIb4GrZqK4DtcsPwukXxGqRxmL
-	 0cfg7WCysH2yrs5wOfVsEWyv5Gb+dxn6hYp8KLX7j5UGV0zFw2IKDZnW0fn2ATun6U
-	 ch78lwv8Pg7CX8/1SZgnUUyLpYXzai1cr90gBWCfOgt20Fd3yk7B+1s9TUgjplove2
-	 kyK9qAKK+r3ig==
-Message-ID: <2e5d12513033a5df4310a97a089ff6856ad70178.camel@kernel.org>
-Subject: Re: [PATCH mptcp-next 1/4] mptcp: pm: netlink: only add server-side
- attr when true
+	b=oSADbe/OkPQZoTRiRjD/XU6R9+hgOJUpLEHu5SfEUdITjMMRU8fM2n8B8hkUVtrKF
+	 vz1ZAqyUaeIfJdBe5k32AHRbmSlpwKd40d60CiQ6RPUk2fDuhUAJfsQzxr6HQmLr2C
+	 4IzDwlewoiD1gDNjuHxKt3BP7AlsWP7OQC0MLPTcYpPYRVGWdPdr9mTxHn3oITSep3
+	 xi5MfyADn2psWdGyEJoGbE9t9R9sNN35uLVh+7qAt/M/39SrJEKGBQ2Dh5q5EhnEzJ
+	 qMMuev+datITAjsgMbj5ROPJ9acwEWLZmiInw2bA3n1+XE19lA6019ROUtlIkS5/ZJ
+	 rKZ7U61JGbYqQ==
+Message-ID: <e740db7c89cf40416c2688ad8ff8a617c7bbafec.camel@kernel.org>
+Subject: Re: [PATCH mptcp-next 4/4] selftests: mptcp: pm: get server-side
+ flag
 From: Geliang Tang <geliang@kernel.org>
 To: Matthieu Baerts <matttbe@kernel.org>, MPTCP Upstream
  <mptcp@lists.linux.dev>
-Date: Thu, 11 Sep 2025 16:45:52 +0800
-In-Reply-To: <9cd0c8da-96a1-40a1-8b56-1689803a32e7@kernel.org>
+Date: Thu, 11 Sep 2025 17:04:23 +0800
+In-Reply-To: <1f62d970-631e-4031-a386-2b1db50642fb@kernel.org>
 References: 
 	<20250909-mptcp-pm-user-server-side-flag-v1-0-cb8e2b8d1c0c@kernel.org>
-	 <20250909-mptcp-pm-user-server-side-flag-v1-1-cb8e2b8d1c0c@kernel.org>
-	 <732d1d85e092148ff8d8d1c82f311929a5d53ff3.camel@kernel.org>
-	 <81bfd469-fc1b-4dc5-a049-5ee470b55bda@kernel.org>
-	 <2512ba8fc5ffc4af4d0b147859e20940bf70540f.camel@kernel.org>
-	 <9cd0c8da-96a1-40a1-8b56-1689803a32e7@kernel.org>
+	 <20250909-mptcp-pm-user-server-side-flag-v1-4-cb8e2b8d1c0c@kernel.org>
+	 <20639f7f4b2616afaa4c4e511a13aa8ad49c8d90.camel@kernel.org>
+	 <1f62d970-631e-4031-a386-2b1db50642fb@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 User-Agent: Evolution 3.56.0-1 
 Precedence: bulk
@@ -51,203 +49,106 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On Thu, 2025-09-11 at 10:37 +0200, Matthieu Baerts wrote:
+Hi Matt,
+
+On Thu, 2025-09-11 at 10:35 +0200, Matthieu Baerts wrote:
 > Hi Geliang,
 > 
-> On 11/09/2025 10:33, Geliang Tang wrote:
+> On 11/09/2025 10:16, Geliang Tang wrote:
 > > Hi Matt,
 > > 
-> > On Thu, 2025-09-11 at 10:20 +0200, Matthieu Baerts wrote:
-> > > Hi Geliang,
+> > On Tue, 2025-09-09 at 18:30 +0200, Matthieu Baerts (NGI0) wrote:
+> > > server-side info linked to the MPTCP connect/established events
+> > > can
+> > > now
+> > > come from the flags, in addition to the dedicated attribute.
 > > > 
-> > > Thank you for the review!
+> > > The attribute is now deprecated -- in favour of the new flag, and
+> > > will
+> > > be removed later on.
 > > > 
-> > > On 11/09/2025 10:15, Geliang Tang wrote:
-> > > > Hi Matt,
-> > > > 
-> > > > On Tue, 2025-09-09 at 18:30 +0200, Matthieu Baerts (NGI0)
-> > > > wrote:
-> > > > > This attribute is a boolean. No need to add it to set it to
-> > > > > 'false'.
-> > > > > 
-> > > > > Indeed, the default value when this attribute is not set is
-> > > > > naturally
-> > > > > 'false'. A few bytes can then be saved by not adding this
-> > > > > attribute
-> > > > > if
-> > > > > the connection is not on the server side.
-> > > > > 
-> > > > > This prepares the future deprecation of its attribute, in
-> > > > > favour
-> > > > > of a
-> > > > > new flag.
-> > > > > 
-> > > > > Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> > > > > ---
-> > > > >  Documentation/netlink/specs/mptcp_pm.yaml         | 4 ++--
-> > > > >  include/uapi/linux/mptcp_pm.h                     | 4 ++--
-> > > > >  net/mptcp/pm_netlink.c                            | 4 +++-
-> > > > >  tools/testing/selftests/net/mptcp/userspace_pm.sh | 2 +-
-> > > > >  4 files changed, 8 insertions(+), 6 deletions(-)
-> > > > > 
-> > > > > diff --git a/Documentation/netlink/specs/mptcp_pm.yaml
-> > > > > b/Documentation/netlink/specs/mptcp_pm.yaml
-> > > > > index
-> > > > > d1b4829b580ad09baf4afd73b67abd7b4ef6883a..fc47a2931014c0304ef
-> > > > > d321
-> > > > > 5cc2
-> > > > > 4485ea22e1ede 100644
-> > > > > --- a/Documentation/netlink/specs/mptcp_pm.yaml
-> > > > > +++ b/Documentation/netlink/specs/mptcp_pm.yaml
-> > > > > @@ -28,13 +28,13 @@ definitions:
-> > > > >            traffic-patterns it can take a long time until the
-> > > > >            MPTCP_EVENT_ESTABLISHED is sent.
-> > > > >            Attributes: token, family, saddr4 | saddr6, daddr4
-> > > > > |
-> > > > > daddr6, sport,
-> > > > > -          dport, server-side, [flags].
-> > > > > +          dport, [server-side], [flags].
-> > > > >        -
-> > > > >          name: established
-> > > > >          doc: >-
-> > > > >            A MPTCP connection is established (can start new
-> > > > > subflows).
-> > > > >            Attributes: token, family, saddr4 | saddr6, daddr4
-> > > > > |
-> > > > > daddr6, sport,
-> > > > > -          dport, server-side, [flags].
-> > > > > +          dport, [server-side], [flags].
-> > > > >        -
-> > > > >          name: closed
-> > > > >          doc: >-
-> > > > > diff --git a/include/uapi/linux/mptcp_pm.h
-> > > > > b/include/uapi/linux/mptcp_pm.h
-> > > > > index
-> > > > > 7359d34da446b94be148b363079120db03ba8549..bf44a5cf5b5a1e6d789
-> > > > > 6326
-> > > > > 82a9
-> > > > > bedbf8090feb9 100644
-> > > > > --- a/include/uapi/linux/mptcp_pm.h
-> > > > > +++ b/include/uapi/linux/mptcp_pm.h
-> > > > > @@ -16,10 +16,10 @@
-> > > > >   *   good time to allocate memory and send ADD_ADDR if
-> > > > > needed.
-> > > > > Depending on the
-> > > > >   *   traffic-patterns it can take a long time until the
-> > > > > MPTCP_EVENT_ESTABLISHED
-> > > > >   *   is sent. Attributes: token, family, saddr4 | saddr6,
-> > > > > daddr4
-> > > > > > 
-> > > > > daddr6,
-> > > > > - *   sport, dport, server-side, [flags].
-> > > > > + *   sport, dport, [server-side], [flags].
-> > > > >   * @MPTCP_EVENT_ESTABLISHED: A MPTCP connection is
-> > > > > established
-> > > > > (can
-> > > > > start new
-> > > > >   *   subflows). Attributes: token, family, saddr4 | saddr6,
-> > > > > daddr4 |
-> > > > > daddr6,
-> > > > > - *   sport, dport, server-side, [flags].
-> > > > > + *   sport, dport, [server-side], [flags].
-> > > > >   * @MPTCP_EVENT_CLOSED: A MPTCP connection has stopped.
-> > > > > Attribute:
-> > > > > token.
-> > > > >   * @MPTCP_EVENT_ANNOUNCED: A new address has been announced
-> > > > > by
-> > > > > the
-> > > > > peer.
-> > > > >   *   Attributes: token, rem_id, family, daddr4 | daddr6 [,
-> > > > > dport].
-> > > > > diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> > > > > index
-> > > > > 483ddbb9ec406a3e965376ee5a833ae295896a02..33a6bf536c020b59717
-> > > > > 472a
-> > > > > ca2d
-> > > > > 38add26255419 100644
-> > > > > --- a/net/mptcp/pm_netlink.c
-> > > > > +++ b/net/mptcp/pm_netlink.c
-> > > > > @@ -413,7 +413,9 @@ static int mptcp_event_created(struct
-> > > > > sk_buff
-> > > > > *skb,
-> > > > >  	if (err)
-> > > > >  		return err;
-> > > > >  
-> > > > > -	if (nla_put_u8(skb, MPTCP_ATTR_SERVER_SIDE,
-> > > > > READ_ONCE(msk-
-> > > > > > pm.server_side)))
-> > > > > +	/* only set when it is the server side */
-> > > > > +	if (READ_ONCE(msk->pm.server_side) &&
-> > > > > +	    nla_put_u8(skb, MPTCP_ATTR_SERVER_SIDE, 1))
-> > > > 
-> > > > In patch 2, this will be modified to use two 'if':
-> > > > 
-> > > > 	if (READ_ONCE(msk->pm.server_side)) {
-> > > > 		flags |= MPTCP_PM_EV_FLAG_SERVER_SIDE;
-> > > > 
-> > > > 		/* only set when it is the server side */
-> > > > 		if (nla_put_u8(skb, MPTCP_ATTR_SERVER_SIDE,
-> > > > 1))
-> > > > 			return -EMSGSIZE;
-> > > > 	}
-> > > > 
-> > > > Why don't we just use two 'if' statements here, which will make
-> > > > patch 2
-> > > > simpler:
-> > > > 
-> > > >        if (READ_ONCE(msk->pm.server_side)) {
-> > > >                /* only set when it is the server side */
-> > > >                if (nla_put_u8(skb, MPTCP_ATTR_SERVER_SIDE, 1))
-> > > >                        return -EMSGSIZE;
-> > > >        }
-> > > > 
-> > > > WDYT?
+> > > Print this info only once.
 > > > 
-> > > I'm not convinced: that might make the patch 2 simpler, but then
-> > > the
-> > > patch 1 will raise questions from reviewers and developers
-> > > looking at
-> > > the patches in the order they have been sent: why using 2 'if'
-> > > statements while there is no need to use 2.
+> > > Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> > > ---
+> > >  tools/testing/selftests/net/mptcp/pm_nl_ctl.c | 9 ++++++++-
+> > >  1 file changed, 8 insertions(+), 1 deletion(-)
 > > > 
-> > > If we want that, I would have to add something in the commit
-> > > message.
-> > > I
-> > > don't think that's worth it.
+> > > diff --git a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
+> > > b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
+> > > index
+> > > 93fea3442216c8fef43731a99c1d5710f234b150..d4981b76693bbddca741694
+> > > 37a5
+> > > 40ad6294cf1d5 100644
+> > > --- a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
+> > > +++ b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
+> > > @@ -2,6 +2,7 @@
+> > >  
+> > >  #include <errno.h>
+> > >  #include <error.h>
+> > > +#include <stdbool.h>
+> > >  #include <stdio.h>
+> > >  #include <stdlib.h>
+> > >  #include <string.h>
+> > > @@ -113,6 +114,8 @@ static int capture_events(int fd, int
+> > > event_group)
+> > >  		error(1, errno, "could not join the "
+> > > MPTCP_PM_EV_GRP_NAME " mcast group");
+> > >  
+> > >  	do {
+> > > +		bool server_side = false;
+> > > +
+> > >  		FD_ZERO(&rfds);
+> > >  		FD_SET(fd, &rfds);
+> > >  		res_len = NLMSG_ALIGN(sizeof(struct nlmsghdr)) +
+> > > @@ -187,18 +190,22 @@ static int capture_events(int fd, int
+> > > event_group)
+> > >  				else if (attrs->rta_type ==
+> > > MPTCP_ATTR_ERROR)
+> > >  					fprintf(stderr,
+> > > ",error:%u",
+> > > *(__u8 *)RTA_DATA(attrs));
+> > >  				else if (attrs->rta_type ==
+> > > MPTCP_ATTR_SERVER_SIDE)
+> > > -					fprintf(stderr,
+> > > ",server_side:%u", *(__u8 *)RTA_DATA(attrs));
 > > 
-> > Sure. Let's keep this patch as is. If so, could you please update
+> > It is a little strange that server_side is displayed at the end. It
+> > changes the original display order.  It is better to display it in
 > > the
-> > position of the comments in patch 2 and patch 3? Something like:
-> > 
-> >         /* only set when it is the server side */
-> >         if (READ_ONCE(msk->pm.server_side)) {
-> >                 flags |= MPTCP_PM_EV_FLAG_SERVER_SIDE;
+> > original position, but check whether the server_side flag is false:
 > 
-> Mmh, I'm not sure: for the flag, it makes sense to only set it when
-> it
-> is the server side, otherwise that's wrong. Keeping the comment above
-> is
-> then a bit confusing, no?
+> I'm not sure to understand why it is strange: the output is read by
+> scripts, the order should not matter, right?
 
-If this comment needs to be just above nla_put_u8(), it makes sense to
-use 2 'if' here. But up to you.
+I mean the original display order of "./pm_nl_ctl events" is:
+
+type:1,token:2327950928,server_side:1,family:10,saddr6:::ffff:10.0.1.1,
+daddr6:::ffff:10.0.1.2,sport:10000,dport:40004,loc_id:0,rem_id:0
+
+With this patch, the order is changed:
+
+type:1,token:1072969578,family:10,saddr6:::ffff:10.0.1.1,daddr6:::ffff:
+10.0.1.2,sport:10000,dport:42484,loc_id:0,rem_id:0,server_side:1
+
+If an application still uses code like this to parse server_side, an
+error will occur.
+
+sscanf(str, "type:%u,token:%u,server_side:%u",
+       &type, &token, &server_side);
+
+So it makes sense to keep the original order. But up to you.
 
 Thanks,
 -Geliang
 
 > 
-> > 
-> >                 /* Deprecated */
-> >                 if (nla_put_u8(skb, MPTCP_ATTR_SERVER_SIDE, 1)) 
-> >                         return -EMSGSIZE;
-> >         }
-> > 
-> > Thanks,
-> > -Geliang
-> > 
-> > > 
-> > > Cheers,
-> > > Matt
+> Plus the order depends on what was received by the kernel, not where
+> they are printed here.
+> 
+> Do you really think it is worth it changing this patch and making
+> longer
+> just to keep an order that we don't currently fully control here?
 > 
 > Cheers,
 > Matt
