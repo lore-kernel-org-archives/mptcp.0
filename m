@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D1582D23B9
-	for <mptcp@lists.linux.dev>; Fri, 12 Sep 2025 07:50:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E46552D3ECF
+	for <mptcp@lists.linux.dev>; Fri, 12 Sep 2025 07:57:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757663448; cv=none; b=U13GynjvP2zjqV8AjG5t8zoJ14Wn2IhgWZKwJ2CdOHnCzmGzTcf6In1cZRtiLzWktftGmBPsjXxVwPcXe/ifq9cnVYpsVC4w6rR+aB8cMpzBsslQUeP2gsJUCLpiPcRhxXBIEqAMN6/kPuSc9W4AJs1MULUF6whIiMYSR3arhLc=
+	t=1757663860; cv=none; b=ozz0X+n/VoKItztTQOxI+FVXjnBi7XDXQEiLBTqE3rGqTnTkm3uqbd5e5AA1KjIN9LrUtyczubDBHUfPOVgbaKY+WFBMoGtMNYJtXbJ5H4GyyKIyPc57tUXT41qwmJFGQWlHKoVwx7muSk8NJgdoY+4Vwm/BivKo9YwAD7N4JJ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757663448; c=relaxed/simple;
-	bh=SZ6W0Qj3/IWLneMQVxwmtkRWXntmX+rlvXXL8ru8g1c=;
+	s=arc-20240116; t=1757663860; c=relaxed/simple;
+	bh=tPAttqHatynaRVmklh63eAf5Xs4P07GxkFOnuPSctQY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kEuSO22C99dbnTaQ2ka8SssZJeO3Ygn98M6FvEB3wI5TdvJeoegb2aSPljwfUR7zHzKALDyLBaMyQxDZDG8p/j1gNKwoSCpeOzuOSrZxm9qpvDIITr1bIt1K0DnJc5Pzy9e/Oxu+lTiWEZr62DYFiXWe/97bv2QOlYeGwwoJfLg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YTOj6ei+; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=Tk2lxddtZ/7ksP3eS1yttYmHav9Q2UKNtqneb/P6G2F646R7P+ASmdR9m6Xn7soNr9A090DBrqmn7n1lCIkxXv0/cyJlTSJMUAxmJQII4TW3L9lxaBY24D53M1Jh1ZIRAzX3EjfV+WG1KCJsXXuzdzecn1OwVWK6nxBjcr6smP4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BwO7EWTg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YTOj6ei+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A01CC4CEF4;
-	Fri, 12 Sep 2025 07:50:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BwO7EWTg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACE54C4CEF4;
+	Fri, 12 Sep 2025 07:57:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757663448;
-	bh=SZ6W0Qj3/IWLneMQVxwmtkRWXntmX+rlvXXL8ru8g1c=;
+	s=k20201202; t=1757663858;
+	bh=tPAttqHatynaRVmklh63eAf5Xs4P07GxkFOnuPSctQY=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=YTOj6ei+JfE8XwOUefixKTZvUxIPQKw/3Jh/ByqwZBBH+xhHQP+Fz9CM0YMr5z4kY
-	 079NQB4bNBm8DKVFx3d/p7IDjHhgCiP9oBrjQYFfB52+jgTzh/hSGbZspJBu+89eUd
-	 7MCGjjITcJzvW1QIbG6qacG3uE+CnC66mKSLCjEEdyBz45EL8nYbdSM7uAgPpkGb/R
-	 gEpxnzpj7oQr8XkXBf9PgGEINGhXW61bDdIQM1s2LlxrV3prrHlxR4ReUybuCu823X
-	 3gdkhdOl6GpVuCEv8bQ933kFDoc0Q8L6aIRAXmNLPs02KN1v/psrLjBXqCJu8QMa1L
-	 CMI1uFa+2+aBQ==
-Message-ID: <7211c209-f211-4614-9433-6d7e792a6961@kernel.org>
-Date: Fri, 12 Sep 2025 09:50:45 +0200
+	b=BwO7EWTggPJ9ZbG6CE09eDQiQV0E4X1NfSkW/hjfK8/bh0nkxCSjqCqO5BvL5EW1C
+	 53dSGXhXlAgrNohb0t5B6NH1L0Ac34QeiZmne3LyFKar8fR5JQ5IOZ8ejVG0QWLfKt
+	 fGUcjNW5AD3HtLAOjeOUU0t2Wv8ofFUTVUOj23x2pBAIDmrY4mzoLqM+xgedotD7O/
+	 ENyFVAPkst6KAyCTEqg4kfSB8hkIxO6nEHQ4XBFtkieG421q8tppH8OrXZkA/JjSXK
+	 U6V4gtKREPZcbD8nVcfD9a/pR8VKqOXIHbJb1CeJVaBFA1iIhejBuF3NMMl/uhZDJg
+	 Orz1wtqhhEtcQ==
+Message-ID: <3e32cf05-e878-4bf3-8497-e515de40f285@kernel.org>
+Date: Fri, 12 Sep 2025 09:57:35 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,15 +35,11 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net v3 1/5] mptcp: propagate shutdown to subflows
- when possible
+Subject: Re: [PATCH mptcp-next v3 0/3] misc fixes for sockopt selftests
 Content-Language: en-GB, fr-BE
-To: Christoph Paasch <cpaasch@openai.com>
-Cc: MPTCP Linux <mptcp@lists.linux.dev>
-References: <20250910-sft-mptcp-disc-err-v3-0-6799fa467d77@kernel.org>
- <20250910-sft-mptcp-disc-err-v3-1-6799fa467d77@kernel.org>
- <ba8c54a8-3ad8-4ae5-879b-05f6b6a45319@kernel.org>
- <CADg4-L9JGT1K9pjXOtL-SjvHTz2yAW5bXAqK-6J8OJZRw+fx1w@mail.gmail.com>
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <cover.1757647967.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -89,50 +85,23 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <CADg4-L9JGT1K9pjXOtL-SjvHTz2yAW5bXAqK-6J8OJZRw+fx1w@mail.gmail.com>
+In-Reply-To: <cover.1757647967.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Christoph,
+Hi Geliang,
 
-On 11/09/2025 21:08, Christoph Paasch wrote:
-> On Thu, Sep 11, 2025 at 9:32 AM Matthieu Baerts <matttbe@kernel.org> wrote:
->>
->> Hello,
->>
->> On 10/09/2025 10:55, Matthieu Baerts (NGI0) wrote:
->>> When the MPTCP DATA FIN have been ACKed, there is no more MPTCP related
->>> metadata to exchange, and all subflows can be safely shutdown.
->>>
->>> Before this patch, the subflows were actually terminated at 'close()'
->>> time. That's certainly fine most of the time, but not when the userspace
->>> 'shutdown()' a connection, without close()ing it. When doing so, the
->>> subflows were staying in LAST_ACK state on one side -- and consequently
->>> in FIN_WAIT2 on the other side -- until the 'close()' of the MPTCP
->>> socket.
->>>
->>> Now, when the DATA FIN have been ACKed, all subflows are shutdown. A
->>> consequence of this is that the TCP 'FIN' flag can be set earlier now,
->>> but the end result is the same. This affects the packetdrill tests
->>> looking at the end of the MPTCP connections, but for a good reason.
->>
->> FYI, I don't know if it is linked to this patch, but the CI recently
->> complained about the "dss_fin_retrans_*" tests, in debug mode only:
->>
->>> # dss_fin_retrans_close_wait.pkt:27: error handling packet: timing error: expected outbound packet in relative time range +0.200000~+0.300000 sec but happened at -0.017265 sec
+On 12/09/2025 05:40, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> What is more suspicious is that the time is negative. Do you capture
-> pcaps when running packetdrill ?
-> That would allow to see the "real" timestamps independent from
-> packetdrill's scheduling issues.
+> v3:
+>  - close(pipefds[1]) in main() instead of process_one_client().
+>  - close(pipefds[0]) on the server side too.
+>  - patch 2 and patch 3 for -next
 
-No we don't. I also don't know the effect it would have on the public CI
-in debug mode.
+Thank you for the v3, it looks good to me:
 
-Locally, I tried to reproduce the issue with '-vvv', but I didn't manage
-to hit the bug after ~4h, even with stress-ng in parallel. I just tried
-without packetdrill's debug output, but with the packet capture, and no
-luck there too.
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
 Cheers,
 Matt
