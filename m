@@ -1,130 +1,116 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88DB73081D6;
-	Fri, 12 Sep 2025 12:53:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B5A8305068
+	for <mptcp@lists.linux.dev>; Fri, 12 Sep 2025 13:29:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757681599; cv=none; b=bww1BJyuTJ3EUARWKenK/jJO9LYUiLiJlU70GEmZ+W2cq0QD+jVnZ1q1Qzy9j8WrQc4ol14IX9XB9JJDamuytcgn11Ccc+ETnQZgm5vpdh1rnqkKhhORtJl41rXIkr/BjQa0Oe4RWovYF2ZU7JsRBs17WtsjzCIUoYBPsFrj0ls=
+	t=1757683795; cv=none; b=GTeB73dA88n14ZRnkfDbCRBslJcWLY2aBAJuXV4AR0PZGIhpyiwtj63JNHSWtXHjxVLFWForZNo1hszyuOVU/brhihvipuVhBnMY11253+6uSHH/G2Og1iU96X2HUcLInycwkicU23mBqZEGNb2va4uAntofUj/KVDqJ9Nvs0+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757681599; c=relaxed/simple;
-	bh=HIFJWzHgSq2h9T+HcGgSfW0yc/cfScRA14LNQRiK9cc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=J/NsNUAgBft4P+pn80UOsYQZwRUORrr3fhIZ6+gGM3BHJxZD+Rwbl2PasCCTJRYcnXYruaqeh1TaiZLbyGUtzoJynA1RQcjSwraYkrDVgV8b4uboIjV5DKUXD03/Zjg98+2yubl94HHoEFvvDxhWUuLbiuJYqEzn+DxbscZL1YM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g8Z6AOWz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1757683795; c=relaxed/simple;
+	bh=GQINRGpp+jHH0/W9+Mc2RPq/W+et5WT7Kwx9I2NF6hU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=UpVp5iIqnVK9Ue7pDCBl/wD78/FHfXSG2ZTEg/15XrDn/qX/U8Y5S6TdAB0xu9L1zy2fHBYG5A1dI5IeV44Z1n2XfukfaVs4wUWg6x5cMIhKi8a4erfzxTvNnPhkyBAov6D99oZ1zjut15+R4LvhAB++T485P0FzA3TZQUJ/xnw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rerDz7BH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g8Z6AOWz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30517C4CEF7;
-	Fri, 12 Sep 2025 12:53:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rerDz7BH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A194CC4CEF1
+	for <mptcp@lists.linux.dev>; Fri, 12 Sep 2025 13:29:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757681599;
-	bh=HIFJWzHgSq2h9T+HcGgSfW0yc/cfScRA14LNQRiK9cc=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=g8Z6AOWzQtjySqdPEHaBoUe5v1/Dv9qja9uhXY8w63kvwKNts9K9hbvwsBKdsBdQX
-	 yOlOhUn04h6zMWCOiPx/gLkLT+GfZOcuoZFXriEuIh6Sm2FYEVX5iVD6cA6oiWcicw
-	 iR+SFffpnXmwsmqQ2XXkfcVV7mGziQJlVVWzzwiNAoBC638T686YuGy5ZjscHXt1F/
-	 Umw3Z1FnC1hWmvRJgPbWj/rxve520weSJPHFg8pPTLWGSLgOWI7Y5xPPPlYDRHEfqR
-	 vZu0iIT0js5EmGlfB3zCQUAPq1ppOPwP16L1DHY919Zy8INoiVaZq350jZSsa+0bNB
-	 RAU+i5yJ/UreA==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Fri, 12 Sep 2025 14:52:24 +0200
-Subject: [PATCH net 5/5] selftests: mptcp: sockopt: fix error messages
+	s=k20201202; t=1757683795;
+	bh=GQINRGpp+jHH0/W9+Mc2RPq/W+et5WT7Kwx9I2NF6hU=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=rerDz7BHXXq37hYEFgQJ0+09ZeoIp0PNiKM0AKhHBdlBVM5ybt9QNcD+jR73Y2FYO
+	 bfLU8Wh7LHTu6ccxbHsczKgQ9Ji8Afi85611xkYYQ5m1Lgb1EnfLPxhA3eFPibmC1Q
+	 u/BDjACcfrP8Zxd6YxE/B896BRlKiYw8WxJr8qPkqGdeQ4SKz31j7F6APmLgxGGBdN
+	 849eX569LKwe58TP/ziyafhMHZjiS8PNgjyn0YU7TvmLX37We9TJ3MqS1O9Xa2jH5q
+	 amqbbOmbup6CnU/JgVXYoKL8jud97Se9ZLP3HsZGUiPqRhSw1DDe733K0atSRD7O6V
+	 HZ7inUUnWSxnw==
+Message-ID: <e51574ae-ad4e-455c-ab50-f23c383bf08a@kernel.org>
+Date: Fri, 12 Sep 2025 15:29:52 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-next] Squash to "selftests: mptcp: userspace pm:
+ validate deny-join-id0 flag"
+Content-Language: en-GB, fr-BE
+To: MPTCP Linux <mptcp@lists.linux.dev>
+References: <20250912123811.1179276-2-matttbe@kernel.org>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <20250912123811.1179276-2-matttbe@kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250912-net-mptcp-pm-uspace-deny_join_id0-v1-5-40171884ade8@kernel.org>
-References: <20250912-net-mptcp-pm-uspace-deny_join_id0-v1-0-40171884ade8@kernel.org>
-In-Reply-To: <20250912-net-mptcp-pm-uspace-deny_join_id0-v1-0-40171884ade8@kernel.org>
-To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Simon Horman <horms@kernel.org>, Donald Hunter <donald.hunter@gmail.com>, 
- Florian Westphal <fw@strlen.de>, Kishen Maloor <kishen.maloor@intel.com>, 
- Shuah Khan <shuah@kernel.org>, Dmytro Shytyi <dmytro@shytyi.net>
-Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, 
- linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
- "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
- Geliang Tang <geliang@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3129; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=cpAk7g4LSetFcO9JBtJAi95qFs0Yx7aiWJZhlHLpHW0=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDKOiK+aMkFTyfvr8xUhDedv9i339Nu+JdOh5Nne1tL3i
- rZBzsUnOkpZGMS4GGTFFFmk2yLzZz6v4i3x8rOAmcPKBDKEgYtTACZSwsrIcKl97c+l3yM9V9q8
- P35s5s5otp8pm//+2GvmE5q4+pnNRWdGhj2RyrqJNwoerXiw5VfhnwWrv2ZM/2KkbFdolS75W+F
- HBD8A
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+Hello,
 
-This patch fixes several issues in the error reporting of the MPTCP sockopt
-selftest:
+On 12/09/2025 14:38, Matthieu Baerts (NGI0) wrote:
+> Set net.mptcp.allow_join_initial_addr_port=0 on the client side, so it
+> also validates "mptcp: set remote_deny_join_id0 on SYN recv" commit.
 
-1. Fix diff not printed: The error messages for counter mismatches had
-   the actual difference ('diff') as argument, but it was missing in the
-   format string. Displaying it makes the debugging easier.
+No need to review this minor modification (I think). I then applied it:
 
-2. Fix variable usage: The error check for 'mptcpi_bytes_acked' incorrectly
-   used 'ret2' (sent bytes) for both the expected value and the difference
-   calculation. It now correctly uses 'ret' (received bytes), which is the
-   expected value for bytes_acked.
+New patches for t/upstream:
+- aba32baed5b8: "squashed" in "selftests: mptcp: userspace pm: validate
+deny-join-id0 flag"
+- 0e19c6685422: conflict in
+t/mptcp-pm-netlink-only-add-server-side-attr-when-true
+- Results: 21725db7a7a9..01d3ba86f43b (export)
 
-3. Fix off-by-one in diff: The calculation for the 'mptcpi_rcv_delta' diff
-   was 's.mptcpi_rcv_delta - ret', which is off-by-one. It has been
-   corrected to 's.mptcpi_rcv_delta - (ret + 1)' to match the expected
-   value in the condition above it.
+Tests are now in progress:
 
-Fixes: 5dcff89e1455 ("selftests: mptcp: explicitly tests aggregate counters")
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- tools/testing/selftests/net/mptcp/mptcp_sockopt.c | 16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/26610d587d2eda62362ffdbf85c268a809c040a0/checks
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-index e934dd26a59d9b50445d61e8b8013ce3c8d2a8a0..112c07c4c37a3c827290a0b06d6307abca98c849 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-+++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-@@ -667,22 +667,26 @@ static void process_one_client(int fd, int pipefd)
- 
- 	do_getsockopts(&s, fd, ret, ret2);
- 	if (s.mptcpi_rcv_delta != (uint64_t)ret + 1)
--		xerror("mptcpi_rcv_delta %" PRIu64 ", expect %" PRIu64, s.mptcpi_rcv_delta, ret + 1, s.mptcpi_rcv_delta - ret);
-+		xerror("mptcpi_rcv_delta %" PRIu64 ", expect %" PRIu64 ", diff %" PRId64,
-+		       s.mptcpi_rcv_delta, ret + 1, s.mptcpi_rcv_delta - (ret + 1));
- 
- 	/* be nice when running on top of older kernel */
- 	if (s.pkt_stats_avail) {
- 		if (s.last_sample.mptcpi_bytes_sent != ret2)
--			xerror("mptcpi_bytes_sent %" PRIu64 ", expect %" PRIu64,
-+			xerror("mptcpi_bytes_sent %" PRIu64 ", expect %" PRIu64
-+			       ", diff %" PRId64,
- 			       s.last_sample.mptcpi_bytes_sent, ret2,
- 			       s.last_sample.mptcpi_bytes_sent - ret2);
- 		if (s.last_sample.mptcpi_bytes_received != ret)
--			xerror("mptcpi_bytes_received %" PRIu64 ", expect %" PRIu64,
-+			xerror("mptcpi_bytes_received %" PRIu64 ", expect %" PRIu64
-+			       ", diff %" PRId64,
- 			       s.last_sample.mptcpi_bytes_received, ret,
- 			       s.last_sample.mptcpi_bytes_received - ret);
- 		if (s.last_sample.mptcpi_bytes_acked != ret)
--			xerror("mptcpi_bytes_acked %" PRIu64 ", expect %" PRIu64,
--			       s.last_sample.mptcpi_bytes_acked, ret2,
--			       s.last_sample.mptcpi_bytes_acked - ret2);
-+			xerror("mptcpi_bytes_acked %" PRIu64 ", expect %" PRIu64
-+			       ", diff %" PRId64,
-+			       s.last_sample.mptcpi_bytes_acked, ret,
-+			       s.last_sample.mptcpi_bytes_acked - ret);
- 	}
- 
- 	close(fd);
-
+Cheers,
+Matt
 -- 
-2.51.0
+Sponsored by the NGI0 Core fund.
 
