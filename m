@@ -1,706 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B430230E831
-	for <mptcp@lists.linux.dev>; Fri, 12 Sep 2025 14:20:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07F0D38FA3
+	for <mptcp@lists.linux.dev>; Fri, 12 Sep 2025 16:05:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757686856; cv=none; b=I1BOsIQk3NXdvIOl17CcUxmsUg2XkTBzJKNh5g//kiVH+C9kqztYhajgurR73dvmb0QBAhpVaSr04v+UvM8SXoEj0gVR8OFtx7pPLB5sU1wqqRc1uUoO5yNV23wIHaOjKAeLhzS5IKWPncC0qkyHYkcRFcCwmuvDP4rtFunGBXk=
+	t=1757693123; cv=none; b=FtuxBHuxuXdVvhcu6nx0D4kJ/5/6tq/KD52lWb7MH8dt6ORIGReTrVtv6Iru7dzWibpvSakstjsqV4PQFrVm3J06mDncxCSJu/dIf0XC8h2kmW7A4N/6aU/JOQB1j1Zi7kTjdOvMUxpf+imMuXiYffV87iO+3awOgP1D29H6tdI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757686856; c=relaxed/simple;
-	bh=IUz4zsjMHnX7WW7cdSFw6QQ6REJSwMpdu4pF3K2S36I=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=n3HyoxNM1WtfuuYyhsvSuEnSkkxUvbAY+zB3uLUG1KIppJ/jx21bXpE35cg9N07Adaszxq7MOWx00soerwl0WvB2IXUyXQCOnrgSkStEBITwQajWK9kwlOJcneaoTs8vkxDzOCQwElvTngdi/jcY8KE8YaJBzwG/nxor1Cv6PaM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XsIvtCKS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1757693123; c=relaxed/simple;
+	bh=6CLlLONcdnsg4VugKirODi9HXv3FKZzFsd/BLti3SZM=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=r9tTfuee5Xdgi+MjeNGTj7nmILC8R8hhs7p17dVVLBre6iTg4PHxGkbdOEJRYeb0K5vQH4OWOORJupcsfuecRzhSahZiJPp/J0O0uOseRFHKdOXTppRFjDvgeq/nxFEUno+krwWxIuPXNzbz5qcy2GtbrKhV6g+Cl9ZP5y1OYFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FHQSOa2I; arc=none smtp.client-ip=209.85.210.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XsIvtCKS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70541C4CEF4;
-	Fri, 12 Sep 2025 14:20:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757686856;
-	bh=IUz4zsjMHnX7WW7cdSFw6QQ6REJSwMpdu4pF3K2S36I=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=XsIvtCKSWKbDsHLhgF8JpS9NcV+Ou9XMwFelUVVxR4TbNwPoqM/VWIeO9YtDTJP61
-	 HJTWCyeB0IUwb4IQNKwGfkJAlrHAk9qR7Q9Ib/GClqUuXiBB+Ac40dh2hi3aspLD78
-	 GDeuyrzCr7uocrQ5WbtAUphY9ZLwGrH7sBkCCN47UqRSR5Ycf3JvObZ4cAUcxXCuX+
-	 xf0ATh8LcYhk3IoLV5QZMfh5cq9if6N480CzNoLLiBk+CsyW1WflThyGiqhqewcZYW
-	 2t4m3+dmOEpWV3ASsHj5yL/SZBoPK0fPi2L1eLqjZvsQ8iq2OHE5lKW+UxvapPfQnu
-	 EPWaDim+w/R9g==
-From: Geliang Tang <geliang@kernel.org>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v4 9/9] selftests: mptcp: sockopt: remove obsolete mptcp_inq
-Date: Fri, 12 Sep 2025 22:19:56 +0800
-Message-ID: <6e2213608dcc75f8fd4fbcf520203676d2d10e15.1757686538.git.tanggeliang@kylinos.cn>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FHQSOa2I"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-76e4f2e4c40so1901238b3a.2
+        for <mptcp@lists.linux.dev>; Fri, 12 Sep 2025 09:05:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1757693121; x=1758297921; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4urLH0JoSqp3D46fsfzv6o7X0QwVjumJLbGbd5kcEcQ=;
+        b=FHQSOa2I2je88cIiZ45awNFaTBO74HoO/KoB935t54b4fP2ZLwbYaMK9VDpfpuE4oJ
+         n6DY/tyHQqptdzphwCjhP/lcQwp52tZs4KMcUTOGHhqwh8mRwjYj4JJrEpx5FqilHaB2
+         FzQBa/4hPRw8Tctx+RaINUh06XhtMF99nFJKeVXIk8+sm6LMRj51r3qEDUvx2xIQ2ADn
+         RJoS2xCK5s/kSTjQGuR8P1aUNTvIH2U3teWqVYWD+6Y+t4OAXh2YhUI191+ZeUlIWxcz
+         Xa1lSzjSY/RPfwXjFOJ0oQ+54og+rxYzsT98XdAPUBPRf711NMaqYHIWRrt/ipgnakEB
+         ulaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1757693121; x=1758297921;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=4urLH0JoSqp3D46fsfzv6o7X0QwVjumJLbGbd5kcEcQ=;
+        b=limMKzgJ+/Udx6fXN8xQJt6T9vtEtqFmV4WXreOdoU/bYbIABn9wBv2f1U4X3tWxiI
+         xUI2kUlK+bZKwedJXSLIFHDaIDM1sdGr5hnbfEnrgSX/Xr3ramE3jttzMKDfxzVGqUOX
+         tu7pkAMHGuxu/gxDHPkPHHmRBKylvIWyAL3zgFpEoqUzj1kzNAV/lG779ZqAlhavz5//
+         KfMyoGJ2A1tu2CzsU6PkR5Gl5NcGLC5QxNnli5IPDlMtuBDUKXx8UcKVH4IjXCtoaas+
+         gWzRQxCFonaG4aNUjrC64PvHHeYYTJ+jpaYjH8YTqOJixA+azbcNxriNXWN3BRXaZubr
+         klHQ==
+X-Gm-Message-State: AOJu0YwyTBIlzfUmJTaKsq0aEUxK4MlR6s3FIG7UiNYR1RyJQDxcTKrC
+	77ltCWrr3SK4Bpze/YBJXY/4RPTnd/bvovsbflt4XLkDgS2BOJjKHFNqdz20
+X-Gm-Gg: ASbGncvKkM/Z4U14VbTZndGuOLTUwe+zWZDofbYF6xKrryioAX0fCjJJd8m45HfU7oj
+	kn1g4CtLbt0OiXlT1LgE9nrsHn1Ye/mep5o9DmLl94US8DGL0/bpkMETqdsMS/DU/axwLprx+TT
+	zDTD82NQ9VLIr5SeZH1cMlTIZZe72Dnh+aP4eAj7bkjTKDt7ZxySjnipSCq7jM0ayJFSuT14MFY
+	/L9x0uBdqAJTG+4qT7Kh2PC2B4VLMQWooySTnKexo0cRxtSCwRyVFt9k/H2/VynnOMlzLEVRXsR
+	HTJ/yD3t134rQ1ZeFgBZF8sYLoi//AJbuSdAgLylTVoXmmw66spwWKYi985ca85qsfN9Mtqb8bi
+	nOofRnri0vrbL44Rdt3RWmxC6b02pRvqwLYP4
+X-Google-Smtp-Source: AGHT+IFk8xEOmgejl350Nb+qLsdvm4D+v8mRtpckIRMBJrtF0bbONcapzQjwTxNw9B4UhLhCzDtCwQ==
+X-Received: by 2002:a05:6a20:7f87:b0:243:78a:82bd with SMTP id adf61e73a8af0-2602c71d39dmr4850602637.55.1757693121048;
+        Fri, 12 Sep 2025 09:05:21 -0700 (PDT)
+Received: from [127.0.0.1] ([20.171.126.215])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-32ddd9ea344sm5236267a91.19.2025.09.12.09.05.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Sep 2025 09:05:20 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Geliang Tang <tanggeliang@kylinos.cn>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
 In-Reply-To: <cover.1757686538.git.tanggeliang@kylinos.cn>
 References: <cover.1757686538.git.tanggeliang@kylinos.cn>
+Subject: Re: [PATCH mptcp-next v4 0/9] selftests: consolidate TCP_INQ
+ testing into sockopt
+Message-ID: <296e4774-e1ec-efde-491a-f56025801e5d@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 12 Sep 2025 16:05:19 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+Hi Geliang,
 
-Delete mptcp_inq binary and references since its functionality has been
-fully integrated into mptcp_sockopt. This simplifies the test suite
-structure and reduces maintenance overhead.
+Thank you for your modifications, that's great!
 
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
----
- tools/testing/selftests/net/mptcp/.gitignore  |   1 -
- tools/testing/selftests/net/mptcp/Makefile    |   2 +-
- tools/testing/selftests/net/mptcp/mptcp_inq.c | 613 ------------------
- 3 files changed, 1 insertion(+), 615 deletions(-)
- delete mode 100644 tools/testing/selftests/net/mptcp/mptcp_inq.c
+Our CI did some validations and here is its report:
 
-diff --git a/tools/testing/selftests/net/mptcp/.gitignore b/tools/testing/selftests/net/mptcp/.gitignore
-index 833279fb34e2..c62e91ce385d 100644
---- a/tools/testing/selftests/net/mptcp/.gitignore
-+++ b/tools/testing/selftests/net/mptcp/.gitignore
-@@ -1,7 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0-only
- mptcp_connect
- mptcp_diag
--mptcp_inq
- mptcp_sockopt
- pm_nl_ctl
- *.pcap
-diff --git a/tools/testing/selftests/net/mptcp/Makefile b/tools/testing/selftests/net/mptcp/Makefile
-index 4c7e51336ab2..9c8da49313fb 100644
---- a/tools/testing/selftests/net/mptcp/Makefile
-+++ b/tools/testing/selftests/net/mptcp/Makefile
-@@ -8,7 +8,7 @@ TEST_PROGS := mptcp_connect.sh mptcp_connect_mmap.sh mptcp_connect_sendfile.sh \
- 	      mptcp_connect_checksum.sh pm_netlink.sh mptcp_join.sh diag.sh \
- 	      simult_flows.sh mptcp_sockopt.sh userspace_pm.sh
- 
--TEST_GEN_FILES = mptcp_connect pm_nl_ctl mptcp_sockopt mptcp_inq mptcp_diag
-+TEST_GEN_FILES = mptcp_connect pm_nl_ctl mptcp_sockopt mptcp_diag
- 
- TEST_FILES := mptcp_lib.sh settings
- 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_inq.c b/tools/testing/selftests/net/mptcp/mptcp_inq.c
-deleted file mode 100644
-index 8e8f6441ad8b..000000000000
---- a/tools/testing/selftests/net/mptcp/mptcp_inq.c
-+++ /dev/null
-@@ -1,613 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--
--#define _GNU_SOURCE
--
--#include <assert.h>
--#include <errno.h>
--#include <fcntl.h>
--#include <limits.h>
--#include <string.h>
--#include <stdarg.h>
--#include <stdbool.h>
--#include <stdint.h>
--#include <inttypes.h>
--#include <stdio.h>
--#include <stdlib.h>
--#include <strings.h>
--#include <unistd.h>
--#include <time.h>
--
--#include <sys/ioctl.h>
--#include <sys/random.h>
--#include <sys/socket.h>
--#include <sys/types.h>
--#include <sys/wait.h>
--
--#include <netdb.h>
--#include <netinet/in.h>
--
--#include <linux/tcp.h>
--#include <linux/sockios.h>
--
--#ifndef IPPROTO_MPTCP
--#define IPPROTO_MPTCP 262
--#endif
--#ifndef SOL_MPTCP
--#define SOL_MPTCP 284
--#endif
--
--static int pf = AF_INET;
--static int proto_tx = IPPROTO_MPTCP;
--static int proto_rx = IPPROTO_MPTCP;
--
--static void die_perror(const char *msg)
--{
--	perror(msg);
--	exit(1);
--}
--
--static void die_usage(int r)
--{
--	fprintf(stderr, "Usage: mptcp_inq [-6] [ -t tcp|mptcp ] [ -r tcp|mptcp]\n");
--	exit(r);
--}
--
--static void xerror(const char *fmt, ...)
--{
--	va_list ap;
--
--	va_start(ap, fmt);
--	vfprintf(stderr, fmt, ap);
--	va_end(ap);
--	fputc('\n', stderr);
--	exit(1);
--}
--
--static const char *getxinfo_strerr(int err)
--{
--	if (err == EAI_SYSTEM)
--		return strerror(errno);
--
--	return gai_strerror(err);
--}
--
--static void xgetaddrinfo(const char *node, const char *service,
--			 struct addrinfo *hints,
--			 struct addrinfo **res)
--{
--	int err;
--
--again:
--	err = getaddrinfo(node, service, hints, res);
--	if (err) {
--		const char *errstr;
--
--		if (err == EAI_SOCKTYPE) {
--			hints->ai_protocol = IPPROTO_TCP;
--			goto again;
--		}
--
--		errstr = getxinfo_strerr(err);
--
--		fprintf(stderr, "Fatal: getaddrinfo(%s:%s): %s\n",
--			node ? node : "", service ? service : "", errstr);
--		exit(1);
--	}
--}
--
--static int sock_listen_mptcp(const char * const listenaddr,
--			     const char * const port)
--{
--	int sock = -1;
--	struct addrinfo hints = {
--		.ai_protocol = IPPROTO_MPTCP,
--		.ai_socktype = SOCK_STREAM,
--		.ai_flags = AI_PASSIVE | AI_NUMERICHOST
--	};
--
--	hints.ai_family = pf;
--
--	struct addrinfo *a, *addr;
--	int one = 1;
--
--	xgetaddrinfo(listenaddr, port, &hints, &addr);
--	hints.ai_family = pf;
--
--	for (a = addr; a; a = a->ai_next) {
--		sock = socket(a->ai_family, a->ai_socktype, proto_rx);
--		if (sock < 0)
--			continue;
--
--		if (-1 == setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &one,
--				     sizeof(one)))
--			perror("setsockopt");
--
--		if (bind(sock, a->ai_addr, a->ai_addrlen) == 0)
--			break; /* success */
--
--		perror("bind");
--		close(sock);
--		sock = -1;
--	}
--
--	freeaddrinfo(addr);
--
--	if (sock < 0)
--		xerror("could not create listen socket");
--
--	if (listen(sock, 20))
--		die_perror("listen");
--
--	return sock;
--}
--
--static int sock_connect_mptcp(const char * const remoteaddr,
--			      const char * const port, int proto)
--{
--	struct addrinfo hints = {
--		.ai_protocol = IPPROTO_MPTCP,
--		.ai_socktype = SOCK_STREAM,
--	};
--	struct addrinfo *a, *addr;
--	int sock = -1;
--
--	hints.ai_family = pf;
--
--	xgetaddrinfo(remoteaddr, port, &hints, &addr);
--	for (a = addr; a; a = a->ai_next) {
--		sock = socket(a->ai_family, a->ai_socktype, proto);
--		if (sock < 0)
--			continue;
--
--		if (connect(sock, a->ai_addr, a->ai_addrlen) == 0)
--			break; /* success */
--
--		die_perror("connect");
--	}
--
--	if (sock < 0)
--		xerror("could not create connect socket");
--
--	freeaddrinfo(addr);
--	return sock;
--}
--
--static int protostr_to_num(const char *s)
--{
--	if (strcasecmp(s, "tcp") == 0)
--		return IPPROTO_TCP;
--	if (strcasecmp(s, "mptcp") == 0)
--		return IPPROTO_MPTCP;
--
--	die_usage(1);
--	return 0;
--}
--
--static void parse_opts(int argc, char **argv)
--{
--	int c;
--
--	while ((c = getopt(argc, argv, "h6t:r:")) != -1) {
--		switch (c) {
--		case 'h':
--			die_usage(0);
--			break;
--		case '6':
--			pf = AF_INET6;
--			break;
--		case 't':
--			proto_tx = protostr_to_num(optarg);
--			break;
--		case 'r':
--			proto_rx = protostr_to_num(optarg);
--			break;
--		default:
--			die_usage(1);
--			break;
--		}
--	}
--}
--
--/* wait up to timeout milliseconds */
--static void wait_for_ack(int fd, int timeout, size_t total)
--{
--	int i;
--
--	for (i = 0; i < timeout; i++) {
--		int nsd, ret, queued = -1;
--		struct timespec req;
--
--		ret = ioctl(fd, TIOCOUTQ, &queued);
--		if (ret < 0)
--			die_perror("TIOCOUTQ");
--
--		ret = ioctl(fd, SIOCOUTQNSD, &nsd);
--		if (ret < 0)
--			die_perror("SIOCOUTQNSD");
--
--		if ((size_t)queued > total)
--			xerror("TIOCOUTQ %u, but only %zu expected\n", queued, total);
--		assert(nsd <= queued);
--
--		if (queued == 0)
--			return;
--
--		/* wait for peer to ack rx of all data */
--		req.tv_sec = 0;
--		req.tv_nsec = 1 * 1000 * 1000ul; /* 1ms */
--		nanosleep(&req, NULL);
--	}
--
--	xerror("still tx data queued after %u ms\n", timeout);
--}
--
--static void connect_one_server(int fd, int unixfd)
--{
--	size_t len, i, total, sent;
--	char buf[4096], buf2[4096];
--	ssize_t ret;
--
--	len = rand() % (sizeof(buf) - 1);
--
--	if (len < 128)
--		len = 128;
--
--	for (i = 0; i < len ; i++) {
--		buf[i] = rand() % 26;
--		buf[i] += 'A';
--	}
--
--	buf[i] = '\n';
--
--	/* un-block server */
--	ret = read(unixfd, buf2, 4);
--	assert(ret == 4);
--
--	assert(strncmp(buf2, "xmit", 4) == 0);
--
--	ret = write(unixfd, &len, sizeof(len));
--	assert(ret == (ssize_t)sizeof(len));
--
--	ret = write(fd, buf, len);
--	if (ret < 0)
--		die_perror("write");
--
--	if (ret != (ssize_t)len)
--		xerror("short write");
--
--	ret = read(unixfd, buf2, 4);
--	assert(strncmp(buf2, "huge", 4) == 0);
--
--	total = rand() % (16 * 1024 * 1024);
--	total += (1 * 1024 * 1024);
--	sent = total;
--
--	ret = write(unixfd, &total, sizeof(total));
--	assert(ret == (ssize_t)sizeof(total));
--
--	wait_for_ack(fd, 5000, len);
--
--	while (total > 0) {
--		if (total > sizeof(buf))
--			len = sizeof(buf);
--		else
--			len = total;
--
--		ret = write(fd, buf, len);
--		if (ret < 0)
--			die_perror("write");
--		total -= ret;
--
--		/* we don't have to care about buf content, only
--		 * number of total bytes sent
--		 */
--	}
--
--	ret = read(unixfd, buf2, 4);
--	assert(ret == 4);
--	assert(strncmp(buf2, "shut", 4) == 0);
--
--	wait_for_ack(fd, 5000, sent);
--
--	ret = write(fd, buf, 1);
--	assert(ret == 1);
--	close(fd);
--	ret = write(unixfd, "closed", 6);
--	assert(ret == 6);
--
--	close(unixfd);
--}
--
--static void get_tcp_inq(struct msghdr *msgh, unsigned int *inqv)
--{
--	struct cmsghdr *cmsg;
--
--	for (cmsg = CMSG_FIRSTHDR(msgh); cmsg ; cmsg = CMSG_NXTHDR(msgh, cmsg)) {
--		if (cmsg->cmsg_level == IPPROTO_TCP && cmsg->cmsg_type == TCP_CM_INQ) {
--			memcpy(inqv, CMSG_DATA(cmsg), sizeof(*inqv));
--			return;
--		}
--	}
--
--	xerror("could not find TCP_CM_INQ cmsg type");
--}
--
--static void process_one_client(int fd, int unixfd)
--{
--	unsigned int tcp_inq;
--	size_t expect_len;
--	char msg_buf[4096];
--	char buf[4096];
--	char tmp[16];
--	struct iovec iov = {
--		.iov_base = buf,
--		.iov_len = 1,
--	};
--	struct msghdr msg = {
--		.msg_iov = &iov,
--		.msg_iovlen = 1,
--		.msg_control = msg_buf,
--		.msg_controllen = sizeof(msg_buf),
--	};
--	ssize_t ret, tot;
--
--	ret = write(unixfd, "xmit", 4);
--	assert(ret == 4);
--
--	ret = read(unixfd, &expect_len, sizeof(expect_len));
--	assert(ret == (ssize_t)sizeof(expect_len));
--
--	if (expect_len > sizeof(buf))
--		xerror("expect len %zu exceeds buffer size", expect_len);
--
--	for (;;) {
--		struct timespec req;
--		unsigned int queued;
--
--		ret = ioctl(fd, FIONREAD, &queued);
--		if (ret < 0)
--			die_perror("FIONREAD");
--		if (queued > expect_len)
--			xerror("FIONREAD returned %u, but only %zu expected\n",
--			       queued, expect_len);
--		if (queued == expect_len)
--			break;
--
--		req.tv_sec = 0;
--		req.tv_nsec = 1000 * 1000ul;
--		nanosleep(&req, NULL);
--	}
--
--	/* read one byte, expect cmsg to return expected - 1 */
--	ret = recvmsg(fd, &msg, 0);
--	if (ret < 0)
--		die_perror("recvmsg");
--
--	if (msg.msg_controllen == 0)
--		xerror("msg_controllen is 0");
--
--	get_tcp_inq(&msg, &tcp_inq);
--
--	assert((size_t)tcp_inq == (expect_len - 1));
--
--	iov.iov_len = sizeof(buf);
--	ret = recvmsg(fd, &msg, 0);
--	if (ret < 0)
--		die_perror("recvmsg");
--
--	/* should have gotten exact remainder of all pending data */
--	assert(ret == (ssize_t)tcp_inq);
--
--	/* should be 0, all drained */
--	get_tcp_inq(&msg, &tcp_inq);
--	assert(tcp_inq == 0);
--
--	/* request a large swath of data. */
--	ret = write(unixfd, "huge", 4);
--	assert(ret == 4);
--
--	ret = read(unixfd, &expect_len, sizeof(expect_len));
--	assert(ret == (ssize_t)sizeof(expect_len));
--
--	/* peer should send us a few mb of data */
--	if (expect_len <= sizeof(buf))
--		xerror("expect len %zu too small\n", expect_len);
--
--	tot = 0;
--	do {
--		iov.iov_len = sizeof(buf);
--		ret = recvmsg(fd, &msg, 0);
--		if (ret < 0)
--			die_perror("recvmsg");
--
--		tot += ret;
--
--		get_tcp_inq(&msg, &tcp_inq);
--
--		if (tcp_inq > expect_len - tot)
--			xerror("inq %d, remaining %d total_len %d\n",
--			       tcp_inq, expect_len - tot, (int)expect_len);
--
--		assert(tcp_inq <= expect_len - tot);
--	} while ((size_t)tot < expect_len);
--
--	ret = write(unixfd, "shut", 4);
--	assert(ret == 4);
--
--	/* wait for hangup. Should have received one more byte of data. */
--	ret = read(unixfd, tmp, sizeof(tmp));
--	assert(ret == 6);
--	assert(strncmp(tmp, "closed", 6) == 0);
--
--	sleep(1);
--
--	iov.iov_len = 1;
--	ret = recvmsg(fd, &msg, 0);
--	if (ret < 0)
--		die_perror("recvmsg");
--	assert(ret == 1);
--
--	get_tcp_inq(&msg, &tcp_inq);
--
--	/* tcp_inq should be 1 due to received fin. */
--	assert(tcp_inq == 1);
--
--	iov.iov_len = 1;
--	ret = recvmsg(fd, &msg, 0);
--	if (ret < 0)
--		die_perror("recvmsg");
--
--	/* expect EOF */
--	assert(ret == 0);
--	get_tcp_inq(&msg, &tcp_inq);
--	assert(tcp_inq == 1);
--
--	close(fd);
--}
--
--static int xaccept(int s)
--{
--	int fd = accept(s, NULL, 0);
--
--	if (fd < 0)
--		die_perror("accept");
--
--	return fd;
--}
--
--static int server(int unixfd)
--{
--	int fd = -1, r, on = 1;
--
--	switch (pf) {
--	case AF_INET:
--		fd = sock_listen_mptcp("127.0.0.1", "15432");
--		break;
--	case AF_INET6:
--		fd = sock_listen_mptcp("::1", "15432");
--		break;
--	default:
--		xerror("Unknown pf %d\n", pf);
--		break;
--	}
--
--	r = write(unixfd, "conn", 4);
--	assert(r == 4);
--
--	alarm(15);
--	r = xaccept(fd);
--
--	if (-1 == setsockopt(r, IPPROTO_TCP, TCP_INQ, &on, sizeof(on)))
--		die_perror("setsockopt");
--
--	process_one_client(r, unixfd);
--
--	close(fd);
--	return 0;
--}
--
--static int client(int unixfd)
--{
--	int fd = -1;
--
--	alarm(15);
--
--	switch (pf) {
--	case AF_INET:
--		fd = sock_connect_mptcp("127.0.0.1", "15432", proto_tx);
--		break;
--	case AF_INET6:
--		fd = sock_connect_mptcp("::1", "15432", proto_tx);
--		break;
--	default:
--		xerror("Unknown pf %d\n", pf);
--	}
--
--	connect_one_server(fd, unixfd);
--
--	return 0;
--}
--
--static void init_rng(void)
--{
--	unsigned int foo;
--
--	if (getrandom(&foo, sizeof(foo), 0) == -1) {
--		perror("getrandom");
--		exit(1);
--	}
--
--	srand(foo);
--}
--
--static pid_t xfork(void)
--{
--	pid_t p = fork();
--
--	if (p < 0)
--		die_perror("fork");
--	else if (p == 0)
--		init_rng();
--
--	return p;
--}
--
--static int rcheck(int wstatus, const char *what)
--{
--	if (WIFEXITED(wstatus)) {
--		if (WEXITSTATUS(wstatus) == 0)
--			return 0;
--		fprintf(stderr, "%s exited, status=%d\n", what, WEXITSTATUS(wstatus));
--		return WEXITSTATUS(wstatus);
--	} else if (WIFSIGNALED(wstatus)) {
--		xerror("%s killed by signal %d\n", what, WTERMSIG(wstatus));
--	} else if (WIFSTOPPED(wstatus)) {
--		xerror("%s stopped by signal %d\n", what, WSTOPSIG(wstatus));
--	}
--
--	return 111;
--}
--
--int main(int argc, char *argv[])
--{
--	int e1, e2, wstatus;
--	pid_t s, c, ret;
--	int unixfds[2];
--
--	parse_opts(argc, argv);
--
--	e1 = socketpair(AF_UNIX, SOCK_DGRAM, 0, unixfds);
--	if (e1 < 0)
--		die_perror("pipe");
--
--	s = xfork();
--	if (s == 0) {
--		close(unixfds[0]);
--		ret = server(unixfds[1]);
--		close(unixfds[1]);
--		return ret;
--	}
--
--	close(unixfds[1]);
--
--	/* wait until server bound a socket */
--	e1 = read(unixfds[0], &e1, 4);
--	assert(e1 == 4);
--
--	c = xfork();
--	if (c == 0)
--		return client(unixfds[0]);
--
--	close(unixfds[0]);
--
--	ret = waitpid(s, &wstatus, 0);
--	if (ret == -1)
--		die_perror("waitpid");
--	e1 = rcheck(wstatus, "server");
--	ret = waitpid(c, &wstatus, 0);
--	if (ret == -1)
--		die_perror("waitpid");
--	e2 = rcheck(wstatus, "client");
--
--	return e1 ? e1 : e2;
--}
--- 
-2.48.1
+- KVM Validation: normal: Success! =E2=9C=85
+- KVM Validation: debug: =
+Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success=
+! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =
+=E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
+uns/17677628486
 
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/d377d14467b4
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1001827
+
+
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
