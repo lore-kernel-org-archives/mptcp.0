@@ -1,42 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 806203596D
-	for <mptcp@lists.linux.dev>; Sat, 13 Sep 2025 00:39:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02ECB6BB5B
+	for <mptcp@lists.linux.dev>; Sat, 13 Sep 2025 00:51:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757723959; cv=none; b=XXkgx4PRKgRM5zsIagToMH2JPScFheEEPMlcXiOCK3UWg9P2tkEOq7qhStnWUC5I+GSRz8cpbArNkzSP0vlKXoifQ4AL/eZIV2ISOEQp/6KN2wrhomtFlavSECh+EoGWGtec9Y8A1DYN1Oh/uJTThcJ72/Hn5PQfsE+I1LtospY=
+	t=1757724680; cv=none; b=r67vnqdcrZfxUvZ+WhYknPWGsw8ggzG+g8LvAfq0zuhsDEMAEavVxVueZ5Wf9Ut9iUUv7navCqrfyhOSRckwFbgquZhTAJDst0qtt6PimBFK/1V3qTBY7pdaNh7KQc13LwmoiLtFkohGGaIq1qKmk8XyK8nRvU3n3i8onBnTOGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757723959; c=relaxed/simple;
-	bh=W1TrNXyK3baNrw+Eky2FBKNJsJGOe6HbIPXU5mFXflU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qDVTFDPoabUN8pgMkWgcgK6qUVdVdUD5eOe14C7hMUF/CBv9NkImoOGCykH1CB97dmgd1oKzweOEW4gS0DXdBCCwcJSxYneJB86cWIJlUcl5jyYRsATvVPwidlKMiZvhd5LolKXy9nbKpVSoRK60IXkqEs2i/0rAmOhTOb1I9RY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XKeoikBO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1757724680; c=relaxed/simple;
+	bh=wsCMWK9O0Z/PM63c7I2uDIrzDne20DMQ6CeX9RZe4po=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=KHS/BbT+gAbK/xh8kijSc9wH7k5P1i+2y1t8RpiPkH8ocS1/aVqS41ecgW2p6RdkfsK9PZehSkpd2MKFlnKk5/7TQ6rdd7KzVR1Bv1+CSN306s4lT2WkSR8CXks2U9yUQD1x429de3T04y3Ue8Nwc+17bhq6Oq8vLfZ9SSI7g/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MtMp5n5B; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XKeoikBO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A340AC4CEF1;
-	Sat, 13 Sep 2025 00:39:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MtMp5n5B"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD2A4C4CEF1;
+	Sat, 13 Sep 2025 00:51:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757723958;
-	bh=W1TrNXyK3baNrw+Eky2FBKNJsJGOe6HbIPXU5mFXflU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=XKeoikBOIPvaclXZc7N2DjegMkYqOFI6OMs5cYjmHMkUHnm0ZS/6GuFBqE3Yzc6N8
-	 zz5ZYBoyhiU2vzfbHxVKiWmk29prOkbFV1GPmxvQI+yL7Pm3cb2sHGx9JR2yg2D1wh
-	 zurHaes257qadQdoiawWuTtyxNMuR0FOjZU6yE07IJnpjsNtHAmTYCC1BSosUXTO5Y
-	 xZHFNHChk+oB1QlU5/louD4k8i9dQUBOM8NwnoHrVVqdMBuU39RNuMc9T1XnOtdclb
-	 xiJdd1SDChsxtmNFOuF9+2MqLlTtTF5BuR010FpoqsEH9qMsq/UTDndG1P88aNmlIB
-	 3ZXIe775djafA==
+	s=k20201202; t=1757724679;
+	bh=wsCMWK9O0Z/PM63c7I2uDIrzDne20DMQ6CeX9RZe4po=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=MtMp5n5BGBChgXbQWOyWLGP6NAUcIv0FoLQN8kqJ9XMovtrNxOtty6ir0z6zMNNQo
+	 eDFfg2jRLiwiXCaH9PBFYoDasw09UR6zFax64T/mnVL9xludSgzXHOlP/aIm8nMvLS
+	 AQOMUf5Zb/qWxmDK7WBVUTJP8KffJ6o+PFd3u5POAgP42jRJh/WH/is+VjsWYIWMJK
+	 LVJ7R6ZpYseyvXM0fc50SoQUBJnQFrCUWjfUyGFHxsvrNjlHpUvL7L8jKQjuWcZYrM
+	 qCOby0jG5kc666wLCNUqAfB6g/Ny/Yfg/835UiqYZ0fVkUHcEcAwlFUiPm9jbG504h
+	 +HBn9/VJOJywQ==
+Message-ID: <3bd3df90d2e4009b4e566c0e6360b84514bb4c70.camel@kernel.org>
+Subject: Re: [PATCH mptcp-next v10 3/9] tcp: drop release and lock again in
+ splice_read
 From: Geliang Tang <geliang@kernel.org>
-To: mptcp@lists.linux.dev,
-	hare@kernel.org
-Cc: Geliang Tang <tanggeliang@kylinos.cn>,
-	Matthieu Baerts <matttbe@kernel.org>
-Subject: [PATCH mptcp-next v11 8/8] selftests: mptcp: connect: cover splice mode
-Date: Sat, 13 Sep 2025 08:37:27 +0800
-Message-ID: <e33b18b0f24b325bf13c1334d232dccbea2ce876.1757723270.git.tanggeliang@kylinos.cn>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <cover.1757723270.git.tanggeliang@kylinos.cn>
-References: <cover.1757723270.git.tanggeliang@kylinos.cn>
+To: Mat Martineau <martineau@kernel.org>
+Cc: mptcp@lists.linux.dev, Geliang Tang <tanggeliang@kylinos.cn>
+Date: Sat, 13 Sep 2025 08:51:16 +0800
+In-Reply-To: <397811f8-3684-0457-eb02-6fd16cb42876@kernel.org>
+References: <cover.1756780274.git.tanggeliang@kylinos.cn>
+	 <89fd2ab6630a8aceceef58273faae8db195ef2e6.1756780274.git.tanggeliang@kylinos.cn>
+	 <397811f8-3684-0457-eb02-6fd16cb42876@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.56.0-1 
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -45,44 +47,66 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+On Fri, 2025-09-12 at 16:34 -0700, Mat Martineau wrote:
+> On Tue, 2 Sep 2025, Geliang Tang wrote:
+> 
+> > From: Geliang Tang <tanggeliang@kylinos.cn>
+> > 
+> > In the main loop of tcp_splice_read(), release_sock() is invoked to
+> > release
+> > the socket lock, and then lock_sock() is immediately invoked to
+> > hold the
+> > socket lock again.
+> > 
+> > It looks like these two calls are useless, so let's drop them.
+> 
+> Hi Geliang -
+> 
+> I think the intent here is to allow incoming packets to be processed
+> from 
+> the backlog before __tcp_splice_read() is called on the next loop 
+> iteration, so there's a chance that more data can be processed in a
+> single 
+> call to tcp_splice_read().
 
-The "splice" alternate mode for mptcp_connect.sh/.c is available now,
-this patch adds mptcp_connect_splice.sh to test it in the MPTCP CI by
-default.
+Thanks Mat, I didn't understand the intent of this code before.
 
-Suggested-by: Matthieu Baerts <matttbe@kernel.org>
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
----
- tools/testing/selftests/net/mptcp/Makefile                | 2 +-
- tools/testing/selftests/net/mptcp/mptcp_connect_splice.sh | 5 +++++
- 2 files changed, 6 insertions(+), 1 deletion(-)
- create mode 100755 tools/testing/selftests/net/mptcp/mptcp_connect_splice.sh
+> 
+> Was this lock reacquisition causing any issues?
 
-diff --git a/tools/testing/selftests/net/mptcp/Makefile b/tools/testing/selftests/net/mptcp/Makefile
-index 4c7e51336ab2..83c1602fb6bd 100644
---- a/tools/testing/selftests/net/mptcp/Makefile
-+++ b/tools/testing/selftests/net/mptcp/Makefile
-@@ -5,7 +5,7 @@ top_srcdir = ../../../../..
- CFLAGS += -Wall -Wl,--no-as-needed -O2 -g -I$(top_srcdir)/usr/include $(KHDR_INCLUDES)
- 
- TEST_PROGS := mptcp_connect.sh mptcp_connect_mmap.sh mptcp_connect_sendfile.sh \
--	      mptcp_connect_checksum.sh pm_netlink.sh mptcp_join.sh diag.sh \
-+	      mptcp_connect_splice.sh mptcp_connect_checksum.sh pm_netlink.sh mptcp_join.sh diag.sh \
- 	      simult_flows.sh mptcp_sockopt.sh userspace_pm.sh
- 
- TEST_GEN_FILES = mptcp_connect pm_nl_ctl mptcp_sockopt mptcp_inq mptcp_diag
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect_splice.sh b/tools/testing/selftests/net/mptcp/mptcp_connect_splice.sh
-new file mode 100755
-index 000000000000..241254a966c9
---- /dev/null
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect_splice.sh
-@@ -0,0 +1,5 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+
-+MPTCP_LIB_KSFT_TEST="$(basename "${0}" .sh)" \
-+	"$(dirname "${0}")/mptcp_connect.sh" -m splice "${@}"
--- 
-2.48.1
+No, I just dropped this patch in v11, and add this 'release and lock
+again' code in mptcp_splice_read() too.
 
+-Geliang
+
+> 
+> Thanks,
+> 
+> Mat
+> 
+> 
+> > 
+> > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> > ---
+> > net/ipv4/tcp.c | 2 --
+> > 1 file changed, 2 deletions(-)
+> > 
+> > diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
+> > index c9eb94a6c41a..c6425f13afd0 100644
+> > --- a/net/ipv4/tcp.c
+> > +++ b/net/ipv4/tcp.c
+> > @@ -866,8 +866,6 @@ ssize_t tcp_splice_read(struct socket *sock,
+> > loff_t *ppos,
+> > 
+> > 		if (!tss.len || !timeo)
+> > 			break;
+> > -		release_sock(sk);
+> > -		lock_sock(sk);
+> > 
+> > 		if (sk->sk_err || sk->sk_state == TCP_CLOSE ||
+> > 		    (sk->sk_shutdown & RCV_SHUTDOWN) ||
+> > -- 
+> > 2.48.1
+> > 
+> > 
+> > 
