@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B20B329E109
-	for <mptcp@lists.linux.dev>; Tue, 16 Sep 2025 09:52:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FBDC25BEE7
+	for <mptcp@lists.linux.dev>; Tue, 16 Sep 2025 10:13:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758016361; cv=none; b=GKQethQakox18+GNonxenqcn/aZVd5yin7J7AX7dwTfm4ayWYeMl2YiSUzeYNaHahsLsmKlyXKCvDhr9+iTu07xBOU9MKC2gkVDt6Jks5jcaZxHKRQVESBYfDn1b/DXZQpTypUeGsjb3FMD6JVu64nLrN7luVSC5/eb0hpK/ZJ8=
+	t=1758017631; cv=none; b=up2i/YLyDN1J3LayrVFLDOhORKgrd8DmdMs0t0iQiVk9OQLkxy70rmXsQjCw9QzrFKyu6pWKcF1dCxLrdZmpC7q4MeoZyXXH57fL/lmvH7EdAvLuKjDXtBnaLIfmw2xMEAybYYbD7nMGPAuo+Wxhq/bDGcsmihfa68iqP4riDGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758016361; c=relaxed/simple;
-	bh=Alp17NTCCl6QwReBMCEVEEyBERVV2g/WSY/bKyyWC8s=;
+	s=arc-20240116; t=1758017631; c=relaxed/simple;
+	bh=9f7/xm39pC04vj/CTomZf/5lkPWCtKs2IYsGOCKvJ1I=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=eoMYNbg5idGDr2SiR/Q/eH+Y/FlNBZjC2M29DjVZk3d7jOKN2qGDRfT2/RNDqwve2/VpxZIMHDKwuoPYpNubx+Izp5m1MSZnWPxu/or+BxXLk8dGvsYN3wWExVYxM9oPCc5n4LOnrMXxPAOxa3naBvjrAhKLS+DETNzaY1PIi1w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WV8P0kTl; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=r3qveTRgaxWnek4fKj8AWfebPr+cIiwqZsl2onnNYc8d+Mtur4rhAszOjTrjDikKEdql5PeCEJ0SPWz09sxqDx7JDGGeTVDSSWOoy9RpHUhRApi44ihanpeUX7STp0E/+1fexmAa37WzR5E2d7MwWjh3LlCXTFQR6u+Dlq5zmcs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=atDnLRYZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WV8P0kTl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3495C4CEEB;
-	Tue, 16 Sep 2025 09:52:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="atDnLRYZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 243D7C4CEEB;
+	Tue, 16 Sep 2025 10:13:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758016361;
-	bh=Alp17NTCCl6QwReBMCEVEEyBERVV2g/WSY/bKyyWC8s=;
+	s=k20201202; t=1758017630;
+	bh=9f7/xm39pC04vj/CTomZf/5lkPWCtKs2IYsGOCKvJ1I=;
 	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=WV8P0kTlFESNIIpp4OcgPcgVSatQnDmn8JODcSDrS73xjXe9JnfYK9wp4cO0701Z0
-	 wt/MYAJ3D+CEywnx9XoxVEd+msAPOMPt4lvQOj4HJ/leRspB1xmRdSw52Jh//Uq9FM
-	 oY9iPe0BVVDav9v8aIqtDWQMj5oG5LaVSZw328XCNVP8Zp6JHA5rkuo448gwHArqY2
-	 GIJLXmAB4e58fATEtaI5p0nyVS+ZGf6V5+OlwzvYJhWzeq77gSqcM+n4kGih5rFaAD
-	 nbbKDRRWp2faJF2EoCqdPr1cuq0ldeUMtbGZ5HUbBIGhagwXWvy2YxhkL+zVcLG5FF
-	 s5Yr5oXKl5d/w==
-Message-ID: <98b2019c-c59a-4ed2-83d3-8fd7823005f1@kernel.org>
-Date: Tue, 16 Sep 2025 11:52:38 +0200
+	b=atDnLRYZ94yJ76QnxOe5B8293jduSqq9fpjdSOSbWOy2RKVEH+1rgyCB8SYBAJsL5
+	 /JIOlFHMvITSP9UkwjRk0A7lTl9Inf98Yxaqzj6ek5ioCvRsj9SAhf4p5+AfphsMZW
+	 GSL+NRJOYWf4wWCGoRgPbz9AOmJxPLbHbiGmSGLNgj/rFrBZJUMgJO1GMZX73uk5+P
+	 TsQ8nStGcjS5jYH+LqJpqJiWv56PnE4vkRdLFTrLKjIuB7MOwbozhdTBXzFHl96Sr0
+	 7FDlg9i4xm1YRplYB9oqmH1Ai17771OuFYS7btx29JBukkc7qPbPJRIRU4JNFjBTlt
+	 jWDhA9/quh0/w==
+Message-ID: <0d772296-4612-4ced-a7c4-ebd0ce7a8760@kernel.org>
+Date: Tue, 16 Sep 2025 12:13:47 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,11 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net 2/2] selftests: mptcp: join: validate C-flag +
- def limit
+Subject: Re: [PATCH mptcp-next] mptcp: use _BITUL() instead of (1 << x)
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, MPTCP Upstream <mptcp@lists.linux.dev>
-References: <20250915-pm-c-flag-client-default-v1-0-6bb241e4d991@kernel.org>
- <20250915-pm-c-flag-client-default-v1-2-6bb241e4d991@kernel.org>
- <fc540d7f9ae539c3b9dac8757348b22a20ba7e09.camel@kernel.org>
+References: <20250916-mptcp-pm-addr-flag-bitul-v1-1-5805a6ddde27@kernel.org>
+ <27a4b87484020388b4c2f8ea9855012f95dc7fd4.camel@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,88 +85,41 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <fc540d7f9ae539c3b9dac8757348b22a20ba7e09.camel@kernel.org>
+In-Reply-To: <27a4b87484020388b4c2f8ea9855012f95dc7fd4.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 16/09/2025 11:24, Geliang Tang wrote:
-> On Mon, 2025-09-15 at 20:11 +0200, Matthieu Baerts (NGI0) wrote:
->> The previous commit adds an exception for the C-flag case. The
->> 'mptcp_join.sh' selftest is extended to validate this case.
+On 16/09/2025 11:46, Geliang Tang wrote:
+> Hi Matt,
+> 
+> Thanks for this patch.
+> 
+> On Tue, 2025-09-16 at 11:04 +0200, Matthieu Baerts (NGI0) wrote:
+>> Simply to use the proper way to declare bits, and to align with all
+>> other flags declared in this file.
 >>
->> In this subtest, there is a typical CDN deployment with a client
->> where
->> MPTCP endpoints have been 'automatically' configured:
+>> No functional changes intended.
 >>
->> - the server set net.mptcp.allow_join_initial_addr_port=0
->>
->> - the client has multiple 'subflow' endpoints, and the default
->> limits:
->>   not accepting ADD_ADDRs.
->>
->> Without the parent patch, the client is not able to establish new
->> subflows using its 'subflow' endpoints. The parent commit fixes that.
->>
->> The 'Fixes' tag here below is the same as the one from the previous
->> commit: this patch here is not fixing anything wrong in the
->> selftests,
->> but it validates the previous fix for an issue introduced by this
->> commit
->> ID.
->>
->> Fixes: df377be38725 ("mptcp: add deny_join_id0 in
->> mptcp_options_received")
 >> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
->> ---
->>  net/mptcp/pm.c                                  |  4 +++-
->>  net/mptcp/pm_kernel.c                           |  1 +
->>  tools/testing/selftests/net/mptcp/mptcp_join.sh | 11 +++++++++++
->>  3 files changed, 15 insertions(+), 1 deletion(-)
->>
->> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
->> index
->> fda8d1880224dedbbfb20954f93a04da435346df..5d037f9d4e0b4d158beaaa5a48c
->> 4efb50fe9b5cb 100644
->> --- a/net/mptcp/pm.c
->> +++ b/net/mptcp/pm.c
->> @@ -637,7 +637,9 @@ void mptcp_pm_add_addr_received(const struct sock
->> *ssk,
->>  		} else {
->>  			__MPTCP_INC_STATS(sock_net((struct sock
->> *)msk), MPTCP_MIB_ADDADDRDROP);
->>  		}
->> -	/* id0 should not have a different address ; special case
->> for C-flag */
->> +	/* - id0 should not have a different address
->> +	 * - special case for C-flag: linked to
->> fill_local_addresses_vec()
->> +	 */
 > 
-> How about squashing this into patch 1.
+> LGTM!
 > 
->>  	} else if ((addr->id == 0 &&
->> !mptcp_pm_is_init_remote_addr(msk, addr)) ||
->>  		   (addr->id > 0 && !READ_ONCE(pm->accept_addr) &&
->>  		    (!READ_ONCE(msk->pm.remote_deny_join_id0) ||
->> diff --git a/net/mptcp/pm_kernel.c b/net/mptcp/pm_kernel.c
->> index
->> 408801e20ed6e874b80ccbf38af76abc13615a3a..aae9b92aea4715dabaf3101a034
->> 1ab7eab16f407 100644
->> --- a/net/mptcp/pm_kernel.c
->> +++ b/net/mptcp/pm_kernel.c
->> @@ -394,6 +394,7 @@ static unsigned int
->> fill_local_addresses_vec(struct mptcp_sock *msk,
->>  
->>  	pernet = pm_nl_get_pernet_from_msk(msk);
->>  	subflows_max = mptcp_pm_get_subflows_max(msk);
->> +	/* linked to conditions in mptcp_pm_add_addr_received() */
-> 
-> And squash this too.
+> Reviewed-by: Geliang Tang <geliang@kernel.org>
 
-Arf, sorry, I missed that and squash these modifications in the wrong
-commit. Yes, it is for patch 1/2.
+Thank you for the review!
+
+Now in our tree:
+
+New patches for t/upstream:
+- 433d828a5f5d: mptcp: use _BITUL() instead of (1 << x)
+- Results: 7064ceb50d7f..1b2f5ca10592 (export)
+
+Tests are now in progress:
+
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/8a11b0ac082577aced4e944a6ef39399e2efd6b1/checks
 
 Cheers,
 Matt
