@@ -1,187 +1,130 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43FDC315D2C
-	for <mptcp@lists.linux.dev>; Tue, 16 Sep 2025 10:23:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BBF62C15BB
+	for <mptcp@lists.linux.dev>; Tue, 16 Sep 2025 11:00:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758018234; cv=none; b=pvTl4BOyhpKiaCuhSLFD8DfCxLFaQgpJBEurJP2OOeksyq/FwmTZxUBlkTIqxeb40R1VJmfNny0lVy1YsmYNcxwzR901VkIgMfFTy9A0pgD3VsTwbDhlyaJ8cvKL9CHlEmxyqxTGj4PS/6Z/Mm9ScS8QrO13CmlySR64+VTsLDY=
+	t=1758020412; cv=none; b=K1RZPiPON0lY4qgV3DFZ/FKo9jB5haq8ZBAzuBcNJ60gaPj4MsvdsWeGJaO3b7RfLncnL53cVZx3+OGYmUsKdpeiIXtcFCj0phvv805qd0YUdjIgJdWU96//YA89Fny00ThHEzahFko9gZYVFQq0Rzz6p64HcxjXPxU0iFNulwA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758018234; c=relaxed/simple;
-	bh=ugSD2ROKnN3TTPl5ttfJvjWM3H+/4gPZPC1SgX1h+AY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=BDy6dMmDZuIargeQruA3Bizjbnkvnz6FjcUEY+lDepzdcWAGLLTHEyA0j7K+CHFtG2cMKaPXef6A7K8mqU2muUyzAWTFcwVUXfkihNCpggBCNfj3qRVvLNT6L3FmVNaA0xGt3FbNrdTfMPWYlCcKqugh26Nmkp0YRruyY34JmRs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ucPScytq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1758020412; c=relaxed/simple;
+	bh=fADjOi17Ed3bHfYjZeWdymZZ99jDEtEFNigqxwc82Io=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=VQjZUsaS3OSxQklTYmw1uC+NdVgDtA5x33crorpCc7MK2QVtWmSS+iSr16Qi+AnYi3QZBeUhQX/XwjQ0SAS9yU8q6OSNO/FWznn3d5GNCy4uKPOz7S3pzq11/Bp+Ru0EqT5Y+dPC2MbN5vseBJHWPT8QIhjqXhM6LaE4r8HrouA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=clxOecV5; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ucPScytq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 977D7C4CEEB;
-	Tue, 16 Sep 2025 10:23:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758018234;
-	bh=ugSD2ROKnN3TTPl5ttfJvjWM3H+/4gPZPC1SgX1h+AY=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=ucPScytq97nKLDcdBzlvp7HLjh4zFBBSeW8xsSv+CCCoJbP6XUF09LqnRL+P2wETX
-	 49dqasj6YTkBC6tNRAgv4G7Dvdc3p8TUKnlWMEDLlTwrjTJuk9Z2NIIMwFO23QOO6Q
-	 bj7Ysz8ewPl7QLxITEl9tQb2wBAZLspDdhMarvBZutwwn6xNDzwQc2TtIpbupHRlU+
-	 PEluEtr/rRgCn2/UXT56fnUfDMWwFkNEhMxqQ5Naw42EJx0jF1hRfdRNuNMSEJhdFk
-	 cBEQK08cWHHDiWeRXZNLypXoJqO84Q0YRv5dYY97kxJ1LXd7rVXqdOhpb7iMTlCvMb
-	 6o8PN7hRCzsLg==
-Message-ID: <291f8169-15e8-426a-a57d-838caf9d2342@kernel.org>
-Date: Tue, 16 Sep 2025 12:23:51 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="clxOecV5"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2445826fd9dso62846775ad.3
+        for <mptcp@lists.linux.dev>; Tue, 16 Sep 2025 04:00:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1758020410; x=1758625210; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KPCLgFUA173f9FDi5MBXvxxZG4PA3OObduTXiBQLwdI=;
+        b=clxOecV5APNVXLmOQKdycUCwTWmoF44KzB4SZq1b1uhMTufDZwrhy6dAdPDtfjSRb3
+         MyZBKk+LtYwK4fC4Z3HNZvdP639dyA/ESN3cJpoZXEOTLWPb4eRgIB7l68zPjuBrdPfZ
+         cvWviQRmwtDAasf9sHl157B0XRKFbZmM2a7YHDMphfu3wxt1SQH/ZfUkke6idUcYKqVs
+         JlvY8m0z7bOEM9wB9xXmdrGnBLPT5+gGafi+Ol7VaRTAnFr5qsPHZmMmvcedD+AQBFtk
+         QM5oB+vSBLDXT6hiwWhPDzchabGmyw91wytGwyDRpX2KHZz6JxmIigyBsmCHw2i8D6us
+         lReg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758020410; x=1758625210;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=KPCLgFUA173f9FDi5MBXvxxZG4PA3OObduTXiBQLwdI=;
+        b=ODEGpRVQFhq6XJojf6Cu9iB0g+9h2FnamGuEcnlozMCcoQ9v/eSIXmboqwWwqk2jEv
+         9XTe4FkJbqg9vcaYfPAdZ0pmx6FGW4Zo64WODko6iO+sq0BoToSNSvMs5Easw35sF/Cf
+         snxqjpSrLE0lM0sc/kb5wPVMGGDU1KwTZoc2JsLHJs+luJYRH2DdoAXGBdCAwvxHA2+Q
+         442qbxeqvTfSu2I07VSESox+4Wc8YcP5ma93LKY615Ji18PxTzSgIinOJMbPQH/MT+ib
+         HOse0VTfFe8Dy/DVWVE0CXYnzJLyPxxDsTslxc1LO4nNbA6eLM6GEQj4IKYIkjM/U84r
+         prRg==
+X-Gm-Message-State: AOJu0YwCTiVEZAaf5vMFVRB3ICU1riDQC6D6NOXyA99Fzf6Cxa/f/RCS
+	1CJKdG9jBiYSRmxld5Yo7PFf5ZHdsnVn/muqClXZx+5BJgehMhcIvMo=
+X-Gm-Gg: ASbGncs2Ur4znsk5TFXOwkGFCH5Pv1zUIwxnXgTQRIIlaSNnlk+GhO5HmP4/xuWc8To
+	9tSLDRajW5zAj/3qrwJUUsyzGJx3Pi3+btEd5afbEHU0/95542cxmqtRXHxwAp6oMyI1W5LnwqE
+	eLYHH2CkFN+App8d5O3Bxtmq5/5uB53aALNKyh6cLTkL1UezNaJNNX878TYMvlintBMNIg1OxZo
+	P0Www3inBb+va1SZiWR2Q3FnYL3yAvi/G0vQalrx6ykZQqFvB4Ik6syFQkqGpM5XyHKuVCRyiUV
+	4MpxVMTsl9CZ+ahejAkZ2cDmZVy2XHShlOkGy5xqkuvcDIrWpSfvQ3n7TSLc9cnObj3cMYtcCHp
+	E7m0S341iU1ySNU+AXFlHhg0pCKitGcKEvw==
+X-Google-Smtp-Source: AGHT+IFdLEZICpdZA10wgCVACkNRel9MiIJ7RG+KWkdOVI6KqVY1/JXQPe9PDnAFQDpE8sxcmdjf+A==
+X-Received: by 2002:a17:903:46c3:b0:264:3519:80d0 with SMTP id d9443c01a7336-264351981e4mr111419265ad.33.1758020410329;
+        Tue, 16 Sep 2025 04:00:10 -0700 (PDT)
+Received: from [127.0.0.1] ([52.159.246.3])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-267dbd64df2sm12416805ad.109.2025.09.16.04.00.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Sep 2025 04:00:09 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <20250916-mptcp-pm-addr-flag-bitul-v1-1-5805a6ddde27@kernel.org>
+References:
+ <20250916-mptcp-pm-addr-flag-bitul-v1-1-5805a6ddde27@kernel.org>
+Subject: Re: [PATCH mptcp-next] mptcp: use _BITUL() instead of (1 << x)
+Message-ID: <7f50a6c0-2224-1dd3-187e-ff6247956ac8@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 16 Sep 2025 11:00:09 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net 1/2] mptcp: pm: in-kernel: usable client side
- with C-flag
-Content-Language: en-GB, fr-BE
-To: Geliang Tang <geliang@kernel.org>, MPTCP Upstream <mptcp@lists.linux.dev>
-References: <20250915-pm-c-flag-client-default-v1-0-6bb241e4d991@kernel.org>
- <20250915-pm-c-flag-client-default-v1-1-6bb241e4d991@kernel.org>
- <9c116c2f5b969325a3c9f4c04b6e23ad849f7671.camel@kernel.org>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <9c116c2f5b969325a3c9f4c04b6e23ad849f7671.camel@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
-Hi Geliang,
+Hi Matthieu,
 
-On 16/09/2025 12:16, Geliang Tang wrote:
-> Hi Matt,
-> 
-> On Mon, 2025-09-15 at 20:11 +0200, Matthieu Baerts (NGI0) wrote:
->> When servers set the C-flag in their MP_CAPABLE to tell clients not
->> to
->> create subflows to the initial address and port, clients will likely
->> not
->> use their other endpoints. That's because the in-kernel path-manager
->> uses the 'subflow' endpoints to create subflows only to the initial
->> address and port.
->>
->> If the limits have not been modified to accept ADD_ADDR, the client
->> doesn't try to establish new subflows. If the limits accept ADD_ADDR,
->> the routing routes will be used to select the source IP.
->>
->> The C-flag is typically set when the server is operating behind a
->> legacy
->> Layer 4 load balancer, or using anycast IP address. Clients having
->> their
->> different 'subflow' endpoints setup, don't end up creating multiple
->> subflows as expected, and causing some deployment issues.
->>
->> A special case is then added here: when servers set the C-flag in the
->> MPC and directly sends an ADD_ADDR, this single ADD_ADDR is accepted.
->> The 'subflows' endpoints will then be used with this new remote IP
->> and
->> port. This exception is only allowed when the ADD_ADDR is sent
->> immediately after the 3WHS, and makes the client switching to the
->> 'fully
->> established' mode. After that, 'select_local_address()' will not be
->> able
->> to find any subflows, because 'id_avail_bitmap' will be filled in
->> mptcp_pm_create_subflow_or_signal_addr(), when switching to 'fully
->> established' mode.
+Thank you for your modifications, that's great!
 
-(...)
+Our CI did some validations and here is its report:
 
->> diff --git a/net/mptcp/pm_kernel.c b/net/mptcp/pm_kernel.c
->> index
->> f30df8e884a0b3de9fb092e5774cafe08f6350ce..408801e20ed6e874b80ccbf38af
->> 76abc13615a3a 100644
->> --- a/net/mptcp/pm_kernel.c
->> +++ b/net/mptcp/pm_kernel.c
+- KVM Validation: normal: Success! =E2=9C=85
+- KVM Validation: debug: =
+Unstable: 1 failed test(s): packetdrill_mp_capable =F0=9F=94=B4
+- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/177612=
+40676
 
-(...)
->> @@ -419,6 +427,37 @@ static unsigned int
->> fill_local_addresses_vec(struct mptcp_sock *msk,
->>  	}
->>  	rcu_read_unlock();
->>  
->> +	/* Special case: peer sets the C flag, accept one ADD_ADDR
->> if default
->> +	 * limits are used -- accepting no ADD_ADDR -- and use
->> subflow endpoints
->> +	 */
->> +	if (!i && deny_join_id0) {
->> +		unsigned int local_addr_max =
->> mptcp_pm_get_local_addr_max(msk);
->> +
->> +		while (msk->pm.local_addr_used < local_addr_max &&
->> +		       msk->pm.subflows < subflows_max) {
->> +			struct mptcp_pm_local *local = &locals[i];
->> +
->> +			if (!select_local_address(pernet, msk,
->> local))
->> +				break;
->> +
->> +			__clear_bit(local->addr.id, msk-
->>> pm.id_avail_bitmap);
->> +
->> +			if (!mptcp_pm_addr_families_match(sk,
->> &local->addr,
->> +							  remote))
-> 
-> Here we need to consider the case of v4mapped addresses, same as in the
-> section below "/* If the array is empty */".
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/9353586010dd
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1002844
 
-I'm not sure to understand: here, we pick a local, then
-mptcp_pm_addr_families_match() takes care of the v4mapped addresses.
 
-Here under, we define a local, and we want to take one for the same
-address family. We still need the check just in case we receive a v6
-address via the ADD_ADDR, and v6 is not supported.
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
 
-So I don't need to change anything here. Or did I miss something?
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
 
 Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
-
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
