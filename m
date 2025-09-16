@@ -1,156 +1,92 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EB9428467B
-	for <mptcp@lists.linux.dev>; Tue, 16 Sep 2025 09:24:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A11A21FF26;
+	Tue, 16 Sep 2025 09:24:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758014650; cv=none; b=NnphcdlsL1ceuKQngLKF2IxbyQQcVN5DVsY+PnxuHpI60xpAUCv45RA67X8gq2sJ1zvFZW7c6yYwfpAvJZUfWAC6u447BODvoIK0EOmiJMMb/o+/kjWM4UQ+NHtjA/pXKXeF7RPjlhwoF1hDtm5xba4rBiUdYcBIACDQKdnPoQU=
+	t=1758014679; cv=none; b=mYbpH5rpdOXubtPXA27K2CLSPRqV8zDhH7czEXtJyaSJhz5uiJ6xav0KWFDv3Ym7QoGGxf1fdMv9avXcPA50uqnY//HLdaNp4SSUxcLnzt0mX5nwuzdP+CP493acZYaqzGaCPcfczu52m9hDbYVzp5GkYINb3Vrme0Tqxaw5z+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758014650; c=relaxed/simple;
-	bh=LAYaqWsTgXCjH7S6gev9Dxd+XdGVUSPVUC3gHVR9cJ4=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=iEF3XHeinyFkrlSrgM2fA8hBDButWEN/yIk0BtH3qjbUdJwuFXn+xFkhXR6M0+LEEB6viRMP6sLtzpzk5eByStzGihyb/fKAGfi1eDOy8DY8IZ+65kpGvMvOkIwaS13qLH+k69sN9uFo/odybDsvEeZfcqVxzQtDaUL6Bkd8CDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Co3L/qhR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1758014679; c=relaxed/simple;
+	bh=AnX7zxFGiyVOnoqXI9inEwlM0tnpL/1wWccRXpRvCCA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=ADaCa9enMPsWDZMWJHIdbYm4IjvBHFwKrM09A2x2g/DWifPrADv9Ixmrlpz8ELnVmuTTxhmsWF/K069hkxowRz4IvlkMlIfoiVatzG/lanuY8PCYe+gHZSxGToh0pjc6eZlm/anm/9YLUDy5lodVgwUDnUm+amgS5OHSe/daHE4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UDPBgD5u; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Co3L/qhR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38ADDC4CEEB;
-	Tue, 16 Sep 2025 09:24:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UDPBgD5u"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02E36C4CEEB;
+	Tue, 16 Sep 2025 09:24:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758014649;
-	bh=LAYaqWsTgXCjH7S6gev9Dxd+XdGVUSPVUC3gHVR9cJ4=;
-	h=Subject:From:To:Date:In-Reply-To:References:From;
-	b=Co3L/qhREGoXe10LBXs8HiWLkjbL0G+xp9QNX0pUmmXZBVOTEEn79Xr5zji9R3W4q
-	 gK/SHnt8CBqXbisPC8750o96S+rvIONTRrepL7QsC5HmhNgztb3WTUeBQOVv8Zmeaq
-	 Yq6+Wi27WKwnU88udgHZ2MlQOa7A3eaOWr32HACi5P1s6NSq26SxeFXY0yY/cG0hhH
-	 7qa9U/zPRiU5OS1xODQ5ALHdO22aen6mEcrsaDm7a90wi0nR8PTGZfUaj6bmyr+DsN
-	 te6hav+LPFYpruPpW8uIRL3zsEDpx2ajBaFOKqZ5fe153OP/w7XkX/qTlc1684mlxg
-	 mJOfPbUXPHuIw==
-Message-ID: <fc540d7f9ae539c3b9dac8757348b22a20ba7e09.camel@kernel.org>
-Subject: Re: [PATCH mptcp-net 2/2] selftests: mptcp: join: validate C-flag +
- def limit
-From: Geliang Tang <geliang@kernel.org>
-To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, MPTCP Upstream
-	 <mptcp@lists.linux.dev>
-Date: Tue, 16 Sep 2025 17:24:03 +0800
-In-Reply-To: <20250915-pm-c-flag-client-default-v1-2-6bb241e4d991@kernel.org>
-References: <20250915-pm-c-flag-client-default-v1-0-6bb241e4d991@kernel.org>
-	 <20250915-pm-c-flag-client-default-v1-2-6bb241e4d991@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.56.0-1 
+	s=k20201202; t=1758014678;
+	bh=AnX7zxFGiyVOnoqXI9inEwlM0tnpL/1wWccRXpRvCCA=;
+	h=From:Date:Subject:To:Cc:From;
+	b=UDPBgD5uQQtr4YYQbHhYP5Jer9tPD8oVfjVRHHcMELrhsC8E0oLdB3k95Jm30AqT1
+	 eZlSarX8mANLnjG9/aww9XiIxRt1hBhXOhcieYu4LVde8rCCK/6qhEc9BdIdGui9bV
+	 JxmcH9Zmj6e+J1tanYc1uPnueNbnF4/w+6ilWExXvvZZM05EwL/ojwUjiI69QvzOnu
+	 dWakFHLLs1xmiueFjs2cHly6Ovxr9N3+zGMV6A8EqVkG002Rd6U0USEFVwmdt+EP5+
+	 9KYKR1U4I/ptIpvfWaHzTDEEiO8J0r0DIoYLR5YuZZn4Ca5tzXltiKG109QSTct0AQ
+	 Su7efqeLg9KIg==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Date: Tue, 16 Sep 2025 11:24:33 +0200
+Subject: [PATCH iproute] mptcp: fix event attributes type
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250916-mptcp-attr-sign-v1-1-316aa96b93ca@kernel.org>
+X-B4-Tracking: v=1; b=H4sIANAsyWgC/x3MTQ5AMBBA4avIrE1S9ReuIhbFlFmoZloiEXfXW
+ H6L9x4IJEwB+uwBoYsDHy6hyDOYN+NWQl6SQStdq65ocPdx9mhiFAy8OrStLqtaLZM1HaTKC1m
+ +/+MA7OU4I8H4vh9o+/W4agAAAA==
+X-Change-ID: 20250916-mptcp-attr-sign-f723450dbfa9
+To: Stephen Hemminger <stephen@networkplumber.org>
+Cc: MPTCP Linux <mptcp@lists.linux.dev>, netdev@vger.kernel.org, 
+ "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1348; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=AnX7zxFGiyVOnoqXI9inEwlM0tnpL/1wWccRXpRvCCA=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDJO6lzlcr68K76gjqvuyJLP8jIX5UVUZn69cyvjwfs34
+ ss/9rTM7ChlYRDjYpAVU2SRbovMn/m8irfEy88CZg4rE8gQBi5OAZiI/0KG/0HLSnuLVH3K9rtv
+ WhiSOsnQz60q5e9Liz0TU9//PVFwJ4yR4Uz+rYIrMydOOGfkK35rpfS5XQp+3wXXtRj8cjdJdJ9
+ RwAUA
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-On Mon, 2025-09-15 at 20:11 +0200, Matthieu Baerts (NGI0) wrote:
-> The previous commit adds an exception for the C-flag case. The
-> 'mptcp_join.sh' selftest is extended to validate this case.
-> 
-> In this subtest, there is a typical CDN deployment with a client
-> where
-> MPTCP endpoints have been 'automatically' configured:
-> 
-> - the server set net.mptcp.allow_join_initial_addr_port=0
-> 
-> - the client has multiple 'subflow' endpoints, and the default
-> limits:
->   not accepting ADD_ADDRs.
-> 
-> Without the parent patch, the client is not able to establish new
-> subflows using its 'subflow' endpoints. The parent commit fixes that.
-> 
-> The 'Fixes' tag here below is the same as the one from the previous
-> commit: this patch here is not fixing anything wrong in the
-> selftests,
-> but it validates the previous fix for an issue introduced by this
-> commit
-> ID.
-> 
-> Fixes: df377be38725 ("mptcp: add deny_join_id0 in
-> mptcp_options_received")
-> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> ---
->  net/mptcp/pm.c                                  |  4 +++-
->  net/mptcp/pm_kernel.c                           |  1 +
->  tools/testing/selftests/net/mptcp/mptcp_join.sh | 11 +++++++++++
->  3 files changed, 15 insertions(+), 1 deletion(-)
-> 
-> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-> index
-> fda8d1880224dedbbfb20954f93a04da435346df..5d037f9d4e0b4d158beaaa5a48c
-> 4efb50fe9b5cb 100644
-> --- a/net/mptcp/pm.c
-> +++ b/net/mptcp/pm.c
-> @@ -637,7 +637,9 @@ void mptcp_pm_add_addr_received(const struct sock
-> *ssk,
->  		} else {
->  			__MPTCP_INC_STATS(sock_net((struct sock
-> *)msk), MPTCP_MIB_ADDADDRDROP);
->  		}
-> -	/* id0 should not have a different address ; special case
-> for C-flag */
-> +	/* - id0 should not have a different address
-> +	 * - special case for C-flag: linked to
-> fill_local_addresses_vec()
-> +	 */
+The 'backup' and 'error' attributes are unsigned.
 
-How about squashing this into patch 1.
+Even if, for the moment, >2^7 values are not expected, they should be
+printed as unsigned (%u) and not as signed (%d).
 
->  	} else if ((addr->id == 0 &&
-> !mptcp_pm_is_init_remote_addr(msk, addr)) ||
->  		   (addr->id > 0 && !READ_ONCE(pm->accept_addr) &&
->  		    (!READ_ONCE(msk->pm.remote_deny_join_id0) ||
-> diff --git a/net/mptcp/pm_kernel.c b/net/mptcp/pm_kernel.c
-> index
-> 408801e20ed6e874b80ccbf38af76abc13615a3a..aae9b92aea4715dabaf3101a034
-> 1ab7eab16f407 100644
-> --- a/net/mptcp/pm_kernel.c
-> +++ b/net/mptcp/pm_kernel.c
-> @@ -394,6 +394,7 @@ static unsigned int
-> fill_local_addresses_vec(struct mptcp_sock *msk,
->  
->  	pernet = pm_nl_get_pernet_from_msk(msk);
->  	subflows_max = mptcp_pm_get_subflows_max(msk);
-> +	/* linked to conditions in mptcp_pm_add_addr_received() */
+Fixes: ff619e4f ("mptcp: add support for event monitoring")
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+ ip/ipmptcp.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-And squash this too.
+diff --git a/ip/ipmptcp.c b/ip/ipmptcp.c
+index 118bac4a42a1ea3ce9710510df1353683eb29c89..2415cac8a36089da0e1c42995c06535a08305de7 100644
+--- a/ip/ipmptcp.c
++++ b/ip/ipmptcp.c
+@@ -522,9 +522,9 @@ static int mptcp_monitor_msg(struct rtnl_ctrl_data *ctrl,
+ 	if (tb[MPTCP_ATTR_DPORT])
+ 		printf(" dport=%u", rta_getattr_be16(tb[MPTCP_ATTR_DPORT]));
+ 	if (tb[MPTCP_ATTR_BACKUP])
+-		printf(" backup=%d", rta_getattr_u8(tb[MPTCP_ATTR_BACKUP]));
++		printf(" backup=%u", rta_getattr_u8(tb[MPTCP_ATTR_BACKUP]));
+ 	if (tb[MPTCP_ATTR_ERROR])
+-		printf(" error=%d", rta_getattr_u8(tb[MPTCP_ATTR_ERROR]));
++		printf(" error=%u", rta_getattr_u8(tb[MPTCP_ATTR_ERROR]));
+ 	if (tb[MPTCP_ATTR_FLAGS])
+ 		printf(" flags=%x", rta_getattr_u16(tb[MPTCP_ATTR_FLAGS]));
+ 	if (tb[MPTCP_ATTR_TIMEOUT])
 
-WDYT?
+---
+base-commit: bd63ac4980f3d405f4b785fdfe45ba9284b052af
+change-id: 20250916-mptcp-attr-sign-f723450dbfa9
 
-Thanks,
--Geliang
+Best regards,
+-- 
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
->  	deny_join_id0 = remote->id && READ_ONCE(msk-
-> >pm.remote_deny_join_id0) &&
->  			!READ_ONCE(msk->pm.accept_addr) &&
->  			msk->pm.local_addr_used == 0 &&
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> index
-> 6055ee5762e13108e5e2924a0e77d58da584d008..e80f90581a2531ac31339ae3543
-> 604c68677c232 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> @@ -3306,6 +3306,17 @@ deny_join_id0_tests()
->  		run_tests $ns1 $ns2 10.0.1.1
->  		chk_join_nr 1 1 1
->  	fi
-> +
-> +	# default limit, server deny join id 0 + signal
-> +	if reset_with_allow_join_id0 "default limit, server deny
-> join id 0" 0 1; then
-> +		pm_nl_set_limits $ns1 0 2
-> +		pm_nl_set_limits $ns2 0 2
-> +		pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
-> +		pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow
-> +		pm_nl_add_endpoint $ns2 10.0.4.2 flags subflow
-> +		run_tests $ns1 $ns2 10.0.1.1
-> +		chk_join_nr 2 2 2
-> +	fi
->  }
->  
->  fullmesh_tests()
