@@ -1,52 +1,52 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C24892F7AA6
-	for <mptcp@lists.linux.dev>; Tue, 16 Sep 2025 16:27:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 973B52F7AA6
+	for <mptcp@lists.linux.dev>; Tue, 16 Sep 2025 16:27:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758040069; cv=none; b=NBlAj9LwKAt0vncQ8rd+qDk0Y0qYiXnhZbabvjHY/wGXaKiChiLRlqqHPyrvjr0LRZPZa3K5yPJ0l1lmddRvKOuKctj6g9XLVi1k9OCHsgDbYEE/tVcO3AvAVEpC/sd4AQN2HUSCPtNTJfv2Knu3qxz3MOhkDDGi+f+T5lgFO5k=
+	t=1758040071; cv=none; b=t+tTYtOcShIoyvBhirQvp5bDivPYJ1MCitv93kbLNG0DwFYOrKTtuF2ZPtBkjqHgA2HRFmmg3Mui5W4yjSHZFTtrneSpL7tjZbeIqXkxSPzfUgTHBcVXBVUGWb+wpNLzeKCDB3i3HXjCs6i89cMI2jquq220680EF2vZLkFpaxE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758040069; c=relaxed/simple;
-	bh=pJyzsL3Ix0u5cgdVaKyoArqSER4UMTDQpnulcFnl64o=;
+	s=arc-20240116; t=1758040071; c=relaxed/simple;
+	bh=vlTAfd2YF5vOaQohY0F6PvXTTCfn58beu7u8KzirW9s=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=Qpg7dua4430XrFYCr0ygme31SWUJ9TFHBbDtt8hzcpEUuC2qVoWwTHzo34D5ffBGbhtKACXvPwIdZpFHbShdWPyZc6IKZ7+nQe6uurkEmAXQd2YOLVYh06rHHtn8XApBp0v1mB1P2ZRynJhtdSNuwtD7z+JFGlZcAtE62oCM590=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UlfPjlrk; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version:content-type; b=JM23McdMTlbyyxppb40+oD7Iqt/knEuv/lKG5emWOEWw1iwRdiIYdhsO4Hznwds3h3IGJHmZBbHRVYYufpKJp7N+gfwTEOKgkLilPskBJHSkbzWj+b1P8DZvmUZdRrOO4CffDBGOVRP7FYgz/6IzgzbT//tDWHQbKopKjjL1aU8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FDdFD21U; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UlfPjlrk"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FDdFD21U"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1758040066;
+	s=mimecast20190719; t=1758040068;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=cRm3UYvPTTHEruegNJeNiN2HTqTNZ83y0Qlvq+PF4T0=;
-	b=UlfPjlrkwgQ9NhnAE5zs0Ny/YHZLCgfFsgUMnd57XsaJMSuN+lYICBsKtKGt7MCvvPSRy6
-	OAxdATrKsYONiWaMNFTG6IlYtKpmPgYlRnjiljtimGIVMeRZ8eAq0HfGAXZwxgkWBYmkZD
-	Wr93mivOJjf3vKusnTLHb5rdy32FCog=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+	bh=hrsxKyYgpVFXf9TFixAIDt7teXpvh2As8MNaCoOdS6s=;
+	b=FDdFD21UXBbQysR5PBEnCUU4KTFetf+DtyZH8Eyuw5u3WJjcEG+LB29yZqAUomhEk6IVNO
+	V/RcbQT8Rtr+5unsCmymnVWYKLLuUJYhAgYbUczZPYIFohLRUlrnRaFzN8vsW6+acgJdSQ
+	FqURSI1W/qCDIXnzkm+ojqswj9rSlKk=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-59-bcljUIhWMXKxMZo3aox7Bw-1; Tue,
- 16 Sep 2025 12:27:45 -0400
-X-MC-Unique: bcljUIhWMXKxMZo3aox7Bw-1
-X-Mimecast-MFC-AGG-ID: bcljUIhWMXKxMZo3aox7Bw_1758040064
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-211-yOBPHOg7P-SskSu8OuQdBg-1; Tue,
+ 16 Sep 2025 12:27:44 -0400
+X-MC-Unique: yOBPHOg7P-SskSu8OuQdBg-1
+X-Mimecast-MFC-AGG-ID: yOBPHOg7P-SskSu8OuQdBg_1758040062
 Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C063019560BB
-	for <mptcp@lists.linux.dev>; Tue, 16 Sep 2025 16:27:44 +0000 (UTC)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 093031800299
+	for <mptcp@lists.linux.dev>; Tue, 16 Sep 2025 16:27:42 +0000 (UTC)
 Received: from gerbillo.redhat.com (unknown [10.44.32.160])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id E64EF19560B8
-	for <mptcp@lists.linux.dev>; Tue, 16 Sep 2025 16:27:43 +0000 (UTC)
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 2C6C419560B8
+	for <mptcp@lists.linux.dev>; Tue, 16 Sep 2025 16:27:40 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
-Subject: [MPTCP next 12/12] mptcp: make fallback backlog aware
-Date: Tue, 16 Sep 2025 18:27:22 +0200
-Message-ID: <f1e09edfda414995754f7c40425cb3a80f0c6234.1758039775.git.pabeni@redhat.com>
+Subject: [MPTCP next 10/12] mptcp: prevernt __mptcp_move_skbs() interferring with the fastpath
+Date: Tue, 16 Sep 2025 18:27:20 +0200
+Message-ID: <d5a0349baeeb725be8de01024dae64abc1a7499a.1758039775.git.pabeni@redhat.com>
 In-Reply-To: <cover.1758039775.git.pabeni@redhat.com>
 References: <cover.1758039775.git.pabeni@redhat.com>
 Precedence: bulk
@@ -57,51 +57,154 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: wAejePXujbKSqiSwwjvGsZWoU_bbC5jMLNsXjXXfKvA_1758040064
+X-Mimecast-MFC-PROC-ID: 2x6yNHOPbGlxGG7XIRi_wA_rkCPxrWpXfR6kRofiQ4o_1758040062
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 
-MPTCP can't relay on ack_seq outside the msk socket log scope. With
-packets pending in the backlog, such value can be quite far from the
-actual dummy correct sequence map value.
+skbs will be left waiting in the subflow only in exceptional cases,
+we want to avoid messing with the fast path by unintentionally
+processing in __mptcp_move_skbs() packets landed into the subflows
+after the last check.
 
-Fallback dummy mapping are in sequence by definition, generate the
-data seq from the subflow sequence.
+Use a separate flag to mark delayed skbs and only process subflow
+with such flag set. Also add new mibs to track the exceptional events.
 
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 ---
- net/mptcp/subflow.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ net/mptcp/mib.c      |  2 ++
+ net/mptcp/mib.h      |  4 ++++
+ net/mptcp/protocol.c | 40 ++++++++++++----------------------------
+ net/mptcp/protocol.h |  1 +
+ 4 files changed, 19 insertions(+), 28 deletions(-)
 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 5339a00528a7a..02bf89f6b5a1a 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -491,6 +491,9 @@ static void subflow_set_remote_key(struct mptcp_sock *msk,
- 	mptcp_crypto_key_sha(subflow->remote_key, NULL, &subflow->iasn);
- 	subflow->iasn++;
+diff --git a/net/mptcp/mib.c b/net/mptcp/mib.c
+index cf879c188ca26..7af9d35cde884 100644
+--- a/net/mptcp/mib.c
++++ b/net/mptcp/mib.c
+@@ -85,6 +85,8 @@ static const struct snmp_mib mptcp_snmp_list[] = {
+ 	SNMP_MIB_ITEM("DssFallback", MPTCP_MIB_DSSFALLBACK),
+ 	SNMP_MIB_ITEM("SimultConnectFallback", MPTCP_MIB_SIMULTCONNFALLBACK),
+ 	SNMP_MIB_ITEM("FallbackFailed", MPTCP_MIB_FALLBACKFAILED),
++	SNMP_MIB_ITEM("RcvDelayed", MPTCP_MIB_RCVDELAYED),
++	SNMP_MIB_ITEM("DelayedProcess", MPTCP_MIB_DELAYED_PROCESS),
+ 	SNMP_MIB_SENTINEL
+ };
  
-+	/* for fallback's sake */
-+	subflow->map_seq = subflow->iasn;
-+
- 	WRITE_ONCE(msk->remote_key, subflow->remote_key);
- 	WRITE_ONCE(msk->ack_seq, subflow->iasn);
- 	WRITE_ONCE(msk->can_ack, true);
-@@ -1421,9 +1424,12 @@ static bool subflow_check_data_avail(struct sock *ssk)
+diff --git a/net/mptcp/mib.h b/net/mptcp/mib.h
+index 309bac6fea325..f6d0eaea463e5 100644
+--- a/net/mptcp/mib.h
++++ b/net/mptcp/mib.h
+@@ -88,6 +88,10 @@ enum linux_mptcp_mib_field {
+ 	MPTCP_MIB_DSSFALLBACK,		/* Bad or missing DSS */
+ 	MPTCP_MIB_SIMULTCONNFALLBACK,	/* Simultaneous connect */
+ 	MPTCP_MIB_FALLBACKFAILED,	/* Can't fallback due to msk status */
++	MPTCP_MIB_RCVDELAYED,		/* Data move from subflow is delayed due to msk
++					 * receive buffer full
++					 */
++	MPTCP_MIB_DELAYED_PROCESS,	/* Delayed data moved in slowpath */
+ 	__MPTCP_MIB_MAX
+ };
  
- 	skb = skb_peek(&ssk->sk_receive_queue);
- 	subflow->map_valid = 1;
--	subflow->map_seq = READ_ONCE(msk->ack_seq);
- 	subflow->map_data_len = skb->len;
- 	subflow->map_subflow_seq = tcp_sk(ssk)->copied_seq - subflow->ssn_offset;
-+	subflow->map_seq = __mptcp_expand_seq(subflow->map_seq,
-+					      subflow->iasn +
-+					      TCP_SKB_CB(skb)->seq -
-+					      subflow->ssn_offset - 1);
- 	WRITE_ONCE(subflow->data_avail, true);
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 9c3baed948d1d..f211a939daf39 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -665,13 +665,17 @@ static bool __mptcp_move_skbs_from_subflow(struct mptcp_sock *msk,
+ 	tp = tcp_sk(ssk);
+ 	do {
+ 		int mem = own_msk ? sk_rmem_alloc_get(sk) : sk->sk_backlog.len;
++		bool over_limit = mem > READ_ONCE(sk->sk_rcvbuf);
+ 		u32 map_remaining, offset;
+ 		u32 seq = tp->copied_seq;
+ 		struct sk_buff *skb;
+ 		bool fin;
  
- 	/* last skb in closed fallback subflow: we are at data fin */
+-		if (mem > READ_ONCE(sk->sk_rcvbuf))
++		WRITE_ONCE(subflow->data_delayed, over_limit);
++		if (subflow->data_delayed) {
++			MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_RCVDELAYED);
+ 			break;
++		}
+ 
+ 		/* try to move as much data as available */
+ 		map_remaining = subflow->map_data_len -
+@@ -2081,32 +2085,13 @@ static void mptcp_rcv_space_adjust(struct mptcp_sock *msk, int copied)
+ 	msk->rcvq_space.time = mstamp;
+ }
+ 
+-static struct mptcp_subflow_context *
+-__mptcp_first_ready_from(struct mptcp_sock *msk,
+-			 struct mptcp_subflow_context *subflow)
+-{
+-	struct mptcp_subflow_context *start_subflow = subflow;
+-
+-	while (!READ_ONCE(subflow->data_avail)) {
+-		subflow = mptcp_next_subflow(msk, subflow);
+-		if (subflow == start_subflow)
+-			return NULL;
+-	}
+-	return subflow;
+-}
+-
+ static bool __mptcp_move_skbs(struct sock *sk)
+ {
+ 	struct mptcp_subflow_context *subflow;
+ 	struct mptcp_sock *msk = mptcp_sk(sk);
+ 	bool ret = false;
+ 
+-	if (list_empty(&msk->conn_list))
+-		return false;
+-
+-	subflow = list_first_entry(&msk->conn_list,
+-				   struct mptcp_subflow_context, node);
+-	for (;;) {
++	mptcp_for_each_subflow(msk, subflow) {
+ 		struct sock *ssk;
+ 		bool slowpath;
+ 
+@@ -2117,23 +2102,22 @@ static bool __mptcp_move_skbs(struct sock *sk)
+ 		if (sk_rmem_alloc_get(sk) > sk->sk_rcvbuf)
+ 			break;
+ 
+-		subflow = __mptcp_first_ready_from(msk, subflow);
+-		if (!subflow)
+-			break;
++		if (!subflow->data_delayed)
++			continue;
+ 
+ 		ssk = mptcp_subflow_tcp_sock(subflow);
+ 		slowpath = lock_sock_fast(ssk);
+-		ret = __mptcp_move_skbs_from_subflow(msk, ssk, true) || ret;
++		ret |= __mptcp_move_skbs_from_subflow(msk, ssk, true);
+ 		if (unlikely(ssk->sk_err))
+ 			__mptcp_error_report(sk);
+ 		unlock_sock_fast(ssk, slowpath);
+-
+-		subflow = mptcp_next_subflow(msk, subflow);
+ 	}
+ 
+ 	__mptcp_ofo_queue(msk);
+-	if (ret)
++	if (ret) {
++		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_DELAYED_PROCESS);
+ 		mptcp_check_data_fin((struct sock *)msk);
++	}
+ 	return ret;
+ }
+ 
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index a6e775d6412e5..2905e4b250070 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -559,6 +559,7 @@ struct mptcp_subflow_context {
+ 	u8	reset_transient:1;
+ 	u8	reset_reason:4;
+ 	u8	stale_count;
++	bool	data_delayed;
+ 
+ 	u32	subflow_id;
+ 
 -- 
 2.51.0
 
