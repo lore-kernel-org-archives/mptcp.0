@@ -1,107 +1,146 @@
-Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6B6B31BC8B
-	for <mptcp@lists.linux.dev>; Wed, 17 Sep 2025 11:20:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18CA131618E
+	for <mptcp@lists.linux.dev>; Wed, 17 Sep 2025 12:53:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758108060; cv=none; b=eW2uSFk/xjQrgxoTVmgjRLxP1MjwfcqDTeV9tDW1+U6hJ+swMpy5w3uxWneW7iAqtgDhUW/nHP9aLRu6D2rsnO1vrPfYQwKzAKrZhToRnb9rc9t6Zm09z8dfDDhcKdrUjIe8EoFr6F7qhGnEGRieqA2OZQVCz2+05flypk1dVkc=
+	t=1758113624; cv=none; b=t+/yHs+Muz7Ch5n1ex+jP2ljTFR9TzN8C7pv5Y1SaB5OOmgrPbEuME9gwQ9pEJ9m5l5/M1IMYUVvm2hX/tk6fBaLF+T7x/HsZD/gELlSlwWdBC7DIpyzpx8kY7BIRQm/ZnxZKINWJaxz/FInLa+FuJWa11KqV+w/J8ThQZl6OlM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758108060; c=relaxed/simple;
-	bh=qU8MeUB/wD5/KM0UkzI/LsmyNjEYEfZ4mlWk00gX9dQ=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=XCo8cH17Kz657updfBijeMmgZQwVzLp8k76q7cr+e6jP6gobhl42GHh/owLJxp69zLEK6kAKsWD5wAke46ffgO00j1hWDE9aPyoQdh7aW0tZRCiTqJ7xLHAwpqj1aOdgarR9UgLPag0KKcTb8aF88PDFflbUXloI7v9Pj0FE2EU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BpI5ZlCV; arc=none smtp.client-ip=209.85.166.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1758113624; c=relaxed/simple;
+	bh=8eOrFg0UN9F44ug6swodcIdwUPktKKScJgxnrAgniGA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=BmIZU2bKazjf/Poz5CBJee/eXr4z0eAAr1lUfGpRBtc0rTOuS1fDyfDpV+lCIoS48NfOYT6XSIOfhtCKfNiVydN9/19sOxADaOLjQgsiyjfdNx/OmLlS0ok6IVQXind2dYDwcPiUBw3VxxXkCP3LUF4NNQiPSiiBwnzsanxQ5Bo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vEjjhxD8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BpI5ZlCV"
-Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-417661ecbb1so72751005ab.2
-        for <mptcp@lists.linux.dev>; Wed, 17 Sep 2025 04:20:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1758108058; x=1758712858; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/A/d+yoAXxE49vpWa37K0fM104ZFjEmQIRq1hg9UxJE=;
-        b=BpI5ZlCVz5WPWTq1gmKan5ZFxS71+yBHVXjWY3XIhyU5jQiBjR7oI1kPovMTW3McJf
-         tXvCRgn2pPInNvp/7HC2XVwRbH4OiEXSMaFVVUi5i8LUaPEDy49Fulm090xWsFjKOI3u
-         qJfOe+vXIjrRDbfTQgkW+LqAzlamWL+7XH04Di0l+0SGLhC3Fts3FmwCuabHufoD/Oak
-         yPfv60vGjFZyPyYrPEkiZGlYmB4qp+/2x7D1ePV2qT1C9LPgPBns6ElDSVW/GGnP2PcI
-         nd1ZN2RM21k90fQI14zeqtvojZXnT1pf77VLZdA+azsD7GcURZInC5xyW/8XcrGFnMFi
-         68vQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758108058; x=1758712858;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=/A/d+yoAXxE49vpWa37K0fM104ZFjEmQIRq1hg9UxJE=;
-        b=JLOUSpuDvxQVL5F8hJJjslIn6clH48VUGi0GiqCIFGghoxTEYNoHXKWgBBV3B6w/Yf
-         eVQkrZkwJ+TxuCo7AIS3ZZ6bCCPzRQob53Q3geOs3JT0UQxxktxCFJNFmWWkzRyA3pQN
-         dD+DDOjT/72f3BOhsb11NOhNlvULWanGhFD+7N26f60hOYyK+60QGk4zr0YjtIOEH6J6
-         z9f4pnaFjXArmlzVu9PYYNjqWBlWDJnTF9z33NyAPtBW99H5Bn2/zteKNmUs5mf3bD2C
-         NOOzFwX9zBBvZHMNV6QCy18HILvD8LtOAfVBIApO7mHBzHrhUnoC1tcOYY2MvfwUpmaF
-         3BAg==
-X-Gm-Message-State: AOJu0YyDR8bqR4n/OC2YX8GRfXuO1kELZiYpUZ6LrtSgq8EZK3te6QVR
-	LvRSuQsPpIaeeHVq3Q6B40kCdKxTWZ3PgqECQQ0YTdfnsHAh9NoLTsc=
-X-Gm-Gg: ASbGncs+ypwFRVq5FaZJq+ICBpL8+oouz3QAdbKxC7KK/J04WJEfIOpNchMROHmTgfa
-	nlZpHn1sjCDwJ/6sXY71haxE/7j0fV56ZH82Qpp7qoJJjMiqn46r3DVYn/X5Sdyf+KXLQy4llut
-	MrboxZ+DMZz3k1MWaY2EHP21DUppdJnlXVtrojAnJ6YpKlNkOVsIsH8hui5P2xToBDeRvZbLkim
-	OeiNzQL3YrYXq+7dbnR904n1S1s7636/0t70sTMiQZKn7Gg8lbANkNKpQfpx4/3JnACgjdc+vQI
-	+sEq7uYG6nWv+z9MU7QbfUmlvCqi/qCvLFPmlD/w1aSWMkT8jY/rgDAGC2yKYDXX00ub5UcrpM/
-	byswiT5cfb4b4wYxX8Slz0Re7pAV9pJFSPoo=
-X-Google-Smtp-Source: AGHT+IH1uirlQn6kKypTnD1yLI6hHxJw29T9kZrxtfKl3OC/ZInSOJwO2suO+L2wo41oa7hAYCcFUg==
-X-Received: by 2002:a05:6e02:1689:b0:424:9a5:85a6 with SMTP id e9e14a558f8ab-4241a564f73mr18478905ab.30.1758108057724;
-        Wed, 17 Sep 2025 04:20:57 -0700 (PDT)
-Received: from [127.0.0.1] ([64.236.153.82])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-511f2f4500csm6860775173.31.2025.09.17.04.20.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Sep 2025 04:20:57 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <cover.1758039775.git.pabeni@redhat.com>
-References: <cover.1758039775.git.pabeni@redhat.com>
-Subject: Re: [MPTCP next 00/12] mptcp: receive path improvement
-Message-ID: <fa724ca2-c73c-b9cf-6b3f-98e4105e9e43@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 17 Sep 2025 11:20:56 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vEjjhxD8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 353EDC4CEF5;
+	Wed, 17 Sep 2025 12:53:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758113624;
+	bh=8eOrFg0UN9F44ug6swodcIdwUPktKKScJgxnrAgniGA=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=vEjjhxD8uWMfK4Ptlq19/A/aH2ZCldTLUX8iMPIiaUyw80+HnDH0ISkAtM16dHtrv
+	 EtKkEi1sMguSCHgR1NW+2hrHk4nsZpmq1Fmvrt6tUjZ79UQ8kLWKTOcWIFp/obJBPj
+	 /UoiNcL/8Iw03TrzJ8y6xQ3TTfJ+g0D+q3/Nz4leDZddv0aZ46mZf/Pgyh/G/AZEXH
+	 Fn0YPm3vg5UEEJBZhji90dY2NV9zjliyDtRD8EPvGyvseFfWtN0LtKjWH0/07EGwtq
+	 ENfsGzdUkhtkM/rGkExqX1/X0uVOEgii3GNWAllvhAZ0USQ3YmwtAHIWJ+1o6Qq8N9
+	 tOxWPn4+F9OdA==
+Message-ID: <a078369f-3dbb-49a0-9139-032912955829@kernel.org>
+Date: Wed, 17 Sep 2025 14:53:40 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [MPTCP next 10/12] mptcp: prevernt __mptcp_move_skbs()
+ interferring with the fastpath
+Content-Language: en-GB, fr-BE
+To: Geliang Tang <geliang@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ mptcp@lists.linux.dev
+References: <cover.1758039775.git.pabeni@redhat.com>
+ <d5a0349baeeb725be8de01024dae64abc1a7499a.1758039775.git.pabeni@redhat.com>
+ <44782f5f4b2fabb1a3ebe476de6b671270671244.camel@kernel.org>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <44782f5f4b2fabb1a3ebe476de6b671270671244.camel@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Paolo,
+Hi Geliang, Paolo,
 
-Thank you for your modifications, that's great!
+On 17/09/2025 05:39, Geliang Tang wrote:
+> Hi Paolo,
+> 
+> Thanks for this patch.
+> 
+> On Tue, 2025-09-16 at 18:27 +0200, Paolo Abeni wrote:
+>> skbs will be left waiting in the subflow only in exceptional cases,
+>> we want to avoid messing with the fast path by unintentionally
+>> processing in __mptcp_move_skbs() packets landed into the subflows
+>> after the last check.
+>>
+>> Use a separate flag to mark delayed skbs and only process subflow
+>> with such flag set. Also add new mibs to track the exceptional
+>> events.
+>>
+>> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+>> ---
+>>  net/mptcp/mib.c      |  2 ++
+>>  net/mptcp/mib.h      |  4 ++++
+>>  net/mptcp/protocol.c | 40 ++++++++++++----------------------------
+>>  net/mptcp/protocol.h |  1 +
+>>  4 files changed, 19 insertions(+), 28 deletions(-)
+>>
+>> diff --git a/net/mptcp/mib.c b/net/mptcp/mib.c
+>> index cf879c188ca26..7af9d35cde884 100644
+>> --- a/net/mptcp/mib.c
+>> +++ b/net/mptcp/mib.c
+>> @@ -85,6 +85,8 @@ static const struct snmp_mib mptcp_snmp_list[] = {
+>>  	SNMP_MIB_ITEM("DssFallback", MPTCP_MIB_DSSFALLBACK),
+>>  	SNMP_MIB_ITEM("SimultConnectFallback",
+>> MPTCP_MIB_SIMULTCONNFALLBACK),
+>>  	SNMP_MIB_ITEM("FallbackFailed", MPTCP_MIB_FALLBACKFAILED),
+>> +	SNMP_MIB_ITEM("RcvDelayed", MPTCP_MIB_RCVDELAYED),
+>> +	SNMP_MIB_ITEM("DelayedProcess", MPTCP_MIB_DELAYED_PROCESS),
+>>  	SNMP_MIB_SENTINEL
+> 
+> I guess this line was accidentally pasted, which prevents this patch
+> from being applied.
 
-But sadly, our CI spotted some issues with it when trying to build it.
+FYI, this line has been removed recently by commit 35cb2da0abaf ("mptcp:
+snmp: do not use SNMP_MIB_SENTINEL anymore").
 
-You can find more details there:
-
-  https://github.com/multipath-tcp/mptcp_=
-net-next/actions/runs/17795536140
-
-Status: failure
-Initiator: Matthieu =
-Baerts (NGI0)
-Commits: https://github.com/multipath-tcp/mptcp_net-next/comm=
-its/f83d2e5ccf99
-Patchwork: https://patchwork.kernel.=
-org/project/mptcp/list/?series=3D1002996
-
-Feel free to reply to this email =
-if you cannot access logs, if you need
-some support to fix the error, if =
-this doesn't seem to be caused by your
-modifications or if the error is a =
-false positive one.
+I manually fixed the conflict, and sent the series to the CI. I also
+restarted my syzkaller instances to validate your series.
 
 Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu =
-Baerts (NGI0 Core)
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
+
