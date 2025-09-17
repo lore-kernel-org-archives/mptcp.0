@@ -1,72 +1,72 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E6B134BA3F
-	for <mptcp@lists.linux.dev>; Wed, 17 Sep 2025 16:22:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9320B2F3C1D
+	for <mptcp@lists.linux.dev>; Wed, 17 Sep 2025 16:25:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758126155; cv=none; b=lnQFWROS1ORt8LU+4nLgBwXps1TYPfk5bk0Ibs3xZm8Qxmac347NIv5Fe6uQtLRUvuH2wITYyEt0BZZJdfwyqGe0c8EQC1WM+i0ldSqZY/rjXjQoR3F2f/SmPmEr5s/CfBkPAvnE00zfRwBMXPxGLj8H3HUYC+VEuJZjC8lOIak=
+	t=1758126346; cv=none; b=QWWQkot/Uyq3HAxSgQPQ5taWO9WgbyCi3PQ36XqKhikDLd+LnoN4TFv3S9EYvbwy3YGp5Jqkb7sSoX6HA3XyCPUnBGvJn0vUg4RyEzAhOYL/0aiKkz7I8Huzr5IwG1fY9R/UxgRTzaonXmpK4RG5vmXnhkkTJFoGoHmspruSHNU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758126155; c=relaxed/simple;
-	bh=kW16OeM050hdQqzorhXmCj1PBYsO8pA2Cab8/rnxymA=;
+	s=arc-20240116; t=1758126346; c=relaxed/simple;
+	bh=aWMQdzxv9lYbs2Tlj14VnROpNnIqTE4uMpLUUB8SvKg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=d5bwFxOJ7VsSYJVWJvUcYqrfGnwyCdfZlZRi2d5nUW1eGHov9BrmV2RMxAIbDRBK1vv7wee2/GqjagYDavFiHpwv7xv7Ih2BONYcM19kXpZ/8nFo1ejDbLqMsICq5fooZu0qI+rZhGnrmgA2RKXpLGCjIQlT2C+RaNGaTKzuHSE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=B0yWlvL/; arc=none smtp.client-ip=170.10.133.124
+	 In-Reply-To:Content-Type; b=bLNjs6lVIFlqgD3P5LF4svfSrrcsyuZ6wQaf7IciIgCI+l8CPMFDxS7YxV/e5TkLkhW8OTwzg1aQ8gdQ1PN4JkvshedRrGySAtg0069pp4eMSuHiqhqa+/K8+iuh4P0ZCluHqP7nt/COyWWWS5IjADN7L9OyU4uhBmHWHPScCSY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=A+Fvyo7c; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="B0yWlvL/"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A+Fvyo7c"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1758126152;
+	s=mimecast20190719; t=1758126339;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=j3MNqtLKP7wasLTCYo3zALeksXkINPwwIuN6TLGU0ec=;
-	b=B0yWlvL/yLhW8UlbfNC1BgC65p6VWQ2RyfTyuB5SeQGrmoYPrIC9rLNZ+e9pDbG6RSDyDr
-	+5ZAY8on3il4n6ojIvPoP82muzA+v15lglCuZZt8t3AMZXJ/2LWGUeU31WDZV7hrNsInHD
-	FbC/AGLZRhg73UeuqxECS0vjL0RpIxw=
+	bh=D1GvSAL6jZDhSoKM/lTPH1sLuojAAx6vq3t6/lvwIgg=;
+	b=A+Fvyo7cbm7wK3tIlQtvKhht1536qjlOaAtRD5/wAfXBd0AAO9pg81QVeeCktva4KQ19/G
+	UNw2qhd2X89RfiDm+t1tt3SBQvBhrnqZgIcWYRYNSitMZMvaoMcVKYwc9mzG7U3ETjzqDh
+	oqF2/YoiqqxhpMzpatwVeemPxkzO3OU=
 Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
  [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-676-gSbyklglNP-mZLGEYRpvOA-1; Wed, 17 Sep 2025 12:22:31 -0400
-X-MC-Unique: gSbyklglNP-mZLGEYRpvOA-1
-X-Mimecast-MFC-AGG-ID: gSbyklglNP-mZLGEYRpvOA_1758126150
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-45dd66e1971so57087125e9.2
-        for <mptcp@lists.linux.dev>; Wed, 17 Sep 2025 09:22:30 -0700 (PDT)
+ us-mta-96-LSzYRvMUMRGC47cKZ4A_Ag-1; Wed, 17 Sep 2025 12:25:32 -0400
+X-MC-Unique: LSzYRvMUMRGC47cKZ4A_Ag-1
+X-Mimecast-MFC-AGG-ID: LSzYRvMUMRGC47cKZ4A_Ag_1758126330
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-45de5fdda1aso33115815e9.1
+        for <mptcp@lists.linux.dev>; Wed, 17 Sep 2025 09:25:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758126149; x=1758730949;
+        d=1e100.net; s=20230601; t=1758126330; x=1758731130;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=j3MNqtLKP7wasLTCYo3zALeksXkINPwwIuN6TLGU0ec=;
-        b=j5aWKjahPliubzAUgjPD3hIbK9/D7YYavU0LTap3i4GDNoi06NnAjjzNtH3KCpbf32
-         vE3mZX4ET/bEmtLsk6ZmtmokiONl2Gwr61z9zlbqO9KNW/B2FJoeSV7KCdlCxQPngRjg
-         Om+EVoWNkr55klLHLkMXsCg8c+4Lw/IbRojyRzpXhvr/ssuSNuHb9L1GbeQ/IxUlURdY
-         B6B88ZM8snR6271VJ/svHuKQbKSt8Vzfkn7j/gSUSHLKn7f+Bzs8Fpw5DCbpf9AXFJw2
-         P2SrLauHYlvYaoJuOJ9jQoEzmZRA6aK/R+LVpNJHoRtEKNAFUUjRwGlYXl2XBjYNmSlD
-         h6dA==
-X-Forwarded-Encrypted: i=1; AJvYcCX9w6QejTANFWYOq/P19Jc6AcpNm/oalIVJttiEfCyAGNNivnxdPkkwAljvwSyTEXQXo8SOUA==@lists.linux.dev
-X-Gm-Message-State: AOJu0YznLNLHMGPQEFAgTpRZFQXPP/GPsscRbEJqlfVw7OMeB8v6LHWj
-	E23LKCtaDPoyn1/PxOTGXMVVHRJqRCKDC8NIrdwxwdQwL2iBLvf7MfQ/AOTTQF9jZN97qt/+7VX
-	rmPYJ+YX7a38czk7kDvFGfF7ju4l1VCtl18+RTSzfDVVKD4wMCfTmDZJszFHvUOpg
-X-Gm-Gg: ASbGnctn0+z2msqbcW2PRSCJt+4VbiwPnFim7GbgnWFThh3hAKCyKtttdY97UFhFbtn
-	wD6o0ZQGFRW/fo9d3Jmr4yr0Y3Enkot5ZYDcI3YK1+CWKaMf0oCJ3zn7ViqCRc0OhgOSCoQsQIj
-	8eGD4q4X5WSRiNMqzpVh9njEr0cBuVkkk/KKdroXMyNxk6KlmRJu+aGswuW/OZyITrSFYAs6Fuq
-	XaYUqXHCFFlRFNUs1VTqvM+RXsMu4Z1JQ1VsVh5GOmemskWHcMtmQzqwhmpluKC50MG8jEa8VuU
-	ZZLeE2jNhoI6xUgjhGOBA41Q9hIknOM/wL5w718Fxg9UMLcyjWOHdSYKoRhAc3HW11zIEizMILa
-	cV1m+JKudA1uU
-X-Received: by 2002:a05:600c:470f:b0:458:b01c:8f with SMTP id 5b1f17b1804b1-46201f8a42amr31664865e9.8.1758126149416;
-        Wed, 17 Sep 2025 09:22:29 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGSNZ8vPUmfWm1HPbHc16JtokIlOeUqyjo+1zdJWm72y2u6H2qjfIJn5kQ5SZUHF6b3TAmajA==
-X-Received: by 2002:a05:600c:470f:b0:458:b01c:8f with SMTP id 5b1f17b1804b1-46201f8a42amr31664525e9.8.1758126148962;
-        Wed, 17 Sep 2025 09:22:28 -0700 (PDT)
+        bh=D1GvSAL6jZDhSoKM/lTPH1sLuojAAx6vq3t6/lvwIgg=;
+        b=mxn0s8vJyhtF+bTtl7QecUZVi3Gw91+fgRH7g62qShvtd6QpuoxaVd3r5BJFVW03V+
+         4BQsfsdlv7EuCPq5O/QGJP22sM9Op8zse8GghAfI7gcspz+6hsIQDU/i9rQV9dxgMmtc
+         JNPCTVXPyh8suUNCKl8r4rIe4V5uVhsqQPS9x4/GbQqPLVvQcuQK9HEZU6aBuIAxuNAt
+         c43jNtJi5iGak1pPiR4NivcX+9zoQOcO3smtYxYUbMirrCvj/65rGA3RsYL0GAUoHJff
+         dYOtJotVO63LRyCuK49q3dYUPakWDm1GgUw3InMSeFL22F/2+H78aDTZC4ApX8Oc46vf
+         XCXA==
+X-Forwarded-Encrypted: i=1; AJvYcCWdh6fgs26qIMoTecq2mTeXXbXjrsNOCNi5nFSDZndJpHKxtX9rGxKJ0+MeJHpUKE2CQLpQhg==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwLo7bdTBGbcdKmfGz18yIH3vz7y1dt08XrWLioti+0TycUoZeG
+	cc8eiauXWWgd8bbKwlaKDY1EmexKxORMUeIj6e8VbLUQnDxO9QKUlCEMfbHLS4RMATwp1VYDuLU
+	VLjXjGeLsWS7E2DzA38Wdr9d5ioCvscko4RsTkxIAegH3sVXSRJrCr1hC
+X-Gm-Gg: ASbGncvpkV5SXRrTLoTRMsbm/R2Ppx5OIuPJtVp61zc+3l8A3tgLWxvRBU7l+LMl8lF
+	l8xCBO9YIT4CM+prpZlbSyH5aFaxP9TuPCCpnuO+WLkxvjxy+dH8ugA3hxzgNQUfMiNSezK0ssQ
+	NLyCypzC7SSwD8SnFz9lZWHtwItNLYqb9J+2kuRHUlTrlSJMznBQb0crPb6NbI9bN6P/BOsgoQy
+	QrML11Jg0UeZzR0e/vFZlEfNWz9JMbHphd+x4rf2JRIilcgj8EtUnfzRt3DDVBirNySF0BOaXop
+	OnEYq8NaGrUppExCXq4au7UOtwNOzgsC22xiw4Rbal1JBfydstU09fnpJ9N0BzPW2SVvlFMKpKl
+	MCHjoRkV+BNyY
+X-Received: by 2002:a05:600c:470f:b0:458:b01c:8f with SMTP id 5b1f17b1804b1-46201f8a42amr31787555e9.8.1758126329813;
+        Wed, 17 Sep 2025 09:25:29 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHNJaJI5RDH2ZSyq115swCYn777xp7vQo5zz6Ggxm5K/wGxaFKZsCF7cjZW1bFK98JvdT5Uaw==
+X-Received: by 2002:a05:600c:470f:b0:458:b01c:8f with SMTP id 5b1f17b1804b1-46201f8a42amr31787165e9.8.1758126329311;
+        Wed, 17 Sep 2025 09:25:29 -0700 (PDT)
 Received: from ?IPV6:2a0d:3344:2712:7e10:4d59:d956:544f:d65c? ([2a0d:3344:2712:7e10:4d59:d956:544f:d65c])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3ecdf0bbf24sm3496229f8f.63.2025.09.17.09.22.28
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-464f5a2850csm2217285e9.19.2025.09.17.09.25.28
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 17 Sep 2025 09:22:28 -0700 (PDT)
-Message-ID: <75975b2c-e3a7-4d13-8ec5-10e1e03685e2@redhat.com>
-Date: Wed, 17 Sep 2025 18:22:27 +0200
+        Wed, 17 Sep 2025 09:25:28 -0700 (PDT)
+Message-ID: <360a350d-5823-4773-bcdf-dedfe4751043@redhat.com>
+Date: Wed, 17 Sep 2025 18:25:27 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -74,117 +74,71 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [MPTCP next 04/12] mptcp: introduce the mptcp_init_skb helper.
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Subject: Re: [MPTCP next 10/12] mptcp: prevernt __mptcp_move_skbs()
+ interferring with the fastpath
+To: Matthieu Baerts <matttbe@kernel.org>, Geliang Tang <geliang@kernel.org>,
+ mptcp@lists.linux.dev
 References: <cover.1758039775.git.pabeni@redhat.com>
- <e070cc84b7d00a3b0ec31f95c810fe2e7bf85059.1758039775.git.pabeni@redhat.com>
- <bb6f1b55c71e6af09b363d27990e14640436dcfc.camel@kernel.org>
+ <d5a0349baeeb725be8de01024dae64abc1a7499a.1758039775.git.pabeni@redhat.com>
+ <44782f5f4b2fabb1a3ebe476de6b671270671244.camel@kernel.org>
+ <a078369f-3dbb-49a0-9139-032912955829@kernel.org>
 From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <bb6f1b55c71e6af09b363d27990e14640436dcfc.camel@kernel.org>
+In-Reply-To: <a078369f-3dbb-49a0-9139-032912955829@kernel.org>
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 9xCHx9ZLGaYLaTVpgsIwvqq13aUfFnWX-_JGsxPRfo8_1758126150
+X-Mimecast-MFC-PROC-ID: qeDEdljUxJWef023eKOpqESVDhSmLqYLBJgLWx1peeo_1758126330
 X-Mimecast-Originator: redhat.com
 Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi,
 
-On 9/17/25 9:48 AM, Geliang Tang wrote:
-> On Tue, 2025-09-16 at 18:27 +0200, Paolo Abeni wrote:
->> Factor out all the skb initialization step in a new helper and
->> use it. Note that this change moves the MPTCP CB initialization
->> earlier: we can do such step as soon as the skb leaves the
->> subflow socket receive queues.
+
+On 9/17/25 2:53 PM, Matthieu Baerts wrote:
+> On 17/09/2025 05:39, Geliang Tang wrote:
+>> On Tue, 2025-09-16 at 18:27 +0200, Paolo Abeni wrote:
+>>> skbs will be left waiting in the subflow only in exceptional cases,
+>>> we want to avoid messing with the fast path by unintentionally
+>>> processing in __mptcp_move_skbs() packets landed into the subflows
+>>> after the last check.
+>>>
+>>> Use a separate flag to mark delayed skbs and only process subflow
+>>> with such flag set. Also add new mibs to track the exceptional
+>>> events.
+>>>
+>>> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+>>> ---
+>>>  net/mptcp/mib.c      |  2 ++
+>>>  net/mptcp/mib.h      |  4 ++++
+>>>  net/mptcp/protocol.c | 40 ++++++++++++----------------------------
+>>>  net/mptcp/protocol.h |  1 +
+>>>  4 files changed, 19 insertions(+), 28 deletions(-)
+>>>
+>>> diff --git a/net/mptcp/mib.c b/net/mptcp/mib.c
+>>> index cf879c188ca26..7af9d35cde884 100644
+>>> --- a/net/mptcp/mib.c
+>>> +++ b/net/mptcp/mib.c
+>>> @@ -85,6 +85,8 @@ static const struct snmp_mib mptcp_snmp_list[] = {
+>>>  	SNMP_MIB_ITEM("DssFallback", MPTCP_MIB_DSSFALLBACK),
+>>>  	SNMP_MIB_ITEM("SimultConnectFallback",
+>>> MPTCP_MIB_SIMULTCONNFALLBACK),
+>>>  	SNMP_MIB_ITEM("FallbackFailed", MPTCP_MIB_FALLBACKFAILED),
+>>> +	SNMP_MIB_ITEM("RcvDelayed", MPTCP_MIB_RCVDELAYED),
+>>> +	SNMP_MIB_ITEM("DelayedProcess", MPTCP_MIB_DELAYED_PROCESS),
+>>>  	SNMP_MIB_SENTINEL
 >>
->> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
->> ---
->>  net/mptcp/protocol.c | 46 ++++++++++++++++++++++++------------------
->> --
->>  1 file changed, 25 insertions(+), 21 deletions(-)
->>
->> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
->> index 671c51cb9539c..879157a1f4fb1 100644
->> --- a/net/mptcp/protocol.c
->> +++ b/net/mptcp/protocol.c
->> @@ -323,27 +323,11 @@ static void mptcp_data_queue_ofo(struct
->> mptcp_sock *msk, struct sk_buff *skb)
->>  		mptcp_rcvbuf_grow(sk);
->>  }
->>  
->> -static bool __mptcp_move_skb(struct mptcp_sock *msk, struct sock
->> *ssk,
->> -			     struct sk_buff *skb, unsigned int
->> offset,
->> -			     size_t copy_len)
->> +static void mptcp_init_skb(struct sock *ssk,
->> +			   struct mptcp_subflow_context *subflow,
+>> I guess this line was accidentally pasted, which prevents this patch
+>> from being applied.
 > 
-> subflow and ssk parameters are redundant, we can just use ssk.
-
-I added the subflow argument explicitly since the caller already had it
-handy to avoid an additional mptcp_subflow_ctx(). Perhaps the compiler
-is smart enough to generate the same code, let me try...
-
+> FYI, this line has been removed recently by commit 35cb2da0abaf ("mptcp:
+> snmp: do not use SNMP_MIB_SENTINEL anymore").
 > 
->> +			   struct sk_buff *skb, int offset, int
->> copy_len)
->>  {
->> -	struct mptcp_subflow_context *subflow =
->> mptcp_subflow_ctx(ssk);
->> -	struct sock *sk = (struct sock *)msk;
->> -	struct sk_buff *tail;
->> -	bool has_rxtstamp;
->> -
->> -	__skb_unlink(skb, &ssk->sk_receive_queue);
->> -
->> -	skb_ext_reset(skb);
->> -	skb_orphan(skb);
->> -
->> -	/* try to fetch required memory from subflow */
->> -	if (!sk_rmem_schedule(sk, skb, skb->truesize)) {
->> -		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_RCVPRUNED);
->> -		goto drop;
->> -	}
->> -
->> -	has_rxtstamp = TCP_SKB_CB(skb)->has_rxtstamp;
->> +	bool has_rxtstamp = TCP_SKB_CB(skb)->has_rxtstamp;
->>  
->>  	/* the skb map_seq accounts for the skb offset:
->>  	 * mptcp_subflow_get_mapped_dsn() is based on the current
->> tp->copied_seq
->> @@ -355,6 +339,24 @@ static bool __mptcp_move_skb(struct mptcp_sock
->> *msk, struct sock *ssk,
->>  	MPTCP_SKB_CB(skb)->has_rxtstamp = has_rxtstamp;
->>  	MPTCP_SKB_CB(skb)->cant_coalesce = 0;
->>  
->> +	__skb_unlink(skb, &ssk->sk_receive_queue);
->> +
->> +	skb_ext_reset(skb);
-> 
-> skb_orphan(skb) call was moved from here to after mptcp_init_skb(), but
-> was then completely removed in patch 11. I'm a bit confused by this. I
-> think it might be better to retain skb_orphan(skb) call here. Or
-> perhaps the addition of skb_dst_drop(skb) has made skb_orphan(skb)
-> unnecessary. I'd like to consult on this point.
+> I manually fixed the conflict, and sent the series to the CI. I also
+> restarted my syzkaller instances to validate your series.
 
-Patch 11 replaces the skb_orphan() call with an open-code optimized
-version of it, as skb_orphan() in this case is really just a skb_rfree()
-I'll expand the commit message in patch 11 to make it clearer.
+Oh wow! many thanks! I though I pulled and rebased the series just
+before submitting it, but perhaps PEBKAC hit again.
 
-> 
->> +	skb_dst_drop(skb);
->> +}
->> +
->> +static bool __mptcp_move_skb(struct mptcp_sock *msk, struct sk_buff
->> *skb)
-> 
-> The parameter 'msk' was changed to 'struct sock *sk' in patch 9. We can
-> directly adopt 'struct sock *sk' here as well.
+In any case I'll send a v2 to address the comments on other patches.
 
-Will do.
-
-Thanks,
-
-Paolo
+/P
 
