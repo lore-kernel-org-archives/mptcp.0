@@ -1,107 +1,96 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F161318141
-	for <mptcp@lists.linux.dev>; Thu, 18 Sep 2025 17:15:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F8B0226861
+	for <mptcp@lists.linux.dev>; Thu, 18 Sep 2025 17:42:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758215727; cv=none; b=C7nTw9GtU5DtvXOjHwm0eiwTx4eUVO5zcsrogsOF9eky3N/29raeNsxLDGRbq83IwDAMkHxdcq284imBYoDVpxPgcB2EftZ/bEfMmFkP90J7GQFYdS87z9DUDdvxZu9ucvBOFMLHjXWciJjN0JzdNsz3ZiBR8g1I4/xDQqjI9D8=
+	t=1758217363; cv=none; b=DljC6FFFJm497ZbFQOUI559KWmy1vZZjHZexGBmi9xYShIF17wTga9rMIiOZlaPnnkAeJXAXD4Z1x/lGunnfONel0TEMr5TvIFSInYtvuHvjsa8/E/gVF4BeT+qDuFW+l28Mv9Kp0kTecq4tHzPZb6yJomodkGqye+Phn/CzO/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758215727; c=relaxed/simple;
-	bh=BgPhdrdnMUrDF6QE4hEQDaKWzF+KV4FIU9bSXHFzDbM=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=DRPM0ZvpMD+JlwoAOiaZVY37wCfj04LvqnlTr032hYf+XQD+XJwyiekpooVgWRbw5PZ5LYXNwSJ7aMIaoqEA4eVhuWzK1A7vXTsGuYO52tNKSQEq90m5MKyuBosFueVZ0qbCfiq2vgOKnNdli72CXSERkVYBNCkGYPjYG5iEQiw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CbWtluCy; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1758217363; c=relaxed/simple;
+	bh=8JFnLRGFWceUFxj3kxBNiTvo0Nve7l7lF+NhB4lMHl8=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=FQZktOYR0ea11Mhosj4S9weuD4KjB+9oAJ+bQ3T5BA4ZelJ+uWOYAt1mlnojvaRiemwSW65Y6LicE0jCUFY8zVZR2eFX2W2m53tOXfppHYTqI1j9YNEdcYB6F3vEiblJGq0NP2s8iVH90Lfv/pwi0jg8CgD6lwA8cEmnKzCgvAc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HMo/1MBj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CbWtluCy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1758215725;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ze3XXSf5NNapAc678mCZq40V7l/IA2/jAVok2jLrHus=;
-	b=CbWtluCymzvaRy0Sa0lL9UmlsJ/nFma4pMgs8tqzCcD7pgqv4Wlf9PyH3mREL7hupUlxl9
-	4acIu0eLwLQlmxs3SxNRlZuDO1LcEaQhuxHjkHuuS3hztzZNeP4+TtQvXjwHFYt1LHKcb8
-	K/iU1DKn19+tMnnBUKrog1XxEmKZvfw=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-128-eE_B8Q0BNGeUcE5PBbrD5w-1; Thu,
- 18 Sep 2025 13:15:23 -0400
-X-MC-Unique: eE_B8Q0BNGeUcE5PBbrD5w-1
-X-Mimecast-MFC-AGG-ID: eE_B8Q0BNGeUcE5PBbrD5w_1758215722
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 39DFB19560A1
-	for <mptcp@lists.linux.dev>; Thu, 18 Sep 2025 17:15:22 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.44.32.207])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 6B1B330002C5
-	for <mptcp@lists.linux.dev>; Thu, 18 Sep 2025 17:15:21 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-next v2 12/12] mptcp: make fallback backlog aware
-Date: Thu, 18 Sep 2025 19:14:55 +0200
-Message-ID: <969bb267528128e861970168da3264822be48b35.1758214564.git.pabeni@redhat.com>
-In-Reply-To: <cover.1758214563.git.pabeni@redhat.com>
-References: <cover.1758214563.git.pabeni@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HMo/1MBj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94D6CC4CEE7;
+	Thu, 18 Sep 2025 17:42:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758217363;
+	bh=8JFnLRGFWceUFxj3kxBNiTvo0Nve7l7lF+NhB4lMHl8=;
+	h=From:Subject:Date:To:Cc:From;
+	b=HMo/1MBjTLapg0dD2ZnwCN72XcFvbBRpUmU2tzLRFsA6KEHJPknMYw9JAyDOZDXyJ
+	 5MRpt/CCbLNKcaKKLJ0rjg9NE8I1YVMEjgcNLGjXj0M1S5HkzPVo+WQ9XgQzmaq56h
+	 Zs0GCxePicZCUNeYHTtHyvyg6I+DBQAblDqLnfoGlmbcXVP1IHzTw0ZHJJSdDdBNbk
+	 nZWq3z0bhbG7cfIwY1EoWh636Hfs1gPLImYYTrSHPVhpBAkKm3jEFzgHYwMUU5vngO
+	 3ewLbsd9KR0k3FVI0kp11sw8LfAVeucZwJA/v5QGSUNb1nIbvZ4Psa4zznpXA19j+6
+	 4HracdZB3jAtg==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH mptcp-next 00/10] mptcp: pm: a few cleanups
+Date: Thu, 18 Sep 2025 19:42:16 +0200
+Message-Id: <20250918-pm-kern-endp-add_addr-v1-0-e12e58770a11@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: XSjJX1_NMo_84yGnPAlD9oaz629GFF-6f2zAA8SdtHk_1758215722
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-content-type: text/plain; charset="US-ASCII"; x-default=true
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAHhEzGgC/x2MwQrCQAwFf6XkbKCtVKi/IiJL9q0GaQzZIoXSf
+ 3fxMIc5zOxUEYpK126nwFerfqzJcOpIXsmeYM3NaezHqZ+HC/vCb4QxLDunnB+N4HmSIkgo5yL
+ UWg8U3f7fGy2+irNhW+l+HD+xCA9zcwAAAA==
+X-Change-ID: 20250916-pm-kern-endp-add_addr-95cfceaef3fc
+To: MPTCP Upstream <mptcp@lists.linux.dev>
+Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1990; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=8JFnLRGFWceUFxj3kxBNiTvo0Nve7l7lF+NhB4lMHl8=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDLOuLT284qeU5OyljiUaLmrfXHBvY3ewjfqDrjNnKsma
+ br1RfCWjlIWBjEuBlkxRRbptsj8mc+reEu8/Cxg5rAygQxh4OIUgInwaTH8L1DPj3xnUZyd7rts
+ YYlx9oFalftJM08xtyW+1gm+znLrICPDh7NKpdm39ucufi1/3Lukz0pUhCkkQ9HhyoXa+t0Llms
+ yAAA=
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-MPTCP can't relay on ack_seq outside the msk socket log scope. With
-packets pending in the backlog, such value can be quite far from the
-actual dummy correct sequence map value.
+I'm currently looking at adding ADD-ADDR endpoint type, see [1].
 
-Fallback dummy mapping are in sequence by definition, generate the
-data seq from the subflow sequence.
+When working on this, I decided to do something we should have done from
+a long time: renaming some variables with confusing names, and split
+some functions.
 
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Flushing this now, just to ease the reviews: this should be pure
+refactoring, no functional changes intended in all these commits.
+
+Based-on: <20250916-pm-c-flag-client-default-v2-0-3be2c5bc4d6a@kernel.org>
+Link: https://github.com/multipath-tcp/mptcp_net-next/issues/503
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- net/mptcp/subflow.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+Matthieu Baerts (NGI0) (10):
+      Squash to "mptcp: pm: in-kernel: usable client side with C-flag"
+      mptcp: pm: in-kernel: refactor fill_local_addresses_vec
+      mptcp: pm: in-kernel: refactor fill_remote_addresses_vec
+      mptcp: pm: rename 'subflows' to 'extra_subflows'
+      mptcp: pm: in-kernel: rename 'subflows_max' to 'limit_extra_subflows'
+      mptcp: pm: in-kernel: rename 'add_addr_signal_max' to 'endp_signal_max'
+      mptcp: pm: in-kernel: rename 'add_addr_accept_max' to 'limit_add_addr_accepted'
+      mptcp: pm: in-kernel: rename 'local_addr_max' to 'endp_subflow_max'
+      mptcp: pm: in-kernel: rename 'local_addr_list' to 'endp_list'
+      mptcp: pm: in-kernel: rename 'addrs' to 'endpoints'
 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 9baf3e54e46f2..8a64a1934d784 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -491,6 +491,9 @@ static void subflow_set_remote_key(struct mptcp_sock *msk,
- 	mptcp_crypto_key_sha(subflow->remote_key, NULL, &subflow->iasn);
- 	subflow->iasn++;
- 
-+	/* for fallback's sake */
-+	subflow->map_seq = subflow->iasn;
-+
- 	WRITE_ONCE(msk->remote_key, subflow->remote_key);
- 	WRITE_ONCE(msk->ack_seq, subflow->iasn);
- 	WRITE_ONCE(msk->can_ack, true);
-@@ -1425,9 +1428,12 @@ static bool subflow_check_data_avail(struct sock *ssk)
- 
- 	skb = skb_peek(&ssk->sk_receive_queue);
- 	subflow->map_valid = 1;
--	subflow->map_seq = READ_ONCE(msk->ack_seq);
- 	subflow->map_data_len = skb->len;
- 	subflow->map_subflow_seq = tcp_sk(ssk)->copied_seq - subflow->ssn_offset;
-+	subflow->map_seq = __mptcp_expand_seq(subflow->map_seq,
-+					      subflow->iasn +
-+					      TCP_SKB_CB(skb)->seq -
-+					      subflow->ssn_offset - 1);
- 	WRITE_ONCE(subflow->data_avail, true);
- 
- 	/* last skb in closed fallback subflow: we are at data fin */
+ include/uapi/linux/mptcp.h                        |   5 +
+ net/mptcp/pm.c                                    |  16 +-
+ net/mptcp/pm_kernel.c                             | 451 ++++++++++++----------
+ net/mptcp/pm_userspace.c                          |   2 +-
+ net/mptcp/protocol.h                              |  15 +-
+ net/mptcp/sockopt.c                               |  20 +-
+ tools/testing/selftests/bpf/progs/mptcp_subflow.c |   2 +-
+ 7 files changed, 284 insertions(+), 227 deletions(-)
+---
+base-commit: 32778f6dc930afb30f995997c12cd8b829ac1600
+change-id: 20250916-pm-kern-endp-add_addr-95cfceaef3fc
+
+Best regards,
 -- 
-2.51.0
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
