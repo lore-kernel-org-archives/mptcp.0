@@ -1,54 +1,54 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6901B3164DA
-	for <mptcp@lists.linux.dev>; Thu, 18 Sep 2025 17:15:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37D07317701
+	for <mptcp@lists.linux.dev>; Thu, 18 Sep 2025 17:15:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758215723; cv=none; b=l6WPt6uaUwfO90palFj/WwaCy+ppHHySr/O9S5w6/FjjK+yPQlh+wfv7BkNHAg3TmD0FlwFKelqZUbdPSRdhnKVqLIzPdlg8daX6xqKmLinmclwCKgykMNbPqGyOOhoMYc1bRMRTjoLLcAOXNdsQD4yl9UI1WsvgThh+VajEmWQ=
+	t=1758215724; cv=none; b=O3bvSet3xTNjGCkrLxVk9sS8cBmxEQ6HGs6k8F7f6a1Mr4ygow3Q1qcDFBSW1IfZdsB6zOh7Z1Am6keJrC4SwK5Q/oW5vQSBpeOnGmN8KxbOL0W9LOU53rTokVzpMzcT9R9L5oAIIIAEEli/ylisau8/ihYU9g8V24k2Zk/kbbw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758215723; c=relaxed/simple;
+	s=arc-20240116; t=1758215724; c=relaxed/simple;
 	bh=za3zfG5FzKrmR4r2PHSsVBpmQJJJNzohm2/OGmOB4nw=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=OckMnSEeCNlKtoPKUH49drYVw8o6yMvdH0KFAZS8JlSKwiDypLq9AlwBlgqxFwi6nvSDpy/qafTeOUOHpLTD5rVxPQ7fsxv3vMaNCC3Ldner0H+b2fUK1Cy5WZPYbUFphHs0uH6EXRqbyqt1D8TMWke0zV6NZyQKHChNvNDdB6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ifE8lpuJ; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version:content-type; b=KGTdzO4iGP8goEnEHL+ivIfz3qbRPQFHgWD2dE5t6srO5K0U0t+kxelCnBb02weHBuNEN4UXNpnw5nuqgl+be6l39MpCBXX6R+uIpw0w8ClvCHHEhEqmyNnKWer38AErC8DFpx3j/tiCZM48yUCK3QmSkRgJWDnEXZ4KBWnHxDw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ioBemXCU; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ifE8lpuJ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ioBemXCU"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1758215720;
+	s=mimecast20190719; t=1758215722;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
 	bh=wdiibhULx9nKxMch5VIhMjd7elW35fAWZ8FNHtMXvEs=;
-	b=ifE8lpuJrOidfWNdvjNBF0qkm5j0QoqmZc1ds7Ir56je9n/X8gPNhlSnuMmUtpcVGNJ4b8
-	EVlt0UmzC6T8AQ7ZT1CIOFtX9Z7n/rDwejcRW3m7tdXu95TYjIYDcmd8TggaTrKfVsPzQf
-	oxUn2N6DJkF/P5YPw8pZAwoHtjwG7Qo=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+	b=ioBemXCU9mqJ7ps8GRCmSP0yFb3hzmLpaLDUKej8cWEX4EzskwhrN52bVcKrklGaIONywy
+	oefN7qXqJJ5e7PGok3GkBOPGcOlmZDklfExR4UjISOI5xZxfUO+56bbhHjwp0rAMD22Mbh
+	v0cpfhiIu2fWJ+clzl7ezP9ziNy7/1k=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-343-mzuI-8_wMBKaUckyhvfMRg-1; Thu,
- 18 Sep 2025 13:15:19 -0400
-X-MC-Unique: mzuI-8_wMBKaUckyhvfMRg-1
-X-Mimecast-MFC-AGG-ID: mzuI-8_wMBKaUckyhvfMRg_1758215718
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-75-B9TQHT9FNreTWkplpruykA-1; Thu,
+ 18 Sep 2025 13:15:20 -0400
+X-MC-Unique: B9TQHT9FNreTWkplpruykA-1
+X-Mimecast-MFC-AGG-ID: B9TQHT9FNreTWkplpruykA_1758215719
 Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4843319560B4
-	for <mptcp@lists.linux.dev>; Thu, 18 Sep 2025 17:15:18 +0000 (UTC)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 957A2180034F
+	for <mptcp@lists.linux.dev>; Thu, 18 Sep 2025 17:15:19 +0000 (UTC)
 Received: from gerbillo.redhat.com (unknown [10.44.32.207])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 73A9A30002C5
-	for <mptcp@lists.linux.dev>; Thu, 18 Sep 2025 17:15:17 +0000 (UTC)
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id C2AD030002C5
+	for <mptcp@lists.linux.dev>; Thu, 18 Sep 2025 17:15:18 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-next v2 10/12] mptcp: prevernt __mptcp_move_skbs() interfering with the fastpath
-Date: Thu, 18 Sep 2025 19:14:52 +0200
-Message-ID: <c7c1ef249ec14f9f456d7a853a16ec05f69d89c0.1758214564.git.pabeni@redhat.com>
-In-Reply-To: <cover.1758214563.git.pabeni@redhat.com>
-References: <cover.1758214563.git.pabeni@redhat.com>
+Subject: [PATCH mptcp-next v2 10/12] mptcp: prevernt __mptcp_move_skbs() interferring with the fastpath
+Date: Thu, 18 Sep 2025 19:14:53 +0200
+Message-ID: <d042c20cfb99aa946d2873034f3f2c03f5e847cf.1758213308.git.pabeni@redhat.com>
+In-Reply-To: <cover.1758213308.git.pabeni@redhat.com>
+References: <cover.1758213308.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -57,7 +57,7 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: sRmS2nr5FrKPnvtgK70p0vRdSqyDK6oVebHk_k2KbEU_1758215718
+X-Mimecast-MFC-PROC-ID: v7Pks1DxKxIGCpyDGL-vKL-PUw5jk877s_ny_5S_KVQ_1758215719
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
