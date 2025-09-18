@@ -1,125 +1,150 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 855152DF6E3
-	for <mptcp@lists.linux.dev>; Wed, 17 Sep 2025 16:35:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 951612EA494
+	for <mptcp@lists.linux.dev>; Thu, 18 Sep 2025 07:37:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758126914; cv=none; b=hBNw5XRSSWi4X25FcIDAtVovR2yJ5xntt5XsR01jIaG8P93S+qKIGdfp4hDE7hT4Kg1f3fRMjvrD+rasP6ZhEAO6le61+ND9oFrRv5vy/oqy4o9YHOaQ/N3laAh+KKOFNJMeDolRnrPN1EQjOErl+azDhdo65aFvYxXOZ5FIkU8=
+	t=1758181025; cv=none; b=p995uPltmLTyhQNxhYoL//R/zNqbUfCCG8jbL22XnCvStU3yUpA4BhHiyeqJIME/pFUXAykQwlW1ePa/xE1wKem+0XGK/Ytfdx41Es6dVGZs9C8RMd7zVU2bvUqlaMIvAYKg3kPxt2fbT9ns3yhgYq78AEkXFEOb5RL5X7seUwg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758126914; c=relaxed/simple;
-	bh=AF/XyO3JTmwxcvR9Z83HIIMcqtIA4M+mF5LB1GV2Tjs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=UgPRH3unyvQaHyc8I91KPTJjWcMwf9rtD5R++VMWekCpns7n+w8k3VAmuOBXzbAvR02uUbmgbs/TtNfmvWaY5CQuQpZM4QFdJ+lXIbTD1anT+OGpFWCoFHAHqbp7QJy3S3kwoenX7HO41u/XZnpZNvxJZF1RI7mXgCRYafhvQYo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JiZsIx7j; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1758181025; c=relaxed/simple;
+	bh=9Ho4P42EGhvYhFEdUEyI88E9SAoONBBfgOPND3eHMvo=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=e6nfDfIFvkOwbxscEby4D2eIb8xAdzJg09wF3onfCakrMtFuKvfZbnCHoJlKAdR236Nb8GNnGsmaFIpueLWcZWAJth2zXuJ96Fs3ppnLxJ0aDd2dE9pe74ZhuX1L+Dq9oK4Hg74AW0+zrhNNaJTZR0HERD/6vlWfb4VOKTj69a0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tngvvhvX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JiZsIx7j"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1758126912;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZPnQf0Orubl6LY1z68Wp6RtEDEQZyWCIqCHotCcuCow=;
-	b=JiZsIx7jKfLTWosdeIS1UDdeoGvhZDHluIVS0VxO832C4N92m2GxuM+QKVSp+IkMMkQwau
-	wEnq41gAyRnVjL8UHdiSVyk4/gFY42CMNmRoi2b5eUrSpPrEcfAecJ1vf441ZZNCWCAMoN
-	h3X22af1Mmu1FBZwjm8IeAqNyngiqR0=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-331-iYY43vTXODm9Vadk-Rksjg-1; Wed, 17 Sep 2025 12:35:10 -0400
-X-MC-Unique: iYY43vTXODm9Vadk-Rksjg-1
-X-Mimecast-MFC-AGG-ID: iYY43vTXODm9Vadk-Rksjg_1758126910
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-45f2b9b958aso28705905e9.3
-        for <mptcp@lists.linux.dev>; Wed, 17 Sep 2025 09:35:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758126909; x=1758731709;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZPnQf0Orubl6LY1z68Wp6RtEDEQZyWCIqCHotCcuCow=;
-        b=MpIMmCa4FfD9jMOZM/2HrzRe9LTP3izSVyIyZgTi0k78nFMx1wC0ihYlgjbhPqspay
-         cFus7neIYyiFzw8yuPBQLyBXu48KGHy/mCZQlWbBpALvrafVfwlWG77nng9x9AyHLCxW
-         /rgi96ITLK6w5lKfwUv7EYKoUZavRVDaO7Lp6RA37kAhpeMm6Hb61W8yHtmaxwkPLXdm
-         WEE66PLAdk18kV5Gt2rrwQ5wL0zAs52CTaphltW46gLOwg1ffuRLvd0xMrKzIHFaNy+T
-         OfYzjLXe0mljoNomjmdMnpmaC13ehRv3YzuxjNMg97w7SmPFZT6fa4fB2iqhAKoFYqtH
-         Wd7A==
-X-Forwarded-Encrypted: i=1; AJvYcCWEz/nOGifzUNeg+tndyxZHTbPx5Vr44tC9tQ8SK+wvQ1WzQl7T12BcxnfDo8Iu45mucmhfyQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0YyPQ6kbBwhFxSx5EUWW3CRVZ7X9gGotnpcHYI81tc9nyKzNnKaW
-	NZV70Y/5huAbNthVkeUDy+4SW4z3LhkQ9IU/CQfsEUaNglMb6bQUpxr6+WuoYhCGuKjlO7+Jb/j
-	rlwfkzqM2c6XsQ9TsQpYbm/igkZtF/b4TDbpnzMF9BQT6rXEUzq+Mmte3
-X-Gm-Gg: ASbGncvUvchUv2FTUPw9TB16cw2fA73Oy9K+dUMbnrYp8O0/BfjVUWjlleh5LMEsfiI
-	obCQRwXfnmgbmydk3zmw5m6IXyLCy59ESxdm57XzIt7Sf/kccmau6ZvQKXyKCg9EDGvuvJd5RUn
-	uklfD8cXBYD0yCs89wsjDAjqphQsLz5SuZtf5Jt+2z6RryWKuTGjuSzpl3ssRYPiDaFbJOAKaPp
-	7eGSme1lROhVGk5lTbs3fX+PaHkkbIjo5GLkEKx0M6R/GJ4gZsMlUsch2YfR2XeK2du19OETL/9
-	G/4eFUpFhygwRxMQGb1gAWOgMpeTVoTjpeLaxKdH4BWbBkRWlGxxPz4jBnttC4ZnsYRZMen3oY3
-	CPoEVIcvNyUKA
-X-Received: by 2002:a05:600c:138b:b0:45f:2828:6a69 with SMTP id 5b1f17b1804b1-46206b2e15dmr28158575e9.28.1758126909650;
-        Wed, 17 Sep 2025 09:35:09 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHdEcVqowWt979uKl4LwU7G+tXju1ftEahVLYbjAdGF94w2ApnT0DtsFm7uQ9oqNWi0hkjZ4A==
-X-Received: by 2002:a05:600c:138b:b0:45f:2828:6a69 with SMTP id 5b1f17b1804b1-46206b2e15dmr28158405e9.28.1758126909179;
-        Wed, 17 Sep 2025 09:35:09 -0700 (PDT)
-Received: from ?IPV6:2a0d:3344:2712:7e10:4d59:d956:544f:d65c? ([2a0d:3344:2712:7e10:4d59:d956:544f:d65c])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-461eefee9f3sm35664175e9.1.2025.09.17.09.35.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 17 Sep 2025 09:35:08 -0700 (PDT)
-Message-ID: <92f47332-97fe-4a8b-adbf-7796aecffd34@redhat.com>
-Date: Wed, 17 Sep 2025 18:35:07 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tngvvhvX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E594C4CEE7;
+	Thu, 18 Sep 2025 07:37:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758181025;
+	bh=9Ho4P42EGhvYhFEdUEyI88E9SAoONBBfgOPND3eHMvo=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=tngvvhvXCkfnjR62T+RWB02QA9gd0beiXWP/UEFTYKZuDw9Qjfwlus7R+mrcVHBnw
+	 NVeLc4OlU0I8A8PFwTI/eAN5wfQlLveTpJhF8xYo8+8IHKq3Lzoe7gyoSlokNGOjzB
+	 bqIWfMni+obHQQLYMC6RspQ4i6YP/nefKRqyz3Bv5ki22on7LcJkKCcBS8BW+nS6O/
+	 A6lXI0fIDWO6O7Gf6BawEKkSreL4XZRQTtoSgnKUMSOBS0ceW6Bu0uzmpyBccqA6LA
+	 D7bsW+JAeiiuKZrRUK9Bik/iLlwD5DCdeHkh3/T0607tWlWNgNVfqoOKYL2PLc9nZq
+	 zun1cKpTP8svg==
+Message-ID: <717920eaaa9d4d0da181d84dd11334dae2568f34.camel@kernel.org>
+Subject: Re: Add Multipath TCP (MPTCP) Support to the Java Networking API
+From: Geliang Tang <geliang@kernel.org>
+To: Alan Bateman <alan.bateman@oracle.com>, net-dev@openjdk.org, 
+ "nio-dev@openjdk.org"
+	 <nio-dev@openjdk.org>
+Cc: Matthieu Baerts <matttbe@kernel.org>, Mat Martineau
+ <martineau@kernel.org>, 	mptcp@lists.linux.dev, Gang Yan
+ <yangang@kylinos.cn>, Xiang Gao	 <gaoxiang@kylinos.cn>,
+ core-libs-dev@openjdk.org
+Date: Thu, 18 Sep 2025 15:36:58 +0800
+In-Reply-To: <c01f7f30efd2f9fb3185f9ad82579eca8a613ac3.camel@kernel.org>
+References: <da3912a3e0b03974305513219621856d33f82219.camel@kernel.org>
+			 <7403952e-14c1-4ba2-871e-0e2174fd5167@oracle.com>
+	 <c01f7f30efd2f9fb3185f9ad82579eca8a613ac3.camel@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.56.0-1 
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [MPTCP next 09/12] mptcp: leverage the sk backlog for RX packet
- processing.
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-References: <cover.1758039775.git.pabeni@redhat.com>
- <aa6e34c45c507061a316f29d075f050cbbbdbe2d.1758039775.git.pabeni@redhat.com>
- <8e688f56dcd264805bac777f1612241f6b2eb836.camel@kernel.org>
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <8e688f56dcd264805bac777f1612241f6b2eb836.camel@kernel.org>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: yb-UpAQaKB071vX-jtjUhmeJ4qFVzP0gdwxtbdOs9t0_1758126910
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 9/17/25 12:07 PM, Geliang Tang wrote:
-> On Tue, 2025-09-16 at 18:27 +0200, Paolo Abeni wrote:
->> This streamline the RX path implementation and improves the RX
->> performances by reducing the subflow-level locking and the amount of
->> work done under the msk socket lock; the implementation mirror
->> closely
->> the TCP backlog processing.
->>
->> Note that MPTCP needs now to traverse the existing subflow looking
->> for
->> data that was left there due to the msk receive buffer full, only
->> after
->> that recvmsg completely empties the receive queue.
+Hi Alan,
+
+On Fri, 2025-09-05 at 18:11 +0800, Geliang Tang wrote:
+> Hi Alan,
 > 
-> This patch breaks my "implement mptcp read_sock v11" test case in
-> patchwork, and I haven't figured out the reason yet.
+> Thanks for your reply.
+> 
+> On Fri, 2025-09-05 at 10:28 +0100, Alan Bateman wrote:
+> >  
+> > On 05/09/2025 09:43, Geliang Tang wrote:
+> >  
+> >  
+> > >  
+> > > :
+> > > 
+> > > 3. Proposed Java API Changes
+> > > 
+> > > The goal is to allow Java applications to opt-in to using MPTCP
+> > > when
+> > > creating sockets, without breaking existing code. The proposed
+> > > changes
+> > > are additive and backward-compatible.
+> > > 
+> > > The core idea is to add a boolean mptcp parameter through the API
+> > > layers, from the public Socket class down to the native system
+> > > call.
+> > >  
+> >  
+> >  (moving the discussion to nio-dev and net-dev).
+> >  
+> >  Adding new constructors to legacy Socket/ServerSocket may work for
+> > your initial prototype but would be problematic to propose as it
+> > would bake non-standard features into the standard API. Also many
+> > high performance servers use SocketChannel rather than Socket.
+> >  
+> >  One suggestion for a next prototype is to model the enablement of
+> > MultiPath TCP as as a JDK-specific socket option (see
+> > jdk.net.ExtendingSocketOptions). All of the standard APIs for
+> > networking sockets define a setOption method for setting socket
+> 
+> I was initially concerned that calling setOption() after Socket()
+> creation to convert TCP to MPTCP was too late. Creating an MPTCP
+> socket
+> must be done during the socket() system call.
+> 
+> > options. If modeled as a socket option then enabling can create a
+> > new
+> > AF_INET6/SOCK_STREAM/IPPROTO_MPTCP socket and then dup2 it into
+> > place
+> 
+> Until I saw here, it should be feasible if the socket can be created
+> again and dup when calling setOption().
+> 
+> I will try to reimplement MPTCP support using
+> jdk.net.ExtendingSocketOptions soon and give you feedback.
 
-Thanks for the head-up. On top of this patch, statement alike:
+I have completed the implementation. Thanks to Xiang Gao and Gang Yan
+for their help. I added a new option named TCP_MPTCPIFY in
+jdk.net.ExtendedSocketOptions (the name was chosen to align with
+'mptcpize' tool in mptcpd and 'mptcpify' in BCC). When this option is
+set, it calls the JNI function mptcpify0.
 
-	if (skb_queue_empty(&sk->sk_receive_queue))
-		__mptcp_move_skbs(sk);
+Following your suggestion, mptcpify0 is implemented by referencing
+Java_sun_net_sdp_SdpSupport_convert0. It creates a new MPTCP socket,
+uses dup2 to duplicate it, and then closes the redundant socket.
 
-should be changed into:
+I have added your tag in the patch:
 
-	if (skb_queue_empty(&sk->sk_receive_queue)) {
-		__sk_flush_backlog(sk);
-		if (skb_queue_empty(&sk->sk_receive_queue))
-			__mptcp_move_skbs(sk))
-	}
+Suggested-by: Alan Bateman <alan.bateman@oracle.com>
 
-Possibly an helper for the above could help
+I also included a test example for this option. All modifications can
+be found here:
 
-/P
+https://github.com/openjdk/jdk/compare/master...geliangtang:jdk:master
 
+Please provide any feedback or suggestions. As for the next steps,
+should I create a new issue for this feature and submit a proper pull
+request?
+
+Thanks,
+-Geliang
+
+> 
+> Thanks,
+> -Geliang
+> 
+> > so that the original AF_INET6/SOCK_STREAM/0 socket is closed.
+> > Enabling can be made to fail if the socket is already bound. It
+> > could
+> > copy over existing socket options if needed. Look at the built-in
+> > (and no longer used) SDP support for an example that does similar
+> > with AF_INET_SDP/SOCK_STREAM/0. The only API surface would be a
+> > socket option defined in jdk.net.ExtendingSocketOptions.
+> >  
+> >  -Alan
+> >  
+> >  
