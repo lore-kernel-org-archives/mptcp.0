@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A45962E2EF3
-	for <mptcp@lists.linux.dev>; Fri, 19 Sep 2025 08:17:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB0752E7162
+	for <mptcp@lists.linux.dev>; Fri, 19 Sep 2025 08:19:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758269837; cv=none; b=kJUPE97Pl8WY5HiGRI4dX8IFWTxZxcDGp3jocP1k60iqGz7NEjbLDb+M4EWqkZTS//J48riRv0/tyqoGy7Hzn2EZiNnQFnVhwgF/Sng7c+V1nLnUxeheR5kAnvIEivzDKeMPHA4pg1p7tL/xxaN9DvDQrKvbniSZd5/AwVblk8E=
+	t=1758269993; cv=none; b=X2k7zXUNVc3bjtN/wF3j0u7qn7zRZ42DpUTgIvnOx5NrLBeQYnZSDbvlB+9FNGFVn6i3wONO0vNSLsb/qkXhBpvnmRt1vgWOSV+BG7YDP1KiUX5WElqrDjIpMz5lSANN1LyswbnKUn4MIuz2puqZmJARjzXVEWjxHYf1esbfISI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758269837; c=relaxed/simple;
-	bh=i3/RzkO3B8rc15ZliOkwEOYBS4cPZFpT6JGYgtdm5P0=;
+	s=arc-20240116; t=1758269993; c=relaxed/simple;
+	bh=NhPHYm7AFsrwsPYqSoUVivlr9WHEbmqO4hAfdzXqNE0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=RuzgWzXJilR1/hjVOsvcWS3JxwmPyTqMEHf8HrlTtFtUifMwR8N8ke7T6xScsPSyzMljwUJJUV5RipFeZBw9k2MLthk/NagghI6W43bEhYFEwAEhCdA56djWyRLb0YXQoirYoUlupZvZq2QJWZNAY86/l5pyQ4WtdLeW4v5pEXU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G11O1c4B; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=HHwBaCuuMGZ1yPMqYPwz1Yt7xKLdOaifcHTVbZpkN+UT/yzZx83CnHwWZ1c+HgBEC6Z18/VGLTtZ0F1pIBjFWZIQ0TLvwr8BB0hBBGA8x+Gjbr0+eyKHJ9cLHhn2PgvWQS/nkxKLAYJZ0yCLtcUJBpU1QtDG+WSs0u91WX5oATI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RSxkm1dZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G11O1c4B"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A63ABC4CEF0;
-	Fri, 19 Sep 2025 08:17:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RSxkm1dZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85E6DC4CEF0;
+	Fri, 19 Sep 2025 08:19:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758269837;
-	bh=i3/RzkO3B8rc15ZliOkwEOYBS4cPZFpT6JGYgtdm5P0=;
+	s=k20201202; t=1758269993;
+	bh=NhPHYm7AFsrwsPYqSoUVivlr9WHEbmqO4hAfdzXqNE0=;
 	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=G11O1c4BZkZ25lo6hxUViav/VL8giUr/VfobWB91gekTPufCmTWSxK5VN1RbFSxyK
-	 ctIr+oNpwKUT76lW3kHSzoALeZlmQbNxfDNqw2YPFrVOqdwA256Lh+U9N6vloHDfs3
-	 EfRJ3/cv6sLEIas1UeSA829TVjGuWEIXaCSJydPzukuUH9HfrNa6bhLDnmuwEpBrkZ
-	 wTW2ZU/ukgIG7gujrX9g13a6oFtWu7mBhkcIXR++EZUVnrYDfE5A0cRv7rTi5/kuIo
-	 nmsnzFcOwmCdsBv5KhfZA3QbBfUTLdVsME9xzw1A8bndmcB7T+hz2XYfvLVtyEk5FD
-	 fCvqTX7JkyCJQ==
-Message-ID: <77711101-541d-4d12-b377-74faf088c40f@kernel.org>
-Date: Fri, 19 Sep 2025 10:17:15 +0200
+	b=RSxkm1dZ1aIxpGREpu7lSXokJOURp9XStBrSx9mX9JdCBnqfdnI/BfUSwe6NmTu/w
+	 LJ2eyWInE2xXnzW6YCjGZ9zy8mrthpbOk67nLqJpyr5RQGexP89cmkV0s3TzWka3Va
+	 wMF4vr7iRpFtIzo1ttuzNvK3gZ1V6GbcpU+0KMjGHTYUi+PHsLVAAyqbG2TBpyW52m
+	 t8qJWp781aBAYnsOFjXVvbxJO1QzJztTX7C300EaivsdQP1ilt5QUQYJLupGWaH9HW
+	 /DC6127iV3IWWkQ/dZqqVh056iibeRZc+rNxYwEEqqCj4AZqY3f7YlBXupPIQLn2pH
+	 M78Jx6v6R+MGw==
+Message-ID: <1f1e3ac1-692e-41e9-8d1d-2e6d1e3b6252@kernel.org>
+Date: Fri, 19 Sep 2025 10:19:50 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net v2 1/2] mptcp: pm: in-kernel: usable client side
- with C-flag
+Subject: Re: [PATCH mptcp-next 01/10] Squash to "mptcp: pm: in-kernel: usable
+ client side with C-flag"
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, MPTCP Upstream <mptcp@lists.linux.dev>
-References: <20250916-pm-c-flag-client-default-v2-0-3be2c5bc4d6a@kernel.org>
- <20250916-pm-c-flag-client-default-v2-1-3be2c5bc4d6a@kernel.org>
- <b31466fa93dfaf3eb7a5b71712275d309c63fc21.camel@kernel.org>
+References: <20250918-pm-kern-endp-add_addr-v1-0-e12e58770a11@kernel.org>
+ <20250918-pm-kern-endp-add_addr-v1-1-e12e58770a11@kernel.org>
+ <ac08f69806eebc9237119b45ab6b3e7a1bd059ad.camel@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,189 +87,44 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <b31466fa93dfaf3eb7a5b71712275d309c63fc21.camel@kernel.org>
+In-Reply-To: <ac08f69806eebc9237119b45ab6b3e7a1bd059ad.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 19/09/2025 05:01, Geliang Tang wrote:
+On 19/09/2025 05:18, Geliang Tang wrote:
 > Hi Matt,
 > 
-> Thanks for this v2.
-> 
-> On Tue, 2025-09-16 at 13:01 +0200, Matthieu Baerts (NGI0) wrote:
->> When servers set the C-flag in their MP_CAPABLE to tell clients not
->> to
->> create subflows to the initial address and port, clients will likely
->> not
->> use their other endpoints. That's because the in-kernel path-manager
->> uses the 'subflow' endpoints to create subflows only to the initial
->> address and port.
->>
->> If the limits have not been modified to accept ADD_ADDR, the client
->> doesn't try to establish new subflows. If the limits accept ADD_ADDR,
->> the routing routes will be used to select the source IP.
->>
->> The C-flag is typically set when the server is operating behind a
->> legacy
->> Layer 4 load balancer, or using anycast IP address. Clients having
->> their
->> different 'subflow' endpoints setup, don't end up creating multiple
->> subflows as expected, and causing some deployment issues.
->>
->> A special case is then added here: when servers set the C-flag in the
->> MPC and directly sends an ADD_ADDR, this single ADD_ADDR is accepted.
->> The 'subflows' endpoints will then be used with this new remote IP
->> and
->> port. This exception is only allowed when the ADD_ADDR is sent
->> immediately after the 3WHS, and makes the client switching to the
->> 'fully
->> established' mode. After that, 'select_local_address()' will not be
->> able
->> to find any subflows, because 'id_avail_bitmap' will be filled in
->> mptcp_pm_create_subflow_or_signal_addr(), when switching to 'fully
->> established' mode.
->>
->> Fixes: df377be38725 ("mptcp: add deny_join_id0 in
->> mptcp_options_received")
->> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/536
->> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
->> ---
->> Notes:
->> - I tried to find a simple solution that can hopefully be backported
->> to
->>   cover the 'CDN' use-case.
->> - I tried to find a solution respecting the 'accepted add addr'
->> limit,
->>   but I don't see how to... That's why here I limit the exception a
->>   maximum: when this limit is 0 (default case), only the first
->> ADD_ADDR,
->>   etc. Feel free to share what you think about that.
->> - I have some additional code doing some cleanup, and I started to
->> look
->>   at #503, which is a bit linked to that.
->> - v2: move conditions to new helper (Geliang) + rename var, squash
->> comm.
->> ---
->>  net/mptcp/pm.c        |  7 +++++--
->>  net/mptcp/pm_kernel.c | 37 +++++++++++++++++++++++++++++++++++++
->>  net/mptcp/protocol.h  |  7 +++++++
->>  3 files changed, 49 insertions(+), 2 deletions(-)
->>
->> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
->> index
->> 02dfb379417e2843301f121039ec0d370b040ef7..edaf93fe6f86b32aee8e9bb8831
->> 8b1dc2a7fcb5e 100644
->> --- a/net/mptcp/pm.c
->> +++ b/net/mptcp/pm.c
->> @@ -637,9 +637,12 @@ void mptcp_pm_add_addr_received(const struct
->> sock *ssk,
->>  		} else {
->>  			__MPTCP_INC_STATS(sock_net((struct sock
->> *)msk), MPTCP_MIB_ADDADDRDROP);
->>  		}
->> -	/* id0 should not have a different address */
->> +	/* - id0 should not have a different address
->> +	 * - special case for C-flag: linked to
->> fill_local_addresses_vec()
->> +	 */
->>  	} else if ((addr->id == 0 &&
->> !mptcp_pm_is_init_remote_addr(msk, addr)) ||
->> -		   (addr->id > 0 && !READ_ONCE(pm->accept_addr))) {
->> +		   (addr->id > 0 && !READ_ONCE(pm->accept_addr) &&
->> +		    !mptcp_pm_add_addr_c_flag_case(msk))) {
->>  		mptcp_pm_announce_addr(msk, addr, true);
->>  		mptcp_pm_add_addr_send_ack(msk);
->>  	} else if (mptcp_pm_schedule_work(msk,
->> MPTCP_PM_ADD_ADDR_RECEIVED)) {
->> diff --git a/net/mptcp/pm_kernel.c b/net/mptcp/pm_kernel.c
->> index
->> f30df8e884a0b3de9fb092e5774cafe08f6350ce..d7cd89fa6a11a1ea7703edbfbdf
->> 2bbe86a6a3054 100644
->> --- a/net/mptcp/pm_kernel.c
->> +++ b/net/mptcp/pm_kernel.c
->> @@ -389,10 +389,12 @@ static unsigned int
->> fill_local_addresses_vec(struct mptcp_sock *msk,
->>  	struct mptcp_addr_info mpc_addr;
->>  	struct pm_nl_pernet *pernet;
->>  	unsigned int subflows_max;
->> +	bool c_flag_case;
->>  	int i = 0;
->>  
->>  	pernet = pm_nl_get_pernet_from_msk(msk);
->>  	subflows_max = mptcp_pm_get_subflows_max(msk);
->> +	c_flag_case = remote->id &&
->> mptcp_pm_add_addr_c_flag_case(msk);
->>  
->>  	mptcp_local_address((struct sock_common *)msk, &mpc_addr);
->>  
->> @@ -409,6 +411,10 @@ static unsigned int
->> fill_local_addresses_vec(struct mptcp_sock *msk,
->>  			locals[i].flags = entry->flags;
->>  			locals[i].ifindex = entry->ifindex;
->>  
->> +			if (c_flag_case)
->> +				__clear_bit(locals[i].addr.id,
->> +					    msk-
->>> pm.id_avail_bitmap);
->> +
->>  			/* Special case for ID0: set the correct ID
->> */
->>  			if (mptcp_addresses_equal(&locals[i].addr,
->> &mpc_addr, locals[i].addr.port))
->>  				locals[i].addr.id = 0;
->> @@ -419,6 +425,37 @@ static unsigned int
->> fill_local_addresses_vec(struct mptcp_sock *msk,
->>  	}
->>  	rcu_read_unlock();
->>  
->> +	/* Special case: peer sets the C flag, accept one ADD_ADDR
->> if default
->> +	 * limits are used -- accepting no ADD_ADDR -- and use
->> subflow endpoints
->> +	 */
->> +	if (!i && c_flag_case) {
->> +		unsigned int local_addr_max =
->> mptcp_pm_get_local_addr_max(msk);
->> +
->> +		while (msk->pm.local_addr_used < local_addr_max &&
->> +		       msk->pm.subflows < subflows_max) {
->> +			struct mptcp_pm_local *local = &locals[i];
->> +
->> +			if (!select_local_address(pernet, msk,
->> local))
->> +				break;
->> +
->> +			__clear_bit(local->addr.id, msk-
->>> pm.id_avail_bitmap);
->> +
->> +			if (!mptcp_pm_addr_families_match(sk,
->> &local->addr,
->> +							  remote))
->> +				continue;
->> +
->> +			if (mptcp_addresses_equal(&local->addr,
->> &mpc_addr,
->> +						  local->addr.port))
->> +				continue;
->> +
->> +			msk->pm.local_addr_used++;
->> +			msk->pm.subflows++;
->> +			i++;
->> +		}
->> +
->> +		return i;
->> +	}
-> 
-> In the subsequent patches, this was refactored into a separate helper.
-> I think that change is well-implemented and could be directly squashed
-> into this patch. We can define this fill_local_addresses_vec_c_flag
-> here directly within this patch. WDYT?
+> Thanks for this patch.
 
-I think it would be better not to add this new helper in this patch, and
-keep it as it is: it will be easier to backport that, and probably
-easier to review.
+Thank you for the review!
+
+> On Thu, 2025-09-18 at 19:42 +0200, Matthieu Baerts (NGI0) wrote:
+>> The id_avail_bitmap is only used when either the 'subflow' or
+>> 'signal'
+>> flag is used, but not with 'fullmesh' only. Here, it is replacing the
+>> 'subflow' action, so check if this flag is set.
+> 
+> I recall that 'fullmesh' can only be used together with 'subflow'. If
+> it has already been determined earlier that the flags contain
+> 'fullmesh', shouldn't the flags here already include 'subflow'? I'm not
+> entirely certain, but directly checking for 'subflow' as done in this
+> patch seems like a better approach.
+
+We have a restriction not to have "fullmesh" with "signal" (even if I
+think we should remove it: I think there is no technical reason to
+forbid), but we can have "fullmesh" without "subflow".
+
+> So this patch looks good to me.
+
+Thanks!
+
+> As mentioned in my previous comment, if possible, the refactoring of
+> the fill_local_addresses_vec_c_flag helper in patch 2 could also be
+> added to this squash-to patch.
+
+I would prefer not to.
 
 Cheers,
 Matt
