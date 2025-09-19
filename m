@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9846B1CFBA
-	for <mptcp@lists.linux.dev>; Fri, 19 Sep 2025 09:50:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CB51212575
+	for <mptcp@lists.linux.dev>; Fri, 19 Sep 2025 09:51:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758275440; cv=none; b=Iyyotrt3N/57jjxBolIV8IndLqypH2FN51ymE8UauRVvtF5FKDblGxXskKcarRehxXS82s4iqF3Hpn7emnanN64e/t0tDYwIs+O21lnPbSBYe8Ae8/0Uk4A/ylIBJ2sTKcgexdhRIvnlNebpsb3RN75LKGADBDwkJcj5a1UQ57U=
+	t=1758275464; cv=none; b=sSh2LKqxrdQIZxJAWf6RcBQKQ4VaH4ioPHABJgTI1XACRoRBpa+wVx1bVUNdUQJJZkY9WwTsW8JRzdHE2ERxGYT8EdybyZxEh31YJhPEBtEbiZT56Bf/Tk40NwT5e32wfTks55sklm7XFQ3H99B2p0WxkLoT2mLM94VAsK/ZiH0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758275440; c=relaxed/simple;
-	bh=/C4VOsN+9q2Purc80u6ziF43ZP2yWGrSnNIIpm4eJhk=;
+	s=arc-20240116; t=1758275464; c=relaxed/simple;
+	bh=wS/Di6JJ4nQK5XcMS4aiVE7TsgXkimqMcSu3nAePfQM=;
 	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Mzdxa43xxgBsuffMHaCX17is3O/wYX9BwHlUN4dVRYM35NiJOOIYQzaKHZAFGEUxU44vVQoq/3cNQIM5s+75NDmINGMQD/sbWq2oxJiTTeQ0aHT23E8ZP0iMhOohWyflua3XTPtuxWW25qjsN6+eNyAegB1oHTJt4KoA0Khuceo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cc3zfugk; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=bHMGGkcsZXaf7XHPDVjiGWjm8AwBHI7z6LheIte5IGUkytIsZBR4AJ85jZrNm50Zot1uL8su2kn/1hXXbH0kyKlqPnEMGIrhpQfVtJQ7ukzM4X8WkK6P4udjyrxr2SykKedExx7GcFgggjBKecoDxglfDloeIYSJv2LhX4v686E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OsmrifLj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cc3zfugk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53DBAC4CEF0;
-	Fri, 19 Sep 2025 09:50:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OsmrifLj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C21A3C4CEF0;
+	Fri, 19 Sep 2025 09:51:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758275440;
-	bh=/C4VOsN+9q2Purc80u6ziF43ZP2yWGrSnNIIpm4eJhk=;
+	s=k20201202; t=1758275463;
+	bh=wS/Di6JJ4nQK5XcMS4aiVE7TsgXkimqMcSu3nAePfQM=;
 	h=Subject:From:To:Date:In-Reply-To:References:From;
-	b=Cc3zfugkhbJo89HWXQZfKa18d2VmigR1g14J4doQ0tFH0muxZP1iDtcOSlOuDf3jX
-	 SXgENzq1oG2AGybsWJipNOgAhTeeQHN5wnGIVxoFqNEZ/TJoE1sPmEAq4nzUdUlGtt
-	 71c8/BmzGYKD9CwPiPDwjUh0FyQUgps6PrGIpXCrBdtZeZJ1KU/jE6rZGOFvIGED5p
-	 q9CwhX6wnWZPrGB3ecfgBfc37ylraYIjL6KpHlj0ZymeveVn/1j5Jtim2OLPHBNT35
-	 yueqmlLvfUDQ3ULOva4hDxrqEhzhTPycUkRMCfYZDS9cOrvBYmtkgjQbcIzQdP8PYe
-	 6CvZMi9tWyF/w==
-Message-ID: <3517fd7b54f5425970f9aea39c4762b723bfca63.camel@kernel.org>
-Subject: Re: [PATCH mptcp-next v2 05/12] mptcp: remove unneeded
- mptcp_move_skb()
+	b=OsmrifLjY/fQYM8P0tXQOUqL1zbKt/fNe1/hazfqy/PeZAGcffXoopKE9hyI5VkQM
+	 7KRgVmDTFN3M5gYvOZPILIAFoJGk5fWssk/9m3LFp2ClnKq1ayPrrAeU2pLYcO/Ax9
+	 0mF4zQi2B6l0YPja/5FRpNtFzREfrE9dK9DUkJB640Gf+hpIJ8gy4hg6yjvR+1nMFq
+	 6ti0YfuUYnCBvXNCsyEkM/u9R0AMN7gKx83C4pYYBTHRah4/mJ0JlUIwh5wZzj9xz6
+	 zMdMCpXRB3j0lSdU+0Z5MWzUkSBZ2ZDyba93jhuELiG6F/rnS0/yrLW3SqWeskjIGY
+	 U0a87YPp48peQ==
+Message-ID: <5c661ecc62a6326912f787a0ae6fe8b4fe94a438.camel@kernel.org>
+Subject: Re: [PATCH mptcp-next v2 07/12] mptcp: minor move_skbs_to_msk()
+ cleanup
 From: Geliang Tang <geliang@kernel.org>
 To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-Date: Fri, 19 Sep 2025 17:50:36 +0800
-In-Reply-To: <ef7887b4b1762d95f5fa64659083153d476ba467.1758214564.git.pabeni@redhat.com>
+Date: Fri, 19 Sep 2025 17:50:58 +0800
+In-Reply-To: <7874130ef3d034155655104b22712fa3c3c1d028.1758214564.git.pabeni@redhat.com>
 References: <cover.1758214563.git.pabeni@redhat.com>
-	 <ef7887b4b1762d95f5fa64659083153d476ba467.1758214564.git.pabeni@redhat.com>
+	 <7874130ef3d034155655104b22712fa3c3c1d028.1758214564.git.pabeni@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 User-Agent: Evolution 3.56.0-1 
 Precedence: bulk
@@ -46,9 +46,12 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
 On Thu, 2025-09-18 at 19:14 +0200, Paolo Abeni wrote:
-> Since commit b7535cfed223 ("mptcp: drop legacy code around RX EOF"),
-> sk_shutdown can't change during the main recvmsg loop, we can drop
-> the related race breaker.
+> Such function is called only by __mptcp_data_ready(), which in turn
+> is always invoked when msk is not owned by the user: we can drop the
+> redundant, related check.
+> 
+> Additionally mptcp needs to propagate the socket error only for
+> current subflow.
 > 
 > Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 
@@ -61,28 +64,29 @@ Thanks,
 -Geliang
 
 > ---
->  net/mptcp/protocol.c | 8 +-------
->  1 file changed, 1 insertion(+), 7 deletions(-)
+>  net/mptcp/protocol.c | 8 ++------
+>  1 file changed, 2 insertions(+), 6 deletions(-)
 > 
 > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 048056b29a92d..19b5b925e2acc 100644
+> index 66ad9a38a6082..02be42d3d11e6 100644
 > --- a/net/mptcp/protocol.c
 > +++ b/net/mptcp/protocol.c
-> @@ -2202,14 +2202,8 @@ static int mptcp_recvmsg(struct sock *sk,
-> struct msghdr *msg, size_t len,
->  				break;
->  			}
+> @@ -810,12 +810,8 @@ static bool move_skbs_to_msk(struct mptcp_sock
+> *msk, struct sock *ssk)
 >  
-> -			if (sk->sk_shutdown & RCV_SHUTDOWN) {
-> -				/* race breaker: the shutdown could
-> be after the
-> -				 * previous receive queue check
-> -				 */
-> -				if (__mptcp_move_skbs(sk))
-> -					continue;
-> +			if (sk->sk_shutdown & RCV_SHUTDOWN)
->  				break;
-> -			}
+>  	moved = __mptcp_move_skbs_from_subflow(msk, ssk);
+>  	__mptcp_ofo_queue(msk);
+> -	if (unlikely(ssk->sk_err)) {
+> -		if (!sock_owned_by_user(sk))
+> -			__mptcp_error_report(sk);
+> -		else
+> -			__set_bit(MPTCP_ERROR_REPORT,  &msk-
+> >cb_flags);
+> -	}
+> +	if (unlikely(ssk->sk_err))
+> +		__mptcp_subflow_error_report(sk, ssk);
 >  
->  			if (sk->sk_state == TCP_CLOSE) {
->  				copied = -ENOTCONN;
+>  	/* If the moves have caught up with the DATA_FIN sequence
+> number
+>  	 * it's time to ack the DATA_FIN and change socket state,
+> but
