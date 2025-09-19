@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A20B2FA0F3
-	for <mptcp@lists.linux.dev>; Fri, 19 Sep 2025 10:22:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B5AB3081A1
+	for <mptcp@lists.linux.dev>; Fri, 19 Sep 2025 10:22:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758277323; cv=none; b=cehu3Fi9Gi3mzjq1s8mOJe6NFspGxrXV0DR99lZXx2rvm2ZmzvTmHdSogtDyrHOtrLTIacorT+gUrAC3BmgCZVYQVxrUUuukTfHtWsyFu8WTnpSL1WDevzBftQLg9x/fWr5FdTkt2Ol8gY+B50DbHpzLyURpvHfij2Jftsvzpjw=
+	t=1758277324; cv=none; b=m19i9NZIqG2mU0vAUmQMZiCDi8LBl6Rxf9ecOqLKbRbxaWVLLs36lnf70k/gDgX/D1goAtkxjb4h3BqR0kXAfvhBnUJXWren+nkSuF9AYtqj1A9lQrNV4rX4kRD4G51GjOTtc9VH5cxdxbNc6SPvZC8B/dMKLsVKBVvaZ+9pOUc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758277323; c=relaxed/simple;
-	bh=Zf4arq72yVatQwMqwrfxt0h96a2yTwu+gbC096ggcno=;
+	s=arc-20240116; t=1758277324; c=relaxed/simple;
+	bh=QXAQHaq5FqhkXvvnfy5NxBqsWI6XxipqETsTqR0ol/s=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=TUf5Rpk9bXMVScsA5XXXmbhqvUhdGZ59eMZXwtMxXNsbNx81EoOu0eRMOarlUXbiJOQ01Ycw+nc8t3M0imzu8iTsP3c0z3CpJTxz8bJh8p/5Oanh1vEcBFfLG9tTTKOGhBp0QKf48baMmu+gBzdn14KUEjH65oOjuT/vrEEhu9Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qmu9fUbT; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=OAfCYsZyBz085LKdnw7OXZvV2Sk7EqWpeWlHAdOTvhPMNDyyfkTG99SalWvj0Fb3UaYpScOXPgMquYIANKak15EK41io7eESaptXdj0lCxwVcqVXHnMtvoJgnza/yUzn/qcaXaHTASbxdSYYDg+Jmrg9Nquh196TI77UEL78EAg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KE3K9Tdn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qmu9fUbT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9A10C4CEF0;
-	Fri, 19 Sep 2025 10:22:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KE3K9Tdn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91C7CC4CEF7;
+	Fri, 19 Sep 2025 10:22:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758277323;
-	bh=Zf4arq72yVatQwMqwrfxt0h96a2yTwu+gbC096ggcno=;
+	s=k20201202; t=1758277324;
+	bh=QXAQHaq5FqhkXvvnfy5NxBqsWI6XxipqETsTqR0ol/s=;
 	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=Qmu9fUbTq3tLreYHN7WtCz13F6zZdywvQ4vIzFXpy+nPfocdXNFUYKwcUC4xiPboE
-	 GjrU7e5vFVZpIoKomDhvKa7uFUMwkUr4EzKiRMTgyeyWLf6q+wjjG3abtPSCpt6sMX
-	 8qQ4dKZnHTfqycht9bfbTFUhs/1INFmUOSJdorg9cMud3euk89NSSXq9SiPlSr91k7
-	 NJ41HhPZzbpg+cNgzmlXmDgTUYMbThpwGzNU9TT5jK+Wl9CrBbnBUUaKUBLwlao00e
-	 Bm1aJ2crjZTEvkVoRpDiT6H4PfclY05YeVsagD7e826c68rKJUpQOjXhapDz6kp5GC
-	 Dt/4iSplI4P6A==
-Message-ID: <08fd600a-c3b8-4c63-86ee-3bae54cd64f0@kernel.org>
-Date: Fri, 19 Sep 2025 12:21:59 +0200
+	b=KE3K9TdnERSEY7qe8xR/Giz+9ETRbDkLKNUh+0xX1Gm0e/FhBqjC9M/hroKOkgwJ+
+	 LnKy5njL6tabd/lbDsPk16ovdfIOhbXxrAo+Lm27nHY+0I3Xt/AVN8HaBUMfrzx9vC
+	 R7IXvAfOZ6clYMVO5S/D65yYr1uetmpJ1OvKVRbjV/U6k9nASbm6MEuDXYFmrCcpZX
+	 i0BRUMEw/3+YN4RXbawbxrLjn0HToGW8gNgkp9pT/7taX72AgrTOasewzaI9ZY7Bxm
+	 JJlitwxNSkw9XToiN8YwjXy0Db0mL77X1750wlCY6y90lu6Am4ErhBRuKwnQhF7bUq
+	 X9+I9uGD/tQNA==
+Message-ID: <f4f6cbed-a1a3-4f64-88ef-2e838792b5c1@kernel.org>
+Date: Fri, 19 Sep 2025 12:22:02 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,11 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v2 01/12] mptcp: leverage skb deferral free
+Subject: Re: [PATCH mptcp-next v2 02/12] tcp: make tcp_rcvbuf_grow()
+ accessible to mptcp code
 Content-Language: en-GB, fr-BE
 To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
 References: <cover.1758214563.git.pabeni@redhat.com>
- <93b5f3f52220e59b5d22611b6fc0858353890105.1758214563.git.pabeni@redhat.com>
+ <d5fe01b8d262752dea8db8653e12aa9e9685b7e7.1758214563.git.pabeni@redhat.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -85,22 +86,20 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <93b5f3f52220e59b5d22611b6fc0858353890105.1758214563.git.pabeni@redhat.com>
+In-Reply-To: <d5fe01b8d262752dea8db8653e12aa9e9685b7e7.1758214563.git.pabeni@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Paolo,
 
 On 18/09/2025 19:14, Paolo Abeni wrote:
-> Usage of the skb deferral API is straight-forward; with multiple
-> subflows actives this allow moving part of the received application
-> load into multiple CPUs.
-> 
-> Also fix a typo in the related comment.
+> To leverage the auto-tuning improvements brought by commit 2da35e4b4df9
+> ("Merge branch 'tcp-receive-side-improvements'"), the MPTCP stack need
+> to access the mentioned helper.
 
 Thank you, it looks good to me!
 
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Acked-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
 Cheers,
 Matt
