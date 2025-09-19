@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C70816DEB1
-	for <mptcp@lists.linux.dev>; Fri, 19 Sep 2025 08:25:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 958B0303C8A
+	for <mptcp@lists.linux.dev>; Fri, 19 Sep 2025 08:41:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758270315; cv=none; b=KatnwG1UhEnQkrsVjd9g4LNA5nHAoV9CuefgzNmKCEAUNE3UsBE73ZTc0cUT+KDlRoCk3sRztYrtKlpXrOBtvl9QwZ1uCLEOMhJ6TBM+EbUwahqhHMbWJN+17XI/zCUOPFT3+glwDzhEe0OqySGz/+SxBw1jMyQU2CjXNIOEOXc=
+	t=1758271298; cv=none; b=Kc99Mub0gLFjVmCvUenMsj+gCsGUeF7uqH9P2FGsbGRk0U5VY8cjwrcHKhZjTDjq0FvZLaMGHxbz2L7DVVjSdrFqEzPll1PumQMZ+vuOYM3HKntMPZEpKyYT4l5v06ZF0UeeZAmnk6GGQPLbz4vdtZ1av3s90kGduqMOkZ/z2y0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758270315; c=relaxed/simple;
-	bh=2Rv6+COt8+XQ3HXqLGJWsZEH5p4jsx3rWB4yVimUNAg=;
+	s=arc-20240116; t=1758271298; c=relaxed/simple;
+	bh=JxF4669owNMUY+CEy7K/51mFoCCZZMXLWQswP8u8PVM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=Jq34AN8SIYnBpRHQqMbuNTHFP4o8g9pZFIgLboZdu2lcFl3iBy/lXZ8T04hoVZ7QQyi0jgV7U4Qf7g/7GH2rqPpFWdHdNmZ0/LJZ4OF+zfDJZKgD0/lQAh/gI7unyIQhLY5JC7I+/l0kfFumRcH5Y2Qw9JE/Iu0DLaivK+KCdV0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HrurHjeR; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=DgROWWaGTri89OZ5922anN9ZG3TdAkaUqpR7mepwRaFB0m/6L1cRkprrR5cfEZKgHN/PqBBIcggEfibf3mVqnsNR6w8Fw13etlFghaGS7RTJawdigFBDllGAgeNETfDNCFcsWYX2dZqiys68YFa13Tfplr6JMVaHZ1t68Oh1fxc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IH06kTVO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HrurHjeR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23511C4CEF0;
-	Fri, 19 Sep 2025 08:25:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IH06kTVO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E4F3C4CEF0;
+	Fri, 19 Sep 2025 08:41:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758270314;
-	bh=2Rv6+COt8+XQ3HXqLGJWsZEH5p4jsx3rWB4yVimUNAg=;
+	s=k20201202; t=1758271298;
+	bh=JxF4669owNMUY+CEy7K/51mFoCCZZMXLWQswP8u8PVM=;
 	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=HrurHjeRk9XunzLXvwyUptuMdLkB1qmOxQgUBfkkiovG41K60CL5uhH3QBPH/3oVs
-	 77dAAtvbhYllH/jsyi87FxrBKKbAWrp8xbNxZfN02xC03oasF79UAfHME+bVmqGqXh
-	 BWpePBqLHnZvHQ0gT9oO5zTmuMEk/2pgn7A9WMa668PM3otYgDW8595MJQB45QWUy3
-	 /lAgpFhQz/0aXAr/8CAJKMBJ0UBLGq8uYRC08K4+1sVO53KjgFa9JIoEjuWSyVFsDa
-	 bnE0C9o03mTQIgGVDNscnV+g6wsiQ4vpt4oWmSIHOo5uoH95ublYMsUBXQGnhgibPj
-	 hQU2ZCIz0OzMw==
-Message-ID: <98655217-febd-4744-9333-df441f6649a3@kernel.org>
-Date: Fri, 19 Sep 2025 10:25:12 +0200
+	b=IH06kTVOaLwAYng++iqctQTq1PpM2dr9KRAqc9S3sIwu9yhvcJO/sypjG4GPSPAm+
+	 8KAbuWCDTLDe/321zHsfg5EtabKWPjPkzp1D+CJuupuZ3WhzQ4SwjbXPi/BTv+c/Us
+	 sXaf7Js1MiFqWkldh3BMj0UICLPzxmotFXET6RYxjrmoIsaJETVsMWlP0oPLbHSp6K
+	 aEP6OFz0oX4JUoBAFaGknRb1khn/SOQXylGXFA1qFrRTivxo7U010LyerswdAvUut7
+	 XCtFJmQx+Ea49RWx5SrOBwJusbPmBpe9cNgieYq763EEsxvyAE2VhAsnwKMXUCR2Ru
+	 eJIIdKo3hnZMg==
+Message-ID: <47a547d4-36cb-48ae-b258-1f6ece3b261c@kernel.org>
+Date: Fri, 19 Sep 2025 10:41:35 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next 02/10] mptcp: pm: in-kernel: refactor
- fill_local_addresses_vec
+Subject: Re: [PATCH mptcp-next 03/10] mptcp: pm: in-kernel: refactor
+ fill_remote_addresses_vec
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, MPTCP Upstream <mptcp@lists.linux.dev>
 References: <20250918-pm-kern-endp-add_addr-v1-0-e12e58770a11@kernel.org>
- <20250918-pm-kern-endp-add_addr-v1-2-e12e58770a11@kernel.org>
- <0c764cfdff33d8d903d78b90bd59a8406552dee2.camel@kernel.org>
+ <20250918-pm-kern-endp-add_addr-v1-3-e12e58770a11@kernel.org>
+ <fc0faacf990d5c422dac4525ae02f64a448a8e9f.camel@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,13 +87,13 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <0c764cfdff33d8d903d78b90bd59a8406552dee2.camel@kernel.org>
+In-Reply-To: <fc0faacf990d5c422dac4525ae02f64a448a8e9f.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 Hi Geliang,
 
-On 19/09/2025 08:51, Geliang Tang wrote:
+On 19/09/2025 08:52, Geliang Tang wrote:
 > Hi Matt,
 > 
 > On Thu, 2025-09-18 at 19:42 +0200, Matthieu Baerts (NGI0) wrote:
@@ -101,146 +101,254 @@ On 19/09/2025 08:51, Geliang Tang wrote:
 >> levels
 >> of indentations.
 >>
->> Each case can be split in a dedicated function: fullmesh, C flag,
->> any.
+>> Each case can be split in a dedicated function: fullmesh, non-
+>> fullmesh.
 > 
-> If "C flag" function is squash into patch 1, how about splitting this
-> patch into two, one for 'fullmesh' and one for 'any'.
+> How about splitting this patch into two, one for 'fullmesh', one for
+> 'non-fullmesh'.
 
-I would prefer not to. I don't think it is really needed to split that
-in multiple patches.
+I don't think that's really needed: I'm simply moving what is in the
+if-statement in one helper, and the rest in another one. Or do you think
+it would really help?
 
-(...)
+> 
+>>
+>> To remove one level of indentation, msk->pm.subflows >= subflows_max
+>> is
+>> now checked after having added one subflow, and stops the loop if it
+>> is
+>> no longer possible to add new subflows. This is fine to do this
+>> because
+>> this function should only be called if msk->pm.subflows <
+>> subflows_max.
+>>
+>> No functional changes intended.
+>>
+>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+>> ---
+>>  net/mptcp/pm_kernel.c | 112 ++++++++++++++++++++++++++++------------
+>> ----------
+>>  1 file changed, 63 insertions(+), 49 deletions(-)
+>>
+>> diff --git a/net/mptcp/pm_kernel.c b/net/mptcp/pm_kernel.c
+>> index
+>> 5bdcfcc26308841c49375ce35205097f30592279..8d5df9b98589e5cd69f16dc54e9
+>> 140e88a1835e2 100644
+>> --- a/net/mptcp/pm_kernel.c
+>> +++ b/net/mptcp/pm_kernel.c
+>> @@ -159,74 +159,88 @@ select_signal_address(struct pm_nl_pernet
+>> *pernet, const struct mptcp_sock *msk,
+>>  	return found;
+>>  }
+>>  
+>> -/* Fill all the remote addresses into the array addrs[],
+>> - * and return the array size.
+>> - */
+>> -static unsigned int fill_remote_addresses_vec(struct mptcp_sock
+>> *msk,
+>> -					      struct mptcp_addr_info
+>> *local,
+>> -					      bool fullmesh,
+>> -					      struct mptcp_addr_info
+>> *addrs)
+>> +static unsigned int
+>> +fill_remote_addr(struct mptcp_sock *msk, struct mptcp_addr_info
+>> *local,
+>> +		 struct mptcp_addr_info *addrs)
+>>  {
+>>  	bool deny_id0 = READ_ONCE(msk->pm.remote_deny_join_id0);
+>> +	struct sock *sk = (struct sock *)msk;
+>> +	struct mptcp_addr_info remote = { 0 };
+> 
+> This breaks 'Reverse X-Mas Tree' order.
 
->> +/* Fill all the local addresses into the array addrs[],
+Good catch, fixed!
+
+> 
+>> +
+>> +	if (deny_id0)
+>> +		return 0;
+>> +
+>> +	mptcp_remote_address((struct sock_common *)sk, &remote);
+>> +
+>> +	if (!mptcp_pm_addr_families_match(sk, local, &remote))
+>> +		return 0;
+>> +
+>> +	msk->pm.subflows++;
+>> +	*addrs = remote;
+>> +
+>> +	return 1;
+> 
+> How about still using:
+> 
+> addrs[i++] = remote;
+> return i;
+> 
+> here, to keep it consistent with other fill_*_addr helpers.
+
+We will only fill one address, then no need to declare 'i', no?
+It looks clearer to me like that, so we clearly understand only one
+address is filled, no?
+
+> 
+>> +}
+>> +
+>> +static unsigned int
+>> +fill_remote_addresses_fullmesh(struct mptcp_sock *msk,
+>> +			       struct mptcp_addr_info *local,
+>> +			       struct mptcp_addr_info *addrs)
+>> +{
+>> +	bool deny_id0 = READ_ONCE(msk->pm.remote_deny_join_id0);
+>> +	DECLARE_BITMAP(unavail_id, MPTCP_PM_MAX_ADDR_ID + 1);
+>>  	struct sock *sk = (struct sock *)msk, *ssk;
+>>  	struct mptcp_subflow_context *subflow;
+>> -	struct mptcp_addr_info remote = { 0 };
+>>  	unsigned int subflows_max;
+>>  	int i = 0;
+>>  
+>>  	subflows_max = mptcp_pm_get_subflows_max(msk);
+>> -	mptcp_remote_address((struct sock_common *)sk, &remote);
+>>  
+>> -	/* Non-fullmesh endpoint, fill in the single entry
+>> -	 * corresponding to the primary MPC subflow remote address
+>> +	/* Forbid creation of new subflows matching existing ones,
+>> possibly
+>> +	 * already created by incoming ADD_ADDR
+>>  	 */
+>> -	if (!fullmesh) {
+>> -		if (deny_id0)
+>> -			return 0;
+>> +	bitmap_zero(unavail_id, MPTCP_PM_MAX_ADDR_ID + 1);
+>> +	mptcp_for_each_subflow(msk, subflow)
+>> +		if (READ_ONCE(subflow->local_id) == local->id)
+>> +			__set_bit(subflow->remote_id, unavail_id);
+>>  
+>> -		if (!mptcp_pm_addr_families_match(sk, local,
+>> &remote))
+>> -			return 0;
+>> +	mptcp_for_each_subflow(msk, subflow) {
+>> +		ssk = mptcp_subflow_tcp_sock(subflow);
+>> +		mptcp_remote_address((struct sock_common *)ssk,
+>> &addrs[i]);
+>> +		addrs[i].id = READ_ONCE(subflow->remote_id);
+>> +		if (deny_id0 && !addrs[i].id)
+>> +			continue;
+>>  
+>> +		if (test_bit(addrs[i].id, unavail_id))
+>> +			continue;
+>> +
+>> +		if (!mptcp_pm_addr_families_match(sk, local,
+>> &addrs[i]))
+>> +			continue;
+>> +
+>> +		/* forbid creating multiple address towards this id
+>> */
+>> +		__set_bit(addrs[i].id, unavail_id);
+>>  		msk->pm.subflows++;
+>> -		addrs[i++] = remote;
+>> -	} else {
+>> -		DECLARE_BITMAP(unavail_id, MPTCP_PM_MAX_ADDR_ID +
+>> 1);
+>> +		i++;
+>>  
+>> -		/* Forbid creation of new subflows matching existing
+>> -		 * ones, possibly already created by incoming
+>> ADD_ADDR
+>> -		 */
+>> -		bitmap_zero(unavail_id, MPTCP_PM_MAX_ADDR_ID + 1);
+>> -		mptcp_for_each_subflow(msk, subflow)
+>> -			if (READ_ONCE(subflow->local_id) == local-
+>>> id)
+>> -				__set_bit(subflow->remote_id,
+>> unavail_id);
+>> -
+>> -		mptcp_for_each_subflow(msk, subflow) {
+>> -			ssk = mptcp_subflow_tcp_sock(subflow);
+>> -			mptcp_remote_address((struct sock_common
+>> *)ssk, &addrs[i]);
+>> -			addrs[i].id = READ_ONCE(subflow->remote_id);
+>> -			if (deny_id0 && !addrs[i].id)
+>> -				continue;
+>> -
+>> -			if (test_bit(addrs[i].id, unavail_id))
+>> -				continue;
+>> -
+>> -			if (!mptcp_pm_addr_families_match(sk, local,
+>> &addrs[i]))
+>> -				continue;
+>> -
+>> -			if (msk->pm.subflows < subflows_max) {
+>> -				/* forbid creating multiple address
+>> towards
+>> -				 * this id
+>> -				 */
+>> -				__set_bit(addrs[i].id, unavail_id);
+>> -				msk->pm.subflows++;
+>> -				i++;
+>> -			}
+>> -		}
+>> +		if (msk->pm.subflows >= subflows_max)
+>> +			break;
+>>  	}
+>>  
+>>  	return i;
+>>  }
+>>  
+>> +/* Fill all the remote addresses into the array addrs[],
 >> + * and return the array size.
 >> + */
 >> +static unsigned int
->> +fill_local_addresses_vec(struct mptcp_sock *msk, struct
->> mptcp_addr_info *remote,
->> +			 struct mptcp_pm_local *locals)
+>> +fill_remote_addresses_vec(struct mptcp_sock *msk, struct
+>> mptcp_addr_info *local,
+>> +			  bool fullmesh, struct mptcp_addr_info
+>> *addrs)
 > 
 > How about keeping this unchanged:
 > 
-> static unsigned int fill_local_addresses_vec(struct mptcp_sock *msk,
-> 					     struct mptcp_addr_info
-> *remote,
-> 					     struct mptcp_pm_local
-> *locals)
+> static unsigned int fill_remote_addresses_vec(struct mptcp_sock
+> *msk,
+> 					      struct mptcp_addr_info
+> *local,
+> 					      bool fullmesh,
+> 					      struct mptcp_addr_info
+> *addrs)
 > 
 > This can make the patch smaller.
 
-I did these modifications because that's the style I used in the new
-functions, plus I think it is better to avoid big indentations.
-
-I don't think we really need to make this patch smaller, it is just a
-"pure" refactoring.
+I don't think that's needed, for the same reason.
 
 > 
 >> +{
->> +	bool c_flag_case = remote->id &&
->> mptcp_pm_add_addr_c_flag_case(msk);
->> +	int i;
->> +
->> +	/* If there is at least one MPTCP endpoint with a fullmesh
->> flag */
->> +	i = fill_local_addresses_vec_fullmesh(msk, remote, locals,
->> c_flag_case);
->> +	if (i)
->> +		return i;
->> +
->>  	/* Special case: peer sets the C flag, accept one ADD_ADDR
->> if default
->>  	 * limits are used -- accepting no ADD_ADDR -- and use
->> subflow endpoints
->>  	 */
->> -	if (!i && c_flag_case) {
->> -		unsigned int local_addr_max =
->> mptcp_pm_get_local_addr_max(msk);
->> +	if (c_flag_case)
->> +		return fill_local_addresses_vec_c_flag(msk, remote,
->> locals);
->>  
->> -		while (msk->pm.local_addr_used < local_addr_max &&
->> -		       msk->pm.subflows < subflows_max) {
->> -			struct mptcp_pm_local *local = &locals[i];
->> -
->> -			if (!select_local_address(pernet, msk,
->> local))
->> -				break;
->> -
->> -			__clear_bit(local->addr.id, msk-
->>> pm.id_avail_bitmap);
->> -
->> -			if (!mptcp_pm_addr_families_match(sk,
->> &local->addr,
->> -							  remote))
->> -				continue;
->> -
->> -			if (mptcp_addresses_equal(&local->addr,
->> &mpc_addr,
->> -						  local->addr.port))
->> -				continue;
->> -
->> -			msk->pm.local_addr_used++;
->> -			msk->pm.subflows++;
->> -			i++;
->> -		}
->> -
->> -		return i;
->> -	}
->> -
->> -	/* If the array is empty, fill in the single
->> -	 * 'IPADDRANY' local address
->> -	 */
->> -	if (!i) {
->> -		memset(&locals[i], 0, sizeof(locals[i]));
->> -		locals[i].addr.family =
->> -#if IS_ENABLED(CONFIG_MPTCP_IPV6)
->> -			       remote->family == AF_INET6 &&
->> -			       ipv6_addr_v4mapped(&remote->addr6) ?
->> AF_INET :
->> -#endif
->> -			       remote->family;
->> -
->> -		if (!mptcp_pm_addr_families_match(sk,
->> &locals[i].addr, remote))
->> -			return 0;
->> -
->> -		msk->pm.subflows++;
->> -		i++;
->> -	}
->> -
->> -	return i;
->> +	/* No special case: fill in the single 'IPADDRANY' local
->> address */
->> +	return fill_local_address_any(msk, remote, &locals[0]);
->>  }
->>  
->>  static void mptcp_pm_nl_add_addr_received(struct mptcp_sock *msk)
->> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
->> index
->> dd0662defd41c84474e44c559c571e3594b85d9e..0d6dae37c9daf4ec8990b9a8703
->> 6aa393add585c 100644
->> --- a/net/mptcp/protocol.h
->> +++ b/net/mptcp/protocol.h
->> @@ -1200,7 +1200,8 @@ static inline bool
->> mptcp_pm_add_addr_c_flag_case(struct mptcp_sock *msk)
->>  {
->>  	return READ_ONCE(msk->pm.remote_deny_join_id0) &&
->>  	       msk->pm.local_addr_used == 0 &&
->> -	       mptcp_pm_get_add_addr_accept_max(msk) == 0;
->> +	       mptcp_pm_get_add_addr_accept_max(msk) == 0 &&
->> +	       msk->pm.subflows < mptcp_pm_get_subflows_max(msk);
 > 
-> This needs to be squash to patch 1 too.
+> -	/* Non-fullmesh endpoint, fill in the single entry
+> -	 * corresponding to the primary MPC subflow remote address
+> 
+> We can keep this comment here.
 
-It is currently not needed, see this message in the commit message:
+Indeed.
 
-> To remove one level of indentation, msk->pm.subflows >= subflows_max is
-> now checked upfront.
-But I guess it doesn't hurt to move it there, just to be on the safe
-side, and avoid this note.
+> 
+> -	if (!fullmesh) {
+> 
+> ... and test "!fullmesh" just like the original code.
+
+It looks "strange" to treat the opposite condition first, but if I leave
+the comment, I can keep '!fullmesh' I guess.
+
+> 
+> Thanks,
+> -Geliang
+> 
+>> +	if (fullmesh)
+>> +		return fill_remote_addresses_fullmesh(msk, local,
+>> addrs);
+>> +
+>> +	return fill_remote_addr(msk, local, addrs);
+>> +}
+>> +
+>>  static struct mptcp_pm_addr_entry *
+>>  __lookup_addr_by_id(struct pm_nl_pernet *pernet, unsigned int id)
+>>  {
 
 Cheers,
 Matt
