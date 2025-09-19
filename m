@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B5AB3081A1
-	for <mptcp@lists.linux.dev>; Fri, 19 Sep 2025 10:22:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52970279788
+	for <mptcp@lists.linux.dev>; Fri, 19 Sep 2025 10:22:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758277324; cv=none; b=m19i9NZIqG2mU0vAUmQMZiCDi8LBl6Rxf9ecOqLKbRbxaWVLLs36lnf70k/gDgX/D1goAtkxjb4h3BqR0kXAfvhBnUJXWren+nkSuF9AYtqj1A9lQrNV4rX4kRD4G51GjOTtc9VH5cxdxbNc6SPvZC8B/dMKLsVKBVvaZ+9pOUc=
+	t=1758277328; cv=none; b=KXDqNWfO1sNeBiy097QlcDat43PVfoP3c3Qr8knCNTnwnUqQHtEmljIiTfzpBO7wKiz9/8LZGl79PnYBaEt00auDC+oGHXsGT67yqnVoKSBMSFxNsc7Sqd9CW7qVt04Zx6yNWHYh5uQt9Jnfe5L8+VRSfcfDEbAblOfOiOMcdfg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758277324; c=relaxed/simple;
-	bh=QXAQHaq5FqhkXvvnfy5NxBqsWI6XxipqETsTqR0ol/s=;
+	s=arc-20240116; t=1758277328; c=relaxed/simple;
+	bh=ybZT3cTqdt4/zQ5eoawC3m9fAdwqwGktPdi3cXSlsgA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=OAfCYsZyBz085LKdnw7OXZvV2Sk7EqWpeWlHAdOTvhPMNDyyfkTG99SalWvj0Fb3UaYpScOXPgMquYIANKak15EK41io7eESaptXdj0lCxwVcqVXHnMtvoJgnza/yUzn/qcaXaHTASbxdSYYDg+Jmrg9Nquh196TI77UEL78EAg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KE3K9Tdn; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=i4Drc0dkJeWd2fwHSZqZgLgOZwS53VzY1JYvlty+NuBx8vFgxDy2cNvfkhhP57TmR0xuICiTxvTfuAKEFOhRc2iftbtT2sFj56RPhytLSwDMSrXRi9tshid7yiqIix2X1VbptXZt0G0EOKUZGoTx9jewZdvS6Lyuu7d43nqL3tg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WpM56GIZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KE3K9Tdn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91C7CC4CEF7;
-	Fri, 19 Sep 2025 10:22:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WpM56GIZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15D1EC4CEF0;
+	Fri, 19 Sep 2025 10:22:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758277324;
-	bh=QXAQHaq5FqhkXvvnfy5NxBqsWI6XxipqETsTqR0ol/s=;
+	s=k20201202; t=1758277327;
+	bh=ybZT3cTqdt4/zQ5eoawC3m9fAdwqwGktPdi3cXSlsgA=;
 	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=KE3K9TdnERSEY7qe8xR/Giz+9ETRbDkLKNUh+0xX1Gm0e/FhBqjC9M/hroKOkgwJ+
-	 LnKy5njL6tabd/lbDsPk16ovdfIOhbXxrAo+Lm27nHY+0I3Xt/AVN8HaBUMfrzx9vC
-	 R7IXvAfOZ6clYMVO5S/D65yYr1uetmpJ1OvKVRbjV/U6k9nASbm6MEuDXYFmrCcpZX
-	 i0BRUMEw/3+YN4RXbawbxrLjn0HToGW8gNgkp9pT/7taX72AgrTOasewzaI9ZY7Bxm
-	 JJlitwxNSkw9XToiN8YwjXy0Db0mL77X1750wlCY6y90lu6Am4ErhBRuKwnQhF7bUq
-	 X9+I9uGD/tQNA==
-Message-ID: <f4f6cbed-a1a3-4f64-88ef-2e838792b5c1@kernel.org>
-Date: Fri, 19 Sep 2025 12:22:02 +0200
+	b=WpM56GIZZ3R004pF7b04HKsI8EKe3UlXXBLr5cEiF+iQP9tw9fuvnPeyLkrFw8Hge
+	 Ojam2B7aJJzI0Jlg88mYz3vnovCUMv10f9wAPXBpWeMmqEzs01qBuieLh17cmSxJ4s
+	 5z4nKL1oDBD741sODVKlomr8dTRW/D5VEOUmezvlZ4Cl/nrB7YTJZNJgWzVdigFqIj
+	 KNg13WmbyKaJQYjInAnOZG1nN3BXkG6y5svCXjS8vEhM7akK9HUP+3qwu1rHdMWX76
+	 dURm09A+XtpyhEebX02rVKKhUIFOVoB6MuNx3QWEpxnGWR9ATICOO9sVjnYOEH8kAQ
+	 l1OSu4yJptEQQ==
+Message-ID: <897ee294-654e-4f94-a6e2-836f1a4d1c7f@kernel.org>
+Date: Fri, 19 Sep 2025 12:22:06 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,11 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v2 02/12] tcp: make tcp_rcvbuf_grow()
- accessible to mptcp code
+Subject: Re: [PATCH mptcp-next v2 03/12] mptcp: rcvbuf auto-tuning improvement
 Content-Language: en-GB, fr-BE
 To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
 References: <cover.1758214563.git.pabeni@redhat.com>
- <d5fe01b8d262752dea8db8653e12aa9e9685b7e7.1758214563.git.pabeni@redhat.com>
+ <41db4ac9e54972274efd501dc110c5820def3412.1758214563.git.pabeni@redhat.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,20 +85,93 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <d5fe01b8d262752dea8db8653e12aa9e9685b7e7.1758214563.git.pabeni@redhat.com>
+In-Reply-To: <41db4ac9e54972274efd501dc110c5820def3412.1758214563.git.pabeni@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Paolo,
 
 On 18/09/2025 19:14, Paolo Abeni wrote:
-> To leverage the auto-tuning improvements brought by commit 2da35e4b4df9
-> ("Merge branch 'tcp-receive-side-improvements'"), the MPTCP stack need
-> to access the mentioned helper.
+> Apply to the MPTCP auto-tuning the same improvements introduced for the
+> TCP protocol by the merge commit 2da35e4b4df9 ("Merge branch
+> 'tcp-receive-side-improvements'").
+> 
+> The main difference is that TCP subflow and the main MPTCP socket need
+> to account separately for OoO: MPTCP does not care for TCP-level OoO
+> and vice versa, as a consequence do not reflect MPTCP-level rcvbuf
+> increase due to OoO packets at the subflow level.
+> 
+> This refeactor additionally allow dropping the msk receive buffer update
+> at receive time, as the latter only intended to cope with subflow receive
+> buffer increase due to OoO packets.
+> 
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/487
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/559
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 
-Thank you, it looks good to me!
+Thank you for looking at that!
 
-Acked-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> ---
+> v1 -> v2:
+>   - fix unused variable
+>   - reword the commit message
+> ---
+>  net/mptcp/protocol.c | 92 ++++++++++++++++++++------------------------
+>  net/mptcp/protocol.h |  4 +-
+>  2 files changed, 44 insertions(+), 52 deletions(-)
+> 
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 9d95d24781509..162abafe3f320 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -179,6 +179,30 @@ static bool mptcp_ooo_try_coalesce(struct mptcp_sock *msk, struct sk_buff *to,
+>  	return mptcp_try_coalesce((struct sock *)msk, to, from);
+>  }
+>  
+> +static bool mptcp_rcvbuf_grow(struct sock *sk)
+
+detail: can we add the similar comment as the one below for
+mptcp_data_queue_ofo()?
+
+   /* "inspired" by tcp_rcvbuf_grow(), main differences:
+    * - ...
+
+I can do the modification when applying the patches.
+
+> +{
+> +	struct mptcp_sock *msk = mptcp_sk(sk);
+> +	int rcvwin, rcvbuf;
+> +
+> +	if (!READ_ONCE(sock_net(sk)->ipv4.sysctl_tcp_moderate_rcvbuf) ||
+> +	    (sk->sk_userlocks & SOCK_RCVBUF_LOCK))
+> +		return false;
+> +
+> +	rcvwin = ((u64)msk->rcvq_space.space << 1);
+
+Why do you need the u64 cast here? (and the parenthesis)
+
+> +
+> +	if (!RB_EMPTY_ROOT(&msk->out_of_order_queue))
+> +		rcvwin += MPTCP_SKB_CB(msk->ooo_last_skb)->end_seq - msk->ack_seq;
+> +
+> +	rcvbuf = min_t(u64, mptcp_space_from_win(sk, rcvwin),
+> +		       READ_ONCE(sock_net(sk)->ipv4.sysctl_tcp_rmem[2]));
+
+detail: mptcp_space_from_win() and *sysctl_tcp_rmem are on 32 bits, no
+need to do a 'min_t(u64)'. Maybe we can copy what is done in
+tcp_rcvbuf_grow()?
+
+  rcvbuf = min_t(u32, ...
+
+While at it, could we get even closer to tcp_rcvbuf_grow()? Declaring
+and using 'net' and 'cap' variable + keep the comments? By doing that,
+it would be easier to spot differences :)
+
+I can also do the modifications when applying the patches if you prefer.
+
+The suggested modifications are minor, and the rest looks good to me!
+
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
 Cheers,
 Matt
