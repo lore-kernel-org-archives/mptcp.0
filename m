@@ -1,39 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53D677082D
-	for <mptcp@lists.linux.dev>; Fri, 19 Sep 2025 09:49:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D7CE1A5BBC
+	for <mptcp@lists.linux.dev>; Fri, 19 Sep 2025 09:50:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758275396; cv=none; b=gRu8NqKqYvYYsyupbqlr4Da3tW3qcyNgE/WRd1RXCWP0QZShHzH3nvmvXgSm4oLTICguKtaheH4KDXtXVtleuUTK5OgKbdUKi+3sJEo5sMVBKX5tqSoaeyJ6Eo8/58T9Qb41kAq8S9RVOCg7SI1EghuiofdyYMhnKSH+D8gCwbY=
+	t=1758275408; cv=none; b=AFkt+V1lKFIElhW2VSu8rrdNnqz44cSlbYEYz4hDhs8/zp/PlxudkUPpOPhAtEWQzh+sV0ymiKliDaQVRkX4axiCTMHU0kmyh4bgitw1C+VROt64UdV6IapEuMbxMkn7d7KtjwtWNn8POCS4Dv79SwbaVMNoHcSMSdxbCmINzuM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758275396; c=relaxed/simple;
-	bh=nAt9dszM+Lf1AcZKWAdC6psl36zFE+TOELWM+KTGkrQ=;
+	s=arc-20240116; t=1758275408; c=relaxed/simple;
+	bh=k8nljP57XoaDBVIpFcWqc8lBdBBDLLLy+4uYABWjFcE=;
 	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Lr+jkvfi607+2n3qpLuaKfvtTzyoqT6n4wtpeXCGFeOY+V8HJVfRduhdgccJRUUGQKcbdQADwbSiNEo2yt0qhIeaNmyw+Wl0q2tT1V/3bpNW/vOqYdWvNmP+2ggEjpXghtwbfx9pepx8pCvDgYkvHys+4Pjv0OY7Bf1ccVNPC5E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fMh5GvLc; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=CDx189Kc/ixkFTtE0pFOT45ms+jcQWjiDgmCiG28GCjcKlggjSB0iJxiELMrKhd34lMDrdtVTcYEonrkc53lnFdXgfs1sEozHI/OK97dfLyQ1lE3PMEOBAxXcbARW05TUlMVd2jW9e+bv9xRNxpAarCO6B68ehZfnyiBUGn1OrY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t+bIlnEs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fMh5GvLc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCE95C4CEF0;
-	Fri, 19 Sep 2025 09:49:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t+bIlnEs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44F74C4CEF0;
+	Fri, 19 Sep 2025 09:50:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758275395;
-	bh=nAt9dszM+Lf1AcZKWAdC6psl36zFE+TOELWM+KTGkrQ=;
+	s=k20201202; t=1758275408;
+	bh=k8nljP57XoaDBVIpFcWqc8lBdBBDLLLy+4uYABWjFcE=;
 	h=Subject:From:To:Date:In-Reply-To:References:From;
-	b=fMh5GvLc7cBMkDI2YIE5Xn5w0cAvqHWB+uppsEyYFTQNvgF7Prk9yEDuqiGr3TFh2
-	 SLU/KNEe98ivdpKb+RGP84/XhyUH/iRbrZ5T8XAt92iWhRQ0KiwJdfpTOg8eaxOXYC
-	 V/moRubAEYLZxt9Z4n6T87hiSMAfQHozuB+gK8cS9yRiMg0bqE3ZpG0FZgmo2QLA0L
-	 m31D2GX17B0dsnWaubsgjoSL7C11YLtBjeehiKQY6bxUsbnKchQFQDeeVFWyP6zcJq
-	 uiTecweBaZmn36yBoV07mp038fzeK8bEhRsvuhtrHwANRJD1mysmse9GYQzDXuGV2v
-	 uGo0LrZotCIKQ==
-Message-ID: <39d0e388979ed690e9dcb68939f1c355518c6f3b.camel@kernel.org>
-Subject: Re: [PATCH mptcp-next v2 01/12] mptcp: leverage skb deferral free
+	b=t+bIlnEsxCz9Dxd0KFDozTEsTClX/XMqWT3U+v2nk/Ikon87fdRHCN6jAOzBckWdu
+	 JZEIstku01Us4fzAHo5gK5UeVHrJK4/n5nYh667io7KWrvcJc5EZpv2g6fRJLFbZ1T
+	 QOif17jP2Dv+Ainwu35qCibZCUdu2tHwH148w57L21EkH0tE6MpXUTR8m92Urdudfe
+	 FOriz8O4imOJQrEd+VSp2N24CCKPp0OaN64H5ESiunLyKsVqH3OH6+vq3DXcwNmm5X
+	 7f2PJzipETfGOunO4CAqkIqTZfJZyQk1j9WD0uXCFXFammHkgg3mE7D/QtDFPd53BO
+	 IobDlA+Qfh1yg==
+Message-ID: <ceb0c39637fec1cb0d10520db53acbedf8fc7f08.camel@kernel.org>
+Subject: Re: [PATCH mptcp-next v2 02/12] tcp: make tcp_rcvbuf_grow()
+ accessible to mptcp code
 From: Geliang Tang <geliang@kernel.org>
 To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-Date: Fri, 19 Sep 2025 17:49:50 +0800
-In-Reply-To: <93b5f3f52220e59b5d22611b6fc0858353890105.1758214563.git.pabeni@redhat.com>
+Date: Fri, 19 Sep 2025 17:50:04 +0800
+In-Reply-To: <d5fe01b8d262752dea8db8653e12aa9e9685b7e7.1758214563.git.pabeni@redhat.com>
 References: <cover.1758214563.git.pabeni@redhat.com>
-	 <93b5f3f52220e59b5d22611b6fc0858353890105.1758214563.git.pabeni@redhat.com>
+	 <d5fe01b8d262752dea8db8653e12aa9e9685b7e7.1758214563.git.pabeni@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 User-Agent: Evolution 3.56.0-1 
 Precedence: bulk
@@ -44,16 +45,12 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi Paolo,
-
-Thanks for this patch.
-
 On Thu, 2025-09-18 at 19:14 +0200, Paolo Abeni wrote:
-> Usage of the skb deferral API is straight-forward; with multiple
-> subflows actives this allow moving part of the received application
-> load into multiple CPUs.
-> 
-> Also fix a typo in the related comment.
+> To leverage the auto-tuning improvements brought by commit
+> 2da35e4b4df9
+> ("Merge branch 'tcp-receive-side-improvements'"), the MPTCP stack
+> need
+> to access the mentioned helper.
 > 
 > Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 
@@ -66,30 +63,34 @@ Thanks,
 -Geliang
 
 > ---
->  net/mptcp/protocol.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
+>  include/net/tcp.h    | 1 +
+>  net/ipv4/tcp_input.c | 2 +-
+>  2 files changed, 2 insertions(+), 1 deletion(-)
 > 
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 7933291e991ce..9d95d24781509 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -1943,12 +1943,13 @@ static int __mptcp_recvmsg_mskq(struct sock
-> *sk,
->  		}
+> diff --git a/include/net/tcp.h b/include/net/tcp.h
+> index e25340459ce4a..db2a4e05147fa 100644
+> --- a/include/net/tcp.h
+> +++ b/include/net/tcp.h
+> @@ -356,6 +356,7 @@ void tcp_delack_timer_handler(struct sock *sk);
+>  int tcp_ioctl(struct sock *sk, int cmd, int *karg);
+>  enum skb_drop_reason tcp_rcv_state_process(struct sock *sk, struct
+> sk_buff *skb);
+>  void tcp_rcv_established(struct sock *sk, struct sk_buff *skb);
+> +void tcp_rcvbuf_grow(struct sock *sk);
+>  void tcp_rcv_space_adjust(struct sock *sk);
+>  int tcp_twsk_unique(struct sock *sk, struct sock *sktw, void *twp);
+>  void tcp_twsk_destructor(struct sock *sk);
+> diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
+> index b2793e749cfd9..ad09995a1aaec 100644
+> --- a/net/ipv4/tcp_input.c
+> +++ b/net/ipv4/tcp_input.c
+> @@ -701,7 +701,7 @@ static inline void tcp_rcv_rtt_measure_ts(struct
+> sock *sk,
+>  	}
+>  }
 >  
->  		if (!(flags & MSG_PEEK)) {
-> -			/* avoid the indirect call, we know the
-> destructor is sock_wfree */
-> +			/* avoid the indirect call, we know the
-> destructor is sock_rfree */
->  			skb->destructor = NULL;
-> +			skb->sk = NULL;
->  			atomic_sub(skb->truesize, &sk-
-> >sk_rmem_alloc);
->  			sk_mem_uncharge(sk, skb->truesize);
->  			__skb_unlink(skb, &sk->sk_receive_queue);
-> -			__kfree_skb(skb);
-> +			skb_attempt_defer_free(skb);
->  			msk->bytes_consumed += count;
->  		}
->  
+> -static void tcp_rcvbuf_grow(struct sock *sk)
+> +void tcp_rcvbuf_grow(struct sock *sk)
+>  {
+>  	const struct net *net = sock_net(sk);
+>  	struct tcp_sock *tp = tcp_sk(sk);
