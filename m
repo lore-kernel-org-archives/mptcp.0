@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8B6E1E3DDE
-	for <mptcp@lists.linux.dev>; Fri, 19 Sep 2025 12:36:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25C501DE2BF
+	for <mptcp@lists.linux.dev>; Fri, 19 Sep 2025 12:36:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758285401; cv=none; b=AcWOjPdrpd13mXnv86/ft4YC+vvPiBvVVdO7Cc9DUwNwa+pyFcw7EfOvTSnFq+4kVSpberRMqKqNq0sJllr1JmJanT2sPI3he4e/qxq70Cr+M0ue+GalmNVgdh8lcbNUQ5RykZMhsBV46CQu/SYZL5n9C+wTaB5jpdb6EitTAZg=
+	t=1758285415; cv=none; b=hTkD1Mbp/HPmOLkvSM6beq5T527VblqdIAjwEDgEmGjgE4hifIOiCzcV1Zcj7XaYY4LVJ1KBhr8fWNguqjT2tRhXENTx4zf35Pu26cMpKsjX/AWnU7ocaHtcFHYhH3CQ6tQ2UP80y8jmwteIWqFOhDiLaoM7PBJNTFfnOmxzolg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758285401; c=relaxed/simple;
-	bh=dty6sVHbDQzBuTIw9eNjM21IpAvgKReIia5TpyduAwg=;
+	s=arc-20240116; t=1758285415; c=relaxed/simple;
+	bh=cOyet8RESGxCSzq2oZlY3ZHO2co6ttE/tLzSnrzb0tw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=KJdQahBYO7Vb1ZbssRXPoDx1lKAwFmELgWeMcSfq4gIMJGUCPFO4cOVuHxU9TNL89JbVq8gOkiPO+ikqWvZ7VIj4RuC6C8afQc1qjY4amJzdr3vOA6ra240zpMeKsQHgPW/ovF4VIXomOP1jZrDDR4x0wBVK1hk/1robok93ESw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dxK6cSBd; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=PWzDnC9EgGlUBfhi39RJc0PiEbbIZBJ1q5I8hjyclsy0Rhm3yEkhtLVKteMbPV3LmbUj7QW64xVToLaSd/V3ULzFqNNsGYSMGjurPU+4SP1hg2Q2oxbJbal86hA7tWao6Fj1iwfD0dKIR0/VtVTzUNVPOzFGVJ/b8tygIHEsZA4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uf5iYs84; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dxK6cSBd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7A72C4CEF0;
-	Fri, 19 Sep 2025 12:36:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uf5iYs84"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2C74C4CEF0;
+	Fri, 19 Sep 2025 12:36:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758285401;
-	bh=dty6sVHbDQzBuTIw9eNjM21IpAvgKReIia5TpyduAwg=;
+	s=k20201202; t=1758285414;
+	bh=cOyet8RESGxCSzq2oZlY3ZHO2co6ttE/tLzSnrzb0tw=;
 	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=dxK6cSBd79ENCS1AGUCXZWtx4UzopRzVtkWhdlbcUxc+/fExZM900puT2PW1B1BC0
-	 2rglJTP/dD1Zd7n3vdfts2bG4jZpJaE8n1TrU27J6qPvFSvpz0cOMhJLAfCbnFou1N
-	 sW8JuA5RZSkRAj1QBbV5gVhwp7/1i5Ov9EBX1KdFxLNFoDI19LtAb6no0F6n42Cbz0
-	 sUHpqpOv+x0IC1Bhv9qygE4PbHS9fZNjCu+Xsaae6nRW8SxaJefPum5qJklHY4m1kf
-	 VZf3M/2AePAAjkIc4wkuHzoKcdO7BtPqEQy5HtALnVkKDii/8XhlbVfiu6cJksN3gJ
-	 R8hOM2xonq+6A==
-Message-ID: <44da8942-fcdb-48c9-a721-b3e033a9a3dd@kernel.org>
-Date: Fri, 19 Sep 2025 14:36:40 +0200
+	b=uf5iYs84ysbtIHxYPF/kr41tLXfdVYTr81XI4NnaqWCoxc/o4pEBoS/HoR+sXuIrh
+	 9g81M2VvrxIHXHsEKWC9VQHCg+Gy5RFWu1ot7Ukp6SVOBajNRgvUghLctUIdRcN2C+
+	 h1Gb1YJ9WujuQi4u4X3uY0iANSVG3sjhhamBid+LBNaPs7YxE34br04gNRWda34MOy
+	 Vbag7wo1DuyRWDo4eKEYkmlc3SZK94KcGphIMPA9ywq7p0iQG3zKX57gfCReSRkxZT
+	 R0tPRThjK3RtST62giaoDf+HNQ/dCm7opnjJ5UeIbsK32r2ctfAJ/WCWKNx78U2Qmk
+	 UQvN5HcXVlxUQ==
+Message-ID: <ae7f65d5-bb1c-4574-9873-b0102d251a09@kernel.org>
+Date: Fri, 19 Sep 2025 14:36:52 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v2 05/12] mptcp: remove unneeded
- mptcp_move_skb()
+Subject: Re: [PATCH mptcp-next v2 06/12] mptcp: factor out a basic skb
+ coalesce helper
 Content-Language: en-GB, fr-BE
 To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
 References: <cover.1758214563.git.pabeni@redhat.com>
- <ef7887b4b1762d95f5fa64659083153d476ba467.1758214564.git.pabeni@redhat.com>
+ <0be52a39543e405a7812399646499b6f3c0cacde.1758214564.git.pabeni@redhat.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,18 +86,75 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <ef7887b4b1762d95f5fa64659083153d476ba467.1758214564.git.pabeni@redhat.com>
+In-Reply-To: <0be52a39543e405a7812399646499b6f3c0cacde.1758214564.git.pabeni@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Paolo,
 
 On 18/09/2025 19:14, Paolo Abeni wrote:
-> Since commit b7535cfed223 ("mptcp: drop legacy code around RX EOF"),
-> sk_shutdown can't change during the main recvmsg loop, we can drop
-> the related race breaker.
+> The upcoming patch will introduced backlog processing for MPTCP
+> socket, and we want to leverage coalescing in such data path.
+> 
+> Factor out the relevant bits not touching memory accounting to
+> deal with such use-case.
+> 
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> ---
+>  net/mptcp/protocol.c | 24 ++++++++++++++++++------
+>  1 file changed, 18 insertions(+), 6 deletions(-)
+> 
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 19b5b925e2acc..66ad9a38a6082 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -142,22 +142,34 @@ static void mptcp_drop(struct sock *sk, struct sk_buff *skb)
+>  	__kfree_skb(skb);
+>  }
+>  
+> -static bool mptcp_try_coalesce(struct sock *sk, struct sk_buff *to,
+> -			       struct sk_buff *from)
+> +static int __mptcp_try_coalesce(struct sock *sk, struct sk_buff *to,
+> +				struct sk_buff *from, bool *fragstolen)
+>  {
+> -	bool fragstolen;
+> +	int limit = READ_ONCE(sk->sk_rcvbuf);
+>  	int delta;
+>  
+>  	if (unlikely(MPTCP_SKB_CB(to)->cant_coalesce) ||
+>  	    MPTCP_SKB_CB(from)->offset ||
+> -	    ((to->len + from->len) > (sk->sk_rcvbuf >> 3)) ||
+> -	    !skb_try_coalesce(to, from, &fragstolen, &delta))
+> -		return false;
+> +	    ((to->len + from->len) > (limit >> 3)) ||
+> +	    !skb_try_coalesce(to, from, fragstolen, &delta))
+> +		return 0;
+>  
+>  	pr_debug("colesced seq %llx into %llx new len %d new end seq %llx\n",
+>  		 MPTCP_SKB_CB(from)->map_seq, MPTCP_SKB_CB(to)->map_seq,
+>  		 to->len, MPTCP_SKB_CB(from)->end_seq);
+>  	MPTCP_SKB_CB(to)->end_seq = MPTCP_SKB_CB(from)->end_seq;
+> +	return delta;
+> +}
+> +
+> +static bool mptcp_try_coalesce(struct sock *sk, struct sk_buff *to,
+> +			       struct sk_buff *from)
+> +{
+> +	bool fragstolen;
+> +	int delta;
+> +
+> +	delta = __mptcp_try_coalesce(sk, to, from, &fragstolen);
+> +	if (!delta)
+> +		return false;
 
-Good catch, thanks!
+Small idea: should __mptcp_try_coalesce() returns a bool, and take a
+pointer to delta? Similar to what skb_try_coalesce() is doing then.
+Here, you will then have:
+
+  if (!__mptcp_try_coalesce(sk, to, from, &fragstolen, &delta))
+      return false;
+
+But that's a detail, if you prefer your version, I'm fine with it:
 
 Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
