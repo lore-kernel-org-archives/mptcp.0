@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52970279788
-	for <mptcp@lists.linux.dev>; Fri, 19 Sep 2025 10:22:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D11EF306B3D
+	for <mptcp@lists.linux.dev>; Fri, 19 Sep 2025 10:30:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758277328; cv=none; b=KXDqNWfO1sNeBiy097QlcDat43PVfoP3c3Qr8knCNTnwnUqQHtEmljIiTfzpBO7wKiz9/8LZGl79PnYBaEt00auDC+oGHXsGT67yqnVoKSBMSFxNsc7Sqd9CW7qVt04Zx6yNWHYh5uQt9Jnfe5L8+VRSfcfDEbAblOfOiOMcdfg=
+	t=1758277855; cv=none; b=qSZBxyXBzDAZo62zIXgPmla5GdA8lbyNSquWRBaPcaEkrtEgdWexJ93xTQY9MscuPoF6Dm04PRDitv1JrAy4ql87dB9mWcyTLTt7UKPzx5m0z++mvIDm1Pcivv4i8j8ovKVLUqfH6TjFV9iNMNs2iuRBxS5E57Xuyzjg3lv6A4w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758277328; c=relaxed/simple;
-	bh=ybZT3cTqdt4/zQ5eoawC3m9fAdwqwGktPdi3cXSlsgA=;
+	s=arc-20240116; t=1758277855; c=relaxed/simple;
+	bh=jRBC/rEw1vfKfJkCfSLqVzKLFZcDD3ZqUsYp5whpKRI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=i4Drc0dkJeWd2fwHSZqZgLgOZwS53VzY1JYvlty+NuBx8vFgxDy2cNvfkhhP57TmR0xuICiTxvTfuAKEFOhRc2iftbtT2sFj56RPhytLSwDMSrXRi9tshid7yiqIix2X1VbptXZt0G0EOKUZGoTx9jewZdvS6Lyuu7d43nqL3tg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WpM56GIZ; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=Ui4ewdiybBHIlNnV0eUxj5ELk3VdTLD7J09Z+0DhdHG86VFhoehMcPN/b2Z0CnC6wmrdt3X0WI6bADELhYZBNVRdydkrstUfMB8nVJbDetIlUBmAVylJx3E0L/mRekUKOLu+zsiT2AbPutqpR2SJOE/n01ir/cfATjZRiuVdDNU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=akTxAQAP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WpM56GIZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15D1EC4CEF0;
-	Fri, 19 Sep 2025 10:22:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="akTxAQAP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF5B7C4CEF1;
+	Fri, 19 Sep 2025 10:30:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758277327;
-	bh=ybZT3cTqdt4/zQ5eoawC3m9fAdwqwGktPdi3cXSlsgA=;
+	s=k20201202; t=1758277855;
+	bh=jRBC/rEw1vfKfJkCfSLqVzKLFZcDD3ZqUsYp5whpKRI=;
 	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=WpM56GIZZ3R004pF7b04HKsI8EKe3UlXXBLr5cEiF+iQP9tw9fuvnPeyLkrFw8Hge
-	 Ojam2B7aJJzI0Jlg88mYz3vnovCUMv10f9wAPXBpWeMmqEzs01qBuieLh17cmSxJ4s
-	 5z4nKL1oDBD741sODVKlomr8dTRW/D5VEOUmezvlZ4Cl/nrB7YTJZNJgWzVdigFqIj
-	 KNg13WmbyKaJQYjInAnOZG1nN3BXkG6y5svCXjS8vEhM7akK9HUP+3qwu1rHdMWX76
-	 dURm09A+XtpyhEebX02rVKKhUIFOVoB6MuNx3QWEpxnGWR9ATICOO9sVjnYOEH8kAQ
-	 l1OSu4yJptEQQ==
-Message-ID: <897ee294-654e-4f94-a6e2-836f1a4d1c7f@kernel.org>
-Date: Fri, 19 Sep 2025 12:22:06 +0200
+	b=akTxAQAPxXMIFJF+zxcA6r32hQZIi//CqA9GB0hbtRp9Ek4QKiUWCt5Qu2fVVcXkp
+	 94oxqCkNdrKH/9gujXlH791jCLEb6iA8Ukt9cMj9LNi4K49u8ZPOO6tjNvJH8x0qay
+	 9OmDsWT+KpqBjRWM3zxfwP4QIN/U95ZyLT/UfZl2b8HZEsRsqlOYsj2uFqBTqUcuDM
+	 y9q6Pn2TfIb91lTmf3f00vA1dTJ+WOOBoDE1pwgL1716Uti5g4XIZVLkeqqX9o+MYt
+	 4L6qwQ2EndFTzWCwE2Na3gOgrFlR8u2XMaOvWJsoek7FpyR3wsdPEestUk5I7QlYVL
+	 wY9GYtzHssFyg==
+Message-ID: <af038759-e7cb-4cba-a23f-e7cb06a07dcb@kernel.org>
+Date: Fri, 19 Sep 2025 12:30:52 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,11 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v2 03/12] mptcp: rcvbuf auto-tuning improvement
+Subject: Re: [PATCH mptcp-next v2 01/10] Squash to "mptcp: pm: in-kernel:
+ usable client side with C-flag"
 Content-Language: en-GB, fr-BE
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-References: <cover.1758214563.git.pabeni@redhat.com>
- <41db4ac9e54972274efd501dc110c5820def3412.1758214563.git.pabeni@redhat.com>
+To: Geliang Tang <geliang@kernel.org>, MPTCP Upstream <mptcp@lists.linux.dev>
+References: <20250919-pm-kern-endp-add_addr-v2-0-1f8f04f01914@kernel.org>
+ <20250919-pm-kern-endp-add_addr-v2-1-1f8f04f01914@kernel.org>
+ <c702e2fc35fdbea872ac01eb49c9f7f7be0262a9.camel@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -85,93 +87,89 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <41db4ac9e54972274efd501dc110c5820def3412.1758214563.git.pabeni@redhat.com>
+In-Reply-To: <c702e2fc35fdbea872ac01eb49c9f7f7be0262a9.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Paolo,
+Hi Geliang,
 
-On 18/09/2025 19:14, Paolo Abeni wrote:
-> Apply to the MPTCP auto-tuning the same improvements introduced for the
-> TCP protocol by the merge commit 2da35e4b4df9 ("Merge branch
-> 'tcp-receive-side-improvements'").
+On 19/09/2025 12:11, Geliang Tang wrote:
+> Hi Matt,
 > 
-> The main difference is that TCP subflow and the main MPTCP socket need
-> to account separately for OoO: MPTCP does not care for TCP-level OoO
-> and vice versa, as a consequence do not reflect MPTCP-level rcvbuf
-> increase due to OoO packets at the subflow level.
+> Thanks for this set. It looks good to me overall. Only one comment
+> below.
 > 
-> This refeactor additionally allow dropping the msk receive buffer update
-> at receive time, as the latter only intended to cope with subflow receive
-> buffer increase due to OoO packets.
+> On Fri, 2025-09-19 at 11:08 +0200, Matthieu Baerts (NGI0) wrote:
+>> The id_avail_bitmap is only used when either the 'subflow' or
+>> 'signal'
+>> flag is used, but not with 'fullmesh' only. Here, it is replacing the
+>> 'subflow' action, so check if this flag is set.
+>>
+>> Also, add the check for the max subflows upfront, so we avoid
+>> scheduling
+>> the worker with MPTCP_PM_ADD_ADDR_RECEIVED if it is not needed.
+>>
+>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+>> ---
+>> v2: modify protocol.h here too (Geliang)
+>> ---
+>>  net/mptcp/pm_kernel.c | 3 ++-
+>>  net/mptcp/protocol.h  | 3 ++-
+>>  2 files changed, 4 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/net/mptcp/pm_kernel.c b/net/mptcp/pm_kernel.c
+>> index
+>> d7cd89fa6a11a1ea7703edbfbdf2bbe86a6a3054..277f81f38134d07918143331746
+>> a50bc316d81ca 100644
+>> --- a/net/mptcp/pm_kernel.c
+>> +++ b/net/mptcp/pm_kernel.c
+>> @@ -411,7 +411,8 @@ static unsigned int
+>> fill_local_addresses_vec(struct mptcp_sock *msk,
+>>  			locals[i].flags = entry->flags;
+>>  			locals[i].ifindex = entry->ifindex;
+>>  
+>> -			if (c_flag_case)
+>> +			if (c_flag_case &&
+>> +			    (entry->flags &
+>> MPTCP_PM_ADDR_FLAG_SUBFLOW))
+>>  				__clear_bit(locals[i].addr.id,
+>>  					    msk-
+>>> pm.id_avail_bitmap);
+>>  
+>> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+>> index
+>> dd0662defd41c84474e44c559c571e3594b85d9e..0d6dae37c9daf4ec8990b9a8703
+>> 6aa393add585c 100644
+>> --- a/net/mptcp/protocol.h
+>> +++ b/net/mptcp/protocol.h
+>> @@ -1200,7 +1200,8 @@ static inline bool
+>> mptcp_pm_add_addr_c_flag_case(struct mptcp_sock *msk)
+>>  {
+>>  	return READ_ONCE(msk->pm.remote_deny_join_id0) &&
+>>  	       msk->pm.local_addr_used == 0 &&
+>> -	       mptcp_pm_get_add_addr_accept_max(msk) == 0;
+>> +	       mptcp_pm_get_add_addr_accept_max(msk) == 0 &&
+>> +	       msk->pm.subflows < mptcp_pm_get_subflows_max(msk);
 > 
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/487
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/559
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-
-Thank you for looking at that!
-
-> ---
-> v1 -> v2:
->   - fix unused variable
->   - reword the commit message
-> ---
->  net/mptcp/protocol.c | 92 ++++++++++++++++++++------------------------
->  net/mptcp/protocol.h |  4 +-
->  2 files changed, 44 insertions(+), 52 deletions(-)
+> If this line is added here, no need to change it again in
+> fill_local_addresses_vec() in "mptcp: pm: in-kernel: usable client side
+> with C-flag", right? I mean we can drop "msk->pm.subflows <
+> subflows_max" in this while statement:
 > 
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 9d95d24781509..162abafe3f320 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -179,6 +179,30 @@ static bool mptcp_ooo_try_coalesce(struct mptcp_sock *msk, struct sk_buff *to,
->  	return mptcp_try_coalesce((struct sock *)msk, to, from);
->  }
->  
-> +static bool mptcp_rcvbuf_grow(struct sock *sk)
+>   while (msk->pm.local_addr_used < local_addr_max &&
+>          msk->pm.subflows < subflows_max) {
+> 
+> No need to send a v3, please update it when merging it if you agree.
 
-detail: can we add the similar comment as the one below for
-mptcp_data_queue_ofo()?
+No, we still need it here, because we might create more than one subflow.
 
-   /* "inspired" by tcp_rcvbuf_grow(), main differences:
-    * - ...
+We could move it to the end of the loop, but I would rather prefer not
+to do that in the patch for 'net'. Probably better to keep this patch
+simple, and similar to what is done in fill_local_addresses_vec() for
+the fullmesh case.
 
-I can do the modification when applying the patches.
-
-> +{
-> +	struct mptcp_sock *msk = mptcp_sk(sk);
-> +	int rcvwin, rcvbuf;
-> +
-> +	if (!READ_ONCE(sock_net(sk)->ipv4.sysctl_tcp_moderate_rcvbuf) ||
-> +	    (sk->sk_userlocks & SOCK_RCVBUF_LOCK))
-> +		return false;
-> +
-> +	rcvwin = ((u64)msk->rcvq_space.space << 1);
-
-Why do you need the u64 cast here? (and the parenthesis)
-
-> +
-> +	if (!RB_EMPTY_ROOT(&msk->out_of_order_queue))
-> +		rcvwin += MPTCP_SKB_CB(msk->ooo_last_skb)->end_seq - msk->ack_seq;
-> +
-> +	rcvbuf = min_t(u64, mptcp_space_from_win(sk, rcvwin),
-> +		       READ_ONCE(sock_net(sk)->ipv4.sysctl_tcp_rmem[2]));
-
-detail: mptcp_space_from_win() and *sysctl_tcp_rmem are on 32 bits, no
-need to do a 'min_t(u64)'. Maybe we can copy what is done in
-tcp_rcvbuf_grow()?
-
-  rcvbuf = min_t(u32, ...
-
-While at it, could we get even closer to tcp_rcvbuf_grow()? Declaring
-and using 'net' and 'cap' variable + keep the comments? By doing that,
-it would be easier to spot differences :)
-
-I can also do the modifications when applying the patches if you prefer.
-
-The suggested modifications are minor, and the rest looks good to me!
-
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+In the refactoring, we can apply the same modifications for both the
+fullmesh case and the one here: using a break at the end of the loop. WDYT?
 
 Cheers,
 Matt
