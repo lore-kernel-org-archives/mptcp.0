@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB0752E7162
-	for <mptcp@lists.linux.dev>; Fri, 19 Sep 2025 08:19:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C70816DEB1
+	for <mptcp@lists.linux.dev>; Fri, 19 Sep 2025 08:25:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758269993; cv=none; b=X2k7zXUNVc3bjtN/wF3j0u7qn7zRZ42DpUTgIvnOx5NrLBeQYnZSDbvlB+9FNGFVn6i3wONO0vNSLsb/qkXhBpvnmRt1vgWOSV+BG7YDP1KiUX5WElqrDjIpMz5lSANN1LyswbnKUn4MIuz2puqZmJARjzXVEWjxHYf1esbfISI=
+	t=1758270315; cv=none; b=KatnwG1UhEnQkrsVjd9g4LNA5nHAoV9CuefgzNmKCEAUNE3UsBE73ZTc0cUT+KDlRoCk3sRztYrtKlpXrOBtvl9QwZ1uCLEOMhJ6TBM+EbUwahqhHMbWJN+17XI/zCUOPFT3+glwDzhEe0OqySGz/+SxBw1jMyQU2CjXNIOEOXc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758269993; c=relaxed/simple;
-	bh=NhPHYm7AFsrwsPYqSoUVivlr9WHEbmqO4hAfdzXqNE0=;
+	s=arc-20240116; t=1758270315; c=relaxed/simple;
+	bh=2Rv6+COt8+XQ3HXqLGJWsZEH5p4jsx3rWB4yVimUNAg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=HHwBaCuuMGZ1yPMqYPwz1Yt7xKLdOaifcHTVbZpkN+UT/yzZx83CnHwWZ1c+HgBEC6Z18/VGLTtZ0F1pIBjFWZIQ0TLvwr8BB0hBBGA8x+Gjbr0+eyKHJ9cLHhn2PgvWQS/nkxKLAYJZ0yCLtcUJBpU1QtDG+WSs0u91WX5oATI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RSxkm1dZ; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=Jq34AN8SIYnBpRHQqMbuNTHFP4o8g9pZFIgLboZdu2lcFl3iBy/lXZ8T04hoVZ7QQyi0jgV7U4Qf7g/7GH2rqPpFWdHdNmZ0/LJZ4OF+zfDJZKgD0/lQAh/gI7unyIQhLY5JC7I+/l0kfFumRcH5Y2Qw9JE/Iu0DLaivK+KCdV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HrurHjeR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RSxkm1dZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85E6DC4CEF0;
-	Fri, 19 Sep 2025 08:19:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HrurHjeR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23511C4CEF0;
+	Fri, 19 Sep 2025 08:25:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758269993;
-	bh=NhPHYm7AFsrwsPYqSoUVivlr9WHEbmqO4hAfdzXqNE0=;
+	s=k20201202; t=1758270314;
+	bh=2Rv6+COt8+XQ3HXqLGJWsZEH5p4jsx3rWB4yVimUNAg=;
 	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=RSxkm1dZ1aIxpGREpu7lSXokJOURp9XStBrSx9mX9JdCBnqfdnI/BfUSwe6NmTu/w
-	 LJ2eyWInE2xXnzW6YCjGZ9zy8mrthpbOk67nLqJpyr5RQGexP89cmkV0s3TzWka3Va
-	 wMF4vr7iRpFtIzo1ttuzNvK3gZ1V6GbcpU+0KMjGHTYUi+PHsLVAAyqbG2TBpyW52m
-	 t8qJWp781aBAYnsOFjXVvbxJO1QzJztTX7C300EaivsdQP1ilt5QUQYJLupGWaH9HW
-	 /DC6127iV3IWWkQ/dZqqVh056iibeRZc+rNxYwEEqqCj4AZqY3f7YlBXupPIQLn2pH
-	 M78Jx6v6R+MGw==
-Message-ID: <1f1e3ac1-692e-41e9-8d1d-2e6d1e3b6252@kernel.org>
-Date: Fri, 19 Sep 2025 10:19:50 +0200
+	b=HrurHjeRk9XunzLXvwyUptuMdLkB1qmOxQgUBfkkiovG41K60CL5uhH3QBPH/3oVs
+	 77dAAtvbhYllH/jsyi87FxrBKKbAWrp8xbNxZfN02xC03oasF79UAfHME+bVmqGqXh
+	 BWpePBqLHnZvHQ0gT9oO5zTmuMEk/2pgn7A9WMa668PM3otYgDW8595MJQB45QWUy3
+	 /lAgpFhQz/0aXAr/8CAJKMBJ0UBLGq8uYRC08K4+1sVO53KjgFa9JIoEjuWSyVFsDa
+	 bnE0C9o03mTQIgGVDNscnV+g6wsiQ4vpt4oWmSIHOo5uoH95ublYMsUBXQGnhgibPj
+	 hQU2ZCIz0OzMw==
+Message-ID: <98655217-febd-4744-9333-df441f6649a3@kernel.org>
+Date: Fri, 19 Sep 2025 10:25:12 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next 01/10] Squash to "mptcp: pm: in-kernel: usable
- client side with C-flag"
+Subject: Re: [PATCH mptcp-next 02/10] mptcp: pm: in-kernel: refactor
+ fill_local_addresses_vec
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, MPTCP Upstream <mptcp@lists.linux.dev>
 References: <20250918-pm-kern-endp-add_addr-v1-0-e12e58770a11@kernel.org>
- <20250918-pm-kern-endp-add_addr-v1-1-e12e58770a11@kernel.org>
- <ac08f69806eebc9237119b45ab6b3e7a1bd059ad.camel@kernel.org>
+ <20250918-pm-kern-endp-add_addr-v1-2-e12e58770a11@kernel.org>
+ <0c764cfdff33d8d903d78b90bd59a8406552dee2.camel@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,44 +87,160 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <ac08f69806eebc9237119b45ab6b3e7a1bd059ad.camel@kernel.org>
+In-Reply-To: <0c764cfdff33d8d903d78b90bd59a8406552dee2.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
 Hi Geliang,
 
-On 19/09/2025 05:18, Geliang Tang wrote:
+On 19/09/2025 08:51, Geliang Tang wrote:
 > Hi Matt,
 > 
-> Thanks for this patch.
-
-Thank you for the review!
-
 > On Thu, 2025-09-18 at 19:42 +0200, Matthieu Baerts (NGI0) wrote:
->> The id_avail_bitmap is only used when either the 'subflow' or
->> 'signal'
->> flag is used, but not with 'fullmesh' only. Here, it is replacing the
->> 'subflow' action, so check if this flag is set.
+>> Before this modification, this function was quite long with many
+>> levels
+>> of indentations.
+>>
+>> Each case can be split in a dedicated function: fullmesh, C flag,
+>> any.
 > 
-> I recall that 'fullmesh' can only be used together with 'subflow'. If
-> it has already been determined earlier that the flags contain
-> 'fullmesh', shouldn't the flags here already include 'subflow'? I'm not
-> entirely certain, but directly checking for 'subflow' as done in this
-> patch seems like a better approach.
+> If "C flag" function is squash into patch 1, how about splitting this
+> patch into two, one for 'fullmesh' and one for 'any'.
 
-We have a restriction not to have "fullmesh" with "signal" (even if I
-think we should remove it: I think there is no technical reason to
-forbid), but we can have "fullmesh" without "subflow".
+I would prefer not to. I don't think it is really needed to split that
+in multiple patches.
 
-> So this patch looks good to me.
+(...)
 
-Thanks!
+>> +/* Fill all the local addresses into the array addrs[],
+>> + * and return the array size.
+>> + */
+>> +static unsigned int
+>> +fill_local_addresses_vec(struct mptcp_sock *msk, struct
+>> mptcp_addr_info *remote,
+>> +			 struct mptcp_pm_local *locals)
+> 
+> How about keeping this unchanged:
+> 
+> static unsigned int fill_local_addresses_vec(struct mptcp_sock *msk,
+> 					     struct mptcp_addr_info
+> *remote,
+> 					     struct mptcp_pm_local
+> *locals)
+> 
+> This can make the patch smaller.
 
-> As mentioned in my previous comment, if possible, the refactoring of
-> the fill_local_addresses_vec_c_flag helper in patch 2 could also be
-> added to this squash-to patch.
+I did these modifications because that's the style I used in the new
+functions, plus I think it is better to avoid big indentations.
 
-I would prefer not to.
+I don't think we really need to make this patch smaller, it is just a
+"pure" refactoring.
+
+> 
+>> +{
+>> +	bool c_flag_case = remote->id &&
+>> mptcp_pm_add_addr_c_flag_case(msk);
+>> +	int i;
+>> +
+>> +	/* If there is at least one MPTCP endpoint with a fullmesh
+>> flag */
+>> +	i = fill_local_addresses_vec_fullmesh(msk, remote, locals,
+>> c_flag_case);
+>> +	if (i)
+>> +		return i;
+>> +
+>>  	/* Special case: peer sets the C flag, accept one ADD_ADDR
+>> if default
+>>  	 * limits are used -- accepting no ADD_ADDR -- and use
+>> subflow endpoints
+>>  	 */
+>> -	if (!i && c_flag_case) {
+>> -		unsigned int local_addr_max =
+>> mptcp_pm_get_local_addr_max(msk);
+>> +	if (c_flag_case)
+>> +		return fill_local_addresses_vec_c_flag(msk, remote,
+>> locals);
+>>  
+>> -		while (msk->pm.local_addr_used < local_addr_max &&
+>> -		       msk->pm.subflows < subflows_max) {
+>> -			struct mptcp_pm_local *local = &locals[i];
+>> -
+>> -			if (!select_local_address(pernet, msk,
+>> local))
+>> -				break;
+>> -
+>> -			__clear_bit(local->addr.id, msk-
+>>> pm.id_avail_bitmap);
+>> -
+>> -			if (!mptcp_pm_addr_families_match(sk,
+>> &local->addr,
+>> -							  remote))
+>> -				continue;
+>> -
+>> -			if (mptcp_addresses_equal(&local->addr,
+>> &mpc_addr,
+>> -						  local->addr.port))
+>> -				continue;
+>> -
+>> -			msk->pm.local_addr_used++;
+>> -			msk->pm.subflows++;
+>> -			i++;
+>> -		}
+>> -
+>> -		return i;
+>> -	}
+>> -
+>> -	/* If the array is empty, fill in the single
+>> -	 * 'IPADDRANY' local address
+>> -	 */
+>> -	if (!i) {
+>> -		memset(&locals[i], 0, sizeof(locals[i]));
+>> -		locals[i].addr.family =
+>> -#if IS_ENABLED(CONFIG_MPTCP_IPV6)
+>> -			       remote->family == AF_INET6 &&
+>> -			       ipv6_addr_v4mapped(&remote->addr6) ?
+>> AF_INET :
+>> -#endif
+>> -			       remote->family;
+>> -
+>> -		if (!mptcp_pm_addr_families_match(sk,
+>> &locals[i].addr, remote))
+>> -			return 0;
+>> -
+>> -		msk->pm.subflows++;
+>> -		i++;
+>> -	}
+>> -
+>> -	return i;
+>> +	/* No special case: fill in the single 'IPADDRANY' local
+>> address */
+>> +	return fill_local_address_any(msk, remote, &locals[0]);
+>>  }
+>>  
+>>  static void mptcp_pm_nl_add_addr_received(struct mptcp_sock *msk)
+>> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+>> index
+>> dd0662defd41c84474e44c559c571e3594b85d9e..0d6dae37c9daf4ec8990b9a8703
+>> 6aa393add585c 100644
+>> --- a/net/mptcp/protocol.h
+>> +++ b/net/mptcp/protocol.h
+>> @@ -1200,7 +1200,8 @@ static inline bool
+>> mptcp_pm_add_addr_c_flag_case(struct mptcp_sock *msk)
+>>  {
+>>  	return READ_ONCE(msk->pm.remote_deny_join_id0) &&
+>>  	       msk->pm.local_addr_used == 0 &&
+>> -	       mptcp_pm_get_add_addr_accept_max(msk) == 0;
+>> +	       mptcp_pm_get_add_addr_accept_max(msk) == 0 &&
+>> +	       msk->pm.subflows < mptcp_pm_get_subflows_max(msk);
+> 
+> This needs to be squash to patch 1 too.
+
+It is currently not needed, see this message in the commit message:
+
+> To remove one level of indentation, msk->pm.subflows >= subflows_max is
+> now checked upfront.
+But I guess it doesn't hurt to move it there, just to be on the safe
+side, and avoid this note.
 
 Cheers,
 Matt
