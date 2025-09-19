@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFF68305058
-	for <mptcp@lists.linux.dev>; Fri, 19 Sep 2025 08:14:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A45962E2EF3
+	for <mptcp@lists.linux.dev>; Fri, 19 Sep 2025 08:17:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758269685; cv=none; b=sabK6FUUar3H24SDZf0yXEaZFG1JQTbEtRraAZW99br2vmtWips3EtzUhwGk7cm4F20GVqICn7k/rSK5D9tCU8fO+M/nNjmZfCsu4a9HjSGsdQgmVAswn7VZCh/DedD2iEGAZKX8aslyBCVmqKduClT22Q78qYInjy+xMyk1H+E=
+	t=1758269837; cv=none; b=kJUPE97Pl8WY5HiGRI4dX8IFWTxZxcDGp3jocP1k60iqGz7NEjbLDb+M4EWqkZTS//J48riRv0/tyqoGy7Hzn2EZiNnQFnVhwgF/Sng7c+V1nLnUxeheR5kAnvIEivzDKeMPHA4pg1p7tL/xxaN9DvDQrKvbniSZd5/AwVblk8E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758269685; c=relaxed/simple;
-	bh=9vQxYuNIkfSh/pKSCGyXd9IqGp2q04D6dKTvgnF85ac=;
+	s=arc-20240116; t=1758269837; c=relaxed/simple;
+	bh=i3/RzkO3B8rc15ZliOkwEOYBS4cPZFpT6JGYgtdm5P0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=KuQMr+fTde4vJ6m9qz9/8GUOiJbTQg6aZxbjXzOAUuyZLVxd8qIpf35USewDj88Jrg76z6+9gnmA+uZC6BcJoOGcUNXyvOQIyrpmYHOZZBeZyJTXlRiMAVU63WzBH/F8x9M2JHgGTS6lYAHOHIILsvSPNMqr/o75X6VDNQJr8Lc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UvNDbOAY; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=RuzgWzXJilR1/hjVOsvcWS3JxwmPyTqMEHf8HrlTtFtUifMwR8N8ke7T6xScsPSyzMljwUJJUV5RipFeZBw9k2MLthk/NagghI6W43bEhYFEwAEhCdA56djWyRLb0YXQoirYoUlupZvZq2QJWZNAY86/l5pyQ4WtdLeW4v5pEXU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G11O1c4B; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UvNDbOAY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D537C4CEF0;
-	Fri, 19 Sep 2025 08:14:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G11O1c4B"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A63ABC4CEF0;
+	Fri, 19 Sep 2025 08:17:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758269685;
-	bh=9vQxYuNIkfSh/pKSCGyXd9IqGp2q04D6dKTvgnF85ac=;
+	s=k20201202; t=1758269837;
+	bh=i3/RzkO3B8rc15ZliOkwEOYBS4cPZFpT6JGYgtdm5P0=;
 	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=UvNDbOAYDVWw5buihiEqy/Ngx3vxbvOI4dnirSIb6AuI+EpLRBskjXyDr0uvKkfDc
-	 sdWh8kw4U088gEpHp77gWADN0LkwLlGn4W+Rk8rI1qeSgVh0ru/WCZhtE01HM06Axr
-	 pa2hvgUANsLCR+iC6UbelWFeNSc2MLjwPGMbO2+fO0mSqHP/CO8DdKbntJkJvfE8Oh
-	 Zyn9VzE0E6/Pu+ns6q6yDJQPfbmWYF+G5WnOi7EZSK5T6LO0vC0P4si64mZuXuuKOt
-	 cPLL6S5r458Sk0VkU5qDN/HaQ07ZO/r1pZRDHb/N/NDX8W/v3XFRksdGm+ry/+9d9Y
-	 AulA66Ai52Qjw==
-Message-ID: <79da8979-8a66-4473-8a7d-7cdd96ebc5b1@kernel.org>
-Date: Fri, 19 Sep 2025 10:14:42 +0200
+	b=G11O1c4BZkZ25lo6hxUViav/VL8giUr/VfobWB91gekTPufCmTWSxK5VN1RbFSxyK
+	 ctIr+oNpwKUT76lW3kHSzoALeZlmQbNxfDNqw2YPFrVOqdwA256Lh+U9N6vloHDfs3
+	 EfRJ3/cv6sLEIas1UeSA829TVjGuWEIXaCSJydPzukuUH9HfrNa6bhLDnmuwEpBrkZ
+	 wTW2ZU/ukgIG7gujrX9g13a6oFtWu7mBhkcIXR++EZUVnrYDfE5A0cRv7rTi5/kuIo
+	 nmsnzFcOwmCdsBv5KhfZA3QbBfUTLdVsME9xzw1A8bndmcB7T+hz2XYfvLVtyEk5FD
+	 fCvqTX7JkyCJQ==
+Message-ID: <77711101-541d-4d12-b377-74faf088c40f@kernel.org>
+Date: Fri, 19 Sep 2025 10:17:15 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,14 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v2 00/12] mptcp: receive path improvement
+Subject: Re: [PATCH mptcp-net v2 1/2] mptcp: pm: in-kernel: usable client side
+ with C-flag
 Content-Language: en-GB, fr-BE
-To: Paolo Abeni <pabeni@redhat.com>, Geliang Tang <geliang@kernel.org>,
- MPTCP Linux <mptcp@lists.linux.dev>
-References: <cover.1758214563.git.pabeni@redhat.com>
- <dd39e243-9ffe-86c0-9db7-6c108470b3b2@gmail.com>
- <0387885e84d41f14cf23914c85d2191f1cdfdae9.camel@kernel.org>
- <7da5cd03-b5ce-4062-a23f-7bd7ecbec38c@redhat.com>
+To: Geliang Tang <geliang@kernel.org>, MPTCP Upstream <mptcp@lists.linux.dev>
+References: <20250916-pm-c-flag-client-default-v2-0-3be2c5bc4d6a@kernel.org>
+ <20250916-pm-c-flag-client-default-v2-1-3be2c5bc4d6a@kernel.org>
+ <b31466fa93dfaf3eb7a5b71712275d309c63fc21.camel@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -88,69 +87,189 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <7da5cd03-b5ce-4062-a23f-7bd7ecbec38c@redhat.com>
+In-Reply-To: <b31466fa93dfaf3eb7a5b71712275d309c63fc21.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi Paolo,
+Hi Geliang,
 
-On 19/09/2025 08:54, Paolo Abeni wrote:
-> On 9/19/25 4:22 AM, Geliang Tang wrote:
->> On Thu, 2025-09-18 at 20:33 +0000, MPTCP CI wrote:
->>> Hi Paolo,
->>>
->>> Thank you for your modifications, that's great!
->>>
->>> Our CI did some validations and here is its report:
->>>
->>> - KVM Validation: normal: Unstable: 5 failed test(s):
->>> packetdrill_mp_capable selftest_mptcp_connect
->>> selftest_mptcp_connect_checksum selftest_mptcp_connect_mmap
->>> selftest_mptcp_connect_sendfile 🔴
->>> - KVM Validation: debug: Unstable: 5 failed test(s):
->>> packetdrill_mp_capable selftest_mptcp_connect
->>> selftest_mptcp_connect_checksum selftest_mptcp_connect_mmap
->>> selftest_mptcp_connect_sendfile 🔴
->>> - KVM Validation: btf-normal (only bpftest_all): Success! ✅
->>> - KVM Validation: btf-debug (only bpftest_all): Success! ✅
->>> - Task:
->>> https://github.com/multipath-tcp/mptcp_net-next/actions/runs/17836736262
->>
->> CI reports that this series breaks the mptcp_connect.sh test:
->>
->> # INFO: disconnect
->> # 63 ns1 MPTCP -> ns1 (10.0.1.1:20001      ) MPTCP     (duration 
->> 1348ms) [ OK ]
->> # 64 ns1 MPTCP -> ns1 (10.0.1.1:20002      ) TCP       main_loop_s:
->> timed out
->> # (duration 61185ms) [FAIL] client exit code 124, server 2
->> # 
->> # netns ns1-HugJD9 (listener) socket stat for 20002:
->> # Netid State     Recv-Q Send-Q Local Address:Port  Peer Address:Port 
->> # tcp   TIME-WAIT 0      0           10.0.1.1:20002     10.0.1.1:47722
->> timer:(timewait,,0) ino:0 sk:2066
->> # ^I
->> # TcpActiveOpens                  2                  0.0
->> # TcpPassiveOpens                 2                  0.0
->>
->> I also tested it on my end and found that starting from patch 8 "mptcp:
->> cleanup fallback data fin reception", the mptcp_connect.sh test has
->> been failing.
->>
->> I apologize for not providing this feedback during the v1 review, but I
->> was too busy yesterday to complete the testing.
+On 19/09/2025 05:01, Geliang Tang wrote:
+> Hi Matt,
 > 
-> Thank you very much for bisecting. I did not observe the failures on v1,
-> but I see them on v2 (which is quite suprising, giving no big changes in
-> there). I submitted v2 anyway to give syzkaller/CI a chance to run more.
+> Thanks for this v2.
+> 
+> On Tue, 2025-09-16 at 13:01 +0200, Matthieu Baerts (NGI0) wrote:
+>> When servers set the C-flag in their MP_CAPABLE to tell clients not
+>> to
+>> create subflows to the initial address and port, clients will likely
+>> not
+>> use their other endpoints. That's because the in-kernel path-manager
+>> uses the 'subflow' endpoints to create subflows only to the initial
+>> address and port.
+>>
+>> If the limits have not been modified to accept ADD_ADDR, the client
+>> doesn't try to establish new subflows. If the limits accept ADD_ADDR,
+>> the routing routes will be used to select the source IP.
+>>
+>> The C-flag is typically set when the server is operating behind a
+>> legacy
+>> Layer 4 load balancer, or using anycast IP address. Clients having
+>> their
+>> different 'subflow' endpoints setup, don't end up creating multiple
+>> subflows as expected, and causing some deployment issues.
+>>
+>> A special case is then added here: when servers set the C-flag in the
+>> MPC and directly sends an ADD_ADDR, this single ADD_ADDR is accepted.
+>> The 'subflows' endpoints will then be used with this new remote IP
+>> and
+>> port. This exception is only allowed when the ADD_ADDR is sent
+>> immediately after the 3WHS, and makes the client switching to the
+>> 'fully
+>> established' mode. After that, 'select_local_address()' will not be
+>> able
+>> to find any subflows, because 'id_avail_bitmap' will be filled in
+>> mptcp_pm_create_subflow_or_signal_addr(), when switching to 'fully
+>> established' mode.
+>>
+>> Fixes: df377be38725 ("mptcp: add deny_join_id0 in
+>> mptcp_options_received")
+>> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/536
+>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+>> ---
+>> Notes:
+>> - I tried to find a simple solution that can hopefully be backported
+>> to
+>>   cover the 'CDN' use-case.
+>> - I tried to find a solution respecting the 'accepted add addr'
+>> limit,
+>>   but I don't see how to... That's why here I limit the exception a
+>>   maximum: when this limit is 0 (default case), only the first
+>> ADD_ADDR,
+>>   etc. Feel free to share what you think about that.
+>> - I have some additional code doing some cleanup, and I started to
+>> look
+>>   at #503, which is a bit linked to that.
+>> - v2: move conditions to new helper (Geliang) + rename var, squash
+>> comm.
+>> ---
+>>  net/mptcp/pm.c        |  7 +++++--
+>>  net/mptcp/pm_kernel.c | 37 +++++++++++++++++++++++++++++++++++++
+>>  net/mptcp/protocol.h  |  7 +++++++
+>>  3 files changed, 49 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+>> index
+>> 02dfb379417e2843301f121039ec0d370b040ef7..edaf93fe6f86b32aee8e9bb8831
+>> 8b1dc2a7fcb5e 100644
+>> --- a/net/mptcp/pm.c
+>> +++ b/net/mptcp/pm.c
+>> @@ -637,9 +637,12 @@ void mptcp_pm_add_addr_received(const struct
+>> sock *ssk,
+>>  		} else {
+>>  			__MPTCP_INC_STATS(sock_net((struct sock
+>> *)msk), MPTCP_MIB_ADDADDRDROP);
+>>  		}
+>> -	/* id0 should not have a different address */
+>> +	/* - id0 should not have a different address
+>> +	 * - special case for C-flag: linked to
+>> fill_local_addresses_vec()
+>> +	 */
+>>  	} else if ((addr->id == 0 &&
+>> !mptcp_pm_is_init_remote_addr(msk, addr)) ||
+>> -		   (addr->id > 0 && !READ_ONCE(pm->accept_addr))) {
+>> +		   (addr->id > 0 && !READ_ONCE(pm->accept_addr) &&
+>> +		    !mptcp_pm_add_addr_c_flag_case(msk))) {
+>>  		mptcp_pm_announce_addr(msk, addr, true);
+>>  		mptcp_pm_add_addr_send_ack(msk);
+>>  	} else if (mptcp_pm_schedule_work(msk,
+>> MPTCP_PM_ADD_ADDR_RECEIVED)) {
+>> diff --git a/net/mptcp/pm_kernel.c b/net/mptcp/pm_kernel.c
+>> index
+>> f30df8e884a0b3de9fb092e5774cafe08f6350ce..d7cd89fa6a11a1ea7703edbfbdf
+>> 2bbe86a6a3054 100644
+>> --- a/net/mptcp/pm_kernel.c
+>> +++ b/net/mptcp/pm_kernel.c
+>> @@ -389,10 +389,12 @@ static unsigned int
+>> fill_local_addresses_vec(struct mptcp_sock *msk,
+>>  	struct mptcp_addr_info mpc_addr;
+>>  	struct pm_nl_pernet *pernet;
+>>  	unsigned int subflows_max;
+>> +	bool c_flag_case;
+>>  	int i = 0;
+>>  
+>>  	pernet = pm_nl_get_pernet_from_msk(msk);
+>>  	subflows_max = mptcp_pm_get_subflows_max(msk);
+>> +	c_flag_case = remote->id &&
+>> mptcp_pm_add_addr_c_flag_case(msk);
+>>  
+>>  	mptcp_local_address((struct sock_common *)msk, &mpc_addr);
+>>  
+>> @@ -409,6 +411,10 @@ static unsigned int
+>> fill_local_addresses_vec(struct mptcp_sock *msk,
+>>  			locals[i].flags = entry->flags;
+>>  			locals[i].ifindex = entry->ifindex;
+>>  
+>> +			if (c_flag_case)
+>> +				__clear_bit(locals[i].addr.id,
+>> +					    msk-
+>>> pm.id_avail_bitmap);
+>> +
+>>  			/* Special case for ID0: set the correct ID
+>> */
+>>  			if (mptcp_addresses_equal(&locals[i].addr,
+>> &mpc_addr, locals[i].addr.port))
+>>  				locals[i].addr.id = 0;
+>> @@ -419,6 +425,37 @@ static unsigned int
+>> fill_local_addresses_vec(struct mptcp_sock *msk,
+>>  	}
+>>  	rcu_read_unlock();
+>>  
+>> +	/* Special case: peer sets the C flag, accept one ADD_ADDR
+>> if default
+>> +	 * limits are used -- accepting no ADD_ADDR -- and use
+>> subflow endpoints
+>> +	 */
+>> +	if (!i && c_flag_case) {
+>> +		unsigned int local_addr_max =
+>> mptcp_pm_get_local_addr_max(msk);
+>> +
+>> +		while (msk->pm.local_addr_used < local_addr_max &&
+>> +		       msk->pm.subflows < subflows_max) {
+>> +			struct mptcp_pm_local *local = &locals[i];
+>> +
+>> +			if (!select_local_address(pernet, msk,
+>> local))
+>> +				break;
+>> +
+>> +			__clear_bit(local->addr.id, msk-
+>>> pm.id_avail_bitmap);
+>> +
+>> +			if (!mptcp_pm_addr_families_match(sk,
+>> &local->addr,
+>> +							  remote))
+>> +				continue;
+>> +
+>> +			if (mptcp_addresses_equal(&local->addr,
+>> &mpc_addr,
+>> +						  local->addr.port))
+>> +				continue;
+>> +
+>> +			msk->pm.local_addr_used++;
+>> +			msk->pm.subflows++;
+>> +			i++;
+>> +		}
+>> +
+>> +		return i;
+>> +	}
+> 
+> In the subsequent patches, this was refactored into a separate helper.
+> I think that change is well-implemented and could be directly squashed
+> into this patch. We can define this fill_local_addresses_vec_c_flag
+> here directly within this patch. WDYT?
 
-It looks like the CI had the same issues with the v1:
-
-https://github.com/multipath-tcp/mptcp_net-next/actions/runs/17795536153
-
-> I think patch 1-3 should be sane and effective, we can probably merge them.
-
-Thank you for that!
+I think it would be better not to add this new helper in this patch, and
+keep it as it is: it will be easier to backport that, and probably
+easier to review.
 
 Cheers,
 Matt
