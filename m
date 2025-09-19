@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33C90244668
-	for <mptcp@lists.linux.dev>; Fri, 19 Sep 2025 10:51:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73A4C2AD0D
+	for <mptcp@lists.linux.dev>; Fri, 19 Sep 2025 10:55:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758279061; cv=none; b=oDK+zx+501H52aCMtz6xph8TdTC63dZNDEGoXhC4Yb7t4aOumMT9Q/yLKQaECvJPZRGVTo8omgA67Y/PFsS0RhZxZXSv7/aG+c7mQULi1pL4xKPcSsDYkFpwkFwSdexFVc1dUZOMSoc+mCTxOQ9qMPAMf3jLWcSlcTOFOflWbac=
+	t=1758279309; cv=none; b=s0watHfwMOhIvRVLOSeAKBpVLJwEWpGQ9HjJk5pZNHxzlKoG/s0k6qro1PDZBqRSz+AfSaJ10YC3tNN0H4VpoRvpBIHrmgOtx8DsFbSygvScU94hwlffFF02xRT+6OtjUr8K8JWbzKdXnbLUEe3cXOrpDmhbK55dV4oqnoTzAhI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758279061; c=relaxed/simple;
-	bh=UkDKYT/rN6MF3Amo2nQX6udtneTlGF8vmELWNPBMCeY=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=t0LJBbz1LthFRPrrfKrSciykzDfKURwtdYVEIVmyi9A1ugUIff+Opr5Sp8Z1aIVrFtPo4Mhc6DNulDE+/ED7k2S6Guw562HJz4+6Jtwl5b09pTxjXx+PiuPLhy8SYgFv4hSoGkLEtdKlhTg0UtifJsljzcV0cgdXV10iVbC27WI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nfwx1B7/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1758279309; c=relaxed/simple;
+	bh=M2N2PL9QqM43HPGtvwl1dXrob8w6j79oOI1Mql5Y1DA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=lfV/yJ8kpzQsnkZc6/ZmkzLpOoF8cMFCoRAfnhnjrbnKyT9RjWPqr1uBsAXLgI1pUZUzlsWGe9OLk0MBD4JbdPp0T8Kt9m1FN1fc9r0PMxKvhKBfOZpTmmCfthhiFQ87rH9TDQgovomX7Zb+vs6k2ys8KngaybBqSC2IEK/iDqg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ku/oV7xq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nfwx1B7/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33B26C4CEF0;
-	Fri, 19 Sep 2025 10:50:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ku/oV7xq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7262BC4CEF0;
+	Fri, 19 Sep 2025 10:55:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758279060;
-	bh=UkDKYT/rN6MF3Amo2nQX6udtneTlGF8vmELWNPBMCeY=;
-	h=Date:Subject:From:To:References:In-Reply-To:From;
-	b=nfwx1B7/eXaKttvf7ieKTbSIGqyYHNcEdt5hSsrzSCoK3xWr/6P0bacxyD8rFmtZ3
-	 pj4ouq/MaMVRuMEk8bG1D5LV7nZFb1ZYxWyNzcS8YlA1BJHN/tMiQvtRLFI1hVf7F3
-	 ehrSwbv3RYXDGI6FohoiYUVDmD95Sptp9cE7Be/HaeMSlKS59gK5srs1iiNy30MCw3
-	 fFpN4ArEwHwxMDzci5fYqsKKTQFvZCKZmOMxYrdls/FXG3wuv/H/swiI9+WMOe2T1a
-	 XAJ/Y3XZIia5TQaGTduErxbPlBHsHhb9nSG78ssehWKs7sMqaN1icfN8rMRmWjwQF3
-	 0vvc0glaXlj/A==
-Message-ID: <56ec31af-4468-4445-aa19-01f407100def@kernel.org>
-Date: Fri, 19 Sep 2025 12:50:58 +0200
+	s=k20201202; t=1758279309;
+	bh=M2N2PL9QqM43HPGtvwl1dXrob8w6j79oOI1Mql5Y1DA=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=Ku/oV7xq15BZnsAWnICpBR4sAoG1nZkcU22NGnO/gIBYHryFmxC+nWnh0QFTaW3fd
+	 fwgXPKm+/52UUUTrms3FqMbSZy0aofdf2HmbGvx1AhvXuaydb13plTklv39NigwfQY
+	 3m8VnFjnSiIT5qeI3ZiZhjjkH3UUQWz98ipun3Q36QeTpRKONQ++AKvZDLS81Xf2uN
+	 bKKnTA+o4vcjdS6aYMR+7uXjThwVKzEY74qwVdHFA+w4wd98ndosgT4hK/Wio2zdWC
+	 opLb1mxdC/TZm1NnksjndRwmYAUzZtdS0V2Ahum5ZZvuDXoiilpBf73pbXK9XIg/KI
+	 IP2/fS9eAgRaQ==
+Message-ID: <a860e33b-bf29-4f65-991d-2e203e3da3d6@kernel.org>
+Date: Fri, 19 Sep 2025 12:55:06 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,14 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net v2 0/2] mptcp: pm: in-kernel: usable client side
- with C-flag
+Subject: Re: [PATCH mptcp-next v2 00/10] mptcp: pm: a few cleanups
 Content-Language: en-GB, fr-BE
-From: Matthieu Baerts <matttbe@kernel.org>
 To: Geliang Tang <geliang@kernel.org>, MPTCP Upstream <mptcp@lists.linux.dev>
-References: <20250916-pm-c-flag-client-default-v2-0-3be2c5bc4d6a@kernel.org>
- <5307c126de5a6029a1bba744bcde32446f2ff2a6.camel@kernel.org>
- <1993725f-b6d6-4ec6-8fa8-3d64368040be@kernel.org>
+References: <20250919-pm-kern-endp-add_addr-v2-0-1f8f04f01914@kernel.org>
+ <0e2481ae141ae8a13ae3d2c34f94e37e8e6fd1a7.camel@kernel.org>
+From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -87,62 +85,63 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <1993725f-b6d6-4ec6-8fa8-3d64368040be@kernel.org>
+In-Reply-To: <0e2481ae141ae8a13ae3d2c34f94e37e8e6fd1a7.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 19/09/2025 12:47, Matthieu Baerts wrote:
-> Hi Geliang,
-> 
-> On 19/09/2025 12:15, Geliang Tang wrote:
->> Hi Matt,
->>
->> On Tue, 2025-09-16 at 13:01 +0200, Matthieu Baerts (NGI0) wrote:
->>> When servers set the C-flag in their MP_CAPABLE to tell clients not
->>> to
->>> create subflows to the initial address and port, clients will likely
->>> not
->>> use their other endpoints. That's because the in-kernel path-manager
->>> uses the 'subflow' endpoints to create subflows only to the initial
->>> address and port.
->>>
->>> The first patch fixes that, and the second one validates it.
->>>
->>> More details:
->>> https://github.com/multipath-tcp/mptcp_net-next/issues/536
->>>
->>> Please see the comment in the first patch, and don't hesitate to
->>> reply :)
->>>
->>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
->>
->> Thanks for this v2.
->>
->> LGTM!
->>
->> Reviewed-by: Geliang Tang <geliang@kernel.org>
-> 
-> Thank you for the review!
-> 
-> Now in our tree. I decided to add them in the section for net-next: we
-> are close to the merge window, and linked to the comment from patch 1,
-> it is certainly safer to delay the backport to stable a bit.
-> 
-> New patches for t/upstream:
-> - 0b324b1e22a0: mptcp: pm: in-kernel: usable client side with C-flag
-> - b366bcbbad02: "squashed" patch 1/10 in "mptcp: pm: in-kernel: usable
-> client side with C-flag"
-> - c3ca688abf65: selftests: mptcp: join: validate C-flag + def limit
-> - Results: fe9c68017366..8a1a30937c29 (export)
+Hi Geliang,
 
-I forgot the last bit:
+On 19/09/2025 12:20, Geliang Tang wrote:
+> Hi Matt,
+> 
+> Thanks for this v2.
+> 
+> On Fri, 2025-09-19 at 11:08 +0200, Matthieu Baerts (NGI0) wrote:
+>> I'm currently looking at adding ADD-ADDR endpoint type, see [1].
+>>
+>> When working on this, I decided to do something we should have done
+>> from
+>> a long time: renaming some variables with confusing names, and split
+>> some functions.
+>>
+>> Flushing this now, just to ease the reviews: this should be pure
+>> refactoring, no functional changes intended in all these commits.
+>>
+>> Based-on:
+>> <20250916-pm-c-flag-client-default-v2-0-3be2c5bc4d6a@kernel.org>
+>> Link: https://github.com/multipath-tcp/mptcp_net-next/issues/503
+>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> 
+> Apart from a small comment in patch 1, the whole patch set looks good
+> to me.
+> 
+> Reviewed-by: Geliang Tang <geliang@kernel.org>
 
-- Results: fe9c68017366..169aef388767 (export)
+Thank you for the review!
+
+Now in our tree:
+
+New patches for t/upstream:
+- 740dfcb5f7a5: mptcp: pm: in-kernel: refactor fill_local_addresses_vec
+- 84e1cff472a8: mptcp: pm: in-kernel: refactor fill_remote_addresses_vec
+- 03ab82dc7dee: mptcp: pm: rename 'subflows' to 'extra_subflows'
+- b28ca23293e0: mptcp: pm: in-kernel: rename 'subflows_max' to
+'limit_extra_subflows'
+- 6e7aa1ce549c: mptcp: pm: in-kernel: rename 'add_addr_signal_max' to
+'endp_signal_max'
+- 6cf4bdae1069: mptcp: pm: in-kernel: rename 'add_addr_accept_max' to
+'limit_add_addr_accepted'
+- ff082e4b5a79: mptcp: pm: in-kernel: rename 'local_addr_max' to
+'endp_subflow_max'
+- 105e63c8190b: mptcp: pm: in-kernel: rename 'local_addr_list' to
+'endp_list'
+- 3390557d8f17: mptcp: pm: in-kernel: rename 'addrs' to 'endpoints'
+- Results: 169aef388767..77807b94c731 (export)
 
 Tests are now in progress:
 
 - export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/df63a09d28d2808cbe27f96a1937ad904035d2d6/checks
+https://github.com/multipath-tcp/mptcp_net-next/commit/a82d2c941090fff63470cf56d935589c1dc63ecf/checks
 
 Cheers,
 Matt
