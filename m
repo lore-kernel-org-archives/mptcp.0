@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D14CC2D191F
-	for <mptcp@lists.linux.dev>; Fri, 19 Sep 2025 21:10:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2306381BA
+	for <mptcp@lists.linux.dev>; Fri, 19 Sep 2025 21:13:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758316204; cv=none; b=SKOQXoc79/doBThG+GTZMM9frzjKYahBa+3sAwE9/PiGkjOhxanLcwUjz4DzEVnd+w8UYQcaU2FRpmagg/sugDLRhDztltLbb1V8M0fP6XPhy52BElnxnHv7HGlLVVL5E2xXR1vZVxkrt1BAFgabJ/OOt4IIExBAcH7vJmk0Yl0=
+	t=1758316398; cv=none; b=M/PlUEpin7j/Ey/jWKlb2OqqRFaNaAK81rDi12dEYvjzs6Nhz/gTSoLbBVLuVdE5sdKFM6YxsDZfq7uW4C8bIHYDZA2+Pn/IfSA71t9zW/9r4cdUSwCIQcyYLIs16Jn3QWE25K60M0CsC7NuqZpFteUasYJ6k1thbvnhSvnH7L0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758316204; c=relaxed/simple;
-	bh=7d1XgXIY4NvYkIY79Nc9ABgQk+kby2kdkkT2y4UCJZA=;
+	s=arc-20240116; t=1758316398; c=relaxed/simple;
+	bh=AuogQYzdGwjmUMhf72c4FHJw812k1rzRYuGBKaP6Rzw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=Pqeme3FWI9MgtRLjL3HPpAqPyM9qz6uDPYXjBTlx3+5udC1JiqvKM9srluvS7duQB6JofbQBeT8rpbBsH+vNNfIkWhHj50fPpb8obgo7tlGNbCB1+54GI0dijftMHNk8SKtYXhtNL3M2XfaKqzSRXrGHMizDRZ3BMNOV4x9sGDM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hDbGbY5f; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=uIq9uVg4hP4ZINjhjEdZQFxwbNc4jQujKmbKfHUI2PqgAxIPuJBQwIr90PjWEz6eNEWkYpYOvsygcoX8MQ47xywItNA2OEH02QslHBWEOuFb32hogjiAinWaROLDyLBoApCzbsFXmqtjZZoHM9yiwDQjmonoz5XiXY9ojYqQpdY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SHHtId/V; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hDbGbY5f"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9411C4CEF0;
-	Fri, 19 Sep 2025 21:10:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SHHtId/V"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 038EDC4CEF0;
+	Fri, 19 Sep 2025 21:13:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758316204;
-	bh=7d1XgXIY4NvYkIY79Nc9ABgQk+kby2kdkkT2y4UCJZA=;
+	s=k20201202; t=1758316397;
+	bh=AuogQYzdGwjmUMhf72c4FHJw812k1rzRYuGBKaP6Rzw=;
 	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=hDbGbY5famnYGCtlOpHl6vVosFjKHMCCnsh/ak0BJTB0H5Bpr/7EqSjlMDAmycGmt
-	 XMgZgOyIeSEcuRKjKj9EhVRF21tEq8yyaRHdvSDl00R/1/r3YU4nM1fFTZY+R6pWKQ
-	 9rPDfOhaXZ4KdDsN16nAXTBLGib9qyqvi2S0qkXjstvPH0XjyQP1+qW9II495FQsjP
-	 CNEJeq3+JIsiV0gwBwgC2n/kJWMOZeAVNfqFX2FIDCtyoKo+UF3SI4EemuiIjSwMS+
-	 hmGc8dG/L/PejdsnlnZDjDSAg7wd6Er9Q0O/7GWcudXEXhTlnJRc0xhz4baux238GX
-	 8fgEQYs+ZRVPg==
-Message-ID: <2f3d59ef-b909-4149-8c94-d014fa2ff543@kernel.org>
-Date: Fri, 19 Sep 2025 23:10:01 +0200
+	b=SHHtId/VllEcXBjcDDQWo915pM94GNmkfbYH1NOR4kIdpHuG/4tg4hEq83zL/XQHR
+	 fHPd9FuuJClaEDCJWTdsp6nsiPueMjJunWBKiAdw8M6T/og45JhgxRnb7tZHxqNbTY
+	 6XpGmvyfisfJXMNToSASQUwrKzPCXUYsMpC7213JAyQ16CaTGhGTgPMpU+VmN8QENf
+	 JM+RVhfaM6SZ90e9u5j6hfdRiaPrm+7Zrgxmry9ySPT7Kc82BHuiU4nF0re0goLaU0
+	 mLQGY1MrxNFT8il1VK8m4FsUvPqy8RzaqAe1DZdrbDlY73WbLvWTL56WRsv0lPvEO2
+	 ZdMVx6RRCkgbQ==
+Message-ID: <4e5d00ca-1317-4f98-952b-e7ac058c52b7@kernel.org>
+Date: Fri, 19 Sep 2025 23:13:15 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,11 +35,10 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [MPTCP next v3 03/12] mptcp: rcvbuf auto-tuning improvement
+Subject: Re: [MPTCP next v3 00/12] mptcp: receive path improvement
 Content-Language: en-GB, fr-BE
 To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
 References: <cover.1758296923.git.pabeni@redhat.com>
- <3b9f144fd4df4c02550946d4208a0ede8e776526.1758296923.git.pabeni@redhat.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -85,39 +84,45 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <3b9f144fd4df4c02550946d4208a0ede8e776526.1758296923.git.pabeni@redhat.com>
+In-Reply-To: <cover.1758296923.git.pabeni@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Paolo,
 
 On 19/09/2025 17:53, Paolo Abeni wrote:
-> Apply to the MPTCP auto-tuning the same improvements introduced for the
-> TCP protocol by the merge commit 2da35e4b4df9 ("Merge branch
-> 'tcp-receive-side-improvements'").
+> This series includes several changes to the MPTCP RX path.
 > 
-> The main difference is that TCP subflow and the main MPTCP socket need
-> to account separately for OoO: MPTCP does not care for TCP-level OoO
-> and vice versa, as a consequence do not reflect MPTCP-level rcvbuf
-> increase due to OoO packets at the subflow level.
+> The main goals are improving the RX performances _and_ increase the
+> long term maintainability.
 > 
-> This refeactor additionally allow dropping the msk receive buffer update
-> at receive time, as the latter only intended to cope with subflow receive
-> buffer increase due to OoO packets.
+> Some changes reflects recent (or not so) improvements introduced in the
+> TCP stack: patch 1, 2 and 3 are the MPTCP counter part of skb deferral
+> free and auto-tuning improvements.
 > 
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/487
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/559
-> Reviewed-by: Geliang Tang <geliang@kernel.org>
-> Tested-by: Geliang Tang <geliang@kernel.org>
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> Note that patch 3 could possibly fix issues/574, and overall such patch
+> should protect from similar issues to arise in the future.
+> 
+> All the others patches are aimed at introducing the socket backlog usage
+> to process the packets received by the subflows while the msk socket is
+> owned. That (almost completely) replace the processing currently
+> happening in the mptcp_release_cb().
+> 
+> The actual job is done in patch 10, while the others are cleanups needed
+> to make the change tidy and more follow-up cleanups.
+> 
+> Sharing earlier with known issues (at least on fallback socket) to raise
+> awareness about this upcoming work.
 > ---
 > v2 -> v3:
->   - copy tcp_rcvbuf_grow() implementation, verbatim
->   - intentionally omitted Mat's tag due to the many changes
+>   - (hopefully) addressed CI failures
 
-Thank you for the v3, that's easier to spot the differences now!
+Sadly, the CI doesn't seem that happy, but only in debug mode:
 
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+https://github.com/multipath-tcp/mptcp_net-next/actions/runs/17863851247
+
+If it is easier for you, I can already apply (and send to netdev?) some
+of these patches? e.g. 1-7/12?
 
 Cheers,
 Matt
