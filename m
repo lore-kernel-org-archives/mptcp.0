@@ -1,42 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5C6D2030A
-	for <mptcp@lists.linux.dev>; Sun, 21 Sep 2025 00:48:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF8024C6D
+	for <mptcp@lists.linux.dev>; Sun, 21 Sep 2025 01:01:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758415703; cv=none; b=uA6jp4vQWXVdazWZtmlfiIMcA+rWbs0YAbkDK9WUNR0d9rmEkqNXhgnp8SRXe6HHAdSHwrP/SI3dckJaRYvSTdddVqO05JaDTBsLuTlzeFT2/JDyvQhYa/NG9xHxpRL6Eg1HCoKVprEwTzJffW1R/MIFU4ewik9mJsRTlDmJZOM=
+	t=1758416490; cv=none; b=iXE1uTQO8LceUbEnAkGYBS76FVop6wD9D31ifMQedikyBxiUEa3Z+HhHeK08kmUtSvbgVJlE4Qx8VSHOl4fTw/pGZ1Iy9nNO1fj04OcKA77A3mMPHVvulp9lDLb0bCcrhIZ+Zx5D24rvW9+uPnhbCB1qu/mnjwGiXfq2IuymGes=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758415703; c=relaxed/simple;
-	bh=smCMvUirHz8h2p0jeXk26+5xYdDeAf6YNJavSP3NenM=;
+	s=arc-20240116; t=1758416490; c=relaxed/simple;
+	bh=dtISwzodfXBUFFoiH8dZKRAEAEjGtZUeUow7xOMLhXc=;
 	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=AlZhkaFQK9oicJCWMej5AoY2aLIb/aJlW27t105zXIo4uloVicUaYBCGcAs466qkBk5gtJ8hwP6aTkev4RzDtGKZNlppPmD3sUZhZd8G96QYJFU205GCNmmB2kOxUxh80Zh6vBA3Osm+ze8v3pmSolGcu1+rDbD1m0shTGyaqFY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=frNRgu+8; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=H5RiFB7128eh+DceISvLaKmsJ6Dj1e0Ko1huRtC0C8j2xs+RbaKzHjYi/fWnae9+FPV0bnuCbDaz3IWXUaSrQtm1joGvvZfZR3Gg38K5nUyTRs+QBPM5R0mdUldorsrJIFSgCQD6MSTBCQyilutlqT0i9UW1js5/pkrJwiz7V8Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BfxklIFN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="frNRgu+8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5BA1C4CEEB;
-	Sun, 21 Sep 2025 00:48:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BfxklIFN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A87A8C4CEEB;
+	Sun, 21 Sep 2025 01:01:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758415703;
-	bh=smCMvUirHz8h2p0jeXk26+5xYdDeAf6YNJavSP3NenM=;
+	s=k20201202; t=1758416489;
+	bh=dtISwzodfXBUFFoiH8dZKRAEAEjGtZUeUow7xOMLhXc=;
 	h=Subject:From:To:Date:In-Reply-To:References:From;
-	b=frNRgu+8H0/4++e/wUIpynj+7Rw9Da4fJ9c2yWXDzg7LTE8EnzaA4F++soEpMDCAK
-	 3tNTOJkU8jPyNnLavPfA3L07CGrEKimbX80EAX3OM33zlTqqacE32WxeitqydM+arM
-	 LEl7o0JF6Fbkc9UJVROAMc9qx0+lXjZLRVFSozjJPV9LXoa+GsM4isO0MXQP7YSBaU
-	 ECJALgzjP/A5TgjGwYnqxTvBHk8R6/fNr9eSejKWFK503bE/wZkpDRbIAuPq62w61x
-	 8MJcSFKZFDd3o8gTA/MVmI/OZUWlT94eoIahmOQgZ4Q1xG2VOFtQbBlFI8ofn/jXye
-	 Bbbh7vzqoCTwA==
-Message-ID: <7f555610b63de81f35e7fc9d19c20034756dd22c.camel@kernel.org>
-Subject: Re: [MPTCP next v3 04/12] mptcp: introduce the mptcp_init_skb
- helper.
+	b=BfxklIFNP3+7GSd1dHDgYUXoCXWO2n+6InddCKjCHnL9LVkzjPWTAvcrQQHZkeC29
+	 uDI+Z3wKOnfFDEmWF50lTHxdrQRmI1gDvX8aegGLg8k2BGewEQsBM+YpxS0OsdsVGA
+	 D76R+yhKLQ6c8VYWgI+AHd3B2aqhgzlsl3ydV4LofaFi+aeDoPE79so+m8S73KYZJl
+	 n0uPgnXigIubF4FsWeVn+PGe/x0sfHmqEBsepnfaK+r8tTGPzFPGPp/mAuEJ82Jex/
+	 LfDI3QqI/1CtAyPThQVz55N7GQlUYs/0pkEL5UCuwQLLaAMuvDfibjkWuW81pdKob/
+	 n/U+EaEEK9iaw==
+Message-ID: <71ec0d4b89140d421e953d1ca03009f960fd9de8.camel@kernel.org>
+Subject: Re: [MPTCP next v3 09/12] mptcp: cleanup fallback dummy mapping
+ generation.
 From: Geliang Tang <geliang@kernel.org>
 To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-Date: Sun, 21 Sep 2025 08:48:20 +0800
-In-Reply-To: <5917814c3e85dfc2a346e83fc3cca4eeb0868295.camel@kernel.org>
+Date: Sun, 21 Sep 2025 09:01:26 +0800
+In-Reply-To: <4d3650ef680da6d172bf69223bda3dea2bb4a71c.camel@kernel.org>
 References: <cover.1758296923.git.pabeni@redhat.com>
-			 <df18a15a52a3884f05ad97cb53716d92bb7c8d88.1758296923.git.pabeni@redhat.com>
-		 <c5efa8750011a88d9945b6d81c36d4d00fe6b1e2.camel@kernel.org>
-	 <5917814c3e85dfc2a346e83fc3cca4eeb0868295.camel@kernel.org>
+		 <31bedb1bf0f3448fa804d3ef8d41fada09636a26.1758296923.git.pabeni@redhat.com>
+	 <4d3650ef680da6d172bf69223bda3dea2bb4a71c.camel@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 User-Agent: Evolution 3.56.0-1 
 Precedence: bulk
@@ -47,156 +46,83 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On Sun, 2025-09-21 at 08:23 +0800, Geliang Tang wrote:
-> On Sat, 2025-09-20 at 08:03 +0800, Geliang Tang wrote:
-> > Hi Paolo,
+On Sat, 2025-09-20 at 08:06 +0800, Geliang Tang wrote:
+> On Fri, 2025-09-19 at 17:53 +0200, Paolo Abeni wrote:
+> > MPTCP currently access ack_seq outside the msk socket log scope to
+> > generate the dummy mapping for fallback socket. Soon we are going
+> > to introduce backlog usage and even for fallback socket the ack_seq
+> > value will be significantly off outside of the msk socket lock
+> > scope.
 > > 
-> > Thank you for the v3. All tests pass on my end, including my
-> > "implement
-> > mptcp read_sock v11" test case.
+> > Avoid relying on ack_seq for dummy mapping generation, using
+> > instead
+> > the subflow sequence number. Note that in case of disconnect() and
+> > (re)connect() we must ensure that any previous state is re-set.
 > > 
-> > I have a few minor cleanup comments to make the patch clean. There
-> > is
-> > no need to send a v4 or block the merging of this series. Matt can
-> > make
-> > the changes when he merges it, or I can send some squash-to patches
-> > to
-> > address these after merging. Either approach would be fine.
+> > Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> > ---
+> > v2 -> v3:
+> >  - reordered before the backlog introduction to avoid transiently
+> >    break the fallback
+> >  - explicitly reset ack_seq
+> > ---
+> >  net/mptcp/protocol.c | 3 +++
+> >  net/mptcp/subflow.c  | 8 +++++++-
+> >  2 files changed, 10 insertions(+), 1 deletion(-)
 > > 
-> > On Fri, 2025-09-19 at 17:53 +0200, Paolo Abeni wrote:
-> > > Factor out all the skb initialization step in a new helper and
-> > > use it. Note that this change moves the MPTCP CB initialization
-> > > earlier: we can do such step as soon as the skb leaves the
-> > > subflow socket receive queues.
-> > > 
-> > > Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> > > Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> > > ---
-> > > v1 -> v2:
-> > >   - drop subflow argument from mptcp_init_skb()
-> > >   - change msk args to sock arg in __mptcp_move_skb()
-> > > ---
-> > >  net/mptcp/protocol.c | 46 ++++++++++++++++++++++++--------------
-> > > --
-> > > --
-> > > --
-> > >  1 file changed, 25 insertions(+), 21 deletions(-)
-> > > 
-> > > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> > > index c9fcdbaf50874..3aa03da781ba3 100644
-> > > --- a/net/mptcp/protocol.c
-> > > +++ b/net/mptcp/protocol.c
-> > > @@ -326,27 +326,11 @@ static void mptcp_data_queue_ofo(struct
-> > > mptcp_sock *msk, struct sk_buff *skb)
-> > >  		mptcp_rcvbuf_grow(sk);
-> > >  }
-> > >  
-> > > -static bool __mptcp_move_skb(struct mptcp_sock *msk, struct sock
-> > > *ssk,
-> > > -			     struct sk_buff *skb, unsigned int
-> > > offset,
-> > > -			     size_t copy_len)
-> > > +static void mptcp_init_skb(struct sock *ssk,
-> > > +			   struct sk_buff *skb, int offset, int
-> > > copy_len)
-> > 
-> > nit:
-> > 
-> > static void mptcp_init_skb(struct sock *ssk, struct sk_buff *skb,
-> >                            int offset, int copy_len)
-> > 
-> > is better.
-> > 
-> > >  {
-> > > -	struct mptcp_subflow_context *subflow =
-> > > mptcp_subflow_ctx(ssk);
-> > > -	struct sock *sk = (struct sock *)msk;
-> > > -	struct sk_buff *tail;
-> > > -	bool has_rxtstamp;
-> > > -
-> > > -	__skb_unlink(skb, &ssk->sk_receive_queue);
-> > > -
-> > > -	skb_ext_reset(skb);
-> > > -	skb_orphan(skb);
-> > > -
-> > > -	/* try to fetch required memory from subflow */
-> > > -	if (!sk_rmem_schedule(sk, skb, skb->truesize)) {
-> > > -		MPTCP_INC_STATS(sock_net(sk),
-> > > MPTCP_MIB_RCVPRUNED);
-> > > -		goto drop;
-> > > -	}
-> > > -
-> > > -	has_rxtstamp = TCP_SKB_CB(skb)->has_rxtstamp;
-> > > +	const struct mptcp_subflow_context *subflow =
-> > > mptcp_subflow_ctx(ssk);
-> > > +	bool has_rxtstamp = TCP_SKB_CB(skb)->has_rxtstamp;
-> > 
-> > nit, how about keeping it as the original code to make this patch
-> > smaller:
-> > 
-> > -	struct mptcp_subflow_context *subflow =
-> > mptcp_subflow_ctx(ssk);
-> > -	bool has_rxtstamp;
-> > -
-> > -	has_rxtstamp = TCP_SKB_CB(skb)->has_rxtstamp;
-> > 
-> > Reviewed-by: Geliang Tang <geliang@kernel.org>
-> > Tested-by: Geliang Tang <geliang@kernel.org>
-> > 
-> > Thanks,
-> > -Geliang
-> > 
-> > >  
-> > >  	/* the skb map_seq accounts for the skb offset:
-> > >  	 * mptcp_subflow_get_mapped_dsn() is based on the
-> > > current
-> > > tp->copied_seq
-> > > @@ -358,6 +342,24 @@ static bool __mptcp_move_skb(struct
-> > > mptcp_sock
-> > > *msk, struct sock *ssk,
-> > >  	MPTCP_SKB_CB(skb)->has_rxtstamp = has_rxtstamp;
-> > >  	MPTCP_SKB_CB(skb)->cant_coalesce = 0;
-> > >  
-> > > +	__skb_unlink(skb, &ssk->sk_receive_queue);
-> > > +
-> > > +	skb_ext_reset(skb);
-> > > +	skb_dst_drop(skb);
-> > > +}
-> > > +
-> > > +static bool __mptcp_move_skb(struct sock *sk, struct sk_buff
-> > > *skb)
-> > > +{
-> > > +	u64 copy_len = MPTCP_SKB_CB(skb)->end_seq -
-> > > MPTCP_SKB_CB(skb)->map_seq;
-> > > +	struct mptcp_sock *msk = mptcp_sk(sk);
-> > > +	struct sk_buff *tail;
-> > > +
-> > > +	/* try to fetch required memory from subflow */
-> > > +	if (!sk_rmem_schedule(sk, skb, skb->truesize)) {
-> > > +		MPTCP_INC_STATS(sock_net(sk),
-> > > MPTCP_MIB_RCVPRUNED);
-> > > +		goto drop;
-> > > +	}
-> > > +
-> > >  	if (MPTCP_SKB_CB(skb)->map_seq == msk->ack_seq) {
-> > >  		/* in sequence */
-> > >  		msk->bytes_received += copy_len;
-> > > @@ -678,7 +680,9 @@ static bool
-> > > __mptcp_move_skbs_from_subflow(struct
-> > > mptcp_sock *msk,
-> > >  		if (offset < skb->len) {
-> > >  			size_t len = skb->len - offset;
-> > >  
-> > > -			ret = __mptcp_move_skb(msk, ssk, skb,
-> > > offset, len) || ret;
-> > > +			mptcp_init_skb(ssk, skb, offset, len);
-> > > +			skb_orphan(skb);
+> > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> > index fce70cdad2a7f..c8b02048126a9 100644
+> > --- a/net/mptcp/protocol.c
+> > +++ b/net/mptcp/protocol.c
+> > @@ -3224,6 +3224,9 @@ static int mptcp_disconnect(struct sock *sk,
+> > int flags)
+> >  	msk->bytes_retrans = 0;
+> >  	msk->rcvspace_init = 0;
+> >  
+> > +	/* for fallback's sake */
+> > +	WRITE_ONCE(msk->ack_seq, 0);
+> > +
+> >  	WRITE_ONCE(sk->sk_shutdown, 0);
+> >  	sk_error_report(sk);
+> >  	return 0;
+> > diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> > index b9455c04e8a46..ac8616e7521e8 100644
+> > --- a/net/mptcp/subflow.c
+> > +++ b/net/mptcp/subflow.c
+> > @@ -491,6 +491,9 @@ static void subflow_set_remote_key(struct
+> > mptcp_sock *msk,
+> >  	mptcp_crypto_key_sha(subflow->remote_key, NULL, &subflow-
+> > > iasn);
+> >  	subflow->iasn++;
+> >  
+> > +	/* for fallback's sake */
+> > +	subflow->map_seq = subflow->iasn;
+> > +
+> >  	WRITE_ONCE(msk->remote_key, subflow->remote_key);
+> >  	WRITE_ONCE(msk->ack_seq, subflow->iasn);
+> >  	WRITE_ONCE(msk->can_ack, true);
+> > @@ -1435,9 +1438,12 @@ static bool subflow_check_data_avail(struct
+> > sock *ssk)
+> >  
+> >  	skb = skb_peek(&ssk->sk_receive_queue);
+> >  	subflow->map_valid = 1;
+> > -	subflow->map_seq = READ_ONCE(msk->ack_seq);
 > 
-> One more small request: could you also put skb_orphan(skb); into
-> mptcp_init_skb, placing it on the last line, and then replace it in
-> patch 12.
+> nit:
+> 
+> How about replacing this line in place? I mean, do not move it to a
+> later position:
+> 
+> +	subflow->map_seq = __mptcp_expand_seq(subflow->map_seq,
+> +					      subflow->iasn +
+> +					      TCP_SKB_CB(skb)->seq -
+> +					      subflow->ssn_offset -
+> 1);
+> 
+> Reviewed-by: Geliang Tang <geliang@kernel.org>
+> Tested-by: Geliang Tang <geliang@kernel.org>
 
-And please delete the sentence in the subject of this patch too.
+Please delete the sentence in the subject of this patch too.
 
 Thanks,
 -Geliang
@@ -205,7 +131,16 @@ Thanks,
 > Thanks,
 > -Geliang
 > 
-> > > +			ret = __mptcp_move_skb(sk, skb) || ret;
-> > >  			seq += len;
-> > >  
-> > >  			if (unlikely(map_remaining < len)) {
+> >  	subflow->map_data_len = skb->len;
+> >  	subflow->map_subflow_seq = tcp_sk(ssk)->copied_seq -
+> > subflow->ssn_offset;
+> > +	subflow->map_seq = __mptcp_expand_seq(subflow->map_seq,
+> > +					      subflow->iasn +
+> > +					      TCP_SKB_CB(skb)->seq
+> > -
+> > +					      subflow->ssn_offset
+> > -
+> > 1);
+> >  	WRITE_ONCE(subflow->data_avail, true);
+> >  	return true;
+> >  }
