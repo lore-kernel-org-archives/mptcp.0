@@ -1,114 +1,108 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76C672BB1D;
-	Sun, 21 Sep 2025 17:26:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B03D2BB1D
+	for <mptcp@lists.linux.dev>; Mon, 22 Sep 2025 08:35:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758475560; cv=none; b=Yx0ztxnDwTP6Fc9oK7XB+cu/uCFBhFwN9n/79S/TU3SMxybiL5WTYNhA4xLf/iwKe+4CKkww55TXXjLGGDIMqGQxwiqk7nihrRgqGratmRF/8dbNEsPZU2bTNCKvR/1QLmU1cIcpEGzQ/fRUt1yTyCwYP4akpp3YytnzrTroQ1w=
+	t=1758530141; cv=none; b=A75GUNubMjNaYBYEJgDVn0U+1rARTu8wlxdmp+qwXEYHa4gMUCVD3ikzga6gutU+JNzM9Sr07Ej2zDEI0Nsu++QEzMPehXUtkNBuq+B+wS/HjEexMmQwSykemH3N/PNxPf6iVD7ZRA17nulDJJZMKS/6+QHYArTjgNKrwgmUfKg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758475560; c=relaxed/simple;
-	bh=6QnVCx7h0Lh6JASmktnDEvqqeGp7VjpvojZmH6XhdwE=;
-	h=Subject:To:Cc:From:Date:In-Reply-To:Message-ID:MIME-Version:
-	 Content-Type; b=tYDrtlbkdtIiNQ37AFd6VhfZ2NBVeQMaiJgimsHrSzR+hSq3NFVnxioiWA22jQYWTMthAj61RLG0CrvUmPrPAh8PlDOUTzA9bPL/FXIE5SuWDBqqYprwyG//5h/tgSY8qVYiUnbDtnoNYo9LfuKzP6ZwFEvrqdHNxDnmb8cVWi4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=fRoFQ0LK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1758530141; c=relaxed/simple;
+	bh=zQe8FjyNY4Ln88XcwcWqu+4IcCEjeZyj1I0I2FC/0/g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JVYSrAId+yMYPZQuYHA1yWbs23X6EMEt0GHp+A9KDGu5Ro41gfE88ykrDv4YSbTt6VKBj1CogGjQ6dpsROcfxeEk/NldAgwNZFIgZoPN8JZXZ4DmgXkTjvih4fD6+6XptTlQRuqti/Jw6s6Fwq7iWXpYir/Ea31ExfD+V+Qk9Xs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CNQm/o42; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="fRoFQ0LK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2E72C4CEE7;
-	Sun, 21 Sep 2025 17:25:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1758475560;
-	bh=6QnVCx7h0Lh6JASmktnDEvqqeGp7VjpvojZmH6XhdwE=;
-	h=Subject:To:Cc:From:Date:In-Reply-To:From;
-	b=fRoFQ0LKCCGsLF4AXMS5kzumElsGrOSr3nGZx2wKA6DxCmC2LgXJ3IVaWwq3gPE4l
-	 NNkl1QcTrXLKjHI7CGV7pJeSpcN977nxSZ8LrmETgngcNy0pjLrTEq+IKIP2Cp6wdq
-	 SJ4Tf8svSgf59rviSaN7yHXyv5SXB0GbBgPodJ/M=
-Subject: Patch "mptcp: set remote_deny_join_id0 on SYN recv" has been added to the 5.15-stable tree
-To: gregkh@linuxfoundation.org,kuba@kernel.org,martineau@kernel.org,matttbe@kernel.org,mptcp@lists.linux.dev,sashal@kernel.org
-Cc: <stable-commits@vger.kernel.org>
-From: <gregkh@linuxfoundation.org>
-Date: Sun, 21 Sep 2025 19:25:55 +0200
-In-Reply-To: <20250919231743.3957803-2-matttbe@kernel.org>
-Message-ID: <2025092155-configure-yapping-1bd8@gregkh>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CNQm/o42"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 167D8C4CEF0;
+	Mon, 22 Sep 2025 08:35:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758530141;
+	bh=zQe8FjyNY4Ln88XcwcWqu+4IcCEjeZyj1I0I2FC/0/g=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=CNQm/o420XyldM95QL/plWVZFxBKP8I+Gix+4DV1U+CaUnt0uVWTzULV+UCW/TsfJ
+	 iDl0JrgRvtesrvoooPPZ0VDJITzqqzi/C7OFNhqZQyU4e8+U70D1mSfFUnqdE9W6NQ
+	 oqT/EHEUitDKsPoU2ZbTdDyIepcRalgG6aR/JRYRYAiNSKT3tgqkRDwkaVoO3c9or1
+	 iPIcrXQwZlnrwNBwYGzbvZXRut2oE4kKEB30GUqH6d8iaNkN1Yz1z5v+FTz5YoSdSh
+	 W0++mBxbdI5whA9JAjxdcYn3Cohv4znWQVw2qaFbPbYoRES+sBewXTjhqaKYfc9Xjv
+	 p5peCarpH9HHw==
+Message-ID: <1f39fb1b-8fab-468c-9a6d-f80c5eca186a@kernel.org>
+Date: Mon, 22 Sep 2025 09:35:36 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ANSI_X3.4-1968
-Content-Transfer-Encoding: 8bit
-X-stable: commit
-X-Patchwork-Hint: ignore
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-next 0/2] fixes for "mptcp: receive path
+ improvement" v3
+Content-Language: en-GB, fr-BE
+To: Geliang Tang <geliang@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: Geliang Tang <tanggeliang@kylinos.cn>, mptcp@lists.linux.dev
+References: <cover.1758339666.git.tanggeliang@kylinos.cn>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <cover.1758339666.git.tanggeliang@kylinos.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+Hi Geliang, Paolo,
 
-This is a note to let you know that I've just added the patch titled
+On 20/09/2025 05:44, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
+> 
+> Try to fix errors reported by CI.
 
-    mptcp: set remote_deny_join_id0 on SYN recv
+@Geliang: Thank you! The modifications make sense to me.
 
-to the 5.15-stable tree which can be found at:
-    http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
+@Paolo: do you want to send the v4 series to netdev directly?
 
-The filename of the patch is:
-     mptcp-set-remote_deny_join_id0-on-syn-recv.patch
-and it can be found in the queue-5.15 subdirectory.
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
 
-If you, or anyone else, feels it should not be added to the stable tree,
-please let <stable@vger.kernel.org> know about it.
-
-
-From stable+bounces-180718-greg=kroah.com@vger.kernel.org Sat Sep 20 01:18:05 2025
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Sat, 20 Sep 2025 01:17:44 +0200
-Subject: mptcp: set remote_deny_join_id0 on SYN recv
-To: stable@vger.kernel.org, gregkh@linuxfoundation.org, sashal@kernel.org
-Cc: MPTCP Upstream <mptcp@lists.linux.dev>, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>, Jakub Kicinski <kuba@kernel.org>
-Message-ID: <20250919231743.3957803-2-matttbe@kernel.org>
-
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-
-commit 96939cec994070aa5df852c10fad5fc303a97ea3 upstream.
-
-When a SYN containing the 'C' flag (deny join id0) was received, this
-piece of information was not propagated to the path-manager.
-
-Even if this flag is mainly set on the server side, a client can also
-tell the server it cannot try to establish new subflows to the client's
-initial IP address and port. The server's PM should then record such
-info when received, and before sending events about the new connection.
-
-Fixes: df377be38725 ("mptcp: add deny_join_id0 in mptcp_options_received")
-Reviewed-by: Mat Martineau <martineau@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Link: https://patch.msgid.link/20250912-net-mptcp-pm-uspace-deny_join_id0-v1-1-40171884ade8@kernel.org
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-[ Conflicts in subflow.c, because of differences in the context, e.g.
-  introduced by commit 3a236aef280e ("mptcp: refactor passive socket
-  initialization"), which is not in this version. The same lines --
-  using 'mptcp_sk(new_msk)' instead of 'owner' -- can still be added
-  approximately at the same place, before calling
-  mptcp_pm_new_connection(). ]
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/mptcp/subflow.c |    3 +++
- 1 file changed, 3 insertions(+)
-
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -758,6 +758,9 @@ create_child:
- 			 */
- 			WRITE_ONCE(mptcp_sk(new_msk)->first, child);
- 
-+			if (mp_opt.deny_join_id0)
-+				WRITE_ONCE(mptcp_sk(new_msk)->pm.remote_deny_join_id0, true);
-+
- 			/* new mpc subflow takes ownership of the newly
- 			 * created mptcp socket
- 			 */
-
-
-Patches currently in stable-queue which might be from matttbe@kernel.org are
-
-queue-5.15/mptcp-sockopt-make-sync_socket_options-propagate-sock_keepopen.patch
-queue-5.15/mptcp-set-remote_deny_join_id0-on-syn-recv.patch
