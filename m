@@ -1,91 +1,120 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14CAD19A288;
-	Mon, 22 Sep 2025 19:00:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB54727A906
+	for <mptcp@lists.linux.dev>; Mon, 22 Sep 2025 22:24:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758567627; cv=none; b=oX6So9gRZrNjMLw302fRdPZ7dxsbJB8vdFEeqf+WlGM3tiLNvstYRkQWhcJecT/ImzZUCo4XK1/732btNexCdBW+veIgYRdFGh2ssxpiM6DxBV5B3naWynGqfLyGJ9df/FfAuqWgi4/Pt7JcOIgds7msSoKw0Y7pqvI/AJ6SzcA=
+	t=1758579847; cv=none; b=TuJUq0n9kSJ+FmxVC4kmwx0ix9Th9ha6tu37PFulh6L1zvKSwvHERdiDzyg+PHv+P5SPlop0lrrpl9Iijykiyel+enUssJ4x0Fz6iwK/kInJsV0Bn+3jQUsNiShE59wUQwNa89PsUYdAaKpfi8DUjXXapSZQm8KXWjvZlcheS9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758567627; c=relaxed/simple;
-	bh=8U5r7MWC4C6QDYlXsPEZHC2SwxespT/dx+lT/gIoY7M=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=euURpmzmeBIlXK3MxSWhALo1HGz6LBFmgrd/ikP5AjRLjZGbQ5LNd+5Su2JHyUl+J3etqAwcVuYirWqcnrwusBdIe6U6ommRQc+Zxndr119H85PEyRjGZEVf0qZFe98bdAAlTmxiaRr3zXhASFy7JuXoe0ETyZMTkfrmEoKKpZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aQkU0QSN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1758579847; c=relaxed/simple;
+	bh=lCPZT6uO7WOqxa8zmSc8VLgor4IZj0cxtW4O+n4Vpbg=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=PQ5JaQzebjoQdJlrK/e3+o3RctMUu9fOTV2RpsoQgXaIXxpGaEKcyYoXVs0YUh+K68iFeqvC+ZJCHDhW1ezhLU5qRTIPzmPgT1ZdIdBvgE/shN7Y+eLRkc79/oDNIu6yuCODwC9hwUzpPnmjMMgzTs/+aCARfMKLlYIrajuJg04=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t8mIxZ3U; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aQkU0QSN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DA46C4CEF0;
-	Mon, 22 Sep 2025 19:00:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t8mIxZ3U"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB1EEC4CEF0;
+	Mon, 22 Sep 2025 22:24:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758567626;
-	bh=8U5r7MWC4C6QDYlXsPEZHC2SwxespT/dx+lT/gIoY7M=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=aQkU0QSNuNyPQOddF8/8SKdXidWzfNKzXYBCKpX3NterDRsdrxxyakEzpejxN6LCm
-	 suKZ1LxYsumb/LrjOc50uEmfzZbMq/Oyy4Odkb6ch14PlftgRqiXvmYxmdzOVJ3uzo
-	 muIYH68lw8Tg3b2PvvvSzoV+RFYiOwU2GMa93RHShKjMXOy4jEsp+NGd9+kaRjthBU
-	 iyrdMqzaZdKw5b+82zCaDb+cjozYE1ZKD6LaGqP4fjokSYDA4/mCaeQ93eYY62TB6q
-	 aqYdfQHJIzLUBJhLEf9DSfmNaEtSVY/l3+V/ZsSECsKwAIKPtXsOhjyPKffcg8X3v/
-	 qpwqNjxHU/73Q==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70D9D39D0C20;
-	Mon, 22 Sep 2025 19:00:25 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1758579847;
+	bh=lCPZT6uO7WOqxa8zmSc8VLgor4IZj0cxtW4O+n4Vpbg=;
+	h=From:Subject:Date:To:Cc:From;
+	b=t8mIxZ3URDBfF+8DSu6oZ1UTHShg4VxnjQk5/qeXOiTLv95+pCSYCunBRKAzQ78wx
+	 o4eHkS/ptDwN2p/dsvJKHoNkiFxIA9t26v6vGtZM/+I3f/j6tYjFnIU51CdgB6g1Gw
+	 jL5TSvLtwba0F2RGNpg9Tu3Z49wpRLJOZMHtDNJLBYoe1JIR24Mid/aNxKHa+ik+Tv
+	 8216SYhF7TWw2RzxCKFb0QAeC5CJbNsN4szuBJKQspzDBESZFk39VgyQOHDsSwCebW
+	 liSkCbbuSsv2GvIC4aOXoS5WHlK7UzC9X5iLacGVn2p1IcvFphpXrG4Y2rvB5S+0Fw
+	 WpVFMDmovlLKw==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH mptcp-next 0/6] mptcp: pm: in-kernel: add 'address'
+ endpoints
+Date: Tue, 23 Sep 2025 00:23:51 +0200
+Message-Id: <20250923-pm-kern-endp-add_addr-new-v1-0-60e3a8968f45@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next 0/6] mptcp: pm: netlink: announce server-side
- flag
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <175856762426.1122110.4750649388400694679.git-patchwork-notify@kernel.org>
-Date: Mon, 22 Sep 2025 19:00:24 +0000
-References: 
- <20250919-net-next-mptcp-server-side-flag-v1-0-a97a5d561a8b@kernel.org>
-In-Reply-To: 
- <20250919-net-next-mptcp-server-side-flag-v1-0-a97a5d561a8b@kernel.org>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: martineau@kernel.org, geliang@kernel.org, donald.hunter@gmail.com,
- kuba@kernel.org, davem@davemloft.net, edumazet@google.com, pabeni@redhat.com,
- horms@kernel.org, shuah@kernel.org, netdev@vger.kernel.org,
- mptcp@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAHfM0WgC/x2M0QrCMAxFf2Xk2UDXOWj9FREpa9QgiyEdczD27
+ wYfzsOBc+8OjYypwaXbwWjlxh9x6U8dTK8iT0Ku7hBDHEPuE+qMbzJBkqpYar07hkJfLDGkPNB
+ 5HFIG36vRg7f/9xVmXSb1bFvgdhw/zn2fu3cAAAA=
+X-Change-ID: 20250918-pm-kern-endp-add_addr-new-a20893e45389
+To: MPTCP Upstream <mptcp@lists.linux.dev>
+Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2705; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=lCPZT6uO7WOqxa8zmSc8VLgor4IZj0cxtW4O+n4Vpbg=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDIunqkt3cVYtmrDVj/hr3uOLbIS0c+pye75cKrYJk1k9
+ sGVVfIFHaUsDGJcDLJiiizSbZH5M59X8ZZ4+VnAzGFlAhnCwMUpABOZxMLIcDT2yAzudv80D+uL
+ T6ZEPQlP3bF0i7u2fMQWt7KDE+acZWT4Z/e4+4tAWuVSP6lT1X4Ld2wQ2syyW4ft3qVIiw3ZD+4
+ 8YAAA
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hello:
+Currently, upon the reception of an ADD_ADDR (and when the fullmesh flag
+is not used), the in-kernel PM will create new subflows using the local
+address the routing configuration will pick.
 
-This series was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+It would be easier to pick local addresses from a selected list of
+endpoints, and use it only once, than relying on routing rules.
 
-On Fri, 19 Sep 2025 14:08:57 +0200 you wrote:
-> Now that the 'flags' attribute is used, it seems interesting to add one
-> flag for 'server-side', a boolean value.
-> 
-> Here are a few patches related to the 'server-side' attribute:
-> 
-> - Patch 1: only announce this attribute on the server side.
-> 
-> [...]
+Use case: both the client (C) and the server (S) have two addresses (a
+and b). The client establishes the connection between C(a) and S(a).
+Once established, the server announces its additional address S(b). Once
+received, the client connects to it using its second address C(b).
+Compared to a situation without the 'address' endpoint for C(b), the
+client didn't use this address C(b) to establish a subflow to the
+server's primary address S(a). So at the end, we have:
 
-Here is the summary with links:
-  - [net-next,1/6] mptcp: pm: netlink: only add server-side attr when true
-    https://git.kernel.org/netdev/net-next/c/c9809f03c158
-  - [net-next,2/6] mptcp: pm: netlink: announce server-side flag
-    https://git.kernel.org/netdev/net-next/c/3d7ae91107b8
-  - [net-next,3/6] mptcp: pm: netlink: deprecate server-side attribute
-    https://git.kernel.org/netdev/net-next/c/c8bc168f5f3d
-  - [net-next,4/6] selftests: mptcp: pm: get server-side flag
-    https://git.kernel.org/netdev/net-next/c/e6c35529452e
-  - [net-next,5/6] mptcp: use _BITUL() instead of (1 << x)
-    https://git.kernel.org/netdev/net-next/c/5c967ebb5519
-  - [net-next,6/6] mptcp: remove unused returned value of check_data_fin
-    https://git.kernel.org/netdev/net-next/c/1be5b82c4585
+   C        S
+  C(a) --- S(a)
+  C(b) --- S(b)
 
-You are awesome, thank you!
+In case of a 3rd address on each side (C(c) and S(c)), upon the
+reception of an ADD_ADDR with S(c), the client should not pick C(b)
+because it has already been used. C(c) should then be used.
+
+Note that this situation is currently possible if C doesn't add any
+endpoint, but configure the routing in order to pick C(b) for the route
+to S(b), and pick C(c) for the route to S(c). That doesn't sound very
+practical because it means knowing in advance the IP addresses that
+will be used and announced by the server.
+
+Patches 1 & 2: some clean-ups and refactoring.
+
+Patch 3: "standardisation" and small perf improvement.
+
+Patch 4: squash to patches for a commit queued for net-next.
+
+Patch 5: new 'address' endpoints.
+
+Patch 6: validation using selftests.
+
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+Matthieu Baerts (NGI0) (6):
+      mptcp: pm: in-kernel: remove stale_loss_cnt
+      mptcp: pm: in-kernel: reduce pernet struct size
+      mptcp: pm: in-kernel: compare IDs instead of addresses
+      Squash to "mptcp: pm: in-kernel: usable client side with C-flag"
+      mptcp: pm: in-kernel: add 'address' endpoints
+      selftests: mptcp: join: validate new 'address' endpoints
+
+ include/uapi/linux/mptcp.h                      |   6 +-
+ net/mptcp/pm_kernel.c                           | 228 ++++++++++++++++--------
+ net/mptcp/protocol.h                            |   9 +-
+ net/mptcp/sockopt.c                             |   2 +
+ tools/testing/selftests/net/mptcp/mptcp_join.sh |  56 ++++++
+ tools/testing/selftests/net/mptcp/pm_nl_ctl.c   |   9 +
+ 6 files changed, 229 insertions(+), 81 deletions(-)
+---
+base-commit: 77807b94c731081ef3d97e96dabcea7aae2bfe15
+change-id: 20250918-pm-kern-endp-add_addr-new-a20893e45389
+
+Best regards,
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
