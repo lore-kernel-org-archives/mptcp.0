@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0F92285058
-	for <mptcp@lists.linux.dev>; Mon, 22 Sep 2025 22:24:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A579427A906
+	for <mptcp@lists.linux.dev>; Mon, 22 Sep 2025 22:24:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758579851; cv=none; b=Ix8s6if9a8KWNWCX/6XZetuJzI/lWcbnBKzdgXZR+VvSLoHuilMXy+LrEn0jOlZcgJ3P04U6pYd0vxgRdC1NmpJBaH6DJvKEg85gWgBo7TNPdOknbMBiMvKvBDDe+U2Gg5SL6IVf37IZnlqSw9/9IvJ0yomjT4V/ibcesq8CyXk=
+	t=1758579852; cv=none; b=REnajE086f8iToMPP/fGfVu2SBHpOuvI4PsBhUNJg27LgFFSK3s6Y3KuBRS+T1dRxgJgV4Lhe9Hz2lFyvlT16L6mt7Mj98ZvJnGOL38MJyL92b3jeVc15eLhD7LhwK37ZgwGCjZ+uToLm73jZewODhmkmTmubig5e4580/PMiDM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758579851; c=relaxed/simple;
-	bh=sXCGF+ApMOoBjnHL6n6tfmRSgONGNKsaeavP40RPDDs=;
+	s=arc-20240116; t=1758579852; c=relaxed/simple;
+	bh=BZGVScledBPyxgT9ajdqZAv+wSsrJH7qGc+H2E0ax8A=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=joaOotlY1ob12qwReiaWVnwBKFmxTkO8FRtRrNF0KlGL/F3LNNUDUQlbAB7Sp1p1AqiJk8loXMGSd/H7mUasN2Z0S/JCRVYtEs3kaRckNAqvZyG7Xk99YUAoS9hvkZ0xCZsGPQxtPmihKDr6/XRxWGhgG1TVnmCo0OF5u465Tcc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=USVsHFUz; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=lPXbt4uKd1HQ983kS6l/BtG4WfTNaa2PgRNNHErFZWnpLLG6C8PORtw+xt6uULmx5EItR6IwNciHFYRvFWll+3i8Quq5QhjUtJURvUdtXTcvFYPW1FQcrYByXRkOrS20f37BsdJL+c4h5UHWvwDtReTHWvV14vOivSEomHUwwwg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vOCUiJaN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="USVsHFUz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA1F2C4CEF0;
-	Mon, 22 Sep 2025 22:24:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vOCUiJaN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3978C113D0;
+	Mon, 22 Sep 2025 22:24:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758579851;
-	bh=sXCGF+ApMOoBjnHL6n6tfmRSgONGNKsaeavP40RPDDs=;
+	s=k20201202; t=1758579852;
+	bh=BZGVScledBPyxgT9ajdqZAv+wSsrJH7qGc+H2E0ax8A=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=USVsHFUz7BLzborkaumuUXduJEynrJt0yTXhKRpS3V4nfuPtFB8mBn9iZ3NwLdiAP
-	 qO/G10kySucYm/Oak35toyRpMXYMb9EPAmRupD9nTppEvbHBcZK27Uw6iLvY1TMhfI
-	 j23GgKPPpnwIqKb/IRtTJJvIFaMKDrMUKnudw2On9EdNd0dLfCO3U/J4Oo/ktx9MqF
-	 uK1hSSA0IRdkYRwODTFIb7Y/qYlbWTFufMfQNfY9fmwiHcWg+ZZrEYHLhAJuJeupBA
-	 AnfLt/ywY2i3QawlussW+f0rOHjUiIfLbwzfwXq2vxXgnjpYcjPDn5GPe5mAt2cVnv
-	 JD37AsK/6JhSw==
+	b=vOCUiJaNLYN3vBJVnCgfz7JfdkK+dEYaP/w6NmIdeeYn4lrQjncQEVLFvwcC3dfl/
+	 Ic/ai3XIaNjxrKISBdPkf5mJBtlNogYZC+M0GqdTtadLhc9212s8/Zw0x9vyuC2DfD
+	 NWMJ1wxrxyUK2oYYPBSWk8i4uSVQk/4PlwvC9wLGU0uZjTwD5z0ytfAjt+rVRUlsC4
+	 GXBaL9l6+a/JPW56EnnDhk5FA6uyUUD4FEBkIUjp/VdAwpsYxJQXr2R1I4jO90EvJn
+	 D54BEnat4vx4fvx5dXJzVArAWFCPWBuJ+SSYbrozMJ7ttf6ycXqmdNUSwFEzLhIfIe
+	 h1UGCwE5RShXw==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Tue, 23 Sep 2025 00:23:56 +0200
-Subject: [PATCH mptcp-next 5/6] mptcp: pm: in-kernel: add 'address'
- endpoints
+Date: Tue, 23 Sep 2025 00:23:57 +0200
+Subject: [PATCH mptcp-next 6/6] selftests: mptcp: join: validate new
+ 'address' endpoints
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,261 +38,144 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250923-pm-kern-endp-add_addr-new-v1-5-60e3a8968f45@kernel.org>
+Message-Id: <20250923-pm-kern-endp-add_addr-new-v1-6-60e3a8968f45@kernel.org>
 References: <20250923-pm-kern-endp-add_addr-new-v1-0-60e3a8968f45@kernel.org>
 In-Reply-To: <20250923-pm-kern-endp-add_addr-new-v1-0-60e3a8968f45@kernel.org>
 To: MPTCP Upstream <mptcp@lists.linux.dev>
 Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=9044; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=sXCGF+ApMOoBjnHL6n6tfmRSgONGNKsaeavP40RPDDs=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDIunmk5+THHcNYhsaxZKsYnj1Q3Jz76E/FrlnCIXebKN
- VJxn9+nd5SyMIhxMciKKbJIt0Xmz3xexVvi5WcBM4eVCWQIAxenAExEIp/hr0hvY84JvXlNospJ
- P9m3qfV82efJ93XrDgH7t5p6vxNPTGL4X3uf5fj7W7UxL50C7m67enSWveCHqmPREl8O/mC8Iq5
- 2iwEA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4594; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=BZGVScledBPyxgT9ajdqZAv+wSsrJH7qGc+H2E0ax8A=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDIunmkV1roiMWmxuLnYza97T0vPfyujfE3t+2GNaUuYo
+ qaXeSW5dZSyMIhxMciKKbJIt0Xmz3xexVvi5WcBM4eVCWQIAxenAEwkgY3hv5cQ476P9z/aFWa4
+ R+1b0tMtOaf/6mUh6cNTXPevW1Y3dRYjw/Kaif9LfVi/spvf/muWKNXbbPUtW+zjYgHreV25dzm
+ O8AIA
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Currently, upon the reception of an ADD_ADDR (and when the fullmesh flag
-is not used), the in-kernel PM will create new subflows using the local
-address the routing configuration will pick.
+Here are a few sub-tests for mptcp_join.sh, validating the new 'address'
+endpoint type.
 
-It would be easier to pick local addresses from a selected list of
-endpoints, and use it only once, than relying on routing rules.
+In a setup where subflows created using the routing rules would be
+rejected by the listener, and where the latter announces one IP address,
+some cases are verified:
 
-Use case: both the client (C) and the server (S) have two addresses (a
-and b). The client establishes the connection between C(a) and S(a).
-Once established, the server announces its additional address S(b). Once
-received, the client connects to it using its second address C(b).
-Compared to a situation without the 'address' endpoint for C(b), the
-client didn't use this address C(b) to establish a subflow to the
-server's primary address S(a). So at the end, we have:
+- Without any 'address' endpoints: no new subflows are created.
 
-   C        S
-  C(a) --- S(a)
-  C(b) --- S(b)
+- With one 'address' endpoints: a second subflow is created.
 
-In case of a 3rd address on each side (C(c) and S(c)), upon the
-reception of an ADD_ADDR with S(c), the client should not pick C(b)
-because it has already been used. C(c) should then be used.
+- With multiple 'address' endpoints: 2 IPv4 subflows are created.
 
-Note that this situation is currently possible if C doesn't add any
-endpoint, but configure the routing in order to pick C(b) for the route
-to S(b), and pick C(c) for the route to S(c). That doesn't sound very
-practical because it means knowing in advance the IP addresses that
-will be used and announced by the server.
+- With one 'address' endpoints, but the server announcing a second IP
+  address, only one subflow is created.
 
-In the code, the new endpoint type is added. Similar to the other
-subflow types, an MPTCP_INFO counter is added. While at it, hole are now
-commented in struct mptcp_info, to remember next time that these holes
-can no longer be used.
-
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/503
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- include/uapi/linux/mptcp.h |  6 +++-
- net/mptcp/pm_kernel.c      | 82 ++++++++++++++++++++++++++++++++++++++++++++++
- net/mptcp/protocol.h       |  1 +
- net/mptcp/sockopt.c        |  2 ++
- 4 files changed, 90 insertions(+), 1 deletion(-)
+ tools/testing/selftests/net/mptcp/mptcp_join.sh | 56 +++++++++++++++++++++++++
+ tools/testing/selftests/net/mptcp/pm_nl_ctl.c   |  9 ++++
+ 2 files changed, 65 insertions(+)
 
-diff --git a/include/uapi/linux/mptcp.h b/include/uapi/linux/mptcp.h
-index 5ec996977b3fa2351222e6d01b814770b34348e9..65dc069e9063325ad2e1ffb1da21cc4a4b6efd32 100644
---- a/include/uapi/linux/mptcp.h
-+++ b/include/uapi/linux/mptcp.h
-@@ -39,6 +39,7 @@
- #define MPTCP_PM_ADDR_FLAG_BACKUP		_BITUL(2)
- #define MPTCP_PM_ADDR_FLAG_FULLMESH		_BITUL(3)
- #define MPTCP_PM_ADDR_FLAG_IMPLICIT		_BITUL(4)
-+#define MPTCP_PM_ADDR_FLAG_ADDRESS		_BITUL(5)
- 
- struct mptcp_info {
- 	__u8	mptcpi_subflows;
-@@ -51,6 +52,7 @@ struct mptcp_info {
- 	#define mptcpi_endp_signal_max mptcpi_add_addr_signal_max
- 	__u8	mptcpi_add_addr_accepted_max;
- 	#define mptcpi_limit_add_addr_accepted mptcpi_add_addr_accepted_max
-+	/* 16-bit hole that can no longer be filled */
- 	__u32	mptcpi_flags;
- 	__u32	mptcpi_token;
- 	__u64	mptcpi_write_seq;
-@@ -60,13 +62,15 @@ struct mptcp_info {
- 	__u8	mptcpi_local_addr_max;
- 	#define mptcpi_endp_subflow_max mptcpi_local_addr_max
- 	__u8	mptcpi_csum_enabled;
-+	/* 8-bit hole that can no longer be filled */
- 	__u32	mptcpi_retransmits;
- 	__u64	mptcpi_bytes_retrans;
- 	__u64	mptcpi_bytes_sent;
- 	__u64	mptcpi_bytes_received;
- 	__u64	mptcpi_bytes_acked;
- 	__u8	mptcpi_subflows_total;
--	__u8	reserved[3];
-+	__u8	mptcpi_endp_address_max;
-+	__u8	reserved[2];
- 	__u32	mptcpi_last_data_sent;
- 	__u32	mptcpi_last_data_recv;
- 	__u32	mptcpi_last_ack_recv;
-diff --git a/net/mptcp/pm_kernel.c b/net/mptcp/pm_kernel.c
-index fbd0a4ade8469ee75d99083bf640ad91a6fb714e..790dd7bc7f79e95a1fb73cbfb065087aa28f8f4b 100644
---- a/net/mptcp/pm_kernel.c
-+++ b/net/mptcp/pm_kernel.c
-@@ -21,6 +21,7 @@ struct pm_nl_pernet {
- 	u8			endpoints;
- 	u8			endp_signal_max;
- 	u8			endp_subflow_max;
-+	u8			endp_address_max;
- 	u8			limit_add_addr_accepted;
- 	u8			limit_extra_subflows;
- 	u8			next_id;
-@@ -61,6 +62,14 @@ u8 mptcp_pm_get_endp_subflow_max(const struct mptcp_sock *msk)
- }
- EXPORT_SYMBOL_GPL(mptcp_pm_get_endp_subflow_max);
- 
-+u8 mptcp_pm_get_endp_address_max(const struct mptcp_sock *msk)
-+{
-+	struct pm_nl_pernet *pernet = pm_nl_get_pernet_from_msk(msk);
-+
-+	return READ_ONCE(pernet->endp_address_max);
-+}
-+EXPORT_SYMBOL_GPL(mptcp_pm_get_endp_address_max);
-+
- u8 mptcp_pm_get_limit_add_addr_accepted(const struct mptcp_sock *msk)
- {
- 	struct pm_nl_pernet *pernet = pm_nl_get_pernet_from_msk(msk);
-@@ -451,6 +460,66 @@ fill_local_addresses_vec_fullmesh(struct mptcp_sock *msk,
- 	return i;
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+index a94b3960ad5e009dbead66b6ff2aa01f70aa3e1f..b0d935e3c8381ea34e74c3878e869610b1a6fa41 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -2320,6 +2320,61 @@ signal_address_tests()
+ 	fi
  }
  
-+static unsigned int
-+fill_local_addresses_vec_address(struct mptcp_sock *msk,
-+				 struct mptcp_addr_info *remote,
-+				 struct mptcp_pm_local *locals)
++address_endp_tests()
 +{
-+	struct pm_nl_pernet *pernet = pm_nl_get_pernet_from_msk(msk);
-+	DECLARE_BITMAP(unavail_id, MPTCP_PM_MAX_ADDR_ID + 1);
-+	struct mptcp_subflow_context *subflow;
-+	struct sock *sk = (struct sock *)msk;
-+	struct mptcp_pm_addr_entry *entry;
-+	struct mptcp_pm_local *local;
-+	int i = 0;
++	# no address endpoints: routing rules are used
++	if reset_with_tcp_filter "without address endpoint" ns1 10.0.2.2 REJECT &&
++	   mptcp_lib_kallsyms_has "mptcp_pm_get_endp_address_max$"; then
++		pm_nl_set_limits $ns1 0 2
++		pm_nl_set_limits $ns2 2 2
++		pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
++		run_tests $ns1 $ns2 10.0.1.1
++		join_syn_tx=1 \
++			chk_join_nr 0 0 0
++		chk_add_nr 1 1
++	fi
 +
-+	/* Forbid creation of new subflows matching existing ones, possibly
-+	 * already created by 'subflow' endpoints
-+	 */
-+	bitmap_zero(unavail_id, MPTCP_PM_MAX_ADDR_ID + 1);
-+	mptcp_for_each_subflow(msk, subflow) {
-+		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
++	# address endpoints: this endpoint is used
++	if reset_with_tcp_filter "with address endpoint" ns1 10.0.2.2 REJECT &&
++	   mptcp_lib_kallsyms_has "mptcp_pm_get_endp_address_max$"; then
++		pm_nl_set_limits $ns1 0 2
++		pm_nl_set_limits $ns2 2 2
++		pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
++		pm_nl_add_endpoint $ns2 10.0.3.2 flags address
++		run_tests $ns1 $ns2 10.0.1.1
++		chk_join_nr 1 1 1
++		chk_add_nr 1 1
++	fi
 +
-+		if ((1 << inet_sk_state_load(ssk)) &
-+		    (TCPF_FIN_WAIT1 | TCPF_FIN_WAIT2 | TCPF_CLOSING | TCPF_CLOSE))
-+			continue;
++	# address endpoints: these endpoints are used
++	if reset_with_tcp_filter "with multiple address endpoints" ns1 10.0.2.2 REJECT &&
++	   mptcp_lib_kallsyms_has "mptcp_pm_get_endp_address_max$"; then
++		pm_nl_set_limits $ns1 0 2
++		pm_nl_set_limits $ns2 2 2
++		pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
++		pm_nl_add_endpoint $ns1 10.0.3.1 flags signal
++		pm_nl_add_endpoint $ns2 dead:beef:3::2 flags address
++		pm_nl_add_endpoint $ns2 10.0.3.2 flags address
++		pm_nl_add_endpoint $ns2 10.0.4.2 flags address
++		run_tests $ns1 $ns2 10.0.1.1
++		chk_join_nr 2 2 2
++		chk_add_nr 2 2
++	fi
 +
-+		__set_bit(READ_ONCE(subflow->local_id), unavail_id);
-+	}
-+
-+	rcu_read_lock();
-+	list_for_each_entry_rcu(entry, &pernet->endp_list, list) {
-+		if (!(entry->flags & MPTCP_PM_ADDR_FLAG_ADDRESS))
-+			continue;
-+
-+		if (!mptcp_pm_addr_families_match(sk, &entry->addr, remote))
-+			continue;
-+
-+		if (test_bit(mptcp_endp_get_local_id(msk, &entry->addr),
-+			     unavail_id))
-+			continue;
-+
-+		local = &locals[i];
-+		local->addr = entry->addr;
-+		local->flags = entry->flags;
-+		local->ifindex = entry->ifindex;
-+
-+		if (entry->flags & MPTCP_PM_ADDR_FLAG_SUBFLOW) {
-+			__clear_bit(local->addr.id, msk->pm.id_avail_bitmap);
-+
-+			if (local->addr.id != msk->mpc_endpoint_id)
-+				msk->pm.local_addr_used++;
-+		}
-+
-+		msk->pm.extra_subflows++;
-+		i++;
-+		break;
-+	}
-+	rcu_read_unlock();
-+
-+	return i;
++	# address endpoints: only one endpoint is used
++	if reset_with_tcp_filter "single address endpoints" ns1 10.0.2.2 REJECT &&
++	   mptcp_lib_kallsyms_has "mptcp_pm_get_endp_address_max$"; then
++		pm_nl_set_limits $ns1 0 2
++		pm_nl_set_limits $ns2 2 2
++		pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
++		pm_nl_add_endpoint $ns1 10.0.3.1 flags signal
++		pm_nl_add_endpoint $ns2 10.0.3.2 flags address
++		run_tests $ns1 $ns2 10.0.1.1
++		chk_join_nr 1 1 1
++		chk_add_nr 2 2
++	fi
 +}
 +
- static unsigned int
- fill_local_addresses_vec_c_flag(struct mptcp_sock *msk,
- 				struct mptcp_addr_info *remote,
-@@ -527,6 +596,10 @@ fill_local_addresses_vec(struct mptcp_sock *msk, struct mptcp_addr_info *remote,
- 	if (i)
- 		return i;
- 
-+	/* If there is at least one MPTCP endpoint with an address flag */
-+	if (mptcp_pm_get_endp_address_max(msk))
-+		return fill_local_addresses_vec_address(msk, remote, locals);
-+
- 	/* Special case: peer sets the C flag, accept one ADD_ADDR if default
- 	 * limits are used -- accepting no ADD_ADDR -- and use subflow endpoints
- 	 */
-@@ -701,6 +774,10 @@ static int mptcp_pm_nl_append_new_local_addr(struct pm_nl_pernet *pernet,
- 		addr_max = pernet->endp_subflow_max;
- 		WRITE_ONCE(pernet->endp_subflow_max, addr_max + 1);
- 	}
-+	if (entry->flags & MPTCP_PM_ADDR_FLAG_ADDRESS) {
-+		addr_max = pernet->endp_address_max;
-+		WRITE_ONCE(pernet->endp_address_max, addr_max + 1);
-+	}
- 
- 	pernet->endpoints++;
- 	if (!entry->addr.port)
-@@ -1095,6 +1172,10 @@ int mptcp_pm_nl_del_addr_doit(struct sk_buff *skb, struct genl_info *info)
- 		addr_max = pernet->endp_subflow_max;
- 		WRITE_ONCE(pernet->endp_subflow_max, addr_max - 1);
- 	}
-+	if (entry->flags & MPTCP_PM_ADDR_FLAG_ADDRESS) {
-+		addr_max = pernet->endp_address_max;
-+		WRITE_ONCE(pernet->endp_address_max, addr_max - 1);
-+	}
- 
- 	pernet->endpoints--;
- 	list_del_rcu(&entry->list);
-@@ -1177,6 +1258,7 @@ static void __reset_counters(struct pm_nl_pernet *pernet)
+ link_failure_tests()
  {
- 	WRITE_ONCE(pernet->endp_signal_max, 0);
- 	WRITE_ONCE(pernet->endp_subflow_max, 0);
-+	WRITE_ONCE(pernet->endp_address_max, 0);
- 	pernet->endpoints = 0;
- }
+ 	# accept and use add_addr with additional subflows and link loss
+@@ -4109,6 +4164,7 @@ all_tests_sorted=(
+ 	f@subflows_tests
+ 	e@subflows_error_tests
+ 	s@signal_address_tests
++	A@address_endp_tests
+ 	l@link_failure_tests
+ 	t@add_addr_timeout_tests
+ 	r@remove_tests
+diff --git a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
+index d4981b76693bbddca74169437a540ad6294cf1d5..9164c2e797bd003d933d274a54791b23928748f6 100644
+--- a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
++++ b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
+@@ -830,6 +830,8 @@ int add_addr(int fd, int pm_family, int argc, char *argv[])
+ 					flags |= MPTCP_PM_ADDR_FLAG_SUBFLOW;
+ 				else if (!strcmp(tok, "signal"))
+ 					flags |= MPTCP_PM_ADDR_FLAG_SIGNAL;
++				else if (!strcmp(tok, "address"))
++					flags |= MPTCP_PM_ADDR_FLAG_ADDRESS;
+ 				else if (!strcmp(tok, "backup"))
+ 					flags |= MPTCP_PM_ADDR_FLAG_BACKUP;
+ 				else if (!strcmp(tok, "fullmesh"))
+@@ -1018,6 +1020,13 @@ static void print_addr(struct rtattr *attrs, int len)
+ 					printf(",");
+ 			}
  
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 027d717ef7cffe150f8de7b3b404916a1899537a..57e4db26e0ae1c5e82bc5a262ccb9d5e36508543 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -1179,6 +1179,7 @@ void mptcp_pm_worker(struct mptcp_sock *msk);
- void __mptcp_pm_kernel_worker(struct mptcp_sock *msk);
- u8 mptcp_pm_get_endp_signal_max(const struct mptcp_sock *msk);
- u8 mptcp_pm_get_endp_subflow_max(const struct mptcp_sock *msk);
-+u8 mptcp_pm_get_endp_address_max(const struct mptcp_sock *msk);
- u8 mptcp_pm_get_limit_add_addr_accepted(const struct mptcp_sock *msk);
- u8 mptcp_pm_get_limit_extra_subflows(const struct mptcp_sock *msk);
- 
-diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-index 92a2a274262732a345b9ab185efd7da1f0a5773a..3cdc35323cc18de3585169fe729a51cab25a4cba 100644
---- a/net/mptcp/sockopt.c
-+++ b/net/mptcp/sockopt.c
-@@ -980,6 +980,8 @@ void mptcp_diag_fill_info(struct mptcp_sock *msk, struct mptcp_info *info)
- 			mptcp_pm_get_limit_add_addr_accepted(msk);
- 		info->mptcpi_endp_subflow_max =
- 			mptcp_pm_get_endp_subflow_max(msk);
-+		info->mptcpi_endp_address_max =
-+			mptcp_pm_get_endp_address_max(msk);
- 	}
- 
- 	if (__mptcp_check_fallback(msk))
++			if (flags & MPTCP_PM_ADDR_FLAG_ADDRESS) {
++				printf("address");
++				flags &= ~MPTCP_PM_ADDR_FLAG_ADDRESS;
++				if (flags)
++					printf(",");
++			}
++
+ 			if (flags & MPTCP_PM_ADDR_FLAG_BACKUP) {
+ 				printf("backup");
+ 				flags &= ~MPTCP_PM_ADDR_FLAG_BACKUP;
 
 -- 
 2.51.0
