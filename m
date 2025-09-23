@@ -1,132 +1,191 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3106D3164A1
-	for <mptcp@lists.linux.dev>; Tue, 23 Sep 2025 16:16:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAEF572628
+	for <mptcp@lists.linux.dev>; Tue, 23 Sep 2025 22:32:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758644167; cv=none; b=ENFbEcZhWljU+xtlYCqsc6H4nXsyz4rdd4KS251ROooz997gYCx9ojwIm4SKxfet5iPSCeaBTIG5FvLXGuec8cO3EMiHZrUoJbi7emc060WmAoZQEu6oLuXIUBA0irp5Ee176S/3aZaIZ/kxXnotg4ao/KHXLXL6KS4tKUlmYtg=
+	t=1758666722; cv=none; b=qYj48IO3nGwE/mnRBOJGnkOmaWVf116AO3CNNlPC46RnRrXOtJl/C+JjinajAY1kec0AUrctlyXvj+R/C5STYVbA7WycDs2ewcdjG6Sc7FZVk90JAqvYMDFPxVp8jIsVorZ2Jm7CtP3lgYHKknQboS1EryK955HzCaauRtggjPo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758644167; c=relaxed/simple;
-	bh=yMncpFFp5VnkyB0Ly1fxXn79qXEgrBQj2oYrKBVrhXE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=Jpj9edEqmQ6Tkbb4JVCtsawMHptMxCBcck4i544dI/+Jvaoi2d34sKoEkOcdPPXHP4ksX4U0fvUpcUQK+ZGj+FLZ1usDwFnIyEQC5Y8f0VvEQV7QAkTruJuO5luSYYag/oxsAkm0TjYUck+ik98p/tClVgSDdSdp9E+NeYgKdG0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Z6tWruts; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1758666722; c=relaxed/simple;
+	bh=3nZrNo6/DcxVqBBxO1A3q/XtFPE96lSENwh3urTjlSg=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=gLi7d0x7s1mX5U480/5s2TX8o0KckKo5zhdwt/E1uYck6dho3MP0CERLihmc3+X2j98pusBd1ir6LoRbRzSLpicoC0Lv6LGCO7fs2qe7MS1ghOPDciAhB3gzOEf6xa0bPTzn5uSdRpCjFs5gcr8ztGN0OvLqQXR0dX33MqsoLL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vBil17g3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Z6tWruts"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1758644163;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xqiIz1IW6YhQewV9J2BO/Oc7JN5+tz2BN+RG8zUQPiM=;
-	b=Z6tWrutsPdnmnfWN5Q+19bMHjvo3IKdzCcePCOjRyvAUUmLbFSSSqkjMkhWie/EF5dFQVT
-	yoqBp2GDTwBO1uYwlCCiF2Tikn1l99EVHrfz1jkM/LLDjoBQMgjEhw6d8Fa/Enesupuf/j
-	sY1W5zgy9YX7f3nmL5o9ISxp/9JsCd4=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-78-_0yrjnfIOoiVGY6w_djtPg-1; Tue, 23 Sep 2025 12:16:02 -0400
-X-MC-Unique: _0yrjnfIOoiVGY6w_djtPg-1
-X-Mimecast-MFC-AGG-ID: _0yrjnfIOoiVGY6w_djtPg_1758644161
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-46e25f5ed85so2546495e9.3
-        for <mptcp@lists.linux.dev>; Tue, 23 Sep 2025 09:16:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758644161; x=1759248961;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xqiIz1IW6YhQewV9J2BO/Oc7JN5+tz2BN+RG8zUQPiM=;
-        b=rxER4l1FRUN+u2bMKhMOhjf48Nnt782wum1GAwG7TJ//8dt7jsu5M2LW4ZP5zbhbdS
-         8PoNjv2vPzGV6aRaaYuOItWuxZ70uIBZPBRbMWudAlxtJowiVVk0Mm+eyoOYxH7ccaf2
-         WGe9f4p3Oc5zmSYxnNAP6QvNGxKMY34UqpJBaYSKXMlkE6qS69K/LYJ9syIyrOmrzMUh
-         JnCY1SpUEvjaBKZqMmWtgL240JVP09Olnag+TijUalOSeH4kTLn6p1prkwytmgKCQaiz
-         Dgim1MnBj2gsnvUH3PMpOgietT1F/VhsXG3sdJj9kA/gfFlW9RD7uaaxrJEsmVfKK2Qg
-         rWqA==
-X-Forwarded-Encrypted: i=1; AJvYcCWZNOaVD7gdt6CYqrRPuvN2rKXOsU9wbROIfZqO15HguCT0Unr9OBY7xRRYt4UEhzNUMEjoNw==@lists.linux.dev
-X-Gm-Message-State: AOJu0YyXin8bCNq+B2/c1gkFpSaote7A+zHjpFpv+qgEeTbE5km1rT+2
-	yUhsDoK++vAq8hrQMXG/11lbvcTlR+nAtkKibvTamspjA8d2i7DwBagL3+2nkH8HOjIOYDDGidr
-	UHCYuzbq26OAIlOz5bAyor4kqzMje0QXL7LsAYDMvHys6kIE5phEDYJfUQx8jICYm
-X-Gm-Gg: ASbGncs7dJlJypY/XjSpVbYVoNRI358E2iKdaCk1DIdvfHqdTYlLzlPYaf00UouBEAU
-	syTXcJnF65ZU93nuzozOHTPdImNuOJgrDw2pjMGeyweHtqKrxK4J/sd0ZJXQpbthxSIaYnk4H3m
-	RycaWYhvBxfaj3FTyW4YkzF3Emgv7AGVz7ud0P1CVMhnfZHYHlB1FHh0hWs1gRx1C9ewgDoO7fQ
-	6vrv10qhMniaQluZb3diM0QB41KoZ4hPN8DTt+Ufu5KnV4n8gij4+Gm1uXBla45Pta6YgpTpgxU
-	bRzgTkH291JWhcq1EBQXht0SlY9MR8pN3rUpttOvyHJehkQEfW19fMlVcZNZ6Hbs+Z/D6L/2dK5
-	tdSV1KaJZ831l
-X-Received: by 2002:a5d:64c7:0:b0:3ee:1279:6e68 with SMTP id ffacd0b85a97d-405cb7bba1amr2209430f8f.47.1758644160917;
-        Tue, 23 Sep 2025 09:16:00 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGClt8WE+gv/EGmiPgGppTmtntAppLVNjEouvhJVHab+6HQh/EYuNyt4cIsnZh1oljC6eGuxA==
-X-Received: by 2002:a5d:64c7:0:b0:3ee:1279:6e68 with SMTP id ffacd0b85a97d-405cb7bba1amr2209414f8f.47.1758644160487;
-        Tue, 23 Sep 2025 09:16:00 -0700 (PDT)
-Received: from ?IPV6:2a0d:3344:2712:7e10:4d59:d956:544f:d65c? ([2a0d:3344:2712:7e10:4d59:d956:544f:d65c])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3f99178390csm11824472f8f.44.2025.09.23.09.15.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 Sep 2025 09:16:00 -0700 (PDT)
-Message-ID: <cbc8cc0f-7806-4807-869d-e9d6d2fe6ce5@redhat.com>
-Date: Tue, 23 Sep 2025 18:15:59 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vBil17g3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 548CCC113CF;
+	Tue, 23 Sep 2025 22:32:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758666722;
+	bh=3nZrNo6/DcxVqBBxO1A3q/XtFPE96lSENwh3urTjlSg=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=vBil17g3MxRwzxpEFMn9EuXCbqN1q7LtCP4a0eo1ptokfgKK/rkuVeMT/NhP6GojB
+	 RPPS/Lecqf+e0h1yIwEU+D4qVsbVs2jWFeD3FmC1SeuOQtaGz0g+5ZoYygmPHd+C5X
+	 dRoql+QTfnuSXbPYfj+deY2UWuGSwJHxbMdUz1eZBh6PoPvXZvpbOXN+SMY423tMaC
+	 qONmP2XqTp0PdlGGTNzBw9kerpEqPCPGQj2eveakJxlSyqle+BpMYyMZZ2f/NLdKM3
+	 +XlsoE9NTJzDmweGdZjngZpG+gJ4MTetad+yP0o7bSh5atLK3HJLeBXKDToEY3klks
+	 29gC4Wmem9Ejw==
+Date: Tue, 23 Sep 2025 15:32:01 -0700 (PDT)
+From: Mat Martineau <martineau@kernel.org>
+To: Matthieu Baerts <matttbe@kernel.org>
+cc: MPTCP Upstream <mptcp@lists.linux.dev>
+Subject: Re: [PATCH mptcp-next 5/6] mptcp: pm: in-kernel: add 'address'
+ endpoints
+In-Reply-To: <ab0cd497-5e48-44f1-8e4b-d6e2aeda3fff@kernel.org>
+Message-ID: <e8da0ce4-55a5-ee7f-ea84-0de88efea9fd@kernel.org>
+References: <20250923-pm-kern-endp-add_addr-new-v1-0-60e3a8968f45@kernel.org> <20250923-pm-kern-endp-add_addr-new-v1-5-60e3a8968f45@kernel.org> <777986f5-0f6a-ccea-28b4-be8e23806567@kernel.org> <ab0cd497-5e48-44f1-8e4b-d6e2aeda3fff@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [MPTCP next v3 00/12] mptcp: receive path improvement
-To: Matthieu Baerts <matttbe@kernel.org>, mptcp@lists.linux.dev
-References: <cover.1758296923.git.pabeni@redhat.com>
- <4e5d00ca-1317-4f98-952b-e7ac058c52b7@kernel.org>
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <4e5d00ca-1317-4f98-952b-e7ac058c52b7@kernel.org>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: my2s_yVR6CdF0Zz6MWPoXnGtu0P7WlNcsooyZy1oLPU_1758644161
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="0-694977073-1758666722=:57519"
 
-On 9/19/25 11:13 PM, Matthieu Baerts wrote:
-> On 19/09/2025 17:53, Paolo Abeni wrote:
->> This series includes several changes to the MPTCP RX path.
->>
->> The main goals are improving the RX performances _and_ increase the
->> long term maintainability.
->>
->> Some changes reflects recent (or not so) improvements introduced in the
->> TCP stack: patch 1, 2 and 3 are the MPTCP counter part of skb deferral
->> free and auto-tuning improvements.
->>
->> Note that patch 3 could possibly fix issues/574, and overall such patch
->> should protect from similar issues to arise in the future.
->>
->> All the others patches are aimed at introducing the socket backlog usage
->> to process the packets received by the subflows while the msk socket is
->> owned. That (almost completely) replace the processing currently
->> happening in the mptcp_release_cb().
->>
->> The actual job is done in patch 10, while the others are cleanups needed
->> to make the change tidy and more follow-up cleanups.
->>
->> Sharing earlier with known issues (at least on fallback socket) to raise
->> awareness about this upcoming work.
->> ---
->> v2 -> v3:
->>   - (hopefully) addressed CI failures
-> 
-> Sadly, the CI doesn't seem that happy, but only in debug mode:
-> 
-> https://github.com/multipath-tcp/mptcp_net-next/actions/runs/17863851247
-> 
-> If it is easier for you, I can already apply (and send to netdev?) some
-> of these patches? e.g. 1-7/12?
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-I did a bit more testing. AFAICS patch 10 introduces a few chances of
-additional failures (even on top of Geliang's patches) I *think* patch
-1-7 and 12 are safe.
+--0-694977073-1758666722=:57519
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8BIT
 
-Thanks,
+On Tue, 23 Sep 2025, Matthieu Baerts wrote:
 
-Paolo
+> Hi Mat,
+>
+> On 23/09/2025 06:17, Mat Martineau wrote:
+>> On Tue, 23 Sep 2025, Matthieu Baerts (NGI0) wrote:
+>>
+>>> Currently, upon the reception of an ADD_ADDR (and when the fullmesh flag
+>>> is not used), the in-kernel PM will create new subflows using the local
+>>> address the routing configuration will pick.
+>>>
+>>> It would be easier to pick local addresses from a selected list of
+>>> endpoints, and use it only once, than relying on routing rules.
+>>>
+>>> Use case: both the client (C) and the server (S) have two addresses (a
+>>> and b). The client establishes the connection between C(a) and S(a).
+>>> Once established, the server announces its additional address S(b). Once
+>>> received, the client connects to it using its second address C(b).
+>>> Compared to a situation without the 'address' endpoint for C(b), the
+>>> client didn't use this address C(b) to establish a subflow to the
+>>> server's primary address S(a). So at the end, we have:
+>>>
+>>>   C        S
+>>>  C(a) --- S(a)
+>>>  C(b) --- S(b)
+>>>
+>>> In case of a 3rd address on each side (C(c) and S(c)), upon the
+>>> reception of an ADD_ADDR with S(c), the client should not pick C(b)
+>>> because it has already been used. C(c) should then be used.
+>>>
+>>> Note that this situation is currently possible if C doesn't add any
+>>> endpoint, but configure the routing in order to pick C(b) for the route
+>>> to S(b), and pick C(c) for the route to S(c). That doesn't sound very
+>>> practical because it means knowing in advance the IP addresses that
+>>> will be used and announced by the server.
+>>>
+>>> In the code, the new endpoint type is added. Similar to the other
+>>> subflow types, an MPTCP_INFO counter is added. While at it, hole are now
+>>> commented in struct mptcp_info, to remember next time that these holes
+>>> can no longer be used.
+>>
+>> Hi Matthieu -
+>>
+>> I think this patch brings up a few larger topics of discussion: path
+>> manager strategy (in-kernel/userspace/bpf), interaction of in-kernel PM
+>> flags, and (once again!) naming.
+>>
+>> I'm not sure the reply chain for this patch is the right place to have
+>> the discussion, but adding another in-kernel PM "mode" makes me think we
+>> need a community-level (MPTCP) discussion on our path manager strategy.
+>> The original plan was to have a single general in-kernel PM, and rely on
+>> userspace/mptcpd for anything else. We've obviously made some changes to
+>> that plan, adding fullmesh and having the BPF PM in progress. This has
+>> made path management more complex to understand, use, and maintain - so
+>> I want to be sure we are making a careful choice about which PM features
+>> to add.
+>
+> Good point!
+>
+> (Regarding the BPF PM, it is similar to the userspace PM, but can be
+> used in environment handling loads of connections in parallel ; and it
+> introduces a better separation between the different PMs, which makes it
+> worth it for the maintenance to me.)
+>
+>> Our userspace API for the in-kernel PM also makes it complicated to
+>> explain what happens when there is a mix of endpoint types. Typical use
+>> would probably be reasonable (all fullmesh, all 'address', etc). But
+>> it's good to avoid confusion, and more importantly bugs!
+>
+> Indeed, I fixed quite a few issues and inconsistencies last year, around
+> the same time I opened this issue #503.
+>
+> I have to admit that the 'fullmesh' mode added quite a bit of unexpected
+> complexity for such a niche use-case (but it allows "workarounds"). I
+> think the new mode suggested here is simple, targeting one specific part
+> of the code (an ADD_ADDR is received) and fix the lack of control on
+> what source IP address is used to create new subflows when an ADD_ADDR
+> is received. Not as invasive as the 'fullmesh' one.
+>
 
+Hi Matthieu -
+
+Yes, I agree this addition is more targeted, and I also think it's a very 
+useful capability. All of these small additions do add up over time, and I 
+want to be sure we keep track of the "big picture" and think about that 
+full context when deciding how to expand our PM features.
+
+>> As for naming, unfortunately "address" is a very frequently used word in
+>> our subsystem! In mptcpd the similar plugin is called "sspi" (single
+>> subflow per interface). I'm definitely open to other ideas that are
+>> identifiable and descriptive.
+>
+> Me too! I initially picked "add-addr", but I wasn't happy with the minus
+> sign, nor by its name. I guess a good name could be "endpoint used when
+> an ADD_ADDR is received", or maybe "received-add-addr", but that seems
+> too long, and more than one word.
+>
+> I ended up picking "address", because it is short, and similar to
+> "signal" and "subflow" (which are not very clear, but hard to do better
+> with one word...).
+>
+
+I still get 'signal' and 'subflow' mixed up sometimes and think we can 
+improve our next choice :)
+
+>> I think there are good use cases for this feature, that's why we
+>> included the similar feature in mptcpd! I'd like to get our core group
+>> (you, me, Geliang, and Paolo) aligned on a general direction for path
+>> management, does that sound reasonable?
+>
+> Yes indeed, it is important.
+>
+> To be honest, I thought we already had this discussion at the meeting
+> following the opening of this ticket #503, but that was a bit more than
+> one year ago. I started working on it because the lack of control on
+> what source IP address is used to create new subflows when an ADD_ADDR
+> is received came back in a few discussions, even prior #503. Even
+> recently when a client wanted to use dedicated interface per path. It
+> feels like something is missing in this in-kernel Netlink API to use
+> endpoints to create subflows to addresses announced by the server.
+>
+> But yes, we are exposing a new option to the userspace, and if it is
+> accepted -- and not modified/reverted in the new 10 weeks -- we will
+> have to maintain it for a long time. So better not to get it wrong. I
+> think it is "self-contain" and worth it. I would like a better name than
+> "address", but I didn't find one. At the end, I'm happy with it as it is
+> similar to the others and will have a longer description in the doc, but
+> I'm open to another name :)
+>
+
+Ok, thanks for clarifying. I think our discussion of #503 15 months ago 
+was fairly brief and I'm guessing the significance of the additional 
+endpoint type didn't sink in at the time. Definitely easier to understand 
+the implications seeing the patches!
+
+Will discuss the naming details in the v2 thread.
+
+- Mat
+--0-694977073-1758666722=:57519--
