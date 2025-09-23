@@ -1,128 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A99C14B977
-	for <mptcp@lists.linux.dev>; Tue, 23 Sep 2025 09:55:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8737931DD87
+	for <mptcp@lists.linux.dev>; Tue, 23 Sep 2025 11:51:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758621325; cv=none; b=TvSKiRCHh1UwjDr2YHHux/zYyJm76F5w5oofn6Wuopsdi81MIhHVzWqT84NtQyS18bVcenq0KQr0tYUBJW5rGE167Cv2yNV7VA6l7pKU7rNrJQ+wEvaOKZWLmdxdnq0edw4pUmVOfrVfRunM31lKUZXwRl5XPOMoek4Zps4dpL4=
+	t=1758628313; cv=none; b=mbTYsCo9ZCXMgEeJHe5KK0SrWxcIR9Q/iD5WiqVVobqGk14FpfFfpfqIy40LrxqieEwXxXQt/7gkTfNx4wvxWX5wXiOzBWY9uweoIAemaP2spv1aC+Ghl8F0kBan2lDCgLu0teGIsfBdCeOmVoxrlsd30eHV4IYLfMnFFNzNWwA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758621325; c=relaxed/simple;
-	bh=zg/wyq+tgR0KD1JudrTZSXPHUBQ8uEw2zPhxBHZlMbY=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=HH/xIhv09rUEza6XRBotUEYc57nWS84qkobkomNR+n+r4cPNfONOSqU/YmfrTer8uP0bvtsSDCZz9Xwu3KjTq2RkNo7w9VFT0oUmomvcyuC3VkD2TwaVvH8BPR5HA4zsCozdbDS2afe3w4FX+j/DJDsjGozLdQp4V5k4ycZrUkE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z0pSa9iI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1758628313; c=relaxed/simple;
+	bh=7v2zAhuQ5LnYaFFvzZ17tZPDxXNekVj2Z97ZJYKSOaU=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=Ww/wuVaz60Xsn0m6UqTwvULtlIupiRmdGmyonfuVs8Ime8//rSSlqXqI4vHu9HZzZDC1OHLEX5nYv6jkCMyR8ohRUIhPbFtnINfNYdFTI1sYe6ewF5uaeSHKrh2EKJsGrZI51d+yIDO3YV+8arkzqFe9tEs53h2KGJNlgwcn5Mw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ay91UG/U; arc=none smtp.client-ip=209.85.215.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z0pSa9iI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02EADC4CEF7;
-	Tue, 23 Sep 2025 09:55:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758621325;
-	bh=zg/wyq+tgR0KD1JudrTZSXPHUBQ8uEw2zPhxBHZlMbY=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=Z0pSa9iIbAYSEX2e5UxfTbxvgCqXIG7mzMdhMEsicXuA01Iu+I/jQYaZt2buFe+/D
-	 dC109yWqiv0C7Qz/+fwzBfs6fifyYuFqsDsUziBUKQpOKmJzSXddeO5bc/KPIGgy0I
-	 yjeDhm8zVjbaSk8INZiclXrIWCn81/HG+1nS6zI3Q1hsdc+JR5wgpvRY8vr3FhmZFI
-	 GxirYH+2sYLVsANsUX0o6qO8vYGYnS29B8AToHwIrDKh2PGD8a/7izMOt/HHUN99Vt
-	 BXKzEQv27ykca9AjxKKYtMqVnIg/o3bK+dn26ZOSdknYWfgKEfw6MpuQMLR8YFSBH2
-	 3pxxvaY2XndZg==
-Message-ID: <2baf027907da32f096cb522691e5d92c454000e4.camel@kernel.org>
-Subject: Re: Add Multipath TCP (MPTCP) Support to the Java Networking API
-From: Geliang Tang <geliang@kernel.org>
-To: Alan Bateman <alan.bateman@oracle.com>, net-dev@openjdk.org, 
- "nio-dev@openjdk.org"
-	 <nio-dev@openjdk.org>
-Cc: Matthieu Baerts <matttbe@kernel.org>, Mat Martineau
- <martineau@kernel.org>, 	mptcp@lists.linux.dev, Gang Yan
- <yangang@kylinos.cn>, Xiang Gao	 <gaoxiang@kylinos.cn>,
- core-libs-dev@openjdk.org
-Date: Tue, 23 Sep 2025 17:55:15 +0800
-In-Reply-To: <2b699d6c-d05b-4445-9448-99348eebdf4a@oracle.com>
-References: <da3912a3e0b03974305513219621856d33f82219.camel@kernel.org>
-	 <7403952e-14c1-4ba2-871e-0e2174fd5167@oracle.com>
-	 <c01f7f30efd2f9fb3185f9ad82579eca8a613ac3.camel@kernel.org>
-	 <717920eaaa9d4d0da181d84dd11334dae2568f34.camel@kernel.org>
-	 <2b699d6c-d05b-4445-9448-99348eebdf4a@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.56.0-1 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ay91UG/U"
+Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-b554bb615dcso1415310a12.1
+        for <mptcp@lists.linux.dev>; Tue, 23 Sep 2025 04:51:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1758628312; x=1759233112; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XoBjFFk3CDEb7EV2ytKxEtJ9Ey1fDxxVGlYwp+3KdlQ=;
+        b=Ay91UG/UT1zPQP5qaRXlL/VhoPnXuaWLG0tLoriIIFtPQk3NPmHbt89AFc1yQ08fFN
+         4r0BW42zqj8j8Jjm/nkMMs2dL97qA2O1HePynQOKjxTlhSkIICgNh51DYgC60Wv++7/f
+         yFuiCdYEKHfBiLTdhA3J2B5GsIkOy8RtCx+8cc6L2XyCybttA8Wsm6nQWJNReU8a28jP
+         2wAUpscTgBilaT9ZqiFMQMj7Zim5eRKss9LZSxcd7YvXlOH1/m0tERCDcKzXNXj2mpnj
+         g8GAUbm6bi/bM34C+KwMOiRCQni4h7/KNo8Ud5McVouUBJ0Q6XlHxKbOCdVj0OOgdToq
+         2A2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758628312; x=1759233112;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=XoBjFFk3CDEb7EV2ytKxEtJ9Ey1fDxxVGlYwp+3KdlQ=;
+        b=r6HjtgBs2R5ugmvFUcVVGOYAfsLgDpbS8J5HwKWyihVVvXX2LqKQQ4KqfGvdP053dU
+         GgrPT1ECAL8HRgUR3YFGBR0+TnoI7691qz/UV4hbKMatKlqRV+LL0DuKrCnYRvbHKv3o
+         l/b3rPLsERNo+uqYshWiZy2NPJf2YLkBSE4firG/wzhC0sPm+StsFxp8drvBfGev8rfw
+         d9To4OfWgyUqCvWfaQAP93gZsmfXn7SbmW1jm8YkkX2K23NQCNo75A2fLdWIaCK5nazM
+         JynRlTkfYT4Hmx9tBtjS8l1itXjfyCQVRBqSf8zdRGMzRpp2dGUZwJFWGBaEZOreRJHV
+         t2Qg==
+X-Gm-Message-State: AOJu0YyT8ga9WPIu+XJ+EDZAwa4UDPUPjdsBu5VULy2qlrrPHTTY6cI3
+	CC9h5idnydbUlV4nkbQPB0CSxqD7POrJF2nHqNlz5M+67WoYPZNV1gqoA0BX
+X-Gm-Gg: ASbGncsFqg2W/SE7rkBN1w1ZNA4OJVAx9UGryiErDN3blkWTOLq1hH/uMop2n8M1QGq
+	rDCPCtZdBv9bNkYmBAMMAq5laANqIdx+zTRgAkLNw1Zby+UD0QtxVROQxHN+lNrvSKU0eQR1GGb
+	AG3SjYbZ0dTdn8hTUYo0sLPNZReqirr7ZUcBD5UaJYrNgPckLFM6A74pFD0X4k8pR5KEvN+C3jc
+	D+7LAt4lq6lP/1kbuHhyGyyqRvUU5X37SMXK0qbQmNw/mn+uLlqzWzuqSqWkLm3rjSNUybDJ5aX
+	eoQ2GkBA4E6nxYCPiuIUppZmY6q01+sCU433WWhSpF9519IsEcfyAnM6tzO4z5dGxoV0EE98HqD
+	W3f0cBLL4ezkUTl2UdMmgzz6JRAh7yPKjevBv
+X-Google-Smtp-Source: AGHT+IGBPKQM7YWHu+ZfL6EPTzXw7XtcdSkO8K1QOfaE4D1L3SHgRGW5j44i5XYgDqx66KefOn7KoA==
+X-Received: by 2002:a17:902:ce0e:b0:279:daa1:676d with SMTP id d9443c01a7336-27cc07ef63bmr26838805ad.8.1758628311645;
+        Tue, 23 Sep 2025 04:51:51 -0700 (PDT)
+Received: from [127.0.0.1] ([52.159.244.160])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-271353b8792sm98032695ad.123.2025.09.23.04.51.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Sep 2025 04:51:51 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <20250923-pm-kern-endp-add_addr-new-v2-0-ee5369dad569@kernel.org>
+References:
+ <20250923-pm-kern-endp-add_addr-new-v2-0-ee5369dad569@kernel.org>
+Subject: Re: [PATCH mptcp-next v2 0/6] mptcp: pm: in-kernel: add 'address'
+ endpoints
+Message-ID: <afd74ddc-36fa-59fb-0428-b7058f1b62de@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 23 Sep 2025 11:51:50 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Hi Alan,
+Hi Matthieu,
 
-Thanks for your reply.
+Thank you for your modifications, that's great!
 
-On Thu, 2025-09-18 at 12:30 +0100, Alan Bateman wrote:
->  
-> On 18/09/2025 08:36, Geliang Tang wrote:
->  
-> >  
-> > I have completed the implementation. Thanks to Xiang Gao and Gang
-> > Yan
-> > for their help. I added a new option named TCP_MPTCPIFY in
-> > jdk.net.ExtendedSocketOptions (the name was chosen to align with
-> > 'mptcpize' tool in mptcpd and 'mptcpify' in BCC). When this option
-> > is
-> > set, it calls the JNI function mptcpify0.
-> > 
-> > Following your suggestion, mptcpify0 is implemented by referencing
-> > Java_sun_net_sdp_SdpSupport_convert0. It creates a new MPTCP
-> > socket,
-> > uses dup2 to duplicate it, and then closes the redundant socket.
-> > 
-> > I have added your tag in the patch:
-> > 
-> > Suggested-by: Alan Bateman <alan.bateman@oracle.com>
-> > 
-> > I also included a test example for this option. All modifications
-> > can
-> > be found here:
-> > 
-> > https://github.com/openjdk/jdk/compare/master...geliangtang:jdk:master
-> > 
-> > Please provide any feedback or suggestions. As for the next steps,
-> > should I create a new issue for this feature and submit a proper
-> > pull
-> > request?
-> >  
->  
->  Thanks for confirming that the direction suggested works. This at
-> least demonstrates a feasible direction that does not impact the
-> standard API.
->  
->  As regards next steps then I think start a thread on net-dev to try
-> to get input. I think it would be useful to show potential scenarios
-> where it would be useful and what performance benefits might come
-> from it. I think also useful to talk about whether this is something
-> that an application has to opt into, maybe there are other
-> configuration approaches that would not require application changes?
->  
->  I think it would be useful to discuss testing. If this feature were
-> integrated into the JDK then how would it be tested? Who would test
-> and maintain it? There is a JDK release every 6 months, is someone
-> going test it with each release?
->  
->  If it goes ahead then there the name of the extended socket option
-> and its API docs will need discussion. Details around state will need
-> to be specified, would it be supported to set TCP_MPTCP when bound or
-> connected, does it make sense to ever attempt to set it to false
-> after setting it to true (these are just examples of the details that
-> will need to be specified, they are not important right now).
+Our CI did some validations and here is its report:
 
-Following your suggestion, I have started a new thread on net-dev:
+- KVM Validation: normal: Success! =E2=9C=85
+- KVM Validation: debug: =
+Unstable: 1 failed test(s): packetdrill_fastopen =F0=9F=94=B4
+- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/179423=
+35666
 
-Add Extended MPTCP (Multipath TCP) Socket Option Support to OpenJDK
-https://mail.openjdk.org/pipermail/net-dev/2025-September/028085.html
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/44d6e040779f
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1005202
 
-Thanks,
--Geliang
 
->  
->  -Alan.
->  
->  
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
