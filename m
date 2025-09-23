@@ -1,182 +1,142 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7928E2F3C23
-	for <mptcp@lists.linux.dev>; Tue, 23 Sep 2025 09:33:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 971CE22ACEB
+	for <mptcp@lists.linux.dev>; Tue, 23 Sep 2025 09:34:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758619990; cv=none; b=qJB6BRFgcB2GOsZPRZm9CamkvAJScOdVJKIycFjPmln4lisd1OGGgljW6U1dIcbQb0zG5wudb+HTgvUZH8gKpTATrlK6yXJxdut9/6Z30LnkmZzK2dNGBkmL/87/uEDcmprSDJr5Pyo4nTEIrH8WMY0QEHBq6m14G0+1khxz6Ao=
+	t=1758620098; cv=none; b=MgUun6M9BkcXcy4XVxSPRRBTbSvN9H7eOXDk3RXuZ5j47QfDMoihuxOBVqzKKDywngrxqSpzJdbceKE9fwgAMJHI2AaHWt2H6h+c58TvC048ZbnSuCq4WoDpVsxtgQy3WmnUGtIGGYhvMnLcLme1X5TrhRq/9u+vABT3PlgGegk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758619990; c=relaxed/simple;
-	bh=BZGVScledBPyxgT9ajdqZAv+wSsrJH7qGc+H2E0ax8A=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Qn3n9vLTk7Go2rSXsW36+6w/w5rEizSBJQGbpC1692g+Kery2gNVogEdhSd/uUWZ3ZLq7dJsYYDK+xSNtxKJD6foT3i3r0dFQSvNN7ZvuDg0dOF2n6KZ61yQ0SxxJ1GLIrAO/fBfRjahJ9SvLZ6CM79XznieiQViLdl8s575XP8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YIGNEAr7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1758620098; c=relaxed/simple;
+	bh=yosSWK+Af1nfpDkyg5N9M1s4cLWOvCxQCvZ3+n2PC9s=;
+	h=Message-ID:Subject:From:To:Cc:Date:Content-Type:MIME-Version; b=jn45xmBwwDbD3hz/BLGLIq2S1YvANveFxqpxa2VMCJbFbUxlgXYoSLdbptxzxTxCjXC1iV86kjNCn7krRTZc7JRmTU9TwSJWS/wH0or0WSUN7mpT/HItuiAzZvLT4oB6kQle0IzpdIwRYak2EqWK39Y0Wsp8vKffYoq8guSjKK0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nnKCh8Go; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YIGNEAr7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF5F5C4CEF7;
-	Tue, 23 Sep 2025 09:33:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nnKCh8Go"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FE91C4CEF5;
+	Tue, 23 Sep 2025 09:34:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758619990;
-	bh=BZGVScledBPyxgT9ajdqZAv+wSsrJH7qGc+H2E0ax8A=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=YIGNEAr71LuTuYlKuvHFjE67lD4BaOU2aT5LqHe6pVAuKpPOpwLZhOTfrkWHzoFx7
-	 itHvZPQVFzBQmIKFxjX0YJLtjgJsnzTsRd4HzGh3oEO4Wk9gSGjgB1NxqLg0JznXt8
-	 Kc0mA+HBDoDnw+yEAqJtEIqYdLA/E3g+yf83faExOZrhtA58VAd6M6L5+QgQtTuAsx
-	 rchuzvlQHj/LqLKzu2J2k2X1KlY+8lfRVNtnXUdmoSGHd0kkvFcENszc2H1+UbPJwE
-	 gP2gFrWrFpzz31VEza4YKVzDdhIDh5QWeN3Zc4P0fomxxLz1PDxbYENAceu3uncv5x
-	 cLg5L9qCiMpvg==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Tue, 23 Sep 2025 11:32:52 +0200
-Subject: [PATCH mptcp-next v2 6/6] selftests: mptcp: join: validate new
- 'address' endpoints
+	s=k20201202; t=1758620098;
+	bh=yosSWK+Af1nfpDkyg5N9M1s4cLWOvCxQCvZ3+n2PC9s=;
+	h=Subject:From:To:Cc:Date:From;
+	b=nnKCh8Gol2bUkpjIHw1JKjmpxbY+Z0opswDFfqMk814zsCFJnai/r/6fxNcb6Gi/v
+	 bxlun9fTjHPvnWFYausReMiBVJE2W4tMqNztO2WfOHVYBzu3CGRISuO1VzxzqZlmYb
+	 T5nKUOTmqW2aoi7cRe+ZvDq0OxM/EP6+G/8Q1cFyx3wl2XFFaq+LxRxF7zhHfKIcf9
+	 O9jkUD98iOMyg7nKnFLfVWJgv/+S/e7wiScpChLzexSjUee4Uu8LZlz9TtxRSacxwL
+	 VaZQKwOktRjpjSVvcOkKXcjGhv3hC4yFVWZySnyRlOCZ53NguU16DFXu6OtdUPD9Ph
+	 FNVKyMcHFV+cQ==
+Message-ID: <69f2513f5d13b65aeb3fd23c9fcc6dc410968466.camel@kernel.org>
+Subject: Add Extended MPTCP (Multipath TCP) Socket Option Support to OpenJDK
+From: Geliang Tang <geliang@kernel.org>
+To: net-dev@openjdk.org, Alan Bateman <alan.bateman@oracle.com>
+Cc: Matthieu Baerts <matttbe@kernel.org>, Mat Martineau
+ <martineau@kernel.org>, 	mptcp@lists.linux.dev, Gang Yan
+ <yangang@kylinos.cn>, Xiang Gao	 <gaoxiang@kylinos.cn>
+Date: Tue, 23 Sep 2025 17:34:52 +0800
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.56.0-1 
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250923-pm-kern-endp-add_addr-new-v2-6-ee5369dad569@kernel.org>
-References: <20250923-pm-kern-endp-add_addr-new-v2-0-ee5369dad569@kernel.org>
-In-Reply-To: <20250923-pm-kern-endp-add_addr-new-v2-0-ee5369dad569@kernel.org>
-To: MPTCP Upstream <mptcp@lists.linux.dev>
-Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4594; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=BZGVScledBPyxgT9ajdqZAv+wSsrJH7qGc+H2E0ax8A=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDIuZfq36ctIiM7gOm87LcE+qORNB3PUmzedrEdKD3erX
- zOZumF9RykLgxgXg6yYIot0W2T+zOdVvCVefhYwc1iZQIYwcHEKwESygxkZ5j36aZDsVSbH9XzK
- yuWJRaWJ17aaJEfWbpL3jJc8rDjLmOGfoo+P/o4Ytq9X6z5UpgtE2UWd3mRT8dDePs/wo1zf3RI
- GAA==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+Content-Transfer-Encoding: 8bit
 
-Here are a few sub-tests for mptcp_join.sh, validating the new 'address'
-endpoint type.
+Dear OpenJDK Maintainers,
 
-In a setup where subflows created using the routing rules would be
-rejected by the listener, and where the latter announces one IP address,
-some cases are verified:
+We are writing to propose the integration of Multipath TCP (MPTCP)
+support into OpenJDK. In response to Alan's feedback in earlier
+discussions [1], we have developed a Java-based implementation that
+utilizes the setOption method to enable MPTCP before binding or
+connecting a socket, as illustrated below:
 
-- Without any 'address' endpoints: no new subflows are created.
+  Socket c = new Socket();
+  c.setOption(ExtendedSocketOptions.TCP_MPTCPIFY, true);
+  c.connect(new InetSocketAddress(loop.getHostAddress(), port));
 
-- With one 'address' endpoints: a second subflow is created.
+The name 'TCP_MPTCPIFY' was chosen to align with 'mptcpize' tool in
+mptcpd and 'mptcpify' in BCC. The complete implementation can be found
+in [2].
 
-- With multiple 'address' endpoints: 2 IPv4 subflows are created.
 
-- With one 'address' endpoints, but the server announcing a second IP
-  address, only one subflow is created.
+This email outlines the technical background and aims to facilitate
+further discussion on the proposed approach.
 
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- tools/testing/selftests/net/mptcp/mptcp_join.sh | 56 +++++++++++++++++++++++++
- tools/testing/selftests/net/mptcp/pm_nl_ctl.c   |  9 ++++
- 2 files changed, 65 insertions(+)
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index a94b3960ad5e009dbead66b6ff2aa01f70aa3e1f..b0d935e3c8381ea34e74c3878e869610b1a6fa41 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -2320,6 +2320,61 @@ signal_address_tests()
- 	fi
- }
- 
-+address_endp_tests()
-+{
-+	# no address endpoints: routing rules are used
-+	if reset_with_tcp_filter "without address endpoint" ns1 10.0.2.2 REJECT &&
-+	   mptcp_lib_kallsyms_has "mptcp_pm_get_endp_address_max$"; then
-+		pm_nl_set_limits $ns1 0 2
-+		pm_nl_set_limits $ns2 2 2
-+		pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
-+		run_tests $ns1 $ns2 10.0.1.1
-+		join_syn_tx=1 \
-+			chk_join_nr 0 0 0
-+		chk_add_nr 1 1
-+	fi
-+
-+	# address endpoints: this endpoint is used
-+	if reset_with_tcp_filter "with address endpoint" ns1 10.0.2.2 REJECT &&
-+	   mptcp_lib_kallsyms_has "mptcp_pm_get_endp_address_max$"; then
-+		pm_nl_set_limits $ns1 0 2
-+		pm_nl_set_limits $ns2 2 2
-+		pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
-+		pm_nl_add_endpoint $ns2 10.0.3.2 flags address
-+		run_tests $ns1 $ns2 10.0.1.1
-+		chk_join_nr 1 1 1
-+		chk_add_nr 1 1
-+	fi
-+
-+	# address endpoints: these endpoints are used
-+	if reset_with_tcp_filter "with multiple address endpoints" ns1 10.0.2.2 REJECT &&
-+	   mptcp_lib_kallsyms_has "mptcp_pm_get_endp_address_max$"; then
-+		pm_nl_set_limits $ns1 0 2
-+		pm_nl_set_limits $ns2 2 2
-+		pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
-+		pm_nl_add_endpoint $ns1 10.0.3.1 flags signal
-+		pm_nl_add_endpoint $ns2 dead:beef:3::2 flags address
-+		pm_nl_add_endpoint $ns2 10.0.3.2 flags address
-+		pm_nl_add_endpoint $ns2 10.0.4.2 flags address
-+		run_tests $ns1 $ns2 10.0.1.1
-+		chk_join_nr 2 2 2
-+		chk_add_nr 2 2
-+	fi
-+
-+	# address endpoints: only one endpoint is used
-+	if reset_with_tcp_filter "single address endpoints" ns1 10.0.2.2 REJECT &&
-+	   mptcp_lib_kallsyms_has "mptcp_pm_get_endp_address_max$"; then
-+		pm_nl_set_limits $ns1 0 2
-+		pm_nl_set_limits $ns2 2 2
-+		pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
-+		pm_nl_add_endpoint $ns1 10.0.3.1 flags signal
-+		pm_nl_add_endpoint $ns2 10.0.3.2 flags address
-+		run_tests $ns1 $ns2 10.0.1.1
-+		chk_join_nr 1 1 1
-+		chk_add_nr 2 2
-+	fi
-+}
-+
- link_failure_tests()
- {
- 	# accept and use add_addr with additional subflows and link loss
-@@ -4109,6 +4164,7 @@ all_tests_sorted=(
- 	f@subflows_tests
- 	e@subflows_error_tests
- 	s@signal_address_tests
-+	A@address_endp_tests
- 	l@link_failure_tests
- 	t@add_addr_timeout_tests
- 	r@remove_tests
-diff --git a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
-index d4981b76693bbddca74169437a540ad6294cf1d5..9164c2e797bd003d933d274a54791b23928748f6 100644
---- a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
-+++ b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
-@@ -830,6 +830,8 @@ int add_addr(int fd, int pm_family, int argc, char *argv[])
- 					flags |= MPTCP_PM_ADDR_FLAG_SUBFLOW;
- 				else if (!strcmp(tok, "signal"))
- 					flags |= MPTCP_PM_ADDR_FLAG_SIGNAL;
-+				else if (!strcmp(tok, "address"))
-+					flags |= MPTCP_PM_ADDR_FLAG_ADDRESS;
- 				else if (!strcmp(tok, "backup"))
- 					flags |= MPTCP_PM_ADDR_FLAG_BACKUP;
- 				else if (!strcmp(tok, "fullmesh"))
-@@ -1018,6 +1020,13 @@ static void print_addr(struct rtattr *attrs, int len)
- 					printf(",");
- 			}
- 
-+			if (flags & MPTCP_PM_ADDR_FLAG_ADDRESS) {
-+				printf("address");
-+				flags &= ~MPTCP_PM_ADDR_FLAG_ADDRESS;
-+				if (flags)
-+					printf(",");
-+			}
-+
- 			if (flags & MPTCP_PM_ADDR_FLAG_BACKUP) {
- 				printf("backup");
- 				flags &= ~MPTCP_PM_ADDR_FLAG_BACKUP;
+1. Use Cases and Performance Benefits
 
--- 
-2.51.0
+MPTCP extends standard TCP (as defined in RFC 8684) by allowing the use
+of multiple paths simultaneously, offering significant advantages:
+
+    Seamless handover: Maintain active connections during network
+transitions (e.g., as implemented in Apple smartphones since 2013).
+
+    Optimized path selection: Dynamically route traffic based on
+latency, cost, bandwidth, and other metrics.
+
+    Bandwidth aggregation: Combine links (e.g., Wi-Fi and cellular) to
+increase total throughput.
+
+Our immediate motivation for introducing MPTCP support in Java is to
+enable MPTCP capabilities in valkey-java [3]. Valkey - a Redis-
+compatible key-value database - officially incorporated MPTCP support
+in its 9.0.0-rc1 release, which reduced latency by approximately 25%
+under 1% packet loss conditions (see PR [4]).
+
+While the Valkey server (written in C) uses MPTCP natively via the
+socket() API, most Java clients (including valkey-java) currently lack
+built-in MPTCP support. As multi-NIC systems become increasingly
+common, providing Java applications with native MPTCP support is
+essential for enhancing network performance and reliability.
+
+
+2. Application Compatibility
+
+A number of applications already support MPTCP natively, as documented
+on https://www.mptcp.dev/apps.html, including Apache, FreeNginx, and
+QEmu.
+
+In response to Alan's earlier question regarding enabling MPTCP without
+modifying applications: the MPTCP community does provide tools such as
+mptcpize and BCC (mptcpify) to enable MPTCP at the socket level system-
+wide - for example:
+
+ $ mptcpize run java app.jar
+
+However, this method lacks fine-grained control, which becomes
+problematic when a Java application must use MPTCP and TCP
+simultaneously - such as one that connects to both Valkey and MySQL.
+Given this limitation, enabling MPTCP explicitly within the application
+code remains the most practical and controlled approach, consistent
+with early MPTCP adoption strategies.
+
+
+3. Testing
+
+We would also like to initiate a discussion on testing strategies and
+API documentation for this feature. In [2], we have included a basic
+MPTCP test. Should this MPTCP implementation be accepted into OpenJDK,
+we are prepared to develop and maintain corresponding jtreg test cases
+within the OpenJDK test framework to ensure interface stability. If
+needed, we - the MPTCP upstream developers - commit to validating this
+feature in each future OpenJDK release.
+
+
+We welcome alternative ideas or suggestions on this topic and are open
+to further discussion. Your feedback on this proposal is highly
+appreciated.
+
+
+Best regards,
+MPTCP Upstream Developers
+
+References
+[1]
+https://mail.openjdk.org/pipermail/net-dev/2025-September/027969.html
+[2]
+https://github.com/openjdk/jdk/compare/master...geliangtang:jdk:master
+[3] https://github.com/valkey-io/valkey-java
+[4] https://github.com/valkey-io/valkey/pull/1811
+
 
