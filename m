@@ -1,133 +1,90 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2FAE28E0F
-	for <mptcp@lists.linux.dev>; Tue, 23 Sep 2025 00:20:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 702042AD25
+	for <mptcp@lists.linux.dev>; Tue, 23 Sep 2025 01:42:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758586828; cv=none; b=CmZ0+wlAhhkyh2FRIIHHR4PC+wam/ImDqprg4IlufJTko8OB9s8WgbuPzPS7BcE1asKZZpL9tiLcti4OwRdic2eaO6G1+J4iFRU3SQBok/HHksF+7fpSwFEvUfK+MzFu6I4wi4mKv0oP+eZpU273pmz6tN0mapP2SFffida/y/Q=
+	t=1758591775; cv=none; b=Z3tKvEA7WneQruYXfF51Upr7qHerxWbvnYrlYjO133GLf04Ck3t+NPcxBRAGxIw3IpNza4Wx5hPzDbxpjMnSzq3crbwUE6rGKRpXRNwQpiSEhzQDVx3eVqOXPKXVTEcImY5XzrhIJtZaY90oKvPJMp2/fp+eugpndDbtSZIVYP8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758586828; c=relaxed/simple;
-	bh=Vfddb/t68vdJHNHrNXK74atgbetVd/lEdcz47BRZC1c=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=tWjoPBAb/OVU5JIQDs9e58deha7wmHmzcwHnBCVPN5eJJXvFF3EM4LUCJFx+3W4pkNYFX55XpI0o7W8Js6Gxgcl9QRV4IcZuG1dbEBBNalN+z/onc75CILZc+aPzqJuibA6JpkHcvvLpc2qR1GdKiINyHcVK2Bx1NvayEdFetf4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ALRlLphW; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1758591775; c=relaxed/simple;
+	bh=Px1HcSpSP7+xwVvb8ceknu7la/E7PBiB44GbyMUdG9o=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cGXnk4tg+fttZbwRVdSNGYcNz/CJQEphhtACTJjNZKShKrjrZIC3+/3ex/ChI+aN8/6ymdasZReKgu6Y4xrRxptSnjeGrowHCr6djW+D1mnw7WHxGEnf2LpmEfyzIS28lRgP5SfghlkQ9fu5LFbGXIFXGx5gjEVORNPuLIG8cq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HoUSnT9b; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ALRlLphW"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-27d3540a43fso330425ad.3
-        for <mptcp@lists.linux.dev>; Mon, 22 Sep 2025 17:20:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1758586826; x=1759191626; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=J+rKHLWSTxQUI5xIvXDGAdcCuReTbal1gqJ7RRDcEA8=;
-        b=ALRlLphWCy9tyi29aBaPbGQzS7JNzbl3AGlEfXI+P1ImHuFI8MMlx3aUh4lB2xA9rM
-         Rvo1/kt+D0J5LTI/6Bj6JMROYh7G3PbzzjbrOFVki+u28J+FmVBadQ2lT4EYJt1Jn4vO
-         ultd0ZWWE2z3I2wu+s8Yenp9J8kDQ4gYAiFFfOAeuWy1Cm1AlVErQUdvsZSQJgM3MhSY
-         nzd17lJb05sV4LEIszAm14l4dFz/NnQ+Wjy95vFUTtRodFGgpnlRGwiCHnzVvdONrtmj
-         kdSoYf8d5e2HaZEdnOYHnx7IuaHXQ1rPEe1MAkNbT8xxBjtVUoGCZYdzjeKqYxoOp8tr
-         jC2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758586826; x=1759191626;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=J+rKHLWSTxQUI5xIvXDGAdcCuReTbal1gqJ7RRDcEA8=;
-        b=CuYTeRFiROpvpz0G57GXWOnfEA3/hwhwDXEtP1p1TZNySj+2VnZkPNvEgyiOtESbYX
-         v5j17dSAA6cMCJzFkkwnQ7yWbNB7MjQLVu/CKtfPAwa0x+G1yDTZCh+VyeZ2/q3guUkr
-         QNVLl706Kh8vrxj/IDd/z1DTDh6Wf8Zi7RdXTqreA9j9HI3arDbYeloUVnksH1mDaErJ
-         ITuo9drJAwEGn0DU+ceomzR5pf+V7aTPyi7SzoEzrf4BZtmX7SvlGpeUVoX/2/Z60DHO
-         bh/RhZdezihXf9KMEtSNhJGPHDPq43KQghKi8sQqnLLLM3kZhrkxjQG6YC3xIvHOK7u+
-         CDJg==
-X-Gm-Message-State: AOJu0Ywe0AowK187RGA4KnusebUkmzOK7ww/4l9EsoVSdb+g9FZF+2iW
-	Tbb7aXZcH7sFi87f2HBLToKLhc3d6MXTtH2CQUBSoT+PndeR/U5FwM58lDZV
-X-Gm-Gg: ASbGncsl+Txjzmxv5RFqa4eV/iVMTdjmdlQNs4Qg+hF6QkoDUWPhLj4fT1vXDKRZWMT
-	yDDoXpr8fw2HiJ/tMBtipJ3BCWo80R7JKW5cB5YtIwk/WkNBff1w7TUYDqMmRyBUg3cMlduHe7E
-	wfIFNVNDmwypvMoQDOC5GdvN4KBSPGgRmY5s2rPTvL0tePJo6qEYCvZSk1JOIhiG9cDy7WSbDzW
-	Ms418g3bMNJ3WwQeiMl0zpDhZgRwTp7ZzIfyTH5I3xCMG25Jnd2dgmppxsvG2EgQN0L9aqwcF1/
-	aeW9ta8+yr+dFgmH9BfnXl4mb9aIe+3rKHfvv4XMNFFCZEwtEG9E2g0SUchNz3P6ps6CK/Yf6Lq
-	OxFZcCXR3FxgMEieogGlPh9VIM9C0RqdqVyZyO0Rz1HW1ouk=
-X-Google-Smtp-Source: AGHT+IEF4XPndftl8Ru2ao56quxffaD27RGTj/A+DDRifRyg97S0G2Ri+nGsqUCjj/xfIAjVkMyMtw==
-X-Received: by 2002:a17:902:f68d:b0:274:3e52:4d2d with SMTP id d9443c01a7336-27cc4998965mr8772145ad.37.1758586826103;
-        Mon, 22 Sep 2025 17:20:26 -0700 (PDT)
-Received: from [127.0.0.1] ([57.151.128.245])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-269802df446sm144751875ad.68.2025.09.22.17.20.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Sep 2025 17:20:25 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <20250923-pm-kern-endp-add_addr-new-v1-0-60e3a8968f45@kernel.org>
-References:
- <20250923-pm-kern-endp-add_addr-new-v1-0-60e3a8968f45@kernel.org>
-Subject: Re: [PATCH mptcp-next 0/6] mptcp: pm: in-kernel: add 'address'
- endpoints
-Message-ID: <93293138-3960-633b-aa8c-451e76125027@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 23 Sep 2025 00:20:24 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HoUSnT9b"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AC4FC4CEF0;
+	Tue, 23 Sep 2025 01:42:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758591775;
+	bh=Px1HcSpSP7+xwVvb8ceknu7la/E7PBiB44GbyMUdG9o=;
+	h=From:To:Cc:Subject:Date:From;
+	b=HoUSnT9boEQjYar6JqFjldbzX2tRUZy5nfNZsMw4Iif99rn2m1RyuaHeRQAGsj/nd
+	 apWVwhT8/EpEAW99RWIT4YETW8NGH4saBkdwVpDFNbjvmEmbvWuonuQteDESrEG/10
+	 eLw3g8WnuoURoIseJU4BvAw7/4XB+JSq4zwxtn1YWfibLFofwAIKUnUIB3tgML40qc
+	 DVDPmLHLidGC2d4V5eihORfFDf7SPYVGvppwdl/xF3jAk5UIUZQeNPDhfSsNyqSBUs
+	 RTGdUlJgMLjFLFqOk3b3tT3jb672EizjIoNttqiL4SXIlUpPeXtv7zNft/BCSLxh4H
+	 xZu1RAob43pMw==
+From: Geliang Tang <geliang@kernel.org>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next] selftests: mptcp: pm: fix pm_nl_ctl build errors with old glibc
+Date: Tue, 23 Sep 2025 09:42:48 +0800
+Message-ID: <092fc76415deb1b45da5bb691ef6069fbab7dd09.1758591744.git.tanggeliang@kylinos.cn>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Hi Matthieu,
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Thank you for your modifications, that's great!
+Compiling pm_nl_ctl on older versions of glibc will report the following
+errors:
 
-Our CI did some validations and here is its report:
+'''
+  CC       pm_nl_ctl
+pm_nl_ctl.c: In function 'capture_events':
+pm_nl_ctl.c:204:53: error: 'MPTCP_PM_EV_FLAG_DENY_JOIN_ID0' undeclared (first use in this function)
+  204 |                                         if (flags & MPTCP_PM_EV_FLAG_DENY_JOIN_ID0)
+      |                                                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+pm_nl_ctl.c:204:53: note: each undeclared identifier is reported only once for each function it appears in
+pm_nl_ctl.c:206:53: error: 'MPTCP_PM_EV_FLAG_SERVER_SIDE' undeclared (first use in this function); did you mean 'MPTCP_ATTR_SERVER_SIDE'?
+  206 |                                         if (flags & MPTCP_PM_EV_FLAG_SERVER_SIDE)
+      |                                                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |                                                     MPTCP_ATTR_SERVER_SIDE
+'''
 
-- KVM Validation: normal: Success! =E2=9C=85
-- KVM Validation: debug: =
-Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success=
-! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =
-=E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
-uns/17930472338
+To fix this, this patch redefines MPTCP_PM_EV_FLAG_DENY_JOIN_ID0 and
+MPTCP_PM_EV_FLAG_SERVER_SIDE in pm_nl_ctl.c.
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/0a3de317c9c0
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1005050
+Fixes: 24733e193a0d ("selftests: mptcp: userspace pm: validate deny-join-id0 flag")
+Fixes: 198c12e28b51 ("selftests: mptcp: pm: get server-side flag")
+Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+---
+ tools/testing/selftests/net/mptcp/pm_nl_ctl.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
+diff --git a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
+index d4981b76693b..409af973d2ef 100644
+--- a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
++++ b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
+@@ -23,6 +23,12 @@
+ #ifndef IPPROTO_MPTCP
+ #define IPPROTO_MPTCP 262
+ #endif
++#ifndef MPTCP_PM_EV_FLAG_DENY_JOIN_ID0
++#define MPTCP_PM_EV_FLAG_DENY_JOIN_ID0	(1 << 0)
++#endif
++#ifndef MPTCP_PM_EV_FLAG_SERVER_SIDE
++#define MPTCP_PM_EV_FLAG_SERVER_SIDE	(1 << 1)
++#endif
+ 
+ static void syntax(char *argv[])
+ {
+-- 
+2.48.1
 
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
