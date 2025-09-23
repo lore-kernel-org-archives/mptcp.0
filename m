@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 288CA265CAD
-	for <mptcp@lists.linux.dev>; Tue, 23 Sep 2025 08:09:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B76201A83F9
+	for <mptcp@lists.linux.dev>; Tue, 23 Sep 2025 08:16:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758614951; cv=none; b=mUmWczB/9TIxBpoa57O4JklCdU5uLrpzMNB5w7+7+WHAQ6qgFnYK2TkIEk/ab1cWJt6rUuGiAPsv+CPM6LIPM2EXehJ1JWu1xMhnGviAi7naufT8EuiO7QLgTo4kqENPAgGp4LaCeBdM50oUP8MiIplfu62FWLMhjL8iRnJ5VuU=
+	t=1758615371; cv=none; b=EFA5/DghRgZ1jj9FAHMizlfjLKtcrM1zTX5bSYzVIxDGbvtvWfkBpmFU5Qlfb23dlQJMVZ+qEj7YJcpZGJqR8wB0IX8ERn3rCbT4uooPEqr3fzXtKrlQNckR513luKZcu7urLsO1OlUAiReIb5tJ1MRn7SRlRUwftqan9tVTxbw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758614951; c=relaxed/simple;
-	bh=CIrV2u3N9zHD7gZRQKdmBOLSRTZTquEWcNFIMSjoZaM=;
+	s=arc-20240116; t=1758615371; c=relaxed/simple;
+	bh=HwZEARQP5FaweXlZ7RXWZa18qZdr2hlJTEHtC4TVKjI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mZk78ucq5Or58O3kTFLQOMKBSSXvwy5fa8qcKQ7qOV11n7ms0u6MIkfV5JLv1lytxADdnREX2ZoKvfKVTMb1qRMQvflXpWXv73WxxaE94bAjPSMfoWuK7QPG1NfHKGVCJCHh+ClDTBmMz/FyuwKXtrTCRKWX+j3U1X0eM90VYb0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gMYFFI+c; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=DtzsifxGdZEHVUpgLJ2sniPrXNOAbmFSNSt6HqN454jUdlj7+3dgTHp4JgTxQVrzus9jhqL+aftNWQoZsYjvALAb0kI39//LgRQtDjM332yPK0R/7HUQ0V2ysV5lphkNKofq1MTS4B9vDefGymH0sN0fKBGAKL2ZYg7g+MVOHuw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=irE7yVJv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gMYFFI+c"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A899C4CEF5;
-	Tue, 23 Sep 2025 08:09:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="irE7yVJv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66B07C4CEF5;
+	Tue, 23 Sep 2025 08:16:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758614950;
-	bh=CIrV2u3N9zHD7gZRQKdmBOLSRTZTquEWcNFIMSjoZaM=;
+	s=k20201202; t=1758615371;
+	bh=HwZEARQP5FaweXlZ7RXWZa18qZdr2hlJTEHtC4TVKjI=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=gMYFFI+cF7OK7ZtNAemWVml2URsYxJH92ILaEaL7B7yb3la/9y5qOqB0BxotZu0/5
-	 voTLB0H5pwseyFMszFg2ARI+b0pAoNMLJw7ROjGUMVRkJjSqXS9FBK2JBHFXdD56zp
-	 ipRXqLzp7zmBwuQHvdSfAOLuFG1/jQAES1m65EyF95ya9KRCCcLs/2J4u15lROdsFR
-	 ZqXblZchH2NmyqcmIa1OiRolp3bcX/8jbQlL8i/+EUqls+q+Hc4Mc8SAzj8gThoZ9D
-	 +mHIJAKrjcQPAxfpCEEwQhk7au9Q7gyxHoAxY5lhToj0ElS24mOjgDrqOV2TxKh8KH
-	 bQB+0eYWJgQpg==
-Message-ID: <587b50ce-3d82-41ae-8115-b1566d4fc784@kernel.org>
-Date: Tue, 23 Sep 2025 09:09:08 +0100
+	b=irE7yVJvzdiKnpzPu1lI5yE0IeryKdp7HUIC3JJdhluxtn+uChWF/+kq2sVnrH9bJ
+	 DrfWjIDUO/RHJiYjzx7Eb7VyjXCbgN/5zzn/WRf0x29eVOTfB/PyiajGYjL2g9+wQ3
+	 emWdWt9AB/nhXaSrv9hMGvF43TlmTQKd8w5UTpxmC7M2GiyxUCUFTAL5qqQ/6t1qh1
+	 7MJUCpSHh5fkdkRuE4Pm/wrA23L+XQ05RoFhRVowQ3lAYX1qQwC2Sc/qMOD+ux3HIm
+	 8UsgaQN/hXwz4PMdRrgYHvWN9ncTk85i9/1YbTZhom9A4Jdoskd2YtA7JP2l9T4CLF
+	 nTk0udT6MCNag==
+Message-ID: <4cb3a2d4-1f6b-4188-ad2e-065bbf9f3640@kernel.org>
+Date: Tue, 23 Sep 2025 09:16:07 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,14 +35,14 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next 3/6] mptcp: pm: in-kernel: compare IDs instead
- of addresses
+Subject: Re: [PATCH mptcp-next] selftests: mptcp: pm: fix pm_nl_ctl build
+ errors with old glibc
 Content-Language: en-GB, fr-BE
-To: Mat Martineau <martineau@kernel.org>
-Cc: MPTCP Upstream <mptcp@lists.linux.dev>
-References: <20250923-pm-kern-endp-add_addr-new-v1-0-60e3a8968f45@kernel.org>
- <20250923-pm-kern-endp-add_addr-new-v1-3-60e3a8968f45@kernel.org>
- <9aaa8915-0747-3fe3-ccab-0b2c88ce42c1@kernel.org>
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <092fc76415deb1b45da5bb691ef6069fbab7dd09.1758591744.git.tanggeliang@kylinos.cn>
+ <20765ed6-3164-4df7-b125-2ee04e90bb23@kernel.org>
+ <8ab7f8a1452b6660e97b757286cfe2d6a7faafd4.camel@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -88,235 +88,94 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <9aaa8915-0747-3fe3-ccab-0b2c88ce42c1@kernel.org>
+In-Reply-To: <8ab7f8a1452b6660e97b757286cfe2d6a7faafd4.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi Mat,
+Hi Geliang,
 
-On 23/09/2025 04:27, Mat Martineau wrote:
-> On Tue, 23 Sep 2025, Matthieu Baerts (NGI0) wrote:
+On 23/09/2025 09:03, Geliang Tang wrote:
+> Hi Matt,
 > 
->> When receiving an ADD_ADDR right after the 3WHS, the connection will
->> switch to 'fully established'. It means the MPTCP worker will be called
->> to treat two events, in this order: ADD_ADDR_RECEIVED, PM_ESTABLISHED.
+> On Tue, 2025-09-23 at 08:53 +0100, Matthieu Baerts wrote:
+>> Hi Geliang,
 >>
->> The MPTCP endpoints cannot have the ID 0, because it is reserved to the
->> address and port used by the initial subflow. To be able to deal with
->> this case in different places, msk->mpc_endpoint_id contains the
->> endpoint ID linked to the initial subflow. This variable was only set
->> when treating the first PM_ESTABLISHED event, after ADD_ADDR_RECEIVED.
->> That's why in fill_local_addresses_vec(), the endpoint addresses were
->> compared with the one of the initial subflow, instead of only comparing
->> the IDs.
+>> On 23/09/2025 02:42, Geliang Tang wrote:
+>>> From: Geliang Tang <tanggeliang@kylinos.cn>
+>>>
+>>> Compiling pm_nl_ctl on older versions of glibc will report the
+>>> following
+>>> errors:
+>>>
+>>> '''
+>>>   CC       pm_nl_ctl
+>>> pm_nl_ctl.c: In function 'capture_events':
+>>> pm_nl_ctl.c:204:53: error: 'MPTCP_PM_EV_FLAG_DENY_JOIN_ID0'
+>>> undeclared (first use in this function)
+>>>   204 |                                         if (flags &
+>>> MPTCP_PM_EV_FLAG_DENY_JOIN_ID0)
+>>>       |                                                    
+>>> ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>>> pm_nl_ctl.c:204:53: note: each undeclared identifier is reported
+>>> only once for each function it appears in
+>>> pm_nl_ctl.c:206:53: error: 'MPTCP_PM_EV_FLAG_SERVER_SIDE'
+>>> undeclared (first use in this function); did you mean
+>>> 'MPTCP_ATTR_SERVER_SIDE'?
+>>>   206 |                                         if (flags &
+>>> MPTCP_PM_EV_FLAG_SERVER_SIDE)
+>>>       |                                                    
+>>> ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>>>       |                                                    
+>>> MPTCP_ATTR_SERVER_SIDE
+>>> '''
+>>>
+>>> To fix this, this patch redefines MPTCP_PM_EV_FLAG_DENY_JOIN_ID0
+>>> and
+>>> MPTCP_PM_EV_FLAG_SERVER_SIDE in pm_nl_ctl.c.
 >>
->> Instead, msk->mpc_endpoint_id is now set when treating ADD_ADDR_RECEIVED
->> as well, if needed, then the IDs can be compared.
+>> You shouldn't get this error, because this file is supposed to be
+>> compiled from the kernel source directory, or at least using the
+>> kernel
+>> headers built from there
 >>
->> To be able to do so, the code doing that is now in a dedicated helper,
->> and called from the functions linked to the two actions.
->>
->> While at it, mptcp_endp_get_local_id() has also been moved up, next to
->> this new helper, because they are linked, and to be able to use it in
->> fill_local_addresses_vec() in the next commit.
->>
->> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
->> ---
->> net/mptcp/pm_kernel.c | 81 ++++++++++++++++++++++++++
->> +------------------------
->> 1 file changed, 43 insertions(+), 38 deletions(-)
->>
->> diff --git a/net/mptcp/pm_kernel.c b/net/mptcp/pm_kernel.c
->> index
->> ae6ab3178c226fe3ec66d156bb0dc919075043e5..7be454196a41f625100a6e0d6cbf1ee360dff553 100644
->> --- a/net/mptcp/pm_kernel.c
->> +++ b/net/mptcp/pm_kernel.c
->> @@ -268,6 +268,44 @@ __lookup_addr(struct pm_nl_pernet *pernet, const
->> struct mptcp_addr_info *info)
->>     return NULL;
->> }
->>
->> +static u8 mptcp_endp_get_local_id(struct mptcp_sock *msk,
->> +                  const struct mptcp_addr_info *addr)
->> +{
->> +    return msk->mpc_endpoint_id == addr->id ? 0 : addr->id;
->> +}
->> +
->> +static void mptcp_set_mpc_endpoint_id(struct mptcp_sock *msk)
+>> How do you compile this file? Are you not using the Makefile in the
 > 
-> Hi Matthieu -
+> I got these errors when compiling the bpf selftests with the commit
+> "selftests/bpf: Add mptcp pm_nl_ctl link" using mptcp-upstream-virtme-
+> docker:
 > 
-> I see how this was pulled out of the function below, but it is both
-> setting the id and taking action to send the MP_PRIO. Is there a better
-> name for what it's doing? mptcp_mpc_endpoint_setup() ?
+> https://patchwork.kernel.org/project/mptcp/patch/8cdb0df7316a6baa93df88b0fe78aaa710f3bb72.1738924354.git.tanggeliang@kylinos.cn/
 
-Good idea!
+Mmh, we already had this issue with pm_nl_ctl in BPF selftests in the
+past, and Alexei didn't want to support KHDR_INCLUDES, because these
+selftests are not "proper" KSelftests :-/
 
-> Or maybe handle MP_PRIO in a separate helper?
-
-Mmh, it should be done only once, when looking at the MPC endpoint,
-under the same conditions. I think it might be easier to keep it there,
-but rename the helper, no?
-
->> +{
->> +    struct mptcp_subflow_context *subflow;
->> +    struct mptcp_pm_addr_entry *entry;
->> +    struct mptcp_addr_info mpc_addr;
->> +    struct pm_nl_pernet *pernet;
->> +    bool backup = false;
->> +
->> +    /* do lazy endpoint usage accounting for the MPC subflows */
->> +    if (likely(msk->pm.status & BIT(MPTCP_PM_MPC_ENDPOINT_ACCOUNTED)) ||
->> +        !msk->first)
->> +        return;
->> +
->> +    subflow = mptcp_subflow_ctx(msk->first);
->> +    pernet = pm_nl_get_pernet_from_msk(msk);
->> +
->> +    mptcp_local_address((struct sock_common *)msk->first, &mpc_addr);
->> +    rcu_read_lock();
->> +    entry = __lookup_addr(pernet, &mpc_addr);
->> +    if (entry) {
->> +        __clear_bit(entry->addr.id, msk->pm.id_avail_bitmap);
->> +        msk->mpc_endpoint_id = entry->addr.id;
->> +        backup = !!(entry->flags & MPTCP_PM_ADDR_FLAG_BACKUP);
->> +    }
->> +    rcu_read_unlock();
->> +
->> +    if (backup)
->> +        mptcp_pm_send_ack(msk, subflow, true, backup);
->> +
->> +    msk->pm.status |= BIT(MPTCP_PM_MPC_ENDPOINT_ACCOUNTED);
->> +}
->> +
->> static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock
->> *msk)
->> {
->>     u8 limit_extra_subflows = mptcp_pm_get_limit_extra_subflows(msk);
->> @@ -278,28 +316,7 @@ static void
->> mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
->>     bool signal_and_subflow = false;
->>     struct mptcp_pm_local local;
->>
->> -    /* do lazy endpoint usage accounting for the MPC subflows */
->> -    if (unlikely(!(msk->pm.status &
->> BIT(MPTCP_PM_MPC_ENDPOINT_ACCOUNTED))) && msk->first) {
->> -        struct mptcp_subflow_context *subflow =
->> mptcp_subflow_ctx(msk->first);
->> -        struct mptcp_pm_addr_entry *entry;
->> -        struct mptcp_addr_info mpc_addr;
->> -        bool backup = false;
->> -
->> -        mptcp_local_address((struct sock_common *)msk->first,
->> &mpc_addr);
->> -        rcu_read_lock();
->> -        entry = __lookup_addr(pernet, &mpc_addr);
->> -        if (entry) {
->> -            __clear_bit(entry->addr.id, msk->pm.id_avail_bitmap);
->> -            msk->mpc_endpoint_id = entry->addr.id;
->> -            backup = !!(entry->flags & MPTCP_PM_ADDR_FLAG_BACKUP);
->> -        }
->> -        rcu_read_unlock();
->> -
->> -        if (backup)
->> -            mptcp_pm_send_ack(msk, subflow, true, backup);
->> -
->> -        msk->pm.status |= BIT(MPTCP_PM_MPC_ENDPOINT_ACCOUNTED);
->> -    }
->> +    mptcp_set_mpc_endpoint_id(msk);
->>
->>     pr_debug("local %d:%d signal %d:%d subflows %d:%d\n",
->>          msk->pm.local_addr_used, endp_subflow_max,
->> @@ -396,12 +413,9 @@ fill_local_addresses_vec_fullmesh(struct
->> mptcp_sock *msk,
->>     struct pm_nl_pernet *pernet = pm_nl_get_pernet_from_msk(msk);
->>     struct sock *sk = (struct sock *)msk;
->>     struct mptcp_pm_addr_entry *entry;
->> -    struct mptcp_addr_info mpc_addr;
->>     struct mptcp_pm_local *local;
->>     int i = 0;
->>
->> -    mptcp_local_address((struct sock_common *)msk, &mpc_addr);
->> -
->>     rcu_read_lock();
->>     list_for_each_entry_rcu(entry, &pernet->endp_list, list) {
->>         if (!(entry->flags & MPTCP_PM_ADDR_FLAG_FULLMESH))
->> @@ -419,8 +433,7 @@ fill_local_addresses_vec_fullmesh(struct
->> mptcp_sock *msk,
->>             __clear_bit(local->addr.id, msk->pm.id_avail_bitmap);
->>
->>         /* Special case for ID0: set the correct ID */
->> -        if (mptcp_addresses_equal(&local->addr, &mpc_addr,
->> -                      local->addr.port))
->> +        if (local->addr.id == msk->mpc_endpoint_id)
->>             local->addr.id = 0;
->>
->>         msk->pm.extra_subflows++;
->> @@ -443,12 +456,9 @@ fill_local_addresses_vec_c_flag(struct mptcp_sock
->> *msk,
->>     struct pm_nl_pernet *pernet = pm_nl_get_pernet_from_msk(msk);
->>     u8 endp_subflow_max = mptcp_pm_get_endp_subflow_max(msk);
->>     struct sock *sk = (struct sock *)msk;
->> -    struct mptcp_addr_info mpc_addr;
->>     struct mptcp_pm_local *local;
->>     int i = 0;
->>
->> -    mptcp_local_address((struct sock_common *)msk, &mpc_addr);
->> -
->>     while (msk->pm.local_addr_used < endp_subflow_max) {
->>         local = &locals[i];
->>
->> @@ -460,8 +470,7 @@ fill_local_addresses_vec_c_flag(struct mptcp_sock
->> *msk,
->>         if (!mptcp_pm_addr_families_match(sk, &local->addr, remote))
->>             continue;
->>
->> -        if (mptcp_addresses_equal(&local->addr, &mpc_addr,
->> -                      local->addr.port))
->> +        if (local->addr.id == msk->mpc_endpoint_id)
->>             continue;
->>
->>         msk->pm.local_addr_used++;
->> @@ -507,6 +516,8 @@ fill_local_addresses_vec(struct mptcp_sock *msk,
->> struct mptcp_addr_info *remote,
->>     bool c_flag_case = remote->id && mptcp_pm_add_addr_c_flag_case(msk);
->>     int i;
->>
->> +    mptcp_set_mpc_endpoint_id(msk);
->> +
-> 
-> What do you think about moving this before the call to
-> fill_addresses_vec() in mptcp_pm_nl_add_addr_received()? Again, taking
-> this action is different from filling the vector.
-
-Good idea! I was so focus working around fill_addresses_vec(), I forgot
-it was called from mptcp_pm_nl_add_addr_received()!
+Did you not add "pm_nl_ctl" because the BPF CI was using a tool old
+version of IPRoute? They updated it. So maybe we don't need this patch
+anymore?
 
 > 
->>     /* If there is at least one MPTCP endpoint with a fullmesh flag */
->>     i = fill_local_addresses_vec_fullmesh(msk, remote, locals,
->> c_flag_case);
->>     if (i)
->> @@ -927,12 +938,6 @@ int mptcp_pm_nl_add_addr_doit(struct sk_buff
->> *skb, struct genl_info *info)
->>     return ret;
->> }
+> Thanks,
+> -Geliang
+> 
+>> same
+>> folder? Or do you have a separate build dir and you didn't specify
+>> KHDR_INCLUDES?
 >>
->> -static u8 mptcp_endp_get_local_id(struct mptcp_sock *msk,
->> -                  const struct mptcp_addr_info *addr)
->> -{
->> -    return msk->mpc_endpoint_id == addr->id ? 0 : addr->id;
->> -}
->> -
->> static bool mptcp_pm_remove_anno_addr(struct mptcp_sock *msk,
->>                       const struct mptcp_addr_info *addr,
->>                       bool force)
+>>   make headers_install INSTALL_HDR_PATH="${HEADERS}"
+>>   make KHDR_INCLUDES="-I${HEADERS}/include" \
+>>        -C tools/testing/selftests/net/mptcp
 >>
->> -- 
->> 2.51.0
+>> Or use the kselftests scripts:
+>>
+>>   make -C tools/testing/selftests TARGETS=net/mptcp install \
+>>        INSTALL_PATH=${INSTALL}
+>>   cd ${INSTALL}
+>>   ./run_kselftest.sh -c net/mptcp
 >>
 >>
->>
+>> Cheers,
+>> Matt
 
 Cheers,
 Matt
