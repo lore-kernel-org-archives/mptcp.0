@@ -1,61 +1,63 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0679C279907
-	for <mptcp@lists.linux.dev>; Thu, 25 Sep 2025 09:36:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 577FE2EA484
+	for <mptcp@lists.linux.dev>; Thu, 25 Sep 2025 09:36:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758792972; cv=none; b=KXOYrTXIBpviCpsD7knmX1HnYGXbVSOWwe4uqI0c7mYySeb9cW3o61BWmTxmA0YlfeVVi7U4OZ+D/0f+J56U7weOO3f5sEOAkcc7421jKTIh7snd6UrvxDG6FkkWUxnkOZyMFNWrjLXZSAwY5z4iNz4dDtwhnSpBVyTr+FrO3sQ=
+	t=1758792977; cv=none; b=MyB8MdXsT+6peFr2UrdwTIO08yTe87vVbc/g1b8zoO6cYc4rUiJo2V/N0ZvBy0rjV99KfabJ22B0AYCbpfan5BJYEMV6oWj44qPw/iU8fKaP/bQVwt29BgwZLRqiEhpZKU2EaWhms7/H3QMnBo89nIZzUo/3f54vgkybC7VnCS4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758792972; c=relaxed/simple;
-	bh=rvmn/9fNBwLXiR/naWUZlKBH+/yw0HMGHd9myyptFrE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JB5eZtFs+NcPeK7J0QzVOqVmNSF1Qyz8+sp8jCKYfRK2nfEiq9teGu7pB8kYhhyFFlJIdwNDDrfMQduQ2QOfH0Dby8MxQDhbIKp3Y99XI88Si1oyKbI1ZjRvPO5GzjDu8U7RW4rt1qqEctJVLREPPnGsQvl6JMzI9cJP0e1PLSw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Rw1JlTjg; arc=none smtp.client-ip=209.85.208.46
+	s=arc-20240116; t=1758792977; c=relaxed/simple;
+	bh=kGgcaZ5dSflruy84oMfsVc6mcKHnV9Yn/tYcBzKlk6E=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=gOmY1y0mO2gGt/G4RGSzwWo9a1riI2AVWctSyEln/A/u4ehP6vMI0dRWAP1Al5jo7JegFSYgCEOJVTYL3cviPeQIvfn46AzxWDL63e2bTUuEdHJ9BgAFp9vDAsOkhznhDMU4bgMufwDehGOD8erMW/Us4I7VdAiJRAu0sINs4bQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J0MYihKH; arc=none smtp.client-ip=209.85.208.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rw1JlTjg"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-633b4861b79so88996a12.1
-        for <mptcp@lists.linux.dev>; Thu, 25 Sep 2025 02:36:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J0MYihKH"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-62fd95ede45so143561a12.1
+        for <mptcp@lists.linux.dev>; Thu, 25 Sep 2025 02:36:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1758792969; x=1759397769; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=JrLk5BVUfi64hDu8MSXp4iRz7KC+EB7RrIoytg966TM=;
-        b=Rw1JlTjgHRow3179Tcq5c1phNduA8lv6I5FcE3k/L4DHWDovP1QsM/pbNjIn+Hul8+
-         Khl4rHjIOXKFU1zhKCC6UW9jLZcHdTETmRc7WB26tDSi0Z80w/rp059Ab1F/LSRi5QNY
-         jh1w7YSFFlN6ZqF4gFr2ff3yPpfN32juwL7tz3gya/+YyTVOLhKCp2KPXeHTkd20uPCC
-         PE9SGFVgAwUi8U0d1U5FfQhMuUIyaVxQD2Kflosh456gtDi8OPmROf1X6qLXlnnAN7eL
-         10mi/cyV2Y8nGDqE0OpW1gYBtNIMK4YMBel1Kn1DD01TM2/bmwGEezPKHr0W03OfyLwO
-         49Jw==
+        d=gmail.com; s=20230601; t=1758792974; x=1759397774; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HYrzRC+Mc8HpR/NxS7zdVfXYo8jUCkc291LCyvTTrB8=;
+        b=J0MYihKHyUUOmNfrvfhhX1U0DMHQKUxugplxo5Nzlj/Fkynu89+kOYO2S+/T8ai84w
+         UtoQW6HzQzDO9jDOg+Qx3lu/4EZnp7/jGphElJII17/8IU2UtCSnUB44+Iz1fRhgh6CG
+         IzohLSThNPLSa8Xgp7Wj4dO6jP90AS6jbgvl1/88a08RKH4yNqxi51C/rsqCaXiByHQt
+         v18q3xqGPd+13B87a6mUjhXoEPicMjE2Et+L37W1i8YZAuh1hjLHrdjxXTet9uZ7xScr
+         nsATAfRNfHTqfD1m88xOqMozGX6hGuL2DkFvDxFv+TXGFcAIkaumqdI7hytmrELERI6j
+         1xTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758792969; x=1759397769;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=JrLk5BVUfi64hDu8MSXp4iRz7KC+EB7RrIoytg966TM=;
-        b=fuEZX8AJVT2K5bySZ5gi4clzapL6Q8ruHmZnxcknQTScEo8heZXdziTJ/60sJ6DRpa
-         v5LinpWBr1ET93Y8Jm+svPW5vfsuXnf9npWOy/1WGnYtbVDMiL1Bfwz0a/uucIi0WFBG
-         g0kSz8G0ogc23EMNjrQol3Ij5pnA8DLovH0Ra17PZPBwbMuW/L3v7iddTO1Xdmx9/cP3
-         Q2KMtIwO4yvZhwzQOrDdX8zenWvwtvqw3dM/sMzpnxljFhhrMBbrW6YpKhfWSE+hW6ii
-         DfrcwyaH5/uFbXrR4l5lcvYoJcxM7zk3GFFOLaL2MW+pYSrp7VRww42oPPgC+2sA8+s3
-         BjYg==
-X-Forwarded-Encrypted: i=1; AJvYcCVjary8d/0Gh/Fq6uy9lKhhY5VEcoElwcHf3O8SaOMnJb12cMMBemxT5n8EI7ZdjOpYeyZ26g==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwqWJgR9dStjesVXal+ZXa0WkON8hsDXFHGC4AfsJKiruI+TEcE
-	FJ0CRG5FgY8F/RYE/TOw/ZCcv/tTEHWClk3gwwdPA226tYjXpPBw7ThV
-X-Gm-Gg: ASbGnctSFNpnH1kDnmRPZ40AOl+rFvudLnGD4PrKyAqWJ45A74Qq89gwAUzOunUdUtL
-	F32AI8DQgOAx9iI9UeAv7ugX+86xNY66UsISxi3GnRyWMVfv2xZQLgOajGInbfMimOrmCifrXFq
-	Ih1zaPKgN8d/ucjT5J6ISgN0lFEh+pRDvVO7R4LJMv/ndXx19LKhcd5n8Fq5fIDtUC5yFIBrCqU
-	ukkddCJgW1CEJtJjm9msm1UGtA5j9D9rEgtoVlPVZ1a0bWb8kvtDDj7494f1RQoVPFq7AJgbD7g
-	Vv95qd+cr5Z/jPDBxqjeaKUlWQneX9VXKwtqdcyOJ5jqS6dQNMjWOrYrE52gPvyxhnbv3e7WJy2
-	f1dJxU5tg0VR/viMxsdU8dixtPR5qCkMU9QTssA==
-X-Google-Smtp-Source: AGHT+IEn+TRY3f3rNpLqKcwo/IFO0X1TqRBrGc61qVTD+XlR37lk96NhcpagZXDaWeHbktL+5wxb3A==
-X-Received: by 2002:a05:6402:4389:b0:628:d1b5:d207 with SMTP id 4fb4d7f45d1cf-6349f9d26b0mr1238596a12.2.1758792969099;
-        Thu, 25 Sep 2025 02:36:09 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1758792974; x=1759397774;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HYrzRC+Mc8HpR/NxS7zdVfXYo8jUCkc291LCyvTTrB8=;
+        b=laXKkGxcCfXSwpHSfzM/Pk+s1Zj8eIun5Nz+66vgg0ZVzZCX5nRuvHJIbA+8YEJADi
+         X4ZlEFRaDmczFU9/WYwvCGgjiqFXRvG5B2To4BBra7Uuuz2ZQkePbpQ6Ifzb+oLdogGx
+         ZZOSEsSgm8OQ8/QXnWOIe63HNpK6DwRwRO7P9eG4H9+/At1qrGrP/N8w17KGJ3fhEN/P
+         zBgCOxTUFwS6aJmbVzBAELD6xImuXcMqHbfsyAwGPIM3Rj8Vs7yOnqDsfJtVg9igOv/3
+         mlTwSlD3EzKtIKdD5SoKmZKzT8kwT21EGv6+noa7yhJfOvOqc7gGkTiNJY08/oZ1phOL
+         3Tqg==
+X-Forwarded-Encrypted: i=1; AJvYcCXlQBwXOsTPsT5LaXT5psle51KbVdxWGs6www3mUsf8RcRRp4IN5sMBTPlhou1TqDSFm2EEAQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwkksCngIPWNBpr1l82emJHr9Lw+ikPSouwjYmTKK0Y4UVAFEba
+	qiOsPJyTJHMhXn38bj3PQ9p3M3aMlCeZqlwBGtsh+3Fs/kc0gIpRqOsO
+X-Gm-Gg: ASbGnctDnlVTbkfGKkEoLkgGLetfEpuHxV1qq+9SmK4TziEWlDdhfH5y7yA2PTb6TK8
+	FvReXoVfm0pOMGO5rzOVT7Dmze/LDSFzktgHaNYZIFQrnDvqatDxUfMf7N/ckrvXNFzSL2g4D8t
+	uA8s9bXPQ5KD7qdUgWaPYDnhOFa34JNy4bSMjVXpMPD0h64Zu7iyCh3C5XwLpB2YlTTk64mw/XJ
+	fh5r4loJw/TMLsjb/MCJ+DBUiT3WgHk2QLqttbzk3zqosxXrpyKZ9A85SDzenn3f34vUDEkxlD/
+	zfbGIlaPGkmOD7DOUjpcOVHbATurQVTSYWpblgKyiXqbt887kR0OGbd6u/NXan3FXnWDrqxS7Jg
+	JIWziD4sj+EoU2g49GXYpzwwfdrlIr6eKHvu4YA==
+X-Google-Smtp-Source: AGHT+IEneqUbInPckHU+/2ODBYNyktvBg1Q4FEg/iNx5A55j1JRc7HsQFyzgpGys7+XvMH0c6D/9kA==
+X-Received: by 2002:a50:8d89:0:b0:62c:dfae:ab96 with SMTP id 4fb4d7f45d1cf-6349fac9c10mr931863a12.7.1758792973580;
+        Thu, 25 Sep 2025 02:36:13 -0700 (PDT)
 Received: from bhk ([165.50.112.244])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-634a3ae321csm941225a12.24.2025.09.25.02.36.05
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-634a3ae321csm941225a12.24.2025.09.25.02.36.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Sep 2025 02:36:08 -0700 (PDT)
+        Thu, 25 Sep 2025 02:36:13 -0700 (PDT)
 From: Mehdi Ben Hadj Khelifa <mehdi.benhadjkhelifa@gmail.com>
 To: andrii@kernel.org,
 	eddyz87@gmail.com,
@@ -104,10 +106,12 @@ Cc: bpf@vger.kernel.org,
 	skhan@linuxfoundation.org,
 	david.hunter.linux@gmail.com,
 	Mehdi Ben Hadj Khelifa <mehdi.benhadjkhelifa@gmail.com>
-Subject: [PATCH v3 0/3] selftests/bpf: Prepare to add -Wsign-compare for bpf selftests
-Date: Thu, 25 Sep 2025 11:35:38 +0100
-Message-ID: <20250925103559.14876-1-mehdi.benhadjkhelifa@gmail.com>
+Subject: [PATCH v3 1/3] selftests/bpf: Prepare to add -Wsign-compare for bpf tests
+Date: Thu, 25 Sep 2025 11:35:39 +0100
+Message-ID: <20250925103559.14876-2-mehdi.benhadjkhelifa@gmail.com>
 X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20250925103559.14876-1-mehdi.benhadjkhelifa@gmail.com>
+References: <20250925103559.14876-1-mehdi.benhadjkhelifa@gmail.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -116,56 +120,96 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This series is preparing to add the -Wsign-compare C compilation flag to
-the Makefile for bpf selftests as requested by a TODO to help avoid
-implicit type conversions and have predictable behavior.
+-Change only variable types for correct sign comparisons
 
-Changelog:
+Signed-off-by: Mehdi Ben Hadj Khelifa <mehdi.benhadjkhelifa@gmail.com>
+---
+ tools/testing/selftests/bpf/progs/test_global_func11.c     | 2 +-
+ tools/testing/selftests/bpf/progs/test_global_func12.c     | 2 +-
+ tools/testing/selftests/bpf/progs/test_global_func13.c     | 2 +-
+ tools/testing/selftests/bpf/progs/test_global_func9.c      | 2 +-
+ tools/testing/selftests/bpf/progs/test_map_init.c          | 2 +-
+ tools/testing/selftests/bpf/progs/test_parse_tcp_hdr_opt.c | 2 +-
+ 6 files changed, 6 insertions(+), 6 deletions(-)
 
-Changes from v2:
-
--Split up the patch into a patch series as suggested by vivek
-
--Include only changes to variable types with no casting by my mentor
-david
-
--Removed the -Wsign-compare in Makefile to avoid compilation errors
-until adding casting for rest of comparisons.
-
-Link:https://lore.kernel.org/bpf/20250924195731.6374-1-mehdi.benhadjkhelifa@gmail.com/T/#u
-
-Changes from v1:
-
-- Fix CI failed builds where it failed due to do missing .c and
-.h files in my patch for working in mainline.
-
-Link:https://lore.kernel.org/bpf/20250924162408.815137-1-mehdi.benhadjkhelifa@gmail.com/T/#u
-
-Mehdi Ben Hadj Khelifa (3):
-  selftests/bpf: Prepare to add -Wsign-compare for bpf tests
-  selftests/bpf: Prepare to add -Wsign-compare for bpf tests
-  selftests/bpf: Prepare to add -Wsign-compare for bpf tests
-
- tools/testing/selftests/bpf/progs/test_global_func11.c       | 2 +-
- tools/testing/selftests/bpf/progs/test_global_func12.c       | 2 +-
- tools/testing/selftests/bpf/progs/test_global_func13.c       | 2 +-
- tools/testing/selftests/bpf/progs/test_global_func9.c        | 2 +-
- tools/testing/selftests/bpf/progs/test_map_init.c            | 2 +-
- tools/testing/selftests/bpf/progs/test_parse_tcp_hdr_opt.c   | 2 +-
- .../selftests/bpf/progs/test_parse_tcp_hdr_opt_dynptr.c      | 2 +-
- tools/testing/selftests/bpf/progs/test_skb_ctx.c             | 2 +-
- tools/testing/selftests/bpf/progs/test_snprintf.c            | 2 +-
- tools/testing/selftests/bpf/progs/test_sockmap_strp.c        | 2 +-
- tools/testing/selftests/bpf/progs/test_tc_tunnel.c           | 2 +-
- tools/testing/selftests/bpf/progs/test_xdp.c                 | 2 +-
- tools/testing/selftests/bpf/progs/test_xdp_dynptr.c          | 2 +-
- tools/testing/selftests/bpf/progs/test_xdp_loop.c            | 2 +-
- tools/testing/selftests/bpf/progs/test_xdp_noinline.c        | 4 ++--
- tools/testing/selftests/bpf/progs/uprobe_multi.c             | 4 ++--
- .../selftests/bpf/progs/uprobe_multi_session_recursive.c     | 5 +++--
- .../selftests/bpf/progs/verifier_iterating_callbacks.c       | 2 +-
- 18 files changed, 22 insertions(+), 21 deletions(-)
-
+diff --git a/tools/testing/selftests/bpf/progs/test_global_func11.c b/tools/testing/selftests/bpf/progs/test_global_func11.c
+index 283e036dc401..2ad72bf0e07b 100644
+--- a/tools/testing/selftests/bpf/progs/test_global_func11.c
++++ b/tools/testing/selftests/bpf/progs/test_global_func11.c
+@@ -5,7 +5,7 @@
+ #include "bpf_misc.h"
+ 
+ struct S {
+-	int x;
++	__u32 x;
+ };
+ 
+ __noinline int foo(const struct S *s)
+diff --git a/tools/testing/selftests/bpf/progs/test_global_func12.c b/tools/testing/selftests/bpf/progs/test_global_func12.c
+index 6e03d42519a6..53eab8ec6772 100644
+--- a/tools/testing/selftests/bpf/progs/test_global_func12.c
++++ b/tools/testing/selftests/bpf/progs/test_global_func12.c
+@@ -5,7 +5,7 @@
+ #include "bpf_misc.h"
+ 
+ struct S {
+-	int x;
++	__u32 x;
+ };
+ 
+ __noinline int foo(const struct S *s)
+diff --git a/tools/testing/selftests/bpf/progs/test_global_func13.c b/tools/testing/selftests/bpf/progs/test_global_func13.c
+index 02ea80da75b5..c4afdfc9d92e 100644
+--- a/tools/testing/selftests/bpf/progs/test_global_func13.c
++++ b/tools/testing/selftests/bpf/progs/test_global_func13.c
+@@ -5,7 +5,7 @@
+ #include "bpf_misc.h"
+ 
+ struct S {
+-	int x;
++	__u32 x;
+ };
+ 
+ __noinline int foo(const struct S *s)
+diff --git a/tools/testing/selftests/bpf/progs/test_global_func9.c b/tools/testing/selftests/bpf/progs/test_global_func9.c
+index 1f2cb0159b8d..9138d9bd08fc 100644
+--- a/tools/testing/selftests/bpf/progs/test_global_func9.c
++++ b/tools/testing/selftests/bpf/progs/test_global_func9.c
+@@ -5,7 +5,7 @@
+ #include "bpf_misc.h"
+ 
+ struct S {
+-	int x;
++	__u32 x;
+ };
+ 
+ struct C {
+diff --git a/tools/testing/selftests/bpf/progs/test_map_init.c b/tools/testing/selftests/bpf/progs/test_map_init.c
+index c89d28ead673..311e6ac64588 100644
+--- a/tools/testing/selftests/bpf/progs/test_map_init.c
++++ b/tools/testing/selftests/bpf/progs/test_map_init.c
+@@ -22,7 +22,7 @@ int sysenter_getpgid(const void *ctx)
+ 	/* Just do it for once, when called from our own test prog. This
+ 	 * ensures the map value is only updated for a single CPU.
+ 	 */
+-	int cur_pid = bpf_get_current_pid_tgid() >> 32;
++	__u32 cur_pid = bpf_get_current_pid_tgid() >> 32;
+ 
+ 	if (cur_pid == inPid)
+ 		bpf_map_update_elem(&hashmap1, &inKey, &inValue, BPF_NOEXIST);
+diff --git a/tools/testing/selftests/bpf/progs/test_parse_tcp_hdr_opt.c b/tools/testing/selftests/bpf/progs/test_parse_tcp_hdr_opt.c
+index d9b2ba7ac340..4b8ab8716246 100644
+--- a/tools/testing/selftests/bpf/progs/test_parse_tcp_hdr_opt.c
++++ b/tools/testing/selftests/bpf/progs/test_parse_tcp_hdr_opt.c
+@@ -102,7 +102,7 @@ int xdp_ingress_v6(struct xdp_md *xdp)
+ 	opt_state.byte_offset = sizeof(struct tcphdr) + tcp_offset;
+ 
+ 	/* max number of bytes of options in tcp header is 40 bytes */
+-	for (int i = 0; i < tcp_hdr_opt_max_opt_checks; i++) {
++	for (__u32 i = 0; i < tcp_hdr_opt_max_opt_checks; i++) {
+ 		err = parse_hdr_opt(xdp, &opt_state);
+ 
+ 		if (err || !opt_state.hdr_bytes_remaining)
 -- 
 2.51.0
 
