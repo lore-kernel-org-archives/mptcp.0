@@ -1,204 +1,162 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 508FB8488
-	for <mptcp@lists.linux.dev>; Thu, 25 Sep 2025 08:54:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E2BF2E7BA5
+	for <mptcp@lists.linux.dev>; Thu, 25 Sep 2025 09:21:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758790494; cv=none; b=jOMb6KEFwL5e33AfvK1M2mVBePAA8NQRNWfOkdObNmrazHxGYw6z9rEgpWkbY91OBuXRyuRrjj5VqSeAKY/p5rqMQ48Ec6Q1kPKgtrf7KakQoPY/JoPdH3heXsKWK0nzxe2R+ujGTCvribeT+5wd34xSPBXKm06uVJicFRGo1XQ=
+	t=1758792107; cv=none; b=XuFINZAzQc9SgK88KRtGGbmdwSSLizHBlJWGekiKbbUg5E0edkSgDn7z84UKPtg74I9rSAjVBYGE5ts4vLlErw/yWwn6hWTX8b9D7NohwHKrhRf8P9+S8pm7GuF9d3EW77+xgWPVjpzl7gFt1IuKktV0KMfDsLsbyJ+Wd4LrZK8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758790494; c=relaxed/simple;
-	bh=Jld+hVs/uOb1aW0Qhgkc52kkWizYKM+HbYRqIKCEMqA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=khPvJJJ9q8Ou1r42YtAgx0bN59v7UUAHsARcNk4hG7wlWAdjes+8pomCEXVNMebmzkvl4GkPbHsZSuu2lJTps2o49jPdo+IB9CdjZr8PynKeLfkcucW1f3ZZRW8/cJmveBk8Wml2UFinLhygezl8Rz6XV7sZIyhO3qBdSiLD/rU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CEIl0KZr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1758792107; c=relaxed/simple;
+	bh=ata6fW8ad5HqN2jJ2S2HCnsi9vGNK65SKNbkV5MMkHY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=OEPNU5w6VeRU3OBrqNgXDkZgcdyBrahhlNLvWFfTFOL2mBTR+zxLTCKpWWrKExTb6o5b1/XBHEz20WQeputgczv83KFwW2INObQOpSMxyg8XuSWnSs/2bipZxPqxMB0qrWyeuD3fMRZCRErlZrt8uNjGoEt2PGDHuW3VkrG44fc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a4olDsOc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CEIl0KZr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84F7AC4CEF4;
-	Thu, 25 Sep 2025 08:54:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a4olDsOc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6594C4CEF0
+	for <mptcp@lists.linux.dev>; Thu, 25 Sep 2025 09:21:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758790494;
-	bh=Jld+hVs/uOb1aW0Qhgkc52kkWizYKM+HbYRqIKCEMqA=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=CEIl0KZrsGAS8RL7b2fhA8j0Ofqj5Z1qzY6sNaS6fp2QMeq6wH9Sbc9mhBc5pnn0b
-	 u/0GYPtAFkFasELXQON8TVCxKcl4hp6aZv32Ry5/Blxp1Nn0a3030O+BXol3t4pcMJ
-	 AtmwJ/cVyujDDUjGTbYy0QJWwipMZz2IkdtLXmEeu9b8Hz8XhgqPixbj729L+QYfDd
-	 ciEXNKSjsNgLtPqeQIayxxev3J5oWE4vS8nYKq5lffdyRaa5Gx2V6CyQkKnEVNDdd4
-	 BYvqfmYdxnHzl82ScPa/vDI61lCvEVmEVANlAK7HVm/X3IwoyFqGHo+AIaoDU+QPTt
-	 n+LwKx7ozYsLQ==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Thu, 25 Sep 2025 10:54:22 +0200
-Subject: [PATCH mptcp-next v3 6/6] selftests: mptcp: join: validate new
- laminar endp
+	s=k20201202; t=1758792107;
+	bh=ata6fW8ad5HqN2jJ2S2HCnsi9vGNK65SKNbkV5MMkHY=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=a4olDsOcYI9hHYB9zqaGqxBFl8LaK5FAvYy4puWGnLsjoXGPthdAh1cmkloTT3zUg
+	 X4tGuWSW2mFaGaB9QAs6zujpjtaSxpCCIirSLKqHHfv1sWH4vMMeXJm8CkG8/Uyrj6
+	 1iZ1fcWNQxpQtr5HTC2rCtQR3RtC0OC0cDZta9DVztemjXdLWlKurVg17iYdovVEru
+	 MRAhz8KH+GRHodrMuHHToz/bPIuj/nMzApVL4LTa6xSose3DJrb/vLjazbsySKIxWp
+	 EODueUJetZvptoh6I3iSsq90WFHtRyKyB66vzPkaYBe85DNRCDL0dWSQYUi5k9ZAMI
+	 P5I74USkxiJig==
+Message-ID: <be083b3d-1173-476e-bc50-4fde29650998@kernel.org>
+Date: Thu, 25 Sep 2025 10:21:44 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250925-pm-kern-endp-add_addr-new-v3-6-1697a14ffa7d@kernel.org>
-References: <20250925-pm-kern-endp-add_addr-new-v3-0-1697a14ffa7d@kernel.org>
-In-Reply-To: <20250925-pm-kern-endp-add_addr-new-v3-0-1697a14ffa7d@kernel.org>
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-next v3 0/6] mptcp: pm: in-kernel: add 'address'
+ endpoints
+Content-Language: en-GB, fr-BE
 To: MPTCP Upstream <mptcp@lists.linux.dev>
-Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
- Mat Martineau <martineau@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5343; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=Jld+hVs/uOb1aW0Qhgkc52kkWizYKM+HbYRqIKCEMqA=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDKuModp3uK4veTMjN5bT/8u5dbm+xQ/W7vS65+noNfzH
- BtXYwG5jlIWBjEuBlkxRRbptsj8mc+reEu8/Cxg5rAygQxh4OIUgImwHWD4p6YuF5D3IqCvY19e
- 4/JT3im7l/ef/qztfE3kmGLB+rkB4gz/E8qMfxt6SEQ3f5rgYX3/g7shp8w6a9v87xJy64Iatix
- kBQA=
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+References: <20250925-pm-kern-endp-add_addr-new-v3-0-1697a14ffa7d@kernel.org>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <20250925-pm-kern-endp-add_addr-new-v3-0-1697a14ffa7d@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Here are a few sub-tests for mptcp_join.sh, validating the new 'laminar'
-endpoint type.
+Hello,
 
-In a setup where subflows created using the routing rules would be
-rejected by the listener, and where the latter announces one IP address,
-some cases are verified:
+On 25/09/2025 09:54, Matthieu Baerts (NGI0) wrote:
+> Currently, upon the reception of an ADD_ADDR (and when the fullmesh flag
+> is not used), the in-kernel PM will create new subflows using the local
+> address the routing configuration will pick.
+> 
+> It would be easier to pick local addresses from a selected list of
+> endpoints, and use it only once, than relying on routing rules.
+> 
+> Use case: both the client (C) and the server (S) have two addresses (a
+> and b). The client establishes the connection between C(a) and S(a).
+> Once established, the server announces its additional address S(b). Once
+> received, the client connects to it using its second address C(b).
+> Compared to a situation without the 'address' endpoint for C(b), the
+> client didn't use this address C(b) to establish a subflow to the
+> server's primary address S(a). So at the end, we have:
+> 
+>    C        S
+>   C(a) --- S(a)
+>   C(b) --- S(b)
+> 
+> In case of a 3rd address on each side (C(c) and S(c)), upon the
+> reception of an ADD_ADDR with S(c), the client should not pick C(b)
+> because it has already been used. C(c) should then be used.
+> 
+> Note that this situation is currently possible if C doesn't add any
+> endpoint, but configure the routing in order to pick C(b) for the route
+> to S(b), and pick C(c) for the route to S(c). That doesn't sound very
+> practical because it means knowing in advance the IP addresses that
+> will be used and announced by the server.
+> 
+> Patches 1 & 2: some clean-ups and refactoring.
+> 
+> Patch 3: "standardisation" and small perf improvement.
+> 
+> Patch 4: squash to patches for a commit queued for net-next.
+> 
+> Patch 5: new 'address' endpoints.
+> 
+> Patch 6: validation using selftests.
 
-- Without any 'laminar' endpoints: no new subflows are created.
+Now in our tree:
 
-- With one 'laminar' endpoint: a second subflow is created.
+New patches for t/upstream:
+- 4fe7e61755f9: "squashed" (with conflicts) in "mptcp: pm: in-kernel:
+usable client side with C-flag"
+- d375b4ca4ff1: conflict in
+t/mptcp-pm-in-kernel-refactor-fill_local_addresses_vec
+- 69fb168252bb: conflict in
+t/mptcp-pm-in-kernel-rename-local_addr_list-to-endp_list
+- Results: cc985c0839fa..37e786078698 (export)
 
-- With multiple 'laminar' endpoints: 2 IPv4 subflows are created.
+New patches for t/upstream:
+- 1cd0a903e63f: mptcp: pm: in-kernel: remove stale_loss_cnt
+- 16b6562ab1bb: mptcp: pm: in-kernel: reduce pernet struct size
+- c1b677272323: mptcp: pm: in-kernel: compare IDs instead of addresses
+- 7cb258b504b6: mptcp: pm: in-kernel: add laminar endpoints
+- cbbae49b8661: selftests: mptcp: join: validate new laminar endp
+- Results: 37e786078698..8dfa18091410 (export)
 
-- With one 'laminar' endpoint, but the server announcing a second IP
-  address, only one subflow is created.
+Tests are now in progress:
 
-- With one 'laminar' + 'subflow' endpoint, the same endpoint is only
-  used once.
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/eec459027a40629949db468c833b33ed7bd53477/checks
 
-Reviewed-by: Mat Martineau <martineau@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
-v3:
- - rename 'address' -> 'laminar' (Mat)
- - add a new test with 'laminar' + 'subflow' flags
----
- tools/testing/selftests/net/mptcp/mptcp_join.sh | 69 +++++++++++++++++++++++++
- tools/testing/selftests/net/mptcp/pm_nl_ctl.c   |  9 ++++
- 2 files changed, 78 insertions(+)
-
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index a94b3960ad5e009dbead66b6ff2aa01f70aa3e1f..c90d8e8b95cbb6ba80f79208d1cc844673f2c249 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -2320,6 +2320,74 @@ signal_address_tests()
- 	fi
- }
- 
-+laminar_endp_tests()
-+{
-+	# no laminar endpoints: routing rules are used
-+	if reset_with_tcp_filter "without a laminar endpoint" ns1 10.0.2.2 REJECT &&
-+	   mptcp_lib_kallsyms_has "mptcp_pm_get_endp_laminar_max$"; then
-+		pm_nl_set_limits $ns1 0 2
-+		pm_nl_set_limits $ns2 2 2
-+		pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
-+		run_tests $ns1 $ns2 10.0.1.1
-+		join_syn_tx=1 \
-+			chk_join_nr 0 0 0
-+		chk_add_nr 1 1
-+	fi
-+
-+	# laminar endpoints: this endpoint is used
-+	if reset_with_tcp_filter "with a laminar endpoint" ns1 10.0.2.2 REJECT &&
-+	   mptcp_lib_kallsyms_has "mptcp_pm_get_endp_laminar_max$"; then
-+		pm_nl_set_limits $ns1 0 2
-+		pm_nl_set_limits $ns2 2 2
-+		pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
-+		pm_nl_add_endpoint $ns2 10.0.3.2 flags laminar
-+		run_tests $ns1 $ns2 10.0.1.1
-+		chk_join_nr 1 1 1
-+		chk_add_nr 1 1
-+	fi
-+
-+	# laminar endpoints: these endpoints are used
-+	if reset_with_tcp_filter "with multiple laminar endpoints" ns1 10.0.2.2 REJECT &&
-+	   mptcp_lib_kallsyms_has "mptcp_pm_get_endp_laminar_max$"; then
-+		pm_nl_set_limits $ns1 0 2
-+		pm_nl_set_limits $ns2 2 2
-+		pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
-+		pm_nl_add_endpoint $ns1 10.0.3.1 flags signal
-+		pm_nl_add_endpoint $ns2 dead:beef:3::2 flags laminar
-+		pm_nl_add_endpoint $ns2 10.0.3.2 flags laminar
-+		pm_nl_add_endpoint $ns2 10.0.4.2 flags laminar
-+		run_tests $ns1 $ns2 10.0.1.1
-+		chk_join_nr 2 2 2
-+		chk_add_nr 2 2
-+	fi
-+
-+	# laminar endpoints: only one endpoint is used
-+	if reset_with_tcp_filter "single laminar endpoint" ns1 10.0.2.2 REJECT &&
-+	   mptcp_lib_kallsyms_has "mptcp_pm_get_endp_laminar_max$"; then
-+		pm_nl_set_limits $ns1 0 2
-+		pm_nl_set_limits $ns2 2 2
-+		pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
-+		pm_nl_add_endpoint $ns1 10.0.3.1 flags signal
-+		pm_nl_add_endpoint $ns2 10.0.3.2 flags laminar
-+		run_tests $ns1 $ns2 10.0.1.1
-+		chk_join_nr 1 1 1
-+		chk_add_nr 2 2
-+	fi
-+
-+	# laminar endpoints: subflow and laminar flags
-+	if reset_with_tcp_filter "sublow + laminar endpoints" ns1 10.0.2.2 REJECT &&
-+	   mptcp_lib_kallsyms_has "mptcp_pm_get_endp_laminar_max$"; then
-+		pm_nl_set_limits $ns1 0 4
-+		pm_nl_set_limits $ns2 2 4
-+		pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
-+		pm_nl_add_endpoint $ns2 10.0.1.2 flags subflow,laminar
-+		pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow,laminar
-+		run_tests $ns1 $ns2 10.0.1.1
-+		chk_join_nr 1 1 1
-+		chk_add_nr 1 1
-+	fi
-+}
-+
- link_failure_tests()
- {
- 	# accept and use add_addr with additional subflows and link loss
-@@ -4109,6 +4177,7 @@ all_tests_sorted=(
- 	f@subflows_tests
- 	e@subflows_error_tests
- 	s@signal_address_tests
-+	L@laminar_endp_tests
- 	l@link_failure_tests
- 	t@add_addr_timeout_tests
- 	r@remove_tests
-diff --git a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
-index d4981b76693bbddca74169437a540ad6294cf1d5..65b374232ff5ac06876dcd621fd2109c4d82cd12 100644
---- a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
-+++ b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
-@@ -830,6 +830,8 @@ int add_addr(int fd, int pm_family, int argc, char *argv[])
- 					flags |= MPTCP_PM_ADDR_FLAG_SUBFLOW;
- 				else if (!strcmp(tok, "signal"))
- 					flags |= MPTCP_PM_ADDR_FLAG_SIGNAL;
-+				else if (!strcmp(tok, "laminar"))
-+					flags |= MPTCP_PM_ADDR_FLAG_LAMINAR;
- 				else if (!strcmp(tok, "backup"))
- 					flags |= MPTCP_PM_ADDR_FLAG_BACKUP;
- 				else if (!strcmp(tok, "fullmesh"))
-@@ -1018,6 +1020,13 @@ static void print_addr(struct rtattr *attrs, int len)
- 					printf(",");
- 			}
- 
-+			if (flags & MPTCP_PM_ADDR_FLAG_LAMINAR) {
-+				printf("laminar");
-+				flags &= ~MPTCP_PM_ADDR_FLAG_LAMINAR;
-+				if (flags)
-+					printf(",");
-+			}
-+
- 			if (flags & MPTCP_PM_ADDR_FLAG_BACKUP) {
- 				printf("backup");
- 				flags &= ~MPTCP_PM_ADDR_FLAG_BACKUP;
-
+Cheers,
+Matt
 -- 
-2.51.0
+Sponsored by the NGI0 Core fund.
 
