@@ -1,127 +1,151 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC0EE2727E5
-	for <mptcp@lists.linux.dev>; Fri, 26 Sep 2025 08:00:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DAD72DC790
+	for <mptcp@lists.linux.dev>; Fri, 26 Sep 2025 11:46:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758873634; cv=none; b=YzB+lWv1OgHks/k10HQTbcb+zcEdi3GcHtQumxHEfoeyOwJ9O84+j13NXLKmjAWEI+D0Ib3CUP3Y8RrYueLNw4/4ZM9I6rQct6zx2fr4HIxgwHv4vu0x7UviprRFymrTl3QGQZa4zs24dGPLPPd3wud59RtPJA75KWPFFUvS6MM=
+	t=1758887162; cv=none; b=ri0bRnmjRS4GRuSRgrP99Jn59gz5uA1boojGdNg4QTWHnHN+FTle0Pfiq3T4jXJvV1mbGIB5BXW8aEkIsLOCy7t+8V5K1vG55/MAXO4j7VvNRbancdUffLscxlZhj+sJz/IEoxj57SCNfFaH9Qnl47mAOGT8aYYFOHxva5Et5u8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758873634; c=relaxed/simple;
-	bh=uKv781t5pHxGX9XHdWBHGON9HVERC0KRbzcEdEyQXDA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ChF08LTLmN0Vm4KoORc4HwDWXtLZpw/6eTxoYF+QGjgSbDbK8EIVBGfUD0nR31mT+TaYPdcTlIHCtz3CftsqUJpoSB9HEE+UQBOl8v6/X2lGwkWH0qnFN7d5Tih7p9PB1BprAWg4fmx1JxlcT4dr4fCux/6h/qSKTv0GORd/1O0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Kx0VmNnj; arc=none smtp.client-ip=209.85.221.44
+	s=arc-20240116; t=1758887162; c=relaxed/simple;
+	bh=1id3B6Wi8UowOcZ+9wbUIN5SOAeHkmeYMI59q8iHO5g=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hSD0fxEGlu3gA1xc3UJbahX4TvOjo9XWW3NNpFnQ2E8yuWLN9BPo3owvFpKqYJmxgNosssu2/0MbhiaSXne2xdkjCPuWRkXfOAec9rZUTKVp7gqDVKRJ05mWquxIR66707wxfuevE/iuM427qqoZR1y1pZD/LokADTi4geguLHI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G0zENm5T; arc=none smtp.client-ip=209.85.128.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kx0VmNnj"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3fb179b398fso252931f8f.0
-        for <mptcp@lists.linux.dev>; Fri, 26 Sep 2025 01:00:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G0zENm5T"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-46e430494ccso593265e9.1
+        for <mptcp@lists.linux.dev>; Fri, 26 Sep 2025 04:46:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1758873631; x=1759478431; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=1Iu0F1mpJxkFZwruVTis8t8NuagO8uvem8I8R547GH8=;
-        b=Kx0VmNnjbykPdGLrVbqvAbZwku36SVL1Ay6FroBas59tTIUWEL3Gff2RfmQslVR4ex
-         1Uzf92/XNE/8My2TEPw7J6PmN9PqxlZplPsltV6igYNV/SCmV9OTdy3JD8Z6tk330nlx
-         iuhqEer7jbSANRH3Lt8eeW/qi0yGX3WS+3Bd920PNUuH/2kG1K2Mheb5gwKlfzNtbQ4r
-         eW4XR9hRl9W5Xg7RkGpB6+upJphK7k7oKhIWl2mt08mT8VgaZt8f1fghx3YCSx+QyusD
-         NscJP9oEv7b4r605vNLSSAQQrLiUC8JRWuuhquEp4vZzqevc3Kh5pgs5v2PHxpoZsa2f
-         6QZA==
+        d=gmail.com; s=20230601; t=1758887158; x=1759491958; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WkRDFqbG55HD/5PHsPObmdh+Ov28CTpaGeY2bB6QWYU=;
+        b=G0zENm5TIPJfeHmYnhOUgEFSzbZIES5ZQM9V9bOAhL/FtQ/0/bbowGdmWLxFz1Vir1
+         Xqw/ZDk+e6CfWEXEhQeFL/da87db1P8ld68c77Z7lsHA3xSv//D4KMnM/43OvSNb8z12
+         zpQ5Jd1nFtjBzbwxCWSUrH196LzCHGS1lOtDdXJWPSJj2mAjk+oYWRv0pCHfGK/Qo/u6
+         wWF7G/GY4mPS/B+JJEXY5laN6e0YOTtR7ilAm2E7CSprw8g/xAKHy1bPlmXyT/bgXjmG
+         peF2FqTtZUcTDaNxOdmmTCnoKasDD2QyyEd3C8Sd54dR4qxZeT/ujPotShI43jhlPOVr
+         fHMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758873631; x=1759478431;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1Iu0F1mpJxkFZwruVTis8t8NuagO8uvem8I8R547GH8=;
-        b=m8H+pYke4qFSpnYR4YBfn0oYDo1Qa76ppsN2TgbZ+8Lyj18ggfG0AZcHG+JV0MHHPY
-         rj4BIOnnJrDdX3uK/EV1p1FqPXMtq+YRhdRqspiYnz9AadOvQm6JfIpHiG81MTIOmajM
-         575GXNp1cJPXm9IH6O7l0rxw8L4p8NxQ54kSaRmUVwfIKoZd01IxUutu/s1uEhn7xEPc
-         tIRc2/vvxqAeNZcXv8pb/tQDcmUB4c3R6flYqZjVOrnUeVSBL/V652AqNI5LBtdRgpqX
-         vasuMOvg4gD2P4JVifkPNuqj9jr4P/KU3UJNHj/1y3e/9GqpAIE2JRgYlHgCAS2J94nF
-         jrhQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVJ2ruJEE16P+Iw33HuXIK5nv81uDLEl+ljREiDq6gPa9mPqzXJEVbDCPZzTrL5/AXfR3fBZA==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwKUl/RbwhHIstbkIwOQKpCatgnBVB+HKg+n5siICkUBSDNyEcc
-	iNYikKIi0Z/zjiW5MfoUVRWB/nzpCymWCyiVzAbG2mWz3OhUP24pYZxu
-X-Gm-Gg: ASbGncvKdYLttBEUCXcTuD9O799TTVN9Bm6zSh9bkxGRQsCAzMWV10WEfKvJ/HH6I/o
-	uhG2RucDmSBHyTQau9Z8zds44D4Q5AclSq/qm5VeuW9O4QUxe/rqGpRxcuGzd1GBTlgYaqKJovq
-	5LuoRzzEJWshgSPndDFB/xOZyj/h04YaID9y1UOHiHy2OphaD6FdbYM65CyUC5LUCjGn06P0gIQ
-	PDQ91kP/Qxpk6U5CYszPhAqPX73LIkf1vChBvUc9qy1TmjlXb3aUs0hqrrxxH+7y1Uvve4E+zKe
-	eMp6ssD0fLCcQdjNzEplG9DwLBljyTArPqGJ9Y/yCrxPkXc+OG2qEdEX0CTq6u33Wt53KH24Equ
-	RXvQqPttOSDcLISZhrvNNsjLPi2PH+LnkjLsGPze9
-X-Google-Smtp-Source: AGHT+IHNpFF3srU1saXcXVO6zTDT4O5u6j9Vyxp4h+sviEeunSEZcOR+GiZEhHwsuD8UAwncJOuzoQ==
-X-Received: by 2002:a05:6000:310d:b0:3fc:854:8b84 with SMTP id ffacd0b85a97d-40e455ca678mr3054531f8f.3.1758873630709;
-        Fri, 26 Sep 2025 01:00:30 -0700 (PDT)
-Received: from [172.16.20.151] ([41.229.125.2])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-40fb9e1bd14sm6212872f8f.28.2025.09.26.01.00.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 26 Sep 2025 01:00:30 -0700 (PDT)
-Message-ID: <fcbdfd79-3996-47cb-9d91-ad049147d352@gmail.com>
-Date: Fri, 26 Sep 2025 09:00:32 +0100
+        d=1e100.net; s=20230601; t=1758887158; x=1759491958;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WkRDFqbG55HD/5PHsPObmdh+Ov28CTpaGeY2bB6QWYU=;
+        b=M0q4t18HW38D4jJljoBdIveXn4x74ARcJg/NOAyeo8fAN3x1+k1MVlz1RosCv/GeB8
+         ea1GhLQWCimWAp09OiTRpAdrdX8CCmwBDsF8+96KBOR8Di6aY/CDsy5AB/0QAf2BHaO3
+         bSEbR7deAxCepi1p0OYCHhIYDiREA2UV6YjoR8XL5ksC+UGz05fjg4zeeSBKETqVzXdW
+         9BsMMbJ1+pXEM0V8qJ2HxLZ5Au1YAggTc8S0aZec/3OxXMngq0HJ6nXcmqhDjA1Rde2N
+         mcd9LHP9rMhkorZl+Lit3OC+T2V7DPUyMZaAa/6jAdtPA+jADpkNcQKTn0HcIYXKh5PE
+         1zTA==
+X-Forwarded-Encrypted: i=1; AJvYcCUZju36dMZ8yCU8G6FjGD0pFKsne20tD/tEegoTC3JGBx+FzNEn8r8mE1hzIpJHkWAxmaLdAA==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxIqMCFSuDHi6/J7DIcl3tQ3QSYSMtHo5b8ubK3xHTDnrsXACqQ
+	LSw1mZNXZjT96ThdaXxV1rxVGPch++WjcJONYitL4RnWhU7SHWIJ7ILM
+X-Gm-Gg: ASbGnctKlC43yysEKmCBjAZ75xsjnCI5NmpaQNGyOFOeiRAlxKvQERY5U/+vf9juCui
+	rGfcddogJkcoP/vctv1tV3x7dKNusUVixlbsgZxRGIY2cTiCgCxK+7maGWUCzh7yolVqW2gJCbS
+	oh2omF89bmwKOPqVbcn/leeTJ9WDi8dWQgKjj9E9JQBc8RoF+tqLgIDwTF5ah4SneWy8PrFDHYD
+	gCslDD8fJ+m5nb4CXPwEz82ZA4ekxXBCdQqKMPBJ4f/sJLxC0poAV4+z7Mpv/3RY90LM3XSFi7E
+	4M1Baxc1c9ctZ+lzr/OeHxzKUs9PmGMd+gKgRhu+yRJu0951VN6ulaR2darZkvPv9EvHtThNvQM
+	+yKA+k36KvfNIUESKzE/afv1xKmYyeYUrU0JlDKWg95d3jT/zvqlMSDWQKS6mjxUX
+X-Google-Smtp-Source: AGHT+IEPTFDb685fmiqtI/zbxG32d7v3MRP+VRk71KQ8OOHsQCWx3c0SFbrsAeMCnBPznWcIWNgGnA==
+X-Received: by 2002:a05:600d:15a:20b0:46e:1e31:8d06 with SMTP id 5b1f17b1804b1-46e329f62b4mr74383735e9.16.1758887158355;
+        Fri, 26 Sep 2025 04:45:58 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-46e33105e0bsm37380245e9.5.2025.09.26.04.45.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Sep 2025 04:45:58 -0700 (PDT)
+Date: Fri, 26 Sep 2025 12:45:55 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: Mehdi Ben Hadj Khelifa <mehdi.benhadjkhelifa@gmail.com>
+Cc: andrii@kernel.org, eddyz87@gmail.com, ast@kernel.org,
+ daniel@iogearbox.net, martin.lau@linux.dev, song@kernel.org,
+ yonghong.song@linux.dev, john.fastabend@gmail.com, kpsingh@kernel.org,
+ sdf@fomichev.me, haoluo@google.com, jolsa@kernel.org, shuah@kernel.org,
+ matttbe@kernel.org, martineau@kernel.org, geliang@kernel.org,
+ davem@davemloft.net, kuba@kernel.org, hawk@kernel.org,
+ linux@jordanrome.com, ameryhung@gmail.com, toke@redhat.com,
+ houtao1@huawei.com, emil@etsalapatis.com, yatsenko@meta.com,
+ isolodrai@meta.com, a.s.protopopov@gmail.com, dxu@dxuuu.xyz,
+ memxor@gmail.com, vmalik@redhat.com, bigeasy@linutronix.de, tj@kernel.org,
+ gregkh@linuxfoundation.org, paul@paul-moore.com,
+ bboscaccy@linux.microsoft.com, James.Bottomley@HansenPartnership.com,
+ mrpre@163.com, jakub@cloudflare.com, bpf@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ netdev@vger.kernel.org, mptcp@lists.linux.dev,
+ linux-kernel-mentees@lists.linuxfoundation.org, skhan@linuxfoundation.org,
+ david.hunter.linux@gmail.com
+Subject: Re: [PATCH] selftests/bpf: Add -Wsign-compare C compilation flag
+Message-ID: <20250926124555.009bfcd6@pumpkin>
+In-Reply-To: <20250924162408.815137-1-mehdi.benhadjkhelifa@gmail.com>
+References: <20250924162408.815137-1-mehdi.benhadjkhelifa@gmail.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/3] selftests/bpf: Prepare to add -Wsign-compare for
- bpf selftests
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>, daniel@iogearbox.net
-Cc: andrii@kernel.org, eddyz87@gmail.com, ast@kernel.org,
- daniel@iogearbox.net, martin.lau@linux.dev, song@kernel.org,
- yonghong.song@linux.dev, john.fastabend@gmail.com, kpsingh@kernel.org,
- sdf@fomichev.me, haoluo@google.com, jolsa@kernel.org, shuah@kernel.org,
- matttbe@kernel.org, martineau@kernel.org, geliang@kernel.org,
- davem@davemloft.net, kuba@kernel.org, hawk@kernel.org, linux@jordanrome.com,
- ameryhung@gmail.com, toke@redhat.com, houtao1@huawei.com,
- emil@etsalapatis.com, yatsenko@meta.com, isolodrai@meta.com,
- a.s.protopopov@gmail.com, dxu@dxuuu.xyz, memxor@gmail.com,
- vmalik@redhat.com, bigeasy@linutronix.de, tj@kernel.org,
- gregkh@linuxfoundation.org, paul@paul-moore.com,
- bboscaccy@linux.microsoft.com, James.Bottomley@hansenpartnership.com,
- mrpre@163.com, jakub@cloudflare.com, bpf@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
- netdev@vger.kernel.org, mptcp@lists.linux.dev,
- linux-kernel-mentees@lists.linuxfoundation.org, skhan@linuxfoundation.org,
- david.hunter.linux@gmail.com
-References: <20250925103559.14876-1-mehdi.benhadjkhelifa@gmail.com>
- <CAEf4Bzaf81OYLTzpN6E4ths_mN2gP29rMYBmbp7P2GqSMj8FbA@mail.gmail.com>
-Content-Language: en-US
-From: Mehdi Ben Hadj Khelifa <mehdi.benhadjkhelifa@gmail.com>
-In-Reply-To: <CAEf4Bzaf81OYLTzpN6E4ths_mN2gP29rMYBmbp7P2GqSMj8FbA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
+On Wed, 24 Sep 2025 17:23:49 +0100
+Mehdi Ben Hadj Khelifa <mehdi.benhadjkhelifa@gmail.com> wrote:
 
-> I see little value in these transformations. Did we catch any real
-> issue here? All this type casting and replacement is just churn.
+> -Change all the source files and the corresponding headers 
+> to having matching sign comparisons.
+
+'Fixing' -Wsign-compare by adding loads of casts doesn't seem right.
+The only real way is to change all the types to unsigned ones.
+But it is of questionable benefit and make the code harder to read.
+
+Consider the following:
+	int x = read(fd, buf, len);
+	if (x < 0)
+		return -1;
+	if (x > sizeof (struct fubar))
+		return -1;
+That will generate a 'sign-compare' error, but min(x, sizeof (struct fubar))
+doesn't generate an error because the compiler knows 'x' isn't negative.
+
+A well known compiler also rejects:
+	unsigned char a;
+	unsigned int b;
+	if (b > a)
+		return;
+because 'a' is promoted to 'signed int' before it does the check.
+
+So until the compilers start looking at the known domain of the value
+(not just the type) I enabling -Wsign-compare' is pretty pointless.
+
+As a matter of interest did you actually find any bugs?
+
+	David
+
+
 > 
-> I certainly don't want such churn in libbpf, and I'd leave BPF
-> selftests as is as well. int vs u64 can have subtle and non-obvious
-> implications for BPF code generation (for no-alu32 variants
-> especially), and I think BPF CI already exposed some of those already.
+> Signed-off-by: Mehdi Ben Hadj Khelifa <mehdi.benhadjkhelifa@gmail.com>
+> ---
+> As suggested by the TODO, -Wsign-compare was added to the C compilation
+> flags for the selftests/bpf/Makefile and all corresponding files in
+> selftests and a single file under tools/lib/bpf/usdt.bpf.h have been
+> carefully changed to account for correct sign comparisons either by
+> explicit casting or changing the variable type.Only local variables
+> and variables which are in limited scope have been changed in cases
+> where it doesn't break the code.Other struct variables or global ones 
+> have left untouched to avoid other conflicts and opted to explicit 
+> casting in this case.This change will help avoid implicit type 
+> conversions and have predictable behavior.
 > 
-> I think we can live without -Wsign-compare just fine.
+> I have already compiled all bpf tests with no errors as well as the
+> kernel and have ran all the selftests with no obvious side effects.
+> I would like to know if it's more convinient to have all changes as
+> a single patch like here or if it needs to be divided in some way 
+> and sent as a patch series.
 > 
-
-I was convinced by [1] that this needed to be done not just for current 
-version of the code but for future code being more robust initially.I 
-have already done all the work and I can follow daniel's suggestion for 
-the next version.Otherwise,This means then that the TODO comment to add 
-that compiler warning in the makefile needs to be removed.
-
-Also I wanted to ask since the CI bot had success with my patch.What 
-does this [2] mean exactly.
-
-Thank you for your time reviewing and helping.
-
-Regards,
-Mehdi
-
-[1]:https://github.com/kernel-patches/bpf/commit/495d2d8133fd1407519170a5238f455abbd9ec9b
-[2]:https://github.com/kernel-patches/bpf/actions/runs/18006172526
-
-
+> Best Regards,
+> Mehdi Ben Hadj Khelifa
+...
