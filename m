@@ -1,206 +1,150 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E6B12D6E60;
-	Sat, 27 Sep 2025 09:41:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAC272D73AD
+	for <mptcp@lists.linux.dev>; Sat, 27 Sep 2025 12:31:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758966084; cv=none; b=rG/8hK3J03CtpGMBp+b8jBPnYB+zRcJV3MEdDaK1NHQSng9FN0Oxc2IQvweXRk5MqtjXmceTSab8jLNE+pLvW4hg1NHavJ+zihzsT4LoyISGUT9X1JZ8QyvxSDMfATLAdjJabz047YFGcGzJujL/65/ZfM+tg3+GHtPZsdfgdCI=
+	t=1758976296; cv=none; b=WHY08zoRhhfF8izGK3wzAUmI6icL9Mm4wfKHjwHT/EDYv0zph2B/mP+7F9jgHaBzEGXQcBiR8CZWVO90HUZEZ1jednfCmdOWE8kqfw1i7/6mqsKiWsUBv43bnrFk+6OTESztMDSg/VRGcOIoVdaot+8A8ffJQooD7Pm81WGtK8A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758966084; c=relaxed/simple;
-	bh=rKTMd7KxeZgkBmvTha+kogxTXlWFl1nRxlgkXTcuuY8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=cDjN/JzZhYExEkdX+qglW62gqh5eRBt65fUQi4/c+sGYm0A9dYp7kWxG8rL+284Iu0qndOOuLkVtFOQeAX4CMnnfYmItL5argUAztdavSOhxdlbF9ga075Qt2NmGVxzAcXO/RZJUnDbSlMn9iZmews3Ne6PJuoxyYb0m2e8xrm8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UwXKnQc1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1758976296; c=relaxed/simple;
+	bh=FNCAlrAzk5obcC50tT/ecicz9t+8X7FlYa4u1q/XYyQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EvQj8cqcasl1WSLCGBFREkNb4vKCeMkJ5ePXGgPpI6mON/h372oNw6vUqga89nhN6jOAZVX9iDAp4ckM70ocp7uxMtmx7tkE0i3MNLwKTZR+grHwWNyCzSCA4WSzVemr8/bO75WUaxcRCo3bfeWRKNCAXUxrDRfWcnxX2hq6mBc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u1k/6POZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UwXKnQc1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BB92C4CEF8;
-	Sat, 27 Sep 2025 09:41:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u1k/6POZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56E43C4CEE7;
+	Sat, 27 Sep 2025 12:31:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758966083;
-	bh=rKTMd7KxeZgkBmvTha+kogxTXlWFl1nRxlgkXTcuuY8=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=UwXKnQc1cdo8zQhNeBc3hhv4ZH/doxEGdmgPpQ62maKclLm5Lk1+KyER4V4mNTOXc
-	 RZVWmxkc/w76Yb8GByjqb9DhC9Dlx1CBss62HjvF6hP3xwjhMfYZVi81V+UJgZSu7M
-	 C+H6DNHFUjTTSu69DafJIQSrJEsNErWPY9ISGhCIfOLGbx86lAIB7MyrfUZEDy7nlY
-	 8fap4sRdRdf0Dz8YgNRZupLoUtRurgBSOkgHiy/4OVojGd+c4Qoo9BbMBlodV2iy04
-	 yG6Ewp+iFqWZmAacmLY2YEfXa4yWNNjIEG3KhmFVdlwT5Rl4MHJLlPkRA+iUsaBaAx
-	 EHbKNZT0cwSDQ==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Sat, 27 Sep 2025 11:40:44 +0200
-Subject: [PATCH net-next 8/8] selftests: mptcp: join: validate new laminar
- endp
+	s=k20201202; t=1758976295;
+	bh=FNCAlrAzk5obcC50tT/ecicz9t+8X7FlYa4u1q/XYyQ=;
+	h=From:To:Cc:Subject:Date:From;
+	b=u1k/6POZ3QbOt1WW8PuSeYPv8nMTtRLTLnGn3QuxjhG2hooXUXJpssKOE96ytlWRZ
+	 az/I8TVwfRLSd6Y261+8zTA9D4a9Az4iNuty7696MJ3qp2QngylWpZslNiQ7nahJGY
+	 EGAQTiYXD51+0OBFIfytrwhGw4KNVAkS9Ogf4CDc1q4sOc8OeqxqPONgglZIUvX3jJ
+	 WHkhwtJAd6eK9eq1RVVZA63Pvvez995BEEhEgqjFMH8dSmA52uy2McvC4s+ElBiaha
+	 iarl5W8Zp5IymKCJ6GMCYCVnGEXQghhaG4MPgklLtLgpVIa4UhRgIj4nJr1OWFR5c7
+	 2gCAyvN9P+J8A==
+From: Geliang Tang <geliang@kernel.org>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v12 0/8] implement mptcp read_sock
+Date: Sat, 27 Sep 2025 20:30:17 +0800
+Message-ID: <cover.1758975929.git.tanggeliang@kylinos.cn>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250927-net-next-mptcp-rcv-path-imp-v1-8-5da266aa9c1a@kernel.org>
-References: <20250927-net-next-mptcp-rcv-path-imp-v1-0-5da266aa9c1a@kernel.org>
-In-Reply-To: <20250927-net-next-mptcp-rcv-path-imp-v1-0-5da266aa9c1a@kernel.org>
-To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Simon Horman <horms@kernel.org>, Neal Cardwell <ncardwell@google.com>, 
- Kuniyuki Iwashima <kuniyu@google.com>, David Ahern <dsahern@kernel.org>, 
- Shuah Khan <shuah@kernel.org>
-Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, 
- linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
- "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5241; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=rKTMd7KxeZgkBmvTha+kogxTXlWFl1nRxlgkXTcuuY8=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDKub1SLq/i7R1av9uEui5LIZb5qJf8mLbjfef6Dpx6zT
- p28QdypjlIWBjEuBlkxRRbptsj8mc+reEu8/Cxg5rAygQxh4OIUgImECDEyHNJIyV79957v24k2
- jo8PLLiwXL2Ua8+HdTskBGo11Y2EohgZzrTZxu56JigzYdWF+c9n5jQVJN2YnrHsb1ue1BU/52W
- 5rAA=
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+Content-Transfer-Encoding: 8bit
 
-Here are a few sub-tests for mptcp_join.sh, validating the new 'laminar'
-endpoint type.
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
-In a setup where subflows created using the routing rules would be
-rejected by the listener, and where the latter announces one IP address,
-some cases are verified:
+v12:
+ - rebase on "mptcp: receive path improvement" 1-7.
+ - some cleanups.
 
-- Without any 'laminar' endpoints: no new subflows are created.
+v11:
+ - drop "tcp: drop release and lock again in splice_read", and add this
+   release and lock again in mptcp_splice_read too. (Thanks Mat, I didn't
+   understand the intent of this code before.)
+ - call mptcp_rps_record_subflows() in mptcp_splice_read as Mat
+   suggested.
 
-- With one 'laminar' endpoint: a second subflow is created.
+v10:
+ - add an offset parameter for mptcp_recv_skb and make it more like
+tcp_recv_skb.
+ - Link: https://patchwork.kernel.org/project/mptcp/cover/cover.1756780274.git.tanggeliang@kylinos.cn/
 
-- With multiple 'laminar' endpoints: 2 IPv4 subflows are created.
+v9:
+ - merge the squash-to patches.
+ - a new patch "drop release and lock again in splice_read".
+ - Link: https://patchwork.kernel.org/project/mptcp/cover/cover.1752399660.git.tanggeliang@kylinos.cn/
 
-- With one 'laminar' endpoint, but the server announcing a second IP
-  address, only one subflow is created.
+v8:
+ - export struct tcp_splice_state and tcp_splice_data_recv() in net/tcp.h.
+ - add a new helper mptcp_recv_should_stop.
+ - add mptcp_connect_splice.sh.
+ - update commit logs.
 
-- With one 'laminar' + 'subflow' endpoint, the same endpoint is only
-  used once.
+v7:
+ - only patch 1 and patch 2 changed.
+ - add a new helper mptcp_eat_recv_skb.
+ - invoke skb_peek in mptcp_recv_skb().
+ - use while ((skb = mptcp_recv_skb(sk)) != NULL) instead of
+ skb_queue_walk_safe(&sk->sk_receive_queue, skb, tmp).
 
-Reviewed-by: Mat Martineau <martineau@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- tools/testing/selftests/net/mptcp/mptcp_join.sh | 69 +++++++++++++++++++++++++
- tools/testing/selftests/net/mptcp/pm_nl_ctl.c   |  9 ++++
- 2 files changed, 78 insertions(+)
+v6:
+ - address Paolo's comments for v4, v5 (thanks)
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index a94b3960ad5e009dbead66b6ff2aa01f70aa3e1f..c90d8e8b95cbb6ba80f79208d1cc844673f2c249 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -2320,6 +2320,74 @@ signal_address_tests()
- 	fi
- }
- 
-+laminar_endp_tests()
-+{
-+	# no laminar endpoints: routing rules are used
-+	if reset_with_tcp_filter "without a laminar endpoint" ns1 10.0.2.2 REJECT &&
-+	   mptcp_lib_kallsyms_has "mptcp_pm_get_endp_laminar_max$"; then
-+		pm_nl_set_limits $ns1 0 2
-+		pm_nl_set_limits $ns2 2 2
-+		pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
-+		run_tests $ns1 $ns2 10.0.1.1
-+		join_syn_tx=1 \
-+			chk_join_nr 0 0 0
-+		chk_add_nr 1 1
-+	fi
-+
-+	# laminar endpoints: this endpoint is used
-+	if reset_with_tcp_filter "with a laminar endpoint" ns1 10.0.2.2 REJECT &&
-+	   mptcp_lib_kallsyms_has "mptcp_pm_get_endp_laminar_max$"; then
-+		pm_nl_set_limits $ns1 0 2
-+		pm_nl_set_limits $ns2 2 2
-+		pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
-+		pm_nl_add_endpoint $ns2 10.0.3.2 flags laminar
-+		run_tests $ns1 $ns2 10.0.1.1
-+		chk_join_nr 1 1 1
-+		chk_add_nr 1 1
-+	fi
-+
-+	# laminar endpoints: these endpoints are used
-+	if reset_with_tcp_filter "with multiple laminar endpoints" ns1 10.0.2.2 REJECT &&
-+	   mptcp_lib_kallsyms_has "mptcp_pm_get_endp_laminar_max$"; then
-+		pm_nl_set_limits $ns1 0 2
-+		pm_nl_set_limits $ns2 2 2
-+		pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
-+		pm_nl_add_endpoint $ns1 10.0.3.1 flags signal
-+		pm_nl_add_endpoint $ns2 dead:beef:3::2 flags laminar
-+		pm_nl_add_endpoint $ns2 10.0.3.2 flags laminar
-+		pm_nl_add_endpoint $ns2 10.0.4.2 flags laminar
-+		run_tests $ns1 $ns2 10.0.1.1
-+		chk_join_nr 2 2 2
-+		chk_add_nr 2 2
-+	fi
-+
-+	# laminar endpoints: only one endpoint is used
-+	if reset_with_tcp_filter "single laminar endpoint" ns1 10.0.2.2 REJECT &&
-+	   mptcp_lib_kallsyms_has "mptcp_pm_get_endp_laminar_max$"; then
-+		pm_nl_set_limits $ns1 0 2
-+		pm_nl_set_limits $ns2 2 2
-+		pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
-+		pm_nl_add_endpoint $ns1 10.0.3.1 flags signal
-+		pm_nl_add_endpoint $ns2 10.0.3.2 flags laminar
-+		run_tests $ns1 $ns2 10.0.1.1
-+		chk_join_nr 1 1 1
-+		chk_add_nr 2 2
-+	fi
-+
-+	# laminar endpoints: subflow and laminar flags
-+	if reset_with_tcp_filter "sublow + laminar endpoints" ns1 10.0.2.2 REJECT &&
-+	   mptcp_lib_kallsyms_has "mptcp_pm_get_endp_laminar_max$"; then
-+		pm_nl_set_limits $ns1 0 4
-+		pm_nl_set_limits $ns2 2 4
-+		pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
-+		pm_nl_add_endpoint $ns2 10.0.1.2 flags subflow,laminar
-+		pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow,laminar
-+		run_tests $ns1 $ns2 10.0.1.1
-+		chk_join_nr 1 1 1
-+		chk_add_nr 1 1
-+	fi
-+}
-+
- link_failure_tests()
- {
- 	# accept and use add_addr with additional subflows and link loss
-@@ -4109,6 +4177,7 @@ all_tests_sorted=(
- 	f@subflows_tests
- 	e@subflows_error_tests
- 	s@signal_address_tests
-+	L@laminar_endp_tests
- 	l@link_failure_tests
- 	t@add_addr_timeout_tests
- 	r@remove_tests
-diff --git a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
-index d4981b76693bbddca74169437a540ad6294cf1d5..65b374232ff5ac06876dcd621fd2109c4d82cd12 100644
---- a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
-+++ b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
-@@ -830,6 +830,8 @@ int add_addr(int fd, int pm_family, int argc, char *argv[])
- 					flags |= MPTCP_PM_ADDR_FLAG_SUBFLOW;
- 				else if (!strcmp(tok, "signal"))
- 					flags |= MPTCP_PM_ADDR_FLAG_SIGNAL;
-+				else if (!strcmp(tok, "laminar"))
-+					flags |= MPTCP_PM_ADDR_FLAG_LAMINAR;
- 				else if (!strcmp(tok, "backup"))
- 					flags |= MPTCP_PM_ADDR_FLAG_BACKUP;
- 				else if (!strcmp(tok, "fullmesh"))
-@@ -1018,6 +1020,13 @@ static void print_addr(struct rtattr *attrs, int len)
- 					printf(",");
- 			}
- 
-+			if (flags & MPTCP_PM_ADDR_FLAG_LAMINAR) {
-+				printf("laminar");
-+				flags &= ~MPTCP_PM_ADDR_FLAG_LAMINAR;
-+				if (flags)
-+					printf(",");
-+			}
-+
- 			if (flags & MPTCP_PM_ADDR_FLAG_BACKUP) {
- 				printf("backup");
- 				flags &= ~MPTCP_PM_ADDR_FLAG_BACKUP;
+v5:
+ - extract the common code of __mptcp_recvmsg_mskq() and mptcp_read_sock()
+ into a new helper __mptcp_recvmsg_desc() to reduce duplication code.
+
+v4:
+ - v3 doesn't work for MPTCP fallback tests in mptcp_connect.sh, this
+   set fix it.
+ - invoke __mptcp_move_skbs in mptcp_read_sock.
+ - use INDIRECT_CALL_INET_1 in __tcp_splice_read.
+
+v3:
+ - merge the two squash-to patches.
+ - use sk->sk_rcvbuf instead of INT_MAX as the max len in
+ mptcp_read_sock().
+ - add splice io mode for mptcp_connect and drop mptcp_splice.c test.
+ - the splice test for packetdrill is also added here:
+https://github.com/multipath-tcp/packetdrill/pull/162
+
+v2:
+ - set splice_read of mptcp
+ - add a splice selftest.
+
+I have good news! I recently added MPTCP support to "NVME over TCP".
+And my RFC patches are under review by NVME maintainer Hannes.
+
+Replacing "NVME over TCP" with MPTCP is very simple. I used IPPROTO_MPTCP
+instead of IPPROTO_TCP to create MPTCP sockets on both target and host
+sides, these sockets are created in Kernel space.
+
+nvmet_tcp_add_port:
+
+	ret = sock_create(port->addr.ss_family, SOCK_STREAM,
+				IPPROTO_MPTCP, &port->sock);
+
+nvme_tcp_alloc_queue:
+
+	ret = sock_create_kern(current->nsproxy->net_ns,
+			ctrl->addr.ss_family, SOCK_STREAM,
+			IPPROTO_MPTCP, &queue->sock);
+
+nvme_tcp_try_recv() needs to call .read_sock interface of struct
+proto_ops, but it is not implemented in MPTCP. So I implemented it
+with reference to __mptcp_recvmsg_mskq().
+
+Since the NVME part patches are still under reviewing, I only send the
+MPTCP part patches in this set to MPTCP ML for your opinions.
+
+Geliang Tang (8):
+  mptcp: add eat_recv_skb helper
+  mptcp: implement .read_sock
+  tcp: export splice_state and splice_data_recv
+  tcp: add recv_should_stop helper
+  mptcp: use recv_should_stop helper
+  mptcp: implement .splice_read
+  selftests: mptcp: add splice io mode
+  selftests: mptcp: connect: cover splice mode
+
+ include/net/tcp.h                             |  35 +++
+ net/ipv4/tcp.c                                |  86 ++-----
+ net/mptcp/protocol.c                          | 224 +++++++++++++++---
+ tools/testing/selftests/net/mptcp/Makefile    |   1 +
+ .../selftests/net/mptcp/mptcp_connect.c       |  63 ++++-
+ .../net/mptcp/mptcp_connect_splice.sh         |   5 +
+ 6 files changed, 304 insertions(+), 110 deletions(-)
+ create mode 100755 tools/testing/selftests/net/mptcp/mptcp_connect_splice.sh
 
 -- 
-2.51.0
+2.43.0
 
