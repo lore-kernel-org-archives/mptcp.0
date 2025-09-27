@@ -1,109 +1,120 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 200B917B505;
-	Sat, 27 Sep 2025 01:20:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DA9E224B09;
+	Sat, 27 Sep 2025 09:40:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758936048; cv=none; b=pj6cv19K+XtGZX2BymfIJtWxOHM9hjmMoxHPwBCCSWkZVYHwf/jqTgNx9c43dHTrjBfKS3+S341ffqInNZpkGYt4VWEqywTcZG27a3SDlePwB3DCnTqvCOvZKfUyVWt5kDZwYh07ryPsY2NphaCVe5SUEnjW70UBOXmTNGGPL4s=
+	t=1758966058; cv=none; b=AX3oo7yB9SIvGu5GdLtvUXEgxSUSfqTHHHrwPBtWkTAvh3ohN4kbLh84QD07nk0CVBFCvJX83ENL93ou12SStId7TdCFKFGWff8o7o87yNkzu0OalsCEaOztswDJxCJGyCgErZzH9Lh+FyUa95/s9/5y6aFVzWY+NKMIVOLf2LI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758936048; c=relaxed/simple;
-	bh=zvPqdywQUeZqytC5OkpE4A2wdCuvkoGS34zQUGAxsTg=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=YC14VNm+XooVH6bLXQFbQi2tjE7qlB9sT+MYisp335HUxC+4Z3Lgt3V4QJbX3mID4iKlWuYvJkepuVkiqu+i3MYJt778pukc3sI+7QWsKIsrJI8z2hPpbCri+ENaCSqo4wmUNPx1MdzOn7tNWtRdzoBDagn8HVXUBhpQgY/0NIE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pbbPdH4D; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1758966058; c=relaxed/simple;
+	bh=dt+DecOx3QZJzbvvA3hprtLoaSDazDHK/AaHDq9Jc1I=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=OSXitCA1eEPGxwtDIWPVoLN8LVeP87EjqRv/dE0zvDkG4GYizUW4h2QWGmVkk2uaJQQzuKcTNUc7KkH9hyhxRLhoMAbQTSLRY6DXmObHzYwL/fStIyKFRe05lGllGM0bsTsyEgMr1+qY+A5iNj7lsQw1EzCEtewQlPVpKmd1LyY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ip6ypAWS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pbbPdH4D"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DD85C4CEF4;
-	Sat, 27 Sep 2025 01:20:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ip6ypAWS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C283EC4CEF8;
+	Sat, 27 Sep 2025 09:40:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758936047;
-	bh=zvPqdywQUeZqytC5OkpE4A2wdCuvkoGS34zQUGAxsTg=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=pbbPdH4D24aZNH8kG9S5zUUbTWaZgh7PfBLwtuVT2A+p/+oUkCev4k91jDf2YKW7s
-	 GBgczyZYh//6a6YKPdlyd6xFuIUBGHjP+DR3lWLU/tl7Pq8vPqepsrDcUOoHgtcEc2
-	 SMavXS9M78/VY8T2sbzYhPUp1DXxWdvlFjO6eNQg6MFaVpbiXSaaWItUV5Xpa/AZRN
-	 D2LMJ+UzWSk2IYAbzK7L3p1iznM2gwXDvtXrA9lSHMhs8GN4oqFtuvd31hVdM3omVM
-	 p/jehEqrBV3NOKfQdceg9P4c5w27jmSHU71efVv6BE5mzUujw4q037+1s3WahtfsL8
-	 hS4+sLtu+Cb/w==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EAEAA39D0C3F;
-	Sat, 27 Sep 2025 01:20:43 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1758966057;
+	bh=dt+DecOx3QZJzbvvA3hprtLoaSDazDHK/AaHDq9Jc1I=;
+	h=From:Subject:Date:To:Cc:From;
+	b=Ip6ypAWS9p3RmzQnOrceVx+weMajQ4YgomFbO4LYYP27tFldc78k6i7K9WXmRpVkw
+	 lMvf/NzF2oSzNY9cvbZGFihwbb6uTbFogWERBWaX9fzUv/xoR/oKG6IFydEQMasZy+
+	 vqEOPUgNISkgHg27zxQiIxJ85lm4tHZECkda41/fX2NpP/GnFC9Jotl0O87rEIm63W
+	 HfAHpFB6PUSUbuv0Q3pw4NbDTp6BO8Y86woYu/0FdBQS/t4elxXgQHjgJ9ZyGV+jJ9
+	 4AaO9kAX3aHayM80Yv29Lxy+HL74V7KTuKslHD3tvnGW5cLsY1pzKY3INJIfRPGw8g
+	 0Mblg9CzU4oSw==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH net-next 0/8] mptcp: receive path improvement
+Date: Sat, 27 Sep 2025 11:40:36 +0200
+Message-Id: <20250927-net-next-mptcp-rcv-path-imp-v1-0-5da266aa9c1a@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next 00/15] mptcp: pm: special case for c-flag +
- luminar endp
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <175893604275.115459.12300335939141121043.git-patchwork-notify@kernel.org>
-Date: Sat, 27 Sep 2025 01:20:42 +0000
-References: 
- <20250925-net-next-mptcp-c-flag-laminar-v1-0-ad126cc47c6b@kernel.org>
-In-Reply-To: 
- <20250925-net-next-mptcp-c-flag-laminar-v1-0-ad126cc47c6b@kernel.org>
-To: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Cc: martineau@kernel.org, geliang@kernel.org, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
- shuah@kernel.org, martin.lau@linux.dev, netdev@vger.kernel.org,
- mptcp@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, stable@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIABSx12gC/zWMQQqEMAwAvyI5G9CguPUr4qHE7JqD3dAWEcS/W
+ wQPc5jDzAlJokqCsTohyq5J/6FIW1fAqw8/QV2KAzXUN44GDJILR8bNMhtG3tF8XlE3w9bR8mH
+ q2PEA5WBRvno89wneEObrugH8HVOydwAAAA==
+X-Change-ID: 20250927-net-next-mptcp-rcv-path-imp-192d8c24c9c7
+To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Simon Horman <horms@kernel.org>, Neal Cardwell <ncardwell@google.com>, 
+ Kuniyuki Iwashima <kuniyu@google.com>, David Ahern <dsahern@kernel.org>, 
+ Shuah Khan <shuah@kernel.org>
+Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, 
+ linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+ "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2508; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=dt+DecOx3QZJzbvvA3hprtLoaSDazDHK/AaHDq9Jc1I=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDKub5QO3nWhVaNtww71nepfbpa7z+VZzCDUlCKldn9aS
+ Oc8W6UJHaUsDGJcDLJiiizSbZH5M59X8ZZ4+VnAzGFlAhnCwMUpABNxX8HI8H5r2/o8nn2Tb3hd
+ 9P4969wab8/QkoPbBbq8VT86/5v9cxojw/2O2zNaXBw1OTUPsK3V4mUoiHA26269ddVvzz5r6d8
+ zuQA=
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hello:
+This series includes several changes to the MPTCP RX path. The main
+goals are improving the RX performances, and increase the long term
+maintainability.
 
-This series was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+Some changes reflects recent(ish) improvements introduced in the TCP
+stack: patch 1, 2 and 3 are the MPTCP counter part of SKB deferral free
+and auto-tuning improvements. Note that patch 3 could possibly fix
+additional issues, and overall such patch should protect from similar
+issues to arise in the future.
 
-On Thu, 25 Sep 2025 12:32:35 +0200 you wrote:
-> Here are some patches for the MPTCP PM, including some refactoring that
-> I thought it would be best to send at the end of a cycle to avoid
-> conflicts between net and net-next that could last a few weeks.
-> 
-> The most interesting changes are in the first and last patch, the rest
-> are patches refactoring the code & tests to validate the modifications.
-> 
-> [...]
+Patches 4-7 are aimed at introducing the socket backlog usage which will
+be done in a later series to process the packets received by the
+different subflows while the msk socket is owned.
 
-Here is the summary with links:
-  - [net-next,01/15] mptcp: pm: in-kernel: usable client side with C-flag
-    https://git.kernel.org/netdev/net-next/c/4b1ff850e0c1
-  - [net-next,02/15] selftests: mptcp: join: validate C-flag + def limit
-    https://git.kernel.org/netdev/net-next/c/008385efd05e
-  - [net-next,03/15] mptcp: pm: in-kernel: refactor fill_local_addresses_vec
-    https://git.kernel.org/netdev/net-next/c/8dc63ade451d
-  - [net-next,04/15] mptcp: pm: in-kernel: refactor fill_remote_addresses_vec
-    https://git.kernel.org/netdev/net-next/c/a845b2bbf26e
-  - [net-next,05/15] mptcp: pm: rename 'subflows' to 'extra_subflows'
-    https://git.kernel.org/netdev/net-next/c/c5273f6ca166
-  - [net-next,06/15] mptcp: pm: in-kernel: rename 'subflows_max' to 'limit_extra_subflows'
-    https://git.kernel.org/netdev/net-next/c/3eb3c9a9596a
-  - [net-next,07/15] mptcp: pm: in-kernel: rename 'add_addr_signal_max' to 'endp_signal_max'
-    https://git.kernel.org/netdev/net-next/c/45cae570664d
-  - [net-next,08/15] mptcp: pm: in-kernel: rename 'add_addr_accept_max' to 'limit_add_addr_accepted'
-    https://git.kernel.org/netdev/net-next/c/37712d84dfc2
-  - [net-next,09/15] mptcp: pm: in-kernel: rename 'local_addr_max' to 'endp_subflow_max'
-    https://git.kernel.org/netdev/net-next/c/e7757b6d3a62
-  - [net-next,10/15] mptcp: pm: in-kernel: rename 'local_addr_list' to 'endp_list'
-    https://git.kernel.org/netdev/net-next/c/35e71e43a56d
-  - [net-next,11/15] mptcp: pm: in-kernel: rename 'addrs' to 'endpoints'
-    https://git.kernel.org/netdev/net-next/c/e9aa044f4a1f
-  - [net-next,12/15] mptcp: pm: in-kernel: remove stale_loss_cnt
-    https://git.kernel.org/netdev/net-next/c/db9a0e3858ba
-  - [net-next,13/15] mptcp: pm: in-kernel: reduce pernet struct size
-    https://git.kernel.org/netdev/net-next/c/4984fe6254f8
-  - [net-next,14/15] mptcp: pm: in-kernel: compare IDs instead of addresses
-    https://git.kernel.org/netdev/net-next/c/f596293314b2
-  - [net-next,15/15] mptcp: pm: in-kernel: add laminar endpoints
-    https://git.kernel.org/netdev/net-next/c/539f6b9de39e
+Patch 8 is not related to the RX path, but it contains additional tests
+for new features recently introduced in net-next.
 
-You are awesome, thank you!
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+Notes:
+ - Sorry for sending this series that late, we had quite a few patches
+   to upstream during this cycle. This is the last batch, and it has
+   been heavily tested the last 2 weeks.
+ - If there are some issues with some patches, but not with 1-3, it
+   would be nice, if possible, if these 3 first patches can be accepted,
+   to reduce the recently introduced gap with TCP.
+ - Patches can be grouped like this if needed: 1-3, 4-5, 6-7, 8. 6-7 are
+   preparing the ground for future on-going work, they can be dropped if
+   there are issues with them.
+
+---
+Matthieu Baerts (NGI0) (1):
+      selftests: mptcp: join: validate new laminar endp
+
+Paolo Abeni (7):
+      mptcp: leverage skb deferral free
+      tcp: make tcp_rcvbuf_grow() accessible to mptcp code
+      mptcp: rcvbuf auto-tuning improvement
+      mptcp: introduce the mptcp_init_skb helper
+      mptcp: remove unneeded mptcp_move_skb()
+      mptcp: factor out a basic skb coalesce helper
+      mptcp: minor move_skbs_to_msk() cleanup
+
+ include/net/tcp.h                               |   1 +
+ net/ipv4/tcp_input.c                            |   2 +-
+ net/mptcp/protocol.c                            | 187 ++++++++++++------------
+ net/mptcp/protocol.h                            |   4 +-
+ tools/testing/selftests/net/mptcp/mptcp_join.sh |  69 +++++++++
+ tools/testing/selftests/net/mptcp/pm_nl_ctl.c   |   9 ++
+ 6 files changed, 177 insertions(+), 95 deletions(-)
+---
+base-commit: 1493c18fe8696bfc758a97130a485fc4e08387f5
+change-id: 20250927-net-next-mptcp-rcv-path-imp-192d8c24c9c7
+
+Best regards,
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
