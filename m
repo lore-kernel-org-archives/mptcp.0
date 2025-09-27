@@ -1,37 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0344D27A900
-	for <mptcp@lists.linux.dev>; Sat, 27 Sep 2025 12:31:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E72F2DF148
+	for <mptcp@lists.linux.dev>; Sat, 27 Sep 2025 12:31:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758976308; cv=none; b=Kz+yc7lf1+fQf3TA6lpMyeR42xTMmEv9KE6/mmSeCWjE4946Smvx8VL2E/EurNDIhsK5kBZ7zGdfg7tDGC2PMDmZNcqQ6ftmXVrrNQPrnITvMubEYr5l5LgdWzE2r6NYr1DJbu1+ZP+nrCFjI8Hdq4By7moITCKlDJzEBPTpx4k=
+	t=1758976309; cv=none; b=spsLXeVqLk51yp+CJvzT0hEtsMloxLJq5BmwsfGIU7FwsDo14TV8QC6V8bkdZQiAWtRWI5AHN5IFiXBcX9OtJpEtI1NKXAZ6Dl6ZHRm57DztdOf9n16zxubXDN2EB80KEveSQwD4tOlpzFWp0aOUZLzQ7p5TBPoFt8/ivwxTcHc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758976308; c=relaxed/simple;
-	bh=2yQXe35CBtR4uoYT5CbBOnaes42b897+rj8e59xHPGg=;
+	s=arc-20240116; t=1758976309; c=relaxed/simple;
+	bh=02n7mNF6TsqQNQQZi6d0zEfSQ70oYonJabggGH6P9PI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=om9SlUnuXKdNMQd65HkF9MvPFw+RB9G54qyg0GKqHhhPb42ejw8F5bjeMRAzkCJbC5snZCy5ABs7vwZDxth93rIP9NPyxfof9qrKwex4W+dqwI1w+OjIRizWwMTdxBu1LIQAZL4viTLEXdL2Uc/ebfWMv1BlMiBZtvnrLI6fMy4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DkyOK7eW; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Tj2hirUfQF02oLoxllZfb38BiBrlYn9QY8AcMNnCWIpfwP04ig8MkN7++wmgJiVg3/1yVhqitORAZuqZEqzyU7Bz2+Jodse5FsIsx07Aabk/HhQGMHPv9DRNDitQjowUW2SuzKuXN55GQWGkklG46X5fQeZuZSTbxWcZArZlVUw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OSNlh3en; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DkyOK7eW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FD78C4CEF5;
-	Sat, 27 Sep 2025 12:31:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OSNlh3en"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B55CC4CEE7;
+	Sat, 27 Sep 2025 12:31:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758976307;
-	bh=2yQXe35CBtR4uoYT5CbBOnaes42b897+rj8e59xHPGg=;
+	s=k20201202; t=1758976309;
+	bh=02n7mNF6TsqQNQQZi6d0zEfSQ70oYonJabggGH6P9PI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=DkyOK7eWStj82UMNztMFluLjGk9ANf36qPuz9WKpOeJPDBrPsPRj0bOingV1S3+t/
-	 eB305JagVlFpQFFrakX5f0/6pHPNNKnu+5UyUdtEp6VBRLpc4yduwA+YZ9tPf4LsS9
-	 OWEqwkmUkrwXaFp4dnwikPOysAUIjH7TptKGL2nPg6gHBrt4d0MJYTsYPCli11iwwy
-	 vPjjfjXvpNABn2p3Y77VBCRBONDHXhbYJ3LTqYUNpikGLseVL+6DVb62RXLD+rMhB8
-	 10/PZEF3Ev1/0v0Cn/dFIBYVzEgPZ2Dcjz4lmuiBXHqfakNn1u9T0uf0eHJC2NiIr2
-	 2f3kSAZfyA7Vw==
+	b=OSNlh3enPGZszFkSAjP9D6uAVnX2F8cnj5djfznyTWNgi/w0a70H27X8Zyn900T+8
+	 jI10YjxSdylHHh+D6wxG0SSeU8pFKtSBtu7QXo1XJ4O/suXRtL/h/jgwLeMI+lBxzl
+	 O3a3PvTdijLfiUlKzrsRO/iDORLd1NMdcd5JzoliPOiTvXyAwKP6bQ6bUff84OYzCm
+	 ksIj/6LavGsQSkLYbKN+GytWbAs+t/oEUovRhxbZ+fc5NLuGtuBk9QfdOO1ipbIOMU
+	 a5hEyo9jr3DindXFKZHNGuZzHZSWeShxk/exBOBuR2qhlHwfrFi4YCC26NT9XWQ6PJ
+	 kGpJLLEcaKayQ==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v12 7/8] selftests: mptcp: add splice io mode
-Date: Sat, 27 Sep 2025 20:30:24 +0800
-Message-ID: <aacf17ac4206c0368cdd03f02c7c2db1557f7a49.1758975929.git.tanggeliang@kylinos.cn>
+Cc: Geliang Tang <tanggeliang@kylinos.cn>,
+	Matthieu Baerts <matttbe@kernel.org>
+Subject: [PATCH mptcp-next v12 8/8] selftests: mptcp: connect: cover splice mode
+Date: Sat, 27 Sep 2025 20:30:25 +0800
+Message-ID: <92d58c5b01d53f1a02ab39a2c50094fd36d58e7a.1758975929.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1758975929.git.tanggeliang@kylinos.cn>
 References: <cover.1758975929.git.tanggeliang@kylinos.cn>
@@ -45,129 +46,41 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-This patch adds a new 'splice' io mode for mptcp_connect to test
-the newly added read_sock() and splice_read() functions of MPTCP.
+The "splice" alternate mode for mptcp_connect.sh/.c is available now,
+this patch adds mptcp_connect_splice.sh to test it in the MPTCP CI by
+default.
 
-do_splice() efficiently transfers data directly between two file
-descriptors (infd and outfd) without copying to userspace, using
-Linux's splice() system call.
-
-Usage:
-	./mptcp_connect.sh -m splice
-
+Suggested-by: Matthieu Baerts <matttbe@kernel.org>
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- .../selftests/net/mptcp/mptcp_connect.c       | 63 ++++++++++++++++++-
- 1 file changed, 62 insertions(+), 1 deletion(-)
+ tools/testing/selftests/net/mptcp/Makefile                | 1 +
+ tools/testing/selftests/net/mptcp/mptcp_connect_splice.sh | 5 +++++
+ 2 files changed, 6 insertions(+)
+ create mode 100755 tools/testing/selftests/net/mptcp/mptcp_connect_splice.sh
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-index b148cadb96d0..52c6696a13a5 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-@@ -51,6 +51,7 @@ enum cfg_mode {
- 	CFG_MODE_POLL,
- 	CFG_MODE_MMAP,
- 	CFG_MODE_SENDFILE,
-+	CFG_MODE_SPLICE,
- };
+diff --git a/tools/testing/selftests/net/mptcp/Makefile b/tools/testing/selftests/net/mptcp/Makefile
+index 4c7e51336ab2..1bc74b271a0a 100644
+--- a/tools/testing/selftests/net/mptcp/Makefile
++++ b/tools/testing/selftests/net/mptcp/Makefile
+@@ -5,6 +5,7 @@ top_srcdir = ../../../../..
+ CFLAGS += -Wall -Wl,--no-as-needed -O2 -g -I$(top_srcdir)/usr/include $(KHDR_INCLUDES)
  
- enum cfg_peek {
-@@ -123,7 +124,7 @@ static void die_usage(void)
- 	fprintf(stderr, "\t-j     -- add additional sleep at connection start and tear down "
- 		"-- for MPJ tests\n");
- 	fprintf(stderr, "\t-l     -- listens mode, accepts incoming connection\n");
--	fprintf(stderr, "\t-m [poll|mmap|sendfile] -- use poll(default)/mmap+write/sendfile\n");
-+	fprintf(stderr, "\t-m [poll|mmap|sendfile|splice] -- use poll(default)/mmap+write/sendfile/splice\n");
- 	fprintf(stderr, "\t-M mark -- set socket packet mark\n");
- 	fprintf(stderr, "\t-o option -- test sockopt <option>\n");
- 	fprintf(stderr, "\t-p num -- use port num\n");
-@@ -926,6 +927,55 @@ static int copyfd_io_sendfile(int infd, int peerfd, int outfd,
- 	return err;
- }
+ TEST_PROGS := mptcp_connect.sh mptcp_connect_mmap.sh mptcp_connect_sendfile.sh \
++	      mptcp_connect_splice.sh \
+ 	      mptcp_connect_checksum.sh pm_netlink.sh mptcp_join.sh diag.sh \
+ 	      simult_flows.sh mptcp_sockopt.sh userspace_pm.sh
  
-+static int do_splice(const int infd, const int outfd, const size_t len,
-+		     struct wstate *winfo)
-+{
-+	int pipefd[2];
-+	ssize_t bytes;
-+	int err;
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect_splice.sh b/tools/testing/selftests/net/mptcp/mptcp_connect_splice.sh
+new file mode 100755
+index 000000000000..241254a966c9
+--- /dev/null
++++ b/tools/testing/selftests/net/mptcp/mptcp_connect_splice.sh
+@@ -0,0 +1,5 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0
 +
-+	err = pipe(pipefd);
-+	if (err)
-+		return err;
-+
-+	while ((bytes = splice(infd, NULL, pipefd[1], NULL,
-+			       len - winfo->total_len,
-+			       SPLICE_F_MOVE | SPLICE_F_MORE)) > 0) {
-+		splice(pipefd[0], NULL, outfd, NULL, bytes,
-+		       SPLICE_F_MOVE | SPLICE_F_MORE);
-+	}
-+
-+	close(pipefd[0]);
-+	close(pipefd[1]);
-+
-+	return 0;
-+}
-+
-+static int copyfd_io_splice(int infd, int peerfd, int outfd, unsigned int size,
-+			    bool *in_closed_after_out, struct wstate *winfo)
-+{
-+	int err;
-+
-+	if (listen_mode) {
-+		err = do_splice(peerfd, outfd, size, winfo);
-+		if (err)
-+			return err;
-+
-+		err = do_splice(infd, peerfd, size, winfo);
-+	} else {
-+		err = do_splice(infd, peerfd, size, winfo);
-+		if (err)
-+			return err;
-+
-+		shut_wr(peerfd);
-+
-+		err = do_splice(peerfd, outfd, size, winfo);
-+		*in_closed_after_out = true;
-+	}
-+
-+	return err;
-+}
-+
- static int copyfd_io(int infd, int peerfd, int outfd, bool close_peerfd, struct wstate *winfo)
- {
- 	bool in_closed_after_out = false;
-@@ -958,6 +1008,14 @@ static int copyfd_io(int infd, int peerfd, int outfd, bool close_peerfd, struct
- 					 &in_closed_after_out, winfo);
- 		break;
- 
-+	case CFG_MODE_SPLICE:
-+		file_size = get_infd_size(infd);
-+		if (file_size < 0)
-+			return file_size;
-+		ret = copyfd_io_splice(infd, peerfd, outfd, file_size,
-+				       &in_closed_after_out, winfo);
-+		break;
-+
- 	default:
- 		fprintf(stderr, "Invalid mode %d\n", cfg_mode);
- 
-@@ -1363,12 +1421,15 @@ int parse_mode(const char *mode)
- 		return CFG_MODE_MMAP;
- 	if (!strcasecmp(mode, "sendfile"))
- 		return CFG_MODE_SENDFILE;
-+	if (!strcasecmp(mode, "splice"))
-+		return CFG_MODE_SPLICE;
- 
- 	fprintf(stderr, "Unknown test mode: %s\n", mode);
- 	fprintf(stderr, "Supported modes are:\n");
- 	fprintf(stderr, "\t\t\"poll\" - interleaved read/write using poll()\n");
- 	fprintf(stderr, "\t\t\"mmap\" - send entire input file (mmap+write), then read response (-l will read input first)\n");
- 	fprintf(stderr, "\t\t\"sendfile\" - send entire input file (sendfile), then read response (-l will read input first)\n");
-+	fprintf(stderr, "\t\t\"splice\" - send entire input file (splice), then read response (-l will read input first)\n");
- 
- 	die_usage();
- 
++MPTCP_LIB_KSFT_TEST="$(basename "${0}" .sh)" \
++	"$(dirname "${0}")/mptcp_connect.sh" -m splice "${@}"
 -- 
 2.43.0
 
