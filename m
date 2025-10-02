@@ -1,128 +1,88 @@
-Received: from mail-io1-f44.google.com (mail-io1-f44.google.com [209.85.166.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from orbyte.nwl.cc (orbyte.nwl.cc [151.80.46.58])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA88E2C15B6
-	for <mptcp@lists.linux.dev>; Thu,  2 Oct 2025 03:44:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8ED22D5939;
+	Thu,  2 Oct 2025 10:09:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=151.80.46.58
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759376695; cv=none; b=u8F+VpS0x9nfcXFHkxdOXQjux+2lQx6xGKQar3qIY+XeXZNE93J9uIS65dU4g7SFWO4FISkdVC6rIhQcKpQP592uCVn0UdLb38uQmAd/CLjLbJaZN5UHtPGV2vZtsUa3GfkiyIed8rp4BkAzpU3K6y+sqD2HaGS2Jx5chJkX/M4=
+	t=1759399794; cv=none; b=s1JcnLolloKi27MYjZPgQVzFVnU0BVRL72WwdKgvG5QyHts5dr6JhigE6AmlDYbCxtxDTF22Lex/PnAnuBwLDm0c5DhGFkPLqkdtJuw7fS54t7mjfRHvF/LEQDoRVEYo3QQYO4cBPRPLr20Xb2IVyP8tOUhxTq3J9bSwc1G8clw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759376695; c=relaxed/simple;
-	bh=Koqladri82qPdCkxouAGx+Lm2RHOCnuAn4O3inNNAT4=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=V3I8SgpJIPseMQi3OeJ95i5ZjAT+upMPnsAlOH/VYMUPySfgrqYbX/jIRLlcoaAi0+oXSh62TE/iRpSoaoBNW7RrmzGI+29kKo1VKJSFxGWnFUEvlbnatbJojT4VmiTpyHUyVs3HP8YTXvL/EYDGD2ltUmkMXv5YEQGyIRJKSq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HcusdBRq; arc=none smtp.client-ip=209.85.166.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1759399794; c=relaxed/simple;
+	bh=aWuPMAxochyezlEMrYGn3mLzqwHBPe1+qLQ8BngueOs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dyP7OubNFsQHGBSLPn57k4eUxC87FfaPlX40jBnsGhzDqOaWIQ0eIfyYXRAsqh4DtQcQJV0hV0KNhwTM7Q79sjGFwCvoiHDFPfXoJIKmK6iZWdHwLasGX4ntHA1mJDJ0O/VJRlUjGnIMK2kAQ2ofX2t7t+0lN+AG9Ucz4oM6DdU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nwl.cc; spf=pass smtp.mailfrom=nwl.cc; dkim=pass (2048-bit key) header.d=nwl.cc header.i=@nwl.cc header.b=n8R9O5J2; arc=none smtp.client-ip=151.80.46.58
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nwl.cc
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nwl.cc
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HcusdBRq"
-Received: by mail-io1-f44.google.com with SMTP id ca18e2360f4ac-9335a918867so44431639f.2
-        for <mptcp@lists.linux.dev>; Wed, 01 Oct 2025 20:44:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1759376693; x=1759981493; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KAINzx8lz9ZU2EiHhZgVI1qerYm/Xe3y7IL/QXBzYbI=;
-        b=HcusdBRqYtm0uLAGp9WTvt6gdxG2mUDP9tGKmU3IXJpOJKh2ifRL6m1owbY7aZgTbt
-         0znwHfBB4OYnWrROUPXG4gi1nwDgZ1MrLBZ7tsB+xd0bp8vfnfLPldxomZBte8syPdga
-         zNUI5EW3WvcpfA27KaelE8cYHta+VjcEv1VZ8k7pvryUeDl92jB5jYiOsJyY+wdRM7o6
-         FTJJZljGLgOwkAWwYVBQDIcnbEd7mAEhw9ZPyd8IgCpCzG+k8+0P758qsA4u8CW79cbR
-         xsLYk4+fA9Y1tilx43Zw3V/bw5RxVudXyERBJIM70K/x0rUy+3zqN8buoba5kEvKb/0J
-         K0Gw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759376693; x=1759981493;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=KAINzx8lz9ZU2EiHhZgVI1qerYm/Xe3y7IL/QXBzYbI=;
-        b=ccLMXjNzB/VxaE6ehfUMQLRQOoMRc/kmFFwyPv4O7+6U3tyB6UjIVJjjUDxNtc+KGV
-         vef6Pc6LRnzyxBVPrQ1sAzuTfidDRUiqQx8DpxbB3YFCdY0c42EB+I6cALFk73B35xXR
-         Wgwk9BBqNAisZ8tkgsqd7xn+K3b1nN0/D2pJO9eXSxqPWJ0+RkRCIeW1oAYxSZhl0Fsf
-         0/qD9AXq0Hvv9Y/k+HdWXADxsM3Cq8NdZ7p7+blUhlsIZeHSlDox7BGWXvBaiM46yhwi
-         xFPil9UUiTzamXQCj10wsqpXJg+quNuur0B/MPElS7WfaXYfS+N/uKk2Mi8Ip94a+Rk3
-         qy2Q==
-X-Gm-Message-State: AOJu0Yx1pY8RZPhBrW8OYH/NugSFu3qMVOdbIC+cq59O7lwXsntehFFx
-	B/ATJVwVgBUgRrovdpnGFdJWkzxHgusmqA8QIR8ltCSnBw7cRwTHqAltwz10
-X-Gm-Gg: ASbGncsSPhomWKCaFGfTjv+ODuAScfDyfzAxtqkQe3VB8ZoUkFJUeHsjlk753ZXRVIE
-	OkT+32cFDI7BDM3plUxqUiQhSj627t86AbGrFQ+zql6R5whEFpPSd0BOxfXCfn8/ygD1Q7U3HDz
-	WtHBYSsyoO6TmaeCBafGEpxftgAWrYjn7OFFoPenvMs65iOQVGFNM8YXsnNswGnYGjew6VJ0OwU
-	+Swc0YsPQxYDKTL1ZtfqL0P//sunSRSYhxWDMToW1DVm9xHIGkw830FQYHOrhLwbNAya+iJEORT
-	Kp+8EKEqkuT7lFAm9wvyJklKXG8wnjWXu3LR/N1J4eKUfjBeggYHKhRhb3nwjb70HDultq9Rhhy
-	4b1xRhYX4MYfp79aEcw1V3Gp4/wXXyJrKyegc1p6r4LOpi4bT6q+fZSciTyXt
-X-Google-Smtp-Source: AGHT+IEJ6DPLgQEuqLpdY9P4kC/n1msPJv7n4cyClQ7BDIPG05Mkzca0j+p5GU2WpgC1NVQaTfve2g==
-X-Received: by 2002:a05:6602:3787:b0:92b:f56f:abc0 with SMTP id ca18e2360f4ac-937adb61dc2mr827421339f.14.1759376692888;
-        Wed, 01 Oct 2025 20:44:52 -0700 (PDT)
-Received: from [127.0.0.1] ([64.236.134.225])
-        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-93a7e3a6ab7sm47810439f.12.2025.10.01.20.44.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Oct 2025 20:44:51 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+	dkim=pass (2048-bit key) header.d=nwl.cc header.i=@nwl.cc header.b="n8R9O5J2"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=nwl.cc;
+	s=mail2022; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=jAtBxARjbGAiZyrHvaZ2gbnrgfqQIv/7WsirpJP41Us=; b=n8R9O5J2/CITXU7WTgFgfG5cg3
+	UZoZfPY2A42m3qn53E1U02M/5bEA72JevtjeS74clRDxgU71ODbTPqwY3MrWu32iqcj+sY49XIJZy
+	9l+jQ3z800fPxm2penBSa4Irb/iH0nGOcrjwx3jXfcgqIiEdDjBDtvXGGH/WUlg98OVTufULktEI8
+	VayjyLnON2JpSwa0JU69d8EVYejAMnHYdCPM8hUpwCBsuQO6ACoQ1My38uXan/9oU82Lkjkx7psyw
+	JURriAxC5RvFX+bKxSRWuIm2jAHxWpYKR093VxmlsVmBft85sKoU9yDstamikeXOtL7sqTvySh/cV
+	viNTXcUg==;
+Received: from n0-1 by orbyte.nwl.cc with local (Exim 4.97.1)
+	(envelope-from <phil@nwl.cc>)
+	id 1v4GFm-000000000BL-11iW;
+	Thu, 02 Oct 2025 12:09:38 +0200
+Date: Thu, 2 Oct 2025 12:09:38 +0200
+From: Phil Sutter <phil@nwl.cc>
 To: Jakub Kicinski <kuba@kernel.org>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20251002015245.3209033-1-kuba@kernel.org>
-References: <20251002015245.3209033-1-kuba@kernel.org>
+Cc: davem@davemloft.net, netdev@vger.kernel.org, edumazet@google.com,
+	pabeni@redhat.com, andrew+netdev@lunn.ch, horms@kernel.org,
+	jv@jvosburgh.net, shuah@kernel.org, kuniyu@google.com,
+	matttbe@kernel.org, martineau@kernel.org, geliang@kernel.org,
+	pablo@netfilter.org, kadlec@netfilter.org, fw@strlen.de,
+	antonio@openvpn.net, sd@queasysnail.net, razor@blackwall.org,
+	idosch@nvidia.com, yongwang@nvidia.com, jiri@resnulli.us,
+	danishanwar@ti.com, linux-kselftest@vger.kernel.org,
+	mptcp@lists.linux.dev, netfilter-devel@vger.kernel.org,
+	coreteam@netfilter.org
 Subject: Re: [PATCH net] selftests: net: sort configs
-Message-ID: <fc1b5efc-b8e9-4114-caa1-86c16494ec1a@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 02 Oct 2025 03:44:50 +0000
+Message-ID: <aN5PYtHSdp4XIWtO@orbyte.nwl.cc>
+Mail-Followup-To: Phil Sutter <phil@nwl.cc>,
+	Jakub Kicinski <kuba@kernel.org>, davem@davemloft.net,
+	netdev@vger.kernel.org, edumazet@google.com, pabeni@redhat.com,
+	andrew+netdev@lunn.ch, horms@kernel.org, jv@jvosburgh.net,
+	shuah@kernel.org, kuniyu@google.com, matttbe@kernel.org,
+	martineau@kernel.org, geliang@kernel.org, pablo@netfilter.org,
+	kadlec@netfilter.org, fw@strlen.de, antonio@openvpn.net,
+	sd@queasysnail.net, razor@blackwall.org, idosch@nvidia.com,
+	yongwang@nvidia.com, jiri@resnulli.us, danishanwar@ti.com,
+	linux-kselftest@vger.kernel.org, mptcp@lists.linux.dev,
+	netfilter-devel@vger.kernel.org, coreteam@netfilter.org
+References: <20251002015245.3209033-1-kuba@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251002015245.3209033-1-kuba@kernel.org>
 
-Hi Jakub,
+Hi,
 
-Thank you for your modifications, that's great!
+On Wed, Oct 01, 2025 at 06:52:45PM -0700, Jakub Kicinski wrote:
+> Sort config files for networking selftests. This should help us
+> avoid merge conflicts between net and net-next. patchwork check
+> will be added to prevent new issues.
 
-Our CI did some validations and here is its report:
+The patch does not apply to my net/main (at daa26ea63c6) for unclear
+reasons, though I verified that it does neither add nor remove lines by:
 
-- KVM Validation: normal: Success! =E2=9C=85
-- KVM Validation: debug: =
-Unstable: 1 failed test(s): packetdrill_add_addr =F0=9F=94=B4
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/181811=
-66519
+diff -u \
+  <(sed -n 's/^-\(CONFIG_.*\)/\1/p' /tmp/sort.patch | sort) \
+  <(sed -n 's/^+\(CONFIG_.*\)/\1/p' /tmp/sort.patch | sort)
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/0f6fb241692d
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1007865
+> Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 
-
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+Acked-by: Phil Sutter <phil@nwl.cc>
