@@ -1,52 +1,52 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F46C25A633
-	for <mptcp@lists.linux.dev>; Mon,  6 Oct 2025 08:12:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC98325B1FC
+	for <mptcp@lists.linux.dev>; Mon,  6 Oct 2025 08:12:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759738352; cv=none; b=UINUQiob0r04B3w6LuCRBxrqAFjmF8sx76vsFuJsgOXx1bUTvsK9oWxN5LikeCtkuNVVVn0gGfRqhG+z2eQq44oxy7aIe2waejKg9/gH8U5Ksat6WohghnvbwB1p7PrMJRV53ttyDa2S5OFBnwfweAbLaDnJzhUuPzSCMBn0zxQ=
+	t=1759738354; cv=none; b=aj/If3UCAsLYCmM+GDaPVopb+gtGWP46kWwh9c5+2xzvSdPoYwFfm1g71Rs5CQHJqxXJ/AK3BsYtV/HZPGtyKH8CznNJdYrS5aFsaY8IB5VDfZfwMJPjnvMh8shz43qJq51MpWRAc+mw9gc/zzWb59ptMxFQDwGZ/CbF7YZ1WLY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759738352; c=relaxed/simple;
-	bh=zjWGHdqVPzfBdgvnM0m/fHvx7NZGzIApbI28ZtnPoXo=;
+	s=arc-20240116; t=1759738354; c=relaxed/simple;
+	bh=KTwGBFaTvYFo5/A3Q5B6l8O80gZ2fWUigeZQHH+wGAU=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=cReZ4B3atU89VrPjS1mqOvABmHoJ5LKHUKS7CnMvcTGXf3VvT991+MfWwUpHQRf4nSNjWVqp4JfUZBqebtUkd0a45xcNZXplYYNy0a7UkO0+ZqGgPP7HG4l0Bs0d0eQ9Mkxlyt+cBrxgPT2KOUvF3Fk94dPP3fJCWBek+uScT78=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UOz3BsK+; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:content-type; b=G+PcpGkeoNjzLwIWhGTQeKVAHnt1Ohx13WI8rW4O2L1+BZvEl1JGXRQBQma2vSQpWBofY0AijyFf5Q5vh/uVM/iTnj5J+J34p2ojnm25xgK1Xk/CapHmCqb6ufyi7r/2TEDEfBOZv4nE9nLLYaFHCYktiDK8lZMyIrNj4mHSdtU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EGVkwWit; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UOz3BsK+"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EGVkwWit"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1759738350;
+	s=mimecast20190719; t=1759738351;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=+aeYLWgFVIIrf5aNPqsmJtr0e2rjGrgmSK9g0U7H0Rk=;
-	b=UOz3BsK+Hc/pWz73m4JUv8hZ/le1nM80XQ87tAZggpwwm+Tns2n9BSC27o1vLjHk2hpLge
-	nSv8I9tJl1lUDCza9huJ2cEIQCprcaJsAMxH9ykc8oryDvy90O/HgOI28Iry69cyJpex/d
-	zXYBq72t9BhNzxPhGH7n2dVYnkGt4jI=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+	bh=ByenU1fcy6RS0oLc8BaHraDbva0dWkIekm3Dn+izs7g=;
+	b=EGVkwWit7cvzpjybynMffZeTgRqdma4wIIqAK0vluiNktOZu7dRYUm5zv65DHNNxukP97L
+	hqsskvTDhxkk/oOUAVJZwBdrMIILEOmCt1jN/xVnhlQkRJIc0IfiUAPIMrCOxYr7e/DXzQ
+	jRbRZYvyDRUvLfBHJ8U3ivxiA0psTfI=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-344-9XBdo8BCPVuMJBVJEmMygg-1; Mon,
- 06 Oct 2025 04:12:28 -0400
-X-MC-Unique: 9XBdo8BCPVuMJBVJEmMygg-1
-X-Mimecast-MFC-AGG-ID: 9XBdo8BCPVuMJBVJEmMygg_1759738348
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-390-_bUBGMZbP0CrhBDws48paQ-1; Mon,
+ 06 Oct 2025 04:12:30 -0400
+X-MC-Unique: _bUBGMZbP0CrhBDws48paQ-1
+X-Mimecast-MFC-AGG-ID: _bUBGMZbP0CrhBDws48paQ_1759738349
 Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 275A419560B7
-	for <mptcp@lists.linux.dev>; Mon,  6 Oct 2025 08:12:28 +0000 (UTC)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 735C318002C3
+	for <mptcp@lists.linux.dev>; Mon,  6 Oct 2025 08:12:29 +0000 (UTC)
 Received: from gerbillo.redhat.com (unknown [10.44.32.92])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 3933218004D8
-	for <mptcp@lists.linux.dev>; Mon,  6 Oct 2025 08:12:26 +0000 (UTC)
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 955D0180035E
+	for <mptcp@lists.linux.dev>; Mon,  6 Oct 2025 08:12:28 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
-Subject: [PATCH v5 mptcp-next 09/10] mptcp: introduce mptcp-level backlog
-Date: Mon,  6 Oct 2025 10:12:08 +0200
-Message-ID: <16ead1024784cf5913a9c9ef69d7d15cb73512a3.1759737859.git.pabeni@redhat.com>
+Subject: [PATCH v5 mptcp-next 10/10] mptcp: leverage the backlog for RX packet processing
+Date: Mon,  6 Oct 2025 10:12:09 +0200
+Message-ID: <1cb19d6e65591b81610cc0dd8ef5d0a38605b3f1.1759737859.git.pabeni@redhat.com>
 In-Reply-To: <cover.1759737859.git.pabeni@redhat.com>
 References: <cover.1759737859.git.pabeni@redhat.com>
 Precedence: bulk
@@ -57,206 +57,318 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: WO__qgP10_yakE1kBXHet5ZWzNXBfCvEiSSK1UcFDNI_1759738348
+X-Mimecast-MFC-PROC-ID: 4CqJsmhSQlXoFI2MuaB2p2vo8gEmsCrzNC3bKxDuo58_1759738349
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 
-We are soon using it for incoming data processing.
-MPTCP can't leverage the sk_backlog, as the latter is processed
-before the release callback, and such callback for MPTCP releases
-and re-acquire the socket spinlock, breaking the sk_backlog processing
-assumption.
+When the msk socket is owned or the msk receive buffer is full,
+move the incoming skbs in a msk level backlog list. This avoid
+traversing the joined subflows and acquiring the subflow level
+socket lock at reception time, improving the RX performances.
 
-Add a skb backlog list inside the mptcp sock struct, and implement
-basic helper to transfer packet to and purge such list.
+when processing the backlog, use the fwd alloc memory borrowed from
+the incoming subflow. skbs exceeding the msk receive space are
+not dropped; instead they are kept into the backlog until the receive
+buffer is freed. Dropping packets already acked at the TCP level is
+explicitly discouraged by the RFC and would corrupt the data stream
+for fallback sockets.
 
-Packets in the backlog are not memory accounted, but still use the
-incoming subflow receive memory, to allow back-pressure.
-
-No packet is currently added to the backlog, so no functional changes
-intended here.
+Special care is needed to avoid adding skbs to the backlog of a closed
+msk, and to avoid leaving dangling references into the backlog
+at subflow closing time.
 
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
---
-v4 -> v5:
-  - split out of the next path, to make the latter smaller
-  - set a custom destructor for skbs in the backlog, this avoid
-    duplicate code, and fix a few places where the need ssk cleanup
-    was not performed.
-  - factor out the backlog purge in a new helper,
-    use spinlock protection, clear the backlog list and zero the
-    backlog len
-  - explicitly init the backlog_len at mptcp_init_sock() time
 ---
- net/mptcp/protocol.c | 70 +++++++++++++++++++++++++++++++++++++++++---
- net/mptcp/protocol.h |  4 +++
- 2 files changed, 70 insertions(+), 4 deletions(-)
+v4 -> v5:
+  - consolidate ssk rcvbuf accunting in __mptcp_move_skb(), remove
+    some code duplication
+  - return soon in __mptcp_add_backlog() when dropping skbs due to
+    the msk closed. This avoid later UaF
+---
+ net/mptcp/protocol.c | 137 ++++++++++++++++++++++++-------------------
+ net/mptcp/protocol.h |   2 +-
+ 2 files changed, 79 insertions(+), 60 deletions(-)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 05ee6bd26b7fa..2d5d3da67d1ac 100644
+index 2d5d3da67d1ac..a97a92eccc502 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -337,6 +337,11 @@ static void mptcp_data_queue_ofo(struct mptcp_sock *msk, struct sk_buff *skb)
- 		mptcp_rcvbuf_grow(sk);
+@@ -696,7 +696,7 @@ static void __mptcp_add_backlog(struct sock *sk, struct sk_buff *skb)
  }
  
-+static void mptcp_bl_free(struct sk_buff *skb)
-+{
-+	atomic_sub(skb->truesize, &skb->sk->sk_rmem_alloc);
-+}
-+
- static int mptcp_init_skb(struct sock *ssk,
- 			  struct sk_buff *skb, int offset, int copy_len)
- {
-@@ -360,7 +365,7 @@ static int mptcp_init_skb(struct sock *ssk,
- 	skb_dst_drop(skb);
- 
- 	/* "borrow" the fwd memory from the subflow, instead of reclaiming it */
--	skb->destructor = NULL;
-+	skb->destructor = mptcp_bl_free;
- 	borrowed = ssk->sk_forward_alloc - sk_unused_reserved_mem(ssk);
- 	borrowed &= ~(PAGE_SIZE - 1);
- 	sk_forward_alloc_add(ssk, skb->truesize - borrowed);
-@@ -373,6 +378,13 @@ static bool __mptcp_move_skb(struct sock *sk, struct sk_buff *skb)
- 	struct mptcp_sock *msk = mptcp_sk(sk);
- 	struct sk_buff *tail;
- 
-+	/* Avoid the indirect call overhead, we know destructor is
-+	 * mptcp_bl_free at this point.
-+	 */
-+	atomic_sub(skb->truesize, &skb->sk->sk_rmem_alloc);
-+	skb->sk = NULL;
-+	skb->destructor = NULL;
-+
- 	/* try to fetch required memory from subflow */
- 	if (!sk_rmem_schedule(sk, skb, skb->truesize)) {
- 		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_RCVPRUNED);
-@@ -654,6 +666,35 @@ static void mptcp_dss_corruption(struct mptcp_sock *msk, struct sock *ssk)
- 	}
- }
- 
-+static void __mptcp_add_backlog(struct sock *sk, struct sk_buff *skb)
-+{
-+	struct mptcp_sock *msk = mptcp_sk(sk);
-+	struct sk_buff *tail = NULL;
-+	bool fragstolen;
-+	int delta;
-+
-+	if (unlikely(sk->sk_state == TCP_CLOSE)) {
-+		kfree_skb_reason(skb, SKB_DROP_REASON_SOCKET_CLOSE);
-+		return;
-+	}
-+
-+	/* Try to coalesce with the last skb in our backlog */
-+	if (!list_empty(&msk->backlog_list))
-+		tail = list_last_entry(&msk->backlog_list, struct sk_buff, list);
-+
-+	if (tail && MPTCP_SKB_CB(skb)->map_seq == MPTCP_SKB_CB(tail)->end_seq &&
-+	    skb->sk == tail->sk &&
-+	    __mptcp_try_coalesce(sk, tail, skb, &fragstolen, &delta)) {
-+		skb->truesize -= delta;
-+		kfree_skb_partial(skb, fragstolen);
-+		WRITE_ONCE(msk->backlog_len, msk->backlog_len + delta);
-+		return;
-+	}
-+
-+	list_add_tail(&skb->list, &msk->backlog_list);
-+	WRITE_ONCE(msk->backlog_len, msk->backlog_len + skb->truesize);
-+}
-+
  static bool __mptcp_move_skbs_from_subflow(struct mptcp_sock *msk,
- 					   struct sock *ssk)
+-					   struct sock *ssk)
++					   struct sock *ssk, bool own_msk)
  {
-@@ -701,10 +742,12 @@ static bool __mptcp_move_skbs_from_subflow(struct mptcp_sock *msk,
+ 	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk);
+ 	struct sock *sk = (struct sock *)msk;
+@@ -712,9 +712,6 @@ static bool __mptcp_move_skbs_from_subflow(struct mptcp_sock *msk,
+ 		struct sk_buff *skb;
+ 		bool fin;
+ 
+-		if (sk_rmem_alloc_get(sk) > sk->sk_rcvbuf)
+-			break;
+-
+ 		/* try to move as much data as available */
+ 		map_remaining = subflow->map_data_len -
+ 				mptcp_subflow_get_map_offset(subflow);
+@@ -742,9 +739,12 @@ static bool __mptcp_move_skbs_from_subflow(struct mptcp_sock *msk,
  			int bmem;
  
  			bmem = mptcp_init_skb(ssk, skb, offset, len);
--			skb->sk = NULL;
- 			sk_forward_alloc_add(sk, bmem);
--			atomic_sub(skb->truesize, &ssk->sk_rmem_alloc);
--			ret = __mptcp_move_skb(sk, skb) || ret;
-+
-+			if (true)
-+				ret |= __mptcp_move_skb(sk, skb);
+-			sk_forward_alloc_add(sk, bmem);
++			if (own_msk)
++				sk_forward_alloc_add(sk, bmem);
 +			else
-+				__mptcp_add_backlog(sk, skb);
- 			seq += len;
++				msk->borrowed_mem += bmem;
  
- 			if (unlikely(map_remaining < len)) {
-@@ -2753,12 +2796,28 @@ static void mptcp_mp_fail_no_response(struct mptcp_sock *msk)
- 	unlock_sock_fast(ssk, slow);
+-			if (true)
++			if (own_msk && sk_rmem_alloc_get(sk) < sk->sk_rcvbuf)
+ 				ret |= __mptcp_move_skb(sk, skb);
+ 			else
+ 				__mptcp_add_backlog(sk, skb);
+@@ -866,7 +866,7 @@ static bool move_skbs_to_msk(struct mptcp_sock *msk, struct sock *ssk)
+ 	struct sock *sk = (struct sock *)msk;
+ 	bool moved;
+ 
+-	moved = __mptcp_move_skbs_from_subflow(msk, ssk);
++	moved = __mptcp_move_skbs_from_subflow(msk, ssk, true);
+ 	__mptcp_ofo_queue(msk);
+ 	if (unlikely(ssk->sk_err))
+ 		__mptcp_subflow_error_report(sk, ssk);
+@@ -898,9 +898,8 @@ void mptcp_data_ready(struct sock *sk, struct sock *ssk)
+ 		/* Wake-up the reader only for in-sequence data */
+ 		if (move_skbs_to_msk(msk, ssk) && mptcp_epollin_ready(sk))
+ 			sk->sk_data_ready(sk);
+-		
+ 	} else {
+-		__set_bit(MPTCP_DEQUEUE, &mptcp_sk(sk)->cb_flags);
++		__mptcp_move_skbs_from_subflow(msk, ssk, false);
+ 	}
+ 	mptcp_data_unlock(sk);
+ }
+@@ -2135,60 +2134,56 @@ static void mptcp_rcv_space_adjust(struct mptcp_sock *msk, int copied)
+ 	msk->rcvq_space.time = mstamp;
  }
  
-+static void mptcp_backlog_purge(struct sock *sk)
-+{
-+	struct mptcp_sock *msk = mptcp_sk(sk);
-+	struct sk_buff *tmp, *skb;
-+	LIST_HEAD(backlog);
-+
-+	mptcp_data_lock(sk);
-+	list_splice_init(&msk->backlog_list, &backlog);
-+	msk->backlog_len = 0;
-+	mptcp_data_unlock(sk);
-+
-+	list_for_each_entry_safe(skb, tmp, &backlog, list)
-+		kfree_skb_reason(skb, SKB_DROP_REASON_SOCKET_CLOSE);
+-static struct mptcp_subflow_context *
+-__mptcp_first_ready_from(struct mptcp_sock *msk,
+-			 struct mptcp_subflow_context *subflow)
+-{
+-	struct mptcp_subflow_context *start_subflow = subflow;
+-
+-	while (!READ_ONCE(subflow->data_avail)) {
+-		subflow = mptcp_next_subflow(msk, subflow);
+-		if (subflow == start_subflow)
+-			return NULL;
+-	}
+-	return subflow;
+-}
+-
+-static bool __mptcp_move_skbs(struct sock *sk)
++static bool __mptcp_move_skbs(struct sock *sk, struct list_head *skbs, u32 *delta)
+ {
+-	struct mptcp_subflow_context *subflow;
++	struct sk_buff *skb = list_first_entry(skbs, struct sk_buff, list);
+ 	struct mptcp_sock *msk = mptcp_sk(sk);
+-	bool ret = false;
+-
+-	if (list_empty(&msk->conn_list))
+-		return false;
+-
+-	subflow = list_first_entry(&msk->conn_list,
+-				   struct mptcp_subflow_context, node);
+-	for (;;) {
+-		struct sock *ssk;
+-		bool slowpath;
++	bool moved = false;
+ 
+-		/*
+-		 * As an optimization avoid traversing the subflows list
+-		 * and ev. acquiring the subflow socket lock before baling out
+-		 */
++	while (1) {
++		/* If the msk recvbuf is full stop, don't drop */
+ 		if (sk_rmem_alloc_get(sk) > sk->sk_rcvbuf)
+ 			break;
+ 
+-		subflow = __mptcp_first_ready_from(msk, subflow);
+-		if (!subflow)
+-			break;
++		prefetch(skb->next);
++		list_del(&skb->list);
++		*delta += skb->truesize;
+ 
+-		ssk = mptcp_subflow_tcp_sock(subflow);
+-		slowpath = lock_sock_fast(ssk);
+-		ret = __mptcp_move_skbs_from_subflow(msk, ssk) || ret;
+-		if (unlikely(ssk->sk_err))
+-			__mptcp_error_report(sk);
+-		unlock_sock_fast(ssk, slowpath);
++		moved |= __mptcp_move_skb(sk, skb);
++		if (list_empty(skbs))
++			break;
+ 
+-		subflow = mptcp_next_subflow(msk, subflow);
++		skb = list_first_entry(skbs, struct sk_buff, list);
+ 	}
+ 
+ 	__mptcp_ofo_queue(msk);
+-	if (ret)
++	if (moved)
+ 		mptcp_check_data_fin((struct sock *)msk);
+-	return ret;
++	return moved;
 +}
 +
- static void mptcp_do_fastclose(struct sock *sk)
- {
- 	struct mptcp_subflow_context *subflow, *tmp;
- 	struct mptcp_sock *msk = mptcp_sk(sk);
- 
- 	mptcp_set_state(sk, TCP_CLOSE);
-+	mptcp_backlog_purge(sk);
- 	mptcp_for_each_subflow_safe(msk, subflow, tmp)
- 		__mptcp_close_ssk(sk, mptcp_subflow_tcp_sock(subflow),
- 				  subflow, MPTCP_CF_FASTCLOSE);
-@@ -2816,11 +2875,13 @@ static void __mptcp_init_sock(struct sock *sk)
- 	INIT_LIST_HEAD(&msk->conn_list);
- 	INIT_LIST_HEAD(&msk->join_list);
- 	INIT_LIST_HEAD(&msk->rtx_queue);
-+	INIT_LIST_HEAD(&msk->backlog_list);
- 	INIT_WORK(&msk->work, mptcp_worker);
- 	msk->out_of_order_queue = RB_ROOT;
- 	msk->first_pending = NULL;
- 	msk->timer_ival = TCP_RTO_MIN;
- 	msk->scaling_ratio = TCP_DEFAULT_SCALING_RATIO;
-+	msk->backlog_len = 0;
- 
- 	WRITE_ONCE(msk->first, NULL);
- 	inet_csk(sk)->icsk_sync_mss = mptcp_sync_mss;
-@@ -3197,6 +3258,7 @@ static void mptcp_destroy_common(struct mptcp_sock *msk, unsigned int flags)
- 	struct sock *sk = (struct sock *)msk;
- 
- 	__mptcp_clear_xmit(sk);
-+	mptcp_backlog_purge(sk);
- 
- 	/* join list will be eventually flushed (with rst) at sock lock release time */
- 	mptcp_for_each_subflow_safe(msk, subflow, tmp)
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 46d8432c72ee7..a21c4955f4cfb 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -358,6 +358,9 @@ struct mptcp_sock {
- 					 * allow_infinite_fallback and
- 					 * allow_join
- 					 */
++static bool mptcp_move_skbs(struct sock *sk)
++{
++	struct mptcp_sock *msk = mptcp_sk(sk);
++	bool moved = false;
++	LIST_HEAD(skbs);
++	u32 delta = 0;
 +
-+	struct list_head backlog_list;	/*protected by the data lock */
-+	u32		backlog_len;
- };
- 
- #define mptcp_data_lock(sk) spin_lock_bh(&(sk)->sk_lock.slock)
-@@ -408,6 +411,7 @@ static inline int mptcp_space_from_win(const struct sock *sk, int win)
- static inline int __mptcp_space(const struct sock *sk)
- {
- 	return mptcp_win_from_space(sk, READ_ONCE(sk->sk_rcvbuf) -
-+				    READ_ONCE(mptcp_sk(sk)->backlog_len) -
- 				    sk_rmem_alloc_get(sk));
++	mptcp_data_lock(sk);
++	while (!list_empty(&msk->backlog_list)) {
++		list_splice_init(&msk->backlog_list, &skbs);
++		mptcp_data_unlock(sk);
++		moved |= __mptcp_move_skbs(sk, &skbs, &delta);
++
++		mptcp_data_lock(sk);
++		if (!list_empty(&skbs)) {
++			list_splice(&skbs, &msk->backlog_list);
++			break;
++		}
++	}
++	WRITE_ONCE(msk->backlog_len, msk->backlog_len - delta);
++	mptcp_data_unlock(sk);
++	return moved;
  }
  
+ static unsigned int mptcp_inq_hint(const struct sock *sk)
+@@ -2254,7 +2249,7 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
+ 
+ 		copied += bytes_read;
+ 
+-		if (skb_queue_empty(&sk->sk_receive_queue) && __mptcp_move_skbs(sk))
++		if (!list_empty(&msk->backlog_list) && mptcp_move_skbs(sk))
+ 			continue;
+ 
+ 		/* only the MPTCP socket status is relevant here. The exit
+@@ -2559,6 +2554,9 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
+ void mptcp_close_ssk(struct sock *sk, struct sock *ssk,
+ 		     struct mptcp_subflow_context *subflow)
+ {
++	struct mptcp_sock *msk = mptcp_sk(sk);
++	struct sk_buff *skb;
++
+ 	/* The first subflow can already be closed and still in the list */
+ 	if (subflow->close_event_done)
+ 		return;
+@@ -2568,6 +2566,18 @@ void mptcp_close_ssk(struct sock *sk, struct sock *ssk,
+ 	if (sk->sk_state == TCP_ESTABLISHED)
+ 		mptcp_event(MPTCP_EVENT_SUB_CLOSED, mptcp_sk(sk), ssk, GFP_KERNEL);
+ 
++	/* Remove any reference from the backlog to this ssk, accounting the
++	 * related skb directly to the main socket
++	 */
++	list_for_each_entry(skb, &msk->backlog_list, list) {
++		if (skb->sk != ssk)
++			continue;
++
++		atomic_sub(skb->truesize, &skb->sk->sk_rmem_alloc);
++		atomic_add(skb->truesize, &sk->sk_rmem_alloc);
++		skb->sk = sk;
++	}
++
+ 	/* subflow aborted before reaching the fully_established status
+ 	 * attempt the creation of the next subflow
+ 	 */
+@@ -3509,23 +3519,29 @@ void __mptcp_check_push(struct sock *sk, struct sock *ssk)
+ 
+ #define MPTCP_FLAGS_PROCESS_CTX_NEED (BIT(MPTCP_PUSH_PENDING) | \
+ 				      BIT(MPTCP_RETRANSMIT) | \
+-				      BIT(MPTCP_FLUSH_JOIN_LIST) | \
+-				      BIT(MPTCP_DEQUEUE))
++				      BIT(MPTCP_FLUSH_JOIN_LIST))
+ 
+ /* processes deferred events and flush wmem */
+ static void mptcp_release_cb(struct sock *sk)
+ 	__must_hold(&sk->sk_lock.slock)
+ {
+ 	struct mptcp_sock *msk = mptcp_sk(sk);
++	u32 delta = 0;
+ 
+ 	for (;;) {
+ 		unsigned long flags = (msk->cb_flags & MPTCP_FLAGS_PROCESS_CTX_NEED);
+-		struct list_head join_list;
++		LIST_HEAD(join_list);
++		LIST_HEAD(skbs);
++
++		sk_forward_alloc_add(sk, msk->borrowed_mem);
++		msk->borrowed_mem = 0;
++
++		if (sk_rmem_alloc_get(sk) < sk->sk_rcvbuf)
++			list_splice_init(&msk->backlog_list, &skbs);
+ 
+-		if (!flags)
++		if (!flags && list_empty(&skbs))
+ 			break;
+ 
+-		INIT_LIST_HEAD(&join_list);
+ 		list_splice_init(&msk->join_list, &join_list);
+ 
+ 		/* the following actions acquire the subflow socket lock
+@@ -3544,7 +3560,8 @@ static void mptcp_release_cb(struct sock *sk)
+ 			__mptcp_push_pending(sk, 0);
+ 		if (flags & BIT(MPTCP_RETRANSMIT))
+ 			__mptcp_retrans(sk);
+-		if ((flags & BIT(MPTCP_DEQUEUE)) && __mptcp_move_skbs(sk)) {
++		if (!list_empty(&skbs) &&
++		    __mptcp_move_skbs(sk, &skbs, &delta)) {
+ 			/* notify ack seq update */
+ 			mptcp_cleanup_rbuf(msk, 0);
+ 			sk->sk_data_ready(sk);
+@@ -3552,7 +3569,9 @@ static void mptcp_release_cb(struct sock *sk)
+ 
+ 		cond_resched();
+ 		spin_lock_bh(&sk->sk_lock.slock);
++		list_splice(&skbs, &msk->backlog_list);
+ 	}
++	WRITE_ONCE(msk->backlog_len, msk->backlog_len - delta);
+ 
+ 	if (__test_and_clear_bit(MPTCP_CLEAN_UNA, &msk->cb_flags))
+ 		__mptcp_clean_una_wakeup(sk);
+@@ -3784,7 +3803,7 @@ static int mptcp_ioctl(struct sock *sk, int cmd, int *karg)
+ 			return -EINVAL;
+ 
+ 		lock_sock(sk);
+-		if (__mptcp_move_skbs(sk))
++		if (mptcp_move_skbs(sk))
+ 			mptcp_cleanup_rbuf(msk, 0);
+ 		*karg = mptcp_inq_hint(sk);
+ 		release_sock(sk);
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index a21c4955f4cfb..cfabda66e7ac4 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -124,7 +124,6 @@
+ #define MPTCP_FLUSH_JOIN_LIST	5
+ #define MPTCP_SYNC_STATE	6
+ #define MPTCP_SYNC_SNDBUF	7
+-#define MPTCP_DEQUEUE		8
+ 
+ struct mptcp_skb_cb {
+ 	u64 map_seq;
+@@ -301,6 +300,7 @@ struct mptcp_sock {
+ 	u32		last_ack_recv;
+ 	unsigned long	timer_ival;
+ 	u32		token;
++	u32		borrowed_mem;
+ 	unsigned long	flags;
+ 	unsigned long	cb_flags;
+ 	bool		recovery;		/* closing subflow write queue reinjected */
 -- 
 2.51.0
 
