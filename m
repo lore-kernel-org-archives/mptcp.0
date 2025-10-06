@@ -1,52 +1,52 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58FEB19C553
-	for <mptcp@lists.linux.dev>; Mon,  6 Oct 2025 08:12:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04FB525B1FC
+	for <mptcp@lists.linux.dev>; Mon,  6 Oct 2025 08:12:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759738346; cv=none; b=lIYU2U5Mk0x1zhmx9DS82ivFS6n4Dhv/Mm5LSQu2Xg542M9ZvvBTHQuXHSOwftaRzg1oi8hsnEj1H01UOv0MbismZ/d6BVTdHxbtAGlAZN/FbTmVkhK1fN0WJIj9Ail2WtxOawcQEZV6r0it+SZuSoGDdtXTGCrtxkfbp/9sO2o=
+	t=1759738349; cv=none; b=gq/SasofWsISa/y6l2iIOaDALfW+xKFTyYquHLSqcWx51dJmyESVgT/O+nN+RuPxDcw/dCCQE8iJTjzn2BfHlsN+4TTgrgO+14NwxrNb+0ZvXlqLZ1YfrDDXzEvuxukVaWK+o/0G/C7ntNpJEu92ORfhDz+/LKV/5f1Vnl0cwNA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759738346; c=relaxed/simple;
-	bh=dj8c/JN7HqwDUiohLe/fpbEFg0BYKJICKZ8rVg4upAE=;
+	s=arc-20240116; t=1759738349; c=relaxed/simple;
+	bh=jqQtfJbFccWEgBHa3xJOB0qkHWJJhnvP//Z4ExzRXDc=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=vBc6FTgjoAJKEDo/9y8y5s6/LE0ImOklYWienE4xDCb7zSRQE/MGwu7tUbsAEaRTPVeUXO6QyXXn3NkLdXdsNvhV8IyaoxKzMaEB7xmIBqdIe/Al2oCTkXpW+BGSZ4vc71gK70sSBlKz+k6YbpcDtZWIMWJ5hvV5EFJbM2tXoCE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZzJL9I3L; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version:content-type; b=GtC1qxv4XrvEwuzzRYueqFmrdbUwQq0MgKYJDPainvMCvAEKAjn74lgLBzKV5bev0TTICn+HF1reUT3PtuOv09ma9ZyivV6hwRG2vy/NwMjvXNyryOmp93Fj9k7Ie7tY+RQPg16YLnBsmXMwRC8ri8olaUiO4MC8ljrVGyA08rE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hXORwaZg; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZzJL9I3L"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hXORwaZg"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1759738344;
+	s=mimecast20190719; t=1759738347;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=QO8GCeWsLtWh9fJUyB8zOtH8wdvB6AApkaM+V13SaDA=;
-	b=ZzJL9I3Lr70d7/igrfmskw3G+fvFdD6678ZIeOhoPW9uIRJg9LEbwCzQgbl6vumfIYeoX1
-	lkFAsJmuvUiZeBACfp/dvFAIKc1+qOwUhR/OXePCyO3ffr9LDp9H0tH/5jmdZOYvDfNnUs
-	NSxnLF1VOli2MKAc1bUrqcHj2UiDI/k=
+	bh=zUcMumon5gU519gvTrM5Jo3mGx11g5ibe+R45ZM76tM=;
+	b=hXORwaZgI6VquTRDwOw5nq7KQ6M7TfRtSlTln3uMQ/hHoQEsTKxU2CpGLvGwE2drhVTT1F
+	ZRH+/4oeuE7Eje7s0qhKnRBKU3oUR01wmZu4rUNhVxQvAmetMMXV9TuOgDTbPLm7X4Dqdl
+	xj1vQyitpANzGyeZpY1B3VcdmxRHfvs=
 Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-427-JLMI5KikN1mepwSLYxt7hg-1; Mon,
- 06 Oct 2025 04:12:23 -0400
-X-MC-Unique: JLMI5KikN1mepwSLYxt7hg-1
-X-Mimecast-MFC-AGG-ID: JLMI5KikN1mepwSLYxt7hg_1759738342
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-267-IE2r7EzfNnihqMH6cMf19Q-1; Mon,
+ 06 Oct 2025 04:12:26 -0400
+X-MC-Unique: IE2r7EzfNnihqMH6cMf19Q-1
+X-Mimecast-MFC-AGG-ID: IE2r7EzfNnihqMH6cMf19Q_1759738345
 Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6F3CE180034D
-	for <mptcp@lists.linux.dev>; Mon,  6 Oct 2025 08:12:22 +0000 (UTC)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 48595180034A
+	for <mptcp@lists.linux.dev>; Mon,  6 Oct 2025 08:12:25 +0000 (UTC)
 Received: from gerbillo.redhat.com (unknown [10.44.32.92])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 96AAD180035E
-	for <mptcp@lists.linux.dev>; Mon,  6 Oct 2025 08:12:21 +0000 (UTC)
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 67DFC180035E
+	for <mptcp@lists.linux.dev>; Mon,  6 Oct 2025 08:12:24 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
-Subject: [PATCH v5 mptcp-next 05/10] mptcp: ensure the kernel PM does not take action too late
-Date: Mon,  6 Oct 2025 10:12:04 +0200
-Message-ID: <8793483bbd42a8be40ccef7a94c0a2a447ffe828.1759737859.git.pabeni@redhat.com>
+Subject: [PATCH v5 mptcp-next 07/10] mptcp: make mptcp_destroy_common() static
+Date: Mon,  6 Oct 2025 10:12:06 +0200
+Message-ID: <59879dfb364477686da1ae5b6ab0ddc3478f84cc.1759737859.git.pabeni@redhat.com>
 In-Reply-To: <cover.1759737859.git.pabeni@redhat.com>
 References: <cover.1759737859.git.pabeni@redhat.com>
 Precedence: bulk
@@ -57,57 +57,96 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: POpjrm0srs8ww6AeTtJrKCryg-Iva_IoEYDBGXFiYxQ_1759738342
+X-Mimecast-MFC-PROC-ID: kcmu6vsN6tHlyWHP-rEAy5xnL86p-e1temHtKVf5NPc_1759738345
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 
-The PM hooks can currently take place when when the msk is already
-shutting down. Subflow creation will fail, thanks to the existing
-check at join time, but we can entirely avoid starting the to be failed
-operations.
+Such function is only used inside protocol.c, there is no need
+to expose it to the whole stack.
+
+Note that the function definition most be moved earlier to avoid
+forward declaration.
 
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 ---
- net/mptcp/pm.c        | 4 +++-
- net/mptcp/pm_kernel.c | 2 ++
- 2 files changed, 5 insertions(+), 1 deletion(-)
+ net/mptcp/protocol.c | 42 +++++++++++++++++++++---------------------
+ net/mptcp/protocol.h |  2 --
+ 2 files changed, 21 insertions(+), 23 deletions(-)
 
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index daf6dcb806843..eade530d38e01 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -588,6 +588,7 @@ void mptcp_pm_subflow_established(struct mptcp_sock *msk)
- void mptcp_pm_subflow_check_next(struct mptcp_sock *msk,
- 				 const struct mptcp_subflow_context *subflow)
- {
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 6ae5ab7595272..e354f16f4a79f 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -3195,6 +3195,27 @@ static void mptcp_copy_inaddrs(struct sock *msk, const struct sock *ssk)
+ 	inet_sk(msk)->inet_rcv_saddr = inet_sk(ssk)->inet_rcv_saddr;
+ }
+ 
++static void mptcp_destroy_common(struct mptcp_sock *msk, unsigned int flags)
++{
++	struct mptcp_subflow_context *subflow, *tmp;
 +	struct sock *sk = (struct sock *)msk;
- 	struct mptcp_pm_data *pm = &msk->pm;
- 	bool update_subflows;
++
++	__mptcp_clear_xmit(sk);
++
++	/* join list will be eventually flushed (with rst) at sock lock release time */
++	mptcp_for_each_subflow_safe(msk, subflow, tmp)
++		__mptcp_close_ssk(sk, mptcp_subflow_tcp_sock(subflow), subflow, flags);
++
++	__skb_queue_purge(&sk->sk_receive_queue);
++	skb_rbtree_purge(&msk->out_of_order_queue);
++
++	/* move all the rx fwd alloc into the sk_mem_reclaim_final in
++	 * inet_sock_destruct() will dispose it
++	 */
++	mptcp_token_destroy(msk);
++	mptcp_pm_destroy(msk);
++}
++
+ static int mptcp_disconnect(struct sock *sk, int flags)
+ {
+ 	struct mptcp_sock *msk = mptcp_sk(sk);
+@@ -3399,27 +3420,6 @@ void mptcp_rcv_space_init(struct mptcp_sock *msk, const struct sock *ssk)
+ 		msk->rcvq_space.space = TCP_INIT_CWND * TCP_MSS_DEFAULT;
+ }
  
-@@ -611,7 +612,8 @@ void mptcp_pm_subflow_check_next(struct mptcp_sock *msk,
- 	/* Even if this subflow is not really established, tell the PM to try
- 	 * to pick the next ones, if possible.
- 	 */
--	if (mptcp_pm_nl_check_work_pending(msk))
-+	if (mptcp_is_fully_established(sk) &&
-+	    mptcp_pm_nl_check_work_pending(msk))
- 		mptcp_pm_schedule_work(msk, MPTCP_PM_SUBFLOW_ESTABLISHED);
+-void mptcp_destroy_common(struct mptcp_sock *msk, unsigned int flags)
+-{
+-	struct mptcp_subflow_context *subflow, *tmp;
+-	struct sock *sk = (struct sock *)msk;
+-
+-	__mptcp_clear_xmit(sk);
+-
+-	/* join list will be eventually flushed (with rst) at sock lock release time */
+-	mptcp_for_each_subflow_safe(msk, subflow, tmp)
+-		__mptcp_close_ssk(sk, mptcp_subflow_tcp_sock(subflow), subflow, flags);
+-
+-	__skb_queue_purge(&sk->sk_receive_queue);
+-	skb_rbtree_purge(&msk->out_of_order_queue);
+-
+-	/* move all the rx fwd alloc into the sk_mem_reclaim_final in
+-	 * inet_sock_destruct() will dispose it
+-	 */
+-	mptcp_token_destroy(msk);
+-	mptcp_pm_destroy(msk);
+-}
+-
+ static void mptcp_destroy(struct sock *sk)
+ {
+ 	struct mptcp_sock *msk = mptcp_sk(sk);
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 0545eab231250..46d8432c72ee7 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -979,8 +979,6 @@ static inline void mptcp_propagate_sndbuf(struct sock *sk, struct sock *ssk)
+ 	local_bh_enable();
+ }
  
- 	spin_unlock_bh(&pm->lock);
-diff --git a/net/mptcp/pm_kernel.c b/net/mptcp/pm_kernel.c
-index da431da16ae04..07b5142004e73 100644
---- a/net/mptcp/pm_kernel.c
-+++ b/net/mptcp/pm_kernel.c
-@@ -328,6 +328,8 @@ static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
- 	struct mptcp_pm_local local;
+-void mptcp_destroy_common(struct mptcp_sock *msk, unsigned int flags);
+-
+ #define MPTCP_TOKEN_MAX_RETRIES	4
  
- 	mptcp_mpc_endpoint_setup(msk);
-+	if (!mptcp_is_fully_established(sk))
-+		return;
- 
- 	pr_debug("local %d:%d signal %d:%d subflows %d:%d\n",
- 		 msk->pm.local_addr_used, endp_subflow_max,
+ void __init mptcp_token_init(void);
 -- 
 2.51.0
 
