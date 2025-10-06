@@ -1,110 +1,82 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9019221543
-	for <mptcp@lists.linux.dev>; Mon,  6 Oct 2025 17:08:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ED0219ABD8;
+	Mon,  6 Oct 2025 17:30:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759770480; cv=none; b=igu/d8yWjNndFEhI2JZxOkye4sm3K5P6433zQebO9zzOHwfFjuqNB7jxFpmFJvgWVu9mS4pL9bKi0Bb25eEQJInRVcF5iLziaafnFRaWAaAyM90pyfWaJnrTvtVM6u//77cadO+cC9XM1qhpAPXShq0/ldnFA2ubhwTrHzR+xac=
+	t=1759771816; cv=none; b=qLGUYh5XXSCXrC4bh2ukFsETlZ0PclEmgyd9ef1e0cc4heVu/5CpOMjNZbYxXY9sUPLASrMTH7Nr68i7NF+nXCVfUjX6/PB5hGjIZP6Vx9j2ZQBxKmlLnCp/RrvYRCOqT7jNfIaGpndUtGMXB7UjrNz3AgZBlWBsKHUOFK4hMMQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759770480; c=relaxed/simple;
-	bh=vUvmYoeyKTLY7XkH1KfxrWX4LfbmyDFAGkV4nrOy17A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=TRyry40kz2bmFN5tCLCY7/7RuZXOA0BQElxgRFyPLD3t6TFDTZkEl86YjCdyL77tNuEQF81hkrPlmq1Y4aEN+VLTJiBKe4NsU11Kwby0rsNG1XA0c4WvYIp0QvfA4gtALPQIxcQcku1phBkx62wP1ZymFPkiIyXnWr2CxWRSCT4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O1R/pH9D; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1759771816; c=relaxed/simple;
+	bh=rWN6jto2RHp+3FusQV0xt+2Au+Nnsz5tLgY5xTBytlM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=pQem9i+E7Q1yHZjxcdNFlBK/s3ynfx0iVoyNg3ozZ9ac0m1wkx4qBf5qor8y/YiPwUWGzUWuQMJgm7t7XSM0SfImv8KbSKhJLdiYYZ1Omxb26Btn10gzXwVoWrQmG0yGCA3XYGkMYriPUmqTcBiiMs8mhld6/72NWSLhmnD4VSc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gxEdPzaa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O1R/pH9D"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3601C4CEF5;
-	Mon,  6 Oct 2025 17:07:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gxEdPzaa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BBF9C4CEF5;
+	Mon,  6 Oct 2025 17:30:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759770480;
-	bh=vUvmYoeyKTLY7XkH1KfxrWX4LfbmyDFAGkV4nrOy17A=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=O1R/pH9D6tEHN99jMF/4wvXrV3hbv3J40NterXPnus/h3ZXToNt5O4atk+fKSvNJj
-	 t8YhMuYaIGwPb7Zf4ILsb6qVlmdXBF1jCZqUqOynK/g+XxXqhDyY9LGH6tDS/ezBWm
-	 r25J03sfO6fQooaoK3Qv1Nu8meNNxfvfkyMG8EgHL+nl1G4vRvvQ8V4g39b8E8hYeF
-	 b4Tes01gCsnGyd7lKzw4HwMDAIBDMqSUrx+cRpr+74AnUe0yR9ZqOfTR/11PhCBovM
-	 qcMEB7CVNBfp7RZoriFBaDrCvFJZq6SQndxPjaIbLbquPML1ilRFgJ/3L0bIvJGx3i
-	 JdUY8i7IcmqqA==
-Message-ID: <2c9f131e-ef34-4916-8aab-e1420e1ae90b@kernel.org>
-Date: Mon, 6 Oct 2025 19:07:57 +0200
+	s=k20201202; t=1759771814;
+	bh=rWN6jto2RHp+3FusQV0xt+2Au+Nnsz5tLgY5xTBytlM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=gxEdPzaaYpi98i/RUy5nqwFo5gHyjKethtBdLCNHcu6zg4/DpWjAnn0CvUPskipQO
+	 CoBEr9yWw/MGvrefx/TuHX0BzFQVFNA0UcSL0yLzYo6Ar8oDqWzi9i3vgPnb2SO/Kt
+	 ST7SBqMCW/t9pWuYRY45/umve1Mq5FFMab5/95fVAiB/dbJ2MxeID7ZPxHavXVYzsw
+	 mFoJhKKkDr9vaGoXlKN09uQT8loxrk/FdrZoeuZ4QpleRT7MFaAEpO4bT69YenTtyJ
+	 emoIrlcJbv+eECHr2P1LiW12WqkHh4MB3+9yzxDFEwI0gsYj1PqJgoUifPF9RCpXfU
+	 rb/mdQqB+di+w==
+Date: Mon, 6 Oct 2025 10:30:12 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Petr Machata <petrm@nvidia.com>
+Cc: <davem@davemloft.net>, <netdev@vger.kernel.org>, <edumazet@google.com>,
+ <pabeni@redhat.com>, <andrew+netdev@lunn.ch>, <horms@kernel.org>, "Antonio
+ Quartulli" <antonio@openvpn.net>, "Matthieu Baerts (NGI0)"
+ <matttbe@kernel.org>, Allison Henderson <allison.henderson@oracle.com>,
+ <shuah@kernel.org>, <jv@jvosburgh.net>, <olteanv@gmail.com>,
+ <jiri@resnulli.us>, <mst@redhat.com>, <jasowang@redhat.com>,
+ <xuanzhuo@linux.alibaba.com>, <eperezma@redhat.com>, <kuniyu@google.com>,
+ <martineau@kernel.org>, <pablo@netfilter.org>, <kadlec@netfilter.org>,
+ <fw@strlen.de>, <razor@blackwall.org>, <idosch@nvidia.com>,
+ <linux-kselftest@vger.kernel.org>, <mptcp@lists.linux.dev>,
+ <netfilter-devel@vger.kernel.org>, <coreteam@netfilter.org>
+Subject: Re: [PATCH net v2] selftests: net: unify the Makefile formats
+Message-ID: <20251006103012.0493a4b4@kernel.org>
+In-Reply-To: <87o6qkcnol.fsf@nvidia.com>
+References: <20251003210127.1021918-1-kuba@kernel.org>
+	<87o6qkcnol.fsf@nvidia.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH v5 mptcp-next 00/10] mptcp: introduce backlog processing
-Content-Language: en-GB, fr-BE
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-References: <cover.1759737859.git.pabeni@redhat.com>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <cover.1759737859.git.pabeni@redhat.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-Hi Paolo,
+On Mon, 6 Oct 2025 11:40:59 +0200 Petr Machata wrote:
+> > We get a significant number of conflicts between net and net-next
+> > because of selftests Makefile changes. People tend to append new
+> > test cases at the end of the Makefile when there's no clear sort
+> > order. Sort all networking selftests Makefiles, use the following
+> > format:  
+> 
+> If we see weird errors in CI, it might be because tests now run in a
+> different order and previously masked missed cleanups are now exposed.
 
-On 06/10/2025 10:11, Paolo Abeni wrote:
-> This series includes RX path improvement built around backlog processing
+Yes, sorry. I enabled the check before merging this so there's probably
+some transient false positives. Which is fine, the pw checks are for
+maintainers? :)
 
-Thank you for the new version! This is not a review, but just a note to
-tell you patchew didn't manage to apply the patches due to the same
-conflict that was already there with the v4 (mptcp_init_skb() parameters
-have been moved to the previous line). I just applied the patches
-manually. While at it, I also used this test branch for syzkaller to
-validate them.
+> > diff --git a/tools/testing/selftests/drivers/net/dsa/Makefile b/tools/testing/selftests/drivers/net/dsa/Makefile
+> > index cd6817fe5be6..699e3565d735 100644
+> > --- a/tools/testing/selftests/drivers/net/dsa/Makefile
+> > +++ b/tools/testing/selftests/drivers/net/dsa/Makefile
+> > @@ -9,11 +9,13 @@ TEST_PROGS = bridge_locked_port.sh \  
+> 
+> This should have the header converted as well:
+> 
+> TEST_PROGS := \
+> 	bridge_locked_port.sh \
 
-(Also, on patch "mptcp: drop the __mptcp_data_ready() helper", git
-complained that there is a trailing whitespace.)
-
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
-
+Ack, let me fix when applying.
