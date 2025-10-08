@@ -1,163 +1,138 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1FF14A01
-	for <mptcp@lists.linux.dev>; Wed,  8 Oct 2025 07:30:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32C18288C0E
+	for <mptcp@lists.linux.dev>; Wed,  8 Oct 2025 14:00:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759908641; cv=none; b=Uc+T+bncbISgfGMne2XinGcWrhbqv70fxUg6yvbbVYD+VU9l44L7x+ycUMAMtC+9VEcfxIn97P7CnvR9Gf+oDcxdAcV4qNhulEausvdOU2rVn6Z9eWkWVorDUb8cZn8qpbQ2UMC15Hcyp9mDet2E0aNEv2sH6Lij2jnv+lG3No4=
+	t=1759932016; cv=none; b=W1VbUreXq3Ms2X6cTrj6uHVZZ6z0NGd6fWElxrJ4A+6h5m1UsRAmhv8Y0tLJMFAd6s7mNFYi46o+NXXfsncdo5KUOyp8hEUQFI7SR4R+f8eB+id9hLcSAqd70IgM1qpt0I6GC75/1xIuRcSe3kTNYTL53E8ikIdd0843pqjEBJw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759908641; c=relaxed/simple;
-	bh=k8DX/flW9WCn9HI45cgXFW7YXqukUszgWNyOReWeFgI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=ToCGdhhkhinVW9ICboBWJBZfIV5+tjq5bUvuxqPUqvD1iwAjOSrFJoEcXIzPTbb3v3gfpfzGJLZyxNGl19tyKfG/sQ0KBwCMhgnpRcpQ9qG2BWF1pgSh4J6YcaXRyTcwNOeofySscbSIQ51N+GTXui2movSN7hmFMigNUHiPqV8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KhoCyg8L; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1759932016; c=relaxed/simple;
+	bh=2LsCQGyDC2O8+H8PLJYOjRsKS5oSTOHqYfQHcjXaLo8=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=eVfnnQAXyie37Yp8yC0XaJhuaJi5sOvKPp7yf9f7MTftj79Ji92XbIqjetpVTXh9ulVJWAOHdrswQbqqMeeMrstQNT3Tn9iLOD3s77XVsJtGT3/NHDySaM4KOa8jk0oXQPL/bNQ+TCB7x2gdy0oiA0+o7/p7yi7uwicJF/WeagE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X161ZHyb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KhoCyg8L"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1759908638;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zlzH580ALVGgMVSbeE1B8Vqh43ydV0OGQbW4U+EaSRo=;
-	b=KhoCyg8LVpoZ4n1dFSFLkrlvKk8vbSBJqqw6skIRbghBhHXhP56ua6emXfivUnNXW5GiFC
-	0PB7p6lqEdjC7KV+qiHWlfPMN2eV5977qgVMGXXj4LLlYAEYRchGufhD1nZ5mjRvSbRNYO
-	2hukpUWVexWM9YPoLbC9f1IZHWtpdf0=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-219-QyAcc3mzMUG7PfI7ZWeMVQ-1; Wed, 08 Oct 2025 03:30:37 -0400
-X-MC-Unique: QyAcc3mzMUG7PfI7ZWeMVQ-1
-X-Mimecast-MFC-AGG-ID: QyAcc3mzMUG7PfI7ZWeMVQ_1759908636
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-46fa88b5760so2638845e9.3
-        for <mptcp@lists.linux.dev>; Wed, 08 Oct 2025 00:30:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759908636; x=1760513436;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zlzH580ALVGgMVSbeE1B8Vqh43ydV0OGQbW4U+EaSRo=;
-        b=Ad2pvDDp+hn+rDkhFmZjWVeNxVMtJ/01M/vhvPp44+GO8mVTekmJ+tBeivj2O/aGbl
-         B2XG2xuk08pEXjAuMJdrR/7JZIRhxb2evU19jV0SeBERriMSla1np5r+vz5K8QIxDK6x
-         cOHLotD4RTi1c8wh0IK3kyor81CQ/pGUKJ78wKIwY9Dvxl7Gbdpynp+u5MUl3/wAIxAq
-         E3Nioki6sOEHawUxDJDzaTdNyqC58lO7isBS06A/RbrCOgbwWDN/yulYa8JvRhcdpVvx
-         OMqiyQ1pYzTb1ggv4g8c1ZD4VaCt5KzwZiyEkmsYCTjtkmpHanAVRSj1oWMa6qP3iifz
-         +iqg==
-X-Forwarded-Encrypted: i=1; AJvYcCXjK3FXGg9DsnmDUysyBCE15nQpWEydhzK3uoJjpwIEoLeUFXw8RrALghsmJVhPN7emN1Ounw==@lists.linux.dev
-X-Gm-Message-State: AOJu0YyWA4qOx4/zFedhLz0RXdk66JFCCwXWgl+jRRlK+7aAzV5zttH6
-	7l/TlRNb4b67yOtKhbX/kiMNDKLGvLDW20+zA+X0SqMAdGi5JnSbtVVeygq4i02J1iqqxVujtka
-	UWMG+hvIKzCpvXeG3Pfp6ol6ekHLsY2sw1h2op6FT/kx4G0xwi9OTkED2
-X-Gm-Gg: ASbGncsUYt47QrEtqhn0PiM1RbscmkZZW5+b2elEGZKVZyXA6U3B+dj4Tbe6dO2R44k
-	xIL/eEK1VPpPaT8dclQJAWb7dwvULS6f3zJ++4+biowtPkuvjLjWCjorX2bLzCzo4vlE5xt23N+
-	+cAkW4brjrWtt8e4qVHPuD9dQy8Twoaob344ekynAY7anT+c2dia3MNkPupvx5IM86duJh9XzA4
-	L6VIiqO6gT+8fLLWU4m7ZW5nyDgftADOTKbqV8nbF4iKdYolXKlaY3bVvsTynaUrjfA1kWo9gjk
-	MeE3vJn94f4woBtjNXwvpfDBr7aJVDBNrctUOjvDDh8pRuTKhDogZtd+pVR/V1L9ZOQnBGUe6CL
-	TmtGTBDKX7jBcR7HlVA==
-X-Received: by 2002:a05:600d:41f3:b0:46e:6603:2a84 with SMTP id 5b1f17b1804b1-46fa9b08bd7mr12440715e9.32.1759908636375;
-        Wed, 08 Oct 2025 00:30:36 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF6n7P1AQDFYVCT670hupTJnE6Sh0Bpc6AYqfdw8bBGFZ7fsNKJLVn7UXKv4jVHCDk0G4JP/A==
-X-Received: by 2002:a05:600d:41f3:b0:46e:6603:2a84 with SMTP id 5b1f17b1804b1-46fa9b08bd7mr12440575e9.32.1759908635920;
-        Wed, 08 Oct 2025 00:30:35 -0700 (PDT)
-Received: from ?IPV6:2a0d:3344:2712:7e10:4d59:d956:544f:d65c? ([2a0d:3344:2712:7e10:4d59:d956:544f:d65c])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-46fa9d4c8c5sm24240525e9.11.2025.10.08.00.30.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Oct 2025 00:30:35 -0700 (PDT)
-Message-ID: <b90e5899-6473-4b3b-a239-9202c2e2cb03@redhat.com>
-Date: Wed, 8 Oct 2025 09:30:34 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X161ZHyb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3EE9BC4CEE7;
+	Wed,  8 Oct 2025 14:00:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1759932015;
+	bh=2LsCQGyDC2O8+H8PLJYOjRsKS5oSTOHqYfQHcjXaLo8=;
+	h=From:Subject:Date:To:Cc:From;
+	b=X161ZHyb1SGfWRa1dNul5eOFuCltdM0XHiMOGg6x+OWrA276zidsW0OSkvBLyeHZf
+	 bOuT1HJiD4d1v5WO1llqjh47l3+Eer71gKFtZbrlb3LlengXLl9IUXet3+W64sA3BG
+	 R8ls3lrdKDXXRTF4EVLED8cIlHXwlv2A9YU77myfTuEQheuEvdTu5WAWQDV6nXCzxa
+	 CKPjrtHjUUtQmxvmCU8iBShLjzAq2fzArDlX1wNPN4B7f3JodqXatypDRcnrXiHLGX
+	 Lc6c8zmutMIMAKFQjxPTvwmFjeQZgXMz/6D/LIIq80dZg8Ak2PM/RYJkYXfC1WJSIj
+	 3hStjT85NUDWw==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH mptcp-net 0/7] mptcp: pm: in-kernel: C-flag: handle late
+ ADD_ADDR + misc.
+Date: Wed, 08 Oct 2025 15:59:54 +0200
+Message-Id: <20251008-c-flag-add-addr-delay-v1-0-c624eb3bf10d@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 mptcp-next 00/10] mptcp: introduce backlog processing
-To: Geliang Tang <geliang@kernel.org>, Matthieu Baerts <matttbe@kernel.org>,
- mptcp@lists.linux.dev
-References: <cover.1759737859.git.pabeni@redhat.com>
- <2c9f131e-ef34-4916-8aab-e1420e1ae90b@kernel.org>
- <d0a814c364e744ca6b836ccd5b6e9146882e8d42.camel@kernel.org>
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <d0a814c364e744ca6b836ccd5b6e9146882e8d42.camel@kernel.org>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: tJXf0UcXEI0_T8716B9zZte3Mdwl9oXaak9fG-I7BkA_1759908636
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAFpu5mgC/x2MzQqDMBAGX0X27EL8r76K9BCST7tg05AEaRHfv
+ dHDHOYwc1BEEESaioMCdonycVmqsiDz0m4Fi81Otaq7SqmGDS+bXllbexHYYtM/bjGiG4bHaJq
+ ecusDFvne35nePhnPDome5/kHeArQVHIAAAA=
+X-Change-ID: 20251003-c-flag-add-addr-delay-4e9e57789c36
+To: MPTCP Upstream <mptcp@lists.linux.dev>
+Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4011; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=2LsCQGyDC2O8+H8PLJYOjRsKS5oSTOHqYfQHcjXaLo8=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDKe5aWu2suS+UltwvNrUR9jZ/2ebSgWYFJavKe1u72s+
+ c2U6+f5O0pZGMS4GGTFFFmk2yLzZz6v4i3x8rOAmcPKBDKEgYtTACayyY+RYV3BOx+frBNJOgEl
+ wbmmB5nsAoyUxfLfKcx4t3yu8vePXxj+p39Y/+19WAJn4EOFQ72alSdObH++9tM2Hcvc0gyP8/c
+ PMgAA
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-On 10/8/25 5:07 AM, Geliang Tang wrote:
-> On Mon, 2025-10-06 at 19:07 +0200, Matthieu Baerts wrote:
->> Hi Paolo,
->>
->> On 06/10/2025 10:11, Paolo Abeni wrote:
->>> This series includes RX path improvement built around backlog
->>> processing
->> Thank you for the new version! This is not a review, but just a note
->> to
->> tell you patchew didn't manage to apply the patches due to the same
->> conflict that was already there with the v4 (mptcp_init_skb()
->> parameters
->> have been moved to the previous line). I just applied the patches
->> manually. While at it, I also used this test branch for syzkaller to
->> validate them.
->>
->> (Also, on patch "mptcp: drop the __mptcp_data_ready() helper", git
->> complained that there is a trailing whitespace.)
-> 
-> Sorry, patches 9-10 break my "implement mptcp read_sock" v12 series. I
-> rebased this series on patches 1-8, it works well. But after applying
-> patches 9-10, I changed mptcp_recv_skb() in [1] from
+On NIPA, the new test validating the special case for the C-flag failed
+a few times, e.g.
 
-Thanks for the feedback, the applied delta looks good to me.
+  102 default limits, server deny join id 0
+        syn rx                 [FAIL] got 0 JOIN[s] syn rx expected 2
+  Server ns stats
+  TcpPassiveOpens                 1                  0.0
+  TcpInSegs                       9                  0.0
+  TcpOutSegs                      10                 0.0
+  TcpExtTW                        1                  0.0
+  TcpExtTCPPureAcks               5                  0.0
+  TcpExtTCPOrigDataSent           3                  0.0
+  TcpExtTCPDelivered              3                  0.0
+  MPTcpExtMPCapableSYNRX          1                  0.0
+  MPTcpExtMPCapableACKRX          1                  0.0
+  MPTcpExtAddAddrTx               1                  0.0
+  MPTcpExtEchoAdd                 1                  0.0
+  Client ns stats
+  TcpActiveOpens                  1                  0.0
+  TcpInSegs                       10                 0.0
+  TcpOutSegs                      9                  0.0
+  TcpExtTCPPureAcks               6                  0.0
+  TcpExtTCPOrigDataSent           3                  0.0
+  TcpExtTCPDelivered              4                  0.0
+  MPTcpExtMPCapableSYNTX          1                  0.0
+  MPTcpExtMPCapableSYNACKRX       1                  0.0
+  MPTcpExtAddAddr                 1                  0.0
+  MPTcpExtEchoAddTx               1                  0.0
+        synack rx              [FAIL] got 0 JOIN[s] synack rx expected 2
+        ack rx                 [FAIL] got 0 JOIN[s] ack rx expected 2
+        join Rx                [FAIL] see above
+        syn tx                 [FAIL] got 0 JOIN[s] syn tx expected 2
+        join Tx                [FAIL] see above
 
-> # INFO: with MPTFO start
-> # 57 ns2 MPTCP -> ns1 (10.0.1.1:10054      ) MPTCP     (duration
-> 60989ms) [FAIL] client exit code 0, server 124
-> # 
-> # netns ns1-RqXF2p (listener) socket stat for 10054:
-> # Failed to find cgroup2 mount
-> # Failed to find cgroup2 mount
-> # Failed to find cgroup2 mount
-> # Netid State    Recv-Q Send-Q Local Address:Port  Peer Address:Port  
-> # tcp   ESTAB    0      0           10.0.1.1:10054     10.0.1.2:55516
-> ino:2064372 sk:1 cgroup:unreachable:1 <->
-> # 	 skmem:(r0,rb131072,t0,tb340992,f0,w0,o0,bl0,d0) sack cubic
-> wscale:8,8 rto:206 rtt:5.026/10.034 ato:40 mss:1460 pmtu:1500
-> rcvmss:1436 advmss:1460 cwnd:10 bytes_sent:115312 bytes_retrans:1560
-> bytes_acked:113752 bytes_received:5136 segs_out:85 segs_in:16
-> data_segs_out:83 data_segs_in:4 send 23239156bps lastsnd:60939
-> lastrcv:61035 lastack:60912 pacing_rate 343879640bps delivery_rate
-> 1994680bps delivered:84 busy:123ms sndbuf_limited:41ms(33.3%)
-> retrans:0/2 dsack_dups:2 rcv_space:14600 rcv_ssthresh:75432
-> minrtt:0.003 rcv_wnd:75520 tcp-ulp-mptcp flags:Mec
-> token:0000(id:0)/32ed0950(id:0) seq:2946228641406205031 sfseq:1
-> ssnoff:1349223625 maplen:5136
-> # mptcp LAST-ACK 0      0           10.0.1.1:10054     10.0.1.2:55516
-> timer:(keepalive,59sec,0) ino:0 sk:2 cgroup:unreachable:1 ---
-> # 	 skmem:(r0,rb131072,t0,tb345088,f4088,w352264,o0,bl0,d0)
-> subflows_max:2 remote_key token:32ed0950 write_seq:6317574787800720824
-> snd_una:6317574787800376423 rcv_nxt:2946228641406210168
-> bytes_sent:113752 bytes_received:5136 bytes_acked:113752
-> subflows_total:1 last_data_sent:60954 last_data_recv:61036
-> last_ack_recv:60913                                       
+I had a suspicion about what the issue could be: the ADD_ADDR might have
+been received with a delay, not when switching to 'fully-established'.
+The issue was not easy to reproduce on my side, but when I did, the
+packet capture shown that the ADD_ADDR can indeed be received with a
+delay, and the client would not try to establish subflows to it as
+expected.
 
-bytes_sent == bytes_sent, possibly we are missing a window-open event,
-which in turn should be triggered by a mptcp_cleanp_rbuf(), which AFAICS
-are correctly invoked in the splice code. TL;DR: I can't find anything
-obviously wrong :-P
+Patch 1 fixes that, simply by not marking the endpoints as 'used' in the
+C-flag case, when looking at creating subflows to the remote initial IP
+address and port: in this case, there is no need to try.
 
-Also the default rx buf size is suspect.
+Patches 2 to 5 are not directly related, but seen when working on patch
+7: they fix subtests not being marked as 'skipped' on older kernels.
 
-Can you reproduce the issue while capturing the traffic with tcpdump? if
-so, could you please share the capture?
+Patches 6 and 7 are for net-next:
 
-Are TFO cases the only one failing?
+- The first one avoids iterating over all endpoints just to check if one
+  of them has the 'fullmesh' flag.
 
-Thanks,
+- The second one clarifies what is done when an ADD_ADDR is received and
+  there are endpoints with the fullmesh flag: only these endpoints are
+  used, even if there are none defined for this address family.
 
-Paolo
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+Matthieu Baerts (NGI0) (7):
+      mptcp: pm: in-kernel: C-flag: handle late ADD_ADDR
+      selftests: mptcp: join: mark 'flush re-add' as skipped if not supported
+      selftests: mptcp: join: mark 'delete re-add signal' as skipped if not supported
+      selftests: mptcp: join: mark implicit tests as skipped if not supported
+      selftests: mptcp: join: mark laminar tests as skipped if not supported
+      mptcp: pm: in-kernel: record fullmesh endp nb
+      mptcp: pm: in kernel: only use fullmesh endp if any
+
+ include/uapi/linux/mptcp.h                      |  3 +-
+ net/mptcp/pm_kernel.c                           | 42 ++++++++++++++++++++++---
+ net/mptcp/protocol.h                            |  1 +
+ net/mptcp/sockopt.c                             |  2 ++
+ tools/testing/selftests/net/mptcp/mptcp_join.sh | 24 ++++++++------
+ 5 files changed, 57 insertions(+), 15 deletions(-)
+---
+base-commit: 3afc295b5e6e698696cf1fd75db194db2c7f64cd
+change-id: 20251003-c-flag-add-addr-delay-4e9e57789c36
+
+Best regards,
+-- 
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
