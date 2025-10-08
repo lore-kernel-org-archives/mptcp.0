@@ -1,120 +1,133 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f50.google.com (mail-io1-f50.google.com [209.85.166.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FC231F95C
-	for <mptcp@lists.linux.dev>; Wed,  8 Oct 2025 14:00:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E65429D27E
+	for <mptcp@lists.linux.dev>; Wed,  8 Oct 2025 15:42:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759932022; cv=none; b=fqXnVxWC9QanDLvbOTgov72ZYOJxdEi7KFQhGsIVQm/Yw+akFk9RFZ1xmPTlp92tMgAMyVOMp1SD81cxESqMowZEfYKkxt0qWx3j2SK8morlA/LFyZ5Yc9tJJcnoHQftPGj9/zRdE5OWnhKB4hDeK5AB/CHkmkyXRaTfy20YD3c=
+	t=1759938165; cv=none; b=Kn7vpfUefQsOBd+VRL4Zh1IlcZz8CsGNtmhoGV8LqWvzo5moz4F3VecugJQuuH0yMaRVZ+cOaj5b1Srq4+JB7pLVoLgngDWaoRQB7bFEuyxb2o3rUuKhSzII6Ro/jJgWGagOGGzQQtnC3vipkCfVD//0S1n6cV3VTFLFWC5oUY8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759932022; c=relaxed/simple;
-	bh=MsQqJmsslGVp4+rpfxpVwFmErV+KJIOlUCNxL3CWAJQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=H5Qxu1zTrVOk1PvQFPwDZKMqOKMy0eB0LZ6HNmsccChjencYSAdtA6SQAnCnysdEnEGEfYfwCtTVBwKXBcirByjbbfDj1FHuNQ2w2qx4qTgY1geNdRqPt3LuPv7IMShpZBZWZRBUt7U3CvhlEikoACy6rh/vdhcIEVCwzAbKV0M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F72+snhY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1759938165; c=relaxed/simple;
+	bh=AECfk0lwLnGYNR/SxH5QYhinTW8ihVGCUkXq6O5lIsM=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=FSJ7Ctxi/Yr1Fkdd/fMRlbvF/AmgaduP8rvr/YcGLMeigQbEGkzpL/iwbQpFWfMG2eNsdvFy2iELVwNkKlQr0tm4WMCGt65CbIvgAemhm81stBKAwpG7YFIza+vOySFElKmIg6ZdjKtnI+TJ2b0kHAR2VbWaHh2E2IplJnI+g7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YPScmjwl; arc=none smtp.client-ip=209.85.166.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F72+snhY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29EC6C4CEE7;
-	Wed,  8 Oct 2025 14:00:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759932021;
-	bh=MsQqJmsslGVp4+rpfxpVwFmErV+KJIOlUCNxL3CWAJQ=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=F72+snhYIylNljV2O8iw7Ma6Rxgf3dQ9uQQnsUr+M1yQ0xvf/SLf0LKZZU5blPqj5
-	 Gi94RZDEXGRo6e0B+d78o/ImVv8co8vgT+e80rVysyozw4toDWSSlO0m5H/aq9mCsG
-	 RgB1b9hlv4MD3tKhSkQhVY4X6BW2PymLUidah8miyJeKfInKa26ySb052rKBQt+Og/
-	 qV++RGj/A+sEkEFksnrNYIPdxwTHPkuoDBRbBjF2SCCrv/ZlRavcsu7udDinhAepqZ
-	 0UaPDhaHiVUY3OJsOKR80oTHVRytJHqJbagi+b5dRi5DNMSY/XYQCebBdY2/UZbhvu
-	 OAk1gvRt4VKNw==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Wed, 08 Oct 2025 16:00:01 +0200
-Subject: [PATCH mptcp-net 7/7] mptcp: pm: in kernel: only use fullmesh endp
- if any
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YPScmjwl"
+Received: by mail-io1-f50.google.com with SMTP id ca18e2360f4ac-91fbba9a8f5so626230139f.0
+        for <mptcp@lists.linux.dev>; Wed, 08 Oct 2025 08:42:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1759938162; x=1760542962; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TRJMSiEgUMkMJH0qBBoLQzPGVXd0Boqyg3c/YU6p2/E=;
+        b=YPScmjwl45V3YtRZ/XtBbsfbQ26zCSbrcFL1YQoSDJSVfR/8t/RUzPrJV7yQxFGqqx
+         8WwxsJDu+gv5K3DsrOQytQ9jceaTVG0r4SbY0ycGE/06jZ58oPGm6OHaSkEJ913ZtCmE
+         +NaresWwhDVP/SwSIRjUPU9fq8rhaCpu9O4zOrJApP+rEP64nt5/M1Fb/x79jdmAARxV
+         KxycVMqxJPDxqiILNxB+0+N+Th/Rtju3F2SRze5iGsED2gCHEuKFDqPCr851/mF6CEwn
+         lHAMsKE/L52Rmmy8unEqt1BN1qXIq0GDuLltu2z+3R6IypT4lyO5UiJGoMiVPP3O5hw5
+         cGlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1759938162; x=1760542962;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=TRJMSiEgUMkMJH0qBBoLQzPGVXd0Boqyg3c/YU6p2/E=;
+        b=vNQmKUTCigQUmnTwVWHf3Geh2le4AC0XsQA1we51YLKLh1KINBa0mBW3+kFH+j9dQB
+         W0AbeDAfiuWHoldNMGFpN1xJMf7nzHm7AV2WRW5FHGqi/Crw0+Mwc1dKJxHBUG4pQ4lY
+         Dn247sYwTPgOr3vxvGpzBx6DTbYYjWcDasW/ESfgciSmwIiKZxSVwcvnsR/9UfVUbKnK
+         2w3mPBh0pv5MpzQ7IwIEpDi5OB+hLFAxcIm8/TOuIR2QM9zK31JmgqAXGvecY7hUzwut
+         THoFicPz/X/ggnlxw0UGBs6ka9upgdHjn5/uE4GbzcU+kH9c3nNHaP4jIHNiRZHJAXEc
+         ONzw==
+X-Gm-Message-State: AOJu0YyrPHt/3+0HjM6iCWnlMYienKzOS1I+u5OefjzDW/uZ9M69Eo/V
+	bJIpC5vbDIrSAxF/A947lZoMCfVTzmJqL8buBbNAZBjdWwGfxHeF0XfGoSHN
+X-Gm-Gg: ASbGncsq+6mWKImvJAdJ5Yv77EBcyzyn8Ykdqkcw4IrPbkHPIe5f6+ETKWR7CXN82p6
+	hgGrm9nfdYQyanF/cN+vendT0g+EJfG0rqZDMaykEB07h1tZ7RWJcYZTQrWiXm6VtkckuF6UGq6
+	fu4o2q85B+9OjyOXGlF6sDJQpp7RI1W0JynW1Mb0aXsr8ZRRfqIUHFqowkaMhmCVwH5HqfUEVFd
+	x3OWLGbqfKatQpv64MGPoIHdhrTS7YAzyUXfNt5kcrD5OcbuljRgYrl5jaE0y6vfiit9RmTNWvg
+	Ms29CY/WlzDkbKy4tKnDKwec2q51T9hwzPdJ7KPRRW8zLsj503fXZYc2+rpZZ8JzMRrlT3/DaDZ
+	a1h65bFjZOFAE6DUsr69wyi5zW7aDgL0s7FvjHaKvC5DnjmcS91YJk8fSmKjc
+X-Google-Smtp-Source: AGHT+IHGJYCbj6vEVyDOm6aiiVG/vB3MjLwTIrhQlzcMfvQ397umqMBH/+xnHtKKNekawxE9nW7yNg==
+X-Received: by 2002:a05:6e02:2143:b0:42d:8c07:70d2 with SMTP id e9e14a558f8ab-42f8736905dmr41267315ab.11.1759938162471;
+        Wed, 08 Oct 2025 08:42:42 -0700 (PDT)
+Received: from [127.0.0.1] ([172.212.167.81])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-57b5ebc8433sm7223346173.41.2025.10.08.08.42.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Oct 2025 08:42:41 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20251008-c-flag-add-addr-delay-v1-0-c624eb3bf10d@kernel.org>
+References: <20251008-c-flag-add-addr-delay-v1-0-c624eb3bf10d@kernel.org>
+Subject: Re: [PATCH mptcp-net 0/7] mptcp: pm: in-kernel: C-flag: handle
+ late ADD_ADDR + misc.
+Message-ID: <01eae48e-4696-9fe7-30f1-fad41140c527@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 08 Oct 2025 15:42:40 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20251008-c-flag-add-addr-delay-v1-7-c624eb3bf10d@kernel.org>
-References: <20251008-c-flag-add-addr-delay-v1-0-c624eb3bf10d@kernel.org>
-In-Reply-To: <20251008-c-flag-add-addr-delay-v1-0-c624eb3bf10d@kernel.org>
-To: MPTCP Upstream <mptcp@lists.linux.dev>
-Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2497; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=MsQqJmsslGVp4+rpfxpVwFmErV+KJIOlUCNxL3CWAJQ=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDKe5eX95SmUr8hNDDS6rsDwfftxK7b1Z01kZqjPmPOcc
- 4fM9C8GHaUsDGJcDLJiiizSbZH5M59X8ZZ4+VnAzGFlAhnCwMUpABNhC2L4K+g0TVLLb1aKg5d0
- 0a9S83nxRgV6kv6NHGtu+/c8Plh2npFhs1wYY13kv7divaaW+xsfXM5wmpn313t3G9s3oR/6XYY
- sAA==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Our documentation is saying that the in-kernel PM is only using fullmesh
-endpoints to establish subflows to announced addresses when at least one
-endpoint has a fullmesh flag. But this was not totally correct: only
-fullmesh endpoints were used if at least one endpoint *from the same
-address family as the received ADD_ADDR* has the fullmesh flag.
+Hi Matthieu,
 
-This is confusing, and it seems clearer not to have differences
-depending on the address family.
+Thank you for your modifications, that's great!
 
-So, now, when at least one MPTCP endpoint has a fullmesh flag, the local
-addresses are picked from all fullmesh endpoints, which might be 0 if
-there are no endpoints for the correct address family.
+Our CI did some validations and here is its report:
 
-One selftest needs to be adapted for this behaviour change.
+- KVM Validation: normal (except selftest_mptcp_join): Unstable: 1 failed =
+test(s): selftest_simult_flows =F0=9F=94=B4
+- KVM Validation: normal (only =
+selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except =
+selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (only =
+selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal (only=
+ bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only =
+bpftest_all): Success! =E2=9C=85
+- Task: https://github.=
+com/multipath-tcp/mptcp_net-next/actions/runs/18347885638
 
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- net/mptcp/pm_kernel.c                           | 10 +++-------
- tools/testing/selftests/net/mptcp/mptcp_join.sh |  6 +++++-
- 2 files changed, 8 insertions(+), 8 deletions(-)
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/51b6ddb50104
+Patchwork: https://patchwork.kernel.=
+org/project/mptcp/list/?series=3D1009412
 
-diff --git a/net/mptcp/pm_kernel.c b/net/mptcp/pm_kernel.c
-index 054d85045381..40a0572b3149 100644
---- a/net/mptcp/pm_kernel.c
-+++ b/net/mptcp/pm_kernel.c
-@@ -609,15 +609,11 @@ fill_local_addresses_vec(struct mptcp_sock *msk, struct mptcp_addr_info *remote,
- 			 struct mptcp_pm_local *locals)
- {
- 	bool c_flag_case = remote->id && mptcp_pm_add_addr_c_flag_case(msk);
--	int i;
- 
- 	/* If there is at least one MPTCP endpoint with a fullmesh flag */
--	if (mptcp_pm_get_endp_fullmesh_max(msk)) {
--		i = fill_local_addresses_vec_fullmesh(msk, remote, locals,
--						      c_flag_case);
--		if (i)
--			return i;
--	}
-+	if (mptcp_pm_get_endp_fullmesh_max(msk))
-+		return fill_local_addresses_vec_fullmesh(msk, remote, locals,
-+							 c_flag_case);
- 
- 	/* If there is at least one MPTCP endpoint with a laminar flag */
- 	if (mptcp_pm_get_endp_laminar_max(msk))
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 78a1aa4ecff2..e7a498dd5a46 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -2952,7 +2952,11 @@ mixed_tests()
- 		pm_nl_add_endpoint $ns1 10.0.1.1 flags signal
- 		speed=slow \
- 			run_tests $ns1 $ns2 dead:beef:2::1
--		chk_join_nr 1 1 1
-+		if mptcp_lib_kallsyms_has "mptcp_pm_get_endp_fullmesh_max$"; then
-+			chk_join_nr 0 0 0
-+		else
-+			chk_join_nr 1 1 1
-+		fi
- 	fi
- 
- 	# fullmesh still tries to create all the possibly subflows with
 
--- 
-2.51.0
+If there are some issues, you =
+can reproduce them using the same environment as
+the one used by the CI =
+thanks to a docker image, e.g.:
 
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
+
+
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 Core)
