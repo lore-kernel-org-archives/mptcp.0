@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 984B4227EAA
-	for <mptcp@lists.linux.dev>; Thu,  9 Oct 2025 17:56:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98DC7244675
+	for <mptcp@lists.linux.dev>; Thu,  9 Oct 2025 17:56:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760032570; cv=none; b=bwTnXUQ1316F8M4c83RNccvveVFXdSAQpIwNOBf0AYjB+vlb92NPKo8ByKufuZ8gPPTfqdA4tpWlrprggUzMFdvmb2+sb1xhoZo2IJ5X7sPsBRyAtvT0Q91V9Lo/VbnNzEqc7fClY1GBa6tTOW0KEHieqTRN5QR2apnZHeT7Gso=
+	t=1760032575; cv=none; b=lDN+YT+nX0J+mQFSFe4AijZz6FaCeEf5rXRXSHl9vL8c8+fD5d8uuGVp0Clco1ygH77zTqQBDrhrOz8NJvhfBxAdQdOcRmZvNeI0KNw/pyJ+ZKxHslwOuqiVV0sgddKiNLjx7WGYuyDpp2pz2q72Y7LTBZjBgJWzr30TWXV5Ihk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760032570; c=relaxed/simple;
-	bh=6grW3x7Btc0JJTc3eSwFqS+kJOKW+LXGtQ/7Hfg7hG8=;
-	h=Message-ID:Date:MIME-Version:From:To:Subject:Content-Type; b=RvL3bjcFjFTJTY5BVhaRqJJlmoJiVnBaCUa8aJJlrLEeZHcrneZtkyedv0Gs3hEwPH3mAkrvlCbketSZl57aq46ih1AR+q29HHDmNT6AijwvoRpDaoKo0hYMuHdhHwviE0afdyPAk82Cv22rElIdtnRWdq3p/4jThFIYNq43qvM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cA9Dnplk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1760032575; c=relaxed/simple;
+	bh=rcGZELekoDjm3q7IFI1oBOzeeO9+HLYLaTG+IGygBg8=;
+	h=Message-ID:Date:MIME-Version:From:To:Subject:Content-Type; b=HnsdZTMuIiP+3nnL96e60yKveNxXzAv1JFkZRdvb2FH5k6yP6f8oEFjDUaLSFHicaiJpjsuLcZ7StBPgVR268g0hskDb03jcxEd+rL8NvP16VsyTqESHYpgJFfy6mgerh+v4SU7jCIxTwq61GqvepovFuarz7Wza22JXm6At92A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VA4budZW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cA9Dnplk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81392C4CEE7
-	for <mptcp@lists.linux.dev>; Thu,  9 Oct 2025 17:56:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VA4budZW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B7FBC4CEE7
+	for <mptcp@lists.linux.dev>; Thu,  9 Oct 2025 17:56:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760032570;
-	bh=6grW3x7Btc0JJTc3eSwFqS+kJOKW+LXGtQ/7Hfg7hG8=;
+	s=k20201202; t=1760032575;
+	bh=rcGZELekoDjm3q7IFI1oBOzeeO9+HLYLaTG+IGygBg8=;
 	h=Date:From:To:Subject:From;
-	b=cA9DnplkvgoyIgMJU37cDaHDk3htR0BjxyOjYYsqwcDfhIT/xm3YqDnS+Fy05xB7l
-	 hBeN8Z0rSAQ6EKgTtXED0yfUgMjqQeOA5NZCrudbIoOZ2Dgy0iiaw8ZMi1hzj2HCmJ
-	 YC9qmLlAYhi0vjKQ9bEE4mZipbp1yi4ow0F/bM49z8NxVDRVfDKJta5jnHgjUXZKen
-	 S8iVi04Q1vjtgb/pl80SEPmc2WkboVUHy3++eXoEtyv06KJFID1JCv2jaJoepmtfYW
-	 g89vNOa1THmAGcPqtZWQ5jfdn4ulX7GlwJsK2YtYl+JDc8qyeterliguOjcD5zO+Gb
-	 Dg83/e0mH5GZA==
-Message-ID: <572123a7-8c0b-4be0-beb6-26c802ae9c5c@kernel.org>
-Date: Thu, 9 Oct 2025 19:56:07 +0200
+	b=VA4budZW/v+eSPdV23oMa8lj6d2Z7Un3DRN2W7aDwy3G6/ygUGjmLagaN+Ct1tszq
+	 /ET3MyI6ksmTcJtJ6zb64d1OmU38+/yjtBBCR2xqkryY6Gki90FsHNpJS04jLg0pxJ
+	 UxkdHONXzCvByvcqS71QxzLtZ42JERembGSMZybm5S+e7/slDcGuLpFjGkZGuAkCfL
+	 eZvurgyvmy8ibU6IEMijdjZQBkMMq8HaYnsMOoYxmZODyr89Jp7NR5IjlFlnr/yVWF
+	 3EaSeLG5h4S6tz9WoAIomzqrQQEp3FK6Y0pJ+10ZglIZnTgDX3EOUD2y+1zRjkKv0b
+	 77CGjbYXYIi4w==
+Message-ID: <35cdc304-99f8-4831-89d3-1b871c526ab2@kernel.org>
+Date: Thu, 9 Oct 2025 19:56:13 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -36,8 +36,6 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
 From: Matthieu Baerts <matttbe@kernel.org>
 Content-Language: en-GB, fr-BE
-To: MPTCP Linux <mptcp@lists.linux.dev>
-Subject: [Weekly meetings] MoM - 10th of September 2025
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -82,13 +80,14 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
+To: MPTCP Linux <mptcp@lists.linux.dev>
+Subject: [Weekly meetings] MoM - 8th of October 2025
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 Hello everyone,
 
-Last month, we had our new meeting with Mat (Cruise), and myself (NGI0
-Core).
+Yesterday, we had our new meeting with Mat (Cruise), and myself (NGI0 Core).
 
 
 Thanks again for this new good meeting!
@@ -102,81 +101,279 @@ Accepted patches:
     - The list of accepted patches can be seen on PatchWork:
       https://patchwork.kernel.org/project/mptcp/list/?state=3
 
+    netdev (if mptcp ML is in cc) (by: Kenta Akagi, Matthieu Baerts (NGI0)):
 
-    netdev (if mptcp ML is in cc) (by: Krister Johansen, Matthieu Baerts
-(NGI0)):
-
-14215589: [net-next,v2,1/4] mptcp: use HMAC-SHA256 library instead of
-open-coded HMAC
-14215590: [net-next,v2,2/4] selftests: mptcp: add checks for fallback
-counters
-14215591: [net-next,v2,3/4] net: Add rfs_needed() helper
-14215592: [net-next,v2,4/4] mptcp: record subflows in RPS table:
-    - Series: mptcp: misc. features for v6.18
+14224583: [net-next] doc: mptcp: fix Netlink specs link:
     - Submitter: Matthieu Baerts (NGI0)
     - URL:
-https://patchwork.kernel.org/project/mptcp/list/?series=998152&state=*&archive=both
+https://patchwork.kernel.org/project/mptcp/patch/20250909-net-next-mptcp-pm-link-v1-1-0f1c4b8439c6@kernel.org/
 
-14221203: [net-next,1/3] mptcp: make ADD_ADDR retransmission timeout
-adaptive
-14221204: [net-next,2/3] selftests: mptcp: join: tolerate more ADD_ADDR
-14221205: [net-next,3/3] selftests: mptcp: join: allow more time to send
-ADD_ADDR:
-    - Series: mptcp: make ADD_ADDR retransmission timeout adaptive
+14228972: [net,1/5] mptcp: propagate shutdown to subflows when possible
+14228973: [net,2/5] selftests: mptcp: connect: catch IO errors on listen
+side
+14228974: [net,3/5] selftests: mptcp: avoid spurious errors on TCP
+disconnect
+14228975: [net,4/5] selftests: mptcp: print trailing bytes with od
+14228976: [net,5/5] selftests: mptcp: connect: print pcap prefix:
+    - Series: selftests: mptcp: avoid spurious errors on TCP disconnect
     - Submitter: Matthieu Baerts (NGI0)
     - URL:
-https://patchwork.kernel.org/project/mptcp/list/?series=999760&state=*&archive=both
+https://patchwork.kernel.org/project/mptcp/list/?series=1001767&state=*&archive=both
 
-14222571: [net,v2] mptcp: sockopt: make sync_socket_options propagate
-SOCK_KEEPOPEN:
-    - Submitter: Krister Johansen
-    - URL:
-https://patchwork.kernel.org/project/mptcp/patch/aL8dYfPZrwedCIh9@templeofstupid.com/
-
-14222812: [net,1/3] netlink: specs: mptcp: fix if-idx attribute type
-14222813: [net,2/3] doc: mptcp: net.mptcp.pm_type is deprecated
-14222814: [net,3/3] selftests: mptcp: shellcheck: support v0.11.0:
-    - Series: mptcp: misc fixes for v6.17-rc6
+14229022: [net,1/5] mptcp: set remote_deny_join_id0 on SYN recv
+14229023: [net,2/5] mptcp: pm: nl: announce deny-join-id0 flag
+14229024: [net,3/5] selftests: mptcp: userspace pm: validate
+deny-join-id0 flag
+14229025: [net,4/5] mptcp: tfo: record 'deny join id0' info
+14229026: [net,5/5] selftests: mptcp: sockopt: fix error messages:
+    - Series: mptcp: pm: nl: announce deny-join-id0 flag
     - Submitter: Matthieu Baerts (NGI0)
     - URL:
-https://patchwork.kernel.org/project/mptcp/list/?series=1000198&state=*&archive=both
+https://patchwork.kernel.org/project/mptcp/list/?series=1001782&state=*&archive=both
 
-
-    our repo (by: Christoph Paasch, Krister Johansen, Matthieu Baerts
-(NGI0)):
-
-14204359: [mptcp-next,v2,1/2] net: Add rfs_needed() helper
-14204360: [mptcp-next,v2,2/2] mptcp: record subflows in RPS table:
-    - Series: mptcp: Support recording MPTCP subflows in RPS table
-    - Submitter: Christoph Paasch
-    - URL:
-https://patchwork.kernel.org/project/mptcp/list/?series=995486&state=*&archive=both
-
-14210928: [mptcp-net,4/7] netlink: specs: mptcp: fix if-idx attribute type
-14210929: [mptcp-net,5/7] doc: mptcp: net.mptcp.pm_type is deprecated
-14210930: [mptcp-net,6/7] selftests: mptcp: shellcheck: support v0.11.0
-
-14217919: [mptcp-next,v2,1/3] Squash to "selftests: mptcp: remove
-add_addr_timeout settings"
-14217920: [mptcp-next,v2,2/3] selftests: mptcp: join: tolerate more ADD_ADDR
-14217921: [mptcp-next,v2,3/3] selftests: mptcp: join: allow more time to
-send ADD_ADDR:
-    - Series: mptcp: fixes for adaptive ADD_ADDR retransmission timeout
+14229368: [net-next,1/3] selftests: mptcp: close server file descriptors
+14229369: [net-next,2/3] selftests: mptcp: close server IPC descriptors
+14229370: [net-next,3/3] mptcp: pm: netlink: fix if-idx type:
+    - Series: mptcp: misc minor cleanups
     - Submitter: Matthieu Baerts (NGI0)
     - URL:
-https://patchwork.kernel.org/project/mptcp/list/?series=998827&state=*&archive=both
+https://patchwork.kernel.org/project/mptcp/list/?series=1001891&state=*&archive=both
 
-14220455: mptcp: sockopt: make sync_socket_options propagate SOCK_KEEPOPEN:
-    - Series: mptcp: sockopt: make sync_socket_options propagate
-SOCK_KEEPOPEN
-    - Submitter: Krister Johansen
-    - URL:
-https://patchwork.kernel.org/project/mptcp/list/?series=999551&state=*&archive=both
-
-14220727: [mptcp-next] mptcp: remove unused returned value:
+14233178: [iproute] mptcp: fix event attributes type:
     - Submitter: Matthieu Baerts (NGI0)
     - URL:
-https://patchwork.kernel.org/project/mptcp/patch/20250906-check_data_fin_ret-v1-1-2c8100bc20eb@kernel.org/
+https://patchwork.kernel.org/project/mptcp/patch/20250916-mptcp-attr-sign-v1-1-316aa96b93ca@kernel.org/
+
+14236715: [net-next] mptcp: reset blackhole on success with non-loopback
+ifaces:
+    - Submitter: Matthieu Baerts (NGI0)
+    - URL:
+https://patchwork.kernel.org/project/mptcp/patch/20250918-net-next-mptcp-blackhole-reset-loopback-v1-1-bf5818326639@kernel.org/
+
+14238933: [net-next,1/6] mptcp: pm: netlink: only add server-side attr
+when true
+14238934: [net-next,2/6] mptcp: pm: netlink: announce server-side flag
+14238935: [net-next,3/6] mptcp: pm: netlink: deprecate server-side attribute
+14238936: [net-next,4/6] selftests: mptcp: pm: get server-side flag
+14238937: [net-next,5/6] mptcp: use _BITUL() instead of (1 << x)
+14238938: [net-next,6/6] mptcp: remove unused returned value of
+check_data_fin:
+    - Series: mptcp: pm: netlink: announce server-side flag
+    - Submitter: Matthieu Baerts (NGI0)
+    - URL:
+https://patchwork.kernel.org/project/mptcp/list/?series=1004239&state=*&archive=both
+
+14239583: [6.16.y] mptcp: pm: nl: announce deny-join-id0 flag:
+    - Submitter: Matthieu Baerts (NGI0)
+    - URL:
+https://patchwork.kernel.org/project/mptcp/patch/20250919214921.3467324-2-matttbe@kernel.org/
+
+14239585: [6.12.y] mptcp: pm: nl: announce deny-join-id0 flag:
+    - Submitter: Matthieu Baerts (NGI0)
+    - URL:
+https://patchwork.kernel.org/project/mptcp/patch/20250919215222.3519719-2-matttbe@kernel.org/
+
+14239650: [6.6.y,1/2] mptcp: pm: nl: announce deny-join-id0 flag
+14239651: [6.6.y,2/2] selftests: mptcp: userspace pm: validate
+deny-join-id0 flag:
+    - Series: mptcp: fix recent failed backports (20250919)
+    - Submitter: Matthieu Baerts (NGI0)
+    - URL:
+https://patchwork.kernel.org/project/mptcp/list/?series=1004427&state=*&archive=both
+
+14239659: [6.1.y,1/2] mptcp: pm: nl: announce deny-join-id0 flag
+14239660: [6.1.y,2/2] selftests: mptcp: userspace pm: validate
+deny-join-id0 flag:
+    - Series: mptcp: fix recent failed backports (20250919)
+    - Submitter: Matthieu Baerts (NGI0)
+    - URL:
+https://patchwork.kernel.org/project/mptcp/list/?series=1004429&state=*&archive=both
+
+14239672: [5.15.y] mptcp: set remote_deny_join_id0 on SYN recv:
+    - Submitter: Matthieu Baerts (NGI0)
+    - URL:
+https://patchwork.kernel.org/project/mptcp/patch/20250919231743.3957803-2-matttbe@kernel.org/
+
+14245934: [net-next,01/15] mptcp: pm: in-kernel: usable client side with
+C-flag
+14245935: [net-next,02/15] selftests: mptcp: join: validate C-flag + def
+limit
+14245936: [net-next,03/15] mptcp: pm: in-kernel: refactor
+fill_local_addresses_vec
+14245937: [net-next,04/15] mptcp: pm: in-kernel: refactor
+fill_remote_addresses_vec
+14245938: [net-next,05/15] mptcp: pm: rename 'subflows' to 'extra_subflows'
+14245939: [net-next,06/15] mptcp: pm: in-kernel: rename 'subflows_max'
+to 'limit_extra_subflows'
+14245940: [net-next,07/15] mptcp: pm: in-kernel: rename
+'add_addr_signal_max' to 'endp_signal_max'
+14245941: [net-next,08/15] mptcp: pm: in-kernel: rename
+'add_addr_accept_max' to 'limit_add_addr_accepted'
+14245942: [net-next,09/15] mptcp: pm: in-kernel: rename 'local_addr_max'
+to 'endp_subflow_max'
+14245943: [net-next,10/15] mptcp: pm: in-kernel: rename
+'local_addr_list' to 'endp_list'
+14245944: [net-next,11/15] mptcp: pm: in-kernel: rename 'addrs' to
+'endpoints'
+14245945: [net-next,12/15] mptcp: pm: in-kernel: remove stale_loss_cnt
+14245946: [net-next,13/15] mptcp: pm: in-kernel: reduce pernet struct size
+14245947: [net-next,14/15] mptcp: pm: in-kernel: compare IDs instead of
+addresses
+14245948: [net-next,15/15] mptcp: pm: in-kernel: add laminar endpoints:
+    - Series: mptcp: pm: special case for c-flag + luminar endp
+    - Submitter: Matthieu Baerts (NGI0)
+    - URL:
+https://patchwork.kernel.org/project/mptcp/list/?series=1006117&state=*&archive=both
+
+14248454: [net-next,1/8] mptcp: leverage skb deferral free
+14248455: [net-next,2/8] tcp: make tcp_rcvbuf_grow() accessible to mptcp
+code
+14248456: [net-next,3/8] mptcp: rcvbuf auto-tuning improvement
+14248457: [net-next,4/8] mptcp: introduce the mptcp_init_skb helper
+14248458: [net-next,5/8] mptcp: remove unneeded mptcp_move_skb()
+14248459: [net-next,6/8] mptcp: factor out a basic skb coalesce helper
+14248460: [net-next,7/8] mptcp: minor move_skbs_to_msk() cleanup
+14248461: [net-next,8/8] selftests: mptcp: join: validate new laminar endp:
+    - Series: mptcp: receive path improvement
+    - Submitter: Matthieu Baerts (NGI0)
+    - URL:
+https://patchwork.kernel.org/project/mptcp/list/?series=1006748&state=*&archive=both
+
+14253556: [6.1.y] selftests: mptcp: connect: fix build regression caused
+by backport:
+    - Submitter: Kenta Akagi
+    - URL:
+https://patchwork.kernel.org/project/mptcp/patch/20251002141759.76891-1-k@mgml.me/
+
+14255173: [net,repost] selftests: net: sort configs:
+    - State: New
+    - Submitter: Jakub Kicinski
+    - URL:
+https://patchwork.kernel.org/project/mptcp/patch/20251003205736.1019673-1-kuba@kernel.org/
+
+14255177: [net,v2] selftests: net: unify the Makefile formats:
+    - State: New
+    - Submitter: Jakub Kicinski
+    - URL:
+https://patchwork.kernel.org/project/mptcp/patch/20251003210127.1021918-1-kuba@kernel.org/
+
+
+    our repo (by: Geliang Tang, Matthieu Baerts (NGI0), Paolo Abeni):
+
+14224171: [mptcp-net,v2,1/5] mptcp: pm: netlink: fix if-idx type
+14224172: [mptcp-net,v2,2/5] mptcp: set remote_deny_join_id0 on SYN recv
+14224173: [mptcp-net,v2,3/5] mptcp: pm: nl: announce deny-join-id0 flag
+14224174: [mptcp-net,v2,4/5] selftests: mptcp: userspace pm: validate
+deny-join-id0 flag
+14224175: [mptcp-net,v2,5/5] mptcp: tfo: record 'deny join id0' info:
+    - Series: mptcp: pm: nl: announce deny-join-id0 attribute
+    - Submitter: Matthieu Baerts (NGI0)
+    - URL:
+https://patchwork.kernel.org/project/mptcp/list/?series=1000542&state=*&archive=both
+
+14224374: [mptcp-next,1/4] mptcp: pm: netlink: only add server-side attr
+when true
+14224376: [mptcp-next,2/4] mptcp: pm: netlink: announce server-side flag
+14224375: [mptcp-next,3/4] mptcp: pm: netlink: deprecate server-side
+attribute
+14224377: [mptcp-next,4/4] selftests: mptcp: pm: get server-side flag:
+    - Series: mptcp: pm: netlink: announce server-side flag
+    - Submitter: Matthieu Baerts (NGI0)
+    - URL:
+https://patchwork.kernel.org/project/mptcp/list/?series=1000598&state=*&archive=both
+
+14225489: [mptcp-net,v3,1/5] mptcp: propagate shutdown to subflows when
+possible
+14225491: [mptcp-net,v3,2/5] selftests: mptcp: connect: catch IO errors
+on listen side
+14225490: [mptcp-net,v3,3/5] selftests: mptcp: avoid spurious errors on
+TCP disconnect
+14225493: [mptcp-net,v3,4/5] selftests: mptcp: print trailing bytes with od
+14225492: [mptcp-net,v3,5/5] selftests: mptcp: connect: print pcap suffix:
+    - Series: selftests: mptcp: avoid spurious errors on TCP disconnect
+    - Submitter: Matthieu Baerts (NGI0)
+    - URL:
+https://patchwork.kernel.org/project/mptcp/list/?series=1000860&state=*&archive=both
+
+14228114: [mptcp-net,v3,1/3] selftests: mptcp: sockopt: fix error messages
+14228115: [mptcp-next,v3,2/3] selftests: mptcp: close server file
+descriptors
+14228116: [mptcp-next,v3,3/3] selftests: mptcp: close server IPC
+descriptors:
+    - Series: misc fixes for sockopt selftests
+    - Submitter: Geliang Tang
+    - URL:
+https://patchwork.kernel.org/project/mptcp/list/?series=1001578&state=*&archive=both
+
+14229001: [mptcp-next] Squash to "selftests: mptcp: userspace pm:
+validate deny-join-id0 flag":
+    - Submitter: Matthieu Baerts (NGI0)
+    - URL:
+https://patchwork.kernel.org/project/mptcp/patch/20250912123811.1179276-2-matttbe@kernel.org/
+
+14233169: [mptcp-next] mptcp: use _BITUL() instead of (1 << x):
+    - Submitter: Matthieu Baerts (NGI0)
+    - URL:
+https://patchwork.kernel.org/project/mptcp/patch/20250916-mptcp-pm-addr-flag-bitul-v1-1-5805a6ddde27@kernel.org/
+
+14233271: [mptcp-net,v2,1/2] mptcp: pm: in-kernel: usable client side
+with C-flag
+14233272: [mptcp-net,v2,2/2] selftests: mptcp: join: validate C-flag +
+def limit:
+    - Series: mptcp: pm: in-kernel: usable client side with C-flag
+    - Submitter: Matthieu Baerts (NGI0)
+    - URL:
+https://patchwork.kernel.org/project/mptcp/list/?series=1002880&state=*&archive=both
+
+14238436: [mptcp-next,v2,01/10] Squash to "mptcp: pm: in-kernel: usable
+client side with C-flag"
+14238437: [mptcp-next,v2,02/10] mptcp: pm: in-kernel: refactor
+fill_local_addresses_vec
+14238438: [mptcp-next,v2,03/10] mptcp: pm: in-kernel: refactor
+fill_remote_addresses_vec
+14238439: [mptcp-next,v2,04/10] mptcp: pm: rename 'subflows' to
+'extra_subflows'
+14238440: [mptcp-next,v2,05/10] mptcp: pm: in-kernel: rename
+'subflows_max' to 'limit_extra_subflows'
+14238441: [mptcp-next,v2,06/10] mptcp: pm: in-kernel: rename
+'add_addr_signal_max' to 'endp_signal_max'
+14238442: [mptcp-next,v2,07/10] mptcp: pm: in-kernel: rename
+'add_addr_accept_max' to 'limit_add_addr_accepted'
+14238443: [mptcp-next,v2,08/10] mptcp: pm: in-kernel: rename
+'local_addr_max' to 'endp_subflow_max'
+14238444: [mptcp-next,v2,09/10] mptcp: pm: in-kernel: rename
+'local_addr_list' to 'endp_list'
+14238445: [mptcp-next,v2,10/10] mptcp: pm: in-kernel: rename 'addrs' to
+'endpoints':
+    - Series: mptcp: pm: a few cleanups
+    - Submitter: Matthieu Baerts (NGI0)
+    - URL:
+https://patchwork.kernel.org/project/mptcp/list/?series=1004147&state=*&archive=both
+
+14239307: [next,v3,01/12] mptcp: leverage skb deferral free
+14239308: [next,v3,02/12] tcp: make tcp_rcvbuf_grow() accessible to
+mptcp code
+14239309: [next,v3,03/12] mptcp: rcvbuf auto-tuning improvement
+14239313: [next,v3,04/12] mptcp: introduce the mptcp_init_skb helper.
+14239310: [next,v3,05/12] mptcp: remove unneeded mptcp_move_skb()
+14239311: [next,v3,06/12] mptcp: factor out a basic skb coalesce helper
+14239312: [next,v3,07/12] mptcp: minor move_skbs_to_msk() cleanup
+14239770: [mptcp-next,1/2] Squash to "mptcp: factor out a basic skb
+coalesce helper"
+14245720: [mptcp-next,v3,1/6] mptcp: pm: in-kernel: remove stale_loss_cnt
+14245721: [mptcp-next,v3,2/6] mptcp: pm: in-kernel: reduce pernet struct
+size
+14245722: [mptcp-next,v3,3/6] mptcp: pm: in-kernel: compare IDs instead
+of addresses
+14245723: [mptcp-next,v3,4/6] Squash to "mptcp: pm: in-kernel: usable
+client side with C-flag"
+14245724: [mptcp-next,v3,5/6] mptcp: pm: in-kernel: add laminar endpoints
+14245725: [mptcp-next,v3,6/6] selftests: mptcp: join: validate new
+laminar endp:
+    - Series: mptcp: pm: in-kernel: add 'address' endpoints
+    - Submitter: Matthieu Baerts (NGI0)
+    - URL:
+https://patchwork.kernel.org/project/mptcp/list/?series=1006064&state=*&archive=both
 
 
 
@@ -185,16 +382,23 @@ Pending patches:
       https://patchwork.kernel.org/project/mptcp/list/?state=*
 
 
-    netdev (if mptcp ML is in cc) (by: Matthieu Baerts (NGI0)):
+    netdev (if mptcp ML is in cc) (by: Jakub Kicinski, Mehdi Ben Hadj
+Khelifa):
 
-14224583: [net-next] doc: mptcp: fix Netlink specs link:
-    - Submitter: Matthieu Baerts (NGI0)
+14245817: [v3,1/3] selftests/bpf: Prepare to add -Wsign-compare for bpf
+tests
+14245818: [v3,2/3] selftests/bpf: Prepare to add -Wsign-compare for bpf
+tests
+14245819: [v3,3/3] selftests/bpf: Prepare to add -Wsign-compare for bpf
+tests:
+    - Series: selftests/bpf: Prepare to add -Wsign-compare for bpf selftests
+    - Submitter: Mehdi Ben Hadj Khelifa
     - URL:
-https://patchwork.kernel.org/project/mptcp/patch/20250909-net-next-mptcp-pm-link-v1-1-0f1c4b8439c6@kernel.org/
+https://patchwork.kernel.org/project/mptcp/list/?series=1006094&state=*&archive=both
 
 
     our repo (by: Christoph Paasch, Gang Yan, Geliang Tang, Gregory
-Detal, Matthieu Baerts, Matthieu Baerts (NGI0)):
+Detal, Matthieu Baerts, Matthieu Baerts (NGI0), Paolo Abeni):
 
 12282223: [RESEND,RFC,mptpcp-next] mptcp: add ooo prune support:
 13070467: [mptcp-next,v4,1/2] mptcp: update mptcp_push_release
@@ -262,7 +466,6 @@ subtest:
     - Submitter: Geliang Tang
     - URL:
 https://patchwork.kernel.org/project/mptcp/list/?series=946095&state=*&archive=both
-    - Status: same as last time
 
 14053397: [mptcp-next,v3,1/3] mptcp: pm: userspace: drop
 delete_local_addr helper
@@ -276,20 +479,6 @@ REMOVE_ADDR
     - Submitter: Geliang Tang
     - URL:
 https://patchwork.kernel.org/project/mptcp/list/?series=953862&state=*&archive=both
-    - Status: same as last time
-
-14077448: [mptcp-next,v7,1/5] mptcp: pm: call pm worker handler without
-pm lock
-14077447: [mptcp-next,v7,2/5] mptcp: pm: add accept_new_subflow() interface
-14077449: [mptcp-next,v7,3/5] mptcp: pm: add established() interface
-14077450: [mptcp-next,v7,4/5] mptcp: pm: add subflow_established() interface
-14077451: [mptcp-next,v7,5/5] mptcp: pm: drop is_userspace in
-subflow_check_next:
-    - State: Needs ack
-    - Series: BPF path manager, part 6
-    - Submitter: Geliang Tang
-    - URL:
-https://patchwork.kernel.org/project/mptcp/list/?series=959912&state=*&archive=both
     - Status: same as last time
 
 14102233: [mptcp-next,v3,1/3] selftests/bpf: Add sndbuf for send_recv_data
@@ -319,27 +508,6 @@ https://patchwork.kernel.org/project/mptcp/patch/9c663fc37767d9036379afdbc83cd88
     - Submitter: Christoph Paasch
     - URL:
 https://patchwork.kernel.org/project/mptcp/list/?series=987909&state=*&archive=both
-    - Status: same as last time
-
-14181837: [mptcp-next,v5,1/8] mptcp: handle TCP_MAXSEG getsockopt in
-common case
-14181838: [mptcp-next,v5,2/8] mptcp: setsockopt support for TCP_MD5SIG
-14181839: [mptcp-next,v5,3/8] selftests: mptcp: sockopt: set REUSEADDR
-opt helper
-14181840: [mptcp-next,v5,4/8] selftests: mptcp: sockopt: add md5 argument
-14181841: [mptcp-next,v5,5/8] selftests: mptcp: sockopt: implement
-TCP_MD5SIG support
-14181842: [mptcp-next,v5,6/8] selftests: mptcp: sockopt: extend MD5
-support for TCP_MD5SIG_EXT
-14181843: [mptcp-next,v5,7/8] selftests: mptcp: sockopt: handle MD5 in
-connection processing
-14181844: [mptcp-next,v5,8/8] selftests: mptcp: sockopt: add TCP_MD5SIG
-test cases:
-    - State: Needs ack
-    - Series: mptcp: TCP_MD5SIG support
-    - Submitter: Geliang Tang
-    - URL:
-https://patchwork.kernel.org/project/mptcp/list/?series=989716&state=*&archive=both
     - Status: same as last time
 
 14185125: [mptcp-next,1/6] mptcp: add helper for setsockopt on first
@@ -397,148 +565,145 @@ IPV6_V6ONLY test:
 https://patchwork.kernel.org/project/mptcp/list/?series=993905&state=*&archive=both
     - Status: same as last time
 
-14204769: [mptcp-next,v3,01/14] selftests: mptcp: sockopt: replace
+14215849: [mptcp-net,v2,1/3] selftests: mptcp: close server file descriptor
+14215850: [mptcp-net,v2,2/3] selftests: mptcp: close IPC descriptor on
+server side
+14229120: [mptcp-next,v4,1/9] selftests: mptcp: sockopt: replace
 /dev/urandom with getrandom
-14204770: [mptcp-next,v3,02/14] selftests: mptcp: sockopt: add protocol
+14229121: [mptcp-next,v4,2/9] selftests: mptcp: sockopt: add protocol
 arguments
-14204771: [mptcp-next,v3,03/14] selftests: mptcp: sockopt: add inq argument
-14204772: [mptcp-next,v3,04/14] selftests: mptcp: sockopt: set TCP_INQ
-on accepted sockets
-14204773: [mptcp-next,v3,05/14] selftests: mptcp: sockopt: use unix
-socket instead of pipe
-14204774: [mptcp-next,v3,06/14] selftests: mptcp: sockopt: read eof at
-the end of process_one_client
-14204775: [mptcp-next,v3,07/14] selftests: mptcp: sockopt: use recvmsg
-instead of read
-14204776: [mptcp-next,v3,08/14] selftests: mptcp: sockopt: read one byte
-first
-14204777: [mptcp-next,v3,09/14] selftests: mptcp: sockopt: add large
-data transfer tests
-14204778: [mptcp-next,v3,10/14] selftests: mptcp: sockopt: add wait_for_ack
-14204779: [mptcp-next,v3,11/14] selftests: mptcp: sockopt: set FIONREAD
-ioctl
-14204780: [mptcp-next,v3,12/14] selftests: mptcp: sockopt: add
-check_tcp_inq helper
-14204781: [mptcp-next,v3,13/14] selftests: mptcp: sockopt: replace
+14229122: [mptcp-next,v4,3/9] selftests: mptcp: sockopt: add inq argument
+14229123: [mptcp-next,v4,4/9] selftests: mptcp: sockopt: rename pipefd
+to ipcfd
+14229124: [mptcp-next,v4,5/9] selftests: mptcp: sockopt: set TCP_INQ sockopt
+14229125: [mptcp-next,v4,6/9] selftests: mptcp: sockopt: handle INQ on
+server side
+14229126: [mptcp-next,v4,7/9] selftests: mptcp: sockopt: handle INQ on
+client side
+14229127: [mptcp-next,v4,8/9] selftests: mptcp: sockopt: replace
 mptcp_inq with sockopt
-14204782: [mptcp-next,v3,14/14] selftests: mptcp: sockopt: remove
-obsolete mptcp_inq:
-    - State: Needs ack
+14229128: [mptcp-next,v4,9/9] selftests: mptcp: sockopt: remove obsolete
+mptcp_inq:
+    - State: New
     - Series: selftests: consolidate TCP_INQ testing into sockopt
     - Submitter: Geliang Tang
     - URL:
-https://patchwork.kernel.org/project/mptcp/list/?series=995595&state=*&archive=both
+https://patchwork.kernel.org/project/mptcp/list/?series=1001827&state=*&archive=both
     - Status: same as last time
 
-14208094: [mptcp-next,v2,1/3] Add native MPTCP socket creation support
-14208095: [mptcp-next,v2,2/3] Add MPTCP support to Java
-Socket/ServerSocket APIs
-14208096: [mptcp-next,v2,3/3] Add test cases for MPTCP socket functionality:
-    - State: Awaiting upstream
-    - Series: Add MPTCP support to Java Networking API
+14242076: [mptcp-next] selftests: mptcp: pm: fix pm_nl_ctl build errors
+with old glibc:
+    - State: New
     - Submitter: Geliang Tang
     - URL:
-https://patchwork.kernel.org/project/mptcp/list/?series=996382&state=*&archive=both
-    - Archived: Geliang is handling that on OpenJDK side
+https://patchwork.kernel.org/project/mptcp/patch/092fc76415deb1b45da5bb691ef6069fbab7dd09.1758591744.git.tanggeliang@kylinos.cn/
+    - TODO: Matth: ask Geliang if pm_nl_ctl is still needed for the BPF
+CI → Done
 
-14214090: [mptcp-next,v10,1/9] mptcp: add eat_recv_skb helper
-14214091: [mptcp-next,v10,2/9] mptcp: implement .read_sock
-14214092: [mptcp-next,v10,3/9] tcp: drop release and lock again in
-splice_read
-14214093: [mptcp-next,v10,4/9] tcp: export splice_state and splice_data_recv
-14214094: [mptcp-next,v10,5/9] tcp: add recv_should_stop helper
-14214095: [mptcp-next,v10,6/9] mptcp: use recv_should_stop helper
-14214096: [mptcp-next,v10,7/9] mptcp: implement .splice_read
-14214097: [mptcp-next,v10,8/9] selftests: mptcp: add splice io mode
-14214098: [mptcp-next,v10,9/9] selftests: mptcp: connect: cover splice mode:
+14248479: [mptcp-next,v12,1/8] mptcp: add eat_recv_skb helper
+14248480: [mptcp-next,v12,2/8] mptcp: implement .read_sock
+14248481: [mptcp-next,v12,3/8] tcp: export splice_state and splice_data_recv
+14248482: [mptcp-next,v12,4/8] tcp: add recv_should_stop helper
+14248483: [mptcp-next,v12,5/8] mptcp: use recv_should_stop helper
+14248484: [mptcp-next,v12,6/8] mptcp: implement .splice_read
+14248485: [mptcp-next,v12,7/8] selftests: mptcp: add splice io mode
+14248486: [mptcp-next,v12,8/8] selftests: mptcp: connect: cover splice mode:
     - State: New
     - Series: implement mptcp read_sock
     - Submitter: Geliang Tang
     - URL:
-https://patchwork.kernel.org/project/mptcp/list/?series=997782&state=*&archive=both
-    - Will check if Paolo can look at it, or Mat can also look
+https://patchwork.kernel.org/project/mptcp/list/?series=1006759&state=*&archive=both
+    - Mat will look at it
 
-14215849: [mptcp-net,v2,1/3] selftests: mptcp: close server file descriptor
-14215850: [mptcp-net,v2,2/3] selftests: mptcp: close IPC descriptor on
-server side
-14215851: [mptcp-net,v2,3/3] selftests: mptcp: sockopt: fix error messages:
-    - State: New
-    - Series: misc fixes for sockopt selftests
-    - Submitter: Geliang Tang
+14255898: [v5,mptcp-next,01/10] mptcp: borrow forward memory from subflow
+14255899: [v5,mptcp-next,02/10] mptcp: cleanup fallback data fin reception
+14255900: [v5,mptcp-next,03/10] mptcp: cleanup fallback dummy mapping
+generation
+14255901: [v5,mptcp-next,04/10] mptcp: fix MSG_PEEK stream corruption
+14255902: [v5,mptcp-next,05/10] mptcp: ensure the kernel PM does not
+take action too late
+14255904: [v5,mptcp-next,06/10] mptcp: do not miss early first subflow
+close event notification.
+14255903: [v5,mptcp-next,07/10] mptcp: make mptcp_destroy_common() static
+14255905: [v5,mptcp-next,08/10] mptcp: drop the __mptcp_data_ready() helper
+14255906: [v5,mptcp-next,09/10] mptcp: introduce mptcp-level backlog
+14255907: [v5,mptcp-next,10/10] mptcp: leverage the backlog for RX
+packet processing:
+    - State: Under review
+    - Series: mptcp: introduce backlog processing
+    - Submitter: Paolo Abeni
     - URL:
-https://patchwork.kernel.org/project/mptcp/list/?series=998230&state=*&archive=both
-    - Geliang can send a new version following the modification he
-suggested at the end
-    - (TODO: Matth: reply to Geliang's last question, just in case he is
-not reading ↑ → Done)
+https://patchwork.kernel.org/project/mptcp/list/?series=1008615&state=*&archive=both
+    - TODO: Probably better to have a few more eyes on this series,
+especially on the last two patches.
 
-14224171: [mptcp-net,v2,1/5] mptcp: pm: netlink: fix if-idx type
-14224172: [mptcp-net,v2,2/5] mptcp: set remote_deny_join_id0 on SYN recv
-14224173: [mptcp-net,v2,3/5] mptcp: pm: nl: announce deny-join-id0 flag
-14224174: [mptcp-net,v2,4/5] selftests: mptcp: userspace pm: validate
-deny-join-id0 flag
-14224175: [mptcp-net,v2,5/5] mptcp: tfo: record 'deny join id0' info:
+14258320: [mptcp-net,1/7] mptcp: pm: in-kernel: C-flag: handle late ADD_ADDR
+14258321: [mptcp-net,2/7] selftests: mptcp: join: mark 'flush re-add' as
+skipped if not supported
+14258322: [mptcp-net,3/7] selftests: mptcp: join: mark 'delete re-add
+signal' as skipped if not supported
+14258323: [mptcp-net,4/7] selftests: mptcp: join: mark implicit tests as
+skipped if not supported
+14258324: [mptcp-net,5/7] selftests: mptcp: join: mark laminar tests as
+skipped if not supported
+14258325: [mptcp-net,6/7] mptcp: pm: in-kernel: record fullmesh endp nb
+14258326: [mptcp-net,7/7] mptcp: pm: in kernel: only use fullmesh endp
+if any:
     - State: New
-    - Series: mptcp: pm: nl: announce deny-join-id0 attribute
+    - Series: mptcp: pm: in-kernel: C-flag: handle late ADD_ADDR + misc.
     - Submitter: Matthieu Baerts (NGI0)
     - URL:
-https://patchwork.kernel.org/project/mptcp/list/?series=1000542&state=*&archive=both
-    - see modifications on mptcpd side too
-
-14224374: [mptcp-next,1/4] mptcp: pm: netlink: only add server-side attr
-when true
-14224376: [mptcp-next,2/4] mptcp: pm: netlink: announce server-side flag
-14224375: [mptcp-next,3/4] mptcp: pm: netlink: deprecate server-side
-attribute
-14224377: [mptcp-next,4/4] selftests: mptcp: pm: get server-side flag:
-    - State: New
-    - Series: mptcp: pm: netlink: announce server-side flag
-    - Submitter: Matthieu Baerts (NGI0)
-    - URL:
-https://patchwork.kernel.org/project/mptcp/list/?series=1000598&state=*&archive=both
-
-14225489: [mptcp-net,v3,1/5] mptcp: propagate shutdown to subflows when
-possible
-14225491: [mptcp-net,v3,2/5] selftests: mptcp: connect: catch IO errors
-on listen side
-14225490: [mptcp-net,v3,3/5] selftests: mptcp: avoid spurious errors on
-TCP disconnect
-14225493: [mptcp-net,v3,4/5] selftests: mptcp: print trailing bytes with od
-14225492: [mptcp-net,v3,5/5] selftests: mptcp: connect: print pcap suffix:
-    - State: Queued
-    - Series: selftests: mptcp: avoid spurious errors on TCP disconnect
-    - Submitter: Matthieu Baerts (NGI0)
-    - URL:
-https://patchwork.kernel.org/project/mptcp/list/?series=1000860&state=*&archive=both
+https://patchwork.kernel.org/project/mptcp/list/?series=1009412&state=*&archive=both
 
 
 
 Issues on GitHub:
     https://github.com/multipath-tcp/mptcp_net-next/issues/
 
-    Recently opened (latest from the last meeting: 582):
+    Recently opened (latest from the last meeting: 584):
 
-  584  [syzkaller] improve coverage [syzkaller]:
-      - Some parts are not covered, and are important: FastOpen,
-SynCookies, multiple subflows (?)
+  590  in-kernel PM: use either `subflow` or `signal` depending on
+connector/listener app [enhancement]:
+      - it might help to setup endpoints with both flags, and this new
+option
 
-  583  KMemLeak: from `mptcp_sk_clone_init()` [bug] [selftests]:
-      - not a lot of info, will need to reproduce it first, and
-understand if it is a false positive or not
+  589  selftests: `simult_flows`: "unbalanced bwidth with opposed,
+unbalanced delay" is unstable [bug] [selftests]:
+      - it looks like it is linked to "mptcp: receive path improvement"
+      - many tests on NIPA are failing now
+      -
+https://netdev.bots.linux.dev/flakes.html?tn-needle=mptcp&br-pfx=net-next
+      - Needs to be investigated
+
+  588  in-kernel PM: support NUMA awareness [enhancement]:
+      - maybe not needed netns can be used?
+      - or a global option
+      - (or userspace/BPF PM)
+
+  587  in-kernel PM: Server is only using single IP to establish
+subflows [bug]:
+      - "laminar" flag is helpful
+      - but still a different issue with bind
+
+  586  [syzkaller] WARNING in `subflow_data_ready` [bug] [syzkaller]:
+      - To be checked
+
+  585  MPTCP stalls when primary path connectivity is lost but interface
+remains up [bug]:
+      - TODO: Matth: check the reply
+
 
     Recently discussed:
 
-  577  MPTCP fails to establish subflows over more than 2 networks
-[question] [feedback-needed]:
-      - should we close it next week if no replies?
+  584  [syzkaller] improve coverage [syzkaller]:
+      - Geliang might look at that (assign him?)
 
-  532  Userspace PM doesn't have access to `allow_join_id0` /
-`allow_join_initial_addr_port` bit from the SYN-ACK [enhancement] [pm]
-@matttbe:
-      - Matt sent patches
+  583  KMemLeak: from `mptcp_sk_clone_init()` [bug] [selftests]:
+      - To be checked!
 
-  434  in-kernel PM: increase subflows limit [enhancement] [pm] @matttbe:
-      - Matt will look at that
+  574  [selftests] `mptcp_connect.sh`: `copyfd_io_poll`: poll timed out
+[bug] [selftests]:
+      - To be checked
 
 
     Bugs (opened, flagged as "bug" and assigned)
@@ -547,8 +712,6 @@ understand if it is a false positive or not
 transparent integrations [bug] @geliangtang
   498  in-kernel PM: closed subflows before `RM_ADDR` will not decrement
 `add_addr_accepted` [bug] [pm] @geliangtang
-  487  `send()` fails with `EAGAIN` in blocking IO mode [bug]
-[selftests] [sched] @geliangtang
   484  BPF: `setsockopt` on an MPTCP socket: check support [bug] [bpf]
 @geliangtang
   445  MPTCP Info counters: start seq numbers ones from 0 [bug] @geliangtang
@@ -560,21 +723,23 @@ sending a `REMOVE_ADDR` [bug] [pm] @geliangtang
 
     Bugs (opened and flagged as "bug" and not assigned)
 
+  589  selftests: `simult_flows`: "unbalanced bwidth with opposed,
+unbalanced delay" is unstable [bug] [selftests]
+  587  in-kernel PM: Server is only using single IP to establish
+subflows [bug]
+  586  [syzkaller] WARNING in `subflow_data_ready` [bug] [syzkaller]
+  585  MPTCP stalls when primary path connectivity is lost but interface
+remains up [bug]
   583  KMemLeak: from `mptcp_sk_clone_init()` [bug] [selftests]
-
   581  Default scheduler under-utilizes newly restored subflows on
 long-lived flows after WAN failback; needs penalize/probe/stale
-integration (related to #345, #348, #349) [bug] [triage]:
-      - TODO: reply
-
+integration (related to #345, #348, #349) [bug] [triage]
   574  [selftests] `mptcp_connect.sh`: `copyfd_io_poll`: poll timed out
 [bug] [selftests]
   572  [syzkaller] WARNING in `skb_try_coalesce` [bug] [syzkaller]
   567  [syzbot] WARNING in `__mark_subflow_endp_available` [bug]
 [syzkaller] [reproducer]
   561  [syzkaller]  WARNING in `mptcp_pm_alloc_anno_list` [bug] [syzkaller]
-  559  Adapt `mptcp_rcv_space_adjust()` after the recent TCP
-modifications (`tcp: receive side improvements`) [bug] [enhancement]
   549  pm: in-kernel: set `msk->pm.work_pending` back to `true` [bug]
 [selftests] [pm]
   508  Divide error on device removal [bug] [feedback-needed]
@@ -605,9 +770,6 @@ server test` are sometimes failing [bug] [selftests]
     In Progress (opened, new feature and assigned)
 
   568  socket option: support `IPV6_TCLASS` [enhancement] @geliangtang
-  532  Userspace PM doesn't have access to `allow_join_id0` /
-`allow_join_initial_addr_port` bit from the SYN-ACK [enhancement] [pm]
-@matttbe
   480  MPTCP and KTLS support [enhancement] @geliangtang
   434  in-kernel PM: increase subflows limit [enhancement] [pm] @matttbe
   353  sockopt: uniform code to get/set values [enhancement] @matttbe
@@ -627,22 +789,18 @@ server test` are sometimes failing [bug] [selftests]
 
     Open questions (opened, questions and not assigned)
 
-  577  MPTCP fails to establish subflows over more than 2 networks
-[question] [feedback-needed]
-
-  562  [performance] How much is the overhead of MPTCP？ [question]
-[triage]:
-      - TODO: reply
-
+  562  [performance] How much is the overhead of MPTCP？ [question] [triage]
   530  about mptcp subflow creation question [question] [feedback-needed]
   520  Question about proper MPTCP configuration over VPN. [question]
 [feedback-needed]
   412  shadowsocks-libev not working, need guidance for PM configuration
 [question] [feedback-needed]
 
-
     For later (opened and not assigned)
 
+  590  in-kernel PM: use either `subflow` or `signal` depending on
+connector/listener app [enhancement]
+  588  in-kernel PM: support NUMA awareness [enhancement]
   584  [syzkaller] improve coverage [syzkaller]
   578  sockopt: support `SO_MAX_PACING_RATE` to limit the whole MPTCP
 connection [enhancement]
@@ -654,8 +812,6 @@ user-space (CRIU) [enhancement]
   543  TCPDump: display `MP_TCPRST` info [enhancement]
   542  in-kernel PM: limit to one subflow per network interface for each
 connection [enhancement] [pm]
-  536  PM: new subflow: avoid selecting initial endpoint upon `ADD_ADDR`
-reception if servers deny MPJ to initial address [enhancement] [pm]
   535  TCPDump: display `MP_CAPABLE` C flag [enhancement]
   525  tests: cover more MPTCP socket options [enhancement]
 [packetdrill] [selftests]
@@ -664,8 +820,6 @@ reception if servers deny MPJ to initial address [enhancement] [pm]
   519  Reset the connection once "MPTCP has been verified" instead of a
 fallback [enhancement]
   511  Add MIB counters for sent `MPTCP_RST_EMPTCP` [enhancement]
-  503  in-kernel PM: use endpoints only to create subflows with received
-`ADD_ADDR` [enhancement] [pm]
   497  in-kernel PM: check to create new subflows when some are
 destroyed [enhancement] [pm]
   496  in-kernel PM: store received `ADD_ADDR` [enhancement] [pm]
@@ -726,29 +880,37 @@ added/removed [enhancement]
    24  Revisit layout of struct mptcp_subflow_context [enhancement]
 
 
-    Recently closed (since 2025-08-27)
+    Recently closed (since 20250910)
 
-None.
+  577  MPTCP fails to establish subflows over more than 2 networks
+[question] [feedback-needed]
+  559  Adapt `mptcp_rcv_space_adjust()` after the recent TCP
+modifications (`tcp: receive side improvements`) [bug] [enhancement]
+  536  PM: new subflow: avoid selecting initial endpoint upon `ADD_ADDR`
+reception if servers deny MPJ to initial address [enhancement] [pm] @matttbe
+  532  Userspace PM doesn't have access to `allow_join_id0` /
+`allow_join_initial_addr_port` bit from the SYN-ACK [enhancement] [pm]
+@matttbe
+  503  in-kernel PM: use endpoints only to create subflows with received
+`ADD_ADDR` (`laminar` flag) [enhancement] [pm] @matttbe
+  487  `send()` fails with `EAGAIN` in blocking IO mode [bug]
+[selftests] [sched] @geliangtang
 
 
     Packetdrill PRs
 
-  171  4 days ago    matttbe      mptcp: propagate shutdown to subflows
-when possible:
-      - linked to patches above
-
-  162  2 months ago  geliangtang  mptcp: add splice test
-  52   7 months ago  dcaratti     Add initial coverage for RM_ADDR
+  162  3 months ago  geliangtang  mptcp: add splice test
+  52   8 months ago  dcaratti     Add initial coverage for RM_ADDR
 
 
-    mptcp.dev PRs
-
-  67  5 days ago  geliangtang  apps: os: openEuler
+    mptcp.dev PRs: /
 
 
     mptcpd PRs
 
-  323  22 hours ago  matttbe  interface: add `deny_join_id0` parameter
+  323  28 days ago  matttbe  interface: add `deny_join_id0` parameter:
+      - To be reviewed
+      - TODO: Matth: add one for "luminar" → done
 
 
 
@@ -758,12 +920,26 @@ https://github.com/multipath-tcp/mptcp_net-next/issues?q=is%3Aissue+is%3Aopen+la
     - Current/Coming merge window (6.18):
 https://github.com/orgs/multipath-tcp/projects/16
     - For later: https://github.com/orgs/multipath-tcp/projects/1
+    - TODO: Matth: update changelog + new project → Done
 
 
 
 Patches to send to NetDev:
 
-    - Fixes for other trees: /
+    - Fixes for other trees:
+
+        - [755e40f85002] selftests/bpf: Fix open-coded gettid syscall in
+uprobe syscall tests (Jiri Olsa)
+        - [179b2cedb6a2] selftests/bpf: Fix typo in subtest_basic_usdt
+after merge conflict (Jiri Olsa)
+        - [1830778292dd] selftests/bpf: Fix realloc size in
+bpf_get_addrs (Jiri Olsa):
+            - should be now in Linus tree
+
+        - [e3ddca210ec2] selftests: bpf: fix recent compilation errors
+(Matthieu Baerts (NGI0)):
+            - workaround: a new version of pahole is needed to avoid
+these errors
 
     - Fixes for -net: /
 
@@ -771,51 +947,46 @@ Patches to send to NetDev:
 
     - Features for net-next:
 
-        - [fe224fd29054] mptcp: pm: init and release mptcp_pm_ops
+        - [be533523193c] mptcp: pm: init and release mptcp_pm_ops
 (Geliang Tang)
-        - [59ba19cd9b5d] mptcp: pm: add get_local_id() interface
+        - [7eed553ed1d7] mptcp: pm: add get_local_id() interface
 (Geliang Tang)
-        - [aaecd7a694d8] mptcp: pm: add get_priority() interface
+        - [217dccdf53f8] mptcp: pm: add get_priority() interface
 (Geliang Tang):
-            - blocked: waiting for PM lock refactoring
+            - net-next is closed
 
-        - [e7b8b51e7ab2] mptcp: remove unused returned value of
-check_data_fin (Matthieu Baerts (NGI0)):
-            - can be sent with others later on
-
-    - Features for net-next (next):
-
+    - Features for net-next (next): /
 
     - Features for other trees:
 
-        - [4f0b48bc9421] bpf: Add mptcp_subflow bpf_iter (Geliang Tang)
-        - [067dbd9ee2aa] selftests/bpf: More endpoints for endpoint_init
+        - [aec92428a01d] bpf: Add mptcp_subflow bpf_iter (Geliang Tang)
+        - [de14001bb9c2] selftests/bpf: More endpoints for endpoint_init
 (Geliang Tang)
-        - [ff0f20525359] selftests/bpf: Drop cgroup_fd of run_mptcpify
+        - [4c21f4c4e190] selftests/bpf: Drop cgroup_fd of run_mptcpify
 (Geliang Tang)
-        - [0996dea09d51] bpf: Add mptcp packet scheduler struct_ops
+        - [34841f83ec98] bpf: Add mptcp packet scheduler struct_ops
 (Geliang Tang)
-        - [c036396d4eb7] bpf: Export mptcp packet scheduler helpers
+        - [c0cac57aca50] bpf: Export mptcp packet scheduler helpers
 (Geliang Tang)
-        - [d23a05ca52ee] selftests/bpf: Add bpf scheduler test (Geliang
+        - [0f1bf308f5c5] selftests/bpf: Add bpf scheduler test (Geliang
 Tang)
-        - [0950079b8fe2] selftests/bpf: Add bpf_first scheduler & test
+        - [d8b41ddced2c] selftests/bpf: Add bpf_first scheduler & test
 (Geliang Tang)
-        - [f06203af22e4] selftests/bpf: Add bpf_bkup scheduler & test
+        - [3f6a8ef4ee7c] selftests/bpf: Add bpf_bkup scheduler & test
 (Geliang Tang)
-        - [d8d3691538fa] selftests/bpf: Add bpf_rr scheduler & test
+        - [f0676b785c34] selftests/bpf: Add bpf_rr scheduler & test
 (Geliang Tang)
-        - [e057f15c44b4] selftests/bpf: Add bpf_red scheduler & test
+        - [a6a9abddb154] selftests/bpf: Add bpf_red scheduler & test
 (Geliang Tang)
-        - [c44f1198e4d2] selftests/bpf: Add bpf_burst scheduler & test
+        - [9b01f60b230b] selftests/bpf: Add bpf_burst scheduler & test
 (Geliang Tang):
-            - blocked: waiting for sched API refactoring
+            - blocked: waiting for new sched refactor
 
 
 
 Extra tests:
     - news about Syzkaller? (Matth):
-        - one issue reported by Syzbot: TODO Matth: check → Done
+        - TODO: Matth: recheck
 
     - Packetdrill (Davide):
         - /
@@ -826,16 +997,17 @@ Extra tests:
     - CI (Matth):
         - https://ci-results.mptcp.dev/flakes.html
         - https://netdev.bots.linux.dev/flakes.html?tn-needle=mptcp
-        - Hopefully will be greener soon, thanks to the WIP patches
+        - issues with simult_flows
+        - improvement: now the "normal" and "debug" jobs are split in
+two: with and without mptcp_join.sh → faster, not to time the 2h timeout
 
 
 
 Next meeting:
-    - No meeting on the 24th of September
-    - Next one on Wednesday, the 8th of October.
+    - Next one on Wednesday, the 22nd of October.
     - 17:30 UTC (8.30am PDT, 5.30pm CEST, 11.30pm CST)
     - Still open to everyone!
-    - https://annuel2.framapad.org/p/mptcp_upstreaming_20251008
+    - https://annuel2.framapad.org/p/mptcp_upstreaming_20251022
 
 
 
