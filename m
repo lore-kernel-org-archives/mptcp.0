@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C83D23B61A
-	for <mptcp@lists.linux.dev>; Thu,  9 Oct 2025 17:33:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E41F723B61A
+	for <mptcp@lists.linux.dev>; Thu,  9 Oct 2025 17:33:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760031216; cv=none; b=r20V/g9ZeCt5J1c2iJeGebhU4jFJsxcqGlZ7FfP8WvKllEsu2tzqjpzOxXJuIN9NyyW0rHO2ShFhsbZvVjmdAa1e0WN/NRsEMElAle6lVOagOG3R4Cm1K+ktRP6BEL0ZE9vHEYlfZc6hwGEFGPJYKh7351WN5bgGiRhK8s79cqY=
+	t=1760031217; cv=none; b=SvMD1KCpzZwdy70opMloFC5aIBGaLlo/dgYVV5LI70KqbB9UfeWdh3XiQZegetIu4ijwlbV3KFWy1P2KUJDL7F/bn6rqyLT1glF/48BFuqnKVE4dSeq3TkIBjjhazaWVZBtoTao8p/EbA3EpcRykv2xxipnCfGhO3oXK+s/E+ek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760031216; c=relaxed/simple;
-	bh=AZY3T2vWI+gnOfoPK245lrwFKYlIErypav21nSBwNYw=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=gbASx6qXapnjAMGYzOnQ0QA6Mh9m3w+shJh88KaX+IZuThNhF2+tZ1j1coXsaUCU+3i56IUtVevOSZvcpfTKJ0D8Rs/CiTXCcUHvgLSENN/T4UiIO/kTaFgp1TZzye0GScyHnWbsIq4cJ3uwNgeftrDfAIz8tK3O8m7yvkg9CHU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EGbCzkWn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1760031217; c=relaxed/simple;
+	bh=4SR60wNa0lg543fvKyJACtQSqreohiulh7LcVAyNZ7A=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=qqArfsMN6ejLmjLxb+mMigphsx1WlEh5Czj7ised9Bda/I9tq9Vlk5GRjtmKbrYykVn5q5ypDevio1fTNS7Z55RhLNBF/V5RB8HmVJ14ELytavbqnFsZXquPGHfbGuRDydzh3fe1IgnDlrlS49ozIYqFV9zNTTMCZmj/0eKt/cY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RODxGMPG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EGbCzkWn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56CB8C4CEF8;
-	Thu,  9 Oct 2025 17:33:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RODxGMPG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CE22C4CEF9;
+	Thu,  9 Oct 2025 17:33:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760031215;
-	bh=AZY3T2vWI+gnOfoPK245lrwFKYlIErypav21nSBwNYw=;
-	h=From:Subject:Date:To:Cc:From;
-	b=EGbCzkWn7TfP/DkyGcG706w6YD+0TmSYtB84r3e/S7JgCRJ14jXGEK0zeJYtmwrPM
-	 M4NPSnjdadBBQq2C44ZLXFFyTIEmoyUodem39N0lxgY0FtKIZ53rKfB0OEFyl3VP8i
-	 ks5es5W3hBTpk+NkUPUGxEz5HgvwDBQ51SUU1zMGo8Uix40g4xFKlgEDuVXN5Dexqv
-	 aWgjjs5Ne8Si6Nu1PNenYZY/ijVs4UsfKr6DwFXDbXx6CO5E98qDXaCktJgk14jU5A
-	 nirmZl2cfaYj+A7ZcuZ5DH+5gArIIQIE0DlrAg6T4BNIh/80QIbbErfDs3gHvSAiud
-	 TFr2ZqcdmsKZA==
+	s=k20201202; t=1760031216;
+	bh=4SR60wNa0lg543fvKyJACtQSqreohiulh7LcVAyNZ7A=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=RODxGMPGGx1boPDRJCw9W1mts8PVpRgmRf0Tgkk3AYnzMQqXwckDrSFSD/83mU+mL
+	 thh9Y9rFwQR4uK7U2O+Vm4m9xLiBNa0dvp0fPo58OnjngDL8w/7C+OK1ljyr2bodHO
+	 kL6e19jB6m1PFBxSZpU9oV0CDN3JrND1O6WvDLqQU2i8L8dcs6SB2jCqr1BvUA/WQS
+	 125blqNuVFkjpfpKIYFsQcDDXC/IyycMa9NxAZreLaxl0Q3wa+6vCSNpQCtrMub1AZ
+	 i6Zt9hodOdEIDyMqj2p7jxkUtfTa7eUFH0cKSl7Ob6aAcYAkYymb+f9m4qIyPQ+Uyc
+	 A4Q3iIk25iNKA==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Subject: [PATCH mptcp-next 0/2] selftests: mptcp: join: code dup + new
- 'bind' tests
-Date: Thu, 09 Oct 2025 19:33:23 +0200
-Message-Id: <20251009-bind-extra-listen-v1-0-5ad2077d77a9@kernel.org>
+Date: Thu, 09 Oct 2025 19:33:24 +0200
+Subject: [PATCH mptcp-next 1/2] selftests: mptcp: join: do_transfer: reduce
+ code dup
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,39 +38,66 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAOPx52gC/x3MQQqAIBBA0avErBswTYquEi0qpxqoSVQiiO6et
- PyL9x+IFJgidMUDgS6OfEqOqixg3kZZCdnlBq20rZRqcWJxSHcKI+4cEwk2xlgytra105CdD7T
- w/T97OHyaPUoGMLzvByLCk7BvAAAA
-X-Change-ID: 20251008-bind-extra-listen-7335e35454d2
+Message-Id: <20251009-bind-extra-listen-v1-1-5ad2077d77a9@kernel.org>
+References: <20251009-bind-extra-listen-v1-0-5ad2077d77a9@kernel.org>
+In-Reply-To: <20251009-bind-extra-listen-v1-0-5ad2077d77a9@kernel.org>
 To: MPTCP Upstream <mptcp@lists.linux.dev>
 Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=715; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=AZY3T2vWI+gnOfoPK245lrwFKYlIErypav21nSBwNYw=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDKef3zNsSWFqaTPL32Sqv/LBJHN8ze0b2RhiD8slyFvn
- hExV25aRykLgxgXg6yYIot0W2T+zOdVvCVefhYwc1iZQIYwcHEKwEQWeDH84XgbPz3G5YFkoXnQ
- s6bMpo0HvaddEHmVcZe5ZuuVr0uK9Rn+J7p/nLkxz9h166Wgataz0yMzN5S42J09Uedo2Lz5bHs
- XOwA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1671; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=4SR60wNa0lg543fvKyJACtQSqreohiulh7LcVAyNZ7A=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDKef3yjc/n04ti+xF2XLl/7e3/fetniCZ5W9wuNfY9Nb
+ muaV65g0FHKwiDGxSArpsgi3RaZP/N5FW+Jl58FzBxWJpAhDFycAjARHQmG/6FvrnM4ZCS+vyQz
+ xaxgyZUDcx5cvmrdrL+ZsTT85tbWs0sZGR7sWq9UtkjPZXuJ88vXJrseTGn7eMJkGRNvz+U7og4
+ 3z3MAAA==
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-A clean-up patch, followed by a few new quick tests validating cases
-where the listener 'bind()' to a specific IP address.
+The same extra long command is present twice, with one small different:
+the var for the stdin file is different.
+
+Use a new dedicated var in one command to avoid this code duplication.
 
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
-Matthieu Baerts (NGI0) (2):
-      selftests: mptcp: join: do_transfer: reduce code dup
-      selftests: mptcp: join: validate extra bind cases
+ tools/testing/selftests/net/mptcp/mptcp_join.sh | 15 ++++++---------
+ 1 file changed, 6 insertions(+), 9 deletions(-)
 
- tools/testing/selftests/net/mptcp/mptcp_connect.c |  10 +-
- tools/testing/selftests/net/mptcp/mptcp_join.sh   | 166 ++++++++++++++++++++--
- 2 files changed, 166 insertions(+), 10 deletions(-)
----
-base-commit: 3afc295b5e6e698696cf1fd75db194db2c7f64cd
-change-id: 20251008-bind-extra-listen-7335e35454d2
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+index c90d8e8b95cb..c5169020a515 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -951,6 +951,7 @@ do_transfer()
+ 	local FAILING_LINKS=${FAILING_LINKS:-""}
+ 	local fastclose=${fastclose:-""}
+ 	local speed=${speed:-"fast"}
++	local in="${sin}"
+ 	port=$(get_port)
+ 
+ 	:> "$cout"
+@@ -999,16 +1000,12 @@ do_transfer()
+ 
+ 	extra_srv_args="$extra_args $extra_srv_args"
+ 	if [ "$test_linkfail" -gt 1 ];then
+-		timeout ${timeout_test} \
+-			ip netns exec ${listener_ns} \
+-				./mptcp_connect -t ${timeout_poll} -l -p $port -s ${srv_proto} \
+-					$extra_srv_args "::" < "$sinfail" > "$sout" &
+-	else
+-		timeout ${timeout_test} \
+-			ip netns exec ${listener_ns} \
+-				./mptcp_connect -t ${timeout_poll} -l -p $port -s ${srv_proto} \
+-					$extra_srv_args "::" < "$sin" > "$sout" &
++		in="${sinfail}"
+ 	fi
++	timeout ${timeout_test} \
++		ip netns exec ${listener_ns} \
++			./mptcp_connect -t ${timeout_poll} -l -p ${port} -s ${srv_proto} \
++				${extra_srv_args} "::" < "${in}" > "${sout}" &
+ 	local spid=$!
+ 
+ 	mptcp_lib_wait_local_port_listen "${listener_ns}" "${port}"
 
-Best regards,
 -- 
-Matthieu Baerts (NGI0) <matttbe@kernel.org>
+2.51.0
 
