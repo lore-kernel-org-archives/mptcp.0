@@ -1,84 +1,76 @@
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE2921C3306
-	for <mptcp@lists.linux.dev>; Thu,  9 Oct 2025 16:31:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C83D23B61A
+	for <mptcp@lists.linux.dev>; Thu,  9 Oct 2025 17:33:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760027492; cv=none; b=S6lVF+5oXHRXWiXM2dc8hEhZmdrIj6x+gaEYqxHQume0UTjPIktmHAo8qaA697Nuu9s+AsdIwnVSj5UinU7Rwme0PO0R3KPqde9C+ZC3Y1sGgSWkvLphHL3kBJsbEVdl+pAiALHKc7EdV7uf6otVTSGBU5M/TAJz6znGQklYAL8=
+	t=1760031216; cv=none; b=r20V/g9ZeCt5J1c2iJeGebhU4jFJsxcqGlZ7FfP8WvKllEsu2tzqjpzOxXJuIN9NyyW0rHO2ShFhsbZvVjmdAa1e0WN/NRsEMElAle6lVOagOG3R4Cm1K+ktRP6BEL0ZE9vHEYlfZc6hwGEFGPJYKh7351WN5bgGiRhK8s79cqY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760027492; c=relaxed/simple;
-	bh=qrYoADEnVXD0we0CMIGwA9CwQG9JnCQdKbRtnkxQ5RI=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=pJEEhhCKBtIvhqo/uXlXK5Rz9ohfgupUABp/ZQdgru0CMN9+xjNrgdrB4fmiDdmpgW2uJpXBeNwJpeHADRLfoWQ6D7w5ynH27Jv9inuS6Aukle1zyOWdMa+0lBO1qn8YvqB90HqMKmWfhL8MJ/ADbhx5eDMpf/Qypc8sGuLk35c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-4256ef4eea3so23008755ab.1
-        for <mptcp@lists.linux.dev>; Thu, 09 Oct 2025 09:31:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760027490; x=1760632290;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=cvA/J4dyztXMhogEO5JrwyKZPNKcLHZNyBJCUhQ7UMw=;
-        b=bLTBx9Qau8rv00wVTyy92O4DffuT3NtA2L0eO/T+KTvYt6IGxdJoVUwygmznQlYTmn
-         B/XL3wukVdZYRI5WRP7oDsI0LHSArjkuKOq2msb3z9X4verbQ84YgMUhGVlUCuL92cuF
-         h1l1oGq5nHnLglR8uBTVAFng0ILVJ1lRt7pagy+sDawL27QLvtjlR0W8atf0m60FRMjp
-         Ba6vnRMXsDajrSU8bIQf2RwEeNWRGUkYpzjy/KL0Jzt0PCTO2I/DyZ/fwWMhWsHQqy0e
-         GaSBQUBX1FMfotqTPqHzdH/dItQbTPLKbJmnERqt0/gR75vNr8RHiO5SNXB05XsJmHbv
-         tvDg==
-X-Forwarded-Encrypted: i=1; AJvYcCW3ca9S2orAcHoYAQHYWJzNb9D/igWGVk523DH8TC5FCvkuQBZUpclbpbRATjycfiVld4xMsQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwYbwg5hW71NbhfTjqPsgpS6jlVaQy+NR34syBwRG01D6nyUi66
-	gLSavxZ2fmeLvPCromXLLqQpEj5wam34wQGZ2JaVnewTyDUJI4uLr7qpfXvk7kOZynH7+ViiDan
-	/w/0OR+fD+HUyrRLbT4+nuGaTh320jK8o0zf4i9zB1SHc09Pj539Sx9Puz9A=
-X-Google-Smtp-Source: AGHT+IH+3ddjgqrEcOVhLcyur4IziVSjaf1FPkRItg24ZYiymtjP8/LF++Mm4T8LVfUSNmSyxqfMm/gjl+oHOieZ3ps/9zMniNVy
+	s=arc-20240116; t=1760031216; c=relaxed/simple;
+	bh=AZY3T2vWI+gnOfoPK245lrwFKYlIErypav21nSBwNYw=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=gbASx6qXapnjAMGYzOnQ0QA6Mh9m3w+shJh88KaX+IZuThNhF2+tZ1j1coXsaUCU+3i56IUtVevOSZvcpfTKJ0D8Rs/CiTXCcUHvgLSENN/T4UiIO/kTaFgp1TZzye0GScyHnWbsIq4cJ3uwNgeftrDfAIz8tK3O8m7yvkg9CHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EGbCzkWn; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EGbCzkWn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56CB8C4CEF8;
+	Thu,  9 Oct 2025 17:33:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1760031215;
+	bh=AZY3T2vWI+gnOfoPK245lrwFKYlIErypav21nSBwNYw=;
+	h=From:Subject:Date:To:Cc:From;
+	b=EGbCzkWn7TfP/DkyGcG706w6YD+0TmSYtB84r3e/S7JgCRJ14jXGEK0zeJYtmwrPM
+	 M4NPSnjdadBBQq2C44ZLXFFyTIEmoyUodem39N0lxgY0FtKIZ53rKfB0OEFyl3VP8i
+	 ks5es5W3hBTpk+NkUPUGxEz5HgvwDBQ51SUU1zMGo8Uix40g4xFKlgEDuVXN5Dexqv
+	 aWgjjs5Ne8Si6Nu1PNenYZY/ijVs4UsfKr6DwFXDbXx6CO5E98qDXaCktJgk14jU5A
+	 nirmZl2cfaYj+A7ZcuZ5DH+5gArIIQIE0DlrAg6T4BNIh/80QIbbErfDs3gHvSAiud
+	 TFr2ZqcdmsKZA==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH mptcp-next 0/2] selftests: mptcp: join: code dup + new
+ 'bind' tests
+Date: Thu, 09 Oct 2025 19:33:23 +0200
+Message-Id: <20251009-bind-extra-listen-v1-0-5ad2077d77a9@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:18cf:b0:428:24b4:42d3 with SMTP id
- e9e14a558f8ab-42f873e3dc8mr69617735ab.15.1760027490108; Thu, 09 Oct 2025
- 09:31:30 -0700 (PDT)
-Date: Thu, 09 Oct 2025 09:31:30 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <68e7e362.050a0220.1186a4.0000.GAE@google.com>
-Subject: [syzbot] Monthly mptcp report (Oct 2025)
-From: syzbot <syzbot+listd2daf64d46ed16abd4d5@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, martineau@kernel.org, matttbe@kernel.org, 
-	mptcp@lists.linux.dev, netdev@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAOPx52gC/x3MQQqAIBBA0avErBswTYquEi0qpxqoSVQiiO6et
+ PyL9x+IFJgidMUDgS6OfEqOqixg3kZZCdnlBq20rZRqcWJxSHcKI+4cEwk2xlgytra105CdD7T
+ w/T97OHyaPUoGMLzvByLCk7BvAAAA
+X-Change-ID: 20251008-bind-extra-listen-7335e35454d2
+To: MPTCP Upstream <mptcp@lists.linux.dev>
+Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=715; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=AZY3T2vWI+gnOfoPK245lrwFKYlIErypav21nSBwNYw=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDKef3zNsSWFqaTPL32Sqv/LBJHN8ze0b2RhiD8slyFvn
+ hExV25aRykLgxgXg6yYIot0W2T+zOdVvCVefhYwc1iZQIYwcHEKwEQWeDH84XgbPz3G5YFkoXnQ
+ s6bMpo0HvaddEHmVcZe5ZuuVr0uK9Rn+J7p/nLkxz9h166Wgataz0yMzN5S42J09Uedo2Lz5bHs
+ XOwA=
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hello mptcp maintainers/developers,
+A clean-up patch, followed by a few new quick tests validating cases
+where the listener 'bind()' to a specific IP address.
 
-This is a 31-day syzbot report for the mptcp subsystem.
-All related reports/information can be found at:
-https://syzkaller.appspot.com/upstream/s/mptcp
-
-During the period, 2 new issues were detected and 5 were fixed.
-In total, 4 issues are still open and 33 have already been fixed.
-
-Some of the still happening issues:
-
-Ref Crashes Repro Title
-<1> 9       No    WARNING in subflow_data_ready (4)
-                  https://syzkaller.appspot.com/bug?extid=0ff6b771b4f7a5bce83b
-<2> 1       No    possible deadlock in mptcp_pm_nl_add_addr_doit
-                  https://syzkaller.appspot.com/bug?extid=7fb125d1bae280dc4749
-<3> 1       No    possible deadlock in mptcp_subflow_create_socket (2)
-                  https://syzkaller.appspot.com/bug?extid=fb2c3fa2ba28aec94627
-
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+Matthieu Baerts (NGI0) (2):
+      selftests: mptcp: join: do_transfer: reduce code dup
+      selftests: mptcp: join: validate extra bind cases
 
-To disable reminders for individual bugs, reply with the following command:
-#syz set <Ref> no-reminders
+ tools/testing/selftests/net/mptcp/mptcp_connect.c |  10 +-
+ tools/testing/selftests/net/mptcp/mptcp_join.sh   | 166 ++++++++++++++++++++--
+ 2 files changed, 166 insertions(+), 10 deletions(-)
+---
+base-commit: 3afc295b5e6e698696cf1fd75db194db2c7f64cd
+change-id: 20251008-bind-extra-listen-7335e35454d2
 
-To change bug's subsystems, reply with:
-#syz set <Ref> subsystems: new-subsystem
+Best regards,
+-- 
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-You may send multiple commands in a single email message.
