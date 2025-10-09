@@ -1,230 +1,168 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D0E72E973F
-	for <mptcp@lists.linux.dev>; Thu,  9 Oct 2025 13:58:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A057298CD5
+	for <mptcp@lists.linux.dev>; Thu,  9 Oct 2025 14:30:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760018317; cv=none; b=QeYgtNx5v9GmCH3s8g5D0LkEu7zQuIFPbf52/RVVoRS8P7R1iUmRqBNIgzlqFt1FkSrqLeJhlIm3HXGWuC7nLQsb92mo22wPIXVy+WhOsTUNl/Y6wN85KQr62EIlK7VLXHFKRbv8LxOOP4S6Zi7ird1asRerp/401eY5YzYgs04=
+	t=1760020234; cv=none; b=Kji4uIwbCXbpuGRpFGAy6Nxs4vpM2j58qS1cyDHn5aEZs/zbZhzz1V6NQZUuZBsP4eeeGlNU2sGl27D9Fv0A3t4WHe3ZiwoCxdlp8I+5locVwecVSBt+EpdVBEBr2PFg9ey6NU6IVoN3rFNFWJXyAFOoWgeQhhyxdIwd4Iifamg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760018317; c=relaxed/simple;
-	bh=6ztkbdZjlcNKVC420llv/ShlZ2gvbqQgT2GofJ9HScw=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=HeuCEjG7kBan7TDC+LPR2t+J/fKcnNK9L+gqeE1XfaVJO3aNmFKVVvQOf72jqI7mQaqEidApMiZNbc1BsCtwXZfgtwTnwD2lq5I0MOMSaSRbi6DrY7Tvz32t1Agde333XnffiTdL3nXPRQAlQ4EYEAZivLP1zoNYQvvtRPE+4ok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FYrXqthI; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1760020234; c=relaxed/simple;
+	bh=ujIBICi5lxiWFIOERWgtT/AZJvtCDmtbcjpTO5Yqldg=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=uB5da3wC7ReYZwgMHP4QYQB1Gj11RPEICsufE0ekGKlRYfY8ATcb6m1QyDnArsujvo7dvXH4tGBMvqfXTvAtCGFNjGLddNi6w0oG9fhQW+5nGVJO7+YY5ih+1PyPpjSs+1xw7+gNnPhElN3BNzA2orCZ7bbsDFlnDu5TLOX9BuM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MaeqVDpv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FYrXqthI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1760018314;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HYo+05on/bBnygv972DHSDPBzVxhVYWBvKwG+6f2qKs=;
-	b=FYrXqthIfKr/Jm6ldPcwzstteYo7VXjrR4wKRZxdPZ7obPCjUONR2g7TAR2298fv4QYtUm
-	Mp0xLMVetNAZgK6Yi28yuNuzfKA+LVOpOJut/idDx8VbUSJmG3Tj0SLoFe85IQk7Teub/d
-	HKpwUd4/094HRO5tfqUgjy20yvz5MhU=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-68-UoWN-WZiP1mKSpSyZzK7Cw-1; Thu, 09 Oct 2025 09:58:33 -0400
-X-MC-Unique: UoWN-WZiP1mKSpSyZzK7Cw-1
-X-Mimecast-MFC-AGG-ID: UoWN-WZiP1mKSpSyZzK7Cw_1760018312
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-46e2d845ebeso5432775e9.1
-        for <mptcp@lists.linux.dev>; Thu, 09 Oct 2025 06:58:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760018311; x=1760623111;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :to:from:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=HYo+05on/bBnygv972DHSDPBzVxhVYWBvKwG+6f2qKs=;
-        b=gC6IS2U6YiBHzHOr3qACUazwjnAxslSSX7t44CLzbiyi2EOy9tNtS8Pvhhad47bvSj
-         b6JQiPRPh35bSfJRh5QXRmL6hF6N64t7jyCfC68Y+mKzON+U6oHbKQbtN1xQpPFbsUAc
-         bUhdrLiY88vxazSSWEQGNLZ+wznAx95GM1eXJqKrOb/omFJZI+MPITtE+ZQOWhmv/wPO
-         iFa5zn+Ya0uSOsYC4N8MrNBkCBG4ZKAJGmuPI/pMJXGtlIix6k1HdF/fQE3dW8COuOih
-         BVrhiFqiT1Olz52VpunZDKBwqlu8bzG02xPq0pKX4xtTqhLHsETp51PRv0KL5iPP/3TS
-         S9pg==
-X-Forwarded-Encrypted: i=1; AJvYcCUNZDf5f4G7hHYR51D760JdE/cSvr4bw8NErEdXqnFBSZZHzwo/+0E++ZxqCIddJTI0+op3oA==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yxtsi5CSDS9uvdHFOcnCt8RmvYM/i2YUe8jYITjyl+KStHrSO+w
-	r+FPkWHtJyZQl8yjewDAq2QyPKVN1xNlTs1NvvGmrPhxzaVv2woZrznelUgDb6G2LgyRb48/riP
-	DoYBj80xpnkAmk0dYHFcj1UXcYkG2Y5aBByQxF05fC776u+r5cFU+bnQoG47aAMyb
-X-Gm-Gg: ASbGncv9dNJeRaKS3+FI2sDLooDjUizYJdqyLeKB92HEkQxv7aG0BAfU2Dqj2Nhnban
-	ZhfcBUeaGvhMtQCVeFQXhc1ADTeo4ZKSnf1SraQ4kKdUeh2YuemNKTa//vwiRjcg6Y9L1dG9j2i
-	Mv2txGlBEPVxczE3FxJb0FWYNEscH3iUEqQtb6Q3UAUBTK6wK7eybfBYaqVNWLrVVpVgvdWa5vr
-	F7sh5lrQGkY0ye4I09cVf/k22lRkmi8nR2JyqaOLfYBtzPPYpyAiYPkyl4qZg+BHEsFidckjBPv
-	mIlMFJ0vY0eKgsga41q/xjJyIROa3eg59NRC7lW7akTEIcOQcBFl5Tan8zXFc/Zb03aoP/626G/
-	t17tPogLbvg08IvSITQ==
-X-Received: by 2002:a05:600c:1c23:b0:46e:32a5:bd8d with SMTP id 5b1f17b1804b1-46fa9a892d7mr54023235e9.3.1760018311509;
-        Thu, 09 Oct 2025 06:58:31 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEjlam1twyYaY4rE27zZiEoDbADsU6BC+K0krhaXoYMURQ5+6Ou6Tm6LOxKaHUvUfnx0PpvPg==
-X-Received: by 2002:a05:600c:1c23:b0:46e:32a5:bd8d with SMTP id 5b1f17b1804b1-46fa9a892d7mr54023045e9.3.1760018311060;
-        Thu, 09 Oct 2025 06:58:31 -0700 (PDT)
-Received: from ?IPV6:2a0d:3344:2712:7e10:4d59:d956:544f:d65c? ([2a0d:3344:2712:7e10:4d59:d956:544f:d65c])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-46faf105ad7sm50335875e9.4.2025.10.09.06.58.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Oct 2025 06:58:30 -0700 (PDT)
-Message-ID: <e759f7f6-b90f-4663-9ab4-040f76c2bbba@redhat.com>
-Date: Thu, 9 Oct 2025 15:58:29 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MaeqVDpv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0C70C4CEE7;
+	Thu,  9 Oct 2025 14:30:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1760020233;
+	bh=ujIBICi5lxiWFIOERWgtT/AZJvtCDmtbcjpTO5Yqldg=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=MaeqVDpveGxUaPeniQhP/a9kc8eu4DpIqAewBU8cbi7j9nukFxb8NVvgD0YhAbMcs
+	 slKs7kk945XY45+7uTSF8jGD94J9HWjScsG/wfEaV2ry0B9kIH3QoVe2KIETlZ9sR3
+	 mkjRPjVFAQTaY5uRh5jUUB6zxwTuuugjA2S3Kb5gW+iAwVN8TwYE/SIfXl/4ZVPA7Y
+	 n3J0nxVFulSs/XkJCx4n6PFlW6UuIk4tKt04Iqvp3WDuNzteTGVKxBG2Zy/CTSA03+
+	 13SQCl3yNN+aNW1znHLZJxE5/KtqJq6tKOP1XieRTIQ+l7XFozRYCM8UGpn5BJu7SZ
+	 HJcI6TLNMNAKA==
+Message-ID: <f4aca085-7f33-402d-a0b4-2d36321f6dbe@kernel.org>
+Date: Thu, 9 Oct 2025 16:30:30 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 mptcp-next 00/10] mptcp: introduce backlog processing
-From: Paolo Abeni <pabeni@redhat.com>
-To: Geliang Tang <geliang@kernel.org>, Matthieu Baerts <matttbe@kernel.org>,
- mptcp@lists.linux.dev
-References: <cover.1759737859.git.pabeni@redhat.com>
- <2c9f131e-ef34-4916-8aab-e1420e1ae90b@kernel.org>
- <d0a814c364e744ca6b836ccd5b6e9146882e8d42.camel@kernel.org>
- <b90e5899-6473-4b3b-a239-9202c2e2cb03@redhat.com>
- <2389029f56a9fa496b59be7655987e6d9c6362f2.camel@kernel.org>
- <8a8feb1d-ad10-4ba4-a448-db8a0e45c7c3@redhat.com>
- <c53540268cb422a14d38745c6d0bdb440deb7c11.camel@kernel.org>
- <6d3545fc-f342-4532-b1c3-fb96d9c79fe6@redhat.com>
-In-Reply-To: <6d3545fc-f342-4532-b1c3-fb96d9c79fe6@redhat.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: l6BrJ7GChY2G_OerNevaPkHDAIULhNRJxpaLW0OKDUQ_1760018312
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-next] selftests: mptcp: pm: fix pm_nl_ctl build
+ errors with old glibc
+Content-Language: en-GB, fr-BE
+From: Matthieu Baerts <matttbe@kernel.org>
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <092fc76415deb1b45da5bb691ef6069fbab7dd09.1758591744.git.tanggeliang@kylinos.cn>
+ <20765ed6-3164-4df7-b125-2ee04e90bb23@kernel.org>
+ <8ab7f8a1452b6660e97b757286cfe2d6a7faafd4.camel@kernel.org>
+ <4cb3a2d4-1f6b-4188-ad2e-065bbf9f3640@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <4cb3a2d4-1f6b-4188-ad2e-065bbf9f3640@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On 10/9/25 12:23 PM, Paolo Abeni wrote:
-> On 10/9/25 11:02 AM, Geliang Tang wrote:
->> On Thu, 2025-10-09 at 09:52 +0200, Paolo Abeni wrote:
->>> On 10/9/25 8:54 AM, Geliang Tang wrote:
->>>> On Wed, 2025-10-08 at 09:30 +0200, Paolo Abeni wrote:
->>>>> On 10/8/25 5:07 AM, Geliang Tang wrote:
->>>>>> On Mon, 2025-10-06 at 19:07 +0200, Matthieu Baerts wrote:
->>>>>>> Hi Paolo,
->>>>>>>
->>>>>>> On 06/10/2025 10:11, Paolo Abeni wrote:
->>>>>>>> This series includes RX path improvement built around
->>>>>>>> backlog
->>>>>>>> processing
->>>>>>> Thank you for the new version! This is not a review, but just
->>>>>>> a
->>>>>>> note
->>>>>>> to
->>>>>>> tell you patchew didn't manage to apply the patches due to
->>>>>>> the
->>>>>>> same
->>>>>>> conflict that was already there with the v4 (mptcp_init_skb()
->>>>>>> parameters
->>>>>>> have been moved to the previous line). I just applied the
->>>>>>> patches
->>>>>>> manually. While at it, I also used this test branch for
->>>>>>> syzkaller
->>>>>>> to
->>>>>>> validate them.
->>>>>>>
->>>>>>> (Also, on patch "mptcp: drop the __mptcp_data_ready()
->>>>>>> helper",
->>>>>>> git
->>>>>>> complained that there is a trailing whitespace.)
->>>>>>
->>>>>> Sorry, patches 9-10 break my "implement mptcp read_sock" v12
->>>>>> series. I
->>>>>> rebased this series on patches 1-8, it works well. But after
->>>>>> applying
->>>>>> patches 9-10, I changed mptcp_recv_skb() in [1] from
->>>>>
->>>>> Thanks for the feedback, the applied delta looks good to me.
->>>>>
->>>>>> # INFO: with MPTFO start
->>>>>> # 57 ns2 MPTCP -> ns1 (10.0.1.1:10054      ) MPTCP    
->>>>>> (duration
->>>>>> 60989ms) [FAIL] client exit code 0, server 124
->>>>>> # 
->>>>>> # netns ns1-RqXF2p (listener) socket stat for 10054:
->>>>>> # Failed to find cgroup2 mount
->>>>>> # Failed to find cgroup2 mount
->>>>>> # Failed to find cgroup2 mount
->>>>>> # Netid State    Recv-Q Send-Q Local Address:Port  Peer
->>>>>> Address:Port  
->>>>>> # tcp   ESTAB    0      0           10.0.1.1:10054    
->>>>>> 10.0.1.2:55516
->>>>>> ino:2064372 sk:1 cgroup:unreachable:1 <->
->>>>>> # 	 skmem:(r0,rb131072,t0,tb340992,f0,w0,o0,bl0,d0) sack
->>>>>> cubic
->>>>>> wscale:8,8 rto:206 rtt:5.026/10.034 ato:40 mss:1460 pmtu:1500
->>>>>> rcvmss:1436 advmss:1460 cwnd:10 bytes_sent:115312
->>>>>> bytes_retrans:1560
->>>>>> bytes_acked:113752 bytes_received:5136 segs_out:85 segs_in:16
->>>>>> data_segs_out:83 data_segs_in:4 send 23239156bps lastsnd:60939
->>>>>> lastrcv:61035 lastack:60912 pacing_rate 343879640bps
->>>>>> delivery_rate
->>>>>> 1994680bps delivered:84 busy:123ms sndbuf_limited:41ms(33.3%)
->>>>>> retrans:0/2 dsack_dups:2 rcv_space:14600 rcv_ssthresh:75432
->>>>>> minrtt:0.003 rcv_wnd:75520 tcp-ulp-mptcp flags:Mec
->>>>>> token:0000(id:0)/32ed0950(id:0) seq:2946228641406205031 sfseq:1
->>>>>> ssnoff:1349223625 maplen:5136
->>>>>> # mptcp LAST-ACK 0      0           10.0.1.1:10054    
->>>>>> 10.0.1.2:55516
->>>>>> timer:(keepalive,59sec,0) ino:0 sk:2 cgroup:unreachable:1 ---
->>>>>> # 	
->>>>>> skmem:(r0,rb131072,t0,tb345088,f4088,w352264,o0,bl0,d0)
->>>>>> subflows_max:2 remote_key token:32ed0950
->>>>>> write_seq:6317574787800720824
->>>>>> snd_una:6317574787800376423 rcv_nxt:2946228641406210168
->>>>>> bytes_sent:113752 bytes_received:5136 bytes_acked:113752
->>>>>> subflows_total:1 last_data_sent:60954 last_data_recv:61036
->>>>>> last_ack_recv:60913                                       
->>>>>
->>>>> bytes_sent == bytes_sent, possibly we are missing a window-open
->>>>> event,
->>>>> which in turn should be triggered by a mptcp_cleanp_rbuf(), which
->>>>> AFAICS
->>>>> are correctly invoked in the splice code. TL;DR: I can't find
->>>>> anything
->>>>> obviously wrong :-P
->>>>>
->>>>> Also the default rx buf size is suspect.
->>>>>
->>>>> Can you reproduce the issue while capturing the traffic with
->>>>> tcpdump?
->>>>> if
->>>>> so, could you please share the capture?
->>>>
->>>> Thank you for your suggestion. I've attached several tcpdump logs
->>>> from
->>>> when the tests failed.
->>>
->>> Oh wow! the receiver actually sends the window open notification
->>> (packets 527 and 528 in the trace), but the sender does not react at
->>> all.
->>>
->>> I have no idea/I haven't digged yet why the sender did not try a zero
->>> window probe (it should!), but it looks like we have some old bug in
->>> sender wakeup since MPTCP_DEQUEUE introduction (which is very
->>> surprising, why we did not catch/observe this earlier ?!?). That
->>> could
->>> explain also sporadic mptcp_join failures.
->>>
->>> Could you please try the attached patch?
+Hi Geliang,
+
+On 23/09/2025 10:16, Matthieu Baerts wrote:
+> Hi Geliang,
+> 
+> On 23/09/2025 09:03, Geliang Tang wrote:
+>> Hi Matt,
 >>
->> Thank you very much. I just tested this patch, but it doesn't work. The
->> splice test still fails and reports the same error.
+>> On Tue, 2025-09-23 at 08:53 +0100, Matthieu Baerts wrote:
+>>> Hi Geliang,
+>>>
+>>> On 23/09/2025 02:42, Geliang Tang wrote:
+>>>> From: Geliang Tang <tanggeliang@kylinos.cn>
+>>>>
+>>>> Compiling pm_nl_ctl on older versions of glibc will report the
+>>>> following
+>>>> errors:
+>>>>
+>>>> '''
+>>>>   CC       pm_nl_ctl
+>>>> pm_nl_ctl.c: In function 'capture_events':
+>>>> pm_nl_ctl.c:204:53: error: 'MPTCP_PM_EV_FLAG_DENY_JOIN_ID0'
+>>>> undeclared (first use in this function)
+>>>>   204 |                                         if (flags &
+>>>> MPTCP_PM_EV_FLAG_DENY_JOIN_ID0)
+>>>>       |                                                    
+>>>> ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>>>> pm_nl_ctl.c:204:53: note: each undeclared identifier is reported
+>>>> only once for each function it appears in
+>>>> pm_nl_ctl.c:206:53: error: 'MPTCP_PM_EV_FLAG_SERVER_SIDE'
+>>>> undeclared (first use in this function); did you mean
+>>>> 'MPTCP_ATTR_SERVER_SIDE'?
+>>>>   206 |                                         if (flags &
+>>>> MPTCP_PM_EV_FLAG_SERVER_SIDE)
+>>>>       |                                                    
+>>>> ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>>>>       |                                                    
+>>>> MPTCP_ATTR_SERVER_SIDE
+>>>> '''
+>>>>
+>>>> To fix this, this patch redefines MPTCP_PM_EV_FLAG_DENY_JOIN_ID0
+>>>> and
+>>>> MPTCP_PM_EV_FLAG_SERVER_SIDE in pm_nl_ctl.c.
+>>>
+>>> You shouldn't get this error, because this file is supposed to be
+>>> compiled from the kernel source directory, or at least using the
+>>> kernel
+>>> headers built from there
+>>>
+>>> How do you compile this file? Are you not using the Makefile in the
+>>
+>> I got these errors when compiling the bpf selftests with the commit
+>> "selftests/bpf: Add mptcp pm_nl_ctl link" using mptcp-upstream-virtme-
+>> docker:
+>>
+>> https://patchwork.kernel.org/project/mptcp/patch/8cdb0df7316a6baa93df88b0fe78aaa710f3bb72.1738924354.git.tanggeliang@kylinos.cn/
 > 
-> Uhmmm... right, in the pcap trace you shared the relevant ack opened the
-> (mptcp-level) window, without changing the msk-level ack seq.
+> Mmh, we already had this issue with pm_nl_ctl in BPF selftests in the
+> past, and Alexei didn't want to support KHDR_INCLUDES, because these
+> selftests are not "proper" KSelftests :-/
 > 
-> So we need something similar for __mptcp_check_push(). I can't do it
-> right now. Could you please have a look?
+> Did you not add "pm_nl_ctl" because the BPF CI was using a tool old
+> version of IPRoute? They updated it. So maybe we don't need this patch
+> anymore?
 
-I reviewed again the relevant code and my initial assessment was wrong.
-i.e. there is no need of additional wake-ups.
+If we can use 'ip' instead of 'pm_nl_ctl', we can drop this patch from
+Patchwork. Can we do that?
 
-@Geliang: if you reproduce the issue multiple times, are there any
-common patterns ? i.e. sender files considerably larger than the client
-one, or only a specific subsets of all the test-cases failing, or ...
-
-Thanks,
-
-Paolo
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
 
