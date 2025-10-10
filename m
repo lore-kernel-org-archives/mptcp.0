@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AE7126FA77
-	for <mptcp@lists.linux.dev>; Fri, 10 Oct 2025 10:12:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8733B26FA77
+	for <mptcp@lists.linux.dev>; Fri, 10 Oct 2025 10:12:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760091129; cv=none; b=lNafNUMwwYBSabs99C4SRufo7yFMtCI/BJozKLZ9vRwS9RcvL1qr+C9pVLoEH0VEiYdqB1onnR4sKPuj5RlTP1QuN3tvzlmJCgZV4LYheHmlaf/GHQvhCELG2j7k6I+3Jo9WCA+3VF/e2qi229Q/cAw1sNsKiEu8/mIHqCM/WAE=
+	t=1760091154; cv=none; b=RriLOdHH+Qh/UTQNYqS6J7JWJIO9Tzhfv0cl8ixv6p9XgGTLre4vKXmszhfNgCZrcWT56uDkZ347fb9v+3MtB+utlPL9V+3oD2HwFEU8ga0Ak4s5fBqdUsmoxewOXJUYwRDqAt4xKTTZms+ncQRWxbyh6KM4NFUoztsQ9y13PoY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760091129; c=relaxed/simple;
-	bh=j0voTGVh278xQ5QF23hqIqjxANnXn68j+xGCecuUvUI=;
+	s=arc-20240116; t=1760091154; c=relaxed/simple;
+	bh=BStSGDhdabqJEnXQeTHkGBTqoW1xkS416MKaZhXsUyI=;
 	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ogEeBcurTgSBz18ZbG01RUJQbniC2jhIPYRuGQq+TYEM++X1r2dB50yGlz/QiGPgFNqz84I9ROlJ+lrM9IUBDH7bVnlwnkIRHLV1VgVb38OIvGUGbOcYE0xu6mVTV/L/20/wp4O3Gvf2A781pQVbLk56drjBovanpu7VGkWiTiA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dj19k06N; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=YLsk44+zOxm4J7/Vet51Hi9ESNUl8ldygT3+xQvBiJpW0S4VemO5wcpu/7Yqt0vgo6Us/mVjOt2CX5SbBJkXsT8qklyWUUk2NyxSCxPTg6U9tzEW9Au/oCk7m2IYSfnfse6B2Ip8Fbnd9ckeKIgTBx11Xu4pMvjdUS3VVVwwssU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NPzQkPj2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dj19k06N"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF197C4CEF5;
-	Fri, 10 Oct 2025 10:12:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NPzQkPj2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2927CC4CEF1;
+	Fri, 10 Oct 2025 10:12:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760091126;
-	bh=j0voTGVh278xQ5QF23hqIqjxANnXn68j+xGCecuUvUI=;
+	s=k20201202; t=1760091153;
+	bh=BStSGDhdabqJEnXQeTHkGBTqoW1xkS416MKaZhXsUyI=;
 	h=Subject:From:To:Date:In-Reply-To:References:From;
-	b=Dj19k06N2U0BTnCM/yxwksncEFrVzZQzQiz8OBxHzQoiuTrTtN/MZ4HfUz1oHst68
-	 JkTmy5q8riGTI0byUWvyk/yp0hN4gpmncNaMM97fCzZBOVPTfu6DTs82EOROEkDupo
-	 Fl01gXTU/72fqlYsfDpoh6M6MWYYv67hmLjiLVaMJ8sbW6XpbdwkBWdHShA+cfoFc8
-	 YjszKRKIO7vZq6/IPYt7L4u7UIb7umfXgibd3R5accSWqFwoUxwaKeX8PIu+j0YiNn
-	 YZgBidARYTrBYDJVUDeqgxBmf3kO+0BoC4BNW78LENmZDJzsm+2so5zbE7T0lFK/1l
-	 X5Yy4VshzjREA==
-Message-ID: <ac60f12f22ccfc13477fb82814c8befedf6b18d9.camel@kernel.org>
-Subject: Re: [PATCH mptcp-net 2/7] selftests: mptcp: join: mark 'flush
- re-add' as skipped if not supported
+	b=NPzQkPj2aNWdDmsktxbllqYEKvx4NFYddqfy/sJoyV3klMdlJ+lvqMLdoxJSFOMvM
+	 f7AtI2zoQTvgEgI28IvgtcTxeE/DoRG82UsbQrcmq2B1FX37RLtzV0v9OHzkeiHcv3
+	 aH9qFXWsOxo+czC9XHsAeyOOZCKusgWvkxkF+pMdz2c9od7Vfi/mjN+jUIqzMfg4/g
+	 U50ZkMy8LdDZtkzst+RLTjeZEO77evOwysb1MLkvNPXkRYuzFXIZ7YYNtVg+6tz/QT
+	 f8F7T+EO/tZPpBkg3N9aJvbx9tq5lng2jGib16767O18o0BmTYiU74RWetvSzUdM0I
+	 a/2IKEGwPDemg==
+Message-ID: <355444b6acdf767fbd7fe6a3d820ab3ff43332f5.camel@kernel.org>
+Subject: Re: [PATCH mptcp-net 3/7] selftests: mptcp: join: mark 'delete
+ re-add signal' as skipped if not supported
 From: Geliang Tang <geliang@kernel.org>
 To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, MPTCP Upstream
 	 <mptcp@lists.linux.dev>
-Date: Fri, 10 Oct 2025 18:12:02 +0800
-In-Reply-To: <20251008-c-flag-add-addr-delay-v1-2-c624eb3bf10d@kernel.org>
+Date: Fri, 10 Oct 2025 18:12:30 +0800
+In-Reply-To: <20251008-c-flag-add-addr-delay-v1-3-c624eb3bf10d@kernel.org>
 References: <20251008-c-flag-add-addr-delay-v1-0-c624eb3bf10d@kernel.org>
-	 <20251008-c-flag-add-addr-delay-v1-2-c624eb3bf10d@kernel.org>
+	 <20251008-c-flag-add-addr-delay-v1-3-c624eb3bf10d@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 User-Agent: Evolution 3.52.3-0ubuntu1 
 Precedence: bulk
@@ -54,8 +54,8 @@ On Wed, 2025-10-08 at 15:59 +0200, Matthieu Baerts (NGI0) wrote:
 > 
 > Without that, the test is wrongly marked as passed on older kernels.
 > 
-> Fixes: e06959e9eebd ("selftests: mptcp: join: test for flush/re-add
-> endpoints")
+> Fixes: b5e2fb832f48 ("selftests: mptcp: add explicit test case for
+> remove/readd")
 > Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
 This patch looks good to me.
@@ -71,20 +71,19 @@ Thanks,
 > 
 > diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh
 > b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> index c90d8e8b95cb..deba21ca5a97 100755
+> index deba21ca5a97..59983aed2591 100755
 > --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
 > +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> @@ -4115,7 +4115,7 @@ endpoint_tests()
+> @@ -4040,7 +4040,7 @@ endpoint_tests()
 >  
->  	# flush and re-add
->  	if reset_with_tcp_filter "flush re-add" ns2 10.0.3.2 REJECT
-> OUTPUT &&
+>  	# remove and re-add
+>  	if reset_with_events "delete re-add signal" &&
 > -	   mptcp_lib_kallsyms_has "subflow_rebuild_header$"; then
 > +	   continue_if mptcp_lib_kallsyms_has
 > "subflow_rebuild_header$"; then
->  		pm_nl_set_limits $ns1 0 2
->  		pm_nl_set_limits $ns2 1 2
->  		# broadcast IP: no packet for this address will be
-> received on ns1
+>  		ip netns exec $ns1 sysctl -q
+> net.mptcp.add_addr_timeout=0
+>  		pm_nl_set_limits $ns1 0 3
+>  		pm_nl_set_limits $ns2 3 3
 > 
 
