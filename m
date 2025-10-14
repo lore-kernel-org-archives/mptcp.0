@@ -1,224 +1,116 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56CBE23B62B
-	for <mptcp@lists.linux.dev>; Tue, 14 Oct 2025 07:20:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 621702F0C49
+	for <mptcp@lists.linux.dev>; Tue, 14 Oct 2025 09:44:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760426415; cv=none; b=ZNoTZrMFfsWxAcT7UNUISAQQaCwRDorMz0X861nCXsG1Ka+78gR9Ibmne7bl1JV72U+tHYr4tTYFoEY0DitBCg1HwxSV/KONNh/QbRLjheFL7dNowUyOWCR17T6ic9HsEFnciRmIE2SyNsx0oWaqmRIEZxmv6+YNaZl0uU8HFf0=
+	t=1760435089; cv=none; b=ATVvcbCG3sqKw9e0jcRQV5iKVWTKbEXhqhp6s7kOIP8XWLcGIrf3Y6qssl6t2bTS3LMBhsgIJ4dvVnpMyA9WoimpJjmLwe/5Zag90rwg5gDSWHmYZXxLeI11kUE+0WEc7jysWwliX5U1P5W7LH9CpkEbpTQaiqpaKPpcvLTBiLI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760426415; c=relaxed/simple;
-	bh=uz7lRyP8OXTlhQpQ86ExRYfb0YTgvM/w/VUQsP/QiAA=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ZFKQYR3zZmr5uuFiwYrFsAFoLk6R9dSiCadVzGwkZFp4AQzAZw6kmwZbdyWonWElteQ7SHcUU8DXeVkWjqCnd8Nl588O0Ux3Q9Th+vt6X8sd/2RSv2BspG7AU2AHx9jGUYqzXA0JEGG796wmn91iMGmAKxCRBSpXlx2i8aAs2to=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YKsiOtFX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1760435089; c=relaxed/simple;
+	bh=m5JhoCcsGrplPiPtmFk9oEpBHcoShZZM7V78Qfa8+IQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aO6UXOqUFmpkVqrM1ku6PKK944EDdXwXqzWI23i4NAPxvHT3uvLEgQsbZE9HMjODittrfOupCsKJn19Cpd+oi4UPBDEHQnd4R5wmQ+z9BT6WviKm2TnNzwwFGo+pC+T+/fJ0/jUrgNL3xfwJwU51u37xGH5X4fx68fygBtZldaE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FY8K+XY+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YKsiOtFX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8D4AC4CEF9;
-	Tue, 14 Oct 2025 07:20:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FY8K+XY+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01DADC4CEE7;
+	Tue, 14 Oct 2025 09:44:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760426411;
-	bh=uz7lRyP8OXTlhQpQ86ExRYfb0YTgvM/w/VUQsP/QiAA=;
-	h=Subject:From:To:Date:In-Reply-To:References:From;
-	b=YKsiOtFXl52VDiSkm+JcPUWPE98s6EraEhjMCEkhRTrmFb8GN/VjpYXenguIl67Ss
-	 Mnyr/0BKBuvllfDmEvxkbbc7k5QucPnsvZzvNSFyJc5F6kO0faqg42WXe8Sj+SnYRW
-	 i8Il+miNw4o3X6f8sJSoJWgGvCHV5lwparfzzN2/07KzAm0+jRW0y1biOgzkYMt8IG
-	 sIpf6dvojX/RTi83+zBcKryhHLpKttIP1HGsI4eW5d3bmQnauK4MLnRSOJcLeGqfIE
-	 6d3bcYBIDfip4F7ze2Bt5agJJ5I9Y8rn73exPd3QXtHb9uWY02OH3ROg1B4fMZED0W
-	 fN9SL4gL+QAWA==
-Message-ID: <e7340af8302a2dc98c41580423c0663954db8523.camel@kernel.org>
-Subject: Re: [PATCH mptcp-net 6/7] mptcp: pm: in-kernel: record fullmesh
- endp nb
-From: Geliang Tang <geliang@kernel.org>
-To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, MPTCP Upstream
-	 <mptcp@lists.linux.dev>
-Date: Tue, 14 Oct 2025 15:20:08 +0800
-In-Reply-To: <20251008-c-flag-add-addr-delay-v1-6-c624eb3bf10d@kernel.org>
-References: <20251008-c-flag-add-addr-delay-v1-0-c624eb3bf10d@kernel.org>
-	 <20251008-c-flag-add-addr-delay-v1-6-c624eb3bf10d@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.52.3-0ubuntu1 
+	s=k20201202; t=1760435088;
+	bh=m5JhoCcsGrplPiPtmFk9oEpBHcoShZZM7V78Qfa8+IQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=FY8K+XY+sohQftki2bUCDhoEMZvTbBfLNnLVjnoLPxxSWLiy8tommcJLiBpv0newh
+	 4QcbS8cRRCM2sjK8/zHX4nrQpyTynjkbTL5eMv/xnwyXnucPbzQhsajPz7oIv0Hn1s
+	 /94eY3BObEQdggvjPZiunEgFJLxGgGBHumpEtkce+uJbk5NSmeTPveYTjraBYJNmQg
+	 buN8hys5RRgcAQWDj2EH7IPS3y3+ibAVkXCuTKws4wtBZ5NM76PuE2sNf+CChjue06
+	 I+rjaMkwEZe9AGF0r0/g5YO/A73mwpX+DreGLKsuVHi7ALUiV5PvoK1WK6EvopU2X1
+	 MC2sGPWv3umfA==
+Message-ID: <1a1d7145-35fc-4faf-9b90-d7abb542b758@kernel.org>
+Date: Tue, 14 Oct 2025 11:44:45 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH] gen_initramfs.sh: use 'date -u' to get Timestamp
+Content-Language: en-GB, fr-BE
+To: GangYan <gang.yan@linux.dev>
+Cc: Gang Yan <yangang@kylinos.cn>, Geliang Tang <geliang@kernel.org>,
+ mptcp@lists.linux.dev
+References: <20251013101946.248420-1-yangang@kylinos.cn>
+ <70e9b1e4-41c4-41ba-a684-f6a0b7d7644c@kernel.org>
+ <aOz9HkqEE_2FfNQX@yangang-ThinkPad-T14-Gen-1>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <aOz9HkqEE_2FfNQX@yangang-ThinkPad-T14-Gen-1>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Matt,
+Hi Gang,
 
-Thanks for this patch.
+On 13/10/2025 15:22, GangYan wrote:
+> Still, I have another question: Is the compilation error too strict when
+> failing to retrieve the date? Would throwing a simple error be enough by
+> default? Or would it be better to provide a default value when the date
+> cannot be obtained, ensuring the compilation can be completed?
 
-On Wed, 2025-10-08 at 16:00 +0200, Matthieu Baerts (NGI0) wrote:
-> Instead of iterating over all endpoints, under RCU read lock, just to
-> check if one of them as the fullmesh flag, we can keep a counter of
-> fullmesh endpoint, similar to what is done with the other flags.
-> 
-> This counter is now checked, before iterating over all endpoints.
-> 
-> Similar to the other counters, this new one is also exposed. A
-> userspace
-> app can then know when it is being used in a fullmesh mode, with
-> potentially (too) many subflows.
-> 
-> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> ---
->  include/uapi/linux/mptcp.h |  3 ++-
->  net/mptcp/pm_kernel.c      | 38 +++++++++++++++++++++++++++++++++++-
-> --
->  net/mptcp/protocol.h       |  1 +
->  net/mptcp/sockopt.c        |  2 ++
->  4 files changed, 40 insertions(+), 4 deletions(-)
-> 
-> diff --git a/include/uapi/linux/mptcp.h b/include/uapi/linux/mptcp.h
-> index 87cfab874e24..04eea6d1d0a9 100644
-> --- a/include/uapi/linux/mptcp.h
-> +++ b/include/uapi/linux/mptcp.h
-> @@ -70,7 +70,8 @@ struct mptcp_info {
->  	__u64	mptcpi_bytes_acked;
->  	__u8	mptcpi_subflows_total;
->  	__u8	mptcpi_endp_laminar_max;
-> -	__u8	reserved[2];
-> +	__u8	mptcpi_endp_fullmesh_max;
-> +	__u8	reserved;
->  	__u32	mptcpi_last_data_sent;
->  	__u32	mptcpi_last_data_recv;
->  	__u32	mptcpi_last_ack_recv;
-> diff --git a/net/mptcp/pm_kernel.c b/net/mptcp/pm_kernel.c
-> index df2bc36593d0..054d85045381 100644
-> --- a/net/mptcp/pm_kernel.c
-> +++ b/net/mptcp/pm_kernel.c
-> @@ -22,6 +22,7 @@ struct pm_nl_pernet {
->  	u8			endp_signal_max;
->  	u8			endp_subflow_max;
->  	u8			endp_laminar_max;
-> +	u8			endp_fullmesh_max;
->  	u8			limit_add_addr_accepted;
->  	u8			limit_extra_subflows;
->  	u8			next_id;
-> @@ -70,6 +71,14 @@ u8 mptcp_pm_get_endp_laminar_max(const struct
-> mptcp_sock *msk)
->  }
->  EXPORT_SYMBOL_GPL(mptcp_pm_get_endp_laminar_max);
->  
-> +u8 mptcp_pm_get_endp_fullmesh_max(const struct mptcp_sock *msk)
-> +{
-> +	struct pm_nl_pernet *pernet =
-> pm_nl_get_pernet_from_msk(msk);
-> +
-> +	return READ_ONCE(pernet->endp_fullmesh_max);
-> +}
-> +EXPORT_SYMBOL_GPL(mptcp_pm_get_endp_fullmesh_max);
-> +
->  u8 mptcp_pm_get_limit_add_addr_accepted(const struct mptcp_sock
-> *msk)
->  {
->  	struct pm_nl_pernet *pernet =
-> pm_nl_get_pernet_from_msk(msk);
-> @@ -603,9 +612,12 @@ fill_local_addresses_vec(struct mptcp_sock *msk,
-> struct mptcp_addr_info *remote,
->  	int i;
->  
->  	/* If there is at least one MPTCP endpoint with a fullmesh
-> flag */
-> -	i = fill_local_addresses_vec_fullmesh(msk, remote, locals,
-> c_flag_case);
-> -	if (i)
-> -		return i;
-> +	if (mptcp_pm_get_endp_fullmesh_max(msk)) {
-> +		i = fill_local_addresses_vec_fullmesh(msk, remote,
-> locals,
-> +						      c_flag_case);
-> +		if (i)
-> +			return i;
-> +	}
+Maybe, I don't know. This gen_initramfs.sh already checks that 'date'
+returned something, and if not, it doesn't try to set the option. Maybe
+an extra check could be added to make sure the timestamp is positive?
 
-I'm not sure if endp_fullmesh_max needs to be checked in
-fill_remote_addresses_vec() too, something like:
+  if test -n "$timestamp" && test "$timestamp" -ge 0; then
 
-   if (mptcp_pm_get_endp_fullmesh_max(msk))
-           return fill_remote_addresses_fullmesh(msk, local, addrs);
+But because it is not linked to MPTCP, do you mind checking this with
+the maintainers of this file, please?
 
-Thanks,
--Geliang
-
->  
->  	/* If there is at least one MPTCP endpoint with a laminar
-> flag */
->  	if (mptcp_pm_get_endp_laminar_max(msk))
-> @@ -790,6 +802,10 @@ static int
-> mptcp_pm_nl_append_new_local_addr(struct pm_nl_pernet *pernet,
->  		addr_max = pernet->endp_laminar_max;
->  		WRITE_ONCE(pernet->endp_laminar_max, addr_max + 1);
->  	}
-> +	if (entry->flags & MPTCP_PM_ADDR_FLAG_FULLMESH) {
-> +		addr_max = pernet->endp_fullmesh_max;
-> +		WRITE_ONCE(pernet->endp_fullmesh_max, addr_max + 1);
-> +	}
->  
->  	pernet->endpoints++;
->  	if (!entry->addr.port)
-> @@ -1188,6 +1204,10 @@ int mptcp_pm_nl_del_addr_doit(struct sk_buff
-> *skb, struct genl_info *info)
->  		addr_max = pernet->endp_laminar_max;
->  		WRITE_ONCE(pernet->endp_laminar_max, addr_max - 1);
->  	}
-> +	if (entry->flags & MPTCP_PM_ADDR_FLAG_FULLMESH) {
-> +		addr_max = pernet->endp_fullmesh_max;
-> +		WRITE_ONCE(pernet->endp_fullmesh_max, addr_max - 1);
-> +	}
->  
->  	pernet->endpoints--;
->  	list_del_rcu(&entry->list);
-> @@ -1503,6 +1523,18 @@ int mptcp_pm_nl_set_flags(struct
-> mptcp_pm_addr_entry *local,
->  	changed = (local->flags ^ entry->flags) & mask;
->  	entry->flags = (entry->flags & ~mask) | (local->flags &
-> mask);
->  	*local = *entry;
-> +
-> +	if (changed & MPTCP_PM_ADDR_FLAG_FULLMESH) {
-> +		u8 addr_max = pernet->endp_fullmesh_max;
-> +
-> +		if (entry->flags & MPTCP_PM_ADDR_FLAG_FULLMESH)
-> +			addr_max++;
-> +		else
-> +			addr_max--;
-> +
-> +		WRITE_ONCE(pernet->endp_fullmesh_max, addr_max);
-> +	}
-> +
->  	spin_unlock_bh(&pernet->lock);
->  
->  	mptcp_pm_nl_set_flags_all(net, local, changed);
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index 0545eab23125..1e8f40bb7870 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -1180,6 +1180,7 @@ void __mptcp_pm_kernel_worker(struct mptcp_sock
-> *msk);
->  u8 mptcp_pm_get_endp_signal_max(const struct mptcp_sock *msk);
->  u8 mptcp_pm_get_endp_subflow_max(const struct mptcp_sock *msk);
->  u8 mptcp_pm_get_endp_laminar_max(const struct mptcp_sock *msk);
-> +u8 mptcp_pm_get_endp_fullmesh_max(const struct mptcp_sock *msk);
->  u8 mptcp_pm_get_limit_add_addr_accepted(const struct mptcp_sock
-> *msk);
->  u8 mptcp_pm_get_limit_extra_subflows(const struct mptcp_sock *msk);
->  
-> diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-> index a28a48385885..de90a2897d2d 100644
-> --- a/net/mptcp/sockopt.c
-> +++ b/net/mptcp/sockopt.c
-> @@ -982,6 +982,8 @@ void mptcp_diag_fill_info(struct mptcp_sock *msk,
-> struct mptcp_info *info)
->  			mptcp_pm_get_endp_subflow_max(msk);
->  		info->mptcpi_endp_laminar_max =
->  			mptcp_pm_get_endp_laminar_max(msk);
-> +		info->mptcpi_endp_fullmesh_max =
-> +			mptcp_pm_get_endp_fullmesh_max(msk);
->  	}
->  
->  	if (__mptcp_check_fallback(msk))
-> 
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
 
