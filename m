@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 621702F0C49
-	for <mptcp@lists.linux.dev>; Tue, 14 Oct 2025 09:44:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA068222587
+	for <mptcp@lists.linux.dev>; Tue, 14 Oct 2025 09:57:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760435089; cv=none; b=ATVvcbCG3sqKw9e0jcRQV5iKVWTKbEXhqhp6s7kOIP8XWLcGIrf3Y6qssl6t2bTS3LMBhsgIJ4dvVnpMyA9WoimpJjmLwe/5Zag90rwg5gDSWHmYZXxLeI11kUE+0WEc7jysWwliX5U1P5W7LH9CpkEbpTQaiqpaKPpcvLTBiLI=
+	t=1760435831; cv=none; b=nMSUF7N/celAPioQFLib343EuxL69QP4PUpfnVT75Ef8FKSeazu/Fq3XzTmwtpwNlxUfaYiCXEsr//2DSPT5bfGK/ytMg87H+ozC4NbRrwwl8WJ4WvKk3+vlCbZpfS9NfevPod3r3ErP15n+6AHP/IUIs4L2arSrP6FkMbPcg4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760435089; c=relaxed/simple;
-	bh=m5JhoCcsGrplPiPtmFk9oEpBHcoShZZM7V78Qfa8+IQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aO6UXOqUFmpkVqrM1ku6PKK944EDdXwXqzWI23i4NAPxvHT3uvLEgQsbZE9HMjODittrfOupCsKJn19Cpd+oi4UPBDEHQnd4R5wmQ+z9BT6WviKm2TnNzwwFGo+pC+T+/fJ0/jUrgNL3xfwJwU51u37xGH5X4fx68fygBtZldaE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FY8K+XY+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1760435831; c=relaxed/simple;
+	bh=lqWboh9cu0bs8CnNe74baKVWi21FBq+z2FUOXu81ES4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=FWn66riRAVfJiuK6ORGIojtyjojVnGCbv2kQAp2gfbTMS/CFP3AQpTbSenjOnZJyNBwaOIdDhtAAnBlQ1dq6olJxk4qyYgGP30x4itiAfyi6rBzxKtELrKTzcIfHCewW99rbTowctmXlC+hhfGUB7Yf+q5ZjFpJXIcuBmWSkiIQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q4kRCgUo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FY8K+XY+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01DADC4CEE7;
-	Tue, 14 Oct 2025 09:44:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q4kRCgUo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA736C4CEE7;
+	Tue, 14 Oct 2025 09:57:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760435088;
-	bh=m5JhoCcsGrplPiPtmFk9oEpBHcoShZZM7V78Qfa8+IQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=FY8K+XY+sohQftki2bUCDhoEMZvTbBfLNnLVjnoLPxxSWLiy8tommcJLiBpv0newh
-	 4QcbS8cRRCM2sjK8/zHX4nrQpyTynjkbTL5eMv/xnwyXnucPbzQhsajPz7oIv0Hn1s
-	 /94eY3BObEQdggvjPZiunEgFJLxGgGBHumpEtkce+uJbk5NSmeTPveYTjraBYJNmQg
-	 buN8hys5RRgcAQWDj2EH7IPS3y3+ibAVkXCuTKws4wtBZ5NM76PuE2sNf+CChjue06
-	 I+rjaMkwEZe9AGF0r0/g5YO/A73mwpX+DreGLKsuVHi7ALUiV5PvoK1WK6EvopU2X1
-	 MC2sGPWv3umfA==
-Message-ID: <1a1d7145-35fc-4faf-9b90-d7abb542b758@kernel.org>
-Date: Tue, 14 Oct 2025 11:44:45 +0200
+	s=k20201202; t=1760435830;
+	bh=lqWboh9cu0bs8CnNe74baKVWi21FBq+z2FUOXu81ES4=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=Q4kRCgUoXqFVFmQIdhmTNf+AuYiR43cCubmy1wAy1h0FE1shdlPzzUjLu9SfFj4Lt
+	 sONxsHRgFSQqpckT7DqE8IK57yzc3vfBMqDBQ88+A/fP4QPqvQbJwU8cJLhtBap/eC
+	 /lvTomMuCN/XWm93DtBDGjoi8O2r/XoE8aw/4Adh8KEvcsFsgZeKjEBcmen6SxZRfz
+	 086ecIGPa1071hSPoT8cZoKxr5Pq64VTgqkF8TAI182JCgT7Ro44uENuBeFiPo/tTT
+	 5GjZM8ptNoFX5+lQId6EldbMeH9kP/91geN+vXc00lfd4X5gqc/7+PuFFlvgQx04zY
+	 q8IVhqyDHMJNg==
+Message-ID: <95e3acf3-9a56-47d8-8314-ed6133403283@kernel.org>
+Date: Tue, 14 Oct 2025 11:57:07 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,14 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH] gen_initramfs.sh: use 'date -u' to get Timestamp
+Subject: Re: [PATCH mptcp-next 2/2] selftests: mptcp: join: validate extra
+ bind cases
 Content-Language: en-GB, fr-BE
-To: GangYan <gang.yan@linux.dev>
-Cc: Gang Yan <yangang@kylinos.cn>, Geliang Tang <geliang@kernel.org>,
- mptcp@lists.linux.dev
-References: <20251013101946.248420-1-yangang@kylinos.cn>
- <70e9b1e4-41c4-41ba-a684-f6a0b7d7644c@kernel.org>
- <aOz9HkqEE_2FfNQX@yangang-ThinkPad-T14-Gen-1>
+To: Geliang Tang <geliang@kernel.org>, MPTCP Upstream <mptcp@lists.linux.dev>
+References: <20251009-bind-extra-listen-v1-0-5ad2077d77a9@kernel.org>
+ <20251009-bind-extra-listen-v1-2-5ad2077d77a9@kernel.org>
+ <6efea80680213decf83313995a7afd9e4ce4fafd.camel@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -88,26 +87,113 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <aOz9HkqEE_2FfNQX@yangang-ThinkPad-T14-Gen-1>
+In-Reply-To: <6efea80680213decf83313995a7afd9e4ce4fafd.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Gang,
+Hi Geliang,
 
-On 13/10/2025 15:22, GangYan wrote:
-> Still, I have another question: Is the compilation error too strict when
-> failing to retrieve the date? Would throwing a simple error be enough by
-> default? Or would it be better to provide a default value when the date
-> cannot be obtained, ensuring the compilation can be completed?
+Thank you for the review!
 
-Maybe, I don't know. This gen_initramfs.sh already checks that 'date'
-returned something, and if not, it doesn't try to set the option. Maybe
-an extra check could be added to make sure the timestamp is positive?
+On 14/10/2025 08:46, Geliang Tang wrote:
+> It took me some time to understand this test.
+Is there something I should add in the commit message to make this clearer?
 
-  if test -n "$timestamp" && test "$timestamp" -ge 0; then
+> On Thu, 2025-10-09 at 19:33 +0200, Matthieu Baerts (NGI0) wrote:
+>> By design, an MPTCP connection will not accept extra subflows where
+>> no
+>> MPTCP listening sockets can accept such requests.
+>>
+>> In other words, it means that if the 'server' listens on a specific
+>> address / device, it cannot accept MP_JOIN sent to a different
+>> address /
+>> device. Except if there is another MPTCP listening socket accepting
+>> them.
+>>
+>> This is what the new tests are validating:
+>>
+>>  - Forcing a bind on the main v4/v6 address, and checking that
+>> MP_JOIN
+>>    to announced addresses are not accepted.
+>>
+>>  - Also forcing a bind on the main v4/v6 address, but before, another
+>>    listening socket is created to accept additional subflows. Note
+>> that
+>>    'mptcpize run nc -l' -- or something else only doing:
+>> socket(MPTCP),
+>>    bind(<IP>), listen(0) -- would be enough, but here mptcp_connect
+>> is
+>>    reused not to depend on another tool just for that.
+>>
+>>  - Same as the previous one, but using v6 link-local addresses: this
+>> is
+>>    a bit particular because it is required to specify the outgoing
+>>    network interface when connecting to a link-local address
+>> announced
+>>    by the other peer. When using the routing rules, this doesn't work
+>>    (the outgoing interface is not known) ; but it does work with a
+>>    'laminar' endpoint having a specified interface.
+>>
+>> Note that extra small modifications are needed for these tests to
+>> work:
+>>
+>>  - mptcp_connect's check_getpeername_connect() check should strip the
+>>    specified interface when comparing addresses.
+>>
+>>  - With IPv6 link-local addresses, it is required to wait for them to
+>>    be ready (no longer in 'tentative' mode) before using them,
+>> otherwise
+>>    the bind() will not be allowed.
+>>
+>> Link: https://github.com/multipath-tcp/mptcp_net-next/issues/591
+>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+>> ---
+>>  tools/testing/selftests/net/mptcp/mptcp_connect.c |  10 +-
+>>  tools/testing/selftests/net/mptcp/mptcp_join.sh   | 153
+>> +++++++++++++++++++++-
+>>  2 files changed, 161 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c
+>> b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+>> index b148cadb96d0..c030b08a7195 100644
+>> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
+>> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+>> @@ -1064,6 +1064,8 @@ static void check_getpeername_connect(int fd)
+>>  	socklen_t salen = sizeof(ss);
+>>  	char a[INET6_ADDRSTRLEN];
+>>  	char b[INET6_ADDRSTRLEN];
+>> +	const char *iface;
+>> +	size_t len;
+>>  
+>>  	if (getpeername(fd, (struct sockaddr *)&ss, &salen) < 0) {
+>>  		perror("getpeername");
+>> @@ -1073,7 +1075,13 @@ static void check_getpeername_connect(int fd)
+>>  	xgetnameinfo((struct sockaddr *)&ss, salen,
+>>  		     a, sizeof(a), b, sizeof(b));
+>>  
+>> -	if (strcmp(cfg_host, a) || strcmp(cfg_port, b))
+>> +	iface = strchr(cfg_host, '%');
+>> +	if (iface)
+>> +		len = iface - cfg_host;
+>> +	else
+>> +		len = strlen(cfg_host) + 1;
+> 
+> Why do we need to add 1 here? I tested it and it works without adding
+> 1.
 
-But because it is not linked to MPTCP, do you mind checking this with
-the maintainers of this file, please?
+If I don't add 1, I will not include '\0' in the comparison with "a".
+
+In other words, if you have:
+
+  cfg_host = "abc";
+  a = "abc123";
+  len = strlen(cfg_host); /* = 3 */
+
+Then strncmp(cfg_host, a, len) will return 0 because the 3 first chars
+are "abc". With 4 chars, they are different: "abc\0" vs "abc1".
+
+So it is important to take the delimiter into account, just in case one
+is the prefix of the other one.
 
 Cheers,
 Matt
