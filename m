@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2E58238176
-	for <mptcp@lists.linux.dev>; Tue, 14 Oct 2025 06:46:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56CBE23B62B
+	for <mptcp@lists.linux.dev>; Tue, 14 Oct 2025 07:20:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760424406; cv=none; b=Pqc2z0bcCqQ8oxu8tCzlEjUehxPsz4B1gN+dES60jYf/JmvUyfPVyiTMscvg53AQmkLofGdPnaAiSAxTtaFPMGu81caSnBJKzlCd8FTlrpjKX5/KefaOrZCAUzvGyXBaWjmq7N8xKIXmd4k/N78h7hJP5YayHaPwgaWEZgNNdCY=
+	t=1760426415; cv=none; b=ZNoTZrMFfsWxAcT7UNUISAQQaCwRDorMz0X861nCXsG1Ka+78gR9Ibmne7bl1JV72U+tHYr4tTYFoEY0DitBCg1HwxSV/KONNh/QbRLjheFL7dNowUyOWCR17T6ic9HsEFnciRmIE2SyNsx0oWaqmRIEZxmv6+YNaZl0uU8HFf0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760424406; c=relaxed/simple;
-	bh=K1ug6mOlFXgnt5ys9pVt+45z4M2t+Nqqkfyjd0E1HkI=;
+	s=arc-20240116; t=1760426415; c=relaxed/simple;
+	bh=uz7lRyP8OXTlhQpQ86ExRYfb0YTgvM/w/VUQsP/QiAA=;
 	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=qWPD9RvG6VHocB0v/mmm9Todny+BUeL3sSEFn4ZUPqV00darU1aFuja5e/sjKZv8Om4fE338Cmj2lEf3IcH/1ZmcBnwnGrg6VdSB4oRaF7VI1SzSYJjUI4bhG9SfYyiFK6lX480ks9RcJK9gcgb+KZ5q+jnwJk3HS5YmVc2pryA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iUSybTHy; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=ZFKQYR3zZmr5uuFiwYrFsAFoLk6R9dSiCadVzGwkZFp4AQzAZw6kmwZbdyWonWElteQ7SHcUU8DXeVkWjqCnd8Nl588O0Ux3Q9Th+vt6X8sd/2RSv2BspG7AU2AHx9jGUYqzXA0JEGG796wmn91iMGmAKxCRBSpXlx2i8aAs2to=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YKsiOtFX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iUSybTHy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EDD5C4CEE7;
-	Tue, 14 Oct 2025 06:46:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YKsiOtFX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8D4AC4CEF9;
+	Tue, 14 Oct 2025 07:20:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760424406;
-	bh=K1ug6mOlFXgnt5ys9pVt+45z4M2t+Nqqkfyjd0E1HkI=;
+	s=k20201202; t=1760426411;
+	bh=uz7lRyP8OXTlhQpQ86ExRYfb0YTgvM/w/VUQsP/QiAA=;
 	h=Subject:From:To:Date:In-Reply-To:References:From;
-	b=iUSybTHyJueoUKI3dn6C1GHhPmlHE5KLb5aJ3xItbAFyGwQAl6uqpB13CNqLvtOsr
-	 kJUZ5BrzNnhKhHctuDMvzWqFJpfg5FIO5C/K7VyKFXz2LZZM0H/4qkEaBVEdrOnkIu
-	 Ay0hx80eKwlpYiYHae5qOvakQNmBoTDm1UBxkxJ6oYh3sDiw5+N5kguxzybg16EtIF
-	 LYPtoMxq3ElkjY5+3yFvEDl0SgtqlSzK1+rLN2N7AnOh3N4GQyrDbzpCXvGoBWOVv3
-	 2SimIBg47sd9R63WCgto23m3cG0MYQdKzUc4UUZ1YkC6NvUx8SzjlucAnkfm+FZ3YX
-	 ES28H5YsFH9DA==
-Message-ID: <6efea80680213decf83313995a7afd9e4ce4fafd.camel@kernel.org>
-Subject: Re: [PATCH mptcp-next 2/2] selftests: mptcp: join: validate extra
- bind cases
+	b=YKsiOtFXl52VDiSkm+JcPUWPE98s6EraEhjMCEkhRTrmFb8GN/VjpYXenguIl67Ss
+	 Mnyr/0BKBuvllfDmEvxkbbc7k5QucPnsvZzvNSFyJc5F6kO0faqg42WXe8Sj+SnYRW
+	 i8Il+miNw4o3X6f8sJSoJWgGvCHV5lwparfzzN2/07KzAm0+jRW0y1biOgzkYMt8IG
+	 sIpf6dvojX/RTi83+zBcKryhHLpKttIP1HGsI4eW5d3bmQnauK4MLnRSOJcLeGqfIE
+	 6d3bcYBIDfip4F7ze2Bt5agJJ5I9Y8rn73exPd3QXtHb9uWY02OH3ROg1B4fMZED0W
+	 fN9SL4gL+QAWA==
+Message-ID: <e7340af8302a2dc98c41580423c0663954db8523.camel@kernel.org>
+Subject: Re: [PATCH mptcp-net 6/7] mptcp: pm: in-kernel: record fullmesh
+ endp nb
 From: Geliang Tang <geliang@kernel.org>
 To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, MPTCP Upstream
 	 <mptcp@lists.linux.dev>
-Date: Tue, 14 Oct 2025 14:46:42 +0800
-In-Reply-To: <20251009-bind-extra-listen-v1-2-5ad2077d77a9@kernel.org>
-References: <20251009-bind-extra-listen-v1-0-5ad2077d77a9@kernel.org>
-	 <20251009-bind-extra-listen-v1-2-5ad2077d77a9@kernel.org>
+Date: Tue, 14 Oct 2025 15:20:08 +0800
+In-Reply-To: <20251008-c-flag-add-addr-delay-v1-6-c624eb3bf10d@kernel.org>
+References: <20251008-c-flag-add-addr-delay-v1-0-c624eb3bf10d@kernel.org>
+	 <20251008-c-flag-add-addr-delay-v1-6-c624eb3bf10d@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 User-Agent: Evolution 3.52.3-0ubuntu1 
 Precedence: bulk
@@ -48,326 +48,177 @@ Content-Transfer-Encoding: 8bit
 
 Hi Matt,
 
-It took me some time to understand this test.
+Thanks for this patch.
 
-On Thu, 2025-10-09 at 19:33 +0200, Matthieu Baerts (NGI0) wrote:
-> By design, an MPTCP connection will not accept extra subflows where
-> no
-> MPTCP listening sockets can accept such requests.
+On Wed, 2025-10-08 at 16:00 +0200, Matthieu Baerts (NGI0) wrote:
+> Instead of iterating over all endpoints, under RCU read lock, just to
+> check if one of them as the fullmesh flag, we can keep a counter of
+> fullmesh endpoint, similar to what is done with the other flags.
 > 
-> In other words, it means that if the 'server' listens on a specific
-> address / device, it cannot accept MP_JOIN sent to a different
-> address /
-> device. Except if there is another MPTCP listening socket accepting
-> them.
+> This counter is now checked, before iterating over all endpoints.
 > 
-> This is what the new tests are validating:
+> Similar to the other counters, this new one is also exposed. A
+> userspace
+> app can then know when it is being used in a fullmesh mode, with
+> potentially (too) many subflows.
 > 
->  - Forcing a bind on the main v4/v6 address, and checking that
-> MP_JOIN
->    to announced addresses are not accepted.
-> 
->  - Also forcing a bind on the main v4/v6 address, but before, another
->    listening socket is created to accept additional subflows. Note
-> that
->    'mptcpize run nc -l' -- or something else only doing:
-> socket(MPTCP),
->    bind(<IP>), listen(0) -- would be enough, but here mptcp_connect
-> is
->    reused not to depend on another tool just for that.
-> 
->  - Same as the previous one, but using v6 link-local addresses: this
-> is
->    a bit particular because it is required to specify the outgoing
->    network interface when connecting to a link-local address
-> announced
->    by the other peer. When using the routing rules, this doesn't work
->    (the outgoing interface is not known) ; but it does work with a
->    'laminar' endpoint having a specified interface.
-> 
-> Note that extra small modifications are needed for these tests to
-> work:
-> 
->  - mptcp_connect's check_getpeername_connect() check should strip the
->    specified interface when comparing addresses.
-> 
->  - With IPv6 link-local addresses, it is required to wait for them to
->    be ready (no longer in 'tentative' mode) before using them,
-> otherwise
->    the bind() will not be allowed.
-> 
-> Link: https://github.com/multipath-tcp/mptcp_net-next/issues/591
 > Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 > ---
->  tools/testing/selftests/net/mptcp/mptcp_connect.c |  10 +-
->  tools/testing/selftests/net/mptcp/mptcp_join.sh   | 153
-> +++++++++++++++++++++-
->  2 files changed, 161 insertions(+), 2 deletions(-)
+>  include/uapi/linux/mptcp.h |  3 ++-
+>  net/mptcp/pm_kernel.c      | 38 +++++++++++++++++++++++++++++++++++-
+> --
+>  net/mptcp/protocol.h       |  1 +
+>  net/mptcp/sockopt.c        |  2 ++
+>  4 files changed, 40 insertions(+), 4 deletions(-)
 > 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c
-> b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-> index b148cadb96d0..c030b08a7195 100644
-> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-> @@ -1064,6 +1064,8 @@ static void check_getpeername_connect(int fd)
->  	socklen_t salen = sizeof(ss);
->  	char a[INET6_ADDRSTRLEN];
->  	char b[INET6_ADDRSTRLEN];
-> +	const char *iface;
-> +	size_t len;
+> diff --git a/include/uapi/linux/mptcp.h b/include/uapi/linux/mptcp.h
+> index 87cfab874e24..04eea6d1d0a9 100644
+> --- a/include/uapi/linux/mptcp.h
+> +++ b/include/uapi/linux/mptcp.h
+> @@ -70,7 +70,8 @@ struct mptcp_info {
+>  	__u64	mptcpi_bytes_acked;
+>  	__u8	mptcpi_subflows_total;
+>  	__u8	mptcpi_endp_laminar_max;
+> -	__u8	reserved[2];
+> +	__u8	mptcpi_endp_fullmesh_max;
+> +	__u8	reserved;
+>  	__u32	mptcpi_last_data_sent;
+>  	__u32	mptcpi_last_data_recv;
+>  	__u32	mptcpi_last_ack_recv;
+> diff --git a/net/mptcp/pm_kernel.c b/net/mptcp/pm_kernel.c
+> index df2bc36593d0..054d85045381 100644
+> --- a/net/mptcp/pm_kernel.c
+> +++ b/net/mptcp/pm_kernel.c
+> @@ -22,6 +22,7 @@ struct pm_nl_pernet {
+>  	u8			endp_signal_max;
+>  	u8			endp_subflow_max;
+>  	u8			endp_laminar_max;
+> +	u8			endp_fullmesh_max;
+>  	u8			limit_add_addr_accepted;
+>  	u8			limit_extra_subflows;
+>  	u8			next_id;
+> @@ -70,6 +71,14 @@ u8 mptcp_pm_get_endp_laminar_max(const struct
+> mptcp_sock *msk)
+>  }
+>  EXPORT_SYMBOL_GPL(mptcp_pm_get_endp_laminar_max);
 >  
->  	if (getpeername(fd, (struct sockaddr *)&ss, &salen) < 0) {
->  		perror("getpeername");
-> @@ -1073,7 +1075,13 @@ static void check_getpeername_connect(int fd)
->  	xgetnameinfo((struct sockaddr *)&ss, salen,
->  		     a, sizeof(a), b, sizeof(b));
+> +u8 mptcp_pm_get_endp_fullmesh_max(const struct mptcp_sock *msk)
+> +{
+> +	struct pm_nl_pernet *pernet =
+> pm_nl_get_pernet_from_msk(msk);
+> +
+> +	return READ_ONCE(pernet->endp_fullmesh_max);
+> +}
+> +EXPORT_SYMBOL_GPL(mptcp_pm_get_endp_fullmesh_max);
+> +
+>  u8 mptcp_pm_get_limit_add_addr_accepted(const struct mptcp_sock
+> *msk)
+>  {
+>  	struct pm_nl_pernet *pernet =
+> pm_nl_get_pernet_from_msk(msk);
+> @@ -603,9 +612,12 @@ fill_local_addresses_vec(struct mptcp_sock *msk,
+> struct mptcp_addr_info *remote,
+>  	int i;
 >  
-> -	if (strcmp(cfg_host, a) || strcmp(cfg_port, b))
-> +	iface = strchr(cfg_host, '%');
-> +	if (iface)
-> +		len = iface - cfg_host;
-> +	else
-> +		len = strlen(cfg_host) + 1;
+>  	/* If there is at least one MPTCP endpoint with a fullmesh
+> flag */
+> -	i = fill_local_addresses_vec_fullmesh(msk, remote, locals,
+> c_flag_case);
+> -	if (i)
+> -		return i;
+> +	if (mptcp_pm_get_endp_fullmesh_max(msk)) {
+> +		i = fill_local_addresses_vec_fullmesh(msk, remote,
+> locals,
+> +						      c_flag_case);
+> +		if (i)
+> +			return i;
+> +	}
 
-Why do we need to add 1 here? I tested it and it works without adding
-1.
+I'm not sure if endp_fullmesh_max needs to be checked in
+fill_remote_addresses_vec() too, something like:
 
-Other than this minor comment, everything looks good to me. No need for
-a v2; it can be modified when applying if needed.
-
-Reviewed-by: Geliang Tang <geliang@kernel.org>
+   if (mptcp_pm_get_endp_fullmesh_max(msk))
+           return fill_remote_addresses_fullmesh(msk, local, addrs);
 
 Thanks,
 -Geliang
 
-> +
-> +	if (strncmp(cfg_host, a, len) || strcmp(cfg_port, b))
->  		fprintf(stderr, "%s: %s vs %s, %s vs %s\n",
-> __func__,
->  			cfg_host, a, cfg_port, b);
->  }
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> index c5169020a515..e323f81cdc02 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> @@ -62,6 +62,7 @@ unset sflags
->  unset fastclose
->  unset fullmesh
->  unset speed
-> +unset bind_addr
->  unset join_syn_rej
->  unset join_csum_ns1
->  unset join_csum_ns2
-> @@ -645,6 +646,27 @@ wait_mpj()
->  	done
->  }
 >  
-> +wait_ll_ready()
-> +{
-> +	local ns="${1}"
-> +
-> +	local i
-> +	for i in $(seq 50); do
-> +		ip -n "${ns}" -6 addr show scope link | grep "inet6
-> fe80" |
-> +			grep -qw "tentative" || break
-> +		sleep 0.1
-> +	done
-> +}
-> +
-> +get_ll_addr()
-> +{
-> +	local ns="${1}"
-> +	local iface="${2}"
-> +
-> +	ip -n "${ns}" -6 addr show dev "${iface}" scope link |
-> +		grep "inet6 fe80" | sed 's#.*\(fe80::.*\)/.*#\1#'
-> +}
-> +
->  kill_events_pids()
->  {
->  	mptcp_lib_kill_wait $evts_ns1_pid
-> @@ -952,6 +974,7 @@ do_transfer()
->  	local fastclose=${fastclose:-""}
->  	local speed=${speed:-"fast"}
->  	local in="${sin}"
-> +	local bind_addr=${bind_addr:-"::"}
->  	port=$(get_port)
+>  	/* If there is at least one MPTCP endpoint with a laminar
+> flag */
+>  	if (mptcp_pm_get_endp_laminar_max(msk))
+> @@ -790,6 +802,10 @@ static int
+> mptcp_pm_nl_append_new_local_addr(struct pm_nl_pernet *pernet,
+>  		addr_max = pernet->endp_laminar_max;
+>  		WRITE_ONCE(pernet->endp_laminar_max, addr_max + 1);
+>  	}
+> +	if (entry->flags & MPTCP_PM_ADDR_FLAG_FULLMESH) {
+> +		addr_max = pernet->endp_fullmesh_max;
+> +		WRITE_ONCE(pernet->endp_fullmesh_max, addr_max + 1);
+> +	}
 >  
->  	:> "$cout"
-> @@ -1005,7 +1028,7 @@ do_transfer()
->  	timeout ${timeout_test} \
->  		ip netns exec ${listener_ns} \
->  			./mptcp_connect -t ${timeout_poll} -l -p
-> ${port} -s ${srv_proto} \
-> -				${extra_srv_args} "::" < "${in}" >
-> "${sout}" &
-> +				${extra_srv_args} "${bind_addr}" <
-> "${in}" > "${sout}" &
->  	local spid=$!
+>  	pernet->endpoints++;
+>  	if (!entry->addr.port)
+> @@ -1188,6 +1204,10 @@ int mptcp_pm_nl_del_addr_doit(struct sk_buff
+> *skb, struct genl_info *info)
+>  		addr_max = pernet->endp_laminar_max;
+>  		WRITE_ONCE(pernet->endp_laminar_max, addr_max - 1);
+>  	}
+> +	if (entry->flags & MPTCP_PM_ADDR_FLAG_FULLMESH) {
+> +		addr_max = pernet->endp_fullmesh_max;
+> +		WRITE_ONCE(pernet->endp_fullmesh_max, addr_max - 1);
+> +	}
 >  
->  	mptcp_lib_wait_local_port_listen "${listener_ns}" "${port}"
-> @@ -3230,6 +3253,133 @@ add_addr_ports_tests()
->  	fi
->  }
+>  	pernet->endpoints--;
+>  	list_del_rcu(&entry->list);
+> @@ -1503,6 +1523,18 @@ int mptcp_pm_nl_set_flags(struct
+> mptcp_pm_addr_entry *local,
+>  	changed = (local->flags ^ entry->flags) & mask;
+>  	entry->flags = (entry->flags & ~mask) | (local->flags &
+> mask);
+>  	*local = *entry;
+> +
+> +	if (changed & MPTCP_PM_ADDR_FLAG_FULLMESH) {
+> +		u8 addr_max = pernet->endp_fullmesh_max;
+> +
+> +		if (entry->flags & MPTCP_PM_ADDR_FLAG_FULLMESH)
+> +			addr_max++;
+> +		else
+> +			addr_max--;
+> +
+> +		WRITE_ONCE(pernet->endp_fullmesh_max, addr_max);
+> +	}
+> +
+>  	spin_unlock_bh(&pernet->lock);
 >  
-> +bind_tests()
-> +{
-> +	# bind to one address should not allow extra subflows to
-> other addresses
-> +	if reset "bind main address v4, no join v4"; then
-> +		pm_nl_set_limits $ns1 0 2
-> +		pm_nl_set_limits $ns2 2 2
-> +		pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
-> +		bind_addr="10.0.1.1" \
-> +			run_tests $ns1 $ns2 10.0.1.1
-> +		join_syn_tx=1 \
-> +			chk_join_nr 0 0 0
-> +		chk_add_nr 1 1
-> +	fi
-> +
-> +	# bind to one address should not allow extra subflows to
-> other addresses
-> +	if reset "bind main address v6, no join v6"; then
-> +		pm_nl_set_limits $ns1 0 2
-> +		pm_nl_set_limits $ns2 2 2
-> +		pm_nl_add_endpoint $ns1 dead:beef:2::1 flags signal
-> +		bind_addr="dead:beef:1::1" \
-> +			run_tests $ns1 $ns2 dead:beef:1::1
-> +		join_syn_tx=1 \
-> +			chk_join_nr 0 0 0
-> +		chk_add_nr 1 1
-> +	fi
-> +
-> +	# multiple binds to allow extra subflows to other addresses
-> +	if reset "multiple bind to allow joins v4"; then
-> +		local extra_bind
-> +
-> +		pm_nl_set_limits $ns1 0 2
-> +		pm_nl_set_limits $ns2 2 2
-> +		pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
-> +
-> +		# Launching another app listening on a different
-> address
-> +		# Note: it could be a totally different app, e.g.
-> nc, socat, ...
-> +		ip netns exec ${ns1} ./mptcp_connect -l -p
-> "$(get_port)" \
-> +			-s MPTCP 10.0.2.1 &
-> +		extra_bind=$!
-> +
-> +		bind_addr="10.0.1.1" \
-> +			run_tests $ns1 $ns2 10.0.1.1
-> +		chk_join_nr 1 1 1
-> +		chk_add_nr 1 1
-> +
-> +		kill ${extra_bind}
-> +	fi
-> +
-> +	# multiple binds to allow extra subflows to other addresses
-> +	if reset "multiple bind to allow joins v6"; then
-> +		local extra_bind
-> +
-> +		pm_nl_set_limits $ns1 0 2
-> +		pm_nl_set_limits $ns2 2 2
-> +		pm_nl_add_endpoint $ns1 dead:beef:2::1 flags signal
-> +
-> +		# Launching another app listening on a different
-> address
-> +		# Note: it could be a totally different app, e.g.
-> nc, socat, ...
-> +		ip netns exec ${ns1} ./mptcp_connect -l -p
-> "$(get_port)" \
-> +			-s MPTCP dead:beef:2::1 &
-> +		extra_bind=$!
-> +
-> +		bind_addr="dead:beef:1::1" \
-> +			run_tests $ns1 $ns2 dead:beef:1::1
-> +		chk_join_nr 1 1 1
-> +		chk_add_nr 1 1
-> +
-> +		kill ${extra_bind}
-> +	fi
-> +
-> +	# multiple binds to allow extra subflows to other addresses:
-> v6 LL case
-> +	if reset "multiple bind to allow joins v6 link-local
-> routing"; then
-> +		local extra_bind ns1ll1 ns1ll2
-> +
-> +		ns1ll1="$(get_ll_addr $ns1 ns1eth1)"
-> +		ns1ll2="$(get_ll_addr $ns1 ns1eth2)"
-> +
-> +		pm_nl_set_limits $ns1 0 2
-> +		pm_nl_set_limits $ns2 2 2
-> +		pm_nl_add_endpoint $ns1 "${ns1ll2}" flags signal
-> +
-> +		wait_ll_ready $ns1 # to be able to bind
-> +		wait_ll_ready $ns2 # also needed to bind on the
-> client side
-> +		ip netns exec ${ns1} ./mptcp_connect -l -p
-> "$(get_port)" \
-> +			-s MPTCP "${ns1ll2}%ns1eth2" &
-> +		extra_bind=$!
-> +
-> +		bind_addr="${ns1ll1}%ns1eth1" \
-> +			run_tests $ns1 $ns2 "${ns1ll1}%ns2eth1"
-> +		# it is not possible to connect to the announced LL
-> addr without
-> +		# specifying the outgoing interface.
-> +		join_connect_err=1 \
-> +			chk_join_nr 0 0 0
-> +		chk_add_nr 1 1
-> +
-> +		kill ${extra_bind}
-> +	fi
-> +
-> +	# multiple binds to allow extra subflows to v6 LL addresses:
-> laminar
-> +	if reset "multiple bind to allow joins v6 link-local
-> laminar" &&
-> +	   continue_if mptcp_lib_kallsyms_has
-> "mptcp_pm_get_endp_laminar_max$"; then
-> +		local extra_bind ns1ll1 ns1ll2 ns2ll2
-> +
-> +		ns1ll1="$(get_ll_addr $ns1 ns1eth1)"
-> +		ns1ll2="$(get_ll_addr $ns1 ns1eth2)"
-> +		ns2ll2="$(get_ll_addr $ns2 ns2eth2)"
-> +
-> +		pm_nl_set_limits $ns1 0 2
-> +		pm_nl_set_limits $ns2 2 2
-> +		pm_nl_add_endpoint $ns1 "${ns1ll2}" flags signal
-> +		pm_nl_add_endpoint $ns2 "${ns2ll2}" flags laminar
-> dev ns2eth2
-> +
-> +		wait_ll_ready $ns1 # to be able to bind
-> +		wait_ll_ready $ns2 # also needed to bind on the
-> client side
-> +		ip netns exec ${ns1} ./mptcp_connect -l -p
-> "$(get_port)" \
-> +			-s MPTCP "${ns1ll2}%ns1eth2" &
-> +		extra_bind=$!
-> +
-> +		bind_addr="${ns1ll1}%ns1eth1" \
-> +			run_tests $ns1 $ns2 "${ns1ll1}%ns2eth1"
-> +		chk_join_nr 1 1 1
-> +		chk_add_nr 1 1
-> +
-> +		kill ${extra_bind}
-> +	fi
-> +}
-> +
->  syncookies_tests()
->  {
->  	# single subflow, syncookies
-> @@ -4184,6 +4334,7 @@ all_tests_sorted=(
->  	M@mixed_tests
->  	b@backup_tests
->  	p@add_addr_ports_tests
-> +	B@bind_tests
->  	k@syncookies_tests
->  	S@checksum_tests
->  	d@deny_join_id0_tests
+>  	mptcp_pm_nl_set_flags_all(net, local, changed);
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index 0545eab23125..1e8f40bb7870 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -1180,6 +1180,7 @@ void __mptcp_pm_kernel_worker(struct mptcp_sock
+> *msk);
+>  u8 mptcp_pm_get_endp_signal_max(const struct mptcp_sock *msk);
+>  u8 mptcp_pm_get_endp_subflow_max(const struct mptcp_sock *msk);
+>  u8 mptcp_pm_get_endp_laminar_max(const struct mptcp_sock *msk);
+> +u8 mptcp_pm_get_endp_fullmesh_max(const struct mptcp_sock *msk);
+>  u8 mptcp_pm_get_limit_add_addr_accepted(const struct mptcp_sock
+> *msk);
+>  u8 mptcp_pm_get_limit_extra_subflows(const struct mptcp_sock *msk);
+>  
+> diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+> index a28a48385885..de90a2897d2d 100644
+> --- a/net/mptcp/sockopt.c
+> +++ b/net/mptcp/sockopt.c
+> @@ -982,6 +982,8 @@ void mptcp_diag_fill_info(struct mptcp_sock *msk,
+> struct mptcp_info *info)
+>  			mptcp_pm_get_endp_subflow_max(msk);
+>  		info->mptcpi_endp_laminar_max =
+>  			mptcp_pm_get_endp_laminar_max(msk);
+> +		info->mptcpi_endp_fullmesh_max =
+> +			mptcp_pm_get_endp_fullmesh_max(msk);
+>  	}
+>  
+>  	if (__mptcp_check_fallback(msk))
 > 
 
