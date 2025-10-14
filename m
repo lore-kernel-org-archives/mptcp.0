@@ -1,117 +1,80 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from localhost.localdomain (unknown [147.136.157.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DABD12D24A6
-	for <mptcp@lists.linux.dev>; Tue, 14 Oct 2025 10:44:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E659C30F94E
+	for <mptcp@lists.linux.dev>; Tue, 14 Oct 2025 12:36:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=147.136.157.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760438640; cv=none; b=AUHMAM/5dMh+1w2cTOo1Illlw/nhCmpfAHDb4Fifiw5Sf307RRfpGrMU0bYsxlp5lmoz7uStvxIdZDWAW+jzfFDpn+fN1+Ztqil7+hCb8f1KKgc/NenRaCt6vkfGQoJoHttaYK4kdJ2x4nsoKTa1uxz9/QvWvMolpo2e/nBopt4=
+	t=1760445400; cv=none; b=uKvwrGbyFdTgkvN3bUqEzxbEnk0jRC+K5gBIjqNfr9jkTPBsyuIVWNMopH6k18+fNLbFSYPS0NjP11i2BY75ciV2jvU9b2pdB34iEZcjfdODsFhljXOltuVRllaUGBT6Z/736DYeNUoK26+V52Q8GZDiSRoO9YNpZySWMgTo6XQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760438640; c=relaxed/simple;
-	bh=mxN20RibeX6Pu4J76HTFylcmJmTvU9368mZc29jGvXc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
-	 In-Reply-To:Content-Type; b=puxdYE2+Q+Z13yuCU2P+yIkhOI6Ks8sC2fY4ryMiJfRI0/uYFyA0vxbpS7aLZWcOTnGO8MUmRSnOEZ9qac0rvPe50ZStaHZDdoUWBmPdXqayUj/mJEHfuI8lfET0Ln0ElWS4CR5KO5mQ9cj1VGw5LBsN7Da1fWVvlkVhjCWSd2Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lqMPmiyW; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lqMPmiyW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD92CC4CEE7;
-	Tue, 14 Oct 2025 10:43:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760438640;
-	bh=mxN20RibeX6Pu4J76HTFylcmJmTvU9368mZc29jGvXc=;
-	h=Date:Subject:To:References:From:Cc:In-Reply-To:From;
-	b=lqMPmiyWLXiqJeTLL1SWl2im6lU11TutpFpT4rBGqJyn2mby3p289168wg7uRujY+
-	 N6dv9dVBujzdJ3oFjAtF7vkFEXH+d1vKxBP9f0YL2o9TqfN+J75LQ+zXCaXfOhkfLB
-	 /3pySrYPSmBNhJbeeXtbHj3lvjNF5sKR7GCp2737hlfBUUQTVDENgoYRAfJ0rpLNW1
-	 h8ZTBrj7FHkdchREb/JpvrndnZ+essFkFEOXco1nYQMDHcxxrfvsYrZh5nucgQ1P2T
-	 vVRs+jlLMlliZLv/VUbxZjCEtwL3N4QJSSFlYmqTFWLUfaJg7tz4OyAH48xQ0Ss/vG
-	 8AVXOOLECHd3Q==
-Message-ID: <854a90f9-655b-4222-a5b8-d61e9a5324e2@kernel.org>
-Date: Tue, 14 Oct 2025 12:43:57 +0200
+	s=arc-20240116; t=1760445400; c=relaxed/simple;
+	bh=k/Tok6k6D/CdQpW7VbJVnHdNR0BBriLH6Ww7ZjTcrIQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kbvPHOH0fgUzpTp5YUDpPUaTxTMBPjzEYi8EaZHuGlcXWrBwgZ91VJ+I90xXUKeAPhD/1PR1O/U3C1SNTJWkYBGbuMGLCdX76Jyi2aUiAEqDFrMle8+kYdtwFdaiHs120NPumZpAE0K18cZChUFR5CImGoV8zvdycCJn/NnPu5k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.dev; spf=none smtp.mailfrom=localhost.localdomain; arc=none smtp.client-ip=147.136.157.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=localhost.localdomain
+Received: by localhost.localdomain (Postfix, from userid 1007)
+	id C29D98B2A56; Tue, 14 Oct 2025 20:26:36 +0800 (+08)
+From: Jiayuan Chen <jiayuan.chen@linux.dev>
+To: mptcp@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Cc: Jiayuan Chen <jiayuan.chen@linux.dev>,
+	Matthieu Baerts <matttbe@kernel.org>,
+	Mat Martineau <martineau@kernel.org>,
+	Geliang Tang <geliang@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Davide Caratti <dcaratti@redhat.com>,
+	netdev@vger.kernel.org
+Subject: [PATCH net-next v1] mptcp: fix incorrect IPv4/IPv6 check
+Date: Tue, 14 Oct 2025 20:26:18 +0800
+Message-ID: <20251014122619.316463-1-jiayuan.chen@linux.dev>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next 0/2] selftests: mptcp: join: code dup + new
- 'bind' tests
-Content-Language: en-GB, fr-BE
-To: Geliang Tang <geliang@kernel.org>
-References: <20251009-bind-extra-listen-v1-0-5ad2077d77a9@kernel.org>
-From: Matthieu Baerts <matttbe@kernel.org>
-Cc: MPTCP Linux <mptcp@lists.linux.dev>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <20251009-bind-extra-listen-v1-0-5ad2077d77a9@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Geliang,
+When MPTCP falls back to normal TCP, it needs to reset proto_ops. However,
+for sockmap and TLS, they have their own custom proto_ops, so simply
+checking sk->sk_prot is insufficient.
 
-On 09/10/2025 19:33, Matthieu Baerts (NGI0) wrote:
-> A clean-up patch, followed by a few new quick tests validating cases
-> where the listener 'bind()' to a specific IP address.
+For example, an IPv6 request might incorrectly follow the IPv4 code path,
+leading to kernel panic.
 
-Thank you for the review!
+Note that Golang has enabled MPTCP by default [1]
 
-Now in our tree (feat. for net-next):
+[1] https://go-review.googlesource.com/c/go/+/607715
 
-New patches for t/upstream:
-- f421ad2aa981: selftests: mptcp: join: do_transfer: reduce code dup
-- 4fd0cfa3ab1a: selftests: mptcp: join: validate extra bind cases
-- Results: fe9c3cb19630..f6f85b548772 (export)
+Fixes: 8e2b8a9fa512 ("mptcp: don't overwrite sock_ops in mptcp_is_tcpsk()")
+Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
+---
+ net/mptcp/protocol.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Tests are now in progress:
-
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/56d043498eb548955160044d50b127c4a2572c13/checks
-
-Cheers,
-Matt
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 0292162a14ee..efcdaeff91f8 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -62,10 +62,10 @@ static u64 mptcp_wnd_end(const struct mptcp_sock *msk)
+ static const struct proto_ops *mptcp_fallback_tcp_ops(const struct sock *sk)
+ {
+ #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+-	if (sk->sk_prot == &tcpv6_prot)
++	if (sk->sk_family == AF_INET6)
+ 		return &inet6_stream_ops;
+ #endif
+-	WARN_ON_ONCE(sk->sk_prot != &tcp_prot);
++	WARN_ON(sk->sk_family != AF_INET);
+ 	return &inet_stream_ops;
+ }
+ 
 -- 
-Sponsored by the NGI0 Core fund.
+2.43.0
 
