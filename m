@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA068222587
-	for <mptcp@lists.linux.dev>; Tue, 14 Oct 2025 09:57:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 253502D5955
+	for <mptcp@lists.linux.dev>; Tue, 14 Oct 2025 10:02:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760435831; cv=none; b=nMSUF7N/celAPioQFLib343EuxL69QP4PUpfnVT75Ef8FKSeazu/Fq3XzTmwtpwNlxUfaYiCXEsr//2DSPT5bfGK/ytMg87H+ozC4NbRrwwl8WJ4WvKk3+vlCbZpfS9NfevPod3r3ErP15n+6AHP/IUIs4L2arSrP6FkMbPcg4Q=
+	t=1760436170; cv=none; b=VZYCRcSjYLXgNRvz6/9wsayxhAJ9JDC20ypMKlGYyc57h26IeuvMIMhqZO60eybvnYtFmQHzlFiDNvkrvPsg7MqHf9Ts8c6aAuVCYcO9wAtSkgbrvtp2GU8OzevsgtzCLszMMSQGOPBO6xji+Gd7pd6NAEy4iZdgS3Wasggc2tQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760435831; c=relaxed/simple;
-	bh=lqWboh9cu0bs8CnNe74baKVWi21FBq+z2FUOXu81ES4=;
+	s=arc-20240116; t=1760436170; c=relaxed/simple;
+	bh=o5suRA15Ttq59eytwHVR8xQwX4f95yhp9sX0BGOu9Sk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=FWn66riRAVfJiuK6ORGIojtyjojVnGCbv2kQAp2gfbTMS/CFP3AQpTbSenjOnZJyNBwaOIdDhtAAnBlQ1dq6olJxk4qyYgGP30x4itiAfyi6rBzxKtELrKTzcIfHCewW99rbTowctmXlC+hhfGUB7Yf+q5ZjFpJXIcuBmWSkiIQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q4kRCgUo; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=L+wnNsroR1m/N9CNN+XvfOeLfbdXYd0tTGFfOMofy25Sxi3x4TNa2S56a26F6Io8XX2mdmnVficIoNi0G2EiuPuHDXLCqsmyIdpRh9AEPDJm0vTo3yuwMwCrOfOF4KkbmCA0OdPuKXv5cMHQo/cSqB7jtZrjBHAbHHJHBCvgSn8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FwrayuQV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q4kRCgUo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA736C4CEE7;
-	Tue, 14 Oct 2025 09:57:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FwrayuQV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42495C4CEE7;
+	Tue, 14 Oct 2025 10:02:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760435830;
-	bh=lqWboh9cu0bs8CnNe74baKVWi21FBq+z2FUOXu81ES4=;
+	s=k20201202; t=1760436169;
+	bh=o5suRA15Ttq59eytwHVR8xQwX4f95yhp9sX0BGOu9Sk=;
 	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=Q4kRCgUoXqFVFmQIdhmTNf+AuYiR43cCubmy1wAy1h0FE1shdlPzzUjLu9SfFj4Lt
-	 sONxsHRgFSQqpckT7DqE8IK57yzc3vfBMqDBQ88+A/fP4QPqvQbJwU8cJLhtBap/eC
-	 /lvTomMuCN/XWm93DtBDGjoi8O2r/XoE8aw/4Adh8KEvcsFsgZeKjEBcmen6SxZRfz
-	 086ecIGPa1071hSPoT8cZoKxr5Pq64VTgqkF8TAI182JCgT7Ro44uENuBeFiPo/tTT
-	 5GjZM8ptNoFX5+lQId6EldbMeH9kP/91geN+vXc00lfd4X5gqc/7+PuFFlvgQx04zY
-	 q8IVhqyDHMJNg==
-Message-ID: <95e3acf3-9a56-47d8-8314-ed6133403283@kernel.org>
-Date: Tue, 14 Oct 2025 11:57:07 +0200
+	b=FwrayuQVU9noiMxwbx8kCk56O5S14+9NMMi6U7XTOcs0tpHfv8N1493sy1z9pYotH
+	 rzaHE+mG6R8Pydw/Ih1iSA/CR89FJbPL3lFgt1CBWe82VmO7kz9XWg5K28rHlkxFS8
+	 4tLrz+d1WRoFXjVI0OfrRdEz07r/q6OCPJT4W7k6JrRLIX0TqiMBzxI/9WaN5uqcld
+	 EuRJCIqtXr9PRcYIolY1IGxKGHq8QKKMqBJPwKYzCapcorfV0fntmq55m8Ug6GzVHD
+	 jqsz0bdmZb1o6ULVSrRfyKstnDYA3Wf7gbrqzY7NQ6wVpR6KiDKX0A8CX1M9li8VL9
+	 4OgUuyfGwzJuw==
+Message-ID: <7fd7973d-e45f-4177-90cd-b65ac4547c04@kernel.org>
+Date: Tue, 14 Oct 2025 12:02:47 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next 2/2] selftests: mptcp: join: validate extra
- bind cases
+Subject: Re: [PATCH mptcp-net 6/7] mptcp: pm: in-kernel: record fullmesh endp
+ nb
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, MPTCP Upstream <mptcp@lists.linux.dev>
-References: <20251009-bind-extra-listen-v1-0-5ad2077d77a9@kernel.org>
- <20251009-bind-extra-listen-v1-2-5ad2077d77a9@kernel.org>
- <6efea80680213decf83313995a7afd9e4ce4fafd.camel@kernel.org>
+References: <20251008-c-flag-add-addr-delay-v1-0-c624eb3bf10d@kernel.org>
+ <20251008-c-flag-add-addr-delay-v1-6-c624eb3bf10d@kernel.org>
+ <e7340af8302a2dc98c41580423c0663954db8523.camel@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,113 +87,73 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <6efea80680213decf83313995a7afd9e4ce4fafd.camel@kernel.org>
+In-Reply-To: <e7340af8302a2dc98c41580423c0663954db8523.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 Hi Geliang,
 
-Thank you for the review!
-
-On 14/10/2025 08:46, Geliang Tang wrote:
-> It took me some time to understand this test.
-Is there something I should add in the commit message to make this clearer?
-
-> On Thu, 2025-10-09 at 19:33 +0200, Matthieu Baerts (NGI0) wrote:
->> By design, an MPTCP connection will not accept extra subflows where
->> no
->> MPTCP listening sockets can accept such requests.
->>
->> In other words, it means that if the 'server' listens on a specific
->> address / device, it cannot accept MP_JOIN sent to a different
->> address /
->> device. Except if there is another MPTCP listening socket accepting
->> them.
->>
->> This is what the new tests are validating:
->>
->>  - Forcing a bind on the main v4/v6 address, and checking that
->> MP_JOIN
->>    to announced addresses are not accepted.
->>
->>  - Also forcing a bind on the main v4/v6 address, but before, another
->>    listening socket is created to accept additional subflows. Note
->> that
->>    'mptcpize run nc -l' -- or something else only doing:
->> socket(MPTCP),
->>    bind(<IP>), listen(0) -- would be enough, but here mptcp_connect
->> is
->>    reused not to depend on another tool just for that.
->>
->>  - Same as the previous one, but using v6 link-local addresses: this
->> is
->>    a bit particular because it is required to specify the outgoing
->>    network interface when connecting to a link-local address
->> announced
->>    by the other peer. When using the routing rules, this doesn't work
->>    (the outgoing interface is not known) ; but it does work with a
->>    'laminar' endpoint having a specified interface.
->>
->> Note that extra small modifications are needed for these tests to
->> work:
->>
->>  - mptcp_connect's check_getpeername_connect() check should strip the
->>    specified interface when comparing addresses.
->>
->>  - With IPv6 link-local addresses, it is required to wait for them to
->>    be ready (no longer in 'tentative' mode) before using them,
->> otherwise
->>    the bind() will not be allowed.
->>
->> Link: https://github.com/multipath-tcp/mptcp_net-next/issues/591
->> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
->> ---
->>  tools/testing/selftests/net/mptcp/mptcp_connect.c |  10 +-
->>  tools/testing/selftests/net/mptcp/mptcp_join.sh   | 153
->> +++++++++++++++++++++-
->>  2 files changed, 161 insertions(+), 2 deletions(-)
->>
->> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c
->> b/tools/testing/selftests/net/mptcp/mptcp_connect.c
->> index b148cadb96d0..c030b08a7195 100644
->> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
->> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
->> @@ -1064,6 +1064,8 @@ static void check_getpeername_connect(int fd)
->>  	socklen_t salen = sizeof(ss);
->>  	char a[INET6_ADDRSTRLEN];
->>  	char b[INET6_ADDRSTRLEN];
->> +	const char *iface;
->> +	size_t len;
->>  
->>  	if (getpeername(fd, (struct sockaddr *)&ss, &salen) < 0) {
->>  		perror("getpeername");
->> @@ -1073,7 +1075,13 @@ static void check_getpeername_connect(int fd)
->>  	xgetnameinfo((struct sockaddr *)&ss, salen,
->>  		     a, sizeof(a), b, sizeof(b));
->>  
->> -	if (strcmp(cfg_host, a) || strcmp(cfg_port, b))
->> +	iface = strchr(cfg_host, '%');
->> +	if (iface)
->> +		len = iface - cfg_host;
->> +	else
->> +		len = strlen(cfg_host) + 1;
+On 14/10/2025 09:20, Geliang Tang wrote:
+> Hi Matt,
 > 
-> Why do we need to add 1 here? I tested it and it works without adding
-> 1.
+> Thanks for this patch.
+> 
+> On Wed, 2025-10-08 at 16:00 +0200, Matthieu Baerts (NGI0) wrote:
+>> Instead of iterating over all endpoints, under RCU read lock, just to
+>> check if one of them as the fullmesh flag, we can keep a counter of
+>> fullmesh endpoint, similar to what is done with the other flags.
+>>
+>> This counter is now checked, before iterating over all endpoints.
+>>
+>> Similar to the other counters, this new one is also exposed. A
+>> userspace
+>> app can then know when it is being used in a fullmesh mode, with
+>> potentially (too) many subflows.
 
-If I don't add 1, I will not include '\0' in the comparison with "a".
+(...)
 
-In other words, if you have:
+>> diff --git a/net/mptcp/pm_kernel.c b/net/mptcp/pm_kernel.c
+>> index df2bc36593d0..054d85045381 100644
+>> --- a/net/mptcp/pm_kernel.c
+>> +++ b/net/mptcp/pm_kernel.c
 
-  cfg_host = "abc";
-  a = "abc123";
-  len = strlen(cfg_host); /* = 3 */
+(...)
 
-Then strncmp(cfg_host, a, len) will return 0 because the 3 first chars
-are "abc". With 4 chars, they are different: "abc\0" vs "abc1".
+>> @@ -603,9 +612,12 @@ fill_local_addresses_vec(struct mptcp_sock *msk,
+>> struct mptcp_addr_info *remote,
+>>  	int i;
+>>  
+>>  	/* If there is at least one MPTCP endpoint with a fullmesh
+>> flag */
+>> -	i = fill_local_addresses_vec_fullmesh(msk, remote, locals,
+>> c_flag_case);
+>> -	if (i)
+>> -		return i;
+>> +	if (mptcp_pm_get_endp_fullmesh_max(msk)) {
+>> +		i = fill_local_addresses_vec_fullmesh(msk, remote,
+>> locals,
+>> +						      c_flag_case);
+>> +		if (i)
+>> +			return i;
+>> +	}
+> 
+> I'm not sure if endp_fullmesh_max needs to be checked in
+> fill_remote_addresses_vec() too, something like:
+> 
+>    if (mptcp_pm_get_endp_fullmesh_max(msk))
+>            return fill_remote_addresses_fullmesh(msk, local, addrs);
 
-So it is important to take the delimiter into account, just in case one
-is the prefix of the other one.
+No, it doesn't need to be used with fill_remote_addresses_fullmesh(),
+because this helper is only called if the local endpoint has the
+fullmesh flag, see fill_remote_addresses_vec().
+
+
+In other words, when calling fill_remote_(...), we have the local
+endpoint (where the fullmesh flag might be set), and we need the remote
+addresses. When calling fill_local_(...), it is the opposite: we have a
+remote address, and we need to find local endpoint(s). It is only in
+this case we need to know in advance if there are any "fullmesh" local
+endpoints.
 
 Cheers,
 Matt
