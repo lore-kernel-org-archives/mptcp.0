@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 723DB9475
-	for <mptcp@lists.linux.dev>; Tue, 14 Oct 2025 10:26:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DABD12D24A6
+	for <mptcp@lists.linux.dev>; Tue, 14 Oct 2025 10:44:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760437603; cv=none; b=lwG3/S5Xrnjoqy9QQluFX+Uvs40zTfJqA9fdrZvVVk9N5hQpG7rGFGzQFR/fKjM0RMgZTWc9uUtuWa6jYd/024Y/JK2d9DpDSK1tlNA2pIza94gkRcXy0iY4lA3A6LW0figkKCn5UeMzxgbZfUomvMXX0sbRaL5Gxz9jXs/hVYI=
+	t=1760438640; cv=none; b=AUHMAM/5dMh+1w2cTOo1Illlw/nhCmpfAHDb4Fifiw5Sf307RRfpGrMU0bYsxlp5lmoz7uStvxIdZDWAW+jzfFDpn+fN1+Ztqil7+hCb8f1KKgc/NenRaCt6vkfGQoJoHttaYK4kdJ2x4nsoKTa1uxz9/QvWvMolpo2e/nBopt4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760437603; c=relaxed/simple;
-	bh=gcSpytPNZlTn/VZ4GJTldNykugF1ze9OTqXWneoj9dw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=oBCqnw+U0uNl8YNiaRVWPSjcbwP7mIlaPxIcdpCUc6EfnQ3brHtJMqK+fQz9+lIyTtgCDgJjT9Dv51QA2tNWHhkIHcIJCkaF74fmqXLnkI9/Qcy70wBE0TcH9mAhcSukBIZIpZSdX5+z6buNj4gl3wZvVM1y124o5TzR+HC0rWk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o0dGq/W2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1760438640; c=relaxed/simple;
+	bh=mxN20RibeX6Pu4J76HTFylcmJmTvU9368mZc29jGvXc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
+	 In-Reply-To:Content-Type; b=puxdYE2+Q+Z13yuCU2P+yIkhOI6Ks8sC2fY4ryMiJfRI0/uYFyA0vxbpS7aLZWcOTnGO8MUmRSnOEZ9qac0rvPe50ZStaHZDdoUWBmPdXqayUj/mJEHfuI8lfET0Ln0ElWS4CR5KO5mQ9cj1VGw5LBsN7Da1fWVvlkVhjCWSd2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lqMPmiyW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o0dGq/W2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F668C4CEE7;
-	Tue, 14 Oct 2025 10:26:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lqMPmiyW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD92CC4CEE7;
+	Tue, 14 Oct 2025 10:43:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760437602;
-	bh=gcSpytPNZlTn/VZ4GJTldNykugF1ze9OTqXWneoj9dw=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=o0dGq/W29+p+9mNG1H1AIPTbFhZyFegc/S9e5fR60MaXRJVyg4Did7JGs5xk0Fe3R
-	 khFicy5SkAhhoT4RjSBB6KbsEgHVBWiJxOB+FNoLRzJMDtXVgkMRu/M2GU8R0FuHUR
-	 tLNLLKjt8GRXz3IoSwW2z5pkaeHwiR81OFkeD1n4/kqGwvnCVy28jgFsLoZ3046cPe
-	 RrEWjJ6SDMCrB87FfKhacXPNRNt+DFTHH13sRpSq7O4PWizZY6BiVd7cAE1IfoWBpe
-	 RSZb7gElsJBOytBEijjxWMzh1ZV3v7vUq8EJtYOZHarTfDBMouAOe9uW6GBL2pXV09
-	 lxYJpI66XwC7g==
-Message-ID: <fabd4101-53c9-4c0d-b4dc-7d51ba89ffdf@kernel.org>
-Date: Tue, 14 Oct 2025 12:26:40 +0200
+	s=k20201202; t=1760438640;
+	bh=mxN20RibeX6Pu4J76HTFylcmJmTvU9368mZc29jGvXc=;
+	h=Date:Subject:To:References:From:Cc:In-Reply-To:From;
+	b=lqMPmiyWLXiqJeTLL1SWl2im6lU11TutpFpT4rBGqJyn2mby3p289168wg7uRujY+
+	 N6dv9dVBujzdJ3oFjAtF7vkFEXH+d1vKxBP9f0YL2o9TqfN+J75LQ+zXCaXfOhkfLB
+	 /3pySrYPSmBNhJbeeXtbHj3lvjNF5sKR7GCp2737hlfBUUQTVDENgoYRAfJ0rpLNW1
+	 h8ZTBrj7FHkdchREb/JpvrndnZ+essFkFEOXco1nYQMDHcxxrfvsYrZh5nucgQ1P2T
+	 vVRs+jlLMlliZLv/VUbxZjCEtwL3N4QJSSFlYmqTFWLUfaJg7tz4OyAH48xQ0Ss/vG
+	 8AVXOOLECHd3Q==
+Message-ID: <854a90f9-655b-4222-a5b8-d61e9a5324e2@kernel.org>
+Date: Tue, 14 Oct 2025 12:43:57 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,14 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net 7/7] mptcp: pm: in kernel: only use fullmesh
- endp if any
+Subject: Re: [PATCH mptcp-next 0/2] selftests: mptcp: join: code dup + new
+ 'bind' tests
 Content-Language: en-GB, fr-BE
-To: Geliang Tang <geliang@kernel.org>, MPTCP Upstream <mptcp@lists.linux.dev>
-References: <20251008-c-flag-add-addr-delay-v1-0-c624eb3bf10d@kernel.org>
- <20251008-c-flag-add-addr-delay-v1-7-c624eb3bf10d@kernel.org>
- <8d1cf5304a2060799a2e3e54ed33a1f572f60e17.camel@kernel.org>
+To: Geliang Tang <geliang@kernel.org>
+References: <20251009-bind-extra-listen-v1-0-5ad2077d77a9@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
+Cc: MPTCP Linux <mptcp@lists.linux.dev>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -87,48 +86,29 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <8d1cf5304a2060799a2e3e54ed33a1f572f60e17.camel@kernel.org>
+In-Reply-To: <20251009-bind-extra-listen-v1-0-5ad2077d77a9@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 14/10/2025 12:10, Geliang Tang wrote:
-> Hi Matt,
-> 
-> On Wed, 2025-10-08 at 16:00 +0200, Matthieu Baerts (NGI0) wrote:
->> Our documentation is saying that the in-kernel PM is only using
->> fullmesh
->> endpoints to establish subflows to announced addresses when at least
->> one
->> endpoint has a fullmesh flag. But this was not totally correct: only
->> fullmesh endpoints were used if at least one endpoint *from the same
->> address family as the received ADD_ADDR* has the fullmesh flag.
->>
->> This is confusing, and it seems clearer not to have differences
->> depending on the address family.
->>
->> So, now, when at least one MPTCP endpoint has a fullmesh flag, the
->> local
->> addresses are picked from all fullmesh endpoints, which might be 0 if
->> there are no endpoints for the correct address family.
->>
->> One selftest needs to be adapted for this behaviour change.
->>
->> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> 
-> This patch LGTM!
-> 
-> Reviewed-by: Geliang Tang <geliang@kernel.org>
-> 
-> Except for patch 1, I have added my reviewed-by tags to all other
-> patches. Please give me some more time to review patch 1. If you're
-> willing, please apply patches 2-7 first.
+On 09/10/2025 19:33, Matthieu Baerts (NGI0) wrote:
+> A clean-up patch, followed by a few new quick tests validating cases
+> where the listener 'bind()' to a specific IP address.
 
-Thank you for your reviews.
+Thank you for the review!
 
-I will wait for the review of patch 1: that's the most "urgent" one
-(fixing a small behavioural issue), the other ones can wait.
+Now in our tree (feat. for net-next):
+
+New patches for t/upstream:
+- f421ad2aa981: selftests: mptcp: join: do_transfer: reduce code dup
+- 4fd0cfa3ab1a: selftests: mptcp: join: validate extra bind cases
+- Results: fe9c3cb19630..f6f85b548772 (export)
+
+Tests are now in progress:
+
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/56d043498eb548955160044d50b127c4a2572c13/checks
 
 Cheers,
 Matt
