@@ -1,71 +1,53 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED0E0235341;
-	Fri, 17 Oct 2025 07:19:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 843282550A4;
+	Fri, 17 Oct 2025 07:57:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760685543; cv=none; b=Eo2yBnkepHy9L9WStm+gKJyLcG8XvDVQi/z/anuiEDLUHVpKVKeotZs40JQoeK2qRZjU2USSQ7TtvxgwhNA7zpZiSjxQsFl4yEZ3pZmEKdnX0lxHnX2jpZCMvFcRDCfXE5kFcT2rEHpLza5lq4dpBQaSvLiBaUhwhV4Z13qvJmY=
+	t=1760687840; cv=none; b=bAr+7YKJQ3bpa8IA2n9Vhjkc2ggKglgTHvq9TrHi6twsHBxsRB1RvINUSwDbDK1PWvt5MRwJjpKEjP6CCUNozRt/wOCr56XFqpdgNs6G9ILpTzj67unybMj+H09MuJjFEbplh4tB/a+XwG/PgmFQ4bO3T5nXVQN0vKVbTlCAoA8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760685543; c=relaxed/simple;
-	bh=neBbrk27vA6GND1zGs3pPaAxWCRrj8/pRnevn20A6EE=;
-	h=Subject:To:Cc:From:Date:In-Reply-To:Message-ID:MIME-Version:
-	 Content-Type; b=dqB98DbbiZhy98jzXsR7nCfik9dtDYhbQPUPjSt+VnQpUz7IPULgosjmF7TfFrMjjzxln3Q+uypqZyuVL9Ib0PcLypSGbsiH7PTVyjD3Nv+rIyat4sayWvpd4fcCr/GCLah1S8anRXTTHzLebdI/1s6uvzsRhPt52Zqmbb8pA5E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=2AF8OMjZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1760687840; c=relaxed/simple;
+	bh=MgPkShBhUBzMn0U3g5lyMB86eaWakWS8Qs+4rxY7XuE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Ee7E5leyHk1WxEQNY3KH2HzXxL8kGroxTrj9JSzApOpYqKi1I0N44F5bttspEjxDlME7/WfT49ag+VVOcuWTUvDosH41HTBd8zHwdixEFI7QmyBnRptaJBTMsZID4Zr5K5H/cf4hjE+rR3QZAs467oiBe41NUPGuXpUorG2VljI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Osjw2ylW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="2AF8OMjZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 798D5C4CEF9;
-	Fri, 17 Oct 2025 07:19:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1760685542;
-	bh=neBbrk27vA6GND1zGs3pPaAxWCRrj8/pRnevn20A6EE=;
-	h=Subject:To:Cc:From:Date:In-Reply-To:From;
-	b=2AF8OMjZTWMvPyZnFSEAo8rnhwrC9sQJ1ZREI7qKMfcMm6X05EUeLB6zcZ5QkJjnR
-	 g6QNvYH4axTBwkbJS7QXcLE99ySOcCXs60u09Da3RV8H+s7V0I5GQ01qOX5XlwWR2j
-	 LjdNhpj8NvBXtybGFBpk1ljLFJmxRi1ON7vIUYRM=
-Subject: Patch "mptcp: pm: in-kernel: usable client side with C-flag" has been added to the 6.12-stable tree
-To: geliang@kernel.org,gregkh@linuxfoundation.org,kuba@kernel.org,matttbe@kernel.org,mptcp@lists.linux.dev
-Cc: <stable-commits@vger.kernel.org>
-From: <gregkh@linuxfoundation.org>
-Date: Fri, 17 Oct 2025 09:18:32 +0200
-In-Reply-To: <20251016165656.940021-2-matttbe@kernel.org>
-Message-ID: <2025101732-devalue-jaws-06b3@gregkh>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Osjw2ylW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7021C4CEE7;
+	Fri, 17 Oct 2025 07:57:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1760687840;
+	bh=MgPkShBhUBzMn0U3g5lyMB86eaWakWS8Qs+4rxY7XuE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Osjw2ylWRVpArcpPTq7oBR78LSG6ORVLGjVt64Y/gPh8inFO2leOEq+zOt/bvi4OO
+	 dmWuN3d7zv/IjLFANdlF983iKVmUCxe+MarBf5KnrWX0Tb/R+x/e9KzV7S9ThF4MLl
+	 6fSswbXOmdM8JoYdzBbYISw7aIG1/VlF+p+8Iaxngb6olFL7f94bP0R1B+OKfcnR7M
+	 TLZXx+Qvq5UPgVd7bb68TRNd1qW4SRTUyGTQMUhkiUVnWzA3/KuhRot+jmfbNHd/Cc
+	 2NIS/OVVAXSWBN9ITb1awdr4jL3zOEDcPMiT8waXEQRUn+qIKCzoj9ofjQfS4NvZUn
+	 CRUDUmwfiKBqg==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+To: stable@vger.kernel.org,
+	gregkh@linuxfoundation.org
+Cc: MPTCP Upstream <mptcp@lists.linux.dev>,
+	"Matthieu Baerts (NGI0)" <matttbe@kernel.org>,
+	Geliang Tang <geliang@kernel.org>,
+	Jakub Kicinski <kuba@kernel.org>
+Subject: [PATCH 6.6.y] mptcp: pm: in-kernel: usable client side with C-flag
+Date: Fri, 17 Oct 2025 09:57:09 +0200
+Message-ID: <20251017075708.1455085-2-matttbe@kernel.org>
+X-Mailer: git-send-email 2.51.0
+In-Reply-To: <2025101656-earthly-womanhood-2b05@gregkh>
+References: <2025101656-earthly-womanhood-2b05@gregkh>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ANSI_X3.4-1968
+X-Developer-Signature: v=1; a=openpgp-sha256; l=7350; i=matttbe@kernel.org; h=from:subject; bh=MgPkShBhUBzMn0U3g5lyMB86eaWakWS8Qs+4rxY7XuE=; b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDI+frv6+sG8Tx7fbvYuF7ppxpl+Uq0pl4H3od+WJ/mTY 5/+e5ff01HKwiDGxSArpsgi3RaZP/N5FW+Jl58FzBxWJpAhDFycAjCRFTkM/xOOrjWbaMfjYWbZ zT9z6qO2omki4Wvlp/W/Zy1W3bVemIvhN8vFJC6Nx6bqys4OoonNQteev52WIZTnY7477uSkhxf 3sQEA
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 Content-Transfer-Encoding: 8bit
-X-stable: commit
-X-Patchwork-Hint: ignore 
-
-
-This is a note to let you know that I've just added the patch titled
-
-    mptcp: pm: in-kernel: usable client side with C-flag
-
-to the 6.12-stable tree which can be found at:
-    http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
-
-The filename of the patch is:
-     mptcp-pm-in-kernel-usable-client-side-with-c-flag.patch
-and it can be found in the queue-6.12 subdirectory.
-
-If you, or anyone else, feels it should not be added to the stable tree,
-please let <stable@vger.kernel.org> know about it.
-
-
-From stable+bounces-186178-greg=kroah.com@vger.kernel.org Thu Oct 16 18:57:55 2025
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Thu, 16 Oct 2025 18:56:57 +0200
-Subject: mptcp: pm: in-kernel: usable client side with C-flag
-To: stable@vger.kernel.org, gregkh@linuxfoundation.org
-Cc: MPTCP Upstream <mptcp@lists.linux.dev>, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, Geliang Tang <geliang@kernel.org>, Jakub Kicinski <kuba@kernel.org>
-Message-ID: <20251016165656.940021-2-matttbe@kernel.org>
-
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 
 commit 4b1ff850e0c1aacc23e923ed22989b827b9808f9 upstream.
 
@@ -109,19 +91,28 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
   pm_netlink.c to pm_kernel.c in commit 8617e85e04bd ("mptcp: pm: split
   in-kernel PM specific code"), which is not in this version. The
   resolution is easy: simply by applying the patch where 'pm_kernel.c'
-  has been replaced 'pm_netlink.c'. 'patch --merge' managed to apply
-  this modified patch without creating any conflicts. ]
+  has been replaced 'pm_netlink.c'.
+  Conflict in pm_netlink.c, because commit b83fbca1b4c9 ("mptcp: pm:
+  reduce entries iterations on connect") is not in this version. Instead
+  of using the 'locals' variable (struct mptcp_pm_local *) from the new
+  version and embedding a "struct mptcp_addr_info", we can simply
+  continue to use the 'addrs' variable (struct mptcp_addr_info *).
+  Conflict in protocol.h, because commit af3dc0ad3167 ("mptcp: Remove
+  unused declaration mptcp_sockopt_sync()") is not in this version and
+  it removed one line in the context. The resolution is easy because the
+  new function can still be added at the same place. ]
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/mptcp/pm.c         |    7 ++++--
- net/mptcp/pm_netlink.c |   50 ++++++++++++++++++++++++++++++++++++++++++++++++-
- net/mptcp/protocol.h   |    8 +++++++
- 3 files changed, 62 insertions(+), 3 deletions(-)
+ net/mptcp/pm.c         |  7 ++++--
+ net/mptcp/pm_netlink.c | 52 +++++++++++++++++++++++++++++++++++++++++-
+ net/mptcp/protocol.h   |  8 +++++++
+ 3 files changed, 64 insertions(+), 3 deletions(-)
 
+diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+index 29c167e5fc02..ab7bdb653181 100644
 --- a/net/mptcp/pm.c
 +++ b/net/mptcp/pm.c
-@@ -226,9 +226,12 @@ void mptcp_pm_add_addr_received(const st
+@@ -227,9 +227,12 @@ void mptcp_pm_add_addr_received(const struct sock *ssk,
  		} else {
  			__MPTCP_INC_STATS(sock_net((struct sock *)msk), MPTCP_MIB_ADDADDRDROP);
  		}
@@ -136,9 +127,11 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
  		mptcp_pm_announce_addr(msk, addr, true);
  		mptcp_pm_add_addr_send_ack(msk);
  	} else if (mptcp_pm_schedule_work(msk, MPTCP_PM_ADD_ADDR_RECEIVED)) {
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index de24989b05a6..9d2c38421f7a 100644
 --- a/net/mptcp/pm_netlink.c
 +++ b/net/mptcp/pm_netlink.c
-@@ -674,10 +674,12 @@ static unsigned int fill_local_addresses
+@@ -675,10 +675,12 @@ static unsigned int fill_local_addresses_vec(struct mptcp_sock *msk,
  	struct mptcp_addr_info mpc_addr;
  	struct pm_nl_pernet *pernet;
  	unsigned int subflows_max;
@@ -151,23 +144,22 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
  
  	mptcp_local_address((struct sock_common *)msk, &mpc_addr);
  
-@@ -690,12 +692,27 @@ static unsigned int fill_local_addresses
+@@ -691,11 +693,26 @@ static unsigned int fill_local_addresses_vec(struct mptcp_sock *msk,
  			continue;
  
  		if (msk->pm.subflows < subflows_max) {
 +			bool is_id0;
 +
- 			locals[i].addr = entry->addr;
- 			locals[i].flags = entry->flags;
- 			locals[i].ifindex = entry->ifindex;
+ 			msk->pm.subflows++;
+ 			addrs[i] = entry->addr;
  
-+			is_id0 = mptcp_addresses_equal(&locals[i].addr,
++			is_id0 = mptcp_addresses_equal(&entry->addr,
 +						       &mpc_addr,
-+						       locals[i].addr.port);
++						       entry->addr.port);
 +
 +			if (c_flag_case &&
 +			    (entry->flags & MPTCP_PM_ADDR_FLAG_SUBFLOW)) {
-+				__clear_bit(locals[i].addr.id,
++				__clear_bit(addrs[i].id,
 +					    msk->pm.id_avail_bitmap);
 +
 +				if (!is_id0)
@@ -175,12 +167,12 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 +			}
 +
  			/* Special case for ID0: set the correct ID */
--			if (mptcp_addresses_equal(&locals[i].addr, &mpc_addr, locals[i].addr.port))
+-			if (mptcp_addresses_equal(&entry->addr, &mpc_addr, entry->addr.port))
 +			if (is_id0)
- 				locals[i].addr.id = 0;
+ 				addrs[i].id = 0;
  
- 			msk->pm.subflows++;
-@@ -704,6 +721,37 @@ static unsigned int fill_local_addresses
+ 			i++;
+@@ -703,6 +720,39 @@ static unsigned int fill_local_addresses_vec(struct mptcp_sock *msk,
  	}
  	rcu_read_unlock();
  
@@ -192,20 +184,22 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 +
 +		while (msk->pm.local_addr_used < local_addr_max &&
 +		       msk->pm.subflows < subflows_max) {
-+			struct mptcp_pm_local *local = &locals[i];
++			struct mptcp_pm_addr_entry local;
 +
-+			if (!select_local_address(pernet, msk, local))
++			if (!select_local_address(pernet, msk, &local))
 +				break;
 +
-+			__clear_bit(local->addr.id, msk->pm.id_avail_bitmap);
++			__clear_bit(local.addr.id, msk->pm.id_avail_bitmap);
 +
-+			if (!mptcp_pm_addr_families_match(sk, &local->addr,
++			if (!mptcp_pm_addr_families_match(sk, &local.addr,
 +							  remote))
 +				continue;
 +
-+			if (mptcp_addresses_equal(&local->addr, &mpc_addr,
-+						  local->addr.port))
++			if (mptcp_addresses_equal(&local.addr, &mpc_addr,
++						  local.addr.port))
 +				continue;
++
++			addrs[i] = local.addr;
 +
 +			msk->pm.local_addr_used++;
 +			msk->pm.subflows++;
@@ -218,9 +212,11 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
  	/* If the array is empty, fill in the single
  	 * 'IPADDRANY' local address
  	 */
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index c5f41cdb36c4..1f213706dfaa 100644
 --- a/net/mptcp/protocol.h
 +++ b/net/mptcp/protocol.h
-@@ -1172,6 +1172,14 @@ static inline void mptcp_pm_close_subflo
+@@ -1080,6 +1080,14 @@ static inline void mptcp_pm_close_subflow(struct mptcp_sock *msk)
  	spin_unlock_bh(&msk->pm.lock);
  }
  
@@ -232,12 +228,9 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 +	       msk->pm.subflows < mptcp_pm_get_subflows_max(msk);
 +}
 +
+ void mptcp_sockopt_sync(struct mptcp_sock *msk, struct sock *ssk);
  void mptcp_sockopt_sync_locked(struct mptcp_sock *msk, struct sock *ssk);
  
- static inline struct mptcp_ext *mptcp_get_ext(const struct sk_buff *skb)
+-- 
+2.51.0
 
-
-Patches currently in stable-queue which might be from matttbe@kernel.org are
-
-queue-6.12/mptcp-pm-in-kernel-usable-client-side-with-c-flag.patch
-queue-6.12/selftests-mptcp-join-validate-c-flag-def-limit.patch
