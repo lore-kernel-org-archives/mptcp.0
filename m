@@ -1,131 +1,142 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67CA230748A;
-	Fri, 17 Oct 2025 17:34:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D89FB312811
+	for <mptcp@lists.linux.dev>; Fri, 17 Oct 2025 17:46:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760722443; cv=none; b=LGytwC9uoMb+z90vX+P+50xOp3jTMuuLvxRXxlxeNFdhRvNEcNEcs6lAHLBL2phXCDPD28h0x+tYwr5emY5agsqphsy24YtOnwAmHPRqC8lhQvqmXy2goD2iTjErgnZDpvzi/vrNikvCaxip43ZUHxBmVISu4Q1kOGQUI375goc=
+	t=1760723200; cv=none; b=YwXhgStCoKjMuKevbAWnB3lp7motYXV0BKyzll68hhhBLkNGzQyYhYJ2g7BKvXx+5JXFrkJfSZh8asthIpHBPbpd+3ZbLE1eR9lTtxk5cBVq+/ZnP6jNzfy+1PK6IN3EAvcMxrFIiRF8ZY3Yqqc3Sp4gjeUGnu2ZLG1XoE3iodk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760722443; c=relaxed/simple;
-	bh=WhWp+CUHcgUnStNBnvrT1zJCZqYFLjpY5pSs8TsRqU8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=aqSFImC4rfv68jS7sFN4L5bIBk7lD1rzGQJVACUtkrubTvJCOBmtqZ8OmhP7YMZXxcjtdVgPa9CbkaYW9HJprs+n4KU8w8nbGOwoJLw4H/55GmJnWaoCRAUhPEf05hKWdF6KxyfGjhyX8YwcwwUUM9SR7GOlyfiNAfHvokABpR4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fNkpGXd7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1760723200; c=relaxed/simple;
+	bh=PTcQDabOMOxkQW8tqzaowEjuZM5w3nohAsWXmkvXO4Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
+	 In-Reply-To:Content-Type; b=QoCS66o6nhwFg0LUvxh4gO7Cy1qqVnxzsvymM1W0IwqBODzHtsWhENRmBzA/XNpBuHesf64eA0m4Chy8B1w0lVEOv3xItH9x3LEjtGHy3RVfFxRnZh5lsv7BC0L+fG25s2wYuNxGKQKdwx2JBFVkAhRdCwaxCSNjDqpti8Rqn8o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k2/78YeF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fNkpGXd7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C095EC116D0;
-	Fri, 17 Oct 2025 17:34:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k2/78YeF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D184AC4CEE7;
+	Fri, 17 Oct 2025 17:46:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760722443;
-	bh=WhWp+CUHcgUnStNBnvrT1zJCZqYFLjpY5pSs8TsRqU8=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=fNkpGXd7LzPNn6YWgCub9r6mc4mUmj6n3AZPP/CIwx0TBBrwCoxHxfJQub1Gn/0gT
-	 d0KeJnmbmuO2CDR9Gw2T2rpONISns1CVmhikhXAc0NIxvkeHDnTMTyila511lY9sqJ
-	 ZOpDG15vcPbTQbyE/Tfs7Q+DoBPclF5he371riQFoflgeZC0ODDV66GipoDI4YmAV6
-	 GqzPh723kx1lq/3Zvw3BKD6qevEE6Vo/UxtOcTcj2L3r/B7AykWrEF/9zCJUZNg+O+
-	 vG1NylZiLXtisg5NferMQYdeva33YDr1ErsBZh4QB2S9qC4v/2Yh+4fwcqHgtHzUEA
-	 HU0270s2NAMBQ==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Fri, 17 Oct 2025 19:33:42 +0200
-Subject: [PATCH 5.4.y 5/5] kernel/profile.c: use cpumask_available to check
- for NULL cpumask
+	s=k20201202; t=1760723200;
+	bh=PTcQDabOMOxkQW8tqzaowEjuZM5w3nohAsWXmkvXO4Y=;
+	h=Date:Subject:To:References:From:Cc:In-Reply-To:From;
+	b=k2/78YeF6PeXqQlqQeWiX/7Zm4W3+d8UyMVX8KB+ewgve7OLFgo/xcdkW4NnTx/+c
+	 8ZOecb3fp4feyFLB8bubu5dliAHW7sB8q5VXbP2UAsfduh4e2X/wr7hl+PJk2yF23b
+	 nNxf0OYgtEvOkBXZIcfi3W0MxYkE4PiTiTGEktZEGZpyBDwPMTmuPYwWSDZupcTLI+
+	 qQcO+ZeNnhtfXGlC3gOeFLyPZOvhcygd47crcoILtMlEgdtEBn0jDUmOuFq38AqB9u
+	 Gc4KVnMCccErQqa6DwzoIQJHeXigsHbBAqcvD/vN3I5ErM2WAsCClxSVSOD8vTFcuf
+	 QXcsTqZGBoDBw==
+Message-ID: <b29a95d3-f4de-41c4-9cc9-7aea06b6ddf3@kernel.org>
+Date: Fri, 17 Oct 2025 19:46:37 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH mptcp-net 0/7] mptcp: pm: in-kernel: C-flag: handle late
+ ADD_ADDR + misc.
+Content-Language: en-GB, fr-BE
+To: Geliang Tang <geliang@kernel.org>
+References: <20251008-c-flag-add-addr-delay-v1-0-c624eb3bf10d@kernel.org>
+From: Matthieu Baerts <matttbe@kernel.org>
+Cc: MPTCP Linux <mptcp@lists.linux.dev>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <20251008-c-flag-add-addr-delay-v1-0-c624eb3bf10d@kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20251017-v5-4-gcc-15-v1-5-6d6367ee50a1@kernel.org>
-References: <20251017-v5-4-gcc-15-v1-0-6d6367ee50a1@kernel.org>
-In-Reply-To: <20251017-v5-4-gcc-15-v1-0-6d6367ee50a1@kernel.org>
-To: stable@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Sasha Levin <sashal@kernel.org>
-Cc: MPTCP Upstream <mptcp@lists.linux.dev>, 
- "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
- Nathan Chancellor <natechancellor@gmail.com>, 
- Andrew Morton <akpm@linux-foundation.org>, 
- Thomas Gleixner <tglx@linutronix.de>, 
- Linus Torvalds <torvalds@linux-foundation.org>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2695; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=Nv28f9jDG/WKsxu892MmMF8tyULuMgUkd2J73jIspzI=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDI+1f5VkUj3/HvgWKDOtQPvu2bxH7nyu6NvY2fbsbZjh
- b8mVs3L6ShlYRDjYpAVU2SRbovMn/m8irfEy88CZg4rE8gQBi5OAZiIrA3D/+q/K212CJ3ftjvU
- 51dM+2bH/4vUwmr4EzLtWo3j4yUK4xgZ+hfkm8rZ+G/Vf3uNs+ajqp1FY6ye8nn+3Z4K4tHXBZ4
- yAQA=
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+Hi Geliang,
 
-commit ef70eff9dea66f38f8c2c2dcc7fe4b7a2bbb4921 upstream.
+On 08/10/2025 15:59, Matthieu Baerts (NGI0) wrote:
+> On NIPA, the new test validating the special case for the C-flag failed
+> a few times, e.g.
 
-When building with clang + -Wtautological-pointer-compare, these
-instances pop up:
+(...)
 
-  kernel/profile.c:339:6: warning: comparison of array 'prof_cpu_mask' not equal to a null pointer is always true [-Wtautological-pointer-compare]
-          if (prof_cpu_mask != NULL)
-              ^~~~~~~~~~~~~    ~~~~
-  kernel/profile.c:376:6: warning: comparison of array 'prof_cpu_mask' not equal to a null pointer is always true [-Wtautological-pointer-compare]
-          if (prof_cpu_mask != NULL)
-              ^~~~~~~~~~~~~    ~~~~
-  kernel/profile.c:406:26: warning: comparison of array 'prof_cpu_mask' not equal to a null pointer is always true [-Wtautological-pointer-compare]
-          if (!user_mode(regs) && prof_cpu_mask != NULL &&
-                                ^~~~~~~~~~~~~    ~~~~
-  3 warnings generated.
+>       mptcp: pm: in-kernel: C-flag: handle late ADD_ADDR
+>       selftests: mptcp: join: mark 'flush re-add' as skipped if not supported
+>       selftests: mptcp: join: mark 'delete re-add signal' as skipped if not supported
+>       selftests: mptcp: join: mark implicit tests as skipped if not supported
+>       selftests: mptcp: join: mark laminar tests as skipped if not supported
+>       mptcp: pm: in-kernel: record fullmesh endp nb
+>       mptcp: pm: in kernel: only use fullmesh endp if any
 
-This can be addressed with the cpumask_available helper, introduced in
-commit f7e30f01a9e2 ("cpumask: Add helper cpumask_available()") to fix
-warnings like this while keeping the code the same.
+Thank you for the review! Now in our trees:
 
-Link: https://github.com/ClangBuiltLinux/linux/issues/747
-Link: http://lkml.kernel.org/r/20191022191957.9554-1-natechancellor@gmail.com
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-[ These warnings are also visible with recent GCC versions. ]
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- kernel/profile.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+New patches for t/upstream-net and t/upstream:
+- 83d8fae94043: mptcp: pm: in-kernel: C-flag: handle late ADD_ADDR
+- 0e8cd327f4e5: selftests: mptcp: join: mark 'flush re-add' as skipped
+if not supported
+- 716e6b76040b: selftests: mptcp: join: mark 'delete re-add signal' as
+skipped if not supported
+- d03f66d8df45: selftests: mptcp: join: mark implicit tests as skipped
+if not supported
+- 8942269563cf: selftests: mptcp: join: mark laminar tests as skipped if
+not supported
+- Results: 447b1b798733..6b1d2535995a (export-net)
+- Results: e50f1e61a2cc..9908a13fba7c (export)
 
-diff --git a/kernel/profile.c b/kernel/profile.c
-index b5ce18b6f1b9..af3d5c34d051 100644
---- a/kernel/profile.c
-+++ b/kernel/profile.c
-@@ -344,7 +344,7 @@ static int profile_dead_cpu(unsigned int cpu)
- 	struct page *page;
- 	int i;
- 
--	if (prof_cpu_mask != NULL)
-+	if (cpumask_available(prof_cpu_mask))
- 		cpumask_clear_cpu(cpu, prof_cpu_mask);
- 
- 	for (i = 0; i < 2; i++) {
-@@ -381,7 +381,7 @@ static int profile_prepare_cpu(unsigned int cpu)
- 
- static int profile_online_cpu(unsigned int cpu)
- {
--	if (prof_cpu_mask != NULL)
-+	if (cpumask_available(prof_cpu_mask))
- 		cpumask_set_cpu(cpu, prof_cpu_mask);
- 
- 	return 0;
-@@ -411,7 +411,7 @@ void profile_tick(int type)
- {
- 	struct pt_regs *regs = get_irq_regs();
- 
--	if (!user_mode(regs) && prof_cpu_mask != NULL &&
-+	if (!user_mode(regs) && cpumask_available(prof_cpu_mask) &&
- 	    cpumask_test_cpu(smp_processor_id(), prof_cpu_mask))
- 		profile_hit(type, (void *)profile_pc(regs));
- }
+New patches for t/upstream:
+- 5f417bb6c462: mptcp: pm: in-kernel: record fullmesh endp nb
+- 9acc176eae6c: mptcp: pm: in kernel: only use fullmesh endp if any
+- Results: 9908a13fba7c..78fb62108556 (export)
 
+Tests are now in progress:
+
+- export-net:
+https://github.com/multipath-tcp/mptcp_net-next/commit/3d8750d216b4299e258dda3979c4e42f7b64c06d/checks
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/ec4b20675929eae392f14e23067ad34180848874/checks
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/7bf4874aee41205fa1d7ca954b68091371f9dd67/checks
+
+Cheers,
+Matt
 -- 
-2.51.0
+Sponsored by the NGI0 Core fund.
 
