@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 843282550A4;
-	Fri, 17 Oct 2025 07:57:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A789E1BC3F;
+	Fri, 17 Oct 2025 10:31:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760687840; cv=none; b=bAr+7YKJQ3bpa8IA2n9Vhjkc2ggKglgTHvq9TrHi6twsHBxsRB1RvINUSwDbDK1PWvt5MRwJjpKEjP6CCUNozRt/wOCr56XFqpdgNs6G9ILpTzj67unybMj+H09MuJjFEbplh4tB/a+XwG/PgmFQ4bO3T5nXVQN0vKVbTlCAoA8=
+	t=1760697114; cv=none; b=JgGQKFICu7c5P5u4FAbvxJHNftdvfIqETCX3+DPx+a/KqfLf+g5dZ51P5+y/MzX0n2m6UFCqMzjHtbdsYn65fYfmK3B0FT875gH6ewZfWlyrXfJN/n/Q8dlq5z2OewsykZsBhtnYViEhoFke1vC3p8draEPR/TkP03d860NTYAY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760687840; c=relaxed/simple;
-	bh=MgPkShBhUBzMn0U3g5lyMB86eaWakWS8Qs+4rxY7XuE=;
+	s=arc-20240116; t=1760697114; c=relaxed/simple;
+	bh=AObnHHizVDtiX+m7JEtlC1hXHcbP31Gpjqx/xImk1o0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Ee7E5leyHk1WxEQNY3KH2HzXxL8kGroxTrj9JSzApOpYqKi1I0N44F5bttspEjxDlME7/WfT49ag+VVOcuWTUvDosH41HTBd8zHwdixEFI7QmyBnRptaJBTMsZID4Zr5K5H/cf4hjE+rR3QZAs467oiBe41NUPGuXpUorG2VljI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Osjw2ylW; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=hJf4jzJdtgMtJcnnZTfSJPZZxDKaqvylnzbWTCHlOCvsgQUQKk0SaJAJpzxgDsv8g9NiLGjNX2KkdZM9rPMHHgPNrK88RPD8Rq5misSn4aWtwfl7KxSit5Q0vVyYR3hgiTNbJwgAaFZUcchUtBdfJQ2W/wkRO7tU5riZjfbvFTM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qfvhDvHN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Osjw2ylW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7021C4CEE7;
-	Fri, 17 Oct 2025 07:57:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qfvhDvHN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0107C4CEE7;
+	Fri, 17 Oct 2025 10:31:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760687840;
-	bh=MgPkShBhUBzMn0U3g5lyMB86eaWakWS8Qs+4rxY7XuE=;
+	s=k20201202; t=1760697114;
+	bh=AObnHHizVDtiX+m7JEtlC1hXHcbP31Gpjqx/xImk1o0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Osjw2ylWRVpArcpPTq7oBR78LSG6ORVLGjVt64Y/gPh8inFO2leOEq+zOt/bvi4OO
-	 dmWuN3d7zv/IjLFANdlF983iKVmUCxe+MarBf5KnrWX0Tb/R+x/e9KzV7S9ThF4MLl
-	 6fSswbXOmdM8JoYdzBbYISw7aIG1/VlF+p+8Iaxngb6olFL7f94bP0R1B+OKfcnR7M
-	 TLZXx+Qvq5UPgVd7bb68TRNd1qW4SRTUyGTQMUhkiUVnWzA3/KuhRot+jmfbNHd/Cc
-	 2NIS/OVVAXSWBN9ITb1awdr4jL3zOEDcPMiT8waXEQRUn+qIKCzoj9ofjQfS4NvZUn
-	 CRUDUmwfiKBqg==
+	b=qfvhDvHN8orMHy+kEXvK7YAgOmjtEKj0CWGgIehuXuiFploknL9c3R8oL5Bmgjynp
+	 JbxVnCHg5XaNHOO3GJzGstrSV+iCj5ouVlU+wez4k1iQf5zZUgo/vTNZP5Ri/HqfU2
+	 RiEN9Hm7stvVo5X+p2PAEbXa47qkGaUhA8YlqI9m05H0+e1z0poY8tJ0H8c3cCbUB+
+	 KnyxLiD/nqnMbzibyibfLpUtMXt7GyYwj7vMVExHzeX1dYWUBGJ5Ce6Xhp46uL/JTe
+	 2Z1Zks3w7WC6z1hKF/LvZVwRgpkxLaJ5j9HlMSnXNaaJD4U7wb+N/MFyCxjnDbHMbB
+	 548A+oDPMVknw==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 To: stable@vger.kernel.org,
 	gregkh@linuxfoundation.org
@@ -33,19 +33,19 @@ Cc: MPTCP Upstream <mptcp@lists.linux.dev>,
 	"Matthieu Baerts (NGI0)" <matttbe@kernel.org>,
 	Geliang Tang <geliang@kernel.org>,
 	Jakub Kicinski <kuba@kernel.org>
-Subject: [PATCH 6.6.y] mptcp: pm: in-kernel: usable client side with C-flag
-Date: Fri, 17 Oct 2025 09:57:09 +0200
-Message-ID: <20251017075708.1455085-2-matttbe@kernel.org>
+Subject: [PATCH 6.1.y] mptcp: pm: in-kernel: usable client side with C-flag
+Date: Fri, 17 Oct 2025 12:31:28 +0200
+Message-ID: <20251017103127.1891170-2-matttbe@kernel.org>
 X-Mailer: git-send-email 2.51.0
-In-Reply-To: <2025101656-earthly-womanhood-2b05@gregkh>
-References: <2025101656-earthly-womanhood-2b05@gregkh>
+In-Reply-To: <2025101657-platform-jersey-adec@gregkh>
+References: <2025101657-platform-jersey-adec@gregkh>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7350; i=matttbe@kernel.org; h=from:subject; bh=MgPkShBhUBzMn0U3g5lyMB86eaWakWS8Qs+4rxY7XuE=; b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDI+frv6+sG8Tx7fbvYuF7ppxpl+Uq0pl4H3od+WJ/mTY 5/+e5ff01HKwiDGxSArpsgi3RaZP/N5FW+Jl58FzBxWJpAhDFycAjCRFTkM/xOOrjWbaMfjYWbZ zT9z6qO2omki4Wvlp/W/Zy1W3bVemIvhN8vFJC6Nx6bqys4OoonNQteev52WIZTnY7477uSkhxf 3sQEA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=8328; i=matttbe@kernel.org; h=from:subject; bh=AObnHHizVDtiX+m7JEtlC1hXHcbP31Gpjqx/xImk1o0=; b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDI+STNwdxcqh2+v0L9u69JyaNrOtAvXb798cvJkyfKdR UvPbWR36ihlYRDjYpAVU2SRbovMn/m8irfEy88CZg4rE8gQBi5OAZhI1XqG/9lqF9fJTv4z71Vp hLaTY/ykzQv7lETauq4f/avnLV8o6czIcJCV0yfn7A+NhTNlL64TmPTAhYOrm8Nq9Zn3jDXfU+f vYAMA
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 Content-Transfer-Encoding: 8bit
 
@@ -97,6 +97,10 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
   of using the 'locals' variable (struct mptcp_pm_local *) from the new
   version and embedding a "struct mptcp_addr_info", we can simply
   continue to use the 'addrs' variable (struct mptcp_addr_info *).
+  Because commit b9d69db87fb7 ("mptcp: let the in-kernel PM use mixed
+  IPv4 and IPv6 addresses") is not in this version, it is also required
+  to pass an extra parameter to fill_local_addresses_vec(): struct
+  mptcp_addr_info *remote, which is available from the caller side.
   Conflict in protocol.h, because commit af3dc0ad3167 ("mptcp: Remove
   unused declaration mptcp_sockopt_sync()") is not in this version and
   it removed one line in the context. The resolution is easy because the
@@ -104,15 +108,15 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
  net/mptcp/pm.c         |  7 ++++--
- net/mptcp/pm_netlink.c | 52 +++++++++++++++++++++++++++++++++++++++++-
- net/mptcp/protocol.h   |  8 +++++++
- 3 files changed, 64 insertions(+), 3 deletions(-)
+ net/mptcp/pm_netlink.c | 55 ++++++++++++++++++++++++++++++++++++++++--
+ net/mptcp/protocol.h   |  8 ++++++
+ 3 files changed, 66 insertions(+), 4 deletions(-)
 
 diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index 29c167e5fc02..ab7bdb653181 100644
+index 6392973b1fa7..f1a8ae7a5af4 100644
 --- a/net/mptcp/pm.c
 +++ b/net/mptcp/pm.c
-@@ -227,9 +227,12 @@ void mptcp_pm_add_addr_received(const struct sock *ssk,
+@@ -225,9 +225,12 @@ void mptcp_pm_add_addr_received(const struct sock *ssk,
  		} else {
  			__MPTCP_INC_STATS(sock_net((struct sock *)msk), MPTCP_MIB_ADDADDRDROP);
  		}
@@ -128,10 +132,18 @@ index 29c167e5fc02..ab7bdb653181 100644
  		mptcp_pm_add_addr_send_ack(msk);
  	} else if (mptcp_pm_schedule_work(msk, MPTCP_PM_ADD_ADDR_RECEIVED)) {
 diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index de24989b05a6..9d2c38421f7a 100644
+index 7e72862a6b54..614ddae9c0a5 100644
 --- a/net/mptcp/pm_netlink.c
 +++ b/net/mptcp/pm_netlink.c
-@@ -675,10 +675,12 @@ static unsigned int fill_local_addresses_vec(struct mptcp_sock *msk,
+@@ -671,6 +671,7 @@ static void mptcp_pm_nl_subflow_established(struct mptcp_sock *msk)
+  * and return the array size.
+  */
+ static unsigned int fill_local_addresses_vec(struct mptcp_sock *msk,
++					     struct mptcp_addr_info *remote,
+ 					     struct mptcp_addr_info *addrs)
+ {
+ 	struct sock *sk = (struct sock *)msk;
+@@ -678,10 +679,12 @@ static unsigned int fill_local_addresses_vec(struct mptcp_sock *msk,
  	struct mptcp_addr_info mpc_addr;
  	struct pm_nl_pernet *pernet;
  	unsigned int subflows_max;
@@ -144,8 +156,8 @@ index de24989b05a6..9d2c38421f7a 100644
  
  	mptcp_local_address((struct sock_common *)msk, &mpc_addr);
  
-@@ -691,11 +693,26 @@ static unsigned int fill_local_addresses_vec(struct mptcp_sock *msk,
- 			continue;
+@@ -701,11 +704,26 @@ static unsigned int fill_local_addresses_vec(struct mptcp_sock *msk,
+ 		}
  
  		if (msk->pm.subflows < subflows_max) {
 +			bool is_id0;
@@ -172,7 +184,7 @@ index de24989b05a6..9d2c38421f7a 100644
  				addrs[i].id = 0;
  
  			i++;
-@@ -703,6 +720,39 @@ static unsigned int fill_local_addresses_vec(struct mptcp_sock *msk,
+@@ -713,6 +731,39 @@ static unsigned int fill_local_addresses_vec(struct mptcp_sock *msk,
  	}
  	rcu_read_unlock();
  
@@ -212,11 +224,20 @@ index de24989b05a6..9d2c38421f7a 100644
  	/* If the array is empty, fill in the single
  	 * 'IPADDRANY' local address
  	 */
+@@ -760,7 +811,7 @@ static void mptcp_pm_nl_add_addr_received(struct mptcp_sock *msk)
+ 	/* connect to the specified remote address, using whatever
+ 	 * local address the routing configuration will pick.
+ 	 */
+-	nr = fill_local_addresses_vec(msk, addrs);
++	nr = fill_local_addresses_vec(msk, &remote, addrs);
+ 
+ 	spin_unlock_bh(&msk->pm.lock);
+ 	for (i = 0; i < nr; i++)
 diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index c5f41cdb36c4..1f213706dfaa 100644
+index e1637443203e..81507419c465 100644
 --- a/net/mptcp/protocol.h
 +++ b/net/mptcp/protocol.h
-@@ -1080,6 +1080,14 @@ static inline void mptcp_pm_close_subflow(struct mptcp_sock *msk)
+@@ -958,6 +958,14 @@ static inline void mptcp_pm_close_subflow(struct mptcp_sock *msk)
  	spin_unlock_bh(&msk->pm.lock);
  }
  
