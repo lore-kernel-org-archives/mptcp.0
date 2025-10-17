@@ -1,133 +1,130 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEFBF335082;
-	Fri, 17 Oct 2025 14:50:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 505AE258ECF;
+	Fri, 17 Oct 2025 16:24:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760712635; cv=none; b=V6gWwQpxC5/08IUSqYRcBncmk10ibC83NnaWSFHXOIIW1XRC40Bk0PHIXBVjP/3/4yOESFvw/87wVfLOuITryCPwFuC2PYCEv/AGxf5iHF6UlsdGlQgsC/KaBl9VNyLPMgtbSZpnSmJCOKc3V0xe7FExqOU2j18DQauRnGpDlKQ=
+	t=1760718255; cv=none; b=eBEVEZQiQ9c0VDTEED+O6IpzYzhdoeivaMYPbAHBPU16ZKlr4dRAHL8y2xRcabEk/mKXlg/2mn7HLXQg/ioC7Ol7znetdCyo5Ol5+PcCvr3Ds36xJEJX8+yqElhqGncApEhFErhn6tT6y25IZvLBKwdJfhQDJRCb1fhVzqjJqfE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760712635; c=relaxed/simple;
-	bh=1VlzfByCdU4Gdqa1SQyDQyGaeOFMsc0jd3ttAdYq09U=;
-	h=Subject:To:Cc:From:Date:In-Reply-To:Message-ID:MIME-Version:
-	 Content-Type; b=DQeZ3i+ZMLpgL+OIcYDyNyZBFhpJUCd3xAf6XRrWLMR/ISFjDgW52oRapFjnfQkZzPa+HHO1XrKZvaHMbgQ4AID2iLhiZNT7vullGkrldq0TBJADZGn243THDM3kWJXPys4+9AxaEscGBNfxLb643vjjj0SxnmlGrThLd2rX8G0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=xLHkqGT/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1760718255; c=relaxed/simple;
+	bh=46TQSPigHf5AnxxA3qcaZcsf/kBafWeQY87jhCkVJxM=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=ZXWyjGqCv8rha57hjWddPDHww+sE8/LfzxebHswqYyyufiAGtkXTgSO8T1GLmjTdIunoS2Z4AxO7Cq871FdEgVWMWIJNj2TO3DIX2Cf3UNqozGA8MeyRQRh66o4gO6KWbMy/2tgqnt5KWb9q5j/DkKopMu2w6FCWXX3zpM3u+Iw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mxCCBEEn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="xLHkqGT/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FE1AC4CEE7;
-	Fri, 17 Oct 2025 14:50:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1760712635;
-	bh=1VlzfByCdU4Gdqa1SQyDQyGaeOFMsc0jd3ttAdYq09U=;
-	h=Subject:To:Cc:From:Date:In-Reply-To:From;
-	b=xLHkqGT/s+15QaVzkuHPex/1DPs/MejDRGr/GBRX/kioyprpfi7uGl2Ge2fFROj+v
-	 qYxWNXmGDCK+miZEKZyZMDOUTjIK2XksMmeIf/Aa0bFC4ZykqKqxeKtt1YHoDlL9D7
-	 03VWNyxzTQHCPWhPTNlZXMPN/nbekTjL9sjCpYCg=
-Subject: Patch "selftests: mptcp: join: validate C-flag + def limit" has been added to the 5.15-stable tree
-To: geliang@kernel.org,gregkh@linuxfoundation.org,kuba@kernel.org,matttbe@kernel.org,mptcp@lists.linux.dev,sashal@kernel.org
-Cc: <stable-commits@vger.kernel.org>
-From: <gregkh@linuxfoundation.org>
-Date: Fri, 17 Oct 2025 16:50:24 +0200
-In-Reply-To: <20251017143949.2844546-6-matttbe@kernel.org>
-Message-ID: <2025101724-smith-crayon-f29b@gregkh>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mxCCBEEn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECC53C4CEE7;
+	Fri, 17 Oct 2025 16:24:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1760718254;
+	bh=46TQSPigHf5AnxxA3qcaZcsf/kBafWeQY87jhCkVJxM=;
+	h=From:Subject:Date:To:Cc:From;
+	b=mxCCBEEnTG7ovqNv52ouf3Q5RZWVzXdYhKv3+2QD4bUZEz9sF0NUwN8fhUR8mC9hc
+	 hUMYK1NfXNCkQBFewNyEKEdZiSTPUeyil2ukav7xG4XNvZRi0spnaxGdMBqQGl0jl+
+	 NPjHi6rtwKpFKg3ZvMOIIb2QCxHT85GO90DKsn65qgLzHLXSPOYwicrABqWZCQyVa6
+	 jc0ZBrQ9bbeSzQ+tJwjrCQnNF+jaPJvYixnUXsZX5XNHGyYnVQJiOH6WFD3hbruIsB
+	 PqFULY5dL7maTRxkwxBGAJwY1lZ98CEvH8sDEiSnSZmCqrxWAYKQLmjV9eUqmlPVJb
+	 p+aMDS+QZrXhw==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH 5.15.y 0/3] v5.15: fix build with GCC 15
+Date: Fri, 17 Oct 2025 18:23:59 +0200
+Message-Id: <20251017-v5-15-gcc-15-v1-0-da6c065049d7@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ANSI_X3.4-1968
-Content-Transfer-Encoding: 8bit
-X-stable: commit
-X-Patchwork-Hint: ignore 
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAJ9t8mgC/x2MQQqAIBAAvxJ7TmmFxegr0cFsq71UKEgh/j3rN
+ MxhJkPkIBxhaDIEThLlPKpg24Df3bGxkqU6mM4QdmhVIoWkNu8/kOfF9TwzWQs1uQKvcv+7EUg
+ j6QemUl73qWjyZgAAAA==
+X-Change-ID: 20251017-v5-15-gcc-15-5ceda8ebe577
+To: stable@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Sasha Levin <sashal@kernel.org>
+Cc: MPTCP Upstream <mptcp@lists.linux.dev>, 
+ "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
+ Alexey Dobriyan <adobriyan@gmail.com>, Ingo Molnar <mingo@kernel.org>, 
+ "H. Peter Anvin (Intel)" <hpa@zytor.com>, 
+ Nathan Chancellor <nathan@kernel.org>, 
+ Dave Hansen <dave.hansen@linux.intel.com>, Ard Biesheuvel <ardb@kernel.org>, 
+ Arnd Bergmann <arnd@arndb.de>, Akira Yokosawa <akiyks@gmail.com>, 
+ Federico Vaga <federico.vaga@vaga.pv.it>, Alex Shi <alexs@kernel.org>, 
+ Hu Haowen <src.res@email.cn>, 
+ Tsugikazu Shibata <shibata@linuxfoundation.org>, 
+ Jonathan Corbet <corbet@lwn.net>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2949; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=46TQSPigHf5AnxxA3qcaZcsf/kBafWeQY87jhCkVJxM=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDI+5S7v2np1x0v7ewmmp5+GnVBcb3r7t3p/fJTPVRaXr
+ dq3Sq4qdZSyMIhxMciKKbJIt0Xmz3xexVvi5WcBM4eVCWQIAxenAEwkrYLhf3rWy+u5tzi4Vmjs
+ FIrK3ZW+7T1749FQ52nMS/MDbGYrMjL89/ZYJKYc6FqutqgkTeUy45oChu7WiJ5Vs3xbbrnUbRb
+ hBwA=
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
+This kernel version doesn't build with GCC 15:
 
-This is a note to let you know that I've just added the patch titled
+  In file included from include/uapi/linux/posix_types.h:5,
+                   from include/uapi/linux/types.h:14,
+                   from include/linux/types.h:6,
+                   from arch/x86/realmode/rm/wakeup.h:11,
+                   from arch/x86/realmode/rm/wakemain.c:2:
+  include/linux/stddef.h:11:9: error: cannot use keyword 'false' as enumeration constant
+     11 |         false   = 0,
+        |         ^~~~~
+  include/linux/stddef.h:11:9: note: 'false' is a keyword with '-std=c23' onwards
+  include/linux/types.h:30:33: error: 'bool' cannot be defined via 'typedef'
+     30 | typedef _Bool                   bool;
+        |                                 ^~~~
+  include/linux/types.h:30:33: note: 'bool' is a keyword with '-std=c23' onwards
+  include/linux/types.h:30:1: warning: useless type name in empty declaration
+     30 | typedef _Bool                   bool;
+        | ^~~~~~~
 
-    selftests: mptcp: join: validate C-flag + def limit
+I initially fixed this by adding -std=gnu11 in arch/x86/Makefile, then I
+realised this fix was already done in an upstream commit, created before
+the GCC 15 release and not mentioning the error I had. This is the first
+patch.
 
-to the 5.15-stable tree which can be found at:
-    http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
+When I was investigating my error, I noticed other commits were already
+backported to v5.15. They were all adding -std=gnu11 in different
+Makefiles. In their commit message, they were mentioning 'gnu11' was
+picked to use the same as the one from the main Makefile. But this is
+not the case in this kernel version. Patch 2 fixes that.
 
-The filename of the patch is:
-     selftests-mptcp-join-validate-c-flag-def-limit.patch
-and it can be found in the queue-5.15 subdirectory.
+Finally, I noticed the documentation was not correct in this kernel
+version: this is because a commit was backported to v5.15 while it was
+not supposed to. Patch 3 fixes that.
 
-If you, or anyone else, feels it should not be added to the stable tree,
-please let <stable@vger.kernel.org> know about it.
-
-
-From stable+bounces-186342-greg=kroah.com@vger.kernel.org Fri Oct 17 16:43:01 2025
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Fri, 17 Oct 2025 16:39:52 +0200
-Subject: selftests: mptcp: join: validate C-flag + def limit
-To: mptcp@lists.linux.dev, stable@vger.kernel.org, gregkh@linuxfoundation.org
-Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, sashal@kernel.org, Geliang Tang <geliang@kernel.org>, Jakub Kicinski <kuba@kernel.org>
-Message-ID: <20251017143949.2844546-6-matttbe@kernel.org>
-
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-
-commit 008385efd05e04d8dff299382df2e8be0f91d8a0 upstream.
-
-The previous commit adds an exception for the C-flag case. The
-'mptcp_join.sh' selftest is extended to validate this case.
-
-In this subtest, there is a typical CDN deployment with a client where
-MPTCP endpoints have been 'automatically' configured:
-
-- the server set net.mptcp.allow_join_initial_addr_port=0
-
-- the client has multiple 'subflow' endpoints, and the default limits:
-  not accepting ADD_ADDRs.
-
-Without the parent patch, the client is not able to establish new
-subflows using its 'subflow' endpoints. The parent commit fixes that.
-
-The 'Fixes' tag here below is the same as the one from the previous
-commit: this patch here is not fixing anything wrong in the selftests,
-but it validates the previous fix for an issue introduced by this commit
-ID.
-
-Fixes: df377be38725 ("mptcp: add deny_join_id0 in mptcp_options_received")
-Cc: stable@vger.kernel.org
-Reviewed-by: Geliang Tang <geliang@kernel.org>
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Link: https://patch.msgid.link/20250925-net-next-mptcp-c-flag-laminar-v1-2-ad126cc47c6b@kernel.org
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-[ Conflicts in mptcp_join.sh, because many different helpers have been
-  modified in newer kernel versions, e.g. in commit 03668c65d153
-  ("selftests: mptcp: join: rework detailed report"), or commit
-  985de45923e2 ("selftests: mptcp: centralize stats dumping"), etc.
-  Adaptations have been made to use the old way, similar to what is done
-  just above. ]
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- tools/testing/selftests/net/mptcp/mptcp_join.sh |   10 ++++++++++
- 1 file changed, 10 insertions(+)
+Alexey Dobriyan (1):
+      x86/boot: Compile boot code with -std=gnu11 too
 
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -1826,6 +1826,16 @@ deny_join_id0_tests()
- 	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
- 	run_tests $ns1 $ns2 10.0.1.1
- 	chk_join_nr "subflow and address allow join id0 2" 1 1 1
-+
-+	# default limits, server deny join id 0 + signal
-+	reset_with_allow_join_id0 0 1
-+	ip netns exec $ns1 ./pm_nl_ctl limits 0 2
-+	ip netns exec $ns2 ./pm_nl_ctl limits 0 2
-+	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
-+	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
-+	ip netns exec $ns2 ./pm_nl_ctl add 10.0.4.2 flags subflow
-+	run_tests $ns1 $ns2 10.0.1.1
-+	chk_join_nr "default limits, server deny join id 0" 2 2 2
- }
- 
- fullmesh_tests()
+Matthieu Baerts (NGI0) (2):
+      arch: back to -std=gnu89 in < v5.18
+      Revert "docs/process/howto: Replace C89 with C11"
 
+ Documentation/process/howto.rst                    | 2 +-
+ Documentation/translations/it_IT/process/howto.rst | 2 +-
+ Documentation/translations/ja_JP/howto.rst         | 2 +-
+ Documentation/translations/ko_KR/howto.rst         | 2 +-
+ Documentation/translations/zh_CN/process/howto.rst | 2 +-
+ Documentation/translations/zh_TW/process/howto.rst | 2 +-
+ arch/parisc/boot/compressed/Makefile               | 2 +-
+ arch/s390/Makefile                                 | 2 +-
+ arch/s390/purgatory/Makefile                       | 2 +-
+ arch/x86/Makefile                                  | 2 +-
+ arch/x86/boot/compressed/Makefile                  | 2 +-
+ drivers/firmware/efi/libstub/Makefile              | 2 +-
+ 12 files changed, 12 insertions(+), 12 deletions(-)
+---
+base-commit: 06cf22cc87e00b878c310d5441981b7750f04078
+change-id: 20251017-v5-15-gcc-15-5ceda8ebe577
 
-Patches currently in stable-queue which might be from matttbe@kernel.org are
+Best regards,
+-- 
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-queue-5.15/mptcp-pm-in-kernel-usable-client-side-with-c-flag.patch
-queue-5.15/selftests-mptcp-join-validate-c-flag-def-limit.patch
