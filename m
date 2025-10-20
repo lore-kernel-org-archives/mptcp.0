@@ -1,125 +1,155 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D050F339B33;
-	Mon, 20 Oct 2025 20:54:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90B652253EB
+	for <mptcp@lists.linux.dev>; Mon, 20 Oct 2025 23:32:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760993644; cv=none; b=qc8ORfh00mAeNBRdokwoV7iLfQzRRKQxIqXeCv6dxtBejKCsGicShdb58iYNuKa3Q/CMr5EsemfjGhAc2NQ3kEg2WxOTm+zK+Yzb8B6Z/etgJWnhkjFIEdTkx7fsWML+wPIK17OpMbpXMB1cfwEheVStqhKLy1YVO/88zCofYCM=
+	t=1761003171; cv=none; b=e1fJyLsYSCbUCJDTxAgB14Hhxk2tJdT2NtOnCnG8B6QE/yKBTcxQlleWSzHhzLIhTSJ3FGt9BGQB2J9Di65P+H0RPKPd4JNkQbzISSs3so4rhn87zFQMNZV32idfL5I4xbFn+9uRWr2ynwSnarDriXtB8BcImsQv9gmOS3vAfkc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760993644; c=relaxed/simple;
-	bh=bHGo8+BWrfJBGH0sCvbI3J2YnPZniPBZaTu937O/yl0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=saBkOSJoYMiSK3VQonHPPR1x+mHXsjFsIStoy8wb8Kp3hJtcUlYXEL33rRXmJQNFolxIKa69uRETfiDRXAQPmv8oCnIAaAdHI9YulpWHaqmH7webaITxcLPk17dy5JlnwVMqcH1wOB/FdPeCOj/PKQUJgZe8CrERrLA6EqrVVoY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NrlY2yEq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1761003171; c=relaxed/simple;
+	bh=pTKsVCr0Zp+S81eWfv3tvWeVswDxiRbuNm1zJ3+X9NU=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=Zd9qkBy3aIa5wWWdVfEiW0hh3aFPQ/Ip6W5NPIHvAaUIQyecYzYr0t/wfH3+leQjeLGkf9s3yc1zwlW7IhYdkUrf7IzBJJcL/iA8AK832VXmGPPT1ZcPhl1m4aVdtCsibGKi+ViAJyo3qC9yRTLH7eI3ybsonLL0Jr91tk5PjNo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kweHjCNH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NrlY2yEq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93858C2BCF7;
-	Mon, 20 Oct 2025 20:54:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kweHjCNH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27F8AC4CEFB;
+	Mon, 20 Oct 2025 23:32:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760993642;
-	bh=bHGo8+BWrfJBGH0sCvbI3J2YnPZniPBZaTu937O/yl0=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=NrlY2yEqf8J/6HabLfI4t1bHNmQHnv/8197GtVsmbrsdnJmTN5DFxOvAbcyEzkMSv
-	 vfcdGjCTfKThEh4e0lBSTFZz5mHewt4r897QAKppkY94OFwdzHSgcwWulE9GA2R5a2
-	 3s2PUTofrq3sPqcNGfywbq/Vs93EmvInFdtRDZ/BjqMjWR7Fl+2xMqHA9/JL3bUGA7
-	 4jRVzZFNDtYmuZ/mfq9rWV8oFnTh/+uy9J4FccxiwGY0KCNZTDvfid9i3Dbo7BhJTN
-	 QsfqRzepsqy1n7+eSMxT1KMi1pm2VGcWKYWP8dPPa4SdRGoGBpjDHcCpx/cy2EBuU6
-	 tyJvh3ascdbLA==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Mon, 20 Oct 2025 22:53:30 +0200
-Subject: [PATCH net 5/5] selftests: mptcp: join: mark laminar tests as
- skipped if not supported
+	s=k20201202; t=1761003170;
+	bh=pTKsVCr0Zp+S81eWfv3tvWeVswDxiRbuNm1zJ3+X9NU=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=kweHjCNHD1Rj1tz04hyjGEx4YK2AcVcAra5Q4gOLD7p04AFmBo+s945fNZ7EwoZe2
+	 8BOCJftQLzRq1gnpXzOC/7Th1i6CkVN3SLP730Uo2NIkmd8pdf8WagoFzkBhelDfRw
+	 apEILGly+LgwqZvDbSbCFU0EjonnWxv+dxyROsvZ2MtaJ3FaF/9Cu/DX8A8JEpFQ7Q
+	 jezasicE+Bb+7rFvfWuyN9iFYoZYpJyDZs1mkPfxMsHOfSMsrDFstxsHZXEer7ViqR
+	 5ZuZUZxAqiwOoTd/h6etq2W+uE/6LgOZin5emGngi0SWzIhGdL42HL0/yw3tlL5fSC
+	 YS/Wtvv862uTg==
+Date: Mon, 20 Oct 2025 16:32:49 -0700 (PDT)
+From: Mat Martineau <martineau@kernel.org>
+To: Paolo Abeni <pabeni@redhat.com>
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH v5 mptcp-next 10/10] mptcp: leverage the backlog for RX
+ packet processing
+In-Reply-To: <1cb19d6e65591b81610cc0dd8ef5d0a38605b3f1.1759737859.git.pabeni@redhat.com>
+Message-ID: <156d60d8-ee80-49fb-8b8e-d0be56f7a02a@kernel.org>
+References: <cover.1759737859.git.pabeni@redhat.com> <1cb19d6e65591b81610cc0dd8ef5d0a38605b3f1.1759737859.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20251020-net-mptcp-c-flag-late-add-addr-v1-5-8207030cb0e8@kernel.org>
-References: <20251020-net-mptcp-c-flag-late-add-addr-v1-0-8207030cb0e8@kernel.org>
-In-Reply-To: <20251020-net-mptcp-c-flag-late-add-addr-v1-0-8207030cb0e8@kernel.org>
-To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Simon Horman <horms@kernel.org>, Shuah Khan <shuah@kernel.org>
-Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, 
- linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
- "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2950; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=bHGo8+BWrfJBGH0sCvbI3J2YnPZniPBZaTu937O/yl0=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDK+LYzw1t+pKv5+Z9q7lOeXLGKmhj/zz+7Kky54ZNR2u
- Pj7rfpzHaUsDGJcDLJiiizSbZH5M59X8ZZ4+VnAzGFlAhnCwMUpABPZ1srIsPcG29aQojCf3bZR
- U8yjauO9A/13KP/tkez7t/rH7UBLTob/KXeuv7Z2SbQykxdkfrmdc1t5/p7PU7+y8xVskdy+Keo
- SGwA=
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-The call to 'continue_if' was missing: it properly marks a subtest as
-'skipped' if the attached condition is not valid.
 
-Without that, the test is wrongly marked as passed on older kernels.
+On Mon, 6 Oct 2025, Paolo Abeni wrote:
 
-Fixes: c912f935a5c7 ("selftests: mptcp: join: validate new laminar endp")
-Reviewed-by: Geliang Tang <geliang@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- tools/testing/selftests/net/mptcp/mptcp_join.sh | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+> When the msk socket is owned or the msk receive buffer is full,
+> move the incoming skbs in a msk level backlog list. This avoid
+> traversing the joined subflows and acquiring the subflow level
+> socket lock at reception time, improving the RX performances.
+>
+> when processing the backlog, use the fwd alloc memory borrowed from
+> the incoming subflow. skbs exceeding the msk receive space are
+> not dropped; instead they are kept into the backlog until the receive
+> buffer is freed. Dropping packets already acked at the TCP level is
+> explicitly discouraged by the RFC and would corrupt the data stream
+> for fallback sockets.
+>
+> Special care is needed to avoid adding skbs to the backlog of a closed
+> msk, and to avoid leaving dangling references into the backlog
+> at subflow closing time.
+>
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> ---
+> v4 -> v5:
+>  - consolidate ssk rcvbuf accunting in __mptcp_move_skb(), remove
+>    some code duplication
+>  - return soon in __mptcp_add_backlog() when dropping skbs due to
+>    the msk closed. This avoid later UaF
+> ---
+> net/mptcp/protocol.c | 137 ++++++++++++++++++++++++-------------------
+> net/mptcp/protocol.h |   2 +-
+> 2 files changed, 79 insertions(+), 60 deletions(-)
+>
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 2d5d3da67d1ac..a97a92eccc502 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index b2a8c51a3969..78a1aa4ecff2 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -2324,7 +2324,7 @@ laminar_endp_tests()
- {
- 	# no laminar endpoints: routing rules are used
- 	if reset_with_tcp_filter "without a laminar endpoint" ns1 10.0.2.2 REJECT &&
--	   mptcp_lib_kallsyms_has "mptcp_pm_get_endp_laminar_max$"; then
-+	   continue_if mptcp_lib_kallsyms_has "mptcp_pm_get_endp_laminar_max$"; then
- 		pm_nl_set_limits $ns1 0 2
- 		pm_nl_set_limits $ns2 2 2
- 		pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
-@@ -2336,7 +2336,7 @@ laminar_endp_tests()
- 
- 	# laminar endpoints: this endpoint is used
- 	if reset_with_tcp_filter "with a laminar endpoint" ns1 10.0.2.2 REJECT &&
--	   mptcp_lib_kallsyms_has "mptcp_pm_get_endp_laminar_max$"; then
-+	   continue_if mptcp_lib_kallsyms_has "mptcp_pm_get_endp_laminar_max$"; then
- 		pm_nl_set_limits $ns1 0 2
- 		pm_nl_set_limits $ns2 2 2
- 		pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
-@@ -2348,7 +2348,7 @@ laminar_endp_tests()
- 
- 	# laminar endpoints: these endpoints are used
- 	if reset_with_tcp_filter "with multiple laminar endpoints" ns1 10.0.2.2 REJECT &&
--	   mptcp_lib_kallsyms_has "mptcp_pm_get_endp_laminar_max$"; then
-+	   continue_if mptcp_lib_kallsyms_has "mptcp_pm_get_endp_laminar_max$"; then
- 		pm_nl_set_limits $ns1 0 2
- 		pm_nl_set_limits $ns2 2 2
- 		pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
-@@ -2363,7 +2363,7 @@ laminar_endp_tests()
- 
- 	# laminar endpoints: only one endpoint is used
- 	if reset_with_tcp_filter "single laminar endpoint" ns1 10.0.2.2 REJECT &&
--	   mptcp_lib_kallsyms_has "mptcp_pm_get_endp_laminar_max$"; then
-+	   continue_if mptcp_lib_kallsyms_has "mptcp_pm_get_endp_laminar_max$"; then
- 		pm_nl_set_limits $ns1 0 2
- 		pm_nl_set_limits $ns2 2 2
- 		pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
-@@ -2376,7 +2376,7 @@ laminar_endp_tests()
- 
- 	# laminar endpoints: subflow and laminar flags
- 	if reset_with_tcp_filter "sublow + laminar endpoints" ns1 10.0.2.2 REJECT &&
--	   mptcp_lib_kallsyms_has "mptcp_pm_get_endp_laminar_max$"; then
-+	   continue_if mptcp_lib_kallsyms_has "mptcp_pm_get_endp_laminar_max$"; then
- 		pm_nl_set_limits $ns1 0 4
- 		pm_nl_set_limits $ns2 2 4
- 		pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
+...
 
--- 
-2.51.0
+> @@ -3509,23 +3519,29 @@ void __mptcp_check_push(struct sock *sk, struct sock *ssk)
+>
+> #define MPTCP_FLAGS_PROCESS_CTX_NEED (BIT(MPTCP_PUSH_PENDING) | \
+> 				      BIT(MPTCP_RETRANSMIT) | \
+> -				      BIT(MPTCP_FLUSH_JOIN_LIST) | \
+> -				      BIT(MPTCP_DEQUEUE))
+> +				      BIT(MPTCP_FLUSH_JOIN_LIST))
+>
+> /* processes deferred events and flush wmem */
+> static void mptcp_release_cb(struct sock *sk)
+> 	__must_hold(&sk->sk_lock.slock)
+> {
+> 	struct mptcp_sock *msk = mptcp_sk(sk);
+> +	u32 delta = 0;
+>
+> 	for (;;) {
+> 		unsigned long flags = (msk->cb_flags & MPTCP_FLAGS_PROCESS_CTX_NEED);
+> -		struct list_head join_list;
+> +		LIST_HEAD(join_list);
+> +		LIST_HEAD(skbs);
+> +
+> +		sk_forward_alloc_add(sk, msk->borrowed_mem);
+> +		msk->borrowed_mem = 0;
+> +
+> +		if (sk_rmem_alloc_get(sk) < sk->sk_rcvbuf)
+> +			list_splice_init(&msk->backlog_list, &skbs);
+>
+> -		if (!flags)
+> +		if (!flags && list_empty(&skbs))
+> 			break;
+>
+> -		INIT_LIST_HEAD(&join_list);
+> 		list_splice_init(&msk->join_list, &join_list);
+>
+> 		/* the following actions acquire the subflow socket lock
+> @@ -3544,7 +3560,8 @@ static void mptcp_release_cb(struct sock *sk)
+> 			__mptcp_push_pending(sk, 0);
+> 		if (flags & BIT(MPTCP_RETRANSMIT))
+> 			__mptcp_retrans(sk);
+> -		if ((flags & BIT(MPTCP_DEQUEUE)) && __mptcp_move_skbs(sk)) {
+> +		if (!list_empty(&skbs) &&
+> +		    __mptcp_move_skbs(sk, &skbs, &delta)) {
+> 			/* notify ack seq update */
+> 			mptcp_cleanup_rbuf(msk, 0);
+> 			sk->sk_data_ready(sk);
+> @@ -3552,7 +3569,9 @@ static void mptcp_release_cb(struct sock *sk)
+>
+> 		cond_resched();
+> 		spin_lock_bh(&sk->sk_lock.slock);
+> +		list_splice(&skbs, &msk->backlog_list);
+> 	}
+> +	WRITE_ONCE(msk->backlog_len, msk->backlog_len - delta);
 
+Hi Paolo -
+
+Given the possible multiple calls to __mptcp_move_skbs() and that the 
+spinlock is released/reacquired (and the cond_resched) in the middle, 
+would it make sense to update msk->backlog_len for each iteration of the 
+loop so __mptcp_space() and mptcp_space() don't under-report available 
+space and mptcp_cleanup_rbuf() can make incremental progress?
+
+I know we don't want to WRITE_ONCE() more than necessary, but it seems 
+like there won't typically be more than one loop iteration. In the cases 
+where it does repeat the loop that means data is arriving quickly and 
+reporting mptcp_space accurately will be important.
+
+- Mat
+
+
+>
+> 	if (__test_and_clear_bit(MPTCP_CLEAN_UNA, &msk->cb_flags))
+> 		__mptcp_clean_una_wakeup(sk);
