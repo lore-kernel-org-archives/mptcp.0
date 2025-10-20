@@ -1,130 +1,259 @@
-Received: from mail-il1-f174.google.com (mail-il1-f174.google.com [209.85.166.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4607D330312
-	for <mptcp@lists.linux.dev>; Mon, 20 Oct 2025 17:38:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 769882D7DDF
+	for <mptcp@lists.linux.dev>; Mon, 20 Oct 2025 19:45:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760981885; cv=none; b=aErq4QRZ2TnQgukxQA82tNQGK7ssPuXwXbMIOV3Ly7Zy6+avIYZbY56IjlG69Lrzi585TpyjDWFELpqUg/EKgpPgn7XUvEGtWGhxvDopm7zLhZ0QtJjQ6Vfa2AofAQr+zHoaMIP/te0V6b6XxQabOmUcUOfvDyWLATvht9lztpc=
+	t=1760989518; cv=none; b=aPCAmSlMT95XxmhlkKYgXQsuf621mWMP2VVyWEAPcxpXtXxOYa8pbhnqDwcpMYaoBG4q1/1lKerJRCyTg8gN4onLdnB+Pj1g+4l0Old1RdsyDySqiBLeryIN9weoL+Ktbbe7ei9CenVddTK39gpwqJE7/9zX8M5Nw+6IZfROFEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760981885; c=relaxed/simple;
-	bh=uY+45c/V/i/MFqUj6LkMn5LIfts1sN5e+JlC/jBsnGs=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=LNgGg2KCWY6QVSAvNNHhxSrzX9ZOxRhl8lM+lBgA9Z707gI/ZS+W3laartG65Kcn8eJJz/rWCZVIQD2otWniQQs872bAfFVWBhNQZZmzJiw70TUbbKVv2GPwPVmrVTJ+M0NhGZV4hdlNDyWCv9GeRlHMLbKOUkWMjMNLN6NP6AQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jzOFM//e; arc=none smtp.client-ip=209.85.166.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1760989518; c=relaxed/simple;
+	bh=8kphyvr6wRRz+W4Fx6Y2yhN1xmU4NA6Ol+MXu823GXU=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=ER7Npxbug+qtWvjsc3ogp7pHC5Whb0p/HIwRXJWOBQyJVVR5NXXZSiuWZEceCdy+DPXO+qu9/NyGdADgA+R5P4bXZ9WHp4AcI/YxT4sabGZM+yeDZZLzCQeEpd4A0vT2TftYtFxqvjD04S5TDP1v0ESaw1PHt1K5VQzB6TO+JvA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PofsO0yO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jzOFM//e"
-Received: by mail-il1-f174.google.com with SMTP id e9e14a558f8ab-430d78a15b1so16489775ab.3
-        for <mptcp@lists.linux.dev>; Mon, 20 Oct 2025 10:38:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1760981882; x=1761586682; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gvFEU3COyQViK1rs/rYonh4sNfPEYS4869NbmFGh9FI=;
-        b=jzOFM//eqIampOCrGSyVd5sVkzvCBiaC6vZ3Ug8E78DAVBY8+Oavrw7O0Ia5lCbkcB
-         dX2Jo+oCMJturO9ia+6bm5r47qRBk7HUX/KqpU6MfNQ6P4bNBIL7Jtc6WxAgIfHZYbEb
-         NlGR5ETWVHHfVwaBUcf244cfMdlteV3hjPh1kp6htsR+e7NJVpQrJWdSvZsxWsTPk70c
-         CDY4wpmevvx9TNGF/LRW6R5Xeb34FURjLO0IyyTCgFaJFtf9GmbvQLIWFl0NdXDIfLXQ
-         TCxDoB879Ssu1twOTl+tpxfHvWJWlwrPeJ3xk3xmGik56GO107qHLz5qZaQWuIbSuydx
-         kPZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760981882; x=1761586682;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=gvFEU3COyQViK1rs/rYonh4sNfPEYS4869NbmFGh9FI=;
-        b=w20FxodU+Hz0GfwC/e3HvRbGTcwmQqcVtoy5/dxOI4YjPtsULLyZ0V1jlFS1Z9hEPV
-         YqZ40Fhk0AxkjkrFYy+VtQtroztUakHFyanzOw7Ea85ALZZehakotsFBFA0NJriQSBtk
-         BMOgr8tPmzTrQ83N7Pp2q7Om/Y4avl57SfPQlGwGEORslPEGpZMAHU+Nn4l9Yccdlq3e
-         sCo224wXT0yk79vVFKnnGFLwPt4UcLyI1hx2PsK23iopObdHV77qlGkAhDDeNVADD1F8
-         cYn02xdtBX5Enx3rSDrcmebYfWGJqpREw6P3W3H/EH6j8b0J4dCkmiLxyY+YvogdZi6G
-         qV2Q==
-X-Gm-Message-State: AOJu0YwarJDrCt6dq9+BaXRnroKmp5lBpF+zXd2ZXSupXh+ByEHIm/sH
-	vmuyW77ez/ZZs5RVKlPJWdWZjNvAuxmboEczT6jnTj8g9mQNib0U/w+CQNgm
-X-Gm-Gg: ASbGncvK84KOXQbA7VMpd0timDmh6isRgXL/y1+fwHG+9AhAJSagvBijgUwKJn0Tv/e
-	WdUZqhlu/1tRe6BFHON7MTzVq1p4y0z6MKxAhw5/PI3fVg3koOBY0Cc/2ABg0In9N/KJMezxVzL
-	ELGGWwwkujeNJ2pxMsug2lKo6blBAqZyttQ0+7PxgELnXJ912Nto9LTsb4m4GsvDV0hsAUHNAhX
-	HV/f/ZoORqe4iIUkcYBr5lyLeMGcneh4uY3s63We6OemSypgMsE6wXRMvcHm6bOVRpyBG+HqzwR
-	fVs06A5TG4QOgv0PSpDqztnx4oYYLN7BWWVhjngSP8sglPUxdsMavkH07KqCW7YJaR4ZEm9Vi6f
-	kdPsnHzid6UkGwX8SshRegvyF/2PMI079kClKZzaEnR6vX5ydIZMvmiGsn2uHcv44j7N6KBE2/6
-	OEO9eMhwyyww6xYkU=
-X-Google-Smtp-Source: AGHT+IEsbP8/ARCZUeC/UR68yS0a6NClG/8dr4CrB1SNFZuL35b7nh6zCMKebVczOJWyxERCACN/vA==
-X-Received: by 2002:a92:cda3:0:b0:430:c1ba:3558 with SMTP id e9e14a558f8ab-430c5268daamr20016155ab.18.1760981881970;
-        Mon, 20 Oct 2025 10:38:01 -0700 (PDT)
-Received: from [127.0.0.1] ([135.232.177.170])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-5a8a95fede6sm3165991173.12.2025.10.20.10.38.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Oct 2025 10:38:01 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PofsO0yO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7C9DC113D0;
+	Mon, 20 Oct 2025 19:45:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1760989518;
+	bh=8kphyvr6wRRz+W4Fx6Y2yhN1xmU4NA6Ol+MXu823GXU=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=PofsO0yOumfVtNeW/bGlqfeDQbwa7n0vUSnfl3ctnwVfz9MDllkNMC0OceYXzvunj
+	 h+dDIHkhtEhuu03ixaC7D3xI2OiPkVBRvv6TST2O5FHTD9bUaQ5bjlTiX8XPMXNOV8
+	 Y8894mFvBREH1PzudFkcRKyIDrHgDyVpQjI6OnpauQzE1DK3T8ln1QLuufS+uebzSZ
+	 JwavkkiGkb2/pm9sDxHr4Wh7LAmphER8YIuGg079alFiGn9CPzfh2J/uvu5AuG40Lo
+	 uNeNXnTlPTheTepsHcysgkmiTGy1454WeWeh1zeJKEQF/DZMF3AyOY/KglXl/xVtvM
+	 yD90Gxs6poO5w==
+Date: Mon, 20 Oct 2025 12:45:17 -0700 (PDT)
+From: Mat Martineau <martineau@kernel.org>
 To: Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <cover.1760976334.git.pabeni@redhat.com>
-References: <cover.1760976334.git.pabeni@redhat.com>
-Subject: Re: [PATCH mptcp-net 0/2] mptcp: restore zero window probe
-Message-ID: <15bc3154-f117-83d9-48f4-e5cf4618f8d5@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 20 Oct 2025 17:38:00 +0000
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH v5 mptcp-next 09/10] mptcp: introduce mptcp-level
+ backlog
+In-Reply-To: <16ead1024784cf5913a9c9ef69d7d15cb73512a3.1759737859.git.pabeni@redhat.com>
+Message-ID: <a6e2b980-9e6a-3dcc-276d-b8d78f091e34@kernel.org>
+References: <cover.1759737859.git.pabeni@redhat.com> <16ead1024784cf5913a9c9ef69d7d15cb73512a3.1759737859.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-Hi Paolo,
+On Mon, 6 Oct 2025, Paolo Abeni wrote:
 
-Thank you for your modifications, that's great!
+> We are soon using it for incoming data processing.
+> MPTCP can't leverage the sk_backlog, as the latter is processed
+> before the release callback, and such callback for MPTCP releases
+> and re-acquire the socket spinlock, breaking the sk_backlog processing
+> assumption.
+>
+> Add a skb backlog list inside the mptcp sock struct, and implement
+> basic helper to transfer packet to and purge such list.
+>
+> Packets in the backlog are not memory accounted, but still use the
+> incoming subflow receive memory, to allow back-pressure.
+>
+> No packet is currently added to the backlog, so no functional changes
+> intended here.
+>
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> --
+> v4 -> v5:
+>  - split out of the next path, to make the latter smaller
+>  - set a custom destructor for skbs in the backlog, this avoid
+>    duplicate code, and fix a few places where the need ssk cleanup
+>    was not performed.
+>  - factor out the backlog purge in a new helper,
+>    use spinlock protection, clear the backlog list and zero the
+>    backlog len
+>  - explicitly init the backlog_len at mptcp_init_sock() time
+> ---
+> net/mptcp/protocol.c | 70 +++++++++++++++++++++++++++++++++++++++++---
+> net/mptcp/protocol.h |  4 +++
+> 2 files changed, 70 insertions(+), 4 deletions(-)
+>
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 05ee6bd26b7fa..2d5d3da67d1ac 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -337,6 +337,11 @@ static void mptcp_data_queue_ofo(struct mptcp_sock *msk, struct sk_buff *skb)
+> 		mptcp_rcvbuf_grow(sk);
+> }
+>
+> +static void mptcp_bl_free(struct sk_buff *skb)
+> +{
+> +	atomic_sub(skb->truesize, &skb->sk->sk_rmem_alloc);
+> +}
+> +
+> static int mptcp_init_skb(struct sock *ssk,
+> 			  struct sk_buff *skb, int offset, int copy_len)
+> {
+> @@ -360,7 +365,7 @@ static int mptcp_init_skb(struct sock *ssk,
+> 	skb_dst_drop(skb);
+>
+> 	/* "borrow" the fwd memory from the subflow, instead of reclaiming it */
+> -	skb->destructor = NULL;
+> +	skb->destructor = mptcp_bl_free;
+> 	borrowed = ssk->sk_forward_alloc - sk_unused_reserved_mem(ssk);
+> 	borrowed &= ~(PAGE_SIZE - 1);
+> 	sk_forward_alloc_add(ssk, skb->truesize - borrowed);
+> @@ -373,6 +378,13 @@ static bool __mptcp_move_skb(struct sock *sk, struct sk_buff *skb)
+> 	struct mptcp_sock *msk = mptcp_sk(sk);
+> 	struct sk_buff *tail;
+>
+> +	/* Avoid the indirect call overhead, we know destructor is
+> +	 * mptcp_bl_free at this point.
+> +	 */
+> +	atomic_sub(skb->truesize, &skb->sk->sk_rmem_alloc);
 
-Our CI did some validations and here is its report:
+Hi Paolo -
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (only selftest_mptcp_join): Unstable: 1 failed =
-test(s): selftest_mptcp_join =F0=9F=94=B4
-- KVM Validation: btf-normal =
-(only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only =
-bpftest_all): Success! =E2=9C=85
-- Task: https://github.=
-com/multipath-tcp/mptcp_net-next/actions/runs/18658193252
+Better (very slightly :) ) to make the direct call to mptcp_bl_free() 
+then? The optimizer would inline it.
 
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/2f955eee50f0
-Patchwork: https://patchwork.kernel.=
-org/project/mptcp/list/?series=3D1013663
+> +	skb->sk = NULL;
+> +	skb->destructor = NULL;
+> +
+> 	/* try to fetch required memory from subflow */
+> 	if (!sk_rmem_schedule(sk, skb, skb->truesize)) {
+> 		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_RCVPRUNED);
+> @@ -654,6 +666,35 @@ static void mptcp_dss_corruption(struct mptcp_sock *msk, struct sock *ssk)
+> 	}
+> }
+>
+> +static void __mptcp_add_backlog(struct sock *sk, struct sk_buff *skb)
+> +{
+> +	struct mptcp_sock *msk = mptcp_sk(sk);
+> +	struct sk_buff *tail = NULL;
+> +	bool fragstolen;
+> +	int delta;
+> +
+> +	if (unlikely(sk->sk_state == TCP_CLOSE)) {
+> +		kfree_skb_reason(skb, SKB_DROP_REASON_SOCKET_CLOSE);
+> +		return;
+> +	}
+> +
+> +	/* Try to coalesce with the last skb in our backlog */
+> +	if (!list_empty(&msk->backlog_list))
+> +		tail = list_last_entry(&msk->backlog_list, struct sk_buff, list);
+> +
+> +	if (tail && MPTCP_SKB_CB(skb)->map_seq == MPTCP_SKB_CB(tail)->end_seq &&
+> +	    skb->sk == tail->sk &&
+> +	    __mptcp_try_coalesce(sk, tail, skb, &fragstolen, &delta)) {
+> +		skb->truesize -= delta;
+> +		kfree_skb_partial(skb, fragstolen);
+> +		WRITE_ONCE(msk->backlog_len, msk->backlog_len + delta);
+> +		return;
+> +	}
+> +
+> +	list_add_tail(&skb->list, &msk->backlog_list);
+> +	WRITE_ONCE(msk->backlog_len, msk->backlog_len + skb->truesize);
+> +}
+> +
+> static bool __mptcp_move_skbs_from_subflow(struct mptcp_sock *msk,
+> 					   struct sock *ssk)
+> {
+> @@ -701,10 +742,12 @@ static bool __mptcp_move_skbs_from_subflow(struct mptcp_sock *msk,
+> 			int bmem;
+>
+> 			bmem = mptcp_init_skb(ssk, skb, offset, len);
+> -			skb->sk = NULL;
+> 			sk_forward_alloc_add(sk, bmem);
+> -			atomic_sub(skb->truesize, &ssk->sk_rmem_alloc);
+> -			ret = __mptcp_move_skb(sk, skb) || ret;
+> +
+> +			if (true)
+> +				ret |= __mptcp_move_skb(sk, skb);
+> +			else
+> +				__mptcp_add_backlog(sk, skb);
+> 			seq += len;
+>
+> 			if (unlikely(map_remaining < len)) {
+> @@ -2753,12 +2796,28 @@ static void mptcp_mp_fail_no_response(struct mptcp_sock *msk)
+> 	unlock_sock_fast(ssk, slow);
+> }
+>
+> +static void mptcp_backlog_purge(struct sock *sk)
+> +{
+> +	struct mptcp_sock *msk = mptcp_sk(sk);
+> +	struct sk_buff *tmp, *skb;
+> +	LIST_HEAD(backlog);
+> +
+> +	mptcp_data_lock(sk);
+> +	list_splice_init(&msk->backlog_list, &backlog);
+> +	msk->backlog_len = 0;
+> +	mptcp_data_unlock(sk);
+> +
+> +	list_for_each_entry_safe(skb, tmp, &backlog, list)
+> +		kfree_skb_reason(skb, SKB_DROP_REASON_SOCKET_CLOSE);
+> +}
+> +
+> static void mptcp_do_fastclose(struct sock *sk)
+> {
+> 	struct mptcp_subflow_context *subflow, *tmp;
+> 	struct mptcp_sock *msk = mptcp_sk(sk);
+>
+> 	mptcp_set_state(sk, TCP_CLOSE);
+> +	mptcp_backlog_purge(sk);
+
+Should mptcp_backlog_purge() also be called in mptcp_check_fastclose()?
+
+- Mat
 
 
-If there are some issues, you =
-can reproduce them using the same environment as
-the one used by the CI =
-thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
-
-
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 Core)
+> 	mptcp_for_each_subflow_safe(msk, subflow, tmp)
+> 		__mptcp_close_ssk(sk, mptcp_subflow_tcp_sock(subflow),
+> 				  subflow, MPTCP_CF_FASTCLOSE);
+> @@ -2816,11 +2875,13 @@ static void __mptcp_init_sock(struct sock *sk)
+> 	INIT_LIST_HEAD(&msk->conn_list);
+> 	INIT_LIST_HEAD(&msk->join_list);
+> 	INIT_LIST_HEAD(&msk->rtx_queue);
+> +	INIT_LIST_HEAD(&msk->backlog_list);
+> 	INIT_WORK(&msk->work, mptcp_worker);
+> 	msk->out_of_order_queue = RB_ROOT;
+> 	msk->first_pending = NULL;
+> 	msk->timer_ival = TCP_RTO_MIN;
+> 	msk->scaling_ratio = TCP_DEFAULT_SCALING_RATIO;
+> +	msk->backlog_len = 0;
+>
+> 	WRITE_ONCE(msk->first, NULL);
+> 	inet_csk(sk)->icsk_sync_mss = mptcp_sync_mss;
+> @@ -3197,6 +3258,7 @@ static void mptcp_destroy_common(struct mptcp_sock *msk, unsigned int flags)
+> 	struct sock *sk = (struct sock *)msk;
+>
+> 	__mptcp_clear_xmit(sk);
+> +	mptcp_backlog_purge(sk);
+>
+> 	/* join list will be eventually flushed (with rst) at sock lock release time */
+> 	mptcp_for_each_subflow_safe(msk, subflow, tmp)
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index 46d8432c72ee7..a21c4955f4cfb 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -358,6 +358,9 @@ struct mptcp_sock {
+> 					 * allow_infinite_fallback and
+> 					 * allow_join
+> 					 */
+> +
+> +	struct list_head backlog_list;	/*protected by the data lock */
+> +	u32		backlog_len;
+> };
+>
+> #define mptcp_data_lock(sk) spin_lock_bh(&(sk)->sk_lock.slock)
+> @@ -408,6 +411,7 @@ static inline int mptcp_space_from_win(const struct sock *sk, int win)
+> static inline int __mptcp_space(const struct sock *sk)
+> {
+> 	return mptcp_win_from_space(sk, READ_ONCE(sk->sk_rcvbuf) -
+> +				    READ_ONCE(mptcp_sk(sk)->backlog_len) -
+> 				    sk_rmem_alloc_get(sk));
+> }
+>
+> -- 
+> 2.51.0
+>
+>
+>
