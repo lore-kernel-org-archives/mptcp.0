@@ -1,130 +1,160 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 233BA355802
-	for <mptcp@lists.linux.dev>; Tue, 21 Oct 2025 17:27:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED99525B30E
+	for <mptcp@lists.linux.dev>; Tue, 21 Oct 2025 23:53:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761067678; cv=none; b=YmjTug+r+Kpj6zuLgnfMVDfWUwMiWUjTcRASoHYGpOnSaaD5gxHwh2PSHDT4ara1fNl5SwJpNaE3J+PASxDNWU7EfnLoNNox57bVliQF8tUILsed30lKwnR/uObCuXdCKmEfnGg6Y0ZtAHY+8ECbCmB6yuMb4ofGm1A627oX+78=
+	t=1761090815; cv=none; b=giMFkiwbu7jToe1KXngg3HFF32xvxxXuqnPtVV91L8hifsnaSP5iQcNccrW54DCJ4nOOG2lLIYA+a5bQzgeSmu6STn1c6YK/VOAhNhsRWK3qwE445RN2JPMZVbUeAXHfkGfJ8TdvaniwYhydNncMxAIM4Fpa2JGTZzfFujmm48k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761067678; c=relaxed/simple;
-	bh=7s+ZlTrFYa12IuhMJnSh5hm6Cj7aCov/KA4tP4V12d0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=J8G9IY1Z4CkNFtF7AgqYu6fI7TAkJdX1NtF6meaI/gLjdQcMB56qqhfN6SsS2w5Nl4pn3rLoGYYHyy1ACdMS2RRVbDM3s2oM1r1CYXTkrCpFJmn/CoqtEoEB4Fh40yhg6Q0QQ25JKQxQhlZBItRAERIq+4ANQ7u7Mq+QWxUkvOY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=G8FjvKGg; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1761090815; c=relaxed/simple;
+	bh=Y7vr/YYsEFa2ZbMd2TgJSP0aQc1web4QHiKEaBaaJYU=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=AV9SqEjQCNGTv+3dZQUPxyr3fJyg3kbA+K5U4YsPcsLQCy+h0uvS01OfiSe+KN8ymVMfnEpRDtJ/R1sUgFcjPKZ2/pFJOcB1pb5ESQLe073FXCLesbf3PsL6twT54RY6OD/DshENzncq5wGXJsxxR+5RTY1ZTYwTRjSO9c+TAaY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Oip4zqn+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="G8FjvKGg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1761067676;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3afdReIUIX88NChE5m3leSUximBxxWRtiis58YBKrZw=;
-	b=G8FjvKGg/4lfttRtB2weJyazlrZnknlw79VMl6o7oxLd2kIguvk2gEDdj2h+shc/u6KChk
-	gf4sJblDCKX9bDCmUPaAMOaBlB2ywx7N7Xk4CdRjeDsHSYqVAHlBI/sqmGSLcM6swwdqNv
-	ujmPlI5vfg9lxL2GWXDKO6pVX5mskIc=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-441-lBknTr4GNDu2FDQ6TcSVPw-1; Tue, 21 Oct 2025 13:27:54 -0400
-X-MC-Unique: lBknTr4GNDu2FDQ6TcSVPw-1
-X-Mimecast-MFC-AGG-ID: lBknTr4GNDu2FDQ6TcSVPw_1761067674
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-426ff59a320so7391511f8f.3
-        for <mptcp@lists.linux.dev>; Tue, 21 Oct 2025 10:27:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761067674; x=1761672474;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3afdReIUIX88NChE5m3leSUximBxxWRtiis58YBKrZw=;
-        b=QtXZO086bJ0D0yiFTyGDFRHn58TM3MmrnNbyEeZj/lbvVBSjKxXZgo8lPOZSqvzbLR
-         FAULVYn1cQP/2LqyoHmL1DeYYSo7O/2cxovhwrxCqklJ/NWevhs+RIJeFWlOu4uZ+L4c
-         8/VJ6OhSQ+zJeakH6JHzj39igItfYdGTBf5OWq4GPt3W5YLaSUJzIzH7XFrymFwPEaAn
-         mAyNZzxhql0R2Yco4vskJhod0+T2JuUq9un/qx8ltj7ZbDwPmLVk1HOBZd0beknXSYRF
-         z1aToesqdwldpY8AgI2X2Y0WY5oJsJGIHU7MSz8yuRtLOkEowKVQBXhuCBTULb2CueNj
-         4y8A==
-X-Gm-Message-State: AOJu0YyFQ9E3QpN9othkMFVSHjtbfTjcDFgyGP7Du2jn7/WWUp6HOR2h
-	tCb1z5qKENT3xo8D4VOOMm6lsBhDQSdzUh+FdNzVY2S4FWzzmBYDRg/l2rnaDO7BDO1Vz39jgaG
-	uRl31qPVuUxqo0UGA2VSLhNEgFFv9Oj/Shy+Ije+SoGfeVsnAqOaeScdu
-X-Gm-Gg: ASbGncu5CVhrVkAyAgVHKFXqqZ1M/l3/hPzqJO7nhsTT4zwz7zbYd3ykzJbtdpw+ibz
-	E6+z3pc9t7SvlQT+SWlzhX6IDK76yUQmypqWF92r4SEQspDZpJC911O9ojbldT/p/fUIJWlgBM7
-	MaLqQJnNEEpBnJQR3MRXg2PCT85DzBuK1sx3Wlof8wdWJNxlbPkdYHOPzvMF+Ni1r1U4NwTJnDl
-	fVg1b8Uos+4/hADS3MGxTQoa50CVAnn43glsqCumbmBTln9hz4S694X8vHKnyjWJ/gETIm9bwqz
-	9OCltgThCIZNz1EXSt+3ahDhCk4q+4G9IRS+uSBDb9rVDm46bzC8xjaYnYZAT7AwvuX3TyUvRNL
-	mZQzg9d2xQe67nLaH8K+Yt8yBAr/kj+oNTJhNRezO/tiXgfY=
-X-Received: by 2002:a05:6000:40c7:b0:427:847:9d59 with SMTP id ffacd0b85a97d-42708479e00mr12236264f8f.45.1761067673666;
-        Tue, 21 Oct 2025 10:27:53 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH+2oVnzPmmhP9CieobwavfmggJ7kLebuUUv0W6GZY5SEsmWhGj6/OnDyE73cWuKQKtFz2KkQ==
-X-Received: by 2002:a05:6000:40c7:b0:427:847:9d59 with SMTP id ffacd0b85a97d-42708479e00mr12236253f8f.45.1761067673282;
-        Tue, 21 Oct 2025 10:27:53 -0700 (PDT)
-Received: from ?IPV6:2a0d:3344:2712:7e10:4d59:d956:544f:d65c? ([2a0d:3344:2712:7e10:4d59:d956:544f:d65c])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-427f00b97f8sm20919445f8f.36.2025.10.21.10.27.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Oct 2025 10:27:52 -0700 (PDT)
-Message-ID: <7d5a11f8-5ac0-49f6-8df9-cc8c43094845@redhat.com>
-Date: Tue, 21 Oct 2025 19:27:51 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Oip4zqn+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76FEFC4CEF1;
+	Tue, 21 Oct 2025 23:53:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761090814;
+	bh=Y7vr/YYsEFa2ZbMd2TgJSP0aQc1web4QHiKEaBaaJYU=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=Oip4zqn++q+b7nDhb4aJA82gwEyfnkG3RyzGAA71xx2DqU90/dvArobR9RxjFzyVU
+	 9ioI/5RQWSMIThum7WvohbzCyPSUJI3vrbzJBVBlbT2ivi50JrQSpjYXhMLn6SNQcF
+	 JyUDtMUy6JBukVRD2fTOxGFC1WZ8aYhJiKoEypm2WW5yEkkmhUjuTqrpzVgQ5c7+kq
+	 MqJl8n96UQicZJSHmJVukDGT93l38zh1gFNUtKZ9YHDEXW1YfyrIzPUFY58wtwHnDD
+	 g05ndMD0i7o7uIweNd7I2eMlWtgz3pawLWo6UgPrbNIn20QiBJuOS0B77dHxt2k06p
+	 FQVv4n+rAfUug==
+Date: Tue, 21 Oct 2025 16:53:33 -0700 (PDT)
+From: Mat Martineau <martineau@kernel.org>
+To: Paolo Abeni <pabeni@redhat.com>
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH v5 mptcp-next 10/10] mptcp: leverage the backlog for RX
+ packet processing
+In-Reply-To: <69af34f2-5a75-4a02-a183-9609cad4abae@redhat.com>
+Message-ID: <0c2291ba-6876-e67b-1607-a56203164ec6@kernel.org>
+References: <cover.1759737859.git.pabeni@redhat.com> <1cb19d6e65591b81610cc0dd8ef5d0a38605b3f1.1759737859.git.pabeni@redhat.com> <156d60d8-ee80-49fb-8b8e-d0be56f7a02a@kernel.org> <69af34f2-5a75-4a02-a183-9609cad4abae@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-net 1/2] mptcp: restore window probe
-To: Mat Martineau <martineau@kernel.org>
-Cc: mptcp@lists.linux.dev, geliang@kernel.org
-References: <cover.1760976334.git.pabeni@redhat.com>
- <59d900cbb2c2ff8e742d55a78e22727d1951bb51.1760976334.git.pabeni@redhat.com>
- <f473dab8-e461-3bdf-d118-2022aacb96bf@kernel.org>
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <f473dab8-e461-3bdf-d118-2022aacb96bf@kernel.org>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: inSNBVVInbgcFtH9qth7r6AQEXqI6C6KbPb1wjoCJeE_1761067674
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-On 10/21/25 2:12 AM, Mat Martineau wrote:
-> On Mon, 20 Oct 2025, Paolo Abeni wrote:
->> Since commit 72377ab2d671 ("mptcp: more conservative check for zero
->> probes") the MPTCP-level zero window probe check is always disabled, as
->> the TCP-level write queue always contains at least the newly allocated
->> skb.
+On Tue, 21 Oct 2025, Paolo Abeni wrote:
+
+> On 10/21/25 1:32 AM, Mat Martineau wrote:
+>> On Mon, 6 Oct 2025, Paolo Abeni wrote:
+>>> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+>>> index 2d5d3da67d1ac..a97a92eccc502 100644
+>>> --- a/net/mptcp/protocol.c
+>>> +++ b/net/mptcp/protocol.c
 >>
->> Refine the relevant check tacking in account that the above condition
->> and that such skb can have zero length.
+>> ...
 >>
->> Fixes: 72377ab2d671 ("mptcp: more conservative check for zero probes")
->> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
->> ---
->> net/mptcp/protocol.c | 14 ++++++++++----
->> 1 file changed, 10 insertions(+), 4 deletions(-)
+>>> @@ -3509,23 +3519,29 @@ void __mptcp_check_push(struct sock *sk, struct sock *ssk)
+>>>
+>>> #define MPTCP_FLAGS_PROCESS_CTX_NEED (BIT(MPTCP_PUSH_PENDING) | \
+>>> 				      BIT(MPTCP_RETRANSMIT) | \
+>>> -				      BIT(MPTCP_FLUSH_JOIN_LIST) | \
+>>> -				      BIT(MPTCP_DEQUEUE))
+>>> +				      BIT(MPTCP_FLUSH_JOIN_LIST))
+>>>
+>>> /* processes deferred events and flush wmem */
+>>> static void mptcp_release_cb(struct sock *sk)
+>>> 	__must_hold(&sk->sk_lock.slock)
+>>> {
+>>> 	struct mptcp_sock *msk = mptcp_sk(sk);
+>>> +	u32 delta = 0;
+>>>
+>>> 	for (;;) {
+>>> 		unsigned long flags = (msk->cb_flags & MPTCP_FLAGS_PROCESS_CTX_NEED);
+>>> -		struct list_head join_list;
+>>> +		LIST_HEAD(join_list);
+>>> +		LIST_HEAD(skbs);
+>>> +
+>>> +		sk_forward_alloc_add(sk, msk->borrowed_mem);
+>>> +		msk->borrowed_mem = 0;
+>>> +
+>>> +		if (sk_rmem_alloc_get(sk) < sk->sk_rcvbuf)
+>>> +			list_splice_init(&msk->backlog_list, &skbs);
+>>>
+>>> -		if (!flags)
+>>> +		if (!flags && list_empty(&skbs))
+>>> 			break;
+>>>
+>>> -		INIT_LIST_HEAD(&join_list);
+>>> 		list_splice_init(&msk->join_list, &join_list);
+>>>
+>>> 		/* the following actions acquire the subflow socket lock
+>>> @@ -3544,7 +3560,8 @@ static void mptcp_release_cb(struct sock *sk)
+>>> 			__mptcp_push_pending(sk, 0);
+>>> 		if (flags & BIT(MPTCP_RETRANSMIT))
+>>> 			__mptcp_retrans(sk);
+>>> -		if ((flags & BIT(MPTCP_DEQUEUE)) && __mptcp_move_skbs(sk)) {
+>>> +		if (!list_empty(&skbs) &&
+>>> +		    __mptcp_move_skbs(sk, &skbs, &delta)) {
+>>> 			/* notify ack seq update */
+>>> 			mptcp_cleanup_rbuf(msk, 0);
+>>> 			sk->sk_data_ready(sk);
+>>> @@ -3552,7 +3569,9 @@ static void mptcp_release_cb(struct sock *sk)
+>>>
+>>> 		cond_resched();
+>>> 		spin_lock_bh(&sk->sk_lock.slock);
+>>> +		list_splice(&skbs, &msk->backlog_list);
+>>> 	}
+>>> +	WRITE_ONCE(msk->backlog_len, msk->backlog_len - delta);
 >>
->> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
->> index bde76b7311f986..fe029359b7d7a2 100644
->> --- a/net/mptcp/protocol.c
->> +++ b/net/mptcp/protocol.c
->> @@ -1276,6 +1276,7 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
->> 	u64 data_seq = dfrag->data_seq + info->sent;
->> 	int offset = dfrag->offset + info->sent;
->> 	struct mptcp_sock *msk = mptcp_sk(sk);
->> +	struct tcp_sock *tp = tcp_sk(ssk);
-> 
-> Hi Paolo -
-> 
-> I appreciate the urge to tidy up the tcp_sk(ssk)s in this function, but it 
-> does distract from the meaningful code change - and the updated zero probe 
-> logic doesn't use the new tp variable...
+>> Hi Paolo -
+>>
+>> Given the possible multiple calls to __mptcp_move_skbs() and that the
+>> spinlock is released/reacquired (and the cond_resched) in the middle,
+>> would it make sense to update msk->backlog_len for each iteration of the
+>> loop so __mptcp_space() and mptcp_space() don't under-report available
+>> space and mptcp_cleanup_rbuf() can make incremental progress?
+>>
+>> I know we don't want to WRITE_ONCE() more than necessary, but it seems
+>> like there won't typically be more than one loop iteration. In the cases
+>> where it does repeat the loop that means data is arriving quickly and
+>> reporting mptcp_space accurately will be important.
+>
+> That WRITE_ONCE() is intentionally out of the loop, but not as an
+> optimization, but for a functional goal, similar to:
+>
+> https://elixir.bootlin.com/linux/v6.17.4/source/net/core/sock.c#L3190
+>
+> without it, in exceptional situation, the loop could run for an
+> unbounded amount of time.
+>
+> Given this is MPTCP-level, and packets went already through the TCP
+> subflow possibly such scenario is even more unlikely, but I think it's
+> still possible and serious enough we want to avoid it.
+>
 
-Whoops, due to a bit of rush on my side after spending ~1w looping on
-the splice selftests ;) A previous iteration of this patch introduced a
-new tcp_sock() usage hence the larger diffstat.
+Ah, I think I see where that could happen if the received packets get 
+discarded and don't get counted against the rcv buffer limits.  "Double 
+counting" the most recently moved packets using backlog_len creates the 
+temporary appearance of no buffer space in that "wild producer" scenario. 
+Still applies at the MPTCP level, I agree.
 
-I'll send a v2 with the minimal fix.
+> WRT the receive buffer utilization, it should not change much, as either
+> on the backlog or in the receiver buffer, the skb should be accounted
+> for the whole truesize.
 
-/P
+My concern is mostly that the moved skbs are accounted twice until the 
+loop is finally exited, so in the non-adversarial case where packets are 
+accepted there would be an impact on the behavior of the rx window during 
+high speed transfers.
+
+If the overall delta was used for the purpose of exiting the loop, the 
+backlog_len could be updated on each loop iteration while still keeping 
+the loop bounded.
+
+Taking into consideration the expected case of high-throughput behavior 
+vs. an unexpected/infrequent "wild producer" scenario, does it still seem 
+best to keep the above code as-is? I'll see what you decide in v6 :)
+
+- Mat
 
