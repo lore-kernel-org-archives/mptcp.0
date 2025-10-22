@@ -1,54 +1,54 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 840FB33F8DC
-	for <mptcp@lists.linux.dev>; Wed, 22 Oct 2025 14:32:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEF12347FEC
+	for <mptcp@lists.linux.dev>; Wed, 22 Oct 2025 14:32:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761143539; cv=none; b=GOj7Xr/elzZnZNLPEUtxNhw/k8u5BFR1ABUtPC52NMfwuOAjF2EQSaeFtsztOSacLrU93pebTpZ/UJonfy18KNY0BgzvtWw1VTCc2K+Jw+AXLt+iAbxpf/hIaVtmo7meGPeWL6q1YDetBHUM3AzANWIE4iBbKogA+XtzGRLlNaM=
+	t=1761143541; cv=none; b=nVJ9LybH74x8aRb0juahDjpCf1SKPpxAFaAmFcQARcfvebbn5sOzloaPBGOJQZR44WZujurXcdqXRSmzZ4REBGBIOWlNrBmpSFILR03ZrZj03yZZZhKAyR0Qs6ea7shOeacI8zzeTxZAassOgHxtceBFTvdotBygEtIC+PdFvFs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761143539; c=relaxed/simple;
-	bh=oZyYKPe7uUMeS4kgPt35j5eo6Z61wKpmP/26cOJRnn8=;
+	s=arc-20240116; t=1761143541; c=relaxed/simple;
+	bh=7dVqvgKPaeM/YUjV2fcz1xyIP+/mWLKa43dfXThBShA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=ndSy4N6+BbNakF4POgxjFxaSZYpHiVD7VLOUT0yIUxB7iM8KPoleiE7prycsFwAnoVwwklsE3gEYY2uif0knCUJBkLvxUJhKlXSjKbVBF6jT3Cfu0kIIzGp4Mm6KyiMxPB2XBYZNGEb67az7tAfWLOWPoY1hcd9yni+SWys8kzA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BUSWfigh; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version:content-type; b=tNk5vYJ0ZVseGQL/3pDwB8S9ydPLC19RQOEllrEuAvr0OF/wdae5juL43qXI0vU+Xsl0jTXelj7FgtntxXvtbLCtGjU2rfKCMUT2RG5afLnsEQupXKWAKtdJGs/DisCec7Io5ExbWtopfSqGekX5OxEL+xWZyWVhYBS+Q+mvnLo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QPWQwnjq; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BUSWfigh"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QPWQwnjq"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1761143535;
+	s=mimecast20190719; t=1761143538;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=0P+xuL6QyOomNNqsC20omlo8taSnXjOgCXp/nwpVRk8=;
-	b=BUSWfigh/jxVOMCuZstis7dq0c7MRZEQZOegzyajuV8oYwK+QRPBr2+U16sYh05vFlcrTT
-	ea32Mfubc6IhnL+1SSwINrYQj64q9sxuxUiB0ey3j1mz1+c6buHWPRo1GrYrKcmuh2TOqH
-	H6XlISb+SiVAdoO/DL67Yp8nOlO0CVw=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+	bh=ZSF375RAz2J4FLfFRCYtSYJAE8SjjJOxSqXyLCAEAA8=;
+	b=QPWQwnjqLlBjOApyXeJrWGzI/cjAgGjNobZWg8xPhcSW/C5KDcnl+6AfYyw3boHO6uI5Yf
+	iFh1jzMKMEfnanWGJYscv5qLNecIDHXmyaGZK2h/c/ZR8yR2J6kNdET6o8F6chXv6oIpTE
+	HBHoKbLeY9kPkx6VVbbQSP7Oo1TOJsE=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-451-qqNGzLSXOQ64VZZ5bZK2Lw-1; Wed,
- 22 Oct 2025 10:32:07 -0400
-X-MC-Unique: qqNGzLSXOQ64VZZ5bZK2Lw-1
-X-Mimecast-MFC-AGG-ID: qqNGzLSXOQ64VZZ5bZK2Lw_1761143526
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-629-Dhiq8K11PPG7_v5ZYGG_lQ-1; Wed,
+ 22 Oct 2025 10:32:17 -0400
+X-MC-Unique: Dhiq8K11PPG7_v5ZYGG_lQ-1
+X-Mimecast-MFC-AGG-ID: Dhiq8K11PPG7_v5ZYGG_lQ_1761143536
 Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9759419560A5;
-	Wed, 22 Oct 2025 14:32:06 +0000 (UTC)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6DF841956068;
+	Wed, 22 Oct 2025 14:32:16 +0000 (UTC)
 Received: from gerbillo.redhat.com (unknown [10.45.225.237])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 378D31956056;
-	Wed, 22 Oct 2025 14:32:04 +0000 (UTC)
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 082961956056;
+	Wed, 22 Oct 2025 14:32:14 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
 Cc: Mat Martineau <martineau@kernel.org>,
 	Geliang Tang <geliang@kernel.org>
-Subject: [PATCH v6 mptcp-next 03/11] mptcp: cleanup fallback data fin reception
-Date: Wed, 22 Oct 2025 16:31:46 +0200
-Message-ID: <3d0984585464292af2c671af2f532d7251d08a7e.1761142784.git.pabeni@redhat.com>
+Subject: [PATCH v6 mptcp-next 08/11] mptcp: make mptcp_destroy_common() static
+Date: Wed, 22 Oct 2025 16:31:51 +0200
+Message-ID: <f0564608bd37deb4ad72eb0d93e87873e56200c1.1761142784.git.pabeni@redhat.com>
 In-Reply-To: <cover.1761142784.git.pabeni@redhat.com>
 References: <cover.1761142784.git.pabeni@redhat.com>
 Precedence: bulk
@@ -59,56 +59,96 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 0kwR2PTL4xkOuXua0hIxCaacE6PtKF9PpDxa_IJAEJA_1761143526
+X-Mimecast-MFC-PROC-ID: q4tPHfmZaklYkcH8V1tP_QSluBjo08S71izKTMHky_o_1761143536
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 
-MPTCP currently generate a dummy data_fin for fallback socket
-when the fallback subflow has completed data reception using
-the current ack_seq.
+Such function is only used inside protocol.c, there is no need
+to expose it to the whole stack.
 
-We are going to introduce backlog usage for the msk soon, even
-for fallback sockets: the ack_seq value will not match the most recent
-sequence number seen by the fallback subflow socket, as it will ignore
-data_seq sitting in the backlog.
+Note that the function definition most be moved earlier to avoid
+forward declaration.
 
-Instead use the last map sequence number to set the data_fin,
-as fallback (dummy) map sequences are always in sequence.
-
-Reviewed-by: Geliang Tang <geliang@kernel.org>
-Tested-by: Geliang Tang <geliang@kernel.org>
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 ---
-v2 -> v3:
-  - keep the close check in subflow_sched_work_if_closed, fix
-    CI failures
----
- net/mptcp/subflow.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ net/mptcp/protocol.c | 42 +++++++++++++++++++++---------------------
+ net/mptcp/protocol.h |  2 --
+ 2 files changed, 21 insertions(+), 23 deletions(-)
 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index e8325890a32238..b9455c04e8a462 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -1285,6 +1285,7 @@ static bool subflow_is_done(const struct sock *sk)
- /* sched mptcp worker for subflow cleanup if no more data is pending */
- static void subflow_sched_work_if_closed(struct mptcp_sock *msk, struct sock *ssk)
- {
-+	const struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk);
- 	struct sock *sk = (struct sock *)msk;
- 
- 	if (likely(ssk->sk_state != TCP_CLOSE &&
-@@ -1303,7 +1304,8 @@ static void subflow_sched_work_if_closed(struct mptcp_sock *msk, struct sock *ss
- 	 */
- 	if (__mptcp_check_fallback(msk) && subflow_is_done(ssk) &&
- 	    msk->first == ssk &&
--	    mptcp_update_rcv_data_fin(msk, READ_ONCE(msk->ack_seq), true))
-+	    mptcp_update_rcv_data_fin(msk, subflow->map_seq +
-+				      subflow->map_data_len, true))
- 		mptcp_schedule_work(sk);
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 8c835ba5a437a2..3653b10d24887e 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -3195,6 +3195,27 @@ static void mptcp_copy_inaddrs(struct sock *msk, const struct sock *ssk)
+ 	inet_sk(msk)->inet_rcv_saddr = inet_sk(ssk)->inet_rcv_saddr;
  }
  
++static void mptcp_destroy_common(struct mptcp_sock *msk, unsigned int flags)
++{
++	struct mptcp_subflow_context *subflow, *tmp;
++	struct sock *sk = (struct sock *)msk;
++
++	__mptcp_clear_xmit(sk);
++
++	/* join list will be eventually flushed (with rst) at sock lock release time */
++	mptcp_for_each_subflow_safe(msk, subflow, tmp)
++		__mptcp_close_ssk(sk, mptcp_subflow_tcp_sock(subflow), subflow, flags);
++
++	__skb_queue_purge(&sk->sk_receive_queue);
++	skb_rbtree_purge(&msk->out_of_order_queue);
++
++	/* move all the rx fwd alloc into the sk_mem_reclaim_final in
++	 * inet_sock_destruct() will dispose it
++	 */
++	mptcp_token_destroy(msk);
++	mptcp_pm_destroy(msk);
++}
++
+ static int mptcp_disconnect(struct sock *sk, int flags)
+ {
+ 	struct mptcp_sock *msk = mptcp_sk(sk);
+@@ -3399,27 +3420,6 @@ void mptcp_rcv_space_init(struct mptcp_sock *msk, const struct sock *ssk)
+ 		msk->rcvq_space.space = TCP_INIT_CWND * TCP_MSS_DEFAULT;
+ }
+ 
+-void mptcp_destroy_common(struct mptcp_sock *msk, unsigned int flags)
+-{
+-	struct mptcp_subflow_context *subflow, *tmp;
+-	struct sock *sk = (struct sock *)msk;
+-
+-	__mptcp_clear_xmit(sk);
+-
+-	/* join list will be eventually flushed (with rst) at sock lock release time */
+-	mptcp_for_each_subflow_safe(msk, subflow, tmp)
+-		__mptcp_close_ssk(sk, mptcp_subflow_tcp_sock(subflow), subflow, flags);
+-
+-	__skb_queue_purge(&sk->sk_receive_queue);
+-	skb_rbtree_purge(&msk->out_of_order_queue);
+-
+-	/* move all the rx fwd alloc into the sk_mem_reclaim_final in
+-	 * inet_sock_destruct() will dispose it
+-	 */
+-	mptcp_token_destroy(msk);
+-	mptcp_pm_destroy(msk);
+-}
+-
+ static void mptcp_destroy(struct sock *sk)
+ {
+ 	struct mptcp_sock *msk = mptcp_sk(sk);
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index a3bbce8950a5e0..dc61579282b2fc 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -979,8 +979,6 @@ static inline void mptcp_propagate_sndbuf(struct sock *sk, struct sock *ssk)
+ 	local_bh_enable();
+ }
+ 
+-void mptcp_destroy_common(struct mptcp_sock *msk, unsigned int flags);
+-
+ #define MPTCP_TOKEN_MAX_RETRIES	4
+ 
+ void __init mptcp_token_init(void);
 -- 
 2.51.0
 
