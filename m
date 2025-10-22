@@ -1,87 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC0AADF59
-	for <mptcp@lists.linux.dev>; Wed, 22 Oct 2025 10:07:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9684035BDB7
+	for <mptcp@lists.linux.dev>; Wed, 22 Oct 2025 14:32:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761127658; cv=none; b=VtVIcT0yizgNNl6r5rnxh5vhmRIAf6ljYyGM+HVzfabPFlM1Z5Gm7GCDaLnEveeqah3/tnPs2RWSDdJ62Gu0UNIPFQtASYBN7ixu1dwxndOzGKSwdfJqWdx+QzR8YlWTrm97injpTUSUPNjt6bd9fgXnoGmJI+g2hwwNSdaKsxE=
+	t=1761143528; cv=none; b=iP9PGRmSp06S6ZXfFG+DlpDmjtxNq7SgeiYmc9z3s4Ac9vO5NyDtMxq/KaS/wiPJBFIrXjEOceziZ23amwhnCisQLshMcuUbPdp33V7DWyYYZLKIpLTE/oEfaK0F1JpS5apRzvO7igh44k7SjoXtdnaqddyKhe2RadOlEicsPX0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761127658; c=relaxed/simple;
-	bh=BnQr51swnP7tzkYij/fAIRjQ59dnJR0EFS6gf8vY+wQ=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=EIofva3mKqNag+xu3MrWxOtHY+IqvT9Fg4oI/46zH9M+VkIz8k9/xTt3XCijIoulh2EzPQlcHR5sxsFN5uRwkEESzidb+55+RS5kIGxWrJVXi5SWw2RynfcA+BoQoaKZ23Iv+E+d3Twynl2WA8Fox5nckJUy3DxHSd+OJuzNCsc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mp9I9laQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1761143528; c=relaxed/simple;
+	bh=Qa4HZiNtNqZX/7fbFoQtmcVpofQNvxAUva1P+FISLVo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:content-type; b=dxrCAg6JxlLBw9BEgrcgtsce+82OmIRGX2ZYvPJjVj9uiIFiYwXf0H/ymE/V1u/YK+U2KzP6q21VfXBt2Nvk3Lt/m351ExP5k0YmGlYtCC/PHF3msYSlyItbECOnUcx7zH4PlflOhYKeRAJQenXWzfS/bNQhFZFabjS/Bjrgqic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=V33/lbKJ; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mp9I9laQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 727D8C4CEF5;
-	Wed, 22 Oct 2025 10:07:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761127658;
-	bh=BnQr51swnP7tzkYij/fAIRjQ59dnJR0EFS6gf8vY+wQ=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=mp9I9laQlCPjcLfI+9NP1EU68hFL//d123onCUf232ZFH8rCwq91GH9GlE32LBAXC
-	 Lr3/aqWfefysA+hZ4HCxplheio/RGP7v1qhoQdAhy3Z5D4+zmU08O/ymBRBACp/WZP
-	 YCfDpdmY7F82TGbesXw3AGJI/2/IJ4vHlLC5uURWllS5apXGtS/4PIuX/ZBqTkhe89
-	 zaKBcUOllqWKN83/7XPcA/+gG9SbrDlwu/eOyBRmWH4nUNuzpM2iA/NLwmenCxYkLE
-	 NB5oOsdvNEqpIFG0I82dpyllW4NaUP5B3eUYRwdnnJ8awJBl4aDdW0ET/wZL3RSv3N
-	 I7r1y4qZF204Q==
-Message-ID: <5676a1d0af9ee91eee8f90be2574ed297bd70272.camel@kernel.org>
-Subject: Re: [PATCH v2 mptcp-net 0/2] mptcp: restore zero window probe
-From: Geliang Tang <geliang@kernel.org>
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-Cc: Mat Martineau <martineau@kernel.org>
-Date: Wed, 22 Oct 2025 18:07:34 +0800
-In-Reply-To: <cover.1761118636.git.pabeni@redhat.com>
-References: <cover.1761118636.git.pabeni@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.52.3-0ubuntu1 
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="V33/lbKJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1761143525;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=roUzjohe4tAzqpa4BBcXJeAnLFHL9j6nsqUKyjTsDHA=;
+	b=V33/lbKJQfHlIjlZ3+e+NXuVjlyLFBAtYbBdkkpnXgqmA8Rl74TkvvY2/g8xj9IuHjLOsT
+	/ubpTewVoAgD3Bqa/sIS2+yfdjK39byfNx1TWgdnJxisW1Cc4sjM54Sf39U2HVg1o0hKj9
+	NTVsPjxwQxGO/2Ic2sMaLqeEkdCukV0=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-17-ts5_tQoZO8u9_DPzB6ZyZw-1; Wed,
+ 22 Oct 2025 10:32:02 -0400
+X-MC-Unique: ts5_tQoZO8u9_DPzB6ZyZw-1
+X-Mimecast-MFC-AGG-ID: ts5_tQoZO8u9_DPzB6ZyZw_1761143521
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C60A71800365;
+	Wed, 22 Oct 2025 14:32:00 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.45.225.237])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 50A001956056;
+	Wed, 22 Oct 2025 14:31:58 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: mptcp@lists.linux.dev
+Cc: Mat Martineau <martineau@kernel.org>,
+	Geliang Tang <geliang@kernel.org>
+Subject: [PATCH v6 mptcp-next 00/11] mptcp: introduce backlog processing
+Date: Wed, 22 Oct 2025 16:31:43 +0200
+Message-ID: <cover.1761142784.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: NWX78SGOGYHUcloCU6qOP8i-cOKmbXZQB2DzjX6k60g_1761143521
+X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
+content-type: text/plain; charset="US-ASCII"; x-default=true
 
-Hi Paolo,
+This series includes RX path improvement built around backlog processing
 
-On Wed, 2025-10-22 at 09:39 +0200, Paolo Abeni wrote:
-> It turns out that the issue reported by Geliang on the pending
-> backlog
-> patches is actually on older one that the new code made more easy
-> reproducible.
-> 
-> The first patch in the series addresses it[1], the 2nd one introduce
-> new
-> mibs to hopefully catch this problem sooned.
-> 
-> I have a pktdrill to validate this scenario. I'll share that soon.
-> 
-> @Geliang could you please validate the above in your testbed, on top
-> of
-> the backlog and splice patches?
+The main goals are improving the RX performances _and_ increase the
+long term maintainability.
 
-Thanks very much. I've already started testing, and so far everything
-is running smoothly. I'll let it run loop tests overnight and will have
-the results by tomorrow morning. I'll provide you with feedback then.
+Patches 2-4 prepare the stack for backlog processing, removing
+assumptions that will not hold true anymore after backlog introduction.
 
-Thanks,
--Geliang
+Patches 1 and 5 fixes long standing issues which are quite hard to
+reproduce with the current implementation but the 2nd one will become
+very apparent with backlog usage.
 
-> 
-> [1] at least here, at least with the packet drill reproducer ;)
-> ---
-> v1 -> v2:
->   - drop unneeded delta in patch 1/2
-> 
-> Paolo Abeni (2):
->   mptcp: restore window probe
->   mptcp: zero window probe mib
-> 
->  net/mptcp/mib.c      | 1 +
->  net/mptcp/mib.h      | 1 +
->  net/mptcp/protocol.c | 8 +++++++-
->  3 files changed, 9 insertions(+), 1 deletion(-)
-> 
+Patches 6, 7 and 9 are more cleanups that will make the backlog patch a
+little less huge.
+
+Patch 8 is a somewhat unrelated cleanup, included here before I forgot
+about it.
+
+The real work is done by patch 10 and 11. Patch 10 introduces the helpers
+needed to manipulate the msk-level backlog, and the data struct itself,
+without any actual functional change. Patch 11 finally use the backlog
+for RX skb processing. Note that MPTCP can't uset the sk_backlog, as
+the mptcp release callback can also release and re-acquire the msk-level
+spinlock and core backlog processing works under the assumption that
+such event is not possible.
+
+A relevant point is memory accounts for skbs in the backlog.
+
+It's somewhat "original" due to MPTCP constraints. Such skbs use space
+from the incoming subflow receive buffer, do not use explicitly any
+forward allocated memory, as we can't update the msk fwd mem while
+enqueuing, nor we want to acquire again the ssk socket lock while
+processing the skbs.
+
+Instead the msk borrows memory from the subflow and reserve it for
+the backlog - see patch 3 and 11 for the gory details.
+
+Note that even if the skbs can sit in the backlog for an unbounded time,
+
+---
+v5 -> v6:
+ - added patch 1/11
+ - reworked widely patch 10 && 11 to avoid double accounts for backlog
+   skb and to address the fwd allocated memory criticality mentioned
+   in previous iterations.
+
+Paolo Abeni (11):
+  mptcp: drop bogus optimization in __mptcp_check_push()
+  mptcp: borrow forward memory from subflow
+  mptcp: cleanup fallback data fin reception
+  mptcp: cleanup fallback dummy mapping generation
+  mptcp: fix MSG_PEEK stream corruption
+  mptcp: ensure the kernel PM does not take action too late
+  mptcp: do not miss early first subflow close event notification.
+  mptcp: make mptcp_destroy_common() static
+  mptcp: drop the __mptcp_data_ready() helper
+  mptcp: introduce mptcp-level backlog
+  mptcp: leverage the backlog for RX packet processing
+
+ net/mptcp/mptcp_diag.c |   3 +-
+ net/mptcp/pm.c         |   4 +-
+ net/mptcp/pm_kernel.c  |   2 +
+ net/mptcp/protocol.c   | 363 ++++++++++++++++++++++++++++-------------
+ net/mptcp/protocol.h   |  10 +-
+ net/mptcp/subflow.c    |  12 +-
+ 6 files changed, 272 insertions(+), 122 deletions(-)
+
+-- 
+2.51.0
 
