@@ -1,91 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED40DA944;
-	Wed, 22 Oct 2025 00:50:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C6112FB61D
+	for <mptcp@lists.linux.dev>; Wed, 22 Oct 2025 07:40:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761094240; cv=none; b=hIEJnog6BvBtPi9CLqORmALwigJRaLPUw2mJuyci70Uky3Y1lIIGwBH/I+R6cDE7Uo3jzHLlNU7ayKsmTo/7FC5DdWJXJskM1BJaU6nrio49+ODdbjez0oUqGFb/ULXv7uMzPJic85PQeHwqj8Nt9VQasKo0ZpafisxFOSttQaU=
+	t=1761118812; cv=none; b=HTuDdC4KCKtL5PhHtKMsTelkvyVih3gF3nuev5HzReeGIdFRHAB3XgbcCMDjR4XP6Hs6wpo5TwCa7xye53k3nfdFPyBVFaUw7AL2owTTbsQUr7P6hNrXGkmmN62PpLCG6bGLYrek+JVRR+oZTSV0FQaERd40RJX9cjgovB46sM0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761094240; c=relaxed/simple;
-	bh=uyeq1nQagIkGtivTdpHLo9/uLR6OX6m79fgpchqEuQs=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=W56ntb4BsKqajBcEaqiTZpF5oAUzasRs6NjKwKA4FXNRz51MU+NburziRzIBgoWikCR2jRrcyJ+T7MQ2IGCjgVbw7zenac3xJ9VvlVLw0yRYVV/ISt9mTnFLTmov2Ra7zzYOcvQxwLQmmmVmkxBNEn7kor3rOdZLvE953K+JtQc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZwdH/bcZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1761118812; c=relaxed/simple;
+	bh=xnlybXhe4Gk3+/T7ptK9m5/2M+M5ja4gQq27GB7rFEA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:content-type; b=oVlLp/tsDrdNExSpwSXgTY+2h2SD0WWWpzYYAdUK1VYiNgtA0uVaSPiMWbAtHLKRJ+MEPKME66IcW7VjKZF51rSbxUzLkUS4LvVHkRmCJ4hOWRsPamMDd1sTkOgtIjc8135Becjf1DzhAtS9XvfMJE8qn7J3s/3mUXNpXGNfpPc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ap0++xGg; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZwdH/bcZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72253C4CEF1;
-	Wed, 22 Oct 2025 00:50:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761094239;
-	bh=uyeq1nQagIkGtivTdpHLo9/uLR6OX6m79fgpchqEuQs=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=ZwdH/bcZx+g6wRU/JpSjieaQe1E1IsgBAk7XfFZ1YdiUfVoP4nAlTA/P2j5pySkjT
-	 1Lhrb2P59x5hQwJ9xB9XXJOYzGLdju93T4DZ+hCLGPB6cxGhGzx9zmjOm0ESzUGVFi
-	 Ynh/sdZlab3BBP49LOZPBuW/P3VkISgzTuHx5Bz7WHKlYw/pOYMIg9H12B5Z7SSOr5
-	 4q1dZ3hpzTySlAeE0pjVkq8YYbBiffU6oVDANzhvSRcTq2oEfDMFe9wQ8YuEA2nPXU
-	 TkFvB32Qx5I+A/pM+0Yooclm8iHBcv4K6gouP2q1h+2qVvsNpoYyh24UhLeXOyHLfR
-	 eswwyVRjsHHFQ==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EADF23A55FA6;
-	Wed, 22 Oct 2025 00:50:21 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ap0++xGg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1761118808;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=0LDpEXVqV1qq3k8fA75o1w3qUBLgt2mPulvuQWFEYPI=;
+	b=Ap0++xGgy3zLw/zwCSh0O80spWYTxyF/p+Me1QMq5U/39InjhJGdmLxb0Vjfp9ihnrkx+M
+	qDozg/qknRnupptGTLXZDsE1sFtjTLqNe9blasZsXGYmW9F2wgyiWumLfWJoUsGPJ+PZwC
+	EZqDPTc9ANozGdbiqiWAMf6QGqf1F8E=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-641-AmdPjc7IPJSglBul5nyiDA-1; Wed,
+ 22 Oct 2025 03:40:05 -0400
+X-MC-Unique: AmdPjc7IPJSglBul5nyiDA-1
+X-Mimecast-MFC-AGG-ID: AmdPjc7IPJSglBul5nyiDA_1761118804
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A484618001D6;
+	Wed, 22 Oct 2025 07:40:04 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.45.225.237])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 2A11430001BF;
+	Wed, 22 Oct 2025 07:40:02 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: mptcp@lists.linux.dev
+Cc: geliang@kernel.org,
+	Mat Martineau <martineau@kernel.org>
+Subject: [PATCH v2 mptcp-net 0/2] mptcp: restore zero window probe
+Date: Wed, 22 Oct 2025 09:39:57 +0200
+Message-ID: <cover.1761118636.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: EWZYVTnipXeJ_dyqfgd42t5LaGEHT0k9Emz-utGqwoY_1761118804
+X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net 0/5] mptcp: handle late ADD_ADDR + selftests skip
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <176109422076.1291118.8078163870194117369.git-patchwork-notify@kernel.org>
-Date: Wed, 22 Oct 2025 00:50:20 +0000
-References: 
- <20251020-net-mptcp-c-flag-late-add-addr-v1-0-8207030cb0e8@kernel.org>
-In-Reply-To: 
- <20251020-net-mptcp-c-flag-late-add-addr-v1-0-8207030cb0e8@kernel.org>
-To: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Cc: martineau@kernel.org, geliang@kernel.org, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
- shuah@kernel.org, netdev@vger.kernel.org, mptcp@lists.linux.dev,
- linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
- stable@vger.kernel.org
+content-type: text/plain; charset="US-ASCII"; x-default=true
 
-Hello:
+It turns out that the issue reported by Geliang on the pending backlog
+patches is actually on older one that the new code made more easy
+reproducible.
 
-This series was applied to netdev/net.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+The first patch in the series addresses it[1], the 2nd one introduce new
+mibs to hopefully catch this problem sooned.
 
-On Mon, 20 Oct 2025 22:53:25 +0200 you wrote:
-> Here are a few independent fixes related to MPTCP and its selftests:
-> 
-> - Patch 1: correctly handle ADD_ADDR being received after the switch to
->   'fully-established'. A fix for another recent fix backported up to
->   v5.14.
-> 
-> - Patches 2-5: properly mark some MPTCP Join subtests as 'skipped' if
->   the tested kernel doesn't support the feature being validated. Some
->   fixes for up to v5.13, v5.18, v6.11 and v6.18-rc1 respectively.
-> 
-> [...]
+I have a pktdrill to validate this scenario. I'll share that soon.
 
-Here is the summary with links:
-  - [net,1/5] mptcp: pm: in-kernel: C-flag: handle late ADD_ADDR
-    https://git.kernel.org/netdev/net/c/e84cb860ac3c
-  - [net,2/5] selftests: mptcp: join: mark 'flush re-add' as skipped if not supported
-    https://git.kernel.org/netdev/net/c/d68460bc31f9
-  - [net,3/5] selftests: mptcp: join: mark implicit tests as skipped if not supported
-    https://git.kernel.org/netdev/net/c/973f80d715bd
-  - [net,4/5] selftests: mptcp: join: mark 'delete re-add signal' as skipped if not supported
-    https://git.kernel.org/netdev/net/c/c3496c052ac3
-  - [net,5/5] selftests: mptcp: join: mark laminar tests as skipped if not supported
-    https://git.kernel.org/netdev/net/c/a9649dfbe552
+@Geliang could you please validate the above in your testbed, on top of
+the backlog and splice patches?
 
-You are awesome, thank you!
+[1] at least here, at least with the packet drill reproducer ;)
+---
+v1 -> v2:
+  - drop unneeded delta in patch 1/2
+
+Paolo Abeni (2):
+  mptcp: restore window probe
+  mptcp: zero window probe mib
+
+ net/mptcp/mib.c      | 1 +
+ net/mptcp/mib.h      | 1 +
+ net/mptcp/protocol.c | 8 +++++++-
+ 3 files changed, 9 insertions(+), 1 deletion(-)
+
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.51.0
 
