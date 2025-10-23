@@ -1,110 +1,154 @@
-Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E61C92737E1
-	for <mptcp@lists.linux.dev>; Wed, 22 Oct 2025 17:06:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 033B2239E97
+	for <mptcp@lists.linux.dev>; Thu, 23 Oct 2025 05:56:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761152818; cv=none; b=HnIu4pFRFediDqkXS9YKxLjTC7fHon8EF2dC96v5V6qWmNKDI4P26Xzb6DL7xYpHlWjI6DqdJxkuJS8DgX/dY7X9diCEdmMP5fzJt3zEZEqj4fCFxdOJqOWWQaglGjlI5drJKUJcqgZGbISKnPS75u96leXrABTSPyv97Qx9Jw4=
+	t=1761199020; cv=none; b=C+6nq2wIy14RHnT5cWxdKJsk7Mep4hFVXjQuwlYAiLh+qqgEyNBeiPqLv/0aXC5aIx3C6jWBtkXcwlMbp6yL5K2GaiPk2wh8DpvgshjSc25e/Xl3Zb7Y5ne7IMIjo79P7CG/TBBFUGggrPkpCoCE6cAsLp9C+zh0frJL32dQ/z4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761152818; c=relaxed/simple;
-	bh=VH/G0c4QxyHu361KPwLMEp5dAEmq2F5Ui1BgioRWhtA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GcPbkhQY2iVMPhQ8DW3srw/JE0YHDs3qfnffvVgldUIov4OZMysHXHtiQopgCyuDTjcZF9gtWeZChDd+8noSGZ+DTSLRvbp7CEWfEJoRPXDPJ4f6+oRhfnyGaEiZgzst9EV4JIaEnOMF0XG4Tc7JxCDr2p2IsmPE1HSEEAKin0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=networkplumber.org; spf=pass smtp.mailfrom=networkplumber.org; dkim=pass (2048-bit key) header.d=networkplumber-org.20230601.gappssmtp.com header.i=@networkplumber-org.20230601.gappssmtp.com header.b=vHquz7Po; arc=none smtp.client-ip=209.85.219.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=networkplumber.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=networkplumber.org
+	s=arc-20240116; t=1761199020; c=relaxed/simple;
+	bh=3QW879QuVHgMUD+nuur+MgcS+jWWyt6rxRHBBNMPV3M=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FuFndpd5eW1mmMSN0n4ngd0DbAm1PIkaxF5DcKS3Nw/1FZ9HInQGdUEt851ActFBkVa/wmqIpEaCaks3JstGgdgMMPozAeldarGYBdB6NWp6mcIMgcMw4b1oRR6JkaCnjE2bBnXcIOABUZzfxTxwu49amhkqPk/CUjM3B3bySg0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PmhYN1Gn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=networkplumber-org.20230601.gappssmtp.com header.i=@networkplumber-org.20230601.gappssmtp.com header.b="vHquz7Po"
-Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-87dcb1dd50cso95419796d6.3
-        for <mptcp@lists.linux.dev>; Wed, 22 Oct 2025 10:06:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=networkplumber-org.20230601.gappssmtp.com; s=20230601; t=1761152816; x=1761757616; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rCzgcuEp7CAzGR7HOOdsOQiZ4DRoGV9cgPFzNpkV3rQ=;
-        b=vHquz7PoxtX07oFFv4o+Ye4aMMe+MmIBp3Pn7UqFZbiXw2Ae+APEVrIcFng5EqyghI
-         FWT80B8T6eesJgJsyQ1hwRjX1iJ8ortmrT9I43Z0Qgh1GXrn1agCNxVJFNbiOdRQItP4
-         gHs/Kl40ucV7k5URbbYZs1nuP3uvY8zvp/AXQPPiYplbHU0H68svEl7PvSSQdj5nv1wf
-         HRe++u11zkUQG+62q8f6aPf5TP95X5HPnr8A0YReUqqfWicnBVAdAafkEef0YmoA5oVU
-         eCnbBwnF5ZzdGqFWuRCEevULnHFy0dEl/o4XqiIbKF0Uz406u+eD7ufW/XnENf0Svaxb
-         g2Dw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761152816; x=1761757616;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rCzgcuEp7CAzGR7HOOdsOQiZ4DRoGV9cgPFzNpkV3rQ=;
-        b=fOntJob3vTfnEA6I7cBvMIpr/FHOGk7iQJZyOt8Q+nYBYj5ae4Vj0Snp74GyqDn8v3
-         p6LyXXwEOsZAMv0/gAy0p64m89s93cKTdN3HTjWa8mXrgK4V3qcCLXDjLIIrc/bVamdL
-         LmX41pR5i3YHgOwOVzak1dwUzhxE4HYy/U9b5lB6hc0qGER3qgltbj3pnmMKL7vpCBqo
-         vGd8e7uowi+8CLmQlGcZQQ7L9U0BE33lo81UFz7DGVneBdGqxc0Whw6fU1yYbFcX3GnL
-         DM0AJ/ir7S7/KdNNQnVZJGcb7OH9LsB/B8JqoSxRWVqByY+sUXypx5tEU1aFeyOW8qyi
-         KUTA==
-X-Forwarded-Encrypted: i=1; AJvYcCWRplM/UIjoMpv2eRu06Th5D8r/9GNFzkyYHv3a6zP0j+NLjs3dKOi0Jdj3+WqATiwTlir3DA==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yyec+XWx4YdCTxTEmm6ZXlzNBbCbNr0Ph7BveSkstLxfQzblR3V
-	wsjT+NREzmSWkcZzKH//9+bSW4dAJAIbSstptPm/GCmLaFPjmxFZ0C2S6yMJ/7jr6kY=
-X-Gm-Gg: ASbGncvkt+fphV4ASeiT8Uigar9RNY9oI+2R1DYTuFTu5VfgE6xaA3Z6U4ZKzotf2iQ
-	EzJoIuyVCYRvWwYKDVRd+V4iws3YWfqNogGoEFa0/ID7HnDV12KTWcAWnySmQ8Tvd5JJM4aU2pC
-	2Btx20bhVZ372RtxNUI7zp2pMSOFlVS9NKGNWMX1IrT9eDLGL7YdbIuBoqQo7XeFuYrprHNvHOD
-	Q1/6hLtAYgWzG8jbtYyX7dSnejZxCiVnKnvmAVN8TVXQT+ChnsELxHUforrUxyULdEZ2v76D2D0
-	N2WtJrlyYn7ERUvBflEEyN+Rw4G+ib142HgaUjc5lyt8JXHMjgVIXkP8vXal/VNY9ZUk4qOTsZ9
-	jLmvt1GOOCryDj+uAqCzeYuITuGcXp8cWJmoxd7ucZy1B7Th76w6/Wzo4x2GKlmOC63SXpp1N09
-	/PT8BJ2oB0+38BL/eGGTNAuXqoJn3wgSyZDnMJ/jEQYIA1mVlKdw==
-X-Google-Smtp-Source: AGHT+IGdWbYTC9vzHNEAyIcGDx0IUkeY3uAeA6cyKPnhJbJb50wH1hNHVbvM7ZjgflV7wWsYLpjhuA==
-X-Received: by 2002:a05:6214:e81:b0:87d:f2ea:674b with SMTP id 6a1803df08f44-87df2ea69b1mr81407816d6.58.1761152815577;
-        Wed, 22 Oct 2025 10:06:55 -0700 (PDT)
-Received: from phoenix.lan (204-195-96-226.wavecable.com. [204.195.96.226])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-87cf51fd099sm91187006d6.5.2025.10.22.10.06.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Oct 2025 10:06:55 -0700 (PDT)
-Date: Wed, 22 Oct 2025 10:06:52 -0700
-From: Stephen Hemminger <stephen@networkplumber.org>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: Andrea Claudi <aclaudi@redhat.com>, David Ahern <dsahern@kernel.org>,
- netdev@vger.kernel.org, MPTCP Linux <mptcp@lists.linux.dev>
-Subject: Re: [PATCH iproute2-next] mptcp: add implicit flag to the 'ip
- mptcp' inline help
-Message-ID: <20251022100652.6d24c0fe@phoenix.lan>
-In-Reply-To: <946ceea8-eb58-4140-aa5a-94605cd697ce@kernel.org>
-References: <0a81085b8be2bee69cf217d2379e87730c28b1c1.1761074697.git.aclaudi@redhat.com>
-	<946ceea8-eb58-4140-aa5a-94605cd697ce@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PmhYN1Gn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 244D6C4CEE7;
+	Thu, 23 Oct 2025 05:56:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761199019;
+	bh=3QW879QuVHgMUD+nuur+MgcS+jWWyt6rxRHBBNMPV3M=;
+	h=From:To:Cc:Subject:Date:From;
+	b=PmhYN1Gng/JOos308b4MntvwDMaZEMRkfLoNoVZZviXdHVxFi5hSZ6rd0vb7b/Y0m
+	 3OkMHuEz2W6vMahAUabkXT43QbSJ5TwOhFz9OiNExZsaANvhX6nIhm4PqUBFFBqrN8
+	 G9C9Ha2KStoiUYKIwLbKIkKsX+HhFTSsTFGT4DNOfRpI5M2oZzMp+1lh5inn3Jl8Fx
+	 8A8A7ioFuVPAJ5xdbcz6nqHP2FUKvMP7RKg19PQAwwWA1m12rdLyEzKtaAVrOdYrcA
+	 azlyBj77Q9mFUuoEuhRg6Rm+UWAxUjxJlRFfPCyOCfqZWB+ozug4FX0AUcGueNZCvH
+	 hBzY0FJQjbdbA==
+From: Geliang Tang <geliang@kernel.org>
+To: mptcp@lists.linux.dev,
+	hare@kernel.org
+Cc: Geliang Tang <geliang@kernel.org>
+Subject: [PATCH mptcp-next v13 0/8] implement mptcp read_sock
+Date: Thu, 23 Oct 2025 13:56:43 +0800
+Message-ID: <cover.1761198660.git.geliang@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Wed, 22 Oct 2025 16:49:41 +0200
-Matthieu Baerts <matttbe@kernel.org> wrote:
+v13:
+ - rebase on "mptcp: introduce backlog processing" v6
 
-> Hi Andrea,
-> 
-> Sorry, I'm reacting a bit too late here (but Stephen applied the patch
-> very quickly :) ).
-> 
-> On 21/10/2025 21:26, Andrea Claudi wrote:
-> > ip mptcp supports the implicit flag since commit 3a2535a41854 ("mptcp:
-> > add support for implicit flag"), however this flag is not listed in the
-> > command inline help.
-> > 
-> > Add the implicit flag to the inline help.  
-> 
-> I would rather not: as written in the man page (by you in the mentioned
-> commit :) ) "Implicit endpoints cannot be created from user-space". Such
-> endpoints can be created by the MPTCP in-kernel path-manager in some
-> circumstances, but if the user-space cannot set the flag, then probably
-> better not to add it in the command inline help, no?
-> 
-> If someone tries to create an "implicit" endpoint, the kernel will
-> reject this request, see:
-> 
-> https://elixir.bootlin.com/linux/v6.17/source/net/mptcp/pm_kernel.c#L813
-> 
-> I can send a revert. I have other small changes to send.
+Based-on: <cover.1761142784.git.pabeni@redhat.com>
 
-Thanks I reverted it
+v12:
+ - rebase on "mptcp: receive path improvement" 1-7.
+ - some cleanups.
+
+v11:
+ - drop "tcp: drop release and lock again in splice_read", and add this
+   release and lock again in mptcp_splice_read too. (Thanks Mat, I didn't
+   understand the intent of this code before.)
+ - call mptcp_rps_record_subflows() in mptcp_splice_read as Mat
+   suggested.
+
+v10:
+ - add an offset parameter for mptcp_recv_skb and make it more like
+tcp_recv_skb.
+ - Link: https://patchwork.kernel.org/project/mptcp/cover/cover.1756780274.git.tanggeliang@kylinos.cn/
+
+v9:
+ - merge the squash-to patches.
+ - a new patch "drop release and lock again in splice_read".
+ - Link: https://patchwork.kernel.org/project/mptcp/cover/cover.1752399660.git.tanggeliang@kylinos.cn/
+
+v8:
+ - export struct tcp_splice_state and tcp_splice_data_recv() in net/tcp.h.
+ - add a new helper mptcp_recv_should_stop.
+ - add mptcp_connect_splice.sh.
+ - update commit logs.
+
+v7:
+ - only patch 1 and patch 2 changed.
+ - add a new helper mptcp_eat_recv_skb.
+ - invoke skb_peek in mptcp_recv_skb().
+ - use while ((skb = mptcp_recv_skb(sk)) != NULL) instead of
+ skb_queue_walk_safe(&sk->sk_receive_queue, skb, tmp).
+
+v6:
+ - address Paolo's comments for v4, v5 (thanks)
+
+v5:
+ - extract the common code of __mptcp_recvmsg_mskq() and mptcp_read_sock()
+ into a new helper __mptcp_recvmsg_desc() to reduce duplication code.
+
+v4:
+ - v3 doesn't work for MPTCP fallback tests in mptcp_connect.sh, this
+   set fix it.
+ - invoke __mptcp_move_skbs in mptcp_read_sock.
+ - use INDIRECT_CALL_INET_1 in __tcp_splice_read.
+
+v3:
+ - merge the two squash-to patches.
+ - use sk->sk_rcvbuf instead of INT_MAX as the max len in
+ mptcp_read_sock().
+ - add splice io mode for mptcp_connect and drop mptcp_splice.c test.
+ - the splice test for packetdrill is also added here:
+https://github.com/multipath-tcp/packetdrill/pull/162
+
+v2:
+ - set splice_read of mptcp
+ - add a splice selftest.
+
+I have good news! I recently added MPTCP support to "NVME over TCP".
+And my RFC patches are under review by NVME maintainer Hannes.
+
+Replacing "NVME over TCP" with MPTCP is very simple. I used IPPROTO_MPTCP
+instead of IPPROTO_TCP to create MPTCP sockets on both target and host
+sides, these sockets are created in Kernel space.
+
+nvmet_tcp_add_port:
+
+	ret = sock_create(port->addr.ss_family, SOCK_STREAM,
+				IPPROTO_MPTCP, &port->sock);
+
+nvme_tcp_alloc_queue:
+
+	ret = sock_create_kern(current->nsproxy->net_ns,
+			ctrl->addr.ss_family, SOCK_STREAM,
+			IPPROTO_MPTCP, &queue->sock);
+
+nvme_tcp_try_recv() needs to call .read_sock interface of struct
+proto_ops, but it is not implemented in MPTCP. So I implemented it
+with reference to __mptcp_recvmsg_mskq().
+
+Since the NVME part patches are still under reviewing, I only send the
+MPTCP part patches in this set to MPTCP ML for your opinions.
+
+Geliang Tang (8):
+  mptcp: add eat_recv_skb helper
+  mptcp: implement .read_sock
+  tcp: add recv_should_stop helper
+  mptcp: use recv_should_stop helper
+  tcp: export tcp_splice_state
+  mptcp: implement .splice_read
+  selftests: mptcp: add splice io mode
+  selftests: mptcp: connect: cover splice mode
+
+ include/net/tcp.h                             |  32 +++
+ net/ipv4/tcp.c                                |  82 +-----
+ net/mptcp/protocol.c                          | 238 +++++++++++++++---
+ tools/testing/selftests/net/mptcp/Makefile    |   1 +
+ .../selftests/net/mptcp/mptcp_connect.c       |  63 ++++-
+ .../net/mptcp/mptcp_connect_splice.sh         |   5 +
+ 6 files changed, 313 insertions(+), 108 deletions(-)
+ create mode 100755 tools/testing/selftests/net/mptcp/mptcp_connect_splice.sh
+
+-- 
+2.43.0
+
