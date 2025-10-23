@@ -1,39 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEDDF272E41
-	for <mptcp@lists.linux.dev>; Thu, 23 Oct 2025 06:37:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60A9E28D82F
+	for <mptcp@lists.linux.dev>; Thu, 23 Oct 2025 06:38:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761201472; cv=none; b=gRRl+feyZx0iRzV2rQ2HxxEZ6NwzBw65MnzVbMKEpkxnVHcPIrCXfMEpyZ2d0naZEz9F9kVtPsDD3jrmKVYFmvYHg9ljPsY4TdKwYm5n4Xfj+0/rV5ufb1qfKtl19jn4LKBIUGpA2O6vI/RKnfisjryCxdJZg0DIemsZFPhxhSU=
+	t=1761201486; cv=none; b=SlzKIRGo57uVkEXy63qfTlOrzYQlP6HjoqwaEk0h92fhFh7YjxxjgaGE/OEfB8iLqckDzrs/0VaAVkzXbRMEeZv19h9mAjSyQ13y1cSbOXlJXgaUlYL1egUv8vD927adtkGK6wuvC7+xYUR3YVvc8YIuZIJNDtFisTk8npX4o6Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761201472; c=relaxed/simple;
-	bh=gOpece4QF2WTj5W3bUKTztSQfGjYInO/U5VM0eCccoc=;
+	s=arc-20240116; t=1761201486; c=relaxed/simple;
+	bh=oFkwwyIzZMT05j4dCqfEGTNJu6aD7xRZtjSzYs9Y2c8=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=dVGUYtrB1fgmXZz+3dge9tZE46Su5B14Mi2ifx1rzw0osLIu8O+xe+XGgq53nfYuJjOl6dYh5RMcJXJu8XHysnZ9dww5OQcIfwegxwk9udwLIZEhgwGG2nAPY0Q8gM8f8VTeyTv4iSVSI1Nr5npo08xngc6dNYeU2Xf65nyhjD8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PmW7g5aP; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=L/9EoNCfpJimjzbEsKObdV6cRb4q0h7IVLOM+UHr5FBpJ8ldXW42Ed2vT0xLO3F1aCK1DIKFWtC8A3QmhsFMq7qhGT5QnKexWNX9/iwnHIgZrZFweIvBw/yTv9s9I7q1ZZnFBvxQ6aZwT3tKH2uUwlm35QkkU6jEEl+p4CaIfoc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GUw/Kcpg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PmW7g5aP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B444C4CEE7;
-	Thu, 23 Oct 2025 06:37:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GUw/Kcpg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE502C4CEE7;
+	Thu, 23 Oct 2025 06:38:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761201471;
-	bh=gOpece4QF2WTj5W3bUKTztSQfGjYInO/U5VM0eCccoc=;
+	s=k20201202; t=1761201484;
+	bh=oFkwwyIzZMT05j4dCqfEGTNJu6aD7xRZtjSzYs9Y2c8=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=PmW7g5aPfpbskK1OHrZRSxwnXAr+JvaPptLuqxuQB2H72EiyvAk9Y5gKqFJKKu+ey
-	 gUEqg7mS2uXUIlsbA6dEe/2jWOM3frgFwJKq83Q9lm+6jxezeQlUWhnPyM8foqfs51
-	 30VC3u6b+utdoAuXZwcAenCozzkaJz4IaG79+BAfSogSPR7O1itcKSQ/1EVR6+n0x1
-	 yXoPaOP/Fsgwr9KVXTzFo8OmBW5XHuBvB9+1yWMQ38prhAVR5eqB4TUoBX5uj/B7j/
-	 g+NOw62E+TDpp0CpSuScd9HK0VqbrXglaHxKH0dJ5OSKtHZBnGzLhXxWyJZw8e8bST
-	 f7oLcKcozDCpQ==
-Message-ID: <d89dae3d99727ab3b48e07ad5bfdd30270898583.camel@kernel.org>
-Subject: Re: [PATCH v6 mptcp-next 00/11] mptcp: introduce backlog processing
+	b=GUw/Kcpgie7mamGqGGP1cJ2MdZyaYMom4f2xd2ReAnQqIcFl2x4oexPAxBI5VLYtR
+	 tcCCNIs6F70wcUoNadd4/3ZP8R0OPZaZE2mytqj172AOcA0RWEbmBnn3wjl3DA3DZQ
+	 e8p64xQYfBLUWBLafh8vKmUpy/7w1ERZHBuc+nkzhI1DyyHeYYbdxoMwHJoA30eykE
+	 Ct0c6Ite0gJoL7XlFBdUbwi+OBcOoNjhRlCIbOrXaLssZfZwDMLSmQcepkPmwxY3+U
+	 MEIePAE+D+cma0dPC8yissa26BnPm665EujY73xrH7+pSSdvNX9otes6va4EYD5Tdt
+	 5B7DtUBw4fqHA==
+Message-ID: <cb11c7174af3fc8e185748fb4169f0b8eba25ee6.camel@kernel.org>
+Subject: Re: [PATCH v6 mptcp-next 02/11] mptcp: borrow forward memory from
+ subflow
 From: Geliang Tang <geliang@kernel.org>
 To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
 Cc: Mat Martineau <martineau@kernel.org>
-Date: Thu, 23 Oct 2025 14:37:47 +0800
-In-Reply-To: <cover.1761142784.git.pabeni@redhat.com>
+Date: Thu, 23 Oct 2025 14:38:01 +0800
+In-Reply-To: <bca701062e618dd595ba395fce0f71ae6a26981c.1761142784.git.pabeni@redhat.com>
 References: <cover.1761142784.git.pabeni@redhat.com>
+	 <bca701062e618dd595ba395fce0f71ae6a26981c.1761142784.git.pabeni@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 User-Agent: Evolution 3.52.3-0ubuntu1 
 Precedence: bulk
@@ -44,96 +46,94 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi Paolo,
-
-Thanks for this v6.
-
 On Wed, 2025-10-22 at 16:31 +0200, Paolo Abeni wrote:
-> This series includes RX path improvement built around backlog
-> processing
+> In the MPTCP receive path, we release the subflow allocated
+> fwd memory just to allocate it again shortly after for the msk.
 > 
-> The main goals are improving the RX performances _and_ increase the
-> long term maintainability.
+> That could increases the failures chances, especially during
+> backlog processing, when other actions could consume the just
+> released memory before the msk socket has a chance to do the
+> rcv allocation.
 > 
-> Patches 2-4 prepare the stack for backlog processing, removing
-> assumptions that will not hold true anymore after backlog
-> introduction.
+> Replace the skb_orphan() call with an open-coded variant that
+> explicitly borrows, with a PAGE_SIZE granularity, the fwd memory
+> from the subflow socket instead of releasing it. During backlog
+> processing the borrowed memory is accounted at release_cb time.
 > 
-> Patches 1 and 5 fixes long standing issues which are quite hard to
-> reproduce with the current implementation but the 2nd one will become
-> very apparent with backlog usage.
-> 
-> Patches 6, 7 and 9 are more cleanups that will make the backlog patch
-> a
-> little less huge.
-> 
-> Patch 8 is a somewhat unrelated cleanup, included here before I
-> forgot
-> about it.
-> 
-> The real work is done by patch 10 and 11. Patch 10 introduces the
-> helpers
-> needed to manipulate the msk-level backlog, and the data struct
-> itself,
-> without any actual functional change. Patch 11 finally use the
-> backlog
-> for RX skb processing. Note that MPTCP can't uset the sk_backlog, as
-> the mptcp release callback can also release and re-acquire the msk-
-> level
-> spinlock and core backlog processing works under the assumption that
-> such event is not possible.
-> 
-> A relevant point is memory accounts for skbs in the backlog.
-> 
-> It's somewhat "original" due to MPTCP constraints. Such skbs use
-> space
-> from the incoming subflow receive buffer, do not use explicitly any
-> forward allocated memory, as we can't update the msk fwd mem while
-> enqueuing, nor we want to acquire again the ssk socket lock while
-> processing the skbs.
-> 
-> Instead the msk borrows memory from the subflow and reserve it for
-> the backlog - see patch 3 and 11 for the gory details.
-> 
-> Note that even if the skbs can sit in the backlog for an unbounded
-> time,
-> 
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 > ---
-> v5 -> v6:
->  - added patch 1/11
->  - reworked widely patch 10 && 11 to avoid double accounts for
-> backlog
->    skb and to address the fwd allocated memory criticality mentioned
->    in previous iterations.
-
-All tests have passed on my end. The only minor issues requiring
-cleanup are in patch 2 and patch 9, which Matt or I can address in
-subsequent revisions. All patches LGTM.
-
-Reviewed-by: Geliang Tang <geliang@kernel.org>
-Tested-by: Geliang Tang <geliang@kernel.org>
-
+> v1 -> v2:
+>   - rebased
+>   - explain why skb_orphan is removed
+> ---
+>  net/mptcp/protocol.c | 19 +++++++++++++++----
+>  1 file changed, 15 insertions(+), 4 deletions(-)
 > 
-> Paolo Abeni (11):
->   mptcp: drop bogus optimization in __mptcp_check_push()
->   mptcp: borrow forward memory from subflow
->   mptcp: cleanup fallback data fin reception
->   mptcp: cleanup fallback dummy mapping generation
->   mptcp: fix MSG_PEEK stream corruption
->   mptcp: ensure the kernel PM does not take action too late
->   mptcp: do not miss early first subflow close event notification.
->   mptcp: make mptcp_destroy_common() static
->   mptcp: drop the __mptcp_data_ready() helper
->   mptcp: introduce mptcp-level backlog
->   mptcp: leverage the backlog for RX packet processing
-> 
->  net/mptcp/mptcp_diag.c |   3 +-
->  net/mptcp/pm.c         |   4 +-
->  net/mptcp/pm_kernel.c  |   2 +
->  net/mptcp/protocol.c   | 363 ++++++++++++++++++++++++++++-----------
-> --
->  net/mptcp/protocol.h   |  10 +-
->  net/mptcp/subflow.c    |  12 +-
->  6 files changed, 272 insertions(+), 122 deletions(-)
-> 
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 804227736638e3..372ae2d9fd229e 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -337,11 +337,12 @@ static void mptcp_data_queue_ofo(struct
+> mptcp_sock *msk, struct sk_buff *skb)
+>  		mptcp_rcvbuf_grow(sk);
+>  }
+>  
+> -static void mptcp_init_skb(struct sock *ssk, struct sk_buff *skb,
+> int offset,
+> -			   int copy_len)
+> +static int mptcp_init_skb(struct sock *ssk,
+> +			  struct sk_buff *skb, int offset, int
+> copy_len)
+
+nit:
+
+int mptcp_init_skb(struct sock *ssk, struct sk_buff *skb, int offset,
+                   int copy_len)
+
+is better.
+
+>  {
+>  	const struct mptcp_subflow_context *subflow =
+> mptcp_subflow_ctx(ssk);
+>  	bool has_rxtstamp = TCP_SKB_CB(skb)->has_rxtstamp;
+> +	int borrowed;
+>  
+>  	/* the skb map_seq accounts for the skb offset:
+>  	 * mptcp_subflow_get_mapped_dsn() is based on the current
+> tp->copied_seq
+> @@ -357,6 +358,13 @@ static void mptcp_init_skb(struct sock *ssk,
+> struct sk_buff *skb, int offset,
+>  
+>  	skb_ext_reset(skb);
+>  	skb_dst_drop(skb);
+> +
+> +	/* "borrow" the fwd memory from the subflow, instead of
+> reclaiming it */
+> +	skb->destructor = NULL;
+> +	borrowed = ssk->sk_forward_alloc -
+> sk_unused_reserved_mem(ssk);
+> +	borrowed &= ~(PAGE_SIZE - 1);
+> +	sk_forward_alloc_add(ssk, skb->truesize - borrowed);
+> +	return borrowed;
+>  }
+>  
+>  static bool __mptcp_move_skb(struct sock *sk, struct sk_buff *skb)
+> @@ -690,9 +698,12 @@ static bool
+> __mptcp_move_skbs_from_subflow(struct mptcp_sock *msk,
+>  
+>  		if (offset < skb->len) {
+>  			size_t len = skb->len - offset;
+> +			int bmem;
+>  
+> -			mptcp_init_skb(ssk, skb, offset, len);
+> -			skb_orphan(skb);
+> +			bmem = mptcp_init_skb(ssk, skb, offset,
+> len);
+> +			skb->sk = NULL;
+> +			sk_forward_alloc_add(sk, bmem);
+> +			atomic_sub(skb->truesize, &ssk-
+> >sk_rmem_alloc);
+>  			ret = __mptcp_move_skb(sk, skb) || ret;
+>  			seq += len;
+>  
 
