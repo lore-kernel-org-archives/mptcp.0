@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7168A246BDE
-	for <mptcp@lists.linux.dev>; Thu, 23 Oct 2025 15:52:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E536123F429
+	for <mptcp@lists.linux.dev>; Thu, 23 Oct 2025 15:54:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761234742; cv=none; b=WKMZD3HaMDnO2qPtJtPovY/EidFLpxBKPNj2lO2W/EDozlvLPRgcNWFlqYrJyTBDF9yiHBqECjr59z/ojLRjMjW/FEXOsRjx/DQULKLFMLIsOoGdnwGiyQwRzUjS1dt5y/p0n7KH2vRhxL80rBRUGHwFftvJY1RSeg4Etr3vOog=
+	t=1761234862; cv=none; b=jaF9sW+njRAw9MNEdW59GL0v15pSOWtPNvGtAY69yoytjO6QRtpcVof6kvEXC1iYyeEuI65/Xd3pBKWum6EjtHEMuzWF9Afg4xBBBpFNCw8cpz5ZtbLqvXiP2AYkolFhAWTIvBtgIJQNphMCWny1xbLRw935cXfx2PZ+E0F++r4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761234742; c=relaxed/simple;
-	bh=oHIK9b3ZEPl2lvLKKsRkoeYK/U3y2hjpW9NuIZhjqpU=;
+	s=arc-20240116; t=1761234862; c=relaxed/simple;
+	bh=sl6OFuJVdaKig92xnltiAlleV8Qv0ZnqCfyZuedY3/c=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Mkp5U/R5MMOrr8QYwfiIfmWGo84bTXhbQ+jn6kgyb5avrbcZsCLM4nldF6+VujTFh655O40q7/6hiGLAUfEgv8sCJXFdKMuZbpJcBI4bARGYuc/0RhST8r2TewqYaOOxOkmlbbSRQTIZsuAUlwtQi4YC1yLfsq5NkUe7SwJ8e6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kD9Vwl6C; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=W9Zv/DIsFLqFkSdCWuSeAZOoojljzKL0Dc8yv5wqlUe4oDg7KPjBddoi1I4+XW/MarJnAuFLZqB4GNLZQeuZiteiifUmdywOM7g1ksowVcgf4X07BFXYiBQnpU1jY1U52Lu8grLJer8nPgwDTJt90jNF6nTFN652s9JIxVxQKQM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IzQ08HJC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kD9Vwl6C"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D74EBC16AAE;
-	Thu, 23 Oct 2025 15:52:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IzQ08HJC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61205C4CEFF;
+	Thu, 23 Oct 2025 15:54:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761234742;
-	bh=oHIK9b3ZEPl2lvLKKsRkoeYK/U3y2hjpW9NuIZhjqpU=;
+	s=k20201202; t=1761234861;
+	bh=sl6OFuJVdaKig92xnltiAlleV8Qv0ZnqCfyZuedY3/c=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=kD9Vwl6CyuvvG3zXBHxwFiu5GRX5yVQqbTGCKo4XQ4Ms9VEgfg1l4CDxgruSRoeAt
-	 aAJF6s2T++jgB8Fr1i+RLvnewUJ30WTIY0AmP0vmZp2lC02WfkxtYqJOEjwVlc6gc+
-	 GB+nKj2uxSDMhBJNSBj6jHty8Ik5lQelldgdpPNngRVBKYaLw5njgvsVtS68UhuM3y
-	 g7Z8NkBRnmag9tNP6C4sSBripV77idlBOQY9Qhq58pT1pEDSryogVtmyVmD9LGntOP
-	 PJPfb4I3RA+FCiz/ZqLZ4MQ/6KSIdtiQ+UYMCvWQZZ0Bsf6nrGGTOEKsoOGfATrI4w
-	 pAQF8YYnAA3Iw==
-Message-ID: <34f90baa-72ff-4c00-917a-a0d65ff0e608@kernel.org>
-Date: Thu, 23 Oct 2025 17:52:18 +0200
+	b=IzQ08HJCrqiMZOoJ76vZKS8aawfz0ZqNxkNJ3v8y8iKOMcagXSWUzYnn5ISzAB6jG
+	 60KofO0L5vRvzyb1bMkOeUq9/qC/mH30KqL29m4MK5bTITLn3mv9ZN4K8TVXlo6WBe
+	 0LUs3MALI+KIl1kwesUeRI2g6RL+ZOhK06T0yDxjFxIpg1HLXrMoH9D7u31KV7AQjf
+	 nDM2xZeoQ1QqWPt6gsWooh7UVPP/jB1YqCQtrxBNoTjr4dERFWXQng89orcCoG4QOb
+	 s/+BQwNukLo/Ooi0ky8T4UtFgZMVzKKlbIVxjwOjYQNByoEUOfi7cXrDu5LE4dV9Vn
+	 vE+RCKTablxvA==
+Message-ID: <2dc7ad69-e264-4733-a953-8368ee2a0b44@kernel.org>
+Date: Thu, 23 Oct 2025 17:54:18 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,14 +35,14 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 mptcp-next 11/11] mptcp: leverage the backlog for RX
- packet processing
+Subject: Re: [PATCH v2 mptcp-net 0/2] mptcp: restore zero window probe
 Content-Language: en-GB, fr-BE
-To: Paolo Abeni <pabeni@redhat.com>, Mat Martineau <martineau@kernel.org>
-Cc: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-References: <cover.1761142784.git.pabeni@redhat.com>
- <2201f259d2176bca0ad37500a352658f7ef5a1f0.1761142784.git.pabeni@redhat.com>
- <3feb8c2a-2098-4626-8bf2-edd66f679463@redhat.com>
+To: Geliang Tang <geliang@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ mptcp@lists.linux.dev
+Cc: Mat Martineau <martineau@kernel.org>
+References: <cover.1761118636.git.pabeni@redhat.com>
+ <5676a1d0af9ee91eee8f90be2574ed297bd70272.camel@kernel.org>
+ <f7e3bb32be02262fa77a5311640f2282e4acdfbc.camel@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -88,93 +88,80 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <3feb8c2a-2098-4626-8bf2-edd66f679463@redhat.com>
+In-Reply-To: <f7e3bb32be02262fa77a5311640f2282e4acdfbc.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Paolo, Mat,
+Hi Geliang,
 
-On 23/10/2025 17:11, Paolo Abeni wrote:
+On 23/10/2025 08:24, Geliang Tang wrote:
+> Hi Paolo,
 > 
-> 
-> On 10/22/25 4:31 PM, Paolo Abeni wrote:
->> When the msk socket is owned or the msk receive buffer is full,
->> move the incoming skbs in a msk level backlog list. This avoid
->> traversing the joined subflows and acquiring the subflow level
->> socket lock at reception time, improving the RX performances.
+> On Wed, 2025-10-22 at 18:07 +0800, Geliang Tang wrote:
+>> Hi Paolo,
 >>
->> When processing the backlog, use the fwd alloc memory borrowed from
->> the incoming subflow. skbs exceeding the msk receive space are
->> not dropped; instead they are kept into the backlog until the receive
->> buffer is freed. Dropping packets already acked at the TCP level is
->> explicitly discouraged by the RFC and would corrupt the data stream
->> for fallback sockets.
+>> On Wed, 2025-10-22 at 09:39 +0200, Paolo Abeni wrote:
+>>> It turns out that the issue reported by Geliang on the pending
+>>> backlog
+>>> patches is actually on older one that the new code made more easy
+>>> reproducible.
+>>>
+>>> The first patch in the series addresses it[1], the 2nd one
+>>> introduce
+>>> new
+>>> mibs to hopefully catch this problem sooned.
+>>>
+>>> I have a pktdrill to validate this scenario. I'll share that soon.
+>>>
+>>> @Geliang could you please validate the above in your testbed, on
+>>> top
+>>> of
+>>> the backlog and splice patches?
 >>
->> Move the conditional reschedule in release_cb() to take action only
->> after the first loop iteration, to avoid rescheduling just before
->> releasing the lock.
+>> Thanks very much. I've already started testing, and so far everything
+>> is running smoothly. I'll let it run loop tests overnight and will
+>> have
+>> the results by tomorrow morning. I'll provide you with feedback then.
+> 
+> Thank you so much! This fix really works. I've run hundreds of splice
+> test loops with the following three patchsets applied, and no test
+> failures occurred:
+> 
+> 	mptcp: restore zero window probe, v2
+> 	mptcp: introduce backlog processing, v6
+> 	implement mptcp read_sock, v13
+> 
+> Please add my tag for this set:
+> 
+> 	Reported-and-tested-by: Geliang Tang <geliang@kernel.org>
+
+Thank you for the test!
+
+To avoid issues with checkpatch and to be consistent, I'm going to add
+this on the first patch:
+
+  Reported-by: (...)
+  Closes:
+https://lore.kernel.org/d0a814c364e744ca6b836ccd5b6e9146882e8d42.camel@kernel.org
+  (...)
+  Tested-by: (...)
+
+And only the Tested-by on the second one. I hope that's OK!
+
+>> Thanks,
+>> -Geliang
 >>
->> Special care is needed to avoid adding skbs to the backlog of a closed
->> msk and to avoid leaving dangling references into the backlog
->> at subflow closing time.
-
-(...)
-
->> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
->> index 5a1d8f9e0fb0ec..0aae17ab77edb2 100644
->> --- a/net/mptcp/protocol.c
->> +++ b/net/mptcp/protocol.c
-
-(...)
-
->> -static bool __mptcp_move_skbs(struct sock *sk)
->> +static bool mptcp_can_spool_backlog(struct sock *sk, u32 moved,
->> +				    struct list_head *skbs)
->>  {
->> -	struct mptcp_subflow_context *subflow;
->>  	struct mptcp_sock *msk = mptcp_sk(sk);
->> -	bool ret = false;
->>  
->> -	if (list_empty(&msk->conn_list))
->> +	if (list_empty(&msk->backlog_list))
->>  		return false;
->>  
->> -	subflow = list_first_entry(&msk->conn_list,
->> -				   struct mptcp_subflow_context, node);
->> -	for (;;) {
->> -		struct sock *ssk;
->> -		bool slowpath;
->> +	/* Borrowed mem could be zero only in the unlikely event that the bl
->> +	 * is full
->> +	 */
->> +	if (likely(msk->borrowed_mem)) {
->> +		sk_forward_alloc_add(sk, msk->borrowed_mem);
->> +		msk->borrowed_mem = 0;
->> +		sk->sk_reserved_mem = msk->backlog_len;
+>>>
+>>> [1] at least here, at least with the packet drill reproducer ;)
+>>> ---
+>>> v1 -> v2:
+>>>   - drop unneeded delta in patch 1/2
 > 
-> With the above I intended to prevent the fwd memory handling from
-> releasing backlog_len bytes. Re-reading the relevant code, it does not
-> allow that (experimentation confirmed), see:
-> 
-> https://elixir.bootlin.com/linux/v6.18-rc2/source/include/net/sock.h#L1593
-> 
-> and:
-> 
-> https://elixir.bootlin.com/linux/v6.18-rc2/source/include/net/sock.h#L1580
-> 
-> This will need some more care. Also patch 2 will require some
-> significant rework.
+> This change in v1 is valid. Later I will send a dedicated cleanup patch
+> for -next to use tcp_sk() in mptcp_sendmsg_frag() with your "Suggested-
+> by" tag.
 
-Thank you for looking at this complex part, and for having spot that!
-
-> @Mat, @Matttbe: could you please consider merging patches 1,3-9?
-> 
-> I think they should be pretty uncontroversial, would make the series
-> more manegeable for future iterations (and would alleviate my
-> frustration to make this thing work correctly).
-
-It makes sense, fine by me. I will wait for Mat's review before applying
-them (patch 1 is for 'net' I suppose).
+Please only add such patch when we modify code around in net-next.
 
 Cheers,
 Matt
