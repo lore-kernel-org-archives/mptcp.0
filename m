@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DE522D9795
-	for <mptcp@lists.linux.dev>; Thu, 23 Oct 2025 16:23:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E08BC2222B4
+	for <mptcp@lists.linux.dev>; Thu, 23 Oct 2025 16:26:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761236588; cv=none; b=lDIj0GWlZ2lC2rBQoRsHHjrmKy5E3ANh2Ju01ai4firu6qs4WJrnduQV6IzOc6FvheqgM8giQG6ONH/dL3r/tW40L3Abw1IaXBgB/u8KYOZM14yk/k0yjcgfFZamMuBqJg1wSkFukZ+lcYgP+8jJNO1ohghWqKrVqSWNr/PTJec=
+	t=1761236787; cv=none; b=TZbTDu03A5VcHP40ZVs6mjE5FKQOk6p4fU7gZjtf98Q1Yws3Mu+GnGurXmdjZ5NpaTltKJkP28Iy52G7b0FLqEkHyYZdMOnGd1M/RsI9sS4cQFVYjEIwCaZ+j/B4WXietilVYJ8O2onFXSHM996JGfrvepw71xZl5b36KQ59bJ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761236588; c=relaxed/simple;
-	bh=8xZQPYABu02SWHuSLlTx9D5WdlGAv/L87QS/2BJjHmE=;
+	s=arc-20240116; t=1761236787; c=relaxed/simple;
+	bh=I9YChgaGrBjsYX7QuaDqgAKTfRZ8gxECDrp74wjdqNE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YdXhYTyitxmNL77Fkk8XhfjSsDkIsKokZ6LnbqwsTCe0puBHhkMRL85KHfR43Ez4wYMl7onAg2aYhd89W/rXr5F503t877WUB19Ya6Jy3i8R6oSIqII9gFJHWeXT0aybYyLz0GOP6b1EvOoaErPQ3NR6dmNtwoKbJcVo/VXuu0o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tecm8PDo; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=brO2WROPuiH2g3kcVqXzZNql56NQMgpGzI4PNV2dsG9An1mUccuSQsfE7XHq1Xx2w+lm9/XLGBXWl7wiSG70Y27R/o5kpKvMubKC82fPSiICTYw4YRRDwGIBKbAIwBo5iAkpwsXlP8LU0+jRdxjLkSJYyuTSrtwxKvVjBiRmlxk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EUTyzMRd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tecm8PDo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7711C4CEFF;
-	Thu, 23 Oct 2025 16:23:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EUTyzMRd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7927AC4CEE7;
+	Thu, 23 Oct 2025 16:26:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761236587;
-	bh=8xZQPYABu02SWHuSLlTx9D5WdlGAv/L87QS/2BJjHmE=;
+	s=k20201202; t=1761236786;
+	bh=I9YChgaGrBjsYX7QuaDqgAKTfRZ8gxECDrp74wjdqNE=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=tecm8PDo4eN215Vh8HTbbVUW8GEsdGywv1woIhASb++yALPpsiECGMqvWUuMvCB7b
-	 wpbdiV5iGFhTkUpPjyRQycbZBPFbO63zI/6dysI6nwCqiG3m3G8ukEn/qh5nP+yW6k
-	 VMnnZr8KPjEvVZcuy5FggVRRF8soqExhomSDfLP+0IWf3CVYFao9dLxvmtSspACO9i
-	 KyOjGRmxpu9BmsOwLihXAvuC3+BpR8/4Mj3IL0ry3euOPZS4jWph8rotoBwSwa5emi
-	 Qvx5oySmARYKvx2o/zU0REcJ6vnA/SG3igmBgk/j4G60oTmFVbdf4ykgnQ2rqHxuoD
-	 sILmHlaW36q0Q==
-Message-ID: <54c78c4f-51da-47a4-b3c2-7640e35986b2@kernel.org>
-Date: Thu, 23 Oct 2025 18:23:04 +0200
+	b=EUTyzMRdr/jJnZNGbvRkzxiMrbuKQnfJE7arSXkv63XVRq/GdIMFRMKwfBeAxBEHO
+	 SuDps+sWF2nKHRiC2cc2E43Gvay633oBJctS4fpxzLtjyz20GQ/cBj+IhX9znPAwaS
+	 tkV6Zd2DuIAI9+ka54Tmgg+oQcwoyUGXCKVl7vR6kp887DKpgLizusjbA8BJIlJETB
+	 XAWaDsVHkfjctwF56Al2fvxEjcmcFBa5Ak1FBL6B3+aGPyyPYqmjprs4XieJTV+UVJ
+	 YPylfPBQMKRAAxrYDAK1ceWSfmsR27woJzOHL7ybvmVyxhAcmubOF55/a/aEqiu1/v
+	 GuiEPi/MeNRiQ==
+Message-ID: <be149ae2-74f3-4655-a03f-08cda8a15c44@kernel.org>
+Date: Thu, 23 Oct 2025 18:26:23 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,11 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 mptcp-net 0/2] mptcp: restore zero window probe
+Subject: Re: [PATCH v2 mptcp-net 2/2] mptcp: zero window probe mib
 Content-Language: en-GB, fr-BE
 To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
 Cc: geliang@kernel.org, Mat Martineau <martineau@kernel.org>
 References: <cover.1761118636.git.pabeni@redhat.com>
+ <9c935ea98196be13949542dcfe787e5bc799ae23.1761118636.git.pabeni@redhat.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -85,49 +86,45 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <cover.1761118636.git.pabeni@redhat.com>
+In-Reply-To: <9c935ea98196be13949542dcfe787e5bc799ae23.1761118636.git.pabeni@redhat.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Paolo, Geliang, Mat,
+Hi Paolo,
 
 On 22/10/2025 09:39, Paolo Abeni wrote:
-> It turns out that the issue reported by Geliang on the pending backlog
-> patches is actually on older one that the new code made more easy
-> reproducible.
+> Explicitly account for MPTCP-level zero windows probe, to catch
+> hopefully earlier issues alike the one addressed by the previous
+> patch.
 > 
-> The first patch in the series addresses it[1], the 2nd one introduce new
-> mibs to hopefully catch this problem sooned.
+> Reviewed-by: Mat Martineau <martineau@kernel.org>
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> ---
+>  net/mptcp/mib.c      | 1 +
+>  net/mptcp/mib.h      | 1 +
+>  net/mptcp/protocol.c | 1 +
+>  3 files changed, 3 insertions(+)
 > 
-> I have a pktdrill to validate this scenario. I'll share that soon.
+> diff --git a/net/mptcp/mib.c b/net/mptcp/mib.c
+> index 6003e47c770a7c..eb4645a9c5ac07 100644
+> --- a/net/mptcp/mib.c
+> +++ b/net/mptcp/mib.c
+> @@ -85,6 +85,7 @@ static const struct snmp_mib mptcp_snmp_list[] = {
+>  	SNMP_MIB_ITEM("DssFallback", MPTCP_MIB_DSSFALLBACK),
+>  	SNMP_MIB_ITEM("SimultConnectFallback", MPTCP_MIB_SIMULTCONNFALLBACK),
+>  	SNMP_MIB_ITEM("FallbackFailed", MPTCP_MIB_FALLBACKFAILED),
+> +	SNMP_MIB_ITEM("MPTcpWinProbe", MPTCP_MIB_MPTCPWINPROBE),
 
-Thank you for the new pktdrill. I don't know if you saw my question:
+Detail: I just noticed that after having applied the patch: Do we need
+to double the 'MPTCP' keyword here? The full MIB counter name is:
 
-  https://github.com/multipath-tcp/packetdrill/pull/179
+  MPTcpExtMPTcpWinProbe
 
-I also just did a quick review and test while at it
+Maybe just WinProbe is enough? → MPTcpExtWinProbe
 
+Or the second MPTCP using capital letters, similar to "MPTCPRetrans"?
 
-> @Geliang could you please validate the above in your testbed, on top of
-> the backlog and splice patches?
-
-Thank you for the patches and the reviews! I already applied the
-patches, I guess the issues with Packetdrill are in the test, not the
-kernel modifications.
-
-
-New patches for t/upstream-net and t/upstream:
-- b7749bb6ab95: mptcp: restore window probe
-- 5d8d442266f9: mptcp: zero window probe mib
-- Results: 94b2567634ae..affaafb5552e (export-net)
-- Results: 5d6d50a980ff..ed6f82a81575 (export)
-
-Tests are now in progress:
-
-- export-net:
-https://github.com/multipath-tcp/mptcp_net-next/commit/5db161c8d173fc05a4d26fd5df5e8c6e90ac8c19/checks
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/785e3842513ff5993f32c918f90dbee62244ed63/checks
+(I can fix that directly in the tree.)
 
 Cheers,
 Matt
