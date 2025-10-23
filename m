@@ -1,40 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49D6E286D56
-	for <mptcp@lists.linux.dev>; Thu, 23 Oct 2025 06:24:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEDDF272E41
+	for <mptcp@lists.linux.dev>; Thu, 23 Oct 2025 06:37:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761200661; cv=none; b=c/z2b8bcGxOH29zKRCiLYrzGpoImfitBeNZN2qL09c1HzdpcwthQSIWCObZ+H12NdKq9wejbchH4NCGjgO6S/mlkCA8awYOeN/OUHpLk2yUvukx1kKAABjnSEVgJU1+/nbCEmSKaJfRIXY9B4ORHjZFnv3+YrWBo02ig9xTFGzQ=
+	t=1761201472; cv=none; b=gRRl+feyZx0iRzV2rQ2HxxEZ6NwzBw65MnzVbMKEpkxnVHcPIrCXfMEpyZ2d0naZEz9F9kVtPsDD3jrmKVYFmvYHg9ljPsY4TdKwYm5n4Xfj+0/rV5ufb1qfKtl19jn4LKBIUGpA2O6vI/RKnfisjryCxdJZg0DIemsZFPhxhSU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761200661; c=relaxed/simple;
-	bh=cUxS1MdYremUN4cNYfibifJ6G+LRGPsvQymSGLdsGmA=;
+	s=arc-20240116; t=1761201472; c=relaxed/simple;
+	bh=gOpece4QF2WTj5W3bUKTztSQfGjYInO/U5VM0eCccoc=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=FgrA1RLbx/PVMP8nS3cBVx24WlTH6Mo4elqY5EOvXQ/J1q0ncWPdPqzbI7sieNvac99lbp4/BZDSOZC6upyBQNNpwbJUiEVZVcCmvHx28Goi3NSJZapyQukh+jrvssgzfUGTK+jlhtE8hEm61PE9FHiC5DkyBl4RF7kXUZ9A5+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NMehJhPT; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=dVGUYtrB1fgmXZz+3dge9tZE46Su5B14Mi2ifx1rzw0osLIu8O+xe+XGgq53nfYuJjOl6dYh5RMcJXJu8XHysnZ9dww5OQcIfwegxwk9udwLIZEhgwGG2nAPY0Q8gM8f8VTeyTv4iSVSI1Nr5npo08xngc6dNYeU2Xf65nyhjD8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PmW7g5aP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NMehJhPT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DF14C4CEE7;
-	Thu, 23 Oct 2025 06:24:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PmW7g5aP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B444C4CEE7;
+	Thu, 23 Oct 2025 06:37:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761200660;
-	bh=cUxS1MdYremUN4cNYfibifJ6G+LRGPsvQymSGLdsGmA=;
+	s=k20201202; t=1761201471;
+	bh=gOpece4QF2WTj5W3bUKTztSQfGjYInO/U5VM0eCccoc=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=NMehJhPTQhyK/Dgvi7wnxn2PlooGIDEUYiJqCIKSzvKS5AaaLxKijyfc7854TnF0p
-	 vpaHny/A71dca/fd2W1Eo7PJg3DgRj6FinoknhKYEoJ9oHpDQVNQF5+88gqDBiEUYt
-	 gudPnhP0lFvxSHPfOSY7im5BQXUhZIJb0DXCQgBKYUUUrI98w/I8mSUkQxaO44ZHUR
-	 waYffwN0e56o8kf0lkXOw8nZFlpbB3DIGBOVZjxtax3BJQvB9W0YAPP4Szem8djwJR
-	 5U5p4vfVevo0hLVQmO7fwKfMauZ3NBGh1REhFuuPq0tKn6wr1+4Py6RMS/9ro0tPEP
-	 IRn6zsl7M6g6Q==
-Message-ID: <f7e3bb32be02262fa77a5311640f2282e4acdfbc.camel@kernel.org>
-Subject: Re: [PATCH v2 mptcp-net 0/2] mptcp: restore zero window probe
+	b=PmW7g5aPfpbskK1OHrZRSxwnXAr+JvaPptLuqxuQB2H72EiyvAk9Y5gKqFJKKu+ey
+	 gUEqg7mS2uXUIlsbA6dEe/2jWOM3frgFwJKq83Q9lm+6jxezeQlUWhnPyM8foqfs51
+	 30VC3u6b+utdoAuXZwcAenCozzkaJz4IaG79+BAfSogSPR7O1itcKSQ/1EVR6+n0x1
+	 yXoPaOP/Fsgwr9KVXTzFo8OmBW5XHuBvB9+1yWMQ38prhAVR5eqB4TUoBX5uj/B7j/
+	 g+NOw62E+TDpp0CpSuScd9HK0VqbrXglaHxKH0dJ5OSKtHZBnGzLhXxWyJZw8e8bST
+	 f7oLcKcozDCpQ==
+Message-ID: <d89dae3d99727ab3b48e07ad5bfdd30270898583.camel@kernel.org>
+Subject: Re: [PATCH v6 mptcp-next 00/11] mptcp: introduce backlog processing
 From: Geliang Tang <geliang@kernel.org>
 To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
 Cc: Mat Martineau <martineau@kernel.org>
-Date: Thu, 23 Oct 2025 14:24:14 +0800
-In-Reply-To: <5676a1d0af9ee91eee8f90be2574ed297bd70272.camel@kernel.org>
-References: <cover.1761118636.git.pabeni@redhat.com>
-	 <5676a1d0af9ee91eee8f90be2574ed297bd70272.camel@kernel.org>
+Date: Thu, 23 Oct 2025 14:37:47 +0800
+In-Reply-To: <cover.1761142784.git.pabeni@redhat.com>
+References: <cover.1761142784.git.pabeni@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 User-Agent: Evolution 3.52.3-0ubuntu1 
 Precedence: bulk
@@ -47,71 +46,94 @@ Content-Transfer-Encoding: 8bit
 
 Hi Paolo,
 
-On Wed, 2025-10-22 at 18:07 +0800, Geliang Tang wrote:
-> Hi Paolo,
+Thanks for this v6.
+
+On Wed, 2025-10-22 at 16:31 +0200, Paolo Abeni wrote:
+> This series includes RX path improvement built around backlog
+> processing
 > 
-> On Wed, 2025-10-22 at 09:39 +0200, Paolo Abeni wrote:
-> > It turns out that the issue reported by Geliang on the pending
-> > backlog
-> > patches is actually on older one that the new code made more easy
-> > reproducible.
-> > 
-> > The first patch in the series addresses it[1], the 2nd one
-> > introduce
-> > new
-> > mibs to hopefully catch this problem sooned.
-> > 
-> > I have a pktdrill to validate this scenario. I'll share that soon.
-> > 
-> > @Geliang could you please validate the above in your testbed, on
-> > top
-> > of
-> > the backlog and splice patches?
+> The main goals are improving the RX performances _and_ increase the
+> long term maintainability.
 > 
-> Thanks very much. I've already started testing, and so far everything
-> is running smoothly. I'll let it run loop tests overnight and will
-> have
-> the results by tomorrow morning. I'll provide you with feedback then.
+> Patches 2-4 prepare the stack for backlog processing, removing
+> assumptions that will not hold true anymore after backlog
+> introduction.
+> 
+> Patches 1 and 5 fixes long standing issues which are quite hard to
+> reproduce with the current implementation but the 2nd one will become
+> very apparent with backlog usage.
+> 
+> Patches 6, 7 and 9 are more cleanups that will make the backlog patch
+> a
+> little less huge.
+> 
+> Patch 8 is a somewhat unrelated cleanup, included here before I
+> forgot
+> about it.
+> 
+> The real work is done by patch 10 and 11. Patch 10 introduces the
+> helpers
+> needed to manipulate the msk-level backlog, and the data struct
+> itself,
+> without any actual functional change. Patch 11 finally use the
+> backlog
+> for RX skb processing. Note that MPTCP can't uset the sk_backlog, as
+> the mptcp release callback can also release and re-acquire the msk-
+> level
+> spinlock and core backlog processing works under the assumption that
+> such event is not possible.
+> 
+> A relevant point is memory accounts for skbs in the backlog.
+> 
+> It's somewhat "original" due to MPTCP constraints. Such skbs use
+> space
+> from the incoming subflow receive buffer, do not use explicitly any
+> forward allocated memory, as we can't update the msk fwd mem while
+> enqueuing, nor we want to acquire again the ssk socket lock while
+> processing the skbs.
+> 
+> Instead the msk borrows memory from the subflow and reserve it for
+> the backlog - see patch 3 and 11 for the gory details.
+> 
+> Note that even if the skbs can sit in the backlog for an unbounded
+> time,
+> 
+> ---
+> v5 -> v6:
+>  - added patch 1/11
+>  - reworked widely patch 10 && 11 to avoid double accounts for
+> backlog
+>    skb and to address the fwd allocated memory criticality mentioned
+>    in previous iterations.
 
-Thank you so much! This fix really works. I've run hundreds of splice
-test loops with the following three patchsets applied, and no test
-failures occurred:
+All tests have passed on my end. The only minor issues requiring
+cleanup are in patch 2 and patch 9, which Matt or I can address in
+subsequent revisions. All patches LGTM.
 
-	mptcp: restore zero window probe, v2
-	mptcp: introduce backlog processing, v6
-	implement mptcp read_sock, v13
-
-Please add my tag for this set:
-
-	Reported-and-tested-by: Geliang Tang <geliang@kernel.org>
+Reviewed-by: Geliang Tang <geliang@kernel.org>
+Tested-by: Geliang Tang <geliang@kernel.org>
 
 > 
-> Thanks,
-> -Geliang
+> Paolo Abeni (11):
+>   mptcp: drop bogus optimization in __mptcp_check_push()
+>   mptcp: borrow forward memory from subflow
+>   mptcp: cleanup fallback data fin reception
+>   mptcp: cleanup fallback dummy mapping generation
+>   mptcp: fix MSG_PEEK stream corruption
+>   mptcp: ensure the kernel PM does not take action too late
+>   mptcp: do not miss early first subflow close event notification.
+>   mptcp: make mptcp_destroy_common() static
+>   mptcp: drop the __mptcp_data_ready() helper
+>   mptcp: introduce mptcp-level backlog
+>   mptcp: leverage the backlog for RX packet processing
 > 
-> > 
-> > [1] at least here, at least with the packet drill reproducer ;)
-> > ---
-> > v1 -> v2:
-> >   - drop unneeded delta in patch 1/2
-
-This change in v1 is valid. Later I will send a dedicated cleanup patch
-for -next to use tcp_sk() in mptcp_sendmsg_frag() with your "Suggested-
-by" tag.
-
-Thanks,
--Geliang
-
-> > 
-> > Paolo Abeni (2):
-> >   mptcp: restore window probe
-> >   mptcp: zero window probe mib
-> > 
-> >  net/mptcp/mib.c      | 1 +
-> >  net/mptcp/mib.h      | 1 +
-> >  net/mptcp/protocol.c | 8 +++++++-
-> >  3 files changed, 9 insertions(+), 1 deletion(-)
-> > 
-> 
+>  net/mptcp/mptcp_diag.c |   3 +-
+>  net/mptcp/pm.c         |   4 +-
+>  net/mptcp/pm_kernel.c  |   2 +
+>  net/mptcp/protocol.c   | 363 ++++++++++++++++++++++++++++-----------
+> --
+>  net/mptcp/protocol.h   |  10 +-
+>  net/mptcp/subflow.c    |  12 +-
+>  6 files changed, 272 insertions(+), 122 deletions(-)
 > 
 
