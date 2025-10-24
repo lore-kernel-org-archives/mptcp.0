@@ -1,72 +1,71 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D09C28D8DA
-	for <mptcp@lists.linux.dev>; Fri, 24 Oct 2025 07:30:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC5322E62A8
+	for <mptcp@lists.linux.dev>; Fri, 24 Oct 2025 07:34:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761291054; cv=none; b=ZhEHayEms8RsCTU5kxOhKfMYVSu/0pqDb00qVNXHshmO4P9vhtlQ7++XnZmjVRzxurFSOvPGvkfScRdiWyTH/L2XtQQXuHLLgW28q6Ez25VrR+7dDFEKro8vY3Cty/TX4fEKwUuvoCxLlSo2BAy7EmTDK8hZW5z1TyFcgiZEqfg=
+	t=1761291275; cv=none; b=GfEg6yedZuF//V/lq/EX7uC7DvBq4BZQGWw86EXLWbvBxET2IbpE8vdLkJJ1oZOcU/1QvwfQ5pfSxqwnDYE/U1MNq8wblcjtt4IBMaYUwVQnBUNKF1cGnl+zMcuNnod/mqc0VPxWI+lFS4gZm8QIKdm/xALRFNJzLVXSlTTdDsk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761291054; c=relaxed/simple;
-	bh=1MWYub82zN/s4EF46pBtD+QQRvPpION1GfJqrBW9gdM=;
+	s=arc-20240116; t=1761291275; c=relaxed/simple;
+	bh=tSkZJW4t0m4PTmyQo3igF2s9J1BxLCQFmX1BY8Mot94=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jbBbsxcCTPCcyVFnH+IqpMkDvKQrkyT+x2T9GNuzp5CCInNbY4VKRRFhO5EGDIf4JEKKjQCWBOrAG3IjYs8as9PjXP2aKwLze3F1/f5/2UMzerQGZkHKC63rE7i4Tf/YCOACBq7G1WuaGB2H2Jh965g6snZwLt4/5700W3rlztU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iEymg83O; arc=none smtp.client-ip=170.10.133.124
+	 In-Reply-To:Content-Type; b=SRCUevR2F9djMAGttUYIyvxlxJdsMnB0nmgAlDmPIasucB67yMLhTky9L/5SXBQuSbvxZP7veCbYRFDJDNDwyVI2f76Pw52yimVudMHP79S/O2BP9dVCfgNvWK/22e8bnrzF4YOx52Ho1AR7/m4I5n/UYgsTMOnO9sXE61+1jfA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UUeAc1uF; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iEymg83O"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UUeAc1uF"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1761291051;
+	s=mimecast20190719; t=1761291272;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=X0Xq9lZfi9/TpzCXbi0GiAv7NkLY9wzGxPwirL4pyts=;
-	b=iEymg83OcGZtRbryrdJxs5ksT/n7ttQv0Ls7nkclOyYyTU+aPPtWGW1LWXpZ7+Xq36C0CC
-	QMt/Yns3ckG0/S5pEdJQpZLNjaWoDEI4p53iEjFufxBNMknyDBgRT7Wpclhnflm5xfkyP+
-	66Onnu/vOKhQQdZ7MckFI4Vw4qa/kWE=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=oIhoq461VgRX3FL58E5wPrn92uu+R8c9Bl/QijzJKKI=;
+	b=UUeAc1uF2AOCsRGghZpvl0+ZtVtN65S+fIi2febIq4ojJTV/wCrBd83/a50Z5IYvf8/1FW
+	+a9HU0h/Bk3YUTcmKnClBe/HbvVjhSHCx8X7Rl5OlWpGL2lBi81AktO4AqxVnhcyheIB8B
+	gocmymMlOIwSeLZcFPn5w+P47pXBVsw=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-26-CnfW0Z1lMHaf_1RqqG5Xrw-1; Fri, 24 Oct 2025 03:30:49 -0400
-X-MC-Unique: CnfW0Z1lMHaf_1RqqG5Xrw-1
-X-Mimecast-MFC-AGG-ID: CnfW0Z1lMHaf_1RqqG5Xrw_1761291048
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-4270a273b6eso1057328f8f.0
-        for <mptcp@lists.linux.dev>; Fri, 24 Oct 2025 00:30:49 -0700 (PDT)
+ us-mta-1-843JtyFRML6rTERnpv4Bmg-1; Fri, 24 Oct 2025 03:34:31 -0400
+X-MC-Unique: 843JtyFRML6rTERnpv4Bmg-1
+X-Mimecast-MFC-AGG-ID: 843JtyFRML6rTERnpv4Bmg_1761291270
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-4284525aecbso1044263f8f.1
+        for <mptcp@lists.linux.dev>; Fri, 24 Oct 2025 00:34:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761291048; x=1761895848;
+        d=1e100.net; s=20230601; t=1761291270; x=1761896070;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=X0Xq9lZfi9/TpzCXbi0GiAv7NkLY9wzGxPwirL4pyts=;
-        b=eMuURLKH+K/TfBlI69+UZIBDMyQQ7fEYHgDZ0GVSMv/oYy9j76oP46HkHJLa0E3LYs
-         wUz2JFNUiDmavpp2zThbE2r6Tol5uevilNO1ousQnAU6rEQ9Gk7M0sFnuEQKN8N0r3go
-         KtzMMaOuzL80ISVmyNsreFBXMMmPfRv9N6WHo2IPnhmr2Rs/ZfG82GIOBrLNz+eYbN9E
-         LdGr+aNJn8WOufuVIGx7E8n2iicUpGeE8vZKlGNsA5+wQUFb34ixUm+TVRMi5mVZznAC
-         zx7PBeIW7ixCf3aNeGTUogJpU8SX0sHgQN+h1Ut6s4uv47IQQlWZlfdaa1/HqgQc6xlL
-         bAgA==
-X-Forwarded-Encrypted: i=1; AJvYcCUrEhNc195SYMROoemfOL7l7StEO+Xss1Fmm9Sn7R/VkeN+qIZmt5lmU92A0xsZXAJ0lQuOBQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yz5B7uCdUPZ2OQdBgqBmoe1wgDH69Rn2wEOU1lSdcJpWpdO5MV9
-	G/nvYY8aBrAwXQWU3Gyll+FN4QUnuZqbAZA6/BWn1juDqYwEHPe/STKZ1IthUD/hxARuskZ1DuS
-	oXD71+v4Iq1dJqK8Vg1evHK6WtfiBc9qHdL4NLV3UboXNP3FpglDR7uPm
-X-Gm-Gg: ASbGncuMLjM4r2U+qc9xKPkoDW7331aX+QGdJpKeMFTPYA+DsZdjWtBzxFqL4FNB0Ud
-	KTASi15iBoaVq6hGpobBxgbkn9ZQP286/hK/5VW/qbeyNb7kAnexsKKe+bVMuTPMXMe53czMjwL
-	LoW6DjO/pF3C/aeeX9+t3wCUX57Tum1ojnsBRjnXDky5gTgrXa/vu0DP+efJ8XSp4twu+TOw5bv
-	ADfTygUK0427r/fvmWG4X58TyMbcceKKz3BawmkCoh4JSlft1TMXrIzvIcqJMHEEa9SttStLfP2
-	EpQjqMt8AVWv4Gu8CgTtyTggDZkNSqxcwAfRH1OC05E1pQNFdf01NOhfws+VnOmh0s7EzQxZjmO
-	qmF9uEaaySyX4kVSldT3OHkE5NWAwQtQwwO/a2wN7Ops7zfo=
-X-Received: by 2002:a05:600c:458b:b0:471:16e5:6d7a with SMTP id 5b1f17b1804b1-475d2e7df18mr8166695e9.13.1761291048242;
-        Fri, 24 Oct 2025 00:30:48 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH7co+ObUV+kSc+I3BLZADWpuHwpZjCGkKIgoCaHu3aKnAMnQtQVlF87J4K89gak4j3HUhojQ==
-X-Received: by 2002:a05:600c:458b:b0:471:16e5:6d7a with SMTP id 5b1f17b1804b1-475d2e7df18mr8166295e9.13.1761291047718;
-        Fri, 24 Oct 2025 00:30:47 -0700 (PDT)
+        bh=oIhoq461VgRX3FL58E5wPrn92uu+R8c9Bl/QijzJKKI=;
+        b=MAEeWwNPyGbX0JeJM3L149NLzYcJ6J9yFjJ1aqq0p09r/A5MEUtE9Z6B7wqa/ZlxXQ
+         1JR8Xn8kXVXJl/W5YsIrs4MXkkTFo8lkGz9ApoMkLC4mm/a6ad07o15y8r238pQeIbCn
+         WfDack/aUz4ofh9IqNjH3MELjVFVrxMA8OPilXt8TRhZGLAwnyIpchYwwsBKlwNoqqSr
+         7OfHewBBTklkGTXIPjNyp+6FdbbIeZuP8c7Y3bHE6mBeegK8vNtkci8W3qnS8t3j7PH5
+         0R6l09/emJGrU8y1JT/aJYOrx13FxSGczEkMRKxnzpG1/DeM5tRzVd2x3Fo8hrLb0lZI
+         IeZQ==
+X-Gm-Message-State: AOJu0YzibByB/Hke013HFMhLaljiQFe2yY9w3uwwqNZ4kSEvDHXEMiv/
+	Cc3lzfHXWbi+04J5Jw62cjq9nu6jS8SxCrK3AKAfnNdY8MJrGVCIoB7vEHFo0Ipu0LQixazWhtK
+	E+BRheEpdREF0bvZMjXfhmLm8Q3oo7iAA5AeEVr2gxUqBJGLvVUYwy1DC90ECI+/n
+X-Gm-Gg: ASbGncvTC2ODVZiL+nsn+Pj1595g3tm2W4NJmqK0Av5VQTECN0GBarENvcB57d7kBFC
+	sOVJi4CTzR90jvybJFrfLRuHr8CutcYL66kIjPqnY66ZbvHEg2pV3qmbENn6y/JKuMRNpBUzMW/
+	W6qRCHdBo8KTJUXsgFglsypWmdrKRh8+KDstzmoST98M39E0GlGTVQeEO78pwcUoRp39GsHXH1y
+	+h6MkBqPUheaJqvm5v9BMDQohGUw8pvR+waEDI988KesC3lr3OpvZnYMonPCjiI3I+KiKMFHi8i
+	Kr3JlfjeoXzpmtfeIU/LU0Cn/TBYCM4k7+eHT0Kjne34CfDdNQeMJXky/da/VAOOpptPqdNbutt
+	Evk0QUkFYh8+ZbhIkdhGjsOFfzO+roHzb2D3SmWHsUMpnFHY=
+X-Received: by 2002:a5d:5d82:0:b0:428:4004:8226 with SMTP id ffacd0b85a97d-4284004ab91mr12867172f8f.34.1761291270041;
+        Fri, 24 Oct 2025 00:34:30 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEv5ljLKK77zt3Tzfi8FkEYJeoyQ+HK+PFGeY8lzvfz+iAsvr7jTkGFmtjfCcRFDGxpAc77ZA==
+X-Received: by 2002:a5d:5d82:0:b0:428:4004:8226 with SMTP id ffacd0b85a97d-4284004ab91mr12867139f8f.34.1761291269538;
+        Fri, 24 Oct 2025 00:34:29 -0700 (PDT)
 Received: from ?IPV6:2a0d:3344:2712:7e10:4d59:d956:544f:d65c? ([2a0d:3344:2712:7e10:4d59:d956:544f:d65c])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-475c4369b3esm130936625e9.13.2025.10.24.00.30.46
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-429898ccd88sm9366814f8f.36.2025.10.24.00.34.28
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 24 Oct 2025 00:30:47 -0700 (PDT)
-Message-ID: <14084e3b-2ee1-49bd-b04f-8281d4f9c3be@redhat.com>
-Date: Fri, 24 Oct 2025 09:30:46 +0200
+        Fri, 24 Oct 2025 00:34:29 -0700 (PDT)
+Message-ID: <f101b253-9116-42bf-98c8-4e7a958bce50@redhat.com>
+Date: Fri, 24 Oct 2025 09:34:27 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -74,55 +73,44 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 mptcp-net 2/2] mptcp: zero window probe mib
-To: Matthieu Baerts <matttbe@kernel.org>, mptcp@lists.linux.dev
-Cc: geliang@kernel.org, Mat Martineau <martineau@kernel.org>
-References: <cover.1761118636.git.pabeni@redhat.com>
- <9c935ea98196be13949542dcfe787e5bc799ae23.1761118636.git.pabeni@redhat.com>
- <be149ae2-74f3-4655-a03f-08cda8a15c44@kernel.org>
+Subject: Re: [PATCH v6 mptcp-next 05/11] mptcp: fix MSG_PEEK stream corruption
+To: Mat Martineau <martineau@kernel.org>
+Cc: mptcp@lists.linux.dev, Geliang Tang <geliang@kernel.org>
+References: <cover.1761142784.git.pabeni@redhat.com>
+ <d110f41af91c7b3feb17b6b5942c21cdcec93c13.1761142784.git.pabeni@redhat.com>
+ <9a415164-74cb-3650-9299-edc82652b086@kernel.org>
 From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <be149ae2-74f3-4655-a03f-08cda8a15c44@kernel.org>
+In-Reply-To: <9a415164-74cb-3650-9299-edc82652b086@kernel.org>
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: ASZEKKz3vyyR6a9Wl4F2bPAfYMK5-vMtXfIQyKq6bYI_1761291048
+X-Mimecast-MFC-PROC-ID: swUgfAWnioR6IuKq_npEUMx966kylwDNOuwEFup2KhU_1761291270
 X-Mimecast-Originator: redhat.com
 Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 10/23/25 6:26 PM, Matthieu Baerts wrote:
-> On 22/10/2025 09:39, Paolo Abeni wrote:
->> Explicitly account for MPTCP-level zero windows probe, to catch
->> hopefully earlier issues alike the one addressed by the previous
->> patch.
+On 10/23/25 6:56 PM, Mat Martineau wrote:
+> On Wed, 22 Oct 2025, Paolo Abeni wrote:
+> 
+>> If a MSG_PEEK | MSG_WAITALL read operation consumes all the bytes in the
+>> receive queue and recvmsg() need to waits for more data - i.e. it's a
+>> blocking one - upon arrival of the next packet the MPTCP protocol will
+>> start again copying the oldest data present in the receive queue,
+>> corrupting the data stream.
 >>
->> Reviewed-by: Mat Martineau <martineau@kernel.org>
+>> Address the issue explicitly tracking the peeked sequence number,
+>> restarting from the last peeked byte.
+>>
+>> Fixes: ca4fb892579f ("mptcp: add MSG_PEEK support")
 >> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 >> ---
->>  net/mptcp/mib.c      | 1 +
->>  net/mptcp/mib.h      | 1 +
->>  net/mptcp/protocol.c | 1 +
->>  3 files changed, 3 insertions(+)
->>
->> diff --git a/net/mptcp/mib.c b/net/mptcp/mib.c
->> index 6003e47c770a7c..eb4645a9c5ac07 100644
->> --- a/net/mptcp/mib.c
->> +++ b/net/mptcp/mib.c
->> @@ -85,6 +85,7 @@ static const struct snmp_mib mptcp_snmp_list[] = {
->>  	SNMP_MIB_ITEM("DssFallback", MPTCP_MIB_DSSFALLBACK),
->>  	SNMP_MIB_ITEM("SimultConnectFallback", MPTCP_MIB_SIMULTCONNFALLBACK),
->>  	SNMP_MIB_ITEM("FallbackFailed", MPTCP_MIB_FALLBACKFAILED),
->> +	SNMP_MIB_ITEM("MPTcpWinProbe", MPTCP_MIB_MPTCPWINPROBE),
+>> This may sound quite esoteric, but it will soon become very easy to
+>> reproduce with mptcp_connect, thanks to the backlog.
 > 
-> Detail: I just noticed that after having applied the patch: Do we need
-> to double the 'MPTCP' keyword here? The full MIB counter name is:
-> 
->   MPTcpExtMPTcpWinProbe
-> 
-> Maybe just WinProbe is enough? → MPTcpExtWinProbe
+> Would it be good to apply this to -net?
 
-I'm sorry for the late reply. Yes WinProbe -> MPTcpExtWinProbe is the
-correct/intended name, if you could fix that in the tree would be great,
-thanks!
+FWIW, I'm fine with applying this to -net.
+
+Thanks,
 
 Paolo
 
