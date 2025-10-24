@@ -1,209 +1,345 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79A3534A777
-	for <mptcp@lists.linux.dev>; Thu, 23 Oct 2025 17:43:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B88401FBEAC
+	for <mptcp@lists.linux.dev>; Fri, 24 Oct 2025 04:13:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761241416; cv=none; b=PhC4RL5lo+3GYP2mE2qRl1fDo3HffjAb5z+D46Uq7f8O033TdJnDezIvfMtrIPS3jI9J1GFSvLtVSuZPX/gTv53mXH2LvQrV8FpxYwfropWQLh4X8Y39d68JdfexlnrYltuPwFkJ8MUb3ASoyZvGVGUEcZMBAl6dckRBWuwOHh0=
+	t=1761279202; cv=none; b=r+t9wG7k0RG4VZCyb5Q+VODmGY1odjZVkRoOVXkeWCyg7OZ8ry3dgUZS8k+89AxnxL3OhokIls4yJfj+NvfeJb61aoJuuAiQ+zDgebpQ+HcI13zGNALbQV6VOc3m+H9qtMnatZseDcKz94VaSysGSyJEsTMrn89mbWd7yXxA8WU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761241416; c=relaxed/simple;
-	bh=x6pP27kZSEZ6+lrACdnnTVbaNxch+DTIW+n4R9zENC8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iR7Eih+F9LkMckcf5hrjxHoKpLgDYq61KfiGrDuGGk9uvB3M/ZkAly5v2O5LcQWktF3O45ikeDMxlYVNfzEsg8WOjhLvWjdOCP5HqFYIUx35cD4f9J16b4DACs7WzWN2RyADstORzNUYrxYJXpwIx3g7FP+nuXY4FjO5kz8WNzQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mBsi331R; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1761279202; c=relaxed/simple;
+	bh=FMNaLFDjx69v6ZzbO/4atk50VxceYVKBeF/2QQssp6E=;
+	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
+	 In-Reply-To:References; b=csyoQRg/CSzyPF2/0ZWqZRaavtjZe5wBmhzeTtC0GY9WPGRfXkUGxK1HDQhB/by/b1TA/KOEJ1Dh0/yHOFnt1crNpNWIXOl4MXWkUXXLf0ONRUeuj/u0XsUwUMM8UWC2VJNdPlMveKon1yAfjz0bwtoAcqIzruqqHZp0Ql7gTC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=LoDe8ebH; arc=none smtp.client-ip=91.218.175.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mBsi331R"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D366C4CEE7;
-	Thu, 23 Oct 2025 17:43:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761241416;
-	bh=x6pP27kZSEZ6+lrACdnnTVbaNxch+DTIW+n4R9zENC8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=mBsi331RWB3r3Oc0+UFh9r7RMUzI1HFW2jDiGW8sTaUWx2Ts9s1tleU679AH+Wwsb
-	 0f3Dc/dTjF5BbnpSJoL3NSYDQc0xNMVwS0ISt54h8RHGUu6yzfcKJHjsQmp/3On6T6
-	 +N0wHU2AJoD+4qTNI38zN4XYk/yG9kl/Oh6QuEeJcujG0sGe+OPcWn/4ZTOvsLY+km
-	 VdCrwZOk/5zgLqsdcyxTAeHe3fTbRFrfl7s9dhYlp+o/6aN74LvcPvLn/BRAWuFHyS
-	 C8xiQ+vglbNhBVyCMw9fz0euJG6Acr9qJs64Y31HizNhT+qUy57Kf308KZYW5UGpaC
-	 cQJFvQl9dFiBA==
-Message-ID: <0d2669ee-4625-4551-96e9-22171a406f8c@kernel.org>
-Date: Thu, 23 Oct 2025 19:43:33 +0200
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="LoDe8ebH"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 mptcp-next 11/11] mptcp: leverage the backlog for RX
- packet processing
-Content-Language: en-GB, fr-BE
-To: Mat Martineau <martineau@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-References: <cover.1761142784.git.pabeni@redhat.com>
- <2201f259d2176bca0ad37500a352658f7ef5a1f0.1761142784.git.pabeni@redhat.com>
- <3feb8c2a-2098-4626-8bf2-edd66f679463@redhat.com>
- <34f90baa-72ff-4c00-917a-a0d65ff0e608@kernel.org>
- <4d70359f-20bb-4575-b6c5-8e862c2547e3@kernel.org>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <4d70359f-20bb-4575-b6c5-8e862c2547e3@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1761279196;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NRsGgrjIKsQrMKsBDmX9pjVYYabxhQ/HoNpJSeaQfa8=;
+	b=LoDe8ebHaOq7xdpyZZcnnEt0x3wAfZWdFVPu4aL/qZJU2e0m7fBYfeUmFicNASdr7MKVDW
+	6ugPwjNAyWGzS3CxAM3KbRUVGsusQ0UkV/ujzP062yM1WXzqui9LscJwkPnebsj5d+NxNP
+	ibgSidUC/rTBWqp/xmhIQ8PErNUPM5s=
+Date: Fri, 24 Oct 2025 04:13:13 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: "Jiayuan Chen" <jiayuan.chen@linux.dev>
+Message-ID: <319c419455b73deb312b53d99c30217f6b606208@linux.dev>
+TLS-Required: No
+Subject: Re: [PATCH net v3 0/3] mptcp: Fix conflicts between MPTCP and
+ sockmap
+To: "Matthieu Baerts" <matttbe@kernel.org>, mptcp@lists.linux.dev
+Cc: "John Fastabend" <john.fastabend@gmail.com>, "Jakub Sitnicki"
+ <jakub@cloudflare.com>, "Eric Dumazet" <edumazet@google.com>, "Kuniyuki
+ Iwashima" <kuniyu@google.com>, "Paolo Abeni" <pabeni@redhat.com>, "Willem
+ de Bruijn" <willemb@google.com>, "David S. Miller" <davem@davemloft.net>,
+ "Jakub Kicinski" <kuba@kernel.org>, "Simon Horman" <horms@kernel.org>,
+ "Mat Martineau" <martineau@kernel.org>, "Geliang Tang"
+ <geliang@kernel.org>, "Alexei Starovoitov" <ast@kernel.org>, "Daniel
+ Borkmann" <daniel@iogearbox.net>, "Andrii Nakryiko" <andrii@kernel.org>,
+ "Martin KaFai Lau" <martin.lau@linux.dev>, "Eduard Zingerman"
+ <eddyz87@gmail.com>, "Song Liu" <song@kernel.org>, "Yonghong Song"
+ <yonghong.song@linux.dev>, "KP Singh" <kpsingh@kernel.org>, "Stanislav
+ Fomichev" <sdf@fomichev.me>, "Hao Luo" <haoluo@google.com>, "Jiri Olsa"
+ <jolsa@kernel.org>, "Shuah Khan" <shuah@kernel.org>, "Florian Westphal"
+ <fw@strlen.de>, linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+ bpf@vger.kernel.org, linux-kselftest@vger.kernel.org
+In-Reply-To: <14b565a1-0c2a-420d-ab2a-dc8a46dbf33c@kernel.org>
+References: <20251023125450.105859-1-jiayuan.chen@linux.dev>
+ <14b565a1-0c2a-420d-ab2a-dc8a46dbf33c@kernel.org>
+X-Migadu-Flow: FLOW_OUT
 
-Hi Mat, Paolo,
-
-On 23/10/2025 19:02, Mat Martineau wrote:
-> On Thu, 23 Oct 2025, Matthieu Baerts wrote:
-> 
->> Hi Paolo, Mat,
->>
->> On 23/10/2025 17:11, Paolo Abeni wrote:
->>>
->>>
->>> On 10/22/25 4:31 PM, Paolo Abeni wrote:
->>>> When the msk socket is owned or the msk receive buffer is full,
->>>> move the incoming skbs in a msk level backlog list. This avoid
->>>> traversing the joined subflows and acquiring the subflow level
->>>> socket lock at reception time, improving the RX performances.
->>>>
->>>> When processing the backlog, use the fwd alloc memory borrowed from
->>>> the incoming subflow. skbs exceeding the msk receive space are
->>>> not dropped; instead they are kept into the backlog until the receive
->>>> buffer is freed. Dropping packets already acked at the TCP level is
->>>> explicitly discouraged by the RFC and would corrupt the data stream
->>>> for fallback sockets.
->>>>
->>>> Move the conditional reschedule in release_cb() to take action only
->>>> after the first loop iteration, to avoid rescheduling just before
->>>> releasing the lock.
->>>>
->>>> Special care is needed to avoid adding skbs to the backlog of a closed
->>>> msk and to avoid leaving dangling references into the backlog
->>>> at subflow closing time.
->>
->> (...)
->>
->>>> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
->>>> index 5a1d8f9e0fb0ec..0aae17ab77edb2 100644
->>>> --- a/net/mptcp/protocol.c
->>>> +++ b/net/mptcp/protocol.c
->>
->> (...)
->>
->>>> -static bool __mptcp_move_skbs(struct sock *sk)
->>>> +static bool mptcp_can_spool_backlog(struct sock *sk, u32 moved,
->>>> +                    struct list_head *skbs)
->>>>  {
->>>> -    struct mptcp_subflow_context *subflow;
->>>>      struct mptcp_sock *msk = mptcp_sk(sk);
->>>> -    bool ret = false;
->>>>
->>>> -    if (list_empty(&msk->conn_list))
->>>> +    if (list_empty(&msk->backlog_list))
->>>>          return false;
->>>>
->>>> -    subflow = list_first_entry(&msk->conn_list,
->>>> -                   struct mptcp_subflow_context, node);
->>>> -    for (;;) {
->>>> -        struct sock *ssk;
->>>> -        bool slowpath;
->>>> +    /* Borrowed mem could be zero only in the unlikely event that
->>>> the bl
->>>> +     * is full
->>>> +     */
->>>> +    if (likely(msk->borrowed_mem)) {
->>>> +        sk_forward_alloc_add(sk, msk->borrowed_mem);
->>>> +        msk->borrowed_mem = 0;
->>>> +        sk->sk_reserved_mem = msk->backlog_len;
->>>
->>> With the above I intended to prevent the fwd memory handling from
->>> releasing backlog_len bytes. Re-reading the relevant code, it does not
->>> allow that (experimentation confirmed), see:
->>>
->>> https://elixir.bootlin.com/linux/v6.18-rc2/source/include/net/
->>> sock.h#L1593
->>>
->>> and:
->>>
->>> https://elixir.bootlin.com/linux/v6.18-rc2/source/include/net/
->>> sock.h#L1580
->>>
->>> This will need some more care. Also patch 2 will require some
->>> significant rework.
->>
->> Thank you for looking at this complex part, and for having spot that!
->>
->>> @Mat, @Matttbe: could you please consider merging patches 1,3-9?
->>>
->>> I think they should be pretty uncontroversial, would make the series
->>> more manegeable for future iterations (and would alleviate my
->>> frustration to make this thing work correctly).
->>
->> It makes sense, fine by me. I will wait for Mat's review before applying
->> them (patch 1 is for 'net' I suppose).
->>
-> 
-> Applying 1,3-9 to our tree(s) makes sense to me. Maybe patch 5 to -net
-> too? (just sent email about that before I saw this message).
-
-Good catch! (I will wait for Paolo's reply before applying the patches.)
-
-> Matthieu do you want me to reply to each so the RvB tag is in patchwork,
-> or does this suffice for patches 1 & 3-9:
-> 
-> Reviewed-by: Mat Martineau <martineau@kernel.org>
-
-No, that's fine, I can do a copy-paste. (Note that you can also send it
-as a reply to the cover-letter, then I simply only apply the mentioned
-patches.)
+2025/10/23 22:10, "Matthieu Baerts" <matttbe@kernel.org mailto:matttbe@ke=
+rnel.org?to=3D%22Matthieu%20Baerts%22%20%3Cmatttbe%40kernel.org%3E > =E5=
+=86=99=E5=88=B0:
 
 
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
+> >  MPTCP creates subflows for data transmission between two endpoints.
+> >  However, BPF can use sockops to perform additional operations when T=
+CP
+> >  completes the three-way handshake. The issue arose because we used s=
+ockmap
+> >  in sockops, which replaces sk->sk_prot and some handlers.
+> >=20
+>=20Do you know at what stage the sk->sk_prot is modified with sockmap? W=
+hen
+> switching to TCP_ESTABLISHED?
+> Is it before or after having set "tcp_sk(sk)->is_mptcp =3D 0" (in
+> subflow_ulp_fallback(), coming from subflow_syn_recv_sock() I suppose)?
 
+
+Yes, there are two call points. One is after executing subflow_syn_recv_s=
+ock():
+tcp_init_transfer(sk, BPF_SOCK_OPS_PASSIVE_ESTABLISHED_CB, skb);
+
+So at this point, is_mptcp =3D 0. The other call point is when userspace =
+calls
+the BPF interface, passing in an fd while it's not a subflow but a parent=
+ sk
+with its own mptcp_prot we will also reject it.
+
+You can refer to my provided selftest, which covers these scenarios.
+
+> If MPTCP is still being used (sk_is_tcp(sk) && sk_is_mptcp(sk)), I gues=
+s
+> sockmap should never touch the in-kernel TCP subflows: they will likely
+> only carry a part of the data. Instead, sockmap should act on the MPTCP
+> sockets, not the in-kernel TCP subflows.
+
+Yes, I agree.
+
+For full functionality, we need to retrieve the parent socket from MPTCP
+and integrate it with sockmap, rather than simply rejecting.
+
+The current implementation rejects MPTCP because I previously attempted t=
+o
+add sockmap support for MPTCP, but it required implementing many interfac=
+es
+and would take considerable time.
+
+So for now, I'm proposing this as a fix to resolve the immediate issue.
+Subsequently, we can continue working on fully integrating MPTCP with soc=
+kmap.
+
+> There is one particular case to take into consideration: an MPTCP
+> connection can fallback to "plain" TCP before being used by the
+> userspace. Typically, that's when an MPTCP listening socket receives a
+> "plain" TCP request (without MPTCP): a "plain" TCP socket will then be
+> created, and exposed to the userspace. In this case, sk_is_mptcp(sk)
+> will return false. I guess that's the case you are trying to handle,
+> right? (It might help BPF reviewers to mention that in the commit
+> message(s).)
+
+Yes, this is primarily the case we're addressing. I will add this descrip=
+tion
+to the commit message.
+
+
+> I would then say that sk->sk_prot->psock_update_sk_prot should not poin=
+t
+> to tcp_bpf_update_proto() when MPTCP is being used (or this callback
+> should take the MPTCP case into account, but I guess no). In case of
+> fallback before the accept() stage, the socket can then be used as a
+> "plain" TCP one. I guess when tcp_bpf_update_proto() will be called,
+> sk_prot is pointing to tcp(v6)_prot, not the MPTCP subflow override one=
+,
+> right?
+
+Yes, when tcp_bpf_update_proto is called the sk_prot is pointing to tcp(v=
+6)_prot.
+subflow_syn_recv_sock
+ mptcp_subflow_drop_ctx
+  subflow_ulp_fallback
+   mptcp_subflow_ops_undo_override -> reset sk_prot to original one
+
+So [patch 2/3] aims to prevent psock_update_sk_prot from being executed o=
+n subflows.
+
+Actually, replacing the subflow's callbacks is also incorrect, as you men=
+tioned earlier,
+because subflows only carry part of the data. By checking for subflows ea=
+rly and skipping
+subsequent steps, we avoid incorrect logic.
+
+Furthermore, there's another risk: if an IPv6 request comes in and we per=
+form the replacement,
+MPTCP will roll it back to inet_stream_ops. I haven't delved too deeply i=
+nto the potential
+impact, but I noticed that inet6_release has many V6-specific cleanup pro=
+cedures not present
+in inet_release.
+
+> >=20
+>=20> Since subflows
+> >  also have their own specialized handlers, this creates a conflict an=
+d leads
+> >  to traffic failure. Therefore, we need to reject operations targetin=
+g
+> >  subflows.
+> >=20
+>=20Would it not work to set sk_prot->psock_update_sk_prot to NULL for th=
+e
+> v4 and v6 subflows (in mptcp_subflow_init()) for the moment while
+> sockmap is not supported with MPTCP? This might save you some checks in
+> sock_map.c, no?
+
+This seems like a reliable alternative I hadn't considered initially.
+
+However, adding the check on the BPF side serves another purpose: to expl=
+icitly
+warn users that sockmap and MPTCP are incompatible.
+
+Since the latest Golang version enables MPTCP server by default, and if t=
+he client
+doesn't support MPTCP, it falls back to TCP logic. We want to print a cle=
+ar message
+informing users who have upgraded to the latest Golang and are using sock=
+map.
+
+Perhaps we could add a function like sk_is_mptcp_subflow() in the MPTCP s=
+ide?
+The implementation would simply be sk_is_tcp(sk) && sk_is_mptcp(sk).
+
+Implementing this check logic on the BPF side might become invalid if MPT=
+CP internals
+change later; placing it in the MPTCP side might be a better choice.
+
+
+> >=20
+>=20> This patchset simply prevents the combination of subflows and sockm=
+ap
+> >  without changing any functionality.
+> >=20
+>=20In your case, you have an MPTCP listening socket, but you receive a T=
+CP
+> request, right? The "sockmap update" is done when switching to
+> TCP_ESTABLISHED, when !sk_is_mptcp(sk), but that's before
+> mptcp_stream_accept(). That's why sk->sk_prot has been modified, but it
+> is fine to look at sk_family, and return inet(6)_stream_ops, right?
+
+I believe so. Since MPTCP is fundamentally based on TCP, using sk_family =
+to
+determine which ops to fall back to should be sufficient.
+
+However, strictly speaking, this [patch 1/3] might not even be necessary =
+if we
+prevent the sk_prot replacement for subflows at the sockmap layer.
+
+> A more important question: what will typically happen in your case if
+> you receive an MPTCP request and sockmap is then not supported? Will th=
+e
+> connection be rejected or stay in a strange state because the userspace
+> will not expect that? In these cases, would it not be better to disallo=
+w
+> sockmap usage while the MPTCP support is not available? The userspace
+> would then get an error from the beginning that the protocol is not
+> supported, and should then not create an MPTCP socket in this case for
+> the moment, no?
+>
+> I can understand that the switch from TCP to MPTCP was probably done
+> globally, and this transition should be as seamless as possible, but it
+> should not cause a regression with MPTCP requests. An alternative could
+> be to force a fallback to TCP when sockmap is used, even when an MPTCP
+> request is received, but not sure if it is practical to do, and might b=
+e
+> strange from the user point of view.
+
+Actually, I understand this not as an MPTCP regression, but as a sockmap
+regression.
+
+Let me explain how users typically use sockmap:
+
+Users typically create multiple sockets on a host and program using BPF+s=
+ockmap
+to enable fast data redirection. This involves intercepting data sent or =
+received
+by one socket and redirecting it to the send or receive queue of another =
+socket.
+
+This requires explicit user programming. The goal is that when multiple m=
+icroservices
+on one host need to communicate, they can bypass most of the network stac=
+k and avoid
+data copies between user and kernel space.
+
+However, when an MPTCP request occurs, this redirection flow fails.
+
+Since the sockmap workflow typically occurs after the three-way handshake=
+, rolling
+back at that point might be too late, and undoing the logic for MPTCP wou=
+ld be very
+complex.
+
+Regardless, the reality is that MPTCP and sockmap are already conflicting=
+, and this
+has been the case for some time. So I think our first step is to catch sp=
+ecific
+behavior on the BPF side and print a message
+"sockmap/sockhash: MPTCP sockets are not supported\n", informing users to=
+ either
+stop using sockmap or not use MPTCP.
+
+As for the logic to check for subflows, I think implementing it in subflo=
+w.c would be
+beneficial, as this logic would likely be useful later if we want to
+support MPTCP + sockmap.
+
+Furthermore, this commit also addresses the issue of incorrectly selectin=
+g
+inet_stream_ops due to the subflow prot replacement, as mentioned above.
+
+> >=20
+>=20> A complete integration of MPTCP and sockmap would require more effo=
+rt, for
+> >  example, we would need to retrieve the parent socket from subflows i=
+n
+> >  sockmap and implement handlers like read_skb.
+> >=20=20
+>=20>  If maintainers don't object, we can further improve this in subseq=
+uent
+> >  work.
+> >=20
+>=20That would be great to add MPTCP support in sockmap! As mentioned abo=
+ve,
+> this should be done on the MPTCP socket. I guess the TCP "in-kernel"
+> subflows should not be modified.
+
+
+I think we should first fix the issue by having sockmap reject operations=
+ on subflows.
+Subsequently, we can work on fully integrating sockmap with MPTCP as a fe=
+ature
+(which would require implementing some handlers).
+
+> >=20
+>=20> [1] truncated warning:
+> >  [ 18.234652] ------------[ cut here ]------------
+> >  [ 18.234664] WARNING: CPU: 1 PID: 388 at net/mptcp/protocol.c:68 mpt=
+cp_stream_accept+0x34c/0x380
+> >  [ 18.234726] Modules linked in:
+> >  [ 18.234755] RIP: 0010:mptcp_stream_accept+0x34c/0x380
+> >  [ 18.234762] RSP: 0018:ffffc90000cf3cf8 EFLAGS: 00010202
+[...]
+> >=20
+>=20Please next time use the ./scripts/decode_stacktrace.sh if possible.
+> (and strip the timestamps if it is not giving useful info)
+> Just to be sure: is it the warning you get on top of net or net-next? O=
+r
+> an older version? (Always useful to mention the base)
+
+Thank you, Matthieu. I will pay attention to this.
+
+
+> >=20
+>=20> ---
+> >  v2: https://lore.kernel.org/bpf/20251020060503.325369-1-jiayuan.chen=
+@linux.dev/T/#t
+> >  Some advice suggested by Jakub Sitnicki
+> >=20=20
+>=20>  v1: https://lore.kernel.org/mptcp/a0a2b87119a06c5ffaa51427a0964a05=
+534fe6f1@linux.dev/T/#t
+> >  Some advice from Matthieu Baerts.
+> >=20
+>=20(It usually helps reviewers to add more details in the notes/changelo=
+g
+> for the individual patch)
+
+Thank you, Matthieu. I will provide more detailed descriptions in the fut=
+ure.
+
+
+Best regards,
+Jiayuan
