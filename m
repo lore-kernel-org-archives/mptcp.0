@@ -1,133 +1,144 @@
-Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BFB82A1BF
-	for <mptcp@lists.linux.dev>; Fri, 24 Oct 2025 11:37:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32F023191CA
+	for <mptcp@lists.linux.dev>; Fri, 24 Oct 2025 12:56:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761305881; cv=none; b=rKn1o6Wc2Ywv6mOolEX7eGVd4sBNP/ZmMlhudvXW1a4vxe0gZP2+gWxcLAjIOtwIsxqO1ps5iqF6nNVON3cvd/aeI38g8rRYr16MEReCnEbFjVlljrKok7D6nFljPTtIFmRpnbjNs/iyHAzwuIHFxJX+7Bw/0b5s+4PQTQkcEIw=
+	t=1761310613; cv=none; b=k21JV4XMVVO3WcmDXrDCYPDMfql6uun3lU7IlJTTItjApdghEVJ/6c663rA8rP/7LELC65ZcxD53TNg+/lutzwqV7xZ75LtAILmHKKPhEH3PucEB74hRXlRge8nEF0/g9Mq2tZpHbet8hhtYp1W51STOYZbeSVS/D0SIzh9hc6g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761305881; c=relaxed/simple;
-	bh=UfrJrWSP0BW/ZXQnb07LhpcYRDSi5i3wVx2pzRL3ipc=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=jVmX4cRCS5AbvuQIEK3dyDpNmF7XCEbtkluc3nrGVNIjMO68aPJsbBAP5voAwvlVydYLNq7bx+INCVk4yCVtAmMP3Fb/UHJAbCBQ5XdT4EfJSocqYNTo4JMNA1tCaWSsdeOiw82J/4BKm9DGHsoyPqhg59fpcy6g0sXAV6GOLr4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EYTtWHP4; arc=none smtp.client-ip=209.85.166.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1761310613; c=relaxed/simple;
+	bh=L1mybk0+rZNdSb2cidfoCbaMrwSS1920zSu99XV0B/g=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=YroOuoiF0UpLezcHxZ0npXh+48K9G78FxPxkfrSWTPmETRVHM51jb8y91VQQF4t1QhhYYAEVx87vPFPSq7pNENFNMcPJFigncGaFjlGoV42xZzbi93XP/imVxBnkHlY7MztkDJVw6c52NtcdyGnBC6g9NgQ6lMpNcycndoEabVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lmULLd0u; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EYTtWHP4"
-Received: by mail-il1-f169.google.com with SMTP id e9e14a558f8ab-430ab5ee3afso18124835ab.2
-        for <mptcp@lists.linux.dev>; Fri, 24 Oct 2025 04:37:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1761305878; x=1761910678; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5aIvV205drsDt6CvKFbl/mv6KXLhUlWBHYzWojwfy7I=;
-        b=EYTtWHP414tnATNiN3WJaO9L1V4XFKWJ3NEKLMsBE0NQsMaK225yCGBJmJTnyc67Pk
-         3/OCtWfNyGZlSPbt/j5toyGxP/ZSVqv0V9fSG107IJ+3Svj2GPtG84ijE3lb1gqN3WvX
-         5lVKaihLWVNCJwnUgAPD7h+n7kPukiOIvNpcguE5MJKUSBUO1fbdb7953BXhZKnis8Sn
-         MHK+eAKNqGYtZoxNdqIN8ALyx229vYZHQ+jSvu5gXWuOKA+HvumJstPLyZxexL1ekQIT
-         8EDs+rRuyXuWxJTK5GeVLi5r0DqxmEPlXBisbTQrJDDn6gor4Vaa7tprRzIsIRctix63
-         Kszw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761305878; x=1761910678;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=5aIvV205drsDt6CvKFbl/mv6KXLhUlWBHYzWojwfy7I=;
-        b=Ot3Q2t1E7NCNIeBnfTaSMGJB14uAw+2+TaPx1H9w65SbefLltp5MqROmBEPCBeQBU3
-         f8VbqyN8N0I1QikS/VigsBBYFtfG6k+VXMjgC8k9omnWis70c/V6R6y1IxMiycwxLnax
-         NM7PjU7Np6anZuNzk2+HsZgzLSVAYBH2u3YA6QEX+c0E3XP9vrKGoE8QtqJDjXRT6Wts
-         JW3cuaZGGNj3HRWBu1qmqqxxk6JmmfIHZUogYfvmLlfz4eZePsb4GhD2XMyG6MA1G5wm
-         saQag/eo51YCncrYr+dsYTpBIBPnxEdyQCzOyi6tQAMlggKn8rU1Z8Nw4GX9vzUszxkx
-         3vAw==
-X-Gm-Message-State: AOJu0YywnYqT2rGXOXlkf0cI0/8hfkb+Lzpe/OnxZD3foIt5hd4VI1em
-	dN7RpCAa6O9LnSal2WZrCGwGYkjIfNr2+0u39Y3ZpqxnJK4p76RuLleC41r1EQk=
-X-Gm-Gg: ASbGncvKWtDsXPeuML/iZn1IXv7BcGD/AOAr8C8Dtgz2mz1+f9zN4hTzMl6EVs+nMXF
-	RWtRXcLsGBhp7sUasye4auuhLQ0h/X8BeOtuP6KrSLHMg9N96Qe6KuMA8wxgxkhJ4OVO38ZQQ7M
-	SORNs6YBfxJji7AwHO+JteCvEVf+TPFKmSiPwLYxJZ5EBgSGmATBHAAkq5T3z+oTutJvpih2giH
-	Inr7nCAeY2yOt7ShBfSZFUewsvPPky0pFjfVyCEQxDm/JmbAnAONQc9ViT+IBrkvMgz8UdDTKS3
-	Ff7XTdGMNgU73kfzoWdgfVFbdUCC8zFxHuSjNMKWxOOeuWLUcySHHe9ZjsXBpEjwsgu8rS86pOa
-	aj3HIw4V0R9xbkGANiw7aygWSTyjNQUSZC/EOrYZ5rueG90WF/k7LbnSW6RPtQdbfDGkDIIbzzb
-	7NuqEut3o6BDZsiypNpmggDkFo
-X-Google-Smtp-Source: AGHT+IGda2HRIGvLRiuhDFOy8S6K031o58xrRNlVgNq4fCyC8JNdd+aHCvt83/LP0s3fky66kBO/7Q==
-X-Received: by 2002:a05:6e02:2382:b0:430:ca90:d0b with SMTP id e9e14a558f8ab-431ebf6c927mr21987775ab.26.1761305878024;
-        Fri, 24 Oct 2025 04:37:58 -0700 (PDT)
-Received: from [127.0.0.1] ([52.165.213.181])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-5abb85c4133sm2039913173.48.2025.10.24.04.37.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Oct 2025 04:37:57 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lmULLd0u"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EAFE3C4CEF1;
+	Fri, 24 Oct 2025 12:56:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761310611;
+	bh=L1mybk0+rZNdSb2cidfoCbaMrwSS1920zSu99XV0B/g=;
+	h=Subject:From:To:Date:In-Reply-To:References:From;
+	b=lmULLd0u8LhjyMo0HNf+PrgjmkGw/6ixU48O8GdynR99NolRbWRGWch5nytkx2w34
+	 yVZEk5AcY2z4b8uxvgC2o6Siqk+vhWFLxlxKejWOiA4CaRU0qX3iYJyJ6zlFmw+hbn
+	 KOiGKpD+6rbxPLq/9bRF3wD+2W2Xal3Z5il2RlOe8hrRfiEUf9Ne8FkFiqpD7aKuKk
+	 S/at9/OpfHDGKeq7RVL34pPgAvmxLeGTElUKRwwJxfXdTIlOAqNxp6dsqrluuzjrSx
+	 /p8Jm/Tf8w0LKiuLooQdDFPKfRgPRcsGPQnyOuMSoCphosT7MygLNGq2cxPrilJ8WG
+	 BNV+xNlJWFvBg==
+Message-ID: <95fdc88fbeba58db5976f97f117b1579a873c051.camel@kernel.org>
+Subject: Re: [PATCH mptcp-next] Squash to "selftests: mptcp: join: validate
+ extra bind cases"
+From: Geliang Tang <geliang@kernel.org>
+To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, MPTCP Upstream
+	 <mptcp@lists.linux.dev>
+Date: Fri, 24 Oct 2025 20:56:49 +0800
 In-Reply-To: <20251024-sft-fix-bind-timeout-v1-1-cb81a67b222c@kernel.org>
 References: <20251024-sft-fix-bind-timeout-v1-1-cb81a67b222c@kernel.org>
-Subject: =?UTF-8?Q?Re=3A_=5BPATCH_mptcp-next=5D_Squash_to_?=
- =?UTF-8?Q?=22selftests=3A_mptcp=3A_join=3A_validat?=
- =?UTF-8?Q?e_extra_bind_cases=22?=
-Message-ID: <33da839b-01c9-4bee-548f-e8680b498bb4@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 24 Oct 2025 11:37:56 +0000
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.52.3-0ubuntu1 
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Hi Matthieu,
+Hi Matt,
 
-Thank you for your modifications, that's great!
+Thanks for this fix.
 
-Our CI did some validations and here is its report:
+On Fri, 2025-10-24 at 12:02 +0200, Matthieu Baerts (NGI0) wrote:
+> I was going to send the related commit upstream, but then I realised
+> in
+> a slow environment (e.g. public CI), with a debug kernel, the default
+> 10 seconds timeout can be too short:
+> 
+>   086 multiple bind to allow joins v4
+>         join Rx                             [ OK ]
+>         join Tx                             [ OK ]
+>   main_loop_s: timed out
+>         add addr rx                         [ OK ]
+>         add addr echo rx                    [ OK ]
+>   ./mptcp_join.sh: line 3305: kill: (2032) - No such process
+> 
+> This doesn't affect the results, because it happens after the test,
+> when
+> checking the counters. Still, better to fix that by using an infinite
+> timeout: the process will be killed at the end.
+> 
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> ---
+>  tools/testing/selftests/net/mptcp/mptcp_join.sh | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> index 05faacefb719..e0cdb9c662aa 100755
+> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> @@ -3293,7 +3293,7 @@ bind_tests()
+>  
+>  		# Launching another app listening on a different
+> address
+>  		# Note: it could be a totally different app, e.g.
+> nc, socat, ...
+> -		ip netns exec ${ns1} ./mptcp_connect -l -p
+> "$(get_port)" \
+> +		ip netns exec ${ns1} ./mptcp_connect -l -t -1 -p
+> "$(get_port)" \
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Unstable: 1 failed =
-test(s): packetdrill_add_addr =F0=9F=94=B4
-- KVM Validation: debug (only =
-selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only=
- bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only =
-bpftest_all): Success! =E2=9C=85
-- Task: https://github.=
-com/multipath-tcp/mptcp_net-next/actions/runs/18777184422
+A timeout of -1 means block indefinitely, right? Do you think using the
+default 30 seconds (-t ${timeout_poll}) is sufficient?
 
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/0db3101c3b80
-Patchwork: https://patchwork.kernel.=
-org/project/mptcp/list/?series=3D1015428
+Thanks,
+-Geliang
 
+>  			-s MPTCP 10.0.2.1 &
+>  		extra_bind=$!
+>  
+> @@ -3315,7 +3315,7 @@ bind_tests()
+>  
+>  		# Launching another app listening on a different
+> address
+>  		# Note: it could be a totally different app, e.g.
+> nc, socat, ...
+> -		ip netns exec ${ns1} ./mptcp_connect -l -p
+> "$(get_port)" \
+> +		ip netns exec ${ns1} ./mptcp_connect -l -t -1 -p
+> "$(get_port)" \
+>  			-s MPTCP dead:beef:2::1 &
+>  		extra_bind=$!
+>  
+> @@ -3340,7 +3340,7 @@ bind_tests()
+>  
+>  		wait_ll_ready $ns1 # to be able to bind
+>  		wait_ll_ready $ns2 # also needed to bind on the
+> client side
+> -		ip netns exec ${ns1} ./mptcp_connect -l -p
+> "$(get_port)" \
+> +		ip netns exec ${ns1} ./mptcp_connect -l -t -1 -p
+> "$(get_port)" \
+>  			-s MPTCP "${ns1ll2}%ns1eth2" &
+>  		extra_bind=$!
+>  
+> @@ -3371,7 +3371,7 @@ bind_tests()
+>  
+>  		wait_ll_ready $ns1 # to be able to bind
+>  		wait_ll_ready $ns2 # also needed to bind on the
+> client side
+> -		ip netns exec ${ns1} ./mptcp_connect -l -p
+> "$(get_port)" \
+> +		ip netns exec ${ns1} ./mptcp_connect -l -t -1 -p
+> "$(get_port)" \
+>  			-s MPTCP "${ns1ll2}%ns1eth2" &
+>  		extra_bind=$!
+>  
+> 
+> ---
+> base-commit: 6354d0b328258d1974cc7d32a82983b2bd3e5871
+> change-id: 20251024-sft-fix-bind-timeout-7e7c47a5d50a
+> 
+> Best regards,
 
-If there are some issues, you =
-can reproduce them using the same environment as
-the one used by the CI =
-thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
-
-
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 Core)
