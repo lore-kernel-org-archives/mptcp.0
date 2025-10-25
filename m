@@ -1,163 +1,149 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A32C306496;
-	Sat, 25 Oct 2025 16:26:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EE9F16132F
+	for <mptcp@lists.linux.dev>; Sat, 25 Oct 2025 16:35:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761409621; cv=none; b=sG4ZPgZct39q87TgaDnuxnUp+1d/2DCZW0Rg8FjQISkR5JqcuhO8ddU1n6S6X2tjMK0bc7x9hIjeuwJuv3P9UsY9dGaRC9B/PRDRY3m6KnCSLPfU2eWSl4Bdca0stopdeAvVeHDHNPYSNNsvT82dZdfgt3wW26CaZYwUUaoJAmM=
+	t=1761410124; cv=none; b=HOdEv7op+tXszErRrInnaYZMAlaoDp/5jTmue8E6j6pYeDvTzAEd23Nu5FrO2UzlcaiWcX/s8DI/LpEDQGhLbMYe6ooDA3MiiaUNwvvpluctE/DEcvdLvoyFwnKQMyXK+YjgHaK8STOAHELyBQyqJofw9NQjNd3+xpeOisw66Rg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761409621; c=relaxed/simple;
-	bh=lHXmSwpImaguJhdytnV4YsY9kThpja29e6/NdiB7iMI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MpipLN6Mx2pE4QAXiUcTPdwzNEWunXfKSU2pUYPQ6xsZLhOmdO6woGogPCmuJWrvBc2Am3lKmlgX7RKvbihOxcJ6jMGRLmf9H26UpI6BdrPT2HNWf3foFX8svlyg6EkBIhRmnDBujPAG40ANGB8kYUXg9yfIdeduxbhLvPoV8fk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZUasmcCT; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZUasmcCT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4ECAFC116D0;
-	Sat, 25 Oct 2025 16:26:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761409619;
-	bh=lHXmSwpImaguJhdytnV4YsY9kThpja29e6/NdiB7iMI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ZUasmcCTXbIjeng+GBJyJ6uUiRjCpO8nbxm/mJsqTge0QDj2AFHmmgzNG6f/dQ0YL
-	 kr2ZpWnNRQwraeeeYleD4FaNzoJNVN5JfYAAPK8vNap5rl4GnQqMQWgOfb4E7WSFIh
-	 40WlsR57EggAL7csOK91Eb/J8IXcfukb5ZwgGfUpo9BxXmXghx562+Tnh0G6ZoUW22
-	 42KbxXV7lTBByQezDPdX/wxbizQspKAV2T3imEjQdF+/rFKSm9mtqjPsWY5NDbiCRM
-	 Dwt9ssXw4tgl5ur5D085hMXGeTIUY5ZvCISmBYAJ+1v6Yx1cwsgjKeU+9K0rftGeT6
-	 Vc+tXd1OdBhBA==
-From: Sasha Levin <sashal@kernel.org>
-To: patches@lists.linux.dev,
-	stable@vger.kernel.org
-Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>,
-	Geliang Tang <geliang@kernel.org>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Sasha Levin <sashal@kernel.org>,
-	martineau@kernel.org,
-	netdev@vger.kernel.org,
-	mptcp@lists.linux.dev
-Subject: [PATCH AUTOSEL 6.17-6.12] selftests: mptcp: join: allow more time to send ADD_ADDR
-Date: Sat, 25 Oct 2025 12:00:27 -0400
-Message-ID: <20251025160905.3857885-396-sashal@kernel.org>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20251025160905.3857885-1-sashal@kernel.org>
-References: <20251025160905.3857885-1-sashal@kernel.org>
+	s=arc-20240116; t=1761410124; c=relaxed/simple;
+	bh=iyOBRl5QZhzw+5Ro5vJB2OJl2o9qrxD7/mSjzKjx6KI=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=LAPEFbdh7YnBiWTDr6udwWLE6hf846WnqpJf/F08iwsX/Phzn8dFSRvytYwO/hU5+/kaPav9HM3KoM+sThrBkAdQSAzSIBrOgoqoKYaLYRfAmbJ0MAStMMNH7lIAZVT61ybOgEgW2YnuElXsMxQx6SVF4lo+iQE1N8SpJfuYMIk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-430afceae09so35080905ab.0
+        for <mptcp@lists.linux.dev>; Sat, 25 Oct 2025 09:35:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761410122; x=1762014922;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=L/TBpiav1G79AIOTkdY4adnGJwgmMIA5+MCuyC38fbg=;
+        b=CNY/i4o1qhWyKy9Prz7/ZPqbQWu002JYmoCUi/+HOvv2BnnVcVSzvw0n1hq/cAbRQd
+         N6cjSoJmaXeXLCeU4RfH9U6Ojpl+o1CyBxjIeyDn1clkafwNcoqq/ijxs3vEAC2c3rZO
+         Jnb+MJOCk6yFJuBcvxGB/Eqsa4etDORgHdhNHnqEIDfiYgDKozkP7OyJ8bkUPOX2yC8+
+         JCCKvTmgt/SaEs9JnIoTgVXVzt8K5Wwc16FZD3n3BYiCwXrm2MV6j+7QSNfUhaHPcPTV
+         T+TXtTDm0NOgJWDEMFFuPiJZsurwCho27o+eS6eoTec7aLzXgVokvsoESLFPPSq5a2S7
+         ViIg==
+X-Forwarded-Encrypted: i=1; AJvYcCW7eaHZUB7PNNlPf0/eaK36bu0Q36rRDuYw7p2fcsb9CZ5zh0UMea8q/Q/+BGgurtkCMHX5hA==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzHxq6G9zY97OLxuIPfLQGnQapfqRvodzGMJRA8bV3zf8ZosJ04
+	sKtgh7BJPeMsmekRDllVdHjD7lun3C7pLcZpfe/U9orxXbMB6DjJPOxTLFa5lVJ+1KVj3HGsP+x
+	xKChYehlyrMRC+hiVQFryIswtUzHZp+do/YGPC4iVLN/6rN+71EW5s755DSA=
+X-Google-Smtp-Source: AGHT+IGeqEzwanU1biO5d+ivaOCUX5hEsxCyYT+xT+jf2Li+zt8m+I5UT6TpcYDR9S2JPh6BYwnuqkplXrB0G8rg6VjlCJJZR0ul
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.17.5
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:3f04:b0:430:c49d:750c with SMTP id
+ e9e14a558f8ab-431ebed79admr77062145ab.27.1761410122404; Sat, 25 Oct 2025
+ 09:35:22 -0700 (PDT)
+Date: Sat, 25 Oct 2025 09:35:22 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <68fcfc4a.050a0220.346f24.02fb.GAE@google.com>
+Subject: [syzbot] [mptcp?] WARNING in mptcp_pm_nl_del_addr_doit
+From: syzbot <syzbot+f56f7d56e2c6e11a01b6@syzkaller.appspotmail.com>
+To: davem@davemloft.net, edumazet@google.com, geliang@kernel.org, 
+	horms@kernel.org, kuba@kernel.org, linux-kernel@vger.kernel.org, 
+	martineau@kernel.org, matttbe@kernel.org, mptcp@lists.linux.dev, 
+	netdev@vger.kernel.org, pabeni@redhat.com, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Hello,
 
-[ Upstream commit e2cda6343bfe459c3331db5afcd675ab333112dd ]
+syzbot found the following issue on:
 
-When many ADD_ADDR need to be sent, it can take some time to send each
-of them, and create new subflows. Some CIs seem to occasionally have
-issues with these tests, especially with "debug" kernels.
+HEAD commit:    6548d364a3e8 Merge tag 'cgroup-for-6.18-rc2-fixes' of git:..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=11da4e7c580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=f953a3e1b3e60637
+dashboard link: https://syzkaller.appspot.com/bug?extid=f56f7d56e2c6e11a01b6
+compiler:       Debian clang version 20.1.8 (++20250708063551+0c9f909b7976-1~exp1~20250708183702.136), Debian LLD 20.1.8
 
-Two subtests will now run for a slightly longer time: the last two where
-3 or more ADD_ADDR are sent during the test.
+Unfortunately, I don't have any reproducer for this issue yet.
 
-Reviewed-by: Geliang Tang <geliang@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Link: https://patch.msgid.link/20250907-net-next-mptcp-add_addr-retrans-adapt-v1-3-824cc805772b@kernel.org
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/a6472a8e035a/disk-6548d364.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/1547185ddf28/vmlinux-6548d364.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/d4610741deb8/bzImage-6548d364.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+f56f7d56e2c6e11a01b6@syzkaller.appspotmail.com
+
+netlink: 8 bytes leftover after parsing attributes in process `syz.7.6472'.
+netlink: 8 bytes leftover after parsing attributes in process `syz.7.6472'.
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 27976 at net/mptcp/pm_kernel.c:1053 __mark_subflow_endp_available net/mptcp/pm_kernel.c:1053 [inline]
+WARNING: CPU: 0 PID: 27976 at net/mptcp/pm_kernel.c:1053 mptcp_nl_remove_subflow_and_signal_addr net/mptcp/pm_kernel.c:1088 [inline]
+WARNING: CPU: 0 PID: 27976 at net/mptcp/pm_kernel.c:1053 mptcp_pm_nl_del_addr_doit+0xe2c/0x11d0 net/mptcp/pm_kernel.c:1190
+Modules linked in:
+CPU: 0 UID: 0 PID: 27976 Comm: syz.7.6472 Not tainted syzkaller #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 10/02/2025
+RIP: 0010:__mark_subflow_endp_available net/mptcp/pm_kernel.c:1053 [inline]
+RIP: 0010:mptcp_nl_remove_subflow_and_signal_addr net/mptcp/pm_kernel.c:1088 [inline]
+RIP: 0010:mptcp_pm_nl_del_addr_doit+0xe2c/0x11d0 net/mptcp/pm_kernel.c:1190
+Code: 01 00 00 49 89 c6 e8 93 b2 82 f6 e9 ed fb ff ff e8 89 b2 82 f6 48 89 df be 03 00 00 00 e8 ac 8d 53 f9 eb 9c e8 75 b2 82 f6 90 <0f> 0b 90 e9 90 fe ff ff 89 d9 80 e1 07 38 c1 0f 8c d9 fb ff ff 48
+RSP: 0018:ffffc9000c3e71a0 EFLAGS: 00010283
+RAX: ffffffff8b3d917b RBX: 0000000000000000 RCX: 0000000000080000
+RDX: ffffc90019844000 RSI: 0000000000009d14 RDI: 0000000000009d15
+RBP: ffffc9000c3e73b0 R08: ffff88802f74eea7 R09: 1ffff11005ee9dd4
+R10: dffffc0000000000 R11: ffffed1005ee9dd5 R12: ffff888068e67080
+R13: ffff88802f74ee98 R14: ffff88802f74e400 R15: 1ffff11005ee9dd3
+FS:  00007f57ed7746c0(0000) GS:ffff888125d06000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000020000000c038 CR3: 000000004ebf8000 CR4: 0000000000350ef0
+Call Trace:
+ <TASK>
+ genl_family_rcv_msg_doit+0x215/0x300 net/netlink/genetlink.c:1115
+ genl_family_rcv_msg net/netlink/genetlink.c:1195 [inline]
+ genl_rcv_msg+0x60e/0x790 net/netlink/genetlink.c:1210
+ netlink_rcv_skb+0x208/0x470 net/netlink/af_netlink.c:2552
+ genl_rcv+0x28/0x40 net/netlink/genetlink.c:1219
+ netlink_unicast_kernel net/netlink/af_netlink.c:1320 [inline]
+ netlink_unicast+0x82f/0x9e0 net/netlink/af_netlink.c:1346
+ netlink_sendmsg+0x805/0xb30 net/netlink/af_netlink.c:1896
+ sock_sendmsg_nosec net/socket.c:727 [inline]
+ __sock_sendmsg+0x21c/0x270 net/socket.c:742
+ ____sys_sendmsg+0x505/0x830 net/socket.c:2630
+ ___sys_sendmsg+0x21f/0x2a0 net/socket.c:2684
+ __sys_sendmsg net/socket.c:2716 [inline]
+ __do_sys_sendmsg net/socket.c:2721 [inline]
+ __se_sys_sendmsg net/socket.c:2719 [inline]
+ __x64_sys_sendmsg+0x19b/0x260 net/socket.c:2719
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xfa/0xfa0 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f57ec98efc9
+Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f57ed774038 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 00007f57ecbe6090 RCX: 00007f57ec98efc9
+RDX: 000000002000c094 RSI: 0000200000000000 RDI: 0000000000000009
+RBP: 00007f57eca11f91 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007f57ecbe6128 R14: 00007f57ecbe6090 R15: 00007ffeff6c13c8
+ </TASK>
+
+
 ---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-LLM Generated explanations, may be completely bogus:
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-YES
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
-- What changed: The patch slows two MPTCP selftests that signal three
-  addresses to reduce flakiness. It injects `speed=slow` for the “signal
-  addresses” and “signal invalid addresses” subtests so `run_tests` runs
-  in slow mode:
-  - tools/testing/selftests/net/mptcp/mptcp_join.sh:2271-2272 sets
-    `speed=slow` before `run_tests` in the “signal addresses” block.
-  - tools/testing/selftests/net/mptcp/mptcp_join.sh:2284-2285 sets
-    `speed=slow` before `run_tests` in the “signal invalid addresses”
-    block.
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
 
-- How it works: `speed=slow` is consumed by `do_transfer()` which maps
-  it to `-r 50` for `mptcp_connect`:
-  - Default/dispatch:
-    tools/testing/selftests/net/mptcp/mptcp_join.sh:953 defines `local
-    speed=${speed:-"fast"}` and at 967-972 maps `fast`→`-j`, `slow`→`-r
-    50`, or numeric speed→`-r <num>`.
-  - mptcp_connect semantics: the `-r` option enables “slow mode,
-    limiting each write to num bytes,” giving the protocol time to
-    exchange ADD_ADDR and create subflows
-    (tools/testing/selftests/net/mptcp/mptcp_connect.c:132, parsed in
-    1426 and handled in the ‘r’ case 1444-1450).
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
 
-- Why it’s needed: With three or more ADD_ADDR to send, debug kernels
-  and slower CI runners can time out or not complete subflow setup
-  before data transfer finishes. Slowing writes increases the window for
-  address signaling and subflow establishment, improving determinism.
-  This aligns with existing practice elsewhere in the script where many
-  subtests already run with `speed=slow` for similar reasons (e.g.,
-  numerous `speed=slow` calls throughout the file).
-
-- Scope and risk:
-  - Test-only: Changes are confined to
-    `tools/testing/selftests/net/mptcp/mptcp_join.sh` and do not touch
-    kernel code paths or ABIs.
-  - Minimal and contained: Two call sites adjusted; no logic or
-    expectations changed, only pacing.
-  - Low regression risk: Only increases runtime slightly for two
-    subtests; expected counts remain the same (e.g., still `chk_join_nr
-    3 3 3` and `chk_add_nr 3 3` in
-    tools/testing/selftests/net/mptcp/mptcp_join.sh:2273-2274; and
-    unchanged checks after the invalid addresses case at 2286-2288).
-
-- Stable-policy fit:
-  - Fixes test flakiness affecting CI/users running stable selftests
-    (practical impact for validation).
-  - No new features or architectural changes; very small diff; conforms
-    to stable rules for low-risk test fixes.
-  - No “Cc: stable” tag, but the change is a clear reliability fix for
-    selftests, which stable trees commonly accept to keep test suites
-    meaningful.
-
-Given it’s a tiny, isolated selftest reliability improvement with no
-kernel-side risk and tangible benefit for CI stability, it is suitable
-for backporting.
-
- tools/testing/selftests/net/mptcp/mptcp_join.sh | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 8e92dfead43bf..fed14a281a6d9 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -2151,7 +2151,8 @@ signal_address_tests()
- 		pm_nl_add_endpoint $ns1 10.0.3.1 flags signal
- 		pm_nl_add_endpoint $ns1 10.0.4.1 flags signal
- 		pm_nl_set_limits $ns2 3 3
--		run_tests $ns1 $ns2 10.0.1.1
-+		speed=slow \
-+			run_tests $ns1 $ns2 10.0.1.1
- 		chk_join_nr 3 3 3
- 		chk_add_nr 3 3
- 	fi
-@@ -2163,7 +2164,8 @@ signal_address_tests()
- 		pm_nl_add_endpoint $ns1 10.0.3.1 flags signal
- 		pm_nl_add_endpoint $ns1 10.0.14.1 flags signal
- 		pm_nl_set_limits $ns2 3 3
--		run_tests $ns1 $ns2 10.0.1.1
-+		speed=slow \
-+			run_tests $ns1 $ns2 10.0.1.1
- 		join_syn_tx=3 \
- 			chk_join_nr 1 1 1
- 		chk_add_nr 3 3
--- 
-2.51.0
-
+If you want to undo deduplication, reply with:
+#syz undup
