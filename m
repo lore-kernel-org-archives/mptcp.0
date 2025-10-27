@@ -1,56 +1,56 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF7EB1990D9
-	for <mptcp@lists.linux.dev>; Mon, 27 Oct 2025 14:41:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D53423BCEE
+	for <mptcp@lists.linux.dev>; Mon, 27 Oct 2025 14:41:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761576076; cv=none; b=sZcvNVfD20SBf/guQlTh3z6fEQOmRpnecs7An6DROAolwTEBdO0RIcxrP95nLoN9jcue5FdaXN40aUTfVIr/Rv//HirPvxTl7wnEDnZxKzugks3m6Xq7MHsUeKo0FAgKTVCjyJnqSMyjR0UyhN9V19dJ9DeCrRvz0VWkTJqZq6c=
+	t=1761576079; cv=none; b=nwfl1RFQe6zIFiAjWZFVrGXE7EmZoQiUlgJc8+/+c4X7ZDVBSQo2rso2VILpPuoG4PuwIORyHfjBPqozCRZg6pRTyhm/WUMBtUlmT/pbZnS2xFuGIsrHCevS3mlJjmO2fCxRAvrdGRFUSI6RjNITMzXQmusch9cTYQ8KkenWPr8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761576076; c=relaxed/simple;
-	bh=zB/8pFYSeKaxyOG2iGOVz0Z6H6IUgzsut7cm9tOlw9s=;
+	s=arc-20240116; t=1761576079; c=relaxed/simple;
+	bh=MmK9ykdTu42OdmM5jVLgqgvvRD1PZxKFsagL5b3c43o=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=lQT0pe4NsgnO/LjRnaCJxwyPEz1Tr6HEa8hnpRw2jk6UkRcovfXsuxBVQdo3GQkMplhOW8ILFUIgn4uXoBFwjCFjXKp4xeQ/VWmbh6qcyVME0Pc5TaYU6Hd8dHD0pYCdmWfw9LlhieMdI36BDIThqAa0V109xhIBvPoiOkiDqG4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=g3/FgqYd; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:content-type; b=NeGFYtHJ4EKxIh/VMs0JhSniTD6pQ3V01MoZz518E3RIQVDD2uXDiP/FSIB0eB0W724+2Quu9CFS1Lgaqzq5qb6xjc1v5YyipCx4/D20N8Q5rTl+lMGS1o0E5vRV8NEbisY93OMJrJGg1IoYnfooXILEbMkvD3+K8IYNPjXL4hg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DoE2nx5o; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g3/FgqYd"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DoE2nx5o"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1761576073;
+	s=mimecast20190719; t=1761576075;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=lKLmPordTrD7LUBbkxUs11zrgr+6UgmsE+K7mEBwktM=;
-	b=g3/FgqYduKVShHMHzC6RR4jDWMQl4K400IOWFN28CI1feQ+8TsJ5Cjhz8/b0MVKUWlXfIP
-	TY/REdD4eN+Ewa++Gbl9kte6gYWumCq+k9CbFghi+X7dkHL38+5c6AcodcJMqXlC6+TGvg
-	ENYHuXVp7gsK5ejhiuzcdQ/3k4YyNhE=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+	bh=vhG81pl5wL9uimVMeAr2OUwDHtfN4m2BNDkfYZlu9aE=;
+	b=DoE2nx5olhCVXOBXc2Ld197a3q8vuVsCNeYqBd7AzspyQUs5arqDRsY4/STw1R27i2VMKE
+	QocrBMLsE3iiZ7bv5ZMxWeZ0YWesG6pXtnpW3pltb9OzunOLyiMQI+cEzNjpiFsc+Qh6+1
+	LoFdoCX+X5INC5gfMaqADMqw0WRIQxk=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-98-yHcwrq19MP62WNxChFp_Bw-1; Mon,
- 27 Oct 2025 10:41:10 -0400
-X-MC-Unique: yHcwrq19MP62WNxChFp_Bw-1
-X-Mimecast-MFC-AGG-ID: yHcwrq19MP62WNxChFp_Bw_1761576069
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-643-dhnmsI73MHqwwyiZXFBmkw-1; Mon,
+ 27 Oct 2025 10:41:11 -0400
+X-MC-Unique: dhnmsI73MHqwwyiZXFBmkw-1
+X-Mimecast-MFC-AGG-ID: dhnmsI73MHqwwyiZXFBmkw_1761576070
 Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id BFECA1800D87;
-	Mon, 27 Oct 2025 14:41:08 +0000 (UTC)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id BB2C5180AAAA;
+	Mon, 27 Oct 2025 14:41:10 +0000 (UTC)
 Received: from gerbillo.redhat.com (unknown [10.45.224.10])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 57DA130001A2;
-	Mon, 27 Oct 2025 14:41:06 +0000 (UTC)
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 493DC30001A2;
+	Mon, 27 Oct 2025 14:41:09 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
 Cc: Mat Martineau <martineau@kernel.org>,
 	geliang@kernel.org
-Subject: [PATCH v7 mptcp-next 1/4] DO-NOT-MERGE: mptcp: enabled by default
-Date: Mon, 27 Oct 2025 15:40:49 +0100
-Message-ID: <7a8077a36ad600454d4050f567c15af9a1399189.1761575881.git.pabeni@redhat.com>
-In-Reply-To: <cover.1761575881.git.pabeni@redhat.com>
-References: <cover.1761575881.git.pabeni@redhat.com>
+Subject: [PATCH v7 mptcp-next 1/4] mptcp: handle first subflow closing consistently
+Date: Mon, 27 Oct 2025 15:40:50 +0100
+Message-ID: <a92175e4a926d83095c5ece4d525af393519213d.1761568311.git.pabeni@redhat.com>
+In-Reply-To: <cover.1761568311.git.pabeni@redhat.com>
+References: <cover.1761568311.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -59,32 +59,100 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: NZnTJq3MM0Zw-e_CdzgQG2pDxVP4S1NMSnnUDeiR7P4_1761576069
+X-Mimecast-MFC-PROC-ID: o3KbE9ztSUU5ikdIqmxPI5twl0oxuIkAHraLzxd-ONk_1761576070
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 
-From: Matthieu Baerts <matttbe@kernel.org>
+Currently, as soon as the PM closes a subflow, the msk stops accepting data
+from it, even if the TCP socket could be still formally open in the
+incoming direction, with the notable exception of the first subflow.
 
-This commit is useful for automated builds, e.g. from Intel's kbuild.
+The root cause of such behavior is that code currently piggy back two
+separate semantic on the subflow->disposable bit: the subflow context
+must be released and that the subflow must stop accepting incoming
+data.
 
-Signed-off-by: Matthieu Baerts <matttbe@kernel.org>
+The first subflow is never disposed, so it also never stop accepting
+incoming data. Use a separate bit to mark to mark the latter status
+and set such bit in __mptcp_close_ssk() for all subflows.
+
+Beyond making per subflow behaviour more consistent this will also
+simplify the next patch.
+
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 ---
- net/mptcp/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ net/mptcp/protocol.c | 14 +++++++++-----
+ net/mptcp/protocol.h |  3 ++-
+ 2 files changed, 11 insertions(+), 6 deletions(-)
 
-diff --git a/net/mptcp/Kconfig b/net/mptcp/Kconfig
-index b755fc9b6660..f674915dc31e 100644
---- a/net/mptcp/Kconfig
-+++ b/net/mptcp/Kconfig
-@@ -5,6 +5,7 @@ config MPTCP
- 	select SKB_EXTENSIONS
- 	select CRYPTO_LIB_SHA256
- 	select CRYPTO
-+	default y
- 	help
- 	  Multipath TCP (MPTCP) connections send and receive data over multiple
- 	  subflows in order to utilize multiple network paths. Each subflow
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index f4e3d0be7c87..74be417be980 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -842,10 +842,10 @@ void mptcp_data_ready(struct sock *sk, struct sock *ssk)
+ 	struct mptcp_sock *msk = mptcp_sk(sk);
+ 
+ 	/* The peer can send data while we are shutting down this
+-	 * subflow at msk destruction time, but we must avoid enqueuing
++	 * subflow at subflow destruction time, but we must avoid enqueuing
+ 	 * more data to the msk receive queue
+ 	 */
+-	if (unlikely(subflow->disposable))
++	if (unlikely(subflow->closing))
+ 		return;
+ 
+ 	mptcp_data_lock(sk);
+@@ -2429,6 +2429,13 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
+ 	struct mptcp_sock *msk = mptcp_sk(sk);
+ 	bool dispose_it, need_push = false;
+ 
++	/* Do not pass RX data to the msk, even if the subflow socket is not
++	 * going to be freed (i.e. even for the first subflow on graceful
++	 * subflow close.
++	 */
++	lock_sock_nested(ssk, SINGLE_DEPTH_NESTING);
++	subflow->closing = 1;
++
+ 	/* If the first subflow moved to a close state before accept, e.g. due
+ 	 * to an incoming reset or listener shutdown, the subflow socket is
+ 	 * already deleted by inet_child_forget() and the mptcp socket can't
+@@ -2439,7 +2446,6 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
+ 		/* ensure later check in mptcp_worker() will dispose the msk */
+ 		sock_set_flag(sk, SOCK_DEAD);
+ 		mptcp_set_close_tout(sk, tcp_jiffies32 - (mptcp_close_timeout(sk) + 1));
+-		lock_sock_nested(ssk, SINGLE_DEPTH_NESTING);
+ 		mptcp_subflow_drop_ctx(ssk);
+ 		goto out_release;
+ 	}
+@@ -2448,8 +2454,6 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
+ 	if (dispose_it)
+ 		list_del(&subflow->node);
+ 
+-	lock_sock_nested(ssk, SINGLE_DEPTH_NESTING);
+-
+ 	if ((flags & MPTCP_CF_FASTCLOSE) && !__mptcp_check_fallback(msk)) {
+ 		/* be sure to force the tcp_close path
+ 		 * to generate the egress reset
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index cd6350073144..15856b0bb47c 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -536,12 +536,13 @@ struct mptcp_subflow_context {
+ 		send_infinite_map : 1,
+ 		remote_key_valid : 1,        /* received the peer key from */
+ 		disposable : 1,	    /* ctx can be free at ulp release time */
++		closing : 1,	    /* must not not pass rx data to msk anymore */
+ 		stale : 1,	    /* unable to snd/rcv data, do not use for xmit */
+ 		valid_csum_seen : 1,        /* at least one csum validated */
+ 		is_mptfo : 1,	    /* subflow is doing TFO */
+ 		close_event_done : 1,       /* has done the post-closed part */
+ 		mpc_drop : 1,	    /* the MPC option has been dropped in a rtx */
+-		__unused : 9;
++		__unused : 8;
+ 	bool	data_avail;
+ 	bool	scheduled;
+ 	bool	pm_listener;	    /* a listener managed by the kernel PM? */
 -- 
 2.51.0
 
