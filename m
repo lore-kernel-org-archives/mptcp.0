@@ -1,153 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0FF6285C99
-	for <mptcp@lists.linux.dev>; Mon, 27 Oct 2025 12:22:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70EBD1EEA49
+	for <mptcp@lists.linux.dev>; Mon, 27 Oct 2025 14:41:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761567723; cv=none; b=fBN2lMc+gVfzDLTHuVFvbSSi2Uagqwd4XCAg7vuJPtibNepKT/flNQLccVm6B1fEQpGd5u3Th3Y8TefeB2dti1/2R+LLbyYXh3YIxcAoteeYFdg5ziPEJSFSBpotN2RciMZ3hoK2Bh8ON6p1OsLkzWG6z18t7pdapN+6kgTz+E8=
+	t=1761576072; cv=none; b=GVU+RIwOyFJ1sxCuH8HkQ1oNFMnM23fVqyijp1Yj+T7H4KJw938LT5YHJYhffUEe72ZIcitLiLngGVqSRjqJI7ZVZQ7LToV4Spl0/v1eUSdZiCQo3B9KDB1mHVwxGTkMrC7Zjkj8eW0IIakkiyRC6as25W5A635qPkNGsDJ/kcA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761567723; c=relaxed/simple;
-	bh=t3xWcd9lx1DDSPXMCWY7leHEiotxwTe3fwOzcchqWG8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=bRTCPKwtVPBOINUw4UgSOpgpT8ZsKlKk8RXE+606P/LDTIDTp+6Nbz3ySKzwyiI2irsQfw3IRamDgYv5QC8o+C3i3IB+tWDxHcetADTldMzusg8H8Qxd+eCw8vBIfqRd6v3kF5QQAhr5vk99Cp25Nm+4AaIUBFdFgAJvZevmvzQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dEJLrPrr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1761576072; c=relaxed/simple;
+	bh=L8/cCZDSh90zfT7JNOHh2SpJpP3M2J5ozQzwgL5waZ0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:content-type; b=AE0KgTOWafs6mI2Ob7zsPt9d2DgZBwI7QnVKzmtjKZqkRbTbE7DC9JgOl+rhM/bmwBr8sVat0pAFzfQjaUVSbxJ/vEAZAMA7b7UK3MJSMSaadpWirqXfkMwmctYb4SKYbyaKsX9uqarTYTcwHBySFA/hD4dhOgaGLlMy0xMpjDw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IeY/00dC; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dEJLrPrr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE464C4CEF1;
-	Mon, 27 Oct 2025 12:22:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761567722;
-	bh=t3xWcd9lx1DDSPXMCWY7leHEiotxwTe3fwOzcchqWG8=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=dEJLrPrrGtTwPOZyzoldYqlD+d4hsh2J9IxL5U/6KeXcSf4YSrCdAsKLFeomyaRtD
-	 FTQv1dLMqgslDJpGm3aL/PX8M4uYhnPUipCRtA4GMaIO1dUvbTcijD/8mfwtg8SnFr
-	 kO7TMCadOzt6QsFBR2J56Naq7GWAKTC2TnMz/SKX/k/dPNHZPJW91sGrPblxLh9SN2
-	 SyZChKOCiD97MqYwEGmE4vN2KA4EmSvvcd7Q1TtB7f2IP69XR553YGoTp9NiMpDgzt
-	 cHKyzI1tdfhSacnvh679lEScqTA2bGy0kWPp3phjx4zeCkG6iqEMjNCkUHw5JBxF1+
-	 fhbM7M7vb6Riw==
-Message-ID: <17404b24-dbed-4f16-9ff6-5822bffc3c1b@kernel.org>
-Date: Mon, 27 Oct 2025 13:21:59 +0100
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IeY/00dC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1761576069;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=wj0oMK/++rnzwG4s7JJg0lH1gZoGSJiN4TPKITDGSoU=;
+	b=IeY/00dCILZIMjxhUj2WVW6bJQ46a71lzh6L4vab5zyB9hHumR6Zi5KOVtZGCOHYs3ls3x
+	/GEmxaiKmNy8R6SZsrn/dcwolro2+YLedM/Dx75Rpg3KSRCbPo+oCROUTtGbGIB/qbsLLf
+	mYYLhVhyW4NzG3b3PWDrtD///O6Ouns=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-99-NMDrQVtPNFmWLIvIlFlQwA-1; Mon,
+ 27 Oct 2025 10:41:07 -0400
+X-MC-Unique: NMDrQVtPNFmWLIvIlFlQwA-1
+X-Mimecast-MFC-AGG-ID: NMDrQVtPNFmWLIvIlFlQwA_1761576066
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B3D001954190;
+	Mon, 27 Oct 2025 14:41:06 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.45.224.10])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 4B53630001A2;
+	Mon, 27 Oct 2025 14:41:04 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: mptcp@lists.linux.dev
+Cc: Mat Martineau <martineau@kernel.org>,
+	geliang@kernel.org
+Subject: [PATCH v7 mptcp-next 0/4] mptcp: introduce backlog processing
+Date: Mon, 27 Oct 2025 15:40:48 +0100
+Message-ID: <cover.1761575881.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next] Squash to "selftests: mptcp: join: validate
- extra bind cases"
-Content-Language: en-GB, fr-BE
-To: Geliang Tang <geliang@kernel.org>, MPTCP Upstream <mptcp@lists.linux.dev>
-References: <20251024-sft-fix-bind-timeout-v1-1-cb81a67b222c@kernel.org>
- <95fdc88fbeba58db5976f97f117b1579a873c051.camel@kernel.org>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <95fdc88fbeba58db5976f97f117b1579a873c051.camel@kernel.org>
-Content-Type: text/plain; charset=UTF-8
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: Ll3Z4waquTP4wtJ3wX6jupxdb7dkZJ9wAI3qFQVtyGA_1761576066
+X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
+content-type: text/plain; charset="US-ASCII"; x-default=true
 
-Hi Geliang,
+This series includes RX path improvement built around backlog processing
 
-On 24/10/2025 14:56, Geliang Tang wrote:
-> Hi Matt,
-> 
-> Thanks for this fix.
-> 
-> On Fri, 2025-10-24 at 12:02 +0200, Matthieu Baerts (NGI0) wrote:
->> I was going to send the related commit upstream, but then I realised
->> in
->> a slow environment (e.g. public CI), with a debug kernel, the default
->> 10 seconds timeout can be too short:
->>
->>   086 multiple bind to allow joins v4
->>         join Rx                             [ OK ]
->>         join Tx                             [ OK ]
->>   main_loop_s: timed out
->>         add addr rx                         [ OK ]
->>         add addr echo rx                    [ OK ]
->>   ./mptcp_join.sh: line 3305: kill: (2032) - No such process
->>
->> This doesn't affect the results, because it happens after the test,
->> when
->> checking the counters. Still, better to fix that by using an infinite
->> timeout: the process will be killed at the end.
->>
->> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
->> ---
->>  tools/testing/selftests/net/mptcp/mptcp_join.sh | 8 ++++----
->>  1 file changed, 4 insertions(+), 4 deletions(-)
->>
->> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh
->> b/tools/testing/selftests/net/mptcp/mptcp_join.sh
->> index 05faacefb719..e0cdb9c662aa 100755
->> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
->> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
->> @@ -3293,7 +3293,7 @@ bind_tests()
->>  
->>  		# Launching another app listening on a different
->> address
->>  		# Note: it could be a totally different app, e.g.
->> nc, socat, ...
->> -		ip netns exec ${ns1} ./mptcp_connect -l -p
->> "$(get_port)" \
->> +		ip netns exec ${ns1} ./mptcp_connect -l -t -1 -p
->> "$(get_port)" \
-> 
-> A timeout of -1 means block indefinitely, right? Do you think using the
-> default 30 seconds (-t ${timeout_poll}) is sufficient?
+The main goals are improving the RX performances _and_ increase the
+long term maintainability.
 
-No need to use the same default timeout: this process is executed in the
-background, and we explicitly kill it at the end. Worst case, the other
-process timeout after 30 seconds, and we will still kill this one.
+Patch 1 and 2 refactor the memory account logic in the RX path, so that
+the msk don't need anymore to do fwd allocation, removing possible drop
+sources.
 
-So it looks easier/better to use -1, no?
+Patch 3 and 4 cope with backlog processing. Patch 3 introduces the
+helpers needed to manipulate the msk-level backlog, and the data struct
+itself, without any actual functional change. Patch 4 finally use the
+backlog for RX skb processing. Note that MPTCP can't use the sk_backlog,
+as the mptcp release callback can also release and re-acquire the
+msk-level spinlock and core backlog processing works under the
+assumption that such event is not possible.
 
-Cheers,
-Matt
+A relevant point is memory accounts for skbs in the backlog.
+
+It's somewhat "original" due to MPTCP constraints. Such skbs use space
+from the incoming subflow receive buffer, but are fwd memory accounted
+on the msk, using memory borrowed by the subflow.
+
+Instead the msk borrows memory from the subflow and reserve it for
+the backlog - see patch 3 and 11 for the gory details.
+---
+v6 -> v7:
+ - dropped merged patches
+ - added patch 1/4
+ - refactor borrow/account logic, see individual patches for the details
+
+Matthieu Baerts (1):
+  DO-NOT-MERGE: mptcp: enabled by default
+
+Paolo Abeni (3):
+  mptcp: handle first subflow closing consistently
+  mptcp: borrow forward memory from subflow
+  mptcp: introduce mptcp-level backlog
+
+ net/mptcp/Kconfig      |   1 +
+ net/mptcp/fastopen.c   |   4 +-
+ net/mptcp/mib.c        |   1 -
+ net/mptcp/mib.h        |   1 -
+ net/mptcp/mptcp_diag.c |   3 +-
+ net/mptcp/protocol.c   | 112 +++++++++++++++++++++++++++++++++++------
+ net/mptcp/protocol.h   |  39 +++++++++++++-
+ 7 files changed, 142 insertions(+), 19 deletions(-)
+
 -- 
-Sponsored by the NGI0 Core fund.
+2.51.0
 
