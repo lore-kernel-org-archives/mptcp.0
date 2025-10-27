@@ -1,52 +1,56 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70EBD1EEA49
-	for <mptcp@lists.linux.dev>; Mon, 27 Oct 2025 14:41:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF7EB1990D9
+	for <mptcp@lists.linux.dev>; Mon, 27 Oct 2025 14:41:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761576072; cv=none; b=GVU+RIwOyFJ1sxCuH8HkQ1oNFMnM23fVqyijp1Yj+T7H4KJw938LT5YHJYhffUEe72ZIcitLiLngGVqSRjqJI7ZVZQ7LToV4Spl0/v1eUSdZiCQo3B9KDB1mHVwxGTkMrC7Zjkj8eW0IIakkiyRC6as25W5A635qPkNGsDJ/kcA=
+	t=1761576076; cv=none; b=sZcvNVfD20SBf/guQlTh3z6fEQOmRpnecs7An6DROAolwTEBdO0RIcxrP95nLoN9jcue5FdaXN40aUTfVIr/Rv//HirPvxTl7wnEDnZxKzugks3m6Xq7MHsUeKo0FAgKTVCjyJnqSMyjR0UyhN9V19dJ9DeCrRvz0VWkTJqZq6c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761576072; c=relaxed/simple;
-	bh=L8/cCZDSh90zfT7JNOHh2SpJpP3M2J5ozQzwgL5waZ0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:content-type; b=AE0KgTOWafs6mI2Ob7zsPt9d2DgZBwI7QnVKzmtjKZqkRbTbE7DC9JgOl+rhM/bmwBr8sVat0pAFzfQjaUVSbxJ/vEAZAMA7b7UK3MJSMSaadpWirqXfkMwmctYb4SKYbyaKsX9uqarTYTcwHBySFA/hD4dhOgaGLlMy0xMpjDw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IeY/00dC; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1761576076; c=relaxed/simple;
+	bh=zB/8pFYSeKaxyOG2iGOVz0Z6H6IUgzsut7cm9tOlw9s=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:content-type; b=lQT0pe4NsgnO/LjRnaCJxwyPEz1Tr6HEa8hnpRw2jk6UkRcovfXsuxBVQdo3GQkMplhOW8ILFUIgn4uXoBFwjCFjXKp4xeQ/VWmbh6qcyVME0Pc5TaYU6Hd8dHD0pYCdmWfw9LlhieMdI36BDIThqAa0V109xhIBvPoiOkiDqG4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=g3/FgqYd; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IeY/00dC"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g3/FgqYd"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1761576069;
+	s=mimecast20190719; t=1761576073;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=wj0oMK/++rnzwG4s7JJg0lH1gZoGSJiN4TPKITDGSoU=;
-	b=IeY/00dCILZIMjxhUj2WVW6bJQ46a71lzh6L4vab5zyB9hHumR6Zi5KOVtZGCOHYs3ls3x
-	/GEmxaiKmNy8R6SZsrn/dcwolro2+YLedM/Dx75Rpg3KSRCbPo+oCROUTtGbGIB/qbsLLf
-	mYYLhVhyW4NzG3b3PWDrtD///O6Ouns=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lKLmPordTrD7LUBbkxUs11zrgr+6UgmsE+K7mEBwktM=;
+	b=g3/FgqYduKVShHMHzC6RR4jDWMQl4K400IOWFN28CI1feQ+8TsJ5Cjhz8/b0MVKUWlXfIP
+	TY/REdD4eN+Ewa++Gbl9kte6gYWumCq+k9CbFghi+X7dkHL38+5c6AcodcJMqXlC6+TGvg
+	ENYHuXVp7gsK5ejhiuzcdQ/3k4YyNhE=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-99-NMDrQVtPNFmWLIvIlFlQwA-1; Mon,
- 27 Oct 2025 10:41:07 -0400
-X-MC-Unique: NMDrQVtPNFmWLIvIlFlQwA-1
-X-Mimecast-MFC-AGG-ID: NMDrQVtPNFmWLIvIlFlQwA_1761576066
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-98-yHcwrq19MP62WNxChFp_Bw-1; Mon,
+ 27 Oct 2025 10:41:10 -0400
+X-MC-Unique: yHcwrq19MP62WNxChFp_Bw-1
+X-Mimecast-MFC-AGG-ID: yHcwrq19MP62WNxChFp_Bw_1761576069
 Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B3D001954190;
-	Mon, 27 Oct 2025 14:41:06 +0000 (UTC)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id BFECA1800D87;
+	Mon, 27 Oct 2025 14:41:08 +0000 (UTC)
 Received: from gerbillo.redhat.com (unknown [10.45.224.10])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 4B53630001A2;
-	Mon, 27 Oct 2025 14:41:04 +0000 (UTC)
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 57DA130001A2;
+	Mon, 27 Oct 2025 14:41:06 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
 Cc: Mat Martineau <martineau@kernel.org>,
 	geliang@kernel.org
-Subject: [PATCH v7 mptcp-next 0/4] mptcp: introduce backlog processing
-Date: Mon, 27 Oct 2025 15:40:48 +0100
-Message-ID: <cover.1761575881.git.pabeni@redhat.com>
+Subject: [PATCH v7 mptcp-next 1/4] DO-NOT-MERGE: mptcp: enabled by default
+Date: Mon, 27 Oct 2025 15:40:49 +0100
+Message-ID: <7a8077a36ad600454d4050f567c15af9a1399189.1761575881.git.pabeni@redhat.com>
+In-Reply-To: <cover.1761575881.git.pabeni@redhat.com>
+References: <cover.1761575881.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -55,59 +59,32 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: Ll3Z4waquTP4wtJ3wX6jupxdb7dkZJ9wAI3qFQVtyGA_1761576066
+X-Mimecast-MFC-PROC-ID: NZnTJq3MM0Zw-e_CdzgQG2pDxVP4S1NMSnnUDeiR7P4_1761576069
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 
-This series includes RX path improvement built around backlog processing
+From: Matthieu Baerts <matttbe@kernel.org>
 
-The main goals are improving the RX performances _and_ increase the
-long term maintainability.
+This commit is useful for automated builds, e.g. from Intel's kbuild.
 
-Patch 1 and 2 refactor the memory account logic in the RX path, so that
-the msk don't need anymore to do fwd allocation, removing possible drop
-sources.
-
-Patch 3 and 4 cope with backlog processing. Patch 3 introduces the
-helpers needed to manipulate the msk-level backlog, and the data struct
-itself, without any actual functional change. Patch 4 finally use the
-backlog for RX skb processing. Note that MPTCP can't use the sk_backlog,
-as the mptcp release callback can also release and re-acquire the
-msk-level spinlock and core backlog processing works under the
-assumption that such event is not possible.
-
-A relevant point is memory accounts for skbs in the backlog.
-
-It's somewhat "original" due to MPTCP constraints. Such skbs use space
-from the incoming subflow receive buffer, but are fwd memory accounted
-on the msk, using memory borrowed by the subflow.
-
-Instead the msk borrows memory from the subflow and reserve it for
-the backlog - see patch 3 and 11 for the gory details.
+Signed-off-by: Matthieu Baerts <matttbe@kernel.org>
 ---
-v6 -> v7:
- - dropped merged patches
- - added patch 1/4
- - refactor borrow/account logic, see individual patches for the details
+ net/mptcp/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-Matthieu Baerts (1):
-  DO-NOT-MERGE: mptcp: enabled by default
-
-Paolo Abeni (3):
-  mptcp: handle first subflow closing consistently
-  mptcp: borrow forward memory from subflow
-  mptcp: introduce mptcp-level backlog
-
- net/mptcp/Kconfig      |   1 +
- net/mptcp/fastopen.c   |   4 +-
- net/mptcp/mib.c        |   1 -
- net/mptcp/mib.h        |   1 -
- net/mptcp/mptcp_diag.c |   3 +-
- net/mptcp/protocol.c   | 112 +++++++++++++++++++++++++++++++++++------
- net/mptcp/protocol.h   |  39 +++++++++++++-
- 7 files changed, 142 insertions(+), 19 deletions(-)
-
+diff --git a/net/mptcp/Kconfig b/net/mptcp/Kconfig
+index b755fc9b6660..f674915dc31e 100644
+--- a/net/mptcp/Kconfig
++++ b/net/mptcp/Kconfig
+@@ -5,6 +5,7 @@ config MPTCP
+ 	select SKB_EXTENSIONS
+ 	select CRYPTO_LIB_SHA256
+ 	select CRYPTO
++	default y
+ 	help
+ 	  Multipath TCP (MPTCP) connections send and receive data over multiple
+ 	  subflows in order to utilize multiple network paths. Each subflow
 -- 
 2.51.0
 
