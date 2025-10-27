@@ -1,149 +1,189 @@
-Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EE9F16132F
-	for <mptcp@lists.linux.dev>; Sat, 25 Oct 2025 16:35:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9502F3B2A0
+	for <mptcp@lists.linux.dev>; Mon, 27 Oct 2025 12:17:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761410124; cv=none; b=HOdEv7op+tXszErRrInnaYZMAlaoDp/5jTmue8E6j6pYeDvTzAEd23Nu5FrO2UzlcaiWcX/s8DI/LpEDQGhLbMYe6ooDA3MiiaUNwvvpluctE/DEcvdLvoyFwnKQMyXK+YjgHaK8STOAHELyBQyqJofw9NQjNd3+xpeOisw66Rg=
+	t=1761567474; cv=none; b=rPsaevceMIwBzrD0aUbWoiV8Ivm1ZFgcm+u4dM5/4qLhsD0kRwoRCteHSeV8v+Eseixd0otQTkQBzEoTTP8QseuWePFx7LNx9ICCoz9T3K5cZHYH0z/v8GcdshrDBAACyn5Clv+p/diCivL3eh/eGysSCM0TZb2V9EuQyWkdIxc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761410124; c=relaxed/simple;
-	bh=iyOBRl5QZhzw+5Ro5vJB2OJl2o9qrxD7/mSjzKjx6KI=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=LAPEFbdh7YnBiWTDr6udwWLE6hf846WnqpJf/F08iwsX/Phzn8dFSRvytYwO/hU5+/kaPav9HM3KoM+sThrBkAdQSAzSIBrOgoqoKYaLYRfAmbJ0MAStMMNH7lIAZVT61ybOgEgW2YnuElXsMxQx6SVF4lo+iQE1N8SpJfuYMIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-430afceae09so35080905ab.0
-        for <mptcp@lists.linux.dev>; Sat, 25 Oct 2025 09:35:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761410122; x=1762014922;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=L/TBpiav1G79AIOTkdY4adnGJwgmMIA5+MCuyC38fbg=;
-        b=CNY/i4o1qhWyKy9Prz7/ZPqbQWu002JYmoCUi/+HOvv2BnnVcVSzvw0n1hq/cAbRQd
-         N6cjSoJmaXeXLCeU4RfH9U6Ojpl+o1CyBxjIeyDn1clkafwNcoqq/ijxs3vEAC2c3rZO
-         Jnb+MJOCk6yFJuBcvxGB/Eqsa4etDORgHdhNHnqEIDfiYgDKozkP7OyJ8bkUPOX2yC8+
-         JCCKvTmgt/SaEs9JnIoTgVXVzt8K5Wwc16FZD3n3BYiCwXrm2MV6j+7QSNfUhaHPcPTV
-         T+TXtTDm0NOgJWDEMFFuPiJZsurwCho27o+eS6eoTec7aLzXgVokvsoESLFPPSq5a2S7
-         ViIg==
-X-Forwarded-Encrypted: i=1; AJvYcCW7eaHZUB7PNNlPf0/eaK36bu0Q36rRDuYw7p2fcsb9CZ5zh0UMea8q/Q/+BGgurtkCMHX5hA==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzHxq6G9zY97OLxuIPfLQGnQapfqRvodzGMJRA8bV3zf8ZosJ04
-	sKtgh7BJPeMsmekRDllVdHjD7lun3C7pLcZpfe/U9orxXbMB6DjJPOxTLFa5lVJ+1KVj3HGsP+x
-	xKChYehlyrMRC+hiVQFryIswtUzHZp+do/YGPC4iVLN/6rN+71EW5s755DSA=
-X-Google-Smtp-Source: AGHT+IGeqEzwanU1biO5d+ivaOCUX5hEsxCyYT+xT+jf2Li+zt8m+I5UT6TpcYDR9S2JPh6BYwnuqkplXrB0G8rg6VjlCJJZR0ul
+	s=arc-20240116; t=1761567474; c=relaxed/simple;
+	bh=zNQ08WTwtJw9sIv5R2cLFzJ1npBmiavxkcLNs1oJlcM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jZHu+Er76ErfcOrLu29dOVKei8Pbm8G8dg2bc+AtnaHPIyjtJ6xY34aOOaNMEefiU/sNg3ToxALZQfGjCPnbCciAc9WbzGh3g/HFyyaXqc3PwQiUED2whB7FfIi4IvC+w5WLSkqYPkg6RfWHrg0tY0htC3E1zmKxvx8vx2Ow1iY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U3abM8Wh; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U3abM8Wh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0954C4CEF1;
+	Mon, 27 Oct 2025 12:17:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761567474;
+	bh=zNQ08WTwtJw9sIv5R2cLFzJ1npBmiavxkcLNs1oJlcM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=U3abM8WhFz4hPYCgVCwhR61+pfr0tCb/S+8+HMpzH450aQU7rodeHpUBCUMoORbFy
+	 rR7A8X1WAVF+bQciqN8DGBZoj1MzKZPmsiWAm78jRHuqkqnKT+JXay0Ul0OBTjunF2
+	 IMawDRRl0+bnIVXR7RH+9Ljny+Nmi/sxfJ6kf6WGTf7Lp4HYE7U9YCrdcX3ydC8Drm
+	 j8sTmtQsT+GknJvYniZDZ3y8qGDSQkbqk55cBo6+t8BizWH7eBA6gD7NFsi4qtuxjb
+	 CuVxWGCeo/miJbqcSOuuYNi3xQ883jWJLPzcsfUxVT8EpLUjxPm5stKgfd8qixckKD
+	 FBh1c6xSWbEBw==
+Message-ID: <938a5c96-baf2-46b6-ab3e-cd25d898009e@kernel.org>
+Date: Mon, 27 Oct 2025 13:17:50 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:3f04:b0:430:c49d:750c with SMTP id
- e9e14a558f8ab-431ebed79admr77062145ab.27.1761410122404; Sat, 25 Oct 2025
- 09:35:22 -0700 (PDT)
-Date: Sat, 25 Oct 2025 09:35:22 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <68fcfc4a.050a0220.346f24.02fb.GAE@google.com>
-Subject: [syzbot] [mptcp?] WARNING in mptcp_pm_nl_del_addr_doit
-From: syzbot <syzbot+f56f7d56e2c6e11a01b6@syzkaller.appspotmail.com>
-To: davem@davemloft.net, edumazet@google.com, geliang@kernel.org, 
-	horms@kernel.org, kuba@kernel.org, linux-kernel@vger.kernel.org, 
-	martineau@kernel.org, matttbe@kernel.org, mptcp@lists.linux.dev, 
-	netdev@vger.kernel.org, pabeni@redhat.com, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 mptcp-next 00/11] mptcp: introduce backlog processing
+Content-Language: en-GB, fr-BE
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+Cc: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>
+References: <cover.1761142784.git.pabeni@redhat.com>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <cover.1761142784.git.pabeni@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hello,
+Hi Paolo,
 
-syzbot found the following issue on:
+On 22/10/2025 16:31, Paolo Abeni wrote:
+> This series includes RX path improvement built around backlog processing
+> 
+> The main goals are improving the RX performances _and_ increase the
+> long term maintainability.
+> 
+> Patches 2-4 prepare the stack for backlog processing, removing
+> assumptions that will not hold true anymore after backlog introduction.
+> 
+> Patches 1 and 5 fixes long standing issues which are quite hard to
+> reproduce with the current implementation but the 2nd one will become
+> very apparent with backlog usage.
+> 
+> Patches 6, 7 and 9 are more cleanups that will make the backlog patch a
+> little less huge.
+> 
+> Patch 8 is a somewhat unrelated cleanup, included here before I forgot
+> about it.
+> 
+> The real work is done by patch 10 and 11. Patch 10 introduces the helpers
+> needed to manipulate the msk-level backlog, and the data struct itself,
+> without any actual functional change. Patch 11 finally use the backlog
+> for RX skb processing. Note that MPTCP can't uset the sk_backlog, as
+> the mptcp release callback can also release and re-acquire the msk-level
+> spinlock and core backlog processing works under the assumption that
+> such event is not possible.
+> 
+> A relevant point is memory accounts for skbs in the backlog.
+> 
+> It's somewhat "original" due to MPTCP constraints. Such skbs use space
+> from the incoming subflow receive buffer, do not use explicitly any
+> forward allocated memory, as we can't update the msk fwd mem while
+> enqueuing, nor we want to acquire again the ssk socket lock while
+> processing the skbs.
+> 
+> Instead the msk borrows memory from the subflow and reserve it for
+> the backlog - see patch 3 and 11 for the gory details.
+> 
+> Note that even if the skbs can sit in the backlog for an unbounded time,
+> 
+> ---
+> v5 -> v6:
+>  - added patch 1/11
+>  - reworked widely patch 10 && 11 to avoid double accounts for backlog
+>    skb and to address the fwd allocated memory criticality mentioned
+>    in previous iterations.
+> 
+> Paolo Abeni (11):
+>   mptcp: drop bogus optimization in __mptcp_check_push()
+>   mptcp: borrow forward memory from subflow
+>   mptcp: cleanup fallback data fin reception
+>   mptcp: cleanup fallback dummy mapping generation
+>   mptcp: fix MSG_PEEK stream corruption
+>   mptcp: ensure the kernel PM does not take action too late
+>   mptcp: do not miss early first subflow close event notification.
+>   mptcp: make mptcp_destroy_common() static
+>   mptcp: drop the __mptcp_data_ready() helper
+>   mptcp: introduce mptcp-level backlog
+>   mptcp: leverage the backlog for RX packet processing
 
-HEAD commit:    6548d364a3e8 Merge tag 'cgroup-for-6.18-rc2-fixes' of git:..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=11da4e7c580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=f953a3e1b3e60637
-dashboard link: https://syzkaller.appspot.com/bug?extid=f56f7d56e2c6e11a01b6
-compiler:       Debian clang version 20.1.8 (++20250708063551+0c9f909b7976-1~exp1~20250708183702.136), Debian LLD 20.1.8
+Sorry for the delay to apply the patches. Now in our tree:
 
-Unfortunately, I don't have any reproducer for this issue yet.
+New patches for t/upstream-net and t/upstream:
+- 3a771ce1a023: mptcp: drop bogus optimization in __mptcp_check_push()
+- b7ad5d80dff9: mptcp: fix MSG_PEEK stream corruption
+- Results: 2a626f21446a..1ce735a9c1d6 (export-net)
+- Results: 0d7b92893723..f23a9744c467 (export)
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/a6472a8e035a/disk-6548d364.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/1547185ddf28/vmlinux-6548d364.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/d4610741deb8/bzImage-6548d364.xz
+Tests are now in progress:
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+f56f7d56e2c6e11a01b6@syzkaller.appspotmail.com
-
-netlink: 8 bytes leftover after parsing attributes in process `syz.7.6472'.
-netlink: 8 bytes leftover after parsing attributes in process `syz.7.6472'.
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 27976 at net/mptcp/pm_kernel.c:1053 __mark_subflow_endp_available net/mptcp/pm_kernel.c:1053 [inline]
-WARNING: CPU: 0 PID: 27976 at net/mptcp/pm_kernel.c:1053 mptcp_nl_remove_subflow_and_signal_addr net/mptcp/pm_kernel.c:1088 [inline]
-WARNING: CPU: 0 PID: 27976 at net/mptcp/pm_kernel.c:1053 mptcp_pm_nl_del_addr_doit+0xe2c/0x11d0 net/mptcp/pm_kernel.c:1190
-Modules linked in:
-CPU: 0 UID: 0 PID: 27976 Comm: syz.7.6472 Not tainted syzkaller #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 10/02/2025
-RIP: 0010:__mark_subflow_endp_available net/mptcp/pm_kernel.c:1053 [inline]
-RIP: 0010:mptcp_nl_remove_subflow_and_signal_addr net/mptcp/pm_kernel.c:1088 [inline]
-RIP: 0010:mptcp_pm_nl_del_addr_doit+0xe2c/0x11d0 net/mptcp/pm_kernel.c:1190
-Code: 01 00 00 49 89 c6 e8 93 b2 82 f6 e9 ed fb ff ff e8 89 b2 82 f6 48 89 df be 03 00 00 00 e8 ac 8d 53 f9 eb 9c e8 75 b2 82 f6 90 <0f> 0b 90 e9 90 fe ff ff 89 d9 80 e1 07 38 c1 0f 8c d9 fb ff ff 48
-RSP: 0018:ffffc9000c3e71a0 EFLAGS: 00010283
-RAX: ffffffff8b3d917b RBX: 0000000000000000 RCX: 0000000000080000
-RDX: ffffc90019844000 RSI: 0000000000009d14 RDI: 0000000000009d15
-RBP: ffffc9000c3e73b0 R08: ffff88802f74eea7 R09: 1ffff11005ee9dd4
-R10: dffffc0000000000 R11: ffffed1005ee9dd5 R12: ffff888068e67080
-R13: ffff88802f74ee98 R14: ffff88802f74e400 R15: 1ffff11005ee9dd3
-FS:  00007f57ed7746c0(0000) GS:ffff888125d06000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000020000000c038 CR3: 000000004ebf8000 CR4: 0000000000350ef0
-Call Trace:
- <TASK>
- genl_family_rcv_msg_doit+0x215/0x300 net/netlink/genetlink.c:1115
- genl_family_rcv_msg net/netlink/genetlink.c:1195 [inline]
- genl_rcv_msg+0x60e/0x790 net/netlink/genetlink.c:1210
- netlink_rcv_skb+0x208/0x470 net/netlink/af_netlink.c:2552
- genl_rcv+0x28/0x40 net/netlink/genetlink.c:1219
- netlink_unicast_kernel net/netlink/af_netlink.c:1320 [inline]
- netlink_unicast+0x82f/0x9e0 net/netlink/af_netlink.c:1346
- netlink_sendmsg+0x805/0xb30 net/netlink/af_netlink.c:1896
- sock_sendmsg_nosec net/socket.c:727 [inline]
- __sock_sendmsg+0x21c/0x270 net/socket.c:742
- ____sys_sendmsg+0x505/0x830 net/socket.c:2630
- ___sys_sendmsg+0x21f/0x2a0 net/socket.c:2684
- __sys_sendmsg net/socket.c:2716 [inline]
- __do_sys_sendmsg net/socket.c:2721 [inline]
- __se_sys_sendmsg net/socket.c:2719 [inline]
- __x64_sys_sendmsg+0x19b/0x260 net/socket.c:2719
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xfa/0xfa0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f57ec98efc9
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f57ed774038 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 00007f57ecbe6090 RCX: 00007f57ec98efc9
-RDX: 000000002000c094 RSI: 0000200000000000 RDI: 0000000000000009
-RBP: 00007f57eca11f91 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 00007f57ecbe6128 R14: 00007f57ecbe6090 R15: 00007ffeff6c13c8
- </TASK>
+- export-net:
+https://github.com/multipath-tcp/mptcp_net-next/commit/294a632909acc62a7656edc52770f9f59332af39/checks
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/1035c9b6c98cf0d15998eb7ce53e5f81621e5116/checks
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+New patches for t/upstream:
+- f0025b89c22c: mptcp: cleanup fallback data fin reception
+- 905fec8ceabc: mptcp: cleanup fallback dummy mapping generation
+- 8b29c30e82d2: mptcp: ensure the kernel PM does not take action too late
+- 439f10b1648b: mptcp: do not miss early first subflow close event
+notification
+- 00804e3abc8d: mptcp: make mptcp_destroy_common() static
+- 25c9415c554d: mptcp: drop the __mptcp_data_ready() helper
+- Results: f23a9744c467..eb31e166f63e (export)
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+Tests are now in progress:
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/54c37fb023bf32f10f60fb90d27a8fa800de426f/checks
 
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
 
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
