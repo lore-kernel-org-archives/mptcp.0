@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9502F3B2A0
-	for <mptcp@lists.linux.dev>; Mon, 27 Oct 2025 12:17:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0FF6285C99
+	for <mptcp@lists.linux.dev>; Mon, 27 Oct 2025 12:22:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761567474; cv=none; b=rPsaevceMIwBzrD0aUbWoiV8Ivm1ZFgcm+u4dM5/4qLhsD0kRwoRCteHSeV8v+Eseixd0otQTkQBzEoTTP8QseuWePFx7LNx9ICCoz9T3K5cZHYH0z/v8GcdshrDBAACyn5Clv+p/diCivL3eh/eGysSCM0TZb2V9EuQyWkdIxc=
+	t=1761567723; cv=none; b=fBN2lMc+gVfzDLTHuVFvbSSi2Uagqwd4XCAg7vuJPtibNepKT/flNQLccVm6B1fEQpGd5u3Th3Y8TefeB2dti1/2R+LLbyYXh3YIxcAoteeYFdg5ziPEJSFSBpotN2RciMZ3hoK2Bh8ON6p1OsLkzWG6z18t7pdapN+6kgTz+E8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761567474; c=relaxed/simple;
-	bh=zNQ08WTwtJw9sIv5R2cLFzJ1npBmiavxkcLNs1oJlcM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jZHu+Er76ErfcOrLu29dOVKei8Pbm8G8dg2bc+AtnaHPIyjtJ6xY34aOOaNMEefiU/sNg3ToxALZQfGjCPnbCciAc9WbzGh3g/HFyyaXqc3PwQiUED2whB7FfIi4IvC+w5WLSkqYPkg6RfWHrg0tY0htC3E1zmKxvx8vx2Ow1iY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U3abM8Wh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1761567723; c=relaxed/simple;
+	bh=t3xWcd9lx1DDSPXMCWY7leHEiotxwTe3fwOzcchqWG8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=bRTCPKwtVPBOINUw4UgSOpgpT8ZsKlKk8RXE+606P/LDTIDTp+6Nbz3ySKzwyiI2irsQfw3IRamDgYv5QC8o+C3i3IB+tWDxHcetADTldMzusg8H8Qxd+eCw8vBIfqRd6v3kF5QQAhr5vk99Cp25Nm+4AaIUBFdFgAJvZevmvzQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dEJLrPrr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U3abM8Wh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0954C4CEF1;
-	Mon, 27 Oct 2025 12:17:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dEJLrPrr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE464C4CEF1;
+	Mon, 27 Oct 2025 12:22:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761567474;
-	bh=zNQ08WTwtJw9sIv5R2cLFzJ1npBmiavxkcLNs1oJlcM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=U3abM8WhFz4hPYCgVCwhR61+pfr0tCb/S+8+HMpzH450aQU7rodeHpUBCUMoORbFy
-	 rR7A8X1WAVF+bQciqN8DGBZoj1MzKZPmsiWAm78jRHuqkqnKT+JXay0Ul0OBTjunF2
-	 IMawDRRl0+bnIVXR7RH+9Ljny+Nmi/sxfJ6kf6WGTf7Lp4HYE7U9YCrdcX3ydC8Drm
-	 j8sTmtQsT+GknJvYniZDZ3y8qGDSQkbqk55cBo6+t8BizWH7eBA6gD7NFsi4qtuxjb
-	 CuVxWGCeo/miJbqcSOuuYNi3xQ883jWJLPzcsfUxVT8EpLUjxPm5stKgfd8qixckKD
-	 FBh1c6xSWbEBw==
-Message-ID: <938a5c96-baf2-46b6-ab3e-cd25d898009e@kernel.org>
-Date: Mon, 27 Oct 2025 13:17:50 +0100
+	s=k20201202; t=1761567722;
+	bh=t3xWcd9lx1DDSPXMCWY7leHEiotxwTe3fwOzcchqWG8=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=dEJLrPrrGtTwPOZyzoldYqlD+d4hsh2J9IxL5U/6KeXcSf4YSrCdAsKLFeomyaRtD
+	 FTQv1dLMqgslDJpGm3aL/PX8M4uYhnPUipCRtA4GMaIO1dUvbTcijD/8mfwtg8SnFr
+	 kO7TMCadOzt6QsFBR2J56Naq7GWAKTC2TnMz/SKX/k/dPNHZPJW91sGrPblxLh9SN2
+	 SyZChKOCiD97MqYwEGmE4vN2KA4EmSvvcd7Q1TtB7f2IP69XR553YGoTp9NiMpDgzt
+	 cHKyzI1tdfhSacnvh679lEScqTA2bGy0kWPp3phjx4zeCkG6iqEMjNCkUHw5JBxF1+
+	 fhbM7M7vb6Riw==
+Message-ID: <17404b24-dbed-4f16-9ff6-5822bffc3c1b@kernel.org>
+Date: Mon, 27 Oct 2025 13:21:59 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,11 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 mptcp-next 00/11] mptcp: introduce backlog processing
+Subject: Re: [PATCH mptcp-next] Squash to "selftests: mptcp: join: validate
+ extra bind cases"
 Content-Language: en-GB, fr-BE
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-Cc: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>
-References: <cover.1761142784.git.pabeni@redhat.com>
+To: Geliang Tang <geliang@kernel.org>, MPTCP Upstream <mptcp@lists.linux.dev>
+References: <20251024-sft-fix-bind-timeout-v1-1-cb81a67b222c@kernel.org>
+ <95fdc88fbeba58db5976f97f117b1579a873c051.camel@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -85,102 +86,65 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <cover.1761142784.git.pabeni@redhat.com>
+In-Reply-To: <95fdc88fbeba58db5976f97f117b1579a873c051.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Paolo,
+Hi Geliang,
 
-On 22/10/2025 16:31, Paolo Abeni wrote:
-> This series includes RX path improvement built around backlog processing
+On 24/10/2025 14:56, Geliang Tang wrote:
+> Hi Matt,
 > 
-> The main goals are improving the RX performances _and_ increase the
-> long term maintainability.
+> Thanks for this fix.
 > 
-> Patches 2-4 prepare the stack for backlog processing, removing
-> assumptions that will not hold true anymore after backlog introduction.
+> On Fri, 2025-10-24 at 12:02 +0200, Matthieu Baerts (NGI0) wrote:
+>> I was going to send the related commit upstream, but then I realised
+>> in
+>> a slow environment (e.g. public CI), with a debug kernel, the default
+>> 10 seconds timeout can be too short:
+>>
+>>   086 multiple bind to allow joins v4
+>>         join Rx                             [ OK ]
+>>         join Tx                             [ OK ]
+>>   main_loop_s: timed out
+>>         add addr rx                         [ OK ]
+>>         add addr echo rx                    [ OK ]
+>>   ./mptcp_join.sh: line 3305: kill: (2032) - No such process
+>>
+>> This doesn't affect the results, because it happens after the test,
+>> when
+>> checking the counters. Still, better to fix that by using an infinite
+>> timeout: the process will be killed at the end.
+>>
+>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+>> ---
+>>  tools/testing/selftests/net/mptcp/mptcp_join.sh | 8 ++++----
+>>  1 file changed, 4 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+>> b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+>> index 05faacefb719..e0cdb9c662aa 100755
+>> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+>> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+>> @@ -3293,7 +3293,7 @@ bind_tests()
+>>  
+>>  		# Launching another app listening on a different
+>> address
+>>  		# Note: it could be a totally different app, e.g.
+>> nc, socat, ...
+>> -		ip netns exec ${ns1} ./mptcp_connect -l -p
+>> "$(get_port)" \
+>> +		ip netns exec ${ns1} ./mptcp_connect -l -t -1 -p
+>> "$(get_port)" \
 > 
-> Patches 1 and 5 fixes long standing issues which are quite hard to
-> reproduce with the current implementation but the 2nd one will become
-> very apparent with backlog usage.
-> 
-> Patches 6, 7 and 9 are more cleanups that will make the backlog patch a
-> little less huge.
-> 
-> Patch 8 is a somewhat unrelated cleanup, included here before I forgot
-> about it.
-> 
-> The real work is done by patch 10 and 11. Patch 10 introduces the helpers
-> needed to manipulate the msk-level backlog, and the data struct itself,
-> without any actual functional change. Patch 11 finally use the backlog
-> for RX skb processing. Note that MPTCP can't uset the sk_backlog, as
-> the mptcp release callback can also release and re-acquire the msk-level
-> spinlock and core backlog processing works under the assumption that
-> such event is not possible.
-> 
-> A relevant point is memory accounts for skbs in the backlog.
-> 
-> It's somewhat "original" due to MPTCP constraints. Such skbs use space
-> from the incoming subflow receive buffer, do not use explicitly any
-> forward allocated memory, as we can't update the msk fwd mem while
-> enqueuing, nor we want to acquire again the ssk socket lock while
-> processing the skbs.
-> 
-> Instead the msk borrows memory from the subflow and reserve it for
-> the backlog - see patch 3 and 11 for the gory details.
-> 
-> Note that even if the skbs can sit in the backlog for an unbounded time,
-> 
-> ---
-> v5 -> v6:
->  - added patch 1/11
->  - reworked widely patch 10 && 11 to avoid double accounts for backlog
->    skb and to address the fwd allocated memory criticality mentioned
->    in previous iterations.
-> 
-> Paolo Abeni (11):
->   mptcp: drop bogus optimization in __mptcp_check_push()
->   mptcp: borrow forward memory from subflow
->   mptcp: cleanup fallback data fin reception
->   mptcp: cleanup fallback dummy mapping generation
->   mptcp: fix MSG_PEEK stream corruption
->   mptcp: ensure the kernel PM does not take action too late
->   mptcp: do not miss early first subflow close event notification.
->   mptcp: make mptcp_destroy_common() static
->   mptcp: drop the __mptcp_data_ready() helper
->   mptcp: introduce mptcp-level backlog
->   mptcp: leverage the backlog for RX packet processing
+> A timeout of -1 means block indefinitely, right? Do you think using the
+> default 30 seconds (-t ${timeout_poll}) is sufficient?
 
-Sorry for the delay to apply the patches. Now in our tree:
+No need to use the same default timeout: this process is executed in the
+background, and we explicitly kill it at the end. Worst case, the other
+process timeout after 30 seconds, and we will still kill this one.
 
-New patches for t/upstream-net and t/upstream:
-- 3a771ce1a023: mptcp: drop bogus optimization in __mptcp_check_push()
-- b7ad5d80dff9: mptcp: fix MSG_PEEK stream corruption
-- Results: 2a626f21446a..1ce735a9c1d6 (export-net)
-- Results: 0d7b92893723..f23a9744c467 (export)
-
-Tests are now in progress:
-
-- export-net:
-https://github.com/multipath-tcp/mptcp_net-next/commit/294a632909acc62a7656edc52770f9f59332af39/checks
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/1035c9b6c98cf0d15998eb7ce53e5f81621e5116/checks
-
-
-New patches for t/upstream:
-- f0025b89c22c: mptcp: cleanup fallback data fin reception
-- 905fec8ceabc: mptcp: cleanup fallback dummy mapping generation
-- 8b29c30e82d2: mptcp: ensure the kernel PM does not take action too late
-- 439f10b1648b: mptcp: do not miss early first subflow close event
-notification
-- 00804e3abc8d: mptcp: make mptcp_destroy_common() static
-- 25c9415c554d: mptcp: drop the __mptcp_data_ready() helper
-- Results: f23a9744c467..eb31e166f63e (export)
-
-Tests are now in progress:
-
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/54c37fb023bf32f10f60fb90d27a8fa800de426f/checks
+So it looks easier/better to use -1, no?
 
 Cheers,
 Matt
