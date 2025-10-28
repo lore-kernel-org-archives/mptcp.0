@@ -1,130 +1,123 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 667F930DEBF
-	for <mptcp@lists.linux.dev>; Tue, 28 Oct 2025 11:47:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7E3D315D33;
+	Tue, 28 Oct 2025 11:58:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761652055; cv=none; b=fNHFi2LXPerTzjlbnqlWZGYc5/A0eubS1Mr+VutWceE485/MKudn8tIjPeYhdonR2pNkBjGYkorIZ6onbaNX7WL5FRPONoEBF4Ng6Te5IDVTo0r+RLNZYX4KVWmxc6r1YGTPZ7Oedyyb/Pplgi2Tqt5LA62SUspYwgeJPpvhkLU=
+	t=1761652693; cv=none; b=kWBYSdmxx5V3PhkEjdPw/G93eNhgez1HmRiKLA+/tmZZG2RCZIQ0tFFtVhKcfV0jA8pcJjNKVIRtgpQv22qbXA0Bz79Y2oENUE+tSfvfGXFiSLYzU4+s06UdoSoLvaUwfSJZptNMqn1zCwJeVJhmRW2ALJqxQufmsNgwrkCW22o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761652055; c=relaxed/simple;
-	bh=hTHSTmvO2gcuI9bvffQRykt0y1SGaZooIAbSqmRKxWY=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=Fy8ZQSmR3b9SqHjblJKfWmLgeYx9xMkzewV4rd9ymKasrpEEXinJJLIeL/MUUvNVJUeKp8L8P7oEeLyqePpoGenwv4xmIUMfGeWiT7asSAkhJf04vvrAs1iJLpxs9kHMSDm/LwNIhNvvI/6+9ClIsV7OYAav2nEqv1uTVREt+aM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AA9haMyl; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1761652693; c=relaxed/simple;
+	bh=sHoW21+AGDUkdQ6DaRFEDfNq+q5/ZNLb3IRxX1Wvf1o=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=ONc6zzfzg/U2yuTO1WViw6Hs68paT+upA6F+EU+hh7PxTEBV0gxfW/GKrmoGoYKx0VJ5Sv3AAtGJtbtazZaFgOlT7BSJ4PIZEL2TLw9+ciIr+OT/A0UPKg6oq97r6mitMN85lUUE936epJNG3efFrz5KJfkBsQ99j5Sab5sfOSI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bm3opNR4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AA9haMyl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1761652052;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ej5v2AhyT2+gsUph5VSZWo0mYhFvGVyUF+E1rpDGkYk=;
-	b=AA9haMylBAidafCPCHDsWLUkv37h7NL1XI4lk7FudkS2N2t/nbQI/gG6K84hzbZDevzl7f
-	m+p1S6uKR3lfPYFsP14GQY1bUbI0xhJdOy0dE5Zp8RAVyTRyTHSzoWteD2QZxW1CZEWVlW
-	o6QudmcANfiRdMezzYtk4o7oAIWx3w0=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-668-UEa5Lj9yOCG-IoLzJDS3rA-1; Tue, 28 Oct 2025 07:47:31 -0400
-X-MC-Unique: UEa5Lj9yOCG-IoLzJDS3rA-1
-X-Mimecast-MFC-AGG-ID: UEa5Lj9yOCG-IoLzJDS3rA_1761652050
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-475ddd57999so27172315e9.1
-        for <mptcp@lists.linux.dev>; Tue, 28 Oct 2025 04:47:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761652050; x=1762256850;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ej5v2AhyT2+gsUph5VSZWo0mYhFvGVyUF+E1rpDGkYk=;
-        b=Jg91Yl5rxRkzW+3JVB7bmnFSt9hhJZij9h6ke+2XExP5wunr+ZkFI3adWeXB9mPAng
-         9tc9mIZ131J3fKks1zoPF68P0i1NX1Mhkb2e3L3qymdYR0LMkV1EwvwoYG8IRUrcOquH
-         ZeaRJUbeI2iUaNFIhLvIizwhU6Az+vEobp8d68PoVjMdE0PTS7sXbqSw9V28UW6YcMUR
-         bsc74flNfdp2gBJfaVsO4UxeyyfmUUwy3y50JqDwlFlfldOxj53gIaaiz8wsruNd5mK+
-         saJk3hOCSuXOUlBu5SFpgqDDtIWf2WkfBQClXztqNlu9GAUHiKTX/ELkvImuOljlEZZK
-         Bc3g==
-X-Forwarded-Encrypted: i=1; AJvYcCU38jBd44b75DBNHUogZVtodcJK4XTkyRKH9LpMR62lBOWugAwGHwyIHBJQHCGlPUqH8RvMLA==@lists.linux.dev
-X-Gm-Message-State: AOJu0YydRcBzohGEnz6FQinjHMLwRbBpl+d6aR51bP8Zsiz2IQ+he5N4
-	VdWzudqxMu/UndLJzugGmaQoYVn6ie7mPnAhFPkFyLIJOjYdg9K7fWTECQdcuAZwwlgKlWYkQ8w
-	ql7yf6SRgEbvHuFONUL7EeeznoYEmbSzFVYv5QMi6rRpRbxhrDmqaLKHS
-X-Gm-Gg: ASbGnctmC36n0XJqC/0Acll0FrCMiPzKHKcbDkXjJxbfWxGF7Xa3B1oRuWbhENPq0iA
-	Mo6pSrzWihVj6k26f1hrq1Aw4V8nkNsK0pyMgBaHJWs/scRrBkVZgoOo7o5VHRnOEE0jesEmaJA
-	P5V6HlvcjW1xtHZJBZLHXTbWRqb8sHqVpxPff14ubxMZqnLPl1YJNCp7+P+VcrIMYlvpZWiMCoo
-	FOEFcCbLAVovFDQ6KwV+s16IN6k5M0R+kV9HoChkQudoEbQJhRxHdw8WB4eEV3n1xvH20ClEfSe
-	daqZkHE2QTJsDiBGRqn0cxw3p8qCT3AbXJxYEG7oSU/uNbveQ+mhfd9aYWehdy9uxgsDcVpPwx/
-	wlQipQEbYw/iatb2dO1/mwRckQJOlBBVVLk8Bdqhla59afio=
-X-Received: by 2002:a05:600c:b90:b0:477:58:7cfe with SMTP id 5b1f17b1804b1-47717e04c2bmr26366965e9.18.1761652049821;
-        Tue, 28 Oct 2025 04:47:29 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHYsmPrnr2n5dOG2TMddpHesTATKrRY3s7taqm1slxtVNIFUzWMD6kXpI/krQ6+LdMW9yh+6A==
-X-Received: by 2002:a05:600c:b90:b0:477:58:7cfe with SMTP id 5b1f17b1804b1-47717e04c2bmr26366375e9.18.1761652049184;
-        Tue, 28 Oct 2025 04:47:29 -0700 (PDT)
-Received: from ?IPV6:2a0d:3344:2712:7e10:4d59:d956:544f:d65c? ([2a0d:3344:2712:7e10:4d59:d956:544f:d65c])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-475dd47793fsm194874245e9.3.2025.10.28.04.47.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Oct 2025 04:47:28 -0700 (PDT)
-Message-ID: <7dfda5bb-665c-4068-acd4-795972da63e8@redhat.com>
-Date: Tue, 28 Oct 2025 12:47:26 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bm3opNR4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 520C9C4CEE7;
+	Tue, 28 Oct 2025 11:58:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761652693;
+	bh=sHoW21+AGDUkdQ6DaRFEDfNq+q5/ZNLb3IRxX1Wvf1o=;
+	h=From:Subject:Date:To:Cc:From;
+	b=bm3opNR4FmbN8/IlfdmxaVn4h4U5MyZLRy24F+L843qoyev2W3J84KXOhdwJnfTW4
+	 oNaQGBMtKADHYPL2tjavuzdcxPd0DoS89/wHKYz71kXEbSRXEDZ1xyLA35yLiw8GsD
+	 xlBkOPGh7M9bSpXFiYYBuuad/8Iav1ZBBn2rhO1yvLf9nTTtzya06VF4ib9h0ALeSb
+	 jBCTDUKn+pNxRYNcj6qM4RVEV00RVWS039Y0Cu7LyIO5WWhES8VD0kRnn5j0q8yzkR
+	 X7i84cqFBi5ifqXnz7WA0/+T0mx1g8FuL5ekYJ+J2+FOXBQwhfzDImUHIdPMuzcfAa
+	 t6QrlLf8Ck8+w==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH net v3 0/4] tcp: fix receive autotune again
+Date: Tue, 28 Oct 2025 12:57:58 +0100
+Message-Id: <20251028-net-tcp-recv-autotune-v3-0-74b43ba4c84c@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net v3 1/3] net,mptcp: fix proto fallback detection with
- BPF sockmap
-From: Paolo Abeni <pabeni@redhat.com>
-To: Jiayuan Chen <jiayuan.chen@linux.dev>, mptcp@lists.linux.dev
-Cc: stable@vger.kernel.org, Jakub Sitnicki <jakub@cloudflare.com>,
- John Fastabend <john.fastabend@gmail.com>, Eric Dumazet
- <edumazet@google.com>, Kuniyuki Iwashima <kuniyu@google.com>,
- Willem de Bruijn <willemb@google.com>, "David S. Miller"
- <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
- Simon Horman <horms@kernel.org>, Matthieu Baerts <matttbe@kernel.org>,
- Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
- Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>,
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
- Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>,
- Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
- Jiri Olsa <jolsa@kernel.org>, Shuah Khan <shuah@kernel.org>,
- Florian Westphal <fw@strlen.de>, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org, bpf@vger.kernel.org, linux-kselftest@vger.kernel.org
-References: <20251023125450.105859-1-jiayuan.chen@linux.dev>
- <20251023125450.105859-2-jiayuan.chen@linux.dev>
- <c10939d2-437e-47fb-81e9-05723442c935@redhat.com>
-In-Reply-To: <c10939d2-437e-47fb-81e9-05723442c935@redhat.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: L4eTKPmIc7B6q4Dqp_QLyDmmQK5uKl0EYd8horg334M_1761652050
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAMevAGkC/02MQQ6DIBAAv2L23DWAVbCn/qPpgcCKJBUMoGlq/
+ HtJTz3OJDMHZEqeMtyaAxLtPvsYKnSXBsysgyP0tjIIJnrOhMJABYtZMZHZUW8lli0Q9koOdrC
+ qt0pDbddEk3//vg+oCTyrnFJcsMyJ9P9SMtkpNraCc3EdFXIkuy36Q+XuYnQvak1c4Dy/lkfHN
+ 6sAAAA=
+X-Change-ID: 20251028-net-tcp-recv-autotune-5876d6d85d8a
+To: Eric Dumazet <edumazet@google.com>, 
+ Neal Cardwell <ncardwell@google.com>, Kuniyuki Iwashima <kuniyu@google.com>, 
+ "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+ David Ahern <dsahern@kernel.org>, Matthieu Baerts <matttbe@kernel.org>, 
+ Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ mptcp@lists.linux.dev, Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+ linux-trace-kernel@vger.kernel.org
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2128; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=sHoW21+AGDUkdQ6DaRFEDfNq+q5/ZNLb3IRxX1Wvf1o=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDIZ1p9p/SB23j+pccOqsMUttZtDTAr/bHvgu3D9e6eVu
+ VEC5o+6O0pZGMS4GGTFFFmk2yLzZz6v4i3x8rOAmcPKBDKEgYtTACbyToSR4ZSI1dnLTOFX9knz
+ 3F2wZLGUdMnbX2qnbnz+/qzsCucy5l+MDO9e7Xn85Lz5u0teNhzRS+coSSo6aJay5zvo2f8P/Xc
+ ngREA
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-On 10/28/25 12:30 PM, Paolo Abeni wrote:
-> On 10/23/25 2:54 PM, Jiayuan Chen wrote:
->> When the server has MPTCP enabled but receives a non-MP-capable request
->> from a client, it calls mptcp_fallback_tcp_ops().
->>
->> Since non-MPTCP connections are allowed to use sockmap, which replaces
->> sk->sk_prot, using sk->sk_prot to determine the IP version in
->> mptcp_fallback_tcp_ops() becomes unreliable. This can lead to assigning
->> incorrect ops to sk->sk_socket->ops.
-> 
-> I don't see how sockmap could modify the to-be-accepted socket sk_prot
-> before mptcp_fallback_tcp_ops(), as such call happens before the fd is
-> installed, and AFAICS sockmap can only fetch sockets via fds.
-> 
-> Is this patch needed?
+Neal Cardwell found that recent kernels were having RWIN limited
+issues, even when net.ipv4.tcp_rmem[2] was set to a very big value like
+512MB.
 
-Matttbe explained off-list the details of how that could happen. I think
-the commit message here must be more verbose to explain clearly the
-whys, even to those non proficient in sockmap like me.
+He suspected that tcp_stream default buffer size (64KB) was triggering
+heuristic added in ea33537d8292 ("tcp: add receive queue awareness
+in tcp_rcv_space_adjust()").
 
-Thanks,
+After more testing, it turns out the bug was added earlier
+with commit 65c5287892e9 ("tcp: fix sk_rcvbuf overshoot").
 
-Paolo
+I forgot once again that DRS has one RTT latency.
+
+MPTCP also got the same issue.
+
+This series :
+
+- Prevent calling tcp_rcvbuf_grow() on some MPTCP subflows.
+- adds rcv_ssthresh, window_clamp and rcv_wnd to trace_tcp_rcvbuf_grow().
+- Refactors code in a patch with no functional changes.
+- Fixes the issue in the final patch.
+
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+[ Added patch 1/4. ]
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+Changes in v3:
+- Fix warnings at build time by moving 'oldval' declaration (Matthieu)
+- Prevent possible divide by zero issue in mptcp_rcv_space_adjust() (Paolo)
+- Note: this v3 is not being sent by Eric because he is unavailable.
+- Link to v2: https://patch.msgid.link/20251027073809.2112498-1-edumazet@google.com
+Changes in v2:
+- Rebased to net tree
+- Changed mptcp_rcvbuf_grow() to read/write msk->rcvq_space.space (Paolo)
+- Link to v1: https://patch.msgid.link/20251024075027.3178786-1-edumazet@google.com
+
+---
+Eric Dumazet (3):
+      trace: tcp: add three metrics to trace_tcp_rcvbuf_grow()
+      tcp: add newval parameter to tcp_rcvbuf_grow()
+      tcp: fix too slow tcp_rcvbuf_grow() action
+
+Paolo Abeni (1):
+      mptcp: fix subflow rcvbuf adjust
+
+ include/net/tcp.h          |  2 +-
+ include/trace/events/tcp.h |  9 +++++++++
+ net/ipv4/tcp_input.c       | 21 ++++++++++++++-------
+ net/mptcp/protocol.c       | 26 +++++++++++++++++---------
+ 4 files changed, 41 insertions(+), 17 deletions(-)
+---
+base-commit: 210b35d6a7ea415494ce75490c4b43b4e717d935
+change-id: 20251028-net-tcp-recv-autotune-5876d6d85d8a
+
+Best regards,
+-- 
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
