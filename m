@@ -1,128 +1,97 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1420123A995
-	for <mptcp@lists.linux.dev>; Tue, 28 Oct 2025 01:34:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CE0425C6FF;
+	Tue, 28 Oct 2025 08:17:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761615263; cv=none; b=DEgw6yqcP2/TP9fG4xi2xuXjJUV6nAEKKGFOh+MyO2mMM2CqJErbapgGT7R4Zozv+LFWWk5FXy540OADcL+9R666RcFx/v2ouRuxSrXFqPC6zSbSwN6BcUi6TXQeDDIwkpE16cJEWEmFmXlhgHnv23GsYTaEI/sy3q7JT0cDvt4=
+	t=1761639434; cv=none; b=REjafO7pAtHmID2B6OAOILJnYOUNy4TbYSDjtmh8W45GzoezEK5NC7KcuZjfJi6LWN+vx6OvJHeLhlFd/Q0clX8zDkkyjhZ+YVPs8qdHrwzTrrlxvr2n3Rpbc47NJP1zfCxEIlfWoSh2DWX8SavAfcZ2/K188qSUIezBQlVrvDU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761615263; c=relaxed/simple;
-	bh=Ce4YAeQg+ljw02miIWCFaKrowc/H6Xu2cVTg0A0vrmk=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=e581+dQQw5C8N+eYX54VdpzySonvGgODvIaD0/kR+MqjrEIwzTUzA10hYHzpaj8wx0aFwEEFKLpAy0LjTGKw0wFLFQP37o223YeLD65z4TDBIrIuN4Q3CNIc0vPRGyN+vems8TSCUP8lcOq4OdLtwtcZDLXzNCNomltDDBrIBDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cofof9Yw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1761639434; c=relaxed/simple;
+	bh=YQctKbpXEnrgC6pJ0qwElwn6iJJlPUjdz6XA74x5wBg=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=ovaJ65qKrQQ6a15k5O+L4/BIo7znc76IY3Y4jkEqSmaDsvOesuLVLpEXWstePwVpmJyPd+OEZTy/XHqFb9VDfiGFc1QY3wXz0tL9HvXVblvz6LkwEb7nuxlUP1XHs13AD6dBc3BNDaoj1mIpLRmbZH3iE54miOUuOkcnjqUrLBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gkb9fflf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cofof9Yw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B45CC4CEFB;
-	Tue, 28 Oct 2025 01:34:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gkb9fflf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C299C4CEE7;
+	Tue, 28 Oct 2025 08:17:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761615262;
-	bh=Ce4YAeQg+ljw02miIWCFaKrowc/H6Xu2cVTg0A0vrmk=;
-	h=Subject:From:To:Date:In-Reply-To:References:From;
-	b=cofof9YwhVD+cMvF8jwaUijo4S2JarzuNKpFR+uyFKUubwLOMuclfDjTwPtIr/7KH
-	 oYUoBZHb0h9m/vT5DsmvH7dBtTMIaVDNfwIVl6BLblHjCH5Tsz8Zr+6vVyESLnuRBH
-	 e0HrpBTOgxjVMA3vUBY6AkanqYrNLHWOS5D4XFi0QRvR0ddxdty/YK/lT36cRWiMTh
-	 UIXf45pGmU60IxdkWwPz3HY/4XgflxZfH+EQhvj1tQXit73Rn8O14XbAvdPqEmR/cG
-	 Bm8sQG33f4f5jQtI8kIerd6RHk0wIBE5vlZL+8DMThMIXHiUvzsCDW6bkJGDMuWO9I
-	 9b8gY5iStzTVw==
-Message-ID: <074a8c2a99f102b2452570814c9700ef0225b145.camel@kernel.org>
-Subject: Re: [PATCH mptcp-next] Squash to "selftests: mptcp: join: validate
- extra bind cases"
-From: Geliang Tang <geliang@kernel.org>
-To: Matthieu Baerts <matttbe@kernel.org>, MPTCP Upstream
- <mptcp@lists.linux.dev>
-Date: Tue, 28 Oct 2025 09:34:16 +0800
-In-Reply-To: <17404b24-dbed-4f16-9ff6-5822bffc3c1b@kernel.org>
-References: <20251024-sft-fix-bind-timeout-v1-1-cb81a67b222c@kernel.org>
-	 <95fdc88fbeba58db5976f97f117b1579a873c051.camel@kernel.org>
-	 <17404b24-dbed-4f16-9ff6-5822bffc3c1b@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.52.3-0ubuntu1 
+	s=k20201202; t=1761639433;
+	bh=YQctKbpXEnrgC6pJ0qwElwn6iJJlPUjdz6XA74x5wBg=;
+	h=From:Subject:Date:To:Cc:From;
+	b=Gkb9fflfFkSsHc1HRyBL8VVXfwBdN27pzlaVxIrsGEG1+beyzHZJV5xjMzVwaob0b
+	 2Z2MEk7uYrH8d7Wusk/VafRWVu1YCW2dkhYQ8rZDTB/437uJZrWAj5Zw+fae6Y9Iy/
+	 0mI4lmtu5iP/v+dCF+MwJqSb6pOgR6is/NUiPQX2myMYM9Un/UC4JFso0L3XrJwk9f
+	 8ltdWxKrdQf+ZsWlIrHPblAGJpGAkfiwd4a/MMF4S4EtbXjZ0fvAuMvQXO/vHY5QbE
+	 lHn+mdiTNSFOrKRNbOQhTnjytOH3PdMyNHE+jZnopKZ1Mnb37TL7s1bD3upnVBkMe0
+	 +ed88RC5LFkLQ==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH net 0/4] mptcp: various rare sending issues
+Date: Tue, 28 Oct 2025 09:16:51 +0100
+Message-Id: <20251028-net-mptcp-send-timeout-v1-0-38ffff5a9ec8@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAPN7AGkC/x3MQQqAIBBA0avErBtIMayuEi1Cx5pFJmoRhHdPW
+ v7F+y8kikwJpuaFSDcnPn0N0TZg9tVvhGxrg+xkLzqp0VPGI2QTMJG3mPmg88qonRFKK2cHNUL
+ FIZLj5x/PUA0spXyC4lNTbQAAAA==
+X-Change-ID: 20251027-net-mptcp-send-timeout-7fc1474fd849
+To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Simon Horman <horms@kernel.org>, Florian Westphal <fw@strlen.de>, 
+ Yonglong Li <liyonglong@chinatelecom.cn>
+Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, 
+ linux-kernel@vger.kernel.org, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
+ stable@vger.kernel.org
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1219; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=YQctKbpXEnrgC6pJ0qwElwn6iJJlPUjdz6XA74x5wBg=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDIZqv8f3LPyYoyqG++xrYb3loaJh7QsXpW146iU2n7dv
+ QENRseMOkpYGMS4GGTFFFmk2yLzZz6v4i3x8rOAmcPKBDKEgYtTACai+p3hu9tDx/U3/l4IFX/0
+ ycT+g+fq1ZnvSmeXP6pI5oxvtnu8luE3K1e7zqPfh3yE1mVsu3n5WbzU9etPMl8cW/VTdia78j8
+ DVgA=
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hi Matt,
+Here are various fixes from Paolo, addressing very occasional issues on
+the sending side:
 
-On Mon, 2025-10-27 at 13:21 +0100, Matthieu Baerts wrote:
-> Hi Geliang,
-> 
-> On 24/10/2025 14:56, Geliang Tang wrote:
-> > Hi Matt,
-> > 
-> > Thanks for this fix.
-> > 
-> > On Fri, 2025-10-24 at 12:02 +0200, Matthieu Baerts (NGI0) wrote:
-> > > I was going to send the related commit upstream, but then I
-> > > realised
-> > > in
-> > > a slow environment (e.g. public CI), with a debug kernel, the
-> > > default
-> > > 10 seconds timeout can be too short:
-> > > 
-> > >   086 multiple bind to allow joins v4
-> > >         join Rx                             [ OK ]
-> > >         join Tx                             [ OK ]
-> > >   main_loop_s: timed out
-> > >         add addr rx                         [ OK ]
-> > >         add addr echo rx                    [ OK ]
-> > >   ./mptcp_join.sh: line 3305: kill: (2032) - No such process
-> > > 
-> > > This doesn't affect the results, because it happens after the
-> > > test,
-> > > when
-> > > checking the counters. Still, better to fix that by using an
-> > > infinite
-> > > timeout: the process will be killed at the end.
-> > > 
-> > > Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> > > ---
-> > >  tools/testing/selftests/net/mptcp/mptcp_join.sh | 8 ++++----
-> > >  1 file changed, 4 insertions(+), 4 deletions(-)
-> > > 
-> > > diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> > > b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> > > index 05faacefb719..e0cdb9c662aa 100755
-> > > --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> > > +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> > > @@ -3293,7 +3293,7 @@ bind_tests()
-> > >  
-> > >  		# Launching another app listening on a different
-> > > address
-> > >  		# Note: it could be a totally different app,
-> > > e.g.
-> > > nc, socat, ...
-> > > -		ip netns exec ${ns1} ./mptcp_connect -l -p
-> > > "$(get_port)" \
-> > > +		ip netns exec ${ns1} ./mptcp_connect -l -t -1 -p
-> > > "$(get_port)" \
-> > 
-> > A timeout of -1 means block indefinitely, right? Do you think using
-> > the
-> > default 30 seconds (-t ${timeout_poll}) is sufficient?
-> 
-> No need to use the same default timeout: this process is executed in
-> the
-> background, and we explicitly kill it at the end. Worst case, the
-> other
-> process timeout after 30 seconds, and we will still kill this one.
-> 
-> So it looks easier/better to use -1, no?
+- Patch 1: drop an optimisation that could lead to timeout in case of
+  race conditions. A fix for up to v5.11.
 
-If that's the case, could we set a value that is, for example, twice or
-ten times the value of ${timeout_poll}? But it's up to you.
+- Patch 2: fix stream corruption under very specific conditions. A fix
+  for up to v5.13.
 
-Reviewed-by: Geliang Tang <geliang@kernel.org>
+- Patch 3: restore MPTCP-level zero window probe after a recent fix. A
+  fix for up to v5.16.
 
-Thanks,
--Geliang
+- Patch 4: new MIB counter to track MPTCP-level zero windows probe to
+  help catching issues similar to the one fixed by the previous patch.
 
-> 
-> Cheers,
-> Matt
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+Paolo Abeni (4):
+      mptcp: drop bogus optimization in __mptcp_check_push()
+      mptcp: fix MSG_PEEK stream corruption
+      mptcp: restore window probe
+      mptcp: zero window probe mib
+
+ net/mptcp/mib.c      |  1 +
+ net/mptcp/mib.h      |  1 +
+ net/mptcp/protocol.c | 57 +++++++++++++++++++++++++++++++++-------------------
+ net/mptcp/protocol.h |  2 +-
+ 4 files changed, 39 insertions(+), 22 deletions(-)
+---
+base-commit: 210b35d6a7ea415494ce75490c4b43b4e717d935
+change-id: 20251027-net-mptcp-send-timeout-7fc1474fd849
+
+Best regards,
+-- 
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
