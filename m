@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB48A346A19;
-	Tue, 28 Oct 2025 17:26:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 130C834BA20
+	for <mptcp@lists.linux.dev>; Tue, 28 Oct 2025 17:31:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761672377; cv=none; b=tsckdXQDvfot5Arq/xOtbi7eObAi7j/CDeQbywvrXMYT3App7ctQwgxr5/8cm9ycJkGuXTD9tf1h0JRvwUlxzgBszYAdJCcgeVp0v3yKA2HUQefySFXoSVzfeiVuJYT9XvbnP+KS7zb6OCGWeNhA/bedpXmbjkAi2yW9sYCOVL8=
+	t=1761672671; cv=none; b=JA0tcEeg7WN3sjTCTBCOYEw58KFShENMeaS+8F3dOZftr5TXPIpTK0UQf3UGIBHC5BHNfv5nUn1lXAv+2YPYg6RFsCtGT5LYogHDfZabrNoSP5PPxdwR6/NyvD9vHeYr67ymwoF2cXaC4ugl6wNw5FichUzXjPlI/FBuPEsCtR8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761672377; c=relaxed/simple;
-	bh=TPax0slGP7PiPUxCVpNjABnEC3k7GlA/DHa3fwFl7gU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EXYhR+uGeQ9eMqg1XkzT71MGzZP8MP+S4EdkI1cvZjXFWN1yyJOBeedjthThCvsa6r5qtjuDzUEGz+QrjV2WmfFQj8VgBBrgDYvITk/e+9T/JUuGgB6VPglB+66LjPMyOtGdGKrHYmesOdpuiZnCqvYkj69v5WiQsgWbbAMo7TY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KxDFJcpx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1761672671; c=relaxed/simple;
+	bh=4Pg18Mo48hzXqQiQXxloyoxvntcyHmrdTHlH98qptK0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=O3oCTrIpuRGcaKeryRZOx7UmlecbxhtxmQkpQenvmwH9KMW63hrcjitER+y4tDKThv0xVSK/eMAl+jyCW11RmnnoHM03dorQRuKTy1j9eCa6XuChBgALT85moGYBFDHW0eczCOCA0iuHatGPqLmA2+9PUaQcSLrBCCCq/8rwk8o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=og0rL7Es; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KxDFJcpx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC551C4CEE7;
-	Tue, 28 Oct 2025 17:26:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="og0rL7Es"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66ED0C19421;
+	Tue, 28 Oct 2025 17:31:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761672376;
-	bh=TPax0slGP7PiPUxCVpNjABnEC3k7GlA/DHa3fwFl7gU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=KxDFJcpx/HWC2pENdRtR/MkUxhf0BIKD6ANVc3e/buzQecZkDC22XPHSOcgkdwkSP
-	 QUrJu/X+hO7IhpkwIlxDAWzLMUjcnf2l0wT16ZWxxFt0pckVpn/ekYH71HQHE+nvsd
-	 S9BA1WiQzIMRT7bH8WXJ2YACgI+bf1gUVMG1lPVXzHlC+6EwW9raDc4OzQ0Jq27A4t
-	 sRWZ4OJm3AfJZ1yIarHC3M35dZR3w7B8NcNYnNwpqYcTKxk+Wzwl3JgZ4Vygwn1UwY
-	 AsF9w/bXgyPAkS0d93u477ovQdNMyfzA9AK0I7Co82YitMpMVBzSUjVbk7nAt+FGs+
-	 NxjIyoCa/ZXBA==
-Message-ID: <bc5831bb-cfa3-4327-b129-30ca5d17b45e@kernel.org>
-Date: Tue, 28 Oct 2025 18:26:05 +0100
+	s=k20201202; t=1761672670;
+	bh=4Pg18Mo48hzXqQiQXxloyoxvntcyHmrdTHlH98qptK0=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=og0rL7EspBTN3GkC5Tic1pFStd01eJx+XGA7X7/+erKGunda8vCc8v6Esw1D2H70F
+	 mz/I6yP2e3/01lW0v8H5BwjswhS7h/Ek6lZBNKgj7pDQejC8peodhouDNIFjX3lqbp
+	 2P+taSKU8rVxV2hiNUL0GCZASc49OIQAR0SwKxWn0Ie05/effK3yiLNJy1ODAYXcer
+	 UgrEay6tPPFPqSD1t6xcHPkzpdCjXcD4C6tlmYVaWw8axJA9ypCoIZFk3nNhIcjkPe
+	 iZEQ+/hQyHSBGYI7aUtErSMsIsuwJzIQNrLSsok3/dYvJSnblOO2xGq0jqFgH5rGNV
+	 u9YOCgmzHkF1A==
+Message-ID: <a8e6e66b-ca88-4888-87c3-4b1b4b906782@kernel.org>
+Date: Tue, 28 Oct 2025 18:31:08 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,27 +35,14 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net v3 0/3] mptcp: Fix conflicts between MPTCP and sockmap
+Subject: Re: [PATCH mptcp-next] Squash to "selftests: mptcp: join: validate
+ extra bind cases"
 Content-Language: en-GB, fr-BE
-To: Jiayuan Chen <jiayuan.chen@linux.dev>, mptcp@lists.linux.dev
-Cc: John Fastabend <john.fastabend@gmail.com>,
- Jakub Sitnicki <jakub@cloudflare.com>, Eric Dumazet <edumazet@google.com>,
- Kuniyuki Iwashima <kuniyu@google.com>, Paolo Abeni <pabeni@redhat.com>,
- Willem de Bruijn <willemb@google.com>, "David S. Miller"
- <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
- Simon Horman <horms@kernel.org>, Mat Martineau <martineau@kernel.org>,
- Geliang Tang <geliang@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
- Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman
- <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
- Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>,
- Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
- Jiri Olsa <jolsa@kernel.org>, Shuah Khan <shuah@kernel.org>,
- Florian Westphal <fw@strlen.de>, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org, bpf@vger.kernel.org, linux-kselftest@vger.kernel.org
-References: <20251023125450.105859-1-jiayuan.chen@linux.dev>
- <14b565a1-0c2a-420d-ab2a-dc8a46dbf33c@kernel.org>
- <319c419455b73deb312b53d99c30217f6b606208@linux.dev>
+To: Geliang Tang <geliang@kernel.org>, MPTCP Upstream <mptcp@lists.linux.dev>
+References: <20251024-sft-fix-bind-timeout-v1-1-cb81a67b222c@kernel.org>
+ <95fdc88fbeba58db5976f97f117b1579a873c051.camel@kernel.org>
+ <17404b24-dbed-4f16-9ff6-5822bffc3c1b@kernel.org>
+ <074a8c2a99f102b2452570814c9700ef0225b145.camel@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -101,286 +88,100 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <319c419455b73deb312b53d99c30217f6b606208@linux.dev>
+In-Reply-To: <074a8c2a99f102b2452570814c9700ef0225b145.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi Jiayuan,
+Hi Geliang,
 
-Thank you for your reply!
-
-On 24/10/2025 06:13, Jiayuan Chen wrote:
-> 2025/10/23 22:10, "Matthieu Baerts" <matttbe@kernel.org mailto:matttbe@kernel.org?to=%22Matthieu%20Baerts%22%20%3Cmatttbe%40kernel.org%3E > 写到:
+On 28/10/2025 02:34, Geliang Tang wrote:
+> Hi Matt,
 > 
-> 
->>>  MPTCP creates subflows for data transmission between two endpoints.
->>>  However, BPF can use sockops to perform additional operations when TCP
->>>  completes the three-way handshake. The issue arose because we used sockmap
->>>  in sockops, which replaces sk->sk_prot and some handlers.
->>>
->> Do you know at what stage the sk->sk_prot is modified with sockmap? When
->> switching to TCP_ESTABLISHED?
->> Is it before or after having set "tcp_sk(sk)->is_mptcp = 0" (in
->> subflow_ulp_fallback(), coming from subflow_syn_recv_sock() I suppose)?
-> 
-> 
-> Yes, there are two call points. One is after executing subflow_syn_recv_sock():
-> tcp_init_transfer(sk, BPF_SOCK_OPS_PASSIVE_ESTABLISHED_CB, skb);
-> 
-> So at this point, is_mptcp = 0. The other call point is when userspace calls
-> the BPF interface, passing in an fd while it's not a subflow but a parent sk
-> with its own mptcp_prot we will also reject it.
-
-OK, thank you for the explanations! I think your commit message in patch
-1/3 should then explain the conditions to have mptcp_fallback_tcp_ops()
-being called with a different sk_prot. In short: MPTCP listening socket,
-TCP request without MPTCP, sk_prot reset to TCP (subflow_syn_recv_sock)
-when SYN RECV, then reset by sockmap when ESTABLISHED, then accept part
-and sk_prot is not the expected one.
-
-> You can refer to my provided selftest, which covers these scenarios.
-> 
->> If MPTCP is still being used (sk_is_tcp(sk) && sk_is_mptcp(sk)), I guess
->> sockmap should never touch the in-kernel TCP subflows: they will likely
->> only carry a part of the data. Instead, sockmap should act on the MPTCP
->> sockets, not the in-kernel TCP subflows.
-> 
-> Yes, I agree.
-> 
-> For full functionality, we need to retrieve the parent socket from MPTCP
-> and integrate it with sockmap, rather than simply rejecting.
-
-We should be careful when adding such exceptions. I will add more
-details below.
-
-> The current implementation rejects MPTCP because I previously attempted to
-> add sockmap support for MPTCP, but it required implementing many interfaces
-> and would take considerable time.
-> 
-> So for now, I'm proposing this as a fix to resolve the immediate issue.
-> Subsequently, we can continue working on fully integrating MPTCP with sockmap.
-
-It makes sense to start with the fix for stable, then the implementation
-later. I think the implementation should not be that complex: it is just
-that it has to be done at MPTCP level, not TCP. sockmap supports
-different protocol, and it doesn't seem to be TCP specific, so that
-should be feasible.
-
->> There is one particular case to take into consideration: an MPTCP
->> connection can fallback to "plain" TCP before being used by the
->> userspace. Typically, that's when an MPTCP listening socket receives a
->> "plain" TCP request (without MPTCP): a "plain" TCP socket will then be
->> created, and exposed to the userspace. In this case, sk_is_mptcp(sk)
->> will return false. I guess that's the case you are trying to handle,
->> right? (It might help BPF reviewers to mention that in the commit
->> message(s).)
-> 
-> Yes, this is primarily the case we're addressing. I will add this description
-> to the commit message.
-
-Thanks!
-
->> I would then say that sk->sk_prot->psock_update_sk_prot should not point
->> to tcp_bpf_update_proto() when MPTCP is being used (or this callback
->> should take the MPTCP case into account, but I guess no). In case of
->> fallback before the accept() stage, the socket can then be used as a
->> "plain" TCP one. I guess when tcp_bpf_update_proto() will be called,
->> sk_prot is pointing to tcp(v6)_prot, not the MPTCP subflow override one,
->> right?
-> 
-> Yes, when tcp_bpf_update_proto is called the sk_prot is pointing to tcp(v6)_prot.
-> subflow_syn_recv_sock
->  mptcp_subflow_drop_ctx
->   subflow_ulp_fallback
->    mptcp_subflow_ops_undo_override -> reset sk_prot to original one
-
-I see, it would be good to add that in the commit message as well.
-
-> So [patch 2/3] aims to prevent psock_update_sk_prot from being executed on subflows.
-> 
-> Actually, replacing the subflow's callbacks is also incorrect, as you mentioned earlier,
-> because subflows only carry part of the data. By checking for subflows early and skipping
-> subsequent steps, we avoid incorrect logic.
-> 
-> Furthermore, there's another risk: if an IPv6 request comes in and we perform the replacement,
-> MPTCP will roll it back to inet_stream_ops. I haven't delved too deeply into the potential
-> impact, but I noticed that inet6_release has many V6-specific cleanup procedures not present
-> in inet_release.
-
-That's why we have the WARN_ON_ONCE(): this sk_prot was not expected, a
-fix in the code is required if another value is accepted.
-
->>> Since subflows
->>>  also have their own specialized handlers, this creates a conflict and leads
->>>  to traffic failure. Therefore, we need to reject operations targeting
->>>  subflows.
->>>
->> Would it not work to set sk_prot->psock_update_sk_prot to NULL for the
->> v4 and v6 subflows (in mptcp_subflow_init()) for the moment while
->> sockmap is not supported with MPTCP? This might save you some checks in
->> sock_map.c, no?
-> 
-> This seems like a reliable alternative I hadn't considered initially.
-> 
-> However, adding the check on the BPF side serves another purpose: to explicitly
-> warn users that sockmap and MPTCP are incompatible.
-> 
-> Since the latest Golang version enables MPTCP server by default, and if the client
-> doesn't support MPTCP, it falls back to TCP logic. We want to print a clear message
-> informing users who have upgraded to the latest Golang and are using sockmap.
-> 
-> Perhaps we could add a function like sk_is_mptcp_subflow() in the MPTCP side?
-> The implementation would simply be sk_is_tcp(sk) && sk_is_mptcp(sk).
-> 
-> Implementing this check logic on the BPF side might become invalid if MPTCP internals
-> change later; placing it in the MPTCP side might be a better choice.
-
-I can understand that adding an error message can be helpful, but I
-don't think we should add MPTCP specific checks in sockmap for the moment.
-
->>> This patchset simply prevents the combination of subflows and sockmap
->>>  without changing any functionality.
->>>
->> In your case, you have an MPTCP listening socket, but you receive a TCP
->> request, right? The "sockmap update" is done when switching to
->> TCP_ESTABLISHED, when !sk_is_mptcp(sk), but that's before
->> mptcp_stream_accept(). That's why sk->sk_prot has been modified, but it
->> is fine to look at sk_family, and return inet(6)_stream_ops, right?
-> 
-> I believe so. Since MPTCP is fundamentally based on TCP, using sk_family to
-> determine which ops to fall back to should be sufficient.
-> 
-> However, strictly speaking, this [patch 1/3] might not even be necessary if we
-> prevent the sk_prot replacement for subflows at the sockmap layer.
-> 
->> A more important question: what will typically happen in your case if
->> you receive an MPTCP request and sockmap is then not supported? Will the
->> connection be rejected or stay in a strange state because the userspace
->> will not expect that? In these cases, would it not be better to disallow
->> sockmap usage while the MPTCP support is not available? The userspace
->> would then get an error from the beginning that the protocol is not
->> supported, and should then not create an MPTCP socket in this case for
->> the moment, no?
+> On Mon, 2025-10-27 at 13:21 +0100, Matthieu Baerts wrote:
+>> Hi Geliang,
 >>
->> I can understand that the switch from TCP to MPTCP was probably done
->> globally, and this transition should be as seamless as possible, but it
->> should not cause a regression with MPTCP requests. An alternative could
->> be to force a fallback to TCP when sockmap is used, even when an MPTCP
->> request is received, but not sure if it is practical to do, and might be
->> strange from the user point of view.
-> 
-> Actually, I understand this not as an MPTCP regression, but as a sockmap
-> regression.
-> 
-> Let me explain how users typically use sockmap:
-> 
-> Users typically create multiple sockets on a host and program using BPF+sockmap
-> to enable fast data redirection. This involves intercepting data sent or received
-> by one socket and redirecting it to the send or receive queue of another socket.
-> 
-> This requires explicit user programming. The goal is that when multiple microservices
-> on one host need to communicate, they can bypass most of the network stack and avoid
-> data copies between user and kernel space.
-> 
-> However, when an MPTCP request occurs, this redirection flow fails.
-
-This part bothers me a bit. Does it mean that when the userspace creates
-a TCP listening socket (IPPROTO_TCP), MPTCP requests will be accepted,
-but MPTCP will not be used ; but when an MPTCP socket is used instead,
-MPTCP requests will be rejected?
-
-If yes, it might be clearer not to allow sockmap on connections created
-from MPTCP sockets. But when looking at sockmap and what's happening
-when a TCP socket is created following a "plain TCP" request, we would
-need specific MPTCP code to catch that in sockmap...
-
-> Since the sockmap workflow typically occurs after the three-way handshake, rolling
-> back at that point might be too late, and undoing the logic for MPTCP would be very
-> complex.
-> 
-> Regardless, the reality is that MPTCP and sockmap are already conflicting, and this
-> has been the case for some time. So I think our first step is to catch specific
-> behavior on the BPF side and print a message
-> "sockmap/sockhash: MPTCP sockets are not supported\n", informing users to either
-> stop using sockmap or not use MPTCP.
-> 
-> As for the logic to check for subflows, I think implementing it in subflow.c would be
-> beneficial, as this logic would likely be useful later if we want to
-> support MPTCP + sockmap.
-
-Probably yes.
-
-> Furthermore, this commit also addresses the issue of incorrectly selecting
-> inet_stream_ops due to the subflow prot replacement, as mentioned above.
-
-(indeed, but this seems to happen only when sk_prot has been replaced by
-sockmap :) )
-
->>> A complete integration of MPTCP and sockmap would require more effort, for
->>>  example, we would need to retrieve the parent socket from subflows in
->>>  sockmap and implement handlers like read_skb.
->>>  
->>>  If maintainers don't object, we can further improve this in subsequent
->>>  work.
+>> On 24/10/2025 14:56, Geliang Tang wrote:
+>>> Hi Matt,
 >>>
->> That would be great to add MPTCP support in sockmap! As mentioned above,
->> this should be done on the MPTCP socket. I guess the TCP "in-kernel"
->> subflows should not be modified.
-> 
-> 
-> I think we should first fix the issue by having sockmap reject operations on subflows.
-> Subsequently, we can work on fully integrating sockmap with MPTCP as a feature
-> (which would require implementing some handlers).
-
-OK for me!
-
->>> [1] truncated warning:
->>>  [ 18.234652] ------------[ cut here ]------------
->>>  [ 18.234664] WARNING: CPU: 1 PID: 388 at net/mptcp/protocol.c:68 mptcp_stream_accept+0x34c/0x380
->>>  [ 18.234726] Modules linked in:
->>>  [ 18.234755] RIP: 0010:mptcp_stream_accept+0x34c/0x380
->>>  [ 18.234762] RSP: 0018:ffffc90000cf3cf8 EFLAGS: 00010202
-> [...]
+>>> Thanks for this fix.
 >>>
->> Please next time use the ./scripts/decode_stacktrace.sh if possible.
->> (and strip the timestamps if it is not giving useful info)
->> Just to be sure: is it the warning you get on top of net or net-next? Or
->> an older version? (Always useful to mention the base)
-> 
-> Thank you, Matthieu. I will pay attention to this.
-> 
-> 
+>>> On Fri, 2025-10-24 at 12:02 +0200, Matthieu Baerts (NGI0) wrote:
+>>>> I was going to send the related commit upstream, but then I
+>>>> realised
+>>>> in
+>>>> a slow environment (e.g. public CI), with a debug kernel, the
+>>>> default
+>>>> 10 seconds timeout can be too short:
+>>>>
+>>>>   086 multiple bind to allow joins v4
+>>>>         join Rx                             [ OK ]
+>>>>         join Tx                             [ OK ]
+>>>>   main_loop_s: timed out
+>>>>         add addr rx                         [ OK ]
+>>>>         add addr echo rx                    [ OK ]
+>>>>   ./mptcp_join.sh: line 3305: kill: (2032) - No such process
+>>>>
+>>>> This doesn't affect the results, because it happens after the
+>>>> test,
+>>>> when
+>>>> checking the counters. Still, better to fix that by using an
+>>>> infinite
+>>>> timeout: the process will be killed at the end.
+>>>>
+>>>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+>>>> ---
+>>>>  tools/testing/selftests/net/mptcp/mptcp_join.sh | 8 ++++----
+>>>>  1 file changed, 4 insertions(+), 4 deletions(-)
+>>>>
+>>>> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+>>>> b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+>>>> index 05faacefb719..e0cdb9c662aa 100755
+>>>> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+>>>> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+>>>> @@ -3293,7 +3293,7 @@ bind_tests()
+>>>>  
+>>>>  		# Launching another app listening on a different
+>>>> address
+>>>>  		# Note: it could be a totally different app,
+>>>> e.g.
+>>>> nc, socat, ...
+>>>> -		ip netns exec ${ns1} ./mptcp_connect -l -p
+>>>> "$(get_port)" \
+>>>> +		ip netns exec ${ns1} ./mptcp_connect -l -t -1 -p
+>>>> "$(get_port)" \
 >>>
->>> ---
->>>  v2: https://lore.kernel.org/bpf/20251020060503.325369-1-jiayuan.chen@linux.dev/T/#t
->>>  Some advice suggested by Jakub Sitnicki
->>>  
->>>  v1: https://lore.kernel.org/mptcp/a0a2b87119a06c5ffaa51427a0964a05534fe6f1@linux.dev/T/#t
->>>  Some advice from Matthieu Baerts.
->>>
->> (It usually helps reviewers to add more details in the notes/changelog
->> for the individual patch)
+>>> A timeout of -1 means block indefinitely, right? Do you think using
+>>> the
+>>> default 30 seconds (-t ${timeout_poll}) is sufficient?
+>>
+>> No need to use the same default timeout: this process is executed in
+>> the
+>> background, and we explicitly kill it at the end. Worst case, the
+>> other
+>> process timeout after 30 seconds, and we will still kill this one.
+>>
+>> So it looks easier/better to use -1, no?
 > 
-> Thank you, Matthieu. I will provide more detailed descriptions in the future.
+> If that's the case, could we set a value that is, for example, twice or
+> ten times the value of ${timeout_poll}? But it's up to you.
 
-Thanks!
+I don't think that's needed: here, we don't wait for any events related
+to this process executed in the background. So we don't need a timeout.
+If really there is an issue to reach the kill part at the end, the
+process will be killed when cleaning the netns.
 
-So for the v4, patch 2/3 would be replaced by one setting ...
+New patches for t/upstream:
+- 284511309756: "squashed" in "selftests: mptcp: join: validate extra
+bind cases"
+- Results: cfb47c65c4ba..2ae62d17b961 (export)
 
-  tcp_prot_override.psock_update_sk_prot = NULL;
-  (...)
-  tcpv6_prot_override.psock_update_sk_prot = NULL;
+Tests are now in progress:
 
-... in mptcp_subflow_init(). (+ more details for patch 1/3).
-
-From there, we can discuss with other maintainers what to do with the
-MPTCP listening socket + sockmap case. And in parallel, we can also
-discuss MPTCP support with sockmap. WDYT?
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/ef9e74921bb057425352352ee9e9e69df0d0c705/checks
 
 Cheers,
 Matt
 -- 
 Sponsored by the NGI0 Core fund.
-
-pw-bot: cr
 
