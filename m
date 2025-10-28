@@ -1,131 +1,128 @@
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 570FD3101DA
-	for <mptcp@lists.linux.dev>; Mon, 27 Oct 2025 16:13:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1420123A995
+	for <mptcp@lists.linux.dev>; Tue, 28 Oct 2025 01:34:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761581630; cv=none; b=LAapy+1/dInA7w0IUpBjqPB4SLzhpGWaaFuMssJ5w3jSR64UGsvFkLNcsWiKdRkDd5v60dCKamzvXEDMWxHL4jv+1g0K0pKT2Bh5aTSWIukhc03/uiIIPND5YM2kMuzzwq3nVjb72E3V3ewf+YgxKnRVDvXNInW13FiBEHnFHGo=
+	t=1761615263; cv=none; b=DEgw6yqcP2/TP9fG4xi2xuXjJUV6nAEKKGFOh+MyO2mMM2CqJErbapgGT7R4Zozv+LFWWk5FXy540OADcL+9R666RcFx/v2ouRuxSrXFqPC6zSbSwN6BcUi6TXQeDDIwkpE16cJEWEmFmXlhgHnv23GsYTaEI/sy3q7JT0cDvt4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761581630; c=relaxed/simple;
-	bh=9sSeEe2axyc5zOOmegrJLJByr2d8JplmtSEgIjD02LY=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=sAaSEtMG88PUG3WuVBRYd/SQv8xUt24ped+H0ABU4ffKBMjTiKIWV3uUzIVJAhP6WbbTMSJwUGg4qQf4zYdjtCUEuwRaI3eUsVxDlf4oY/yxucCy2lcQGdGmxWpgmc3BmH19tfvoI4Nv5cNeY8RGNBnHJgSGO6hi0YR0hY1BMW4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dWfYCYSM; arc=none smtp.client-ip=209.85.160.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1761615263; c=relaxed/simple;
+	bh=Ce4YAeQg+ljw02miIWCFaKrowc/H6Xu2cVTg0A0vrmk=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=e581+dQQw5C8N+eYX54VdpzySonvGgODvIaD0/kR+MqjrEIwzTUzA10hYHzpaj8wx0aFwEEFKLpAy0LjTGKw0wFLFQP37o223YeLD65z4TDBIrIuN4Q3CNIc0vPRGyN+vems8TSCUP8lcOq4OdLtwtcZDLXzNCNomltDDBrIBDg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cofof9Yw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dWfYCYSM"
-Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-4e8a25d96ecso78209391cf.0
-        for <mptcp@lists.linux.dev>; Mon, 27 Oct 2025 09:13:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1761581628; x=1762186428; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=I6s86tK4hbj/xY3px08e9KWY4Ftb8w3IAtazvJN5W70=;
-        b=dWfYCYSMcCCezwTXLrMLrjfzNMvbRK59BEbRRy2YffakdpfFEVBTEoizhhVwhFAncP
-         qTMFfUXTVk8opqsIkQpUF+PMdjln9pPPP4bGHn9z1uC+4RK8xbfSN/idnyLE0ev2rf4T
-         uCeLXMhKMdN5P4qNwTKKlD3Xr0RtZ/NxpMLhpJZp5o9DNeAYi0XbM6YFF0I9w34ChxAj
-         OtAN9id/wk34aqXsPFiE1pCUvsrNnq/ZYdNEa7kn1Q5mO2639KUHjcKR2f6D4hjv0I+P
-         1/J6BaWonCPjS8PItkQRxO1PIPozkMj7jU5B+D9gmCgkofCOlLzrgysKIlqBqTnn8HsH
-         nP2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761581628; x=1762186428;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=I6s86tK4hbj/xY3px08e9KWY4Ftb8w3IAtazvJN5W70=;
-        b=K5E/hyd0LgeojAim6adVrBxdTIDePnlKAqKAgxsnqipiGiCnJhbCX2noB4k0cRVZth
-         /DIdB5UhQYPKQ2u/fyU/iO7qySDO9Ap+Wdlh4zabAoVnUdpWSbpoSSuM/6n5ih5vd4c4
-         BSFCzIVXRwLqmt4jyB3l0/1i20up0Rc4qspSHBkkHrlcFl3JejCphX/Aclonc0otCElP
-         8DsoH8L4G5zGkgzjDmgph42BgECJ4RgNe7cyKospkcqs5nmH48DkeFJ1AkUHdW62Gup/
-         rSTFUUFi+ddilolrMzf51H4TtKo6IwRpGvuuCI2gPXlmk4BY+GUsqe6d26ngqgieC2G0
-         2gew==
-X-Gm-Message-State: AOJu0Yzze65Ds7gohIEvMcc/Dum4to7x/q2DfDMtCF3r1fW6EgBlLXUq
-	2k4iavsUjylfYDrgAhlpD5pKauIZxmaGN+722crDa+K7U62V8WN1wi8=
-X-Gm-Gg: ASbGnculAEFbEF2B0QvtZW8n0qwSakuyJQJn6+q2lIeGaRkCNIZoxom1TNgiSAlAkqX
-	4e7nRf8nv2Dhsfx7gcpqwIg/pcopwKVB4ySHjf1moDuodGlPGRPYHFj55JKyrGMLxLkqQKYI2KK
-	tIP9VcDSYUfX7QSHC1El3yTnarR6MX0ZGpNdKjztNlbycyIqlFu59Q2bhHeekcFkCUBZd+fVEUs
-	mCb9e+UWEt734N0mpxct2IxJp9+Bpo3kBoeXPSyFNre6LQF9MdlwD7DOQrixROoxFYXYCjFm2tq
-	xLx0LuAjmEZs48XD9A8rOTP1RRXGvYWzmazvH/Qw5z1OQ7yg94ZU0d4QAUgCcISyYNUI/+jyFwC
-	ZOtJpGgOA5kU1WDpJp40oxY3jeRinXNMhzeTwr1y3g7HxsqORKc9pLadln90qAfnHjco+6YJ78E
-	cypRjPLKKZfeSDrLlvv+PGJws=
-X-Google-Smtp-Source: AGHT+IHYqGxnBRgh1R3/w+q9eAZF0f/A0oj5M4NK8DBANXl0BR1/zDEsSpxPLs5FyifuYNAMHOrgPA==
-X-Received: by 2002:a05:622a:342:b0:4ed:5ed:253a with SMTP id d75a77b69052e-4ed0749a3f1mr7414461cf.12.1761581628036;
-        Mon, 27 Oct 2025 09:13:48 -0700 (PDT)
-Received: from [127.0.0.1] ([20.109.38.182])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4eba3e193bdsm54215181cf.10.2025.10.27.09.13.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Oct 2025 09:13:47 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <cover.1761576117.git.pabeni@redhat.com>
-References: <cover.1761576117.git.pabeni@redhat.com>
-Subject: Re: [PATCH RESENT v7 mptcp-next 0/4] mptcp: introduce backlog
- processing
-Message-ID: <44bda09c-a602-1f31-c100-d014b4180a17@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 27 Oct 2025 16:13:46 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cofof9Yw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B45CC4CEFB;
+	Tue, 28 Oct 2025 01:34:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761615262;
+	bh=Ce4YAeQg+ljw02miIWCFaKrowc/H6Xu2cVTg0A0vrmk=;
+	h=Subject:From:To:Date:In-Reply-To:References:From;
+	b=cofof9YwhVD+cMvF8jwaUijo4S2JarzuNKpFR+uyFKUubwLOMuclfDjTwPtIr/7KH
+	 oYUoBZHb0h9m/vT5DsmvH7dBtTMIaVDNfwIVl6BLblHjCH5Tsz8Zr+6vVyESLnuRBH
+	 e0HrpBTOgxjVMA3vUBY6AkanqYrNLHWOS5D4XFi0QRvR0ddxdty/YK/lT36cRWiMTh
+	 UIXf45pGmU60IxdkWwPz3HY/4XgflxZfH+EQhvj1tQXit73Rn8O14XbAvdPqEmR/cG
+	 Bm8sQG33f4f5jQtI8kIerd6RHk0wIBE5vlZL+8DMThMIXHiUvzsCDW6bkJGDMuWO9I
+	 9b8gY5iStzTVw==
+Message-ID: <074a8c2a99f102b2452570814c9700ef0225b145.camel@kernel.org>
+Subject: Re: [PATCH mptcp-next] Squash to "selftests: mptcp: join: validate
+ extra bind cases"
+From: Geliang Tang <geliang@kernel.org>
+To: Matthieu Baerts <matttbe@kernel.org>, MPTCP Upstream
+ <mptcp@lists.linux.dev>
+Date: Tue, 28 Oct 2025 09:34:16 +0800
+In-Reply-To: <17404b24-dbed-4f16-9ff6-5822bffc3c1b@kernel.org>
+References: <20251024-sft-fix-bind-timeout-v1-1-cb81a67b222c@kernel.org>
+	 <95fdc88fbeba58db5976f97f117b1579a873c051.camel@kernel.org>
+	 <17404b24-dbed-4f16-9ff6-5822bffc3c1b@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.52.3-0ubuntu1 
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Hi Paolo,
+Hi Matt,
 
-Thank you for your modifications, that's great!
+On Mon, 2025-10-27 at 13:21 +0100, Matthieu Baerts wrote:
+> Hi Geliang,
+> 
+> On 24/10/2025 14:56, Geliang Tang wrote:
+> > Hi Matt,
+> > 
+> > Thanks for this fix.
+> > 
+> > On Fri, 2025-10-24 at 12:02 +0200, Matthieu Baerts (NGI0) wrote:
+> > > I was going to send the related commit upstream, but then I
+> > > realised
+> > > in
+> > > a slow environment (e.g. public CI), with a debug kernel, the
+> > > default
+> > > 10 seconds timeout can be too short:
+> > > 
+> > >   086 multiple bind to allow joins v4
+> > >         join Rx                             [ OK ]
+> > >         join Tx                             [ OK ]
+> > >   main_loop_s: timed out
+> > >         add addr rx                         [ OK ]
+> > >         add addr echo rx                    [ OK ]
+> > >   ./mptcp_join.sh: line 3305: kill: (2032) - No such process
+> > > 
+> > > This doesn't affect the results, because it happens after the
+> > > test,
+> > > when
+> > > checking the counters. Still, better to fix that by using an
+> > > infinite
+> > > timeout: the process will be killed at the end.
+> > > 
+> > > Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> > > ---
+> > >  tools/testing/selftests/net/mptcp/mptcp_join.sh | 8 ++++----
+> > >  1 file changed, 4 insertions(+), 4 deletions(-)
+> > > 
+> > > diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> > > b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> > > index 05faacefb719..e0cdb9c662aa 100755
+> > > --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> > > +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> > > @@ -3293,7 +3293,7 @@ bind_tests()
+> > >  
+> > >  		# Launching another app listening on a different
+> > > address
+> > >  		# Note: it could be a totally different app,
+> > > e.g.
+> > > nc, socat, ...
+> > > -		ip netns exec ${ns1} ./mptcp_connect -l -p
+> > > "$(get_port)" \
+> > > +		ip netns exec ${ns1} ./mptcp_connect -l -t -1 -p
+> > > "$(get_port)" \
+> > 
+> > A timeout of -1 means block indefinitely, right? Do you think using
+> > the
+> > default 30 seconds (-t ${timeout_poll}) is sufficient?
+> 
+> No need to use the same default timeout: this process is executed in
+> the
+> background, and we explicitly kill it at the end. Worst case, the
+> other
+> process timeout after 30 seconds, and we will still kill this one.
+> 
+> So it looks easier/better to use -1, no?
 
-Our CI did some validations and here is its report:
+If that's the case, could we set a value that is, for example, twice or
+ten times the value of ${timeout_poll}? But it's up to you.
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/188461=
-83864
+Reviewed-by: Geliang Tang <geliang@kernel.org>
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/a809ef68db21
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1016326
+Thanks,
+-Geliang
 
+> 
+> Cheers,
+> Matt
 
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
