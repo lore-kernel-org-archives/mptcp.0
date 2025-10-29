@@ -1,73 +1,73 @@
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9112F357A4B
-	for <mptcp@lists.linux.dev>; Wed, 29 Oct 2025 13:42:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5677323FC54
+	for <mptcp@lists.linux.dev>; Wed, 29 Oct 2025 13:43:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761745362; cv=none; b=tggM6+oamYeNPFBr5dRDeNX/WiNLgP/LwoWNxzctx/VrINuJsxbewGUesdv4NuNpkCIjqtMExKp8XwSzcIZ24Atx036E7TcrW6BGoGiuqAYyRQevyGnuPTmKi5wIWwQVwdAsFUsvYLTIgFQE54gkIhBrwcMjX+BxGnJYjWI2LtI=
+	t=1761745387; cv=none; b=FiOrNivSdXl9xxCzYNSB2WXvgnJ2gsfoNEukzvvtKmktsO/416n70RgvoNOsyc9rXg2zL4Mag7lkhoq1PIzyYywlciMmzsLBq08MmuUgofYkH8D3wuvijSF5HYthsSooVPP+1EHsP1Xz2nieBvGiU8U1CH0jk60gQMmuGWFnNd4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761745362; c=relaxed/simple;
-	bh=eqmbZ6C+/pzZCLCfiQmSe/VNbkn9pwD4O5gf0205jdA=;
+	s=arc-20240116; t=1761745387; c=relaxed/simple;
+	bh=7soHO9LaDuEcrh4CS1BaPHwK4b5qra2+PXKb/ErM4yc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=snnFNBczzFXH3YQGb6PP4/28dIlLTRLNhYeDK8ZwEN2Rsiu4vfaanPGJ9AcODUsI2gnKdAY0i5ariN3a7KzrV24YweZnarfKqHZttILRL9BiZ+AWa4IOzR7nMd+d/K+IH6LB4OkCc6kq5HRvkSIvls/3qW/PEUKEBsH6m8yC4MM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=X2ssr3R6; arc=none smtp.client-ip=209.85.160.178
+	 To:Cc:Content-Type; b=B7UJSUrAVnF8P4+Uhs0LSh3Mn6m3WG73YsMYo13fzlMQXf5v79uMagk8cvpLcHKkynKIrar2g+rQUcaSX0iCvR3oY0T/x8s6YzNgN0zPZApNXZ3DCdpx6h/pzN1bIlH6vV7K1otcRQNIeefifLX2PBsQrTp6KNHTMzpeA+aP0DQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=F47Fve7i; arc=none smtp.client-ip=209.85.160.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="X2ssr3R6"
-Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-4ecfafb92bcso314881cf.1
-        for <mptcp@lists.linux.dev>; Wed, 29 Oct 2025 06:42:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="F47Fve7i"
+Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-4ea12242d2eso303011cf.1
+        for <mptcp@lists.linux.dev>; Wed, 29 Oct 2025 06:43:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1761745359; x=1762350159; darn=lists.linux.dev;
+        d=google.com; s=20230601; t=1761745384; x=1762350184; darn=lists.linux.dev;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=MwK1ndFtoZIlgGj7bI2/GfCsVHplI6VuQ2X/63o4ayg=;
-        b=X2ssr3R61gXcvaVUUO1/PO6uW37/SRRRdqPq7K+Pmw/wyu+X7A+ebQJF0kYu0ztETF
-         aznLa97ZFJ73RCO/pSvISj6FV65Em8u75qH0K/UQpCSq91YYRJz59RMOTMIHAwfFKdUJ
-         0QrCRcK5HDfXnBi40mT0kxKKCnQ/94EV8XuTw8hL2iGC0/51ADM8af9JOonwQgh/9gwt
-         n3KgaUbJRkYIUgP0BKxf6PLfGFtMNXpbZJ01jEboYnjlg1IzAbE6x9vbFrH8jlePUX1E
-         8WVippTsp1OmZq7ZlpaJ8LyDQR1MEz+eKrd8qO0i55F592B2HxutdnjDYkryyvBVY7Ja
-         VhjA==
+        bh=3Efu2b3TBu5wmyvdmKqEZLni7Qy5XpG2TvGkeSVZD7U=;
+        b=F47Fve7iml686sHFi6KE9cgb4v22cq6uFJVmqlyvGRXLFOmEzlqcVJD1o/ndk/0Mrn
+         M03s5u+1oS/ddTTTB2m/kMI8veH3r3tV5BJGbHAsXWcae/USCVyEV2Hy/ZYea5P+a8hQ
+         9PKpeIJsYnQ4gTU8pQfGM7wJv6q17IPmeYfmw7OMhJYCAJMXChyHSNz4MNZtucK/ph4h
+         AuJEJa/fFw3F8sWP4N/DVuQi1Vfy9E+T94rBuka6Lt2JJJa3lhtpLJCjgNASlOCuiDjo
+         G2zfx5dmZEuyQIGATrAGkmxF3PqIhowElrFHh8Ec+oyqFAgAWahVfgdOdTJLUPyN+28f
+         ubkw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761745359; x=1762350159;
+        d=1e100.net; s=20230601; t=1761745384; x=1762350184;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=MwK1ndFtoZIlgGj7bI2/GfCsVHplI6VuQ2X/63o4ayg=;
-        b=nC8gN2pe/OIVD6aE0ruiEKiARa4t6p5VN2vmMzLY0AOpyRFoe7m5C5QNcxRzACwYJZ
-         5Q1hf5UbwFifTFdTk5yj032pa+TSWf3724fcXvZuxocGSoLhCsESpmr6R0vqrcVEz3W7
-         JMBAVopXUOgfwNZpOSyKa5Hmhqo9b0rMuaXFIoLPEcvAv5VLqqIPM+c+4r3aF5Smz6t8
-         +b7vcEnGlP+2yrPjDKxx518q7rDNJWKgRq4FZWBGbciiq6p3iVZx1VeEBD5zWNWFuu+/
-         Nm1/fZwi5Kk+VzDzE/FGFPRmHKZ0DIeprTExMcmKgvAQoSGcfZc1R2Nuxb2loWyy8MZk
-         hcbw==
-X-Forwarded-Encrypted: i=1; AJvYcCUpxscsUkzB/UfxYxAArBrDfyLa86/buJMPED3gXGW5qV6aYvr1dSyKLvlN3259NfNzu12PUw==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yy9xzKVzPceJ1zKF45K97t1qPshbirupfPln5VgWYcIFXQZu3QT
-	xzBP6S6C4LCfc3NMVqhuQJDsbNJiVgrDORTkVsBe5LVccI3Of/ckp17+gUx6sP6lrtzYDYJRDvg
-	p+I0/gsbPd1oJTusohpkN0d68173AKrlivt+k+cpo
-X-Gm-Gg: ASbGncvKbujO/+4+X+j6Ijomht/8yk0G07RG2oMiOR5gtwC1A6FUAgPYsNOWdSPrtmd
-	HsoRQLAmYI1zVR88i3YIRNOwN5/IaWOMKJvRKFLitWre6TV9jSI+5VKn7vHdsIQg3xhWEd9lgZy
-	NFXVPfctTDWe2JmM6jce2vrpdLtZ9BYDB3v+Ep39H3XOu3Qn8k4P1txRxXX6AdNTMgJZFqMi3or
-	XYzi1izvC0vUNLhXCTrfZyKZQG+sH21UkRukIuidE4UTij8mpipJvBZ/s1YmYpJMkQ2m9ggd0F6
-	9gB+XQ+RYnvgdupTlf8RUza6x+gUH1eG7/04otg0aTL5l8aLJqncpnn9bE2S
-X-Google-Smtp-Source: AGHT+IGtHWfovXqfvSbcFy+Pt5rl32fTWV0d/1Y/CsEeBRhTrAlUP7rTGJeLhXDltf8/Z2wATZXHrUKI/n/m8N95X/E=
-X-Received: by 2002:a05:622a:1b20:b0:4eb:7681:d90 with SMTP id
- d75a77b69052e-4ed158ac668mr7989031cf.16.1761745359037; Wed, 29 Oct 2025
- 06:42:39 -0700 (PDT)
+        bh=3Efu2b3TBu5wmyvdmKqEZLni7Qy5XpG2TvGkeSVZD7U=;
+        b=Ho4y0ppSAcXiJ8nrgAkdwcEvy447PMJA80xmwIh4Teka6qg/hO3dbhUv02abfSNK2H
+         aHa74RtckCnaB81yI2PMqPOGdUc24KntQYtedgo9O1mUON5P5Ek3b4f2WM5vehJ4BmVD
+         865TBgu3f1D6tpvJHcXjqMrgRZ2CBD7oXoGM2VW8on+DuuWVbMHCet5fzT61xoOCFdgF
+         PF3W4bSqFL7Wrcics2D7mA+aXWXlqu6rvZsfeihXuZyVfYRPac4NH1aPBngnWgGVsCOg
+         ooGps/m9I5VVl0PNAu4fcBTwCNCxjvzUQXVYw/C8NYanAUo5ir7Lvdcbl9JOwX+Bl8Wb
+         F+KA==
+X-Forwarded-Encrypted: i=1; AJvYcCWyzIBYeIrSjNePJNbjKiA15KsbrrU9GgluelsUpP8ZxfjDEdmB/1h9/MTV2BFNE+0FPL9U2w==@lists.linux.dev
+X-Gm-Message-State: AOJu0YymXzh3boGzEJw7r8VrE7u+Kz1ykC3LMak9TjJJF00e84tlFdwb
+	tdyZO5kwMO77kGPho7UyZcQyFC+66BMzA/M/3KHghFJDgIw1h7jkvG2u1Ui1VVC8G/sWsIka9MT
+	6Ouytc287iQ3d03Qd05U8xWvtIrVtRQ0U7EP+Wub7
+X-Gm-Gg: ASbGnctnreIw3iUqyngWL8s6u+fZityDg4DsiO6p89Y0Q5AHmEKQnJxS9WFo/L52hKy
+	cc9ANlv4gk4TEi/QoSSYenelmodEZalh0ri+PZDb/shIwcoKuzCY+H+thewYgqkyQZ+AKhT8qjl
+	/t2qWXjxHn+QrozdNQp6Q+K6jn2srWPchYFFEifs1cBr9vAoz0VPjSHGuy/ZfoeDV9U3gLgZOMr
+	2VdBmE0KFBh6Zd5w2SGGHpnFKzkPFn/KnaZrqx3fC1ALsPZrgGP7gLY3EryvJxzcvrIpKfg3JOb
+	RRRrJhGZQQRAMDvilAVU5pK5OCOkDClCKLDtVOfqIGZEciBcmg==
+X-Google-Smtp-Source: AGHT+IFep33ARYzlPHTxdEMcSpa5nOb5jyduzTR8U+HMJiuH9EhqsySS+kqdMKz2s3RAh8Z2dflJHLBxW9htAh56QOQ=
+X-Received: by 2002:a05:622a:4d99:b0:4b7:9a9e:833f with SMTP id
+ d75a77b69052e-4ed1657e9f6mr6357411cf.7.1761745383809; Wed, 29 Oct 2025
+ 06:43:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20251028-net-tcp-recv-autotune-v3-0-74b43ba4c84c@kernel.org> <20251028-net-tcp-recv-autotune-v3-3-74b43ba4c84c@kernel.org>
-In-Reply-To: <20251028-net-tcp-recv-autotune-v3-3-74b43ba4c84c@kernel.org>
+References: <20251028-net-tcp-recv-autotune-v3-0-74b43ba4c84c@kernel.org> <20251028-net-tcp-recv-autotune-v3-4-74b43ba4c84c@kernel.org>
+In-Reply-To: <20251028-net-tcp-recv-autotune-v3-4-74b43ba4c84c@kernel.org>
 From: Neal Cardwell <ncardwell@google.com>
-Date: Wed, 29 Oct 2025 09:42:21 -0400
-X-Gm-Features: AWmQ_bmkO50WQoFAT_CZV9_dPllZDeiEg5XeCFHugo6EvwnaCcAy-NspHcjqfqc
-Message-ID: <CADVnQyna1BX8y8Gw4=+4dJ_VYn=O8JMzSqh2y1i+ZH5NpfPsfA@mail.gmail.com>
-Subject: Re: [PATCH net v3 3/4] tcp: add newval parameter to tcp_rcvbuf_grow()
+Date: Wed, 29 Oct 2025 09:42:46 -0400
+X-Gm-Features: AWmQ_blM3nXt0K4DkE9fj5uTx0bD3zz8OQN-MjU7m93BFU5U1NDhs27rt6_9h4A
+Message-ID: <CADVnQykUuOTK2M5LfkzvBNU+_tPLQj=8e2sm4EdVyzfktohuZQ@mail.gmail.com>
+Subject: Re: [PATCH net v3 4/4] tcp: fix too slow tcp_rcvbuf_grow() action
 To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 Cc: Eric Dumazet <edumazet@google.com>, Kuniyuki Iwashima <kuniyu@google.com>, 
 	"David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
@@ -82,16 +82,205 @@ On Tue, Oct 28, 2025 at 7:58=E2=80=AFAM Matthieu Baerts (NGI0)
 >
 > From: Eric Dumazet <edumazet@google.com>
 >
-> This patch has no functional change, and prepares the following one.
+> While the blamed commits apparently avoided an overshoot,
+> they also limited how fast a sender can increase BDP at each RTT.
 >
-> tcp_rcvbuf_grow() will need to have access to tp->rcvq_space.space
-> old and new values.
+> This is not exactly a revert, we do not add the 16 * tp->advmss
+> cushion we had, and we are keeping the out_of_order_queue
+> contribution.
 >
-> Change mptcp_rcvbuf_grow() in a similar way.
+> Do the same in mptcp_rcvbuf_grow().
 >
+> Tested:
+>
+> emulated 50ms rtt (tcp_stream --tcp-tx-delay 50000), cubic 20 second flow=
+.
+> net.ipv4.tcp_rmem set to "4096 131072 67000000"
+>
+> perf record -a -e tcp:tcp_rcvbuf_grow sleep 20
+> perf script
+>
+> Before:
+>
+> We can see we fail to roughly double RWIN at each RTT.
+> Sender is RWIN limited while CWND is ramping up (before getting tcp_wmem
+> limited).
+>
+> tcp_stream 33793 [010]  825.717525: tcp:tcp_rcvbuf_grow: time=3D100869 rt=
+t_us=3D50428 copied=3D49152 inq=3D0 space=3D40960 ooo=3D0 scaling_ratio=3D2=
+19 rcvbuf=3D131072 rcv_ssthresh=3D103970 window_clamp=3D112128 rcv_wnd=3D10=
+6496
+> tcp_stream 33793 [010]  825.768966: tcp:tcp_rcvbuf_grow: time=3D51447 rtt=
+_us=3D50362 copied=3D86016 inq=3D0 space=3D49152 ooo=3D0 scaling_ratio=3D21=
+9 rcvbuf=3D131072 rcv_ssthresh=3D107474 window_clamp=3D112128 rcv_wnd=3D106=
+496
+> tcp_stream 33793 [010]  825.821539: tcp:tcp_rcvbuf_grow: time=3D52577 rtt=
+_us=3D50243 copied=3D114688 inq=3D0 space=3D86016 ooo=3D0 scaling_ratio=3D2=
+19 rcvbuf=3D201096 rcv_ssthresh=3D167377 window_clamp=3D172031 rcv_wnd=3D16=
+7936
+> tcp_stream 33793 [010]  825.871781: tcp:tcp_rcvbuf_grow: time=3D50248 rtt=
+_us=3D50237 copied=3D167936 inq=3D0 space=3D114688 ooo=3D0 scaling_ratio=3D=
+219 rcvbuf=3D268129 rcv_ssthresh=3D224722 window_clamp=3D229375 rcv_wnd=3D2=
+25280
+> tcp_stream 33793 [010]  825.922475: tcp:tcp_rcvbuf_grow: time=3D50698 rtt=
+_us=3D50183 copied=3D241664 inq=3D0 space=3D167936 ooo=3D0 scaling_ratio=3D=
+219 rcvbuf=3D392617 rcv_ssthresh=3D331217 window_clamp=3D335871 rcv_wnd=3D3=
+23584
+> tcp_stream 33793 [010]  825.973326: tcp:tcp_rcvbuf_grow: time=3D50855 rtt=
+_us=3D50213 copied=3D339968 inq=3D0 space=3D241664 ooo=3D0 scaling_ratio=3D=
+219 rcvbuf=3D564986 rcv_ssthresh=3D478674 window_clamp=3D483327 rcv_wnd=3D4=
+62848
+> tcp_stream 33793 [010]  826.023970: tcp:tcp_rcvbuf_grow: time=3D50647 rtt=
+_us=3D50248 copied=3D491520 inq=3D0 space=3D339968 ooo=3D0 scaling_ratio=3D=
+219 rcvbuf=3D794811 rcv_ssthresh=3D671778 window_clamp=3D679935 rcv_wnd=3D6=
+51264
+> tcp_stream 33793 [010]  826.074612: tcp:tcp_rcvbuf_grow: time=3D50648 rtt=
+_us=3D50227 copied=3D700416 inq=3D0 space=3D491520 ooo=3D0 scaling_ratio=3D=
+219 rcvbuf=3D1149124 rcv_ssthresh=3D974881 window_clamp=3D983039 rcv_wnd=3D=
+942080
+> tcp_stream 33793 [010]  826.125452: tcp:tcp_rcvbuf_grow: time=3D50845 rtt=
+_us=3D50225 copied=3D987136 inq=3D8192 space=3D700416 ooo=3D0 scaling_ratio=
+=3D219 rcvbuf=3D1637502 rcv_ssthresh=3D1392674 window_clamp=3D1400831 rcv_w=
+nd=3D1339392
+> tcp_stream 33793 [010]  826.175698: tcp:tcp_rcvbuf_grow: time=3D50250 rtt=
+_us=3D50198 copied=3D1347584 inq=3D0 space=3D978944 ooo=3D0 scaling_ratio=
+=3D219 rcvbuf=3D2288672 rcv_ssthresh=3D1949729 window_clamp=3D1957887 rcv_w=
+nd=3D1945600
+> tcp_stream 33793 [010]  826.225947: tcp:tcp_rcvbuf_grow: time=3D50252 rtt=
+_us=3D50240 copied=3D1945600 inq=3D0 space=3D1347584 ooo=3D0 scaling_ratio=
+=3D219 rcvbuf=3D3150516 rcv_ssthresh=3D2687010 window_clamp=3D2695167 rcv_w=
+nd=3D2691072
+> tcp_stream 33793 [010]  826.276175: tcp:tcp_rcvbuf_grow: time=3D50233 rtt=
+_us=3D50224 copied=3D2691072 inq=3D0 space=3D1945600 ooo=3D0 scaling_ratio=
+=3D219 rcvbuf=3D4548617 rcv_ssthresh=3D3883041 window_clamp=3D3891199 rcv_w=
+nd=3D3887104
+> tcp_stream 33793 [010]  826.326403: tcp:tcp_rcvbuf_grow: time=3D50233 rtt=
+_us=3D50229 copied=3D3887104 inq=3D0 space=3D2691072 ooo=3D0 scaling_ratio=
+=3D219 rcvbuf=3D6291456 rcv_ssthresh=3D5370482 window_clamp=3D5382144 rcv_w=
+nd=3D5373952
+> tcp_stream 33793 [010]  826.376723: tcp:tcp_rcvbuf_grow: time=3D50323 rtt=
+_us=3D50218 copied=3D5373952 inq=3D0 space=3D3887104 ooo=3D0 scaling_ratio=
+=3D219 rcvbuf=3D9087658 rcv_ssthresh=3D7755537 window_clamp=3D7774207 rcv_w=
+nd=3D7757824
+> tcp_stream 33793 [010]  826.426991: tcp:tcp_rcvbuf_grow: time=3D50274 rtt=
+_us=3D50196 copied=3D7757824 inq=3D180224 space=3D5373952 ooo=3D0 scaling_r=
+atio=3D219 rcvbuf=3D12563759 rcv_ssthresh=3D10729233 window_clamp=3D1074790=
+3 rcv_wnd=3D10575872
+> tcp_stream 33793 [010]  826.477229: tcp:tcp_rcvbuf_grow: time=3D50241 rtt=
+_us=3D50078 copied=3D10731520 inq=3D180224 space=3D7577600 ooo=3D0 scaling_=
+ratio=3D219 rcvbuf=3D17715667 rcv_ssthresh=3D15136529 window_clamp=3D151551=
+99 rcv_wnd=3D14983168
+> tcp_stream 33793 [010]  826.527482: tcp:tcp_rcvbuf_grow: time=3D50258 rtt=
+_us=3D50153 copied=3D15138816 inq=3D360448 space=3D10551296 ooo=3D0 scaling=
+_ratio=3D219 rcvbuf=3D24667870 rcv_ssthresh=3D21073410 window_clamp=3D21102=
+591 rcv_wnd=3D20766720
+> tcp_stream 33793 [010]  826.577712: tcp:tcp_rcvbuf_grow: time=3D50234 rtt=
+_us=3D50228 copied=3D21073920 inq=3D0 space=3D14778368 ooo=3D0 scaling_rati=
+o=3D219 rcvbuf=3D34550339 rcv_ssthresh=3D29517041 window_clamp=3D29556735 r=
+cv_wnd=3D29519872
+> tcp_stream 33793 [010]  826.627982: tcp:tcp_rcvbuf_grow: time=3D50275 rtt=
+_us=3D50220 copied=3D29519872 inq=3D540672 space=3D21073920 ooo=3D0 scaling=
+_ratio=3D219 rcvbuf=3D49268707 rcv_ssthresh=3D42090625 window_clamp=3D42147=
+839 rcv_wnd=3D41627648
+> tcp_stream 33793 [010]  826.678274: tcp:tcp_rcvbuf_grow: time=3D50296 rtt=
+_us=3D50185 copied=3D42053632 inq=3D761856 space=3D28979200 ooo=3D0 scaling=
+_ratio=3D219 rcvbuf=3D67000000 rcv_ssthresh=3D57238168 window_clamp=3D57316=
+406 rcv_wnd=3D56606720
+> tcp_stream 33793 [010]  826.728627: tcp:tcp_rcvbuf_grow: time=3D50357 rtt=
+_us=3D50128 copied=3D43913216 inq=3D851968 space=3D41291776 ooo=3D0 scaling=
+_ratio=3D219 rcvbuf=3D67000000 rcv_ssthresh=3D57290728 window_clamp=3D57316=
+406 rcv_wnd=3D56524800
+> tcp_stream 33793 [010]  827.131364: tcp:tcp_rcvbuf_grow: time=3D50239 rtt=
+_us=3D50127 copied=3D43843584 inq=3D655360 space=3D43061248 ooo=3D0 scaling=
+_ratio=3D219 rcvbuf=3D67000000 rcv_ssthresh=3D57290728 window_clamp=3D57316=
+406 rcv_wnd=3D56696832
+> tcp_stream 33793 [010]  827.181613: tcp:tcp_rcvbuf_grow: time=3D50254 rtt=
+_us=3D50115 copied=3D43843584 inq=3D524288 space=3D43188224 ooo=3D0 scaling=
+_ratio=3D219 rcvbuf=3D67000000 rcv_ssthresh=3D57290728 window_clamp=3D57316=
+406 rcv_wnd=3D56807424
+> tcp_stream 33793 [010]  828.339635: tcp:tcp_rcvbuf_grow: time=3D50283 rtt=
+_us=3D50110 copied=3D43843584 inq=3D458752 space=3D43319296 ooo=3D0 scaling=
+_ratio=3D219 rcvbuf=3D67000000 rcv_ssthresh=3D57290728 window_clamp=3D57316=
+406 rcv_wnd=3D56864768
+> tcp_stream 33793 [010]  828.440350: tcp:tcp_rcvbuf_grow: time=3D50404 rtt=
+_us=3D50099 copied=3D43843584 inq=3D393216 space=3D43384832 ooo=3D0 scaling=
+_ratio=3D219 rcvbuf=3D67000000 rcv_ssthresh=3D57290728 window_clamp=3D57316=
+406 rcv_wnd=3D56922112
+> tcp_stream 33793 [010]  829.195106: tcp:tcp_rcvbuf_grow: time=3D50154 rtt=
+_us=3D50077 copied=3D43843584 inq=3D196608 space=3D43450368 ooo=3D0 scaling=
+_ratio=3D219 rcvbuf=3D67000000 rcv_ssthresh=3D57290728 window_clamp=3D57316=
+406 rcv_wnd=3D57090048
+>
+> After:
+>
+> It takes few steps to increase RWIN. Sender is no longer RWIN limited.
+>
+> tcp_stream 50826 [010]  935.634212: tcp:tcp_rcvbuf_grow: time=3D100788 rt=
+t_us=3D50315 copied=3D49152 inq=3D0 space=3D40960 ooo=3D0 scaling_ratio=3D2=
+19 rcvbuf=3D131072 rcv_ssthresh=3D103970 window_clamp=3D112128 rcv_wnd=3D10=
+6496
+> tcp_stream 50826 [010]  935.685642: tcp:tcp_rcvbuf_grow: time=3D51437 rtt=
+_us=3D50361 copied=3D86016 inq=3D0 space=3D49152 ooo=3D0 scaling_ratio=3D21=
+9 rcvbuf=3D160875 rcv_ssthresh=3D132969 window_clamp=3D137623 rcv_wnd=3D131=
+072
+> tcp_stream 50826 [010]  935.738299: tcp:tcp_rcvbuf_grow: time=3D52660 rtt=
+_us=3D50256 copied=3D139264 inq=3D0 space=3D86016 ooo=3D0 scaling_ratio=3D2=
+19 rcvbuf=3D502741 rcv_ssthresh=3D411497 window_clamp=3D430079 rcv_wnd=3D41=
+3696
+> tcp_stream 50826 [010]  935.788544: tcp:tcp_rcvbuf_grow: time=3D50249 rtt=
+_us=3D50233 copied=3D307200 inq=3D0 space=3D139264 ooo=3D0 scaling_ratio=3D=
+219 rcvbuf=3D728690 rcv_ssthresh=3D618717 window_clamp=3D623371 rcv_wnd=3D6=
+18496
+> tcp_stream 50826 [010]  935.838796: tcp:tcp_rcvbuf_grow: time=3D50258 rtt=
+_us=3D50202 copied=3D618496 inq=3D0 space=3D307200 ooo=3D0 scaling_ratio=3D=
+219 rcvbuf=3D2450338 rcv_ssthresh=3D1855709 window_clamp=3D2096187 rcv_wnd=
+=3D1859584
+> tcp_stream 50826 [010]  935.889140: tcp:tcp_rcvbuf_grow: time=3D50347 rtt=
+_us=3D50166 copied=3D1261568 inq=3D0 space=3D618496 ooo=3D0 scaling_ratio=
+=3D219 rcvbuf=3D4376503 rcv_ssthresh=3D3725291 window_clamp=3D3743961 rcv_w=
+nd=3D3706880
+> tcp_stream 50826 [010]  935.939435: tcp:tcp_rcvbuf_grow: time=3D50300 rtt=
+_us=3D50185 copied=3D2478080 inq=3D24576 space=3D1261568 ooo=3D0 scaling_ra=
+tio=3D219 rcvbuf=3D9082648 rcv_ssthresh=3D7733731 window_clamp=3D7769921 rc=
+v_wnd=3D7692288
+> tcp_stream 50826 [010]  935.989681: tcp:tcp_rcvbuf_grow: time=3D50251 rtt=
+_us=3D50221 copied=3D4915200 inq=3D114688 space=3D2453504 ooo=3D0 scaling_r=
+atio=3D219 rcvbuf=3D16574936 rcv_ssthresh=3D14108110 window_clamp=3D1417933=
+9 rcv_wnd=3D14024704
+> tcp_stream 50826 [010]  936.039967: tcp:tcp_rcvbuf_grow: time=3D50289 rtt=
+_us=3D50279 copied=3D9830400 inq=3D114688 space=3D4800512 ooo=3D0 scaling_r=
+atio=3D219 rcvbuf=3D32695050 rcv_ssthresh=3D27896187 window_clamp=3D2796959=
+3 rcv_wnd=3D27815936
+> tcp_stream 50826 [010]  936.090172: tcp:tcp_rcvbuf_grow: time=3D50211 rtt=
+_us=3D50200 copied=3D19841024 inq=3D114688 space=3D9715712 ooo=3D0 scaling_=
+ratio=3D219 rcvbuf=3D67000000 rcv_ssthresh=3D57245176 window_clamp=3D573164=
+06 rcv_wnd=3D57163776
+> tcp_stream 50826 [010]  936.140430: tcp:tcp_rcvbuf_grow: time=3D50262 rtt=
+_us=3D50197 copied=3D39501824 inq=3D114688 space=3D19726336 ooo=3D0 scaling=
+_ratio=3D219 rcvbuf=3D67000000 rcv_ssthresh=3D57245176 window_clamp=3D57316=
+406 rcv_wnd=3D57163776
+> tcp_stream 50826 [010]  936.190527: tcp:tcp_rcvbuf_grow: time=3D50101 rtt=
+_us=3D50071 copied=3D43655168 inq=3D262144 space=3D39387136 ooo=3D0 scaling=
+_ratio=3D219 rcvbuf=3D67000000 rcv_ssthresh=3D57259192 window_clamp=3D57316=
+406 rcv_wnd=3D57032704
+> tcp_stream 50826 [010]  936.240719: tcp:tcp_rcvbuf_grow: time=3D50197 rtt=
+_us=3D50057 copied=3D43843584 inq=3D262144 space=3D43393024 ooo=3D0 scaling=
+_ratio=3D219 rcvbuf=3D67000000 rcv_ssthresh=3D57259192 window_clamp=3D57316=
+406 rcv_wnd=3D57032704
+> tcp_stream 50826 [010]  936.341271: tcp:tcp_rcvbuf_grow: time=3D50297 rtt=
+_us=3D50123 copied=3D43843584 inq=3D131072 space=3D43581440 ooo=3D0 scaling=
+_ratio=3D219 rcvbuf=3D67000000 rcv_ssthresh=3D57259192 window_clamp=3D57316=
+406 rcv_wnd=3D57147392
+> tcp_stream 50826 [010]  936.642503: tcp:tcp_rcvbuf_grow: time=3D50131 rtt=
+_us=3D50084 copied=3D43843584 inq=3D0 space=3D43712512 ooo=3D0 scaling_rati=
+o=3D219 rcvbuf=3D67000000 rcv_ssthresh=3D57259192 window_clamp=3D57316406 r=
+cv_wnd=3D57262080
+>
+> Fixes: 65c5287892e9 ("tcp: fix sk_rcvbuf overshoot")
+> Fixes: e118cdc34dd1 ("mptcp: rcvbuf auto-tuning improvement")
+> Reported-by: Neal Cardwell <ncardwell@google.com>
 > Signed-off-by: Eric Dumazet <edumazet@google.com>
-> [ Moved 'oldval' declaration to the next patch to avoid warnings at
->  build time. ]
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/589
 > Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 > ---
 
