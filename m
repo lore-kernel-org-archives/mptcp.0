@@ -1,187 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 130C834BA20
-	for <mptcp@lists.linux.dev>; Tue, 28 Oct 2025 17:31:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADBDD2D1F6B
+	for <mptcp@lists.linux.dev>; Wed, 29 Oct 2025 13:42:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761672671; cv=none; b=JA0tcEeg7WN3sjTCTBCOYEw58KFShENMeaS+8F3dOZftr5TXPIpTK0UQf3UGIBHC5BHNfv5nUn1lXAv+2YPYg6RFsCtGT5LYogHDfZabrNoSP5PPxdwR6/NyvD9vHeYr67ymwoF2cXaC4ugl6wNw5FichUzXjPlI/FBuPEsCtR8=
+	t=1761745328; cv=none; b=QuiIOyYSvr8zwxHW96eXTk0dq7SilaNOpam0jH79qn5p1kUitHYVrk5Kq2DJEZXUGykAUdWqPAU4CF4OOaaTl6PJC97Jt6ab8H5ZtYG4F5a5o9deJCKNZHqvmaQtOh1zIfY7pWDEOAgO6AEva9SvdzwE2o7u4HpScazbUoazGec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761672671; c=relaxed/simple;
-	bh=4Pg18Mo48hzXqQiQXxloyoxvntcyHmrdTHlH98qptK0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=O3oCTrIpuRGcaKeryRZOx7UmlecbxhtxmQkpQenvmwH9KMW63hrcjitER+y4tDKThv0xVSK/eMAl+jyCW11RmnnoHM03dorQRuKTy1j9eCa6XuChBgALT85moGYBFDHW0eczCOCA0iuHatGPqLmA2+9PUaQcSLrBCCCq/8rwk8o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=og0rL7Es; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1761745328; c=relaxed/simple;
+	bh=zbMOoAZx7RYNx6TmQte8UME/DXY5NFfuty2hcf87lug=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=AFl2KdkuQhQTKuHdMHhwSM4pQRp06KFMbOzof2mK+uxrMj2+ZjcvkytnA+DPxGPJ7QPQhiRCx6koZwNH9/UNPWuEEEKgdKZcq84U4hknx7JV/w1c3sJ5Igp+MwFFvku2IMFwnUpYWCeNvl3VsfLID5OHdsToocz3DjYzuzu7UkU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=M7E0pV0c; arc=none smtp.client-ip=209.85.160.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="og0rL7Es"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66ED0C19421;
-	Tue, 28 Oct 2025 17:31:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761672670;
-	bh=4Pg18Mo48hzXqQiQXxloyoxvntcyHmrdTHlH98qptK0=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=og0rL7EspBTN3GkC5Tic1pFStd01eJx+XGA7X7/+erKGunda8vCc8v6Esw1D2H70F
-	 mz/I6yP2e3/01lW0v8H5BwjswhS7h/Ek6lZBNKgj7pDQejC8peodhouDNIFjX3lqbp
-	 2P+taSKU8rVxV2hiNUL0GCZASc49OIQAR0SwKxWn0Ie05/effK3yiLNJy1ODAYXcer
-	 UgrEay6tPPFPqSD1t6xcHPkzpdCjXcD4C6tlmYVaWw8axJA9ypCoIZFk3nNhIcjkPe
-	 iZEQ+/hQyHSBGYI7aUtErSMsIsuwJzIQNrLSsok3/dYvJSnblOO2xGq0jqFgH5rGNV
-	 u9YOCgmzHkF1A==
-Message-ID: <a8e6e66b-ca88-4888-87c3-4b1b4b906782@kernel.org>
-Date: Tue, 28 Oct 2025 18:31:08 +0100
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="M7E0pV0c"
+Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-4ecfafb92bcso314701cf.1
+        for <mptcp@lists.linux.dev>; Wed, 29 Oct 2025 06:42:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1761745324; x=1762350124; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JR9rxo2u79GKDjnzL8I5WnLfCVj8XfqRuf1RDu5qxZQ=;
+        b=M7E0pV0cfXDwKuhzFHxNfBOlkORqfTqnv6BDnKqmAWWJIiPLsAn/droUwph5WlYAyp
+         ynGqSCu6Ficx/h+8se8t0wG79vb9Ci5ySY/pPg2eNSSXZx/ssuZbH11Ite7wg+ywZvVB
+         MME5V7gb7KiFBJoXyW9u92VL2JL9T4VVlCSvUvcKCjBjYBhLs6pssLMvpQHvPo6febpT
+         jTdx7LH6jC0sDCTB77mayC7Z5W1GGS/N1l8v4oP2yU0Q0a6YogUNhAfLeZJSizoc/XkR
+         WChN+pwv+ELFg5fAwkW4XSjADgxWNewkqGT33OBIgc7tYGZ2mbNzLYxVeYpxTma+DPie
+         BNrw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761745324; x=1762350124;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JR9rxo2u79GKDjnzL8I5WnLfCVj8XfqRuf1RDu5qxZQ=;
+        b=D+k83ewluLz2UO2ebWuc2/ZRG5Keq9JGajL5Zy10IQA3eBODjbGnGSwVKI9zNNh1cK
+         glbYL17v5P+BwSw95ZxTK6bDUThxNmKasxBtjxzQhxNadqrSLyBguez8Cn0pffcipX+D
+         VkOx4LHHkxw6giev8BGchWJ8xG4NJdp7F91Yt/Vb8IbJlSGaX6rQPLhKIl97wRcNM4QV
+         1tbxw7TRDZrfLbsHZfbx/FVOzm2SHc2s2E7b8XPWh2D6kAkQMLXmltWz2LP2Z88gy9t9
+         YfClwR6mMyML8Q5icTVk6xuEK9qOKFnEJqkDZkX/t7vKTgjwoNe3yZq+MD9EgR6cJaD9
+         DsLw==
+X-Forwarded-Encrypted: i=1; AJvYcCWgnVzIGz58kFo7KH6jQYdkUBlbEPVHOSUrnPXN0W/4SJdfRSaLJo8FqMlGafXTjX/NuYthQQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwqdAlnIYeNwcMF5JNh+er2eN3O/zZXsZkitXAKfyBonFTi8tj1
+	gIv12bcwQ6UdQ6yBqCXwpUY6eZ3gDmqEtyjfsJjP/dMf+yeam6CbFYUHJshw2Eh6Us09oBbHxc7
+	TjGQvDwUUv8W7+eWxqkezV/ERSyYUjpoAIspZePW2
+X-Gm-Gg: ASbGncvABV4h4+53vfHn+0iUJpLhdloxc45L9I8wws/eba6trbzhfS6L53tI5MWhSGr
+	UGA2t5FzIwwE6jCncTzqKASHFdiq9O2m8TsqjgX3DLY2AeA1tkWlGnl+FAQVQ1PmSlh3apNX+mB
+	RMVjP8fG/GcJR9GnXlKvuL77Zuux+b06O1+9fbJhuCs9W9ZnSDCfmx11BZCETGSLAbh5vMD/fDN
+	usau9Qo5cz8lzhiPzt5BOEKcq0wG9bVbnAywmSaiJ44e5saAzxLe5//KXyB4djLC+PWinmoF/jF
+	VV0QM6S5rgJQM7NTL9UfC3Th/BrOuX92qlmFpqfZA+vyhbCfng==
+X-Google-Smtp-Source: AGHT+IGOZDQAj/TycBpf1oLko6kxdZqBO2Sk3hT4y5SfEx6uw5mwTcmg8Z7NahmZfp18PPYf1PTqZO5h2SskSugGe9E=
+X-Received: by 2002:a05:622a:5a97:b0:4b7:8de4:52d6 with SMTP id
+ d75a77b69052e-4ed157cfd4cmr6757411cf.2.1761745324169; Wed, 29 Oct 2025
+ 06:42:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next] Squash to "selftests: mptcp: join: validate
- extra bind cases"
-Content-Language: en-GB, fr-BE
-To: Geliang Tang <geliang@kernel.org>, MPTCP Upstream <mptcp@lists.linux.dev>
-References: <20251024-sft-fix-bind-timeout-v1-1-cb81a67b222c@kernel.org>
- <95fdc88fbeba58db5976f97f117b1579a873c051.camel@kernel.org>
- <17404b24-dbed-4f16-9ff6-5822bffc3c1b@kernel.org>
- <074a8c2a99f102b2452570814c9700ef0225b145.camel@kernel.org>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <074a8c2a99f102b2452570814c9700ef0225b145.camel@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20251028-net-tcp-recv-autotune-v3-0-74b43ba4c84c@kernel.org> <20251028-net-tcp-recv-autotune-v3-2-74b43ba4c84c@kernel.org>
+In-Reply-To: <20251028-net-tcp-recv-autotune-v3-2-74b43ba4c84c@kernel.org>
+From: Neal Cardwell <ncardwell@google.com>
+Date: Wed, 29 Oct 2025 09:41:47 -0400
+X-Gm-Features: AWmQ_bkzo-mReBBs6WU6490vxEeqlXsoSqmYJljmFEdRABTFs0x5o3xtvuTei8g
+Message-ID: <CADVnQy=NBw3RL+yS4=4AusooKkiMx9Wr+20dj-14fK+jPNw8pw@mail.gmail.com>
+Subject: Re: [PATCH net v3 2/4] trace: tcp: add three metrics to trace_tcp_rcvbuf_grow()
+To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Cc: Eric Dumazet <edumazet@google.com>, Kuniyuki Iwashima <kuniyu@google.com>, 
+	"David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Simon Horman <horms@kernel.org>, David Ahern <dsahern@kernel.org>, 
+	Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, mptcp@lists.linux.dev, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Geliang,
+On Tue, Oct 28, 2025 at 7:58=E2=80=AFAM Matthieu Baerts (NGI0)
+<matttbe@kernel.org> wrote:
+>
+> From: Eric Dumazet <edumazet@google.com>
+>
+> While chasing yet another receive autotuning bug,
+> I found useful to add rcv_ssthresh, window_clamp and rcv_wnd.
+>
+> tcp_stream 40597 [068]  2172.978198: tcp:tcp_rcvbuf_grow: time=3D50307 rt=
+t_us=3D50179 copied=3D77824 inq=3D0 space=3D40960 ooo=3D0 scaling_ratio=3D2=
+19 rcvbuf=3D131072 rcv_ssthresh=3D107474 window_clamp=3D112128 rcv_wnd=3D11=
+0592
+> tcp_stream 40597 [068]  2173.028528: tcp:tcp_rcvbuf_grow: time=3D50336 rt=
+t_us=3D50206 copied=3D110592 inq=3D0 space=3D77824 ooo=3D0 scaling_ratio=3D=
+219 rcvbuf=3D509444 rcv_ssthresh=3D328658 window_clamp=3D435813 rcv_wnd=3D3=
+31776
+> tcp_stream 40597 [068]  2173.078830: tcp:tcp_rcvbuf_grow: time=3D50305 rt=
+t_us=3D50070 copied=3D270336 inq=3D0 space=3D110592 ooo=3D0 scaling_ratio=
+=3D219 rcvbuf=3D509444 rcv_ssthresh=3D431159 window_clamp=3D435813 rcv_wnd=
+=3D434176
+> tcp_stream 40597 [068]  2173.129137: tcp:tcp_rcvbuf_grow: time=3D50313 rt=
+t_us=3D50118 copied=3D434176 inq=3D0 space=3D270336 ooo=3D0 scaling_ratio=
+=3D219 rcvbuf=3D2457847 rcv_ssthresh=3D1299511 window_clamp=3D2102611 rcv_w=
+nd=3D1302528
+> tcp_stream 40597 [068]  2173.179451: tcp:tcp_rcvbuf_grow: time=3D50318 rt=
+t_us=3D50041 copied=3D1019904 inq=3D0 space=3D434176 ooo=3D0 scaling_ratio=
+=3D219 rcvbuf=3D2457847 rcv_ssthresh=3D2087445 window_clamp=3D2102611 rcv_w=
+nd=3D2088960
+>
+> Signed-off-by: Eric Dumazet <edumazet@google.com>
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> ---
 
-On 28/10/2025 02:34, Geliang Tang wrote:
-> Hi Matt,
-> 
-> On Mon, 2025-10-27 at 13:21 +0100, Matthieu Baerts wrote:
->> Hi Geliang,
->>
->> On 24/10/2025 14:56, Geliang Tang wrote:
->>> Hi Matt,
->>>
->>> Thanks for this fix.
->>>
->>> On Fri, 2025-10-24 at 12:02 +0200, Matthieu Baerts (NGI0) wrote:
->>>> I was going to send the related commit upstream, but then I
->>>> realised
->>>> in
->>>> a slow environment (e.g. public CI), with a debug kernel, the
->>>> default
->>>> 10 seconds timeout can be too short:
->>>>
->>>>   086 multiple bind to allow joins v4
->>>>         join Rx                             [ OK ]
->>>>         join Tx                             [ OK ]
->>>>   main_loop_s: timed out
->>>>         add addr rx                         [ OK ]
->>>>         add addr echo rx                    [ OK ]
->>>>   ./mptcp_join.sh: line 3305: kill: (2032) - No such process
->>>>
->>>> This doesn't affect the results, because it happens after the
->>>> test,
->>>> when
->>>> checking the counters. Still, better to fix that by using an
->>>> infinite
->>>> timeout: the process will be killed at the end.
->>>>
->>>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
->>>> ---
->>>>  tools/testing/selftests/net/mptcp/mptcp_join.sh | 8 ++++----
->>>>  1 file changed, 4 insertions(+), 4 deletions(-)
->>>>
->>>> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh
->>>> b/tools/testing/selftests/net/mptcp/mptcp_join.sh
->>>> index 05faacefb719..e0cdb9c662aa 100755
->>>> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
->>>> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
->>>> @@ -3293,7 +3293,7 @@ bind_tests()
->>>>  
->>>>  		# Launching another app listening on a different
->>>> address
->>>>  		# Note: it could be a totally different app,
->>>> e.g.
->>>> nc, socat, ...
->>>> -		ip netns exec ${ns1} ./mptcp_connect -l -p
->>>> "$(get_port)" \
->>>> +		ip netns exec ${ns1} ./mptcp_connect -l -t -1 -p
->>>> "$(get_port)" \
->>>
->>> A timeout of -1 means block indefinitely, right? Do you think using
->>> the
->>> default 30 seconds (-t ${timeout_poll}) is sufficient?
->>
->> No need to use the same default timeout: this process is executed in
->> the
->> background, and we explicitly kill it at the end. Worst case, the
->> other
->> process timeout after 30 seconds, and we will still kill this one.
->>
->> So it looks easier/better to use -1, no?
-> 
-> If that's the case, could we set a value that is, for example, twice or
-> ten times the value of ${timeout_poll}? But it's up to you.
+Reviewed-by: Neal Cardwell <ncardwell@google.com>
 
-I don't think that's needed: here, we don't wait for any events related
-to this process executed in the background. So we don't need a timeout.
-If really there is an issue to reach the kill part at the end, the
-process will be killed when cleaning the netns.
+Thanks, Eric and Matthieu!
 
-New patches for t/upstream:
-- 284511309756: "squashed" in "selftests: mptcp: join: validate extra
-bind cases"
-- Results: cfb47c65c4ba..2ae62d17b961 (export)
-
-Tests are now in progress:
-
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/ef9e74921bb057425352352ee9e9e69df0d0c705/checks
-
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
-
+neal
