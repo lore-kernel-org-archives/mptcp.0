@@ -1,138 +1,101 @@
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7140B34D3B9
-	for <mptcp@lists.linux.dev>; Sat,  1 Nov 2025 11:20:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DEFC2727FE;
+	Sat,  1 Nov 2025 17:57:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761996036; cv=none; b=Stj6FzV9P/YsgGpVtkUjo5M5TKYDLHRq3dGGY4USxjeerLd0Bc5kftN/mNa9jzEOB0l1z/zAk6B+N5f5TJaimHsvSkXgVicKpg7Pc+WX1nQ/ZYEd5ZgJSqf0cSlkv9gEZEkuQlacJrlgFT+flOshFX7T8BbL1XV8kjfGB6dQQNs=
+	t=1762019830; cv=none; b=KDiflamdHhrdE6FSqBaH7shJT8JYVUFR/8oIP8syQXaBX/VRpYmBZ3XV3N1SqS3eBtexB8W42kQKiGtFYaZKMeFWDunYgM9Vj8daGrlo1ft155GDQF8VzPaneSvuIkOLMza4Gqb21UBdywd7IQ/wEQRBCmbcMDuQNWSerqD2j/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761996036; c=relaxed/simple;
-	bh=IFzhQKXe5grNpUQ+QbRJSoMRd0dncngjvrn95oguhXg=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=fchu2cRdALWZn/RX6FfICjPnzOKjx3bty5yutXaOSFAhrg9VBSuN79jtHqatOZishTDfEvkzDJPlkh1Xdwhq1GujX7GXcVGCLAhsIB4wnMeGi8rbQQuwfafTrlAkHCtp5s3QkrVssh+VJXXuyTtb3jcHB0bNlNT7RmQluz72I+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JYqRH12l; arc=none smtp.client-ip=209.85.210.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1762019830; c=relaxed/simple;
+	bh=4alG/4J+Zw7vtUovcB0c4P8srDoSOCdZC4qNDI79DGk=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Gs+qwJOgb0xdo0fWPMTfMAyt/UyOwJKuQa74/Pa60pD+UmyMBwywnzk4dKVV4UVqX9RPZbAld4AWHRGbp6nDP4/BGGtFaBrLZ40u2f+MbOqLjBMP3YCRlSxvLo01fHHN9laqQ8zTXBriZagB3vGBZmllW6VeNim6hJuIx7MFy08=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ElAO+T25; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JYqRH12l"
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-7a27053843bso4492913b3a.1
-        for <mptcp@lists.linux.dev>; Sat, 01 Nov 2025 04:20:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1761996035; x=1762600835; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kf3ULd+FcrCCfNAd3JbcDOowxnsphLt439finQd857c=;
-        b=JYqRH12l3+lxV2begN3Dz1kXPdR9+PYAAubWznyFn1/DOhquo99RQ265FJcUwonF3K
-         u9pHH2fwUkKME8gSZiYpKNdErLMh27RlECwm1O94Z+eJJaoHzMGfyYo8kTPEjVYSiR2f
-         Y3pczGFGo1mHBf5cUOVmW5myFvs/YDQLDhR742pFObyJP+GunRi17ATCNX8C/aYvdbTw
-         YhMiP4Jwf2AlNhU83uhX1EqAWRHC3QRkvQ5zwstdGz+FWdA45mNng6pt/HgCIE2SNQ5q
-         ITJxlZRDoTqqfbkVA+qk2owEf/CMHjZmZCbwydYFcT75eh2nS1VrQ5+a8kqbuTb1RebP
-         bnYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761996035; x=1762600835;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=kf3ULd+FcrCCfNAd3JbcDOowxnsphLt439finQd857c=;
-        b=vFa4JdO47QHsevrROB5oN3FCGeL8stO/j7sy1hhYn4ozPElfNhbEtv3MSjjBCyXm8V
-         ZYD5hnCl0VgEHWUb8yi/bkQ/dHQ1zVVZc/yjDvn6GqH/ji3LsguCXwi/szqEYLtkqeKG
-         33OZir1b/5uP1APYDYygcewSVcwXkXmgBQcRb5kp7Upw6hCstpPEKGK+JpMhSjAI/LRs
-         VUq3SDUvtVgySsFOK+nGK1P46Ciy6MocH9cMP99v4b/IGOnzEUamHA+IbPfi6Jb8HejJ
-         2/pfkfhhdvMsmUxuAYTpHgjM2wqX0HRcdoHuziSzrWLFc/WeF70Z3iu6c4x283CatvsI
-         jssQ==
-X-Gm-Message-State: AOJu0YwItJnYBlbK0NZfwbTZUYJzKQidQKLUYmmLkQTZsocPixefNxnv
-	bykiPo/UCnzLgSWSNGMFMy+lgfLwHZsJHVSgprL7K6yY9j6qzecvHaYj9vfB
-X-Gm-Gg: ASbGnctC0gVDv8egeDpcetW6gIw1v/XPI5JlcHA9x1bXtYcb9zPUQLvTQvg7EwO6Inc
-	adxNr5IlOYamccxp908N+SB212HE0JRuHghSUyAENnNSnVATMd0kE7jLMTCMJexvj6IdAZLYsfG
-	fhnLdXC3bq75YjdE4YKZeNhzRgkaGWyQt77zj9/OhAorgVuhwb+WKFrlNKZcFECD8ltF6AO0bIK
-	1raZA+sjohbEQBSLHjquR2wKjXNvb2xyvvIw1tujXWEE9gVsZHamMjT92YXaWxErUhmZglnPdDP
-	JC+RAgoAaYA3s0poFFGtdjjXs9a7Y4YqWqjgq2xyCLQm8YbntyPyABpN5L6Q2+MKRj/fkNkUAOC
-	UtklA/ETilGzSMEJJ11MErKN9Usa+a7lHb6fd0YqOWYrQcjecMNVPzTnZZo1ygQBHwP+Tl3Ekq3
-	KUZzin5T1Pn3jzc9bzExKqeKRL
-X-Google-Smtp-Source: AGHT+IE1iWqk6YTIhVgd+vveuxbTjepzBfHxQAK2BqhNqkLRbOE4KuwUtOIZyjsXUl+1M0E8+oVPIA==
-X-Received: by 2002:a05:6a00:9287:b0:78c:994a:fc87 with SMTP id d2e1a72fcca58-7a776d97f3cmr8617103b3a.6.1761996034632;
-        Sat, 01 Nov 2025 04:20:34 -0700 (PDT)
-Received: from [127.0.0.1] ([57.151.137.146])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7a7db0a07cfsm4931934b3a.39.2025.11.01.04.20.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 01 Nov 2025 04:20:33 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <cover.1761931390.git.pabeni@redhat.com>
-References: <cover.1761931390.git.pabeni@redhat.com>
-Subject: Re: [PATCH mptcp-next 0/4] mptcp: autotune related improvement
-Message-ID: <0a5b1aa3-065f-70b5-ec2f-9bb058f27b62@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Sat, 01 Nov 2025 11:20:33 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ElAO+T25"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 670F4C113D0;
+	Sat,  1 Nov 2025 17:57:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1762019829;
+	bh=4alG/4J+Zw7vtUovcB0c4P8srDoSOCdZC4qNDI79DGk=;
+	h=From:Subject:Date:To:Cc:From;
+	b=ElAO+T259sbS4PtfmsssBEzluhML/6LPnjZ4Hr7bRblaRQaNwxS4empP39szfUUvB
+	 5U4NG1RDEwaL4eD5td4370wz09h/A7FEjUnXIYUpXaa6TV06MLdBLSv6GdxqDPw7by
+	 b9GcgFgm3pXnGT1C3gEwx+Bm6+6na298CbCu6ec43s8yeTjedW4Eih1B1IgfoC4imC
+	 x6UtJSPOfghHk+IdQb2gnUZZlD4lswjBRacqtS4op80V1/0DrjGz/RFBCS8NwNJF46
+	 U5PYaVFlBdCK5Sac43ExjXx9YazWBb57nmpGb1qRkcw2k729WUffcwSLFzIkOwn0Wr
+	 fO3Zz8XWpVkAQ==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH net-next 0/4] mptcp: pm: in-kernel: fullmesh endp nb + bind
+ cases
+Date: Sat, 01 Nov 2025 18:56:50 +0100
+Message-Id: <20251101-net-next-mptcp-fm-endp-nb-bind-v1-0-b4166772d6bb@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAOJJBmkC/zWNQQqEMAxFryJZGzCCM+pVxIVt05ksjKUtIoh3t
+ wgu3uIt3v8nJI7CCcbqhMi7JNm0CNUV2P+iP0ZxxaFt2o6oIVTOhSPjGrIN6FdkdQHVoBF1aP1
+ 3MZ++d4MnKCMhspfjOZjgbWG+rhv1xhc4egAAAA==
+X-Change-ID: 20251101-net-next-mptcp-fm-endp-nb-bind-cf7ab688d9f1
+To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Simon Horman <horms@kernel.org>, Shuah Khan <shuah@kernel.org>
+Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, 
+ linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+ "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1683; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=4alG/4J+Zw7vtUovcB0c4P8srDoSOCdZC4qNDI79DGk=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDLZPF9VncyUn7TkdNwk1ca59af7L6yY9W8hT+Gfw+vEg
+ kPbnH5pd5SyMIhxMciKKbJIt0Xmz3xexVvi5WcBM4eVCWQIAxenAEzEwprhf4H4a/uLW3ZMtvVb
+ Lv8491RwJk9m95xbNxxDjge8ShCcpMzI8NPtcIiG1Mlu/jifP0fYH5Y5f4o4O+fCkSZWBsv7DCu
+ 7WQA=
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hi Paolo,
+Here is a small optimisation for the in-kernel PM, joined by a small
+behavioural change to avoid confusions, and followed by a few more
+tests.
 
-Thank you for your modifications, that's great!
+- Patch 1: record fullmesh endpoints numbers, not to iterate over all
+  endpoints to check if one is marked as fullmesh.
 
-Our CI did some validations and here is its report:
+- Patch 2: when at least one endpoint is marked as fullmesh, only use
+  these endpoints when reacting to an ADD_ADDR, even if there are no
+  endpoints for this IP family: this is less confusing.
 
-- KVM Validation: normal (except selftest_mptcp_join): Unstable: 1 failed =
-test(s): selftest_mptcp_connect_sendfile - Critical: 1 Call Trace(s) - =
-Critical: Global Timeout =E2=9D=8C
-- KVM Validation: normal (only =
-selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except =
-selftest_mptcp_join): Critical: 1 Call Trace(s) - Critical: Global Timeout =
-=E2=9D=8C
-- KVM Validation: debug (only selftest_mptcp_join): Success! =
-=E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =
-=E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =
-=E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
-uns/18994741164
+- Patch 3: reduce duplicated code to prepare the next patch.
 
-Initiator: Matthieu Baerts (NGI0)
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/7e6786f6a20f
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1018332
+- Patch 4: extra "bind" cases: the listen socket restrict the bind to
+  one IP address, not allowing MP_JOIN to extra IP addresses, except if
+  another listening socket accepts them.
 
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+Matthieu Baerts (NGI0) (4):
+      mptcp: pm: in-kernel: record fullmesh endp nb
+      mptcp: pm: in kernel: only use fullmesh endp if any
+      selftests: mptcp: join: do_transfer: reduce code dup
+      selftests: mptcp: join: validate extra bind cases
 
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
+ include/uapi/linux/mptcp.h                        |   3 +-
+ net/mptcp/pm_kernel.c                             |  36 ++++-
+ net/mptcp/protocol.h                              |   1 +
+ net/mptcp/sockopt.c                               |   2 +
+ tools/testing/selftests/net/mptcp/mptcp_connect.c |  10 +-
+ tools/testing/selftests/net/mptcp/mptcp_join.sh   | 187 +++++++++++++++++++---
+ 6 files changed, 213 insertions(+), 26 deletions(-)
+---
+base-commit: 01cc760632b875c4ad0d8fec0b0c01896b8a36d4
+change-id: 20251101-net-next-mptcp-fm-endp-nb-bind-cf7ab688d9f1
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+Best regards,
+-- 
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
