@@ -1,334 +1,136 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f54.google.com (mail-io1-f54.google.com [209.85.166.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 054512FD691;
-	Sat,  1 Nov 2025 17:57:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D35CD1917F1
+	for <mptcp@lists.linux.dev>; Sat,  1 Nov 2025 19:43:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762019840; cv=none; b=rnzuWhcEJlTXcwO3obxoZLVJ7X7ze4gE0++eVVRih33c5K2GEd0LfElYuE2/zJ022mKPT/xgFgDPUwbFvhgAG7Ag5kum84t/0mXAaa2lsjwGkl5BdqqNMQe89wilWax/5NqFWEVVdj9ALu83kBM/xVKZqJOHXjExwCGtiAOJL6Y=
+	t=1762026194; cv=none; b=TCsZgxWgC0y/TQNb+ijSbsuOMPXRYBgb9bQ82r2Y87LbX9ZH364edftuWkPPFP3lhgHuO4qN4+aB6cNCDCjh+SoyXe2emN4KGVbSW0I+dhAv2gJY+p82dZTDh43h8qnJB/dXCpMHyoyCLlLfgP9XFPAxDr/NEDSRTSG3IuhxM4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762019840; c=relaxed/simple;
-	bh=in42XnovMXeVQqZbDa2ZCxwTuNrF6sz8oX+pUPjugkw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Ls3FFqH7Ff9dDEwYrQD4MEsefQtMrVraj0j0jpmwndJ0DcEOnzaXMScacWsV0xdU4lj6OniGwGe5HRM0qqGJNRHXL1tPWHg32SKK8NyvLKgrGAmSEmc4i3SlIUFXZYqOVm0ekHfhDFubwsnF4dBoErOgAFoIR7wlZkqNsyIaTgc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TX09LgCR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1762026194; c=relaxed/simple;
+	bh=sLyjGIY2nqzyND1HsPN2pX4wTLURIIkLFHdYnZLXxPQ=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=r0P2I10fxin/EMQCCVNiByjsVS/GbF4gBZ9BdvtDJ0vouEvQWC1NAg8qy+0DtXJMKAzm0odIWuosSrvXNkNYN8PqGxTq8i/84Ljlwk8P98g0jEoot+KlaVqT6LoGIbArNMeNISzNwbTuReMrnob42f4S0zeYfx0khHdUdA4yYDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B3N0pWcR; arc=none smtp.client-ip=209.85.166.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TX09LgCR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A97E0C4CEFB;
-	Sat,  1 Nov 2025 17:57:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762019839;
-	bh=in42XnovMXeVQqZbDa2ZCxwTuNrF6sz8oX+pUPjugkw=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=TX09LgCRjL//NZFSuJbnsLprNO+I4shNwhohXNpiHNEgaz1ziN1C4Dp4EQw4Uripk
-	 +Nt5hppo/IGz3pADXkxV1WHKbIv+P4t9w3Zvevcc/lb/JNMEeyIoY0PGpHxBjZRVMw
-	 hghF1l2PD3i5CGxMfI2orTgogWLoTInXQD4JJOLIYw92KsFHmbm71fUKswtRoWpk0m
-	 NXcPc+27K4FMDV/LClP2ojNvD66FNN2CqrDisISQwnWSWZIPQnWk+dfoXjLUHLE6JC
-	 WFFL2nPt6nPEKD13Mzr9YRkeIzmApceKfeFqbTMyUKAChEAOtRQqp8LvVxcSzEuvNp
-	 RpMXYypMZ8tTg==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Sat, 01 Nov 2025 18:56:54 +0100
-Subject: [PATCH net-next 4/4] selftests: mptcp: join: validate extra bind
- cases
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B3N0pWcR"
+Received: by mail-io1-f54.google.com with SMTP id ca18e2360f4ac-945a4bfd8c6so295535939f.0
+        for <mptcp@lists.linux.dev>; Sat, 01 Nov 2025 12:43:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1762026192; x=1762630992; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tgaMUctS4CE8NtKuhw5dU6eQVSP4IllaBxBPaMzwwIU=;
+        b=B3N0pWcRkNgsX+Kz6oHKcmmXdCNZ365NigZLhAuj6hqy3nfkPjIVeoXBsyo5O3C6wk
+         KId+wpzMSnn8OAE5cnJ5ijGIFa8cy7z3fo39WRB7ImRb6afYbJIxuK/Yt19LsnqEt4i0
+         6hYwYdxSoB7fj9hGQsx5LmMwVEHbOw04ASvC0pLIatdYzEknPom3tMgKrDyXIHEtNrco
+         gHHHJCPd7qrlqKifgcOGz7oiYBhDZjEJ7FBElKpTLiduqWEGgAC20gve2aYZosCp1y4n
+         Lpg8i99DDizgC1up8TKAbNdbJEj/uKW6TfHTSkG1wcYtK7jSNJhsr/UmYws8Dsm0ilA/
+         WUuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762026192; x=1762630992;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=tgaMUctS4CE8NtKuhw5dU6eQVSP4IllaBxBPaMzwwIU=;
+        b=KbyVzVXYwIywAwoCEAXkfQ6tVJxSnUlqntQmCThz+TZc6GsmYI24eIOxdA2xw+lSBF
+         WQYJDGrgVPpr1nvUo2VVegxiJtQzhf4m1/BBgjVLSa5z01w5l7DcASSQA5XYq+yXM+j3
+         RzxZfDtdlP9dcowR0GstuhtZIF8NVSXeGu5drbzBFr6iCzAM58kxI5uya7n2775s4q6X
+         FURivdOYeq+j5oWW4FXXHtoBgzX7xKkGYWscld9YoithFXj96COuy0/+IkFBpm+TpDyU
+         MtDOedLWdQr15KkGROh1aAZ4ttcpq8VVCZ6tAzLC4JOXLGNfR1r3tymrMXGjJqFAWERi
+         qpIA==
+X-Gm-Message-State: AOJu0YxUYa+f7nOWPwHA5nNnjC4Vwq5t3K8GDXLqwitwtveicq6pvseE
+	FJVN7shFKNCSBM2JMdeqwaXLQ5gUjkdVvx3j463iIgHG8Ack2EiYJ/c=
+X-Gm-Gg: ASbGnctUlLKBfUor/bK1eM9gh1BHegUsmIfIldVWZ+5+qdcnqaluSmFZ8a9SM8vbXYs
+	p2nmz3KAvfL1GRWQ94Rv8kWPqMCQBbD0b9O6eQCXpFJ0N8TPyjh2lvBb6eunAlXfUxKvnghPKN3
+	qTFOCHP07rHr6DHJcdK5giefxj3iQeXxy4r4ByH5RzmQUvgvjCguHWcXi+t8oyoMgBWblu5i7oG
+	B+dJE3lfVkXUgPzFapOowrsh14r6pln1FpesoQ2PFKPpv7ZXfeZa0KwHAUH1sMrUq+PozELGolF
+	ng5oASEljndKnt7BOkOWvfXkMxqUhYI4ENrhxBfdDP6LVFtJeqDIeQE9qPO/5D8ArK/4ei5PWiP
+	S11meJ8BY4ThmK9gYFeDhf37w9MKVyyMhoW5EEkWMftZDMxq42u/iyHemL+pz7Vvl/LhY5awLBw
+	CTg69UGNRqzqzqPQtG/H6WtRKT3w==
+X-Google-Smtp-Source: AGHT+IGQfEB/joRqb2AuMFjBGoOX42SuTuV2g4rXu+Q1IYiFDX5wFEBk0OltpHn+x3ITI97hjxnAGg==
+X-Received: by 2002:a05:6e02:12cb:b0:430:d371:d3bd with SMTP id e9e14a558f8ab-4330d1dbf00mr105048445ab.25.1762026191767;
+        Sat, 01 Nov 2025 12:43:11 -0700 (PDT)
+Received: from [127.0.0.1] ([135.232.184.212])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-5b6a34b85e3sm2002973173.18.2025.11.01.12.43.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 01 Nov 2025 12:43:10 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20251101-slft-join-inst-v1-0-10572512a0b2@kernel.org>
+References: <20251101-slft-join-inst-v1-0-10572512a0b2@kernel.org>
+Subject: Re: [PATCH mptcp-net 0/6] selftests: mptcp: join: fix flaky tests
+Message-ID: <3bdf8ce7-2104-78c8-f04c-2f93f9e9e60f@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Sat, 01 Nov 2025 19:43:10 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20251101-net-next-mptcp-fm-endp-nb-bind-v1-4-b4166772d6bb@kernel.org>
-References: <20251101-net-next-mptcp-fm-endp-nb-bind-v1-0-b4166772d6bb@kernel.org>
-In-Reply-To: <20251101-net-next-mptcp-fm-endp-nb-bind-v1-0-b4166772d6bb@kernel.org>
-To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Simon Horman <horms@kernel.org>, Shuah Khan <shuah@kernel.org>
-Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, 
- linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
- "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=8916; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=in42XnovMXeVQqZbDa2ZCxwTuNrF6sz8oX+pUPjugkw=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDLZPD9NL2n4+3/P2bTGmSW2iSsdF577tuioynFHs4/SX
- 1l8rP8Wd5SyMIhxMciKKbJIt0Xmz3xexVvi5WcBM4eVCWQIAxenAEzEfjLDf1++rFVNsjH6SxdK
- 7574ff/VnCVPnp3nrHsSlTsjIKz51TWGf/pcIietnnzaL1sU/8bMfv31mHt3/wqx8m8Lsrh9SHn
- 3UQ4A
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-By design, an MPTCP connection will not accept extra subflows where no
-MPTCP listening sockets can accept such requests.
+Hi Matthieu,
 
-In other words, it means that if the 'server' listens on a specific
-address / device, it cannot accept MP_JOIN sent to a different address /
-device. Except if there is another MPTCP listening socket accepting
-them.
+Thank you for your modifications, that's great!
 
-This is what the new tests are validating:
+Our CI did some validations and here is its report:
 
- - Forcing a bind on the main v4/v6 address, and checking that MP_JOIN
-   to announced addresses are not accepted.
+- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: normal (only selftest_mptcp_join): Unstable: 1 failed =
+test(s): selftest_mptcp_join =F0=9F=94=B4
+- KVM Validation: debug (except =
+selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (only =
+selftest_mptcp_join): Unstable: 1 failed test(s): selftest_mptcp_join =
+=F0=9F=94=B4
+- KVM Validation: btf-normal (only bpftest_all): Success! =
+=E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =
+=E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
+uns/19000566005
 
- - Also forcing a bind on the main v4/v6 address, but before, another
-   listening socket is created to accept additional subflows. Note that
-   'mptcpize run nc -l' -- or something else only doing: socket(MPTCP),
-   bind(<IP>), listen(0) -- would be enough, but here mptcp_connect is
-   reused not to depend on another tool just for that.
+Initiator: Matthieu Baerts (NGI0)
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/6b0e1d6c4c13
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1018473
 
- - Same as the previous one, but using v6 link-local addresses: this is
-   a bit particular because it is required to specify the outgoing
-   network interface when connecting to a link-local address announced
-   by the other peer. When using the routing rules, this doesn't work
-   (the outgoing interface is not known) ; but it does work with a
-   'laminar' endpoint having a specified interface.
 
-Note that extra small modifications are needed for these tests to work:
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
 
- - mptcp_connect's check_getpeername_connect() check should strip the
-   specified interface when comparing addresses.
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
 
- - With IPv6 link-local addresses, it is required to wait for them to
-   be ready (no longer in 'tentative' mode) before using them, otherwise
-   the bind() will not be allowed.
+For more details:
 
-Link: https://github.com/multipath-tcp/mptcp_net-next/issues/591
-Reviewed-by: Geliang Tang <geliang@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- tools/testing/selftests/net/mptcp/mptcp_connect.c |  10 +-
- tools/testing/selftests/net/mptcp/mptcp_join.sh   | 153 +++++++++++++++++++++-
- 2 files changed, 161 insertions(+), 2 deletions(-)
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-index b148cadb96d0..c030b08a7195 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-@@ -1064,6 +1064,8 @@ static void check_getpeername_connect(int fd)
- 	socklen_t salen = sizeof(ss);
- 	char a[INET6_ADDRSTRLEN];
- 	char b[INET6_ADDRSTRLEN];
-+	const char *iface;
-+	size_t len;
- 
- 	if (getpeername(fd, (struct sockaddr *)&ss, &salen) < 0) {
- 		perror("getpeername");
-@@ -1073,7 +1075,13 @@ static void check_getpeername_connect(int fd)
- 	xgetnameinfo((struct sockaddr *)&ss, salen,
- 		     a, sizeof(a), b, sizeof(b));
- 
--	if (strcmp(cfg_host, a) || strcmp(cfg_port, b))
-+	iface = strchr(cfg_host, '%');
-+	if (iface)
-+		len = iface - cfg_host;
-+	else
-+		len = strlen(cfg_host) + 1;
-+
-+	if (strncmp(cfg_host, a, len) || strcmp(cfg_port, b))
- 		fprintf(stderr, "%s: %s vs %s, %s vs %s\n", __func__,
- 			cfg_host, a, cfg_port, b);
- }
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 4c9ee094381e..4faf58fecc94 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -62,6 +62,7 @@ unset sflags
- unset fastclose
- unset fullmesh
- unset speed
-+unset bind_addr
- unset join_syn_rej
- unset join_csum_ns1
- unset join_csum_ns2
-@@ -645,6 +646,27 @@ wait_mpj()
- 	done
- }
- 
-+wait_ll_ready()
-+{
-+	local ns="${1}"
-+
-+	local i
-+	for i in $(seq 50); do
-+		ip -n "${ns}" -6 addr show scope link | grep "inet6 fe80" |
-+			grep -qw "tentative" || break
-+		sleep 0.1
-+	done
-+}
-+
-+get_ll_addr()
-+{
-+	local ns="${1}"
-+	local iface="${2}"
-+
-+	ip -n "${ns}" -6 addr show dev "${iface}" scope link |
-+		grep "inet6 fe80" | sed 's#.*\(fe80::.*\)/.*#\1#'
-+}
-+
- kill_events_pids()
- {
- 	mptcp_lib_kill_wait $evts_ns1_pid
-@@ -951,6 +973,7 @@ do_transfer()
- 	local FAILING_LINKS=${FAILING_LINKS:-""}
- 	local fastclose=${fastclose:-""}
- 	local speed=${speed:-"fast"}
-+	local bind_addr=${bind_addr:-"::"}
- 	local listener_in="${sin}"
- 	local connector_in="${cin}"
- 	port=$(get_port)
-@@ -1006,7 +1029,7 @@ do_transfer()
- 	timeout ${timeout_test} \
- 		ip netns exec ${listener_ns} \
- 			./mptcp_connect -t ${timeout_poll} -l -p ${port} -s ${srv_proto} \
--				${extra_srv_args} "::" < "${listener_in}" > "${sout}" &
-+				${extra_srv_args} "${bind_addr}" < "${listener_in}" > "${sout}" &
- 	local spid=$!
- 
- 	mptcp_lib_wait_local_port_listen "${listener_ns}" "${port}"
-@@ -3229,6 +3252,133 @@ add_addr_ports_tests()
- 	fi
- }
- 
-+bind_tests()
-+{
-+	# bind to one address should not allow extra subflows to other addresses
-+	if reset "bind main address v4, no join v4"; then
-+		pm_nl_set_limits $ns1 0 2
-+		pm_nl_set_limits $ns2 2 2
-+		pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
-+		bind_addr="10.0.1.1" \
-+			run_tests $ns1 $ns2 10.0.1.1
-+		join_syn_tx=1 \
-+			chk_join_nr 0 0 0
-+		chk_add_nr 1 1
-+	fi
-+
-+	# bind to one address should not allow extra subflows to other addresses
-+	if reset "bind main address v6, no join v6"; then
-+		pm_nl_set_limits $ns1 0 2
-+		pm_nl_set_limits $ns2 2 2
-+		pm_nl_add_endpoint $ns1 dead:beef:2::1 flags signal
-+		bind_addr="dead:beef:1::1" \
-+			run_tests $ns1 $ns2 dead:beef:1::1
-+		join_syn_tx=1 \
-+			chk_join_nr 0 0 0
-+		chk_add_nr 1 1
-+	fi
-+
-+	# multiple binds to allow extra subflows to other addresses
-+	if reset "multiple bind to allow joins v4"; then
-+		local extra_bind
-+
-+		pm_nl_set_limits $ns1 0 2
-+		pm_nl_set_limits $ns2 2 2
-+		pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
-+
-+		# Launching another app listening on a different address
-+		# Note: it could be a totally different app, e.g. nc, socat, ...
-+		ip netns exec ${ns1} ./mptcp_connect -l -t -1 -p "$(get_port)" \
-+			-s MPTCP 10.0.2.1 &
-+		extra_bind=$!
-+
-+		bind_addr="10.0.1.1" \
-+			run_tests $ns1 $ns2 10.0.1.1
-+		chk_join_nr 1 1 1
-+		chk_add_nr 1 1
-+
-+		kill ${extra_bind}
-+	fi
-+
-+	# multiple binds to allow extra subflows to other addresses
-+	if reset "multiple bind to allow joins v6"; then
-+		local extra_bind
-+
-+		pm_nl_set_limits $ns1 0 2
-+		pm_nl_set_limits $ns2 2 2
-+		pm_nl_add_endpoint $ns1 dead:beef:2::1 flags signal
-+
-+		# Launching another app listening on a different address
-+		# Note: it could be a totally different app, e.g. nc, socat, ...
-+		ip netns exec ${ns1} ./mptcp_connect -l -t -1 -p "$(get_port)" \
-+			-s MPTCP dead:beef:2::1 &
-+		extra_bind=$!
-+
-+		bind_addr="dead:beef:1::1" \
-+			run_tests $ns1 $ns2 dead:beef:1::1
-+		chk_join_nr 1 1 1
-+		chk_add_nr 1 1
-+
-+		kill ${extra_bind}
-+	fi
-+
-+	# multiple binds to allow extra subflows to other addresses: v6 LL case
-+	if reset "multiple bind to allow joins v6 link-local routing"; then
-+		local extra_bind ns1ll1 ns1ll2
-+
-+		ns1ll1="$(get_ll_addr $ns1 ns1eth1)"
-+		ns1ll2="$(get_ll_addr $ns1 ns1eth2)"
-+
-+		pm_nl_set_limits $ns1 0 2
-+		pm_nl_set_limits $ns2 2 2
-+		pm_nl_add_endpoint $ns1 "${ns1ll2}" flags signal
-+
-+		wait_ll_ready $ns1 # to be able to bind
-+		wait_ll_ready $ns2 # also needed to bind on the client side
-+		ip netns exec ${ns1} ./mptcp_connect -l -t -1 -p "$(get_port)" \
-+			-s MPTCP "${ns1ll2}%ns1eth2" &
-+		extra_bind=$!
-+
-+		bind_addr="${ns1ll1}%ns1eth1" \
-+			run_tests $ns1 $ns2 "${ns1ll1}%ns2eth1"
-+		# it is not possible to connect to the announced LL addr without
-+		# specifying the outgoing interface.
-+		join_connect_err=1 \
-+			chk_join_nr 0 0 0
-+		chk_add_nr 1 1
-+
-+		kill ${extra_bind}
-+	fi
-+
-+	# multiple binds to allow extra subflows to v6 LL addresses: laminar
-+	if reset "multiple bind to allow joins v6 link-local laminar" &&
-+	   continue_if mptcp_lib_kallsyms_has "mptcp_pm_get_endp_laminar_max$"; then
-+		local extra_bind ns1ll1 ns1ll2 ns2ll2
-+
-+		ns1ll1="$(get_ll_addr $ns1 ns1eth1)"
-+		ns1ll2="$(get_ll_addr $ns1 ns1eth2)"
-+		ns2ll2="$(get_ll_addr $ns2 ns2eth2)"
-+
-+		pm_nl_set_limits $ns1 0 2
-+		pm_nl_set_limits $ns2 2 2
-+		pm_nl_add_endpoint $ns1 "${ns1ll2}" flags signal
-+		pm_nl_add_endpoint $ns2 "${ns2ll2}" flags laminar dev ns2eth2
-+
-+		wait_ll_ready $ns1 # to be able to bind
-+		wait_ll_ready $ns2 # also needed to bind on the client side
-+		ip netns exec ${ns1} ./mptcp_connect -l -t -1 -p "$(get_port)" \
-+			-s MPTCP "${ns1ll2}%ns1eth2" &
-+		extra_bind=$!
-+
-+		bind_addr="${ns1ll1}%ns1eth1" \
-+			run_tests $ns1 $ns2 "${ns1ll1}%ns2eth1"
-+		chk_join_nr 1 1 1
-+		chk_add_nr 1 1
-+
-+		kill ${extra_bind}
-+	fi
-+}
-+
- syncookies_tests()
- {
- 	# single subflow, syncookies
-@@ -4183,6 +4333,7 @@ all_tests_sorted=(
- 	M@mixed_tests
- 	b@backup_tests
- 	p@add_addr_ports_tests
-+	B@bind_tests
- 	k@syncookies_tests
- 	S@checksum_tests
- 	d@deny_join_id0_tests
 
--- 
-2.51.0
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
 
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
