@@ -1,132 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 454452D5938
-	for <mptcp@lists.linux.dev>; Sun,  2 Nov 2025 11:30:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1D521D555
+	for <mptcp@lists.linux.dev>; Sun,  2 Nov 2025 12:33:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762083027; cv=none; b=MEaXoAHOkOHiJgPYsdLCe/STxqu5IZWoQ2aqwK/orFK5FVgF5UQsjhinXRdCjIHm9eNpND4SZPruscycaTXkEMupvuWm4fY0o/I9uRpPl3HtFHwgrv03hSALvfH5kdTyLVlqoZLB3b2KfZboJvcuZHpebSRYTjHc3ql+IDae1uo=
+	t=1762086835; cv=none; b=qnAcTkupFiRp74bFg1kxC1kG/7+KXLshGmtXL+lWbC6u5lAebxrr+aNd94ByXLndMdTn8dekR/BdHLQWPo1RRPqVS26u68kfqbWpszPEFQzIuquyx7H9jOahihVkfiua9GoL1gH6hDptx9ffobO3PQzm4BM1OnkGh84DaqY0Uw4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762083027; c=relaxed/simple;
-	bh=qIBsqFVvBorBqc84mVDtrWVlmPySnuF9WwgXa52rhZg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=VwVdS/sOZUfa9rvy7ExRshiyeNtPujYquxc1WWi4ruZrCGJDW+Y77CMM3HqifHbF3M3hTESDnTYXqIYpxQyXqUi6KRqe9423XwuzNirjnbw17b9yxaSQ0xI75bXTWh1Fn9DnbgKeMmLbNyodoEYTfUIGtQV6dJHwnbyD2oWrFow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W2Eah65L; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1762086835; c=relaxed/simple;
+	bh=I9wHkWL8MB8xoAAemQ45nIHh4o137VuEtv+S5ZrVIMw=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=R3j1PvFCX00o6E92fxZVGl/1KLQp0R4yMYf1Y74RmX87xEY5kjYSKSlg6BljdTpo5T+qOFfrRrqH4VCdkYYd6M1+BKHdOquWlp5CDLypfG9vmdLaB1IE4ej8D27CpoQxh6kiVOFHDWVOGBhszWxpMe+Cfj1Beveq77UF1m0dbyY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eaOH43es; arc=none smtp.client-ip=209.85.166.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W2Eah65L"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 716E1C4CEFD;
-	Sun,  2 Nov 2025 11:30:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762083026;
-	bh=qIBsqFVvBorBqc84mVDtrWVlmPySnuF9WwgXa52rhZg=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=W2Eah65LJ2dS4T1flGSZBKHkf8VJu6ZHfGQjZkfRRCTMUmbY5qaeb+2R3ZyzMLtLM
-	 G3+gAh+E9XDst9to5eZY9jBFVRXpYloyZVnad0UJfOZoQ+ydt8UIpX9GpnCimRRLh1
-	 zWQHqNjVdQjxJUBlBuUacTpBFSm6rTv4IAG6XDzs8EOcEOJlIFO2M8W9l5G38MyODN
-	 nFOpMwwPuyECdN7XBajGLfMzzGnikVUeHjo/dCNDYkB5WoEcwJL23JNO/i6vXExyB1
-	 EMrTJos7ad7VBf5OBhaI/GhbA3cZHia5/1QtX7KhaSAGKJEJ7k2K+ingkxjaVK5wfi
-	 VANhNYSnnlj2A==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Sun, 02 Nov 2025 12:30:08 +0100
-Subject: [PATCH mptcp-net v2 6/6] selftests: mptcp: connect: trunc: read
- all recv data
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eaOH43es"
+Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-4332d5be8adso1911515ab.0
+        for <mptcp@lists.linux.dev>; Sun, 02 Nov 2025 04:33:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1762086833; x=1762691633; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4YEMGSsjOZQPDC8rjvZmBzWNIpXwqam62H5LQndrHTI=;
+        b=eaOH43esU5pe4Y8u39ZGMl0TQIKZX0cjAmcWiIc1gyYy68tv9yVAWqe6YoMQblVmza
+         8Yp4L3PsY67garwQaWJfI1W1onJoHtQRH1Sot6DVC5dEgtFl1XeXDT0cG3wd2+icoY4I
+         5aYTA4B8xF1l6H4cP2q/SBealjCIRuc6ImX5Opj16AqfuuHYDggeEniTQQLkhTTdyCK1
+         pulvRFXEBX0eN+pCPadeZmQGNuBF504cClG1NDFX4XYeb4MciqKZ07wbYamyMgr3LHlL
+         scm709kt4EGjS852soUXmJvhpKgqieSBnsCsKhkk5oaJnvvAZegXMnYvvdbNJgxw39ew
+         NxWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762086833; x=1762691633;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=4YEMGSsjOZQPDC8rjvZmBzWNIpXwqam62H5LQndrHTI=;
+        b=Znpz+wr4W3k6ZFstTfOrFX2ej+CacIwVl9iuTrkhXsNP/TU02DT2ElI/U4uSPnLREs
+         tl2UoFAnWZHAvxWHLM8PQugMnHSZXO5QNWZVak9ESPFjGyZ8XyfqiDmO9X4zxO3Wcand
+         JcAi8KbQqOXawCiYeXSeLznUOGMTEasISIfZ+Vy4gBa7I9E8Xy9/Tep8BQeEra2AKTyI
+         UPGQpNdW0GADfcicvRK3DU9P86ibL3guGJ5nijlukS4wDBG6ChTleDaIyRiQvLKdYF6/
+         RpuwpCWwfb9Z1lLc+FEE58nrCf6TDOH20FcyoAZulaEczblBsey4kJYFXPG9J4O2pAG8
+         G9LA==
+X-Gm-Message-State: AOJu0Yyd2ZbLtT2hJ2okW2k49LPgRjbMoh61RdnpbyEKINun0wioxRRI
+	TRgLRwS+3T/t6Mya+hctL7GhTi77NB4jr7cyboiKo+BRfW48LqtIpZkwJKjW
+X-Gm-Gg: ASbGncsxC6OEq36GY7icDG+8yt3nA+lHOYjdHJgs9dBc3GXQd3qLuKGNYPLmzUXcaOh
+	eBLwpRnM0ZeD4B2XKtm4e3DflsXKeVIFiIpcesZxmQKsF/J9/hd7UQ0r6lI0PD+E0w8UeVNOTbZ
+	wQu3id+FSedeKoW5XMUAien99HTxJZ/NDv06DJ8d413Y/+9wX1URDC9886zUqtKmWV3QKhgp2YG
+	Xd4ic1LAS2OcRTjlAszXQWaL8GAAW8v6nJovzi2JY7/da+6wck19YI34wQxaNaqfxHvrHLtgTlJ
+	uc0yzNRydG6qwLtPpk1xq+CGUzNhGMYLL3DM6sL4B8Q/BhtBcMNbsfSiADwH5nnCSWX7kvVEkqM
+	GtUgnHq4JghZs1TbEqcP+Zh5SFVXGVFPOJ//DwqDC/qQysqQbijtLyIeaNdOJdUut6gUxeJ1f8+
+	FxFOslYDRqFzPe
+X-Google-Smtp-Source: AGHT+IHf/0ZlCFK1S2Nwe+bDLiT/k8f2CcauuDnVEPjiHU+LMWyBiQvXoiJ9Ft7r4+/6zC6m0ME44Q==
+X-Received: by 2002:a05:6e02:4511:b0:433:1d3e:e540 with SMTP id e9e14a558f8ab-4331d3eeb0dmr58055845ab.24.1762086832889;
+        Sun, 02 Nov 2025 04:33:52 -0800 (PST)
+Received: from [127.0.0.1] ([52.154.131.96])
+        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-4331028acf9sm26893995ab.12.2025.11.02.04.33.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 02 Nov 2025 04:33:51 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20251102-slft-join-inst-v2-0-b4f3ba15a7c4@kernel.org>
+References: <20251102-slft-join-inst-v2-0-b4f3ba15a7c4@kernel.org>
+Subject: Re: [PATCH mptcp-net v2 0/6] selftests: mptcp: join: fix flaky
+ tests
+Message-ID: <d09d787f-de8f-95ec-aeb8-2d2148b70d2f@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Sun, 02 Nov 2025 12:33:51 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20251102-slft-join-inst-v2-6-b4f3ba15a7c4@kernel.org>
-References: <20251102-slft-join-inst-v2-0-b4f3ba15a7c4@kernel.org>
-In-Reply-To: <20251102-slft-join-inst-v2-0-b4f3ba15a7c4@kernel.org>
-To: MPTCP Upstream <mptcp@lists.linux.dev>
-Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2778; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=qIBsqFVvBorBqc84mVDtrWVlmPySnuF9WwgXa52rhZg=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDLZHc68bYrat+dcde7Nv7ONjq2LX/SpSiiKLVY459EKo
- 5PH/fL+dJSyMIhxMciKKbJIt0Xmz3xexVvi5WcBM4eVCWQIAxenAExEsJCR4f0sL/4K8RCL3zsW
- nH3Bor6v5P2evc+2puR8X+rH2y+y8jYjw0vV0GMMW8V+zNx7csFCLa2P31a+vvd/UpLL5TSnJRx
- Wk3kB
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-MPTCP Join "fastclose server" selftest is sometimes failing because the
-client output file doesn't have the expected size, e.g. 296B instead of
-1024B.
+Hi Matthieu,
 
-When looking at a packet trace when this happens, the server sent the
-expected 1024B in two parts -- 100B, then 924B -- then the MP_FASTCLOSE.
-It is then strange to see the client only receiving 296B, which would
-mean it only got a part of the second packet. The problem is then not on
-the networking side, but rather on the data reception side.
+Thank you for your modifications, that's great!
 
-When mptcp_connect is launched with '-f -1', it means the connection
-might stop before having sent everything, because a reset has been
-received. When this happens, the program was directly stopped. But it is
-also possible there are still some data to read, simply because the
-previous 'read' step was done with a buffer smaller than the pending
-data, see do_rnd_read(). In this case, it is important to read what's
-left in the kernel buffers before stopping without error like before.
+Our CI did some validations and here is its report:
 
-SIGPIPE is now ignored, not to quit the app before having read
-everything.
+- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/190116=
+45207
 
-Fixes: 6bf41020b72b ("selftests: mptcp: update and extend fastclose test-cases")
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
-v2:
- - Also catch EPIPE, and ignore SIGPIPE
----
- tools/testing/selftests/net/mptcp/mptcp_connect.c | 18 +++++++++++++-----
- 1 file changed, 13 insertions(+), 5 deletions(-)
+Initiator: Matthieu Baerts (NGI0)
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/ee5cae87148e
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1018612
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-index c030b08a7195..404a77bf366a 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-@@ -710,8 +710,14 @@ static int copyfd_io_poll(int infd, int peerfd, int outfd,
- 
- 				bw = do_rnd_write(peerfd, winfo->buf + winfo->off, winfo->len);
- 				if (bw < 0) {
--					if (cfg_rcv_trunc)
--						return 0;
-+					/* expected reset, continue to read */
-+					if (cfg_rcv_trunc &&
-+					    (errno == ECONNRESET ||
-+					     errno == EPIPE)) {
-+						fds.events &= ~POLLOUT;
-+						continue;
-+					}
-+
- 					perror("write");
- 					return 111;
- 				}
-@@ -737,8 +743,10 @@ static int copyfd_io_poll(int infd, int peerfd, int outfd,
- 		}
- 
- 		if (fds.revents & (POLLERR | POLLNVAL)) {
--			if (cfg_rcv_trunc)
--				return 0;
-+			if (cfg_rcv_trunc) {
-+				fds.events &= ~(POLLERR | POLLNVAL);
-+				continue;
-+			}
- 			fprintf(stderr, "Unexpected revents: "
- 				"POLLERR/POLLNVAL(%x)\n", fds.revents);
- 			return 5;
-@@ -1441,7 +1449,7 @@ static void parse_opts(int argc, char **argv)
- 			 */
- 			if (cfg_truncate < 0) {
- 				cfg_rcv_trunc = true;
--				signal(SIGPIPE, handle_signal);
-+				signal(SIGPIPE, SIG_IGN);
- 			}
- 			break;
- 		case 'j':
 
--- 
-2.51.0
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
 
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
