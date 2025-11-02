@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F1652D593D
-	for <mptcp@lists.linux.dev>; Sun,  2 Nov 2025 11:30:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 454452D5938
+	for <mptcp@lists.linux.dev>; Sun,  2 Nov 2025 11:30:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762083026; cv=none; b=YAMBxW93sJCDAKkAPxN/sg+Xms8vYJ+XdEWO15sRFgGZyzgE22WCb+gnuNLWZ1iR2KfONde77o1yfDwBNu5JmFRCeIJpxjgt5daIE38yctfB4LNf33TNHg5i6+/HYLIplgtzhtG5rkQVfgblbehcSd4QfngQ4nu3JUZsXQcB2FU=
+	t=1762083027; cv=none; b=MEaXoAHOkOHiJgPYsdLCe/STxqu5IZWoQ2aqwK/orFK5FVgF5UQsjhinXRdCjIHm9eNpND4SZPruscycaTXkEMupvuWm4fY0o/I9uRpPl3HtFHwgrv03hSALvfH5kdTyLVlqoZLB3b2KfZboJvcuZHpebSRYTjHc3ql+IDae1uo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762083026; c=relaxed/simple;
-	bh=j85NVJkS37w/7eW+9H26tgNisTYBkmaVUXChPCz532Y=;
+	s=arc-20240116; t=1762083027; c=relaxed/simple;
+	bh=qIBsqFVvBorBqc84mVDtrWVlmPySnuF9WwgXa52rhZg=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=N49paivsGT7FrFsatJfD1gxoTB8MWaItU1evHXyNhyIlC+e4kJ2XDwTItWK6CtB1NroEE3Ou/13eAX2KeKrfYxhm9JE60tTqkom+q2af1Yzp/aLmpQLKn5UR8+ZkHvJGfUz0pjVVvqgUx9D58KptEOet2FwpOg7nmiT6HFUMYVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Sk6cld93; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=VwVdS/sOZUfa9rvy7ExRshiyeNtPujYquxc1WWi4ruZrCGJDW+Y77CMM3HqifHbF3M3hTESDnTYXqIYpxQyXqUi6KRqe9423XwuzNirjnbw17b9yxaSQ0xI75bXTWh1Fn9DnbgKeMmLbNyodoEYTfUIGtQV6dJHwnbyD2oWrFow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W2Eah65L; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Sk6cld93"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A932C4CEF7;
-	Sun,  2 Nov 2025 11:30:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W2Eah65L"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 716E1C4CEFD;
+	Sun,  2 Nov 2025 11:30:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1762083026;
-	bh=j85NVJkS37w/7eW+9H26tgNisTYBkmaVUXChPCz532Y=;
+	bh=qIBsqFVvBorBqc84mVDtrWVlmPySnuF9WwgXa52rhZg=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=Sk6cld93eoo2DDpbJBHDjOgLhb6PVQyQjRFcVsiYp3u2EZTkPSkrNP4Zjf2IpVnxS
-	 beC6nmCSts+Y3aQ26I7U1I0W3ef3gymhNT5b8UOLSRRsoyzqFYZ+yKjbnRgP5myHzj
-	 HS9GmRHRxnwgJNYT52xf75CD+0P7LuGHuDQlvlm2xU/sN3twPswq9fTvqPNmUWuPSX
-	 Wc+eKhJZguQ86CwBP02g14dnf8NtlA5VBuOQxUiRNGckJj/hfhi84T/7DARASEpdOr
-	 /dLNyXpn3dYRK07j84ojd+mUsTAmFfmXXy4HqO/CI1JgSID+pvE/16DAUh23UONE5n
-	 2CtjUtp6GHYuw==
+	b=W2Eah65LJ2dS4T1flGSZBKHkf8VJu6ZHfGQjZkfRRCTMUmbY5qaeb+2R3ZyzMLtLM
+	 G3+gAh+E9XDst9to5eZY9jBFVRXpYloyZVnad0UJfOZoQ+ydt8UIpX9GpnCimRRLh1
+	 zWQHqNjVdQjxJUBlBuUacTpBFSm6rTv4IAG6XDzs8EOcEOJlIFO2M8W9l5G38MyODN
+	 nFOpMwwPuyECdN7XBajGLfMzzGnikVUeHjo/dCNDYkB5WoEcwJL23JNO/i6vXExyB1
+	 EMrTJos7ad7VBf5OBhaI/GhbA3cZHia5/1QtX7KhaSAGKJEJ7k2K+ingkxjaVK5wfi
+	 VANhNYSnnlj2A==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Sun, 02 Nov 2025 12:30:07 +0100
-Subject: [PATCH mptcp-net v2 5/6] selftests: mptcp: join: fastclose: drop
- plain RST
+Date: Sun, 02 Nov 2025 12:30:08 +0100
+Subject: [PATCH mptcp-net v2 6/6] selftests: mptcp: connect: trunc: read
+ all recv data
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,114 +38,94 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20251102-slft-join-inst-v2-5-b4f3ba15a7c4@kernel.org>
+Message-Id: <20251102-slft-join-inst-v2-6-b4f3ba15a7c4@kernel.org>
 References: <20251102-slft-join-inst-v2-0-b4f3ba15a7c4@kernel.org>
 In-Reply-To: <20251102-slft-join-inst-v2-0-b4f3ba15a7c4@kernel.org>
 To: MPTCP Upstream <mptcp@lists.linux.dev>
 Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3485; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=j85NVJkS37w/7eW+9H26tgNisTYBkmaVUXChPCz532Y=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDLZHU57K2VyVUvMXKzkGlD1zi596wX37ktvp+19+EJIo
- jOob93CjlIWBjEuBlkxRRbptsj8mc+reEu8/Cxg5rAygQxh4OIUgIk4sDP8T7v5ZV6v4sTlNpEM
- NYXNX+V1rnBmMd/KmTlP+GvtY7l4O0aGD/vy1bqfPP1h62W2aE2blmLnqQMMOkd8im8VBDn5u3x
- lBwA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2778; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=qIBsqFVvBorBqc84mVDtrWVlmPySnuF9WwgXa52rhZg=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDLZHc68bYrat+dcde7Nv7ONjq2LX/SpSiiKLVY459EKo
+ 5PH/fL+dJSyMIhxMciKKbJIt0Xmz3xexVvi5WcBM4eVCWQIAxenAExEsJCR4f0sL/4K8RCL3zsW
+ nH3Bor6v5P2evc+2puR8X+rH2y+y8jYjw0vV0GMMW8V+zNx7csFCLa2P31a+vvd/UpLL5TSnJRx
+ Wk3kB
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-These tests are sending data without any throttling. Quickly, one side
-will shutdown the connection, which will force sending a RST with
-MP_FASTCLOSE.
+MPTCP Join "fastclose server" selftest is sometimes failing because the
+client output file doesn't have the expected size, e.g. 296B instead of
+1024B.
 
-On the kernel side, the following path will be taken:
+When looking at a packet trace when this happens, the server sent the
+expected 1024B in two parts -- 100B, then 924B -- then the MP_FASTCLOSE.
+It is then strange to see the client only receiving 296B, which would
+mean it only got a part of the second packet. The problem is then not on
+the networking side, but rather on the data reception side.
 
-  mptcp_close
-  --> __mptcp_close
-    --> mptcp_do_fastclose
-      --> __mptcp_close_ssk
-        --> tcp_disconnect
-          --> tcp_send_active_reset
+When mptcp_connect is launched with '-f -1', it means the connection
+might stop before having sent everything, because a reset has been
+received. When this happens, the program was directly stopped. But it is
+also possible there are still some data to read, simply because the
+previous 'read' step was done with a buffer smaller than the pending
+data, see do_rnd_read(). In this case, it is important to read what's
+left in the kernel buffers before stopping without error like before.
 
-The subflow will be closed and the reset containing the MP_FASTCLOSE
-will be queued to be sent. If some data are received at the same time,
-it is possible a "plain" reset -- without ACK -- is sent from
-tcp_v[46]_send_reset, because no socket has been found for this packet
-(no_tcp_socket). In some cases, this "plain" reset can be sent before
-the one with the MP_FASTCLOSE. When this happens, the receiver will
-first close the connection upon the first RST reception, and then drop
-the second one because the connection has already been closed. In this
-case, the connection has been correctly reset, but the MPFastcloseRx and
-MPRstRx MIB counters have not been incremented, which is not what the
-test expects.
+SIGPIPE is now ignored, not to quit the app before having read
+everything.
 
-To solve this issue, the "plain" reset are now dropped to make sure the
-one with the MP_FASTCLOSE is parsed by the receiver.
-
-Note that this instability seems to be more visible since commit
-8cc6e542f150 ("mptcp: propagate shutdown to subflows when possible"),
-certainly because the subflows are closed slightly quicker.
-
-Another solution is also possible: reset the connection with no ongoing
-data. But this means more changes: data being sent, probably set
-SO_LINGER, etc.
-
-With this small modification, the test should no longer be flaky. It is
-then OK to remove the MPTCP_LIB_SUBTEST_FLAKY mark.
-
-Fixes: 01542c9bf9ab ("selftests: mptcp: add fastclose testcase")
+Fixes: 6bf41020b72b ("selftests: mptcp: update and extend fastclose test-cases")
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- tools/testing/selftests/net/mptcp/mptcp_join.sh | 23 +++++++++++++++++++----
- 1 file changed, 19 insertions(+), 4 deletions(-)
+v2:
+ - Also catch EPIPE, and ignore SIGPIPE
+---
+ tools/testing/selftests/net/mptcp/mptcp_connect.c | 18 +++++++++++++-----
+ 1 file changed, 13 insertions(+), 5 deletions(-)
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 1af96a63516c..0b084c502122 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -335,6 +335,23 @@ reset_check_counter()
- 	fi
- }
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+index c030b08a7195..404a77bf366a 100644
+--- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
++++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+@@ -710,8 +710,14 @@ static int copyfd_io_poll(int infd, int peerfd, int outfd,
  
-+# $1: test name ; $2: counter to check
-+reset_fastclose()
-+{
-+	reset_check_counter "${1}" "${2}" || return 1
+ 				bw = do_rnd_write(peerfd, winfo->buf + winfo->off, winfo->len);
+ 				if (bw < 0) {
+-					if (cfg_rcv_trunc)
+-						return 0;
++					/* expected reset, continue to read */
++					if (cfg_rcv_trunc &&
++					    (errno == ECONNRESET ||
++					     errno == EPIPE)) {
++						fds.events &= ~POLLOUT;
++						continue;
++					}
 +
-+	local netns
-+	for netns in "$ns1" "$ns2"; do
-+		# Drop "plain" RST sent because the connection is closed
-+		if ! ip netns exec "${netns}" "${iptables}" -A OUTPUT -p tcp \
-+				--tcp-flags ALL RST \
-+				-j DROP; then
-+			mark_as_skipped "unable to set the 'fastclose' rule"
-+			return 1
-+		fi
-+	done
-+}
-+
- # $1: test name
- reset_with_cookies()
- {
-@@ -3650,8 +3667,7 @@ fullmesh_tests()
+ 					perror("write");
+ 					return 111;
+ 				}
+@@ -737,8 +743,10 @@ static int copyfd_io_poll(int infd, int peerfd, int outfd,
+ 		}
  
- fastclose_tests()
- {
--	if reset_check_counter "fastclose test" "MPTcpExtMPFastcloseTx"; then
--		MPTCP_LIB_SUBTEST_FLAKY=1
-+	if reset_fastclose "fastclose test" "MPTcpExtMPFastcloseTx"; then
- 		test_linkfail=1024 fastclose=client \
- 			run_tests $ns1 $ns2 10.0.1.1
- 		chk_join_nr 0 0 0
-@@ -3659,8 +3675,7 @@ fastclose_tests()
- 		chk_rst_nr 1 1 invert
- 	fi
- 
--	if reset_check_counter "fastclose server test" "MPTcpExtMPFastcloseRx"; then
--		MPTCP_LIB_SUBTEST_FLAKY=1
-+	if reset_fastclose "fastclose server test" "MPTcpExtMPFastcloseRx"; then
- 		test_linkfail=1024 fastclose=server \
- 			run_tests $ns1 $ns2 10.0.1.1
- 		join_rst_nr=1 \
+ 		if (fds.revents & (POLLERR | POLLNVAL)) {
+-			if (cfg_rcv_trunc)
+-				return 0;
++			if (cfg_rcv_trunc) {
++				fds.events &= ~(POLLERR | POLLNVAL);
++				continue;
++			}
+ 			fprintf(stderr, "Unexpected revents: "
+ 				"POLLERR/POLLNVAL(%x)\n", fds.revents);
+ 			return 5;
+@@ -1441,7 +1449,7 @@ static void parse_opts(int argc, char **argv)
+ 			 */
+ 			if (cfg_truncate < 0) {
+ 				cfg_rcv_trunc = true;
+-				signal(SIGPIPE, handle_signal);
++				signal(SIGPIPE, SIG_IGN);
+ 			}
+ 			break;
+ 		case 'j':
 
 -- 
 2.51.0
