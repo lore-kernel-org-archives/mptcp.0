@@ -1,21 +1,21 @@
-Received: from out-170.mta1.migadu.com (out-170.mta1.migadu.com [95.215.58.170])
+Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E6FF2DF3F9
-	for <mptcp@lists.linux.dev>; Mon,  3 Nov 2025 12:44:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA39230BF67
+	for <mptcp@lists.linux.dev>; Mon,  3 Nov 2025 12:45:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762173866; cv=none; b=SONL+zkCAqGOZ7ybT3kMLyqJ3ikbZDPsc06q4MlSWeUQJ4eIavZUfUC/WV33g4iC7UkIs655lRIBJ6Al8aPlkepMeFtcg6W25ysy4/hm85LpltNYuedNvh+X8kkA2W99/QF1/lgH4L1RbxQdq33hSNEvWuHMqIF9tnCU1NrteXE=
+	t=1762173938; cv=none; b=GGeQ5906mEFQsJeUOgYGCUYcpU+BD3n5zKxX4nViiPX+yWBQSEZwzgYQUd270qW2aWTpuDFkEbcvqQlQQ1FKbnrPA+xx2LH10c6RMcM3ZhzWcXhcHWJlaY2OmaDlXltRIrhvysBJbd+I1Eag6My79MfTV0jHqqmSksBvLVLgTa4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762173866; c=relaxed/simple;
-	bh=vT6PArFNlD9ATQBYI/ysNDAumFVMhzxz9dljQq1FEo4=;
+	s=arc-20240116; t=1762173938; c=relaxed/simple;
+	bh=PXv1z36/be6/4aY9ewYt8RoZMabXtTyrqmzZIbYsjrg=;
 	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
-	 In-Reply-To:References; b=fAWfKbunZwNZmXts59GjugunFHIT2kFaeQx3SVHy7xJgvtIz7MlVL1+BuBC9Y22RFqCF/vTGV7zlRBfI+mw7Q8BYdTwvpN8jwhangwGbD/TWh2tjq6UGIQ8Tl4pyF1sCFxMyOFb3F1umEW8PNJenmYczLH/41rZhA0O4eSjmGXA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=RmGgkokm; arc=none smtp.client-ip=95.215.58.170
+	 In-Reply-To:References; b=F0oBRdVijDZm7VYILe43juz+cc+X0op46axR6MTEayKX+Sh3uVrRjjf7wD/uZ4Z2GC6eQ/RPsFsVB90lxbEiHnQ8TEigXAK13ZnksjgeCduKBisxm70iu8GP3uaisdFJyO7Tbfoq9z4NhHeo5jwxGdotmPUNGS6sbwf8DnowTzw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=vPmF0CSo; arc=none smtp.client-ip=91.218.175.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="RmGgkokm"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="vPmF0CSo"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -23,21 +23,21 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1762173862;
+	t=1762173932;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=HCESdiFfePQnHxAf5Hjx+NZwOKZOc1DIfGTWc/CkQFI=;
-	b=RmGgkokmZWSo8UB9yGc4Wq07j7MdQpgB0b3cW0rSbLfwQyuO9LTYotTkkJPN3r4augRIlF
-	l7yY27AMCqp6lE9/YHUWl6UdnxZg/JOhepCTkF7MTPAISgKfqjWtkrarP+kHNzCwFXBDP/
-	MJigcA7V0TLszG04FEJ92ouXtktg/jA=
-Date: Mon, 03 Nov 2025 12:44:15 +0000
+	bh=1BZfPsf1uykEsk+GOZr7evhjaMa7D7ZzUYhWF9AmfpY=;
+	b=vPmF0CSob2yFKuI+FJqd06xxfooXyeA+NbfplTK9R97Dz+z4wtnUJcjGrjjIFv/PFY3/x4
+	1g4cGTwE/H/xndi4RmDpIdrXZtl6N5zdHsQYML0E6jkTvTMEFixJC+0jrgQZWOlweA4gwF
+	4RTX2ZHzgNFnGJjCn/PqUSq9rhXF1qw=
+Date: Mon, 03 Nov 2025 12:45:29 +0000
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 From: "Jiayuan Chen" <jiayuan.chen@linux.dev>
-Message-ID: <3ddd7d72644ebd5826caa244cad6a6491410c00a@linux.dev>
+Message-ID: <43899f2857ba10fbcc90f9d273bb09dadd7229ec@linux.dev>
 TLS-Required: No
 Subject: Re: [PATCH net v3 1/3] net,mptcp: fix proto fallback detection with
  BPF sockmap
@@ -58,50 +58,52 @@ Cc: stable@vger.kernel.org, "Jakub Sitnicki" <jakub@cloudflare.com>, "John
  <shuah@kernel.org>, "Florian Westphal" <fw@strlen.de>,
  linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
  bpf@vger.kernel.org, linux-kselftest@vger.kernel.org
-In-Reply-To: <c10939d2-437e-47fb-81e9-05723442c935@redhat.com>
+In-Reply-To: <7dfda5bb-665c-4068-acd4-795972da63e8@redhat.com>
 References: <20251023125450.105859-1-jiayuan.chen@linux.dev>
  <20251023125450.105859-2-jiayuan.chen@linux.dev>
  <c10939d2-437e-47fb-81e9-05723442c935@redhat.com>
+ <7dfda5bb-665c-4068-acd4-795972da63e8@redhat.com>
 X-Migadu-Flow: FLOW_OUT
 
-October 28, 2025 at 19:30, "Paolo Abeni" <pabeni@redhat.com mailto:pabeni=
+October 28, 2025 at 19:47, "Paolo Abeni" <pabeni@redhat.com mailto:pabeni=
 @redhat.com?to=3D%22Paolo%20Abeni%22%20%3Cpabeni%40redhat.com%3E > wrote:
 
 
 >=20
->=20On 10/23/25 2:54 PM, Jiayuan Chen wrote:
+>=20On 10/28/25 12:30 PM, Paolo Abeni wrote:
 >=20
 >=20>=20
->=20> When the server has MPTCP enabled but receives a non-MP-capable req=
-uest
-> >  from a client, it calls mptcp_fallback_tcp_ops().
-> >=20=20
->=20>  Since non-MPTCP connections are allowed to use sockmap, which repl=
-aces
-> >  sk->sk_prot, using sk->sk_prot to determine the IP version in
-> >  mptcp_fallback_tcp_ops() becomes unreliable. This can lead to assign=
-ing
-> >  incorrect ops to sk->sk_socket->ops.
+>=20> On 10/23/25 2:54 PM, Jiayuan Chen wrote:
 > >=20
->=20I don't see how sockmap could modify the to-be-accepted socket sk_pro=
-t
-> before mptcp_fallback_tcp_ops(), as such call happens before the fd is
-> installed, and AFAICS sockmap can only fetch sockets via fds.
+>=20> >=20
+>=20> > When the server has MPTCP enabled but receives a non-MP-capable r=
+equest
+> > >  from a client, it calls mptcp_fallback_tcp_ops().
+> > >=20
+>=20> >  Since non-MPTCP connections are allowed to use sockmap, which re=
+places
+> > >  sk->sk_prot, using sk->sk_prot to determine the IP version in
+> > >  mptcp_fallback_tcp_ops() becomes unreliable. This can lead to assi=
+gning
+> > >  incorrect ops to sk->sk_socket->ops.
+> > >=20
+>=20>=20=20
+>=20>  I don't see how sockmap could modify the to-be-accepted socket sk_=
+prot
+> >  before mptcp_fallback_tcp_ops(), as such call happens before the fd =
+is
+> >  installed, and AFAICS sockmap can only fetch sockets via fds.
+> >=20=20
+>=20>  Is this patch needed?
+> >=20
+>=20Matttbe explained off-list the details of how that could happen. I th=
+ink
+> the commit message here must be more verbose to explain clearly the
+> whys, even to those non proficient in sockmap like me.
 >=20
->=20Is this patch needed?
+>=20Thanks,
+>=20
+>=20Paolo
+>
 
-"mptcp_fallback_tcp_ops" is only called during the accept process. Howeve=
-r,
-before that, for an already established TCP socket, its sk_prot is replac=
-ed via the following path:
-tcp_rcv_state_process()
-  tcp_init_transfer(BPF_SOCK_OPS_PASSIVE_ESTABLISHED_CB)
-    call bpf prog
-        bpf_sock_map_update(sk)
-           tcp_bpf_update_proto()
-
-However, after discussing with Matthieu, we've concluded that this patch =
-is indeed no
-longer necessary, as we have a simpler way to intercept the operation."
-
-Thanks~
+Thanks, I will add more details into commit message :).
