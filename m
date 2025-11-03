@@ -1,173 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB48A1DED4C
-	for <mptcp@lists.linux.dev>; Mon,  3 Nov 2025 07:16:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 956E23009D4
+	for <mptcp@lists.linux.dev>; Mon,  3 Nov 2025 11:57:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762154180; cv=none; b=OrkWTKVqPmSqOFmh5Wsu9boxiva0AlIZIfr/Zxs0ui7qslrrMKckUWr9mGtaEB+Z9RS9Yb8yYCIL5ijBosvsWi+Y9K/uuAJJdCM40nz3AB2qVlv32aG1nxGOeMwL+UGB5gyxo0RbTfqHBvIug3GpwNAuVAz9jOZYiau6GRiMVbQ=
+	t=1762171033; cv=none; b=TGthOgv0neDNY6m8VMg4Hf1hchmYtjxqiTsJW/N1b90qcF94c4C6AnEyP6aDMNz/CxB7bQxxO9WHFt7DHC31kZsWdkHeIOrtcgWBYa8d24VXS0jQfi8GxpvOv/KdQNABbPEgVay6623SQN5hFtMpI9rLS/dOQ6DawJM0nddcCcA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762154180; c=relaxed/simple;
-	bh=5rP7Is5pzGHM4U64nWX9HOKtihZhzIgHdo3Xx6KrDJw=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=NHUJXd6omjN63So96QFclFe+VMNGAzRvZVZ1PY0uJW/I0M3eIJR0Le921O4Y1brqvKQl/utPdwxP7oYzYEo1nZ7E92apNVXKvYBL+XvjykOA5TBcx5iljHgzQQEYXMO7xUBiiky2jPCXUTyqOXBLZYn48JN1OvXrzVacbZg/3bs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dc4G1QiK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1762171033; c=relaxed/simple;
+	bh=z9kWeFG+e7Zm8DL5ectYMh1LwsWXUyXwmsevKdRTzk4=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=QbF0eUkAe7tFZ/8Bm7GS+rlBxCRSejwXzVJMlSJrql2vISHxQC2WXEeQAYB0QisBZILmcmBOH2+D3enluXAi+nc8pf7NEF6CY7hp0alC6CGSDTR61NcRe1mMkXtcliSfJAxwRqy844LEyQ5IvZWTFWHWVU7BHhzRP2d+zEfcZXs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JbnAcyNy; arc=none smtp.client-ip=209.85.160.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dc4G1QiK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77EAFC4CEE7;
-	Mon,  3 Nov 2025 07:16:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762154180;
-	bh=5rP7Is5pzGHM4U64nWX9HOKtihZhzIgHdo3Xx6KrDJw=;
-	h=Subject:From:To:Date:In-Reply-To:References:From;
-	b=Dc4G1QiKbp3KnJVjyS1tEKX0v4I9IVjMuxAuXRc5gvf9m/abXbw4uhIei1My9lBG3
-	 lrJ6V4FEG35udu1g7pvwwBqr3w8TFkoHqIc1xzgQwwb3GP6E5bQnLvGYU4/6Dc/kNM
-	 rbkPEyCcaoTEWdDAllVZMYktgwOrIeDcHy6MsnalHDkepOlSr3fGTsX3XYJiRTlk23
-	 MQ+KeJ2Xa3pEVpVVpfIpYCFoeDsjNn2Z3quc+/i/K5X0LZ+UQZ2XqzA/aK/WXP2FpZ
-	 CQXz7M6i9vYBcj6y5hGBHdoWjfQVFBszaVXIoEYEPFVVJbFZSLL4tj+I44kDKFOjf5
-	 yee0lMU1ZcwMw==
-Message-ID: <8c0c5c48687518f351c3469cbd0f9e3497d6c22e.camel@kernel.org>
-Subject: Re: [PATCH mptcp-net v2 5/6] selftests: mptcp: join: fastclose:
- drop plain RST
-From: Geliang Tang <geliang@kernel.org>
-To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, MPTCP Upstream
-	 <mptcp@lists.linux.dev>
-Date: Mon, 03 Nov 2025 15:16:16 +0800
-In-Reply-To: <20251102-slft-join-inst-v2-5-b4f3ba15a7c4@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JbnAcyNy"
+Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-4e89ac45e61so39908981cf.2
+        for <mptcp@lists.linux.dev>; Mon, 03 Nov 2025 03:57:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1762171030; x=1762775830; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xmyrMvHldH/GHV68YLbTVODWn8VCIvOGBS+i/TmoD/M=;
+        b=JbnAcyNyBEE3ytUWFezrma6GvSDWIQNSdzX8gH1r0B3JL3KEvfMvsp48UoL4EyAd3A
+         FoRsEu9qXt4/33WCDraab/uVp3hy2TtYvzEQirZOf7pBG9IOvpy+k5M3QVzP3ya7k0Z5
+         vfp5WdjjXCR+1MDRUplQitiQGwloN9ZyeZ4VzS77eheZBnwVuaAJkNy2g7aET2ggp2W9
+         PprPWMzkQhqIG6GmAkcuYFyW4LC/pnI1gdWqjzGEf5Abj9D3MfgazL710e6X1wKnRiP1
+         4OZ6RmmZ0BLxJf5epfOZ07W6UwySzBgdvkhkxqnM5lpSGUfjV9Fv15y6QJd/EsGAI1EC
+         G6xw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762171030; x=1762775830;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=xmyrMvHldH/GHV68YLbTVODWn8VCIvOGBS+i/TmoD/M=;
+        b=WAgD/uWWbRPmqs6h5yQWPuL00BKwZbJKWY80j0MZniwhNqRj3MDntjwSuioQs2FRE1
+         lh0vWxOe8ogPIdCo/hY6e2b5UoP1iMgXAx5mwSI0vDy+mUjwVs/t+DeQUAtCWCsaKSJ5
+         xuSZwdbprCViy4bF1u6Hc984j2kJJuH4SGtKRpqR1y4hXyFolDr2sTMAuGaoMd0OivKq
+         8yT7YomS+wzRxRpnAw9fb1KyTiIlcYo5RdvalNgrI7qovhuOVyGzHn0IGeq1EtJ4eu0S
+         hI0g5nQtIxuSaZ1hNCT5wep7ynyHL6J+7nVitRE1xHQs7olbisA5nxY5qoxoExPIe/it
+         cDtw==
+X-Gm-Message-State: AOJu0YzVD8E9Oa/4lYh72Yzjy6LgEzIMhNDSmBf01iFX0R3k3IWYMgWn
+	SDOOlIslQ5pp+7MHyGTQT0YJBckalg1VlCQ9gQgvmzgZbyxzT/3DUmU=
+X-Gm-Gg: ASbGncsYOvLhMGW9dQYEoW11cXXyhXgjhuA1duhAffl7fMpTLMB6pi8lhbYXounGQ9E
+	pwbNJGREc8ts4GyeFpPIzD2RNEdlhU+7imRj3Nrrskvhf72bWJU1qdbvQmDXz0ud6SdqveDssXK
+	q6691GA3tZ+7q6nsaeP2y+B4/yCJa85R6aukHEwA4MhS1bNKaDfVBWd27PVrrxgxJflYo6Q8x69
+	MVL7bbGZl1uGJjDNMmkziJyCPBrkYGOZwGjJbMtzijRXKtfpwpqnJ1N8DyKPmKDr10EMBYhwh6S
+	MfRwxrw0MuZZMH+JG7iaKzt57OgNmo8TpB1lADGmN1pTzo35DKMaOAZ/XJ6UKU06MVajYXI6K9n
+	9kqj883bwmcwAqjyag2qhzquPIW7u3FV+Qlh4f4r5trW70na8IccuOZjJMa3XIUepC7Tv9jLa5a
+	w7n43cBRK3PDCZffr+kKh1mQ==
+X-Google-Smtp-Source: AGHT+IG8zMKjB9+YxI0W4Ka1D9ZKwy4Lx6X1//l/LPd54Gs1T+8xi7QPHrPTBtdb7YCdBUocAiIbUw==
+X-Received: by 2002:a05:622a:19a6:b0:4e8:b9f6:6379 with SMTP id d75a77b69052e-4ed3100cad2mr132276861cf.62.1762171030131;
+        Mon, 03 Nov 2025 03:57:10 -0800 (PST)
+Received: from [127.0.0.1] ([74.235.123.2])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4ed352897aasm55069121cf.17.2025.11.03.03.57.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Nov 2025 03:57:09 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20251102-slft-join-inst-v2-0-b4f3ba15a7c4@kernel.org>
 References: <20251102-slft-join-inst-v2-0-b4f3ba15a7c4@kernel.org>
-	 <20251102-slft-join-inst-v2-5-b4f3ba15a7c4@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.52.3-0ubuntu1 
+Subject: Re: [PATCH mptcp-net v2 0/6] selftests: mptcp: join: fix flaky
+ tests
+Message-ID: <3a2f3ba8-c35f-dff1-d5ff-6d5d60e24b82@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 03 Nov 2025 11:57:08 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Hi Matt,
+Hi Matthieu,
 
-On Sun, 2025-11-02 at 12:30 +0100, Matthieu Baerts (NGI0) wrote:
-> These tests are sending data without any throttling. Quickly, one
-> side
-> will shutdown the connection, which will force sending a RST with
-> MP_FASTCLOSE.
-> 
-> On the kernel side, the following path will be taken:
-> 
->   mptcp_close
->   --> __mptcp_close
->     --> mptcp_do_fastclose
->       --> __mptcp_close_ssk
->         --> tcp_disconnect
->           --> tcp_send_active_reset
-> 
-> The subflow will be closed and the reset containing the MP_FASTCLOSE
-> will be queued to be sent. If some data are received at the same
-> time,
-> it is possible a "plain" reset -- without ACK -- is sent from
-> tcp_v[46]_send_reset, because no socket has been found for this
-> packet
-> (no_tcp_socket). In some cases, this "plain" reset can be sent before
-> the one with the MP_FASTCLOSE. When this happens, the receiver will
-> first close the connection upon the first RST reception, and then
-> drop
-> the second one because the connection has already been closed. In
-> this
-> case, the connection has been correctly reset, but the MPFastcloseRx
-> and
-> MPRstRx MIB counters have not been incremented, which is not what the
-> test expects.
-> 
-> To solve this issue, the "plain" reset are now dropped to make sure
-> the
-> one with the MP_FASTCLOSE is parsed by the receiver.
-> 
-> Note that this instability seems to be more visible since commit
-> 8cc6e542f150 ("mptcp: propagate shutdown to subflows when possible"),
-> certainly because the subflows are closed slightly quicker.
-> 
-> Another solution is also possible: reset the connection with no
-> ongoing
-> data. But this means more changes: data being sent, probably set
-> SO_LINGER, etc.
-> 
-> With this small modification, the test should no longer be flaky. It
-> is
-> then OK to remove the MPTCP_LIB_SUBTEST_FLAKY mark.
-> 
-> Fixes: 01542c9bf9ab ("selftests: mptcp: add fastclose testcase")
-> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Thank you for your modifications, that's great!
 
-This patch looks good to me.
+Our CI did some validations and here is its report:
 
-    Reviewed-by: Geliang Tang <geliang@kernel.org>
-    Tested-by: Geliang Tang <geliang@kernel.org>
+- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Unstable: 1 failed =
+test(s): packetdrill_add_addr =F0=9F=94=B4
+- KVM Validation: debug (only =
+selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal (only=
+ bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only =
+bpftest_all): Success! =E2=9C=85
+- Task: https://github.=
+com/multipath-tcp/mptcp_net-next/actions/runs/19031627642
 
-Thanks,
--Geliang
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/22e5bba93c31
+Patchwork: https://patchwork.kernel.=
+org/project/mptcp/list/?series=3D1018612
 
-> ---
->  tools/testing/selftests/net/mptcp/mptcp_join.sh | 23
-> +++++++++++++++++++----
->  1 file changed, 19 insertions(+), 4 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> index 1af96a63516c..0b084c502122 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> @@ -335,6 +335,23 @@ reset_check_counter()
->  	fi
->  }
->  
-> +# $1: test name ; $2: counter to check
-> +reset_fastclose()
-> +{
-> +	reset_check_counter "${1}" "${2}" || return 1
-> +
-> +	local netns
-> +	for netns in "$ns1" "$ns2"; do
-> +		# Drop "plain" RST sent because the connection is
-> closed
-> +		if ! ip netns exec "${netns}" "${iptables}" -A
-> OUTPUT -p tcp \
-> +				--tcp-flags ALL RST \
-> +				-j DROP; then
-> +			mark_as_skipped "unable to set the
-> 'fastclose' rule"
-> +			return 1
-> +		fi
-> +	done
-> +}
-> +
->  # $1: test name
->  reset_with_cookies()
->  {
-> @@ -3650,8 +3667,7 @@ fullmesh_tests()
->  
->  fastclose_tests()
->  {
-> -	if reset_check_counter "fastclose test"
-> "MPTcpExtMPFastcloseTx"; then
-> -		MPTCP_LIB_SUBTEST_FLAKY=1
-> +	if reset_fastclose "fastclose test" "MPTcpExtMPFastcloseTx";
-> then
->  		test_linkfail=1024 fastclose=client \
->  			run_tests $ns1 $ns2 10.0.1.1
->  		chk_join_nr 0 0 0
-> @@ -3659,8 +3675,7 @@ fastclose_tests()
->  		chk_rst_nr 1 1 invert
->  	fi
->  
-> -	if reset_check_counter "fastclose server test"
-> "MPTcpExtMPFastcloseRx"; then
-> -		MPTCP_LIB_SUBTEST_FLAKY=1
-> +	if reset_fastclose "fastclose server test"
-> "MPTcpExtMPFastcloseRx"; then
->  		test_linkfail=1024 fastclose=server \
->  			run_tests $ns1 $ns2 10.0.1.1
->  		join_rst_nr=1 \
-> 
 
+If there are some issues, you =
+can reproduce them using the same environment as
+the one used by the CI =
+thanks to a docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
+
+
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 Core)
