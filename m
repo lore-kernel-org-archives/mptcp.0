@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0936D347C3
-	for <mptcp@lists.linux.dev>; Mon,  3 Nov 2025 19:19:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB61623D7DA
+	for <mptcp@lists.linux.dev>; Mon,  3 Nov 2025 19:19:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762197592; cv=none; b=p6OhdEToz7qsCPHde6+KrgneQho90S7Iplc3jmlUKQgw9nptsRL/dibhDSOj5wEV5w72ADH8TAzSXyj7z8nJwKiIbGHysoca7pUJU8Dqgi8lP3+UgQ/4npO9lWyfRmfZ5Cer1khecsOy7exmzETjgyvFCLy7rBoDuE5+f4VWM6Q=
+	t=1762197593; cv=none; b=KWAZeUZNeBlRlPOz0eQXjOTOv/odioSTdf9NKx8ehwftyg8xQr7i9rp+XhbxNKp+Zf9FbXjC7KasShh8/UP3gwqIYz2uJ+PaLvtKWtQLrR1laFcljTXo1/DsPK+gLRrJrvLMlIO2GmUke9glJ+7nkat/lSjCsswPM9dAoVh1Yrc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762197592; c=relaxed/simple;
-	bh=tSQOtxkFudeac0w8FOAMwRnvnMsPw3LtPxI9XE5DM0Q=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Iy0I9HxC5dD9Rn/hY8I8eCitnOYYJGi2Y5+Nh99gL4bi4H+J0vxiO0XPhEYL0v0z67E27Hpwy4jjZrbn3G8W0xaXG3HI7nUUw3NiRXi3SKMecEjOxVFejwmRS+JJKrectNYky/5sRp1/uqyXX8kv51Ep8FiqGRWmfKdnoM8Np/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sTrbmHW3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1762197593; c=relaxed/simple;
+	bh=Uh6Gvvx2to8FRM4FPvuDyTAWF8CAfBSLIXQJy2VoyT4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=if1ANu1EINOtyLzutxsZS9TuFBNH1KWwy0Trt++JwPNA48N0k9X5S0pUQXAEm+UmuCgt9ScWwatiy3cwrLKYmSL722VTBtjBJoKySTxmACHPgZ8jlyP4OAuwG3s4LvFBqIVEC+cNL5faVUJMw1Zcp5HpfP7XLWL8HZrDRA4hWUo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M5V02PXb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sTrbmHW3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 148E8C4CEE7;
-	Mon,  3 Nov 2025 19:19:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M5V02PXb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8C71C4CEF8;
+	Mon,  3 Nov 2025 19:19:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762197591;
-	bh=tSQOtxkFudeac0w8FOAMwRnvnMsPw3LtPxI9XE5DM0Q=;
-	h=From:Subject:Date:To:Cc:From;
-	b=sTrbmHW32Fa6tmLQeiyUrC96f+C7itG6GLBzbFDqZD6MFkP19R+jEMtp+hiTR2fax
-	 MEM3RvmHC9NROJ/g1FDozwPdYVhLi3e11gq14TmaPT0JHolPrbtFUE1IYuvpd/DjFW
-	 oYU3MINgTqjNaWCftz9QzqV/Wboo13e6iTeXD05BCl7d4nUimEIpsfYZ+t1JoLVa+k
-	 efPYSVIcz4Wv8+zx0IHUrcfnYqLZOwVMZXlFFYd0mig/6syM8gXhPj0vTupjsmRCzF
-	 VazE0mFt7SV7n7He2msdqSFC3QkQBxSC+wiq9u6STH1emmewuKBtSThC/K9Kdpjf6p
-	 DA3OU0HmQUTLg==
+	s=k20201202; t=1762197592;
+	bh=Uh6Gvvx2to8FRM4FPvuDyTAWF8CAfBSLIXQJy2VoyT4=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=M5V02PXbCZnWQ55oMSNTvLQYXQyoJ2XgbeUV3BQp4ajghwCt+MVEc9/XqI24Dl1gC
+	 ALle9TaFuhqai9kT0Ol2YH6DFErpdp7Q97Jt3r8FeHO9x6LW3D3vKTZUtZbziX0bQP
+	 ksogR9WCmp3yxZlLDsBSCxOya6E2XDtEgMCsBkM8wiP7YayMjCVSNccC9uPnYuQaYv
+	 0iwPXZ6a+5EWlkZ/SezQHV+j01cpNiMsTxPc+THWkpHP6SMk42OztzzUD2Nh2O7ZKG
+	 8dSc9D2WmNtNi4BZoT7WlSTbby0oVfo1afcLDpjAPV1KMux3ik0v/YKk+/RVuOggXL
+	 /Jq8sq/vdx1NA==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Subject: [PATCH mptcp-next 0/5] selftests: mptcp: get counters from nstat
- history
-Date: Mon, 03 Nov 2025 20:19:30 +0100
-Message-Id: <20251103-slft-nstat-cache-v1-0-56025c09e56a@kernel.org>
+Date: Mon, 03 Nov 2025 20:19:31 +0100
+Subject: [PATCH mptcp-next 1/5] selftests: mptcp: lib: introduce
+ 'nstat_{init,get}'
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,60 +38,184 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAEMACWkC/yWNwQqDMBBEf0X23AUTasH+inhIN2tdsDHNbosg/
- ntDPT5m3swOykVY4d7sUPgrKmuq4C4N0BzSk1FiZfCt75xrHeoyGSa1YEiBZsb4uEbf3zx1xFC
- 1XHiS7T85wCsbZUy8GYxnVvj9qS92Fsbj+AH6LEYOgwAAAA==
-X-Change-ID: 20251101-slft-nstat-cache-db4d2962c5ce
+Message-Id: <20251103-slft-nstat-cache-v1-1-56025c09e56a@kernel.org>
+References: <20251103-slft-nstat-cache-v1-0-56025c09e56a@kernel.org>
+In-Reply-To: <20251103-slft-nstat-cache-v1-0-56025c09e56a@kernel.org>
 To: MPTCP Upstream <mptcp@lists.linux.dev>
 Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1650; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=tSQOtxkFudeac0w8FOAMwRnvnMsPw3LtPxI9XE5DM0Q=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDI5GfxjzRcVH08Pz16z8W5IisU+nxbv7D8K17NUpvDP+
- fi87MqSjlIWBjEuBlkxRRbptsj8mc+reEu8/Cxg5rAygQxh4OIUgImstGf4H9q8ZTpf5pQw76Dz
- ARXmPqI7u2Qacnm2iE+Lll7bzTzDh+GvuLbHe7a1QkX/n/3Nny+UVBX1+UKp7ryHBdPn+DxeG7G
- IGQA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5854; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=Uh6Gvvx2to8FRM4FPvuDyTAWF8CAfBSLIXQJy2VoyT4=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDI5GQLXNKnGhCR5xM8yZFn7bOWdryz1bWtOr+Fc/ligR
+ ue1Dvu/jlIWBjEuBlkxRRbptsj8mc+reEu8/Cxg5rAygQxh4OIUgImo5TEyPBDNsI9ylin+ELVW
+ 8ceunhssNiLvtK4WGaxXT8naZXlZleF/aP0k7aNOrKWFMfMFDKsMTn2pVH+3P3P2y9mXoxsiulP
+ YAQ==
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-When debugging MPTCP Join selftest with a "debug" kernel config, I
-noticed checking all the different counters was sometimes slower than
-the test itself. Fetching the counters once, then reading them from the
-history file that was already there seems to save more than 5 minutes
-when running the whole MPTCP Join selftest.
+These new helpers are easier to read than the long and multi lines
+commands. Plus it will ease the addition of new features related to that
+in the next commits.
 
-- Patch 1: move code to mptcp_lib.sh to prepare the new features.
-
-- Patch 2: simplify mptcp_lib_pr_err_stats helper use.
-
-- Patch 3: remove unused last column from nstat output.
-
-- Patch 4: improve stats dump in mptcp_join.sh.
-
-- Patch 5: get counters from nstat history.
-
-Based-on: <20251102-slft-join-inst-v2-0-b4f3ba15a7c4@kernel.org>
+No behavioural changes intended.
 
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
-Matthieu Baerts (NGI0) (5):
-      selftests: mptcp: lib: introduce 'nstat_{init,get}'
-      selftests: mptcp: lib: remove stats files args
-      selftests: mptcp: lib: stats: remove nstat rate columns
-      selftests: mptcp: join: dump stats from history
-      selftests: mptcp: lib: get counters from nstat history
+ tools/testing/selftests/net/mptcp/mptcp_connect.sh | 12 ++++--------
+ tools/testing/selftests/net/mptcp/mptcp_join.sh    | 12 ++++--------
+ tools/testing/selftests/net/mptcp/mptcp_lib.sh     | 14 ++++++++++++++
+ tools/testing/selftests/net/mptcp/mptcp_sockopt.sh | 12 ++++--------
+ tools/testing/selftests/net/mptcp/simult_flows.sh  | 12 ++++--------
+ 5 files changed, 30 insertions(+), 32 deletions(-)
 
- tools/testing/selftests/net/mptcp/mptcp_connect.sh | 100 ++++++++-------------
- tools/testing/selftests/net/mptcp/mptcp_join.sh    |  31 ++++---
- tools/testing/selftests/net/mptcp/mptcp_lib.sh     |  45 ++++++++--
- tools/testing/selftests/net/mptcp/mptcp_sockopt.sh |  15 ++--
- tools/testing/selftests/net/mptcp/simult_flows.sh  |  15 ++--
- 5 files changed, 104 insertions(+), 102 deletions(-)
----
-base-commit: 1b41f9e417a8db60baf3686b81346131d2d81f30
-change-id: 20251101-slft-nstat-cache-db4d2962c5ce
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+index 9b7b93f8eb0c..e1f34508490a 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+@@ -384,11 +384,9 @@ do_transfer()
+ 		sleep 1
+ 	fi
+ 
+-	NSTAT_HISTORY=/tmp/${listener_ns}.nstat ip netns exec ${listener_ns} \
+-		nstat -n
++	mptcp_lib_nstat_init "${listener_ns}"
+ 	if [ ${listener_ns} != ${connector_ns} ]; then
+-		NSTAT_HISTORY=/tmp/${connector_ns}.nstat ip netns exec ${connector_ns} \
+-			nstat -n
++		mptcp_lib_nstat_init "${connector_ns}"
+ 	fi
+ 
+ 	local stat_synrx_last_l
+@@ -436,11 +434,9 @@ do_transfer()
+ 		kill ${cappid_connector}
+ 	fi
+ 
+-	NSTAT_HISTORY=/tmp/${listener_ns}.nstat ip netns exec ${listener_ns} \
+-		nstat | grep Tcp > /tmp/${listener_ns}.out
++	mptcp_lib_nstat_get "${listener_ns}"
+ 	if [ ${listener_ns} != ${connector_ns} ]; then
+-		NSTAT_HISTORY=/tmp/${connector_ns}.nstat ip netns exec ${connector_ns} \
+-			nstat | grep Tcp > /tmp/${connector_ns}.out
++		mptcp_lib_nstat_get "${connector_ns}"
+ 	fi
+ 
+ 	local duration
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+index 495b14baccba..ee24adbcfb0c 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -1000,10 +1000,8 @@ do_transfer()
+ 
+ 	cond_start_capture ${listener_ns}
+ 
+-	NSTAT_HISTORY=/tmp/${listener_ns}.nstat ip netns exec ${listener_ns} \
+-		nstat -n
+-	NSTAT_HISTORY=/tmp/${connector_ns}.nstat ip netns exec ${connector_ns} \
+-		nstat -n
++	mptcp_lib_nstat_init "${listener_ns}"
++	mptcp_lib_nstat_init "${connector_ns}"
+ 
+ 	local extra_args
+ 	if [ $speed = "fast" ]; then
+@@ -1085,10 +1083,8 @@ do_transfer()
+ 
+ 	cond_stop_capture
+ 
+-	NSTAT_HISTORY=/tmp/${listener_ns}.nstat ip netns exec ${listener_ns} \
+-		nstat | grep Tcp > /tmp/${listener_ns}.out
+-	NSTAT_HISTORY=/tmp/${connector_ns}.nstat ip netns exec ${connector_ns} \
+-		nstat | grep Tcp > /tmp/${connector_ns}.out
++	mptcp_lib_nstat_get "${listener_ns}"
++	mptcp_lib_nstat_get "${connector_ns}"
+ 
+ 	if [ ${rets} -ne 0 ] || [ ${retc} -ne 0 ]; then
+ 		fail_test "client exit code $retc, server $rets"
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+index d62e653d48b0..d03aa817ac27 100644
+--- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+@@ -355,6 +355,20 @@ mptcp_lib_is_v6() {
+ 	[ -z "${1##*:*}" ]
+ }
+ 
++mptcp_lib_nstat_init() {
++	local ns="${1}"
++
++	NSTAT_HISTORY="/tmp/${ns}.nstat" ip netns exec "${ns}" nstat -n
++}
++
++mptcp_lib_nstat_get() {
++	local ns="${1}"
++
++	# filter out non-*TCP stats
++	NSTAT_HISTORY="/tmp/${ns}.nstat" ip netns exec "${ns}" nstat |
++		grep Tcp > "/tmp/${ns}.out"
++}
++
+ # $1: ns, $2: MIB counter
+ mptcp_lib_get_counter() {
+ 	local ns="${1}"
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
+index f01989be6e9b..343615908558 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
+@@ -169,10 +169,8 @@ do_transfer()
+ 		cmsg+=",TCPINQ"
+ 	fi
+ 
+-	NSTAT_HISTORY=/tmp/${listener_ns}.nstat ip netns exec ${listener_ns} \
+-		nstat -n
+-	NSTAT_HISTORY=/tmp/${connector_ns}.nstat ip netns exec ${connector_ns} \
+-		nstat -n
++	mptcp_lib_nstat_init "${listener_ns}"
++	mptcp_lib_nstat_init "${connector_ns}"
+ 
+ 	timeout ${timeout_test} \
+ 		ip netns exec ${listener_ns} \
+@@ -194,10 +192,8 @@ do_transfer()
+ 	wait $spid
+ 	local rets=$?
+ 
+-	NSTAT_HISTORY=/tmp/${listener_ns}.nstat ip netns exec ${listener_ns} \
+-		nstat | grep Tcp > /tmp/${listener_ns}.out
+-	NSTAT_HISTORY=/tmp/${connector_ns}.nstat ip netns exec ${connector_ns} \
+-		nstat | grep Tcp > /tmp/${connector_ns}.out
++	mptcp_lib_nstat_get "${listener_ns}"
++	mptcp_lib_nstat_get "${connector_ns}"
+ 
+ 	print_title "Transfer ${ip:2}"
+ 	if [ ${rets} -ne 0 ] || [ ${retc} -ne 0 ]; then
+diff --git a/tools/testing/selftests/net/mptcp/simult_flows.sh b/tools/testing/selftests/net/mptcp/simult_flows.sh
+index 1903e8e84a31..fbd1685d1adc 100755
+--- a/tools/testing/selftests/net/mptcp/simult_flows.sh
++++ b/tools/testing/selftests/net/mptcp/simult_flows.sh
+@@ -155,10 +155,8 @@ do_transfer()
+ 		sleep 1
+ 	fi
+ 
+-	NSTAT_HISTORY=/tmp/${ns3}.nstat ip netns exec ${ns3} \
+-		nstat -n
+-	NSTAT_HISTORY=/tmp/${ns1}.nstat ip netns exec ${ns1} \
+-		nstat -n
++	mptcp_lib_nstat_init "${ns3}"
++	mptcp_lib_nstat_init "${ns1}"
+ 
+ 	timeout ${timeout_test} \
+ 		ip netns exec ${ns3} \
+@@ -185,10 +183,8 @@ do_transfer()
+ 		kill ${cappid_connector}
+ 	fi
+ 
+-	NSTAT_HISTORY=/tmp/${ns3}.nstat ip netns exec ${ns3} \
+-		nstat | grep Tcp > /tmp/${ns3}.out
+-	NSTAT_HISTORY=/tmp/${ns1}.nstat ip netns exec ${ns1} \
+-		nstat | grep Tcp > /tmp/${ns1}.out
++	mptcp_lib_nstat_get "${ns3}"
++	mptcp_lib_nstat_get "${ns1}"
+ 
+ 	cmp $sin $cout > /dev/null 2>&1
+ 	local cmps=$?
 
-Best regards,
 -- 
-Matthieu Baerts (NGI0) <matttbe@kernel.org>
+2.51.0
 
