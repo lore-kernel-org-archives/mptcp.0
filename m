@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D1654502A
-	for <mptcp@lists.linux.dev>; Mon,  3 Nov 2025 19:19:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70C0D4502A
+	for <mptcp@lists.linux.dev>; Mon,  3 Nov 2025 19:19:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762197593; cv=none; b=Lmq2tAJpxZZMs2hcH5i2socnZre++rZ9wUWYqN9D00T/bYPcoJ34IAjch2IKNsl4/hc9RplhExhzEm5vnTjXg2Z2EJfI0Itgl8PDZAKCnOlYzn0LjGxA9ZmRbZoPgZqAUnq0bFtPtDeIr2Rjun4LCyrqo3fZFzRtIXbiYF2xNk8=
+	t=1762197594; cv=none; b=WnqOp0jlOlnGna/xxxNNMu0AiGehj5zVNW42rTWIxoUeZAmoe/15iTzOYlGuqXNPONIN6OhTw3f4c10mBL6kEfR9Mmyh/Cxg8ocv72ia66aGc0GfQx1PLBfw0cOoHwf41g31RHWYn190scYy6hB5Akrmt74uAMXgJV117zHm1eQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762197593; c=relaxed/simple;
-	bh=ljyGXwfq0oOXZrLe2P2sS7nT3NURSWz4bUh0HRIHF8o=;
+	s=arc-20240116; t=1762197594; c=relaxed/simple;
+	bh=56YEkVJG32LKXgKyLYxW3RpM843KanqvmIy0SURcTQo=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=cn5VU5iAYEyTGK+QYT4iNcaVH/8kEw7DeUAxH5tOQ8Aypw5SwqIYUUotc2sYdPosIdOIbMn4luX4wkLCapL9s1OIYT/CHnSMk/LXjaBAXjY1KxT3a0oE2L4IJbGpJ+7aWDEWa65HhscJb9k5oDCbta8b087sa1sRYSLDgwWFspE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r8Z78CEg; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=lbYZ3RqN+/2JwMJGAQEhiYAeg0JcwAgLyMlbYoHeYGaSOJo129ukiORNhAcMjYPhtCp9TYpouOaCkKf6PCroHzXEN/8crNfVmQvPyRl4svx/L7ZmFwfgpMewYH5zitUK0Y4stjbVzx3tQ48sxWvfCeILzPEbX6Ri7rVLVY74bKQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CP8sKtzk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r8Z78CEg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C04F7C113D0;
-	Mon,  3 Nov 2025 19:19:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CP8sKtzk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97BE2C4CEF8;
+	Mon,  3 Nov 2025 19:19:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762197593;
-	bh=ljyGXwfq0oOXZrLe2P2sS7nT3NURSWz4bUh0HRIHF8o=;
+	s=k20201202; t=1762197594;
+	bh=56YEkVJG32LKXgKyLYxW3RpM843KanqvmIy0SURcTQo=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=r8Z78CEgLDu+sCMPzP15AIz0+T9RQksqNdzT2odOUriui5HhH2IoxywaUMogj0wsW
-	 7FjMvmgOJ4U2uKHUeq+3yl8ceFLFxdv+0Xhk2G9yIPcYxpaQwS8kEwjaS+Yfhxt58P
-	 JajI5BID9dv0iZrPmo6V2KHgqtImxasPP57qAolG0jURM/ZS6ceTz7v9oTdLBiY5UW
-	 HZ4BX0GCgh/VF1wjNU4yBjRURtwr4I/eRW2VEk5pnrKQYhjJnYumig7WIP4F9HiLfB
-	 Jvt0hmgGAM3tpavgWbknrGV+fPlovUivIUkHTnV+iXcP6qHBShVccEPhASKKj8sJpx
-	 91uxOEtVwq+YA==
+	b=CP8sKtzk9m2xfPurIHNgp59e653OJB9IXBjQhZCpP4fOx/2czIUcOrdzYy0zJ5iW5
+	 CYAj5j48R6iUuWFwZ4efsA0XZx+D2oU0epACQyh6nSUvx12jo0tgcHxhPdnzB16GSv
+	 FJmKH0gz1/Azu3ZDRUyA/ZJK07EAvmFl8M5FJXcJ5Rbi/LI63Cag9qWHLPNA/Pa9Sd
+	 FD1KfpgxYXbJqXB/TMmkjEOXIAgTuwsBViv07G96Hjov301VpH2is5/PBbtsbmisVb
+	 Bbn836fROi6Z7id3qip8ft5Jshw1eAOvcgKIFOdc9Jouwr9KXoP0i+WWzM7MGO3Qd0
+	 Hxn1hlZowe6zw==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Mon, 03 Nov 2025 20:19:32 +0100
-Subject: [PATCH mptcp-next 2/5] selftests: mptcp: lib: remove stats files
- args
+Date: Mon, 03 Nov 2025 20:19:33 +0100
+Subject: [PATCH mptcp-next 3/5] selftests: mptcp: lib: stats: remove nstat
+ rate columns
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,130 +38,48 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20251103-slft-nstat-cache-v1-2-56025c09e56a@kernel.org>
+Message-Id: <20251103-slft-nstat-cache-v1-3-56025c09e56a@kernel.org>
 References: <20251103-slft-nstat-cache-v1-0-56025c09e56a@kernel.org>
 In-Reply-To: <20251103-slft-nstat-cache-v1-0-56025c09e56a@kernel.org>
 To: MPTCP Upstream <mptcp@lists.linux.dev>
 Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4498; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=ljyGXwfq0oOXZrLe2P2sS7nT3NURSWz4bUh0HRIHF8o=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDI5GYJm3D/5Vrv2lpD+Rua8kr/CzDuN7oU2zQi02/Fat
- ag8eH5NRykLgxgXg6yYIot0W2T+zOdVvCVefhYwc1iZQIYwcHEKwESifjEy3BB0VvDe/zEz32Te
- xFW9F7S+mgZJeb3cxDvrQUtT4Ko3aowM8/8u/3W0YVvBS/WiprMOc4NaeYMnrtuU9vVq0r2CG6U
- dnAA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1033; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=56YEkVJG32LKXgKyLYxW3RpM843KanqvmIy0SURcTQo=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDI5GYLPWnhapawpMbzrpXun+zn3vYjdtlUvv91m+layo
+ iAzJtqko5SFQYyLQVZMkUW6LTJ/5vMq3hIvPwuYOaxMIEMYuDgFYCK6kxgZFlXIifTPdeuY3fJp
+ JWOFI9u81zuipxt6xYTnOUyZvfAJNyPDba9U/+NiT4qyzF9az3AsLJi75QPHfsYfR/QiftjyZx7
+ jAgA=
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Now that these files are written from MPTCP lib helpers, the stats file
-paths are uniformed. Then, no need to specify them from the each
-selftest.
+With the MPTCP selftests, the nstat daemon is not used. It means that
+the last column (the rate) is always 0.0, and that's not something
+interesting to display.
 
-No behavioural changes intended.
+Then, this last column can be filtered out.
 
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- tools/testing/selftests/net/mptcp/mptcp_connect.sh |  3 +--
- tools/testing/selftests/net/mptcp/mptcp_join.sh    |  3 +--
- tools/testing/selftests/net/mptcp/mptcp_lib.sh     | 15 ++++++++++-----
- tools/testing/selftests/net/mptcp/mptcp_sockopt.sh |  3 +--
- tools/testing/selftests/net/mptcp/simult_flows.sh  |  3 +--
- 5 files changed, 14 insertions(+), 13 deletions(-)
+ tools/testing/selftests/net/mptcp/mptcp_lib.sh | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-index e1f34508490a..4ff2d02429d3 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-@@ -444,8 +444,7 @@ do_transfer()
- 	printf "(duration %05sms) " "${duration}"
- 	if [ ${rets} -ne 0 ] || [ ${retc} -ne 0 ]; then
- 		mptcp_lib_pr_fail "client exit code $retc, server $rets"
--		mptcp_lib_pr_err_stats "${listener_ns}" "${connector_ns}" "${port}" \
--			"/tmp/${listener_ns}.out" "/tmp/${connector_ns}.out"
-+		mptcp_lib_pr_err_stats "${listener_ns}" "${connector_ns}" "${port}"
- 
- 		echo
- 		cat "$capout"
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index ee24adbcfb0c..ad0981e0b377 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -1088,8 +1088,7 @@ do_transfer()
- 
- 	if [ ${rets} -ne 0 ] || [ ${retc} -ne 0 ]; then
- 		fail_test "client exit code $retc, server $rets"
--		mptcp_lib_pr_err_stats "${listener_ns}" "${connector_ns}" "${port}" \
--			"/tmp/${listener_ns}.out" "/tmp/${connector_ns}.out"
-+		mptcp_lib_pr_err_stats "${listener_ns}" "${connector_ns}" "${port}"
- 		return 1
- 	fi
- 
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-index d03aa817ac27..22ab39749ca2 100644
+index 22ab39749ca2..f59268b25707 100644
 --- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
 +++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-@@ -106,23 +106,28 @@ mptcp_lib_pr_info() {
- 	mptcp_lib_print_info "INFO: ${*}"
+@@ -369,9 +369,9 @@ mptcp_lib_nstat_init() {
+ mptcp_lib_nstat_get() {
+ 	local ns="${1}"
+ 
+-	# filter out non-*TCP stats
++	# filter out non-*TCP stats, and the rate (last column)
+ 	NSTAT_HISTORY="/tmp/${ns}.nstat" ip netns exec "${ns}" nstat |
+-		grep Tcp > "/tmp/${ns}.out"
++		grep -o ".*Tcp\S\+\s\+[0-9]\+" > "/tmp/${ns}.out"
  }
  
--# $1-2: listener/connector ns ; $3 port ; $4-5 listener/connector stat file
-+mptcp_lib_pr_nstat() {
-+	local ns="${1}"
-+	local hist="/tmp/${ns}.out"
-+
-+	cat "${hist}"
-+}
-+
-+# $1-2: listener/connector ns ; $3 port
- mptcp_lib_pr_err_stats() {
- 	local lns="${1}"
- 	local cns="${2}"
- 	local port="${3}"
--	local lstat="${4}"
--	local cstat="${5}"
- 
- 	echo -en "${MPTCP_LIB_COLOR_RED}"
- 	{
- 		printf "\nnetns %s (listener) socket stat for %d:\n" "${lns}" "${port}"
- 		ip netns exec "${lns}" ss -Menitam -o "sport = :${port}"
--		cat "${lstat}"
-+		mptcp_lib_pr_nstat "${lns}"
- 
- 		printf "\nnetns %s (connector) socket stat for %d:\n" "${cns}" "${port}"
- 		ip netns exec "${cns}" ss -Menitam -o "dport = :${port}"
--		[ "${lstat}" != "${cstat}" ] && cat "${cstat}"
-+		[ "${lns}" != "${cns}" ] && mptcp_lib_pr_nstat "${cns}"
- 	} 1>&2
- 	echo -en "${MPTCP_LIB_COLOR_RESET}"
- }
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-index 343615908558..42d533b95ec7 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-@@ -198,8 +198,7 @@ do_transfer()
- 	print_title "Transfer ${ip:2}"
- 	if [ ${rets} -ne 0 ] || [ ${retc} -ne 0 ]; then
- 		mptcp_lib_pr_fail "client exit code $retc, server $rets"
--		mptcp_lib_pr_err_stats "${listener_ns}" "${connector_ns}" "${port}" \
--			"/tmp/${listener_ns}.out" "/tmp/${connector_ns}.out"
-+		mptcp_lib_pr_err_stats "${listener_ns}" "${connector_ns}" "${port}"
- 
- 		mptcp_lib_result_fail "transfer ${ip}"
- 
-diff --git a/tools/testing/selftests/net/mptcp/simult_flows.sh b/tools/testing/selftests/net/mptcp/simult_flows.sh
-index fbd1685d1adc..503cb59571a4 100755
---- a/tools/testing/selftests/net/mptcp/simult_flows.sh
-+++ b/tools/testing/selftests/net/mptcp/simult_flows.sh
-@@ -200,8 +200,7 @@ do_transfer()
- 	fi
- 
- 	mptcp_lib_pr_fail "client exit code $retc, server $rets"
--	mptcp_lib_pr_err_stats "${ns3}" "${ns1}" "${port}" \
--		"/tmp/${ns3}.out" "/tmp/${ns1}.out"
-+	mptcp_lib_pr_err_stats "${ns3}" "${ns1}" "${port}"
- 	ls -l $sin $cout
- 	ls -l $cin $sout
- 
+ # $1: ns, $2: MIB counter
 
 -- 
 2.51.0
