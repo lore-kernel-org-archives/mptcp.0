@@ -1,136 +1,185 @@
-Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7642B2BE7CB
-	for <mptcp@lists.linux.dev>; Mon,  3 Nov 2025 12:10:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B069C1DE3B5
+	for <mptcp@lists.linux.dev>; Mon,  3 Nov 2025 12:12:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762171857; cv=none; b=ZqcNatOCGPgJimxsoBiZPsbMBXC92jiaNPbs4AlYQC85NQ8FUvUtI2z6no08wiu5c1zq8RmhwzoNhF8UTsSfZa+f0Fr5YKHnxA1qJKSA+fdSv0Sb1+4WPyzELQzCnQf/GScZ1GclkNsBaaLqTylzrywyqP1cgur4FzoX6FtUQEc=
+	t=1762171938; cv=none; b=ijjUuGa6Qjf+ZY9xzKU10NdouPrCTAjdZs7Wge8WlJysWRIR8wE2Bvq1+D7yqH4hp1WU8TI+M3NFexy2p0aurINnGXQhB2gMGKFg4Mjme+qH5mzpNOkVsuNqlNUbuGHSYIUKTurIiY9XyHREbANp3FHX7Fo/UVbdVcfcPUxvYD0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762171857; c=relaxed/simple;
-	bh=cXQHCrKg9LtXIHj/BRYdbojfDbw/TXVlf78azb0D7R0=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=flcnFoEvT+vpdmXDYpm7RlNIKS74kH+c9/sQQTA44RdGFmneF0an6kDVsguR6pa8A3A4r7GIJnFvmJTdV/KeA3DPfEcUVMU4o67+c47XscUfi+HMmijhVJtI6iGj+q/0XPrLBU2ALBZoRmq9ZJmYRJdHHTW2se3MyrPNvi8NeRI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NKBpZEGz; arc=none smtp.client-ip=209.85.166.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1762171938; c=relaxed/simple;
+	bh=Iryw2+JB4Cb+vnXtXjzgKkysQGFENh/oXa7kZtXnYyQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=VSiTnXyh6UewHMTf5B9uQEg0XsFpVPMLOFnAokUfKg8ZX8wsQywlfjxoVFPP7erOfp9cZdfgEWjxpAAmh6ONm8twUIdv7qBocmQ1dw2Ub3xsqt7gm8luPnrP46CJiooYK+/puR2zM2y9igCjBPN3mmcXU3hFtWSs7Sv2Geb/r3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=unYiGOmc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NKBpZEGz"
-Received: by mail-il1-f169.google.com with SMTP id e9e14a558f8ab-4332ae0635fso10736965ab.2
-        for <mptcp@lists.linux.dev>; Mon, 03 Nov 2025 04:10:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1762171854; x=1762776654; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/GZG2gWBvDPowWnL4rAvUw0WlC/zoHisq45jLW3jS2Y=;
-        b=NKBpZEGzinpqh78GIAjLE/M7jVE9J1293KsFAKYLCNzQS5lukJvjvhkvhhCVJYZCaK
-         5ecjT6mUAGx1V8O8cKPGgQ2USeNbu46nWUOiN9hX5g/cARFHXCutml9T+T8Q9RBEqkZt
-         Bj0ogM4fdy8QatkgYsWNSM5jHlEr+jy8cUOYuQ/Ukm6H3h7kOsjUUSpvIV47Uv5KbWV1
-         n7X07qO0lLPlkuQQrUSDQNTOU65gZNPcx7EdNRGMmMVZxQ01LWWrhgXEwExsLYGQN0pb
-         T9DaA22Vw4qYhH/fwD4oFO50UA1aLT4JmTypdHe7aHkB0hHPJ9FQTajCKrW8rWxjKBzW
-         yHEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762171854; x=1762776654;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=/GZG2gWBvDPowWnL4rAvUw0WlC/zoHisq45jLW3jS2Y=;
-        b=eim/zEw3rxyNL0dkaJlG0wjBUIPFKHh4OXzUy/idQbgcwIQwjQ95kOpvH40OCmlu0u
-         pCvAFbc81P7ZPf90cYRaBRhSX9kMpDOr2mkoL13GunsWtVHc6LOKQrzKqR8GLtYwvtwz
-         GMa51vkb1Yc3R/8aWZ+N7Jdsjp8LUdM3t11PZ5KyzpimNS847LBwmgU9sr3s1yYcLbe6
-         5A72PAIa+MnrAIC8VYq4QcYuGojNFZ+WEXBSC5RUraS4gYlfpOq7+dzl5pOdHhXSKIFU
-         PHaNjcE0QMbYbQpktjjQm631RZgvLXEexN4TbG1GwTwja5+C5EH8xOL6vQvnpjXqXScX
-         VZHQ==
-X-Gm-Message-State: AOJu0Yy6enQmIFWedUjxgETfOFwlRM5seME5yfjgzo7YGgrkpG4NdIBD
-	m7c9y2ZRh+dPIaVAoTA4AvDsMqDMemi/JWnoH4doz06svjo7N0DdOUy+K1r6
-X-Gm-Gg: ASbGncut3yn5+OYiyb4Lh6jS2vF9OyVNQ4Fonhbyyrq6QowwEnpnOBCZ2+AzKXXEjay
-	fFa6e9KbqQyPazrpuw0+u4Novo5E0ZNBP5gL4ZlXFAXhINDTLoEJnzRnlS/nhz8vVAVdtVtlaQv
-	5cFoBO801tpRUCzajhkFt3VoypzpSiSAuIHucNHAoN2+kFvL99Qt+MZqYoQMF+q1PFuUX7Hpayp
-	EQhLki7Ww25RDri373x8gSoF02UmGFSqtRSebS0kRqKaFM/wwnB7irZ08vefxXR5LgYvOgIPH9C
-	1urDNgooDT48x8GGN27C+nPm8bTeLU7T67LJdGYWQ1O++zrs09Gm7hcDK6wuIppjur7qixBAEqG
-	U5a6wrr1LsdgvUdnw7PlU6GQwpRtVRpANY0CKrN/y2nl8qX+WMWV2NWJ1FqiXH2K/aVYEUyOEbT
-	8h5R8GmD5NJSJUeN6ZtdQpUzYN/4ndfhG/OQ==
-X-Google-Smtp-Source: AGHT+IGDkEVuhb+FmwzAhxnB6icBAbOERXeujtyf2AjgzMAkaHICPzwpv82IX5SraKihMJyd/bv1Yg==
-X-Received: by 2002:a05:6e02:1a89:b0:433:34b5:37a5 with SMTP id e9e14a558f8ab-43334b5398bmr4735755ab.16.1762171853960;
-        Mon, 03 Nov 2025 04:10:53 -0800 (PST)
-Received: from [127.0.0.1] ([64.236.144.97])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-5b72258d074sm90524173.1.2025.11.03.04.10.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Nov 2025 04:10:53 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20251101-slft-join-inst-v1-0-10572512a0b2@kernel.org>
-References: <20251101-slft-join-inst-v1-0-10572512a0b2@kernel.org>
-Subject: Re: [PATCH mptcp-net 0/6] selftests: mptcp: join: fix flaky tests
-Message-ID: <e03802fa-bd0c-4901-5fe5-049c4751a584@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 03 Nov 2025 12:10:52 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="unYiGOmc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3970C4CEE7;
+	Mon,  3 Nov 2025 12:12:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1762171938;
+	bh=Iryw2+JB4Cb+vnXtXjzgKkysQGFENh/oXa7kZtXnYyQ=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=unYiGOmcnE/mBN+f+7/8P+oz95dmAXO+o6NuEnt1w+/zblZtaqTQdr2urDNs/B+sl
+	 Q2dE13pGYG+4+XZdLMi3LV5UEP8SaBV/iLHIz3lP+GRLr6lsGvU2D5HX06Kn3Q08aj
+	 eIpyKYzs/o8rmG8rnzWrC2GCacMmigJLYbWLCE62Cp/Epwve79mZ4YoRL1OCvZ+nTG
+	 FpqC1A8chtDyg8a7efB7lo0nBOQ7thgaRuFspMgipf4+zEz+/53zIpzP42gVfaO0h7
+	 Wz9KfG5oNKxCWPv3/TVE3OERjR2DGQ/HsFA0GQhvx98vLpRI6+ad7zniN1L0JUYPIx
+	 Kqs/VD0HBBjbA==
+Message-ID: <2e71345d-fe2a-4ae7-ba28-26e5d4fab726@kernel.org>
+Date: Mon, 3 Nov 2025 13:12:14 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-net v2 6/6] selftests: mptcp: connect: trunc: read
+ all recv data
+To: Geliang Tang <geliang@kernel.org>, MPTCP Upstream <mptcp@lists.linux.dev>
+References: <20251102-slft-join-inst-v2-0-b4f3ba15a7c4@kernel.org>
+ <20251102-slft-join-inst-v2-6-b4f3ba15a7c4@kernel.org>
+ <d94c0f0850c8985324956cfdfef900bde3f2b377.camel@kernel.org>
+From: Matthieu Baerts <matttbe@kernel.org>
+Content-Language: en-GB, fr-BE
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <d94c0f0850c8985324956cfdfef900bde3f2b377.camel@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Matthieu,
+Hi Geliang,
 
-Thank you for your modifications, that's great!
+On 03/11/2025 08:13, Geliang Tang wrote:
+> Hi Matt,
+> 
+> On Sun, 2025-11-02 at 12:30 +0100, Matthieu Baerts (NGI0) wrote:
+>> MPTCP Join "fastclose server" selftest is sometimes failing because
+>> the
+>> client output file doesn't have the expected size, e.g. 296B instead
+>> of
+>> 1024B.
+> 
+> Thanks for this fix. After repeatedly running the fastclose tests,
+> patches 5 and 6 have indeed eliminated the flaky failures.
 
-Our CI did some validations and here is its report:
+Thank you for the tests.
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Unstable: 1 failed =
-test(s): selftest_mptcp_join =F0=9F=94=B4
-- KVM Validation: debug (except =
-selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (only =
-selftest_mptcp_join): Unstable: 1 failed test(s): selftest_mptcp_join =
-=F0=9F=94=B4
-- KVM Validation: btf-normal (only bpftest_all): Success! =
-=E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =
-=E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
-uns/19031599358
+>> When looking at a packet trace when this happens, the server sent the
+>> expected 1024B in two parts -- 100B, then 924B -- then the
+>> MP_FASTCLOSE.
+>> It is then strange to see the client only receiving 296B, which would
+>> mean it only got a part of the second packet. The problem is then not
+>> on
+>> the networking side, but rather on the data reception side.
+>>
+>> When mptcp_connect is launched with '-f -1', it means the connection
+>> might stop before having sent everything, because a reset has been
+>> received. When this happens, the program was directly stopped. But it
+>> is
+>> also possible there are still some data to read, simply because the
+>> previous 'read' step was done with a buffer smaller than the pending
+>> data, see do_rnd_read(). In this case, it is important to read what's
+>> left in the kernel buffers before stopping without error like before.
+>>
+>> SIGPIPE is now ignored, not to quit the app before having read
+>> everything.
+>>
+>> Fixes: 6bf41020b72b ("selftests: mptcp: update and extend fastclose
+>> test-cases")
+>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+>> ---
+>> v2:
+>>  - Also catch EPIPE, and ignore SIGPIPE
+>> ---
+>>  tools/testing/selftests/net/mptcp/mptcp_connect.c | 18
+>> +++++++++++++-----
+>>  1 file changed, 13 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c
+>> b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+>> index c030b08a7195..404a77bf366a 100644
+>> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
+>> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+>> @@ -710,8 +710,14 @@ static int copyfd_io_poll(int infd, int peerfd,
+>> int outfd,
+>>  
+>>  				bw = do_rnd_write(peerfd, winfo->buf
+>> + winfo->off, winfo->len);
+>>  				if (bw < 0) {
+>> -					if (cfg_rcv_trunc)
+>> -						return 0;
+>> +					/* expected reset, continue
+>> to read */
+>> +					if (cfg_rcv_trunc &&
+>> +					    (errno == ECONNRESET ||
+>> +					     errno == EPIPE)) {
+>> +						fds.events &=
+>> ~POLLOUT;
+>> +						continue;
+>> +					}
+> 
+> We're adjusting the behavior of the falseclose tests here and need to
+> ensure it doesn't affect other tests. I'm considering adding a new
+> config like cfg_rcv_ign to encapsulate these changes within an if
+> (cfg_rcv_ign) block, and only enable this new config in the falseclose
+> tests.
+> 
+> WDYT?
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/dccecb55467d
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1018473
+I don't think we need an extra option. For the moment, when one side
+truncates the output ("-f XXX", which will cause a fastclose), the other
+side will be launched with "-f -1". In this case, "cfg_rcv_trunc" will
+be set, and we only change the behaviour for that.
 
-
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+It looks like this "-f" option is only use for the fastclose tests, and
+both peers have a "-f". So we can keep this as it is, no?
 
 Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
+
