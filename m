@@ -1,111 +1,177 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 602F027A91F;
-	Mon,  3 Nov 2025 01:41:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 047BE1C84D7;
+	Mon,  3 Nov 2025 01:43:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762134092; cv=none; b=dYoH8pISWTPnNeagZbDIS2NA3PwRNV13qC6LnheE/FpQedKkuQ0D9A1fa7ufqjH8eQQtFCqIRmm8j8sWR4UlJvnFDLDNVa9Td30FFmZvKkZoTEi/QOx+NXXpebVShiHcWpAL58FUQCa6UD7TRLQBHPoCMGf/PZC2aYnHMSZKnoY=
+	t=1762134234; cv=none; b=BTOall7ujsuRCZOB+ZhxLZBSvc4VT9b/iR780H4HjoXWGv/5qN3tOEKMAy2ywLzKgR4ayIBS06a1Ey3kxNnNvtVbI50x2nrymyREilA/wveTIWjd+jJ1ODED0+YiHX2gwn2oBG04urHnkU9hDQZ4vJKBM8OPWVaKtwF8Ci1WpL8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762134092; c=relaxed/simple;
-	bh=TvTMLqLHXgFzDqChHE1XhzmqVdyZgm1nslxo4aqMoaE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GiEKIRewCDznr/TBNViYJM/tsu3PLaMTbHkQ7HTbfth3RGdI0Akch7ugu4pr3MqosXGKW+SeIpdo0CR2JzNG+XNP6Fw54AJpxs2/nTqO9UhDkWMu8PIHdujTubjVEWXRzIAo6IOD+/9EymWu50ephUYW5zhRdNCxxH4vKB7IKRU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=fcAPA2Pt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1762134234; c=relaxed/simple;
+	bh=2UhM8k8uEoY8CvO1RmFENjW5bYvRViK1/2ICJXmjl1w=;
+	h=Subject:To:Cc:From:Date:In-Reply-To:Message-ID:MIME-Version:
+	 Content-Type; b=qOLVrEB7oH2Det3FZh9gWIpYeNDT2wjNU0cCUSf5TjXT5SMcfMxGWFoqIpMoGbsyvQUW8SWuClV+ro6e1sNg5dqTNvw0bLsMs0heh4COFqg1VRwEE1ywIN94XdTQm9iyzqv1nRNPjgCcpRlvYQhN1GQruZ08btgdM5wOty8fkDI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=yEmLkPMA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="fcAPA2Pt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3D77C116C6;
-	Mon,  3 Nov 2025 01:41:31 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="yEmLkPMA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F384C4CEF7;
+	Mon,  3 Nov 2025 01:43:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1762134092;
-	bh=TvTMLqLHXgFzDqChHE1XhzmqVdyZgm1nslxo4aqMoaE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fcAPA2PtpeGb9EF9XogatXVegtU7Da7wcaAb1BeQprbSJrI4OwnL3vqbmR6REzeGf
-	 QNkTmMmQbOscycpi6Ojw4f+aC9Cf1JL9g5TXcHio6jUkmNwCsdgIwmHdLnZ9mrLuCY
-	 /Pdd6f0ka6EkWTRwWolNPiy6pHuKhoEv2lh1Rd4o=
-Date: Mon, 3 Nov 2025 10:41:14 +0900
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: stable@vger.kernel.org, Sasha Levin <sashal@kernel.org>,
-	MPTCP Upstream <mptcp@lists.linux.dev>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Alexey Dobriyan <adobriyan@gmail.com>,
-	Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 5.15.y 2/3] arch: back to -std=gnu89 in < v5.18
-Message-ID: <2025110343-unbiased-hydration-f828@gregkh>
-References: <20251017-v5-15-gcc-15-v1-0-da6c065049d7@kernel.org>
- <20251017-v5-15-gcc-15-v1-2-da6c065049d7@kernel.org>
- <2025102015-alongside-kiwi-6f75@gregkh>
- <a23607ec-e1a2-45b6-bc80-01deec03d6f0@kernel.org>
+	s=korg; t=1762134233;
+	bh=2UhM8k8uEoY8CvO1RmFENjW5bYvRViK1/2ICJXmjl1w=;
+	h=Subject:To:Cc:From:Date:In-Reply-To:From;
+	b=yEmLkPMAtw0fgZmDYjFFZvZbSLfQt5kQsvynIKCw6k559E+f72RNMxK+BJuqRGoJZ
+	 h3VFhifYu1LyNopETlGSgJQD+wVjFT+I9vEv0LEboBcpsS4At8rBsdPC2FybuJXIbf
+	 Lm0f0UEaSWeOu81GPhuqNemxn0uP5gQ1RFKT42lE=
+Subject: Patch "arch: back to -std=gnu89 in < v5.18" has been added to the 5.10-stable tree
+To: adobriyan@gmail.com,ardb@kernel.org,arnd@arndb.de,gregkh@linuxfoundation.org,matttbe@kernel.org,mptcp@lists.linux.dev,nathan@kernel.org,sashal@kernel.org
+Cc: <stable-commits@vger.kernel.org>
+From: <gregkh@linuxfoundation.org>
+Date: Mon, 03 Nov 2025 10:43:51 +0900
+In-Reply-To: <20251017-v5-10-gcc-15-v1-2-cdbbfe1a2100@kernel.org>
+Message-ID: <2025110351-dimple-shredder-3a76@gregkh>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a23607ec-e1a2-45b6-bc80-01deec03d6f0@kernel.org>
+Content-Type: text/plain; charset=ANSI_X3.4-1968
+Content-Transfer-Encoding: 8bit
+X-stable: commit
+X-Patchwork-Hint: ignore
 
-On Mon, Oct 20, 2025 at 05:58:12PM +0200, Matthieu Baerts wrote:
-> Hi Greg,
-> 
-> On 20/10/2025 15:30, Greg Kroah-Hartman wrote:
-> > On Fri, Oct 17, 2025 at 06:24:01PM +0200, Matthieu Baerts (NGI0) wrote:
-> >> Recent fixes have been backported to < v5.18 to fix build issues with
-> >> GCC 5.15. They all force -std=gnu11 in the CFLAGS, "because [the kernel]
-> >> requests the gnu11 standard via '-std=' in the main Makefile".
-> >>
-> >> This is true for >= 5.18 versions, but not before. This switch to
-> >> -std=gnu11 has been done in commit e8c07082a810 ("Kbuild: move to
-> >> -std=gnu11").
-> >>
-> >> For a question of uniformity, force -std=gnu89, similar to what is done
-> >> in the main Makefile.
-> >>
-> >> Note: the fixes tags below refers to upstream commits, but this fix is
-> >> only for kernels not having commit e8c07082a810 ("Kbuild: move to
-> >> -std=gnu11").
-> >>
-> >> Fixes: 7cbb015e2d3d ("parisc: fix building with gcc-15")
-> >> Fixes: 3b8b80e99376 ("s390: Add '-std=gnu11' to decompressor and purgatory CFLAGS")
-> >> Fixes: b3bee1e7c3f2 ("x86/boot: Compile boot code with -std=gnu11 too")
-> >> Fixes: ee2ab467bddf ("x86/boot: Use '-std=gnu11' to fix build with GCC 15")
-> >> Fixes: 8ba14d9f490a ("efi: libstub: Use '-std=gnu11' to fix build with GCC 15")
-> >> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> >> ---
-> >> Note:
-> >>   An alternative is to backport commit e8c07082a810 ("Kbuild: move to
-> >>   -std=gnu11"), but I guess we might not want to do that for stable, as
-> >>   it might introduce new warnings.
-> > 
-> > I would rather do that, as that would allow us to make things align up
-> > and be easier to support over the next two years that this kernel needs
-> > to be alive for.  How much work would that entail?
-> 
-> Good question. I'm not an expert in this area, but I just did a quick
-> test: I backported commit e8c07082a810 ("Kbuild: move to -std=gnu11")
-> and its parent commit 4d94f910e79a ("Kbuild: use
-> -Wdeclaration-after-statement"). A build with 'make allyesconfig' and
-> GCC 5.15 looks OK to me, no warnings.
-> 
-> But when looking a bit around, I noticed these patches have already been
-> suggested to be backported to v5.15 in 2023, but they got removed --
-> except the doc update, see patch 3/3 -- because they were causing build
-> issues with GCC 8 and 12, see:
-> 
->  https://lore.kernel.org/a2fbbaa2-51d2-4a8c-b032-5331e72cd116@linaro.org
-> 
-> I didn't try to reproduce the issues, but maybe we can re-add them to
-> the v5.15 queue, and ask the CIs to test that?
-> 
-> Note that even if we do that, the first patch will still be needed to
-> have GCC 15 support in v5.15.
 
-Ok, 5.15.y and 5.10.y will be alive for a while, so I'll go queue these
-up now as odds are, I'll end up hitting this issue myself :)
+This is a note to let you know that I've just added the patch titled
 
-thanks for the patches!
+    arch: back to -std=gnu89 in < v5.18
 
-greg k-h
+to the 5.10-stable tree which can be found at:
+    http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
+
+The filename of the patch is:
+     arch-back-to-std-gnu89-in-v5.18.patch
+and it can be found in the queue-5.10 subdirectory.
+
+If you, or anyone else, feels it should not be added to the stable tree,
+please let <stable@vger.kernel.org> know about it.
+
+
+From matttbe@kernel.org Sat Oct 18 01:54:02 2025
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Date: Fri, 17 Oct 2025 18:53:26 +0200
+Subject: arch: back to -std=gnu89 in < v5.18
+To: stable@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,  Sasha Levin <sashal@kernel.org>
+Cc: MPTCP Upstream <mptcp@lists.linux.dev>,  "Matthieu Baerts (NGI0)" <matttbe@kernel.org>,  Nathan Chancellor <nathan@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,  Alexey Dobriyan <adobriyan@gmail.com>, Arnd Bergmann <arnd@arndb.de>
+Message-ID: <20251017-v5-10-gcc-15-v1-2-cdbbfe1a2100@kernel.org>
+
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+
+Recent fixes have been backported to < v5.18 to fix build issues with
+GCC 5.15. They all force -std=gnu11 in the CFLAGS, "because [the kernel]
+requests the gnu11 standard via '-std=' in the main Makefile".
+
+This is true for >= 5.18 versions, but not before. This switch to
+-std=gnu11 has been done in commit e8c07082a810 ("Kbuild: move to
+-std=gnu11").
+
+For a question of uniformity, force -std=gnu89, similar to what is done
+in the main Makefile.
+
+Note: the fixes tags below refers to upstream commits, but this fix is
+only for kernels not having commit e8c07082a810 ("Kbuild: move to
+-std=gnu11").
+
+Fixes: 7cbb015e2d3d ("parisc: fix building with gcc-15")
+Fixes: 3b8b80e99376 ("s390: Add '-std=gnu11' to decompressor and purgatory CFLAGS")
+Fixes: b3bee1e7c3f2 ("x86/boot: Compile boot code with -std=gnu11 too")
+Fixes: ee2ab467bddf ("x86/boot: Use '-std=gnu11' to fix build with GCC 15")
+Fixes: 8ba14d9f490a ("efi: libstub: Use '-std=gnu11' to fix build with GCC 15")
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Cc: Nathan Chancellor <nathan@kernel.org>
+Cc: Ard Biesheuvel <ardb@kernel.org>
+Cc: Alexey Dobriyan <adobriyan@gmail.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ arch/parisc/boot/compressed/Makefile  |    2 +-
+ arch/s390/Makefile                    |    2 +-
+ arch/s390/purgatory/Makefile          |    2 +-
+ arch/x86/Makefile                     |    2 +-
+ arch/x86/boot/compressed/Makefile     |    2 +-
+ drivers/firmware/efi/libstub/Makefile |    2 +-
+ 6 files changed, 6 insertions(+), 6 deletions(-)
+
+--- a/arch/parisc/boot/compressed/Makefile
++++ b/arch/parisc/boot/compressed/Makefile
+@@ -22,7 +22,7 @@ KBUILD_CFLAGS += -fno-PIE -mno-space-reg
+ ifndef CONFIG_64BIT
+ KBUILD_CFLAGS += -mfast-indirect-calls
+ endif
+-KBUILD_CFLAGS += -std=gnu11
++KBUILD_CFLAGS += -std=gnu89
+ 
+ OBJECTS += $(obj)/head.o $(obj)/real2.o $(obj)/firmware.o $(obj)/misc.o $(obj)/piggy.o
+ 
+--- a/arch/s390/Makefile
++++ b/arch/s390/Makefile
+@@ -23,7 +23,7 @@ endif
+ aflags_dwarf	:= -Wa,-gdwarf-2
+ KBUILD_AFLAGS_DECOMPRESSOR := $(CLANG_FLAGS) -m64 -D__ASSEMBLY__
+ KBUILD_AFLAGS_DECOMPRESSOR += $(if $(CONFIG_DEBUG_INFO),$(aflags_dwarf))
+-KBUILD_CFLAGS_DECOMPRESSOR := $(CLANG_FLAGS) -m64 -O2 -std=gnu11
++KBUILD_CFLAGS_DECOMPRESSOR := $(CLANG_FLAGS) -m64 -O2 -std=gnu89
+ KBUILD_CFLAGS_DECOMPRESSOR += -DDISABLE_BRANCH_PROFILING -D__NO_FORTIFY
+ KBUILD_CFLAGS_DECOMPRESSOR += -fno-delete-null-pointer-checks -msoft-float
+ KBUILD_CFLAGS_DECOMPRESSOR += -fno-asynchronous-unwind-tables
+--- a/arch/s390/purgatory/Makefile
++++ b/arch/s390/purgatory/Makefile
+@@ -20,7 +20,7 @@ GCOV_PROFILE := n
+ UBSAN_SANITIZE := n
+ KASAN_SANITIZE := n
+ 
+-KBUILD_CFLAGS := -std=gnu11 -fno-strict-aliasing -Wall -Wstrict-prototypes
++KBUILD_CFLAGS := -std=gnu89 -fno-strict-aliasing -Wall -Wstrict-prototypes
+ KBUILD_CFLAGS += -Wno-pointer-sign -Wno-sign-compare
+ KBUILD_CFLAGS += -fno-zero-initialized-in-bss -fno-builtin -ffreestanding
+ KBUILD_CFLAGS += -c -MD -Os -m64 -msoft-float -fno-common
+--- a/arch/x86/Makefile
++++ b/arch/x86/Makefile
+@@ -31,7 +31,7 @@ endif
+ CODE16GCC_CFLAGS := -m32 -Wa,$(srctree)/arch/x86/boot/code16gcc.h
+ M16_CFLAGS	 := $(call cc-option, -m16, $(CODE16GCC_CFLAGS))
+ 
+-REALMODE_CFLAGS	:= -std=gnu11 $(M16_CFLAGS) -g -Os -DDISABLE_BRANCH_PROFILING -D__DISABLE_EXPORTS \
++REALMODE_CFLAGS	:= -std=gnu89 $(M16_CFLAGS) -g -Os -DDISABLE_BRANCH_PROFILING -D__DISABLE_EXPORTS \
+ 		   -Wall -Wstrict-prototypes -march=i386 -mregparm=3 \
+ 		   -fno-strict-aliasing -fomit-frame-pointer -fno-pic \
+ 		   -mno-mmx -mno-sse $(call cc-option,-fcf-protection=none)
+--- a/arch/x86/boot/compressed/Makefile
++++ b/arch/x86/boot/compressed/Makefile
+@@ -33,7 +33,7 @@ targets := vmlinux vmlinux.bin vmlinux.b
+ # avoid errors with '-march=i386', and future flags may depend on the target to
+ # be valid.
+ KBUILD_CFLAGS := -m$(BITS) -O2 $(CLANG_FLAGS)
+-KBUILD_CFLAGS += -std=gnu11
++KBUILD_CFLAGS += -std=gnu89
+ KBUILD_CFLAGS += -fno-strict-aliasing -fPIE
+ KBUILD_CFLAGS += -DDISABLE_BRANCH_PROFILING
+ cflags-$(CONFIG_X86_32) := -march=i386
+--- a/drivers/firmware/efi/libstub/Makefile
++++ b/drivers/firmware/efi/libstub/Makefile
+@@ -7,7 +7,7 @@
+ #
+ cflags-$(CONFIG_X86_32)		:= -march=i386
+ cflags-$(CONFIG_X86_64)		:= -mcmodel=small
+-cflags-$(CONFIG_X86)		+= -m$(BITS) -D__KERNEL__ -std=gnu11 \
++cflags-$(CONFIG_X86)		+= -m$(BITS) -D__KERNEL__ -std=gnu89 \
+ 				   -fPIC -fno-strict-aliasing -mno-red-zone \
+ 				   -mno-mmx -mno-sse -fshort-wchar \
+ 				   -Wno-pointer-sign \
+
+
+Patches currently in stable-queue which might be from matttbe@kernel.org are
+
+queue-5.10/arch-back-to-std-gnu89-in-v5.18.patch
+queue-5.10/x86-boot-compile-boot-code-with-std-gnu11-too.patch
+queue-5.10/tracing-fix-declaration-after-statement-warning.patch
