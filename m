@@ -1,131 +1,179 @@
-Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1D521D555
-	for <mptcp@lists.linux.dev>; Sun,  2 Nov 2025 12:33:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F07A2248F73;
+	Mon,  3 Nov 2025 01:40:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762086835; cv=none; b=qnAcTkupFiRp74bFg1kxC1kG/7+KXLshGmtXL+lWbC6u5lAebxrr+aNd94ByXLndMdTn8dekR/BdHLQWPo1RRPqVS26u68kfqbWpszPEFQzIuquyx7H9jOahihVkfiua9GoL1gH6hDptx9ffobO3PQzm4BM1OnkGh84DaqY0Uw4=
+	t=1762134045; cv=none; b=qg+ax5peoK9U9uyrvSNlgUwEZGG2ukQ6tdMDai9dTKpsNHqJIwa0uE7COg+14h/1dRj9WOkgL4S/Qj2Ooa1lvNUlMxJLeYr78eQB6W6Eae9g+pUPk/KRQgswJf8KL7zvm91XM+zQwEm0V98/4Llu52a2r5pPZ31l/mDtRT7SC1c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762086835; c=relaxed/simple;
-	bh=I9wHkWL8MB8xoAAemQ45nIHh4o137VuEtv+S5ZrVIMw=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=R3j1PvFCX00o6E92fxZVGl/1KLQp0R4yMYf1Y74RmX87xEY5kjYSKSlg6BljdTpo5T+qOFfrRrqH4VCdkYYd6M1+BKHdOquWlp5CDLypfG9vmdLaB1IE4ej8D27CpoQxh6kiVOFHDWVOGBhszWxpMe+Cfj1Beveq77UF1m0dbyY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eaOH43es; arc=none smtp.client-ip=209.85.166.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1762134045; c=relaxed/simple;
+	bh=YiQPpJRl3NIkLI4QYcYianUOWFcg1frZ2PPumIQXOfU=;
+	h=Subject:To:Cc:From:Date:In-Reply-To:Message-ID:MIME-Version:
+	 Content-Type; b=WbytajlJzyAHKSCTUP0cYObPrPw3WKPZrac1gyNq6g2of8U2QjWof6fxvyzZTlHTbDpQ4Eh3UGy0TPj++jciPZoDQ05ZHUBSL63fxR6pUPuqVI0AWOgxazOQyHYpktb7j8OmHAriVJsp9vmfwv6A7G4BXVA9AbHfm3eHrcBB4sM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=JTF2bVfm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eaOH43es"
-Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-4332d5be8adso1911515ab.0
-        for <mptcp@lists.linux.dev>; Sun, 02 Nov 2025 04:33:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1762086833; x=1762691633; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4YEMGSsjOZQPDC8rjvZmBzWNIpXwqam62H5LQndrHTI=;
-        b=eaOH43esU5pe4Y8u39ZGMl0TQIKZX0cjAmcWiIc1gyYy68tv9yVAWqe6YoMQblVmza
-         8Yp4L3PsY67garwQaWJfI1W1onJoHtQRH1Sot6DVC5dEgtFl1XeXDT0cG3wd2+icoY4I
-         5aYTA4B8xF1l6H4cP2q/SBealjCIRuc6ImX5Opj16AqfuuHYDggeEniTQQLkhTTdyCK1
-         pulvRFXEBX0eN+pCPadeZmQGNuBF504cClG1NDFX4XYeb4MciqKZ07wbYamyMgr3LHlL
-         scm709kt4EGjS852soUXmJvhpKgqieSBnsCsKhkk5oaJnvvAZegXMnYvvdbNJgxw39ew
-         NxWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762086833; x=1762691633;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=4YEMGSsjOZQPDC8rjvZmBzWNIpXwqam62H5LQndrHTI=;
-        b=Znpz+wr4W3k6ZFstTfOrFX2ej+CacIwVl9iuTrkhXsNP/TU02DT2ElI/U4uSPnLREs
-         tl2UoFAnWZHAvxWHLM8PQugMnHSZXO5QNWZVak9ESPFjGyZ8XyfqiDmO9X4zxO3Wcand
-         JcAi8KbQqOXawCiYeXSeLznUOGMTEasISIfZ+Vy4gBa7I9E8Xy9/Tep8BQeEra2AKTyI
-         UPGQpNdW0GADfcicvRK3DU9P86ibL3guGJ5nijlukS4wDBG6ChTleDaIyRiQvLKdYF6/
-         RpuwpCWwfb9Z1lLc+FEE58nrCf6TDOH20FcyoAZulaEczblBsey4kJYFXPG9J4O2pAG8
-         G9LA==
-X-Gm-Message-State: AOJu0Yyd2ZbLtT2hJ2okW2k49LPgRjbMoh61RdnpbyEKINun0wioxRRI
-	TRgLRwS+3T/t6Mya+hctL7GhTi77NB4jr7cyboiKo+BRfW48LqtIpZkwJKjW
-X-Gm-Gg: ASbGncsxC6OEq36GY7icDG+8yt3nA+lHOYjdHJgs9dBc3GXQd3qLuKGNYPLmzUXcaOh
-	eBLwpRnM0ZeD4B2XKtm4e3DflsXKeVIFiIpcesZxmQKsF/J9/hd7UQ0r6lI0PD+E0w8UeVNOTbZ
-	wQu3id+FSedeKoW5XMUAien99HTxJZ/NDv06DJ8d413Y/+9wX1URDC9886zUqtKmWV3QKhgp2YG
-	Xd4ic1LAS2OcRTjlAszXQWaL8GAAW8v6nJovzi2JY7/da+6wck19YI34wQxaNaqfxHvrHLtgTlJ
-	uc0yzNRydG6qwLtPpk1xq+CGUzNhGMYLL3DM6sL4B8Q/BhtBcMNbsfSiADwH5nnCSWX7kvVEkqM
-	GtUgnHq4JghZs1TbEqcP+Zh5SFVXGVFPOJ//DwqDC/qQysqQbijtLyIeaNdOJdUut6gUxeJ1f8+
-	FxFOslYDRqFzPe
-X-Google-Smtp-Source: AGHT+IHf/0ZlCFK1S2Nwe+bDLiT/k8f2CcauuDnVEPjiHU+LMWyBiQvXoiJ9Ft7r4+/6zC6m0ME44Q==
-X-Received: by 2002:a05:6e02:4511:b0:433:1d3e:e540 with SMTP id e9e14a558f8ab-4331d3eeb0dmr58055845ab.24.1762086832889;
-        Sun, 02 Nov 2025 04:33:52 -0800 (PST)
-Received: from [127.0.0.1] ([52.154.131.96])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-4331028acf9sm26893995ab.12.2025.11.02.04.33.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 02 Nov 2025 04:33:51 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20251102-slft-join-inst-v2-0-b4f3ba15a7c4@kernel.org>
-References: <20251102-slft-join-inst-v2-0-b4f3ba15a7c4@kernel.org>
-Subject: Re: [PATCH mptcp-net v2 0/6] selftests: mptcp: join: fix flaky
- tests
-Message-ID: <d09d787f-de8f-95ec-aeb8-2d2148b70d2f@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Sun, 02 Nov 2025 12:33:51 +0000
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="JTF2bVfm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34784C4CEF7;
+	Mon,  3 Nov 2025 01:40:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1762134044;
+	bh=YiQPpJRl3NIkLI4QYcYianUOWFcg1frZ2PPumIQXOfU=;
+	h=Subject:To:Cc:From:Date:In-Reply-To:From;
+	b=JTF2bVfmo4FhFT7SDfxpEgG9LjFuKKXQatjMnqX4Ed/+0AjD0c+s+gOLtlUU4Cxtg
+	 PCoG8mdQ5n5UI1FPaWBLeLwPoj7ZIfzPVT6xKPVam1Jk3nDOm0Zk2/v6ltcWK/Ifs0
+	 +F4EDLttW/dAF++ZCHrqDsg2FeluSZQmDaXvR71E=
+Subject: Patch "arch: back to -std=gnu89 in < v5.18" has been added to the 5.15-stable tree
+To: adobriyan@gmail.com,ardb@kernel.org,arnd@arndb.de,gregkh@linuxfoundation.org,matttbe@kernel.org,mptcp@lists.linux.dev,nathan@kernel.org,sashal@kernel.org
+Cc: <stable-commits@vger.kernel.org>
+From: <gregkh@linuxfoundation.org>
+Date: Mon, 03 Nov 2025 10:38:10 +0900
+In-Reply-To: <20251017-v5-15-gcc-15-v1-2-da6c065049d7@kernel.org>
+Message-ID: <2025110310-judiciary-exemplary-18eb@gregkh>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-
-Hi Matthieu,
-
-Thank you for your modifications, that's great!
-
-Our CI did some validations and here is its report:
-
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/190116=
-45207
-
-Initiator: Matthieu Baerts (NGI0)
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/ee5cae87148e
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1018612
+Content-Type: text/plain; charset=ANSI_X3.4-1968
+Content-Transfer-Encoding: 8bit
+X-stable: commit
+X-Patchwork-Hint: ignore
 
 
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
+This is a note to let you know that I've just added the patch titled
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+    arch: back to -std=gnu89 in < v5.18
 
-For more details:
+to the 5.15-stable tree which can be found at:
+    http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
 
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+The filename of the patch is:
+     arch-back-to-std-gnu89-in-v5.18.patch
+and it can be found in the queue-5.15 subdirectory.
+
+If you, or anyone else, feels it should not be added to the stable tree,
+please let <stable@vger.kernel.org> know about it.
 
 
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+From matttbe@kernel.org Sat Oct 18 01:24:25 2025
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Date: Fri, 17 Oct 2025 18:24:01 +0200
+Subject: arch: back to -std=gnu89 in < v5.18
+To: stable@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,  Sasha Levin <sashal@kernel.org>
+Cc: MPTCP Upstream <mptcp@lists.linux.dev>,  "Matthieu Baerts (NGI0)" <matttbe@kernel.org>,  Nathan Chancellor <nathan@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,  Alexey Dobriyan <adobriyan@gmail.com>, Arnd Bergmann <arnd@arndb.de>
+Message-ID: <20251017-v5-15-gcc-15-v1-2-da6c065049d7@kernel.org>
 
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+
+Recent fixes have been backported to < v5.18 to fix build issues with
+GCC 5.15. They all force -std=gnu11 in the CFLAGS, "because [the kernel]
+requests the gnu11 standard via '-std=' in the main Makefile".
+
+This is true for >= 5.18 versions, but not before. This switch to
+-std=gnu11 has been done in commit e8c07082a810 ("Kbuild: move to
+-std=gnu11").
+
+For a question of uniformity, force -std=gnu89, similar to what is done
+in the main Makefile.
+
+Note: the fixes tags below refers to upstream commits, but this fix is
+only for kernels not having commit e8c07082a810 ("Kbuild: move to
+-std=gnu11").
+
+Fixes: 7cbb015e2d3d ("parisc: fix building with gcc-15")
+Fixes: 3b8b80e99376 ("s390: Add '-std=gnu11' to decompressor and purgatory CFLAGS")
+Fixes: b3bee1e7c3f2 ("x86/boot: Compile boot code with -std=gnu11 too")
+Fixes: ee2ab467bddf ("x86/boot: Use '-std=gnu11' to fix build with GCC 15")
+Fixes: 8ba14d9f490a ("efi: libstub: Use '-std=gnu11' to fix build with GCC 15")
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Cc: Nathan Chancellor <nathan@kernel.org>
+Cc: Ard Biesheuvel <ardb@kernel.org>
+Cc: Alexey Dobriyan <adobriyan@gmail.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ arch/parisc/boot/compressed/Makefile  |    2 +-
+ arch/s390/Makefile                    |    2 +-
+ arch/s390/purgatory/Makefile          |    2 +-
+ arch/x86/Makefile                     |    2 +-
+ arch/x86/boot/compressed/Makefile     |    2 +-
+ drivers/firmware/efi/libstub/Makefile |    2 +-
+ 6 files changed, 6 insertions(+), 6 deletions(-)
+
+--- a/arch/parisc/boot/compressed/Makefile
++++ b/arch/parisc/boot/compressed/Makefile
+@@ -22,7 +22,7 @@ KBUILD_CFLAGS += -fno-PIE -mno-space-reg
+ ifndef CONFIG_64BIT
+ KBUILD_CFLAGS += -mfast-indirect-calls
+ endif
+-KBUILD_CFLAGS += -std=gnu11
++KBUILD_CFLAGS += -std=gnu89
+ 
+ OBJECTS += $(obj)/head.o $(obj)/real2.o $(obj)/firmware.o $(obj)/misc.o $(obj)/piggy.o
+ 
+--- a/arch/s390/Makefile
++++ b/arch/s390/Makefile
+@@ -23,7 +23,7 @@ endif
+ aflags_dwarf	:= -Wa,-gdwarf-2
+ KBUILD_AFLAGS_DECOMPRESSOR := $(CLANG_FLAGS) -m64 -D__ASSEMBLY__
+ KBUILD_AFLAGS_DECOMPRESSOR += $(if $(CONFIG_DEBUG_INFO),$(aflags_dwarf))
+-KBUILD_CFLAGS_DECOMPRESSOR := $(CLANG_FLAGS) -m64 -O2 -std=gnu11
++KBUILD_CFLAGS_DECOMPRESSOR := $(CLANG_FLAGS) -m64 -O2 -std=gnu89
+ KBUILD_CFLAGS_DECOMPRESSOR += -DDISABLE_BRANCH_PROFILING -D__NO_FORTIFY
+ KBUILD_CFLAGS_DECOMPRESSOR += -fno-delete-null-pointer-checks -msoft-float -mbackchain
+ KBUILD_CFLAGS_DECOMPRESSOR += -fno-asynchronous-unwind-tables
+--- a/arch/s390/purgatory/Makefile
++++ b/arch/s390/purgatory/Makefile
+@@ -21,7 +21,7 @@ UBSAN_SANITIZE := n
+ KASAN_SANITIZE := n
+ KCSAN_SANITIZE := n
+ 
+-KBUILD_CFLAGS := -std=gnu11 -fno-strict-aliasing -Wall -Wstrict-prototypes
++KBUILD_CFLAGS := -std=gnu89 -fno-strict-aliasing -Wall -Wstrict-prototypes
+ KBUILD_CFLAGS += -Wno-pointer-sign -Wno-sign-compare
+ KBUILD_CFLAGS += -fno-zero-initialized-in-bss -fno-builtin -ffreestanding
+ KBUILD_CFLAGS += -c -MD -Os -m64 -msoft-float -fno-common
+--- a/arch/x86/Makefile
++++ b/arch/x86/Makefile
+@@ -24,7 +24,7 @@ endif
+ 
+ # How to compile the 16-bit code.  Note we always compile for -march=i386;
+ # that way we can complain to the user if the CPU is insufficient.
+-REALMODE_CFLAGS	:= -std=gnu11 -m16 -g -Os -DDISABLE_BRANCH_PROFILING -D__DISABLE_EXPORTS \
++REALMODE_CFLAGS	:= -std=gnu89 -m16 -g -Os -DDISABLE_BRANCH_PROFILING -D__DISABLE_EXPORTS \
+ 		   -Wall -Wstrict-prototypes -march=i386 -mregparm=3 \
+ 		   -fno-strict-aliasing -fomit-frame-pointer -fno-pic \
+ 		   -mno-mmx -mno-sse $(call cc-option,-fcf-protection=none)
+--- a/arch/x86/boot/compressed/Makefile
++++ b/arch/x86/boot/compressed/Makefile
+@@ -33,7 +33,7 @@ targets := vmlinux vmlinux.bin vmlinux.b
+ # avoid errors with '-march=i386', and future flags may depend on the target to
+ # be valid.
+ KBUILD_CFLAGS := -m$(BITS) -O2 $(CLANG_FLAGS)
+-KBUILD_CFLAGS += -std=gnu11
++KBUILD_CFLAGS += -std=gnu89
+ KBUILD_CFLAGS += -fno-strict-aliasing -fPIE
+ KBUILD_CFLAGS += -Wundef
+ KBUILD_CFLAGS += -DDISABLE_BRANCH_PROFILING
+--- a/drivers/firmware/efi/libstub/Makefile
++++ b/drivers/firmware/efi/libstub/Makefile
+@@ -7,7 +7,7 @@
+ #
+ cflags-$(CONFIG_X86_32)		:= -march=i386
+ cflags-$(CONFIG_X86_64)		:= -mcmodel=small
+-cflags-$(CONFIG_X86)		+= -m$(BITS) -D__KERNEL__ -std=gnu11 \
++cflags-$(CONFIG_X86)		+= -m$(BITS) -D__KERNEL__ -std=gnu89 \
+ 				   -fPIC -fno-strict-aliasing -mno-red-zone \
+ 				   -mno-mmx -mno-sse -fshort-wchar \
+ 				   -Wno-pointer-sign \
+
+
+Patches currently in stable-queue which might be from matttbe@kernel.org are
+
+queue-5.15/arch-back-to-std-gnu89-in-v5.18.patch
+queue-5.15/x86-boot-compile-boot-code-with-std-gnu11-too.patch
+queue-5.15/mptcp-drop-bogus-optimization-in-__mptcp_check_push.patch
+queue-5.15/mptcp-restore-window-probe.patch
+queue-5.15/revert-docs-process-howto-replace-c89-with-c11.patch
