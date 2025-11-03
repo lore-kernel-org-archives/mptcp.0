@@ -1,119 +1,230 @@
-Received: from out-170.mta1.migadu.com (out-170.mta1.migadu.com [95.215.58.170])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBC75305046
-	for <mptcp@lists.linux.dev>; Mon,  3 Nov 2025 12:52:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6A8C304969;
+	Mon,  3 Nov 2025 15:53:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762174337; cv=none; b=neEqcu2XtDoCtaBWgsvOHp17Z0uyAMXooR5XOJ2s8fJuKJxwCUbpQSvMB+vjTKGZG7W6zERd0LvDPi3vsQKpSPtdDTNM4zs3WwtFPzpKK5ayfHxsAa/RydCo4s7/+ACOy2qe3mVTXTUfu5brb102q9z24LWTDiDHEBOAja8Vvpg=
+	t=1762185210; cv=none; b=RyMCt4XGH7gY+vmvb5JXtlBj3C8n6SikIJMQnv5yLVBB2A8xz2x94y5MpPLmZYdyKjdci3529hmQsb8QN9RQuKra7OEy9OcQMGeFeO4AWTXXkdJsMR9EyMsK74T+ZuLZvt+ugf1ga1RYDjlypDt1qezuK3mB1aFakwRP3S4aiLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762174337; c=relaxed/simple;
-	bh=zknbNUMqtehApA9rsCKAcUn2eRCCK8ipSC6uMSED0SI=;
-	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
-	 In-Reply-To:References; b=Hm4vHyoPJrGKD0sNGi3MS2OS0rUHCb1Cda4/jm6cwf5G85i5Q/fP3z8UF6IwO6sgQTv/lYEjK1jyOj0HWzLakDd1eNc3mDvc0onOK42wttUhp2NYiAQqhjwE4wTgYesQDfFAqbd8ZnjRN8BZgQHtT67vUKWPGJxayY7bWM571EA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=nyGhwC/k; arc=none smtp.client-ip=95.215.58.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1762185210; c=relaxed/simple;
+	bh=zlD987IYcgv0Lcs/dP07a3fW5+8vkcfzEITDz9joQpc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=M9miuUIma+U8GUeYjLKq9+gS3QRKFpCFm40KWRuap5Qi3mwzsY0r20rkA+1pkrDJOprBpu241HdVuTUIEsM/My9DwO+Vq8G/0C6EonGmyLmOMtdMk5bud6XAdM5iD6rVghzA6+BhnykKCaOJBtO3gr236vsCPULaLOmoopaQDOI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YoDaWuqj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="nyGhwC/k"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YoDaWuqj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8436DC4CEE7;
+	Mon,  3 Nov 2025 15:53:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1762185209;
+	bh=zlD987IYcgv0Lcs/dP07a3fW5+8vkcfzEITDz9joQpc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=YoDaWuqjSCLvmDCn+FWGs6npsxuTUyH4xdREcv27YJEPaSCucdcntn3hrejxFpaZP
+	 SX9LJeCxDB8Xa46q93MGSLZ0Y3AI8BXFS/Xm5b2ZoMEGfe+bsz7T2nwU0nSjq7o0dS
+	 snP23C15CTTMJC2cHsHTiAI3UV52OCK+Ba9Kvjip8EEbMDTHHNZmbJYWlKgxU8L8RV
+	 qXY7uTV37A0qKrOXI0Vlw1i6s9PcjWDchiGhd911vmR9NbVJffgETkzggpaZkpQu3W
+	 G+HIslil2WzmvbyfTUsflNNlXUPGn6C2ggAybWRLaFemFbXJ9L3MwXJyUOmLpe5N50
+	 dza56b75pm/Ag==
+Message-ID: <99bcc333-c451-4409-ae23-1ca3b38950fa@kernel.org>
+Date: Mon, 3 Nov 2025 16:53:18 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1762174333;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=m8V6AyaUjluKuvk/onmZHfKTs0gZnfKFW4ogFQGfP/c=;
-	b=nyGhwC/k4oeCg1b62hJqV8LpEsaBbAdryrVmYKVaC+KORBU1Wu+WEdWrt58TjK63ahz8qF
-	hpzvBCqvdDaafx68ZxAgCRjg8z4FRfPi1bQvGjawhJVa5Drx7JgbFDfLfLn0IANpF+tJFq
-	epg6X+7y+zHfzxPLfrWAWYLapNHJ9yo=
-Date: Mon, 03 Nov 2025 12:52:07 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: "Jiayuan Chen" <jiayuan.chen@linux.dev>
-Message-ID: <154ce327ae50ea1e3ebde8a1b73c83ac0b547f61@linux.dev>
-TLS-Required: No
-Subject: Re: [PATCH net v3 2/3] bpf,sockmap: disallow MPTCP sockets from
- sockmap
-To: "Paolo Abeni" <pabeni@redhat.com>, mptcp@lists.linux.dev
-Cc: stable@vger.kernel.org, "Jakub Sitnicki" <jakub@cloudflare.com>, "John
- Fastabend" <john.fastabend@gmail.com>, "Eric Dumazet"
- <edumazet@google.com>, "Kuniyuki Iwashima" <kuniyu@google.com>, "Willem
- de Bruijn" <willemb@google.com>, "David S. Miller" <davem@davemloft.net>,
- "Jakub Kicinski" <kuba@kernel.org>, "Simon Horman" <horms@kernel.org>,
- "Matthieu Baerts" <matttbe@kernel.org>, "Mat Martineau"
- <martineau@kernel.org>, "Geliang Tang" <geliang@kernel.org>, "Andrii
- Nakryiko" <andrii@kernel.org>, "Eduard Zingerman" <eddyz87@gmail.com>,
- "Alexei Starovoitov" <ast@kernel.org>, "Daniel Borkmann"
- <daniel@iogearbox.net>, "Martin KaFai Lau" <martin.lau@linux.dev>, "Song
- Liu" <song@kernel.org>, "Yonghong Song" <yonghong.song@linux.dev>, "KP
- Singh" <kpsingh@kernel.org>, "Stanislav Fomichev" <sdf@fomichev.me>, "Hao
- Luo" <haoluo@google.com>, "Jiri Olsa" <jolsa@kernel.org>, "Shuah Khan"
- <shuah@kernel.org>, "Florian Westphal" <fw@strlen.de>,
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
- bpf@vger.kernel.org, linux-kselftest@vger.kernel.org
-In-Reply-To: <c5021188-593c-431c-bf01-6775f5b2b2ed@redhat.com>
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH net v3 0/3] mptcp: Fix conflicts between MPTCP and sockmap
+Content-Language: en-GB, fr-BE
+To: Jiayuan Chen <jiayuan.chen@linux.dev>, mptcp@lists.linux.dev
+Cc: John Fastabend <john.fastabend@gmail.com>,
+ Jakub Sitnicki <jakub@cloudflare.com>, Eric Dumazet <edumazet@google.com>,
+ Kuniyuki Iwashima <kuniyu@google.com>, Paolo Abeni <pabeni@redhat.com>,
+ Willem de Bruijn <willemb@google.com>, "David S. Miller"
+ <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
+ Simon Horman <horms@kernel.org>, Mat Martineau <martineau@kernel.org>,
+ Geliang Tang <geliang@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
+ Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman
+ <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+ Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>,
+ Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
+ Jiri Olsa <jolsa@kernel.org>, Shuah Khan <shuah@kernel.org>,
+ Florian Westphal <fw@strlen.de>, linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org, bpf@vger.kernel.org, linux-kselftest@vger.kernel.org
 References: <20251023125450.105859-1-jiayuan.chen@linux.dev>
- <20251023125450.105859-3-jiayuan.chen@linux.dev>
- <c5021188-593c-431c-bf01-6775f5b2b2ed@redhat.com>
-X-Migadu-Flow: FLOW_OUT
+ <14b565a1-0c2a-420d-ab2a-dc8a46dbf33c@kernel.org>
+ <319c419455b73deb312b53d99c30217f6b606208@linux.dev>
+ <bc5831bb-cfa3-4327-b129-30ca5d17b45e@kernel.org>
+ <55049e76c1e86825ff963c381ef01e38cfc08b10@linux.dev>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <55049e76c1e86825ff963c381ef01e38cfc08b10@linux.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-October 28, 2025 at 20:03, "Paolo Abeni" <pabeni@redhat.com mailto:pabeni=
-@redhat.com?to=3D%22Paolo%20Abeni%22%20%3Cpabeni%40redhat.com%3E > wrote:
+Hi Jiayuan,
 
+On 03/11/2025 13:34, Jiayuan Chen wrote:
+> October 29, 2025 at 1:26 AM, "Matthieu Baerts" <matttbe@kernel.org mailto:matttbe@kernel.org?to=%22Matthieu%20Baerts%22%20%3Cmatttbe%40kernel.org%3E > wrote:
+>> On 24/10/2025 06:13, Jiayuan Chen wrote:
 
->=20
->=20On 10/23/25 2:54 PM, Jiayuan Chen wrote:
->=20
->=20>=20
->=20> MPTCP creates subflows for data transmission, and these sockets sho=
-uld not
-> >  be added to sockmap because MPTCP sets specialized data_ready handle=
-rs
-> >  that would be overridden by sockmap.
-> >=20=20
->=20>  Additionally, for the parent socket of MPTCP subflows (plain TCP s=
-ocket),
-> >  MPTCP sk requires specific protocol handling that conflicts with soc=
-kmap's
-> >  operation(mptcp_prot).
-> >=20=20
->=20>  This patch adds proper checks to reject MPTCP subflows and their p=
-arent
-> >  sockets from being added to sockmap, while preserving compatibility =
-with
-> >  reuseport functionality for listening MPTCP sockets.
-> >=20
->=20It's unclear to me why that is safe. sockmap is going to change the
-> listener msk proto ops.
->=20
->=20The listener could disconnect and create an egress connection, still
-> using the wrong ops.
+(...)
 
-sockmap only replaces read/write handler of a sk and keeps another handle=
-r.
+>>> The current implementation rejects MPTCP because I previously attempted to
+>>>  add sockmap support for MPTCP, but it required implementing many interfaces
+>>>  and would take considerable time.
+>>>  
+>>>  So for now, I'm proposing this as a fix to resolve the immediate issue.
+>>>  Subsequently, we can continue working on fully integrating MPTCP with sockmap.
+>>>
+>> It makes sense to start with the fix for stable, then the implementation
+>> later. I think the implementation should not be that complex: it is just
+>> that it has to be done at MPTCP level, not TCP. sockmap supports
+>> different protocol, and it doesn't seem to be TCP specific, so that
+>> should be feasible.
+> 
+> I agree with that. From a userspace perspective, we can't really manipulate subflow
+> TCP directly, and I also think it's correct to handle this at the MPTCP layer.
+> 
+> But I didn't quite get your point about "it has to be done at MPTCP level." Currently,
+> BPF provides 'sockops' capability, which invokes BPF programs in the protocol stack.
+> The input parameter sk for the BPF program is actually a TCP sk (subflow).
+> 
+> Many helper functions (like sockmap) have no choice but to care about whether it's MPTCP
+> or not.
 
-But I agree with you; I also don't think sockmap should replace the handl=
-ers of
-the listen socket. Because for a listen socket, sockmap is merely used as=
- a container,=20
-just=20like hash map or array map. But in reality, that's exactly what it=
- does...
+I see. Maybe new MPTCP equivalent hooks will be needed then?
 
-> I think sockmap should always be prevented for mptcp socket, or at leas=
-t
-> a solid explanation of why such exception is safe should be included in
-> the commit message.
->=20
->=20Note that the first option allows for solving the issue entirely in t=
-he
-> mptcp code, setting dummy/noop psock_update_sk_prot for mptcp sockets
-> and mptcp subflows.
+(...)
 
-I will do it.
+>>>> A more important question: what will typically happen in your case if
+>>>>  you receive an MPTCP request and sockmap is then not supported? Will the
+>>>>  connection be rejected or stay in a strange state because the userspace
+>>>>  will not expect that? In these cases, would it not be better to disallow
+>>>>  sockmap usage while the MPTCP support is not available? The userspace
+>>>>  would then get an error from the beginning that the protocol is not
+>>>>  supported, and should then not create an MPTCP socket in this case for
+>>>>  the moment, no?
+>>>>
+>>>>  I can understand that the switch from TCP to MPTCP was probably done
+>>>>  globally, and this transition should be as seamless as possible, but it
+>>>>  should not cause a regression with MPTCP requests. An alternative could
+>>>>  be to force a fallback to TCP when sockmap is used, even when an MPTCP
+>>>>  request is received, but not sure if it is practical to do, and might be
+>>>>  strange from the user point of view.
+>>>>
+>>>  
+>>>  Actually, I understand this not as an MPTCP regression, but as a sockmap
+>>>  regression.
+>>>  
+>>>  Let me explain how users typically use sockmap:
+>>>  
+>>>  Users typically create multiple sockets on a host and program using BPF+sockmap
+>>>  to enable fast data redirection. This involves intercepting data sent or received
+>>>  by one socket and redirecting it to the send or receive queue of another socket.
+>>>  
+>>>  This requires explicit user programming. The goal is that when multiple microservices
+>>>  on one host need to communicate, they can bypass most of the network stack and avoid
+>>>  data copies between user and kernel space.
+>>>  
+>>>  However, when an MPTCP request occurs, this redirection flow fails.
+>>>
+>> This part bothers me a bit. Does it mean that when the userspace creates
+>> a TCP listening socket (IPPROTO_TCP), MPTCP requests will be accepted,
+>> but MPTCP will not be used ; but when an MPTCP socket is used instead,
+>> MPTCP requests will be rejected?
+> 
+> "when the userspace creates a TCP listening socket (IPPROTO_TCP), MPTCP requests will be accepted,
+> but MPTCP will not be used"
+> --- Yes, that's essentially the logic behind MPTCP fallback, right? In this case, it should work
+> fine with sockmap as well. That's exactly what this patch aims to achieve.
+
+That's an MPTCP fallback to TCP for the client side here: the client
+requests to use MPTCP, but the server doesn't support it. In this case,
+MPTCP options will be ignored, and a "plain" TCP SYN+ACK will be sent
+back to the client. In this case, the server using sockmap doesn't
+handle MPTCP, because it created an IPPROTO_TCP.
+
+In other words, the situation you had before GO 1.24, right?
+
+> "but when an MPTCP socket is used instead, MPTCP requests will be rejected?"
+> --- Exactly. Currently, because sockmap operates directly on the subflow sk, it breaks the MPTCP
+> connection. The purpose of this patch is to explicitly return an error when users try to replace
+> certain handlers of the subflow sk.
+
+I don't think a message at that point is that useful. Ideally, the
+userspace should get an error or a notice when setting sockmap up. But I
+understand sockmap are not really attached to listening sockets, and it
+doesn't seem possible to block sockmap at setup time because it is going
+to be used with "accept()ed" connection created from an MPTCP listening
+socket.
+
+So I guess we will still need patch 1/3 (with a better commit message),
+and patch 2/3 should be restricted to remove psock_update_sk_prot for
+MPTCP subflows.
+
+> This way, users at least get a clear error message instead of just experiencing a mysterious connection
+> failure.
+> 
+>> If yes, it might be clearer not to allow sockmap on connections created
+>> from MPTCP sockets. But when looking at sockmap and what's happening
+>> when a TCP socket is created following a "plain TCP" request, we would
+>> need specific MPTCP code to catch that in sockmap...
+> 
+> I know what you're concerned about, and I also don't want to add any MPTCP-specific checks on the
+> sockmap or BPF side :).
+> 
+> I will try to set psock_update_sk_prot to NULL first.
+
+Thanks!
+
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
+
