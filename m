@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 096AC23EA80
-	for <mptcp@lists.linux.dev>; Tue,  4 Nov 2025 08:47:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6012F19CCF5
+	for <mptcp@lists.linux.dev>; Tue,  4 Nov 2025 08:47:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762246027; cv=none; b=N1EYISeQlyyUr8XXt7M5anYT1pgBYDCzlzKv6C2uronHM17ZplVYCPMniE9TvH3Oqagmlqh5Dry1DdgiJXvRycESBKKHUC4V9jzWpYGxUB+ODDKJ/Zkyq9YsZhVJya8VpAkuhmpTRg+d1RUuA1MXsNm8jwHUuIuRCXVAfVIUQmA=
+	t=1762246072; cv=none; b=PB4cj9HVkC/k6gjKSmit1kbIfpNQl507hP7M4R17NX2OZx+1+V+9uIy+rosC3dKKa0qfJxe/5HzAb+wtVQpVBFuqkegAJ6f8Cz+bS9xzy4jXtXKhE6SKHNhaeUlthojMoGthM9kdbDkkapk9NzxQy7EyV3DRCMDUHRjS4gotNm8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762246027; c=relaxed/simple;
-	bh=5Rdgr1R9bKNldIpHD2y8RrO8AFcnczHTflWun9Cz/Cc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NSOLUmVrrkVlvVt8uJkP8aLoS631uBcLh0TB3BBwomTiX9/dN76aAQsl0CJ1CsMKd0pDDbQEf9YgEGfbkQUdJK44yRPvpf6EwZCinLgHzfWp+7qRSOHXd6KmWt+Ez9E3oAaApjuPeWxfIvBZyq+8rZmMzBxago1t/DzBQFhqGFo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dOcd8GnY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1762246072; c=relaxed/simple;
+	bh=rSKa1onPnz4y9tHtft9xZIr0qyl/TXyL9XdGGiCvbVA=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=ke7LKR2tTB9FbSo2+UzHSApz6o24r4UpjenL6Kw4euePMe6UzlRRE3BJSbtg8FTNMkX3ikdCR8HLhEY/PfsYacpYTm0U0lwmQtunprgus05NlDVoQH1Y4A/yrCzIqFSNaVt4xDMyDhsDqeop7pzUPgSsIS5KfvWwr0LLjMJgnyI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u3RlyRAw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dOcd8GnY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0EFEC4CEF7;
-	Tue,  4 Nov 2025 08:47:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u3RlyRAw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03B2BC4CEF7;
+	Tue,  4 Nov 2025 08:47:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762246024;
-	bh=5Rdgr1R9bKNldIpHD2y8RrO8AFcnczHTflWun9Cz/Cc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=dOcd8GnYyFpX1d/GhpjjjY/zoXWRrOjXeJZT6B9fCDwhlNBlpR/+W5DNroGbGJnxe
-	 n9eIwd0PNXteluw05xNrZLCYNSRzY4xLmRfJRDv8IVRbcZ/pZa6gqaWB/DTI0yieF6
-	 EOGuAgD9386qxsrXA01byy5cZ9X5rKOJTd6uk/g7DAcTssTe0NdZ25LG8rR4chOMuR
-	 zxkLQDrvzb3kzXqBsu9DJHiiRudRN2Dy2h4ku7d3R5wxt8Fbf/qHDXrIfqqrMlgCSt
-	 x9nnUR9EOXXAtvUPHsu24f/Gz3Yb7/fYBxXxwj+BJBzU4X9vi3Nyaqq47VWIcStLk+
-	 bptBSgT7jJpsQ==
-Message-ID: <0b8d61bc-836b-4f61-a8c7-a5ce17906e19@kernel.org>
-Date: Tue, 4 Nov 2025 09:47:01 +0100
+	s=k20201202; t=1762246071;
+	bh=rSKa1onPnz4y9tHtft9xZIr0qyl/TXyL9XdGGiCvbVA=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=u3RlyRAw+/I9kdHbQJMj1aZCf4Btgz7TzrLz9w/LG/tMPyy9UetjZJNAzY6kiXhu3
+	 aLltHJ4NuAy2Ld3UraJc8/ONgiRjhXSFkvWF/ruMmVMXcpau7Q3DZUWPmacfQKj+xI
+	 zuWt679yWyOm1su6pAD0FP6CwmThVxFqpcu+4it5I4/pNNF1brcZvPii/lSpVsPoi0
+	 xwwLQP8V2TicFSJ5Feh2ic8nJrnhutjMeEP9drdf33aQAR/9Kvbg0AqwLUNMuHQGRI
+	 bjs4enjWU1shAG+9VceHqRYyS7oBn03nMbUGti2ddFe9VPcCoFCaqupNdU/o5A100f
+	 Jp4g6skvvD7dg==
+Message-ID: <ed7be7cc-5ff9-4a55-8d97-fa6be887b62d@kernel.org>
+Date: Tue, 4 Nov 2025 09:47:48 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,6 +38,7 @@ User-Agent: Mozilla Thunderbird Beta
 Subject: Re: [PATCH mptcp-net v2 2/6] selftests: mptcp: join: rm: set backup
  flag
 Content-Language: en-GB, fr-BE
+From: Matthieu Baerts <matttbe@kernel.org>
 To: Geliang Tang <geliang@kernel.org>
 Cc: MPTCP Upstream <mptcp@lists.linux.dev>
 References: <20251102-slft-join-inst-v2-0-b4f3ba15a7c4@kernel.org>
@@ -45,7 +46,7 @@ References: <20251102-slft-join-inst-v2-0-b4f3ba15a7c4@kernel.org>
  <1d91f6b378b430088d81c2a5a1d33c678fc81cac.camel@kernel.org>
  <21daa38d-d335-4d62-b247-472629ee54dc@kernel.org>
  <c707d12083543db56fa5b2f361837d1c29931c58.camel@kernel.org>
-From: Matthieu Baerts <matttbe@kernel.org>
+ <0b8d61bc-836b-4f61-a8c7-a5ce17906e19@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -90,69 +91,77 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <c707d12083543db56fa5b2f361837d1c29931c58.camel@kernel.org>
+In-Reply-To: <0b8d61bc-836b-4f61-a8c7-a5ce17906e19@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 04/11/2025 08:29, Geliang Tang wrote:
-> Hi Matt,
+On 04/11/2025 09:47, Matthieu Baerts wrote:
+> On 04/11/2025 08:29, Geliang Tang wrote:
+>> Hi Matt,
+>>
+>> On Tue, 2025-11-04 at 07:57 +0100, Matthieu Baerts wrote:
+>>> Hi Geliang,
+>>>
+>>> Thank you for the review.
+>>>
+>>> 4 Nov 2025 07:06:34 Geliang Tang <geliang@kernel.org>:
+>>>
+>>>> Hi Matt,
+>>>>
+>>>> Thanks for this fix. It works indeed.
+>>>>
+>>>> On Sun, 2025-11-02 at 12:30 +0100, Matthieu Baerts (NGI0) wrote:
+>>>>> Some of these 'remove' tests rarely fail because a subflow has
+>>>>> been
+>>>>
+>>>> In my testing, only the "flush addresses" test case fails
+>>>> intermittently. I'm wondering which other test cases have failed in
+>>>> your environment?
+>>>
+>>> I took the unstable ones from the Netdev and MPTCP CIs:
+>>>
+>>> https://netdev.bots.linux.dev/contest.html?pass=0&executor=vmksft-mptcp-dbg&ld-cases=1
+>>>
+>>> https://ci-results.mptcp.dev/flakes.html
+>>>
+>>>> I'm thinking we shouldn't add the "backup" flag to every test in
+>>>> remove_tests, but only to the specific ones that are actually
+>>>> failing.
+>>>>
+>>>> Similarly for patches 3 and 4, we don't need to add
+>>>> "test_linkfail=128"
+>>>> to every test. We should only apply it to the specific ones that
+>>>> are
+>>>> actually failing.
+>>>
+>>> If my analysis is correct, it means the simple fixes I did (backup
+>>> and
+>>> longer file size) can be applied to multiple tests. Then probably
+>>> better
+>>> to avoid these other tests to fail for the same reasons even if it is
+>>> very
+>>> rare, and very hard to reproduce, no? Each false positive takes a lot
+>>> of
+>>> resources (mainly time) to debug.
+>>
+>> I'll leave it to you to decide. However, I still believe it's better to
+>> apply these fixes to the tests one by one, in case we see failures in
+>> the future.
 > 
-> On Tue, 2025-11-04 at 07:57 +0100, Matthieu Baerts wrote:
->> Hi Geliang,
->>
->> Thank you for the review.
->>
->> 4 Nov 2025 07:06:34 Geliang Tang <geliang@kernel.org>:
->>
->>> Hi Matt,
->>>
->>> Thanks for this fix. It works indeed.
->>>
->>> On Sun, 2025-11-02 at 12:30 +0100, Matthieu Baerts (NGI0) wrote:
->>>> Some of these 'remove' tests rarely fail because a subflow has
->>>> been
->>>
->>> In my testing, only the "flush addresses" test case fails
->>> intermittently. I'm wondering which other test cases have failed in
->>> your environment?
->>
->> I took the unstable ones from the Netdev and MPTCP CIs:
->>
->> https://netdev.bots.linux.dev/contest.html?pass=0&executor=vmksft-mptcp-dbg&ld-cases=1
->>
->> https://ci-results.mptcp.dev/flakes.html
->>
->>> I'm thinking we shouldn't add the "backup" flag to every test in
->>> remove_tests, but only to the specific ones that are actually
->>> failing.
->>>
->>> Similarly for patches 3 and 4, we don't need to add
->>> "test_linkfail=128"
->>> to every test. We should only apply it to the specific ones that
->>> are
->>> actually failing.
->>
->> If my analysis is correct, it means the simple fixes I did (backup
->> and
->> longer file size) can be applied to multiple tests. Then probably
->> better
->> to avoid these other tests to fail for the same reasons even if it is
->> very
->> rare, and very hard to reproduce, no? Each false positive takes a lot
->> of
->> resources (mainly time) to debug.
+> Because these modifications are not modifying what is being validated in
+> the test, but only avoid noises that would make the tests failing, I
+> think it is better to prevent issues and waiting for them to happen.
+
+I meant to say: "it is better to prevent issues *than* waiting for them
+to happen.".
+
 > 
-> I'll leave it to you to decide. However, I still believe it's better to
-> apply these fixes to the tests one by one, in case we see failures in
-> the future.
-
-Because these modifications are not modifying what is being validated in
-the test, but only avoid noises that would make the tests failing, I
-think it is better to prevent issues and waiting for them to happen.
-
-> I'll respond with my Reviewed-by tag in the cover letter.
-
-Thanks!
+>> I'll respond with my Reviewed-by tag in the cover letter.
+> 
+> Thanks!
+> 
+> Cheers,
+> Matt
 
 Cheers,
 Matt
