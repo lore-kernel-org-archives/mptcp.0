@@ -1,114 +1,80 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A077D346776
-	for <mptcp@lists.linux.dev>; Tue,  4 Nov 2025 21:52:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13FF072639
+	for <mptcp@lists.linux.dev>; Tue,  4 Nov 2025 22:32:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762293135; cv=none; b=W1ZJc2poeM7/fojc6XXFY9cflk9ajoP7ko9M/Cs1oos/gLqV0SSWW3OuttYXkBEY5PLEeiWJfE07WcecO478ru8KZU3N+h0wqmjrchh0WseyXELKVNzIs6EPNTWXWDbqrGtUigYd03lOnGDn6sGV1NjcJxp0XnLYrn3oPayf0Uk=
+	t=1762295530; cv=none; b=Wm3eeUFfyv5XrGm4ygP3ZRH04JQAkkW18n8fb4DtkSX3Vn5XdKbCQhqUYDL1Qnmbt2cY8+Q58ku6lxSUiCNRang3c/n4BvCmoyhT4lD4a3SADBB/TDmrwLNRRSk4U4HN5gfZZHGhEqzN3CRaRCyJCh96C0vv3G4GQlG1co9T3ew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762293135; c=relaxed/simple;
-	bh=cQtygeHmS0T4Fb8OK4PX2TgRnKAB9pNZGKcIqyRKGlA=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=ttDvbs4ZlWE4kh5Q/1dcYnVLHpExjIn18iy+Uc7BhDyhJV88CQqDjbXvLUEsZc6BuUjYXWnGbzol86zJhT1WE4/Y+ezjS4p4nhvBgHEp5b3mACd2zKDe+MDLFbI55TFliETbXI+2onhVveIBjpnx5RO9/HFBpW4Gu1/IlVed0/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=augKDP3i; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1762295530; c=relaxed/simple;
+	bh=+jCn/yU0QssYl1sgsow2FmswnTzh3gHG/ADb7e/Xpq4=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=r3RXRohdzimrE0w3Gc2OF9pLTLRRLlKObjoHJXaIZKHLhYvfeQfCpwwRBehCGp2Vtgx4tGWck1h9JaV3FMJWTph9muwLAH5bkOttHxxrQzPVWaXIllfftEGZEFJ5+YJD66aP4vvVB3m43I17VEhsaJxcE0CNxukCKt6wTeMRTiU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ULyJMf3Q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="augKDP3i"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1762293132;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zznC7FJgXOMRZVH7xPPMHGah7C+BgELZa2Qbf29YCCw=;
-	b=augKDP3ir3qn9p6mvCQYEaERmzPS/xe4kDP7g1NewN11EHtWvA4UE91Y8/yILnEtrIbzEc
-	ltWnzK4MrQEm1Xkxgno+T0VS7KIcAjB2DR/vnPPGbaghPx3FA+VQw4gZ67D7R0b/ceW7wc
-	B3K8IpoYfMfNUzsCZGkR1hi/P3DVpHI=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-38-j1qKVhPkMImYLDsenNbEoQ-1; Tue,
- 04 Nov 2025 16:52:11 -0500
-X-MC-Unique: j1qKVhPkMImYLDsenNbEoQ-1
-X-Mimecast-MFC-AGG-ID: j1qKVhPkMImYLDsenNbEoQ_1762293129
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7B451180065F
-	for <mptcp@lists.linux.dev>; Tue,  4 Nov 2025 21:52:09 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.45.224.32])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 6ACEA19560A2
-	for <mptcp@lists.linux.dev>; Tue,  4 Nov 2025 21:52:08 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Subject: [PATCH v2 mptcp-next 7/7] mptcp: add receive queue awareness in tcp_rcv_space_adjust()
-Date: Tue,  4 Nov 2025 22:51:41 +0100
-Message-ID: <639f98b0d408d8acef5876b58e05d343091418c3.1762292476.git.pabeni@redhat.com>
-In-Reply-To: <cover.1762292476.git.pabeni@redhat.com>
-References: <cover.1762292476.git.pabeni@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ULyJMf3Q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77F62C4CEF8;
+	Tue,  4 Nov 2025 22:32:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1762295529;
+	bh=+jCn/yU0QssYl1sgsow2FmswnTzh3gHG/ADb7e/Xpq4=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=ULyJMf3QuPl/KpbPn78y5QG6ktLzrghyqfZlF9ZKgOc9OIRzKsc9/QTaVwyn3WPJK
+	 DoMY930+MoXh2c2cfOxZG5cpQQkydV1A01YXyEc/e2C7n2wdIDT2+gX9gB0h+lQ7Io
+	 OKHfPgLhDK/OQ6CvsbuOjCiEtwr/ahnuWTjKb4QeHAjn55kW88ogRwL+T2SvTl7e8l
+	 uqCPlysQup6qX8vVOdkVnlgXq6IxomsfTb3TP+V0hODnEO7VXYYwTltmlOor6FFA8X
+	 RSMtB7WRSptTkgJOeiBhpebsD6Y5K2hQm3RfQJ1w9mr1vgrGC1DuULIlZLzUaoJyGJ
+	 K9dcOETAPD4UQ==
+Date: Tue, 4 Nov 2025 14:32:08 -0800 (PST)
+From: Mat Martineau <martineau@kernel.org>
+To: Paolo Abeni <pabeni@redhat.com>
+cc: mptcp@lists.linux.dev, geliang@kernel.org
+Subject: Re: [PATCH RESENT v7 mptcp-next 4/4] mptcp: leverage the backlog
+ for RX packet processing
+In-Reply-To: <bf160603-cfb4-4945-81d2-c958043078cf@redhat.com>
+Message-ID: <45416918-6168-327e-36a2-6c7033a36098@kernel.org>
+References: <cover.1761576117.git.pabeni@redhat.com> <08f8e227a749a28a88ce245fa36870173e32c54f.1761576117.git.pabeni@redhat.com> <6fb0d5aa-8140-505d-c40f-1dc40fff352f@kernel.org> <bf160603-cfb4-4945-81d2-c958043078cf@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 4LNPHb1Zvk7Wzv_FUEdJvfS0QT1rT_YKaadwRhxgdCo_1762293129
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-content-type: text/plain; charset="US-ASCII"; x-default=true
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-This is the mptcp counter-part of commit ea33537d8292 ("tcp: add receive
-queue awareness in tcp_rcv_space_adjust()").
+On Mon, 3 Nov 2025, Paolo Abeni wrote:
 
-Prior to this commit:
+> On 11/1/25 1:04 AM, Mat Martineau wrote:
+>> On Mon, 27 Oct 2025, Paolo Abeni wrote:
+>>> @@ -3573,6 +3586,8 @@ static void mptcp_release_cb(struct sock *sk)
+>>>
+>>> 		cond_resched();
+>>> 		spin_lock_bh(&sk->sk_lock.slock);
+>>> +		if (spool_bl)
+>>> +			mptcp_backlog_spooled(sk, moved, &skbs);
+>>
+>> Hi Paolo -
+>>
+>> Given the discussion in v5, to address the "wild producer" scenario this
+>> loop can keep track of total_moved and exit the loop when that gets too
+>> large.
+>>
+>> The question is what the total limit would be - available rcvbuf when
+>> entering the loop, or some multiple of that?
+>
+> I spent a lot of time around that choice. Limiting the loop here is
+> quite tricky. Stopping the loop after sk_rcvbuf bytes causes mptcp-level
+> OoO and adds additional complexity to the code (as the receiver will
+> need to check the backlog even when the receive queue is not empty.
+>
+> Note that the code proposed in this series is as robust as the current
+> (i.e. release_cb() can already be bothered by a wild producer in exactly
+> the same way).
+>
+> I propose to decouple the wild producer problem solution from these patches.
 
-ESTAB 33165568 0      192.168.255.2:5201 192.168.255.1:53380 \
-	skmem:(r33076416,rb33554432,t0,tb91136,f448,w0,o0,bl0,d0)
+Sounds reasonable to me. After the v5 thread, wanted to be sure I was 
+clearly understanding the tradeoffs. Thanks for the details!
 
-After:
-ESTAB 3279168 0      192.168.255.2:5201 192.168.255.1]:53042 \
-	skmem:(r3190912,rb3719956,t0,tb91136,f1536,w0,o0,bl0,d0)
-(same tput)
-
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
----
- net/mptcp/protocol.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
-
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 414cca078541..4b1944e40d91 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2134,11 +2134,13 @@ static void mptcp_rcv_space_adjust(struct mptcp_sock *msk, int copied)
- 	if (rtt_us == U32_MAX || time < (rtt_us >> 3))
- 		return;
- 
--	if (msk->rcvq_space.copied <= msk->rcvq_space.space)
-+	copied = msk->rcvq_space.copied;
-+	copied -= mptcp_inq_hint(sk);
-+	if (copied <= msk->rcvq_space.space)
- 		goto new_measure;
- 
- 	trace_mptcp_rcvbuf_grow(sk, time);
--	if (mptcp_rcvbuf_grow(sk, msk->rcvq_space.copied)) {
-+	if (mptcp_rcvbuf_grow(sk, copied)) {
- 		/* Make subflows follow along.  If we do not do this, we
- 		 * get drops at subflow level if skbs can't be moved to
- 		 * the mptcp rx queue fast enough (announced rcv_win can
-@@ -2152,7 +2154,7 @@ static void mptcp_rcv_space_adjust(struct mptcp_sock *msk, int copied)
- 			slow = lock_sock_fast(ssk);
- 			/* subflows can be added before tcp_init_transfer() */
- 			if (tcp_sk(ssk)->rcvq_space.space)
--				tcp_rcvbuf_grow(ssk, msk->rcvq_space.copied);
-+				tcp_rcvbuf_grow(ssk, copied);
- 			unlock_sock_fast(ssk, slow);
- 		}
- 	}
--- 
-2.51.0
-
+- Mat
