@@ -1,171 +1,70 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-170.mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E719329BD96;
-	Tue,  4 Nov 2025 12:15:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BD941DA55
+	for <mptcp@lists.linux.dev>; Tue,  4 Nov 2025 12:34:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762258549; cv=none; b=YJvGr7/pVXNQRxnDke3oZYnd5oeqoCFy5KXUyEy5zUqwdAsdUkL1rSNfB4fcRiOaQTnHAFAU/wxQGqIP1D1YeYaEjzXOSwvqb7tUJ50B43uu999ti3GqAa+KAMod+Wg/dKLV3iFCCQ3nAf33DTbmaXQxF1lO/y4UCYfN7P4Oc3s=
+	t=1762259667; cv=none; b=iBZzOZ+wz/SkApY87KHZ783qU0Q2Es61K4H+HL7LaA77BU0v41fSjElHyQfmdy77iG7Xy66DwvS9p+nbCk1G2vGKH4UGffPOfscRYGzI5480V7nU6+8axoIpDwNgz5+YnJzfQZAWHGLTrcXRhgFbg06T1ryAK2mh3gnyRqIaoaw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762258549; c=relaxed/simple;
-	bh=ACw2vBX42jxFsM07eDSGgWZY/ej/53OwAi0/iqaL8aU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mwSFcPws9kyKNVpMPYnoN9t7X7Ho+OcJreVQ4Js+M28Qxd1QmFoXoBSdck+kOU7ki3nXhJz0SP9RZtP6XDuj6B/KOacnPg315JuqsQ2SYeu+CX9eymdJ8bfg55HDJJeciZ8vtboYepNcPdf5a6blL17O7qpg8t9XirCo1pucd4o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sHPJU8ri; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1762259667; c=relaxed/simple;
+	bh=nClUGzk8ppW3iBR85j0udiLCPxVKDOW1OJ6dEY6KB4g=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Xzq+iH7uPwSCQvPxA1gh6LcBRC1MQNHWGnmzmmsGaVRMXySiyxtTgxp43dXhC5jQnzq6DGcVnMQPxHiSLsKlKtN+UPNy8mxCcNp9nJwoOMIkcOOff/r1cDutt3Ic/TiQ8FheJD2IISrJqwyaK+31T4VB7AksnMCYi2WKpZQ+D7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=sGMKmZIv; arc=none smtp.client-ip=91.218.175.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sHPJU8ri"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4312C16AAE;
-	Tue,  4 Nov 2025 12:15:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762258548;
-	bh=ACw2vBX42jxFsM07eDSGgWZY/ej/53OwAi0/iqaL8aU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=sHPJU8ri2tjuWPp2vGJxJ3q3dyjji0vNPiacsibrWwBppMlC42uxZHzVGXD8iKES1
-	 dtplSUQF01FOHHvBx8WkxuGfTQq3Ry6YJTeKQBrWwfQdx8inv90cbiYBiNJ8PIacZi
-	 5qfxtd0bW5YijrRJkSlPpBEHtavnuWceDUWvRccAY/q77xBSCtffqN8wG7UydaZgiG
-	 plfAwS6YCUQDYMV0WJu5Ck/JLqLADdehtM/jN7SLJyCNvrhQPeRVDbyNfCDQdkKiP5
-	 GeZFCHutf2bxSGN1pErfhepWeYdCS+vNDp0lFCaNyM+BswqzeL8HmjhVg8whHBThIL
-	 oRlGDsPT1Gkxw==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-To: stable@vger.kernel.org,
-	gregkh@linuxfoundation.org
-Cc: MPTCP Upstream <mptcp@lists.linux.dev>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Geliang Tang <geliang@kernel.org>,
-	Mat Martineau <martineau@kernel.org>,
-	"Matthieu Baerts (NGI0)" <matttbe@kernel.org>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.12.y] mptcp: fix MSG_PEEK stream corruption
-Date: Tue,  4 Nov 2025 13:15:16 +0100
-Message-ID: <20251104121515.1093006-2-matttbe@kernel.org>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <2025110208-pond-pouring-512d@gregkh>
-References: <2025110208-pond-pouring-512d@gregkh>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="sGMKmZIv"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1762259662;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=BSnapW9A+k887L5TnVxu5qBOIEF+OvjGODaJXGLWSo8=;
+	b=sGMKmZIvvTua++z8exVEVzCpR/QCfuDO9uDnJkRObJtzxH+0J+GxVl4eGnXgHiockZss7a
+	4GuKgyw+jv+wykNIHs86pmR/U/NiVKWfP6owh0wSaBgGAazm3vUpdmr8hE98LBrSV3KN3+
+	OIie74iDwQR1/Z0xTUdu4Xx+y/48wJA=
+From: Gang Yan <gang.yan@linux.dev>
+To: mptcp@lists.linux.dev
+Cc: Gang Yan <yangang@kylinos.cn>
+Subject: [PATCH, mptcp-net] mptcp: fix address removal logic in mptcp_pm_nl_rm_addr
+Date: Tue,  4 Nov 2025 20:34:16 +0800
+Message-ID: <20251104123416.395362-1-gang.yan@linux.dev>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4010; i=matttbe@kernel.org; h=from:subject; bh=LOJlpwF16lMiGnFkHh+wBjJqpz1xWbuoVEZ9Jnnsgos=; b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDI534XMjL2cFM9qWW/yQn3+909LA+O9815kiRwyV+SbW nFj5xmtjlIWBjEuBlkxRRbptsj8mc+reEu8/Cxg5rAygQxh4OIUgInMusvwP3KpAsPCfo1Z/Gom gluZ8jP17JewzF1dz5p14V5fy8R+X0aGOQba0xdcfPH1wu/HWm8WKhvk7F+SE/Tv39uD+7qXJjQ wMgAA
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-From: Paolo Abeni <pabeni@redhat.com>
+From: Gang Yan <yangang@kylinos.cn>
 
-[ Upstream commit 8e04ce45a8db7a080220e86e249198fa676b83dc ]
+Fix inverted WARN_ON_ONCE condition that prevented normal address
+removal counter updates. The current code only executes decrement
+logic when the counter is already 0 (abnormal state), while
+normal removals (counter > 0) are ignored.
 
-If a MSG_PEEK | MSG_WAITALL read operation consumes all the bytes in the
-receive queue and recvmsg() need to waits for more data - i.e. it's a
-blocking one - upon arrival of the next packet the MPTCP protocol will
-start again copying the oldest data present in the receive queue,
-corrupting the data stream.
-
-Address the issue explicitly tracking the peeked sequence number,
-restarting from the last peeked byte.
-
-Fixes: ca4fb892579f ("mptcp: add MSG_PEEK support")
-Cc: stable@vger.kernel.org
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Reviewed-by: Geliang Tang <geliang@kernel.org>
-Tested-by: Geliang Tang <geliang@kernel.org>
-Reviewed-by: Mat Martineau <martineau@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Link: https://patch.msgid.link/20251028-net-mptcp-send-timeout-v1-2-38ffff5a9ec8@kernel.org
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-[ Adjust context ]
-Signed-off-by: Sasha Levin <sashal@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Signed-off-by: Gang Yan <yangang@kylinos.cn>
 ---
-Note: this is the patch Sasha sent for the v6.6 which applies on v6.12
-without conflicts. On v6.12, Sasha sent another version with dependences
-that caused some issues, see:
- https://lore.kernel.org/bbe84711-95b2-4257-9f01-560b4473a3da@kernel.org
----
- net/mptcp/protocol.c | 36 +++++++++++++++++++++++++-----------
- 1 file changed, 25 insertions(+), 11 deletions(-)
+ net/mptcp/pm_kernel.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 5ded0841b159..4798892aa178 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1977,19 +1977,35 @@ static void mptcp_rcv_space_adjust(struct mptcp_sock *msk, int copied);
+diff --git a/net/mptcp/pm_kernel.c b/net/mptcp/pm_kernel.c
+index a3f654ba9dbe..cb3ebb2efd00 100644
+--- a/net/mptcp/pm_kernel.c
++++ b/net/mptcp/pm_kernel.c
+@@ -682,7 +682,7 @@ static void mptcp_pm_nl_add_addr_received(struct mptcp_sock *msk)
  
- static int __mptcp_recvmsg_mskq(struct mptcp_sock *msk,
- 				struct msghdr *msg,
--				size_t len, int flags,
-+				size_t len, int flags, int copied_total,
- 				struct scm_timestamping_internal *tss,
- 				int *cmsg_flags)
+ void mptcp_pm_nl_rm_addr(struct mptcp_sock *msk, u8 rm_id)
  {
- 	struct sk_buff *skb, *tmp;
-+	int total_data_len = 0;
- 	int copied = 0;
+-	if (rm_id && WARN_ON_ONCE(msk->pm.add_addr_accepted == 0)) {
++	if (rm_id && !WARN_ON_ONCE(msk->pm.add_addr_accepted == 0)) {
+ 		u8 limit_add_addr_accepted =
+ 			mptcp_pm_get_limit_add_addr_accepted(msk);
  
- 	skb_queue_walk_safe(&msk->receive_queue, skb, tmp) {
--		u32 offset = MPTCP_SKB_CB(skb)->offset;
-+		u32 delta, offset = MPTCP_SKB_CB(skb)->offset;
- 		u32 data_len = skb->len - offset;
--		u32 count = min_t(size_t, len - copied, data_len);
-+		u32 count;
- 		int err;
- 
-+		if (flags & MSG_PEEK) {
-+			/* skip already peeked skbs */
-+			if (total_data_len + data_len <= copied_total) {
-+				total_data_len += data_len;
-+				continue;
-+			}
-+
-+			/* skip the already peeked data in the current skb */
-+			delta = copied_total - total_data_len;
-+			offset += delta;
-+			data_len -= delta;
-+		}
-+
-+		count = min_t(size_t, len - copied, data_len);
-+
- 		if (!(flags & MSG_TRUNC)) {
- 			err = skb_copy_datagram_msg(skb, offset, msg, count);
- 			if (unlikely(err < 0)) {
-@@ -2006,22 +2022,19 @@ static int __mptcp_recvmsg_mskq(struct mptcp_sock *msk,
- 
- 		copied += count;
- 
--		if (count < data_len) {
--			if (!(flags & MSG_PEEK)) {
-+		if (!(flags & MSG_PEEK)) {
-+			msk->bytes_consumed += count;
-+			if (count < data_len) {
- 				MPTCP_SKB_CB(skb)->offset += count;
- 				MPTCP_SKB_CB(skb)->map_seq += count;
--				msk->bytes_consumed += count;
-+				break;
- 			}
--			break;
--		}
- 
--		if (!(flags & MSG_PEEK)) {
- 			/* we will bulk release the skb memory later */
- 			skb->destructor = NULL;
- 			WRITE_ONCE(msk->rmem_released, msk->rmem_released + skb->truesize);
- 			__skb_unlink(skb, &msk->receive_queue);
- 			__kfree_skb(skb);
--			msk->bytes_consumed += count;
- 		}
- 
- 		if (copied >= len)
-@@ -2245,7 +2258,8 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
- 	while (copied < len) {
- 		int err, bytes_read;
- 
--		bytes_read = __mptcp_recvmsg_mskq(msk, msg, len - copied, flags, &tss, &cmsg_flags);
-+		bytes_read = __mptcp_recvmsg_mskq(msk, msg, len - copied, flags,
-+						  copied, &tss, &cmsg_flags);
- 		if (unlikely(bytes_read < 0)) {
- 			if (!copied)
- 				copied = bytes_read;
 -- 
-2.51.0
+2.43.0
 
