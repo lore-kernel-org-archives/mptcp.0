@@ -1,92 +1,99 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63D0D30147A;
-	Mon,  3 Nov 2025 23:54:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B48C42417C3
+	for <mptcp@lists.linux.dev>; Tue,  4 Nov 2025 05:53:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762214045; cv=none; b=mR/DTh+FCclHAXsVjGnEfv12DBPIZSuBRKPd8ykIgTvYiDBUYMFVpPsYiWhS6vfo8QC1YpotI6MM88w1zGCMRvL2B/531ws80O5UwL5RQHA1ZSeo/qlUaQ25k+5WT9zj4yRvfqBaclkNSeVAPNbJc54f4EEK1L2v114TlzEfpMs=
+	t=1762235632; cv=none; b=WTzrXasP+XVzluQh6tacvVy+r463r7KgirRuQdSiwZfdS0wFRgzN7aE1eLlu/fXMkCaE6SX/yiKVGS3SsFre+PB1R89/rxPeDbK3cfECrYA0veIK8WI3thQFksPoyLU7dS9hNpIMXYFujKJFCG5jO6Z7cfJ7S++sbtr9i8z6gp4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762214045; c=relaxed/simple;
-	bh=UVNzrMusqOU6GYBHUTbZTOdkeG10tADERbGG7oMrZrc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CI0gmNubirSpFpgOO4Dgjc4RCxTZJGyIst11iuYVrBwdRmWn7ES7JNbPBvG7mNqFlwSQTLCZt6igSNjh251JbZGadbIVjoPfaMJoElXJrS5O99ZgZi44Bvb5g+I84gck/r8o/PPLkc8i2+UkCapu9aT6xy0ku0odos0z7oo47HI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=XTpIGphC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1762235632; c=relaxed/simple;
+	bh=D0Oqoiwef0Vm5kUCY6Tfc0m6QtYJvqIhwu0+xKGpUs8=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=lE11SBzr+zjMx5nCOYLWeSQyNp816LN/R9zIlKyU4LH31tUHDvzEkXwd/UV//rc5oLLTPTs0UWzKYQY1su7uDqeB8XogYq2kgQ8VnhcvDUO6eQkoy4Fqkw+AJAQitoKsQ1jZZLOZ+Q3hFf/Ew0JgnZC8t3NI+2wn8aKBDJka+tM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DcwwXz9w; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="XTpIGphC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70CD6C4CEFD;
-	Mon,  3 Nov 2025 23:54:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1762214044;
-	bh=UVNzrMusqOU6GYBHUTbZTOdkeG10tADERbGG7oMrZrc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XTpIGphCDs9/cZht1SaBb9Xn//vQQ+GZF/kGDjKVpLPU6Kat4IeMT8KrRKKY+Zt/D
-	 nXghC5UVY90nRK+0+F56i7MnaNK6AVbDaqiZKg7Aj2JrU+8Kfr5NDmg5+baTfkXvKb
-	 XP7pfQIiuLPMOl9TpdaHLdHJqDPXbYE6Z45J2NQU=
-Date: Tue, 4 Nov 2025 08:54:01 +0900
-From: Greg KH <gregkh@linuxfoundation.org>
-To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Cc: stable@vger.kernel.org, sashal@kernel.org,
-	MPTCP Upstream <mptcp@lists.linux.dev>
-Subject: Re: [PATCH 6.12.y-5.10.y] selftests: mptcp: connect modes: re-add
- exec mode
-Message-ID: <2025110410-cake-tasty-1a16@gregkh>
-References: <20251103165433.6396-2-matttbe@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DcwwXz9w"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B10CC4CEF7;
+	Tue,  4 Nov 2025 05:53:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1762235632;
+	bh=D0Oqoiwef0Vm5kUCY6Tfc0m6QtYJvqIhwu0+xKGpUs8=;
+	h=Subject:From:To:Date:In-Reply-To:References:From;
+	b=DcwwXz9wDDaaIm6zer+f2wluInn6ns9tk1+EBlkRUaV/pVkWrFJFnGWibnIXiVYKp
+	 eQsESKjwLivCR52NNT/3ryPAgJIV+ikYsqHMl08aNNw1DajmN1VbJYrOcLhfHcDZay
+	 lSpV+qpK+JGBshz9vxKaVhH3TgWzhaWynR8TxN2N2PCeCbf+/03Sy56UbsSK3xmade
+	 eHJKf46veyk0CxnxeQZ3lPTqfv2C6kQcmRoOvV5UQ36faPSVt6ME+BEOeGlEmWtj4J
+	 hVCiR78OeKpNl8rOgokY8n1vppkeTLAolJM4QjX+Q6vST5jY8/AVQjo/f41YSulgpu
+	 elj5Z7RBcIkrQ==
+Message-ID: <a8ddb726e2a2bf7242c5ec776ee7e4cca5e2450e.camel@kernel.org>
+Subject: Re: [PATCH mptcp-net v2 1/6] selftests: mptcp: connect: fix
+ fallback note due to OoO
+From: Geliang Tang <geliang@kernel.org>
+To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, MPTCP Upstream
+	 <mptcp@lists.linux.dev>
+Date: Tue, 04 Nov 2025 13:53:47 +0800
+In-Reply-To: <20251102-slft-join-inst-v2-1-b4f3ba15a7c4@kernel.org>
+References: <20251102-slft-join-inst-v2-0-b4f3ba15a7c4@kernel.org>
+	 <20251102-slft-join-inst-v2-1-b4f3ba15a7c4@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.52.3-0ubuntu1 
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251103165433.6396-2-matttbe@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Nov 03, 2025 at 05:54:34PM +0100, Matthieu Baerts (NGI0) wrote:
-> It looks like the execution permissions (+x) got lost during the
-> backports of these new files.
+Hi Matt,
+
+On Sun, 2025-11-02 at 12:30 +0100, Matthieu Baerts (NGI0) wrote:
+> The "fallback due to TCP OoO" was never printed because the
+> stat_ooo_now
+> variable was checked twice: once in the parent if-statement, and one
+> in
+> the child one. The second condition was then always true then, and
+> the
+> 'else' branch was never taken.
+
+Good catch!
+
+Reviewed-by: Geliang Tang <geliang@kernel.org>
+
+Thanks,
+-Geliang
+
 > 
-> The issue is that some CIs don't execute these tests without that.
+> The idea is that when there are more ACK + MP_CAPABLE than expected,
+> the
+> test either fails if there was no out of order packets, or a notice
+> is
+> printed.
 > 
-> Fixes: 37848a456fc3 ("selftests: mptcp: connect: also cover alt modes")
-> Fixes: fdf0f60a2bb0 ("selftests: mptcp: connect: also cover checksum")
+> Fixes: 69ca3d29a755 ("mptcp: update selftest for fallback due to
+> OoO")
 > Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 > ---
-> I'm not sure why they got lost, maybe Quilt doesn't support that? But
-> then, can this patch still be applied?
-> The same patch can be applied up to v5.10. In v5.10, only
-> mptcp_connect_mmap.sh file is present, but I can send a dedicated patch
-> for v5.10.
-> ---
->  tools/testing/selftests/net/mptcp/mptcp_connect_checksum.sh | 0
->  tools/testing/selftests/net/mptcp/mptcp_connect_mmap.sh     | 0
->  tools/testing/selftests/net/mptcp/mptcp_connect_sendfile.sh | 0
->  3 files changed, 0 insertions(+), 0 deletions(-)
->  mode change 100644 => 100755 tools/testing/selftests/net/mptcp/mptcp_connect_checksum.sh
->  mode change 100644 => 100755 tools/testing/selftests/net/mptcp/mptcp_connect_mmap.sh
->  mode change 100644 => 100755 tools/testing/selftests/net/mptcp/mptcp_connect_sendfile.sh
+>  tools/testing/selftests/net/mptcp/mptcp_connect.sh | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect_checksum.sh b/tools/testing/selftests/net/mptcp/mptcp_connect_checksum.sh
-> old mode 100644
-> new mode 100755
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect_mmap.sh b/tools/testing/selftests/net/mptcp/mptcp_connect_mmap.sh
-> old mode 100644
-> new mode 100755
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect_sendfile.sh b/tools/testing/selftests/net/mptcp/mptcp_connect_sendfile.sh
-> old mode 100644
-> new mode 100755
-> -- 
-> 2.51.0
-> 
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+> b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+> index 47ecb5b3836e..9b7b93f8eb0c 100755
+> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+> @@ -492,7 +492,7 @@ do_transfer()
+>  				  "than expected (${expect_synrx})"
+>  		retc=1
+>  	fi
+> -	if [ ${stat_ackrx_now_l} -lt ${expect_ackrx} ] && [
+> ${stat_ooo_now} -eq 0 ]; then
+> +	if [ ${stat_ackrx_now_l} -lt ${expect_ackrx} ]; then
+>  		if [ ${stat_ooo_now} -eq 0 ]; then
+>  			mptcp_lib_pr_fail "lower MPC ACK rx
+> (${stat_ackrx_now_l})" \
+>  					  "than expected
+> (${expect_ackrx})"
 > 
 
-This is going to be a pain to apply, given that we use quilt, and that
-does not handle modes well, if at all.
-
-So yes, that is why these files are not marked executable, but I thought
-we were moving away from that anyway, most scripts should not be marked
-that way.
-
-thanks,
-
-greg k-h
