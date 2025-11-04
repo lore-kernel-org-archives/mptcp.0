@@ -1,43 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FC5D2FDC53
-	for <mptcp@lists.linux.dev>; Tue,  4 Nov 2025 07:29:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA1DD296159
+	for <mptcp@lists.linux.dev>; Tue,  4 Nov 2025 07:30:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762241355; cv=none; b=EvjuNM9dRSdkx88xvEQipHaYub2/Jj+5vpJDeJmF6e16iTrC841MomUQjBXwhxrKDCzbRKhiUqL9MYfF/nuZ1AwMxcZvWs+tQ9IStjScHGygyWnRUSs/em5sKaMiFFwX0H5y30RD+HS+bCXLLZFa/4RMLkogR41x/8dXvITmRRc=
+	t=1762241424; cv=none; b=kVi/XwZliOMzcRT6zTpZ4rrf3fvTpQizI0HBwQxgQh8tRVoagmkWk+0XGTZIXzOO9tlMt+I/6mq18zPLD4V0beYEUrf9/6OGvieNLNlRLk77if4zZG39c4qLo3x99QrQ3b3N+EAcLiGaNPxiBxz6ogXU/D+Dj2/f2sbyCMUo6Ow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762241355; c=relaxed/simple;
-	bh=5op/CBb0f/9Bq9ei7hEEdQZmNnrfK2bxgaod7+399Hc=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=DQ2AIZiBpoq+x/TPNFyCV08VP4a4TC8yWlDRyUpRIr5qz0tuZ54vp0aAh/p7fm/RAtoO/ZIgoZMFIkHWc9dnALZAcOUsn+IYrh4E4xG5vPeD5j0S4Ofsc90EbUTOaMBKLGtB6rXBzN+iQbKEN4yiE05EsJQ8gRjRQYlnoSLcm+M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bcjstwa9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1762241424; c=relaxed/simple;
+	bh=SA0Kx9jQ7WznsqAxH9eqYYMBLGhQlZw2J9LVOFZd1p0=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=djj5CKm68micFaI3fKqtfsPr0LUwLnWDX1yQke6l+lwE8rv84J7gI34SUHcnR8FXhdrl9fKX+YcmQRkjPpxbPU/syt0NrDnSEzJR8jpdJiIpgQRYGrVWzjEiBoJ6JqkPCuF4EjDXYN/+7pmUUFXYJnD6Zu+FZrcaN3Av4n/RA5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FgeaGEGF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bcjstwa9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61858C4CEF8;
-	Tue,  4 Nov 2025 07:29:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FgeaGEGF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8734BC4CEF7;
+	Tue,  4 Nov 2025 07:30:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762241355;
-	bh=5op/CBb0f/9Bq9ei7hEEdQZmNnrfK2bxgaod7+399Hc=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=bcjstwa95GkwJwXUFioSb7UAF+/8fPcVca/pthyim5PEATymF6OHwAc+SnDwKrg1v
-	 4MdUlcUbkvtFNZX7wL1NKH9+DnpoEuKVetgfwNoeP+/CdqIHhbhoi3L7CX++Xaq0Ei
-	 fTfgY2jYPPtAhdBfEuUI5UWo/Ay5gAhmgU0PMU+/MfMTpeyz66XkQOUUzZLzt6zvjQ
-	 IUYymF8FFWUiHoGMcvZvl/Y4FI+Ha1n91hcpyRv69rnu/hgr+GuxxJK/vUoHaIur5o
-	 8TF2UTW8SeJ/VIMm5aVbwz80cw7Neu0BvH5QC/BzgaRVR3MSSeA1MXXOSgq4PiIETt
-	 eGDxy/mO47Avg==
-Message-ID: <c707d12083543db56fa5b2f361837d1c29931c58.camel@kernel.org>
-Subject: Re: [PATCH mptcp-net v2 2/6] selftests: mptcp: join: rm: set backup
- flag
+	s=k20201202; t=1762241424;
+	bh=SA0Kx9jQ7WznsqAxH9eqYYMBLGhQlZw2J9LVOFZd1p0=;
+	h=Subject:From:To:Date:In-Reply-To:References:From;
+	b=FgeaGEGFsh17Fa1bK2gE1weukAnNS1621Zd+D2ktNgtXxyJiSswle56FZfXl6AM7N
+	 VMUipxlRGFZjY4tQ4+2GLk3TXMbNKhgalk4+u7UVNF5gaYPPHkpQYqcX29eu01oOIv
+	 zrWhW31uSSmCvcocwQJOpH9y2BWp+9ZMpltBr88Sg1WGMdzq5UjKF7/l/9iKJXi8qQ
+	 HDftFm14+kAO03aYyu1mMS75v5AGNP8c0GslWvAVqF8zHZC2QQncQIl+pqwIxbczlt
+	 Qz/6peRjFJJJdWvSMvKcHfyDQc5kWzgcu8fUTL/O+cvp//7KeXZ9i0b0oydXPGPS9m
+	 eOdE95FrwnGjg==
+Message-ID: <46433282b63496fc4c49313fb629a378ddd8594a.camel@kernel.org>
+Subject: Re: [PATCH mptcp-net v2 0/6] selftests: mptcp: join: fix flaky tests
 From: Geliang Tang <geliang@kernel.org>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: MPTCP Upstream <mptcp@lists.linux.dev>
-Date: Tue, 04 Nov 2025 15:29:10 +0800
-In-Reply-To: <21daa38d-d335-4d62-b247-472629ee54dc@kernel.org>
+To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, MPTCP Upstream
+	 <mptcp@lists.linux.dev>
+Date: Tue, 04 Nov 2025 15:30:20 +0800
+In-Reply-To: <20251102-slft-join-inst-v2-0-b4f3ba15a7c4@kernel.org>
 References: <20251102-slft-join-inst-v2-0-b4f3ba15a7c4@kernel.org>
-	 <20251102-slft-join-inst-v2-2-b4f3ba15a7c4@kernel.org>
-	 <1d91f6b378b430088d81c2a5a1d33c678fc81cac.camel@kernel.org>
-	 <21daa38d-d335-4d62-b247-472629ee54dc@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 User-Agent: Evolution 3.52.3-0ubuntu1 
 Precedence: bulk
@@ -46,66 +42,66 @@ List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
 Hi Matt,
 
-On Tue, 2025-11-04 at 07:57 +0100, Matthieu Baerts wrote:
-> Hi Geliang,
+On Sun, 2025-11-02 at 12:30 +0100, Matthieu Baerts (NGI0) wrote:
+> When looking at the recent CI results on NIPA and MPTCP CIs, a few
+> MPTCP
+> Join tests are marked as unstable. Here are some fixes for that.
 > 
-> Thank you for the review.
+> - Patch 1: a small fix for mptcp_connect.sh, printing a note as
+>   initially intended. For >=v5.13.
 > 
-> 4 Nov 2025 07:06:34 Geliang Tang <geliang@kernel.org>:
+> - Patch 2: avoid unexpected reset when closing subflows. For >= 5.13.
 > 
-> > Hi Matt,
-> > 
-> > Thanks for this fix. It works indeed.
-> > 
-> > On Sun, 2025-11-02 at 12:30 +0100, Matthieu Baerts (NGI0) wrote:
-> > > Some of these 'remove' tests rarely fail because a subflow has
-> > > been
-> > 
-> > In my testing, only the "flush addresses" test case fails
-> > intermittently. I'm wondering which other test cases have failed in
-> > your environment?
+> - Patches 3-4: longer transfer when not waiting for the end. For
+> >=5.18.
 > 
-> I took the unstable ones from the Netdev and MPTCP CIs:
+> - Patch 5: drop noisy plain RST packets when looking for
+> MP_FASTCLOSE.
+>   For >= 5.18.
 > 
-> https://netdev.bots.linux.dev/contest.html?pass=0&executor=vmksft-mptcp-dbg&ld-cases=1
+> - Patch 6: read all received data when expecting a reset. For >=
+> v6.1.
 > 
-> https://ci-results.mptcp.dev/flakes.html
+> When reviewing patches 2-6, please double check that I'm not hiding
+> real
+> issues by tweaking the tests suite.
 > 
-> > I'm thinking we shouldn't add the "backup" flag to every test in
-> > remove_tests, but only to the specific ones that are actually
-> > failing.
-> > 
-> > Similarly for patches 3 and 4, we don't need to add
-> > "test_linkfail=128"
-> > to every test. We should only apply it to the specific ones that
-> > are
-> > actually failing.
-> 
-> If my analysis is correct, it means the simple fixes I did (backup
-> and
-> longer file size) can be applied to multiple tests. Then probably
-> better
-> to avoid these other tests to fail for the same reasons even if it is
-> very
-> rare, and very hard to reproduce, no? Each false positive takes a lot
-> of
-> resources (mainly time) to debug.
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-I'll leave it to you to decide. However, I still believe it's better to
-apply these fixes to the tests one by one, in case we see failures in
-the future.
+This set looks good to me!
 
-I'll respond with my Reviewed-by tag in the cover letter.
+Reviewed-by: Geliang Tang <geliang@kernel.org>
 
 Thanks,
 -Geliang
 
+> ---
+> Changes in v2:
+> - Patch 6: also handle EPIPE properly.
+> - Link to v1:
+> https://patch.msgid.link/20251101-slft-join-inst-v1-0-10572512a0b2@kernel.org
 > 
-> Cheers,
-> Matt
+> ---
+> Matthieu Baerts (NGI0) (6):
+>       selftests: mptcp: connect: fix fallback note due to OoO
+>       selftests: mptcp: join: rm: set backup flag
+>       selftests: mptcp: join: endpoints: longer transfer
+>       selftests: mptcp: join: userspace: longer transfer
+>       selftests: mptcp: join: fastclose: drop plain RST
+>       selftests: mptcp: connect: trunc: read all recv data
 > 
+>  tools/testing/selftests/net/mptcp/mptcp_connect.c  | 18 ++--
+>  tools/testing/selftests/net/mptcp/mptcp_connect.sh |  2 +-
+>  tools/testing/selftests/net/mptcp/mptcp_join.sh    | 95
+> +++++++++++++---------
+>  3 files changed, 69 insertions(+), 46 deletions(-)
+> ---
+> base-commit: b9e1acc39cbc985ca8df781775718e39e421409b
+> change-id: 20251029-slft-join-inst-e307faf42138
+> 
+> Best regards,
 
