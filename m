@@ -1,40 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13FF072639
-	for <mptcp@lists.linux.dev>; Tue,  4 Nov 2025 22:32:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A05D317BB35
+	for <mptcp@lists.linux.dev>; Tue,  4 Nov 2025 22:50:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762295530; cv=none; b=Wm3eeUFfyv5XrGm4ygP3ZRH04JQAkkW18n8fb4DtkSX3Vn5XdKbCQhqUYDL1Qnmbt2cY8+Q58ku6lxSUiCNRang3c/n4BvCmoyhT4lD4a3SADBB/TDmrwLNRRSk4U4HN5gfZZHGhEqzN3CRaRCyJCh96C0vv3G4GQlG1co9T3ew=
+	t=1762296632; cv=none; b=CIp8GjHlLeM06gOUXqkiH7CWvEi1JBGzs0CJQbs7R0GP5TwkPgLb4jjInodUWwFUxt++E9KSZJKByzU0yByu24Zqyqdqruz768H/UIOwddcjexh/CKnYbQZfP6pTRnigWYs6Ne57yWhELXcEwaTBNrtPXO4FEv5kVvpymPzG4vg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762295530; c=relaxed/simple;
-	bh=+jCn/yU0QssYl1sgsow2FmswnTzh3gHG/ADb7e/Xpq4=;
+	s=arc-20240116; t=1762296632; c=relaxed/simple;
+	bh=qydPjjM9GfMe1lCkfu664gIsG1DSrJTB6XnGiSw5xR8=;
 	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=r3RXRohdzimrE0w3Gc2OF9pLTLRRLlKObjoHJXaIZKHLhYvfeQfCpwwRBehCGp2Vtgx4tGWck1h9JaV3FMJWTph9muwLAH5bkOttHxxrQzPVWaXIllfftEGZEFJ5+YJD66aP4vvVB3m43I17VEhsaJxcE0CNxukCKt6wTeMRTiU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ULyJMf3Q; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=SiXjBduK0+AgQzh65QURO6hZfrgJsmzA0E3c8WgE8sYeRGCC5gezIK1+aNztxSVmgH3Tjtc54a/mJ1Gv7U6pQjlcOwVOnhdKH2ptSyT4TdNicZR7i4Kwg7i/MJtTH5QTCIP21gRIxXA+eW4Dp2xXNKQiYUsIz98ccRPqUiLEpAc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iMyxNTB5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ULyJMf3Q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77F62C4CEF8;
-	Tue,  4 Nov 2025 22:32:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iMyxNTB5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70096C4CEF7;
+	Tue,  4 Nov 2025 22:50:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762295529;
-	bh=+jCn/yU0QssYl1sgsow2FmswnTzh3gHG/ADb7e/Xpq4=;
+	s=k20201202; t=1762296632;
+	bh=qydPjjM9GfMe1lCkfu664gIsG1DSrJTB6XnGiSw5xR8=;
 	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=ULyJMf3QuPl/KpbPn78y5QG6ktLzrghyqfZlF9ZKgOc9OIRzKsc9/QTaVwyn3WPJK
-	 DoMY930+MoXh2c2cfOxZG5cpQQkydV1A01YXyEc/e2C7n2wdIDT2+gX9gB0h+lQ7Io
-	 OKHfPgLhDK/OQ6CvsbuOjCiEtwr/ahnuWTjKb4QeHAjn55kW88ogRwL+T2SvTl7e8l
-	 uqCPlysQup6qX8vVOdkVnlgXq6IxomsfTb3TP+V0hODnEO7VXYYwTltmlOor6FFA8X
-	 RSMtB7WRSptTkgJOeiBhpebsD6Y5K2hQm3RfQJ1w9mr1vgrGC1DuULIlZLzUaoJyGJ
-	 K9dcOETAPD4UQ==
-Date: Tue, 4 Nov 2025 14:32:08 -0800 (PST)
+	b=iMyxNTB5QRJX+dammQn8eyMyOZmzwvk8BuFU0T6r75oXOQWIjtlzWXz77ZU5evTbw
+	 jXRI0DO0iHlKwa4gF12TFYnUVUK/rb/g/HxvKbHrqhJKNxmAhgG9ux0pnx7G4wuJIT
+	 wGj52l7pnqasjTY8OxY4yOv2BCNqUTQtIaoxYPTEbVWiLCa7p2GIzXsLBqyBsjdzef
+	 BPKUwTCg5H1yuqicLEOrSqGIgl2W2vw9siuEHU3kCAvL1J3eAJ432JAnfmkOPib4fq
+	 msZunImUhj9grQ69xRtkAECguqNc+UODG8rWuxPMAITkcrydDO+RTSRqOEnNqzD6RH
+	 lL4ZxvnIHmC2w==
+Date: Tue, 4 Nov 2025 14:50:31 -0800 (PST)
 From: Mat Martineau <martineau@kernel.org>
 To: Paolo Abeni <pabeni@redhat.com>
-cc: mptcp@lists.linux.dev, geliang@kernel.org
-Subject: Re: [PATCH RESENT v7 mptcp-next 4/4] mptcp: leverage the backlog
- for RX packet processing
-In-Reply-To: <bf160603-cfb4-4945-81d2-c958043078cf@redhat.com>
-Message-ID: <45416918-6168-327e-36a2-6c7033a36098@kernel.org>
-References: <cover.1761576117.git.pabeni@redhat.com> <08f8e227a749a28a88ce245fa36870173e32c54f.1761576117.git.pabeni@redhat.com> <6fb0d5aa-8140-505d-c40f-1dc40fff352f@kernel.org> <bf160603-cfb4-4945-81d2-c958043078cf@redhat.com>
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-next v8 0/4] mptcp: introduce backlog processing
+In-Reply-To: <cover.1762271864.git.pabeni@redhat.com>
+Message-ID: <1d2d6f02-868a-a367-069f-0c74c82c14a8@kernel.org>
+References: <cover.1762271864.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -43,38 +42,59 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-On Mon, 3 Nov 2025, Paolo Abeni wrote:
+On Tue, 4 Nov 2025, Paolo Abeni wrote:
 
-> On 11/1/25 1:04 AM, Mat Martineau wrote:
->> On Mon, 27 Oct 2025, Paolo Abeni wrote:
->>> @@ -3573,6 +3586,8 @@ static void mptcp_release_cb(struct sock *sk)
->>>
->>> 		cond_resched();
->>> 		spin_lock_bh(&sk->sk_lock.slock);
->>> +		if (spool_bl)
->>> +			mptcp_backlog_spooled(sk, moved, &skbs);
->>
->> Hi Paolo -
->>
->> Given the discussion in v5, to address the "wild producer" scenario this
->> loop can keep track of total_moved and exit the loop when that gets too
->> large.
->>
->> The question is what the total limit would be - available rcvbuf when
->> entering the loop, or some multiple of that?
+> This series includes RX path improvement built around backlog processing
 >
-> I spent a lot of time around that choice. Limiting the loop here is
-> quite tricky. Stopping the loop after sk_rcvbuf bytes causes mptcp-level
-> OoO and adds additional complexity to the code (as the receiver will
-> need to check the backlog even when the receive queue is not empty.
+> The main goals are improving the RX performances _and_ increase the
+> long term maintainability.
 >
-> Note that the code proposed in this series is as robust as the current
-> (i.e. release_cb() can already be bothered by a wild producer in exactly
-> the same way).
+> Patch 1 and 2 refactor the memory account logic in the RX path, so that
+> the msk don't need anymore to do fwd allocation, removing possible drop
+> sources.
 >
-> I propose to decouple the wild producer problem solution from these patches.
+> Patch 3 and 4 cope with backlog processing. Patch 3 introduces the
+> helpers needed to manipulate the msk-level backlog, and the data struct
+> itself, without any actual functional change. Patch 4 finally use the
+> backlog for RX skb processing. Note that MPTCP can't use the sk_backlog,
+> as the mptcp release callback can also release and re-acquire the
+> msk-level spinlock and core backlog processing works under the
+> assumption that such event is not possible.
+>
+> A relevant point is memory accounts for skbs in the backlog.
+>
+> It's somewhat "original" due to MPTCP constraints. Such skbs use space
+> from the incoming subflow receive buffer, but are fwd memory accounted
+> on the msk, using memory borrowed by the subflow.
+>
+> Instead the msk borrows memory from the subflow and reserve it for
+> the backlog - see patch 2 and 4 for the gory details.
+> ---
+> v7 -> v8:
+>  - only minor changes: typos, added warn_on().
+>  - notably no BL loop limiting, as discussed on previous iteration
+>
 
-Sounds reasonable to me. After the v5 thread, wanted to be sure I was 
-clearly understanding the tradeoffs. Thanks for the details!
+Thanks for the clarifications Paolo, v8 LGTM:
 
-- Mat
+Reviewed-by: Mat Martineau <martineau@kernel.org>
+
+> Paolo Abeni (4):
+>  mptcp: handle first subflow closing consistently
+>  mptcp: borrow forward memory from subflow
+>  mptcp: introduce mptcp-level backlog
+>  mptcp: leverage the backlog for RX packet processing
+>
+> net/mptcp/fastopen.c   |   4 +-
+> net/mptcp/mib.c        |   1 -
+> net/mptcp/mib.h        |   1 -
+> net/mptcp/mptcp_diag.c |   3 +-
+> net/mptcp/protocol.c   | 232 +++++++++++++++++++++++++++++------------
+> net/mptcp/protocol.h   |  45 +++++++-
+> 6 files changed, 214 insertions(+), 72 deletions(-)
+>
+> -- 
+> 2.51.0
+>
+>
+>
