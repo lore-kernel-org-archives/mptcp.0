@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DECD305E1F
-	for <mptcp@lists.linux.dev>; Wed,  5 Nov 2025 10:43:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0859B2E7BBB
+	for <mptcp@lists.linux.dev>; Wed,  5 Nov 2025 10:58:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762339386; cv=none; b=Ux4COzLc7gD3DHHCsru1JwZuNf6oB+z7zNoVV2lubIW9y1wbxfIWu06ekKoRAOfjgLH1i7nSJwIlfSIrx+btBRiSmGkEG/gixe7FnQlynJ2dsQLzx5auabpZYtHj9ZYfOceMWHmGmF2C9+fnr3yTRP1DKHdgr8ypNR5fwv08gw4=
+	t=1762340335; cv=none; b=bOv/eDN7gMz1Yvly+eWZELp3XCPe3DTEuLyUfq3S+0FXHbbVTC8KqS8j73+rvcQA/tUUh3x4UquZIyrcXCbV+m4P7upmUp7z2uuPZXx63VGDJvTW/N1HDgfc59vF7C4B4lTZACs/DEH5ybkFj0clwF3tLkR2T3q4Hi4Kv/DITzU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762339386; c=relaxed/simple;
-	bh=/fVRD1hKJrWxtwAWe7sJaCBIT7RwsaowkRAG7e3Cma0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oQVwtCAQMYXplJ+Bmi9GgQySBNIHCWJqz9RU4jYaDEUpiXTJG4Wz42+zdBLWAjP6uwXfuFeTsCM/XOxYpltUJGjLeTWedzA8kgPGcnRwOrssNSFGK0F+cRmpnUd6JFXIJ3BiC7FB3Nk5yM248XREuARIX2mM7J0AfjlemNkC0MY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CGihPKLD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1762340335; c=relaxed/simple;
+	bh=pSKFt168va48yTC2c92pC2M36VECtjd7zApIQtry308=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
+	 In-Reply-To:Content-Type; b=uBPfoNu04e1JPIVr7i7hs8vAVAJ2S82O/JrXpJlg3M1MLM5clB62PJOMjRwR+sCefPX+tdJCJgQSzOJp4fA7KQMjuW/pQsMxJygwnO63Ln3JAe4BiQxhDi7Kyf3VmNsIpTIrSX/oHCaC7sHzq+javwxHJO+AwuVg4cV0/ivZ8zc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F3BziQmp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CGihPKLD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0762C116D0;
-	Wed,  5 Nov 2025 10:43:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F3BziQmp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C511FC4CEF8;
+	Wed,  5 Nov 2025 10:58:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762339385;
-	bh=/fVRD1hKJrWxtwAWe7sJaCBIT7RwsaowkRAG7e3Cma0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=CGihPKLDKS4anBFWcyZWFewwt6XQPIBLpEQUggY67f6K0ck7I8sh6G9j4RySXI0lT
-	 I7taq3aFOvr2DjEQoWEovlI69fKbxfzsuXzp/kIGZs4BjEP1wbJbZ0S0jK1rrtVrW1
-	 pVLHFnT97z5ETByinKvA+GbngBUssFq7jBZeOi7yqiOo0B4TZkRE1UkdnPSOqSDIv0
-	 HNdtxLQ5knIjsjyY8NO5gl72bdsCbZ+5gAtS6gXrasv2BuOOIv+kmjDpYsj/WW0neG
-	 OMJpEG9hLvKbdgxH8UYh1YJD1Yk5mR4q35KCmhGLDkpr+mA9yEnQWckxKpfZXc7x8c
-	 QIvsB+onWL+ow==
-Message-ID: <5da6be8c-76b6-4d65-88e7-f74a95557b65@kernel.org>
-Date: Wed, 5 Nov 2025 11:43:02 +0100
+	s=k20201202; t=1762340334;
+	bh=pSKFt168va48yTC2c92pC2M36VECtjd7zApIQtry308=;
+	h=Date:Subject:To:References:From:Cc:In-Reply-To:From;
+	b=F3BziQmpxmti5D7jM+a9Ya9QF6yFZxEgunQ5PY3QSsQNMyvpcE387GfXoeQ4w/tpC
+	 I9/IvfW/UwZQ3XLqiJvaC2pamc1elORVKBcQW69AYUKG6PJR5T9/Le42C9674OR/Em
+	 rrSwHbTdhxgKHr/i8cCArh7HkYkqSfYEToHYvMwxt90DqcWygBClS2tnqnK8joIu3+
+	 QwcIEwiZN9Zg+EWvLvnW4wK8TXMXgOnfW36txHpR6BKStGC+qkRJzMc/S6s2y0HCE3
+	 b+UXtjwT2WzXKK5lQr1MEsTbrb51WaNUiTSxf9zICd+ir36ATcHCJRe2u8lIU6nPo1
+	 ePPFEe8kbLurQ==
+Message-ID: <e898e464-1c33-472e-bede-19581ce7d432@kernel.org>
+Date: Wed, 5 Nov 2025 11:58:51 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,14 +35,15 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v8 4/4] mptcp: leverage the backlog for RX
- packet processing
+Subject: Re: [PATCH mptcp-next 0/5] selftests: mptcp: get counters from nstat
+ history
 Content-Language: en-GB, fr-BE
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-Cc: Mat Martineau <martineau@kernel.org>
-References: <cover.1762271864.git.pabeni@redhat.com>
- <44e2efcff50d5c45c9a72b1efa15528e81166d34.1762271864.git.pabeni@redhat.com>
+To: Paolo Abeni <pabeni@redhat.com>
+References: <20251103-slft-nstat-cache-v1-0-56025c09e56a@kernel.org>
+ <08d6eed5-4177-3a1d-d1a7-4aabcca38b9d@gmail.com>
+ <d1121a70-693f-4bd5-8b5e-223c011370a1@redhat.com>
 From: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -87,74 +88,32 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <44e2efcff50d5c45c9a72b1efa15528e81166d34.1762271864.git.pabeni@redhat.com>
+In-Reply-To: <d1121a70-693f-4bd5-8b5e-223c011370a1@redhat.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 Hi Paolo,
 
-On 04/11/2025 16:59, Paolo Abeni wrote:
-> When the msk socket is owned or the msk receive buffer is full,
-> move the incoming skbs in a msk level backlog list. This avoid
-> traversing the joined subflows and acquiring the subflow level
-> socket lock at reception time, improving the RX performances.
-> 
-> When processing the backlog, use the fwd alloc memory borrowed from
-> the incoming subflow. skbs exceeding the msk receive space are
-> not dropped; instead they are kept into the backlog until the receive
-> buffer is freed. Dropping packets already acked at the TCP level is
-> explicitly discouraged by the RFC and would corrupt the data stream
-> for fallback sockets.
-> 
-> Special care is needed to avoid adding skbs to the backlog of a closed
-> msk and to avoid leaving dangling references into the backlog
-> at subflow closing time.
+On 04/11/2025 22:13, Paolo Abeni wrote:
+> The series LGTM! actually that ugly old syntax I introduced bothered me
+> since a while, thanks for fixing it!
 
-Thank you for the patches!
+Thank you for the review!
 
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index d075db13bb72..01114456dec6 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -684,7 +684,7 @@ static void __mptcp_add_backlog(struct sock *sk,
->  }
->  
->  static bool __mptcp_move_skbs_from_subflow(struct mptcp_sock *msk,
-> -					   struct sock *ssk)
-> +					   struct sock *ssk, bool own_msk)
->  {
->  	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk);
->  	struct sock *sk = (struct sock *)msk;
-> @@ -700,9 +700,6 @@ static bool __mptcp_move_skbs_from_subflow(struct mptcp_sock *msk,
->  		struct sk_buff *skb;
->  		bool fin;
->  
-> -		if (sk_rmem_alloc_get(sk) > sk->sk_rcvbuf)
+Now in our tree:
 
-I don't think that's important, but I prefer to report it just in case:
+New patches for t/upstream:
+- 5fc66ff0c21d: selftests: mptcp: lib: introduce 'nstat_{init,get}'
+- 85c2658ab280: selftests: mptcp: lib: remove stats files args
+- c03f469e66cd: selftests: mptcp: lib: stats: remove nstat rate columns
+- 7c215cadfe13: selftests: mptcp: join: dump stats from history
+- 1e8ac2ba9238: selftests: mptcp: lib: get counters from nstat history
+- Results: 47634a71c01a..fdaf439eed61 (export)
 
-I see that you moved this condition from here ...
+Tests are now in progress:
 
-> -			break;
-> -
->  		/* try to move as much data as available */
->  		map_remaining = subflow->map_data_len -
->  				mptcp_subflow_get_map_offset(subflow);
-> @@ -730,7 +727,7 @@ static bool __mptcp_move_skbs_from_subflow(struct mptcp_sock *msk,
->  
->  			mptcp_init_skb(ssk, skb, offset, len);
->  
-> -			if (true) {
-> +			if (own_msk && sk_rmem_alloc_get(sk) < sk->sk_rcvbuf) {
-
-... to here, but almost the opposite: '>' → '<'. Fine with '<', or
-should it be '<='?
-
-But I guess we will not often hit just the exact number.
-
->  				mptcp_subflow_lend_fwdmem(subflow, skb);
->  				ret |= __mptcp_move_skb(sk, skb);
->  			} else {
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/4cf71a5e2203016f33c5584d5a926eca7a9529ff/checks
 
 Cheers,
 Matt
