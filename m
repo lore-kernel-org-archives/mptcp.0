@@ -1,112 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AFDD16132F
-	for <mptcp@lists.linux.dev>; Wed,  5 Nov 2025 02:00:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D239913D891
+	for <mptcp@lists.linux.dev>; Wed,  5 Nov 2025 02:13:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762308046; cv=none; b=LhUeweg85aNHfX2aAxKYQs69PmODl4UrdhCHv40dJmA3CSaEQU1YzZRtJo7nxoKAz2TLjY2nkk3vvkOCqJW73033WUbPdUcZXhORJSzx7VvJwiyBrowRmJTTHx2owqrm3e8H9oTvJsEDl4apfJiZdBWZ1uzn7VyLKGYGMYUEws4=
+	t=1762308840; cv=none; b=H857UEzyXCCyaTJhzOqDWfw4vvwyYAVnsbn8IEAYFVVIKjEwmrsZ9SNW1CJXv9GkhFF2ga8wEjiV3IMqYk8Rc2t1N8oprMAG5xxxIHAeONWmviOQXqMr2vWddWeSbqNNmBAt6io6/ajsSzn5PWE9zLX4UdfUCnPuKWUZLCDxoEc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762308046; c=relaxed/simple;
-	bh=ucgl2xKlQ3jWn9nop6X8wRert8O2nENsFsx14pbey0o=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=h3qLi+/0JNwfy9w+h7iP867CAkn+zddW2sBE8JriMVucELbU8ll44j0EI4fLa8MGWVJVnTzEE7xolyqrzvxSKhkKgNY4UkQqyh7qz9VAt2MUozzzTKmiYkbnV2O3IKwnjYXfdJ0PwUcEF+GEzPEQnYaD2LYo60IUOENF/UE3Hs0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hOWROytf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1762308840; c=relaxed/simple;
+	bh=24oiNoJR6Ert99MR0rh6+xqy0X2l2tVX/evTHLGiBMo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RnVrPeUKhLjFFUt+eC+mfSshTe+bau8kAeziii7MVq3J2AyTiWYQAIOhHit0ss+ivOrAMAdvNqetsDvrFJxQJ1CED3gA19FD6TzbXPukCLIPc2upZnefOMqBHGiTVItJfw2EXIsw8Nzy8XAXyWbgwhBk4t74cXrcZbpIq85yvuE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=HO8tknJh; arc=none smtp.client-ip=95.215.58.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hOWROytf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82A56C4CEF7;
-	Wed,  5 Nov 2025 02:00:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762308046;
-	bh=ucgl2xKlQ3jWn9nop6X8wRert8O2nENsFsx14pbey0o=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=hOWROytf61O+uOMJDsPLloCS6LV/geN44C4XvZnKkHsJXxKmNq1p+KTT9n7H6/A4M
-	 3Hj3gH3rpKDTV0Q3Zdil8/gBVaFyEF3kqHkw+8ZEl3rJVHQ3+DGdKPNqipk4fbcSav
-	 nx9gTgMU+vNQ21+P1C1iH98BOoUyPWUHJrxGaHdsEnlCo2SgHFFjBk55pOoWPdLVzi
-	 EcamWUQZ/HPhps51fDsaDHEWpePDP/+qE5npYgQYD2DdPnr+gUxPMS3l/oCMSCwQn6
-	 ARgY7evAWFYH8IULKs811VTkkB2/16D34P53sk9J6GMadEP8qT/Mh+A7ApflGAmokf
-	 mbi0N2xahkd9A==
-Message-ID: <c2cd46563de5a4e90a95f98913d42cd198757167.camel@kernel.org>
-Subject: Re: [PATCH mptcp-net v2 0/6] selftests: mptcp: join: fix flaky tests
-From: Geliang Tang <geliang@kernel.org>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="HO8tknJh"
+Date: Wed, 5 Nov 2025 10:13:50 +0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1762308836;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SL4njtvaPQ7uHrNGzYSWUBSyookja9hKy0sEC9BAbqE=;
+	b=HO8tknJhGv9uI751QmqrWu1BG2LBKC9/44M9sOLN+4HE2yKrPPo+BHTAEsHNMj6BX7DDyN
+	QiCs6TFhFp2Ry1FOixozSBqD09VX9TIEhU0jvuxkkDjeUojcKRyjpBgV+HvaUCu7yWjFBs
+	MK2HQVLa5B5Kpu4s7sTOaGX0JFO6A4Q=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: GangYan <gang.yan@linux.dev>
 To: Matthieu Baerts <matttbe@kernel.org>
-Cc: MPTCP Linux <mptcp@lists.linux.dev>
-Date: Wed, 05 Nov 2025 10:00:42 +0800
-In-Reply-To: <b8762565-35cb-482a-8988-e15fbbb01093@kernel.org>
-References: <20251102-slft-join-inst-v2-0-b4f3ba15a7c4@kernel.org>
-	 <b8762565-35cb-482a-8988-e15fbbb01093@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.52.3-0ubuntu1 
+Cc: Gang Yan <yangang@kylinos.cn>, mptcp@lists.linux.dev
+Subject: Re: [PATCH, mptcp-net] mptcp: fix address removal logic in
+ mptcp_pm_nl_rm_addr
+Message-ID: <aQqy3mG3hwlwRcck@thinkbook16p>
+References: <20251104123416.395362-1-gang.yan@linux.dev>
+ <bde9ef49-25c6-4892-8952-917ce5ff54a5@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <bde9ef49-25c6-4892-8952-917ce5ff54a5@kernel.org>
+X-Migadu-Flow: FLOW_OUT
 
-Hi Matt,
-
-On Tue, 2025-11-04 at 13:10 +0100, Matthieu Baerts wrote:
-> Hi Geliang,
+> On Tue, Nov 04, 2025 at 03:34:38PM +0100, Matthieu Baerts wrote:
+> Hi Gang,
 > 
-> On 02/11/2025 12:30, Matthieu Baerts (NGI0) wrote:
-> > When looking at the recent CI results on NIPA and MPTCP CIs, a few
-> > MPTCP
-> > Join tests are marked as unstable. Here are some fixes for that.
+> On 04/11/2025 13:34, Gang Yan wrote:
+> > From: Gang Yan <yangang@kylinos.cn>
 > > 
-> > - Patch 1: a small fix for mptcp_connect.sh, printing a note as
-> >   initially intended. For >=v5.13.
-> > 
-> > - Patch 2: avoid unexpected reset when closing subflows. For >=
-> > 5.13.
-> > 
-> > - Patches 3-4: longer transfer when not waiting for the end. For
-> > >=5.18.
-> > 
-> > - Patch 5: drop noisy plain RST packets when looking for
-> > MP_FASTCLOSE.
-> >   For >= 5.18.
-> > 
-> > - Patch 6: read all received data when expecting a reset. For >=
-> > v6.1.
-> > 
-> > When reviewing patches 2-6, please double check that I'm not hiding
-> > real
-> > issues by tweaking the tests suite.
+> > Fix inverted WARN_ON_ONCE condition that prevented normal address
+> > removal counter updates. The current code only executes decrement
+> > logic when the counter is already 0 (abnormal state), while
+> > normal removals (counter > 0) are ignored.
 > 
-> (More eyes are welcome, especially on patch 5/6!)
+> Good catch!
+> 
+> For fixes, we need a Fixes tag:
+> 
+> Fixes: 636113918508 ("mptcp: pm: remove '_nl' from
+> mptcp_pm_nl_rm_addr_received")
+> 
+> Apart from that, it looks good to me:
+> 
+> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> 
+> How did you find out about this? I'm surprised out test suite didn't
+> spot it. By chance, do you have a test that can be used to reproduce
+> this issue?
 
-I tested patch 5/6 again and found that only dropping the plain RST
-from ns1 is sufficient to make it work. There is no need to
-simultaneously drop the plain RST from ns2. What do you think?
+I've been looking into the work_pending-related issue described in
+#ISSUE 440 and have designed several potentially affected scenarios
+based on mptcp_join tests. Except for the case where endpoints are
+deleted one by one and then re-added via ADD_ADDR (which fails), all
+other related tests have passed. (I'll share some conclusions in the
+corresponding discussion later.)
 
-If you agree, I can send a squash-to patch to fix it.
+By tracing the relevant code, I found that the value of
+'add_addr_accepted' here does not decrease, which subsequently blocks
+further ADD_ADDR operations. We can verify the value of
+'add_addr_accepted' in 'delete re-add signal' test, which can be found
+in mptcp_join.sh, using either 'ss' or 'mptcp_diag'. The reason this
+test didn't fail previously is that when the 'add_addr_accepted_limit'
+was set to 3, the test's add_addr operations never reached the limit,
+so no overflow occurred.
+
+I lean toward using 'ss' to obtain the token and then retrieving the
+'add_addr_accepted' value via 'mptcp_diag', because when the value is
+zero, ss does not display it. Moreover, using 'mptcp_diag' minimizes
+potential inconsistencies caused by different versions of iproute2,
+making maintenance easier. WDYT?
 
 Thanks,
--Geliang
-
-> 
-> Thank you for the review! Now in our tree:
-> 
-> New patches for t/upstream-net and t/upstream:
-> - a9a49f5a022a: selftests: mptcp: connect: fix fallback note due to
-> OoO
-> - 818251a0fc51: selftests: mptcp: join: rm: set backup flag
-> - f0864a03b80b: selftests: mptcp: join: endpoints: longer transfer
-> - a68bf9260dab: selftests: mptcp: join: userspace: longer transfer
-> - 69569761c0f6: selftests: mptcp: join: fastclose: drop plain RST
-> - e99b7db5862e: selftests: mptcp: connect: trunc: read all recv data
-> - Results: 3cf18f92ab22..09c25f9f5ca3 (export-net)
-> - Results: b35f4b01c8d3..625ded86ead5 (export)
-> 
-> Tests are now in progress:
-> 
-> - export-net:
-> https://github.com/multipath-tcp/mptcp_net-next/commit/c8f9b6716c62042010e0e231a789467236c55625/checks
-> - export:
-> https://github.com/multipath-tcp/mptcp_net-next/commit/31b5d615cdeb4fd6ea58fcd577b48543dd3b0617/checks
+Gang
 > 
 > Cheers,
 > Matt
-
+> -- 
+> Sponsored by the NGI0 Core fund.
+> 
