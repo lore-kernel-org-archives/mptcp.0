@@ -1,134 +1,175 @@
-Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from localhost.localdomain (unknown [147.136.157.0])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2652330DEC9
-	for <mptcp@lists.linux.dev>; Wed,  5 Nov 2025 11:37:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB90C2D239B
+	for <mptcp@lists.linux.dev>; Wed,  5 Nov 2025 11:38:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=147.136.157.0
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762342664; cv=none; b=AfK66gxdn1MDaW5V9ZXTRHFEdbgE0MYQDdTdgCUtNCZTCn6g5Ir7OqnFZL+Q4/St6zKUt1oCEjQyhbqTi+DM7M0UoYca4vB+orQZ8WijD6I4oNn25g40fTF78lm+WgnS+HUf7wS80Md01QFU5EC/4BU+dgvc1Zs/qbWGQORVBfw=
+	t=1762342693; cv=none; b=VVWc2ZvtnSdTr8+5YyG4DoY8djumyheRlWjB3ZtErSSGHRpXUGAopwLz9XiFgOdhTf3zK3qRVPmzBJkqdhJxy/QoxfWRR6c39iRn6KbdzKrAK8gNRHGIgRz45VNLWyl6BnHZo6k4pQPBxl5KKMwxa4wq5mbX6KXXAW1x35TWXDo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762342664; c=relaxed/simple;
-	bh=Tmvajdmhc09DHUrWEBeabu/WE5lE1cdVj709qtDlUAg=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=oiJIbFU+DZH89MjFEYl5VDKEckk05NZgJImn9HzRrxih2rTU38o2uAs5o1oTA310imORDenOajvA+pJVRd7m/6TYFEI1hWakNOs4ffj60ka2RoxSRN5kwhvZYelopHU9lg/0g1IK1lh+f63Z35Zu64Dy6tWRSHS+rE0nLaM6EcE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e5GA4stX; arc=none smtp.client-ip=209.85.215.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e5GA4stX"
-Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-b99bfb451e5so2500731a12.2
-        for <mptcp@lists.linux.dev>; Wed, 05 Nov 2025 03:37:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1762342662; x=1762947462; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=W7wbGUTK1+Ye/VDesW9TcMWDPYD51L4FzY0isEQM7oM=;
-        b=e5GA4stXNFjlwbcFrcc//uDWdczt8BeQ+s41BIVVaU2CFahIzqUc9ue122f+zFArZ0
-         pHMnVc/tEeaOFK8QVWMR2oW7p97ov5HlU939/lrzPsBwt2KMO9kw4BnG+ewn1riUl5WQ
-         /F19d22HTEAv6hPl473C78IDfRbZ4ZYUEIc4IwbWpUqg9ayfwiSQcHog3t6NItVNmftf
-         BP7qYhEEqH/k6aSB0/OWBmcWklCnwltynQz6s5t8AKOCaQw/LZd5CkYsqZRrZbO1kGWs
-         JBhK6uu/hpDLpqSnGbsl+AkgTBVDjUbR2C9nFSdepL+HhOo9nkI1jDi7/3z4gdHo/zB7
-         NZCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762342662; x=1762947462;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=W7wbGUTK1+Ye/VDesW9TcMWDPYD51L4FzY0isEQM7oM=;
-        b=G0g/BCFBuyUL22SB9WWZWAC9hQXdmZD4Kwr/G8xNyNd2VFQqjouis8Y4aXYS6ObRD6
-         kx36/byCprFrn0UNwU1nbgTjG45twyfAeQL3uOIIb893eUKJ2ujw0vHprQ3xUTir4IJ/
-         pynmtJw5abXB31sdYZhy6eHZUTLNbue7fv5Kh3Qn1a2C8AwlQKF7CnvO0XHZXwGiuwl0
-         ReQdkUwE+I09gwUxnv7pbvEw51bk6T3EfKZe8SkkQ+7BO5VglNmMlxZBwKkcG7YygMq4
-         b2D3ORYs/gwO5/ec0wGx9p8nQWhXDoigrao0h6cxMM4+gxirgQwgaMHxYRgTUJJgROzC
-         pZDg==
-X-Gm-Message-State: AOJu0YxQ1NqHPxXkMPICVRmL3/Ql5/PVJ9n19dxGFCY4vB5AFel9rMzL
-	PaX0a9gFW5Gy8Fza6HvcWXLSMnStL2NFvJ5fDiVEOqXoWZpWArmJNdT2i/wK
-X-Gm-Gg: ASbGncvuruacjI0cRvLvGwa/bIEEXGHq9BjULXQ4dN/XtJFY81rcqdjBWEhXU7AE4gh
-	7iQeIltn68SAGlYm54yKb1cK8xp5AAdaQZmJDTgK6sqHqbSTzUSTa2/yCWFeuYFhErfm+0JXGdW
-	JyUMSISZn0YeEYv001qStv6g411RE9chKQez7GwIwSPjFHUVJqqF4j6HmF/60ZrjIao/xmodBNr
-	ASc6ApqwdRGEE/nsJ3+CjP5nXlCF1RNiZ8Cl/WPp9XOzZGHEqd6eKwvQ3trQYYrLa027ieRxKkp
-	0VwslwHarUyl7zPVk7sY/8vZBnt+A/9j+Q2M3tSpKL64E0/3knsRcfSCHjI3BmA9W1FFf26Nnjx
-	V23apQ5TQNKH022pUWK0mp94QmqlaBPwIBHYQAmzWysvcy+fHps8ch7QVRsoZp7/+IWAU3sz2um
-	4oJh78KPxpy0mi
-X-Google-Smtp-Source: AGHT+IFTpHzm6G99loiTQAV4lmyQDI8d0AO542dY+OJ5OZJ3/tIVeeH4Xd2ySM4EJXZphSOqzb0nZg==
-X-Received: by 2002:a17:902:db08:b0:295:f508:9d32 with SMTP id d9443c01a7336-2962ae55881mr39009695ad.37.1762342662219;
-        Wed, 05 Nov 2025 03:37:42 -0800 (PST)
-Received: from [127.0.0.1] ([128.24.163.37])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29601972a92sm59438835ad.7.2025.11.05.03.37.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Nov 2025 03:37:41 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <tanggeliang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <cover.1762334694.git.tanggeliang@kylinos.cn>
-References: <cover.1762334694.git.tanggeliang@kylinos.cn>
-Subject: Re: [PATCH mptcp-next v6 0/7] mptcp: TCP_MD5SIG support
-Message-ID: <82102115-e7c4-4347-41a3-7a3453439512@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 05 Nov 2025 11:37:41 +0000
+	s=arc-20240116; t=1762342693; c=relaxed/simple;
+	bh=9gqY/a/t3cgf+qUGFp5v6NHGkd9JXj5rvQDmdYxUHVs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=tYSWVOKll2UmzR13X2wVt4Vh6hyHpuYCoXPtj3ZycirL1xO482OBj+V4XmxVB1g9AbAwfzIl1EbunzqMfpzdjrlFDjclVXtF5XfWoNvyDAOxws1bAVhWboa3f5myvPgFps1A6ubMneNXFQWFVomI1cR0FWKQL+KMmxQppKcieVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.dev; spf=none smtp.mailfrom=localhost.localdomain; arc=none smtp.client-ip=147.136.157.0
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=localhost.localdomain
+Received: by localhost.localdomain (Postfix, from userid 1007)
+	id 11B918B2A0D; Wed,  5 Nov 2025 19:38:09 +0800 (+08)
+From: Jiayuan Chen <jiayuan.chen@linux.dev>
+To: mptcp@lists.linux.dev
+Cc: Jiayuan Chen <jiayuan.chen@linux.dev>,
+	stable@vger.kernel.org,
+	Jakub Sitnicki <jakub@cloudflare.com>,
+	Matthieu Baerts <matttbe@kernel.org>,
+	Mat Martineau <martineau@kernel.org>,
+	Geliang Tang <geliang@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Shuah Khan <shuah@kernel.org>,
+	Florian Westphal <fw@strlen.de>,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	bpf@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: [PATCH net v4 2/3] net,mptcp: fix proto fallback detection with BPF
+Date: Wed,  5 Nov 2025 19:36:08 +0800
+Message-ID: <20251105113625.148900-3-jiayuan.chen@linux.dev>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20251105113625.148900-1-jiayuan.chen@linux.dev>
+References: <20251105113625.148900-1-jiayuan.chen@linux.dev>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Hi Geliang,
+The sockmap feature allows bpf syscall from userspace, or based
+on bpf sockops, replacing the sk_prot of sockets during protocol stack
+processing with sockmap's custom read/write interfaces.
+'''
+tcp_rcv_state_process()
+  syn_recv_sock()/subflow_syn_recv_sock()
+    tcp_init_transfer(BPF_SOCK_OPS_PASSIVE_ESTABLISHED_CB)
+      bpf_skops_established       <== sockops
+        bpf_sock_map_update(sk)   <== call bpf helper
+          tcp_bpf_update_proto()  <== update sk_prot
+'''
 
-Thank you for your modifications, that's great!
+When the server has MPTCP enabled but the client sends a TCP SYN
+without MPTCP, subflow_syn_recv_sock() performs a fallback on the
+subflow, replacing the subflow sk's sk_prot with the native sk_prot.
+'''
+subflow_syn_recv_sock()
+  subflow_ulp_fallback()
+    subflow_drop_ctx()
+      mptcp_subflow_ops_undo_override()
+'''
 
-Our CI did some validations and here is its report:
+Then, this subflow can be normally used by sockmap, which replaces the
+native sk_prot with sockmap's custom sk_prot. The issue occurs when the
+user executes accept::mptcp_stream_accept::mptcp_fallback_tcp_ops().
+Here, it uses sk->sk_prot to compare with the native sk_prot, but this
+is incorrect when sockmap is used, as we may incorrectly set
+sk->sk_socket->ops.
 
-- KVM Validation: normal (except selftest_mptcp_join): Unstable: 1 failed =
-test(s): packetdrill_sockopts =F0=9F=94=B4
-- KVM Validation: normal (only =
-selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except =
-selftest_mptcp_join): Unstable: 3 failed test(s): packetdrill_mp_join =
-packetdrill_sockopts selftest_mptcp_connect_mmap =F0=9F=94=B4
-- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/190978=
-49691
+This fix uses the more generic sk_family for the comparison instead.
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/73158e211c60
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1019796
+Additionally, this also prevents a WARNING from occurring:
 
+------------[ cut here ]------------
+WARNING: CPU: 1 PID: 388 at net/mptcp/protocol.c:68 \
+mptcp_stream_accept+0x34c/0x380
+Modules linked in:
+RIP: 0010:mptcp_stream_accept+0x34c/0x380
+RSP: 0018:ffffc90000cf3cf8 EFLAGS: 00010202
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ do_accept+0xeb/0x190
+ ? __x64_sys_pselect6+0x61/0x80
+ ? _raw_spin_unlock+0x12/0x30
+ ? alloc_fd+0x11e/0x190
+ __sys_accept4+0x8c/0x100
+ __x64_sys_accept+0x1f/0x30
+ x64_sys_call+0x202f/0x20f0
+ do_syscall_64+0x72/0x9a0
+ ? switch_fpu_return+0x60/0xf0
+ ? irqentry_exit_to_user_mode+0xdb/0x1e0
+ ? irqentry_exit+0x3f/0x50
+ ? clear_bhb_loop+0x50/0xa0
+ ? clear_bhb_loop+0x50/0xa0
+ ? clear_bhb_loop+0x50/0xa0
+ entry_SYSCALL_64_after_hwframe+0x76/0x7e
+ </TASK>
+---[ end trace 0000000000000000 ]---
 
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
+result from ./scripts/decode_stacktrace.sh:
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 337 at net/mptcp/protocol.c:68 mptcp_stream_accept \
+(net-next/net/mptcp/protocol.c:4005)
+Modules linked in:
+...
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+PKRU: 55555554
+Call Trace:
+<TASK>
+do_accept (net-next/net/socket.c:1989)
+__sys_accept4 (net-next/net/socket.c:2028 net-next/net/socket.c:2057)
+__x64_sys_accept (net-next/net/socket.c:2067)
+x64_sys_call (net-next/arch/x86/entry/syscall_64.c:41)
+do_syscall_64 (net-next/arch/x86/entry/syscall_64.c:63 \
+net-next/arch/x86/entry/syscall_64.c:94)
+entry_SYSCALL_64_after_hwframe (net-next/arch/x86/entry/entry_64.S:130)
+RIP: 0033:0x7f87ac92b83d
 
-For more details:
+---[ end trace 0000000000000000 ]---
 
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+Fixes: 0b4f33def7bb ("mptcp: fix tcp fallback crash")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
+Reviewed-by: Jakub Sitnicki <jakub@cloudflare.com>
+---
+ net/mptcp/protocol.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 4cd5df01446e..b5e5e130b158 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -61,11 +61,13 @@ static u64 mptcp_wnd_end(const struct mptcp_sock *msk)
+ 
+ static const struct proto_ops *mptcp_fallback_tcp_ops(const struct sock *sk)
+ {
++	unsigned short family = READ_ONCE(sk->sk_family);
++
+ #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+-	if (sk->sk_prot == &tcpv6_prot)
++	if (family == AF_INET6)
+ 		return &inet6_stream_ops;
+ #endif
+-	WARN_ON_ONCE(sk->sk_prot != &tcp_prot);
++	WARN_ON_ONCE(family != AF_INET);
+ 	return &inet_stream_ops;
+ }
+ 
+-- 
+2.43.0
 
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
