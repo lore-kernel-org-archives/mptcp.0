@@ -1,172 +1,165 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E39C32ED25
-	for <mptcp@lists.linux.dev>; Wed,  5 Nov 2025 14:54:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E0A21F37D3
+	for <mptcp@lists.linux.dev>; Wed,  5 Nov 2025 15:05:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762354470; cv=none; b=XpNz/7aG51JgdcaKjIAnC1iCnAjXE+wbj9nZAn2YORQmMH/s/ylXNplxfhi58yHEqCOEdbBL6Y2itQB5ykF6ItfKxE44tQP2pd4I1WOw7RZfVihwd1nSqyTbCJoaZQfl+pNKoprddE87SC2v/WSqL59K3F+U/hL4zfRboSp5Dik=
+	t=1762355145; cv=none; b=arCtsZ5bay0Vqmr9CZyK3320LU5nZ8QIGooQe1DvYRFD1594sgNunim9TxwxqM7RHZ0yuVSeIxnlKYAVF/yAXoX3a6x8LjMvzxK3LRcBgDZcv32it7jmOkJDuxK5gywQWHvE3pSGqM8WcgmmlSUIICImAUBr1GPGqMYKRrtjaUU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762354470; c=relaxed/simple;
-	bh=aCUm6VqVUC62lk8pNgkytmmTZ0tTkG/+Nz/sqRoIaMg=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=u9bzYm4+/YKV+WAYrja/rkvO0BPMtNLV60c08l1F+j124AGNI1sLmk2H+cuhowFsvl9IqYti56d/abHKaPrkOMHFNcG+j1SKmrmnt/xTS3tt34Qf5JOvUjpfjdlqhnoXveRIHD8Dy5Wv1TcC4M8aRIUQrJPIi0ysf1ljMmkT31E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TbnMx/19; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1762355145; c=relaxed/simple;
+	bh=EQuTi27m+mena9DezTOqpy5pGCKftxBT1qld7CXF/8I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dtFZBnyHWMowl6Ad607pJ5Vum8TdJ4WTXmty3iUCgLjE/SGG/cZsbZpUuardg6Pf1UTZnAc92NvN0PdGwzeFXjuK8ICUvrVW91qmBQCD0RcsETxDeRJ6gfayJZTme4swV4+UqJViuolB1OIYXLDLdEzYfiVcy1XgFiU7+QSGB5k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JG8NVryu; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TbnMx/19"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JG8NVryu"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1762354467;
+	s=mimecast20190719; t=1762355143;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ZYR5n8lkUKogYgHCMBt8QG/B9JRTJKJtFQu0H6TxQg0=;
-	b=TbnMx/19+O9rlOmNrRpXeh6gv1MVNlxZqetbjbQCwtJeTFeblgabc2RfS+zAQi1+k6/DO1
-	q90pMs0MGTUE8RMs9T3T71xvS4/evny7Au549HoSQC3zJj2bJQQssCfLsrD2/ckrV0XnQj
-	NP9rsrlXpVt8/dxUVWzwAazeSwhjkoY=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-84-CmIkfuBvMqO9rBoXNvM8oQ-1; Wed,
- 05 Nov 2025 09:54:25 -0500
-X-MC-Unique: CmIkfuBvMqO9rBoXNvM8oQ-1
-X-Mimecast-MFC-AGG-ID: CmIkfuBvMqO9rBoXNvM8oQ_1762354464
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7F89F1956071
-	for <mptcp@lists.linux.dev>; Wed,  5 Nov 2025 14:54:24 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.44.34.105])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 9E72E3000198
-	for <mptcp@lists.linux.dev>; Wed,  5 Nov 2025 14:54:23 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-net 2/2] mptcp: fix duplicate reset on fastclose
-Date: Wed,  5 Nov 2025 15:54:12 +0100
-Message-ID: <0395b95bc89964254ad9a10a9e6da9fd58b6f7a7.1762354419.git.pabeni@redhat.com>
-In-Reply-To: <962efc0fd760155328967f4023a899e520e6f9a7.1762354419.git.pabeni@redhat.com>
-References: <962efc0fd760155328967f4023a899e520e6f9a7.1762354419.git.pabeni@redhat.com>
+	bh=wumyZTzouk2B+H4+lga8Agcv+0f2gJnuqk6u1bIADAE=;
+	b=JG8NVryuSLsX2z8KUAIh4orQCAh8yHwuQr3ooBVxgIKJ+RYBd5YFfY+vdrAOg/y6dLJXTV
+	/sPPD9ksj9Lq+tLTgSmJfvc3dXKqpSRYNfuCfm6sDmim/6Snay7NX2Zwnur2v5YWy8ZeuY
+	hTo12CHXSOhUlpy4uzSxroA4csYbaag=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-631-xt6me9WBO9G1auIRblyyPw-1; Wed, 05 Nov 2025 10:05:41 -0500
+X-MC-Unique: xt6me9WBO9G1auIRblyyPw-1
+X-Mimecast-MFC-AGG-ID: xt6me9WBO9G1auIRblyyPw_1762355141
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-4721b4f3afbso28321485e9.0
+        for <mptcp@lists.linux.dev>; Wed, 05 Nov 2025 07:05:41 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762355141; x=1762959941;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=wumyZTzouk2B+H4+lga8Agcv+0f2gJnuqk6u1bIADAE=;
+        b=YVPopClNJLshTDQa2SeZmPDnkgHLpyOccw6brBNe968+ohIXGWdyUnyXNYvr6H0kQF
+         1YWQeK8EN49D6sAnUziIE23N2URZvkr5a3gsgaWVVmGc24wyHnQ1QlevJ5URtLyS2cOq
+         i4VjFM1PZKCR//eV6gPsHwXUAQz4+pB5td8smIMAPlywQqoEGAbTxo2VaKtXZX9vg5tt
+         D+HYzbyF66ofelHy4DFKiWM8JORnKT4L9k2Wkg/NU3Xm2oWEERxmZMYIAeat8NqhsCsB
+         VqcRu7YAWoKkyggzfkjgutOD4nkUY0gHFjXP9fAiitlHJw2oVG7pcBvcGIto4PqIKTEw
+         Iwpw==
+X-Forwarded-Encrypted: i=1; AJvYcCWYMMv3MkJwJhpNK3ATLYu2cAHz2rWq9miXa3FqBMpZPfIBeW1G4DPFWo1UuJp32WURaFMF9A==@lists.linux.dev
+X-Gm-Message-State: AOJu0YyKoBwf3gVHoPaJGJgP0E94T0M7f4acS6fHAYRQtIj73XvIx4DO
+	yNlOY2S/hTv/f/Dn8cd4GlagtzfGTMfybjyOzQpJ0hnSdt4ZsaNLDiMxkYB3o6rsI2iE6TT2t4x
+	L8QDjs6D3eAwOBXcX/anEpwjj2G8+E0gPu6baLeeLCxhqOieSXQYO3xrh
+X-Gm-Gg: ASbGncu9k5rrVWj1Hwyeh6nvTV+mRTgmVXeKbg2YtE4QN6ATxKyjZh+s/ejqMyREF0J
+	GFA4i/ikBtCF2OMMso4BFOYHT4SERmEweeF8xoKe24av/1fYza8Y3qtyZdcz0qIbY0oM30xLh4R
+	xS2Y0Nr8tNC/z/D+Z9M1ZXHVXIwitq5MkhBNokuN4aNe+rgc7zdg7GEQfODnIz2pSeVQzYKj07O
+	Su0fJcskmNChAsRiEKceb2YJg63aLPHyKL2Y5l32A5JOSLvQSVDzsVXlS6TcvWv38Z6egdAg1/O
+	ivVfJ1kMi06z3EBQe6D/2/5gaUieW8Dgbe6dYRQ5HTPaeyuZinRCSPFmtmhfPWPq01Ah9kaG+vC
+	vZw==
+X-Received: by 2002:a05:600c:828d:b0:471:a96:d1b6 with SMTP id 5b1f17b1804b1-4775cd9c4d2mr33793375e9.7.1762355140596;
+        Wed, 05 Nov 2025 07:05:40 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHjEwR/PnXsK8t1MyDx9ZQuCXSZ9DQYC5Zb6lPZHw/gIQoaugxtmZSuswTfwusI3lOUmKthTQ==
+X-Received: by 2002:a05:600c:828d:b0:471:a96:d1b6 with SMTP id 5b1f17b1804b1-4775cd9c4d2mr33793065e9.7.1762355140137;
+        Wed, 05 Nov 2025 07:05:40 -0800 (PST)
+Received: from [192.168.88.32] ([216.128.11.239])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-477558b826bsm44427915e9.3.2025.11.05.07.05.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Nov 2025 07:05:39 -0800 (PST)
+Message-ID: <f15ad419-1d47-4d96-a225-3861dd6ff700@redhat.com>
+Date: Wed, 5 Nov 2025 16:05:38 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH mptcp-next v8 4/4] mptcp: leverage the backlog for RX
+ packet processing
+To: Matthieu Baerts <matttbe@kernel.org>, mptcp@lists.linux.dev
+Cc: Mat Martineau <martineau@kernel.org>
+References: <cover.1762271864.git.pabeni@redhat.com>
+ <44e2efcff50d5c45c9a72b1efa15528e81166d34.1762271864.git.pabeni@redhat.com>
+ <5da6be8c-76b6-4d65-88e7-f74a95557b65@kernel.org>
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <5da6be8c-76b6-4d65-88e7-f74a95557b65@kernel.org>
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: PMPDB1CYeZZJNzh2U8rydwvAta3L5cE1UaBmb9ZIaxI_1762354464
+X-Mimecast-MFC-PROC-ID: _4lSDX_Hlweon9YbC89J1mglC0DgNiZg3YRv5w9s1Wo_1762355141
 X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-content-type: text/plain; charset="US-ASCII"; x-default=true
 
-The CI reports sporadic failures of the fastclose self-tests. The root
-cause is a duplicate reset, not carrying the relevant MPTCP option.
-In the failing scenario the bad reset is received by the peer before
-the fastclose one, preventing the reception of the latter.
 
-Indeed there is window of opportunity at fastclose time for the following
-race:
 
-mptcp_do_fastclose
-  __mptcp_close_ssk
-    __tcp_close()
-      tcp_set_state() [1]
-      tcp_send_active_reset() [2]
+On 11/5/25 11:43 AM, Matthieu Baerts wrote:
+> Hi Paolo,
+> 
+> On 04/11/2025 16:59, Paolo Abeni wrote:
+>> When the msk socket is owned or the msk receive buffer is full,
+>> move the incoming skbs in a msk level backlog list. This avoid
+>> traversing the joined subflows and acquiring the subflow level
+>> socket lock at reception time, improving the RX performances.
+>>
+>> When processing the backlog, use the fwd alloc memory borrowed from
+>> the incoming subflow. skbs exceeding the msk receive space are
+>> not dropped; instead they are kept into the backlog until the receive
+>> buffer is freed. Dropping packets already acked at the TCP level is
+>> explicitly discouraged by the RFC and would corrupt the data stream
+>> for fallback sockets.
+>>
+>> Special care is needed to avoid adding skbs to the backlog of a closed
+>> msk and to avoid leaving dangling references into the backlog
+>> at subflow closing time.
+> 
+> Thank you for the patches!
+> 
+>> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+>> index d075db13bb72..01114456dec6 100644
+>> --- a/net/mptcp/protocol.c
+>> +++ b/net/mptcp/protocol.c
+>> @@ -684,7 +684,7 @@ static void __mptcp_add_backlog(struct sock *sk,
+>>  }
+>>  
+>>  static bool __mptcp_move_skbs_from_subflow(struct mptcp_sock *msk,
+>> -					   struct sock *ssk)
+>> +					   struct sock *ssk, bool own_msk)
+>>  {
+>>  	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk);
+>>  	struct sock *sk = (struct sock *)msk;
+>> @@ -700,9 +700,6 @@ static bool __mptcp_move_skbs_from_subflow(struct mptcp_sock *msk,
+>>  		struct sk_buff *skb;
+>>  		bool fin;
+>>  
+>> -		if (sk_rmem_alloc_get(sk) > sk->sk_rcvbuf)
+> 
+> I don't think that's important, but I prefer to report it just in case:
+> 
+> I see that you moved this condition from here ...
+> 
+>> -			break;
+>> -
+>>  		/* try to move as much data as available */
+>>  		map_remaining = subflow->map_data_len -
+>>  				mptcp_subflow_get_map_offset(subflow);
+>> @@ -730,7 +727,7 @@ static bool __mptcp_move_skbs_from_subflow(struct mptcp_sock *msk,
+>>  
+>>  			mptcp_init_skb(ssk, skb, offset, len);
+>>  
+>> -			if (true) {
+>> +			if (own_msk && sk_rmem_alloc_get(sk) < sk->sk_rcvbuf) {
+> 
+> ... to here, but almost the opposite: '>' → '<'. Fine with '<', or
+> should it be '<='?
+> 
+> But I guess we will not often hit just the exact number.
 
-After [1] the stack will send reset to in-flight data reaching the now
-closed port. Such reset may race with [2].
+Actually the new test is more correct than the old one: if the rcvbuf is
+full we should not add data to the backlog.
 
-Address the issue explicitly sending a single reset on fastclose before
-explicitly moving the subflow to close status.
+Arguably a better test would be alike tcp_can_ingest(), but that change
+caused several regression and I would refrain/wait a bit before porting
+it to mptcp.
 
-Fixes: d21f83485518 ("mptcp: use fastclose on more edge scenarios");
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/596
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
----
- net/mptcp/protocol.c                          | 34 ++++++++++++-------
- .../testing/selftests/net/mptcp/mptcp_join.sh |  2 --
- 2 files changed, 22 insertions(+), 14 deletions(-)
-
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 7c66300c9fe1..200d8040cf12 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2451,20 +2451,13 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
- 
- 	lock_sock_nested(ssk, SINGLE_DEPTH_NESTING);
- 
--	if ((flags & MPTCP_CF_FASTCLOSE) && !__mptcp_check_fallback(msk)) {
--		/* be sure to force the tcp_close path
--		 * to generate the egress reset
--		 */
--		ssk->sk_lingertime = 0;
--		sock_set_flag(ssk, SOCK_LINGER);
--		subflow->send_fastclose = 1;
--	}
-+	if (subflow->send_fastclose && ssk->sk_state != TCP_CLOSE)
-+		tcp_set_state(ssk, TCP_CLOSE);
- 
- 	need_push = (flags & MPTCP_CF_PUSH) && __mptcp_retransmit_pending_data(sk);
- 	if (!dispose_it) {
- 		__mptcp_subflow_disconnect(ssk, subflow, flags);
- 		release_sock(ssk);
--
- 		goto out;
- 	}
- 
-@@ -2762,9 +2755,26 @@ static void mptcp_do_fastclose(struct sock *sk)
- 	struct mptcp_sock *msk = mptcp_sk(sk);
- 
- 	mptcp_set_state(sk, TCP_CLOSE);
--	mptcp_for_each_subflow_safe(msk, subflow, tmp)
--		__mptcp_close_ssk(sk, mptcp_subflow_tcp_sock(subflow),
--				  subflow, MPTCP_CF_FASTCLOSE);
-+
-+	/* Explicitly send the fastclose reset as need */
-+	if (__mptcp_check_fallback(msk))
-+		return;
-+
-+	mptcp_for_each_subflow_safe(msk, subflow, tmp) {
-+		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
-+
-+		lock_sock(ssk);
-+
-+		/* Some subflow socket states don't allow/need a reset.*/
-+		if ((1 << ssk->sk_state) & (TCPF_LISTEN | TCPF_CLOSE))
-+			goto unlock;
-+
-+		subflow->send_fastclose = 1;
-+		tcp_send_active_reset(ssk, ssk->sk_allocation,
-+				      SK_RST_REASON_TCP_ABORT_ON_CLOSE);
-+unlock:
-+		release_sock(ssk);
-+	}
- }
- 
- static void mptcp_worker(struct work_struct *work)
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 4faf58fecc94..663ea9ece31d 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -3646,7 +3646,6 @@ fullmesh_tests()
- fastclose_tests()
- {
- 	if reset_check_counter "fastclose test" "MPTcpExtMPFastcloseTx"; then
--		MPTCP_LIB_SUBTEST_FLAKY=1
- 		test_linkfail=1024 fastclose=client \
- 			run_tests $ns1 $ns2 10.0.1.1
- 		chk_join_nr 0 0 0
-@@ -3655,7 +3654,6 @@ fastclose_tests()
- 	fi
- 
- 	if reset_check_counter "fastclose server test" "MPTcpExtMPFastcloseRx"; then
--		MPTCP_LIB_SUBTEST_FLAKY=1
- 		test_linkfail=1024 fastclose=server \
- 			run_tests $ns1 $ns2 10.0.1.1
- 		join_rst_nr=1 \
--- 
-2.51.0
+/P
 
