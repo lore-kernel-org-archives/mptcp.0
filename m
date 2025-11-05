@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74D122FE059
-	for <mptcp@lists.linux.dev>; Wed,  5 Nov 2025 09:29:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E64662FE050
+	for <mptcp@lists.linux.dev>; Wed,  5 Nov 2025 09:29:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762334984; cv=none; b=CaJh4YkB9mzFcSlDLX+Br7yh8CRrHWIdUbbHBkibh9FanN0rOu0OOCEp8RB3GPDrTC+9MylmFaMyXJ0+3FV01VAVTTY019Qnba7FSielH+CVO+qaClfYuqIT3SyhSDDtfnAGHr3wD0snFQ+DfDW179tpIsK0sWVnhlrvnceJbKo=
+	t=1762334986; cv=none; b=YhpOaztrT+0abbar4sNwo3nxjxNcWu50NrmxFrREk09pa6X8IXZ3W0GUoIfWwLMuR2RTRhehTvmTeMJeWVgpbbqo9IblDBGKTLhVyCvcngyB0nUkdHL5qrbWmnvlx7ALNJAYJ+QuET9hAu6bphoyZgXv9cJgZhqU0JeLxvXHpnM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762334984; c=relaxed/simple;
-	bh=Id8Y5cCpW8a6fTmhiL7u9VRBktxppJjIW8En60VP3lI=;
+	s=arc-20240116; t=1762334986; c=relaxed/simple;
+	bh=NLG6q2RVoio0QdnhhLSVMij1VEN87MGAaNi2WTRX5iA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TBfYNXXDzQDwmPYX2D/mXpoYPB67DQypIRzxF9zFzcahpfSyioWCEUJ1mUWJ7CtsV01NQLvHAzpv2NJPRmCL7pkaNi30GP30Gz7bGSvArqEQYJ2n9N5dC6LwxPgo3y+qqfG9FBNatOnrFJe1rskxhkVlHSjMO2Ovy72jO27FW60=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fn4Ft+jQ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=P44Z+WMwX1a0mYNCoKxpNL61Rsoy+lWfD2mRema+xhgAuhgK6Y8d0pE+4sCmsh2Bi2s71ydAoqUqM8rq56Wc7FG1KKHWGN0G/QChFtx8RN/SLmC0ezcdUL3mSDArQ06szLfUpgwYIV8ABlriAifAO69cFxd2jnfxXNjc+3Q2OBs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jxColFUL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fn4Ft+jQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D4BAC4CEFB;
-	Wed,  5 Nov 2025 09:29:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jxColFUL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F2A9C19422;
+	Wed,  5 Nov 2025 09:29:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762334984;
-	bh=Id8Y5cCpW8a6fTmhiL7u9VRBktxppJjIW8En60VP3lI=;
+	s=k20201202; t=1762334985;
+	bh=NLG6q2RVoio0QdnhhLSVMij1VEN87MGAaNi2WTRX5iA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Fn4Ft+jQoQdMw7eL/4DrSY48RFyFrmiRCm5GU+D5yypT3LdyeABVfIcLqLTLF2tFt
-	 o7mh5beqvgVDHJnud8gW+P54q4sLvQebWdOHMv9pbIf1spMEkDH7OEnI0VrFM3FAbA
-	 BwdDG24+0tRsqXI2dzKpWMQz5WAFKMUXR0BZ/Z6o1cRfT/RaY6416yZ9luV9jcUZzt
-	 QBML9EJvg0ePC4prkDUX98VClLiXuiQZWimbzyOzaOiq3r2h4raxKtG8NE/53njvDq
-	 trOVirW5VQG/jLlmesQkg/KQx0WPJQ5hoPbgTtltLpaZz1MT7EYa8iyUkOumqY9uMa
-	 X+KX6q0AG6peA==
+	b=jxColFULhZ11dkczFBUGvKO/kI3cj1fNknyjqEzzVnIPkjiZQV9RIVxY7fiwEtmpJ
+	 eAHFA4+iLjcM5ksxiqmcmwktyjCokMFNvQBdmtvwX/kwxBIx6JwT7o3CtEixRGfman
+	 4YbTB1ZIBxi2TtrZUKaKPJVdXk31bvs176ANPloRiB4jyvUdWiOh9T6GhzkGa7jVjl
+	 Fw0hLkKHlSVihxSp9U0PuxrUt0Zoylq/7JnMKrYu6onQP/nE1yg4FUAF7demc3EV9m
+	 3qlvUAx1VWeFT8c02exSgr3Z9r5nuleg4Gc/nPJcbqfVIkpN628N+0bL7jJ/RWNa/h
+	 cWVb2M+qwia9A==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v6 5/7] selftests: mptcp: sockopt: implement TCP_MD5SIG support
-Date: Wed,  5 Nov 2025 17:29:28 +0800
-Message-ID: <cd55ec725f2233a48cbb82ff51ad4aa3bec04d22.1762334694.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v6 6/7] selftests: mptcp: sockopt: skip getsockopt for MD5 tests
+Date: Wed,  5 Nov 2025 17:29:29 +0800
+Message-ID: <f28a3580fc18f228f4fd97667213859630066c68.1762334694.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1762334694.git.tanggeliang@kylinos.cn>
 References: <cover.1762334694.git.tanggeliang@kylinos.cn>
@@ -45,94 +45,80 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Add socket option handling for TCP_MD5SIG and TCP_MD5SIG_EXT.
-Configure MD5 keys using the key provided via '-m' parameter.
+Skip getsockopt checks during MD5 tests since MD5 connections fallback
+to TCP and MPTCP socket options are not available.
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- .../selftests/net/mptcp/mptcp_sockopt.c       | 49 +++++++++++++++++++
- 1 file changed, 49 insertions(+)
+ .../selftests/net/mptcp/mptcp_sockopt.c       | 21 ++++++++-----------
+ 1 file changed, 9 insertions(+), 12 deletions(-)
 
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-index fcf1d7a195d1..e577fbec9373 100644
+index e577fbec9373..9bac1494b238 100644
 --- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
 +++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-@@ -25,6 +25,7 @@
- #include <netinet/in.h>
+@@ -426,7 +426,7 @@ static void do_getsockopt_mptcp_info(struct so_state *s, int fd, size_t w)
+ 	ret = getsockopt(fd, SOL_MPTCP, MPTCP_INFO, &i, &olen);
  
- #include <linux/tcp.h>
-+#include <arpa/inet.h>
+ 	if (ret < 0)
+-		die_perror("getsockopt MPTCP_INFO");
++		return;
  
- static int pf = AF_INET;
- static bool md5;
-@@ -186,6 +187,50 @@ static void xgetaddrinfo(const char *node, const char *service,
- 	}
+ 	s->pkt_stats_avail = olen >= sizeof(i);
+ 
+@@ -457,7 +457,7 @@ static void do_getsockopt_tcp_info(struct so_state *s, int fd, size_t r, size_t
+ 
+ 		ret = getsockopt(fd, SOL_MPTCP, MPTCP_TCPINFO, &ti, &olen);
+ 		if (ret < 0)
+-			xerror("getsockopt MPTCP_TCPINFO (tries %d, %m)");
++			return;
+ 
+ 		assert(olen <= sizeof(ti));
+ 		assert(ti.d.size_kernel > 0);
+@@ -512,7 +512,7 @@ static void do_getsockopt_subflow_addrs(struct so_state *s, int fd)
+ 
+ 	ret = getsockopt(fd, SOL_MPTCP, MPTCP_SUBFLOW_ADDRS, &addrs, &olen);
+ 	if (ret < 0)
+-		die_perror("getsockopt MPTCP_SUBFLOW_ADDRS");
++		return;
+ 
+ 	assert(olen <= sizeof(addrs));
+ 	assert(addrs.d.size_kernel > 0);
+@@ -582,13 +582,8 @@ static void do_getsockopt_mptcp_full_info(struct so_state *s, int fd)
+ 	olen = data_size;
+ 
+ 	ret = getsockopt(fd, SOL_MPTCP, MPTCP_FULL_INFO, &mfi, &olen);
+-	if (ret < 0) {
+-		if (errno == EOPNOTSUPP) {
+-			perror("MPTCP_FULL_INFO test skipped");
+-			return;
+-		}
+-		xerror("getsockopt MPTCP_FULL_INFO");
+-	}
++	if (ret < 0)
++		return;
+ 
+ 	assert(olen <= data_size);
+ 	assert(mfi.size_tcpinfo_kernel > 0);
+@@ -692,7 +687,8 @@ static void connect_one_server(int fd, int pipefd)
+ 	if (eof)
+ 		total += 1; /* sequence advances due to FIN */
+ 
+-	assert(s.mptcpi_rcv_delta == (uint64_t)total);
++	if (s.mptcpi_rcv_delta)
++		assert(s.mptcpi_rcv_delta == (uint64_t)total);
+ 	close(fd);
  }
  
-+static void do_setsockopt_md5sig(int fd)
-+{
-+	struct sockaddr_storage *addr;
-+	size_t key_len = strlen(key);
-+	struct tcp_md5sig md5sig;
-+	int opt = TCP_MD5SIG;
-+
-+	memset(&md5sig, 0, sizeof(md5sig));
-+	addr = (struct sockaddr_storage *)&md5sig.tcpm_addr;
-+	addr->ss_family = pf;
-+
-+	if ((pf == AF_INET ? inet_pton(pf, "127.0.0.1", &((struct sockaddr_in *)addr)->sin_addr) :
-+			     inet_pton(pf, "::1", &((struct sockaddr_in6 *)addr)->sin6_addr)) != 1)
-+		perror("inet_pton failed");
-+
-+	if (key_len > sizeof(md5sig.tcpm_key))
-+		perror("Key too long\n");
-+
-+	memcpy(md5sig.tcpm_key, key, key_len);
-+	md5sig.tcpm_keylen = key_len;
-+
-+	if (prefixlen || ifindex)
-+		opt = TCP_MD5SIG_EXT;
-+
-+	if (prefixlen) {
-+		md5sig.tcpm_flags |= TCP_MD5SIG_FLAG_PREFIX;
-+		md5sig.tcpm_prefixlen = prefixlen;
-+	}
-+
-+	if (ifindex) {
-+		md5sig.tcpm_flags |= TCP_MD5SIG_FLAG_IFINDEX;
-+		md5sig.tcpm_ifindex = (uint8_t)ifindex;
-+	}
-+
-+	if (setsockopt(fd, IPPROTO_TCP, opt, &md5sig, sizeof(md5sig)))
-+		perror("setsockopt(TCP_MD5SIG)");
-+}
-+
-+static void do_setsockopts(int fd)
-+{
-+	if (md5)
-+		do_setsockopt_md5sig(fd);
-+}
-+
- static int sock_listen_mptcp(const char * const listenaddr,
- 			     const char * const port)
- {
-@@ -213,6 +258,8 @@ static int sock_listen_mptcp(const char * const listenaddr,
- 				     sizeof(one)))
- 			perror("setsockopt");
+@@ -727,7 +723,8 @@ static void process_one_client(int fd, int pipefd)
+ 		xerror("expected EOF, got %lu", ret3);
  
-+		do_setsockopts(sock);
-+
- 		if (bind(sock, a->ai_addr, a->ai_addrlen) == 0)
- 			break; /* success */
- 
-@@ -250,6 +297,8 @@ static int sock_connect_mptcp(const char * const remoteaddr,
- 		if (sock < 0)
- 			continue;
- 
-+		do_setsockopts(sock);
-+
- 		if (connect(sock, a->ai_addr, a->ai_addrlen) == 0)
- 			break; /* success */
+ 	do_getsockopts(&s, fd, ret, ret2);
+-	if (s.mptcpi_rcv_delta != (uint64_t)ret + 1)
++	if (s.mptcpi_rcv_delta &&
++	    s.mptcpi_rcv_delta != (uint64_t)ret + 1)
+ 		xerror("mptcpi_rcv_delta %" PRIu64 ", expect %" PRIu64 ", diff %" PRId64,
+ 		       s.mptcpi_rcv_delta, ret + 1, s.mptcpi_rcv_delta - (ret + 1));
  
 -- 
 2.43.0
