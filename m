@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0859B2E7BBB
-	for <mptcp@lists.linux.dev>; Wed,  5 Nov 2025 10:58:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D938830FC04
+	for <mptcp@lists.linux.dev>; Wed,  5 Nov 2025 11:22:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762340335; cv=none; b=bOv/eDN7gMz1Yvly+eWZELp3XCPe3DTEuLyUfq3S+0FXHbbVTC8KqS8j73+rvcQA/tUUh3x4UquZIyrcXCbV+m4P7upmUp7z2uuPZXx63VGDJvTW/N1HDgfc59vF7C4B4lTZACs/DEH5ybkFj0clwF3tLkR2T3q4Hi4Kv/DITzU=
+	t=1762341744; cv=none; b=nhpaEdVCgGq2ImzhmCPR2+NVomsESyaCJ5Xrh7VBMnKsLvIbMHBphQFQV89iBHpX+/cwZi3glgDrS01KGpb4ZhLlDkvmZDZ97oM4lXe16pjoq7hcWyAt9N1D8J1rXX9cV5ckwd+o0S1slDPrAnMvmd1ga7lX8UY6DIhp2g7uk3k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762340335; c=relaxed/simple;
-	bh=pSKFt168va48yTC2c92pC2M36VECtjd7zApIQtry308=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
-	 In-Reply-To:Content-Type; b=uBPfoNu04e1JPIVr7i7hs8vAVAJ2S82O/JrXpJlg3M1MLM5clB62PJOMjRwR+sCefPX+tdJCJgQSzOJp4fA7KQMjuW/pQsMxJygwnO63Ln3JAe4BiQxhDi7Kyf3VmNsIpTIrSX/oHCaC7sHzq+javwxHJO+AwuVg4cV0/ivZ8zc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F3BziQmp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1762341744; c=relaxed/simple;
+	bh=uiSHxtgQYFF8G8QPouMD5eHvOXPj2CHUZnPoyjddPJU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Zz0uf9SRHdiy8dIP5z/aU6tyhaBxaFar2jJdJy1JULraKPY2OAzge5QC5a+8spHBDq2XoU+kcfgIxCAwLx2hfeDDkmfnn6mydmioEUM9cWa0b4+Qd7MmV5nlF6kNOIHlm9+vV6TSnIWab7R/WWZWORo5slknq48sPl/arbajLgI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BBoaAYic; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F3BziQmp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C511FC4CEF8;
-	Wed,  5 Nov 2025 10:58:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BBoaAYic"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 580CEC4CEF8;
+	Wed,  5 Nov 2025 11:22:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762340334;
-	bh=pSKFt168va48yTC2c92pC2M36VECtjd7zApIQtry308=;
-	h=Date:Subject:To:References:From:Cc:In-Reply-To:From;
-	b=F3BziQmpxmti5D7jM+a9Ya9QF6yFZxEgunQ5PY3QSsQNMyvpcE387GfXoeQ4w/tpC
-	 I9/IvfW/UwZQ3XLqiJvaC2pamc1elORVKBcQW69AYUKG6PJR5T9/Le42C9674OR/Em
-	 rrSwHbTdhxgKHr/i8cCArh7HkYkqSfYEToHYvMwxt90DqcWygBClS2tnqnK8joIu3+
-	 QwcIEwiZN9Zg+EWvLvnW4wK8TXMXgOnfW36txHpR6BKStGC+qkRJzMc/S6s2y0HCE3
-	 b+UXtjwT2WzXKK5lQr1MEsTbrb51WaNUiTSxf9zICd+ir36ATcHCJRe2u8lIU6nPo1
-	 ePPFEe8kbLurQ==
-Message-ID: <e898e464-1c33-472e-bede-19581ce7d432@kernel.org>
-Date: Wed, 5 Nov 2025 11:58:51 +0100
+	s=k20201202; t=1762341744;
+	bh=uiSHxtgQYFF8G8QPouMD5eHvOXPj2CHUZnPoyjddPJU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=BBoaAYiceZD3Z3P76EUHdImCF8f3LTT55/qTCVgYUXanOa8mRhrjlc0weo+IiYyUQ
+	 E69IhAMcIHvg/62cAcztklggdb+VKa2vMzv3n3tQw/mpG72OAw3jQ8Ap7BtHYBx+Gi
+	 v+S+BrzpfBaTOoF2CwoNID5uZe0+erqXoGDJ0n6NS/h5XUaC++yIqau32m0XNjsOpr
+	 NMf1qFwZe7uyH0HpoCw1U05Of1zvP4hGaD4UyVxi7gBqtVf+eEPqBXGi8tqQf8ZzBg
+	 6AC97pn93BI8gB7Mqqwtu6ImgL9UkJCcROpCKERPAg9cOQN5gkOqPTd5b7GDpvo8Y/
+	 J+ed8RIAFjrag==
+Message-ID: <fe62bfa4-8112-4da4-9565-5665d36d9f2a@kernel.org>
+Date: Wed, 5 Nov 2025 12:22:20 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,15 +35,15 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next 0/5] selftests: mptcp: get counters from nstat
- history
+Subject: Re: [PATCH, mptcp-net] mptcp: fix address removal logic in
+ mptcp_pm_nl_rm_addr
 Content-Language: en-GB, fr-BE
-To: Paolo Abeni <pabeni@redhat.com>
-References: <20251103-slft-nstat-cache-v1-0-56025c09e56a@kernel.org>
- <08d6eed5-4177-3a1d-d1a7-4aabcca38b9d@gmail.com>
- <d1121a70-693f-4bd5-8b5e-223c011370a1@redhat.com>
+To: GangYan <gang.yan@linux.dev>
+Cc: Gang Yan <yangang@kylinos.cn>, mptcp@lists.linux.dev
+References: <20251104123416.395362-1-gang.yan@linux.dev>
+ <bde9ef49-25c6-4892-8952-917ce5ff54a5@kernel.org>
+ <aQqy3mG3hwlwRcck@thinkbook16p>
 From: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -88,32 +88,69 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <d1121a70-693f-4bd5-8b5e-223c011370a1@redhat.com>
+In-Reply-To: <aQqy3mG3hwlwRcck@thinkbook16p>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Paolo,
+Hi Gang,
 
-On 04/11/2025 22:13, Paolo Abeni wrote:
-> The series LGTM! actually that ugly old syntax I introduced bothered me
-> since a while, thanks for fixing it!
+On 05/11/2025 03:13, GangYan wrote:
+>> On Tue, Nov 04, 2025 at 03:34:38PM +0100, Matthieu Baerts wrote:
+>> Hi Gang,
+>>
+>> On 04/11/2025 13:34, Gang Yan wrote:
+>>> From: Gang Yan <yangang@kylinos.cn>
+>>>
+>>> Fix inverted WARN_ON_ONCE condition that prevented normal address
+>>> removal counter updates. The current code only executes decrement
+>>> logic when the counter is already 0 (abnormal state), while
+>>> normal removals (counter > 0) are ignored.
+>>
+>> Good catch!
+>>
+>> For fixes, we need a Fixes tag:
+>>
+>> Fixes: 636113918508 ("mptcp: pm: remove '_nl' from
+>> mptcp_pm_nl_rm_addr_received")
+>>
+>> Apart from that, it looks good to me:
+>>
+>> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+>>
+>> How did you find out about this? I'm surprised out test suite didn't
+>> spot it. By chance, do you have a test that can be used to reproduce
+>> this issue?
+> 
+> I've been looking into the work_pending-related issue described in
+> #ISSUE 440 and have designed several potentially affected scenarios
+> based on mptcp_join tests. Except for the case where endpoints are
+> deleted one by one and then re-added via ADD_ADDR (which fails), all
+> other related tests have passed. (I'll share some conclusions in the
+> corresponding discussion later.)
+> 
+> By tracing the relevant code, I found that the value of
+> 'add_addr_accepted' here does not decrease, which subsequently blocks
+> further ADD_ADDR operations. We can verify the value of
+> 'add_addr_accepted' in 'delete re-add signal' test, which can be found
+> in mptcp_join.sh, using either 'ss' or 'mptcp_diag'. The reason this
+> test didn't fail previously is that when the 'add_addr_accepted_limit'
+> was set to 3, the test's add_addr operations never reached the limit,
+> so no overflow occurred.
 
-Thank you for the review!
+OK, so the WARN_ON_ONCE() is not shown because add_addr_accepted is
+never decremented, but it should have been decremented (not below the
+limit).
 
-Now in our tree:
+> I lean toward using 'ss' to obtain the token and then retrieving the
+> 'add_addr_accepted' value via 'mptcp_diag', because when the value is
+> zero, ss does not display it. Moreover, using 'mptcp_diag' minimizes
+> potential inconsistencies caused by different versions of iproute2,
+> making maintenance easier. WDYT?
 
-New patches for t/upstream:
-- 5fc66ff0c21d: selftests: mptcp: lib: introduce 'nstat_{init,get}'
-- 85c2658ab280: selftests: mptcp: lib: remove stats files args
-- c03f469e66cd: selftests: mptcp: lib: stats: remove nstat rate columns
-- 7c215cadfe13: selftests: mptcp: join: dump stats from history
-- 1e8ac2ba9238: selftests: mptcp: lib: get counters from nstat history
-- Results: 47634a71c01a..fdaf439eed61 (export)
+I think you can use 'ss', because it is already used in this test, see
+chk_mptcp_info().
 
-Tests are now in progress:
-
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/4cf71a5e2203016f33c5584d5a926eca7a9529ff/checks
+I suggest applying the fix now, the test can be added later.
 
 Cheers,
 Matt
