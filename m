@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 636AE2FE594
-	for <mptcp@lists.linux.dev>; Wed,  5 Nov 2025 09:29:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA7FB2FE050
+	for <mptcp@lists.linux.dev>; Wed,  5 Nov 2025 09:29:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762334981; cv=none; b=cK+IePyVxPunkyElfmB3Co6anQnnEWbpA+ruvrNf+KgGBRvrQxkgY4Aneqd9yBHbAGt8Ks5pECgB56zKcVXARGa4DUbjpU1DGZ2jVgQfxmEPW6NFlGG40qihQEwfaqKtUfSiivJY56MJPmUShGoH04bduEQ5t+Lo6OOWghTp0yI=
+	t=1762334982; cv=none; b=YSgD+FyGDnns1qNXwn1B545xiDL4K2sZK1eMPp+AFsCeGukK/r6+vF88olOr/uHJEsOCAYLMQR97M17svcCde8un7Rj7HAjIj3BBeI8OEadxXiNflbFH4B/Ibp31nZtECQwDj0aAgxDoRk39iMLdbDNvhocEgO9SaykeFNBwlp8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762334981; c=relaxed/simple;
-	bh=naOkNDf8EvSxnlW0eJXzyLXgbjn/c3yEGbbtpGn6Ap0=;
+	s=arc-20240116; t=1762334982; c=relaxed/simple;
+	bh=Rf5ia++5sbR2vhHm7r6sxedKuvOKmyMkbTV2z1RzLB4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LLIDq+IhEyP/+XoDFbGPfPLh4tjWdK3qF6hnrbIgCaPdCqk/zgev+FUFdIsW0K8t5c6tA3EmMTbvRgBeRrghuHhdUfSx1hyRyLgWIye5GYuBDZaPWzBCBeKwSeJniXxQNLFwRMCk1KeWOZcOa3l4ukarUYCGhxtABpyAapnrheE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dQcu2q8m; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=PjQv5Zf153yEqp3ysr1lS1/PfqSWD3A7pgkpEvVAFPPnHsE4KSRs2Zij0c6xf+5DqBr2t29ALZvhk84JOT3R9gsP6ve+enEGA4yplTLrJv13Zg/qM4UMoDz1ToHeUvPDBXYMXt8ZfPjpWsjIBzPp7SzL+xEFhlmj/+Ac4Tsa8I0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VjVSeKXv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dQcu2q8m"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6183C4CEF8;
-	Wed,  5 Nov 2025 09:29:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VjVSeKXv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E73DC4CEFB;
+	Wed,  5 Nov 2025 09:29:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762334981;
-	bh=naOkNDf8EvSxnlW0eJXzyLXgbjn/c3yEGbbtpGn6Ap0=;
+	s=k20201202; t=1762334982;
+	bh=Rf5ia++5sbR2vhHm7r6sxedKuvOKmyMkbTV2z1RzLB4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=dQcu2q8mbFszthpj33uOk7QdaTulNHWGbEjMjjx8nV9dt5L0qmbi3UAcJJvVhVGgH
-	 Liv/ztoAzkgetGeAPu9ykInCqptzAE3oyWNzTGRxMsST/UGMSsZq5yglVFcdZYwJG6
-	 4CLBVNhtFODSkm3XmdWlUjig4ff56H2bOPOQbThu5NOG3tVRx6R1O8ESIuIYGOnbVx
-	 g92nPYbApJ4O2qU84uuSsdB9w/ZXIJDDiRpNN/Abm8LjQb2WqgtaBmI5A5zw/CnNzE
-	 9qTLcbioML3+4UfhrDNR5Wc/oNv+C0+JaCz1R3NqdJJZvnQoYNt/SNPVyd2kJ2vnTp
-	 zDmoza8Ag5XIg==
+	b=VjVSeKXvjcY7f8t0+l1Co+f9CpNk3K8hLekbWDU60hCZ3GaH+4xgQODqSqCU89/Pf
+	 ZVMjhB6tyNaukz5LR/oJIpEyJAOdofYA65/aWfsfpJaxKMgrCH41/GtWtgkD25jfs4
+	 TMbUGm77Yt+BqaCMNQYXPGWej0jtCOV8KQy9IsS5Fl0XtF7373eNrqERqBS8Uq6E/i
+	 rj3jYbFBXJWLMqJVbbj8AMJTcz/KpWRYUyqA20w9LcYdUtsDo2asRvjTyUIdbSDteu
+	 dfw9Y0qLyydo1DzSqBBsXKH8TlxIDr+rqlDZZVcq2ubV9sYkytxmy1ieOQNeMRUKuP
+	 /40mMHuhG15tA==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v6 3/7] mptcp: setsockopt support for TCP_MD5SIG
-Date: Wed,  5 Nov 2025 17:29:26 +0800
-Message-ID: <9e4d438d9e8c4f2babec5d44854d9c0b1c7ef3fa.1762334694.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v6 4/7] selftests: mptcp: sockopt: add md5 argument
+Date: Wed,  5 Nov 2025 17:29:27 +0800
+Message-ID: <3707a5f5bec46960aa8484e94b4fb11b25719798.1762334694.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1762334694.git.tanggeliang@kylinos.cn>
 References: <cover.1762334694.git.tanggeliang@kylinos.cn>
@@ -45,77 +45,62 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Add setsockopt support for TCP_MD5SIG and TCP_MD5SIG_EXT. These options
-force fallback to TCP to maintain MD5 compatibility. Apply them only to
-the first subflow.
+Add '-m' option to support TCP_MD5SIG tests. Accepts MD5 keys in
+'md5,key=<value>' or 'md5ext,prefixlen,ifindex,key' format.
 
-Note that getsockopt for these options remains unsupported, consistent
-with TCP.
-
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/575
-Fixes: d9e4c1291810 ("mptcp: only admit explicitly supported sockopt")
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- net/mptcp/sockopt.c | 14 ++++++++++++--
- net/mptcp/subflow.c |  3 +++
- 2 files changed, 15 insertions(+), 2 deletions(-)
+ .../testing/selftests/net/mptcp/mptcp_sockopt.c  | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
-diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-index e2d1b4b6b3b2..a3efaf5db256 100644
---- a/net/mptcp/sockopt.c
-+++ b/net/mptcp/sockopt.c
-@@ -13,6 +13,7 @@
- #include <net/tcp.h>
- #include <net/mptcp.h>
- #include "protocol.h"
-+#include "mib.h"
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
+index 286164f7246e..fcf1d7a195d1 100644
+--- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
++++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
+@@ -27,6 +27,10 @@
+ #include <linux/tcp.h>
  
- #define MIN_INFO_OPTLEN_SIZE		16
- #define MIN_FULL_INFO_OPTLEN_SIZE	40
-@@ -567,11 +568,12 @@ static bool mptcp_supported_sockopt(int level, int optname)
- 		case TCP_FASTOPEN_CONNECT:
- 		case TCP_FASTOPEN_KEY:
- 		case TCP_FASTOPEN_NO_COOKIE:
-+		/* MD5 will force a fallback to TCP: OK to set while not connected */
-+		case TCP_MD5SIG:
-+		case TCP_MD5SIG_EXT:
- 			return true;
- 		}
+ static int pf = AF_INET;
++static bool md5;
++static char key[TCP_MD5SIG_MAXKEYLEN];
++static int prefixlen;
++static int ifindex;
  
--		/* TCP_MD5SIG, TCP_MD5SIG_EXT are not supported, MD5 is not compatible with MPTCP */
--
- 		/* TCP_REPAIR, TCP_REPAIR_QUEUE, TCP_QUEUE_SEQ, TCP_REPAIR_OPTIONS,
- 		 * TCP_REPAIR_WINDOW are not supported, better avoid this mess
- 		 */
-@@ -836,6 +838,14 @@ static int mptcp_setsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
- 	case TCP_FASTOPEN_NO_COOKIE:
- 		return mptcp_setsockopt_first_sf_only(msk, SOL_TCP, optname,
- 						      optval, optlen);
-+	case TCP_MD5SIG:
-+	case TCP_MD5SIG_EXT:
-+		ret = mptcp_setsockopt_first_sf_only(msk, SOL_TCP, optname,
-+						     optval, optlen);
-+		if (ret == 0)
-+			WARN_ON_ONCE(!__mptcp_try_fallback(msk,
-+							   MPTCP_MIB_MD5SIGFALLBACK));
-+		return ret;
- 	}
+ #ifndef IPPROTO_MPTCP
+ #define IPPROTO_MPTCP 262
+@@ -135,7 +139,7 @@ static void die_perror(const char *msg)
  
- 	ret = mptcp_get_int_option(msk, optval, optlen, &val);
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 7eef4aaf78e2..5e29eee72656 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -155,6 +155,9 @@ static int subflow_check_req(struct request_sock *req,
+ static void die_usage(int r)
+ {
+-	fprintf(stderr, "Usage: mptcp_sockopt [-6]\n");
++	fprintf(stderr, "Usage: mptcp_sockopt [-6] [-m md5,key|md5ext,prefixlen,ifindex,key]\n");
+ 	exit(r);
+ }
  
- 	pr_debug("subflow_req=%p, listener=%p\n", subflow_req, listener);
+@@ -263,7 +267,7 @@ static void parse_opts(int argc, char **argv)
+ {
+ 	int c;
  
-+	if (__mptcp_check_fallback(mptcp_sk(listener->conn)))
-+		return 0;
-+
- #ifdef CONFIG_TCP_MD5SIG
- 	/* no MPTCP if MD5SIG is enabled on this socket or we may run out of
- 	 * TCP option space.
+-	while ((c = getopt(argc, argv, "h6")) != -1) {
++	while ((c = getopt(argc, argv, "h6m:")) != -1) {
+ 		switch (c) {
+ 		case 'h':
+ 			die_usage(0);
+@@ -271,6 +275,14 @@ static void parse_opts(int argc, char **argv)
+ 		case '6':
+ 			pf = AF_INET6;
+ 			break;
++		case 'm':
++			md5 = true;
++			if (!strncmp(optarg, "md5,", 4))
++				sscanf(optarg, "md5,key=%s", key);
++			else if (!strncmp(optarg, "md5ext,", 6))
++				sscanf(optarg, "md5ext,prefixlen=%u,ifindex=%u,key=%s",
++				       &prefixlen, &ifindex, key);
++			break;
+ 		default:
+ 			die_usage(1);
+ 			break;
 -- 
 2.43.0
 
