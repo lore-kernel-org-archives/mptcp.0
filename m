@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFAC12F90DB
-	for <mptcp@lists.linux.dev>; Wed,  5 Nov 2025 09:42:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DECD305E1F
+	for <mptcp@lists.linux.dev>; Wed,  5 Nov 2025 10:43:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762335741; cv=none; b=jOYaMcgJt7itCBhvnHlO2Ti8xZ1Qjhdava71CG/pgS5N2HWVNGdpSIgSuZmQ8oRfqwyKPKWvek1nWWc3XNVzh+Fa894vJtLZdJgqJPwHwgQx8gibpD5uX4Iq2lcvyrQvfRB3qdyWlalYe7ZRx83+JP/L51yceThbr5t8aBFeLd0=
+	t=1762339386; cv=none; b=Ux4COzLc7gD3DHHCsru1JwZuNf6oB+z7zNoVV2lubIW9y1wbxfIWu06ekKoRAOfjgLH1i7nSJwIlfSIrx+btBRiSmGkEG/gixe7FnQlynJ2dsQLzx5auabpZYtHj9ZYfOceMWHmGmF2C9+fnr3yTRP1DKHdgr8ypNR5fwv08gw4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762335741; c=relaxed/simple;
-	bh=sNFq5tpKc9uRfs6rSdf24puv1qoUeFhADjmlQCvafYg=;
+	s=arc-20240116; t=1762339386; c=relaxed/simple;
+	bh=/fVRD1hKJrWxtwAWe7sJaCBIT7RwsaowkRAG7e3Cma0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TKe3fYM3uiv3MzJ7AxBjIkiVOfKW1dxbHMwl0NRCv+NIm0GnPyJP3/64TRG6NdAEeRt9wKpjG33fSaYyA+6HyJL0oiGnC3mVH6kNBFb4nJR1zTCMvODGWSDDCPDXH2RshZrT510egbjmctXg279v3pnwDcbVkljVORP0Vz/mfqE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mOh7X0VX; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=oQVwtCAQMYXplJ+Bmi9GgQySBNIHCWJqz9RU4jYaDEUpiXTJG4Wz42+zdBLWAjP6uwXfuFeTsCM/XOxYpltUJGjLeTWedzA8kgPGcnRwOrssNSFGK0F+cRmpnUd6JFXIJ3BiC7FB3Nk5yM248XREuARIX2mM7J0AfjlemNkC0MY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CGihPKLD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mOh7X0VX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71384C4CEF8;
-	Wed,  5 Nov 2025 09:42:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CGihPKLD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0762C116D0;
+	Wed,  5 Nov 2025 10:43:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762335741;
-	bh=sNFq5tpKc9uRfs6rSdf24puv1qoUeFhADjmlQCvafYg=;
+	s=k20201202; t=1762339385;
+	bh=/fVRD1hKJrWxtwAWe7sJaCBIT7RwsaowkRAG7e3Cma0=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=mOh7X0VXu8bStwuTl5KqBrcSMh5LRAgmuiYSUCf/09XzUXH8BuaySFByDg06QV4AM
-	 YJZrTvgr4IPGXCNumJzw4GHc6C2QgC5segicK4nFP+OD1AmgsitV3bv8NPsWbux95j
-	 lPJ1+mLAjMFRlG1usTvs4DlVqp/EvYgdea+QHRs3ozm6kydBypiSD1LyFoWWMY7zx+
-	 NJJBHATPYmeo4M8ShMSNhovRiTACPdXsb2vv3G/Movy/znghRkGM4anlfWzbj2EmZe
-	 vr7cUlj8DSx7ixDhQnYtzQhsdCViiIHlG5llQNBqNgcN5Kq6guqU0+UYftALaMvl/D
-	 vREacmyQJjjjw==
-Message-ID: <2d681554-51de-4cad-a81c-789cc32ac406@kernel.org>
-Date: Wed, 5 Nov 2025 10:42:18 +0100
+	b=CGihPKLDKS4anBFWcyZWFewwt6XQPIBLpEQUggY67f6K0ck7I8sh6G9j4RySXI0lT
+	 I7taq3aFOvr2DjEQoWEovlI69fKbxfzsuXzp/kIGZs4BjEP1wbJbZ0S0jK1rrtVrW1
+	 pVLHFnT97z5ETByinKvA+GbngBUssFq7jBZeOi7yqiOo0B4TZkRE1UkdnPSOqSDIv0
+	 HNdtxLQ5knIjsjyY8NO5gl72bdsCbZ+5gAtS6gXrasv2BuOOIv+kmjDpYsj/WW0neG
+	 OMJpEG9hLvKbdgxH8UYh1YJD1Yk5mR4q35KCmhGLDkpr+mA9yEnQWckxKpfZXc7x8c
+	 QIvsB+onWL+ow==
+Message-ID: <5da6be8c-76b6-4d65-88e7-f74a95557b65@kernel.org>
+Date: Wed, 5 Nov 2025 11:43:02 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,11 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v8 0/4] mptcp: introduce backlog processing
+Subject: Re: [PATCH mptcp-next v8 4/4] mptcp: leverage the backlog for RX
+ packet processing
 Content-Language: en-GB, fr-BE
 To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
 Cc: Mat Martineau <martineau@kernel.org>
 References: <cover.1762271864.git.pabeni@redhat.com>
+ <44e2efcff50d5c45c9a72b1efa15528e81166d34.1762271864.git.pabeni@redhat.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -85,64 +87,74 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <cover.1762271864.git.pabeni@redhat.com>
+In-Reply-To: <44e2efcff50d5c45c9a72b1efa15528e81166d34.1762271864.git.pabeni@redhat.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Paolo, Mat,
+Hi Paolo,
 
 On 04/11/2025 16:59, Paolo Abeni wrote:
-> This series includes RX path improvement built around backlog processing
+> When the msk socket is owned or the msk receive buffer is full,
+> move the incoming skbs in a msk level backlog list. This avoid
+> traversing the joined subflows and acquiring the subflow level
+> socket lock at reception time, improving the RX performances.
 > 
-> The main goals are improving the RX performances _and_ increase the
-> long term maintainability.
+> When processing the backlog, use the fwd alloc memory borrowed from
+> the incoming subflow. skbs exceeding the msk receive space are
+> not dropped; instead they are kept into the backlog until the receive
+> buffer is freed. Dropping packets already acked at the TCP level is
+> explicitly discouraged by the RFC and would corrupt the data stream
+> for fallback sockets.
 > 
-> Patch 1 and 2 refactor the memory account logic in the RX path, so that
-> the msk don't need anymore to do fwd allocation, removing possible drop
-> sources.
-> 
-> Patch 3 and 4 cope with backlog processing. Patch 3 introduces the
-> helpers needed to manipulate the msk-level backlog, and the data struct
-> itself, without any actual functional change. Patch 4 finally use the
-> backlog for RX skb processing. Note that MPTCP can't use the sk_backlog,
-> as the mptcp release callback can also release and re-acquire the
-> msk-level spinlock and core backlog processing works under the
-> assumption that such event is not possible.
-> 
-> A relevant point is memory accounts for skbs in the backlog.
-> 
-> It's somewhat "original" due to MPTCP constraints. Such skbs use space
-> from the incoming subflow receive buffer, but are fwd memory accounted
-> on the msk, using memory borrowed by the subflow.
-> 
-> Instead the msk borrows memory from the subflow and reserve it for
-> the backlog - see patch 2 and 4 for the gory details.
-> ---
-> v7 -> v8:
->   - only minor changes: typos, added warn_on().
->   - notably no BL loop limiting, as discussed on previous iteration
-> 
-> Paolo Abeni (4):
->   mptcp: handle first subflow closing consistently
->   mptcp: borrow forward memory from subflow
->   mptcp: introduce mptcp-level backlog
->   mptcp: leverage the backlog for RX packet processing
+> Special care is needed to avoid adding skbs to the backlog of a closed
+> msk and to avoid leaving dangling references into the backlog
+> at subflow closing time.
 
-Thank you for the patches and the reviews!
+Thank you for the patches!
 
-Now in our tree:
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index d075db13bb72..01114456dec6 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -684,7 +684,7 @@ static void __mptcp_add_backlog(struct sock *sk,
+>  }
+>  
+>  static bool __mptcp_move_skbs_from_subflow(struct mptcp_sock *msk,
+> -					   struct sock *ssk)
+> +					   struct sock *ssk, bool own_msk)
+>  {
+>  	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk);
+>  	struct sock *sk = (struct sock *)msk;
+> @@ -700,9 +700,6 @@ static bool __mptcp_move_skbs_from_subflow(struct mptcp_sock *msk,
+>  		struct sk_buff *skb;
+>  		bool fin;
+>  
+> -		if (sk_rmem_alloc_get(sk) > sk->sk_rcvbuf)
 
-New patches for t/upstream:
-- acccba36fa8b: mptcp: handle first subflow closing consistently
-- 858caff062de: mptcp: borrow forward memory from subflow
-- 4a9aeb444ecf: mptcp: introduce mptcp-level backlog
-- d09fc4521e3a: mptcp: leverage the backlog for RX packet processing
-- Results: 24301f878352..c0bd85030030 (export)
+I don't think that's important, but I prefer to report it just in case:
 
-Tests are now in progress:
+I see that you moved this condition from here ...
 
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/288a453d00d9ed545fa108e32485f407a07a6d32/checks
+> -			break;
+> -
+>  		/* try to move as much data as available */
+>  		map_remaining = subflow->map_data_len -
+>  				mptcp_subflow_get_map_offset(subflow);
+> @@ -730,7 +727,7 @@ static bool __mptcp_move_skbs_from_subflow(struct mptcp_sock *msk,
+>  
+>  			mptcp_init_skb(ssk, skb, offset, len);
+>  
+> -			if (true) {
+> +			if (own_msk && sk_rmem_alloc_get(sk) < sk->sk_rcvbuf) {
+
+... to here, but almost the opposite: '>' → '<'. Fine with '<', or
+should it be '<='?
+
+But I guess we will not often hit just the exact number.
+
+>  				mptcp_subflow_lend_fwdmem(subflow, skb);
+>  				ret |= __mptcp_move_skb(sk, skb);
+>  			} else {
 
 Cheers,
 Matt
