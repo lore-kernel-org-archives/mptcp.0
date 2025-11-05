@@ -1,224 +1,151 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F035E2FFDCA
-	for <mptcp@lists.linux.dev>; Wed,  5 Nov 2025 09:40:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFAC12F90DB
+	for <mptcp@lists.linux.dev>; Wed,  5 Nov 2025 09:42:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762335644; cv=none; b=aXdhRd5Nvlr94SUOj/bUOXTavWGgLBezKPfOjkuXRJgI/hHv8Q5JV+NFdEZ/abMk4HUG8/TYbjwL7uhTfVBiD/FHmdYSs/gtYztWIi94i24gTxhSdl+ZqNz4e4bmJq25e3qEW7zAXGpGKIYJ66z+PWQl624oxTGzcf4/OjXuIc8=
+	t=1762335741; cv=none; b=jOYaMcgJt7itCBhvnHlO2Ti8xZ1Qjhdava71CG/pgS5N2HWVNGdpSIgSuZmQ8oRfqwyKPKWvek1nWWc3XNVzh+Fa894vJtLZdJgqJPwHwgQx8gibpD5uX4Iq2lcvyrQvfRB3qdyWlalYe7ZRx83+JP/L51yceThbr5t8aBFeLd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762335644; c=relaxed/simple;
-	bh=ONEriO5BFP/+j/Sn7r/1WfQMJqrlV+491H1qPll09bg=;
+	s=arc-20240116; t=1762335741; c=relaxed/simple;
+	bh=sNFq5tpKc9uRfs6rSdf24puv1qoUeFhADjmlQCvafYg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Lez+elXYHOuBtxAhZlMJMCELOFW/fCT5PQODOT/zmZejY5r852o4EcVxFK5zu8fTfmQFpGp7BAngOaprIQJqLFsn0kJnxKx2Ava1/gUGJu9SeTcH8nLTlfXcDI7ftkRhAFdYCD+lt32yuMpdGRQV6opts7TuvlGiGZbIltcXEx8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FDpx26I7; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=TKe3fYM3uiv3MzJ7AxBjIkiVOfKW1dxbHMwl0NRCv+NIm0GnPyJP3/64TRG6NdAEeRt9wKpjG33fSaYyA+6HyJL0oiGnC3mVH6kNBFb4nJR1zTCMvODGWSDDCPDXH2RshZrT510egbjmctXg279v3pnwDcbVkljVORP0Vz/mfqE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mOh7X0VX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FDpx26I7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1762335640;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6cwtKqllspJBoO05pANHMdoQMbEhpDOc6LLgFmvuY2o=;
-	b=FDpx26I72n7oaqCOn5pJoIZAL5raI1jSb4n88kIdwd27wLRCVIOKSHyhxRJXNQXZZu4Aw3
-	C1JKauMKG/xiPVyaISkPVEiX4pn5TxqRhztWtshl6q+H+s6TjhqMfhLH8Pe9a4lfT/8UCz
-	sw8irOsGrsbRTZ5COtav/C/a3R1iBvg=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-663-Oa_hFKjBOtC0mDdIkQ7FvQ-1; Wed, 05 Nov 2025 04:40:39 -0500
-X-MC-Unique: Oa_hFKjBOtC0mDdIkQ7FvQ-1
-X-Mimecast-MFC-AGG-ID: Oa_hFKjBOtC0mDdIkQ7FvQ_1762335639
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-475de1afec6so2445655e9.1
-        for <mptcp@lists.linux.dev>; Wed, 05 Nov 2025 01:40:39 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762335638; x=1762940438;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6cwtKqllspJBoO05pANHMdoQMbEhpDOc6LLgFmvuY2o=;
-        b=Lp2PMpoXBMKLgtJbmiT6ZLZA/S4nq9/F0IuhYzbchrawKPzyY/2pECQ3NtmzNAEzq+
-         1lnhOdjoCXpLpYG2ZuFf7qDx5vU+q6tuhtFce9K2DaOm5Bw/aU80ijaxxQnr/9dzgsJH
-         NikaiudGEapRYahTWveKe/o96/HiL7Uu0uOGaU+K4PBM97UrKChOZ2W1/et48eUh783t
-         +TPKJa2pEWRUcpQ+eijQ4XbosnYJh80gU2BbHg3EEqxbbHjAIjt2VVeWvPb3+K6WxCzC
-         4bZnsqB30esKALWnqY3AMHJAM2kXv4rdaH+T6OZa2ivfhwpowfPqyckQvvMGVULBnecw
-         NHaA==
-X-Gm-Message-State: AOJu0YxqTMI43LxzlTYaYrX8T+PXaxwVqYSiR4IAi/RHCsosNnQ5p6nW
-	ZRce646T9EZiljcHyrX61qX++fboDDwL9DDRM8FhKgZu6tyAEP+2CBaA91wHr6ckLd6vD10UUtM
-	GhRF+lekV4ern2o+qZPKW6WK89tQYwbDfSGRzERK69emu7ABA92RhthSrHb1j0RUe
-X-Gm-Gg: ASbGncvJn8QigfNNJwbf0r+P7VcdOg0leGiCZgocj4EDX24GyMgHfXArId9gY3ydER2
-	AYEc5Of5XHxmPe1efQyLv0k7QFVOmmEYR/+f7T9hKB/XRygRPoSGMXn8yNizEFQN1ECPrMXKvdv
-	dhIyyNR8X5A9m0+KG5jpQLb34Vg5nzXyeycBAceSsilSZeIkwO228MyRzdgBEUD1snMBPPkZdju
-	2koriwhpeO0FzJF3WYJxLsiUqLQ2MBYqno4+gfh2hrw68BS3W84+dYQbl3qQ8xoxZXMSCR652kR
-	m/HPkG8i7Ve2qytYNdPERWoGEwPWUMeHIGmDhXhjA5ewFke+HsvI3//Jqj39sIc7K9GEia25ITn
-	0+A==
-X-Received: by 2002:a05:600c:8b28:b0:46e:2815:8568 with SMTP id 5b1f17b1804b1-4775c72668fmr23984035e9.10.1762335638249;
-        Wed, 05 Nov 2025 01:40:38 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IE7v4PNgUwRJ1htMVpc79OqL/ex9cm2q7Jgjg9SqrLTTsYjIMkNm12ojRiHd5xgNfd2Xit+Jg==
-X-Received: by 2002:a05:600c:8b28:b0:46e:2815:8568 with SMTP id 5b1f17b1804b1-4775c72668fmr23983735e9.10.1762335637730;
-        Wed, 05 Nov 2025 01:40:37 -0800 (PST)
-Received: from [192.168.88.32] ([216.128.11.239])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4775ce329a4sm37300395e9.14.2025.11.05.01.40.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Nov 2025 01:40:37 -0800 (PST)
-Message-ID: <95c083c8-12ca-46f4-8de7-30bea39c4bb0@redhat.com>
-Date: Wed, 5 Nov 2025 10:40:36 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mOh7X0VX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71384C4CEF8;
+	Wed,  5 Nov 2025 09:42:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1762335741;
+	bh=sNFq5tpKc9uRfs6rSdf24puv1qoUeFhADjmlQCvafYg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=mOh7X0VXu8bStwuTl5KqBrcSMh5LRAgmuiYSUCf/09XzUXH8BuaySFByDg06QV4AM
+	 YJZrTvgr4IPGXCNumJzw4GHc6C2QgC5segicK4nFP+OD1AmgsitV3bv8NPsWbux95j
+	 lPJ1+mLAjMFRlG1usTvs4DlVqp/EvYgdea+QHRs3ozm6kydBypiSD1LyFoWWMY7zx+
+	 NJJBHATPYmeo4M8ShMSNhovRiTACPdXsb2vv3G/Movy/znghRkGM4anlfWzbj2EmZe
+	 vr7cUlj8DSx7ixDhQnYtzQhsdCViiIHlG5llQNBqNgcN5Kq6guqU0+UYftALaMvl/D
+	 vREacmyQJjjjw==
+Message-ID: <2d681554-51de-4cad-a81c-789cc32ac406@kernel.org>
+Date: Wed, 5 Nov 2025 10:42:18 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 mptcp-next 1/7] trace: mptcp: add mptcp_rcvbuf_grow
- tracepoint
-To: Mat Martineau <martineau@kernel.org>
-Cc: mptcp@lists.linux.dev
-References: <cover.1762292476.git.pabeni@redhat.com>
- <5b1042b7f934b9a749dee435b7494a414adb57ce.1762292476.git.pabeni@redhat.com>
- <076e1386-240e-f23e-f95a-876e7284a346@kernel.org>
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <076e1386-240e-f23e-f95a-876e7284a346@kernel.org>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: yzm2KfWnj0BeVPFrdfXbg_N-2wcZyGEOjW8XEl_17po_1762335639
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-next v8 0/4] mptcp: introduce backlog processing
+Content-Language: en-GB, fr-BE
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+Cc: Mat Martineau <martineau@kernel.org>
+References: <cover.1762271864.git.pabeni@redhat.com>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <cover.1762271864.git.pabeni@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
+Hi Paolo, Mat,
 
-
-On 11/5/25 1:24 AM, Mat Martineau wrote:
-> On Tue, 4 Nov 2025, Paolo Abeni wrote:
+On 04/11/2025 16:59, Paolo Abeni wrote:
+> This series includes RX path improvement built around backlog processing
 > 
->> Similar to tcp, provide a new tracepoint to better understand
->> mptcp_rcv_space_adjust() behavior, which presents many artifacts.
->>
->> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
->> ---
->> include/trace/events/mptcp.h | 74 ++++++++++++++++++++++++++++++++++++
->> net/mptcp/protocol.c         |  3 ++
->> 2 files changed, 77 insertions(+)
->>
->> diff --git a/include/trace/events/mptcp.h b/include/trace/events/mptcp.h
->> index 085b749cdd97..71fd6d33f48b 100644
->> --- a/include/trace/events/mptcp.h
->> +++ b/include/trace/events/mptcp.h
->> @@ -178,6 +178,80 @@ TRACE_EVENT(subflow_check_data_avail,
->> 		  __entry->skb)
->> );
->>
->> +#include <trace/events/net_probe_common.h>
->> +
->> +TRACE_EVENT(mptcp_rcvbuf_grow,
->> +
->> +	TP_PROTO(struct sock *sk, int time),
->> +
->> +	TP_ARGS(sk, time),
->> +
->> +	TP_STRUCT__entry(
->> +		__field(int, time)
->> +		__field(__u32, rtt_us)
->> +		__field(__u32, copied)
->> +		__field(__u32, inq)
->> +		__field(__u32, space)
->> +		__field(__u32, ooo_space)
->> +		__field(__u32, rcvbuf)
->> +		__field(__u32, rcv_wnd)
->> +		__field(__u8, scaling_ratio)
->> +		__field(__u16, sport)
->> +		__field(__u16, dport)
->> +		__field(__u16, family)
->> +		__array(__u8, saddr, 4)
->> +		__array(__u8, daddr, 4)
->> +		__array(__u8, saddr_v6, 16)
->> +		__array(__u8, daddr_v6, 16)
->> +		__field(const void *, skaddr)
->> +	),
->> +
->> +	TP_fast_assign(
->> +		struct mptcp_sock *msk = mptcp_sk(sk);
->> +		struct inet_sock *inet = inet_sk(sk);
->> +		__be32 *p32;
->> +
->> +		__entry->time = time;
->> +		__entry->rtt_us = msk->rcvq_space.rtt_us >> 3;
->> +		__entry->copied = msk->rcvq_space.copied;
->> +		__entry->inq = mptcp_inq_hint(sk);
->> +		__entry->space = msk->rcvq_space.space;
->> +		__entry->ooo_space = RB_EMPTY_ROOT(&msk->out_of_order_queue) ? 0 :
->> +				     MPTCP_SKB_CB(msk->ooo_last_skb)->end_seq -
->> +				     msk->ack_seq;
->> +
->> +		__entry->rcvbuf = sk->sk_rcvbuf;
->> +		__entry->rcv_wnd = atomic64_read(&msk->rcv_wnd_sent) -  msk->ack_seq;
->> +		__entry->scaling_ratio = msk->scaling_ratio;
->> +		__entry->sport = ntohs(inet->inet_sport);
->> +		__entry->dport = ntohs(inet->inet_dport);
->> +		__entry->family = sk->sk_family;
+> The main goals are improving the RX performances _and_ increase the
+> long term maintainability.
 > 
-> Hi Paolo -
+> Patch 1 and 2 refactor the memory account logic in the RX path, so that
+> the msk don't need anymore to do fwd allocation, removing possible drop
+> sources.
 > 
-> __entry->family isn't referenced in the TP_printk() below.
+> Patch 3 and 4 cope with backlog processing. Patch 3 introduces the
+> helpers needed to manipulate the msk-level backlog, and the data struct
+> itself, without any actual functional change. Patch 4 finally use the
+> backlog for RX skb processing. Note that MPTCP can't use the sk_backlog,
+> as the mptcp release callback can also release and re-acquire the
+> msk-level spinlock and core backlog processing works under the
+> assumption that such event is not possible.
 > 
-> Other than that, the series is looking good. I still need to work on 
-> understanding the last 2 patches, even with the commit messages & comments 
-> the behavioral changes/consequences aren't clear to me yet.
+> A relevant point is memory accounts for skbs in the backlog.
+> 
+> It's somewhat "original" due to MPTCP constraints. Such skbs use space
+> from the incoming subflow receive buffer, but are fwd memory accounted
+> on the msk, using memory borrowed by the subflow.
+> 
+> Instead the msk borrows memory from the subflow and reserve it for
+> the backlog - see patch 2 and 4 for the gory details.
+> ---
+> v7 -> v8:
+>   - only minor changes: typos, added warn_on().
+>   - notably no BL loop limiting, as discussed on previous iteration
+> 
+> Paolo Abeni (4):
+>   mptcp: handle first subflow closing consistently
+>   mptcp: borrow forward memory from subflow
+>   mptcp: introduce mptcp-level backlog
+>   mptcp: leverage the backlog for RX packet processing
 
-patch 7/7 is just 'inspired' by similar tcp change (commit
-ea33537d82921e71f852ea2ed985acc562125efe) the goal is making DRS
-converging faster to the right size. It should not have any downside.
+Thank you for the patches and the reviews!
 
-patch 6/7 'fixes rtt estimation'; with the current algo there are some
-major issues:
-- max() is simply wrong, as we need to react reasonably fast. If a link
-has extreme high latency and another is very fast, DRS will converge
-very slowly. This is addressed using min()
-- the subflow rtt is biased by mptcp; i.e. on the rx side is the time
-measured between an ack and the next data. If the connection is CPU
-bounded, and the scheduler picks a different subflow in response to an
-incoming ack, the rtt estimated by acked subflow on the rx side could be
-much more higher then the actual delay. This is addressed explicitly
-filtering out "too high" rtt value (i.e. double than previous sample)
-- the most subtle but very effective problem. When the link latency is
-very low (i.e. I have 2 hosts b2b connected) the first rtt sample will
-be much higher than the next ones (in my scenario 40K us vs 80 us, note
-the missing 'K'), because the first sample includes all process
-scheduler and the socket creation overhead. With the current algo I see:
+Now in our tree:
 
-	mptcp_rcv_space_adjust() // time  = ~40K us
-	  mptcp_rcv_space_init() // msk rtt = ~40K us, ssk rtt = ~40K
-	  mptcp_rcvbuf_grow()	
+New patches for t/upstream:
+- acccba36fa8b: mptcp: handle first subflow closing consistently
+- 858caff062de: mptcp: borrow forward memory from subflow
+- 4a9aeb444ecf: mptcp: introduce mptcp-level backlog
+- d09fc4521e3a: mptcp: leverage the backlog for RX packet processing
+- Results: 24301f878352..c0bd85030030 (export)
 
-	mptcp_rcv_space_adjust() // for 40K us keeps increasing `copied`
-	...
-	mptcp_rcv_space_adjust() // time = ~40K us, copied is very high
-	  // ssk rtt ~= 80us, msk rtt = ~80 us
-	  mptcp_rcvbuf_grow() // set sk_rcvbuf to tcp_rmem[2], because
-			// `copied` accumulated data for much more than
-			// one rtt
+Tests are now in progress:
 
-  the root cause of the problem is that the msk rtt is updated with a
-period equal to the previous rtt sample, which in turn is too high at
-connection start.
-
-The solution is keeping the msk rtt up2date with the subflow ones, with
-update every rcvwin. In theory could be at every incoming packet, but it
-would be useless because the subflow update the rtt every rcv wnd and
-touching too often the msk field could cause performance regressions.
-
-Side note: the msk rtt needs periodic 'reset'/'refresh' because
-otherwise it could not deal with events like 'subflow with lowest rtt is
-closed'. Such reset happens every <rcv wnd> * <number of subflows>
-incoming bytes.
-
-Please LMK if the above helps.
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/288a453d00d9ed545fa108e32485f407a07a6d32/checks
 
 Cheers,
-
-Paolo
-	
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
 
