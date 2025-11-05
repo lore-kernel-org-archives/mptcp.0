@@ -1,208 +1,132 @@
-Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74809335064
-	for <mptcp@lists.linux.dev>; Wed,  5 Nov 2025 16:12:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 659941D5CC9
+	for <mptcp@lists.linux.dev>; Wed,  5 Nov 2025 16:29:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762359139; cv=none; b=hYOaXYmlrvGsb4vQVBlXPjdulSXbetL47UpiANu4sLKb1lmbbJIqMiKILuEEWBspNaW+eSjWjZCs6tiIbFqhSu8JVh7OQuurwpbYuW5Jynz6gqyR8l/W3yU7x0UVkd9oH6rIYVJqr2yHC+/7pSnrJUb5SuxUbUS3hVJNGWzj1D8=
+	t=1762360147; cv=none; b=SCaFf3XddXOQ8mnmuo15bJRDSFUJ9LtFKXQe9DxtA1muN9C9vPmh4cmEyQMP8sDdEfRrpPfnvaDWkTRRiXZuXkLTtrl5og3BeOTF3i1EEyOm8fLK1XPIxee/Mu7uzbloYpusaXJuATCKLeEL644DzABr9aynNOk44prX1FcSgUA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762359139; c=relaxed/simple;
-	bh=JV1piMY9FWz2kSzJwBr1bGiqxTKtVt93I5kC9mSL670=;
-	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
-	 In-Reply-To:References; b=iGAiQrkL3vJe4/3t2bI208aUKpKjCnp6r5Pf/UBJDisDeUzTwNciMd+MfNbQ5xOHQceNSFdgk9Y0pDmhVHRBD3J0blWRr6t8jfnMOTN7OrVBhI6VbxjWruduIZnQl7wEAjErK/Lad0yA+oJrI/EdQsdOBw90iYrII0FtKU2+pHI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=baFM0iyx; arc=none smtp.client-ip=95.215.58.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1762360147; c=relaxed/simple;
+	bh=Y3esDubalrgvIM7lQbRaeJHeZfYhyTamlVhvSeykTdU=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=geapeFnl4Kl65/yTFwD+W8shkVl5qYjm4YfD/LgvS7i8qNNhYIcNk4ssUwIxzzuUQ2HrXd42qCQJ63Ti+gTlZvyewuDwCEuQGh45lq7wNhYCQTWj3Mk297125QY9jy3V9I3e+mWzLQ5ny5paUtE07t5GvYmI/7mnhKUHIQebvIw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=glVWbtX5; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="baFM0iyx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="glVWbtX5"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-27c369f8986so201505ad.3
+        for <mptcp@lists.linux.dev>; Wed, 05 Nov 2025 08:29:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1762360145; x=1762964945; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4nU1PjlWt8geYMQt6GT0AiT1wsIJuR3sWLCn6E75oKQ=;
+        b=glVWbtX5aURJLYjAjaKRqh7lI+w7RDR+flU4un2VSOcVxDLeXnX316xZYXRJ/i2ttV
+         BMgyI2VnHXSyTrEDpPpOfq+mZmWU5SqSPIOA987F4D8pL9+J1KQhDEbyXdWsi0HdHHFc
+         7BHCoqGT++5kBfKULzMxCYIZJjke+ZsL6zpInpEIRSniKDmFOLDA/NgrazB6ZTjfEf/+
+         9Y6mZjBQmVUlwE3motP75rlKhRmKZ2UQuNwAQWtKpzCcgIAtwAp4BN2dLmcLMUnNJYu7
+         J/YJU76wjD9RFByxUWdrJ+PA0QJXZv1MrnY7rLBarqIlGb0IJH/OvXSBQyaeiIPxvo5u
+         r/2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762360145; x=1762964945;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=4nU1PjlWt8geYMQt6GT0AiT1wsIJuR3sWLCn6E75oKQ=;
+        b=ZV64/+MgwphHEx+AlyaibfsgyvImzq5Dui3XHcgCHKe/wwN/RCNkwJIAf3VaJKv+nV
+         13frwtPTXAxM1HMFHXwVtL3PWSQR9JCQQwJXGixfTGdqvZ/XIdXh2lMaNkAGjLZtvUqi
+         EU69uG2gkCa6rzGRGAjy65keSJgK65MxsHOIq4gXUwNLlYT9NgPmiKTKphs5LghaIIIb
+         9m4b8SH7QRhNSkk+OUFSEbLPdR0uHw5yYkvmia0GgNlYN1Yjfc2yq5QQ0s7ckrN3y5jO
+         i4FRKV21n4JlzRw0OuHn2PPrOAIYsnayDrgzxPcLoCgsqRn8gzNbZTL9ag66iDRe06xv
+         GNvA==
+X-Gm-Message-State: AOJu0YyIltJETC0MDnVjAiVdMPL7IMwt6ve8N8ero3zCtwP5nK6Y8bBj
+	fo16pDuwT+UxDdD5rfGCG/UIro++gSmA+TF02Cvh9YBUyNplhZ2YxDI=
+X-Gm-Gg: ASbGncuA5p6v/t2qP5xoPeQr3nH+EbbMsB4tXT6Ke6JwFgQz54wSHr9svkBTZWsff+U
+	WCUw0+L6Dt/GoSO4uPlGfJBtVu0R/KKVMME5ffE9JMknGzDzYO479QalIHJ4RsR6r7tpYUXw34i
+	/F0yF6xVJI4q3csTxeTAhLNCIFJWPDGDD301o3kYOKXiaRT21/LLc7G0DItqMptSgra3rRtbgUg
+	JKmlkuSTKcnANxAcXRSmV1EPGJ+BvbPvplZuK00o1Tw3SPibmGYi1Dw+/SH7VotsNlQzkRpomKu
+	g7BF2FJAkw+Eqrjg0uKmT+J9Yh/qIVM1kCHUhGtJePeShtIyR91KLhZo0nGIfruJoSDtAR1oNzA
+	ORy03yVEAG87Sgn3ArF0vCgE9hgiYhAAFAGok10ckZ0nAMtSM/iMECvh2028HMiUINIIM8N70Mc
+	dnBkKfCMTd7fAN
+X-Google-Smtp-Source: AGHT+IGgWKyx2LhDismGAF0omNwqpntZYZQCmcW34e98+NzfTZQR4m5s4GoRB7IaGjz7F1aHOFml8g==
+X-Received: by 2002:a17:903:25cb:b0:295:9cb5:ae2a with SMTP id d9443c01a7336-2962ad0793amr27722335ad.9.1762360145438;
+        Wed, 05 Nov 2025 08:29:05 -0800 (PST)
+Received: from [127.0.0.1] ([13.83.233.102])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-ba1f2893bc6sm5919066a12.10.2025.11.05.08.29.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Nov 2025 08:29:04 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <0395b95bc89964254ad9a10a9e6da9fd58b6f7a7.1762354419.git.pabeni@redhat.com>
+References:
+ <0395b95bc89964254ad9a10a9e6da9fd58b6f7a7.1762354419.git.pabeni@redhat.com>
+Subject: Re: [PATCH mptcp-net 2/2] mptcp: fix duplicate reset on fastclose
+Message-ID: <09b12daa-4c45-d341-2eb8-35406fdfcf31@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 05 Nov 2025 16:29:04 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1762359133;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WeV2eLUSuSC3/7iM2Op1hOrd03eB07H/sYIO5UnkqUc=;
-	b=baFM0iyx/644TXbP264AjlW1hrp+adGSBbouysT9eCsZZ3ETuFrLWy9FzSI4zuuvM5TFDC
-	newPzkAqxcA7ZDBXqoi8d/E8pyATVRRdcHzCBzxWE8i87FuUGdvMC8fy061exlb2zZie0x
-	K04dxU9GXpFjCfaBg0nPGYZqRdkyrcY=
-Date: Wed, 05 Nov 2025 16:12:08 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: "Jiayuan Chen" <jiayuan.chen@linux.dev>
-Message-ID: <b5f67a681be12833efa12e68fc3139954b409446@linux.dev>
-TLS-Required: No
-Subject: Re: [PATCH net v4 3/3] selftests/bpf: Add mptcp test with sockmap
-To: "Matthieu Baerts" <matttbe@kernel.org>, mptcp@lists.linux.dev
-Cc: "Mat Martineau" <martineau@kernel.org>, "Geliang Tang"
- <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, "Eric
- Dumazet" <edumazet@google.com>, "Jakub Kicinski" <kuba@kernel.org>,
- "Paolo Abeni" <pabeni@redhat.com>, "Simon Horman" <horms@kernel.org>,
- "Alexei Starovoitov" <ast@kernel.org>, "Daniel Borkmann"
- <daniel@iogearbox.net>, "Andrii Nakryiko" <andrii@kernel.org>, "Martin
- KaFai Lau" <martin.lau@linux.dev>, "Eduard Zingerman"
- <eddyz87@gmail.com>, "Song Liu" <song@kernel.org>, "Yonghong Song"
- <yonghong.song@linux.dev>, "John Fastabend" <john.fastabend@gmail.com>,
- "KP Singh" <kpsingh@kernel.org>, "Stanislav Fomichev" <sdf@fomichev.me>,
- "Hao Luo" <haoluo@google.com>, "Jiri Olsa" <jolsa@kernel.org>, "Shuah
- Khan" <shuah@kernel.org>, "Florian Westphal" <fw@strlen.de>,
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
- bpf@vger.kernel.org, linux-kselftest@vger.kernel.org
-In-Reply-To: <665825df-b995-45ee-9e0c-2b40cc4897ee@kernel.org>
-References: <20251105113625.148900-1-jiayuan.chen@linux.dev>
- <20251105113625.148900-4-jiayuan.chen@linux.dev>
- <665825df-b995-45ee-9e0c-2b40cc4897ee@kernel.org>
-X-Migadu-Flow: FLOW_OUT
 
-November 5, 2025 at 22:40, "Matthieu Baerts" <matttbe@kernel.org mailto:m=
-atttbe@kernel.org?to=3D%22Matthieu%20Baerts%22%20%3Cmatttbe%40kernel.org%=
-3E > wrote:
+Hi Paolo,
+
+Thank you for your modifications, that's great!
+
+Our CI did some validations and here is its report:
+
+- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/191074=
+26763
+
+Initiator: Matthieu Baerts (NGI0)
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/bf6b927f00d4
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1019919
 
 
->=20
->=20Hi Jiayuan,
->=20
->=20Thank you for this new test!
->=20
->=20I'm not very familiar with the BPF selftests: it would be nice if
-> someone else can have a quick look.
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
 
-Thanks for the review. I've seen the feedback on the other patches(1/3, 2=
-/3) and will fix them up.
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
 
+For more details:
 
-> On 05/11/2025 12:36, Jiayuan Chen wrote:
->=20
->=20>=20
->=20> Add test cases to verify that when MPTCP falls back to plain TCP so=
-ckets,
-> >  they can properly work with sockmap.
-> >=20=20
->=20>  Additionally, add test cases to ensure that sockmap correctly reje=
-cts
-> >  MPTCP sockets as expected.
-> >=20=20
->=20>  Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
-> >  ---
-> >  .../testing/selftests/bpf/prog_tests/mptcp.c | 150 +++++++++++++++++=
-+
-> >  .../selftests/bpf/progs/mptcp_sockmap.c | 43 +++++
-> >  2 files changed, 193 insertions(+)
-> >  create mode 100644 tools/testing/selftests/bpf/progs/mptcp_sockmap.c
-> >=20=20
->=20>  diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tool=
-s/testing/selftests/bpf/prog_tests/mptcp.c
-> >  index f8eb7f9d4fd2..56c556f603cc 100644
-> >  --- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
-> >  +++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-> >  @@ -6,11 +6,14 @@
-> >  #include <netinet/in.h>
-> >  #include <test_progs.h>
-> >  #include <unistd.h>
-> >  +#include <error.h>
-> >=20
->=20Do you use this new include?
-
-"EOPNOTSUPP" I used was defined in error.h.
-
-> >=20
->=20>  +
-> >  +end:
-> >  + if (client_fd1 > 1)
-> >  + close(client_fd1);
-> >  + if (client_fd2 > 1)
-> >  + close(client_fd2);
-> >  + if (server_fd1 > 0)
-> >  + close(server_fd1);
-> >  + if (server_fd2 > 0)
-> >  + close(server_fd2);
-> >=20
->=20Why do you check if it is above 0 or 1? Should you not always check i=
-f
-> it is >=3D 0 for each fd?
-
-My bad, ">=3D0" is correct.
-
-> >=20
->=20> + close(listen_fd);
-> >  +}
-> >  +
-> >  +/* Test sockmap rejection of MPTCP sockets - both server and client=
- sides. */
-> >  +static void test_sockmap_reject_mptcp(struct mptcp_sockmap *skel)
-> >  +{
-> >  + int client_fd1 =3D -1, client_fd2 =3D -1;
-> >  + int listen_fd =3D -1, server_fd =3D -1;
-> >  + int err, zero =3D 0;
-> >  +
-> >  + /* start server with MPTCP enabled */
-> >  + listen_fd =3D start_mptcp_server(AF_INET, NULL, 0, 0);
-> >  + if (!ASSERT_OK_FD(listen_fd, "start_mptcp_server"))
-> >=20
->=20In test_sockmap_with_mptcp_fallback(), you prefixed each error with
-> 'redirect:'. Should you also have a different prefix here? 'sockmap-fb:=
-'
-> vs 'sockmap-mptcp:' eventually?
-
-I will do it.
-
-> >=20
->=20> + return;
-> >  +
-> >  + skel->bss->trace_port =3D ntohs(get_socket_local_port(listen_fd));
-> >  + skel->bss->sk_index =3D 0;
-> >  + /* create client with MPTCP enabled */
-> >  + client_fd1 =3D connect_to_fd(listen_fd, 0);
-> >  + if (!ASSERT_OK_FD(client_fd1, "connect_to_fd client_fd1"))
-> >  + goto end;
-> >  +
-> >  + /* bpf_sock_map_update() called from sockops should reject MPTCP s=
-k */
-> >  + if (!ASSERT_EQ(skel->bss->helper_ret, -EOPNOTSUPP, "should reject"=
-))
-> >  + goto end;
-> >=20
->=20So here, the client is connected, but sockmap doesn't operate on it,
-> right? So most likely, the connection is stalled until the userspace
-> realises that and takes an action?
->
-
-It depends. Sockmap usually runs as a bypass. The user app (like Nginx)
-has its own native forwarding logic, and sockmap just kicks in to acceler=
-ate
-it. So in known cases, turning off sockmap falls back to the native logic=
-.
-But if there's no native logic, the connection just stalls.
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
 
 
-> >=20
->=20> + /* set trace_port =3D -1 to stop sockops */
-> >  + skel->bss->trace_port =3D -1;
-> >=20
->=20What do you want to demonstrate from here? That without the sockmap
-> injection, there are no new entries added? Is it worth checking that he=
-re?
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
 
-That's redundant. I'll drop it.
-
-
-[...]
-> >  + if (client_fd1 > 0)
-> >  + close(client_fd1);
-> >  + if (client_fd2 > 0)
-> >  + close(client_fd2);
-> >  + if (server_fd > 0)
-> >  + close(server_fd);
-> >=20
->=20Same here: should it not be "*fd >=3D 0"?
-
-I will fix it.
-
-Thanks.
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
