@@ -1,132 +1,128 @@
-Received: from mail-il1-f172.google.com (mail-il1-f172.google.com [209.85.166.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A487329B229
-	for <mptcp@lists.linux.dev>; Thu,  6 Nov 2025 09:04:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C7582DC772
+	for <mptcp@lists.linux.dev>; Thu,  6 Nov 2025 09:37:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762419870; cv=none; b=vAk2G++j6CQFwWxycB4Fpel9KyDA+zSih454jSwyD3k+S1QtX/uuJZ6RZoKGZ/6RyvWE9okpnlVwu1OyKJAF3tbdqInOZt9etJyByJM/XEyEj85z0geYXqL9YI/YyHK0ObIOjriWe2EqnqM35i4KwHwYC/JK8rcBAX0JYerb+go=
+	t=1762421829; cv=none; b=Mp7b0O1g5NMe9iPgHZ4+BU3fJMgRHuri0+A48+9K6BuwdWSBaO1eP/EjqvhNwbTALY2R33LGcFVxhX2ASgVCeQNWqMIh9yvjIrAZOFekBhswmc5n2F59uQWYIUjSa+m+3ywC9TAcgJ6pMbx+3TMvqhmJp16WSzk6A72xXCoWIjU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762419870; c=relaxed/simple;
-	bh=p2apfm6yEigDPhxw4uuFcFQlEqhxOGB3vosOItJmAHs=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=ZC3Tn/dVtPdAU9qlOpumji2JKzbpqk5k5pr0L+ZS0Kj3w+a7iLbA6MVKeKpcudKv5svIufAcYt9TjsOgVz9X/4QHSqcuD/MxmFLuOXwpcPZ7yPhVjWJzgm6RjyKNNeyoan2nupWeBRlJ3HCmBQk5r7jDrVBqDR8LElZron7BTTU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AoMuoGaq; arc=none smtp.client-ip=209.85.166.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1762421829; c=relaxed/simple;
+	bh=lkNTDEpI9xDwOGpJ4vlKtUmxdJ5uM/jDLSo6R/Glopc=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=STLzsF2AprrS//m+hpwee9TMwVLCKU2hr3v6887CocY1JQYWidxntch3cREGVthQ0aWMuXNct0G/KwPc33Uol6a+NXaWlTk2Bw7GjIdtijCImrTfBRpGk4Fr6wfzg8Uphs8HV1YuhqS9fkQ3rZdqHsw9IjsMK76CUoYoR++69rY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J2Et5EXD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AoMuoGaq"
-Received: by mail-il1-f172.google.com with SMTP id e9e14a558f8ab-4334e884b9dso3677175ab.1
-        for <mptcp@lists.linux.dev>; Thu, 06 Nov 2025 01:04:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1762419868; x=1763024668; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8od+Y91B0M00ZyKvzWrR3qps5e1nJR17o8jwtt+m3lc=;
-        b=AoMuoGaqe4xXOqTL4aEB+qIJIb2wKL6g2HwcAWBw6crRGYOicvOTWaBEJQWVKD72l2
-         f7QqAVi3ZlxNuBsOD71H3o0cWhsrVeha8Q43XudA1h8X1fHSBtyy21/KwGiU/INQu+/l
-         7013XbCJ/CFzG2G6us77z1D0hZB2X4k/NOoOhICIiwLLLLAY8YrPGJQ2IaHW7Qb/gWZI
-         4qUEPOHdQLBteEjQsZOsrjGbtLntTV8tTQWuvvnvGd4Mitotlw4L635hUQ5QVRKM6n/G
-         dSt81OthsBBNm/OO24M2MB9Lir81gsLRNaj7Wym8RdC/N5QPUIRITYQ2XPRTyqPocRg/
-         1lZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762419868; x=1763024668;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=8od+Y91B0M00ZyKvzWrR3qps5e1nJR17o8jwtt+m3lc=;
-        b=Vpsw9xkgYmOnpyf51+reG1S1POhS59Vz020R2eVlbQgg58H9XO5UW/Bou0fZSRKME1
-         Qwc8w7M/2b2CQ80rLzyvd/1963fItuT42EBY2F2S8CUdUOxe7q1lFof31Jmut6AxISDU
-         /DntZS01zrWzfIN4jzmWZVgOQiCqojwR5vpfBt1d76zMkSX0xDYgDOIe0TK63GlwI6lj
-         NWVbFEmo7DGf94bo/+mWp/vy6qeQuYcrISFH1/HbfoA0GtIFl8XrDDX//uVtNN2yuJKQ
-         G4YC41peLdnzvsLzv2dicRcOIsswFJE04ruet5iSeeZIFlkss6mRfG+5a7ITIf/Ko2S5
-         PtCg==
-X-Gm-Message-State: AOJu0Yxjkfl2Cr9zf79zxA2owdlh9lqS5jB0GcNPWNGi6LLeUknl+/Vh
-	u4Y/K5bdyBqhQdnd2u4VYZW/E3gtkKnWMLcCOhuk74Y3NyOjT6EOPvLdBEQfBnM=
-X-Gm-Gg: ASbGncsgfug0aa4+oTl2jz2vWe3zquIOECBpCCm16cK6S+1lnaOFOBZibwT2Fj/GzVB
-	b7l4vXmRFXjTH7/t5+Ytr8f5neSIW9WhNU2BgrTDTshWcIpNQPD//SgZRJtMW2rHMoDp86AlIZv
-	h6Bm+acz39aQPelnHPhaAp4qBjJPETAvc6K6tDmEsXn4rFHbgER5hwbpoJw7nNEEWhfzWAA0lty
-	uvaIlhJceFm7ob6samYpdMec3+gKnZ6QjNWB3RKvEE436HuxiDGt9Ash6XHh05KBukBqkOPAcmJ
-	N0Jds6aVrq/+FxrS+nq4JtpOZi9VLHpC1vr3SGKuEybYfP/QGXtWUmP/+jA0916OTwGdIAX4CK5
-	iFc3F8+Kr8ChSEwRGAAmAzKOr53alif/C2nG2bDjOAygZg684KxYohzDrMuuNFZEhOUdrH8wzzy
-	7oPtx5twMBx2rHMdoXX54gXRc=
-X-Google-Smtp-Source: AGHT+IE8x90PKPe03Ib+CVLrVFPLAe0qFmgwmrloBJQGdb4/HtN5/Yw90Gs0cNJcEtbA90UhTWBsug==
-X-Received: by 2002:a05:6e02:1567:b0:433:2400:2eef with SMTP id e9e14a558f8ab-4334ee78384mr35483335ab.13.1762419867604;
-        Thu, 06 Nov 2025 01:04:27 -0800 (PST)
-Received: from [127.0.0.1] ([64.236.200.83])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-4334f4e366csm7222185ab.27.2025.11.06.01.04.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Nov 2025 01:04:26 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Gang Yan <yangang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20251106075457.41025-1-gang.yan@linux.dev>
-References: <20251106075457.41025-1-gang.yan@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J2Et5EXD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51697C4CEF7;
+	Thu,  6 Nov 2025 09:37:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1762421827;
+	bh=lkNTDEpI9xDwOGpJ4vlKtUmxdJ5uM/jDLSo6R/Glopc=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=J2Et5EXDrQg9EFLV51y0YZaA30he7VJyzMLOJbESRyfhmeJbg9roabSgJGurdB7yX
+	 2AjKNY90V1XNLZghD6Hgbkgs55im9B3fuB2QrNrbLkHEdnrCTnEDC4CdHVtxLJMSIv
+	 e/RpoQ7DTBw+YRmAi88qMzuprP5txi0Aibc7w7OeK8PPl51aMVfNzEevGs9U//X2ck
+	 tp3US0gDpGq7f186iqJWlAV7+PM8F8XPFDKg3nGJKVVZOwNtoRKpwxDWMzTFeohdgm
+	 rwMsPzGVQP9o0MY7ehFjr8As9jl2L0YzBvxcEQVjgqkmx0Ft5q7rFA4met0CxReBZu
+	 ue04G2FAN8MNA==
+Message-ID: <695cb8b2257afb66830f8c8536504b100ae31a62.camel@kernel.org>
 Subject: Re: [PATCH, mptcp-next] selftests: mptcp: Add a check for
  'add_addr_accepted'
-Message-ID: <98c5efd5-afe9-5b4d-38d2-94ec5c85ba65@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 06 Nov 2025 09:04:26 +0000
+From: Geliang Tang <geliang@kernel.org>
+To: Gang Yan <gang.yan@linux.dev>, mptcp@lists.linux.dev
+Cc: Gang Yan <yangang@kylinos.cn>
+Date: Thu, 06 Nov 2025 17:37:02 +0800
+In-Reply-To: <20251106075457.41025-1-gang.yan@linux.dev>
+References: <20251106075457.41025-1-gang.yan@linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.52.3-0ubuntu1 
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
 Hi Gang,
 
-Thank you for your modifications, that's great!
+Thanks for this follow-up patch.
 
-Our CI did some validations and here is its report:
+On Thu, 2025-11-06 at 15:54 +0800, Gang Yan wrote:
+> From: Gang Yan <yangang@kylinos.cn>
+> 
+> The previous 'delete re-add signal' test did not validate the
+> 'add_addr_signal' and 'add_addr_accepted' counters. These counters
+> are crucial for ensuring the MPTCP path manager correctly handles the
+> subflow creation via 'ADD_ADDR'.
+> 
+> Signed-off-by: Gang Yan <yangang@kylinos.cn>
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Unstable: 1 failed =
-test(s): selftest_mptcp_connect_sendfile =F0=9F=94=B4
-- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/191291=
-23754
+Looks good!
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/e9de5b91f0a3
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1020287
+Reviewed-by: Geliang Tang <geliang@kernel.org>
 
+Except that we typically do not use capital letters to start the
+subject line. Let's have Matt update the subject when applying this
+patch.
 
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
+Thanks,
+-Geliang
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+> ---
+>  tools/testing/selftests/net/mptcp/mptcp_join.sh | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> index 4faf58fecc94..cca97a8ad0d6 100755
+> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> @@ -4203,38 +4203,45 @@ endpoint_tests()
+>  			$ns1 10.0.2.1 id 1 flags signal
+>  		chk_subflow_nr "before delete" 2
+>  		chk_mptcp_info subflows 1 subflows 1
+> +		chk_mptcp_info add_addr_signal 2 add_addr_accepted 1
+>  
+>  		pm_nl_del_endpoint $ns1 1 10.0.2.1
+>  		pm_nl_del_endpoint $ns1 2 224.0.0.1
+>  		sleep 0.5
+>  		chk_subflow_nr "after delete" 1
+>  		chk_mptcp_info subflows 0 subflows 0
+> +		chk_mptcp_info add_addr_signal 0 add_addr_accepted 0
+>  
+>  		pm_nl_add_endpoint $ns1 10.0.2.1 id 1 flags signal
+>  		pm_nl_add_endpoint $ns1 10.0.3.1 id 2 flags signal
+>  		wait_mpj $ns2
+>  		chk_subflow_nr "after re-add" 3
+>  		chk_mptcp_info subflows 2 subflows 2
+> +		chk_mptcp_info add_addr_signal 2 add_addr_accepted 2
+>  
+>  		pm_nl_del_endpoint $ns1 42 10.0.1.1
+>  		sleep 0.5
+>  		chk_subflow_nr "after delete ID 0" 2
+>  		chk_mptcp_info subflows 2 subflows 2
+> +		chk_mptcp_info add_addr_signal 2 add_addr_accepted 2
+>  
+>  		pm_nl_add_endpoint $ns1 10.0.1.1 id 99 flags signal
+>  		wait_mpj $ns2
+>  		chk_subflow_nr "after re-add ID 0" 3
+>  		chk_mptcp_info subflows 3 subflows 3
+> +		chk_mptcp_info add_addr_signal 3 add_addr_accepted 2
+>  
+>  		pm_nl_del_endpoint $ns1 99 10.0.1.1
+>  		sleep 0.5
+>  		chk_subflow_nr "after re-delete ID 0" 2
+>  		chk_mptcp_info subflows 2 subflows 2
+> +		chk_mptcp_info add_addr_signal 2 add_addr_accepted 2
+>  
+>  		pm_nl_add_endpoint $ns1 10.0.1.1 id 88 flags signal
+>  		wait_mpj $ns2
+>  		chk_subflow_nr "after re-re-add ID 0" 3
+>  		chk_mptcp_info subflows 3 subflows 3
+> +		chk_mptcp_info add_addr_signal 3 add_addr_accepted 2
+>  		mptcp_lib_kill_wait $tests_pid
+>  
+>  		kill_events_pids
 
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
