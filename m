@@ -1,128 +1,133 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C7582DC772
-	for <mptcp@lists.linux.dev>; Thu,  6 Nov 2025 09:37:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D7401DE8BB
+	for <mptcp@lists.linux.dev>; Fri,  7 Nov 2025 00:10:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762421829; cv=none; b=Mp7b0O1g5NMe9iPgHZ4+BU3fJMgRHuri0+A48+9K6BuwdWSBaO1eP/EjqvhNwbTALY2R33LGcFVxhX2ASgVCeQNWqMIh9yvjIrAZOFekBhswmc5n2F59uQWYIUjSa+m+3ywC9TAcgJ6pMbx+3TMvqhmJp16WSzk6A72xXCoWIjU=
+	t=1762474259; cv=none; b=hdhYDQHHjsqMY0/in8dVkUUhAvwgJxtY56x2MAoKq4G8XOpnZ69yb164fF4Q6rGB+mkitYDF7qw6AxmdwsGJDwcO+pMIuiADFjDMw0d5cm1Jd3AiajcJeLt9HREbx1L5IpIXvotccctH8kYsORBHjLnM1iG0QTQp4Gsu5aCbCsU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762421829; c=relaxed/simple;
-	bh=lkNTDEpI9xDwOGpJ4vlKtUmxdJ5uM/jDLSo6R/Glopc=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=STLzsF2AprrS//m+hpwee9TMwVLCKU2hr3v6887CocY1JQYWidxntch3cREGVthQ0aWMuXNct0G/KwPc33Uol6a+NXaWlTk2Bw7GjIdtijCImrTfBRpGk4Fr6wfzg8Uphs8HV1YuhqS9fkQ3rZdqHsw9IjsMK76CUoYoR++69rY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J2Et5EXD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1762474259; c=relaxed/simple;
+	bh=fx0JC+6uuq3erkSA25JU/Z2ThXQqAbjWSgfZBpcGZgk=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:content-type; b=Qa44Yw5OBEBZVN8d0tXSdA8xP8uuKHT7S/B5W3RysEGIFpB3K7mbKhljTnsI9gKcs+RisSMOW27BzqHImV194/ofVyJfeF3sjht4irSAqDOkFaTkJnhUvl9qQpPqehT2CM1GSDlOJKy3j/aNrE0jib4MRwi/MqyOZ/JPIbUHotw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=g4z0NyRy; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J2Et5EXD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51697C4CEF7;
-	Thu,  6 Nov 2025 09:37:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762421827;
-	bh=lkNTDEpI9xDwOGpJ4vlKtUmxdJ5uM/jDLSo6R/Glopc=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=J2Et5EXDrQg9EFLV51y0YZaA30he7VJyzMLOJbESRyfhmeJbg9roabSgJGurdB7yX
-	 2AjKNY90V1XNLZghD6Hgbkgs55im9B3fuB2QrNrbLkHEdnrCTnEDC4CdHVtxLJMSIv
-	 e/RpoQ7DTBw+YRmAi88qMzuprP5txi0Aibc7w7OeK8PPl51aMVfNzEevGs9U//X2ck
-	 tp3US0gDpGq7f186iqJWlAV7+PM8F8XPFDKg3nGJKVVZOwNtoRKpwxDWMzTFeohdgm
-	 rwMsPzGVQP9o0MY7ehFjr8As9jl2L0YzBvxcEQVjgqkmx0Ft5q7rFA4met0CxReBZu
-	 ue04G2FAN8MNA==
-Message-ID: <695cb8b2257afb66830f8c8536504b100ae31a62.camel@kernel.org>
-Subject: Re: [PATCH, mptcp-next] selftests: mptcp: Add a check for
- 'add_addr_accepted'
-From: Geliang Tang <geliang@kernel.org>
-To: Gang Yan <gang.yan@linux.dev>, mptcp@lists.linux.dev
-Cc: Gang Yan <yangang@kylinos.cn>
-Date: Thu, 06 Nov 2025 17:37:02 +0800
-In-Reply-To: <20251106075457.41025-1-gang.yan@linux.dev>
-References: <20251106075457.41025-1-gang.yan@linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.52.3-0ubuntu1 
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g4z0NyRy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1762474256;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=lAF6R7GSsGospSNpI7Xnish+883xby3ddw7VVT8l3Jc=;
+	b=g4z0NyRyOsrny2JzTYj1kXpuwoe8XuVpjSIo3zRytX31mzoPKzIG3wNuGwncJYqbeofDTj
+	dgJzjKcWDUBbXbFZ+YbAh/IDskwz3v7k7+Awvs4RrecFhbexW7saj6MQ6/NcRnnt51oB9k
+	l8pYk/1mG8KVQ9spyEiWI7/bYsP3mYs=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-75-kTBfmvmdMnm0b3fZgrteTA-1; Thu,
+ 06 Nov 2025 19:10:55 -0500
+X-MC-Unique: kTBfmvmdMnm0b3fZgrteTA-1
+X-Mimecast-MFC-AGG-ID: kTBfmvmdMnm0b3fZgrteTA_1762474254
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 456A1180120E
+	for <mptcp@lists.linux.dev>; Fri,  7 Nov 2025 00:10:54 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.45.224.143])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 67A141800362
+	for <mptcp@lists.linux.dev>; Fri,  7 Nov 2025 00:10:53 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: mptcp@lists.linux.dev
+Subject: [PATCH mptcp-net] mptcp: fix ack generation for fallback msk
+Date: Fri,  7 Nov 2025 01:10:38 +0100
+Message-ID: <14a868192851deb4145a90e3b7eec616544da262.1762474159.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: NSXEBTyEj0DzNcJHWmReVai7vpqrEZyM-GfiiqFc2DA_1762474254
+X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
+content-type: text/plain; charset="US-ASCII"; x-default=true
 
-Hi Gang,
+mptcp_cleanup_rbuf() need to know the last most recent, mptcp-level
+rcv_wnd sent, and such information is tracked into the msk->old_wspace
+field, updated at ack transmission time by mptcp_write_options().
 
-Thanks for this follow-up patch.
+Fallback socket do not add any mptcp options, such helper is never
+invoked, and msk->old_wspace value remain stale. That in turn makes
+ack generation at recvmsg() time quite randomic.
 
-On Thu, 2025-11-06 at 15:54 +0800, Gang Yan wrote:
-> From: Gang Yan <yangang@kylinos.cn>
-> 
-> The previous 'delete re-add signal' test did not validate the
-> 'add_addr_signal' and 'add_addr_accepted' counters. These counters
-> are crucial for ensuring the MPTCP path manager correctly handles the
-> subflow creation via 'ADD_ADDR'.
-> 
-> Signed-off-by: Gang Yan <yangang@kylinos.cn>
+Address the issue ensuring mptcp_write_options() is invoked even
+for fallback sockets, and just update the needed info in such a
+case.
 
-Looks good!
+The issue went unnoticed for a long time, as mptcp overshot the
+fallback socket receive buffer autotune significantly.
 
-Reviewed-by: Geliang Tang <geliang@kernel.org>
+Fixes: e3859603ba13 ("mptcp: better msk receive window updates")
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/594
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+---
+ net/mptcp/options.c | 22 +++++++++++++++++++++-
+ 1 file changed, 21 insertions(+), 1 deletion(-)
 
-Except that we typically do not use capital letters to start the
-subject line. Let's have Matt update the subject when applying this
-patch.
-
-Thanks,
--Geliang
-
-> ---
->  tools/testing/selftests/net/mptcp/mptcp_join.sh | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> index 4faf58fecc94..cca97a8ad0d6 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> @@ -4203,38 +4203,45 @@ endpoint_tests()
->  			$ns1 10.0.2.1 id 1 flags signal
->  		chk_subflow_nr "before delete" 2
->  		chk_mptcp_info subflows 1 subflows 1
-> +		chk_mptcp_info add_addr_signal 2 add_addr_accepted 1
->  
->  		pm_nl_del_endpoint $ns1 1 10.0.2.1
->  		pm_nl_del_endpoint $ns1 2 224.0.0.1
->  		sleep 0.5
->  		chk_subflow_nr "after delete" 1
->  		chk_mptcp_info subflows 0 subflows 0
-> +		chk_mptcp_info add_addr_signal 0 add_addr_accepted 0
->  
->  		pm_nl_add_endpoint $ns1 10.0.2.1 id 1 flags signal
->  		pm_nl_add_endpoint $ns1 10.0.3.1 id 2 flags signal
->  		wait_mpj $ns2
->  		chk_subflow_nr "after re-add" 3
->  		chk_mptcp_info subflows 2 subflows 2
-> +		chk_mptcp_info add_addr_signal 2 add_addr_accepted 2
->  
->  		pm_nl_del_endpoint $ns1 42 10.0.1.1
->  		sleep 0.5
->  		chk_subflow_nr "after delete ID 0" 2
->  		chk_mptcp_info subflows 2 subflows 2
-> +		chk_mptcp_info add_addr_signal 2 add_addr_accepted 2
->  
->  		pm_nl_add_endpoint $ns1 10.0.1.1 id 99 flags signal
->  		wait_mpj $ns2
->  		chk_subflow_nr "after re-add ID 0" 3
->  		chk_mptcp_info subflows 3 subflows 3
-> +		chk_mptcp_info add_addr_signal 3 add_addr_accepted 2
->  
->  		pm_nl_del_endpoint $ns1 99 10.0.1.1
->  		sleep 0.5
->  		chk_subflow_nr "after re-delete ID 0" 2
->  		chk_mptcp_info subflows 2 subflows 2
-> +		chk_mptcp_info add_addr_signal 2 add_addr_accepted 2
->  
->  		pm_nl_add_endpoint $ns1 10.0.1.1 id 88 flags signal
->  		wait_mpj $ns2
->  		chk_subflow_nr "after re-re-add ID 0" 3
->  		chk_mptcp_info subflows 3 subflows 3
-> +		chk_mptcp_info add_addr_signal 3 add_addr_accepted 2
->  		mptcp_lib_kill_wait $tests_pid
->  
->  		kill_events_pids
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index ad51dcf18984..8d3b0f9754dc 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -838,8 +838,11 @@ bool mptcp_established_options(struct sock *sk, struct sk_buff *skb,
+ 
+ 	opts->suboptions = 0;
+ 
++	/* Force later mptcp_write_options(), but do not use any actual
++	 * option space.
++	 */
+ 	if (unlikely(__mptcp_check_fallback(msk) && !mptcp_check_infinite_map(skb)))
+-		return false;
++		return true;
+ 
+ 	if (unlikely(skb && TCP_SKB_CB(skb)->tcp_flags & TCPHDR_RST)) {
+ 		if (mptcp_established_options_fastclose(sk, &opt_size, remaining, opts) ||
+@@ -1351,6 +1354,20 @@ static void mptcp_set_rwin(struct tcp_sock *tp, struct tcphdr *th)
+ 	subflow->rcv_wnd_sent = rcv_wnd_new;
+ }
+ 
++static void mptcp_track_rwin(struct tcp_sock *tp)
++{
++	const struct sock *ssk = (const struct sock *)tp;
++	struct mptcp_subflow_context *subflow;
++	struct mptcp_sock *msk;
++
++	if (!ssk)
++		return;
++
++	subflow = mptcp_subflow_ctx(ssk);
++	msk = mptcp_sk(subflow->conn);
++	WRITE_ONCE(msk->old_wspace, tp->rcv_wnd);
++}
++
+ __sum16 __mptcp_make_csum(u64 data_seq, u32 subflow_seq, u16 data_len, __wsum sum)
+ {
+ 	struct csum_pseudo_header header;
+@@ -1643,6 +1660,9 @@ void mptcp_write_options(struct tcphdr *th, __be32 *ptr, struct tcp_sock *tp,
+ 				      opts->reset_transient,
+ 				      opts->reset_reason);
+ 		return;
++	} else if (unlikely(!opts->suboptions)) {
++		mptcp_track_rwin(tp);
++		return;
+ 	}
+ 
+ 	if (OPTION_MPTCP_PRIO & opts->suboptions) {
+-- 
+2.51.0
 
