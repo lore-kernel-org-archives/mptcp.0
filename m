@@ -1,133 +1,203 @@
-Received: from mail-il1-f174.google.com (mail-il1-f174.google.com [209.85.166.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AE42302154
-	for <mptcp@lists.linux.dev>; Fri,  7 Nov 2025 08:30:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 712D33207
+	for <mptcp@lists.linux.dev>; Fri,  7 Nov 2025 08:32:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762504257; cv=none; b=aCVEGanXMpn4JlxlR9DL7AagLby4A0E3NV124a0TotgzaF1muqBcQjOuOiul/rNMQytiS1O+rWCFrGIbBOqasNEdhRVqdnDsDa3SgsrHhS52vPW2Z9F/u69k0AoQNZBu2/mpvJRL8Ian8qSpV2+x2rtpzK+P/58MJNmJsDUN7TA=
+	t=1762504347; cv=none; b=MKaE/yrfZuR5wXp9XmBtg4OI+rZ1mwB02hs+VokTB8diGPEREx6KsVpdj3dxN7DQwJgHahWkiEubI7OFqddSmjcnIEwO1oPkZqvIaCDbW8AwgQc1Mavamn2Q8ANwSXF4bTQxLSWlTXLPMzcEhO/T94C+kgUDXG0YtLvkpv6WZyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762504257; c=relaxed/simple;
-	bh=sUQstPGXxaw5MjDb2VXKBplfI5HnXRPwewz3PgIjls0=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=cASAjqzDgVjw7IDQEjwrzJ+AymrWm1W7TWTGYAzAD9eYqit6GtRcsgXpoI/mONJtyP6oBiDt5SYXi3y4Ys8Ia8Rgiz74rvRd5bZ6xdHg3SAo4jP5x95uLARS6FBqvV2Z+pdFj8O7wpS2mnwLaXoaZMdPbr1+RLfNdW9uGPMcH1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mP3i5bj8; arc=none smtp.client-ip=209.85.166.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1762504347; c=relaxed/simple;
+	bh=1Hc3kX7b2Qjds4E4ckHMY39pjKPgKFWB7eAnh624kWA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:content-type; b=cCRg0nCBoXad/oCJ7Glie4YoPLDiIipPEmgAkrSlvRGpbIT8DYViMHcDfabpD/vHlBO5A7GOfo3kPPvksBeE5+PtQc7bRQmtX7FVepNODJ33W6akg5C+I4/91WZwYOtojjc5VuDn61HPEp5rZc7km1wwKXGS3B5MZGxx5lzxrKg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hGYteB58; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mP3i5bj8"
-Received: by mail-il1-f174.google.com with SMTP id e9e14a558f8ab-4334f402e17so2347285ab.2
-        for <mptcp@lists.linux.dev>; Fri, 07 Nov 2025 00:30:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1762504255; x=1763109055; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GC7rP8GqLr49M+QjjqtZKHaAWi00fMEI2MxjEF2cF4I=;
-        b=mP3i5bj85D/oJwAFG7XE08Fvb7zYvWCosUldB7eGfG1CZsZVzC/xciHU3sfR0L0oBi
-         54z5n4DV8hskQOd60MrTL7unWdIfOEFX7cvsSHb0nfB7DNcdY5zmGN5MTfI8IXjlKmH/
-         yqZwwGv1h08uhwor/Q8sb7pA2gO43ypxoaqA/2KLEal0Nh2DS0vE7gsNvLoM3p4RYNHu
-         V99U9lYRftW2Ln0YToZ6rnweaepg/3Ez0cIYWW2jxedE/R41pEKFspUJlyTB30F5RsTb
-         ODdVFKxlzt9FyfJD+jMCHHr5mBcaNYC0CWA1rwjL2v6/iHx2reQ6x7fRyWMNX4VFQtuE
-         0WZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762504255; x=1763109055;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GC7rP8GqLr49M+QjjqtZKHaAWi00fMEI2MxjEF2cF4I=;
-        b=SHwWUar4lsK1jcJYWmfy41mJKbQjTiVJ0yV7NaOZLAeKs5+1/wNWIaTr+bNOGhiqB3
-         O/43g4NcowaKmEtGCh37+8mfnYGFwxThBpHL78OBkRubyKWA+bFYA3mABd3T8+Q4z75w
-         tp2fGydnWtpCeganoXLs/Ysd0vf/rKBpyv0sXcWurARJMR6DES8tkMAPFMWD9ux2CJXt
-         UF0rDKS51459MxB/hShfp5ZXfobV0TnrO9vGn9S+JZauv8C63Q/PWfmosjBSRilhPx+S
-         cfRuPH9VhlxhzsULlGe8on4K1xUdZOm/acSAE7ttXDiEhZENGFAxhtRxaNud8W0Pe+T5
-         NkZw==
-X-Gm-Message-State: AOJu0YwM/swdtkiFGRdGmz6dD0Awcq2vzAJnvhFKKnpd+jInJp0L5K1Q
-	rX9E6i2kYOgYuLGzredx6Ol9mbNd/cJ+4AQudGhfd42AZo6/atp2xMiTpBWY
-X-Gm-Gg: ASbGncuP59xzj4VUdFE0NQgXTc0kCCsty+oZHPLKmAjpyp6O3+MpArv6slJp5vNBF7J
-	BCPzTVoU1SKY8J9n0/U3isZiTmXdSPWhfkrh3s93/jttKiRI12ZW/g5GYLn6VmhsBcdNIt1JmyS
-	A7e0zi3wetFsg1oI7fv1F0WP1vYoqL/FWtsY23Z3/f77V6U872OCdmXWHbsvfWcLUXr/8WQ8ccR
-	rCWk6riC+evoS6FmNMPZbFS4mzXo2poXAmbvA+4klxJx7af9WVKPEOBZF9L930ZFHf2YAFHmtly
-	zSwkENKzLQq+DWROu62zH9ZvV+yoOrISTQazLtdvBsC01iNjcRpC899uOG0KDz8EePEJ77LF/vl
-	6AVeeB3VPMs7d/kPU4GQGbqhRMYN1RhmIsj6C2GEtUqUNTBVcTcvhgssy1YTebOzS3kQAQ0sKdh
-	GtdYz24y14+AO7WA==
-X-Google-Smtp-Source: AGHT+IFlZpWHHXmBqMFa4PA1UcLqHeXqdlkhFSxBR7q1wuMQZJ52+r5H8GwoQxHd4s7r5yN2sGL+RA==
-X-Received: by 2002:a05:6e02:3183:b0:433:2b83:340b with SMTP id e9e14a558f8ab-4335f3ab037mr36554735ab.2.1762504255121;
-        Fri, 07 Nov 2025 00:30:55 -0800 (PST)
-Received: from [127.0.0.1] ([64.236.141.192])
-        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-94888c34964sm72259139f.13.2025.11.07.00.30.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Nov 2025 00:30:54 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <cover.1762500073.git.pabeni@redhat.com>
-References: <cover.1762500073.git.pabeni@redhat.com>
-Subject: Re: [PATCH v2 mptcp-net 0/2] mptcp: fix duplicate reset
-Message-ID: <30e5b3ce-bea1-6077-27e8-eeb235f599b3@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 07 Nov 2025 08:30:53 +0000
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hGYteB58"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1762504344;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/7hG/sIcv2TRPO8epr0Cjoy4xYUJ8nqYOJ7PH6xjFFI=;
+	b=hGYteB58h6dJUpm2oGSCGd6Pamc+i55qrgllY146gBuupRSiR2gJwH8eKbnhnVKjMSLqnx
+	3brKNRDv5hYZlZm2oo87KaOaOH7F7yxDRQcmZgeIAElKmDhWw5dLNVbh3agiAthqPQjjuG
+	ntAvi4l7qN7Gmi44xq7DqtFKxTSCo2w=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-618-bi-k44q5OOy2H8jfJ5FZKw-1; Fri,
+ 07 Nov 2025 03:32:23 -0500
+X-MC-Unique: bi-k44q5OOy2H8jfJ5FZKw-1
+X-Mimecast-MFC-AGG-ID: bi-k44q5OOy2H8jfJ5FZKw_1762504342
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 525A819560B2;
+	Fri,  7 Nov 2025 08:32:22 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.44.32.157])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 2674018002A6;
+	Fri,  7 Nov 2025 08:32:20 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: mptcp@lists.linux.dev
+Cc: Mat Martineau <martineau@kernel.org>
+Subject: [PATCH v3 mptcp-next 1/7] trace: mptcp: add mptcp_rcvbuf_grow tracepoint
+Date: Fri,  7 Nov 2025 09:32:05 +0100
+Message-ID: <58467c663646d2ee937e6c2fde18439971efa49c.1762504059.git.pabeni@redhat.com>
+In-Reply-To: <cover.1762504059.git.pabeni@redhat.com>
+References: <cover.1762504059.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: kC7t3me49z7wLMAR_spLcUUgqDdvyzG1dOW7L9sjnic_1762504342
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+content-type: text/plain; charset="US-ASCII"; x-default=true
 
-Hi Paolo,
+Similar to tcp, provide a new tracepoint to better understand
+mptcp_rcv_space_adjust() behavior, which presents many artifacts.
 
-Thank you for your modifications, that's great!
+Note that the used format string is so long that I preferred
+wrap it, contrary to guidance for quoted strings.
 
-Our CI did some validations and here is its report:
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+---
+v2 -> v3:
+  - use __entry->family; note that its value is show as raw number
+    instead of string, as show_family_name is available only to
+    net/core/ trace and I preferred not moving the mptcp traces
+    there as we need mptcp-specific helpers, too.
+---
+ include/trace/events/mptcp.h | 77 ++++++++++++++++++++++++++++++++++++
+ net/mptcp/protocol.c         |  3 ++
+ 2 files changed, 80 insertions(+)
 
-- KVM Validation: normal (except selftest_mptcp_join): Unstable: 1 failed =
-test(s): packetdrill_mp_capable =F0=9F=94=B4
-- KVM Validation: normal (only=
- selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except =
-selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (only =
-selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only=
- bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only =
-bpftest_all): Success! =E2=9C=85
-- Task: https://github.=
-com/multipath-tcp/mptcp_net-next/actions/runs/19161574021
+diff --git a/include/trace/events/mptcp.h b/include/trace/events/mptcp.h
+index 085b749cdd97..0f24ec65cea6 100644
+--- a/include/trace/events/mptcp.h
++++ b/include/trace/events/mptcp.h
+@@ -5,7 +5,13 @@
+ #if !defined(_TRACE_MPTCP_H) || defined(TRACE_HEADER_MULTI_READ)
+ #define _TRACE_MPTCP_H
+ 
++#include <linux/ipv6.h>
++#include <linux/tcp.h>
+ #include <linux/tracepoint.h>
++#include <net/ipv6.h>
++#include <net/tcp.h>
++#include <linux/sock_diag.h>
++#include <net/rstreason.h>
+ 
+ #define show_mapping_status(status)					\
+ 	__print_symbolic(status,					\
+@@ -178,6 +184,77 @@ TRACE_EVENT(subflow_check_data_avail,
+ 		  __entry->skb)
+ );
+ 
++#include <trace/events/net_probe_common.h>
++
++TRACE_EVENT(mptcp_rcvbuf_grow,
++
++	TP_PROTO(struct sock *sk, int time),
++
++	TP_ARGS(sk, time),
++
++	TP_STRUCT__entry(
++		__field(int, time)
++		__field(__u32, rtt_us)
++		__field(__u32, copied)
++		__field(__u32, inq)
++		__field(__u32, space)
++		__field(__u32, ooo_space)
++		__field(__u32, rcvbuf)
++		__field(__u32, rcv_wnd)
++		__field(__u8, scaling_ratio)
++		__field(__u16, sport)
++		__field(__u16, dport)
++		__field(__u16, family)
++		__array(__u8, saddr, 4)
++		__array(__u8, daddr, 4)
++		__array(__u8, saddr_v6, 16)
++		__array(__u8, daddr_v6, 16)
++		__field(const void *, skaddr)
++	),
++
++	TP_fast_assign(
++		struct mptcp_sock *msk = mptcp_sk(sk);
++		struct inet_sock *inet = inet_sk(sk);
++		__be32 *p32;
++
++		__entry->time = time;
++		__entry->rtt_us = msk->rcvq_space.rtt_us >> 3;
++		__entry->copied = msk->rcvq_space.copied;
++		__entry->inq = mptcp_inq_hint(sk);
++		__entry->space = msk->rcvq_space.space;
++		__entry->ooo_space = RB_EMPTY_ROOT(&msk->out_of_order_queue) ? 0 :
++				     MPTCP_SKB_CB(msk->ooo_last_skb)->end_seq -
++				     msk->ack_seq;
++
++		__entry->rcvbuf = sk->sk_rcvbuf;
++		__entry->rcv_wnd = atomic64_read(&msk->rcv_wnd_sent) -  msk->ack_seq;
++		__entry->scaling_ratio = msk->scaling_ratio;
++		__entry->sport = ntohs(inet->inet_sport);
++		__entry->dport = ntohs(inet->inet_dport);
++		__entry->family = sk->sk_family;
++
++		p32 = (__be32 *) __entry->saddr;
++		*p32 = inet->inet_saddr;
++
++		p32 = (__be32 *) __entry->daddr;
++		*p32 = inet->inet_daddr;
++
++		TP_STORE_ADDRS(__entry, inet->inet_saddr, inet->inet_daddr,
++			       sk->sk_v6_rcv_saddr, sk->sk_v6_daddr);
++
++		__entry->skaddr = sk;
++	),
++
++	TP_printk("time=%u rtt_us=%u copied=%u inq=%u space=%u ooo=%u scaling_ratio=%u "
++		  "rcvbuf=%u rcv_wnd=%u family=%d sport=%hu dport=%hu saddr=%pI4 "
++		  "daddr=%pI4 saddrv6=%pI6c daddrv6=%pI6c skaddr=%p",
++		  __entry->time, __entry->rtt_us, __entry->copied,
++		  __entry->inq, __entry->space, __entry->ooo_space,
++		  __entry->scaling_ratio, __entry->rcvbuf, __entry->rcv_wnd,
++		  __entry->family, __entry->sport,
++		  __entry->dport, __entry->saddr, __entry->daddr,
++		  __entry->saddr_v6, __entry->daddr_v6, __entry->skaddr)
++);
+ #endif /* _TRACE_MPTCP_H */
+ 
+ /* This part must be outside protection */
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 24d4fa8227b7..31154e2df5ee 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -28,6 +28,8 @@
+ #include "protocol.h"
+ #include "mib.h"
+ 
++static unsigned int mptcp_inq_hint(const struct sock *sk);
++
+ #define CREATE_TRACE_POINTS
+ #include <trace/events/mptcp.h>
+ 
+@@ -2101,6 +2103,7 @@ static void mptcp_rcv_space_adjust(struct mptcp_sock *msk, int copied)
+ 	if (msk->rcvq_space.copied <= msk->rcvq_space.space)
+ 		goto new_measure;
+ 
++	trace_mptcp_rcvbuf_grow(sk, time);
+ 	if (mptcp_rcvbuf_grow(sk, msk->rcvq_space.copied)) {
+ 		/* Make subflows follow along.  If we do not do this, we
+ 		 * get drops at subflow level if skbs can't be moved to
+-- 
+2.51.0
 
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/92f738c5d9cf
-Patchwork: https://patchwork.kernel.=
-org/project/mptcp/list/?series=3D1020769
-
-
-If there are some issues, you =
-can reproduce them using the same environment as
-the one used by the CI =
-thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
-
-
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 Core)
