@@ -1,42 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07D4013D891
-	for <mptcp@lists.linux.dev>; Fri,  7 Nov 2025 03:38:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 601B913D891
+	for <mptcp@lists.linux.dev>; Fri,  7 Nov 2025 03:38:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762486693; cv=none; b=XNofY3NJy1WRi40jCViKOYjnuFTaN8nS3eHZy5KbaX5tEdtjY4+nt8bmc4SMibWBQdhia0DkL0+qGTP9KHEjVPcVDxqbTz6qdEbCYkRP6LvLjOVVJ2HBDLUpILTefaP0KetaTr81GBMCaY973MkA/4aN/T0NwA6WX3m1/PPMn7U=
+	t=1762486695; cv=none; b=ib4D7HCvLuF5f5EHuamxXuShkMm46e/uG23m97TrZbGGQSMEXgat0W0pC2VP5xdeTsxky4/+Mtz5ydqAU3jbjUccYaHKgybVkmw/jroIKFq3QMhOWFuZ063Vyk4tK4jVTuKySS9CU6c23QYFKkYCx5QO5HQ9VN8WQrZCMHZzsYQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762486693; c=relaxed/simple;
-	bh=9MUfi1cF/g48GvPD7NmsgtRoRPVrEqVhQtc+Z8NHTqc=;
+	s=arc-20240116; t=1762486695; c=relaxed/simple;
+	bh=mFSXEgORr33xEfFsLfkZVniXeb6eqzeMzPyvO0vjOSk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Vlq4NbOGEelgd2IzJGrN1Qg6e+gQqkg2xCsqd2HIUBAMsH87mtygQjm96eqmy22tqLLW4pQvQaJE1JIShoG43Wy0RCOUwA6JoJf51iOwuOGma4mivOCo5bD/6nhUXawjOhXEgEbhMthn6od0A5F5I19A3mocuqI4hutVERyvvOA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u7vSjlDb; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=LTVvZYUafFyFEKip2I3KryG5a5qwrNtiFIwEV5p/rfJG1yZWKRY4Dv67Gr6/K5trCIYRa8ubAfbsksoLPwipZUVSZEHHlEPqEESU5IIwyCfFfc8FiyE7hXxgJsaaRlX8CjNhC1cfxLb1lg6QWp+guKC/zx70cD47rkPWNb0XT9c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t5rpM3CL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u7vSjlDb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A1E8C19424;
-	Fri,  7 Nov 2025 03:38:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t5rpM3CL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6DF07C4CEF7;
+	Fri,  7 Nov 2025 03:38:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762486692;
-	bh=9MUfi1cF/g48GvPD7NmsgtRoRPVrEqVhQtc+Z8NHTqc=;
+	s=k20201202; t=1762486695;
+	bh=mFSXEgORr33xEfFsLfkZVniXeb6eqzeMzPyvO0vjOSk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=u7vSjlDbFzmytHzG9aqb5qi/piB4oqUtD3jSW1tejFAesJbx+EMXVD9mleU2LsCVj
-	 CuJnpUKTsEHyUcREB+NIWqeOdlxucVuWTY+o7gp5hIosDhrmYTuaZE1FTveMX0ZbiF
-	 RahQbry28Fn6HLfe4ggawVcC+A0b5rbGUnetARTzBBFFU8lIinly8RLTzXGmi092KC
-	 PQE1YsTJjzqZKtJQg87MGgK63zYjugm/RcGZyBoG5syc9TkRXEjB4UNknrc1x8ZshT
-	 A72f2gmYLcvM1Lk1x6nDwPtEYPZ62KtffhdJ33RXzs78Y95HGwrrG2OiWKieTmqNCG
-	 os6OfzFiN7Ckw==
+	b=t5rpM3CL9zcM5qjZ7XDvFu9tV5n+au7jB3MEeP1rBgHRuD1jw+CdSFfh8NLE02+6m
+	 0kvYAIMbDDatRrTuz7WJsDv4A0WaBRQgQEW8+RH1+PPYb4clCvnWNJ7xI4h98neT5l
+	 4FG01IPHNDjiF3A0aJEE/1cdQlliCLPb6WDruEEeU9pVp+qvTc6pUt/ySLDvtJHgwM
+	 7DRLJSBPuAu8OE6CbgvOpM1e2zSJE9+xfx1Te4ItRUyXt3DesvzNMEM/iF6CHClkXZ
+	 MGbaMW/Y3WQREZpn2F9+v20QOXQJy/cC1nu4Ax8rm4tnlJTaVjVuRMbUvbK2UTstXT
+	 WWpMkwFC9N9Tg==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev,
 	hare@suse.de,
 	hare@kernel.org
-Cc: Geliang Tang <tanggeliang@kylinos.cn>,
-	Hui Zhu <zhuhui@kylinos.cn>,
-	Gang Yan <yangang@kylinos.cn>,
-	zhenwei pi <zhenwei.pi@linux.dev>
-Subject: [RFC mptcp-next 5/6] selftests: mptcp: add NVMe-over-MPTCP test
-Date: Fri,  7 Nov 2025 11:37:36 +0800
-Message-ID: <aae526f547430896b473f6b6d254f9b706c01ad6.1762485513.git.tanggeliang@kylinos.cn>
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Subject: [RFC mptcp-next 6/6] nvmet-tcp: clear MSG_DONTWAIT for MPTCP (TODO: HELP WANTED)
+Date: Fri,  7 Nov 2025 11:37:37 +0800
+Message-ID: <cfdce3d91ca30abcf2ff9b77ecc146ad48f31d07.1762485513.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1762485513.git.tanggeliang@kylinos.cn>
 References: <cover.1762485513.git.tanggeliang@kylinos.cn>
@@ -50,127 +47,84 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-This patch introduces a new selftest that evaluates NVMe-over-Fabrics
-performance when using MPTCP as the transport protocol. The test:
+When running the tests from a previous commit in a loop, there is about a
+one in ten chance of reporting the following "timeout" error:
 
-1. Sets up a local NVMe target configuration using:
-   - A loopback device as storage backend
-   - MPTCP as the transport type
-   - IPv4 addressing
+'''
+[   32.867710] nvme nvme0: I/O tag 1 (0001) type 4 opcode 0x2 (I/O Cmd) QID 2 timeout
+[   32.867929] nvme nvme0: starting error recovery
+[   32.867994] nvme nvme0: I/O tag 2 (0002) type 4 opcode 0x2 (I/O Cmd) QID 2 timeout
+[   32.868112] nvme nvme0: I/O tag 3 (0003) type 4 opcode 0x2 (I/O Cmd) QID 2 timeout
+[   32.868359] nvme nvme0: I/O tag 4 (0004) type 4 opcode 0x2 (I/O Cmd) QID 2 timeout
+[   32.868446] nvme nvme0: I/O tag 5 (0005) type 4 opcode 0x2 (I/O Cmd) QID 2 timeout
+[   32.868592] nvme0c0n1: I/O Cmd(0x2) @ LBA 1046528, 8 blocks, I/O Error (sct 0x3 / sc 0x70)
+[   32.868817] recoverable transport error, dev nvme0c0n1, sector 1046528 op 0x0:(READ) flags 0x2080700 phys_seg 1 prio class 0
+[   32.868976] block nvme0n1: no usable path - requeuing I/O
+[   32.869038] nvme nvme0: I/O tag 6 (0006) type 4 opcode 0x2 (I/O Cmd) QID 2 timeout
+[   32.869119] nvme nvme0: I/O tag 7 (0007) type 4 opcode 0x2 (I/O Cmd) QID 2 timeout
+... ...
+[   32.877945] nvme nvme0: I/O tag 122 (107a) type 4 opcode 0x2 (I/O Cmd) QID 2 timeout
+[   32.878025] block nvme0n1: no usable path - requeuing I/O
+[   32.878079] block nvme0n1: no usable path - requeuing I/O
+[   32.878128] block nvme0n1: no usable path - requeuing I/O
+[   32.878180] block nvme0n1: no usable path - requeuing I/O
+[   32.878238] block nvme0n1: no usable path - requeuing I/O
+[   32.878296] block nvme0n1: no usable path - requeuing I/O
+[   32.878350] block nvme0n1: no usable path - requeuing I/O
+[   32.878403] block nvme0n1: no usable path - requeuing I/O
+[   32.878455] block nvme0n1: no usable path - requeuing I/O
+[   32.883603] nvme nvme0: Reconnecting in 10 seconds...
+'''
 
-2. Performs standard NVMe operations including:
-   - Discovery and connection
-   - Device listing
-   - Random read/write performance tests using fio
+Through debugging, I discovered that setting the MSG_DONTWAIT flag leads to
+MPTCP returning EAGAIN in mptcp_sendmsg.
 
-3. Cleans up all test resources
+This patch addresses it by dropping the MSG_DONTWAIT flag for MPTCP. I know
+this isn't an ideal fix, and I need your suggestions.
 
-The test script (mptcp_nvme.sh) accepts parameters for transport type
-and target address, defaulting to MPTCP and localhost. It measures
-performance using fio with:
-- 4 parallel jobs
-- 256 I/O depth
-- 4KB block size
-- 10 second runtime
-- Both random read and write patterns
-
-Required kernel config options are added to the MPTCP selftest config
-file to support NVMe-over-TCP functionality.
-
-This test helps validate MPTCP's suitability for storage networking
-workloads and provides a benchmark for performance comparisons.
-
-Co-Developed-by: Hui Zhu <zhuhui@kylinos.cn>
-Signed-off-by: Hui Zhu <zhuhui@kylinos.cn>
-Co-Developed-by: Gang Yan <yangang@kylinos.cn>
-Signed-off-by: Gang Yan <yangang@kylinos.cn>
-Co-Developed-by: zhenwei pi <zhenwei.pi@linux.dev>
-Signed-off-by: zhenwei pi <zhenwei.pi@linux.dev>
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- tools/testing/selftests/net/mptcp/config      |  7 +++
- .../testing/selftests/net/mptcp/mptcp_nvme.sh | 57 +++++++++++++++++++
- 2 files changed, 64 insertions(+)
- create mode 100755 tools/testing/selftests/net/mptcp/mptcp_nvme.sh
+ drivers/nvme/target/tcp.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/net/mptcp/config b/tools/testing/selftests/net/mptcp/config
-index 59051ee2a986..0eee348eff8b 100644
---- a/tools/testing/selftests/net/mptcp/config
-+++ b/tools/testing/selftests/net/mptcp/config
-@@ -34,3 +34,10 @@ CONFIG_NFT_SOCKET=m
- CONFIG_NFT_TPROXY=m
- CONFIG_SYN_COOKIES=y
- CONFIG_VETH=y
-+CONFIG_CONFIGFS_FS=y
-+CONFIG_NVME_CORE=y
-+CONFIG_NVME_FABRICS=y
-+CONFIG_NVME_TCP=y
-+CONFIG_NVME_TARGET=y
-+CONFIG_NVME_TARGET_TCP=y
-+CONFIG_NVME_MULTIPATH=y
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_nvme.sh b/tools/testing/selftests/net/mptcp/mptcp_nvme.sh
-new file mode 100755
-index 000000000000..329169fac4ca
---- /dev/null
-+++ b/tools/testing/selftests/net/mptcp/mptcp_nvme.sh
-@@ -0,0 +1,57 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0
+diff --git a/drivers/nvme/target/tcp.c b/drivers/nvme/target/tcp.c
+index 854b70b4a6f4..683a451bcb08 100644
+--- a/drivers/nvme/target/tcp.c
++++ b/drivers/nvme/target/tcp.c
+@@ -645,12 +645,15 @@ static int nvmet_try_send_data(struct nvmet_tcp_cmd *cmd, bool last_in_batch)
+ 
+ 	while (cmd->cur_sg) {
+ 		struct msghdr msg = {
+-			.msg_flags = MSG_DONTWAIT | MSG_SPLICE_PAGES,
++			.msg_flags = MSG_SPLICE_PAGES,
+ 		};
+ 		struct page *page = sg_page(cmd->cur_sg);
+ 		struct bio_vec bvec;
+ 		u32 left = cmd->cur_sg->length - cmd->offset;
+ 
++		if (cmd->queue->sock->sk->sk_protocol != IPPROTO_MPTCP)
++			msg.msg_flags |= MSG_DONTWAIT;
 +
-+trtype="${1:-mptcp}"
-+traddr="${2:-127.0.0.1}"
-+ns=1
-+port=1234
-+trsvcid=4420
-+nqn=nqn.2014-08.org.nvmexpress.${trtype}dev
+ 		if ((!last_in_batch && cmd->queue->send_list_len) ||
+ 		    cmd->wbytes_done + left < cmd->req.transfer_len ||
+ 		    queue->data_digest || !queue->nvme_sq.sqhd_disabled)
+@@ -694,12 +697,15 @@ static int nvmet_try_send_data(struct nvmet_tcp_cmd *cmd, bool last_in_batch)
+ static int nvmet_try_send_response(struct nvmet_tcp_cmd *cmd,
+ 		bool last_in_batch)
+ {
+-	struct msghdr msg = { .msg_flags = MSG_DONTWAIT | MSG_SPLICE_PAGES, };
++	struct msghdr msg = { .msg_flags = MSG_SPLICE_PAGES, };
+ 	struct bio_vec bvec;
+ 	u8 hdgst = nvmet_tcp_hdgst_len(cmd->queue);
+ 	int left = sizeof(*cmd->rsp_pdu) - cmd->offset + hdgst;
+ 	int ret;
+ 
++	if (cmd->queue->sock->sk->sk_protocol != IPPROTO_MPTCP)
++		msg.msg_flags |= MSG_DONTWAIT;
 +
-+dd if=/dev/zero of=/tmp/test.raw bs=1M count=0 seek=512
-+losetup /dev/loop100 /tmp/test.raw
-+cd /sys/kernel/config/nvmet/subsystems
-+mkdir ${nqn}
-+cd ${nqn}
-+echo 1 > attr_allow_any_host
-+cd namespaces
-+mkdir ${ns}
-+cd ${ns}
-+echo /dev/loop100 > device_path
-+echo 1 > enable
-+cd /sys/kernel/config/nvmet/ports
-+mkdir ${port}
-+cd ${port}
-+echo ${trtype} > addr_trtype
-+echo ipv4 > addr_adrfam
-+echo ${traddr} > addr_traddr
-+echo ${trsvcid} > addr_trsvcid
-+cd subsystems
-+ln -s ../../../subsystems/${nqn} ${trtype}subsys
-+
-+echo "nvme discover"
-+nvme discover -t ${trtype} -a ${traddr} -s ${trsvcid}
-+
-+echo "nvme connect"
-+devname=$(nvme connect -t ${trtype} -a ${traddr} -s ${trsvcid} -n ${nqn} | awk '{print $4}')
-+
-+sleep 0.5
-+echo "nvme list"
-+nvme list
-+
-+fio --name=global --direct=1 --norandommap --randrepeat=0 --ioengine=libaio --thread=1 --blocksize=4k --runtime=10 --time_based --rw=randread --numjobs=4 --iodepth=256 --group_reporting --size=100% --name=libaio_4_256_4k_randread --filename=/dev/${devname}n1
-+
-+fio --name=global --direct=1 --norandommap --randrepeat=0 --ioengine=libaio --thread=1 --blocksize=4k --runtime=10 --time_based --rw=randwrite --numjobs=4 --iodepth=256 --group_reporting --size=100% --name=libaio_4_256_4k_randread --filename=/dev/${devname}n1
-+
-+sleep 0.5
-+echo "nvme disconnect"
-+nvme disconnect -n ${nqn}
-+
-+rm -rf /sys/kernel/config/nvmet/ports/${port}/subsystems/${trtype}subsys
-+rmdir /sys/kernel/config/nvmet/ports/${port}
-+echo 0 > /sys/kernel/config/nvmet/subsystems/${nqn}/namespaces/${ns}/enable
-+echo -n 0 > /sys/kernel/config/nvmet/subsystems/${nqn}/namespaces/${ns}/device_path
-+rmdir /sys/kernel/config/nvmet/subsystems/${nqn}/namespaces/${ns}
-+rmdir /sys/kernel/config/nvmet/subsystems/${nqn}
-+losetup -d /dev/loop100
-+rm -rf /tmp/test.raw
+ 	if (!last_in_batch && cmd->queue->send_list_len)
+ 		msg.msg_flags |= MSG_MORE;
+ 	else
 -- 
 2.43.0
 
