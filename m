@@ -1,130 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f43.google.com (mail-io1-f43.google.com [209.85.166.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 601B913D891
-	for <mptcp@lists.linux.dev>; Fri,  7 Nov 2025 03:38:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 730D979DA
+	for <mptcp@lists.linux.dev>; Fri,  7 Nov 2025 04:15:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762486695; cv=none; b=ib4D7HCvLuF5f5EHuamxXuShkMm46e/uG23m97TrZbGGQSMEXgat0W0pC2VP5xdeTsxky4/+Mtz5ydqAU3jbjUccYaHKgybVkmw/jroIKFq3QMhOWFuZ063Vyk4tK4jVTuKySS9CU6c23QYFKkYCx5QO5HQ9VN8WQrZCMHZzsYQ=
+	t=1762488944; cv=none; b=HN3L00ZXvBdMg+k6yGQsFNvSUWXbZK9ksE1KrBZumGfb4UmqfNTD+jj57wwWm4fTe09wCUVaEAp1UrRcRV5trucxXPVb5YhSf1W44i1g4LLozXn23wdXr2ISgFCd8PW8wq36+xa/4OPcgOY/5mOobai+FWNwRW4iFweWTUo3paw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762486695; c=relaxed/simple;
-	bh=mFSXEgORr33xEfFsLfkZVniXeb6eqzeMzPyvO0vjOSk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LTVvZYUafFyFEKip2I3KryG5a5qwrNtiFIwEV5p/rfJG1yZWKRY4Dv67Gr6/K5trCIYRa8ubAfbsksoLPwipZUVSZEHHlEPqEESU5IIwyCfFfc8FiyE7hXxgJsaaRlX8CjNhC1cfxLb1lg6QWp+guKC/zx70cD47rkPWNb0XT9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t5rpM3CL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1762488944; c=relaxed/simple;
+	bh=NuZurw0JGzswtGjMmzIihiE3snOX9hDOf75lkIqnX8o=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=GU1jVvAl1RZjMQPRRMP4EMgTxG1PEwmbf2sT8xnwU22bB1nVsJi4ZtNl8hyiDEIamy7YJV4prroPHm89fHXUkWI+O/EC17l4GCxQSTu6+Yqy1MEooCMBQ/pNRifAwHed3cCXZ/1Ln8K4oBLE0ROh1tLKXKjVPpbnhK3lL5iBvSY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BGU8f4I5; arc=none smtp.client-ip=209.85.166.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t5rpM3CL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6DF07C4CEF7;
-	Fri,  7 Nov 2025 03:38:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762486695;
-	bh=mFSXEgORr33xEfFsLfkZVniXeb6eqzeMzPyvO0vjOSk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=t5rpM3CL9zcM5qjZ7XDvFu9tV5n+au7jB3MEeP1rBgHRuD1jw+CdSFfh8NLE02+6m
-	 0kvYAIMbDDatRrTuz7WJsDv4A0WaBRQgQEW8+RH1+PPYb4clCvnWNJ7xI4h98neT5l
-	 4FG01IPHNDjiF3A0aJEE/1cdQlliCLPb6WDruEEeU9pVp+qvTc6pUt/ySLDvtJHgwM
-	 7DRLJSBPuAu8OE6CbgvOpM1e2zSJE9+xfx1Te4ItRUyXt3DesvzNMEM/iF6CHClkXZ
-	 MGbaMW/Y3WQREZpn2F9+v20QOXQJy/cC1nu4Ax8rm4tnlJTaVjVuRMbUvbK2UTstXT
-	 WWpMkwFC9N9Tg==
-From: Geliang Tang <geliang@kernel.org>
-To: mptcp@lists.linux.dev,
-	hare@suse.de,
-	hare@kernel.org
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [RFC mptcp-next 6/6] nvmet-tcp: clear MSG_DONTWAIT for MPTCP (TODO: HELP WANTED)
-Date: Fri,  7 Nov 2025 11:37:37 +0800
-Message-ID: <cfdce3d91ca30abcf2ff9b77ecc146ad48f31d07.1762485513.git.tanggeliang@kylinos.cn>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BGU8f4I5"
+Received: by mail-io1-f43.google.com with SMTP id ca18e2360f4ac-940d25b807bso11707439f.1
+        for <mptcp@lists.linux.dev>; Thu, 06 Nov 2025 20:15:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1762488942; x=1763093742; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jj+8GmSM3Ia6Gzd6SNE/MpKX985VHdTbB0W6OfaqhfI=;
+        b=BGU8f4I5vxmdsjv0uIWn3stSF+h6x7t75GShvXbOfNIFEKxvbP4pJIgjFQzxoKZpEw
+         LGMr+T5xUD8zHIY1g0sfxiyqDHRkvqdJ/cca55+YxYgKbRTuaytnDeaydA59P2SMckic
+         yejxVHQYRvULwR9p2JS98BJ4BUDlmPbkVl/oHL+MGDPd18KHP82lrE4rBqu6ifEFAJVX
+         3Wsr8Zq/EU5UQ9MpQByW2WuzWljI+kL6643hOU0h+2mgybPSz/1CTpsEn/QulVuf50fv
+         9PGqzbmhQ13bfk3KqX2uzkZpSrgX3F4sQsdTDEI+Haao3P2pln7unp7oR7YRCo+jSOTW
+         wNOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762488942; x=1763093742;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jj+8GmSM3Ia6Gzd6SNE/MpKX985VHdTbB0W6OfaqhfI=;
+        b=I7RsDvrfiJ/Tqe/2GLho/icKB/BYMzHx2hyWiXRovd0AL2VIrwPTNKBrrSeAW3SaJR
+         NJmGlrEclMztkggm7zew2t1ZMhB1EU5IsMZ5tLa/kGY2mf9AhTQIJYtwH5SggTb8iBDo
+         vBXSxKQF5ch3Owk8JAgXWBTvnfZ6Ozus3Zqg/zOXQsFp/Z+0Bq+THLyKVEnmQZPgwevj
+         Jbq0E7LO3pgzwAn/uLdywZPXROtQqrV2BB89Pxv2v77jwl0n7Hj5YMJCJItk4KGelYSh
+         wfSG/GgZ5Vz9y9yFjTxD2+rWT089dsMNAdLoZmRSz12H9sViMPXTO7bJeh8a5nscQsiv
+         gFyg==
+X-Gm-Message-State: AOJu0Yy4IJqTLxRQhBZVfBP2msdWaa7hoF+nOnY7s/0mzFCOOcO8/o94
+	6MAefAW46hlI1WgiDf4XxgTqkHwM/h0lH419GXeyIjmlG8txNNk58eI=
+X-Gm-Gg: ASbGnctoKGi+Px5FWGrujCZpj1AjbPBkTKQKsT7DFQe18IjJWWfG0JseODpFqb7FtYR
+	Pfawk1Ax7k0FcPK+wH4FI3iIu639fvi7XvtySy5Z5WmHkaaEjgy9+ntRE7jsRR8lc3IDvaiUmlC
+	NOmP7vcyaGg/9IndeBfl2DyHJ/RzIo50wYKbl1YUo0oVjccwlo+rah764pj/FhgjrwfIK9q4g5I
+	WSLoAxyg7rBujW7XGwE5+Z+14O+7ho8zSbOGWq6sLuukjVz5gLbaQQ21HgWG1GInBc4EEMUQobX
+	QU+eygT1uwJdWn24l+Hv8e5/zHuZnkpUJwtUCpVByvlOAOCk2jHgG4RLF01hRy/7cPrNaTe2iZX
+	T0oamATJkynubQh/gjUqtPKN0LEwVM7FBIvJnt0MY4X9P2HhpIufc8EVTma481sRNaxWfxDdqFl
+	i33gr4EknDHwVnIhdyMgjz9c71
+X-Google-Smtp-Source: AGHT+IEzjEoK8S6J/aEgjAs9AcxFaSRoQT0f4txlhxFvGjKYSeDwy8WxD6AU55k6nYwn59cWUNWI8w==
+X-Received: by 2002:a5d:9615:0:b0:887:732f:6a96 with SMTP id ca18e2360f4ac-9488909c500mr217157539f.17.1762488941614;
+        Thu, 06 Nov 2025 20:15:41 -0800 (PST)
+Received: from [127.0.0.1] ([52.165.213.178])
+        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-94888d94b8esm57834339f.19.2025.11.06.20.15.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Nov 2025 20:15:40 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Geliang Tang <tanggeliang@kylinos.cn>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
 In-Reply-To: <cover.1762485513.git.tanggeliang@kylinos.cn>
 References: <cover.1762485513.git.tanggeliang@kylinos.cn>
+Subject: Re: [RFC mptcp-next 0/6] NVME over MPTCP
+Message-ID: <7f7d6334-a3c0-3458-b361-9bf15d8c76ef@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 07 Nov 2025 04:15:39 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+Hi Geliang,
 
-When running the tests from a previous commit in a loop, there is about a
-one in ten chance of reporting the following "timeout" error:
+Thank you for your modifications, that's great!
 
-'''
-[   32.867710] nvme nvme0: I/O tag 1 (0001) type 4 opcode 0x2 (I/O Cmd) QID 2 timeout
-[   32.867929] nvme nvme0: starting error recovery
-[   32.867994] nvme nvme0: I/O tag 2 (0002) type 4 opcode 0x2 (I/O Cmd) QID 2 timeout
-[   32.868112] nvme nvme0: I/O tag 3 (0003) type 4 opcode 0x2 (I/O Cmd) QID 2 timeout
-[   32.868359] nvme nvme0: I/O tag 4 (0004) type 4 opcode 0x2 (I/O Cmd) QID 2 timeout
-[   32.868446] nvme nvme0: I/O tag 5 (0005) type 4 opcode 0x2 (I/O Cmd) QID 2 timeout
-[   32.868592] nvme0c0n1: I/O Cmd(0x2) @ LBA 1046528, 8 blocks, I/O Error (sct 0x3 / sc 0x70)
-[   32.868817] recoverable transport error, dev nvme0c0n1, sector 1046528 op 0x0:(READ) flags 0x2080700 phys_seg 1 prio class 0
-[   32.868976] block nvme0n1: no usable path - requeuing I/O
-[   32.869038] nvme nvme0: I/O tag 6 (0006) type 4 opcode 0x2 (I/O Cmd) QID 2 timeout
-[   32.869119] nvme nvme0: I/O tag 7 (0007) type 4 opcode 0x2 (I/O Cmd) QID 2 timeout
-... ...
-[   32.877945] nvme nvme0: I/O tag 122 (107a) type 4 opcode 0x2 (I/O Cmd) QID 2 timeout
-[   32.878025] block nvme0n1: no usable path - requeuing I/O
-[   32.878079] block nvme0n1: no usable path - requeuing I/O
-[   32.878128] block nvme0n1: no usable path - requeuing I/O
-[   32.878180] block nvme0n1: no usable path - requeuing I/O
-[   32.878238] block nvme0n1: no usable path - requeuing I/O
-[   32.878296] block nvme0n1: no usable path - requeuing I/O
-[   32.878350] block nvme0n1: no usable path - requeuing I/O
-[   32.878403] block nvme0n1: no usable path - requeuing I/O
-[   32.878455] block nvme0n1: no usable path - requeuing I/O
-[   32.883603] nvme nvme0: Reconnecting in 10 seconds...
-'''
+But sadly, our CI spotted some issues with it when trying to build it.
 
-Through debugging, I discovered that setting the MSG_DONTWAIT flag leads to
-MPTCP returning EAGAIN in mptcp_sendmsg.
+You can find more details there:
 
-This patch addresses it by dropping the MSG_DONTWAIT flag for MPTCP. I know
-this isn't an ideal fix, and I need your suggestions.
+  https://github.com/multipath-tcp/mptcp_=
+net-next/actions/runs/19157587244
 
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
----
- drivers/nvme/target/tcp.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+Status: failure
+Initiator: Patchew =
+Applier
+Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/4d=
+1bb0e3c51a
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1020727
 
-diff --git a/drivers/nvme/target/tcp.c b/drivers/nvme/target/tcp.c
-index 854b70b4a6f4..683a451bcb08 100644
---- a/drivers/nvme/target/tcp.c
-+++ b/drivers/nvme/target/tcp.c
-@@ -645,12 +645,15 @@ static int nvmet_try_send_data(struct nvmet_tcp_cmd *cmd, bool last_in_batch)
- 
- 	while (cmd->cur_sg) {
- 		struct msghdr msg = {
--			.msg_flags = MSG_DONTWAIT | MSG_SPLICE_PAGES,
-+			.msg_flags = MSG_SPLICE_PAGES,
- 		};
- 		struct page *page = sg_page(cmd->cur_sg);
- 		struct bio_vec bvec;
- 		u32 left = cmd->cur_sg->length - cmd->offset;
- 
-+		if (cmd->queue->sock->sk->sk_protocol != IPPROTO_MPTCP)
-+			msg.msg_flags |= MSG_DONTWAIT;
-+
- 		if ((!last_in_batch && cmd->queue->send_list_len) ||
- 		    cmd->wbytes_done + left < cmd->req.transfer_len ||
- 		    queue->data_digest || !queue->nvme_sq.sqhd_disabled)
-@@ -694,12 +697,15 @@ static int nvmet_try_send_data(struct nvmet_tcp_cmd *cmd, bool last_in_batch)
- static int nvmet_try_send_response(struct nvmet_tcp_cmd *cmd,
- 		bool last_in_batch)
- {
--	struct msghdr msg = { .msg_flags = MSG_DONTWAIT | MSG_SPLICE_PAGES, };
-+	struct msghdr msg = { .msg_flags = MSG_SPLICE_PAGES, };
- 	struct bio_vec bvec;
- 	u8 hdgst = nvmet_tcp_hdgst_len(cmd->queue);
- 	int left = sizeof(*cmd->rsp_pdu) - cmd->offset + hdgst;
- 	int ret;
- 
-+	if (cmd->queue->sock->sk->sk_protocol != IPPROTO_MPTCP)
-+		msg.msg_flags |= MSG_DONTWAIT;
-+
- 	if (!last_in_batch && cmd->queue->send_list_len)
- 		msg.msg_flags |= MSG_MORE;
- 	else
--- 
-2.43.0
+Feel free to reply to this email if you cannot access =
+logs, if you need
+some support to fix the error, if this doesn't seem to be=
+ caused by your
+modifications or if the error is a false positive one.
 
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
