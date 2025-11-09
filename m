@@ -1,153 +1,134 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f46.google.com (mail-io1-f46.google.com [209.85.166.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E7AE2D595A
-	for <mptcp@lists.linux.dev>; Sun,  9 Nov 2025 13:53:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 842614A33
+	for <mptcp@lists.linux.dev>; Sun,  9 Nov 2025 22:01:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762696419; cv=none; b=djpwLhH0LUlgXQT62tQK/JCld65TYc6QQQ11dc41V614lI8p6PLfTpLmmpY8m5h3/SGDPR7pvVrSBtRxUv1wlJV946Ahu/3G4XICIPS4SvAHHkjZ40XQjWjl/vG1aumFpdXQ+qwXNhPg+MN92mGIpu138CT2pj59s/nNDwwufXQ=
+	t=1762725709; cv=none; b=E1sMb5Rq0YKMQi/3ynGCfQ1fq0E357jcrNOhykd+xPcZXyQqYUFC+yCbNdhYU/Ue+2cJwb38jYymLohpUng3I9O9qPuSRcxqKkzsdgK2a+OhpZ0wKGmgIfhHhj+moVSuzSj06yhp0hM/QNW/3NhbYzw+Tu3pXv0hl5DBmyuF13k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762696419; c=relaxed/simple;
-	bh=FKaTiGuEXDTFkscifAJrZnqrENC5jb2Hx/lQUXXLSVY=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:content-type; b=CmB3niToO46Kr4Dp94EYKrsyOomzbkmImnSGhI+gwRsfR48MPqqzcLl4QvZsXpbOVlUVXeZiyqAw445ncHfrORy2iZpxIsTNITf1Zv3p+YnyfVSVCIvI5ssAx4YJeQgCrepC7RDGSNVghE9BvzxruG2vAi+8t/t6hV8tG6v6oaY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WqFjn1el; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1762725709; c=relaxed/simple;
+	bh=EiqBIceD4FnUwGpjEC+fXWzQcqSKy2z5cz6kQMkUZtQ=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=IbwU1Gn+9YFeYNcQR9BOwpDoBaCXKTMyQXUdtyU4J35TJGUE7XIR+K4KPAFVU+zJ3G1nwtRf+jrWFal3s8QFqqAuESPzoFX3M0TxDoBen/TePw2C2sxzvH5cVOGDCaPAMOSSw01gguC+mK54IX90CrtCCBiSIIGt+PYTDtPNsAA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ltTs3tHY; arc=none smtp.client-ip=209.85.166.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WqFjn1el"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1762696415;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=VMzb5Cy70il6kpI3arliHl/hq6MpCpCj8GWikxwAFQQ=;
-	b=WqFjn1elZwrbU4zkwdnwl2BxyJ16Spq6hXMSCiNB7EYs4L7LdrWZ1NCzLnLKzUJahlMaxW
-	O9Glc6gfZve7hWmKq0fJtk/WYGGHDbmh0KLB2aKGTeD5Ppx8DO6RVOLExjMMlPV0mYZIvP
-	HljKgOl0fsi24VwS/5IQVhAFSFObpUc=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-575-ACw3DnOzN7yZCiJK39gw6A-1; Sun,
- 09 Nov 2025 08:53:34 -0500
-X-MC-Unique: ACw3DnOzN7yZCiJK39gw6A-1
-X-Mimecast-MFC-AGG-ID: ACw3DnOzN7yZCiJK39gw6A_1762696413
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5372B1800447
-	for <mptcp@lists.linux.dev>; Sun,  9 Nov 2025 13:53:33 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.44.32.57])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 852BB1955BE3
-	for <mptcp@lists.linux.dev>; Sun,  9 Nov 2025 13:53:32 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Subject: [PATCH v2 mptcp-next] Squash-to: "mptcp: leverage the backlog for RX packet processing"
-Date: Sun,  9 Nov 2025 14:53:30 +0100
-Message-ID: <ed5c5ea1de503f6dc8a514b5eb4c9d16c431646f.1762696333.git.pabeni@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ltTs3tHY"
+Received: by mail-io1-f46.google.com with SMTP id ca18e2360f4ac-9486248f01bso95852039f.0
+        for <mptcp@lists.linux.dev>; Sun, 09 Nov 2025 14:01:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1762725706; x=1763330506; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=V+WYbqx3gkDOBQWGWmrvDVrOCmxILj5235Ryc23OgqI=;
+        b=ltTs3tHYwXTikdk1oPpDvs45+Ey2eGF2kZm5YiGGlC5xZfN8WXaKIF1bZg97cuwqEH
+         0qAPvyREfBE5/k7ChSb+KYtYqaKij267LyUixCR3fsVGgzOBwXbQ0iS2hvyjecAe/heo
+         nG/1NKUMlbtRPRcqtvswhGlw7/Zc6S2GNfMJc7wHpsW9kjjjaFJ89Ia5taeG0mFwc0CW
+         FX18svHRaU9BockIsyOARGlN119VvqjK/zCdUpajY8QR0bAicUF24E1kUCbkglPkiYNQ
+         3Fil0wsncA+pqyxLOIjwL4STT/b0K+orUtO9K6F6bY+lCD72VNvQNcNGv+aNbYmwT8kC
+         ZG7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762725706; x=1763330506;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=V+WYbqx3gkDOBQWGWmrvDVrOCmxILj5235Ryc23OgqI=;
+        b=cqOzT9HALYXhicU5HSVT+V3FtkCDZjBeOGVVkWElRtuiC1MkGNhODKJTlzhaW/AGCU
+         d0Ev2sszs5EDHf+gngaVcaophqceL1qNd0YWf6+Dci+cEAFU0SWrHU+k0rarXP0gPyzf
+         FJEau9+QnKqCqcrbBVUwv0EBzqM69ADycZ8lJaXXtvAn/a529cWlyTXPzbaNgjO6Nc/L
+         oe6/UQAzmjuGymOwProVbB74tZAXnTDdf/8InlKwtxKGxoyJayyVxZznR1QV036V2OyZ
+         ySS1DeaMv1lzb7ukpkiB39G8K5//Gscen5wO90d1h0HuRsLPjN1gnczzc0316+poXVGW
+         3ySg==
+X-Gm-Message-State: AOJu0YyI9s6t/girX2XOZ3hMScuXJ7bNDDEGZQft/6Bk4GOF8YPlfWzq
+	3r6A22IHNkfXENFIQcHHlYbIG0u/GLQ6EpYCtHCeMRXdv+Rl9aA3C+o=
+X-Gm-Gg: ASbGncv8jv95f6B6AVSaT6hKp0na6ry7wV6SRhNScj30TVB+75HF9sHlAg4J8VkUGLT
+	AXV3N4HhneDINNKpo4pd+BMbTG2GREmbJuHN3dK7wgjuF9AO73kR9+rn+1VFoCdZ0wDCXEevAPN
+	9N59Y0/aBPhvOiUq9oNkogxgJeDZzo/RiBlJdfUKH2Y039+dnqUouCpuVBgTIaXbnNmvEcBpZjN
+	FoLv9wzoxOEcDZKPnGrU5AXT12pIujQh+Uz2d0/BU9wWcgn6MxT3z0qTHmYTX107A10D8IFwpAE
+	ho8JiS8BPWHcaImetT9ztaUDyZBAH2a6DQJtkC9Iwv0Hgo6cBnWvnGBwZrcbF1qSpDzfUeJMLoN
+	axbGDDVyfgdn+s0L4MrFZJ+GzybVKt2z6KZdq1NVDRIq6FX/r9QcE9WQZBPO+ubZgkXODIklsUN
+	qJBkD5IigM0BGqJprgelwN6GLv
+X-Google-Smtp-Source: AGHT+IEx6bSjiiBt0eRFuhEzi+dNlvGX09tXFimH4AZ9Z8kI/1DvC3LIz9bwY9rhpE/OwrOn7mL5uA==
+X-Received: by 2002:a05:6602:3f8f:b0:948:9d92:9eaa with SMTP id ca18e2360f4ac-9489d92a194mr451907639f.11.1762725705630;
+        Sun, 09 Nov 2025 14:01:45 -0800 (PST)
+Received: from [127.0.0.1] ([172.212.163.17])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-5b746991ac4sm4290444173.64.2025.11.09.14.01.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 09 Nov 2025 14:01:44 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <ed5c5ea1de503f6dc8a514b5eb4c9d16c431646f.1762696333.git.pabeni@redhat.com>
+References:
+ <ed5c5ea1de503f6dc8a514b5eb4c9d16c431646f.1762696333.git.pabeni@redhat.com>
+Subject: =?UTF-8?Q?Re=3A_=5BPATCH_v2_mptcp-next=5D_Squash-t?=
+ =?UTF-8?Q?o=3A_=22mptcp=3A_leverage_the_backlog_fo?=
+ =?UTF-8?Q?r_RX_packet_processing=22?=
+Message-ID: <5e792591-2c67-3d9d-65d9-cbf8bf3ad96e@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Sun, 09 Nov 2025 22:01:43 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: yeIm-2mQYtQCGL7bxsF_l5DENxQqamx83OewSg0cXtc_1762696413
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-content-type: text/plain; charset="US-ASCII"; x-default=true
 
-If a subflow receives data before gaining the memcg while the msk
-socket lock is held at accept time, or the PM locks the msk socket
-while still unaccepted and subflows push data to it at the same time,
-the mptcp_graph_subflows() can complete with a non empty backlog.
+Hi Paolo,
 
-The msk will try to borrow such memory, but (some) of the skbs there
-where not memcg charged. When the msk finally will return such accounted
-memory, we should hit the same splat of #597.
-[even if so far I was unable to replicate this scenario]
+Thank you for your modifications, that's great!
 
-This patch tries to address such potential issue by:
-- preventing the subflow from queuing data into the backlog after
-  gaining the memcg. This ensure that at the end of the look all the
-  skbs in the backlog (if any) are _not_ memory accounted.
-- mem charge the backlog to msk
-- 'restart' the subflow and spool any data waiting there.
+Our CI did some validations and here is its report:
 
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
----
- net/mptcp/protocol.c | 46 ++++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 44 insertions(+), 2 deletions(-)
+- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/192143=
+27116
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 5e9325c7ea9c..d6b08e1de358 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -4082,10 +4082,12 @@ static void mptcp_graph_subflows(struct sock *sk)
- {
- 	struct mptcp_subflow_context *subflow;
- 	struct mptcp_sock *msk = mptcp_sk(sk);
-+	struct sock *ssk;
-+	int old_amt, amt;
-+	bool slow;
- 
- 	mptcp_for_each_subflow(msk, subflow) {
--		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
--		bool slow;
-+		ssk = mptcp_subflow_tcp_sock(subflow);
- 
- 		slow = lock_sock_fast(ssk);
- 
-@@ -4095,8 +4097,48 @@ static void mptcp_graph_subflows(struct sock *sk)
- 		if (!ssk->sk_socket)
- 			mptcp_sock_graft(ssk, sk->sk_socket);
- 
-+		if (!mem_cgroup_from_sk(sk))
-+			goto unlock;
-+
- 		__mptcp_inherit_cgrp_data(sk, ssk);
- 		__mptcp_inherit_memcg(sk, ssk, GFP_KERNEL);
-+
-+		/* Prevent subflows from queueing data into the backlog
-+		 * as soon as cg is set; note that we can't race
-+		 * with __mptcp_close_ssk setting this bit for a really
-+		 * closing socket, because we hold the msk socket lock here.
-+		 */
-+		subflow->closing = 1;
-+
-+unlock:
-+		unlock_sock_fast(ssk, slow);
-+	}
-+
-+	if (!mem_cgroup_from_sk(sk))
-+		return;
-+
-+	/* Charge the bl memory, note that __sk_charge accounted for
-+	 * fwd memory and rmem only
-+	 */
-+	mptcp_data_lock(sk);
-+	old_amt = sk_mem_pages(sk->sk_forward_alloc +
-+			       atomic_read(&sk->sk_rmem_alloc));
-+	amt = sk_mem_pages(msk->backlog_len + sk->sk_forward_alloc +
-+		     atomic_read(&sk->sk_rmem_alloc));
-+	amt -= old_amt;
-+	if (amt)
-+		mem_cgroup_sk_charge(sk, amt, GFP_ATOMIC | __GFP_NOFAIL);
-+	mptcp_data_unlock(sk);
-+
-+	/* Finally let the subflow restart queuing data. */
-+	mptcp_for_each_subflow(msk, subflow) {
-+		ssk = mptcp_subflow_tcp_sock(subflow);
-+
-+		slow = lock_sock_fast(ssk);
-+		subflow->closing = 0;
-+
-+		if (mptcp_subflow_data_available(ssk))
-+			mptcp_data_ready(sk, ssk);
- 		unlock_sock_fast(ssk, slow);
- 	}
- }
--- 
-2.51.0
+Initiator: Matthieu Baerts (NGI0)
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/d100023cce38
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1021300
 
+
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
