@@ -1,198 +1,285 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92E2832E6A7;
-	Mon, 10 Nov 2025 18:24:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59E2E158545
+	for <mptcp@lists.linux.dev>; Tue, 11 Nov 2025 01:56:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762799064; cv=none; b=G+JxJoPAubeRFjaftNR7mU6GLYH6Yc75PMT6Q39qlyAL9pB365Crv2JQ2yKequ6jGa5efyu0uOmiyJR0ggiKHTRk9p0IQdCF7Oofi7Z4Wfi5akC/SDdJSo+OmhepwW8Zf8wIanCTlZ12jG8SeGUfKyo+hjAwESqYiIQkUm6VI+I=
+	t=1762826168; cv=none; b=N5gNR26eBjcLHw5qtNCdMCPh/KP0cDZ2oRy6pRmG/FxmMGvZePNO6l4ci3DoK+K1kf3Keigg6Y6gNUc6/ZfDq78g9dH8BjgMTWZp6AopUrSGx6r29H2gqM0/PW65a76n1q7FkUpnJDiSS3GWyIbryMspfnYN7fCTkiP9d31/D3w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762799064; c=relaxed/simple;
-	bh=rNX/qv1b1iAPPSF9UvN11BhMKo9TT2zldKEZXZLB5Uo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=qGQq0BbeS8lbcp4jwyF+gmYGbixck4ngZhwGIrYHVKppjxVYj4FIwNXMfTUzl7w4WHNrYJKkcpc1ESTlM4DMgaYJ//Y01x1vrZ2JVbJe6EOrGVo7aX6u7/owBejgLJ35JCntTiAJ5H6T4NholVBkMzr67iekxoCfIhvgwww370E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mYU+YtIQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1762826168; c=relaxed/simple;
+	bh=taRLavDkR0mZz/MP88ryLPTCR63x3S5r9+xzR973laY=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=OSeVzWpZV135SKXUBiCXN213TF/UQebB0oI5ijWtZQwQdyrJjBwoq6QUjOWff1pLtxAAJzfcANrGKJXXfsWnZ9pSLWj4xR+3pbhX6umRwxMHf0Ohcmli3HaraAxkC15FJ5eul4wiphijjsyim8GMhVO5trra7yOjB/N11x1R3o0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m1P7XaIG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mYU+YtIQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D822EC116D0;
-	Mon, 10 Nov 2025 18:24:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m1P7XaIG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8E79C116D0;
+	Tue, 11 Nov 2025 01:56:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762799064;
-	bh=rNX/qv1b1iAPPSF9UvN11BhMKo9TT2zldKEZXZLB5Uo=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=mYU+YtIQo8XQwOFl6334IV7EZGLLffUzMWY2YN+3GrKmU77HZAKI+jOoZbqPd9fSh
-	 7S5pJJC+8kSwRqLqkvZo5RLxJAFVf6JsIzNMXELoS7pRHljGjeTcHfD0ZHmWAjy8di
-	 nvps2BMwZkH2rcqvdYg0/KIkEYp1GsnvqnwYz0hFCuI2J5TiV0LTeh/oLxz+hAbm8S
-	 v2EdktNHapsYFVzShFYwz6clzCYrfwFJF5dA+uDuxozwVGOBj3caU1Sy5Yjaq0Sjfp
-	 gf0ZevQtUoLLm6KqYWWyD8XsEi6Xv9pyVCl8UsaTURjWBx6rG1mnfDK6eU0y+gu1sr
-	 0yUxi5yJJbQxw==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Mon, 10 Nov 2025 19:23:45 +0100
-Subject: [PATCH net 6/6] selftests: mptcp: join: properly kill background
- tasks
+	s=k20201202; t=1762826164;
+	bh=taRLavDkR0mZz/MP88ryLPTCR63x3S5r9+xzR973laY=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=m1P7XaIGAGcz06tx4vC7lSfyFKPwAmfv+OF07nlHrBaraEuhD0i1PvzK+P9lI1k0Y
+	 doctXDU2D6PjV8Ty31GfzaJyJUkwtD1W6BcIpeuaG0dA4EAJmd9Y3WsuxIf4N51M2A
+	 Z1tNhP4jJUEhXl4PtBN6YExdok1v9ALQjqgpFUFQmZ5r1as05fAKmapoFMnXxZrIVl
+	 a2aAGKXOTLabmIt7T1wzENaZkOJHmZKyD7CbQnzQiYs65yI+szsUil3vKe60J9enDT
+	 bxz7ULul2L7+NlR++l6FzzD4LXnnGFNLgAGkwg6RhAqGQF3hQrd8GZgCCFNk0y1MyS
+	 QR7+AyBgwoqaw==
+Date: Mon, 10 Nov 2025 17:56:03 -0800 (PST)
+From: Mat Martineau <martineau@kernel.org>
+To: Paolo Abeni <pabeni@redhat.com>
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH v3 mptcp-next 6/7] mptcp: better mptcp-level RTT
+ estimator
+In-Reply-To: <2e404a1c673c812819ac5b6f12d57d23625c1e71.1762504059.git.pabeni@redhat.com>
+Message-ID: <fc066efe-5656-4561-1a69-b290215743c2@kernel.org>
+References: <cover.1762504059.git.pabeni@redhat.com> <2e404a1c673c812819ac5b6f12d57d23625c1e71.1762504059.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20251110-net-mptcp-sft-join-unstable-v1-6-a4332c714e10@kernel.org>
-References: <20251110-net-mptcp-sft-join-unstable-v1-0-a4332c714e10@kernel.org>
-In-Reply-To: <20251110-net-mptcp-sft-join-unstable-v1-0-a4332c714e10@kernel.org>
-To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Simon Horman <horms@kernel.org>, Shuah Khan <shuah@kernel.org>
-Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, 
- linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, 
- "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, stable@vger.kernel.org
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4441; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=rNX/qv1b1iAPPSF9UvN11BhMKo9TT2zldKEZXZLB5Uo=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDKFdI/oNM2oODzD4O70uSH5F56d2nomOPIX25HXJ7jD8
- nKFQyc6dJSyMIhxMciKKbJIt0Xmz3xexVvi5WcBM4eVCWQIAxenAExExo7hf+QKwz7j0N1Rsy/f
- StP9YXVi2uuoLu09wZXlLJLVyr/CyxgZ9ik/6ww/J5EhInQ6qv3gxRdrhC0mnfu6rPZVrMGj2wK
- M/AA=
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-The 'run_tests' function is executed in the background, but killing its
-associated PID would not kill the children tasks running in the
-background.
+On Fri, 7 Nov 2025, Paolo Abeni wrote:
 
-To properly kill all background tasks, 'kill -- -PID' could be used, but
-this requires kill from procps-ng. Instead, all children tasks are
-listed using 'ps', and 'kill' is called with all PIDs of this group.
+> The current MPTCP-level RTT estimator has several issues. On high speed
+> links, the MPTCP-level receive buffer auto-tuning happens with a frequency
+> well above the TCP-level's one. That in turn can cause excessive/unneeded
+> receive buffer increase.
+>
+> On such links, the initial rtt_us value is considerably higher
+> than the actual delay, and the current mptcp_rcv_space_adjust() updates
+> msk->rcvq_space.rtt_us with a period equal to the such field previous
+> value. If the initial rtt_us is 40ms, its first update will happen after
+> 40ms, even if the subflows see actual RTT orders of magnitude lower.
+>
+> Additionally, setting the msk rtt to the maximum among all the subflows
+> RTTs makes DRS constantly overshooting the rcvbuf size when a subflow has
+> considerable higher latency than the other(s).
+>
+> Finally, during unidirectional bulk transfers with multiple active
+> subflows, the TCP-level RTT estimator occasionally sees considerably higher
+> value than the real link delay, i.e. when the packet scheduler reacts to
+> an incoming ack on given subflow pushing data on a different subflow.
+>
+> Address the issue with a more accurate RTT estimation strategy: the
+> MPTCP-level RTT is set to the minimum of all the subflows, in a rcv-win
+> based interval, feeding data into the MPTCP-receive buffer.
+>
+> Use some care to avoid updating msk and ssk level fields too often and
+> to avoid 'too high' samples.
+>
+> Fixes: a6b118febbab ("mptcp: add receive buffer auto-tuning")
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> ---
+> v1 -> v2:
+>  - do not use explicit reset flags - do rcv win based decision instead
+>  - discard 0 rtt_us samples from subflows
+>  - discard samples on non empty rx queue
+>  - discard "too high" samples, see the code comments WRT the whys
 
-Fixes: 31ee4ad86afd ("selftests: mptcp: join: stop transfer when check is done (part 1)")
-Cc: stable@vger.kernel.org
-Fixes: 04b57c9e096a ("selftests: mptcp: join: stop transfer when check is done (part 2)")
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- tools/testing/selftests/net/mptcp/mptcp_join.sh | 18 +++++++++---------
- tools/testing/selftests/net/mptcp/mptcp_lib.sh  | 21 +++++++++++++++++++++
- 2 files changed, 30 insertions(+), 9 deletions(-)
+Hi Paolo -
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 01273abfdc89..41503c241989 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -3831,7 +3831,7 @@ userspace_tests()
- 		chk_mptcp_info subflows 0 subflows 0
- 		chk_subflows_total 1 1
- 		kill_events_pids
--		mptcp_lib_kill_wait $tests_pid
-+		mptcp_lib_kill_group_wait $tests_pid
- 	fi
- 
- 	# userspace pm create destroy subflow
-@@ -3859,7 +3859,7 @@ userspace_tests()
- 		chk_mptcp_info subflows 0 subflows 0
- 		chk_subflows_total 1 1
- 		kill_events_pids
--		mptcp_lib_kill_wait $tests_pid
-+		mptcp_lib_kill_group_wait $tests_pid
- 	fi
- 
- 	# userspace pm create id 0 subflow
-@@ -3880,7 +3880,7 @@ userspace_tests()
- 		chk_mptcp_info subflows 1 subflows 1
- 		chk_subflows_total 2 2
- 		kill_events_pids
--		mptcp_lib_kill_wait $tests_pid
-+		mptcp_lib_kill_group_wait $tests_pid
- 	fi
- 
- 	# userspace pm remove initial subflow
-@@ -3904,7 +3904,7 @@ userspace_tests()
- 		chk_mptcp_info subflows 1 subflows 1
- 		chk_subflows_total 1 1
- 		kill_events_pids
--		mptcp_lib_kill_wait $tests_pid
-+		mptcp_lib_kill_group_wait $tests_pid
- 	fi
- 
- 	# userspace pm send RM_ADDR for ID 0
-@@ -3930,7 +3930,7 @@ userspace_tests()
- 		chk_mptcp_info subflows 1 subflows 1
- 		chk_subflows_total 1 1
- 		kill_events_pids
--		mptcp_lib_kill_wait $tests_pid
-+		mptcp_lib_kill_group_wait $tests_pid
- 	fi
- }
- 
-@@ -3960,7 +3960,7 @@ endpoint_tests()
- 		pm_nl_add_endpoint $ns2 10.0.2.2 flags signal
- 		pm_nl_check_endpoint "modif is allowed" \
- 			$ns2 10.0.2.2 id 1 flags signal
--		mptcp_lib_kill_wait $tests_pid
-+		mptcp_lib_kill_group_wait $tests_pid
- 	fi
- 
- 	if reset_with_tcp_filter "delete and re-add" ns2 10.0.3.2 REJECT OUTPUT &&
-@@ -4015,7 +4015,7 @@ endpoint_tests()
- 			chk_mptcp_info subflows 3 subflows 3
- 		done
- 
--		mptcp_lib_kill_wait $tests_pid
-+		mptcp_lib_kill_group_wait $tests_pid
- 
- 		kill_events_pids
- 		chk_evt_nr ns1 MPTCP_LIB_EVENT_LISTENER_CREATED 1
-@@ -4089,7 +4089,7 @@ endpoint_tests()
- 		wait_mpj $ns2
- 		chk_subflow_nr "after re-re-add ID 0" 3
- 		chk_mptcp_info subflows 3 subflows 3
--		mptcp_lib_kill_wait $tests_pid
-+		mptcp_lib_kill_group_wait $tests_pid
- 
- 		kill_events_pids
- 		chk_evt_nr ns1 MPTCP_LIB_EVENT_LISTENER_CREATED 1
-@@ -4137,7 +4137,7 @@ endpoint_tests()
- 		wait_mpj $ns2
- 		pm_nl_add_endpoint $ns1 10.0.3.1 id 2 flags signal
- 		wait_mpj $ns2
--		mptcp_lib_kill_wait $tests_pid
-+		mptcp_lib_kill_group_wait $tests_pid
- 
- 		join_syn_tx=3 join_connect_err=1 \
- 			chk_join_nr 2 2 2
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-index d62e653d48b0..f4388900016a 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-@@ -350,6 +350,27 @@ mptcp_lib_kill_wait() {
- 	wait "${1}" 2>/dev/null
- }
- 
-+# $1: PID
-+mptcp_lib_pid_list_children() {
-+	local curr="${1}"
-+	# evoke 'ps' only once
-+	local pids="${2:-"$(ps o pid,ppid)"}"
-+
-+	echo "${curr}"
-+
-+	local pid
-+	for pid in $(echo "${pids}" | awk "\$2 == ${curr} { print \$1 }"); do
-+		mptcp_lib_pid_list_children "${pid}" "${pids}"
-+	done
-+}
-+
-+# $1: PID
-+mptcp_lib_kill_group_wait() {
-+	# Some users might not have procps-ng: cannot use "kill -- -PID"
-+	mptcp_lib_pid_list_children "${1}" | xargs -r kill &>/dev/null
-+	wait "${1}" 2>/dev/null
-+}
-+
- # $1: IP address
- mptcp_lib_is_v6() {
- 	[ -z "${1##*:*}" ]
+Thanks for the explanation in the v2 discussion, and for the commit 
+message update here - those both helped clarify what's changing.
 
--- 
-2.51.0
+> ---
+> include/trace/events/mptcp.h |  2 +-
+> net/mptcp/protocol.c         | 74 ++++++++++++++++++++++--------------
+> net/mptcp/protocol.h         |  7 +++-
+> 3 files changed, 53 insertions(+), 30 deletions(-)
+>
+> diff --git a/include/trace/events/mptcp.h b/include/trace/events/mptcp.h
+> index 0f24ec65cea6..d30d2a6a8b42 100644
+> --- a/include/trace/events/mptcp.h
+> +++ b/include/trace/events/mptcp.h
+> @@ -218,7 +218,7 @@ TRACE_EVENT(mptcp_rcvbuf_grow,
+> 		__be32 *p32;
+>
+> 		__entry->time = time;
+> -		__entry->rtt_us = msk->rcvq_space.rtt_us >> 3;
+> +		__entry->rtt_us = msk->rcv_rtt_est.rtt_us >> 3;
+> 		__entry->copied = msk->rcvq_space.copied;
+> 		__entry->inq = mptcp_inq_hint(sk);
+> 		__entry->space = msk->rcvq_space.space;
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 97c4f1ee25e0..3d0990c58c02 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -868,6 +868,42 @@ static bool move_skbs_to_msk(struct mptcp_sock *msk, struct sock *ssk)
+> 	return moved;
+> }
+>
+> +static void mptcp_rcv_rtt_update(struct mptcp_sock *msk,
+> +				 struct mptcp_subflow_context *subflow)
+> +{
+> +	const struct tcp_sock *tp = tcp_sk(subflow->tcp_sock);
+> +	u32 rtt_us = tp->rcv_rtt_est.rtt_us;
+> +	u8 sr = tp->scaling_ratio;
+> +
+> +	/* MPTCP can react to incoming acks pushing data on different subflows,
+> +	 * causing apparent high RTT: ignore large samples; also do the update
+> +	 * only on RTT changes
+> +	 */
+> +	if (tp->rcv_rtt_est.seq == subflow->prev_rtt_seq ||
+> +	    (subflow->prev_rtt_us && (rtt_us >> 1) > subflow->prev_rtt_us))
+> +		return;
 
+If the subflow rtt increases and stays high, is there any provision to 
+adapt to that?
+
+> +
+> +	/* Similar to plain TCP, only consider samples with empty RX queue. */
+> +	if (!rtt_us || mptcp_data_avail(msk))
+> +		return;
+> +
+> +	/* Refresh the RTT after a full win per subflow */
+> +	subflow->prev_rtt_us = rtt_us;
+> +	subflow->prev_rtt_seq = tp->rcv_rtt_est.seq;
+> +	if (after(subflow->map_seq, msk->rcv_rtt_est.seq)) {
+> +		msk->rcv_rtt_est.seq = subflow->map_seq +
+> +				       tp->rcv_wnd * msk->pm.extra_subflows;
+> +		msk->rcv_rtt_est.rtt_us = rtt_us;
+> +		msk->scaling_ratio = sr;
+> +		return;
+
+Ok - so the rtt of the active subflow (whichever subflow happens to be 
+receiving the data that triggers the refresh) will rewrite the msk-level 
+rtt. It could be one of the higher-rtt subflows, but the code just below 
+will quickly reduce the msk rtt as data arrives on those subflows. High 
+rtts are filtered above so it shouldn't be too drastic. Are there any 
+consequences to occasional small jumps in rtt?
+
+> +	}
+> +
+> +	if (rtt_us < msk->rcv_rtt_est.rtt_us)
+> +		msk->rcv_rtt_est.rtt_us = rtt_us;
+> +	if (sr < msk->scaling_ratio)
+> +		msk->scaling_ratio = sr;
+> +}
+> +
+> void mptcp_data_ready(struct sock *sk, struct sock *ssk)
+> {
+> 	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk);
+> @@ -881,6 +917,7 @@ void mptcp_data_ready(struct sock *sk, struct sock *ssk)
+> 		return;
+>
+> 	mptcp_data_lock(sk);
+> +	mptcp_rcv_rtt_update(msk, subflow);
+> 	if (!sock_owned_by_user(sk)) {
+> 		/* Wake-up the reader only for in-sequence data */
+> 		if (move_skbs_to_msk(msk, ssk) && mptcp_epollin_ready(sk))
+> @@ -2058,6 +2095,7 @@ static void mptcp_rcv_space_init(struct mptcp_sock *msk)
+> 	msk->rcvspace_init = 1;
+>
+> 	mptcp_data_lock(sk);
+> +	msk->rcv_rtt_est.seq = atomic64_read(&msk->rcv_wnd_sent);
+> 	__mptcp_sync_rcvspace(sk);
+>
+> 	/* Paranoid check: at least one subflow pushed data to the msk. */
+> @@ -2076,9 +2114,8 @@ static void mptcp_rcv_space_adjust(struct mptcp_sock *msk, int copied)
+
+It's not in the diff context here, but there's a comment at the beginning 
+of the mptcp_rcv_space_adjust() function that still refers to the "highest 
+rtt estimate".
+
+> {
+> 	struct mptcp_subflow_context *subflow;
+> 	struct sock *sk = (struct sock *)msk;
+> -	u8 scaling_ratio = U8_MAX;
+> -	u32 time, advmss = 1;
+> -	u64 rtt_us, mstamp;
+> +	u32 rtt_us, time;
+> +	u64 mstamp;
+>
+> 	msk_owned_by_me(msk);
+>
+> @@ -2093,29 +2130,8 @@ static void mptcp_rcv_space_adjust(struct mptcp_sock *msk, int copied)
+> 	mstamp = mptcp_stamp();
+> 	time = tcp_stamp_us_delta(mstamp, READ_ONCE(msk->rcvq_space.time));
+>
+> -	rtt_us = msk->rcvq_space.rtt_us;
+> -	if (rtt_us && time < (rtt_us >> 3))
+> -		return;
+> -
+> -	rtt_us = 0;
+> -	mptcp_for_each_subflow(msk, subflow) {
+> -		const struct tcp_sock *tp;
+> -		u64 sf_rtt_us;
+> -		u32 sf_advmss;
+> -
+> -		tp = tcp_sk(mptcp_subflow_tcp_sock(subflow));
+> -
+> -		sf_rtt_us = READ_ONCE(tp->rcv_rtt_est.rtt_us);
+> -		sf_advmss = READ_ONCE(tp->advmss);
+> -
+> -		rtt_us = max(sf_rtt_us, rtt_us);
+> -		advmss = max(sf_advmss, advmss);
+> -		scaling_ratio = min(tp->scaling_ratio, scaling_ratio);
+> -	}
+> -
+> -	msk->rcvq_space.rtt_us = rtt_us;
+> -	msk->scaling_ratio = scaling_ratio;
+> -	if (time < (rtt_us >> 3) || rtt_us == 0)
+> +	rtt_us = READ_ONCE(msk->rcv_rtt_est.rtt_us);
+> +	if (rtt_us == U32_MAX || time < (rtt_us >> 3))
+> 		return;
+>
+> 	if (msk->rcvq_space.copied <= msk->rcvq_space.space)
+> @@ -2954,7 +2970,8 @@ static void __mptcp_init_sock(struct sock *sk)
+> 	msk->scaling_ratio = TCP_DEFAULT_SCALING_RATIO;
+> 	msk->backlog_len = 0;
+> 	msk->rcvq_space.copied = 0;
+> -	msk->rcvq_space.rtt_us = 0;
+> +	msk->rcv_rtt_est.rtt_us = U32_MAX;
+> +	msk->scaling_ratio = U8_MAX;
+>
+> 	WRITE_ONCE(msk->first, NULL);
+> 	inet_csk(sk)->icsk_sync_mss = mptcp_sync_mss;
+> @@ -3399,7 +3416,8 @@ static int mptcp_disconnect(struct sock *sk, int flags)
+> 	msk->bytes_retrans = 0;
+> 	msk->rcvspace_init = 0;
+> 	msk->rcvq_space.copied = 0;
+> -	msk->rcvq_space.rtt_us = 0;
+> +	msk->scaling_ratio = U8_MAX;
+> +	msk->rcv_rtt_est.rtt_us = U32_MAX;
+>
+> 	/* for fallback's sake */
+> 	WRITE_ONCE(msk->ack_seq, 0);
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index adc0851bad69..051f21b06d33 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -340,11 +340,14 @@ struct mptcp_sock {
+> 				 */
+> 	struct mptcp_pm_data	pm;
+> 	struct mptcp_sched_ops	*sched;
+> +	struct {
+> +		u32	rtt_us;		/* Minimum RTT of subflows */
+> +		u64	seq;		/* Refresh RTT after this seq */
+> +	} rcv_rtt_est;
+> 	struct {
+> 		int	space;	/* bytes copied in last measurement window */
+> 		int	copied; /* bytes copied in this measurement window */
+> 		u64	time;	/* start time of measurement window */
+> -		u64	rtt_us; /* last maximum rtt of subflows */
+> 	} rcvq_space;
+> 	u8		scaling_ratio;
+> 	bool		allow_subflows;
+> @@ -523,6 +526,8 @@ struct mptcp_subflow_context {
+> 	u32	map_data_len;
+> 	__wsum	map_data_csum;
+> 	u32	map_csum_len;
+> +	u32	prev_rtt_us;
+> +	u32	prev_rtt_seq;
+> 	u32	request_mptcp : 1,  /* send MP_CAPABLE */
+> 		request_join : 1,   /* send MP_JOIN */
+> 		request_bkup : 1,
+> -- 
+> 2.51.0
+>
+>
+>
