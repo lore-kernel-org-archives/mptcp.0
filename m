@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A55CC2FB629
-	for <mptcp@lists.linux.dev>; Tue, 11 Nov 2025 10:53:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6C2127FB2B
+	for <mptcp@lists.linux.dev>; Tue, 11 Nov 2025 11:24:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762858394; cv=none; b=CP08/8vv3IsZ6wnRAQMF3FEmXPky55rjWb7IM8r6HGvIZfQGHLW07Bn3emr/tU4hDY+7tjn6gTxDum1qIRYnnD7o0H55W3WdO9x071iMmhAHURf1BYgAWtTHr6LnNF4BNSr8vkWZiBsPnQnYuIxB7XtJhNCEdtXsmQ169iGXX98=
+	t=1762860278; cv=none; b=ZLxWsC8bBJhfA9nVn0ZMQe/jY26lwhYeuLGE1eLf4vtqVg8wUXgDmpWqOtQa3mJVTifyDhFeajbV9f72SL15gceft+8X1Y/1SPPo6im39h+0Rf3hXSiX5UgtTcVO7yRG1vz8JHoK1tYGrUxVhQ2Db+w9OdGlgFjkqkAswRtfKzM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762858394; c=relaxed/simple;
-	bh=AhjVPWnXJyNBXV8f/OBs0E6EwSf5JN3uWykSmxloG90=;
+	s=arc-20240116; t=1762860278; c=relaxed/simple;
+	bh=3uPgLER2nf1mNTTZF7ot75EyQHuWNf31tRaeSTgaa4s=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bnH2Su9SxaG4OFg/FxpUedV+gN3IJullaZYA7GAWMUE38OFxnpG+b7kTL05ooZdBDIfMJgvSszGV5DQyIB33w+MagoS4MikN+lx7bCYP8YQxYPnue/CZN2Y4m7H8sCcQt/jOXaP5LiR7giCbMLfpYezZgSIZLRpqeWMTELLBTFg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JUjJkZ5U; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=tW7MTGncaJe43m8a35RLSDQ+pvkrbUwfUHRkdHMd3oS/oZ/F/IkhDJwgccGdNQR0NQT8ptH6ilMA16YM3yoPOIf5JsQZkdwsn5RwAjg2r9SFiWm7KmCq5vAj3GixA3V0Hz6TGp6XSvIi0x8kgOL7bPzDmyVcVMDV7ZIQxZdqwLs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r3o2TueY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JUjJkZ5U"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C1F9C4CEF5;
-	Tue, 11 Nov 2025 10:53:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r3o2TueY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDC0DC116B1;
+	Tue, 11 Nov 2025 11:24:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762858393;
-	bh=AhjVPWnXJyNBXV8f/OBs0E6EwSf5JN3uWykSmxloG90=;
+	s=k20201202; t=1762860277;
+	bh=3uPgLER2nf1mNTTZF7ot75EyQHuWNf31tRaeSTgaa4s=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=JUjJkZ5U/xZMHQzKpWaZr4hsTwbVHk9buGyKCH1XT6Ko0J5zR6tLq8uYALHHU689/
-	 94Z4GJ/69MDnAmf43dykTmPhb51LiOpPH7+b6QyKCy9c05/1OnOS17m7f1anYRLzSV
-	 OG2qzzXYIQ1HCEQAs43f/kzZrGTCTKuZLv999prSHYVoaEpFvo42s0DnwQFPMnx/yb
-	 Xah8+wiZjPj6cDr+0UEw+FWw5QpBBXrJv7i3ZfniBXEFJXGOVT3B9Qs02byeXUj/xq
-	 YE7fHXaUqgvRtq67vgRF9Ku4tiqk/e38Z+VwxvXooO/a92QrsmxWfiKMErY6spwUVT
-	 NUuIqDj5bJZmw==
-Message-ID: <5cc480da-9682-4193-858b-8506792347ac@kernel.org>
-Date: Tue, 11 Nov 2025 11:53:10 +0100
+	b=r3o2TueYc1nAHD3VSvYXm4NPq7aZt+hZK+LLq6DQFVLVFkqs2CVzTve1rVzc6xuaF
+	 TGjZRdWFVQNk8frtq3TE/C8TBY69fbp5Xi8divankFm8d+9zwJ0GWUe8+Db+H0MNnA
+	 hW/jfnoGAqpMbAPxCu+dMEkJ2XZ8O2IKr6TT1FWsY+Mj0ljpwf6uTtSkHB9bRCUstx
+	 vvxJ6y5qnMkPE7nyM26fcIa26JJWADska8LG9NYa6YZ317QEfCrkJtYweerXQE83w9
+	 JlpFUTN8l3O4b2KbBIjvqPpHhin9x7GQu2nJ4Mq9raoUHgsUUc9BnZjISbLWwFqv8Y
+	 y/ks0aoFTN1IQ==
+Message-ID: <ee194395-a955-4a55-b469-8ab8f0a20904@kernel.org>
+Date: Tue, 11 Nov 2025 12:24:34 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH, mptcp-next] selftests: mptcp: Add a check for
- 'add_addr_accepted'
+Subject: Re: [PATCH v2 mptcp-net 1/2] mptcp: decouple mptcp fastclose from tcp
+ close
 Content-Language: en-GB, fr-BE
-To: Gang Yan <gang.yan@linux.dev>, mptcp@lists.linux.dev
-Cc: Gang Yan <yangang@kylinos.cn>
-References: <20251106075457.41025-1-gang.yan@linux.dev>
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+Cc: geliang@kernel.org
+References: <cover.1762500073.git.pabeni@redhat.com>
+ <235288b5bd06f28f5df094cd27bcd33bdcbf34f3.1762500073.git.pabeni@redhat.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,33 +87,36 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20251106075457.41025-1-gang.yan@linux.dev>
+In-Reply-To: <235288b5bd06f28f5df094cd27bcd33bdcbf34f3.1762500073.git.pabeni@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Gang, Geliang,
+Hi Paolo,
 
-On 06/11/2025 08:54, Gang Yan wrote:
-> From: Gang Yan <yangang@kylinos.cn>
+On 07/11/2025 08:23, Paolo Abeni wrote:
+> With the current fastclose implementation, the mptcp_do_fastclose() helper
+> is in charge of two distinct actions: send the fastclose reset and cleanup
+> the subflows.
 > 
-> The previous 'delete re-add signal' test did not validate the
-> 'add_addr_signal' and 'add_addr_accepted' counters. These counters
-> are crucial for ensuring the MPTCP path manager correctly handles the
-> subflow creation via 'ADD_ADDR'.
+> Formally decouple the two steps, ensuring that mptcp explicitly closes all
+> the subflows after the mentioned helper.
+> 
+> This will make the upcoming fix simpler, and allows dropping the 2nd
+> argument from mptcp_destroy_common().
 
-Now in our tree:
+I suggest adding the same Fixes tag here, just to ease the backports (to
+ensure this patch is automatically picked up):
 
-New patches for t/upstream-net and t/upstream:
-- 58e7695feb9b: selftests: mptcp: add a check for 'add_addr_accepted'
-- Results: b0e64e85315f..0a46d88dd962 (export-net)
-- Results: bb0c4d401f7c..3ba6375d918e (export)
+Fixes: d21f83485518 ("mptcp: use fastclose on more edge scenarios")
 
-Tests are now in progress:
+I'm going to add the following text to the previous paragraph:
 
-- export-net:
-https://github.com/multipath-tcp/mptcp_net-next/commit/0b60ebf29888f051796d8dc8749bf405c89cc176/checks
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/ef24db85cc1df050e9b6c0245267f15852f2d75e/checks
+  The Fixes tag is the same as in the next commit, simply to ease the
+  backports.
+
+Thank you for the patch!
+
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
 Cheers,
 Matt
