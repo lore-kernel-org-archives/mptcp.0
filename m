@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6C2127FB2B
-	for <mptcp@lists.linux.dev>; Tue, 11 Nov 2025 11:24:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D5BF34CFA6
+	for <mptcp@lists.linux.dev>; Tue, 11 Nov 2025 11:24:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762860278; cv=none; b=ZLxWsC8bBJhfA9nVn0ZMQe/jY26lwhYeuLGE1eLf4vtqVg8wUXgDmpWqOtQa3mJVTifyDhFeajbV9f72SL15gceft+8X1Y/1SPPo6im39h+0Rf3hXSiX5UgtTcVO7yRG1vz8JHoK1tYGrUxVhQ2Db+w9OdGlgFjkqkAswRtfKzM=
+	t=1762860280; cv=none; b=Qt2kGbjaipjnsGogM9iLpk+gCNTx7SaVi36x3x2JJs0uWC2fR1V82mk3GTfPKkdhqqfsxK+DNIzWFH6kBKSNIO5yKfQMmPIblK0Hyy065aG0jS40nRJTWVpeRiFaoaMB37KOvYQRhti6+IA7YUamLJXKLDLMGFeDSEvKn9A4uRo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762860278; c=relaxed/simple;
-	bh=3uPgLER2nf1mNTTZF7ot75EyQHuWNf31tRaeSTgaa4s=;
+	s=arc-20240116; t=1762860280; c=relaxed/simple;
+	bh=DzjVMU1HeHTAVBETVo4/oqaxXwscHIuR9KKAEmCuNmY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tW7MTGncaJe43m8a35RLSDQ+pvkrbUwfUHRkdHMd3oS/oZ/F/IkhDJwgccGdNQR0NQT8ptH6ilMA16YM3yoPOIf5JsQZkdwsn5RwAjg2r9SFiWm7KmCq5vAj3GixA3V0Hz6TGp6XSvIi0x8kgOL7bPzDmyVcVMDV7ZIQxZdqwLs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r3o2TueY; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=jF2vSPXPiKos90QBUdmy3Joi5762dfjjzsWG8Dc7SwpbKIsHPk6aEh2Y/SKiVpdFlRcX1lqlkN2j7h2Dt1hhf5fKBrn+Vp8Cn6IVbrt55gWxKqsgGtH/WAxCsgRpzfnN15/yng5zRK0Hi1I/2ZcG05vkbChAaIr8jZsxZkmZ4cc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N3MqjKCZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r3o2TueY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDC0DC116B1;
-	Tue, 11 Nov 2025 11:24:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N3MqjKCZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3EFC4C4CEF7;
+	Tue, 11 Nov 2025 11:24:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762860277;
-	bh=3uPgLER2nf1mNTTZF7ot75EyQHuWNf31tRaeSTgaa4s=;
+	s=k20201202; t=1762860280;
+	bh=DzjVMU1HeHTAVBETVo4/oqaxXwscHIuR9KKAEmCuNmY=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=r3o2TueYc1nAHD3VSvYXm4NPq7aZt+hZK+LLq6DQFVLVFkqs2CVzTve1rVzc6xuaF
-	 TGjZRdWFVQNk8frtq3TE/C8TBY69fbp5Xi8divankFm8d+9zwJ0GWUe8+Db+H0MNnA
-	 hW/jfnoGAqpMbAPxCu+dMEkJ2XZ8O2IKr6TT1FWsY+Mj0ljpwf6uTtSkHB9bRCUstx
-	 vvxJ6y5qnMkPE7nyM26fcIa26JJWADska8LG9NYa6YZ317QEfCrkJtYweerXQE83w9
-	 JlpFUTN8l3O4b2KbBIjvqPpHhin9x7GQu2nJ4Mq9raoUHgsUUc9BnZjISbLWwFqv8Y
-	 y/ks0aoFTN1IQ==
-Message-ID: <ee194395-a955-4a55-b469-8ab8f0a20904@kernel.org>
-Date: Tue, 11 Nov 2025 12:24:34 +0100
+	b=N3MqjKCZ8SbXlpejNmttyJZj+S5Hl1x9jP/S2GX5YwdeTmEbOH+ArwTpDkrKXZ8gv
+	 srKcTwZUJBRIISKikG45g/ulSr7orNalZikP05VNLNxrsMD/DCJ4WOnvPbHkdQDFBl
+	 dPh1ZnNA4aKSN/DTDLQgStfRxmCleWNNp7CNfvh+CHWO9c1sMUJQT0FAqg0ucpDXod
+	 +/Zd6XN1Tgtn5Ze4A8WSE1FAx9OamWgZL7sLfbdajuwGGC99Bi1bo50hmtBAC0YaO1
+	 MXsIheSLNaf7GbnPVw0Ox0R9RV1Ukc2TLPHxeeLXxizQYsN3PaW5La7P+sKdg4yrJ4
+	 aU4rT9+IHGAkQ==
+Message-ID: <c3a9f35f-d5d2-4f52-a789-bd73cff8dd1b@kernel.org>
+Date: Tue, 11 Nov 2025 12:24:38 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH v2 mptcp-net 1/2] mptcp: decouple mptcp fastclose from tcp
- close
+Subject: Re: [PATCH v2 mptcp-net 2/2] mptcp: fix duplicate reset on fastclose
 Content-Language: en-GB, fr-BE
 To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
 Cc: geliang@kernel.org
 References: <cover.1762500073.git.pabeni@redhat.com>
- <235288b5bd06f28f5df094cd27bcd33bdcbf34f3.1762500073.git.pabeni@redhat.com>
+ <32586f43554a4837f39d534676c5ad957dc10dd5.1762500073.git.pabeni@redhat.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,36 +86,43 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <235288b5bd06f28f5df094cd27bcd33bdcbf34f3.1762500073.git.pabeni@redhat.com>
+In-Reply-To: <32586f43554a4837f39d534676c5ad957dc10dd5.1762500073.git.pabeni@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Paolo,
 
 On 07/11/2025 08:23, Paolo Abeni wrote:
-> With the current fastclose implementation, the mptcp_do_fastclose() helper
-> is in charge of two distinct actions: send the fastclose reset and cleanup
-> the subflows.
+> The CI reports sporadic failures of the fastclose self-tests. The root
+> cause is a duplicate reset, not carrying the relevant MPTCP option.
+> In the failing scenario the bad reset is received by the peer before
+> the fastclose one, preventing the reception of the latter.
 > 
-> Formally decouple the two steps, ensuring that mptcp explicitly closes all
-> the subflows after the mentioned helper.
+> Indeed there is window of opportunity at fastclose time for the following
+> race:
 > 
-> This will make the upcoming fix simpler, and allows dropping the 2nd
-> argument from mptcp_destroy_common().
+> mptcp_do_fastclose
+>   __mptcp_close_ssk
+>     __tcp_close()
+>       tcp_set_state() [1]
+>       tcp_send_active_reset() [2]
+> 
+> After [1] the stack will send reset to in-flight data reaching the now
+> closed port. Such reset may race with [2].
+> 
+> Address the issue explicitly sending a single reset on fastclose before
+> explicitly moving the subflow to close status.
 
-I suggest adding the same Fixes tag here, just to ease the backports (to
-ensure this patch is automatically picked up):
-
-Fixes: d21f83485518 ("mptcp: use fastclose on more edge scenarios")
-
-I'm going to add the following text to the previous paragraph:
-
-  The Fixes tag is the same as in the next commit, simply to ease the
-  backports.
-
-Thank you for the patch!
+Thank you for the proper fix!
 
 Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> Fixes: d21f83485518 ("mptcp: use fastclose on more edge scenarios");
+
+When applying this patch, I will remove the extra ';' at the end of this
+line, plus not removing a line below.
+
+I will also revert "selftests: mptcp: join: fastclose: drop plain RST"
+and only keep the removal of the two 'MPTCP_LIB_SUBTEST_FLAKY=1' lines.
 
 Cheers,
 Matt
