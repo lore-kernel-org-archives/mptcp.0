@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3063C26E146
-	for <mptcp@lists.linux.dev>; Tue, 11 Nov 2025 15:47:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAB347082A
+	for <mptcp@lists.linux.dev>; Tue, 11 Nov 2025 15:54:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762876035; cv=none; b=oTwLY4AEwKHlEoEVPe24bBlkrTssdZsSVY690l1pMt0KEYYfUTiVy2bzL3vtEQs2wk1ezl4h/prsubyCGYIXA87x/UAxWZPLxl41x/2WgYbS3JTUpkoX1DcH5mlawJ8JfXU/BFE9vFa4WK7QHvZY3TNo6iJUZQfREZBew/jvRIY=
+	t=1762876466; cv=none; b=ZYLOysfwAS5iMEQT0vsKRcgXKTBxKbX1kzkCrFHAp+DvkoezMXV9Ofly07MsU9QPikhathDNRnDWeYd//rdNDflemRaZOSMsFgfydkAsdWOf17OHECRvDzbAl4cDTE3C1ISTNd0MYbhtB7ql0tGC4l+4A7tjXYsD912QW1avJCs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762876035; c=relaxed/simple;
-	bh=/8ePIaJg5isv8TlpN/VGfKw5Rm9eFEcKXACBIH3vp48=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=JRYRUtXkF2S57nAzNIh6oPRjZ58nyt1FYT5xmgtPVCw1MmnMsmFndrpy/X2Ebd4lnxKsYvJI4U3VQRxrCzuth3yPT027YEQ7HfH++yzo9aa9IADoxrGhczEYikbJlcdIPTwyB0TJh5MKcH7LLdZ2KUfAPZnI3PbzyXG4UZVwXTE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FxyUUQnz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1762876466; c=relaxed/simple;
+	bh=qSxa6/XSn468GTrcqUit1tgScm73W8kt+2E28dLXD5I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ik6uCXnj2x0Nm2nncKvVqwXf+vpmjsyB0yh1zMkaGHkO3KfoiToOj6jbrmj0C1axicE7DlK091x1tmHWUf7GwiKDvmP3dZFPsuqz0H6P1Vj6skpkZUUxW4X+M1e76Rn53RBZ4ES6O0QTikUeT2K9SaWLDQVlWH9ORaDBeaN6q8M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AZ70phzK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FxyUUQnz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3DACBC4CEF7;
-	Tue, 11 Nov 2025 15:47:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AZ70phzK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B145C16AAE;
+	Tue, 11 Nov 2025 15:54:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762876034;
-	bh=/8ePIaJg5isv8TlpN/VGfKw5Rm9eFEcKXACBIH3vp48=;
-	h=Date:Subject:From:To:References:In-Reply-To:From;
-	b=FxyUUQnzbj5XCtN2VXFCcjDXrWGyBRSHERRDYNXZ25V7niF8pgtI29fBe01sKq+Hg
-	 k8dMSVCqD/XKvn/NdljH3ENKQLJbPZqYu0U9SM9bToyDdOlgAxwAhsTD3fVrYUshS9
-	 x5ADkoPTCVJZo44ZiNe7WnIeq7RV6dzduHWkQ8CQHuLDaAWBmwn3ljP3uPp2i/YBsM
-	 6xmbUTsDExs6c0aP0XROtmdK01f+85xBq8/oumnvJl5gIAIDrWhIm7FzpfYivAkCGo
-	 1pC7OaL9bh4r/Fdc2dLZen5iJhacEMUr01fpo7FtZWnhJBjFPFskgItOeHcIcC0s2U
-	 +EGYTyfjK0uCg==
-Message-ID: <db7a5754-c4de-48d2-9cf8-892a0d4db38e@kernel.org>
-Date: Tue, 11 Nov 2025 16:47:12 +0100
+	s=k20201202; t=1762876465;
+	bh=qSxa6/XSn468GTrcqUit1tgScm73W8kt+2E28dLXD5I=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=AZ70phzKpvPIIHiaCvidKE9MXX4Pkl3thRZYS93hunwTEwMN4iCPFzq7k945IhV15
+	 Cnir1i8Cs6ROXI0742wKwf/PRYLWhcxuHSVzw6puEv0cBAEhzLkBhBztnFU5LPb1l2
+	 fhEkXJmf82U55JvYNkTqTBE3TuzI9urx74sq8LK6fqN4TUrkxhZu3zMSYWO6VsC9W/
+	 L6cyLEPf9iQ6o0wMS56LZgkwXCFzfmuoX/cxo/7pgcplMJM//noU5MVi/uBXSz2Idi
+	 15fmxn7Zt/qye9vVAxCLWqKD4/aHh54vOlgqSddTCHynF0lg9D7ONAPstXeVGR7kib
+	 cSkHn/E1RLOMQ==
+Message-ID: <86b9d7df-24ad-4b4c-a84e-f099ef424d03@kernel.org>
+Date: Tue, 11 Nov 2025 16:54:23 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net] mptcp: fix ack generation for fallback msk
+Subject: Re: [PATCH v2 mptcp-net 0/2] mptcp: fix duplicate reset
 Content-Language: en-GB, fr-BE
-From: Matthieu Baerts <matttbe@kernel.org>
 To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-References: <14a868192851deb4145a90e3b7eec616544da262.1762474159.git.pabeni@redhat.com>
- <fa8316ac-594e-443b-b9dc-00103ee8557a@kernel.org>
+Cc: geliang@kernel.org
+References: <cover.1762500073.git.pabeni@redhat.com>
+From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -85,70 +85,45 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <fa8316ac-594e-443b-b9dc-00103ee8557a@kernel.org>
+In-Reply-To: <cover.1762500073.git.pabeni@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Paolo,
+Hi Paolo, Geliang,
 
-On 11/11/2025 16:30, Matthieu Baerts wrote:
-> Hi Paolo,
-> 
-> On 07/11/2025 01:10, Paolo Abeni wrote:
->> mptcp_cleanup_rbuf() need to know the last most recent, mptcp-level
->> rcv_wnd sent, and such information is tracked into the msk->old_wspace
->> field, updated at ack transmission time by mptcp_write_options().
->>
->> Fallback socket do not add any mptcp options, such helper is never
->> invoked, and msk->old_wspace value remain stale. That in turn makes
->> ack generation at recvmsg() time quite randomic.
->>
->> Address the issue ensuring mptcp_write_options() is invoked even
->> for fallback sockets, and just update the needed info in such a
->> case.
->>
->> The issue went unnoticed for a long time, as mptcp overshot the> fallback socket receive buffer autotune significantly.
-> 
-> Should we say "used to overshot"? :)
-> 
->> Fixes: e3859603ba13 ("mptcp: better msk receive window updates")
->> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/594
-> 
-> Thank you for the fix!
-> 
-> (...)
-> 
->> @@ -1643,6 +1660,9 @@ void mptcp_write_options(struct tcphdr *th, __be32 *ptr, struct tcp_sock *tp,
->>  				      opts->reset_transient,
->>  				      opts->reset_reason);
->>  		return;
->> +	} else if (unlikely(!opts->suboptions)) {
-> 
-> Small detail: do you mind if I add /* Fallback to TCP */ just above when
-> applying the patch?
-> 
->> +		mptcp_track_rwin(tp);
-> 
-> Should we eventually also call mptcp_track_rwin(tp) in case of MP_FAIL
-> without MP_RST? Or is this not needed?
-> 
-> Other than that, it looks good to me, and I guess we can already apply
-> the patch:
+(I just noticed this email was unsent, the patches have been applied a
+few hours ago)
 
-That's what I just did: I guess the modification for MP_FAIL, if really
-needed, can still be added later on.
+On 07/11/2025 08:23, Paolo Abeni wrote:
+> The actual fix is in patch 2/2, while patch 1/2 is there just to make
+> the change tidy/more easily reviewable.
+
+Thank you for the patches and the reviews! I had a few conflicts, but I
+think I got it right.
+
+Now in our tree (fixes for -net):
 
 New patches for t/upstream-net and t/upstream:
-- c3a571ff59cc: mptcp: fix ack generation for fallback msk
-- Results: 751a2432b7d8..5b6b4e3aef4f (export-net)
-- Results: 247540d77d20..a96affe5f0a1 (export)
+- 408b267c6bd8: Revert "selftests: mptcp: join: fastclose: drop plain RST"
+- 0ef8d2d40280: mptcp: decouple mptcp fastclose from tcp close (with
+conflicts)
+- 5413ee2c5a4b: mptcp: fix duplicate reset on fastclose (with conflicts)
+- a5fd6152dbe2: conflict in t/mptcp-make-mptcp_destroy_common-static
+- 69ec39f082d0: conflict in
+t/mptcp-handle-first-subflow-closing-consistently
+- 8a23d7a4757f: conflict in t/mptcp-introduce-mptcp-level-backlog
+- e54a7311c74b: selftests: mptcp: join: fastclose: remove flaky marks
+- Results: 0a46d88dd962..751a2432b7d8 (export-net)
+- Results: 3ba6375d918e..247540d77d20 (export)
 
 Tests are now in progress:
 
-- export-net:
-https://github.com/multipath-tcp/mptcp_net-next/commit/7fade8917eeabe227b5ffae540e9cbe48d3e5046/checks
 - export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/b10c1d3d1e5da09bbc2b81eca8f4339b84499268/checks
+https://github.com/multipath-tcp/mptcp_net-next/commit/7b747795627aab975ffff54ee796ccd77f593292/checks
+- export-net:
+https://github.com/multipath-tcp/mptcp_net-next/commit/3f20649f33461a575a29a4da06d29ec9c50058cb/checks
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/cf56fe8fbd0dde4dcb53f37ba20d59ac543bbf74/checks
 
 Cheers,
 Matt
