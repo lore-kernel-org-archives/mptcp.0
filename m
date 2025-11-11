@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F1932741AC;
-	Tue, 11 Nov 2025 10:35:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C968E34F49C
+	for <mptcp@lists.linux.dev>; Tue, 11 Nov 2025 10:43:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762857345; cv=none; b=ktcKOQGN8/yURDDKv2UzWoUZbfq4rA66EII02I7hA5jTz3QD+C0Py7Pxpug0jg0tyvgoRnfNBqjZYP2tMZ6SKSQ/VsMEgJMtuIFo6KcTGSfAWjeVRZPFGAsGHB31Aozim+gzbIFZbAhaplxfaxK3vPRvaYapq5zcbNejqBH1zxU=
+	t=1762857788; cv=none; b=qoFGtAKkR9p0ZRqVL2mAlKlCXVuTPh612MNBVNbqQeKLutYuVr0zFEPS9rnsuEL9WV6i4nymLaSVnkL33pX6D1WgRbOFpBIc86kHknGuSO464lNr366FTU/7TGipgxCbUMgLHIYtMOQl6ml0r32+GryT4o1ist8C6g/hiLLZquI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762857345; c=relaxed/simple;
-	bh=Xq140z8t2Lz9tMLDdMmjzX8uNuNbzNJxr107yZ7r5/o=;
+	s=arc-20240116; t=1762857788; c=relaxed/simple;
+	bh=k5r8RoytaDfJPclZWI1OlvpgzDrzwFOPuT5NZ8CiArA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bY59AMdHU7XuVyPTb3eEdUTeVQ4D3vcta4I8hIqA6He0atvTSfF8nLl3Y4rYE0+D+gZEV+lp4XAT3qhP1/xQEARtC008Y7DBFOtPPhQlExACUshsjWOnFmsgmJxblv/opXgBEW41wzKN43PmFgoyxVgQSkShj3pDRLuZRqrTqs4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XNzcP4Jx; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=OXMT2NTC2YPCbr2GY/FYl9AGzXfmL/cqm13pJFVviLwwMD3ovIHKbE6IZ8apftbyPA4hCrCV7uLj8BAuQW6FMWel5jCE6skwrdsiY2r6yofRhUnd9Mbm/vTOnZQg23JOJbOyv6w2Wq1nwZWks5XAlxu5WHqZ4u1GfgaZBUypB6Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YMdW8qnt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XNzcP4Jx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 702C5C116D0;
-	Tue, 11 Nov 2025 10:35:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YMdW8qnt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7AC7C19422;
+	Tue, 11 Nov 2025 10:43:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762857344;
-	bh=Xq140z8t2Lz9tMLDdMmjzX8uNuNbzNJxr107yZ7r5/o=;
+	s=k20201202; t=1762857788;
+	bh=k5r8RoytaDfJPclZWI1OlvpgzDrzwFOPuT5NZ8CiArA=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=XNzcP4JxLcsq+v9Gh+HF0DTywnT1mFmvi7yAfyY5RW8Kk6f1dn/zMn6bi49eFCzFf
-	 03qQqT/jWGf9Zlz+J8IuOaHuegSCrMykqwybKOTMVNZLcWUs8Tgl3498RVQCXqDB7h
-	 g8Q7KFBQ+pvtZIdR830u68faptBVurqTFmc28LTu5DoloSbAk+oTbGvllcysqWbjO+
-	 usqZ4XYfF2fKzbeYY+LnQELFECpM53q7d14bsL7hzphs5k7QqLP3W8mg4gwQgGodw9
-	 PgDUubK/O7YU0CQH8YzAJl8jhHija1+4mQE1VTOzVJfKwzRDMXtGtPNKxPhisBdkf1
-	 oMJ94yacWuAgQ==
-Message-ID: <d2cb9d64-ecda-4cda-83e0-fd5d5758972d@kernel.org>
-Date: Tue, 11 Nov 2025 11:35:34 +0100
+	b=YMdW8qntQeWvAnIya3vqas/eo8aGh4Xit3jAG6nIs8GNQw1lWhA/nGWJ+R7E8Q6E7
+	 w6Y7bGHyvlz0a+GAPSHqznJWUBnNyq9iG9wQQqy/LI7MeojtCay4ZYv5KbtCl0A4BR
+	 /POFTrNXhwj32qOpiNOGHvoeznepVNuhhXn7a+4Bp9TIbI6h5lmZaFGtUdkKSazOM2
+	 3synHkA5k9GRUwKg3I9DsKlEu3plh3vXyKPr7BssOtOMcjDc7dJ/i+HPEm1pDhJ4cR
+	 mRGRI3T+YJFtFsSi8ELzdmiKS1VaeblpvyUOGIi6MNPqHK6x/zwLUW1SMxsNUuYsYq
+	 opYFpLc+seRgQ==
+Message-ID: <3779db4a-9159-4719-8856-beb1175faa5a@kernel.org>
+Date: Tue, 11 Nov 2025 11:43:05 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,25 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH net v5 3/3] selftests/bpf: Add mptcp test with sockmap
+Subject: Re: [PATCH, mptcp-next] selftests: mptcp: Add a check for
+ 'add_addr_accepted'
 Content-Language: en-GB, fr-BE
-To: Jiayuan Chen <jiayuan.chen@linux.dev>, mptcp@lists.linux.dev
-Cc: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Simon Horman <horms@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
- Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman
- <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
- Yonghong Song <yonghong.song@linux.dev>,
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
- Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
- Jiri Olsa <jolsa@kernel.org>, Shuah Khan <shuah@kernel.org>,
- Florian Westphal <fw@strlen.de>, Christoph Paasch <cpaasch@apple.com>,
- Peter Krystad <peter.krystad@linux.intel.com>, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org, bpf@vger.kernel.org, linux-kselftest@vger.kernel.org
-References: <20251111060307.194196-1-jiayuan.chen@linux.dev>
- <20251111060307.194196-4-jiayuan.chen@linux.dev>
+To: Gang Yan <gang.yan@linux.dev>, mptcp@lists.linux.dev
+Cc: Gang Yan <yangang@kylinos.cn>
+References: <20251106075457.41025-1-gang.yan@linux.dev>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -99,22 +86,29 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20251111060307.194196-4-jiayuan.chen@linux.dev>
+In-Reply-To: <20251106075457.41025-1-gang.yan@linux.dev>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Jiayuan,
+Hi Gang,
 
-On 11/11/2025 07:02, Jiayuan Chen wrote:
-> Add test cases to verify that when MPTCP falls back to plain TCP sockets,
-> they can properly work with sockmap.
+On 06/11/2025 08:54, Gang Yan wrote:
+> From: Gang Yan <yangang@kylinos.cn>
 > 
-> Additionally, add test cases to ensure that sockmap correctly rejects
-> MPTCP sockets as expected.
+> The previous 'delete re-add signal' test did not validate the
+> 'add_addr_signal' and 'add_addr_accepted' counters. These counters
+> are crucial for ensuring the MPTCP path manager correctly handles the
+> subflow creation via 'ADD_ADDR'.
 
-Thank you for the v5.
+Thank you for the patch!
 
-Acked-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+
+I'm going to apply it in 'net', just after your fix, because it is still
+in the queue and can go alongside to 'net'.
+
+I will just add something in the commit message to explain it is linked
+to the previous patch.
 
 Cheers,
 Matt
