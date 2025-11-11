@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D80EC350D4C
-	for <mptcp@lists.linux.dev>; Tue, 11 Nov 2025 10:51:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A55CC2FB629
+	for <mptcp@lists.linux.dev>; Tue, 11 Nov 2025 10:53:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762858319; cv=none; b=Z7f9iF9bF531y/LvN+vyz/kVm4d5qhPr0xPz8PfQLEm8asylYrNxO/cipdn2w8aO0dix7KCGRHANQRkupaKbZYPNmePNYBINXynSiTrA0bKVdqFx3vPnpAa8WRvbczPjfWhJDFoBTSYzIhIOpZO07ejUfRiBQKko7JTxFpFXCcY=
+	t=1762858394; cv=none; b=CP08/8vv3IsZ6wnRAQMF3FEmXPky55rjWb7IM8r6HGvIZfQGHLW07Bn3emr/tU4hDY+7tjn6gTxDum1qIRYnnD7o0H55W3WdO9x071iMmhAHURf1BYgAWtTHr6LnNF4BNSr8vkWZiBsPnQnYuIxB7XtJhNCEdtXsmQ169iGXX98=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762858319; c=relaxed/simple;
-	bh=5hEdG+A+Il2ieHEui5zA/OTCr9fEt7cv7q6MyF3+kA4=;
+	s=arc-20240116; t=1762858394; c=relaxed/simple;
+	bh=AhjVPWnXJyNBXV8f/OBs0E6EwSf5JN3uWykSmxloG90=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uoQsJmwGRkUOz7cfgaJFcLXLhtt9NXQj3eLeS3nUUifbc6cwmAUbRFjS4rCm/aMAwIAiHbFN8MT1N/DHmKeKVmK54gd1oMPKPiE03OMPOfeq0b8l65P6xMk0dy2omFH2vnbaUCA0kjMQY6dJvfMQ/E1rZHYlPy+g1CkebJEnS7Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I89qZfGP; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=bnH2Su9SxaG4OFg/FxpUedV+gN3IJullaZYA7GAWMUE38OFxnpG+b7kTL05ooZdBDIfMJgvSszGV5DQyIB33w+MagoS4MikN+lx7bCYP8YQxYPnue/CZN2Y4m7H8sCcQt/jOXaP5LiR7giCbMLfpYezZgSIZLRpqeWMTELLBTFg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JUjJkZ5U; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I89qZfGP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA2C9C19425;
-	Tue, 11 Nov 2025 10:51:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JUjJkZ5U"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C1F9C4CEF5;
+	Tue, 11 Nov 2025 10:53:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762858319;
-	bh=5hEdG+A+Il2ieHEui5zA/OTCr9fEt7cv7q6MyF3+kA4=;
+	s=k20201202; t=1762858393;
+	bh=AhjVPWnXJyNBXV8f/OBs0E6EwSf5JN3uWykSmxloG90=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=I89qZfGPYFFY8TR8ms0GOi9Y0Z/ro6f8SONq/M53Xnjs0MwxDO34pzHiRWJLZzBOI
-	 zz9Yo54+LK2bOAfq2IgAKN7eH9sPZxystyElokj79HAjzutU0efCBbVPXzRNCFMRXE
-	 Re8xWEIjB0Ud4T8PAZtGX51SE2/QegzXgsKMEGcdKqE+ApClU88y7qneE+AWi/xcna
-	 0xe9PdCxRhQNHyPmIlK+HnfMQiMUc32GVoCdgh5ja586yaUMTqIculOuOjU86sXy7u
-	 jeJ/Tmo1WXf7A9/ags4A/D7qeZ/kI1Dvv6Z7lapAU2JDSOo8SjsREeXyx+2G/a1h4d
-	 xp/SzEyk4SaHQ==
-Message-ID: <bf49af1b-1a43-4e4c-a716-64eda20a7773@kernel.org>
-Date: Tue, 11 Nov 2025 11:51:57 +0100
+	b=JUjJkZ5U/xZMHQzKpWaZr4hsTwbVHk9buGyKCH1XT6Ko0J5zR6tLq8uYALHHU689/
+	 94Z4GJ/69MDnAmf43dykTmPhb51LiOpPH7+b6QyKCy9c05/1OnOS17m7f1anYRLzSV
+	 OG2qzzXYIQ1HCEQAs43f/kzZrGTCTKuZLv999prSHYVoaEpFvo42s0DnwQFPMnx/yb
+	 Xah8+wiZjPj6cDr+0UEw+FWw5QpBBXrJv7i3ZfniBXEFJXGOVT3B9Qs02byeXUj/xq
+	 YE7fHXaUqgvRtq67vgRF9Ku4tiqk/e38Z+VwxvXooO/a92QrsmxWfiKMErY6spwUVT
+	 NUuIqDj5bJZmw==
+Message-ID: <5cc480da-9682-4193-858b-8506792347ac@kernel.org>
+Date: Tue, 11 Nov 2025 11:53:10 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,16 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next 1/4] selftests: mptcp: join: properly kill
- background tasks
+Subject: Re: [PATCH, mptcp-next] selftests: mptcp: Add a check for
+ 'add_addr_accepted'
 Content-Language: en-GB, fr-BE
-To: Geliang Tang <geliang@kernel.org>
-Cc: MPTCP Upstream <mptcp@lists.linux.dev>
-References: <20251108-slft-timeout-stats-v1-0-c2234d277318@kernel.org>
- <20251108-slft-timeout-stats-v1-1-c2234d277318@kernel.org>
- <d5ef4083df02cc56e51170ec906eeaea78443c84.camel@kernel.org>
- <894506e8-df54-4fb7-8337-c5fdc99ecb73@kernel.org>
- <a8768ce5597666aca5effeb794303245d8edc67c.camel@kernel.org>
+To: Gang Yan <gang.yan@linux.dev>, mptcp@lists.linux.dev
+Cc: Gang Yan <yangang@kylinos.cn>
+References: <20251106075457.41025-1-gang.yan@linux.dev>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -90,90 +86,33 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <a8768ce5597666aca5effeb794303245d8edc67c.camel@kernel.org>
+In-Reply-To: <20251106075457.41025-1-gang.yan@linux.dev>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+Hi Gang, Geliang,
 
-On 11/11/2025 09:17, Geliang Tang wrote:
-> Hi Matt,
+On 06/11/2025 08:54, Gang Yan wrote:
+> From: Gang Yan <yangang@kylinos.cn>
 > 
-> On Tue, 2025-11-11 at 07:53 +0100, Matthieu Baerts wrote:
->> Hi Geliang,
->>
->> Thank you for the reviews.
->>
->> 11 Nov 2025 03:46:06 Geliang Tang <geliang@kernel.org>:
->>
->>> Hi Matt,
->>>
->>> This for this fix.
->>>
->>> On Sat, 2025-11-08 at 15:20 +0100, Matthieu Baerts (NGI0) wrote:
->>>> The 'run_tests' function is executed in the background, but
->>>> killing
->>>> its
->>>> associated PID would not kill the children tasks running in the
->>>> background.
->>>>
->>>> To properly kill all background tasks, 'kill -- -PID' could be
->>>> used,
->>>> but
->>>> this requires kill from procps-ng. Instead, all children tasks
->>>> are
->>>> listed using 'ps', and 'kill' is called with all PIDs of this
->>>> group.
->>
->> (...)
->>
->>>> diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
->>>> b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
->>>> index ce6c92826be7..91ec75ddcb96 100644
->>>> --- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
->>>> +++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
->>>> @@ -359,6 +359,27 @@ mptcp_lib_kill_wait() {
->>>>     wait "${1}" 2>/dev/null
->>>>  }
->>>>  
->>>> +# $1: PID
->>>> +mptcp_lib_pid_list_children() {
->>>> +   local curr="${1}"
->>>> +   # evoke 'ps' only once
->>>> +   local pids="${2:-"$(ps o pid,ppid)"}"
->>>> +
->>>> +   echo "${curr}"
->>>> +
->>>> +   local pid
->>>> +   for pid in $(echo "${pids}" | awk "\$2 == ${curr} { print
->>>> \$1 }"); do
->>>> +       mptcp_lib_pid_list_children "${pid}" "${pids}"
->>>
->>> To be honest, I don't understand why this
->>> mptcp_lib_pid_list_children
->>> function is calling itself here. Is this recursion?
->>
->> Yes it is a recursion: children processes can have children ones.
->>
->> mptcp_lib_pid_list_children() will print the PID it is called with,
->> and call
->> itself with all children (can be none).
->>
->> In our case with mptcp_join.sh, it means getting the run_tests job
->> plus
->> the other background tasks: mptcp_connect (x2), the timeout, and
->> eventually the task modifying the endpoints.
-> 
-> Thanks for your explanation, this patch looks good to me.
-> 
-> I'll reply my RB tag in the cover letter.
-> 
-> And for patch 6 of "selftests: mptcp: join: fix some flaky tests"
-> sending to -net too.
+> The previous 'delete re-add signal' test did not validate the
+> 'add_addr_signal' and 'add_addr_accepted' counters. These counters
+> are crucial for ensuring the MPTCP path manager correctly handles the
+> subflow creation via 'ADD_ADDR'.
 
-Thank you for that! Note that I sent it directly to 'net' because it was
-"simple", and other patches depend on it: we already have quite a few
-patches in the queue, probably better not to delay some even longer.
+Now in our tree:
+
+New patches for t/upstream-net and t/upstream:
+- 58e7695feb9b: selftests: mptcp: add a check for 'add_addr_accepted'
+- Results: b0e64e85315f..0a46d88dd962 (export-net)
+- Results: bb0c4d401f7c..3ba6375d918e (export)
+
+Tests are now in progress:
+
+- export-net:
+https://github.com/multipath-tcp/mptcp_net-next/commit/0b60ebf29888f051796d8dc8749bf405c89cc176/checks
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/ef24db85cc1df050e9b6c0245267f15852f2d75e/checks
 
 Cheers,
 Matt
