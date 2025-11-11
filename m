@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBF2929B778
-	for <mptcp@lists.linux.dev>; Tue, 11 Nov 2025 18:43:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C1902848AD
+	for <mptcp@lists.linux.dev>; Tue, 11 Nov 2025 18:53:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762886629; cv=none; b=al49sygyIFR3JtkNVoi0PbT8Q6LOskuMRSxy1utpTwJSHg8njGwDDwV8gpsa1w853YpegewQoFwaEwry9GHANQSd/3ingFnqSqWyDkCjn/fyhWv/gUh+YrSIYbmIC6bpzBPLvthEs9t9/c7iTbvuWKqioJxsUmofMR4+OBYj+Us=
+	t=1762887207; cv=none; b=EBTNaWsDtpnyNcAvTzLJu8/JpSj8WPQdYv+Vc6RgzrC7mldLGjYR4ERkp0Uc9AmK8LWnbNfs5nBM1jgg3Gqufj+oj34KT89H+16mQbLcfa0TjG80qMLOgRwJOwiptBE9b9T+W5qF8YJgh1osSRZRo4jP7zAs1Q076j/40k9s3RA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762886629; c=relaxed/simple;
-	bh=vyyXyd7tBM34oR2vONwYUNFKJuNtRJLepQMsmBIQhRg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=p5I5Yyhz+crjhn2Y6lwPYrLd4u9ScQdrhuermA4LEHKV0F6pTI9qFNWPuFJMqBxylvVMFOjMaq7WntvrDNu3MowpPolCgsI2/0YwzEMbg3LvQKkfNmbM5FozTJiSNquOwXj9VyJEp4t8xJrgR8iDWSzP6pc1XfiqX31mryDFV94=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fGFN9lnp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1762887207; c=relaxed/simple;
+	bh=b2AOTeQH5gUd5wNgHfaUUO5WBWWvvfHSU4csTs6tqd0=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=VljyRJbiXYzsBX0G0LjTQBvXB/BO4EFS2JyosvZ4Ac+qgA0KS7rhBTab8OMlyTZB4SJomhldI4xYiMmVJjVijj5bCWJ8SaWnDKrA/+zSD3GLopTcUDfUVS/ugweMbSeIYuTyRj4QGgLJRT7KWS4+LDIb5itgQHTZMmN05yxf/Uk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZfUmz8BW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fGFN9lnp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C2BEC4CEF5;
-	Tue, 11 Nov 2025 18:43:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZfUmz8BW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D212C4CEF5;
+	Tue, 11 Nov 2025 18:53:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762886629;
-	bh=vyyXyd7tBM34oR2vONwYUNFKJuNtRJLepQMsmBIQhRg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=fGFN9lnp1MHOnKHNSH1SS8GizCuakUEJjWT8oXKYruIVaTIjrBNBVZP+x/9FWsiwe
-	 z6yxUwbUrwtT1FfitRxQ/U5bYemo1hy+Z7h/yNqvdqOejaTx9kwFmnkmfMwKWFa8pS
-	 q/2eA82qy2cq6uFQAyD6VU53aVUIxjXUgrktyv3uZ4v5NcMv/3YqMh93HSXhLlLmya
-	 6NkyIFc55n3xeBecZrEHhAWlhHilUe0qgQuHV6YB2Bln/CZzbSIbKkAu8awnBUiOeE
-	 d/QwDM5wsA/AgCL5WNoTPQMRXEOtZk77Dn7bDShpeYNa5s7MWBWDCfrLy7X8mER5b4
-	 ML5ktHUu2Ti3Q==
-Message-ID: <e820a52a-7944-45b6-b3f1-4012a3856a4a@kernel.org>
-Date: Tue, 11 Nov 2025 19:43:46 +0100
+	s=k20201202; t=1762887207;
+	bh=b2AOTeQH5gUd5wNgHfaUUO5WBWWvvfHSU4csTs6tqd0=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=ZfUmz8BWkYYiS8UcQUBmxEhqqLzlhsQyVcs0kuTJ41CwYMr2X2cCD1l21lTgvA1pv
+	 yRpbV2XfX928nST4ZBUQcUqE3N5V2PTWqjAaVBpysuR/KiwNf+IXvAJ+YyYpEc+F2T
+	 zbipaxZkqWx4k+WMDESJxgZf7GsojCMkyTdJGWyEfPdqWSAtuHFL1gvZsFE0/sVbPV
+	 uHH1agjWdJmR+Xm9y1mQoEiSreBW+0JQpGqPUAImeRks+ktUvUsOxBWuF3LYiDlLjH
+	 skbRJGdPiffTmKFg8BN32A1Jv0ka4Jljr5JB91XF5DU5VhUnZZWBoE8LzETubKepLu
+	 4X57dKD8vOOnQ==
+Message-ID: <127e3172-3a82-4286-a095-b8cf884df056@kernel.org>
+Date: Tue, 11 Nov 2025 19:53:24 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,11 +38,12 @@ User-Agent: Mozilla Thunderbird Beta
 Subject: Re: [PATCH v3 mptcp-next 2/7] mptcp: avoid unneeded subflow-level
  drops.
 Content-Language: en-GB, fr-BE
+From: Matthieu Baerts <matttbe@kernel.org>
 To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
 Cc: Mat Martineau <martineau@kernel.org>
 References: <cover.1762504059.git.pabeni@redhat.com>
  <6af807a4d56bcac85d0908e30251ffa6d28ea38f.1762504059.git.pabeni@redhat.com>
-From: Matthieu Baerts <matttbe@kernel.org>
+ <e820a52a-7944-45b6-b3f1-4012a3856a4a@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -87,46 +88,66 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <6af807a4d56bcac85d0908e30251ffa6d28ea38f.1762504059.git.pabeni@redhat.com>
+In-Reply-To: <e820a52a-7944-45b6-b3f1-4012a3856a4a@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Paolo,
-
-On 07/11/2025 09:32, Paolo Abeni wrote:
-> The rcv window is shared among all the subflows. Currently, MPTCP sync
-> the TCP-level rcv window with the MPTCP one at tcp_transmit_skb() time.
+On 11/11/2025 19:43, Matthieu Baerts wrote:
+> Hi Paolo,
 > 
-> The above means that incoming data may sporadically observe outdated
-> TCP-level rcv window and being wrongly dropped by TCP.
+> On 07/11/2025 09:32, Paolo Abeni wrote:
+>> The rcv window is shared among all the subflows. Currently, MPTCP sync
+>> the TCP-level rcv window with the MPTCP one at tcp_transmit_skb() time.
+>>
+>> The above means that incoming data may sporadically observe outdated
+>> TCP-level rcv window and being wrongly dropped by TCP.
+>>
+>> Address the issue checking for the edge condition before queuing the data
+>> at TCP level, and eventually syncing the rcv window as needed.
+>>
+>> Note that the issue is actually present from the very first MPTCP
+>> implementation, but backports older than the blamed commit below will range
+>> from impossible to useless.
 > 
-> Address the issue checking for the edge condition before queuing the data
-> at TCP level, and eventually syncing the rcv window as needed.
+> Thank you for this patch!
 > 
-> Note that the issue is actually present from the very first MPTCP
-> implementation, but backports older than the blamed commit below will range
-> from impossible to useless.
-
-Thank you for this patch!
-
-It looks good to me:
-
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-
-> Before:
-> nstat >/dev/null ;sleep 1; nstat -z TcpExtBeyondWindow
-> TcpExtBeyondWindow              14                 0.0
+> It looks good to me:
 > 
-> After:
-> nstat >/dev/null ;sleep 1; nstat -z TcpExtBeyondWindow
-> TcpExtBeyondWindow              0                  0.0
-Should we eventually track this MIB counter in mptcp_connect.sh?
+> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> 
+>> Before:
+>> nstat >/dev/null ;sleep 1; nstat -z TcpExtBeyondWindow
+>> TcpExtBeyondWindow              14                 0.0
+>>
+>> After:
+>> nstat >/dev/null ;sleep 1; nstat -z TcpExtBeyondWindow
+>> TcpExtBeyondWindow              0                  0.0
+> 
+> Should we eventually track this MIB counter in mptcp_connect.sh?
 
-> Fixes: fa3fe2b15031 ("mptcp: track window announced to peer")
+(This can be done in another patch later, we can also create a task to
+do it later if that's easier of course.)
 
-While there are still discussions on patch 6/7, to ease things, I
-suggest already applying only this patch in our tree (fixes for -net),
-the only material for 'net' from what I understood.
+> 
+>> Fixes: fa3fe2b15031 ("mptcp: track window announced to peer")
+> 
+> While there are still discussions on patch 6/7, to ease things, I
+> suggest already applying only this patch in our tree (fixes for -net),
+> the only material for 'net' from what I understood.
+
+Done:
+
+New patches for t/upstream-net and t/upstream:
+- 9250eb1bd82b: mptcp: avoid unneeded subflow-level drops
+- Results: 7d372ea35141..25f5033b9887 (export-net)
+- Results: 3b1f54eb2ace..3dad323fd8af (export)
+
+Tests are now in progress:
+
+- export-net:
+https://github.com/multipath-tcp/mptcp_net-next/commit/ef271ef4961b23166a56d80c5136bb85b29826d8/checks
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/473f3b6a6838866eed83d85449df20f654ac4c1a/checks
 
 Cheers,
 Matt
