@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B3803A1D0B
-	for <mptcp@lists.linux.dev>; Tue, 11 Nov 2025 17:38:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49DEF22157B
+	for <mptcp@lists.linux.dev>; Tue, 11 Nov 2025 17:50:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762882706; cv=none; b=Qxdv1EDwGMG3clJKr7a0P4WAUCPfiqs9awV0IdfrYPcxAH8fiMP4wbttW88OfAvOI56rq5hd/Qb1g91G4yz8whGPF1/NP7RLVD6EwIxhDuUhzRX+T7RAdoHUxtThIhQ9TByqAilgslq6rvjE+uyqZiC327sY9IoJNp6RLWLB2Cg=
+	t=1762883449; cv=none; b=RP9Su7/OU6uIOuIK/okdI+RDtMLjwUJV5/iQFg5+wDCLK6LR4a3se0Omp75++cg0l9vibSl4OFKtavcl27lxss170z89wb6crG7y/8S7PDj/55DNjja79lDnmPJIFBCYFy1Cnn1/KzAH8ztEtFJBFR7SUwBzq77qTglyTiBHCm0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762882706; c=relaxed/simple;
-	bh=oMyLNUg4iu6TqLH5y/e++9SwWlCr+1/HwtCqWABmNR4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
-	 In-Reply-To:Content-Type; b=AHwvOcNJzKzC2yCbeMNbJQ5U6AC/8E3pUFJ+xQ5R4WFNjiMj9ez5gl7CqEc1Nsd8WlhfjgigaFzP6NEN84HcWHF1iQ2Kmp1Udd9XuEChW/RSR+hGp3o2mTKodQd9lJRUTMXOXyFCuj7PMi8IXY5urfqnlIZty9P2G0IPZhMXiiI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IIlwlYqy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1762883449; c=relaxed/simple;
+	bh=4Zu0dHgcWDXhEsSIH8Y+FssdWF5Zxbu91APUacMMZgY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=f0E26xXyccwwHtRmagYO2nUAlpwyDSsrYJ4tb3MMJXGbpV2BaF/9kpt5Ln+2iM+fJHb3BDTOAEW/qD1Zcj3TMiy1D5eyAgxncm7OGhB5+4pzE6ZNXiZF10RUqVAypBz7XLr1CWb4FYlaxZr38cysBImX9vSxMjaGD+SNawFZTbQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OROd9L5Y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IIlwlYqy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49176C4CEF5;
-	Tue, 11 Nov 2025 17:38:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OROd9L5Y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D6AAC116D0;
+	Tue, 11 Nov 2025 17:50:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762882705;
-	bh=oMyLNUg4iu6TqLH5y/e++9SwWlCr+1/HwtCqWABmNR4=;
-	h=Date:Subject:To:References:From:Cc:In-Reply-To:From;
-	b=IIlwlYqymM8WTGgjkEi3xDa8S6TnEHOfXhnK4TBcSj1+VXp1SL93hkC/Pv4D+Zhc5
-	 zsd2xqdpS9SXqavSUPdhWS2wyj44B1Cdm3GsvalyYcUL5diEE2mV6FH1/8yPzyyLJE
-	 285+5vyf3oq6bPHjSyToS8jhdul+vQrZ77bptaqMts1WvLGVMG4p8kbkvSGfWkPr+R
-	 6fEOmIgpLni7J1MkP9DBUuixR2029ZaJgxFZCqK9B/61yiTtvbLrdboRHrI7aMlueD
-	 RXa5QlSbABmivdg4rvU5ysfhOfTUoIoO/OhAcqMGklfMjnq5rKZFH+khN0JPu7D25q
-	 GBF/R6hRQjlww==
-Message-ID: <a2449ccf-69a5-4503-a687-074b4436223a@kernel.org>
-Date: Tue, 11 Nov 2025 18:38:23 +0100
+	s=k20201202; t=1762883448;
+	bh=4Zu0dHgcWDXhEsSIH8Y+FssdWF5Zxbu91APUacMMZgY=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=OROd9L5YLAFLZ4JTVu6nIBygZq5vhBz1OKvsllxzXzsYzqGPybToq8OovolI3HpEI
+	 III6ou9xVSf9LGDqb4F7BlKL5yTA34TcX9IiuBQ92Qs1+8ZfFzp/FnZnrybqVo/7pB
+	 6+0Ccerxc+4aiYyBMy54oqoLX1Mm1EJCEa7QgK0KaAQo9mqkJ+WkdwXnjkYgHUSPe0
+	 Ywi0kyaXxemIAXo2dAVeAE6QE9KTVhYknnrjTSiYAbUsRjnEGgrorrlIvOl4WvN0G4
+	 HidxqqsPTT8c4dKP+FBLhVEzGgEEzO5NANoPEhPXXorEZIZBunHZEpCaibvT7bi8kV
+	 5+ymP3RBBBrbg==
+Message-ID: <1929f39e-b3e5-437d-b8da-71e3c7e6f36b@kernel.org>
+Date: Tue, 11 Nov 2025 18:50:45 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net 1/3] net: factor-out _sk_charge() helper
+Subject: Re: [PATCH v2 mptcp-net 1/2] mptcp: do not fallback when OoO is
+ present
 Content-Language: en-GB, fr-BE
-To: Paolo Abeni <pabeni@redhat.com>
-References: <cover.1762551942.git.pabeni@redhat.com>
- <063e2bc8e98ce050286eb4309bf4bd47716cc3f8.1762551942.git.pabeni@redhat.com>
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+References: <cover.1762845791.git.pabeni@redhat.com>
+ <fec239b14fa74d96fee25928de089de45f2c99ef.1762845791.git.pabeni@redhat.com>
 From: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -86,107 +86,51 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <063e2bc8e98ce050286eb4309bf4bd47716cc3f8.1762551942.git.pabeni@redhat.com>
+In-Reply-To: <fec239b14fa74d96fee25928de089de45f2c99ef.1762845791.git.pabeni@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Paolo,
 
-On 07/11/2025 22:55, Paolo Abeni wrote:
-> Move out of __inet_accept() the code dealing charging newly
-> accepted socket to memcg. MPTCP will soon use it to on a per
-> subflow basis, in different contexts.
-> 
-> No functional changes intended.
-> 
+On 11/11/2025 08:24, Paolo Abeni wrote:
+> In case of DSS corruption, the MPTCP protocol tries to avoid the
+> subflow reset if fallback is possible. Such corruptions happen in
+> the receive path; to ensure fallback is possible the stack additionally
+> need to check for OoO data, otherwise the fallback will break the data
+> stream.
+
+Thank you for the fix!
+> Fixes: e32d262c89e2 ("mptcp: handle consistently DSS corruption")
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/598
 > Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 > ---
->  include/net/sock.h |  2 ++
->  net/core/sock.c    | 18 ++++++++++++++++++
->  net/ipv4/af_inet.c | 17 +----------------
->  3 files changed, 21 insertions(+), 16 deletions(-)
+> Note: this does not avoid the WARN(), but fixes the inconsistend
+> read() behavior; the ingress data is OoO, we should not ack it
+> ---
+>  net/mptcp/protocol.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> diff --git a/include/net/sock.h b/include/net/sock.h
-> index a5f36ea9d46f..38d48cfe0741 100644
-> --- a/include/net/sock.h
-> +++ b/include/net/sock.h
-> @@ -1631,6 +1631,8 @@ static inline void sk_mem_uncharge(struct sock *sk, int size)
->  	sk_mem_reclaim(sk);
->  }
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index d6b08e1de358..7b966f105f89 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -646,7 +646,8 @@ static void mptcp_check_data_fin(struct sock *sk)
 >  
-> +void __sk_charge(struct sock *sk, gfp_t gfp);
-> +
->  #if IS_ENABLED(CONFIG_PROVE_LOCKING) && IS_ENABLED(CONFIG_MODULES)
->  static inline void sk_owner_set(struct sock *sk, struct module *owner)
+>  static void mptcp_dss_corruption(struct mptcp_sock *msk, struct sock *ssk)
 >  {
-> diff --git a/net/core/sock.c b/net/core/sock.c
-> index 3b74fc71f51c..b26a6cdc9bcd 100644
-> --- a/net/core/sock.c
-> +++ b/net/core/sock.c
-> @@ -3448,6 +3448,24 @@ void __sk_mem_reclaim(struct sock *sk, int amount)
->  }
->  EXPORT_SYMBOL(__sk_mem_reclaim);
->  
-> +void __sk_charge(struct sock *sk, gfp_t gfp)
-> +{
-> +	int amt;
-> +
-> +	gfp |= __GFP_NOFAIL;
-> +	if (mem_cgroup_from_sk(sk)) {
-> +		/* The socket has not been accepted yet, no need
-> +		 * to look at newsk->sk_wmem_queued.
-> +		 */
-> +		amt = sk_mem_pages(sk->sk_forward_alloc +
-> +				   atomic_read(&sk->sk_rmem_alloc));
-> +		if (amt)
-> +			mem_cgroup_sk_charge(sk, amt, gfp);
-> +	}
-> +
-> +	kmem_cache_charge(sk, gfp);
-> +}
-> +
->  int sk_set_peek_off(struct sock *sk, int val)
->  {
->  	WRITE_ONCE(sk->sk_peek_off, val);
-> diff --git a/net/ipv4/af_inet.c b/net/ipv4/af_inet.c
-> index a31b94ce8968..08d811f11896 100644
-> --- a/net/ipv4/af_inet.c
-> +++ b/net/ipv4/af_inet.c
-> @@ -756,23 +756,8 @@ EXPORT_SYMBOL(inet_stream_connect);
->  void __inet_accept(struct socket *sock, struct socket *newsock, struct sock *newsk)
->  {
->  	if (mem_cgroup_sockets_enabled) {
-> -		gfp_t gfp = GFP_KERNEL | __GFP_NOFAIL;
-> -
->  		mem_cgroup_sk_alloc(newsk);
-> -
-> -		if (mem_cgroup_from_sk(newsk)) {
-> -			int amt;
-> -
-> -			/* The socket has not been accepted yet, no need
-> -			 * to look at newsk->sk_wmem_queued.
-> -			 */
-> -			amt = sk_mem_pages(newsk->sk_forward_alloc +
-> -					   atomic_read(&newsk->sk_rmem_alloc));
-> -			if (amt)
-> -				mem_cgroup_sk_charge(newsk, amt, gfp);
-> -		}
-> -
-> -		kmem_cache_charge(newsk, gfp);
+> -	if (!mptcp_try_fallback(ssk, MPTCP_MIB_DSSCORRUPTIONFALLBACK)) {
+> +	if (!RB_EMPTY_ROOT(&msk->out_of_order_queue) ||
+> +	    !mptcp_try_fallback(ssk, MPTCP_MIB_DSSCORRUPTIONFALLBACK)) {
 
-Mmh, this code has been moved from inet_csk_accept() to __inet_accept()
-in net-next only, see commit 4a997d49d92a ("tcp: Save lock_sock() for
-memcg in inet_csk_accept()."):
+Does it mean we should check the OoO queue each time mptcp_try_fallback
+is called?
 
-  https://lore.kernel.org/20251014235604.3057003-2-kuniyu@google.com
+Should we not eventually set msk->allow_infinite_fallback to false in
+mptcp_data_queue_ofo()?
 
-Should we only apply these patches in our export branch, for net-next?
-If yes, then I guess we should remove the Fixes tag in patch 3/3.
-
-> +		__sk_charge(newsk, GFP_KERNEL);
+>  		MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_DSSCORRUPTIONRESET);
+>  		mptcp_subflow_reset(ssk);
 >  	}
->  
->  	sock_rps_record_flow(newsk);
 
 Cheers,
 Matt
