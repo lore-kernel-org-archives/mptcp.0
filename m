@@ -1,190 +1,137 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5254E23AE9A
-	for <mptcp@lists.linux.dev>; Tue, 11 Nov 2025 08:37:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 237221F03D2
+	for <mptcp@lists.linux.dev>; Tue, 11 Nov 2025 09:09:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762850246; cv=none; b=faLJLb2YQ3p/e4v1ZPteanPyrHxTEZJ+6scpD8IiU3v2jU9pAf9gMmbn28sSvy2MDQbGL9IWZWqQ1geVQz5ff6e8L5aCeCscuzFAj3/SPO/92nFo0c4cveVBWdEzgYQvepIfwngH0kdtVCCgawbZQVfFYV9kcv9HtNhZ0wQEDwY=
+	t=1762852156; cv=none; b=lh7ucnFzozRjNB1BZCHtsngmbrZXrDAFz5kjvnEhOCP43jA0Mj/SPUAuuRlLEQXsvHgJxuEuZjgGQ5cThdo/BNh3fZjezfqor46CRcRfXbPRZ8NJjCwKok7ns3U2cRT+zNqblW7KyVf3FMPWPLEDWqAFxVTqo7j6+kOL4L/H2HY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762850246; c=relaxed/simple;
-	bh=wIKblSVDXtlkqpWAe9otfPlq/DPSNsVPRql6/M/yKDc=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=N/tURn4onOcZcLMvPAbvcbNtrpggJXUWXxC4yFNS9VRJSJyxk2Ux7tfZ/Qo1fMQYbOPXklssa2WCs0tlrsWjZA+r48+z1yWFTQ8Iva6iCBbB6z1RYDlvXr9wRBoMNlb2gcDR5I8UwHOoQKId9uKy1klwelq9OUJA4/xhoZQa7xg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EAnvYesD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1762852156; c=relaxed/simple;
+	bh=zMpwqZCNRdeY5l3Fzqx33Wlr4oEXjpiGi59mLSV6lrU=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=IU7L7Ch0FTPtJKAaIkWWGSnbJjyqixuHyZb72X/WJiKipEJPJBnwU+tSVHKNrVlgmsTGbxnK4QGO5svhxcq33qhPt1jBfnRl0pZWzjqoFA4F1oqZoDj44zA/BbFNH3kEs/4a8HtNzY77KCN+wgOItvHY5XvxEiMkbwaRagQN9Cs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=melcz0We; arc=none smtp.client-ip=209.85.215.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EAnvYesD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08927C19421;
-	Tue, 11 Nov 2025 08:37:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762850245;
-	bh=wIKblSVDXtlkqpWAe9otfPlq/DPSNsVPRql6/M/yKDc=;
-	h=Subject:From:To:Date:In-Reply-To:References:From;
-	b=EAnvYesDjR2GLmQeZhp1cQh3dGrmwrQlvMyUV6gWKucFt0hdLK9iUbVEOSkSL8noV
-	 NBTQb+QR+Cc3tFe0QdIVNz8SftthHVXWSOuu2IY2AW8u6Jc+3K433D37PS2homXEyz
-	 HBJN7gVKC2OGFA46RePiN80+beoiNH9fpOYL35USY3FuXImNR46hKzBA8XBEoAPZBo
-	 G33is+3qfPRauMLANsRl76GjaTmhXMdpjYju4Y6dJh8sQkLDQeezKIC55Iwu/xWuZT
-	 lnPsziRZ6bZw8nvsompK3KcGiNvHFnuhRNH02PLAt+ezDYWH0bMWfQeI1wBsTnSJLH
-	 z5ybiyo+4U5CA==
-Message-ID: <7d43f35c26a94f22a8e7627f477560ba994efbe7.camel@kernel.org>
-Subject: Re: [PATCH mptcp-net 3/3] mptcp: fix memcg accounting for passive
- sockets
-From: Geliang Tang <geliang@kernel.org>
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-Date: Tue, 11 Nov 2025 16:37:22 +0800
-In-Reply-To: <b78e4fb6552cc0b94aa9c1471590d7af1ec2a221.1762551942.git.pabeni@redhat.com>
-References: <cover.1762551942.git.pabeni@redhat.com>
-	 <b78e4fb6552cc0b94aa9c1471590d7af1ec2a221.1762551942.git.pabeni@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.52.3-0ubuntu1 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="melcz0We"
+Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-b4755f37c3eso3085885a12.3
+        for <mptcp@lists.linux.dev>; Tue, 11 Nov 2025 01:09:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1762852154; x=1763456954; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QFFpThtQxQYtEMJajfHurZ1wMnnYmfOB6iDBhEQ/xxo=;
+        b=melcz0We7XqpZoQ5sK2qlWGysEf6A2bL4t2h4qwOFoV9+KyPdtfq7CS5YSh6zFA2Fb
+         w6ASzU7aP82F9UvyfPO9E+IBdUW/30GwC2WqOcNjBu1aq0oFKARql++PegK03/IaOBN7
+         7GIRVhASVwZoUCtWNwobZsqqwHm3lJWfu3rsmD6L/vxdOaXestrYJvdAUmR3JMWAa6xE
+         Kgg9SeHhJMiSTa+zOCQho6O/Q2p2MHuX2Okg9FYxtfCALJp823W9ihxnICsft9Zz5VA8
+         L1ye7nQp3r4Bq0f/HIRiWsmYhOPNODCOAfpeJZ0+A3A0dh1Qsj/uZ6/5L4dc6FcXrgVf
+         Qerw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762852154; x=1763456954;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=QFFpThtQxQYtEMJajfHurZ1wMnnYmfOB6iDBhEQ/xxo=;
+        b=vDplGyJ1s17TTSjY2n62WcHYJNDSjYpdT06XbugcXDDra0w3ZRQFwWfnxfDpcBQggx
+         +oTnKzRYYE5wNeW/tkDIbUH4xc7DqBbmKqnecgsfs5XtZumO13v9WJdkJ6UIO1f4lptl
+         RBPxzHKY/SLLaDFUlMgo0+L70LWb/e3jFQ13mE+l3i7bMTrD9vk67m0G8rOsFJA0SaCA
+         rUQWRH6RP4uIg9Ml67fabssysBA8eFyFMhWoXctkz4K5KXPPORKNEInyuw5pvQueDIc1
+         h2Dr9xrf1k5yzEsiVAdtyy/r75XovXkxwhU80IBaDEKdeC7G97nadQs6wWN+RfDFudcZ
+         Zx8Q==
+X-Gm-Message-State: AOJu0Yx/lRhE5TOC/+Qq6D7xQMD4ApO3EomV5Xu8cO6JQshy0wHJTgmv
+	H/DB+L7P1FojCzY9nHjAUrOkqOsikg+ErQ23ZeKrghAgTOXZ/QNS4X0=
+X-Gm-Gg: ASbGnctOHczOa8374Xq8XPFq/bb+yk1PjDbwvhUO46bHd4nq4qFEQAP93u6wfIuo9m4
+	8a8OD/6S6zZKZQLQlbpKzcVH0gjtkBfzdcHHKOKeXF1/qXc3/g3Uacnq8Yr+ncugJwkt/tNpRlB
+	lgKGJSlEh3PBuwEYtYPAXEDpgReqOW1jlLx7yrdRqTmvbIunMmgo1y8g3E6brytkTxxsshdIG7H
+	i6pEj5VTnriYJY2QYJY5R5tc8dr4YV4FtNi153KqiaBm812JywzvuKKzjoAYfZAvW9+Tn4USetB
+	Ma12HmCq3IdMApJB1voAk9FDBuws0aftHe70wHz1DAMd7QDWYqws2tWqYMJYicv6VurwSpuN8hs
+	YWQiawKfp28o/YGBtX1s8l2RI4ixJW+lPZo1RQiH6tPlnebEc3OncBGVL4wU47JdRq1mOaI4EOg
+	UJWiRWPhmrX0OdNz0+uzxCCnw=
+X-Google-Smtp-Source: AGHT+IEd8wysPImCQ7SN+GUaH48ZSJGZOTUxqoYbkNWqQr2Y/6zNzSbvx6lN0hqNnf25WNVqHjBpUg==
+X-Received: by 2002:a17:902:e847:b0:295:7f1d:b02d with SMTP id d9443c01a7336-297e56476f0mr164841315ad.22.1762852154277;
+        Tue, 11 Nov 2025 01:09:14 -0800 (PST)
+Received: from [127.0.0.1] ([52.161.75.162])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29651c94ac5sm173147395ad.92.2025.11.11.01.09.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Nov 2025 01:09:13 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <cover.1762845791.git.pabeni@redhat.com>
+References: <cover.1762845791.git.pabeni@redhat.com>
+Subject: Re: [PATCH v2 mptcp-net 0/2] mptcp: a couple of fixes
+Message-ID: <d51ef5bb-5cd4-f523-2f46-add9a7ed5d1b@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 11 Nov 2025 09:09:13 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
 Hi Paolo,
 
-Thanks for this fix.
+Thank you for your modifications, that's great!
 
-On Fri, 2025-11-07 at 22:55 +0100, Paolo Abeni wrote:
-> The passive sockets never got proper memcg accounting: the msk
-> socket is associated with the memcg at accept time, but the
-> passive subflows never got it right.
-> 
-> At accept time, traverse the subflows list and associate each of them
-> with the msk memcg, and try to do the same at join completion time,
-> if
-> the msk has been already accepted.
-> 
-> Fixes: cf7da0d66cc1 ("mptcp: Create SUBFLOW socket for incoming
-> connections")
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/298
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/597
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> ---
->  net/mptcp/protocol.c | 36 ++++++++++++++++++++++++++----------
->  net/mptcp/protocol.h |  1 +
->  net/mptcp/subflow.c  | 10 ++++++++++
->  3 files changed, 37 insertions(+), 10 deletions(-)
-> 
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 34e6bc731085..5e9325c7ea9c 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -959,6 +959,8 @@ static bool __mptcp_finish_join(struct mptcp_sock
-> *msk, struct sock *ssk)
->  	mptcp_subflow_ctx(ssk)->subflow_id = msk->subflow_id++;
->  	mptcp_sockopt_sync_locked(msk, ssk);
->  	mptcp_stop_tout_timer(sk);
-> +	__mptcp_inherit_cgrp_data(sk, ssk);
-> +	__mptcp_inherit_memcg(sk, ssk, GFP_ATOMIC);
+Our CI did some validations and here is its report:
 
-In mptcp_graph_subflows(), these two lines already have the
-mem_cgroup_from_sk() check (in the squash-to patch). It's unclear
-whether mem_cgroup_from_sk() check needs to be added here too.
+- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Unstable: 2 failed =
+test(s): selftest_mptcp_connect selftest_mptcp_connect_checksum =
+=F0=9F=94=B4
+- KVM Validation: debug (only selftest_mptcp_join): Unstable: =
+1 failed test(s): selftest_mptcp_join =F0=9F=94=B4
+- KVM Validation: =
+btf-normal (only bpftest_all): Success! =E2=9C=85
+- KVM Validation: =
+btf-debug (only bpftest_all): Unstable: 2 failed test(s): =
+bpftest_test_progs-cpuv4_mptcp bpftest_test_progs-no_alu32_mptcp =
+=F0=9F=94=B4
+- Task: https://github.com/multipath-tcp/mptcp_net-next/action=
+s/runs/19258711974
 
-Thanks,
--Geliang
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/fbba16487ba0
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1021913
 
->  	__mptcp_propagate_sndbuf(sk, ssk);
->  	__mptcp_propagate_rcvspace(sk, ssk);
->  	return true;
-> @@ -4076,6 +4078,29 @@ static int mptcp_listen(struct socket *sock,
-> int backlog)
->  	return err;
->  }
->  
-> +static void mptcp_graph_subflows(struct sock *sk)
-> +{
-> +	struct mptcp_subflow_context *subflow;
-> +	struct mptcp_sock *msk = mptcp_sk(sk);
-> +
-> +	mptcp_for_each_subflow(msk, subflow) {
-> +		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
-> +		bool slow;
-> +
-> +		slow = lock_sock_fast(ssk);
-> +
-> +		/* set ssk->sk_socket of accept()ed flows to mptcp
-> socket.
-> +		 * This is needed so NOSPACE flag can be set from
-> tcp stack.
-> +		 */
-> +		if (!ssk->sk_socket)
-> +			mptcp_sock_graft(ssk, sk->sk_socket);
-> +
-> +		__mptcp_inherit_cgrp_data(sk, ssk);
-> +		__mptcp_inherit_memcg(sk, ssk, GFP_KERNEL);
-> +		unlock_sock_fast(ssk, slow);
-> +	}
-> +}
-> +
->  static int mptcp_stream_accept(struct socket *sock, struct socket
-> *newsock,
->  			       struct proto_accept_arg *arg)
->  {
-> @@ -4123,16 +4148,7 @@ static int mptcp_stream_accept(struct socket
-> *sock, struct socket *newsock,
->  		msk = mptcp_sk(newsk);
->  		msk->in_accept_queue = 0;
->  
-> -		/* set ssk->sk_socket of accept()ed flows to mptcp
-> socket.
-> -		 * This is needed so NOSPACE flag can be set from
-> tcp stack.
-> -		 */
-> -		mptcp_for_each_subflow(msk, subflow) {
-> -			struct sock *ssk =
-> mptcp_subflow_tcp_sock(subflow);
-> -
-> -			if (!ssk->sk_socket)
-> -				mptcp_sock_graft(ssk, newsock);
-> -		}
-> -
-> +		mptcp_graph_subflows(newsk);
->  		mptcp_rps_record_subflows(msk);
->  
->  		/* Do late cleanup for the first subflow as
-> necessary. Also
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index 300ac7030958..60bfe50530dc 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -755,6 +755,7 @@ mptcp_subflow_delegated_next(struct
-> mptcp_delegated_action *delegated)
->  	return ret;
->  }
->  
-> +void __mptcp_inherit_memcg(struct sock *sk, struct sock *ssk, gfp_t
-> gfp);
->  void __mptcp_inherit_cgrp_data(struct sock *sk, struct sock *ssk);
->  
->  int mptcp_is_enabled(const struct net *net);
-> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> index 599a21d92590..39bf69e73975 100644
-> --- a/net/mptcp/subflow.c
-> +++ b/net/mptcp/subflow.c
-> @@ -1721,6 +1721,16 @@ int __mptcp_subflow_connect(struct sock *sk,
-> const struct mptcp_pm_local *local,
->  	return err;
->  }
->  
-> +void __mptcp_inherit_memcg(struct sock *sk, struct sock *ssk, gfp_t
-> gfp)
-> +{
-> +	/* Only if the msk has been accepted already (and not
-> orphaned).*/
-> +	if (!mem_cgroup_sockets_enabled || !sk->sk_socket)
-> +		return;
-> +
-> +	mem_cgroup_sk_inherit(sk, ssk);
-> +	__sk_charge(ssk, gfp);
-> +}
-> +
->  void __mptcp_inherit_cgrp_data(struct sock *sk, struct sock *ssk)
->  {
->  #ifdef CONFIG_SOCK_CGROUP_DATA
 
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
