@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 573E630AAD2
-	for <mptcp@lists.linux.dev>; Tue, 11 Nov 2025 17:25:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70494377E85
+	for <mptcp@lists.linux.dev>; Tue, 11 Nov 2025 17:26:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762881911; cv=none; b=NdjpXFO07JEhDwTAqnh3gR43Duvqc5QdXUsFkdIcNU3WOgUtDaWrNN3SdgZgsEmoM7DrNLTZKwEQbLkCNI2jLJleNYKSQW/L8zjigvm6ZS7uAE0okTmTZOSvq9+sOOGxw/RbsL7EA37kzgoYywS8t7enNcTQBIUg7/LDtWn0Mss=
+	t=1762882013; cv=none; b=QhIQkOPa8jA/OGK/NWTVGur/lPklRld0i32WVwmhscHEZQRNUC/H+3KBeQkcNGhgNU7DAOshh+mO5hN/NHCyzaqqCodM/T48zdCU977Xwv/v5T/MHbPneNa8Oto/lQr61JPpnJw35/IK6JLpV9P67CKtFRT0XC+HlPeS4mfIkKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762881911; c=relaxed/simple;
-	bh=r50zJUzdbBubGlh1qOEljQMQ7u6QJoYG21gwIALmWCU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
-	 In-Reply-To:Content-Type; b=iTXcrbkbSzFdQ6bSxS/nG4puBOFg5rfDRahGT4LLd5qnaT+HQ5ZbbhER1kEvP9hseLEzcCF0MudLk3EbeQ0WWuIm9MT1K+BHn/W4sHMD0Ns7tFZ2gzze9mGYOyJXhJu7yEgqgUOfhm1TVFsEKKIyPbeyGUY4xuf/qadJKoqDDsE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i632DiA5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1762882013; c=relaxed/simple;
+	bh=Mm9DhGPQ/AIFd/J6ooeIvYv2C8cZRtJQH2hZ3NUYixA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=l0vUxPZ+Oy562COpnuUfs6PkYD9wPBuVLMR8svJXusuf2qPBrqrAw4ZWt26Zutxa9GpwAT7I0FmMFnEaEvazxg8Sf69Jj8Eu48fR0CxzPVaHgkmsV4fCHu4Xac7MsbMDqWBL3b3COCgEe/rMUNdf+AB7AVWNKNysBjxata2wSls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YnOMAe+m; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i632DiA5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14D9DC113D0;
-	Tue, 11 Nov 2025 17:25:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YnOMAe+m"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EEC5C4CEFB;
+	Tue, 11 Nov 2025 17:26:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762881910;
-	bh=r50zJUzdbBubGlh1qOEljQMQ7u6QJoYG21gwIALmWCU=;
-	h=Date:Subject:To:References:From:Cc:In-Reply-To:From;
-	b=i632DiA5OCV8e43qlHBxkJHuxFOuBZhhcCwmxKKEe8cIjFxVvq98q6+mIWuhYVWPt
-	 AHImqe4LSvSAzoJq3kqo8GToNotxv5ZgwmEbfgmVJlZTjmNFqfJqME8qap57nOliF/
-	 Uob85+ruFG55WaOQ3fh1xEyy3BJyuCdmIaj/B5TMxGNuaNAd6bvNj4TLI3BwfGl9lz
-	 4oOcDJuwUA1kZdPBYwwBokFelKQ0ye+GFWVeumKr2S8HTEhgl/St/PnxRbcr+KsOQ7
-	 /ZAqufm7LJywBVjlo5zh9Qucq9Yq+Ic2AF7oGWElh31Kvcj/2A4oWefagHkHEPK81k
-	 yXCH9K6lne9kg==
-Message-ID: <61dce5d9-0dac-4c42-af9f-231b537844c4@kernel.org>
-Date: Tue, 11 Nov 2025 18:25:07 +0100
+	s=k20201202; t=1762882013;
+	bh=Mm9DhGPQ/AIFd/J6ooeIvYv2C8cZRtJQH2hZ3NUYixA=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=YnOMAe+mN5uCK9sc+kWgoCAhlf6ctdesHT3zXCtc2SbtHwcTvnGhpyG/Kqp58NrtO
+	 7VdJOsyBQhXr6Uo/iqEC/t4455Y+dWRm/FQ8I9tHGInxygo2BSaMsoU9HoqlUwqYda
+	 cVZSxWNtrY8newWS5CKj9v8h0wiEV92IZ+q36802sBiygstfmRR5m3uHFrhol+H98G
+	 j5EvIhbIBI8m4wrJof2bWxh5dhP0GAbspan8aundeJXh1bMvBwC8YDlqlsUAGt2Clj
+	 FZPIw1++ApYae5gsNRho4/PnzVoDCsnct94kJnP9N0lfBbz/JpECYcZC156AyavgzB
+	 RSTCJv5X50XHw==
+Message-ID: <b35ac728-dc25-40db-9fdb-8242e857ed87@kernel.org>
+Date: Tue, 11 Nov 2025 18:26:51 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,15 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net 3/3] mptcp: fix memcg accounting for passive
+Subject: Re: [PATCH mptcp-net 0/3] mptcp: fix memcg accounting for passive
  sockets
 Content-Language: en-GB, fr-BE
-To: Geliang Tang <geliang@kernel.org>
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
 References: <cover.1762551942.git.pabeni@redhat.com>
- <b78e4fb6552cc0b94aa9c1471590d7af1ec2a221.1762551942.git.pabeni@redhat.com>
- <7d43f35c26a94f22a8e7627f477560ba994efbe7.camel@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
-Cc: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -88,61 +85,37 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <7d43f35c26a94f22a8e7627f477560ba994efbe7.camel@kernel.org>
+In-Reply-To: <cover.1762551942.git.pabeni@redhat.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+Hi Paolo,
 
-On 11/11/2025 09:37, Geliang Tang wrote:
-> Hi Paolo,
+On 07/11/2025 22:55, Paolo Abeni wrote:
+> It turns out that the splat reported earlier is indeed due to an old
+> bug/missing feature that hit hard on top of "mptcp: borrow forward 
+> memory from subflow", as we can borrow accounted memory from a socket
+> not doing any accounting;)
 > 
-> Thanks for this fix.
+> It should land upstream before the above mentioned commit, ence the
+> 'net' target, but it could as well be net-next material.
+
+Thank you for these fixes!
+
+They look good to me for 'net':
+
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+
+> I think there is still a racing window to produce the splat reported in
+> #597: if a subflow receive data while the msk is locked, and before the
+> memcg is initialized on such subflow, it will push the data into the msk
+> becklog, and later borrow will again try to grab accounted memory from
+> non accounting ssk.
 > 
-> On Fri, 2025-11-07 at 22:55 +0100, Paolo Abeni wrote:
->> The passive sockets never got proper memcg accounting: the msk
->> socket is associated with the memcg at accept time, but the
->> passive subflows never got it right.
->>
->> At accept time, traverse the subflows list and associate each of them
->> with the msk memcg, and try to do the same at join completion time,
->> if
->> the msk has been already accepted.
->>
->> Fixes: cf7da0d66cc1 ("mptcp: Create SUBFLOW socket for incoming
->> connections")
->> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/298
->> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/597
->> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
->> ---
->>  net/mptcp/protocol.c | 36 ++++++++++++++++++++++++++----------
->>  net/mptcp/protocol.h |  1 +
->>  net/mptcp/subflow.c  | 10 ++++++++++
->>  3 files changed, 37 insertions(+), 10 deletions(-)
->>
->> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
->> index 34e6bc731085..5e9325c7ea9c 100644
->> --- a/net/mptcp/protocol.c
->> +++ b/net/mptcp/protocol.c
->> @@ -959,6 +959,8 @@ static bool __mptcp_finish_join(struct mptcp_sock
->> *msk, struct sock *ssk)
->>  	mptcp_subflow_ctx(ssk)->subflow_id = msk->subflow_id++;
->>  	mptcp_sockopt_sync_locked(msk, ssk);
->>  	mptcp_stop_tout_timer(sk);
->> +	__mptcp_inherit_cgrp_data(sk, ssk);
->> +	__mptcp_inherit_memcg(sk, ssk, GFP_ATOMIC);
-> 
-> In mptcp_graph_subflows(), these two lines already have the
-> mem_cgroup_from_sk() check (in the squash-to patch). It's unclear
-> whether mem_cgroup_from_sk() check needs to be added here too.
+> I have a tentative fix for that one but it's quite ugly and I'll keep it
+> separate from this series.
 
-From what I understood, no need to check mem_cgroup_from_sk() here:
-
-- __mptcp_inherit_cgrp_data() should not depend on that (I think)
-- __mptcp_inherit_memcg() is doing that via mem_cgroup_sockets_enabled()
-
-I *think* the squash-to patch needs some small further modifications,
-but this series looks good to me.
+Good idea!
 
 Cheers,
 Matt
