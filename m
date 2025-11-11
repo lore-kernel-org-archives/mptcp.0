@@ -1,89 +1,145 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED0AA358D21
-	for <mptcp@lists.linux.dev>; Tue, 11 Nov 2025 12:15:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAD4135958
+	for <mptcp@lists.linux.dev>; Tue, 11 Nov 2025 15:30:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762863325; cv=none; b=F2h7MdTMHCF9KvPK0qnQT65UhgHEe58yqC93VS6cNSza2e75cS6uyMjaEjZ6fJVECqqw2TQO4LrNXgozZMgVZW4RLh4vr2llEhfibJ6dbzy1JDVbB4LmTISlT+Xr14DG3Tu+Qb3MHumHS83X33hXsvA/kLyg7IBLtyiYIhzX5T8=
+	t=1762875042; cv=none; b=B2W6SP2Zrqy1jLMRadbG/HeXWkI4ybibIpAkX9gfUFFaX6CsEUboALTJR5dp7G1Ck8Ub5YkOLa30Nb26lrR22SgPoyIB2d/28CeG0UHbbtbx8SPmCu258/TYv2LZVs6zs0cHkMSk5NLNxdXzBnTizgMo7ucb+ulQKZOGfuPu9DI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762863325; c=relaxed/simple;
-	bh=8hWQd6TSJNK5DPb3b2IcURpBQDYA2RC3RdGSE5EV/3s=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kurqi+gAqRNN/wxNNIoOcomY1rGqJPUkyvGvmgqKr/QXJ3CtJ58GRtmX+l6EN8enTY0KvUqUx9XW94Nx52L5hkx4Qscu9s+6fdowBcbk/l8twYQgv0JJj4SYuBRSLQxBIvjauK8mfiLjCtGwaPm+wC/ThaBswePcu9JS04oTZXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OEuc0Jrr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1762875042; c=relaxed/simple;
+	bh=/QPLGVcRgB/CnYYTEUdeR3vJvV7rxeM3WjbHLv8plb0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=RwBnWMZpypn7gRs7pSAJ4Ntb7UfxtDzlgHWsUb1NRQ+cPQYaxoTyHSphtny5L0WtMsxaTZ1puvt4CpOzsAd2LQtf2yNXFZrEHtXZhGDuFeYzcBou3j/QlBd/d3BAXSVMuUK5lLZnIa6TFrqmJquE8+cXArYMiWQ6jI8YUT3iZDs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GegYQfNt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OEuc0Jrr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6F06C4CEFB;
-	Tue, 11 Nov 2025 12:15:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GegYQfNt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD864C113D0;
+	Tue, 11 Nov 2025 15:30:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762863324;
-	bh=8hWQd6TSJNK5DPb3b2IcURpBQDYA2RC3RdGSE5EV/3s=;
-	h=From:To:Cc:Subject:Date:From;
-	b=OEuc0Jrr6T0ZYw5B17l0VooXFxJG4EzdUfy/o794r9IW88FgKGdowmIJciQgTxVCb
-	 OzSRKvGAbzJIHL1ve4sL+13iy1v/JU6c4vE7WILTHtAO0MC8MRBjk1daZt1Epy9Wrq
-	 +3QjkEFX6UyyXxXOoWnYY3dR/5ynfBSzUFToJNos3xQAQ9poNS++O8Bq/Yb9dlW7m8
-	 0NzDpJkRD3wLO1ybGsA8HlV8lEEhzDjXquApZC/IZHH/84UJs/l2DuQhZ7lETA7+aw
-	 iSc7Qs+tJPI2G7qxXRqOicioxI+aAz/2q6t3YV8Ax+tnEkxjmfoAnz0C2dWXDfB5K5
-	 srIpN9E8wfNUA==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-To: MPTCP Upstream <mptcp@lists.linux.dev>
-Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>,
-	Geliang Tang <geliang@kernel.org>
-Subject: [PATCH mptcp-net] selftests: mptcp: join: fastclose: remove flaky marks
-Date: Tue, 11 Nov 2025 13:15:17 +0100
-Message-ID: <20251111121516.141312-2-matttbe@kernel.org>
-X-Mailer: git-send-email 2.51.0
+	s=k20201202; t=1762875042;
+	bh=/QPLGVcRgB/CnYYTEUdeR3vJvV7rxeM3WjbHLv8plb0=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=GegYQfNtpgbqJUkp1BQVHacxVYoipG3roIf1BU5RAeVAPMa0XDKkLjUmOL5MhuNO9
+	 zMvsJfGFQKpwazBbzkH/IacVXgDjcz5MZAuI7jbL5wjjb2L1FW6TFEy82BA9cPOv5P
+	 C2tUvdafSX/rQyopoPuBXVomapID6zelK+FgKj0h168J6vM90Do06nHqF/IK7nyZfe
+	 oi93xqizlsXF8Y/4/T9bccZ1UJdlUN2l1GD0LQM6Ino64lJ4HwA0/d9muqfrQzgBBB
+	 LmBfj3tIyJgz42bf0RDpVWsy23HzpNx0Y9hHTKxnEadp9Nb1znLKGqoLk7e6N16Ndz
+	 8LdElRMD8yBrA==
+Message-ID: <fa8316ac-594e-443b-b9dc-00103ee8557a@kernel.org>
+Date: Tue, 11 Nov 2025 16:30:39 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1728; i=matttbe@kernel.org; h=from:subject; bh=8hWQd6TSJNK5DPb3b2IcURpBQDYA2RC3RdGSE5EV/3s=; b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDKFNa4GZM8Mq375qvy1xFmji7l8vxSkFxbee8BgYVAiu 8jl+TyBjlIWBjEuBlkxRRbptsj8mc+reEu8/Cxg5rAygQxh4OIUgIk4VDH8FbzF93NWzYO3eo3N zN7XdKZssf35PXL/t4rV7Oo3TfN4njIydE/Q1v+mxNt73vWKVrLz9eyFHdObTVcWLl/FVT3vVkM oGwA=
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-net] mptcp: fix ack generation for fallback msk
+Content-Language: en-GB, fr-BE
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+References: <14a868192851deb4145a90e3b7eec616544da262.1762474159.git.pabeni@redhat.com>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <14a868192851deb4145a90e3b7eec616544da262.1762474159.git.pabeni@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-After recent fixes like the parent commit, and "selftests: mptcp:
-connect: trunc: read all recv data", the two fastclose subtests no
-longer look flaky any more.
+Hi Paolo,
 
-It then feels fine to remove these flaky marks, to no longer ignore
-these subtests in case of errors.
+On 07/11/2025 01:10, Paolo Abeni wrote:
+> mptcp_cleanup_rbuf() need to know the last most recent, mptcp-level
+> rcv_wnd sent, and such information is tracked into the msk->old_wspace
+> field, updated at ack transmission time by mptcp_write_options().
+> 
+> Fallback socket do not add any mptcp options, such helper is never
+> invoked, and msk->old_wspace value remain stale. That in turn makes
+> ack generation at recvmsg() time quite randomic.
+> 
+> Address the issue ensuring mptcp_write_options() is invoked even
+> for fallback sockets, and just update the needed info in such a
+> case.
+> 
+> The issue went unnoticed for a long time, as mptcp overshot the> fallback socket receive buffer autotune significantly.
 
-Reviewed-by: Geliang Tang <geliang@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
-This was originally a Squash-to patch for "selftests: mptcp: join:
-fastclose: drop plain RST", including the revert (without this change).
-But just to ease the applications of the patches, I already did a full
-revert and applied Paolo's patches. This patch is then going to be
-applied after Paolo's patches, and just after having been sent. I'm
-sharing this, mainly because I kept Geliang's RvB tag: please shout if
-you want me to remove it.
----
- tools/testing/selftests/net/mptcp/mptcp_join.sh | 2 --
- 1 file changed, 2 deletions(-)
+Should we say "used to overshot"? :)
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 98d78ecae8c6..74c7adf5fcbd 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -3500,7 +3500,6 @@ fullmesh_tests()
- fastclose_tests()
- {
- 	if reset_check_counter "fastclose test" "MPTcpExtMPFastcloseTx"; then
--		MPTCP_LIB_SUBTEST_FLAKY=1
- 		test_linkfail=1024 fastclose=client \
- 			run_tests $ns1 $ns2 10.0.1.1
- 		chk_join_nr 0 0 0
-@@ -3509,7 +3508,6 @@ fastclose_tests()
- 	fi
- 
- 	if reset_check_counter "fastclose server test" "MPTcpExtMPFastcloseRx"; then
--		MPTCP_LIB_SUBTEST_FLAKY=1
- 		test_linkfail=1024 fastclose=server \
- 			run_tests $ns1 $ns2 10.0.1.1
- 		join_rst_nr=1 \
+> Fixes: e3859603ba13 ("mptcp: better msk receive window updates")
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/594
+
+Thank you for the fix!
+
+(...)
+
+> @@ -1643,6 +1660,9 @@ void mptcp_write_options(struct tcphdr *th, __be32 *ptr, struct tcp_sock *tp,
+>  				      opts->reset_transient,
+>  				      opts->reset_reason);
+>  		return;
+> +	} else if (unlikely(!opts->suboptions)) {
+
+Small detail: do you mind if I add /* Fallback to TCP */ just above when
+applying the patch?
+
+> +		mptcp_track_rwin(tp);
+
+Should we eventually also call mptcp_track_rwin(tp) in case of MP_FAIL
+without MP_RST? Or is this not needed?
+
+Other than that, it looks good to me, and I guess we can already apply
+the patch:
+
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+
+> +		return;
+>  	}
+>  
+>  	if (OPTION_MPTCP_PRIO & opts->suboptions) {
+
+Cheers,
+Matt
 -- 
-2.51.0
+Sponsored by the NGI0 Core fund.
 
