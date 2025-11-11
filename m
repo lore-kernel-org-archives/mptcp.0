@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49DEF22157B
-	for <mptcp@lists.linux.dev>; Tue, 11 Nov 2025 17:50:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBF2929B778
+	for <mptcp@lists.linux.dev>; Tue, 11 Nov 2025 18:43:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762883449; cv=none; b=RP9Su7/OU6uIOuIK/okdI+RDtMLjwUJV5/iQFg5+wDCLK6LR4a3se0Omp75++cg0l9vibSl4OFKtavcl27lxss170z89wb6crG7y/8S7PDj/55DNjja79lDnmPJIFBCYFy1Cnn1/KzAH8ztEtFJBFR7SUwBzq77qTglyTiBHCm0=
+	t=1762886629; cv=none; b=al49sygyIFR3JtkNVoi0PbT8Q6LOskuMRSxy1utpTwJSHg8njGwDDwV8gpsa1w853YpegewQoFwaEwry9GHANQSd/3ingFnqSqWyDkCjn/fyhWv/gUh+YrSIYbmIC6bpzBPLvthEs9t9/c7iTbvuWKqioJxsUmofMR4+OBYj+Us=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762883449; c=relaxed/simple;
-	bh=4Zu0dHgcWDXhEsSIH8Y+FssdWF5Zxbu91APUacMMZgY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=f0E26xXyccwwHtRmagYO2nUAlpwyDSsrYJ4tb3MMJXGbpV2BaF/9kpt5Ln+2iM+fJHb3BDTOAEW/qD1Zcj3TMiy1D5eyAgxncm7OGhB5+4pzE6ZNXiZF10RUqVAypBz7XLr1CWb4FYlaxZr38cysBImX9vSxMjaGD+SNawFZTbQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OROd9L5Y; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1762886629; c=relaxed/simple;
+	bh=vyyXyd7tBM34oR2vONwYUNFKJuNtRJLepQMsmBIQhRg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=p5I5Yyhz+crjhn2Y6lwPYrLd4u9ScQdrhuermA4LEHKV0F6pTI9qFNWPuFJMqBxylvVMFOjMaq7WntvrDNu3MowpPolCgsI2/0YwzEMbg3LvQKkfNmbM5FozTJiSNquOwXj9VyJEp4t8xJrgR8iDWSzP6pc1XfiqX31mryDFV94=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fGFN9lnp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OROd9L5Y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D6AAC116D0;
-	Tue, 11 Nov 2025 17:50:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fGFN9lnp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C2BEC4CEF5;
+	Tue, 11 Nov 2025 18:43:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762883448;
-	bh=4Zu0dHgcWDXhEsSIH8Y+FssdWF5Zxbu91APUacMMZgY=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=OROd9L5YLAFLZ4JTVu6nIBygZq5vhBz1OKvsllxzXzsYzqGPybToq8OovolI3HpEI
-	 III6ou9xVSf9LGDqb4F7BlKL5yTA34TcX9IiuBQ92Qs1+8ZfFzp/FnZnrybqVo/7pB
-	 6+0Ccerxc+4aiYyBMy54oqoLX1Mm1EJCEa7QgK0KaAQo9mqkJ+WkdwXnjkYgHUSPe0
-	 Ywi0kyaXxemIAXo2dAVeAE6QE9KTVhYknnrjTSiYAbUsRjnEGgrorrlIvOl4WvN0G4
-	 HidxqqsPTT8c4dKP+FBLhVEzGgEEzO5NANoPEhPXXorEZIZBunHZEpCaibvT7bi8kV
-	 5+ymP3RBBBrbg==
-Message-ID: <1929f39e-b3e5-437d-b8da-71e3c7e6f36b@kernel.org>
-Date: Tue, 11 Nov 2025 18:50:45 +0100
+	s=k20201202; t=1762886629;
+	bh=vyyXyd7tBM34oR2vONwYUNFKJuNtRJLepQMsmBIQhRg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=fGFN9lnp1MHOnKHNSH1SS8GizCuakUEJjWT8oXKYruIVaTIjrBNBVZP+x/9FWsiwe
+	 z6yxUwbUrwtT1FfitRxQ/U5bYemo1hy+Z7h/yNqvdqOejaTx9kwFmnkmfMwKWFa8pS
+	 q/2eA82qy2cq6uFQAyD6VU53aVUIxjXUgrktyv3uZ4v5NcMv/3YqMh93HSXhLlLmya
+	 6NkyIFc55n3xeBecZrEHhAWlhHilUe0qgQuHV6YB2Bln/CZzbSIbKkAu8awnBUiOeE
+	 d/QwDM5wsA/AgCL5WNoTPQMRXEOtZk77Dn7bDShpeYNa5s7MWBWDCfrLy7X8mER5b4
+	 ML5ktHUu2Ti3Q==
+Message-ID: <e820a52a-7944-45b6-b3f1-4012a3856a4a@kernel.org>
+Date: Tue, 11 Nov 2025 19:43:46 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH v2 mptcp-net 1/2] mptcp: do not fallback when OoO is
- present
+Subject: Re: [PATCH v3 mptcp-next 2/7] mptcp: avoid unneeded subflow-level
+ drops.
 Content-Language: en-GB, fr-BE
 To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-References: <cover.1762845791.git.pabeni@redhat.com>
- <fec239b14fa74d96fee25928de089de45f2c99ef.1762845791.git.pabeni@redhat.com>
+Cc: Mat Martineau <martineau@kernel.org>
+References: <cover.1762504059.git.pabeni@redhat.com>
+ <6af807a4d56bcac85d0908e30251ffa6d28ea38f.1762504059.git.pabeni@redhat.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,51 +87,46 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <fec239b14fa74d96fee25928de089de45f2c99ef.1762845791.git.pabeni@redhat.com>
+In-Reply-To: <6af807a4d56bcac85d0908e30251ffa6d28ea38f.1762504059.git.pabeni@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Paolo,
 
-On 11/11/2025 08:24, Paolo Abeni wrote:
-> In case of DSS corruption, the MPTCP protocol tries to avoid the
-> subflow reset if fallback is possible. Such corruptions happen in
-> the receive path; to ensure fallback is possible the stack additionally
-> need to check for OoO data, otherwise the fallback will break the data
-> stream.
-
-Thank you for the fix!
-> Fixes: e32d262c89e2 ("mptcp: handle consistently DSS corruption")
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/598
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> ---
-> Note: this does not avoid the WARN(), but fixes the inconsistend
-> read() behavior; the ingress data is OoO, we should not ack it
-> ---
->  net/mptcp/protocol.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+On 07/11/2025 09:32, Paolo Abeni wrote:
+> The rcv window is shared among all the subflows. Currently, MPTCP sync
+> the TCP-level rcv window with the MPTCP one at tcp_transmit_skb() time.
 > 
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index d6b08e1de358..7b966f105f89 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -646,7 +646,8 @@ static void mptcp_check_data_fin(struct sock *sk)
->  
->  static void mptcp_dss_corruption(struct mptcp_sock *msk, struct sock *ssk)
->  {
-> -	if (!mptcp_try_fallback(ssk, MPTCP_MIB_DSSCORRUPTIONFALLBACK)) {
-> +	if (!RB_EMPTY_ROOT(&msk->out_of_order_queue) ||
-> +	    !mptcp_try_fallback(ssk, MPTCP_MIB_DSSCORRUPTIONFALLBACK)) {
+> The above means that incoming data may sporadically observe outdated
+> TCP-level rcv window and being wrongly dropped by TCP.
+> 
+> Address the issue checking for the edge condition before queuing the data
+> at TCP level, and eventually syncing the rcv window as needed.
+> 
+> Note that the issue is actually present from the very first MPTCP
+> implementation, but backports older than the blamed commit below will range
+> from impossible to useless.
 
-Does it mean we should check the OoO queue each time mptcp_try_fallback
-is called?
+Thank you for this patch!
 
-Should we not eventually set msk->allow_infinite_fallback to false in
-mptcp_data_queue_ofo()?
+It looks good to me:
 
->  		MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_DSSCORRUPTIONRESET);
->  		mptcp_subflow_reset(ssk);
->  	}
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+
+> Before:
+> nstat >/dev/null ;sleep 1; nstat -z TcpExtBeyondWindow
+> TcpExtBeyondWindow              14                 0.0
+> 
+> After:
+> nstat >/dev/null ;sleep 1; nstat -z TcpExtBeyondWindow
+> TcpExtBeyondWindow              0                  0.0
+Should we eventually track this MIB counter in mptcp_connect.sh?
+
+> Fixes: fa3fe2b15031 ("mptcp: track window announced to peer")
+
+While there are still discussions on patch 6/7, to ease things, I
+suggest already applying only this patch in our tree (fixes for -net),
+the only material for 'net' from what I understood.
 
 Cheers,
 Matt
