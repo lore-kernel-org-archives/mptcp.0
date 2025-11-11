@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAD4135958
-	for <mptcp@lists.linux.dev>; Tue, 11 Nov 2025 15:30:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3063C26E146
+	for <mptcp@lists.linux.dev>; Tue, 11 Nov 2025 15:47:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762875042; cv=none; b=B2W6SP2Zrqy1jLMRadbG/HeXWkI4ybibIpAkX9gfUFFaX6CsEUboALTJR5dp7G1Ck8Ub5YkOLa30Nb26lrR22SgPoyIB2d/28CeG0UHbbtbx8SPmCu258/TYv2LZVs6zs0cHkMSk5NLNxdXzBnTizgMo7ucb+ulQKZOGfuPu9DI=
+	t=1762876035; cv=none; b=oTwLY4AEwKHlEoEVPe24bBlkrTssdZsSVY690l1pMt0KEYYfUTiVy2bzL3vtEQs2wk1ezl4h/prsubyCGYIXA87x/UAxWZPLxl41x/2WgYbS3JTUpkoX1DcH5mlawJ8JfXU/BFE9vFa4WK7QHvZY3TNo6iJUZQfREZBew/jvRIY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762875042; c=relaxed/simple;
-	bh=/QPLGVcRgB/CnYYTEUdeR3vJvV7rxeM3WjbHLv8plb0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=RwBnWMZpypn7gRs7pSAJ4Ntb7UfxtDzlgHWsUb1NRQ+cPQYaxoTyHSphtny5L0WtMsxaTZ1puvt4CpOzsAd2LQtf2yNXFZrEHtXZhGDuFeYzcBou3j/QlBd/d3BAXSVMuUK5lLZnIa6TFrqmJquE8+cXArYMiWQ6jI8YUT3iZDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GegYQfNt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1762876035; c=relaxed/simple;
+	bh=/8ePIaJg5isv8TlpN/VGfKw5Rm9eFEcKXACBIH3vp48=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=JRYRUtXkF2S57nAzNIh6oPRjZ58nyt1FYT5xmgtPVCw1MmnMsmFndrpy/X2Ebd4lnxKsYvJI4U3VQRxrCzuth3yPT027YEQ7HfH++yzo9aa9IADoxrGhczEYikbJlcdIPTwyB0TJh5MKcH7LLdZ2KUfAPZnI3PbzyXG4UZVwXTE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FxyUUQnz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GegYQfNt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD864C113D0;
-	Tue, 11 Nov 2025 15:30:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FxyUUQnz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3DACBC4CEF7;
+	Tue, 11 Nov 2025 15:47:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762875042;
-	bh=/QPLGVcRgB/CnYYTEUdeR3vJvV7rxeM3WjbHLv8plb0=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=GegYQfNtpgbqJUkp1BQVHacxVYoipG3roIf1BU5RAeVAPMa0XDKkLjUmOL5MhuNO9
-	 zMvsJfGFQKpwazBbzkH/IacVXgDjcz5MZAuI7jbL5wjjb2L1FW6TFEy82BA9cPOv5P
-	 C2tUvdafSX/rQyopoPuBXVomapID6zelK+FgKj0h168J6vM90Do06nHqF/IK7nyZfe
-	 oi93xqizlsXF8Y/4/T9bccZ1UJdlUN2l1GD0LQM6Ino64lJ4HwA0/d9muqfrQzgBBB
-	 LmBfj3tIyJgz42bf0RDpVWsy23HzpNx0Y9hHTKxnEadp9Nb1znLKGqoLk7e6N16Ndz
-	 8LdElRMD8yBrA==
-Message-ID: <fa8316ac-594e-443b-b9dc-00103ee8557a@kernel.org>
-Date: Tue, 11 Nov 2025 16:30:39 +0100
+	s=k20201202; t=1762876034;
+	bh=/8ePIaJg5isv8TlpN/VGfKw5Rm9eFEcKXACBIH3vp48=;
+	h=Date:Subject:From:To:References:In-Reply-To:From;
+	b=FxyUUQnzbj5XCtN2VXFCcjDXrWGyBRSHERRDYNXZ25V7niF8pgtI29fBe01sKq+Hg
+	 k8dMSVCqD/XKvn/NdljH3ENKQLJbPZqYu0U9SM9bToyDdOlgAxwAhsTD3fVrYUshS9
+	 x5ADkoPTCVJZo44ZiNe7WnIeq7RV6dzduHWkQ8CQHuLDaAWBmwn3ljP3uPp2i/YBsM
+	 6xmbUTsDExs6c0aP0XROtmdK01f+85xBq8/oumnvJl5gIAIDrWhIm7FzpfYivAkCGo
+	 1pC7OaL9bh4r/Fdc2dLZen5iJhacEMUr01fpo7FtZWnhJBjFPFskgItOeHcIcC0s2U
+	 +EGYTyfjK0uCg==
+Message-ID: <db7a5754-c4de-48d2-9cf8-892a0d4db38e@kernel.org>
+Date: Tue, 11 Nov 2025 16:47:12 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -37,9 +37,10 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
 Subject: Re: [PATCH mptcp-net] mptcp: fix ack generation for fallback msk
 Content-Language: en-GB, fr-BE
+From: Matthieu Baerts <matttbe@kernel.org>
 To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
 References: <14a868192851deb4145a90e3b7eec616544da262.1762474159.git.pabeni@redhat.com>
-From: Matthieu Baerts <matttbe@kernel.org>
+ <fa8316ac-594e-443b-b9dc-00103ee8557a@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -84,59 +85,70 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <14a868192851deb4145a90e3b7eec616544da262.1762474159.git.pabeni@redhat.com>
+In-Reply-To: <fa8316ac-594e-443b-b9dc-00103ee8557a@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Paolo,
 
-On 07/11/2025 01:10, Paolo Abeni wrote:
-> mptcp_cleanup_rbuf() need to know the last most recent, mptcp-level
-> rcv_wnd sent, and such information is tracked into the msk->old_wspace
-> field, updated at ack transmission time by mptcp_write_options().
+On 11/11/2025 16:30, Matthieu Baerts wrote:
+> Hi Paolo,
 > 
-> Fallback socket do not add any mptcp options, such helper is never
-> invoked, and msk->old_wspace value remain stale. That in turn makes
-> ack generation at recvmsg() time quite randomic.
+> On 07/11/2025 01:10, Paolo Abeni wrote:
+>> mptcp_cleanup_rbuf() need to know the last most recent, mptcp-level
+>> rcv_wnd sent, and such information is tracked into the msk->old_wspace
+>> field, updated at ack transmission time by mptcp_write_options().
+>>
+>> Fallback socket do not add any mptcp options, such helper is never
+>> invoked, and msk->old_wspace value remain stale. That in turn makes
+>> ack generation at recvmsg() time quite randomic.
+>>
+>> Address the issue ensuring mptcp_write_options() is invoked even
+>> for fallback sockets, and just update the needed info in such a
+>> case.
+>>
+>> The issue went unnoticed for a long time, as mptcp overshot the> fallback socket receive buffer autotune significantly.
 > 
-> Address the issue ensuring mptcp_write_options() is invoked even
-> for fallback sockets, and just update the needed info in such a
-> case.
+> Should we say "used to overshot"? :)
 > 
-> The issue went unnoticed for a long time, as mptcp overshot the> fallback socket receive buffer autotune significantly.
+>> Fixes: e3859603ba13 ("mptcp: better msk receive window updates")
+>> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/594
+> 
+> Thank you for the fix!
+> 
+> (...)
+> 
+>> @@ -1643,6 +1660,9 @@ void mptcp_write_options(struct tcphdr *th, __be32 *ptr, struct tcp_sock *tp,
+>>  				      opts->reset_transient,
+>>  				      opts->reset_reason);
+>>  		return;
+>> +	} else if (unlikely(!opts->suboptions)) {
+> 
+> Small detail: do you mind if I add /* Fallback to TCP */ just above when
+> applying the patch?
+> 
+>> +		mptcp_track_rwin(tp);
+> 
+> Should we eventually also call mptcp_track_rwin(tp) in case of MP_FAIL
+> without MP_RST? Or is this not needed?
+> 
+> Other than that, it looks good to me, and I guess we can already apply
+> the patch:
 
-Should we say "used to overshot"? :)
+That's what I just did: I guess the modification for MP_FAIL, if really
+needed, can still be added later on.
 
-> Fixes: e3859603ba13 ("mptcp: better msk receive window updates")
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/594
+New patches for t/upstream-net and t/upstream:
+- c3a571ff59cc: mptcp: fix ack generation for fallback msk
+- Results: 751a2432b7d8..5b6b4e3aef4f (export-net)
+- Results: 247540d77d20..a96affe5f0a1 (export)
 
-Thank you for the fix!
+Tests are now in progress:
 
-(...)
-
-> @@ -1643,6 +1660,9 @@ void mptcp_write_options(struct tcphdr *th, __be32 *ptr, struct tcp_sock *tp,
->  				      opts->reset_transient,
->  				      opts->reset_reason);
->  		return;
-> +	} else if (unlikely(!opts->suboptions)) {
-
-Small detail: do you mind if I add /* Fallback to TCP */ just above when
-applying the patch?
-
-> +		mptcp_track_rwin(tp);
-
-Should we eventually also call mptcp_track_rwin(tp) in case of MP_FAIL
-without MP_RST? Or is this not needed?
-
-Other than that, it looks good to me, and I guess we can already apply
-the patch:
-
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-
-> +		return;
->  	}
->  
->  	if (OPTION_MPTCP_PRIO & opts->suboptions) {
+- export-net:
+https://github.com/multipath-tcp/mptcp_net-next/commit/7fade8917eeabe227b5ffae540e9cbe48d3e5046/checks
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/b10c1d3d1e5da09bbc2b81eca8f4339b84499268/checks
 
 Cheers,
 Matt
