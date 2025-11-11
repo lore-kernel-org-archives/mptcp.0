@@ -1,138 +1,140 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C73A29CEB
-	for <mptcp@lists.linux.dev>; Tue, 11 Nov 2025 09:09:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 642652727EB;
+	Tue, 11 Nov 2025 10:35:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762852190; cv=none; b=W8lLsaqlIIY9N9LlO26Dr0rsPKyindrmECzBOzMpUb99uhQlV1Hg/6oJDB4GJoCCIGHE5IV5qoI+VjTuspJ4/Jnx+RgiGPfpCh9alZqgw2cW/yRd5C9xfxJxZsNMjY4g5RS9dEy8XOjV7lPdAgYWhmKcxqJXHqcmylOPOzWVysU=
+	t=1762857321; cv=none; b=lFiSfrqdORLWeNui72vgUzLWxFQ7to32nvkck0TBoFnDIAQGem6uFbc6dsNMo7o7Fa3CrtRiN08WsISadnp7ADIcL+bozrimbu3U/bHgHIUp3KMkGAeaTmfbw6iQoGEP6ZdBL3pik+VgWZaCWzhgFeUSfYFTtjxVJW24ZOGn6ts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762852190; c=relaxed/simple;
-	bh=nrosOXAbxQSNRNHuSDtIOp5ULpESw81u6ZaYwwL3v9g=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=XzcbQvxSX3w2xVfxUAsDz9vhFDAB4wMoJ6u9LcPjnkLnzEgI7a6Y2/QmidIQIW+ogsZuQDRWo/fGbVb/uFOABKhOX1N3SYfnh7LRoGBbCbfenFpYYrqdELzmFTdTmc9ia1Ca6VW6Vhj+64ZAoGo0JwVo/3kDGhtpuzNUCxkwMdc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OrUUdpAX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1762857321; c=relaxed/simple;
+	bh=ikQYTPKgrxxcM1o7K2HzJax8zvKLGPAKsPsUyvfZnuc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tZIGsQK9HgY5bt1YokkRRQGtZXm1YSL1TQ7NPVRFi5lXO7vmUAW4yGovUu1TcstOtMF83xyRzKYYHN3Y0Qh3WbGyRyIzQOe19IGKDqWY/OYUbbbvqDFPe0IDzTHQpPOT6rQbVEa+35GJSOOVmXkA31QgTdv6mB02mipKSoKh5WQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fTzMknut; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OrUUdpAX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25FFBC4CEF7;
-	Tue, 11 Nov 2025 09:09:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fTzMknut"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA237C19421;
+	Tue, 11 Nov 2025 10:35:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762852188;
-	bh=nrosOXAbxQSNRNHuSDtIOp5ULpESw81u6ZaYwwL3v9g=;
-	h=Subject:From:To:Date:In-Reply-To:References:From;
-	b=OrUUdpAXzGe/1eGGPurNmluV9PScHlTF26mw6x5NNc8slLa89OE7p/nPLGYVTrTLF
-	 zVN0WRNHUs9/dmfnVZ8AmJ69xYYQdrE2SAwhdBkGVYiv36l0lenBj9wZeXONrclz79
-	 nTvhYvNENMEN9Wqt9O6kU6hGMrKo5ih00hfFwGhGh/Zo1AeGYXBcWlGFoLcxtNLbN9
-	 3qZ6m4yZfVpbQoywYMfZZwtq9aOkKbhg+JEC3pmaTKtOxWmc9CN3M/RO73jM/970vm
-	 ZztP+k9I5h5Ra7uR0LmySzBvoGns5O1UOcYPFWeiIIdBMOqQmTAXhAS0zwN9wtBwHG
-	 CXrMopzmJWTSw==
-Message-ID: <5070437517392bc9a2499152ad873cdcaf4a58eb.camel@kernel.org>
-Subject: Re: [PATCH mptcp-net] mptcp: fix ack generation for fallback msk
-From: Geliang Tang <geliang@kernel.org>
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-Date: Tue, 11 Nov 2025 17:09:44 +0800
-In-Reply-To: <14a868192851deb4145a90e3b7eec616544da262.1762474159.git.pabeni@redhat.com>
-References: 
-	<14a868192851deb4145a90e3b7eec616544da262.1762474159.git.pabeni@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.52.3-0ubuntu1 
+	s=k20201202; t=1762857320;
+	bh=ikQYTPKgrxxcM1o7K2HzJax8zvKLGPAKsPsUyvfZnuc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=fTzMknut7KPkiX2bHCUR3JOuB+GG4kAuKCaG/5lsqdZWT777xr1KDWircJZqHYVvA
+	 7Q65jEMzVWQ5n7gw1QRS1tlzCGBX5JsdzqXRkKGRshJzhtLnv/F10Jol1OEHvDM6ku
+	 cbdTQvZMYSw2QPpC1d6MKVax3MmSpB9cT93Kb4vYuo3tzvQ5PahDTQNyT+/2/cFUor
+	 jJX8bkTCbBLbO9/OoM/Gkj5hjCgbMlXbCUb0h7/He9guZLxX1i1iBqsv1fInKO9PAQ
+	 uwT49md1HR6A9eUiBTsVTGqTjzAf67R4N9y06gKKUmH3Onghw193ADqwMCB5H3BHb2
+	 9ojFwAHCi1kNA==
+Message-ID: <cf035c68-fe96-49e0-acdb-bf813ae71d57@kernel.org>
+Date: Tue, 11 Nov 2025 11:35:04 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH net v5 0/3] mptcp: Fix conflicts between MPTCP and sockmap
+Content-Language: en-GB, fr-BE
+To: Jiayuan Chen <jiayuan.chen@linux.dev>, mptcp@lists.linux.dev
+Cc: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Simon Horman <horms@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
+ Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman
+ <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+ Yonghong Song <yonghong.song@linux.dev>,
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
+ Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
+ Jiri Olsa <jolsa@kernel.org>, Shuah Khan <shuah@kernel.org>,
+ Christoph Paasch <cpaasch@apple.com>, Florian Westphal <fw@strlen.de>,
+ Peter Krystad <peter.krystad@linux.intel.com>, linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org, bpf@vger.kernel.org, linux-kselftest@vger.kernel.org
+References: <20251111060307.194196-1-jiayuan.chen@linux.dev>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <20251111060307.194196-1-jiayuan.chen@linux.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Paolo,
+Hi net and bpf-net maintainers,
 
-Thanks for this fix.
-
-On Fri, 2025-11-07 at 01:10 +0100, Paolo Abeni wrote:
-> mptcp_cleanup_rbuf() need to know the last most recent, mptcp-level
-> rcv_wnd sent, and such information is tracked into the msk-
-> >old_wspace
-> field, updated at ack transmission time by mptcp_write_options().
+On 11/11/2025 07:02, Jiayuan Chen wrote:
+> Overall, we encountered a warning [1] that can be triggered by running the
+> selftest I provided.
 > 
-> Fallback socket do not add any mptcp options, such helper is never
-> invoked, and msk->old_wspace value remain stale. That in turn makes
-> ack generation at recvmsg() time quite randomic.
+> sockmap works by replacing sk_data_ready, recvmsg, sendmsg operations and
+> implementing fast socket-level forwarding logic:
+> 1. Users can obtain file descriptors through userspace socket()/accept()
+>    interfaces, then call BPF syscall to perform these replacements.
+> 2. Users can also use the bpf_sock_hash_update helper (in sockops programs)
+>    to replace handlers when TCP connections enter ESTABLISHED state
+>   (BPF_SOCK_OPS_PASSIVE_ESTABLISHED_CB/BPF_SOCK_OPS_ACTIVE_ESTABLISHED_CB)
 > 
-> Address the issue ensuring mptcp_write_options() is invoked even
-> for fallback sockets, and just update the needed info in such a
-> case.
+> However, when combined with MPTCP, an issue arises: MPTCP creates subflow
+> sk's and performs TCP handshakes, so the BPF program obtains subflow sk's
+> and may incorrectly replace their sk_prot. We need to reject such
+> operations. In patch 1, we set psock_update_sk_prot to NULL in the
+> subflow's custom sk_prot.
 > 
-> The issue went unnoticed for a long time, as mptcp overshot the
-> fallback socket receive buffer autotune significantly.
+> Additionally, if the server's listening socket has MPTCP enabled and the
+> client's TCP also uses MPTCP, we should allow the combination of subflow
+> and sockmap. This is because the latest Golang programs have enabled MPTCP
+> for listening sockets by default [2]. For programs already using sockmap,
+> upgrading Golang should not cause sockmap functionality to fail.
 > 
-> Fixes: e3859603ba13 ("mptcp: better msk receive window updates")
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/594
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> Patch 2 prevents the WARNING from occurring.
 
-This patch looks good to me!
+I think this series can be applied directly in 'net', if that's OK for
+both of you.
 
-    Reviewed-by: Geliang Tang <geliang@kernel.org>
-
--Geliang
-
-> ---
->  net/mptcp/options.c | 22 +++++++++++++++++++++-
->  1 file changed, 21 insertions(+), 1 deletion(-)
-> 
-> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index ad51dcf18984..8d3b0f9754dc 100644
-> --- a/net/mptcp/options.c
-> +++ b/net/mptcp/options.c
-> @@ -838,8 +838,11 @@ bool mptcp_established_options(struct sock *sk,
-> struct sk_buff *skb,
->  
->  	opts->suboptions = 0;
->  
-> +	/* Force later mptcp_write_options(), but do not use any
-> actual
-> +	 * option space.
-> +	 */
->  	if (unlikely(__mptcp_check_fallback(msk) &&
-> !mptcp_check_infinite_map(skb)))
-> -		return false;
-> +		return true;
->  
->  	if (unlikely(skb && TCP_SKB_CB(skb)->tcp_flags &
-> TCPHDR_RST)) {
->  		if (mptcp_established_options_fastclose(sk,
-> &opt_size, remaining, opts) ||
-> @@ -1351,6 +1354,20 @@ static void mptcp_set_rwin(struct tcp_sock
-> *tp, struct tcphdr *th)
->  	subflow->rcv_wnd_sent = rcv_wnd_new;
->  }
->  
-> +static void mptcp_track_rwin(struct tcp_sock *tp)
-> +{
-> +	const struct sock *ssk = (const struct sock *)tp;
-> +	struct mptcp_subflow_context *subflow;
-> +	struct mptcp_sock *msk;
-> +
-> +	if (!ssk)
-> +		return;
-> +
-> +	subflow = mptcp_subflow_ctx(ssk);
-> +	msk = mptcp_sk(subflow->conn);
-> +	WRITE_ONCE(msk->old_wspace, tp->rcv_wnd);
-> +}
-> +
->  __sum16 __mptcp_make_csum(u64 data_seq, u32 subflow_seq, u16
-> data_len, __wsum sum)
->  {
->  	struct csum_pseudo_header header;
-> @@ -1643,6 +1660,9 @@ void mptcp_write_options(struct tcphdr *th,
-> __be32 *ptr, struct tcp_sock *tp,
->  				      opts->reset_transient,
->  				      opts->reset_reason);
->  		return;
-> +	} else if (unlikely(!opts->suboptions)) {
-> +		mptcp_track_rwin(tp);
-> +		return;
->  	}
->  
->  	if (OPTION_MPTCP_PRIO & opts->suboptions) {
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
 
