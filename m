@@ -1,48 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF608A944;
-	Tue, 11 Nov 2025 08:19:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5254E23AE9A
+	for <mptcp@lists.linux.dev>; Tue, 11 Nov 2025 08:37:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762849172; cv=none; b=bmG8ZqTOAFGOtHeexalIMvI3lNTyJBuSA2vcPyFVjI3ho8d0VDd2BoaYraMEckNCw06zsIlkI2Ac1+ffKdP1+c1mlDloCBMchxQS+IgCOc8YlGPuluJzDNc1MCDnXcDSEr2A3jySVw9aj8owp9im+WxhsCczY8G6PFkqE3k27oU=
+	t=1762850246; cv=none; b=faLJLb2YQ3p/e4v1ZPteanPyrHxTEZJ+6scpD8IiU3v2jU9pAf9gMmbn28sSvy2MDQbGL9IWZWqQ1geVQz5ff6e8L5aCeCscuzFAj3/SPO/92nFo0c4cveVBWdEzgYQvepIfwngH0kdtVCCgawbZQVfFYV9kcv9HtNhZ0wQEDwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762849172; c=relaxed/simple;
-	bh=VstIjK1vfnpN7gjRmI8dp01MjG9QpTrz0bVPQw+b3VU=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=EG8nAsfVpUaTwNCUJzX+4nG1bKfoQ+dyU36ht9WEl7iQSBHYOtMyUUSej9jmqzckTyaw4Vs14W3EhPtwKvKxBEnZ+o6sSv4W9iQ7OycgcFjNRYqzOcNI7XUK1Z/dP9HoznQGcMZPmLQUvX4gAkPoC+RoHqpbyygoNVYbyGY6Mf8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a+L3Fe9p; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1762850246; c=relaxed/simple;
+	bh=wIKblSVDXtlkqpWAe9otfPlq/DPSNsVPRql6/M/yKDc=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=N/tURn4onOcZcLMvPAbvcbNtrpggJXUWXxC4yFNS9VRJSJyxk2Ux7tfZ/Qo1fMQYbOPXklssa2WCs0tlrsWjZA+r48+z1yWFTQ8Iva6iCBbB6z1RYDlvXr9wRBoMNlb2gcDR5I8UwHOoQKId9uKy1klwelq9OUJA4/xhoZQa7xg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EAnvYesD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a+L3Fe9p"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EE8BC19423;
-	Tue, 11 Nov 2025 08:19:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EAnvYesD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08927C19421;
+	Tue, 11 Nov 2025 08:37:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762849171;
-	bh=VstIjK1vfnpN7gjRmI8dp01MjG9QpTrz0bVPQw+b3VU=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=a+L3Fe9pxBPaiamQhdm4lNYcibp3HHiPit3IntdyKfPq3efKSDEXdR/myFYriVM7h
-	 2db9dgrICZ2s7FqFF6m2snCIbTcImEhP4sWEpY1DspRRgRdG0hEEm/soA+EgCcSW1h
-	 G9Wekk6tMFakRC9/BvaA7OlKQBOfM7QD/s2/EsTgtWnltCqdjiL5J/0d9WtM77EiYm
-	 xx8lvh4Etx51gd1YxfsJ3tZs4M2hWh3uMBVl8ZvilqKGyrs25RdV/2f07g0zgnbLYR
-	 u/ab6rkP6WBQYapqxeQFIlqAqc8AcLyvQCFlqwwI7G5ffCTtrC41iICedumfZTm8DZ
-	 UR+Lqx46UC2Eg==
-Message-ID: <31caf9ecda9335a4377f383404b2609a24c8caeb.camel@kernel.org>
-Subject: Re: [PATCH net 6/6] selftests: mptcp: join: properly kill
- background tasks
+	s=k20201202; t=1762850245;
+	bh=wIKblSVDXtlkqpWAe9otfPlq/DPSNsVPRql6/M/yKDc=;
+	h=Subject:From:To:Date:In-Reply-To:References:From;
+	b=EAnvYesDjR2GLmQeZhp1cQh3dGrmwrQlvMyUV6gWKucFt0hdLK9iUbVEOSkSL8noV
+	 NBTQb+QR+Cc3tFe0QdIVNz8SftthHVXWSOuu2IY2AW8u6Jc+3K433D37PS2homXEyz
+	 HBJN7gVKC2OGFA46RePiN80+beoiNH9fpOYL35USY3FuXImNR46hKzBA8XBEoAPZBo
+	 G33is+3qfPRauMLANsRl76GjaTmhXMdpjYju4Y6dJh8sQkLDQeezKIC55Iwu/xWuZT
+	 lnPsziRZ6bZw8nvsompK3KcGiNvHFnuhRNH02PLAt+ezDYWH0bMWfQeI1wBsTnSJLH
+	 z5ybiyo+4U5CA==
+Message-ID: <7d43f35c26a94f22a8e7627f477560ba994efbe7.camel@kernel.org>
+Subject: Re: [PATCH mptcp-net 3/3] mptcp: fix memcg accounting for passive
+ sockets
 From: Geliang Tang <geliang@kernel.org>
-To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, Mat Martineau
- <martineau@kernel.org>, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
- Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, Shuah Khan
- <shuah@kernel.org>
-Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, 
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	stable@vger.kernel.org
-Date: Tue, 11 Nov 2025 16:19:25 +0800
-In-Reply-To: <20251110-net-mptcp-sft-join-unstable-v1-6-a4332c714e10@kernel.org>
-References: 
-	<20251110-net-mptcp-sft-join-unstable-v1-0-a4332c714e10@kernel.org>
-	 <20251110-net-mptcp-sft-join-unstable-v1-6-a4332c714e10@kernel.org>
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+Date: Tue, 11 Nov 2025 16:37:22 +0800
+In-Reply-To: <b78e4fb6552cc0b94aa9c1471590d7af1ec2a221.1762551942.git.pabeni@redhat.com>
+References: <cover.1762551942.git.pabeni@redhat.com>
+	 <b78e4fb6552cc0b94aa9c1471590d7af1ec2a221.1762551942.git.pabeni@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 User-Agent: Evolution 3.52.3-0ubuntu1 
 Precedence: bulk
@@ -53,162 +45,146 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi Matt,
+Hi Paolo,
 
-On Mon, 2025-11-10 at 19:23 +0100, Matthieu Baerts (NGI0) wrote:
-> The 'run_tests' function is executed in the background, but killing
-> its
-> associated PID would not kill the children tasks running in the
-> background.
+Thanks for this fix.
+
+On Fri, 2025-11-07 at 22:55 +0100, Paolo Abeni wrote:
+> The passive sockets never got proper memcg accounting: the msk
+> socket is associated with the memcg at accept time, but the
+> passive subflows never got it right.
 > 
-> To properly kill all background tasks, 'kill -- -PID' could be used,
-> but
-> this requires kill from procps-ng. Instead, all children tasks are
-> listed using 'ps', and 'kill' is called with all PIDs of this group.
+> At accept time, traverse the subflows list and associate each of them
+> with the msk memcg, and try to do the same at join completion time,
+> if
+> the msk has been already accepted.
 > 
-> Fixes: 31ee4ad86afd ("selftests: mptcp: join: stop transfer when
-> check is done (part 1)")
-> Cc: stable@vger.kernel.org
-> Fixes: 04b57c9e096a ("selftests: mptcp: join: stop transfer when
-> check is done (part 2)")
-> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> Fixes: cf7da0d66cc1 ("mptcp: Create SUBFLOW socket for incoming
+> connections")
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/298
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/597
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> ---
+>  net/mptcp/protocol.c | 36 ++++++++++++++++++++++++++----------
+>  net/mptcp/protocol.h |  1 +
+>  net/mptcp/subflow.c  | 10 ++++++++++
+>  3 files changed, 37 insertions(+), 10 deletions(-)
+> 
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 34e6bc731085..5e9325c7ea9c 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -959,6 +959,8 @@ static bool __mptcp_finish_join(struct mptcp_sock
+> *msk, struct sock *ssk)
+>  	mptcp_subflow_ctx(ssk)->subflow_id = msk->subflow_id++;
+>  	mptcp_sockopt_sync_locked(msk, ssk);
+>  	mptcp_stop_tout_timer(sk);
+> +	__mptcp_inherit_cgrp_data(sk, ssk);
+> +	__mptcp_inherit_memcg(sk, ssk, GFP_ATOMIC);
 
-This patch looks good to me.
-
-    Reviewed-by: Geliang Tang <geliang@kernel.org>
+In mptcp_graph_subflows(), these two lines already have the
+mem_cgroup_from_sk() check (in the squash-to patch). It's unclear
+whether mem_cgroup_from_sk() check needs to be added here too.
 
 Thanks,
 -Geliang
 
-> ---
->  tools/testing/selftests/net/mptcp/mptcp_join.sh | 18 +++++++++------
-> ---
->  tools/testing/selftests/net/mptcp/mptcp_lib.sh  | 21
-> +++++++++++++++++++++
->  2 files changed, 30 insertions(+), 9 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> index 01273abfdc89..41503c241989 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> @@ -3831,7 +3831,7 @@ userspace_tests()
->  		chk_mptcp_info subflows 0 subflows 0
->  		chk_subflows_total 1 1
->  		kill_events_pids
-> -		mptcp_lib_kill_wait $tests_pid
-> +		mptcp_lib_kill_group_wait $tests_pid
->  	fi
->  
->  	# userspace pm create destroy subflow
-> @@ -3859,7 +3859,7 @@ userspace_tests()
->  		chk_mptcp_info subflows 0 subflows 0
->  		chk_subflows_total 1 1
->  		kill_events_pids
-> -		mptcp_lib_kill_wait $tests_pid
-> +		mptcp_lib_kill_group_wait $tests_pid
->  	fi
->  
->  	# userspace pm create id 0 subflow
-> @@ -3880,7 +3880,7 @@ userspace_tests()
->  		chk_mptcp_info subflows 1 subflows 1
->  		chk_subflows_total 2 2
->  		kill_events_pids
-> -		mptcp_lib_kill_wait $tests_pid
-> +		mptcp_lib_kill_group_wait $tests_pid
->  	fi
->  
->  	# userspace pm remove initial subflow
-> @@ -3904,7 +3904,7 @@ userspace_tests()
->  		chk_mptcp_info subflows 1 subflows 1
->  		chk_subflows_total 1 1
->  		kill_events_pids
-> -		mptcp_lib_kill_wait $tests_pid
-> +		mptcp_lib_kill_group_wait $tests_pid
->  	fi
->  
->  	# userspace pm send RM_ADDR for ID 0
-> @@ -3930,7 +3930,7 @@ userspace_tests()
->  		chk_mptcp_info subflows 1 subflows 1
->  		chk_subflows_total 1 1
->  		kill_events_pids
-> -		mptcp_lib_kill_wait $tests_pid
-> +		mptcp_lib_kill_group_wait $tests_pid
->  	fi
+>  	__mptcp_propagate_sndbuf(sk, ssk);
+>  	__mptcp_propagate_rcvspace(sk, ssk);
+>  	return true;
+> @@ -4076,6 +4078,29 @@ static int mptcp_listen(struct socket *sock,
+> int backlog)
+>  	return err;
 >  }
 >  
-> @@ -3960,7 +3960,7 @@ endpoint_tests()
->  		pm_nl_add_endpoint $ns2 10.0.2.2 flags signal
->  		pm_nl_check_endpoint "modif is allowed" \
->  			$ns2 10.0.2.2 id 1 flags signal
-> -		mptcp_lib_kill_wait $tests_pid
-> +		mptcp_lib_kill_group_wait $tests_pid
->  	fi
+> +static void mptcp_graph_subflows(struct sock *sk)
+> +{
+> +	struct mptcp_subflow_context *subflow;
+> +	struct mptcp_sock *msk = mptcp_sk(sk);
+> +
+> +	mptcp_for_each_subflow(msk, subflow) {
+> +		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
+> +		bool slow;
+> +
+> +		slow = lock_sock_fast(ssk);
+> +
+> +		/* set ssk->sk_socket of accept()ed flows to mptcp
+> socket.
+> +		 * This is needed so NOSPACE flag can be set from
+> tcp stack.
+> +		 */
+> +		if (!ssk->sk_socket)
+> +			mptcp_sock_graft(ssk, sk->sk_socket);
+> +
+> +		__mptcp_inherit_cgrp_data(sk, ssk);
+> +		__mptcp_inherit_memcg(sk, ssk, GFP_KERNEL);
+> +		unlock_sock_fast(ssk, slow);
+> +	}
+> +}
+> +
+>  static int mptcp_stream_accept(struct socket *sock, struct socket
+> *newsock,
+>  			       struct proto_accept_arg *arg)
+>  {
+> @@ -4123,16 +4148,7 @@ static int mptcp_stream_accept(struct socket
+> *sock, struct socket *newsock,
+>  		msk = mptcp_sk(newsk);
+>  		msk->in_accept_queue = 0;
 >  
->  	if reset_with_tcp_filter "delete and re-add" ns2 10.0.3.2
-> REJECT OUTPUT &&
-> @@ -4015,7 +4015,7 @@ endpoint_tests()
->  			chk_mptcp_info subflows 3 subflows 3
->  		done
+> -		/* set ssk->sk_socket of accept()ed flows to mptcp
+> socket.
+> -		 * This is needed so NOSPACE flag can be set from
+> tcp stack.
+> -		 */
+> -		mptcp_for_each_subflow(msk, subflow) {
+> -			struct sock *ssk =
+> mptcp_subflow_tcp_sock(subflow);
+> -
+> -			if (!ssk->sk_socket)
+> -				mptcp_sock_graft(ssk, newsock);
+> -		}
+> -
+> +		mptcp_graph_subflows(newsk);
+>  		mptcp_rps_record_subflows(msk);
 >  
-> -		mptcp_lib_kill_wait $tests_pid
-> +		mptcp_lib_kill_group_wait $tests_pid
->  
->  		kill_events_pids
->  		chk_evt_nr ns1 MPTCP_LIB_EVENT_LISTENER_CREATED 1
-> @@ -4089,7 +4089,7 @@ endpoint_tests()
->  		wait_mpj $ns2
->  		chk_subflow_nr "after re-re-add ID 0" 3
->  		chk_mptcp_info subflows 3 subflows 3
-> -		mptcp_lib_kill_wait $tests_pid
-> +		mptcp_lib_kill_group_wait $tests_pid
->  
->  		kill_events_pids
->  		chk_evt_nr ns1 MPTCP_LIB_EVENT_LISTENER_CREATED 1
-> @@ -4137,7 +4137,7 @@ endpoint_tests()
->  		wait_mpj $ns2
->  		pm_nl_add_endpoint $ns1 10.0.3.1 id 2 flags signal
->  		wait_mpj $ns2
-> -		mptcp_lib_kill_wait $tests_pid
-> +		mptcp_lib_kill_group_wait $tests_pid
->  
->  		join_syn_tx=3 join_connect_err=1 \
->  			chk_join_nr 2 2 2
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-> b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-> index d62e653d48b0..f4388900016a 100644
-> --- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-> @@ -350,6 +350,27 @@ mptcp_lib_kill_wait() {
->  	wait "${1}" 2>/dev/null
+>  		/* Do late cleanup for the first subflow as
+> necessary. Also
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index 300ac7030958..60bfe50530dc 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -755,6 +755,7 @@ mptcp_subflow_delegated_next(struct
+> mptcp_delegated_action *delegated)
+>  	return ret;
 >  }
 >  
-> +# $1: PID
-> +mptcp_lib_pid_list_children() {
-> +	local curr="${1}"
-> +	# evoke 'ps' only once
-> +	local pids="${2:-"$(ps o pid,ppid)"}"
+> +void __mptcp_inherit_memcg(struct sock *sk, struct sock *ssk, gfp_t
+> gfp);
+>  void __mptcp_inherit_cgrp_data(struct sock *sk, struct sock *ssk);
+>  
+>  int mptcp_is_enabled(const struct net *net);
+> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> index 599a21d92590..39bf69e73975 100644
+> --- a/net/mptcp/subflow.c
+> +++ b/net/mptcp/subflow.c
+> @@ -1721,6 +1721,16 @@ int __mptcp_subflow_connect(struct sock *sk,
+> const struct mptcp_pm_local *local,
+>  	return err;
+>  }
+>  
+> +void __mptcp_inherit_memcg(struct sock *sk, struct sock *ssk, gfp_t
+> gfp)
+> +{
+> +	/* Only if the msk has been accepted already (and not
+> orphaned).*/
+> +	if (!mem_cgroup_sockets_enabled || !sk->sk_socket)
+> +		return;
 > +
-> +	echo "${curr}"
-> +
-> +	local pid
-> +	for pid in $(echo "${pids}" | awk "\$2 == ${curr} { print
-> \$1 }"); do
-> +		mptcp_lib_pid_list_children "${pid}" "${pids}"
-> +	done
+> +	mem_cgroup_sk_inherit(sk, ssk);
+> +	__sk_charge(ssk, gfp);
 > +}
 > +
-> +# $1: PID
-> +mptcp_lib_kill_group_wait() {
-> +	# Some users might not have procps-ng: cannot use "kill -- -
-> PID"
-> +	mptcp_lib_pid_list_children "${1}" | xargs -r kill
-> &>/dev/null
-> +	wait "${1}" 2>/dev/null
-> +}
-> +
->  # $1: IP address
->  mptcp_lib_is_v6() {
->  	[ -z "${1##*:*}" ]
-> 
+>  void __mptcp_inherit_cgrp_data(struct sock *sk, struct sock *ssk)
+>  {
+>  #ifdef CONFIG_SOCK_CGROUP_DATA
 
