@@ -1,23 +1,26 @@
-Received: from localhost.localdomain (unknown [147.136.157.0])
+Received: from localhost.localdomain (unknown [147.136.157.3])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B9E5284894
-	for <mptcp@lists.linux.dev>; Tue, 11 Nov 2025 06:03:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=147.136.157.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 257E4285C99
+	for <mptcp@lists.linux.dev>; Tue, 11 Nov 2025 06:03:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=147.136.157.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762841000; cv=none; b=cjzjNZQCp93yuIpNSxNkHZjsUkbmHUo+eVmpaL7SLbhlGNeLeMQRBKYEUNSr/A9qoqqfWGc7ufwZcO+8Hi23dF1Gog+LmVkrCLE45K4eIhVWD+U4NtMxQ1oXA17puqJkPWHQKXLDwZeyoWTVZU7xt4RDVL/n2Y/+9Dm+Bz6VkDE=
+	t=1762841001; cv=none; b=HQyg5Ao5QzOqBMQwp5WrEf7ZJX9DzHV4cgz+GySV2JaM0Dmt+3Vef8/CGY2oC9O3W/7bbTVtPGso+KmlbfOZj891rVo7r5f6lA0HhLh3WKl3hCwzkTiwUKFO6ms+Vboavc3nWtK9v87JG+iCyvmLnlnrfEjV3P74tuI9vzLCRI8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762841000; c=relaxed/simple;
-	bh=kx3Yne0nkJeAFxlO30iUDm78UqKm7f+vgcF0pslWmls=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ctopXfjydBkxU5Vcq6kRbEZmc2XTMNJ7awUU2BQjf6u0uwa36l0dpd0k3kBJvH1/AtBVvOp6meNzw0drIXHbuN+Cthrd33Ia76sf6gEKjTIlSKgUecBsjxEaQ3nkzyls51L8GAenevFqSh/nFIRSxd/N7AdWA6cO16C26P+Q14Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.dev; spf=none smtp.mailfrom=localhost.localdomain; arc=none smtp.client-ip=147.136.157.0
+	s=arc-20240116; t=1762841001; c=relaxed/simple;
+	bh=kGRmQam432BJbD6BROFIQPV8PElNINTvJRdMDm3Xoj0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=npyO33YRCyAhy2zYtHoYpKRoUd53+t0EoXDvfhf7R0Omm2BTMFsG7PK1QVFtWyIlRy6JlYDxTMZeKteLu03auBGvhkWdwdVgp36kRlliQNP54rJSik/DTtHwAG7rnyeEsSZHXiBBqKBrSt+RcIG7ef0VfJ4Ao6GUu+sCl8WY0oM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.dev; spf=none smtp.mailfrom=localhost.localdomain; arc=none smtp.client-ip=147.136.157.3
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=localhost.localdomain
 Received: by localhost.localdomain (Postfix, from userid 1007)
-	id 1EF678B2A0B; Tue, 11 Nov 2025 14:03:10 +0800 (+08)
+	id 64F408B2A0D; Tue, 11 Nov 2025 14:03:17 +0800 (+08)
 From: Jiayuan Chen <jiayuan.chen@linux.dev>
 To: mptcp@lists.linux.dev
 Cc: Jiayuan Chen <jiayuan.chen@linux.dev>,
+	stable@vger.kernel.org,
+	Jakub Sitnicki <jakub@cloudflare.com>,
 	Matthieu Baerts <matttbe@kernel.org>,
 	Mat Martineau <martineau@kernel.org>,
 	Geliang Tang <geliang@kernel.org>,
@@ -39,17 +42,19 @@ Cc: Jiayuan Chen <jiayuan.chen@linux.dev>,
 	Hao Luo <haoluo@google.com>,
 	Jiri Olsa <jolsa@kernel.org>,
 	Shuah Khan <shuah@kernel.org>,
-	Christoph Paasch <cpaasch@apple.com>,
-	Florian Westphal <fw@strlen.de>,
 	Peter Krystad <peter.krystad@linux.intel.com>,
+	Florian Westphal <fw@strlen.de>,
+	Christoph Paasch <cpaasch@apple.com>,
 	linux-kernel@vger.kernel.org,
 	netdev@vger.kernel.org,
 	bpf@vger.kernel.org,
 	linux-kselftest@vger.kernel.org
-Subject: [PATCH net v5 0/3] mptcp: Fix conflicts between MPTCP and sockmap
-Date: Tue, 11 Nov 2025 14:02:49 +0800
-Message-ID: <20251111060307.194196-1-jiayuan.chen@linux.dev>
+Subject: [PATCH net v5 2/3] net,mptcp: fix proto fallback detection with BPF
+Date: Tue, 11 Nov 2025 14:02:51 +0800
+Message-ID: <20251111060307.194196-3-jiayuan.chen@linux.dev>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20251111060307.194196-1-jiayuan.chen@linux.dev>
+References: <20251111060307.194196-1-jiayuan.chen@linux.dev>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -58,92 +63,88 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Overall, we encountered a warning [1] that can be triggered by running the
-selftest I provided.
+The sockmap feature allows bpf syscall from userspace, or based
+on bpf sockops, replacing the sk_prot of sockets during protocol stack
+processing with sockmap's custom read/write interfaces.
+'''
+tcp_rcv_state_process()
+  syn_recv_sock()/subflow_syn_recv_sock()
+    tcp_init_transfer(BPF_SOCK_OPS_PASSIVE_ESTABLISHED_CB)
+      bpf_skops_established       <== sockops
+        bpf_sock_map_update(sk)   <== call bpf helper
+          tcp_bpf_update_proto()  <== update sk_prot
+'''
 
-sockmap works by replacing sk_data_ready, recvmsg, sendmsg operations and
-implementing fast socket-level forwarding logic:
-1. Users can obtain file descriptors through userspace socket()/accept()
-   interfaces, then call BPF syscall to perform these replacements.
-2. Users can also use the bpf_sock_hash_update helper (in sockops programs)
-   to replace handlers when TCP connections enter ESTABLISHED state
-  (BPF_SOCK_OPS_PASSIVE_ESTABLISHED_CB/BPF_SOCK_OPS_ACTIVE_ESTABLISHED_CB)
+When the server has MPTCP enabled but the client sends a TCP SYN
+without MPTCP, subflow_syn_recv_sock() performs a fallback on the
+subflow, replacing the subflow sk's sk_prot with the native sk_prot.
+'''
+subflow_syn_recv_sock()
+  subflow_ulp_fallback()
+    subflow_drop_ctx()
+      mptcp_subflow_ops_undo_override()
+'''
 
-However, when combined with MPTCP, an issue arises: MPTCP creates subflow
-sk's and performs TCP handshakes, so the BPF program obtains subflow sk's
-and may incorrectly replace their sk_prot. We need to reject such
-operations. In patch 1, we set psock_update_sk_prot to NULL in the
-subflow's custom sk_prot.
+Then, this subflow can be normally used by sockmap, which replaces the
+native sk_prot with sockmap's custom sk_prot. The issue occurs when the
+user executes accept::mptcp_stream_accept::mptcp_fallback_tcp_ops().
+Here, it uses sk->sk_prot to compare with the native sk_prot, but this
+is incorrect when sockmap is used, as we may incorrectly set
+sk->sk_socket->ops.
 
-Additionally, if the server's listening socket has MPTCP enabled and the
-client's TCP also uses MPTCP, we should allow the combination of subflow
-and sockmap. This is because the latest Golang programs have enabled MPTCP
-for listening sockets by default [2]. For programs already using sockmap,
-upgrading Golang should not cause sockmap functionality to fail.
+This fix uses the more generic sk_family for the comparison instead.
 
-Patch 2 prevents the WARNING from occurring.
+Additionally, this also prevents a WARNING from occurring:
 
-Despite these patches fixing stream corruption, users of sockmap must set
-GODEBUG=multipathtcp=0 to disable MPTCP until sockmap fully supports it.
-
-[1] truncated warning:
+result from ./scripts/decode_stacktrace.sh:
 ------------[ cut here ]------------
-WARNING: CPU: 1 PID: 388 at net/mptcp/protocol.c:68 mptcp_stream_accept+0x34c/0x380
+WARNING: CPU: 0 PID: 337 at net/mptcp/protocol.c:68 mptcp_stream_accept \
+(net/mptcp/protocol.c:4005)
 Modules linked in:
-RIP: 0010:mptcp_stream_accept+0x34c/0x380
-RSP: 0018:ffffc90000cf3cf8 EFLAGS: 00010202
+...
+
 PKRU: 55555554
 Call Trace:
- <TASK>
- do_accept+0xeb/0x190
- ? __x64_sys_pselect6+0x61/0x80
- ? _raw_spin_unlock+0x12/0x30
- ? alloc_fd+0x11e/0x190
- __sys_accept4+0x8c/0x100
- __x64_sys_accept+0x1f/0x30
- x64_sys_call+0x202f/0x20f0
- do_syscall_64+0x72/0x9a0
- ? switch_fpu_return+0x60/0xf0
- ? irqentry_exit_to_user_mode+0xdb/0x1e0
- ? irqentry_exit+0x3f/0x50
- ? clear_bhb_loop+0x50/0xa0
- ? clear_bhb_loop+0x50/0xa0
- ? clear_bhb_loop+0x50/0xa0
- entry_SYSCALL_64_after_hwframe+0x76/0x7e
- </TASK>
+<TASK>
+do_accept (net/socket.c:1989)
+__sys_accept4 (net/socket.c:2028 net/socket.c:2057)
+__x64_sys_accept (net/socket.c:2067)
+x64_sys_call (arch/x86/entry/syscall_64.c:41)
+do_syscall_64 (arch/x86/entry/syscall_64.c:63 arch/x86/entry/syscall_64.c:94)
+entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:130)
+RIP: 0033:0x7f87ac92b83d
+
 ---[ end trace 0000000000000000 ]---
 
-[2]: https://go-review.googlesource.com/c/go/+/607715
-
+Fixes: cec37a6e41aa ("mptcp: Handle MP_CAPABLE options for outgoing connections")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
+Reviewed-by: Jakub Sitnicki <jakub@cloudflare.com>
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
-v4 -> v5: Dropped redundant selftest code, updated the Fixes tag, and
-          added a Reviewed-by tag.
-v3 -> v4: Addressed questions from Matthieu and Paolo, explained sockmap's
-          operational mechanism, and finalized the changes
-v2 -> v3: Adopted Jakub Sitnicki's suggestions - atomic retrieval of
-          sk_family is required
-v1 -> v2: Had initial discussion with Matthieu on sockmap and MPTCP
-          technical details
+ net/mptcp/protocol.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-v4: https://lore.kernel.org/bpf/20251105113625.148900-1-jiayuan.chen@linux.dev/
-v3: https://lore.kernel.org/bpf/20251023125450.105859-1-jiayuan.chen@linux.dev/
-v2: https://lore.kernel.org/bpf/20251020060503.325369-1-jiayuan.chen@linux.dev/T/#t
-v1: https://lore.kernel.org/mptcp/a0a2b87119a06c5ffaa51427a0964a05534fe6f1@linux.dev/T/#t
-
-Jiayuan Chen (3):
-  mptcp: disallow MPTCP subflows from sockmap
-  net,mptcp: fix proto fallback detection with BPF
-  selftests/bpf: Add mptcp test with sockmap
-
- net/mptcp/protocol.c                          |   6 +-
- net/mptcp/subflow.c                           |   8 +
- .../testing/selftests/bpf/prog_tests/mptcp.c  | 141 ++++++++++++++++++
- .../selftests/bpf/progs/mptcp_sockmap.c       |  43 ++++++
- 4 files changed, 196 insertions(+), 2 deletions(-)
- create mode 100644 tools/testing/selftests/bpf/progs/mptcp_sockmap.c
-
-
-base-commit: 8c0726e861f3920bac958d76cf134b5a3aa14ce4
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 2d6b8de35c44..90b4aeca2596 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -61,11 +61,13 @@ static u64 mptcp_wnd_end(const struct mptcp_sock *msk)
+ 
+ static const struct proto_ops *mptcp_fallback_tcp_ops(const struct sock *sk)
+ {
++	unsigned short family = READ_ONCE(sk->sk_family);
++
+ #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+-	if (sk->sk_prot == &tcpv6_prot)
++	if (family == AF_INET6)
+ 		return &inet6_stream_ops;
+ #endif
+-	WARN_ON_ONCE(sk->sk_prot != &tcp_prot);
++	WARN_ON_ONCE(family != AF_INET);
+ 	return &inet_stream_ops;
+ }
+ 
 -- 
 2.43.0
 
