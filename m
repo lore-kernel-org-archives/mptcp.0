@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F3932F6577
-	for <mptcp@lists.linux.dev>; Tue, 11 Nov 2025 17:09:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 240693730C6
+	for <mptcp@lists.linux.dev>; Tue, 11 Nov 2025 17:14:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762880960; cv=none; b=HftklwPnKAutQHdvUmEgXT3a0NyiDyjRGV4a+PyRdRyhXHrOJel6YHqV+S4UQFw5zZ3VrvSmVUECYj97warmNF/uqC2sD/hzPiRCkub+QqBl+qRVrp9rkC4MxmDJosLXMNDwwt3Xu+LcYD/qYmDBNuY3rd3yySP0D4O+WSVB+po=
+	t=1762881278; cv=none; b=mB/KdTWxXzrvzkDv1HCLJDXffWxlOK0smr3PJAOzW50ZLvdfRkrtgHghWlT5Bw76BfDnBmszFHopXbKODQyCsmbxRXQxleKuxXEPogmE1kSZzh6h/NMD6UP+i4qtS70w9kNu0zfFicSOxbzps0dS1AJo8+0ly/pFeTmfhx/dpvM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762880960; c=relaxed/simple;
-	bh=hsV8BnXNoXMpLuJq477hMITIPi6J30lBo7E3cH2DrJI=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=TlRL57eFVeUg5SqDFRkLCmvTQKpDFx1lGXqqPC/6MT1VAyKa8lAStCjNUyg5MstGRhrM/leAEn7OcxyW9DdKB7JQuzIl63poDraKjCQA8ccINanjtk4MneUXHYaBuon+KAKDK2hH/Uq1xGzVOh7BFAD88KLhobq8SPhSiT4rj84=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RJymFrqS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1762881278; c=relaxed/simple;
+	bh=abCZ/XLB3l6pzgVHFU83kc7KysTtS2brjEOH09VTO1c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
+	 In-Reply-To:Content-Type; b=SMJPyH6so+VK2FLxkihrB2gEDAyFyYfP4Qdz61yTDXEKoMiUYwrnnLo7C96HsFEIcXqB5PcW1e/DEmTFh8xRypoT5sK2iXgMnzs4M/50sUwLb4z5PY4dzEoIE3IHZPQanvIjfDMjuyBsc18TtxZYtungyi/v5iEM1tC08veffOE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L1+cucAq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RJymFrqS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BC49C116D0;
-	Tue, 11 Nov 2025 17:09:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L1+cucAq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5DD9C16AAE;
+	Tue, 11 Nov 2025 17:14:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762880959;
-	bh=hsV8BnXNoXMpLuJq477hMITIPi6J30lBo7E3cH2DrJI=;
-	h=Date:Subject:From:To:References:In-Reply-To:From;
-	b=RJymFrqS2oQvoM4m5VtPxJvDTJyn8KsSk4kZcWgAqW0gRtWe/6r3mgBYj6h7isVn7
-	 yuPCw+AmxQdI8kNBa1tFg0JcwofhDzmARtwPbYwQ09YUjSJdg2U+yYWkIwFPjmDjfs
-	 U+t7MDxahdA6197atEZwF+K9bJH22rIFteIx2Go5J3XUuWPC9z6/GNI6UdYuCwvcLR
-	 K+J5Mw/GxFMJv93oAKdFVA5vD1vWIBD1WYt3B/oUn5z//ZcQUDZ0ksSchB41ROdXKc
-	 PkS4Mk9zCvOSjDslJb5Sm4zTyf/FLXNMecCQHuQe1hiPDOYPoB8StwXpMnSLTCV9ua
-	 9sHawMVgMrycA==
-Message-ID: <9558784a-bb5b-417a-b758-da9ccda80f8b@kernel.org>
-Date: Tue, 11 Nov 2025 18:09:16 +0100
+	s=k20201202; t=1762881277;
+	bh=abCZ/XLB3l6pzgVHFU83kc7KysTtS2brjEOH09VTO1c=;
+	h=Date:Subject:To:References:From:Cc:In-Reply-To:From;
+	b=L1+cucAqww9uUtdPYxDQUt//ThgCecgTDXB8bU3+p1oYmrSBzC/Jis3O2qDyjFLB2
+	 PsCmZxOoOarcMzh0LlpjF+8pd+qNg4hn+S520DOOkGMBr+Ra1yIMmpnMXbNQGC116F
+	 vr4EewaGzowuntZj4UXBMcuS18uky8yitMhCUktG5oDP3Vga3FHG/0AFQZw72/CVQt
+	 i+Hp9csAw7U4hqBr8Q2BsSMuCcdWI49PeLyuoXz2mTRj/UV/z01eFCVj5P/5NVO2Rl
+	 4h0NNx7u8898LuWwHDtNS2nV+4hvG6zttReXUrIg57e9gRip75coTVRNftx5u/PVkl
+	 CsgLSw+LF2gzw==
+Message-ID: <8e2ae2b2-13b4-4615-be82-eb3710ec566f@kernel.org>
+Date: Tue, 11 Nov 2025 18:14:34 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,10 +38,11 @@ User-Agent: Mozilla Thunderbird Beta
 Subject: Re: [PATCH v2 mptcp-next] Squash-to: "mptcp: leverage the backlog for
  RX packet processing"
 Content-Language: en-GB, fr-BE
-From: Matthieu Baerts <matttbe@kernel.org>
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+To: Geliang Tang <geliang@kernel.org>
 References: <ed5c5ea1de503f6dc8a514b5eb4c9d16c431646f.1762696333.git.pabeni@redhat.com>
- <704b4358-30b2-4065-abbb-752f4f9a3c79@kernel.org>
+ <2f6f0b1e22690e962d4fff02838d23d4b8a65f07.camel@kernel.org>
+From: Matthieu Baerts <matttbe@kernel.org>
+Cc: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -86,92 +87,95 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <704b4358-30b2-4065-abbb-752f4f9a3c79@kernel.org>
+In-Reply-To: <2f6f0b1e22690e962d4fff02838d23d4b8a65f07.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Paolo,
+Hi Geliang,
 
-On 11/11/2025 17:21, Matthieu Baerts wrote:
+On 11/11/2025 08:21, Geliang Tang wrote:
 > Hi Paolo,
 > 
-> On 09/11/2025 14:53, Paolo Abeni wrote:
+> Thanks for this fix.
+> 
+> On Sun, 2025-11-09 at 14:53 +0100, Paolo Abeni wrote:
 >> If a subflow receives data before gaining the memcg while the msk
 >> socket lock is held at accept time, or the PM locks the msk socket
 >> while still unaccepted and subflows push data to it at the same time,
 >> the mptcp_graph_subflows() can complete with a non empty backlog.
 >>
 >> The msk will try to borrow such memory, but (some) of the skbs there
->> where not memcg charged. When the msk finally will return such accounted
+>> where not memcg charged. When the msk finally will return such
+>> accounted
 >> memory, we should hit the same splat of #597.
 >> [even if so far I was unable to replicate this scenario]
 >>
 >> This patch tries to address such potential issue by:
 >> - preventing the subflow from queuing data into the backlog after
->>   gaining the memcg. This ensure that at the end of the look all the
->>   skbs in the backlog (if any) are _not_ memory accounted.
+>>   gaining the memcg. This ensure that at the end of the look all the
+>>   skbs in the backlog (if any) are _not_ memory accounted.
 >> - mem charge the backlog to msk
 >> - 'restart' the subflow and spool any data waiting there.
 >>
 >> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 >> ---
->>  net/mptcp/protocol.c | 46 ++++++++++++++++++++++++++++++++++++++++++--
->>  1 file changed, 44 insertions(+), 2 deletions(-)
+>>  net/mptcp/protocol.c | 46
+>> ++++++++++++++++++++++++++++++++++++++++++--
+>>  1 file changed, 44 insertions(+), 2 deletions(-)
 >>
 >> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
 >> index 5e9325c7ea9c..d6b08e1de358 100644
 >> --- a/net/mptcp/protocol.c
 >> +++ b/net/mptcp/protocol.c
->> @@ -4082,10 +4082,12 @@ static void mptcp_graph_subflows(struct sock *sk)
->>  {
->>  	struct mptcp_subflow_context *subflow;
->>  	struct mptcp_sock *msk = mptcp_sk(sk);
+>> @@ -4082,10 +4082,12 @@ static void mptcp_graph_subflows(struct sock
+>> *sk)
+>>  {
+>>  	struct mptcp_subflow_context *subflow;
+>>  	struct mptcp_sock *msk = mptcp_sk(sk);
 >> +	struct sock *ssk;
 >> +	int old_amt, amt;
 >> +	bool slow;
->>  
->>  	mptcp_for_each_subflow(msk, subflow) {
+>>  
+>>  	mptcp_for_each_subflow(msk, subflow) {
 >> -		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
 >> -		bool slow;
 >> +		ssk = mptcp_subflow_tcp_sock(subflow);
->>  
->>  		slow = lock_sock_fast(ssk);
->>  
->> @@ -4095,8 +4097,48 @@ static void mptcp_graph_subflows(struct sock *sk)
->>  		if (!ssk->sk_socket)
->>  			mptcp_sock_graft(ssk, sk->sk_socket);
->>  
+>>  
+>>  		slow = lock_sock_fast(ssk);
+>>  
+>> @@ -4095,8 +4097,48 @@ static void mptcp_graph_subflows(struct sock
+>> *sk)
+>>  		if (!ssk->sk_socket)
+>>  			mptcp_sock_graft(ssk, sk->sk_socket);
+>>  
 >> +		if (!mem_cgroup_from_sk(sk))
-> 
-> Should we not call mem_cgroup_sk_enabled() instead? It does this:
-> 
->   return mem_cgroup_sockets_enabled && mem_cgroup_from_sk(sk);
-> 
-> That's what is done in net/core/sock.c and net/ipv4/tcp_output.c. Not in
-> __inet_accept(), because mem_cgroup_sockets_enabled() is checked before.
-> Maybe we should do the same here?
-> 
-> (Note that it is not clear to me if mem_cgroup can be enabled later on,
-> and if yes, what should be done with existing connections.)
-
-Also, do you not still need to call __mptcp_inherit_cgrp_data() even if
-!mem_cgroup_sockets_enabled() (or !mem_cgroup_from_sk())?
-
-I guess the two are often linked, but can they not be used independently?
-
-Cheers,
-Matt
-
-> 
 >> +			goto unlock;
+> 
+> I think it's better to use "continue" here, just like in v1, so that
+> other subflows also have a chance to call mptcp_sock_graft(), but we
+> need to call unlock_sock_fast() before "continue".
+
+Mmh, that's what this code is doing: unlock and continue, no?
+
+> Besides, wouldn't it be more appropriate to squash these lines into
+> "mptcp: fix memcg accounting for passive sockets"?
+
+From what I understood, that's not strickly needed: such check are done
+in the helpers below: here it is just to avoid doing the same check yet
+another time for 'subflow->closing = 1'.
+
+> 
 >> +
->>  		__mptcp_inherit_cgrp_data(sk, ssk);
->>  		__mptcp_inherit_memcg(sk, ssk, GFP_KERNEL);
+>>  		__mptcp_inherit_cgrp_data(sk, ssk);
+>>  		__mptcp_inherit_memcg(sk, ssk, GFP_KERNEL);
 >> +
->> +		/* Prevent subflows from queueing data into the backlog
+>> +		/* Prevent subflows from queueing data into the
+>> backlog
 >> +		 * as soon as cg is set; note that we can't race
->> +		 * with __mptcp_close_ssk setting this bit for a really
->> +		 * closing socket, because we hold the msk socket lock here.
+>> +		 * with __mptcp_close_ssk setting this bit for a
+>> really
+>> +		 * closing socket, because we hold the msk socket
+>> lock here.
 >> +		 */
 >> +		subflow->closing = 1;
 >> +
@@ -180,9 +184,6 @@ Matt
 >> +	}
 >> +
 >> +	if (!mem_cgroup_from_sk(sk))
-> 
-> Same here?
-> 
 >> +		return;
 >> +
 >> +	/* Charge the bl memory, note that __sk_charge accounted for
@@ -190,19 +191,24 @@ Matt
 >> +	 */
 >> +	mptcp_data_lock(sk);
 >> +	old_amt = sk_mem_pages(sk->sk_forward_alloc +
->> +			       atomic_read(&sk->sk_rmem_alloc));
+>> +			       atomic_read(&sk->sk_rmem_alloc));
 >> +	amt = sk_mem_pages(msk->backlog_len + sk->sk_forward_alloc +
->> +		     atomic_read(&sk->sk_rmem_alloc));
+>> +		     atomic_read(&sk->sk_rmem_alloc));
 > 
-> (Same as Geliang for the alignment here, and eventually calling
-> kmem_cache_charge() like in __inet_accept())
+> The code here is not aligned properly.
 > 
 >> +	amt -= old_amt;
 >> +	if (amt)
->> +		mem_cgroup_sk_charge(sk, amt, GFP_ATOMIC | __GFP_NOFAIL);
+>> +		mem_cgroup_sk_charge(sk, amt, GFP_ATOMIC |
+>> __GFP_NOFAIL);
 > 
-> Just to be sure: no need to check if there was an error? It is not done
-> in __inet_accept() either, so I guess no?
+> I'm not sure if we need to call kmem_cache_charge() here, just like in
+> __sk_charge().
+> 
+> WDYT?
+> 
+> Thanks,
+> -Geliang
 > 
 >> +	mptcp_data_unlock(sk);
 >> +
@@ -215,9 +221,14 @@ Matt
 >> +
 >> +		if (mptcp_subflow_data_available(ssk))
 >> +			mptcp_data_ready(sk, ssk);
->>  		unlock_sock_fast(ssk, slow);
->>  	}
->>  }
+>>  		unlock_sock_fast(ssk, slow);
+>>  	}
+>>  }
+> 
+> 
+
+Cheers,
+Matt
 -- 
 Sponsored by the NGI0 Core fund.
 
