@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAC9721ABAA
-	for <mptcp@lists.linux.dev>; Wed, 12 Nov 2025 09:58:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8020635CBCD
+	for <mptcp@lists.linux.dev>; Wed, 12 Nov 2025 10:01:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762941484; cv=none; b=f0qb+C35WT+ngKBGkGXqVwSRLw0US2Sr4kZSgPUVVsXSfZiqMl9QUWfy7qAxYirLBdeNx9S5pjs+owJVwJQhU3NdgZKe/UfcdnCopPs/7giVMLeBdCsbn6YSjJHCX5rDnjjt3cYVViYOS5GJcYY7VEsfP9al1Srty/v2icr2WKA=
+	t=1762941661; cv=none; b=TYPYt+E0El6jSntPUMZhlkXH9xTXd9hId+TqUe2xXQxfM/+LCsqsgWnh7gESyUdvpco26QdxHNilnm6Yns3c9VFo5MacZFKMxa5b8Yv+fBv/kS1upQcyThaShpNk2qAT8+TC3+V0QvbxmykJJ94EwbXGbJbVrdimCfVhK7VJp+o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762941484; c=relaxed/simple;
-	bh=P4pMfFvGYc8JhpE+Vt26VFmiGc6qDnp5Ci8JgdbSf8Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
-	 In-Reply-To:Content-Type; b=VAM8kyiuBtjhYKPznDzh91AcofK0hk5WWIAq7hyXTtvbcsAA0tc8//isUJtgySThkV4aVCZyrAqBctZpNQjOp7LvL5X8YB762wpi+gNIA/QJPlHbfl+oTND9uVXPYV1fhv8G/dIqjjFGFhSNcnbGrBfEQygOZ8kZ30usZ70mmhk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T23tiJ1P; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1762941661; c=relaxed/simple;
+	bh=K5wD52EaiYuc9xF0Eke+PIulEQQYLTcD4f+TQm3c1Aw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=psV+PCZmGEU00uZ4OTvhIMTGi460bh1OAqP4oR5AOcXevoSfRi8x01+8ktfkUXn3GKXRptiiRS3wkDO+AklCG/5RB7OW5xwS/usWzn7AtjWNbz/XGVJezHgPI6ac6p1SroqmetrpeN7QyZJ2tuz28ziDZHV/yhcpuwogsBYoNok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S0ANFGOU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T23tiJ1P"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2303C4CEF5;
-	Wed, 12 Nov 2025 09:58:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S0ANFGOU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 811D4C4CEF8;
+	Wed, 12 Nov 2025 10:01:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762941484;
-	bh=P4pMfFvGYc8JhpE+Vt26VFmiGc6qDnp5Ci8JgdbSf8Y=;
-	h=Date:Subject:To:References:From:Cc:In-Reply-To:From;
-	b=T23tiJ1POjLp8ZI+lL5+PYqTYAGpd4+qZmr6Taaa2pCxQNlDElVYtoWqZ0/WaLcaG
-	 FPS4Hhmby4NGxCIFYe7hMTfLF8oqUK34CvMHbSIp0s7LLpJl4BkWFdPT++u9i0Zm4h
-	 bicgZgzJQC6k3uxSLnrNpGa4JglwCGrIW5JuXHtDV0DAciu1SDjTmNVCp1rxlqJjHE
-	 EToXyWRSScOejR7UFFHktPBGK+JAa920BkNlZtYOk9L6Y8qOpGIsh/E1fvdisGSKZ7
-	 CD60RZnGWNgIf4cYIYJNyKvIOZauzAx7/4dcOkmA78ZRxVY2iJt0OakNiiUZLzYp/X
-	 n3OpUUqmY3jug==
-Message-ID: <4e15d638-b6b8-4daa-aa88-321678bf4824@kernel.org>
-Date: Wed, 12 Nov 2025 10:58:02 +0100
+	s=k20201202; t=1762941661;
+	bh=K5wD52EaiYuc9xF0Eke+PIulEQQYLTcD4f+TQm3c1Aw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=S0ANFGOUcbaZdsrO0zZCSTE2eiYG0jhgvIwV84Q/WwfDwbLsPDUFGFxIPKGJc7FTt
+	 IPPIpgacLNcj0TJuX7zXkVo/LwwFVRU8f2ttQ0P9kXhwepJDayYdNjWb5KITjSDbKY
+	 rg1nL4lLAQB2U0a8vflB5H0dp4JNzosz0l1DfIdn6gTsz/uHsPfIhpin+7vJ/kG1EH
+	 Kn/6p7N8HcAEaDdvi099sBNX8X5MWBFeNUpgCyMuTfWvaDucSka8OIOJNpz2CVB4OZ
+	 Edq5ZMd3pxFSJytvO3oku9u1b/chDIYO2006wPltnCCG5CEQPFBU3LapDnw4NrRSLq
+	 XQR7ZgmPxxvqg==
+Message-ID: <5d0f28a6-96cd-4aae-8826-1c9e1c1db4f2@kernel.org>
+Date: Wed, 12 Nov 2025 11:00:58 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,15 +35,17 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net 0/3] mptcp: fix memcg accounting for passive
- sockets
+Subject: Re: [PATCH mptcp-next 1/4] selftests: mptcp: join: properly kill
+ background tasks
 Content-Language: en-GB, fr-BE
-To: Paolo Abeni <pabeni@redhat.com>
-References: <cover.1762551942.git.pabeni@redhat.com>
- <b35ac728-dc25-40db-9fdb-8242e857ed87@kernel.org>
- <209462dc-d6a1-424e-a93f-0414e21e759f@redhat.com>
+To: Geliang Tang <geliang@kernel.org>
+Cc: MPTCP Upstream <mptcp@lists.linux.dev>
+References: <20251108-slft-timeout-stats-v1-0-c2234d277318@kernel.org>
+ <20251108-slft-timeout-stats-v1-1-c2234d277318@kernel.org>
+ <d5ef4083df02cc56e51170ec906eeaea78443c84.camel@kernel.org>
+ <894506e8-df54-4fb7-8337-c5fdc99ecb73@kernel.org>
+ <a8768ce5597666aca5effeb794303245d8edc67c.camel@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -88,35 +90,19 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <209462dc-d6a1-424e-a93f-0414e21e759f@redhat.com>
+In-Reply-To: <a8768ce5597666aca5effeb794303245d8edc67c.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 12/11/2025 10:35, Paolo Abeni wrote:
-> On 11/11/25 6:26 PM, Matthieu Baerts wrote:
->> Hi Paolo,
->>
->> On 07/11/2025 22:55, Paolo Abeni wrote:
->>> It turns out that the splat reported earlier is indeed due to an old
->>> bug/missing feature that hit hard on top of "mptcp: borrow forward 
->>> memory from subflow", as we can borrow accounted memory from a socket
->>> not doing any accounting;)
->>>
->>> It should land upstream before the above mentioned commit, ence the
->>> 'net' target, but it could as well be net-next material.
->>
->> Thank you for these fixes!
->>
->> They look good to me for 'net':
->>
->> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> 
-> If you don't have applied these patches yet, please wait a bit: I'll
-> send a new revision including a minor delta to make 'Squash-to: "mptcp:
-> leverage the backlog for RX packet processing"' smaller/less ugly.
+Hi Geliang,
 
-I was going to apply them to help you not to have to carry many patches,
-but I can sure wait! :)
+On 11/11/2025 09:17, Geliang Tang wrote:
+> Thanks for your explanation, this patch looks good to me.
+> 
+> I'll reply my RB tag in the cover letter.
+
+I don't see this RB tag: was there an issue with the email, or do you
+simply need more time?
 
 Cheers,
 Matt
