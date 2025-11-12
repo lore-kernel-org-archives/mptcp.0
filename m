@@ -1,111 +1,96 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8020635CBCD
-	for <mptcp@lists.linux.dev>; Wed, 12 Nov 2025 10:01:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C000253B58
+	for <mptcp@lists.linux.dev>; Wed, 12 Nov 2025 10:02:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762941661; cv=none; b=TYPYt+E0El6jSntPUMZhlkXH9xTXd9hId+TqUe2xXQxfM/+LCsqsgWnh7gESyUdvpco26QdxHNilnm6Yns3c9VFo5MacZFKMxa5b8Yv+fBv/kS1upQcyThaShpNk2qAT8+TC3+V0QvbxmykJJ94EwbXGbJbVrdimCfVhK7VJp+o=
+	t=1762941777; cv=none; b=RsdrnMpLUQxuANH9FeU6F1zF9zIgupkf0yu7Q5kOCfVoW3fhHfWp8gbX9VkywLmRf8KXC02UCsP9pZhkq8lfezqsM3rb6aOwBx8fba4FTOUWo3dRMeM8cO2SJi9qdyA0bWWwQQRZisK2dNNadwkel5dVj2mBpV/WVYca6mvP7Ss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762941661; c=relaxed/simple;
-	bh=K5wD52EaiYuc9xF0Eke+PIulEQQYLTcD4f+TQm3c1Aw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=psV+PCZmGEU00uZ4OTvhIMTGi460bh1OAqP4oR5AOcXevoSfRi8x01+8ktfkUXn3GKXRptiiRS3wkDO+AklCG/5RB7OW5xwS/usWzn7AtjWNbz/XGVJezHgPI6ac6p1SroqmetrpeN7QyZJ2tuz28ziDZHV/yhcpuwogsBYoNok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S0ANFGOU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1762941777; c=relaxed/simple;
+	bh=+MNP2Ll29aGa96PzZXaZUQpz5rDNAOVZEONCZRlTfW8=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=AW30cj4eTbzzxSvos4D3JuXkY+EJ69nzvS3YfQ4BDcr0bTMLny1Se5OSn/Tdes/4qP/j87HcoUZ9If37ze6bhy8meEHjO7DYiDSBJSWaQcOa+eemtKL8GWciPno9NC7HPkbt81hQNHtHECyEgo7L0mWLEwGZF7Mi+Nur/ZqsW18=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hSgboQh+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S0ANFGOU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 811D4C4CEF8;
-	Wed, 12 Nov 2025 10:01:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hSgboQh+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A7F2C116B1;
+	Wed, 12 Nov 2025 10:02:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762941661;
-	bh=K5wD52EaiYuc9xF0Eke+PIulEQQYLTcD4f+TQm3c1Aw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=S0ANFGOUcbaZdsrO0zZCSTE2eiYG0jhgvIwV84Q/WwfDwbLsPDUFGFxIPKGJc7FTt
-	 IPPIpgacLNcj0TJuX7zXkVo/LwwFVRU8f2ttQ0P9kXhwepJDayYdNjWb5KITjSDbKY
-	 rg1nL4lLAQB2U0a8vflB5H0dp4JNzosz0l1DfIdn6gTsz/uHsPfIhpin+7vJ/kG1EH
-	 Kn/6p7N8HcAEaDdvi099sBNX8X5MWBFeNUpgCyMuTfWvaDucSka8OIOJNpz2CVB4OZ
-	 Edq5ZMd3pxFSJytvO3oku9u1b/chDIYO2006wPltnCCG5CEQPFBU3LapDnw4NrRSLq
-	 XQR7ZgmPxxvqg==
-Message-ID: <5d0f28a6-96cd-4aae-8826-1c9e1c1db4f2@kernel.org>
-Date: Wed, 12 Nov 2025 11:00:58 +0100
+	s=k20201202; t=1762941777;
+	bh=+MNP2Ll29aGa96PzZXaZUQpz5rDNAOVZEONCZRlTfW8=;
+	h=Subject:From:To:Date:In-Reply-To:References:From;
+	b=hSgboQh+gDjCN5qXccKmuz84vj7Q5sYUrsMdwhrMYIKb5Q3qiThxe1bKN9Z2nIZ8K
+	 CWFRsJ3DvGVd81a8aPSIEwQZikPrpvWZnwrpWCblnpVz6cYLFeCcedJKEQJBpkp1F8
+	 hQvpfQNdf7GV5dYnrCWCYpcQaxxB0uGH1Bhcb36srjQYbGJCYotZVpKkH68/eUP6eq
+	 7ZAyok1WSr4unaYQZ/w85DY5OmNB8uu2VRZb8q+4eBniLuYZGu909VNf7WYexyhHUg
+	 T/QFhSGnymhPNL0cFh3R5PnR8/PCJiQIFHCQ1YmlZzP71NylFtaQEO7Ft/RgujwbaU
+	 OCpKKrqvcY/lA==
+Message-ID: <db3ad087c99a9b625dc257e035cc271863cd083e.camel@kernel.org>
+Subject: Re: [PATCH mptcp-next 0/4] selftests: mptcp: get stats just before
+ timing out
+From: Geliang Tang <geliang@kernel.org>
+To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, MPTCP Upstream
+	 <mptcp@lists.linux.dev>
+Date: Wed, 12 Nov 2025 18:02:52 +0800
+In-Reply-To: <20251108-slft-timeout-stats-v1-0-c2234d277318@kernel.org>
+References: <20251108-slft-timeout-stats-v1-0-c2234d277318@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.52.3-0ubuntu1 
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next 1/4] selftests: mptcp: join: properly kill
- background tasks
-Content-Language: en-GB, fr-BE
-To: Geliang Tang <geliang@kernel.org>
-Cc: MPTCP Upstream <mptcp@lists.linux.dev>
-References: <20251108-slft-timeout-stats-v1-0-c2234d277318@kernel.org>
- <20251108-slft-timeout-stats-v1-1-c2234d277318@kernel.org>
- <d5ef4083df02cc56e51170ec906eeaea78443c84.camel@kernel.org>
- <894506e8-df54-4fb7-8337-c5fdc99ecb73@kernel.org>
- <a8768ce5597666aca5effeb794303245d8edc67c.camel@kernel.org>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <a8768ce5597666aca5effeb794303245d8edc67c.camel@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Geliang,
+Hi Matt,
 
-On 11/11/2025 09:17, Geliang Tang wrote:
-> Thanks for your explanation, this patch looks good to me.
+On Sat, 2025-11-08 at 15:20 +0100, Matthieu Baerts (NGI0) wrote:
+> A few patches to improve the selftests in case of issues:
 > 
-> I'll reply my RB tag in the cover letter.
+> - Patch 1: a fix to properly kill background tasks.
+> 
+> - Patch 2: avoid taking the same packet trace twice.
+> 
+> - Patch 3: wait for an event instead of a fix time.
+> 
+> - Patch 4: instead of using 'timeout' and print the stats after,
+> another
+>   internal timeout is used: if it fires, it will print stats, then
+> stop
+>   everything. This avoids confusions around stats in case of timeout.
+> 
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-I don't see this RB tag: was there an issue with the email, or do you
-simply need more time?
+This set looks good to me.
 
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
+    Reviewed-by: Geliang Tang <geliang@kernel.org>
+
+Thanks,
+-Geliang
+
+> ---
+> Matthieu Baerts (NGI0) (4):
+>       selftests: mptcp: join: properly kill background tasks
+>       selftests: mptcp: connect: avoid double packet traces
+>       selftests: mptcp: wait for port instead of sleep
+>       selftests: mptcp: get stats just before timing out
+> 
+>  tools/testing/selftests/net/mptcp/mptcp_connect.sh | 31 ++++++++----
+> --
+>  tools/testing/selftests/net/mptcp/mptcp_join.sh    | 47 +++++++++++-
+> ----------
+>  tools/testing/selftests/net/mptcp/mptcp_lib.sh     | 34
+> ++++++++++++++++
+>  tools/testing/selftests/net/mptcp/mptcp_sockopt.sh | 23 ++++++-----
+>  tools/testing/selftests/net/mptcp/simult_flows.sh  | 24 ++++++-----
+>  tools/testing/selftests/net/mptcp/userspace_pm.sh  |  3 +-
+>  6 files changed, 106 insertions(+), 56 deletions(-)
+> ---
+> base-commit: e3f3a4ba83a02423a3cb045f7485340b713fb549
+> change-id: 20251106-slft-timeout-stats-d061de7fcebe
+> 
+> Best regards,
 
