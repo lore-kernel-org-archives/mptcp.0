@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59A3F2C0F6C
-	for <mptcp@lists.linux.dev>; Wed, 12 Nov 2025 09:55:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAC9721ABAA
+	for <mptcp@lists.linux.dev>; Wed, 12 Nov 2025 09:58:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762941358; cv=none; b=k8Erw9oOzNKbcldWQVnHyPVygzHizC6i2NHEcYIX61pTLxZCAaYBCt0QVzv/3pzfgcpAcjH0Nr4GYXIZ3p0IxMJSF9A+o0a8Es3GXY4v/RQb0N28DtXIdpkwWSTDjbHqHZW8bwdTgaz3irlf2qX0MXnUUKiQuB9EHtJ7ulK1n7k=
+	t=1762941484; cv=none; b=f0qb+C35WT+ngKBGkGXqVwSRLw0US2Sr4kZSgPUVVsXSfZiqMl9QUWfy7qAxYirLBdeNx9S5pjs+owJVwJQhU3NdgZKe/UfcdnCopPs/7giVMLeBdCsbn6YSjJHCX5rDnjjt3cYVViYOS5GJcYY7VEsfP9al1Srty/v2icr2WKA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762941358; c=relaxed/simple;
-	bh=Awv3Nez6OR4q98NhFgvg1vYbGW9PlpMQBhv0l/50468=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OApvk6bwg6LnKQdxTjZ4BZNEhuyYxn5Xl/1DDZJreDVOQyP8wRYOk3iswhSY63mPn5GzPaSsYbuGnd79V6WU+HwI1UPjFF0vzGtrbcs/ESXvRQ44BpFER7E+WUnax1zVdOu+xUMz15NHx97fjf4fsKneQ1vSKsi75OlpX+2XT/A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BUnhPT+Y; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1762941484; c=relaxed/simple;
+	bh=P4pMfFvGYc8JhpE+Vt26VFmiGc6qDnp5Ci8JgdbSf8Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
+	 In-Reply-To:Content-Type; b=VAM8kyiuBtjhYKPznDzh91AcofK0hk5WWIAq7hyXTtvbcsAA0tc8//isUJtgySThkV4aVCZyrAqBctZpNQjOp7LvL5X8YB762wpi+gNIA/QJPlHbfl+oTND9uVXPYV1fhv8G/dIqjjFGFhSNcnbGrBfEQygOZ8kZ30usZ70mmhk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T23tiJ1P; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BUnhPT+Y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 564D8C4CEF8;
-	Wed, 12 Nov 2025 09:55:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T23tiJ1P"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2303C4CEF5;
+	Wed, 12 Nov 2025 09:58:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762941357;
-	bh=Awv3Nez6OR4q98NhFgvg1vYbGW9PlpMQBhv0l/50468=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=BUnhPT+YiLNkV6dQLg6U+u/+VovAtr9e/4SyqZXipaIXNdA4evclW5G4UK58PT7Oj
-	 dA36BbcIcQol/hKFhdZoU+TGHK+WxGozBM3OCI1ZcBN5+2mW0tGcI3+6Lr3FdOT/UX
-	 AWxUHe0ndcQxpf98t4eb+H6u/GmAyB9sKzznjMNfkE5jD5iyGvkEJBxgv8VLvmu6hQ
-	 VpyuEArsEkaOhsDN4lVgfwjSqdZlCxwr2gUrruBSEyRLmcNcb3I0yagcmacA0ylvcb
-	 l5+7pc7jES2Hgqg/Lphai8vdzP0h8L4h9BAzUiCiY7eyA6QYq9KMGtuGM5le12JyXb
-	 K2q8uKYarcwVA==
-Message-ID: <0db0481f-9611-4d86-a291-4606004c4067@kernel.org>
-Date: Wed, 12 Nov 2025 10:55:55 +0100
+	s=k20201202; t=1762941484;
+	bh=P4pMfFvGYc8JhpE+Vt26VFmiGc6qDnp5Ci8JgdbSf8Y=;
+	h=Date:Subject:To:References:From:Cc:In-Reply-To:From;
+	b=T23tiJ1POjLp8ZI+lL5+PYqTYAGpd4+qZmr6Taaa2pCxQNlDElVYtoWqZ0/WaLcaG
+	 FPS4Hhmby4NGxCIFYe7hMTfLF8oqUK34CvMHbSIp0s7LLpJl4BkWFdPT++u9i0Zm4h
+	 bicgZgzJQC6k3uxSLnrNpGa4JglwCGrIW5JuXHtDV0DAciu1SDjTmNVCp1rxlqJjHE
+	 EToXyWRSScOejR7UFFHktPBGK+JAa920BkNlZtYOk9L6Y8qOpGIsh/E1fvdisGSKZ7
+	 CD60RZnGWNgIf4cYIYJNyKvIOZauzAx7/4dcOkmA78ZRxVY2iJt0OakNiiUZLzYp/X
+	 n3OpUUqmY3jug==
+Message-ID: <4e15d638-b6b8-4daa-aa88-321678bf4824@kernel.org>
+Date: Wed, 12 Nov 2025 10:58:02 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,17 +35,15 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net 1/3] net: factor-out _sk_charge() helper
+Subject: Re: [PATCH mptcp-net 0/3] mptcp: fix memcg accounting for passive
+ sockets
 Content-Language: en-GB, fr-BE
 To: Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
 References: <cover.1762551942.git.pabeni@redhat.com>
- <063e2bc8e98ce050286eb4309bf4bd47716cc3f8.1762551942.git.pabeni@redhat.com>
- <a2449ccf-69a5-4503-a687-074b4436223a@kernel.org>
- <63928360-2947-49d7-8e8e-9f83745f3556@redhat.com>
- <d557d65a-3b3c-484a-a5d3-d526b46317f7@kernel.org>
- <fe5a48a5-d329-42dc-876b-dc3db739e178@redhat.com>
+ <b35ac728-dc25-40db-9fdb-8242e857ed87@kernel.org>
+ <209462dc-d6a1-424e-a93f-0414e21e759f@redhat.com>
 From: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -90,95 +88,35 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <fe5a48a5-d329-42dc-876b-dc3db739e178@redhat.com>
+In-Reply-To: <209462dc-d6a1-424e-a93f-0414e21e759f@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 12/11/2025 10:28, Paolo Abeni wrote:
-> On 11/12/25 10:16 AM, Matthieu Baerts wrote:
->> On 12/11/2025 10:04, Paolo Abeni wrote:
->>>
->>> On 11/11/25 6:38 PM, Matthieu Baerts wrote:
->>>> On 07/11/2025 22:55, Paolo Abeni wrote:
->>>>> Move out of __inet_accept() the code dealing charging newly
->>>>> accepted socket to memcg. MPTCP will soon use it to on a per
->>>>> subflow basis, in different contexts.
->>>>>
->>>>> No functional changes intended.
+On 12/11/2025 10:35, Paolo Abeni wrote:
+> On 11/11/25 6:26 PM, Matthieu Baerts wrote:
+>> Hi Paolo,
 >>
->> (...)
+>> On 07/11/2025 22:55, Paolo Abeni wrote:
+>>> It turns out that the splat reported earlier is indeed due to an old
+>>> bug/missing feature that hit hard on top of "mptcp: borrow forward 
+>>> memory from subflow", as we can borrow accounted memory from a socket
+>>> not doing any accounting;)
+>>>
+>>> It should land upstream before the above mentioned commit, ence the
+>>> 'net' target, but it could as well be net-next material.
 >>
->>>>> diff --git a/net/ipv4/af_inet.c b/net/ipv4/af_inet.c
->>>>> index a31b94ce8968..08d811f11896 100644
->>>>> --- a/net/ipv4/af_inet.c
->>>>> +++ b/net/ipv4/af_inet.c
->>>>> @@ -756,23 +756,8 @@ EXPORT_SYMBOL(inet_stream_connect);
->>>>>  void __inet_accept(struct socket *sock, struct socket *newsock, struct sock *newsk)
->>>>>  {
->>>>>  	if (mem_cgroup_sockets_enabled) {
->>>>> -		gfp_t gfp = GFP_KERNEL | __GFP_NOFAIL;
->>>>> -
->>>>>  		mem_cgroup_sk_alloc(newsk);
->>>>> -
->>>>> -		if (mem_cgroup_from_sk(newsk)) {
->>>>> -			int amt;
->>>>> -
->>>>> -			/* The socket has not been accepted yet, no need
->>>>> -			 * to look at newsk->sk_wmem_queued.
->>>>> -			 */
->>>>> -			amt = sk_mem_pages(newsk->sk_forward_alloc +
->>>>> -					   atomic_read(&newsk->sk_rmem_alloc));
->>>>> -			if (amt)
->>>>> -				mem_cgroup_sk_charge(newsk, amt, gfp);
->>>>> -		}
->>>>> -
->>>>> -		kmem_cache_charge(newsk, gfp);
->>>>
->>>> Mmh, this code has been moved from inet_csk_accept() to __inet_accept()
->>>> in net-next only, see commit 4a997d49d92a ("tcp: Save lock_sock() for
->>>> memcg in inet_csk_accept()."):
->>>>
->>>>   https://lore.kernel.org/20251014235604.3057003-2-kuniyu@google.com
->>>
->>> Right you are!
->>>
->>>> Should we only apply these patches in our export branch, for net-next?
->>>> If yes, then I guess we should remove the Fixes tag in patch 3/3.
->>>
->>> Technically is a fix. Even prior to the backlog introduction bad thing
->>> could happen, as passive msk does not have memory by the subflow only
->>> accounted.
->>>
->>> TCP-level OoO could potentially use a lot of system memory that will not
->>> be memaccounted.
->>>
->>> Unfortunately it's not easy to have a clean net patch.
->>>
->>> I suppose with can have this as net-next fixes (including the fixes tag
->>> in 3/3) as the change is invasive and the thing is broken since the
->>> beginning.
->>>
->>> WDYT?
+>> Thank you for these fixes!
 >>
->> It sounds good to me. When these patches will be in Linus tree, we can
->> ask to backport these 3 patches from this series, plus commit
->> 4a997d49d92a ("tcp: Save lock_sock() for memcg in inet_csk_accept()."), no?
+>> They look good to me for 'net':
 >>
->> If yes, do you think I can add a "Cc: stable", and explaining in the
->> comments that it is because it depends on a patch that is only in
->> net-next, and the fix is not urgent?
+>> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 > 
-> You know I don't have all the fascination for stable;)
+> If you don't have applied these patches yet, please wait a bit: I'll
+> send a new revision including a minor delta to make 'Squash-to: "mptcp:
+> leverage the backlog for RX packet processing"' smaller/less ugly.
 
-I forgot :)
-
-> My first take
-> would be to avoid such tag. If you are willing to do the extra mile I
-> guess that is a good plan. Alternatively you could just send the patch
-> to stable after merge, with pre-req included.
-
-Adding the "Cc: stable" allow me to forget about backporting it, except
-if there are conflicts! But I can add a reminder :)
+I was going to apply them to help you not to have to carry many patches,
+but I can sure wait! :)
 
 Cheers,
 Matt
