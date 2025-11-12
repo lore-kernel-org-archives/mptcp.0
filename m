@@ -1,131 +1,243 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6739D2EA732
-	for <mptcp@lists.linux.dev>; Wed, 12 Nov 2025 09:46:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F7142FF659
+	for <mptcp@lists.linux.dev>; Wed, 12 Nov 2025 09:52:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762940779; cv=none; b=W+sQTNm/5MSaNTL52PR+ROIMqtypNi39xO1p+5MP+HLUItfWW+Wt/TCkYdRP3OQPu8vOyu08UWcH0UtYvPn76lm7gwNz9xpSDS2WIRulsaQm/BHcTU89cESn4uiRZrWN+3gXpWY1mRGLulE8/LuJQ1iFxmhRZYhshCXsc1IIf4s=
+	t=1762941168; cv=none; b=K4wcq8PnbnOXCTJCFMJyEbREdocn4lNYEJPa/VrNQEq48oORCgKz+4tV0rQFm37axA41wv/2YRIU6t5IUbNo732KfSWIVc2g5l/PCPMQCFuvyQk4prPSBgSRXY1SJIn/KUDiYujPIqJyrSUas58kv15G3mzZj1Pde/qa4Mx56P8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762940779; c=relaxed/simple;
-	bh=OZomXwYZ0TJNG2JLPnIzzQ4pHtRjZ2Qa4LR69Pgm7z0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=S4GuTauCVJ42Ot8A+hfIwqwZTVKb+iqf+RGSHSyFySseeoW4HXPB3w1ZXf7a01e61DMAMDsuvgPSgITJcvSR1NAUs4KxSUAdwwB0Cp7K9W32AraBxQ3luVWKLyfyqnGoXX+8gTyOyfUQIjZXy2i6PySno7+p1LFb560FOA5GHZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BnpJSJ0Q; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1762941168; c=relaxed/simple;
+	bh=DzcsxOdzD7+jvtJCe6BeAks9RA5b/hTbRLJopHaRYbU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
+	 In-Reply-To:Content-Type; b=sPd2zSEvF8ftV+X85SaruNWw5QwWh6EYVc1eMYQjlcuUSL0yLVTcXbykSYi3HqZlOkKBzW7Gk4vb3V203JHLZ3umps4g9qQccwmQfjrIpreyKwJuzLtE1WFdghFQXTW33+KZMEikztpay21EpvAqDbhlgqaa8NUpww5UFFq0k+0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WZDXqQMo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BnpJSJ0Q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF134C19425;
-	Wed, 12 Nov 2025 09:46:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WZDXqQMo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A9C6C19423;
+	Wed, 12 Nov 2025 09:52:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762940779;
-	bh=OZomXwYZ0TJNG2JLPnIzzQ4pHtRjZ2Qa4LR69Pgm7z0=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=BnpJSJ0QjkgAaKDb8XQp1rLrB04qyPLKRnVE+3X/qaSE++F/kEB8Coa0vA020zDiK
-	 urryqZQK0/2CN1A5sOy2nAh0gkXOU/9TNKm5GjKpzrc0swlSWs4OqH6anKnjPepN8p
-	 EOFM6r6tdmBePNuqboiKrvVi2mZQNqjpTO7FQ2DM3F7p87T+k73JVXspXGp6quZqph
-	 b/A2dKRI7sgdtnpYVL2AY54UgRCtR0GbmGQT1e+dF7K8X3H41B4xI3vrfPnNEFw7Cp
-	 17h20skJbpa3oAnnNZwIasd1nHzRVxBs1YJxrNC+6BpOdpujgVDVm5i/NG8JrdSia8
-	 Pq68sxAktsD6g==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Wed, 12 Nov 2025 10:45:49 +0100
-Subject: [PATCH mptcp-net 2/2] selftests: mptcp: join: userspace: longer
- timeout
+	s=k20201202; t=1762941168;
+	bh=DzcsxOdzD7+jvtJCe6BeAks9RA5b/hTbRLJopHaRYbU=;
+	h=Date:Subject:To:References:From:Cc:In-Reply-To:From;
+	b=WZDXqQMol5S9HgGuhpt8cLJOdUt2NJZKsAmRDvHDTXhbOnR/qzL+1DMpUxHhQ385y
+	 sSRAMwgbcDt1yWdpXFSPKzpUvNEKYTcO/s6di1mrjOhgprP/7LpSgOr3zjx0abJqpO
+	 9goOhZklrbDQIkJpHVJBmVsjZ9sJnebfJW49LqoYd6OpArHJwfdOy8lJyPUQQXNMwr
+	 FDN1ZAUGIfa/swlOvawyI6b83CcLaEIM75i1DnSsk7kIv9NKTQxe8zEWSMxeY99yD3
+	 YQ7rO34Xe7X2GfvxPBKZPhoLUx4yOD04EhPX/pZBoz43JIefCy2WIFmcIVsoR4j/Ak
+	 EL11ykKCkXxAg==
+Message-ID: <301e47c3-3c4a-4e8f-8c4f-a359356cc7a3@kernel.org>
+Date: Wed, 12 Nov 2025 10:52:44 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH v2 mptcp-next] Squash-to: "mptcp: leverage the backlog for
+ RX packet processing"
+Content-Language: en-GB, fr-BE
+To: Paolo Abeni <pabeni@redhat.com>
+References: <ed5c5ea1de503f6dc8a514b5eb4c9d16c431646f.1762696333.git.pabeni@redhat.com>
+ <704b4358-30b2-4065-abbb-752f4f9a3c79@kernel.org>
+ <27e7304b-d485-4e01-bd47-a169c5b25849@redhat.com>
+From: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev, Geliang Tang <geliang@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <27e7304b-d485-4e01-bd47-a169c5b25849@redhat.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20251112-slft-longer-timeout-v1-2-97aab145a062@kernel.org>
-References: <20251112-slft-longer-timeout-v1-0-97aab145a062@kernel.org>
-In-Reply-To: <20251112-slft-longer-timeout-v1-0-97aab145a062@kernel.org>
-To: MPTCP Upstream <mptcp@lists.linux.dev>
-Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3084; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=OZomXwYZ0TJNG2JLPnIzzQ4pHtRjZ2Qa4LR69Pgm7z0=;
- b=kA0DAAoWfCLwwvNHCpcByyZiAGkUV2iggPLVkzocu57xP4xk1u3PJtO2varsG/32vv+5cqA1R
- 4h1BAAWCgAdFiEEG4ZZb5nneg10Sk44fCLwwvNHCpcFAmkUV2gACgkQfCLwwvNHCpc+ygEAg4Db
- C62CaEjmPUfmxtFVXjCVG2af/8bxiVIUZ8Z6da4BAI7eWEpyOBwxrz5gHDSh4HSKkWNYTk4u9rp
- 7z1QLzE8H
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-In rare cases, when the test environment is very slow, some userspace
-tests can fail because some expected events have not been seen.
+Hi Paolo,
 
-Because the tests are expecting a long on-going connection, and they are
-not waiting for the end of the transfer, it is fine to have a longer
-timeout, and even go over the default one. This connection will be
-killed at the end, after the verifications: increasing the timeout
-doesn't change anything, apart from avoiding it to end before the end of
-the verifications.
+Thank you for your reply!
 
-To play it safe, all userspace tests not waiting for the end of the
-transfer are now having a longer timeout: 2 minutes.
+On 12/11/2025 10:24, Paolo Abeni wrote:
+> On 11/11/25 5:21 PM, Matthieu Baerts wrote:
+>> On 09/11/2025 14:53, Paolo Abeni wrote:
+>>> If a subflow receives data before gaining the memcg while the msk
+>>> socket lock is held at accept time, or the PM locks the msk socket
+>>> while still unaccepted and subflows push data to it at the same time,
+>>> the mptcp_graph_subflows() can complete with a non empty backlog.
+>>>
+>>> The msk will try to borrow such memory, but (some) of the skbs there
+>>> where not memcg charged. When the msk finally will return such accounted
+>>> memory, we should hit the same splat of #597.
+>>> [even if so far I was unable to replicate this scenario]
+>>>
+>>> This patch tries to address such potential issue by:
+>>> - preventing the subflow from queuing data into the backlog after
+>>>   gaining the memcg. This ensure that at the end of the look all the
+>>>   skbs in the backlog (if any) are _not_ memory accounted.
+>>> - mem charge the backlog to msk
+>>> - 'restart' the subflow and spool any data waiting there.
+>>>
+>>> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+>>> ---
+>>>  net/mptcp/protocol.c | 46 ++++++++++++++++++++++++++++++++++++++++++--
+>>>  1 file changed, 44 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+>>> index 5e9325c7ea9c..d6b08e1de358 100644
+>>> --- a/net/mptcp/protocol.c
+>>> +++ b/net/mptcp/protocol.c
+>>> @@ -4082,10 +4082,12 @@ static void mptcp_graph_subflows(struct sock *sk)
+>>>  {
+>>>  	struct mptcp_subflow_context *subflow;
+>>>  	struct mptcp_sock *msk = mptcp_sk(sk);
+>>> +	struct sock *ssk;
+>>> +	int old_amt, amt;
+>>> +	bool slow;
+>>>  
+>>>  	mptcp_for_each_subflow(msk, subflow) {
+>>> -		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
+>>> -		bool slow;
+>>> +		ssk = mptcp_subflow_tcp_sock(subflow);
+>>>  
+>>>  		slow = lock_sock_fast(ssk);
+>>>  
+>>> @@ -4095,8 +4097,48 @@ static void mptcp_graph_subflows(struct sock *sk)
+>>>  		if (!ssk->sk_socket)
+>>>  			mptcp_sock_graft(ssk, sk->sk_socket);
+>>>  
+>>> +		if (!mem_cgroup_from_sk(sk))
+>>
+>> Should we not call mem_cgroup_sk_enabled() instead? It does this:
+>>
+>>   return mem_cgroup_sockets_enabled && mem_cgroup_from_sk(sk);
+>>
+>> That's what is done in net/core/sock.c and net/ipv4/tcp_output.c. Not in
+>> __inet_accept(), because mem_cgroup_sockets_enabled() is checked before.
+>> Maybe we should do the same here?
+>>
+>> (Note that it is not clear to me if mem_cgroup can be enabled later on,
+>> and if yes, what should be done with existing connections.)
+> 
+> It's just an additional optimization, to leverage static branch, but
+> it's not strictly needed. Can be added, thus.
 
-The Fixes commit was making the connection longer, but still, the
-default timeout would have stopped it after 1 minute, which might not be
-enough in very slow environments.
+I see, thank you!
 
-Fixes: 290493078b96 ("selftests: mptcp: join: userspace: longer transfer")
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- tools/testing/selftests/net/mptcp/mptcp_join.sh | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+While at it, should we call mem_cgroup_*() only once by using local
+variables?
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index b058f78ea0bd..541c2676c79e 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -3953,7 +3953,7 @@ userspace_tests()
- 	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
- 		set_userspace_pm $ns1
- 		pm_nl_set_limits $ns2 2 2
--		{ test_linkfail=128 speed=5 \
-+		{ timeout_test=120 test_linkfail=128 speed=5 \
- 			run_tests $ns1 $ns2 10.0.1.1 & } 2>/dev/null
- 		local tests_pid=$!
- 		wait_mpj $ns1
-@@ -3986,7 +3986,7 @@ userspace_tests()
- 	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
- 		set_userspace_pm $ns2
- 		pm_nl_set_limits $ns1 0 1
--		{ test_linkfail=128 speed=5 \
-+		{ timeout_test=120 test_linkfail=128 speed=5 \
- 			run_tests $ns1 $ns2 10.0.1.1 & } 2>/dev/null
- 		local tests_pid=$!
- 		wait_mpj $ns2
-@@ -4014,7 +4014,7 @@ userspace_tests()
- 	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
- 		set_userspace_pm $ns2
- 		pm_nl_set_limits $ns1 0 1
--		{ test_linkfail=128 speed=5 \
-+		{ timeout_test=120 test_linkfail=128 speed=5 \
- 			run_tests $ns1 $ns2 10.0.1.1 & } 2>/dev/null
- 		local tests_pid=$!
- 		wait_mpj $ns2
-@@ -4035,7 +4035,7 @@ userspace_tests()
- 	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
- 		set_userspace_pm $ns2
- 		pm_nl_set_limits $ns1 0 1
--		{ test_linkfail=128 speed=5 \
-+		{ timeout_test=120 test_linkfail=128 speed=5 \
- 			run_tests $ns1 $ns2 10.0.1.1 & } 2>/dev/null
- 		local tests_pid=$!
- 		wait_mpj $ns2
-@@ -4059,7 +4059,7 @@ userspace_tests()
- 	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
- 		set_userspace_pm $ns1
- 		pm_nl_set_limits $ns2 1 1
--		{ test_linkfail=128 speed=5 \
-+		{ timeout_test=120 test_linkfail=128 speed=5 \
- 			run_tests $ns1 $ns2 10.0.1.1 & } 2>/dev/null
- 		local tests_pid=$!
- 		wait_mpj $ns1
+>>> +			goto unlock;
+>>> +
+>>>  		__mptcp_inherit_cgrp_data(sk, ssk);
+>>>  		__mptcp_inherit_memcg(sk, ssk, GFP_KERNEL);
+>>> +
+>>> +		/* Prevent subflows from queueing data into the backlog
+>>> +		 * as soon as cg is set; note that we can't race
+>>> +		 * with __mptcp_close_ssk setting this bit for a really
+>>> +		 * closing socket, because we hold the msk socket lock here.
+>>> +		 */
+>>> +		subflow->closing = 1;
+>>> +
+>>> +unlock:
+>>> +		unlock_sock_fast(ssk, slow);
+>>> +	}
+>>> +
+>>> +	if (!mem_cgroup_from_sk(sk))
+>>
+>> Same here?
+>>
+>>> +		return;
+>>> +
+>>> +	/* Charge the bl memory, note that __sk_charge accounted for
+>>> +	 * fwd memory and rmem only
+>>> +	 */
+>>> +	mptcp_data_lock(sk);
+>>> +	old_amt = sk_mem_pages(sk->sk_forward_alloc +
+>>> +			       atomic_read(&sk->sk_rmem_alloc));
+>>> +	amt = sk_mem_pages(msk->backlog_len + sk->sk_forward_alloc +
+>>> +		     atomic_read(&sk->sk_rmem_alloc));
+>>
+>> (Same as Geliang for the alignment here, and eventually calling
+>> kmem_cache_charge() like in __inet_accept())
+> 
+> This and the next are the more obscure point. I chose to not call
+> kmem_cache_charge() because I'm (was) a bit doubtful about such call
+> being legit in __inet_accept(): active (plain TCP) sockets are not
+> accounted, just passive ones. Re-thinking about it I guess it's better
+> to be consistent with TCP than trying to be smarted (history has proved
+> it does not work so well :-P)
+> 
+> TL;DR: I'll add the missing kmem_cache_charge();
 
+:)
+
+Indeed, safer. If it is changed in TCP, hopefully the same will be done
+in MPTCP side.
+
+>>> +	amt -= old_amt;
+>>> +	if (amt)
+>>> +		mem_cgroup_sk_charge(sk, amt, GFP_ATOMIC | __GFP_NOFAIL);
+>>
+>> Just to be sure: no need to check if there was an error? It is not done
+>> in __inet_accept() either, so I guess no?
+> 
+> The __GFP_NOFAIL flag ensures that the call can not fail.
+
+Of course, I missed that!
+
+> Adding it with
+> GFP_ATOMIC is at least "original" (this is the only call site with this
+> flags combo). In the next version I'll move the call outside the
+> spinlock (we are still under the msk socket lock) to replace GFP_ATOMIC
+> with GFP_KERNEL.
+
+Good idea! Also better to align with what is done with TCP.
+
+> Many thanks for all the review effort!
+
+That's the least I can do with all the new fixes and optimisations :)
+
+Cheers,
+Matt
 -- 
-2.51.0
+Sponsored by the NGI0 Core fund.
 
