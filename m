@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0641F26F46E
-	for <mptcp@lists.linux.dev>; Thu, 13 Nov 2025 17:14:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6A8435C1A5;
+	Thu, 13 Nov 2025 17:16:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763054100; cv=none; b=oJilxnGAmu46dy2j3viaogZOeJGi3PLhirAozcbgsKzkMgCGTBE9rGLt5bTi0zMEAhQg5OkyzTvbWkR54G3IbjQ4zSnONMfy6wY/cOrL4z/neZ2meKR9K6HE+8PVrNm/L4E/e91oLHzQBWXdduiAQIXyJ8KO/vZVGYyqLu20XNk=
+	t=1763054207; cv=none; b=jwwV9+yEYZ5vGwl/F/5Ohl4CRdS6zkg1pJWlwlMJxXqSqKSGKzawDLNVyXoSDVfEEMZLAPc+J3Gp3BaqQBPccgbRVgxIkG6XoZv/yKezdwjqHjXSR2EAmNBiPA6u6QE3Q5QfcKANYPqEo+l8J634BFoXUE6s9tYMHVbj2UoLWA4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763054100; c=relaxed/simple;
-	bh=nZ5Xp6byjCl3oCAvugFYrG83MC+nn4Tj+5A3QZuAmR8=;
+	s=arc-20240116; t=1763054207; c=relaxed/simple;
+	bh=uyyY9cHMRIOZigdUowSTBTWUrdpADGk8JLFriXjOiIc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=t1rbr0MxSHVwLPBmtKDFnPZyTIy28um5Rb1EXBoA1v4TeVYejp0yV7gqOdEV7p/au1NMUVz9k8Sgiu9Zc/XiiOofaQBFk30b4DW+NxflmV9RG6TSkBRvDlghNnB3oex7R9O0SeZqfmG1O9flwSOdrxLPfoe7Mukc0ljbFx8dPTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KEqqXRhZ; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=CWZ4kd90vYajCzTFxbE8K084Xg7wjsQmmAG+hpu5gMPP3jmcll5Ml21RdAJTFx7BKZ9GbRJT1A3yQ2XCzC7+ZfzzNnElZVusTOcza4FtISW4nM9IaJ4Cu1Vhf6nzKWvwkr5+6oXVvf6uxUGvYVu84VL/KCOhuSujHFecHa6X3B0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UTDOEiqP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KEqqXRhZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC55AC4CEF7;
-	Thu, 13 Nov 2025 17:14:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UTDOEiqP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68A05C4CEF7;
+	Thu, 13 Nov 2025 17:16:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763054099;
-	bh=nZ5Xp6byjCl3oCAvugFYrG83MC+nn4Tj+5A3QZuAmR8=;
+	s=k20201202; t=1763054207;
+	bh=uyyY9cHMRIOZigdUowSTBTWUrdpADGk8JLFriXjOiIc=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=KEqqXRhZJH/tmTDx9+n9GoCEuL0nYoxiYZmulDDLVUYI/GsOGZweKFq68+/DUiZr8
-	 giwuCO/hr6ZokEl/Z5aXaVUUp7fVu5660ayRSdwn48fdwGTSj+g4bnq7LUSYMSxaJV
-	 irBzVS+Mp47eiDdIyV0JORAWP5dgGF8e3wXdq0Rq9AP7wRV5EtDlSxpjPOXXDlwzOO
-	 VpoIcxeulEyu3O85HOT+eUKA4/z9Lmf7EsYjmxJlsnIDT+VzLdJI17+TWkVvhu5Jka
-	 Xn/7IAsgCofLuk7FdtPh8CdNYwDEl7T2Vlr8oCAEnkefa+AI3Gzcul9ddB5gPVwL1R
-	 EQwSTip+DxAHw==
-Message-ID: <e320db27-f629-439b-b5dd-b75a18d3cc4f@kernel.org>
-Date: Thu, 13 Nov 2025 18:14:56 +0100
+	b=UTDOEiqP936Gp8MbxUuTgpSBVSzpS+d/Nf4s83YjbzsKtq7Ipch9Os8/xzCnx4FWt
+	 ls4fcCBA0onptdr4MBkHK+JFbphE1+7U98HhJ3J0Jq9SEnbPH/7e2HcQlahe1qBZLH
+	 JsgpGpGvj2wjobpexGZlI2uvlGk+zVLBKlLupKcQalBra/cVu0t2WeWmYzxwz1nmlz
+	 UinIx3B7iDaYrFFFuXgbR8ysdW5aXmakRS/wR8wC+RMWq+zOt7UTJPe4RrRnuXXiWB
+	 6nheSKvHQAHxhhddcX5VVW51icmYvZ/ZoOLSXSu25vQCbHFIR5f9KO13VBeYIJIS41
+	 yo6me1uP6wiew==
+Message-ID: <c4170711-d764-46a1-9a65-56299ee9b28b@kernel.org>
+Date: Thu, 13 Nov 2025 18:16:44 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,15 +35,15 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 mptcp-net 1/3] mptcp: fix grafting corner case
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-References: <cover.1762992570.git.pabeni@redhat.com>
- <4696be966622c9d340e8bfa4728b219b7cac1d1b.1762992570.git.pabeni@redhat.com>
- <49c300cc-e000-420d-82ad-aa59e5f1cd76@kernel.org>
- <2102ad3b-4f22-4da7-ac2f-7da0eba0ba46@redhat.com>
-From: Matthieu Baerts <matttbe@kernel.org>
+Subject: Re: [PATCH v3 mptcp-net 3/3] Squash-to: "mptcp: leverage the backlog
+ for RX packet processing"
 Content-Language: en-GB, fr-BE
+To: kernel test robot <lkp@intel.com>, Paolo Abeni <pabeni@redhat.com>,
+ mptcp@lists.linux.dev
+Cc: oe-kbuild-all@lists.linux.dev
+References: <ee40999f77d0186abba2a6b21958c1a8c4881c57.1762992570.git.pabeni@redhat.com>
+ <202511131931.1yh3eKYe-lkp@intel.com>
+From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -88,45 +88,44 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <2102ad3b-4f22-4da7-ac2f-7da0eba0ba46@redhat.com>
+In-Reply-To: <202511131931.1yh3eKYe-lkp@intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Paolo,
+Hello,
 
-On 13/11/2025 18:09, Paolo Abeni wrote:
-> On 11/13/25 9:47 AM, Matthieu Baerts wrote:
->> On 13/11/2025 01:10, Paolo Abeni wrote:
-
-(...)
-
->>> @@ -3767,6 +3776,8 @@ bool mptcp_finish_join(struct sock *ssk)
->>>  		goto err_prohibited;
->>>  	}
->>>  
->>> +	mptcp_check_graft(parent, ssk);
->>
->> Is it OK to graft it even in case of errors in __mptcp_finish_join()?
->> i.e. not in an established state or !msk->allow_subflows.
->>
->> Should it not be done after the block below, if there was no error?
+On 13/11/2025 12:30, kernel test robot wrote:
+> Hi Paolo,
 > 
-> My understanding/hope is that grafting early don't cause issues:
-> - no UaF access to ssk->sk_socket, because ssk either do finish
-> successfully the join or is reset/delete very soon.
-> - no ref leak, because ssk does not acquire any actual reference on
-> msk/socket.
+> kernel test robot noticed the following build errors:
 > 
-> It's needed to do it in mptcp_finish_join(), to ensure that in patch 3/3
-> all the subflows will always push accounted data after that
-> mptcp_graft_subflows() completes - or more specifically the
-> `backlog_unaccounted` counter is flushed.
+> [auto build test ERROR on mptcp/export]
+> [cannot apply to mptcp/export-net linus/master v6.18-rc5 next-20251113]
+> [If your patch is applied to the wrong git tree, kindly drop us a note.
+> And when submitting patch, we suggest to use '--base' as documented in
+> https://git-scm.com/docs/git-format-patch#_base_tree_information]
 > 
-> Let me see if I can rework 3/3 without this patch
+> url:    https://github.com/intel-lab-lkp/linux/commits/Paolo-Abeni/mptcp-fix-grafting-corner-case/20251113-081224
+> base:   https://github.com/multipath-tcp/mptcp_net-next.git export
+> patch link:    https://lore.kernel.org/r/ee40999f77d0186abba2a6b21958c1a8c4881c57.1762992570.git.pabeni%40redhat.com
+> patch subject: [PATCH v3 mptcp-net 3/3] Squash-to: "mptcp: leverage the backlog for RX packet processing"
+> config: openrisc-defconfig (https://download.01.org/0day-ci/archive/20251113/202511131931.1yh3eKYe-lkp@intel.com/config)
+> compiler: or1k-linux-gcc (GCC) 15.1.0
+> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251113/202511131931.1yh3eKYe-lkp@intel.com/reproduce)
+> 
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202511131931.1yh3eKYe-lkp@intel.com/
+> 
+> All errors (new ones prefixed by >>):
+> 
+>    net/mptcp/protocol.c: In function '__mptcp_add_backlog':
+>>> net/mptcp/protocol.c:693:17: error: 'struct sock' has no member named 'sk_memcg'
+>      693 |         if (!ssk->sk_memcg)
 
-We don't need to drop this patch if it fixes thing. I was only asking
-some questions to understand the behavioural change, and if that was not
-going to introduce different issues :)
+I guess mem_cgroup_from_sk() should be used if this patch doesn't target
+-net.
 
 Cheers,
 Matt
