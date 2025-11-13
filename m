@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CD55286A4
-	for <mptcp@lists.linux.dev>; Thu, 13 Nov 2025 09:08:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92D4729ACC6;
+	Thu, 13 Nov 2025 09:12:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763024917; cv=none; b=M4jVi3JLekMQfxq9WIXoeDRkRUMOa3bbBAlu/U+XS/fI35KcxNG4Ulys9zUlOF+B3b1oMYwGrItUuoK9vXf8YP3aGd7iRWnfe2hTyoepBP9MsCJ7HMI/GehmgD7ihjUsDZm2GCe1PVBySUJYyI5pCHqFhq7BXaHfRxzt0xXJaKM=
+	t=1763025174; cv=none; b=N/koSe17EfYxs//atk8KEInN+I0sbsabdcpi4aqYlGt6JMyDv73X4OmI4WBYbcL0Y7LspobO1jKOND+MkKtiN6kcLdbDcxxntPhuTJ1UCzCTG8bjAWtIfk9FDdgRaDKWMMj16vdr77yAej4ZTtQz5pyQsqyhurwy743qyMf5lik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763024917; c=relaxed/simple;
-	bh=IHW8ECmZ3UrmfPd4BtYK5OvJOmpKw9VjSnByfX6f5gY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=gb7N1eRlJPBLy8yqFwv5Z6oThHD7jxRWIrSswsuUO7/WugVGzQm7unA3VrcfDr6MqZNbsck2DfieQDKPka90eds7jcTswOeONGaykGd+Hgfek4D1pbbTQa7ow944FTPceJ4RTX3+50flnaFHijWVHTXnP8jWDENpmLbiFT5wkUE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F0ZhwTkk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1763025174; c=relaxed/simple;
+	bh=Z5sCgPCZvSjgs/rZdisIFqpHsRyOQUvFSlrjPGt7aks=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dT2q4+SjXr1RuwdQnZJTGQW7Cdo5Sz+VMc0O5JkrzA0tvlvi1GKmKYFNPIvZyhVn2r3gf8JsqgxHzc/6eD+/jMPF8zqpKSESuEjJPCSbnK2CDkqJIAysvm4xWYzJ6ErWhLyVWhZwnar8kljeZuqegsUbFMVYHGICWLEl8E0Z1lg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=js1Xtar+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F0ZhwTkk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60753C4CEF8;
-	Thu, 13 Nov 2025 09:08:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="js1Xtar+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8961FC116D0;
+	Thu, 13 Nov 2025 09:12:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763024916;
-	bh=IHW8ECmZ3UrmfPd4BtYK5OvJOmpKw9VjSnByfX6f5gY=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=F0ZhwTkkZDVCGMaMd1Mg9ZwaCeOkPZgIZR39JBs3m+5vfr+RFOwu+klHEpEV8CrB1
-	 l7NbsoSuYtEXfflpFWMqmNPZaeTTEijaxpQF9GoDUYoSIkmFaMXmxepE8CdjMvqOZ1
-	 MpxqXFZOYQcyhNyEJAZQ300Ftx7PT//vFwmDAnh1BG1QgHJDV8PQH3X2t0NCeEZ1Yt
-	 Gyh2FIXCUhTiCDfSxvBLi5RxGC3esCaaVe+JUtkaTmEfio+5RVPXMVl+dwrlw7UMlz
-	 mDRXzvxrHTwUBk+bbBU77ikQOnluyj0FsZiaBeeFjvJPx7HV5I6NpyqYVxaGynDy+5
-	 e+nyeWf5qJwyQ==
-Message-ID: <3990718e-e4a8-4eb2-965e-02847bb339c0@kernel.org>
-Date: Thu, 13 Nov 2025 10:08:34 +0100
+	s=k20201202; t=1763025174;
+	bh=Z5sCgPCZvSjgs/rZdisIFqpHsRyOQUvFSlrjPGt7aks=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=js1Xtar+fTSewmsuYTUDV0A10GwT1XwZRx6McGr5fuhCLx+B/K0lhzeuyv2ODyQ8j
+	 dzVDfodH2T1lzzzR+sFgCLZDevpZObzcriZtoI2WR99HzwPJaIBpMEy0AQ1VAcaxnj
+	 XfTge17udmZjuUktYV9iuV0hSYSgEVXueTxrPeZqNNaQLR6cqlcvzCoOULt5ArEyDx
+	 JyFojC1d1oVWBv7fI8DH7ghzws40fd9jgrwPycRAhHLKNg+ve3zsz3TZjloj6gTN3a
+	 NgQgsLYZx8Lcy8GkXyUAdfQKWPPpbV6+ue2pFBnhjlF7/Fev2DyP/9AiVG4/t6rcRt
+	 1fgoxerYV/+WA==
+Message-ID: <4f302c55-b0a2-46c0-8cd3-0eb7bb9bac86@kernel.org>
+Date: Thu, 13 Nov 2025 10:12:44 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,14 +35,26 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH v2 mptcp-net 1/2] mptcp: do not fallback when OoO is
- present
+Subject: Re: [PATCH net v5 0/3] mptcp: Fix conflicts between MPTCP and sockmap
 Content-Language: en-GB, fr-BE
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-References: <cover.1762845791.git.pabeni@redhat.com>
- <fec239b14fa74d96fee25928de089de45f2c99ef.1762845791.git.pabeni@redhat.com>
- <1929f39e-b3e5-437d-b8da-71e3c7e6f36b@kernel.org>
- <686e7b33-00c5-47dd-af4a-8ac3014869b4@redhat.com>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Jiayuan Chen <jiayuan.chen@linux.dev>, mptcp@lists.linux.dev,
+ Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau
+ <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>,
+ Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>,
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
+ Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
+ Jiri Olsa <jolsa@kernel.org>, Shuah Khan <shuah@kernel.org>,
+ Christoph Paasch <cpaasch@apple.com>, Florian Westphal <fw@strlen.de>,
+ Peter Krystad <peter.krystad@linux.intel.com>, linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org, bpf@vger.kernel.org, linux-kselftest@vger.kernel.org
+References: <20251111060307.194196-1-jiayuan.chen@linux.dev>
+ <cf035c68-fe96-49e0-acdb-bf813ae71d57@kernel.org>
+ <20251112182349.281a6a11@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -88,69 +100,26 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <686e7b33-00c5-47dd-af4a-8ac3014869b4@redhat.com>
+In-Reply-To: <20251112182349.281a6a11@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Paolo,
+Hi Jakub,
 
-On 13/11/2025 01:02, Paolo Abeni wrote:
-> On 11/11/25 6:50 PM, Matthieu Baerts wrote:
->> On 11/11/2025 08:24, Paolo Abeni wrote:
->>> In case of DSS corruption, the MPTCP protocol tries to avoid the
->>> subflow reset if fallback is possible. Such corruptions happen in
->>> the receive path; to ensure fallback is possible the stack additionally
->>> need to check for OoO data, otherwise the fallback will break the data
->>> stream.
->>
->> Thank you for the fix!
->>> Fixes: e32d262c89e2 ("mptcp: handle consistently DSS corruption")
->>> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/598
->>> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
->>> ---
->>> Note: this does not avoid the WARN(), but fixes the inconsistend
->>> read() behavior; the ingress data is OoO, we should not ack it
->>> ---
->>>  net/mptcp/protocol.c | 3 ++-
->>>  1 file changed, 2 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
->>> index d6b08e1de358..7b966f105f89 100644
->>> --- a/net/mptcp/protocol.c
->>> +++ b/net/mptcp/protocol.c
->>> @@ -646,7 +646,8 @@ static void mptcp_check_data_fin(struct sock *sk)
->>>  
->>>  static void mptcp_dss_corruption(struct mptcp_sock *msk, struct sock *ssk)
->>>  {
->>> -	if (!mptcp_try_fallback(ssk, MPTCP_MIB_DSSCORRUPTIONFALLBACK)) {
->>> +	if (!RB_EMPTY_ROOT(&msk->out_of_order_queue) ||
->>> +	    !mptcp_try_fallback(ssk, MPTCP_MIB_DSSCORRUPTIONFALLBACK)) {
->>
->> Does it mean we should check the OoO queue each time mptcp_try_fallback
->> is called?
->>
->> Should we not eventually set msk->allow_infinite_fallback to false in
->> mptcp_data_queue_ofo()?
+On 13/11/2025 03:23, Jakub Kicinski wrote:
+> On Tue, 11 Nov 2025 11:35:04 +0100 Matthieu Baerts wrote:
+>> I think this series can be applied directly in 'net', if that's OK for
+>> both of you.
 > 
-> Good question. According to the RFC here we should unconditionally reset
-> the subflow. "historically" we try hard to fallback - even because in
-> early releases fallback was a bit to easy to obtain.
+> Also no preference here, Martin mentioned he will take it via bpf
+> tomorrow. 
 > 
-> Setting msk->allow_infinite_fallback = false in mptcp_data_queue_ofo()
-> could possibly hit performances. queue_ofo is basically fastpath with
-> multiple streams and we will likely need to acquire the fallback lock to
-> to the thing race free.
-> 
-> I'm tempted to just do a plain reset here. WDYT?
+> Please let us know on the off chance that you have anything that may
+> conflict queued up. These will likely need a week of travel before 
+> they reach net in this case.
 
-Can mptcp_dss_corruption() not be called before being in fully
-established mode? In this case, should we not fallback instead? e.g. if
-a middlebox start to alter MPTCP options after the 3WHS?
-
-Or maybe moving this RB_EMPTY_ROOT(&msk->out_of_order_queue) check to
-mptcp_try_fallback()? (mmh, we don't have the msk)
-
-Or maybe just a plain reset is OK here?
+No problem for me, this can go to bpf-net first. We don't have pending
+patches modifying these parts.
 
 Cheers,
 Matt
