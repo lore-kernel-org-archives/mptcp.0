@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92D4729ACC6;
-	Thu, 13 Nov 2025 09:12:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F1DA29E0E5
+	for <mptcp@lists.linux.dev>; Thu, 13 Nov 2025 09:25:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763025174; cv=none; b=N/koSe17EfYxs//atk8KEInN+I0sbsabdcpi4aqYlGt6JMyDv73X4OmI4WBYbcL0Y7LspobO1jKOND+MkKtiN6kcLdbDcxxntPhuTJ1UCzCTG8bjAWtIfk9FDdgRaDKWMMj16vdr77yAej4ZTtQz5pyQsqyhurwy743qyMf5lik=
+	t=1763025961; cv=none; b=hnwxeuYUanZKIbWc5JOLfpOp6bRM1YujYUJwl3UHqACpovemXjFP1pc92hEPYevBSoW+i6jcPUC9pqd7pfa8C/bE/Rkx9350Gv9P1WtTJwm8eHRoRU2Ia7zF8HhiHLahGVVG28T70dP7gktA/6BuuvRqv+qe4wNF7TkmBo8XGCM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763025174; c=relaxed/simple;
-	bh=Z5sCgPCZvSjgs/rZdisIFqpHsRyOQUvFSlrjPGt7aks=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dT2q4+SjXr1RuwdQnZJTGQW7Cdo5Sz+VMc0O5JkrzA0tvlvi1GKmKYFNPIvZyhVn2r3gf8JsqgxHzc/6eD+/jMPF8zqpKSESuEjJPCSbnK2CDkqJIAysvm4xWYzJ6ErWhLyVWhZwnar8kljeZuqegsUbFMVYHGICWLEl8E0Z1lg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=js1Xtar+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1763025961; c=relaxed/simple;
+	bh=2zVeQAXF4chJ67Iak1d0DpECeU4V/X5x8yUpatJWhA4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=lsmt20QMv50SYMDGG9whyOFLPLvE/vvEwj3Q4+G5zmwmgR5qRGIG589uXsG0f9q6w7VDDcF/8jzkY0vlvS/KtciIj/rUVl8+/lvwc/unHSZ5Qofbfi1L1W0qCmeH3yA75zt3Op7FGl3aq/OVEDOIGlCsxMK4hYXMzbrzEOuy5GA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G6MGkzXI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="js1Xtar+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8961FC116D0;
-	Thu, 13 Nov 2025 09:12:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G6MGkzXI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 211B4C4CEF5;
+	Thu, 13 Nov 2025 09:25:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763025174;
-	bh=Z5sCgPCZvSjgs/rZdisIFqpHsRyOQUvFSlrjPGt7aks=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=js1Xtar+fTSewmsuYTUDV0A10GwT1XwZRx6McGr5fuhCLx+B/K0lhzeuyv2ODyQ8j
-	 dzVDfodH2T1lzzzR+sFgCLZDevpZObzcriZtoI2WR99HzwPJaIBpMEy0AQ1VAcaxnj
-	 XfTge17udmZjuUktYV9iuV0hSYSgEVXueTxrPeZqNNaQLR6cqlcvzCoOULt5ArEyDx
-	 JyFojC1d1oVWBv7fI8DH7ghzws40fd9jgrwPycRAhHLKNg+ve3zsz3TZjloj6gTN3a
-	 NgQgsLYZx8Lcy8GkXyUAdfQKWPPpbV6+ue2pFBnhjlF7/Fev2DyP/9AiVG4/t6rcRt
-	 1fgoxerYV/+WA==
-Message-ID: <4f302c55-b0a2-46c0-8cd3-0eb7bb9bac86@kernel.org>
-Date: Thu, 13 Nov 2025 10:12:44 +0100
+	s=k20201202; t=1763025958;
+	bh=2zVeQAXF4chJ67Iak1d0DpECeU4V/X5x8yUpatJWhA4=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=G6MGkzXIjWU/8P9G5DJgOw8CpmwuItyoH1rYxikHvf4KphEuYBuR2pp7Hty3ECZuh
+	 VsDi/3Zevamg8zwg2piRWhSaUDAkYDvg4sO9H1AWPrDt/nhOC/bxFrPYWFCdcq2hPI
+	 yUh9FJ/vV0RRYxboh4OKiSqjZ1HTmHzxMEILYpAcVUyw+ZeYfNz5JPL8wy2VvZyg2j
+	 ze6C2J4E+d3aSx3gZE4LpJoHubi53pnXBKluxQC+tLk0WhKDCm2xH1OfnjUJ5FAnLT
+	 Sp83QVNtvNMbdeGO+aBmBbu3vBJGHVdHfqKRU8W7Y+kWKJ6cQBgupXp7BuOp+WLwpp
+	 KKflzanUetgfQ==
+Message-ID: <79e4c200-738e-46d8-bbd4-63647d3b1f71@kernel.org>
+Date: Thu, 13 Nov 2025 10:25:56 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,26 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH net v5 0/3] mptcp: Fix conflicts between MPTCP and sockmap
+Subject: Re: [PATCH mptcp-next 4/4] selftests: mptcp: get stats just before
+ timing out
 Content-Language: en-GB, fr-BE
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Jiayuan Chen <jiayuan.chen@linux.dev>, mptcp@lists.linux.dev,
- Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau
- <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>,
- Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>,
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
- Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
- Jiri Olsa <jolsa@kernel.org>, Shuah Khan <shuah@kernel.org>,
- Christoph Paasch <cpaasch@apple.com>, Florian Westphal <fw@strlen.de>,
- Peter Krystad <peter.krystad@linux.intel.com>, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org, bpf@vger.kernel.org, linux-kselftest@vger.kernel.org
-References: <20251111060307.194196-1-jiayuan.chen@linux.dev>
- <cf035c68-fe96-49e0-acdb-bf813ae71d57@kernel.org>
- <20251112182349.281a6a11@kernel.org>
+To: Geliang Tang <geliang@kernel.org>, MPTCP Upstream <mptcp@lists.linux.dev>
+References: <20251108-slft-timeout-stats-v1-0-c2234d277318@kernel.org>
+ <20251108-slft-timeout-stats-v1-4-c2234d277318@kernel.org>
+ <2a6869ca39bda7ddf8b486cd03e0867b30e0d565.camel@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -100,26 +87,52 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20251112182349.281a6a11@kernel.org>
+In-Reply-To: <2a6869ca39bda7ddf8b486cd03e0867b30e0d565.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Jakub,
+Hi Geliang,
 
-On 13/11/2025 03:23, Jakub Kicinski wrote:
-> On Tue, 11 Nov 2025 11:35:04 +0100 Matthieu Baerts wrote:
->> I think this series can be applied directly in 'net', if that's OK for
->> both of you.
+On 13/11/2025 08:15, Geliang Tang wrote:
+> Hi Matt,
 > 
-> Also no preference here, Martin mentioned he will take it via bpf
-> tomorrow. 
+> On Sat, 2025-11-08 at 15:20 +0100, Matthieu Baerts (NGI0) wrote:
+>> Recently, some debugging happened around a test that was timing out.
+>> The
+>> stats were showing connections being closed which was confusing
+>> because
+>> the closing state was caused by the timeout stopping the transfer.
+>>
+>> To avoid such confusion, the timeout is no longer done per
+>> mptcp_connect
+>> process, but separately. In case of timeout, the stats are now
+>> printed,
+>> then the apps are killed.
+>>
+>> The stats will still be printed after the kill, but that's fine, and
+>> this might even be useful, just in case. Timeout should be
+>> exceptional.
 > 
-> Please let us know on the off chance that you have anything that may
-> conflict queued up. These will likely need a week of travel before 
-> they reach net in this case.
+> Today I found that this patch has increased the runtime of the
+> selftests, for example:
+> 
+> # 66 ns1 MPTCP -> ns1 (dead:beef:1::1:20004) MPTCP     (duration  
+> 390ms) [ OK ]
+> # 67 ns1 MPTCP -> ns1 (dead:beef:1::1:20005) TCP       (duration  
+> 415ms) [ OK ]
+> # 68 ns1 TCP   -> ns1 (dead:beef:1::1:20006) MPTCP     (duration  
+> 380ms) [ OK ]
+> # Time: 38 seconds
+> ok 1 test: selftest_mptcp_connect
+> # time=99
+> 
+> The mptcp_connect test ended after 38 seconds, but it waited an
+> additional 61 seconds before finally stopping at 99 seconds.
 
-No problem for me, this can go to bpf-net first. We don't have pending
-patches modifying these parts.
+Good catch, indeed, thanks, I will check that!
+
+I guess I should use mptcp_lib_kill_group_wait() to kill the "sleep"
+command as well.
 
 Cheers,
 Matt
