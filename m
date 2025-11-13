@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65960257824
-	for <mptcp@lists.linux.dev>; Thu, 13 Nov 2025 08:47:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B0B1330306
+	for <mptcp@lists.linux.dev>; Thu, 13 Nov 2025 09:00:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763023677; cv=none; b=GsSMKasqE6m2creyyGeqaWLl21OKsV9DkRcSDjUO4PX/58iBayMCjEYQQmdBnrfUhZP3O8FHgz2MhooxUYYEmJvJOYOpnzh2Vem3IbN51piDyiBWCmTDCBoFiwEtHBh/RjrKEi3XZ81Wbf55VwJrCrr+rB4lciwmxUaGyOtq9N8=
+	t=1763024457; cv=none; b=cAXK0zbZ6W2DumjH4aKWyNg52ogQHu6RfLCTyVlVXFANGALJeDQCavQky+cp+eAvbNfevGANY3w9ECa7kh9QIQhCy3jUP/HWJ6pQ6ah91oESEytToQM6q9a6i8muYKHGGb2aN9c9nbFppnq0UaHFsieh9oTos1HnblcLBNPkCTA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763023677; c=relaxed/simple;
-	bh=RmKNA6H3doE5+IR1gbtiers6aYu4NZKwetGeD2EFal8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
-	 In-Reply-To:Content-Type; b=F4I04yf/tzb40TEeSj3omhx6RxZfKZA+bjLTIHSg6Bo7M276jJ1z1Sf+GH47ZftGnETcnigik9JZ/gIbAPQGYaycnejM4pvZrjXksvzVK5wPoTGUuBuZUOV7fKHmcFAB8VeYvibsTocFJjZGF3MOZZ4daA+Jeu9M3nPtH6rP53M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cLbZJUt0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1763024457; c=relaxed/simple;
+	bh=Jc80UQ3X2HKgpqUHZ6f51j/D8WejF8wVoi3oUZvaH5A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=B9mdRLRnf4Y3uEtqCs9Rb5TZfqAed3fNkbe53FkK+NOSVUZpg3BVPNv9g1ElP44Ow+DIQtscXBHdqwjT1YxQMNxJYlcsETfP4+8AYBiGREZpviW3llR7kpHdBn9XmIcNktd/+LWoY430XEC1JFvzwzb1yJGSxJmMuAma2h8rG0w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dXSq/2LB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cLbZJUt0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A7C5C16AAE;
-	Thu, 13 Nov 2025 08:47:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dXSq/2LB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B3CFC4CEF5;
+	Thu, 13 Nov 2025 09:00:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763023676;
-	bh=RmKNA6H3doE5+IR1gbtiers6aYu4NZKwetGeD2EFal8=;
-	h=Date:Subject:To:References:From:Cc:In-Reply-To:From;
-	b=cLbZJUt0QOKXjFyKW08MZQs1ghQtVDddjFacX6KMyXRYGCEdlN6fjKORHc19nXrck
-	 vdgzdoU46Fc7Tvlq3PvN9c1yNAJAInaMB/7Y7j97lEMRDMov6s0aT1niltFupZ7t31
-	 Hcav2WHsNt3oZjMdbJyh28yaylB7MghYsPr1eE7VHpccijRADnPGW+r6oHmNWtkgC1
-	 LtI4F6EvPSOncy7sFJ26Eq6pvP6pA4Qp2oPc7wTPCUgDWNRbJhJk4nD8IaiZiqp533
-	 1YpuY9qmwJDVPlKfWY90skIkhhD6LF19Ejf5Ugo5jw6z2QQd9Rxgy0CyFKsRFmsE6H
-	 HYo4XUy0VR7/w==
-Message-ID: <49c300cc-e000-420d-82ad-aa59e5f1cd76@kernel.org>
-Date: Thu, 13 Nov 2025 09:47:54 +0100
+	s=k20201202; t=1763024456;
+	bh=Jc80UQ3X2HKgpqUHZ6f51j/D8WejF8wVoi3oUZvaH5A=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=dXSq/2LB5fFwG2d9Rmn/k7+bPaHV20qjJWCtZOWRYapwlLuYUCrLn6exZh7Bnx7CU
+	 G+2UIT55VMBemOUXn73Kk+q52gx5xNtBSNtZoAcd8PA0QLSXQR6v+PTXlAHEwAdCcV
+	 1Pv4ntS5URwLajNVvKRVUS+1HlNjwmNCH+NHo6NoDmEQai7T/m2R39e+fLPbiiNK8Q
+	 VZ7WbvVp7XA0y+EFAVgjVyEsK2qHppLhXxICLUtTgWvCbRJssy8ehQB9dUyO4ZoFke
+	 wEecVZwCAnl4nhKT9hNy0wutLxCRCJN5w/dBaBxcggQD/hlbv9XjavbsBxYmJWQhTr
+	 ecmmuXJQI2J2g==
+Message-ID: <5253a2f3-99b0-4ac9-8d17-74c86bea2ef8@kernel.org>
+Date: Thu, 13 Nov 2025 10:00:54 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,11 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH v3 mptcp-net 1/3] mptcp: fix grafting corner case
+Subject: Re: [PATCH v3 mptcp-net 3/3] Squash-to: "mptcp: leverage the backlog
+ for RX packet processing"
 Content-Language: en-GB, fr-BE
-To: Paolo Abeni <pabeni@redhat.com>
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
 References: <cover.1762992570.git.pabeni@redhat.com>
- <4696be966622c9d340e8bfa4728b219b7cac1d1b.1762992570.git.pabeni@redhat.com>
+ <ee40999f77d0186abba2a6b21958c1a8c4881c57.1762992570.git.pabeni@redhat.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -85,105 +86,173 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-Cc: mptcp@lists.linux.dev
-In-Reply-To: <4696be966622c9d340e8bfa4728b219b7cac1d1b.1762992570.git.pabeni@redhat.com>
+In-Reply-To: <ee40999f77d0186abba2a6b21958c1a8c4881c57.1762992570.git.pabeni@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Paolo,
 
 On 13/11/2025 01:10, Paolo Abeni wrote:
-> If a passive MPTCP socket creates active subflows while still unaccepted,
-> __mptcp_subflow_connect() will try to graft such subflows to the msk,
-> but the msk struct socket is not yet initialized at that point:
-> the subflows will misbehave.
-
-What kind of errors were visible?
-
-> Address the issue always trying to graft the subflow in
-> mptcp_finish_join(), regardless of the subflow itself being active or
-> passive. To avoid races with accept(), access the msk->sk_socket under
-> the callback lock.
-
-Thank you for addressing this issue!
-
+> If a subflow receives data before gaining the memcg while the msk
+> socket lock is held at accept time, or the PM locks the msk socket
+> while still unaccepted and subflows push data to it at the same time,
+> the mptcp_graph_subflows() can complete with a non empty backlog.
 > 
-
-By chance, do you have a Fixes tag to add here? (if it is for -net)
-
+> The msk will try to borrow such memory, but (some) of the skbs there
+> where not memcg charged. When the msk finally will return such accounted
+> memory, we should hit the same splat of #597.
+> [even if so far I was unable to replicate this scenario]
+> 
+> This patch tries to address such potential issue by:
+> - explicitly keep track of the amount of memory added to the backlog
+>   not CG accounted
+> - additionally accouting for such memory at accept time
+> - preventing any subflow from adding memory to the backlog not CG
+>   accounted after the above flush
+> 
 > Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 > ---
->  net/mptcp/protocol.c | 23 +++++++++++++++++------
->  1 file changed, 17 insertions(+), 6 deletions(-)
+>  net/mptcp/protocol.c | 64 +++++++++++++++++++++++++++++++++++++++++---
+>  net/mptcp/protocol.h |  1 +
+>  2 files changed, 61 insertions(+), 4 deletions(-)
 > 
 > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 8965abb94b81..1b3c5fd01600 100644
+> index addd8025d235..abf0edc4b888 100644
 > --- a/net/mptcp/protocol.c
 > +++ b/net/mptcp/protocol.c
-> @@ -913,12 +913,6 @@ static bool __mptcp_finish_join(struct mptcp_sock *msk, struct sock *ssk)
->  	mptcp_subflow_joined(msk, ssk);
->  	spin_unlock_bh(&msk->fallback_lock);
+> @@ -658,6 +658,7 @@ static void __mptcp_add_backlog(struct sock *sk,
+>  {
+>  	struct mptcp_sock *msk = mptcp_sk(sk);
+>  	struct sk_buff *tail = NULL;
+> +	struct sock *ssk = skb->sk;
+>  	bool fragstolen;
+>  	int delta;
 >  
-> -	/* attach to msk socket only after we are sure we will deal with it
-> -	 * at close time
-> -	 */
-> -	if (sk->sk_socket && !ssk->sk_socket)
-> -		mptcp_sock_graft(ssk, sk->sk_socket);
-> -
->  	mptcp_subflow_ctx(ssk)->subflow_id = msk->subflow_id++;
->  	mptcp_sockopt_sync_locked(msk, ssk);
->  	mptcp_stop_tout_timer(sk);
-> @@ -3734,6 +3728,20 @@ void mptcp_sock_graft(struct sock *sk, struct socket *parent)
->  	write_unlock_bh(&sk->sk_callback_lock);
+> @@ -671,18 +672,26 @@ static void __mptcp_add_backlog(struct sock *sk,
+>  		tail = list_last_entry(&msk->backlog_list, struct sk_buff, list);
+>  
+>  	if (tail && MPTCP_SKB_CB(skb)->map_seq == MPTCP_SKB_CB(tail)->end_seq &&
+> -	    skb->sk == tail->sk &&
+> +	    ssk == tail->sk &&
+>  	    __mptcp_try_coalesce(sk, tail, skb, &fragstolen, &delta)) {
+>  		skb->truesize -= delta;
+>  		kfree_skb_partial(skb, fragstolen);
+>  		__mptcp_subflow_lend_fwdmem(subflow, delta);
+> -		WRITE_ONCE(msk->backlog_len, msk->backlog_len + delta);
+> -		return;
+> +		goto account;
+>  	}
+>  
+>  	list_add_tail(&skb->list, &msk->backlog_list);
+>  	mptcp_subflow_lend_fwdmem(subflow, skb);
+> -	WRITE_ONCE(msk->backlog_len, msk->backlog_len + skb->truesize);
+> +	delta = skb->truesize;
+> +
+> +account:
+> +	WRITE_ONCE(msk->backlog_len, msk->backlog_len + delta);
+> +
+> +	/* Possibly not accept()ed yet, keep track of memory not CG
+> +	 * accounted, mptcp_grapt_subflows will handle it.
+
+detail: s/grapt/graft
+
+> +	 */
+> +	if (!ssk->sk_memcg)
+> +		msk->backlog_unaccounted += delta;
 >  }
 >  
-> +static void mptcp_check_graft(struct sock *sk, struct sock *ssk)
-> +{
-> +	struct socket *sock;
-> +
-> +	if (ssk->sk_socket)
-> +		return;
-> +
-> +	write_lock_bh(&sk->sk_callback_lock);
-> +	sock = sk->sk_socket;
-> +	write_lock_bh(&sk->sk_callback_lock);
-
-The build job failed because here it should be the unlock version
-(write_unlock_bh()).
-(and probably an empty line just after).
-
-If there is only that, I can fix that when applying the patches.
-
-> +	if (sock)
-> +		mptcp_sock_graft(ssk, sock);
-> +}
-> +
->  bool mptcp_finish_join(struct sock *ssk)
+>  static bool __mptcp_move_skbs_from_subflow(struct mptcp_sock *msk,
+> @@ -2154,6 +2163,12 @@ static bool mptcp_can_spool_backlog(struct sock *sk, struct list_head *skbs)
 >  {
->  	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk);
-> @@ -3758,6 +3766,7 @@ bool mptcp_finish_join(struct sock *ssk)
->  		}
->  		mptcp_subflow_joined(msk, ssk);
->  		spin_unlock_bh(&msk->fallback_lock);
-> +		mptcp_check_graft(parent, ssk);
->  		mptcp_propagate_sndbuf(parent, ssk);
->  		return true;
->  	}
-> @@ -3767,6 +3776,8 @@ bool mptcp_finish_join(struct sock *ssk)
->  		goto err_prohibited;
->  	}
+>  	struct mptcp_sock *msk = mptcp_sk(sk);
 >  
-> +	mptcp_check_graft(parent, ssk);
-
-Is it OK to graft it even in case of errors in __mptcp_finish_join()?
-i.e. not in an established state or !msk->allow_subflows.
-
-Should it not be done after the block below, if there was no error?
-
+> +	/* After CG initialization, subflows should never add skb before
+> +	 * gaining the CG themself.
+> +	 */
+> +	DEBUG_NET_WARN_ON_ONCE(msk->backlog_unaccounted && sk->sk_socket &&
+> +			       mem_cgroup_from_sk(sk));
 > +
->  	/* If we can't acquire msk socket lock here, let the release callback
->  	 * handle it
->  	 */
+>  	/* Don't spool the backlog if the rcvbuf is full. */
+>  	if (list_empty(&msk->backlog_list) ||
+>  	    sk_rmem_alloc_get(sk) > sk->sk_rcvbuf)
+> @@ -4059,6 +4074,22 @@ static void mptcp_graft_subflows(struct sock *sk)
+>  	struct mptcp_subflow_context *subflow;
+>  	struct mptcp_sock *msk = mptcp_sk(sk);
+>  
+> +	if (mem_cgroup_sockets_enabled) {
+> +		LIST_HEAD(join_list);
+> +
+> +		/* Subflows joining after __inet_accept() with get the
+> +		 * mem CG properly initialized at mptcp_finish_join() time,
+> +		 * but subflows pending in join_list need explicit
+> +		 * initialization before flushing `backlog_unaccounted`
+> +		 * or we can cat unexpeced unaccounted memory later.
+
+detail: s/cat/catch/ or s/cat/get/?
+
+> +		 */
+> +		mptcp_data_lock(sk);
+> +		list_splice_init(&msk->join_list, &join_list);
+> +		mptcp_data_unlock(sk);
+> +
+> +		__mptcp_flush_join_list(sk, &join_list);
+> +	}
+> +
+>  	mptcp_for_each_subflow(msk, subflow) {
+>  		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
+>  
+> @@ -4070,10 +4101,35 @@ static void mptcp_graft_subflows(struct sock *sk)
+>  		if (!ssk->sk_socket)
+>  			mptcp_sock_graft(ssk, sk->sk_socket);
+>  
+> +		if (!mem_cgroup_sk_enabled(sk))
+
+detail: what's the cost of this call? (static key + get)
+Do we need to use a local variable to call this helper only once?
+
+> +			goto unlock;
+> +
+>  		__mptcp_inherit_cgrp_data(sk, ssk);
+>  		__mptcp_inherit_memcg(sk, ssk, GFP_KERNEL);
+> +
+> +unlock:
+>  		release_sock(ssk);
+>  	}
+> +
+> +	if (mem_cgroup_sk_enabled(sk)) {
+> +		gfp_t gfp = GFP_KERNEL | __GFP_NOFAIL;
+> +		int amt;
+> +
+> +		/* Account the backlog memory; prior accept() is aware of
+> +		 * fwd and rmem only
+> +		 */
+> +		mptcp_data_lock(sk);
+> +		amt = sk_mem_pages(sk->sk_forward_alloc +
+> +				   msk->backlog_unaccounted +
+> +				   atomic_read(&sk->sk_rmem_alloc)) -
+> +		      sk_mem_pages(sk->sk_forward_alloc +
+> +				   atomic_read(&sk->sk_rmem_alloc));
+> +		msk->backlog_unaccounted = 0;
+> +		mptcp_data_unlock(sk);
+> +
+> +		if (amt)
+> +			mem_cgroup_sk_charge(sk, amt, gfp);
+> +	}
+>  }
+>  
+>  static int mptcp_stream_accept(struct socket *sock, struct socket *newsock,
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index 161b704be16b..199f28f3dd5e 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -360,6 +360,7 @@ struct mptcp_sock {
+>  
+>  	struct list_head backlog_list;	/* protected by the data lock */
+>  	u32		backlog_len;
+> +	u32		backlog_unaccounted;
+>  };
+>  
+>  #define mptcp_data_lock(sk) spin_lock_bh(&(sk)->sk_lock.slock)
 
 Cheers,
 Matt
