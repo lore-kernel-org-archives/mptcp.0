@@ -1,139 +1,83 @@
-Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD245313E29
-	for <mptcp@lists.linux.dev>; Thu, 13 Nov 2025 21:49:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5387E2F6585
+	for <mptcp@lists.linux.dev>; Thu, 13 Nov 2025 23:07:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763070542; cv=none; b=BkVEWPt0UpTsnvFpTwi1HqwdIoNHum0okQim24TAa60mkf5uyehP8act1ygbncqRDMZrQHfrW9PAUhOSMNzSi5fmUIhPnYJZkpkpb90DD9lAD/MavFDF/TtxpGNu3sFbZVtXkmCAqmb35KDXpyi9JFmLqTBKlxi8BV0zNHO4AhU=
+	t=1763075252; cv=none; b=jeIQ3SoJXFTuVxo8j5KC6Y3Gw4LgA9ENabVWASNDQbfFYun7NWZSCyFL7xmV0RhfpP4fdWTyBjZMb/ENaLmtCzrnBrJbCbBhCbiZXcIpBvrZ8cE4wOyNGSCEMjxEuZvMQN28GAkZGERk77+VkZAgLN8lC6b7J4x62XzCcm2jzxo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763070542; c=relaxed/simple;
-	bh=reUr5vr9UGxA/z5v5hvjsSRJR9k1NeomI4kvfTl5mRw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lrKXtdGAlSw8OI4C9W1AaEkg4Gejqb4Faf3avxAdpfR3wU72zpgkI5Ri9YE2mBzZR9IGbax9GVRC5gOeecacgo+e8l9XlF6lRFBm8FrizgUJAOnaixs/BDaXFMqF/cLf7hPeRPh7zVOAqcvFEzSKXK7lIuTRxg+PxBdlq9fZDRA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=fgFcjYQn; arc=none smtp.client-ip=91.218.175.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1763075252; c=relaxed/simple;
+	bh=7eSImwNvoMkwDsvwPRk220NhPxqTjrsJEj1kAy6hZWQ=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:content-type; b=h9HaCLQ1D2LCefEfrvk5OVTwCar2bC37TI1qs0YDp2jbJ8o3gxhDGtHaD9os9mLjCLUVilNVjI3mLftO7GvX9z5oMyKrGEp7DcnL7lhCeuDzzz61NFaoOwkZa+he5GG4EGJKi4NJq2xtvnfT3ds2cN3L2pypzeMP8/tNOUhR2Jg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iFA+Ss/S; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="fgFcjYQn"
-Message-ID: <a92e2c4a-bfde-4a74-8bb5-5e2b8ca87199@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1763070528;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iFA+Ss/S"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1763075249;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BWxDrNld1/nw1/i6TIgWHQ0YjF/o5aVc62P7yzv+ZHI=;
-	b=fgFcjYQnEUyDVhIeB5QDbAbARXGAxFYqOqQEvNDO5ZhsLMNZhWG968TwoTEdTyiJglExnl
-	pRjkNIkkLGpyppjdDp+hkBDVrCknaPtJKfB4Sfz/AiivhqlEpo3yK1gNgKoYs66SnLl0bc
-	6Immm6dOOxEXWE5eEYPyh7RT4EkwJts=
-Date: Thu, 13 Nov 2025 13:48:40 -0800
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=65IeVe5ZbsDI7rTor27UnbVAxJDvbIjL/Q0fdg9n1kQ=;
+	b=iFA+Ss/SPbwdAC6XyBqFSZ88f9Q8lfcAFvui9NXss0HDsrYHAUujNkjS9j9NRiU5zwKyau
+	sMTvVRE6BYKu3pN/ncbRnicXYDeOEGyfuFb+fzlET28zoyN5X5JdSvk95AhdkgoFhv3TY2
+	iZNkEkobtwLpmXNh7L+sLZoL9IqY3nc=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-447-cuh9VbKyMoCiobL5BsP1xw-1; Thu,
+ 13 Nov 2025 18:07:27 -0500
+X-MC-Unique: cuh9VbKyMoCiobL5BsP1xw-1
+X-Mimecast-MFC-AGG-ID: cuh9VbKyMoCiobL5BsP1xw_1763075247
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id BD69919560A3
+	for <mptcp@lists.linux.dev>; Thu, 13 Nov 2025 23:07:26 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.44.33.100])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id AFBAD300018D
+	for <mptcp@lists.linux.dev>; Thu, 13 Nov 2025 23:07:25 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: mptcp@lists.linux.dev
+Subject: [PATCH mptcp-net 0/3] mptcp: a few random fixes
+Date: Fri, 14 Nov 2025 00:05:28 +0100
+Message-ID: <cover.1763075056.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Subject: Re: [PATCH net v5 3/3] selftests/bpf: Add mptcp test with sockmap
-To: Jiayuan Chen <jiayuan.chen@linux.dev>,
- Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>,
- Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>,
- Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>,
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
- Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
- Jiri Olsa <jolsa@kernel.org>, Shuah Khan <shuah@kernel.org>,
- Florian Westphal <fw@strlen.de>, Christoph Paasch <cpaasch@apple.com>,
- Peter Krystad <peter.krystad@linux.intel.com>, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org, bpf@vger.kernel.org, linux-kselftest@vger.kernel.org
-References: <20251111060307.194196-1-jiayuan.chen@linux.dev>
- <20251111060307.194196-4-jiayuan.chen@linux.dev>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Martin KaFai Lau <martin.lau@linux.dev>
-In-Reply-To: <20251111060307.194196-4-jiayuan.chen@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: gMeJ3p8mVEXk_kf9HJy4F3RKGGnC3QsOxbydERYbsJc_1763075247
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+content-type: text/plain; charset="US-ASCII"; x-default=true
 
-> diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-> index f8eb7f9d4fd2..b976fe626343 100644
-> --- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
-> +++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-> @@ -6,11 +6,14 @@
->   #include <netinet/in.h>
->   #include <test_progs.h>
->   #include <unistd.h>
-> +#include <error.h>
+The first patch fixes selftest failures in CONFIG_PREEMPT build.
+The second patch addresses a recently filed issue, 2nd one is due to
+code inspection while investigating the mentioned issue.
 
-I changed to errno.h to be specific. I think you only need the values of 
-an errno here.
->   #include "cgroup_helpers.h"
->   #include "network_helpers.h"
-> +#include "socket_helpers.h"
->   #include "mptcp_sock.skel.h"
->   #include "mptcpify.skel.h"
->   #include "mptcp_subflow.skel.h"
-> +#include "mptcp_sockmap.skel.h"
->   
->   #define NS_TEST "mptcp_ns"
->   #define ADDR_1	"10.0.1.1"
-> @@ -436,6 +439,142 @@ static void test_subflow(void)
->   	close(cgroup_fd);
->   }
->   
-> +/* Test sockmap on MPTCP server handling non-mp-capable clients. */
-> +static void test_sockmap_with_mptcp_fallback(struct mptcp_sockmap *skel)
-> +{
-> +	int listen_fd = -1, client_fd1 = -1, client_fd2 = -1;
-> +	int server_fd1 = -1, server_fd2 = -1, sent, recvd;
-> +	char snd[9] = "123456789";
-> +	char rcv[10];
-> +
-> +	/* start server with MPTCP enabled */
-> +	listen_fd = start_mptcp_server(AF_INET, NULL, 0, 0);
-> +	if (!ASSERT_OK_FD(listen_fd, "sockmap-fb:start_mptcp_server"))
-> +		return;
-> +
-> +	skel->bss->trace_port = ntohs(get_socket_local_port(listen_fd));
-> +	skel->bss->sk_index = 0;
-> +	/* create client without MPTCP enabled */
-> +	client_fd1 = connect_to_fd_opts(listen_fd, NULL);
-> +	if (!ASSERT_OK_FD(client_fd1, "sockmap-fb:connect_to_fd"))
-> +		goto end;
-> +
-> +	server_fd1 = xaccept_nonblock(listen_fd, NULL, NULL);
-> +	skel->bss->sk_index = 1;
-> +	client_fd2 = connect_to_fd_opts(listen_fd, NULL);
-> +	if (!ASSERT_OK_FD(client_fd2, "sockmap-fb:connect_to_fd"))
-> +		goto end;
-> +
-> +	server_fd2 = xaccept_nonblock(listen_fd, NULL, NULL);
-> +	/* test normal redirect behavior: data sent by client_fd1 can be
-> +	 * received by client_fd2
-> +	 */
-> +	skel->bss->redirect_idx = 1;
-> +	sent = xsend(client_fd1, snd, sizeof(snd), 0);
-> +	if (!ASSERT_EQ(sent, sizeof(snd), "sockmap-fb:xsend(client_fd1)"))
-> +		goto end;
-> +
-> +	/* try to recv more bytes to avoid truncation check */
-> +	recvd = recv_timeout(client_fd2, rcv, sizeof(rcv), MSG_DONTWAIT, 2);
+v2 -> v3:
+  - new patch 1/3
+  - check OoO queue in mptcp_try_fallback
 
-I removed the socket_helpers.h usage. The _nonblock, _timeout, and
-MSG_DONTWAIT are unnecessary. I replaced them with the regular accept,
-send, and recv. All fds from network_helpers.c have a default 3s
-timeout instead of 30s in xaccept_nonblock. This matches how most of
-the selftests/bpf are doing it as well.
+v1 -> v2:
+  - fix pktdrill failures due to missing rcv_wnd_sent initialization
 
-I also touched up the commit message in patch 2 based on Matt's comment.
+Paolo Abeni (3):
+  mptcp: fix premature close in case of fallback
+  mptcp: do not fallback when OoO is present
+  mptcp: do not drop partial packets.
 
-Applied. Thanks.
+ net/mptcp/protocol.c | 37 +++++++++++++++++++++++++++++--------
+ net/mptcp/subflow.c  |  3 ++-
+ 2 files changed, 31 insertions(+), 9 deletions(-)
 
-> +	server_fd = xaccept_nonblock(listen_fd, NULL, NULL);
-> +	err = bpf_map_update_elem(bpf_map__fd(skel->maps.sock_map),
-> +				  &zero, &server_fd, BPF_NOEXIST);
+-- 
+2.51.1
+
