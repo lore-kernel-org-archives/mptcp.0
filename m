@@ -1,242 +1,131 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70930264F81;
-	Thu, 13 Nov 2025 15:20:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D02AF25EF9C;
+	Thu, 13 Nov 2025 15:23:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763047202; cv=none; b=t+5ZIvc1yJxuD3ua+Dk2TlijkaGcufZoyORnd2QZGHIUB7NbTmkS0srNge638AWLQxcmSNafFAvSty07HPp5pVmGWHYm6Led0g640COMXLuyaNwsNQMVqdQM6eQW63WoRkHihZIG9GpIyg+C9KG/gRZ28zZmxdyY1Sie3JwvBO8=
+	t=1763047411; cv=none; b=Yg0lcWVCy3s0EwsZvdDmGrGkYfsl6OE9tmNw3wSB9+e9QYl1GdG3wydFOlB0s0DYE+iNWum1GfGY1gASly7VDFoR3sBRKwHiIO3LrGHZ7wPp9hIVSWUpIOXMOI+Q6x1INZYrwkDQXwzPGly1a5GHebLI4O9gt+REwRKQ5k3dL50=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763047202; c=relaxed/simple;
-	bh=lWYhbavprkT3U9nZXKkesHRb9Y0PC/NemTNV0+uAcaI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=diq56RwR5JZfROGbNKRG889MWFFFpZFTj5O5WV4S6VhqhhPBNA3A7UZvrrb9rR6xG6vSV+LfKpgSOhPkIW6uEr4BaTopRlkcWB9sPNpWrPacSVkKUnoGKm72gye5NiFHhhRwcOUFwRWO/rd//TFD0QA3BBuGsnFzivxoucYwIqI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mRrfucok; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1763047411; c=relaxed/simple;
+	bh=d9PhCmAQbrZluboZNdUsSmy8Hk+VX5BfUP3Vl7V4KDo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=U9gG9ZlcoB3mPP/dQ+CCesmeC9sQpltscvA1qY5UqpHqvgzSUxxovb3vnCLvpATbkgamKQXZgBg0y0Y7J6RejM0WuWnPAHRE7cbSBPE4VyUYmMWXoQVv+8ZbcSNIkMdhPkaIo5AtbI+inUieDKHHvwySaYF6OaJe8oZcSOaCiC8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BKvFdi9k; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mRrfucok"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8D70C4CEF8;
-	Thu, 13 Nov 2025 15:19:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BKvFdi9k"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1F84C4CEF5;
+	Thu, 13 Nov 2025 15:23:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763047200;
-	bh=lWYhbavprkT3U9nZXKkesHRb9Y0PC/NemTNV0+uAcaI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=mRrfucok2Ntrq4u+nF5na/T140QwG94RXgPIwX81QtT+ro5IOP+JfWj4ExGTKDhpx
-	 wibxCg+MXTvxezSyilx4YcnEUl2nrVNiPe0S9TRcCabAdRp2o4l0XpB3/XSFwmQgpc
-	 OfGQDutQ0FPEm3b+75eM7/OZggIfuz5PrXnZrG0zhRu89IPTeTdwLcPNwQtZdS4m6Y
-	 uh69YNf6UlBqJwMCeehbf0UJfQTBW9KehJICFpyKw//SpnF7iYLLlHwKYQ8dCruXjp
-	 SqVxdSx0xRmCyuqQtXtN9vxctyv7x44xuJlmat8klBW7nZ2h8WHWu86CjwzF6UySbt
-	 W4hSuuf6dyNWQ==
-Message-ID: <48bbe998-982c-4dbd-b261-83c076ebcb7a@kernel.org>
-Date: Thu, 13 Nov 2025 16:19:56 +0100
+	s=k20201202; t=1763047411;
+	bh=d9PhCmAQbrZluboZNdUsSmy8Hk+VX5BfUP3Vl7V4KDo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=BKvFdi9kKpHn6Ew12/6uzHcqEJl0iYi56H0x2bCOunD0Q9kwG+UvUX1DwGLczx0QI
+	 R/hvzCNTxeE+SfJC57JNbJOUIDyWK/81xrWNKF91l6DpTaamuOwpTfMzqjx1N5OCRB
+	 JdcZ+RsyIy1clIlAYB6aPmHpCtyFxMJzo71ygub4So7lE6Kqzg/7b9hErwJV/MaUXj
+	 0+Xc7ms1YF4IYQQxuBa2C9Epvz+1vQIA1s+kvRtn+AMfK+m82GgscT4bEMzr5kJ93G
+	 EZxhD39Ute+39TjU/vfg3nDctTNp8Ty1lpB22jvgohJ0EkFibcqxcvgPS46V8cVmnS
+	 JUETJt2+VuizA==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+To: stable@vger.kernel.org,
+	gregkh@linuxfoundation.org
+Cc: MPTCP Upstream <mptcp@lists.linux.dev>,
+	"Matthieu Baerts (NGI0)" <matttbe@kernel.org>,
+	Geliang Tang <geliang@kernel.org>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.15.y] mptcp: pm: in-kernel: C-flag: handle late ADD_ADDR
+Date: Thu, 13 Nov 2025 16:22:57 +0100
+Message-ID: <20251113152256.3075806-2-matttbe@kernel.org>
+X-Mailer: git-send-email 2.51.0
+In-Reply-To: <2025102646-unwary-premises-4a2c@gregkh>
+References: <2025102646-unwary-premises-4a2c@gregkh>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: Patch "mptcp: drop bogus optimization in __mptcp_check_push()"
- has been added to the 5.15-stable tree
-Content-Language: en-GB, fr-BE
-To: gregkh@linuxfoundation.org, sashal@kernel.org
-Cc: stable-commits@vger.kernel.org, geliang@kernel.org, kuba@kernel.org,
- martineau@kernel.org, pabeni@redhat.com,
- "stable@vger.kernel.org" <stable@vger.kernel.org>,
- MPTCP Linux <mptcp@lists.linux.dev>
-References: <2025110310-scapegoat-magnetic-3cf8@gregkh>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
- YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
- c7SPFMpMesgpcu1xFt0F6bcxE+0ojRtSCZ5HDElKlHJNYtD1uwY4UYVGWUGCF/+cY1YLmtfb
- WdNb/SFo+Mp0HItfBC12qtDIXYvbfNUGVnA5jXeWMEyYhSNktLnpDL2gBUCsdbkov5VjiOX7
- CRTkX0UgNWRjyFZwThaZADEvAOo12M5uSBk7h07yJ97gqvBtcx45IsJwfUJE4hy8qZqsA62A
- nTRflBvp647IXAiCcwWsEgE5AXKwA3aL6dcpVR17JXJ6nwHHnslVi8WesiqzUI9sbO/hXeXw
- TDSB+YhErbNOxvHqCzZEnGAAFf6ges26fRVyuU119AzO40sjdLV0l6LE7GshddyazWZf0iac
- nEhX9NKxGnuhMu5SXmo2poIQttJuYAvTVUNwQVEx/0yY5xmiuyqvXa+XT7NKJkOZSiAPlNt6
- VffjgOP62S7M9wDShUghN3F7CPOrrRsOHWO/l6I/qJdUMW+MHSFYPfYiFXoLUZyPvNVCYSgs
- 3oQaFhHapq1f345XBtfG3fOYp1K2wTXd4ThFraTLl8PHxCn4ywARAQABzSRNYXR0aGlldSBC
- YWVydHMgPG1hdHR0YmVAa2VybmVsLm9yZz7CwZEEEwEIADsCGwMFCwkIBwIGFQoJCAsCBBYC
- AwECHgECF4AWIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZUDpDAIZAQAKCRD2t4JPQmmgcz33
- EACjROM3nj9FGclR5AlyPUbAq/txEX7E0EFQCDtdLPrjBcLAoaYJIQUV8IDCcPjZMJy2ADp7
- /zSwYba2rE2C9vRgjXZJNt21mySvKnnkPbNQGkNRl3TZAinO1Ddq3fp2c/GmYaW1NWFSfOmw
- MvB5CJaN0UK5l0/drnaA6Hxsu62V5UnpvxWgexqDuo0wfpEeP1PEqMNzyiVPvJ8bJxgM8qoC
- cpXLp1Rq/jq7pbUycY8GeYw2j+FVZJHlhL0w0Zm9CFHThHxRAm1tsIPc+oTorx7haXP+nN0J
- iqBXVAxLK2KxrHtMygim50xk2QpUotWYfZpRRv8dMygEPIB3f1Vi5JMwP4M47NZNdpqVkHrm
- jvcNuLfDgf/vqUvuXs2eA2/BkIHcOuAAbsvreX1WX1rTHmx5ud3OhsWQQRVL2rt+0p1DpROI
- 3Ob8F78W5rKr4HYvjX2Inpy3WahAm7FzUY184OyfPO/2zadKCqg8n01mWA9PXxs84bFEV2mP
- VzC5j6K8U3RNA6cb9bpE5bzXut6T2gxj6j+7TsgMQFhbyH/tZgpDjWvAiPZHb3sV29t8XaOF
- BwzqiI2AEkiWMySiHwCCMsIH9WUH7r7vpwROko89Tk+InpEbiphPjd7qAkyJ+tNIEWd1+MlX
- ZPtOaFLVHhLQ3PLFLkrU3+Yi3tXqpvLE3gO3LM7BTQRV4/npARAA5+u/Sx1n9anIqcgHpA7l
- 5SUCP1e/qF7n5DK8LiM10gYglgY0XHOBi0S7vHppH8hrtpizx+7t5DBdPJgVtR6SilyK0/mp
- 9nWHDhc9rwU3KmHYgFFsnX58eEmZxz2qsIY8juFor5r7kpcM5dRR9aB+HjlOOJJgyDxcJTwM
- 1ey4L/79P72wuXRhMibN14SX6TZzf+/XIOrM6TsULVJEIv1+NdczQbs6pBTpEK/G2apME7vf
- mjTsZU26Ezn+LDMX16lHTmIJi7Hlh7eifCGGM+g/AlDV6aWKFS+sBbwy+YoS0Zc3Yz8zrdbi
- Kzn3kbKd+99//mysSVsHaekQYyVvO0KD2KPKBs1S/ImrBb6XecqxGy/y/3HWHdngGEY2v2IP
- Qox7mAPznyKyXEfG+0rrVseZSEssKmY01IsgwwbmN9ZcqUKYNhjv67WMX7tNwiVbSrGLZoqf
- Xlgw4aAdnIMQyTW8nE6hH/Iwqay4S2str4HZtWwyWLitk7N+e+vxuK5qto4AxtB7VdimvKUs
- x6kQO5F3YWcC3vCXCgPwyV8133+fIR2L81R1L1q3swaEuh95vWj6iskxeNWSTyFAVKYYVskG
- V+OTtB71P1XCnb6AJCW9cKpC25+zxQqD2Zy0dK3u2RuKErajKBa/YWzuSaKAOkneFxG3LJIv
- Hl7iqPF+JDCjB5sAEQEAAcLBXwQYAQIACQUCVeP56QIbDAAKCRD2t4JPQmmgc5VnD/9YgbCr
- HR1FbMbm7td54UrYvZV/i7m3dIQNXK2e+Cbv5PXf19ce3XluaE+wA8D+vnIW5mbAAiojt3Mb
- 6p0WJS3QzbObzHNgAp3zy/L4lXwc6WW5vnpWAzqXFHP8D9PTpqvBALbXqL06smP47JqbyQxj
- Xf7D2rrPeIqbYmVY9da1KzMOVf3gReazYa89zZSdVkMojfWsbq05zwYU+SCWS3NiyF6QghbW
- voxbFwX1i/0xRwJiX9NNbRj1huVKQuS4W7rbWA87TrVQPXUAdkyd7FRYICNW+0gddysIwPoa
- KrLfx3Ba6Rpx0JznbrVOtXlihjl4KV8mtOPjYDY9u+8x412xXnlGl6AC4HLu2F3ECkamY4G6
- UxejX+E6vW6Xe4n7H+rEX5UFgPRdYkS1TA/X3nMen9bouxNsvIJv7C6adZmMHqu/2azX7S7I
- vrxxySzOw9GxjoVTuzWMKWpDGP8n71IFeOot8JuPZtJ8omz+DZel+WCNZMVdVNLPOd5frqOv
- mpz0VhFAlNTjU1Vy0CnuxX3AM51J8dpdNyG0S8rADh6C8AKCDOfUstpq28/6oTaQv7QZdge0
- JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <2025110310-scapegoat-magnetic-3cf8@gregkh>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3174; i=matttbe@kernel.org; h=from:subject; bh=d9PhCmAQbrZluboZNdUsSmy8Hk+VX5BfUP3Vl7V4KDo=; b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDJFv18MuMlm+JNd407DpCcZkRF8uZFOf0zSD8dGVkevt KqLn9nTUcrCIMbFICumyCLdFpk/83kVb4mXnwXMHFYmkCEMXJwCMBGX1Qz/dGxqpM3qC3eq38gJ MNobw7yHWewa0yuXddndrzqVH0ncYvif9OzVxPmaui3lYpcsDzy1vrhKPj5bxtt06yQV39tNBvE MAA==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+Content-Transfer-Encoding: 8bit
 
-Hi Greg, Sasha,
+[ Upstream commit e84cb860ac3ce67ec6ecc364433fd5b412c448bc ]
 
-On 03/11/2025 02:38, gregkh@linuxfoundation.org wrote:
-> 
-> This is a note to let you know that I've just added the patch titled
-> 
->     mptcp: drop bogus optimization in __mptcp_check_push()
-> 
-> to the 5.15-stable tree which can be found at:
->     http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
-> 
-> The filename of the patch is:
->      mptcp-drop-bogus-optimization-in-__mptcp_check_push.patch
-> and it can be found in the queue-5.15 subdirectory.
-> 
-> If you, or anyone else, feels it should not be added to the stable tree,
-> please let <stable@vger.kernel.org> know about it.
+The special C-flag case expects the ADD_ADDR to be received when
+switching to 'fully-established'. But for various reasons, the ADD_ADDR
+could be sent after the "4th ACK", and the special case doesn't work.
 
-Can you please drop this patch from v5.15? It looks like it is causing
-some issues with MP_PRIO tests. I think that's because back then, the
-path is selected differently, with the use of 'msk->last_snd' which will
-bypass some decisions to where to send the next data.
+On NIPA, the new test validating this special case for the C-flag failed
+a few times, e.g.
 
-I will try to check if another version of this patch is needed for v5.15.
+  102 default limits, server deny join id 0
+        syn rx                 [FAIL] got 0 JOIN[s] syn rx expected 2
 
-Cheers,
-Matt
+  Server ns stats
+  (...)
+  MPTcpExtAddAddrTx  1
+  MPTcpExtEchoAdd    1
 
+  Client ns stats
+  (...)
+  MPTcpExtAddAddr    1
+  MPTcpExtEchoAddTx  1
 
-(I kept the patch below just in case some people from the MPTCP ML want
-to react.)
+        synack rx              [FAIL] got 0 JOIN[s] synack rx expected 2
+        ack rx                 [FAIL] got 0 JOIN[s] ack rx expected 2
+        join Rx                [FAIL] see above
+        syn tx                 [FAIL] got 0 JOIN[s] syn tx expected 2
+        join Tx                [FAIL] see above
 
-> From stable+bounces-192087-greg=kroah.com@vger.kernel.org Mon Nov  3 05:15:58 2025
-> From: Sasha Levin <sashal@kernel.org>
-> Date: Sun,  2 Nov 2025 15:15:50 -0500
-> Subject: mptcp: drop bogus optimization in __mptcp_check_push()
-> To: stable@vger.kernel.org
-> Cc: Paolo Abeni <pabeni@redhat.com>, Geliang Tang <geliang@kernel.org>, Mat Martineau <martineau@kernel.org>, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, Jakub Kicinski <kuba@kernel.org>, Sasha Levin <sashal@kernel.org>
-> Message-ID: <20251102201550.3588174-1-sashal@kernel.org>
-> 
-> From: Paolo Abeni <pabeni@redhat.com>
-> 
-> [ Upstream commit 27b0e701d3872ba59c5b579a9e8a02ea49ad3d3b ]
-> 
-> Accessing the transmit queue without owning the msk socket lock is
-> inherently racy, hence __mptcp_check_push() could actually quit early
-> even when there is pending data.
-> 
-> That in turn could cause unexpected tx lock and timeout.
-> 
-> Dropping the early check avoids the race, implicitly relaying on later
-> tests under the relevant lock. With such change, all the other
-> mptcp_send_head() call sites are now under the msk socket lock and we
-> can additionally drop the now unneeded annotation on the transmit head
-> pointer accesses.
-> 
-> Fixes: 6e628cd3a8f7 ("mptcp: use mptcp release_cb for delayed tasks")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> Reviewed-by: Geliang Tang <geliang@kernel.org>
-> Tested-by: Geliang Tang <geliang@kernel.org>
-> Reviewed-by: Mat Martineau <martineau@kernel.org>
-> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> Link: https://patch.msgid.link/20251028-net-mptcp-send-timeout-v1-1-38ffff5a9ec8@kernel.org
-> Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-> [ split upstream __subflow_push_pending modification across __mptcp_push_pending and __mptcp_subflow_push_pending ]
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> ---
->  net/mptcp/protocol.c |   13 +++++--------
->  net/mptcp/protocol.h |    2 +-
->  2 files changed, 6 insertions(+), 9 deletions(-)
-> 
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -1137,7 +1137,7 @@ static void __mptcp_clean_una(struct soc
->  			if (WARN_ON_ONCE(!msk->recovery))
->  				break;
->  
-> -			WRITE_ONCE(msk->first_pending, mptcp_send_next(sk));
-> +			msk->first_pending = mptcp_send_next(sk);
->  		}
->  
->  		dfrag_clear(sk, dfrag);
-> @@ -1674,7 +1674,7 @@ void __mptcp_push_pending(struct sock *s
->  
->  			mptcp_update_post_push(msk, dfrag, ret);
->  		}
-> -		WRITE_ONCE(msk->first_pending, mptcp_send_next(sk));
-> +		msk->first_pending = mptcp_send_next(sk);
->  	}
->  
->  	/* at this point we held the socket lock for the last subflow we used */
-> @@ -1732,7 +1732,7 @@ static void __mptcp_subflow_push_pending
->  
->  			mptcp_update_post_push(msk, dfrag, ret);
->  		}
-> -		WRITE_ONCE(msk->first_pending, mptcp_send_next(sk));
-> +		msk->first_pending = mptcp_send_next(sk);
->  	}
->  
->  out:
-> @@ -1850,7 +1850,7 @@ static int mptcp_sendmsg(struct sock *sk
->  			get_page(dfrag->page);
->  			list_add_tail(&dfrag->list, &msk->rtx_queue);
->  			if (!msk->first_pending)
-> -				WRITE_ONCE(msk->first_pending, dfrag);
-> +				msk->first_pending = dfrag;
->  		}
->  		pr_debug("msk=%p dfrag at seq=%llu len=%u sent=%u new=%d\n", msk,
->  			 dfrag->data_seq, dfrag->data_len, dfrag->already_sent,
-> @@ -2645,7 +2645,7 @@ static void __mptcp_clear_xmit(struct so
->  	struct mptcp_sock *msk = mptcp_sk(sk);
->  	struct mptcp_data_frag *dtmp, *dfrag;
->  
-> -	WRITE_ONCE(msk->first_pending, NULL);
-> +	msk->first_pending = NULL;
->  	list_for_each_entry_safe(dfrag, dtmp, &msk->rtx_queue, list)
->  		dfrag_clear(sk, dfrag);
->  }
-> @@ -3114,9 +3114,6 @@ void __mptcp_data_acked(struct sock *sk)
->  
->  void __mptcp_check_push(struct sock *sk, struct sock *ssk)
->  {
-> -	if (!mptcp_send_head(sk))
-> -		return;
-> -
->  	if (!sock_owned_by_user(sk)) {
->  		struct sock *xmit_ssk = mptcp_subflow_get_send(mptcp_sk(sk));
->  
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -325,7 +325,7 @@ static inline struct mptcp_data_frag *mp
->  {
->  	const struct mptcp_sock *msk = mptcp_sk(sk);
->  
-> -	return READ_ONCE(msk->first_pending);
-> +	return msk->first_pending;
->  }
->  
->  static inline struct mptcp_data_frag *mptcp_send_next(struct sock *sk)
+I had a suspicion about what the issue could be: the ADD_ADDR might have
+been received after the switch to the 'fully-established' state. The
+issue was not easy to reproduce. The packet capture shown that the
+ADD_ADDR can indeed be sent with a delay, and the client would not try
+to establish subflows to it as expected.
 
-Cheers,
-Matt
+A simple fix is not to mark the endpoints as 'used' in the C-flag case,
+when looking at creating subflows to the remote initial IP address and
+port. In this case, there is no need to try.
+
+Note: newly added fullmesh endpoints will still continue to be used as
+expected, thanks to the conditions behind mptcp_pm_add_addr_c_flag_case.
+
+Fixes: 4b1ff850e0c1 ("mptcp: pm: in-kernel: usable client side with C-flag")
+Cc: stable@vger.kernel.org
+Reviewed-by: Geliang Tang <geliang@kernel.org>
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Link: https://patch.msgid.link/20251020-net-mptcp-c-flag-late-add-addr-v1-1-8207030cb0e8@kernel.org
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+[ applied to pm_netlink.c instead of pm_kernel.c ]
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+[ I took the version from Sasha from v6.1, and fixed an additional
+  conflict in pm_netlink.c, because commit a88c9e496937 ("mptcp: do not
+  block subflows creation on errors") is not in this version and changed
+  the code around: check_work_pending() is now called directly, followed
+  by a return instead of a goto. ]
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+ net/mptcp/pm_netlink.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index df46ca14ce23..e94b78a8b0ef 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -532,6 +532,12 @@ static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
+ 		check_work_pending(msk);
+ 	}
+ 
++	/* No need to try establishing subflows to remote id0 if not allowed */
++	if (mptcp_pm_add_addr_c_flag_case(msk)) {
++		check_work_pending(msk);
++		return;
++	}
++
+ 	/* check if should create a new subflow */
+ 	if (msk->pm.local_addr_used < local_addr_max &&
+ 	    msk->pm.subflows < subflows_max &&
 -- 
-Sponsored by the NGI0 Core fund.
+2.51.0
 
