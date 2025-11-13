@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F1DA29E0E5
-	for <mptcp@lists.linux.dev>; Thu, 13 Nov 2025 09:25:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B37E926CE25
+	for <mptcp@lists.linux.dev>; Thu, 13 Nov 2025 09:30:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763025961; cv=none; b=hnwxeuYUanZKIbWc5JOLfpOp6bRM1YujYUJwl3UHqACpovemXjFP1pc92hEPYevBSoW+i6jcPUC9pqd7pfa8C/bE/Rkx9350Gv9P1WtTJwm8eHRoRU2Ia7zF8HhiHLahGVVG28T70dP7gktA/6BuuvRqv+qe4wNF7TkmBo8XGCM=
+	t=1763026209; cv=none; b=XvWkKncgY5jAvyyLrp2WQGtE0I7BGoWv0b0jXtPPRvZIdNSpXx58vxlKjFtVAtdfb/DRCfd8J4WJqLeoXA3GnjKN4QAV4QH9YKHvIeZrl5InuPTJ+UJuiHUXOZetUyw4af4XyA235QrqIpK5VmOoEVciXfErOj9YUgXOHmJIlf0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763025961; c=relaxed/simple;
-	bh=2zVeQAXF4chJ67Iak1d0DpECeU4V/X5x8yUpatJWhA4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=lsmt20QMv50SYMDGG9whyOFLPLvE/vvEwj3Q4+G5zmwmgR5qRGIG589uXsG0f9q6w7VDDcF/8jzkY0vlvS/KtciIj/rUVl8+/lvwc/unHSZ5Qofbfi1L1W0qCmeH3yA75zt3Op7FGl3aq/OVEDOIGlCsxMK4hYXMzbrzEOuy5GA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G6MGkzXI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1763026209; c=relaxed/simple;
+	bh=ND58m9LQNOT9I+IJKSjrmCEENK+6u9F6+NlV+zF9OE0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
+	 In-Reply-To:Content-Type; b=XiOJVz2HrsRAXcBd8OsjPiBLW7SK3weJRFs/yzE33EngW4UAsZRHqGQpMU2FhlHdt/iuB2DZ1y1km6HBvJUo3H5XWRDoHXuozqkyQk0dmqpyECXkX2SIHNvXBMsuHc1rvDOVd5kBbFYRhALyxkRIv2sPxFKHZAGQwS4xAsn2S2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WeCTsUn6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G6MGkzXI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 211B4C4CEF5;
-	Thu, 13 Nov 2025 09:25:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WeCTsUn6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3B0CC4CEF8;
+	Thu, 13 Nov 2025 09:30:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763025958;
-	bh=2zVeQAXF4chJ67Iak1d0DpECeU4V/X5x8yUpatJWhA4=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=G6MGkzXIjWU/8P9G5DJgOw8CpmwuItyoH1rYxikHvf4KphEuYBuR2pp7Hty3ECZuh
-	 VsDi/3Zevamg8zwg2piRWhSaUDAkYDvg4sO9H1AWPrDt/nhOC/bxFrPYWFCdcq2hPI
-	 yUh9FJ/vV0RRYxboh4OKiSqjZ1HTmHzxMEILYpAcVUyw+ZeYfNz5JPL8wy2VvZyg2j
-	 ze6C2J4E+d3aSx3gZE4LpJoHubi53pnXBKluxQC+tLk0WhKDCm2xH1OfnjUJ5FAnLT
-	 Sp83QVNtvNMbdeGO+aBmBbu3vBJGHVdHfqKRU8W7Y+kWKJ6cQBgupXp7BuOp+WLwpp
-	 KKflzanUetgfQ==
-Message-ID: <79e4c200-738e-46d8-bbd4-63647d3b1f71@kernel.org>
-Date: Thu, 13 Nov 2025 10:25:56 +0100
+	s=k20201202; t=1763026208;
+	bh=ND58m9LQNOT9I+IJKSjrmCEENK+6u9F6+NlV+zF9OE0=;
+	h=Date:Subject:To:References:From:Cc:In-Reply-To:From;
+	b=WeCTsUn64SahNkngkSSDJEQ5UEqE4Etp+S99osKvaj508ABxqBHS9MMc2ER5jaFf5
+	 rCGBL+dFR4K57aXPlQPlZbo89aFiiKlL0KJvPHneuzaVEGxY2IBwbRw9GP8qRBY050
+	 ZlKpxZpJfPawv+8AJGFNd1jnNrS9HfXsFvyu1Cyb1ZZX/RwpwphKKNf/fDYVgoRxrI
+	 V/Vtk0u2ALlob4OVUv7GDltfMcfhG1RV+ebDf4DPeB8bzMnflCGeypTMds1l16xXEo
+	 38mLOwLKzZtJ91EqgAj04nk8MIS0r7NnALeW2LB5vFaE4q8GA4Sayrmu4g3jWTkb+O
+	 /qBUCvHXiYW2Q==
+Message-ID: <4a5e2978-077c-450e-ae60-c28c465e5f7f@kernel.org>
+Date: Thu, 13 Nov 2025 10:30:05 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,11 +38,12 @@ User-Agent: Mozilla Thunderbird Beta
 Subject: Re: [PATCH mptcp-next 4/4] selftests: mptcp: get stats just before
  timing out
 Content-Language: en-GB, fr-BE
-To: Geliang Tang <geliang@kernel.org>, MPTCP Upstream <mptcp@lists.linux.dev>
+To: Paolo Abeni <pabeni@redhat.com>
 References: <20251108-slft-timeout-stats-v1-0-c2234d277318@kernel.org>
  <20251108-slft-timeout-stats-v1-4-c2234d277318@kernel.org>
- <2a6869ca39bda7ddf8b486cd03e0867b30e0d565.camel@kernel.org>
+ <45c6a268-3501-47da-b1ef-fbf3012a791c@redhat.com>
 From: Matthieu Baerts <matttbe@kernel.org>
+Cc: MPTCP Upstream <mptcp@lists.linux.dev>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -87,52 +88,88 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <2a6869ca39bda7ddf8b486cd03e0867b30e0d565.camel@kernel.org>
+In-Reply-To: <45c6a268-3501-47da-b1ef-fbf3012a791c@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+Hi Paolo,
 
-On 13/11/2025 08:15, Geliang Tang wrote:
-> Hi Matt,
-> 
-> On Sat, 2025-11-08 at 15:20 +0100, Matthieu Baerts (NGI0) wrote:
->> Recently, some debugging happened around a test that was timing out.
->> The
->> stats were showing connections being closed which was confusing
->> because
+On 13/11/2025 08:25, Paolo Abeni wrote:
+> On 11/8/25 3:20 PM, Matthieu Baerts (NGI0) wrote:
+>> Recently, some debugging happened around a test that was timing out. The
+>> stats were showing connections being closed which was confusing because
 >> the closing state was caused by the timeout stopping the transfer.
 >>
->> To avoid such confusion, the timeout is no longer done per
->> mptcp_connect
->> process, but separately. In case of timeout, the stats are now
->> printed,
+>> To avoid such confusion, the timeout is no longer done per mptcp_connect
+>> process, but separately. In case of timeout, the stats are now printed,
 >> then the apps are killed.
 >>
 >> The stats will still be printed after the kill, but that's fine, and
->> this might even be useful, just in case. Timeout should be
->> exceptional.
+>> this might even be useful, just in case. Timeout should be exceptional.
+>>
+>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 > 
-> Today I found that this patch has increased the runtime of the
-> selftests, for example:
+> This is very useful, thanks!
 > 
-> # 66 ns1 MPTCP -> ns1 (dead:beef:1::1:20004) MPTCP     (duration  
-> 390ms) [ OK ]
-> # 67 ns1 MPTCP -> ns1 (dead:beef:1::1:20005) TCP       (duration  
-> 415ms) [ OK ]
-> # 68 ns1 TCP   -> ns1 (dead:beef:1::1:20006) MPTCP     (duration  
-> 380ms) [ OK ]
-> # Time: 38 seconds
-> ok 1 test: selftest_mptcp_connect
-> # time=99
+>> ---
+>>  tools/testing/selftests/net/mptcp/mptcp_connect.sh | 21 +++++++++-------
+>>  tools/testing/selftests/net/mptcp/mptcp_join.sh    | 29 +++++++++++-----------
+>>  tools/testing/selftests/net/mptcp/mptcp_lib.sh     | 13 ++++++++++
+>>  tools/testing/selftests/net/mptcp/mptcp_sockopt.sh | 21 +++++++++-------
+>>  tools/testing/selftests/net/mptcp/simult_flows.sh  | 24 ++++++++++--------
+>>  5 files changed, 66 insertions(+), 42 deletions(-)
+>>
+>> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+>> index 1149bd150d6a..6bff77ed0a74 100755
+>> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+>> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+>> @@ -391,26 +391,29 @@ do_transfer()
+>>  		mptcp_lib_nstat_init "${connector_ns}"
+>>  	fi
+>>  
+>> -	timeout ${timeout_test} \
+>> -		ip netns exec ${listener_ns} \
+>> -			./mptcp_connect -t ${timeout_poll} -l -p $port -s ${srv_proto} \
+>> -				$extra_args $local_addr < "$sin" > "$sout" &
+>> +	ip netns exec ${listener_ns} \
+>> +		./mptcp_connect -t ${timeout_poll} -l -p $port -s ${srv_proto} \
+>> +			$extra_args $local_addr < "$sin" > "$sout" &
+>>  	local spid=$!
+>>  
+>>  	mptcp_lib_wait_local_port_listen "${listener_ns}" "${port}"
+>>  
+>>  	local start
+>>  	start=$(date +%s%3N)
+>> -	timeout ${timeout_test} \
+>> -		ip netns exec ${connector_ns} \
+>> -			./mptcp_connect -t ${timeout_poll} -p $port -s ${cl_proto} \
+>> -				$extra_args $connect_addr < "$cin" > "$cout" &
+>> +	ip netns exec ${connector_ns} \
+>> +		./mptcp_connect -t ${timeout_poll} -p $port -s ${cl_proto} \
+>> +			$extra_args $connect_addr < "$cin" > "$cout" &
+>>  	local cpid=$!
+>>  
+>> +	mptcp_lib_wait_timeout "${timeout_test}" "${listener_ns}" \
+>> +		"${connector_ns}" "${port}" "${cpid}" "${spid}" &
 > 
-> The mptcp_connect test ended after 38 seconds, but it waited an
-> additional 61 seconds before finally stopping at 99 seconds.
+> I'm still debugging some timeouts caused by `${timeout_poll}`. In such
+> cases the process still terminates and closes the relevant fd. I'm
+> wondering additionally setting ${timeout_test} to a lower value of
+> ${timeout_poll}?
+${timeout_test} is supposed to be a safeguard, just in case
+${timeout_poll} is not enough. I think it might be better to call 'ss'
+from mptcp_connect.c in case of timeout: WDYT?
 
-Good catch, indeed, thanks, I will check that!
+> BTW I'm testing with CONFIG_PREEMPT=y and possibly I'm seeing the
+> timeout due to such setting triggering some race we don't observe with
+> vng defaults: it's very easily reproducible on mptcp_connect.sh
+> "disconnect" case.
 
-I guess I should use mptcp_lib_kill_group_wait() to kill the "sleep"
-command as well.
+Arf, maybe not a new issue... Thank you for looking at that!
+
+The MPTCP CI and my syzkaller instances are all using
+CONFIG_PREEMPT_VOLUNTARY=y. Should I change that? Or at least have a mix
+in the Syzkaller instances?
 
 Cheers,
 Matt
