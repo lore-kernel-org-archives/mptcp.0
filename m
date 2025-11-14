@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3202B313E25
-	for <mptcp@lists.linux.dev>; Fri, 14 Nov 2025 11:30:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2617630BF66
+	for <mptcp@lists.linux.dev>; Fri, 14 Nov 2025 11:49:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763119807; cv=none; b=Uisa27xgUjbVhOHvOQuWjA3Ltwr8rkrgP5An1Maw1DjVyh5yQC0Hok5jxLn+9wI9hsHd/ifz3ysnFPGK5BsnzakAL1SABNz54Hl6R1+jTRsOTUKZe6tyXkd1jq2Bj6innPHsBgMZVgMYyOf7HNkhuvYvD4Bg6dwQ+VIi4mo72vU=
+	t=1763120998; cv=none; b=f2Ln9Hq3tJjVK+gOGUVSNecP+kaQm0GFhiDmRKv0ZyphTzJzSvDBagWTrQQSS1Wkk0y3pEEwr3IBjsNbQUo0Q+2Y/HBi9JEVBto3mB0rkVL8pXNlZWpkQ9wCvc8UXBQGxG9KsGZuu+pBfv0SSix5ER714Q9fno7etnM/VHFpw0k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763119807; c=relaxed/simple;
-	bh=vjFPoquxjvkj/zsnAxNx+wLhJzge5PK0zT3bI1tmb3Q=;
+	s=arc-20240116; t=1763120998; c=relaxed/simple;
+	bh=YbhEhFh4dGL8ewXaFSws1or2w02/rHrEX3WVlyoNDpE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=i6AhojlKuhziwpKd/TU3aC7NzC6E6PQ/8mtlMPJ2hHjc0RlVfChUaAk6jv7BkZSRGMgmgRdM0d/6aefQSiyJDcWTO2XIFBAieVEjlLsPY2lQ2N2wwgVwgicos8dGwCf7AROQli6yhtYU3DSLGlFyCL4syYnYCaD4coame9NTVSI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oR6ZaNCC; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=SoS1OilD5wstJU0l/NS1ijK6B7wRgtcxIjnC3b6A96fUfJIHbAHCZ7EMa99elvbud46kBr32gMoMPU4HUs9cmqmzXfa/qfNxTMZIwFphnZRxmebG2LLFXDmcjLKz+AZssYBVKeKYpJqfg08h1suSIXijP5dMILPw2VWBKTVBUtc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d94rg5Rn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oR6ZaNCC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48D8EC4CEF5;
-	Fri, 14 Nov 2025 11:30:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d94rg5Rn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0DF5C16AAE;
+	Fri, 14 Nov 2025 11:49:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763119806;
-	bh=vjFPoquxjvkj/zsnAxNx+wLhJzge5PK0zT3bI1tmb3Q=;
+	s=k20201202; t=1763120997;
+	bh=YbhEhFh4dGL8ewXaFSws1or2w02/rHrEX3WVlyoNDpE=;
 	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=oR6ZaNCCF0GA9rqLK5eLM8DKM8JfErRPnP8v+cXbOD5jGq3DjZT+fchbi6NUfdzz2
-	 QTqnRlzyIipdR6pVSPp7lbt1YTFIsmPKxbK+RhC7gSqumJuygOIFoHg40xQmXotl+n
-	 wyOXEGTLVixQbd/rdjxcpOe+DvZfHkD6P1FCnYgMDwkZmQMJ7El1E1O08Vb3370Hr5
-	 tB5fr8jkzg+FEm9OcHpndfKragHBS4pUL5e2sdLexpKQ4+2AIU/foT59zw2pSMLhvM
-	 Ydw/q4J1cPP1VA/tnq94JgT/I2xxwsmfQ8moKuovN1bAgzD6bVXETH+TJPJc3O/UKA
-	 tMiDJlWqOaLMA==
-Message-ID: <67b8b6a5-92e3-49f5-a494-8293ea763af9@kernel.org>
-Date: Fri, 14 Nov 2025 12:30:04 +0100
+	b=d94rg5Rn+ylMlLoABLYLgYA5yoUDmKcC71d+J1ncZ4OCdhIFVEn+q4vMqMe0AE/2d
+	 mloz5pzJw9lNnx0ASNgBd8SUPIoz7SH+dfZMol+l0bs0J90lvp6/ZrdQ7+SBS9qf05
+	 KF4oVqw41fz5GfQThKFQWnRtbEAUSp4ycbwIomWfj9H4nMNjYMmuMCfXv3BOqBP4DP
+	 m3dWS9hIp6qLW3ZxpUGo2huuY+Frbx2vaob0sqIuWH5BPPfr+XOJmqkofgKf/CGY8l
+	 AgNDTbTiXLDMx4NghSFdSvIk8J2LieFQpFEn/sRpU17eOzkLjhUcp3KPY6fckOSUtE
+	 Mun4vlELOgklA==
+Message-ID: <23f531f3-b821-42d3-82a1-ed94a0987dd4@kernel.org>
+Date: Fri, 14 Nov 2025 12:49:54 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -95,11 +95,22 @@ On 14/11/2025 00:05, Paolo Abeni wrote:
 > The second patch addresses a recently filed issue, 2nd one is due to
 > code inspection while investigating the mentioned issue.
 
-Thank you for the new version!
+Thank you again! Now in our tree (fixes for -net):
 
-It looks good to me:
+New patches for t/upstream-net and t/upstream:
+- f00f2972e67b: mptcp: fix premature close in case of fallback
+- 8e46f6ba1eea: mptcp: do not fallback when OoO is present
+- 1d2ce718811a: mptcp: do not drop partial packets
+- Results: 7b864be7a6e5..d3c1552df7fb (export-net)
+- 42c9778f2eef: conflict in t/mptcp-borrow-forward-memory-from-subflow
+- Results: 2636e284e552..13d7de45372c (export)
 
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Tests are now in progress:
+
+- export-net:
+https://github.com/multipath-tcp/mptcp_net-next/commit/2e032d2fe4e08ca8caac051eb86c063a29cf6dca/checks
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/a7420f3fafe4ac3877b5bafdea23b2c13d3e2d61/checks
 
 Cheers,
 Matt
