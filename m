@@ -1,167 +1,153 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD902A95E
-	for <mptcp@lists.linux.dev>; Fri, 14 Nov 2025 01:30:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E011C1DB54C
+	for <mptcp@lists.linux.dev>; Fri, 14 Nov 2025 01:36:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763083821; cv=none; b=hk5DOj7ZiSpVYkjuDJ/wnzJ3OQBoxzvBG1+/fHF6D4FJVrSCoyiveXxv8/zwTeP6SDkskBMCzNXDjE20N//PgK9n6KBGuUYc5DY+BASjPq0Pp0nbVyBety3vtjHiDDOtsXkUiBK5NX2I2PkwrvYEr+resf25XiKuPVY3Y9X5MF8=
+	t=1763084201; cv=none; b=A928X3YrrhY8Vqt7sjzdlrB5G/IvCCRRSW/LBZy06FxtoumUdZJsvqUlLMxmBw2qcc34kpXN/mB1DeTo8FezKVxLZpCrYv26tJzBN/S/FEGCdMDzb5tv6InwNCpXZ3bDIMGCVj4lc9J/D2dBIcF+JeyRxWXvkSeXaSs5brgX+3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763083821; c=relaxed/simple;
-	bh=2to9946Qzs8QEtSfLIorDPayF68AU5d0pBj4oIUdVnY=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=GspX+26ccCBacq1BeV3Fpj8t5TtaxFKU9xNg/gPTumg0tvApXi+9wbSfPQJZcU5AQq3dMo+S6bKn0EQA4qk7lu9aZJxF9NObnExUN3q+D9NPo8aYdLolS9LDItCd4GxSzqCfRZkMEnB8snhVQfvVwLQGvUah9owBOyr8caH33OY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZX0z4KSv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1763084201; c=relaxed/simple;
+	bh=184T6RWPKkrI9yGxqY80YK5leWWcLPxzmE9thnr28BY=;
+	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
+	 In-Reply-To:References; b=bX7MGtkE3uhVMsXSs6OaImFz40c0Vdz2eKLRFcO5moJmmW/cxJ7jgtm2JAKIgGDCKTvTh2nrAArvFSPB6DaaXmmmz0qeUP74Djv6+nQLK9QQf2GuCubnRSz/ECCfHARgLuLHdVst1jUbHozzuRntcVeVzOJtcA/rZWbWG8ghfaM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=t/xuhW6c; arc=none smtp.client-ip=91.218.175.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZX0z4KSv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7AE7C4AF09;
-	Fri, 14 Nov 2025 01:30:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763083821;
-	bh=2to9946Qzs8QEtSfLIorDPayF68AU5d0pBj4oIUdVnY=;
-	h=Subject:From:To:Date:In-Reply-To:References:From;
-	b=ZX0z4KSvi37A+Emwe7njK2Jd6F0KjRfLN89tvcG188uwizFJU9X2MjnUoTarkY+Os
-	 JrBQL05JEsFTrXMehBpT41OyyWUM4ohxRTGcLnlaoEIVtqFubLOsm4+cjelRSxob3/
-	 d1uGVyPqBBJ2KYVkkqCTQa7IzuA6e4IEXkKGnruJS25aSC7emieTl3xlsy9/nrff0s
-	 xFy6J4uE5yOBypX36pjAKnI9m2jBFZwClDLchwve6R9z9pDDY7mC3GCfmiVJqckYo0
-	 Fsl/AQ9mlSiC0K4hSDU2+3o4Xbiaq6lxgR1SmmS+lHO2C4S9JfDjbxWWlhZU07Og9t
-	 n1fgtv3G8LNZQ==
-Message-ID: <19e9fe8e0ebbfe2dce632c29771df9eeed470d2e.camel@kernel.org>
-Subject: Re: [PATCH mptcp-next] Squash to "selftests: mptcp: get stats just
- before timing out"
-From: Geliang Tang <geliang@kernel.org>
-To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, MPTCP Upstream
-	 <mptcp@lists.linux.dev>
-Date: Fri, 14 Nov 2025 09:30:18 +0800
-In-Reply-To: <20251113-slft-timeout-stats-kill-v1-1-9a09d8f46392@kernel.org>
-References: <20251113-slft-timeout-stats-kill-v1-1-9a09d8f46392@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.56.2-4 
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="t/xuhW6c"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1763084195;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=rhAvhoW0qGIKNwEfFjd214od0HqLgMRWs7YHTP4WZaA=;
+	b=t/xuhW6cYzNRhoXeqwXsrq+DVpCFpEEZ10t9Hro34mdAneBTjRM8fcvOodXL4GzWCL08QT
+	w5yBZIDqjrzULT/Bml/Q14gUs+7099w1Lo6UWJV/hf+EAI+ry5Q8OoKTumBnDTAaCcoI57
+	h0iRQ7TrtIz0Fbe6Uq3NbwiDiI7zRGo=
+Date: Fri, 14 Nov 2025 01:36:32 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: "Jiayuan Chen" <jiayuan.chen@linux.dev>
+Message-ID: <c052bf6e1e5584b806c41dcb63a1d67f6aafa293@linux.dev>
+TLS-Required: No
+Subject: Re: [PATCH net v5 3/3] selftests/bpf: Add mptcp test with sockmap
+To: "Martin KaFai Lau" <martin.lau@linux.dev>, "Matthieu Baerts"
+ <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev, "Mat Martineau" <martineau@kernel.org>, "Geliang
+ Tang" <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>,
+ "Eric Dumazet" <edumazet@google.com>, "Jakub Kicinski" <kuba@kernel.org>,
+ "Paolo Abeni" <pabeni@redhat.com>, "Simon Horman" <horms@kernel.org>,
+ "Alexei Starovoitov" <ast@kernel.org>, "Daniel Borkmann"
+ <daniel@iogearbox.net>, "Andrii Nakryiko" <andrii@kernel.org>, "Eduard
+ Zingerman" <eddyz87@gmail.com>, "Song Liu" <song@kernel.org>, "Yonghong
+ Song" <yonghong.song@linux.dev>, "John Fastabend"
+ <john.fastabend@gmail.com>, "KP Singh" <kpsingh@kernel.org>, "Stanislav
+ Fomichev" <sdf@fomichev.me>, "Hao Luo" <haoluo@google.com>, "Jiri Olsa"
+ <jolsa@kernel.org>, "Shuah Khan" <shuah@kernel.org>, "Florian Westphal"
+ <fw@strlen.de>, "Christoph Paasch" <cpaasch@apple.com>, "Peter Krystad"
+ <peter.krystad@linux.intel.com>, linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org, bpf@vger.kernel.org,
+ linux-kselftest@vger.kernel.org
+In-Reply-To: <a92e2c4a-bfde-4a74-8bb5-5e2b8ca87199@linux.dev>
+References: <20251111060307.194196-1-jiayuan.chen@linux.dev>
+ <20251111060307.194196-4-jiayuan.chen@linux.dev>
+ <a92e2c4a-bfde-4a74-8bb5-5e2b8ca87199@linux.dev>
+X-Migadu-Flow: FLOW_OUT
 
-Hi Matt,
+2025/11/14 05:48, "Martin KaFai Lau" <martin.lau@linux.dev mailto:martin.=
+lau@linux.dev?to=3D%22Martin%20KaFai%20Lau%22%20%3Cmartin.lau%40linux.dev=
+%3E > =E5=86=99=E5=88=B0:
 
-Thanks for this fix.
 
-On Thu, 2025-11-13 at 12:11 +0100, Matthieu Baerts (NGI0) wrote:
-> Geliang reported that mptcp_connect.sh test runtime got increased
-> after
-> this patch.
-> 
-> That's because the previous 'kill' command was only killing the
-> background job, but the 'sleep' command was still running.
-> 
-> It is not very clear to me why there was a delay at the end, but
-> switching to mptcp_lib_kill_group_wait to kill the background job and
-> the running command fixed the issue. The new code is also looking
-> clearer I think, so that's good.
-> 
-> Link:
-> https://lore.kernel.org/2a6869ca39bda7ddf8b486cd03e0867b30e0d565.camel@kernel.org
-> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+>=20
+>=20>=20
+>=20> diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools=
+/testing/selftests/bpf/prog_tests/mptcp.c
+> >  index f8eb7f9d4fd2..b976fe626343 100644
+> >  --- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
+> >  +++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
+> >  @@ -6,11 +6,14 @@
+> >  #include <netinet/in.h>
+> >  #include <test_progs.h>
+> >  #include <unistd.h>
+> >  +#include <error.h>
+> >=20
+>=20I changed to errno.h to be specific. I think you only need the values=
+ of an errno here.
+>=20
+>=20>=20
+>=20> #include "cgroup_helpers.h"
+> >  #include "network_helpers.h"
+> >  +#include "socket_helpers.h"
+> >  #include "mptcp_sock.skel.h"
+> >  #include "mptcpify.skel.h"
+> >  #include "mptcp_subflow.skel.h"
+> >  +#include "mptcp_sockmap.skel.h"
+> >  > #define NS_TEST "mptcp_ns"
+> >  #define ADDR_1 "10.0.1.1"
+> >  @@ -436,6 +439,142 @@ static void test_subflow(void)
+> >  close(cgroup_fd);
+> >  }
+> >  > +/* Test sockmap on MPTCP server handling non-mp-capable clients. =
+*/
+> >  +static void test_sockmap_with_mptcp_fallback(struct mptcp_sockmap *=
+skel)
+> >  +{
+> >  + int listen_fd =3D -1, client_fd1 =3D -1, client_fd2 =3D -1;
+> >  + int server_fd1 =3D -1, server_fd2 =3D -1, sent, recvd;
+> >  + char snd[9] =3D "123456789";
+> >  + char rcv[10];
+> >  +
+> >  + /* start server with MPTCP enabled */
+> >  + listen_fd =3D start_mptcp_server(AF_INET, NULL, 0, 0);
+> >  + if (!ASSERT_OK_FD(listen_fd, "sockmap-fb:start_mptcp_server"))
+> >  + return;
+> >  +
+> >  + skel->bss->trace_port =3D ntohs(get_socket_local_port(listen_fd));
+> >  + skel->bss->sk_index =3D 0;
+> >  + /* create client without MPTCP enabled */
+> >  + client_fd1 =3D connect_to_fd_opts(listen_fd, NULL);
+> >  + if (!ASSERT_OK_FD(client_fd1, "sockmap-fb:connect_to_fd"))
+> >  + goto end;
+> >  +
+> >  + server_fd1 =3D xaccept_nonblock(listen_fd, NULL, NULL);
+> >  + skel->bss->sk_index =3D 1;
+> >  + client_fd2 =3D connect_to_fd_opts(listen_fd, NULL);
+> >  + if (!ASSERT_OK_FD(client_fd2, "sockmap-fb:connect_to_fd"))
+> >  + goto end;
+> >  +
+> >  + server_fd2 =3D xaccept_nonblock(listen_fd, NULL, NULL);
+> >  + /* test normal redirect behavior: data sent by client_fd1 can be
+> >  + * received by client_fd2
+> >  + */
+> >  + skel->bss->redirect_idx =3D 1;
+> >  + sent =3D xsend(client_fd1, snd, sizeof(snd), 0);
+> >  + if (!ASSERT_EQ(sent, sizeof(snd), "sockmap-fb:xsend(client_fd1)"))
+> >  + goto end;
+> >  +
+> >  + /* try to recv more bytes to avoid truncation check */
+> >  + recvd =3D recv_timeout(client_fd2, rcv, sizeof(rcv), MSG_DONTWAIT,=
+ 2);
+> >=20
+>=20I removed the socket_helpers.h usage. The _nonblock, _timeout, and
+> MSG_DONTWAIT are unnecessary. I replaced them with the regular accept,
+> send, and recv. All fds from network_helpers.c have a default 3s
+> timeout instead of 30s in xaccept_nonblock. This matches how most of
+> the selftests/bpf are doing it as well.
+>=20
+>=20I also touched up the commit message in patch 2 based on Matt's comme=
+nt.
+>=20
+>=20Applied. Thanks.
+>=20
 
-It works.
-
-    Reviewed-by: Geliang Tang <geliang@kernel.org>
-
--Geliang
-
-> ---
->  tools/testing/selftests/net/mptcp/mptcp_connect.sh | 7 ++++++-
->  tools/testing/selftests/net/mptcp/mptcp_join.sh    | 7 ++++++-
->  tools/testing/selftests/net/mptcp/mptcp_sockopt.sh | 7 ++++++-
->  tools/testing/selftests/net/mptcp/simult_flows.sh  | 7 ++++++-
->  4 files changed, 24 insertions(+), 4 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-> b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-> index 458b07673910..a6447f7a31fe 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-> @@ -415,7 +415,12 @@ do_transfer()
->  	local retc=$?
->  	wait $spid
->  	local rets=$?
-> -	kill $timeout_pid 2>/dev/null && timeout_pid=0
-> +
-> +	if kill -0 $timeout_pid; then
-> +		# Finished before the timeout: kill the background
-> job
-> +		mptcp_lib_kill_group_wait $timeout_pid
-> +		timeout_pid=0
-> +	fi
->  
->  	local stop
->  	stop=$(date +%s%3N)
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> index 222babd43682..7a72efcf1403 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> @@ -1063,7 +1063,12 @@ do_transfer()
->  	local retc=$?
->  	wait $spid
->  	local rets=$?
-> -	kill $timeout_pid 2>/dev/null && timeout_pid=0
-> +
-> +	if kill -0 $timeout_pid; then
-> +		# Finished before the timeout: kill the background
-> job
-> +		mptcp_lib_kill_group_wait $timeout_pid
-> +		timeout_pid=0
-> +	fi
->  
->  	cond_stop_capture
->  
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-> b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-> index 326466f2f6eb..ab8bce06b262 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-> @@ -193,7 +193,12 @@ do_transfer()
->  	local retc=$?
->  	wait $spid
->  	local rets=$?
-> -	kill $timeout_pid 2>/dev/null && timeout_pid=0
-> +
-> +	if kill -0 $timeout_pid; then
-> +		# Finished before the timeout: kill the background
-> job
-> +		mptcp_lib_kill_group_wait $timeout_pid
-> +		timeout_pid=0
-> +	fi
->  
->  	mptcp_lib_nstat_get "${listener_ns}"
->  	mptcp_lib_nstat_get "${connector_ns}"
-> diff --git a/tools/testing/selftests/net/mptcp/simult_flows.sh
-> b/tools/testing/selftests/net/mptcp/simult_flows.sh
-> index cc4d40d149e2..806aaa7d2d61 100755
-> --- a/tools/testing/selftests/net/mptcp/simult_flows.sh
-> +++ b/tools/testing/selftests/net/mptcp/simult_flows.sh
-> @@ -178,7 +178,12 @@ do_transfer()
->  	local retc=$?
->  	wait $spid
->  	local rets=$?
-> -	kill $timeout_pid 2>/dev/null && timeout_pid=0
-> +
-> +	if kill -0 $timeout_pid; then
-> +		# Finished before the timeout: kill the background
-> job
-> +		mptcp_lib_kill_group_wait $timeout_pid
-> +		timeout_pid=0
-> +	fi
->  
->  	if $capture; then
->  		sleep 1
-> 
-> ---
-> base-commit: 6861f291b7a3bc40235e996f5605c477f55ce9e0
-> change-id: 20251113-slft-timeout-stats-kill-444931425af7
-> 
-> Best regards,
+Thanks=20for the cleanup and applying!
