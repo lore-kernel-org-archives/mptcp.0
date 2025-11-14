@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D7B9315D5C
-	for <mptcp@lists.linux.dev>; Fri, 14 Nov 2025 11:58:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1C19306B0D
+	for <mptcp@lists.linux.dev>; Fri, 14 Nov 2025 12:06:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763121513; cv=none; b=AgycSuVrp/rCFDmSu00yiq5ohRYLNWmbPQcR7qoH6tdemVMCdT0qP6xGgZFAlqHuoZv36/sYZNuJ/AQEQG8Rvg4sb2L1uPYBzgc/JBBely/C7FlYY1EvkiErmUN5SLHPRu4yG9UcGNyveCc6XKenu9ENLLwNQiPe5YjTHLiDfgo=
+	t=1763122007; cv=none; b=jKQAkjTQsMW5NA6L3lvMNYXWX6d5ghZQNtcHXUmoBScIWFfYMM1oyqM6Vk1Kje7t/Ds3FIfeeBWavgWQmYJqsteOWR00D57NtfWIoMCcd7yHjA5aEqc4v7XOF+3YBk0WXtlR8m7ix9J90fyV2GK45YnrDvq9Xi+BdMoSEJCgLgM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763121513; c=relaxed/simple;
-	bh=vOccs1IOtZQI/e3HFtYOcObJbg6Pn5Ut+8en7CT7vDo=;
+	s=arc-20240116; t=1763122007; c=relaxed/simple;
+	bh=gCCKTWavzIatmJRLNZcdhxyjvYevsq8/VMQFdkrUOKw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=RNowo+G6Tzpw+CxZwlhlifDq3p3WzRv5XjhG7azNRtSLz63FCxRm1va9JcQJjBqf0X6bmHQQRietvsJG5E/wAsrh4OEseapcWVHF7PATQW347aqsJOkJCCdyzTLgFQmb7pv7invFN3QbHwEkxA0lNVmJjQ4bj3UWmVs6/nEWaXs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q6PQYKfV; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=U4GyMRaKfEik9R4By40U6wIMk7azTwMrpARDVXkVNAieHVcXeRpnR0mbYeorZHBeqX+hcGJ5rRq/qjqeWP6Ji+xuAk6k0/29HmZi2NCm73532VionQlQXpOtly6r9FulHWOlVZkQO/ERIL8/RlkKVxYq50F+WY4DgkrQsI2POFU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YFpeMMp0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q6PQYKfV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0A93C4CEF8;
-	Fri, 14 Nov 2025 11:58:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YFpeMMp0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CECB5C4CEF1;
+	Fri, 14 Nov 2025 12:06:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763121513;
-	bh=vOccs1IOtZQI/e3HFtYOcObJbg6Pn5Ut+8en7CT7vDo=;
+	s=k20201202; t=1763122007;
+	bh=gCCKTWavzIatmJRLNZcdhxyjvYevsq8/VMQFdkrUOKw=;
 	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=q6PQYKfVoejUKxlh/EgOLldna3FeK2R3kAwmspXavUrbL8To1mgupDCtBGmRSqq8j
-	 EPnyBockIj3k7mLHW5gY2Y+SsaoK5GNOqpep6WxAscrMq2c7mwrB1iCL7zMAMUmdMd
-	 SCiwwJ7UI5ttVeCcyJLVgJON6qsBDeCUYa5ZReylGTxTRwFhwfQdDYbFgqLSW9Sg4h
-	 ZLir7Y2DbBUWHujxMl53Xl9VNShkR5exFgEKDYPX7WpjJRA667eE94KwhQUhgnYiQF
-	 psmPK51f4y5CE9QU2T+3gdrWKjNUlVRoHJF2ygKEvLhutLMCjz6JO6Jo5kDh/+fUbV
-	 gJaRoMnICNglA==
-Message-ID: <ef04cb67-2ed7-47e8-b837-b2c4bb33cabe@kernel.org>
-Date: Fri, 14 Nov 2025 12:58:25 +0100
+	b=YFpeMMp0BlUVXUV01K1cL6VhFyqNQcxOIs9l9u2mXDNhFYeExB9WrTEcOfCp5WvH6
+	 aNusk+i1c7sWyh6PIs8RIMVMtIXUjkRrTPCRVP6LzmJVhSPpB2MGgHzWSmi/zQ1ina
+	 1BXBvvzXdJU/L9aprSPRRKlYdl5XuDO2VlSzptAUkrlvi+1Xicgt5WjA5jvsICVDsn
+	 oUq5WBCARjWqAQUMu93V5/nJ+ngiguSn1X+Tsx3Wd2y3q7cvxTPLtZADg2WOIU3qXT
+	 0KBcR7blFz4fH9H9m2uiPCFGiYEENjU8LGsmU2VHXAYH3n3AYx2GzDZG1CDkTmw0CH
+	 BWd0OdGErsTvw==
+Message-ID: <257ff01c-c236-406f-9c98-123d9b3aef46@kernel.org>
+Date: Fri, 14 Nov 2025 13:06:45 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -97,9 +97,20 @@ On 14/11/2025 10:17, Paolo Abeni wrote:
 > Only minor delta over v3: typos, build fix without CG, and reworded
 > comments/commit messages.
 
-Thank you for the v4 and all these fixes. It looks good to me:
+Now in our tree:
 
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+New patches for t/upstream:
+- f67fd656fe97: mptcp: grafting MPJ subflow earlier
+- 36a8ca62b02d: "squashed" patch 2/3 in "mptcp: fix memcg accounting for
+passive sockets"
+- a3565f84e54f: "squashed" patch 3/3 in "mptcp: leverage the backlog for
+RX packet processing"
+- Results: 13d7de45372c..13cda072207e (export)
+
+Tests are now in progress:
+
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/c2eff70b71b8c42253db435d68374277502522e7/checks
 
 Cheers,
 Matt
