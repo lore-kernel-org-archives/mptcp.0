@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2617630BF66
-	for <mptcp@lists.linux.dev>; Fri, 14 Nov 2025 11:49:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D7B9315D5C
+	for <mptcp@lists.linux.dev>; Fri, 14 Nov 2025 11:58:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763120998; cv=none; b=f2Ln9Hq3tJjVK+gOGUVSNecP+kaQm0GFhiDmRKv0ZyphTzJzSvDBagWTrQQSS1Wkk0y3pEEwr3IBjsNbQUo0Q+2Y/HBi9JEVBto3mB0rkVL8pXNlZWpkQ9wCvc8UXBQGxG9KsGZuu+pBfv0SSix5ER714Q9fno7etnM/VHFpw0k=
+	t=1763121513; cv=none; b=AgycSuVrp/rCFDmSu00yiq5ohRYLNWmbPQcR7qoH6tdemVMCdT0qP6xGgZFAlqHuoZv36/sYZNuJ/AQEQG8Rvg4sb2L1uPYBzgc/JBBely/C7FlYY1EvkiErmUN5SLHPRu4yG9UcGNyveCc6XKenu9ENLLwNQiPe5YjTHLiDfgo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763120998; c=relaxed/simple;
-	bh=YbhEhFh4dGL8ewXaFSws1or2w02/rHrEX3WVlyoNDpE=;
+	s=arc-20240116; t=1763121513; c=relaxed/simple;
+	bh=vOccs1IOtZQI/e3HFtYOcObJbg6Pn5Ut+8en7CT7vDo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=SoS1OilD5wstJU0l/NS1ijK6B7wRgtcxIjnC3b6A96fUfJIHbAHCZ7EMa99elvbud46kBr32gMoMPU4HUs9cmqmzXfa/qfNxTMZIwFphnZRxmebG2LLFXDmcjLKz+AZssYBVKeKYpJqfg08h1suSIXijP5dMILPw2VWBKTVBUtc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d94rg5Rn; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=RNowo+G6Tzpw+CxZwlhlifDq3p3WzRv5XjhG7azNRtSLz63FCxRm1va9JcQJjBqf0X6bmHQQRietvsJG5E/wAsrh4OEseapcWVHF7PATQW347aqsJOkJCCdyzTLgFQmb7pv7invFN3QbHwEkxA0lNVmJjQ4bj3UWmVs6/nEWaXs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q6PQYKfV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d94rg5Rn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0DF5C16AAE;
-	Fri, 14 Nov 2025 11:49:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q6PQYKfV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0A93C4CEF8;
+	Fri, 14 Nov 2025 11:58:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763120997;
-	bh=YbhEhFh4dGL8ewXaFSws1or2w02/rHrEX3WVlyoNDpE=;
+	s=k20201202; t=1763121513;
+	bh=vOccs1IOtZQI/e3HFtYOcObJbg6Pn5Ut+8en7CT7vDo=;
 	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=d94rg5Rn+ylMlLoABLYLgYA5yoUDmKcC71d+J1ncZ4OCdhIFVEn+q4vMqMe0AE/2d
-	 mloz5pzJw9lNnx0ASNgBd8SUPIoz7SH+dfZMol+l0bs0J90lvp6/ZrdQ7+SBS9qf05
-	 KF4oVqw41fz5GfQThKFQWnRtbEAUSp4ycbwIomWfj9H4nMNjYMmuMCfXv3BOqBP4DP
-	 m3dWS9hIp6qLW3ZxpUGo2huuY+Frbx2vaob0sqIuWH5BPPfr+XOJmqkofgKf/CGY8l
-	 AgNDTbTiXLDMx4NghSFdSvIk8J2LieFQpFEn/sRpU17eOzkLjhUcp3KPY6fckOSUtE
-	 Mun4vlELOgklA==
-Message-ID: <23f531f3-b821-42d3-82a1-ed94a0987dd4@kernel.org>
-Date: Fri, 14 Nov 2025 12:49:54 +0100
+	b=q6PQYKfVoejUKxlh/EgOLldna3FeK2R3kAwmspXavUrbL8To1mgupDCtBGmRSqq8j
+	 EPnyBockIj3k7mLHW5gY2Y+SsaoK5GNOqpep6WxAscrMq2c7mwrB1iCL7zMAMUmdMd
+	 SCiwwJ7UI5ttVeCcyJLVgJON6qsBDeCUYa5ZReylGTxTRwFhwfQdDYbFgqLSW9Sg4h
+	 ZLir7Y2DbBUWHujxMl53Xl9VNShkR5exFgEKDYPX7WpjJRA667eE94KwhQUhgnYiQF
+	 psmPK51f4y5CE9QU2T+3gdrWKjNUlVRoHJF2ygKEvLhutLMCjz6JO6Jo5kDh/+fUbV
+	 gJaRoMnICNglA==
+Message-ID: <ef04cb67-2ed7-47e8-b837-b2c4bb33cabe@kernel.org>
+Date: Fri, 14 Nov 2025 12:58:25 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,10 +35,10 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-net 0/3] mptcp: a few random fixes
+Subject: Re: [PATCH v4 mptcp-next 0/3] mptcp: cg and backlog follow-up
 Content-Language: en-GB, fr-BE
 To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-References: <cover.1763075056.git.pabeni@redhat.com>
+References: <cover.1763111767.git.pabeni@redhat.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -84,33 +84,22 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <cover.1763075056.git.pabeni@redhat.com>
+In-Reply-To: <cover.1763111767.git.pabeni@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Paolo,
 
-On 14/11/2025 00:05, Paolo Abeni wrote:
-> The first patch fixes selftest failures in CONFIG_PREEMPT build.
-> The second patch addresses a recently filed issue, 2nd one is due to
-> code inspection while investigating the mentioned issue.
+On 14/11/2025 10:17, Paolo Abeni wrote:
+> This tries to fix the existing races in memcg accounting with the
+> backlog.
+> 
+> Only minor delta over v3: typos, build fix without CG, and reworded
+> comments/commit messages.
 
-Thank you again! Now in our tree (fixes for -net):
+Thank you for the v4 and all these fixes. It looks good to me:
 
-New patches for t/upstream-net and t/upstream:
-- f00f2972e67b: mptcp: fix premature close in case of fallback
-- 8e46f6ba1eea: mptcp: do not fallback when OoO is present
-- 1d2ce718811a: mptcp: do not drop partial packets
-- Results: 7b864be7a6e5..d3c1552df7fb (export-net)
-- 42c9778f2eef: conflict in t/mptcp-borrow-forward-memory-from-subflow
-- Results: 2636e284e552..13d7de45372c (export)
-
-Tests are now in progress:
-
-- export-net:
-https://github.com/multipath-tcp/mptcp_net-next/commit/2e032d2fe4e08ca8caac051eb86c063a29cf6dca/checks
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/a7420f3fafe4ac3877b5bafdea23b2c13d3e2d61/checks
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
 Cheers,
 Matt
