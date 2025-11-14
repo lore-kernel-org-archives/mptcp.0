@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F4AD2FBE02
-	for <mptcp@lists.linux.dev>; Fri, 14 Nov 2025 09:22:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC20A2D73A3;
+	Fri, 14 Nov 2025 10:00:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763112132; cv=none; b=hFr3zm8FIHhg3M0D2TNBBqWOQzB+UBOZGIETRgMqIqZ25Kvs540JBEck4GPv/v44QTYKn2N84snTixomHgP0yfc67zUIJ8UIfiaTpCfLzXj+huMKOQohQRCf6t1rlZ7d0hbEalOEVnLMW4PGEYYObH1urRrojwyGpyJaZtA6elQ=
+	t=1763114453; cv=none; b=kSv3clbLPuyaAWreWKDKUoxdJj8kWW4SwzpKMpO3TS153mrul8NJd1Irm7klIOhP/hdFoO71NSCkK6lTufpH0uvj4ieey/g0m/czV0Ao4i8ABl6tKYoK4tW3f+/pBRP2lsQFqvyOsiBKrM/5XearHZLp0Sak9Dn5IjIc6HsMaJA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763112132; c=relaxed/simple;
-	bh=Ru9GOVXT4hy3ohu6UKco3YnC31OBnpBo2L3fpLs52/U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
-	 In-Reply-To:Content-Type; b=pUPuPKtj8qUzqnNw5S7cODimb5UkabEznJnEMBJMdtZuhOQMDnK4rafXVQ+IORvXuOc5ZMn0AP8VphCihapj0BODE6onCG73mdnbLzot0LXe6ajTalJEdbxUEAuNpA+TfYvCkRUiusEXkVPxX5HDs9UrEWnK486Zch4ss7tz4/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fj5ddhg2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1763114453; c=relaxed/simple;
+	bh=yXdik3qblw9W6slk3JMRfjEQ0RUHvUCkdnP6MjfqTyQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ItqddqtER3MAESFdSQMnWzM7/twx40Zt1DGNbRf26myRJCSsi5vaKCWIZxfEzUL9PSDO51pjfPvi5UQaF3bmpnsiCxyxwIHdPUTkCQk+n+WuZBblZFFND2Hn43EGv8m8dtTZewOxD+zPP0zcXRIALGAYNKXH4hDWcheL1Wi8gNc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LhX5vnil; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fj5ddhg2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A16CC4CEF5;
-	Fri, 14 Nov 2025 09:22:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LhX5vnil"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94636C4CEFB;
+	Fri, 14 Nov 2025 10:00:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763112129;
-	bh=Ru9GOVXT4hy3ohu6UKco3YnC31OBnpBo2L3fpLs52/U=;
-	h=Date:Subject:To:References:From:Cc:In-Reply-To:From;
-	b=Fj5ddhg2yapP/88LB+l33mT9WrO2Am6uCMlDmOv8J1gu6AZVo2JxNehIFockcia19
-	 IPxrO7siaz75eXO2FEKOyhkhwkz5glcPqUVlL+2nrq/f7RSrz4TQKDUYOx+EjbXV8E
-	 8rE/Bl8Qv8S9jRP/UrlFhmUgqPzLSbIsxuOxYNYyqsZh5YvELq+Hr6HMdhfsTScMcl
-	 p0gEKtb1xgtHhjCHsmhdceD148mb4SU3BQ9SH15ioxjcKKxPy60ky4eBTBJUxRNl6W
-	 JD8ake5kY3eJz/m0nj+nT5CNbT7Po9JeIaEIIIg8ld5LZdmMRE2Bjz7vasfVSMI9ND
-	 d0ZOZHleE6hCQ==
-Message-ID: <481c75b0-ccd1-4ac7-8a42-4766bccffeaa@kernel.org>
-Date: Fri, 14 Nov 2025 10:22:06 +0100
+	s=k20201202; t=1763114453;
+	bh=yXdik3qblw9W6slk3JMRfjEQ0RUHvUCkdnP6MjfqTyQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=LhX5vnilJoGh37ITgXmtVtpeAIFV40wNBTpoHD95YQ7qYwJuirQ83Q+BZ/mEDesaP
+	 cSThoCZCqjLJtEcQ7XYxw0c4OOgpTdVNXbv8eMB7L6UCGnMDLJrx5K0XQyWZxFlVBJ
+	 GoNdEOcBj7YbIIkAAtv/DJDOAvOls5oa3AkK6thO5ISCDAbWUqepaGtFyeqFq6oARD
+	 h1Fp6tICwFb39b0vWCNFMCTchszVJ/BarS/TVXU3xnxobEx/7lZ92RNOlN6ssaF0GL
+	 wfduLhPtPw8gLgpeF5NJUwe9DdAqZu1LdJ0sQBcxubmB41ahQpdU8ioNeUGi3PdhKC
+	 kkn4HBP/VzBjw==
+Message-ID: <545ef721-8e86-4b1f-9333-41e37b46e4d6@kernel.org>
+Date: Fri, 14 Nov 2025 11:00:42 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,14 +35,27 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next] Squash to "selftests: mptcp: get stats just
- before timing out"
-To: Geliang Tang <geliang@kernel.org>
-References: <20251113-slft-timeout-stats-kill-v1-1-9a09d8f46392@kernel.org>
- <19e9fe8e0ebbfe2dce632c29771df9eeed470d2e.camel@kernel.org>
-From: Matthieu Baerts <matttbe@kernel.org>
+Subject: Re: [PATCH net v5 3/3] selftests/bpf: Add mptcp test with sockmap
 Content-Language: en-GB, fr-BE
-Cc: MPTCP Upstream <mptcp@lists.linux.dev>
+To: Martin KaFai Lau <martin.lau@linux.dev>,
+ Jiayuan Chen <jiayuan.chen@linux.dev>
+Cc: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>,
+ Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>,
+ Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>,
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
+ Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
+ Jiri Olsa <jolsa@kernel.org>, Shuah Khan <shuah@kernel.org>,
+ Florian Westphal <fw@strlen.de>, Christoph Paasch <cpaasch@apple.com>,
+ Peter Krystad <peter.krystad@linux.intel.com>, linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org, bpf@vger.kernel.org, linux-kselftest@vger.kernel.org
+References: <20251111060307.194196-1-jiayuan.chen@linux.dev>
+ <20251111060307.194196-4-jiayuan.chen@linux.dev>
+ <a92e2c4a-bfde-4a74-8bb5-5e2b8ca87199@linux.dev>
+From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -87,49 +100,92 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <19e9fe8e0ebbfe2dce632c29771df9eeed470d2e.camel@kernel.org>
+In-Reply-To: <a92e2c4a-bfde-4a74-8bb5-5e2b8ca87199@linux.dev>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Geliang,
+Hi Martin,
 
-On 14/11/2025 02:30, Geliang Tang wrote:
-> Hi Matt,
+On 13/11/2025 22:48, Martin KaFai Lau wrote:
+>> diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools/
+>> testing/selftests/bpf/prog_tests/mptcp.c
+>> index f8eb7f9d4fd2..b976fe626343 100644
+>> --- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
+>> +++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
+>> @@ -6,11 +6,14 @@
+>>   #include <netinet/in.h>
+>>   #include <test_progs.h>
+>>   #include <unistd.h>
+>> +#include <error.h>
 > 
-> Thanks for this fix.
+> I changed to errno.h to be specific. I think you only need the values of
+> an errno here.
+>>   #include "cgroup_helpers.h"
+>>   #include "network_helpers.h"
+>> +#include "socket_helpers.h"
+>>   #include "mptcp_sock.skel.h"
+>>   #include "mptcpify.skel.h"
+>>   #include "mptcp_subflow.skel.h"
+>> +#include "mptcp_sockmap.skel.h"
+>>     #define NS_TEST "mptcp_ns"
+>>   #define ADDR_1    "10.0.1.1"
+>> @@ -436,6 +439,142 @@ static void test_subflow(void)
+>>       close(cgroup_fd);
+>>   }
+>>   +/* Test sockmap on MPTCP server handling non-mp-capable clients. */
+>> +static void test_sockmap_with_mptcp_fallback(struct mptcp_sockmap *skel)
+>> +{
+>> +    int listen_fd = -1, client_fd1 = -1, client_fd2 = -1;
+>> +    int server_fd1 = -1, server_fd2 = -1, sent, recvd;
+>> +    char snd[9] = "123456789";
+>> +    char rcv[10];
+>> +
+>> +    /* start server with MPTCP enabled */
+>> +    listen_fd = start_mptcp_server(AF_INET, NULL, 0, 0);
+>> +    if (!ASSERT_OK_FD(listen_fd, "sockmap-fb:start_mptcp_server"))
+>> +        return;
+>> +
+>> +    skel->bss->trace_port = ntohs(get_socket_local_port(listen_fd));
+>> +    skel->bss->sk_index = 0;
+>> +    /* create client without MPTCP enabled */
+>> +    client_fd1 = connect_to_fd_opts(listen_fd, NULL);
+>> +    if (!ASSERT_OK_FD(client_fd1, "sockmap-fb:connect_to_fd"))
+>> +        goto end;
+>> +
+>> +    server_fd1 = xaccept_nonblock(listen_fd, NULL, NULL);
+>> +    skel->bss->sk_index = 1;
+>> +    client_fd2 = connect_to_fd_opts(listen_fd, NULL);
+>> +    if (!ASSERT_OK_FD(client_fd2, "sockmap-fb:connect_to_fd"))
+>> +        goto end;
+>> +
+>> +    server_fd2 = xaccept_nonblock(listen_fd, NULL, NULL);
+>> +    /* test normal redirect behavior: data sent by client_fd1 can be
+>> +     * received by client_fd2
+>> +     */
+>> +    skel->bss->redirect_idx = 1;
+>> +    sent = xsend(client_fd1, snd, sizeof(snd), 0);
+>> +    if (!ASSERT_EQ(sent, sizeof(snd), "sockmap-fb:xsend(client_fd1)"))
+>> +        goto end;
+>> +
+>> +    /* try to recv more bytes to avoid truncation check */
+>> +    recvd = recv_timeout(client_fd2, rcv, sizeof(rcv), MSG_DONTWAIT, 2);
 > 
-> On Thu, 2025-11-13 at 12:11 +0100, Matthieu Baerts (NGI0) wrote:
->> Geliang reported that mptcp_connect.sh test runtime got increased
->> after
->> this patch.
->>
->> That's because the previous 'kill' command was only killing the
->> background job, but the 'sleep' command was still running.
->>
->> It is not very clear to me why there was a delay at the end, but
->> switching to mptcp_lib_kill_group_wait to kill the background job and
->> the running command fixed the issue. The new code is also looking
->> clearer I think, so that's good.
->>
->> Link:
->> https://lore.kernel.org/2a6869ca39bda7ddf8b486cd03e0867b30e0d565.camel@kernel.org
->> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> I removed the socket_helpers.h usage. The _nonblock, _timeout, and
+> MSG_DONTWAIT are unnecessary. I replaced them with the regular accept,
+> send, and recv. All fds from network_helpers.c have a default 3s
+> timeout instead of 30s in xaccept_nonblock. This matches how most of
+> the selftests/bpf are doing it as well.
 > 
-> It works.
+> I also touched up the commit message in patch 2 based on Matt's comment.
+
+Thank you for having applied the patches, and for the modifications you did!
+
+> Applied. Thanks.
 > 
->     Reviewed-by: Geliang Tang <geliang@kernel.org>
-
-Thank you for the review, just applied:
-
-New patches for t/upstream:
-- 39266eb8cdba: Squash to "selftests: mptcp: get stats just before
-timing out"
-- Results: 24d7b3380fc2..e804ecd59ca4 (export)
-
-Tests are now in progress:
-
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/3210c91543d4fb12e46c89fefb9d9ff78be4a471/checks
+>> +    server_fd = xaccept_nonblock(listen_fd, NULL, NULL);
+>> +    err = bpf_map_update_elem(bpf_map__fd(skel->maps.sock_map),
+>> +                  &zero, &server_fd, BPF_NOEXIST);
+> 
 
 Cheers,
 Matt
