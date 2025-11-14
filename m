@@ -1,153 +1,137 @@
-Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E011C1DB54C
-	for <mptcp@lists.linux.dev>; Fri, 14 Nov 2025 01:36:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F46B1DE2C9
+	for <mptcp@lists.linux.dev>; Fri, 14 Nov 2025 01:43:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763084201; cv=none; b=A928X3YrrhY8Vqt7sjzdlrB5G/IvCCRRSW/LBZy06FxtoumUdZJsvqUlLMxmBw2qcc34kpXN/mB1DeTo8FezKVxLZpCrYv26tJzBN/S/FEGCdMDzb5tv6InwNCpXZ3bDIMGCVj4lc9J/D2dBIcF+JeyRxWXvkSeXaSs5brgX+3g=
+	t=1763084615; cv=none; b=HbDXOoWkzrv1aN+aBc9VzF7OIM80LF3k5s+CBXT++ohQJ5ATmAtRpVo/dFiKmBAMtHUzghEqCiRU77V7D72d7TQcGUObICZaeNSgGg+W1P9VT2evQFh7L4tYijYsjkPi+1qSL6rMTxOh2eVX+kCUW0NMgZIwFL0UKbXCd6GiUX8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763084201; c=relaxed/simple;
-	bh=184T6RWPKkrI9yGxqY80YK5leWWcLPxzmE9thnr28BY=;
-	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
-	 In-Reply-To:References; b=bX7MGtkE3uhVMsXSs6OaImFz40c0Vdz2eKLRFcO5moJmmW/cxJ7jgtm2JAKIgGDCKTvTh2nrAArvFSPB6DaaXmmmz0qeUP74Djv6+nQLK9QQf2GuCubnRSz/ECCfHARgLuLHdVst1jUbHozzuRntcVeVzOJtcA/rZWbWG8ghfaM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=t/xuhW6c; arc=none smtp.client-ip=91.218.175.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1763084615; c=relaxed/simple;
+	bh=NXCxcEnKcC1xOljXjLHvaEiXeouGvHb8dTE/p+UpMqI=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=YddG/CiMeRe6XpLPbxeRuQrkDidcySYHB8xD6iNn1r6FuGe4xEYtdwGX+2vT+X/qYjy3Ho6lA0NwXUbd759BPU3dwgGY36Of7oFpww52z3Cdh2kdCB6jlNYHZmSlgOYqMsa6/+/Osj7UH8BK0z8R1AQu8L3ZpOrbOs0PkWLxl+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E3cdUSvM; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="t/xuhW6c"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E3cdUSvM"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-7acd9a03ba9so1212731b3a.1
+        for <mptcp@lists.linux.dev>; Thu, 13 Nov 2025 17:43:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1763084614; x=1763689414; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yxnUhoGMvmRypuOiZqyr1a1uNtk9how5+rkt00YZ+yQ=;
+        b=E3cdUSvM3y/Wj5mUzhTyjkbN/CrKdJRm8sY1xpNGZD/q1NSsXoNbT1Xq+k9ECEDLne
+         DDwHKrBGx9jwarPMkChHY6G777wBFWQbtnfQVMGVDsMrorjKhL5fOc12cz977gwxaefo
+         nQ9Wh6b6VJpFVt5uJ7WIRXcVPpZgPivWtFpXSq2nMqDNpRDrGEldI7LzXjoi+jMOtdma
+         O8bWVsXI8vhBZIRiWKPioetS9vsqgwbUJXdqh4SZ871YZVo4h/FOCuWOm5e+dQa9c/OQ
+         qcui4SC6ihGh7pibw8//KL3oSpsTeeCRtuRspjluTza6h7QHAkBnl6it8v57xa+iJK24
+         qytQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763084614; x=1763689414;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=yxnUhoGMvmRypuOiZqyr1a1uNtk9how5+rkt00YZ+yQ=;
+        b=r33dy/bkpbhcd8vNaVQSka5Ypumx/YmJHikhu/IwDncflIIyunABOOQItxdgle970d
+         W31mW+oDe2xJ3KKwraBIz6/I01ror4nRKop2/HshG9hgb0exBYQoYoxsdstIp7U8Y4I8
+         jnnxw0r9uCcRJx/cO8dIC0m9P/LSm/mGI2HijCfZLQAiw4e/efYU0m+MV5hjWE79GuFD
+         6OsPjbrTRBqwtaDRAO4ZZe/DDWmmab/klNSdKLCv6yWh3US6lJwodTQtdAGthFf3Eb5O
+         1aSpxkW40KeimfOx8ggsXP9/6gUii4grl13+Qtxa8h1H002jX9KwnCPI+JdU/eA41OkD
+         1MhA==
+X-Gm-Message-State: AOJu0Yy++SIve0BNyJWPJe3LXEmS5TkFGfzTH6D7SygKQfZIaz3i54ea
+	yCIqwcT7LKYRCdZLncPzXe+VE9J46zBtLrEH77kcokVj5rlVqySUi3Y=
+X-Gm-Gg: ASbGncvl5XKuZoezZmJ/XwkZRlUJ9fPHqTxGKbXJ2dUnZTcjr84TA2kLTP8VCccth1D
+	UIGL0Kd2SeBW0R2mg4sjbR2hHjQFopTCxmtP4tbIVIjvzJWBC3lhAukfhDF4RAtThJ2iRjzxN/q
+	3y0D7Thb55koX3ZrBdslYUvi+fbswtxz89IiMgbDXd9mObVgSVpAQFRgyxsAwnZegSfFog4jr9M
+	ALZsXoK0y1GG56NPZkB35Lwi18uSG7nka2b8ZmsXaQQNRuoc3uoCdNOJKNF/uL5wUIUrbdv87mj
+	PzQgbQXdmYXwCBqZk3Wz0YK7wCjuLdQhFMge419YnZdwl1r4I4LhYX5uDCRiKFpKJ+GcQdEPp/n
+	bK+Cq16hBlrgIx40QE85Q6+6M6CsnfQKaxKL9sJhCVOOPIXsVzjwvotuFIGl6I/jruv2+nQoh71
+	0msF0C5vhP/DlgP27u/KDkM656gl9CQW4PNCPK
+X-Google-Smtp-Source: AGHT+IFdMihnMdO540AoOjfKDeHn//EoZIrVUKllJvvvr16xONODfvdlzNaay9Xh5V7M0b/oXG01GQ==
+X-Received: by 2002:a05:7300:ec97:b0:2a4:8aaf:d6b9 with SMTP id 5a478bee46e88-2a4aba993a1mr517342eec.13.1763084613569;
+        Thu, 13 Nov 2025 17:43:33 -0800 (PST)
+Received: from [127.0.0.1] ([172.184.220.153])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-11b06088604sm4285873c88.7.2025.11.13.17.43.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Nov 2025 17:43:33 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <cover.1763075056.git.pabeni@redhat.com>
+References: <cover.1763075056.git.pabeni@redhat.com>
+Subject: Re: [PATCH mptcp-net 0/3] mptcp: a few random fixes
+Message-ID: <4fb8c093-d8cc-0b1b-1a44-2f4a8bbeac74@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 14 Nov 2025 01:43:32 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1763084195;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rhAvhoW0qGIKNwEfFjd214od0HqLgMRWs7YHTP4WZaA=;
-	b=t/xuhW6cYzNRhoXeqwXsrq+DVpCFpEEZ10t9Hro34mdAneBTjRM8fcvOodXL4GzWCL08QT
-	w5yBZIDqjrzULT/Bml/Q14gUs+7099w1Lo6UWJV/hf+EAI+ry5Q8OoKTumBnDTAaCcoI57
-	h0iRQ7TrtIz0Fbe6Uq3NbwiDiI7zRGo=
-Date: Fri, 14 Nov 2025 01:36:32 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: "Jiayuan Chen" <jiayuan.chen@linux.dev>
-Message-ID: <c052bf6e1e5584b806c41dcb63a1d67f6aafa293@linux.dev>
-TLS-Required: No
-Subject: Re: [PATCH net v5 3/3] selftests/bpf: Add mptcp test with sockmap
-To: "Martin KaFai Lau" <martin.lau@linux.dev>, "Matthieu Baerts"
- <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev, "Mat Martineau" <martineau@kernel.org>, "Geliang
- Tang" <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>,
- "Eric Dumazet" <edumazet@google.com>, "Jakub Kicinski" <kuba@kernel.org>,
- "Paolo Abeni" <pabeni@redhat.com>, "Simon Horman" <horms@kernel.org>,
- "Alexei Starovoitov" <ast@kernel.org>, "Daniel Borkmann"
- <daniel@iogearbox.net>, "Andrii Nakryiko" <andrii@kernel.org>, "Eduard
- Zingerman" <eddyz87@gmail.com>, "Song Liu" <song@kernel.org>, "Yonghong
- Song" <yonghong.song@linux.dev>, "John Fastabend"
- <john.fastabend@gmail.com>, "KP Singh" <kpsingh@kernel.org>, "Stanislav
- Fomichev" <sdf@fomichev.me>, "Hao Luo" <haoluo@google.com>, "Jiri Olsa"
- <jolsa@kernel.org>, "Shuah Khan" <shuah@kernel.org>, "Florian Westphal"
- <fw@strlen.de>, "Christoph Paasch" <cpaasch@apple.com>, "Peter Krystad"
- <peter.krystad@linux.intel.com>, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org, bpf@vger.kernel.org,
- linux-kselftest@vger.kernel.org
-In-Reply-To: <a92e2c4a-bfde-4a74-8bb5-5e2b8ca87199@linux.dev>
-References: <20251111060307.194196-1-jiayuan.chen@linux.dev>
- <20251111060307.194196-4-jiayuan.chen@linux.dev>
- <a92e2c4a-bfde-4a74-8bb5-5e2b8ca87199@linux.dev>
-X-Migadu-Flow: FLOW_OUT
 
-2025/11/14 05:48, "Martin KaFai Lau" <martin.lau@linux.dev mailto:martin.=
-lau@linux.dev?to=3D%22Martin%20KaFai%20Lau%22%20%3Cmartin.lau%40linux.dev=
-%3E > =E5=86=99=E5=88=B0:
+Hi Paolo,
+
+Thank you for your modifications, that's great!
+
+Our CI did some validations and here is its report:
+
+- KVM Validation: normal (except selftest_mptcp_join): Critical: 85 Call =
+Trace(s) - Critical: Global Timeout =E2=9D=8C
+- KVM Validation: normal =
+(only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug =
+(except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug =
+(only selftest_mptcp_join): Unstable: 1 failed test(s): selftest_mptcp_join=
+ =F0=9F=94=B4
+- KVM Validation: btf-normal (only bpftest_all): Success! =
+=E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Unstable: 1 =
+failed test(s): bpftest_test_progs-cpuv4_mptcp =F0=9F=94=B4
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/193490=
+79984
+
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/88e88d30abed
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1023207
 
 
->=20
->=20>=20
->=20> diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools=
-/testing/selftests/bpf/prog_tests/mptcp.c
-> >  index f8eb7f9d4fd2..b976fe626343 100644
-> >  --- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
-> >  +++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-> >  @@ -6,11 +6,14 @@
-> >  #include <netinet/in.h>
-> >  #include <test_progs.h>
-> >  #include <unistd.h>
-> >  +#include <error.h>
-> >=20
->=20I changed to errno.h to be specific. I think you only need the values=
- of an errno here.
->=20
->=20>=20
->=20> #include "cgroup_helpers.h"
-> >  #include "network_helpers.h"
-> >  +#include "socket_helpers.h"
-> >  #include "mptcp_sock.skel.h"
-> >  #include "mptcpify.skel.h"
-> >  #include "mptcp_subflow.skel.h"
-> >  +#include "mptcp_sockmap.skel.h"
-> >  > #define NS_TEST "mptcp_ns"
-> >  #define ADDR_1 "10.0.1.1"
-> >  @@ -436,6 +439,142 @@ static void test_subflow(void)
-> >  close(cgroup_fd);
-> >  }
-> >  > +/* Test sockmap on MPTCP server handling non-mp-capable clients. =
-*/
-> >  +static void test_sockmap_with_mptcp_fallback(struct mptcp_sockmap *=
-skel)
-> >  +{
-> >  + int listen_fd =3D -1, client_fd1 =3D -1, client_fd2 =3D -1;
-> >  + int server_fd1 =3D -1, server_fd2 =3D -1, sent, recvd;
-> >  + char snd[9] =3D "123456789";
-> >  + char rcv[10];
-> >  +
-> >  + /* start server with MPTCP enabled */
-> >  + listen_fd =3D start_mptcp_server(AF_INET, NULL, 0, 0);
-> >  + if (!ASSERT_OK_FD(listen_fd, "sockmap-fb:start_mptcp_server"))
-> >  + return;
-> >  +
-> >  + skel->bss->trace_port =3D ntohs(get_socket_local_port(listen_fd));
-> >  + skel->bss->sk_index =3D 0;
-> >  + /* create client without MPTCP enabled */
-> >  + client_fd1 =3D connect_to_fd_opts(listen_fd, NULL);
-> >  + if (!ASSERT_OK_FD(client_fd1, "sockmap-fb:connect_to_fd"))
-> >  + goto end;
-> >  +
-> >  + server_fd1 =3D xaccept_nonblock(listen_fd, NULL, NULL);
-> >  + skel->bss->sk_index =3D 1;
-> >  + client_fd2 =3D connect_to_fd_opts(listen_fd, NULL);
-> >  + if (!ASSERT_OK_FD(client_fd2, "sockmap-fb:connect_to_fd"))
-> >  + goto end;
-> >  +
-> >  + server_fd2 =3D xaccept_nonblock(listen_fd, NULL, NULL);
-> >  + /* test normal redirect behavior: data sent by client_fd1 can be
-> >  + * received by client_fd2
-> >  + */
-> >  + skel->bss->redirect_idx =3D 1;
-> >  + sent =3D xsend(client_fd1, snd, sizeof(snd), 0);
-> >  + if (!ASSERT_EQ(sent, sizeof(snd), "sockmap-fb:xsend(client_fd1)"))
-> >  + goto end;
-> >  +
-> >  + /* try to recv more bytes to avoid truncation check */
-> >  + recvd =3D recv_timeout(client_fd2, rcv, sizeof(rcv), MSG_DONTWAIT,=
- 2);
-> >=20
->=20I removed the socket_helpers.h usage. The _nonblock, _timeout, and
-> MSG_DONTWAIT are unnecessary. I replaced them with the regular accept,
-> send, and recv. All fds from network_helpers.c have a default 3s
-> timeout instead of 30s in xaccept_nonblock. This matches how most of
-> the selftests/bpf are doing it as well.
->=20
->=20I also touched up the commit message in patch 2 based on Matt's comme=
-nt.
->=20
->=20Applied. Thanks.
->=20
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
 
-Thanks=20for the cleanup and applying!
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
