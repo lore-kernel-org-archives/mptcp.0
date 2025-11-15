@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D4CD224D6
-	for <mptcp@lists.linux.dev>; Sat, 15 Nov 2025 01:32:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7AA418EAB
+	for <mptcp@lists.linux.dev>; Sat, 15 Nov 2025 01:32:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763170357; cv=none; b=b9JEj7W6LTKBvrXb/T0jI0u1wMlZ93LBGMrgRoaAUzRDOI4HSlezkqQX+7NbRbWEAXJLlF2HzeLg7I8aCalEKT5TSkAsc4AGsJCdHT6gdVUvFJ/I29WMxsUnzMlPBG+bHkCrUcpid6X5rEY1WA0SZqVTgtIi3ChTJK+T+34FiWE=
+	t=1763170373; cv=none; b=n2INsGkuklAVuknCvQMaF3CjfFc8FbccNDkxWsnr0OJ0uk+/VFvTH/maDWKp4fPHXnppb0GhHiDZviFlDFksr8rnzXT8kykz8xrQSIHDHvb+vXgdefIDQtNjY2wywC0Pl8oCwGwK6xjNdebZ6F6uZPCVicdPswSaZx2/Vpe0apQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763170357; c=relaxed/simple;
-	bh=pHH/8a87O8lK7PM7FRg0jDqrAG5Q1yk+3brd7F/TCK8=;
+	s=arc-20240116; t=1763170373; c=relaxed/simple;
+	bh=t9bnYN0Vpp5RsoaO9WG3yLmh5ixhkOMxRMPJ7B4dfmc=;
 	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=ElC+/gs8+EX7lZaEuoL/Uqc4xTv2u36s02diTNwcmB7eHvqmmYCpvMwD5uKGYtqSB+nfuNfOMZfosj6jLgGNArnLsursNZ3qSEbYdoQOyfomzYUNlB1YQd9yk2wlNy4oe8A0lAN7PX0C6BXPutaawOLALyt50HePXqYeQcsdf2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VUAioMPN; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=ILjfLrS3sAL/QnbfxHM+6zSWo1qPnC1ea1WdnfJjH9rg+xZoxDmBckhZjaj06TxjauXh7YU4vDQvsIvXFgoYVQDt10d6Nucee2GYvZJ47KYa/T6Ul8nE44Ck99xuogMw8ZtAWeSCiqIMOlOGuSi2E6dUEw/W84EAGNhI/zJ+wtg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UzhUOgNH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VUAioMPN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED566C16AAE;
-	Sat, 15 Nov 2025 01:32:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UzhUOgNH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7354C4CEFB;
+	Sat, 15 Nov 2025 01:32:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763170357;
-	bh=pHH/8a87O8lK7PM7FRg0jDqrAG5Q1yk+3brd7F/TCK8=;
+	s=k20201202; t=1763170372;
+	bh=t9bnYN0Vpp5RsoaO9WG3yLmh5ixhkOMxRMPJ7B4dfmc=;
 	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=VUAioMPNGW8sRsLQiZMFU5EwWWOOsED45qc5DvjJMxpbFk7y3iNAB6tQRCcvCBN8I
-	 XBu8vhW2T64fpUqnXFkjXEDyieVcP0psQhPHESJnDc1vfVGzzV3jCTfsKQzKO5JIKH
-	 UKy/4xYZOsmaizarOVOxqraJCYdjvX/K76I6ysWF8W6ca61GNLEf7IZXTGkvu+YdPO
-	 hle3XI+E2SX6yXbpH4Bn3Db6Ti5GhB3fJmB37GnswrLxiG1AEVH0zQ+TrDtqxo64hf
-	 zzGGR6UhY8PdnOpKSiS6UPGW7NisUF4ivAWqFFY4zDo0dhuqWJoJ2I5lTeFWH8IUUD
-	 urYnb6IZX/FJA==
-Date: Fri, 14 Nov 2025 17:32:36 -0800 (PST)
+	b=UzhUOgNHqZ0oDSWvijXyLeWUd6CnNzE0UW0HYA8SKop47lJ28dipt3lOMJqFCvZTw
+	 t+I2hiHEHjiUwbr9Lmsjl4tCPhs47wdt/4IqXHdAwejYFBdKwGLPmhCaiggL8TZVBZ
+	 SQEWa+obEEWm1wT/9O506L52JBkEUVGU3E7S69HIK5sAVsEkUKYfrsvNKlfZpUFo+3
+	 A6K++T18XQqU7nl8FFGx0iwh9lwSolE4bc72vIzNszdJwhdZTGCTJomkZOwY343ic2
+	 k+sakcjqFP543OIzIHk2xWdmERKnBqZ4eB1aeYH9FuqaMYYlE34HgI1SOnv91Ll4z5
+	 3/IqE3peQOLow==
+Date: Fri, 14 Nov 2025 17:32:52 -0800 (PST)
 From: Mat Martineau <martineau@kernel.org>
 To: Paolo Abeni <pabeni@redhat.com>
 cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH v4 mptcp-next 4/6] mptcp: better rcv space
- initialization
-In-Reply-To: <add0910a988cd8f45b7c3f5c76dea0fc3f4ee666.1762940290.git.pabeni@redhat.com>
-Message-ID: <c279328d-9ae5-fb26-4d71-d23d887a44da@kernel.org>
-References: <cover.1762940290.git.pabeni@redhat.com> <add0910a988cd8f45b7c3f5c76dea0fc3f4ee666.1762940290.git.pabeni@redhat.com>
+Subject: Re: [PATCH v4 mptcp-next 6/6] mptcp: add receive queue awareness in
+ tcp_rcv_space_adjust()
+In-Reply-To: <ba459ac039f30f4b81cb97be2d0963e7b5216e05.1762940290.git.pabeni@redhat.com>
+Message-ID: <67facdd8-cc0b-6146-4f3b-05745f0652d5@kernel.org>
+References: <cover.1762940290.git.pabeni@redhat.com> <ba459ac039f30f4b81cb97be2d0963e7b5216e05.1762940290.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -45,23 +45,23 @@ Content-Type: text/plain; charset=US-ASCII; format=flowed
 
 On Wed, 12 Nov 2025, Paolo Abeni wrote:
 
-> Each additional subflow can overshot the rcv space by a full rcv wnd,
-> as the TCP socket at creation time will announce such window even if
-> the MPTCP-level window is closed.
+> This is the mptcp counter-part of commit ea33537d8292 ("tcp: add receive
+> queue awareness in tcp_rcv_space_adjust()").
 >
-> Underestimating the initial real rcv space can overshot the initial rcv
-> win increase significantly.
+> Prior to this commit:
 >
-> Keep track explicitly of the rcv space contribution by newly created
-> subflow, updating rcvq_space.space accordingly for every successfully
-> completed subflow handshake.
+> ESTAB 33165568 0      192.168.255.2:5201 192.168.255.1:53380 \
+> 	skmem:(r33076416,rb33554432,t0,tb91136,f448,w0,o0,bl0,d0)
+>
+> After:
+> ESTAB 3279168 0      192.168.255.2:5201 192.168.255.1]:53042 \
+> 	skmem:(r3190912,rb3719956,t0,tb91136,f1536,w0,o0,bl0,d0)
+> (same tput)
 >
 > Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 > ---
-> net/mptcp/protocol.c | 44 ++++++++++++++++++++++++++++++--------------
-> net/mptcp/protocol.h | 30 ++++++++++++++++++++++++++++++
-> net/mptcp/subflow.c  |  3 +++
-> 3 files changed, 63 insertions(+), 14 deletions(-)
+> net/mptcp/protocol.c | 8 +++++---
+> 1 file changed, 5 insertions(+), 3 deletions(-)
 
 Reviewed-by: Mat Martineau <martineau@kernel.org>
 
