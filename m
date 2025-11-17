@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59146242D79;
-	Mon, 17 Nov 2025 10:42:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 954DA331239
+	for <mptcp@lists.linux.dev>; Mon, 17 Nov 2025 11:08:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763376157; cv=none; b=MbRbUcdl1GF0GygWZiapo//2FPcWBfvtkuP/GwOs1UfPb/TsUzMT4HEoFj99NeNdzn0psIIX9JcWIdEC4AV7ydLTgFekbVWONyqlk6B3fKVtWBuxDo9Z5nRHk7phRisg+JoY6E1M2uSoYXRazpcl7e2ZK3mlcABRMtLY0DOG4gg=
+	t=1763377705; cv=none; b=S16Qvq31NPvUtuRaw+Ja61DBgCwcTHZvTFbQpoi6zMDJc66bsCiUsQ6rZtNwFmUmsb3BRZV+JQl/asYhHGFuOCqmwiirsmH9VUAzApbSv3450d54bDWliuzW6MPRWOyzSo6v8AUKJ54YHN1+qG8FklXBh6IXQ+vQRPEUTIYKMhI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763376157; c=relaxed/simple;
-	bh=h4naylcnZ42ygadbcjyMy/mQYI5dhbIUSRYT93UZJSQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lPm++EHQB3gQl8LFtWrNPl1OA1W/UtT5aJeYrjXa75meyjoTnwaO6K62KG4wF+QYLWu6Cxf6Z/WpguVhncMcYn2MfXjFTegB5GtXFkL77UmSZuAGZn7cInT872rYDcPnyqfODDENSV/CBtXjVOBtcFr0KWnwfsuOPpIrNr+djTw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f9Fs0Vr0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1763377705; c=relaxed/simple;
+	bh=Qy6Np31u5xXHi3GQSCa27OUiJqt4D2GDCrKX+hQQZVQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=r2G+H6cRTXs7vKcSF/Hv7KFCGI3oSDxsmWdbC9/n5aosDDtK3nwN4HrWwBcbkvWmULW1eGoTbRfqqlSv+xKytIczBIOaYOtyOj0yBpaZycZ2Q/qRyiolf9ogwMclDGuGX3EWa0rjj1DRviQiB3Wg0oESHkgC0SjfRBfBevoWQVk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EdeKzPRU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f9Fs0Vr0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 790F7C116B1;
-	Mon, 17 Nov 2025 10:42:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EdeKzPRU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B96EDC4CEFB
+	for <mptcp@lists.linux.dev>; Mon, 17 Nov 2025 11:08:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763376156;
-	bh=h4naylcnZ42ygadbcjyMy/mQYI5dhbIUSRYT93UZJSQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=f9Fs0Vr0csPEvrpD9S43ms3eZKlpnL46BEa1SuW/dFVovda15xZVVFC6JC44ByEdT
-	 8494DP4aPmT7reXAS8r0QEojLSWDUZT6hNeOagxsHuakgc+UddP7NvPaMLAcLCCJf5
-	 VKPxidMQWzwg7vKxGbkFpa7ODvuuedr/hWTX87XTBn2eHpFXY5x/oIS1m2JUbffxQ4
-	 ixyZUo2v49UbyLO0jBAu/9TYn+1cZJeTjHZ8XEVVhX3lHZKC9f/tCjZ+xHMmein+zV
-	 y05wI8MGQQQOYeGzIEnzKF5Dmhtmi6lrOGHs7tlPDyOHmtqYuZD9S1jMP78GT8ItPg
-	 /RUwpQsOuwwtg==
-Message-ID: <a155bf8b-08cd-4cd9-91d9-f49180f19f6c@kernel.org>
-Date: Mon, 17 Nov 2025 11:42:31 +0100
+	s=k20201202; t=1763377705;
+	bh=Qy6Np31u5xXHi3GQSCa27OUiJqt4D2GDCrKX+hQQZVQ=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=EdeKzPRU2njoyWsnTI3vCb8BFXAwdW7svfKfBrwDb3uREY7Bx7bKJ93tgsAwiieLi
+	 S3MwVwExVHQ0urBYJkxJA2F4kAyk2OQLomuvvSQgs26FrADqrT+gxbDamBfWgzXQ1o
+	 uqSOY8K3KsAwHDU35F3zPkKpxejr0rwakTCyi7/fsd7Ksz2CcTj0Kjccxs3ve64s/c
+	 0EgBToFMFZzzFUw+lWxwu9ZXxILpZF/ZsBsviYojigX5+6sTrc1Yt32hjadN+Q6Pib
+	 vpcGVBKCYkHQwmJ9VZAh8F4fRGwJ5xby3O8gBfABUp4iLnmQ57KgwwVCF+E2AZazyb
+	 5Sb8uizalGfMg==
+Message-ID: <8aeea045-c68d-493a-8f83-4a9187480428@kernel.org>
+Date: Mon, 17 Nov 2025 12:08:23 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,19 +35,10 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 net] mptcp: fix a race in mptcp_pm_del_add_timer()
+Subject: Re: [PATCH mptcp-net 0/2] selftests: mptcp: join: longer timeout
 Content-Language: en-GB, fr-BE
-To: Eric Dumazet <edumazet@google.com>
-Cc: Mat Martineau <martineau@kernel.org>,
- Geliang Tang <geliang.tang@linux.dev>, Florian Westphal <fw@strlen.de>,
- netdev@vger.kernel.org, eric.dumazet@gmail.com,
- syzbot+2a6fbf0f0530375968df@syzkaller.appspotmail.com,
- Geliang Tang <geliang@kernel.org>, MPTCP Linux <mptcp@lists.linux.dev>,
- "David S . Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>
-References: <20251117100745.1913963-1-edumazet@google.com>
- <c378da30-4916-4fd6-8981-4ab2ffa17482@kernel.org>
- <CANn89iLxt+F+SrpgXGvYh9CZ8GNmbbowv5Ce80P1gsWjaXf+CA@mail.gmail.com>
+To: MPTCP Linux <mptcp@lists.linux.dev>
+References: <20251112-slft-longer-timeout-v1-0-97aab145a062@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -93,63 +84,28 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <CANn89iLxt+F+SrpgXGvYh9CZ8GNmbbowv5Ce80P1gsWjaXf+CA@mail.gmail.com>
+In-Reply-To: <20251112-slft-longer-timeout-v1-0-97aab145a062@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 17/11/2025 11:21, Eric Dumazet wrote:
-> On Mon, Nov 17, 2025 at 2:15 AM Matthieu Baerts <matttbe@kernel.org> wrote:
->>
->> Hi Eric,
->>
->> (+cc MPTCP ML)
->>
->> On 17/11/2025 11:07, Eric Dumazet wrote:
->>> mptcp_pm_del_add_timer() can call sk_stop_timer_sync(sk, &entry->add_timer)
->>> while another might have free entry already, as reported by syzbot.
->>>
->>> Add RCU protection to fix this issue.
->>
->> Thank you for the report and even more for the fix!
->>
->>> Also change confusing add_timer variable with stop_timer boolean.
->>
->> Indeed, this name was confusing: 'add_timer' is in fact a (too) short
->> version of "additional address signalling retransmission timer". This
->> new 'stop_timer' boolean makes sense!
->>
->>> syzbot report:
->>
->> (...)
->>
->>> Fixes: 00cfd77b9063 ("mptcp: retransmit ADD_ADDR when timeout")
->>> Reported-by: syzbot+2a6fbf0f0530375968df@syzkaller.appspotmail.com
->>> Closes: https://lore.kernel.org/netdev/691ad3c3.a70a0220.f6df1.0004.GAE@google.com/
->>> Signed-off-by: Eric Dumazet <edumazet@google.com>
->>> Cc: Geliang Tang <geliang@kernel.org>
->>
->> The modification looks good to me:
->>
->> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
->>
->> While at it, just to help me to manage the backports:
->>
->> Cc: stable@vger.kernel.org
->>
->>> v2: Updated/Added Reported-by:/Closes: tags now syzbot report finally reached netdev@ mailing list.
->>
->> Out of curiosity, is it not OK to reply to the patch with the new
->> Reported-by & Closes tags to have them automatically added when applying
->> the patch? (I was going to do that on the v1, then I saw the v2 just
->> when I was going to press 'Send' :) )
+Hello,
+
+On 12/11/2025 10:45, Matthieu Baerts (NGI0) wrote:
+> A previous attempt was helping, but not enough as the background
+> connections were still stopped after the timeout. That's what the MPTCP
+> CI recently reported with the "delete and re-add" subtest taking a bit
+> more than one minute in a debug environment.
 > 
-> I am not sure patchwork has been finally changed to understand these two tags.
+> To play it safe, and because increasing the timeout for the background
+> connections doesn't change anything to the end result (the transfer is
+> not checked in this case), all subtests with a background connection not
+> waiting for it to end now have a longer timeout.
 
-Ah yes, thank you! If there is a dependence on Patchwork, I think
-indeed, it doesn't recognise the 'Closes' tag (but I think 'Reported-by'
-is OK).
+I hope it is OK if I apply these patches now: they are simple, linked to
+recent patches, and we still have quite a few patches in the queue.
 
-While at it, I forgot to add: this patch can be applied in net directly.
+I'm planning to send them with other patches we have in the queue for
+net ideally today.
 
 Cheers,
 Matt
