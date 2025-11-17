@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 954DA331239
-	for <mptcp@lists.linux.dev>; Mon, 17 Nov 2025 11:08:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44C3F27CCEE
+	for <mptcp@lists.linux.dev>; Mon, 17 Nov 2025 11:26:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763377705; cv=none; b=S16Qvq31NPvUtuRaw+Ja61DBgCwcTHZvTFbQpoi6zMDJc66bsCiUsQ6rZtNwFmUmsb3BRZV+JQl/asYhHGFuOCqmwiirsmH9VUAzApbSv3450d54bDWliuzW6MPRWOyzSo6v8AUKJ54YHN1+qG8FklXBh6IXQ+vQRPEUTIYKMhI=
+	t=1763378769; cv=none; b=VUDp6BaAXafccCP0GHb419GTKbKbYIzYqA9UnxNyx5Q13JjNAD/ZwhNvj+tmmxbgXsuxaJ/vaTgfWmJwcb81ePWwtuEO15ISyAb5u9PXuYXMt1JHv9Tkee28qTvt+lqCNmJ9S+hx2AeMJ2tc6jgO6WSCqw+AT6F0SleTP6t77EM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763377705; c=relaxed/simple;
-	bh=Qy6Np31u5xXHi3GQSCa27OUiJqt4D2GDCrKX+hQQZVQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=r2G+H6cRTXs7vKcSF/Hv7KFCGI3oSDxsmWdbC9/n5aosDDtK3nwN4HrWwBcbkvWmULW1eGoTbRfqqlSv+xKytIczBIOaYOtyOj0yBpaZycZ2Q/qRyiolf9ogwMclDGuGX3EWa0rjj1DRviQiB3Wg0oESHkgC0SjfRBfBevoWQVk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EdeKzPRU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1763378769; c=relaxed/simple;
+	bh=v0zM5x0AWmXbvcxGe/eiSSTN8Ht4jMpHQfUhTIDVzeM=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=ooMgExAJVC0OTNButEoEshpCaWesIJlfSWUEbx+2DcAN1HMaqtJ1jlgx+s/HodsQcE2VEcEjaxqWjKvZ9QrEc5fakvFDiITxMfJJg6B6M9U2y2Xfhw2IusJxUN3f7vjWsINwD9GoVKbQAa36bqZEqGGk2fnjhnHvcTnsxVZBO/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OIZdgw3y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EdeKzPRU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B96EDC4CEFB
-	for <mptcp@lists.linux.dev>; Mon, 17 Nov 2025 11:08:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OIZdgw3y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31EE4C4CEF5
+	for <mptcp@lists.linux.dev>; Mon, 17 Nov 2025 11:26:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763377705;
-	bh=Qy6Np31u5xXHi3GQSCa27OUiJqt4D2GDCrKX+hQQZVQ=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=EdeKzPRU2njoyWsnTI3vCb8BFXAwdW7svfKfBrwDb3uREY7Bx7bKJ93tgsAwiieLi
-	 S3MwVwExVHQ0urBYJkxJA2F4kAyk2OQLomuvvSQgs26FrADqrT+gxbDamBfWgzXQ1o
-	 uqSOY8K3KsAwHDU35F3zPkKpxejr0rwakTCyi7/fsd7Ksz2CcTj0Kjccxs3ve64s/c
-	 0EgBToFMFZzzFUw+lWxwu9ZXxILpZF/ZsBsviYojigX5+6sTrc1Yt32hjadN+Q6Pib
-	 vpcGVBKCYkHQwmJ9VZAh8F4fRGwJ5xby3O8gBfABUp4iLnmQ57KgwwVCF+E2AZazyb
-	 5Sb8uizalGfMg==
-Message-ID: <8aeea045-c68d-493a-8f83-4a9187480428@kernel.org>
-Date: Mon, 17 Nov 2025 12:08:23 +0100
+	s=k20201202; t=1763378766;
+	bh=v0zM5x0AWmXbvcxGe/eiSSTN8Ht4jMpHQfUhTIDVzeM=;
+	h=Date:Subject:From:To:References:In-Reply-To:From;
+	b=OIZdgw3yHANya7R6DBXC6P/q7iQyIvXL/oMS5Vo07G4C7u4QA1mh9HRZUP49yB92/
+	 oz28yiyrVqEBPSxEjyHoihIDigsYjKShL0/HFBaai7l5xmv5oQwux3MVzpSIcvO6gg
+	 PbQKUJNoqL9bl+X8iA+KseD8TRTBKn4MnxVFSGl6KENx3ddboJIpEaQJoeAzH5DuRt
+	 5Ux5ARQZRbiAQ6Eqg+ApgHI7Rujlqj/sleF+Ulr9Lnq5tyFdjqfuZLjvU1x12sMLVT
+	 2rgPxyOo/aD5CmVtpPvsPgDRKStNlv0xzNaUDWoMWhb9ReDOWUcYx3dwZ2sMSDFjkK
+	 PauimUxhAEx3A==
+Message-ID: <36b8fc84-1bcf-4799-90e2-3a54099f2d19@kernel.org>
+Date: Mon, 17 Nov 2025 12:26:03 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -37,9 +37,10 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH mptcp-net 0/2] selftests: mptcp: join: longer timeout
 Content-Language: en-GB, fr-BE
+From: Matthieu Baerts <matttbe@kernel.org>
 To: MPTCP Linux <mptcp@lists.linux.dev>
 References: <20251112-slft-longer-timeout-v1-0-97aab145a062@kernel.org>
-From: Matthieu Baerts <matttbe@kernel.org>
+ <8aeea045-c68d-493a-8f83-4a9187480428@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -84,28 +85,41 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20251112-slft-longer-timeout-v1-0-97aab145a062@kernel.org>
+In-Reply-To: <8aeea045-c68d-493a-8f83-4a9187480428@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hello,
-
-On 12/11/2025 10:45, Matthieu Baerts (NGI0) wrote:
-> A previous attempt was helping, but not enough as the background
-> connections were still stopped after the timeout. That's what the MPTCP
-> CI recently reported with the "delete and re-add" subtest taking a bit
-> more than one minute in a debug environment.
+On 17/11/2025 12:08, Matthieu Baerts wrote:
+> Hello,
 > 
-> To play it safe, and because increasing the timeout for the background
-> connections doesn't change anything to the end result (the transfer is
-> not checked in this case), all subtests with a background connection not
-> waiting for it to end now have a longer timeout.
+> On 12/11/2025 10:45, Matthieu Baerts (NGI0) wrote:
+>> A previous attempt was helping, but not enough as the background
+>> connections were still stopped after the timeout. That's what the MPTCP
+>> CI recently reported with the "delete and re-add" subtest taking a bit
+>> more than one minute in a debug environment.
+>>
+>> To play it safe, and because increasing the timeout for the background
+>> connections doesn't change anything to the end result (the transfer is
+>> not checked in this case), all subtests with a background connection not
+>> waiting for it to end now have a longer timeout.
+> 
+> I hope it is OK if I apply these patches now: they are simple, linked to
+> recent patches, and we still have quite a few patches in the queue.
 
-I hope it is OK if I apply these patches now: they are simple, linked to
-recent patches, and we still have quite a few patches in the queue.
+Done:
 
-I'm planning to send them with other patches we have in the queue for
-net ideally today.
+New patches for t/upstream-net and t/upstream:
+- 16a4ac47cd40: selftests: mptcp: join: endpoints: longer timeout
+- 5dd3ee3a0e67: selftests: mptcp: join: userspace: longer timeout
+- Results: b6737ab5301a..7cd73169934a (export-net)
+- Results: 622c76f2be66..f642d28cfc23 (export)
+
+Tests are now in progress:
+
+- export-net:
+https://github.com/multipath-tcp/mptcp_net-next/commit/660070b99dec84a338e2efd835be9a68f63316a1/checks
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/89520dc46a1f4d65bffc7bac94b57b3ecf12cbe9/checks
 
 Cheers,
 Matt
