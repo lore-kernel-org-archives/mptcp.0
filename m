@@ -1,36 +1,36 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BFEF1EB5C2
-	for <mptcp@lists.linux.dev>; Tue, 18 Nov 2025 03:53:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45A111FBC8E
+	for <mptcp@lists.linux.dev>; Tue, 18 Nov 2025 04:01:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763438005; cv=none; b=B81h/FyTjfz5bkGAyNJm1v/vbY5vr6sZS++94cn1+gPnGB6eQZtMjoxEPvOGH99FQXXSfZvn6pWdSMcmM2/Wzgvxqd4AxX3ydRiN/q9NpDzHE+857Xg46LIPDJP7Scjz3jd63Mck05kG3J7buAechIRUvrv92ZD08i8pX5x3b+w=
+	t=1763438511; cv=none; b=g3nAUWZCUbYAUED5yfLJH1z+OoxCalruS9l+na4XTYgzWKr9SHGhoTn7lfkvNJ9FteXeOLFKPOfAOR0ncQvwA3I3r8IqtqBG/6MXRsZQZrRY+mZC9Hk+eKPNmwIUvP+nog7Tyj3XGkZYakJBMn2nDA+iDrNxyk1OBdPHnU37LxQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763438005; c=relaxed/simple;
-	bh=UG0CRXzNwszajqgpTvN9x/gr894ZfJfvrQ09IKi/byg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JhtYZewOlwcN6vbt9uOqxjXaSg2oBe+IzdtzEGgd23caNh1H8Fdo6R2xJTg2vifKGNFa2OktRf6Y1EmKkl8NzJ6iPctU+tZBtyGeVZLw2MajEQqJQbSLBuccLTMBhjdgZ4hqL3TaXs814w5RizQI+d9VypMiyZycAfNzd6tv6M8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tmQJXJpF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1763438511; c=relaxed/simple;
+	bh=bw5LhJERFoqF5lT5iHUddpREUO0sQYx6j8XoLR9lDGE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YgfhmEJ+oo1vuhy39UgbLLGHftOdLuReD9022oOB98R9ZNSsG9tvJoJF04zC+Sk/h9E5rrYVzmPgs+YVSWKDI9eW9WJLaS+GW3r3uQlUcAzQ6aRB+qTChuiQ/Mpq85QohvnZpjv+JCliG0v2oW42SvfJoWSOKHiawUvfHtNrSuY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X7fAijIO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tmQJXJpF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B24BAC2BCB6;
-	Tue, 18 Nov 2025 03:53:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X7fAijIO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C409BC116B1;
+	Tue, 18 Nov 2025 04:01:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763438004;
-	bh=UG0CRXzNwszajqgpTvN9x/gr894ZfJfvrQ09IKi/byg=;
+	s=k20201202; t=1763438509;
+	bh=bw5LhJERFoqF5lT5iHUddpREUO0sQYx6j8XoLR9lDGE=;
 	h=From:To:Cc:Subject:Date:From;
-	b=tmQJXJpFbh2OSG75bcYoWBl3rfk0bMK/bxMA6mPUWzUO30quCvGWp+uX4E+mjC7F+
-	 Zohh0F+H+YDNgLfxGjQCo5Ofc+8HegGH1BoZCNFkcLNGqy503QmgLfhDR9lD0K+nQx
-	 4iOSb9ZheMpOu7i517u9ORwM6E27Us/2J3bSGxJtXuXVT33giMT0/4RYS9MblZz3R4
-	 IwZJL36r6fhC9CjpV7lLuFv3vQbtXY4Jn411caDmt+v6YaFR80WpXKGPEpEbgcAyM8
-	 Ucuq+bNL4DUw3ujw0KySNf4UVXeDFaK/4z4BYF9Mu1BZDqSZ+7sK2n+JkPqUmEdfXv
-	 RDQBGsJanrVmQ==
+	b=X7fAijIOaliq9EuebPTnbk23EKElZj0409TzVoHVPQLKlf1GSHuC+gP0JOJVUI5N/
+	 bqjTWupUPujKDhHWA/l62CF4wr5MTCbwvNnoXdj6Bx7VSHnqziP17/qiBFqOM+iNWf
+	 R3WP06TBZrp1SQRqiI4/Ib/y0KRONSjxG7rThJx88EIW6M+oNMKzYf29lMNyc6lkZ2
+	 mnzlsk18Weu+xeKvENKy+OreJZhqVNS81daPfs6CUI3VaQsq1cJnKGdrMq/fwWyIgU
+	 CS69VFJys/h3ylXFe0rYx2vOTw8wESHYtAUjr6QeVAA2ryltyoFl7u1FKfhbxVWkQh
+	 mCmuJtgv11Eew==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next] Squash to "mptcp: implement .read_sock"
-Date: Tue, 18 Nov 2025 11:53:18 +0800
-Message-ID: <3bb22c78b078988462e13e72aa6fd9a29b07a8a0.1763437914.git.tanggeliang@kylinos.cn>
+Subject: [RFC mptcp-next 00/10] MPTCP KTLS support
+Date: Tue, 18 Nov 2025 12:01:21 +0800
+Message-ID: <cover.1763438045.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -42,30 +42,38 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Squash to "[v13,2/8] mptcp: implement .read_sock".
+This series adds KTLS support for MPTCP. Since the ULP of msk is not being
+used, ULP KTLS can be directly configured onto msk without affecting its
+communication.
 
-Add sock_owned_by_me().
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/480
 
+Depends on: implement mptcp read_sock, v13
 Based-on: <cover.1761198660.git.geliang@kernel.org>
 
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
----
- net/mptcp/protocol.c | 2 ++
- 1 file changed, 2 insertions(+)
+Geliang Tang (10):
+  selftests: mptcp: sockopt: add protocol arguments
+  selftests: mptcp: sockopt: skip mptcp getsockopt for tcp tests
+  selftests: mptcp: sockopt: add TLS argument support
+  selftests: mptcp: sockopt: implement TCP TLS tests
+  tls: add MPTCP protocol support
+  mptcp: enable TLS socket options
+  selftests: mptcp: connect: enhance TCP ULP testing
+  selftests: mptcp: connect: skip TLS in disconnect tests
+  selftests: mptcp: connect: fix uninitialized variable warning
+  selftests: mptcp: sockopt: add MPTCP TLS test cases
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index c64494b15a40..873c1a93b777 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -4304,6 +4304,8 @@ static int mptcp_read_sock(struct sock *sk, read_descriptor_t *desc,
- 	int copied = 0;
- 	u32 offset;
- 
-+	sock_owned_by_me(sk);
-+
- 	if (sk->sk_state == TCP_LISTEN)
- 		return -ENOTCONN;
- 	while ((skb = mptcp_recv_skb(sk, &offset)) != NULL) {
+ include/net/mptcp.h                           |  34 ++++++
+ net/mptcp/protocol.c                          |  61 ++++++++--
+ net/mptcp/sockopt.c                           |  18 ++-
+ net/tls/tls_main.c                            |   7 +-
+ net/tls/tls_strp.c                            |  20 ++-
+ tools/testing/selftests/net/mptcp/config      |   1 +
+ .../selftests/net/mptcp/mptcp_connect.c       |  42 ++++---
+ .../selftests/net/mptcp/mptcp_sockopt.c       | 114 +++++++++++++++---
+ .../selftests/net/mptcp/mptcp_sockopt.sh      |  47 ++++++++
+ 9 files changed, 297 insertions(+), 47 deletions(-)
+
 -- 
 2.51.0
 
