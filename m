@@ -1,37 +1,50 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BA9D2376FD
-	for <mptcp@lists.linux.dev>; Tue, 18 Nov 2025 07:41:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6EA630B509;
+	Tue, 18 Nov 2025 08:39:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763451720; cv=none; b=dUb5uQYXD7tj6ft2dqwIvsb7dIGYhN1fWcjoSP9ETD5d+xm6JES7NrJ8qt9UGjSFuItc2iCIVK37b/1tYvLJr2IAffgfrTSt7ZHUcka91CkaZrQi1eVBj+8Fi/m6hoSkADnQiNdmIaSXl6LxDHULKVOpnc0+6YFpR74tmZMLcUY=
+	t=1763455189; cv=none; b=qu3PlQf31rVDoYgF90G8vpL3fBOnQxnx03xbRYTCasEsT3UhI2uWMd/Ix2ilJl9KxJ+d2Q5KY19LnA+qT1uvp8bwStiEYTCO5WqVVyqbJOwuRP9caPqL3D9ERa8bOaOTdczYPZsk1c4mbxdJYR/rWU1yJrmqOPkM7xd39n8aC6A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763451720; c=relaxed/simple;
-	bh=XHaIt5Qguvb8xhAHtsY8Qsc+qRkpPvIrxqT78GYx0bk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QUECn8W0VjwCKsMOgVt7ZiQ4BJXTiUGi/7eOhsvQigBCYeRDhLbtOnvF3Gp+M6fFd3bP+SSB1s9QiPvNoK2YdZwRyFQS62kuoGGqM56x9bWw3JwqLRscEGaUGwCt8t6hUezOuQXH/rnJkoiVKVfRwBuJyOOUJxpor0Q1BQOEOkI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sH3gzd+V; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1763455189; c=relaxed/simple;
+	bh=UsiEEBm0oAP3CAsvZ2e+fKZt4abKErsjxcqdQzrr0nM=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=JkyyzW8s3tPuuECPJzrponnbqfDYN8H4Vb0kUYSkpSr15iNOiMwCvlYkDCGCBNnbLSQx1nB/AQ65rquyFeTD/W9U1JE8eTwH39Qx/WV21l/1AIKGD5uBCbxUgJCZ9hcNUgOWpvEt3ixQayPKPjpVNUJ5bW5TgU8mQXCLZuWlqSk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=poVeSJCZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sH3gzd+V"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59B25C2BCB1;
-	Tue, 18 Nov 2025 07:41:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="poVeSJCZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BADE8C16AAE;
+	Tue, 18 Nov 2025 08:39:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763451719;
-	bh=XHaIt5Qguvb8xhAHtsY8Qsc+qRkpPvIrxqT78GYx0bk=;
-	h=From:To:Cc:Subject:Date:From;
-	b=sH3gzd+V4c4hU91Qu0umWIizpqdqUrougd9n3FzYKcHizX7X+A1YkO33uzz6UFPAV
-	 LgzLkDoZkK+uf2Sgr0se0Tpg+AZftF6vCWcSxjwaeS94AP7rxUUp7TI4X3M1iTwAoR
-	 p1aFhNhgfgsOdQFVF6h2G7S8QrpiiNXJhhQGUV27amoNchMoMh9GfO8+g4X8uhMJ0c
-	 qbHUfM7ebO+MbGygPgkhiKEXjNEK+0TQCGzc9zOtHPeCDXwnmmkGyVxdITKlA6KKi8
-	 TTc4XRXqVZGkhg++mCE/KLR5ApYanfKuvs98vQahwDGbo7aW9x79VNAfuSQqlZhjnF
-	 eEsUE9RfwmyVA==
+	s=k20201202; t=1763455188;
+	bh=UsiEEBm0oAP3CAsvZ2e+fKZt4abKErsjxcqdQzrr0nM=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=poVeSJCZpdSDb9G5CgnJhU1G1lRfdeSWOLnP12zGil/haYT7uUnWqId8RomUSyJ6C
+	 nlKJA86Trgflg11VjnAmPYYbHpO7lE/QE2pd1U1R3CIaoW+aTxoXEK1CdvyV7kxCL4
+	 RmwidWVTGnnKfnvb1JXn+f+wBb2tR9Wxpt0W6tZpBty5lSpGb1sxAxAlwL1LbjhiQ8
+	 aaAbszSnziNERMOUZcQi9qg9vWOx+NAPAfvFxPSCpQyXePyjoXcmitxd4XV1UetDMz
+	 +cpbeOsCMVNf88VrDhSFNf28K5J8acsBu23gpPozXU9u6HwYVIWEn/Wtl81uiNxAQO
+	 BRRVSUYiWvllw==
+Message-ID: <236d10dc597fbf5bf58c64190f7c34347f07dccc.camel@kernel.org>
+Subject: Re: [PATCH net 08/11] selftests: mptcp: join: endpoints: longer
+ timeout
 From: Geliang Tang <geliang@kernel.org>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v2] Squash to "mptcp: implement .read_sock"
-Date: Tue, 18 Nov 2025 15:41:53 +0800
-Message-ID: <ae97ac245e5031422c18b3c2c2b37c3aad33cc23.1763451700.git.tanggeliang@kylinos.cn>
-X-Mailer: git-send-email 2.51.0
+To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, Mat Martineau	
+ <martineau@kernel.org>, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet	 <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
+ Abeni	 <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, Shuah Khan	
+ <shuah@kernel.org>, Florian Westphal <fw@strlen.de>
+Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev,
+ linux-kernel@vger.kernel.org, 	linux-kselftest@vger.kernel.org,
+ stable@vger.kernel.org
+Date: Tue, 18 Nov 2025 16:39:40 +0800
+In-Reply-To: <20251118-net-mptcp-misc-fixes-6-18-rc6-v1-8-806d3781c95f@kernel.org>
+References: 
+	<20251118-net-mptcp-misc-fixes-6-18-rc6-v1-0-806d3781c95f@kernel.org>
+	 <20251118-net-mptcp-misc-fixes-6-18-rc6-v1-8-806d3781c95f@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.56.2-4 
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -40,35 +53,87 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+Hi Matt,
 
-Squash to "[v13,2/8] mptcp: implement .read_sock".
+On Tue, 2025-11-18 at 08:20 +0100, Matthieu Baerts (NGI0) wrote:
+> In rare cases, when the test environment is very slow, some endpoints
+> tests can fail because some expected events have not been seen.
+> 
+> Because the tests are expecting a long on-going connection, and they
+> are
+> not waiting for the end of the transfer, it is fine to have a longer
+> timeout, and even go over the default one. This connection will be
+> killed at the end, after the verifications: increasing the timeout
+> doesn't change anything, apart from avoiding it to end before the end
+> of
+> the verifications.
+> 
+> To play it safe, all endpoints tests not waiting for the end of the
+> transfer are now having a longer timeout: 2 minutes.
+> 
+> The Fixes commit was making the connection longer, but still, the
+> default timeout would have stopped it after 1 minute, which might not
+> be
+> enough in very slow environments.
+> 
+> Fixes: 6457595db987 ("selftests: mptcp: join: endpoints: longer
+> transfer")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-Add msk_owned_by_me().
+This patch looks good to me.
 
-v2:
- - use msk_owned_by_me instead of sock_owned_by_me.
+Reviewed-by: Geliang Tang <geliang@kernel.org>
 
-Based-on: <cover.1761198660.git.geliang@kernel.org>
+Thanks,
+-Geliang
 
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
----
- net/mptcp/protocol.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index c64494b15a40..13b858b47cf1 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -4304,6 +4304,8 @@ static int mptcp_read_sock(struct sock *sk, read_descriptor_t *desc,
- 	int copied = 0;
- 	u32 offset;
- 
-+	msk_owned_by_me(msk);
-+
- 	if (sk->sk_state == TCP_LISTEN)
- 		return -ENOTCONN;
- 	while ((skb = mptcp_recv_skb(sk, &offset)) != NULL) {
--- 
-2.51.0
-
+> ---
+>  tools/testing/selftests/net/mptcp/mptcp_join.sh | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> index 303abbca59fc..93d38ded5e4e 100755
+> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> @@ -3941,7 +3941,7 @@ endpoint_tests()
+>  		pm_nl_set_limits $ns1 2 2
+>  		pm_nl_set_limits $ns2 2 2
+>  		pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
+> -		{ test_linkfail=128 speed=slow \
+> +		{ timeout_test=120 test_linkfail=128 speed=slow \
+>  			run_tests $ns1 $ns2 10.0.1.1 & } 2>/dev/null
+>  		local tests_pid=$!
+>  
+> @@ -3968,7 +3968,7 @@ endpoint_tests()
+>  		pm_nl_set_limits $ns2 0 3
+>  		pm_nl_add_endpoint $ns2 10.0.1.2 id 1 dev ns2eth1
+> flags subflow
+>  		pm_nl_add_endpoint $ns2 10.0.2.2 id 2 dev ns2eth2
+> flags subflow
+> -		{ test_linkfail=128 speed=5 \
+> +		{ timeout_test=120 test_linkfail=128 speed=5 \
+>  			run_tests $ns1 $ns2 10.0.1.1 & } 2>/dev/null
+>  		local tests_pid=$!
+>  
+> @@ -4046,7 +4046,7 @@ endpoint_tests()
+>  		# broadcast IP: no packet for this address will be
+> received on ns1
+>  		pm_nl_add_endpoint $ns1 224.0.0.1 id 2 flags signal
+>  		pm_nl_add_endpoint $ns1 10.0.1.1 id 42 flags signal
+> -		{ test_linkfail=128 speed=5 \
+> +		{ timeout_test=120 test_linkfail=128 speed=5 \
+>  			run_tests $ns1 $ns2 10.0.1.1 & } 2>/dev/null
+>  		local tests_pid=$!
+>  
+> @@ -4119,7 +4119,7 @@ endpoint_tests()
+>  		# broadcast IP: no packet for this address will be
+> received on ns1
+>  		pm_nl_add_endpoint $ns1 224.0.0.1 id 2 flags signal
+>  		pm_nl_add_endpoint $ns2 10.0.3.2 id 3 flags subflow
+> -		{ test_linkfail=128 speed=20 \
+> +		{ timeout_test=120 test_linkfail=128 speed=20 \
+>  			run_tests $ns1 $ns2 10.0.1.1 & } 2>/dev/null
+>  		local tests_pid=$!
+>  
