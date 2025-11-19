@@ -1,53 +1,53 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C277D3587C3
-	for <mptcp@lists.linux.dev>; Wed, 19 Nov 2025 12:13:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CB0A357A32
+	for <mptcp@lists.linux.dev>; Wed, 19 Nov 2025 12:13:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763554390; cv=none; b=h5FFP7zRTmEMe5J8arVFdc3ud3NZPl4eCKAFWKpiCSQrdziZzaZHZEl/P438qCoFmNCPLRB2p1+1ODB/PDCN6Ntq2mYePyLhPEeKuXUJOlmpoR4lkaSlhboGExGysOXiTbk1cj3UlBPTfDkzTiQAeGGOZXbVGKpI9UhSOsI7NdI=
+	t=1763554392; cv=none; b=ZUjXxPpH1HhJbiLQ2lNi57s6jvX/KLhe+5VO2ciRa2bfBlO/QkBpgoGthmmWecc2xwOrqQABmVdBDd4ZgfR9JuGzpJS23/Lb8W1MvL3bpTIeU3AEXj28uUV0+ZniXNpHMGUvJ5ImqdSdPrrFKcSYG7Na5CsragmqYfXRUrU8vm0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763554390; c=relaxed/simple;
-	bh=aURQQXEryRFfJjkaU6HdjVlmD3kMg+HHLP7Rbjx7jeg=;
+	s=arc-20240116; t=1763554392; c=relaxed/simple;
+	bh=5RBPt6YSmJMCMi6vgcWNU1NqFPuJ/HtHROADFPjZVd4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=onGiN3N2XH9JmBCO5/QkN//8cnR5YZgZRCWz58mQVMEyWULLT3TQMlqtYMBALXwA16nsH/Jj3bn0XNcxJR5aT3lhMp/Esxm5R+A9rVsBXIbY3pyCi6QK93mbI/t4fDSzLtFHMVpbNzS8Y0FIC/bRBVcAfhZaaU01No8iGoKRJJ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dKT0uQ2U; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version:content-type; b=JBqIdNaYp1I2lVZuk/bSCv0KZyjIjVTLlV+Bf8XfRNggbnUhWyu8tBpAzX5FdIpxsy8ux9z8plEec6G/e9MSNB04njpb0se9mTZRTCgTxr5EqbuvIZscspxK5udY2ORKylZA9k5hH8omrqk1W9/fbT0MJw4z/uRg1oYRqNC2pq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XMWUjwkg; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dKT0uQ2U"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XMWUjwkg"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1763554386;
+	s=mimecast20190719; t=1763554388;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=sVyLFxsoy29T4gggCzNi54Gin1PHAW9O695ZnK7TPeY=;
-	b=dKT0uQ2UlEL2C94+dSCu1g4bmCrUEaaUuQ79qSt0OPcMyPluhTYBXiOGD4OdryvkqVLWZv
-	sDS4zzvAZ6mttRrUmc/NP1qp3p6RcmgKh6ejGivNOWQMQonMubZymqF7mqBdyPiIMzWj9i
-	oIptbEsqSS9tf0SeQ24VEbhgDRRbHqE=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+	bh=0KItWhDxxaIFHIFSvZCOY/XWLEcM1aTO5QNapZUrfEQ=;
+	b=XMWUjwkgwozymGIMwpqfxsPdjP7UaFtjkAGUdXne0ovYz/ri9/aXVMbSvkNSJ+6uR5027R
+	dePJZFoJGATuSL/natJgG1VwkBg6u+CE0hYrt71GmXUVZlflhnyu7Jg4PVjKIA6gWmBbTN
+	vlbJnJ5eNQzJcCxNnfjr7zZEfx4Y4+k=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-551-rdhSfRDsN3KMECBAhE68dw-1; Wed,
- 19 Nov 2025 07:13:05 -0500
-X-MC-Unique: rdhSfRDsN3KMECBAhE68dw-1
-X-Mimecast-MFC-AGG-ID: rdhSfRDsN3KMECBAhE68dw_1763554384
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-660-9InAmiTSO22GvmSDrSjPfQ-1; Wed,
+ 19 Nov 2025 07:13:07 -0500
+X-MC-Unique: 9InAmiTSO22GvmSDrSjPfQ-1
+X-Mimecast-MFC-AGG-ID: 9InAmiTSO22GvmSDrSjPfQ_1763554386
 Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 372FE1956089;
-	Wed, 19 Nov 2025 12:13:04 +0000 (UTC)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0F06318AB300;
+	Wed, 19 Nov 2025 12:13:06 +0000 (UTC)
 Received: from gerbillo.redhat.com (unknown [10.44.33.89])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 112D4195608E;
-	Wed, 19 Nov 2025 12:13:02 +0000 (UTC)
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id E40F8195608E;
+	Wed, 19 Nov 2025 12:13:04 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
 Cc: martineau@kernel.org
-Subject: [PATCH mptcp-next v5 1/5] trace: mptcp: add mptcp_rcvbuf_grow tracepoint
-Date: Wed, 19 Nov 2025 13:12:54 +0100
-Message-ID: <b7f42ed1dd95409c130359e4105b722dd48da17c.1763553361.git.pabeni@redhat.com>
+Subject: [PATCH mptcp-next v5 2/5] mptcp: fix receive space timestamp initialization.
+Date: Wed, 19 Nov 2025 13:12:55 +0100
+Message-ID: <b5d273206e793ebeb9348eb6a7043f838358dd9b.1763553361.git.pabeni@redhat.com>
 In-Reply-To: <cover.1763553361.git.pabeni@redhat.com>
 References: <cover.1763553361.git.pabeni@redhat.com>
 Precedence: bulk
@@ -58,153 +58,84 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: Li9aa585sq4jUOhb5ORuU3_JumvigRnVe24rfxL1F9c_1763554384
+X-Mimecast-MFC-PROC-ID: ESQ-2Lxcf_SaE8Q9VY4RRYhUImr1Hco2o1b4LrAfcEg_1763554386
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 
-Similar to tcp, provide a new tracepoint to better understand
-mptcp_rcv_space_adjust() behavior, which presents many artifacts.
+MPTCP initialize the receive buffer stamp in mptcp_rcv_space_init(),
+using the provided subflow stamp. Such helper is invoked in several
+places; for passive sockets, space init happened at clone time.
 
-Note that the used format string is so long that I preferred
-wrap it, contrary to guidance for quoted strings.
+In such scenario, MPTCP ends-up accesses the subflow stamp before
+its initialization, leading to quite randomic timing for the first
+receive buffer auto-tune event, as the timestamp for newly created
+subflow is not refreshed there.
 
+Fix the issue moving the stamp initialization of the mentioned helper, as
+soon at the data transfer start, and always using a fresh timestamp.
+
+This will also make the next patch cleaner.
+
+Fixes: 013e3179dbd2 ("mptcp: fix rcv space initialization")
 Reviewed-by: Mat Martineau <martineau@kernel.org>
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 ---
-v4 -> v5:
-  - fixed a couple of checkpatch issues.
-
-v2 -> v3:
-  - use __entry->family; note that its value is show as raw number
-    instead of string, as show_family_name is available only to
-    net/core/ trace and I preferred not moving the mptcp traces
-    there as we need mptcp-specific helpers, too.
+v1 -> v2:
+ -- factor out only the tstamp change for better reviewability
 ---
- include/trace/events/mptcp.h | 80 ++++++++++++++++++++++++++++++++++++
- net/mptcp/protocol.c         |  3 ++
- 2 files changed, 83 insertions(+)
+ net/mptcp/protocol.c | 7 ++++---
+ net/mptcp/protocol.h | 5 +++++
+ 2 files changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/include/trace/events/mptcp.h b/include/trace/events/mptcp.h
-index 085b749cdd97..269d949b2025 100644
---- a/include/trace/events/mptcp.h
-+++ b/include/trace/events/mptcp.h
-@@ -5,7 +5,13 @@
- #if !defined(_TRACE_MPTCP_H) || defined(TRACE_HEADER_MULTI_READ)
- #define _TRACE_MPTCP_H
- 
-+#include <linux/ipv6.h>
-+#include <linux/tcp.h>
- #include <linux/tracepoint.h>
-+#include <net/ipv6.h>
-+#include <net/tcp.h>
-+#include <linux/sock_diag.h>
-+#include <net/rstreason.h>
- 
- #define show_mapping_status(status)					\
- 	__print_symbolic(status,					\
-@@ -178,6 +184,80 @@ TRACE_EVENT(subflow_check_data_avail,
- 		  __entry->skb)
- );
- 
-+#include <trace/events/net_probe_common.h>
-+
-+TRACE_EVENT(mptcp_rcvbuf_grow,
-+
-+	TP_PROTO(struct sock *sk, int time),
-+
-+	TP_ARGS(sk, time),
-+
-+	TP_STRUCT__entry(
-+		__field(int, time)
-+		__field(__u32, rtt_us)
-+		__field(__u32, copied)
-+		__field(__u32, inq)
-+		__field(__u32, space)
-+		__field(__u32, ooo_space)
-+		__field(__u32, rcvbuf)
-+		__field(__u32, rcv_wnd)
-+		__field(__u8, scaling_ratio)
-+		__field(__u16, sport)
-+		__field(__u16, dport)
-+		__field(__u16, family)
-+		__array(__u8, saddr, 4)
-+		__array(__u8, daddr, 4)
-+		__array(__u8, saddr_v6, 16)
-+		__array(__u8, daddr_v6, 16)
-+		__field(const void *, skaddr)
-+	),
-+
-+	TP_fast_assign(
-+		struct mptcp_sock *msk = mptcp_sk(sk);
-+		struct inet_sock *inet = inet_sk(sk);
-+		bool ofo_empty;
-+		__be32 *p32;
-+
-+		__entry->time = time;
-+		__entry->rtt_us = msk->rcvq_space.rtt_us >> 3;
-+		__entry->copied = msk->rcvq_space.copied;
-+		__entry->inq = mptcp_inq_hint(sk);
-+		__entry->space = msk->rcvq_space.space;
-+		ofo_empty = RB_EMPTY_ROOT(&msk->out_of_order_queue);
-+		__entry->ooo_space = ofo_empty ? 0 :
-+				     MPTCP_SKB_CB(msk->ooo_last_skb)->end_seq -
-+				     msk->ack_seq;
-+
-+		__entry->rcvbuf = sk->sk_rcvbuf;
-+		__entry->rcv_wnd = atomic64_read(&msk->rcv_wnd_sent) -
-+				   msk->ack_seq;
-+		__entry->scaling_ratio = msk->scaling_ratio;
-+		__entry->sport = ntohs(inet->inet_sport);
-+		__entry->dport = ntohs(inet->inet_dport);
-+		__entry->family = sk->sk_family;
-+
-+		p32 = (__be32 *)__entry->saddr;
-+		*p32 = inet->inet_saddr;
-+
-+		p32 = (__be32 *)__entry->daddr;
-+		*p32 = inet->inet_daddr;
-+
-+		TP_STORE_ADDRS(__entry, inet->inet_saddr, inet->inet_daddr,
-+			       sk->sk_v6_rcv_saddr, sk->sk_v6_daddr);
-+
-+		__entry->skaddr = sk;
-+	),
-+
-+	TP_printk("time=%u rtt_us=%u copied=%u inq=%u space=%u ooo=%u scaling_ratio=%u "
-+		  "rcvbuf=%u rcv_wnd=%u family=%d sport=%hu dport=%hu saddr=%pI4 "
-+		  "daddr=%pI4 saddrv6=%pI6c daddrv6=%pI6c skaddr=%p",
-+		  __entry->time, __entry->rtt_us, __entry->copied,
-+		  __entry->inq, __entry->space, __entry->ooo_space,
-+		  __entry->scaling_ratio, __entry->rcvbuf, __entry->rcv_wnd,
-+		  __entry->family, __entry->sport, __entry->dport,
-+		  __entry->saddr, __entry->daddr, __entry->saddr_v6,
-+		  __entry->daddr_v6, __entry->skaddr)
-+);
- #endif /* _TRACE_MPTCP_H */
- 
- /* This part must be outside protection */
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index f8756521b2e2..64f592a7897c 100644
+index 64f592a7897c..8b2824834b10 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -28,6 +28,8 @@
- #include "protocol.h"
- #include "mib.h"
+@@ -2089,8 +2089,8 @@ static void mptcp_rcv_space_adjust(struct mptcp_sock *msk, int copied)
  
-+static unsigned int mptcp_inq_hint(const struct sock *sk);
+ 	msk->rcvq_space.copied += copied;
+ 
+-	mstamp = div_u64(tcp_clock_ns(), NSEC_PER_USEC);
+-	time = tcp_stamp_us_delta(mstamp, msk->rcvq_space.time);
++	mstamp = mptcp_stamp();
++	time = tcp_stamp_us_delta(mstamp, READ_ONCE(msk->rcvq_space.time));
+ 
+ 	rtt_us = msk->rcvq_space.rtt_us;
+ 	if (rtt_us && time < (rtt_us >> 3))
+@@ -3530,7 +3530,7 @@ struct sock *mptcp_sk_clone_init(const struct sock *sk,
+ 	mptcp_copy_inaddrs(nsk, ssk);
+ 	__mptcp_propagate_sndbuf(nsk, ssk);
+ 
+-	mptcp_rcv_space_init(msk, ssk);
++	msk->rcvq_space.time = mptcp_stamp();
+ 
+ 	if (mp_opt->suboptions & OPTION_MPTCP_MPC_ACK)
+ 		__mptcp_subflow_fully_established(msk, subflow, mp_opt);
+@@ -3745,6 +3745,7 @@ void mptcp_finish_connect(struct sock *ssk)
+ 	 * accessing the field below
+ 	 */
+ 	WRITE_ONCE(msk->local_key, subflow->local_key);
++	WRITE_ONCE(msk->rcvq_space.time, mptcp_stamp());
+ 
+ 	mptcp_pm_new_connection(msk, ssk, 0);
+ }
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 199f28f3dd5e..95c62f2ac705 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -917,6 +917,11 @@ static inline bool mptcp_is_fully_established(struct sock *sk)
+ 	       READ_ONCE(mptcp_sk(sk)->fully_established);
+ }
+ 
++static inline u64 mptcp_stamp(void)
++{
++	return div_u64(tcp_clock_ns(), NSEC_PER_USEC);
++}
 +
- #define CREATE_TRACE_POINTS
- #include <trace/events/mptcp.h>
- 
-@@ -2118,6 +2120,7 @@ static void mptcp_rcv_space_adjust(struct mptcp_sock *msk, int copied)
- 	if (msk->rcvq_space.copied <= msk->rcvq_space.space)
- 		goto new_measure;
- 
-+	trace_mptcp_rcvbuf_grow(sk, time);
- 	if (mptcp_rcvbuf_grow(sk, msk->rcvq_space.copied)) {
- 		/* Make subflows follow along.  If we do not do this, we
- 		 * get drops at subflow level if skbs can't be moved to
+ void mptcp_rcv_space_init(struct mptcp_sock *msk, const struct sock *ssk);
+ void mptcp_data_ready(struct sock *sk, struct sock *ssk);
+ bool mptcp_finish_join(struct sock *sk);
 -- 
 2.51.1
 
