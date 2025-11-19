@@ -1,40 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4365F3346A6
-	for <mptcp@lists.linux.dev>; Wed, 19 Nov 2025 10:05:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38CC1274B2E
+	for <mptcp@lists.linux.dev>; Wed, 19 Nov 2025 10:05:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763546733; cv=none; b=Jv89IYhzGQae2UWet/94XVfkCV4A3BL+bIUFxjwXPeslp+IAqfOMQfj8DwM02vILHIQ9Ktpe9e9UAFgH+Q2U+lQSZvZM2Rj3fZGH4TkOQojJXd76zC9oDjkhKIUB57cboRIenajaBQ3ANyEZ8/ntxdrgXlhMkP5QWa4tET9yvEw=
+	t=1763546736; cv=none; b=eCGpJTak0yJHC+iQvlwPgp9XzG+PsqH7yeRH4V7nNK5Mkr9zL/H19rt9af+7ufo/rNjZfUjDK6y6uvSboCCkXVWpN31A8AA5eCtQ51QGQHdAqO1pWmxlupO0OOs4AYJwLL7NPdYTzbaFiLo29vgWSqTd1ekSQoVmxPF55083bvE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763546733; c=relaxed/simple;
-	bh=wI41m9xxWX7xZoCdF0d8Q5gacVsSsY3DvlvG83+6MQo=;
+	s=arc-20240116; t=1763546736; c=relaxed/simple;
+	bh=CXIEd2zkZciP19HeuLiQcf2rhqR3ifkT7q2ezeX0Z/0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=L1Gut50Vm1lU1agtmOZiEoYbqAyWIWLlMZEqDZiypAVIhhW6vtoaw7mlREflAMclu4mBtNT5X/jiyOnhFlV0DySnltWFR/zk3paxRK3kiXVKnEW64rGUtd063RJf9f+vPAPiRWAYOvS+heE/DTFNmZS8pZybBt5eXA4s28CqfD4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HETb3KkF; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=UE4iOlE+7iptdonGlFCs5vdnHa1gqQ4XnuyXh0QQqvmjTXH7MXvE33jgH06iAEjNY9WegQIUht6ayBGvLmvU2h9vEChhne97R5+HkTwH2Dwq+nPT3QCQaYvSdSZ3ehewUCI6MjctNjssetAMnhVRjuljJBBuBE2QZYZReyflqes=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sfqDXL1M; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HETb3KkF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06844C2BC87;
-	Wed, 19 Nov 2025 10:05:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sfqDXL1M"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEBD3C19421;
+	Wed, 19 Nov 2025 10:05:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763546733;
-	bh=wI41m9xxWX7xZoCdF0d8Q5gacVsSsY3DvlvG83+6MQo=;
+	s=k20201202; t=1763546735;
+	bh=CXIEd2zkZciP19HeuLiQcf2rhqR3ifkT7q2ezeX0Z/0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=HETb3KkFHDUi6cIKVsnH2Nr2nx89cMy094sNb+sbOtrHU+lU3Fqx7u9rNier04JM3
-	 MA0YxpijkY2XiszUCGKrZKUQ/kZxc8l6C7p3E7l1oJR8Colqt8d3MCtaJl8FFY0YzU
-	 l4omZv5e4+Y2GU4ON38fOk+Ivs3B2oynhGo8lvlKzlHcmHvCj+AP/7CY+UeCHbSSmF
-	 y5FnHrwoo8q4FIY45fsZuH2CZYofoSHRbTccdeFLAlqPcGkQ9rl8OU3S1OjkccNH4Z
-	 KfeEsaI1K0oBcbNezKThIKmseui6u7R6d1umF/5eRlhORZkQwG8arRmMCrLE7yi1f9
-	 v2BYAk26S9Z2g==
+	b=sfqDXL1MtPbzDZ6J8q5Uj4uozUPQSYlo5pwf6yqmi8OKxQXMuzfqqgbTf5N6UjoYX
+	 Q9sQHpE+XeaorJDokXxB8a/7SAVNxAGRJW89AFgX/z11hL3liYWrG/U1MUI+6+p3Yr
+	 GTHg2OJUwkOn4Osx0S0Bmv+u4ELJxLEsbuRb2C58JxFtulQdJ3Sluc7Ec3LFz6rX4t
+	 95bQyxgkTw10dkjKpNXqjJk3LJ1shoqjr+jWHwO9Mi09PC5eX/Oj7AaZ36VcWD2e0F
+	 FavxTTRrCJDohkN0g9TI+J9jn3tsnG5OcGTX0pXUxo1Irw0ECQRwx80p4LusBGmgwz
+	 noKDaceyDg0BQ==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev,
 	hare@kernel.org,
 	hare@suse.com
-Cc: Geliang Tang <tanggeliang@kylinos.cn>,
-	Gang Yan <yangang@kylinos.cn>
-Subject: [RFC mptcp-next v2 2/8] mptcp: enable TLS setsockopt
-Date: Wed, 19 Nov 2025 18:05:01 +0800
-Message-ID: <7332355ce3ab08926cc4c18a12ff7daed239cff5.1763546473.git.tanggeliang@kylinos.cn>
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Subject: [RFC mptcp-next v2 3/8] mptcp: update ULP getsockopt
+Date: Wed, 19 Nov 2025 18:05:02 +0800
+Message-ID: <397d591df64c3d1c9267c99a2c9d4255490beff6.1763546473.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <cover.1763546473.git.tanggeliang@kylinos.cn>
 References: <cover.1763546473.git.tanggeliang@kylinos.cn>
@@ -48,72 +47,45 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Add support for TLS-related socket options in MPTCP protocol:
+TCP_ULP was obtained by calling mptcp_getsockopt_first_sf_only() to get
+the ULP of the first subflow. Now that the mechanism has changed, a new
+helper needs to be implemented to get the ULP of the msk.
 
-- Allow TCP_ULP option with "tls" parameter;
-- Support TLS_TX and TLS_RX options from SOL_TLS level;
-- Delegate TLS option handling to underlying TCP implementation.
-
-Signed-off-by: Gang Yan <yangang@kylinos.cn>
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- net/mptcp/sockopt.c | 18 +++++++++++++++++-
- 1 file changed, 17 insertions(+), 1 deletion(-)
+ net/mptcp/sockopt.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
 diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-index de90a2897d2d..54ad674da151 100644
+index 54ad674da151..52ff75702404 100644
 --- a/net/mptcp/sockopt.c
 +++ b/net/mptcp/sockopt.c
-@@ -12,6 +12,7 @@
- #include <net/protocol.h>
- #include <net/tcp.h>
- #include <net/mptcp.h>
-+#include <net/tls.h>
- #include "protocol.h"
- 
- #define MIN_INFO_OPTLEN_SIZE		16
-@@ -567,6 +568,7 @@ static bool mptcp_supported_sockopt(int level, int optname)
- 		case TCP_FASTOPEN_CONNECT:
- 		case TCP_FASTOPEN_KEY:
- 		case TCP_FASTOPEN_NO_COOKIE:
-+		case TCP_ULP:
- 			return true;
- 		}
- 
-@@ -576,6 +578,13 @@ static bool mptcp_supported_sockopt(int level, int optname)
- 		 * TCP_REPAIR_WINDOW are not supported, better avoid this mess
- 		 */
- 	}
-+	if (level == SOL_TLS) {
-+		switch (optname) {
-+		case TLS_TX:
-+		case TLS_RX:
-+			return true;
-+		}
-+	}
- 	return false;
+@@ -1409,6 +1409,17 @@ static int mptcp_put_int_option(struct mptcp_sock *msk, char __user *optval,
+ 	return 0;
  }
  
-@@ -819,11 +828,18 @@ static int mptcp_setsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
- 				    sockptr_t optval, unsigned int optlen)
++static int mptcp_getsockopt_msk(struct sock *sk, int level, int optname,
++				char __user *optval, int __user *optlen)
++{
++	int ret;
++
++	lock_sock(sk);
++	ret = tcp_getsockopt(sk, level, optname, optval, optlen);
++	release_sock(sk);
++	return ret;
++}
++
+ static int mptcp_getsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
+ 				    char __user *optval, int __user *optlen)
  {
- 	struct sock *sk = (void *)msk;
-+	char ulp[4] = "";
- 	int ret, val;
+@@ -1416,6 +1427,7 @@ static int mptcp_getsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
  
  	switch (optname) {
  	case TCP_ULP:
--		return -EOPNOTSUPP;
-+		if (copy_from_user(ulp, optval.user, 4))
-+			return -EFAULT;
-+		if (strcmp(ulp, "tls\0"))
-+			return -EOPNOTSUPP;
-+		if ((1 << sk->sk_state) & (TCPF_CLOSE | TCPF_LISTEN))
-+			return -EINVAL;
-+		return tcp_setsockopt(sk, SOL_TCP, optname, optval, optlen);
++		return mptcp_getsockopt_msk(sk, SOL_TCP, optname, optval, optlen);
  	case TCP_CONGESTION:
- 		return mptcp_setsockopt_sol_tcp_congestion(msk, optval, optlen);
- 	case TCP_DEFER_ACCEPT:
+ 	case TCP_INFO:
+ 	case TCP_CC_INFO:
 -- 
 2.51.0
 
