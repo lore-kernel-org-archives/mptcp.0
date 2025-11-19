@@ -1,53 +1,53 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C74DB23D7F0
-	for <mptcp@lists.linux.dev>; Wed, 19 Nov 2025 12:13:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FF03357A3F
+	for <mptcp@lists.linux.dev>; Wed, 19 Nov 2025 12:13:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763554403; cv=none; b=rZ3Ofe6Ur+o+JscQ+/jPe8Dyx6LSdRV00EgaiSrse53ZKq/DsP62BcwA8tjLWG0Rrc+DcX0NsJzp+8p1a9YdgVxAkh1dYXwUhbZlLTINTVN8uC2mqwGIEueUrhDfzqy/ySkBNwYI76wVvH766MV6mjgFJiuw+qubqCnH0YGqrNQ=
+	t=1763554404; cv=none; b=XERiBrL4erf2B6dKo5AX7dLh0safTcPH4N22bQ6UUlCBJVIxQGMlfvD3pnMX8vwsF4XARsBa5ClVpt/55Of/YAS4oPO4mcHqUKIkbzinhR7B19uVn0TuiW7i7PjgBM13T8aADnn/tVC+V8waAANyT6jWNI28lkG8cjBPLBBkK7g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763554403; c=relaxed/simple;
-	bh=wY6jximG58M4HN20afKe6OzucXoRpoED2gZNfFLFwHU=;
+	s=arc-20240116; t=1763554404; c=relaxed/simple;
+	bh=p3AY75uxgulzMgO3Ds0xv+pom+rcMnnCPMLqDx7YRN0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=OdL/nNqILiTfUkxGiO++Cbhmimcw7SJwyJoeGqJSFzuQJsPT21xdBiaMLHlUngkUamxJUJGLMidlVijzuE3b13ZK2ifFxX2YlESf8F/GmEiEjwLaqn9cKXR7SBClIWx1TR/tK6ChBneIMFtGW0Dy15rsfMZAmHeEt8FJ+64ZNyk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NPvX5sob; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:content-type; b=UDEfGaC/UdeM3v0jNzyA9nZsXUlz2CODukR26ePaE2dOcn8PKOhLiIB86kemIE+kwpYUIFiV8/a3BhqcmMndv4IHsLujF89ze+YODaggW2y7lEL4GFNoKdbYPa6Cf0BaFSlObW0l06DBFBX/COF0cwnypf7FWpAh2LeWpvU3vzA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZaCFlE6u; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NPvX5sob"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZaCFlE6u"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1763554398;
+	s=mimecast20190719; t=1763554401;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=JQAgKXMcgv6SyVdQKQXJD3BBmf5HI4AxzEGObTaoYWY=;
-	b=NPvX5sobVEcs3itn3W9QSg8JzCq7v9U78ovlcSVMIL9KpJWXx7YNwLB5n2dYJvhRJv+Krl
-	/Z8Jf3nsoD4GnSpIrdbVR5ZjdYVO6mgHUniCWQMxOFvSxvlGrcArwEIocbRkh3lTQik0uO
-	VZACFdlI52Zeb8i6N7PE+j3kY6IDbMo=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+	bh=5ZkNVVjsQQbyymzRFR61as68eh0OnfAaAeVOWC4eVw8=;
+	b=ZaCFlE6uqerFtT7VIyg07KQ+yg/ECYN4AU/9inmcvGAKZ3ngKLqWOMXK3J+qWmDUbSHaju
+	7bhsl6zuc/ryw3tgLpEWre98vyX+mgT5JMC6rq09uSViBvELdOk4sSgDitcTMXbDioZ4K1
+	wyIiMbdsk1ao+svRWqWkTs5J14e7LsU=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-696-y-3WkWgANUiJ-o8nNWRPuA-1; Wed,
- 19 Nov 2025 07:13:08 -0500
-X-MC-Unique: y-3WkWgANUiJ-o8nNWRPuA-1
-X-Mimecast-MFC-AGG-ID: y-3WkWgANUiJ-o8nNWRPuA_1763554387
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-96-waQqM_SUPpueUclHDcSiMw-1; Wed,
+ 19 Nov 2025 07:13:14 -0500
+X-MC-Unique: waQqM_SUPpueUclHDcSiMw-1
+X-Mimecast-MFC-AGG-ID: waQqM_SUPpueUclHDcSiMw_1763554391
 Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C3DE418AB406;
-	Wed, 19 Nov 2025 12:13:07 +0000 (UTC)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7C0EF1800451;
+	Wed, 19 Nov 2025 12:13:11 +0000 (UTC)
 Received: from gerbillo.redhat.com (unknown [10.44.33.89])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 96BD2195608E;
-	Wed, 19 Nov 2025 12:13:06 +0000 (UTC)
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 54249195608E;
+	Wed, 19 Nov 2025 12:13:09 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
 Cc: martineau@kernel.org
-Subject: [PATCH mptcp-next v5 3/5] mptcp: consolidate rcv space init
-Date: Wed, 19 Nov 2025 13:12:56 +0100
-Message-ID: <59152266d5ed10c8b47da33cc5f087f2fcfaeb68.1763553361.git.pabeni@redhat.com>
+Subject: [PATCH mptcp-next v5 5/5] mptcp: add receive queue awareness in tcp_rcv_space_adjust()
+Date: Wed, 19 Nov 2025 13:12:58 +0100
+Message-ID: <9b71450237deb12a03c8d05cedd5e8593950db0b.1763553361.git.pabeni@redhat.com>
 In-Reply-To: <cover.1763553361.git.pabeni@redhat.com>
 References: <cover.1763553361.git.pabeni@redhat.com>
 Precedence: bulk
@@ -58,128 +58,59 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: F9vt2m-4cIRBRs3JopUKsFuCZ5H-m3Zn03fRPVmzYIY_1763554387
+X-Mimecast-MFC-PROC-ID: 35XTA34F2T-2GNhZcRehtqikImTXd2qMZu0Hpt09Azw_1763554391
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 
-MPTCP uses several calls of the mptcp_rcv_space_init() helper to
-initialize the receive space, with a catch-up call in
-mptcp_rcv_space_adjust().
+This is the mptcp counter-part of commit ea33537d8292 ("tcp: add receive
+queue awareness in tcp_rcv_space_adjust()").
 
-Drop all the other strictly not needed invocations and move constant
-fields initialization at socket init/reset time.
+Prior to this commit:
 
-This removes a bit of complexity from mptcp DRS code. No functional
-changes intended.
+ESTAB 33165568 0      192.168.255.2:5201 192.168.255.1:53380 \
+	skmem:(r33076416,rb33554432,t0,tb91136,f448,w0,o0,bl0,d0)
+
+After:
+ESTAB 3279168 0      192.168.255.2:5201 192.168.255.1]:53042 \
+	skmem:(r3190912,rb3719956,t0,tb91136,f1536,w0,o0,bl0,d0)
+(same tput)
 
 Reviewed-by: Mat Martineau <martineau@kernel.org>
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 ---
-v4 -> v5:
-  - reworded the commit message
-
-v1 -> v2:
-  - split helper consolidation out of v1 patch
-  - additionally move 'copied' and 'rtt_us' initialization out of
-    mptcp_rcv_space_init()
----
- net/mptcp/protocol.c | 34 +++++++++++++++++-----------------
- net/mptcp/protocol.h |  1 -
- net/mptcp/subflow.c  |  2 --
- 3 files changed, 17 insertions(+), 20 deletions(-)
+ net/mptcp/protocol.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 8b2824834b10..bfda2dce956c 100644
+index e30e408c4f52..aaaf5357084e 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -2067,6 +2067,19 @@ static int __mptcp_recvmsg_mskq(struct sock *sk, struct msghdr *msg,
- 	return copied;
- }
+@@ -2136,11 +2136,13 @@ static void mptcp_rcv_space_adjust(struct mptcp_sock *msk, int copied)
+ 	if (rtt_us == U32_MAX || time < (rtt_us >> 3))
+ 		return;
  
-+static void mptcp_rcv_space_init(struct mptcp_sock *msk, const struct sock *ssk)
-+{
-+	const struct tcp_sock *tp = tcp_sk(ssk);
-+
-+	msk->rcvspace_init = 1;
-+
-+	/* initial rcv_space offering made to peer */
-+	msk->rcvq_space.space = min_t(u32, tp->rcv_wnd,
-+				      TCP_INIT_CWND * tp->advmss);
-+	if (msk->rcvq_space.space == 0)
-+		msk->rcvq_space.space = TCP_INIT_CWND * TCP_MSS_DEFAULT;
-+}
-+
- /* receive buffer autotuning.  See tcp_rcv_space_adjust for more information.
-  *
-  * Only difference: Use highest rtt estimate of the subflows in use.
-@@ -2960,6 +2973,8 @@ static void __mptcp_init_sock(struct sock *sk)
- 	msk->timer_ival = TCP_RTO_MIN;
- 	msk->scaling_ratio = TCP_DEFAULT_SCALING_RATIO;
- 	msk->backlog_len = 0;
-+	msk->rcvq_space.copied = 0;
-+	msk->rcvq_space.rtt_us = 0;
+-	if (msk->rcvq_space.copied <= msk->rcvq_space.space)
++	copied = msk->rcvq_space.copied;
++	copied -= mptcp_inq_hint(sk);
++	if (copied <= msk->rcvq_space.space)
+ 		goto new_measure;
  
- 	WRITE_ONCE(msk->first, NULL);
- 	inet_csk(sk)->icsk_sync_mss = mptcp_sync_mss;
-@@ -3403,6 +3418,8 @@ static int mptcp_disconnect(struct sock *sk, int flags)
- 	msk->bytes_sent = 0;
- 	msk->bytes_retrans = 0;
- 	msk->rcvspace_init = 0;
-+	msk->rcvq_space.copied = 0;
-+	msk->rcvq_space.rtt_us = 0;
- 
- 	/* for fallback's sake */
- 	WRITE_ONCE(msk->ack_seq, 0);
-@@ -3540,23 +3557,6 @@ struct sock *mptcp_sk_clone_init(const struct sock *sk,
- 	return nsk;
- }
- 
--void mptcp_rcv_space_init(struct mptcp_sock *msk, const struct sock *ssk)
--{
--	const struct tcp_sock *tp = tcp_sk(ssk);
--
--	msk->rcvspace_init = 1;
--	msk->rcvq_space.copied = 0;
--	msk->rcvq_space.rtt_us = 0;
--
--	msk->rcvq_space.time = tp->tcp_mstamp;
--
--	/* initial rcv_space offering made to peer */
--	msk->rcvq_space.space = min_t(u32, tp->rcv_wnd,
--				      TCP_INIT_CWND * tp->advmss);
--	if (msk->rcvq_space.space == 0)
--		msk->rcvq_space.space = TCP_INIT_CWND * TCP_MSS_DEFAULT;
--}
--
- static void mptcp_destroy(struct sock *sk)
- {
- 	struct mptcp_sock *msk = mptcp_sk(sk);
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 95c62f2ac705..ee0dbd6dbacf 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -922,7 +922,6 @@ static inline u64 mptcp_stamp(void)
- 	return div_u64(tcp_clock_ns(), NSEC_PER_USEC);
- }
- 
--void mptcp_rcv_space_init(struct mptcp_sock *msk, const struct sock *ssk);
- void mptcp_data_ready(struct sock *sk, struct sock *ssk);
- bool mptcp_finish_join(struct sock *sk);
- bool mptcp_schedule_work(struct sock *sk);
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 86ce58ae533d..23f439853a7c 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -462,8 +462,6 @@ void __mptcp_sync_state(struct sock *sk, int state)
- 
- 	subflow = mptcp_subflow_ctx(ssk);
- 	__mptcp_propagate_sndbuf(sk, ssk);
--	if (!msk->rcvspace_init)
--		mptcp_rcv_space_init(msk, ssk);
- 
- 	if (sk->sk_state == TCP_SYN_SENT) {
- 		/* subflow->idsn is always available is TCP_SYN_SENT state,
+ 	trace_mptcp_rcvbuf_grow(sk, time);
+-	if (mptcp_rcvbuf_grow(sk, msk->rcvq_space.copied)) {
++	if (mptcp_rcvbuf_grow(sk, copied)) {
+ 		/* Make subflows follow along.  If we do not do this, we
+ 		 * get drops at subflow level if skbs can't be moved to
+ 		 * the mptcp rx queue fast enough (announced rcv_win can
+@@ -2154,7 +2156,7 @@ static void mptcp_rcv_space_adjust(struct mptcp_sock *msk, int copied)
+ 			slow = lock_sock_fast(ssk);
+ 			/* subflows can be added before tcp_init_transfer() */
+ 			if (tcp_sk(ssk)->rcvq_space.space)
+-				tcp_rcvbuf_grow(ssk, msk->rcvq_space.copied);
++				tcp_rcvbuf_grow(ssk, copied);
+ 			unlock_sock_fast(ssk, slow);
+ 		}
+ 	}
 -- 
 2.51.1
 
