@@ -1,114 +1,121 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7773D18E025
-	for <mptcp@lists.linux.dev>; Wed, 19 Nov 2025 21:30:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 371B8305948
+	for <mptcp@lists.linux.dev>; Wed, 19 Nov 2025 21:54:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763587825; cv=none; b=mivP9yLmM+mBG01bYZCFWbsu+QkGKRYzEpJ1ae+eyGlQxWf1KwIt7R81+hrELOYM2tJSPVCmgAD4GJfhRTtdtHGEeHGGS92GRhnDuWIAP1P+6Kjxt5RhsWD9pq4fvUeiaqnZbqGWYCL5VbD5sOOrLY5DUE9atWDcrTwU0zossk4=
+	t=1763589275; cv=none; b=XTq3EAPE8pz2kPVUvQH+mm2cp5X8ikN+4z1tT1HFcM8Ot3orVC42mP4sLOCvPVf86+d4Cz0FcC52eku+JFptYF0OThqWod1sVOmlf+rruYb64QtCHLdEwdgOWEblB9QBAqMokDGSGjH0DnFIeJHlpC4dmhGVV3drEEjy3NU7r1Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763587825; c=relaxed/simple;
-	bh=ujJzzhVs7UeP/BtHvcD3JYhKp+nTwm8j9pUd68LpyCQ=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=vGZm2SFGfQdDrDrJF9RaTkncx08Gc2Gh1rQdGAfmlrf/8TAwWK/1Db85YEK3pg0ULWoLBd53E6wo0XmRHvVUhzDwq3edCmhPG319aB4eeQzcNEuvU/e/hpMgp5fl1Mj59F/0aWBp4X0YZkLtqCh3lbN99Kcl+axmT4dkCH5UjYE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iINRsS4E; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1763589275; c=relaxed/simple;
+	bh=F69Y2dO5eqdDyzIJ+3u0TUMbPscc4TzF1PF63T4Z0fI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:content-type; b=dBM0ZJ7ccqATqUbHKTn/0f0G5MJL3GkBRHK65qsD5E8qFLnM3igCP0+IKVt3N5mA45VwJDm/bThjOZ+wO9cd7t2ws5H6fz54ojeJzGPrQlAxsLTcVWF8z9n5V76UjnMdeGmycBJMxyA/yBcRFfJ4KWSFA3QTJT2+wvjaNhlRYv8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fWzzZlGb; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iINRsS4E"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fWzzZlGb"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1763587822;
+	s=mimecast20190719; t=1763589273;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9R2JQ8mQbdhjJxXuBxcRH8CO76zYpCgDbXsJ1Li9q+E=;
-	b=iINRsS4EWNc08tKDDKzvBJ5SaaxSYyiqyVj7Omsu1UR935iIOezVh7GcxxjZCUZy8cW99G
-	buY2Y9q2L5KFfwaGrM1hxf3E2zKx8SpCuwg1hd9vNu+f9snuBjtIuNCkKPQBgTXwFF+qyo
-	yp8252SS7i954bQlEzfpqkwnRzEe9OA=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-36-CzCPPgYOOjuhzbGZ-jKXoQ-1; Wed, 19 Nov 2025 16:30:21 -0500
-X-MC-Unique: CzCPPgYOOjuhzbGZ-jKXoQ-1
-X-Mimecast-MFC-AGG-ID: CzCPPgYOOjuhzbGZ-jKXoQ_1763587820
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-477a0ddd1d4so2864705e9.0
-        for <mptcp@lists.linux.dev>; Wed, 19 Nov 2025 13:30:20 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763587819; x=1764192619;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9R2JQ8mQbdhjJxXuBxcRH8CO76zYpCgDbXsJ1Li9q+E=;
-        b=NHEwPYf3UNiVbqVELDQ2Urk6bvpj/E+vkzqh+FpLl4StfvEU+ZrSRFpRIMjm3cg+x1
-         cycjY/01N52HgfePvTXAV7OLu9SusKl0Mt6xePKfUiLUVdJ31h6j38FxpWQGJI/j6Rw1
-         Iq6c9p3Jiottd9NP92XSPtsuKPzwsEtPewws4uaQIMSVajoQ21uJOFVNHTftU4p7jdHs
-         wiPx5ZV3c5fgRE753gzS6dZvlBP7gy5EMDOUfn38IAY4b+0toY0sjnRxpy4WtzOIERhI
-         mTmkKXbgUWDxx0CtQmX4vsnd8g1Ex96u4wtTiPGxvyX4UWyIIj4uqM4IZsWA/8ZgEcl+
-         m5Sg==
-X-Gm-Message-State: AOJu0Yxq94gFxZxS+ZFqN08rqpKsM6aaGHTlYvBb81UN3mxzqXz0Kzr+
-	xkxJp7jmmDYrytNELi6YKcXtzRG4brVDABAMvhq7IgoTfPBF95ytLowL+338r3AGh71tskRPC7S
-	vdYldICcjfLc0DH0PeZsDPrQgggBQcVBgbeS8TSuNAOLCcOOsVYy0Dcqa6bEgvuMmAqXL5hSs3y
-	3cE8dElHJYW4mI8idchmJZRKXgG48X4Fc/ZsEb8w==
-X-Gm-Gg: ASbGncuLElpZTdjJYurSKV3QrLP3mrus7yxzEo86s37iEIgZR9nEz3cxrN/iOaODnuX
-	HYJwKY6YpKoZsPT9wMU6S4yYX2QrS3BlvorbuQJYQH5L4GRpuCXKFwM+cF/a8uKOrxAhbBmjbwB
-	Yi9DdVhW/vtbNLXzkTb4bCTX1MeWFgvS4JK5+4fMh3Oit3X/tDumxuB5aZAWtgXAHAh8MHO3Z0n
-	tT/unX8JSYfVlRc+zTN557wn5duCbowxkmrsA79eXk/DAkkjIU/q638bEqtBDQY+ECUsH1/m5qe
-	dCLdjM7zljJMMCO8C7PeUmI+3hwS+mEM8zfcSmfWNePgzQAD8493Kfn8zjIJ1vG0a0Pf8o+UQJB
-	MiJboSw8dmN6O
-X-Received: by 2002:a05:600c:8b22:b0:477:9b4a:a82 with SMTP id 5b1f17b1804b1-477b8aa3615mr6836465e9.35.1763587819513;
-        Wed, 19 Nov 2025 13:30:19 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHZSRg7p0jhfBCQ+Fgj2/+eMp5GMpV84HTSmQ5cE2zIlLykWl4iVbCcb8YnnwjjEUUTVTkczA==
-X-Received: by 2002:a05:600c:8b22:b0:477:9b4a:a82 with SMTP id 5b1f17b1804b1-477b8aa3615mr6836245e9.35.1763587819048;
-        Wed, 19 Nov 2025 13:30:19 -0800 (PST)
-Received: from [192.168.88.32] ([212.105.155.41])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-477b0ffd37bsm70129355e9.3.2025.11.19.13.30.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 Nov 2025 13:30:18 -0800 (PST)
-Message-ID: <2b4384b3-39e7-41e9-a7df-8521067b817b@redhat.com>
-Date: Wed, 19 Nov 2025 22:30:17 +0100
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=o4vo8LuqTPl/57uMNKNRw1eIve8CHd3oqJLF04+HWl0=;
+	b=fWzzZlGb0D/xbu8ozkW4XiD6Zy36Twio8t3UwwZTzxk3JOvoFuFV13HGUYYo+IOogYZ4WF
+	nHewEycVxJqpuePDf+3zhOVM0Dk1lqF7c9ZkFUsk9vJLMzHTquOvytS93aCeh7cpTcxA+4
+	BAt5MLAGleF3uWxwQ592aNyQVEWCZJs=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-647-utUQGxAeMgeDwcftx9wNog-1; Wed,
+ 19 Nov 2025 16:54:31 -0500
+X-MC-Unique: utUQGxAeMgeDwcftx9wNog-1
+X-Mimecast-MFC-AGG-ID: utUQGxAeMgeDwcftx9wNog_1763589270
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C580C19560A3;
+	Wed, 19 Nov 2025 21:54:29 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.44.33.89])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id AF92F180049F;
+	Wed, 19 Nov 2025 21:54:28 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: mptcp@lists.linux.dev
+Cc: martineau@kernel.org
+Subject: [PATCH mptcp-next v6 0/4] mptcp: autotune related improvement
+Date: Wed, 19 Nov 2025 22:54:19 +0100
+Message-ID: <cover.1763588352.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v5 3/5] mptcp: consolidate rcv space init
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Cc: martineau@kernel.org
-References: <cover.1763553361.git.pabeni@redhat.com>
- <59152266d5ed10c8b47da33cc5f087f2fcfaeb68.1763553361.git.pabeni@redhat.com>
-In-Reply-To: <59152266d5ed10c8b47da33cc5f087f2fcfaeb68.1763553361.git.pabeni@redhat.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: vUD9KSIx8GbyVXm5SbzvEpB8wAjTNsnkQbjDvAM9UHg_1763587820
+X-Mimecast-MFC-PROC-ID: 2TDEtSS_eJXrwB0nU-lGG11Pel3acyuFG1PbDdM7PwM_1763589270
 X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+content-type: text/plain; charset="US-ASCII"; x-default=true
 
-On 11/19/25 1:12 PM, Paolo Abeni wrote:
-> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> index 86ce58ae533d..23f439853a7c 100644
-> --- a/net/mptcp/subflow.c
-> +++ b/net/mptcp/subflow.c
-> @@ -462,8 +462,6 @@ void __mptcp_sync_state(struct sock *sk, int state)
->  
->  	subflow = mptcp_subflow_ctx(ssk);
->  	__mptcp_propagate_sndbuf(sk, ssk);
-> -	if (!msk->rcvspace_init)
-> -		mptcp_rcv_space_init(msk, ssk);
->  
->  	if (sk->sk_state == TCP_SYN_SENT) {
->  		/* subflow->idsn is always available is TCP_SYN_SENT state,
+This series collects a few follow-up for the backlog refactor, with some
+of them posing as fixes just to confuse the enemy.
 
-My fault, I tested only lightly after removal of old patch 4/6; the
-above is buggy, as now rcvspace_init is delayed to recvmsg() and
-packets can enter the OoO queue after accept while space is still empty
-causing divide by zero in mptcp_rcvwnd_grow.
+Targeting net-next as the issues addressed are very old, the change
+is quite invasive and, as mentioned, based on the BL refactor.
 
-I'll drop even this patch, the cleanup is minimum.
+Overall this:
+- introduces a tracepoint similar to tcp useful to track down the issues
+  addressed here
+- avoid rx drop in corner case scenarios, improving tput stability and
+  peak tput over fast link
+- refactor the rcv space and rtt estimator, overall making DRS more
+  correct and avoiding rcv buffer drifting to tcp_rmem[2], which in
+  turn makes the tput more stable and less bursty
 
-/P
+Note that after this upstream series will be merged:
+
+https://patchwork.kernel.org/user/todo/netdevbpf/?series=1025209
+
+we want to introduce similar changes in mptcp, too.
+---
+v5 -> v6:
+  - dropped the buggy patch 3/5
+
+v4 -> v5:
+  - dropped patch 4/6; it proved to be useless together with new version
+    of patch 4/5
+  - refactor rtt estimator: use sliding window instead of dropping "too
+    high" values
+
+v3 -> v4:
+  - dropped already merged patch 1
+  - update comment in patch 6/6
+
+v2 -> v3:
+  - use __entry->family in patch 1/7
+  - more verbose commit message for patch 6/7
+
+v1 -> v2:
+  - new patch 1/7
+  - old patch 2/4 has been split in 3: 3/7, 4/7 and 5/7
+  - refactor both the rcv space init and rtt estimator
+*** SUBJECT HERE ***
+
+*** BLURB HERE ***
+
+Paolo Abeni (4):
+  trace: mptcp: add mptcp_rcvbuf_grow tracepoint
+  mptcp: fix receive space timestamp initialization.
+  mptcp: better mptcp-level RTT estimator
+  mptcp: add receive queue awareness in tcp_rcv_space_adjust()
+
+ include/trace/events/mptcp.h | 80 ++++++++++++++++++++++++++++++++++
+ net/mptcp/protocol.c         | 83 ++++++++++++++++++++----------------
+ net/mptcp/protocol.h         | 43 ++++++++++++++++++-
+ 3 files changed, 169 insertions(+), 37 deletions(-)
+
+-- 
+2.51.1
 
