@@ -1,84 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBF8B23B615;
-	Thu, 20 Nov 2025 18:02:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F45D3644D9
+	for <mptcp@lists.linux.dev>; Thu, 20 Nov 2025 19:01:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763661764; cv=none; b=IO8sA4CsqALv9/Q3RISd3mLxCwwbTvZJB5G8zd/y3BGPL7ObvirZuxuUOrKck4jX7spG3pwoh+Fb3aLEEUKiS3Qos8R16ep1AZaf4l2/B7zuK2KcngjlOuDzS+hG2sCKiuUZasTnsaxfvESefP+KExCdtfbb5PV7Q09/Q76t+A0=
+	t=1763665310; cv=none; b=cVBDP7KMYMUtW65GVaRADlozFrvSONAoFcClZIng6TU/Qta/ScpDV+l1PJHDnxeehqqaWhLmG+bnxKwnnSWudfqpXhFVm4WfLq1yAt/VLOaWVPIIEZg6PGzDvNKN2YiLbDKLfegbbZ+DWbX9nZjgg+zwWzr18flFpgW6//1uIHs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763661764; c=relaxed/simple;
-	bh=tW4GWywFGyxIBvvnTE52KQ0xbnTTxrBJuVsfwIEnrEY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Bd7A3sqdbVvPNMfpYYbjFSjgkr9CksYLfXUAvCMMym9tFf24hFcnkrzoxubM7q4fPaPlLZSUqxehL5sG/6p9p9xzzrfgScXRZfxGEYzZROBx9HLbzmeKAX32C+nXpNNLGdOraVnoymekqq7+eJCD4hkT13+gSWioSQfrFHwabzg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bU1aX7dC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1763665310; c=relaxed/simple;
+	bh=MMpy61hGyXTLj1scCDZl3xmCQQa6rNDcMDQf2O30yV4=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=clTYCDXuZbD5oyfCNJwDH1EWEXGE28C28gkPFuiSZS0s//GdREV+l20zDfD/TLSDVgmLPQrYKrFVLbgwLO704xTaYCRmKVnlpaVI1I9jLw0AcTaVdUilqvtA5tEg21DFKtZltsJxatHVtwqaNy1cvVfUzwigM6T8LApvnYcIUsU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kcaeCZpN; arc=none smtp.client-ip=209.85.166.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bU1aX7dC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F67AC4CEF1;
-	Thu, 20 Nov 2025 18:02:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763661763;
-	bh=tW4GWywFGyxIBvvnTE52KQ0xbnTTxrBJuVsfwIEnrEY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=bU1aX7dCdw3jpvhsOS8/fsYpgSWcKVyMRk+L7pljjC+YPutDUc16+nkqLtJus7SQo
-	 Iwpd2Slb01j64FnS/raCTlEhfOzlM/xaDtDo3WM8RCpq5vp3vyWfYS9Tv7ct/jSus4
-	 NPoDR89HMhyV8IYt3tpqEZKMvJD+2M2W4FaUpqSo1LaY7pDQWbO3GSRh6vCwUEGj2b
-	 Lfp94mIRWogUqLMga7ZVuqjgd/gaWn84MRSDN+bTOdNkf8sI6x9aOuTBrBZSl2Gz3t
-	 /Tt2Ycbk3TOIuxhitFF0yw3fb87xOUBSD/jHyhcFNiky1W6eolkvkqYX/9nvgNZ8q6
-	 W/SThFGBkyBWQ==
-Date: Thu, 20 Nov 2025 10:02:40 -0800
-From: Jakub Kicinski <kuba@kernel.org>
-To: =?UTF-8?B?QXNiasO4cm4=?= Sloth =?UTF-8?B?VMO4bm5lc2Vu?=
- <ast@fiberby.net>
-Cc: Donald Hunter <donald.hunter@gmail.com>, "Jason A. Donenfeld"
- <Jason@zx2c4.com>, Andrew Lunn <andrew+netdev@lunn.ch>, Anna Schumaker
- <anna@kernel.org>, Antonio Quartulli <antonio@openvpn.net>, Arkadiusz
- Kubalewski <arkadiusz.kubalewski@intel.com>, Arve =?UTF-8?B?SGrDuG5uZXY=?=
- =?UTF-8?B?w6Vn?= <arve@android.com>, Carlos Llamas <cmllamas@google.com>,
- Christian Brauner <brauner@kernel.org>, Chuck Lever
- <chuck.lever@oracle.com>, Dai Ngo <Dai.Ngo@oracle.com>, Daniel Zahka
- <daniel.zahka@gmail.com>, David Ahern <dsahern@kernel.org>, "David S.
- Miller" <davem@davemloft.net>, David Wei <dw@davidwei.uk>, Eric Dumazet
- <edumazet@google.com>, Geliang Tang <geliang@kernel.org>, Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>, Hannes Reinecke
- <hare@kernel.org>, Jacob Keller <jacob.e.keller@intel.com>, Jeff Layton
- <jlayton@kernel.org>, Jiri Pirko <jiri@resnulli.us>, Joe Damato
- <jdamato@fastly.com>, Joel Fernandes <joelagnelf@nvidia.com>,
- kernel-tls-handshake@lists.linux.dev, Li Li <dualli@google.com>,
- linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org, Martijn Coenen
- <maco@android.com>, Mat Martineau <martineau@kernel.org>, Matthieu Baerts
- <matttbe@kernel.org>, Mina Almasry <almasrymina@google.com>,
- mptcp@lists.linux.dev, NeilBrown <neil@brown.name>, netdev@vger.kernel.org,
- Olga Kornievskaia <okorniev@redhat.com>, Paolo Abeni <pabeni@redhat.com>,
- Sabrina Dubroca <sd@queasysnail.net>, Samiullah Khawaja
- <skhawaja@google.com>, Simon Horman <horms@kernel.org>, Stanislav Fomichev
- <sdf@fomichev.me>, Suren Baghdasaryan <surenb@google.com>, Todd Kjos
- <tkjos@android.com>, Tom Talpey <tom@talpey.com>, Trond Myklebust
- <trondmy@kernel.org>, Vadim Fedorenko <vadim.fedorenko@linux.dev>, Willem
- de Bruijn <willemb@google.com>
-Subject: Re: [PATCH net-next 2/2] tools: ynl-gen: add regeneration comment
-Message-ID: <20251120100240.1e80c65f@kernel.org>
-In-Reply-To: <20251120174429.390574-3-ast@fiberby.net>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kcaeCZpN"
+Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-433100c59dcso5000545ab.0
+        for <mptcp@lists.linux.dev>; Thu, 20 Nov 2025 11:01:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1763665307; x=1764270107; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WWPnNkM3SFvOO4wMb7lvfqgws3zGsHBUZg+DF3VosGc=;
+        b=kcaeCZpNPLXW8AkboFbpFgzf5ciugU7FvuYTjp3AOvQjOqnjq1zBQmjCr0RyIiVS4Z
+         LLV4RwN03MHzZeIniWv6lBs0Bc1B309Gp20Hsoh85x1MqCKibhhQqmCFsPvXBxrqQjX/
+         BGxSTyrZ9Cc8gEh39c5RRE1t1l/LYBQnZRm6Ek4EVhyMFwFLBrB0HqguooUmxlWbdsa1
+         fU2dtwBa6bfF/gWnmefJu8UuS9FS5VHuB2BpwYdgK1oRB3zoNGXVQGGotemR3F3tluuo
+         B2wTJTinDW6Dbe20lc1vBsa7fKGKrwmDli8QfSMo+a2NQcacNsURs87SIO6uc+Lirqrq
+         DHBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763665307; x=1764270107;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=WWPnNkM3SFvOO4wMb7lvfqgws3zGsHBUZg+DF3VosGc=;
+        b=X6559hQoJVWTXVBNpWSlUZGIh5tPbsQNjTdj+FrGhjCwXMp1gy+/Azm0gbqdnQTx9T
+         XMho9kF4oCG2oaXcOgTrwf2t7qy0DVwiiae6ObwST9/7Kc7ESqHlpCGmfVQL+He9t5YR
+         uTSqkU/EoGcp1/x2JolcdC67eFWwvAn5NYpUU6YRM4eAmb5xb6UiV70PvmHbDt6mELcB
+         KUFRhx3RsBwWl7H7hUhYxOgs6aULYcDPHHl9Z4GtpC1XQTVpvRAp+zN+025Y+Q47O8pb
+         9GzkSyh1uOH7l9RgDnJhkoBuoa/22plv9mzMRVC6MQSnTbkvo1bnGD0X1he+As5NO046
+         +6jg==
+X-Gm-Message-State: AOJu0Yw27FWLkyBmISCsAFbAst8gfc/K3CYH3YwNrrLztBNEFVhGGTW+
+	2jtH3qjHWQtCw7hvipgNYe+T/mXSdh5tejLqpxqITBeqAHpHN36vK8VWtX1J
+X-Gm-Gg: ASbGncs5ozmuLuCtVcY2wkwwEOrnHLLKwLChpOzqN8XGD83bE4J38cvFUYn/ePBru5Q
+	+JryKuS4yWB5q+3ZOmOblbWN7LonF/uWMWFB53yLDGl4JGP/eyy+HdMRyue9lw5T8Q8jchxYnPd
+	SsbwwpeNeysTabA5ctlimduTnAqPjf5mUiTxPkOXUrNPil2Sif5JslF5IJsMlUokKMA/H8S4ZSJ
+	oBVwcz7CA4/pgyV+APwMztsFw5T6dc1OqxH23XCEI7y8+lNgTlsby+VxREhHTAfriVS0k9aaV46
+	lkYQlZ+0a0VfMH/7APi+z92Px/g9HdL8jD929bdcaaX6OQpD8NuFkxSfLqgC1uxuFETemxaNcLx
+	Ba7Fl12Je/U5Grb7WtJHPs59LPT+wlhHaeL3wonrtBsl/BDwxIjKlYEXI78ysftcyVancs0qcpN
+	5QA8B/+mS58A==
+X-Google-Smtp-Source: AGHT+IEm+H62KKAMmrittg3eLvMWEKxPInxe7dXEB4P1FqXjFY24MJ2ZBlwAEJvj9Io8kB+WdO5lBA==
+X-Received: by 2002:a05:6e02:3f09:b0:433:78dd:18ed with SMTP id e9e14a558f8ab-435a9074ad2mr38576345ab.26.1763665306885;
+        Thu, 20 Nov 2025 11:01:46 -0800 (PST)
+Received: from [127.0.0.1] ([52.176.138.177])
+        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-435a90c5adfsm14130475ab.22.2025.11.20.11.01.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Nov 2025 11:01:46 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: =?UTF-8?Q?Asbj=C3=B8rn_Sloth_T=C3=B8nnesen?= <ast@fiberby.net>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20251120174429.390574-1-ast@fiberby.net>
 References: <20251120174429.390574-1-ast@fiberby.net>
-	<20251120174429.390574-3-ast@fiberby.net>
+Subject: Re: [PATCH net-next 0/2] tools: ynl-gen: regeneration comment +
+ function prefix
+Message-ID: <6ad82c56-19b5-20ea-5e30-8e45ce73a67d@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 20 Nov 2025 19:01:45 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, 20 Nov 2025 17:44:27 +0000 Asbj=C3=B8rn Sloth T=C3=B8nnesen wrote:
-> Add a comment on regeneration to the generated files.
->=20
-> The comment is placed after the YNL-GEN line[1], as to not interfere
-> with ynl-regen.sh's detection logic.
->=20
-> [1] and after the optional YNL-ARG line.
+Hi Asbj=C3=B8rn,
 
-Let's make this comment also optional? Detect whether it's there=20
-in the bash script and pass appropriate flag to C gen?
---=20
-pw-bot: cr
+Thank you for your modifications, that's great!
+
+Our CI did some validations and here is its report:
+
+- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/195468=
+18189
+
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/f040cba4ef2e
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1025958
+
+
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
