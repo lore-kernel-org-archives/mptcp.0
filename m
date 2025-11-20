@@ -1,118 +1,133 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AC9A1FD4
-	for <mptcp@lists.linux.dev>; Thu, 20 Nov 2025 22:16:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEA6F3081B9
+	for <mptcp@lists.linux.dev>; Thu, 20 Nov 2025 23:15:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763676992; cv=none; b=cfuAXpajIb9kItILeojEPt9rvR9b2Kb/qvZSzPmHQGLuZeVRqCA3yS8kevWmKH87sAxDhsNmo/MFehCHe5KbSGFBgzQcMs3SlE5cKQr66jUvyODVLPRt1Iq2ZTu8pFi3h66xuW3p2yTtACJuoj0Ah8QSBLAjGhN/vbgAVyvslow=
+	t=1763680523; cv=none; b=FokhbkbHSHUdf8BfUPZPOIgAyUgYdOUCemyMO289C/x418V/t9mGN+2zamHdOkf1lWDJZAupJtzl921+3dxEFU4glcSuSdz8VTeZiSYdEhraA46ThrW9OhCgnEjaSAgbjEItMLKCYvTMoJfHhiFG5ZBSd0JP9nlMo8VERvEQ0Nw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763676992; c=relaxed/simple;
-	bh=ctpO3ZGeWyhIwAxEY/KuZY6NtJ0UXNQa6o35LS0kTpE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:content-type; b=jLzcOzxOe1H+fCTD4Q2jWnRWW6w5BliUz8G3MTqbT11HL6XgtDFlfhCUfagb5fQYBbf/5mZXOvB3mxGXmL2sZOQOuD4/WgLFpWc0CJErC0Fv35LwUfSYylzvvWeCQC/hmY5U58YmnqPi0pcL/1S3X65K5ei0thMtHf17nlUkZqY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GJe/zFfL; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1763680523; c=relaxed/simple;
+	bh=/kiE5t8+zsphGP2OefMj0Xm0dPZuyPOqZywzeEfZszo=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=VEv1RNuaqNibVP3o8vb6vziefhPxx0brxppRv2e2SvWtYUjMPmTVgPYwogHgA3s+QLPf+sGDs2a+GQZ/BdoX4mpY5+72JWJmFoN3Q4dlETihlNhcX0k9JcRJGvWwKFJdiqDoSwYfan7uiyuw61mzIysp9X3iv95DizHdc+y5+aU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Qez3U1El; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GJe/zFfL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1763676990;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=l1P+EVt1UlqAETGV4LYu/f08j2PTmmWemBqxi4gF2YM=;
-	b=GJe/zFfLtWAzVBl9Byh8ig6bH20Oth3RZKvgfhbD7NlPstKb0YlLgLsrY/6Lf8+kJK1Zot
-	JeHzws6LYeOshDTk/iZyiaf7IuVIntrqZ0EAeT+tnpXuTvxH8yJMQ2iehKGsi3VRIKgjn0
-	tVmH2UrVLE/zCoyyRH1Wxul+9mjiCxg=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-470-5767HhrrN7OSSNLfXtJYTQ-1; Thu,
- 20 Nov 2025 17:16:27 -0500
-X-MC-Unique: 5767HhrrN7OSSNLfXtJYTQ-1
-X-Mimecast-MFC-AGG-ID: 5767HhrrN7OSSNLfXtJYTQ_1763676987
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D31571800473
-	for <mptcp@lists.linux.dev>; Thu, 20 Nov 2025 22:16:26 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.44.33.89])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 7667830044DB;
-	Thu, 20 Nov 2025 22:16:25 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Cc: dcaratti@redhat.com
-Subject: [PATCH mptcp-net] mptcp: clear scheduled subflows on retransmit
-Date: Thu, 20 Nov 2025 23:16:13 +0100
-Message-ID: <30e5325f37026b870cd0d0765d5d47c8a68fced9.1763676964.git.pabeni@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qez3U1El"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-7b80fed1505so1586246b3a.3
+        for <mptcp@lists.linux.dev>; Thu, 20 Nov 2025 15:15:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1763680521; x=1764285321; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=anDCDfLB7KrkCqizhv6y9TBanhp1R+JWCM6vVAr0bX4=;
+        b=Qez3U1El1YXoCHG1Zh57SnlZqmTjF7dtfW+Y53fQYGIKY9BivX44bbWX0qTuUsbkWc
+         X6A/6ne8fqRLPImohE0efMQ3G1pS6g1qrGPYSkSY2bRA4urqKh5+orLtqDmY/byuBkeV
+         5jmW6VR1LsiyN82TEproMlzIi10hrhnUDPNe2CVje7UfGZKXsEnb/MmsnqashwyvXWAy
+         hmAVBVTQEJM0S71vrcKGe407ICPW0IYvVVGL4S9eJ9FwPMjTyCpaofbwWciL/He38TJ3
+         2W65jkPe4GKj/4iBdpzvddY0oP+bm2wc+1boh3NmitK9o179UMFyYBdkXNqvVR1dJbYV
+         ULVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763680521; x=1764285321;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=anDCDfLB7KrkCqizhv6y9TBanhp1R+JWCM6vVAr0bX4=;
+        b=oFC0OTaOg17I6FqNKgfpEEtCCbr/k8lTBDrIhGMlDtTL9FgmWE113WHhP9ea0/iWbg
+         nN6Fk6uk6hrbjlmBm+4f3+oUqq46LPtEYaojSIrUCvtYuBdPiqClGZ9R74Zd3czNbObC
+         uaUmPOi8DDHci/EOI0RVss19Tbi5wU6VxqSruWcGCkAesSrlH3QEUNxatBTTkMpvLD3D
+         zBwNATT8/LysY/Ysqp+yS18+eFx58/QuDay/jG2nWaadtgNXqRsnWFDjirzwWZ2wmubI
+         NuVzfhzQKv5LH6HUpwOaEGNj1w5zhBxEvBtT9MI9q1N1W1HZlH7jVaxH/+ab5HF5s6mz
+         1ddg==
+X-Gm-Message-State: AOJu0YychJbhHQEaifg4G1sITaSPGRGUGie5eoafN0g64UlKGh5Z7JRR
+	7vrsRUQXfyUYI+zDKQpyIwym2MkBqCAqW9JhQmawSSEeqJif+PasRMmPCieL
+X-Gm-Gg: ASbGncvuFdKgkfPdEXvdTRb4X1p5umkgX0ndIKJSGjM+8tOiLWJ5JMdA4tTCptwmwPe
+	oTT6CUsGEItpjZRmtz2Z7fBQl8xyDB4ZUY2+7vtP+dq7rPWucZPZh/wFN4RexfyEXdc8eTvQyJC
+	sk2rx3Y0n6BeQsKhXP9H6r/gQH7aONNDT7kKH9XGfN0pV7EPHVa/kWCu3N10p7yWPkXPc0iw7Un
+	Qg7WruT7MczPtBmTDTdNsJJcMTutdfDRVHQOVs3czgPLexfDctU8OD6EsRGXh3zr/1MTIm75KHM
+	pkcTDgKf3NBARIZWKUEf+m1Tn68LurB3TUqqqznN4qfkQKyw1G3DP10oQBOFEmd5uRwOJbuC+2x
+	7qiLtkKqEgVNDa+k+ZBEtAPnmgK8yYMmypH78r0J0w9i/1Kc+MVVJEudkbs7jp1nAaT0YIANZg+
+	y3F4ZnDF+u+LpIdroaFDnmmgw=
+X-Google-Smtp-Source: AGHT+IHZGc+E+rr6NfQgJ6dWl8N+Piz3fXNAnQ4bXxTAeNTePc2nY6YpbeUvovyI0kUi1lJbEQ3YBg==
+X-Received: by 2002:a05:6a00:3e08:b0:7a2:7237:79ff with SMTP id d2e1a72fcca58-7c53013861cmr1210719b3a.7.1763680520774;
+        Thu, 20 Nov 2025 15:15:20 -0800 (PST)
+Received: from [127.0.0.1] ([52.159.243.21])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7c3f1262364sm3869383b3a.58.2025.11.20.15.15.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Nov 2025 15:15:20 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <30e5325f37026b870cd0d0765d5d47c8a68fced9.1763676964.git.pabeni@redhat.com>
+References:
+ <30e5325f37026b870cd0d0765d5d47c8a68fced9.1763676964.git.pabeni@redhat.com>
+Subject: Re: [PATCH mptcp-net] mptcp: clear scheduled subflows on
+ retransmit
+Message-ID: <41e8a753-6f87-b67c-298f-bf0e5579fde8@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 20 Nov 2025 23:15:19 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: Y5RDov8raVwwPVFTcUszHnwWdFPU_PKs3c3LXOCNxUg_1763676987
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-content-type: text/plain; charset="US-ASCII"; x-default=true
 
-When __mptcp_retrans() kicks-in, it schedules one or more subflow for
-retransmission, but such subflows could be actually left alone if there
-is no more data to retransmit and/or in case of concurrent fallback.
+Hi Paolo,
 
-Scheduled subflows could be processed much later in time, i.e. when new
-data will be transmitted, leading to bad subflow selection.
+Thank you for your modifications, that's great!
 
-Explicitly clear all scheduled subflows before leaving the retransmission
-function.
+Our CI did some validations and here is its report:
 
-Fixes: ee2708aedad0 ("mptcp: use get_retrans wrapper")
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
----
- net/mptcp/protocol.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/195533=
+52689
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 6f4220c8b5bb..3b327e9ccb78 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2763,7 +2763,7 @@ static void __mptcp_retrans(struct sock *sk)
- 		}
- 
- 		if (!mptcp_send_head(sk))
--			return;
-+			goto clear_scheduled;
- 
- 		goto reset_timer;
- 	}
-@@ -2794,7 +2794,7 @@ static void __mptcp_retrans(struct sock *sk)
- 			if (__mptcp_check_fallback(msk)) {
- 				spin_unlock_bh(&msk->fallback_lock);
- 				release_sock(ssk);
--				return;
-+				goto clear_scheduled;
- 			}
- 
- 			while (info.sent < info.limit) {
-@@ -2826,6 +2826,15 @@ static void __mptcp_retrans(struct sock *sk)
- 
- 	if (!mptcp_rtx_timer_pending(sk))
- 		mptcp_reset_rtx_timer(sk);
-+
-+clear_scheduled:
-+	/* If no rtx data was available or in case of fallback, there
-+	 * could be left-over scheduled subflows; clear them all
-+	 * or later xmit could use bad ones
-+	 */
-+	mptcp_for_each_subflow(msk, subflow)
-+		if (READ_ONCE(subflow->scheduled))
-+			mptcp_subflow_set_scheduled(subflow, false);
- }
- 
- /* schedule the timeout timer for the relevant event: either close timeout
--- 
-2.51.1
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/79d3d1a2339d
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1026047
 
+
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
