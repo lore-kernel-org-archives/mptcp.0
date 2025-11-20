@@ -1,161 +1,647 @@
-Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail1.fiberby.net (mail1.fiberby.net [193.104.135.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D72D32FA2F
-	for <mptcp@lists.linux.dev>; Thu, 20 Nov 2025 14:52:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 418422F5321;
+	Thu, 20 Nov 2025 17:47:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.104.135.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763650373; cv=none; b=JKZq+8KPHgvcWRTILvIdq5py5w5Dhz2HlxGG2MV2LTB6o6n0rYxvqN+i/iNKusy3OUiS96eTazP4wVZZAj08VlWdY6LOuJku7KZ///0C5xyDDkoyPr9aibuEp8BeDKlG1sVOcEcbNcpbUYq6JWGSi3T5Rsz8mDqXiydAzPkR2TI=
+	t=1763660880; cv=none; b=R4ci0UPEii3P+aP4qwuCDxOtx33zcuKO6zf2PHRv8PQdyzUrI+6vkoKmnw9cSLnKb0//0BuMfLh/ZE4suxSa2vaFvnVMB74dn0clECjpDas1fO6kmxGf9UTtBXwo9LYQB+VASDt7qigUQ5QKRJE80Z7aAxasHuYUOAx68K1QKFs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763650373; c=relaxed/simple;
-	bh=fJNbQYu7PoiJLsEPpjUYNqAPI6k2geFEJacIKnsv5a4=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=UkdubQzG2VaGuHvXpLgtalU49Xncz4ibTWyjrA7C/9tPCswuwEGMTWwTG/HgGRIyHNkJlbhw94uKyWsn4ZU0c3NhE6By5rnvITrVKSeJ0dUIdaNYEBQvntXoll+uGDStPb9tnpl0sFNyVv3mRhKNvEoS/FjQgGoTxvwrYmIJ8jM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=oLWhi37n; arc=none smtp.client-ip=209.85.166.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1763660880; c=relaxed/simple;
+	bh=Ilm5qDrtGnxZNbqD7nazjsxJcRprIIZ6zvJUldHh9V4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=EhdoV3hYGsN1jmwpveW0JXvmW5oIAX1zr8hZFODedNvNYR649qiRVi/cIA9Qozmyp1k30tKtyfvOZ16axeKVat8tWiuvmkeYIilscPU2itqFuYBVu+ZjvheOrK4A9qXPCvlyuBTSefYM2xYBgXV1usmLYFyvFOUMr7Hz20d7fm0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net; spf=pass smtp.mailfrom=fiberby.net; dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b=vn12iGhp; arc=none smtp.client-ip=193.104.135.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fiberby.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="oLWhi37n"
-Received: by mail-il1-f179.google.com with SMTP id e9e14a558f8ab-43379251ff9so9582725ab.1
-        for <mptcp@lists.linux.dev>; Thu, 20 Nov 2025 06:52:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1763650367; x=1764255167; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mIp1emodWmrQX+c6TjoXmEBGWcecINECr9nK+dGHBUw=;
-        b=oLWhi37nn8jP4R3d7It6iPLlh6aXylMAeiTeev+ag8LJqItVOKP8v81gQOdvdJTOUX
-         sE7spKKqmA5S95z54xArKVbVbVlmBB4K6Qx90fkVpZNfSlz0CQwj1HApO3Jxqi6tXZJu
-         LBZsrWVbrvmrFPjslDaHoJq4jlXJd0ZoqDqU4Y5/T95/Ax6mfG5Zpp2cK3/UbmLAmh56
-         tCoAzWOJEsRvtGSLbmwn//RChVuzA0G/ZAmSnslUCxGbjjhCempskkxnk+RFAjCq4oXQ
-         j9YtqdBx5wpklon/MV1Qq9Js8z13cZRVCQHmMknPHnE9GZ/co+hqxYn1oAvvN0H7fcsz
-         aCcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763650367; x=1764255167;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=mIp1emodWmrQX+c6TjoXmEBGWcecINECr9nK+dGHBUw=;
-        b=ad8quHeJ2cDHTAeq/MdAg/xRRsKFujf1cqdUsAPv7EJFYlSGEo4O+gmpB7RQoMd7Ry
-         iDNBSYd+Cyjf0Vjjs+baCp44PSf+KuTrOTAMNFSif2mLXRSPJHDlfkOaSLAJafaLYwBg
-         56JRL13g2tWvVjd8u1VEqboRboVV5MIHvs1ZNVzH2xbFy+z6BNHWk6bQ8M+eMpAtQTOV
-         aw7vR3qSMCewwU+trc/7wsJiCOt9892r9zLfiZ9VZIdL3kRo/im9nV3IlMYvLX8Qd1cR
-         /e6CEWvrNbFt9NUsxuhGoRuQQNdsGj9AOBiEC18Kib42x6gbGroK31y9XyCdB08ecwDE
-         FPtA==
-X-Forwarded-Encrypted: i=1; AJvYcCU/VEPwqaeNvFN4gxuSL0+jqwjKpwDWA/3MQ36Y5pe3M/dAAB13jYsYsaezMncUCYL9pCI/uQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxDlbcRO1re4bdLcrnyJUnJtpshRg0cROI4RvFVuPc6s5a3rpX/
-	PsMNWJ9MiU5TIoVQkfE+Z/xbJZq2+Md3Pf58LH+1XETChI2JwPDLuOEEjienSF2mWLo=
-X-Gm-Gg: ASbGncst14130ufiFuWAvHO045fMRoFl+N+7GuaToKJO2PCuGx1/6yn5+H8+BWZ3FfH
-	9tY5+Ojy5XSKhVt2fmNctNiMzZwfIY/+sx+7rZn6oje8TF1gBHVf416rw8zpoW4+FFkfu4L9Lt9
-	SxgKryscMlPOhksVAQA+OHpA+X8h+kjfBLEpMeFafokDtNUSqwqnS48DG2RwQBnJQ6iUjhuevwb
-	csqil5aMl10m7/8oGzwlUjK4ablT/YMC4QXbrRsArTAnocTpB8f6JYYwwLFNK+I5oC9kyWwWLoA
-	Hm8GRnfk7qvBZEr5woqxU5B9v26dUMkISmfwKEPB6Ee9CVF8/ErpBwQw0PDjUdav93R5oplIu54
-	paZkjbpbe1k3iiYQkVI05xAQ48zQoObrxO20yCg0wP6Cw7hOZTDDBN6bp8r9+7TTu8dAVBNM/Os
-	kfRg==
-X-Google-Smtp-Source: AGHT+IEmRlVKCe07qbgo1t2w3uFpBKsqx62crTftDC+8sZ0oUBIrcGL53VTRakva//fmnWvcfQrQww==
-X-Received: by 2002:a05:6e02:1c01:b0:433:1d5a:5157 with SMTP id e9e14a558f8ab-435aa88e822mr21434775ab.6.1763650367018;
-        Thu, 20 Nov 2025 06:52:47 -0800 (PST)
-Received: from [127.0.0.1] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-5b954b207d7sm1008611173.33.2025.11.20.06.52.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Nov 2025 06:52:46 -0800 (PST)
-From: Jens Axboe <axboe@kernel.dk>
-To: linux-kernel@vger.kernel.org, david.laight.linux@gmail.com
-Cc: Alan Stern <stern@rowland.harvard.edu>, 
- Alexander Viro <viro@zeniv.linux.org.uk>, 
- Alexei Starovoitov <ast@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, 
- Andreas Dilger <adilger.kernel@dilger.ca>, Andrew Lunn <andrew@lunn.ch>, 
- Andrew Morton <akpm@linux-foundation.org>, 
- Andrii Nakryiko <andrii@kernel.org>, 
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
- Ard Biesheuvel <ardb@kernel.org>, 
- Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Bjorn Helgaas <bhelgaas@google.com>, Borislav Petkov <bp@alien8.de>, 
- Christian Brauner <brauner@kernel.org>, 
- =?utf-8?q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
- Christoph Hellwig <hch@lst.de>, Daniel Borkmann <daniel@iogearbox.net>, 
- Dan Williams <dan.j.williams@intel.com>, 
- Dave Hansen <dave.hansen@linux.intel.com>, 
- Dave Jiang <dave.jiang@intel.com>, David Ahern <dsahern@kernel.org>, 
- Davidlohr Bueso <dave@stgolabs.net>, 
- "David S. Miller" <davem@davemloft.net>, Dennis Zhou <dennis@kernel.org>, 
- Eric Dumazet <edumazet@google.com>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Herbert Xu <herbert@gondor.apana.org.au>, Ingo Molnar <mingo@redhat.com>, 
- Jakub Kicinski <kuba@kernel.org>, Jakub Sitnicki <jakub@cloudflare.com>, 
- "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, 
- Jarkko Sakkinen <jarkko@kernel.org>, "Jason A. Donenfeld" <Jason@zx2c4.com>, 
- Jiri Slaby <jirislaby@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, 
- John Allen <john.allen@amd.com>, 
- Jonathan Cameron <jonathan.cameron@huawei.com>, 
- Juergen Gross <jgross@suse.com>, Kees Cook <kees@kernel.org>, 
- KP Singh <kpsingh@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
- "Martin K. Petersen" <martin.petersen@oracle.com>, 
- "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
- Mika Westerberg <westeri@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
- Miklos Szeredi <miklos@szeredi.hu>, Namhyung Kim <namhyung@kernel.org>, 
- Neal Cardwell <ncardwell@google.com>, nic_swsd@realtek.com, 
- OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>, 
- Olivia Mackall <olivia@selenic.com>, Paolo Abeni <pabeni@redhat.com>, 
- Paolo Bonzini <pbonzini@redhat.com>, Peter Huewe <peterhuewe@gmx.de>, 
- Peter Zijlstra <peterz@infradead.org>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, 
- Sean Christopherson <seanjc@google.com>, 
- Srinivas Kandagatla <srini@kernel.org>, 
- Stefano Stabellini <sstabellini@kernel.org>, 
- Steven Rostedt <rostedt@goodmis.org>, Tejun Heo <tj@kernel.org>, 
- Theodore Ts'o <tytso@mit.edu>, Thomas Gleixner <tglx@linutronix.de>, 
- Tom Lendacky <thomas.lendacky@amd.com>, 
- Willem de Bruijn <willemdebruijn.kernel@gmail.com>, x86@kernel.org, 
- Yury Norov <yury.norov@gmail.com>, amd-gfx@lists.freedesktop.org, 
- bpf@vger.kernel.org, cgroups@vger.kernel.org, 
- dri-devel@lists.freedesktop.org, io-uring@vger.kernel.org, 
- kvm@vger.kernel.org, linux-acpi@vger.kernel.org, 
- linux-block@vger.kernel.org, linux-crypto@vger.kernel.org, 
- linux-cxl@vger.kernel.org, linux-efi@vger.kernel.org, 
- linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
- linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org, 
- linux-integrity@vger.kernel.org, linux-mm@kvack.org, 
- linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org, 
- linux-perf-users@vger.kernel.org, linux-scsi@vger.kernel.org, 
- linux-serial@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
- linux-usb@vger.kernel.org, mptcp@lists.linux.dev, netdev@vger.kernel.org, 
- usb-storage@lists.one-eyed-alien.net, David Hildenbrand <david@kernel.org>
-In-Reply-To: <20251119224140.8616-1-david.laight.linux@gmail.com>
-References: <20251119224140.8616-1-david.laight.linux@gmail.com>
-Subject: Re: (subset) [PATCH 00/44] Change a lot of min_t() that might mask
- high bits
-Message-Id: <176365036384.566630.2992984118137417732.b4-ty@kernel.dk>
-Date: Thu, 20 Nov 2025 07:52:43 -0700
+	dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b="vn12iGhp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fiberby.net;
+	s=202008; t=1763660872;
+	bh=Ilm5qDrtGnxZNbqD7nazjsxJcRprIIZ6zvJUldHh9V4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=vn12iGhpkpsC+nTnpoQSAYhOMOF/LrWL5OtqO9ZtvZf1YQsj+ZdWMtqxwx2Ywq7oa
+	 Hyf2Dz+fGzBwL7N0rYgYI4Tz2zwhY5VHdzwft4a2gfnmp8rD1FQ3df9I8/cTUAi+9K
+	 G38ITwVURG9VkQrVTL+koAYvU79yNMtElav/SLLf6aBio4WTYueoVu+Iap8dbmNikL
+	 0oy53DzdqxnLnGLnifwdTXU1OL1+5CMhwXpSbsq+VVapAK3FBLJmH+TBFcTGnLf2T2
+	 ckIu9osSSkSQWzhgwvQyb5HozS2J0M0HqncGgYnQuXRUoRRsz/6NjNdDBF9UGY4DYg
+	 yvnrHpVCkwbzg==
+Received: from x201s (193-104-135-243.ip4.fiberby.net [193.104.135.243])
+	by mail1.fiberby.net (Postfix) with ESMTPSA id 26959600FC;
+	Thu, 20 Nov 2025 17:46:25 +0000 (UTC)
+Received: by x201s (Postfix, from userid 1000)
+	id 621FB204000; Thu, 20 Nov 2025 17:45:08 +0000 (UTC)
+From: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>
+To: Donald Hunter <donald.hunter@gmail.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	"Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	Anna Schumaker <anna@kernel.org>,
+	Antonio Quartulli <antonio@openvpn.net>,
+	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+	=?UTF-8?q?Arve=20Hj=C3=B8nnev=C3=A5g?= <arve@android.com>,
+	Carlos Llamas <cmllamas@google.com>,
+	Christian Brauner <brauner@kernel.org>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>,
+	Daniel Zahka <daniel.zahka@gmail.com>,
+	David Ahern <dsahern@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	David Wei <dw@davidwei.uk>,
+	Eric Dumazet <edumazet@google.com>,
+	Geliang Tang <geliang@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Hannes Reinecke <hare@kernel.org>,
+	Jacob Keller <jacob.e.keller@intel.com>,
+	Jeff Layton <jlayton@kernel.org>,
+	Jiri Pirko <jiri@resnulli.us>,
+	Joe Damato <jdamato@fastly.com>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	kernel-tls-handshake@lists.linux.dev,
+	Li Li <dualli@google.com>,
+	linux-kernel@vger.kernel.org,
+	linux-nfs@vger.kernel.org,
+	Martijn Coenen <maco@android.com>,
+	Mat Martineau <martineau@kernel.org>,
+	Matthieu Baerts <matttbe@kernel.org>,
+	Mina Almasry <almasrymina@google.com>,
+	mptcp@lists.linux.dev,
+	NeilBrown <neil@brown.name>,
+	netdev@vger.kernel.org,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Sabrina Dubroca <sd@queasysnail.net>,
+	Samiullah Khawaja <skhawaja@google.com>,
+	Simon Horman <horms@kernel.org>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Todd Kjos <tkjos@android.com>,
+	Tom Talpey <tom@talpey.com>,
+	Trond Myklebust <trondmy@kernel.org>,
+	Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+	Willem de Bruijn <willemb@google.com>
+Subject: [PATCH net-next 2/2] tools: ynl-gen: add regeneration comment
+Date: Thu, 20 Nov 2025 17:44:27 +0000
+Message-ID: <20251120174429.390574-3-ast@fiberby.net>
+X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20251120174429.390574-1-ast@fiberby.net>
+References: <20251120174429.390574-1-ast@fiberby.net>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.3
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+Add a comment on regeneration to the generated files.
 
-On Wed, 19 Nov 2025 22:40:56 +0000, david.laight.linux@gmail.com wrote:
-> It in not uncommon for code to use min_t(uint, a, b) when one of a or b
-> is 64bit and can have a value that is larger than 2^32;
-> This is particularly prevelant with:
-> 	uint_var = min_t(uint, uint_var, uint64_expression);
-> 
-> Casts to u8 and u16 are very likely to discard significant bits.
-> 
-> [...]
+The comment is placed after the YNL-GEN line[1], as to not interfere
+with ynl-regen.sh's detection logic.
 
-Applied, thanks!
+[1] and after the optional YNL-ARG line.
 
-[12/44] block: use min() instead of min_t()
-        commit: 9420e720ad192c53c8d2803c5a2313b2d586adbd
+Link: https://lore.kernel.org/r/aR5m174O7pklKrMR@zx2c4.com/
+Suggested-by: Jason A. Donenfeld <Jason@zx2c4.com>
+Signed-off-by: Asbjørn Sloth Tønnesen <ast@fiberby.net>
+---
+ drivers/android/binder_netlink.c               | 1 +
+ drivers/android/binder_netlink.h               | 1 +
+ drivers/dpll/dpll_nl.c                         | 1 +
+ drivers/dpll/dpll_nl.h                         | 1 +
+ drivers/net/ovpn/netlink-gen.c                 | 1 +
+ drivers/net/ovpn/netlink-gen.h                 | 1 +
+ drivers/net/team/team_nl.c                     | 1 +
+ drivers/net/team/team_nl.h                     | 1 +
+ fs/lockd/netlink.c                             | 1 +
+ fs/lockd/netlink.h                             | 1 +
+ fs/nfsd/netlink.c                              | 1 +
+ fs/nfsd/netlink.h                              | 1 +
+ include/uapi/linux/android/binder_netlink.h    | 1 +
+ include/uapi/linux/dpll.h                      | 1 +
+ include/uapi/linux/ethtool_netlink_generated.h | 1 +
+ include/uapi/linux/fou.h                       | 1 +
+ include/uapi/linux/handshake.h                 | 1 +
+ include/uapi/linux/if_team.h                   | 1 +
+ include/uapi/linux/lockd_netlink.h             | 1 +
+ include/uapi/linux/mptcp_pm.h                  | 1 +
+ include/uapi/linux/net_shaper.h                | 1 +
+ include/uapi/linux/netdev.h                    | 1 +
+ include/uapi/linux/nfsd_netlink.h              | 1 +
+ include/uapi/linux/ovpn.h                      | 1 +
+ include/uapi/linux/psp.h                       | 1 +
+ net/core/netdev-genl-gen.c                     | 1 +
+ net/core/netdev-genl-gen.h                     | 1 +
+ net/devlink/netlink_gen.c                      | 1 +
+ net/devlink/netlink_gen.h                      | 1 +
+ net/handshake/genl.c                           | 1 +
+ net/handshake/genl.h                           | 1 +
+ net/ipv4/fou_nl.c                              | 1 +
+ net/ipv4/fou_nl.h                              | 1 +
+ net/mptcp/mptcp_pm_gen.c                       | 1 +
+ net/mptcp/mptcp_pm_gen.h                       | 1 +
+ net/psp/psp-nl-gen.c                           | 1 +
+ net/psp/psp-nl-gen.h                           | 1 +
+ net/shaper/shaper_nl_gen.c                     | 1 +
+ net/shaper/shaper_nl_gen.h                     | 1 +
+ tools/include/uapi/linux/netdev.h              | 1 +
+ tools/net/ynl/pyynl/ynl_gen_c.py               | 1 +
+ 41 files changed, 41 insertions(+)
 
-Best regards,
+diff --git a/drivers/android/binder_netlink.c b/drivers/android/binder_netlink.c
+index d05397a50ca6..81e8432b5904 100644
+--- a/drivers/android/binder_netlink.c
++++ b/drivers/android/binder_netlink.c
+@@ -2,6 +2,7 @@
+ /* Do not edit directly, auto-generated from: */
+ /*	Documentation/netlink/specs/binder.yaml */
+ /* YNL-GEN kernel source */
++/* To regenerate run: tools/net/ynl/ynl-regen.sh */
+ 
+ #include <net/netlink.h>
+ #include <net/genetlink.h>
+diff --git a/drivers/android/binder_netlink.h b/drivers/android/binder_netlink.h
+index 882c7a6b537e..57399942a5e3 100644
+--- a/drivers/android/binder_netlink.h
++++ b/drivers/android/binder_netlink.h
+@@ -2,6 +2,7 @@
+ /* Do not edit directly, auto-generated from: */
+ /*	Documentation/netlink/specs/binder.yaml */
+ /* YNL-GEN kernel header */
++/* To regenerate run: tools/net/ynl/ynl-regen.sh */
+ 
+ #ifndef _LINUX_BINDER_GEN_H
+ #define _LINUX_BINDER_GEN_H
+diff --git a/drivers/dpll/dpll_nl.c b/drivers/dpll/dpll_nl.c
+index 3c6d570babf8..36d11ff195df 100644
+--- a/drivers/dpll/dpll_nl.c
++++ b/drivers/dpll/dpll_nl.c
+@@ -2,6 +2,7 @@
+ /* Do not edit directly, auto-generated from: */
+ /*	Documentation/netlink/specs/dpll.yaml */
+ /* YNL-GEN kernel source */
++/* To regenerate run: tools/net/ynl/ynl-regen.sh */
+ 
+ #include <net/netlink.h>
+ #include <net/genetlink.h>
+diff --git a/drivers/dpll/dpll_nl.h b/drivers/dpll/dpll_nl.h
+index 3da10cfe9a6e..7419679b6977 100644
+--- a/drivers/dpll/dpll_nl.h
++++ b/drivers/dpll/dpll_nl.h
+@@ -2,6 +2,7 @@
+ /* Do not edit directly, auto-generated from: */
+ /*	Documentation/netlink/specs/dpll.yaml */
+ /* YNL-GEN kernel header */
++/* To regenerate run: tools/net/ynl/ynl-regen.sh */
+ 
+ #ifndef _LINUX_DPLL_GEN_H
+ #define _LINUX_DPLL_GEN_H
+diff --git a/drivers/net/ovpn/netlink-gen.c b/drivers/net/ovpn/netlink-gen.c
+index 14298188c5f1..ecbe9dcf4f7d 100644
+--- a/drivers/net/ovpn/netlink-gen.c
++++ b/drivers/net/ovpn/netlink-gen.c
+@@ -2,6 +2,7 @@
+ /* Do not edit directly, auto-generated from: */
+ /*	Documentation/netlink/specs/ovpn.yaml */
+ /* YNL-GEN kernel source */
++/* To regenerate run: tools/net/ynl/ynl-regen.sh */
+ 
+ #include <net/netlink.h>
+ #include <net/genetlink.h>
+diff --git a/drivers/net/ovpn/netlink-gen.h b/drivers/net/ovpn/netlink-gen.h
+index 220b5b2fdd4f..b2301580770f 100644
+--- a/drivers/net/ovpn/netlink-gen.h
++++ b/drivers/net/ovpn/netlink-gen.h
+@@ -2,6 +2,7 @@
+ /* Do not edit directly, auto-generated from: */
+ /*	Documentation/netlink/specs/ovpn.yaml */
+ /* YNL-GEN kernel header */
++/* To regenerate run: tools/net/ynl/ynl-regen.sh */
+ 
+ #ifndef _LINUX_OVPN_GEN_H
+ #define _LINUX_OVPN_GEN_H
+diff --git a/drivers/net/team/team_nl.c b/drivers/net/team/team_nl.c
+index 208424ab78f5..6db21725f9cc 100644
+--- a/drivers/net/team/team_nl.c
++++ b/drivers/net/team/team_nl.c
+@@ -2,6 +2,7 @@
+ /* Do not edit directly, auto-generated from: */
+ /*	Documentation/netlink/specs/team.yaml */
+ /* YNL-GEN kernel source */
++/* To regenerate run: tools/net/ynl/ynl-regen.sh */
+ 
+ #include <net/netlink.h>
+ #include <net/genetlink.h>
+diff --git a/drivers/net/team/team_nl.h b/drivers/net/team/team_nl.h
+index c9ec1b22ac4d..74816b193475 100644
+--- a/drivers/net/team/team_nl.h
++++ b/drivers/net/team/team_nl.h
+@@ -2,6 +2,7 @@
+ /* Do not edit directly, auto-generated from: */
+ /*	Documentation/netlink/specs/team.yaml */
+ /* YNL-GEN kernel header */
++/* To regenerate run: tools/net/ynl/ynl-regen.sh */
+ 
+ #ifndef _LINUX_TEAM_GEN_H
+ #define _LINUX_TEAM_GEN_H
+diff --git a/fs/lockd/netlink.c b/fs/lockd/netlink.c
+index 6e00b02cad90..880c42b4f8c3 100644
+--- a/fs/lockd/netlink.c
++++ b/fs/lockd/netlink.c
+@@ -2,6 +2,7 @@
+ /* Do not edit directly, auto-generated from: */
+ /*	Documentation/netlink/specs/lockd.yaml */
+ /* YNL-GEN kernel source */
++/* To regenerate run: tools/net/ynl/ynl-regen.sh */
+ 
+ #include <net/netlink.h>
+ #include <net/genetlink.h>
+diff --git a/fs/lockd/netlink.h b/fs/lockd/netlink.h
+index 1920543a7955..d8408f077dd8 100644
+--- a/fs/lockd/netlink.h
++++ b/fs/lockd/netlink.h
+@@ -2,6 +2,7 @@
+ /* Do not edit directly, auto-generated from: */
+ /*	Documentation/netlink/specs/lockd.yaml */
+ /* YNL-GEN kernel header */
++/* To regenerate run: tools/net/ynl/ynl-regen.sh */
+ 
+ #ifndef _LINUX_LOCKD_GEN_H
+ #define _LINUX_LOCKD_GEN_H
+diff --git a/fs/nfsd/netlink.c b/fs/nfsd/netlink.c
+index ca54aa583530..ac51a44e1065 100644
+--- a/fs/nfsd/netlink.c
++++ b/fs/nfsd/netlink.c
+@@ -2,6 +2,7 @@
+ /* Do not edit directly, auto-generated from: */
+ /*	Documentation/netlink/specs/nfsd.yaml */
+ /* YNL-GEN kernel source */
++/* To regenerate run: tools/net/ynl/ynl-regen.sh */
+ 
+ #include <net/netlink.h>
+ #include <net/genetlink.h>
+diff --git a/fs/nfsd/netlink.h b/fs/nfsd/netlink.h
+index 8eb903f24c41..478117ff6b8c 100644
+--- a/fs/nfsd/netlink.h
++++ b/fs/nfsd/netlink.h
+@@ -2,6 +2,7 @@
+ /* Do not edit directly, auto-generated from: */
+ /*	Documentation/netlink/specs/nfsd.yaml */
+ /* YNL-GEN kernel header */
++/* To regenerate run: tools/net/ynl/ynl-regen.sh */
+ 
+ #ifndef _LINUX_NFSD_GEN_H
+ #define _LINUX_NFSD_GEN_H
+diff --git a/include/uapi/linux/android/binder_netlink.h b/include/uapi/linux/android/binder_netlink.h
+index b218f96d6668..bf69833c9a19 100644
+--- a/include/uapi/linux/android/binder_netlink.h
++++ b/include/uapi/linux/android/binder_netlink.h
+@@ -2,6 +2,7 @@
+ /* Do not edit directly, auto-generated from: */
+ /*	Documentation/netlink/specs/binder.yaml */
+ /* YNL-GEN uapi header */
++/* To regenerate run: tools/net/ynl/ynl-regen.sh */
+ 
+ #ifndef _UAPI_LINUX_ANDROID_BINDER_NETLINK_H
+ #define _UAPI_LINUX_ANDROID_BINDER_NETLINK_H
+diff --git a/include/uapi/linux/dpll.h b/include/uapi/linux/dpll.h
+index 69d35570ac4f..b7ff9c44f9aa 100644
+--- a/include/uapi/linux/dpll.h
++++ b/include/uapi/linux/dpll.h
+@@ -2,6 +2,7 @@
+ /* Do not edit directly, auto-generated from: */
+ /*	Documentation/netlink/specs/dpll.yaml */
+ /* YNL-GEN uapi header */
++/* To regenerate run: tools/net/ynl/ynl-regen.sh */
+ 
+ #ifndef _UAPI_LINUX_DPLL_H
+ #define _UAPI_LINUX_DPLL_H
+diff --git a/include/uapi/linux/ethtool_netlink_generated.h b/include/uapi/linux/ethtool_netlink_generated.h
+index b71b175df46d..556a0c834df5 100644
+--- a/include/uapi/linux/ethtool_netlink_generated.h
++++ b/include/uapi/linux/ethtool_netlink_generated.h
+@@ -2,6 +2,7 @@
+ /* Do not edit directly, auto-generated from: */
+ /*	Documentation/netlink/specs/ethtool.yaml */
+ /* YNL-GEN uapi header */
++/* To regenerate run: tools/net/ynl/ynl-regen.sh */
+ 
+ #ifndef _UAPI_LINUX_ETHTOOL_NETLINK_GENERATED_H
+ #define _UAPI_LINUX_ETHTOOL_NETLINK_GENERATED_H
+diff --git a/include/uapi/linux/fou.h b/include/uapi/linux/fou.h
+index b5cd3e7b3775..bb6bef74d2d1 100644
+--- a/include/uapi/linux/fou.h
++++ b/include/uapi/linux/fou.h
+@@ -2,6 +2,7 @@
+ /* Do not edit directly, auto-generated from: */
+ /*	Documentation/netlink/specs/fou.yaml */
+ /* YNL-GEN uapi header */
++/* To regenerate run: tools/net/ynl/ynl-regen.sh */
+ 
+ #ifndef _UAPI_LINUX_FOU_H
+ #define _UAPI_LINUX_FOU_H
+diff --git a/include/uapi/linux/handshake.h b/include/uapi/linux/handshake.h
+index 662e7de46c54..d7e40f594888 100644
+--- a/include/uapi/linux/handshake.h
++++ b/include/uapi/linux/handshake.h
+@@ -2,6 +2,7 @@
+ /* Do not edit directly, auto-generated from: */
+ /*	Documentation/netlink/specs/handshake.yaml */
+ /* YNL-GEN uapi header */
++/* To regenerate run: tools/net/ynl/ynl-regen.sh */
+ 
+ #ifndef _UAPI_LINUX_HANDSHAKE_H
+ #define _UAPI_LINUX_HANDSHAKE_H
+diff --git a/include/uapi/linux/if_team.h b/include/uapi/linux/if_team.h
+index a5c06243a435..f4cd839ae725 100644
+--- a/include/uapi/linux/if_team.h
++++ b/include/uapi/linux/if_team.h
+@@ -2,6 +2,7 @@
+ /* Do not edit directly, auto-generated from: */
+ /*	Documentation/netlink/specs/team.yaml */
+ /* YNL-GEN uapi header */
++/* To regenerate run: tools/net/ynl/ynl-regen.sh */
+ 
+ #ifndef _UAPI_LINUX_IF_TEAM_H
+ #define _UAPI_LINUX_IF_TEAM_H
+diff --git a/include/uapi/linux/lockd_netlink.h b/include/uapi/linux/lockd_netlink.h
+index 21c65aec3bc6..2d766a0fa6ea 100644
+--- a/include/uapi/linux/lockd_netlink.h
++++ b/include/uapi/linux/lockd_netlink.h
+@@ -2,6 +2,7 @@
+ /* Do not edit directly, auto-generated from: */
+ /*	Documentation/netlink/specs/lockd.yaml */
+ /* YNL-GEN uapi header */
++/* To regenerate run: tools/net/ynl/ynl-regen.sh */
+ 
+ #ifndef _UAPI_LINUX_LOCKD_NETLINK_H
+ #define _UAPI_LINUX_LOCKD_NETLINK_H
+diff --git a/include/uapi/linux/mptcp_pm.h b/include/uapi/linux/mptcp_pm.h
+index bf44a5cf5b5a..c97d060ee90b 100644
+--- a/include/uapi/linux/mptcp_pm.h
++++ b/include/uapi/linux/mptcp_pm.h
+@@ -2,6 +2,7 @@
+ /* Do not edit directly, auto-generated from: */
+ /*	Documentation/netlink/specs/mptcp_pm.yaml */
+ /* YNL-GEN uapi header */
++/* To regenerate run: tools/net/ynl/ynl-regen.sh */
+ 
+ #ifndef _UAPI_LINUX_MPTCP_PM_H
+ #define _UAPI_LINUX_MPTCP_PM_H
+diff --git a/include/uapi/linux/net_shaper.h b/include/uapi/linux/net_shaper.h
+index d8834b59f7d7..3dd22c2930d9 100644
+--- a/include/uapi/linux/net_shaper.h
++++ b/include/uapi/linux/net_shaper.h
+@@ -2,6 +2,7 @@
+ /* Do not edit directly, auto-generated from: */
+ /*	Documentation/netlink/specs/net_shaper.yaml */
+ /* YNL-GEN uapi header */
++/* To regenerate run: tools/net/ynl/ynl-regen.sh */
+ 
+ #ifndef _UAPI_LINUX_NET_SHAPER_H
+ #define _UAPI_LINUX_NET_SHAPER_H
+diff --git a/include/uapi/linux/netdev.h b/include/uapi/linux/netdev.h
+index 048c8de1a130..e0b579a1df4f 100644
+--- a/include/uapi/linux/netdev.h
++++ b/include/uapi/linux/netdev.h
+@@ -2,6 +2,7 @@
+ /* Do not edit directly, auto-generated from: */
+ /*	Documentation/netlink/specs/netdev.yaml */
+ /* YNL-GEN uapi header */
++/* To regenerate run: tools/net/ynl/ynl-regen.sh */
+ 
+ #ifndef _UAPI_LINUX_NETDEV_H
+ #define _UAPI_LINUX_NETDEV_H
+diff --git a/include/uapi/linux/nfsd_netlink.h b/include/uapi/linux/nfsd_netlink.h
+index 887cbd12b695..e157e2009ea8 100644
+--- a/include/uapi/linux/nfsd_netlink.h
++++ b/include/uapi/linux/nfsd_netlink.h
+@@ -2,6 +2,7 @@
+ /* Do not edit directly, auto-generated from: */
+ /*	Documentation/netlink/specs/nfsd.yaml */
+ /* YNL-GEN uapi header */
++/* To regenerate run: tools/net/ynl/ynl-regen.sh */
+ 
+ #ifndef _UAPI_LINUX_NFSD_NETLINK_H
+ #define _UAPI_LINUX_NFSD_NETLINK_H
+diff --git a/include/uapi/linux/ovpn.h b/include/uapi/linux/ovpn.h
+index 680d1522dc87..959b41def61f 100644
+--- a/include/uapi/linux/ovpn.h
++++ b/include/uapi/linux/ovpn.h
+@@ -2,6 +2,7 @@
+ /* Do not edit directly, auto-generated from: */
+ /*	Documentation/netlink/specs/ovpn.yaml */
+ /* YNL-GEN uapi header */
++/* To regenerate run: tools/net/ynl/ynl-regen.sh */
+ 
+ #ifndef _UAPI_LINUX_OVPN_H
+ #define _UAPI_LINUX_OVPN_H
+diff --git a/include/uapi/linux/psp.h b/include/uapi/linux/psp.h
+index d8449c043ba1..a3a336488dc3 100644
+--- a/include/uapi/linux/psp.h
++++ b/include/uapi/linux/psp.h
+@@ -2,6 +2,7 @@
+ /* Do not edit directly, auto-generated from: */
+ /*	Documentation/netlink/specs/psp.yaml */
+ /* YNL-GEN uapi header */
++/* To regenerate run: tools/net/ynl/ynl-regen.sh */
+ 
+ #ifndef _UAPI_LINUX_PSP_H
+ #define _UAPI_LINUX_PSP_H
+diff --git a/net/core/netdev-genl-gen.c b/net/core/netdev-genl-gen.c
+index ff20435c45d2..ba673e81716f 100644
+--- a/net/core/netdev-genl-gen.c
++++ b/net/core/netdev-genl-gen.c
+@@ -2,6 +2,7 @@
+ /* Do not edit directly, auto-generated from: */
+ /*	Documentation/netlink/specs/netdev.yaml */
+ /* YNL-GEN kernel source */
++/* To regenerate run: tools/net/ynl/ynl-regen.sh */
+ 
+ #include <net/netlink.h>
+ #include <net/genetlink.h>
+diff --git a/net/core/netdev-genl-gen.h b/net/core/netdev-genl-gen.h
+index cf3fad74511f..cffc08517a41 100644
+--- a/net/core/netdev-genl-gen.h
++++ b/net/core/netdev-genl-gen.h
+@@ -2,6 +2,7 @@
+ /* Do not edit directly, auto-generated from: */
+ /*	Documentation/netlink/specs/netdev.yaml */
+ /* YNL-GEN kernel header */
++/* To regenerate run: tools/net/ynl/ynl-regen.sh */
+ 
+ #ifndef _LINUX_NETDEV_GEN_H
+ #define _LINUX_NETDEV_GEN_H
+diff --git a/net/devlink/netlink_gen.c b/net/devlink/netlink_gen.c
+index 5ad435aee29d..f998a7378381 100644
+--- a/net/devlink/netlink_gen.c
++++ b/net/devlink/netlink_gen.c
+@@ -2,6 +2,7 @@
+ /* Do not edit directly, auto-generated from: */
+ /*	Documentation/netlink/specs/devlink.yaml */
+ /* YNL-GEN kernel source */
++/* To regenerate run: tools/net/ynl/ynl-regen.sh */
+ 
+ #include <net/netlink.h>
+ #include <net/genetlink.h>
+diff --git a/net/devlink/netlink_gen.h b/net/devlink/netlink_gen.h
+index 09cc6f264ccf..2817d53a0eba 100644
+--- a/net/devlink/netlink_gen.h
++++ b/net/devlink/netlink_gen.h
+@@ -2,6 +2,7 @@
+ /* Do not edit directly, auto-generated from: */
+ /*	Documentation/netlink/specs/devlink.yaml */
+ /* YNL-GEN kernel header */
++/* To regenerate run: tools/net/ynl/ynl-regen.sh */
+ 
+ #ifndef _LINUX_DEVLINK_GEN_H
+ #define _LINUX_DEVLINK_GEN_H
+diff --git a/net/handshake/genl.c b/net/handshake/genl.c
+index f55d14d7b726..870612609491 100644
+--- a/net/handshake/genl.c
++++ b/net/handshake/genl.c
+@@ -2,6 +2,7 @@
+ /* Do not edit directly, auto-generated from: */
+ /*	Documentation/netlink/specs/handshake.yaml */
+ /* YNL-GEN kernel source */
++/* To regenerate run: tools/net/ynl/ynl-regen.sh */
+ 
+ #include <net/netlink.h>
+ #include <net/genetlink.h>
+diff --git a/net/handshake/genl.h b/net/handshake/genl.h
+index ae72a596f6cc..8d3e18672daf 100644
+--- a/net/handshake/genl.h
++++ b/net/handshake/genl.h
+@@ -2,6 +2,7 @@
+ /* Do not edit directly, auto-generated from: */
+ /*	Documentation/netlink/specs/handshake.yaml */
+ /* YNL-GEN kernel header */
++/* To regenerate run: tools/net/ynl/ynl-regen.sh */
+ 
+ #ifndef _LINUX_HANDSHAKE_GEN_H
+ #define _LINUX_HANDSHAKE_GEN_H
+diff --git a/net/ipv4/fou_nl.c b/net/ipv4/fou_nl.c
+index 506260b4a4dc..7a99639204b1 100644
+--- a/net/ipv4/fou_nl.c
++++ b/net/ipv4/fou_nl.c
+@@ -2,6 +2,7 @@
+ /* Do not edit directly, auto-generated from: */
+ /*	Documentation/netlink/specs/fou.yaml */
+ /* YNL-GEN kernel source */
++/* To regenerate run: tools/net/ynl/ynl-regen.sh */
+ 
+ #include <net/netlink.h>
+ #include <net/genetlink.h>
+diff --git a/net/ipv4/fou_nl.h b/net/ipv4/fou_nl.h
+index 63a6c4ed803d..438342dc8507 100644
+--- a/net/ipv4/fou_nl.h
++++ b/net/ipv4/fou_nl.h
+@@ -2,6 +2,7 @@
+ /* Do not edit directly, auto-generated from: */
+ /*	Documentation/netlink/specs/fou.yaml */
+ /* YNL-GEN kernel header */
++/* To regenerate run: tools/net/ynl/ynl-regen.sh */
+ 
+ #ifndef _LINUX_FOU_GEN_H
+ #define _LINUX_FOU_GEN_H
+diff --git a/net/mptcp/mptcp_pm_gen.c b/net/mptcp/mptcp_pm_gen.c
+index dcffd847af33..c180930a8e0e 100644
+--- a/net/mptcp/mptcp_pm_gen.c
++++ b/net/mptcp/mptcp_pm_gen.c
+@@ -2,6 +2,7 @@
+ /* Do not edit directly, auto-generated from: */
+ /*	Documentation/netlink/specs/mptcp_pm.yaml */
+ /* YNL-GEN kernel source */
++/* To regenerate run: tools/net/ynl/ynl-regen.sh */
+ 
+ #include <net/netlink.h>
+ #include <net/genetlink.h>
+diff --git a/net/mptcp/mptcp_pm_gen.h b/net/mptcp/mptcp_pm_gen.h
+index e24258f6f819..b9280bcb43f5 100644
+--- a/net/mptcp/mptcp_pm_gen.h
++++ b/net/mptcp/mptcp_pm_gen.h
+@@ -2,6 +2,7 @@
+ /* Do not edit directly, auto-generated from: */
+ /*	Documentation/netlink/specs/mptcp_pm.yaml */
+ /* YNL-GEN kernel header */
++/* To regenerate run: tools/net/ynl/ynl-regen.sh */
+ 
+ #ifndef _LINUX_MPTCP_PM_GEN_H
+ #define _LINUX_MPTCP_PM_GEN_H
+diff --git a/net/psp/psp-nl-gen.c b/net/psp/psp-nl-gen.c
+index 73f8b06d66f0..22a48d0fa378 100644
+--- a/net/psp/psp-nl-gen.c
++++ b/net/psp/psp-nl-gen.c
+@@ -2,6 +2,7 @@
+ /* Do not edit directly, auto-generated from: */
+ /*	Documentation/netlink/specs/psp.yaml */
+ /* YNL-GEN kernel source */
++/* To regenerate run: tools/net/ynl/ynl-regen.sh */
+ 
+ #include <net/netlink.h>
+ #include <net/genetlink.h>
+diff --git a/net/psp/psp-nl-gen.h b/net/psp/psp-nl-gen.h
+index 5bc3b5d5a53e..599c5f1c82f2 100644
+--- a/net/psp/psp-nl-gen.h
++++ b/net/psp/psp-nl-gen.h
+@@ -2,6 +2,7 @@
+ /* Do not edit directly, auto-generated from: */
+ /*	Documentation/netlink/specs/psp.yaml */
+ /* YNL-GEN kernel header */
++/* To regenerate run: tools/net/ynl/ynl-regen.sh */
+ 
+ #ifndef _LINUX_PSP_GEN_H
+ #define _LINUX_PSP_GEN_H
+diff --git a/net/shaper/shaper_nl_gen.c b/net/shaper/shaper_nl_gen.c
+index 204c8ae8c7b1..e8cccc4c1180 100644
+--- a/net/shaper/shaper_nl_gen.c
++++ b/net/shaper/shaper_nl_gen.c
+@@ -2,6 +2,7 @@
+ /* Do not edit directly, auto-generated from: */
+ /*	Documentation/netlink/specs/net_shaper.yaml */
+ /* YNL-GEN kernel source */
++/* To regenerate run: tools/net/ynl/ynl-regen.sh */
+ 
+ #include <net/netlink.h>
+ #include <net/genetlink.h>
+diff --git a/net/shaper/shaper_nl_gen.h b/net/shaper/shaper_nl_gen.h
+index cb7f9026fc23..ec41c90431a4 100644
+--- a/net/shaper/shaper_nl_gen.h
++++ b/net/shaper/shaper_nl_gen.h
+@@ -2,6 +2,7 @@
+ /* Do not edit directly, auto-generated from: */
+ /*	Documentation/netlink/specs/net_shaper.yaml */
+ /* YNL-GEN kernel header */
++/* To regenerate run: tools/net/ynl/ynl-regen.sh */
+ 
+ #ifndef _LINUX_NET_SHAPER_GEN_H
+ #define _LINUX_NET_SHAPER_GEN_H
+diff --git a/tools/include/uapi/linux/netdev.h b/tools/include/uapi/linux/netdev.h
+index 048c8de1a130..e0b579a1df4f 100644
+--- a/tools/include/uapi/linux/netdev.h
++++ b/tools/include/uapi/linux/netdev.h
+@@ -2,6 +2,7 @@
+ /* Do not edit directly, auto-generated from: */
+ /*	Documentation/netlink/specs/netdev.yaml */
+ /* YNL-GEN uapi header */
++/* To regenerate run: tools/net/ynl/ynl-regen.sh */
+ 
+ #ifndef _UAPI_LINUX_NETDEV_H
+ #define _UAPI_LINUX_NETDEV_H
+diff --git a/tools/net/ynl/pyynl/ynl_gen_c.py b/tools/net/ynl/pyynl/ynl_gen_c.py
+index 0dd589e502cb..b517d0c605ad 100755
+--- a/tools/net/ynl/pyynl/ynl_gen_c.py
++++ b/tools/net/ynl/pyynl/ynl_gen_c.py
+@@ -3442,6 +3442,7 @@ def main():
+         if args.fn_prefix:
+             line += f' --function-prefix {args.fn_prefix}'
+         cw.p(f'/* YNL-ARG{line} */')
++    cw.p('/* To regenerate run: tools/net/ynl/ynl-regen.sh */')
+     cw.nl()
+ 
+     if args.mode == 'uapi':
 -- 
-Jens Axboe
-
-
+2.51.0
 
