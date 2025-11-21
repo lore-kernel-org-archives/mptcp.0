@@ -1,133 +1,202 @@
-Received: from mail-dl1-f42.google.com (mail-dl1-f42.google.com [74.125.82.42])
+Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EDBA33EAE7
-	for <mptcp@lists.linux.dev>; Fri, 21 Nov 2025 10:05:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 247453321D3
+	for <mptcp@lists.linux.dev>; Fri, 21 Nov 2025 12:11:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763719525; cv=none; b=HYXEc7CqWKnzpChMer+8N8EGSLHPFM9rHLunOb+Z6jN/CwzmIBB/ngIqRiatwaWW7uEsaQB3ghrEixWuvmLFAM6Rgqzcomskk6wVgYhzcgV4qs46CPLuYbAAEiqlBqJQTpiSaNNGUJq+wQV28QaR3f7/Ls4vdTfjKxsvFK/8gWA=
+	t=1763727097; cv=none; b=CLPXrq3bD2s6OLj98gHrk0mJhmAz+t4CxLcpGcvhuVGlD6stOPj2vA2dOIlXdQv+l2CYdTMnJ52iLNE725Zzo5+d2/qBSE1K++656cw1mjhL+bTAaPJV2K4BI60YEjctOkgyadwx2tdo4WtCKvrO4g78MNppjbWWCVrrXDst4l8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763719525; c=relaxed/simple;
-	bh=WnbHjMiZD36INw/J5PuG9W47KdbdCs73eGGyZQWZU3E=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=vBkQNH8DE5hOWAjjz5bBKZrKpCkTaxfQzo98LgBwbvKRVu7yfsgol6mQ6nxzrO2uN3BcvQR70PXkoUTQIc2FTpE/19WZ0SFCpeKTEDKqEf1uUcDJu02yKlzCn63o1VVqf8tvpGP08EPte0lWaUaOa6HCxW7HtJEI14DjeOniq2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QV5wpibe; arc=none smtp.client-ip=74.125.82.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QV5wpibe"
-Received: by mail-dl1-f42.google.com with SMTP id a92af1059eb24-11beb0a7bd6so2538408c88.1
-        for <mptcp@lists.linux.dev>; Fri, 21 Nov 2025 02:05:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1763719523; x=1764324323; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HL5wfU+xjVD+V2SnHGC+vZSbexXhxkE/uEUlekml7hM=;
-        b=QV5wpibeKlWQfQAd7PkNjA3dmji5Fl1kx2K+qPWXQ0fQ/jeUEu4lwYdJliTp/eVPzh
-         6QUcEsJ5o0MO8Q+fGTxo2+73ouYVIxlRBBgfh6LsgPiA61rZe2i4Le/Fs91CTuFWaeKU
-         3xNrp7zAUvi4Rsj5yWJ+bnGRo2SyqubDVmG9A4msrHPHdYBxzd9e4Ua59hH5wdbVDsBc
-         GcC/pXj9l1O1OVswPbYuYhY2Wo4ORH6LwsB82FDzRZ+oantac2A5UvyRZh4Fx4+OWDgf
-         WjU0hZ16vWMoGcZHUT9l5yfDD1CKVxdtXYvlyBvmnFzbDCBwr07axCOKcXDlznhuf5JG
-         K/cg==
+	s=arc-20240116; t=1763727097; c=relaxed/simple;
+	bh=2D5fuZ4CnSOfDrMMePKN/OyKAL0l1ZNmoSbpv5mEe7A=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=dbZB6CGdJEfpoiDHj578LfATBJ44T0ToXGDVBzaLUIQV8r/Ai3lczyxrRzBWW2WMfleyo6rFRfLxYzGO9gkZPWwhc84zrWKRH6iwp0QQvCURe5H4KClzn3j2to2ipK2n1HZaLwKMJjYWNAcxxv19K2b5T93BvS2d712HRs2M+lU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-43478824a6fso18848455ab.3
+        for <mptcp@lists.linux.dev>; Fri, 21 Nov 2025 04:11:34 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763719523; x=1764324323;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=HL5wfU+xjVD+V2SnHGC+vZSbexXhxkE/uEUlekml7hM=;
-        b=K8V+uoiGWKlTRWcyzWSy+d15gEgeGZnT9dymcFIBLKZjFkZRC+452LN+SbMIXGGsu6
-         zKb+6/707wJNqEi871E8siv9DHxUsiiSrYxmfVke/Y9n4BOzHBbxBaLmslpYe/GC4/s4
-         fJ1T6CuR7G0Rpd6zr1+DUSaliGksLm0PLQD3Nl2K013kHp7Lz2Xzctyh1uECIQIWIOBQ
-         pI18QSet11rfM443Sqe9ZvvQft3SoQLDaaU4SELwzskmWmHSU/w+0fSfk4Wh4eJjCEjP
-         kCeJ2aFuO6UqEQT21CYlfjuunYSsKaD8Dg3SvQK79aLxzxwQ92E3dU12D5D7GYAD0vBb
-         QL6w==
-X-Gm-Message-State: AOJu0Yy4/WVN1Bl8bHTpwMvLmox1hawNrna6qhRv/JAoOmaKnB2iYVaF
-	CALwTA/PZhFEv0xNZq0SHHg4NUFmmjvCpOX18SqTfq8ARpG4KH6+anU=
-X-Gm-Gg: ASbGncsGMQTV1ZuYM7pe5jLzkJIpyhT7W3BCVVUMryF7LGHVgAYYIkOFnuUHYIrNl/a
-	4UvUCfXXczwgnyYt1xVMcNNnok7K3Gp59z0ZJ83Vy+M8BPnOgGLsBv6VJ1NbHXlmxGh+3ANyHrg
-	LUWjoqKYlIDAC07dBMcGXpa1Kx323cvcMtFGRmxmeqIl45mLakpQg3xImbmMbC5fHjPWnb0xdpZ
-	5Uq3l5kVD9K7yEmZy0vxoz2V7y9v5uD1GkQGKNorlOwDThQsQTDn5t911ss/dxpwf9z3XY94v0j
-	Fd0uyhMzvJme9wt/jaLvMR704HkBExU9g4ibqTymcpOBuQu7ah655AV8sn7n3ZEJJYAO+YAewop
-	7Ftki95FwZJI0sBp0uvP8H/o7xaFIw0LxCHTq47taOZEhS/xGQBfVFTblG9W5q1EJ3FhzgWtIX3
-	jAtoVSIljGAacxJWSp62ZJJiW/NXZqcr/hEr3w
-X-Google-Smtp-Source: AGHT+IE1jhgKgtGvhsfG/XzE853cj7rRwMs/ZiXc2mLyySr7FxkajEjzO3/EaWBvGscMKp7pRECEEg==
-X-Received: by 2002:a05:7022:418b:b0:11a:468a:cf9b with SMTP id a92af1059eb24-11c94b0b693mr1795225c88.9.1763719522500;
-        Fri, 21 Nov 2025 02:05:22 -0800 (PST)
-Received: from [127.0.0.1] ([172.182.224.161])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-11c93de6d5csm14957213c88.4.2025.11.21.02.05.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Nov 2025 02:05:22 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <9f5e5b6c05fa0e6d303126c6a68a19305d166d36.1763715034.git.pabeni@redhat.com>
-References:
- <9f5e5b6c05fa0e6d303126c6a68a19305d166d36.1763715034.git.pabeni@redhat.com>
-Subject: Re: [PATCH mptcp-net] mptcp: schedule rtx timer only after pushing
- data
-Message-ID: <1a4c1891-1d2f-9b5a-6b2f-b1ba1f579979@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 21 Nov 2025 10:05:21 +0000
+        d=1e100.net; s=20230601; t=1763727094; x=1764331894;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=zV30rAUHe9nf5njvs4h81en2iC+xQgzdRBM2uW2ZegQ=;
+        b=Ua+GoMSMKYlkUfRhef+R+ZkqLP/1JzsNc8NBMZHBou7PbLYpLvl2xjSLPxYYogQ34C
+         jivN/INojkQVOFJ6SClYG0mZIXp8erCT1Zqe98GDrSYh26MYN5Hp98qAVcdWweeBPNLl
+         A9Gsk7jIcEwh+Z7AWFJcNvM7V3eE8bEX7EG3EPyRqUwDZFr/kdhaE4bUlttV7xeTo3nq
+         +QLaKjC2gmLma/rVoF5Gx//qi6gC3MzsHRifEVa4tyh1CHgw6vw9CZ4ERaey8z7Tozok
+         Vo14cPnZKEWl7ikY0loldp7N1hqa8IX/1XvilL8uObZLTNqjBY+16X5mHSF9aydNhKAU
+         A+8w==
+X-Forwarded-Encrypted: i=1; AJvYcCWATawCaBKIjOaVnX9h+VLfqbp7cGCxg3YA/7J8FtrG+gfT4s13XDowZCRTYnaMN29SnLYl0w==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yxz4O4rpQIxgI1MYstuxoxsYD4jOy5PIwOSaazKplwXSQLegaTB
+	EI+5cxTVVd8OxlryHD1lMUAx66oZDiF/ZjLXpl4wm3D0JTmc0wt5lupMuyHa4BtMqSl/Spdt/0B
+	3NcrqsvrSdCbhQLy1HRS+jKNc43B0aT8+9VR1BaBcM5jJdckhZTdI/qaEvnI=
+X-Google-Smtp-Source: AGHT+IHbVGWfWIxz44VI+EgtiCO1Fa4flWCMu2SCDaKm0jcgj3g6PkOE0/IZyXHe2m0xdxZ0y/2RSZVHdkSoiFzX3f0038AMJKul
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-Received: by 2002:a05:6e02:2608:b0:433:23ba:2d84 with SMTP id
+ e9e14a558f8ab-435b8c1f639mr17222345ab.17.1763727094346; Fri, 21 Nov 2025
+ 04:11:34 -0800 (PST)
+Date: Fri, 21 Nov 2025 04:11:34 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <692056f6.a70a0220.2ea503.004e.GAE@google.com>
+Subject: [syzbot] [mptcp?] WARNING in __mptcp_move_skbs_from_subflow (2)
+From: syzbot <syzbot+9475dcc0b42355ded022@syzkaller.appspotmail.com>
+To: davem@davemloft.net, edumazet@google.com, geliang@kernel.org, 
+	horms@kernel.org, kuba@kernel.org, linux-kernel@vger.kernel.org, 
+	martineau@kernel.org, matttbe@kernel.org, mptcp@lists.linux.dev, 
+	netdev@vger.kernel.org, pabeni@redhat.com, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Paolo,
+Hello,
 
-Thank you for your modifications, that's great!
+syzbot found the following issue on:
 
-Our CI did some validations and here is its report:
+HEAD commit:    fd95357fd8c6 Merge tag 'sched_ext-for-6.18-rc6-fixes-2' of..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=17220e92580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=1cd7f786c0f5182f
+dashboard link: https://syzkaller.appspot.com/bug?extid=9475dcc0b42355ded022
+compiler:       gcc (Debian 12.2.0-14+deb12u1) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+userspace arch: i386
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/195653=
-15895
+Unfortunately, I don't have any reproducer for this issue yet.
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/e7f0f49b0657
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1026213
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/d900f083ada3/non_bootable_disk-fd95357f.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/9301ea2e80a9/vmlinux-fd95357f.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/13592a9d2a74/bzImage-fd95357f.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+9475dcc0b42355ded022@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+WARNING: CPU: 2 PID: 1143 at net/mptcp/protocol.c:718 __mptcp_move_skbs_from_subflow+0xeda/0x3360 net/mptcp/protocol.c:718
+Modules linked in:
+CPU: 2 UID: 0 PID: 1143 Comm: kworker/u32:7 Not tainted syzkaller #0 PREEMPT(full) 
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+Workqueue: krdsd rds_shutdown_worker
+RIP: 0010:__mptcp_move_skbs_from_subflow+0xeda/0x3360 net/mptcp/protocol.c:718
+Code: 75 f6 e8 09 a8 75 f6 8b 5c 24 18 8b 6c 24 70 01 5c 24 1c 89 ee 89 df e8 74 a2 75 f6 39 dd 0f 83 d9 f3 ff ff e8 e7 a7 75 f6 90 <0f> 0b 90 48 b8 00 00 00 00 00 fc ff df 48 8b 54 24 48 48 c1 ea 03
+RSP: 0018:ffffc90000537aa0 EFLAGS: 00010246
+RAX: 0000000000000000 RBX: 0000000000001508 RCX: ffffffff8b46af8c
+RDX: ffff888021412480 RSI: ffffffff8b46af99 RDI: 0000000000000004
+RBP: 00000000000010bc R08: 0000000000000004 R09: 0000000000001508
+R10: 00000000000010bc R11: 0000000000000001 R12: ffff88806b1b00e8
+R13: ffffffff9afc3e80 R14: dffffc0000000000 R15: ffff88806b1b0000
+FS:  0000000000000000(0000) GS:ffff888097a0d000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000000000c230000 CR3: 00000000663a8000 CR4: 0000000000352ef0
+Call Trace:
+ <IRQ>
+ move_skbs_to_msk net/mptcp/protocol.c:833 [inline]
+ __mptcp_data_ready net/mptcp/protocol.c:853 [inline]
+ mptcp_data_ready+0x251/0x6c0 net/mptcp/protocol.c:870
+ subflow_state_change+0x4fb/0x800 net/mptcp/subflow.c:1870
+ tcp_rcv_state_process+0x453b/0x6490 net/ipv4/tcp_input.c:7073
+ tcp_v6_do_rcv+0x7b8/0x1dc0 net/ipv6/tcp_ipv6.c:1675
+ tcp_v6_rcv+0x2ab5/0x48f0 net/ipv6/tcp_ipv6.c:1922
+ ip6_protocol_deliver_rcu+0x188/0x1520 net/ipv6/ip6_input.c:438
+ ip6_input_finish+0x1e4/0x4b0 net/ipv6/ip6_input.c:489
+ NF_HOOK include/linux/netfilter.h:318 [inline]
+ NF_HOOK include/linux/netfilter.h:312 [inline]
+ ip6_input+0x105/0x2f0 net/ipv6/ip6_input.c:500
+ dst_input include/net/dst.h:474 [inline]
+ ip6_rcv_finish+0x1ac/0x580 net/ipv6/ip6_input.c:79
+ ip_sabotage_in+0x21e/0x290 net/bridge/br_netfilter_hooks.c:990
+ nf_hook_entry_hookfn include/linux/netfilter.h:158 [inline]
+ nf_hook_slow+0xbe/0x200 net/netfilter/core.c:623
+ nf_hook.constprop.0+0x424/0x750 include/linux/netfilter.h:273
+ NF_HOOK include/linux/netfilter.h:316 [inline]
+ ipv6_rcv+0xa4/0x650 net/ipv6/ip6_input.c:311
+ __netif_receive_skb_one_core+0x12d/0x1e0 net/core/dev.c:6079
+ __netif_receive_skb+0x1d/0x160 net/core/dev.c:6192
+ netif_receive_skb_internal net/core/dev.c:6278 [inline]
+ netif_receive_skb+0x137/0x7b0 net/core/dev.c:6337
+ NF_HOOK include/linux/netfilter.h:318 [inline]
+ NF_HOOK include/linux/netfilter.h:312 [inline]
+ br_pass_frame_up+0x346/0x490 net/bridge/br_input.c:70
+ br_handle_frame_finish+0x12fe/0x1f00 net/bridge/br_input.c:222
+ br_nf_hook_thresh+0x307/0x410 net/bridge/br_netfilter_hooks.c:1167
+ br_nf_pre_routing_finish_ipv6+0x76a/0xfc0 net/bridge/br_netfilter_ipv6.c:154
+ NF_HOOK include/linux/netfilter.h:318 [inline]
+ br_nf_pre_routing_ipv6+0x3cd/0x8c0 net/bridge/br_netfilter_ipv6.c:184
+ br_nf_pre_routing+0x860/0x15b0 net/bridge/br_netfilter_hooks.c:508
+ nf_hook_entry_hookfn include/linux/netfilter.h:158 [inline]
+ nf_hook_bridge_pre net/bridge/br_input.c:291 [inline]
+ br_handle_frame+0xb28/0x14e0 net/bridge/br_input.c:442
+ __netif_receive_skb_core.constprop.0+0xa25/0x4bd0 net/core/dev.c:5966
+ __netif_receive_skb_one_core+0xb0/0x1e0 net/core/dev.c:6077
+ __netif_receive_skb+0x1d/0x160 net/core/dev.c:6192
+ process_backlog+0x439/0x15e0 net/core/dev.c:6544
+ __napi_poll.constprop.0+0xba/0x550 net/core/dev.c:7594
+ napi_poll net/core/dev.c:7657 [inline]
+ net_rx_action+0x97f/0xef0 net/core/dev.c:7784
+ handle_softirqs+0x219/0x8e0 kernel/softirq.c:622
+ do_softirq kernel/softirq.c:523 [inline]
+ do_softirq+0xb2/0xf0 kernel/softirq.c:510
+ </IRQ>
+ <TASK>
+ __local_bh_enable_ip+0x100/0x120 kernel/softirq.c:450
+ local_bh_enable include/linux/bottom_half.h:33 [inline]
+ rcu_read_unlock_bh include/linux/rcupdate.h:936 [inline]
+ __dev_queue_xmit+0xb06/0x4490 net/core/dev.c:4790
+ dev_queue_xmit include/linux/netdevice.h:3365 [inline]
+ neigh_hh_output include/net/neighbour.h:531 [inline]
+ neigh_output include/net/neighbour.h:545 [inline]
+ ip6_finish_output2+0x1184/0x1cf0 net/ipv6/ip6_output.c:136
+ __ip6_finish_output+0x3cd/0x1010 net/ipv6/ip6_output.c:209
+ ip6_finish_output net/ipv6/ip6_output.c:220 [inline]
+ NF_HOOK_COND include/linux/netfilter.h:307 [inline]
+ ip6_output+0x253/0x710 net/ipv6/ip6_output.c:247
+ dst_output include/net/dst.h:464 [inline]
+ NF_HOOK include/linux/netfilter.h:318 [inline]
+ NF_HOOK include/linux/netfilter.h:312 [inline]
+ ip6_xmit+0x1512/0x23f0 net/ipv6/ip6_output.c:371
+ inet6_csk_xmit+0x444/0x7f0 net/ipv6/inet6_connection_sock.c:120
+ __tcp_transmit_skb+0x1d67/0x44d0 net/ipv4/tcp_output.c:1628
+ tcp_transmit_skb net/ipv4/tcp_output.c:1646 [inline]
+ tcp_write_xmit+0x12a9/0x86e0 net/ipv4/tcp_output.c:2999
+ __tcp_push_pending_frames+0xaf/0x390 net/ipv4/tcp_output.c:3182
+ tcp_send_fin+0x121/0x1050 net/ipv4/tcp_output.c:3800
+ __tcp_close+0xa46/0x1120 net/ipv4/tcp.c:3207
+ tcp_close+0x28/0x120 net/ipv4/tcp.c:3298
+ inet_release+0xed/0x200 net/ipv4/af_inet.c:437
+ inet6_release+0x4f/0x70 net/ipv6/af_inet6.c:487
+ __sock_release net/socket.c:662 [inline]
+ sock_release+0x91/0x1d0 net/socket.c:690
+ rds_tcp_conn_path_shutdown+0x1f9/0x410 net/rds/tcp_connect.c:220
+ rds_conn_shutdown+0x28b/0xaa0 net/rds/connection.c:399
+ process_one_work+0x9cf/0x1b70 kernel/workqueue.c:3263
+ process_scheduled_works kernel/workqueue.c:3346 [inline]
+ worker_thread+0x6c8/0xf10 kernel/workqueue.c:3427
+ kthread+0x3c5/0x780 kernel/kthread.c:463
+ ret_from_fork+0x675/0x7d0 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
 
 
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-For more details:
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
 
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
 
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+If you want to undo deduplication, reply with:
+#syz undup
