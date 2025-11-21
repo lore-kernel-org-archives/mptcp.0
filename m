@@ -1,127 +1,193 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04CA02F7AB0
-	for <mptcp@lists.linux.dev>; Fri, 21 Nov 2025 08:53:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2676534844B;
+	Fri, 21 Nov 2025 09:58:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763715199; cv=none; b=NpWu6ZNHWvLZSSBca7jcKFFGwIxIsVx2XAfMCstxDKqzIJu2JSMk4adyOOgfvPeJ+qk4Q4QhA/4Sqzd7RlXJ8dEKwGIK3+fKMZO8GLJTEoQg2u9d4PMZTvdpUkdQs5otEquGP+6AsfeCoBs5xykjZLWOiIIGPaRGdfrd2d+LIJw=
+	t=1763719090; cv=none; b=Tj9mpXQ8kv5/3UqfG7P6XHJORl0N2Qq2OqtDLqf24oi6FQjjMX1kKRnYGhSEBFwV515KIyzvJdImOWJeuRZUc8evLYxhfYRctCCRDKXC5lFVPX7rVNvam0d5dkKoocHtXE4sE8rSmyZAwT5UOQjc9tqQOP0/JgXoJ6uqmi7adbA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763715199; c=relaxed/simple;
-	bh=/ha7ZfOyzQgiJ6fjsAWhQyQykVlpjYnkixOSa3N8YO8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:content-type; b=h9Jk3i/Md2M8bpmAr0FXluZxkrWGws5CaC3B0i/YAuj3tLJiWKYqd1zmJOrZba1FumniFTcTtDA4o5ZKxeYQAHkFVafPqtikU7IY62+/TkyH6otAVY9DqdnYvJSkj48kP+o35dCRpz91Z7w4PE/BGnQaNx0E5WssYdXIpfemVJY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LiWdyttO; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1763719090; c=relaxed/simple;
+	bh=foIZAITlbJnMtClLNIHPb1yM8sbAba6wyWQDOCljLXo=;
+	h=Subject:To:Cc:From:Date:In-Reply-To:Message-ID:MIME-Version:
+	 Content-Type; b=NpSTjWt2pHAHSMqezRwmMqHxisB2sWmUguVoo+qJs6VHMsjgjAhNrF3TGznY1Ya/1s7jcpk6BjfMyPNABtuWhtpA/blUYuDadsYtF/jxbvHUy5K/5PvoN1akz0ygkew4ZmRc/6S+dhCZNJy0YgdfbAj7yCfAkXmBY/hcOnuOCPU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=gmciclvs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LiWdyttO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1763715195;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=/mxxtMnf3n6aW5xL1e33rpT5/zupHOjzicjpzU6AhBU=;
-	b=LiWdyttOd1XH2x4yFVnTuzF8wKFq40VMgGABWKTZDb12+7tP2m9q/QahgvmP7pRXAT2tJa
-	03yJFXhX2FjCy3FRn8JgylReXESiKpuYsw22FfZeH00aiI5iDr6KcENOLJ18dLi5YNsi9V
-	uz9SHYwEZn/Gl9y5w+gZZRHGy87FUY8=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-635-lZRCI3VHP_u_9TPDERQCpw-1; Fri,
- 21 Nov 2025 03:53:14 -0500
-X-MC-Unique: lZRCI3VHP_u_9TPDERQCpw-1
-X-Mimecast-MFC-AGG-ID: lZRCI3VHP_u_9TPDERQCpw_1763715193
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 47B7E1956080
-	for <mptcp@lists.linux.dev>; Fri, 21 Nov 2025 08:53:13 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.44.32.201])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 4389A180047F;
-	Fri, 21 Nov 2025 08:53:12 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Cc: dcaratti@redhat.com
-Subject: [PATCH mptcp-net] mptcp: schedule rtx timer only after pushing data
-Date: Fri, 21 Nov 2025 09:52:59 +0100
-Message-ID: <9f5e5b6c05fa0e6d303126c6a68a19305d166d36.1763715034.git.pabeni@redhat.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="gmciclvs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E650CC116D0;
+	Fri, 21 Nov 2025 09:58:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1763719089;
+	bh=foIZAITlbJnMtClLNIHPb1yM8sbAba6wyWQDOCljLXo=;
+	h=Subject:To:Cc:From:Date:In-Reply-To:From;
+	b=gmciclvs1sD6pidoKRKvhJ6NxSRcmNnSuYJBeLDcjpdPK7TEgxgb1JzpIbS+XO9tH
+	 v94DyJODlqmptp+pJCK0eynhARXGpPdaVjG+6iY0g68Af3s7nT4kMWex2DLwJPKixZ
+	 RyUonupo/L7rRBsal0MDpBL0Q3o8KmyqrNwhKL2c=
+Subject: Patch "mptcp: fix MSG_PEEK stream corruption" has been added to the 6.12-stable tree
+To: geliang@kernel.org,gregkh@linuxfoundation.org,kuba@kernel.org,martineau@kernel.org,matttbe@kernel.org,mptcp@lists.linux.dev,pabeni@redhat.com,sashal@kernel.org
+Cc: <stable-commits@vger.kernel.org>
+From: <gregkh@linuxfoundation.org>
+Date: Fri, 21 Nov 2025 10:57:41 +0100
+In-Reply-To: <20251104121515.1093006-2-matttbe@kernel.org>
+Message-ID: <2025112141-recent-lend-65b7@gregkh>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: MTGjRdNn5BppXW_UfG18ik7JMUXWLkVKqsOMWfBbn2U_1763715193
-X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=ANSI_X3.4-1968
 Content-Transfer-Encoding: 8bit
-content-type: text/plain; charset="US-ASCII"; x-default=true
+X-stable: commit
+X-Patchwork-Hint: ignore 
 
-The MPTCP protocol usually schedule the retransmission timer only
-when there is some chances for such retransmissions to happen.
 
-With a notable exception: __mptcp_push_pending() currently schedule
-such timer unconditionally, potentially leading to unnecessary rtx
-timer expiration.
+This is a note to let you know that I've just added the patch titled
 
-The issue is present since the blamed commit below but become easily
-reproducible after commit 27b0e701d387 ("mptcp: drop bogus optimization in
-__mptcp_check_push()")
+    mptcp: fix MSG_PEEK stream corruption
 
-Fixes: 33d41c9cd74c ("mptcp: more accurate timeout")
+to the 6.12-stable tree which can be found at:
+    http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
+
+The filename of the patch is:
+     mptcp-fix-msg_peek-stream-corruption.patch
+and it can be found in the queue-6.12 subdirectory.
+
+If you, or anyone else, feels it should not be added to the stable tree,
+please let <stable@vger.kernel.org> know about it.
+
+
+From stable+bounces-192373-greg=kroah.com@vger.kernel.org Tue Nov  4 13:17:04 2025
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Date: Tue,  4 Nov 2025 13:15:16 +0100
+Subject: mptcp: fix MSG_PEEK stream corruption
+To: stable@vger.kernel.org, gregkh@linuxfoundation.org
+Cc: MPTCP Upstream <mptcp@lists.linux.dev>, Paolo Abeni <pabeni@redhat.com>, Geliang Tang <geliang@kernel.org>, Mat Martineau <martineau@kernel.org>, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, Jakub Kicinski <kuba@kernel.org>, Sasha Levin <sashal@kernel.org>
+Message-ID: <20251104121515.1093006-2-matttbe@kernel.org>
+
+From: Paolo Abeni <pabeni@redhat.com>
+
+[ Upstream commit 8e04ce45a8db7a080220e86e249198fa676b83dc ]
+
+If a MSG_PEEK | MSG_WAITALL read operation consumes all the bytes in the
+receive queue and recvmsg() need to waits for more data - i.e. it's a
+blocking one - upon arrival of the next packet the MPTCP protocol will
+start again copying the oldest data present in the receive queue,
+corrupting the data stream.
+
+Address the issue explicitly tracking the peeked sequence number,
+restarting from the last peeked byte.
+
+Fixes: ca4fb892579f ("mptcp: add MSG_PEEK support")
+Cc: stable@vger.kernel.org
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Reviewed-by: Geliang Tang <geliang@kernel.org>
+Tested-by: Geliang Tang <geliang@kernel.org>
+Reviewed-by: Mat Martineau <martineau@kernel.org>
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Link: https://patch.msgid.link/20251028-net-mptcp-send-timeout-v1-2-38ffff5a9ec8@kernel.org
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+[ Adjust context ]
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
-Note that the blamed commit states we always need to rearm the timer even
-with no data pending, to catch link failures. That sounds weird/possibly
-tied to broken zero window probes?!? Hopefully mp_join self test should
-catch that
+Note: this is the patch Sasha sent for the v6.6 which applies on v6.12
+without conflicts. On v6.12, Sasha sent another version with dependences
+that caused some issues, see:
+ https://lore.kernel.org/bbe84711-95b2-4257-9f01-560b4473a3da@kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/mptcp/protocol.c | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+ net/mptcp/protocol.c |   36 +++++++++++++++++++++++++-----------
+ 1 file changed, 25 insertions(+), 11 deletions(-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 3b327e9ccb78..b3122f53827f 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -1649,7 +1649,7 @@ void __mptcp_push_pending(struct sock *sk, unsigned int flags)
- 	struct mptcp_sendmsg_info info = {
- 				.flags = flags,
- 	};
--	bool do_check_data_fin = false;
-+	bool copied = false;
- 	int push_count = 1;
+@@ -1977,19 +1977,35 @@ static void mptcp_rcv_space_adjust(struc
  
- 	while (mptcp_send_head(sk) && (push_count > 0)) {
-@@ -1691,7 +1691,7 @@ void __mptcp_push_pending(struct sock *sk, unsigned int flags)
- 						push_count--;
- 					continue;
- 				}
--				do_check_data_fin = true;
-+				copied = true;
+ static int __mptcp_recvmsg_mskq(struct mptcp_sock *msk,
+ 				struct msghdr *msg,
+-				size_t len, int flags,
++				size_t len, int flags, int copied_total,
+ 				struct scm_timestamping_internal *tss,
+ 				int *cmsg_flags)
+ {
+ 	struct sk_buff *skb, *tmp;
++	int total_data_len = 0;
+ 	int copied = 0;
+ 
+ 	skb_queue_walk_safe(&msk->receive_queue, skb, tmp) {
+-		u32 offset = MPTCP_SKB_CB(skb)->offset;
++		u32 delta, offset = MPTCP_SKB_CB(skb)->offset;
+ 		u32 data_len = skb->len - offset;
+-		u32 count = min_t(size_t, len - copied, data_len);
++		u32 count;
+ 		int err;
+ 
++		if (flags & MSG_PEEK) {
++			/* skip already peeked skbs */
++			if (total_data_len + data_len <= copied_total) {
++				total_data_len += data_len;
++				continue;
++			}
++
++			/* skip the already peeked data in the current skb */
++			delta = copied_total - total_data_len;
++			offset += delta;
++			data_len -= delta;
++		}
++
++		count = min_t(size_t, len - copied, data_len);
++
+ 		if (!(flags & MSG_TRUNC)) {
+ 			err = skb_copy_datagram_msg(skb, offset, msg, count);
+ 			if (unlikely(err < 0)) {
+@@ -2006,22 +2022,19 @@ static int __mptcp_recvmsg_mskq(struct m
+ 
+ 		copied += count;
+ 
+-		if (count < data_len) {
+-			if (!(flags & MSG_PEEK)) {
++		if (!(flags & MSG_PEEK)) {
++			msk->bytes_consumed += count;
++			if (count < data_len) {
+ 				MPTCP_SKB_CB(skb)->offset += count;
+ 				MPTCP_SKB_CB(skb)->map_seq += count;
+-				msk->bytes_consumed += count;
++				break;
  			}
+-			break;
+-		}
+ 
+-		if (!(flags & MSG_PEEK)) {
+ 			/* we will bulk release the skb memory later */
+ 			skb->destructor = NULL;
+ 			WRITE_ONCE(msk->rmem_released, msk->rmem_released + skb->truesize);
+ 			__skb_unlink(skb, &msk->receive_queue);
+ 			__kfree_skb(skb);
+-			msk->bytes_consumed += count;
  		}
- 	}
-@@ -1700,11 +1700,14 @@ void __mptcp_push_pending(struct sock *sk, unsigned int flags)
- 	if (ssk)
- 		mptcp_push_release(ssk, &info);
  
--	/* ensure the rtx timer is running */
--	if (!mptcp_rtx_timer_pending(sk))
--		mptcp_reset_rtx_timer(sk);
--	if (do_check_data_fin)
-+	/* Avoid scheduling the rtx timer if no data has been pushed; the timer
-+	 * will be updated on positive acks by __mptcp_cleanup_una().
-+	 */
-+	if (copied) {
-+		if (!mptcp_rtx_timer_pending(sk))
-+			mptcp_reset_rtx_timer(sk);
- 		mptcp_check_send_data_fin(sk);
-+	}
- }
+ 		if (copied >= len)
+@@ -2245,7 +2258,8 @@ static int mptcp_recvmsg(struct sock *sk
+ 	while (copied < len) {
+ 		int err, bytes_read;
  
- static void __mptcp_subflow_push_pending(struct sock *sk, struct sock *ssk, bool first)
--- 
-2.51.1
+-		bytes_read = __mptcp_recvmsg_mskq(msk, msg, len - copied, flags, &tss, &cmsg_flags);
++		bytes_read = __mptcp_recvmsg_mskq(msk, msg, len - copied, flags,
++						  copied, &tss, &cmsg_flags);
+ 		if (unlikely(bytes_read < 0)) {
+ 			if (!copied)
+ 				copied = bytes_read;
 
+
+Patches currently in stable-queue which might be from matttbe@kernel.org are
+
+queue-6.12/selftests-mptcp-join-endpoints-longer-transfer.patch
+queue-6.12/selftests-mptcp-connect-trunc-read-all-recv-data.patch
+queue-6.12/selftests-mptcp-join-rm-set-backup-flag.patch
+queue-6.12/selftests-mptcp-connect-fix-fallback-note-due-to-ooo.patch
+queue-6.12/mptcp-fix-msg_peek-stream-corruption.patch
+queue-6.12/selftests-mptcp-join-properly-kill-background-tasks.patch
+queue-6.12/selftests-mptcp-join-userspace-longer-transfer.patch
+queue-6.12/gcov-add-support-for-gcc-15.patch
