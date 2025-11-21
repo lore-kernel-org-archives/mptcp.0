@@ -1,202 +1,146 @@
-Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 247453321D3
-	for <mptcp@lists.linux.dev>; Fri, 21 Nov 2025 12:11:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8097C285C88;
+	Fri, 21 Nov 2025 17:02:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763727097; cv=none; b=CLPXrq3bD2s6OLj98gHrk0mJhmAz+t4CxLcpGcvhuVGlD6stOPj2vA2dOIlXdQv+l2CYdTMnJ52iLNE725Zzo5+d2/qBSE1K++656cw1mjhL+bTAaPJV2K4BI60YEjctOkgyadwx2tdo4WtCKvrO4g78MNppjbWWCVrrXDst4l8=
+	t=1763744548; cv=none; b=nzYVThKADxcrUlC+mY3blmaMovATLD7V+09jTUQuRfVwaHfTP3qWL5X3r+ZT0SRACNvXSsSsfessv4+lKaWkiGZt4i2Vx6L92+aWyr7DCFVa2car0V0xYjo9JieTjz2l8IkoMoezkoIx67jGvjIT21kY0+1mL9Zz8CmxEt/ffLE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763727097; c=relaxed/simple;
-	bh=2D5fuZ4CnSOfDrMMePKN/OyKAL0l1ZNmoSbpv5mEe7A=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=dbZB6CGdJEfpoiDHj578LfATBJ44T0ToXGDVBzaLUIQV8r/Ai3lczyxrRzBWW2WMfleyo6rFRfLxYzGO9gkZPWwhc84zrWKRH6iwp0QQvCURe5H4KClzn3j2to2ipK2n1HZaLwKMJjYWNAcxxv19K2b5T93BvS2d712HRs2M+lU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-43478824a6fso18848455ab.3
-        for <mptcp@lists.linux.dev>; Fri, 21 Nov 2025 04:11:34 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763727094; x=1764331894;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=zV30rAUHe9nf5njvs4h81en2iC+xQgzdRBM2uW2ZegQ=;
-        b=Ua+GoMSMKYlkUfRhef+R+ZkqLP/1JzsNc8NBMZHBou7PbLYpLvl2xjSLPxYYogQ34C
-         jivN/INojkQVOFJ6SClYG0mZIXp8erCT1Zqe98GDrSYh26MYN5Hp98qAVcdWweeBPNLl
-         A9Gsk7jIcEwh+Z7AWFJcNvM7V3eE8bEX7EG3EPyRqUwDZFr/kdhaE4bUlttV7xeTo3nq
-         +QLaKjC2gmLma/rVoF5Gx//qi6gC3MzsHRifEVa4tyh1CHgw6vw9CZ4ERaey8z7Tozok
-         Vo14cPnZKEWl7ikY0loldp7N1hqa8IX/1XvilL8uObZLTNqjBY+16X5mHSF9aydNhKAU
-         A+8w==
-X-Forwarded-Encrypted: i=1; AJvYcCWATawCaBKIjOaVnX9h+VLfqbp7cGCxg3YA/7J8FtrG+gfT4s13XDowZCRTYnaMN29SnLYl0w==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yxz4O4rpQIxgI1MYstuxoxsYD4jOy5PIwOSaazKplwXSQLegaTB
-	EI+5cxTVVd8OxlryHD1lMUAx66oZDiF/ZjLXpl4wm3D0JTmc0wt5lupMuyHa4BtMqSl/Spdt/0B
-	3NcrqsvrSdCbhQLy1HRS+jKNc43B0aT8+9VR1BaBcM5jJdckhZTdI/qaEvnI=
-X-Google-Smtp-Source: AGHT+IHbVGWfWIxz44VI+EgtiCO1Fa4flWCMu2SCDaKm0jcgj3g6PkOE0/IZyXHe2m0xdxZ0y/2RSZVHdkSoiFzX3f0038AMJKul
+	s=arc-20240116; t=1763744548; c=relaxed/simple;
+	bh=ioKhLSro9ujBAyOSRclCwpexaEBcrzxMjz6Lfns2rkM=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=QEF1qn9Q9+Cn4E7veH9cL9wy2j7uqjJaMp+ZF0gbawjjvO6/yWgkPouyBIyDhD6N6EsQ2N77cd7L18gNc7zJb7idsNenESd48u5+tDmqiVQOZ2e4Sdzpvm84ugiFX3PBwT5aK2uXlC29a8BfGr6c08CQ1qVJOd6bYM43klTDGek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zkr4R4wo; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zkr4R4wo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48E13C4CEF1;
+	Fri, 21 Nov 2025 17:02:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763744548;
+	bh=ioKhLSro9ujBAyOSRclCwpexaEBcrzxMjz6Lfns2rkM=;
+	h=From:Subject:Date:To:Cc:From;
+	b=Zkr4R4wof6nc2vPCO3lr9fJP1NMyyVHqb67wBWJz9rNc1AwRkpxP+UgsFkuZKfqlt
+	 Kul8SZqqdwxHxCePCzYt3d/Egfp4gri+VVZgPBYY/aPqwwA4IWmk6p9wbbFcl4s06M
+	 H1nxc+1Im4gLQiJL0JI/4TX29/ASZT4zFZcxPFeNzb7IqoXIFC0+gOG+yJrpE4bo4T
+	 mUwA4BYFdEeF//3CI1XJGtBR21joi5iWbOwOqtfXvaF3+kyE7buQqtF9oXjS+A/rPZ
+	 DeCKzSE6hyJB6ecLTNm69yg3TVg6EVMHKuAobknAxyzb4jvpahVwlHIBcLdrdesa8+
+	 7InVDL8zNlTdg==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH net-next 00/14] mptcp: memcg accounting for passive sockets
+ & backlog processing
+Date: Fri, 21 Nov 2025 18:01:59 +0100
+Message-Id: <20251121-net-next-mptcp-memcg-backlog-imp-v1-0-1f34b6c1e0b1@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:2608:b0:433:23ba:2d84 with SMTP id
- e9e14a558f8ab-435b8c1f639mr17222345ab.17.1763727094346; Fri, 21 Nov 2025
- 04:11:34 -0800 (PST)
-Date: Fri, 21 Nov 2025 04:11:34 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <692056f6.a70a0220.2ea503.004e.GAE@google.com>
-Subject: [syzbot] [mptcp?] WARNING in __mptcp_move_skbs_from_subflow (2)
-From: syzbot <syzbot+9475dcc0b42355ded022@syzkaller.appspotmail.com>
-To: davem@davemloft.net, edumazet@google.com, geliang@kernel.org, 
-	horms@kernel.org, kuba@kernel.org, linux-kernel@vger.kernel.org, 
-	martineau@kernel.org, matttbe@kernel.org, mptcp@lists.linux.dev, 
-	netdev@vger.kernel.org, pabeni@redhat.com, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAebIGkC/zWNQQqDMBBFryKz7kASq2ivUlzYcYyDTQxJEEG8e
+ 0PBxVu8xfv/hMRROMGrOiHyLkk2X0Q/KqBl9JZRpuJglGm0Nho958KR0YVMAR07svgZaf1uFsU
+ FrOum7ahVveqfUGZC5FmO/8Ub7hqG6/oBviN0qnwAAAA=
+X-Change-ID: 20251121-net-next-mptcp-memcg-backlog-imp-33568c609094
+To: Eric Dumazet <edumazet@google.com>, 
+ Kuniyuki Iwashima <kuniyu@google.com>, Paolo Abeni <pabeni@redhat.com>, 
+ Willem de Bruijn <willemb@google.com>, 
+ "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, 
+ Simon Horman <horms@kernel.org>, David Ahern <dsahern@kernel.org>, 
+ Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, 
+ Peter Krystad <peter.krystad@linux.intel.com>, 
+ Florian Westphal <fw@strlen.de>, Christoph Paasch <cpaasch@apple.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ mptcp@lists.linux.dev, Davide Caratti <dcaratti@redhat.com>, 
+ "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3632; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=ioKhLSro9ujBAyOSRclCwpexaEBcrzxMjz6Lfns2rkM=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDIVZvN/4li+ZMaPQsZ1t1NuTUsoVrgxfR9DOH9z4cTNE
+ o/bBIsMO0pZGMS4GGTFFFmk2yLzZz6v4i3x8rOAmcPKBDKEgYtTACYyo5Lhn3rnzvo1d5WU8gO2
+ KKhsXWtwTZRBpGieoJmizp8/bLIbFzH8j6j/unC5Tlb4hhuM+VZvjgZXb5z7Ib9vjajZZulrHJt
+ fMQAA
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hello,
+This series is split in two: the 4 first patches are linked to memcg
+accounting for passive sockets, and the rest introduce the backlog
+processing. They are sent together, because the first one appeared to be
+needed to get the second one fully working.
 
-syzbot found the following issue on:
+The second part includes RX path improvement built around backlog
+processing. The main goals are improving the RX performances _and_
+increase the long term maintainability.
 
-HEAD commit:    fd95357fd8c6 Merge tag 'sched_ext-for-6.18-rc6-fixes-2' of..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=17220e92580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=1cd7f786c0f5182f
-dashboard link: https://syzkaller.appspot.com/bug?extid=9475dcc0b42355ded022
-compiler:       gcc (Debian 12.2.0-14+deb12u1) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-userspace arch: i386
+- Patches 1-3: preparation work to ease the introduction of the next
+  patch.
 
-Unfortunately, I don't have any reproducer for this issue yet.
+- Patch 4: fix memcg accounting for passive sockets. Note that this is a
+  (non-urgent) fix, but it depends on material that is currently only in
+  net-next, e.g. commit 4a997d49d92a ("tcp: Save lock_sock() for memcg
+  in inet_csk_accept().").
 
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/d900f083ada3/non_bootable_disk-fd95357f.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/9301ea2e80a9/vmlinux-fd95357f.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/13592a9d2a74/bzImage-fd95357f.xz
+- Patches 5-6: preparation of the stack for backlog processing, removing
+  assumptions that will not hold true any more after the backlog
+  introduction.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+9475dcc0b42355ded022@syzkaller.appspotmail.com
+- Patches 7,8,10,11,12 are more cleanups that will make the backlog
+  patch a little less huge.
 
-------------[ cut here ]------------
-WARNING: CPU: 2 PID: 1143 at net/mptcp/protocol.c:718 __mptcp_move_skbs_from_subflow+0xeda/0x3360 net/mptcp/protocol.c:718
-Modules linked in:
-CPU: 2 UID: 0 PID: 1143 Comm: kworker/u32:7 Not tainted syzkaller #0 PREEMPT(full) 
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-Workqueue: krdsd rds_shutdown_worker
-RIP: 0010:__mptcp_move_skbs_from_subflow+0xeda/0x3360 net/mptcp/protocol.c:718
-Code: 75 f6 e8 09 a8 75 f6 8b 5c 24 18 8b 6c 24 70 01 5c 24 1c 89 ee 89 df e8 74 a2 75 f6 39 dd 0f 83 d9 f3 ff ff e8 e7 a7 75 f6 90 <0f> 0b 90 48 b8 00 00 00 00 00 fc ff df 48 8b 54 24 48 48 c1 ea 03
-RSP: 0018:ffffc90000537aa0 EFLAGS: 00010246
-RAX: 0000000000000000 RBX: 0000000000001508 RCX: ffffffff8b46af8c
-RDX: ffff888021412480 RSI: ffffffff8b46af99 RDI: 0000000000000004
-RBP: 00000000000010bc R08: 0000000000000004 R09: 0000000000001508
-R10: 00000000000010bc R11: 0000000000000001 R12: ffff88806b1b00e8
-R13: ffffffff9afc3e80 R14: dffffc0000000000 R15: ffff88806b1b0000
-FS:  0000000000000000(0000) GS:ffff888097a0d000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000000000c230000 CR3: 00000000663a8000 CR4: 0000000000352ef0
-Call Trace:
- <IRQ>
- move_skbs_to_msk net/mptcp/protocol.c:833 [inline]
- __mptcp_data_ready net/mptcp/protocol.c:853 [inline]
- mptcp_data_ready+0x251/0x6c0 net/mptcp/protocol.c:870
- subflow_state_change+0x4fb/0x800 net/mptcp/subflow.c:1870
- tcp_rcv_state_process+0x453b/0x6490 net/ipv4/tcp_input.c:7073
- tcp_v6_do_rcv+0x7b8/0x1dc0 net/ipv6/tcp_ipv6.c:1675
- tcp_v6_rcv+0x2ab5/0x48f0 net/ipv6/tcp_ipv6.c:1922
- ip6_protocol_deliver_rcu+0x188/0x1520 net/ipv6/ip6_input.c:438
- ip6_input_finish+0x1e4/0x4b0 net/ipv6/ip6_input.c:489
- NF_HOOK include/linux/netfilter.h:318 [inline]
- NF_HOOK include/linux/netfilter.h:312 [inline]
- ip6_input+0x105/0x2f0 net/ipv6/ip6_input.c:500
- dst_input include/net/dst.h:474 [inline]
- ip6_rcv_finish+0x1ac/0x580 net/ipv6/ip6_input.c:79
- ip_sabotage_in+0x21e/0x290 net/bridge/br_netfilter_hooks.c:990
- nf_hook_entry_hookfn include/linux/netfilter.h:158 [inline]
- nf_hook_slow+0xbe/0x200 net/netfilter/core.c:623
- nf_hook.constprop.0+0x424/0x750 include/linux/netfilter.h:273
- NF_HOOK include/linux/netfilter.h:316 [inline]
- ipv6_rcv+0xa4/0x650 net/ipv6/ip6_input.c:311
- __netif_receive_skb_one_core+0x12d/0x1e0 net/core/dev.c:6079
- __netif_receive_skb+0x1d/0x160 net/core/dev.c:6192
- netif_receive_skb_internal net/core/dev.c:6278 [inline]
- netif_receive_skb+0x137/0x7b0 net/core/dev.c:6337
- NF_HOOK include/linux/netfilter.h:318 [inline]
- NF_HOOK include/linux/netfilter.h:312 [inline]
- br_pass_frame_up+0x346/0x490 net/bridge/br_input.c:70
- br_handle_frame_finish+0x12fe/0x1f00 net/bridge/br_input.c:222
- br_nf_hook_thresh+0x307/0x410 net/bridge/br_netfilter_hooks.c:1167
- br_nf_pre_routing_finish_ipv6+0x76a/0xfc0 net/bridge/br_netfilter_ipv6.c:154
- NF_HOOK include/linux/netfilter.h:318 [inline]
- br_nf_pre_routing_ipv6+0x3cd/0x8c0 net/bridge/br_netfilter_ipv6.c:184
- br_nf_pre_routing+0x860/0x15b0 net/bridge/br_netfilter_hooks.c:508
- nf_hook_entry_hookfn include/linux/netfilter.h:158 [inline]
- nf_hook_bridge_pre net/bridge/br_input.c:291 [inline]
- br_handle_frame+0xb28/0x14e0 net/bridge/br_input.c:442
- __netif_receive_skb_core.constprop.0+0xa25/0x4bd0 net/core/dev.c:5966
- __netif_receive_skb_one_core+0xb0/0x1e0 net/core/dev.c:6077
- __netif_receive_skb+0x1d/0x160 net/core/dev.c:6192
- process_backlog+0x439/0x15e0 net/core/dev.c:6544
- __napi_poll.constprop.0+0xba/0x550 net/core/dev.c:7594
- napi_poll net/core/dev.c:7657 [inline]
- net_rx_action+0x97f/0xef0 net/core/dev.c:7784
- handle_softirqs+0x219/0x8e0 kernel/softirq.c:622
- do_softirq kernel/softirq.c:523 [inline]
- do_softirq+0xb2/0xf0 kernel/softirq.c:510
- </IRQ>
- <TASK>
- __local_bh_enable_ip+0x100/0x120 kernel/softirq.c:450
- local_bh_enable include/linux/bottom_half.h:33 [inline]
- rcu_read_unlock_bh include/linux/rcupdate.h:936 [inline]
- __dev_queue_xmit+0xb06/0x4490 net/core/dev.c:4790
- dev_queue_xmit include/linux/netdevice.h:3365 [inline]
- neigh_hh_output include/net/neighbour.h:531 [inline]
- neigh_output include/net/neighbour.h:545 [inline]
- ip6_finish_output2+0x1184/0x1cf0 net/ipv6/ip6_output.c:136
- __ip6_finish_output+0x3cd/0x1010 net/ipv6/ip6_output.c:209
- ip6_finish_output net/ipv6/ip6_output.c:220 [inline]
- NF_HOOK_COND include/linux/netfilter.h:307 [inline]
- ip6_output+0x253/0x710 net/ipv6/ip6_output.c:247
- dst_output include/net/dst.h:464 [inline]
- NF_HOOK include/linux/netfilter.h:318 [inline]
- NF_HOOK include/linux/netfilter.h:312 [inline]
- ip6_xmit+0x1512/0x23f0 net/ipv6/ip6_output.c:371
- inet6_csk_xmit+0x444/0x7f0 net/ipv6/inet6_connection_sock.c:120
- __tcp_transmit_skb+0x1d67/0x44d0 net/ipv4/tcp_output.c:1628
- tcp_transmit_skb net/ipv4/tcp_output.c:1646 [inline]
- tcp_write_xmit+0x12a9/0x86e0 net/ipv4/tcp_output.c:2999
- __tcp_push_pending_frames+0xaf/0x390 net/ipv4/tcp_output.c:3182
- tcp_send_fin+0x121/0x1050 net/ipv4/tcp_output.c:3800
- __tcp_close+0xa46/0x1120 net/ipv4/tcp.c:3207
- tcp_close+0x28/0x120 net/ipv4/tcp.c:3298
- inet_release+0xed/0x200 net/ipv4/af_inet.c:437
- inet6_release+0x4f/0x70 net/ipv6/af_inet6.c:487
- __sock_release net/socket.c:662 [inline]
- sock_release+0x91/0x1d0 net/socket.c:690
- rds_tcp_conn_path_shutdown+0x1f9/0x410 net/rds/tcp_connect.c:220
- rds_conn_shutdown+0x28b/0xaa0 net/rds/connection.c:399
- process_one_work+0x9cf/0x1b70 kernel/workqueue.c:3263
- process_scheduled_works kernel/workqueue.c:3346 [inline]
- worker_thread+0x6c8/0xf10 kernel/workqueue.c:3427
- kthread+0x3c5/0x780 kernel/kthread.c:463
- ret_from_fork+0x675/0x7d0 arch/x86/kernel/process.c:158
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
- </TASK>
+- Patch 9: somewhat an unrelated cleanup, included here not to forget
+  about it.
 
+- Patches 13-14: The real work is done by them. Patch 13 introduces the
+  helpers needed to manipulate the msk-level backlog, and the data
+  struct itself, without any actual functional change. Patch 14 finally
+  uses the backlog for RX skb processing. Note that MPTCP can't use the
+  sk_backlog, as the MPTCP release callback can also release and
+  re-acquire the msk-level spinlock and core backlog processing works
+  under the assumption that such event is not possible.
+  A relevant point is memory accounts for skbs in the backlog. It's
+  somewhat "original" due to MPTCP constraints. Such skbs use space from
+  the incoming subflow receive buffer, do not use explicitly any forward
+  allocated memory, as we can't update the msk fwd mem while enqueuing,
+  nor we want to acquire again the ssk socket lock while processing the
+  skbs. Instead the msk borrows memory from the subflow and reserve it
+  for the backlog, see patch 5 and 14 for the gory details.
 
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+Paolo Abeni (14):
+      net: factor-out _sk_charge() helper
+      mptcp: factor-out cgroup data inherit helper
+      mptcp: grafting MPJ subflow earlier
+      mptcp: fix memcg accounting for passive sockets
+      mptcp: cleanup fallback data fin reception
+      mptcp: cleanup fallback dummy mapping generation
+      mptcp: ensure the kernel PM does not take action too late
+      mptcp: do not miss early first subflow close event notification
+      mptcp: make mptcp_destroy_common() static
+      mptcp: drop the __mptcp_data_ready() helper
+      mptcp: handle first subflow closing consistently
+      mptcp: borrow forward memory from subflow
+      mptcp: introduce mptcp-level backlog
+      mptcp: leverage the backlog for RX packet processing
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+ include/net/sock.h     |   2 +
+ net/core/sock.c        |  18 +++
+ net/ipv4/af_inet.c     |  17 +-
+ net/mptcp/fastopen.c   |   4 +-
+ net/mptcp/mib.c        |   1 -
+ net/mptcp/mib.h        |   1 -
+ net/mptcp/mptcp_diag.c |   3 +-
+ net/mptcp/pm.c         |   4 +-
+ net/mptcp/pm_kernel.c  |   2 +
+ net/mptcp/protocol.c   | 428 +++++++++++++++++++++++++++++++++++--------------
+ net/mptcp/protocol.h   |  51 +++++-
+ net/mptcp/subflow.c    |  42 +++--
+ 12 files changed, 417 insertions(+), 156 deletions(-)
+---
+base-commit: e2c20036a8879476c88002730d8a27f4e3c32d4b
+change-id: 20251121-net-next-mptcp-memcg-backlog-imp-33568c609094
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
+Best regards,
+-- 
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
