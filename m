@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAEC72F60B2
-	for <mptcp@lists.linux.dev>; Sat, 22 Nov 2025 12:14:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 282EF2773F
+	for <mptcp@lists.linux.dev>; Sat, 22 Nov 2025 12:59:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763813696; cv=none; b=mw+3EiLgjqpOeMLe1V+9ztvhx7J5UEVFKbUiybkmFh7U2DmIRHEuKl3d6/RFZIfJOX9nTR2IKvu7L+z8iydkaBrkP1jgpfetsdviK4snxJv+YfkPZM8iCZIbxf1uXffhUE5zL5FSlgvR/kP+d51pknGGv1hLkWbVHsEuWqY7p8g=
+	t=1763816371; cv=none; b=PqaRvfCziikQjEQi00K5SiQmMVMgjS+y9HD/cNLn2JHHbTWH0vUsxJhiw4U8alXypKX7ThF5lZ4j1XvWxbj7dAaSht7hxrnnU9hTMS3GtXHMj7eLt1t5lGb9B7tf7478k4N7ULY08frYYqbDrXmVqaz5Mub6K5C8wZJ2UR9JWKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763813696; c=relaxed/simple;
-	bh=X2I1wjeeeODt417hms8lIl3d5DAcAG1UJX9QO69mt84=;
+	s=arc-20240116; t=1763816371; c=relaxed/simple;
+	bh=B3kW9KXHwZ90SF6OoXrJsEdPmwanb9+gu2u+puL+rSE=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Rr/PKSyYUny/J9CE0OWifj75T6jQ/WoSBuA/7LgZ60HBORmhSDGAApVinisrEyfBF2SWuvOKLctdlMahuIkQDr89aA09M8yMpzzd4wNSyAsPswk2OJR8g+XYAiPa6k1bPyAEEfMNyMF37ijvP5r9y5CS1dInmeB8KaQTGOEkMG8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lF7l9G7p; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=aNFM/ykRBZhSOJvcUmOtC3MuRsNwytqf0rwM/gLMeUzuCpeoUJY87g+hLPnJY8IsNEbLWaSNpxBKjD6vO15AnxHQwRReZfEmt0KQmvfbVLv7RyrBCSxJhwifRIWYaS0HIgNIm2PXaJlZEd8nWwIckZiU8yoFBxIsG17dbNzCGnw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rhn6pP30; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lF7l9G7p"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAC6CC4CEF5;
-	Sat, 22 Nov 2025 12:14:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rhn6pP30"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1EEDC4CEF5;
+	Sat, 22 Nov 2025 12:59:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763813696;
-	bh=X2I1wjeeeODt417hms8lIl3d5DAcAG1UJX9QO69mt84=;
+	s=k20201202; t=1763816370;
+	bh=B3kW9KXHwZ90SF6OoXrJsEdPmwanb9+gu2u+puL+rSE=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=lF7l9G7pb3NN92yUu9l4/qVLFw7D8JcLchZO7QZcFIwuu4tONfKLwt0X20bJtvhbr
-	 5LHgJVmbKcJrXK5I+v36XhrWiv1F9STxBQD6lUE/jlWwsnKTxDlH4cEEV0IuKMKqPM
-	 DaKyAd0c1Kcog3XgUf5aHoceE4pos0XG92IACNKhGqTz72toyBDS7ItrW2t6fxu0+L
-	 R6h2X0fBScXBZI+TiftCMms17iSgJrk9skaKZDmAtqSCYR3e1r/617TSjtLY5mSbzN
-	 AE7ljpZ/lfKETYqWRcwldVfFrrMg9ZSfoqIelEB/ldcEuGJNOuBVUCcC1yeB2/PEAB
-	 0uLWSJnOVpEKw==
-Message-ID: <b5cf59c34d0f47f32cce5ea0fe0f419beed4fa7d.camel@kernel.org>
-Subject: Re: [PATCH mptcp-net] mptcp: schedule rtx timer only after pushing
- data
+	b=rhn6pP30j85R16Pimii/r+9yPIDENX/FgkKSA/af+sshrJiU9jS+IWS40skbIoazB
+	 z0L698KmOTRTBludXEuYsgoGIbgbXvYN0kLSYE3Gw5ZBia2aasrnEORg9eqUZ4XjnO
+	 uAQE5ViYqJSkX8MqTjCbMK2Zjpx85ul58ESP6KuE1jaLJn1ri57cndIGvU+Db0dWIo
+	 ODApdrAfK9ZnfXUFWjJI+qNn0W46edWPBVsGGdQonWTMmn0qCZdmXJEqgGe6r+bMkB
+	 ArfTuODNKCCcGka+TfMFJrTFsTPFul2RbRZGwKKOcTCpzxm4dO05MnWkDGkv34wkFi
+	 crOWfr6aIz8IQ==
+Message-ID: <f53b9be4a701bf2696a96fb316f538aca2566bdf.camel@kernel.org>
+Subject: Re: [PATCH mptcp-net] mptcp: clear scheduled subflows on retransmit
 From: Geliang Tang <geliang@kernel.org>
 To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
 Cc: dcaratti@redhat.com
-Date: Sat, 22 Nov 2025 20:14:53 +0800
-In-Reply-To: <9f5e5b6c05fa0e6d303126c6a68a19305d166d36.1763715034.git.pabeni@redhat.com>
+Date: Sat, 22 Nov 2025 20:59:27 +0800
+In-Reply-To: <30e5325f37026b870cd0d0765d5d47c8a68fced9.1763676964.git.pabeni@redhat.com>
 References: 
-	<9f5e5b6c05fa0e6d303126c6a68a19305d166d36.1763715034.git.pabeni@redhat.com>
+	<30e5325f37026b870cd0d0765d5d47c8a68fced9.1763676964.git.pabeni@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 User-Agent: Evolution 3.56.2-4 
 Precedence: bulk
@@ -48,86 +47,72 @@ Content-Transfer-Encoding: 8bit
 
 Hi Paolo,
 
-On Fri, 2025-11-21 at 09:52 +0100, Paolo Abeni wrote:
-> The MPTCP protocol usually schedule the retransmission timer only
-> when there is some chances for such retransmissions to happen.
+On Thu, 2025-11-20 at 23:16 +0100, Paolo Abeni wrote:
+> When __mptcp_retrans() kicks-in, it schedules one or more subflow for
+> retransmission, but such subflows could be actually left alone if
+> there
+> is no more data to retransmit and/or in case of concurrent fallback.
 > 
-> With a notable exception: __mptcp_push_pending() currently schedule
-> such timer unconditionally, potentially leading to unnecessary rtx
-> timer expiration.
+> Scheduled subflows could be processed much later in time, i.e. when
+> new
+> data will be transmitted, leading to bad subflow selection.
 > 
-> The issue is present since the blamed commit below but become easily
-> reproducible after commit 27b0e701d387 ("mptcp: drop bogus
-> optimization in
-> __mptcp_check_push()")
+> Explicitly clear all scheduled subflows before leaving the
+> retransmission
+> function.
 > 
-> Fixes: 33d41c9cd74c ("mptcp: more accurate timeout")
+> Fixes: ee2708aedad0 ("mptcp: use get_retrans wrapper")
 > Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 > ---
-> Note that the blamed commit states we always need to rearm the timer
-> even
-> with no data pending, to catch link failures. That sounds
-> weird/possibly
-> tied to broken zero window probes?!? Hopefully mp_join self test
-> should
-> catch that
-> ---
->  net/mptcp/protocol.c | 15 +++++++++------
->  1 file changed, 9 insertions(+), 6 deletions(-)
+>  net/mptcp/protocol.c | 13 +++++++++++--
+>  1 file changed, 11 insertions(+), 2 deletions(-)
 > 
 > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 3b327e9ccb78..b3122f53827f 100644
+> index 6f4220c8b5bb..3b327e9ccb78 100644
 > --- a/net/mptcp/protocol.c
 > +++ b/net/mptcp/protocol.c
-> @@ -1649,7 +1649,7 @@ void __mptcp_push_pending(struct sock *sk,
-> unsigned int flags)
->  	struct mptcp_sendmsg_info info = {
->  				.flags = flags,
->  	};
-> -	bool do_check_data_fin = false;
-> +	bool copied = false;
->  	int push_count = 1;
->  
->  	while (mptcp_send_head(sk) && (push_count > 0)) {
-> @@ -1691,7 +1691,7 @@ void __mptcp_push_pending(struct sock *sk,
-> unsigned int flags)
->  						push_count--;
->  					continue;
->  				}
-> -				do_check_data_fin = true;
-> +				copied = true;
->  			}
+> @@ -2763,7 +2763,7 @@ static void __mptcp_retrans(struct sock *sk)
 >  		}
->  	}
-> @@ -1700,11 +1700,14 @@ void __mptcp_push_pending(struct sock *sk,
-> unsigned int flags)
->  	if (ssk)
->  		mptcp_push_release(ssk, &info);
 >  
-> -	/* ensure the rtx timer is running */
+>  		if (!mptcp_send_head(sk))
+> -			return;
+> +			goto clear_scheduled;
+>  
+>  		goto reset_timer;
+>  	}
+> @@ -2794,7 +2794,7 @@ static void __mptcp_retrans(struct sock *sk)
+>  			if (__mptcp_check_fallback(msk)) {
+>  				spin_unlock_bh(&msk->fallback_lock);
+>  				release_sock(ssk);
+> -				return;
+> +				goto clear_scheduled;
+>  			}
+>  
+>  			while (info.sent < info.limit) {
+> @@ -2826,6 +2826,15 @@ static void __mptcp_retrans(struct sock *sk)
+>  
+>  	if (!mptcp_rtx_timer_pending(sk))
+>  		mptcp_reset_rtx_timer(sk);
+> +
+> +clear_scheduled:
+> +	/* If no rtx data was available or in case of fallback,
+> there
+> +	 * could be left-over scheduled subflows; clear them all
+> +	 * or later xmit could use bad ones
+> +	 */
+> +	mptcp_for_each_subflow(msk, subflow)
+> +		if (READ_ONCE(subflow->scheduled))
+> +			mptcp_subflow_set_scheduled(subflow, false);
+>  }
 
-nit:
-
-This comment remains valid and can be moved inside the if (copied)
-block together.
+If this __mptcp_retrans() needs to clear scheduled subflows, then
+shouldn't similar this clear_scheduled operations also be added at the
+end of both the __mptcp_push_pending() and
+__mptcp_subflow_push_pending()?
 
 Thanks,
 -Geliang
 
-> -	if (!mptcp_rtx_timer_pending(sk))
-> -		mptcp_reset_rtx_timer(sk);
-> -	if (do_check_data_fin)
-> +	/* Avoid scheduling the rtx timer if no data has been
-> pushed; the timer
-> +	 * will be updated on positive acks by
-> __mptcp_cleanup_una().
-> +	 */
-> +	if (copied) {
-> +		if (!mptcp_rtx_timer_pending(sk))
-> +			mptcp_reset_rtx_timer(sk);
->  		mptcp_check_send_data_fin(sk);
-> +	}
->  }
 >  
->  static void __mptcp_subflow_push_pending(struct sock *sk, struct
-> sock *ssk, bool first)
+>  /* schedule the timeout timer for the relevant event: either close
+> timeout
