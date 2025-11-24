@@ -1,139 +1,151 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4DD52BDC33
-	for <mptcp@lists.linux.dev>; Mon, 24 Nov 2025 18:29:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9DDD2EB873
+	for <mptcp@lists.linux.dev>; Mon, 24 Nov 2025 21:06:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764008975; cv=none; b=utcdJDZQ4NJsgcKoUoyzmWTEiGOvSi8ANP7utZsRVR5VQ8v7Q0eL0MnA+oO23coIF8noayHsuLDkBy1dFHpSXbuCYUiVldsoFynsRG501JrvbULX3O9Pk23cDt1LcQ41aJRv7HxnJyiSYppBnBlFy1IczE4pGvolbk2SUPtM1jc=
+	t=1764018402; cv=none; b=GWDhVD/pWyCEipMACHsPki1T8fFKGIYmCO+mH8tAIvYImwoc2VtVTczMsd5JHMP2/f/s4hyZ6k8pnFcuuneIJMCcH5YMVR5UQaYh1E1ETyQQgE7nStC8t2p6u9h4xSuyHfqZDf0dbMqTeJsevgpIfsBP0wLFZ6MuJm3jYhnG3ao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764008975; c=relaxed/simple;
-	bh=9Dgz2H8UQtxUWu/fQrz6DtAfFkwiWnrZAVyAFQPzucQ=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=oh2Ojeg8g0FbDdgNDYxel+RHdlguBxzt8PI6GzjFEUeRojsnFprK4F2CmQl4Mzvk8bUXAj/f64zKMutMMwzzOnVDwt/lLsOfSGHOFoxwDLE2tM0T2Cbbd07qAHpVt22kUXiDp//OHocUxt1TU904DTEgSR1xAcxmJqJeJfALeSI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MCC6EvgM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1764018402; c=relaxed/simple;
+	bh=YxugdU2K9NDm5QN0qpwU62BpH9zAlGCaHMTkU8k07ik=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gnL1H46gLYQm5gS1Es8tGRjzuXlgzpjU8IOqSq9rnRk1LelxMF7XR8o26Y1/6a3Vb3snmDXC/aMh4quIL+M9ou0E+glKMUOaVRDtoKbUayDFEI5fFntkG0UTgjTLwIR4DQLJ7LTwpttMp5fzUFOtb+3Rm+LNCVNztLY0ek/8j6U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PLKbj97b; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MCC6EvgM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A22B4C4CEF1;
-	Mon, 24 Nov 2025 18:29:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764008975;
-	bh=9Dgz2H8UQtxUWu/fQrz6DtAfFkwiWnrZAVyAFQPzucQ=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=MCC6EvgMEx/dRiKtlNfTm10ZOSXx/J0bjS8EgXH9diEfEz+81K+pve5yNf0YbFhMW
-	 BLTd41PnetkhtlNZcpPLiXSzwTBdSzK38zFCmr3uEF77kp06fxwy7g6cDMw/H8hmfq
-	 id4gHJNcTAu7Z73gO+sRCtabIIaJ77eqWN5YWo0Q+Uua9f0ixn+I45IypaxR0IvNGH
-	 Yj6i11o2HUbm5VOhVEeJgZo7/tGEyY3hdeGwcNaXjLb47aqt6czXIOLHZUlXFdnm3C
-	 JD3c1BjwxHNJ6qZlR1mO0WcIf1fg7UU8cWjaSB6DgRUo1mhtrOSyJ8Bqe6KefKgl+E
-	 Hq6Gww9vATTaA==
-Message-ID: <25ce82ee-2080-49c6-8559-11c7ead9d8e5@kernel.org>
-Date: Mon, 24 Nov 2025 19:29:32 +0100
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PLKbj97b"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1764018399;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ePzLhBUhUs3nmrkyB9IWAlYeUoFlgrM9MHWegC6p1nQ=;
+	b=PLKbj97bI6MsTF3JbTiNcIU3TbMVgAwFLXWAPfh4lxXP6UGf+/Rwa+NL1vfGPj8cfFqeaV
+	qn9IfbC6XSto+ufQPiu5h1rdwbaKaj8zf7ieuGqNyxudxiZ1blJ+KXrLtXfnfoR583fVJo
+	+NxMoK9Md3cb04cKK9lyKsj2SVYn2yY=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-654-qLO1PVdBNu-sLv0FAsMtXg-1; Mon, 24 Nov 2025 16:06:38 -0500
+X-MC-Unique: qLO1PVdBNu-sLv0FAsMtXg-1
+X-Mimecast-MFC-AGG-ID: qLO1PVdBNu-sLv0FAsMtXg_1764018397
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-4779ecc3cc8so21933925e9.3
+        for <mptcp@lists.linux.dev>; Mon, 24 Nov 2025 13:06:38 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764018397; x=1764623197;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ePzLhBUhUs3nmrkyB9IWAlYeUoFlgrM9MHWegC6p1nQ=;
+        b=XoBmuZr/xcABF9Ua2Sk2S2vCehQHSQDXpku64N9BjTXT9fnAVbF10rRVXWkuLuEELr
+         T66ZfRLOsXI8tHplXadEizB0qgDcJNxianO2lznvv9J0/FMw037t8j+j3dK9j5CuQk1E
+         RGoan71kmbBJRb2HUaF4urky8eVcNKsY1vZ3NAgi0N09tUjipDsXGcTa2cFf7my0dKIg
+         w8JAlXLtip7dFwM8HV+fdJ1reZ7h5eJytXegRgGmziJtjNsxoR7Gh1nHG3YP9K2F4OKI
+         TfZypH5rT3Yvwtvyy2YK8NB+EkSK4XHBBczaif5HTXGZvag74ddGomzig30fJxOQzbvZ
+         ySng==
+X-Forwarded-Encrypted: i=1; AJvYcCV1vvrAcfttVs4jAjIYrMmUwWtVzPx9t0wG0Ln3dyWene8znDndUhYkAgk4V+F9DMez4IELIA==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yz8S4/kWpxasb07m3ehfU3UtmC/yt/jUEwfxraXPS8ADPvWGxjC
+	uH0gNCGN/b0/gngH/uIzIGyWwwoOl8QG46Ebdz9TB+npRxhYTPW9SQ4B6Lk04KQcrAxNO7KIbzU
+	Ykq3LveC10mbFD55PtDvp5nQXryQy+rPLmRpNRJOV55Aj8Lf5oUgeJ/G7R20vQkiG
+X-Gm-Gg: ASbGnctSswsBBeV3Zd88ruu6uFRi3INP+0hdyiKw7r9/bjxjKCi/fcjxkKiEt5NDCir
+	l7k85QH2WsNdCaZrjFeBBOKOoYz2KAFOdZditL3z7MNLWbxR7VxbKPBdtd2xU79FER7ZNEUFRlX
+	Eef0NXOc86CCjvnR1+lW8EI5+s9/3YfBEwmuywkl1R4i8mFUhsjkHlC+8pMRKSYE7kQI7dKCts4
+	GTLhd1DwDiWAhcOlvBt7zXkRvqWCkN4eBu7QEfo5+M9rVWErZTuHei6bcGyD81N1eV7ZU3CMy9y
+	vePFR4duseVXlmi657pjclaCuV66Yl3qsSiEKyoog9v0rVGbG3cCajFvkm2HiJqgeg7WzTn1ntO
+	d6XBg11e4EKyjxQ==
+X-Received: by 2002:a05:600c:4583:b0:477:fad:acd9 with SMTP id 5b1f17b1804b1-47904b2bcd7mr1987925e9.34.1764018396950;
+        Mon, 24 Nov 2025 13:06:36 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFIp6MN1zur2PHXGtlHNFrykrMeEJK8GQl2mTGKepPt4VBy0jTxlICnf0wTyQ14DG5eal8QlA==
+X-Received: by 2002:a05:600c:4583:b0:477:fad:acd9 with SMTP id 5b1f17b1804b1-47904b2bcd7mr1987785e9.34.1764018396590;
+        Mon, 24 Nov 2025 13:06:36 -0800 (PST)
+Received: from [192.168.88.32] ([212.105.153.231])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-477bf3af0ecsm217044555e9.9.2025.11.24.13.06.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Nov 2025 13:06:35 -0800 (PST)
+Message-ID: <0c7e9f23-ea1a-48dd-957a-956dfb3d6dc4@redhat.com>
+Date: Mon, 24 Nov 2025 22:06:35 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net] mptcp: schedule rtx timer only after pushing
- data
-Content-Language: en-GB, fr-BE
-From: Matthieu Baerts <matttbe@kernel.org>
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH mptcp-net] mptcp: clear scheduled subflows on retransmit
+To: Matthieu Baerts <matttbe@kernel.org>, mptcp@lists.linux.dev
 Cc: dcaratti@redhat.com
-References: <9f5e5b6c05fa0e6d303126c6a68a19305d166d36.1763715034.git.pabeni@redhat.com>
- <5eaf4403-e8c5-49cc-ab09-bbe71a0e6182@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <5eaf4403-e8c5-49cc-ab09-bbe71a0e6182@kernel.org>
+References: <30e5325f37026b870cd0d0765d5d47c8a68fced9.1763676964.git.pabeni@redhat.com>
+ <fbd12dc4-ad95-46df-965b-43bf9de430ab@kernel.org>
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <fbd12dc4-ad95-46df-965b-43bf9de430ab@kernel.org>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: j5lEHACG5H2BuM0yHo3gDXug4XGA7TFRGGNNat61xJQ_1764018397
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Paolo,
-
-On 24/11/2025 19:24, Matthieu Baerts wrote:
-> Hi Paolo,
-> 
-> On 21/11/2025 09:52, Paolo Abeni wrote:
->> The MPTCP protocol usually schedule the retransmission timer only
->> when there is some chances for such retransmissions to happen.
+On 11/24/25 7:18 PM, Matthieu Baerts wrote:
+> On 20/11/2025 23:16, Paolo Abeni wrote:
+>> When __mptcp_retrans() kicks-in, it schedules one or more subflow for
+>> retransmission, but such subflows could be actually left alone if there
+>> is no more data to retransmit and/or in case of concurrent fallback.
 >>
->> With a notable exception: __mptcp_push_pending() currently schedule
->> such timer unconditionally, potentially leading to unnecessary rtx
->> timer expiration.
+>> Scheduled subflows could be processed much later in time, i.e. when new
+>> data will be transmitted, leading to bad subflow selection.
 >>
->> The issue is present since the blamed commit below but become easily
->> reproducible after commit 27b0e701d387 ("mptcp: drop bogus optimization in
->> __mptcp_check_push()")
+>> Explicitly clear all scheduled subflows before leaving the retransmission
+>> function.
+>>
+>> Fixes: ee2708aedad0 ("mptcp: use get_retrans wrapper")
+>> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+>> ---
+>>  net/mptcp/protocol.c | 13 +++++++++++--
+>>  1 file changed, 11 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+>> index 6f4220c8b5bb..3b327e9ccb78 100644
+>> --- a/net/mptcp/protocol.c
+>> +++ b/net/mptcp/protocol.c
+>> @@ -2763,7 +2763,7 @@ static void __mptcp_retrans(struct sock *sk)
+>>  		}
+>>  
+>>  		if (!mptcp_send_head(sk))
+>> -			return;
+>> +			goto clear_scheduled;
+>>  
+>>  		goto reset_timer;
+>>  	}
+>> @@ -2794,7 +2794,7 @@ static void __mptcp_retrans(struct sock *sk)
+>>  			if (__mptcp_check_fallback(msk)) {
+>>  				spin_unlock_bh(&msk->fallback_lock);
+>>  				release_sock(ssk);
+>> -				return;
+>> +				goto clear_scheduled;
+>>  			}
+>>  
+>>  			while (info.sent < info.limit) {
+>> @@ -2826,6 +2826,15 @@ static void __mptcp_retrans(struct sock *sk)
+>>  
+>>  	if (!mptcp_rtx_timer_pending(sk))
+>>  		mptcp_reset_rtx_timer(sk);
+>> +
+>> +clear_scheduled:
+>> +	/* If no rtx data was available or in case of fallback, there
 > 
-> Thank you for the fix!
-> 
-> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
->> Note that the blamed commit states we always need to rearm the timer even
->> with no data pending, to catch link failures. That sounds weird/possibly
->> tied to broken zero window probes?!? Hopefully mp_join self test should
->> catch that
-> 
-> Thank you for the note! I suggest waiting one more week before sending it.
+> When reading this comment, it sounds like a "return" could be added
+> before this new label (clear_scheduled). Is it always needed to clear
+> this flag or only in these two cases?
 
-Applied!
-
-New patches for t/upstream-net and t/upstream:
-- 246fb174f79b: mptcp: schedule rtx timer only after pushing data
-- Results: c85e07c93b0a..bbb6d3ccd581 (export-net)
-- Results: d68a54341cb3..23a6a5017274 (export)
-
-Tests are now in progress:
-
-- export-net:
-https://github.com/multipath-tcp/mptcp_net-next/commit/5cfb92e8243a99a2edc03b68e8ef3568672b7546/checks
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/25182e7cd25a7e550ad2d9f7ecbb7e24cecd7f7f/checks
+No, we can't add a return before 'clear_scheduled:'. At least the 'goto
+reset_timer;' under the 'if (!dfrag) {' conditional above could reach
+there with one or more subflows scheduled.
 
 Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
+
+Paolo
 
