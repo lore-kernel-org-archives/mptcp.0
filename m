@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE0D927FB1E
-	for <mptcp@lists.linux.dev>; Mon, 24 Nov 2025 18:18:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B93DE256C84
+	for <mptcp@lists.linux.dev>; Mon, 24 Nov 2025 18:24:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764008319; cv=none; b=OIDNo8wPQJMmB9vKNisH1lJVc4jAc0Z+9Bazv1A4ybzg3pkL2FChiKKIUEIVdopLINp6O6bK+ux/Nm7YKl4U+uJ5vlYvMo6reLBX1jEBOgx+e0MzdSe2lk81Q2q4250BOW6YZxrXgx01ldljLtMT9p/35G3i/unC5svIG5wL3W0=
+	t=1764008653; cv=none; b=CzvLKVaX3IQW8LVDTVDNLMs3e6zqffE4cMuI+jbUbPWHTqRps1Fixz1XUROF3onXIR585UQsj9ZG91aBnQZ+oow35xHi1bhYlsDGk1Ehb21khqZ75Tvnd/3sE9hIDvy/yDYhrx+5cRG5tjgUjkD79JuJfXpMBdyPyHp6qs8xHMU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764008319; c=relaxed/simple;
-	bh=mMvOIz8Nm7FuSI48Tu78p+jiyefpr74061U+p8GqTKM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Dibeb/qhMvXPpHIXbB8bLqCDxnx01jeNiODpU1T3p4kclAIwd18MPYTSfZM6ECskiQxRZwF304CVTa0lL2FK8D+HXhdM7csekETIunQZ+n3hrLLm+E1YdiWZUCkQ2q0FBC5IX35BjoyYySp/seyI9unztz2DK6EIduycAaer2bo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CWQGFLYC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1764008653; c=relaxed/simple;
+	bh=gSCkZo6aZOj1ZuZPDvs4GrPaV80uKFR0KQNqDPTdnRE=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=HeTa9/xveFi0s6VUIzg/Nd52P0vPbwfYR0ltzdsWIl9U5f7lpzvyuDPlEIVv9Z1Pq5/MgNKVfS5BNSzwlUfeawLXqQJGDO2wBrym5/oHuZpLHU8a9sUbb7HTVSzfOKhA4jfwfdmONDFrJdh4w45hvr+L2PZDpxkHy8agZaxY12k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FOwu2ECR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CWQGFLYC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83694C4CEF1;
-	Mon, 24 Nov 2025 18:18:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FOwu2ECR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85304C4CEF1;
+	Mon, 24 Nov 2025 18:24:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764008319;
-	bh=mMvOIz8Nm7FuSI48Tu78p+jiyefpr74061U+p8GqTKM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=CWQGFLYCX2EM8aUmIGhS+zio1m+sz1GuXBcmKs1fI/HAl1fpFTSGgUpXSviHU3eO1
-	 HN6MXn6nk0mlfjUe4PAPb5hOqz6iZBiodN8hBLQOktgZNPHqfdZG3i2uLol9iAlhY6
-	 Holv8ju8i/jF/nztN+mBI48THDd3PeDE75OI36SDfZrLGw7sIXOHbS6oN09KvC2A2k
-	 W/Ws8gG+i8cucULs+BcwIyb3LwVmITpLIhCfVeVj3IDb8oQ3VIuJ56V5hzmsBLDq24
-	 xnnuKh7er27ji1DBQUIFVGPpgJLjcWrS/9jDb6l/d5ylK4rJj2C/LvAkSzRF7J9Glm
-	 V/Zva8dxNV9gQ==
-Message-ID: <fbd12dc4-ad95-46df-965b-43bf9de430ab@kernel.org>
-Date: Mon, 24 Nov 2025 19:18:35 +0100
+	s=k20201202; t=1764008653;
+	bh=gSCkZo6aZOj1ZuZPDvs4GrPaV80uKFR0KQNqDPTdnRE=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=FOwu2ECR7PTHq05uQTOoQstkdqt3BrraQhP1lzOtrq2DSFSMw0AZwCOzmaNHLb29/
+	 Z1Wzqz2wNEYcKpfdezQ0hhcXLgIJXva8Z7OZeHkXmo2KKw9remOPQe7CHHIsPgvSdv
+	 h0vFlSTWUSaDbGWmr+AtFf5rbFaebxs1l3k5tV93KimFG5dINon3UVz9qSfQfVqTeJ
+	 9lzDcomoFz9+jllIF+PTTWxRbh5JonLqgExxftS+KT4owKxz5CNMUYDUJPdgksep6+
+	 pe8kGOUyPhR8PLtkXU2ReiIPj8dPr1S4HUcyq61anmFzMNIeERHmGesVsWjf3eyKUm
+	 IIm7PU4v3aiPQ==
+Message-ID: <d6388777-74f1-4695-8527-59986ca52d64@kernel.org>
+Date: Mon, 24 Nov 2025 19:24:10 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -37,10 +37,11 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
 Subject: Re: [PATCH mptcp-net] mptcp: clear scheduled subflows on retransmit
 Content-Language: en-GB, fr-BE
+From: Matthieu Baerts <matttbe@kernel.org>
 To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
 Cc: dcaratti@redhat.com
 References: <30e5325f37026b870cd0d0765d5d47c8a68fced9.1763676964.git.pabeni@redhat.com>
-From: Matthieu Baerts <matttbe@kernel.org>
+ <a2faac8b-1c60-4086-8b99-c770c1c31ac6@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -85,72 +86,46 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <30e5325f37026b870cd0d0765d5d47c8a68fced9.1763676964.git.pabeni@redhat.com>
+In-Reply-To: <a2faac8b-1c60-4086-8b99-c770c1c31ac6@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Paolo,
+On 24/11/2025 19:10, Matthieu Baerts wrote:
+> Hi Paolo,
+> 
+> On 20/11/2025 23:16, Paolo Abeni wrote:
+>> When __mptcp_retrans() kicks-in, it schedules one or more subflow for
+>> retransmission, but such subflows could be actually left alone if there
+>> is no more data to retransmit and/or in case of concurrent fallback.
+>>
+>> Scheduled subflows could be processed much later in time, i.e. when new
+>> data will be transmitted, leading to bad subflow selection.
+>>
+>> Explicitly clear all scheduled subflows before leaving the retransmission
+>> function.
+> 
+> Thank you for this fix! It looks good to me:
+> 
+> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> 
+> I suggest sending it (alone) tomorrow if there are no objections.
 
-On 20/11/2025 23:16, Paolo Abeni wrote:
-> When __mptcp_retrans() kicks-in, it schedules one or more subflow for
-> retransmission, but such subflows could be actually left alone if there
-> is no more data to retransmit and/or in case of concurrent fallback.
-> 
-> Scheduled subflows could be processed much later in time, i.e. when new
-> data will be transmitted, leading to bad subflow selection.
-> 
-> Explicitly clear all scheduled subflows before leaving the retransmission
-> function.
-> 
-> Fixes: ee2708aedad0 ("mptcp: use get_retrans wrapper")
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> ---
->  net/mptcp/protocol.c | 13 +++++++++++--
->  1 file changed, 11 insertions(+), 2 deletions(-)
-> 
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 6f4220c8b5bb..3b327e9ccb78 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -2763,7 +2763,7 @@ static void __mptcp_retrans(struct sock *sk)
->  		}
->  
->  		if (!mptcp_send_head(sk))
-> -			return;
-> +			goto clear_scheduled;
->  
->  		goto reset_timer;
->  	}
-> @@ -2794,7 +2794,7 @@ static void __mptcp_retrans(struct sock *sk)
->  			if (__mptcp_check_fallback(msk)) {
->  				spin_unlock_bh(&msk->fallback_lock);
->  				release_sock(ssk);
-> -				return;
-> +				goto clear_scheduled;
->  			}
->  
->  			while (info.sent < info.limit) {
-> @@ -2826,6 +2826,15 @@ static void __mptcp_retrans(struct sock *sk)
->  
->  	if (!mptcp_rtx_timer_pending(sk))
->  		mptcp_reset_rtx_timer(sk);
-> +
-> +clear_scheduled:
-> +	/* If no rtx data was available or in case of fallback, there
+(Note: I already applied the patch before my other comment)
 
-When reading this comment, it sounds like a "return" could be added
-before this new label (clear_scheduled). Is it always needed to clear
-this flag or only in these two cases?
+Now in our tree (fix for -net):
 
-> +	 * could be left-over scheduled subflows; clear them all
-> +	 * or later xmit could use bad ones
-> +	 */
-> +	mptcp_for_each_subflow(msk, subflow)
-> +		if (READ_ONCE(subflow->scheduled))
-> +			mptcp_subflow_set_scheduled(subflow, false);
->  }
->  
->  /* schedule the timeout timer for the relevant event: either close timeout
+New patches for t/upstream-net and t/upstream:
+- 8f165e0fb8c1: mptcp: clear scheduled subflows on retransmit
+- dda4b8ef8834: tg:msg: add Reported-by tag
+- Results: c5303a89cbfe..c85e07c93b0a (export-net)
+- Results: ea19f6f490ba..d68a54341cb3 (export)
+
+Tests are now in progress:
+
+- export-net:
+https://github.com/multipath-tcp/mptcp_net-next/commit/56912d17ffa80bd7c622bcfa4b5f0ce6da906a19/checks
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/9b3f7e4aba65f380467c4dbf76a247de39c411e9/checks
 
 Cheers,
 Matt
