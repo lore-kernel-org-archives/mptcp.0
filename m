@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40809DDA9
-	for <mptcp@lists.linux.dev>; Mon, 24 Nov 2025 18:10:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE0D927FB1E
+	for <mptcp@lists.linux.dev>; Mon, 24 Nov 2025 18:18:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764007816; cv=none; b=syNKYAIgUk9d75/OY8zXfWHcCDToEGSH48erzFZrOMonQPtDsg1VFEQaMClY2iTfuzXfajy3RkIknpruErOA3MbkzJqCX3utkoPVOCnr48Jgq9n8szvkpwzYJvzQMZugndJWl0cKSbBpc+PuvkC0sO+8vxxjKD+P5XUVUqMpyXM=
+	t=1764008319; cv=none; b=OIDNo8wPQJMmB9vKNisH1lJVc4jAc0Z+9Bazv1A4ybzg3pkL2FChiKKIUEIVdopLINp6O6bK+ux/Nm7YKl4U+uJ5vlYvMo6reLBX1jEBOgx+e0MzdSe2lk81Q2q4250BOW6YZxrXgx01ldljLtMT9p/35G3i/unC5svIG5wL3W0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764007816; c=relaxed/simple;
-	bh=GqVm3JXaYaZuWk/rft1CFY+mH3pRKMUJ3BhACZnaLoA=;
+	s=arc-20240116; t=1764008319; c=relaxed/simple;
+	bh=mMvOIz8Nm7FuSI48Tu78p+jiyefpr74061U+p8GqTKM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ISKDLqfllMsgVDpgFFE2MEeyviMvxuzjw7aF1Bu4XQ0PLww0lr6HnsMGLULMz24NKshjr1vJNABfDLa10fC/B9PMeZtoj2e0kdAz4SSqxWRF6zDTKarqMmkHsC1Mj2Zvpx27wXDu2QF11vBdDAe7CZur0WFU9dHc8FscgVfsQ1o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VJfwnlz9; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=Dibeb/qhMvXPpHIXbB8bLqCDxnx01jeNiODpU1T3p4kclAIwd18MPYTSfZM6ECskiQxRZwF304CVTa0lL2FK8D+HXhdM7csekETIunQZ+n3hrLLm+E1YdiWZUCkQ2q0FBC5IX35BjoyYySp/seyI9unztz2DK6EIduycAaer2bo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CWQGFLYC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VJfwnlz9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A5A8C4CEF1;
-	Mon, 24 Nov 2025 18:10:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CWQGFLYC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83694C4CEF1;
+	Mon, 24 Nov 2025 18:18:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764007815;
-	bh=GqVm3JXaYaZuWk/rft1CFY+mH3pRKMUJ3BhACZnaLoA=;
+	s=k20201202; t=1764008319;
+	bh=mMvOIz8Nm7FuSI48Tu78p+jiyefpr74061U+p8GqTKM=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=VJfwnlz96Ye8mVwC3Ja3KXXQEu44BWVDQ+n9/S6y5oIRL5Dd47j5WeNn0K510shfZ
-	 D5Km5DbFY1Vkr4GUHXOB6ZIshD7F3SPqfXXKRJnueg+CAdbQ/CiHbjLTz4JH9+lrTP
-	 eiDdS/aapNxWv+0ffbecdS7tXRu06Erg8GXP7PHKuFur4n/Anq8fR0m+uR1YmjlTJl
-	 bt/eElwU6nT7iLi+3R7j5L8XPU2qaiu8v+fVo4NmxrT3qLWfmv3sToazIijzmh5GnF
-	 yMjVXdaoR/EGxhFylPAGQojp7QwA2vwniwwTt3ZaAqhFYpS6ooOAQzmqghb3VGpQMc
-	 WgpcCmdgIKUZA==
-Message-ID: <a2faac8b-1c60-4086-8b99-c770c1c31ac6@kernel.org>
-Date: Mon, 24 Nov 2025 19:10:12 +0100
+	b=CWQGFLYCX2EM8aUmIGhS+zio1m+sz1GuXBcmKs1fI/HAl1fpFTSGgUpXSviHU3eO1
+	 HN6MXn6nk0mlfjUe4PAPb5hOqz6iZBiodN8hBLQOktgZNPHqfdZG3i2uLol9iAlhY6
+	 Holv8ju8i/jF/nztN+mBI48THDd3PeDE75OI36SDfZrLGw7sIXOHbS6oN09KvC2A2k
+	 W/Ws8gG+i8cucULs+BcwIyb3LwVmITpLIhCfVeVj3IDb8oQ3VIuJ56V5hzmsBLDq24
+	 xnnuKh7er27ji1DBQUIFVGPpgJLjcWrS/9jDb6l/d5ylK4rJj2C/LvAkSzRF7J9Glm
+	 V/Zva8dxNV9gQ==
+Message-ID: <fbd12dc4-ad95-46df-965b-43bf9de430ab@kernel.org>
+Date: Mon, 24 Nov 2025 19:18:35 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -101,12 +101,56 @@ On 20/11/2025 23:16, Paolo Abeni wrote:
 > 
 > Explicitly clear all scheduled subflows before leaving the retransmission
 > function.
+> 
+> Fixes: ee2708aedad0 ("mptcp: use get_retrans wrapper")
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> ---
+>  net/mptcp/protocol.c | 13 +++++++++++--
+>  1 file changed, 11 insertions(+), 2 deletions(-)
+> 
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 6f4220c8b5bb..3b327e9ccb78 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -2763,7 +2763,7 @@ static void __mptcp_retrans(struct sock *sk)
+>  		}
+>  
+>  		if (!mptcp_send_head(sk))
+> -			return;
+> +			goto clear_scheduled;
+>  
+>  		goto reset_timer;
+>  	}
+> @@ -2794,7 +2794,7 @@ static void __mptcp_retrans(struct sock *sk)
+>  			if (__mptcp_check_fallback(msk)) {
+>  				spin_unlock_bh(&msk->fallback_lock);
+>  				release_sock(ssk);
+> -				return;
+> +				goto clear_scheduled;
+>  			}
+>  
+>  			while (info.sent < info.limit) {
+> @@ -2826,6 +2826,15 @@ static void __mptcp_retrans(struct sock *sk)
+>  
+>  	if (!mptcp_rtx_timer_pending(sk))
+>  		mptcp_reset_rtx_timer(sk);
+> +
+> +clear_scheduled:
+> +	/* If no rtx data was available or in case of fallback, there
 
-Thank you for this fix! It looks good to me:
+When reading this comment, it sounds like a "return" could be added
+before this new label (clear_scheduled). Is it always needed to clear
+this flag or only in these two cases?
 
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-
-I suggest sending it (alone) tomorrow if there are no objections.
+> +	 * could be left-over scheduled subflows; clear them all
+> +	 * or later xmit could use bad ones
+> +	 */
+> +	mptcp_for_each_subflow(msk, subflow)
+> +		if (READ_ONCE(subflow->scheduled))
+> +			mptcp_subflow_set_scheduled(subflow, false);
+>  }
+>  
+>  /* schedule the timeout timer for the relevant event: either close timeout
 
 Cheers,
 Matt
