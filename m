@@ -1,151 +1,111 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9DDD2EB873
-	for <mptcp@lists.linux.dev>; Mon, 24 Nov 2025 21:06:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9534288D6;
+	Tue, 25 Nov 2025 04:41:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764018402; cv=none; b=GWDhVD/pWyCEipMACHsPki1T8fFKGIYmCO+mH8tAIvYImwoc2VtVTczMsd5JHMP2/f/s4hyZ6k8pnFcuuneIJMCcH5YMVR5UQaYh1E1ETyQQgE7nStC8t2p6u9h4xSuyHfqZDf0dbMqTeJsevgpIfsBP0wLFZ6MuJm3jYhnG3ao=
+	t=1764045660; cv=none; b=BXbLhYhvb7lm8OAJgCbhlxjqFCAiqAXhpckal0BxCKAsqlmTkwVU83cQh3OM2zClDL+hLKvJM3qSV5zp4K4PgMcPAZkT5jm4vjpeyL3elxz19pZnwU9kF2zmS+/2KQ0aLQnAvyk2xVA9I8Y0qnXvo3u4MzJElB/vprYPGN4Z07I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764018402; c=relaxed/simple;
-	bh=YxugdU2K9NDm5QN0qpwU62BpH9zAlGCaHMTkU8k07ik=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gnL1H46gLYQm5gS1Es8tGRjzuXlgzpjU8IOqSq9rnRk1LelxMF7XR8o26Y1/6a3Vb3snmDXC/aMh4quIL+M9ou0E+glKMUOaVRDtoKbUayDFEI5fFntkG0UTgjTLwIR4DQLJ7LTwpttMp5fzUFOtb+3Rm+LNCVNztLY0ek/8j6U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PLKbj97b; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1764045660; c=relaxed/simple;
+	bh=QYR4hjfoqH52yadclOSEYGCayQv9/Ag6fW1jB4kKIcA=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=meg9sYnSbOlMF4qm34SK3YyBvK9jmkXiwBdLtVIQwEXRsTo5PWK/yVXPOc0XsbH4kiH/1beVu5nAnfzQjB/nMSJhtN3UKsoD9TjGYNm0G2zMG1Oj0MpSs/6C7JBhlgI6R+qUpUw8aMJ6BhEg1ujLPDxTawZ0IGi21/7n6uuEfyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e6LcBvj0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PLKbj97b"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1764018399;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ePzLhBUhUs3nmrkyB9IWAlYeUoFlgrM9MHWegC6p1nQ=;
-	b=PLKbj97bI6MsTF3JbTiNcIU3TbMVgAwFLXWAPfh4lxXP6UGf+/Rwa+NL1vfGPj8cfFqeaV
-	qn9IfbC6XSto+ufQPiu5h1rdwbaKaj8zf7ieuGqNyxudxiZ1blJ+KXrLtXfnfoR583fVJo
-	+NxMoK9Md3cb04cKK9lyKsj2SVYn2yY=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-654-qLO1PVdBNu-sLv0FAsMtXg-1; Mon, 24 Nov 2025 16:06:38 -0500
-X-MC-Unique: qLO1PVdBNu-sLv0FAsMtXg-1
-X-Mimecast-MFC-AGG-ID: qLO1PVdBNu-sLv0FAsMtXg_1764018397
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-4779ecc3cc8so21933925e9.3
-        for <mptcp@lists.linux.dev>; Mon, 24 Nov 2025 13:06:38 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764018397; x=1764623197;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ePzLhBUhUs3nmrkyB9IWAlYeUoFlgrM9MHWegC6p1nQ=;
-        b=XoBmuZr/xcABF9Ua2Sk2S2vCehQHSQDXpku64N9BjTXT9fnAVbF10rRVXWkuLuEELr
-         T66ZfRLOsXI8tHplXadEizB0qgDcJNxianO2lznvv9J0/FMw037t8j+j3dK9j5CuQk1E
-         RGoan71kmbBJRb2HUaF4urky8eVcNKsY1vZ3NAgi0N09tUjipDsXGcTa2cFf7my0dKIg
-         w8JAlXLtip7dFwM8HV+fdJ1reZ7h5eJytXegRgGmziJtjNsxoR7Gh1nHG3YP9K2F4OKI
-         TfZypH5rT3Yvwtvyy2YK8NB+EkSK4XHBBczaif5HTXGZvag74ddGomzig30fJxOQzbvZ
-         ySng==
-X-Forwarded-Encrypted: i=1; AJvYcCV1vvrAcfttVs4jAjIYrMmUwWtVzPx9t0wG0Ln3dyWene8znDndUhYkAgk4V+F9DMez4IELIA==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yz8S4/kWpxasb07m3ehfU3UtmC/yt/jUEwfxraXPS8ADPvWGxjC
-	uH0gNCGN/b0/gngH/uIzIGyWwwoOl8QG46Ebdz9TB+npRxhYTPW9SQ4B6Lk04KQcrAxNO7KIbzU
-	Ykq3LveC10mbFD55PtDvp5nQXryQy+rPLmRpNRJOV55Aj8Lf5oUgeJ/G7R20vQkiG
-X-Gm-Gg: ASbGnctSswsBBeV3Zd88ruu6uFRi3INP+0hdyiKw7r9/bjxjKCi/fcjxkKiEt5NDCir
-	l7k85QH2WsNdCaZrjFeBBOKOoYz2KAFOdZditL3z7MNLWbxR7VxbKPBdtd2xU79FER7ZNEUFRlX
-	Eef0NXOc86CCjvnR1+lW8EI5+s9/3YfBEwmuywkl1R4i8mFUhsjkHlC+8pMRKSYE7kQI7dKCts4
-	GTLhd1DwDiWAhcOlvBt7zXkRvqWCkN4eBu7QEfo5+M9rVWErZTuHei6bcGyD81N1eV7ZU3CMy9y
-	vePFR4duseVXlmi657pjclaCuV66Yl3qsSiEKyoog9v0rVGbG3cCajFvkm2HiJqgeg7WzTn1ntO
-	d6XBg11e4EKyjxQ==
-X-Received: by 2002:a05:600c:4583:b0:477:fad:acd9 with SMTP id 5b1f17b1804b1-47904b2bcd7mr1987925e9.34.1764018396950;
-        Mon, 24 Nov 2025 13:06:36 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFIp6MN1zur2PHXGtlHNFrykrMeEJK8GQl2mTGKepPt4VBy0jTxlICnf0wTyQ14DG5eal8QlA==
-X-Received: by 2002:a05:600c:4583:b0:477:fad:acd9 with SMTP id 5b1f17b1804b1-47904b2bcd7mr1987785e9.34.1764018396590;
-        Mon, 24 Nov 2025 13:06:36 -0800 (PST)
-Received: from [192.168.88.32] ([212.105.153.231])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-477bf3af0ecsm217044555e9.9.2025.11.24.13.06.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Nov 2025 13:06:35 -0800 (PST)
-Message-ID: <0c7e9f23-ea1a-48dd-957a-956dfb3d6dc4@redhat.com>
-Date: Mon, 24 Nov 2025 22:06:35 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e6LcBvj0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51B79C4CEF1;
+	Tue, 25 Nov 2025 04:41:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1764045660;
+	bh=QYR4hjfoqH52yadclOSEYGCayQv9/Ag6fW1jB4kKIcA=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=e6LcBvj0yOCj/VknX2c9F7F2Cta6bW7aS4T/hDuEZ5EzgZJBl/DeTUAcXjLOiTVN1
+	 QSyBBRD8ZRJsc/LtNxZ5Ivi8x0IE2swWR7GJAEhQJr8LTajLMi8Ks99vIYs1x495Rv
+	 cq+qrLvA2SBx0Xc0N2xLpZx2FIKXE2/sGLH0sIQB96wpNSh8Qp+C5FSailLzY6YMzx
+	 tHH15kQ6wC/zXiM3rwuZ+UdmYwFM86xLQUp4u8fVlPSa+TMZs4mfKR6Mqr8zBTisZ6
+	 FTE0cmyYa9bQ0d7EcXhVThwXEVt/vwjg6vf5dVaVSSTKDrVfurpGUjdME8Z5UZS+uY
+	 uI6A/Ys3Regag==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 340673A8A3CC;
+	Tue, 25 Nov 2025 04:40:24 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-net] mptcp: clear scheduled subflows on retransmit
-To: Matthieu Baerts <matttbe@kernel.org>, mptcp@lists.linux.dev
-Cc: dcaratti@redhat.com
-References: <30e5325f37026b870cd0d0765d5d47c8a68fced9.1763676964.git.pabeni@redhat.com>
- <fbd12dc4-ad95-46df-965b-43bf9de430ab@kernel.org>
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <fbd12dc4-ad95-46df-965b-43bf9de430ab@kernel.org>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: j5lEHACG5H2BuM0yHo3gDXug4XGA7TFRGGNNat61xJQ_1764018397
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next 00/14] mptcp: memcg accounting for passive
+ sockets
+ & backlog processing
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <176404562300.189804.16757204264695752077.git-patchwork-notify@kernel.org>
+Date: Tue, 25 Nov 2025 04:40:23 +0000
+References: 
+ <20251121-net-next-mptcp-memcg-backlog-imp-v1-0-1f34b6c1e0b1@kernel.org>
+In-Reply-To: 
+ <20251121-net-next-mptcp-memcg-backlog-imp-v1-0-1f34b6c1e0b1@kernel.org>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: edumazet@google.com, kuniyu@google.com, pabeni@redhat.com,
+ willemb@google.com, davem@davemloft.net, kuba@kernel.org, horms@kernel.org,
+ dsahern@kernel.org, martineau@kernel.org, geliang@kernel.org,
+ peter.krystad@linux.intel.com, fw@strlen.de, cpaasch@apple.com,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org, mptcp@lists.linux.dev,
+ dcaratti@redhat.com
 
-On 11/24/25 7:18 PM, Matthieu Baerts wrote:
-> On 20/11/2025 23:16, Paolo Abeni wrote:
->> When __mptcp_retrans() kicks-in, it schedules one or more subflow for
->> retransmission, but such subflows could be actually left alone if there
->> is no more data to retransmit and/or in case of concurrent fallback.
->>
->> Scheduled subflows could be processed much later in time, i.e. when new
->> data will be transmitted, leading to bad subflow selection.
->>
->> Explicitly clear all scheduled subflows before leaving the retransmission
->> function.
->>
->> Fixes: ee2708aedad0 ("mptcp: use get_retrans wrapper")
->> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
->> ---
->>  net/mptcp/protocol.c | 13 +++++++++++--
->>  1 file changed, 11 insertions(+), 2 deletions(-)
->>
->> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
->> index 6f4220c8b5bb..3b327e9ccb78 100644
->> --- a/net/mptcp/protocol.c
->> +++ b/net/mptcp/protocol.c
->> @@ -2763,7 +2763,7 @@ static void __mptcp_retrans(struct sock *sk)
->>  		}
->>  
->>  		if (!mptcp_send_head(sk))
->> -			return;
->> +			goto clear_scheduled;
->>  
->>  		goto reset_timer;
->>  	}
->> @@ -2794,7 +2794,7 @@ static void __mptcp_retrans(struct sock *sk)
->>  			if (__mptcp_check_fallback(msk)) {
->>  				spin_unlock_bh(&msk->fallback_lock);
->>  				release_sock(ssk);
->> -				return;
->> +				goto clear_scheduled;
->>  			}
->>  
->>  			while (info.sent < info.limit) {
->> @@ -2826,6 +2826,15 @@ static void __mptcp_retrans(struct sock *sk)
->>  
->>  	if (!mptcp_rtx_timer_pending(sk))
->>  		mptcp_reset_rtx_timer(sk);
->> +
->> +clear_scheduled:
->> +	/* If no rtx data was available or in case of fallback, there
+Hello:
+
+This series was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
+
+On Fri, 21 Nov 2025 18:01:59 +0100 you wrote:
+> This series is split in two: the 4 first patches are linked to memcg
+> accounting for passive sockets, and the rest introduce the backlog
+> processing. They are sent together, because the first one appeared to be
+> needed to get the second one fully working.
 > 
-> When reading this comment, it sounds like a "return" could be added
-> before this new label (clear_scheduled). Is it always needed to clear
-> this flag or only in these two cases?
+> The second part includes RX path improvement built around backlog
+> processing. The main goals are improving the RX performances _and_
+> increase the long term maintainability.
+> 
+> [...]
 
-No, we can't add a return before 'clear_scheduled:'. At least the 'goto
-reset_timer;' under the 'if (!dfrag) {' conditional above could reach
-there with one or more subflows scheduled.
+Here is the summary with links:
+  - [net-next,01/14] net: factor-out _sk_charge() helper
+    https://git.kernel.org/netdev/net-next/c/075b19c211df
+  - [net-next,02/14] mptcp: factor-out cgroup data inherit helper
+    https://git.kernel.org/netdev/net-next/c/bd92dd8e03d9
+  - [net-next,03/14] mptcp: grafting MPJ subflow earlier
+    https://git.kernel.org/netdev/net-next/c/e777a7fb06b1
+  - [net-next,04/14] mptcp: fix memcg accounting for passive sockets
+    https://git.kernel.org/netdev/net-next/c/68c7c3867145
+  - [net-next,05/14] mptcp: cleanup fallback data fin reception
+    https://git.kernel.org/netdev/net-next/c/85f22b8e1e9d
+  - [net-next,06/14] mptcp: cleanup fallback dummy mapping generation
+    https://git.kernel.org/netdev/net-next/c/2834f8edd74d
+  - [net-next,07/14] mptcp: ensure the kernel PM does not take action too late
+    https://git.kernel.org/netdev/net-next/c/2ca1b8926fda
+  - [net-next,08/14] mptcp: do not miss early first subflow close event notification
+    https://git.kernel.org/netdev/net-next/c/48a395605e08
+  - [net-next,09/14] mptcp: make mptcp_destroy_common() static
+    https://git.kernel.org/netdev/net-next/c/9d8295960300
+  - [net-next,10/14] mptcp: drop the __mptcp_data_ready() helper
+    https://git.kernel.org/netdev/net-next/c/38a4a469c850
+  - [net-next,11/14] mptcp: handle first subflow closing consistently
+    https://git.kernel.org/netdev/net-next/c/0eeb372deebc
+  - [net-next,12/14] mptcp: borrow forward memory from subflow
+    https://git.kernel.org/netdev/net-next/c/9db5b3cec4ec
+  - [net-next,13/14] mptcp: introduce mptcp-level backlog
+    https://git.kernel.org/netdev/net-next/c/ee458a3f314e
+  - [net-next,14/14] mptcp: leverage the backlog for RX packet processing
+    https://git.kernel.org/netdev/net-next/c/6228efe0cc01
 
-Cheers,
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-Paolo
 
