@@ -1,35 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8031E30DECE;
-	Wed, 26 Nov 2025 04:01:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C9D031B817
+	for <mptcp@lists.linux.dev>; Wed, 26 Nov 2025 09:42:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764129663; cv=none; b=qqLww9XXZHMdI+cqL+a+m8nqLTUtznRIYQZh+jFJNmDB1Ak4fcxzTBnuktjkY6co25Q/9XfFvy5JdpWuckG7m/ax8e5iWALvNZiMOLl7CKzGiF3m9/QkNUDKLO+q/+wu1XxQLPTBTX9HTLdVozyxP9ANkXpUnucYba29aMTAnEA=
+	t=1764150132; cv=none; b=EKpNZ4o9XuqlRvyACngebWdIVoa9mGoh2dq5jAEUblZwHzIAiwTTA7DiYzvDUzIgyhX+ng0aIBQLG+2XcYaXcocmyKX/IUfysvgTdQYrniV5nfiYr8UY7fmlDi1Z4Lfv0Yg3TyuB/zxDYdux1xpH3/FA2TOES/JfvzXS0/h6bgE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764129663; c=relaxed/simple;
-	bh=u7WhcPoQgtAyom6NzBpHZKJ3S3T/moATUT+y2VUtn54=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=iEqG11iZOF0+ZD8gwofKR0tQilCuIi+1CwU89HcLxfmVZQOREx5j1js2I6o+CFz3abOUZ4yyp53vHQqYVOxy0Xki2HE9iDEQUb3Im0obVrC2AY6M8my4jv3S9POhnIrC5qybre1NURZ5b2xsXwVo7VmT9jvZ0ckLgu7KGi64/Co=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e/yDTgjQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1764150132; c=relaxed/simple;
+	bh=GEfREnqZvIiO60erFzS59ctM0V+32EHMKtTtOj66tNM=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=oRWoNzpOvdNdjrH/gd1pCawQMGe4hBX6PUWaA8nbbO4JWNi9XLwPb7urJP6p9Sm8ZvTeRLZ2KpzTO63rvgryY2DXxIo+Zv6jI69WVzk7FYABdg5/wkO3bfJv8FcuBmypC5mX8E6m2tH8A77tRkAasJ5UTpjuU7wwVeFYi1ND394=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m4HHhb+6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e/yDTgjQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1B69C116C6;
-	Wed, 26 Nov 2025 04:01:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m4HHhb+6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 137B7C113D0;
+	Wed, 26 Nov 2025 09:42:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764129662;
-	bh=u7WhcPoQgtAyom6NzBpHZKJ3S3T/moATUT+y2VUtn54=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=e/yDTgjQbXQSTAwyvE7FgkPAE2NIAdDvmLJBzvDj2W4EsmGcJ1JBQOVZielSccaMJ
-	 p19DNUWBtAWq3Yd1PWsRpkeFy4K8CankCXsikmYaNgOZuLfXirt5L+c6pr739oOFIR
-	 HQJsf/uiDkobuySu0JXq16xpvXr8XkvIWMiZjt40xaj0p8lzbM3r5iPuYH7WRNr7MI
-	 eKWylT03jbRbrXXBhBJs1o74rHp1RdRXPPGLEl5gxZ2RI+/GDMXi+lfU/zjPXWYvwr
-	 JLL5nOydA1W7L8+CIeb4NrwLOnZaY60R3CDjK2f9Jyk3gxx959tMwpfDT5iMbwVE2B
-	 BLLbukuAI37MQ==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33D99380AA73;
-	Wed, 26 Nov 2025 04:00:25 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1764150132;
+	bh=GEfREnqZvIiO60erFzS59ctM0V+32EHMKtTtOj66tNM=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=m4HHhb+6Zamco4nD6sRdIAamb4dYA2jsxrJRDppM07otYbdVUMfWeWzTlXhD2DgNc
+	 8RW8lTbPJ8zeB45U483uCiN7eZCicJXJlQjHee+Zpq+6MIsv9Y0EGkXugSi95CAymI
+	 mlM29AmERhHXaCdolfvJI7Mah+Vbs5xtgIybWTmRNdetWueSBniA2iPdtH1cc754ne
+	 u1nm1ZXPYs4xH9m+lcCpozjYPxSkaZzX0C/p9tjhjzNrhuuMvCRAal1qOkMVbz93nL
+	 fB5rO2wB2vkju4YO6gOKcuzOYW88+H6oAXtzd/fxa/ZdTGHmTragUflkk3fRbsd/CC
+	 K+j2/huXq+ueA==
+Message-ID: <d7b2572ae9bb7dcfd74b15fa4c49f20369cc3276.camel@kernel.org>
+Subject: Re: [RFC mptcp-next 6/6] nvmet-tcp: clear MSG_DONTWAIT for MPTCP
+ (TODO: HELP WANTED)
+From: Geliang Tang <geliang@kernel.org>
+To: mptcp@lists.linux.dev, hare@suse.de, hare@kernel.org
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Date: Wed, 26 Nov 2025 17:42:08 +0800
+In-Reply-To: <cfdce3d91ca30abcf2ff9b77ecc146ad48f31d07.1762485513.git.tanggeliang@kylinos.cn>
+References: <cover.1762485513.git.tanggeliang@kylinos.cn>
+	 <cfdce3d91ca30abcf2ff9b77ecc146ad48f31d07.1762485513.git.tanggeliang@kylinos.cn>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.56.2-4 
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -37,58 +45,126 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next 0/2] tools: ynl-gen: regeneration comment +
- function
- prefix
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <176412962400.1513924.8908884768543220332.git-patchwork-notify@kernel.org>
-Date: Wed, 26 Nov 2025 04:00:24 +0000
-References: <20251120174429.390574-1-ast@fiberby.net>
-In-Reply-To: <20251120174429.390574-1-ast@fiberby.net>
-To: =?utf-8?b?QXNiasO4cm4gU2xvdGggVMO4bm5lc2VuIDxhc3RAZmliZXJieS5uZXQ+?=@aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org
-Cc: donald.hunter@gmail.com, kuba@kernel.org, Jason@zx2c4.com,
- andrew+netdev@lunn.ch, anna@kernel.org, antonio@openvpn.net,
- arkadiusz.kubalewski@intel.com, arve@android.com, cmllamas@google.com,
- brauner@kernel.org, chuck.lever@oracle.com, Dai.Ngo@oracle.com,
- daniel.zahka@gmail.com, dsahern@kernel.org, davem@davemloft.net,
- dw@davidwei.uk, edumazet@google.com, geliang@kernel.org,
- gregkh@linuxfoundation.org, hare@kernel.org, jacob.e.keller@intel.com,
- jlayton@kernel.org, jiri@resnulli.us, jdamato@fastly.com,
- joelagnelf@nvidia.com, kernel-tls-handshake@lists.linux.dev,
- dualli@google.com, linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
- maco@android.com, martineau@kernel.org, matttbe@kernel.org,
- almasrymina@google.com, mptcp@lists.linux.dev, neil@brown.name,
- netdev@vger.kernel.org, okorniev@redhat.com, pabeni@redhat.com,
- sd@queasysnail.net, skhawaja@google.com, horms@kernel.org, sdf@fomichev.me,
- surenb@google.com, tkjos@android.com, tom@talpey.com, trondmy@kernel.org,
- vadim.fedorenko@linux.dev, willemb@google.com
 
-Hello:
-
-This series was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
-
-On Thu, 20 Nov 2025 17:44:25 +0000 you wrote:
-> It looks like these two patches are the last ones needed
-> for YNL, before the WireGuard patches can go in.
+On Fri, 2025-11-07 at 11:37 +0800, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> These patches was both requested by Jason, during review
-> of the WireGuard YNL conversion patchset[1].
+> When running the tests from a previous commit in a loop, there is
+> about a
+> one in ten chance of reporting the following "timeout" error:
 > 
-> [1] https://lore.kernel.org/r/20251105183223.89913-1-ast@fiberby.net/T/#u
+> '''
+> [   32.867710] nvme nvme0: I/O tag 1 (0001) type 4 opcode 0x2 (I/O
+> Cmd) QID 2 timeout
+> [   32.867929] nvme nvme0: starting error recovery
+> [   32.867994] nvme nvme0: I/O tag 2 (0002) type 4 opcode 0x2 (I/O
+> Cmd) QID 2 timeout
+> [   32.868112] nvme nvme0: I/O tag 3 (0003) type 4 opcode 0x2 (I/O
+> Cmd) QID 2 timeout
+> [   32.868359] nvme nvme0: I/O tag 4 (0004) type 4 opcode 0x2 (I/O
+> Cmd) QID 2 timeout
+> [   32.868446] nvme nvme0: I/O tag 5 (0005) type 4 opcode 0x2 (I/O
+> Cmd) QID 2 timeout
+> [   32.868592] nvme0c0n1: I/O Cmd(0x2) @ LBA 1046528, 8 blocks, I/O
+> Error (sct 0x3 / sc 0x70)
+> [   32.868817] recoverable transport error, dev nvme0c0n1, sector
+> 1046528 op 0x0:(READ) flags 0x2080700 phys_seg 1 prio class 0
+> [   32.868976] block nvme0n1: no usable path - requeuing I/O
+> [   32.869038] nvme nvme0: I/O tag 6 (0006) type 4 opcode 0x2 (I/O
+> Cmd) QID 2 timeout
+> [   32.869119] nvme nvme0: I/O tag 7 (0007) type 4 opcode 0x2 (I/O
+> Cmd) QID 2 timeout
+> ... ...
+> [   32.877945] nvme nvme0: I/O tag 122 (107a) type 4 opcode 0x2 (I/O
+> Cmd) QID 2 timeout
+> [   32.878025] block nvme0n1: no usable path - requeuing I/O
+> [   32.878079] block nvme0n1: no usable path - requeuing I/O
+> [   32.878128] block nvme0n1: no usable path - requeuing I/O
+> [   32.878180] block nvme0n1: no usable path - requeuing I/O
+> [   32.878238] block nvme0n1: no usable path - requeuing I/O
+> [   32.878296] block nvme0n1: no usable path - requeuing I/O
+> [   32.878350] block nvme0n1: no usable path - requeuing I/O
+> [   32.878403] block nvme0n1: no usable path - requeuing I/O
+> [   32.878455] block nvme0n1: no usable path - requeuing I/O
+> [   32.883603] nvme nvme0: Reconnecting in 10 seconds...
+> '''
 > 
-> [...]
+> Through debugging, I discovered that setting the MSG_DONTWAIT flag
+> leads to
+> MPTCP returning EAGAIN in mptcp_sendmsg.
+> 
+> This patch addresses it by dropping the MSG_DONTWAIT flag for MPTCP.
+> I know
+> this isn't an ideal fix, and I need your suggestions.
 
-Here is the summary with links:
-  - [net-next,1/2] tools: ynl-gen: add function prefix argument
-    https://git.kernel.org/netdev/net-next/c/17fa6ee35bd4
-  - [net-next,2/2] tools: ynl-gen: add regeneration comment
-    https://git.kernel.org/netdev/net-next/c/68e83f347266
+Good news! With help from Paolo and Gang Yan, I have finally solved
+this issue. It turned out that the write_space function, overridden by
+NVMe, was unable to be invoked by MPTCP.
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+This can be fixed by making the following modifications:
 
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -973,7 @@ static inline void mptcp_write_space(struct sock *sk)
+   /* pairs with memory barrier in mptcp_poll */
+   smp_mb();
+   if (mptcp_stream_memory_free(sk, 1))
+-      sk_stream_write_space(sk);
++      INDIRECT_CALL_1(sk->sk_write_space, sk_stream_write_space, sk);
 
+I'll send out v2 of this set soon.
+
+Thanks,
+-Geliang
+
+> 
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> ---
+>  drivers/nvme/target/tcp.c | 10 ++++++++--
+>  1 file changed, 8 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/nvme/target/tcp.c b/drivers/nvme/target/tcp.c
+> index 854b70b4a6f4..683a451bcb08 100644
+> --- a/drivers/nvme/target/tcp.c
+> +++ b/drivers/nvme/target/tcp.c
+> @@ -645,12 +645,15 @@ static int nvmet_try_send_data(struct
+> nvmet_tcp_cmd *cmd, bool last_in_batch)
+>  
+>  	while (cmd->cur_sg) {
+>  		struct msghdr msg = {
+> -			.msg_flags = MSG_DONTWAIT |
+> MSG_SPLICE_PAGES,
+> +			.msg_flags = MSG_SPLICE_PAGES,
+>  		};
+>  		struct page *page = sg_page(cmd->cur_sg);
+>  		struct bio_vec bvec;
+>  		u32 left = cmd->cur_sg->length - cmd->offset;
+>  
+> +		if (cmd->queue->sock->sk->sk_protocol !=
+> IPPROTO_MPTCP)
+> +			msg.msg_flags |= MSG_DONTWAIT;
+> +
+>  		if ((!last_in_batch && cmd->queue->send_list_len) ||
+>  		    cmd->wbytes_done + left < cmd->req.transfer_len
+> ||
+>  		    queue->data_digest || !queue-
+> >nvme_sq.sqhd_disabled)
+> @@ -694,12 +697,15 @@ static int nvmet_try_send_data(struct
+> nvmet_tcp_cmd *cmd, bool last_in_batch)
+>  static int nvmet_try_send_response(struct nvmet_tcp_cmd *cmd,
+>  		bool last_in_batch)
+>  {
+> -	struct msghdr msg = { .msg_flags = MSG_DONTWAIT |
+> MSG_SPLICE_PAGES, };
+> +	struct msghdr msg = { .msg_flags = MSG_SPLICE_PAGES, };
+>  	struct bio_vec bvec;
+>  	u8 hdgst = nvmet_tcp_hdgst_len(cmd->queue);
+>  	int left = sizeof(*cmd->rsp_pdu) - cmd->offset + hdgst;
+>  	int ret;
+>  
+> +	if (cmd->queue->sock->sk->sk_protocol != IPPROTO_MPTCP)
+> +		msg.msg_flags |= MSG_DONTWAIT;
+> +
+>  	if (!last_in_batch && cmd->queue->send_list_len)
+>  		msg.msg_flags |= MSG_MORE;
+>  	else
