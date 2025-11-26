@@ -1,130 +1,94 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9EBE273805;
-	Tue, 25 Nov 2025 17:11:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8031E30DECE;
+	Wed, 26 Nov 2025 04:01:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764090669; cv=none; b=JXMQDpAahhdfaCRFOfM/5EYXXPPIKpWwp4oAQIYtPCIUJl4xZtKwai+eHiTndDiAHtQLekTdm/hvfJHSqGHR6csrKpl5DKJ+WtQLTEASyLpfJEE6pd4WZaDHGXs5XN4JK0CIrSXzCWwCNAsDjSU18uOGkwDHRJu7GxbcLc9Fm7I=
+	t=1764129663; cv=none; b=qqLww9XXZHMdI+cqL+a+m8nqLTUtznRIYQZh+jFJNmDB1Ak4fcxzTBnuktjkY6co25Q/9XfFvy5JdpWuckG7m/ax8e5iWALvNZiMOLl7CKzGiF3m9/QkNUDKLO+q/+wu1XxQLPTBTX9HTLdVozyxP9ANkXpUnucYba29aMTAnEA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764090669; c=relaxed/simple;
-	bh=xZR8pJbbTDC36ucMzn1ejVJnyZlat8zJQi3cfsqTE/Y=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Ygbn2Mmn8Arm1c/bjvE7LWdJHJA7hA0jtIa32xbq/FInHN5KFfWYIKUKJeFkPRqnklqw8gLUv4OTvVHSl0Md9xKHZv9FTiccr8aSzpAIPYmDVj6hayB0qGKOsKoLi244zo5viKH8A6S5vIyD3iTTKPtLkaI+GDEIuYLB9ONEgLg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RmZHWh34; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1764129663; c=relaxed/simple;
+	bh=u7WhcPoQgtAyom6NzBpHZKJ3S3T/moATUT+y2VUtn54=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=iEqG11iZOF0+ZD8gwofKR0tQilCuIi+1CwU89HcLxfmVZQOREx5j1js2I6o+CFz3abOUZ4yyp53vHQqYVOxy0Xki2HE9iDEQUb3Im0obVrC2AY6M8my4jv3S9POhnIrC5qybre1NURZ5b2xsXwVo7VmT9jvZ0ckLgu7KGi64/Co=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e/yDTgjQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RmZHWh34"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1E85C4CEF1;
-	Tue, 25 Nov 2025 17:11:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e/yDTgjQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1B69C116C6;
+	Wed, 26 Nov 2025 04:01:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764090669;
-	bh=xZR8pJbbTDC36ucMzn1ejVJnyZlat8zJQi3cfsqTE/Y=;
-	h=From:Date:Subject:To:Cc:From;
-	b=RmZHWh345UtOHdBBl2skqpaSIDD3vOfTkuKHrc3GGu+S/PZHOefZZ9aFDnhOEPF/5
-	 KfOHwaFc9xV6vyRZqK09ZPKnLIaNCAnB+nZ+CLNwEhwjCGjLYaanz1lWrQhrnnXWIq
-	 xIcQogKdUf0uOoYZkNA5KUiuJlc2z3MLLuDPC9H9Q4ND52fsH/+y1C5Dyi3wl3ngU0
-	 D6r8HTHyBaRlk7TcH1recUlaFxFUeHiOoE4LfuZJRSJMg9v8biKwiTiHZams2W11Co
-	 wisPQ08/UP1SMAUeEmEDGoEPuglhQuWcfbUu6liPCutxVkcq0jOIPefAWdu4vurgci
-	 2AOaj0JdL68hA==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Tue, 25 Nov 2025 17:59:11 +0100
-Subject: [PATCH net] mptcp: clear scheduled subflows on retransmit
+	s=k20201202; t=1764129662;
+	bh=u7WhcPoQgtAyom6NzBpHZKJ3S3T/moATUT+y2VUtn54=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=e/yDTgjQbXQSTAwyvE7FgkPAE2NIAdDvmLJBzvDj2W4EsmGcJ1JBQOVZielSccaMJ
+	 p19DNUWBtAWq3Yd1PWsRpkeFy4K8CankCXsikmYaNgOZuLfXirt5L+c6pr739oOFIR
+	 HQJsf/uiDkobuySu0JXq16xpvXr8XkvIWMiZjt40xaj0p8lzbM3r5iPuYH7WRNr7MI
+	 eKWylT03jbRbrXXBhBJs1o74rHp1RdRXPPGLEl5gxZ2RI+/GDMXi+lfU/zjPXWYvwr
+	 JLL5nOydA1W7L8+CIeb4NrwLOnZaY60R3CDjK2f9Jyk3gxx959tMwpfDT5iMbwVE2B
+	 BLLbukuAI37MQ==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33D99380AA73;
+	Wed, 26 Nov 2025 04:00:25 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20251125-net-mptcp-clear-sched-rtx-v1-1-1cea4ad2165f@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAF7gJWkC/x3MQQrDIBBG4auEWXcgSiTQq4QurP5NBhojo5SA5
- O6RLt/ie40KVFDoOTRS/KTIkXqYx0Bh82kFS+xNdrTOGOs4ofKea8gcvvDKJWyIrPVkP+HtZ0z
- RwVD3WfGR8/9eqDN6XdcNiPIel3AAAAA=
-X-Change-ID: 20251125-net-mptcp-clear-sched-rtx-a4eba7e4d5e1
-To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Simon Horman <horms@kernel.org>
-Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, 
- linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
- Filip Pokryvka <fpokryvk@redhat.com>, 
- "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2175; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=2hBOccHTvC3Ma2AnCdnY4gSmYbZkET0gScOy1lgMpdU=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDJVH2tx7+2+kDdB/rDzuUJnn3UB871CJ53mZp763vUwn
- /TVR32zOkpZGMS4GGTFFFmk2yLzZz6v4i3x8rOAmcPKBDKEgYtTACZip87wv7CKcZsJf8kC9/K9
- E34dVys5mHNv2ubG/d78guGcpUrvhBkZZh53vi63+WBUhEvWpflPNLQazmho2kQd7juWq/qNccp
- 8RgA=
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next 0/2] tools: ynl-gen: regeneration comment +
+ function
+ prefix
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <176412962400.1513924.8908884768543220332.git-patchwork-notify@kernel.org>
+Date: Wed, 26 Nov 2025 04:00:24 +0000
+References: <20251120174429.390574-1-ast@fiberby.net>
+In-Reply-To: <20251120174429.390574-1-ast@fiberby.net>
+To: =?utf-8?b?QXNiasO4cm4gU2xvdGggVMO4bm5lc2VuIDxhc3RAZmliZXJieS5uZXQ+?=@aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org
+Cc: donald.hunter@gmail.com, kuba@kernel.org, Jason@zx2c4.com,
+ andrew+netdev@lunn.ch, anna@kernel.org, antonio@openvpn.net,
+ arkadiusz.kubalewski@intel.com, arve@android.com, cmllamas@google.com,
+ brauner@kernel.org, chuck.lever@oracle.com, Dai.Ngo@oracle.com,
+ daniel.zahka@gmail.com, dsahern@kernel.org, davem@davemloft.net,
+ dw@davidwei.uk, edumazet@google.com, geliang@kernel.org,
+ gregkh@linuxfoundation.org, hare@kernel.org, jacob.e.keller@intel.com,
+ jlayton@kernel.org, jiri@resnulli.us, jdamato@fastly.com,
+ joelagnelf@nvidia.com, kernel-tls-handshake@lists.linux.dev,
+ dualli@google.com, linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
+ maco@android.com, martineau@kernel.org, matttbe@kernel.org,
+ almasrymina@google.com, mptcp@lists.linux.dev, neil@brown.name,
+ netdev@vger.kernel.org, okorniev@redhat.com, pabeni@redhat.com,
+ sd@queasysnail.net, skhawaja@google.com, horms@kernel.org, sdf@fomichev.me,
+ surenb@google.com, tkjos@android.com, tom@talpey.com, trondmy@kernel.org,
+ vadim.fedorenko@linux.dev, willemb@google.com
 
-From: Paolo Abeni <pabeni@redhat.com>
+Hello:
 
-When __mptcp_retrans() kicks-in, it schedules one or more subflows for
-retransmission, but such subflows could be actually left alone if there
-is no more data to retransmit and/or in case of concurrent fallback.
+This series was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-Scheduled subflows could be processed much later in time, i.e. when new
-data will be transmitted, leading to bad subflow selection.
+On Thu, 20 Nov 2025 17:44:25 +0000 you wrote:
+> It looks like these two patches are the last ones needed
+> for YNL, before the WireGuard patches can go in.
+> 
+> These patches was both requested by Jason, during review
+> of the WireGuard YNL conversion patchset[1].
+> 
+> [1] https://lore.kernel.org/r/20251105183223.89913-1-ast@fiberby.net/T/#u
+> 
+> [...]
 
-Explicitly clear all scheduled subflows before leaving the
-retransmission function.
+Here is the summary with links:
+  - [net-next,1/2] tools: ynl-gen: add function prefix argument
+    https://git.kernel.org/netdev/net-next/c/17fa6ee35bd4
+  - [net-next,2/2] tools: ynl-gen: add regeneration comment
+    https://git.kernel.org/netdev/net-next/c/68e83f347266
 
-Fixes: ee2708aedad0 ("mptcp: use get_retrans wrapper")
-Cc: stable@vger.kernel.org
-Reported-by: Filip Pokryvka <fpokryvk@redhat.com>
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- net/mptcp/protocol.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
-
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 33b5dce431c2..8abb425d8b5f 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2665,7 +2665,7 @@ static void __mptcp_retrans(struct sock *sk)
- 		}
- 
- 		if (!mptcp_send_head(sk))
--			return;
-+			goto clear_scheduled;
- 
- 		goto reset_timer;
- 	}
-@@ -2696,7 +2696,7 @@ static void __mptcp_retrans(struct sock *sk)
- 			if (__mptcp_check_fallback(msk)) {
- 				spin_unlock_bh(&msk->fallback_lock);
- 				release_sock(ssk);
--				return;
-+				goto clear_scheduled;
- 			}
- 
- 			while (info.sent < info.limit) {
-@@ -2728,6 +2728,15 @@ static void __mptcp_retrans(struct sock *sk)
- 
- 	if (!mptcp_rtx_timer_pending(sk))
- 		mptcp_reset_rtx_timer(sk);
-+
-+clear_scheduled:
-+	/* If no rtx data was available or in case of fallback, there
-+	 * could be left-over scheduled subflows; clear them all
-+	 * or later xmit could use bad ones
-+	 */
-+	mptcp_for_each_subflow(msk, subflow)
-+		if (READ_ONCE(subflow->scheduled))
-+			mptcp_subflow_set_scheduled(subflow, false);
- }
- 
- /* schedule the timeout timer for the relevant event: either close timeout
-
----
-base-commit: 4fe5a00ec70717a7f1002d8913ec6143582b3c8e
-change-id: 20251125-net-mptcp-clear-sched-rtx-a4eba7e4d5e1
-
-Best regards,
+You are awesome, thank you!
 -- 
-Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
