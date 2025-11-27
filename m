@@ -1,157 +1,132 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EEC433555D
-	for <mptcp@lists.linux.dev>; Thu, 27 Nov 2025 15:07:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ED1E337BA5
+	for <mptcp@lists.linux.dev>; Thu, 27 Nov 2025 15:58:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764256072; cv=none; b=eQTWsr7c4Uf1waeIFZbjZl+UCgKPoYymIVbb2ewb9txCJ9etXxLIOikU5ceVZpOdwPsYXii8fMCde1BwPvkMeQ92EiaoUVfnp31/5xCZgJ7nIBY37mhljxIpUsBc/IA41UKIooebHP2gGNF+oXcmOX97XBgL6+tV/SOamHAn9PI=
+	t=1764259122; cv=none; b=WhCBg40qhEcqrvfS+1xw39PojzNomYOdUirgXqvkeFGKxFq8c0Bqm5mHxYFrdqv/5mnL2yyFYR+NnX0TmbX+M3ONZUMQOY+lMMq0bqIHE1UV0nIrwAsPiIxk+EfMpDObyFJvvLAUlU4R1qZ6zKae/QDvBw3WnLDyloZa4jWhooM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764256072; c=relaxed/simple;
-	bh=XbCcbr53K34JjU0GuuCrEV7Wtu0jKNbkpo8TldSEDIY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ixOnZRr5u+nvgocG9iC2c8Laaz1ylcSdCb7hOD8+bKYVL3mMe7V9eEERESMCdtv0ycGbuye4rKEO9hKF440M/Osd8ZiAFOgopz9NS/hm+swtelL8uMFSnafsYaZ3OwC2CxWh3fsnxpwBk3lAubWO+xMVu7nqhSoToZbvXzcSNnI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VZi1GqhJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1764259122; c=relaxed/simple;
+	bh=W0Op5WKS/IPZ3TOd1vWrAhwOjwIOzFjiWc1S4TLx6N8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=qBdAhI6iuLxRaWn/gT7fWZEyBbo+GuvUEPpva6KHOCrpGYrdXLbt2CryBxNV7T8Q7elnSOY11gvTKRZETYUT9V0XlV50wz5gO9fpoE6insS4wr0Nu8nqbH1Ji9OaSvFvB8eSyZ9w6PsxG6qgbRpUhVqKHO2Awq20Zj7BYAccGhE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R/uQVtE4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VZi1GqhJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 912D2C116D0;
-	Thu, 27 Nov 2025 15:07:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R/uQVtE4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6201C4CEF8;
+	Thu, 27 Nov 2025 15:58:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764256072;
-	bh=XbCcbr53K34JjU0GuuCrEV7Wtu0jKNbkpo8TldSEDIY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=VZi1GqhJg4rmbT9l1MCb3Z3dIv1map28L9PtIbcA2EiZ/n9cwQPyfVYSLkAWRYiWh
-	 aIhWGZebjhACRt20FjA8+Iym9hta6swfa7kPC8aBPouHYSTp//YLIIcbJD6K2CGHVi
-	 euRiZhF/MPC8I/tWvAyHT+goaO2Cbw/p4i5GnMzi6X//XLm7c4qqfgEbHQ/nr0+stO
-	 Hlz0me/OLwRq7vARnubHFZ319M+wNK7uyPbD7GxVBTzxvkMRvWtj4AaImD+IugKUDf
-	 YrpJgr0KvUdxJbTVnFEKvTI+3JLn9SEegUldrMrLHsyFw2jBR9zK1n3WKHLeqREFqH
-	 37jvRXxRPsAYA==
-Message-ID: <04b48141-fbec-40e7-a96d-3f25be09e915@kernel.org>
-Date: Thu, 27 Nov 2025 16:07:49 +0100
+	s=k20201202; t=1764259122;
+	bh=W0Op5WKS/IPZ3TOd1vWrAhwOjwIOzFjiWc1S4TLx6N8=;
+	h=From:Date:Subject:To:Cc:From;
+	b=R/uQVtE4NBvYPJJspc1IUgdX0pGNKx1PpEU7fUsBBIjA3h7NiD9t3VR9/dV2f0uN8
+	 oQaOSVF2b+8Ged+lDN/SP5nxlhobJP3rH+dCvuVuL6qlolJP8knWko+uJmUVaiakZU
+	 b+2GHEBklsxSJpZtmij4j9KGUM79FucGku35Q846l4+U7iPQJsxUC9PyKsBEbXo1xd
+	 xdUhBCp0i5WNVnwW/3wtoyY1X9Qizk33lZEUteTBuApyUuwXYGYHVo8r4/nvMrGvyC
+	 K0HsH/uafkbjRBM8qtmfSLth3Jzwx2kCiGoTc2fQeX6/ZUtOMu1IHGLd6szwlZT3/E
+	 ZOI3w3DYh6hQw==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Date: Thu, 27 Nov 2025 16:58:30 +0100
+Subject: [PATCH RFC mptcp-next] mptcp: support net.ipv4.tcp_rcvbuf_low_rtt
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net 0/3] mptcp: pm: ignore unknown endpoint flags
-Content-Language: en-GB, fr-BE
-To: Mat Martineau <martineau@kernel.org>
-Cc: MPTCP Upstream <mptcp@lists.linux.dev>
-References: <20251126-mptcp-pm-kern-drop-unknown-flags-v1-0-d2e4c2ebce0c@kernel.org>
- <032f83ca-b331-9e4f-5739-de91b4a3ff00@kernel.org>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <032f83ca-b331-9e4f-5739-de91b4a3ff00@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20251127-mptcp-tcp_rcvbuf_low_rtt-v1-1-fa080d67f2e5@kernel.org>
+X-B4-Tracking: v=1; b=H4sIACV1KGkC/yWMQQqDMBAAvyJ7NuCm2oJfEQmabuyCxrBJVRD/3
+ lAPc5jDzAmRhClCW5wgtHHk1WfBsgD7GfxEit/ZQVe6QdQvtYRkg8oYsdv4dWZedyMpKWefNep
+ qxOYxQM6DkOPjv+7grjwdCfrr+gGgtvH8dgAAAA==
+X-Change-ID: 20251127-mptcp-tcp_rcvbuf_low_rtt-fc64120b153a
+To: MPTCP Upstream <mptcp@lists.linux.dev>
+Cc: Paolo Abeni <pabeni@redhat.com>, 
+ "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3028; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=W0Op5WKS/IPZ3TOd1vWrAhwOjwIOzFjiWc1S4TLx6N8=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDI1Sg2eLW72Xrtu35VTa25p9zNPeCTvnxdsJKL6zjfvz
+ 73yrvrMjlIWBjEuBlkxRRbptsj8mc+reEu8/Cxg5rAygQxh4OIUgIlM6GT477t9Y+hBy1PZN1wc
+ Fb8ybypZ/ev2tJjPOlZyb8uyo/delGT4ZyRsfTJ0tdb754dWe4sxfp6eG75ssmT6XsnOTjMrwc4
+ vjAA=
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hi Mat,
+This is a follow up of commit ecfea98b7d0d ("tcp: add
+net.ipv4.tcp_rcvbuf_low_rtt"), but adapted to MPTCP.
 
-On 27/11/2025 00:54, Mat Martineau wrote:
-> On Wed, 26 Nov 2025, Matthieu Baerts (NGI0) wrote:
-> 
->> This is just a simple fix to ignore unknown endpoint flags. Recently, a
->> new "laminar" flag has been added. It can be set on older kernel
->> versions without effects -- which is good -- but it is strange to report
->> it in the endpoints dumps if it is not supported.
->>
->>  # uname -r
->>  6.17.9
->>  # ip mptcp endpoint add 1.2.3.4 laminar  # not supported on v6.17
->>  # ip mptcp endpoint
->>  1.2.3.4 id 1 laminar
->>
->> Patch 1 fixes that, while Patch 2 validates that.
->>
->> Patch 3 is for mptcp-next, to correctly follow the specs and accept u32
->> flags instead of u8. This doesn't change anything, but avoids
->> confusions.
->>
->> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
->> ---
->> Matthieu Baerts (NGI0) (3):
->>      mptcp: pm: ignore unknown endpoint flags
->>      selftests: mptcp: pm: ensure unknown flags are ignored
->>      mptcp: pm: align endpoint flags size with the NL specs
-> 
-> Hi Matthieu!
-> 
-> All three patches LGTM:
-> 
-> Reviewed-by: Mat Martineau <martineau@kernel.org>
+MPTCP has mptcp_rcvbuf_grow(), which is similar to tcp_rcvbuf_grow, but
+adapted for the MPTCP-level socket.
 
-Thank you for the review!
+The idea here is similar to what has been done on TCP side: not let
+mptcp_rcvbuf_grow() grow sk->sk_rcvbuf too fast for small RTT flows.
+Quoting Eric: If sk->sk_rcvbuf is too big, this can force NIC driver to
+not recycle pages from their page pool, and also can cause cache
+evictions for DDIO enabled cpus/NIC, as receivers are usually slower
+than senders.
 
-> See my comment on patch 2 regarding an additional fourth patch for net-
-> next.
+If RTT if smaller than the new net.ipv4.tcp_rcvbuf_low_rtt sysctl value,
+use the RTT / tcp_rcvbuf_low_rtt ratio to control sk_rcvbuf inflation.
 
-Replied!
+Tested: NO :)
 
-And applied:
+This is why it is still a RFC. My perf test env is currently broken. I'm
+sharing this patch just in case it is easy for someone to validate this
+patch. Ideally such tests should be done on top of "trace: mptcp: add
+mptcp_rcvbuf_grow tracepoint" patch from Paolo (and probably on top of
+the related series), following similar tests to the ones done by Eric,
+making sure the receiver is slower than the sender. Feel free to take
+the patch, and send new versions changing the author, etc. if needed.
 
-New patches for t/upstream-net and t/upstream:
-- 42678c2b1831: mptcp: pm: ignore unknown endpoint flags
-- 61aa36a0d8af: selftests: mptcp: pm: ensure unknown flags are ignored
-- Results: 643ff4ccf427..5bbaf3d47feb (export-net)
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+ net/mptcp/protocol.c | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
 
-- 7174c458730b: mptcp: pm: align endpoint flags size with the NL specs
-- Results: 70279bef46d8..1fea9a6bd10f (export)
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index e484c6391b48..715a9a072c6a 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -208,6 +208,7 @@ static bool mptcp_rcvbuf_grow(struct sock *sk, u32 newval)
+ 	struct mptcp_sock *msk = mptcp_sk(sk);
+ 	const struct net *net = sock_net(sk);
+ 	u32 rcvwin, rcvbuf, cap, oldval;
++	u32 rtt_threshold, rtt_us;
+ 	u64 grow;
+ 
+ 	oldval = msk->rcvq_space.space;
+@@ -219,10 +220,19 @@ static bool mptcp_rcvbuf_grow(struct sock *sk, u32 newval)
+ 	/* DRS is always one RTT late. */
+ 	rcvwin = newval << 1;
+ 
+-	/* slow start: allow the sender to double its rate. */
+-	grow = (u64)rcvwin * (newval - oldval);
+-	do_div(grow, oldval);
+-	rcvwin += grow << 1;
++	rtt_us = msk->rcvq_space.rtt_us >> 3;
++	rtt_threshold = READ_ONCE(net->ipv4.sysctl_tcp_rcvbuf_low_rtt);
++	if (rtt_us < rtt_threshold) {
++		/* For small RTT, we set @grow to rcvwin * rtt_us/rtt_threshold.
++		 * It might take few additional ms to reach 'line rate',
++		 * but will avoid sk_rcvbuf inflation and poor cache use.
++		 */
++		grow = div_u64((u64)rcvwin * rtt_us, rtt_threshold);
++	} else {
++		/* slow start: allow the sender to double its rate. */
++		grow = div_u64(((u64)rcvwin << 1) * (newval - oldval), oldval);
++	}
++	rcvwin += grow;
+ 
+ 	if (!RB_EMPTY_ROOT(&msk->out_of_order_queue))
+ 		rcvwin += MPTCP_SKB_CB(msk->ooo_last_skb)->end_seq - msk->ack_seq;
 
-Tests are now in progress:
+---
+base-commit: 1fea9a6bd10f5c5494b7973141083ec56ecffd74
+change-id: 20251127-mptcp-tcp_rcvbuf_low_rtt-fc64120b153a
 
-- export-net:
-https://github.com/multipath-tcp/mptcp_net-next/commit/419c354054eb2e8a2c694be3ef18e8fc35780cc2/checks
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/9e5249109d34f839b6573890fbab202a784b83cb/checks
-
-
-Cheers,
-Matt
+Best regards,
 -- 
-Sponsored by the NGI0 Core fund.
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
