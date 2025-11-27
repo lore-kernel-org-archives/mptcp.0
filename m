@@ -1,120 +1,144 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 313C1328B7B
-	for <mptcp@lists.linux.dev>; Thu, 27 Nov 2025 09:33:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0080431281E
+	for <mptcp@lists.linux.dev>; Thu, 27 Nov 2025 14:57:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764236026; cv=none; b=uhvP6t4jW0EWGm93rmDhgwMCm7VxH1gC1mZR390Svsda81Ppx/3l6clJ144xKjxJRg6sIuYzSk8u5BOwx/XPRhhl97zXwvtYKRl0O34pTCheUuIwG6VQY0JxyzBBYJ7Vw5/eTnGMfa0PQLQEtaCXJiU9wT2NWz4LJd/KrOjikWk=
+	t=1764255447; cv=none; b=eBQKGgffgISK1Xi9CMDrjd7e9QTNvFL7G/4YjVfx8/BulpaRs0Q5b4exJRquWf7fZG2sthWVn3aG4ELS+XNvLBpYVvmZcq1UiesBT91fmhsvJn7IIIvLhx823pYfUbTnnL7XIcQyHEt+Rm5yHVWfettKVBTpOrBYlqZiEhzUrX8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764236026; c=relaxed/simple;
-	bh=vi9I2bmKTgo1ihvsRplzRhnQwKGABLGk22DsIJYydaw=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=BQJexaHmhw9YdbMfQOXH1HZOcpu1hcEcBFtp/0fVcwJhWdEQ6u6XdAGVzcULdAbwIeM4MC+oWsg0TmQ/tc+qvmhvd3+A45rzFZlg3v7v7KeP5/wuFL9Wig0zyAqz6Ncsm7163nfg5jc5a9KV/zRS7MpD5iPeMdQ/wtPGyKWvL3w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aDRwX5ZP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1764255447; c=relaxed/simple;
+	bh=2SCZGP6/acp+8p/n6ucyJt0FVj/nfCt15rgB7uEbfCM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=r5XcV/O3U5u6TOQTQ/72NysncD5DQ9kNO+RwrQKil+8//LP1jr6hphmrkv/DPI30vccVUPTIOLKSLajeDq0R19p++ybRZru8pUYkFn78oOUjF2W4tQYnNpqZhEwgTkI5Qi+HjbFJ/NQAwuaQdh7z8bZnkwxg0O3JQ6UzEBV5qNU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EHwV9ZJf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aDRwX5ZP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFFCEC4CEF8;
-	Thu, 27 Nov 2025 09:33:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EHwV9ZJf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31CC3C4CEF8;
+	Thu, 27 Nov 2025 14:57:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764236025;
-	bh=vi9I2bmKTgo1ihvsRplzRhnQwKGABLGk22DsIJYydaw=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=aDRwX5ZPZDxl22j8jHvCk81oMNaRzJhIkpA69FL19BbXFHHtdE6A4Zuzxfkb9ZV8l
-	 /DYdxxbgeKyUhSP58Hr9yEnO4WQnKIlsHBdr/qlGOfyBQiZuPJd5N15UrMl/80WsFO
-	 wpWBjJzbmteQGhV14iD+oOlGkAfBZrUHGxnl7l8aDhO7A/ib+qXx0YBsno5CCfWY1e
-	 E1di6JR+tNSj/yC9ft1I/NcftXfLTEpJK9lPJc8veg9QEKuNa3gk4cN0TndSSFnvl2
-	 klezGd3a7XLn3qxiQBk6alTPcHhH7Qy55jFnzlMJutrrvNIplmREbOaPmI3ZzxXJYW
-	 ljOSjaELwZp9Q==
-Message-ID: <8f6ef1567e3f5af2d7843c87c034a5d90d57ebd1.camel@kernel.org>
-Subject: Re: [PATCH mptcp-net] mptcp: sync the msk->sndbuf at accept() time
-From: Geliang Tang <geliang@kernel.org>
-To: Gang Yan <gang.yan@linux.dev>, mptcp@lists.linux.dev
-Cc: Gang Yan <yangang@kylinos.cn>
-Date: Thu, 27 Nov 2025 17:33:41 +0800
-In-Reply-To: <20251127070417.53513-1-gang.yan@linux.dev>
-References: <20251127070417.53513-1-gang.yan@linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.56.2-4 
+	s=k20201202; t=1764255446;
+	bh=2SCZGP6/acp+8p/n6ucyJt0FVj/nfCt15rgB7uEbfCM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=EHwV9ZJfTbsXIJMFWt6vxqtPRdmyMTkLb5wIKwCktOziq99vobqqkoGGvPc3waAQU
+	 3M3pcuvSTW8GwFO4X/wSpp5aPpNHsMfI4TlgV8EmjGMzreaH7rZTwInArKFkfAEnse
+	 glKQi+2ck2QmKXBkHaqRRLiED93hIuGES3IhP9YpHKkDIqrk2LFII5L1nOhFPBxEqm
+	 g2EXCEjXY4qUqhybxAZUlxZjPyCmyeG73woCVMLjNYcwcJUpBo3yabWWCW2ViKx43N
+	 zK+2K3PPUML6AraN8uNMrogev3vLJeVCgSYs181SBafqTz8NrFISEUwAweGF2JrxKV
+	 tSUBpeeD/VcgA==
+Message-ID: <76a84375-3778-4685-9ef3-da367ac8ea54@kernel.org>
+Date: Thu, 27 Nov 2025 15:57:24 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-net 2/3] selftests: mptcp: pm: ensure unknown flags
+ are ignored
+Content-Language: en-GB, fr-BE
+To: Mat Martineau <martineau@kernel.org>
+Cc: MPTCP Upstream <mptcp@lists.linux.dev>
+References: <20251126-mptcp-pm-kern-drop-unknown-flags-v1-0-d2e4c2ebce0c@kernel.org>
+ <20251126-mptcp-pm-kern-drop-unknown-flags-v1-2-d2e4c2ebce0c@kernel.org>
+ <34dd0312-6eb7-b56d-b7e4-06837bc4c50c@kernel.org>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <34dd0312-6eb7-b56d-b7e4-06837bc4c50c@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Gang,
+Hi Mat,
 
-Thanks for this patch.
+Thank you for the review!
 
-On Thu, 2025-11-27 at 15:04 +0800, Gang Yan wrote:
-> From: Gang Yan <yangang@kylinos.cn>
+On 27/11/2025 00:57, Mat Martineau wrote:
+> On Wed, 26 Nov 2025, Matthieu Baerts (NGI0) wrote:
 > 
-> After an MPTCP connection is established, the sk_sndbuf of client's
-> msk
-> can be updated through 'subflow_finish_connect'. However, the newly
-> accepted msk on the server side has a small sk_sndbuf than
-> msk->first->sk_sndbuf:
-> 
-> '''
-> MPTCP: msk:00000000e55b09db, msk->sndbuf:20480, msk->first-
-> >sndbuf:2626560
-> '''
-> 
-> This means that when the server immediately sends MSG_DONTWAIT data
-> to
-> the client after the connection is established, it is more likely to
-> encounter EAGAIN.
-> 
-> This patch synchronizes the sk_sndbuf by triggering its update during
-> accept.
-> 
-> Fixes: 8005184fd1ca ("mptcp: refactor sndbuf auto-tuning")
-> Signed-off-by: Gang Yan <yangang@kylinos.cn>
-> ---
-> Notes:
-> 
-> Hi, Matt,
-> 
-> I'm not sure the commit in 'Fix' tag is correct.
-> 
-> The 3a236aef280e (mptcp: refactor passive socket initialization)
-> removes the
-> 'propagate_sndbuf' in '__mptcp_finish_join' and
-> 'mptcp_stream_accept'.
-> And the 8005184fd1ca adds it in '__mptcp_finish_join' but not in
-> accept
-> time. So I think there exists a miss in 8005184fd1ca.
-> 
-> Can you help me to check the 'Fix' tag?
-> 
-> Thanks,
-> Gang
-> ---
->  net/mptcp/protocol.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index e484c6391b48..33610d638385 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -4213,6 +4213,7 @@ static int mptcp_stream_accept(struct socket
-> *sock, struct socket *newsock,
->  
->  		mptcp_graft_subflows(newsk);
->  		mptcp_rps_record_subflows(msk);
-> +		__mptcp_propagate_sndbuf(newsk, subflow->tcp_sock);
+>> This validates the previous commit: the userspace can set unknown flags
+>> -- the 7th bit is currently unused -- without errors, but only the
+>> supported ones are printed in the endpoints dumps.
+>>
+>> The 'Fixes' tag here below is the same as the one from the previous
+>> commit: this patch here is not fixing anything wrong in the selftests,
+>> but it validates the previous fix for an issue introduced by this commit
+>> ID.
 
-We generally avoid directly using subflow->tcp_sock and instead use
-mptcp_subflow_tcp_sock() helper. What do you think about using this
-helper here?
+(...)
 
-Thanks,
--Geliang
+>> diff --git a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c b/tools/
+>> testing/selftests/net/mptcp/pm_nl_ctl.c
+>> index 65b374232ff5..99eecccbf0c8 100644
+>> --- a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
+>> +++ b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
+>> @@ -24,6 +24,8 @@
+>> #define IPPROTO_MPTCP 262
+>> #endif
+>>
+>> +#define MPTCP_PM_ADDR_FLAG_UNKNOWN _BITUL(7)
+> 
+> Given the u8->u32 change in patch 3, I can see why this needs to be 7
+> for this patch to be meaningful for -net.
+> 
+> Can you add a patch 4 that updates this to _BITUL(31) to match up with
+> the internal flag representation change?
 
->  
->  		/* Do late cleanup for the first subflow as
-> necessary. Also
->  		 * deal with bad peers not doing a complete
-> shutdown.
+It makes sense, and I was going to do that, but now I'm hesitating: some
+CIs will use the latest version of the selftests on older kernels. If
+they do that, the test will be less interesting on older kernels.
+
+Maybe that's not an issue? I could move it to 31, or set bits from 6 to
+31. Or stay on 7 for the time being?
+
+(I don't think we would add new flags, but if we do, we can also move
+this flag to the end later on?)
+
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
+
