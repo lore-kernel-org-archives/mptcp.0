@@ -1,130 +1,139 @@
-Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 764F13168E4
-	for <mptcp@lists.linux.dev>; Thu, 27 Nov 2025 08:08:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38B0C2D948A
+	for <mptcp@lists.linux.dev>; Thu, 27 Nov 2025 09:10:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764230898; cv=none; b=RMU8igqlEDxd59mHFDMO0JV4tMT2Toco530hYLJcaw+fBi/a/wMLPHsCAv66m+0qRhy9QGeyjdDakbJlcqIKNC6PbZsrS8PO8FB6Cl9orAZnf2VC0Jy6xsoM4JZ8PEINYNKGxfSIMnRR9e1N2tJVS8GhG1N/U2736Lp3Urz4i2Y=
+	t=1764234602; cv=none; b=cHb2aI8TBbJf+yqlWuL8n1gLr7wS9EmE2ASgvIJirxYSoSPtVBVtGwOy9sOuurEgoXXlELQjLD585Zy/of++o/Kdp1KatDEHvMM+ivPD1qy7TdG4EZhQ3yCX9qGrH4HVo0SzY8yYnOdKS0lCDI+8RnhWKlacrYeFtZPwwUNaA1w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764230898; c=relaxed/simple;
-	bh=/ET0kDgNhEPPKdPK44G0xe9XIbwMWNvUd01sOF4Yhok=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=icMSwKvbYgnr2tTjkBPqqn1tslqyFaFIazWrfi6GjixE8AjIjCxFzaQPSR/A3K+HkyH2d5VSF1L6N1OZTPciFRhxD2xn4Yt1qJWfOGbKzxWFjImCVfY3Ga6yqLOY+529SWRcCAmMR8p/BOwVmDmDieX6x15CwZoq97Ba5qwOydI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IsERO26H; arc=none smtp.client-ip=209.85.222.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1764234602; c=relaxed/simple;
+	bh=mA6zmlNbtt8j0iLs6N0EjIUiYcFWzGu0qKvb5h0ZWI8=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=PHRzpnrF5HQbRjhOy3dGcH32tUHymZtyXe3BKvu0q790tYpnnta3OhYygo/kGtNMHtgGgt/zO9ylOC4XErFrmWfEv/ZRqae8Y3YlT4pFl+JWWpkf8tnAg2H8sghVJqn1Thsxd3FcjwDy2+aThHZk2lY1KPZTmG8zX5NF/XPQabY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hl63SzqR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IsERO26H"
-Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-8b22624bcdaso67511985a.3
-        for <mptcp@lists.linux.dev>; Thu, 27 Nov 2025 00:08:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1764230895; x=1764835695; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=v+zRVwtjWHI4Ye43XrLueIVCRHm7IgbeRghxYkFpSzc=;
-        b=IsERO26HgNXs+AXRxoc+AuPZBIbTNFjJ10wp2PlBzlszuphJCYKhFq37sFIsoLUfRa
-         qIwDfYHfBm3ILQQIPyKcro5GalNfm1XiR/3cx3SejU7ohopCI9wO8fgppOVcbnSQMejo
-         ZV/4qCNw2ocozzTMHUUAXZn+b/EIcIjPlAmcKym+ntuGbPH2kPuu7IGWDKx6LEqEnAPT
-         fRAfQMLDfQvZuwt4UTA13tRb72sT9ub3Fumz88v7whJArcr8mKqC5JATbreWptUT24Ts
-         IERf2/aKX7r8gKORGJfnug7jWR6jrR6E5SosCh27H9MUsrIOW6QpbUTk81TWT1kF0vNO
-         qOKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764230895; x=1764835695;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=v+zRVwtjWHI4Ye43XrLueIVCRHm7IgbeRghxYkFpSzc=;
-        b=XbnjpFJDrJ+EsBME7Pmr6gOTaDTts7JWJBOxwL3RU1h6URrGla+ao0nxnnaLCoOEGn
-         QJ5r9JzIqQ7f5M6NfWwvFTAPOZpL6zHpAtmolRlv0tM29AbW2XmVHcvinqzogvnR15c6
-         R2coO7LdjNJ8YrLT3MfpQsadAt1SjCb7M2IO843Pf9gKLM/DM2PnbOvhEr2Iw8vooQqy
-         TyDrWPresr3Ngc/CUbujnoaYd4cD9rV8FRrBUGpkWxl8W7ZZVoweS7YxF+KFkTqJRREO
-         Ua8CoCqvm1P74iW4lmJCkZfvvDJs7vmcahM2DzKIWr5579RWgyvRldBQ7We1RnRdkylx
-         tZQw==
-X-Gm-Message-State: AOJu0Yxmaz8Yim45oDeLSG31xi1tCGpptbHp4df3ca62H2r+07N5DbWr
-	+/6WFrDPwpV092GkKlPb7voTIaSHNeyd3MgemxlCeWF2jnjtphLWQPOfTKcf
-X-Gm-Gg: ASbGncv1FgmwaAhQr2jfj3g1O4nLXljFiUegflVVsii5b/xQLkdbFYQwUy/2LwzBbbG
-	2YhgHHhCpQE3HWGxi0tE6zoigja42NoUUISd6oAlRmNGXzOAhg+BzWkDIgJCyjz4Y+bDemPcicb
-	NuvKN+bXMQ18aOFs0fzzE+tDT5CIPIxS7mgPbIOBxIzY0FWeTvhj/hwpXaSSzU+NJ15GAjtbxQn
-	3krLVzyKMzkFyqYm/qD/H8ZreJdNENCjwAFbV1VHyAMdmwbe9uXoFWD5Q02TBiClRPckCB3f+Tn
-	tGHjTRn7UFws8PT0dTq1soFvJ6zkXU/H5mCI+qRivNe2kS1d1oESOIEdGkaCoNmuWlZnZn2qEBA
-	KVggyy4aHBgoTa0ESCMplio/IibQ/gG2dXbzc3Kd9bQyL3T7FKmlnTssrL8BB73Oxca2Flx2o2A
-	qC4ymZju7PUniSp87jsM6PLgFemMcrFHTu
-X-Google-Smtp-Source: AGHT+IF4VyF/insi07vhgnKbRhap5WwIc4l/y6u31pQhznGQY0HBPRnom+rcvMdHQYrncY9/d8nxTA==
-X-Received: by 2002:a05:620a:4722:b0:8b2:7331:28e6 with SMTP id af79cd13be357-8b33d4c711cmr2735760385a.86.1764230895191;
-        Thu, 27 Nov 2025 00:08:15 -0800 (PST)
-Received: from [127.0.0.1] ([74.235.123.4])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-8b52a1cb5a5sm60155385a.46.2025.11.27.00.08.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Nov 2025 00:08:14 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Gang Yan <yangang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20251127070417.53513-1-gang.yan@linux.dev>
-References: <20251127070417.53513-1-gang.yan@linux.dev>
-Subject: Re: [PATCH mptcp-net] mptcp: sync the msk->sndbuf at accept() time
-Message-ID: <7b09ae45-31cf-ea52-33aa-4813dcef7cc5@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 27 Nov 2025 08:08:13 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hl63SzqR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9B98C116B1;
+	Thu, 27 Nov 2025 09:10:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1764234601;
+	bh=mA6zmlNbtt8j0iLs6N0EjIUiYcFWzGu0qKvb5h0ZWI8=;
+	h=Subject:From:To:Date:In-Reply-To:References:From;
+	b=Hl63SzqRMOoGS963b4NCodx1ii66zv1UE8lPUajgy1JpgvmYyoEk2gYbVJIDYFSvR
+	 8MGlBmOhHfw4n/gdzAeqay4SnX28AUeNptWRP7JxV30OK56XerslmT1nt2/ZD2QquS
+	 sBxRz2TMeKJ2lbzYGT3H+sxH1N8EIqW2FfHDg4+iVIC6o50V7ISbshnTuY+dj4Yw89
+	 fDzR7Arn3J/fM+C/pBMVv7v62XpLLXdoOoALK7PBftGXDXnDjfASgfjMrru7Mw0D5i
+	 0wpncZnURGU51IZmjD+/cQAnoiF4KMHamWQrg/VLQDgSddFEhcMyudREE3Cats7CHI
+	 y+lCr28cLKdxw==
+Message-ID: <a89a2d6ebf7151f24aa479898beb9db49b2e2771.camel@kernel.org>
+Subject: Re: [PATCH] libnvme: add mptcp trtype
+From: Geliang Tang <geliang@kernel.org>
+To: Hannes Reinecke <hare@suse.de>, mptcp@lists.linux.dev
+Date: Thu, 27 Nov 2025 17:09:57 +0800
+In-Reply-To: <2055f284-2b8d-49af-b149-7b341e5d44d5@suse.de>
+References: 
+	<99f6e63b5c9677f29a9bc8cdd87b2064b258435f.1764206766.git.tanggeliang@kylinos.cn>
+	 <2055f284-2b8d-49af-b149-7b341e5d44d5@suse.de>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.56.2-4 
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Hi Gang,
+Hi Hannes,
 
-Thank you for your modifications, that's great!
+On Thu, 2025-11-27 at 08:57 +0100, Hannes Reinecke wrote:
+> On 11/27/25 02:26, Geliang Tang wrote:
+> > A new NVMe target transport type NVMF_TRTYPE_MPTCP is defined for
+> > MPTCP in
+> > the kernel. Add it to libnvme as well.
+> > 
+> > Cc: Hannes Reinecke <hare@suse.de>
+> > Signed-off-by: Geliang Tang <geliang@kernel.org>
+> > ---
+> >   src/nvme/fabrics.c | 1 +
+> >   src/nvme/types.h   | 2 ++
+> >   2 files changed, 3 insertions(+)
+> > 
+> > diff --git a/src/nvme/fabrics.c b/src/nvme/fabrics.c
+> > index b0821e96..d3a1c033 100644
+> > --- a/src/nvme/fabrics.c
+> > +++ b/src/nvme/fabrics.c
+> > @@ -73,6 +73,7 @@ const char * const trtypes[] = {
+> >   	[NVMF_TRTYPE_RDMA]	= "rdma",
+> >   	[NVMF_TRTYPE_FC]	= "fc",
+> >   	[NVMF_TRTYPE_TCP]	= "tcp",
+> > +	[NVMF_TRTYPE_MPTCP]	= "mptcp",
+> >   	[NVMF_TRTYPE_LOOP]	= "loop",
+> >   };
+> >   
+> > diff --git a/src/nvme/types.h b/src/nvme/types.h
+> > index 4943e00f..2aa81938 100644
+> > --- a/src/nvme/types.h
+> > +++ b/src/nvme/types.h
+> > @@ -6823,6 +6823,7 @@ struct nvmf_disc_log_entry {
+> >    * @NVMF_TRTYPE_RDMA:		RDMA
+> >    * @NVMF_TRTYPE_FC:		Fibre Channel
+> >    * @NVMF_TRTYPE_TCP:		TCP
+> > + * @NVMF_TRTYPE_MPTCP:		MPTCP
+> >    * @NVMF_TRTYPE_LOOP:		Intra-host Transport (i.e.,
+> > loopback), reserved
+> >    *				for host usage.
+> >    * @NVMF_TRTYPE_MAX:		Maximum value for &enum
+> > nvmf_trtype
+> > @@ -6832,6 +6833,7 @@ enum nvmf_trtype {
+> >   	NVMF_TRTYPE_RDMA	= 1,
+> >   	NVMF_TRTYPE_FC		= 2,
+> >   	NVMF_TRTYPE_TCP		= 3,
+> > +	NVMF_TRTYPE_MPTCP	= 4,
+> >   	NVMF_TRTYPE_LOOP	= 254,
+> >   	NVMF_TRTYPE_MAX,
+> >   };
+> 
+> Sorry, you can't do that. You'll need to register a new protocol
+> number
+> from NVMexpress.org. And that would require a TPAR detailing out the
+> mapping between NVMe commands and MPTCP frames.
+> Which probably is a bit of an overhead.
 
-Our CI did some validations and here is its report:
+Thank you for the reminder. May I ask where I can get the TPAR for NVMe
+over TCP? I'd like to see what details need to be included to prepare
+for future needs.
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/197283=
-35198
+> Maybe it's easier to declare it as a TCP 'variant', keeping the
+> protocol
+> number and 'just' modify the TCP driver.
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/e6e537dee960
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1028131
+That does make things much simpler.
 
+On the host side, it's easy. A new NVMF_OPT_MPTCP option can be added,
+which can be set through nvme command as follows to create an MPTCP
+socket:
 
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
+    nvme discover -t tcp --mptcp -a 127.0.0.1 -s 4420
+    nvme connect -t tcp --mptcp -a 127.0.0.1 -s 4420 -n
+org.nvmexpress.mptcptest
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+On the target side, in v1 I sent you earlier, I reused TSAS (Transport
+Specific Address Subtype) field for both MPTCP and TLS. However, that
+approach made it impossible to use MPTCP and TLS simultaneously. Since
+I'm currently working on TLS support for MPTCP, I believe MPTCP will
+soon be capable of supporting TLS.
 
-For more details:
+The approach I can think of to switch between TCP and MPTCP on the
+target side is to introduce a Kconfig (e.g., NVME_TARGET_MPTCP). When
+enabled, it would create MPTCP sockets instead of the standard TCP
+ones. What are your thoughts? I'd appreciate your feedback.
 
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+Thanks,
+-Geliang
 
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+> 
+> Cheers,
+> 
+> Hannes
