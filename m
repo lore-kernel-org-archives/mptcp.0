@@ -1,40 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38B0C2D948A
-	for <mptcp@lists.linux.dev>; Thu, 27 Nov 2025 09:10:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 313C1328B7B
+	for <mptcp@lists.linux.dev>; Thu, 27 Nov 2025 09:33:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764234602; cv=none; b=cHb2aI8TBbJf+yqlWuL8n1gLr7wS9EmE2ASgvIJirxYSoSPtVBVtGwOy9sOuurEgoXXlELQjLD585Zy/of++o/Kdp1KatDEHvMM+ivPD1qy7TdG4EZhQ3yCX9qGrH4HVo0SzY8yYnOdKS0lCDI+8RnhWKlacrYeFtZPwwUNaA1w=
+	t=1764236026; cv=none; b=uhvP6t4jW0EWGm93rmDhgwMCm7VxH1gC1mZR390Svsda81Ppx/3l6clJ144xKjxJRg6sIuYzSk8u5BOwx/XPRhhl97zXwvtYKRl0O34pTCheUuIwG6VQY0JxyzBBYJ7Vw5/eTnGMfa0PQLQEtaCXJiU9wT2NWz4LJd/KrOjikWk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764234602; c=relaxed/simple;
-	bh=mA6zmlNbtt8j0iLs6N0EjIUiYcFWzGu0qKvb5h0ZWI8=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=PHRzpnrF5HQbRjhOy3dGcH32tUHymZtyXe3BKvu0q790tYpnnta3OhYygo/kGtNMHtgGgt/zO9ylOC4XErFrmWfEv/ZRqae8Y3YlT4pFl+JWWpkf8tnAg2H8sghVJqn1Thsxd3FcjwDy2+aThHZk2lY1KPZTmG8zX5NF/XPQabY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hl63SzqR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1764236026; c=relaxed/simple;
+	bh=vi9I2bmKTgo1ihvsRplzRhnQwKGABLGk22DsIJYydaw=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=BQJexaHmhw9YdbMfQOXH1HZOcpu1hcEcBFtp/0fVcwJhWdEQ6u6XdAGVzcULdAbwIeM4MC+oWsg0TmQ/tc+qvmhvd3+A45rzFZlg3v7v7KeP5/wuFL9Wig0zyAqz6Ncsm7163nfg5jc5a9KV/zRS7MpD5iPeMdQ/wtPGyKWvL3w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aDRwX5ZP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hl63SzqR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9B98C116B1;
-	Thu, 27 Nov 2025 09:10:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aDRwX5ZP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFFCEC4CEF8;
+	Thu, 27 Nov 2025 09:33:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764234601;
-	bh=mA6zmlNbtt8j0iLs6N0EjIUiYcFWzGu0qKvb5h0ZWI8=;
-	h=Subject:From:To:Date:In-Reply-To:References:From;
-	b=Hl63SzqRMOoGS963b4NCodx1ii66zv1UE8lPUajgy1JpgvmYyoEk2gYbVJIDYFSvR
-	 8MGlBmOhHfw4n/gdzAeqay4SnX28AUeNptWRP7JxV30OK56XerslmT1nt2/ZD2QquS
-	 sBxRz2TMeKJ2lbzYGT3H+sxH1N8EIqW2FfHDg4+iVIC6o50V7ISbshnTuY+dj4Yw89
-	 fDzR7Arn3J/fM+C/pBMVv7v62XpLLXdoOoALK7PBftGXDXnDjfASgfjMrru7Mw0D5i
-	 0wpncZnURGU51IZmjD+/cQAnoiF4KMHamWQrg/VLQDgSddFEhcMyudREE3Cats7CHI
-	 y+lCr28cLKdxw==
-Message-ID: <a89a2d6ebf7151f24aa479898beb9db49b2e2771.camel@kernel.org>
-Subject: Re: [PATCH] libnvme: add mptcp trtype
+	s=k20201202; t=1764236025;
+	bh=vi9I2bmKTgo1ihvsRplzRhnQwKGABLGk22DsIJYydaw=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=aDRwX5ZPZDxl22j8jHvCk81oMNaRzJhIkpA69FL19BbXFHHtdE6A4Zuzxfkb9ZV8l
+	 /DYdxxbgeKyUhSP58Hr9yEnO4WQnKIlsHBdr/qlGOfyBQiZuPJd5N15UrMl/80WsFO
+	 wpWBjJzbmteQGhV14iD+oOlGkAfBZrUHGxnl7l8aDhO7A/ib+qXx0YBsno5CCfWY1e
+	 E1di6JR+tNSj/yC9ft1I/NcftXfLTEpJK9lPJc8veg9QEKuNa3gk4cN0TndSSFnvl2
+	 klezGd3a7XLn3qxiQBk6alTPcHhH7Qy55jFnzlMJutrrvNIplmREbOaPmI3ZzxXJYW
+	 ljOSjaELwZp9Q==
+Message-ID: <8f6ef1567e3f5af2d7843c87c034a5d90d57ebd1.camel@kernel.org>
+Subject: Re: [PATCH mptcp-net] mptcp: sync the msk->sndbuf at accept() time
 From: Geliang Tang <geliang@kernel.org>
-To: Hannes Reinecke <hare@suse.de>, mptcp@lists.linux.dev
-Date: Thu, 27 Nov 2025 17:09:57 +0800
-In-Reply-To: <2055f284-2b8d-49af-b149-7b341e5d44d5@suse.de>
-References: 
-	<99f6e63b5c9677f29a9bc8cdd87b2064b258435f.1764206766.git.tanggeliang@kylinos.cn>
-	 <2055f284-2b8d-49af-b149-7b341e5d44d5@suse.de>
+To: Gang Yan <gang.yan@linux.dev>, mptcp@lists.linux.dev
+Cc: Gang Yan <yangang@kylinos.cn>
+Date: Thu, 27 Nov 2025 17:33:41 +0800
+In-Reply-To: <20251127070417.53513-1-gang.yan@linux.dev>
+References: <20251127070417.53513-1-gang.yan@linux.dev>
 Content-Type: text/plain; charset="UTF-8"
 User-Agent: Evolution 3.56.2-4 
 Precedence: bulk
@@ -45,95 +44,77 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi Hannes,
+Hi Gang,
 
-On Thu, 2025-11-27 at 08:57 +0100, Hannes Reinecke wrote:
-> On 11/27/25 02:26, Geliang Tang wrote:
-> > A new NVMe target transport type NVMF_TRTYPE_MPTCP is defined for
-> > MPTCP in
-> > the kernel. Add it to libnvme as well.
-> > 
-> > Cc: Hannes Reinecke <hare@suse.de>
-> > Signed-off-by: Geliang Tang <geliang@kernel.org>
-> > ---
-> >   src/nvme/fabrics.c | 1 +
-> >   src/nvme/types.h   | 2 ++
-> >   2 files changed, 3 insertions(+)
-> > 
-> > diff --git a/src/nvme/fabrics.c b/src/nvme/fabrics.c
-> > index b0821e96..d3a1c033 100644
-> > --- a/src/nvme/fabrics.c
-> > +++ b/src/nvme/fabrics.c
-> > @@ -73,6 +73,7 @@ const char * const trtypes[] = {
-> >   	[NVMF_TRTYPE_RDMA]	= "rdma",
-> >   	[NVMF_TRTYPE_FC]	= "fc",
-> >   	[NVMF_TRTYPE_TCP]	= "tcp",
-> > +	[NVMF_TRTYPE_MPTCP]	= "mptcp",
-> >   	[NVMF_TRTYPE_LOOP]	= "loop",
-> >   };
-> >   
-> > diff --git a/src/nvme/types.h b/src/nvme/types.h
-> > index 4943e00f..2aa81938 100644
-> > --- a/src/nvme/types.h
-> > +++ b/src/nvme/types.h
-> > @@ -6823,6 +6823,7 @@ struct nvmf_disc_log_entry {
-> >    * @NVMF_TRTYPE_RDMA:		RDMA
-> >    * @NVMF_TRTYPE_FC:		Fibre Channel
-> >    * @NVMF_TRTYPE_TCP:		TCP
-> > + * @NVMF_TRTYPE_MPTCP:		MPTCP
-> >    * @NVMF_TRTYPE_LOOP:		Intra-host Transport (i.e.,
-> > loopback), reserved
-> >    *				for host usage.
-> >    * @NVMF_TRTYPE_MAX:		Maximum value for &enum
-> > nvmf_trtype
-> > @@ -6832,6 +6833,7 @@ enum nvmf_trtype {
-> >   	NVMF_TRTYPE_RDMA	= 1,
-> >   	NVMF_TRTYPE_FC		= 2,
-> >   	NVMF_TRTYPE_TCP		= 3,
-> > +	NVMF_TRTYPE_MPTCP	= 4,
-> >   	NVMF_TRTYPE_LOOP	= 254,
-> >   	NVMF_TRTYPE_MAX,
-> >   };
+Thanks for this patch.
+
+On Thu, 2025-11-27 at 15:04 +0800, Gang Yan wrote:
+> From: Gang Yan <yangang@kylinos.cn>
 > 
-> Sorry, you can't do that. You'll need to register a new protocol
-> number
-> from NVMexpress.org. And that would require a TPAR detailing out the
-> mapping between NVMe commands and MPTCP frames.
-> Which probably is a bit of an overhead.
+> After an MPTCP connection is established, the sk_sndbuf of client's
+> msk
+> can be updated through 'subflow_finish_connect'. However, the newly
+> accepted msk on the server side has a small sk_sndbuf than
+> msk->first->sk_sndbuf:
+> 
+> '''
+> MPTCP: msk:00000000e55b09db, msk->sndbuf:20480, msk->first-
+> >sndbuf:2626560
+> '''
+> 
+> This means that when the server immediately sends MSG_DONTWAIT data
+> to
+> the client after the connection is established, it is more likely to
+> encounter EAGAIN.
+> 
+> This patch synchronizes the sk_sndbuf by triggering its update during
+> accept.
+> 
+> Fixes: 8005184fd1ca ("mptcp: refactor sndbuf auto-tuning")
+> Signed-off-by: Gang Yan <yangang@kylinos.cn>
+> ---
+> Notes:
+> 
+> Hi, Matt,
+> 
+> I'm not sure the commit in 'Fix' tag is correct.
+> 
+> The 3a236aef280e (mptcp: refactor passive socket initialization)
+> removes the
+> 'propagate_sndbuf' in '__mptcp_finish_join' and
+> 'mptcp_stream_accept'.
+> And the 8005184fd1ca adds it in '__mptcp_finish_join' but not in
+> accept
+> time. So I think there exists a miss in 8005184fd1ca.
+> 
+> Can you help me to check the 'Fix' tag?
+> 
+> Thanks,
+> Gang
+> ---
+>  net/mptcp/protocol.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index e484c6391b48..33610d638385 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -4213,6 +4213,7 @@ static int mptcp_stream_accept(struct socket
+> *sock, struct socket *newsock,
+>  
+>  		mptcp_graft_subflows(newsk);
+>  		mptcp_rps_record_subflows(msk);
+> +		__mptcp_propagate_sndbuf(newsk, subflow->tcp_sock);
 
-Thank you for the reminder. May I ask where I can get the TPAR for NVMe
-over TCP? I'd like to see what details need to be included to prepare
-for future needs.
-
-> Maybe it's easier to declare it as a TCP 'variant', keeping the
-> protocol
-> number and 'just' modify the TCP driver.
-
-That does make things much simpler.
-
-On the host side, it's easy. A new NVMF_OPT_MPTCP option can be added,
-which can be set through nvme command as follows to create an MPTCP
-socket:
-
-    nvme discover -t tcp --mptcp -a 127.0.0.1 -s 4420
-    nvme connect -t tcp --mptcp -a 127.0.0.1 -s 4420 -n
-org.nvmexpress.mptcptest
-
-On the target side, in v1 I sent you earlier, I reused TSAS (Transport
-Specific Address Subtype) field for both MPTCP and TLS. However, that
-approach made it impossible to use MPTCP and TLS simultaneously. Since
-I'm currently working on TLS support for MPTCP, I believe MPTCP will
-soon be capable of supporting TLS.
-
-The approach I can think of to switch between TCP and MPTCP on the
-target side is to introduce a Kconfig (e.g., NVME_TARGET_MPTCP). When
-enabled, it would create MPTCP sockets instead of the standard TCP
-ones. What are your thoughts? I'd appreciate your feedback.
+We generally avoid directly using subflow->tcp_sock and instead use
+mptcp_subflow_tcp_sock() helper. What do you think about using this
+helper here?
 
 Thanks,
 -Geliang
 
-> 
-> Cheers,
-> 
-> Hannes
+>  
+>  		/* Do late cleanup for the first subflow as
+> necessary. Also
+>  		 * deal with bad peers not doing a complete
+> shutdown.
