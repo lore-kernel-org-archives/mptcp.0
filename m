@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0080431281E
-	for <mptcp@lists.linux.dev>; Thu, 27 Nov 2025 14:57:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EEC433555D
+	for <mptcp@lists.linux.dev>; Thu, 27 Nov 2025 15:07:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764255447; cv=none; b=eBQKGgffgISK1Xi9CMDrjd7e9QTNvFL7G/4YjVfx8/BulpaRs0Q5b4exJRquWf7fZG2sthWVn3aG4ELS+XNvLBpYVvmZcq1UiesBT91fmhsvJn7IIIvLhx823pYfUbTnnL7XIcQyHEt+Rm5yHVWfettKVBTpOrBYlqZiEhzUrX8=
+	t=1764256072; cv=none; b=eQTWsr7c4Uf1waeIFZbjZl+UCgKPoYymIVbb2ewb9txCJ9etXxLIOikU5ceVZpOdwPsYXii8fMCde1BwPvkMeQ92EiaoUVfnp31/5xCZgJ7nIBY37mhljxIpUsBc/IA41UKIooebHP2gGNF+oXcmOX97XBgL6+tV/SOamHAn9PI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764255447; c=relaxed/simple;
-	bh=2SCZGP6/acp+8p/n6ucyJt0FVj/nfCt15rgB7uEbfCM=;
+	s=arc-20240116; t=1764256072; c=relaxed/simple;
+	bh=XbCcbr53K34JjU0GuuCrEV7Wtu0jKNbkpo8TldSEDIY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=r5XcV/O3U5u6TOQTQ/72NysncD5DQ9kNO+RwrQKil+8//LP1jr6hphmrkv/DPI30vccVUPTIOLKSLajeDq0R19p++ybRZru8pUYkFn78oOUjF2W4tQYnNpqZhEwgTkI5Qi+HjbFJ/NQAwuaQdh7z8bZnkwxg0O3JQ6UzEBV5qNU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EHwV9ZJf; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=ixOnZRr5u+nvgocG9iC2c8Laaz1ylcSdCb7hOD8+bKYVL3mMe7V9eEERESMCdtv0ycGbuye4rKEO9hKF440M/Osd8ZiAFOgopz9NS/hm+swtelL8uMFSnafsYaZ3OwC2CxWh3fsnxpwBk3lAubWO+xMVu7nqhSoToZbvXzcSNnI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VZi1GqhJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EHwV9ZJf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31CC3C4CEF8;
-	Thu, 27 Nov 2025 14:57:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VZi1GqhJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 912D2C116D0;
+	Thu, 27 Nov 2025 15:07:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764255446;
-	bh=2SCZGP6/acp+8p/n6ucyJt0FVj/nfCt15rgB7uEbfCM=;
+	s=k20201202; t=1764256072;
+	bh=XbCcbr53K34JjU0GuuCrEV7Wtu0jKNbkpo8TldSEDIY=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=EHwV9ZJfTbsXIJMFWt6vxqtPRdmyMTkLb5wIKwCktOziq99vobqqkoGGvPc3waAQU
-	 3M3pcuvSTW8GwFO4X/wSpp5aPpNHsMfI4TlgV8EmjGMzreaH7rZTwInArKFkfAEnse
-	 glKQi+2ck2QmKXBkHaqRRLiED93hIuGES3IhP9YpHKkDIqrk2LFII5L1nOhFPBxEqm
-	 g2EXCEjXY4qUqhybxAZUlxZjPyCmyeG73woCVMLjNYcwcJUpBo3yabWWCW2ViKx43N
-	 zK+2K3PPUML6AraN8uNMrogev3vLJeVCgSYs181SBafqTz8NrFISEUwAweGF2JrxKV
-	 tSUBpeeD/VcgA==
-Message-ID: <76a84375-3778-4685-9ef3-da367ac8ea54@kernel.org>
-Date: Thu, 27 Nov 2025 15:57:24 +0100
+	b=VZi1GqhJg4rmbT9l1MCb3Z3dIv1map28L9PtIbcA2EiZ/n9cwQPyfVYSLkAWRYiWh
+	 aIhWGZebjhACRt20FjA8+Iym9hta6swfa7kPC8aBPouHYSTp//YLIIcbJD6K2CGHVi
+	 euRiZhF/MPC8I/tWvAyHT+goaO2Cbw/p4i5GnMzi6X//XLm7c4qqfgEbHQ/nr0+stO
+	 Hlz0me/OLwRq7vARnubHFZ319M+wNK7uyPbD7GxVBTzxvkMRvWtj4AaImD+IugKUDf
+	 YrpJgr0KvUdxJbTVnFEKvTI+3JLn9SEegUldrMrLHsyFw2jBR9zK1n3WKHLeqREFqH
+	 37jvRXxRPsAYA==
+Message-ID: <04b48141-fbec-40e7-a96d-3f25be09e915@kernel.org>
+Date: Thu, 27 Nov 2025 16:07:49 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,14 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net 2/3] selftests: mptcp: pm: ensure unknown flags
- are ignored
+Subject: Re: [PATCH mptcp-net 0/3] mptcp: pm: ignore unknown endpoint flags
 Content-Language: en-GB, fr-BE
 To: Mat Martineau <martineau@kernel.org>
 Cc: MPTCP Upstream <mptcp@lists.linux.dev>
 References: <20251126-mptcp-pm-kern-drop-unknown-flags-v1-0-d2e4c2ebce0c@kernel.org>
- <20251126-mptcp-pm-kern-drop-unknown-flags-v1-2-d2e4c2ebce0c@kernel.org>
- <34dd0312-6eb7-b56d-b7e4-06837bc4c50c@kernel.org>
+ <032f83ca-b331-9e4f-5739-de91b4a3ff00@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -88,54 +86,69 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <34dd0312-6eb7-b56d-b7e4-06837bc4c50c@kernel.org>
+In-Reply-To: <032f83ca-b331-9e4f-5739-de91b4a3ff00@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
 Hi Mat,
 
-Thank you for the review!
-
-On 27/11/2025 00:57, Mat Martineau wrote:
+On 27/11/2025 00:54, Mat Martineau wrote:
 > On Wed, 26 Nov 2025, Matthieu Baerts (NGI0) wrote:
 > 
->> This validates the previous commit: the userspace can set unknown flags
->> -- the 7th bit is currently unused -- without errors, but only the
->> supported ones are printed in the endpoints dumps.
+>> This is just a simple fix to ignore unknown endpoint flags. Recently, a
+>> new "laminar" flag has been added. It can be set on older kernel
+>> versions without effects -- which is good -- but it is strange to report
+>> it in the endpoints dumps if it is not supported.
 >>
->> The 'Fixes' tag here below is the same as the one from the previous
->> commit: this patch here is not fixing anything wrong in the selftests,
->> but it validates the previous fix for an issue introduced by this commit
->> ID.
-
-(...)
-
->> diff --git a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c b/tools/
->> testing/selftests/net/mptcp/pm_nl_ctl.c
->> index 65b374232ff5..99eecccbf0c8 100644
->> --- a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
->> +++ b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
->> @@ -24,6 +24,8 @@
->> #define IPPROTO_MPTCP 262
->> #endif
+>>  # uname -r
+>>  6.17.9
+>>  # ip mptcp endpoint add 1.2.3.4 laminar  # not supported on v6.17
+>>  # ip mptcp endpoint
+>>  1.2.3.4 id 1 laminar
 >>
->> +#define MPTCP_PM_ADDR_FLAG_UNKNOWN _BITUL(7)
+>> Patch 1 fixes that, while Patch 2 validates that.
+>>
+>> Patch 3 is for mptcp-next, to correctly follow the specs and accept u32
+>> flags instead of u8. This doesn't change anything, but avoids
+>> confusions.
+>>
+>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+>> ---
+>> Matthieu Baerts (NGI0) (3):
+>>      mptcp: pm: ignore unknown endpoint flags
+>>      selftests: mptcp: pm: ensure unknown flags are ignored
+>>      mptcp: pm: align endpoint flags size with the NL specs
 > 
-> Given the u8->u32 change in patch 3, I can see why this needs to be 7
-> for this patch to be meaningful for -net.
+> Hi Matthieu!
 > 
-> Can you add a patch 4 that updates this to _BITUL(31) to match up with
-> the internal flag representation change?
+> All three patches LGTM:
+> 
+> Reviewed-by: Mat Martineau <martineau@kernel.org>
 
-It makes sense, and I was going to do that, but now I'm hesitating: some
-CIs will use the latest version of the selftests on older kernels. If
-they do that, the test will be less interesting on older kernels.
+Thank you for the review!
 
-Maybe that's not an issue? I could move it to 31, or set bits from 6 to
-31. Or stay on 7 for the time being?
+> See my comment on patch 2 regarding an additional fourth patch for net-
+> next.
 
-(I don't think we would add new flags, but if we do, we can also move
-this flag to the end later on?)
+Replied!
+
+And applied:
+
+New patches for t/upstream-net and t/upstream:
+- 42678c2b1831: mptcp: pm: ignore unknown endpoint flags
+- 61aa36a0d8af: selftests: mptcp: pm: ensure unknown flags are ignored
+- Results: 643ff4ccf427..5bbaf3d47feb (export-net)
+
+- 7174c458730b: mptcp: pm: align endpoint flags size with the NL specs
+- Results: 70279bef46d8..1fea9a6bd10f (export)
+
+Tests are now in progress:
+
+- export-net:
+https://github.com/multipath-tcp/mptcp_net-next/commit/419c354054eb2e8a2c694be3ef18e8fc35780cc2/checks
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/9e5249109d34f839b6573890fbab202a784b83cb/checks
+
 
 Cheers,
 Matt
