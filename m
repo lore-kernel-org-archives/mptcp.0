@@ -1,212 +1,186 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0EC030B525
-	for <mptcp@lists.linux.dev>; Fri, 28 Nov 2025 12:23:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD3D81CFBA;
+	Fri, 28 Nov 2025 12:55:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764332585; cv=none; b=H7H53kw7Fxsk9F83Fhy3C8RMC0Px4/L5uT+MoHH+SPDxFlEKZMRHVcAT43Fu+efWyXluT7iCy3FG436jSTLy7dPCpKe5SspHALULZwbzymgkKiL8bHb0HRsPovFrb3363wYCZr0y1yAgdqOmRpzAafQCtDqtujNxxOOaEHmGT0U=
+	t=1764334548; cv=none; b=feHTADcEj5ANY5nDmUCOVv+HW9hkVZGgX00O/qmZNrJ9K71/ZhOIIvDBrPn39Tk8ALKR7jcDEhARTiir4LnCDpx0xs5iGhiqZGkZpLCKX/JMspHMJEB1EyNsQHgZ650PqQ9HCM4YzvXUFz6aGZvHTuQGL7pBZ8pNvw/FhKrbHPw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764332585; c=relaxed/simple;
-	bh=LihUTlbA1JrsE2YCDozxjC19INAYSw0qoCCEEkc8Wkc=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:content-type; b=VDEqnWFWcjE4Znkl4HSqQx6RKTo5s8wOpgPi7JzhtzslPEBKonuHzvoGPaj2OVTkZvQUy/hSa2ZdgxsAjnQfE0Op5CeJw2NLyLV3yhdibDmYXVx5nPLjYas2rYUwl6YQZX8IqjZJUnBWKvqRlxZH9EQpLE131pG7kUA9Khn7d6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PTpkimN/; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1764334548; c=relaxed/simple;
+	bh=6wZkwIximqeenLXShq2pcWLLFXz3o3ua5rrlN1psIpY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HSrw30vvT62t25fJbr+MeQXGGvZsbcXlKQ2AnMi/22ZhrsBrdtZ5ZvJV+wQcnFDqixCTSwZXF7FwAIefqHW0xd1zg/Hikjd+YmLUFKMzQYHDIWBB27in8B/G7rQiFuNg0Wex0VAWnys5La/hhR9a1DYCUeAVwB1FnXcz1/p50iI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gFkpub1Q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PTpkimN/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1764332581;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=rhUQsXEUuoymTZz0aWQpEHUC1G93E3oX8LMQ3lPH2rQ=;
-	b=PTpkimN/uS1eLMOWni9veu3imBJurLrPDCNRZKMC2J2o1sKV2HpF/4LJjEYFmRdpTd75LP
-	X9s6hZhnzDedJXGhmdbKnU11BKisr1nxhe0qg1KhWRBj+BnefM+vBlygzjQ2uGT8zgMk/6
-	WOKiz3iIOqIE/SuTNnIQKYUDAYZBFOE=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-228-OwWgEyxQMSGXcjw593qYuA-1; Fri,
- 28 Nov 2025 07:23:00 -0500
-X-MC-Unique: OwWgEyxQMSGXcjw593qYuA-1
-X-Mimecast-MFC-AGG-ID: OwWgEyxQMSGXcjw593qYuA_1764332579
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 886461800342
-	for <mptcp@lists.linux.dev>; Fri, 28 Nov 2025 12:22:59 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.44.33.140])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 8BE591800451
-	for <mptcp@lists.linux.dev>; Fri, 28 Nov 2025 12:22:58 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-net] mptcp: fallback earlier on simult connection
-Date: Fri, 28 Nov 2025 13:22:50 +0100
-Message-ID: <36b926c5d55933a6f2d2a7f6ff8d8a091c0de719.1764332508.git.pabeni@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gFkpub1Q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95F35C116B1;
+	Fri, 28 Nov 2025 12:55:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1764334548;
+	bh=6wZkwIximqeenLXShq2pcWLLFXz3o3ua5rrlN1psIpY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=gFkpub1QAAdeqP3kbsSOq77Z4Gmd9ceo/mkOezdvQuvkTwJHvMCwhRXEYk5kbLAg2
+	 gn8984LtJTfQJCbDj4WXtpULcNJMVfke7vfoqkyFs4ydIa8jXhAlS+QaiqchdG1L2D
+	 GImwFv2hh0rIB6BOxNyvJMpxWMByHeWzw2i92Hg4EeyEdPfMmGxEhK5bN7XXFlQvYA
+	 7qClsP96lFGJGMHWDv+9j+MyTW+SeTU/3Rd357EFq7Bekxg4DRz2lEuJ8BEA+mauNd
+	 +3DEBHnC8EKpu9exOzr1WWGDCloUvkZ7Ui1stXWh7V7dcEX0/gIoI6BeOiwCACVt/b
+	 B0eBzSL8mRPyA==
+From: Geliang Tang <geliang@kernel.org>
+To: John Fastabend <john.fastabend@gmail.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Sabrina Dubroca <sd@queasysnail.net>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>
+Cc: Geliang Tang <tanggeliang@kylinos.cn>,
+	netdev@vger.kernel.org,
+	mptcp@lists.linux.dev,
+	Hui Zhu <zhuhui@kylinos.cn>
+Subject: [PATCH net-next] tls: check return value of strp_load_anchor_with_queue
+Date: Fri, 28 Nov 2025 20:55:17 +0800
+Message-ID: <ce74452f4c095a1761ef493b767b4bd9f9c14359.1764333805.git.tanggeliang@kylinos.cn>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: u4_MMp9WjCUMwyYDYj8JvHa0QHv2QaQJ3SrzjLxiOHE_1764332579
-X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
-content-type: text/plain; charset="US-ASCII"; x-default=true
 
-Syzkaller reports a simult-connect race leading to inconsistent fallback
-status:
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
-WARNING: CPU: 3 PID: 33 at net/mptcp/subflow.c:1515 subflow_data_ready+0x40b/0x7c0 net/mptcp/subflow.c:1515
-Modules linked in:
-CPU: 3 UID: 0 PID: 33 Comm: ksoftirqd/3 Not tainted syzkaller #0 PREEMPT(full)
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-RIP: 0010:subflow_data_ready+0x40b/0x7c0 net/mptcp/subflow.c:1515
-Code: 89 ee e8 78 61 3c f6 40 84 ed 75 21 e8 8e 66 3c f6 44 89 fe bf 07 00 00 00 e8 c1 61 3c f6 41 83 ff 07 74 09 e8 76 66 3c f6 90 <0f> 0b 90 e8 6d 66 3c f6 48 89 df e8 e5 ad ff ff 31 ff 89 c5 89 c6
-RSP: 0018:ffffc900006cf338 EFLAGS: 00010246
-RAX: 0000000000000000 RBX: ffff888031acd100 RCX: ffffffff8b7f2abf
-RDX: ffff88801e6ea440 RSI: ffffffff8b7f2aca RDI: 0000000000000005
-RBP: 0000000000000000 R08: 0000000000000005 R09: 0000000000000007
-R10: 0000000000000004 R11: 0000000000002c10 R12: ffff88802ba69900
-R13: 1ffff920000d9e67 R14: ffff888046f81800 R15: 0000000000000004
-FS:  0000000000000000(0000) GS:ffff8880d69bc000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000560fc0ca1670 CR3: 0000000032c3a000 CR4: 0000000000352ef0
-Call Trace:
- <TASK>
- tcp_data_queue+0x13b0/0x4f90 net/ipv4/tcp_input.c:5197
- tcp_rcv_state_process+0xfdf/0x4ec0 net/ipv4/tcp_input.c:6922
- tcp_v6_do_rcv+0x492/0x1740 net/ipv6/tcp_ipv6.c:1672
- tcp_v6_rcv+0x2976/0x41e0 net/ipv6/tcp_ipv6.c:1918
- ip6_protocol_deliver_rcu+0x188/0x1520 net/ipv6/ip6_input.c:438
- ip6_input_finish+0x1e4/0x4b0 net/ipv6/ip6_input.c:489
- NF_HOOK include/linux/netfilter.h:318 [inline]
- NF_HOOK include/linux/netfilter.h:312 [inline]
- ip6_input+0x105/0x2f0 net/ipv6/ip6_input.c:500
- dst_input include/net/dst.h:471 [inline]
- ip6_rcv_finish net/ipv6/ip6_input.c:79 [inline]
- NF_HOOK include/linux/netfilter.h:318 [inline]
- NF_HOOK include/linux/netfilter.h:312 [inline]
- ipv6_rcv+0x264/0x650 net/ipv6/ip6_input.c:311
- __netif_receive_skb_one_core+0x12d/0x1e0 net/core/dev.c:5979
- __netif_receive_skb+0x1d/0x160 net/core/dev.c:6092
- process_backlog+0x442/0x15e0 net/core/dev.c:6444
- __napi_poll.constprop.0+0xba/0x550 net/core/dev.c:7494
- napi_poll net/core/dev.c:7557 [inline]
- net_rx_action+0xa9f/0xfe0 net/core/dev.c:7684
- handle_softirqs+0x216/0x8e0 kernel/softirq.c:579
- run_ksoftirqd kernel/softirq.c:968 [inline]
- run_ksoftirqd+0x3a/0x60 kernel/softirq.c:960
- smpboot_thread_fn+0x3f7/0xae0 kernel/smpboot.c:160
- kthread+0x3c2/0x780 kernel/kthread.c:463
- ret_from_fork+0x5d7/0x6f0 arch/x86/kernel/process.c:148
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
- </TASK>
+In tls_strp_load_anchor_with_queue(), when first is null, strp->anchor is
+not successfully initialized. Accessing strp->anchor afterward will result
+in a memory access error (for example, BUG: KASAN: slab-use-after-free in
+skb_copy_bits).
 
-The TCP subflow can process the simult-connect syn-ack packet after
-transitioning to TCP_FIN1 state, bypassing the MPTCP fallback check,
-as the sk_state_change() callback is not invoked for * -> FIN_WAIT1
-transitions.
+This patch adds a bool return value to tls_strp_load_anchor_with_queue()
+to indicate whether initialization was successful. It also adds checks for
+this return value in both tls_strp_msg_load() and tls_strp_read_sock().
+If the initialization fails, the functions will return immediately,
+preventing invalid memory access.
 
-That will move the msk socket to an inconsistent status and the next
-incoming data will hit the reported splat.
-
-Close the race moving the simult-fallback check at the earliest possible
-stage - that is at syn-ack generation time.
-
-Fixes: 23e89e8ee7be ("tcp: Don't drop SYN+ACK for simultaneous connect().")
-Fixes: 4fd19a307016 ("mptcp: fix inconsistent state on fastopen race")
-Fixes: 1e777f39b4d7 ("mptcp: add MSG_FASTOPEN sendmsg flag support")
-Reported-by: syzbot+0ff6b771b4f7a5bce83b@syzkaller.appspotmail.com
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/586
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Co-developed-by: Hui Zhu <zhuhui@kylinos.cn>
+Signed-off-by: Hui Zhu <zhuhui@kylinos.cn>
+Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
-@mattbe: could you please test vs yours syz repro?
+I encountered the following error while developing MPTCP TLS support [1][2]:
 
-simult connect pkt drill test will need a paired change; not reporting
-the full diff to avoid confusing the patch importer:
+'''
+[ 2054.086130][T15666] ==================================================================
+[ 2054.086450][T15666] BUG: KASAN: slab-use-after-free in skb_copy_bits (net/core/skbuff.c:3039)
+[ 2054.086763][T15666] Read of size 4 at addr ffff8881224c9550 by task test_progs-cpuv/15666
+[ 2054.086871][T15666] 
+[ 2054.086912][T15666] CPU: 18 UID: 0 PID: 15666 Comm: test_progs-cpuv Tainted: G           OE       6.18.0-rc6+ #36 PREEMPT(full) 
+[ 2054.086915][T15666] Tainted: [O]=OOT_MODULE, [E]=UNSIGNED_MODULE
+[ 2054.086916][T15666] Hardware name: Bochs Bochs, BIOS Bochs 01/01/2011
+[ 2054.086917][T15666] Call Trace:
+[ 2054.086919][T15666]  <TASK>
+[ 2054.086920][T15666]  ? skb_copy_bits (net/core/skbuff.c:3039)
+[ 2054.086922][T15666]  dump_stack_lvl (lib/dump_stack.c:122)
+[ 2054.086927][T15666]  print_address_description.constprop.0 (mm/kasan/report.c:379)
+[ 2054.086931][T15666]  ? skb_copy_bits (net/core/skbuff.c:3039)
+[ 2054.086932][T15666]  print_report (mm/kasan/report.c:483)
+[ 2054.086933][T15666]  ? __virt_addr_valid (include/linux/rcupdate.h:981 (discriminator 3) include/linux/mmzone.h:2197 (discriminator 3) arch/x86/mm/physaddr.c:65 (discriminator 3))
+[ 2054.086937][T15666]  ? skb_copy_bits (net/core/skbuff.c:3039)
+[ 2054.086939][T15666]  kasan_report (mm/kasan/report.c:221 mm/kasan/report.c:597)
+[ 2054.086943][T15666]  ? skb_copy_bits (net/core/skbuff.c:3039)
+[ 2054.086946][T15666]  skb_copy_bits (net/core/skbuff.c:3039)
+[ 2054.086948][T15666]  ? __lock_release.isra.0 (kernel/locking/lockdep.c:5536)
+[ 2054.086950][T15666]  ? trace_lock_acquire (include/trace/events/lock.h:24 (discriminator 33))
+[ 2054.086953][T15666]  ? mark_held_locks (kernel/locking/lockdep.c:4325 (discriminator 1))
+[ 2054.086955][T15666]  tls_rx_msg_size (net/tls/tls_sw.c:2464)
+[ 2054.086960][T15666]  ? tls_strp_load_anchor_with_queue (net/tls/tls_strp.c:472 (discriminator 1))
+[ 2054.086962][T15666]  ? __pfx_tls_rx_msg_size (net/tls/tls_sw.c:2444)
+[ 2054.086965][T15666]  tls_strp_check_rcv (net/tls/tls_strp.c:538 net/tls/tls_strp.c:562)
+[ 2054.086967][T15666]  ? __pfx_mptcp_read_done (net/mptcp/protocol.c:4486)
+[ 2054.086971][T15666]  ? __pfx_tls_strp_check_rcv (net/tls/tls_strp.c:558)
+[ 2054.086972][T15666]  ? __pfx_tls_rx_one_record (net/tls/tls_sw.c:1803)
+[ 2054.086975][T15666]  ? __asan_memset (mm/kasan/shadow.c:84 (discriminator 2))
+[ 2054.086977][T15666]  ? tls_strp_msg_done (net/tls/tls_strp.c:608)
+[ 2054.086979][T15666]  tls_sw_recvmsg (net/tls/tls_sw.c:2160)
+[ 2054.086982][T15666]  ? __lock_acquire (kernel/locking/lockdep.c:5237)
+[ 2054.086985][T15666]  ? __pfx_tls_sw_recvmsg (net/tls/tls_sw.c:2038)
+[ 2054.086988][T15666]  ? lock_acquire.part.0 (kernel/locking/lockdep.c:470 kernel/locking/lockdep.c:5870)
+[ 2054.086989][T15666]  ? find_held_lock (kernel/locking/lockdep.c:5350 (discriminator 1))
+[ 2054.086992][T15666]  inet_recvmsg (net/ipv4/af_inet.c:891 (discriminator 7))
+[ 2054.086994][T15666]  ? __fget_files (include/linux/rcupdate.h:341 (discriminator 1) include/linux/rcupdate.h:897 (discriminator 1) fs/file.c:1072 (discriminator 1))
+[ 2054.086997][T15666]  ? __pfx_inet_recvmsg (net/ipv4/af_inet.c:883)
+[ 2054.087000][T15666]  ? security_socket_recvmsg (security/security.c:4774 (discriminator 15))
+[ 2054.087003][T15666]  sock_recvmsg (net/socket.c:1078 (discriminator 15) net/socket.c:1100 (discriminator 15))
+[ 2054.087006][T15666]  __sys_recvfrom (net/socket.c:2296)
+[ 2054.087008][T15666]  ? __pfx___sys_recvfrom (net/socket.c:2271)
+[ 2054.087012][T15666]  ? trace_rseq_update (include/trace/events/rseq.h:11 (discriminator 33))
+[ 2054.087016][T15666]  ? xfd_validate_state (arch/x86/kernel/fpu/xstate.c:1499 arch/x86/kernel/fpu/xstate.c:1543)
+[ 2054.087019][T15666]  __x64_sys_recvfrom (net/socket.c:2309 (discriminator 1) net/socket.c:2305 (discriminator 1) net/socket.c:2305 (discriminator 1))
+[ 2054.087021][T15666]  ? lockdep_hardirqs_on (kernel/locking/lockdep.c:4473)
+[ 2054.087024][T15666]  ? do_syscall_64 (arch/x86/include/asm/irqflags.h:42 arch/x86/include/asm/irqflags.h:119 include/linux/entry-common.h:124 arch/x86/entry/syscall_64.c:90)
+[ 2054.087027][T15666]  do_syscall_64 (arch/x86/entry/syscall_64.c:63 (discriminator 1) arch/x86/entry/syscall_64.c:94 (discriminator 1))
+[ 2054.087029][T15666]  entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:130)
+[ 2054.087031][T15666] RIP: 0033:0x7f309edf1772
+'''
+This patch can fix it.
 
- +0  >  S  0:0(0)                    <mss 1460, sackOK, TS val 100 ecr 0,   nop, wscale 8, mpcapable v1 flags[flag_h] nokey>
- +0  <  S  0:0(0)         win 1000   <mss 1460, sackOK, TS val 407 ecr 0,   nop, wscale 8, mpcapable v1 flags[flag_h] nokey>
--+0  >  S. 0:0(0)  ack 1             <mss 1460, sackOK, TS val 330 ecr 407, nop, wscale 8, mpcapable v1 flags[flag_h] nokey>
--+0  <  S. 0:0(0)  ack 1  win 65535  <mss 1460, sackOK, TS val 507 ecr 100, nop, wscale 8, mpcapable v1 flags[flag_h] key[skey=2]>
-++0  >  S. 0:0(0)  ack 1             <mss 1460, sackOK, TS val 330 ecr 407, nop,wscale 8>
-++0  <  S. 0:0(0)  ack 1  win 65535  <mss 1460, sackOK, TS val 507 ecr 100, nop,wscale 8>
- +0  >   . 1:1(0)  ack 1             <nop,      nop,    TS val 430 ecr 507, nop, nop, sack 0:1>
+[1]
+https://github.com/multipath-tcp/mptcp_net-next/issues/480
+[2]
+https://patchwork.kernel.org/project/mptcp/cover/cover.1763800601.git.tanggeliang@kylinos.cn/
 ---
- net/mptcp/options.c  | 10 ++++++++++
- net/mptcp/protocol.h | 11 ++---------
- net/mptcp/subflow.c  |  6 ------
- 3 files changed, 12 insertions(+), 15 deletions(-)
+ net/tls/tls_strp.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index ff2b9fc7c01f..ac16e4bd496f 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -408,6 +408,16 @@ bool mptcp_syn_options(struct sock *sk, const struct sk_buff *skb,
- 	 */
- 	subflow->snd_isn = TCP_SKB_CB(skb)->end_seq;
- 	if (subflow->request_mptcp) {
-+		if (unlikely(subflow_simultaneous_connect(sk))) {
-+			WARN_ON_ONCE(!mptcp_try_fallback(sk, MPTCP_MIB_SIMULTCONNFALLBACK));
-+
-+			/* Ensure mptcp_finish_connect() will not process the
-+			 * MPC handshake.
-+			 */
-+			subflow->request_mptcp = 0;
-+			return false;
-+		}
-+
- 		opts->suboptions = OPTION_MPTCP_MPC_SYN;
- 		opts->csum_reqd = mptcp_is_checksum_enabled(sock_net(sk));
- 		opts->allow_join_id0 = mptcp_allow_join_id0(sock_net(sk));
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index bc470254bd6b..b995b009f31d 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -1325,19 +1325,12 @@ static inline bool mptcp_check_infinite_map(struct sk_buff *skb)
- 	return false;
+diff --git a/net/tls/tls_strp.c b/net/tls/tls_strp.c
+index 98e12f0ff57e..48bd64f103ec 100644
+--- a/net/tls/tls_strp.c
++++ b/net/tls/tls_strp.c
+@@ -458,7 +458,7 @@ static bool tls_strp_check_queue_ok(struct tls_strparser *strp)
+ 	return true;
  }
  
--static inline bool is_active_ssk(struct mptcp_subflow_context *subflow)
--{
--	return (subflow->request_mptcp || subflow->request_join);
--}
--
- static inline bool subflow_simultaneous_connect(struct sock *sk)
+-static void tls_strp_load_anchor_with_queue(struct tls_strparser *strp, int len)
++static bool tls_strp_load_anchor_with_queue(struct tls_strparser *strp, int len)
  {
- 	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
+ 	struct tcp_sock *tp = tcp_sk(strp->sk);
+ 	struct sk_buff *first;
+@@ -466,7 +466,7 @@ static void tls_strp_load_anchor_with_queue(struct tls_strparser *strp, int len)
  
--	return (1 << sk->sk_state) &
--	       (TCPF_ESTABLISHED | TCPF_FIN_WAIT1 | TCPF_FIN_WAIT2 | TCPF_CLOSING) &&
--	       is_active_ssk(subflow) &&
--	       !subflow->conn_finished;
-+	/* Note that the sk state implies !subflow->conn_finished. */
-+	return sk->sk_state == TCP_SYN_RECV && subflow->request_mptcp;
+ 	first = tcp_recv_skb(strp->sk, tp->copied_seq, &offset);
+ 	if (WARN_ON_ONCE(!first))
+-		return;
++		return false;
+ 
+ 	/* Bestow the state onto the anchor */
+ 	strp->anchor->len = offset + len;
+@@ -479,6 +479,7 @@ static void tls_strp_load_anchor_with_queue(struct tls_strparser *strp, int len)
+ 	strp->anchor->destructor = NULL;
+ 
+ 	strp->stm.offset = offset;
++	return true;
  }
  
- #ifdef CONFIG_SYN_COOKIES
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 86ce58ae533d..96d54cb2cd93 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -1878,12 +1878,6 @@ static void subflow_state_change(struct sock *sk)
+ bool tls_strp_msg_load(struct tls_strparser *strp, bool force_refresh)
+@@ -496,7 +497,8 @@ bool tls_strp_msg_load(struct tls_strparser *strp, bool force_refresh)
+ 			return false;
+ 		}
  
- 	__subflow_state_change(sk);
+-		tls_strp_load_anchor_with_queue(strp, strp->stm.full_len);
++		if (!tls_strp_load_anchor_with_queue(strp, strp->stm.full_len))
++			return false;
+ 	}
  
--	if (subflow_simultaneous_connect(sk)) {
--		WARN_ON_ONCE(!mptcp_try_fallback(sk, MPTCP_MIB_SIMULTCONNFALLBACK));
--		subflow->conn_finished = 1;
--		mptcp_propagate_state(parent, sk, subflow, NULL);
--	}
--
- 	/* as recvmsg() does not acquire the subflow socket for ssk selection
- 	 * a fin packet carrying a DSS can be unnoticed if we don't trigger
- 	 * the data available machinery here.
+ 	rxm = strp_msg(strp->anchor);
+@@ -523,7 +525,8 @@ static int tls_strp_read_sock(struct tls_strparser *strp)
+ 	if (inq < strp->stm.full_len)
+ 		return tls_strp_read_copy(strp, true);
+ 
+-	tls_strp_load_anchor_with_queue(strp, inq);
++	if (!tls_strp_load_anchor_with_queue(strp, inq))
++		return 0;
+ 	if (!strp->stm.full_len) {
+ 		sz = tls_rx_msg_size(strp, strp->anchor);
+ 		if (sz < 0)
 -- 
-2.52.0
+2.51.0
 
