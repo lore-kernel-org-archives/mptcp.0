@@ -1,186 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD3D81CFBA;
-	Fri, 28 Nov 2025 12:55:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADF861E32A2
+	for <mptcp@lists.linux.dev>; Fri, 28 Nov 2025 13:35:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764334548; cv=none; b=feHTADcEj5ANY5nDmUCOVv+HW9hkVZGgX00O/qmZNrJ9K71/ZhOIIvDBrPn39Tk8ALKR7jcDEhARTiir4LnCDpx0xs5iGhiqZGkZpLCKX/JMspHMJEB1EyNsQHgZ650PqQ9HCM4YzvXUFz6aGZvHTuQGL7pBZ8pNvw/FhKrbHPw=
+	t=1764336924; cv=none; b=YqHyocgguX0T/P+AGe+UsginzeYTP1ifMf0oBYgoeUxRlxsyxPR9y7Kdc5aUO37fVbALKuErd0RMsfS2SgXr/iBT7Ms6+ixw00fz0PG17DR3/8kw/WdUFE6Y6IvPa9bzvsGcC0ky3flnwiIl9Ph/imFwEWb0OhM5qQ7XPtgqFsU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764334548; c=relaxed/simple;
-	bh=6wZkwIximqeenLXShq2pcWLLFXz3o3ua5rrlN1psIpY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HSrw30vvT62t25fJbr+MeQXGGvZsbcXlKQ2AnMi/22ZhrsBrdtZ5ZvJV+wQcnFDqixCTSwZXF7FwAIefqHW0xd1zg/Hikjd+YmLUFKMzQYHDIWBB27in8B/G7rQiFuNg0Wex0VAWnys5La/hhR9a1DYCUeAVwB1FnXcz1/p50iI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gFkpub1Q; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1764336924; c=relaxed/simple;
+	bh=EF75CCWSUPZuYGV8xY8K4qpCUrlRQ3uMHazKX3Dj50E=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=PCVKQ/FqAQlJZqYDxm83Vw+AI2ZSKaiQwZLc2TBYKCW8VmwhqyxJYmdYyTuG/qd8l8KnjcXDpMe9wfxQyl9FEO3004ciW3m+DRdVyG+020LDaD+8THc+tCSFr2Ehw15xdYWhOgKx1hWPXMarJJBR1rXCjye5HjfkGSNRlNIO7YE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=d6+MMKHk; arc=none smtp.client-ip=209.85.160.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gFkpub1Q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95F35C116B1;
-	Fri, 28 Nov 2025 12:55:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764334548;
-	bh=6wZkwIximqeenLXShq2pcWLLFXz3o3ua5rrlN1psIpY=;
-	h=From:To:Cc:Subject:Date:From;
-	b=gFkpub1QAAdeqP3kbsSOq77Z4Gmd9ceo/mkOezdvQuvkTwJHvMCwhRXEYk5kbLAg2
-	 gn8984LtJTfQJCbDj4WXtpULcNJMVfke7vfoqkyFs4ydIa8jXhAlS+QaiqchdG1L2D
-	 GImwFv2hh0rIB6BOxNyvJMpxWMByHeWzw2i92Hg4EeyEdPfMmGxEhK5bN7XXFlQvYA
-	 7qClsP96lFGJGMHWDv+9j+MyTW+SeTU/3Rd357EFq7Bekxg4DRz2lEuJ8BEA+mauNd
-	 +3DEBHnC8EKpu9exOzr1WWGDCloUvkZ7Ui1stXWh7V7dcEX0/gIoI6BeOiwCACVt/b
-	 B0eBzSL8mRPyA==
-From: Geliang Tang <geliang@kernel.org>
-To: John Fastabend <john.fastabend@gmail.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Sabrina Dubroca <sd@queasysnail.net>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>
-Cc: Geliang Tang <tanggeliang@kylinos.cn>,
-	netdev@vger.kernel.org,
-	mptcp@lists.linux.dev,
-	Hui Zhu <zhuhui@kylinos.cn>
-Subject: [PATCH net-next] tls: check return value of strp_load_anchor_with_queue
-Date: Fri, 28 Nov 2025 20:55:17 +0800
-Message-ID: <ce74452f4c095a1761ef493b767b4bd9f9c14359.1764333805.git.tanggeliang@kylinos.cn>
-X-Mailer: git-send-email 2.51.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d6+MMKHk"
+Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-4ee553ba7b4so6894241cf.1
+        for <mptcp@lists.linux.dev>; Fri, 28 Nov 2025 05:35:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1764336920; x=1764941720; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DRVEWQsrb5xmUEcpdXhWWlReraGVmscIk40njAQ1Eq4=;
+        b=d6+MMKHkFGC/Zs3a3WJOHeNi2jXHG/QniQnGPlanQbOS5QzPIg8u3mI71RxXDjhGtJ
+         L034XWlFtmp+1rGZr0rp1T4W9Z8R5C/e0EXe4UTFhrSRLxeY3t/7m1YH64ZdC38dOW5g
+         NSfis6OGIdHQJQhHgp3rgdhoOJ+o0vzOODncvwpe23aoqwY5aBxNJp6erKrD+SX43jX4
+         YgucvTGN5vuzpasdw62B/65hdD7EWfUTdCNyrLZaovOvl8oEBQIh0w9JHW57NGflrAXu
+         VPUBwVFqkxxgWvH4tqioPfDOUCIBskOSQG4qVJpu2u5Ic+ayBQzIVut5xaGpYcT895qu
+         xiTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764336920; x=1764941720;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=DRVEWQsrb5xmUEcpdXhWWlReraGVmscIk40njAQ1Eq4=;
+        b=tCypP1wmof8lKWWNNWzYpnEz7ozxGkOBykG1hGRvKHbH1FUFlaNkZzmV2/z6/ZpEru
+         fdOrAn0hEcOVy7eYG8Gp9ZuMw98R0pX3RYDX/8GSEfAz0RRpspnVVk2oNldaPmFIjrsc
+         3gTfvKwoZmIU/z/Yt1TC3KPSwmamvYbgPUVHHh9oKrA1XqFAYhdX4PhCQhjRkZkoN8Bp
+         6V38MjTz3TXQVbC4JXKLQcJxTp4B2VkxGVTm1qhMRmw2thehIZo8gkHsrjdVQkew5XJ5
+         Z8CceorEofO5cqH89gsp19pmNuW2bOgipC23Zwe+b/w5WbrSCDU6vkQuodl1B6i3pDpc
+         Um0Q==
+X-Gm-Message-State: AOJu0Ywwi9hPhGIib0r9uJuI1nFIJVDOQc9EwTcZTP65iy2BB6ZN2uOv
+	wGl0wXV/UqzhYwWuFptTD0LUf0C1EuDSZ/K9PpTDqYHrL3LJw0ak+YU=
+X-Gm-Gg: ASbGncv0usoSP5Tho2uH6xpk3dduRgfgqR2f+M/RSMhqTIUHesQng2kKjiOKt8mYsO6
+	agVzHLQslfql/zUdpKHUfpx9RAwo61fuQPX13xVbC2obhgcy5NRS10R6pKoYXc1xuxOedGP3b4I
+	lqLjlSqibefROHWUm6w8f2jHA3dCY6MrlbL3NES630lBuEG0D+T9dDDcNv02HzQuj1X0JKq8BLq
+	xsUiVkezCYEjbgZd67OTgmaZcy0udXTOcUku3H9vmKdeDK+WaL/OiIUG55cduT/KOgIBjIu96KX
+	rlMh4CPY4BkHSuprLc4eF4GxHdZGmO6DwAN/Div2PDxgyJpaj6l2N0DhLSTpXw27oYQ15QJIZ3r
+	GU8OquGOoPtjP3F9iz5M7TeWwJxRMFPB+APOlqC3cHmSWgpOx0pH2EXbBJ01IPZsETFKh4LH40w
+	9uUfiTFh7plWMX6cG9JW2V/XoVgyaGkmdL0lDe
+X-Google-Smtp-Source: AGHT+IFuRAgiP58CP3DIwX5Q32852VPpZd2GnApmUaniLIHjjagrKrbdWrFtNxo1GwOrMiBSmKszUQ==
+X-Received: by 2002:ac8:57d6:0:b0:4ee:4157:c052 with SMTP id d75a77b69052e-4efbda22aadmr224705781cf.37.1764336920497;
+        Fri, 28 Nov 2025 05:35:20 -0800 (PST)
+Received: from [127.0.0.1] ([172.177.209.211])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4efd3436275sm25536601cf.25.2025.11.28.05.35.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Nov 2025 05:35:19 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <36b926c5d55933a6f2d2a7f6ff8d8a091c0de719.1764332508.git.pabeni@redhat.com>
+References:
+ <36b926c5d55933a6f2d2a7f6ff8d8a091c0de719.1764332508.git.pabeni@redhat.com>
+Subject: Re: [PATCH mptcp-net] mptcp: fallback earlier on simult connection
+Message-ID: <7bc3d452-b6f3-ce84-f163-a2fbefa71e55@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 28 Nov 2025 13:35:19 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+Hi Paolo,
 
-In tls_strp_load_anchor_with_queue(), when first is null, strp->anchor is
-not successfully initialized. Accessing strp->anchor afterward will result
-in a memory access error (for example, BUG: KASAN: slab-use-after-free in
-skb_copy_bits).
+Thank you for your modifications, that's great!
 
-This patch adds a bool return value to tls_strp_load_anchor_with_queue()
-to indicate whether initialization was successful. It also adds checks for
-this return value in both tls_strp_msg_load() and tls_strp_read_sock().
-If the initialization fails, the functions will return immediately,
-preventing invalid memory access.
+Our CI did some validations and here is its report:
 
-Co-developed-by: Hui Zhu <zhuhui@kylinos.cn>
-Signed-off-by: Hui Zhu <zhuhui@kylinos.cn>
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
----
-I encountered the following error while developing MPTCP TLS support [1][2]:
+- KVM Validation: normal (except selftest_mptcp_join): Unstable: 2 failed =
+test(s): packetdrill_syscalls selftest_simult_flows =F0=9F=94=B4
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Unstable: 1 failed =
+test(s): packetdrill_syscalls =F0=9F=94=B4
+- KVM Validation: debug (only =
+selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal (only=
+ bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only =
+bpftest_all): Unstable: 1 failed test(s): bpftest_test_progs_mptcp =
+=F0=9F=94=B4
+- Task: https://github.com/multipath-tcp/mptcp_net-next/action=
+s/runs/19764025304
 
-'''
-[ 2054.086130][T15666] ==================================================================
-[ 2054.086450][T15666] BUG: KASAN: slab-use-after-free in skb_copy_bits (net/core/skbuff.c:3039)
-[ 2054.086763][T15666] Read of size 4 at addr ffff8881224c9550 by task test_progs-cpuv/15666
-[ 2054.086871][T15666] 
-[ 2054.086912][T15666] CPU: 18 UID: 0 PID: 15666 Comm: test_progs-cpuv Tainted: G           OE       6.18.0-rc6+ #36 PREEMPT(full) 
-[ 2054.086915][T15666] Tainted: [O]=OOT_MODULE, [E]=UNSIGNED_MODULE
-[ 2054.086916][T15666] Hardware name: Bochs Bochs, BIOS Bochs 01/01/2011
-[ 2054.086917][T15666] Call Trace:
-[ 2054.086919][T15666]  <TASK>
-[ 2054.086920][T15666]  ? skb_copy_bits (net/core/skbuff.c:3039)
-[ 2054.086922][T15666]  dump_stack_lvl (lib/dump_stack.c:122)
-[ 2054.086927][T15666]  print_address_description.constprop.0 (mm/kasan/report.c:379)
-[ 2054.086931][T15666]  ? skb_copy_bits (net/core/skbuff.c:3039)
-[ 2054.086932][T15666]  print_report (mm/kasan/report.c:483)
-[ 2054.086933][T15666]  ? __virt_addr_valid (include/linux/rcupdate.h:981 (discriminator 3) include/linux/mmzone.h:2197 (discriminator 3) arch/x86/mm/physaddr.c:65 (discriminator 3))
-[ 2054.086937][T15666]  ? skb_copy_bits (net/core/skbuff.c:3039)
-[ 2054.086939][T15666]  kasan_report (mm/kasan/report.c:221 mm/kasan/report.c:597)
-[ 2054.086943][T15666]  ? skb_copy_bits (net/core/skbuff.c:3039)
-[ 2054.086946][T15666]  skb_copy_bits (net/core/skbuff.c:3039)
-[ 2054.086948][T15666]  ? __lock_release.isra.0 (kernel/locking/lockdep.c:5536)
-[ 2054.086950][T15666]  ? trace_lock_acquire (include/trace/events/lock.h:24 (discriminator 33))
-[ 2054.086953][T15666]  ? mark_held_locks (kernel/locking/lockdep.c:4325 (discriminator 1))
-[ 2054.086955][T15666]  tls_rx_msg_size (net/tls/tls_sw.c:2464)
-[ 2054.086960][T15666]  ? tls_strp_load_anchor_with_queue (net/tls/tls_strp.c:472 (discriminator 1))
-[ 2054.086962][T15666]  ? __pfx_tls_rx_msg_size (net/tls/tls_sw.c:2444)
-[ 2054.086965][T15666]  tls_strp_check_rcv (net/tls/tls_strp.c:538 net/tls/tls_strp.c:562)
-[ 2054.086967][T15666]  ? __pfx_mptcp_read_done (net/mptcp/protocol.c:4486)
-[ 2054.086971][T15666]  ? __pfx_tls_strp_check_rcv (net/tls/tls_strp.c:558)
-[ 2054.086972][T15666]  ? __pfx_tls_rx_one_record (net/tls/tls_sw.c:1803)
-[ 2054.086975][T15666]  ? __asan_memset (mm/kasan/shadow.c:84 (discriminator 2))
-[ 2054.086977][T15666]  ? tls_strp_msg_done (net/tls/tls_strp.c:608)
-[ 2054.086979][T15666]  tls_sw_recvmsg (net/tls/tls_sw.c:2160)
-[ 2054.086982][T15666]  ? __lock_acquire (kernel/locking/lockdep.c:5237)
-[ 2054.086985][T15666]  ? __pfx_tls_sw_recvmsg (net/tls/tls_sw.c:2038)
-[ 2054.086988][T15666]  ? lock_acquire.part.0 (kernel/locking/lockdep.c:470 kernel/locking/lockdep.c:5870)
-[ 2054.086989][T15666]  ? find_held_lock (kernel/locking/lockdep.c:5350 (discriminator 1))
-[ 2054.086992][T15666]  inet_recvmsg (net/ipv4/af_inet.c:891 (discriminator 7))
-[ 2054.086994][T15666]  ? __fget_files (include/linux/rcupdate.h:341 (discriminator 1) include/linux/rcupdate.h:897 (discriminator 1) fs/file.c:1072 (discriminator 1))
-[ 2054.086997][T15666]  ? __pfx_inet_recvmsg (net/ipv4/af_inet.c:883)
-[ 2054.087000][T15666]  ? security_socket_recvmsg (security/security.c:4774 (discriminator 15))
-[ 2054.087003][T15666]  sock_recvmsg (net/socket.c:1078 (discriminator 15) net/socket.c:1100 (discriminator 15))
-[ 2054.087006][T15666]  __sys_recvfrom (net/socket.c:2296)
-[ 2054.087008][T15666]  ? __pfx___sys_recvfrom (net/socket.c:2271)
-[ 2054.087012][T15666]  ? trace_rseq_update (include/trace/events/rseq.h:11 (discriminator 33))
-[ 2054.087016][T15666]  ? xfd_validate_state (arch/x86/kernel/fpu/xstate.c:1499 arch/x86/kernel/fpu/xstate.c:1543)
-[ 2054.087019][T15666]  __x64_sys_recvfrom (net/socket.c:2309 (discriminator 1) net/socket.c:2305 (discriminator 1) net/socket.c:2305 (discriminator 1))
-[ 2054.087021][T15666]  ? lockdep_hardirqs_on (kernel/locking/lockdep.c:4473)
-[ 2054.087024][T15666]  ? do_syscall_64 (arch/x86/include/asm/irqflags.h:42 arch/x86/include/asm/irqflags.h:119 include/linux/entry-common.h:124 arch/x86/entry/syscall_64.c:90)
-[ 2054.087027][T15666]  do_syscall_64 (arch/x86/entry/syscall_64.c:63 (discriminator 1) arch/x86/entry/syscall_64.c:94 (discriminator 1))
-[ 2054.087029][T15666]  entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:130)
-[ 2054.087031][T15666] RIP: 0033:0x7f309edf1772
-'''
-This patch can fix it.
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/23fd9c22f527
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1028652
 
-[1]
-https://github.com/multipath-tcp/mptcp_net-next/issues/480
-[2]
-https://patchwork.kernel.org/project/mptcp/cover/cover.1763800601.git.tanggeliang@kylinos.cn/
----
- net/tls/tls_strp.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/net/tls/tls_strp.c b/net/tls/tls_strp.c
-index 98e12f0ff57e..48bd64f103ec 100644
---- a/net/tls/tls_strp.c
-+++ b/net/tls/tls_strp.c
-@@ -458,7 +458,7 @@ static bool tls_strp_check_queue_ok(struct tls_strparser *strp)
- 	return true;
- }
- 
--static void tls_strp_load_anchor_with_queue(struct tls_strparser *strp, int len)
-+static bool tls_strp_load_anchor_with_queue(struct tls_strparser *strp, int len)
- {
- 	struct tcp_sock *tp = tcp_sk(strp->sk);
- 	struct sk_buff *first;
-@@ -466,7 +466,7 @@ static void tls_strp_load_anchor_with_queue(struct tls_strparser *strp, int len)
- 
- 	first = tcp_recv_skb(strp->sk, tp->copied_seq, &offset);
- 	if (WARN_ON_ONCE(!first))
--		return;
-+		return false;
- 
- 	/* Bestow the state onto the anchor */
- 	strp->anchor->len = offset + len;
-@@ -479,6 +479,7 @@ static void tls_strp_load_anchor_with_queue(struct tls_strparser *strp, int len)
- 	strp->anchor->destructor = NULL;
- 
- 	strp->stm.offset = offset;
-+	return true;
- }
- 
- bool tls_strp_msg_load(struct tls_strparser *strp, bool force_refresh)
-@@ -496,7 +497,8 @@ bool tls_strp_msg_load(struct tls_strparser *strp, bool force_refresh)
- 			return false;
- 		}
- 
--		tls_strp_load_anchor_with_queue(strp, strp->stm.full_len);
-+		if (!tls_strp_load_anchor_with_queue(strp, strp->stm.full_len))
-+			return false;
- 	}
- 
- 	rxm = strp_msg(strp->anchor);
-@@ -523,7 +525,8 @@ static int tls_strp_read_sock(struct tls_strparser *strp)
- 	if (inq < strp->stm.full_len)
- 		return tls_strp_read_copy(strp, true);
- 
--	tls_strp_load_anchor_with_queue(strp, inq);
-+	if (!tls_strp_load_anchor_with_queue(strp, inq))
-+		return 0;
- 	if (!strp->stm.full_len) {
- 		sz = tls_rx_msg_size(strp, strp->anchor);
- 		if (sz < 0)
--- 
-2.51.0
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
 
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
