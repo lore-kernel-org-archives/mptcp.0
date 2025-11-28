@@ -1,147 +1,133 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46C1F309DDC;
-	Fri, 28 Nov 2025 10:34:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D08D2E62B3
+	for <mptcp@lists.linux.dev>; Fri, 28 Nov 2025 10:58:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764326086; cv=none; b=Tz+pHsprn0NXflujc3GVAbXuZX4SDq2LbGghE1Lj+Sctztak/PLmhYnCEXuAwQUD208XYhiEyNPRUgCv2WmEs7KoeprDr+SHLC8EnizLkR4gScxhofbOWuNOCtGrk48VS6nOpKy55Ves8GIQQ4LAd9g+uFmWyEu6D9oFNbvW7Ac=
+	t=1764327488; cv=none; b=BOI8btCOmWYLD8RVJq61Y8HcSvKEmav/1YssiGOhRDAgyP62BvipOFxWf1359MRr5pPB4iHRlXEQR7QuMRXj4CqSEUVlKjTg1DpDHRXfYWWQ1OXBF2+LAPlcgJtfCse6xE/FwkoqpLGb3bcpT7UkOA40/+XhBrfwTsDYuo5mHm0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764326086; c=relaxed/simple;
-	bh=T8rMJ9WQqCt8iW4inKGGya8zVOnvpEEz3CtrHRql3ho=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=B4/bwyu3Im1eB+WX1vBS78YsL1dceCA9dXE2aUI7ibTOs6tdeDjbxuLowQz9iEHg34MJGor1r1WmN8F1WS64q9VoJEuJzwilkZuHvg2CwjXQMyYCNBaEuYiyvlkAu3q64a9lSh6POUccM2qRnSPFG+qhmT20spZPi7h0EXGvd4s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L534N7tR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1764327488; c=relaxed/simple;
+	bh=HKCE+26thzP63u1C4IzfwG/84sM8rUq3+ExdGWAMvjQ=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=NyntMd8bNRz4dJSYwRRkHJigToyoJj0SIKFmGsssLlPa91CCCXeI4iKfFsxOFmp/xXcj3XOhSFBmXBHTJLVwTyfqpvxdLyuku44LA4rl1b42V4kySmPIO/Am7L56eScRJzO4q9+4MDnAbzB2+XHznugY2CoFLH30J04/0KnB5n0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i/sT41jC; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L534N7tR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F779C4CEF1;
-	Fri, 28 Nov 2025 10:34:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764326085;
-	bh=T8rMJ9WQqCt8iW4inKGGya8zVOnvpEEz3CtrHRql3ho=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=L534N7tR4Sj3EszcNh91K/KXrjAqxIIXhxLjSgBzebXP5EhbP5hcZTai4AZe1cUDl
-	 zj/qCyRsCSoAzVtNaDqCV/GFUduUCKmXA7NNKWLtFCwAkjZbnGKRDSMQfPA9hLXY/5
-	 5CIXWe6Nj5xSuZfykZBxXTKgJ2iua1nsgbaQdenTIwFDlt/eWMbXboSNxPBjQFl1P9
-	 AMLOQ18HAKSQWmlya1GGCkevDI/PobDcgxEJzmjD+6u3zt8uYE0YCYrAjxFrm6Vr78
-	 V4wtFXZ7ITaXW+doRRgeV1NQhKiK9YDPmyAIt7pHe+8vJGVUbUfNNAewGPGCm2WoC0
-	 3KpRtMsSJIdJg==
-Message-ID: <603f6c4f-20a1-4b6b-80a8-c9d9d3373d7e@kernel.org>
-Date: Fri, 28 Nov 2025 11:34:38 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i/sT41jC"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-29555415c5fso21269075ad.1
+        for <mptcp@lists.linux.dev>; Fri, 28 Nov 2025 02:58:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1764327486; x=1764932286; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IljqjPX9oZXmHXwge2EO8AjUE4jgOo6Ov07+t9JIq+I=;
+        b=i/sT41jCipD3ucAGTRm8BXPTUXsxOykzorKW3/kWLJKHuABZymrTnIapKwLghy/Zd+
+         JQ0MW4hEPBPD00DqsvDylysHqb8S9JEFSSfpWiyochZsLcXhCftZYbW37BS47CrnSU08
+         diJ/PfzWhOv0mrTPGM7HUTx+GTvr/VOhYvN1KxDkMmlUXg88KTsdDxFzfbOpakSW5DDT
+         I6g8qgJb6CFLCwtXfx9KfAfXbk3ekdRolJf0Pb0o6Io++miv2g59ab0SbNGUBG5debjQ
+         ITeUZpOXB6Tb7iBLN0fgB+QblVs2fD5e+/WdDMQe2lIZEn5vp0zoJW/XuKB7LLqnyqOP
+         unvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764327486; x=1764932286;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=IljqjPX9oZXmHXwge2EO8AjUE4jgOo6Ov07+t9JIq+I=;
+        b=k+wJmMH9pLnrPlbsaPjsnR3d3iEFJWf03vTzM2vKRUTjij3aNhPwo9UwKv8fi3bAEn
+         7WivoessIUw7w3CKwMwrV1ff0eFcItJ/LWZA5mVBbHdK8R9hCbGUXoDZcJbrSNdhxibA
+         MWLCs4z3EAG5J2LoekTWOL1FdI3Syxi4xzNPVy5t+v07jdBS0AgdBkI17WUkZhZCv/ec
+         Lf2vsWQ9zVtD2g9KFfPrYqXPPJSyzxpmp6ZoVKoRPwuxMs8EINflCX+LEk/zb+1Y4qMe
+         KOFvu404+FmkyxC+DnQusbMck0P2eNuMXDJrYe1Mnz2fRlnQs+NL4ZJ8dorVXqcymMRb
+         PQgg==
+X-Gm-Message-State: AOJu0YyFKZth1v/JwvT6I3t00ok7Hi23EobjcYu9EDB/WhbzuyJTdsG6
+	7XR74MbW4v6eo+4A4Oa82EL9XBZMHodzPbwNz6ZTdFp14QRitL7mWuOUdhby
+X-Gm-Gg: ASbGncvQx73YE7LDRx8lUlHjg2XANu4nX1jBVCyyJWC44EXY+lto0xYTnGa1KJ5eZwp
+	LhLXfzlUeIbfQ3l6UJoh/zYEE9y7NgBHHpiuOJjR3Ac+n9E8XtmVBg35t2NNBXm57skmj2wMxYM
+	I1cwTGNXUP7MN3WC+qWMT1rbXQzfeAIays4EtV0MlQMaTB1DQD6FjmdNVSBcb8Pq4cNyA/Zl2CQ
+	WW6sYocYQIKQGk4A8G6ghLiyF6QBSxFrTcLdL3oRqmVq6/OL0yCcVo1acbDr1mlIfzFh7D9PpA7
+	6hT3+yw/2ti0aWSCW64MOhStgkmX4oyn/Jt0QtosrhqPygOc1NJITPa5Np6KMozTKY3y61RcOp+
+	KDgxIG3s6/urJMtQLpqVHL8Eqcl1/dS2MzBNKV48QSyBBJOAkrLOepkeMaWll/tivpgehOuHKAi
+	YfJA3NeE4i1d8fK/5ZtYEBiYip
+X-Google-Smtp-Source: AGHT+IF7ZHVFXTAJlN2ooVonHjLdbSuiVvQQlxTsnIq3+j2YXYppmvhv8Q0lV57IpDMczk72S56ELw==
+X-Received: by 2002:a05:7022:60f:b0:11b:ceee:a49f with SMTP id a92af1059eb24-11c9d60d675mr19434744c88.8.1764327486298;
+        Fri, 28 Nov 2025 02:58:06 -0800 (PST)
+Received: from [127.0.0.1] ([128.24.160.249])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-11dcae73bedsm17533944c88.0.2025.11.28.02.58.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Nov 2025 02:58:05 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Gang Yan <yangang@kylinos.cn>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20251128094417.14463-1-gang.yan@linux.dev>
+References: <20251128094417.14463-1-gang.yan@linux.dev>
+Subject: Re: [PATCH mptcp-net] mptcp: sync the msk->sndbuf at accept() time
+Message-ID: <00ee6127-75db-8dd3-8d92-513e89c39274@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 28 Nov 2025 10:58:05 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH] selftests: mptcp: initialize raw_addr to Null
-Content-Language: en-GB, fr-BE
-To: Jakub Kicinski <kuba@kernel.org>,
- Ankit Khushwaha <ankitkhushwaha.linux@gmail.com>
-Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev,
- linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
- llvm@lists.linux.dev, Shuah Khan <shuah@kernel.org>,
- Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
- Nathan Chancellor <nathan@kernel.org>,
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>
-References: <20251126163046.58615-1-ankitkhushwaha.linux@gmail.com>
- <795a8f3c-eff7-46d9-9175-a4ebe3f9ffd8@kernel.org>
- <20251127170041.0613c50e@kernel.org>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <20251127170041.0613c50e@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-Hi Jakub, Ankit,
+Hi Gang,
 
-On 28/11/2025 02:00, Jakub Kicinski wrote:
-> On Wed, 26 Nov 2025 17:55:14 +0100 Matthieu Baerts wrote:
->> I confirm this, I can reproduce the warning with Clang 21.
->>
->> It is indeed a false positive, because the code does that:
->>
->>
->>   if (addr.ss_family == AF_INET)
->>           raw_addr = &(((struct sockaddr_in *)&addr)->sin_addr);
->>   else if (addr.ss_family == AF_INET6)
->>           raw_addr = &(((struct sockaddr_in6 *)&addr)->sin6_addr);
->>   else
->>           xerror("bad family");
->>
->>
->> "xerror()" calls "exit(1)", so "raw_addr" is never used uninitialized.
->>
->> I'm not sure why Clang 21 reports that now, and not before, but well,
->> the modification you did in the selftests doesn't hurt:
-> 
-> I think annotating xerror with __noreturn is a better fix.
+Thank you for your modifications, that's great!
 
-Good idea, I didn't know about that!
+Our CI did some validations and here is its report:
 
-Thank you for the review!
+- KVM Validation: normal (except selftest_mptcp_join): Unstable: 1 failed =
+test(s): selftest_simult_flows =F0=9F=94=B4
+- KVM Validation: normal (only =
+selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except =
+selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (only =
+selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal (only=
+ bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only =
+bpftest_all): Success! =E2=9C=85
+- Task: https://github.=
+com/multipath-tcp/mptcp_net-next/actions/runs/19760550380
 
-> Including kselftest.h will be needed.
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/793ebeaae843
+Patchwork: https://patchwork.kernel.=
+org/project/mptcp/list/?series=3D1028603
 
-Because mptcp_connect.c is a tool that is used by other selftests, but
-it doesn't interact directly with the selftests, maybe we don't need to
-include it, and only add this #define in mptcp_connect.c?
 
-  #define __noreturn __attribute__((__noreturn__))
+If there are some issues, you =
+can reproduce them using the same environment as
+the one used by the CI =
+thanks to a docker image, e.g.:
 
-(I don't know if a #ifndef/#endif is needed.)
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
 
-That's a detail, I guess either is fine and shouldn't cause other issues.
+For more details:
+
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
+
+
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
 
 Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
-
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 Core)
