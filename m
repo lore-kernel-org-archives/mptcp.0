@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54288221FB4
-	for <mptcp@lists.linux.dev>; Fri, 28 Nov 2025 09:51:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46C1F309DDC;
+	Fri, 28 Nov 2025 10:34:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764323492; cv=none; b=X7anjiGJXk0gPdhMgwO0JJEL+wEUB7g4q5r5cmKW9aZTAkqTcGSj+VsbiVIoA8H3ODTeIoVWZ2faWRo+W+WhZWi5kSHS9hmwuhL/+ZwrTp+TInSs7zn6woB54EuhsdkJZfloEjSZBD/kZnQ91LybuzrI+bj7Jp+WVZr9rdDnhik=
+	t=1764326086; cv=none; b=Tz+pHsprn0NXflujc3GVAbXuZX4SDq2LbGghE1Lj+Sctztak/PLmhYnCEXuAwQUD208XYhiEyNPRUgCv2WmEs7KoeprDr+SHLC8EnizLkR4gScxhofbOWuNOCtGrk48VS6nOpKy55Ves8GIQQ4LAd9g+uFmWyEu6D9oFNbvW7Ac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764323492; c=relaxed/simple;
-	bh=uKBh60/GqNkJteSjJShNXKTpemOyTAekTu0swAmL3JM=;
+	s=arc-20240116; t=1764326086; c=relaxed/simple;
+	bh=T8rMJ9WQqCt8iW4inKGGya8zVOnvpEEz3CtrHRql3ho=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YR/E+8lcz8hJoNZVebpyJ9BDjd7Ps6UO692XvCUz1vwzgLpbS93IwfEEQp+zBPy0Q2ODrmBzi0gknEWzARRiKY9wG24T9BM6kq2ue0Df9QGMEcukMHjU8GEGocrmLR5Mc/pW0fg1coeMvXesvCRnACLzrdbOWVNquSs3GB+ZJbc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dXJsSA8V; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=B4/bwyu3Im1eB+WX1vBS78YsL1dceCA9dXE2aUI7ibTOs6tdeDjbxuLowQz9iEHg34MJGor1r1WmN8F1WS64q9VoJEuJzwilkZuHvg2CwjXQMyYCNBaEuYiyvlkAu3q64a9lSh6POUccM2qRnSPFG+qhmT20spZPi7h0EXGvd4s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L534N7tR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dXJsSA8V"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1845AC4CEF1;
-	Fri, 28 Nov 2025 09:51:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L534N7tR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F779C4CEF1;
+	Fri, 28 Nov 2025 10:34:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764323491;
-	bh=uKBh60/GqNkJteSjJShNXKTpemOyTAekTu0swAmL3JM=;
+	s=k20201202; t=1764326085;
+	bh=T8rMJ9WQqCt8iW4inKGGya8zVOnvpEEz3CtrHRql3ho=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=dXJsSA8VnhRb5oENApyPSMeKls2Us2VXH/h2Df+esZXJYKn2EuFpdOHUmLqpWbR/0
-	 F1uMbJ+BPqJ14Fp6llDMoz8VwkW7HVZZlbDu6weviio0cNi9OpzDDXD1yb5huJrBp+
-	 dt6Ai0Zm/VaOnsGP3Zp5SBWMt7Jb5HzM0IWUR9c5ZWj/hd18LG5ifZQX40Ma9jhDaK
-	 2ZWGtEX2Td9zMg9qYJm8OsF/v1wj0x53pa4QvMTo5GR6d+qHyEHBAUC0m4l1GSLjUb
-	 znQMwkPyDDIfigrNpJ39aZS1TjjMS55MG3Sbnv8WX6g45l00vGFuznkfC0OJFeMofE
-	 Qdi2X5iZW74vA==
-Message-ID: <cdd003da-c4e4-4b37-b27d-254633e2b2ec@kernel.org>
-Date: Fri, 28 Nov 2025 10:51:28 +0100
+	b=L534N7tR4Sj3EszcNh91K/KXrjAqxIIXhxLjSgBzebXP5EhbP5hcZTai4AZe1cUDl
+	 zj/qCyRsCSoAzVtNaDqCV/GFUduUCKmXA7NNKWLtFCwAkjZbnGKRDSMQfPA9hLXY/5
+	 5CIXWe6Nj5xSuZfykZBxXTKgJ2iua1nsgbaQdenTIwFDlt/eWMbXboSNxPBjQFl1P9
+	 AMLOQ18HAKSQWmlya1GGCkevDI/PobDcgxEJzmjD+6u3zt8uYE0YCYrAjxFrm6Vr78
+	 V4wtFXZ7ITaXW+doRRgeV1NQhKiK9YDPmyAIt7pHe+8vJGVUbUfNNAewGPGCm2WoC0
+	 3KpRtMsSJIdJg==
+Message-ID: <603f6c4f-20a1-4b6b-80a8-c9d9d3373d7e@kernel.org>
+Date: Fri, 28 Nov 2025 11:34:38 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,14 +35,22 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH v7 mptcp-next 5/6] mptcp: better mptcp-level RTT estimator
+Subject: Re: [PATCH] selftests: mptcp: initialize raw_addr to Null
 Content-Language: en-GB, fr-BE
-To: Paolo Abeni <pabeni@redhat.com>, martineau@kernel.org
-Cc: mptcp@lists.linux.dev
-References: <cover.1763625391.git.pabeni@redhat.com>
- <6ffc28b03d35f1b5698ff9ed6b22bd3e82fc81be.1763625391.git.pabeni@redhat.com>
- <08ca5b33-8592-4060-9211-ecbef30cda0e@kernel.org>
- <7e85ed1a-3072-4230-a14f-b7eecdf2d4d2@redhat.com>
+To: Jakub Kicinski <kuba@kernel.org>,
+ Ankit Khushwaha <ankitkhushwaha.linux@gmail.com>
+Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev,
+ linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+ llvm@lists.linux.dev, Shuah Khan <shuah@kernel.org>,
+ Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+ Nathan Chancellor <nathan@kernel.org>,
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>
+References: <20251126163046.58615-1-ankitkhushwaha.linux@gmail.com>
+ <795a8f3c-eff7-46d9-9175-a4ebe3f9ffd8@kernel.org>
+ <20251127170041.0613c50e@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -88,102 +96,49 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <7e85ed1a-3072-4230-a14f-b7eecdf2d4d2@redhat.com>
+In-Reply-To: <20251127170041.0613c50e@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Paolo,
+Hi Jakub, Ankit,
 
-On 28/11/2025 09:47, Paolo Abeni wrote:
-> On 11/27/25 7:13 PM, Matthieu Baerts wrote:
->> On 20/11/2025 09:39, Paolo Abeni wrote:
->>> The current MPTCP-level RTT estimator has several issues. On high speed
->>> links, the MPTCP-level receive buffer auto-tuning happens with a frequency
->>> well above the TCP-level's one. That in turn can cause excessive/unneeded
->>> receive buffer increase.
->>>
->>> On such links, the initial rtt_us value is considerably higher
->>> than the actual delay, and the current mptcp_rcv_space_adjust() updates
->>> msk->rcvq_space.rtt_us with a period equal to the such field previous
->>> value. If the initial rtt_us is 40ms, its first update will happen after
->>> 40ms, even if the subflows see actual RTT orders of magnitude lower.
->>>
->>> Additionally:
->>> - setting the msk rtt to the maximum among all the subflows RTTs makes DRS
->>> constantly overshooting the rcvbuf size when a subflow has considerable
->>> higher latency than the other(s).
->>>
->>> - during unidirectional bulk transfers with multiple active subflows, the
->>> TCP-level RTT estimator occasionally sees considerably higher value than
->>> the real link delay, i.e. when the packet scheduler reacts to an incoming
->>> ack on given subflow pushing data on a different subflow.
->>>
->>> - currently inactive but still open subflows (i.e. switched to backup mode)
->>> are always considered when computing the msk-level rtt.
->>>
->>> Address the all the issues above with a more accurate RTT estimation
->>> strategy: the MPTCP-level RTT is set to the minimum of all the subflows
->>> actually feeding data into the MPTCP receive buffer, using a small sliding
->>> window.
+On 28/11/2025 02:00, Jakub Kicinski wrote:
+> On Wed, 26 Nov 2025 17:55:14 +0100 Matthieu Baerts wrote:
+>> I confirm this, I can reproduce the warning with Clang 21.
 >>
->> (...)
+>> It is indeed a false positive, because the code does that:
 >>
->>> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
->>> index ee0dbd6dbacf..b392d7855928 100644
->>> --- a/net/mptcp/protocol.h
->>> +++ b/net/mptcp/protocol.h
->>> @@ -269,6 +269,13 @@ struct mptcp_data_frag {
->>>  	struct page *page;
->>>  };
->>>  
->>> +/* Arbitrary compromise between as low as possible to react timely to subflow
->>> + * close event and as big as possible to avoid being fouled by biased large
->>> + * samples due to peer sending data on a different subflow WRT to the incoming
->>> + * ack.
->>> + */
->>> +#define MPTCP_RTT_SAMPLES	5
->>> +
->>>  /* MPTCP connection sock */
->>>  struct mptcp_sock {
->>>  	/* inet_connection_sock must be the first member */
->>> @@ -340,11 +347,17 @@ struct mptcp_sock {
->>>  				 */
->>>  	struct mptcp_pm_data	pm;
->>>  	struct mptcp_sched_ops	*sched;
->>> +
->>> +	/* Most recent rtt_us observed by in use incoming subflows. */
->>> +	struct {
->>> +		u32	samples[MPTCP_RTT_SAMPLES];
->>> +		u32	next_sample;
->>> +	} rcv_rtt_est;
 >>
->> I'm sorry to react only now, I didn't manage to follow this in details,
->> but I have one question: why not using a smooth RTT [1]? Is it because
->> the goal is to mix data from the active/recently used subflows and only
->> to take the minimum, and not "combining" RTT from different subflows?
+>>   if (addr.ss_family == AF_INET)
+>>           raw_addr = &(((struct sockaddr_in *)&addr)->sin_addr);
+>>   else if (addr.ss_family == AF_INET6)
+>>           raw_addr = &(((struct sockaddr_in6 *)&addr)->sin6_addr);
+>>   else
+>>           xerror("bad family");
 >>
->> [1] https://datatracker.ietf.org/doc/rfc6298/
->>     srtt = old * (1-alpha) + new * alpha   # alpha is 1/8 in RFC6298
+>>
+>> "xerror()" calls "exit(1)", so "raw_addr" is never used uninitialized.
+>>
+>> I'm not sure why Clang 21 reports that now, and not before, but well,
+>> the modification you did in the selftests doesn't hurt:
 > 
-> TCP already use EWMA for rtt; the values seen by MPTCP on each subflow
-> went already into such processing.
-> 
-> If there is a single subflow, doing again EWMA should only cause slower
-> reactions.
-> 
-> If there are multiple subflows, we really want the min() not the
-> smoothed average, because:
-> 
-> - there are high spikes caused by the mptcp packet scheduler: we want to
-> entirely filter them out, while EWMA will make them contributing the the
-> estimate and results are very visible (negatively) in my experiments.
-> 
-> - different subflows can have very different rtt (say 1ms vs 100ms). We
-> really want the minimum, otherwise DRS will be fouled/the rcvbuf will
-> "explode"
+> I think annotating xerror with __noreturn is a better fix.
 
-Thank you for having taken the time to explain me all this. That's much
-clearer, and I just realised I was mixing up acronyms! :)
+Good idea, I didn't know about that!
+
+Thank you for the review!
+
+> Including kselftest.h will be needed.
+
+Because mptcp_connect.c is a tool that is used by other selftests, but
+it doesn't interact directly with the selftests, maybe we don't need to
+include it, and only add this #define in mptcp_connect.c?
+
+  #define __noreturn __attribute__((__noreturn__))
+
+(I don't know if a #ifndef/#endif is needed.)
+
+That's a detail, I guess either is fine and shouldn't cause other issues.
 
 Cheers,
 Matt
