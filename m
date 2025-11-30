@@ -1,112 +1,147 @@
-Received: from localhost.localdomain (unknown [147.136.157.3])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5786215077
-	for <mptcp@lists.linux.dev>; Sun, 30 Nov 2025 03:39:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=147.136.157.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C46711CAF;
+	Sun, 30 Nov 2025 16:21:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764473987; cv=none; b=CiwEDlOv0wbFCWNvg1UMratO5U9C3r4wPf1Xa1wkd9cuwLQiGdOGZNaLf6SkQk3BGsJEw3ZDknAmQWF5cNytmDPnjv3cA1sI7Jg/+ojZw8ir6ZKbl9u7E4+Sp6ojGHhtW04kRf9STQouxQUQeASNOQtw8nZgI1K2vIUZCwxUll0=
+	t=1764519677; cv=none; b=EiKczZoQnq0M9Z3W00QyX8aHErWYavtff1m7hqVaEA69DKryO7NWCgJvAb5MaNcLbKp6BHsgN0XuyjxcbmrhHiO3m7CG6UaIr5A0biBafRyygIstDwBY/pI8wnB9psLG/rP6q2VZkud91sCpjqDz968b30KiXQ4p822JDoHVKC8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764473987; c=relaxed/simple;
-	bh=OiwOJbJBk6q9IvkjJfVDWx3vC+KZVz4tRUwq8fXUKO8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=B/t6d+GudcE0Oxf0ShkwzwzCApusL0986mxN+GddWL0xO5ojgN4YVbHNN8/sT/p5Wg/3b7TAuX9EPK1Rb115CS4zqy1X1JAypn9ZL39GolV3Dl+px69QirL+0qMWwKZ1U2CEg0FrTqnh3WFHVnoSDyYS9/KQdUghUYTkwBp4TUo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.dev; spf=none smtp.mailfrom=localhost.localdomain; arc=none smtp.client-ip=147.136.157.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=localhost.localdomain
-Received: by localhost.localdomain (Postfix, from userid 1007)
-	id EA9AC8B2A36; Sun, 30 Nov 2025 11:23:15 +0800 (+08)
-From: Jiayuan Chen <jiayuan.chen@linux.dev>
-To: stable@vger.kernel.org,
-	mptcp@lists.linux.dev,
-	matthieu.baerts@tessares.net,
-	sashal@kernel.org,
-	gregkh@linuxfoundation.org
-Cc: Jiayuan Chen <jiayuan.chen@linux.dev>,
-	Matthieu Baerts <matttbe@kernel.org>
-Subject: [PATCH 6.1.y v1 1/2] mptcp: disallow MPTCP subflows from sockmap
-Date: Sun, 30 Nov 2025 11:23:02 +0800
-Message-ID: <20251130032303.324510-2-jiayuan.chen@linux.dev>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20251130032303.324510-1-jiayuan.chen@linux.dev>
-References: <20251130032303.324510-1-jiayuan.chen@linux.dev>
+	s=arc-20240116; t=1764519677; c=relaxed/simple;
+	bh=QIGxXzOXgetKMboQBkk6r8HvQViU7hOvjX/Fh/C0908=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qrDX3GRpRfV/HEQJ3RgThw/aS1RozaKPuu9c6pE6q4ubLicjQ7QRsAwR38HUDscrLmteEKEX15J0xk3FiQhwz3t9drMRS3wzGqYqp+fzyULrORDgiIUkpQ655DelndS/PAvpCb130th0rjCjQZr9bJb38iRhBbzbqrda170sw+k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iaxI8nW3; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iaxI8nW3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D61DC4CEF8;
+	Sun, 30 Nov 2025 16:21:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1764519676;
+	bh=QIGxXzOXgetKMboQBkk6r8HvQViU7hOvjX/Fh/C0908=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=iaxI8nW3Djp1jtV77hWZrTXMreN1mD4Y9zujgroegOO5eQgyGoSvUI5YI6ZrF4lrn
+	 8jc8qdEWsHfaEIg5i0Si6z7xDisNld5v/HSI3GYNMs6B3ebfxn6La1qWHE7gCcP3RR
+	 gu4TUahjcwk4ZSL2vGXeD3tfuLyTN8872Oh4+zXZjfdhEt1fIg4Q/QqTCFS5ChGVO7
+	 228LesFc5lPIi8GXPM1jr7C/FVtsZ2mBd6f+XPieHeRZ7f5gdoICrfr69BUzBYmdtE
+	 wRGHQF4hGXWTBlXD9TjUDdpnSdz3qrvnRE3ZX/aO66xnEh8Ly4cVTXtyzeddBt8cjN
+	 yBoJOnoyXW1Xw==
+Message-ID: <f24fccc6-9491-474f-a907-0ea53fbdc5ec@kernel.org>
+Date: Sun, 30 Nov 2025 17:21:13 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH 6.1.y v1 2/2] net,mptcp: fix proto fallback detection with
+ BPF
+Content-Language: en-GB, fr-BE
+To: Jiayuan Chen <jiayuan.chen@linux.dev>, stable@vger.kernel.org,
+ mptcp@lists.linux.dev, sashal@kernel.org, gregkh@linuxfoundation.org
+Cc: Jakub Sitnicki <jakub@cloudflare.com>
+References: <20251130032303.324510-1-jiayuan.chen@linux.dev>
+ <20251130032303.324510-3-jiayuan.chen@linux.dev>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <20251130032303.324510-3-jiayuan.chen@linux.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The sockmap feature allows bpf syscall from userspace, or based on bpf
-sockops, replacing the sk_prot of sockets during protocol stack processing
-with sockmap's custom read/write interfaces.
-'''
-tcp_rcv_state_process()
-  subflow_syn_recv_sock()
-    tcp_init_transfer(BPF_SOCK_OPS_PASSIVE_ESTABLISHED_CB)
-      bpf_skops_established       <== sockops
-        bpf_sock_map_update(sk)   <== call bpf helper
-          tcp_bpf_update_proto()  <== update sk_prot
-'''
-Consider two scenarios:
+Hi Jiayuan,
 
-1. When the server has MPTCP enabled and the client also requests MPTCP,
-   the sk passed to the BPF program is a subflow sk. Since subflows only
-   handle partial data, replacing their sk_prot is meaningless and will
-   cause traffic disruption.
+On 30/11/2025 04:23, Jiayuan Chen wrote:
+> The sockmap feature allows bpf syscall from userspace, or based
+> on bpf sockops, replacing the sk_prot of sockets during protocol stack
+> processing with sockmap's custom read/write interfaces.
 
-2. When the server has MPTCP enabled but the client sends a TCP SYN
-   without MPTCP, subflow_syn_recv_sock() performs a fallback on the
-   subflow, replacing the subflow sk's sk_prot with the native sk_prot.
-   '''
-   subflow_ulp_fallback()
-    subflow_drop_ctx()
-      mptcp_subflow_ops_undo_override()
-   '''
-   Subsequently, accept::mptcp_stream_accept::mptcp_fallback_tcp_ops()
-   converts the subflow to plain TCP.
+(...)
 
-For the first case, we should prevent it from being combined with sockmap
-by setting sk_prot->psock_update_sk_prot to NULL, which will be blocked by
-sockmap's own flow.
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 1dbc62537259..13e3510e6c8f 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -79,8 +79,9 @@ static u64 mptcp_wnd_end(const struct mptcp_sock *msk)
+>  static bool mptcp_is_tcpsk(struct sock *sk)
+>  {
+>  	struct socket *sock = sk->sk_socket;
+> +	unsigned short family = READ_ONCE(sk->sk_family);
+>  
+> -	if (unlikely(sk->sk_prot == &tcp_prot)) {
+> +	if (unlikely(family == AF_INET)) {
+>  		/* we are being invoked after mptcp_accept() has
+>  		 * accepted a non-mp-capable flow: sk is a tcp_sk,
+>  		 * not an mptcp one.
+> @@ -91,7 +92,7 @@ static bool mptcp_is_tcpsk(struct sock *sk)
+>  		sock->ops = &inet_stream_ops;
+>  		return true;
+>  #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+> -	} else if (unlikely(sk->sk_prot == &tcpv6_prot)) {
+> +	} else if (unlikely(family == AF_INET6)) {
 
-For the second case, since subflow_syn_recv_sock() has already restored
-sk_prot to native tcp_prot/tcpv6_prot, no further action is needed.
+These modifications here break MPTCP: this function (mptcp_is_tcpsk) is
+there to check if the socket is a "plain" TCP one (return "true") or an
+MPTCP one (return "false"). If it is not an MPTCP one, the sock ops is
+modified.
 
-Fixes: d2f77c53342e ("mptcp: check for plain TCP sock at accept time")
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
----
- net/mptcp/subflow.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Here, you are saying: any IPv4 or IPv6 socket is a "plain" TCP one,
+never an MPTCP socket then.
 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 2159b5f9988f..c922bbb12bd8 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -1936,6 +1936,10 @@ void __init mptcp_subflow_init(void)
- 
- 	tcp_prot_override = tcp_prot;
- 	tcp_prot_override.release_cb = tcp_release_cb_override;
-+#ifdef CONFIG_BPF_SYSCALL
-+	/* Disable sockmap processing for subflows */
-+	tcp_prot_override.psock_update_sk_prot = NULL;
-+#endif
- 
- #if IS_ENABLED(CONFIG_MPTCP_IPV6)
- 	subflow_request_sock_ipv6_ops = tcp_request_sock_ipv6_ops;
-@@ -1957,6 +1961,10 @@ void __init mptcp_subflow_init(void)
- 
- 	tcpv6_prot_override = tcpv6_prot;
- 	tcpv6_prot_override.release_cb = tcp_release_cb_override;
-+#ifdef CONFIG_BPF_SYSCALL
-+	/* Disable sockmap processing for subflows */
-+	tcpv6_prot_override.psock_update_sk_prot = NULL;
-+#endif
- #endif
- 
- 	mptcp_diag_subflow_init(&subflow_ulp_ops);
+I suggest adding ...
+
+  if (sk->sk_protocol == IPPROTO_MPTCP)
+          return false;
+
+... at the beginning of this function. I'm planning to send a patch
+later on including this check. Once it is sent, do you mind checking it
+with sockmap if you have the setup available, please?
+
+Cheers,
+Matt
 -- 
-2.43.0
+Sponsored by the NGI0 Core fund.
 
