@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 774CE11CAF;
-	Sun, 30 Nov 2025 16:21:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEF34E56A;
+	Sun, 30 Nov 2025 17:09:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764519682; cv=none; b=m72D2bFfa142CgkDEpLxILGsPCe67mSRozuO0CRmzMiwZirLbbME1tRAWnD/g/w5Ttiqc25d1o+YZMjrSloGHci5jCbSjfR+2K7WdOBSpNBK4naMrNkslr/5zFJJvIOX+gMS8QziDbFLjKOz5HW1E2p2KWoib2wbsD00krqRHzc=
+	t=1764522564; cv=none; b=QjEXedAvZRISjUXga3OtGL8TShr8pAOqH6iXT+FaKBV40AxuEwnkB8aYS+sDCjTD5hzGzS1CSkeD2jVE1d5bl0YHZN32961WtB62hEvzEz0i04BgTsTtN3YuL8QoLxmXGOc+Whi4Ec/EiZI4qu0SjgIk6v3vQ6ZR/NWcDbp27Y4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764519682; c=relaxed/simple;
-	bh=7kxHR/r2oI69yLuiH8cgTybiZhs3ebORqfxCuXWL2fw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
-	 In-Reply-To:Content-Type; b=uaCL3cSLw2bwDCP7qNMczIGnK1c6HWxbEa0cLq3ojOAOG0e/t0TsDLq8CSJ8gkssDIW75IzDDu9YKqhTV/kgRNhSrGUnkgbh1qgU+JPxbJJ9G75ZUO4IGhefbzcTAQOZROeptwYwEbOjZcQpT9gAwSvFsTzD2lvZEXHFdeFquXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LkozGWkF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1764522564; c=relaxed/simple;
+	bh=U3f8jUJMRi88Fyafs1+GaX9IpTpIzhXaRVFLj1w1J/0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=R8sNbhe2OYbo5/TeQnjWxn8q3Su+R2fk7341q5YDhd+w9glydGrSsjHZqFP2MQRqXduaU3SO4+geRX2ererxdshF6BZiXgN3JexoLdro5XakiT9Yn5GsVofw0FDFHT9uG5/7KORU/QL5ehDXUW1acpGW3jMLTg2j209wLgZ4N24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b1I30JIC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LkozGWkF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC681C4CEF8;
-	Sun, 30 Nov 2025 16:21:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b1I30JIC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0DCCC4CEF8;
+	Sun, 30 Nov 2025 17:09:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764519682;
-	bh=7kxHR/r2oI69yLuiH8cgTybiZhs3ebORqfxCuXWL2fw=;
-	h=Date:Subject:To:References:From:Cc:In-Reply-To:From;
-	b=LkozGWkFt0i7KMa6UBTJ+fAwSKs542RMMCW1bx37IdCACbPqXj89H5AiBmakhrqjm
-	 7gXN3lOyxQT4/LrF/UH3b5i5uy8GDRrcIlPKeqVgvFEHeUxLTsG81O8a6mSd99bpP2
-	 kbzKuBdtSZjSVsFdq8E/0tkVTbHZsgon5QqK/leg25LiTaFLzpneVQbJE3gRWwGtfc
-	 t0a9tJ+ouzlMsrB2rYAGr/FEO+DGcnT3nf8d9g7griCID3vSbbQF7mA77jYCorQPBv
-	 20esjW0+O6zglJu224QqouDGVaft+a/gDs2O/KFF5IzOBRSeH7s+gA/TIBF7TaQiT/
-	 iZE19iJ7RIPMA==
-Message-ID: <a3bd7cdc-e0f3-448f-a1f2-aaa2a603486e@kernel.org>
-Date: Sun, 30 Nov 2025 17:21:20 +0100
+	s=k20201202; t=1764522564;
+	bh=U3f8jUJMRi88Fyafs1+GaX9IpTpIzhXaRVFLj1w1J/0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=b1I30JICSyPO0nRnfGITe48Ca7n56aKvXN6zvCD8+IvJ7+o3Axdv+/ueNsNuQUEI6
+	 yEgbX17Qf3RmyxX0fK98y5tM/AndUl0EcVIEhUwk/XQc1MWtUT4fU7sLy5WonZssM0
+	 KCHBlubUiQK/Af0jjihxa/YxplejC2nBjCQiF+w/Ac7uBIUB4eoSBtKEoodZiH0Z0p
+	 jPv9ZIlX+mEExH9WFL6MSUY9UKLmjgzE7/9GTXrnsgW7AW2mBJIFKxrvzCVBNmt06V
+	 fyY6M1XIqckz+Fre8bfBNV2Y0aEPLhIS4FU31q1FJdYw9P3hD0k1UwxWWEn06izcM3
+	 yOzyGK8kigFUg==
+Message-ID: <d4656eca-3c65-407b-a487-0a1816c38036@kernel.org>
+Date: Sun, 30 Nov 2025 18:09:18 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,14 +35,20 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH 6.1.y v1 0/2] mptcp: Fix conflicts between MPTCP and
- sockmap
+Subject: Re: [PATCH net-next v2] selftests: mptcp: Mark xerror __noreturn
 Content-Language: en-GB, fr-BE
-To: Jiayuan Chen <jiayuan.chen@linux.dev>
-References: <20251130032303.324510-1-jiayuan.chen@linux.dev>
+To: Jakub Kicinski <kuba@kernel.org>,
+ Ankit Khushwaha <ankitkhushwaha.linux@gmail.com>
+Cc: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+ Shuah Khan <shuah@kernel.org>, netdev@vger.kernel.org,
+ mptcp@lists.linux.dev, linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20251129043808.16714-1-ankitkhushwaha.linux@gmail.com>
+ <632d57cf-becd-4d09-bb21-0e3db6776c49@kernel.org>
+ <20251129174133.0e369f80@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
-Cc: stable@vger.kernel.org, mptcp@lists.linux.dev, sashal@kernel.org,
- gregkh@linuxfoundation.org
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -87,39 +93,29 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20251130032303.324510-1-jiayuan.chen@linux.dev>
+In-Reply-To: <20251129174133.0e369f80@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Jiayuan,
+Hi Jakub, Ankit,
 
-On 30/11/2025 04:23, Jiayuan Chen wrote:
-> Overall, we encountered a warning [1] that can be triggered by running the
-> selftest I provided.
+On 30/11/2025 02:41, Jakub Kicinski wrote:
+> On Sat, 29 Nov 2025 19:13:08 +0100 Matthieu Baerts wrote:
+>>> +$(OUTPUT)/mptcp_connect: CFLAGS += -I$(top_srcdir)/tools/include
+>>> +$(OUTPUT)/mptcp_sockopt: CFLAGS += -I$(top_srcdir)/tools/include
+>>> +$(OUTPUT)/mptcp_inq: CFLAGS += -I$(top_srcdir)/tools/include  
+> 
+> I believe this is being added via MM or kselftest tree at level of the
+> main ksft makefile. Since this is a false positive, maybe let's defer
+> fixing the issue until after the merge window? When the -I.. flag
+> will be implicitly in place?
 
-Thank you for having shared these patches, but there are some issues
-with them:
+@Jakub: Thank you for sharing this, I didn't know about that. That makes
+sense to wait.
 
-- Patch 1/2 has already been queued, see [1].
-
-- Patch 2/2 is the exact same patch as the one sent by Sasha [2], and
-recently dropped [3] because it breaks MPTCP. See my comment there.
-
-- You need to follow the stable rules [4] when sending patches to
-stable. In short, here, you should have kept the original upstream
-commit message, then add the SHA and a note about the conflicts, e.g.
-similar to [5]. Without that, it is a new patch, not a backport (and the
-reviewed-by/acked-by/... cannot be kept).
-
-[1]
-https://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git/tree/queue-6.1/mptcp-disallow-mptcp-subflows-from-sockmap.patch
-[2]
-https://lore.kernel.org/stable/9e6ef98f-12eb-4608-aece-cf321e0a38d7@kernel.org/T/#u
-[3]
-https://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git/commit/?id=a662939f16b515c5162e304e6a4cf95370e596e1
-[4] https://docs.kernel.org/process/stable-kernel-rules.html
-[5]
-https://lore.kernel.org/stable/20251129165612.2125498-2-matttbe@kernel.org/T/#u
+@Ankit: do you mind sending a v3 without the modifications of the
+Makefile, and supporting die_perror() in a bit more than 2 weeks or
+later, please?
 
 Cheers,
 Matt
