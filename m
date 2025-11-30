@@ -1,60 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from localhost.localdomain (unknown [147.136.157.2])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F4EF36D508;
-	Sun, 30 Nov 2025 01:41:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB09721E082
+	for <mptcp@lists.linux.dev>; Sun, 30 Nov 2025 03:29:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=147.136.157.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764466895; cv=none; b=uCxHFIEKOAM8QxXcXSMKAqbAnxudg4CvgboHOTZnqo0ag/VMDbciathNxQ3IUQEolyaycssbKWSVqMBbGOhuBKtadBis+gloYm7dD3dhuuGEDMFHt+JgktEqOhjyndHjUIJR/iUnYitsxMHOu33xYjfMbalxVhVr/yI3CCaaL18=
+	t=1764473387; cv=none; b=SbUyE4nmzG6TVW1LhtMdvIqkkM52Y4Cm8FKY8DC4tdkmFuzRmM2bGgSgsh7C93Ir1i256QB8NGEZ/T8k1BJd6oengy44JMDXRFWXYaXanfqwT2AfroJ/m1L8rHIjrfyVdw7547ZtQxbmGMvbOV7AEV/pJopyWDmi2wf6S9XzC3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764466895; c=relaxed/simple;
-	bh=9j57zVcaHg17tyaBJh/yVVESsg+3+MK5o+L7M9AdjdY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZtaoQP1YCuB9OiwBtLSBBA41U3YVfbFfXLeIL6aGDDPQ7/xd3Vsp3qSTmKDdTe1VxGfYdlBr7n/x9gWCSXNeeL4ZZus6IDvFcvZYR+HHQJWMjqzgU+eNKOy5o7PlnoQSOIR2W8rP2SBo7b3k69LukMuXONvhdlVMc1y1UlSsRRQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f8fDtxvC; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f8fDtxvC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64999C4CEF7;
-	Sun, 30 Nov 2025 01:41:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764466894;
-	bh=9j57zVcaHg17tyaBJh/yVVESsg+3+MK5o+L7M9AdjdY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=f8fDtxvCGP+ZKgEn1KKUfItRs9zUAG6rZhS3hW8nIaJWkrvoA0gLTTZL70ijt2UFd
-	 N9z11nGtKlvCFUxRtxZGgsBOyQkt2mJpMjrNuu17aJ1qsUgN9gdL+Ei94ZREbIjmla
-	 85S3gDEfqLxDw1J5fHoDMmwjqt4nv0tPaKrORNepd9IySgS3lT4IOyPQIhJd75uvON
-	 VLEetaYW8bG6fKjWeu5GTu+VfavjROx2MrRLiA7PZFWv0to2HiuC6FpARe7pR/nph3
-	 dwnalMSHEZoRVwLJkOcUEaeYKfcVj2+U3RdmXtP9wJdK6z1dUeZV0zq2VjlBW8dwQW
-	 oZd9g6vApv86w==
-Date: Sat, 29 Nov 2025 17:41:33 -0800
-From: Jakub Kicinski <kuba@kernel.org>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: Ankit Khushwaha <ankitkhushwaha.linux@gmail.com>, Mat Martineau
- <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, "David S.
- Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo
- Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, Shuah Khan
- <shuah@kernel.org>, netdev@vger.kernel.org, mptcp@lists.linux.dev,
- linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v2] selftests: mptcp: Mark xerror __noreturn
-Message-ID: <20251129174133.0e369f80@kernel.org>
-In-Reply-To: <632d57cf-becd-4d09-bb21-0e3db6776c49@kernel.org>
-References: <20251129043808.16714-1-ankitkhushwaha.linux@gmail.com>
-	<632d57cf-becd-4d09-bb21-0e3db6776c49@kernel.org>
+	s=arc-20240116; t=1764473387; c=relaxed/simple;
+	bh=FHmfxBJ3157gvfojzWka9epkDh8kiSyjDN14jlsHFvY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=O4OQAZFFvhqcZUa0g9eIralKXKAzBEH80DnoGZjIyKAtzukUF15Oxfdgry7ylVTy6r0nr+7EAo+TUM4VE1VHAFOIq6AoaW+NaN92m8PXKnU5pvzZxST3hy0MInQXT4um3YQoI15HiDxcGGr/P6HgajJGCATHnyKoUFneHX7A+Cw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.dev; spf=none smtp.mailfrom=localhost.localdomain; arc=none smtp.client-ip=147.136.157.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=localhost.localdomain
+Received: by localhost.localdomain (Postfix, from userid 1007)
+	id D3E708B2A35; Sun, 30 Nov 2025 11:23:14 +0800 (+08)
+From: Jiayuan Chen <jiayuan.chen@linux.dev>
+To: stable@vger.kernel.org,
+	mptcp@lists.linux.dev,
+	matthieu.baerts@tessares.net,
+	sashal@kernel.org,
+	gregkh@linuxfoundation.org
+Cc: Jiayuan Chen <jiayuan.chen@linux.dev>
+Subject: [PATCH 6.1.y v1 0/2] mptcp: Fix conflicts between MPTCP and sockmap
+Date: Sun, 30 Nov 2025 11:23:01 +0800
+Message-ID: <20251130032303.324510-1-jiayuan.chen@linux.dev>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Sat, 29 Nov 2025 19:13:08 +0100 Matthieu Baerts wrote:
-> > +$(OUTPUT)/mptcp_connect: CFLAGS += -I$(top_srcdir)/tools/include
-> > +$(OUTPUT)/mptcp_sockopt: CFLAGS += -I$(top_srcdir)/tools/include
-> > +$(OUTPUT)/mptcp_inq: CFLAGS += -I$(top_srcdir)/tools/include  
+Overall, we encountered a warning [1] that can be triggered by running the
+selftest I provided.
 
-I believe this is being added via MM or kselftest tree at level of the
-main ksft makefile. Since this is a false positive, maybe let's defer
-fixing the issue until after the merge window? When the -I.. flag
-will be implicitly in place?
+sockmap works by replacing sk_data_ready, recvmsg, sendmsg operations and
+implementing fast socket-level forwarding logic:
+1. Users can obtain file descriptors through userspace socket()/accept()
+   interfaces, then call BPF syscall to perform these replacements.
+2. Users can also use the bpf_sock_hash_update helper (in sockops programs)
+   to replace handlers when TCP connections enter ESTABLISHED state
+  (BPF_SOCK_OPS_PASSIVE_ESTABLISHED_CB/BPF_SOCK_OPS_ACTIVE_ESTABLISHED_CB)
+
+However, when combined with MPTCP, an issue arises: MPTCP creates subflow
+sk's and performs TCP handshakes, so the BPF program obtains subflow sk's
+and may incorrectly replace their sk_prot. We need to reject such
+operations. In patch 1, we set psock_update_sk_prot to NULL in the
+subflow's custom sk_prot.
+
+Additionally, if the server's listening socket has MPTCP enabled and the
+client's TCP also uses MPTCP, we should allow the combination of subflow
+and sockmap. This is because the latest Golang programs have enabled MPTCP
+for listening sockets by default [2]. For programs already using sockmap,
+upgrading Golang should not cause sockmap functionality to fail.
+
+Patch 2 prevents the panic from occurring.
+
+Despite these patches fixing stream corruption, users of sockmap must set
+GODEBUG=multipathtcp=0 to disable MPTCP until sockmap fully supports it.
+
+[1] truncated warning:
+------------[ cut here ]------------
+
+BUG: kernel NULL pointer dereference, address: 00000000000004bb
+PGD 0 P4D 0
+Oops: 0000 [#1] SMP PTI
+CPU: 0 PID: 400 Comm: test_progs Not tainted 6.1.0+ #16
+RIP: 0010:mptcp_stream_accept (./include/linux/list.h:88 net/mptcp/protocol.c:3719)
+
+RSP: 0018:ffffc90000ef3cf0 EFLAGS: 00010246
+RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffff8880089dcc58
+RDX: 0000000000000003 RSI: 0000002c000000b0 RDI: 0000000000000000
+RBP: ffffc90000ef3d38 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: ffff8880089dc600
+R13: ffff88800b859e00 R14: ffff88800638c680 R15: 0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00000000000004bb CR3: 000000000b8e8006 CR4: 0000000000770ef0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+PKRU: 55555554
+Call Trace:
+ <TASK>
+? apparmor_socket_accept (security/apparmor/lsm.c:966)
+do_accept (net/socket.c:1856)
+__sys_accept4 (net/socket.c:1897 net/socket.c:1927)
+__x64_sys_accept (net/socket.c:1941)
+do_syscall_64 (arch/x86/entry/common.c:50 arch/x86/entry/common.c:80)
+
+[2]: https://go-review.googlesource.com/c/go/+/607715
+
+Jiayuan Chen (2):
+  mptcp: disallow MPTCP subflows from sockmap
+  net,mptcp: fix proto fallback detection with BPF
+
+ net/mptcp/protocol.c | 5 +++--
+ net/mptcp/subflow.c  | 8 ++++++++
+ 2 files changed, 11 insertions(+), 2 deletions(-)
+
+-- 
+2.43.0
+
