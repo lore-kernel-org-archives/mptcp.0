@@ -1,172 +1,132 @@
-Received: from out-181.mta1.migadu.com (out-181.mta1.migadu.com [95.215.58.181])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 383503064B1
-	for <mptcp@lists.linux.dev>; Mon,  1 Dec 2025 11:15:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBB9C247280
+	for <mptcp@lists.linux.dev>; Mon,  1 Dec 2025 11:19:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764587719; cv=none; b=lIjMLW6FesJC8haBGUjYwL/nW4NSpB1WB+AE2+5L3pvQdoZCTc+ZEDiuJpTHptrR3Rd/52llXiThKRL5b3Xsjyj7yU0pEUM+5+FtOQT1eGEwhd5XUTPp3sqc0vAA5RNgF0wR7mMH+jDUlYEqwhuLWXzsmLdV0F2mQogPRhp4QPM=
+	t=1764587965; cv=none; b=Ae6M0cJL6XhG6yR0I2KmQq3KDczKMnYQMf6kq57qe8uBuAej1N1cadehjZKMTvUdqtnwuhTVD2M3Vwfs5miiHl5fG4Zq501NzwbziDhtWjpDBRZUMmKLPdLk4HKvWytTNt6E1xXXItU+kicwy3YdEkOgO0XqeleXCby3PejEivc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764587719; c=relaxed/simple;
-	bh=35Ioes8F9NuIOJPlbXL2e4SFn/P/8Eaqe4nMlITnMdI=;
-	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
-	 In-Reply-To:References; b=nlMz1orNvlsAdK8RLJPhWon0sA1twEut/HpU6u9NPg57ZRPSy3FEfH7SCiPGkfpepvBdfC6wSK2BUbLhyraSti8eF812o8oZlXwx8p6HwN955ZSYwCAvrLPSKnEmZAhlszpUuXuRuSQHqKmUJUrkxG4hBohlM54ccvVv8hgcUzo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=tbjnDzGW; arc=none smtp.client-ip=95.215.58.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1764587965; c=relaxed/simple;
+	bh=HelmBrNOGPxnECAahrI/AYz/q47MmmsHP6zQrECTiHA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
+	 In-Reply-To:Content-Type; b=EZZ8lO8/+HfQ0ZuAfhwCUwEGeVIfewtFUqdVDiKTZ4aJFeg5+96y435TE7RqJIfXln7ExhPPj3kzqFcmc+uD1NabVAz7BuPLYZQH7WMebNX910Fovt1mMMj1KRcvX4ZCfaLTmW0Pgny+oN8c3lZQh9AsA7efRmRVf2RvFAileXQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kOCm4jCL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="tbjnDzGW"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kOCm4jCL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6EACC4CEF1;
+	Mon,  1 Dec 2025 11:19:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1764587964;
+	bh=HelmBrNOGPxnECAahrI/AYz/q47MmmsHP6zQrECTiHA=;
+	h=Date:Subject:To:References:From:Cc:In-Reply-To:From;
+	b=kOCm4jCLFvkGoHKEMaVanbmjZpGA3VNYyZx4zlISAXtcDBUNl3hzUWQxYjIjLe5E0
+	 e1TVxBZknaTY3/OsXHBzm4u9zqYzX2fTLuzRGHLcpkIkuKhljVDl/5dL8YVQ8w8ftS
+	 8/PpRkAPL0k5Cs1ipaPDkUCtILZ+0iuEJxBTnt4vaHPCC4UdhwsB/NNGWN/7m9L82p
+	 i74O3yTpOakbpmSYeHxm7MpOK22nHOw2wGHyrSMpr1cwAdN0FeicKrc/j+Te283qVv
+	 bhqrppd1vzsMPz4MOG5y05aWqjAdl1OTKq5VQUD/whSTac9m1XRRy7wm44q7yGBjT7
+	 iD7pm3CaGeFVw==
+Message-ID: <5ab9decf-e350-4ff6-bd0d-ba23b501f224@kernel.org>
+Date: Mon, 1 Dec 2025 12:19:21 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1764587714;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=e9mggv6DfPBghIR8nxbEbjiHW97QJ9xR/zSwx2wi9Dk=;
-	b=tbjnDzGWBiJUCfqokzNfq9AzQV73ajvagdI8CPI6ZX+KcKlmvAqqmHGxjQ8+B8RoITez9t
-	RQP+tM6Py71zyw44gLAbKJ8RmpIEMZLHZgjqYJmwpABShbZ0djAYHXcISuWaAtuu3AiV+u
-	qGLxL68G3sXpl7VuxYzVIqvRnjvbWFY=
-Date: Mon, 01 Dec 2025 11:15:10 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: "Jiayuan Chen" <jiayuan.chen@linux.dev>
-Message-ID: <e6ec12b0a9a3e0bc4db370b3fb6647f7127f4a04@linux.dev>
-TLS-Required: No
-Subject: Re: [PATCH 6.1.y] mptcp: Fix proto fallback detection with BPF
-To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, stable@vger.kernel.org,
- gregkh@linuxfoundation.org
-Cc: "MPTCP Upstream" <mptcp@lists.linux.dev>, "Martin KaFai Lau"
- <martin.lau@kernel.org>, "Jakub Sitnicki" <jakub@cloudflare.com>,
- "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-In-Reply-To: <20251201104459.3440448-2-matttbe@kernel.org>
-References: <2025112444-entangled-winking-ac86@gregkh>
- <20251201104459.3440448-2-matttbe@kernel.org>
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-net] mptcp: fallback earlier on simult connection
+Content-Language: en-GB, fr-BE
+To: Paolo Abeni <pabeni@redhat.com>
+References: <36b926c5d55933a6f2d2a7f6ff8d8a091c0de719.1764332508.git.pabeni@redhat.com>
+ <7bc3d452-b6f3-ce84-f163-a2fbefa71e55@gmail.com>
+ <cb41f3a1-2a45-496d-9dba-784a81dc2de2@redhat.com>
+From: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <cb41f3a1-2a45-496d-9dba-784a81dc2de2@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-December 1, 2025 at 18:45, "Matthieu Baerts (NGI0)" <matttbe@kernel.org m=
-ailto:matttbe@kernel.org?to=3D%22Matthieu%20Baerts%20(NGI0)%22%20%3Cmattt=
-be%40kernel.org%3E > wrote:
+Hi Paolo,
 
+On 01/12/2025 12:10, Paolo Abeni wrote:
+> On 11/28/25 2:35 PM, MPTCP CI wrote:
+>> Thank you for your modifications, that's great!
+>>
+>> Our CI did some validations and here is its report:
+>>
+>> - KVM Validation: normal (except selftest_mptcp_join): Unstable: 2 failed test(s): packetdrill_syscalls selftest_simult_flows 🔴
+>> - KVM Validation: normal (only selftest_mptcp_join): Success! ✅
+>> - KVM Validation: debug (except selftest_mptcp_join): Unstable: 1 failed test(s): packetdrill_syscalls 🔴
+>> - KVM Validation: debug (only selftest_mptcp_join): Success! ✅
+>> - KVM Validation: btf-normal (only bpftest_all): Success! ✅
+>> - KVM Validation: btf-debug (only bpftest_all): Unstable: 1 failed test(s): bpftest_test_progs_mptcp 🔴
+>> - Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/19764025304
+> 
+> As mentioned, pktdrill failures are expected - test need to be updated.
+> 
+> The simult flows and btf failures are unexpected, but looks unrelated
+> from this patch.
 
->=20
->=20From: Jiayuan Chen <jiayuan.chen@linux.dev>
->=20
->=20commit c77b3b79a92e3345aa1ee296180d1af4e7031f8f upstream.
->=20
->=20The sockmap feature allows bpf syscall from userspace, or based
-> on bpf sockops, replacing the sk_prot of sockets during protocol stack
-> processing with sockmap's custom read/write interfaces.
-> '''
-> tcp_rcv_state_process()
->  syn_recv_sock()/subflow_syn_recv_sock()
->  tcp_init_transfer(BPF_SOCK_OPS_PASSIVE_ESTABLISHED_CB)
->  bpf_skops_established <=3D=3D sockops
->  bpf_sock_map_update(sk) <=3D=3D call bpf helper
->  tcp_bpf_update_proto() <=3D=3D update sk_prot
-> '''
->=20
->=20When the server has MPTCP enabled but the client sends a TCP SYN
-> without MPTCP, subflow_syn_recv_sock() performs a fallback on the
-> subflow, replacing the subflow sk's sk_prot with the native sk_prot.
-> '''
-> subflow_syn_recv_sock()
->  subflow_ulp_fallback()
->  subflow_drop_ctx()
->  mptcp_subflow_ops_undo_override()
-> '''
->=20
->=20Then, this subflow can be normally used by sockmap, which replaces th=
-e
-> native sk_prot with sockmap's custom sk_prot. The issue occurs when the
-> user executes accept::mptcp_stream_accept::mptcp_fallback_tcp_ops().
-> Here, it uses sk->sk_prot to compare with the native sk_prot, but this
-> is incorrect when sockmap is used, as we may incorrectly set
-> sk->sk_socket->ops.
->=20
->=20This fix uses the more generic sk_family for the comparison instead.
->=20
->=20Additionally, this also prevents a WARNING from occurring:
->=20
->=20result from ./scripts/decode_stacktrace.sh:
-> ------------[ cut here ]------------
-> WARNING: CPU: 0 PID: 337 at net/mptcp/protocol.c:68 mptcp_stream_accept=
- \
-> (net/mptcp/protocol.c:4005)
-> Modules linked in:
-> ...
->=20
->=20PKRU: 55555554
-> Call Trace:
-> <TASK>
-> do_accept (net/socket.c:1989)
-> __sys_accept4 (net/socket.c:2028 net/socket.c:2057)
-> __x64_sys_accept (net/socket.c:2067)
-> x64_sys_call (arch/x86/entry/syscall_64.c:41)
-> do_syscall_64 (arch/x86/entry/syscall_64.c:63 arch/x86/entry/syscall_64=
-.c:94)
-> entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:130)
-> RIP: 0033:0x7f87ac92b83d
->=20
->=20---[ end trace 0000000000000000 ]---
->=20
->=20Fixes: 0b4f33def7bb ("mptcp: fix tcp fallback crash")
-> Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
-> Signed-off-by: Martin KaFai Lau <martin.lau@kernel.org>
-> Reviewed-by: Jakub Sitnicki <jakub@cloudflare.com>
-> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> Cc: <stable@vger.kernel.org>
-> Link: https://patch.msgid.link/20251111060307.194196-3-jiayuan.chen@lin=
-ux.dev
-> [ Conflicts in protocol.c, because commit 8e2b8a9fa512 ("mptcp: don't
->  overwrite sock_ops in mptcp_is_tcpsk()") is not in this version. It
->  changes the logic on how and where the sock_ops is overridden in case
->  of passive fallback. To fix this, mptcp_is_tcpsk() is modified to use
->  the family, but first, a check of the protocol is required to continue
->  returning 'false' in case of MPTCP socket. ]
-> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> ---
->  net/mptcp/protocol.c | 9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
->=20
->=20diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index e2908add97d3..10844f08752c 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -79,8 +79,13 @@ static u64 mptcp_wnd_end(const struct mptcp_sock *ms=
-k)
->  static bool mptcp_is_tcpsk(struct sock *sk)
->  {
->  struct socket *sock =3D sk->sk_socket;
-> + unsigned short family;
->=20=20
->=20- if (unlikely(sk->sk_prot =3D=3D &tcp_prot)) {
-> + if (likely(sk->sk_protocol =3D=3D IPPROTO_MPTCP))
-> + return false;
-> +
-> + family =3D READ_ONCE(sk->sk_family);
-> + if (unlikely(family =3D=3D AF_INET)) {
->  /* we are being invoked after mptcp_accept() has
->  * accepted a non-mp-capable flow: sk is a tcp_sk,
->  * not an mptcp one.
-> @@ -91,7 +96,7 @@ static bool mptcp_is_tcpsk(struct sock *sk)
->  sock->ops =3D &inet_stream_ops;
->  return true;
->  #if IS_ENABLED(CONFIG_MPTCP_IPV6)
-> - } else if (unlikely(sk->sk_prot =3D=3D &tcpv6_prot)) {
-> + } else if (unlikely(family =3D=3D AF_INET6)) {
->  sock->ops =3D &inet6_stream_ops;
->  return true;
->  #endif
-> --=20
->=202.51.0
->
+Thank you for having checked! (Sorry, I'm lagging a bit behind)
 
-Thank you, Matthieu. I=E2=80=99ve tested the patch and confirmed it resol=
-ves the issue.
+Regarding the simult_flows tests, the last job checking the sync with
+net/net-next also has a failure:
+
+https://github.com/multipath-tcp/mptcp_net-next/actions/runs/19812973527
+
+So not a regression due to your patch, but I hope there is not one due
+to other changes!
+
+(The last job also mentioned issues with a new packetdrill test, I'm
+going to look at it, then apply your patch!)
+
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
+
