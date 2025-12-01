@@ -1,111 +1,172 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from out-181.mta1.migadu.com (out-181.mta1.migadu.com [95.215.58.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2212B306B38
-	for <mptcp@lists.linux.dev>; Mon,  1 Dec 2025 11:10:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 383503064B1
+	for <mptcp@lists.linux.dev>; Mon,  1 Dec 2025 11:15:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764587415; cv=none; b=NQ5wzk3+ioGbRE5Hw0ZdF7CJ2dpRQU92GWWLhgHAMiST0J0PwbnY1MLYrZF2cR4sYcSUWk/oDsyYzqwgQ37zuITDVRu/AXwXLrLvln8/JymlaKA/0qotEGcpHl0Z0WpoajkqPvwkwx5ToM7tY0/AkpOO/rzl/8+7MDevXEbE3FQ=
+	t=1764587719; cv=none; b=lIjMLW6FesJC8haBGUjYwL/nW4NSpB1WB+AE2+5L3pvQdoZCTc+ZEDiuJpTHptrR3Rd/52llXiThKRL5b3Xsjyj7yU0pEUM+5+FtOQT1eGEwhd5XUTPp3sqc0vAA5RNgF0wR7mMH+jDUlYEqwhuLWXzsmLdV0F2mQogPRhp4QPM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764587415; c=relaxed/simple;
-	bh=kncEdnB71fqaD2hcIiHguiRwsbnDOSKTWALyMv3oYiY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=G0EUl+ZD3uwCOUl7CrmllUYONQ0ckuqULohvqXrmiXt52tIR3na8IGlvfR6zKI57HURfHTvYKA8CQUZ5ud0Qtf61NKs4IS6W/hGGN0DfCZqEoYMgJMnNhNxKIvPg4thN2pP2S3q3btJVgv0KdrvfQRqsqZY3Ym5iC3dFT7VwJho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dPBL+XXl; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1764587719; c=relaxed/simple;
+	bh=35Ioes8F9NuIOJPlbXL2e4SFn/P/8Eaqe4nMlITnMdI=;
+	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
+	 In-Reply-To:References; b=nlMz1orNvlsAdK8RLJPhWon0sA1twEut/HpU6u9NPg57ZRPSy3FEfH7SCiPGkfpepvBdfC6wSK2BUbLhyraSti8eF812o8oZlXwx8p6HwN955ZSYwCAvrLPSKnEmZAhlszpUuXuRuSQHqKmUJUrkxG4hBohlM54ccvVv8hgcUzo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=tbjnDzGW; arc=none smtp.client-ip=95.215.58.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dPBL+XXl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1764587412;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Yc8DTpUpDggKx7nZnQvP1aNWrxRtgyLLV2eExM143SM=;
-	b=dPBL+XXlj0YJ5ZoSqKsLZ8QrEISETo3Fp+tSmg6D6DgY29dpwu6/9PvElewvOVKkOFw7DD
-	h+BvFrD5aefpzXXvzIsFGXzjJYZQ9bJyDL2OV6hrLojUQqu2JpYkUdwj4NUZNCMQ4LzD8n
-	U2uIWzKJKaEtrBHTrAsNAcfwf8qT4l4=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-470-WtdTW4ApP8KK9wf7ElYWtA-1; Mon, 01 Dec 2025 06:10:10 -0500
-X-MC-Unique: WtdTW4ApP8KK9wf7ElYWtA-1
-X-Mimecast-MFC-AGG-ID: WtdTW4ApP8KK9wf7ElYWtA_1764587409
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-42e2d105358so955023f8f.3
-        for <mptcp@lists.linux.dev>; Mon, 01 Dec 2025 03:10:10 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764587409; x=1765192209;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Yc8DTpUpDggKx7nZnQvP1aNWrxRtgyLLV2eExM143SM=;
-        b=XBRfX0hS9oqO/g5RlxyM6tDltT2V2GHGiq/8YrJIl6eFDU8v9odSv1iwQdP2rI6/SI
-         DhNBAxLQ2CpNwS8dWEdMOEuYp+V8jIOp8C2D5MuLjgBEia3n1KZg7WNFO5eoI5S60m+b
-         knQstNNXCP24vZugafC45/cQEqDUEvbOartUVHxJAat7knzyMOz/lEMpN3/Z9c7l2uaw
-         cgQISoxa3wVhjqHcpLcjvxz1lPrM/XBioG6DXJ3D/jK3PliukGk9lJv5LrpA1MxDVpOJ
-         gx4e4NMaBFU+ZrGMMKfrv/HzAQEbmQT5ih9/ievzPX7S2bYLE3jgEYKxhD/zISOGKVNb
-         QiPw==
-X-Gm-Message-State: AOJu0Yxk97SpUrcsZfiuY7ssfS5h7++HQ/kv70uRYXN+Di+b1YIcajp+
-	aYmcorr78UgVpAm61sTb6oppS5ZCxxGU22RP9CzwdT2Y3ztG61pjryJ1345lTNhF2LUYCpG3jSd
-	2pMDRpvvSeVFptOOUSL8xOYRad3AgIbr/orkBTcweaEMJFSFIfhBIxyv/rWvrmt6i7vqTYdyg36
-	WaFPjh2GzQhZDaRsFoOyFzL9JOfoLvpnVfhGxioA==
-X-Gm-Gg: ASbGncuwXlUseGZTttpUz9USzwiLBy2MGKBvHyi3wTcmZow3wYqxxcj1Zj9qT0R7cQT
-	KBsAP2Z5TjDKkUe/+r/XOu8x/qsy/C4GF4VkE5XcOx+1o8pHVUrD3tHJ7GI8qprgZaQrG6jXYzh
-	LUDIxi5AUWfbJ+Zs4F44vBwEkWoBwTum39601Ipqh89+zcXOBkK5qpWrP0Xgmx9GhEMwHBvf5o2
-	Dm5aEeKSqBbRFFEB8mrlNxnCPZpyLJyqqi1aDF2ycptYUYjLiM7CXpFr/tfzDZKcTGahq4S/zxz
-	kLN6MITg2p/xbxnFNxUjX1EYIcjnJ7jQj0zPqFHp4PtjGTt7TZxcWKxpfnWnG2Kc4LLZHVRBEg5
-	JOlDivqVArWk=
-X-Received: by 2002:a5d:5f93:0:b0:42b:30d4:e401 with SMTP id ffacd0b85a97d-42cc1ac9d58mr43059398f8f.12.1764587409025;
-        Mon, 01 Dec 2025 03:10:09 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFORf3xPc6lczsq48a6PCqiM4kesMxA7iPZPvAr9BUeZmEYYcJexrIOkE5u/+fBkBdHWUdDWA==
-X-Received: by 2002:a5d:5f93:0:b0:42b:30d4:e401 with SMTP id ffacd0b85a97d-42cc1ac9d58mr43059348f8f.12.1764587408518;
-        Mon, 01 Dec 2025 03:10:08 -0800 (PST)
-Received: from [192.168.88.32] ([212.105.153.9])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42e1c5e3857sm26529949f8f.19.2025.12.01.03.10.07
-        for <mptcp@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 01 Dec 2025 03:10:07 -0800 (PST)
-Message-ID: <cb41f3a1-2a45-496d-9dba-784a81dc2de2@redhat.com>
-Date: Mon, 1 Dec 2025 12:10:07 +0100
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="tbjnDzGW"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-net] mptcp: fallback earlier on simult connection
-To: mptcp@lists.linux.dev
-References: <36b926c5d55933a6f2d2a7f6ff8d8a091c0de719.1764332508.git.pabeni@redhat.com>
- <7bc3d452-b6f3-ce84-f163-a2fbefa71e55@gmail.com>
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <7bc3d452-b6f3-ce84-f163-a2fbefa71e55@gmail.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: rDQsKOu7PnBznopL9cNXayJ1r6fsenFk07eTciGSHZA_1764587409
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1764587714;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=e9mggv6DfPBghIR8nxbEbjiHW97QJ9xR/zSwx2wi9Dk=;
+	b=tbjnDzGWBiJUCfqokzNfq9AzQV73ajvagdI8CPI6ZX+KcKlmvAqqmHGxjQ8+B8RoITez9t
+	RQP+tM6Py71zyw44gLAbKJ8RmpIEMZLHZgjqYJmwpABShbZ0djAYHXcISuWaAtuu3AiV+u
+	qGLxL68G3sXpl7VuxYzVIqvRnjvbWFY=
+Date: Mon, 01 Dec 2025 11:15:10 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: "Jiayuan Chen" <jiayuan.chen@linux.dev>
+Message-ID: <e6ec12b0a9a3e0bc4db370b3fb6647f7127f4a04@linux.dev>
+TLS-Required: No
+Subject: Re: [PATCH 6.1.y] mptcp: Fix proto fallback detection with BPF
+To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, stable@vger.kernel.org,
+ gregkh@linuxfoundation.org
+Cc: "MPTCP Upstream" <mptcp@lists.linux.dev>, "Martin KaFai Lau"
+ <martin.lau@kernel.org>, "Jakub Sitnicki" <jakub@cloudflare.com>,
+ "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+In-Reply-To: <20251201104459.3440448-2-matttbe@kernel.org>
+References: <2025112444-entangled-winking-ac86@gregkh>
+ <20251201104459.3440448-2-matttbe@kernel.org>
+X-Migadu-Flow: FLOW_OUT
 
-On 11/28/25 2:35 PM, MPTCP CI wrote:
-> Thank you for your modifications, that's great!
-> 
-> Our CI did some validations and here is its report:
-> 
-> - KVM Validation: normal (except selftest_mptcp_join): Unstable: 2 failed test(s): packetdrill_syscalls selftest_simult_flows 🔴
-> - KVM Validation: normal (only selftest_mptcp_join): Success! ✅
-> - KVM Validation: debug (except selftest_mptcp_join): Unstable: 1 failed test(s): packetdrill_syscalls 🔴
-> - KVM Validation: debug (only selftest_mptcp_join): Success! ✅
-> - KVM Validation: btf-normal (only bpftest_all): Success! ✅
-> - KVM Validation: btf-debug (only bpftest_all): Unstable: 1 failed test(s): bpftest_test_progs_mptcp 🔴
-> - Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/19764025304
+December 1, 2025 at 18:45, "Matthieu Baerts (NGI0)" <matttbe@kernel.org m=
+ailto:matttbe@kernel.org?to=3D%22Matthieu%20Baerts%20(NGI0)%22%20%3Cmattt=
+be%40kernel.org%3E > wrote:
 
-As mentioned, pktdrill failures are expected - test need to be updated.
 
-The simult flows and btf failures are unexpected, but looks unrelated
-from this patch.
+>=20
+>=20From: Jiayuan Chen <jiayuan.chen@linux.dev>
+>=20
+>=20commit c77b3b79a92e3345aa1ee296180d1af4e7031f8f upstream.
+>=20
+>=20The sockmap feature allows bpf syscall from userspace, or based
+> on bpf sockops, replacing the sk_prot of sockets during protocol stack
+> processing with sockmap's custom read/write interfaces.
+> '''
+> tcp_rcv_state_process()
+>  syn_recv_sock()/subflow_syn_recv_sock()
+>  tcp_init_transfer(BPF_SOCK_OPS_PASSIVE_ESTABLISHED_CB)
+>  bpf_skops_established <=3D=3D sockops
+>  bpf_sock_map_update(sk) <=3D=3D call bpf helper
+>  tcp_bpf_update_proto() <=3D=3D update sk_prot
+> '''
+>=20
+>=20When the server has MPTCP enabled but the client sends a TCP SYN
+> without MPTCP, subflow_syn_recv_sock() performs a fallback on the
+> subflow, replacing the subflow sk's sk_prot with the native sk_prot.
+> '''
+> subflow_syn_recv_sock()
+>  subflow_ulp_fallback()
+>  subflow_drop_ctx()
+>  mptcp_subflow_ops_undo_override()
+> '''
+>=20
+>=20Then, this subflow can be normally used by sockmap, which replaces th=
+e
+> native sk_prot with sockmap's custom sk_prot. The issue occurs when the
+> user executes accept::mptcp_stream_accept::mptcp_fallback_tcp_ops().
+> Here, it uses sk->sk_prot to compare with the native sk_prot, but this
+> is incorrect when sockmap is used, as we may incorrectly set
+> sk->sk_socket->ops.
+>=20
+>=20This fix uses the more generic sk_family for the comparison instead.
+>=20
+>=20Additionally, this also prevents a WARNING from occurring:
+>=20
+>=20result from ./scripts/decode_stacktrace.sh:
+> ------------[ cut here ]------------
+> WARNING: CPU: 0 PID: 337 at net/mptcp/protocol.c:68 mptcp_stream_accept=
+ \
+> (net/mptcp/protocol.c:4005)
+> Modules linked in:
+> ...
+>=20
+>=20PKRU: 55555554
+> Call Trace:
+> <TASK>
+> do_accept (net/socket.c:1989)
+> __sys_accept4 (net/socket.c:2028 net/socket.c:2057)
+> __x64_sys_accept (net/socket.c:2067)
+> x64_sys_call (arch/x86/entry/syscall_64.c:41)
+> do_syscall_64 (arch/x86/entry/syscall_64.c:63 arch/x86/entry/syscall_64=
+.c:94)
+> entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:130)
+> RIP: 0033:0x7f87ac92b83d
+>=20
+>=20---[ end trace 0000000000000000 ]---
+>=20
+>=20Fixes: 0b4f33def7bb ("mptcp: fix tcp fallback crash")
+> Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
+> Signed-off-by: Martin KaFai Lau <martin.lau@kernel.org>
+> Reviewed-by: Jakub Sitnicki <jakub@cloudflare.com>
+> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> Cc: <stable@vger.kernel.org>
+> Link: https://patch.msgid.link/20251111060307.194196-3-jiayuan.chen@lin=
+ux.dev
+> [ Conflicts in protocol.c, because commit 8e2b8a9fa512 ("mptcp: don't
+>  overwrite sock_ops in mptcp_is_tcpsk()") is not in this version. It
+>  changes the logic on how and where the sock_ops is overridden in case
+>  of passive fallback. To fix this, mptcp_is_tcpsk() is modified to use
+>  the family, but first, a check of the protocol is required to continue
+>  returning 'false' in case of MPTCP socket. ]
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> ---
+>  net/mptcp/protocol.c | 9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
+>=20
+>=20diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index e2908add97d3..10844f08752c 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -79,8 +79,13 @@ static u64 mptcp_wnd_end(const struct mptcp_sock *ms=
+k)
+>  static bool mptcp_is_tcpsk(struct sock *sk)
+>  {
+>  struct socket *sock =3D sk->sk_socket;
+> + unsigned short family;
+>=20=20
+>=20- if (unlikely(sk->sk_prot =3D=3D &tcp_prot)) {
+> + if (likely(sk->sk_protocol =3D=3D IPPROTO_MPTCP))
+> + return false;
+> +
+> + family =3D READ_ONCE(sk->sk_family);
+> + if (unlikely(family =3D=3D AF_INET)) {
+>  /* we are being invoked after mptcp_accept() has
+>  * accepted a non-mp-capable flow: sk is a tcp_sk,
+>  * not an mptcp one.
+> @@ -91,7 +96,7 @@ static bool mptcp_is_tcpsk(struct sock *sk)
+>  sock->ops =3D &inet_stream_ops;
+>  return true;
+>  #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+> - } else if (unlikely(sk->sk_prot =3D=3D &tcpv6_prot)) {
+> + } else if (unlikely(family =3D=3D AF_INET6)) {
+>  sock->ops =3D &inet6_stream_ops;
+>  return true;
+>  #endif
+> --=20
+>=202.51.0
+>
 
-/P
-
+Thank you, Matthieu. I=E2=80=99ve tested the patch and confirmed it resol=
+ves the issue.
