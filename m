@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBB9C247280
-	for <mptcp@lists.linux.dev>; Mon,  1 Dec 2025 11:19:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6117D2C0277;
+	Mon,  1 Dec 2025 11:24:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764587965; cv=none; b=Ae6M0cJL6XhG6yR0I2KmQq3KDczKMnYQMf6kq57qe8uBuAej1N1cadehjZKMTvUdqtnwuhTVD2M3Vwfs5miiHl5fG4Zq501NzwbziDhtWjpDBRZUMmKLPdLk4HKvWytTNt6E1xXXItU+kicwy3YdEkOgO0XqeleXCby3PejEivc=
+	t=1764588242; cv=none; b=jg2QfyWavzAAzq4GzWSICYTcLizT5axB9L3myp0CcaHIOWLsvoaMIsbpBvHQIZc7v5ggA7QwqNmFsZ1vwGa1V8KkDdz2bZjliqUjbry8jXBccIu5rCy6iqpeUj7eOyCBbrff51CGZWqLjwQne4LLv5Q+imH6wD2yyanCyBKhdSA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764587965; c=relaxed/simple;
-	bh=HelmBrNOGPxnECAahrI/AYz/q47MmmsHP6zQrECTiHA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
-	 In-Reply-To:Content-Type; b=EZZ8lO8/+HfQ0ZuAfhwCUwEGeVIfewtFUqdVDiKTZ4aJFeg5+96y435TE7RqJIfXln7ExhPPj3kzqFcmc+uD1NabVAz7BuPLYZQH7WMebNX910Fovt1mMMj1KRcvX4ZCfaLTmW0Pgny+oN8c3lZQh9AsA7efRmRVf2RvFAileXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kOCm4jCL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1764588242; c=relaxed/simple;
+	bh=bnGmDizU6A1LSlarM+iXvF/stBDONIbWPuTT2TOSu8g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=X3l1bIqNXHR4niV3waQiEJZ2/9PKD0WQvHe4wT4uwQQZ/35cYeoFI7pPc7U3lEkvcsbVxcnUicS1uvcBN9zoueF5i60OXqdX30cxdJMgDMkvEHBDnFNzEQalgd/l39P1wFynJfr0hVZ+pLvrs48H8YJnlTAwOtu+t8Kb08yU4/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iYBJ3+HM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kOCm4jCL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6EACC4CEF1;
-	Mon,  1 Dec 2025 11:19:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iYBJ3+HM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0D05C4CEF1;
+	Mon,  1 Dec 2025 11:23:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764587964;
-	bh=HelmBrNOGPxnECAahrI/AYz/q47MmmsHP6zQrECTiHA=;
-	h=Date:Subject:To:References:From:Cc:In-Reply-To:From;
-	b=kOCm4jCLFvkGoHKEMaVanbmjZpGA3VNYyZx4zlISAXtcDBUNl3hzUWQxYjIjLe5E0
-	 e1TVxBZknaTY3/OsXHBzm4u9zqYzX2fTLuzRGHLcpkIkuKhljVDl/5dL8YVQ8w8ftS
-	 8/PpRkAPL0k5Cs1ipaPDkUCtILZ+0iuEJxBTnt4vaHPCC4UdhwsB/NNGWN/7m9L82p
-	 i74O3yTpOakbpmSYeHxm7MpOK22nHOw2wGHyrSMpr1cwAdN0FeicKrc/j+Te283qVv
-	 bhqrppd1vzsMPz4MOG5y05aWqjAdl1OTKq5VQUD/whSTac9m1XRRy7wm44q7yGBjT7
-	 iD7pm3CaGeFVw==
-Message-ID: <5ab9decf-e350-4ff6-bd0d-ba23b501f224@kernel.org>
-Date: Mon, 1 Dec 2025 12:19:21 +0100
+	s=k20201202; t=1764588240;
+	bh=bnGmDizU6A1LSlarM+iXvF/stBDONIbWPuTT2TOSu8g=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=iYBJ3+HMbznACH3jhT0iABYOLpzHzfUnZMJve69AvnAsrxmn50CWyNk+n1vyMLxKt
+	 5Es/URM80aXZin4cyIymVJ1pE4YbJANllSG4unO1SWAoToz8R89CM/0ALnoLPwFol2
+	 bPvQW4dDcaCBkjNgEZ4yCFVWIOezV5s5kSHnckbF+c2ar2QePMrYHR6nax9vP/U3NR
+	 8G7Px9PvnwgK1A/Pq4hoo0cPSo1vQbjENWTu6KsBeBbZei90NmhrkPda3Uu7BBlQLT
+	 mHE962E064xh87lfXBjnH/HE1Kw2W3+WBK0VtNxzD5LZkVPbfuMwWwabGIkHBodQNT
+	 Z3pWa4KSbcxBg==
+Message-ID: <768dd161-bc91-4809-8ee0-3ce9d172c01c@kernel.org>
+Date: Mon, 1 Dec 2025 12:23:56 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,14 +35,17 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net] mptcp: fallback earlier on simult connection
+Subject: Re: [PATCH 6.1.y] mptcp: Fix proto fallback detection with BPF
 Content-Language: en-GB, fr-BE
-To: Paolo Abeni <pabeni@redhat.com>
-References: <36b926c5d55933a6f2d2a7f6ff8d8a091c0de719.1764332508.git.pabeni@redhat.com>
- <7bc3d452-b6f3-ce84-f163-a2fbefa71e55@gmail.com>
- <cb41f3a1-2a45-496d-9dba-784a81dc2de2@redhat.com>
+To: Jiayuan Chen <jiayuan.chen@linux.dev>
+Cc: MPTCP Upstream <mptcp@lists.linux.dev>,
+ Martin KaFai Lau <martin.lau@kernel.org>,
+ Jakub Sitnicki <jakub@cloudflare.com>, stable@vger.kernel.org,
+ gregkh@linuxfoundation.org
+References: <2025112444-entangled-winking-ac86@gregkh>
+ <20251201104459.3440448-2-matttbe@kernel.org>
+ <e6ec12b0a9a3e0bc4db370b3fb6647f7127f4a04@linux.dev>
 From: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -87,43 +90,32 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <cb41f3a1-2a45-496d-9dba-784a81dc2de2@redhat.com>
+In-Reply-To: <e6ec12b0a9a3e0bc4db370b3fb6647f7127f4a04@linux.dev>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi Paolo,
+Hi Jiayuan,
 
-On 01/12/2025 12:10, Paolo Abeni wrote:
-> On 11/28/25 2:35 PM, MPTCP CI wrote:
->> Thank you for your modifications, that's great!
->>
->> Our CI did some validations and here is its report:
->>
->> - KVM Validation: normal (except selftest_mptcp_join): Unstable: 2 failed test(s): packetdrill_syscalls selftest_simult_flows 🔴
->> - KVM Validation: normal (only selftest_mptcp_join): Success! ✅
->> - KVM Validation: debug (except selftest_mptcp_join): Unstable: 1 failed test(s): packetdrill_syscalls 🔴
->> - KVM Validation: debug (only selftest_mptcp_join): Success! ✅
->> - KVM Validation: btf-normal (only bpftest_all): Success! ✅
->> - KVM Validation: btf-debug (only bpftest_all): Unstable: 1 failed test(s): bpftest_test_progs_mptcp 🔴
->> - Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/19764025304
+On 01/12/2025 12:15, Jiayuan Chen wrote:
+> December 1, 2025 at 18:45, "Matthieu Baerts (NGI0)" <matttbe@kernel.org mailto:matttbe@kernel.org?to=%22Matthieu%20Baerts%20(NGI0)%22%20%3Cmatttbe%40kernel.org%3E > wrote:
 > 
-> As mentioned, pktdrill failures are expected - test need to be updated.
 > 
-> The simult flows and btf failures are unexpected, but looks unrelated
-> from this patch.
+>>
+>> From: Jiayuan Chen <jiayuan.chen@linux.dev>
+>>
+>> commit c77b3b79a92e3345aa1ee296180d1af4e7031f8f upstream.
 
-Thank you for having checked! (Sorry, I'm lagging a bit behind)
+(...)
+> Thank you, Matthieu. I’ve tested the patch and confirmed it resolves the issue.
 
-Regarding the simult_flows tests, the last job checking the sync with
-net/net-next also has a failure:
+Thank you for having checked! Then I will also send the same patch for
+v5.15 and v5.10.
 
-https://github.com/multipath-tcp/mptcp_net-next/actions/runs/19812973527
-
-So not a regression due to your patch, but I hope there is not one due
-to other changes!
-
-(The last job also mentioned issues with a new packetdrill test, I'm
-going to look at it, then apply your patch!)
+Note: regarding your other patch fbade4bd08ba ("mptcp: Disallow MPTCP
+subflows from sockmap"): it cannot be applied on v5.10. I have a draft,
+but the modifications have to be done in sockmap code, not in MPTCP
+side, and I don't want to introduce regressions for "normal" TCP sockmap
+use. By chance, are you also able to test that one on a v5.10 kernel?
 
 Cheers,
 Matt
