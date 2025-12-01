@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4363257435;
-	Mon,  1 Dec 2025 11:27:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9652E26657D;
+	Mon,  1 Dec 2025 11:35:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764588449; cv=none; b=TqnJwlRREAZ7IfUnB8M9544wQmaKSPPR7LgPc/f7MOD0lHZoWkZqFaP4nP6qThCu94aUzntTDW3Kwq+/rpGgu5oLUs5ybpqYDhckY0BhA6jMTUQnK/vHuoDLUC08Yx6fh4Q0zNNfyhDGudKgJoQmFahT6VYw7tgJUqMaVsV3BkY=
+	t=1764588909; cv=none; b=gWMrRyWnewxBQlF1Pn8QXFkzGdGIpm5lunRQlSPB8O/umh7Cu5T911QTbY0YdDtCkODTcFBQoSsnYTidagkAmMZE67pZxjLHJ+KdYbNdufVeEomCJBNKTXmYZPmdLS5ngFAb9AQZnnx651hfgOf1SMKuIRO8kSpL9CtKdsJND9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764588449; c=relaxed/simple;
-	bh=JQUXX5BW4qXqiuVRrha08tek9Dt+2ZQBa2czDf0X98k=;
+	s=arc-20240116; t=1764588909; c=relaxed/simple;
+	bh=VqwYdTtpiD5/G8VqmN7tC+U7Rpt4TvBPToaNKdlwePQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=G1hxMAMCyVEzbxXGJLH6JsVbAqHSgkR5fVzqG6iF39hpeLsZS0L1BbhaTKEckK2l2VrZDisFOmN89fwYDzJdoWf6Ah6ahCSlIMcfM0M4QtIdLz9ERgOGvli77JVuI4/y80U9c6Q9zcRRVjALOar8zDOXBSxnc5OR+9VzxkSrtTU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fD1T6boH; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=QD046VQYkyqecIu/oY6hhKrjKNLwPAFxm/p+Oz3PqL0gMw9Dg0K3e921Rs7rnAQymozV7Ohj4jz3Fz5/30L5+jo+xe6h6dI2UDXm0WGCmjCMogSZ9AG86q52/PwVbABnXLW1wQA24Ot8cJYYU/NHtTqrSmxsev42KhS/62/2fkg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jSVvYYDf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fD1T6boH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65B9BC116D0;
-	Mon,  1 Dec 2025 11:27:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jSVvYYDf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12B92C4CEF1;
+	Mon,  1 Dec 2025 11:35:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764588448;
-	bh=JQUXX5BW4qXqiuVRrha08tek9Dt+2ZQBa2czDf0X98k=;
+	s=k20201202; t=1764588909;
+	bh=VqwYdTtpiD5/G8VqmN7tC+U7Rpt4TvBPToaNKdlwePQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=fD1T6boHipPXaq61+x6pp8eAQoQErrmiqRKv3u94raxCLxLAFWBJ+dRj41CUi+4wr
-	 eR3Y4bmqxPo5U67AGu004/jivM83Rhn0sSv+CksTdMRkBJ0B8f1hMRpv6w6kldyyu/
-	 s+dpWoEgOwdAFPcmk2XL8p0HrZvtAwcatSS1TdBngmfUVpgjaav32CYjR0oO3+SDe0
-	 wgqujebpUU+v4n2RCUjDtdU+O/aqT2rY3KXqMUC1tIm3+Xpq7Wj1xK77FQSC3hhHjC
-	 mE/AKIKttGort+cL2c0XmmMAmcF6YKAXgKhfvqPqNDqMcfUs0kMTeupObtdnt+CRxZ
-	 uYLfYpmbWbZjw==
+	b=jSVvYYDfroXwVQYiNIlvkrO56VYuR3ttsmAakoBjbrypdFCc1fCNGeIC2X3yGaU/N
+	 6Fe+c4ZY+sRK+RzT/z6ftMMTI4c0n+9AuPIsHGgUM2huJ1/VXkJaNoOG2ma6Ja0Jps
+	 nyf5UR0kwkTc0Y34fwmcgDDjnRcNfHAzANcuJZ6cKXDJsWcTczOigQ6I2O02zbBo7P
+	 U+RvVAoXv6cYDZc4DJAOkiXcQPbZLiFZQF0tOkxx93Gi3AjVBB6azWvmhquoeZCptX
+	 tjKRRDMC/Hc66pHOvB2g7UNwhjjXUhsAAOS2IEbKT0OCytLuOO/X7DHsSAIBxk4NF/
+	 ejmi9Klu/KbTQ==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 To: stable@vger.kernel.org,
 	gregkh@linuxfoundation.org
@@ -34,19 +34,19 @@ Cc: MPTCP Upstream <mptcp@lists.linux.dev>,
 	Martin KaFai Lau <martin.lau@kernel.org>,
 	Jakub Sitnicki <jakub@cloudflare.com>,
 	"Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Subject: [PATCH 5.15.y] mptcp: Fix proto fallback detection with BPF
-Date: Mon,  1 Dec 2025 12:27:13 +0100
-Message-ID: <20251201112712.3573321-2-matttbe@kernel.org>
+Subject: [PATCH 5.10.y] mptcp: Fix proto fallback detection with BPF
+Date: Mon,  1 Dec 2025 12:34:58 +0100
+Message-ID: <20251201113457.3641925-2-matttbe@kernel.org>
 X-Mailer: git-send-email 2.51.0
-In-Reply-To: <2025112449-untaxed-cola-39b4@gregkh>
-References: <2025112449-untaxed-cola-39b4@gregkh>
+In-Reply-To: <2025112454-comic-external-4ced@gregkh>
+References: <2025112454-comic-external-4ced@gregkh>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3965; i=matttbe@kernel.org; h=from:subject; bh=HebLo+nplxyYDjVkJCy5huL0sbJ1daH9AyM9JTwDn9g=; b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDJ1qyeGij9qfrrqA8/1OY275BOCNjRM8piflxxRV35Ee m9s6QWnjlIWBjEuBlkxRRbptsj8mc+reEu8/Cxg5rAygQxh4OIUgIkw8DH8919t3+OxiC3q+++1 PLvUgjY8f9YcdfyS0pWGSdPYui0+7WJk+BarWK78OSU+JflPhZ76r9/XbC6/EE//FtZu7OfjMv0 4OwA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3982; i=matttbe@kernel.org; h=from:subject; bh=tWlUAzgP2edVINQzQrOIyxKql5ok0E0A8hX+SlnZL7o=; b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDJ1a5O0T9huc+cSne/8tsbU67Vhu/iWi58WX5+asOOB2 pvIui2TOkpZGMS4GGTFFFmk2yLzZz6v4i3x8rOAmcPKBDKEgYtTACZyagbD/xQtzdScqg+t/Zsv x6RvPrA4ZOXOL/ecD5k2rDSv2G6iuZLhf0Zu+0Uf8axiu+pNj6/89/20qbQ9Q22++Gr1V+JKi+q 7uQE=
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 Content-Transfer-Encoding: 8bit
 
@@ -126,10 +126,10 @@ Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
  1 file changed, 7 insertions(+), 2 deletions(-)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index f89de0f7b3e5..98fd4ffe6f11 100644
+index 0911ebe1f93a..70bc440c615d 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -77,8 +77,13 @@ static u64 mptcp_wnd_end(const struct mptcp_sock *msk)
+@@ -56,8 +56,13 @@ static struct socket *__mptcp_nmpc_socket(const struct mptcp_sock *msk)
  static bool mptcp_is_tcpsk(struct sock *sk)
  {
  	struct socket *sock = sk->sk_socket;
@@ -144,7 +144,7 @@ index f89de0f7b3e5..98fd4ffe6f11 100644
  		/* we are being invoked after mptcp_accept() has
  		 * accepted a non-mp-capable flow: sk is a tcp_sk,
  		 * not an mptcp one.
-@@ -89,7 +94,7 @@ static bool mptcp_is_tcpsk(struct sock *sk)
+@@ -68,7 +73,7 @@ static bool mptcp_is_tcpsk(struct sock *sk)
  		sock->ops = &inet_stream_ops;
  		return true;
  #if IS_ENABLED(CONFIG_MPTCP_IPV6)
