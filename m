@@ -1,109 +1,111 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DCA42F6189;
-	Tue,  2 Dec 2025 06:15:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B606F30DEAA
+	for <mptcp@lists.linux.dev>; Tue,  2 Dec 2025 09:40:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764656151; cv=none; b=HghiilGeCME0JirC0nKmiude1BwJ5bSmF+udkwjSSvAxFL2BH7oQBzK15GoCl57oVH8NEznMZkP+9sOFZDAjlTR4Qhjr+Yj2p+LksaNup0I9X7OpGC+nZ5AnHz0VbR7ZaMgywX83vhvLUMxSPXh41fHQg6FWsATlkoyenzuByVM=
+	t=1764668419; cv=none; b=E4HgicNsnbxlGWwpC41whLDqc516eeesinMMO0t26gT5xzwrAJSQaCMqL90MbJipn5BjqNOKc/P/zyhovH4+/x2FY5a4XSmqUOO5GAdX50TPjjk/zfhXIq/3Ad9cQjhr431rd/5UAPRQ5f32jZXG1SahatMkhZ6Sqw0dXjGENoU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764656151; c=relaxed/simple;
-	bh=qsTYuZd3FTP5N3RouZG5CmvZzfqSmT0ch3VUuBsKyZ4=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=VH0nvOBGDdkISlwjY4nfKgcJoelZ5/BDpIXz4FPWWlrXuIrN8ZvuBDidEdCOovJ2rDVdY7GrFVvSFQZ0jVoARbPtP0dXOFDgoeSHtTn8+y3MoTrCYBdmKOFNI4lm5qel1LYD9xFEt5K9WUfBZnIBp2UlTZ1h6Uk494RmXAveG2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JPfVR3re; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1764668419; c=relaxed/simple;
+	bh=/aCIS3A44YVOT7Yt+v0rWfdkxLd4NUb9BnKrIXswz5A=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=X/bIbXpbyu7WO3WHOKu+B2pU2XXyp+5ynXlGuJaD8fPa6k7yrwsjwlibICK2Io/ZyjD/s9zKcB1HSNJ5mOX1X2jzXZtI3qSmhYFyzhbmsBk9xVVlTO3cQj16m7xI8zbDPQ581jquWDYm5PNrpOvyNYWF0TS73NAo/0/oZyXoqvc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hJT+GEwk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JPfVR3re"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABA14C4CEF1;
-	Tue,  2 Dec 2025 06:15:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hJT+GEwk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0298C4CEF1;
+	Tue,  2 Dec 2025 09:40:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764656150;
-	bh=qsTYuZd3FTP5N3RouZG5CmvZzfqSmT0ch3VUuBsKyZ4=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=JPfVR3rep/KEkUtsWT9W5hLtit9cXbj5eT8S2fcwSKTLezs5A7LdxEIAJj6VrUyvV
-	 gzDau+Ey80ruCjtQig2Ie5Sp4eiNX88Jmc7bSZF2h11ZsazD7wLwiovURfFlkrMuTD
-	 lJewT9DAeo/EA/rZGA4XEeFfBXq7h0g83UcU3HhBWVInmhyaQ/HdwhLJbQJ0ZHGuZn
-	 b7xpW+Bye+bgbJRjSGeVKrDIUB1y+eSTyl2Va5QYD+GZno/Sx/AO7oiUfqMVY551Pb
-	 b45nqkv3H8M99ymad+7PyEWFWlwi7gZ7Gn/c7VZI06P9FJ6TS/9LJdsfCdnP1t7eEt
-	 4qymQxm37u3rA==
-Date: Tue, 2 Dec 2025 07:15:43 +0100 (GMT+01:00)
-From: Matthieu Baerts <matttbe@kernel.org>
-To: David Ahern <dsahern@kernel.org>
-Cc: Stephen Hemminger <stephen@networkplumber.org>, netdev@vger.kernel.org,
-	MPTCP Linux <mptcp@lists.linux.dev>,
-	Mat Martineau <martineau@kernel.org>,
-	Geliang Tang <geliang@kernel.org>
-Message-ID: <a92d7456-67a0-44bd-be03-99f17846a213@kernel.org>
-In-Reply-To: <23baf995-080d-4457-b089-a88a317425d2@kernel.org>
-References: <20251124-iproute-mptcp-laminar-v1-0-e56437483fdf@kernel.org> <23baf995-080d-4457-b089-a88a317425d2@kernel.org>
-Subject: Re: [PATCH iproute2-net 0/6] mptcp: new endpoint type and info
- flags
+	s=k20201202; t=1764668419;
+	bh=/aCIS3A44YVOT7Yt+v0rWfdkxLd4NUb9BnKrIXswz5A=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=hJT+GEwkEgx4+eJ1XR7OeBOj3KaN0rPKFRfZh9h85EVCTaIFMOLJ3MgjfL/Vj65Hu
+	 d738XRot0WXGiaKEJdWT8pqtH0l9nWkQRfPcFH7EIUMAdwL6QYBLjXK1QwtGifwgmw
+	 sxmBUYYfqhZ9yjsYnLd7J3FOuBVA092JMH2B3plV+NhGNoVdU4nqs/ptiC0XIskzjD
+	 QQjg6N1cpxB5RsXZHge4pb9MhFyIp9dr/IhcEr3ejKEfhGW1z5SelGI5Y46LWSUqsv
+	 +n1X22wzNyB7Jma0pJ/qFSWrC9AqQKwbDzhCtEItFcvDsGq0CgS6f0qcYzbrCgWkh6
+	 RXBgURQQ9E75A==
+Message-ID: <90461cd50133cd2b845a49dab7d3334aca4e0a15.camel@kernel.org>
+Subject: Re: [PATCH net-next] tls: check return value of
+ strp_load_anchor_with_queue
+From: Geliang Tang <geliang@kernel.org>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+Date: Tue, 02 Dec 2025 17:39:06 +0800
+In-Reply-To: <ad0fedfd-e25b-4054-aabf-ebac46dbbcd1@redhat.com>
+References: 
+	<ce74452f4c095a1761ef493b767b4bd9f9c14359.1764333805.git.tanggeliang@kylinos.cn>
+	 <ad0fedfd-e25b-4054-aabf-ebac46dbbcd1@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.56.2-4 
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Correlation-ID: <a92d7456-67a0-44bd-be03-99f17846a213@kernel.org>
+Content-Transfer-Encoding: 7bit
 
-Hi David,
+Hi Paolo,
 
-2 Dec 2025 03:34:42 David Ahern <dsahern@kernel.org>:
+mptcp-list only.
 
-> On 11/24/25 4:19 AM, Matthieu Baerts (NGI0) wrote:
->> Here are some patches related to MPTCP, mainly to control features that
->> will be in the future v6.18.
->>
->> - Patch 1: add an entry in the MAINTAINERS file for MPTCP.
->>
->> - Patch 2: fix two minor typos in the man page.
->>
->> - Patch 3: add laminar endpoint support.
->>
->> - Patches 4-6: display missing attributes & flags in 'ip mptcp monitor'.
->>
->> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
->> ---
->> Matthieu Baerts (NGI0) (6):
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 MAINTAINERS: add entry for mptcp
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 man: mptcp: fix minor typos
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mptcp: add 'laminar' endpoint support
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mptcp: monitor: add 'server side' info
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mptcp: monitor: add 'deny join id0' info
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mptcp: monitor: support 'server side' as =
-a flag
->>
->> MAINTAINERS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 7 ++=
-+++++
->> ip/ipmptcp.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 20 ++++++++++++=
-+++++---
->> man/man8/ip-mptcp.8 | 20 ++++++++++++++++++--
->> misc/ss.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=
-=C2=A0 2 ++
->> 4 files changed, 44 insertions(+), 5 deletions(-)
->> ---
->> base-commit: 2a82227f984b3f97354e4a490d3f172eedf07f63
->> change-id: 20251124-iproute-mptcp-laminar-2973adec2860
->>
->> Best regards,
->
-> applied to iproute2-next.
+On Fri, 2025-11-28 at 16:01 +0100, Paolo Abeni wrote:
+> On 11/28/25 1:55 PM, Geliang Tang wrote:
+> > From: Geliang Tang <tanggeliang@kylinos.cn>
+> > 
+> > In tls_strp_load_anchor_with_queue(), when first is null, strp-
+> > >anchor is
+> > not successfully initialized. Accessing strp->anchor afterward will
+> > result
+> > in a memory access error (for example, BUG: KASAN: slab-use-after-
+> > free in
+> > skb_copy_bits).
+> 
+> tls_strp_load_anchor_with_queue() has:
+> 
+> 	WARN_ON_ONCE(!first)
 
-Thank you!
+I printed sk_state of strp->sk when first was null, and found it to be
+8, which corresponds to TCP_CLOSE_WAIT.
 
-> Patches should always be against top of tree - no assumptions. I had to
-> fixup the first patch of this set which puts work on me.
+Following further debugging, it was found that the issue lies in
+tls_strp_read_sock() in [1] ("tls: add MPTCP protocol support"), where
+I used mptcp_inq_hint() to replace tcp_inq() as follows:
 
-I'm sorry about that!
+-	inq = tcp_inq(strp->sk);
++	inq = strp->sk->sk_protocol == IPPROTO_MPTCP ?
++	      mptcp_inq_hint(strp->sk) :
++	      tcp_inq(strp->sk);
+ 	if (inq < 1)
+ 		return 0;
 
-These patches were on top of iproute2.git (not next) because they were
-controlling features available in v6.18 (or older), but not only in net-nex=
-t.
+However, mptcp_inq_hint() returns 1 when sk->sk_state == TCP_CLOSE or
+sk->sk_shutdown & RCV_SHUTDOWN, which is inconsistent with the behavior
+of tcp_inq().
 
-Should I maybe next time not prefix such patches with [iproute2-net] but
-only [iproute2]?
+I can modify the condition here from 'if (inq < 1)' to 'if (inq <= 1)'
+to fix the issue, but I know this isn't a good solution. I need to
+reimplement an mptcp_inq() helper instead of directly using
+mptcp_inq_hint(), right? Could you give me some advice?
 
-Cheers,
-Matt
+Thanks,
+-Geliang
+
+[1]
+https://patchwork.kernel.org/project/mptcp/patch/2a0f438fbd4c5ddf7d8153bfc8aa44cfefa58c45.1763800601.git.tanggeliang@kylinos.cn/
+
+> 
+> and AFAICS all the tls_strp_load_anchor_with_queue() call sites
+> ensure
+> that the receive queue is not empty before invoking such function.
+> 
+> Hitting the above condition is a symtom of a prior issue that must be
+> identified and fixed. Please try to solve such problem instead.
+
+
+
+
+> 
+> /P
