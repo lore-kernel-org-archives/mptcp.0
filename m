@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE65126E14C;
-	Tue,  2 Dec 2025 16:02:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51A4D186E2E;
+	Tue,  2 Dec 2025 16:03:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764691378; cv=none; b=ZgJIYZdqVB9yy/Pm8tSx7Fq+YKK+nJ89YJLLUcu6R6Gh2nrftZvSAEKGZBMvI4/u5BYN4S/4ftgfDDZ83fZEYAgY9ZDDJRDN5BJeI2V396H4QrTkMoHCwh1T9oo84y02IvmmQL1iDpbQ8H5bTAb7PL+0a795a6LOXIfBEp8Y8+g=
+	t=1764691392; cv=none; b=YU87ovALZyqVHGBJG/AOhNePs0tzlmTjlWeym02O1NPh/pIKhZ0I8eWcYOr08SqFbQElwoXNeo7V+/ZX81RDj4SjnmZ9oBg5kczDOTJTWLZZYqcX4HBb5zYIgTOminTIyXvgl3bgzR61PjulCBmYuLvVLjfbjrambT3Hjwk1l9g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764691378; c=relaxed/simple;
-	bh=iKdEE0bsWQa4iFpzyCNkCDT4BXuqlpTp9vmNQ4Xgq+8=;
+	s=arc-20240116; t=1764691392; c=relaxed/simple;
+	bh=fYCDeDcj9pNv/mfsKKmk2uwvO7Y7Kxac6VTOaKZ1izs=;
 	h=Subject:To:Cc:From:Date:In-Reply-To:Message-ID:MIME-Version:
-	 Content-Type; b=Jqtp87OGjMSd8fW+PKair7N7P+xDgPUAbwSZgLmkOrPATnqf+umbe0wXuFEfb32au5vd9cHgOCSZH4ZkY6D6JVFAPKQ+rPoi5wN2K3vtnd/s8UrnJGYcQomBI+ICGvHYQl0CUIppA8+cELgU5R8VDQ5doWolvRzeujAWldSL3r8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=MbPOim6S; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type; b=CtHysFYm3YRhZAW1dGfGX7X1itnEf7OWilC0K+TWO8ClINeihbeGCnEI7d9M/RwjkRQWdzcI7QanZMqC8lqLa/qYP63CVq/PPfsiC51lMh7ImnweiSEZQP39MN9BEN403xzHZlwNfu+WGG3z8AWxYqmAAfdZhp36PnXtrZ/cWy0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=lYbdQxt7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="MbPOim6S"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1811C116B1;
-	Tue,  2 Dec 2025 16:02:57 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="lYbdQxt7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E6F9C4CEF1;
+	Tue,  2 Dec 2025 16:03:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1764691378;
-	bh=iKdEE0bsWQa4iFpzyCNkCDT4BXuqlpTp9vmNQ4Xgq+8=;
+	s=korg; t=1764691391;
+	bh=fYCDeDcj9pNv/mfsKKmk2uwvO7Y7Kxac6VTOaKZ1izs=;
 	h=Subject:To:Cc:From:Date:In-Reply-To:From;
-	b=MbPOim6SDDxcjc2fwlctPULloF9x5gMybssl1G65ouuz+/BlZrk93x2TZl6N57FV8
-	 wixw2Po6Dyrxj7ljYn2I369k6MaZ4rRR5eT/LozdsdflNHuxUH3G8njlL0IOKFQlIL
-	 xvGlEYZMKC121/158LjHw6sWHchH/MDryDFvaxHo=
-Subject: Patch "mptcp: Fix proto fallback detection with BPF" has been added to the 6.1-stable tree
-To: gregkh@linuxfoundation.org,jakub@cloudflare.com,jiayuan.chen@linux.dev,martin.lau@kernel.org,matttbe@kernel.org,mptcp@lists.linux.dev
+	b=lYbdQxt7JlYRGUvZiO3As3Ag53dkTjjFscxwHl8jnMZab/QubP4mc4EUjE9noaPqo
+	 YWbVtAuIZqdZnb0sdH5pbKm7tKfNJIozieDVdJ1bG7XdTNZi+oUMLRZFNMIClKGeD4
+	 XjEe6UVIlZLugk3ZSW8l+0iayRFqIdGUIzDOIXjw=
+Subject: Patch "selftests: mptcp: join: endpoints: longer transfer" has been added to the 6.1-stable tree
+To: geliang@kernel.org,gregkh@linuxfoundation.org,kuba@kernel.org,matttbe@kernel.org,mptcp@lists.linux.dev,sashal@kernel.org
 Cc: <stable-commits@vger.kernel.org>
 From: <gregkh@linuxfoundation.org>
 Date: Tue, 02 Dec 2025 17:02:44 +0100
-In-Reply-To: <20251201104459.3440448-2-matttbe@kernel.org>
-Message-ID: <2025120244-skied-pretended-8151@gregkh>
+In-Reply-To: <20251129165510.2124040-2-matttbe@kernel.org>
+Message-ID: <2025120244-scraggly-drone-522a@gregkh>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -44,129 +44,102 @@ X-Patchwork-Hint: ignore
 
 This is a note to let you know that I've just added the patch titled
 
-    mptcp: Fix proto fallback detection with BPF
+    selftests: mptcp: join: endpoints: longer transfer
 
 to the 6.1-stable tree which can be found at:
     http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
 
 The filename of the patch is:
-     mptcp-fix-proto-fallback-detection-with-bpf.patch
+     selftests-mptcp-join-endpoints-longer-transfer.patch
 and it can be found in the queue-6.1 subdirectory.
 
 If you, or anyone else, feels it should not be added to the stable tree,
 please let <stable@vger.kernel.org> know about it.
 
 
-From stable+bounces-197700-greg=kroah.com@vger.kernel.org Mon Dec  1 11:45:35 2025
+From stable+bounces-197643-greg=kroah.com@vger.kernel.org Sat Nov 29 17:56:00 2025
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Mon,  1 Dec 2025 11:45:00 +0100
-Subject: mptcp: Fix proto fallback detection with BPF
+Date: Sat, 29 Nov 2025 17:55:11 +0100
+Subject: selftests: mptcp: join: endpoints: longer transfer
 To: stable@vger.kernel.org, gregkh@linuxfoundation.org
-Cc: MPTCP Upstream <mptcp@lists.linux.dev>, Jiayuan Chen <jiayuan.chen@linux.dev>, Martin KaFai Lau <martin.lau@kernel.org>, Jakub Sitnicki <jakub@cloudflare.com>, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Message-ID: <20251201104459.3440448-2-matttbe@kernel.org>
+Cc: MPTCP Upstream <mptcp@lists.linux.dev>, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, Geliang Tang <geliang@kernel.org>, Jakub Kicinski <kuba@kernel.org>, Sasha Levin <sashal@kernel.org>
+Message-ID: <20251129165510.2124040-2-matttbe@kernel.org>
 
-From: Jiayuan Chen <jiayuan.chen@linux.dev>
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 
-commit c77b3b79a92e3345aa1ee296180d1af4e7031f8f upstream.
+[ Upstream commit 6457595db9870298ee30b6d75287b8548e33fe19 ]
 
-The sockmap feature allows bpf syscall from userspace, or based
-on bpf sockops, replacing the sk_prot of sockets during protocol stack
-processing with sockmap's custom read/write interfaces.
-'''
-tcp_rcv_state_process()
-  syn_recv_sock()/subflow_syn_recv_sock()
-    tcp_init_transfer(BPF_SOCK_OPS_PASSIVE_ESTABLISHED_CB)
-      bpf_skops_established       <== sockops
-        bpf_sock_map_update(sk)   <== call bpf helper
-          tcp_bpf_update_proto()  <== update sk_prot
-'''
+In rare cases, when the test environment is very slow, some userspace
+tests can fail because some expected events have not been seen.
 
-When the server has MPTCP enabled but the client sends a TCP SYN
-without MPTCP, subflow_syn_recv_sock() performs a fallback on the
-subflow, replacing the subflow sk's sk_prot with the native sk_prot.
-'''
-subflow_syn_recv_sock()
-  subflow_ulp_fallback()
-    subflow_drop_ctx()
-      mptcp_subflow_ops_undo_override()
-'''
+Because the tests are expecting a long on-going connection, and they are
+not waiting for the end of the transfer, it is fine to make the
+connection longer. This connection will be killed at the end, after the
+verifications, so making it longer doesn't change anything, apart from
+avoid it to end before the end of the verifications
 
-Then, this subflow can be normally used by sockmap, which replaces the
-native sk_prot with sockmap's custom sk_prot. The issue occurs when the
-user executes accept::mptcp_stream_accept::mptcp_fallback_tcp_ops().
-Here, it uses sk->sk_prot to compare with the native sk_prot, but this
-is incorrect when sockmap is used, as we may incorrectly set
-sk->sk_socket->ops.
+To play it safe, all endpoints tests not waiting for the end of the
+transfer are now sharing a longer file (128KB) at slow speed.
 
-This fix uses the more generic sk_family for the comparison instead.
-
-Additionally, this also prevents a WARNING from occurring:
-
-result from ./scripts/decode_stacktrace.sh:
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 337 at net/mptcp/protocol.c:68 mptcp_stream_accept \
-(net/mptcp/protocol.c:4005)
-Modules linked in:
-...
-
-PKRU: 55555554
-Call Trace:
-<TASK>
-do_accept (net/socket.c:1989)
-__sys_accept4 (net/socket.c:2028 net/socket.c:2057)
-__x64_sys_accept (net/socket.c:2067)
-x64_sys_call (arch/x86/entry/syscall_64.c:41)
-do_syscall_64 (arch/x86/entry/syscall_64.c:63 arch/x86/entry/syscall_64.c:94)
-entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:130)
-RIP: 0033:0x7f87ac92b83d
-
----[ end trace 0000000000000000 ]---
-
-Fixes: 0b4f33def7bb ("mptcp: fix tcp fallback crash")
-Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
-Signed-off-by: Martin KaFai Lau <martin.lau@kernel.org>
-Reviewed-by: Jakub Sitnicki <jakub@cloudflare.com>
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Cc: <stable@vger.kernel.org>
-Link: https://patch.msgid.link/20251111060307.194196-3-jiayuan.chen@linux.dev
-[ Conflicts in protocol.c, because commit 8e2b8a9fa512 ("mptcp: don't
-  overwrite sock_ops in mptcp_is_tcpsk()") is not in this version. It
-  changes the logic on how and where the sock_ops is overridden in case
-  of passive fallback. To fix this, mptcp_is_tcpsk() is modified to use
-  the family, but first, a check of the protocol is required to continue
-  returning 'false' in case of MPTCP socket. ]
+Fixes: 69c6ce7b6eca ("selftests: mptcp: add implicit endpoint test case")
+Cc: stable@vger.kernel.org
+Fixes: e274f7154008 ("selftests: mptcp: add subflow limits test-cases")
+Fixes: b5e2fb832f48 ("selftests: mptcp: add explicit test case for remove/readd")
+Fixes: e06959e9eebd ("selftests: mptcp: join: test for flush/re-add endpoints")
+Reviewed-by: Geliang Tang <geliang@kernel.org>
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Link: https://patch.msgid.link/20251110-net-mptcp-sft-join-unstable-v1-3-a4332c714e10@kernel.org
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+[ removed curly braces and stderr redirection ]
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+[ Conflicts in mptcp_join.sh because commit 0c93af1f8907 ("selftests:
+  mptcp: drop test_linkfail parameter") is not in this version. It moved
+  the 4th parameter to an env var. To fix the conflicts, the new value
+  simply needs to be added as the 4th argument instead of an env var. ]
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/mptcp/protocol.c |    9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ tools/testing/selftests/net/mptcp/mptcp_join.sh |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -79,8 +79,13 @@ static u64 mptcp_wnd_end(const struct mp
- static bool mptcp_is_tcpsk(struct sock *sk)
- {
- 	struct socket *sock = sk->sk_socket;
-+	unsigned short family;
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -3313,7 +3313,7 @@ endpoint_tests()
+ 		pm_nl_set_limits $ns1 2 2
+ 		pm_nl_set_limits $ns2 2 2
+ 		pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
+-		run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow 2>/dev/null &
++		run_tests $ns1 $ns2 10.0.1.1 128 0 0 slow 2>/dev/null &
  
--	if (unlikely(sk->sk_prot == &tcp_prot)) {
-+	if (likely(sk->sk_protocol == IPPROTO_MPTCP))
-+		return false;
-+
-+	family = READ_ONCE(sk->sk_family);
-+	if (unlikely(family == AF_INET)) {
- 		/* we are being invoked after mptcp_accept() has
- 		 * accepted a non-mp-capable flow: sk is a tcp_sk,
- 		 * not an mptcp one.
-@@ -91,7 +96,7 @@ static bool mptcp_is_tcpsk(struct sock *
- 		sock->ops = &inet_stream_ops;
- 		return true;
- #if IS_ENABLED(CONFIG_MPTCP_IPV6)
--	} else if (unlikely(sk->sk_prot == &tcpv6_prot)) {
-+	} else if (unlikely(family == AF_INET6)) {
- 		sock->ops = &inet6_stream_ops;
- 		return true;
- #endif
+ 		wait_mpj $ns1
+ 		pm_nl_check_endpoint 1 "creation" \
+@@ -3336,7 +3336,7 @@ endpoint_tests()
+ 		pm_nl_set_limits $ns2 0 3
+ 		pm_nl_add_endpoint $ns2 10.0.1.2 id 1 dev ns2eth1 flags subflow
+ 		pm_nl_add_endpoint $ns2 10.0.2.2 id 2 dev ns2eth2 flags subflow
+-		run_tests $ns1 $ns2 10.0.1.1 4 0 0 speed_5 2>/dev/null &
++		run_tests $ns1 $ns2 10.0.1.1 128 0 0 speed_5 2>/dev/null &
+ 		local tests_pid=$!
+ 
+ 		wait_mpj $ns2
+@@ -3401,7 +3401,7 @@ endpoint_tests()
+ 		# broadcast IP: no packet for this address will be received on ns1
+ 		pm_nl_add_endpoint $ns1 224.0.0.1 id 2 flags signal
+ 		pm_nl_add_endpoint $ns1 10.0.1.1 id 42 flags signal
+-		run_tests $ns1 $ns2 10.0.1.1 4 0 0 speed_5 2>/dev/null &
++		run_tests $ns1 $ns2 10.0.1.1 128 0 0 speed_5 2>/dev/null &
+ 		local tests_pid=$!
+ 
+ 		wait_mpj $ns2
+@@ -3464,7 +3464,7 @@ endpoint_tests()
+ 		# broadcast IP: no packet for this address will be received on ns1
+ 		pm_nl_add_endpoint $ns1 224.0.0.1 id 2 flags signal
+ 		pm_nl_add_endpoint $ns2 10.0.3.2 id 3 flags subflow
+-		run_tests $ns1 $ns2 10.0.1.1 4 0 0 speed_20 2>/dev/null &
++		run_tests $ns1 $ns2 10.0.1.1 128 0 0 speed_20 2>/dev/null &
+ 		local tests_pid=$!
+ 
+ 		wait_attempt_fail $ns2
 
 
 Patches currently in stable-queue which might be from matttbe@kernel.org are
