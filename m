@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8606D2FB08F;
-	Wed,  3 Dec 2025 13:32:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 439602E8B86;
+	Wed,  3 Dec 2025 13:32:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764768720; cv=none; b=BG10rBmUY2LNXkCjD7VLAf3IQWjn4UOiOInbVTaIenLmUYyjdOiAOUISb/c5CPN7gHy9VyrD35itf+B2Grn8BBAvpIv52jC4VP1sorcdwB1Hq4X1avy9370ZX3D3wipKLDhKGKf5PDDutn5kGy8kZ7I8iusY13mXMf9NdGdp2CQ=
+	t=1764768727; cv=none; b=bn+ckH30E1xzqzzkUA262ShMUtgpB5+WrT0/K/7tXSm/Y7Liv4ZgEOyCiT9R0SCGMbOR6IcyHxL57ROOP2YwcydhTCeR6GRqRrqNxf0PDx7s6zf5GNPaV9mRd97xHSSe112oPyK9aQYLAXpUj1uGEsHUFLd1yaan5RUnO2HW2m0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764768720; c=relaxed/simple;
-	bh=uXJDv15SsCAdhA6on8Kcs6NSuijMkmM3ly31Esed8w8=;
+	s=arc-20240116; t=1764768727; c=relaxed/simple;
+	bh=u9gnSTJiAF2u/nBG7jQiy9HGLn3JSxSzKJjdgaOrWCo=;
 	h=Subject:To:Cc:From:Date:In-Reply-To:Message-ID:MIME-Version:
-	 Content-Type; b=Fxi75mrwyEoy+UdAZcGPQKCcsBc4OU/Dg4zSEwY1KsPVXSS7LbWq5D+Vp9MbzGWv24bZ1fORrs4hhWK+R1Mar4iuasewUMYjJy3vPLN6XdwM10q3l/IN38G5KFrcJtdUPTQbCVaTwmz34Nf0zwHbl+keNymdXu1XeOMcTdQB7VE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=WqEVLmrd; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type; b=GYxvutnmDDOXpnFtfXX4H7RCUIdJzQDl+FevMQ/6BVZTIDtM5ARvRmFTMSpLTzWn0dlA9baF+tKax+OiAMwpauoxN/mSxtD50QbWHXYnhwwzyno7j60HBEmpK0NhKV5gMma2bFJmvj8CVqqHGksgbe5iFAkgFOYPkp/HohvyCmI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=loy9Rnfm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="WqEVLmrd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75970C4CEFB;
-	Wed,  3 Dec 2025 13:31:59 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="loy9Rnfm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB3F8C4CEFB;
+	Wed,  3 Dec 2025 13:32:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1764768720;
-	bh=uXJDv15SsCAdhA6on8Kcs6NSuijMkmM3ly31Esed8w8=;
+	s=korg; t=1764768727;
+	bh=u9gnSTJiAF2u/nBG7jQiy9HGLn3JSxSzKJjdgaOrWCo=;
 	h=Subject:To:Cc:From:Date:In-Reply-To:From;
-	b=WqEVLmrdQCyO7ZJbbM3yIC1HE8YIUgI9s1mZCqs5iXQlyobWisqKgTndsdPjV/SPG
-	 usl2F60tpGy5VLtIJOKSmXJDeybj+rswdEyUPmZ5xyB0DqYqUhmYq9E8mmt3DPLbJD
-	 /IFU7Q+BxgEB8H9AMHAlV4zaMKDqF93zeG6w4rwU=
-Subject: Patch "mptcp: Fix proto fallback detection with BPF" has been added to the 5.15-stable tree
-To: gregkh@linuxfoundation.org,jakub@cloudflare.com,jiayuan.chen@linux.dev,martin.lau@kernel.org,matttbe@kernel.org,mptcp@lists.linux.dev
+	b=loy9Rnfm1X+0/hVxFAUrKoHlTk2KYf+rLVlfo+XtVkl6vDupzuFD6lF2O8mHhrBc5
+	 f6nK/qyCyg0KBdGkUOKzFXlQPdcT1kpXtFMPd89T4PUiX1chiG0VZ1xPa7yPEpvDCM
+	 ZT2Vq4Xp/3SS2wLzLLuZpU2I32eP2V5U+KGoJL+4=
+Subject: Patch "selftests: mptcp: join: rm: set backup flag" has been added to the 5.15-stable tree
+To: geliang@kernel.org,gregkh@linuxfoundation.org,kuba@kernel.org,matttbe@kernel.org,mptcp@lists.linux.dev
 Cc: <stable-commits@vger.kernel.org>
 From: <gregkh@linuxfoundation.org>
 Date: Wed, 03 Dec 2025 14:31:37 +0100
-In-Reply-To: <20251201112712.3573321-2-matttbe@kernel.org>
-Message-ID: <2025120337-shakable-coastline-aea3@gregkh>
+In-Reply-To: <20251129165729.2127525-2-matttbe@kernel.org>
+Message-ID: <2025120337-ditto-icon-3099@gregkh>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -44,129 +44,194 @@ X-Patchwork-Hint: ignore
 
 This is a note to let you know that I've just added the patch titled
 
-    mptcp: Fix proto fallback detection with BPF
+    selftests: mptcp: join: rm: set backup flag
 
 to the 5.15-stable tree which can be found at:
     http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
 
 The filename of the patch is:
-     mptcp-fix-proto-fallback-detection-with-bpf.patch
+     selftests-mptcp-join-rm-set-backup-flag.patch
 and it can be found in the queue-5.15 subdirectory.
 
 If you, or anyone else, feels it should not be added to the stable tree,
 please let <stable@vger.kernel.org> know about it.
 
 
-From stable+bounces-197759-greg=kroah.com@vger.kernel.org Mon Dec  1 12:31:55 2025
+From stable+bounces-197645-greg=kroah.com@vger.kernel.org Sat Nov 29 17:58:02 2025
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Mon,  1 Dec 2025 12:27:13 +0100
-Subject: mptcp: Fix proto fallback detection with BPF
+Date: Sat, 29 Nov 2025 17:57:30 +0100
+Subject: selftests: mptcp: join: rm: set backup flag
 To: stable@vger.kernel.org, gregkh@linuxfoundation.org
-Cc: MPTCP Upstream <mptcp@lists.linux.dev>, Jiayuan Chen <jiayuan.chen@linux.dev>, Martin KaFai Lau <martin.lau@kernel.org>, Jakub Sitnicki <jakub@cloudflare.com>, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Message-ID: <20251201112712.3573321-2-matttbe@kernel.org>
+Cc: MPTCP Upstream <mptcp@lists.linux.dev>, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, Geliang Tang <geliang@kernel.org>, Jakub Kicinski <kuba@kernel.org>
+Message-ID: <20251129165729.2127525-2-matttbe@kernel.org>
 
-From: Jiayuan Chen <jiayuan.chen@linux.dev>
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 
-commit c77b3b79a92e3345aa1ee296180d1af4e7031f8f upstream.
+commit aea73bae662a0e184393d6d7d0feb18d2577b9b9 upstream.
 
-The sockmap feature allows bpf syscall from userspace, or based
-on bpf sockops, replacing the sk_prot of sockets during protocol stack
-processing with sockmap's custom read/write interfaces.
-'''
-tcp_rcv_state_process()
-  syn_recv_sock()/subflow_syn_recv_sock()
-    tcp_init_transfer(BPF_SOCK_OPS_PASSIVE_ESTABLISHED_CB)
-      bpf_skops_established       <== sockops
-        bpf_sock_map_update(sk)   <== call bpf helper
-          tcp_bpf_update_proto()  <== update sk_prot
-'''
+Some of these 'remove' tests rarely fail because a subflow has been
+reset instead of cleanly removed. This can happen when one extra subflow
+which has never carried data is being closed (FIN) on one side, while
+the other is sending data for the first time.
 
-When the server has MPTCP enabled but the client sends a TCP SYN
-without MPTCP, subflow_syn_recv_sock() performs a fallback on the
-subflow, replacing the subflow sk's sk_prot with the native sk_prot.
-'''
-subflow_syn_recv_sock()
-  subflow_ulp_fallback()
-    subflow_drop_ctx()
-      mptcp_subflow_ops_undo_override()
-'''
+To avoid such subflows to be used right at the end, the backup flag has
+been added. With that, data will be only carried on the initial subflow.
 
-Then, this subflow can be normally used by sockmap, which replaces the
-native sk_prot with sockmap's custom sk_prot. The issue occurs when the
-user executes accept::mptcp_stream_accept::mptcp_fallback_tcp_ops().
-Here, it uses sk->sk_prot to compare with the native sk_prot, but this
-is incorrect when sockmap is used, as we may incorrectly set
-sk->sk_socket->ops.
-
-This fix uses the more generic sk_family for the comparison instead.
-
-Additionally, this also prevents a WARNING from occurring:
-
-result from ./scripts/decode_stacktrace.sh:
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 337 at net/mptcp/protocol.c:68 mptcp_stream_accept \
-(net/mptcp/protocol.c:4005)
-Modules linked in:
-...
-
-PKRU: 55555554
-Call Trace:
-<TASK>
-do_accept (net/socket.c:1989)
-__sys_accept4 (net/socket.c:2028 net/socket.c:2057)
-__x64_sys_accept (net/socket.c:2067)
-x64_sys_call (arch/x86/entry/syscall_64.c:41)
-do_syscall_64 (arch/x86/entry/syscall_64.c:63 arch/x86/entry/syscall_64.c:94)
-entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:130)
-RIP: 0033:0x7f87ac92b83d
-
----[ end trace 0000000000000000 ]---
-
-Fixes: 0b4f33def7bb ("mptcp: fix tcp fallback crash")
-Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
-Signed-off-by: Martin KaFai Lau <martin.lau@kernel.org>
-Reviewed-by: Jakub Sitnicki <jakub@cloudflare.com>
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Cc: <stable@vger.kernel.org>
-Link: https://patch.msgid.link/20251111060307.194196-3-jiayuan.chen@linux.dev
-[ Conflicts in protocol.c, because commit 8e2b8a9fa512 ("mptcp: don't
-  overwrite sock_ops in mptcp_is_tcpsk()") is not in this version. It
-  changes the logic on how and where the sock_ops is overridden in case
-  of passive fallback. To fix this, mptcp_is_tcpsk() is modified to use
-  the family, but first, a check of the protocol is required to continue
-  returning 'false' in case of MPTCP socket. ]
+Fixes: d2c4333a801c ("selftests: mptcp: add testcases for removing addrs")
+Cc: stable@vger.kernel.org
+Reviewed-by: Geliang Tang <geliang@kernel.org>
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Link: https://patch.msgid.link/20251110-net-mptcp-sft-join-unstable-v1-2-a4332c714e10@kernel.org
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+[ The subtests structure has changed quite a bit in newer versions, see
+  commit c7d49c033de0 ("selftests: mptcp: join: alt. to exec specific
+  tests") and commit ae7bd9ccecc3 ("selftests: mptcp: join: option to
+  execute specific tests") for example.
+  To resolve the conflicts, the same principle has been applied: adding
+  ',backup' for each non-ID0 endpoint in remove_tests. ]
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/mptcp/protocol.c |    9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ tools/testing/selftests/net/mptcp/mptcp_join.sh |   54 ++++++++++++------------
+ 1 file changed, 27 insertions(+), 27 deletions(-)
 
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -77,8 +77,13 @@ static u64 mptcp_wnd_end(const struct mp
- static bool mptcp_is_tcpsk(struct sock *sk)
- {
- 	struct socket *sock = sk->sk_socket;
-+	unsigned short family;
- 
--	if (unlikely(sk->sk_prot == &tcp_prot)) {
-+	if (likely(sk->sk_protocol == IPPROTO_MPTCP))
-+		return false;
-+
-+	family = READ_ONCE(sk->sk_family);
-+	if (unlikely(family == AF_INET)) {
- 		/* we are being invoked after mptcp_accept() has
- 		 * accepted a non-mp-capable flow: sk is a tcp_sk,
- 		 * not an mptcp one.
-@@ -89,7 +94,7 @@ static bool mptcp_is_tcpsk(struct sock *
- 		sock->ops = &inet_stream_ops;
- 		return true;
- #if IS_ENABLED(CONFIG_MPTCP_IPV6)
--	} else if (unlikely(sk->sk_prot == &tcpv6_prot)) {
-+	} else if (unlikely(family == AF_INET6)) {
- 		sock->ops = &inet6_stream_ops;
- 		return true;
- #endif
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -1269,7 +1269,7 @@ remove_tests()
+ 	reset
+ 	ip netns exec $ns1 ./pm_nl_ctl limits 0 1
+ 	ip netns exec $ns2 ./pm_nl_ctl limits 0 1
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
++	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow,backup
+ 	run_tests $ns1 $ns2 10.0.1.1 0 0 -1 slow
+ 	chk_join_nr "remove single subflow" 1 1 1
+ 	chk_rm_nr 1 1
+@@ -1278,8 +1278,8 @@ remove_tests()
+ 	reset
+ 	ip netns exec $ns1 ./pm_nl_ctl limits 0 2
+ 	ip netns exec $ns2 ./pm_nl_ctl limits 0 2
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags subflow
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
++	ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags subflow,backup
++	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow,backup
+ 	run_tests $ns1 $ns2 10.0.1.1 0 0 -2 slow
+ 	chk_join_nr "remove multiple subflows" 2 2 2
+ 	chk_rm_nr 2 2
+@@ -1287,7 +1287,7 @@ remove_tests()
+ 	# single address, remove
+ 	reset
+ 	ip netns exec $ns1 ./pm_nl_ctl limits 0 1
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
++	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal,backup
+ 	ip netns exec $ns2 ./pm_nl_ctl limits 1 1
+ 	run_tests $ns1 $ns2 10.0.1.1 0 -1 0 slow
+ 	chk_join_nr "remove single address" 1 1 1
+@@ -1297,9 +1297,9 @@ remove_tests()
+ 	# subflow and signal, remove
+ 	reset
+ 	ip netns exec $ns1 ./pm_nl_ctl limits 0 2
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
++	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal,backup
+ 	ip netns exec $ns2 ./pm_nl_ctl limits 1 2
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
++	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow,backup
+ 	run_tests $ns1 $ns2 10.0.1.1 0 -1 -1 slow
+ 	chk_join_nr "remove subflow and signal" 2 2 2
+ 	chk_add_nr 1 1
+@@ -1308,10 +1308,10 @@ remove_tests()
+ 	# subflows and signal, remove
+ 	reset
+ 	ip netns exec $ns1 ./pm_nl_ctl limits 0 3
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
++	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal,backup
+ 	ip netns exec $ns2 ./pm_nl_ctl limits 1 3
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.4.2 flags subflow
++	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow,backup
++	ip netns exec $ns2 ./pm_nl_ctl add 10.0.4.2 flags subflow,backup
+ 	run_tests $ns1 $ns2 10.0.1.1 0 -1 -2 slow
+ 	chk_join_nr "remove subflows and signal" 3 3 3
+ 	chk_add_nr 1 1
+@@ -1320,9 +1320,9 @@ remove_tests()
+ 	# addresses remove
+ 	reset
+ 	ip netns exec $ns1 ./pm_nl_ctl limits 3 3
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal id 250
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.4.1 flags signal
++	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal,backup id 250
++	ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal,backup
++	ip netns exec $ns1 ./pm_nl_ctl add 10.0.4.1 flags signal,backup
+ 	ip netns exec $ns2 ./pm_nl_ctl limits 3 3
+ 	run_tests $ns1 $ns2 10.0.1.1 0 -3 0 slow
+ 	chk_join_nr "remove addresses" 3 3 3
+@@ -1332,10 +1332,10 @@ remove_tests()
+ 	# invalid addresses remove
+ 	reset
+ 	ip netns exec $ns1 ./pm_nl_ctl limits 3 3
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.12.1 flags signal
++	ip netns exec $ns1 ./pm_nl_ctl add 10.0.12.1 flags signal,backup
+ 	# broadcast IP: no packet for this address will be received on ns1
+-	ip netns exec $ns1 ./pm_nl_ctl add 224.0.0.1 flags signal
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal
++	ip netns exec $ns1 ./pm_nl_ctl add 224.0.0.1 flags signal,backup
++	ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal,backup
+ 	ip netns exec $ns2 ./pm_nl_ctl limits 2 2
+ 	run_tests $ns1 $ns2 10.0.1.1 0 -3 0 slow
+ 	chk_join_nr "remove invalid addresses" 1 1 1
+@@ -1345,10 +1345,10 @@ remove_tests()
+ 	# subflows and signal, flush
+ 	reset
+ 	ip netns exec $ns1 ./pm_nl_ctl limits 0 3
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
++	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal,backup
+ 	ip netns exec $ns2 ./pm_nl_ctl limits 1 3
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.4.2 flags subflow
++	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow,backup
++	ip netns exec $ns2 ./pm_nl_ctl add 10.0.4.2 flags subflow,backup
+ 	run_tests $ns1 $ns2 10.0.1.1 0 -8 -8 slow
+ 	chk_join_nr "flush subflows and signal" 3 3 3
+ 	chk_add_nr 1 1
+@@ -1358,9 +1358,9 @@ remove_tests()
+ 	reset
+ 	ip netns exec $ns1 ./pm_nl_ctl limits 3 3
+ 	ip netns exec $ns2 ./pm_nl_ctl limits 3 3
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags subflow id 150
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+-	ip netns exec $ns2 ./pm_nl_ctl add 10.0.4.2 flags subflow
++	ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags subflow,backup id 150
++	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow,backup
++	ip netns exec $ns2 ./pm_nl_ctl add 10.0.4.2 flags subflow,backup
+ 	run_tests $ns1 $ns2 10.0.1.1 0 -8 -8 slow
+ 	chk_join_nr "flush subflows" 3 3 3
+ 	chk_rm_nr 3 3
+@@ -1368,9 +1368,9 @@ remove_tests()
+ 	# addresses flush
+ 	reset
+ 	ip netns exec $ns1 ./pm_nl_ctl limits 3 3
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal id 250
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.4.1 flags signal
++	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal,backup id 250
++	ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal,backup
++	ip netns exec $ns1 ./pm_nl_ctl add 10.0.4.1 flags signal,backup
+ 	ip netns exec $ns2 ./pm_nl_ctl limits 3 3
+ 	run_tests $ns1 $ns2 10.0.1.1 0 -8 -8 slow
+ 	chk_join_nr "flush addresses" 3 3 3
+@@ -1380,9 +1380,9 @@ remove_tests()
+ 	# invalid addresses flush
+ 	reset
+ 	ip netns exec $ns1 ./pm_nl_ctl limits 3 3
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.12.1 flags signal
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.14.1 flags signal
++	ip netns exec $ns1 ./pm_nl_ctl add 10.0.12.1 flags signal,backup
++	ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal,backup
++	ip netns exec $ns1 ./pm_nl_ctl add 10.0.14.1 flags signal,backup
+ 	ip netns exec $ns2 ./pm_nl_ctl limits 3 3
+ 	run_tests $ns1 $ns2 10.0.1.1 0 -8 0 slow
+ 	chk_join_nr "flush invalid addresses" 1 1 1
 
 
 Patches currently in stable-queue which might be from matttbe@kernel.org are
