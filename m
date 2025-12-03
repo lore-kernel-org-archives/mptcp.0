@@ -1,52 +1,52 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BA37314B8B
-	for <mptcp@lists.linux.dev>; Wed,  3 Dec 2025 18:24:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 121CA307AD9
+	for <mptcp@lists.linux.dev>; Wed,  3 Dec 2025 18:24:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764786289; cv=none; b=NjasyOtulwV14efBwEqeovqWhBlykKU8b1tVTgZe8v+iDP6m2uDakBmYZn7dK/ZPR5UEfb848/UL/2nihU6s9WxE/CborjjWWtohk6ltiGrcPku4XrLL2dRdrNs5XggqY8hX146G0YxPkQnDnA36k+ruBxhtpGMkbMsfl/AerBc=
+	t=1764786295; cv=none; b=l6hIrR1e6FCufboZ1zP+eHG5mYofkVUUeUsKkt9Log5z2/P0jIGhzlf8hkxfYgzh/oA/mHMMozFo4cVfanm5zztHHhMBtYH0OiUWEtjt5sa5QFB2yLTsuk9IQmS3CCOhdtfNH8C72bo/cLwCz5qA1XG90GXjho2WrGNHIIFk8mg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764786289; c=relaxed/simple;
-	bh=jqNmFk+/1duw/Gr99YqnH0G+DeHszM9CnIfGwrIKl6g=;
+	s=arc-20240116; t=1764786295; c=relaxed/simple;
+	bh=X/73+89lcRcs5N0rhhm+FVux78LqubxSAr2BdgM/uco=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=O5uRK5a9NyVCZx8rVObAtaOyzO0puoT2XD81ySflJkFWm1rl0574S5EwUFszyHyPI43c5gVgHwMKn7z/tP7Ur081xGV0a1JP3QkaB6hLqihQbSSMrVm0bIT5jSmIHvrE7OwqyHKJkcDLut7L5BP9M9sy0tkdQ7iAa4FyqVe4qs4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dlOk0X5u; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:content-type; b=d2fOKWWaEkrfApYoDb4Vc8meVIfoKmyVrpYX4NHgvwOOGROd2aQ31PgX50jq8wQvIHws69wqhfrX9ov1wQZQy+rTg816kCOGjaMbUKcIhxoP5y9dj1oj3UI89dGucAJNt0v4LOAMtGhSf2immh4hURpebNvWtZ//wJGmXFBe8mI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VNXTacLD; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dlOk0X5u"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VNXTacLD"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1764786286;
+	s=mimecast20190719; t=1764786290;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=RbloZGjUGTkgyyPDiAC1AyFhRvmMllDnoYn79jSJ53c=;
-	b=dlOk0X5u1x9Rd0wkYDDs8NXwlbuBd8FF9Vcvrz1WIZf4ciXsxAKY1mNB+v4MCJtD9niON1
-	uu58S48rYZ0Bipl12ALQ5DL4Oqp17JcyPMns0wBn+tZaq6CtKV+ilg7ochYw2mws4qLLzO
-	li98qzdr/vCld6+B6Wjb+Lqb3yLfapA=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+	bh=T8ehTuz5iNTdAh3dXVgduiPWYksEhy4ggvfdhWIXdW0=;
+	b=VNXTacLD6rYdZJ/V9HynQ653QLeQFsrljhKSXnSPkOPpOUVQqm84p7vQf+jJtehocxUrjR
+	ETvtOMd4jzCb5FtvUxFhhfndwjqogUvK03wH6skE5aZZkpg0LfjFKx3zqNryw7hwTCmaZi
+	gf0fRSpYpYWKeBmsNS+L6PtNAl4N86U=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-638-QYw4wMarOnOofPL1pFXwuw-1; Wed,
- 03 Dec 2025 13:24:45 -0500
-X-MC-Unique: QYw4wMarOnOofPL1pFXwuw-1
-X-Mimecast-MFC-AGG-ID: QYw4wMarOnOofPL1pFXwuw_1764786284
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-345-3dGc04iWO0KBE1P_wBFamQ-1; Wed,
+ 03 Dec 2025 13:24:47 -0500
+X-MC-Unique: 3dGc04iWO0KBE1P_wBFamQ-1
+X-Mimecast-MFC-AGG-ID: 3dGc04iWO0KBE1P_wBFamQ_1764786286
 Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4456119560AD
-	for <mptcp@lists.linux.dev>; Wed,  3 Dec 2025 18:24:44 +0000 (UTC)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id AA95A19560B2
+	for <mptcp@lists.linux.dev>; Wed,  3 Dec 2025 18:24:45 +0000 (UTC)
 Received: from gerbillo.redhat.com (unknown [10.45.224.2])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 6619519560A7
-	for <mptcp@lists.linux.dev>; Wed,  3 Dec 2025 18:24:43 +0000 (UTC)
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id CE33E19560A7
+	for <mptcp@lists.linux.dev>; Wed,  3 Dec 2025 18:24:44 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-net v2 1/2] mptcp: fallback earlier on simult connection
-Date: Wed,  3 Dec 2025 19:24:34 +0100
-Message-ID: <078e2754149228cbcda09182870520bd5d0a4aae.1764786151.git.pabeni@redhat.com>
+Subject: [PATCH mptcp-net v2 2/2] mptcp: ensure context reset on disconnect()
+Date: Wed,  3 Dec 2025 19:24:35 +0100
+Message-ID: <7789f18691733c076dcc69321963080d30ca27b9.1764786151.git.pabeni@redhat.com>
 In-Reply-To: <cover.1764786151.git.pabeni@redhat.com>
 References: <cover.1764786151.git.pabeni@redhat.com>
 Precedence: bulk
@@ -57,156 +57,82 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: vT-t13qY8M5bLJWkcIanrKcj4fi2EbWabIndtUpODBw_1764786284
+X-Mimecast-MFC-PROC-ID: jpFVGeyMHH71K7iBQm8o_YEpqTXmnbu5-x9xWyWiIG4_1764786286
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 
-Syzkaller reports a simult-connect race leading to inconsistent fallback
-status:
+After the blamed commit below, if the MPC subflow is already in TCP_CLOSE
+status at mptcp_disconnect() time, mptcp_do_fastclose() skips setting
+the `send_fastclose flag` and the later __mptcp_close_ssk() does not
+reset anymore the related subflow context.
 
-WARNING: CPU: 3 PID: 33 at net/mptcp/subflow.c:1515 subflow_data_ready+0x40b/0x7c0 net/mptcp/subflow.c:1515
-Modules linked in:
-CPU: 3 UID: 0 PID: 33 Comm: ksoftirqd/3 Not tainted syzkaller #0 PREEMPT(full)
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-RIP: 0010:subflow_data_ready+0x40b/0x7c0 net/mptcp/subflow.c:1515
-Code: 89 ee e8 78 61 3c f6 40 84 ed 75 21 e8 8e 66 3c f6 44 89 fe bf 07 00 00 00 e8 c1 61 3c f6 41 83 ff 07 74 09 e8 76 66 3c f6 90 <0f> 0b 90 e8 6d 66 3c f6 48 89 df e8 e5 ad ff ff 31 ff 89 c5 89 c6
-RSP: 0018:ffffc900006cf338 EFLAGS: 00010246
-RAX: 0000000000000000 RBX: ffff888031acd100 RCX: ffffffff8b7f2abf
-RDX: ffff88801e6ea440 RSI: ffffffff8b7f2aca RDI: 0000000000000005
-RBP: 0000000000000000 R08: 0000000000000005 R09: 0000000000000007
-R10: 0000000000000004 R11: 0000000000002c10 R12: ffff88802ba69900
-R13: 1ffff920000d9e67 R14: ffff888046f81800 R15: 0000000000000004
-FS:  0000000000000000(0000) GS:ffff8880d69bc000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000560fc0ca1670 CR3: 0000000032c3a000 CR4: 0000000000352ef0
-Call Trace:
- <TASK>
- tcp_data_queue+0x13b0/0x4f90 net/ipv4/tcp_input.c:5197
- tcp_rcv_state_process+0xfdf/0x4ec0 net/ipv4/tcp_input.c:6922
- tcp_v6_do_rcv+0x492/0x1740 net/ipv6/tcp_ipv6.c:1672
- tcp_v6_rcv+0x2976/0x41e0 net/ipv6/tcp_ipv6.c:1918
- ip6_protocol_deliver_rcu+0x188/0x1520 net/ipv6/ip6_input.c:438
- ip6_input_finish+0x1e4/0x4b0 net/ipv6/ip6_input.c:489
- NF_HOOK include/linux/netfilter.h:318 [inline]
- NF_HOOK include/linux/netfilter.h:312 [inline]
- ip6_input+0x105/0x2f0 net/ipv6/ip6_input.c:500
- dst_input include/net/dst.h:471 [inline]
- ip6_rcv_finish net/ipv6/ip6_input.c:79 [inline]
- NF_HOOK include/linux/netfilter.h:318 [inline]
- NF_HOOK include/linux/netfilter.h:312 [inline]
- ipv6_rcv+0x264/0x650 net/ipv6/ip6_input.c:311
- __netif_receive_skb_one_core+0x12d/0x1e0 net/core/dev.c:5979
- __netif_receive_skb+0x1d/0x160 net/core/dev.c:6092
- process_backlog+0x442/0x15e0 net/core/dev.c:6444
- __napi_poll.constprop.0+0xba/0x550 net/core/dev.c:7494
- napi_poll net/core/dev.c:7557 [inline]
- net_rx_action+0xa9f/0xfe0 net/core/dev.c:7684
- handle_softirqs+0x216/0x8e0 kernel/softirq.c:579
- run_ksoftirqd kernel/softirq.c:968 [inline]
- run_ksoftirqd+0x3a/0x60 kernel/softirq.c:960
- smpboot_thread_fn+0x3f7/0xae0 kernel/smpboot.c:160
- kthread+0x3c2/0x780 kernel/kthread.c:463
- ret_from_fork+0x5d7/0x6f0 arch/x86/kernel/process.c:148
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
- </TASK>
+Any later connection will be created with both the `request_mptcp` flag
+and the msk-level fallback status off, leading to a warning in
+subflow_data_ready():
 
-The TCP subflow can process the simult-connect syn-ack packet after
-transitioning to TCP_FIN1 state, bypassing the MPTCP fallback check,
-as the sk_state_change() callback is not invoked for * -> FIN_WAIT1
-transitions.
+ WARNING: CPU: 26 PID: 8996 at net/mptcp/subflow.c:1519 subflow_data_ready (net/mptcp/subflow.c:1519 (discriminator 13))
+ Modules linked in:
+ CPU: 26 UID: 0 PID: 8996 Comm: syz.22.39 Not tainted 6.18.0-rc7-05427-g11fc074f6c36 #1 PREEMPT(voluntary)
+ Hardware name: Bochs Bochs, BIOS Bochs 01/01/2011
+ RIP: 0010:subflow_data_ready (net/mptcp/subflow.c:1519 (discriminator 13))
+ Code: 90 0f 0b 90 90 e9 04 fe ff ff e8 b7 1e f5 fe 89 ee bf 07 00 00 00 e8 db 19 f5 fe 83 fd 07 0f 84 35 ff ff ff e8 9d 1e f5 fe 90 <0f> 0b 90 e9 27 ff ff ff e8 8f 1e f5 fe 4c 89 e7 48 89 de e8 14 09
+ RSP: 0018:ffffc9002646fb30 EFLAGS: 00010293
+ RAX: 0000000000000000 RBX: ffff88813b218000 RCX: ffffffff825c8435
+ RDX: ffff8881300b3580 RSI: ffffffff825c8443 RDI: 0000000000000005
+ RBP: 000000000000000b R08: ffffffff825c8435 R09: 000000000000000b
+ R10: 0000000000000005 R11: 0000000000000007 R12: ffff888131ac0000
+ R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+ FS:  00007f88330af6c0(0000) GS:ffff888a93dd2000(0000) knlGS:0000000000000000
+ CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+ CR2: 00007f88330aefe8 CR3: 000000010ff59000 CR4: 0000000000350ef0
+ Call Trace:
+  <TASK>
+  tcp_data_ready (net/ipv4/tcp_input.c:5356)
+  tcp_data_queue (net/ipv4/tcp_input.c:5445)
+  tcp_rcv_state_process (net/ipv4/tcp_input.c:7165)
+  tcp_v4_do_rcv (net/ipv4/tcp_ipv4.c:1955)
+  __release_sock (include/net/sock.h:1158 (discriminator 6) net/core/sock.c:3180 (discriminator 6))
+  release_sock (net/core/sock.c:3737)
+  mptcp_sendmsg (net/mptcp/protocol.c:1763 net/mptcp/protocol.c:1857)
+  inet_sendmsg (net/ipv4/af_inet.c:853 (discriminator 7))
+  __sys_sendto (net/socket.c:727 (discriminator 15) net/socket.c:742 (discriminator 15) net/socket.c:2244 (discriminator 15))
+  __x64_sys_sendto (net/socket.c:2247)
+  do_syscall_64 (arch/x86/entry/syscall_64.c:63 (discriminator 1) arch/x86/entry/syscall_64.c:94 (discriminator 1))
+  entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:130)
+ RIP: 0033:0x7f883326702d
 
-That will move the msk socket to an inconsistent status and the next
-incoming data will hit the reported splat.
+Address the issue ensuring `send_fastclose` is always set for all
+subflows after mptcp_do_fastclose().
 
-Close the race moving the simult-fallback check at the earliest possible
-stage - that is at syn-ack generation time.
-
-Fixes: 23e89e8ee7be ("tcp: Don't drop SYN+ACK for simultaneous connect().")
-Fixes: 4fd19a307016 ("mptcp: fix inconsistent state on fastopen race")
-Fixes: 1e777f39b4d7 ("mptcp: add MSG_FASTOPEN sendmsg flag support")
-Reported-by: syzbot+0ff6b771b4f7a5bce83b@syzkaller.appspotmail.com
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/586
+Fixes: ae155060247b ("mptcp: fix duplicate reset on fastclose")
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 ---
-v1 -> v2:
-  - re-add is_active_ssk(). MPJ subflow would likely still need more love
-    to handle simult connect correctly, but let's not mix-up things.
+ net/mptcp/protocol.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-Note: I kept the subflow_simultaneous_connect() helper around because
-its name itself is/should be well self-documenting.
-
-simult connect pkt drill test will need a paired change; not reporting
-the full diff to avoid confusing the patch importer:
-
- +0  >  S  0:0(0)                    <mss 1460, sackOK, TS val 100 ecr 0,   nop, wscale 8, mpcapable v1 flags[flag_h] nokey>
- +0  <  S  0:0(0)         win 1000   <mss 1460, sackOK, TS val 407 ecr 0,   nop, wscale 8, mpcapable v1 flags[flag_h] nokey>
--+0  >  S. 0:0(0)  ack 1             <mss 1460, sackOK, TS val 330 ecr 407, nop, wscale 8, mpcapable v1 flags[flag_h] nokey>
--+0  <  S. 0:0(0)  ack 1  win 65535  <mss 1460, sackOK, TS val 507 ecr 100, nop, wscale 8, mpcapable v1 flags[flag_h] key[skey=2]>
-++0  >  S. 0:0(0)  ack 1             <mss 1460, sackOK, TS val 330 ecr 407, nop,wscale 8>
-++0  <  S. 0:0(0)  ack 1  win 65535  <mss 1460, sackOK, TS val 507 ecr 100, nop,wscale 8>
- +0  >   . 1:1(0)  ack 1             <nop,      nop,    TS val 430 ecr 507, nop, nop, sack 0:1>
----
- net/mptcp/options.c  | 10 ++++++++++
- net/mptcp/protocol.h |  6 ++----
- net/mptcp/subflow.c  |  6 ------
- 3 files changed, 12 insertions(+), 10 deletions(-)
-
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index ff2b9fc7c01f..ac16e4bd496f 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -408,6 +408,16 @@ bool mptcp_syn_options(struct sock *sk, const struct sk_buff *skb,
- 	 */
- 	subflow->snd_isn = TCP_SKB_CB(skb)->end_seq;
- 	if (subflow->request_mptcp) {
-+		if (unlikely(subflow_simultaneous_connect(sk))) {
-+			WARN_ON_ONCE(!mptcp_try_fallback(sk, MPTCP_MIB_SIMULTCONNFALLBACK));
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index e484c6391b48..cd5a19ab3ba1 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -2891,12 +2891,15 @@ static void mptcp_do_fastclose(struct sock *sk)
+ 
+ 		lock_sock(ssk);
+ 
++		/* Ensure that the MPC subflow will be fully disconnected/reset
++		 * by the later mptcp_destroy_common()/__mptcp_close_ssk().
++		 */
++		subflow->send_fastclose = 1;
 +
-+			/* Ensure mptcp_finish_connect() will not process the
-+			 * MPC handshake.
-+			 */
-+			subflow->request_mptcp = 0;
-+			return false;
-+		}
-+
- 		opts->suboptions = OPTION_MPTCP_MPC_SYN;
- 		opts->csum_reqd = mptcp_is_checksum_enabled(sock_net(sk));
- 		opts->allow_join_id0 = mptcp_allow_join_id0(sock_net(sk));
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index bc470254bd6b..41d80df1ba3e 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -1334,10 +1334,8 @@ static inline bool subflow_simultaneous_connect(struct sock *sk)
- {
- 	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
+ 		/* Some subflow socket states don't allow/need a reset.*/
+ 		if ((1 << ssk->sk_state) & (TCPF_LISTEN | TCPF_CLOSE))
+ 			goto unlock;
  
--	return (1 << sk->sk_state) &
--	       (TCPF_ESTABLISHED | TCPF_FIN_WAIT1 | TCPF_FIN_WAIT2 | TCPF_CLOSING) &&
--	       is_active_ssk(subflow) &&
--	       !subflow->conn_finished;
-+	/* Note that the sk state implies !subflow->conn_finished. */
-+	return sk->sk_state == TCP_SYN_RECV && is_active_ssk(subflow);
- }
- 
- #ifdef CONFIG_SYN_COOKIES
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 86ce58ae533d..96d54cb2cd93 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -1878,12 +1878,6 @@ static void subflow_state_change(struct sock *sk)
- 
- 	__subflow_state_change(sk);
- 
--	if (subflow_simultaneous_connect(sk)) {
--		WARN_ON_ONCE(!mptcp_try_fallback(sk, MPTCP_MIB_SIMULTCONNFALLBACK));
--		subflow->conn_finished = 1;
--		mptcp_propagate_state(parent, sk, subflow, NULL);
--	}
+-		subflow->send_fastclose = 1;
 -
- 	/* as recvmsg() does not acquire the subflow socket for ssk selection
- 	 * a fin packet carrying a DSS can be unnoticed if we don't trigger
- 	 * the data available machinery here.
+ 		/* Initialize rcv_mss to TCP_MIN_MSS to avoid division by 0
+ 		 * issue in __tcp_select_window(), see tcp_disconnect().
+ 		 */
 -- 
 2.52.0
 
