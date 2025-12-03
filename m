@@ -1,160 +1,140 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f194.google.com (mail-qt1-f194.google.com [209.85.160.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B4402110E
-	for <mptcp@lists.linux.dev>; Wed,  3 Dec 2025 18:56:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7DB02F5A10
+	for <mptcp@lists.linux.dev>; Wed,  3 Dec 2025 19:40:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764788189; cv=none; b=Q6v0O8yGV22SFxFaILx0Kl2udoTnX2IDpcqiOt86tfczE/RgSua/y/yNd3VVronIvImIvmUFiuHifdF6s0pAGSkxswHbcYmLnXF97JpHzz0d7cb6Z2xC3gxVQd525Bq/SUoinzYd56wTJPQSAxNz6gN8ysWZ/38V+JXH9l3QucA=
+	t=1764790849; cv=none; b=ueq2YRJJxch9pVmipmk/Oe1Das4HYVnlZgwdQZPP6qvJHoZ/3YQUipoDA3HAmB8CoOWIn/fp/tCLZqQ9rZwcfVHAboR2nzqqW/zx6jvVfmReRRDTo+1xSFDfZznigHGPF/Dk3KeJnKE6u4AmLmWUOeM3W7geC1ExHRAb51x9WLc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764788189; c=relaxed/simple;
-	bh=QZC2GbyatsjmsTXmET/5NTOz+d9crLFzNnxQTpjybZQ=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:content-type; b=Ir+4nGqHTaCtHCjovw7w0p/rm+74wFxFJvrH0s1Q9Pm0zKVAxP8Ii5H7uyUW19nXeZ+jjWKSiMnFppq4YN7tl69wC9W9HvFvt0fsB3TGwHs6cciHxIAxoUPN8dKmn2fYT74l9ML++xInxO3wfYx5w8Z3WgrmBlYiRSCcmX502L8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JxQou3DA; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1764790849; c=relaxed/simple;
+	bh=omyDSy0Ee74tikzc7i2OjmE3JEchnoa0CoFmo9Oe9Yw=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=UuMq2CNyn9CgFxHyuUoqPNxcSG1puJzVxx8Xj147k9LBhqqujZBDZkLo5RrxMKSmrmw8gbLuLiNAZrZZtsRLSzHts3RP0YqvD+jLv1xmTSZM9ZYypzP+AqBB5HnKCoBtaM5FRN32qSXEII11GzDZrmPmmEjtsf9Qr+t07j+lg2w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UzMBflUQ; arc=none smtp.client-ip=209.85.160.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JxQou3DA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1764788186;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=cTytbF+jt922KXdzH3Cm4Dhr+hyqBIt+1ZDWbyw8xrQ=;
-	b=JxQou3DA7KZLK4qddZIaYbkUwfdGBXfMWUa0OBYoFnXsp8lISrN/+SGvxiMFW/K7U9pevX
-	vU5NeecapFdpZ0IZg9DFcby8LZ8KOmXwQWbNVaQE1xpBiim/oWIz8W3sDtzoD1OwhquVzu
-	bsJ2UI+M7kR7GnmFKvd7p2Io25VmwnM=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-78-nVonuhYHPM2HJo6VzGvA-g-1; Wed,
- 03 Dec 2025 13:56:24 -0500
-X-MC-Unique: nVonuhYHPM2HJo6VzGvA-g-1
-X-Mimecast-MFC-AGG-ID: nVonuhYHPM2HJo6VzGvA-g_1764788184
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 076951800245
-	for <mptcp@lists.linux.dev>; Wed,  3 Dec 2025 18:56:24 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.45.224.2])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 2FCB11955F2D
-	for <mptcp@lists.linux.dev>; Wed,  3 Dec 2025 18:56:22 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-net] mptcp: avoid deadlock on fallback while reinjecting
-Date: Wed,  3 Dec 2025 19:55:25 +0100
-Message-ID: <6ad37e65c7501b061811e79b45f7898cff838a4e.1764788106.git.pabeni@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UzMBflUQ"
+Received: by mail-qt1-f194.google.com with SMTP id d75a77b69052e-4ed82e82f0fso1294061cf.1
+        for <mptcp@lists.linux.dev>; Wed, 03 Dec 2025 11:40:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1764790845; x=1765395645; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iCwUprFomN2s5vIdjufKSSZVMaCgWoCkAfU02etS3ZU=;
+        b=UzMBflUQcEcqay96KiajGPN2WQMvr4RLP9W/Z2VGqQ277Wr5UBzUe4PA7Zedpsm12n
+         bLTHz/PHqfnSFHd9vR040okqugpfahXQYTOIxR2sPPHlmJMul6F9V1R4CyL1GQhOPXeg
+         apQf8PRO4nBAx659NqhsSAn/aomi+I1M8ZN+iRAI6auPDtQzxYJoxkH/3UtrA5YGBPNW
+         OhztHuwXdSYug/6cV1C5L/FYEZBcud2Vs9pmSTfncM2HNqbShpMc64A73jjDc2JKXyhl
+         vLkTER+siuo28GHZAoegqgR0/x9wCDI/iiwd2Y8oOppCZe/ppH+M8xjbYL2LE9yZwV8N
+         4Vtg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764790845; x=1765395645;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=iCwUprFomN2s5vIdjufKSSZVMaCgWoCkAfU02etS3ZU=;
+        b=M0sSPMt/ymxspx6lRwKENxyXbAJvnm/6wz55kPEPW9Gf+Qtv/c4m7i1WKF8b0ngtE3
+         5+f0isK7jXHQiae2X7VO6cSws1n1f4qDDKOuR+F9jZy64iLudImXx2z+dGCWlDt7L/Ta
+         9fb0xsDGYBV0egdsdWR9icZ3kaJ1wRAaGP2vVMPrO7fipm/Zw/6TVMT0Yl8zx1ktlN5b
+         iH99sTuyi3FDx7XLLl4kh0AaaejKnw/V4A7H4+UQ6RIUdRiQXSAk++SZRq+w8phtJY9Y
+         uB+u/K1jL2JbsUZTse0gjj0PCX0iwEtsR3GtCsbiqRaAGl5rY8KztEJoDGG14C5KE96x
+         SAIg==
+X-Gm-Message-State: AOJu0YzC+8ODDJsvSPRD88r9ypwls7Uh+DkOJLsU2R/34rN0npFsTPnd
+	08GJeIRMA2yNhexlCl3MXE7PRFl4+kMKZRQ6NrPlOg8LE0+8Tz281qk=
+X-Gm-Gg: ASbGnctBnobGm8SmDEX0ugVRISlfF99BmoV/kaTr/UUf9CT/tP2HsbS79ZiISJFavKb
+	Aw1y43JiyVDFai67vXPFtvkVttRsMGN3z1jPguBbemvPhl/iHIUDBLl1EVzIdczdneSx/tmpBCy
+	OR4gQBRMuKBHMUeuKUQsaEEHjG1HBxfOAJd/P2L9CbZXdbt0Yn3yEGlOjKgUBUHG7aKMWXawsga
+	yTaLhudWT0blGjjacUYtoyAz2XzSl7XmdMoX8Kys0Hz/oy8bh6MS7GiR+WXHjXWRRAAaSKLiJCW
+	+oNI/e8nX8tquT1rTyjmBDRw260avTxqfMLkdHta7odhvwxRGheEuUr59lfVfZGcRnEbR5/eROS
+	nNm69NpLrf5CDPqClPfoYIqx7bIMsOM4n/vBvIxGPVpr1OB7dqzYJ8oRxrlVonFx797Jb9+61Tn
+	xxvI1FPufl02CKEGUC2z7iniSGQQ==
+X-Google-Smtp-Source: AGHT+IFhMjYd9g06Ls6PBN+CrwIjdOfKxvJECB2ofSGo5RcV2A4Qvht6oHwCDqUBnhyB84O/x2YwBQ==
+X-Received: by 2002:ac8:5716:0:b0:4ee:2508:3945 with SMTP id d75a77b69052e-4f017505eaamr47792891cf.9.1764790845057;
+        Wed, 03 Dec 2025 11:40:45 -0800 (PST)
+Received: from [127.0.0.1] ([172.208.127.199])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4efd341f0ecsm119108231cf.16.2025.12.03.11.40.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Dec 2025 11:40:44 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <6d4733b0268246892cbbb8c2d3bcebce1714404a.1764786299.git.pabeni@redhat.com>
+References:
+ <6d4733b0268246892cbbb8c2d3bcebce1714404a.1764786299.git.pabeni@redhat.com>
+Subject: Re: [PATCH mptcp-next] mptcp: cleanup duplicate ack suppression on
+ fastclose.
+Message-ID: <1066550e-1821-806a-aabb-68832a28d5f7@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 03 Dec 2025 19:40:43 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: tDzGwSknOGjGGyV-_jWcTkibayr30bJQ6QqDUo_XUMM_1764788184
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-content-type: text/plain; charset="US-ASCII"; x-default=true
 
-Jakub reported an MPTCP deadlock at fallback time:
+Hi Paolo,
 
- WARNING: possible recursive locking detected
- 6.18.0-rc7-virtme #1 Not tainted
- --------------------------------------------
- mptcp_connect/20858 is trying to acquire lock:
- ff1100001da18b60 (&msk->fallback_lock){+.-.}-{3:3}, at: __mptcp_try_fallback+0xd8/0x280
+Thank you for your modifications, that's great!
 
- but task is already holding lock:
- ff1100001da18b60 (&msk->fallback_lock){+.-.}-{3:3}, at: __mptcp_retrans+0x352/0xaa0
+Our CI did some validations and here is its report:
 
- other info that might help us debug this:
-  Possible unsafe locking scenario:
+- KVM Validation: normal (except selftest_mptcp_join): Unstable: 1 failed =
+test(s): selftest_simult_flows =F0=9F=94=B4
+- KVM Validation: normal (only =
+selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except =
+selftest_mptcp_join): Unstable: 1 failed test(s): packetdrill_dss =
+=F0=9F=94=B4
+- KVM Validation: debug (only selftest_mptcp_join): Success! =
+=E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success! =
+=E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =
+=E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
+uns/19904924250
 
-        CPU0
-        ----
-   lock(&msk->fallback_lock);
-   lock(&msk->fallback_lock);
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/1f0e1c8a3ee8
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1030202
 
-  *** DEADLOCK ***
 
-  May be due to missing lock nesting notation
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
 
- 3 locks held by mptcp_connect/20858:
-  #0: ff1100001da18290 (sk_lock-AF_INET){+.+.}-{0:0}, at: mptcp_sendmsg+0x114/0x1bc0
-  #1: ff1100001db40fd0 (k-sk_lock-AF_INET#2){+.+.}-{0:0}, at: __mptcp_retrans+0x2cb/0xaa0
-  #2: ff1100001da18b60 (&msk->fallback_lock){+.-.}-{3:3}, at: __mptcp_retrans+0x352/0xaa0
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
 
- stack backtrace:
- CPU: 0 UID: 0 PID: 20858 Comm: mptcp_connect Not tainted 6.18.0-rc7-virtme #1 PREEMPT(full)
- Hardware name: Bochs, BIOS Bochs 01/01/2011
- Call Trace:
-  <TASK>
-  dump_stack_lvl+0x6f/0xa0
-  print_deadlock_bug.cold+0xc0/0xcd
-  validate_chain+0x2ff/0x5f0
-  __lock_acquire+0x34c/0x740
-  lock_acquire.part.0+0xbc/0x260
-  _raw_spin_lock_bh+0x38/0x50
-  __mptcp_try_fallback+0xd8/0x280
-  mptcp_sendmsg_frag+0x16c2/0x3050
-  __mptcp_retrans+0x421/0xaa0
-  mptcp_release_cb+0x5aa/0xa70
-  release_sock+0xab/0x1d0
-  mptcp_sendmsg+0xd5b/0x1bc0
-  sock_write_iter+0x281/0x4d0
-  new_sync_write+0x3c5/0x6f0
-  vfs_write+0x65e/0xbb0
-  ksys_write+0x17e/0x200
-  do_syscall_64+0xbb/0xfd0
-  entry_SYSCALL_64_after_hwframe+0x4b/0x53
- RIP: 0033:0x7fa5627cbc5e
- Code: 4d 89 d8 e8 14 bd 00 00 4c 8b 5d f8 41 8b 93 08 03 00 00 59 5e 48 83 f8 fc 74 11 c9 c3 0f 1f 80 00 00 00 00 48 8b 45 10 0f 05 <c9> c3 83 e2 39 83 fa 08 75 e7 e8 13 ff ff ff 0f 1f 00 f3 0f 1e fa
- RSP: 002b:00007fff1fe14700 EFLAGS: 00000202 ORIG_RAX: 0000000000000001
- RAX: ffffffffffffffda RBX: 0000000000000005 RCX: 00007fa5627cbc5e
- RDX: 0000000000001f9c RSI: 00007fff1fe16984 RDI: 0000000000000005
- RBP: 00007fff1fe14710 R08: 0000000000000000 R09: 0000000000000000
- R10: 0000000000000000 R11: 0000000000000202 R12: 00007fff1fe16920
- R13: 0000000000002000 R14: 0000000000001f9c R15: 0000000000001f9c
+For more details:
 
-The packet scheduler could attempt a reinjection after receiving an
-MP_FAIL and before the infinite map has been transmitted, causing a
-deadlock since MPTCP needs to do the reinjection atomically from WRT
-fallback.
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
 
-Address the issue explicitly avoiding the reinjection in the critical
-scenario. Note that this is the only fallback critical section that
-could potentially send packets and hit the double-lock.
 
-Reported-by: Jakub Kicinski <kuba@kernel.org>
-Closes: https://netdev-ctrl.bots.linux.dev/logs/vmksft/mptcp-dbg/results/412720/1-mptcp-join-sh/stderr
-Fixes: f8a1d9b18c5e ("mptcp: make fallback action and fallback decision atomic")
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
----
- net/mptcp/protocol.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index cd5a19ab3ba1..2df36a125816 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2769,10 +2769,13 @@ static void __mptcp_retrans(struct sock *sk)
- 
- 			/*
- 			 * make the whole retrans decision, xmit, disallow
--			 * fallback atomic
-+			 * fallback atomic, note that we can't retrans even
-+			 * when an infinite fallback is in progress, i.e. new
-+			 * subflows are disallowed.
- 			 */
- 			spin_lock_bh(&msk->fallback_lock);
--			if (__mptcp_check_fallback(msk)) {
-+			if (__mptcp_check_fallback(msk) ||
-+			    !msk->allow_subflows) {
- 				spin_unlock_bh(&msk->fallback_lock);
- 				release_sock(ssk);
- 				goto clear_scheduled;
--- 
-2.52.0
-
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
