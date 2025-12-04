@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 719CD357A3C
-	for <mptcp@lists.linux.dev>; Thu,  4 Dec 2025 17:44:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03AD62135CE
+	for <mptcp@lists.linux.dev>; Thu,  4 Dec 2025 18:27:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764870278; cv=none; b=dE4pWz9vaBNIUd6xhI01mtu+pz7PqJrE9UwjkMn9sOM3n/uVlcOG2ajttPwzyoi5r5ASmCNyOx9cr3+kRwr8tNErgMOkw6w90twKcSlFUBUCrixCgbXdtSAr5E+ti2jLWX6QkyIgPccnbR7IT5P7ufIGo1sUMqLrnK6bj7vatLs=
+	t=1764872873; cv=none; b=FlufAgAfaQv45Bukv0vQ8aPs+fRlDAX4nCRFMBAFqhLaFVaU13Hbz3kuUZWmTD4dpsuwXOWYnEMap4Fcll9p2+jxifC6gneS4W9TVFP12nACY0lo1RaTTyLhsFeowGhD56HUzmrQHjhCF4cK3+JoVnDMCMMV4eZBW3zYJ31Z3DQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764870278; c=relaxed/simple;
-	bh=CtFP3k3A6HWBpeKZRiB5u57draxO0vAoBOcJpx8FBHk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
-	 In-Reply-To:Content-Type; b=I+HnyzxfPA1Ns+6EH7bmkJ3TNOGkRErwQ1ZzKAxUEl2hLeZOhAgdlQanLSusFg0QRCx9mt8n4SytNqt38dJobHSUQEp2yyYELA+EpniICDsjXylrfNqZ+p8keLkX7hrOzC3FohJgMcvBZVhtoDOHSINvHOMJGsH/LOrn7nqMZGM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D39GEm+5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1764872873; c=relaxed/simple;
+	bh=su1hvdiGudrEdxyqUV2rlIqRfHWLgKIWs2022ViSC9Y=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=oEda4DN4X79xI6VUSSIX3Rk4nZgaWsjZTYjWJ49Hrh++JMQo21LKuvXCPMI27RawOVFQMQzxFSP1g9dyQ5PmsRNJuzBoj/xp8gn7xCR7suXlDFAlJ/GHGQmuFf+p11y8MU73l5DMQy0r990mpEtdLmhuYNuyfwKUAeXRStGB5fg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BgaYXGUL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D39GEm+5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6ED86C4CEFB;
-	Thu,  4 Dec 2025 17:44:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BgaYXGUL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEDFEC4CEFB;
+	Thu,  4 Dec 2025 18:27:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764870278;
-	bh=CtFP3k3A6HWBpeKZRiB5u57draxO0vAoBOcJpx8FBHk=;
-	h=Date:Subject:To:References:From:Cc:In-Reply-To:From;
-	b=D39GEm+57kg/yfi0gG0RFpkxAnD654anMRzbrdtm5QvAvu1F1Q2+T2+Gkp3jB9ErB
-	 TeQAEXsJHvM3Y2UbAsp5uCa3maVOdPWHkW2JxJr7rrCgyeHSt8nkf8W1WSj9g82vWb
-	 qhzVO4YPOk5sBZFf674U8KXzXQU215vBqdR2ofA90tV14EAWNS0s36D4mXLz9p6XDr
-	 vBtWY148+hKZTnwd1y1bbdP5vT3dcgjRQ7b5LLIRu80aWg9DMRc2SllvB1IA+Zpz/Y
-	 TEp1XxyuFKaAVI1IVapvCpLm5ZLYuFygsjwvjk5pJezpCz8USfnhz36fjfij9W93nu
-	 YEw86BgcGQidA==
-Message-ID: <e41302f4-6866-49a1-a1bd-49804fe0a6b9@kernel.org>
-Date: Thu, 4 Dec 2025 18:44:34 +0100
+	s=k20201202; t=1764872872;
+	bh=su1hvdiGudrEdxyqUV2rlIqRfHWLgKIWs2022ViSC9Y=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=BgaYXGULIJZ1r2HtvcZ4LgrOJ6YfImOXFmJN+0u80RIyzpEHRYfpo8Bs97bVO7OUJ
+	 k3lmr0skC46GyD5AzDuZsx1nIdXe8JVX9LBsw8YhhD2txAkLg9y+YBb/cD1sUpud08
+	 E6G1I/4CPeWd/WUxLQw4kp2Ow51jabLX7+IPE1Bpzm+XyQszYkmrvmuMncgnl8Iq10
+	 cVRHLWsWCqmxsIEfPRYiI1LVaDEiAw5ihq7Pvl3ceLqX2dnzdZKkOnQGWCyw6/Y/bo
+	 tDYjtQKC5lEoYXl/JqZOU0NFs0erpZpFzx4KX10Tqw+7Wqt5V0pm3x8QeCBqif7xTQ
+	 x4gHzdhgGbgqg==
+Message-ID: <a966baba-1794-4ee7-8fd9-09def1234f7b@kernel.org>
+Date: Thu, 4 Dec 2025 19:27:49 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,10 +38,11 @@ User-Agent: Mozilla Thunderbird Beta
 Subject: Re: [PATCH mptcp-net] mptcp: avoid deadlock on fallback while
  reinjecting
 Content-Language: en-GB, fr-BE
-To: Paolo Abeni <pabeni@redhat.com>
-References: <6ad37e65c7501b061811e79b45f7898cff838a4e.1764788106.git.pabeni@redhat.com>
 From: Matthieu Baerts <matttbe@kernel.org>
+To: Paolo Abeni <pabeni@redhat.com>
 Cc: mptcp@lists.linux.dev
+References: <6ad37e65c7501b061811e79b45f7898cff838a4e.1764788106.git.pabeni@redhat.com>
+ <e41302f4-6866-49a1-a1bd-49804fe0a6b9@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -86,91 +87,108 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <6ad37e65c7501b061811e79b45f7898cff838a4e.1764788106.git.pabeni@redhat.com>
+In-Reply-To: <e41302f4-6866-49a1-a1bd-49804fe0a6b9@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Paolo,
 
-On 03/12/2025 19:55, Paolo Abeni wrote:
-> Jakub reported an MPTCP deadlock at fallback time:
+On 04/12/2025 18:44, Matthieu Baerts wrote:
+> Hi Paolo,
 > 
->  WARNING: possible recursive locking detected
->  6.18.0-rc7-virtme #1 Not tainted
->  --------------------------------------------
->  mptcp_connect/20858 is trying to acquire lock:
->  ff1100001da18b60 (&msk->fallback_lock){+.-.}-{3:3}, at: __mptcp_try_fallback+0xd8/0x280
+> On 03/12/2025 19:55, Paolo Abeni wrote:
+>> Jakub reported an MPTCP deadlock at fallback time:
+>>
+>>  WARNING: possible recursive locking detected
+>>  6.18.0-rc7-virtme #1 Not tainted
+>>  --------------------------------------------
+>>  mptcp_connect/20858 is trying to acquire lock:
+>>  ff1100001da18b60 (&msk->fallback_lock){+.-.}-{3:3}, at: __mptcp_try_fallback+0xd8/0x280
+>>
+>>  but task is already holding lock:
+>>  ff1100001da18b60 (&msk->fallback_lock){+.-.}-{3:3}, at: __mptcp_retrans+0x352/0xaa0
+>>
+>>  other info that might help us debug this:
+>>   Possible unsafe locking scenario:
+>>
+>>         CPU0
+>>         ----
+>>    lock(&msk->fallback_lock);
+>>    lock(&msk->fallback_lock);
+>>
+>>   *** DEADLOCK ***
+>>
+>>   May be due to missing lock nesting notation
+>>
+>>  3 locks held by mptcp_connect/20858:
+>>   #0: ff1100001da18290 (sk_lock-AF_INET){+.+.}-{0:0}, at: mptcp_sendmsg+0x114/0x1bc0
+>>   #1: ff1100001db40fd0 (k-sk_lock-AF_INET#2){+.+.}-{0:0}, at: __mptcp_retrans+0x2cb/0xaa0
+>>   #2: ff1100001da18b60 (&msk->fallback_lock){+.-.}-{3:3}, at: __mptcp_retrans+0x352/0xaa0
+>>
+>>  stack backtrace:
+>>  CPU: 0 UID: 0 PID: 20858 Comm: mptcp_connect Not tainted 6.18.0-rc7-virtme #1 PREEMPT(full)
+>>  Hardware name: Bochs, BIOS Bochs 01/01/2011
+>>  Call Trace:
+>>   <TASK>
+>>   dump_stack_lvl+0x6f/0xa0
+>>   print_deadlock_bug.cold+0xc0/0xcd
+>>   validate_chain+0x2ff/0x5f0
+>>   __lock_acquire+0x34c/0x740
+>>   lock_acquire.part.0+0xbc/0x260
+>>   _raw_spin_lock_bh+0x38/0x50
+>>   __mptcp_try_fallback+0xd8/0x280
+>>   mptcp_sendmsg_frag+0x16c2/0x3050
+>>   __mptcp_retrans+0x421/0xaa0
+>>   mptcp_release_cb+0x5aa/0xa70
+>>   release_sock+0xab/0x1d0
+>>   mptcp_sendmsg+0xd5b/0x1bc0
+>>   sock_write_iter+0x281/0x4d0
+>>   new_sync_write+0x3c5/0x6f0
+>>   vfs_write+0x65e/0xbb0
+>>   ksys_write+0x17e/0x200
+>>   do_syscall_64+0xbb/0xfd0
+>>   entry_SYSCALL_64_after_hwframe+0x4b/0x53
+>>  RIP: 0033:0x7fa5627cbc5e
+>>  Code: 4d 89 d8 e8 14 bd 00 00 4c 8b 5d f8 41 8b 93 08 03 00 00 59 5e 48 83 f8 fc 74 11 c9 c3 0f 1f 80 00 00 00 00 48 8b 45 10 0f 05 <c9> c3 83 e2 39 83 fa 08 75 e7 e8 13 ff ff ff 0f 1f 00 f3 0f 1e fa
+>>  RSP: 002b:00007fff1fe14700 EFLAGS: 00000202 ORIG_RAX: 0000000000000001
+>>  RAX: ffffffffffffffda RBX: 0000000000000005 RCX: 00007fa5627cbc5e
+>>  RDX: 0000000000001f9c RSI: 00007fff1fe16984 RDI: 0000000000000005
+>>  RBP: 00007fff1fe14710 R08: 0000000000000000 R09: 0000000000000000
+>>  R10: 0000000000000000 R11: 0000000000000202 R12: 00007fff1fe16920
+>>  R13: 0000000000002000 R14: 0000000000001f9c R15: 0000000000001f9c
+>>
+>> The packet scheduler could attempt a reinjection after receiving an
+>> MP_FAIL and before the infinite map has been transmitted, causing a
+>> deadlock since MPTCP needs to do the reinjection atomically from WRT
+>> fallback.
+>>
+>> Address the issue explicitly avoiding the reinjection in the critical
+>> scenario. Note that this is the only fallback critical section that
+>> could potentially send packets and hit the double-lock.
 > 
->  but task is already holding lock:
->  ff1100001da18b60 (&msk->fallback_lock){+.-.}-{3:3}, at: __mptcp_retrans+0x352/0xaa0
+> Thank you for the fix!
 > 
->  other info that might help us debug this:
->   Possible unsafe locking scenario:
+> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 > 
->         CPU0
->         ----
->    lock(&msk->fallback_lock);
->    lock(&msk->fallback_lock);
+> Out-of-curiosity: any idea why we only see it now while the fix tag is
+> from July? :)
 > 
->   *** DEADLOCK ***
-> 
->   May be due to missing lock nesting notation
-> 
->  3 locks held by mptcp_connect/20858:
->   #0: ff1100001da18290 (sk_lock-AF_INET){+.+.}-{0:0}, at: mptcp_sendmsg+0x114/0x1bc0
->   #1: ff1100001db40fd0 (k-sk_lock-AF_INET#2){+.+.}-{0:0}, at: __mptcp_retrans+0x2cb/0xaa0
->   #2: ff1100001da18b60 (&msk->fallback_lock){+.-.}-{3:3}, at: __mptcp_retrans+0x352/0xaa0
-> 
->  stack backtrace:
->  CPU: 0 UID: 0 PID: 20858 Comm: mptcp_connect Not tainted 6.18.0-rc7-virtme #1 PREEMPT(full)
->  Hardware name: Bochs, BIOS Bochs 01/01/2011
->  Call Trace:
->   <TASK>
->   dump_stack_lvl+0x6f/0xa0
->   print_deadlock_bug.cold+0xc0/0xcd
->   validate_chain+0x2ff/0x5f0
->   __lock_acquire+0x34c/0x740
->   lock_acquire.part.0+0xbc/0x260
->   _raw_spin_lock_bh+0x38/0x50
->   __mptcp_try_fallback+0xd8/0x280
->   mptcp_sendmsg_frag+0x16c2/0x3050
->   __mptcp_retrans+0x421/0xaa0
->   mptcp_release_cb+0x5aa/0xa70
->   release_sock+0xab/0x1d0
->   mptcp_sendmsg+0xd5b/0x1bc0
->   sock_write_iter+0x281/0x4d0
->   new_sync_write+0x3c5/0x6f0
->   vfs_write+0x65e/0xbb0
->   ksys_write+0x17e/0x200
->   do_syscall_64+0xbb/0xfd0
->   entry_SYSCALL_64_after_hwframe+0x4b/0x53
->  RIP: 0033:0x7fa5627cbc5e
->  Code: 4d 89 d8 e8 14 bd 00 00 4c 8b 5d f8 41 8b 93 08 03 00 00 59 5e 48 83 f8 fc 74 11 c9 c3 0f 1f 80 00 00 00 00 48 8b 45 10 0f 05 <c9> c3 83 e2 39 83 fa 08 75 e7 e8 13 ff ff ff 0f 1f 00 f3 0f 1e fa
->  RSP: 002b:00007fff1fe14700 EFLAGS: 00000202 ORIG_RAX: 0000000000000001
->  RAX: ffffffffffffffda RBX: 0000000000000005 RCX: 00007fa5627cbc5e
->  RDX: 0000000000001f9c RSI: 00007fff1fe16984 RDI: 0000000000000005
->  RBP: 00007fff1fe14710 R08: 0000000000000000 R09: 0000000000000000
->  R10: 0000000000000000 R11: 0000000000000202 R12: 00007fff1fe16920
->  R13: 0000000000002000 R14: 0000000000001f9c R15: 0000000000001f9c
-> 
-> The packet scheduler could attempt a reinjection after receiving an
-> MP_FAIL and before the infinite map has been transmitted, causing a
-> deadlock since MPTCP needs to do the reinjection atomically from WRT
-> fallback.
-> 
-> Address the issue explicitly avoiding the reinjection in the critical
-> scenario. Note that this is the only fallback critical section that
-> could potentially send packets and hit the double-lock.
+> Do you want to send it to netdev ASAP, or do you prefer if I do it?
+> Should I do it now, or can I send it with other fixes tomorrow?
 
-Thank you for the fix!
+We still need these patches in our tree anyway, so here they are:
 
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+New patches for t/upstream-net and t/upstream:
+- 372aa8a6919d: mptcp: avoid deadlock on fallback while reinjecting
+- Results: 00ccc7a6f72d..d4a49e165085 (export-net)
+- Results: f83b9a74e823..e6e1c3ebe99c (export)
 
-Out-of-curiosity: any idea why we only see it now while the fix tag is
-from July? :)
+Tests are now in progress:
 
-Do you want to send it to netdev ASAP, or do you prefer if I do it?
-Should I do it now, or can I send it with other fixes tomorrow?
+- export-net:
+https://github.com/multipath-tcp/mptcp_net-next/commit/5dd0db8d894823fbbaac17b23cc174be4dddd58b/checks
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/db27293f26f389e0aa4807c47fc09a0cc1366702/checks
 
 Cheers,
 Matt
