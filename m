@@ -1,151 +1,179 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E257343D8C
-	for <mptcp@lists.linux.dev>; Thu,  4 Dec 2025 17:42:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 719CD357A3C
+	for <mptcp@lists.linux.dev>; Thu,  4 Dec 2025 17:44:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764870124; cv=none; b=lqXMIz5lVEoXcDYAU9uIV14Vgpl8Uw5uJEP1TeuArv/7UzvEQ5i5qyD2Vh7ZkXycyDD6Q6eH7x0DFu3ULyCpGREMHOhZZ3bnX3OlgkicMmgcec5uxSEvWdPEQSdceE3yH4tMM5K1XoSOLLr2+pgjwa5f8GttPNSf4yCOU6R6Zl8=
+	t=1764870278; cv=none; b=dE4pWz9vaBNIUd6xhI01mtu+pz7PqJrE9UwjkMn9sOM3n/uVlcOG2ajttPwzyoi5r5ASmCNyOx9cr3+kRwr8tNErgMOkw6w90twKcSlFUBUCrixCgbXdtSAr5E+ti2jLWX6QkyIgPccnbR7IT5P7ufIGo1sUMqLrnK6bj7vatLs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764870124; c=relaxed/simple;
-	bh=04eznu63bRzCceVhLl9sysJACGgpZgxcVBqFdoih1FE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FGzLcM4AQS1EyLWJL+JLZRL7E2cdWgp2z4uS2uvvpju3SnDompNAW1PNsOlijpIwrUpj+vtf+ItDLpeVvWM6ch0063dEuXvBWqs1W3wgflcHZmdSVxExtPyA3IFJy/J1MMYksX1MM5g0oDVIaRJZdcBjlu3AdbVAbo25HQ7GRTI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XFG7vuLY; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1764870278; c=relaxed/simple;
+	bh=CtFP3k3A6HWBpeKZRiB5u57draxO0vAoBOcJpx8FBHk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
+	 In-Reply-To:Content-Type; b=I+HnyzxfPA1Ns+6EH7bmkJ3TNOGkRErwQ1ZzKAxUEl2hLeZOhAgdlQanLSusFg0QRCx9mt8n4SytNqt38dJobHSUQEp2yyYELA+EpniICDsjXylrfNqZ+p8keLkX7hrOzC3FohJgMcvBZVhtoDOHSINvHOMJGsH/LOrn7nqMZGM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D39GEm+5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XFG7vuLY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1764870120;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/Apn1ii+kL29/iiH1gv9+7vJMZ0ZBWCRhM37tdP0HYk=;
-	b=XFG7vuLYTXRjbIgogw0eEMyaxQLBNuGQLrZlj5MiD9yN79DJno93WiFMgtJKMbNt9ifWzi
-	d+wWKuttsu31L94xnzOX+XwpchR5VWzkPBAeDQ6uxcV/bTFpKaafzqeBDum21UoFhwF7lp
-	hT2EjjH7oZ0+nz1yoNSQV7aN3TZPpNw=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-90-YIjAewzfPeyuTEhy6S3ldQ-1; Thu, 04 Dec 2025 12:41:59 -0500
-X-MC-Unique: YIjAewzfPeyuTEhy6S3ldQ-1
-X-Mimecast-MFC-AGG-ID: YIjAewzfPeyuTEhy6S3ldQ_1764870118
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-47918084ac1so9204825e9.2
-        for <mptcp@lists.linux.dev>; Thu, 04 Dec 2025 09:41:59 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764870118; x=1765474918;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/Apn1ii+kL29/iiH1gv9+7vJMZ0ZBWCRhM37tdP0HYk=;
-        b=Dr2xERO8KDetQXXsJS6t/e1cbLiXcuHhnW8S4VOV53pFgI55e5AhCPJ7WoEj0s9Q4T
-         NEoajG6shs5ugJzmQaj6+bFtfwS82xclL0DbSb4ukDeiLY4tgClHLSPi/4lARALa+yrU
-         eVTGf9Bwc6vrbXuffDDPP8JniC5hvwks4msiJU9AbUHBgGHJAwNfUalRsE54eG6LjiUn
-         sx4z0vKUh75XuM5qq/UBgfRFJF3p1tuBlTT2rep1FRfW3c1ZuQzeI/9tGvw8jOtRKJzo
-         jzty+OuY0AXRDP7ApJlt5knTuq0BqJeROLyXLASPPfi8kEqnzcW3dQOq3Kfj0s1tSJJV
-         Z6FQ==
-X-Gm-Message-State: AOJu0Ywx4PloEVw/NSAjk138TdxuvNoZq/oO9HdAnj9XttFTaOxbyEQk
-	liwYESVJCcObEpOKdF/kmBxdVz2eKRNwpTCs29QNbhVMqYJLgu3of572NDuji1Dmmdna3hNAJ+W
-	TpScTc4YhL5Hpw7NL5qUAXTS0vCZ+XrqN/9xDMq4XE6FbBVq6MDmrGVQmIpvwtA96
-X-Gm-Gg: ASbGncs3H+3DvjQzygFnFhISG9tRnPzxZQmcw2yeKe3wZ5GGMHYkTnrv/brMqV8OqcJ
-	XaKTkXTAoUmx2/fR3MxUfhJgQKcsfEWfH5ZbrybVNXBhsnrdgcAYD2gLEx0CZhttawLO/jBmZMN
-	r+ZbG5OT/tkLsjPKxKYOCvdAK8mgR4byxrNTae/TgNDShqIj5qRFixNEKTKqWq9grv7NSEtV/ab
-	ADvLYxiuP42YFotto6xVheRQ1zeOZ3Hv6U3E+vg9KlY8DAVo6Ymhmkl0fAm42n1nqUnzZFPLpN0
-	Gadf03nzgw8CY8j3MKwyeUwSJQE2LWUNdGBmOM0vJeKwl280PXCyl+gZOAnl6Fiinks1F3L70XX
-	HN4pf13PTrsD8
-X-Received: by 2002:a05:600c:548e:b0:477:2f7c:314f with SMTP id 5b1f17b1804b1-4792aee37b6mr66949545e9.10.1764870118142;
-        Thu, 04 Dec 2025 09:41:58 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGRbFbC4NEoor6P8ZWYOQEe2Eya3I4gHklZjHLe1aA15I3KAtWd4tHaz8ndj2hklvMztCzTpw==
-X-Received: by 2002:a05:600c:548e:b0:477:2f7c:314f with SMTP id 5b1f17b1804b1-4792aee37b6mr66949355e9.10.1764870117762;
-        Thu, 04 Dec 2025 09:41:57 -0800 (PST)
-Received: from [192.168.88.32] ([212.105.153.24])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47930ca15adsm44102595e9.13.2025.12.04.09.41.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Dec 2025 09:41:57 -0800 (PST)
-Message-ID: <c3ad9194-e77c-4504-9302-5a5bffcad265@redhat.com>
-Date: Thu, 4 Dec 2025 18:41:56 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D39GEm+5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6ED86C4CEFB;
+	Thu,  4 Dec 2025 17:44:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1764870278;
+	bh=CtFP3k3A6HWBpeKZRiB5u57draxO0vAoBOcJpx8FBHk=;
+	h=Date:Subject:To:References:From:Cc:In-Reply-To:From;
+	b=D39GEm+57kg/yfi0gG0RFpkxAnD654anMRzbrdtm5QvAvu1F1Q2+T2+Gkp3jB9ErB
+	 TeQAEXsJHvM3Y2UbAsp5uCa3maVOdPWHkW2JxJr7rrCgyeHSt8nkf8W1WSj9g82vWb
+	 qhzVO4YPOk5sBZFf674U8KXzXQU215vBqdR2ofA90tV14EAWNS0s36D4mXLz9p6XDr
+	 vBtWY148+hKZTnwd1y1bbdP5vT3dcgjRQ7b5LLIRu80aWg9DMRc2SllvB1IA+Zpz/Y
+	 TEp1XxyuFKaAVI1IVapvCpLm5ZLYuFygsjwvjk5pJezpCz8USfnhz36fjfij9W93nu
+	 YEw86BgcGQidA==
+Message-ID: <e41302f4-6866-49a1-a1bd-49804fe0a6b9@kernel.org>
+Date: Thu, 4 Dec 2025 18:44:34 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next] mptcp: cleanup duplicate ack suppression on
- fastclose.
-To: Matthieu Baerts <matttbe@kernel.org>
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-net] mptcp: avoid deadlock on fallback while
+ reinjecting
+Content-Language: en-GB, fr-BE
+To: Paolo Abeni <pabeni@redhat.com>
+References: <6ad37e65c7501b061811e79b45f7898cff838a4e.1764788106.git.pabeni@redhat.com>
+From: Matthieu Baerts <matttbe@kernel.org>
 Cc: mptcp@lists.linux.dev
-References: <6d4733b0268246892cbbb8c2d3bcebce1714404a.1764786299.git.pabeni@redhat.com>
- <24ac4eeb-5092-4f13-a1e7-423ea5659016@kernel.org>
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <24ac4eeb-5092-4f13-a1e7-423ea5659016@kernel.org>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: p7rO7m7OGlwvZ3xyE-PVksFy7c5NrOCVu63ZT5GR-nE_1764870118
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <6ad37e65c7501b061811e79b45f7898cff838a4e.1764788106.git.pabeni@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 12/4/25 6:22 PM, Matthieu Baerts wrote:
-> On 03/12/2025 19:25, Paolo Abeni wrote:
->> The current transition to TCP_CLOSE in __mptcp_close_ssk() is rather
->> obscure, especially since it's done unconditionally for all subflow.
->>
->> Such action is needed only when disposing the given socket - that is
->> for MPJ subflows, or at mptcp close time.
->>
->> Move the statement in a better place and explain it's role for future
->> memory.
->>
->> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
->> ---
->>  net/mptcp/protocol.c | 7 ++++---
->>  1 file changed, 4 insertions(+), 3 deletions(-)
->>
->> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
->> index cd5a19ab3ba1..61066eb81412 100644
->> --- a/net/mptcp/protocol.c
->> +++ b/net/mptcp/protocol.c
->> @@ -2533,9 +2533,6 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
->>  	if (dispose_it)
->>  		list_del(&subflow->node);
->>  
->> -	if (subflow->send_fastclose && ssk->sk_state != TCP_CLOSE)
->> -		tcp_set_state(ssk, TCP_CLOSE);
->> -
->>  	need_push = (flags & MPTCP_CF_PUSH) && __mptcp_retransmit_pending_data(sk);
->>  	if (!dispose_it) {
->>  		__mptcp_subflow_disconnect(ssk, subflow, flags);
+Hi Paolo,
+
+On 03/12/2025 19:55, Paolo Abeni wrote:
+> Jakub reported an MPTCP deadlock at fallback time:
 > 
-> Just to be sure, is it not an issue to transition to TCP_CLOSE after
-> having called __mptcp_subflow_disconnect()? 
+>  WARNING: possible recursive locking detected
+>  6.18.0-rc7-virtme #1 Not tainted
+>  --------------------------------------------
+>  mptcp_connect/20858 is trying to acquire lock:
+>  ff1100001da18b60 (&msk->fallback_lock){+.-.}-{3:3}, at: __mptcp_try_fallback+0xd8/0x280
+> 
+>  but task is already holding lock:
+>  ff1100001da18b60 (&msk->fallback_lock){+.-.}-{3:3}, at: __mptcp_retrans+0x352/0xaa0
+> 
+>  other info that might help us debug this:
+>   Possible unsafe locking scenario:
+> 
+>         CPU0
+>         ----
+>    lock(&msk->fallback_lock);
+>    lock(&msk->fallback_lock);
+> 
+>   *** DEADLOCK ***
+> 
+>   May be due to missing lock nesting notation
+> 
+>  3 locks held by mptcp_connect/20858:
+>   #0: ff1100001da18290 (sk_lock-AF_INET){+.+.}-{0:0}, at: mptcp_sendmsg+0x114/0x1bc0
+>   #1: ff1100001db40fd0 (k-sk_lock-AF_INET#2){+.+.}-{0:0}, at: __mptcp_retrans+0x2cb/0xaa0
+>   #2: ff1100001da18b60 (&msk->fallback_lock){+.-.}-{3:3}, at: __mptcp_retrans+0x352/0xaa0
+> 
+>  stack backtrace:
+>  CPU: 0 UID: 0 PID: 20858 Comm: mptcp_connect Not tainted 6.18.0-rc7-virtme #1 PREEMPT(full)
+>  Hardware name: Bochs, BIOS Bochs 01/01/2011
+>  Call Trace:
+>   <TASK>
+>   dump_stack_lvl+0x6f/0xa0
+>   print_deadlock_bug.cold+0xc0/0xcd
+>   validate_chain+0x2ff/0x5f0
+>   __lock_acquire+0x34c/0x740
+>   lock_acquire.part.0+0xbc/0x260
+>   _raw_spin_lock_bh+0x38/0x50
+>   __mptcp_try_fallback+0xd8/0x280
+>   mptcp_sendmsg_frag+0x16c2/0x3050
+>   __mptcp_retrans+0x421/0xaa0
+>   mptcp_release_cb+0x5aa/0xa70
+>   release_sock+0xab/0x1d0
+>   mptcp_sendmsg+0xd5b/0x1bc0
+>   sock_write_iter+0x281/0x4d0
+>   new_sync_write+0x3c5/0x6f0
+>   vfs_write+0x65e/0xbb0
+>   ksys_write+0x17e/0x200
+>   do_syscall_64+0xbb/0xfd0
+>   entry_SYSCALL_64_after_hwframe+0x4b/0x53
+>  RIP: 0033:0x7fa5627cbc5e
+>  Code: 4d 89 d8 e8 14 bd 00 00 4c 8b 5d f8 41 8b 93 08 03 00 00 59 5e 48 83 f8 fc 74 11 c9 c3 0f 1f 80 00 00 00 00 48 8b 45 10 0f 05 <c9> c3 83 e2 39 83 fa 08 75 e7 e8 13 ff ff ff 0f 1f 00 f3 0f 1e fa
+>  RSP: 002b:00007fff1fe14700 EFLAGS: 00000202 ORIG_RAX: 0000000000000001
+>  RAX: ffffffffffffffda RBX: 0000000000000005 RCX: 00007fa5627cbc5e
+>  RDX: 0000000000001f9c RSI: 00007fff1fe16984 RDI: 0000000000000005
+>  RBP: 00007fff1fe14710 R08: 0000000000000000 R09: 0000000000000000
+>  R10: 0000000000000000 R11: 0000000000000202 R12: 00007fff1fe16920
+>  R13: 0000000000002000 R14: 0000000000001f9c R15: 0000000000001f9c
+> 
+> The packet scheduler could attempt a reinjection after receiving an
+> MP_FAIL and before the infinite map has been transmitted, causing a
+> deadlock since MPTCP needs to do the reinjection atomically from WRT
+> fallback.
+> 
+> Address the issue explicitly avoiding the reinjection in the critical
+> scenario. Note that this is the only fallback critical section that
+> could potentially send packets and hit the double-lock.
 
-That would be indeed an issue, but the following 2 lines (after
-__mptcp_subflow_disconnect()) are:
+Thank you for the fix!
 
-		release_sock(ssk);
-		goto out;
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-that, is
+Out-of-curiosity: any idea why we only see it now while the fix tag is
+from July? :)
 
-	tcp_set_state(..CLOSE);
+Do you want to send it to netdev ASAP, or do you prefer if I do it?
+Should I do it now, or can I send it with other fixes tomorrow?
 
-should never be called after __mptcp_subflow_disconnect().
-
-> I guess no because the
-> transition above was done if "subflow->send_fastclose", which is also
-> check there. Also, tcp_disconnect() will transition to TCP_CLOSE but the
-> old state might cause extra RST, but I think that's fine, right?
-
-Good point! I cooked the patch too hastly, and did not consider such
-path (I stumble upon it while preparing the previous fixes, that do not
-do the tcp_disconnect() thing).
-
-I think you can simply drop this patch, or possibly even better just add
-a suitable comment to the set_state() transition.
-
-/P
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
 
