@@ -1,137 +1,125 @@
-Received: from mail-qt1-f195.google.com (mail-qt1-f195.google.com [209.85.160.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A76A34D92E
-	for <mptcp@lists.linux.dev>; Fri,  5 Dec 2025 15:09:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 791FA33BBA5
+	for <mptcp@lists.linux.dev>; Fri,  5 Dec 2025 16:04:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764947363; cv=none; b=JZoBzU9p4xyKeD470Q9/VCAwAtSckkkZRJTrMFF5Trd3/tt/4t6a7+hbiN5B6IcOVmBqwGbhmtVUQ+4OruDmnYq7+bsziKkiNc8zRI2Yo0Ktm0awWArYIh7O0nLxMg3qpLyeGMFuqPylTxl8ygOzFev3cYfYdRybdlgGE73McaQ=
+	t=1764950678; cv=none; b=kdjLSXGeIrLt9xLqAJ0obFflyPPd7S+gWuWuo9vo6Wpg8oylNrnAHSh7pJvbIJ/pfIzEeQJmHA9eUOB3kyozAGU/wyHGfQddEj9Hz0s5QwklzLAIeAkEzZwpoXsX4an1ebx4sV5QZY/PwOkCAFcEXOQ8/LJaBD3zxzREaPoUtxY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764947363; c=relaxed/simple;
-	bh=r6hONlGn3+rr6oo8lR118MTMTWwDB8drkdIeVtlQxXM=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=WQFEWOTbizpRNMArtCn1SCJTBgvh58vvpTU4g67R5TEAXcp59xXkvCy2rLya6wvfNnoqdgpsMTSOBBUlp7hI2J+elg+8Q1PPP0ZZvZn44AvD5Lc7CnoXlJRRUl1YuHD77r8TTg4Ki0C25Y8XTtg0OOnEdzc0It5dYZqCTWa7dRE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VVImXh1n; arc=none smtp.client-ip=209.85.160.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1764950678; c=relaxed/simple;
+	bh=AvHnDCPaWNki8sBOPbSo+6/z4aVXpQo3MwcYVLa65cE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=Mk0+RjnhAS5sT+MGFoAX+MjbDXvGRnB2waQvYXad5WzRSzhF+MMlXkdAlMGFgXXZhg+zDMX5Bqy9BdGzfIPS5mX0Ozm7r/iV5bfvkYKWzcddR2iDyDXBHNZKyzapGkQ1+0kMFgdWgjTafRsKDPV3otpPEPfo6kUu9v+oVYzLRAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eWzH28d5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VVImXh1n"
-Received: by mail-qt1-f195.google.com with SMTP id d75a77b69052e-4eda26a04bfso22508091cf.2
-        for <mptcp@lists.linux.dev>; Fri, 05 Dec 2025 07:09:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1764947358; x=1765552158; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=avj/X1Eu4pqtc9161bCQ2LqO04KnqCiSI17knd/RN64=;
-        b=VVImXh1nVpDP26x+izBsIy12XRX8VlLMkxKwQlkp747I+3UJbAk2ur+e8pd/b+PfKD
-         cl//ayh/nCrdASbCVkWxL8Dp7+LlEeeEPtG4de7EdNaln2jdQmiVKwNxYUbSHmm0j7Z/
-         fb+S1ATl+TdGwRdrZJ5ZrjjFBOnObDiVblynJCNK3CWHaXl9kaR8Xnq8ljV8QouTEyNl
-         oIBI/fbXf50cDJD6YOjT8mNx3PGZQeTnELuUJRTbDom2Q8eQomT+MvnrsKmLs7Vur/tf
-         R/Kb6SrTfZQmPpNueu9FDHM/Wf+t7YpZRhIYFhE92Z/pLk5mhGd0WWwzcQOY4lgXY1R5
-         0ikA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764947358; x=1765552158;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=avj/X1Eu4pqtc9161bCQ2LqO04KnqCiSI17knd/RN64=;
-        b=dGGTYevNaMIqSWXvcfRug13JXRzL7u5wF9H83Wg8NiQL3eLrdXx+QJtniZosk5ZXkS
-         hUPrE67U5hV/e16nx5Bx6zizoUGCHf/FxyqIRgNEDTrbZhErAEljo/wurscSDLZcgg2I
-         sVcstfcwCQkEwOPwonX+0Mf86Rvdid1QAk1jfLFS7Hvezsk1QvGNejo1k3vvdLQfnS0P
-         T0mVrTBd/FWsvLGnLOaYgwvWYDQFrSqU4PCmdBau5MFPJP2frO1YLlVZ5/omL0OmUnvX
-         YkDgPAnsLTUVW7W/H22+zyc32u7kgGINR6bVv2ZGBpAvNnthe89ijsb8jL7QnXJkYtzH
-         6HXw==
-X-Gm-Message-State: AOJu0YzEpHqEY9jecFBbv8CflKzQHsmg7Sl2hNneHY2jwwgnvBRbebCl
-	pZKViXS82I9ZGL1eWrbZVyUrTTH70PtF80B93gadLdz9FanCxCBtNkM=
-X-Gm-Gg: ASbGnctk6ii028NXzNJDG/uA/hJtu7CrbgS07XlzwJmxA6AE9zpbBn2zvGSPtQkJnT6
-	XEi9eDQEdZLAOEDFVkZSUOyHZbzUR07Nae9lQ8FGg1APSt2HSTQiCv1VIzMOJfOFqQe7zeRGYPs
-	nXW5+YF03iIFDmkZU1SLBuDayEaNoxWV1acBSYlcTGm6/pyGdsb/q31BkQq6dlXhVkCMmnBsMd3
-	SWdO4emeM4GLqxb6FqrZ9AszOtn5TIrwimRCBZhv77CkMIKpTNeerUxEaNBM0H/V09ur/3bHNsF
-	qw+b3duu0e37D5CxtQjCq2N3PNG5Le92tsYqk5P3A65GCaOS+M6ppwxqZsbPBGkdmvTnUVEnOOO
-	Z57aJyyBkOl3nZvwpyqyxAVCz0xY7v4u/MCzPCtZDGts/aqof9RmEdddOfR/6tKsteIBAltwqkJ
-	gMFvV7eUSFi07rYG6Uf2HR7XkgyOaPLycR
-X-Google-Smtp-Source: AGHT+IFtqkok2rn4FkWRI+/ue2PZql44/AGqaXYuh0QH6gYlAfADkGydxSr+aakROv5t0FaBfReAWg==
-X-Received: by 2002:ac8:5fcd:0:b0:4ec:f001:e186 with SMTP id d75a77b69052e-4f0176561a5mr146750801cf.62.1764947353179;
-        Fri, 05 Dec 2025 07:09:13 -0800 (PST)
-Received: from [127.0.0.1] ([20.55.15.227])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4f027d0171asm28537701cf.20.2025.12.05.07.09.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Dec 2025 07:09:12 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <cover.1764928598.git.pabeni@redhat.com>
-References: <cover.1764928598.git.pabeni@redhat.com>
-Subject: Re: [PATCH mptcp-net v3 0/2] mptcp: fix warn on bad status
-Message-ID: <ed72601d-56d2-acbd-075b-3ea8fd86e05e@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 05 Dec 2025 15:09:12 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eWzH28d5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72481C4CEF1;
+	Fri,  5 Dec 2025 16:04:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1764950677;
+	bh=AvHnDCPaWNki8sBOPbSo+6/z4aVXpQo3MwcYVLa65cE=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=eWzH28d5eHdWGv/lyOZVyibpp7BcgWVmcEM85y6aFhmLWJ4WeBtyLEcFVQOE5Pq1U
+	 W0nfxOfCkTxE/XmGHt3fvpU/LUEUZ8GgnF8wzXBt4d+uEnsXWB5kwroWlHy0n1hu6S
+	 rjrEJnL/zeQqTrvNYV9z7U4ii9DXnqQtlsMMuqSE2uaM4m+S0RVtDXtHAjV31az4Ke
+	 DPoWJYvsBlkL3xusl/HsMKZcTCsO+FA0qF6VKD9krrfU2lfBpA22xeWKFMCRcV3x1p
+	 BJ8vz1V33F7/9Xh8+4AKT0fhBAOQVwvzohp879BnZMSRV0RJ6QethvsXAJ1Bz42QSR
+	 B1qDoytw6KqUg==
+Message-ID: <346a6066-6280-4e19-b236-641c5a9057ab@kernel.org>
+Date: Fri, 5 Dec 2025 17:04:34 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-net v3 0/2] mptcp: fix warn on bad status
+Content-Language: en-GB, fr-BE
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+References: <cover.1764928598.git.pabeni@redhat.com>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <cover.1764928598.git.pabeni@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 Hi Paolo,
 
-Thank you for your modifications, that's great!
+On 05/12/2025 10:58, Paolo Abeni wrote:
+> Two somewhat related fixes addressing different issues producing
+> exactly the same splat (issues/586).
+> 
+> Patch 2 now takes in account more edge cases.
+> 
+> Paolo Abeni (2):
+>   mptcp: fallback earlier on simult connection
+>   mptcp: ensure context reset on disconnect()
 
-Our CI did some validations and here is its report:
+Thank you for these fixes!
 
-- KVM Validation: normal (except selftest_mptcp_join): Unstable: 1 failed =
-test(s): packetdrill_syscalls =F0=9F=94=B4
-- KVM Validation: normal (only =
-selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except =
-selftest_mptcp_join): Unstable: 2 failed test(s): packetdrill_dss =
-packetdrill_syscalls =F0=9F=94=B4
-- KVM Validation: debug (only =
-selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only=
- bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only =
-bpftest_all): Success! =E2=9C=85
-- Task: https://github.=
-com/multipath-tcp/mptcp_net-next/actions/runs/19965087423
+Now in our tree:
 
-Initiator: Matthieu Baerts (NGI0)
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/ed0dfd57a2bc
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1030787
+New patches for t/upstream-net and t/upstream:
+- 1440e0387c99: mptcp: fallback earlier on simult connection
+- 44e82feac422: mptcp: ensure context reset on disconnect()
+- Results: 747eaa6d8997..d36c213dc2b5 (export-net)
+- 2419c9c4c208: conflict in t/mptcp-better-mptcp-level-RTT-estimator
+- Results: a82b483f14fa..f2b1f9f41c2d (export)
 
+Tests are now in progress:
 
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+- export-net:
+https://github.com/multipath-tcp/mptcp_net-next/commit/28af05d8581af0c8b8296330d48c67d62ff66efe/checks
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/ea5f5e676cf524729a78070fa3f674f11cf09059/checks
 
 Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
+
