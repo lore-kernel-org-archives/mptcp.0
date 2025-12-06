@@ -1,40 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDCC13161AC
-	for <mptcp@lists.linux.dev>; Sat,  6 Dec 2025 00:20:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D27EF31A80E
+	for <mptcp@lists.linux.dev>; Sat,  6 Dec 2025 00:22:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764980446; cv=none; b=ZyfZA8ej1lAjNAP5000AYHDUSqbWGdegAxMSA4ERj3A7RF88WgU6bjAYr1YFI7cx+RaFeMHw/SSEzZb2i0Ag7lGxQoN/KRbwzlplgLC3UB60I0GRQ7q0UwybceHfMJy62vi6OA0F/iDD8llR2HUmOKvUEh9HTRXOvcTIIauFbRc=
+	t=1764980521; cv=none; b=GlHcwCW83vMyb0kGEJsJFKQirgHmuHW7Pjnik/bBUT46J2l6/RNgsug0IaixB7JfCXX1EvADw/2BhLDYBgopW6GOvaZQjpC0Sy+gSVvZ3ZhH7hJoaj6xSo+o9LhF0nRqAE9ivKCrwu49p7rILPQBhLUX0T42iwnLkO63RXz7q0g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764980446; c=relaxed/simple;
-	bh=csDqGEhGb3H+nG2th/uNKVTdq0vjpDlROcniCPNV1sk=;
+	s=arc-20240116; t=1764980521; c=relaxed/simple;
+	bh=kKzZ7Rp9SGQ/8qVldDp0KMkdPSUAFMRFC47uaYVBRhY=;
 	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=rb3TNuJZHGLd4U/4TfAECB4U9WYgs7j3PcZRx8DtMhROUhR97rBRCW4CL02krECPpeT9xRSP6Dq3adSa/jHGoSMmhWMJZdF1q76iKchAQoFWX9DKx8gbTRrTmeUxddR2hYMXEVx9Vl9r3FRqbFyX5CtPuyL0lwwvODSxbewgQcQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pRl1wFlQ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=rOLTUbXtxcTSaX4U5fiV3WiiF1fUk7kbK/R/I48IZyr+NAzMs0z+fPqzaTqJBTE3rOiBtfYGa0VlvHizBA/gHZkNSAAUjHIzmBcvljxxAJpiZRz534aynbgufhbeEkklAedZ9Fu7IOpgWtnqj0XyNUBk1MgCQCoysetk28Uv6eE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R/dXohQF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pRl1wFlQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C55FFC116B1;
-	Sat,  6 Dec 2025 00:20:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R/dXohQF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8BC7C4CEF1;
+	Sat,  6 Dec 2025 00:22:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764980445;
-	bh=csDqGEhGb3H+nG2th/uNKVTdq0vjpDlROcniCPNV1sk=;
+	s=k20201202; t=1764980521;
+	bh=kKzZ7Rp9SGQ/8qVldDp0KMkdPSUAFMRFC47uaYVBRhY=;
 	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=pRl1wFlQG+rL2huPk8Km/0fuAYvrh++47utyYqOzY1GBQsHVoU596CZ+jlbwWzxx8
-	 A5x+uO2mhx8gIwoFz1YXPt27Ka3eF0me9yyFAHkdz2fCyxzvhHh1LWLrH+OY/Hvf0y
-	 1ie6NBbE55214VYGOT6E/GM8Fy5uj7OfjoRBxcGJceCDfgSOMcdV2U/yqSodTDtT89
-	 9nWPFLlLDfMf9YW08QiwbFuna0KOlcluqysr3TkPOcHhNIHQf5cTCPBxwdxUQIregK
-	 AMxn/QOM8H+ICYv7HTfOug+1iwPig+5zkxek+twau4XTQshh6xY7QfJhNJgE9i7KU5
-	 7B3YpA/UJEXCA==
-Date: Fri, 5 Dec 2025 16:20:45 -0800 (PST)
+	b=R/dXohQFlAzAivvi7UPheo4u1Wp4LRB0E4QFO0R1aNA25q5ZXyghXlieUajgsnbuV
+	 v5CEuPwUjvmBMEydPS3ojvvb2mzpXuZLMFzL/ug+glb8TJiEXM7Fb8EC+sGX44SZsF
+	 quHMvVHydTrO7I7vPapSgf78QWFPTDohxcD6ZiJdwmg4orNVZQrXL5zC28fSXj7v8b
+	 SrX4wwFpyYfPuIoFCjWP0kt3wy+kurdxvDozrqV9TOZ3/dToNjjMeC6oyGY2F34Ygq
+	 XiNUcUgFoCcEZD0Oa8pS5vuqCQZtAGj05KyQVwz/+cv7q6inUXq/GjsrMKBNMJTc8G
+	 c0Qiziw0ldVcA==
+Date: Fri, 5 Dec 2025 16:22:01 -0800 (PST)
 From: Mat Martineau <martineau@kernel.org>
 To: Geliang Tang <geliang@kernel.org>
-cc: mptcp@lists.linux.dev, Geliang Tang <tanggeliang@kylinos.cn>, 
-    Paolo Abeni <pabeni@redhat.com>
-Subject: Re: [PATCH mptcp-next v14 3/8] tcp: add recv_should_stop helper
-In-Reply-To: <67d9afa587bcd654db6e63350d9cba395d7778fd.1763974740.git.tanggeliang@kylinos.cn>
-Message-ID: <7e206916-7a4b-a71a-c386-aac02d8ae8a3@kernel.org>
-References: <cover.1763974740.git.tanggeliang@kylinos.cn> <67d9afa587bcd654db6e63350d9cba395d7778fd.1763974740.git.tanggeliang@kylinos.cn>
+cc: mptcp@lists.linux.dev, Geliang Tang <tanggeliang@kylinos.cn>
+Subject: Re: [PATCH mptcp-next v14 6/8] mptcp: implement .splice_read
+In-Reply-To: <cff194b2736d851c1ad28e2d6e38eb7e890de2a4.1763974740.git.tanggeliang@kylinos.cn>
+Message-ID: <088efdb2-4f2b-3c37-ce09-19a855f4f08f@kernel.org>
+References: <cover.1763974740.git.tanggeliang@kylinos.cn> <cff194b2736d851c1ad28e2d6e38eb7e890de2a4.1763974740.git.tanggeliang@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -47,170 +46,151 @@ On Mon, 24 Nov 2025, Geliang Tang wrote:
 
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 >
-> Factor out a new helper tcp_recv_should_stop() from tcp_recvmsg_locked()
-> and tcp_splice_read() to check whether to stop receiving. It will be used
-> for MPTCP too.
+> This patch implements .splice_read interface of mptcp struct proto_ops
+> as mptcp_splice_read() with reference to tcp_splice_read().
 >
-> Suggested-by: Paolo Abeni <pabeni@redhat.com>
+> Corresponding to __tcp_splice_read(), __mptcp_splice_read() is defined,
+> invoking mptcp_read_sock() instead of tcp_read_sock().
+>
+> mptcp_splice_read() is almost the same as tcp_splice_read(), except for
+> sock_rps_record_flow().
+>
 > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 > ---
-> include/net/tcp.h | 23 +++++++++++++++
-> net/ipv4/tcp.c    | 73 ++++++++---------------------------------------
-> 2 files changed, 35 insertions(+), 61 deletions(-)
+> net/mptcp/protocol.c | 96 ++++++++++++++++++++++++++++++++++++++++++++
+> 1 file changed, 96 insertions(+)
 >
-> diff --git a/include/net/tcp.h b/include/net/tcp.h
-> index 0deb5e9dd911..94a50a9daf65 100644
-> --- a/include/net/tcp.h
-> +++ b/include/net/tcp.h
-> @@ -2942,4 +2942,27 @@ enum skb_drop_reason tcp_inbound_hash(struct sock *sk,
-> 		const void *saddr, const void *daddr,
-> 		int family, int dif, int sdif);
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 9302b372910e..abd0f44ad63f 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -4355,6 +4355,100 @@ static int mptcp_read_sock(struct sock *sk, read_descriptor_t *desc,
+> 	return __mptcp_read_sock(sk, desc, recv_actor, false);
+> }
 >
-> +static inline int tcp_recv_should_stop(struct sock *sk, long timeo)
+> +static int __mptcp_splice_read(struct sock *sk, struct tcp_splice_state *tss)
 > +{
-> +	if (sock_flag(sk, SOCK_DONE))
-> +		return -ENETDOWN;
+> +	/* Store TCP splice context information in read_descriptor_t. */
+> +	read_descriptor_t rd_desc = {
+> +		.arg.data = tss,
+> +		.count	  = tss->len,
+> +	};
 > +
-> +	if (sk->sk_err)
-> +		return sock_error(sk);
+> +	return mptcp_read_sock(sk, &rd_desc, tcp_splice_data_recv);
+> +}
+> +
+> +/**
+> + *  mptcp_splice_read - splice data from MPTCP socket to a pipe
+> + * @sock:	socket to splice from
+> + * @ppos:	position (not valid)
+> + * @pipe:	pipe to splice to
+> + * @len:	number of bytes to splice
+> + * @flags:	splice modifier flags
+> + *
+> + * Description:
+> + *    Will read pages from given socket and fill them into a pipe.
+> + *
+> + **/
+> +static ssize_t mptcp_splice_read(struct socket *sock, loff_t *ppos,
+> +				 struct pipe_inode_info *pipe, size_t len,
+> +				 unsigned int flags)
+> +{
+> +	struct tcp_splice_state tss = {
+> +		.pipe	= pipe,
+> +		.len	= len,
+> +		.flags	= flags,
+> +	};
+> +	struct sock *sk = sock->sk;
+> +	ssize_t spliced = 0;
+> +	int ret = 0;
+> +	long timeo;
+> +
+> +	/*
+> +	 * We can't seek on a socket input
+> +	 */
+> +	if (unlikely(*ppos))
+> +		return -ESPIPE;
+> +
+> +	lock_sock(sk);
+> +
+> +	mptcp_rps_record_subflows(mptcp_sk(sk));
+> +
+> +	timeo = sock_rcvtimeo(sk, sock->file->f_flags & O_NONBLOCK);
+> +	while (tss.len) {
+> +		ret = __mptcp_splice_read(sk, &tss);
+> +		if (ret < 0) {
+> +			break;
+> +		} else if (!ret) {
+> +			int err;
+> +
+> +			if (spliced)
+> +				break;
+> +			err = tcp_recv_should_stop(sk, timeo);
+> +			if (err < 0) {
+> +				if (err != -ESHUTDOWN)
+> +					ret = err;
+> +				break;
+> +			}
+> +			/* if __mptcp_splice_read() got nothing while we have
+> +			 * an skb in receive queue, we do not want to loop.
+> +			 * This might happen with URG data.
+> +			 */
+> +			if (!skb_queue_empty(&sk->sk_receive_queue))
+> +				break;
 
 Hi Geliang -
 
-sock_error() will clear sk_err, and this introduces some changes in 
-certain code paths that are refactored below (especially where data was 
-read successfully before the error was encountered).
+This queue could also be non-empty due to the length limit in patch 2. 
+Maybe another reason to remove that length limit.
 
-I suggest either handling sk_err outside of this helper so the exact 
-behavior of the existing code can be maintained, or maybe defer this 
-helper for a separate patch series.
 
 - Mat
 
 
+> +			ret = sk_wait_data(sk, &timeo, NULL);
+> +			if (ret < 0)
+> +				break;
+> +			continue;
+> +		}
+> +		tss.len -= ret;
+> +		spliced += ret;
 > +
-> +	if (sk->sk_shutdown & RCV_SHUTDOWN)
-> +		return -ESHUTDOWN;
+> +		if (!tss.len || !timeo)
+> +			break;
+> +		release_sock(sk);
+> +		lock_sock(sk);
 > +
-> +	if (sk->sk_state == TCP_CLOSE)
-> +		return -ENOTCONN;
+> +		if (tcp_recv_should_stop(sk, timeo))
+> +			break;
+> +	}
 > +
-> +	if (!timeo)
-> +		return -EAGAIN;
+> +	release_sock(sk);
 > +
-> +	if (signal_pending(current))
-> +		return sock_intr_errno(timeo);
+> +	if (spliced)
+> +		return spliced;
 > +
-> +	return 0;
+> +	return ret;
 > +}
 > +
-> #endif	/* _TCP_H */
-> diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
-> index 5265a9453814..8b4917a7f262 100644
-> --- a/net/ipv4/tcp.c
-> +++ b/net/ipv4/tcp.c
-> @@ -842,26 +842,14 @@ ssize_t tcp_splice_read(struct socket *sock, loff_t *ppos,
-> 		if (ret < 0)
-> 			break;
-> 		else if (!ret) {
-> +			int err;
-> +
-> 			if (spliced)
-> 				break;
-> -			if (sock_flag(sk, SOCK_DONE))
-> -				break;
-> -			if (sk->sk_err) {
-> -				ret = sock_error(sk);
-> -				break;
-> -			}
-> -			if (sk->sk_shutdown & RCV_SHUTDOWN)
-> -				break;
-> -			if (sk->sk_state == TCP_CLOSE) {
-> -				/*
-> -				 * This occurs when user tries to read
-> -				 * from never connected socket.
-> -				 */
-> -				ret = -ENOTCONN;
-> -				break;
-> -			}
-> -			if (!timeo) {
-> -				ret = -EAGAIN;
-> +			err = tcp_recv_should_stop(sk, timeo);
-> +			if (err < 0) {
-> +				if (err != -ENETDOWN && err != -ESHUTDOWN)
-> +					ret = err;
-> 				break;
-> 			}
-> 			/* if __tcp_splice_read() got nothing while we have
-> @@ -873,10 +861,6 @@ ssize_t tcp_splice_read(struct socket *sock, loff_t *ppos,
-> 			ret = sk_wait_data(sk, &timeo, NULL);
-> 			if (ret < 0)
-> 				break;
-> -			if (signal_pending(current)) {
-> -				ret = sock_intr_errno(timeo);
-> -				break;
-> -			}
-> 			continue;
-> 		}
-> 		tss.len -= ret;
-> @@ -887,9 +871,7 @@ ssize_t tcp_splice_read(struct socket *sock, loff_t *ppos,
-> 		release_sock(sk);
-> 		lock_sock(sk);
+> static const struct proto_ops mptcp_stream_ops = {
+> 	.family		   = PF_INET,
+> 	.owner		   = THIS_MODULE,
+> @@ -4376,6 +4470,7 @@ static const struct proto_ops mptcp_stream_ops = {
+> 	.mmap		   = sock_no_mmap,
+> 	.set_rcvlowat	   = mptcp_set_rcvlowat,
+> 	.read_sock	   = mptcp_read_sock,
+> +	.splice_read	   = mptcp_splice_read,
+> };
 >
-> -		if (sk->sk_err || sk->sk_state == TCP_CLOSE ||
-> -		    (sk->sk_shutdown & RCV_SHUTDOWN) ||
-> -		    signal_pending(current))
-> +		if (tcp_recv_should_stop(sk, timeo))
-> 			break;
-> 	}
+> static struct inet_protosw mptcp_protosw = {
+> @@ -4481,6 +4576,7 @@ static const struct proto_ops mptcp_v6_stream_ops = {
+> #endif
+> 	.set_rcvlowat	   = mptcp_set_rcvlowat,
+> 	.read_sock	   = mptcp_read_sock,
+> +	.splice_read	   = mptcp_splice_read,
+> };
 >
-> @@ -2732,42 +2714,11 @@ static int tcp_recvmsg_locked(struct sock *sk, struct msghdr *msg, size_t len,
-> 		if (copied >= target && !READ_ONCE(sk->sk_backlog.tail))
-> 			break;
->
-> -		if (copied) {
-> -			if (!timeo ||
-> -			    sk->sk_err ||
-> -			    sk->sk_state == TCP_CLOSE ||
-> -			    (sk->sk_shutdown & RCV_SHUTDOWN) ||
-> -			    signal_pending(current))
-> -				break;
-> -		} else {
-> -			if (sock_flag(sk, SOCK_DONE))
-> -				break;
-> -
-> -			if (sk->sk_err) {
-> -				copied = sock_error(sk);
-> -				break;
-> -			}
-> -
-> -			if (sk->sk_shutdown & RCV_SHUTDOWN)
-> -				break;
-> -
-> -			if (sk->sk_state == TCP_CLOSE) {
-> -				/* This occurs when user tries to read
-> -				 * from never connected socket.
-> -				 */
-> -				copied = -ENOTCONN;
-> -				break;
-> -			}
-> -
-> -			if (!timeo) {
-> -				copied = -EAGAIN;
-> -				break;
-> -			}
-> -
-> -			if (signal_pending(current)) {
-> -				copied = sock_intr_errno(timeo);
-> -				break;
-> -			}
-> +		err = tcp_recv_should_stop(sk, timeo);
-> +		if (err < 0) {
-> +			if (!copied && err != -ENETDOWN && err != -ESHUTDOWN)
-> +				copied = err;
-> +			break;
-> 		}
->
-> 		if (copied >= target) {
+> static struct proto mptcp_v6_prot;
 > -- 
 > 2.43.0
 >
