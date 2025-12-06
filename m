@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F26FDDDC5
-	for <mptcp@lists.linux.dev>; Sat,  6 Dec 2025 12:34:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 738D8DDC5
+	for <mptcp@lists.linux.dev>; Sat,  6 Dec 2025 12:34:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765024472; cv=none; b=lTCVJv8NQEsQ08O4AmvumXUUzjU2/faN4KcTOgqyHOWKJcXD07LufkpZJi4YjxO6yULkGIYl7wEVJaxwf71M9desh9AEkLrrlhBokPxN0nDw8IbATsEkFXnBxJL3SdOVtQZUUblNbkpbOyIUqtZtkhL9nSyD6DxVmMfxIVepng0=
+	t=1765024474; cv=none; b=DfowdeRL07odiZRi3/4Hkczl56VWH/x0fO88A6fAtPC4xxnEYZ18Ou7uabx9kQEuzIGRXhSFtuYw49loBpYGC9Foxj2EM8A9GKoomvrQIMukCTRqGRmbFtE+wtT+yhWs5h1edRL9XETZTDbXdCZJWpptapDksbFt2kFYbjcB0vc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765024472; c=relaxed/simple;
-	bh=49lsmvuuJEyPxMr0mre3SjmAsVnOoqyeVqmxKzVhCas=;
+	s=arc-20240116; t=1765024474; c=relaxed/simple;
+	bh=lV56axlPXMe1LcP0B5FRqRW0KYzq5Ep3zPi9Lsr+CfE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oqsZd9b8G/lqbklt3EEk1nvL0QBZgXrKrKBv0Qt6Stev+f7HG33OXEVmd/hzuK3wr/Ygp3UCUOZHgUkghUGmREjqZhf3Y92+QmzCB7ImXtw9UkMQ/ni30nHUtSaZQT9r0uJymVoMvZrluUkFOCjw5lzIfqpI6L0RkzWBy0dav/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bWn0lNJV; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=GiKitOZf8yRkV2zEgOyfj2WJy2Yp7D+is8ulb2N/Fc235KCc466GMXhjrxWE6aPXtEi9EzXTSZR35T/9weG3VeQ4ODegVSUbtK7nM6QY/w1XlnyHnKJynl/3s3S5xMuSWMCOw2/u4b6r5O6SVULzMEC3XzSvm8giCUqTxR4UfNk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p8OQ+Vo7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bWn0lNJV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB0B2C116C6;
-	Sat,  6 Dec 2025 12:34:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p8OQ+Vo7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91E9AC4CEF5;
+	Sat,  6 Dec 2025 12:34:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765024471;
-	bh=49lsmvuuJEyPxMr0mre3SjmAsVnOoqyeVqmxKzVhCas=;
+	s=k20201202; t=1765024474;
+	bh=lV56axlPXMe1LcP0B5FRqRW0KYzq5Ep3zPi9Lsr+CfE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=bWn0lNJVZpMjEbIdnIH2M1BpA812y/VhJov8dWfDApvH2mdWDBjKi6daIjEGI/+zi
-	 UUid9j9hCUyu4aXEXTDJ91cvKDf7kGoYgW//GoB/eBQiqqCDKJaTbjCUXLtfkyILQf
-	 DNOX7poh5XX2d+/lDoqtZ63hkAiuOxtZ8bdAXzFSlcQ5B+GZxnT5na76wFYjmri/yl
-	 bGkAlA5PjeyG373yBC1UrRIJSILLWgor2sZ1hyZvSVkZX78PvmLVa+Mw/URNryS76P
-	 KnheZGs0fc/KjHOEIZz6ud5Fqxso6U2JIqcioK+B5dKc3KNOmunI2Su7i47m8IOvF9
-	 /+C0qelDk3x0g==
+	b=p8OQ+Vo7gFdISBO0uHopQZs/sx5gUjCeeDk/4nvsnIDn+In6wuZBPqJzf5YozXr4a
+	 KHC6Tm7/41CoAaR6AMEyCSNZLAn2KT1ewm9yKVuOnCHR2qTRd/bzuREdyg6wEZ6GGn
+	 csFehLEgU9s4wWGZvvhp3XULZJeVqbhE1ya3cJlB9M3a9lUYUNwBlLkD8UrlyWWC1T
+	 S3W3YPlLG6Q+4opWEz4jYCEWVv7ahPIQ6laeyP2O7CZUv7rRrura7kL6lfAEdL4kMB
+	 5QaKkSCcW6FkTgQzhrybPVxzqeiokiKYZ2KgqILOtLrUh4CIiz7CaULMg0wXXNzqKQ
+	 4V+DvzYpHXcxw==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>,
-	Hannes Reinecke <hare@kernel.org>
-Subject: [PATCH mptcp-next v15 2/6] mptcp: implement .read_sock
-Date: Sat,  6 Dec 2025 20:33:52 +0800
-Message-ID: <6d5470547063a740c0eb2f80655fafd7dc47716e.1765023923.git.tanggeliang@kylinos.cn>
+	Paolo Abeni <pabeni@redhat.com>
+Subject: [PATCH mptcp-next v15 3/6] tcp: export tcp_splice_state
+Date: Sat,  6 Dec 2025 20:33:53 +0800
+Message-ID: <83d5d4fe500cf589dca5b4318ed3e6985ed34f28.1765023923.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <cover.1765023923.git.tanggeliang@kylinos.cn>
 References: <cover.1765023923.git.tanggeliang@kylinos.cn>
@@ -46,134 +46,76 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-nvme_tcp_try_recv() needs to call .read_sock interface of struct
-proto_ops, but it's not implemented in MPTCP.
+Export struct tcp_splice_state and tcp_splice_data_recv() in net/tcp.h so
+that they can be used by MPTCP.
 
-This patch implements it with reference to __tcp_read_sock() and
-__mptcp_recvmsg_mskq().
-
-Corresponding to tcp_recv_skb(), a new helper for MPTCP named
-mptcp_recv_skb() is added to peek a skb from sk->sk_receive_queue.
-
-Compared with __mptcp_recvmsg_mskq(), mptcp_read_sock() uses
-sk->sk_rcvbuf as the max read length. The LISTEN status is checked
-before the while loop, and mptcp_recv_skb() and mptcp_cleanup_rbuf()
-are invoked after the loop. In the loop, all flags checks for
-__mptcp_recvmsg_mskq() are removed.
-
-Reviewed-by: Hannes Reinecke <hare@kernel.org>
+Suggested-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- net/mptcp/protocol.c | 82 ++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 82 insertions(+)
+ include/net/tcp.h | 11 +++++++++++
+ net/ipv4/tcp.c    | 13 ++-----------
+ 2 files changed, 13 insertions(+), 11 deletions(-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 9d67c751b7a9..01d602f0d556 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -4322,6 +4322,86 @@ static __poll_t mptcp_poll(struct file *file, struct socket *sock,
- 	return mask;
+diff --git a/include/net/tcp.h b/include/net/tcp.h
+index 0deb5e9dd911..f5f6119f7716 100644
+--- a/include/net/tcp.h
++++ b/include/net/tcp.h
+@@ -347,6 +347,15 @@ extern struct proto tcp_prot;
+ #define TCP_DEC_STATS(net, field)	SNMP_DEC_STATS((net)->mib.tcp_statistics, field)
+ #define TCP_ADD_STATS(net, field, val)	SNMP_ADD_STATS((net)->mib.tcp_statistics, field, val)
+ 
++/*
++ * TCP splice context
++ */
++struct tcp_splice_state {
++	struct pipe_inode_info *pipe;
++	size_t len;
++	unsigned int flags;
++};
++
+ void tcp_tsq_work_init(void);
+ 
+ int tcp_v4_err(struct sk_buff *skb, u32);
+@@ -378,6 +387,8 @@ void tcp_rcv_space_adjust(struct sock *sk);
+ int tcp_twsk_unique(struct sock *sk, struct sock *sktw, void *twp);
+ void tcp_twsk_destructor(struct sock *sk);
+ void tcp_twsk_purge(struct list_head *net_exit_list);
++int tcp_splice_data_recv(read_descriptor_t *rd_desc, struct sk_buff *skb,
++			 unsigned int offset, size_t len);
+ ssize_t tcp_splice_read(struct socket *sk, loff_t *ppos,
+ 			struct pipe_inode_info *pipe, size_t len,
+ 			unsigned int flags);
+diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
+index 313c7cf208d8..40ad9656dc9e 100644
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -318,15 +318,6 @@ EXPORT_SYMBOL(tcp_have_smc);
+ struct percpu_counter tcp_sockets_allocated ____cacheline_aligned_in_smp;
+ EXPORT_IPV6_MOD(tcp_sockets_allocated);
+ 
+-/*
+- * TCP splice context
+- */
+-struct tcp_splice_state {
+-	struct pipe_inode_info *pipe;
+-	size_t len;
+-	unsigned int flags;
+-};
+-
+ /*
+  * Pressure flag: try to collapse.
+  * Technical note: it is used by multiple contexts non atomically.
+@@ -775,8 +766,8 @@ void tcp_push(struct sock *sk, int flags, int mss_now,
+ 	__tcp_push_pending_frames(sk, mss_now, nonagle);
  }
  
-+static struct sk_buff *mptcp_recv_skb(struct sock *sk, u32 *off)
-+{
-+	struct mptcp_sock *msk = mptcp_sk(sk);
-+	struct sk_buff *skb;
-+	u32 offset;
-+
-+	if (!list_empty(&msk->backlog_list))
-+		mptcp_move_skbs(sk);
-+
-+	while ((skb = skb_peek(&sk->sk_receive_queue)) != NULL) {
-+		offset = MPTCP_SKB_CB(skb)->offset;
-+		if (offset < skb->len) {
-+			*off = offset;
-+			return skb;
-+		}
-+		mptcp_eat_recv_skb(sk, skb);
-+	}
-+	return NULL;
-+}
-+
-+/*
-+ * Note:
-+ *	- It is assumed that the socket was locked by the caller.
-+ */
-+static int __mptcp_read_sock(struct sock *sk, read_descriptor_t *desc,
-+			     sk_read_actor_t recv_actor, bool noack)
-+{
-+	struct mptcp_sock *msk = mptcp_sk(sk);
-+	struct sk_buff *skb;
-+	int copied = 0;
-+	u32 offset;
-+
-+	msk_owned_by_me(msk);
-+
-+	if (sk->sk_state == TCP_LISTEN)
-+		return -ENOTCONN;
-+	while ((skb = mptcp_recv_skb(sk, &offset)) != NULL) {
-+		u32 data_len = skb->len - offset;
-+		int count;
-+		u32 size;
-+
-+		size = min_t(size_t, data_len, INT_MAX);
-+		count = recv_actor(desc, skb, offset, size);
-+		if (count <= 0) {
-+			if (!copied)
-+				copied = count;
-+			break;
-+		}
-+
-+		copied += count;
-+
-+		msk->bytes_consumed += count;
-+		if (count < data_len) {
-+			MPTCP_SKB_CB(skb)->offset += count;
-+			MPTCP_SKB_CB(skb)->map_seq += count;
-+			break;
-+		}
-+
-+		mptcp_eat_recv_skb(sk, skb);
-+	}
-+
-+	if (noack)
-+		goto out;
-+
-+	mptcp_rcv_space_adjust(msk, copied);
-+
-+	if (copied > 0) {
-+		mptcp_recv_skb(sk, &offset);
-+		mptcp_cleanup_rbuf(msk, copied);
-+	}
-+out:
-+	return copied;
-+}
-+
-+static int mptcp_read_sock(struct sock *sk, read_descriptor_t *desc,
-+			   sk_read_actor_t recv_actor)
-+{
-+	return __mptcp_read_sock(sk, desc, recv_actor, false);
-+}
-+
- static const struct proto_ops mptcp_stream_ops = {
- 	.family		   = PF_INET,
- 	.owner		   = THIS_MODULE,
-@@ -4342,6 +4422,7 @@ static const struct proto_ops mptcp_stream_ops = {
- 	.recvmsg	   = inet_recvmsg,
- 	.mmap		   = sock_no_mmap,
- 	.set_rcvlowat	   = mptcp_set_rcvlowat,
-+	.read_sock	   = mptcp_read_sock,
- };
- 
- static struct inet_protosw mptcp_protosw = {
-@@ -4446,6 +4527,7 @@ static const struct proto_ops mptcp_v6_stream_ops = {
- 	.compat_ioctl	   = inet6_compat_ioctl,
- #endif
- 	.set_rcvlowat	   = mptcp_set_rcvlowat,
-+	.read_sock	   = mptcp_read_sock,
- };
- 
- static struct proto mptcp_v6_prot;
+-static int tcp_splice_data_recv(read_descriptor_t *rd_desc, struct sk_buff *skb,
+-				unsigned int offset, size_t len)
++int tcp_splice_data_recv(read_descriptor_t *rd_desc, struct sk_buff *skb,
++			 unsigned int offset, size_t len)
+ {
+ 	struct tcp_splice_state *tss = rd_desc->arg.data;
+ 	int ret;
 -- 
 2.51.0
 
