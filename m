@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7929521D3CC;
-	Tue,  9 Dec 2025 11:53:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76226320CA6;
+	Tue,  9 Dec 2025 11:53:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765281199; cv=none; b=FOtpdpxGfljgCusaNuEhiSk0njBsP/Ncdkg+PJg7tZ3fjFcGlPubk7UWn+o3biV5GRl5fjq9sdbIsIeNSLQMB0eanCtzsgoMWjrYwNkpSyoTzEcckdBv6za/ITR7IxBZrbtEKsH8Yj8c//AIB3mkJHiL8zmzlQfBa4OQxFIgAHY=
+	t=1765281203; cv=none; b=RhsN3Yple97XqeJoCICV5oM2dyJZ6t/bTM1E95EG3MVxsDpFPUzUB+C/g9MC/BqZcgilXe08zIDfJaOTm8B/hyWDuxWiilR9EsZxz02SquaDGzCrPF/QYvMs1BuLLpGMNbh3EA30Xmzgrlw2x47/naA6oYtIEpkp4Cf5yR/o4CU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765281199; c=relaxed/simple;
-	bh=L0g662WB0mVl+WAkbemEVpXhr6ChDipHoLJVsRbGaPc=;
+	s=arc-20240116; t=1765281203; c=relaxed/simple;
+	bh=HNP0eAAS3dej7Rg/amu3m4v9LMoP6OJ8ZFPK+G7P4xk=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=krFhl4zwig7tkI6o87+TZieiAz5FoBr14iGEBdVunYgZx2H0VV1iHwW9k1GnpoixaupRBFtGcEcTMGcjLQ/TZsKmGoNS87VUGXNuF/BYSy2dV+BdpNDDCZrPZHLz0Qyxr+Q3gA02xv8NRyC+NvlPjKdQFwILC/TwGu9U6/Q02J0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mJ0ReMh4; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=u0avy8gE7ISO4FrDh4uae8rQ4Nbj4kR8DToGDGg9dSBWHft1L5yv3UCzpN64LGW6hfF8d1kP0f7rpDfq7Nt/UbNmR0lZkO2M4+tpkYFuqsLLco+CqbFjxpJgQH8i4Z5DrcbYWxokF5stWE9zsyOIO9qEe15gPZUPmCBHam8fFrc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=syUKd9KB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mJ0ReMh4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12252C4CEF5;
-	Tue,  9 Dec 2025 11:53:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="syUKd9KB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1203FC4CEF5;
+	Tue,  9 Dec 2025 11:53:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765281199;
-	bh=L0g662WB0mVl+WAkbemEVpXhr6ChDipHoLJVsRbGaPc=;
+	s=k20201202; t=1765281203;
+	bh=HNP0eAAS3dej7Rg/amu3m4v9LMoP6OJ8ZFPK+G7P4xk=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=mJ0ReMh4GUErEMC2XYEcSamkeS0rELjBZjfI6Y7kOzQ1/WlzGNGXarqFNJt83Y33H
-	 xf/RlYFOA0j86PtSMgwY1hzVQzWKUkRqyABakTKrB49+EpEIrUpw5zEs+rEg+lltv7
-	 2wEWcgYxFl13fsZoAv8WO6bl+A7GCBPjndKOHYr/2dbx31CqgzkKGGsrcJ5VQnpC62
-	 n3kyetk+uujbrQDhtJ8DwSqUY7eJWrVSCV8FoS5bCALCXzOymJ49Rdb/ECn9mqNGkp
-	 Ydt7bZ4YlnpS0Ygo3/Ps9TvyqbNyndt3b5HB+f3BOxGG9OPDmS5HXHsOVnE2oUNbS6
-	 FMaH+BMnv6Gsw==
+	b=syUKd9KBKHETiTzYW7oZI/Zp+OYTLkg7CXGBFFFtkrz861ktEAY4z+qMlDk0+kZR1
+	 otmnUDZkkN+/wiBwthvDobHjGIKnyTHqBXsEdEzZHxrb19Jd1806M0fnwyOzZ836Pl
+	 5UAvyx3+Xt8VQyvsUTHdM1wqMWbePbNcyzik1Ys5y/Dp5ysigbiQPLpIqNgRomlmar
+	 9XFGxpfvM5leQyulBmVMJ83xPhj9zcfnHHqXWWAjajxFNNV/DLyWhChquC2c+H/g+u
+	 wbhGzkI3HgA3tozey6Yo4AcxRVgXPllpXrVFE2HUdkUPDYQVg2uIOWMFPtaXFgiue8
+	 cUAfurkE+ZNag==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 7888C3808200;
-	Tue,  9 Dec 2025 11:50:15 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 787AA3808200;
+	Tue,  9 Dec 2025 11:50:19 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -37,47 +37,35 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net 0/4] mptcp: misc fixes for v6.19-rc1
+Subject: Re: [PATCH net] mptcp: select CRYPTO_LIB_UTILS instead of CRYPTO
 From: patchwork-bot+netdevbpf@kernel.org
 Message-Id: 
- <176528101428.3919807.13662926558612296874.git-patchwork-notify@kernel.org>
-Date: Tue, 09 Dec 2025 11:50:14 +0000
-References: 
- <20251205-net-mptcp-misc-fixes-6-19-rc1-v1-0-9e4781a6c1b8@kernel.org>
-In-Reply-To: 
- <20251205-net-mptcp-misc-fixes-6-19-rc1-v1-0-9e4781a6c1b8@kernel.org>
-To: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Cc: martineau@kernel.org, geliang@kernel.org, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
- shuah@kernel.org, kuniyu@google.com, dmytro@shytyi.net,
- netdev@vger.kernel.org, mptcp@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, stable@vger.kernel.org
+ <176528101827.3919807.17827620499389499440.git-patchwork-notify@kernel.org>
+Date: Tue, 09 Dec 2025 11:50:18 +0000
+References: <20251204054417.491439-1-ebiggers@kernel.org>
+In-Reply-To: <20251204054417.491439-1-ebiggers@kernel.org>
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: matttbe@kernel.org, martineau@kernel.org, netdev@vger.kernel.org,
+ mptcp@lists.linux.dev, geliang@kernel.org
 
 Hello:
 
-This series was applied to netdev/net.git (main)
+This patch was applied to netdev/net.git (main)
 by Jakub Kicinski <kuba@kernel.org>:
 
-On Fri, 05 Dec 2025 19:55:13 +0100 you wrote:
-> Here are various unrelated fixes:
+On Wed,  3 Dec 2025 21:44:17 -0800 you wrote:
+> Since the only crypto functions used by the mptcp code are the SHA-256
+> library functions and crypto_memneq(), select only the options needed
+> for those: CRYPTO_LIB_SHA256 and CRYPTO_LIB_UTILS.
 > 
-> - Patches 1-2: ignore unknown in-kernel PM endpoint flags instead of
->   pretending they are supported. A fix for v5.7.
-> 
-> - Patch 3: avoid potential unnecessary rtx timer expiration. A fix for
->   v5.15.
+> Previously, CRYPTO was selected instead of CRYPTO_LIB_UTILS.  That does
+> pull in CRYPTO_LIB_UTILS as well, but it's unnecessarily broad.
 > 
 > [...]
 
 Here is the summary with links:
-  - [net,1/4] mptcp: pm: ignore unknown endpoint flags
-    https://git.kernel.org/netdev/net/c/0ace3297a730
-  - [net,2/4] selftests: mptcp: pm: ensure unknown flags are ignored
-    https://git.kernel.org/netdev/net/c/29f4801e9c8d
-  - [net,3/4] mptcp: schedule rtx timer only after pushing data
-    https://git.kernel.org/netdev/net/c/2ea6190f42d0
-  - [net,4/4] mptcp: avoid deadlock on fallback while reinjecting
-    https://git.kernel.org/netdev/net/c/ffb8c27b0539
+  - [net] mptcp: select CRYPTO_LIB_UTILS instead of CRYPTO
+    https://git.kernel.org/netdev/net/c/e9e5047df953
 
 You are awesome, thank you!
 -- 
