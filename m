@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E234B2264C7
-	for <mptcp@lists.linux.dev>; Wed, 10 Dec 2025 09:54:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6F153081BE
+	for <mptcp@lists.linux.dev>; Wed, 10 Dec 2025 10:03:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765360452; cv=none; b=e5LTyif2rUiUQr65YshV3asCwhymNXJgQ1jcdHvfRNmSDFvfyh0SKa33di+leGG8B5flyjSd6XZtmoUmwzcI9A7+g9GpsvO6FGRakKEzHIvKiAwTkoL0t2ty24uv5wJTEbdWyi0qnKrm6XziERv1xE/ChGtMkD3HVBDeIDeS7Pg=
+	t=1765360983; cv=none; b=svqBvaR5nqykGZ7Dk/3kMtBSQpeIPcKhF8EAVw/tnGZ//5C8x7D/EfdfdeepUGNs6hTh9g7PjeWrfw0lALr3gjMn2oByhORDLhLBjq7umXte682ZUHDsrGkJ77VpQXFaErNtMuTVpwB3frpTBbf3SaH/hVjLZ7zzvrkrFyxbRJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765360452; c=relaxed/simple;
-	bh=v0HPEpZNi3ydQ9HpfXiDKLDUXRqaXKOq7o4910dAYe8=;
+	s=arc-20240116; t=1765360983; c=relaxed/simple;
+	bh=2XQ2sMN+MComRS2KpFRsH1SCqOmxB+x4+JWmkyszU8o=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=a61oyOqcBaVOhNMEeF7+HeNDuF8nAP80rWVAkNjWIYczVhiX27SGzfL09jDjGJwTjKSeO0jHeZuJkdTIqtFvTTpVQOHupWvjZejxUp6pOwOxxbrRzEPzO36K3wQjlDQEbhjAgBp/6U+6Vqj4Lh8EVE+40n6v+nGNrXA128Jud1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IcuzVyJY; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=lBsxo2RblaFC9mPXXSsQoTlSu44pGp0bpMUyWDg2APT+OkOPQ9+H0Rg6mUbU7I69yrYbMECsz5zR1WbmD/q7M4f97kDU4G/KDjKtRg0l3JJixPRldSyO5mEAed+G5HrnG0u2zMsxEriw/ckzDSPLs7vwIC7p6akAPVT4YQDgkW0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p+23vG1f; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IcuzVyJY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD326C4CEF1;
-	Wed, 10 Dec 2025 09:54:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p+23vG1f"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73A5AC113D0;
+	Wed, 10 Dec 2025 10:03:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765360451;
-	bh=v0HPEpZNi3ydQ9HpfXiDKLDUXRqaXKOq7o4910dAYe8=;
+	s=k20201202; t=1765360983;
+	bh=2XQ2sMN+MComRS2KpFRsH1SCqOmxB+x4+JWmkyszU8o=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=IcuzVyJYHz+iP8PnU6O8sSKWCPWBNaisspFnIizz+UUZBEjgK7Yt4RBmfAaNwD3SM
-	 Duc0fGqf/L0Lql6pqf6A1DFSnJAEWC3qhMz7NHB+pX2xyTEDAJDF/U4RKH0IdibTiq
-	 jOioI94JXoDa9G6Y2M9nZwoxPUDhq4dX1IVx7kTYuSME+AUYjIJrsCSC0WKvIScJD5
-	 993mTggqwKR3BlIhLHtiHKEf5boAHxiaBdwmet2RyBsGxWBc5Fzs8AgQp+++lrlEYd
-	 Fu6cBRnCDjhGf0uTEoDtsDFaoO4Ox0Xmzro5dw05btklKan0Y5vYaYOYEm48F7FDcS
-	 RDPs1gMPKva2Q==
-Message-ID: <b0db8dd7-a0dd-4673-bfa5-a62ebf8facc5@kernel.org>
-Date: Wed, 10 Dec 2025 10:54:08 +0100
+	b=p+23vG1fl6HiJRBM8T1W5MaF95oAfnVH/VqeL6cDTgbMmqjDX+nDSTXdfkv4eLKvJ
+	 12Txpvxf/MwsjNL7+XDGLU+lind0V5UESytNHiPK8foy2hZAFEFD+9r4MciPGWViPn
+	 /Qit8a6pIbbWEZSn5OkfMIwl4oEhot/pKRXfbJOCbXEWUO9WaRY4WzEo/M5mUXbqlJ
+	 WzAbt3hSVN4U1T0jsVC9JkafL3sbqC8nXPrbzKh6pC4kMwJbunMh4ogHSWr5tWt7mX
+	 SW1EgvmD1nxT/odSyaioZks6nNChd9Iyau/N7kEHarz6jvZDm/uoY/CX7q37Ri6GSw
+	 JwT51FVP5eWBA==
+Message-ID: <3109f99b-3eb2-478f-a062-37a92a7ba035@kernel.org>
+Date: Wed, 10 Dec 2025 11:03:00 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next 1/2] mptcp: use sk_is_tcp helper
+Subject: Re: [PATCH mptcp-next 2/2] mptcp: add sk_is_msk helper
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1765354225.git.tanggeliang@kylinos.cn>
- <f33c663ae39d50dbca2623822519f5628c04f9f0.1765354225.git.tanggeliang@kylinos.cn>
+ <1c8e8e95896e6f34a677eec690bc9edf493fd4fe.1765354225.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,79 +86,93 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <f33c663ae39d50dbca2623822519f5628c04f9f0.1765354225.git.tanggeliang@kylinos.cn>
+In-Reply-To: <1c8e8e95896e6f34a677eec690bc9edf493fd4fe.1765354225.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-Thank you for the patches.
-
 On 10/12/2025 09:12, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> This patch enhances the validation by using sk_is_tcp to determine whether
-> the socket is a TCP socket. This approach is more rigorous than simply
-> checking if sk_protocol equals IPPROTO_TCP, as the helper also verifies
-> sk_family and sk_type.
+> This patch introduces a sk_is_msk() helper modeled after sk_is_tcp() to
+> determine whether the socket is an MPTCP one. Unlike sk_is_mptcp(), which
+> accepts a subflow socket as its parameter, this new helper specifically
+> accepts an MPTCP socket parameter.
 > 
-> Note: The modifications in the bpf_sk_stream_memory_free section should be
-> squashed into the commit "bpf: Export mptcp packet scheduler helpers".
+> Note: This helper will be useful in the subsequent "MPTCP KTLS support"
+> series.
+
+It might be easier to introduce it there then, see below.
+
 > 
 > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 > ---
->  net/mptcp/bpf.c      | 4 ++--
->  net/mptcp/protocol.h | 2 +-
->  2 files changed, 3 insertions(+), 3 deletions(-)
+>  include/net/mptcp.h  | 12 ++++++++++++
+>  net/mptcp/protocol.h |  2 +-
+>  2 files changed, 13 insertions(+), 1 deletion(-)
 > 
-> diff --git a/net/mptcp/bpf.c b/net/mptcp/bpf.c
-> index b261551f5d1b..372a21b96495 100644
-> --- a/net/mptcp/bpf.c
-> +++ b/net/mptcp/bpf.c
-> @@ -193,7 +193,7 @@ static struct bpf_struct_ops bpf_mptcp_sched_ops = {
+> diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+> index 4cf59e83c1c5..82660374859a 100644
+> --- a/include/net/mptcp.h
+> +++ b/include/net/mptcp.h
+> @@ -150,6 +150,13 @@ static inline bool rsk_drop_req(const struct request_sock *req)
+>  	return tcp_rsk(req)->is_mptcp && tcp_rsk(req)->drop_req;
+>  }
 >  
->  struct mptcp_sock *bpf_mptcp_sock_from_subflow(struct sock *sk)
->  {
-> -	if (sk && sk_fullsock(sk) && sk->sk_protocol == IPPROTO_TCP && sk_is_mptcp(sk))
-> +	if (sk && sk_fullsock(sk) && sk_is_tcp(sk) && sk_is_mptcp(sk))
+> +static inline bool sk_is_msk(const struct sock *sk)
+> +{
+> +	return sk_is_inet(sk) &&
+> +	       sk->sk_type == SOCK_STREAM &&
+> +	       sk->sk_protocol == IPPROTO_MPTCP;
+> +}
+> +
+>  void mptcp_space(const struct sock *ssk, int *space, int *full_space);
+>  bool mptcp_syn_options(struct sock *sk, const struct sk_buff *skb,
+>  		       unsigned int *size, struct mptcp_out_options *opts);
+> @@ -258,6 +265,11 @@ static inline bool rsk_drop_req(const struct request_sock *req)
+>  	return false;
+>  }
+>  
+> +static inline bool sk_is_msk(const struct sock *sk)
 
-I know that BPF has a few extra "hidden" checks: are you adding this
-because you saw issues where the protocol could be set to TCP, but the
-family and type are not the expected ones?
+I do wonder if we shouldn't take this opportunity to rename sk_is_mptcp
+to something less confusing: sk has to be a TCP sk and we are looking at
+subflows, not MPTCP socket... tp_is_subflow or tp_is_mptcp or
+tp_is_mptcp_subflow or sk_is_subflow or ...
 
-If not, it might be harder to justify these patches upstream.
+But to be discussed first: sk_is_mptcp is mainly used in TCP code and
+that might cause issues for the backports.
 
->  		return mptcp_sk(mptcp_subflow_ctx(sk)->conn);
->  
->  	return NULL;
-> @@ -294,7 +294,7 @@ __bpf_kfunc static bool bpf_sk_stream_memory_free(const struct sock *sk__ign)
->  	const struct sock *sk = sk__ign;
->  
->  	if (sk && sk_fullsock(sk) &&
-> -	    sk->sk_protocol == IPPROTO_TCP && sk_is_mptcp(sk))
-> +	    sk_is_tcp(sk) && sk_is_mptcp(sk))
->  		return sk_stream_memory_free(sk);
->  
->  	return NULL;
+I don't know what people think about that. We already discussed that before:
+
+  https://github.com/multipath-tcp/mptcp_net-next/issues/453
+
+Same for rsk_is_mptcp.
+
+> +{
+> +	return false;
+> +}
+> +
+>  static inline bool mptcp_syn_options(struct sock *sk, const struct sk_buff *skb,
+>  				     unsigned int *size,
+>  				     struct mptcp_out_options *opts)
 > diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index cd5266099993..f418a0a0fa51 100644
+> index f418a0a0fa51..8f1fd74ecaa3 100644
 > --- a/net/mptcp/protocol.h
 > +++ b/net/mptcp/protocol.h
-> @@ -399,7 +399,7 @@ static inline void msk_owned_by_me(const struct mptcp_sock *msk)
->  #undef tcp_sk
->  #define tcp_sk(ptr) ({								\
->  	typeof(ptr) _ptr = (ptr);						\
-> -	WARN_ON(_ptr->sk_protocol != IPPROTO_TCP);				\
-> +	WARN_ON(!sk_is_tcp(_ptr));						\
-
-I don't think we should change that here. That will potentially cause
-issues with kunit, but also the check here is mainly to catch that
-'tcp_sk()' is not called with an MPTCP socket. So only the protocol
-check is needed.
-
->  	container_of_const(_ptr, struct tcp_sock, inet_conn.icsk_inet.sk);	\
+> @@ -404,7 +404,7 @@ static inline void msk_owned_by_me(const struct mptcp_sock *msk)
 >  })
 >  #define mptcp_sk(ptr) ({						\
+>  	typeof(ptr) _ptr = (ptr);					\
+> -	WARN_ON(_ptr->sk_protocol != IPPROTO_MPTCP);			\
+> +	WARN_ON(!sk_is_msk(_ptr));					\
+
+Same here, I don't think we should/need to do that.
+
+>  	container_of_const(_ptr, struct mptcp_sock, sk.icsk_inet.sk);	\
+>  })
+>  
 
 Cheers,
 Matt
