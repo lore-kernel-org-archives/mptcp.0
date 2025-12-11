@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A9D42DAFCB
-	for <mptcp@lists.linux.dev>; Thu, 11 Dec 2025 18:22:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5E07212FB9
+	for <mptcp@lists.linux.dev>; Thu, 11 Dec 2025 18:26:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765477330; cv=none; b=GgoxPYo8cDdCab2c0Lhmt2xhpb9g+taQxYQTKkX73TsAgbHkIQv8h1o0w7e+S73YVlbJILNUuKLoGlbSO5mwI5O+7hQbovXGw2D9D1vXrEMmne6C1cZwT6HdeLGFDFJ8FnNjWudlwSaEt8uiTzHtv/Isc5moXYZ0yODuu9vC2as=
+	t=1765477610; cv=none; b=Kp066wQqwiKcUFm4/4c3302szDvJHm0zXLM1IsZqw8i1TeqHKGi3QWeMmzCnuxn7uYQaOweDSca3H903FLi8D8AtV18/XF41towjxLE4ovlrQaBrtRRDW6L3pEDepli7CHOHft8weHcACMN159MsaNtfm/alkTesIYPLcmgzTGE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765477330; c=relaxed/simple;
-	bh=5xkmie2GPpuGnWYmaqF1+ZOPCOdaVa4CWIzMJ+PB40A=;
+	s=arc-20240116; t=1765477610; c=relaxed/simple;
+	bh=WAKlM/AAKob31fz1skjq0fZa6+VJEWwxzynIpXTLZ68=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jaA2zEDTqVtvm68+C0zBFUCpttkWHrtMGI/FpnOmGN1o/mjJxFl/I5ljYFdlOFfKKOMcOzKiEdPUjryu/QVfLVII/DFcxzUiIcqQOzsGBCGxx3VQJsBFlC/WbiRfpV5dluFgD75kTd5Tw4JevUSHxid1aCm9NVSaclQtdJ+9A5c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JMBnCTvk; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=Dpj9NGct/yJMvaERLU8uIdQLJvc3oIACoG6ByVhTBezkRZ/DyA1vyEwDx4qJyfSbq1vTHuiJ4i9dOwyKTQBfucHCr/S69AsflxCrQTF6Wdyf3N/i8KYQyzw+MLyud5cfoSAiV3owNxFr6lvdngmHHfVmeVeI1Wx2/DYd9iIxbLM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pu/VVJ5C; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JMBnCTvk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBBB3C4CEF7;
-	Thu, 11 Dec 2025 18:22:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pu/VVJ5C"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D018C4CEF7;
+	Thu, 11 Dec 2025 18:26:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765477329;
-	bh=5xkmie2GPpuGnWYmaqF1+ZOPCOdaVa4CWIzMJ+PB40A=;
+	s=k20201202; t=1765477610;
+	bh=WAKlM/AAKob31fz1skjq0fZa6+VJEWwxzynIpXTLZ68=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=JMBnCTvkfJd1KT/67I8gfwFmJoBc5WSaZqE1LkHUBgrqPOmeaPGDNjGoCr6Hc+BMA
-	 v+9mJeBq/nbHw/ds6lcWZ9nZDEi0V5/UGI+GtNEMqPIAwB/u2r+npeEShiPX8bHmqx
-	 excp/lbfDIpkjGwAuLL47vTs8VHthofe1+DA703sqp11i3ltFnGO1XgF8LnVqCM0fq
-	 Ny15QZhYNRuubEE78LQ4CX+giYhnoHfTvALL7DRwQ+axxWDvuIbAEGKIY5ImcbuCbp
-	 o9B9TA3Wd+iDAJdcYbw/XwfqTVf2zYgwPnN+YvgDSTxF9eapzjZEQivTG6D7rYtklP
-	 eQap6olgc9Vng==
-Message-ID: <a3838d83-64a5-4c6f-99a4-b69ad515836c@kernel.org>
-Date: Thu, 11 Dec 2025 19:22:06 +0100
+	b=Pu/VVJ5Cczr+17zduH0TyqKv+y/GyJ8GXu9eERgiCZiBhAdr3sq35Y0qB5JHLPgOw
+	 +7Jh78YDHiPuyH6GE3Spec/B1eNxK/e5iGVK9BXxCopH/St2SH4GO/+6MROL/S9U3J
+	 S90EW1+Y2XQuqA806TZuCl138sAEVEIVA2+GAyLHcNqFClNANhCyyp8URvcgtVBUFJ
+	 wpvXSundtmW0S3yvUL0uGh28QlHRcemsDVg4i7WlvSXuqP3vMH9EzTzgU7gIR1YXGB
+	 gDvKk2oP59SC8eJi07QidTh9no9OADeX2gBV35m2+1wRGMql4kDL7/RNYMAx8oQHva
+	 4eq4c6L842TKA==
+Message-ID: <e4027387-71df-43d5-8d06-60f3c51e990d@kernel.org>
+Date: Thu, 11 Dec 2025 19:26:47 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,11 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v15 2/6] mptcp: implement .read_sock
+Subject: Re: [PATCH mptcp-next v15 0/6] implement mptcp read_sock
 Content-Language: en-GB, fr-BE
-To: Geliang Tang <geliang@kernel.org>
-Cc: Geliang Tang <tanggeliang@kylinos.cn>, Hannes Reinecke <hare@kernel.org>,
- mptcp@lists.linux.dev
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1765023923.git.tanggeliang@kylinos.cn>
- <6d5470547063a740c0eb2f80655fafd7dc47716e.1765023923.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,45 +85,48 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <6d5470547063a740c0eb2f80655fafd7dc47716e.1765023923.git.tanggeliang@kylinos.cn>
+In-Reply-To: <cover.1765023923.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
-
-Thank you for working on that!
+Hi Geliang, Mat,
 
 On 06/12/2025 13:33, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> nvme_tcp_try_recv() needs to call .read_sock interface of struct
-> proto_ops, but it's not implemented in MPTCP.
-> 
-> This patch implements it with reference to __tcp_read_sock() and
-> __mptcp_recvmsg_mskq().
-> 
-> Corresponding to tcp_recv_skb(), a new helper for MPTCP named
-> mptcp_recv_skb() is added to peek a skb from sk->sk_receive_queue.
-> 
-> Compared with __mptcp_recvmsg_mskq(), mptcp_read_sock() uses
-> sk->sk_rcvbuf as the max read length. The LISTEN status is checked
-> before the while loop, and mptcp_recv_skb() and mptcp_cleanup_rbuf()
-> are invoked after the loop. In the loop, all flags checks for
-> __mptcp_recvmsg_mskq() are removed.
+> v15:
+>  - Patch 2, remove the maximum length limit as Mat suggested.
+>  - Move tcp_recv_should_stop() helper out of the series as Mat
+>    suggested.
 
 (...)
 
-> +static int mptcp_read_sock(struct sock *sk, read_descriptor_t *desc,
-> +			   sk_read_actor_t recv_actor)
-> +{
-> +	return __mptcp_read_sock(sk, desc, recv_actor, false);
+> Geliang Tang (6):
+>   mptcp: add eat_recv_skb helper
+>   mptcp: implement .read_sock
+>   tcp: export tcp_splice_state
+>   mptcp: implement .splice_read
+>   selftests: mptcp: add splice io mode
+>   selftests: mptcp: connect: cover splice mode
 
-In this series, it looks like __mptcp_read_sock() is only called here,
-always with noack == false then. Will you call this helper with noack
-set to true in another series?
+Thank you for this series and the reviews!
 
-(Maybe the extension could be introduced later, but if the next series
-follows, that's fine to keep it like that.)
+Now in our tree (I have one question on patch 2/6, but not blocking).
+
+New patches for t/upstream:
+- e78890a6ea4b: mptcp: add eat_recv_skb helper
+- cd77bb397ce5: mptcp: implement .read_sock
+- 5e585fdd542a: tcp: export tcp_splice_state
+  - f7f50269c753: tg:msg: switch Mat's RvB to Acked-by
+- 95e576d9d745: mptcp: implement .splice_read
+- 5c48da682a24: selftests: mptcp: add splice io mode
+- 8a1663feb989: selftests: mptcp: connect: cover splice mode
+- Results: ff3fd5f60460..51ec4882d220 (export)
+
+Tests are now in progress:
+
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/cdae7102afdc1eeafc0fa217f76f746ffd67c561/checks
 
 Cheers,
 Matt
