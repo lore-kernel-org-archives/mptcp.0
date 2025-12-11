@@ -1,226 +1,134 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F5C11FF1B5
-	for <mptcp@lists.linux.dev>; Thu, 11 Dec 2025 18:09:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A9D42DAFCB
+	for <mptcp@lists.linux.dev>; Thu, 11 Dec 2025 18:22:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765476565; cv=none; b=F4tUGwbiYJoC0F7IZz4q2esSiYCebTG5MTBymRKc8GULyT1C/H5KRxYbDpHeYmhaR9FCCPj8ArTY6Z6R3WkcOcQpGD5L0EzRrvKzMwjstyCbZiBIJ7R4hrn3AnIV0xQ1cJ1UjtVvo9fJLTj3b3XKck3/MCVNqL8D/92IGKTHdj0=
+	t=1765477330; cv=none; b=GgoxPYo8cDdCab2c0Lhmt2xhpb9g+taQxYQTKkX73TsAgbHkIQv8h1o0w7e+S73YVlbJILNUuKLoGlbSO5mwI5O+7hQbovXGw2D9D1vXrEMmne6C1cZwT6HdeLGFDFJ8FnNjWudlwSaEt8uiTzHtv/Isc5moXYZ0yODuu9vC2as=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765476565; c=relaxed/simple;
-	bh=DrP/g+/6/jxYUPy2k8ui1CHaPtApS+Rro30muplrmxc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=WExHX6yavIQfuVt3W5LKp/vcnlhBo1cvebPjVKHq7k4ZizNXaWyAWIEfgOc0I3AJ1ZzrZinDQHzZ2XaNBEjesjrI5kpHyGJQ9MSpLGRBqpf3RD6ISMkAStD4fe9GJPAq0u3WffSQq8YFiSsW5lvwOmQ5Q8TJOoj7McVKW/cZ8eE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e5kiMfMh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1765477330; c=relaxed/simple;
+	bh=5xkmie2GPpuGnWYmaqF1+ZOPCOdaVa4CWIzMJ+PB40A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jaA2zEDTqVtvm68+C0zBFUCpttkWHrtMGI/FpnOmGN1o/mjJxFl/I5ljYFdlOFfKKOMcOzKiEdPUjryu/QVfLVII/DFcxzUiIcqQOzsGBCGxx3VQJsBFlC/WbiRfpV5dluFgD75kTd5Tw4JevUSHxid1aCm9NVSaclQtdJ+9A5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JMBnCTvk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e5kiMfMh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98B3CC4CEF7;
-	Thu, 11 Dec 2025 18:09:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JMBnCTvk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBBB3C4CEF7;
+	Thu, 11 Dec 2025 18:22:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765476565;
-	bh=DrP/g+/6/jxYUPy2k8ui1CHaPtApS+Rro30muplrmxc=;
-	h=From:Date:Subject:To:Cc:From;
-	b=e5kiMfMhMjnnDpluRJ2l1swpkJMDhzDjNVveRBQ46QYGRdL8Yj0e7PPNDQPefVDnF
-	 splYyz80wXgb25xszfW3XEcrkJh+ic33rhzic5cLbHsLvp8CaVChsRPTMRbGQYxA0B
-	 cQ4cPelv4WoBT4uN1gKHy6iwEcdGWlvStjFozi0udF/03l+RN97vTViqTdCCazyTEU
-	 872sokNxyDJ0Q0QglmUpFgs/9tUofTiObF8xaF92m9P7CScdOxrFe3rKE1vyUj15/y
-	 naY+euavsQXtTrtPsP12A0KllZ8sBH8/iXrCr5+GEOpWh3qHraXLKE+Kyqi5+f5DCT
-	 G6a5yuu4/Au5w==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Thu, 11 Dec 2025 19:09:12 +0100
-Subject: [PATCH mptcp-next] selftests: mptcp: join: no SKIP mark for group
- checks
+	s=k20201202; t=1765477329;
+	bh=5xkmie2GPpuGnWYmaqF1+ZOPCOdaVa4CWIzMJ+PB40A=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=JMBnCTvkfJd1KT/67I8gfwFmJoBc5WSaZqE1LkHUBgrqPOmeaPGDNjGoCr6Hc+BMA
+	 v+9mJeBq/nbHw/ds6lcWZ9nZDEi0V5/UGI+GtNEMqPIAwB/u2r+npeEShiPX8bHmqx
+	 excp/lbfDIpkjGwAuLL47vTs8VHthofe1+DA703sqp11i3ltFnGO1XgF8LnVqCM0fq
+	 Ny15QZhYNRuubEE78LQ4CX+giYhnoHfTvALL7DRwQ+axxWDvuIbAEGKIY5ImcbuCbp
+	 o9B9TA3Wd+iDAJdcYbw/XwfqTVf2zYgwPnN+YvgDSTxF9eapzjZEQivTG6D7rYtklP
+	 eQap6olgc9Vng==
+Message-ID: <a3838d83-64a5-4c6f-99a4-b69ad515836c@kernel.org>
+Date: Thu, 11 Dec 2025 19:22:06 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH mptcp-next v15 2/6] mptcp: implement .read_sock
+Content-Language: en-GB, fr-BE
+To: Geliang Tang <geliang@kernel.org>
+Cc: Geliang Tang <tanggeliang@kylinos.cn>, Hannes Reinecke <hare@kernel.org>,
+ mptcp@lists.linux.dev
+References: <cover.1765023923.git.tanggeliang@kylinos.cn>
+ <6d5470547063a740c0eb2f80655fafd7dc47716e.1765023923.git.tanggeliang@kylinos.cn>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <6d5470547063a740c0eb2f80655fafd7dc47716e.1765023923.git.tanggeliang@kylinos.cn>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20251211-sft-no-skip-new-cnt-v1-1-6dd6d70f8242@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAMcIO2kC/x2M0QqDMAwAf0XyvICpG8h+ZexB0nQLsliaMgXx3
- +32eHB3O7gUFYd7t0ORr7ou1oAuHfB7spegxsYQ+nCjQISeKtqCPmtGkxXZKl77KQ6JKTKP0Mp
- cJOn2vz7gkyv/1K3C8zhO0LJKa3EAAAA=
-X-Change-ID: 20251211-sft-no-skip-new-cnt-40ad3fc1dcc8
-To: MPTCP Upstream <mptcp@lists.linux.dev>
-Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5572; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=DrP/g+/6/jxYUPy2k8ui1CHaPtApS+Rro30muplrmxc=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDKtOS5X8Wyf+96FRyNrse4D3cdGLF73jr6/5XNugUXFB
- 8tFrWtUO0pZGMS4GGTFFFmk2yLzZz6v4i3x8rOAmcPKBDKEgYtTACbC94Phn12+q9Sz1X8jq66+
- j633fnZE9dfd5eVPj1RUb/qytPm0FCPDP9M4YY0ZWzgCjk3YnHQyQajjx4KP8Td4lvaU+fJfVTA
- 8xw8A
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-When executing the last MPTCP selftests on older kernels, this output is
-printed:
+Hi Geliang,
 
-  # 001 no JOIN
-  #       join Rx                             [SKIP]
-  #       join Tx                             [SKIP]
-  #       fallback                            [SKIP]
+Thank you for working on that!
 
-In fact, behind each line, a few counters are checked, and likely not
-all of them have been skipped because the they are not available on
-these kernels. Instead, "new" and unsupported counters for these groups
-are now ignored, and [ OK ] will be printed instead of [SKIP].
+On 06/12/2025 13:33, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
+> 
+> nvme_tcp_try_recv() needs to call .read_sock interface of struct
+> proto_ops, but it's not implemented in MPTCP.
+> 
+> This patch implements it with reference to __tcp_read_sock() and
+> __mptcp_recvmsg_mskq().
+> 
+> Corresponding to tcp_recv_skb(), a new helper for MPTCP named
+> mptcp_recv_skb() is added to peek a skb from sk->sk_receive_queue.
+> 
+> Compared with __mptcp_recvmsg_mskq(), mptcp_read_sock() uses
+> sk->sk_rcvbuf as the max read length. The LISTEN status is checked
+> before the while loop, and mptcp_recv_skb() and mptcp_cleanup_rbuf()
+> are invoked after the loop. In the loop, all flags checks for
+> __mptcp_recvmsg_mskq() are removed.
 
-Note that on the MPTCP CI, when validating the dev versions, any
-unsupported counter will cause the tests to fail. So this is safe not to
-print 'SKIP' for these group checks.
+(...)
 
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- tools/testing/selftests/net/mptcp/mptcp_join.sh | 30 ++++++++++++-------------
- 1 file changed, 15 insertions(+), 15 deletions(-)
+> +static int mptcp_read_sock(struct sock *sk, read_descriptor_t *desc,
+> +			   sk_read_actor_t recv_actor)
+> +{
+> +	return __mptcp_read_sock(sk, desc, recv_actor, false);
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index b2e6e548f796..77370b10651a 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -1407,7 +1407,7 @@ chk_join_tx_nr()
- 
- 	count=$(mptcp_lib_get_counter ${ns2} "MPTcpExtMPJoinSynTxCreatSkErr")
- 	if [ -z "$count" ]; then
--		rc=${KSFT_SKIP}
-+		: # ignore skip
- 	elif [ "$count" != "$create" ]; then
- 		rc=${KSFT_FAIL}
- 		print_check "syn tx create socket error"
-@@ -1416,7 +1416,7 @@ chk_join_tx_nr()
- 
- 	count=$(mptcp_lib_get_counter ${ns2} "MPTcpExtMPJoinSynTxBindErr")
- 	if [ -z "$count" ]; then
--		rc=${KSFT_SKIP}
-+		: # ignore skip
- 	elif [ "$count" != "$bind" ]; then
- 		rc=${KSFT_FAIL}
- 		print_check "syn tx bind error"
-@@ -1425,7 +1425,7 @@ chk_join_tx_nr()
- 
- 	count=$(mptcp_lib_get_counter ${ns2} "MPTcpExtMPJoinSynTxConnectErr")
- 	if [ -z "$count" ]; then
--		rc=${KSFT_SKIP}
-+		: # ignore skip
- 	elif [ "$count" != "$connect" ]; then
- 		rc=${KSFT_FAIL}
- 		print_check "syn tx connect error"
-@@ -1451,7 +1451,7 @@ chk_fallback_nr()
- 
- 	count=$(mptcp_lib_get_counter ${!ns} "MPTcpExtInfiniteMapTx")
- 	if [ -z "$count" ]; then
--		rc=${KSFT_SKIP}
-+		: # ignore skip
- 	elif [ "$count" != "$infinite_map_tx" ]; then
- 		rc=${KSFT_FAIL}
- 		print_check "$ns infinite map tx fallback"
-@@ -1460,7 +1460,7 @@ chk_fallback_nr()
- 
- 	count=$(mptcp_lib_get_counter ${!ns} "MPTcpExtDSSCorruptionFallback")
- 	if [ -z "$count" ]; then
--		rc=${KSFT_SKIP}
-+		: # ignore skip
- 	elif [ "$count" != "$dss_corruption" ]; then
- 		rc=${KSFT_FAIL}
- 		print_check "$ns dss corruption fallback"
-@@ -1469,7 +1469,7 @@ chk_fallback_nr()
- 
- 	count=$(mptcp_lib_get_counter ${!ns} "MPTcpExtSimultConnectFallback")
- 	if [ -z "$count" ]; then
--		rc=${KSFT_SKIP}
-+		: # ignore skip
- 	elif [ "$count" != "$simult_conn" ]; then
- 		rc=${KSFT_FAIL}
- 		print_check "$ns simult conn fallback"
-@@ -1478,7 +1478,7 @@ chk_fallback_nr()
- 
- 	count=$(mptcp_lib_get_counter ${!ns} "MPTcpExtMPCapableFallbackACK")
- 	if [ -z "$count" ]; then
--		rc=${KSFT_SKIP}
-+		: # ignore skip
- 	elif [ "$count" != "$mpc_passive" ]; then
- 		rc=${KSFT_FAIL}
- 		print_check "$ns mpc passive fallback"
-@@ -1487,7 +1487,7 @@ chk_fallback_nr()
- 
- 	count=$(mptcp_lib_get_counter ${!ns} "MPTcpExtMPCapableFallbackSYNACK")
- 	if [ -z "$count" ]; then
--		rc=${KSFT_SKIP}
-+		: # ignore skip
- 	elif [ "$count" != "$mpc_active" ]; then
- 		rc=${KSFT_FAIL}
- 		print_check "$ns mpc active fallback"
-@@ -1496,7 +1496,7 @@ chk_fallback_nr()
- 
- 	count=$(mptcp_lib_get_counter ${!ns} "MPTcpExtMPCapableDataFallback")
- 	if [ -z "$count" ]; then
--		rc=${KSFT_SKIP}
-+		: # ignore skip
- 	elif [ "$count" != "$mpc_data" ]; then
- 		rc=${KSFT_FAIL}
- 		print_check "$ns mpc data fallback"
-@@ -1505,7 +1505,7 @@ chk_fallback_nr()
- 
- 	count=$(mptcp_lib_get_counter ${!ns} "MPTcpExtMD5SigFallback")
- 	if [ -z "$count" ]; then
--		rc=${KSFT_SKIP}
-+		: # ignore skip
- 	elif [ "$count" != "$md5_sig" ]; then
- 		rc=${KSFT_FAIL}
- 		print_check "$ns MD5 Sig fallback"
-@@ -1514,7 +1514,7 @@ chk_fallback_nr()
- 
- 	count=$(mptcp_lib_get_counter ${!ns} "MPTcpExtDssFallback")
- 	if [ -z "$count" ]; then
--		rc=${KSFT_SKIP}
-+		: # ignore skip
- 	elif [ "$count" != "$dss" ]; then
- 		rc=${KSFT_FAIL}
- 		print_check "$ns dss fallback"
-@@ -1590,7 +1590,7 @@ chk_join_nr()
- 
- 	count=$(mptcp_lib_get_counter ${ns2} "MPTcpExtMPJoinSynAckHMacFailure")
- 	if [ -z "$count" ]; then
--		rc=${KSFT_SKIP}
-+		: # ignore skip
- 	elif [ "$count" != "0" ]; then
- 		rc=${KSFT_FAIL}
- 		print_check "synack HMAC"
-@@ -1599,7 +1599,7 @@ chk_join_nr()
- 
- 	count=$(mptcp_lib_get_counter ${ns1} "MPTcpExtMPJoinAckRx")
- 	if [ -z "$count" ]; then
--		rc=${KSFT_SKIP}
-+		: # ignore skip
- 	elif [ "$count" != "$ack_nr" ]; then
- 		rc=${KSFT_FAIL}
- 		print_check "ack rx"
-@@ -1608,7 +1608,7 @@ chk_join_nr()
- 
- 	count=$(mptcp_lib_get_counter ${ns1} "MPTcpExtMPJoinAckHMacFailure")
- 	if [ -z "$count" ]; then
--		rc=${KSFT_SKIP}
-+		: # ignore skip
- 	elif [ "$count" != "0" ]; then
- 		rc=${KSFT_FAIL}
- 		print_check "ack HMAC"
-@@ -1617,7 +1617,7 @@ chk_join_nr()
- 
- 	count=$(mptcp_lib_get_counter ${ns1} "MPTcpExtMPJoinRejected")
- 	if [ -z "$count" ]; then
--		rc=${KSFT_SKIP}
-+		: # ignore skip
- 	elif [ "$count" != "$syn_rej" ]; then
- 		rc=${KSFT_FAIL}
- 		print_check "syn rejected"
+In this series, it looks like __mptcp_read_sock() is only called here,
+always with noack == false then. Will you call this helper with noack
+set to true in another series?
 
----
-base-commit: ff3fd5f60460ba1ba338bfff405f13001e7131b8
-change-id: 20251211-sft-no-skip-new-cnt-40ad3fc1dcc8
+(Maybe the extension could be introduced later, but if the next series
+follows, that's fine to keep it like that.)
 
-Best regards,
+Cheers,
+Matt
 -- 
-Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Sponsored by the NGI0 Core fund.
 
