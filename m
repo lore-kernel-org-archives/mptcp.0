@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 018A3299948
-	for <mptcp@lists.linux.dev>; Fri, 12 Dec 2025 02:27:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5263192B75
+	for <mptcp@lists.linux.dev>; Fri, 12 Dec 2025 02:27:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765506463; cv=none; b=cwgC6MB0dtxmE2s6lllbU7tMr+F96Q0X9JvGqpiYxigzle0mhRkSTJahW3ZLAdQLHRNhDPb6T2sj74H7/fjQNcrsMFI0VeqEp4X7tY1u1SrxNBBmABCTj9cnWTYk4nhEstNCsWE+AmjAXuDYrwGo4fA1nYy+v1FK2m9kV6RaH08=
+	t=1765506464; cv=none; b=ZTu+0paFfDG+Zs2MSCVxQNPGlJ7CdDZ9Qp2+TCrL8sLu8MTROvcZ2receuUg4gr+bGS4MUCoW3t40n3zeFU5xBcKYnNDMWb+omk42K6li6xPRMXEVTB4EhiIh3cQdrHTzkcaqcGg2H+yvfCrTGTbilKcKp7KMIuCAhavwoo8+wA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765506463; c=relaxed/simple;
-	bh=oq0zKgX05uRcbn7PAy3rOmQlIOOnqg7bERQHSUE3Ymo=;
+	s=arc-20240116; t=1765506464; c=relaxed/simple;
+	bh=3RLRIH72HmYZgUYeM9xQ5rFdNU5lF0ekjAuqe7Te4w8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=j+Aj2HsIX0E9BT9MmCnaPHGSEmxE77EU+KoIABcU2sJ5xyyDJ+vmOvfNysbWBDwSwiqzEJ9IAJcXm0gJcmKfj4jdCkGmVN562j1vkK8CjxR43Gft0yGRN7E+knJeUcypEhVQX4XLyVMEGWpN9Y+6P1pucUoiKjwxUwy9sexC3fQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UegESR2y; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=hqxR6ygMpc2jsfCjgPgH+YpJenx9AO1T6jIAZ2WSJuxO6NKecIHfRajIq6WR8L9jI097h45mvMaT2p59wUgLY4nAcnMDl+A051MCUQKGx8u1Ac9vu60kV5GnqS7A33leHIu7gfGgASB5+UCo1+ci/M7RLShkHPJP6dxuFVYjTdE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iQm6BMlm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UegESR2y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CE12C19422;
-	Fri, 12 Dec 2025 02:27:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iQm6BMlm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0792DC4CEF7;
+	Fri, 12 Dec 2025 02:27:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765506462;
-	bh=oq0zKgX05uRcbn7PAy3rOmQlIOOnqg7bERQHSUE3Ymo=;
+	s=k20201202; t=1765506464;
+	bh=3RLRIH72HmYZgUYeM9xQ5rFdNU5lF0ekjAuqe7Te4w8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=UegESR2ySt9tgMzlJcQx6af0aOzf1tZJHijBhX2Z6Y3ObYcT+ESeP53HacLd6dZr4
-	 JOGnN90DUdXP4DGBQ/DMGJjUKyVWbGVoVypMd4Po0GI8KGDelGPT25dkCYS0Gf8FmT
-	 LeRzi2To76z4NP4Bnf8ha0KGcQGDnWE3RRmop6+AZB9EtQLh1vX51u4hovgm59dZNZ
-	 vWYKfN2QwEUR9BPHWktj4joBHAJENr7PzCR+h81zuXVXgoFpBYsv9NipaPJhG4vWnZ
-	 tiaU8lhyAUz2h/J5/SgbTnTv/AJprdOo1nw7wBBUCVJ1mBjsvrHiPVVYvgnn+VOczk
-	 FEv7NJoBg7dbQ==
+	b=iQm6BMlmSYSz1pURDE0JZj7ABZ7GzfkaAk98WBjksMTNQLrVzWe0XrXai237310vv
+	 pTJRZmZJgjamcEdupg/IL2eZfznKhYsMeNRPhwXbxSMfEOJG3LJEid8RpEf+d7Xu05
+	 7lknadeEjGZGPsPMFgiVUHi5bAHc22HQ0klOk69o/sTmxnKKzbJdBgt9/cuoQiMhYC
+	 GcKf3GkIp8/KadAL435VtVCFZYd6L4FU67qgthrQ+tW3aUC+H3DdGiiCLkXnlkm6gM
+	 L8aGyP/hLJhfAEq344qWKYdgXTX7SoPzoOX5BKcmIgdmdN4iAvZiOSxV4k2wE6XBLF
+	 Kr+4uX/QRc+8A==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>,
 	Gang Yan <yangang@kylinos.cn>
-Subject: [RFC mptcp-next v4 08/10] mptcp: enable TLS setsockopt
-Date: Fri, 12 Dec 2025 10:27:18 +0800
-Message-ID: <03bbe5c5fa031651f0796c30f3c64a74083d8a7f.1765505775.git.tanggeliang@kylinos.cn>
+Subject: [RFC mptcp-next v4 09/10] selftests: mptcp: connect: update sock_test_tcpulp
+Date: Fri, 12 Dec 2025 10:27:19 +0800
+Message-ID: <8ec35b02f8c253ff49b58b01ad9ea9f53c99a39e.1765505775.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <cover.1765505775.git.tanggeliang@kylinos.cn>
 References: <cover.1765505775.git.tanggeliang@kylinos.cn>
@@ -46,73 +46,78 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-This patch adds MPTCP TLS setsockopt support. It allows setting the TCP_ULP
-option to 'tls' exclusively, and enables configuration of the TLS_TX and
-TLS_RX options at the SOL_TLS level.
+Update sock_test_tcpulp() to ensure the mptcp_connect.c tests are not
+broken.
 
-This option cannot be set when the socket is in CLOSE or LISTEN state.
+fallback() helper has been implemented to verify fallback scenarios,
+ensuring that MPTCP fallback-to-TCP tests continue to pass.
 
 Co-developed-by: Gang Yan <yangang@kylinos.cn>
 Signed-off-by: Gang Yan <yangang@kylinos.cn>
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- net/mptcp/sockopt.c | 18 +++++++++++++++++-
- 1 file changed, 17 insertions(+), 1 deletion(-)
+ .../selftests/net/mptcp/mptcp_connect.c       | 20 ++++++++++++-------
+ 1 file changed, 13 insertions(+), 7 deletions(-)
 
-diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-index f3db4f2e8f81..52ff75702404 100644
---- a/net/mptcp/sockopt.c
-+++ b/net/mptcp/sockopt.c
-@@ -12,6 +12,7 @@
- #include <net/protocol.h>
- #include <net/tcp.h>
- #include <net/mptcp.h>
-+#include <net/tls.h>
- #include "protocol.h"
- 
- #define MIN_INFO_OPTLEN_SIZE		16
-@@ -567,6 +568,7 @@ static bool mptcp_supported_sockopt(int level, int optname)
- 		case TCP_FASTOPEN_CONNECT:
- 		case TCP_FASTOPEN_KEY:
- 		case TCP_FASTOPEN_NO_COOKIE:
-+		case TCP_ULP:
- 			return true;
- 		}
- 
-@@ -576,6 +578,13 @@ static bool mptcp_supported_sockopt(int level, int optname)
- 		 * TCP_REPAIR_WINDOW are not supported, better avoid this mess
- 		 */
- 	}
-+	if (level == SOL_TLS) {
-+		switch (optname) {
-+		case TLS_TX:
-+		case TLS_RX:
-+			return true;
-+		}
-+	}
- 	return false;
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+index b82df82e0594..e5c394ea4e11 100644
+--- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
++++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+@@ -266,6 +266,18 @@ static void set_mptfo(int fd, int pf)
+ 		perror("TCP_FASTOPEN");
  }
  
-@@ -819,11 +828,18 @@ static int mptcp_setsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
- 				    sockptr_t optval, unsigned int optlen)
++static int fallback(int fd)
++{
++	int is_mptcp = 0;
++	socklen_t optlen;
++
++	optlen = sizeof(is_mptcp);
++	if (getsockopt(fd, IPPROTO_TCP, TCP_IS_MPTCP, &is_mptcp, &optlen) == -1)
++		perror("TCP_IS_MPTCP");
++
++	return !is_mptcp;
++}
++
+ static int do_ulp_so(int sock, const char *name)
  {
- 	struct sock *sk = (void *)msk;
-+	char ulp[4] = "";
- 	int ret, val;
+ 	return setsockopt(sock, IPPROTO_TCP, TCP_ULP, name, strlen(name));
+@@ -282,7 +294,7 @@ static void sock_test_tcpulp(int sock, int proto, unsigned int line)
+ 		X("getsockopt");
  
- 	switch (optname) {
- 	case TCP_ULP:
--		return -EOPNOTSUPP;
-+		if (copy_from_user(ulp, optval.user, 4))
-+			return -EFAULT;
-+		if (strcmp(ulp, "tls\0"))
-+			return -EOPNOTSUPP;
-+		if ((1 << sk->sk_state) & (TCPF_CLOSE | TCPF_LISTEN))
-+			return -EINVAL;
-+		return tcp_setsockopt(sk, SOL_TCP, optname, optval, optlen);
- 	case TCP_CONGESTION:
- 		return mptcp_setsockopt_sol_tcp_congestion(msk, optval, optlen);
- 	case TCP_DEFER_ACCEPT:
+ 	if (buflen > 0) {
+-		if (strcmp(buf, "mptcp") != 0)
++		if (strcmp(buf, fallback(sock) ? "mptcp" : "tls") != 0)
+ 			xerror("unexpected ULP '%s' for proto %d at line %u", buf, proto, line);
+ 		ret = do_ulp_so(sock, "tls");
+ 		if (ret == 0)
+@@ -424,8 +436,6 @@ static int sock_connect_mptcp(const char * const remoteaddr,
+ 	}
+ 
+ 	freeaddrinfo(addr);
+-	if (sock != -1)
+-		SOCK_TEST_TCPULP(sock, proto);
+ 	return sock;
+ }
+ 
+@@ -1197,8 +1207,6 @@ int main_loop_s(int listensock)
+ 				xerror("can't open %s: %d", cfg_input, errno);
+ 		}
+ 
+-		SOCK_TEST_TCPULP(remotesock, 0);
+-
+ 		memset(&winfo, 0, sizeof(winfo));
+ 		err = copyfd_io(fd, remotesock, 1, true, &winfo);
+ 	} else {
+@@ -1371,8 +1379,6 @@ int main_loop(void)
+ again:
+ 	check_getpeername_connect(fd);
+ 
+-	SOCK_TEST_TCPULP(fd, cfg_sock_proto);
+-
+ 	if (cfg_rcvbuf)
+ 		set_rcvbuf(fd, cfg_rcvbuf);
+ 	if (cfg_sndbuf)
 -- 
 2.51.0
 
