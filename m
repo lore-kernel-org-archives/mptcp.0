@@ -1,42 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9C472E6CAF
-	for <mptcp@lists.linux.dev>; Fri, 12 Dec 2025 08:29:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D88713126B7
+	for <mptcp@lists.linux.dev>; Fri, 12 Dec 2025 09:11:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765528168; cv=none; b=parjY3g/zYfKrh2o9A7iCgN0y5qE5X6W9QN1+Dx0ubWRbYjGlU24+wzvIRbu4YdKep4JoZaXruI54JwnlxeEJekryMnrSVW16c+YofCpS2T3HnzeCkubeOmd5KgncupZrfrF6jGCJZAB5BjBKiKcvQVw//5OefgMjqO5ds1M1B8=
+	t=1765530695; cv=none; b=KDSkgA4d0m3vjehBFYeAa/3j7LCe6W4X84Eho+mF+50QCt36W8qw7zjy3Xlihe1Sg8Yndd1KzWeAvbtj0TxrUYQ2SQ0wkzgURx+sRax+n7Ti5/DZYzB5+B0u1FYjvWilX5FWBwd8nyLkZ9EglgR+gXToBHHYqqygA+uIkagUcuE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765528168; c=relaxed/simple;
-	bh=lVWOhZC6lMrPgd6hCOQy74ensHW/XeZwgp9Zti9lw7I=;
+	s=arc-20240116; t=1765530695; c=relaxed/simple;
+	bh=+E/ie/fFfzQzXCm+TC4/fngCcNBywLEYXgQBqOD4iUQ=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=WKjM2Z8yfLxuHye3EsXSB4JeLNCr9okP5CPFat74MPzMN2ExW2izSnPOXrd8LaW+HxLIKD6U3OLTOkBk2XiZY9CRmBmS2gbw2yoeA/brxpLNddOKJ2np2e2gAzHJ3VE7hvLprMoWqVBnRK7F5hwLK+l3PMj8Ax7GvYdHnSf7pks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k7diFUPe; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=Ku9SQ7C0hZ0zVSRmvQ3FhPQzrr/W4l0ZA5zsY/X9jpcHCUWrDLWOITvsw6q8BMCar//Z2BRpd5O57Q+RdburxgfQwmP27CSXx2+FE1ouU6CgOUiLUNhUMBx/Zd+328mYkisoGM+uegy2zD7euklozy/yw1tCnSx0ohpSHbDfYoA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bkM7IOGc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k7diFUPe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1577AC4CEF1;
-	Fri, 12 Dec 2025 08:29:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bkM7IOGc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E3F3C113D0;
+	Fri, 12 Dec 2025 09:11:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765528167;
-	bh=lVWOhZC6lMrPgd6hCOQy74ensHW/XeZwgp9Zti9lw7I=;
+	s=k20201202; t=1765530693;
+	bh=+E/ie/fFfzQzXCm+TC4/fngCcNBywLEYXgQBqOD4iUQ=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=k7diFUPegsBlonw1zYL3jtBx1XdgubeG+siN+5Fe1g3UM0ReYUtY9FK0p4UkYFIQO
-	 QHEuJC+2PnypRprpYcb01KW/vCcKxfydBom7g0PTXNHXNVmAKWYeMYj4Sb2oqn26oR
-	 eD9jTNNOZ3SMd4U3t0iioUR5uIY+I7yUZRYBYxfNa3n3TdOEvp7F8Jd9U7ZZPqkZFI
-	 WxX5FKYvgEkxS6H45G6qnhzLGmFhUE9MaQ/eV/9v0floaB3zBVRMJLs5THmMaACDgC
-	 Pww3JGBlyIyTBv0xV6KK7Z3dlmeqxsSppOBn+vQYroASWU+8moXzX9GJGFoH8e7MOw
-	 7XeqoIl+FLVDg==
-Message-ID: <0bfb29e59a823e7ac1ed15056be20f8b9c8e0e1b.camel@kernel.org>
-Subject: Re: [RFC mptcp-next v4 08/10] mptcp: enable TLS setsockopt
+	b=bkM7IOGcOuJgzvn8sBSdjoaDhgoLrolHR1FadLsHtBs1lzximc1DRpS34QW1q8L1e
+	 Qxc8OhNVc5s4mNKOgQ1nXWXgJDNPV/IwqdhM6zuoNl9+3juWoGbOor1dw9H2RVVYoy
+	 tbXyMvuznoUgW8a9163cdD7sfTnl5HJZbxnIoWxPcwhffEyq4+UnEcdmJV33/1paQ0
+	 mxZEV/YentsK+9tU5Cuxe5VmU+anFmOcWTMgiykvK7gMH+Xu+mCRb2WChFDD4IlvYx
+	 UKbgM1ILJaQiitlOLaBmiZWbnCg+FgDQKmpm1p4pt+Sx8yOEDwdW9ikEzuGheFEJMy
+	 mfVkm3N2OfBKw==
+Message-ID: <0840d15cd328e59d8d12dbd54224488f8f44813b.camel@kernel.org>
+Subject: Re: [PATCH mptcp-next v15 2/6] mptcp: implement .read_sock
 From: Geliang Tang <geliang@kernel.org>
-To: GangYan <gang.yan@linux.dev>
-Cc: mptcp@lists.linux.dev, Geliang Tang <tanggeliang@kylinos.cn>, Gang Yan
-	 <yangang@kylinos.cn>
-Date: Fri, 12 Dec 2025 16:29:21 +0800
-In-Reply-To: <aTvDDz10WD9VJ48i@thinkbook16p>
-References: <cover.1765505775.git.tanggeliang@kylinos.cn>
-	 <03bbe5c5fa031651f0796c30f3c64a74083d8a7f.1765505775.git.tanggeliang@kylinos.cn>
-	 <aTvDDz10WD9VJ48i@thinkbook16p>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: Geliang Tang <tanggeliang@kylinos.cn>, Hannes Reinecke
+ <hare@kernel.org>, 	mptcp@lists.linux.dev
+Date: Fri, 12 Dec 2025 17:11:24 +0800
+In-Reply-To: <a3838d83-64a5-4c6f-99a4-b69ad515836c@kernel.org>
+References: <cover.1765023923.git.tanggeliang@kylinos.cn>
+	 <6d5470547063a740c0eb2f80655fafd7dc47716e.1765023923.git.tanggeliang@kylinos.cn>
+	 <a3838d83-64a5-4c6f-99a4-b69ad515836c@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 User-Agent: Evolution 3.56.2-4 
 Precedence: bulk
@@ -47,114 +47,80 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On Fri, 2025-12-12 at 15:23 +0800, GangYan wrote:
-> Hi, Geliang:
-> > On Fri, Dec 12, 2025 at 10:27:18AM +0800, Geliang Tang wrote:
+Hi Matt,
+
+On Thu, 2025-12-11 at 19:22 +0100, Matthieu Baerts wrote:
+> Hi Geliang,
+> 
+> Thank you for working on that!
+> 
+> On 06/12/2025 13:33, Geliang Tang wrote:
 > > From: Geliang Tang <tanggeliang@kylinos.cn>
 > > 
-> > This patch adds MPTCP TLS setsockopt support. It allows setting the
-> > TCP_ULP
-> > option to 'tls' exclusively, and enables configuration of the
-> > TLS_TX and
-> > TLS_RX options at the SOL_TLS level.
+> > nvme_tcp_try_recv() needs to call .read_sock interface of struct
+> > proto_ops, but it's not implemented in MPTCP.
 > > 
-> > This option cannot be set when the socket is in CLOSE or LISTEN
-> > state.
+> > This patch implements it with reference to __tcp_read_sock() and
+> > __mptcp_recvmsg_mskq().
 > > 
-> > Co-developed-by: Gang Yan <yangang@kylinos.cn>
-> > Signed-off-by: Gang Yan <yangang@kylinos.cn>
-> > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-> > ---
-> >  net/mptcp/sockopt.c | 18 +++++++++++++++++-
-> >  1 file changed, 17 insertions(+), 1 deletion(-)
+> > Corresponding to tcp_recv_skb(), a new helper for MPTCP named
+> > mptcp_recv_skb() is added to peek a skb from sk->sk_receive_queue.
 > > 
-> > diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-> > index f3db4f2e8f81..52ff75702404 100644
-> > --- a/net/mptcp/sockopt.c
-> > +++ b/net/mptcp/sockopt.c
-> > @@ -12,6 +12,7 @@
-> >  #include <net/protocol.h>
-> >  #include <net/tcp.h>
-> >  #include <net/mptcp.h>
-> > +#include <net/tls.h>
-> >  #include "protocol.h"
-> >  
-> >  #define MIN_INFO_OPTLEN_SIZE		16
-> > @@ -567,6 +568,7 @@ static bool mptcp_supported_sockopt(int level,
-> > int optname)
-> >  		case TCP_FASTOPEN_CONNECT:
-> >  		case TCP_FASTOPEN_KEY:
-> >  		case TCP_FASTOPEN_NO_COOKIE:
-> > +		case TCP_ULP:
-> >  			return true;
-> >  		}
-> >  
-> > @@ -576,6 +578,13 @@ static bool mptcp_supported_sockopt(int level,
-> > int optname)
-> >  		 * TCP_REPAIR_WINDOW are not supported, better
-> > avoid this mess
-> >  		 */
-> >  	}
-> > +	if (level == SOL_TLS) {
-> > +		switch (optname) {
-> > +		case TLS_TX:
-> > +		case TLS_RX:
-> > +			return true;
-> > +		}
-> > +	}
-> >  	return false;
-> >  }
-> >  
-> > @@ -819,11 +828,18 @@ static int mptcp_setsockopt_sol_tcp(struct
-> > mptcp_sock *msk, int optname,
-> >  				    sockptr_t optval, unsigned int
-> > optlen)
-> >  {
-> >  	struct sock *sk = (void *)msk;
-> > +	char ulp[4] = "";
-> >  	int ret, val;
-> >  
-> >  	switch (optname) {
-> >  	case TCP_ULP:
-> > -		return -EOPNOTSUPP;
-> > +		if (copy_from_user(ulp, optval.user, 4))
-> > +			return -EFAULT;
-> > +		if (strcmp(ulp, "tls\0"))
-> > +			return -EOPNOTSUPP;
-> > +		if ((1 << sk->sk_state) & (TCPF_CLOSE |
-> > TCPF_LISTEN))
-> > +			return -EINVAL;
-> Here should return -ENOTCONN
+> > Compared with __mptcp_recvmsg_mskq(), mptcp_read_sock() uses
+> > sk->sk_rcvbuf as the max read length. The LISTEN status is checked
+> > before the while loop, and mptcp_recv_skb() and
+> > mptcp_cleanup_rbuf()
+> > are invoked after the loop. In the loop, all flags checks for
+> > __mptcp_recvmsg_mskq() are removed.
+> 
+> (...)
+> 
+> > +static int mptcp_read_sock(struct sock *sk, read_descriptor_t
+> > *desc,
+> > +			   sk_read_actor_t recv_actor)
+> > +{
+> > +	return __mptcp_read_sock(sk, desc, recv_actor, false);
+> 
+> In this series, it looks like __mptcp_read_sock() is only called
+> here,
+> always with noack == false then. Will you call this helper with noack
+> set to true in another series?
 
-Yes, you're right. I'll update it in v5.
+Yes, indeed. This read_sock will be called in all three series that I
+am currently developing.
+
+1. In "NVME over MPTCP" series, mptcp_read_sock() will be used, see:
+
+    consumed = sock->ops->read_sock(sk, &rd_desc, nvme_tcp_recv_skb);
+
+in nvme_tcp_try_recv().
+
+2. In "MPTCP sockmap support" series (issue #521),
+mptcp_read_sock_noack() will be used, see:
+
+    copied = tcp_read_sock_noack(sk, desc, recv_actor, true,
+                                 &psock->copied_seq);
+
+in tcp_bpf_strp_read_sock().
+
+3. In "MPTCP KTLS support" series (issue #480), tcp_read_sock() is used
+in tls_strp_read_copyin():
+
+    tcp_read_sock(strp->sk, &desc, tls_strp_copyin);
+
+I originally intended to use mptcp_read_sock() here, but it would cause
+a deadlock, so I had to switch to using tcp_read_sock_noack() instead.
+
+> 
+> (Maybe the extension could be introduced later, but if the next
+> series
+> follows, that's fine to keep it like that.)
+
+So I think it's better to keep this patch as is.
 
 Thanks,
 -Geliang
 
 > 
-> I'm running the tls selftest(tools/testing/selftest/net/tls.c), and
-> the
-> '-EINVAL' will cause an error in 'non_established' test, it checks
-> the
-> errno should be 'ENOTCONN'.
-> 
-> If we don't return here is also OK, because the
-> 'tcp_setsockopt' can return too, but I think a state validation at
-> the
-> MPTCP layer is necessary, and 'ENOTCONN' is more accurate for
-> 'TCPF_CLOSE | TCPF_LISTEN'.
-> 
-> WDYT
-> 
-> Thanks
-> Gang
-> > +		return tcp_setsockopt(sk, SOL_TCP, optname,
-> > optval, optlen);
-> >  	case TCP_CONGESTION:
-> >  		return mptcp_setsockopt_sol_tcp_congestion(msk,
-> > optval, optlen);
-> >  	case TCP_DEFER_ACCEPT:
-> > -- 
-> > 2.51.0
-> > 
-> > 
+> Cheers,
+> Matt
