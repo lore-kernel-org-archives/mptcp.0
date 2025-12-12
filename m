@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD1C6287245
-	for <mptcp@lists.linux.dev>; Fri, 12 Dec 2025 02:27:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E19D274B2E
+	for <mptcp@lists.linux.dev>; Fri, 12 Dec 2025 02:27:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765506449; cv=none; b=T90BJv2jiS0sKGqVrSieHWgvVHsbbB6aqBL9Yu9HZjdcE3x0oyQmDkn9uvVyb6T9dsM0SKNJsqLg6FjZBR48F3k/mTUKvhpDB0GAsxFv0kM9r6gHwHOL8DZIyHVVdQbsWkqC/8WMyD4qMcLrQyyk2bsVU2kSwauAw31/ndX7m6U=
+	t=1765506451; cv=none; b=mDIqCN8jsbnAyyj39FdpN5i7ajAnsSKgIkJ2xJeTCw/OIzZtPr1RTfkMKErU66/btk5SSSuMqJKQEqux2jrNZ3j065fd6cyDvdZ2BktVzTVSfJxcQwE8FUO08QL8nxpMfqeFqI7Z+dHm7BQ1VSyN6as4L2BpZtCCLpricC4wjhk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765506449; c=relaxed/simple;
-	bh=tPaghPmLGRJTUlN1s8E2PHNc3lFIXXRBgG0Ew/QGudE=;
+	s=arc-20240116; t=1765506451; c=relaxed/simple;
+	bh=hmLpiN3dL0NAGpnfcAdxNKyTMuE/QkP93XjVbSIynAU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=brr9HLhpUXsyTOqkGMfN384sR+C2/H+uBqOABllpCdH2HXo64gUjYRwUhKkPU71dXu5bBMI+Nxc71dDZf1NgKpBN/aI9xulon4s4kEyK1gk6/6BSH1NUmQ814QN3iFHjDQhjAVDrychvQdXFu0wreTf4Xb0ZjyC3o94Uj2wlSOo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SnpMHbMm; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=dC5o6xW5JIdtPg2MDTuGuzoRl1dNwAaaAKXgBVL0BlhNzZ4HV7cFMdcJ7Yip8rtkNDcj4UKvrceEltW1G5tIU45RHUoYwKnaV0/Q/oc8wzZqBNLOa7NgdY4RsAjAGXoJnAIsx9D6dSX9AjV9uVWyP1+Iijl7vvtyXlh/2Puw6A8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PCf5fM2n; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SnpMHbMm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C072C113D0;
-	Fri, 12 Dec 2025 02:27:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PCf5fM2n"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17EE2C4CEF7;
+	Fri, 12 Dec 2025 02:27:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765506449;
-	bh=tPaghPmLGRJTUlN1s8E2PHNc3lFIXXRBgG0Ew/QGudE=;
+	s=k20201202; t=1765506451;
+	bh=hmLpiN3dL0NAGpnfcAdxNKyTMuE/QkP93XjVbSIynAU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=SnpMHbMmmkRJNCtFD4FzDqFvXpyGll3EEPv8UydhNwtptFTNQqvlZqRyvib/7xJE1
-	 WloASIe13r9Ji/v0ZCsrR+Lj+upQ99AuA+gcd1LfekTytqrMGoMq/ZPjFhqU9FkeHD
-	 M2xk9xO3rnyUt4nC0TQNyDCB57IN1uhQXQuCRDqm4st1E1i6UyOLS1FgSvWYwPGA2U
-	 cN29Ruhz8YWQmW2aiQ2GYrLa5KYLkGshfnFoKT3AxaqsqQXjBWyxzgo3fYK/rjt16u
-	 rRFdySaYrexC/aocE7L6oOdLOIBSk5nmWGZtc9dhOP+LJKtKP6L9Ez2Hee+35dm/x5
-	 WpVdVaSn9d9rA==
+	b=PCf5fM2n2o6itCD5csh2pbu3sHa/QD/xGQPxe4NHGYtXFaO9lcMUgxHySJ/ABHY5Y
+	 O2bpnnnT2yPkjBIEQwuZs2Jas6zyYNU6AaJpOqq0upiCUfiNzecZiX3QSl/iNUGhSG
+	 HSND88rGIaM4U7Qdlj+ZU7+I8SQJ77oVnqPBBdSy5vl1B5yUVIpXxZjb/KJyEt0Upn
+	 VxIaqJqX3uIEJZTXYUD5WxLHXjq8cd+J1D6gF+a7wlYKnu7suBmUc+hLPy4Prd87dR
+	 dq3oS+DIXkuZ9bzuDt6ufn21KkQ7o5ZlYcHC2yqtLfZLC7PngUTiUMhvcitvHEL5TR
+	 aVi4fwFwlmOog==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>,
 	Gang Yan <yangang@kylinos.cn>
-Subject: [RFC mptcp-next v4 02/10] tls: switch to MPTCP_SKB_CB
-Date: Fri, 12 Dec 2025 10:27:12 +0800
-Message-ID: <31e6e239c93a18940f6332ae01186a2491bed62f.1765505775.git.tanggeliang@kylinos.cn>
+Subject: [RFC mptcp-next v4 03/10] tls: switch to mptcp_inq
+Date: Fri, 12 Dec 2025 10:27:13 +0800
+Message-ID: <32d096b7bd6aa7992f33d65e0dd5b1073d03fd80.1765505775.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <cover.1765505775.git.tanggeliang@kylinos.cn>
 References: <cover.1765505775.git.tanggeliang@kylinos.cn>
@@ -47,104 +47,122 @@ Content-Transfer-Encoding: 8bit
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
 To extend MPTCP support based on TCP TLS, corresponding MPTCP-specific
-macro MPTCP_SKB_CB() has been exported into net/mptcp.h.
+helper mptcp_inq() has been exported into net/mptcp.h.
 
-TLS implementation switches between the respective TCP and MPTCP macros
+Note that there is a slight difference between mptcp_inq() and
+mptcp_inq_hint(), it does not return 1 when the socket is closed or shut
+down; instead, it returns 0. Otherwise, it would break the condition
+"inq < 1" in tls_strp_read_sock().
+
+TLS implementation switches between the respective TCP and MPTCP helpers
 based on the detected protocol.
 
 Co-developed-by: Gang Yan <yangang@kylinos.cn>
 Signed-off-by: Gang Yan <yangang@kylinos.cn>
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- include/net/mptcp.h  | 10 ++++++++++
- net/mptcp/protocol.h | 10 ----------
+ include/net/mptcp.h  |  7 +++++++
+ net/mptcp/protocol.c | 12 +++++++++++-
  net/tls/tls_strp.c   |  8 ++++++--
  net/tls/tls_sw.c     |  4 +++-
- 4 files changed, 19 insertions(+), 13 deletions(-)
+ 4 files changed, 27 insertions(+), 4 deletions(-)
 
 diff --git a/include/net/mptcp.h b/include/net/mptcp.h
-index 82660374859a..050c2e820fc4 100644
+index 050c2e820fc4..4c8e483fcc4b 100644
 --- a/include/net/mptcp.h
 +++ b/include/net/mptcp.h
-@@ -132,6 +132,16 @@ struct mptcp_pm_ops {
- 	void (*release)(struct mptcp_sock *msk);
- } ____cacheline_aligned_in_smp;
+@@ -254,6 +254,8 @@ static inline __be32 mptcp_reset_option(const struct sk_buff *skb)
+ }
  
-+struct mptcp_skb_cb {
-+	u64 map_seq;
-+	u64 end_seq;
-+	u32 offset;
-+	u8  has_rxtstamp;
-+	u8  cant_coalesce;
-+};
+ void mptcp_active_detect_blackhole(struct sock *sk, bool expired);
 +
-+#define MPTCP_SKB_CB(__skb)	((struct mptcp_skb_cb *)&((__skb)->cb[0]))
++unsigned int mptcp_inq(const struct sock *sk);
+ #else
+ 
+ static inline void mptcp_init(void)
+@@ -345,6 +347,11 @@ static inline struct request_sock *mptcp_subflow_reqsk_alloc(const struct reques
+ static inline __be32 mptcp_reset_option(const struct sk_buff *skb)  { return htonl(0u); }
+ 
+ static inline void mptcp_active_detect_blackhole(struct sock *sk, bool expired) { }
 +
- #ifdef CONFIG_MPTCP
- void mptcp_init(void);
++static inline unsigned int mptcp_inq(const struct sock *sk)
++{
++	return 0;
++}
+ #endif /* CONFIG_MPTCP */
  
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index cd5266099993..75f2fd05ece4 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -125,16 +125,6 @@
- #define MPTCP_SYNC_STATE	6
- #define MPTCP_SYNC_SNDBUF	7
+ #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 334fdb10fdf3..82a3b3c70ad1 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -2242,7 +2242,7 @@ static bool mptcp_move_skbs(struct sock *sk)
+ 	return enqueued;
+ }
  
--struct mptcp_skb_cb {
--	u64 map_seq;
--	u64 end_seq;
--	u32 offset;
--	u8  has_rxtstamp;
--	u8  cant_coalesce;
--};
--
--#define MPTCP_SKB_CB(__skb)	((struct mptcp_skb_cb *)&((__skb)->cb[0]))
--
- static inline bool before64(__u64 seq1, __u64 seq2)
+-static unsigned int mptcp_inq_hint(const struct sock *sk)
++unsigned int mptcp_inq(const struct sock *sk)
  {
- 	return (__s64)(seq1 - seq2) < 0;
-diff --git a/net/tls/tls_strp.c b/net/tls/tls_strp.c
-index 98e12f0ff57e..cdbcb07a52f8 100644
---- a/net/tls/tls_strp.c
-+++ b/net/tls/tls_strp.c
-@@ -439,7 +439,9 @@ static bool tls_strp_check_queue_ok(struct tls_strparser *strp)
- 
- 	first = skb_shinfo(strp->anchor)->frag_list;
- 	skb = first;
--	seq = TCP_SKB_CB(first)->seq;
-+	seq = sk_is_msk(strp->sk) ?
-+	      MPTCP_SKB_CB(first)->map_seq :
-+	      TCP_SKB_CB(first)->seq;
- 
- 	/* Make sure there's no duplicate data in the queue,
- 	 * and the decrypted status matches.
-@@ -449,7 +451,9 @@ static bool tls_strp_check_queue_ok(struct tls_strparser *strp)
- 		len -= skb->len;
- 		skb = skb->next;
- 
--		if (TCP_SKB_CB(skb)->seq != seq)
-+		if ((sk_is_msk(strp->sk) ?
-+		     MPTCP_SKB_CB(skb)->map_seq :
-+		     TCP_SKB_CB(skb)->seq) != seq)
- 			return false;
- 		if (skb_cmp_decrypted(first, skb))
- 			return false;
-diff --git a/net/tls/tls_sw.c b/net/tls/tls_sw.c
-index 9937d4c810f2..c35c25abc40c 100644
---- a/net/tls/tls_sw.c
-+++ b/net/tls/tls_sw.c
-@@ -2489,7 +2489,9 @@ int tls_rx_msg_size(struct tls_strparser *strp, struct sk_buff *skb)
+ 	const struct mptcp_sock *msk = mptcp_sk(sk);
+ 	const struct sk_buff *skb;
+@@ -2257,6 +2257,16 @@ static unsigned int mptcp_inq_hint(const struct sock *sk)
+ 		return (unsigned int)hint_val;
  	}
  
- 	tls_device_rx_resync_new_rec(strp->sk, data_len + TLS_HEADER_SIZE,
--				     TCP_SKB_CB(skb)->seq + strp->stm.offset);
-+				     (sk_is_msk(strp->sk) ?
-+				      MPTCP_SKB_CB(skb)->map_seq :
-+				      TCP_SKB_CB(skb)->seq) + strp->stm.offset);
- 	return data_len + TLS_HEADER_SIZE;
++	return 0;
++}
++
++static unsigned int mptcp_inq_hint(const struct sock *sk)
++{
++	unsigned int inq = mptcp_inq(sk);
++
++	if (inq)
++		return inq;
++
+ 	if (sk->sk_state == TCP_CLOSE || (sk->sk_shutdown & RCV_SHUTDOWN))
+ 		return 1;
  
- read_failure:
+diff --git a/net/tls/tls_strp.c b/net/tls/tls_strp.c
+index cdbcb07a52f8..0639130b8d5e 100644
+--- a/net/tls/tls_strp.c
++++ b/net/tls/tls_strp.c
+@@ -494,7 +494,9 @@ bool tls_strp_msg_load(struct tls_strparser *strp, bool force_refresh)
+ 	DEBUG_NET_WARN_ON_ONCE(!strp->stm.full_len);
+ 
+ 	if (!strp->copy_mode && force_refresh) {
+-		if (unlikely(tcp_inq(strp->sk) < strp->stm.full_len)) {
++		if (unlikely((sk_is_msk(strp->sk) ?
++			      mptcp_inq(strp->sk) :
++			      tcp_inq(strp->sk)) < strp->stm.full_len)) {
+ 			WRITE_ONCE(strp->msg_ready, 0);
+ 			memset(&strp->stm, 0, sizeof(strp->stm));
+ 			return false;
+@@ -517,7 +519,9 @@ static int tls_strp_read_sock(struct tls_strparser *strp)
+ {
+ 	int sz, inq;
+ 
+-	inq = tcp_inq(strp->sk);
++	inq = sk_is_msk(strp->sk) ?
++	      mptcp_inq(strp->sk) :
++	      tcp_inq(strp->sk);
+ 	if (inq < 1)
+ 		return 0;
+ 
+diff --git a/net/tls/tls_sw.c b/net/tls/tls_sw.c
+index c35c25abc40c..30ca332afe41 100644
+--- a/net/tls/tls_sw.c
++++ b/net/tls/tls_sw.c
+@@ -1958,7 +1958,9 @@ tls_read_flush_backlog(struct sock *sk, struct tls_prot_info *prot,
+ 		return false;
+ 
+ 	max_rec = prot->overhead_size - prot->tail_size + TLS_MAX_PAYLOAD_SIZE;
+-	if (done - *flushed_at < SZ_128K && tcp_inq(sk) > max_rec)
++	if (done - *flushed_at < SZ_128K && (sk_is_msk(sk) ?
++					     mptcp_inq(sk) :
++					     tcp_inq(sk)) > max_rec)
+ 		return false;
+ 
+ 	*flushed_at = done;
 -- 
 2.51.0
 
