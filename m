@@ -1,137 +1,136 @@
-Received: from mail-qv1-f65.google.com (mail-qv1-f65.google.com [209.85.219.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D15733126C0
-	for <mptcp@lists.linux.dev>; Fri, 12 Dec 2025 09:17:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04BDC3161A6
+	for <mptcp@lists.linux.dev>; Fri, 12 Dec 2025 09:59:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.110
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765531062; cv=none; b=IqcrIFPWsQ8xq0hKPWLbyeW8ecyqNdlySFQI561os49sdzbhSp8HA2BmVborHjmSu0qpd0IHP5Xdh6RI58u8UVO7AxpEn9D8N76bzjmZ0w5wAkMicsouumxM0EpgQbVOE5PiwH/xytmXzWgcFSMAnuKRnFi+j44DPlvpS5r7zm0=
+	t=1765533562; cv=none; b=C1G69b227NAZ8l+rytM+1v4y2Iuf9s+GUaFirOpq+GW0o/EuYe4csU5UtyfTFAxhRMjq4OZ3N+3PW7DdpAoFUy4ZjKDZRkKGGaDbeC+khHIvQzssPD50iToafp/a8gyCcqrxCvVNUfioTLKxVEDqr4fU/4uHl4PJACSQY7mx/NQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765531062; c=relaxed/simple;
-	bh=ib9hKmn7mK0bUe7d6g6KPKZYXGgdSt6WWIJIWKNH7Q4=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=RKrZAsw53CIGtk9eNcPnmpG7NyoYhiSX3FogduVGEq2iv8KjIBWO8W7cCAQ3LMqt37t2yIcUqez593jiTx55cvWWUch6rklfiEZpP9yhggTqmY61SJfoS3Avmyo/cisbc3E6GK/Y9P6mHrU1u/jbS5YlLP4mQY7PB3GGMHFCv5c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WuxNfMPi; arc=none smtp.client-ip=209.85.219.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1765533562; c=relaxed/simple;
+	bh=rcWaxzsy/BhKrpMBzTexaQPucukDOlfhcS9RbDkSI0w=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=svMN+iYkbQbmQQnR+BB+bAKEZWgXDtfdfjrSl71aLAlIZzAH/IkHv+F9Vs+Jc8vLn7DmnXmdblCAkyrMtfRu3jQpB2VKWnPUvC3rcOpt6eT7D0loUdx/akOoGRDVTkK+35tsYpgWCTccg2Eour7fPJMYPtlucQF3GG4yoK6pW8M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=UuiTApOi; arc=none smtp.client-ip=115.124.30.110
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WuxNfMPi"
-Received: by mail-qv1-f65.google.com with SMTP id 6a1803df08f44-8824ce98111so14990146d6.0
-        for <mptcp@lists.linux.dev>; Fri, 12 Dec 2025 01:17:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1765531058; x=1766135858; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=l0e05y0V2lAYh/stfmXbvaWFXDYynL/fxet4QoO7FX0=;
-        b=WuxNfMPilTqFFH+8WsTSWw6hVVYgMCBfCOdSzBnotP8kxHmYC8qH9zA3Y+EdBYDwQI
-         4oulfiDpXUdzgrm12+SziSh8O2C4rAUZJcnumF4cPPve4t8GoBgPYaautl8LMjWelAgd
-         mBzA85XRrqWos/YXJ7mujJqaCqXkTBGlqnOPK4benYsk+roiMj+/gCbkTnPwL0PV4L5O
-         uNVOS5dEfKyksEWxHEPTKqMWZRoYIYxJXgaZxK605zboB9ew8slZRpQasxZh6fV1Pipu
-         2ynHbkcnBceIL8DoHTF3TUg96mptMoaq+0Y2GyKEeG5ZGbznnc+ABbxcG93OlqEaiF20
-         Bpsw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765531058; x=1766135858;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=l0e05y0V2lAYh/stfmXbvaWFXDYynL/fxet4QoO7FX0=;
-        b=EVIdMkDbBsrrFL6dHcHGiXtw3ldim2LGtPsyhShjPx2O7zbiJ/CEc0pSi+jYGSOqd6
-         nbYJUl1ZbKeP8yPNEQ0z0qtLPF+leENf4jwUdA6wVW++JFUNSfgPpulc4nl9rQ8B2apO
-         mX/6+j6gi80ftp1KzS2Uko5cjO87cFYr4kX5AHVYlEG+LrW9209ETS9ipAv5UybKlTlA
-         hP34oRIWJ9h4MmvWPiRBJU9gLrHtoGXlfFAXNpi+gAWfcokG2WeZENEhDqBOxAkBDYuY
-         I6XQELZy9B9GHelLO+xSHuZEG62Dn2QaRMuXCSpnjl4ztebyAcj3EwgwkoLPrzJiCsFS
-         rzwA==
-X-Gm-Message-State: AOJu0Yxk5NTJWxfkNzwMK1FrwFu5D4I04ZwRfLH6/wd0nBM/VivXd7Gc
-	K0bQnjpzXz0mlUifC3gCOuLs4jonVJianFMSurhKx3vBo2KW8WRO4ltkUWl8s07rlw==
-X-Gm-Gg: AY/fxX7SidscBBWS3Dn0+vGRT37XPlz5FBC39gSX9LtV6+SGy8rXxQE1/GToHfsVGTX
-	qXMj0IJd14EKRsjDj9MkPhz4nruLD7tG0PAGJcJkAgc6UGVx1i3w5XPL2br0KefVoorQ3EmFHjk
-	qrFU2Hh8VkuUMs564C4feD3lDl7B12s1HZFLn+1GX3ZeCFH9kbDJtWvUXFmWgSC1PpyezJqIPpY
-	sbq1dMrZ78QlUMlJOUGAbJ4AoNFcRpZWmTfGRPV6b6SLqTQbXgCtNGx06+IFRLFJPqP/JhLU1bQ
-	B9puqJTCQZmwnHaH3w2sKbkR5S2H+oyw9kkMUfBooGOxh5HcC3J+BynVowHXCcBF9malNDmkcAA
-	i+v5D9b406txwfPzj9lmyUFxd7cSZ4s4CcQSSjGWBfo2fsryC0lUk1FjGoOSBCF3/MQ37Vwkomt
-	HPZY+AWxrovdWKUzH+ukPaqKU=
-X-Google-Smtp-Source: AGHT+IG2mdsb+/+j/wa9jPQFi1ioSp/ZIEtTXuz03NZnZE3bm1WVE0kyRd6By6Mcn+7Xc3wGsaUxAw==
-X-Received: by 2002:a05:6214:5287:b0:888:201e:57c7 with SMTP id 6a1803df08f44-8887dfeddaamr19823876d6.5.1765531058573;
-        Fri, 12 Dec 2025 01:17:38 -0800 (PST)
-Received: from [127.0.0.1] ([64.236.177.97])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-88881a0b913sm6883186d6.46.2025.12.12.01.17.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Dec 2025 01:17:38 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <tanggeliang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <cover.1765505775.git.tanggeliang@kylinos.cn>
-References: <cover.1765505775.git.tanggeliang@kylinos.cn>
-Subject: Re: [RFC mptcp-next v4 00/10] MPTCP KTLS support
-Message-ID: <ef2e469a-bd21-4909-8114-3ba0c472e6c1@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 12 Dec 2025 09:17:37 +0000
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="UuiTApOi"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1765533557; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=g9p1PKRiJ+IqF8WgLeqdKGX/8PMrBBoE7jD+fozUtWI=;
+	b=UuiTApOiUfTD8knDl1UusJtcTdpJfKBbE2Q4wc3IoHy79V9cQH3Zm3Dxv0wGYBufNdt9FR2V3cu17y6mUNrxcvip0LQkQ44bLXcih2ylaDhAx7ZMlNsT0hdOa1uOIrchdV8sYOKhh4I0qzMPTLbKq3XlUVyy849OjtAjtg9CR0g=
+Received: from localhost(mailfrom:evan.li@linux.alibaba.com fp:SMTPD_---0WududpR_1765533555 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Fri, 12 Dec 2025 17:59:16 +0800
+From: evan.li@linux.alibaba.com
+To: matttbe@kernel.org,
+	martineau@kernel.org,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	horms@kernel.org
+Cc: netdev@vger.kernel.org,
+	mptcp@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Evan Li <evan.li@linux.alibaba.com>,
+	kitta <kitta@linux.alibaba.com>
+Subject: [PATCH] subflow: relax WARN in subflow_data_ready() on teardown races
+Date: Fri, 12 Dec 2025 17:59:09 +0800
+Message-ID: <20251212095909.2480475-1-evan.li@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.7
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Hi Geliang,
+From: Evan Li <evan.li@linux.alibaba.com>
 
-Thank you for your modifications, that's great!
+A WARN splat in subflow_data_ready() can be triggered when a subflow
+enters an unexpected state during connection teardown or cleanup:
 
-Our CI did some validations and here is its report:
+WARNING: net/mptcp/subflow.c:1527 at subflow_data_ready+0x38a/0x670
 
-- KVM Validation: normal (except selftest_mptcp_join): Unstable: 1 failed =
-test(s): selftest_simult_flows =F0=9F=94=B4
-- KVM Validation: normal (only =
-selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except =
-selftest_mptcp_join): Unstable: 1 failed test(s): packetdrill_add_addr =
-=F0=9F=94=B4
-- KVM Validation: debug (only selftest_mptcp_join): Success! =
-=E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =
-=E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =
-=E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
-uns/20154532531
+This comes from the following check:
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/397a7ac03cb4
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1032489
+WARN_ON_ONCE(!__mptcp_check_fallback(msk) &&
+!subflow->mp_capable &&
+!subflow->mp_join &&
+!(state & TCPF_CLOSE));
 
+Under fuzzing and other stress scenarios, there are legitimate windows
+where this condition can become true without indicating a real bug, for
+example:
 
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
+during connection teardown / fastclose handling
+races with subflow destruction
+packets arriving after subflow cleanup
+when the parent MPTCP socket is being destroyed
+After commit ae155060247b ("mptcp: fix duplicate reset on fastclose"),
+these edge cases became easier to trigger and the WARN started firing
+spuriously, causing noisy reports but no functional issues.
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+Refine the state check in subflow_data_ready() so that:
 
-For more details:
+if the socket is in a known teardown/cleanup situation
+(SOCK_DEAD, zero parent refcnt, or repair/recv-queue handling),
+the function simply returns without emitting a warning; and
 
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+for other unexpected states, we emit a ratelimited pr_debug() to
+aid debugging, instead of a WARN_ON_ONCE() that can panic
+fuzzing/CI kernels or flood logs in production.
 
+This suppresses the bogus warning while preserving diagnostics for any
+real state machine bugs.
 
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+Fixes: ae155060247b ("mptcp: fix duplicate reset on fastclose")
+Reported-by: kitta <kitta@linux.alibaba.com>
+Closes: https://bugzilla.kernel.org/show_bug.cgi?id=220856
+Co-developed-by: kitta <kitta@linux.alibaba.com>
+Signed-off-by: Evan Li <evan.li@linux.alibaba.com>
+---
+ net/mptcp/subflow.c | 24 +++++++++++++++++++++---
+ 1 file changed, 21 insertions(+), 3 deletions(-)
 
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 86ce58ae5..01d30679c 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -1524,9 +1524,27 @@ static void subflow_data_ready(struct sock *sk)
+ 		return;
+ 	}
+ 
+-	WARN_ON_ONCE(!__mptcp_check_fallback(msk) && !subflow->mp_capable &&
+-		     !subflow->mp_join && !(state & TCPF_CLOSE));
+-
++	/* Check if subflow is in a valid state. Skip warning for legitimate edge cases
++	 * such as connection teardown, race conditions, or when parent is being destroyed.
++	 */
++	if (!__mptcp_check_fallback(msk) && !subflow->mp_capable &&
++	    !subflow->mp_join && !(state & TCPF_CLOSE)) {
++	/* Legitimate cases where this can happen:
++	 * 1. During connection teardown
++	 * 2. Race conditions with subflow destruction
++	 * 3. Packets arriving after subflow cleanup
++	 * Log debug info but don't warn loudly in production.
++	 */
++	if (unlikely(tcp_sk(sk)->repair_queue == TCP_RECV_QUEUE ||
++	    sock_flag(sk, SOCK_DEAD) || !refcount_read(&parent->sk_refcnt))) {
++			/* Expected during cleanup, silently return */
++			return;
++	}
++	/* For other cases, still log for debugging but don't WARN */
++	if (net_ratelimit())
++		pr_debug("MPTCP: subflow in unexpected state sk=%p parent=%p state=%u\n",
++			 sk, parent, state);
++	}
+ 	if (mptcp_subflow_data_available(sk)) {
+ 		mptcp_data_ready(parent, sk);
+ 
+-- 
+2.43.7
+
