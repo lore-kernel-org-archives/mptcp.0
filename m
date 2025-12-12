@@ -1,244 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f195.google.com (mail-qk1-f195.google.com [209.85.222.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AC82169AD2;
-	Fri, 12 Dec 2025 10:34:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 109703B8D47
+	for <mptcp@lists.linux.dev>; Fri, 12 Dec 2025 11:15:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765535701; cv=none; b=d+HpuuNLQuNcZS9B0gPtGyVsdabeHJIg0JUxIMmWgvr5Zywh4YoH5fLJb8QrRb7LJawwa5L0DIrkOSEVj70+f2CSOnWRIkCAu1h2qA/jNEl1JB/foX8WBbWqalizugEVx1Tidz5pGs5ThZEq7H5Cvp6QxMSeZKrtl6QSDWiXvJI=
+	t=1765538129; cv=none; b=KvOaO+weRYqWADGHW+SlIIwuhqdp4FZxkDzsA41Z8T5J15+4cC2TP1jEKGWlxggoIKHDSsum/AJVcVkpZSPgeWwgwepcJz2qTsKgEmCIO2WKkOhlNcjIbY/pwjKyDUajOfy6JB5ADkAMWb8Eo+4gcuf58leuEp/SItAXNKKaNLY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765535701; c=relaxed/simple;
-	bh=tpoLmlWNdgfPUN+3GVk5CixxlW8xGaDG0EeFHjNwi7Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=o1QYembsVbXOS991Nw6T18OGXn4zrVXyMxJl89x7eJYBvF1+L+hPh4syMgu+B+aI1YczUG4WITHF++9u5zLUElrzcOp7ymhpaT745rHx0//JFWba02k6RtZBojU9foNeHiG/fa28xgs8uY6/d88SatFQFldEmTTTum+jhx15tN0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OuZVw6jT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1765538129; c=relaxed/simple;
+	bh=vK+v0YmiNMJ0T26vPlPv+xY9c1RTKOBh8HR6kuxXqzk=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=O2iok30FHeRYpV2Y9T00TO6iBE2iEhb8igkHqD3mCAnmRmCpfuPYX9KIjBLM3Un0XRQDkeI5P0I0YCbPE8/BgUjc2QBA0ycnfeIINm8CABuAlBnsqqLvCguWCANqoxuy1NsvmBISJECDZpzgEv4GLnW7nEIS2fukmK43csPgKbw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZsYKDlOW; arc=none smtp.client-ip=209.85.222.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OuZVw6jT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD031C4CEF1;
-	Fri, 12 Dec 2025 10:34:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765535699;
-	bh=tpoLmlWNdgfPUN+3GVk5CixxlW8xGaDG0EeFHjNwi7Y=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=OuZVw6jT+j1cDhnrP9PXiRVBpZ7prSuT9DJPD4BnL+BrJhkYJxfY6DoZ4WwWXafKe
-	 9v9I8nts41hdMjLoflTY2zxTuS48woD6YvTNmXdmagit1d56Mltzxcb/xEAMhQmksj
-	 puqk/WcOB+iSdL+7G0jOHcdmSUltqXNa14sClz74oB5h9JbI5oBdkdv+IMr+4Iya6p
-	 eGagb3N6JGnAX+o3rifssAxpNUq8OSUqeyMvCEPIEce/esa7FYVnqgh+zXa5d39LF3
-	 cOWQwNxdPbC+BwgFpm4wxGGsppmDHuGfPmxRUneug7078kL0B7sK/3M3UjtCJoXTh7
-	 no0j92tDuKHrg==
-Message-ID: <87064d74-2090-4d0f-ba34-129942e60450@kernel.org>
-Date: Fri, 12 Dec 2025 11:34:53 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZsYKDlOW"
+Received: by mail-qk1-f195.google.com with SMTP id af79cd13be357-8b2dec4d115so114302385a.0
+        for <mptcp@lists.linux.dev>; Fri, 12 Dec 2025 03:15:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1765538127; x=1766142927; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nfifXdEJvZ7gZElnS3GrIFtE/CTdJFrKATxAHxTGOSA=;
+        b=ZsYKDlOWSe7i8doDpQWNm6kR+7LwYPKcUln1babor6DiPcI4svswQIvHYviJOpomaf
+         FaEjh7TaMctgjtLKjd7PdSZYQppdFLBe75srj373r4ry8neBKJu3ZvrJLxRnvY2cwuBm
+         M8bhuSCe+kRWhM9SlrHft2RGYAeAO7+7Vy40rCKP3apkrRyc7HHdbN/Q0eGcrKOYPL1I
+         x7DHZ7sVMuyRK0jgovphsipdXwLo0oP+uuPCVkN0AvdwPX6f7ymR/q5/O3mO1YSu6gxI
+         d5hMa/kERWWFiB8RmES358JI7j4G0FQMT+r4NI6wfj1CCCT7UMS6ZycXznqhjae2QqDt
+         KEUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1765538127; x=1766142927;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=nfifXdEJvZ7gZElnS3GrIFtE/CTdJFrKATxAHxTGOSA=;
+        b=ttPUKpKytMcl3pIzD43xPdO1zyrQ6C1oRJ8/Qu8yOdBhECoRnTH/u/oGJLLGjUAQdv
+         xIhy9XjGtXmPzKYsOjwIRqccdTzSKck+F42bBCu6APwYTokwU2m+26JBH/mcgYOpAMY7
+         JC4b2EbMGCK+a9r1ajYTgvjPXo9rlgF+OzsNK9hZSmjnOekjzREjTYJpdn6a+eYaVzfp
+         3MMAoIZeB//EuABgAb1nbsQ0WahhIHeLnUqgUr3Cix9u0DCNk2sMa+Uw5tVilFblV/pL
+         uoXsaTk6Z9Htw5YRB+sGFZQ6vEsPJCMBXLeCyiNmo1Kw6FW9fVDaIAeQ/Z1GL19cXs3+
+         7tmw==
+X-Gm-Message-State: AOJu0YwPGPzp1ep7HDh9Owpk8hUzon7LnVS2ql4nI/As2ofg5WzJU7fC
+	xbpNuycb2eUl8KejphG9xVAOs9+hSg19qf3xkaAbzO4LXGar2NBTvlVRv7VXIM8=
+X-Gm-Gg: AY/fxX6OZneUvn58XDaIvUnNyTOnFjGzySC7EH60vZZnOiOYBqlHC03hmrjTzjWv3YY
+	59WRm+U/8tPDS7HAjXDwxHq846OUKBISj7DPIONaVIkpvYHLeqONvZQ+MjjSLzC7FN4A+AZ1YpR
+	eOrDiSvPHKGwg93qxAw0FbkuU+YHd3pv7Zku61Af/ARBBuPdwPOM3fIHgjXJcKWaGtSpvv/JlgA
+	yy+iROuJkZGUApqe3LEbjQgmzQWWZIvKeCvfy0TseDcvsAfY0Vx+pTaov4CKwXUC9nzEG6kmupW
+	J08SE/FO6tk5aYWGN/osR5XNox/3RMi6RUNps4nCrtCjKpayfv/ufq4cVkcyXRMm4ru59k7Q1Qq
+	McYCHfeilNAkIxV1h4M3jOTAVHibs5ngCP+53onx/bQ56S387IMt8ikQjTDtFXQt6m+6s26qpZh
+	LcooXvabXWovSkd41pIfGMkdKs7UJOLF7WFA==
+X-Google-Smtp-Source: AGHT+IFgtoDZXFno+eM9FOgLpPQzJR1NHPgM4xqVy8c2Z9m9pkXOmxlqYY3ofuj+WEKgpMfy1d4jBw==
+X-Received: by 2002:a05:620a:178d:b0:8b2:e1fa:6eab with SMTP id af79cd13be357-8bb3a388981mr200982685a.62.1765538126808;
+        Fri, 12 Dec 2025 03:15:26 -0800 (PST)
+Received: from [127.0.0.1] ([172.183.89.64])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-888819fa7a0sm8334186d6.40.2025.12.12.03.15.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Dec 2025 03:15:26 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Evan Li <evan.li@linux.alibaba.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20251212095909.2480475-1-evan.li@linux.alibaba.com>
+References: <20251212095909.2480475-1-evan.li@linux.alibaba.com>
+Subject: Re: [PATCH] subflow: relax WARN in subflow_data_ready() on
+ teardown races
+Message-ID: <0711e109-e8f3-cf27-6b87-5a523beafdff@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 12 Dec 2025 11:15:25 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] subflow: relax WARN in subflow_data_ready() on teardown
- races
-Content-Language: en-GB, fr-BE
-To: evan.li@linux.alibaba.com
-Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev,
- linux-kernel@vger.kernel.org, kitta <kitta@linux.alibaba.com>,
- martineau@kernel.org, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, horms@kernel.org
-References: <20251212095909.2480475-1-evan.li@linux.alibaba.com>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <20251212095909.2480475-1-evan.li@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-Hi Evan, Kitta,
+Hi Evan,
 
-Thank you for sharing this patch.
+Thank you for your modifications, that's great!
 
-On 12/12/2025 10:59, evan.li@linux.alibaba.com wrote:
-> From: Evan Li <evan.li@linux.alibaba.com>
-> 
-> A WARN splat in subflow_data_ready() can be triggered when a subflow
-> enters an unexpected state during connection teardown or cleanup:
-> 
-> WARNING: net/mptcp/subflow.c:1527 at subflow_data_ready+0x38a/0x670
+Our CI did some validations and here is its report:
 
-Please always share the full stacktrace, not just the warning: it helps
-reviewers, devs later, and other people who found the same issue on
-their side.
+- KVM Validation: normal (except selftest_mptcp_join): Unstable: 1 failed =
+test(s): selftest_simult_flows =F0=9F=94=B4
+- KVM Validation: normal (only =
+selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except =
+selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (only =
+selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal (only=
+ bpftest_all): Critical: 6 Call Trace(s) - Critical: Global Timeout =
+=E2=9D=8C
+- KVM Validation: btf-debug (only bpftest_all): Success! =
+=E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
+uns/20163673400
 
-> This comes from the following check:
-> 
-> WARN_ON_ONCE(!__mptcp_check_fallback(msk) &&
-> !subflow->mp_capable &&
-> !subflow->mp_join &&
-> !(state & TCPF_CLOSE));
-> 
-> Under fuzzing and other stress scenarios, there are legitimate windows
-> where this condition can become true without indicating a real bug, for
-> example:
-> 
-> during connection teardown / fastclose handling
-> races with subflow destruction
-> packets arriving after subflow cleanup
-> when the parent MPTCP socket is being destroyed
-> After commit ae155060247b ("mptcp: fix duplicate reset on fastclose"),
-> these edge cases became easier to trigger and the WARN started firing
-> spuriously, causing noisy reports but no functional issues.
-> 
-> Refine the state check in subflow_data_ready() so that:
-> 
-> if the socket is in a known teardown/cleanup situation
-> (SOCK_DEAD, zero parent refcnt, or repair/recv-queue handling),
-> the function simply returns without emitting a warning; and
-> 
-> for other unexpected states, we emit a ratelimited pr_debug() to
-> aid debugging, instead of a WARN_ON_ONCE() that can panic
-> fuzzing/CI kernels or flood logs in production.
-> 
-> This suppresses the bogus warning while preserving diagnostics for any
-> real state machine bugs.
-> 
-> Fixes: ae155060247b ("mptcp: fix duplicate reset on fastclose")
-> Reported-by: kitta <kitta@linux.alibaba.com>
-> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=220856
-
-I don't think you should continue using Bugzilla: it is no longer used
-for the Networking subsystem, and it might be shutdown soon. Instead,
-please check the instructions in the MAINTAINERS file: for general
-Networking issues, send them by email. For MPTCP, there is a bug tracker
-on GitHub.
-
-Note that you don't need to open an issue somewhere if you already have
-the patch: simply put all the details in the commit message, e.g.
-stacktrace, reproducer, conditions, etc. You only need to open an issue
-somewhere if you need to include large files, or if you need help to fix
-it. I know Checkpatch will ask you to add a link after a "Reported-by"
-but that's only valid if the initial report was done publicly: in your
-case, you can then ignore this warning.
-
-> Co-developed-by: kitta <kitta@linux.alibaba.com>
-
-(Note that a Co-developed-by should be followed by a Signed-off-by from
-the same person.)
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/db1ac6b5d91d
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1032600
 
 
-https://docs.kernel.org/process/submitting-patches.html#when-to-use-acked-by-cc-and-co-developed-by
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
 
-While at it, please next time use the 'net' prefix, see:
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
 
-  https://docs.kernel.org/process/maintainer-netdev.html
+For more details:
 
-> Signed-off-by: Evan Li <evan.li@linux.alibaba.com>
-> ---
->  net/mptcp/subflow.c | 24 +++++++++++++++++++++---
->  1 file changed, 21 insertions(+), 3 deletions(-)
-> 
-> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> index 86ce58ae5..01d30679c 100644
-> --- a/net/mptcp/subflow.c
-> +++ b/net/mptcp/subflow.c
-> @@ -1524,9 +1524,27 @@ static void subflow_data_ready(struct sock *sk)
->  		return;
->  	}
->  
-> -	WARN_ON_ONCE(!__mptcp_check_fallback(msk) && !subflow->mp_capable &&
-> -		     !subflow->mp_join && !(state & TCPF_CLOSE));
-> -
-> +	/* Check if subflow is in a valid state. Skip warning for legitimate edge cases
-> +	 * such as connection teardown, race conditions, or when parent is being destroyed.
-> +	 */
-> +	if (!__mptcp_check_fallback(msk) && !subflow->mp_capable &&
-> +	    !subflow->mp_join && !(state & TCPF_CLOSE)) {
-> +	/* Legitimate cases where this can happen:
-> +	 * 1. During connection teardown
-> +	 * 2. Race conditions with subflow destruction
-> +	 * 3. Packets arriving after subflow cleanup
-> +	 * Log debug info but don't warn loudly in production.
-> +	 */
-> +	if (unlikely(tcp_sk(sk)->repair_queue == TCP_RECV_QUEUE ||
-> +	    sock_flag(sk, SOCK_DEAD) || !refcount_read(&parent->sk_refcnt))) {
-> +			/* Expected during cleanup, silently return */
-> +			return;
-> +	}
-> +	/* For other cases, still log for debugging but don't WARN */
-> +	if (net_ratelimit())
-> +		pr_debug("MPTCP: subflow in unexpected state sk=%p parent=%p state=%u\n",
-> +			 sk, parent, state);
-> +	}
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
 
-The warning was there to catch issues: it is *not* normal to have to
-process data in this state. I think it is better to prevent
-subflow_data_ready() to be called in this state than ignoring the
-warning, even if the warnings you saw didn't cause visible functional
-issues. Please also note that a pr_debug() will very likely not be
-caught in case of real issues: a WARN_ON_ONCE should have been kept.
 
-Regarding this issue, it was already tracked in our bug tracker, see:
-
-  https://github.com/multipath-tcp/mptcp_net-next/issues/586
-
-There are two patches from Paolo in our tree addressing it:
-
-  https://lore.kernel.org/mptcp/cover.1764928598.git.pabeni@redhat.com
-
-I was waiting to upstream them because they are not urgent and net
-maintainers are busy at the LPC for the moment, but I guess I should
-still send them to avoid syzkaller instances to complain about these
-issues. I will try to do that today.
-
-Do you mind checking if they fix the issues on your side please?
-
-pw-bot: cr
-
->  	if (mptcp_subflow_data_available(sk)) {
->  		mptcp_data_ready(parent, sk);
->  
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
 
 Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
-
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
