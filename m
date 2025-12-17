@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FC15223710
-	for <mptcp@lists.linux.dev>; Tue, 16 Dec 2025 16:38:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 437AB27B353
+	for <mptcp@lists.linux.dev>; Wed, 17 Dec 2025 15:50:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765903138; cv=none; b=Ycnn4NjRC9nnb6TXnD+El9eTVTAvhIDQph4qbfIQn9RwmZRBt36R4Q3A+vPRU666CgwL6tEGt+JyYMivRSrbU4ncnMvZUSV+KpRPjYW17IAsHS23VV/62uXA2D4gadZXJHD26XcszDchLNpQV9/nyb4LP0vUgun/i+coGk7Qmq4=
+	t=1765986649; cv=none; b=Khzv1HJdVaVA0lHqe5uNzve8niLJy6JmLx4fbDNKQcXlOcnMa94k46d7p1ali1YbHZxYLGzU9/9c5QXAF7qGzT/42t9cbjm1jHBU7naMW7wHWdrs5/FYM3xstHRt7ypCmWuBLsl3CGDMa9M4pqUpzn1SFSVN9DQiHT4eiMzFceg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765903138; c=relaxed/simple;
-	bh=cJJRloXo6bgMJtvfpD2g+KNlM53nsktSimWrvkgmrJY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Fp1nCO39bh5oineCCKxPLNhQrM1LXHTHZuWaNFD5oBgrleN5CikgZyCECEa6uQLvjTBlgS3dLgpSjRn8OE4rVKx0VXcXSoBbleOeJO9g6I86H3h3AojVPEhv3hrt57FXaxtMBmffeANvmBOiZuReXPpnUpFf/HEc7PWierYXOiw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EhHYxAZe; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1765986649; c=relaxed/simple;
+	bh=MIc7FNhlnc973cIxhTVJEycMl6Q8OiP5gQ4Nv6NSPKI=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=rJxcyHbV58L2ii/QGrpafMonEX4Qf4A0Xu4hP/I8kJoyafDItOjsxuPFLaKzJeT+K8pYiqeF62z4wsL6hFKwOiosBqAL40/tW3744RVdfwiMfzI2DWDIEl+QmGWEl62dzrLy/Clo7yJHnjtUPC+uQlEuGtq/FVqV6rHCelllutU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K7CvJOab; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EhHYxAZe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8E83C4CEF1;
-	Tue, 16 Dec 2025 16:38:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K7CvJOab"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40E5BC4CEF5
+	for <mptcp@lists.linux.dev>; Wed, 17 Dec 2025 15:50:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765903137;
-	bh=cJJRloXo6bgMJtvfpD2g+KNlM53nsktSimWrvkgmrJY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=EhHYxAZeezEXTSz9PpLpCODud1glrNlgrAK9t8YjcsbPQyASNx6b286KXccWEh4Mg
-	 uWeb6soEbGDISZt9Ed3nDzBrvyqMH5V6C67V50nvPnNxkk4I2eCeq39GZCEMfT67HX
-	 p8ZW7AYo65fpsgRxZcjeOM1evinNYyZya212Nt74z5Y11EJnA72xOEL+61LrAXljzm
-	 yGKKi91FnU4yCqrwD/693oQhVvHseqUPIlTPj6fUrbCIgl5NTmwyW1ufmdE6z0OM4k
-	 ffRwbVnPMwZCJItMKCHK/hCrQmqFaljeNXvP1+MpC47wfrnZSBpmoRfGNb6LPgPeH1
-	 Wag38Y+jfQ+ag==
-Message-ID: <49d1fc83-5805-43ac-893b-c1913e84cdaf@kernel.org>
-Date: Tue, 16 Dec 2025 17:38:54 +0100
+	s=k20201202; t=1765986648;
+	bh=MIc7FNhlnc973cIxhTVJEycMl6Q8OiP5gQ4Nv6NSPKI=;
+	h=Date:Subject:From:To:References:In-Reply-To:From;
+	b=K7CvJOabtrT4XZ4ssZV3ozEgWQwWleMFrQngngpIcVUBpIB9t5OCmjoVMEdKB+2SP
+	 kLa8CW5WaHmV1LhhKyWuAOly93xb9r0Eh/hsbCEAW3y5VybZftfmQ8SFwW1x5Gk1WB
+	 Q+K76hH0unDmiYuZj8gj2N55J2ntL4wOa3EU/RWvqBH3AQc1KCpujh8SkxBSkgnVu3
+	 HtgopwrQnchln3xNa/tbL40lU1pSmVBXkRnMdt4itW/HZhggHnwgBsl8uBoPc1y5XX
+	 SCnrSUnaO9YtLO7XTTunspX+IcLH/QJpRCUKGjw60RTmI8bW7VxKh6tcez+aNBJ3ks
+	 42c7KIxwvW7lQ==
+Message-ID: <9100f797-6b3f-4f7a-aa06-576d2d2327b0@kernel.org>
+Date: Wed, 17 Dec 2025 16:50:45 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,11 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 mptcp-next 5/6] mptcp: better mptcp-level RTT estimator
+Subject: Re: [Weekly meetings] MoM - 3rd of December 2025
 Content-Language: en-GB, fr-BE
-To: Paolo Abeni <pabeni@redhat.com>, Mat Martineau <martineau@kernel.org>
-Cc: mptcp@lists.linux.dev
-References: <cover.1763625391.git.pabeni@redhat.com>
- <6ffc28b03d35f1b5698ff9ed6b22bd3e82fc81be.1763625391.git.pabeni@redhat.com>
 From: Matthieu Baerts <matttbe@kernel.org>
+To: MPTCP Linux <mptcp@lists.linux.dev>
+References: <c4088783-0c32-4cbf-827d-4fa0811e5512@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -86,57 +84,26 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <6ffc28b03d35f1b5698ff9ed6b22bd3e82fc81be.1763625391.git.pabeni@redhat.com>
+In-Reply-To: <c4088783-0c32-4cbf-827d-4fa0811e5512@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Paolo, Mat,
+Hello,
 
-On 20/11/2025 09:39, Paolo Abeni wrote:
-> The current MPTCP-level RTT estimator has several issues. On high speed
-> links, the MPTCP-level receive buffer auto-tuning happens with a frequency
-> well above the TCP-level's one. That in turn can cause excessive/unneeded
-> receive buffer increase.
-> 
-> On such links, the initial rtt_us value is considerably higher
-> than the actual delay, and the current mptcp_rcv_space_adjust() updates
-> msk->rcvq_space.rtt_us with a period equal to the such field previous
-> value. If the initial rtt_us is 40ms, its first update will happen after
-> 40ms, even if the subflows see actual RTT orders of magnitude lower.
-> 
-> Additionally:
-> - setting the msk rtt to the maximum among all the subflows RTTs makes DRS
-> constantly overshooting the rcvbuf size when a subflow has considerable
-> higher latency than the other(s).
-> 
-> - during unidirectional bulk transfers with multiple active subflows, the
-> TCP-level RTT estimator occasionally sees considerably higher value than
-> the real link delay, i.e. when the packet scheduler reacts to an incoming
-> ack on given subflow pushing data on a different subflow.
-> 
-> - currently inactive but still open subflows (i.e. switched to backup mode)
-> are always considered when computing the msk-level rtt.
-> 
-> Address the all the issues above with a more accurate RTT estimation
-> strategy: the MPTCP-level RTT is set to the minimum of all the subflows
-> actually feeding data into the MPTCP receive buffer, using a small sliding
-> window.
-> 
-> While at it, also use EWMA to compute the msk-level scaling_ratio, to that
-> mptcp can avoid traversing the subflow list is mptcp_rcv_space_adjust().
-> 
-> Use some care to avoid updating msk and ssk level fields too often.
+On 05/12/2025 19:25, Matthieu Baerts wrote:
 
-FYI, it looks like the recent "simult_flows" instabilities are due to
-this patch, see this ticket for more details:
+(...)
 
-  https://github.com/multipath-tcp/mptcp_net-next/issues/607
+> Next meeting:
+>     - Next one on Wednesday, the 17th of December.
+>     - /!\ Note: this meeting will maybe be cancelled: net-next will still be closed, post LPC, pre holiday period, etc.
 
-Good that there is no hurry to fix this, it is only in our tree for the
-moment. I could revert it, but anyway, it looks like there are other
-bugs in net, e.g. it is not possible to connect to it at the beginning
-via vsock.
+FYI, this meeting has not been cancelled. Feel free to join in ~40 minutes.
 
+>     - /!\ The one on the 31st of December will be cancelled. Next one on the 14st of January
+>     - 17:30 UTC (8.30am PDT, 5.30pm CEST, 11.30pm CST)
+>     - Still open to everyone!
+>     - https://annuel2.framapad.org/p/mptcp_upstreaming_20251217
 Cheers,
 Matt
 -- 
