@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 437AB27B353
-	for <mptcp@lists.linux.dev>; Wed, 17 Dec 2025 15:50:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86B5E2D0618;
+	Thu, 18 Dec 2025 17:33:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765986649; cv=none; b=Khzv1HJdVaVA0lHqe5uNzve8niLJy6JmLx4fbDNKQcXlOcnMa94k46d7p1ali1YbHZxYLGzU9/9c5QXAF7qGzT/42t9cbjm1jHBU7naMW7wHWdrs5/FYM3xstHRt7ypCmWuBLsl3CGDMa9M4pqUpzn1SFSVN9DQiHT4eiMzFceg=
+	t=1766079212; cv=none; b=YppU5Rp7i3sSst0pC3TWTzWWMfYm+xg/eDM9piIcvdQ0rKa5/S9daA8lObuAsHvB+yqLRhYO5g5QWL5Y4/tg+FElmppwPJb5x7/QB7VvZW/o9ZFLZy3TrXYIWkT/8yw4Ti8gOlLMLT2/Q0849U3mJd1VBqcmgmjBEf0iPNGxqEw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765986649; c=relaxed/simple;
-	bh=MIc7FNhlnc973cIxhTVJEycMl6Q8OiP5gQ4Nv6NSPKI=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=rJxcyHbV58L2ii/QGrpafMonEX4Qf4A0Xu4hP/I8kJoyafDItOjsxuPFLaKzJeT+K8pYiqeF62z4wsL6hFKwOiosBqAL40/tW3744RVdfwiMfzI2DWDIEl+QmGWEl62dzrLy/Clo7yJHnjtUPC+uQlEuGtq/FVqV6rHCelllutU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K7CvJOab; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1766079212; c=relaxed/simple;
+	bh=5nVAbK51knrR0fb7CK0nsXcw3klJffgdDO8uPL74BY0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uP+hYI9F4Cj1cqXP3By9uTdJaw7IaS9rLc17p3f8OXLFEBH2zCr4AIKrRR7qnvjoRxQmXPqODO1mcldAI5DMlAadEuTFPpMqPM54Tr5RXz6CFsWMYoH01XT5up1y7hw7Ms0MuNJSyEOJqJhBCbv8L0Avi/R8mI4kJUdNkhBxllE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lVCXvMch; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K7CvJOab"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40E5BC4CEF5
-	for <mptcp@lists.linux.dev>; Wed, 17 Dec 2025 15:50:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lVCXvMch"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4AB1C116D0;
+	Thu, 18 Dec 2025 17:33:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765986648;
-	bh=MIc7FNhlnc973cIxhTVJEycMl6Q8OiP5gQ4Nv6NSPKI=;
-	h=Date:Subject:From:To:References:In-Reply-To:From;
-	b=K7CvJOabtrT4XZ4ssZV3ozEgWQwWleMFrQngngpIcVUBpIB9t5OCmjoVMEdKB+2SP
-	 kLa8CW5WaHmV1LhhKyWuAOly93xb9r0Eh/hsbCEAW3y5VybZftfmQ8SFwW1x5Gk1WB
-	 Q+K76hH0unDmiYuZj8gj2N55J2ntL4wOa3EU/RWvqBH3AQc1KCpujh8SkxBSkgnVu3
-	 HtgopwrQnchln3xNa/tbL40lU1pSmVBXkRnMdt4itW/HZhggHnwgBsl8uBoPc1y5XX
-	 SCnrSUnaO9YtLO7XTTunspX+IcLH/QJpRCUKGjw60RTmI8bW7VxKh6tcez+aNBJ3ks
-	 42c7KIxwvW7lQ==
-Message-ID: <9100f797-6b3f-4f7a-aa06-576d2d2327b0@kernel.org>
-Date: Wed, 17 Dec 2025 16:50:45 +0100
+	s=k20201202; t=1766079211;
+	bh=5nVAbK51knrR0fb7CK0nsXcw3klJffgdDO8uPL74BY0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=lVCXvMchvYdILBBvbu5OyAWs9LRrOrvBZb1D5+yu6G5uvTkOugtyDekIkweav8dfi
+	 63GuUSP2oR/PzZ/nXnakh8X4F6gDre5Tz+Dre2uRXPj1X7R3+yGi2eDu0Uagv+Rf0b
+	 OP3DAGP7oPg9O1lMAj6fDFjUgJuhGeQZQXK8uWzjVpDAi5a+KSExWz5w1rJZ7JyRvI
+	 SQ+P42+j2yeReJYIJr5uZuKR+hib+KVuAw0j80G/3xC5Fd08NW7qdT2ooTGAbA9e9z
+	 YPJgxvTW9n6nM7iM6fBnM8m/ySJbpnh5hKckJ1YYRFSqKH+JLoBmTMbNqFEsnVSjtd
+	 qcjq8ujYg3XkQ==
+Message-ID: <cd5d45f7-0d76-4f82-849e-2f2c1544d907@kernel.org>
+Date: Thu, 18 Dec 2025 18:33:26 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,11 +35,17 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [Weekly meetings] MoM - 3rd of December 2025
+Subject: Re: [PATCH 44/44] net/mptcp: Change some dubious min_t(int, ...) to
+ min()
 Content-Language: en-GB, fr-BE
+To: david.laight.linux@gmail.com, linux-kernel@vger.kernel.org,
+ mptcp@lists.linux.dev, netdev@vger.kernel.org
+Cc: "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Mat Martineau <martineau@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+References: <20251119224140.8616-1-david.laight.linux@gmail.com>
+ <20251119224140.8616-45-david.laight.linux@gmail.com>
 From: Matthieu Baerts <matttbe@kernel.org>
-To: MPTCP Linux <mptcp@lists.linux.dev>
-References: <c4088783-0c32-4cbf-827d-4fa0811e5512@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -84,26 +90,37 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <c4088783-0c32-4cbf-827d-4fa0811e5512@kernel.org>
+In-Reply-To: <20251119224140.8616-45-david.laight.linux@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hello,
+Hi David,
 
-On 05/12/2025 19:25, Matthieu Baerts wrote:
+On 19/11/2025 23:41, david.laight.linux@gmail.com wrote:
+> From: David Laight <david.laight.linux@gmail.com>
+> 
+> There are two:
+> 	min_t(int, xxx, mptcp_wnd_end(msk) - msk->snd_nxt);
+> Both mptcp_wnd_end(msk) and msk->snd_nxt are u64, their difference
+> (aka the window size) might be limited to 32 bits - but that isn't
+> knowable from this code.
+> So checks being added to min_t() detect the potential discard of
+> significant bits.
+> 
+> Provided the 'avail_size' and return of mptcp_check_allowed_size()
+> are changed to an unsigned type (size_t matches the type the caller
+> uses) both min_t() can be changed to min().
 
-(...)
+Thank you for the patch!
 
-> Next meeting:
->     - Next one on Wednesday, the 17th of December.
->     - /!\ Note: this meeting will maybe be cancelled: net-next will still be closed, post LPC, pre holiday period, etc.
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-FYI, this meeting has not been cancelled. Feel free to join in ~40 minutes.
+I'm not sure what the status on your side: I don't know if you still
+plan to send a specific series for all the modifications in the net, but
+just in case, I just applied your patch in the MPTCP tree. I removed the
+"net/" prefix from the subject. I will send this patch with others for
+including in the net-next tree later on if you didn't do that in between.
 
->     - /!\ The one on the 31st of December will be cancelled. Next one on the 14st of January
->     - 17:30 UTC (8.30am PDT, 5.30pm CEST, 11.30pm CST)
->     - Still open to everyone!
->     - https://annuel2.framapad.org/p/mptcp_upstreaming_20251217
 Cheers,
 Matt
 -- 
