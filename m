@@ -1,132 +1,153 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E95173112C2
-	for <mptcp@lists.linux.dev>; Thu, 18 Dec 2025 17:42:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47641243376
+	for <mptcp@lists.linux.dev>; Thu, 18 Dec 2025 21:57:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766079743; cv=none; b=fxZxGjPqxjWbVRIJwiBIRQ4f0iPIekFNybtL9gc/OMGc/R2zBO3Hmv4Ii9Yt8CFFqVV9GK8p3w4eVuYQ+AJA5H491OxSql7bHv/NP/VaAoychbpI6mNVx6ZIIfrSV51Z0ur8pIRQIqzvn95kSsBSlaF8n+Ejzu00/GiEN9qUUeo=
+	t=1766095067; cv=none; b=Q3CK+UIVNRRSHIDdOK1s/+xhiMvvGbT/4QZw1KHeWlFmnaOlytHuNjsLsJbCWyZ0FbXugbOrgWluHakeKjnua1JuF60BFNEeW8Lvmg0dxEV/CtXRfZ8ECGfr0rkChnr+D7/El7HkCf3wc56ItiQwWqPzPAPpr0loOMuxnW/jxTg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766079743; c=relaxed/simple;
-	bh=WAoW49s+XlSp7xxdxNGp1qc6xl8Nk0EublPv/1KqPeE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CbXzLlv4reX0n2/hwh/9uONRXnbU8x+55tDRa1Uvh0i9l4/JGU9iDtqaxjOBDeRS8/gJFs/uo9kbh366etRto0wP4ph3zaHKwspFXIWmFuZUaYB2KB5ipfX/DFtAKZgf8tKtu9AGlDti9MpoKi96uieT3FiY0lsyoFC/P544MfU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iaQ06Mav; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1766095067; c=relaxed/simple;
+	bh=XKkT2tZz7eWrLkWjuPs0kYDLhUmTVv+sxfAAI2qI3aw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=SZkp9LveGTLp8v9VczrJfn0JdufjX+ihMEQ64x/52aG/zetoAh05SqAoupxlLguP38fYFmdGFff6gqLg3GcHiGaXyR+fw4PelmjWFXpKtGIhejwnx/WGqbdqeXJiRjCXo4eUnBJKyN88q6B01eF+RNKK/lN8UJ/jCxqdfb4peNw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dyARMYCX; arc=none smtp.client-ip=209.85.208.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iaQ06Mav"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1282C4CEFB;
-	Thu, 18 Dec 2025 17:42:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766079741;
-	bh=WAoW49s+XlSp7xxdxNGp1qc6xl8Nk0EublPv/1KqPeE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=iaQ06MavK0LMP2THYcirfvaMOcDqxR6r26Ozkeaw3EYM2ITGe0u8UFCjnfoWIyey2
-	 DJogEPCWZCP5BQNWaguRnBgXIM3um08Nb3QOk3/LipOGV8fhWpz9LPmbYHFY1quN2Y
-	 MxEj1vw1Anhqha6zK1emKAV+iRQkSxgU0fzZeKdGkDs01b/DrCLuXGSy4EtKQ+9Uhm
-	 25wiNW5LRBFxW6c5tNBXM9THoELYPDuedsGF6F9xnSIpe4oJTUhuCJ02nV2nb7+iBY
-	 FvJ6cZbnNXK++OQ5Or4+HqjgQhEvJBQUZCx1tRwZUOJwYcLldeBYtfmma51BDFMAv2
-	 Irm1LtzbVOxew==
-Message-ID: <f8242748-876a-40f3-8b0b-3e8b49c355f3@kernel.org>
-Date: Thu, 18 Dec 2025 18:42:18 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dyARMYCX"
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-37a34702a20so7372651fa.3
+        for <mptcp@lists.linux.dev>; Thu, 18 Dec 2025 13:57:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1766095063; x=1766699863; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=t/sjp0jU275es5lIyrSH+clAsUhfyndmb5HbMmt8PNE=;
+        b=dyARMYCX14KY0dzjN+eFHyZGerIhoiGSdkFWKdbBTzsbnnwrtuis08hldJIIuBiGqD
+         Bg9UScnP6eI8cZxEuvIpBsvPHm6grKznTS60XZMtmOuJnNGSQuotzHnDY7nR7war6s/A
+         bB2IIeo+vqccaOd+67Qf4DcZWL17rK3SHc/WqlyiujqX1ThZdzUJtuI9GlnaTfuP/Hm9
+         sCiGCa+02qj4QwG3c9dmSiFXLBpCBK5kuVEO0Xd443qxbgAqhejSxBhRhCvf4U2X5IJi
+         y/U3uIDVHSZeRz54gqkoARPduQNhMXYF7LG94UmSfoNyUiDY0GjPtaHrcktMZbsa7Mw+
+         hp+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1766095063; x=1766699863;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=t/sjp0jU275es5lIyrSH+clAsUhfyndmb5HbMmt8PNE=;
+        b=D6mi48jdFDIoJi1qbMoVW9YUvJJ5MgCI6Pm2hfgqCWMzzIvHqFdp9E1jMQxySAACde
+         d8/I8KP9l0H9sB1QCQY4/wJXrf32vcpQAxyoDNBbnu62uk9C58x6vAROKEROl+rQZ1Ni
+         +4cbrrSdoqW7UIJahHHD2tNKIGWiNTCY6kyrEz4IY1Kfa5QWYLaJr8JxF6o0j65dlc3S
+         QbrznmdTiPQalFhWlb78e7IW+zJB1OKXWQFTLN8EnHG1qf0FTWog+K/SA4flnfyvyLP9
+         4W2lQLlZU/Mp7nb7b/tgSb8XNC8iDV2tUqpuLkVXrYKz5Bj9adVejcED+FO76xomPJKi
+         MFqA==
+X-Forwarded-Encrypted: i=1; AJvYcCV6HVy4Yx9FZYCGN9Gz5WseE3PwonK4kDjUsJJNKKBskUuWsBtOSRVEalZsKo3/RvMF7RWI4Q==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwOPXra2ncI0MLyYIuLwQm3BX4EcCLxfndlh0P/irkR9LTy9DjV
+	VMECAvUHB/KR4pUi/DtwewD2hJXRKieM0WxX4RZunA5/vuNum8kl6eK6rrYbDw==
+X-Gm-Gg: AY/fxX6hiZ2nxgpcwHnGHGhmmBBjmzaduxLkGkzIqqa95b4+cBgYLvocl53imewvNwx
+	4amzX1WuwCZEXAWGsN+YRIPCs0O8dGcNuza60mvVFxg1cBMCathkvoXiKrA5JExX5V96PvuXRvy
+	sel/4l4lGON4rA9zkPhTeTTZUZVI4qca2skyk2YeOleotyPqZDlWGJCCUyUY9acfFxFlHCCyWCw
+	3w2jrpOQLMlyoShRGe5LwhLkiIDowW8rWj8vmAYU9lMe5ZkwfEKpp+YnZsuJ5euJRdCy695niA5
+	CljF2PRwmUl858jER+qh4yxhpFFH1LKnHQUipEK3sZ9W+hO8YtGKn1sc8sC8OshJy0ZbRbefKjb
+	V+jnDytMFTUuNEDP/YmeL9A1dQa/rS0a/qIUVuKSMtSV6Spm0pXjxX5aIPIEfzuODfao9D4tSaJ
+	/lcmkd4vRKSh6Cj64fixmQDwbLoCAsN0e/fneKa3MH4LaI+bPHMmxy7UMaWHOnPs4=
+X-Google-Smtp-Source: AGHT+IHQbU+iOqzaiFiPp8MK9D9JLLWz5I3nysW2I9Q92SyiIPFWBxMnrn97EMLGECK7bx8NAmxYpg==
+X-Received: by 2002:a05:600c:4fc6:b0:465:a51d:d4 with SMTP id 5b1f17b1804b1-47d1953b768mr4547825e9.6.1766088919259;
+        Thu, 18 Dec 2025 12:15:19 -0800 (PST)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47be27c2260sm56813515e9.15.2025.12.18.12.15.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Dec 2025 12:15:18 -0800 (PST)
+Date: Thu, 18 Dec 2025 20:15:17 +0000
+From: David Laight <david.laight.linux@gmail.com>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: linux-kernel@vger.kernel.org, mptcp@lists.linux.dev,
+ netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Mat
+ Martineau <martineau@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Subject: Re: [PATCH 44/44] net/mptcp: Change some dubious min_t(int, ...) to
+ min()
+Message-ID: <20251218201517.2f2d91d4@pumpkin>
+In-Reply-To: <cd5d45f7-0d76-4f82-849e-2f2c1544d907@kernel.org>
+References: <20251119224140.8616-1-david.laight.linux@gmail.com>
+	<20251119224140.8616-45-david.laight.linux@gmail.com>
+	<cd5d45f7-0d76-4f82-849e-2f2c1544d907@kernel.org>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC mptcp-next v4 00/10] MPTCP KTLS support
-Content-Language: en-GB, fr-BE
-To: Geliang Tang <geliang@kernel.org>
-Cc: Geliang Tang <tanggeliang@kylinos.cn>, mptcp@lists.linux.dev,
- Mat Martineau <martineau@kernel.org>
-References: <cover.1765505775.git.tanggeliang@kylinos.cn>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
- YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
- c7SPFMpMesgpcu1xFt0F6bcxE+0ojRtSCZ5HDElKlHJNYtD1uwY4UYVGWUGCF/+cY1YLmtfb
- WdNb/SFo+Mp0HItfBC12qtDIXYvbfNUGVnA5jXeWMEyYhSNktLnpDL2gBUCsdbkov5VjiOX7
- CRTkX0UgNWRjyFZwThaZADEvAOo12M5uSBk7h07yJ97gqvBtcx45IsJwfUJE4hy8qZqsA62A
- nTRflBvp647IXAiCcwWsEgE5AXKwA3aL6dcpVR17JXJ6nwHHnslVi8WesiqzUI9sbO/hXeXw
- TDSB+YhErbNOxvHqCzZEnGAAFf6ges26fRVyuU119AzO40sjdLV0l6LE7GshddyazWZf0iac
- nEhX9NKxGnuhMu5SXmo2poIQttJuYAvTVUNwQVEx/0yY5xmiuyqvXa+XT7NKJkOZSiAPlNt6
- VffjgOP62S7M9wDShUghN3F7CPOrrRsOHWO/l6I/qJdUMW+MHSFYPfYiFXoLUZyPvNVCYSgs
- 3oQaFhHapq1f345XBtfG3fOYp1K2wTXd4ThFraTLl8PHxCn4ywARAQABzSRNYXR0aGlldSBC
- YWVydHMgPG1hdHR0YmVAa2VybmVsLm9yZz7CwZEEEwEIADsCGwMFCwkIBwIGFQoJCAsCBBYC
- AwECHgECF4AWIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZUDpDAIZAQAKCRD2t4JPQmmgcz33
- EACjROM3nj9FGclR5AlyPUbAq/txEX7E0EFQCDtdLPrjBcLAoaYJIQUV8IDCcPjZMJy2ADp7
- /zSwYba2rE2C9vRgjXZJNt21mySvKnnkPbNQGkNRl3TZAinO1Ddq3fp2c/GmYaW1NWFSfOmw
- MvB5CJaN0UK5l0/drnaA6Hxsu62V5UnpvxWgexqDuo0wfpEeP1PEqMNzyiVPvJ8bJxgM8qoC
- cpXLp1Rq/jq7pbUycY8GeYw2j+FVZJHlhL0w0Zm9CFHThHxRAm1tsIPc+oTorx7haXP+nN0J
- iqBXVAxLK2KxrHtMygim50xk2QpUotWYfZpRRv8dMygEPIB3f1Vi5JMwP4M47NZNdpqVkHrm
- jvcNuLfDgf/vqUvuXs2eA2/BkIHcOuAAbsvreX1WX1rTHmx5ud3OhsWQQRVL2rt+0p1DpROI
- 3Ob8F78W5rKr4HYvjX2Inpy3WahAm7FzUY184OyfPO/2zadKCqg8n01mWA9PXxs84bFEV2mP
- VzC5j6K8U3RNA6cb9bpE5bzXut6T2gxj6j+7TsgMQFhbyH/tZgpDjWvAiPZHb3sV29t8XaOF
- BwzqiI2AEkiWMySiHwCCMsIH9WUH7r7vpwROko89Tk+InpEbiphPjd7qAkyJ+tNIEWd1+MlX
- ZPtOaFLVHhLQ3PLFLkrU3+Yi3tXqpvLE3gO3LM7BTQRV4/npARAA5+u/Sx1n9anIqcgHpA7l
- 5SUCP1e/qF7n5DK8LiM10gYglgY0XHOBi0S7vHppH8hrtpizx+7t5DBdPJgVtR6SilyK0/mp
- 9nWHDhc9rwU3KmHYgFFsnX58eEmZxz2qsIY8juFor5r7kpcM5dRR9aB+HjlOOJJgyDxcJTwM
- 1ey4L/79P72wuXRhMibN14SX6TZzf+/XIOrM6TsULVJEIv1+NdczQbs6pBTpEK/G2apME7vf
- mjTsZU26Ezn+LDMX16lHTmIJi7Hlh7eifCGGM+g/AlDV6aWKFS+sBbwy+YoS0Zc3Yz8zrdbi
- Kzn3kbKd+99//mysSVsHaekQYyVvO0KD2KPKBs1S/ImrBb6XecqxGy/y/3HWHdngGEY2v2IP
- Qox7mAPznyKyXEfG+0rrVseZSEssKmY01IsgwwbmN9ZcqUKYNhjv67WMX7tNwiVbSrGLZoqf
- Xlgw4aAdnIMQyTW8nE6hH/Iwqay4S2str4HZtWwyWLitk7N+e+vxuK5qto4AxtB7VdimvKUs
- x6kQO5F3YWcC3vCXCgPwyV8133+fIR2L81R1L1q3swaEuh95vWj6iskxeNWSTyFAVKYYVskG
- V+OTtB71P1XCnb6AJCW9cKpC25+zxQqD2Zy0dK3u2RuKErajKBa/YWzuSaKAOkneFxG3LJIv
- Hl7iqPF+JDCjB5sAEQEAAcLBXwQYAQIACQUCVeP56QIbDAAKCRD2t4JPQmmgc5VnD/9YgbCr
- HR1FbMbm7td54UrYvZV/i7m3dIQNXK2e+Cbv5PXf19ce3XluaE+wA8D+vnIW5mbAAiojt3Mb
- 6p0WJS3QzbObzHNgAp3zy/L4lXwc6WW5vnpWAzqXFHP8D9PTpqvBALbXqL06smP47JqbyQxj
- Xf7D2rrPeIqbYmVY9da1KzMOVf3gReazYa89zZSdVkMojfWsbq05zwYU+SCWS3NiyF6QghbW
- voxbFwX1i/0xRwJiX9NNbRj1huVKQuS4W7rbWA87TrVQPXUAdkyd7FRYICNW+0gddysIwPoa
- KrLfx3Ba6Rpx0JznbrVOtXlihjl4KV8mtOPjYDY9u+8x412xXnlGl6AC4HLu2F3ECkamY4G6
- UxejX+E6vW6Xe4n7H+rEX5UFgPRdYkS1TA/X3nMen9bouxNsvIJv7C6adZmMHqu/2azX7S7I
- vrxxySzOw9GxjoVTuzWMKWpDGP8n71IFeOot8JuPZtJ8omz+DZel+WCNZMVdVNLPOd5frqOv
- mpz0VhFAlNTjU1Vy0CnuxX3AM51J8dpdNyG0S8rADh6C8AKCDOfUstpq28/6oTaQv7QZdge0
- JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <cover.1765505775.git.tanggeliang@kylinos.cn>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+On Thu, 18 Dec 2025 18:33:26 +0100
+Matthieu Baerts <matttbe@kernel.org> wrote:
 
-On 12/12/2025 03:27, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
+> Hi David,
 > 
-> v4:
->  - split "tls: add MPTCP protocol support" into smaller, more
->    focused patches.
->  - a new mptcp_inq helper has been implemented instead of directly
->    using mptcp_inq_hint to fix the issue mentioned in [1].
->  - add sk_is_msk helper.
->  - the 'expect' parameter will no longer be added to sock_test_tcpulp.
->    Instead, SOCK_TEST_TCPULP items causing the tests failure will be
->    directly removed.
->  - remove the "TCP KTLS" tests, keeping only the MPTCP-related ones.
+> On 19/11/2025 23:41, david.laight.linux@gmail.com wrote:
+> > From: David Laight <david.laight.linux@gmail.com>
+> > 
+> > There are two:
+> > 	min_t(int, xxx, mptcp_wnd_end(msk) - msk->snd_nxt);
+> > Both mptcp_wnd_end(msk) and msk->snd_nxt are u64, their difference
+> > (aka the window size) might be limited to 32 bits - but that isn't
+> > knowable from this code.
+> > So checks being added to min_t() detect the potential discard of
+> > significant bits.
+> > 
+> > Provided the 'avail_size' and return of mptcp_check_allowed_size()
+> > are changed to an unsigned type (size_t matches the type the caller
+> > uses) both min_t() can be changed to min().  
+> 
+> Thank you for the patch!
+> 
+> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> 
+> I'm not sure what the status on your side: I don't know if you still
+> plan to send a specific series for all the modifications in the net, but
+> just in case, I just applied your patch in the MPTCP tree. I removed the
+> "net/" prefix from the subject. I will send this patch with others for
+> including in the net-next tree later on if you didn't do that in between.
 
-Thank you for the new version.
+I'll go through them again at some point.
+I'll check against 'next' (but probably not net-next).
+I actually need to look at the ones that seemed like real bugs when I
+did an allmodconfig build - that got to over 200 patches to get 'clean'.
 
-We briefly looked at the series with Mat yesterday, and we think that
-this series would be better accepted by the KTLS maintainers if function
-pointers are used instead of all the sk_is_msk() you added in many
-places. In other words, adding a new layer, where "struct tls_strparser"
-(or another one?) would have new fields with function pointer to call
-tcp_inq() or mptcp_inq(), etc. e.g. strp->ops->tcp_inq(strp->sk).
+It would be nice to get rid of a lot of the min_t(), but I might try
+to attack the dubious ones rather than the ones that appear to make
+no difference.
 
-MPTCP would then only be checked once at the initialisation, not before
-each call.
+I might propose some extra checks in minmax.h that would break W=1 builds.
+Detecting things like min_t(u8, u32_value, 0xff) where the cast makes the
+comparison always succeed.
+In reality any calls with casts to u8 and u16 are 'dubious'.
 
-Notes: If adding an indirection is an issue for the KTLS maintainers,
-INDIRECT_CALL_*(...) macros can be used. Also, it might be good to send
-the RFC to KTLS people, but probably best to wait for the read-sock
-series to be in net-next? But if you are not sure about the new
-suggested way, I guess it is always possible to email KTLS maintainers,
-and ask for their feedback.
+That and changing checkpatch.pl to not suggest min_t() at all, and
+to reject the more dubious uses.
+After all with:
+	min(x, (int)y)
+it is clear to the reader that 'y' is being possibly truncated and converted
+to a signed value, but with:
+	min_t(int, x, y)
+you don't know which value needed the cast (and the line isn't even shorter).
+But what I've found all to often is actually:
+	a = min_t(typeof(a), x, y);
+and the similar:
+	x = min_t(typeof(x), x, y);
+where the type of the result is used and high bits get discarded.
 
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
+I've just been trying to build with #define clamp_val clamp.
+That requires a few minor changes and I'm pretty sure shows up
+a real bug.
+
+	David
+
+> 
+> Cheers,
+> Matt
 
