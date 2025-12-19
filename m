@@ -1,33 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C1C035CBAE;
-	Fri, 19 Dec 2025 15:51:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0834427FB28
+	for <mptcp@lists.linux.dev>; Fri, 19 Dec 2025 18:02:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766159500; cv=none; b=cMUKWysVdVJqZ/A7DLACFtw3okrasrd+++08dEkSNWKsEwxL7X6hsUHPlZWTekvBPhPp18gEL81dVVOFlBwOJQSb3T4O/FcDwClTU4DovOYCASrL2gMBVHauE97MYjIMmPnFyuZFoRa7TwZojK5GUvklrK+b2W90k7rk9EbFWVs=
+	t=1766167322; cv=none; b=C1xnQG4JfzlZHtoT5P6jc+Dbvss0h0CDNHrBPkIaUFZEyZo/s6CyL0oL7SB6E0Ha/Za2UC3BIcG28gF9xTtjMtse0U7XUZFKfyXbKCm8oDxRhCDUsAZJ4UV30rLwlpyk9DFhLhaEijvLKQK5syK1ytDNZ7j3dnkqcBYwPZStbUw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766159500; c=relaxed/simple;
-	bh=RHg8X/l3glpqIdUZM5I2Tv5UDvNNl7f0frkrqi1P0FA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Zsu15eXuGcDQYMGYJXBGcT9WYs8jKME8auh5HKGZ9ejUBcsYPB3vhdADOxBbISwmd2/r/1s8gfmeAyLkULm84TfRwRfLiUXFXrF9IGKtyLp8dt6lf4lqXSgE6vhNWii97sTCLXeJyx/bCpLa5VjBvBp7lq6ojFctJjAFvhM0N04=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fiEknfgd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1766167322; c=relaxed/simple;
+	bh=3kELHqp8CXZFxiVBxW98Xuq7YPB4vACIsOJQXf19sN4=;
+	h=Message-ID:Date:MIME-Version:From:To:Subject:Content-Type; b=QVVJ3ss4MWrJeyErnvDArFm0pyH2BxrORmFFW9ZsnRlRgiAfVfq9uhCaE1ucYnla7Z9AmHpF8rdhLwaSRvJ8p3b5eALbWRz7U+JVB5GQ7MuvQC3EUlz2JbZ1/JHqYcSyysRISMnqpzPuLksa373igWO/IJzr5RE2pjUE4rm1Cg0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LZiW537l; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fiEknfgd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE1B4C4CEF1;
-	Fri, 19 Dec 2025 15:51:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LZiW537l"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E831C4CEF1
+	for <mptcp@lists.linux.dev>; Fri, 19 Dec 2025 18:02:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766159499;
-	bh=RHg8X/l3glpqIdUZM5I2Tv5UDvNNl7f0frkrqi1P0FA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=fiEknfgd5eKhTjXqh8hELSxmFy7F/bd0avN12+g8X8vLEwdSmLtyRa/R/Efm3WISq
-	 kyr9MQBoEFypfXavlMhgbdG32mWMGRpaaGZEVqAsnPhgYl0vv/6+pQoigSVeBwq3rh
-	 58uel6Yo2zYP36HgU6+sYXPgCjFK5JIaDzFdH+SdzHGqiLPnqkMPyC/4qN8r7mFXL/
-	 JOhsYUzLq/t6RBe9aM81m/3+Zz17pBqjQ8dTMdxvLi2w+76HjSY8aM756d/c2Wo7AZ
-	 78/cIxE3riP0IAeCVJLYNjHXa9DghI77R+GcF5hhwf6iql9uJNKEe9AN3PVKlkc2eU
-	 JjE9yeY+bpO6A==
-Message-ID: <5cec0446-92d8-4348-8190-9491bffa1538@kernel.org>
-Date: Fri, 19 Dec 2025 16:51:36 +0100
+	s=k20201202; t=1766167321;
+	bh=3kELHqp8CXZFxiVBxW98Xuq7YPB4vACIsOJQXf19sN4=;
+	h=Date:From:To:Subject:From;
+	b=LZiW537lvAFJJTZQ/LfYp/ghDS79YxGoJ4QE5vmRCF0exoMawbuwrIZkjCZNMLG/n
+	 1DKiYH1ZxRJpaht10UiIwJVBeES1zvcoq/Hto/ywSMaE26/ZA5hbG8IW4KS0RapTFL
+	 AXbQ2ouG9CnSWwdikMoMi+D66mnaCyeh/IbFeV31sIkImXZBmt07AJIq+suO4Xk3N5
+	 Xkf/qbq4+6LiwPS6ZeIZ3z98fQGlDzSgbetAQLa2CN6plW7W7+/rsbvN+m/M7MP3ua
+	 H+7kH5OSxboUoBNoBdnHo8wCRdy9nCKD7B8fLlH/wTeaDJTboiKvaymckL0ojkiGQ/
+	 Lm2D/4ACgE4HA==
+Message-ID: <04d68786-d421-4f8e-8f24-bd6893fff414@kernel.org>
+Date: Fri, 19 Dec 2025 19:01:59 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,17 +34,10 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: MPTCP tree in linux-next
-Content-Language: en-GB, fr-BE
-To: Mark Brown <broonie@kernel.org>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>,
- MPTCP Linux <mptcp@lists.linux.dev>, linux-next@vger.kernel.org,
- Mat Martineau <martineau@kernel.org>
-References: <f39f437e-7ff9-4f52-bc6f-974f54f42260@kernel.org>
- <38d74d9e-9da0-41b8-9721-3de9aa355c21@sirena.org.uk>
- <09460b1f-ce96-4d8d-a94d-0d0890981cb0@kernel.org>
- <56a0f49e-b5ab-47f2-a0b2-2ad4e991d056@sirena.org.uk>
 From: Matthieu Baerts <matttbe@kernel.org>
+Content-Language: en-GB, fr-BE
+To: MPTCP Linux <mptcp@lists.linux.dev>
+Subject: MPTCP CI: now validating stable versions
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -90,46 +82,48 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <56a0f49e-b5ab-47f2-a0b2-2ad4e991d056@sirena.org.uk>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 19/12/2025 16:49, Mark Brown wrote:
-> On Fri, Dec 19, 2025 at 04:31:25PM +0100, Matthieu Baerts wrote:
->> On 19/12/2025 15:30, Mark Brown wrote:
->>> On Fri, Dec 19, 2025 at 01:35:51PM +0100, Matthieu Baerts wrote:
-> 
->> If 'linux-next' already contains a merge between 'net' and 'net-next',
->> maybe it is fine to merge a branch also containing this merge? But I
->> guess that's possibly not recommended if conflicts are solved differently.
-> 
-> Yeah, if the resolution is the same it's not an issue - it's if they
-> diverge somehow that there's a concern.
-> 
->> Perhaps it is enough to work in a "best-effort" way and to provide a
->> "pending-fixes" branch with only fixes on top of 'net', and "for-next"
->> with patches that applies on top of "net-next". Conflicted patches are
->> skipped until the next 'net' / 'net-next' sync.
-> 
-> You could always start with that and figure out the complicated stuff
-> later.
+Hello,
 
-Indeed, I will do that!
+FYI, a new job has recently been added, validating stable versions:
 
->>> If you were to switch to sending a PR of the actual commits in -next
->>> that'd make life easier but that'd need you to work out the workflow
->>> with whoever you're sending the patches to.  I guess you could adopt a
->>> hybrid flow where you use TopGit with regeneration until you send the PR
->>> and then freeze the patches included in the PR?  You could use the PR as
->>> a base for new stuff while it's in flight.  There are trees that are
->>> managed in a patch queues that use a workflow a bit like that.
-> 
->> Indeed, it might be better to do that. I will check later to put that in
->> place. I guess we mainly have to change the way patches are sent.
-> 
-> Sounds good.
+  https://github.com/multipath-tcp/mptcp_net-next/actions/workflows/stable.yml
 
-Thank you, I will contact you later when this new workflow is in place!
+Results are visible in "flakes" webui + IRC (#mptcp-ci)
+
+  https://ci-results.mptcp.dev/flakes.html
+
+You can see the different results by selecting a "Version" (top left),
+e.g.
+
+  https://ci-results.mptcp.dev/flakes.html?branch=stable-6.12
+
+It is using the stable patches that have been queued but not released
+yet [1] + pending MPTCP ones available in our patchwork [2], with the
+kernel version in the patch subject.
+
+
+Note that once a week (Sunday), this job is using the selftests from the
+'export' branch, e.g.
+
+  https://ci-results.mptcp.dev/flakes.html?branch=latest-6.12
+
+
+It is important to keep in mind that some tests might be failing
+because:
+
+- tests are expecting a fix which has not been backported to stable yet,
+  especially when using the selftests from the export branch.
+- there might be a behaviour change, but a modification is needed in
+  stable packetdrill branches, etc.
+
+
+It looks important to fix (real) issues from stable in priority.
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+[2] https://patchwork.kernel.org/project/mptcp/list/?state=*
 
 Cheers,
 Matt
