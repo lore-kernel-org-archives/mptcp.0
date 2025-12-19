@@ -1,33 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E99EF2EC541;
-	Fri, 19 Dec 2025 10:48:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BFC134C822;
+	Fri, 19 Dec 2025 12:35:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766141326; cv=none; b=PfUp8feIqYgbMPyKfW16U+sTGE5z1eKabEUJWdQ+iQ+YFDN1imYSNlJQ3+t6ku7U8a9wUscowpcptMJzU9qURCfSpIqTKj77ze2K+hCY7u5AGti9+P22+JFxdscqFjXukYrBcf4hWTfRd+GdtxFryy6IImlBHcgIteezJ+roVXE=
+	t=1766147756; cv=none; b=WbeyRGegjiH6c0GqllMLErLXOuecXx8WeZURaBV2R0rw/6K1eiR9uRKOECfLEpo5XZwgNoxbpe1pVRKfhfslbviwA/2wHAdTpLvuZp10jVfiG/vy7VGXw84gngKGY+SuhiqHNindqTadsvxKVAvYoaCYGH8UWZWOvMdPxXSncyw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766141326; c=relaxed/simple;
-	bh=YjLoTYKDjQc7ykxQOyqOUVAmPo1a4U7SoiPnS819chY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=laYrgEIlbJeQFqQ1Eha/tkUIMFbLwiHzevx3YTqXFCrG8f3PpSEvkibFuToFXuXjyjIPeTAxY7KPN2yjDQiq2osMO7SDMneYK96jWvHmj6yHqjEQ1nE7bfZNEVQ20Iz/AYdDX6V5Bn0gFl542enVhBC1lvIl7VCAmLki5nd72Hc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L7bqolvB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1766147756; c=relaxed/simple;
+	bh=9zYOtg+wFL7dDm3vqw07D5tk1iNur6XnZok5rS3Up8A=;
+	h=Message-ID:Date:MIME-Version:From:To:Cc:Subject:Content-Type; b=ezu88m41U9D5iY+gxe2J7IBDU8MUIoeshUfteZojlOz9gL0tKEBbEFQMaP24HMxmOxlQUMyAFSEsksxnTn0w84hLNecqOSYw0RIhAvHJ8/3ALo1vHjoNYKn/+WWzbqcGPdoh/09Yt0FhaqlfJDjsYu87DkMiKgoi3Di43xq3xM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l5cc4x0G; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L7bqolvB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61349C4CEF1;
-	Fri, 19 Dec 2025 10:48:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l5cc4x0G"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60355C4CEF1;
+	Fri, 19 Dec 2025 12:35:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766141325;
-	bh=YjLoTYKDjQc7ykxQOyqOUVAmPo1a4U7SoiPnS819chY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=L7bqolvBFOR101dxP5KRLI3a89z2sYRaD5NMDs6Ftuij/N0gZwi4QNAdCHeojZTnS
-	 sTmw64BxfL5fRcmcwE0zNkijE6ByCan7iAD/1xcIEITD9mANijFwiu6u4vqpCvBmdx
-	 rVhNGqtC3jylNs9DFq/plyoUdZN6FTZ9+Du71noT/eH0gK7qafW3x9wk2b66h1QmFU
-	 iHh8MIDUnindvn/xXUhcuigCG4S2n7szUwb9sjTlMSO4EFH89QNRR+Vpz3uEOG5TRA
-	 AIiZ2NmPwbFxNkh03fN6c4S2gDllgUQR+Es2ZssCD5m0x4BgFYlPkruIu6nqAfp3Rr
-	 aU7NU187DIl/g==
-Message-ID: <96b827e5-d8b7-4e0d-b5a8-1729f5177134@kernel.org>
-Date: Fri, 19 Dec 2025 11:48:39 +0100
+	s=k20201202; t=1766147756;
+	bh=9zYOtg+wFL7dDm3vqw07D5tk1iNur6XnZok5rS3Up8A=;
+	h=Date:From:To:Cc:Subject:From;
+	b=l5cc4x0GRS9OozapkdzOvy/6ljnJpXMzfqiNSmrwW4Scx5S+EFN/CriH8hFe0orHv
+	 pIUE82PyXaNIRuTt9xhFlFoc/Rd2uhT8fYnyzATAdRtTVOIPeqT2gC6T/ik+6laMEr
+	 Z/sgTEW51LGMMa6uzYfOMOcKHrCjFY++xQ+TqJB/vsKJJk4TcQ8e2GBZHpBBTM47bZ
+	 XUDbo+Nt0ncXqJRE+Bvpy8r0zqCrWnjHAB/BmZC5rtpep5X8LwuO//1pkkcMVPECpu
+	 psDr4ApCstEC7jtDX0fIojyyGzUCF/jm2jj2C4/HJPuw3ds/QQ+jZSSRCahc4toeUm
+	 h8Ild6yVSLEUw==
+Message-ID: <f39f437e-7ff9-4f52-bc6f-974f54f42260@kernel.org>
+Date: Fri, 19 Dec 2025 13:35:51 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,19 +34,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 44/44] net/mptcp: Change some dubious min_t(int, ...) to
- min()
-Content-Language: en-GB, fr-BE
-To: David Laight <david.laight.linux@gmail.com>
-Cc: linux-kernel@vger.kernel.org, mptcp@lists.linux.dev,
- netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Mat Martineau <martineau@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-References: <20251119224140.8616-1-david.laight.linux@gmail.com>
- <20251119224140.8616-45-david.laight.linux@gmail.com>
- <cd5d45f7-0d76-4f82-849e-2f2c1544d907@kernel.org>
- <20251218201517.2f2d91d4@pumpkin>
 From: Matthieu Baerts <matttbe@kernel.org>
+Content-Language: en-GB, fr-BE
+To: Mark Brown <broonie@kernel.org>, Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: MPTCP Linux <mptcp@lists.linux.dev>, linux-next@vger.kernel.org,
+ Mat Martineau <martineau@kernel.org>
+Subject: MPTCP tree in linux-next
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -92,85 +84,69 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20251218201517.2f2d91d4@pumpkin>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi David,
+Hi Mark, Stephen,
 
-Thank you for your reply!
+First, thank you, Stephen, for all the work you did around linux-next,
+and Mark for taking over!
 
-On 18/12/2025 21:15, David Laight wrote:
-> On Thu, 18 Dec 2025 18:33:26 +0100
-> Matthieu Baerts <matttbe@kernel.org> wrote:
-> 
->> Hi David,
->>
->> On 19/11/2025 23:41, david.laight.linux@gmail.com wrote:
->>> From: David Laight <david.laight.linux@gmail.com>
->>>
->>> There are two:
->>> 	min_t(int, xxx, mptcp_wnd_end(msk) - msk->snd_nxt);
->>> Both mptcp_wnd_end(msk) and msk->snd_nxt are u64, their difference
->>> (aka the window size) might be limited to 32 bits - but that isn't
->>> knowable from this code.
->>> So checks being added to min_t() detect the potential discard of
->>> significant bits.
->>>
->>> Provided the 'avail_size' and return of mptcp_check_allowed_size()
->>> are changed to an unsigned type (size_t matches the type the caller
->>> uses) both min_t() can be changed to min().  
->>
->> Thank you for the patch!
->>
->> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
->>
->> I'm not sure what the status on your side: I don't know if you still
->> plan to send a specific series for all the modifications in the net, but
->> just in case, I just applied your patch in the MPTCP tree. I removed the
->> "net/" prefix from the subject. I will send this patch with others for
->> including in the net-next tree later on if you didn't do that in between.
-> 
-> I'll go through them again at some point.
+I'm currently maintaining MPTCP with Mat, and I wonder if that would be
+OK to add the MPTCP tree in linux-next. We never asked before, mainly
+because we handle our tree [1] with TopGit on top of both 'net' and
+'net-next' trees, but technically, I'm sure we can find a way to have
+branches that would suit linux-next.
 
-Great, thank you!
+Currently, we "export" commits from the TopGit tree in two branches:
+'export' and 'export-net':
 
-> I'll check against 'next' (but probably not net-next).
+- 'export-net' is on top of 'net', but it also contains patches that are
+useful for our CI: fixes from other trees, temp workarounds, instruction
+files for the CI, extra debugging, etc.
 
-net-next is in linux-next, so that should be fine.
+- 'export' is on top of 'net-next' and 'export-net', so with the extra
+commits for the CI.
 
-> I actually need to look at the ones that seemed like real bugs when I
-> did an allmodconfig build - that got to over 200 patches to get 'clean'.
-> 
-> It would be nice to get rid of a lot of the min_t(), but I might try
-> to attack the dubious ones rather than the ones that appear to make
-> no difference.
-> 
-> I might propose some extra checks in minmax.h that would break W=1 builds.
-> Detecting things like min_t(u8, u32_value, 0xff) where the cast makes the
-> comparison always succeed.
-> In reality any calls with casts to u8 and u16 are 'dubious'.
-> 
-> That and changing checkpatch.pl to not suggest min_t() at all, and
-> to reject the more dubious uses.
-> After all with:
-> 	min(x, (int)y)
-> it is clear to the reader that 'y' is being possibly truncated and converted
-> to a signed value, but with:
-> 	min_t(int, x, y)
-> you don't know which value needed the cast (and the line isn't even shorter).
-> But what I've found all to often is actually:
-> 	a = min_t(typeof(a), x, y);
-> and the similar:
-> 	x = min_t(typeof(x), x, y);
-> where the type of the result is used and high bits get discarded.
+For linux-next, I guess we should remove these extra commits for the CI,
+right?
 
-Good idea to add extra checks and prevent future issues!
-> I've just been trying to build with #define clamp_val clamp.
-> That requires a few minor changes and I'm pretty sure shows up
-> a real bug.
+Would it be OK to add one new branch containing both the fixes (for
+'net') and the new features (for 'net-next') on top of 'net-next'?
+Sometimes, we have new features that depend on fixes that are not in
+'net' yet. Having one branch should help here.
 
-Thank you for looking at that!
+With one branch on top of 'net-next', we might still have issues if some
+of our fixes for 'net' cannot be applied on top of 'net-next'. A
+solution would be to have our branch on top of 'net' and containing:
+
+- MPTCP fixes
+- a merge commit with 'net-next'
+- MPTCP features
+
+Would that also work for you? Or do you prefer having only the MPTCP
+commits on top of 'net-next'? Or two branches, one on top of 'net' and
+one on top of 'net-next' (without the patches that depends on the ones
+in 'net', not in 'net-next' yet)?
+
+
+Two important notes:
+
+- A synchronisation with 'net' and 'net-next' is done by our CI once a
+day, except during the weekend or in case of conflicts.
+
+- Our patches are currently sent as "patches", not in a pull request, so
+patches will be applied with a different SHA.
+
+We can certainly easily change both points if that would help you: when
+the sync is done, and send PR instead of patches. I guess we could have
+situations where when 'linux-next' is rebuilt, a patch would appear in
+both Networking and MPTCP trees, which can confuse Git. Maybe changing
+our workflow can help to prevent such issues.
+
+One last thing: no hurry here, especially at this period of the year!
+
+[1] https://github.com/multipath-tcp/mptcp_net-next
 
 Cheers,
 Matt
