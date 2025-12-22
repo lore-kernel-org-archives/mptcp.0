@@ -1,129 +1,114 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DAED19DF4F
-	for <mptcp@lists.linux.dev>; Fri, 19 Dec 2025 18:52:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 080142F851
+	for <mptcp@lists.linux.dev>; Mon, 22 Dec 2025 03:15:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766170323; cv=none; b=pXNkx3SB+bQwcwgdPJvBZsm/d5UYlVBYCr7rdanm9KALeYeZwP3EWyF9Ed8c3d/iaQzpnGj1jO/h5g7famYR6IXefH5Xg/YpZ04KG8/sXMHt7AJuOQ4dpC41MfG5QdHVq6UYnpajEPiqcvOhZHrrjDR4mcoJ8Ttb7d/9S5GaO44=
+	t=1766373335; cv=none; b=FhnevTrA+hGpt7M/utEj9LNjKFVCOWjjwUknUiiVIqO3+4x30z/hm1k2Cmi+2j6RfQi88AM/8Dv845d6+mfEXCzKNWeJLBHQvSN2IpYb/bmm0oHvqllzQZgZNHFgTPGIyqT4eDrUaEUUPI7H+LhFvqXYv48sx0+PnY55HyCg6PQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766170323; c=relaxed/simple;
-	bh=kU9TpjQoyRKJmZlCGevkOZZZZ4J838WqPRFM980NJhI=;
-	h=Message-ID:Date:MIME-Version:From:To:Subject:Content-Type; b=U6bkZvxUkuGs96242u3B1SsfkvdheGlSKWg6V6SSvtiRWxqUnubqrm1ruYfbpYMUIIjvql6KDDIK/f1bii43A6BfWfRXdw/8QFaXRkId6HWvwaJ94CDa/UIMA+Bj4QQqxP6z4K4i0iJXTzWsXqS6UAkWywcHBScQ8GXVUjLeGQA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fqw9hdi7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1766373335; c=relaxed/simple;
+	bh=c2i4lCIwhrhz4LKrjAHv4yujez8QzK/cL0AudHE8Rwc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=b3tbrjWSXlt0jK0t+HUIeskirwex5ezwdS1ohMCm9qST8tBLXxlJ9g4CGfwtsEWi3HzmbuS/bQ6yGP8yvfoVujtUJOFg2cuGALugIHVfyQpiKyI6jc1WSi+L1d9wg6+szZZdNXhtZn6eQdtfAHWkZMK/TBoWKDIngrM0bWF4Rok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pHLek5+F; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fqw9hdi7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C372C4CEF1
-	for <mptcp@lists.linux.dev>; Fri, 19 Dec 2025 18:52:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pHLek5+F"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51F21C4CEFB;
+	Mon, 22 Dec 2025 03:15:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766170321;
-	bh=kU9TpjQoyRKJmZlCGevkOZZZZ4J838WqPRFM980NJhI=;
-	h=Date:From:To:Subject:From;
-	b=fqw9hdi7cpOUnpDjTWzRJzmPVisflhb/b/ZYtbQms9dgEiN0PtBe60bppmv8TnoW3
-	 BBu5emFwe5Ia/n7CpBAeJwlRqzZ+KDavGLu+B4oECalarIKC1+uzezc4uEec/geB9Q
-	 T8AKPq3AN+x28y7ZC9Tgz2ZBYE2TqdnvlzwBlI2tiV4OLjhQl31XPuWw4FMjxuumJj
-	 rFSmPrVJaGN3ms1xLPUOQH1AXTKx6+jdDDgEjdOF5v2N7VJDYD6QvVFw+AkFMq52SG
-	 r2zTqNmtC8dOSNZmyevPFrcoFPR2DoN38zBbUD9O71uqSziD7pocP+m6k5cmk5x/fO
-	 kNSa6Rb3Pfqng==
-Message-ID: <199e713c-5efe-445e-9dd6-82913a6a4edb@kernel.org>
-Date: Fri, 19 Dec 2025 19:51:59 +0100
+	s=k20201202; t=1766373334;
+	bh=c2i4lCIwhrhz4LKrjAHv4yujez8QzK/cL0AudHE8Rwc=;
+	h=From:To:Cc:Subject:Date:From;
+	b=pHLek5+F1hzdyUueZYr/6gK7mcfSAJMMp/eDTObAltdqJgM5AYE/RYXl3TIJ7mw+U
+	 6/EDDkj/iLila0ChnCPHj9fIdK6KHh/CdlttYkcbKOfZ6Jj8+rUmVTbnhUk0R81am0
+	 2xUIoe2NJTMBlXSlqxN3HboZZXiJd5f+9RapAIOZVx9w86j5epcMsfbBYdfYANkSwN
+	 iFLDmugvxjxZhupVEBZOoByTpSUW9mW2T/I/k1MgmuabFAKp7wmYBr7CSVFWlAal0L
+	 stvWIQIp6IKlM7v+Ur9AkvcKV0BBB6w+dMp8EjJgVVpUg80C4cbnhbabj2dVNqk8y+
+	 di4b2qGTg5D4Q==
+From: Geliang Tang <geliang@kernel.org>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Subject: [RFC mptcp-next v5 0/8] MPTCP KTLS support
+Date: Mon, 22 Dec 2025 11:15:19 +0800
+Message-ID: <cover.1766372799.git.tanggeliang@kylinos.cn>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Matthieu Baerts <matttbe@kernel.org>
-Content-Language: en-GB, fr-BE
-To: MPTCP Linux <mptcp@lists.linux.dev>
-Subject: mptcpd 0.14 released
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hello,
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
-mptcpd 0.14 is now available at:
+v5:
+ - As suggested by Mat and Matt, this set introduces struct tls_prot_ops
+   for TLS.
+ - Includes Gang Yan's patches to add MPTCP support to the TLS selftests.
 
-    https://github.com/multipath-tcp/mptcpd/releases/tag/v0.14
+v4:
+ - split "tls: add MPTCP protocol support" into smaller, more
+   focused patches.
+ - a new mptcp_inq helper has been implemented instead of directly
+   using mptcp_inq_hint to fix the issue mentioned in [1].
+ - add sk_is_msk helper.
+ - the 'expect' parameter will no longer be added to sock_test_tcpulp.
+   Instead, SOCK_TEST_TCPULP items causing the tests failure will be
+   directly removed.
+ - remove the "TCP KTLS" tests, keeping only the MPTCP-related ones.
+ - Link: https://patchwork.kernel.org/project/mptcp/cover/cover.1765505775.git.tanggeliang@kylinos.cn/
 
+[1]
+https://patchwork.kernel.org/project/mptcp/patch/ce74452f4c095a1761ef493b767b4bd9f9c14359.1764333805.git.tanggeliang@kylinos.cn/
 
-Notable changes include the following:
+v3:
+ - mptcp_read_sock() and mptcp_poll() are not exported, as mptcp_sockopt
+   test does not use read_sock/poll interfaces. They will be exported when
+   new tests are added in the future.
+ - call mptcp_inq_hint in tls_device_rx_resync_new_rec(),
+   tls_device_core_ctrl_rx_resync() and tls_read_flush_backlog() too.
+ - update selftests.
+ - Link: https://patchwork.kernel.org/project/mptcp/cover/cover.1763800601.git.tanggeliang@kylinos.cn/
 
-- libmptcpd breaking changes:
+v2:
+ - fix disconnect.
+ - update selftests.
 
-  - 'new_connection' and 'connection_established' interfaces have a new
-     parameter: deny_join_id0. It is set when the other peer requested
-     not to create new subflows to the initial IP address and port.
-     See: https://www.mptcp.dev/load-balancer.html
+This series adds KTLS support for MPTCP. Since the ULP of msk is not being
+used, ULP KTLS can be directly configured onto msk without affecting its
+communication.
 
-  - 'subflow_closed' interface has a new 'error' parameter, set to a
-    non-zero errno value if the subflow has been closed due to an error
-    like a reset, a timeout, etc.
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/480
 
-- Add support for the new 'laminar' in-kernel PM endpoint, see:
-  https://www.mptcp.dev/pm.html
+Gang Yan (2):
+  mptcp: fix the mptcp_check_readable
+  selftests: tls: add a '--mptcp' test mode
 
-- mptcpize: LD_PRELOAD is now appended, not overridden.
+Geliang Tang (6):
+  tls: introduce struct tls_prot_ops
+  mptcp: implement tls_mptcp_ops
+  mptcp: update ULP getsockopt
+  mptcp: enable TLS setsockopt
+  selftests: mptcp: connect: update sock_test_tcpulp
+  selftests: mptcp: sockopt: implement MPTCP KTLS tests
 
-- mptcpize: GODEBUG=multipathtcp=1 environment variable is also set.
-  GODEBUG is appended if it is already defined.
+ include/net/mptcp.h                           |  12 ++
+ include/net/tcp.h                             |   5 +
+ include/net/tls.h                             |  44 ++++++++
+ net/mptcp/protocol.c                          | 106 ++++++++++++++++--
+ net/mptcp/sockopt.c                           |  31 ++++-
+ net/tls/tls_device.c                          |   4 +-
+ net/tls/tls_main.c                            |  14 ++-
+ net/tls/tls_strp.c                            |  28 +++--
+ net/tls/tls_sw.c                              |   5 +-
+ tools/testing/selftests/net/mptcp/config      |   1 +
+ .../selftests/net/mptcp/mptcp_connect.c       |  20 ++--
+ .../selftests/net/mptcp/mptcp_sockopt.c       |  76 ++++++++++++-
+ .../selftests/net/mptcp/mptcp_sockopt.sh      |  36 ++++++
+ tools/testing/selftests/net/tls.c             |  56 +++++++--
+ 14 files changed, 393 insertions(+), 45 deletions(-)
 
-- mptcpd now support ELL 0.72: a recent API change broke mptcpd
-  'commands' test.
-
-- Add musl libc compatibility. Note that the unit tests still require
-  GLibC.
-
-- A recommendation has been added not to have a plugin directory with
-  world writeable permissions for security reasons.
-
-Cheers,
-Matt
 -- 
-Sponsored by the NGI0 Core fund.
+2.51.0
 
