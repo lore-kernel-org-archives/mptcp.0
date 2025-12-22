@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEED02F851
-	for <mptcp@lists.linux.dev>; Mon, 22 Dec 2025 03:15:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11E882F851
+	for <mptcp@lists.linux.dev>; Mon, 22 Dec 2025 03:15:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766373336; cv=none; b=ok7swazXLkKnDoMK3QAU/qakF73lsGjOdNgXKM8U7MFMG5ttixHvfXIAewb+dv6FZTZCP1Rb1ZPoitFgSnj2PxZwYJE8GCO4G86ax/CHM14Xoj7VnS2AF0dYj1Q0g5uGgbAM5trZ6oleqm5qP46C8+vQ8py5uxo3lquu/tZLSzk=
+	t=1766373339; cv=none; b=j75FOVu4ZB0LKm5amK1r/iQ7fJfmVzij161w7zvdl4QSzLVrNqM1o4hDDmybFQASLQpbin2pLyCjq1aL2qME/oOSpZm51jM+15jhnSTIC/BRq7KsvFgj8XAmI6ReJBeST3nklfdnbVh/LngJrsYrdU3jgwtOv9mc71juxWVJonw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766373336; c=relaxed/simple;
-	bh=Z/NE3DPlGydWCx4M6NaQpjVoEukmmM9d2f/UcwH5EIk=;
+	s=arc-20240116; t=1766373339; c=relaxed/simple;
+	bh=RnTxOPxflhqIwx21FLa4JuJOQjgjfd+tsn0wRFmwemI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mjjztF4Wm0E6F5bNvCaT7g6n8ZbhLk4WSwr9Cqm3nMgLBF8jH12URtEikB9YeyJXhuMAYBzsBWIYv8cbYjHpA7mOEk1d2o1/tpnKdAcAdtdGxsMx040YoBWLcpM9xtSl5TswZTx7UCKyHaXbzy/+9EdEmbEiz8omuV846/l5E5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=duJfigDa; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=fQ6Zm/qIIOrELgR6dEjgwJu0SBGNoW43GoMagQNx62bkCLbuhn5iWMiFgpM5ZVAK8usuYfrl1zc5cg44j6ic/EFXO5z1qWX9zQNzkdZrQM5PnxV+U9DO1jiJ1pYs4Kw2srQRIrRy+KFDRq2xjhxAWC3Jv9aZ3cKGxbDbDkjKfEU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F+ytlXNV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="duJfigDa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27DCCC16AAE;
-	Mon, 22 Dec 2025 03:15:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F+ytlXNV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1AD39C4CEFB;
+	Mon, 22 Dec 2025 03:15:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766373336;
-	bh=Z/NE3DPlGydWCx4M6NaQpjVoEukmmM9d2f/UcwH5EIk=;
+	s=k20201202; t=1766373338;
+	bh=RnTxOPxflhqIwx21FLa4JuJOQjgjfd+tsn0wRFmwemI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=duJfigDaBcdQsX8as77HKDy3CA/WWoxvdRYwBnJcjPgHZmXf+08/E+9nV4N5YKvwc
-	 bXP/HSVY31jw0qhMLo+FCA0dz1w3gUbqcBPmZWSnv9dy8yZvLvrH09io7ystpvp7DM
-	 /KzokmMEmv3XVPL+d0IVum3Py82i+O5JaxKgmEf+17hVqdMCT0VNp5FTrBjAavsI3R
-	 whPCmV0K1q+jzNxTkCPqQky8Y7dyMaL7r2dAsFw6VQcvVoE1fghKXfotOcfhXuLn+2
-	 un9kAkz7mNp4wO3uQItGjHXhyJ9DxVUi1U3fQ9ShcD9MPRSCLSAE/KipafLFJukTbt
-	 qQL1aIFmCBivQ==
+	b=F+ytlXNVE9l+3ySmUbQVj4sA3qLPTJE1V6iRKeGOQn1R4ItalZnsy+ITtLNz+l5QX
+	 Rfx2bsRTYQxr8Egb6vtmFwWsqxRxjKZh2QKb8jGWiQlFtb3IKWhDB60nMxtRJZioMD
+	 4urXUg34EHWBWWUsdSmAdooQgvUmTFQgx3eNohn26pIrJLC6rP8r6MBSLhpsYnK5Tf
+	 XeYRRB3Ax9xhVMWLhRK0Uqxs/zCbYVEjBJCi3HeKJHk89IQP59ITgeAeREsLM6vEsY
+	 qmoOx6WKAxmCX9OJtJfOohBJ0wsXSIkGtpdUxFeddm2bTNFQhrQWUa5Fa3kL7O6tZU
+	 3bbygPaCGckCQ==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>,
 	Gang Yan <yangang@kylinos.cn>
-Subject: [RFC mptcp-next v5 1/8] tls: introduce struct tls_prot_ops
-Date: Mon, 22 Dec 2025 11:15:20 +0800
-Message-ID: <292fd0d8ad99a937e82440e4de45719388d959e8.1766372799.git.tanggeliang@kylinos.cn>
+Subject: [RFC mptcp-next v5 2/8] mptcp: implement tls_mptcp_ops
+Date: Mon, 22 Dec 2025 11:15:21 +0800
+Message-ID: <7ae87a2beaae790f9d4d633f04baa00118c88517.1766372799.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <cover.1766372799.git.tanggeliang@kylinos.cn>
 References: <cover.1766372799.git.tanggeliang@kylinos.cn>
@@ -46,329 +46,257 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-To extend MPTCP support based on TCP TLS, a tls_prot_ops structure
-has been introduced for TLS, encapsulating both TCP-specific and
-MPTCP-specific helpers within this structure. A pointer to this
-structure, named 'ops', has been added to the tls_context. The places
-originally calling TLS-specific helpers have now been modified to
-indirectly invoke them via 'ops' pointer in the tls_context.
+This patch implements the MPTCP-specific struct tls_prot_ops, named
+'tls_mptcp_ops'.
+
+Note that there is a slight difference between mptcp_inq() and
+mptcp_inq_hint(), it does not return 1 when the socket is closed or
+shut down; instead, it returns 0. Otherwise, it would break the
+condition "inq < 1" in tls_strp_read_sock().
+
+A direct call to mptcp_read_sock() could lead to a deadlock, as
+'read_sock' interface of TLS might be invoked from within a softirq
+context. In such a scenario, lock_sock_fast(), which is called by
+mptcp_rcv_space_adjust() or mptcp_cleanup_rbuf(), would cause the
+deadlocks. To resolve it, use in_softirq() to determine whether to
+call mptcp_read_sock() or mptcp_read_sock_noack().
+
+Also introduces a sk_is_msk() helper modeled after sk_is_tcp() to
+determine whether the socket is an MPTCP one. Unlike sk_is_mptcp(),
+which accepts a subflow socket as its parameter, this new helper
+specifically accepts an MPTCP socket parameter.
+
+In do_tls_setsockopt_conf, the sk_is_mptcp helper is used to determine
+the socket type, selecting either 'tls_mptcp_ops' or 'tls_tcp_ops'
+accordingly.
 
 Co-developed-by: Gang Yan <yangang@kylinos.cn>
 Signed-off-by: Gang Yan <yangang@kylinos.cn>
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- include/net/tcp.h    |  5 +++++
- include/net/tls.h    | 42 ++++++++++++++++++++++++++++++++++++++++++
- net/tls/tls_device.c |  4 ++--
- net/tls/tls_main.c   | 12 +++++++++---
- net/tls/tls_strp.c   | 28 +++++++++++++++++++---------
- net/tls/tls_sw.c     |  5 +++--
- 6 files changed, 80 insertions(+), 16 deletions(-)
+ include/net/mptcp.h  | 12 ++++++
+ include/net/tls.h    |  2 +
+ net/mptcp/protocol.c | 99 +++++++++++++++++++++++++++++++++++++++++---
+ net/tls/tls_main.c   |  2 +
+ 4 files changed, 109 insertions(+), 6 deletions(-)
 
-diff --git a/include/net/tcp.h b/include/net/tcp.h
-index f5f6119f7716..a0a2d4d63b15 100644
---- a/include/net/tcp.h
-+++ b/include/net/tcp.h
-@@ -2953,4 +2953,9 @@ enum skb_drop_reason tcp_inbound_hash(struct sock *sk,
- 		const void *saddr, const void *daddr,
- 		int family, int dif, int sdif);
+diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+index 4cf59e83c1c5..82660374859a 100644
+--- a/include/net/mptcp.h
++++ b/include/net/mptcp.h
+@@ -150,6 +150,13 @@ static inline bool rsk_drop_req(const struct request_sock *req)
+ 	return tcp_rsk(req)->is_mptcp && tcp_rsk(req)->drop_req;
+ }
  
-+static inline u32 tcp_get_seq(struct sk_buff *skb)
++static inline bool sk_is_msk(const struct sock *sk)
 +{
-+	return TCP_SKB_CB(skb)->seq;
++	return sk_is_inet(sk) &&
++	       sk->sk_type == SOCK_STREAM &&
++	       sk->sk_protocol == IPPROTO_MPTCP;
 +}
 +
- #endif	/* _TCP_H */
-diff --git a/include/net/tls.h b/include/net/tls.h
-index ebd2550280ae..985ac326d59c 100644
---- a/include/net/tls.h
-+++ b/include/net/tls.h
-@@ -220,6 +220,47 @@ struct tls_prot_info {
- 	u16 tail_size;
- };
+ void mptcp_space(const struct sock *ssk, int *space, int *full_space);
+ bool mptcp_syn_options(struct sock *sk, const struct sk_buff *skb,
+ 		       unsigned int *size, struct mptcp_out_options *opts);
+@@ -258,6 +265,11 @@ static inline bool rsk_drop_req(const struct request_sock *req)
+ 	return false;
+ }
  
-+#define TLS_PROT_OPS_NAME_MAX	16
-+
-+struct tls_prot_ops {
-+	char			name[TLS_PROT_OPS_NAME_MAX];
-+
-+	int (*inq)(struct sock *sk);
-+	int (*sendmsg_locked)(struct sock *sk, struct msghdr *msg, size_t size);
-+	struct sk_buff *(*recv_skb)(struct sock *sk, u32 seq, u32 *off);
-+	void (*read_done)(struct sock *sk, size_t len);
-+	u32 (*get_seq)(struct sk_buff *skb);
-+	int (*read_sock)(struct sock *sk, read_descriptor_t *desc,
-+			 sk_read_actor_t recv_actor);
-+	__poll_t (*poll)(struct file *file, struct socket *sock,
-+			 struct poll_table_struct *wait);
-+	bool (*epollin_ready)(const struct sock *sk, int target);
-+};
-+
-+static inline bool tls_validate_prot_ops(const struct tls_prot_ops *ops)
++static inline bool sk_is_msk(const struct sock *sk)
 +{
-+	if (ops->inq || ops->sendmsg_locked ||
-+	    ops->recv_skb || ops->read_done ||
-+	    ops->get_seq || ops->read_sock ||
-+	    ops->poll || ops->epollin_ready)
-+		return true;
-+
-+	pr_err("%s does not implement required ops\n", ops->name);
 +	return false;
 +}
 +
-+static const struct tls_prot_ops tls_tcp_ops = {
-+	.name		= "tcp",
-+	.inq		= tcp_inq,
-+	.sendmsg_locked	= tcp_sendmsg_locked,
-+	.recv_skb	= tcp_recv_skb,
-+	.read_done	= tcp_read_done,
-+	.get_seq	= tcp_get_seq,
-+	.read_sock	= tcp_read_sock,
-+	.poll		= tcp_poll,
-+	.epollin_ready	= tcp_epollin_ready,
-+};
+ static inline bool mptcp_syn_options(struct sock *sk, const struct sk_buff *skb,
+ 				     unsigned int *size,
+ 				     struct mptcp_out_options *opts)
+diff --git a/include/net/tls.h b/include/net/tls.h
+index 985ac326d59c..71c0399e6a43 100644
+--- a/include/net/tls.h
++++ b/include/net/tls.h
+@@ -261,6 +261,8 @@ static const struct tls_prot_ops tls_tcp_ops = {
+ 	.epollin_ready	= tcp_epollin_ready,
+ };
+ 
++extern const struct tls_prot_ops tls_mptcp_ops;
 +
  struct tls_context {
  	/* read-only cache line */
  	struct tls_prot_info prot_info;
-@@ -258,6 +299,7 @@ struct tls_context {
- 	struct sock *sk;
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 900f26e21acd..bdf53e4b3f7e 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -24,11 +24,12 @@
+ #include <net/mptcp.h>
+ #include <net/hotdata.h>
+ #include <net/xfrm.h>
++#include <net/tls.h>
+ #include <asm/ioctls.h>
+ #include "protocol.h"
+ #include "mib.h"
  
- 	void (*sk_destruct)(struct sock *sk);
-+	const struct tls_prot_ops *ops;
+-static unsigned int mptcp_inq_hint(const struct sock *sk);
++static unsigned int mptcp_inq_hint(struct sock *sk);
  
- 	union tls_crypto_context crypto_send;
- 	union tls_crypto_context crypto_recv;
-diff --git a/net/tls/tls_device.c b/net/tls/tls_device.c
-index 82ea407e520a..c03bd4c41bc8 100644
---- a/net/tls/tls_device.c
-+++ b/net/tls/tls_device.c
-@@ -805,7 +805,7 @@ void tls_device_rx_resync_new_rec(struct sock *sk, u32 rcd_len, u32 seq)
- 		/* head of next rec is already in, note that the sock_inq will
- 		 * include the currently parsed message when called from parser
- 		 */
--		sock_data = tcp_inq(sk);
-+		sock_data = tls_ctx->ops->inq(sk);
- 		if (sock_data > rcd_len) {
- 			trace_tls_device_rx_resync_nh_delay(sk, sock_data,
- 							    rcd_len);
-@@ -864,7 +864,7 @@ static void tls_device_core_ctrl_rx_resync(struct tls_context *tls_ctx,
- 	rxm = strp_msg(skb);
- 
- 	/* head of next rec is already in, parser will sync for us */
--	if (tcp_inq(sk) > rxm->full_len) {
-+	if (tls_ctx->ops->inq(sk) > rxm->full_len) {
- 		trace_tls_device_rx_resync_nh_schedule(sk);
- 		ctx->resync_nh_do_now = 1;
- 	} else {
-diff --git a/net/tls/tls_main.c b/net/tls/tls_main.c
-index 56ce0bc8317b..20f7eb438771 100644
---- a/net/tls/tls_main.c
-+++ b/net/tls/tls_main.c
-@@ -194,7 +194,7 @@ int tls_push_sg(struct sock *sk,
- 		bvec_set_page(&bvec, p, size, offset);
- 		iov_iter_bvec(&msg.msg_iter, ITER_SOURCE, &bvec, 1, size);
- 
--		ret = tcp_sendmsg_locked(sk, &msg, size);
-+		ret = ctx->ops->sendmsg_locked(sk, &msg, size);
- 
- 		if (ret != size) {
- 			if (ret > 0) {
-@@ -409,14 +409,14 @@ static __poll_t tls_sk_poll(struct file *file, struct socket *sock,
- 	u8 shutdown;
- 	int state;
- 
--	mask = tcp_poll(file, sock, wait);
-+	tls_ctx = tls_get_ctx(sk);
-+	mask = tls_ctx->ops->poll(file, sock, wait);
- 
- 	state = inet_sk_state_load(sk);
- 	shutdown = READ_ONCE(sk->sk_shutdown);
- 	if (unlikely(state != TCP_ESTABLISHED || shutdown & RCV_SHUTDOWN))
- 		return mask;
- 
--	tls_ctx = tls_get_ctx(sk);
- 	ctx = tls_sw_ctx_rx(tls_ctx);
- 	psock = sk_psock_get(sk);
- 
-@@ -760,6 +760,12 @@ static int do_tls_setsockopt_conf(struct sock *sk, sockptr_t optval,
- 		ctx->rx_conf = conf;
- 	update_sk_prot(sk, ctx);
- 
-+	if (sk_is_tcp(sk))
-+		ctx->ops = &tls_tcp_ops;
-+
-+	if (!tls_validate_prot_ops(ctx->ops))
-+		return -EINVAL;
-+
- 	if (update)
- 		return 0;
- 
-diff --git a/net/tls/tls_strp.c b/net/tls/tls_strp.c
-index 98e12f0ff57e..3e79a8cfaadf 100644
---- a/net/tls/tls_strp.c
-+++ b/net/tls/tls_strp.c
-@@ -120,6 +120,7 @@ struct sk_buff *tls_strp_msg_detach(struct tls_sw_context_rx *ctx)
- int tls_strp_msg_cow(struct tls_sw_context_rx *ctx)
- {
- 	struct tls_strparser *strp = &ctx->strp;
-+	struct tls_context *tls_ctx;
- 	struct sk_buff *skb;
- 
- 	if (strp->copy_mode)
-@@ -132,7 +133,8 @@ int tls_strp_msg_cow(struct tls_sw_context_rx *ctx)
- 	tls_strp_anchor_free(strp);
- 	strp->anchor = skb;
- 
--	tcp_read_done(strp->sk, strp->stm.full_len);
-+	tls_ctx = tls_get_ctx(strp->sk);
-+	tls_ctx->ops->read_done(strp->sk, strp->stm.full_len);
- 	strp->copy_mode = 1;
- 
- 	return 0;
-@@ -376,6 +378,7 @@ static int tls_strp_copyin(read_descriptor_t *desc, struct sk_buff *in_skb,
- 
- static int tls_strp_read_copyin(struct tls_strparser *strp)
- {
-+	struct tls_context *ctx = tls_get_ctx(strp->sk);
- 	read_descriptor_t desc;
- 
- 	desc.arg.data = strp;
-@@ -383,13 +386,14 @@ static int tls_strp_read_copyin(struct tls_strparser *strp)
- 	desc.count = 1; /* give more than one skb per call */
- 
- 	/* sk should be locked here, so okay to do read_sock */
--	tcp_read_sock(strp->sk, &desc, tls_strp_copyin);
-+	ctx->ops->read_sock(strp->sk, &desc, tls_strp_copyin);
- 
- 	return desc.error;
+ #define CREATE_TRACE_POINTS
+ #include <trace/events/mptcp.h>
+@@ -1884,7 +1885,7 @@ static void mptcp_rps_record_subflows(const struct mptcp_sock *msk)
+ 	}
  }
  
- static int tls_strp_read_copy(struct tls_strparser *strp, bool qshort)
+-static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
++static int mptcp_sendmsg_locked(struct sock *sk, struct msghdr *msg, size_t len)
  {
-+	struct tls_context *ctx = tls_get_ctx(strp->sk);
- 	struct skb_shared_info *shinfo;
- 	struct page *page;
- 	int need_spc, len;
-@@ -398,7 +402,7 @@ static int tls_strp_read_copy(struct tls_strparser *strp, bool qshort)
- 	 * to read the data out. Otherwise the connection will stall.
- 	 * Without pressure threshold of INT_MAX will never be ready.
- 	 */
--	if (likely(qshort && !tcp_epollin_ready(strp->sk, INT_MAX)))
-+	if (likely(qshort && !ctx->ops->epollin_ready(strp->sk, INT_MAX)))
- 		return 0;
+ 	struct mptcp_sock *msk = mptcp_sk(sk);
+ 	struct page_frag *pfrag;
+@@ -1895,8 +1896,6 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
+ 	/* silently ignore everything else */
+ 	msg->msg_flags &= MSG_MORE | MSG_DONTWAIT | MSG_NOSIGNAL | MSG_FASTOPEN;
  
- 	shinfo = skb_shinfo(strp->anchor);
-@@ -434,12 +438,13 @@ static int tls_strp_read_copy(struct tls_strparser *strp, bool qshort)
- static bool tls_strp_check_queue_ok(struct tls_strparser *strp)
- {
- 	unsigned int len = strp->stm.offset + strp->stm.full_len;
-+	struct tls_context *ctx = tls_get_ctx(strp->sk);
- 	struct sk_buff *first, *skb;
- 	u32 seq;
+-	lock_sock(sk);
+-
+ 	mptcp_rps_record_subflows(msk);
  
- 	first = skb_shinfo(strp->anchor)->frag_list;
- 	skb = first;
--	seq = TCP_SKB_CB(first)->seq;
-+	seq = ctx->ops->get_seq(first);
+ 	if (unlikely(inet_test_bit(DEFER_CONNECT, sk) ||
+@@ -2004,7 +2003,6 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
+ 		__mptcp_push_pending(sk, msg->msg_flags);
  
- 	/* Make sure there's no duplicate data in the queue,
- 	 * and the decrypted status matches.
-@@ -449,7 +454,7 @@ static bool tls_strp_check_queue_ok(struct tls_strparser *strp)
- 		len -= skb->len;
- 		skb = skb->next;
+ out:
+-	release_sock(sk);
+ 	return copied;
  
--		if (TCP_SKB_CB(skb)->seq != seq)
-+		if (ctx->ops->get_seq(skb) != seq)
- 			return false;
- 		if (skb_cmp_decrypted(first, skb))
- 			return false;
-@@ -460,11 +465,12 @@ static bool tls_strp_check_queue_ok(struct tls_strparser *strp)
+ do_error:
+@@ -2015,6 +2013,17 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
+ 	goto out;
+ }
  
- static void tls_strp_load_anchor_with_queue(struct tls_strparser *strp, int len)
- {
-+	struct tls_context *ctx = tls_get_ctx(strp->sk);
- 	struct tcp_sock *tp = tcp_sk(strp->sk);
- 	struct sk_buff *first;
- 	u32 offset;
- 
--	first = tcp_recv_skb(strp->sk, tp->copied_seq, &offset);
-+	first = ctx->ops->recv_skb(strp->sk, tp->copied_seq, &offset);
- 	if (WARN_ON_ONCE(!first))
- 		return;
- 
-@@ -483,6 +489,7 @@ static void tls_strp_load_anchor_with_queue(struct tls_strparser *strp, int len)
- 
- bool tls_strp_msg_load(struct tls_strparser *strp, bool force_refresh)
- {
-+	struct tls_context *ctx = tls_get_ctx(strp->sk);
- 	struct strp_msg *rxm;
- 	struct tls_msg *tlm;
- 
-@@ -490,7 +497,7 @@ bool tls_strp_msg_load(struct tls_strparser *strp, bool force_refresh)
- 	DEBUG_NET_WARN_ON_ONCE(!strp->stm.full_len);
- 
- 	if (!strp->copy_mode && force_refresh) {
--		if (unlikely(tcp_inq(strp->sk) < strp->stm.full_len)) {
-+		if (unlikely(ctx->ops->inq(strp->sk) < strp->stm.full_len)) {
- 			WRITE_ONCE(strp->msg_ready, 0);
- 			memset(&strp->stm, 0, sizeof(strp->stm));
- 			return false;
-@@ -511,9 +518,10 @@ bool tls_strp_msg_load(struct tls_strparser *strp, bool force_refresh)
- /* Called with lock held on lower socket */
- static int tls_strp_read_sock(struct tls_strparser *strp)
- {
-+	struct tls_context *ctx = tls_get_ctx(strp->sk);
- 	int sz, inq;
- 
--	inq = tcp_inq(strp->sk);
-+	inq = ctx->ops->inq(strp->sk);
- 	if (inq < 1)
- 		return 0;
- 
-@@ -583,10 +591,12 @@ static void tls_strp_work(struct work_struct *w)
- 
- void tls_strp_msg_done(struct tls_strparser *strp)
- {
-+	struct tls_context *ctx = tls_get_ctx(strp->sk);
++static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
++{
++	int ret;
 +
- 	WARN_ON(!strp->stm.full_len);
++	lock_sock(sk);
++	ret = mptcp_sendmsg_locked(sk, msg, len);
++	release_sock(sk);
++
++	return ret;
++}
++
+ static void mptcp_rcv_space_adjust(struct mptcp_sock *msk, int copied);
  
- 	if (likely(!strp->copy_mode))
--		tcp_read_done(strp->sk, strp->stm.full_len);
-+		ctx->ops->read_done(strp->sk, strp->stm.full_len);
- 	else
- 		tls_strp_flush_anchor_copy(strp);
+ static void mptcp_eat_recv_skb(struct sock *sk, struct sk_buff *skb)
+@@ -2242,7 +2251,7 @@ static bool mptcp_move_skbs(struct sock *sk)
+ 	return enqueued;
+ }
  
-diff --git a/net/tls/tls_sw.c b/net/tls/tls_sw.c
-index 9937d4c810f2..a36f23aae603 100644
---- a/net/tls/tls_sw.c
-+++ b/net/tls/tls_sw.c
-@@ -1952,13 +1952,14 @@ tls_read_flush_backlog(struct sock *sk, struct tls_prot_info *prot,
- 		       size_t len_left, size_t decrypted, ssize_t done,
- 		       size_t *flushed_at)
+-static unsigned int mptcp_inq_hint(const struct sock *sk)
++static int mptcp_inq(struct sock *sk)
  {
-+	struct tls_context *tls_ctx = tls_get_ctx(sk);
- 	size_t max_rec;
- 
- 	if (len_left <= decrypted)
- 		return false;
- 
- 	max_rec = prot->overhead_size - prot->tail_size + TLS_MAX_PAYLOAD_SIZE;
--	if (done - *flushed_at < SZ_128K && tcp_inq(sk) > max_rec)
-+	if (done - *flushed_at < SZ_128K && tls_ctx->ops->inq(sk) > max_rec)
- 		return false;
- 
- 	*flushed_at = done;
-@@ -2489,7 +2490,7 @@ int tls_rx_msg_size(struct tls_strparser *strp, struct sk_buff *skb)
+ 	const struct mptcp_sock *msk = mptcp_sk(sk);
+ 	const struct sk_buff *skb;
+@@ -2257,6 +2266,16 @@ static unsigned int mptcp_inq_hint(const struct sock *sk)
+ 		return (unsigned int)hint_val;
  	}
  
- 	tls_device_rx_resync_new_rec(strp->sk, data_len + TLS_HEADER_SIZE,
--				     TCP_SKB_CB(skb)->seq + strp->stm.offset);
-+				     tls_ctx->ops->get_seq(skb) + strp->stm.offset);
- 	return data_len + TLS_HEADER_SIZE;
++	return 0;
++}
++
++static unsigned int mptcp_inq_hint(struct sock *sk)
++{
++	unsigned int inq = mptcp_inq(sk);
++
++	if (inq)
++		return inq;
++
+ 	if (sk->sk_state == TCP_CLOSE || (sk->sk_shutdown & RCV_SHUTDOWN))
+ 		return 1;
  
- read_failure:
+@@ -4674,4 +4693,72 @@ int __init mptcp_proto_v6_init(void)
+ 
+ 	return err;
+ }
++
++static struct sk_buff *mptcp_recv_skb_tls(struct sock *sk, u32 seq, u32 *off)
++{
++	return mptcp_recv_skb(sk, off);
++}
++
++static void mptcp_read_done(struct sock *sk, size_t len)
++{
++	struct mptcp_sock *msk = mptcp_sk(sk);
++	struct sk_buff *skb;
++	size_t left;
++	u32 offset;
++
++	msk_owned_by_me(msk);
++
++	if (sk->sk_state == TCP_LISTEN)
++		return;
++
++	left = len;
++	while (left && (skb = mptcp_recv_skb(sk, &offset)) != NULL) {
++		int used;
++
++		used = min_t(size_t, skb->len - offset, left);
++		msk->bytes_consumed += used;
++		MPTCP_SKB_CB(skb)->offset += used;
++		MPTCP_SKB_CB(skb)->map_seq += used;
++		left -= used;
++
++		if (skb->len > offset + used)
++			break;
++
++		mptcp_eat_recv_skb(sk, skb);
++	}
++
++	mptcp_rcv_space_adjust(msk, len - left);
++
++	/* Clean up data we have read: This will do ACK frames. */
++	if (left != len)
++		mptcp_cleanup_rbuf(msk, len - left);
++}
++
++static u32 mptcp_get_seq(struct sk_buff *skb)
++{
++	return MPTCP_SKB_CB(skb)->map_seq;
++}
++
++static int mptcp_read_sock_tls(struct sock *sk, read_descriptor_t *desc,
++			       sk_read_actor_t recv_actor)
++{
++	return __mptcp_read_sock(sk, desc, recv_actor, in_softirq());
++}
++
++static bool mptcp_epollin_ready_tls(const struct sock *sk, int target)
++{
++	return mptcp_epollin_ready(sk);
++}
++
++const struct tls_prot_ops tls_mptcp_ops = {
++	.name		= "mptcp",
++	.inq		= mptcp_inq,
++	.sendmsg_locked	= mptcp_sendmsg_locked,
++	.recv_skb	= mptcp_recv_skb_tls,
++	.read_done	= mptcp_read_done,
++	.get_seq	= mptcp_get_seq,
++	.read_sock	= mptcp_read_sock_tls,
++	.poll		= mptcp_poll,
++	.epollin_ready	= mptcp_epollin_ready_tls,
++};
+ #endif
+diff --git a/net/tls/tls_main.c b/net/tls/tls_main.c
+index 20f7eb438771..7c69bef4f51d 100644
+--- a/net/tls/tls_main.c
++++ b/net/tls/tls_main.c
+@@ -762,6 +762,8 @@ static int do_tls_setsockopt_conf(struct sock *sk, sockptr_t optval,
+ 
+ 	if (sk_is_tcp(sk))
+ 		ctx->ops = &tls_tcp_ops;
++	else if (sk_is_msk(sk))
++		ctx->ops = &tls_mptcp_ops;
+ 
+ 	if (!tls_validate_prot_ops(ctx->ops))
+ 		return -EINVAL;
 -- 
 2.51.0
 
