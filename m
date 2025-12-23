@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6335A79CD
-	for <mptcp@lists.linux.dev>; Tue, 23 Dec 2025 16:35:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C003A2882AA
+	for <mptcp@lists.linux.dev>; Tue, 23 Dec 2025 16:36:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766507753; cv=none; b=BTBJ3pgAEfFDzaIR4vXXBPx2Decg7XQmGcsYOjzA9WKQKpjVLaw7liRDlK0sdF1i80YIgT4OeU/XkQaOdJKPqpC6jhsSs7/iuGQ1jkLB0m9EiknaXF1OuDNFJ9auUcbKVOmmvKEUi3wsStBwg/FqVacqgYntDmvrtyTC5f9/1tw=
+	t=1766507770; cv=none; b=t7r4GKwDr2ovga0/TRfBAsxR+PxmhTnAYz+QfEu3CgSYWdrxGnx1JNVWRnUprtjnlD6Ya2iY3+xZYV7NzOTGtUUTHofslf9xj/rLn/cWLRrr09kpPrcbcJTTOtIpmByJ4/kiqBRsqgBrzRG7CmnE+9k1eXDVhN5BIfGF8UjuZYg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766507753; c=relaxed/simple;
-	bh=wbq8DO34M+v7vvyKPb9r5bW0iAkVpQT9g9G0tLIPdqA=;
+	s=arc-20240116; t=1766507770; c=relaxed/simple;
+	bh=qZne3ZHq4IxbzcNCBpVsK9Exbqp+wvRcTd2HA1LBxsk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FLnrQ5YveONxcwVp3pBILnGlMPeDNY1bLyNYrHb6CaxcTU1ZXHssrZzu3iSzktRcFKp6SaEoqYHEV+00mUAutswumD8E4iLzO3N4O6LmMIbiiGRYsd9zkj3EOmQmKgSorwjPnmdtLUvQ8CuXwVQLYaD6sj/TJSWbv4g5O6FnzHw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jRRXX+Di; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=Cou55XNKzwAE/RsNxBXrgekFSvZQ+fHYVPlAjS5pN/FI9oNSKUUCFXjMUXmgj1BoAQcjBtU1ZlM0nu44N+c6kwWqDHOn+rQb81oa3GD5FEdDYhkpyxWr1/or1Cqxhc8w/63BuufOu/IE7iquMOOIHiZHIzL/d2nlIe+0aaDz6uk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Umd4Y34K; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jRRXX+Di"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41B1CC113D0;
-	Tue, 23 Dec 2025 16:35:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Umd4Y34K"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 472FFC113D0;
+	Tue, 23 Dec 2025 16:36:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766507753;
-	bh=wbq8DO34M+v7vvyKPb9r5bW0iAkVpQT9g9G0tLIPdqA=;
+	s=k20201202; t=1766507770;
+	bh=qZne3ZHq4IxbzcNCBpVsK9Exbqp+wvRcTd2HA1LBxsk=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=jRRXX+DiDexojxvSwp1/HeSuEdUEL0ytf5do/+DfdbRyvHakwe9wFdvmideHoGfqp
-	 pbeYHc9c5Fy3L4HdBhxxL6EZcbRAdFh2snaUpkQ+aM9DhGoldg4un8vIHo4anW4hCK
-	 45gKD1Mle7qtd2aH635jM+09Okxjn4Q7bL5GkFhDqgMFDaojBS5N4iU0ZfB1TPhRuL
-	 gsgEWpP1cTjpA1goVRFjb5S7LF3Kft38w4ceXRg7ay2wxfJN2RNkqnPtw2NL7fDdOt
-	 E5OzpHVTzaqM1vZhrZpml2M0DtKoYXT+330BtRX0QoCaADdAPZR+65ABMMbTzYI6NP
-	 uspBj4OcyzokA==
-Message-ID: <13eb9cae-9243-4706-b873-c11ad11e266a@kernel.org>
-Date: Tue, 23 Dec 2025 17:35:49 +0100
+	b=Umd4Y34KknCcEew7oSouMEVxznrUjEix5cx4vDRsSFjZUqJ5T3trBkeD+mDnuUXe5
+	 tBgXI7EulXzx/dLVY2VBZnYpVJw68dP3zWINzkl5sPqYSsnSQ23NC69SzkUEspfOKs
+	 /QDBVcWBT/7ntfSVjD5iKqTrah7AcGaUf4TfBEhGz2ynaT/aNBDQdRFMwudL8GimPG
+	 i6k5p0eqDXJ0sITmlzf/QymqMsN67HN9gcvITJ9whNg3sZ/ZZFXRH/IbymrGAQQiYM
+	 vsuP7Yj6Y/CWE/z7zPutGqOKKkuMe9iG7da0AIimGjOprThtuKYXoYma0RK0hTrX46
+	 iJIpUdGbz1N/A==
+Message-ID: <73c89089-b8fb-42a0-a86c-69af2e33eb0a@kernel.org>
+Date: Tue, 23 Dec 2025 17:36:07 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,11 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC mptcp-next v5 0/8] MPTCP KTLS support
+Subject: Re: [RFC mptcp-next v5 1/8] tls: introduce struct tls_prot_ops
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Cc: Geliang Tang <tanggeliang@kylinos.cn>, Gang Yan <yangang@kylinos.cn>
 References: <cover.1766372799.git.tanggeliang@kylinos.cn>
+ <292fd0d8ad99a937e82440e4de45719388d959e8.1766372799.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -85,7 +86,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <cover.1766372799.git.tanggeliang@kylinos.cn>
+In-Reply-To: <292fd0d8ad99a937e82440e4de45719388d959e8.1766372799.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -94,27 +95,58 @@ Hi Geliang,
 On 22/12/2025 04:15, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> v5:
->  - As suggested by Mat and Matt, this set introduces struct tls_prot_ops
->    for TLS.
->  - Includes Gang Yan's patches to add MPTCP support to the TLS selftests.
+> To extend MPTCP support based on TCP TLS, a tls_prot_ops structure
+> has been introduced for TLS, encapsulating both TCP-specific and
+> MPTCP-specific helpers within this structure. A pointer to this
+> structure, named 'ops', has been added to the tls_context. The places
+> originally calling TLS-specific helpers have now been modified to
+> indirectly invoke them via 'ops' pointer in the tls_context.
 
-Thank you for this new version!
+Thank you for this new version, it looks better!
 
-I just did a very quick reviews. Please see my comments in the
-individual patches.
+(...)
 
-Also, did you check the behaviour with MPTCP and multiple subflows when
-KTLS is used with HW supporting TLS offload? (TLS_HW mode)
+> diff --git a/net/tls/tls_main.c b/net/tls/tls_main.c
+> index 56ce0bc8317b..20f7eb438771 100644
+> --- a/net/tls/tls_main.c
+> +++ b/net/tls/tls_main.c
 
-  https://docs.kernel.org/networking/tls-offload.html
+(...)
 
-I didn't check how it works, but if the NIC needs to have a continuous
-flow to work, it will not work with MPTCP if only a part of the traffic
-is handled by a NIC.
+> @@ -760,6 +760,12 @@ static int do_tls_setsockopt_conf(struct sock *sk, sockptr_t optval,
+>  		ctx->rx_conf = conf;
+>  	update_sk_prot(sk, ctx);
+>  
+> +	if (sk_is_tcp(sk))
 
-(Also, in the selftests, I don't see any tests using TLS_SW with MPTCP
-and multiple subflows, that's important!)
+I wonder if it would not be better to register each ops in an array /
+list, and add the protocol number in the ops. Then here, use the right
+ops corresponding to the sk->sk_protocol.
+
+(I don't think you need 'sk_is_tcp()' here, I guess this helper can only
+be called for a TCP connection. When MPTCP is added, only the protocol
+will differ. Then 'sk_is_msk(sk)' is probably not needed)
+
+> +		ctx->ops = &tls_tcp_ops;
+
+I guess you should handle the case where ctx->ops is not set.
+
+> +
+> +	if (!tls_validate_prot_ops(ctx->ops))
+
+I don't think this validation should be done for each connection. If
+required, it should be done when registering the ops.
+
+> +		return -EINVAL;
+
+I think this block should come before "update_sk_prot()" (or you need to
+cancel the update).
+
+> +
+>  	if (update)
+>  		return 0;
+
+(...)
 
 Cheers,
 Matt
