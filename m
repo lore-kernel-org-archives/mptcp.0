@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C003A2882AA
-	for <mptcp@lists.linux.dev>; Tue, 23 Dec 2025 16:36:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A472339701
+	for <mptcp@lists.linux.dev>; Tue, 23 Dec 2025 16:36:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766507770; cv=none; b=t7r4GKwDr2ovga0/TRfBAsxR+PxmhTnAYz+QfEu3CgSYWdrxGnx1JNVWRnUprtjnlD6Ya2iY3+xZYV7NzOTGtUUTHofslf9xj/rLn/cWLRrr09kpPrcbcJTTOtIpmByJ4/kiqBRsqgBrzRG7CmnE+9k1eXDVhN5BIfGF8UjuZYg=
+	t=1766507806; cv=none; b=BUJ3NFxAC3/HqwU9nyEjKQLKlXrsew/RJr/xwDgbzj6pThRvaSe0u7SU/qkv7rbba5oagYV0yqMIPeWjj+j863wt0RLGwmmzyd8YqH1x8PKKsFRY41IPZU2b6FMQ60ePc7hx1enYL5+JgUjXH3nuEeNTm+z61qX4PrEHLbgLQkc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766507770; c=relaxed/simple;
-	bh=qZne3ZHq4IxbzcNCBpVsK9Exbqp+wvRcTd2HA1LBxsk=;
+	s=arc-20240116; t=1766507806; c=relaxed/simple;
+	bh=DcfCKPSw32gAMWXyo7oN7KfnA5yRW2QDe/JqTiVBP+c=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Cou55XNKzwAE/RsNxBXrgekFSvZQ+fHYVPlAjS5pN/FI9oNSKUUCFXjMUXmgj1BoAQcjBtU1ZlM0nu44N+c6kwWqDHOn+rQb81oa3GD5FEdDYhkpyxWr1/or1Cqxhc8w/63BuufOu/IE7iquMOOIHiZHIzL/d2nlIe+0aaDz6uk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Umd4Y34K; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=ppET71C56zGO4X60DaiD4Cw0pWHxkE+7RJtY6fAQS44Va7uwYejFDp6dgo/n53JEbarL98eLiPHtEx/1//4Zn7ka3GjZxSn8f+9cl3P/wuVoiRH5QSUkxWTv4G28oDqQflziSesSimVJct9DOtu80mH3Lqtnhqt1+kM8+VH5V8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZMfYtr+9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Umd4Y34K"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 472FFC113D0;
-	Tue, 23 Dec 2025 16:36:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZMfYtr+9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 081FBC113D0;
+	Tue, 23 Dec 2025 16:36:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766507770;
-	bh=qZne3ZHq4IxbzcNCBpVsK9Exbqp+wvRcTd2HA1LBxsk=;
+	s=k20201202; t=1766507805;
+	bh=DcfCKPSw32gAMWXyo7oN7KfnA5yRW2QDe/JqTiVBP+c=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Umd4Y34KknCcEew7oSouMEVxznrUjEix5cx4vDRsSFjZUqJ5T3trBkeD+mDnuUXe5
-	 tBgXI7EulXzx/dLVY2VBZnYpVJw68dP3zWINzkl5sPqYSsnSQ23NC69SzkUEspfOKs
-	 /QDBVcWBT/7ntfSVjD5iKqTrah7AcGaUf4TfBEhGz2ynaT/aNBDQdRFMwudL8GimPG
-	 i6k5p0eqDXJ0sITmlzf/QymqMsN67HN9gcvITJ9whNg3sZ/ZZFXRH/IbymrGAQQiYM
-	 vsuP7Yj6Y/CWE/z7zPutGqOKKkuMe9iG7da0AIimGjOprThtuKYXoYma0RK0hTrX46
-	 iJIpUdGbz1N/A==
-Message-ID: <73c89089-b8fb-42a0-a86c-69af2e33eb0a@kernel.org>
-Date: Tue, 23 Dec 2025 17:36:07 +0100
+	b=ZMfYtr+9DCXFQR9mJ75o/stL3eJdPVAhegfJPMDCxGxH/Z+SWaAozIDIAB2sE8xx4
+	 zzHYHcxu6SUIVgOmLR18LPigRfwBIRz8kfOZpYjt64CAFuw1lwY333OuQrUEAOoVgE
+	 fZaVDzZdP6BzkIVL8reDjluIJ5s90VOxtRpRjViqxlG3dzJAJlGNP+wMEZzjbC27D/
+	 EDxPwfPB5jkjbzlaN90XgYfFmqWq7VJpTSFiNboyOa4cenlcN/LS74r1133sMNr+Q1
+	 4rjbsQcNq51zYVNAkdrDYIV4eTGGaCSFYlxhiCobbvVoRWUgTu3+VZQOzeeSSz5/qF
+	 gQahupGurhmcA==
+Message-ID: <e481349e-a011-4132-97dd-05c6a346991a@kernel.org>
+Date: Tue, 23 Dec 2025 17:36:42 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC mptcp-next v5 1/8] tls: introduce struct tls_prot_ops
+Subject: Re: [RFC mptcp-next v5 3/8] mptcp: update ULP getsockopt
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>, Gang Yan <yangang@kylinos.cn>
 References: <cover.1766372799.git.tanggeliang@kylinos.cn>
- <292fd0d8ad99a937e82440e4de45719388d959e8.1766372799.git.tanggeliang@kylinos.cn>
+ <30f3a9d298bfb93bcb49a4360af5976697684f2a.1766372799.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,67 +86,64 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <292fd0d8ad99a937e82440e4de45719388d959e8.1766372799.git.tanggeliang@kylinos.cn>
+In-Reply-To: <30f3a9d298bfb93bcb49a4360af5976697684f2a.1766372799.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-
-Hi Geliang,
 
 On 22/12/2025 04:15, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> To extend MPTCP support based on TCP TLS, a tls_prot_ops structure
-> has been introduced for TLS, encapsulating both TCP-specific and
-> MPTCP-specific helpers within this structure. A pointer to this
-> structure, named 'ops', has been added to the tls_context. The places
-> originally calling TLS-specific helpers have now been modified to
-> indirectly invoke them via 'ops' pointer in the tls_context.
-
-Thank you for this new version, it looks better!
-
-(...)
-
-> diff --git a/net/tls/tls_main.c b/net/tls/tls_main.c
-> index 56ce0bc8317b..20f7eb438771 100644
-> --- a/net/tls/tls_main.c
-> +++ b/net/tls/tls_main.c
-
-(...)
-
-> @@ -760,6 +760,12 @@ static int do_tls_setsockopt_conf(struct sock *sk, sockptr_t optval,
->  		ctx->rx_conf = conf;
->  	update_sk_prot(sk, ctx);
+> TCP_ULP was obtained by calling mptcp_getsockopt_first_sf_only() to get
+> the ULP of the first subflow. Now that the mechanism has changed, a new
+> helper needs to be implemented to get the ULP of the msk.
+> 
+> Co-developed-by: Gang Yan <yangang@kylinos.cn>
+> Signed-off-by: Gang Yan <yangang@kylinos.cn>
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> ---
+>  net/mptcp/sockopt.c | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+> 
+> diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+> index de90a2897d2d..4f805b99742e 100644
+> --- a/net/mptcp/sockopt.c
+> +++ b/net/mptcp/sockopt.c
+> @@ -1393,6 +1393,17 @@ static int mptcp_put_int_option(struct mptcp_sock *msk, char __user *optval,
+>  	return 0;
+>  }
 >  
-> +	if (sk_is_tcp(sk))
-
-I wonder if it would not be better to register each ops in an array /
-list, and add the protocol number in the ops. Then here, use the right
-ops corresponding to the sk->sk_protocol.
-
-(I don't think you need 'sk_is_tcp()' here, I guess this helper can only
-be called for a TCP connection. When MPTCP is added, only the protocol
-will differ. Then 'sk_is_msk(sk)' is probably not needed)
-
-> +		ctx->ops = &tls_tcp_ops;
-
-I guess you should handle the case where ctx->ops is not set.
-
+> +static int mptcp_getsockopt_msk(struct sock *sk, int level, int optname,
+> +				char __user *optval, int __user *optlen)
+> +{
+> +	int ret;
 > +
-> +	if (!tls_validate_prot_ops(ctx->ops))
+> +	lock_sock(sk);
+> +	ret = tcp_getsockopt(sk, level, optname, optval, optlen);
 
-I don't think this validation should be done for each connection. If
-required, it should be done when registering the ops.
+Mmh, even if I see that I can work, it doesn't sound safe:
+do_tcp_getsockopt() will expect the sk to be a TCP sk. I think it is
+better to avoid that. Instead, maybe sharing code between TCP and MPTCP
+to do the same?
 
-> +		return -EINVAL;
+(also the helper name is confusing: this case is particular and works
+for this particular SOL_TCP+TCP_ULP case.)
 
-I think this block should come before "update_sk_prot()" (or you need to
-cancel the update).
-
+> +	release_sock(sk);
+> +	return ret;
+> +}
 > +
->  	if (update)
->  		return 0;
-
-(...)
+>  static int mptcp_getsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
+>  				    char __user *optval, int __user *optlen)
+>  {
+> @@ -1400,6 +1411,8 @@ static int mptcp_getsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
+>  
+>  	switch (optname) {
+>  	case TCP_ULP:
+> +		return mptcp_getsockopt_msk(sk, SOL_TCP, optname,
+> +					    optval, optlen);
+>  	case TCP_CONGESTION:
+>  	case TCP_INFO:
+>  	case TCP_CC_INFO:
 
 Cheers,
 Matt
