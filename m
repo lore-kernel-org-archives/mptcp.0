@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E70782DC765
-	for <mptcp@lists.linux.dev>; Tue, 23 Dec 2025 16:39:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D255928C014
+	for <mptcp@lists.linux.dev>; Tue, 23 Dec 2025 16:39:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766507983; cv=none; b=QPeX9s3UPIMiayF6PDNWYpWiL6txIAz9eqF1HDtOQ1XluYp7FU4F7Q73lUPrZzPQKDHA9PsM4S/PSisPuYA/shR/EcuzJCAFf59c1texzP/ki2huL9NLATjrbNObgf1b+jJBZaIHWgiR8y90ZlzSxptvZ+BKhnnfOrJghhu2D94=
+	t=1766507989; cv=none; b=DYHefdfTIKQcPZQL5s1sjAj+RJ1swHNOpxgo7Xi0Md84dpqP8IMLnI8Ci3WudjTw0iizAcNlVBwI61hOV4ZGoHp/VHqM6TgsU1ROIxd/9+xu0cw0OjoTjzVwfQbb2wXN9x8PVxYuOdVF9cuiotlL8qUJwsYBOv4XgvU+hVqUhRo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766507983; c=relaxed/simple;
-	bh=eUSWSfE1/jGG9MU1ZMFGTecEBfRjULv8OsMYKYOrdV0=;
+	s=arc-20240116; t=1766507989; c=relaxed/simple;
+	bh=FPJ+FjWmTsjO+OfbLN+qbmYTFH7MdFat0SBbiyJ9+mc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XGSIwtBxCmogjPIYYTGRge+4TtH2lb+uIrjCNjAemmZBgtyi9QhbUK4k0u3tmDXBRncLLLeXrc0wjhW/SmvzxhNhZ56dHVBMzmG7/cOWtrj4XWDDdY5asEdFgPhqR6N/1PQrnILE8INvsJosNwHfk2almINYmwWkoGLIUcf+BX4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Chdrzx+l; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=rOSbb9/IakMWmfbrHlpvuCWHBboHh1VKo0Pgq5g8oCI7oAAv8gwKrso7h10U374ERSflalZAKfwHk4Av3QIjUiNR1Zp1pXP2ZL6rvbIHQElFOab/9Z9LWVN8EVwyxU69Dg8npuQLP5XQkJQopvLSX7ZSXiEiCn0RXi5B0s93ctU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u+5yI8lm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Chdrzx+l"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDB60C113D0;
-	Tue, 23 Dec 2025 16:39:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u+5yI8lm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F645C113D0;
+	Tue, 23 Dec 2025 16:39:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766507982;
-	bh=eUSWSfE1/jGG9MU1ZMFGTecEBfRjULv8OsMYKYOrdV0=;
+	s=k20201202; t=1766507989;
+	bh=FPJ+FjWmTsjO+OfbLN+qbmYTFH7MdFat0SBbiyJ9+mc=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Chdrzx+lGQZW768tqpuI6SYioFWqBroZGO+SVepnO9hGuD9z3X38Yxgv77/qx5qaq
-	 Xk4adtbzhLAeHy2DixxsuGaui+a0NsSMRhi31DltqehPa5F2NkrWM8Qeb+7ZmQpefQ
-	 apeQKBEXIEJLID4AIGmgt4ztrCkxKruSz2Jw8QjhHmSDj6fhaTkd+pmV1XhpFPpf6d
-	 AgtNvicwpO7MxeL0WGyz/7DzWiigUNfzaQFLF/lBDx95LgEqqUxzRL7gHwEztbP9F8
-	 0A/PqWwh2CTnhQ/QZZrfma2PzOJ/O1TElAqWmT7D72Q0UbtA6hrZdb8t7zr1d4WUhQ
-	 pQiBw84jN0JCw==
-Message-ID: <228f0676-b4cb-43f5-b4e7-198b06251dc1@kernel.org>
-Date: Tue, 23 Dec 2025 17:39:39 +0100
+	b=u+5yI8lmy9ZsTN8mEtDteRGFItbVTlYq3lwgh5mkwWaPayOA9B/huQVQUzvBFP93+
+	 DgtfXgI/qq7RcKTS1UmmIe+ZI237L+5eHmRtTp3FgfpDet8eXJORbKfEmEa2mPQOtv
+	 r0Wn8UxtIu0/xZU8h7I2UYGgo0DG1WoSGOZW97xl13B4tycOEpjhtnvHST01QmDjnr
+	 VH5X005auSeuWU/pVPoUyVwzBVtkNr8aCJTB03x4QlSpZ4HhW0nONSplLj3YpFnAKT
+	 c1AQGX1xARQBi3+BRZqaUdy2+pe7tqGBEAlFqOVvS+UuzdqX3HBlKA3wZiZNSyEcGN
+	 G+BLXZRYSFr8w==
+Message-ID: <091bb58a-18e4-4c27-9b79-cbad831f53f2@kernel.org>
+Date: Tue, 23 Dec 2025 17:39:47 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC mptcp-next v5 7/8] mptcp: fix the mptcp_check_readable
+Subject: Re: [RFC mptcp-next v5 8/8] selftests: tls: add a '--mptcp' test mode
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Gang Yan <yangang@kylinos.cn>
 References: <cover.1766372799.git.tanggeliang@kylinos.cn>
- <814297ff30d16e51ac7c126255ef26dbfdc1ca10.1766372799.git.tanggeliang@kylinos.cn>
+ <d068c478192bc0ca8040f51dcb948eb93eb0e617.1766372799.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,67 +86,29 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <814297ff30d16e51ac7c126255ef26dbfdc1ca10.1766372799.git.tanggeliang@kylinos.cn>
+In-Reply-To: <d068c478192bc0ca8040f51dcb948eb93eb0e617.1766372799.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Geliang, Gang,
+Hi Gang,
 
 On 22/12/2025 04:15, Geliang Tang wrote:
 > From: Gang Yan <yangang@kylinos.cn>
 > 
-> 'mptcp_check_readble' is corresponding to the 'tcp_stream_is_readable',
-> but the later one will call the 'sk_is_readble' ->
-> 'prot->sock_is_readable(sk)' -> 'tls_sw_sock_is_readable'.
-> 
-> If not apply this patch, it will cause an error in 'poll_wait_split'
-> test when running tls_test in mptcp mode.
+> Add a command-line parameter `--mptcp` that allows the TLS test program
+> to switch between using MPTCP and standard TCP. When the `--mptcp` flag
+> is provided, the test suite will utilize MPTCP connections; otherwise,
+> it defaults to standard TCP.
 
-Which error?
+Adding a command-line parameter is not enough: this test will only be
+checked when launched manually. In other words, CI will not check that.
 
-It might be better to move this before patch 2 and mention that this is
-to aligned with TCP, and will be used in the case of KTLS, because
-'prot' will be modified, tls_sw_sock_is_readable is expected to be
-called from prot->sock_is_readable(), etc.
+Instead, all tests should be called in the two modes by default. If you
+do that, the protocol number/name should appear in the subtest names:
+for the CIs *not* to have each test appearing twice.
 
-> 
-> Signed-off-by: Gang Yan <yangang@kylinos.cn>
-> ---
->  net/mptcp/protocol.c | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
-> 
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index bdf53e4b3f7e..8363d89d3a13 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -3260,7 +3260,9 @@ void __mptcp_unaccepted_force_close(struct sock *sk)
->  
->  static __poll_t mptcp_check_readable(struct sock *sk)
-
-Might be good to add a comment to say that it is similar to
-tcp_stream_is_readable()
-
-While at it, maybe rename it to mptcp_stream_is_readable() so it is
-aligned with TCP?
-
->  {
-> -	return mptcp_epollin_ready(sk) ? EPOLLIN | EPOLLRDNORM : 0;
-> +	if (mptcp_epollin_ready(sk))
-> +		return true;
-> +	return sk_is_readable(sk);
->  }
->  
->  static void mptcp_check_listen_stop(struct sock *sk)
-> @@ -4322,7 +4324,8 @@ static __poll_t mptcp_poll(struct file *file, struct socket *sock,
->  		mask |= EPOLLIN | EPOLLRDNORM | EPOLLRDHUP;
->  
->  	if (state != TCP_SYN_SENT && state != TCP_SYN_RECV) {
-> -		mask |= mptcp_check_readable(sk);
-> +		if (mptcp_check_readable(sk))
-> +			mask |= EPOLLIN | EPOLLRDNORM;
->  		if (shutdown & SEND_SHUTDOWN)
->  			mask |= EPOLLOUT | EPOLLWRNORM;
->  		else
+Also, for MPTCP case, it is important to have a test somewhere using
+multiple subflows, with data going through multiple subflows.
 
 Cheers,
 Matt
