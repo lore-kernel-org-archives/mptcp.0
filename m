@@ -1,113 +1,123 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D54791F5821
-	for <mptcp@lists.linux.dev>; Mon, 22 Dec 2025 16:49:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6335A79CD
+	for <mptcp@lists.linux.dev>; Tue, 23 Dec 2025 16:35:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766422141; cv=none; b=jnJPoki0bQioDS/BNm/9budOCUMoDPSim8VVLzp89JwEIYoqTJ1g+xeseMf1so9TQV1NbPyzf6ZWwZKjQdikNcb7V/uBp54gcyiBAwGP6jABcPLGGJMvRZhS6WFS2xUPTWmJ/gAZq8a7wKLClrJw0Z3gQ8XWMWP+7IedZObHTdQ=
+	t=1766507753; cv=none; b=BTBJ3pgAEfFDzaIR4vXXBPx2Decg7XQmGcsYOjzA9WKQKpjVLaw7liRDlK0sdF1i80YIgT4OeU/XkQaOdJKPqpC6jhsSs7/iuGQ1jkLB0m9EiknaXF1OuDNFJ9auUcbKVOmmvKEUi3wsStBwg/FqVacqgYntDmvrtyTC5f9/1tw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766422141; c=relaxed/simple;
-	bh=IRtBnTSPxMYaSliYgMwFZy+mo7142MCroNmS+70/5uQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=OePTYleA45QU1la1otYEU0IAF5LR7eBHLbsJ7HPoW38EnxJdy2t3YHb8ZTzu9lndS47E0udGE6G0yNLZYjRa7xWO6oNoQCI3nmsRDucTrl5GKdNPRGgIXg/fqgf1qSbChCWA9YSr5Ll7bzye4Tzz87gun/XFO5ZmVa+W7L0MQ0o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q9wWcAB0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1766507753; c=relaxed/simple;
+	bh=wbq8DO34M+v7vvyKPb9r5bW0iAkVpQT9g9G0tLIPdqA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FLnrQ5YveONxcwVp3pBILnGlMPeDNY1bLyNYrHb6CaxcTU1ZXHssrZzu3iSzktRcFKp6SaEoqYHEV+00mUAutswumD8E4iLzO3N4O6LmMIbiiGRYsd9zkj3EOmQmKgSorwjPnmdtLUvQ8CuXwVQLYaD6sj/TJSWbv4g5O6FnzHw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jRRXX+Di; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q9wWcAB0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14E8CC4CEF1;
-	Mon, 22 Dec 2025 16:49:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jRRXX+Di"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41B1CC113D0;
+	Tue, 23 Dec 2025 16:35:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766422141;
-	bh=IRtBnTSPxMYaSliYgMwFZy+mo7142MCroNmS+70/5uQ=;
-	h=From:Date:Subject:To:Cc:From;
-	b=q9wWcAB0PsKBoVESyfNVTdyzJbCvQIqY8ZrTHsbkFxNMBy5MvcBiBJhPOTGqO2Odp
-	 h+4oda4KO2R5/GF9o17HHgzJMvqqIw/vv8BmgAvX5LWfxG3Q/DzUPtzWn8oPyHsyZ8
-	 ZJcKurJ/i8/FlsEHUVVY5iRZ0M/Q7pObKVAbcNfR7sydsbjmVj0KwxS8RqIyGzBbT7
-	 +DI1Lxu40p16S4ubhwEG8yajTgc3tsvtevHdw0tJ6TqaVMIAz+67AKt7Cw58XUm7hz
-	 /bG5cqs5PtVS/iU0ichUR+wvXWtsX1WDbDLuDgvbViVHoQyvJphyDcw0m2gBWEqerZ
-	 QUS/eV3MXg+Fw==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Mon, 22 Dec 2025 17:48:54 +0100
-Subject: [PATCH mptcp-net] selftests: mptcp: join: fix local endp not being
- tracked
+	s=k20201202; t=1766507753;
+	bh=wbq8DO34M+v7vvyKPb9r5bW0iAkVpQT9g9G0tLIPdqA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=jRRXX+DiDexojxvSwp1/HeSuEdUEL0ytf5do/+DfdbRyvHakwe9wFdvmideHoGfqp
+	 pbeYHc9c5Fy3L4HdBhxxL6EZcbRAdFh2snaUpkQ+aM9DhGoldg4un8vIHo4anW4hCK
+	 45gKD1Mle7qtd2aH635jM+09Okxjn4Q7bL5GkFhDqgMFDaojBS5N4iU0ZfB1TPhRuL
+	 gsgEWpP1cTjpA1goVRFjb5S7LF3Kft38w4ceXRg7ay2wxfJN2RNkqnPtw2NL7fDdOt
+	 E5OzpHVTzaqM1vZhrZpml2M0DtKoYXT+330BtRX0QoCaADdAPZR+65ABMMbTzYI6NP
+	 uspBj4OcyzokA==
+Message-ID: <13eb9cae-9243-4706-b873-c11ad11e266a@kernel.org>
+Date: Tue, 23 Dec 2025 17:35:49 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC mptcp-next v5 0/8] MPTCP KTLS support
+Content-Language: en-GB, fr-BE
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <cover.1766372799.git.tanggeliang@kylinos.cn>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <cover.1766372799.git.tanggeliang@kylinos.cn>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20251222-sft-5-15-signal-race-test-v1-1-a9b67c49af15@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAHV2SWkC/x3MwQqDMAyA4VeRnBewgeK2VxEPJUYNbF1pwhDEd
- 7d4/A7/f4BJVTF4dwdU+avpLzeERwe8pbwK6twM1FMMRIS2OEYMEU3XnD5YEwu6mKNwePLQz/S
- KCVpfqiy63+8RvsW5YBaH6TwvLJwFo3YAAAA=
-X-Change-ID: 20251222-sft-5-15-signal-race-test-ec18c70d295a
-To: MPTCP Upstream <mptcp@lists.linux.dev>
-Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2243; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=IRtBnTSPxMYaSliYgMwFZy+mo7142MCroNmS+70/5uQ=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDI9y2qibFVUtDfXFL3oP/qvz5rFTmzXb8n+bD0Fr6Qps
- 2bqCAh3lLIwiHExyIopski3RebPfF7FW+LlZwEzh5UJZAgDF6cATMQwm5FhnoSHZfgqVaYzZheO
- z762lzmo2POj0g7zFYIzjFRvvngRysiwrX/1pxcXsq+9fbHldoLXWr3du+793CPw8Eibjuv0Pbv
- r2QE=
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-When running this mptcp_join.sh selftest on older kernel versions not
-supporting local endpoints tracking, this test fails because 3 MP_JOIN
-ACKs have been received, while only 2 were expected.
+Hi Geliang,
 
-It is not clear why only 2 MP_JOIN ACKs were expected on old kernel
-versions, while 3 MP_JOIN SYN and SYN+ACK were expected. When testing on
-the v5.15.197 kernel, 3 MP_JOIN ACKs are seen, which is also what is
-expected in the selftests included in this kernel version, see commit
-f4480eaad489 ("selftests: mptcp: add missing join check").
+On 22/12/2025 04:15, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
+> 
+> v5:
+>  - As suggested by Mat and Matt, this set introduces struct tls_prot_ops
+>    for TLS.
+>  - Includes Gang Yan's patches to add MPTCP support to the TLS selftests.
 
-Switch the expected MP_JOIN ACKs to 3. While at it, move this
-chk_join_nr helper out of the special condition for older kernel
-versions as it is now the same as with more recent ones. Also, invert
-the condition to be more logical: what's expected on newer kernel
-versions having such helper first.
+Thank you for this new version!
 
-Fixes: d4c81bbb8600 ("selftests: mptcp: join: support local endpoint being tracked or not")
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- tools/testing/selftests/net/mptcp/mptcp_join.sh | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+I just did a very quick reviews. Please see my comments in the
+individual patches.
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index b2e6e548f796..f1a0d812e642 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -2329,17 +2329,16 @@ signal_address_tests()
- 		ip netns exec $ns1 sysctl -q net.mptcp.add_addr_timeout=1
- 		speed=slow \
- 			run_tests $ns1 $ns2 10.0.1.1
-+		chk_join_nr 3 3 3
- 
- 		# It is not directly linked to the commit introducing this
- 		# symbol but for the parent one which is linked anyway.
--		if ! mptcp_lib_kallsyms_has "mptcp_pm_subflow_check_next$"; then
--			chk_join_nr 3 3 2
--			chk_add_nr 4 4
--		else
--			chk_join_nr 3 3 3
-+		if mptcp_lib_kallsyms_has "mptcp_pm_subflow_check_next$"; then
- 			# the server will not signal the address terminating
- 			# the MPC subflow
- 			chk_add_nr 3 3
-+		else
-+			chk_add_nr 4 4
- 		fi
- 	fi
- }
+Also, did you check the behaviour with MPTCP and multiple subflows when
+KTLS is used with HW supporting TLS offload? (TLS_HW mode)
 
----
-base-commit: fab1280894b693ae0b9bb08f21f74852f112db79
-change-id: 20251222-sft-5-15-signal-race-test-ec18c70d295a
+  https://docs.kernel.org/networking/tls-offload.html
 
-Best regards,
+I didn't check how it works, but if the NIC needs to have a continuous
+flow to work, it will not work with MPTCP if only a part of the traffic
+is handled by a NIC.
+
+(Also, in the selftests, I don't see any tests using TLS_SW with MPTCP
+and multiple subflows, that's important!)
+
+Cheers,
+Matt
 -- 
-Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Sponsored by the NGI0 Core fund.
 
