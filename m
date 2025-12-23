@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CBFD299AAA
-	for <mptcp@lists.linux.dev>; Tue, 23 Dec 2025 16:38:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01DDD2DF13A
+	for <mptcp@lists.linux.dev>; Tue, 23 Dec 2025 16:38:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766507917; cv=none; b=sWilCCUicdxfDsH0cwy4z2c7uMOCZNAEG9lNvq21h4l2KsU0n0ESBE1v3egzAhQ5CI+6ovV/isSY5lvPL0fwxVmRxpYC++17G1VY9E701Yiqx3ixZsyuPycK9S3V+Lhc2FSVMtfHAFCSTCRHzEYgv3x5kcYPf08L+ZuFCz1z50c=
+	t=1766507925; cv=none; b=UaVD5wqr80Wf4dpH+ogkGFRr4N7B9g3TGhfsnUxwxWePfBRhIMgwCy2CX3vyhohmAWCLlwgifflGNLN06ucFWul593BLpRp5/9LjdW5T6E9WM0S3kS7EiLr8QQrD7FRsxsix94C19MfF1OyEEAmRxnyyj1jDtrGHiRez1lA+Ri4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766507917; c=relaxed/simple;
-	bh=4yUNe6vlEg/m6eP2tv6iaqs4Zv5rov7jH85PqkFlDT8=;
+	s=arc-20240116; t=1766507925; c=relaxed/simple;
+	bh=JUujs0JrRvOjVWw0j4TgWw6WUtuB85HWeJRnW1V1LIs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NOzXnd/Cudhe2GiB2s1pACStniM+iS+e7rz78ip/CgvoU2dUdn7+gbcDMXZJhpeO9vcNaTS/EE1wI1mLGnwhW2lsa8IzM8s/hFqzgdwSU7/4y1mZsHWLJPqpOUtfgubSWHMrUzSixaZA3lU+rYPoUbYT33295ZjeIIzQwkIBCnY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YTmZHo+F; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=CY+r7y6NB/b4vvYV9lCOvyv/5kelMjy7u9GzW0ScROPCbwbNrqNXYMdRBX/2ba1JpDLJZf4o3i2sWS9h4K9mzeIUKVDuCqXh9af+H8ALn+nDjPuRxzY+9CXgFCeVNBat2tbss6zKc752zQdci1a+0lSfJAA2NKh2kQk5PPpGCtI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HSRVr/+O; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YTmZHo+F"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56EECC113D0;
-	Tue, 23 Dec 2025 16:38:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HSRVr/+O"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05A4BC113D0;
+	Tue, 23 Dec 2025 16:38:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766507917;
-	bh=4yUNe6vlEg/m6eP2tv6iaqs4Zv5rov7jH85PqkFlDT8=;
+	s=k20201202; t=1766507924;
+	bh=JUujs0JrRvOjVWw0j4TgWw6WUtuB85HWeJRnW1V1LIs=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=YTmZHo+FIFebzmegPphWmA4+H8bFDzlPlpW/Wul0sZbCQU/VJ80nTbUO3F33sxJZa
-	 fTAnaPcdNVi0MNnjiDYNdysdSL/Zi4bPFdr29KgReOu4Kg2hJVFae2jVf7kuFSvz3V
-	 HY7t74YdLqAlvbun7b5uPI57cQm/86xBCVHj/FBz66TxuRNKibx07Z7OrwQgcZvo6q
-	 fAd8G5qLQfFc8Ps1AK5oEVQ9eV4uDyrXxP//199dbE4NTlZ6ixFcu/vExyvuxDtLJP
-	 JHIHi0keMs51iwqWO6I0Rb55is2zQM4ZbenJnOMf5bb8MLCWHVQEcxQHKY1vOBjutR
-	 exCdK38eJtwmA==
-Message-ID: <b69f4303-36b6-4ae9-98e3-89ec4740c9d4@kernel.org>
-Date: Tue, 23 Dec 2025 17:38:34 +0100
+	b=HSRVr/+OiyfE2OwUCmq3p1vdJ2i/27BXHWmKskLbKrdwfvKdOrFEfPHzTs3keecMN
+	 WKDtwqfLtQgEz9Lm5R7ARDQvWgTzeHRmywcAQTJXLZA3pIRD8RyHav4/+aF86uLPyW
+	 cJP9gLS2wnqAcwlyTfqGvRZP9QR6hOFwa5QQu7YD/Y2MCKdsoMOeEIzdLpIusgkrCJ
+	 QtTV2d5zf4o605x+kxXEhPG/ParuTnNCb6qzFAEf+MbLJrUEy8Yl0ZDFWDfPujjwBn
+	 htcPybhror9cnuX11UxF0fVzlgcLSITdfa/3dhpSHgbbj5i8t9ZeDvP37n8AtY1mwi
+	 OcpHFboSdvW2A==
+Message-ID: <d97b77d8-c97c-46be-b64e-590b93055f79@kernel.org>
+Date: Tue, 23 Dec 2025 17:38:42 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC mptcp-next v5 5/8] selftests: mptcp: connect: update
- sock_test_tcpulp
+Subject: Re: [RFC mptcp-next v5 6/8] selftests: mptcp: sockopt: implement
+ MPTCP KTLS tests
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>, Gang Yan <yangang@kylinos.cn>
 References: <cover.1766372799.git.tanggeliang@kylinos.cn>
- <6679775753c0e285b1b218b085d77d2a6208f4e7.1766372799.git.tanggeliang@kylinos.cn>
+ <fb08cb01f9dfa6ae1a61680390e074330e9b252c.1766372799.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,7 +87,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <6679775753c0e285b1b218b085d77d2a6208f4e7.1766372799.git.tanggeliang@kylinos.cn>
+In-Reply-To: <fb08cb01f9dfa6ae1a61680390e074330e9b252c.1766372799.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -96,91 +96,23 @@ Hi Geliang,
 On 22/12/2025 04:15, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> Update sock_test_tcpulp() to ensure the mptcp_connect.c tests are not
-> broken.
+> This patch adds Kernel TLS (KTLS) testing infrastructure to MPTCP sockopt
+> selftest, introducing a new '-c' option to enable TLS tests. It includes
+> a helper for configuring TLS socket options and implements MPTCP-specific
+> KTLS test cases for both IPv4 and IPv6, along with the necessary header
+> includes and config updates.
 > 
-> fallback() helper has been implemented to verify fallback scenarios,
-> ensuring that MPTCP fallback-to-TCP tests continue to pass.
-> 
-> Co-developed-by: Gang Yan <yangang@kylinos.cn>
-> Signed-off-by: Gang Yan <yangang@kylinos.cn>
-> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-> ---
->  .../selftests/net/mptcp/mptcp_connect.c       | 20 ++++++++++++-------
->  1 file changed, 13 insertions(+), 7 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-> index b82df82e0594..e5c394ea4e11 100644
-> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-> @@ -266,6 +266,18 @@ static void set_mptfo(int fd, int pf)
->  		perror("TCP_FASTOPEN");
->  }
->  
-> +static int fallback(int fd)
-> +{
-> +	int is_mptcp = 0;
-> +	socklen_t optlen;
-> +
-> +	optlen = sizeof(is_mptcp);
-> +	if (getsockopt(fd, IPPROTO_TCP, TCP_IS_MPTCP, &is_mptcp, &optlen) == -1)
+> TLS_OVERHEAD_SIZE macro is defined to account for the overhead in sent
+> and received data length.
 
-Would it be OK to check SO_PROTOCOL instead? TCP_IS_MPTCP is not
-available on older kernel versions.
+When quickly looking at the code and the commit message, it is not clear
+what this does: does it only set the TLS socket options, and that's it?
+If yes, that's not enough, and it might give confusing results if the
+new feature is not "properly" tested.
 
-> +		perror("TCP_IS_MPTCP");
-> +
-> +	return !is_mptcp;
-> +}
-> +
->  static int do_ulp_so(int sock, const char *name)
->  {
->  	return setsockopt(sock, IPPROTO_TCP, TCP_ULP, name, strlen(name));
-> @@ -282,7 +294,7 @@ static void sock_test_tcpulp(int sock, int proto, unsigned int line)
->  		X("getsockopt");
->  
->  	if (buflen > 0) {
-> -		if (strcmp(buf, "mptcp") != 0)
-> +		if (strcmp(buf, fallback(sock) ? "mptcp" : "tls") != 0)
->  			xerror("unexpected ULP '%s' for proto %d at line %u", buf, proto, line);
->  		ret = do_ulp_so(sock, "tls");
->  		if (ret == 0)
-> @@ -424,8 +436,6 @@ static int sock_connect_mptcp(const char * const remoteaddr,
->  	}
->  
->  	freeaddrinfo(addr);
-> -	if (sock != -1)
-> -		SOCK_TEST_TCPULP(sock, proto);
-
-When looking at f730b65c9d85 ("selftests: mptcp: try to set mptcp ulp
-mode in different sk states"), it looks like this test is useful to
-avoid regressions. We should not remove them then.
-
-With KTLS being implemented, I guess "tls" should no longer be used, but
-we should continue to call SOCK_TEST_TCPULP(). Maybe another ULP name
-can be set instead of "tls"?
-
->  	return sock;
->  }
->  
-> @@ -1197,8 +1207,6 @@ int main_loop_s(int listensock)
->  				xerror("can't open %s: %d", cfg_input, errno);
->  		}
->  
-> -		SOCK_TEST_TCPULP(remotesock, 0);
-> -
->  		memset(&winfo, 0, sizeof(winfo));
->  		err = copyfd_io(fd, remotesock, 1, true, &winfo);
->  	} else {
-> @@ -1371,8 +1379,6 @@ int main_loop(void)
->  again:
->  	check_getpeername_connect(fd);
->  
-> -	SOCK_TEST_TCPULP(fd, cfg_sock_proto);
-> -
->  	if (cfg_rcvbuf)
->  		set_rcvbuf(fd, cfg_rcvbuf);
->  	if (cfg_sndbuf)
+I think a "proper" test would involve transferring data with multiple
+subflows (with data going through the different subflows and correctly
+processed). That's more complex to put in place, but this looks required.
 
 Cheers,
 Matt
