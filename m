@@ -1,39 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB5811E572F
-	for <mptcp@lists.linux.dev>; Thu, 25 Dec 2025 09:00:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C1E21E572F
+	for <mptcp@lists.linux.dev>; Thu, 25 Dec 2025 09:00:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766653238; cv=none; b=T/wuwrQAT27Ef5YUfoqcROPFEEghseeIYBpcZKhVerMRlZVhEDRKXM4nhWXiX2QjVQ6GzhX3/WCADoUEesh31QthuWM2flveZM93u89MDf7wjASx/eOz1cHojuzIcPNlM0EKK+2msLmXJfOBIUCdroATf6mddQa22p7WQgxoQP0=
+	t=1766653240; cv=none; b=F8XHYtBV+Q2celL01UxSzAF7246OPqqaH2l1uYJ1aJKjwvTd0kBHBLjkTA9xXUZZ1kqafmYp/hNzo2ZN8eem1+auIMU0xVr/EDGw4asNmkDLGri3rl24RB4HpAjgOmc/NuwWLSbMHQdnqLnPgGXRjXSujyGmpSmM0gz5Tmt5ww4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766653238; c=relaxed/simple;
-	bh=dQa2mQD1k8jMXM428vmJcI3XZnE4oX5j4J4zESf4rEM=;
+	s=arc-20240116; t=1766653240; c=relaxed/simple;
+	bh=5e+wGjokdw9lf/RAoaGCcvmbjc2NWW1OltWOGet5qj8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QhvKor4waLHLgrOy3k48jepywxjWALk1i9v3sMQ5ONirgwl0U5pj+PYsEw+eTMhPKlpKs3OJwx23IjzfieGQh4sBygYYjHD6tRLg7vPly4szyQQN69Vt+1zpHB0/fASP9PqW0XbjEb3bcTSAb10lcsTFhauLTexiTIE3GG8v7TY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SO8plxUw; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=jo++9sexdbEhUEHCQVEd4Imns4/QkCvbepHBBESAoVt1Vw8HP76mOFib/OuRgsFT7BepTSHgDcpCyIuCOb4ccZEZENGcv34DHemgAWVgOm4Wex7ShsnCIKrEfvnkBWEnU1IsA2aLWbhSdTQ1xsRo+nAzIspZBr6wt574XUmVSpA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SF8vHmuQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SO8plxUw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 723CEC4CEF1;
-	Thu, 25 Dec 2025 09:00:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SF8vHmuQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF5AEC4CEF1;
+	Thu, 25 Dec 2025 09:00:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766653238;
-	bh=dQa2mQD1k8jMXM428vmJcI3XZnE4oX5j4J4zESf4rEM=;
+	s=k20201202; t=1766653240;
+	bh=5e+wGjokdw9lf/RAoaGCcvmbjc2NWW1OltWOGet5qj8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=SO8plxUwZ2L+ZQ7y+szXivYja/zC8PrR0zTNbi7uk2IClFOn3afX9IPNiKYtk4A5L
-	 iz1di/2GUQ2UJb3rLHde8vuO0KX7E91Akse+EMxYHJCMUzbdmfwkhr6+pGQC0nMx0U
-	 7lJs25gXVMk8rUwZGkSuKEf0oTjXhHtJExTpWiUWkyinrPPjkUVx76L7Zb+lid7cXf
-	 CRh0n+okViH+FDItIKm4galGKFpCXfid5u8/XjievbWqDdaTwPPIEB5I7wymYwAZAX
-	 tmzNBmxH39CtO43lkHLkh2bNGgdiOVe1GO6NAFEbs59J+T7J83FdeDt3jEJhVDq9vC
-	 4/mK95FsMcEOA==
+	b=SF8vHmuQXw4rT5aFVAShcNLCu2KS7oW1UxP4BZSNLvNbWSBtgQ0Z8suk8OKrFEcsr
+	 joai9G/EyVc8PXHLQpFjGf6LsQ6O13DG+HQlla0DcGAd4I2GIJs7YTsWaCYFlDm8wS
+	 JIxINddqa9qpKtwXP4v+XcMjuggsdxxEfP84EUxkrsL+XZzhvhhS/7Q45lBKqTSfu4
+	 sjbIYljbgj7CFJdQ9njVuasW/0WkUVfrhImSzQQ26N0aE7DG9Wydd1n6H8EPjv5Gvd
+	 fOTo2d+3hHvVvwYonoPisZwMjf05FJKI1tKg4LI2+Bt/f8APsoUd27Tnm72Zs35FNB
+	 uxAcFL97/8a4w==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Gang Yan <yangang@kylinos.cn>
-Subject: [PATCH mptcp-next 2/3] mptcp: allow overridden write_space to be invoked
-Date: Thu, 25 Dec 2025 16:59:57 +0800
-Message-ID: <1f9a7ad4c8174feb4de57ac51c77768623ed02df.1766653030.git.tanggeliang@kylinos.cn>
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next 3/3] selftests/bpf: Update sockmap tests for MPTCP
+Date: Thu, 25 Dec 2025 16:59:58 +0800
+Message-ID: <405fb5b8444cb10f04eca8ba2753fe1065d6cf1d.1766653030.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <cover.1766653030.git.tanggeliang@kylinos.cn>
 References: <cover.1766653030.git.tanggeliang@kylinos.cn>
@@ -47,32 +45,34 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-psock may override its own sk_write_space functions. This patch ensures
-that the overridden sk_write_space can be invoked by MPTCP.
+Update sockmap tests to reflect new MPTCP support. MPTCP sockets are now
+allowed in sockmap, so test expectations are adjusted accordingly.
 
-Note: This patch was initially included in the NVME MPTCP set.
-
-Suggested-by: Paolo Abeni <pabeni@redhat.com>
-Co-developed-by: Gang Yan <yangang@kylinos.cn>
-Signed-off-by: Gang Yan <yangang@kylinos.cn>
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- net/mptcp/protocol.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/testing/selftests/bpf/prog_tests/mptcp.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index cd5266099993..f5d4d7d030f2 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -1014,7 +1014,7 @@ static inline void mptcp_write_space(struct sock *sk)
- 	/* pairs with memory barrier in mptcp_poll */
- 	smp_mb();
- 	if (mptcp_stream_memory_free(sk, 1))
--		sk_stream_write_space(sk);
-+		INDIRECT_CALL_1(sk->sk_write_space, sk_stream_write_space, sk);
- }
+diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools/testing/selftests/bpf/prog_tests/mptcp.c
+index 7f48fd9e94e1..217ecc59c8a2 100644
+--- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
++++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
+@@ -570,13 +570,13 @@ static void test_sockmap_reject_mptcp(struct mptcp_sockmap *skel)
+ 	server_fd = accept(listen_fd, NULL, 0);
+ 	err = bpf_map_update_elem(bpf_map__fd(skel->maps.sock_map),
+ 				  &zero, &server_fd, BPF_NOEXIST);
+-	if (!ASSERT_EQ(err, -EOPNOTSUPP, "server should be disallowed"))
++	if (!ASSERT_EQ(err, 0, "server should be allowed"))
+ 		goto end;
  
- static inline void __mptcp_sync_sndbuf(struct sock *sk)
+ 	/* MPTCP client should also be disallowed */
+ 	err = bpf_map_update_elem(bpf_map__fd(skel->maps.sock_map),
+ 				  &zero, &client_fd1, BPF_NOEXIST);
+-	if (!ASSERT_EQ(err, -EOPNOTSUPP, "client should be disallowed"))
++	if (!ASSERT_EQ(err, -EEXIST, "client should be allowed"))
+ 		goto end;
+ end:
+ 	if (client_fd1 >= 0)
 -- 
 2.51.0
 
