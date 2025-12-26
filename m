@@ -1,127 +1,94 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5123EA92E;
-	Fri, 26 Dec 2025 05:40:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ADEB1DFDB8
+	for <mptcp@lists.linux.dev>; Fri, 26 Dec 2025 06:40:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766727638; cv=none; b=ImJsHS5XPHtQSL98XVmlE6rMhh+HUtgWbATksvRh9kcNk6/HBMKavAJJprVJ5Y5//0bhnp+FDRZexQcQzUYq6CLBpXA7T0+QeW9NveirLRYCOnpGHe+DcmMmqc4QalWsWzzGMqcFp3yzrSXbcZpHaOoXNpVudP6l3fAJznM/3jQ=
+	t=1766731238; cv=none; b=bsjjNAsdje5wkAhkmtcYa/AUGvNuyRhoiAN1uyy0Osa/w5qRhjKR3tvowl7sj/062VEofjG/ebAN3DQYLpCsfIE7hT+UXah5pvazbSG4Q93VuPtOVEqrUrsqEuUuCggH7hpbxBGZqW4907g9IxnL5ySZ5I2DPb7Cz30FN7xyevY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766727638; c=relaxed/simple;
-	bh=+hkccAZuBW95jPpjYYvEPX3r+GbHRl454mPKjzKNaok=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kJrcxahdytHRt4KIbEVyEqcMmQrzFaralKGXWqBVvq/59J5XAFTi7knlJqsYCpANcK/5VGqHQEvikF9dljFCIkvT+zSps7nxWKWQ1Af7q6vaZ/a5+1NAvv9WnxkfeTmYZXpDYID1wO7Fc4FTjP6m65J12Dblaxd3/hfP0fauvKI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=L+FCsEjk; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1766731238; c=relaxed/simple;
+	bh=k1HH37N/+LdMO3D3j6FFXd2KyvV+/0o4Wiz9ImKXi74=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Ajga/ZGMXqGvh1qKC3Uj/5R5K5hLzJwbE5N6XJMZTwlnfCHJpccsGsXx2GlPolwHG1NHJxoBUiWM+IxX/dg1ZN3qdd4YenCorzXIEFH45M/3/C11eEKd5sW3Wcuhvdis00z0f5N+/vikNjywT6+TNmOJfJ0NuDtvPQ3pimpxv1Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N1cQbv+k; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="L+FCsEjk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1766727636; x=1798263636;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=+hkccAZuBW95jPpjYYvEPX3r+GbHRl454mPKjzKNaok=;
-  b=L+FCsEjkdE//BHZIBBTcPsHKfkzehcr4wWXsq5YS1lUEApKB+Ah3ACRT
-   2/ONvbImjCEHpkXLGnvKleyObL2h2paYnEeXG6643RfP8c9Wg/P02R2jD
-   KCPTwKWsVPPCIuo9PaE5nWP4Rl096UIZa0cNb0g0wCRLsDzUsWJX9L6u/
-   dBYe+U+nH2hVXaFoIxiMBB7ztlIVCJMg6UNZQm1Yf8oXJ/HNNbdvpXlsu
-   nlDkGpzvxsTBaDTpfhdyhxP+exOFOG8JMh2XKpooZynk5lhwF2CqfKawd
-   1VxZ312/l2yqsNEa5Y1j5PPEhi1tzdLBnAsRrabvF3qTkGOn0DoPOfu+K
-   A==;
-X-CSE-ConnectionGUID: u2SgnMLnR7i8E+bGMjbMsA==
-X-CSE-MsgGUID: yMRvWiQaTW+Ob2Xi6RV6Qg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11652"; a="56062725"
-X-IronPort-AV: E=Sophos;i="6.21,177,1763452800"; 
-   d="scan'208";a="56062725"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Dec 2025 21:40:35 -0800
-X-CSE-ConnectionGUID: r6dIUj2HQoa8U8beK9UkBA==
-X-CSE-MsgGUID: nyuOGFWxQnGuK9ybQRit+A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,177,1763452800"; 
-   d="scan'208";a="237727729"
-Received: from lkp-server02.sh.intel.com (HELO dd3453e2b682) ([10.239.97.151])
-  by orviesa001.jf.intel.com with ESMTP; 25 Dec 2025 21:40:33 -0800
-Received: from kbuild by dd3453e2b682 with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1vZ0Yx-000000004jN-2983;
-	Fri, 26 Dec 2025 05:40:31 +0000
-Date: Fri, 26 Dec 2025 13:39:33 +0800
-From: kernel test robot <lkp@intel.com>
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: oe-kbuild-all@lists.linux.dev, Geliang Tang <tanggeliang@kylinos.cn>
-Subject: Re: [PATCH mptcp-next 1/3] mptcp: implement psock_update_sk_prot
-Message-ID: <202512261326.9cQpYwdp-lkp@intel.com>
-References: <f2508c5923c4ed365d6c12800e43a16761ed615a.1766653030.git.tanggeliang@kylinos.cn>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N1cQbv+k"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21A26C4CEF7;
+	Fri, 26 Dec 2025 06:40:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1766731237;
+	bh=k1HH37N/+LdMO3D3j6FFXd2KyvV+/0o4Wiz9ImKXi74=;
+	h=From:Subject:Date:To:Cc:From;
+	b=N1cQbv+kH8jAYpnwPuOykhYtxQdsYONtCCIXjOR771vCnWXtiy99FAa3g8Tf2xbat
+	 +c47METTbUS3jEksTEvs6pB7adawga9SxBzvHc7F/3EkMyou7Fw9nsj2Mnp3Z8wEbj
+	 ClSbgo1nWPmfmiVKEgDncHcForDl0WUNinJNC/0bOFRXXS+l7ofAsm57RFise1LZN9
+	 BoolALgwdGBQAHod1cG721aG8FPK80h71mpDzJx/5An07MOnBgEE6wtQ5yzPMmlgm1
+	 ieSQGlSqxZjvUygH9XIWzfyebFuWPnjbTDMiBsFciWC3FBbb33mohn/feCRrpkD7GH
+	 TH9WJm/r/Ctjg==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH mptcp-next 00/11] mptcp: avoid dup events + error + misc.
+Date: Fri, 26 Dec 2025 07:40:14 +0100
+Message-Id: <20251226-mptcp-issue-603-v1-0-bb30e331b839@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f2508c5923c4ed365d6c12800e43a16761ed615a.1766653030.git.tanggeliang@kylinos.cn>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAM4tTmkC/yWMSwqFMAwAryJZG6gRv1cRF9JGzcJaGt9DEO9u0
+ eXAzFygHIUV+uyCyH9R2X2CIs/ArpNfGMUlBjJUFUSEWzhsQFH9MdamRNdWrqububFmglSFyLO
+ c73GAT/Z8HjDe9wNy5kqBbQAAAA==
+X-Change-ID: 20251222-mptcp-issue-603-d85d967f7c0a
+To: MPTCP Upstream <mptcp@lists.linux.dev>
+Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
+ Marco Angaroni <marco.angaroni@italtel.com>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1538; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=k1HH37N/+LdMO3D3j6FFXd2KyvV+/0o4Wiz9ImKXi74=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDL9dG/OWPxrbugtz96ozKDCvsnqgrFLPLj3LC86/bj5x
+ hrrj6/+dZSyMIhxMciKKbJIt0Xmz3xexVvi5WcBM4eVCWQIAxenAEzk51aG/84aVzJudB0WiPGr
+ 9rrt5B4nnfY+ZPb1oH8L5Rwrf/mdvcPw36/urmx25unpoW43VN/ydV9nqli/xGj9isWT/V9LtRk
+ t5AcA
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hi Geliang,
+Here is my last series of the year :)
 
-kernel test robot noticed the following build errors:
+There are two fixes with their tests:
 
-[auto build test ERROR on mptcp/export]
-[also build test ERROR on mptcp/export-net linus/master v6.19-rc2 next-20251219]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+- a subflow closed event can be visible multiple times, see issue #603
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Geliang-Tang/mptcp-implement-psock_update_sk_prot/20251225-170243
-base:   https://github.com/multipath-tcp/mptcp_net-next.git export
-patch link:    https://lore.kernel.org/r/f2508c5923c4ed365d6c12800e43a16761ed615a.1766653030.git.tanggeliang%40kylinos.cn
-patch subject: [PATCH mptcp-next 1/3] mptcp: implement psock_update_sk_prot
-config: arc-defconfig (https://download.01.org/0day-ci/archive/20251226/202512261326.9cQpYwdp-lkp@intel.com/config)
-compiler: arc-linux-gcc (GCC) 15.1.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251226/202512261326.9cQpYwdp-lkp@intel.com/reproduce)
+- the subflow closed event didn't contain the error as expected.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202512261326.9cQpYwdp-lkp@intel.com/
+The 4 first patches are for -net, the rest are small fixes and
+improvements for net-next. Some tests should be quicker now.
 
-All errors (new ones prefixed by >>):
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+Matthieu Baerts (NGI0) (11):
+      mptcp: avoid dup SUB_CLOSED events after disconnect
+      selftests: mptcp: check no dup close events after error
+      mptcp: only reset subflow errors when propagated
+      selftests: mptcp: check subflow errors in close events
+      selftests: mptcp: join: wait for estab event instead of MPJ
+      selftests: mptcp: join: fix wait_mpj helper
+      selftests: mptcp: join: userspace: wait for new events
+      selftests: mptcp: join chk_stale_nr: avoid dup stats
+      selftests: mptcp: join: avoid declaring i if not used
+      selftests: mptcp: connect: fix maybe-uninitialize warn
+      selftests: mptcp: connect cleanup TFO setup
 
-   net/mptcp/protocol.c: In function 'mptcp_bpf_rebuild_protos':
->> net/mptcp/protocol.c:4043:51: error: 'sock_map_destroy' undeclared (first use in this function); did you mean 'sock_diag_destroy'?
-    4043 |         prot[MPTCP_BPF_BASE].destroy            = sock_map_destroy;
-         |                                                   ^~~~~~~~~~~~~~~~
-         |                                                   sock_diag_destroy
-   net/mptcp/protocol.c:4043:51: note: each undeclared identifier is reported only once for each function it appears in
->> net/mptcp/protocol.c:4044:51: error: 'sock_map_close' undeclared (first use in this function); did you mean 'sk_msg_clone'?
-    4044 |         prot[MPTCP_BPF_BASE].close              = sock_map_close;
-         |                                                   ^~~~~~~~~~~~~~
-         |                                                   sk_msg_clone
-   net/mptcp/protocol.c: At top level:
-   net/mptcp/protocol.c:4079:12: warning: 'mptcp_bpf_update_proto' defined but not used [-Wunused-function]
-    4079 | static int mptcp_bpf_update_proto(struct sock *sk, struct sk_psock *psock, bool restore)
-         |            ^~~~~~~~~~~~~~~~~~~~~~
+ net/mptcp/protocol.c                              |   9 +-
+ tools/testing/selftests/net/mptcp/mptcp_connect.c |  19 ++-
+ tools/testing/selftests/net/mptcp/mptcp_join.sh   | 146 +++++++++++++++-------
+ 3 files changed, 116 insertions(+), 58 deletions(-)
+---
+base-commit: b3ae75d680ea6ef281101b0f5029056c4f87ff02
+change-id: 20251222-mptcp-issue-603-d85d967f7c0a
 
-
-vim +4043 net/mptcp/protocol.c
-
-  4038	
-  4039	static void mptcp_bpf_rebuild_protos(struct proto prot[MPTCP_BPF_NUM_CFGS],
-  4040					     struct proto *base)
-  4041	{
-  4042		prot[MPTCP_BPF_BASE]			= *base;
-> 4043		prot[MPTCP_BPF_BASE].destroy		= sock_map_destroy;
-> 4044		prot[MPTCP_BPF_BASE].close		= sock_map_close;
-  4045		prot[MPTCP_BPF_BASE].sock_is_readable	= sk_msg_is_readable;
-  4046	
-  4047		prot[MPTCP_BPF_TX]			= prot[MPTCP_BPF_BASE];
-  4048		prot[MPTCP_BPF_RX]			= prot[MPTCP_BPF_BASE];
-  4049		prot[MPTCP_BPF_TXRX]			= prot[MPTCP_BPF_TX];
-  4050	}
-  4051	
-
+Best regards,
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
+
