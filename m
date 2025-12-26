@@ -1,132 +1,141 @@
-Received: from mail-qk1-f196.google.com (mail-qk1-f196.google.com [209.85.222.196])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC54E23EA83
-	for <mptcp@lists.linux.dev>; Thu, 25 Dec 2025 10:09:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 645891E3DE5;
+	Fri, 26 Dec 2025 03:24:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766657354; cv=none; b=VcK5Pg38+HCiGqact0+GoJdWAdZU4D8Nh8iKsXPuscQO8bGHna6s2oqXRIhwanngp1LHN7hvqyYfNlWrFuwmV+8lviNkAAY1HT1aPk8mezc2o5/uFjge5ghNLt2XgzC/1eYw/uojRbTwII7hyAvug64bhDrywtfTsnHz3olTXpU=
+	t=1766719498; cv=none; b=DajXCFWy4EYP/VhVaPD/1u5IvmyA23zlkfPp9JXu7r4kFwKqiTg93f0mqDJiWQbVUe/wANOFHJwC5RUfcr6P+J9s1uR0HQ2UcebrujMsdVJCFQvH5YrYzWuExS4oIRUAFqk4niKWbnHmfI5OXEFc6qQS1Q3lTsa+QAlH2tDU5fI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766657354; c=relaxed/simple;
-	bh=3p96LzLR0KdfgPRbEHsdBoNKEswQbmYBQ7Z9KrUYHRs=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=aW1g8i412yLu9ZJwipEXVUAP8mY8hnwrg5Hp8dQ4je4bxHvA8Y2FlyZBSyfWKbMkHQYAFHR8Asolkq8uk2UyvwCmijkIZgj98Vzyyaxki96LkoFVfjcvHPP/QVdsQDuQhDSGgs19j1D2LsyyIbk0e7NEVzCRjiZ2kS6WVuC7rMI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TPdccrYB; arc=none smtp.client-ip=209.85.222.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1766719498; c=relaxed/simple;
+	bh=PkGiF3AbGksqohvKGUUIK1j4unoG/RYWEFIRcHdSUVU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jCUkFYWICoAmb6p+lReq53dDYgxZEdgnF271WRhoCVBRGBXHX26OgAl0JjEqkOqmtNezUDV0ujrKcRbH2d98cpajs7Ub6z1296L5SqkzMpYDc2e8CqqVRg1grL+wuYS+xa23zNnJhGz4/LN60PZz3zf1fepuoWvSRfXyEhhi51E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HnalGOLg; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TPdccrYB"
-Received: by mail-qk1-f196.google.com with SMTP id af79cd13be357-8b2148ca40eso1016801885a.1
-        for <mptcp@lists.linux.dev>; Thu, 25 Dec 2025 02:09:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1766657352; x=1767262152; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=x0c4W6V3W4pX1eA/bpwACCDZpaBBrOymqsoGs+AR+ts=;
-        b=TPdccrYBVOQb/Un6l23zA1elS8FPhI+CrUQf4bh5Hp3IyYR662/gY5ecwtp6hF//Vq
-         K7K+tyn/HB2xp26oqFu/y32OC6HC5E5Kz3dsQhGafNB5j/ehtDSCcIgApcfSPSdrh4Xh
-         acstjmlvSVhMkJJNhKPSNeGDi++d1WjH2fdjDvkKN33BhVx8uzlFCDAStnMD4pbc0QSD
-         stHX0UExHcCnHaKNNbPKksNOHQtOSMTGz4nxMszXl9N4VhebaMZ8DvUF3e1zYenAmnt+
-         JR1HmslkM1iKNoVZ5bCa9irLJg19l+FohpOCOa4j6hrnfeME1FfR8DvqsxQZKf+/jVKm
-         4Jtg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1766657352; x=1767262152;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=x0c4W6V3W4pX1eA/bpwACCDZpaBBrOymqsoGs+AR+ts=;
-        b=mtt3Go4BnwFhltmqtSv5FVIMSP2T4vEJWYKXxRhHfpxJdmGlH9YBgvwN4f76lSSpvt
-         ScJdJ3IQiAKmF4Qa6RVeSq5gGtSW0c7w+MzO6Gmn3TatFcw2Mihd4mmITeTGhK/SwGJk
-         6lCg8O/GiA3CTcr0q/Wa1An2CVgzjF9uYLyRPSxVaPb3YV5zoe4M2DkIzjJ10FJk8rWw
-         WYbzb4ifTQn1Ox3m05KxC5Q9AF7u3XiMHqtaDwCpjRKw+MvhSd1AoWdFw9bxorxkZR2b
-         WSoZqqpEYwsMqHYAayqwYpv1lWjuDINayC751hdf0VPgiHPGUrmEDVmTj5UfmWkBGFIM
-         aB0A==
-X-Gm-Message-State: AOJu0Yw1QDKCIX0suJcG5LMTIRQ4QrEFT1vvJ/C9I945c1GMODdKEUrZ
-	Ee/5Xp+Y3kAa/QqlMwrxuCKhYO1pjZ0o0KBp8w+FrEj8253WvLddiI5Btl4HVSs=
-X-Gm-Gg: AY/fxX6K4d3RmauAj4Kz7HOlAjja4redI7yfi6N0lpdB/icIMwl3jjN1g/ePPgjaFHO
-	7jiXP2TYz+rA9dZ9f46UW25vnr1Yjwptv6/wtkjyoJ+F9oOHc8zSh7EtEDrSrsgejz7nZmEZN6Z
-	CAnaz/HMelyOWqb7WoK03rC71BtDapLCV2+AeQsgbyqwhhyjA3/JJddEonsR4DjCHr0goDqAAVd
-	1jXaMBVp9HotQ8AUtD/yPgsrwMLop+aDz3USRV3bEHXL05TOI/5558jJiwR59YD7yYjsN2nFhTg
-	DVANWju/1QYD4BJQVtQFrVkBR5vi7+ugajk3HTSh1QuHsgKBcCrCIzdHKGw5wLCu9asjH5eRaUQ
-	NHtbXMufxBF6hQkouoOivEPKeqeuF1rtPSG+Z9DtTyRovpJoDr5p20O5/eokO94yQnnl05V7Cpf
-	asWEQNWEL/F4Ci0xLp5V5SpBU=
-X-Google-Smtp-Source: AGHT+IHjyvJmOK3wPSmcUkPD/Dt+E1u01jyE9Xj6zE5t6CkZJ3LzOu4mk0D/pwU6XnsGx2N+YMe9Jw==
-X-Received: by 2002:a05:620a:1789:b0:8b2:e986:2704 with SMTP id af79cd13be357-8c08fa9be3fmr2775022185a.6.1766657351721;
-        Thu, 25 Dec 2025 02:09:11 -0800 (PST)
-Received: from [127.0.0.1] ([64.236.143.34])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-8c0970f5fa6sm1493121585a.28.2025.12.25.02.09.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Dec 2025 02:09:11 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <tanggeliang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <cover.1766653030.git.tanggeliang@kylinos.cn>
-References: <cover.1766653030.git.tanggeliang@kylinos.cn>
-Subject: Re: [PATCH mptcp-next 0/3] implement psock_update_sk_prot
-Message-ID: <f6354273-4dde-668a-b450-3c1e18c7f058@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 25 Dec 2025 10:09:10 +0000
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HnalGOLg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1766719496; x=1798255496;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=PkGiF3AbGksqohvKGUUIK1j4unoG/RYWEFIRcHdSUVU=;
+  b=HnalGOLgdyLbTL2YBs+HfMldGTpQyEuDSXL/v0oQ1edKFSroYqY8/YgE
+   ZctS7IGgC52jIdgRBXRAfa27SnRnZ+2iReHCWAeSbqdkEIgnK/XihVEIU
+   XdrD2oLuaAnVDGjREiskdwWzjrXRTCqiBHbm+7NlGJ6dmkmA6e8ElqAWW
+   t15xCZTfArUcoV9N+9epQi9GM2D6WHN2QvEok4whTm5Y+oMPueTe/1Akw
+   LI2lR+EooysQDTG19BXggn2cMSR6KHAU8JUw1ejqhXvTzOi1GzOt747na
+   FaaOjoWdjcQCIRVEAlVFalj+O44vZRdh2lo80vvTMip/aPJjX24rM5TqG
+   g==;
+X-CSE-ConnectionGUID: HgNxaGJkQaextWjKDyEc+g==
+X-CSE-MsgGUID: BiWXkmquTXS6nNNdMIouLA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11652"; a="56058654"
+X-IronPort-AV: E=Sophos;i="6.21,177,1763452800"; 
+   d="scan'208";a="56058654"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Dec 2025 19:24:55 -0800
+X-CSE-ConnectionGUID: DR4lHJfaRCSeiH5INfu8rQ==
+X-CSE-MsgGUID: Bkt3+5EdSoGDNKYtCqGKnA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,177,1763452800"; 
+   d="scan'208";a="237712186"
+Received: from lkp-server02.sh.intel.com (HELO dd3453e2b682) ([10.239.97.151])
+  by orviesa001.jf.intel.com with ESMTP; 25 Dec 2025 19:24:55 -0800
+Received: from kbuild by dd3453e2b682 with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1vYyRf-000000004ez-05BV;
+	Fri, 26 Dec 2025 03:24:51 +0000
+Date: Fri, 26 Dec 2025 11:24:06 +0800
+From: kernel test robot <lkp@intel.com>
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: oe-kbuild-all@lists.linux.dev, Geliang Tang <tanggeliang@kylinos.cn>
+Subject: Re: [PATCH mptcp-next 1/3] mptcp: implement psock_update_sk_prot
+Message-ID: <202512261144.DxrvwMS3-lkp@intel.com>
+References: <f2508c5923c4ed365d6c12800e43a16761ed615a.1766653030.git.tanggeliang@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f2508c5923c4ed365d6c12800e43a16761ed615a.1766653030.git.tanggeliang@kylinos.cn>
 
 Hi Geliang,
 
-Thank you for your modifications, that's great!
+kernel test robot noticed the following build warnings:
 
-Our CI did some validations and here is its report:
+[auto build test WARNING on mptcp/export]
+[also build test WARNING on mptcp/export-net linus/master v6.19-rc2 next-20251219]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Critical: Global Timeout =
-=E2=9D=8C
-- KVM Validation: btf-debug (only bpftest_all): Success! =
-=E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
-uns/20502612231
+url:    https://github.com/intel-lab-lkp/linux/commits/Geliang-Tang/mptcp-implement-psock_update_sk_prot/20251225-170243
+base:   https://github.com/multipath-tcp/mptcp_net-next.git export
+patch link:    https://lore.kernel.org/r/f2508c5923c4ed365d6c12800e43a16761ed615a.1766653030.git.tanggeliang%40kylinos.cn
+patch subject: [PATCH mptcp-next 1/3] mptcp: implement psock_update_sk_prot
+config: arc-defconfig (https://download.01.org/0day-ci/archive/20251226/202512261144.DxrvwMS3-lkp@intel.com/config)
+compiler: arc-linux-gcc (GCC) 15.1.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251226/202512261144.DxrvwMS3-lkp@intel.com/reproduce)
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/274e726fda82
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1036539
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202512261144.DxrvwMS3-lkp@intel.com/
 
+All warnings (new ones prefixed by >>):
 
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+   net/mptcp/protocol.c: In function 'mptcp_bpf_rebuild_protos':
+   net/mptcp/protocol.c:4043:51: error: 'sock_map_destroy' undeclared (first use in this function); did you mean 'sock_diag_destroy'?
+    4043 |         prot[MPTCP_BPF_BASE].destroy            = sock_map_destroy;
+         |                                                   ^~~~~~~~~~~~~~~~
+         |                                                   sock_diag_destroy
+   net/mptcp/protocol.c:4043:51: note: each undeclared identifier is reported only once for each function it appears in
+   net/mptcp/protocol.c:4044:51: error: 'sock_map_close' undeclared (first use in this function); did you mean 'sk_msg_clone'?
+    4044 |         prot[MPTCP_BPF_BASE].close              = sock_map_close;
+         |                                                   ^~~~~~~~~~~~~~
+         |                                                   sk_msg_clone
+   net/mptcp/protocol.c: At top level:
+>> net/mptcp/protocol.c:4079:12: warning: 'mptcp_bpf_update_proto' defined but not used [-Wunused-function]
+    4079 | static int mptcp_bpf_update_proto(struct sock *sk, struct sk_psock *psock, bool restore)
+         |            ^~~~~~~~~~~~~~~~~~~~~~
 
 
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+vim +/mptcp_bpf_update_proto +4079 net/mptcp/protocol.c
 
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+  4078	
+> 4079	static int mptcp_bpf_update_proto(struct sock *sk, struct sk_psock *psock, bool restore)
+  4080	{
+  4081		int family = sk->sk_family == AF_INET6 ? MPTCP_BPF_IPV6 : MPTCP_BPF_IPV4;
+  4082		int config = psock->progs.msg_parser   ? MPTCP_BPF_TX   : MPTCP_BPF_BASE;
+  4083	
+  4084		if (psock->progs.stream_verdict || psock->progs.skb_verdict)
+  4085			config = (config == MPTCP_BPF_TX) ? MPTCP_BPF_TXRX : MPTCP_BPF_RX;
+  4086	
+  4087		if (restore) {
+  4088			sk->sk_write_space = psock->saved_write_space;
+  4089			/* Pairs with lockless read in sk_clone_lock() */
+  4090			sock_replace_proto(sk, psock->sk_proto);
+  4091			return 0;
+  4092		}
+  4093	
+  4094		if (sk->sk_family == AF_INET6) {
+  4095			if (mptcp_bpf_assert_proto_ops(psock->sk_proto))
+  4096				return -EINVAL;
+  4097	
+  4098			mptcp_bpf_check_v6_needs_rebuild(psock->sk_proto);
+  4099		}
+  4100	
+  4101		/* Pairs with lockless read in sk_clone_lock() */
+  4102		sock_replace_proto(sk, &mptcp_bpf_prots[family][config]);
+  4103		return 0;
+  4104	}
+  4105	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
