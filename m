@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E79091DFFD
-	for <mptcp@lists.linux.dev>; Sun, 28 Dec 2025 02:59:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E55F2110
+	for <mptcp@lists.linux.dev>; Sun, 28 Dec 2025 03:06:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766890746; cv=none; b=aK2dcvZAyE8vk35if45sh+1H3uYZzbMD3OTEzArI1SearIOjk3knNdDo0Rmkr6v6F4EEDxaRXUBBx6SUDWGZ2IMJ0tcld1N7lteVsRzfo0354HDZ813fK89QfftZTCllQZUlNAny/TkzDdzoFWzdYkGlg+uCrHhpU6c2jfQ+OwY=
+	t=1766891195; cv=none; b=IpgK9hlYEOSWzzml5kG6rWir0OqGxhNajc1vuZM0IYdP+s2Oo71PR60GpzcRvruaxWP6Ru563ZljFpmjZgDwSJAfvDHKVkGdNVyTBBs0Kif8BPxZaYtCYo9Tv7WCfqAD9OMjbKz68o6dkc02KRiRuQ1LA6XibYsmTvCcoZXovNM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766890746; c=relaxed/simple;
-	bh=bfu94th0CjgASFm1d2uPtDJZpINAdIbfq9G5JrwETLc=;
+	s=arc-20240116; t=1766891195; c=relaxed/simple;
+	bh=RLW0gYQsMf1EboxhILpe2VTMP93N1Chid9qWYu+Rbxs=;
 	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=duEEDCkmeT5f68dv/795fcUEbYFscr/iZXj02jt6DV1E2i92yZTMMGQ5kWa2DFiWEH71LfqM2ZuIy1fpkmCrZWJ7cEkYXvkpYOMTLAWFV1yi7L6XZ44OfSt3USqAbUynvi1hRZHdLvNArjcSq6L/tc7EGlJj+3JiuQlpSckjMxk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rae/9cw1; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=UvfaLsKzHH5OvvfXXw7uBMHlXoCZ5K47XrCJHPzZQff1z6H32noCVvogMQ0yI4yjuOGKYphGFfGoPd+Q7hNN1O6GGYEMl0rV918/NOT5y4mV1WVhYYEw8ljJE38oTiqYjxYpMJPnAFY2UE/o5EW4JF050uMMaMj4uU0cRp0PWIU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=awwCkoei; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rae/9cw1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F0C1C4CEF1;
-	Sun, 28 Dec 2025 02:59:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="awwCkoei"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 239A8C116C6;
+	Sun, 28 Dec 2025 03:06:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766890745;
-	bh=bfu94th0CjgASFm1d2uPtDJZpINAdIbfq9G5JrwETLc=;
+	s=k20201202; t=1766891194;
+	bh=RLW0gYQsMf1EboxhILpe2VTMP93N1Chid9qWYu+Rbxs=;
 	h=Subject:From:To:Date:In-Reply-To:References:From;
-	b=rae/9cw1AEPmzSaP+hVqU0Na2PesFiQ7pszIsRHc5DD0X8TeyOefKYZcQapU9q22P
-	 jzodmd07LPCBBzWY540gfEWfnTICKMKWXTzXbq9rjCPjayeX+vkePywzSJ6IvbPIC3
-	 PxNuPGBBymxbGB1zUna3d/B79PN3G6R5r03SXPiarKUbyja0/l3SaBe9XtcoGR5Y5o
-	 1vfYiWeX0wT0zeJsP8qhyQr6SFxhdfuatCYu7CkkMOq5kot+2d8gGGIEmdBnJudttG
-	 on91mcT3JBqCr78hsBnPEcwhtDi5+MAYv16YI4RaCxUJdB/lE4+zJrU2lmq5bfFtTZ
-	 vGEyQp9orcGfA==
-Message-ID: <052b88ccb1d8a3ebb64b196a75db3a616023f606.camel@kernel.org>
-Subject: Re: [PATCH mptcp-next 11/11] selftests: mptcp: connect cleanup TFO
- setup
+	b=awwCkoeic6nOssPS2YR9Lg6uhkIl9kmx7xst+SIC08b850Ojq+XKoH5WfHYrznLVa
+	 qXHP8oz745oX5oyfsbEaXOyBhtu/jnsMwqKmKM0t+OLDmtlf1cDcSpihKOjhsxq7Wt
+	 ix/i8t1nMlKOvZoaBl3uNEPIkbr2YydDIF2rCzq84sbGbDmtZdlzoY9RnMmCh9wzAo
+	 UM/10SXzB0ExKvbL9Q5QI8RGRFrNOMp8z/2x3teadUVHf4nLn+8QqRA3a8jZlypgpM
+	 YDDe3bSu5d2K9WkMyXFo4MIEuscv6MiCKAHfIEdJn04xOvesHEqpDOSexOEsievtJp
+	 ZSK1kvqfgFApA==
+Message-ID: <c24cd268dc2f6797425e022a515776a006eaded6.camel@kernel.org>
+Subject: Re: [PATCH mptcp-next] selftests: mptcp: join: no SKIP mark for
+ group checks
 From: Geliang Tang <geliang@kernel.org>
 To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, MPTCP Upstream
 	 <mptcp@lists.linux.dev>
-Date: Sun, 28 Dec 2025 10:59:02 +0800
-In-Reply-To: <20251226-mptcp-issue-603-v1-11-bb30e331b839@kernel.org>
-References: <20251226-mptcp-issue-603-v1-0-bb30e331b839@kernel.org>
-	 <20251226-mptcp-issue-603-v1-11-bb30e331b839@kernel.org>
+Date: Sun, 28 Dec 2025 11:06:32 +0800
+In-Reply-To: <20251211-sft-no-skip-new-cnt-v1-1-6dd6d70f8242@kernel.org>
+References: <20251211-sft-no-skip-new-cnt-v1-1-6dd6d70f8242@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 User-Agent: Evolution 3.56.2-4 
 Precedence: bulk
@@ -50,77 +49,196 @@ Hi Matt,
 
 Thanks for this patch.
 
-On Fri, 2025-12-26 at 07:40 +0100, Matthieu Baerts (NGI0) wrote:
-> To the TFO, only the file descriptor is needed, the family is not.
+On Thu, 2025-12-11 at 19:09 +0100, Matthieu Baerts (NGI0) wrote:
+> When executing the last MPTCP selftests on older kernels, this output
+> is
+> printed:
 > 
-> Also, the error can be handled the same way when 'sendto()' or
-> 'connect()' are used. Only the printed error message is different.
+>   # 001 no JOIN
+>   #       join Rx                             [SKIP]
+>   #       join Tx                             [SKIP]
+>   #       fallback                            [SKIP]
 > 
-> This avoids a bit of confusions.
+> In fact, behind each line, a few counters are checked, and likely not
+> all of them have been skipped because the they are not available on
+> these kernels. Instead, "new" and unsupported counters for these
+> groups
+> are now ignored, and [ OK ] will be printed instead of [SKIP].
+> 
+> Note that on the MPTCP CI, when validating the dev versions, any
+> unsupported counter will cause the tests to fail. So this is safe not
+> to
+> print 'SKIP' for these group checks.
 > 
 > Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> ---
+>  tools/testing/selftests/net/mptcp/mptcp_join.sh | 30 ++++++++++++---
+> ----------
+>  1 file changed, 15 insertions(+), 15 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> index b2e6e548f796..77370b10651a 100755
+> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> @@ -1407,7 +1407,7 @@ chk_join_tx_nr()
+>  
+>  	count=$(mptcp_lib_get_counter ${ns2}
+> "MPTcpExtMPJoinSynTxCreatSkErr")
+>  	if [ -z "$count" ]; then
+> -		rc=${KSFT_SKIP}
+> +		: # ignore skip
+>  	elif [ "$count" != "$create" ]; then
 
-LGTM!
+In that case, wouldn't it be better to remove 'if [ -z "$count" ];
+then' and directly check with 'if [ "$count" != "$create" ]; then'?
 
-    Reviewed-by: Geliang Tang <geliang@kernel.org>
-
+Thanks,
 -Geliang
 
-> ---
->  tools/testing/selftests/net/mptcp/mptcp_connect.c | 17 +++++++------
-> ----
->  1 file changed, 7 insertions(+), 10 deletions(-)
+>  		rc=${KSFT_FAIL}
+>  		print_check "syn tx create socket error"
+> @@ -1416,7 +1416,7 @@ chk_join_tx_nr()
+>  
+>  	count=$(mptcp_lib_get_counter ${ns2}
+> "MPTcpExtMPJoinSynTxBindErr")
+>  	if [ -z "$count" ]; then
+> -		rc=${KSFT_SKIP}
+> +		: # ignore skip
+>  	elif [ "$count" != "$bind" ]; then
+>  		rc=${KSFT_FAIL}
+>  		print_check "syn tx bind error"
+> @@ -1425,7 +1425,7 @@ chk_join_tx_nr()
+>  
+>  	count=$(mptcp_lib_get_counter ${ns2}
+> "MPTcpExtMPJoinSynTxConnectErr")
+>  	if [ -z "$count" ]; then
+> -		rc=${KSFT_SKIP}
+> +		: # ignore skip
+>  	elif [ "$count" != "$connect" ]; then
+>  		rc=${KSFT_FAIL}
+>  		print_check "syn tx connect error"
+> @@ -1451,7 +1451,7 @@ chk_fallback_nr()
+>  
+>  	count=$(mptcp_lib_get_counter ${!ns}
+> "MPTcpExtInfiniteMapTx")
+>  	if [ -z "$count" ]; then
+> -		rc=${KSFT_SKIP}
+> +		: # ignore skip
+>  	elif [ "$count" != "$infinite_map_tx" ]; then
+>  		rc=${KSFT_FAIL}
+>  		print_check "$ns infinite map tx fallback"
+> @@ -1460,7 +1460,7 @@ chk_fallback_nr()
+>  
+>  	count=$(mptcp_lib_get_counter ${!ns}
+> "MPTcpExtDSSCorruptionFallback")
+>  	if [ -z "$count" ]; then
+> -		rc=${KSFT_SKIP}
+> +		: # ignore skip
+>  	elif [ "$count" != "$dss_corruption" ]; then
+>  		rc=${KSFT_FAIL}
+>  		print_check "$ns dss corruption fallback"
+> @@ -1469,7 +1469,7 @@ chk_fallback_nr()
+>  
+>  	count=$(mptcp_lib_get_counter ${!ns}
+> "MPTcpExtSimultConnectFallback")
+>  	if [ -z "$count" ]; then
+> -		rc=${KSFT_SKIP}
+> +		: # ignore skip
+>  	elif [ "$count" != "$simult_conn" ]; then
+>  		rc=${KSFT_FAIL}
+>  		print_check "$ns simult conn fallback"
+> @@ -1478,7 +1478,7 @@ chk_fallback_nr()
+>  
+>  	count=$(mptcp_lib_get_counter ${!ns}
+> "MPTcpExtMPCapableFallbackACK")
+>  	if [ -z "$count" ]; then
+> -		rc=${KSFT_SKIP}
+> +		: # ignore skip
+>  	elif [ "$count" != "$mpc_passive" ]; then
+>  		rc=${KSFT_FAIL}
+>  		print_check "$ns mpc passive fallback"
+> @@ -1487,7 +1487,7 @@ chk_fallback_nr()
+>  
+>  	count=$(mptcp_lib_get_counter ${!ns}
+> "MPTcpExtMPCapableFallbackSYNACK")
+>  	if [ -z "$count" ]; then
+> -		rc=${KSFT_SKIP}
+> +		: # ignore skip
+>  	elif [ "$count" != "$mpc_active" ]; then
+>  		rc=${KSFT_FAIL}
+>  		print_check "$ns mpc active fallback"
+> @@ -1496,7 +1496,7 @@ chk_fallback_nr()
+>  
+>  	count=$(mptcp_lib_get_counter ${!ns}
+> "MPTcpExtMPCapableDataFallback")
+>  	if [ -z "$count" ]; then
+> -		rc=${KSFT_SKIP}
+> +		: # ignore skip
+>  	elif [ "$count" != "$mpc_data" ]; then
+>  		rc=${KSFT_FAIL}
+>  		print_check "$ns mpc data fallback"
+> @@ -1505,7 +1505,7 @@ chk_fallback_nr()
+>  
+>  	count=$(mptcp_lib_get_counter ${!ns}
+> "MPTcpExtMD5SigFallback")
+>  	if [ -z "$count" ]; then
+> -		rc=${KSFT_SKIP}
+> +		: # ignore skip
+>  	elif [ "$count" != "$md5_sig" ]; then
+>  		rc=${KSFT_FAIL}
+>  		print_check "$ns MD5 Sig fallback"
+> @@ -1514,7 +1514,7 @@ chk_fallback_nr()
+>  
+>  	count=$(mptcp_lib_get_counter ${!ns} "MPTcpExtDssFallback")
+>  	if [ -z "$count" ]; then
+> -		rc=${KSFT_SKIP}
+> +		: # ignore skip
+>  	elif [ "$count" != "$dss" ]; then
+>  		rc=${KSFT_FAIL}
+>  		print_check "$ns dss fallback"
+> @@ -1590,7 +1590,7 @@ chk_join_nr()
+>  
+>  	count=$(mptcp_lib_get_counter ${ns2}
+> "MPTcpExtMPJoinSynAckHMacFailure")
+>  	if [ -z "$count" ]; then
+> -		rc=${KSFT_SKIP}
+> +		: # ignore skip
+>  	elif [ "$count" != "0" ]; then
+>  		rc=${KSFT_FAIL}
+>  		print_check "synack HMAC"
+> @@ -1599,7 +1599,7 @@ chk_join_nr()
+>  
+>  	count=$(mptcp_lib_get_counter ${ns1} "MPTcpExtMPJoinAckRx")
+>  	if [ -z "$count" ]; then
+> -		rc=${KSFT_SKIP}
+> +		: # ignore skip
+>  	elif [ "$count" != "$ack_nr" ]; then
+>  		rc=${KSFT_FAIL}
+>  		print_check "ack rx"
+> @@ -1608,7 +1608,7 @@ chk_join_nr()
+>  
+>  	count=$(mptcp_lib_get_counter ${ns1}
+> "MPTcpExtMPJoinAckHMacFailure")
+>  	if [ -z "$count" ]; then
+> -		rc=${KSFT_SKIP}
+> +		: # ignore skip
+>  	elif [ "$count" != "0" ]; then
+>  		rc=${KSFT_FAIL}
+>  		print_check "ack HMAC"
+> @@ -1617,7 +1617,7 @@ chk_join_nr()
+>  
+>  	count=$(mptcp_lib_get_counter ${ns1}
+> "MPTcpExtMPJoinRejected")
+>  	if [ -z "$count" ]; then
+> -		rc=${KSFT_SKIP}
+> +		: # ignore skip
+>  	elif [ "$count" != "$syn_rej" ]; then
+>  		rc=${KSFT_FAIL}
+>  		print_check "syn rejected"
 > 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c
-> b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-> index 27a93a25b142..6d2eb5cf8539 100644
-> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-> @@ -258,7 +258,7 @@ static void set_transparent(int fd, int pf)
->  	}
->  }
->  
-> -static void set_mptfo(int fd, int pf)
-> +static void set_mptfo(int fd)
->  {
->  	int qlen = 25;
->  
-> @@ -335,7 +335,7 @@ static int sock_listen_mptcp(const char * const
-> listenaddr,
->  			set_transparent(sock, pf);
->  
->  		if (cfg_sockopt_types.mptfo)
-> -			set_mptfo(sock, pf);
-> +			set_mptfo(sock);
->  
->  		if (bind(sock, a->ai_addr, a->ai_addrlen) == 0)
->  			break; /* success */
-> @@ -406,21 +406,18 @@ static int sock_connect_mptcp(const char *
-> const remoteaddr,
->  				*peer = a;
->  				break; /* success */
->  			}
-> +			perror("sendto()");
->  		} else {
->  			if (connect(sock, a->ai_addr, a->ai_addrlen)
-> == 0) {
->  				*peer = a;
->  				break; /* success */
->  			}
-> -		}
-> -		if (cfg_sockopt_types.mptfo) {
-> -			perror("sendto()");
-> -			close(sock);
-> -			sock = -1;
-> -		} else {
->  			perror("connect()");
-> -			close(sock);
-> -			sock = -1;
->  		}
-> +
-> +		/* error */
-> +		close(sock);
-> +		sock = -1;
->  	}
->  
->  	freeaddrinfo(addr);
+> ---
+> base-commit: ff3fd5f60460ba1ba338bfff405f13001e7131b8
+> change-id: 20251211-sft-no-skip-new-cnt-40ad3fc1dcc8
+> 
+> Best regards,
