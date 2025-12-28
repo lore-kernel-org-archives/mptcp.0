@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33880CA52
-	for <mptcp@lists.linux.dev>; Sun, 28 Dec 2025 02:51:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15B371DFFD
+	for <mptcp@lists.linux.dev>; Sun, 28 Dec 2025 02:54:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766890274; cv=none; b=oOca/BEtLgkWTLtQM9gXH+cQN47/6vENHNEgt4ttPRHzYckdWjtar7bIOgzjtGc2cqarx3F3/seM0z1HC6cuIt7toy1Ivghku+9FPTLOKexRxJ2wZdL/2AhjuiANHuHCqKaabRZM0bzWa4zpV65HWSsC/3T4YAax1VddJkc0GHA=
+	t=1766890481; cv=none; b=dFK5dGvfx3xvhmmUQYW6V3OJco5f3K6VuqDezsmRzptedtLWj6dOOxK0iZap2/J+JxtvklpUCJ9mN/SiW7TP5KEiIytBWOFoEyWsqNePefVVMNs6Q0JTPjx8jwtayp2wVBaigNCQQTJefbW8ClwbSh1iORaPmy5JYudz9W2DH/k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766890274; c=relaxed/simple;
-	bh=A5RTf/SI1qgu6q24sxSDsm0tA9UoghiAvWdRGQt63os=;
+	s=arc-20240116; t=1766890481; c=relaxed/simple;
+	bh=l8uW9ihCT82NcG5JJFpvF2wrXWBGDWkTaDg8zQCqMWk=;
 	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=gHEVFWD72IuhkeBK66f3zW6l3n1V/5bPxjYm1GmqDaoa9TRYKkeJ86r3V2GKYW5K2nJ2RKVs+vST1GKWp+xplMUKrGKfKmmyEIh9AKmNTj5JXsBLEYpdGLEC6R/C+AfHolhbG3rzoKLos3ZeE3NLx4w9QeYDiYdE/EoLvt4B2jU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tL5wOPI4; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=rQUFXepGNr44mamlJ9OJkRRiYWJdr126V4iiEKeugcZhamtxnVuWvDM6OZpgHHOUPDaIsoYk6KkwHRtLoxbRvXF6WjkSEzbQ1FoZmZfO0Ta88F+0H81qSLmQVeYmaA4h4qkHeBeg26y2jBXjLXGO8QpBeizgLwhjQb//f6XNjqA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=thTStfX4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tL5wOPI4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10093C4CEF1;
-	Sun, 28 Dec 2025 02:51:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="thTStfX4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6D29C4CEF1;
+	Sun, 28 Dec 2025 02:54:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766890273;
-	bh=A5RTf/SI1qgu6q24sxSDsm0tA9UoghiAvWdRGQt63os=;
+	s=k20201202; t=1766890480;
+	bh=l8uW9ihCT82NcG5JJFpvF2wrXWBGDWkTaDg8zQCqMWk=;
 	h=Subject:From:To:Date:In-Reply-To:References:From;
-	b=tL5wOPI4/90rMpVO/0OAHFNAHP02SVQO5xN71lFYLCBBHgvE3WxJPViIrCiAMf9A4
-	 cys/QsPvzHZ/kV/JAzl6N3C4rDv2/Y0jAR8kAOpuMoAUIJaHKKIHO/+BXP0IouJ1JZ
-	 MUPyTjVMbuuwDTLLUpiO4zYwBxuguzhRrgTL6qntOPXPPPxfSkGei+oVBrnVI01xM9
-	 XNZH6UGCCiyXq0ajUToXh6jXfaNVeH2p/6S9Bqzs6dbJJho0/ZJ/s2OmCgN+8C+5IC
-	 T7oOI/lJn7BF5vZBJD4QSOr3Jhhvp8qhVpC/oH7AxqNSj1tO2bTonZfUXQtggrvIKF
-	 XyPuCB5VjMxdA==
-Message-ID: <d16b1a026c14795fe02aaec2a4694ca6dbbb4360.camel@kernel.org>
-Subject: Re: [PATCH mptcp-next 09/11] selftests: mptcp: join: avoid
- declaring i if not used
+	b=thTStfX4fl+hmjAzWZYvk3NX9Zlq5d2k1ORJ5coDgEg8MDAtIYJSz8gKnXtpgjrzy
+	 V0oCaV8AeDtA2f6fJIgXnAK5qTx5Wfpp9AqMc/6Nq2c9g/YEmOjMJKiVOgIEJ5dDeJ
+	 ggORMwKI9LfYKkjFMec3xM0CRWcGUDa7S+EARTruKDpMfBuVSHB7bnXZZF9rRU8X6c
+	 eQnY3b8aZd2EVUCceTUn87nCoHI2QhjXoo64L85BO5HHpfvR21stkCNA6V1/uEFnfQ
+	 altltuvFPMc4nZ4n8JEvI58bv0zA1Cv6mVsobnlgiIAzrQhXJ7KzCM/sGRhTogpgYp
+	 BJxqvzxp001IA==
+Message-ID: <1bc66b28aa41d97ae8180705747015f6b6a4bb2c.camel@kernel.org>
+Subject: Re: [PATCH mptcp-next 10/11] selftests: mptcp: connect: fix
+ maybe-uninitialize warn
 From: Geliang Tang <geliang@kernel.org>
 To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, MPTCP Upstream
 	 <mptcp@lists.linux.dev>
-Date: Sun, 28 Dec 2025 10:51:10 +0800
-In-Reply-To: <20251226-mptcp-issue-603-v1-9-bb30e331b839@kernel.org>
+Date: Sun, 28 Dec 2025 10:54:37 +0800
+In-Reply-To: <20251226-mptcp-issue-603-v1-10-bb30e331b839@kernel.org>
 References: <20251226-mptcp-issue-603-v1-0-bb30e331b839@kernel.org>
-	 <20251226-mptcp-issue-603-v1-9-bb30e331b839@kernel.org>
+	 <20251226-mptcp-issue-603-v1-10-bb30e331b839@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 User-Agent: Evolution 3.56.2-4 
 Precedence: bulk
@@ -46,57 +46,55 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
+Hi Matt,
+
+Thanks for this fix. In my previous commit "selftests: mptcp: connect:
+fix uninitialized peer warning" [1], I also fixed this.
+
+[1]
+https://patchwork.kernel.org/project/mptcp/patch/43931d38bed6e47b1b68d3bdf0a13916a926d190.1763546473.git.tanggeliang@kylinos.cn/
+
 On Fri, 2025-12-26 at 07:40 +0100, Matthieu Baerts (NGI0) wrote:
-> A few loops were declaring 'i', but this variable was not used.
+> This warning can be seen with GCC 15.2:
 > 
-> To avoid confusions, use '_' instead: it is more explicit to mark
-> that
-> this variable is not needed.
+>   mptcp_connect.c: In function ‘main_loop’:
+>   mptcp_connect.c:1422:37: warning: ‘peer’ may be used uninitialized
+> [-Wmaybe-uninitialized]
+>    1422 |                 if (connect(fd, peer->ai_addr, peer-
+> >ai_addrlen))
+>         |                                 ~~~~^~~~~~~~~
+>   mptcp_connect.c:1377:26: note: ‘peer’ was declared here
+>    1377 |         struct addrinfo *peer;
+>         |                          ^~~~
+> 
+> This variable is set in sock_connect_mptcp() in some conditions. If
+> not,
+> this helper returns an error, and the program stops. So this is a
+> false
+> positive, but better remove it by initialising peer to NULL.
 > 
 > Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
     Reviewed-by: Geliang Tang <geliang@kernel.org>
 
-Thanks,
 -Geliang
 
 > ---
->  tools/testing/selftests/net/mptcp/mptcp_join.sh | 9 +++------
->  1 file changed, 3 insertions(+), 6 deletions(-)
+>  tools/testing/selftests/net/mptcp/mptcp_connect.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> index 80e03168b419..4ca4bdfea246 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> @@ -603,8 +603,7 @@ wait_rm_addr()
->  	local old_cnt="${2}"
->  	local cnt
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c
+> b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+> index b82df82e0594..27a93a25b142 100644
+> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+> @@ -1353,8 +1353,8 @@ void xdisconnect(int fd)
 >  
-> -	local i
-> -	for i in $(seq 10); do
-> +	for _ in $(seq 10); do
->  		cnt=$(rm_addr_count ${ns})
->  		[ "$cnt" = "${old_cnt}" ] || break
->  		sleep 0.1
-> @@ -623,8 +622,7 @@ wait_rm_sf()
->  	local old_cnt="${2}"
->  	local cnt
->  
-> -	local i
-> -	for i in $(seq 10); do
-> +	for _ in $(seq 10); do
->  		cnt=$(rm_sf_count ${ns})
->  		[ "$cnt" = "${old_cnt}" ] || break
->  		sleep 0.1
-> @@ -648,8 +646,7 @@ wait_ll_ready()
+>  int main_loop(void)
 >  {
->  	local ns="${1}"
+> +	struct addrinfo *peer = NULL;
+>  	int fd = 0, ret, fd_in = 0;
+> -	struct addrinfo *peer;
+>  	struct wstate winfo;
 >  
-> -	local i
-> -	for i in $(seq 50); do
-> +	for _ in $(seq 50); do
->  		ip -n "${ns}" -6 addr show scope link | grep "inet6
-> fe80" |
->  			grep -qw "tentative" || break
->  		sleep 0.1
+>  	if (cfg_input && cfg_sockopt_types.mptfo) {
