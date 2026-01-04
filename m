@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 064DB22F772
-	for <mptcp@lists.linux.dev>; Sun,  4 Jan 2026 09:35:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C57527CCF2
+	for <mptcp@lists.linux.dev>; Sun,  4 Jan 2026 09:35:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767519335; cv=none; b=hkaJEUGn4CJk7X1t8BDfa8OH0jZ3nVxJrw71GjM+EHhdWLrnY+zF91TXJXQ6NqIz5agCeD4dYP4P7bp1znXhZpoxCRB0cMfKCQ74gDNkTeiIeYePXaBjTeiGovt6hkcTE1jFonPGnvSFSQJcGemfyIDZ/HfSYUehgWf1Yqj2gRk=
+	t=1767519337; cv=none; b=XFcYdDbc7INgREnZ/Y78hayEsgR09NXGEvdBp6ObC5QbMbx51SyY5VUYMJEnjzzJ6ic8vJDpDdsI1ttTen2SiV9Dr+PUe2sMv6GJDtGiRnJl9IO+u9ikjpOvrXitum1jlmv7IVTjOPlWX8gBDfaAkxxz5kN5FUtjzEiIabx/aVM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767519335; c=relaxed/simple;
-	bh=qBrl+DpO/Sk+ePK3jgJZurfHDEprIEjBG1Lfob5lho4=;
+	s=arc-20240116; t=1767519337; c=relaxed/simple;
+	bh=YP619uoPdFqrL1xDwUUmU2zSIN5YKjfpgIip1hXDzyo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QMuWB/xK1vOaYX3QpzuQu5np0ucJ1mMulTS1FkMx6XmUQhDYE66LYU5XyXvGLxFsTlyLLKUz9P0C4iJwh5NeN99IJUXwwyEODTqFCmAIlNtpiiiKaCt6reH50/4p6hTDpuC5LIJh6bQzT/fYj0e+yVNJ2kv3MpW0X5sKLOFv46o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SedIalXm; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=NN2kczabcJnQk7PnmgEhl/EdM6EIyRyTD1LuUEnXCEFXoV1uZANFZVe+VoSGCnGI5DhZuymI2+Tsqc6FoA0DTZ3OFeGKS3vbX2ZRa3WcZyy4aC8C6Wh4v21KYQOtAFGRtjM+u0yFUZaRvZkpCbffYS6exju2tX8Anoj/Tc9T2u8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SAE9hs4f; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SedIalXm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C484C4CEF7;
-	Sun,  4 Jan 2026 09:35:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SAE9hs4f"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87EC7C4CEF7;
+	Sun,  4 Jan 2026 09:35:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767519334;
-	bh=qBrl+DpO/Sk+ePK3jgJZurfHDEprIEjBG1Lfob5lho4=;
+	s=k20201202; t=1767519337;
+	bh=YP619uoPdFqrL1xDwUUmU2zSIN5YKjfpgIip1hXDzyo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=SedIalXmvOMYafEBf3XuDkwRLS8yXLTC0eYDxJWHYCKTvj/u12TB6CO3OTFgcIbN3
-	 CUIO1n2CVJtk2T09UfJeK8QtpDDUkpvcdx6gWTct38SH4EUqXfUetXeCSx/29iTO6i
-	 J2VmnELk4/ETQdqK4m4WsD1i741ZBuLYpGG1J7xEUT5fnkmSl5bv54bHOJlZFvHf1n
-	 a0O6qyq7/Hsia0+PonUwquQ2wbdsmEniierYALs76JxNOhVTZJLDBiBharPTJhW/FO
-	 gNOZF8HkAO9Jb76pZ/eaFSdr9HEkpEGJO6qp99hcrGnKf8Pj2U8OkQD2ODo3d42HP2
-	 l/i06/rc9yYjw==
+	b=SAE9hs4f0V6INr/+wkQor0nJEG1b3bj5T8zqebqGLz7YZdMRDcNdDoTmez8g8/aD0
+	 9ZTM0Cj8gq+0fZDtB1A1oxuDEBZhy+vuGbmtqtWhBfw8KLID0rFCXl0elEJH6X9b1Q
+	 i/TnBGwJWEjKdL5ZB91X4e0dUjR82n3FOO7FY6vUeiJCFtGNSzPqka4fb9rmLU+8cb
+	 wIra5DECGVm8ab5+GyQWtuwkOsZF5/iInEiyWQkoCWsoz7HBiNdegBuIfFwVqnycms
+	 CJW0xs98enj7OIj+vFqkv/5BIyodflnKIc1irzF1PS7PFT0PYFA3y4Rk/zhIeplesq
+	 kNzXqoVO9A1cg==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>,
 	Gang Yan <yangang@kylinos.cn>
-Subject: [RFC mptcp-next v6 09/10] selftests: mptcp: connect: add tls sockopt type
-Date: Sun,  4 Jan 2026 17:35:10 +0800
-Message-ID: <357baa10e3d1ca30150e7517c1fc688ae74e1658.1767518836.git.tanggeliang@kylinos.cn>
+Subject: [RFC mptcp-next v6 10/10] selftests: mptcp: join: add mptcp tls tests
+Date: Sun,  4 Jan 2026 17:35:11 +0800
+Message-ID: <6f4bd896b6ecd35613bd5c41b9f6d208bf403386.1767518836.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <cover.1767518836.git.tanggeliang@kylinos.cn>
 References: <cover.1767518836.git.tanggeliang@kylinos.cn>
@@ -46,111 +46,97 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-A new TLS type has been added to cfg_sockopt_types, enabled via the
-parameter "-o TLS". do_setsockopt_tls() has been implemented to set
-TLS parameters for both the server and client.
+Two MPTCP TLS tests have been added to mptcp_join.sh. The command
+'./mptcp_join.sh -c' can be used to run the tests.
 
 Co-developed-by: Gang Yan <yangang@kylinos.cn>
 Signed-off-by: Gang Yan <yangang@kylinos.cn>
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- .../selftests/net/mptcp/mptcp_connect.c       | 47 ++++++++++++++++++-
- 1 file changed, 46 insertions(+), 1 deletion(-)
+ tools/testing/selftests/net/mptcp/config      |  1 +
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 32 +++++++++++++++++++
+ 2 files changed, 33 insertions(+)
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-index 9da32701d2d0..3dd22d7e0460 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-@@ -33,6 +33,7 @@
- #include <linux/tcp.h>
- #include <linux/time_types.h>
- #include <linux/sockios.h>
-+#include <linux/tls.h>
+diff --git a/tools/testing/selftests/net/mptcp/config b/tools/testing/selftests/net/mptcp/config
+index 59051ee2a986..18bd29ac5b24 100644
+--- a/tools/testing/selftests/net/mptcp/config
++++ b/tools/testing/selftests/net/mptcp/config
+@@ -34,3 +34,4 @@ CONFIG_NFT_SOCKET=m
+ CONFIG_NFT_TPROXY=m
+ CONFIG_SYN_COOKIES=y
+ CONFIG_VETH=y
++CONFIG_TLS=y
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+index b2e6e548f796..f4cf7b5e2388 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -63,6 +63,7 @@ unset fastclose
+ unset fullmesh
+ unset speed
+ unset bind_addr
++unset tls
+ unset join_syn_rej
+ unset join_csum_ns1
+ unset join_csum_ns2
+@@ -974,6 +975,7 @@ do_transfer()
+ 	local fastclose=${fastclose:-""}
+ 	local speed=${speed:-"fast"}
+ 	local bind_addr=${bind_addr:-"::"}
++	local tls=${tls:-"::"}
+ 	local listener_in="${sin}"
+ 	local connector_in="${cin}"
+ 	port=$(get_port)
+@@ -995,6 +997,10 @@ do_transfer()
+ 		extra_args="-r ${speed}"
+ 	fi
  
- extern int optind;
- 
-@@ -88,6 +89,7 @@ struct cfg_cmsg_types {
- struct cfg_sockopt_types {
- 	unsigned int transparent:1;
- 	unsigned int mptfo:1;
-+	unsigned int tls:1;
- };
- 
- struct tcp_inq_state {
-@@ -283,6 +285,39 @@ static int is_mptcp(int fd)
- 	return mptcp;
++	if [ -n "${tls}" ]; then
++		extra_args="$extra_args -o TLS"
++	fi
++
+ 	local extra_cl_args=""
+ 	local extra_srv_args=""
+ 	local trunc_size=""
+@@ -4306,6 +4312,31 @@ endpoint_tests()
+ 	fi
  }
  
-+static void do_setsockopt_tls(int fd)
++tls_tests()
 +{
-+	struct tls12_crypto_info_aes_gcm_128 tls_tx = {
-+		.info = {
-+			.version     = TLS_1_2_VERSION,
-+			.cipher_type = TLS_CIPHER_AES_GCM_128,
-+		},
-+	};
-+	struct tls12_crypto_info_aes_gcm_128 tls_rx = {
-+		.info = {
-+			.version     = TLS_1_2_VERSION,
-+			.cipher_type = TLS_CIPHER_AES_GCM_128,
-+		},
-+	};
-+	int so_buf = 6553500;
-+	int err;
++	# multiple subflows, tls tests
++	if reset "multiple subflows, tls tests"; then
++		pm_nl_set_limits $ns1 0 2
++		pm_nl_set_limits $ns2 0 2
++		pm_nl_add_endpoint $ns2 10.0.2.2 flags subflow
++		pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow
++		tls=1 run_tests $ns1 $ns2 10.0.1.1
++		chk_join_nr 2 2 2
++	fi
 +
-+	err = do_ulp_so(fd, "tls");
-+	if (err)
-+		xerror("setsockopt TCP_ULP");
-+
-+	err = setsockopt(fd, SOL_TLS, TLS_TX, (void *)&tls_tx, sizeof(tls_tx));
-+	if (err)
-+		xerror("setsockopt TLS_TX");
-+
-+	err = setsockopt(fd, SOL_TLS, TLS_RX, (void *)&tls_rx, sizeof(tls_rx));
-+	if (err)
-+		xerror("setsockopt TLS_RX");
-+
-+	set_sndbuf(fd, so_buf);
-+	set_rcvbuf(fd, so_buf);
++	# multiple subflows, signal, tls tests
++	if reset "multiple subflows, signal, tls tests"; then
++		pm_nl_set_limits $ns1 0 3
++		pm_nl_add_endpoint $ns1 10.0.2.1 dev ns1eth2 flags signal
++		pm_nl_set_limits $ns2 1 3
++		pm_nl_add_endpoint $ns2 10.0.3.2 dev ns2eth3 flags subflow
++		pm_nl_add_endpoint $ns2 10.0.4.2 dev ns2eth4 flags subflow
++		tls=1 run_tests $ns1 $ns2 10.0.1.1
++		chk_join_nr 3 3 3
++		chk_add_nr 1 1
++	fi
 +}
 +
- #define X(m)	xerror("%s:%u: %s: failed for proto %d at line %u", __FILE__, __LINE__, (m), proto, line)
- static void sock_test_tcpulp(int sock, int proto, unsigned int line)
+ # [$1: error message]
+ usage()
  {
-@@ -436,8 +471,11 @@ static int sock_connect_mptcp(const char * const remoteaddr,
- 	}
+@@ -4356,6 +4387,7 @@ all_tests_sorted=(
+ 	F@fail_tests
+ 	u@userspace_tests
+ 	I@endpoint_tests
++	c@tls_tests
+ )
  
- 	freeaddrinfo(addr);
--	if (sock != -1)
-+	if (sock != -1) {
- 		SOCK_TEST_TCPULP(sock, proto);
-+		if (cfg_sockopt_types.tls)
-+			do_setsockopt_tls(sock);
-+	}
- 	return sock;
- }
- 
-@@ -1210,6 +1248,8 @@ int main_loop_s(int listensock)
- 		}
- 
- 		SOCK_TEST_TCPULP(remotesock, 0);
-+		if (cfg_sockopt_types.tls)
-+			do_setsockopt_tls(remotesock);
- 
- 		memset(&winfo, 0, sizeof(winfo));
- 		err = copyfd_io(fd, remotesock, 1, true, &winfo);
-@@ -1310,6 +1350,11 @@ static void parse_setsock_options(const char *name)
- 		return;
- 	}
- 
-+	if (strncmp(name, "TLS", len) == 0) {
-+		cfg_sockopt_types.tls = 1;
-+		return;
-+	}
-+
- 	fprintf(stderr, "Unrecognized setsockopt option %s\n", name);
- 	exit(1);
- }
+ all_tests_args=""
 -- 
 2.51.0
 
