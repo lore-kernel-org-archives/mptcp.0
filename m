@@ -1,101 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f193.google.com (mail-qt1-f193.google.com [209.85.160.193])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A7B89443
-	for <mptcp@lists.linux.dev>; Sun,  4 Jan 2026 09:52:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D735F1A9B24
+	for <mptcp@lists.linux.dev>; Sun,  4 Jan 2026 10:02:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767520333; cv=none; b=gh/Mhf0ntaXYBNeDPfWbJOa5qLnNd5s39SZ3Fg0fmhJFM58MSdkvyM+sJaCvXijuYgYdqsFf5t6qPal7UJAlrgsTfjDxoR496GvWwVtQxzJ8X0z+GM1mekmotJEGVabJWy9Cj3xm3NS8qKhvQ6jkpv7e6aXpweQHI0PuS2JKIDc=
+	t=1767520962; cv=none; b=ne8U2GSEVAY2kOLvQK9jm92cX+Y3rSto8J8K5Un5buS0fAUWK6hmsLiv10qm3Iq+ragGQMA4uqSq8eAobe73UmY8vby3+Ac+7JZXt0ILNoP8v1vDa3rP/oQ8n2YqnNXVFD0OX9ehsB2tN6P2RKF1vTA+5jDhu7MxAaGn8TkyLHo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767520333; c=relaxed/simple;
-	bh=qQwHjEM5p/aFl1Mv6bAYkxhI8UkAlT/vC/pcp7Ibp/E=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=NqFDGHNDXzbOsr1lHv9vYsmewHpaPzmRXGnIs7bvaPXia1NYK9TaaqNkERjOq6OhPenAavhfiX7RSCjrk8ntV69U1JuwEAO2dWkytWo/8TsHP+LhbM1cWE/Qc/V8MQ+W1rAy+34qoPLhEHBpJ0BmE87mpn+0l1aQs4yWT5gAmMU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cDfCMwqR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1767520962; c=relaxed/simple;
+	bh=JVjfSJawhryCTk2+n/9ATCMSuVeP9TiIHr2sQye4Hyo=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=ZDYB2TOOzLHa8v/m2hSe6dBFc+KJ8jhXe8d4o2z6xn0Gcz0oTBMpom5o4cUuccjEGxpeKO+frQfE/JU62/xEzTCHPH82YCaZSE5UCFZNZ/YSBDv/APUGDXRcarQJdiLejHdLkBFlmlw7zgDghdSIikC2cw8h99wbAbymKVV9t5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=O8lKaYe4; arc=none smtp.client-ip=209.85.160.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cDfCMwqR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62EB5C4CEF7;
-	Sun,  4 Jan 2026 09:52:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767520333;
-	bh=qQwHjEM5p/aFl1Mv6bAYkxhI8UkAlT/vC/pcp7Ibp/E=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=cDfCMwqRgKf5nkMok1d/Y2oLXHVIia53RYlkouiUejnBPFZ5iHqr29l+tf59B3v2d
-	 Gy3Bqkzhzf/vvyx68b+JAqJq1i09eCycAqmO4qTQh+8YTK2DQ8tEqD56W2M8N864js
-	 qfiJTLMlIf8Xp5fbPRnwnY+MJ800CpM1MCr5KHWwrIOO1VWh2mSyUNkPwGOsorYPQC
-	 bUCvKWpIUIRYhpc2Ksj//IkZtcMYHu9rcBDWUC5qHinpnnwx0iyc8AlFVIjBxoW3pA
-	 a1e/s0iBkxzaPPFOda2/dTQQF099AYEAq4WxWBS7Mbd+K1phRcZd6FkJekTtgQo1vg
-	 Nas/3aPRCzORg==
-Message-ID: <d5c42db92494cb4259ee9386c3b800e12898f152.camel@kernel.org>
-Subject: Re: [RFC mptcp-next v5 0/8] MPTCP KTLS support
-From: Geliang Tang <geliang@kernel.org>
-To: Matthieu Baerts <matttbe@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Date: Sun, 04 Jan 2026 17:52:07 +0800
-In-Reply-To: <13eb9cae-9243-4706-b873-c11ad11e266a@kernel.org>
-References: <cover.1766372799.git.tanggeliang@kylinos.cn>
-		 <13eb9cae-9243-4706-b873-c11ad11e266a@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.56.2-4 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O8lKaYe4"
+Received: by mail-qt1-f193.google.com with SMTP id d75a77b69052e-4f1899960f0so167170701cf.1
+        for <mptcp@lists.linux.dev>; Sun, 04 Jan 2026 02:02:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1767520960; x=1768125760; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=f4ZUH4Q4Ehps/o1tDjWP4ATVo8Hq0sTwa94lqPoWeBw=;
+        b=O8lKaYe4S5GkCxsyiUneMSX7MGkMHXLkWCQ1QUj7B6TtennY9bJP9ySzyC6rPewNrU
+         cqRNUqzsVZKM1A2ZPkQ3l3Te6Ld4kPdyqlbvjSlcZnluGC7LBCNEx31iNp6qiEKs3VUY
+         ZsgiH6b/xt7kUDpFijSmTHiOlNMQcgBHezl6KjEEmGfw0KRPZ3ufHp6WBXG/w6b0wHxH
+         n+hDezbEjb1umRtnNHFL1acaXqBA1K3ylUyUOS6ICIdQ8Vh7VtS1v8Glv6kOOpnOkBOL
+         ZpfhfKCvdDpFPQHDnMVKi4iyKkMVNAScONrgaMtlcpGu9TrtO8Ioty9aNICBRAo7/PnJ
+         NUhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767520960; x=1768125760;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=f4ZUH4Q4Ehps/o1tDjWP4ATVo8Hq0sTwa94lqPoWeBw=;
+        b=fzuEuoNWsn4f9raA8VAMlYGCnDGNW7xh29NApI1ulnBuVdrnCMgWkJrItEr0xelh3x
+         uli6KxjE9o6jXvzGbmeIVeRAJeqojSl8ojsn16N5hMCsojzxrEVJXNX3a6oo5G+0IUYT
+         tYR6XQE5jjHOr+jtNS9tJ1vhVaefvKuSGl5b/BGx9ceaEUd0ApanCeDJAHNxLnfW7DvJ
+         IHKAFiilTxJ7jhWuA146vffNK+F+sVJyuvWTMgPtVvz1LlKD04bWoJ/QcbMMuOZFMEpP
+         N/Hm6FyetcZ231phqbqxaZdlgn6JYT5Kx52FWKl0wD/Fm4ND5S/wR+UrPmIF3x1PTwjt
+         6J0g==
+X-Gm-Message-State: AOJu0Yy+hL6avSrAEvj1ZFtBjxDAVssjzlZBw046uaShKL4uOvnYsxIC
+	CChDEhzY6UfNw/tnOI6DR8vwFP4J831lyp/acoT5nVUjXZEqdNaAQ9DTF4Kz3zY=
+X-Gm-Gg: AY/fxX5TmWJzZy7m/03cMHWHv/LFIDyU3rbtJcDDVjLnPSs8t/71t8SXv8zVgAlw3yx
+	pKWm89mnbWqwmnkreqy3Dl6c7UyaT8bbR6TnhWamK9xRyZ5y44CrVh+mZFHwgeYnqRh8ycqcJXO
+	Jed7x2QrVjtdCrqEINX2Ny/QJd4baNu7frm9yRVk28/LJV+m7Px87UogT2fkX1C6SpfkYcRuIQf
+	7dEhBAUT/EwdmM7Tvg+mMJg41RI1I0/5YmJpmlHd56x5Q2F7qA5WmDSHB0Vn3bnJ7HDaazIsvFz
+	E47rUPMRljOK2uT1CZi6MZAAixJvbeD1fsft5Wj6EqiT8eEPLW9sojfuaDjP2hDLfSViiO0yY97
+	ruuzpFfiOcUk/2JsjxNuk9K9+SggW6KuukqTXTxE6jBgq2J7y+m1L/E6XeR7NqlCutUw7ve2WCZ
+	oMxL299O5x/6qBy6vk8O+pU2wT7VGqJWPZvu/4nJHU+Ws=
+X-Google-Smtp-Source: AGHT+IFFz+VNKA0euWbx8EPNeMs51o3GV4lM+tSdfDpYQCyRxLblx2MdlGJhZdnMtYSKjgDxOSHLpQ==
+X-Received: by 2002:a05:622a:40c4:b0:4ed:bad6:9fa9 with SMTP id d75a77b69052e-4f4abcb89a9mr692093371cf.6.1767520959691;
+        Sun, 04 Jan 2026 02:02:39 -0800 (PST)
+Received: from [127.0.0.1] ([20.236.100.3])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4f4ac55fe70sm320537641cf.11.2026.01.04.02.02.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 04 Jan 2026 02:02:38 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Geliang Tang <tanggeliang@kylinos.cn>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <cover.1767518836.git.tanggeliang@kylinos.cn>
+References: <cover.1767518836.git.tanggeliang@kylinos.cn>
+Subject: Re: [RFC mptcp-next v6 00/10] MPTCP KTLS support
+Message-ID: <5a4be378-d24e-a57d-47a6-0a30ab2777bd@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Sun, 04 Jan 2026 10:02:37 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Hi Matt,
+Hi Geliang,
 
-Thanks for your review and happy new year.
+Thank you for your modifications, that's great!
 
-On Tue, 2025-12-23 at 17:35 +0100, Matthieu Baerts wrote:
-> Hi Geliang,
-> 
-> On 22/12/2025 04:15, Geliang Tang wrote:
-> > From: Geliang Tang <tanggeliang@kylinos.cn>
-> > 
-> > v5:
-> >  - As suggested by Mat and Matt, this set introduces struct
-> > tls_prot_ops
-> >    for TLS.
-> >  - Includes Gang Yan's patches to add MPTCP support to the TLS
-> > selftests.
-> 
-> Thank you for this new version!
-> 
-> I just did a very quick reviews. Please see my comments in the
-> individual patches.
+But sadly, our CI spotted some issues with it when trying to build it.
 
-I just sent a v6, addressing your comments.
+You can find more details there:
 
-> 
-> Also, did you check the behaviour with MPTCP and multiple subflows
-> when
-> KTLS is used with HW supporting TLS offload? (TLS_HW mode)
-> 
->   https://docs.kernel.org/networking/tls-offload.html
-> 
-> I didn't check how it works, but if the NIC needs to have a
-> continuous
-> flow to work, it will not work with MPTCP if only a part of the
-> traffic
-> is handled by a NIC.
+  https://github.com/multipath-tcp/mptcp_=
+net-next/actions/runs/20691127358
 
-I haven't considered TLS_HW mode yet. I think at this stage we can
-disable TLS_HW mode for MPTCP TLS. I'll spend time working on it in the
-future.
+Status: failure
+Initiator: Patchew =
+Applier
+Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/a5=
+cdb3d625cd
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1038175
 
-> 
-> (Also, in the selftests, I don't see any tests using TLS_SW with
-> MPTCP
-> and multiple subflows, that's important!)
+Feel free to reply to this email if you cannot access =
+logs, if you need
+some support to fix the error, if this doesn't seem to be=
+ caused by your
+modifications or if the error is a false positive one.
 
-New tests for multiple subflows are added in v6.
-
-Thanks,
--Geliang
-
-> 
-> Cheers,
-> Matt
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
