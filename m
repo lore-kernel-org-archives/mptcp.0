@@ -1,35 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE13219E99F;
-	Tue,  6 Jan 2026 00:33:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C63D366DC9
+	for <mptcp@lists.linux.dev>; Tue, 13 Jan 2026 06:13:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767659614; cv=none; b=nUlsukA993dqv7jOB0zKvbbA/eILzDZadSeigtIqBvkJRqQEpMxFc6ilkkHw+V3MMZm5OaofO8KFQA4kpIXi4HHCGZpvWFT+Pc5ixy8HJnQYYPba+SAfi94YqRN3912SrnnlZKGDfeJDCD9AUaohJWiFK4DF4Nxe3cJ/CdbsCFE=
+	t=1768284824; cv=none; b=HPsj6B7GKUz5xBOEoqB+UHMUGVRmyON37vs/lKqxuttaor5A0VdQK0sn7jkzdlxn06I7ccmENVoutFUYis/UtyWYqwZS5tvSussKZ3QEkSPX1ADkUYc98HsuKxEf0tj0iOAgKZAu3ekHXICZcpgLkZ+ozK2lquj0V8Hhq8Kdmx0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767659614; c=relaxed/simple;
-	bh=16Eb/9DJD1sJo4gf8iw24X+kBRSpVoHIjwW3cwI9fDE=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=jTDvbv6H0XzdWHAure1+90MNAascFCvtcYfjZD8t3o7vm9kAgg9KHcDwmb+Yth1jbPpEy2Ezf1+51noR2DXdDsqw4Bjd8BfFIJgjr6LzPfYKsZuNJ3ahElr6P4Xrlk5DfIQyLpWMmYZBtngqYclbhHhgkUNJMY6Tf0u2tBGxDno=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eEB+B/41; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1768284824; c=relaxed/simple;
+	bh=aoxT6TmgSI0gqU8Kyw+7AGZH5bIOgSbLiC8Jp97aYU8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pd15C2gYVTrARzRrH9ZGmQLoofFMiSUSId6Rp4EutWhkZZDHwl5/i0l04eISwDQdNjrl99Tgx1TEcvafRG1Uqd27m8DCWrdcYkgY9BP9i5Yoa/Em3idq9YvQv13HP8DdXTQKEN4ODlgPLuzlXt5WDpJycnm/A/4R1Wnichx9eIQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rXDAxo7B; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eEB+B/41"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C01BC116D0;
-	Tue,  6 Jan 2026 00:33:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rXDAxo7B"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8635C19421;
+	Tue, 13 Jan 2026 06:13:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767659614;
-	bh=16Eb/9DJD1sJo4gf8iw24X+kBRSpVoHIjwW3cwI9fDE=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=eEB+B/415Y8ACEAap9gTDx+96bm6WbKmeUgNiJAu4aFJfUGVBclPlSoQoW+Vrg95f
-	 UeXjB41utJeEJa0UAyRibrJGo5R+ysRm9Mrt6zVRymInq0U+36OJt8n3/sw+Yj72Xt
-	 dXCj5/pygorQE6nSIK7xfTFlB5rJJBQwwfuR/XkElgNCzZUXSqjMvtFFBZJvjmo8v2
-	 9xuI3cLUfygxw5k3sTN6Lo/ryU+UdxQww+H1D01o5f1ByYiwJcQ00dPqTSPkN5Ul3l
-	 fZpChYQY6Ap+7duLe5kMu7SaC+nZN4grQCZ1ApTovSiXvdJaYbU3B0hewiqYAtPBJe
-	 tT383SXU4yOEQ==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id B5AE5380A966;
-	Tue,  6 Jan 2026 00:30:13 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1768284823;
+	bh=aoxT6TmgSI0gqU8Kyw+7AGZH5bIOgSbLiC8Jp97aYU8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=rXDAxo7BNmpmsFpB2Duhih6FF3rHxWFWaivTQq+ax5U/B4OaEjTxqjwtg8LEeggwP
+	 0Ev9xijpCRN+vNi9CXAZ/RMupEU+dNA62XoXqS0UDg1dNcPfoto3U8V12LU42/PoT/
+	 aJ7jixtRapBrc9gAzB+QAuHEM8XZbPC6n3pEQ1U52Ne6wJcfw6QQp+opUhBlF8t5yl
+	 ZJR1cDAfYylQcS+ZyHb7LO2NP9a/iE3BCCLEYbrKOeGU43sYBF0TaxFZ4m++qyydyW
+	 ROGlVNPOFFWKf0L6oRfMdtkN/AAENmpo+GK2iQetsfR9SI5DbrPeOhOWIbrLY6CrgE
+	 bd7svJ+MgjIzw==
+From: Geliang Tang <geliang@kernel.org>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Subject: [RFC mptcp-next v7 0/9] MPTCP KTLS support
+Date: Tue, 13 Jan 2026 14:13:26 +0800
+Message-ID: <cover.1768284047.git.tanggeliang@kylinos.cn>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -37,43 +39,98 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net v3] selftests: mptcp: Mark xerror and die_perror
- __noreturn
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <176765941227.1341185.12449283509632090674.git-patchwork-notify@kernel.org>
-Date: Tue, 06 Jan 2026 00:30:12 +0000
-References: <20260101172840.90186-1-ankitkhushwaha.linux@gmail.com>
-In-Reply-To: <20260101172840.90186-1-ankitkhushwaha.linux@gmail.com>
-To: Ankit Khushwaha <ankitkhushwaha.linux@gmail.com>
-Cc: matttbe@kernel.org, martineau@kernel.org, geliang@kernel.org,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- horms@kernel.org, shuah@kernel.org, netdev@vger.kernel.org,
- mptcp@lists.linux.dev, linux-kselftest@vger.kernel.org,
- linux-kernel@vger.kernel.org
 
-Hello:
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
-This patch was applied to netdev/net.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+v7:
+ - Passing an MPTCP socket to tcp_sock_rate_check_app_limited() causes a
+   crash. In v7, an MPTCP version of check_app_limited() is implemented,
+   which calls tcp_sock_rate_check_app_limited() for each subflow.
+ - Register tls_tcp_ops and tls_mptcp_ops in tls_register() rather than in
+   tls_init().
+ - Set ctx->ops in tls_init() instead of in do_tls_setsockopt_conf().
+ - Keep tls_device.c unchanged. MPTCP TLS_HW mode has not been implemented
+   yet, so EOPNOTSUPP is returned in this case.
+ - Also add TCP TLS tests in mptcp_join.sh.
 
-On Thu,  1 Jan 2026 22:58:40 +0530 you wrote:
-> Compiler reports potential uses of uninitialized variables in
-> mptcp_connect.c when xerror() is called from failure paths.
-> 
-> mptcp_connect.c:1262:11: warning: variable 'raw_addr' is used
->       uninitialized whenever 'if' condition is false
->       [-Wsometimes-uninitialized]
-> 
-> [...]
+v6:
+ - register each ops as Matt suggested.
+ - drop sk_is_msk().
+ - add tcp_sock_get_ulp/tcp_sock_set_ulp helpers.
+ - set another ULP in sock_test_tcpulp as Matt suggested.
+ - add tls tests using multiple subflows in mptcp_join.sh.
+ - Link: https://patchwork.kernel.org/project/mptcp/cover/cover.1767518836.git.tanggeliang@kylinos.cn/
 
-Here is the summary with links:
-  - [net,v3] selftests: mptcp: Mark xerror and die_perror __noreturn
-    https://git.kernel.org/netdev/net/c/2fa98059fd5a
+v5:
+ - As suggested by Mat and Matt, this set introduces struct tls_prot_ops
+   for TLS.
+ - Includes Gang Yan's patches to add MPTCP support to the TLS selftests.
+ - Link: https://patchwork.kernel.org/project/mptcp/cover/cover.1766372799.git.tanggeliang@kylinos.cn/
 
-You are awesome, thank you!
+v4:
+ - split "tls: add MPTCP protocol support" into smaller, more
+   focused patches.
+ - a new mptcp_inq helper has been implemented instead of directly
+   using mptcp_inq_hint to fix the issue mentioned in [1].
+ - add sk_is_msk helper.
+ - the 'expect' parameter will no longer be added to sock_test_tcpulp.
+   Instead, SOCK_TEST_TCPULP items causing the tests failure will be
+   directly removed.
+ - remove the "TCP KTLS" tests, keeping only the MPTCP-related ones.
+ - Link: https://patchwork.kernel.org/project/mptcp/cover/cover.1765505775.git.tanggeliang@kylinos.cn/
+
+[1]
+https://patchwork.kernel.org/project/mptcp/patch/ce74452f4c095a1761ef493b767b4bd9f9c14359.1764333805.git.tanggeliang@kylinos.cn/
+
+v3:
+ - mptcp_read_sock() and mptcp_poll() are not exported, as mptcp_sockopt
+   test does not use read_sock/poll interfaces. They will be exported when
+   new tests are added in the future.
+ - call mptcp_inq_hint in tls_device_rx_resync_new_rec(),
+   tls_device_core_ctrl_rx_resync() and tls_read_flush_backlog() too.
+ - update selftests.
+ - Link: https://patchwork.kernel.org/project/mptcp/cover/cover.1763800601.git.tanggeliang@kylinos.cn/
+
+v2:
+ - fix disconnect.
+ - update selftests.
+
+This series adds KTLS support for MPTCP. Since the ULP of msk is not being
+used, ULP KTLS can be directly configured onto msk without affecting its
+communication.
+
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/480
+
+Gang Yan (2):
+  mptcp: allow overridden write_space to be invoked
+  mptcp: update mptcp_check_readable
+
+Geliang Tang (7):
+  selftests: mptcp: add tcp tls tests
+  tls: introduce struct tls_prot_ops
+  tls: add ops in tls_context
+  mptcp: implement tls_mptcp_ops
+  mptcp: update ULP getsockopt
+  mptcp: enable TLS setsockopt
+  selftests: mptcp: add mptcp tls tests
+
+ include/linux/tcp.h                           |   2 +
+ include/net/mptcp.h                           |   2 +
+ include/net/tcp.h                             |   1 +
+ include/net/tls.h                             |  19 +++
+ net/ipv4/tcp.c                                |  78 ++++++-----
+ net/ipv4/tcp_rate.c                           |   9 +-
+ net/mptcp/protocol.c                          | 125 ++++++++++++++++--
+ net/mptcp/protocol.h                          |   2 +-
+ net/mptcp/sockopt.c                           |  36 ++++-
+ net/tls/tls_main.c                            |  93 ++++++++++++-
+ net/tls/tls_strp.c                            |  28 ++--
+ net/tls/tls_sw.c                              |   5 +-
+ tools/testing/selftests/net/mptcp/config      |   1 +
+ .../selftests/net/mptcp/mptcp_connect.c       |  53 +++++++-
+ .../testing/selftests/net/mptcp/mptcp_join.sh |  45 ++++++-
+ 15 files changed, 435 insertions(+), 64 deletions(-)
+
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.51.0
 
