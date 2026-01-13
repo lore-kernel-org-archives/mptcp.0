@@ -1,36 +1,36 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 437B129D27D
-	for <mptcp@lists.linux.dev>; Tue, 13 Jan 2026 07:26:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 691C5310652
+	for <mptcp@lists.linux.dev>; Tue, 13 Jan 2026 08:07:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768289208; cv=none; b=OvmgJrCZjLUPx58ETqzKf3Tokr5fO33tY0vRIXMiBVqzFyT7MoJ0/ZYdPfo0NIEJpxSLBmlSQ9VGo3hhUaYMJDQro1cQIpgzN3nKu236Z2dtUK88BoH/Vur7I3L1OauAfd10OurGE0MJRhuEgDjUSPKrXnUJgPF4ax3aCdS7wuU=
+	t=1768291643; cv=none; b=D3Eub/SZUR/4Fj6ytvAXNWHQ7uTePTRvS3BPz8MWURhl2D6epRZThkxv0acfOp2O1dFT5tOSgIL2cXME2PZclwuN6+1ZY9a6EAsFnpSQOMf3Iouuch57HkfSFsTwzZy7kCF3yHmvCMPudm68zOnp6UVGm2amIZQQ7uFmUAtttUg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768289208; c=relaxed/simple;
-	bh=X12eV0pRW0yGpoCrRghQUkG0cD3cHgL2zEmdlqoVjtw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CeAKMyVuEjs/vDvrVhovtkdsIU8cax0xZZ2yaOuLTfwFbT6RjOfxiesc5TVZ7HY+Tm7x2XOrrqEZIJqpkay49Nxwuz7YsWrH1zXu/pcna1C6QyjotTugmqrL3SKlVLvcsaFRjl9fHkXJqsnHenN4tMLTLDl7WVYVRuVKgzdIVmk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pYQGeC0v; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1768291643; c=relaxed/simple;
+	bh=RJKifpgaqHQhDE1AXoD/9qEm32hIbVoBQgMbvrpY9X8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=syiTSrooMqf9iVXsODsj7KEEVrApbEV9x3BtbueFX6k8p99mTy9xJXV5tkx4xk0httYFYNOX/quBAX9snyyAGSCn+fXkBhoIueSo0kWsl9iIf7nBCGs1SLHtsehjvqXBHtvvmshYJktNuRjLr3dntvJDg+Hqabn/phI4M1hRP6k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=syIyQ6+o; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pYQGeC0v"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7C36C116C6;
-	Tue, 13 Jan 2026 07:26:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="syIyQ6+o"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF981C19421;
+	Tue, 13 Jan 2026 08:07:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768289207;
-	bh=X12eV0pRW0yGpoCrRghQUkG0cD3cHgL2zEmdlqoVjtw=;
+	s=k20201202; t=1768291643;
+	bh=RJKifpgaqHQhDE1AXoD/9qEm32hIbVoBQgMbvrpY9X8=;
 	h=From:To:Cc:Subject:Date:From;
-	b=pYQGeC0vut8HcxU8i1f4tjsXbURIa7uLr2wtQY9gyhwx8kHh0TNMV4R4JIATHGpLg
-	 xqwlalDvNHMAWFGFq3ZznIfLGByZb8mAIsH4Q5hLhpQ8BEXIFJ2qBXn6+wz+pfMMC+
-	 rRAecBq5iOXvj9NZ3TAgsQ5Ao0G5qj03HVTk/02ltA1teARh6BlSXVKONLHU8J90KP
-	 kLZodSg6PJBIx3heFb3u9olB8JZRZhXJnolFRm4mWVVNtoN8Y4ZaQLxLs4XT9lOOGb
-	 Hlnx0y6RS/DDGpsIsOH/hsvSqXTen5ZFKFh6LJOa1vlP8QJlcNjFvtK0+Fhm448Xt1
-	 3DceOIFS9f9EQ==
+	b=syIyQ6+onB6D4bpeIfXi+ONs2E6y2o6+JDoEMx1bH1Z76GNJhrejJ+lOpbapLvoPh
+	 d3uwvdR2WHOLJrLtS183rIF6toXWwXZVe5MW0wq+V1Lpu7VS8m88jaQytVVjoyXdgC
+	 SMU4ry2m8Mz+xA1eoYYfGt007GhPJS7xCnGLU1WgqycBdVHNSmP8d0cov+CILLz0tt
+	 fR4jQIVxQlNucj3Ie7Wno+x/x9v2ljsgJsC1EoLcIXW43f4iSv3cJOZ/JXyrlUU3/k
+	 sm2qbb1T7TZ5venCV51q+cuPJ1lz0RXf7Fd5XNw5Ii2jIg4aelRKp/funB7i1glL5w
+	 2geNDV66BfZ1w==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [RFC mptcp-next] Squash to "tls: add ops in tls_context"
-Date: Tue, 13 Jan 2026 15:26:42 +0800
-Message-ID: <95151965c8e5b49c6246c8cbb5f543177c0737de.1768289171.git.tanggeliang@kylinos.cn>
+Subject: [RFC mptcp-next v2] Squash to "tls: add ops in tls_context"
+Date: Tue, 13 Jan 2026 16:07:17 +0800
+Message-ID: <24196096819a0557b38926fd53ef1b9121465b11.1768291283.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -42,49 +42,36 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Oops, sorry. spin_lock(&tls_prot_ops_lock) should be called after
-write_unlock_bh(&sk->sk_callback_lock); otherwise, a deadlock occurs.
+Oops, sorry. spin_lock(&tls_prot_ops_lock) shouldn't be called after
+write_lock_bh(&sk->sk_callback_lock); otherwise, a deadlock occurs.
 
-In this fix, tls_prot_ops_find() is moved to after write_unlock_bh(),
-and spin_lock_bh()/spin_unlock_bh() are now used.
+When calling tls_prot_ops_find() here, it's unnecessary to hold
+tls_prot_ops_lock; holding sk->sk_callback_lock is sufficient.
 
 Based-on: <cover.1768284047.git.tanggeliang@kylinos.cn>
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- net/tls/tls_main.c | 16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
+ v2:
+ - do not hold tls_prot_ops_lock in tls_init().
+---
+ net/tls/tls_main.c | 2 --
+ 1 file changed, 2 deletions(-)
 
 diff --git a/net/tls/tls_main.c b/net/tls/tls_main.c
-index 75e01f2dde26..1da7f479342f 100644
+index 75e01f2dde26..1051cb53bc5a 100644
 --- a/net/tls/tls_main.c
 +++ b/net/tls/tls_main.c
-@@ -1097,16 +1097,18 @@ static int tls_init(struct sock *sk)
+@@ -1097,9 +1097,7 @@ static int tls_init(struct sock *sk)
  	ctx->tx_conf = TLS_BASE;
  	ctx->rx_conf = TLS_BASE;
  	ctx->tx_max_payload_len = TLS_MAX_PAYLOAD_SIZE;
 -	spin_lock(&tls_prot_ops_lock);
--	ctx->ops = tls_prot_ops_find(sk->sk_protocol);
+ 	ctx->ops = tls_prot_ops_find(sk->sk_protocol);
 -	spin_unlock(&tls_prot_ops_lock);
--	if (!ctx->ops) {
--		rc = -EINVAL;
--		goto out;
--	}
- 	update_sk_prot(sk, ctx);
- out:
- 	write_unlock_bh(&sk->sk_callback_lock);
-+
-+	if (!rc) {
-+		spin_lock_bh(&tls_prot_ops_lock);
-+		ctx->ops = tls_prot_ops_find(sk->sk_protocol);
-+		spin_unlock_bh(&tls_prot_ops_lock);
-+		if (!ctx->ops)
-+			rc = -EINVAL;
-+	}
-+
- 	return rc;
- }
- 
+ 	if (!ctx->ops) {
+ 		rc = -EINVAL;
+ 		goto out;
 -- 
 2.51.0
 
