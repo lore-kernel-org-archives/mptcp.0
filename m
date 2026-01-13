@@ -1,38 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97EE0A41
-	for <mptcp@lists.linux.dev>; Tue, 13 Jan 2026 06:13:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61B42366DC7
+	for <mptcp@lists.linux.dev>; Tue, 13 Jan 2026 06:13:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768284831; cv=none; b=TWAMCPvK1MnLfgNOLy95IJC8ZKA1rsI/aJW/k31hKIBrgvb1LFxuNIQs/UVQB3q0YGGmCQ8GRgrSZmnS4670FldFXz7y9286wXBIBPJwWUS19JH7VKhoKDaBYA/KvFXm7nFggbutZ/ol/V9AFdppsyyYVvuNzMxN2oN3K3ilt2Y=
+	t=1768284833; cv=none; b=QC1bS2q8DMIoopCaCOhON8ChN7haI4KoizGsyBfQTkVo1UIaL+eWrBPZ3uZNrltzdDROgRhR/uKzbPsJdfViW0nN+gDLOzJcEqCin8aalXtSqTxZfYOFQKPBSSTrA/OYHWeBhp2B1RwKXu2kZO29ZXb3rpMaFyQP9dUbBbOMTb8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768284831; c=relaxed/simple;
-	bh=s+J0uiEWN2RKqf6vRJ0b882/FRaUaQiO4LNcZ2w7mr4=;
+	s=arc-20240116; t=1768284833; c=relaxed/simple;
+	bh=GBw4zWCGkK5GIjNsRYXI1QrMdTiVpNMOHKCjnMweplQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WNoDbmj1VvBqw1Wmfleb6LdvCe6TqX/0ZWrXNzND/gwjg6WwLeD07vlULGKfbAaTuyYlWA/KMtmU9iMNEDeleqpGaxLwB3bytWL++89j5yxx8vLpX2iLnhwIEF0SVqwH6XYDo1usr7GmBJMLk2vxOkxPySn/Egv2mdjetAXLfYM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ONak/q5j; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=IvrKd2Ny5vBLzpWCg4k/4WFzZKHMEhJEVRpk52RvnLK5WpiNV+26OlGCgJXDrHClse3sFTEAkG5nlG1TLW9qAIq0EFN+gxOMbglW7E7z5FRVviclHbzWSOLsmoRHLxQ+Kew6b9jRsre1sIq35AAVvx6d3US9ZrU+LAn2zJwCmZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OesChuQw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ONak/q5j"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46074C19421;
-	Tue, 13 Jan 2026 06:13:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OesChuQw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27E0CC116C6;
+	Tue, 13 Jan 2026 06:13:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768284831;
-	bh=s+J0uiEWN2RKqf6vRJ0b882/FRaUaQiO4LNcZ2w7mr4=;
+	s=k20201202; t=1768284833;
+	bh=GBw4zWCGkK5GIjNsRYXI1QrMdTiVpNMOHKCjnMweplQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ONak/q5jdWm/hPEL51V8Y/eRoYlkWwYy+DySeqBVba0oa2BGUl+vWjXmkZJMz/w/3
-	 poHjfJU1MJu+ivMPITjSbo2zLZVBsbmUXfv58ZPKbRXC3AWXUU70aGbMpqS4c78hmN
-	 ad6AcAhpTs9sHqXlFCwjv0GbbKPh94opSwTSnurv1OjJGnLyAgpjxpNOw/Egfv0af8
-	 CuyULfShXFr/U2X/rSL0b3WcLzTMIIPCByWwtGUL5nvxavZu7p7vcwdIbUQHHHgo7w
-	 FJiLaaSRB7KQoKW4nkWWhuMGnX6oJmtKq09aiZBY574WH/lw6CqLLY55DOm2nVyZ1c
-	 5auhMPPh/lcCw==
+	b=OesChuQwPqnYR+fUHqA2cCpwNfiscKDponmM9GZS0aTS5OecRloUxaFJ4QzinTdTR
+	 MFMLDRgwU3jlixJILyjz5x0sCUhZmUvV+X5sMqyR1Z4yyLZEvcBtwuAbUniEf6u/1x
+	 rbt1+OIdzLwJdlJYI9g048Rwls024S4OaOaZ8zlE6JC9B++gGJGPvisEeJVNjy+jk7
+	 D9DRn8y5keqvyXic1nj9XN9wVqPnnDwMWDZEvz55P0I10kmRIRHFZqsyni0Zz0JWmg
+	 KLwtRBKw7jY7Np+Pu/tl47LJlNBpFaQBBHdgdOzHlVuwzks9M3Oak1hljYY6vQBKOW
+	 uyKbPpxFlgESg==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
-Cc: Gang Yan <yangang@kylinos.cn>,
-	Paolo Abeni <pabeni@redhat.com>
-Subject: [RFC mptcp-next v7 4/9] mptcp: allow overridden write_space to be invoked
-Date: Tue, 13 Jan 2026 14:13:30 +0800
-Message-ID: <3bb02f7f4d3d58291ac1e7a2eaaf851edb636136.1768284047.git.tanggeliang@kylinos.cn>
+Cc: Gang Yan <yangang@kylinos.cn>
+Subject: [RFC mptcp-next v7 5/9] mptcp: update mptcp_check_readable
+Date: Tue, 13 Jan 2026 14:13:31 +0800
+Message-ID: <d25b2b40fe43a4d1edc5b4bea1d4151bba810673.1768284047.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <cover.1768284047.git.tanggeliang@kylinos.cn>
 References: <cover.1768284047.git.tanggeliang@kylinos.cn>
@@ -46,30 +45,44 @@ Content-Transfer-Encoding: 8bit
 
 From: Gang Yan <yangang@kylinos.cn>
 
-TLS overrides its own sk_write_space function with tls_write_space(). This
-patch ensures that the overridden sk_write_space can be invoked by MPTCP.
+This patch makes mptcp_check_readable() aligned with TCP, and renames it to
+mptcp_stream_is_readable(). It will be used in the case of KTLS, because
+'prot' will be modified, tls_sw_sock_is_readable() is expected to be called
+from prot->sock_is_readable().
 
-Note: This patch was initially included in the NVME MPTCP set.
-
-Suggested-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: Gang Yan <yangang@kylinos.cn>
 ---
- net/mptcp/protocol.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/mptcp/protocol.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index cd5266099993..f5d4d7d030f2 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -1014,7 +1014,7 @@ static inline void mptcp_write_space(struct sock *sk)
- 	/* pairs with memory barrier in mptcp_poll */
- 	smp_mb();
- 	if (mptcp_stream_memory_free(sk, 1))
--		sk_stream_write_space(sk);
-+		INDIRECT_CALL_1(sk->sk_write_space, sk_stream_write_space, sk);
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 900f26e21acd..e5b59310bd27 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -3239,9 +3239,11 @@ void __mptcp_unaccepted_force_close(struct sock *sk)
+ 	__mptcp_destroy_sock(sk);
  }
  
- static inline void __mptcp_sync_sndbuf(struct sock *sk)
+-static __poll_t mptcp_check_readable(struct sock *sk)
++static __poll_t mptcp_stream_is_readable(struct sock *sk)
+ {
+-	return mptcp_epollin_ready(sk) ? EPOLLIN | EPOLLRDNORM : 0;
++	if (mptcp_epollin_ready(sk))
++		return true;
++	return sk_is_readable(sk);
+ }
+ 
+ static void mptcp_check_listen_stop(struct sock *sk)
+@@ -4303,7 +4305,8 @@ static __poll_t mptcp_poll(struct file *file, struct socket *sock,
+ 		mask |= EPOLLIN | EPOLLRDNORM | EPOLLRDHUP;
+ 
+ 	if (state != TCP_SYN_SENT && state != TCP_SYN_RECV) {
+-		mask |= mptcp_check_readable(sk);
++		if (mptcp_stream_is_readable(sk))
++			mask |= EPOLLIN | EPOLLRDNORM;
+ 		if (shutdown & SEND_SHUTDOWN)
+ 			mask |= EPOLLOUT | EPOLLWRNORM;
+ 		else
 -- 
 2.51.0
 
