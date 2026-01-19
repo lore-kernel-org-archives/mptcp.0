@@ -1,53 +1,90 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 014D450096D;
-	Sun, 18 Jan 2026 00:49:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECCE4381AF;
+	Mon, 19 Jan 2026 06:17:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768697373; cv=none; b=aqnRZIrzG8mFOhBQ3ls86N3RAT9/2crg1bRxvXQ+qiRz4N9QRquUQ/pOECGdkOdrFsd7AkecWBV/P6YQV4dl/gaDrCUqsNakNh5SP1bvQaMmilvABMYUQtJDbt0iVJkzQgJcNjaixqtmDMcPRl848u82lxgdwwPsKGr6OT6qQjY=
+	t=1768803424; cv=none; b=l8yzv6BYW0QiyiNfj6uh1NTDmLUgQEPXW6JD2Ce7r1RfxiB5eedGMb3gcSPs99KdAd/JEIXJew1Bp/82l4niTmc769DyCDxLNI/shBkM1442Atx+GaHaTiFINVBOOLpV2+qyOraPeL699sV7snQHBdhOTh03EVOPEp5w3row61k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768697373; c=relaxed/simple;
-	bh=VbOvOE8szbiEEc3m/5uVJd+yC+M9/BYE2w317eOONuQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=C4rAd2ir318v8rq4vtdAO5tGF+a3pInlCJp2erpovXrYQxub0OoRkUmgB0qWgcS6kLIz+AgozURIokwzQDdx/sg6Pw/i04po5vJ1aiScY1hd6rw5DEiIMa2MiPKO7BhavegL1WKtDK4ysNh6xlawBrYDtqRrbK42Extkxx/KKXE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tOSJntWW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1768803424; c=relaxed/simple;
+	bh=QETn13R73S5/GcHX+qI13XXSll7BGlIfb+ruyBizkvI=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=py6D41gvnEOYY52Yt4d1PbwXDBKdvhthsNbRzDj1m6sQIljdLM+X+U52ZGInwlAyj7GWGO07UvyBQ9fAgwiLEIVxuJrzA6UEhBGrKdTRXKymyWiAVXxFNcU6Ot1dZiclfstGC1oZXTuuon90bk3aMNoTC+3wgKZp5TowTOE0ZNI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sJ8fgPl2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tOSJntWW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66195C4CEF7;
-	Sun, 18 Jan 2026 00:49:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sJ8fgPl2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01F15C116C6;
+	Mon, 19 Jan 2026 06:16:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768697372;
-	bh=VbOvOE8szbiEEc3m/5uVJd+yC+M9/BYE2w317eOONuQ=;
-	h=Date:From:To:Cc:Subject:From;
-	b=tOSJntWW+XiWK85BD82UEbvTnWoT3cUVfsvRLqZuxgyGtS0EOCo8VjaLh6dutJ5aK
-	 bfjL5loWLB/hPfWWrWcw119b+4az4YHbQiH2WGgwosPmZkYF3tseJcVheqpcjYi36p
-	 zRhf8dwIH3Sd1ruaT/CdqpWMl7Og/Tv0Ww3KY2KUIrdFi/TN4+Y1qnSll2AzvO6mVB
-	 GR5FdEkbNdrw8JxnthwWoW53XnSZlPzBlHtVB79ZsrDcfm9v0NoZECBqL4QiXW3g/f
-	 ZUcd/z4+iv/aWbrWK0qYNrjGAPswDgo5iuTsEdnIeNbu78Bpgs1wAV4kWUk5S2Plyf
-	 XfNkLGMjqEQ0g==
-Date: Sat, 17 Jan 2026 16:49:31 -0800
-From: Jakub Kicinski <kuba@kernel.org>
-To: Matthieu Baerts <matttbe@kernel.org>, Mat Martineau
- <martineau@kernel.org>
-Cc: mptcp@lists.linux.dev, netdev@vger.kernel.org
-Subject: [TEST] mptcp diag.sh curious skips
-Message-ID: <20260117164931.394ee1fc@kernel.org>
+	s=k20201202; t=1768803423;
+	bh=QETn13R73S5/GcHX+qI13XXSll7BGlIfb+ruyBizkvI=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=sJ8fgPl26LZtqwJFIYUCRiFxLnbGacVkuaNHfYWWWNerl+kYC6kOs+KIwpXl4CkAZ
+	 IFV2T4iuPw8KX9hwloyaDE/kY010FucLAKvhciEY3nF2B65y428uB+kOCVHIchOD6s
+	 e2AcM5ad/IYzJoqozwGA7T1vYceW8tg58hTV5zdyz2FThqOTp4WyfSwZ1evVO/mL9T
+	 YrSSh6laNeAmybcOlukRjwEsHhdev6V3j9gecflH/nig3ZlDBedSxkNWFLj559Xw3v
+	 nuF9ditg/GzJvvR7x5rvjQY9XkvLxQdJlA3xJe4Uj08cs6kEp1ec9uzre39ujH7EMC
+	 tnwfVCLINCWNg==
+Message-ID: <66b44ded1d5174131e90fae85b296ef89a53ab24.camel@kernel.org>
+Subject: Re: [PATCH net-next v2] selftests: tls: use mkstemp instead of
+ open(O_TMPFILE)
+From: Geliang Tang <geliang@kernel.org>
+To: Jakub Kicinski <kuba@kernel.org>, "Matthieu Baerts (NGI0)"
+	 <matttbe@kernel.org>
+Cc: John Fastabend <john.fastabend@gmail.com>, Sabrina Dubroca	
+ <sd@queasysnail.net>, "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+	 <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Simon Horman	
+ <horms@kernel.org>, Shuah Khan <shuah@kernel.org>, Gang Yan
+ <yangang@kylinos.cn>, 	netdev@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, mptcp@lists.linux.dev
+Date: Mon, 19 Jan 2026 14:16:32 +0800
+In-Reply-To: <20260115184922.7e346931@kernel.org>
+References:
+	 	<2fa14a04f5287c956a1112cef8cdfb2c86931d2d.1768467496.git.tanggeliang@kylinos.cn>
+		 <20260115184922.7e346931@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.56.2-4 
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-Hi!
+Hi Jakub, Matt,
 
-Every now and then this happens:
+On Thu, 2026-01-15 at 18:49 -0800, Jakub Kicinski wrote:
+> On Thu, 15 Jan 2026 17:02:40 +0800 Geliang Tang wrote:
+> > This is because the /tmp directory uses the virtiofs filesystem,
+> > which does
+> > not support the O_TMPFILE feature.
+> 
+> I don't think selftests are expected to support setups where /tmp 
+> isn't tmp. Please fix your setup instead (or explain why it's very
 
-https://netdev-ctrl.bots.linux.dev/logs/vmksft/mptcp-dbg/results/478242/10-diag-sh/stdout
+Thanks for reviewing. I recently implemented TLS support for MPTCP and
+have been adding MPTCP test items to the TLS selftests. When running
+these in the MPTCP upstream CI (mptcp-upstream-virtme-docker), these
+O_TMPFILE unsupported errors occurred.
 
-note the skip and the leak.
+Following your suggestion, I looked into the mptcp-upstream-virtme-
+docker configuration and found that /tmp isn't mounted as tmpfs; it's
+just a plain directory. I've opened a PR to address this:
 
-Not a big deal if this is a false positive given the very low freq. 
-But the leak made me pause.
+virtme: mount /tmp as overlay for O_TMPFILE support
+
+https://github.com/multipath-tcp/mptcp-upstream-virtme-docker/pull/43
+
+@Matt
+
+This change adds "--overlay-rwdir /tmp" to virtme-run options, ensuring
+/tmp gets mounted as an overlay filesystem. It functions correctly,
+though I'm not certain it's the ideal solution.
+
+Thanks,
+-Geliang
+
+> crucial that you don't). The upstream CI runs all the selftests in
+> VMs and they are working just fine.
