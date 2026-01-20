@@ -1,90 +1,136 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECCE4381AF;
-	Mon, 19 Jan 2026 06:17:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 847F443CED9
+	for <mptcp@lists.linux.dev>; Tue, 20 Jan 2026 14:10:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768803424; cv=none; b=l8yzv6BYW0QiyiNfj6uh1NTDmLUgQEPXW6JD2Ce7r1RfxiB5eedGMb3gcSPs99KdAd/JEIXJew1Bp/82l4niTmc769DyCDxLNI/shBkM1442Atx+GaHaTiFINVBOOLpV2+qyOraPeL699sV7snQHBdhOTh03EVOPEp5w3row61k=
+	t=1768918243; cv=none; b=MwusQKw5SE9SR+3+ZsVAoKg+Ia196+uFLU7J5pfpT3J4IC46J/NFV4zKw9IB5/hLlokioiw0LrklwLazmDwE4fkz+yRtvkip7vVQoQcF+wSrvz/zfuSyyZirEQCA1Ze/SFFrzNdqZTlzVVV1EeN0tHCix2ihULUNmxeusynxRso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768803424; c=relaxed/simple;
-	bh=QETn13R73S5/GcHX+qI13XXSll7BGlIfb+ruyBizkvI=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=py6D41gvnEOYY52Yt4d1PbwXDBKdvhthsNbRzDj1m6sQIljdLM+X+U52ZGInwlAyj7GWGO07UvyBQ9fAgwiLEIVxuJrzA6UEhBGrKdTRXKymyWiAVXxFNcU6Ot1dZiclfstGC1oZXTuuon90bk3aMNoTC+3wgKZp5TowTOE0ZNI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sJ8fgPl2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1768918243; c=relaxed/simple;
+	bh=Ahm6F+EOjc6R8Q0l33MFSfJ04zvpzbPYSaGnxm24BWE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=R+FGMOZ6ZOdZbc5vZEcyCtGSTJXfJZYUsV7kj6obD/xY12mBSCN9QoKQwVtJtJ8RfPGhqb81aLjUkW/ll7AZjw16N1j13jUwsVf9CrBwb87B2EgILEMmGbF754tsaVfNbVH8vAPUuq6Rtji+iFlurI/csTj0qTW5ZCamYBu55Eg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=NoSWA8KH; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=NItJhtZf; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sJ8fgPl2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01F15C116C6;
-	Mon, 19 Jan 2026 06:16:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768803423;
-	bh=QETn13R73S5/GcHX+qI13XXSll7BGlIfb+ruyBizkvI=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=sJ8fgPl26LZtqwJFIYUCRiFxLnbGacVkuaNHfYWWWNerl+kYC6kOs+KIwpXl4CkAZ
-	 IFV2T4iuPw8KX9hwloyaDE/kY010FucLAKvhciEY3nF2B65y428uB+kOCVHIchOD6s
-	 e2AcM5ad/IYzJoqozwGA7T1vYceW8tg58hTV5zdyz2FThqOTp4WyfSwZ1evVO/mL9T
-	 YrSSh6laNeAmybcOlukRjwEsHhdev6V3j9gecflH/nig3ZlDBedSxkNWFLj559Xw3v
-	 nuF9ditg/GzJvvR7x5rvjQY9XkvLxQdJlA3xJe4Uj08cs6kEp1ec9uzre39ujH7EMC
-	 tnwfVCLINCWNg==
-Message-ID: <66b44ded1d5174131e90fae85b296ef89a53ab24.camel@kernel.org>
-Subject: Re: [PATCH net-next v2] selftests: tls: use mkstemp instead of
- open(O_TMPFILE)
-From: Geliang Tang <geliang@kernel.org>
-To: Jakub Kicinski <kuba@kernel.org>, "Matthieu Baerts (NGI0)"
-	 <matttbe@kernel.org>
-Cc: John Fastabend <john.fastabend@gmail.com>, Sabrina Dubroca	
- <sd@queasysnail.net>, "David S. Miller" <davem@davemloft.net>, Eric Dumazet
-	 <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Simon Horman	
- <horms@kernel.org>, Shuah Khan <shuah@kernel.org>, Gang Yan
- <yangang@kylinos.cn>, 	netdev@vger.kernel.org,
- linux-kselftest@vger.kernel.org, mptcp@lists.linux.dev
-Date: Mon, 19 Jan 2026 14:16:32 +0800
-In-Reply-To: <20260115184922.7e346931@kernel.org>
-References:
-	 	<2fa14a04f5287c956a1112cef8cdfb2c86931d2d.1768467496.git.tanggeliang@kylinos.cn>
-		 <20260115184922.7e346931@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.56.2-4 
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NoSWA8KH";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NItJhtZf"
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1768918239;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=nw3GMmv6rsxzJhfQEt7gKqAEVYquIJkLViAuhkQckP0=;
+	b=NoSWA8KHAOW34ej89I6r4P9qqfRGTSrpRdLYpSX2TU/YKte6uFQbzKvdinPA0lisvYESRi
+	HYR3dbyIkym4yrwD6NuHSOFvoIRarqOstQ0TP56+/FTOn0uUTAZnuzzVzPi/0GoNDWQ88d
+	GlGpOIj51tOdACdwx6SwPz+vAN3Pgg5Z+Wm/5Ly4DbiMrVsQfo/kZ8DQ3XH2ap2jNNODle
+	ES+cM/ucSiFmYheJ92FprCtTYAW3fNxZv9iWB3FSG21peOu2k5+LOEXRiiGBNOKFoT6SFT
+	fjRfM7aEWKIcHL7Nkspjl4yIVkCDKs85aMN92Q3Dl7GWp7BAFekFEzpwlwgi/g==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1768918239;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=nw3GMmv6rsxzJhfQEt7gKqAEVYquIJkLViAuhkQckP0=;
+	b=NItJhtZfv+tx5epeA2xKfozfbOxxbY0+Lwh+VC3Sf/nVsyjCAfZ/h/i5gbhoRCCWad3fkz
+	//HYvaUB6h2f5DAg==
+Subject: [PATCH net-next v2 0/4] net: uapi: Provide an UAPI definition of
+ 'struct sockaddr'
+Date: Tue, 20 Jan 2026 15:10:30 +0100
+Message-Id: <20260120-uapi-sockaddr-v2-0-63c319111cf6@linutronix.de>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIANaMb2kC/12NQQ6CMBBFr0Jm7Zh2tBBdeQ/DotBBJpqWtIVgC
+ He3Yeny5eW/v0HiKJzgXm0QeZEkwRegUwX9aP2LUVxhIEVGExHOdhJMoX9b5yL2g1bc1HRt6AZ
+ lM0UeZD16T/Cc0fOaoS1mlJRD/B5Hiz58adZKK/PXXDRq7JraXGxnNVnz+Iifcwxe1rNjaPd9/
+ wFO2SCEuAAAAA==
+X-Change-ID: 20251222-uapi-sockaddr-cf10e7624729
+To: Eric Dumazet <edumazet@google.com>, 
+ Kuniyuki Iwashima <kuniyu@google.com>, Paolo Abeni <pabeni@redhat.com>, 
+ Willem de Bruijn <willemb@google.com>, 
+ "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, 
+ Simon Horman <horms@kernel.org>, Shuah Khan <shuah@kernel.org>, 
+ Matthieu Baerts <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>, 
+ Geliang Tang <geliang@kernel.org>, 
+ =?utf-8?q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>, 
+ =?utf-8?q?G=C3=BCnther_Noack?= <gnoack@google.com>, 
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+ Jesper Dangaard Brouer <hawk@kernel.org>, 
+ John Fastabend <john.fastabend@gmail.com>, 
+ Stanislav Fomichev <sdf@fomichev.me>, Andrii Nakryiko <andrii@kernel.org>, 
+ Martin KaFai Lau <martin.lau@linux.dev>, 
+ Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+ Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
+ Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-api@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, 
+ linux-kselftest@vger.kernel.org, mptcp@lists.linux.dev, 
+ linux-security-module@vger.kernel.org, bpf@vger.kernel.org, 
+ libc-alpha@sourceware.org, Carlos O'Donell <carlos@redhat.com>, 
+ Adhemerval Zanella <adhemerval.zanella@linaro.org>, 
+ Rich Felker <dalias@libc.org>, klibc@zytor.com, 
+ Florian Weimer <fweimer@redhat.com>, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1768918237; l=2292;
+ i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
+ bh=Ahm6F+EOjc6R8Q0l33MFSfJ04zvpzbPYSaGnxm24BWE=;
+ b=5X22So3PfA/S7ayTw8eLh1EFtj1DE0Tv6sUsSL2/wnoVi2BXpK944Df4Iu5TWZmKG+GLpv7YI
+ jzfIuR+GpMBDIJ9kfKmasfJ9A3NvmYTn3p3DyGhQAXO3d2FHCDLTleb
+X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
+ pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-Hi Jakub, Matt,
+Various UAPI headers reference 'struct sockaddr'. Currently the
+definition of this struct is pulled in from the libc header
+sys/socket.h. This is problematic as it introduces a dependency
+on a full userspace toolchain.
 
-On Thu, 2026-01-15 at 18:49 -0800, Jakub Kicinski wrote:
-> On Thu, 15 Jan 2026 17:02:40 +0800 Geliang Tang wrote:
-> > This is because the /tmp directory uses the virtiofs filesystem,
-> > which does
-> > not support the O_TMPFILE feature.
-> 
-> I don't think selftests are expected to support setups where /tmp 
-> isn't tmp. Please fix your setup instead (or explain why it's very
+Add a definition of 'struct sockaddr' to the UAPI headers.
+Before that, reorder some problematic header inclusions in the selftests.
 
-Thanks for reviewing. I recently implemented TLS support for MPTCP and
-have been adding MPTCP test items to the TLS selftests. When running
-these in the MPTCP upstream CI (mptcp-upstream-virtme-docker), these
-O_TMPFILE unsupported errors occurred.
+Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+---
+Changes in v2:
+- Fix compilation failures in BPF samples and selftests
+- Link to v1: https://lore.kernel.org/r/20260105-uapi-sockaddr-v1-1-b7653aba12a5@linutronix.de
 
-Following your suggestion, I looked into the mptcp-upstream-virtme-
-docker configuration and found that /tmp isn't mounted as tmpfs; it's
-just a plain directory. I've opened a PR to address this:
+---
+Thomas Weißschuh (4):
+      selftests: net: Move some UAPI header inclusions after libc ones
+      selftests/landlock: Move some UAPI header inclusions after libc ones
+      samples/bpf: Move some UAPI header inclusions after libc ones
+      net: uapi: Provide an UAPI definition of 'struct sockaddr'
 
-virtme: mount /tmp as overlay for O_TMPFILE support
+ include/linux/socket.h                             | 10 ----------
+ include/uapi/linux/if.h                            |  4 ----
+ include/uapi/linux/libc-compat.h                   | 12 ++++++++++++
+ include/uapi/linux/socket.h                        | 14 ++++++++++++++
+ samples/bpf/xdp_adjust_tail_user.c                 |  6 ++++--
+ samples/bpf/xdp_fwd_user.c                         |  7 ++++---
+ samples/bpf/xdp_router_ipv4_user.c                 |  6 +++---
+ samples/bpf/xdp_sample_user.c                      | 15 ++++++++-------
+ samples/bpf/xdp_tx_iptunnel_user.c                 |  4 ++--
+ tools/testing/selftests/landlock/audit.h           |  7 ++++---
+ tools/testing/selftests/net/af_unix/diag_uid.c     |  9 +++++----
+ tools/testing/selftests/net/busy_poller.c          |  3 ++-
+ tools/testing/selftests/net/mptcp/mptcp_diag.c     | 11 ++++++-----
+ tools/testing/selftests/net/nettest.c              |  4 ++--
+ tools/testing/selftests/net/tcp_ao/icmps-discard.c |  6 +++---
+ tools/testing/selftests/net/tcp_ao/lib/netlink.c   |  9 +++++----
+ tools/testing/selftests/net/tun.c                  |  5 +++--
+ 17 files changed, 77 insertions(+), 55 deletions(-)
+---
+base-commit: 24d479d26b25bce5faea3ddd9fa8f3a6c3129ea7
+change-id: 20251222-uapi-sockaddr-cf10e7624729
 
-https://github.com/multipath-tcp/mptcp-upstream-virtme-docker/pull/43
+Best regards,
+-- 
+Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 
-@Matt
-
-This change adds "--overlay-rwdir /tmp" to virtme-run options, ensuring
-/tmp gets mounted as an overlay filesystem. It functions correctly,
-though I'm not certain it's the ideal solution.
-
-Thanks,
--Geliang
-
-> crucial that you don't). The upstream CI runs all the selftests in
-> VMs and they are working just fine.
