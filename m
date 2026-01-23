@@ -1,203 +1,83 @@
-Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51FD32741AB
-	for <mptcp@lists.linux.dev>; Fri, 23 Jan 2026 11:36:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.219.46
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769168196; cv=pass; b=RRLyJQXcgiXAUrohqUbq0RsW+v4LR9M4WkD+hXQAg/Zfvb6dHHztyFomVtvV/TLudm5QhEC9TeGm4QqTaO8VQeryCOHCR3xRjcReRBasdBt3Vbd0G4kpJM5h+nbaP+JQ9d8MffE2yKSKvcnajLccVNlwot3rc/fMjL0Xa39q/R4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769168196; c=relaxed/simple;
-	bh=y6MTrvZG8VupVu25MNpn3bdLgsc3yejB9DqMLytJSR0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=jzhwWF7sS/STqNdcg2E1+ErSIm9MQUF9sFMsAVSlMIfGlN6PnEYw8atrJjmAqZHoPajZL0iYu9DRorYfZDpfLGSeZuxb8phLxz8s2WkuAwjeeClhKeS3wLQCaMGvYEUaCTNsjbMGX+sQhkJPBLO663hVvP7nHwO0rk9cT1fn3h8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cPver49U; arc=pass smtp.client-ip=209.85.219.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7193C286A9
+	for <mptcp@lists.linux.dev>; Fri, 23 Jan 2026 13:33:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1769175237; cv=none; b=eV6HGroJqXVyuWhx26YRCH0bWUeimBeR82DZbbTS3gGW+oHgvLDjcguY0ZfW1swArRD0YJ/UDVzMPrwGnPh9qew0i+RS/SL2H8O/AQUV/wDZr4YH0S8ozMa/srfh5jjJLl2NEZ3cclMDF0l133ghYL48tT01BuCya/B0QbPx/sM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1769175237; c=relaxed/simple;
+	bh=75ICJCxKbgxNvQjzhyzFGLxCPhUa/JywXja4HxjERvo=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=k9zoZpTclSCNJa7E8sKCWyKHSB4f2Qmatdg7V+aTpI7bXp8qowYmhtgDHQxGCiu18ZUYAGheU6GtKQec3X+MUErqVZeFvXx8YZzakH4gMxq/EwMJm5r8TO2rJZ4e26fKOBm0R49HkaW+k3oSA+Q/S0/2yoFsRERsmRvnwFnd7BM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hHPMO9Hm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cPver49U"
-Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-894774491deso37336746d6.2
-        for <mptcp@lists.linux.dev>; Fri, 23 Jan 2026 03:36:35 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1769168194; cv=none;
-        d=google.com; s=arc-20240605;
-        b=iy3KQJiZmxYaLZNuG41c/6ibJjCjQc0wLuCJU2BXCyYm2kpNFEeQPawh4FgeDDuM5m
-         Bx6X33H6EufVBNbK1lVe8LBOwVBBD+uJaMyyyPCrWoXhqn915Wm1cZqXzOUAy8SrRhhj
-         ixyiefDnLlquriyDbiESomAnpwaeX1q1KXnz72NkzkvyZ+iEW/IGKa6uhyT8MA3q0esN
-         oF5Si6aqNdgjNQ3i5Ru4ECOcvo5Pxie3z4W3jN98EjeV9kT0frCVaj2ffUjSHfT5ZNGt
-         SCltNDmzF9RxkL+goRiLbrP4gtsUEL/rnJau+K2tUjpPoqHxadOWKBJZdFD3j2iWUXrw
-         ILJA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=XfBeo+UuxpBpmV4YRzeR7r9q0Ag6udZmjfpEkEtqvpU=;
-        fh=KoOOhf6J2pokZKo/B0+oz08+WVYAFzmgcZVfHglZF2o=;
-        b=OuobMH68ngGhzdCvla1wmgHaWbBhj7NGzz3hcHBd8WtpDVI2q4tFSC3F9Mr2wmwKSZ
-         pcChcJ6i5InMY0JYOq4p/L7ij5mnjev7dayyRCAL6KN3g3EwTx/RF+RMKls1lqKWrQwr
-         chzQX7w8bINUJdJWxYsPaMTar82yft+sysRtAVvHR425OSP92KChUfS8OR4YgJ9XjCmN
-         N982f/Vo1yEOxJo2bt7V1lcNMgVLyHkxiYMwqP/4KQl1iGNLmjR/h2oZm4PbRjCoJbx8
-         Px360/9uGZF8mcdh2f97KmJpsOZSS6AaDz68oaQliLJ5Hq57SzNDqHY8+UV3qK9mF7zn
-         mOOg==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1769168194; x=1769772994; darn=lists.linux.dev;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XfBeo+UuxpBpmV4YRzeR7r9q0Ag6udZmjfpEkEtqvpU=;
-        b=cPver49UnEi/d1AHHckLZtOStHZZVIDUSNCRdPE4BD7SXNj1zPfvT+5hXsW0e/9OPQ
-         Tn9bhZCBpibHDnhc49Rjl3guVQM9LA/pXe165TJsZ/aapYS/lPvxEvesrwIerCsUOhFE
-         XUll0xeUuM+EuLv4BU1/zc/ZHHdemFLokLdNJqkgzzHkuCT1omd/ejdeX0Qk21pkBxDK
-         hqzXBPKdMAix2TvD1DA1jLF/c5QOzaWtp1YwodZ7KYXGb3QR0/GX1hxnqPvjJJ2NgQas
-         +XlrW404xOQvs7jsOe3uKpdsMUzbybMoXU00OQTmu80DvJf0w4k5EeOUskk0/3/EQtKw
-         oJzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769168194; x=1769772994;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=XfBeo+UuxpBpmV4YRzeR7r9q0Ag6udZmjfpEkEtqvpU=;
-        b=YMfDtmevYvL9XTXytQIZTTsuQ0+86o0jDBi7dshtMGauEpTSjBwVgNEjtuWq2FnxgY
-         AH14SZPknudlPCp7TqI16SBmXENRAuyxO5KcgUQe2vqR1Hw1zMUV1s86EaKRK7evebMm
-         49Q+2Am4207hwJ4moBjKp+UWaqr8msqOR+47EADzWHMmZ21/Rs9NvRso/Nc2UXTKUiHC
-         zEukFQP5FCXhaT6M6VmEALAhBVK/IOVmBIC4jj4OqUuBYU5lRw5n1UeTpOyI7GMIq4Iz
-         ePtJqjvKH44b+Zsk3yxwRV2yOY5suqI0DAxcON1PEZl2oazHwXSlnrkWl0o/x/VtttOv
-         xBVg==
-X-Gm-Message-State: AOJu0YxGoj2TQE0EgF3c4zwdtPnlPXkPlf5QWaaN3oKEfNm/vssQVNCg
-	vIIitbDxd9FQuJzKOHzcGfGCuTdOyYFaHEgSfm+c8AnO0WgOpdOoHAKo/JILh2b1PVHklbRRbK9
-	WOITASY7n3kZV8yLvF0CYRWc/0+cZCVxgtKooB34felhyoYeT+1APBoj5yEA=
-X-Gm-Gg: AZuq6aL0L63QmAv25n5l2vp1/aJF/3CxT4YLYSMnNUjcdfskFVWy1A9guMibI+uaLW8
-	9uyIqZwieyOio9X3tO4pZfFPY0IkMLJDG5SXCtnAktRQtoCTyFHG05vXzPigzkcXUxpbckhDGu8
-	isaELtX7bvvBGQYq8uAUjBeLyOGPf/yPOrRrtzESErJUbz2rOh58WJYDPEPZXYFpUuZXLOx7RqG
-	4Pw6uC+oo4sxTE7yTQR2Vr4WxLOMasTzo9Mh5b1eg3jSM0EwUYZDWaLFJ7M3aS1BfwS8GPV2OTc
-	arDlXw==
-X-Received: by 2002:ac8:5914:0:b0:4ee:ee46:842f with SMTP id
- d75a77b69052e-502f770be6fmr34301641cf.9.1769168193803; Fri, 23 Jan 2026
- 03:36:33 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hHPMO9Hm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F7F3C4CEF1;
+	Fri, 23 Jan 2026 13:33:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1769175237;
+	bh=75ICJCxKbgxNvQjzhyzFGLxCPhUa/JywXja4HxjERvo=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=hHPMO9HmBXluxca7kXUqu/pqCjYFD6TOfIMx254Tbka7eL4rK/5JK9G8YMD2YP6jG
+	 AqZ/X1TxvKNS1VXuKqRk9DZI/U/0B7xP13uN3w8+98ZGjKsBjQSOYMSDnJAi1po0YO
+	 2rNo1R1gYgQ7pgjXSebZgQcgscTLUQh4gz6+IgMPasvuH6vzUKdS/juZt3MTKdgxp5
+	 1Ugbze/68fQxJkF7YDNn7Iyr+14O3r053YvetL/5sjZXCWNPyHr4AxVLDKTrfG5zaw
+	 9cJOkbWd783wVI3reVO8UHrp+CBpvOK6xg9XnOcPlT7DVVXv0e0Q5u/yA+x72uyO/W
+	 IV5eNLXnuuKEw==
+Date: Fri, 23 Jan 2026 14:33:52 +0100
+From: Matthieu Baerts <matttbe@kernel.org>
+To: Eric Dumazet <edumazet@google.com>
+Cc: mptcp@lists.linux.dev
+Message-ID: <5ffec702-b8e5-4864-95ae-d4c94357dc04@kernel.org>
+In-Reply-To: <CANn89iJ+c=_DdT5CPj4Zxfhx__gKOeNjBhQuOaBqOgkR7ugkdQ@mail.gmail.com>
+References: <20260123030327.3041148-1-edumazet@google.com> <f146d0f7-1d16-e749-04a9-05a79d1ddf98@gmail.com> <CANn89iJ+c=_DdT5CPj4Zxfhx__gKOeNjBhQuOaBqOgkR7ugkdQ@mail.gmail.com>
+Subject: Re: [PATCH v2 net] mptcp: fix race in
+ mptcp_pm_nl_flush_addrs_doit()
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260123030327.3041148-1-edumazet@google.com> <f146d0f7-1d16-e749-04a9-05a79d1ddf98@gmail.com>
-In-Reply-To: <f146d0f7-1d16-e749-04a9-05a79d1ddf98@gmail.com>
-From: Eric Dumazet <edumazet@google.com>
-Date: Fri, 23 Jan 2026 12:36:22 +0100
-X-Gm-Features: AZwV_QgikpWAgYeVNb52EmVCbuU5O98TjL0X2CUtRtX_h0J5Txt2xkoCFjWOhpk
-Message-ID: <CANn89iJ+c=_DdT5CPj4Zxfhx__gKOeNjBhQuOaBqOgkR7ugkdQ@mail.gmail.com>
-Subject: Re: [PATCH v2 net] mptcp: fix race in mptcp_pm_nl_flush_addrs_doit()
-To: mptcp@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
+X-Correlation-ID: <5ffec702-b8e5-4864-95ae-d4c94357dc04@kernel.org>
 
-On Fri, Jan 23, 2026 at 12:03=E2=80=AFPM MPTCP CI
-<wpasupplicant.patchew@gmail.com> wrote:
->
-> Hi Eric,
->
-> Thank you for your modifications, that's great!
->
-> Our CI did some validations and here is its report:
->
-> - KVM Validation: normal (except selftest_mptcp_join): Unstable: 1 failed=
- test(s): selftest_simult_flows =F0=9F=94=B4
-> - KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-> - KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
-> - KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-> - KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-> - KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-> - Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/2128=
-1916251
->
-> Initiator: Matthieu Baerts (NGI0)
-> Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/c14ce301=
-6a03
-> Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D1045=
-988
->
->
-> If there are some issues, you can reproduce them using the same environme=
-nt as
-> the one used by the CI thanks to a docker image, e.g.:
->
->     $ cd [kernel source code]
->     $ docker run -v "${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it =
-\
->         --pull always mptcp/mptcp-upstream-virtme-docker:latest \
->         auto-normal
->
-> For more details:
->
->     https://github.com/multipath-tcp/mptcp-upstream-virtme-docker
->
->
-> Please note that despite all the efforts that have been already done to h=
-ave a
-> stable tests suite when executed on a public CI like here, it is possible=
- some
-> reported issues are not due to your modifications. Still, do not hesitate=
- to
-> help us improve that ;-)
->
-> Cheers,
-> MPTCP GH Action bot
-> Bot operated by Matthieu Baerts (NGI0 Core)
+Hi Eric,
 
-This seem a flake ?
+Thank you for having looked at this and sharing this fix.
 
-No issue here
+23 Jan 2026 12:36:37 Eric Dumazet <edumazet@google.com>:
 
-make -j8 -C tools/testing/selftests TARGETS=3Dnet/mptcp
-TEST_PROGS=3D"simult_flows.sh" run_tests
-make: Entering directory
-'/usr/local/google/home/edumazet/git/net-next/tools/testing/selftests'
-make[1]: Nothing to be done for 'all'.
-TAP version 13
-1..1
-# timeout set to 1800
-# selftests: net/mptcp: simult_flows.sh
-# 01 balanced bwidth                                             7412
-max 7906       [ OK ]
-# 02 balanced bwidth - reverse direction                         7389
-max 7906       [ OK ]
-# 03 balanced bwidth with unbalanced delay                       7522
-max 7906       [ OK ]
-# 04 balanced bwidth with unbalanced delay - reverse direction   7519
-max 7906       [ OK ]
-# 05 unbalanced bwidth                                           11588
-max 11921      [ OK ]
-# 06 unbalanced bwidth - reverse direction                       11431
-max 11921      [ OK ]
-# 07 unbalanced bwidth with unbalanced delay                     11378
-max 11921      [ OK ]
-# 08 unbalanced bwidth with unbalanced delay - reverse direction 11304
-max 11921      [ OK ]
-# 09 unbalanced bwidth with opposed, unbalanced delay            11605
-max 11921      [ OK ]
-# 10 unbalanced bwidth with opposed, unbalanced delay - reverse
-direction11579 max 11921      [ OK ]
-#
-# TAP version 13
-# 1..10
-# ok 1 - simult_flows: balanced bwidth # time=3D9708ms
-# ok 2 - simult_flows: balanced bwidth - reverse direction # time=3D8764ms
-# ok 3 - simult_flows: balanced bwidth with unbalanced delay # time=3D9414m=
-s
-# ok 4 - simult_flows: balanced bwidth with unbalanced delay - reverse
-direction # time=3D8847ms
-# ok 5 - simult_flows: unbalanced bwidth # time=3D13405ms
-# ok 6 - simult_flows: unbalanced bwidth - reverse direction # time=3D12701=
-ms
-# ok 7 - simult_flows: unbalanced bwidth with unbalanced delay # time=3D132=
-47ms
-# ok 8 - simult_flows: unbalanced bwidth with unbalanced delay -
-reverse direction # time=3D12589ms
-# ok 9 - simult_flows: unbalanced bwidth with opposed, unbalanced
-delay # time=3D13441ms
-# ok 10 - simult_flows: unbalanced bwidth with opposed, unbalanced
-delay - reverse direction # time=3D12940ms
-ok 1 selftests: net/mptcp: simult_flows.sh
-make: Leaving directory
-'/usr/local/google/home/edumazet/git/net-next/tools/testing/selftests'
-root@virtme-ng:/usr/local/google/home/edumazet/git/net-next#
+> On Fri, Jan 23, 2026 at 12:03=E2=80=AFPM MPTCP CI
+> <wpasupplicant.patchew@gmail.com> wrote:
+
+>> Our CI did some validations and here is its report:
+>>
+>> - KVM Validation: normal (except selftest_mptcp_join): Unstable: 1 faile=
+d test(s): selftest_simult_flows =F0=9F=94=B4
+>
+> This seem a flake ?
+
+Yes it is, and due to a commit ("mptcp: better mptcp-level RTT
+estimator") which is only in our tree (used by our CI), see:
+
+https://github.com/multipath-tcp/mptcp_net-next/issues/607
+
+Sorry, I didn't have the opportunity to find a solution for that.
+
+Regarding your patch, it looks like it is corrupted. Both NIPA and
+Patchew are complaining about it:
+
+=C2=A0 Applying: mptcp: fix race in mptcp_pm_nl_flush_addrs_doit()
+=C2=A0 error: corrupt patch at line 15
+=C2=A0 error: could not build fake ancestor
+
+"git am" complains, but it is OK to manually apply it with "patch". Any
+idea why? If you are not available, do you want me to resend it later
+on?
+
+Cheers,
+Matt
