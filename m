@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83124239085
-	for <mptcp@lists.linux.dev>; Mon, 26 Jan 2026 18:27:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E40E8223DFB
+	for <mptcp@lists.linux.dev>; Mon, 26 Jan 2026 18:34:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769452023; cv=none; b=gQqq64RyKnATzH5V4h9YCwrHJyKc6Kd65tPFJlaLyDJg9aAvipWu13x3DwQHNFxSA1fRXnLYWWKqRJYKBIsqZbCzXfJzIyGL68Qer5efCxmVon36UR7NWlu39wLYyGKPlAY6f6zq/CwzT9PNWeX9bp2fM8q9glwm+cCkAJW64zU=
+	t=1769452468; cv=none; b=ADVuP5ZjG6On+u1xQePlSkKRS9qnrxohDe/VgI8Q/++rTsQ8hSUgpe1L7hdjUnZLaYJoLykrMmPSzOXoa33u67PSAhl7oIPwvn+EZQgSUSctrNlSd1alZDnmitiBz37bKrYtnwuzk1zMfnDy/uF1xTwUnsTfDMPave1b2BwYK9E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769452023; c=relaxed/simple;
-	bh=GpPGMmbjfnc/oWU9mFgyaEKbUDena8G9dHjE79pEj4E=;
+	s=arc-20240116; t=1769452468; c=relaxed/simple;
+	bh=n3kJvNT8kmf7dhkZLIprOXe3zr+5i1fOjG6Ntxio0Tg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HDYIzwvJKjAyJi1YsK0bL8zmsDf1fxT9kD/9h5MRINg0HEEqUtVlC4ybiwBB5QFx8LIpbEZDu+tp05RXh371P09yVZc1fmutJYNM2t66FQzRy8OZ9GqFJEg4u43f0QrbUF0dupTUG4+WS8adyPmPciMsdexv8Ejg0u9txb3EuYU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q4C0w+mV; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=D0lU3dx2x91ZkJHkTzDBruzwM+MQb/P661aVMDxpR5gPSYhdv3NufCgAwyYqIjb7kynJvhkZIDndn8qH1/XTdoFsxlno6KYSyW0j+NovNPCfzYvsR+Tm79+qhHoxYwE56zeCVMCHwjJLV1CcJ00z+HxoMgIxhnfnCPNwnJ8mqko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WA+Vx8ZW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q4C0w+mV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CF78C116C6;
-	Mon, 26 Jan 2026 18:27:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WA+Vx8ZW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18166C116C6;
+	Mon, 26 Jan 2026 18:34:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769452023;
-	bh=GpPGMmbjfnc/oWU9mFgyaEKbUDena8G9dHjE79pEj4E=;
+	s=k20201202; t=1769452467;
+	bh=n3kJvNT8kmf7dhkZLIprOXe3zr+5i1fOjG6Ntxio0Tg=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Q4C0w+mVvvakIq3hCq17te+CRgyvUu8tevUcLJ7hVa8e6IDRzHQwRMgaV4BjO2XT2
-	 xXoxwWZnUcGEgwBRKwwBGvVmV3CuDp2zL+ROIaKwq3DpVzUdH37+EIICH5SVWy94HI
-	 U4iZCNlqIlT3FN3fiQIucVjEBqOemy4/BqNImbIplqpQgG6TMI8xBihQYF5JdVB8ki
-	 55Z90Hm3JVMxjbkONNvyLr4Pj3+7yXmS9wAPSO1DxHeF/qQgBFV4bxeAxEgqSA3GSJ
-	 VGF2BBhPBdsYLTgKC7J8rhc8Cue18R1HpFfgG6y9qtfKWwLxiWourxk0+LMooLlTaj
-	 rbf7f+bSSao9Q==
-Message-ID: <d0e6f49a-1ee3-4cfd-8e46-ceb657f7a8dc@kernel.org>
-Date: Mon, 26 Jan 2026 19:27:00 +0100
+	b=WA+Vx8ZWPBGvFMKGOErRBOTMWBX+RUYNsRPHhHts+CYlshhM0quufu6E7pTf+lBPZ
+	 yh49dl5uPGjIh/chodIGOqO5Xj0As0btHuqFAfqEsw3F30/R2HfQpPZdfhyNfHozYS
+	 UAHdvQ4ckLsrzxzixLsmKpkjZDasX95a2rNgkfTQ9iIC/P/Pa+dvJ1Dw2gKCbrqwS/
+	 D5RiTBM7FVuE8zD5SNxT2Doccj+2Rsa+qtA2ynLnG4gPQBeEK2vdW1Iojh85yNzJP5
+	 YfIq7WUfb2TeVaLMQcJDjLo1KlhZ4unTm3h/qtDatGnPiqGcl/QzxiFyNVJLKOvjqJ
+	 hr1+rOHv2Rumg==
+Message-ID: <c27f82ac-dcf6-4ea2-8163-cd2615f9a096@kernel.org>
+Date: Mon, 26 Jan 2026 19:34:24 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,15 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-net] selftests: mptcp: join: fix local endp not
- being tracked
+Subject: Re: [PATCH mptcp-net 1/2] mptcp: pm: in-kernel: always set as unavail
+ when removing addr
 Content-Language: en-GB, fr-BE
 To: Mat Martineau <martineau@kernel.org>
-Cc: MPTCP Upstream <mptcp@lists.linux.dev>
-References: <20251222-sft-5-15-signal-race-test-v1-1-a9b67c49af15@kernel.org>
- <d75df364-38c3-b9b3-b978-dcba2b9fb96b@kernel.org>
+Cc: MPTCP Upstream <mptcp@lists.linux.dev>,
+ syzbot+f56f7d56e2c6e11a01b6@syzkaller.appspotmail.com
+References: <20251215-issue-606-mark-subflow-endp-avail-v1-0-2f1b36da8993@kernel.org>
+ <20251215-issue-606-mark-subflow-endp-avail-v1-1-2f1b36da8993@kernel.org>
+ <2059f374-0447-30ff-92ff-b090fd91504d@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,54 +89,70 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <d75df364-38c3-b9b3-b978-dcba2b9fb96b@kernel.org>
+In-Reply-To: <2059f374-0447-30ff-92ff-b090fd91504d@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
 Hi Mat,
 
-On 14/01/2026 17:50, Mat Martineau wrote:
-> On Mon, 22 Dec 2025, Matthieu Baerts (NGI0) wrote:
-> 
->> When running this mptcp_join.sh selftest on older kernel versions not
->> supporting local endpoints tracking, this test fails because 3 MP_JOIN
->> ACKs have been received, while only 2 were expected.
->>
->> It is not clear why only 2 MP_JOIN ACKs were expected on old kernel
->> versions, while 3 MP_JOIN SYN and SYN+ACK were expected. When testing on
->> the v5.15.197 kernel, 3 MP_JOIN ACKs are seen, which is also what is
->> expected in the selftests included in this kernel version, see commit
->> f4480eaad489 ("selftests: mptcp: add missing join check").
->>
->> Switch the expected MP_JOIN ACKs to 3. While at it, move this
->> chk_join_nr helper out of the special condition for older kernel
->> versions as it is now the same as with more recent ones. Also, invert
->> the condition to be more logical: what's expected on newer kernel
->> versions having such helper first.
->>
->> Fixes: d4c81bbb8600 ("selftests: mptcp: join: support local endpoint
->> being tracked or not")
->> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> 
-> Looks good to me, thanks Matthieu.
-> 
-> Reviewed-by: Mat Martineau <martineau@kernel.org>
-
 Thank you for the review!
 
-Now in our tree:
+On 15/01/2026 05:56, Mat Martineau wrote:
+> On Mon, 15 Dec 2025, Matthieu Baerts (NGI0) wrote:
+> 
+>> Syzkaller managed to find a combination of actions that was generating
+>> this warning:
 
-New patches for t/upstream-net and t/upstream:
-- b799002f1f8e: selftests: mptcp: join: fix local endp not being tracked
-- Results: fb96b304d88a..af4181f61c9c (export-net)
-- Results: ba44c0dbd2e9..b8bb952910af (export)
+(...)
 
-Tests are now in progress:
+>> diff --git a/net/mptcp/pm_kernel.c b/net/mptcp/pm_kernel.c
+>> index f59d21e7579c..51bcfcec882d 100644
+>> --- a/net/mptcp/pm_kernel.c
+>> +++ b/net/mptcp/pm_kernel.c
+>> @@ -1057,10 +1057,8 @@ static bool mptcp_pm_remove_anno_addr(struct
+>> mptcp_sock *msk,
+>>     ret = mptcp_remove_anno_list_by_saddr(msk, addr);
+>>     if (ret || force) {
+>>         spin_lock_bh(&msk->pm.lock);
+>> -        if (ret) {
+>> -            __set_bit(addr->id, msk->pm.id_avail_bitmap);
+>> +        if (ret)
+>>             msk->pm.add_addr_signaled--;
+>> -        }
+>>         mptcp_pm_remove_addr(msk, &list);
+>>         spin_unlock_bh(&msk->pm.lock);
+>>     }
+>> @@ -1098,17 +1096,14 @@ static int
+>> mptcp_nl_remove_subflow_and_signal_addr(struct net *net,
+>>                       !(entry->flags & MPTCP_PM_ADDR_FLAG_IMPLICIT));
+>>
+>>         list.ids[0] = mptcp_endp_get_local_id(msk, addr);
+>> -        if (remove_subflow) {
+>> -            spin_lock_bh(&msk->pm.lock);
+>> -            mptcp_pm_rm_subflow(msk, &list);
+>> -            spin_unlock_bh(&msk->pm.lock);
+>> -        }
+>>
+>> -        if (entry->flags & MPTCP_PM_ADDR_FLAG_SUBFLOW) {
+>> -            spin_lock_bh(&msk->pm.lock);
+>> +        spin_lock_bh(&msk->pm.lock);
+>> +        if (remove_subflow)
+>> +            mptcp_pm_rm_subflow(msk, &list);
+>> +        if (entry->flags & MPTCP_PM_ADDR_FLAG_SUBFLOW)
+>>             __mark_subflow_endp_available(msk, list.ids[0]);
+>> -            spin_unlock_bh(&msk->pm.lock);
+>> -        }
+>> +        __set_bit(addr->id, msk->pm.id_avail_bitmap);
+> 
+> There's not any harm in setting this bit a second time if it was also
+> set in __mark_subflow_endp_available().
+> 
+> However, __mark_subflow_endp_available() has some logic around ID 0 and
+> mpc_endpoint_id. Is that relevant in this code path or is the new
+> __set_bit() doing the correct thing by always clearing based on addr->id?
 
-- export-net:
-https://github.com/multipath-tcp/mptcp_net-next/commit/7ad24eb2a484fcd7d6e9d6d8d3285c917abc6354/checks
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/fce2d92251d9288da07c20f381ec436d24b0e2ee/checks
+Good point. Even if there is no harm, no need to set the bit for ID 0. I
+will look at that!
 
 Cheers,
 Matt
