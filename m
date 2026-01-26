@@ -1,34 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ED4027877D
-	for <mptcp@lists.linux.dev>; Mon, 26 Jan 2026 19:24:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDCF727877D
+	for <mptcp@lists.linux.dev>; Mon, 26 Jan 2026 19:24:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769455489; cv=none; b=kB72Tvu0t0jqKoeVeviGPUiLWuozdMPoQskVsNtsHp2tkRRrOTh3KNmYrkXqURhRMtCSnrguDfC/7OdRfa/zfdf2ih+ODRcnzRhAGUnToBVtfL2um+ugZFPryz8ixKFXGjoeWkWHckMQsrsNDBVEGUKI+hpw5TWbmBaSSuPwssk=
+	t=1769455490; cv=none; b=f0HL2ECmeo8r6K9yeJYmGghHByr/CSrjkC1tBzhQL0M9k2MHnH87qwZREgCrhsnXVwd3xlLyuc7V6kEpcFkbuWglILCG4LuAlTiywRCY1+f2NjzZCdnbS9v4UHahlYdHfWat7Sl5TJBtLf58PXHfqxSojrQ3veTVW9bU3z9viZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769455489; c=relaxed/simple;
-	bh=u9yx4toBWvKhmHguhHkUl3AV9V01qg05Hme0Xa2Pdng=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=aqC7lNse0Zh159kqMgdgFpTciA0l25OuQpm2Wrtdt+ujARzzpzyngIyC7aGM3d+nTTrh5TB/o7tXnWWaxnC1I+jIjOX3snQVla7fexqeSwUyfg46HDuzlQAdRzkc1NTObquve9RQuajigks0sOzO5jMYzf7lNdQL54G7GzOw6u4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XfmD+dPU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1769455490; c=relaxed/simple;
+	bh=cgQfp6q0YozSh4yXrM6GTQAGJfIOMetJ1A/1KU7GNOM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=nG56Fj8Rkj1AwGxAtPmkYW7Awyhfq4r9HXmLp8P52Ssn/1gQ85fXkj5OrAJDICq7iobVp3m/PdW8h+ov7+cAW2nyAi0sJWaXOEqWhry0OWDuG6T/oreXMqK9IOpRRD+c0ACoCnoiCtt7unw9B8lG55cjplkvzGGkX7xzEqVwD60=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CC2ZOcKe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XfmD+dPU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0097C116C6;
-	Mon, 26 Jan 2026 19:24:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CC2ZOcKe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 010E5C19425;
+	Mon, 26 Jan 2026 19:24:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769455488;
-	bh=u9yx4toBWvKhmHguhHkUl3AV9V01qg05Hme0Xa2Pdng=;
-	h=From:Subject:Date:To:Cc:From;
-	b=XfmD+dPUkSeK19MZ2gK+6FEr6GuTX/aEhJgWUTeIH621DHaR9M0kRB6qxd8qOIhdI
-	 /RwaN4VpXznuCsLLwSiJGgjskG4wu7q9Egjfk7biKkMMs8R79e3xfKNVM48B9HFcLm
-	 BsvhpRmE7Awd0f238B5w6VYFoXiPQpBMCT04FDgY70p4b5N6uyGMpMA++JJngtotvB
-	 4owuQj7UVVW2ENKpEr2aTasOtXgAHpBBTCmw6mxipPq3PKZwZZJd5/6eeFCq4iesKi
-	 4p3Yl4SvCN3bJFSFos7tVmuP46LzQqPChysQeUD2uQHIItNsbCnjqyPGicxlZCsYXp
-	 bLnLIlBazE9rw==
+	s=k20201202; t=1769455489;
+	bh=cgQfp6q0YozSh4yXrM6GTQAGJfIOMetJ1A/1KU7GNOM=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=CC2ZOcKeJCHxVH7V9nORyU6D8wx2xpfMA3vcf/BaeL0RY3ZYWHo65dEiTRP55HGcX
+	 guQo5OdHSgBRuK8p4e9nSg/voP9XbonT6rdBvYJMMaAuPNp6YiDVmnfhWz/RnXx+J8
+	 mCGws1ii1Dhe6ARO+V7po3kny+AQl235rfFhvKX9Pq5b/7Yi7AQpxjZ8zrUKoHxn1O
+	 hd2lfFHdwQiFl7Xm7zzWyCxeILJjIKfZjSw/u7DuBRZMq6MLWDQ7+uvYtpDWTWlDb3
+	 e5g7Iu95YD9HrxUZnJCPRD80nzfwUcJ+JpDMsyW2G7EQC9W8rIpM8BdbdBoLsu4cFN
+	 VZV9eAIgFlG9w==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Subject: [PATCH mptcp-net v2 00/11] mptcp: avoid dup events + error + misc.
-Date: Mon, 26 Jan 2026 20:18:37 +0100
-Message-Id: <20260126-mptcp-issue-603-v2-0-8393e7840b9e@kernel.org>
+Date: Mon, 26 Jan 2026 20:18:38 +0100
+Subject: [PATCH mptcp-net v2 01/11] mptcp: avoid dup SUB_CLOSED events
+ after disconnect
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -37,64 +38,66 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAA2+d2kC/2WNSQ7CMBAEvxLNmUFelI1T/oFyyDJJRoBj2SECR
- f47luHGsdXV1Qd4ckweLtkBjnb2vJoY1CmDYenMTMhjzKCEyqVSCh92Gyyy90/CQmgcq3ysi3I
- qB9FBXFlHE7+S8Qpf2NAGbawW9tvq3ulrlwn4aYs/7S5RYN9rQVrLvtJ1cyNn6H5e3QxtCOEDn
- yKVG7oAAAA=
-X-Change-ID: 20251222-mptcp-issue-603-d85d967f7c0a
+Message-Id: <20260126-mptcp-issue-603-v2-1-8393e7840b9e@kernel.org>
+References: <20260126-mptcp-issue-603-v2-0-8393e7840b9e@kernel.org>
+In-Reply-To: <20260126-mptcp-issue-603-v2-0-8393e7840b9e@kernel.org>
 To: MPTCP Upstream <mptcp@lists.linux.dev>
 Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
  Marco Angaroni <marco.angaroni@italtel.com>, 
  Geliang Tang <geliang@kernel.org>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1691; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=u9yx4toBWvKhmHguhHkUl3AV9V01qg05Hme0Xa2Pdng=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDLL91eULt/CdGfxBCGji5dNTnxQ+P9QUt7R6XylUEUN/
- 2mpu0fPdpSyMIhxMciKKbJIt0Xmz3xexVvi5WcBM4eVCWQIAxenAEzk2HZGhj9CB/8wvDtoc7U3
- 0uYR79e5z14WvNX8/Orf4sxEy22xC/cwMhy5oROR9UKz6a/DX539zvmqElybuiUUla+vvvhJR/7
- SDR4A
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1811; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=cgQfp6q0YozSh4yXrM6GTQAGJfIOMetJ1A/1KU7GNOM=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDLL91euTlWaYxx3497c3wvUd775Vx2X/29CatxaWb2ko
+ 3vvMD+T6ChlYRDjYpAVU2SRbovMn/m8irfEy88CZg4rE8gQBi5OAbhIJiPDee70eXuEJ029teH0
+ v397nUt/Mdmdz753tDGjaZHCX47+RkaGmUbmRwNDNhWFNc7ZIaDnqFV4I2C3id6m/OfyXxjtprz
+ kAgA=
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-There are two fixes with their tests:
+In case of subflow disconnect(), which can also happen with the first
+subflow in case of errors like timeout or reset, mptcp_subflow_ctx_reset
+will reset most fields from the mptcp_subflow_context structure,
+including close_event_done. Then, when another subflow is closed, yet
+another SUB_CLOSED event for the disconnected initial subflow is sent.
+Because of the previous reset, there are no source address and
+destination port.
 
-- a subflow closed event can be visible multiple times, see issue #603
+A solution is then to also check the subflow's local id: it shouldn't be
+negative anyway.
 
-- the subflow closed event didn't contain the error as expected.
+Another solution would be not to reset subflow->close_event_done at
+disconnect time, but when reused. But then, probably the whole reset
+could be done when being reused. Let's not change this logic, similar
+to TCP with tcp_disconnect().
 
-The 4 first patches are for -net, the rest are small fixes and
-improvements for net-next. Some tests should be quicker now.
-
+Fixes: d82809b6c5f2 ("mptcp: avoid duplicated SUB_CLOSED events")
+Reported-by: Marco Angaroni <marco.angaroni@italtel.com>
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/603
+Reviewed-by: Geliang Tang <geliang@kernel.org>
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
-Changes in v2:
-- Small updates on patches 1, 2, 3 and 5 (Geliang)
-- Add Geliang RvB tags.
-- Link to v1: https://patch.msgid.link/20251226-mptcp-issue-603-v1-0-bb30e331b839@kernel.org
-
+v2: rework comment (Geliang)
 ---
-Matthieu Baerts (NGI0) (11):
-      mptcp: avoid dup SUB_CLOSED events after disconnect
-      selftests: mptcp: check no dup close events after error
-      mptcp: only reset subflow errors when propagated
-      selftests: mptcp: check subflow errors in close events
-      selftests: mptcp: join: wait for estab event instead of MPJ
-      selftests: mptcp: join: fix wait_mpj helper
-      selftests: mptcp: join: userspace: wait for new events
-      selftests: mptcp: join chk_stale_nr: avoid dup stats
-      selftests: mptcp: join: avoid declaring i if not used
-      selftests: mptcp: connect: fix maybe-uninitialize warn
-      selftests: mptcp: connect cleanup TFO setup
+ net/mptcp/protocol.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
- net/mptcp/protocol.c                              |  13 +-
- tools/testing/selftests/net/mptcp/mptcp_connect.c |  19 ++-
- tools/testing/selftests/net/mptcp/mptcp_join.sh   | 149 +++++++++++++++-------
- 3 files changed, 121 insertions(+), 60 deletions(-)
----
-base-commit: b8bb952910af48167681524c5b217996c16382c1
-change-id: 20251222-mptcp-issue-603-d85d967f7c0a
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 900f26e21acd..335a1723c1dc 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -2622,8 +2622,8 @@ void mptcp_close_ssk(struct sock *sk, struct sock *ssk,
+ 	struct mptcp_sock *msk = mptcp_sk(sk);
+ 	struct sk_buff *skb;
+ 
+-	/* The first subflow can already be closed and still in the list */
+-	if (subflow->close_event_done)
++	/* The first subflow can already be closed or disconnected */
++	if (subflow->close_event_done || READ_ONCE(subflow->local_id) < 0)
+ 		return;
+ 
+ 	subflow->close_event_done = true;
 
-Best regards,
 -- 
-Matthieu Baerts (NGI0) <matttbe@kernel.org>
+2.51.0
 
