@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28FB234D910;
-	Mon, 26 Jan 2026 18:14:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83124239085
+	for <mptcp@lists.linux.dev>; Mon, 26 Jan 2026 18:27:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769451246; cv=none; b=ED8BaevKStI7OGKlrrw8+ovt7RT9DaiESycXWFqZry9stBFpD8ePuVLD1g4RFO+otFIikkfiQKjKt+isgbQgwUh7bTJFvoeIOg09a0M/mw8vAttk6NdHM1dxFwtfhh/ZmiAPRRIDLQ3SAvQgzQC9WFZ6OjAMYZejH3MABIxjafU=
+	t=1769452023; cv=none; b=gQqq64RyKnATzH5V4h9YCwrHJyKc6Kd65tPFJlaLyDJg9aAvipWu13x3DwQHNFxSA1fRXnLYWWKqRJYKBIsqZbCzXfJzIyGL68Qer5efCxmVon36UR7NWlu39wLYyGKPlAY6f6zq/CwzT9PNWeX9bp2fM8q9glwm+cCkAJW64zU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769451246; c=relaxed/simple;
-	bh=jhr9a6cgDBi4L/Y/fqNnkSWD4mZrTD0Td1Kjc0FE7d4=;
+	s=arc-20240116; t=1769452023; c=relaxed/simple;
+	bh=GpPGMmbjfnc/oWU9mFgyaEKbUDena8G9dHjE79pEj4E=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bXin7mABzqZwt6gsvO80zr9Wdd0f2kJoPUUE2h6N8CtsnVVQ3JW+7rQcOPbdMriM4SgwuBUhEXn2Z0+o02liFkFTwnVpKMV6nhUtRkDmHIhut488uVLGo0Y4xlxqDLo/AYlBcK0lGChXCNDqldiUgHXvV1Z4e5PTFXeMODGTNao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nVgoIJgT; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=HDYIzwvJKjAyJi1YsK0bL8zmsDf1fxT9kD/9h5MRINg0HEEqUtVlC4ybiwBB5QFx8LIpbEZDu+tp05RXh371P09yVZc1fmutJYNM2t66FQzRy8OZ9GqFJEg4u43f0QrbUF0dupTUG4+WS8adyPmPciMsdexv8Ejg0u9txb3EuYU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q4C0w+mV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nVgoIJgT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78E27C116C6;
-	Mon, 26 Jan 2026 18:13:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q4C0w+mV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CF78C116C6;
+	Mon, 26 Jan 2026 18:27:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769451245;
-	bh=jhr9a6cgDBi4L/Y/fqNnkSWD4mZrTD0Td1Kjc0FE7d4=;
+	s=k20201202; t=1769452023;
+	bh=GpPGMmbjfnc/oWU9mFgyaEKbUDena8G9dHjE79pEj4E=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=nVgoIJgTaMtZXe7vJx91AIult5bczODnhPAwNvlhgpWv9/zxDR9iqiytQ/4FLN947
-	 pwwrkH5t65DpbcC2Ndjsc3y8aLEOhS0YcPTP/zE9t8jPah+veeX4QBoyt1kmvAWrY+
-	 zRwMXcdzKZtNmnovqWUmBKzDbk9OAYTgK+9DolDd9fVf3ecNbeyx+YBmZX/4TxAWSB
-	 wqRZlkumamMI/9hdPN88aJwNDn2vHU20e79cjnY/MZArxLERLAkk/9E4ucbO4XBing
-	 XS9aPsA9kPCFc1v/sOkFQgZ7s+hN5AxNLT2q9/XSNFJhI7WnNpPfb4LEcMYEAXUTHV
-	 2++X9k5uMy7nA==
-Message-ID: <4e673f7f-c49c-46b0-85b4-bae6e4efcb3a@kernel.org>
-Date: Mon, 26 Jan 2026 19:13:50 +0100
+	b=Q4C0w+mVvvakIq3hCq17te+CRgyvUu8tevUcLJ7hVa8e6IDRzHQwRMgaV4BjO2XT2
+	 xXoxwWZnUcGEgwBRKwwBGvVmV3CuDp2zL+ROIaKwq3DpVzUdH37+EIICH5SVWy94HI
+	 U4iZCNlqIlT3FN3fiQIucVjEBqOemy4/BqNImbIplqpQgG6TMI8xBihQYF5JdVB8ki
+	 55Z90Hm3JVMxjbkONNvyLr4Pj3+7yXmS9wAPSO1DxHeF/qQgBFV4bxeAxEgqSA3GSJ
+	 VGF2BBhPBdsYLTgKC7J8rhc8Cue18R1HpFfgG6y9qtfKWwLxiWourxk0+LMooLlTaj
+	 rbf7f+bSSao9Q==
+Message-ID: <d0e6f49a-1ee3-4cfd-8e46-ceb657f7a8dc@kernel.org>
+Date: Mon, 26 Jan 2026 19:27:00 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,35 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v2 1/4] selftests: net: Move some UAPI header
- inclusions after libc ones
+Subject: Re: [PATCH mptcp-net] selftests: mptcp: join: fix local endp not
+ being tracked
 Content-Language: en-GB, fr-BE
-To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-api@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
- linux-kselftest@vger.kernel.org, mptcp@lists.linux.dev,
- linux-security-module@vger.kernel.org, bpf@vger.kernel.org,
- libc-alpha@sourceware.org, Carlos O'Donell <carlos@redhat.com>,
- Adhemerval Zanella <adhemerval.zanella@linaro.org>,
- Rich Felker <dalias@libc.org>, klibc@zytor.com,
- Florian Weimer <fweimer@redhat.com>, Eric Dumazet <edumazet@google.com>,
- Kuniyuki Iwashima <kuniyu@google.com>, Paolo Abeni <pabeni@redhat.com>,
- Willem de Bruijn <willemb@google.com>, "David S. Miller"
- <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
- Simon Horman <horms@kernel.org>, Shuah Khan <shuah@kernel.org>,
- Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
- =?UTF-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
- =?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack@google.com>,
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- Jesper Dangaard Brouer <hawk@kernel.org>,
- John Fastabend <john.fastabend@gmail.com>,
- Stanislav Fomichev <sdf@fomichev.me>, Andrii Nakryiko <andrii@kernel.org>,
- Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman
- <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
- Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>,
- Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>
-References: <20260120-uapi-sockaddr-v2-0-63c319111cf6@linutronix.de>
- <20260120-uapi-sockaddr-v2-1-63c319111cf6@linutronix.de>
+To: Mat Martineau <martineau@kernel.org>
+Cc: MPTCP Upstream <mptcp@lists.linux.dev>
+References: <20251222-sft-5-15-signal-race-test-v1-1-a9b67c49af15@kernel.org>
+ <d75df364-38c3-b9b3-b978-dcba2b9fb96b@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -109,70 +87,54 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20260120-uapi-sockaddr-v2-1-63c319111cf6@linutronix.de>
+In-Reply-To: <d75df364-38c3-b9b3-b978-dcba2b9fb96b@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Thomas,
+Hi Mat,
 
-On 20/01/2026 15:10, Thomas Weißschuh wrote:
-> Interleaving inclusions of UAPI headers and libc headers is problematic.
-> Both sets of headers define conflicting symbols. To enable their
-> coexistence a compatibility-mechanism is in place.
+On 14/01/2026 17:50, Mat Martineau wrote:
+> On Mon, 22 Dec 2025, Matthieu Baerts (NGI0) wrote:
 > 
-> An upcoming change will define 'struct sockaddr' from linux/socket.h.
-> However sys/socket.h from libc does not yet handle this case and a
-> symbol conflict will arise.
+>> When running this mptcp_join.sh selftest on older kernel versions not
+>> supporting local endpoints tracking, this test fails because 3 MP_JOIN
+>> ACKs have been received, while only 2 were expected.
+>>
+>> It is not clear why only 2 MP_JOIN ACKs were expected on old kernel
+>> versions, while 3 MP_JOIN SYN and SYN+ACK were expected. When testing on
+>> the v5.15.197 kernel, 3 MP_JOIN ACKs are seen, which is also what is
+>> expected in the selftests included in this kernel version, see commit
+>> f4480eaad489 ("selftests: mptcp: add missing join check").
+>>
+>> Switch the expected MP_JOIN ACKs to 3. While at it, move this
+>> chk_join_nr helper out of the special condition for older kernel
+>> versions as it is now the same as with more recent ones. Also, invert
+>> the condition to be more logical: what's expected on newer kernel
+>> versions having such helper first.
+>>
+>> Fixes: d4c81bbb8600 ("selftests: mptcp: join: support local endpoint
+>> being tracked or not")
+>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 > 
-> Furthermore libc-compat.h evaluates the state of the libc
-> inclusions only once, at the point it is included first. If another
-> problematic header from libc is included later, symbol conflicts arise.
-> This will trigger other duplicate definitions when linux/libc-compat.h
-> is added to linux/socket.h
+> Looks good to me, thanks Matthieu.
 > 
-> Move the inclusion of UAPI headers after the inclusion of the glibc
-> ones, so the libc-compat.h continues to work correctly.
+> Reviewed-by: Mat Martineau <martineau@kernel.org>
 
-Thank you for looking at this!
+Thank you for the review!
 
-Here is my (late, sorry) review for the modifications related to MPTCP:
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_diag.c b/tools/testing/selftests/net/mptcp/mptcp_diag.c
-> index 8e0b1b8d84b6..af25ebfd2915 100644
-> --- a/tools/testing/selftests/net/mptcp/mptcp_diag.c
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_diag.c
-> @@ -1,11 +1,6 @@
->  // SPDX-License-Identifier: GPL-2.0
->  /* Copyright (c) 2025, Kylin Software */
->  
-> -#include <linux/sock_diag.h>
-> -#include <linux/rtnetlink.h>
-> -#include <linux/inet_diag.h>
-> -#include <linux/netlink.h>
-> -#include <linux/compiler.h>
->  #include <sys/socket.h>
->  #include <netinet/in.h>
->  #include <linux/tcp.h>
+Now in our tree:
 
-There is a remaining one (linux/tcp.h) here that you might want to move
-below too.
+New patches for t/upstream-net and t/upstream:
+- b799002f1f8e: selftests: mptcp: join: fix local endp not being tracked
+- Results: fb96b304d88a..af4181f61c9c (export-net)
+- Results: ba44c0dbd2e9..b8bb952910af (export)
 
-> @@ -17,6 +12,12 @@
->  #include <errno.h>
->  #include <stdio.h>
->  
-> +#include <linux/sock_diag.h>
-> +#include <linux/rtnetlink.h>
-> +#include <linux/inet_diag.h>
-> +#include <linux/netlink.h>
-> +#include <linux/compiler.h>
+Tests are now in progress:
 
-Note that I just noticed this is the only file from this directory where
-the "includes" are not sorted by type and alphabetical order, see
-pm_nl_ctl.c as an example. A bit of a detail, but if you plan to send a
-v2, do you mind doing that too here while at it, please?
-
-If not, I can look at that later, but better to avoid doing that in
-parallel.
+- export-net:
+https://github.com/multipath-tcp/mptcp_net-next/commit/7ad24eb2a484fcd7d6e9d6d8d3285c917abc6354/checks
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/fce2d92251d9288da07c20f381ec436d24b0e2ee/checks
 
 Cheers,
 Matt
