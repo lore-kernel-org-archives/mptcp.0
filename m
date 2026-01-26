@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8243B27877D
-	for <mptcp@lists.linux.dev>; Mon, 26 Jan 2026 19:24:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4007727877D
+	for <mptcp@lists.linux.dev>; Mon, 26 Jan 2026 19:24:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769455491; cv=none; b=m5GVLsdWKTA4fSlQV9J920D9RfsWoyMz5V7iBpbR31XWUXprVetVFX0Jf5/bmw3yQBJZilvbWMfcgN0a9CpNidLZRmLLTcPceNA0SXPwM8hIkagiFcX1buXtsVa1haIOVSt9LUveV7i4s0TxD4GosFJdixEJqGUL43+uPBoeHmo=
+	t=1769455492; cv=none; b=Au58XkgW+mzSI2cMH68QzYz3EK1reSWd0G3oKNnAmmZQqymyGFnnX+JUy14yctMYayA0n2RCuwg8L6wFKx1AXWLx6h9eF97w8ieQpI7IAEjYYfUtMWGeMg5+Q095BFG3DbnO+K9+R5rxj4dQx6+T94LnYLsGyF63ygnCuW6tksQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769455491; c=relaxed/simple;
-	bh=Ngmr3wL7Ofuvts2jVIJXdbSdTuPi0mOLmHnscFsySJ4=;
+	s=arc-20240116; t=1769455492; c=relaxed/simple;
+	bh=s4TBAz8WcWznvgR11XYKwjYSG7NOK0Sxe4EBmgmiAEY=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=VHgV+tYhrO2alEk8h1wurf28wErqHsPuYMPfglrlJ4fgu9MMiLhIfvmGyweTCEZMPLTZ4X7V+6XeNa9GM2Mb649c6eh/BqEQ1YsnoJtOHnLusFHUZVveYTunyM8rARlzgmNS+Lt23sJdgcqsnAqre5lqf5kJsIAxTmrjzQQRoBM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P0bBh2lq; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=Y0UlbtsRjTJ+CBalsy5jWjm3zMmeUoq8iwGQ//2A/4XugWOpb9gNLd4mi4MV0o1aSHS7bvvHtygSGHGMm0jEHCC6kIzDmbJM6j9Yl13AP9McVywjwPKdJ05evR6QlAp+Izcqzo3iWWSxeosGFqcLLLSZmpgU/1keVfYjUUWNhaY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VylWyCan; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P0bBh2lq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC34BC116C6;
-	Mon, 26 Jan 2026 19:24:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VylWyCan"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93D89C19422;
+	Mon, 26 Jan 2026 19:24:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769455491;
-	bh=Ngmr3wL7Ofuvts2jVIJXdbSdTuPi0mOLmHnscFsySJ4=;
+	s=k20201202; t=1769455492;
+	bh=s4TBAz8WcWznvgR11XYKwjYSG7NOK0Sxe4EBmgmiAEY=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=P0bBh2lqHZve5sl412lmjhTJ4aKZ0aNLqNjcUVEmxB4u7WETqSJJ0PubjTR6JUMOh
-	 yqM8NjeXBapxtiXw4iUTyn6TpvRV8WIT6XpfuAiktgLNsiGCO/8BX2CtPkw9Br95CC
-	 q1zswbxiTxW1x8B7iw8LKlCSk+CrxdKJ82KMBaS88ebz/FP6a8FDQ4zjKkvQ7WKV+3
-	 KyfONciuthy49vwHT/es2Vdig8gPVDcPUhF9vx5XX4i0lQBGox85iftwgb/6GSUTXH
-	 DLZGNEhK/0DK1BPRpm0zsp1HqOc9EYNx+meN4nqGrXZ337XOhaisDZD4RtVFr+Qg0i
-	 psYNC8/syCpTw==
+	b=VylWyCanbQnoUk02NrjkpStN/bLYN96RDWed9zztiirhOrF8kRr1v8HPOnKufDKzf
+	 SVMA4Z59cZjOoPlFcV4xIpl+A/MaWLJU9aE59nWBjKvkUeYPetra7zgx2Rme7ywoWY
+	 kyIe6mkbWOH72w7obovky0R7IAIEp8CN3c0dijSUW5gi+l0+diiWHR6Rsk3vHglTNw
+	 tJWPG0vaqaNDKkH98rSlPoXo1uV7g/iRE3knsg4q5FF7dLip/bdKzi1WBRAizVfEuP
+	 ugoDNzKApAObKubTQvIiLgSbaluLnRLuuhrsaU7Dc34Od6crgjiUk9+4CtUNpOwHF/
+	 eh6EezuoVXg2Q==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Mon, 26 Jan 2026 20:18:40 +0100
-Subject: [PATCH mptcp-net v2 03/11] mptcp: only reset subflow errors when
- propagated
+Date: Mon, 26 Jan 2026 20:18:41 +0100
+Subject: [PATCH mptcp-net v2 04/11] selftests: mptcp: check subflow errors
+ in close events
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,72 +38,102 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260126-mptcp-issue-603-v2-3-8393e7840b9e@kernel.org>
+Message-Id: <20260126-mptcp-issue-603-v2-4-8393e7840b9e@kernel.org>
 References: <20260126-mptcp-issue-603-v2-0-8393e7840b9e@kernel.org>
 In-Reply-To: <20260126-mptcp-issue-603-v2-0-8393e7840b9e@kernel.org>
 To: MPTCP Upstream <mptcp@lists.linux.dev>
 Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1979; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=Ngmr3wL7Ofuvts2jVIJXdbSdTuPi0mOLmHnscFsySJ4=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDLL91c9OsT9UVNsQmzFMn3Ht2URnpJc1T+6pu55kJe+i
- +P9VJnejlIWBjEuBlkxRRbptsj8mc+reEu8/Cxg5rAygQxh4OIUgIl0fWH4pxdrtvNwuVm2jKFf
- 6JWFdx8cn27Mq7Zg4tISnZchpk3TuhgZFn5OFYiv0ptTF3hBUXLR/fPbWUTOy1TWLe7+kWL08sd
- ydgA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2684; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=s4TBAz8WcWznvgR11XYKwjYSG7NOK0Sxe4EBmgmiAEY=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDLL91dfebP+wrTibptHFRd+3RZ8dKLh9ENJG5Z7+Uv1/
+ 3Wcvn7sbEcpC4MYF4OsmCKLdFtk/sznVbwlXn4WMHNYmUCGMHBxCsBEDLYzMhx6ySPSYPx/4UPp
+ K8uYthS83nlTZsPhw9cOP7J7dLF9drAiw3/Pyo1rtbasXxl03PP6etGdJ04rLM203BO+cdX/vKw
+ NHLF8AA==
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Some subflow socket errors need to be reported to the MPTCP socket: the
-initial subflow connect (MP_CAPABLE), and the ones from the fallback
-sockets. The others are not propagated.
+This validates the previous commit: subflow closed events should contain
+an error field when a subflow got closed with an error, e.g. reset or
+timeout.
 
-The issue is that sock_error() was used to retrieve the error, which was
-also resetting the sk_err field. Because of that, when notifying the
-userspace about subflow close events later on from the MPTCP worker, the
-ssk->sk_err field was always 0.
+For this test, the chk_evt_nr helper has been extended to check
+attributes in the matched events.
 
-Now, the error (sk_err) is only reset when propagating it to the msk.
+In this test, the 2 subflow closed events should have an error.
+
+The 'Fixes' tag here below is the same as the one from the previous
+commit: this patch here is not fixing anything wrong in the selftests,
+but it validates the previous fix for an issue introduced by this commit
+ID.
 
 Fixes: 15cc10453398 ("mptcp: deliver ssk errors to msk")
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
-Note: I guess we could also duplicate the error in mptcp_subflow_context
-  struct before scheduling the worker, and use this field in
-  mptcp_event_put_token_and_ssk(), but I don't see why we should always
-  reset ssk->sk_err in __mptcp_subflow_error_report() in all cases.
-v2: keep 'err' variable (Geliang)
----
- net/mptcp/protocol.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ tools/testing/selftests/net/mptcp/mptcp_join.sh | 23 ++++++++++++++++++++---
+ 1 file changed, 20 insertions(+), 3 deletions(-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 335a1723c1dc..1b87b3b0d089 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -817,11 +817,8 @@ static bool __mptcp_ofo_queue(struct mptcp_sock *msk)
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+index 35ff769f440f..e70d3420954f 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -3846,21 +3846,28 @@ userspace_pm_chk_get_addr()
+ 	fi
+ }
  
- static bool __mptcp_subflow_error_report(struct sock *sk, struct sock *ssk)
+-# $1: ns ; $2: event type ; $3: count
++# $1: ns ; $2: event type ; $3: count ; [ $4: attr ; $5: attr count ]
+ chk_evt_nr()
  {
--	int err = sock_error(ssk);
- 	int ssk_state;
--
--	if (!err)
--		return false;
-+	int err;
+ 	local ns=${1}
+ 	local evt_name="${2}"
+ 	local exp="${3}"
++	local attr="${4}"
++	local attr_exp="${5}"
  
- 	/* only propagate errors on fallen-back sockets or
- 	 * on MPC connect
-@@ -829,6 +826,10 @@ static bool __mptcp_subflow_error_report(struct sock *sk, struct sock *ssk)
- 	if (sk->sk_state != TCP_SYN_SENT && !__mptcp_check_fallback(mptcp_sk(sk)))
- 		return false;
+ 	local evts="${evts_ns1}"
+ 	local evt="${!evt_name}"
++	local attr_name
+ 	local count
  
-+	err = sock_error(ssk);
-+	if (!err)
-+		return false;
++	if [ -n "${attr}" ]; then
++		attr_name=", ${attr}: ${attr_exp}"
++	fi
 +
- 	/* We need to propagate only transition to CLOSE state.
- 	 * Orphaned socket will see such state change via
- 	 * subflow_sched_work_if_closed() and that path will properly
+ 	evt_name="${evt_name:16}" # without MPTCP_LIB_EVENT_
+ 	[ "${ns}" == "ns2" ] && evts="${evts_ns2}"
+ 
+-	print_check "event ${ns} ${evt_name} (${exp})"
++	print_check "event ${ns} ${evt_name} (${exp}${attr_name})"
+ 
+ 	if [[ "${evt_name}" = "LISTENER_"* ]] &&
+ 	   ! mptcp_lib_kallsyms_has "mptcp_event_pm_listener$"; then
+@@ -3872,6 +3879,16 @@ chk_evt_nr()
+ 	if [ "${count}" != "${exp}" ]; then
+ 		fail_test "got ${count} events, expected ${exp}"
+ 		cat "${evts}"
++		return
++	elif [ -z "${attr}" ]; then
++		print_ok
++		return
++	fi
++
++	count=$(grep -w "type:${evt}" "${evts}" | grep -c ",${attr}:")
++	if [ "${count}" != "${attr_exp}" ]; then
++		fail_test "got ${count} event attributes, expected ${attr_exp}"
++		grep -w "type:${evt}" "${evts}"
+ 	else
+ 		print_ok
+ 	fi
+@@ -4130,7 +4147,7 @@ userspace_tests()
+ 			chk_subflows_total 1 1
+ 			userspace_pm_add_sf $ns2 10.0.1.2 0
+ 			wait_event ns2 MPTCP_LIB_EVENT_SUB_CLOSED 2
+-			chk_evt_nr ns2 MPTCP_LIB_EVENT_SUB_CLOSED 2
++			chk_evt_nr ns2 MPTCP_LIB_EVENT_SUB_CLOSED 2 error 2
+ 		fi
+ 		kill_events_pids
+ 		mptcp_lib_kill_group_wait $tests_pid
 
 -- 
 2.51.0
