@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 608EE27877D
-	for <mptcp@lists.linux.dev>; Mon, 26 Jan 2026 19:24:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DBCE27877D
+	for <mptcp@lists.linux.dev>; Mon, 26 Jan 2026 19:24:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769455497; cv=none; b=HkfUTEA6Qbfi9Wl4wu18YK4AFu9qOBYvno5J9ztE0bYf+gFKJhUlSt8DvRi3GRIbtgcykIg+UQO0qFgayCuLMKgg8Knr5y9eNt6uKJE8ye+63JAuWOrc6iULgbCKSL2Gy9DmKr5wNHwpwRZ8ZCuQoKEDJ2Hy6rkPXpJ6SxczKVk=
+	t=1769455498; cv=none; b=ea0VPJ6sPlS/yPotYldMUsRo1vdiqafUmMMANjysANGZsJdVljkeOhYP6NPWcfKK6ooizmZFSCY6edrIUAc0SjsjhFm93WkMs1KY+yTuCtTYJKhX2R+mVkrkUk6129ThsfLgY1v42X0Td1sadhkmvTqCQsZB1hVFa+yaCD8dTLM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769455497; c=relaxed/simple;
-	bh=hK+yDv0v7+KVb+xYAFsvnyGIUmuxWx2Pvp3fAPsLWGM=;
+	s=arc-20240116; t=1769455498; c=relaxed/simple;
+	bh=EHENzNVQYoEkrsZOJYba954H0Z36EQpT8zSFFfpaLyY=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=dqPaqFU2je66zfWkGeQCTkcRkFPcqd5TXakER7/7wWORUQE4Vd704l+yPjrTe947b9JXO/dKZGZWuMQCTlR2pe1FCwisnsta6CG1Ou6Y1PwfqWdmfOHtCMeoshQgy3fXXUnlHCNHoSaXV9me27JkLZ9EeT9ylzFZOVY6jIyl+uc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L/xVRBXu; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=P+3vsp+1zLdJEL6uAwhG3tDEVxNUGGYUGov0iMCDhGq0shyAsSbzEDnesDlncvXmM0iAVe3V43+rnA4DrQMfrQE1cmkH7UgaZQ1uX8BIO6c+n15Xe+MuQf0XWJhKiw6fiyLARoYMLwNDUb1Dbf9Bot+8Ce6VADxu1H0BP6q2v9A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KLdO6IDP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L/xVRBXu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E954C4AF0C;
-	Mon, 26 Jan 2026 19:24:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KLdO6IDP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A638C116C6;
+	Mon, 26 Jan 2026 19:24:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769455497;
-	bh=hK+yDv0v7+KVb+xYAFsvnyGIUmuxWx2Pvp3fAPsLWGM=;
+	s=k20201202; t=1769455498;
+	bh=EHENzNVQYoEkrsZOJYba954H0Z36EQpT8zSFFfpaLyY=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=L/xVRBXu2mWOptUbz9VZSVSPQYtjNBYWU0y2SGwv4ehg0zUolMULXSFzmFuLA3Ve7
-	 cIHvXppOdzcqMHmZgk4kjmbm6IfR+iE0Vec8TdHYYCNVLTfWQ5sLcN0v4fFt3SPMot
-	 yrFhdqcoYmJMgVNBjn+FqVGeijAIFdGQRgKsD0dTR3PXGRexA2+1GxFhYaZNIo1Kha
-	 xIByglfd8GVOZX2CHVUuEq7RlNYYJRBCN0Fvoovg6zj6gAXEf/fk//n4rcKRlKnJlA
-	 oDEnv0yUtBe20fYGAhj9AM148FNeDcCDuAHiltAdc0kabbw4TTn4UvFjPUWRm8DUgQ
-	 xuGFyxiJhWoGw==
+	b=KLdO6IDP0oCuZO0AdVA1OWWkWuMEA5YkZNzV1gHf54vY4Pi1hX62S8MC4C5ujnUEX
+	 C3Ml5JvJ2EqqAnZim//Z8R1xzSXggaiEMS/esbJDROoYHwCwD/TAVbXjxGoei9kfVs
+	 RzaH62Ayj7mAQzRxtlXHc53VNemeUD7gofIpJwj+UKLgpaZQR42r3zIPQN30vUO7H7
+	 E4eS1MG7yuwq3OG39VRpxym/kPfFrlG0xmfp6AjaLj1OmcwOyT9rtPnhlbgBS3n7lQ
+	 5LbG0cgSAVND4vtPd6Kc/Lg7ILD1Zwv3GJxGmYbifE+rc3FtGFljc+o98jCvZ0t6KI
+	 XXLr6yHEQWnyA==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Mon, 26 Jan 2026 20:18:47 +0100
-Subject: [PATCH mptcp-net v2 10/11] selftests: mptcp: connect: fix
- maybe-uninitialize warn
+Date: Mon, 26 Jan 2026 20:18:48 +0100
+Subject: [PATCH mptcp-net v2 11/11] selftests: mptcp: connect cleanup TFO
+ setup
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -37,57 +37,85 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20260126-mptcp-issue-603-v2-10-8393e7840b9e@kernel.org>
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260126-mptcp-issue-603-v2-11-8393e7840b9e@kernel.org>
 References: <20260126-mptcp-issue-603-v2-0-8393e7840b9e@kernel.org>
 In-Reply-To: <20260126-mptcp-issue-603-v2-0-8393e7840b9e@kernel.org>
 To: MPTCP Upstream <mptcp@lists.linux.dev>
 Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
  Geliang Tang <geliang@kernel.org>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1432; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=hK+yDv0v7+KVb+xYAFsvnyGIUmuxWx2Pvp3fAPsLWGM=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDLL99fFeKx8Ff3rh8zXY3w/ry7i0L47lcVXf/WZ3wcr/
- /+3n3pzT0cpC4MYF4OsmCKLdFtk/sznVbwlXn4WMHNYmUCGMHBxCsBEvJgZ/gfH7OQ7x6/sflRY
- NC3YeZot6xLphb+idSZJz9PIMphxt42RYZL7UYG7pm3Rvuk7nj3+fkHAO/mGNoPLGqbYQH1Zjf6
- PzAA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1762; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=EHENzNVQYoEkrsZOJYba954H0Z36EQpT8zSFFfpaLyY=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDLL99e/Vr2ycF/a67lBqRVP9s4XdWfc3lgpGeuykVlSd
+ q7mHUOujlIWBjEuBlkxRRbptsj8mc+reEu8/Cxg5rAygQxh4OIUgIl8FmNkeJVQsF75y+ZuDrnT
+ zcmKplNqfM/43wuIKizY/f/aoohDxowME32y1hXtucM/UVP0esSsND3ldCazyY+fp/GyR12aZqP
+ KAQA=
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-This warning can be seen with GCC 15.2:
+To the TFO, only the file descriptor is needed, the family is not.
 
-  mptcp_connect.c: In function ‘main_loop’:
-  mptcp_connect.c:1422:37: warning: ‘peer’ may be used uninitialized [-Wmaybe-uninitialized]
-   1422 |                 if (connect(fd, peer->ai_addr, peer->ai_addrlen))
-        |                                 ~~~~^~~~~~~~~
-  mptcp_connect.c:1377:26: note: ‘peer’ was declared here
-   1377 |         struct addrinfo *peer;
-        |                          ^~~~
+Also, the error can be handled the same way when 'sendto()' or
+'connect()' are used. Only the printed error message is different.
 
-This variable is set in sock_connect_mptcp() in some conditions. If not,
-this helper returns an error, and the program stops. So this is a false
-positive, but better remove it by initialising peer to NULL.
+This avoids a bit of confusions.
 
 Reviewed-by: Geliang Tang <geliang@kernel.org>
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- tools/testing/selftests/net/mptcp/mptcp_connect.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/testing/selftests/net/mptcp/mptcp_connect.c | 17 +++++++----------
+ 1 file changed, 7 insertions(+), 10 deletions(-)
 
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-index 1c4fe60089a2..554886f23d6a 100644
+index 554886f23d6a..ff1a298d3469 100644
 --- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
 +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-@@ -1354,8 +1354,8 @@ void xdisconnect(int fd)
+@@ -259,7 +259,7 @@ static void set_transparent(int fd, int pf)
+ 	}
+ }
  
- int main_loop(void)
+-static void set_mptfo(int fd, int pf)
++static void set_mptfo(int fd)
  {
-+	struct addrinfo *peer = NULL;
- 	int fd = 0, ret, fd_in = 0;
--	struct addrinfo *peer;
- 	struct wstate winfo;
+ 	int qlen = 25;
  
- 	if (cfg_input && cfg_sockopt_types.mptfo) {
+@@ -336,7 +336,7 @@ static int sock_listen_mptcp(const char * const listenaddr,
+ 			set_transparent(sock, pf);
+ 
+ 		if (cfg_sockopt_types.mptfo)
+-			set_mptfo(sock, pf);
++			set_mptfo(sock);
+ 
+ 		if (bind(sock, a->ai_addr, a->ai_addrlen) == 0)
+ 			break; /* success */
+@@ -407,21 +407,18 @@ static int sock_connect_mptcp(const char * const remoteaddr,
+ 				*peer = a;
+ 				break; /* success */
+ 			}
++			perror("sendto()");
+ 		} else {
+ 			if (connect(sock, a->ai_addr, a->ai_addrlen) == 0) {
+ 				*peer = a;
+ 				break; /* success */
+ 			}
+-		}
+-		if (cfg_sockopt_types.mptfo) {
+-			perror("sendto()");
+-			close(sock);
+-			sock = -1;
+-		} else {
+ 			perror("connect()");
+-			close(sock);
+-			sock = -1;
+ 		}
++
++		/* error */
++		close(sock);
++		sock = -1;
+ 	}
+ 
+ 	freeaddrinfo(addr);
 
 -- 
 2.51.0
