@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EB27252904
-	for <mptcp@lists.linux.dev>; Mon, 26 Jan 2026 18:59:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D21FE26CE2B
+	for <mptcp@lists.linux.dev>; Mon, 26 Jan 2026 19:02:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769453976; cv=none; b=flhTZmXc+JweePm1D+4UbQrZNW+hTq3Y3EAal7L9Jb3ZRvaG/Dq7ONGomHAg5Rm+Y2ZSCGhzwnKYRDsBDxdb6/1Dm+NBa0II15DftvUfJy3CsDeV9jvdKVn5wXLl9kc70V9WxK9y6OMj2cpJ4PssgBCHI96oaujRI9XL3R4Ud+Y=
+	t=1769454140; cv=none; b=d0piabeKPnYIqpSTLxCyWHWEvl/R5QzxZbyL0ftXWUMv/vzIBVp08aubyrd/l016M1lovU0ledrUUIw0431i+wkbaMQcar7XMTsk5dOTRt2urdKEUgD+J/zMrb1HBJ+6x2O5hzYcJioKehTn1glzvXR2wP/MCb5rrHzWz2rKInQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769453976; c=relaxed/simple;
-	bh=t9xDtqAcOHYgoxUL19Vfm00W5jiq6mmyJ3JVXszrZ4Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
-	 In-Reply-To:Content-Type; b=e0lEr49cNNwQRREnNyhVyn+h6VOxb5K49GiBXr9S4JjZNrBWmFzQ0fQUf0181hMMZZBXf4rv/ycFLlmWzgB/81XADzYTT6J27C3UOZEhZLPpJUCz4d3/rigyD1afXhAcQhbKZhVevfvJ3Cb5wdjmPR7W4r6gRdYcDBkHvwduVWY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JnS6Um9/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1769454140; c=relaxed/simple;
+	bh=4vVJXZmzzksxvEBVrJ0g0kHS7qTVT1yyz36X2Inyg6U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=dP+6GE8mT48g2KaXsU+BrcWx8vU8aWCtHmn/iEMY6mD4qeM1cJ1rfC4h62j1DZ6+10qN5pLG/iEddFMZsweNEltAPQIpFYSKspZC6SPy2w2Y2xI9/WsjLTcMYI4OorrIl/InjJIqDpKNWyml+7cTXY7xl7JaCjS6jQSBfNKMr1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JTIP4nQB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JnS6Um9/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C0F0C116C6;
-	Mon, 26 Jan 2026 18:59:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JTIP4nQB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5A0EC116C6;
+	Mon, 26 Jan 2026 19:02:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769453976;
-	bh=t9xDtqAcOHYgoxUL19Vfm00W5jiq6mmyJ3JVXszrZ4Q=;
-	h=Date:Subject:To:References:From:Cc:In-Reply-To:From;
-	b=JnS6Um9/lbCs3ov9r0cK9xvNH6kUfJAZ0EaD1H1ANF4cW4ayl+IzOzFTIQs+PlqTO
-	 HCwYM4Hy8+/IMdAg0iBtfqLcoR3mM0LW2SLfMuPbhkmj/0rrD+lpv3ApAym7irKfUm
-	 aKyh2Ul+HJLQI5Yswhe/QxvlJx49ulvFRz/3ZbXGwn969DzhnxIZ6zy0uFP3FnItc7
-	 xgJJUONNHCqnpk/3ldUNThbL3XH22BbjKcGEkUSglP1esKra4PKo3j8tIhoo1bUod7
-	 KexEP/yXMMV3XemunCPnnF/tB151YQhXacP/jRXmTN9tRMm61HpkOcZA677nRHqkDt
-	 WD6C3dhS8kQTw==
-Message-ID: <8549f814-a0f2-4858-8308-f13b478548b9@kernel.org>
-Date: Mon, 26 Jan 2026 19:59:33 +0100
+	s=k20201202; t=1769454140;
+	bh=4vVJXZmzzksxvEBVrJ0g0kHS7qTVT1yyz36X2Inyg6U=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=JTIP4nQBSTBEErRjDCglpc2m+1Yji7xDcCLSCtNzdjdEdf0YIl1VnivCG7ZtM+hj+
+	 9S0ygEn2LD4bhrkY7Tb48ztutg+XoWzyxc/RV7/x2inRJnnD8xwrtQL7oKH3ddhFlv
+	 UMsIM18vNKbY6DXWA8RCj7P6bpHDa4aaHOOvH7tQwrpLw8nZNKS7g9moNwjwhYGvai
+	 YmzbQxsokA7ePG6RLcnfjWnZ8EAC+gmKmZ5dB3gHUBm76gEejlUSYHy2zfak7gb1lE
+	 HEu2FI43F9kifwvKKosMDd039BkMIe7ViypKIhuUb0m1tczSFJfXNm78yf8tOYIbEa
+	 DQPcRGFc4+/Rg==
+Message-ID: <f047bbb7-7c70-46bb-ad88-212d0daec82f@kernel.org>
+Date: Mon, 26 Jan 2026 20:02:17 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,15 +35,14 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next 07/11] selftests: mptcp: join: userspace: wait
- for new events
+Subject: Re: [PATCH mptcp-next 10/11] selftests: mptcp: connect: fix
+ maybe-uninitialize warn
 Content-Language: en-GB, fr-BE
-To: Geliang Tang <geliang@kernel.org>
+To: Geliang Tang <geliang@kernel.org>, MPTCP Upstream <mptcp@lists.linux.dev>
 References: <20251226-mptcp-issue-603-v1-0-bb30e331b839@kernel.org>
- <20251226-mptcp-issue-603-v1-7-bb30e331b839@kernel.org>
- <bf6e805ec8310f0814db3b05d51cc78f0bf77a92.camel@kernel.org>
+ <20251226-mptcp-issue-603-v1-10-bb30e331b839@kernel.org>
+ <1bc66b28aa41d97ae8180705747015f6b6a4bb2c.camel@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
-Cc: MPTCP Upstream <mptcp@lists.linux.dev>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -88,79 +87,19 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <bf6e805ec8310f0814db3b05d51cc78f0bf77a92.camel@kernel.org>
+In-Reply-To: <1bc66b28aa41d97ae8180705747015f6b6a4bb2c.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-Thank you for the reviews!
+On 28/12/2025 03:54, Geliang Tang wrote:
 
-On 28/12/2025 03:48, Geliang Tang wrote:
-> Hi Matt,
-> 
-> Thanks for this patch.
-> 
-> On Fri, 2025-12-26 at 07:40 +0100, Matthieu Baerts (NGI0) wrote:
->> Instead of waiting for a random amount of time (1 second), wait for
->> an
->> event to be received on the other side.
->>
->> To do that, when an address is announced (userspace_pm_add_addr), the
->> ANNOUNCED is expected. When a new subflow is created
->> (userspace_pm_add_sf), the SUB_ESTABLISHED event is expected.
->>
->> With this, the tests can finish quicker.
->>
->> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
->> ---
->>  tools/testing/selftests/net/mptcp/mptcp_join.sh | 9 +++++++--
->>  1 file changed, 7 insertions(+), 2 deletions(-)
->>
->> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh
->> b/tools/testing/selftests/net/mptcp/mptcp_join.sh
->> index cf28537b71f7..63a84a4d43a6 100755
->> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
->> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
->> @@ -3717,7 +3717,6 @@ userspace_pm_add_addr()
->>  	tk=$(mptcp_lib_evts_get_info token "$evts")
->>  
->>  	ip netns exec $1 ./pm_nl_ctl ann $2 token $tk id $3
->> -	sleep 1
->>  }
->>  
->>  # $1: ns ; $2: id
->> @@ -3748,7 +3747,6 @@ userspace_pm_add_sf()
->>  
->>  	ip netns exec $1 ./pm_nl_ctl csf lip $2 lid $3 \
->>  				rip $da rport $dp token $tk
->> -	sleep 1
->>  }
->>  
->>  # $1: ns ; $2: addr $3: event type
->> @@ -4000,7 +3998,9 @@ userspace_tests()
->>  		local tests_pid=$!
->>  		wait_event ns1 MPTCP_LIB_EVENT_ESTABLISHED 1
->>  		userspace_pm_add_addr $ns1 10.0.2.1 10
->> +		wait_event ns2 MPTCP_LIB_EVENT_ANNOUNCED 1
->>  		userspace_pm_add_addr $ns1 10.0.3.1 20
->> +		wait_event ns2 MPTCP_LIB_EVENT_ANNOUNCED 2
-> 
-> This has been changed to wait for 2 seconds. Can it revert to waiting
-> for only 1 second like before?
+> Thanks for this fix. In my previous commit "selftests: mptcp: connect:
+> fix uninitialized peer warning" [1], I also fixed this.
 
-The last parameter (2) is the min expected number of such events. Here,
-two ADD_ADDR are expected to be seen on the other host, because
-userspace_pm_add_addr has been called twice from ns1.
-
-We could only keep the second "wait_event ANNOUNCED", maybe clearer and
-faster?
-
-  userspace_pm_add_addr $ns1 10.0.2.1 10
-  userspace_pm_add_addr $ns1 10.0.3.1 20
-  wait_event ns2 MPTCP_LIB_EVENT_ANNOUNCED 2
-
-WDYT?
+Ah yes, sorry, I missed that patch. Why did you check if "peer" was set
+in main_loop()?
 
 Cheers,
 Matt
