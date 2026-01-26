@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 257AF2264CF
-	for <mptcp@lists.linux.dev>; Mon, 26 Jan 2026 18:42:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EB27252904
+	for <mptcp@lists.linux.dev>; Mon, 26 Jan 2026 18:59:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769452941; cv=none; b=f6wMRQyuussi+4aMR3+9bony7z0VqTm1C3yh/rafLH9E7lImm6YYsVd9CiA4dmD5htf27XJQjzshdID2JWhp9dQ8L63sTuz6JiD8krxIW4AXyOjXIt6Gy3EnlYt+5LjABVJISvbmSA9y8vSVnxmpm3oYS1NQ5SL3gYomeszKzls=
+	t=1769453976; cv=none; b=flhTZmXc+JweePm1D+4UbQrZNW+hTq3Y3EAal7L9Jb3ZRvaG/Dq7ONGomHAg5Rm+Y2ZSCGhzwnKYRDsBDxdb6/1Dm+NBa0II15DftvUfJy3CsDeV9jvdKVn5wXLl9kc70V9WxK9y6OMj2cpJ4PssgBCHI96oaujRI9XL3R4Ud+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769452941; c=relaxed/simple;
-	bh=5UhboGGuxeJj1FplZR3z/sMihoYZB87OPHI3gQlqvpo=;
+	s=arc-20240116; t=1769453976; c=relaxed/simple;
+	bh=t9xDtqAcOHYgoxUL19Vfm00W5jiq6mmyJ3JVXszrZ4Q=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
-	 In-Reply-To:Content-Type; b=SHlKMqwK2SGWd2dzpiHJJ2Kh2L5qF7d1PpS4FOcJxKF/ABpYavyul+NMw/qhKGE160IY6erUiOMuufOSuorPWO+SxtDRSQTMOvrToSPQam3fNaSzp+c4HiOe7u12fZ2luzVHH03o+omdzD1mr9VPxmQds9J7YS7sxAyGD/Fl+Fs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ElZCnc2M; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=e0lEr49cNNwQRREnNyhVyn+h6VOxb5K49GiBXr9S4JjZNrBWmFzQ0fQUf0181hMMZZBXf4rv/ycFLlmWzgB/81XADzYTT6J27C3UOZEhZLPpJUCz4d3/rigyD1afXhAcQhbKZhVevfvJ3Cb5wdjmPR7W4r6gRdYcDBkHvwduVWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JnS6Um9/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ElZCnc2M"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38324C116C6;
-	Mon, 26 Jan 2026 18:42:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JnS6Um9/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C0F0C116C6;
+	Mon, 26 Jan 2026 18:59:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769452940;
-	bh=5UhboGGuxeJj1FplZR3z/sMihoYZB87OPHI3gQlqvpo=;
+	s=k20201202; t=1769453976;
+	bh=t9xDtqAcOHYgoxUL19Vfm00W5jiq6mmyJ3JVXszrZ4Q=;
 	h=Date:Subject:To:References:From:Cc:In-Reply-To:From;
-	b=ElZCnc2Mpe5A66R7X+wL4eP5GmVrhYEy3wbWuqfqG0NMKx9HifzSq0oF1+b2UHVZT
-	 SQ9S94JwUa0Pgxf+WTAT7pcsiDMSaC/Y6J1NarFU8aHpUCvfKiIIMweHiGU1kQ0OON
-	 38spb0VLP3l+9CNOqmaVkJ3suCdCO407HJHj9PECPeL1ae9Y8wKWw3hFsWWb1Fw5Sw
-	 PFJdvp8Z6/fpsof1Fl66Ycc93iXhb2xPBNAKyG7e2Xp/asXVIboGnc30efy5hrmW92
-	 /NocuEZTZ0eKnUcdFewOaos2AW0mF6A8sJk+k13tD9p/ik0OjgW/m4l0RHyjm9998I
-	 9wlLc0XYDZvMQ==
-Message-ID: <db374b02-06fd-4be8-96d8-e6be55d522ea@kernel.org>
-Date: Mon, 26 Jan 2026 19:42:17 +0100
+	b=JnS6Um9/lbCs3ov9r0cK9xvNH6kUfJAZ0EaD1H1ANF4cW4ayl+IzOzFTIQs+PlqTO
+	 HCwYM4Hy8+/IMdAg0iBtfqLcoR3mM0LW2SLfMuPbhkmj/0rrD+lpv3ApAym7irKfUm
+	 aKyh2Ul+HJLQI5Yswhe/QxvlJx49ulvFRz/3ZbXGwn969DzhnxIZ6zy0uFP3FnItc7
+	 xgJJUONNHCqnpk/3ldUNThbL3XH22BbjKcGEkUSglP1esKra4PKo3j8tIhoo1bUod7
+	 KexEP/yXMMV3XemunCPnnF/tB151YQhXacP/jRXmTN9tRMm61HpkOcZA677nRHqkDt
+	 WD6C3dhS8kQTw==
+Message-ID: <8549f814-a0f2-4858-8308-f13b478548b9@kernel.org>
+Date: Mon, 26 Jan 2026 19:59:33 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next] selftests: mptcp: join: no SKIP mark for group
- checks
+Subject: Re: [PATCH mptcp-next 07/11] selftests: mptcp: join: userspace: wait
+ for new events
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>
-References: <20251211-sft-no-skip-new-cnt-v1-1-6dd6d70f8242@kernel.org>
- <c24cd268dc2f6797425e022a515776a006eaded6.camel@kernel.org>
+References: <20251226-mptcp-issue-603-v1-0-bb30e331b839@kernel.org>
+ <20251226-mptcp-issue-603-v1-7-bb30e331b839@kernel.org>
+ <bf6e805ec8310f0814db3b05d51cc78f0bf77a92.camel@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Cc: MPTCP Upstream <mptcp@lists.linux.dev>
 Autocrypt: addr=matttbe@kernel.org; keydata=
@@ -87,72 +88,79 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <c24cd268dc2f6797425e022a515776a006eaded6.camel@kernel.org>
+In-Reply-To: <bf6e805ec8310f0814db3b05d51cc78f0bf77a92.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 Hi Geliang,
 
-Thank you for the review! (and sorry for the late reply)
+Thank you for the reviews!
 
-On 28/12/2025 04:06, Geliang Tang wrote:
+On 28/12/2025 03:48, Geliang Tang wrote:
 > Hi Matt,
 > 
 > Thanks for this patch.
 > 
-> On Thu, 2025-12-11 at 19:09 +0100, Matthieu Baerts (NGI0) wrote:
->> When executing the last MPTCP selftests on older kernels, this output
->> is
->> printed:
+> On Fri, 2025-12-26 at 07:40 +0100, Matthieu Baerts (NGI0) wrote:
+>> Instead of waiting for a random amount of time (1 second), wait for
+>> an
+>> event to be received on the other side.
 >>
->>   # 001 no JOIN
->>   #       join Rx                             [SKIP]
->>   #       join Tx                             [SKIP]
->>   #       fallback                            [SKIP]
+>> To do that, when an address is announced (userspace_pm_add_addr), the
+>> ANNOUNCED is expected. When a new subflow is created
+>> (userspace_pm_add_sf), the SUB_ESTABLISHED event is expected.
 >>
->> In fact, behind each line, a few counters are checked, and likely not
->> all of them have been skipped because the they are not available on
->> these kernels. Instead, "new" and unsupported counters for these
->> groups
->> are now ignored, and [ OK ] will be printed instead of [SKIP].
->>
->> Note that on the MPTCP CI, when validating the dev versions, any
->> unsupported counter will cause the tests to fail. So this is safe not
->> to
->> print 'SKIP' for these group checks.
+>> With this, the tests can finish quicker.
 >>
 >> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 >> ---
->>  tools/testing/selftests/net/mptcp/mptcp_join.sh | 30 ++++++++++++---
->> ----------
->>  1 file changed, 15 insertions(+), 15 deletions(-)
+>>  tools/testing/selftests/net/mptcp/mptcp_join.sh | 9 +++++++--
+>>  1 file changed, 7 insertions(+), 2 deletions(-)
 >>
 >> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh
->> b/tools/test[ -z "$count" ]ing/selftests/net/mptcp/mptcp_join.sh
->> index b2e6e548f796..77370b10651a 100755
+>> b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+>> index cf28537b71f7..63a84a4d43a6 100755
 >> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
 >> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
->> @@ -1407,7 +1407,7 @@ chk_join_tx_nr()
+>> @@ -3717,7 +3717,6 @@ userspace_pm_add_addr()
+>>  	tk=$(mptcp_lib_evts_get_info token "$evts")
 >>  
->>  	count=$(mptcp_lib_get_counter ${ns2}
->> "MPTcpExtMPJoinSynTxCreatSkErr")
->>  	if [ -z "$count" ]; then
->> -		rc=${KSFT_SKIP}
->> +		: # ignore skip
->>  	elif [ "$count" != "$create" ]; then
+>>  	ip netns exec $1 ./pm_nl_ctl ann $2 token $tk id $3
+>> -	sleep 1
+>>  }
+>>  
+>>  # $1: ns ; $2: id
+>> @@ -3748,7 +3747,6 @@ userspace_pm_add_sf()
+>>  
+>>  	ip netns exec $1 ./pm_nl_ctl csf lip $2 lid $3 \
+>>  				rip $da rport $dp token $tk
+>> -	sleep 1
+>>  }
+>>  
+>>  # $1: ns ; $2: addr $3: event type
+>> @@ -4000,7 +3998,9 @@ userspace_tests()
+>>  		local tests_pid=$!
+>>  		wait_event ns1 MPTCP_LIB_EVENT_ESTABLISHED 1
+>>  		userspace_pm_add_addr $ns1 10.0.2.1 10
+>> +		wait_event ns2 MPTCP_LIB_EVENT_ANNOUNCED 1
+>>  		userspace_pm_add_addr $ns1 10.0.3.1 20
+>> +		wait_event ns2 MPTCP_LIB_EVENT_ANNOUNCED 2
 > 
-> In that case, wouldn't it be better to remove 'if [ -z "$count" ];
-> then' and directly check with 'if [ "$count" != "$create" ]; then'?
+> This has been changed to wait for 2 seconds. Can it revert to waiting
+> for only 1 second like before?
 
-No, we cannot: if $count is empty, then "$count" != "$create", and the
-test will be marked as failed instead of being ignored.
+The last parameter (2) is the min expected number of such events. Here,
+two ADD_ADDR are expected to be seen on the other host, because
+userspace_pm_add_addr has been called twice from ns1.
 
-We could have:
+We could only keep the second "wait_event ANNOUNCED", maybe clearer and
+faster?
 
-  if [ -n "$count" ] && [ "$count" != "$create" ]
+  userspace_pm_add_addr $ns1 10.0.2.1 10
+  userspace_pm_add_addr $ns1 10.0.3.1 20
+  wait_event ns2 MPTCP_LIB_EVENT_ANNOUNCED 2
 
-But I think it is clearer to have an explicit comment for this special
-case than multiple conditions. WDYT?
+WDYT?
 
 Cheers,
 Matt
