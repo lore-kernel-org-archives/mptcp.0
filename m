@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F4D734C989
-	for <mptcp@lists.linux.dev>; Tue, 27 Jan 2026 12:21:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2B5A3491C4
+	for <mptcp@lists.linux.dev>; Tue, 27 Jan 2026 12:25:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769516476; cv=none; b=OuEuhEO4YwKNF2OK/sc5ePxdmI4Cla8lo/oJah+zioJMYhFSdY5pvolAUEaRtrIUNlW8xYhCnH70Z1r9494OtjLConS3lFubK0nzYxWuXfdodwn9QHqpkuCKhAHKZ8eNnvog/1bnFM8RzYCugCooe4luOSg411dLEGZW1HohSYc=
+	t=1769516713; cv=none; b=s92IqOzsAwETGhzNcjmQNUCkRmQ2kdOFOCMjCl10BsTd/R+YiKKETDNZXmnPD9RSua+Xdvbkin/GG7KhVnYcD5QN+a52T18weZERmh7z8TjvEqFiLspAlD6D3sROb7VlOqCf8ovpq7GxQuQcB+9X9cKiQXZ2I6x0RXVrkIRWKZc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769516476; c=relaxed/simple;
-	bh=uvdztWuSUDv1rfk6LdEsHpGYKSWJVDcLgfbfi6xxv7Q=;
+	s=arc-20240116; t=1769516713; c=relaxed/simple;
+	bh=a4PzYuwdC8tTqPGyYt+Wzo53Thlvm1f+npJt9pCq+hc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fhwbnS93lUtJUdQyN3Zu6KtriD7PJUoTTGHVrnlAhvnhGy57CMfbDOCUFgrTTQgJqAZHkyQXc90X4vOESl18uUrIkpTKTLy15B/8SIaTovtcSgmGla0bJShAt72CHewXZbAk+YhLWIyAza+Y4xFRLAmbztD4wLgEyBqONK2XJio=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kVPaTBZW; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=kaLyxNeof5MZ6byW9GjTf9r2Seoww8cr53rx9sfiSkYdfOtqMntIS4B+9P0kUtx8libdbH+qSle/LVQmAm9Dx8bIndGftmR/iKUrSE4vJRfkMOa86T44IGL/gZRjTeKQKY88LfCpCnYbH53aBwLCIgZWxrG3yKuk9W1CwosTLKg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sG1KYY7f; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kVPaTBZW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93BC5C116C6;
-	Tue, 27 Jan 2026 12:21:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sG1KYY7f"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1975C116C6;
+	Tue, 27 Jan 2026 12:25:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769516475;
-	bh=uvdztWuSUDv1rfk6LdEsHpGYKSWJVDcLgfbfi6xxv7Q=;
+	s=k20201202; t=1769516713;
+	bh=a4PzYuwdC8tTqPGyYt+Wzo53Thlvm1f+npJt9pCq+hc=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=kVPaTBZWDSOgUCqaKs/NE458NXutZeIM3rc5v7fNWqcG2UgM6nDyI0aiItJFb+xTY
-	 Y/oH9AUk+Y8Sf/i1/rzn5ShwXePpnVzgaC0CD+oDTH9d3a3sQt/HICeXkWQ5AHq7uw
-	 4irn2OO2AhnE7pofJh4SBZsRq82hF6hfCWfwmSaxB+gkVX+vRTOPrzusl3jvzZs5U4
-	 sYleXoYxDNFhuT1UAXHRAYh/12kfI23k2IiueqBXOoQwtPKSMT4uXGl6FWtBW0UIlL
-	 XZhRS1+0pgT9BTTNA/Uk4KaBp70pRQf9+3jGWxr2jhSdx2y3QHAGjLjiwMdzBkw9hy
-	 inzfCrQaa1NyA==
-Message-ID: <8a307148-07cc-4b6d-974f-6ddec371f2e2@kernel.org>
-Date: Tue, 27 Jan 2026 13:21:12 +0100
+	b=sG1KYY7fAmmAJ38co4MPRR81U+AZqozkYpLmi1gNyugC4KCYceVh1CbS/Md9tR4PN
+	 +1mmkVJ5Y01ztsrFZOXttenAfzYOoNfjXd9XkEFCD0FiZ6q3OsTNsYMWWcjIsnKpH5
+	 Np+QeeKajTsaOWvToD0n1UOKG0leYA4J9gZcdHOTOW3nGZim0hjBTqmUY/lb6qqa/q
+	 75qeN52WbsAlqlmA9ozLHgqd3+cI29Y53RoSPmYI2ZIkTYuNm3QSvGWLjzUwow4zov
+	 MtWhmOplOhCISW/fFF4+zkQ2GJFCIPTGTtMhY1KNjhr7X0q47YZs1/FM0FwWJ2tG4l
+	 rIOq8JKfXukzg==
+Message-ID: <fa22372c-1cef-4453-a6af-358db2654f3e@kernel.org>
+Date: Tue, 27 Jan 2026 13:25:10 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,15 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-net v2 00/11] mptcp: avoid dup events + error +
- misc.
+Subject: Re: [PATCH mptcp-next] selftests: mptcp: join: no SKIP mark for group
+ checks
 Content-Language: en-GB, fr-BE
-To: Geliang Tang <geliang@kernel.org>, MPTCP Upstream <mptcp@lists.linux.dev>
-Cc: Marco Angaroni <marco.angaroni@italtel.com>
-References: <20260126-mptcp-issue-603-v2-0-8393e7840b9e@kernel.org>
- <2ce6fadb135d3d2227032c8b5f553f328f5c96ce.camel@kernel.org>
+To: Geliang Tang <geliang@kernel.org>
+Cc: MPTCP Upstream <mptcp@lists.linux.dev>
+References: <20251211-sft-no-skip-new-cnt-v1-1-6dd6d70f8242@kernel.org>
+ <c24cd268dc2f6797425e022a515776a006eaded6.camel@kernel.org>
+ <db374b02-06fd-4be8-96d8-e6be55d522ea@kernel.org>
+ <48222a07ad8d4d11668e293527a354640bdafec5.camel@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,64 +89,29 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <2ce6fadb135d3d2227032c8b5f553f328f5c96ce.camel@kernel.org>
+In-Reply-To: <48222a07ad8d4d11668e293527a354640bdafec5.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 27/01/2026 07:49, Geliang Tang wrote:
-> Hi Matt,
+On 27/01/2026 07:54, Geliang Tang wrote:
+> Thanks for the explanation.
 > 
-> Thanks for this v2.
-> 
-> On Mon, 2026-01-26 at 20:18 +0100, Matthieu Baerts (NGI0) wrote:
->> There are two fixes with their tests:
->>
->> - a subflow closed event can be visible multiple times, see issue
->> #603
->>
->> - the subflow closed event didn't contain the error as expected.
->>
->> The 4 first patches are for -net, the rest are small fixes and
->> improvements for net-next. Some tests should be quicker now.
->>
->> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> 
-> Looks good to me.
-> 
-> Reviewed-by: Geliang Tang <geliang@kernel.org>
+> This patch looks good to me.
 
-Thank you for the review!
+Thank you for the review.
 
 Now in our tree:
 
-New patches for t/upstream-net and t/upstream:
-- e00c1cde2f33: mptcp: avoid dup SUB_CLOSED events after disconnect
-- 2690dee1d1c2: selftests: mptcp: check no dup close events after error
-- b00ab6a1c0a3: mptcp: only reset subflow errors when propagated
-- 16cfe3e8f86d: selftests: mptcp: check subflow errors in close events
-- Results: e2aed0b16078..b9ebb632c0c5 (export-net)
-- Results: f35d5bacc3d9..3a7897f294e0 (export)
-
 New patches for t/upstream:
-- 3a865473b8fc: selftests: mptcp: join: wait for estab event instead of MPJ
-- 0e605a03b612: selftests: mptcp: join: fix wait_mpj helper
-- 7ba1f3ed5a69: selftests: mptcp: join: userspace: wait for new events
-- 9c01b3c47ce3: selftests: mptcp: join chk_stale_nr: avoid dup stats
-- 29d0083334ab: selftests: mptcp: join: avoid declaring i if not used
-- e6a4afd1527a: selftests: mptcp: connect: fix maybe-uninitialize warn
-- 983eaf267fa4: selftests: mptcp: connect cleanup TFO setup
-- Results: 3a7897f294e0..7db9a30f8664 (export)
+- 63c83cd4d42f: selftests: mptcp: join: no SKIP mark for group checks
+- Results: 7db9a30f8664..cd96e4ab92c2 (export)
 
 Tests are now in progress:
 
-- export-net:
-https://github.com/multipath-tcp/mptcp_net-next/commit/f4278db6305ce32da9f5d541d3034ef2358f38e1/checks
 - export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/954a6c81672b5ff22af3066565cbbc8631fd70f6/checks
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/8ad88e01fe8c2c5b0a6c897b0cf72bba60594b9a/checks
+https://github.com/multipath-tcp/mptcp_net-next/commit/0ad06206f9d3a1a2ad955b58a9425598eb9b3196/checks
 
 Cheers,
 Matt
