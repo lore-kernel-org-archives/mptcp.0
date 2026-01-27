@@ -1,133 +1,153 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F3A42E6CD5
-	for <mptcp@lists.linux.dev>; Tue, 27 Jan 2026 06:54:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F4D734C989
+	for <mptcp@lists.linux.dev>; Tue, 27 Jan 2026 12:21:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769496899; cv=none; b=dfKH6D1uenmHB4Q2V1/EzdLfGhd5atVorS7neAbtq/v1q3MIQFEE6s65iMEXxwL+ppi2R0CD8biv4m4iYUCCUoIfvEFASlxh6L9XHTTNZfLvFVJKIEgCp2hJWuzTU+33Ab0+myTrWVs6ZvNRnMbGhKkYaC6eGhuiTgIyuHOa72A=
+	t=1769516476; cv=none; b=OuEuhEO4YwKNF2OK/sc5ePxdmI4Cla8lo/oJah+zioJMYhFSdY5pvolAUEaRtrIUNlW8xYhCnH70Z1r9494OtjLConS3lFubK0nzYxWuXfdodwn9QHqpkuCKhAHKZ8eNnvog/1bnFM8RzYCugCooe4luOSg411dLEGZW1HohSYc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769496899; c=relaxed/simple;
-	bh=kv8bNiTzwV658+RNVfBh7QEjEUmkey89QPJgHcsaVkQ=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=BMuNjO+IEz7FQaf2DjZEl+hjC7nr2fp/jgZqR+YihEVW2D09AAN8rKtTCqhl4e0PjgHo8c54XTSpKeT7ENKOc+30zYM8+Z3FjFAvN2duisQWXgMIH7J9GbEdjHF+rXtBMW4Qje0VuaWwEsqnMmTwqiRgynrvMTJ2t4RkXojaSR0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uvP9gSdq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1769516476; c=relaxed/simple;
+	bh=uvdztWuSUDv1rfk6LdEsHpGYKSWJVDcLgfbfi6xxv7Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fhwbnS93lUtJUdQyN3Zu6KtriD7PJUoTTGHVrnlAhvnhGy57CMfbDOCUFgrTTQgJqAZHkyQXc90X4vOESl18uUrIkpTKTLy15B/8SIaTovtcSgmGla0bJShAt72CHewXZbAk+YhLWIyAza+Y4xFRLAmbztD4wLgEyBqONK2XJio=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kVPaTBZW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uvP9gSdq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8889DC116C6;
-	Tue, 27 Jan 2026 06:54:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kVPaTBZW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93BC5C116C6;
+	Tue, 27 Jan 2026 12:21:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769496899;
-	bh=kv8bNiTzwV658+RNVfBh7QEjEUmkey89QPJgHcsaVkQ=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=uvP9gSdqUTVUA2bV7ekGgpK3j/Ul+6M58IUsC5x5lmNhRJdDqyE9EhM3tG968JYNt
-	 OScjfzTDPuIYj6MCTjZUTNW3MV3mNLJXJHE0u2y/Kao+WzxEzGt/gFyvrgkNzOKFqI
-	 S4Dlt/f4oSQNekM8hamfN0OoYKOtNFFLJq30z4iYQGEQgP1A2GPngs00r0gPKVxxHb
-	 t9EPdztrkDSUYKCs8jT1voEVDY+IOZSPCXcuewChF9H9FXpKsR/Zwmt/wokjbeoJ6K
-	 haDKAM4WNcF/4GX/s7VpsIsNdkRpEITlniiLrWMbj/WK/Ho+kmlWe5d9DsAR2oyKty
-	 htFaSBUAF8f3w==
-Message-ID: <48222a07ad8d4d11668e293527a354640bdafec5.camel@kernel.org>
-Subject: Re: [PATCH mptcp-next] selftests: mptcp: join: no SKIP mark for
- group checks
-From: Geliang Tang <geliang@kernel.org>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: MPTCP Upstream <mptcp@lists.linux.dev>
-Date: Tue, 27 Jan 2026 14:54:50 +0800
-In-Reply-To: <db374b02-06fd-4be8-96d8-e6be55d522ea@kernel.org>
-References: <20251211-sft-no-skip-new-cnt-v1-1-6dd6d70f8242@kernel.org>
-	 <c24cd268dc2f6797425e022a515776a006eaded6.camel@kernel.org>
-	 <db374b02-06fd-4be8-96d8-e6be55d522ea@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.56.2-4 
+	s=k20201202; t=1769516475;
+	bh=uvdztWuSUDv1rfk6LdEsHpGYKSWJVDcLgfbfi6xxv7Q=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=kVPaTBZWDSOgUCqaKs/NE458NXutZeIM3rc5v7fNWqcG2UgM6nDyI0aiItJFb+xTY
+	 Y/oH9AUk+Y8Sf/i1/rzn5ShwXePpnVzgaC0CD+oDTH9d3a3sQt/HICeXkWQ5AHq7uw
+	 4irn2OO2AhnE7pofJh4SBZsRq82hF6hfCWfwmSaxB+gkVX+vRTOPrzusl3jvzZs5U4
+	 sYleXoYxDNFhuT1UAXHRAYh/12kfI23k2IiueqBXOoQwtPKSMT4uXGl6FWtBW0UIlL
+	 XZhRS1+0pgT9BTTNA/Uk4KaBp70pRQf9+3jGWxr2jhSdx2y3QHAGjLjiwMdzBkw9hy
+	 inzfCrQaa1NyA==
+Message-ID: <8a307148-07cc-4b6d-974f-6ddec371f2e2@kernel.org>
+Date: Tue, 27 Jan 2026 13:21:12 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH mptcp-net v2 00/11] mptcp: avoid dup events + error +
+ misc.
+Content-Language: en-GB, fr-BE
+To: Geliang Tang <geliang@kernel.org>, MPTCP Upstream <mptcp@lists.linux.dev>
+Cc: Marco Angaroni <marco.angaroni@italtel.com>
+References: <20260126-mptcp-issue-603-v2-0-8393e7840b9e@kernel.org>
+ <2ce6fadb135d3d2227032c8b5f553f328f5c96ce.camel@kernel.org>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <2ce6fadb135d3d2227032c8b5f553f328f5c96ce.camel@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Matt,
+Hi Geliang,
 
-On Mon, 2026-01-26 at 19:42 +0100, Matthieu Baerts wrote:
-> Hi Geliang,
+On 27/01/2026 07:49, Geliang Tang wrote:
+> Hi Matt,
 > 
-> Thank you for the review! (and sorry for the late reply)
+> Thanks for this v2.
 > 
-> On 28/12/2025 04:06, Geliang Tang wrote:
-> > Hi Matt,
-> > 
-> > Thanks for this patch.
-> > 
-> > On Thu, 2025-12-11 at 19:09 +0100, Matthieu Baerts (NGI0) wrote:
-> > > When executing the last MPTCP selftests on older kernels, this
-> > > output
-> > > is
-> > > printed:
-> > > 
-> > >   # 001 no JOIN
-> > >   #       join Rx                             [SKIP]
-> > >   #       join Tx                             [SKIP]
-> > >   #       fallback                            [SKIP]
-> > > 
-> > > In fact, behind each line, a few counters are checked, and likely
-> > > not
-> > > all of them have been skipped because the they are not available
-> > > on
-> > > these kernels. Instead, "new" and unsupported counters for these
-> > > groups
-> > > are now ignored, and [ OK ] will be printed instead of [SKIP].
-> > > 
-> > > Note that on the MPTCP CI, when validating the dev versions, any
-> > > unsupported counter will cause the tests to fail. So this is safe
-> > > not
-> > > to
-> > > print 'SKIP' for these group checks.
-> > > 
-> > > Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> > > ---
-> > >  tools/testing/selftests/net/mptcp/mptcp_join.sh | 30
-> > > ++++++++++++---
-> > > ----------
-> > >  1 file changed, 15 insertions(+), 15 deletions(-)
-> > > 
-> > > diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> > > b/tools/test[ -z "$count" ]ing/selftests/net/mptcp/mptcp_join.sh
-> > > index b2e6e548f796..77370b10651a 100755
-> > > --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> > > +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> > > @@ -1407,7 +1407,7 @@ chk_join_tx_nr()
-> > >  
-> > >  	count=$(mptcp_lib_get_counter ${ns2}
-> > > "MPTcpExtMPJoinSynTxCreatSkErr")
-> > >  	if [ -z "$count" ]; then
-> > > -		rc=${KSFT_SKIP}
-> > > +		: # ignore skip
-> > >  	elif [ "$count" != "$create" ]; then
-> > 
-> > In that case, wouldn't it be better to remove 'if [ -z "$count" ];
-> > then' and directly check with 'if [ "$count" != "$create" ]; then'?
+> On Mon, 2026-01-26 at 20:18 +0100, Matthieu Baerts (NGI0) wrote:
+>> There are two fixes with their tests:
+>>
+>> - a subflow closed event can be visible multiple times, see issue
+>> #603
+>>
+>> - the subflow closed event didn't contain the error as expected.
+>>
+>> The 4 first patches are for -net, the rest are small fixes and
+>> improvements for net-next. Some tests should be quicker now.
+>>
+>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 > 
-> No, we cannot: if $count is empty, then "$count" != "$create", and
-> the
-> test will be marked as failed instead of being ignored.
+> Looks good to me.
 > 
-> We could have:
-> 
->   if [ -n "$count" ] && [ "$count" != "$create" ]
-> 
-> But I think it is clearer to have an explicit comment for this
-> special
-> case than multiple conditions. WDYT?
+> Reviewed-by: Geliang Tang <geliang@kernel.org>
 
-Thanks for the explanation.
+Thank you for the review!
 
-This patch looks good to me.
+Now in our tree:
 
-Reviewed-by: Geliang Tang <geliang@kernel.org>
+New patches for t/upstream-net and t/upstream:
+- e00c1cde2f33: mptcp: avoid dup SUB_CLOSED events after disconnect
+- 2690dee1d1c2: selftests: mptcp: check no dup close events after error
+- b00ab6a1c0a3: mptcp: only reset subflow errors when propagated
+- 16cfe3e8f86d: selftests: mptcp: check subflow errors in close events
+- Results: e2aed0b16078..b9ebb632c0c5 (export-net)
+- Results: f35d5bacc3d9..3a7897f294e0 (export)
 
--Geliang
+New patches for t/upstream:
+- 3a865473b8fc: selftests: mptcp: join: wait for estab event instead of MPJ
+- 0e605a03b612: selftests: mptcp: join: fix wait_mpj helper
+- 7ba1f3ed5a69: selftests: mptcp: join: userspace: wait for new events
+- 9c01b3c47ce3: selftests: mptcp: join chk_stale_nr: avoid dup stats
+- 29d0083334ab: selftests: mptcp: join: avoid declaring i if not used
+- e6a4afd1527a: selftests: mptcp: connect: fix maybe-uninitialize warn
+- 983eaf267fa4: selftests: mptcp: connect cleanup TFO setup
+- Results: 3a7897f294e0..7db9a30f8664 (export)
 
-> 
-> Cheers,
-> Matt
+Tests are now in progress:
+
+- export-net:
+https://github.com/multipath-tcp/mptcp_net-next/commit/f4278db6305ce32da9f5d541d3034ef2358f38e1/checks
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/954a6c81672b5ff22af3066565cbbc8631fd70f6/checks
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/8ad88e01fe8c2c5b0a6c897b0cf72bba60594b9a/checks
+
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
+
