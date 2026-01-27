@@ -1,41 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30E0F3EBF3A
-	for <mptcp@lists.linux.dev>; Tue, 27 Jan 2026 06:49:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F3A42E6CD5
+	for <mptcp@lists.linux.dev>; Tue, 27 Jan 2026 06:54:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769496566; cv=none; b=jlKL1lVTb1ukGaNmRpfhDusLtvAe9muUe4g8B71ZJVzbeWPdK9cKWaZ0IHs7JNiVg+cWKop2lYwyW0SLzcoS5krH1JX3zO0ECNjncChe+mZ27q4y5ujfTxkMgY3iJgvlv9kXmE3am7v9n7gI7UkXDNFB1wVUAneGizfbvbJomZk=
+	t=1769496899; cv=none; b=dfKH6D1uenmHB4Q2V1/EzdLfGhd5atVorS7neAbtq/v1q3MIQFEE6s65iMEXxwL+ppi2R0CD8biv4m4iYUCCUoIfvEFASlxh6L9XHTTNZfLvFVJKIEgCp2hJWuzTU+33Ab0+myTrWVs6ZvNRnMbGhKkYaC6eGhuiTgIyuHOa72A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769496566; c=relaxed/simple;
-	bh=lbB/PXyCZrVbU/5TFFsqHuiK2IZIXOHQPYRbxz7cnOQ=;
+	s=arc-20240116; t=1769496899; c=relaxed/simple;
+	bh=kv8bNiTzwV658+RNVfBh7QEjEUmkey89QPJgHcsaVkQ=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=kCd4018aJikvCOnQmJzz1pzgNO4efLhDph1x1n7d7cHQJiy8RTsnskhEQPp6stsuvYjGxWGoaoXWVNXN3fE4LDU36iTLWbcxdRy2hkIQW6G2EXRfiAfTcB9wtBHT1dUUywtGx1lWO6GMu38+OJ+aDBe6pX+0VMuKeCPdnqZtmxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iaQc0Cyl; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=BMuNjO+IEz7FQaf2DjZEl+hjC7nr2fp/jgZqR+YihEVW2D09AAN8rKtTCqhl4e0PjgHo8c54XTSpKeT7ENKOc+30zYM8+Z3FjFAvN2duisQWXgMIH7J9GbEdjHF+rXtBMW4Qje0VuaWwEsqnMmTwqiRgynrvMTJ2t4RkXojaSR0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uvP9gSdq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iaQc0Cyl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6DF9C116C6;
-	Tue, 27 Jan 2026 06:49:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uvP9gSdq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8889DC116C6;
+	Tue, 27 Jan 2026 06:54:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769496565;
-	bh=lbB/PXyCZrVbU/5TFFsqHuiK2IZIXOHQPYRbxz7cnOQ=;
+	s=k20201202; t=1769496899;
+	bh=kv8bNiTzwV658+RNVfBh7QEjEUmkey89QPJgHcsaVkQ=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=iaQc0CylCTWV5xSbX9pAB4j66sEqyt0rpH1gePe3t36JyxvndPYWtpvtJ710krqkL
-	 rV31uWXVfy9z8hnIRg0OElkHP17i9YdDrY3XGAKUKJ8UtZw6NXcB7eoFNjwd037rdZ
-	 gogHM/ZmoCV6K7lG9gxQ9ZORc30ul1ijM+bN2dc12GCaZSgzmOO/NYBT4mrqO+2W7Z
-	 mlT31geEt++QM2QFkjbtDfvg+Ng3i0WhjF/zTNV0NeAer6GH7V22bywFsfBGh/YayX
-	 nmlwBVnoHM/bkQ8cI7zMkKrg5zsrKEyGSEdRnaFVdTABhenHGAnbPB/vgPkdIl3iZe
-	 Qu5zN3l0z6ZRA==
-Message-ID: <2ce6fadb135d3d2227032c8b5f553f328f5c96ce.camel@kernel.org>
-Subject: Re: [PATCH mptcp-net v2 00/11] mptcp: avoid dup events + error +
- misc.
+	b=uvP9gSdqUTVUA2bV7ekGgpK3j/Ul+6M58IUsC5x5lmNhRJdDqyE9EhM3tG968JYNt
+	 OScjfzTDPuIYj6MCTjZUTNW3MV3mNLJXJHE0u2y/Kao+WzxEzGt/gFyvrgkNzOKFqI
+	 S4Dlt/f4oSQNekM8hamfN0OoYKOtNFFLJq30z4iYQGEQgP1A2GPngs00r0gPKVxxHb
+	 t9EPdztrkDSUYKCs8jT1voEVDY+IOZSPCXcuewChF9H9FXpKsR/Zwmt/wokjbeoJ6K
+	 haDKAM4WNcF/4GX/s7VpsIsNdkRpEITlniiLrWMbj/WK/Ho+kmlWe5d9DsAR2oyKty
+	 htFaSBUAF8f3w==
+Message-ID: <48222a07ad8d4d11668e293527a354640bdafec5.camel@kernel.org>
+Subject: Re: [PATCH mptcp-next] selftests: mptcp: join: no SKIP mark for
+ group checks
 From: Geliang Tang <geliang@kernel.org>
-To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, MPTCP Upstream
-	 <mptcp@lists.linux.dev>
-Cc: Marco Angaroni <marco.angaroni@italtel.com>
-Date: Tue, 27 Jan 2026 14:49:18 +0800
-In-Reply-To: <20260126-mptcp-issue-603-v2-0-8393e7840b9e@kernel.org>
-References: <20260126-mptcp-issue-603-v2-0-8393e7840b9e@kernel.org>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: MPTCP Upstream <mptcp@lists.linux.dev>
+Date: Tue, 27 Jan 2026 14:54:50 +0800
+In-Reply-To: <db374b02-06fd-4be8-96d8-e6be55d522ea@kernel.org>
+References: <20251211-sft-no-skip-new-cnt-v1-1-6dd6d70f8242@kernel.org>
+	 <c24cd268dc2f6797425e022a515776a006eaded6.camel@kernel.org>
+	 <db374b02-06fd-4be8-96d8-e6be55d522ea@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 User-Agent: Evolution 3.56.2-4 
 Precedence: bulk
@@ -48,55 +49,85 @@ Content-Transfer-Encoding: 8bit
 
 Hi Matt,
 
-Thanks for this v2.
+On Mon, 2026-01-26 at 19:42 +0100, Matthieu Baerts wrote:
+> Hi Geliang,
+> 
+> Thank you for the review! (and sorry for the late reply)
+> 
+> On 28/12/2025 04:06, Geliang Tang wrote:
+> > Hi Matt,
+> > 
+> > Thanks for this patch.
+> > 
+> > On Thu, 2025-12-11 at 19:09 +0100, Matthieu Baerts (NGI0) wrote:
+> > > When executing the last MPTCP selftests on older kernels, this
+> > > output
+> > > is
+> > > printed:
+> > > 
+> > >   # 001 no JOIN
+> > >   #       join Rx                             [SKIP]
+> > >   #       join Tx                             [SKIP]
+> > >   #       fallback                            [SKIP]
+> > > 
+> > > In fact, behind each line, a few counters are checked, and likely
+> > > not
+> > > all of them have been skipped because the they are not available
+> > > on
+> > > these kernels. Instead, "new" and unsupported counters for these
+> > > groups
+> > > are now ignored, and [ OK ] will be printed instead of [SKIP].
+> > > 
+> > > Note that on the MPTCP CI, when validating the dev versions, any
+> > > unsupported counter will cause the tests to fail. So this is safe
+> > > not
+> > > to
+> > > print 'SKIP' for these group checks.
+> > > 
+> > > Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> > > ---
+> > >  tools/testing/selftests/net/mptcp/mptcp_join.sh | 30
+> > > ++++++++++++---
+> > > ----------
+> > >  1 file changed, 15 insertions(+), 15 deletions(-)
+> > > 
+> > > diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> > > b/tools/test[ -z "$count" ]ing/selftests/net/mptcp/mptcp_join.sh
+> > > index b2e6e548f796..77370b10651a 100755
+> > > --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> > > +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> > > @@ -1407,7 +1407,7 @@ chk_join_tx_nr()
+> > >  
+> > >  	count=$(mptcp_lib_get_counter ${ns2}
+> > > "MPTcpExtMPJoinSynTxCreatSkErr")
+> > >  	if [ -z "$count" ]; then
+> > > -		rc=${KSFT_SKIP}
+> > > +		: # ignore skip
+> > >  	elif [ "$count" != "$create" ]; then
+> > 
+> > In that case, wouldn't it be better to remove 'if [ -z "$count" ];
+> > then' and directly check with 'if [ "$count" != "$create" ]; then'?
+> 
+> No, we cannot: if $count is empty, then "$count" != "$create", and
+> the
+> test will be marked as failed instead of being ignored.
+> 
+> We could have:
+> 
+>   if [ -n "$count" ] && [ "$count" != "$create" ]
+> 
+> But I think it is clearer to have an explicit comment for this
+> special
+> case than multiple conditions. WDYT?
 
-On Mon, 2026-01-26 at 20:18 +0100, Matthieu Baerts (NGI0) wrote:
-> There are two fixes with their tests:
-> 
-> - a subflow closed event can be visible multiple times, see issue
-> #603
-> 
-> - the subflow closed event didn't contain the error as expected.
-> 
-> The 4 first patches are for -net, the rest are small fixes and
-> improvements for net-next. Some tests should be quicker now.
-> 
-> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Thanks for the explanation.
 
-Looks good to me.
+This patch looks good to me.
 
 Reviewed-by: Geliang Tang <geliang@kernel.org>
 
 -Geliang
 
-> ---
-> Changes in v2:
-> - Small updates on patches 1, 2, 3 and 5 (Geliang)
-> - Add Geliang RvB tags.
-> - Link to v1:
-> https://patch.msgid.link/20251226-mptcp-issue-603-v1-0-bb30e331b839@kernel.org
 > 
-> ---
-> Matthieu Baerts (NGI0) (11):
->       mptcp: avoid dup SUB_CLOSED events after disconnect
->       selftests: mptcp: check no dup close events after error
->       mptcp: only reset subflow errors when propagated
->       selftests: mptcp: check subflow errors in close events
->       selftests: mptcp: join: wait for estab event instead of MPJ
->       selftests: mptcp: join: fix wait_mpj helper
->       selftests: mptcp: join: userspace: wait for new events
->       selftests: mptcp: join chk_stale_nr: avoid dup stats
->       selftests: mptcp: join: avoid declaring i if not used
->       selftests: mptcp: connect: fix maybe-uninitialize warn
->       selftests: mptcp: connect cleanup TFO setup
-> 
->  net/mptcp/protocol.c                              |  13 +-
->  tools/testing/selftests/net/mptcp/mptcp_connect.c |  19 ++-
->  tools/testing/selftests/net/mptcp/mptcp_join.sh   | 149
-> +++++++++++++++-------
->  3 files changed, 121 insertions(+), 60 deletions(-)
-> ---
-> base-commit: b8bb952910af48167681524c5b217996c16382c1
-> change-id: 20251222-mptcp-issue-603-d85d967f7c0a
-> 
-> Best regards,
+> Cheers,
+> Matt
