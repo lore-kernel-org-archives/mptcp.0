@@ -1,114 +1,208 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FB90371046;
-	Tue, 27 Jan 2026 19:27:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E9A725A2B4
+	for <mptcp@lists.linux.dev>; Thu, 29 Jan 2026 04:13:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769542071; cv=none; b=ZzxF5vfUpvu4isy4V9+5mzqigu+aDhg8ykJEIR6WtYPCf99mmIWvc0mwiCTbV6sXwlN1+V92tlMmBOGesTtOyYAYRkEMynbVnJt8+vOr81sWsbRu9hSzTW71O8G40GKJP6780U9iW8spMozg46ZHRmimDQMKGQO4hot59YM+bgs=
+	t=1769660012; cv=none; b=n4DuMIite1WvPwoSoQITl20+SZ/WFnS1z0OX4XXbVJ7m7VG0q3E6AgkSUMVV+7Pqro55gMGhluMU7D5+xVvIjpoOOBej/0BytEo88pYCUB0akuXlrSvBDIWJz0Un49pZL0QuuhvoGqXpn50fYUf6ZC+bbEoro5Y4regszDXQGpM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769542071; c=relaxed/simple;
-	bh=ytjJ25Q1jmwXE29IQbjqiVL3coToMRadyXhmXWtjND8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=REbOz8ytgi10EedfoAEMhlYKYROnz5ZfYZphu0d3tBu/RANE6uCV+N2hmhKHuozBRX31lfZ53Ok+qOT8Zd5PujYaAhy4hExCKuGDoRUwRO7lNulZhmktJvWmQ+1bcoKWe4BVQ9/4W99kruxEz76siUs5G+Ht7MfnoOFNQPFA8ZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UnNTQJto; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1769660012; c=relaxed/simple;
+	bh=16NXzws07wBEbi4IFY3RE/UJffRBueNUf690k9YmV+4=;
+	h=Message-ID:Subject:From:To:Cc:Date:Content-Type:MIME-Version; b=bMVKLbLD414PI6Zum00gPVvmFOx2Osrb1+goQgkQTn+lXL2zlP3wlJTvOIcwnQwnirY9Rjw6JKjLjDhjfM6q9PLp4Xett+Q/rtBlfC39Pvvh4Cdx+qTXmbylX2C+YI2FFuHBycIAVaB87EkWxbXBGYgWX/pXwE5gBTmUJUF1P2M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BQFVekOO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UnNTQJto"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E283C19425;
-	Tue, 27 Jan 2026 19:27:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BQFVekOO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BAD40C116D0;
+	Thu, 29 Jan 2026 04:13:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769542071;
-	bh=ytjJ25Q1jmwXE29IQbjqiVL3coToMRadyXhmXWtjND8=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=UnNTQJtoSVqy9mLMLJ2g0son1lXJ7iQ8GevQnsC3V6Ny+XKz5OWLiv+ewt8gilpth
-	 13b61T3CgpcvbizoZAQ7OIzB4o2dR/WXGgK5UP6bshYgCyVluTBShM1udB0RIUtZbF
-	 /pV2vILb0FgWu4a/QREO7y9D21mgs9tg1hZssRqPM/wvhBnbM1nvj0vg9JQdCHWBM6
-	 lEPOVPPNcyusNnqxU951RnQDcct4tLMpE4sHZWdjIVh3FOYhOTR+8L0I84kcCj3kpL
-	 ENQLW7mVAQ0mPaojxEXbpZfzNqNc+JvduiZAhZIN00+gMo0QaRfMTUQehXkycBDTxU
-	 IbepUWMs5717g==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Tue, 27 Jan 2026 20:27:27 +0100
-Subject: [PATCH net 5/5] selftests: mptcp: join: fix local endp not being
- tracked
+	s=k20201202; t=1769660012;
+	bh=16NXzws07wBEbi4IFY3RE/UJffRBueNUf690k9YmV+4=;
+	h=Subject:From:To:Cc:Date:From;
+	b=BQFVekOO1U59dCPC9kqojQyn0ts8UY5Azo1JWxdrVD8stsljKBzIPUQ1ddPj17x+r
+	 5InQ0LfMZIHfRxr74TmJkLH2BpNyUAcKG6flvZVhM9mqAMk0m6AjksVnidaAUw1y2E
+	 +D5fn+dbHG2VCtwheldxIBQN4BiXhTUUhmsj1b/n/fcI/kamGQWukQ7DTCGtpsm7ye
+	 F+9sTEjzuL5TL9VhJZP9qMzAMK2isH2SmibV1qsttRtvU3aSSh+Z8+pZQf1HZknf6t
+	 xAqf0HDEY1u5dIKOLdY5VkkmiRwaKNy2X3hDwzvLMT1/U24FuY/jEDSwGWqpnVPdj6
+	 1hyKnQfyEsAXw==
+Message-ID: <a9f115aa5719e1088702a3fdeee766a3166611b1.camel@kernel.org>
+Subject: [LSF/MM/BPF TOPIC] NVMe over MPTCP: Multi-Fold Acceleration for
+ NVMe over TCP in Multi-NIC Environments
+From: Geliang Tang <geliang@kernel.org>
+To: lsf-pc@lists.linux-foundation.org, linux-nvme@lists.infradead.org
+Cc: mptcp@lists.linux.dev, Matthieu Baerts <matttbe@kernel.org>, Mat
+ Martineau	 <martineau@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Hannes
+ Reinecke	 <hare@suse.de>
+Date: Thu, 29 Jan 2026 12:13:25 +0800
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.56.2-4 
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260127-net-mptcp-dup-nl-events-v1-5-7f71e1bc4feb@kernel.org>
-References: <20260127-net-mptcp-dup-nl-events-v1-0-7f71e1bc4feb@kernel.org>
-In-Reply-To: <20260127-net-mptcp-dup-nl-events-v1-0-7f71e1bc4feb@kernel.org>
-To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Simon Horman <horms@kernel.org>, Shuah Khan <shuah@kernel.org>
-Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, 
- linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
- "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, stable@vger.kernel.org
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2148; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=ytjJ25Q1jmwXE29IQbjqiVL3coToMRadyXhmXWtjND8=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDIrBZfnbsn02dD+KTqoor5G+3r8av1V/x+o9E2Y47q0t
- 8W88/nPjlIWBjEuBlkxRRbptsj8mc+reEu8/Cxg5rAygQxh4OIUgImUX2P4w+uzxCLT70JehuLU
- FD2btzN8167r36puLmi7/ormd4VN5owMewzurdFKddtles1kth8D0+rpP87N5GaXTJHJ3xdkUX6
- dBQA=
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-When running this mptcp_join.sh selftest on older kernel versions not
-supporting local endpoints tracking, this test fails because 3 MP_JOIN
-ACKs have been received, while only 2 were expected.
+As one of the MPTCP upstream developers, I'm recently working on adding
+MPTCP support to 'NVMe over TCP'. This approach achieves a multi-fold
+performance improvement over using standard TCP. The implementation and
+testing phases are largely complete. The code is currently in the RFC
+stage and has undergone several rounds of discussion and iteration on
+the MPTCP mailing list [1]. It will be sent to the NVMe mailing list
+shortly.
 
-It is not clear why only 2 MP_JOIN ACKs were expected on old kernel
-versions, while 3 MP_JOIN SYN and SYN+ACK were expected. When testing on
-the v5.15.197 kernel, 3 MP_JOIN ACKs are seen, which is also what is
-expected in the selftests included in this kernel version, see commit
-f4480eaad489 ("selftests: mptcp: add missing join check").
+1. Introduction to MPTCP
 
-Switch the expected MP_JOIN ACKs to 3. While at it, move this
-chk_join_nr helper out of the special condition for older kernel
-versions as it is now the same as with more recent ones. Also, invert
-the condition to be more logical: what's expected on newer kernel
-versions having such helper first.
+Multipath TCP (MPTCP), standardized in RFC 8684, represents a major
+evolution of the TCP protocol. It enables a single transport connection
+to utilize multiple network paths simultaneously, providing benefits in
+redundancy, resilience, and bandwidth aggregation. Since its
+introduction in Linux kernel v5.6, it has become a key technology for
+modern networking, particularly in multi-NIC environments.
 
-Fixes: d4c81bbb8600 ("selftests: mptcp: join: support local endpoint being tracked or not")
-Cc: stable@vger.kernel.org
-Reviewed-by: Mat Martineau <martineau@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- tools/testing/selftests/net/mptcp/mptcp_join.sh | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+On a supported system such as Linux, an MPTCP socket is created by
+specifying the IPPROTO_MPTCP protocol in the socket() system call:
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 3fc29201362a..e70d3420954f 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -2329,17 +2329,16 @@ signal_address_tests()
- 		ip netns exec $ns1 sysctl -q net.mptcp.add_addr_timeout=1
- 		speed=slow \
- 			run_tests $ns1 $ns2 10.0.1.1
-+		chk_join_nr 3 3 3
- 
- 		# It is not directly linked to the commit introducing this
- 		# symbol but for the parent one which is linked anyway.
--		if ! mptcp_lib_kallsyms_has "mptcp_pm_subflow_check_next$"; then
--			chk_join_nr 3 3 2
--			chk_add_nr 4 4
--		else
--			chk_join_nr 3 3 3
-+		if mptcp_lib_kallsyms_has "mptcp_pm_subflow_check_next$"; then
- 			# the server will not signal the address terminating
- 			# the MPC subflow
- 			chk_add_nr 3 3
-+		else
-+			chk_add_nr 4 4
- 		fi
- 	fi
- }
+	int fd = socket(AF_INET, SOCK_STREAM, IPPROTO_MPTCP);
 
--- 
-2.51.0
+This creates a socket that appears as a standard TCP socket to the
+application but uses the MPTCP protocol stack underneath.
+
+For more details, please visit the project website: https://mptcp.dev.
+
+2. Implementation
+
+'NVMe over TCP' establishes multiple TCP connections between the target
+and host for data transfer. This includes one admin queue connection
+for management traffic and multiple I/O queue connections for data
+traffic, with the number typically scaling with available CPU cores.
+While these multiple TCP connections (using the same IP address but
+different ports) help distribute computational load across CPUs, all
+data traffic still flows through a single network interface card (NIC),
+even in multi-NIC environments.
+
+The 'NVMe over MPTCP' solution enhances 'NVMe over TCP' by replacing
+the multiple TCP connections with multiple MPTCP connections, leaving
+other mechanisms unchanged. Internally, each MPTCP connection can
+establish multiple subflows based on the number of configured NICs.
+This distributes data traffic across all available NICs, thereby
+increasing aggregate transmission speed.
+
+Therefore, the primary change required is to modify the protocol
+parameter from IPPROTO_TCP to IPPROTO_MPTCP when creating sockets on
+both the target and host sides:
+
+	Target side:
+
+	sock_create(port->addr.ss_family, SOCK_STREAM,
+			IPPROTO_TCP, &port->sock);
+
+	Host side:
+
+	sock_create_kern(current->nsproxy->net_ns,
+			ctrl->addr.ss_family, SOCK_STREAM,
+			IPPROTO_TCP, &queue->sock);
+
+A new NVMe transport type, named NVMF_TRTYPE_MPTCP (suggested by Hannes
+Reinecke), has been introduced to determine whether to create a TCP or
+MPTCP socket:
+
+	Target side:
+
+	if (nport->disc_addr.trtype == NVMF_TRTYPE_MPTCP)
+		proto = IPPROTO_MPTCP;
+
+	Host side:
+
+	if (!strcmp(ctrl->ctrl.opts->transport, "mptcp"))
+		proto = IPPROTO_MPTCP;
+
+3. Performance Benefits
+
+This new feature has been evaluated in different environments:
+
+I conducted 'NVMe over MPTCP' tests between two PCs, each equipped with
+two Gigabit NICs and directly connected via Ethernet cables. Using
+'NVMe over TCP', the fio benchmark showed a speed of approximately 100
+MiB/s. In contrast, 'NVMe over MPTCP' achieved about 200 MiB/s with
+fio, doubling the throughput.
+
+In a virtual machine test environment simulating four NICs on both
+sides, 'NVMe over MPTCP' delivered bandwidth up to four times that of
+standard TCP.
+
+4. Configuration
+
+To achieve the described multi-fold acceleration benefits, both the
+target and host sides must be deployed in multi-NIC environments with
+properly configured MPTCP endpoints. The target side should use the
+'signal' flag for its endpoints, while the host side should use the
+'subflow' flag.
+
+	Target side:
+
+	# ip mptcp endpoint add 192.168.1.2 id 2 dev enp3s0f1 signal
+	# echo mptcp > /sys/kernel/config/nvmet/ports/1234/addr_trtype
+
+	Host side:
+
+	# ip mptcp endpoint add 192.168.1.4 id 2 dev enp1s0f1 subflow
+	# nvme discover -t mptcp ...
+	# nvme connect -t mptcp ...
+
+5. Dependencies
+
+The modifications in the NVMe subsystem are minimal. Most of the code
+change is on the MPTCP side, to implement interfaces to use MPTCP from
+the kernel space, similar to what is done today with TCP.
+
+'NVMe over TCP' uses the read_sock interface for data receiving.
+Consequently, the read_sock interface for MPTCP has been implemented
+('implement mptcp read_sock' series [2]), which is under review on the
+MPTCP mailing list.
+
+As 'NVMe over TCP' can utilize TLS for encryption, KTLS support for
+MPTCP has also been added ('MPTCP KTLS support' series [3]), which is
+currently in the RFC stage. TLS mode for 'NVMe over MPTCP' has been
+successfully validated.
+
+Corresponding updates are also required in user-space libraries and
+tools, including libnvme [4], nvme-cli [5], and ktls-utils [6], to add
+MPTCP support.
+
+6. Discussion
+
+The current approach is to define a new transport type,
+NVMF_TRTYPE_MPTCP, but I understand it will need to register a new
+protocol number from NVMexpress.org. Hannes Reinecke also suggested
+declaring MPTCP as a TCP 'variant', but I found some drawbacks. I would
+like to discuss them and find possible solutions.
+
+I also seek guidance on how to incorporate MPTCP support into the NVMe
+protocol specifications. I lack experience in modifying NVMe protocol
+specifications and would appreciate guidance and assistance from the
+NVMe community.
+
+Thanks,
+-Geliang
+
+[1]
+NVME over MPTCP
+https://patchwork.kernel.org/project/mptcp/cover/cover.1764152990.git.tanggeliang@kylinos.cn/
+[2]
+implement mptcp read_sock
+https://patchwork.kernel.org/project/mptcp/cover/cover.1765023923.git.tanggeliang@kylinos.cn/
+[3]
+MPTCP KTLS support
+https://patchwork.kernel.org/project/mptcp/cover/cover.1768294706.git.tanggeliang@kylinos.cn/
+[4]
+libnvme: add mptcp trtype
+https://patchwork.kernel.org/project/mptcp/patch/99f6e63b5c9677f29a9bc8cdd87b2064b258435f.1764206766.git.tanggeliang@kylinos.cn/
+[5]
+fabrics: add mptcp support
+https://github.com/linux-nvme/nvme-cli/commit/f468531d0592ad22b71760d883409363b1f8a9d6
+[6]
+add mptcp support
+https://github.com/oracle/ktls-utils/commit/4a45e486c65be986ef349ed10b0fc9bd5dbf107d
 
