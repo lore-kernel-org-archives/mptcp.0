@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A77092E9EBB
-	for <mptcp@lists.linux.dev>; Fri, 30 Jan 2026 07:19:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 873BE2E40B;
+	Fri, 30 Jan 2026 07:24:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769757590; cv=none; b=q6lSPXLTKj07TpHrNBykrh+v8Xsk4zGbC6HkEL0DMZbMRZdhYZxOuZhJWfGAzyaAsuMAuQKaK8oQHo7jCfC/YhfjbebTHlnB1/dTYS5Pq7XjkcIwhU6YcEb5zTMhR7xt1XSefoME/U295EbAjr9J5650TVGQIpI3Q0DT+GT+zDg=
+	t=1769757886; cv=none; b=L6ZlttmAQafetOMhB9V9gRlWaeN10w0L+IzWoCqbPKkkZxnQhiCqG+54VwHIZVsM3PW8CVCQqnElkDwsbyWl5gBF4otfgtAQwXofKF8pB9jm6p+WtBNyveW+lrjVmTM0QGtSborGrOhjl7xv6f2QV+kfrldYxZZbmk+uRWtxoPc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769757590; c=relaxed/simple;
-	bh=2w+A8sI+ZIy7b6Qt3OxAYy7RaNEGazk4JOkpGDDgugM=;
+	s=arc-20240116; t=1769757886; c=relaxed/simple;
+	bh=RbhFroj7QvFytoXKlKRjIPa9axlhRKn1uHD6xwFo1BY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UFNVWY5Qn9h3GFnvucTVu8NVGABL92noLN4LXjhgSFqCEbZuLMZTDN8rg2FjDdhnpK3Uvdml+g2IYrlUkSft81ju5zmXlNkD56CKuBb9NpJ+lUJnM6ZBsun91xPILjgJ8RnpYVF8n5OiwIeCjQXg1RlptgjSnY8WjBkeMXs1R2E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PP0Rm5W9; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=WFlLikMpfLT+7uSSOSntN3FQr9JyG/snUFVuak9T/C1+ryTYCz2BczsJ2b75MCV+WyZYQ6Pg9Lwbuxg5K4YCsusAt5g2/fz9QNGYgCut9rZq3QwWHq/QIgke05G/O67KJWdz5vu+K32ai/1Aj9oWIzaFKKe8QHST+ML5xJff+RY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=unha1+yh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PP0Rm5W9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D967C4CEF7;
-	Fri, 30 Jan 2026 07:19:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="unha1+yh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4FEEC16AAE;
+	Fri, 30 Jan 2026 07:24:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769757590;
-	bh=2w+A8sI+ZIy7b6Qt3OxAYy7RaNEGazk4JOkpGDDgugM=;
+	s=k20201202; t=1769757886;
+	bh=RbhFroj7QvFytoXKlKRjIPa9axlhRKn1uHD6xwFo1BY=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=PP0Rm5W9E81f3q2uOJwsUOFitwfWGiziYNgJxFd9keodw4rjScrSOZjb1CTYpQoMB
-	 CDuGLQrLdUsrYQQAgFSatVx5huBlaTqP/1hocamPtuC/KaFXqItVMZflBLEsNjP5Md
-	 PgKN6IY4v3lQuv11fcUyDAuzhotJBn9B8WL97ROrIJAN+qK8Qfkh3MGrcgTDqB2nt7
-	 iMwQGQra2AVe8f4+BKliCZevi6JkIvlkP2UJ4rr+lRNx9rRVM4TjmyzeIdeg9BgiOe
-	 u/OIO8PjAHOcqP8FmDf4cQsN2bG0hmeg7jyBJvXugnIbXYkflPCe+PAH8ldqBZQdXn
-	 cTDWleclbuJmA==
-Message-ID: <24a4b887-393c-46af-9166-ab7b6c0e3762@kernel.org>
-Date: Fri, 30 Jan 2026 08:19:47 +0100
+	b=unha1+yh66kWGGnn5Gcx+HVndwjjObB/bZL9TFAhLbNCy8YPFtVqltsAru70YrcMM
+	 vApnGxs+LWIMSXhwPAszLQHnbBp4xFWkCV8ltQWyJDmV9a3ppbigxDwRHf83s7Do+C
+	 kfXx5UcbQ3NakElgMs+bo0rRxat0A9iCRdoG/l8afgltxbDs/chALlUH1RRzdwu/Hj
+	 Lgb34v/4KyWAxQeJsaCoHPV8M9RcggG9QsxFfVq4Kp/DPeQ/XihDyPkPv4wfi7SlaL
+	 dgRPtePYrOmNmqaf2WEfwkWlg6FRTChCHwoBPuCmflQ8+lU+oQtvsHYR4maZpHFBW/
+	 BLiphRJDJdgRw==
+Message-ID: <0f074dd6-6a37-4f7e-bdd3-528f201fc8f1@kernel.org>
+Date: Fri, 30 Jan 2026 08:24:40 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,19 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v15 4/6] mptcp: implement .splice_read
-Content-Language: en-GB, fr-BE
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1765023923.git.tanggeliang@kylinos.cn>
- <eb8faceedfba8da224fa5467dd80d0c7f99cfd3f.1765023923.git.tanggeliang@kylinos.cn>
+Subject: Re: [PATCH net-next 4/6] mptcp: implement .splice_read
+To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Simon Horman <horms@kernel.org>, Neal Cardwell <ncardwell@google.com>,
+ Kuniyuki Iwashima <kuniyu@google.com>, David Ahern <dsahern@kernel.org>,
+ Shuah Khan <shuah@kernel.org>
+Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev,
+ linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+References: <20260129-net-next-mptcp-splice-v1-0-994cac40daa0@kernel.org>
+ <20260129-net-next-mptcp-splice-v1-4-994cac40daa0@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
+Content-Language: en-GB, fr-BE
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -86,13 +92,13 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <eb8faceedfba8da224fa5467dd80d0c7f99cfd3f.1765023923.git.tanggeliang@kylinos.cn>
+In-Reply-To: <20260129-net-next-mptcp-splice-v1-4-994cac40daa0@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+Hello,
 
-On 06/12/2025 13:33, Geliang Tang wrote:
+On 29/01/2026 20:23, Matthieu Baerts (NGI0) wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
 > This patch implements .splice_read interface of mptcp struct proto_ops
@@ -103,25 +109,55 @@ On 06/12/2025 13:33, Geliang Tang wrote:
 > 
 > mptcp_splice_read() is almost the same as tcp_splice_read(), except for
 > sock_rps_record_flow().
-
-(...)
-
+> 
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> Reviewed-by: Mat Martineau <martineau@kernel.org>
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> ---
+>  net/mptcp/protocol.c | 114 +++++++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 114 insertions(+)
+> 
 > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 01d602f0d556..334fdb10fdf3 100644
+> index c58e306ec3ef..3aee29f70954 100644
 > --- a/net/mptcp/protocol.c
 > +++ b/net/mptcp/protocol.c
+> @@ -4396,6 +4396,118 @@ static int mptcp_read_sock(struct sock *sk, read_descriptor_t *desc,
+>  	return __mptcp_read_sock(sk, desc, recv_actor, false);
+>  }
+>  
+> +static int __mptcp_splice_read(struct sock *sk, struct tcp_splice_state *tss)
+> +{
+> +	/* Store TCP splice context information in read_descriptor_t. */
+> +	read_descriptor_t rd_desc = {
+> +		.arg.data = tss,
+> +		.count	  = tss->len,
+> +	};
+> +
+> +	return mptcp_read_sock(sk, &rd_desc, tcp_splice_data_recv);
+> +}
+> +
+> +/**
+> + *  mptcp_splice_read - splice data from MPTCP socket to a pipe
+> + * @sock:	socket to splice from
+> + * @ppos:	position (not valid)
+> + * @pipe:	pipe to splice to
+> + * @len:	number of bytes to splice
+> + * @flags:	splice modifier flags
+> + *
+> + * Description:
+> + *    Will read pages from given socket and fill them into a pipe.
 
-(...)
+This comment is a copy of tcp_splice_read() where only the first line
+has been adapted, but this seems to cause a new kdoc warning:
 
-> @@ -4423,6 +4535,7 @@ static const struct proto_ops mptcp_stream_ops = {
->  	.mmap		   = sock_no_mmap,
->  	.set_rcvlowat	   = mptcp_set_rcvlowat,
->  	.read_sock	   = mptcp_read_sock,
-> +	.splice_read	   = mptcp_splice_read,
+  net/mptcp/protocol.c:4424 No description found for return value of
+'mptcp_splice_read'
 
-When looking at this patch in more details (after the issue with kdoc),
-I was wondering: is it not needed to also implement .splice_eof, similar
-to tcp_splice_eof()?
+
+I guess something like that should be added in a v2:
+
+  Return:
+     Amount of bytes that have been spliced.
 
 Cheers,
 Matt
