@@ -1,133 +1,136 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 070C035DCF9
-	for <mptcp@lists.linux.dev>; Fri, 30 Jan 2026 10:25:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEAEF330B2B
+	for <mptcp@lists.linux.dev>; Fri, 30 Jan 2026 10:34:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769768719; cv=none; b=RzTUvvDokerX5A7v1YbjH/5rKxqOUR90EuroZm/ykeBdiCMXisJT7EwwM3vIn1TNR8gKi55mdO8HuMDkU4zES16Pr0lbA1ov5QXvvYDH4kGkg4LsIjDYiy8GjARN5CyPuvTPxotrHfkZFy5jYFMpz9bEFI06MFCJ047QhUZO67o=
+	t=1769769259; cv=none; b=tkOEbLy3zcmMHSFQbWxI4it2/5pPHeqMo+3inxENMidciSXQillKOlMK+NrWMLdTeabNjMO7aXzKswuYESAkzOOY+Enyk3lF7aHhnn97IUUux5hkCibOPIw5PJnepacshEHlG94el0jXVJXWoa+Jvi/AWNC3ovBINdTrMCNRHXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769768719; c=relaxed/simple;
-	bh=nz//itjOzWtF5z0UBDrPHTfvTsXTMQQh8pjjpMXe8JA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=gHbesDdDxWcNOsZ6TL1CeyIxQFOcrDMcnpSzBv7SVb8ZRmNCAwHdq7/CXja/z4629+P68EM2+tqgNA7aZJ97IFGiZ3wzgsS7APdPuo0zuKlxAsL8vJC3aD5mvhoryb1ftAMPZDlaW74tI2JjqLheGMZ8iOVZFJaSyCpmzXL68Xo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XOssioiJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1769769259; c=relaxed/simple;
+	bh=zO/BeVFYXfCNJ6HxSyIH3vm/jykiVQkpDNRIphsnCq4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Wx+MP4gf/VFXR3FZgFfqym9CFNIxQyzBQAmSU+qO7m+jN7WJwi9tOLJx1SHLs22x+bD3DynCepvUXk5mAoJWlTdRAuTYnSlQ5X9g5f4MqUJa5l6W0fC+biiugkUwZF/TnRjaXZe2JGtzMQSMKectY7lXBYLkjHharQLNVasjerA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=sOicpeZy; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=C7irYTkR; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XOssioiJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0ED7DC4CEF7;
-	Fri, 30 Jan 2026 10:25:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769768718;
-	bh=nz//itjOzWtF5z0UBDrPHTfvTsXTMQQh8pjjpMXe8JA=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=XOssioiJWqrn7v+u4xwN4VsX85whH9i7PV56+cZBuCgFHRmTX5fAGj1dOBBHDGkRr
-	 erHg5gW0ImdI1igc5JwNV7R3hUe6fhUVymjWPPaWDUQqZcR78UyWNPIaJ0P9FgROLP
-	 3sGBcQqMB5QkLyGe1lvKtZBvB6DuBVI4+t+WPwBc2WqUoq+EEjn6vrLvR6hP1EAxEF
-	 QZsQjwB6AhtKR3iqajts0GkKB8F6qCx2woMKFcEjwIImvNwnRPqzy0bxWSX2iMn/Hi
-	 HlxpNnUPD0r6A2pGfI0R5pEdZug0d2N41fDTCKYgyCvlnCFN9gPu5ghcEym94o2WtM
-	 4Z7UkUFm4RnxQ==
-Message-ID: <a5b63ab2-5053-41f4-95bb-10252af9edae@kernel.org>
-Date: Fri, 30 Jan 2026 11:25:16 +0100
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="sOicpeZy";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="C7irYTkR"
+Date: Fri, 30 Jan 2026 11:34:15 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1769769256;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fqjzclOpE5Z0JqU8Ln9zaCqECU+eQmtcA8Y0G/H7Kqw=;
+	b=sOicpeZyVu6DjKBMznBPOyrkXHynpfqzSjLra94cmo69t730MJGq/vVRHd2CBoSw0RAvOj
+	mri5kGbFMa2UzoWXipXc1Y+B68PHAeHOnd4rAAOYI/GCoNDahSj2wh0Oe9FnhadS4jHuE/
+	GoIN73jNlmec7S+5eTtQpnW3FpClUPplRJI5JQFSbKSKokF8o69Y+I7Ep+jaa+bseMV4ww
+	m5vhepbB58EHtkttATK4n5R07UKx+2i8ZPQjjdsvFswoRctYknbW1mqbwgvXoPFF1bKGTO
+	mwCT4w1Gx6rYiY0LDJilx5Ui9/OPEqlp1xh9DyMl2pLRc2EJo2DfsMkYglGkoA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1769769256;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fqjzclOpE5Z0JqU8Ln9zaCqECU+eQmtcA8Y0G/H7Kqw=;
+	b=C7irYTkRY2dmkaIIJt8bgtlla46RmYfRlQi6yK6ytIcAGH9BmOrmndC3rRju7QIg66S5Ea
+	4VVpL5aU+QYKvgAg==
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Eric Dumazet <edumazet@google.com>, 
+	Kuniyuki Iwashima <kuniyu@google.com>, Paolo Abeni <pabeni@redhat.com>, 
+	Willem de Bruijn <willemb@google.com>, "David S. Miller" <davem@davemloft.net>, 
+	Simon Horman <horms@kernel.org>, Shuah Khan <shuah@kernel.org>, 
+	Matthieu Baerts <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>, 
+	Geliang Tang <geliang@kernel.org>, =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>, 
+	=?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Jesper Dangaard Brouer <hawk@kernel.org>, 
+	John Fastabend <john.fastabend@gmail.com>, Stanislav Fomichev <sdf@fomichev.me>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-api@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-kselftest@vger.kernel.org, 
+	mptcp@lists.linux.dev, linux-security-module@vger.kernel.org, bpf@vger.kernel.org, 
+	libc-alpha@sourceware.org, Carlos O'Donell <carlos@redhat.com>, 
+	Adhemerval Zanella <adhemerval.zanella@linaro.org>, Rich Felker <dalias@libc.org>, klibc@zytor.com, 
+	Florian Weimer <fweimer@redhat.com>
+Subject: Re: [PATCH net-next v2 0/4] net: uapi: Provide an UAPI definition of
+ 'struct sockaddr'
+Message-ID: <20260130112309-28f2645b-e756-4173-96da-cf5c59191520@linutronix.de>
+References: <20260120-uapi-sockaddr-v2-0-63c319111cf6@linutronix.de>
+ <20260121192729.2095aa25@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next] mptcp: fix kdoc warnings
-Content-Language: en-GB, fr-BE
-To: Geliang Tang <geliang@kernel.org>, MPTCP Upstream <mptcp@lists.linux.dev>
-References: <20260130-mptcp-fix-kdoc-v1-1-a391da37f1ad@kernel.org>
- <186516ed4c548c2a35584153c5f995a205064725.camel@kernel.org>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <186516ed4c548c2a35584153c5f995a205064725.camel@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260121192729.2095aa25@kernel.org>
 
-Hi Geliang,
-
-On 30/01/2026 09:28, Geliang Tang wrote:
-> On Fri, 2026-01-30 at 08:52 +0100, Matthieu Baerts (NGI0) wrote:
->> The following warnings were visible:
-
-(...)
->> Address all of them: either by using the 'Return:' keyword, or by
->> adding
->> a missing initial short description.
->>
->> The MPTCP CI will soon report issues with kdoc to avoid introducing
->> new
->> issues and being flagged by the Netdev CI.
->>
->> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+On Wed, Jan 21, 2026 at 07:27:29PM -0800, Jakub Kicinski wrote:
+> On Tue, 20 Jan 2026 15:10:30 +0100 Thomas Weißschuh wrote:
+> > Various UAPI headers reference 'struct sockaddr'. Currently the
+> > definition of this struct is pulled in from the libc header
+> > sys/socket.h. This is problematic as it introduces a dependency
+> > on a full userspace toolchain.
+> > 
+> > Add a definition of 'struct sockaddr' to the UAPI headers.
+> > Before that, reorder some problematic header inclusions in the selftests.
 > 
-> Looks good to me.
+> >  include/linux/socket.h                             | 10 ----------
+> >  include/uapi/linux/if.h                            |  4 ----
+> >  include/uapi/linux/libc-compat.h                   | 12 ++++++++++++
+> >  include/uapi/linux/socket.h                        | 14 ++++++++++++++
+> >  samples/bpf/xdp_adjust_tail_user.c                 |  6 ++++--
+> >  samples/bpf/xdp_fwd_user.c                         |  7 ++++---
+> >  samples/bpf/xdp_router_ipv4_user.c                 |  6 +++---
+> >  samples/bpf/xdp_sample_user.c                      | 15 ++++++++-------
+> >  samples/bpf/xdp_tx_iptunnel_user.c                 |  4 ++--
+> >  tools/testing/selftests/landlock/audit.h           |  7 ++++---
+> >  tools/testing/selftests/net/af_unix/diag_uid.c     |  9 +++++----
+> >  tools/testing/selftests/net/busy_poller.c          |  3 ++-
+> >  tools/testing/selftests/net/mptcp/mptcp_diag.c     | 11 ++++++-----
+> >  tools/testing/selftests/net/nettest.c              |  4 ++--
+> >  tools/testing/selftests/net/tcp_ao/icmps-discard.c |  6 +++---
+> >  tools/testing/selftests/net/tcp_ao/lib/netlink.c   |  9 +++++----
+> >  tools/testing/selftests/net/tun.c                  |  5 +++--
+> >  17 files changed, 77 insertions(+), 55 deletions(-)
+> 
+> Are all those selftests / samples getting broken by this patch set?
 
-Thank you for the review!
+Yes.
 
-Note that the CI now checks these warnings, e.g.:
+Some of them get broken by the new 'struct sockaddr', but some others are
+already broken just by the new transitive inclusion of libc-compat.h.
+So any header starting to use the compatibility machinery may trigger breakage
+in code including UAPI headers before libc header, even for completely new type
+definitions which themselves would not conflict with libc.
 
-https://github.com/multipath-tcp/mptcp_net-next/actions/runs/21509881177
+> I understand that we should avoid libc dependencies in uAPI but at
+> least speaking for networking - building selftests without libc is..
+> not a practical proposition?
+
+I am not sure I understand. Some sort of libc will always be necessary.
+And as the selftests are intended to exercise the low-level kernel APIs,
+even those not supported by libc, the UAPI headers will also be necessary.
+
+There is nolibc (tools/include/nolibc/) which is using the UAPI headers in
+most cases, and aims to be compatible. And can be and already is used for
+selftests, but it will be too limited for all of the networking selftests.
+(Disclaimer: I am maintaining nolibc)
+
+My goal is *not* to make the different headers less compatible on purpose.
+But by removing the existing dependencies we can now enforce the checks in
+CONFIG_UAPI_HEADER_TEST to prevent any new ones from creeping in. Therefore
+preventing compatiblity issues in any new UAPI.
 
 
-Now in our tree:
-
-New patches for t/upstream:
-- 3d0ed4124117: mptcp: fix kdoc warnings
-- Results: 803afbaeada9..50e7f60d4f2a (export)
-
-Tests are now in progress:
-
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/9538a224bbca2b776a98b1384c7b8b0156e5dc89/checks
-
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
-
+Thomas
