@@ -1,121 +1,78 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD9E233EAED
-	for <mptcp@lists.linux.dev>; Fri, 30 Jan 2026 10:41:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9F58369980
+	for <mptcp@lists.linux.dev>; Fri, 30 Jan 2026 10:43:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769769713; cv=none; b=Mr1tjlN8tXJN9YD06dWdXAF2GVlitfflqf0vmDrTzR20QXR9R+6BLjBM/e3Y+caz40zzADgoQMJcz++QOtmiYsLNlS1SY0h8qjh8efSRWY+Z1pszK0/m7Kcd/ppMUiY+PWGXk0ylk24dLiG/itOc5z2YKwpYRG5YdjnbMC8EcBU=
+	t=1769769799; cv=none; b=BsDbrpz6fNVVVQz4wjDl7/G14SRrvxfJljb7MmuWP7DieJ/IDCcOGiD9T6CAC5JHlCh4QRtLlNUKbJxqepPcXtORRyM4soER/Ysk+hIQ9TZxjSOxLKRvJZMhJFYMQdtFYXYSCdOdfUpndCHWgkW0QWDKV+XMfY4VwaxBAWMqUg4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769769713; c=relaxed/simple;
-	bh=9p2s3JWOU8kdTRJh7N52ImRA8XEN1D0aFZM43ORgHwQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=fofklkUTYJycJseb/EnDoQ3xrBdnDIy+/01nFy7xaRv8uTloVdVyDNzvWCdNfty+sn0hqM58tsvAfulHREdZd6+1Ap9asiSUr0bdceDooFJlbmU09Q/SR3i6SbDrpf4xOf5mtrNQ2qJG2QLHuDdrqLj4rlCZvavx6K5kP3WR4GY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=roN7WR8k; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1769769799; c=relaxed/simple;
+	bh=BI+h+xFYnGQe/6p7JwmYZmJXqgwXc8nMyzoeio9UZ/I=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NzxZFP94YAqt9g/Yr2n9UVJjfyr3uCVxbQVDeINqmYVmxBQOOkkV/VzlMztllQJLaxaKhuruoYaj1avOHsXuC+YZ9nnLHecJS3AgacFZjok/OVGUFBT/oOURRSHNlJOTaVXlaLZ+6soMwJzrnOFWRbgrDou+zN0uZHkLQrzXQgA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ozkH0mex; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="roN7WR8k"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 850F8C4CEF7;
-	Fri, 30 Jan 2026 10:41:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ozkH0mex"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3938EC4CEF7;
+	Fri, 30 Jan 2026 10:43:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769769713;
-	bh=9p2s3JWOU8kdTRJh7N52ImRA8XEN1D0aFZM43ORgHwQ=;
-	h=From:Date:Subject:To:Cc:From;
-	b=roN7WR8kN0px2oS6JsbzLNPhNyL1V7UXx/SIyqQryWLWfmhGje1E2FsZcDGHwYoxA
-	 RrmOkpm4EBto6tNvWFh9B6J9VyG2ibeAI2j2qe2K42XkKcd3lxlbgvfg0pm2kOQTPd
-	 sk4maZqxHM81oCExfLLY4qPzA4ySc9FLq1FsMEf1olUq2tFa2FVtMeiu04TK5uqAgc
-	 Tm0pEgod78tvkLN6tCgVvuZk760qQJCKuUi2G/5sCOE9Igzw2h31Ydjc5e8FLpghNp
-	 OD+ax1qamR7ggHsKJ91d1UdWXfH65Lm6IgauDVgd11IFdYtjLA5BvCj1bOzDijx0YW
-	 vIyEy3VFARHqg==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Fri, 30 Jan 2026 11:41:43 +0100
-Subject: [PATCH mptcp-next] selftests: mptcp: diag: sort all #include
+	s=k20201202; t=1769769798;
+	bh=BI+h+xFYnGQe/6p7JwmYZmJXqgwXc8nMyzoeio9UZ/I=;
+	h=From:To:Cc:Subject:Date:From;
+	b=ozkH0mexRJLMZ5ivBr/p3gCmjz6l3kQNlkmq6iIzoRM/A3HSTZM+whBbtU8spIZWp
+	 oDRc83lY1NetPnphsgYMOAk/aNMsi5+g+lIANq0l2vdgVTlnxaWsud/+Cz8V/E+9mz
+	 pFOd8u5ltcDM5bpsRGELOTHCxpTsn4EEo3idg8DFk9g1fh4YklS0r2bTXpF/Weo4TM
+	 eZlgBGVyE7r0q2a6v2C73iw2Up5qiHasGzPLuAJ6x4ydzTcw71/kFERZbl1p/mFnrN
+	 UUo6EzymlemYYhpU6zcvHBIX3qwrEL9q5jb45LESMyJwc5FzeNo3UOpLRlwc6uZOLg
+	 DXmZgf7EYyxGA==
+From: Geliang Tang <geliang@kernel.org>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next] Squash to "selftests: mptcp: add splice io mode"
+Date: Fri, 30 Jan 2026 18:43:13 +0800
+Message-ID: <c24b6414ed2ec128f8ed00be9aa84e0a33c484e8.1769769757.git.tanggeliang@kylinos.cn>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260130-mptcp-sft-sort-includes-v1-1-ab022fad9741@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAOaKfGkC/yXMQQqDMBBA0avIrB1INEjtVYqLNJm0AzWGTCyCe
- HeDLv/i/R2EMpPAs9kh05+Fl1hDtw24r40fQva1oVPdoHSvcE7FJZRQUJZckKP7rZ4EH8Eba8z
- b6mGEqlOmwNt1fsGNIm0FpuM4AfZBGBN1AAAA
-X-Change-ID: 20260130-mptcp-sft-sort-includes-8fd4a44ba169
-To: MPTCP Upstream <mptcp@lists.linux.dev>
-Cc: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
- Gang Yan <yangang@kylinos.cn>, 
- "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1903; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=9p2s3JWOU8kdTRJh7N52ImRA8XEN1D0aFZM43ORgHwQ=;
- b=kA0DAAoWfCLwwvNHCpcByyZiAGl8ivCiGcM3C+KfSba3r3sSZCozHSU/Ti4NG1EHQTFtGDQxZ
- Ih1BAAWCgAdFiEEG4ZZb5nneg10Sk44fCLwwvNHCpcFAml8ivAACgkQfCLwwvNHCpdWDAEA4TcE
- msrRlMJxfvpMRyR919hN9ZnH+/sMJixF37JCh/gBALqqedEQGoK4Tx+7Ew8RIygfe96u2FwFJLB
- 2aNMqiAcD
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+Content-Transfer-Encoding: 8bit
 
-This file is the only one from this directory not to have all these
-header inclusions sorted by type and alphabetical order.
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Adapt them, to ease the reading, prevent conflicts during potential
-future backport modifying these lines, and also to avoid having UAPI
-header inclusions before libc ones, see [1].
+Check the return value of splice().
 
-Link: https://lore.kernel.org/20260120-uapi-sockaddr-v2-1-63c319111cf6@linutronix.de
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- tools/testing/selftests/net/mptcp/mptcp_diag.c | 29 ++++++++++++++------------
- 1 file changed, 16 insertions(+), 13 deletions(-)
+ tools/testing/selftests/net/mptcp/mptcp_connect.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_diag.c b/tools/testing/selftests/net/mptcp/mptcp_diag.c
-index 8e0b1b8d84b6..5e222ba977e4 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_diag.c
-+++ b/tools/testing/selftests/net/mptcp/mptcp_diag.c
-@@ -1,21 +1,24 @@
- // SPDX-License-Identifier: GPL-2.0
- /* Copyright (c) 2025, Kylin Software */
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+index ff1a298d3469..aaa2248ac76e 100644
+--- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
++++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+@@ -947,14 +947,16 @@ static int do_splice(const int infd, const int outfd, const size_t len,
+ 	while ((bytes = splice(infd, NULL, pipefd[1], NULL,
+ 			       len - winfo->total_len,
+ 			       SPLICE_F_MOVE | SPLICE_F_MORE)) > 0) {
+-		splice(pipefd[0], NULL, outfd, NULL, bytes,
+-		       SPLICE_F_MOVE | SPLICE_F_MORE);
++		bytes = splice(pipefd[0], NULL, outfd, NULL, bytes,
++			       SPLICE_F_MOVE | SPLICE_F_MORE);
++		if (bytes <= 0)
++			break;
+ 	}
  
--#include <linux/sock_diag.h>
--#include <linux/rtnetlink.h>
--#include <linux/inet_diag.h>
--#include <linux/netlink.h>
--#include <linux/compiler.h>
--#include <sys/socket.h>
--#include <netinet/in.h>
--#include <linux/tcp.h>
--#include <arpa/inet.h>
--
--#include <unistd.h>
--#include <stdlib.h>
--#include <string.h>
- #include <errno.h>
- #include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <unistd.h>
-+
-+#include <sys/socket.h>
-+
-+#include <arpa/inet.h>
-+
-+#include <netinet/in.h>
-+
-+#include <linux/compiler.h>
-+#include <linux/inet_diag.h>
-+#include <linux/netlink.h>
-+#include <linux/rtnetlink.h>
-+#include <linux/sock_diag.h>
-+#include <linux/tcp.h>
+ 	close(pipefd[0]);
+ 	close(pipefd[1]);
  
- #ifndef IPPROTO_MPTCP
- #define IPPROTO_MPTCP 262
-
----
-base-commit: 50e7f60d4f2aecec1adf329735dd16a88d7d494a
-change-id: 20260130-mptcp-sft-sort-includes-8fd4a44ba169
-
-Best regards,
+-	return 0;
++	return bytes < 0 ? bytes : 0;
+ }
+ 
+ static int copyfd_io_splice(int infd, int peerfd, int outfd, unsigned int size,
 -- 
-Matthieu Baerts (NGI0) <matttbe@kernel.org>
+2.51.0
 
