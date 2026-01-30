@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA0C42D2390
-	for <mptcp@lists.linux.dev>; Fri, 30 Jan 2026 18:45:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF9CD385EC3
+	for <mptcp@lists.linux.dev>; Fri, 30 Jan 2026 18:50:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769798743; cv=none; b=h7N/cVNLQJqqWJfXBp71x5pCgf+N84UTgRRJi34B2Xx/ztwgEfjfFCE6/sbqAs6DHkBcExMwT5fI8+DcWIZwI+Ivkaj171ABlrBIQN4Kkl1AuAnK7JcJxl+X0263YN8IoTHAQf67cUxhErwUaWzQduIiJzO+Sv+a0v0AXol9+C8=
+	t=1769799041; cv=none; b=AseQmlOzfB+etnOTnl8BTQry0Ynv0o9NGaxIAVQfcdrOPac2LYCNhl5X0zuhBOEbVYs3Spxbf3sv9jmx+lsMMv6kRhxOLIXGU3Dh+X593rc2K84Gm2eOar89Vi6oN12J2h/aeDLMB5uC+DS5kZzI0A/D5TalJYMgsVE4S4DTHmg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769798743; c=relaxed/simple;
-	bh=DizcSTtn8sXAUfi+2ScBYc83LlXLPoGkAYvom1Ym3TY=;
+	s=arc-20240116; t=1769799041; c=relaxed/simple;
+	bh=0X35wex6AtaahDOHPjJI5KV64cju7ngQd9yLnBYyB94=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=cS3Xrewm0lDAfJnL9tqDf4IKpNPcYhipKvEGcrZIWD9LM1UrDVsh6WaY3oVEuzgqY95rM9JEnlDgjnUeNaByVIvxB5KoknGAk8NlSw2VNbt+jFj9mWNiF5bTgb25zlX44o1AFVfpnZKcNtwxXSFesTMEG2b+80aywu4n+KE+ASo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Oz2oYydU; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=ZIlJ3dF4ZuSJwmQdfu/ZWhQJBvKtPqoijP+99K78dzF2F9AnuC28iCBM2FbjXnJXIamSDRxY74nM02FtZs/w5xBLvAPM4Ka1heLs7t0lQucKe9INObGWPzYMq4z1z6ef2ieCEqPhdp2VfDry0ZPS8bSvecdOFmM6xqhdLgSiaeA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G6xTvLU5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Oz2oYydU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F4F1C4CEF7;
-	Fri, 30 Jan 2026 18:45:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G6xTvLU5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24494C4CEF7
+	for <mptcp@lists.linux.dev>; Fri, 30 Jan 2026 18:50:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769798742;
-	bh=DizcSTtn8sXAUfi+2ScBYc83LlXLPoGkAYvom1Ym3TY=;
+	s=k20201202; t=1769799041;
+	bh=0X35wex6AtaahDOHPjJI5KV64cju7ngQd9yLnBYyB94=;
 	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=Oz2oYydUn/0mAAvyAyLH7abiRo0TM3DOJ+LdpS94pJ3g2vfVuEaYeKYaHtTN3TsMF
-	 RfhPhxNpHuZqwtfH1bCnSZejgyBOrMW955x3toZSPJ9CJ4xyJL2zEeU+vvkg2mPans
-	 29AlD9TJzDrY2g4gvb83L8PkaQwiMm1XtsYkAUmRxic+a0SslRQkuJU48nCQmdXgUU
-	 eSqTIwAGMrEZ6hKZCOkpXKmCcppm4enKCoLDD1drduTUUYjEap+d+kcCKgECZbnvkX
-	 342auON0PrMxpAByD4rD7GQpQJv/p8CnRP5F+TEPduzJLiEEU4NPJGaGifRZQdOm0F
-	 s0zRKJoaZ2lvA==
-Message-ID: <3f4e0974-c14e-4820-a018-0acd12d8204f@kernel.org>
-Date: Fri, 30 Jan 2026 19:45:40 +0100
+	b=G6xTvLU5JviIpEiMDrgrNz5xTxu+OCmxA+bGe24Jr8eNmvehRVha+pvcmgou49r3B
+	 /pND28DyOqSv9F3YcPkHKDKcfc2QEov1ctCzsRPhHAaV8DBCsswwhzBgadiFRt/z6d
+	 D1oYmEV4h/jYzU3T57AIDaPQahoCp9lHzF+H8PZpur9lnEwR66PiSJQEGSivmzOM91
+	 QK/lXPAXTJfMWs8i6EpcFPMCWZmznQcu4WRMc+jXa2B/d1NscEhimacRBN7wPhNtlP
+	 UbVCHJTEsspx8BnNpUOjg6jlmWIwoMbAGG29IoaNvilM25U6RvGIVozYQWpWq7yZgN
+	 GjJ6qsjP6r1ZA==
+Message-ID: <a24afc64-7884-452b-af04-348884cc8e8b@kernel.org>
+Date: Fri, 30 Jan 2026 19:50:39 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,11 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next] Squash to "selftests: mptcp: add splice io
- mode"
+Subject: Re: [PATCH mptcp-next] DO-NOT-MERGE: mark some simult flows tests as
+ flaky
 Content-Language: en-GB, fr-BE
-To: Geliang Tang <geliang@kernel.org>, MPTCP Upstream <mptcp@lists.linux.dev>
-References: <20260130-mptcp-sft-no-ignore-splice-err-v1-1-af0a458b6ec8@kernel.org>
- <e0ee5fe14cf45ac2af67b510ee0810c8a20da105.camel@kernel.org>
+To: MPTCP Linux <mptcp@lists.linux.dev>
+References: <20260130-mptcp-issue-607-tmp-fix-v1-1-c7fbfa0c2915@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,67 +85,37 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <e0ee5fe14cf45ac2af67b510ee0810c8a20da105.camel@kernel.org>
+In-Reply-To: <20260130-mptcp-issue-607-tmp-fix-v1-1-c7fbfa0c2915@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+Hello,
 
-On 30/01/2026 14:46, Geliang Tang wrote:
-> Hi Matt,
+On 30/01/2026 19:39, Matthieu Baerts (NGI0) wrote:
+> This is just to reduce the noise while we are working a solution for
+> issue 607:
 > 
-> Thanks for this fix.
+>   selftests: simult_flows: "unbalanced bwidth with opposed, unbalanced
+>   delay" (+ "reverse direction") are unstable
 > 
-> On Fri, 2026-01-30 at 11:17 +0100, Matthieu Baerts (NGI0) wrote:
->> NIPA review assistant rightly spotted errors with splice() are
->> simply...
->> ignored! Technically, mptcp_connect.sh will check the integrity of
->> the
->> transfer, but still, that's clearly not a good practice!
->>
->> The different possible errors are now caught, printed, and reported
->> to
->> the caller.
->>
->> Link:
->> https://netdev-ai.bots.linux.dev/ai-review.html?id=93466fc9-574b-45fc-996e-13a19a1490a9
->> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> Suggested by Paolo: commit "mptcp: better mptcp-level RTT estimator" is
+> probably correct, but likely it uncovers some underlying issues (in ack
+> generation?).
 > 
-> Looks good to me!
-> 
-> Reviewed-by: Geliang Tang <geliang@kernel.org>
-> 
->> ---
->>  tools/testing/selftests/net/mptcp/mptcp_connect.c | 34
->> +++++++++++++++++------
->>  1 file changed, 25 insertions(+), 9 deletions(-)
->>
->> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c
->> b/tools/testing/selftests/net/mptcp/mptcp_connect.c
->> index ff1a298d3469..34d8efe429a4 100644
->> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
->> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
->> @@ -937,24 +937,40 @@ static int do_splice(const int infd, const int
->> outfd, const size_t len,
->>  		     struct wstate *winfo)
->>  {
->>  	int pipefd[2];
->> -	ssize_t bytes;
->> +	ssize_t in_bytes, out_bytes;
-> 
-> This line is longer than the previous one; their positions could be
-> swapped.
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> ---
+> To be placed just after/before the commit causing the instabilities.
 
-Good point, I missed that. I just fixed that when applying the patch.
+FYI, I just applied the patch:
 
 New patches for t/upstream:
-- f09f3f41e540: Squash to "selftests: mptcp: add splice io mode"
-- Results: 50e7f60d4f2a..6f5b41319f11 (export)
+- 87173196aabf: DO-NOT-MERGE: mark some simult flows tests as flaky
+- Results: 6f5b41319f11..847c469e539c (export)
 
 Tests are now in progress:
 
 - export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/e34e5e3567f9b0fc679d6e6778c749684db62186/checks
+https://github.com/multipath-tcp/mptcp_net-next/commit/a8ef10a37d4254bf9b07108ccd01a4b7b35fc5b5/checks
 
 Cheers,
 Matt
