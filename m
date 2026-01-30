@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF9CD385EC3
-	for <mptcp@lists.linux.dev>; Fri, 30 Jan 2026 18:50:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE71A2FDC5C
+	for <mptcp@lists.linux.dev>; Fri, 30 Jan 2026 18:54:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769799041; cv=none; b=AseQmlOzfB+etnOTnl8BTQry0Ynv0o9NGaxIAVQfcdrOPac2LYCNhl5X0zuhBOEbVYs3Spxbf3sv9jmx+lsMMv6kRhxOLIXGU3Dh+X593rc2K84Gm2eOar89Vi6oN12J2h/aeDLMB5uC+DS5kZzI0A/D5TalJYMgsVE4S4DTHmg=
+	t=1769799299; cv=none; b=FejzA2OUMKTvL0xlbhr52Hj8hQlOzZx64XW/7YU0Y/oXaPs5sM1IOJuFv9MdV/Vl8jWbosrC7JIitq6S+TX9utwMvIUBtX7Q9EHUzcoGZkHyK2/J/f31Ho/G3wTx78tFyxVeM+kIXHS35OucyT11jQVBAov0JXsdklWrNEcO3Ko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769799041; c=relaxed/simple;
-	bh=0X35wex6AtaahDOHPjJI5KV64cju7ngQd9yLnBYyB94=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=ZIlJ3dF4ZuSJwmQdfu/ZWhQJBvKtPqoijP+99K78dzF2F9AnuC28iCBM2FbjXnJXIamSDRxY74nM02FtZs/w5xBLvAPM4Ka1heLs7t0lQucKe9INObGWPzYMq4z1z6ef2ieCEqPhdp2VfDry0ZPS8bSvecdOFmM6xqhdLgSiaeA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G6xTvLU5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1769799299; c=relaxed/simple;
+	bh=UxR7izAyr3UmU2VgzUGKn+o6BW2+62GB45d7QfXMQAo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kHoeNUvIJgcH+HsWr8VIIDhCC6hfG5+ie3Q3scuDLXYv8iB+uzMbvDx0xA1cnAuAAFSlAVHbpbIlGOtWL1Z00JycTk3mKb7Y9d6Ct8YaTY9ZgbK8oMzrKB3kb/lYX3exFRDkOhUGxZGp+JRHhzWopRFFC7hUN6F+PYKosA11YN8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qJUqfQcF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G6xTvLU5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24494C4CEF7
-	for <mptcp@lists.linux.dev>; Fri, 30 Jan 2026 18:50:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qJUqfQcF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 505F9C4CEF7;
+	Fri, 30 Jan 2026 18:54:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769799041;
-	bh=0X35wex6AtaahDOHPjJI5KV64cju7ngQd9yLnBYyB94=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=G6xTvLU5JviIpEiMDrgrNz5xTxu+OCmxA+bGe24Jr8eNmvehRVha+pvcmgou49r3B
-	 /pND28DyOqSv9F3YcPkHKDKcfc2QEov1ctCzsRPhHAaV8DBCsswwhzBgadiFRt/z6d
-	 D1oYmEV4h/jYzU3T57AIDaPQahoCp9lHzF+H8PZpur9lnEwR66PiSJQEGSivmzOM91
-	 QK/lXPAXTJfMWs8i6EpcFPMCWZmznQcu4WRMc+jXa2B/d1NscEhimacRBN7wPhNtlP
-	 UbVCHJTEsspx8BnNpUOjg6jlmWIwoMbAGG29IoaNvilM25U6RvGIVozYQWpWq7yZgN
-	 GjJ6qsjP6r1ZA==
-Message-ID: <a24afc64-7884-452b-af04-348884cc8e8b@kernel.org>
-Date: Fri, 30 Jan 2026 19:50:39 +0100
+	s=k20201202; t=1769799299;
+	bh=UxR7izAyr3UmU2VgzUGKn+o6BW2+62GB45d7QfXMQAo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=qJUqfQcF6WVCuL6axG98zcsxq7P5tM6tqMB4vCC5TZgCkbmaf72pS128NXl52C3hN
+	 uuDnYIu/j2M4T9OvrRXAA55M701YyOmz88GZk5CePoZYlNQFnSULDqDzpe7CfYsa8m
+	 0OeEzHVuGpgIS5Dc6ldHf8kZxRMAFrIjZo6Wzo5JHl2FrIwSLAPlj56ViUUJpOrWrr
+	 LqbgdtWnWFRTBjA6Iflut15+7Fw4LuQONpF+LmDWghdcSTQfVEOtJk2+5dme+6YS9a
+	 GpHv+CrB4hgPztX2Z6mQvcfVrZ4hkokWAVTllTwuEUz9v2OUjGq3ekKCJFpJGoBd7k
+	 OoEWNv2XGhmtw==
+Message-ID: <97558e02-8fac-4970-8597-bc4ffe4f178f@kernel.org>
+Date: Fri, 30 Jan 2026 19:54:56 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,11 +35,14 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next] DO-NOT-MERGE: mark some simult flows tests as
- flaky
+Subject: Re: [PATCH mptcp-next] selftests: mptcp: diag: sort all #include
 Content-Language: en-GB, fr-BE
-To: MPTCP Linux <mptcp@lists.linux.dev>
-References: <20260130-mptcp-issue-607-tmp-fix-v1-1-c7fbfa0c2915@kernel.org>
+To: Geliang Tang <geliang@kernel.org>,
+ =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+Cc: MPTCP Upstream <mptcp@lists.linux.dev>, Gang Yan <yangang@kylinos.cn>
+References: <20260130-mptcp-sft-sort-includes-v1-1-ab022fad9741@kernel.org>
+ <20260130115218-0bdb243f-819d-46aa-a7cb-fd43fefccb8d@linutronix.de>
+ <e13a0b73a01583e614e2b7e116075a24d9178472.camel@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -85,37 +88,48 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20260130-mptcp-issue-607-tmp-fix-v1-1-c7fbfa0c2915@kernel.org>
+In-Reply-To: <e13a0b73a01583e614e2b7e116075a24d9178472.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hello,
+Hi Geliang, Thomas,
 
-On 30/01/2026 19:39, Matthieu Baerts (NGI0) wrote:
-> This is just to reduce the noise while we are working a solution for
-> issue 607:
+On 30/01/2026 14:50, Geliang Tang wrote:
+> On Fri, 2026-01-30 at 11:53 +0100, Thomas Weißschuh wrote:
+>> On Fri, Jan 30, 2026 at 11:41:43AM +0100, Matthieu Baerts (NGI0)
+>> wrote:
+>>> This file is the only one from this directory not to have all these
+>>> header inclusions sorted by type and alphabetical order.
+>>>
+>>> Adapt them, to ease the reading, prevent conflicts during potential
+>>> future backport modifying these lines, and also to avoid having
+>>> UAPI
+>>> header inclusions before libc ones, see [1].
+>>>
+>>> Link:
+>>> https://lore.kernel.org/20260120-uapi-sockaddr-v2-1-63c319111cf6@linutronix.de
+>>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+>>
+>> Thanks!
+>>
+>> Reviewed-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 > 
->   selftests: simult_flows: "unbalanced bwidth with opposed, unbalanced
->   delay" (+ "reverse direction") are unstable
+> Looks good to me too!
 > 
-> Suggested by Paolo: commit "mptcp: better mptcp-level RTT estimator" is
-> probably correct, but likely it uncovers some underlying issues (in ack
-> generation?).
-> 
-> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> ---
-> To be placed just after/before the commit causing the instabilities.
+>     Reviewed-by: Geliang Tang <geliang@kernel.org>
 
-FYI, I just applied the patch:
+Thank you for the reviews!
+
+Now in our tree:
 
 New patches for t/upstream:
-- 87173196aabf: DO-NOT-MERGE: mark some simult flows tests as flaky
-- Results: 6f5b41319f11..847c469e539c (export)
+- 463bdbb2c21d: selftests: mptcp: diag: sort all #include
+- Results: 847c469e539c..1f27d14ad280 (export)
 
 Tests are now in progress:
 
 - export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/a8ef10a37d4254bf9b07108ccd01a4b7b35fc5b5/checks
+https://github.com/multipath-tcp/mptcp_net-next/commit/d713fc185b84b7e4f02beff96022692bce694318/checks
 
 Cheers,
 Matt
