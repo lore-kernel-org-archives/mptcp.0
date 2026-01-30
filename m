@@ -1,126 +1,121 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8208936C5A4;
-	Fri, 30 Jan 2026 10:39:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD9E233EAED
+	for <mptcp@lists.linux.dev>; Fri, 30 Jan 2026 10:41:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769769586; cv=none; b=bacam/o9R8zbcNF5M60JjJOXE/QJ4yuSFjerGdT+3l+IffYi4oF7Fee5fuCan10l9PomVtAjFdu45/7asjsZGJxdaSnlSLkmxJfKUoPBJ9P8vzAQ2DUgpKJ0tSWPuHWwuiu027+6NeWIVDxMAND5esSzg2Js1r1KrmAwh4SJmuY=
+	t=1769769713; cv=none; b=Mr1tjlN8tXJN9YD06dWdXAF2GVlitfflqf0vmDrTzR20QXR9R+6BLjBM/e3Y+caz40zzADgoQMJcz++QOtmiYsLNlS1SY0h8qjh8efSRWY+Z1pszK0/m7Kcd/ppMUiY+PWGXk0ylk24dLiG/itOc5z2YKwpYRG5YdjnbMC8EcBU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769769586; c=relaxed/simple;
-	bh=HqLf5fAjj919LYQEQ3fjjogDmxa6wbUD8HUVCT6MfUA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=U7CHvIChRNOKWstSVflYfoX7kCuA5Hvp34W3KFTASPpNW/4cesylBNftjbXT2d0njTinrcbVXVdUghm85ciBn+YEsvMti0tUodzKKWUKaMPqLMIXs+YEOjESdmo2Wbmdt7F+DxzmPwef5iTQKtTO0Io2+eUNColXucqamd7/Lx8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VnnDBNO/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1769769713; c=relaxed/simple;
+	bh=9p2s3JWOU8kdTRJh7N52ImRA8XEN1D0aFZM43ORgHwQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=fofklkUTYJycJseb/EnDoQ3xrBdnDIy+/01nFy7xaRv8uTloVdVyDNzvWCdNfty+sn0hqM58tsvAfulHREdZd6+1Ap9asiSUr0bdceDooFJlbmU09Q/SR3i6SbDrpf4xOf5mtrNQ2qJG2QLHuDdrqLj4rlCZvavx6K5kP3WR4GY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=roN7WR8k; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VnnDBNO/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32D9FC19421;
-	Fri, 30 Jan 2026 10:39:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="roN7WR8k"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 850F8C4CEF7;
+	Fri, 30 Jan 2026 10:41:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769769586;
-	bh=HqLf5fAjj919LYQEQ3fjjogDmxa6wbUD8HUVCT6MfUA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=VnnDBNO/kG2fkcp9Rl0DaqlUw5pFJlYqqcbpgzlUaHW4PzNtYccnPo0uIYS0Z7QuC
-	 Cd/cXSRgptBXYilva4FihsbhIDFZSjDZLw6MooWAVvS+32V19BXNzesZomdNLjPIEM
-	 8bo2lgqs7UElyJR0mDi4cL9bOd8exIVb4cVgluUDkj+sWnRwXWrV/UR9LANR4YRXkO
-	 kD4E3E4miFzn8uTZ2k48zjckL5m2aNdrtabcI3vooDqf2aiQYaNpoEYHPCnL0jnm4p
-	 7sRuyYFE+1DAeBzUIL6SpgJCbErzHomCIEgUjeyVNmfhaoHOx7ZcOzLHEJHlSTJF0b
-	 hKi7lIMZ3X1Ew==
-Message-ID: <4e88f7b1-65bd-47e1-9875-03002bafdd04@kernel.org>
-Date: Fri, 30 Jan 2026 11:39:41 +0100
+	s=k20201202; t=1769769713;
+	bh=9p2s3JWOU8kdTRJh7N52ImRA8XEN1D0aFZM43ORgHwQ=;
+	h=From:Date:Subject:To:Cc:From;
+	b=roN7WR8kN0px2oS6JsbzLNPhNyL1V7UXx/SIyqQryWLWfmhGje1E2FsZcDGHwYoxA
+	 RrmOkpm4EBto6tNvWFh9B6J9VyG2ibeAI2j2qe2K42XkKcd3lxlbgvfg0pm2kOQTPd
+	 sk4maZqxHM81oCExfLLY4qPzA4ySc9FLq1FsMEf1olUq2tFa2FVtMeiu04TK5uqAgc
+	 Tm0pEgod78tvkLN6tCgVvuZk760qQJCKuUi2G/5sCOE9Igzw2h31Ydjc5e8FLpghNp
+	 OD+ax1qamR7ggHsKJ91d1UdWXfH65Lm6IgauDVgd11IFdYtjLA5BvCj1bOzDijx0YW
+	 vIyEy3VFARHqg==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Date: Fri, 30 Jan 2026 11:41:43 +0100
+Subject: [PATCH mptcp-next] selftests: mptcp: diag: sort all #include
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v2 1/4] selftests: net: Move some UAPI header
- inclusions after libc ones
-Content-Language: en-GB, fr-BE
-To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-api@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
- linux-kselftest@vger.kernel.org, mptcp@lists.linux.dev,
- linux-security-module@vger.kernel.org, bpf@vger.kernel.org,
- libc-alpha@sourceware.org
-References: <20260120-uapi-sockaddr-v2-0-63c319111cf6@linutronix.de>
- <20260120-uapi-sockaddr-v2-1-63c319111cf6@linutronix.de>
- <4e673f7f-c49c-46b0-85b4-bae6e4efcb3a@kernel.org>
- <20260130111949-4b4eb870-6df7-4026-a48c-730fa8660ad6@linutronix.de>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <20260130111949-4b4eb870-6df7-4026-a48c-730fa8660ad6@linutronix.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260130-mptcp-sft-sort-includes-v1-1-ab022fad9741@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAOaKfGkC/yXMQQqDMBBA0avIrB1INEjtVYqLNJm0AzWGTCyCe
+ HeDLv/i/R2EMpPAs9kh05+Fl1hDtw24r40fQva1oVPdoHSvcE7FJZRQUJZckKP7rZ4EH8Eba8z
+ b6mGEqlOmwNt1fsGNIm0FpuM4AfZBGBN1AAAA
+X-Change-ID: 20260130-mptcp-sft-sort-includes-8fd4a44ba169
+To: MPTCP Upstream <mptcp@lists.linux.dev>
+Cc: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
+ Gang Yan <yangang@kylinos.cn>, 
+ "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1903; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=9p2s3JWOU8kdTRJh7N52ImRA8XEN1D0aFZM43ORgHwQ=;
+ b=kA0DAAoWfCLwwvNHCpcByyZiAGl8ivCiGcM3C+KfSba3r3sSZCozHSU/Ti4NG1EHQTFtGDQxZ
+ Ih1BAAWCgAdFiEEG4ZZb5nneg10Sk44fCLwwvNHCpcFAml8ivAACgkQfCLwwvNHCpdWDAEA4TcE
+ msrRlMJxfvpMRyR919hN9ZnH+/sMJixF37JCh/gBALqqedEQGoK4Tx+7Ew8RIygfe96u2FwFJLB
+ 2aNMqiAcD
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hi Thomas,
+This file is the only one from this directory not to have all these
+header inclusions sorted by type and alphabetical order.
 
-On 30/01/2026 11:22, Thomas Weißschuh wrote:
+Adapt them, to ease the reading, prevent conflicts during potential
+future backport modifying these lines, and also to avoid having UAPI
+header inclusions before libc ones, see [1].
 
-(...)
+Link: https://lore.kernel.org/20260120-uapi-sockaddr-v2-1-63c319111cf6@linutronix.de
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+ tools/testing/selftests/net/mptcp/mptcp_diag.c | 29 ++++++++++++++------------
+ 1 file changed, 16 insertions(+), 13 deletions(-)
 
->> Note that I just noticed this is the only file from this directory where
->> the "includes" are not sorted by type and alphabetical order, see
->> pm_nl_ctl.c as an example. A bit of a detail, but if you plan to send a
->> v2, do you mind doing that too here while at it, please?
-> 
-> I'll send a v3 during the next cycle.
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_diag.c b/tools/testing/selftests/net/mptcp/mptcp_diag.c
+index 8e0b1b8d84b6..5e222ba977e4 100644
+--- a/tools/testing/selftests/net/mptcp/mptcp_diag.c
++++ b/tools/testing/selftests/net/mptcp/mptcp_diag.c
+@@ -1,21 +1,24 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /* Copyright (c) 2025, Kylin Software */
+ 
+-#include <linux/sock_diag.h>
+-#include <linux/rtnetlink.h>
+-#include <linux/inet_diag.h>
+-#include <linux/netlink.h>
+-#include <linux/compiler.h>
+-#include <sys/socket.h>
+-#include <netinet/in.h>
+-#include <linux/tcp.h>
+-#include <arpa/inet.h>
+-
+-#include <unistd.h>
+-#include <stdlib.h>
+-#include <string.h>
+ #include <errno.h>
+ #include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++#include <unistd.h>
++
++#include <sys/socket.h>
++
++#include <arpa/inet.h>
++
++#include <netinet/in.h>
++
++#include <linux/compiler.h>
++#include <linux/inet_diag.h>
++#include <linux/netlink.h>
++#include <linux/rtnetlink.h>
++#include <linux/sock_diag.h>
++#include <linux/tcp.h>
+ 
+ #ifndef IPPROTO_MPTCP
+ #define IPPROTO_MPTCP 262
 
-Thanks!
->> If not, I can look at that later, but better to avoid doing that in
->> parallel.
-> 
-> If you want to fix this up already during this cycle,
-> that would also be most welcome.
+---
+base-commit: 50e7f60d4f2aecec1adf329735dd16a88d7d494a
+change-id: 20260130-mptcp-sft-sort-includes-8fd4a44ba169
 
-Sure, I can do that.
-
-Cheers,
-Matt
+Best regards,
 -- 
-Sponsored by the NGI0 Core fund.
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
