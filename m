@@ -1,41 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CEE42D7395
-	for <mptcp@lists.linux.dev>; Fri, 30 Jan 2026 13:54:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ABA12D5C8E
+	for <mptcp@lists.linux.dev>; Fri, 30 Jan 2026 13:56:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769781247; cv=none; b=t6Ge6ZGs1B/iLfhdsmUhatP2r+F1cuTXMFFaSzhgR/+tvvWugrJu7nTDDTAXOcH9xFuPL7UWlCWdfLLx9hyg7H8IzQ4OD3hzktTFJzDUZIi4pZBW81Umwp3m6OrowQtjEuFbxMTQvDkdLlGaJY4KpfRxHEYODhPEH1plnijOL8c=
+	t=1769781414; cv=none; b=YzhnTpN+ED4bySwR38x8GM9dmOMBs4rKCM6izmYJH2wfIoTJbU5wTj/p40boiOW5uOaO7Y0Hp8kPY4EB8VzvaPImZrne60m44lQzr8r4/q4U40GZT/9N0nFSdyFEjwnKou7343mkGuHQnbOSprZe0Qmp+Fd0sbYikso7Sj+g54E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769781247; c=relaxed/simple;
-	bh=homh0TA6eW0HLbyEpL0SYwezrAulzyJk5zAYoJfIpK8=;
+	s=arc-20240116; t=1769781414; c=relaxed/simple;
+	bh=2w59xjeAqvV8quWGqeEp9YcKKXMV434sEq5BRvXnvCU=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=XfjkUyp/wA+cq6IqtpIAZwABPn9pWOVraVAKH9SMiarnIYc8EkcFKuK1F0suzHS1dcZEx5J8hnl+x+g3METSL0JC2T9PhfvegckHGC3e27P9J1mxuSdERJUr0kSDfVI2obcooftkpAeZTrZxGLNmIhpQsWnq7noS1F/OYuAt1tA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZoqFc1Sg; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=VGfX4BeXX5QyF1VwJp1r+qXszX6upMHHAW6dFZrG+kcp2goCSAihbQ9jU1jadYLbUIsl6RxDRJbUjNhWOKNo+2cFRbWyWovtntIJxY1WcSGqqsJDLaAMfhCaynm/6rX9YpFEy8DkgU5VhzLqfo5T6Z28IrC9k1KLo+DDC7IEh7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C0A0MiIO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZoqFc1Sg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47EC2C4CEF7;
-	Fri, 30 Jan 2026 13:54:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C0A0MiIO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30C46C4CEF7;
+	Fri, 30 Jan 2026 13:56:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769781246;
-	bh=homh0TA6eW0HLbyEpL0SYwezrAulzyJk5zAYoJfIpK8=;
+	s=k20201202; t=1769781414;
+	bh=2w59xjeAqvV8quWGqeEp9YcKKXMV434sEq5BRvXnvCU=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=ZoqFc1SgKum32LsZpwe8QeOAUXdEjK6narUTWCstazIUQ80bqOX9aqSX+75/jl2MZ
-	 Ns/Pv2uzEv5KwtWAtDnPhTtn3A5vP8Jhcn2BaMOt7qpAczgRpECUBZe524UOzqqBv9
-	 D0KWNRjl9X1Gks/VOvWVW0S6QECQtOgOwTErf/TziM3oe84+sc19X9naPdPKAB6oKP
-	 JHRvzZafXPOiNP3Bn4awWGpL9v5SM8TX+NQaxX9Xat63Ks/d3faSfLnNle0/qyrflJ
-	 CHGRI3uZFZ1alfAqh1kh8/feoYBCc2SPXOs8B89Zdb67V8i7Qmu5Mtv5Ta8sTXUquk
-	 o8yVHhdenz0jg==
-Message-ID: <bfd9ef7479eb2696b8606ba1e34702303dd01fe1.camel@kernel.org>
-Subject: Re: [PATCH mptcp-next v15 4/6] mptcp: implement .splice_read
+	b=C0A0MiIOo0IYFjfdr8c95nKmrFMrjEfD24HDDIZqtuzQ8+G6h/1jZMYy1IoQ3ZQPo
+	 ol4LPGG0uXWj+WgEK9mTaZ3HD0RLNuL+J+os/mkSf6W+xQcxuHwHckqfLddyXTrgmW
+	 IFFVCc05owxgDJkT5udEJUCgu//iJm6FScI6LhzKlTySoYDIixVZJr3ncRTc+0i36P
+	 9BdiuQ6Pgt1Mi7yclVWlmn2X2WuyzW7f+54Q4OtMum2wy/9yAFRseti+4IguHvIoFU
+	 vkCwI0pvwxPVY+FiB96LJa8vbGrLU4RvBpOj0GUzZc365EZwHdvM4LW6h2pPkjEvbT
+	 RAgVV01w9iEug==
+Message-ID: <64366afe9fe353882f70b1d4bb17d0a15e3e6ac5.camel@kernel.org>
+Subject: Re: [PATCH mptcp-next] Squash to "selftests: mptcp: add splice io
+ mode"
 From: Geliang Tang <geliang@kernel.org>
 To: Matthieu Baerts <matttbe@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Date: Fri, 30 Jan 2026 21:54:03 +0800
-In-Reply-To: <24a4b887-393c-46af-9166-ab7b6c0e3762@kernel.org>
-References: <cover.1765023923.git.tanggeliang@kylinos.cn>
-	 <eb8faceedfba8da224fa5467dd80d0c7f99cfd3f.1765023923.git.tanggeliang@kylinos.cn>
-	 <24a4b887-393c-46af-9166-ab7b6c0e3762@kernel.org>
+Date: Fri, 30 Jan 2026 21:56:45 +0800
+In-Reply-To: <732e23f4-979e-4bc4-bae4-1cbf01aa21ec@kernel.org>
+References: 
+	<c24b6414ed2ec128f8ed00be9aa84e0a33c484e8.1769769757.git.tanggeliang@kylinos.cn>
+	 <732e23f4-979e-4bc4-bae4-1cbf01aa21ec@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 User-Agent: Evolution 3.56.2-4 
 Precedence: bulk
@@ -48,50 +49,75 @@ Content-Transfer-Encoding: 8bit
 
 Hi Matt,
 
-On Fri, 2026-01-30 at 08:19 +0100, Matthieu Baerts wrote:
-> Hi Geliang,
-> 
-> On 06/12/2025 13:33, Geliang Tang wrote:
-> > From: Geliang Tang <tanggeliang@kylinos.cn>
-> > 
-> > This patch implements .splice_read interface of mptcp struct
-> > proto_ops
-> > as mptcp_splice_read() with reference to tcp_splice_read().
-> > 
-> > Corresponding to __tcp_splice_read(), __mptcp_splice_read() is
-> > defined,
-> > invoking mptcp_read_sock() instead of tcp_read_sock().
-> > 
-> > mptcp_splice_read() is almost the same as tcp_splice_read(), except
-> > for
-> > sock_rps_record_flow().
-> 
-> (...)
-> 
-> > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> > index 01d602f0d556..334fdb10fdf3 100644
-> > --- a/net/mptcp/protocol.c
-> > +++ b/net/mptcp/protocol.c
-> 
-> (...)
-> 
-> > @@ -4423,6 +4535,7 @@ static const struct proto_ops
-> > mptcp_stream_ops = {
-> >  	.mmap		   = sock_no_mmap,
-> >  	.set_rcvlowat	   = mptcp_set_rcvlowat,
-> >  	.read_sock	   = mptcp_read_sock,
-> > +	.splice_read	   = mptcp_splice_read,
-> 
-> When looking at this patch in more details (after the issue with
-> kdoc),
-> I was wondering: is it not needed to also implement .splice_eof,
-> similar
-> to tcp_splice_eof()?
+I just noticed that you also submitted a squash-to patch to fix this
+issue. Your patch is better, so I've changed the status of this one to
+Rejected.
 
-Thanks for the reminder, I'll try to implement mptcp_splice_eof later.
-
+Thanks,
 -Geliang
 
+On Fri, 2026-01-30 at 11:50 +0100, Matthieu Baerts wrote:
+> Hi Geliang,
+> 
+> On 30/01/2026 11:43, Geliang Tang wrote:
+> > From: Geliang Tang <tanggeliang@kylinos.cn>
+> > 
+> > Check the return value of splice().
+> 
+> Thank you for looking at that.
+> 
+> > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> > ---
+> >  tools/testing/selftests/net/mptcp/mptcp_connect.c | 8 +++++---
+> >  1 file changed, 5 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c
+> > b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+> > index ff1a298d3469..aaa2248ac76e 100644
+> > --- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
+> > +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+> > @@ -947,14 +947,16 @@ static int do_splice(const int infd, const
+> > int outfd, const size_t len,
+> >  	while ((bytes = splice(infd, NULL, pipefd[1], NULL,
+> >  			       len - winfo->total_len,
+> >  			       SPLICE_F_MOVE | SPLICE_F_MORE)) >
+> > 0) {
+> > -		splice(pipefd[0], NULL, outfd, NULL, bytes,
+> > -		       SPLICE_F_MOVE | SPLICE_F_MORE);
+> > +		bytes = splice(pipefd[0], NULL, outfd, NULL,
+> > bytes,
+> > +			       SPLICE_F_MOVE | SPLICE_F_MORE);
+> > +		if (bytes <= 0)
+> > +			break;
+> 
+> Please check [1]: that's not enough: it is important to print the
+> error
+> to be able to find out what went wrong in case of error. Also, the
+> two
+> splice() should return the same value, and if "bytes" is 0 here,
+> that's
+> not normal.
+> 
+> [1]
+> https://lore.kernel.org/mptcp/20260130-mptcp-sft-no-ignore-splice-err-v1-1-af0a458b6ec8@kernel.org
+> 
+> >  	}
+> >  
+> >  	close(pipefd[0]);
+> >  	close(pipefd[1]);
+> >  
+> > -	return 0;
+> > +	return bytes < 0 ? bytes : 0;
+> 
+> The returned value is supposed to be positive (that's the exit
+> returned
+> value). Also, I don't think you are supposed to have bytes > 0 here,
+> no?
+> 
+> >  }
+> >  
+> >  static int copyfd_io_splice(int infd, int peerfd, int outfd,
+> > unsigned int size,
 > 
 > Cheers,
 > Matt
