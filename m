@@ -1,114 +1,126 @@
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55D6234B1A8
-	for <mptcp@lists.linux.dev>; Fri, 30 Jan 2026 20:18:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.178
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769804332; cv=pass; b=bGdRlZzFDWGQF8fScmslKXf8Loa59ViRS9rC52S/s+fQC05qImkhIRzzDmoPwSLTrFtq3K0UDL6S2sJM5IDNHmsyYZ435CWtGIPU82B6+V4rAyme0CgXY43Crw98OlA8DstpAOURB1jAJFrtuGXvTe+OMrGg1KEJN3K2H+vtSqo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769804332; c=relaxed/simple;
-	bh=nnNhbflpDXd0E2GUCIfx9K0B+gy+MkR5SSCXcr1p6RI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=f3fOwO3Nzv2C35cOJJX9qwku8AEG6aojDQZG+EOBsk1pHfThL5ggQgKgGV+/hL1CKLuvjCrT+AyxMS9KVOqz0o+rmzc3Fod2yOdm3Vod019590NxBi3XbP6/Zjia+W0CuAFmZnWtPdyJG6HjeiPbsQvjcM5xdXRGrfbP+g53IJY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JfqY8Eks; arc=pass smtp.client-ip=209.85.160.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C3B72DB7AD
+	for <mptcp@lists.linux.dev>; Sat, 31 Jan 2026 10:26:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1769855204; cv=none; b=rAGGL4irw/u/c2xh9s3ZLkq7bcQQZD3n8bXccw1Sdbhek89M0Tb5k2Dn+6RNvV1gNsLLMIGiCDjCLpCB4W7JhIOi3QICMn8ejQ5A8DsUlwPjApM3HiCerUtuGePn8gIrHeoypSBFg/9uWrjE300KyX5cziwqpPim0zSx2ugzCkk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1769855204; c=relaxed/simple;
+	bh=fSYUV7IS3o69dTdqJYCTCDDpkpgEmF9ZMQCatBCrxIY=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=PstHHjJ1DIEtlA3xO7/oN6p3z6qcnGUPwjmqzP4gy0f27NypuIJ2JkTgdf+Tpv1wa6PL6b2bxhc0eJJvosS/AKI/lF97t2e3ChXdhuEzgszN/zU66tmVLAojrERySmF7pmijecH9AiCR+16r09uqbSFEqyEO74MA1A2MSGgXGHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ujFcBGUs; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=o3Mf3maH; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JfqY8Eks"
-Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-502b0aa36feso30648591cf.1
-        for <mptcp@lists.linux.dev>; Fri, 30 Jan 2026 12:18:51 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1769804330; cv=none;
-        d=google.com; s=arc-20240605;
-        b=ecB8z99D+SekgMwIOzB76WNzsWzvr8t4WDQSJ7XQUBAi5qYe4MCckYadUZjLg6tpSQ
-         FuFBQgGZ9GiN0S8kspfhM7q4O1kwBrSJvxjrv4y3zY0/xK+qtkXPM/s2NsG8gsEQvkS/
-         yJmp614hHayKxmMSSIUv3CvQIN8yfXi2llm5ghteyoRzQW8ziUJlbTGtumtShO36puYn
-         B0l56AnvJ+zH2pwhmRMNgVU+1NZfkSuYUiCbiarotGEdCYs0l9gR6LPxzrvmouS6iLnH
-         Cv9vssvvvc9rRX6W9lGJaHQ4YNF0Xu9hUlRuGs5eBmQnYQLg9x1iMqBhbuTNglpM87kd
-         jPfQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=nnNhbflpDXd0E2GUCIfx9K0B+gy+MkR5SSCXcr1p6RI=;
-        fh=7ufmvr6tPJ5HP8IP6c/V4ud6qEJfsOFESWWy0MWq/5c=;
-        b=IXlznQPRs5pEBUj5LuaTMIDQjuFMqE637p1thAAbCeL8QoVA1WULQDH8YOrw3vW4Ro
-         aEsvaTW/8L90KX2Kh6iyhSJ6UE4CIfr+QJKw7jgbNlRatk9Adq+XJUE+kg4rvpApZrHJ
-         grFzN2aAV7tB0gLw8NYgCDPsCBGAXovOpqSqdFfUpTwsoVXLxy+LuxfagxVCN42TovMv
-         SstOlgw09+ucCOW5IJLEgBAEAxuOQc0rHwD4XdYy4r23XH1R2U85BeTrLYGhWdavvja9
-         ITMs56xX1yyVjX2bkjkFmKZc6I8SaZWow+5IbU0KiI4oih4CXK2tQaifYCXDFqjWU3Dd
-         CQXw==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1769804330; x=1770409130; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nnNhbflpDXd0E2GUCIfx9K0B+gy+MkR5SSCXcr1p6RI=;
-        b=JfqY8Eks3lmnQ0mE67EePpco/2CzZJjePQVTevvq0UqbAmrZarW+u0+8Gh1vqFR/lF
-         0yrIYq6vVWjKwC/WaodOVc/mos9EdevRQ7tXZBcV5089V1z7mjjWPH/yA+/lhiNdGGPa
-         A9vn2uc4aOtt76QpUlsMvpFTXoiM1KNeoEyUakHDhx2PVm7yf87wf8Vo9054albI8d2/
-         ZdISgkaTo6S5gxk1dxIXX6C7txv/xyzS+LPZj+oU8Dt2S9tZN59d/MwW6qj6vE9faZfS
-         SnoYdOPz+EBD5B3eael4pur1wT1fk4gCunXj7nJ8A2tq1BqtQxlcfHlLPGAhTClgCq8n
-         byAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769804330; x=1770409130;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=nnNhbflpDXd0E2GUCIfx9K0B+gy+MkR5SSCXcr1p6RI=;
-        b=sWX2oX4fxQdUIMTpf6DMUwWHXlBr3FCisUfvWT+iEwCjr6a09QSw/MWendDR1SJn+S
-         AoXYHoHf5SsKlu0I9CZl+cZGSK8dlPnkwtAvdw4zB3/3O0mBnCwad0fGlWE4jeWV3ZKE
-         GAb8pisccWcLtAwQvNo1JM8xaYIAHW6jr9sO5lHtdlecU3VR6IqunKG5hnFyisTpvu4H
-         UwQkV+aPg0loOuBeeLJ1QaSJlyPmaco/LgQkU4DW7tmxabCOjrRA4mcT/gkXMGdyur6q
-         NXmagRwYYGt3pS7xdbJIxAshh+zghIDZA7NNrb/ZkGX1cazHjCt5RzjP8EeKlfUJpTvv
-         mJ5A==
-X-Forwarded-Encrypted: i=1; AJvYcCW8nZj5IPnFnUexrH8ZVrigdXwjSgaP5GSCqhP4AozpUW4kVDIwAbeJ2aHxn4akAdJdyGszLA==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxuzwkBE5TrQZEzTuJ/QJQNWc3yWAwMS88gK8quqrcfLDQ8f0w4
-	d2EkHyDNgi2wLd48YUqzNgnsYfPFyyvhDMSeFXRnW6GiBCfn8b+i1DytmDBL0/bjBBTZtdIky+0
-	ARApQmeL7Esev+A/IznCksKxVVFdFHmJv+HWHDuAO
-X-Gm-Gg: AZuq6aLfwwfRNVdRQ9p0l6qfR7C53C2TS/vOxLC1yzpviIXT2Ld7yLM3ckv246VJaiz
-	ISZY+mZTSzHqk/z5soERuj5FkMcSr8EWQlMojx9cmd47euiPAn4/1DII/Th4KqVcwwCnvQhhMAb
-	jQpodC0yh6f4oNyhgZo/zW+8ksx+jxFHVZawbuINU/kwkm83iLnoTn2By58yGJf+Gg8tC3ngdsr
-	qxQcoXJuP53KGip8sp3qUCntVCJaLZsqwkb8ZGylYfYIQo+oAfq61FSy4YSP7KpjF2wRrk=
-X-Received: by 2002:ac8:58c5:0:b0:502:a218:1cf with SMTP id
- d75a77b69052e-505d289d77emr53380761cf.4.1769804328557; Fri, 30 Jan 2026
- 12:18:48 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ujFcBGUs";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="o3Mf3maH"
+Date: Sat, 31 Jan 2026 11:26:32 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1769855200;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fSYUV7IS3o69dTdqJYCTCDDpkpgEmF9ZMQCatBCrxIY=;
+	b=ujFcBGUsImqUv9Waw+ZtvA+p6fZ4LIbAmiS6QztDYuHyPXm/6tntcMoEMIYEjU8lOqcO84
+	JUUDN/6Kukil9yK//36hXfaWpntbhqwS7rpoYqgNp8J7vH2rEgPLSWBSOJCFhT370lMrz/
+	7gRztUGxucgA8FZM7aBr49ieKm/ipXKorVgUa2YcofyppS0h5L2o6S+vxx6wdHHiyZuQP7
+	4tDa97C40tHmopdF7sfKWCecB4iWhSWR6wxuCMHjQF5PnvXeR7OeAHevgmM2vMyuDCG3al
+	xfxPZ+QZ+kVu3G/6B75qY9SyFT5dp8UfXmQfVcVLA1dNhzZVtJfmKcKv2Y6xrg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1769855200;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fSYUV7IS3o69dTdqJYCTCDDpkpgEmF9ZMQCatBCrxIY=;
+	b=o3Mf3maHGlMurUXPFEwRlLNYIUYFFIj6zqdetL38/IGpMYAIMViNT6qayDv5qUM3kMIQ3B
+	XwdioEIZ+jxY1TDQ==
+From: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Eric Dumazet <edumazet@google.com>,
+	Kuniyuki Iwashima <kuniyu@google.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Willem de Bruijn <willemb@google.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Simon Horman <horms@kernel.org>, Shuah Khan <shuah@kernel.org>,
+	Matthieu Baerts <matttbe@kernel.org>,
+	Mat Martineau <martineau@kernel.org>,
+	Geliang Tang <geliang@kernel.org>,
+	=?UTF-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
+	=?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack@google.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	KP Singh <kpsingh@kernel.org>, Hao Luo <haoluo@google.com>,
+	Jiri Olsa <jolsa@kernel.org>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+	Arnd Bergmann <arnd@arndb.de>, linux-kselftest@vger.kernel.org,
+	mptcp@lists.linux.dev, linux-security-module@vger.kernel.org,
+	bpf@vger.kernel.org, libc-alpha@sourceware.org,
+	Carlos O'Donell <carlos@redhat.com>,
+	Adhemerval Zanella <adhemerval.zanella@linaro.org>,
+	Rich Felker <dalias@libc.org>, klibc@zytor.com,
+	Florian Weimer <fweimer@redhat.com>
+Message-ID: <3c46fc49-b41b-44a2-b42a-669cc7e6bb02@linutronix.de>
+In-Reply-To: <20260130081741.425a92e0@kernel.org>
+References: <20260120-uapi-sockaddr-v2-0-63c319111cf6@linutronix.de> <20260121192729.2095aa25@kernel.org> <20260130112309-28f2645b-e756-4173-96da-cf5c59191520@linutronix.de> <20260130081741.425a92e0@kernel.org>
+Subject: Re: [PATCH net-next v2 0/4] net: uapi: Provide an UAPI definition
+ of 'struct sockaddr'
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260130-net-next-mptcp-splice-v2-0-31332ba70d7f@kernel.org> <20260130-net-next-mptcp-splice-v2-3-31332ba70d7f@kernel.org>
-In-Reply-To: <20260130-net-next-mptcp-splice-v2-3-31332ba70d7f@kernel.org>
-From: Eric Dumazet <edumazet@google.com>
-Date: Fri, 30 Jan 2026 21:18:37 +0100
-X-Gm-Features: AZwV_Qgee0kWrUcrGSbV870oEmI0azfGZzvyJVxkG1CCnUqUQKho8S6iTRt6gAQ
-Message-ID: <CANn89i+kMpgCa2F0c+Y3av0OfbW3B0gf=TEMQD2r_cEVixEpqg@mail.gmail.com>
-Subject: Re: [PATCH net-next v2 3/6] tcp: export tcp_splice_state
-To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Cc: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, 
-	"David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Simon Horman <horms@kernel.org>, Neal Cardwell <ncardwell@google.com>, 
-	Kuniyuki Iwashima <kuniyu@google.com>, David Ahern <dsahern@kernel.org>, Shuah Khan <shuah@kernel.org>, 
-	netdev@vger.kernel.org, mptcp@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
+X-Correlation-ID: <3c46fc49-b41b-44a2-b42a-669cc7e6bb02@linutronix.de>
 
-On Fri, Jan 30, 2026 at 8:24=E2=80=AFPM Matthieu Baerts (NGI0)
-<matttbe@kernel.org> wrote:
+Jan 30, 2026 17:17:46 Jakub Kicinski <kuba@kernel.org>:
+
+> On Fri, 30 Jan 2026 11:34:15 +0100 Thomas Wei=C3=9Fschuh wrote:
+>>> Are all those selftests / samples getting broken by this patch set?=C2=
+=A0
+>>
+>> Yes.
+>>
+>> Some of them get broken by the new 'struct sockaddr', but some others ar=
+e
+>> already broken just by the new transitive inclusion of libc-compat.h.
+>> So any header starting to use the compatibility machinery may trigger br=
+eakage
+>> in code including UAPI headers before libc header, even for completely n=
+ew type
+>> definitions which themselves would not conflict with libc.
 >
-> From: Geliang Tang <tanggeliang@kylinos.cn>
->
-> Export struct tcp_splice_state and tcp_splice_data_recv() in net/tcp.h
-> so that they can be used by MPTCP in the next patch.
->
-> Suggested-by: Paolo Abeni <pabeni@redhat.com>
-> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-> Acked-by: Mat Martineau <martineau@kernel.org>
-> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> Let's split the uAPI header changes from any selftest changes.
+> If you're saying the the selftests no longer build after the uAPI
+> header changes then of course we can't apply the patches.
+
+Yes, the selftests don't build anymore after the uAPI changes.
+
+"can't apply" as in
+* "can't apply separately"
+* "are unacceptable in general"
+* "are too late for this cycle"
+?
+
+None of this is urgent.
+We can do the selftests in one cycle and the uAPI in another one.
+Feel free to pick up the patches as you see fit.
+(The mptcp changes already go through their tree, so need to be dropped her=
+e)
+I can also resubmit the patches differently if preferred.
 
 
-Reviewed-by: Eric Dumazet <edumazet@google.com>
+Thomas
