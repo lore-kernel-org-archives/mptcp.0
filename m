@@ -1,112 +1,152 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-174.mta1.migadu.com (out-174.mta1.migadu.com [95.215.58.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A68842E54D1;
-	Sat, 31 Jan 2026 17:25:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEA3F27B340
+	for <mptcp@lists.linux.dev>; Mon,  2 Feb 2026 04:09:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769880320; cv=none; b=sJOCOtxy7Fbts6voOSu6ckPujJMpdgqF0WfLykqmrYJXSNUj/MvxuRrPVbEcT/FCMmOryUrfz7nENiLKmH9PAHRqiLuCwvt6aqug0dun5jAXRj0bEGyerbr/AVAZYTAptVtKC6w30JxIFQ0uf7/uq+ESbqOwlV7ps73QGqf3OV4=
+	t=1770005383; cv=none; b=SQPeKWSVN00ismeuwjz9ae/O5MounYmONKx+NbD50SzTCvhx30SYMQdPfztF2RASoazVI7NE/DOLT+Hx6QKLbbz3PIjkJ8j+vyh5aXiL/rPMzxOkz5r6Wy15lZyy7y0cyYmUpFVJosKw/nqlryNDeBfoUBnLkftCR+iiGORJnT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769880320; c=relaxed/simple;
-	bh=VdrhpYX/xqvIWPFWCfZ0baQLFsfzzI9f0fA4hBvpNCU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=O3+W8ZWliBSrEUXOZpR89v6xUst4VY2A1ITCEEqDnpOCE2Nmmk4C7sSdpwSCoKwPDW1hPAQxzIrrY8L1YT46TtH9bi4xnvcFBJ9ZvuoqtL/nGdpls5UGzyhwB7kTS+PjzqBlzAF1Iq6TOgbWjW68lJgscsN9H2w3o79A+3ySkzA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lyOpOqHt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1770005383; c=relaxed/simple;
+	bh=Wyu4FKDv+MFdKrMgzrmO+F3M7C0+O1fm63Od7bEhY8s=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HVoywEWFZ+Q74qd+go5YEed8GJ2p7wne0KwEGnfUGbA1nUS+jViFXfhoQefbFB4+ctudflfwEF3oTxMImFvSOwSsjIDFkY5zICWnSNx1O8fsPNu0ov/fxo7Q904W6XFTbdBAHWRJrYL5HqwxeEPfLu5BIOblUW3fUXaHRiHvqhs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=G0IFV5NX; arc=none smtp.client-ip=95.215.58.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lyOpOqHt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D040DC4CEF1;
-	Sat, 31 Jan 2026 17:25:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769880320;
-	bh=VdrhpYX/xqvIWPFWCfZ0baQLFsfzzI9f0fA4hBvpNCU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=lyOpOqHtctSBTT3RWfweLWjBSm8lFZdjvHAYZ8acBPsXKdsjhFaUI1HvBiJ+8esQx
-	 iZs9nM9nCkE7C41cwpNx07jcYh/Px++kGNvfXvuhwX+wcMLQRj3Vei2r7mL3A7gRAP
-	 7sPp2rRkruTZ74GGD8uXtl4d+ahRcbGFQ3JQro/P40AzkNF4VJ+T3MekVszUbRbz/N
-	 9XI2GGu2IoULhGPWnwnHmv6sxDJ79guFXCEv4zSwUe1AySyAk8Hu6XAtx17nkNtu9E
-	 3KTO/1xg6dk0qlgHyjCXxlSWgJg9zXp0c8PygCMTcs2k7jy8vycYji3w1BL7uj3OQQ
-	 vxGVswCFi595w==
-Date: Sat, 31 Jan 2026 09:25:17 -0800
-From: Jakub Kicinski <kuba@kernel.org>
-To: Thomas =?UTF-8?B?V2Vpw59zY2h1aA==?= <thomas.weissschuh@linutronix.de>
-Cc: Eric Dumazet <edumazet@google.com>, Kuniyuki Iwashima
- <kuniyu@google.com>, Paolo Abeni <pabeni@redhat.com>, Willem de Bruijn
- <willemb@google.com>, "David S. Miller" <davem@davemloft.net>, Simon Horman
- <horms@kernel.org>, Shuah Khan <shuah@kernel.org>, Matthieu Baerts
- <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>, Geliang Tang
- <geliang@kernel.org>, =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?=
- <mic@digikod.net>, =?UTF-8?B?R8O8bnRoZXI=?= Noack <gnoack@google.com>,
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann
- <daniel@iogearbox.net>, Jesper Dangaard Brouer <hawk@kernel.org>, John
- Fastabend <john.fastabend@gmail.com>, Stanislav Fomichev <sdf@fomichev.me>,
- Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau
- <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu
- <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, KP Singh
- <kpsingh@kernel.org>, Hao Luo <haoluo@google.com>, Jiri Olsa
- <jolsa@kernel.org>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-api@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
- linux-kselftest@vger.kernel.org, mptcp@lists.linux.dev,
- linux-security-module@vger.kernel.org, bpf@vger.kernel.org,
- libc-alpha@sourceware.org, Carlos O'Donell <carlos@redhat.com>, Adhemerval
- Zanella <adhemerval.zanella@linaro.org>, Rich Felker <dalias@libc.org>,
- klibc@zytor.com, Florian Weimer <fweimer@redhat.com>
-Subject: Re: [PATCH net-next v2 0/4] net: uapi: Provide an UAPI definition
- of 'struct sockaddr'
-Message-ID: <20260131092517.6639d84c@kernel.org>
-In-Reply-To: <3c46fc49-b41b-44a2-b42a-669cc7e6bb02@linutronix.de>
-References: <20260120-uapi-sockaddr-v2-0-63c319111cf6@linutronix.de>
-	<20260121192729.2095aa25@kernel.org>
-	<20260130112309-28f2645b-e756-4173-96da-cf5c59191520@linutronix.de>
-	<20260130081741.425a92e0@kernel.org>
-	<3c46fc49-b41b-44a2-b42a-669cc7e6bb02@linutronix.de>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="G0IFV5NX"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1770005378;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=vNMw5kb69nXvr8is55X99V56X/bzXgYFf3HN99L26Os=;
+	b=G0IFV5NXzW9RrhNy0vYaZ/Do2jt6dZpF42GD7hwtHYOZydD2lEoTVGOp/WhjAo/EgAANo+
+	POrFbkUty53DboQjr50Ag95/9ObrCa1UliYagfMKPUUTyKib7aBtusFwRlAtQ16CJ/feeU
+	nQUfEfUIDZbrLgbBF7Trjc/MIFd4H1Y=
+From: Gang Yan <gang.yan@linux.dev>
+To: mptcp@lists.linux.dev
+Cc: Gang Yan <yangang@kylinos.cn>
+Subject: [RFC mptcp-next] mptcp: support MSG_EOR in mptcp_sendmsg
+Date: Mon,  2 Feb 2026 12:09:16 +0800
+Message-ID: <20260202040916.626066-1-gang.yan@linux.dev>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Sat, 31 Jan 2026 11:26:32 +0100 Thomas Wei=C3=9Fschuh wrote:
-> Jan 30, 2026 17:17:46 Jakub Kicinski <kuba@kernel.org>:
->=20
-> > On Fri, 30 Jan 2026 11:34:15 +0100 Thomas Wei=C3=9Fschuh wrote: =20
-> >> Some of them get broken by the new 'struct sockaddr', but some others =
-are
-> >> already broken just by the new transitive inclusion of libc-compat.h.
-> >> So any header starting to use the compatibility machinery may trigger =
-breakage
-> >> in code including UAPI headers before libc header, even for completely=
- new type
-> >> definitions which themselves would not conflict with libc. =20
-> >
-> > Let's split the uAPI header changes from any selftest changes.
-> > If you're saying the the selftests no longer build after the uAPI
-> > header changes then of course we can't apply the patches. =20
->=20
-> Yes, the selftests don't build anymore after the uAPI changes.
->=20
-> "can't apply" as in
-> * "can't apply separately"
-> * "are unacceptable in general"
+From: Gang Yan <yangang@kylinos.cn>
 
-this one
+This patch adds support for the MSG_EOR flag in MPTCP's sendmsg path,
+ensuring that data fragments marked with MSG_EOR are properly handled
+to prevent coalescing with subsequent data.
 
-> * "are too late for this cycle"
-> ?
->=20
-> None of this is urgent.
-> We can do the selftests in one cycle and the uAPI in another one.
-> Feel free to pick up the patches as you see fit.
-> (The mptcp changes already go through their tree, so need to be dropped h=
-ere)
-> I can also resubmit the patches differently if preferred.
+Key changes:
+1. Added an 'eor' field to struct mptcp_data_frag to track MSG_EOR marking
+2. Initialize the eor field to 0 in mptcp_carve_data_frag()
+3. In mptcp_sendmsg_frag(), when sending the last chunk of a data fragment
+   that has MSG_EOR set, mark the corresponding skb with TCP_SKB_CB(skb)->eor = 1
+   to prevent coalescing with subsequent data
+4. Modified mptcp_sendmsg() to:
+   - Preserve MSG_EOR flag in msg_flags filtering
+   - Mark the last pending data fragment with eor = 1 when MSG_EOR is set
+     in the message flags
 
-The selftests are just a canary in the coalmine. If we break a bunch of
-selftests chances are we'll also break compilation of real applications
-for people. Subjective, but I don't see a sufficient upside here to do
-that.
+This ensures that applications using MSG_EOR to indicate record boundaries
+have their intent preserved across MPTCP subflows, maintaining proper
+message segmentation semantics.
 
-FWIW the typelimits change broke compilation of ethtool, we'll see if
-anyone "outside kernel community itself" complains.
+Signed-off-by: Gang Yan <yangang@kylinos.cn>
+---
+
+Notes:
+    Hi Matt,
+    
+    I create two packetdrill scripts to test the 'MSG_EOR' in
+    single/multi subflow(s). The link is attached below:
+    https://github.com/multipath-tcp/packetdrill/compare/mptcp-net-next...Dwyane-Yan:packetdrill:mptcp-net-next
+    
+    Please ignore the indent problems, I will fix them when
+    the 'MSG_EOR' patch is accepted.
+    
+    Thanks
+
+ net/mptcp/protocol.c | 22 +++++++++++++++++++---
+ net/mptcp/protocol.h |  1 +
+ 2 files changed, 20 insertions(+), 3 deletions(-)
+
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index c88882062c40..b8200765506f 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -1174,6 +1174,7 @@ mptcp_carve_data_frag(const struct mptcp_sock *msk, struct page_frag *pfrag,
+ 	dfrag->offset = offset + sizeof(struct mptcp_data_frag);
+ 	dfrag->already_sent = 0;
+ 	dfrag->page = pfrag->page;
++	dfrag->eor = 0;
+ 
+ 	return dfrag;
+ }
+@@ -1434,6 +1435,13 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
+ 		mptcp_update_infinite_map(msk, ssk, mpext);
+ 	trace_mptcp_sendmsg_frag(mpext);
+ 	mptcp_subflow_ctx(ssk)->rel_write_seq += copy;
++
++	 /* If this is the last chunk of a dfrag with MSG_EOR set
++	  * mark the skb to prevent coalescing with subsequent data
++	  */
++	if (dfrag->eor && info->sent + copy >= dfrag->data_len)
++		TCP_SKB_CB(skb)->eor = 1;
++
+ 	return copy;
+ }
+ 
+@@ -1894,7 +1902,8 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
+ 	long timeo;
+ 
+ 	/* silently ignore everything else */
+-	msg->msg_flags &= MSG_MORE | MSG_DONTWAIT | MSG_NOSIGNAL | MSG_FASTOPEN;
++	msg->msg_flags &= MSG_MORE | MSG_DONTWAIT | MSG_NOSIGNAL |
++			  MSG_FASTOPEN | MSG_EOR;
+ 
+ 	lock_sock(sk);
+ 
+@@ -2001,9 +2010,16 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
+ 			goto do_error;
+ 	}
+ 
+-	if (copied)
+-		__mptcp_push_pending(sk, msg->msg_flags);
++	if (copied) {
++		/* Mark the last dfrag with EOR if MSG_EOR was set */
++		if (msg->msg_flags & MSG_EOR) {
++			struct mptcp_data_frag *dfrag = mptcp_pending_tail(sk);
+ 
++			if (dfrag)
++				dfrag->eor = 1;
++		}
++		__mptcp_push_pending(sk, msg->msg_flags);
++	}
+ out:
+ 	release_sock(sk);
+ 	return copied;
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index cd5266099993..5bfe1002242d 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -267,6 +267,7 @@ struct mptcp_data_frag {
+ 	u16 overhead;
+ 	u16 already_sent;
+ 	struct page *page;
++	u8 eor;					/* Is MSG_EOR marked? Prevents coalescing with next frag */
+ };
+ 
+ /* Arbitrary compromise between as low as possible to react timely to subflow
+-- 
+2.43.0
+
