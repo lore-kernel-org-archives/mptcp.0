@@ -1,154 +1,130 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f66.google.com (mail-qv1-f66.google.com [209.85.219.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69A191A9F88
-	for <mptcp@lists.linux.dev>; Mon,  2 Feb 2026 10:28:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12D4A2C15B5
+	for <mptcp@lists.linux.dev>; Mon,  2 Feb 2026 10:41:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770028085; cv=none; b=D/vVbBIrHoyu0VaXDuhRr/wdNP/rxk6cmUXUuc1j/p6wUTry5TIUgcKaHA8QNfBZ7SQrkHOVzLUIddsTWjWxzmhUV56FXb01mJIyKoTGmkQT/ErHLNWlY5DQRc3jZhsB/QYFVwsvE3m2ammcgWhQxPKHiVTL/qNsfNBbfmmss68=
+	t=1770028898; cv=none; b=H4s/NpGWfAY3CQnrR1X6XMfwaxBEBMZSfNe+C3BgrDX/8xg+p6HANPHlWcfwBTEagCtvFgeul8ikY+ofyR92O+Jg9OwkOl2OcN+ob+W/PAxchVott18BwfUoEsryDmdz/ngBOsDptAGDJXFa1kB200/6ZLKndxk/pYlc9Zi4+wY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770028085; c=relaxed/simple;
-	bh=TGeuuK7fOYRfoe6a8DhpoHdMGzI2E5kOAf8iKFMGuSA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Qm4uRe/nuIwtwTsAMfzJST+8S3u2UeOLai2CE4d3RdLSx0OjJbExc5cmb9LczkcJi5MwQWPm8qu9a9JMfUDSWqabNLjG+deiDgvEOZtgwmOWRZof/MxT8f52fWct7hjxScquvyWgVAhTyaF9vGWASBgbhvemA8EPxY7BErnKe04=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fVKGVbUo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1770028898; c=relaxed/simple;
+	bh=LpUBuZ6qMFlEU/6VMl+YdgXpi3GcB5v6jcpPGQLwI7w=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=OofVsYpRRBcjO4KCzQH3yexVH7d6tc8OZYY43KK6a0P1oBGKmqkmM0Llpf7cReMmnEufint2wrnZS3WPBjWBSbRK4IY22Fo3sm8jZtvMNbVqxmCM2lQwwz/zwXLR2is8jRfcHTdENQU/HqwRc+awdpXcmFCbE/weH1+oApHQREw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SoClpool; arc=none smtp.client-ip=209.85.219.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fVKGVbUo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31B59C116C6;
-	Mon,  2 Feb 2026 10:28:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770028084;
-	bh=TGeuuK7fOYRfoe6a8DhpoHdMGzI2E5kOAf8iKFMGuSA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=fVKGVbUoamI24K6bILks02TU1ztDe91CfyI1uqXi3t2/v4Q5twR5AopI02D93u3t/
-	 r1JGb0/mEBUn3oIOZg/SFnXw3GAmiEB6TA/Z8AgKuyOe0yF9vifINv3AUErRT5uT1L
-	 UzZjYYzibsvT2/BOq2axZX/t4lSkm0+AhMpIaOj/wrjMTwwCfbg+FsDiRuOqkM3WSS
-	 R6m3+p2qvxMNnKtyB5hDvJXKywAhA1IkxgQ+7ss2INSV/VMuOP2ziG9lJ2ByTUIDrN
-	 wXCRWjREseOXEOwuL9AhTP0nmZQA+PMr65/zQwOcfcLDBKS6U9P8r3FEqEAOjT81VK
-	 fnOy7NKU5l1HQ==
-Message-ID: <2cf2897c-00dd-4f1a-aceb-404959a8eb4c@kernel.org>
-Date: Mon, 2 Feb 2026 11:28:01 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SoClpool"
+Received: by mail-qv1-f66.google.com with SMTP id 6a1803df08f44-88888c41a13so55200306d6.3
+        for <mptcp@lists.linux.dev>; Mon, 02 Feb 2026 02:41:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1770028896; x=1770633696; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2KziMQhnYryz97r1OqZZIkY4DTkUy8aNgy8xpgmqsUk=;
+        b=SoClpoolQ1ywZKTo+UpMJmJVETOWZKBQ0eEkUFPE4gFLMmuoK2VT6DHyrm+3Pt4B03
+         a+XqE8ZbjDFuxMPJA8mz/Xt6/FYv4K6QslN17L79aeLneTGOGH8dqewvDGFYucik91fx
+         wybVk6LnlP2cbkvDJtWqxmcGrykAFdqr2B4X+nmLycqzgkZHR4P0MRT668fAXei/ngnt
+         pzTWLGMBGyVvSLFBGuWuuq/ErW3xYrA20t2rO5EEY+k+/Wk86+pa/M/i1Bk4CLZoL+Ju
+         UME8xgWX9WEQLYfWdgISieiAaWVoC4KEFkwd2ckVlY1gfhEVbOElHtri0xTLxrg0rVLM
+         E+Sg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1770028896; x=1770633696;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=2KziMQhnYryz97r1OqZZIkY4DTkUy8aNgy8xpgmqsUk=;
+        b=V/mBomLXNNh1RvqS8hPd8YYx4/FQTPrRvlagGqatpJi5hWZISlNYLWpn/UjyeN4sgM
+         HdUs9+gEMZh83e/umCjny1qTlIs3U4WOUtShsCQzrcGV7cuaRYuN6lp6nnPCYqWYO2+e
+         UCq2Ax+f8+jSvx0UzbHZXbIe9TeJKDoX9uN6v8HUTZyidv2lt8fKFg99C5bMQbnQZSKs
+         ixUi9LFsmnt30JqOL/0YMNnnhve0eEG5p9AeWUCRHgzEw+HAssh313yIZivSbhYhxDbP
+         m1Wb0p1S51gqYByYOZTtw5vVdTxhSnkLGSd4UY8L+SxgRqWfLqQD3v0pzMZ/gFExkjW4
+         gUzw==
+X-Gm-Message-State: AOJu0YwjmQIqm2KoujNe0xddEDE//Rg0ASVlT4X9UcQ66BJUM3UgbKR6
+	J5tSsuDXJpBS2xOyo2728b+4/EEYuldLfHVV2CTzQCGDT+whcq+TKzmuulTSYug=
+X-Gm-Gg: AZuq6aJjkyQ8kYK7Gy34+sYTkuE1KXYv38KWNG9aKpmBiEp2JzUsnhT3YU7bmOidsM3
+	7O/z9/toDGmZ4Cjm8D/CqN5dq99habfOt76ConFm2Jo4BJ4+G4RIuTN0FzzdQ7L48ytA0Mmkl7B
+	i2gt7mwnOblMVQcm1K2tNWGukUQttaCealf/Pdf6OKMw0/eh4ETVlXeRTdDMFli7Arq4JdE6zDz
+	/nz9tNViF1dAHAp7VU2PEnXzMGGXRVq0PYknkqYWHFsEJTGmkcZEg1zB2QosOd1eMAjv/FEZJdP
+	CtNCD/+ZWxqZ0nCfRU2kcnzqUbaO2V1wMUrDEw+dyxfYAQrtiR7hnVFp2mAncFKvbpj7zHBmApn
+	6GUgQ+v7KBkG3MDggO8KJ41ReS6JX+17yaxZM8yotbkXsn3iWPomYZuhtDjbeGpTB5Gnm+omcX+
+	tfud+lCzeskUbvEpU8OEdX8bDJ
+X-Received: by 2002:ad4:5be3:0:b0:894:6dc8:924d with SMTP id 6a1803df08f44-894e9f70170mr142037486d6.24.1770028895862;
+        Mon, 02 Feb 2026 02:41:35 -0800 (PST)
+Received: from [127.0.0.1] ([172.183.94.244])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-50337cbdc24sm107515631cf.32.2026.02.02.02.41.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Feb 2026 02:41:34 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Geliang Tang <tanggeliang@kylinos.cn>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <cover.1770023932.git.tanggeliang@kylinos.cn>
+References: <cover.1770023932.git.tanggeliang@kylinos.cn>
+Subject: Re: [PATCH mptcp-next 0/3] implement .splice_eof
+Message-ID: <e8b3f3ef-feae-6d39-846d-254950da5cac@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 02 Feb 2026 10:41:33 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC mptcp-next] mptcp: support MSG_EOR in mptcp_sendmsg
-Content-Language: en-GB, fr-BE
-To: Gang Yan <gang.yan@linux.dev>, mptcp@lists.linux.dev
-Cc: Gang Yan <yangang@kylinos.cn>
-References: <20260202040916.626066-1-gang.yan@linux.dev>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <20260202040916.626066-1-gang.yan@linux.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-Hi Gang,
+Hi Geliang,
 
-On 02/02/2026 05:09, Gang Yan wrote:
-> From: Gang Yan <yangang@kylinos.cn>
-> 
-> This patch adds support for the MSG_EOR flag in MPTCP's sendmsg path,
-> ensuring that data fragments marked with MSG_EOR are properly handled
-> to prevent coalescing with subsequent data.
-> 
-> Key changes:
-> 1. Added an 'eor' field to struct mptcp_data_frag to track MSG_EOR marking
-> 2. Initialize the eor field to 0 in mptcp_carve_data_frag()
-> 3. In mptcp_sendmsg_frag(), when sending the last chunk of a data fragment
->    that has MSG_EOR set, mark the corresponding skb with TCP_SKB_CB(skb)->eor = 1
->    to prevent coalescing with subsequent data
-> 4. Modified mptcp_sendmsg() to:
->    - Preserve MSG_EOR flag in msg_flags filtering
->    - Mark the last pending data fragment with eor = 1 when MSG_EOR is set
->      in the message flags
-> 
-> This ensures that applications using MSG_EOR to indicate record boundaries
-> have their intent preserved across MPTCP subflows, maintaining proper
-> message segmentation semantics.
+Thank you for your modifications, that's great!
 
-Thank you for looking at this.
+Our CI did some validations and here is its report:
 
-> 
-> Signed-off-by: Gang Yan <yangang@kylinos.cn>
-> ---
-> 
-> Notes:
->     Hi Matt,
->     
->     I create two packetdrill scripts to test the 'MSG_EOR' in
->     single/multi subflow(s). The link is attached below:
->     https://github.com/multipath-tcp/packetdrill/compare/mptcp-net-next...Dwyane-Yan:packetdrill:mptcp-net-next
->     
->     Please ignore the indent problems, I will fix them when
->     the 'MSG_EOR' patch is accepted.
+- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Unstable: 1 failed =
+test(s): packetdrill_dss =F0=9F=94=B4
+- KVM Validation: debug (only =
+selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal (only=
+ bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only =
+bpftest_all): Success! =E2=9C=85
+- Task: https://github.=
+com/multipath-tcp/mptcp_net-next/actions/runs/21584982091
 
-I think it is better to be able to review the tests at the same time as
-the implementation. Can you then fix the indent problems and open a PR
-please?
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/b605c7ce18aa
+Patchwork: https://patchwork.kernel.=
+org/project/mptcp/list/?series=3D1049653
 
-In the meantime, it looks like checkpatch is complaining here:
 
-> WARNING: Prefer a maximum 75 chars per line (possible unwrapped commit description?)
-> #14: 
->    that has MSG_EOR set, mark the corresponding skb with TCP_SKB_CB(skb)->eor = 1
-> 
-> WARNING: line length of 107 exceeds 80 columns
-> #95: FILE: net/mptcp/protocol.h:270:
-> +	u8 eor;					/* Is MSG_EOR marked? Prevents coalescing with next frag */
-> 
-> total: 0 errors, 2 warnings, 0 checks, 54 lines checked
+If there are some issues, you =
+can reproduce them using the same environment as
+the one used by the CI =
+thanks to a docker image, e.g.:
 
-Can you look at that, please?
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
+
+
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
 
 Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
-
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 Core)
