@@ -1,38 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B4E22C032E
-	for <mptcp@lists.linux.dev>; Mon,  2 Feb 2026 09:22:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 866BC2C08CB
+	for <mptcp@lists.linux.dev>; Mon,  2 Feb 2026 09:22:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770024127; cv=none; b=R/8fRRRpEohOGQpqoIKksFzqpF7m9IMAIvNKn3gsuy95O4dfBv6Tlyx6RMcizl/CkGhH/XITgkXrkGdDSumsxVk3N+BwU0phnYhc5KTScasgWEntmLhwRAQQifQSepikE0F09LFBg+iyMEdBD2rSBSN/LvKdt918Otlu6XuCrpg=
+	t=1770024128; cv=none; b=GjYjAV9sgz6+s7Ydd3ufaaspdfnO2le6FnbswB4S342CxMW/zPULUVSzMn5XGUFxiYkyq8JXSy7Vftw0zjJgfEx2IgBczwXbXyvsBpKBDhYYbupXqvs7SbWcHrMCWcdXohsmbpwNh6eFRn92779u7J4BejVgo5R2vR9H3NZGCs0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770024127; c=relaxed/simple;
-	bh=SSKgcmQCzsRkGbWx/PhgVdINC1OAKmnrTv959idBzyw=;
+	s=arc-20240116; t=1770024128; c=relaxed/simple;
+	bh=KC4MGsPWkiBp8BGG77e1H1vx/zbo96/a8rSkzeLjFX8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZVZeDi0PJFcwiXXeQ7/xS2sPGRS4RlujNLW/tbSdF1rFrhrDKqoXTSLBfQ0ROg/se9TBfFqPjiXJLvraJCOtdLYguDWnQVx+zmLoP+musRtYZ/rHw3Y0XYaPQRgMrTKsTtCURyYUpRyhXTW6ZXm7lW5idm60v2bf7w7gxaVgJD0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WngQiKw5; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=abiNoxS9BoCib5VWtmzLFTKw1/RrCLWSXSenaFHgUQpGDEC9siGSymX3ir19zRvGlbj5gkEMe2y9lTM+X+Gl1+K0ihUsMZtUfbdhYJZ269XzmQTHLhWg1tpCKLgQoR3bMZrsNdWlyb1TtimHCkdAvTDvsdQdGrjDDxGrqgc0amQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rVdrSZYz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WngQiKw5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D27FC116C6;
-	Mon,  2 Feb 2026 09:22:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rVdrSZYz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BD01C116D0;
+	Mon,  2 Feb 2026 09:22:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770024126;
-	bh=SSKgcmQCzsRkGbWx/PhgVdINC1OAKmnrTv959idBzyw=;
+	s=k20201202; t=1770024128;
+	bh=KC4MGsPWkiBp8BGG77e1H1vx/zbo96/a8rSkzeLjFX8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=WngQiKw5fDodeOe64W3LhWxjEMBw0PCCzeHXUUDf6C+7fZRLVv03KWf/LGpEQWoDi
-	 mTxDuYfnELVYezgN3kouZZWnLz3EV8p7TF+g4Xk95f6yJ33vkxnBf22doOnoZQWrPN
-	 Aae6Kz17gUKOghpydYyYPgg4o7OoAfGyFcOKpQqvNlLln5ibTeKIIhJt2n/h/wZEHB
-	 OIB/Y3o7TO62bTuM1e32gk0lL7knjBoItWkPMSiBUu2poseRcwUS5K1psyGcD3WvTr
-	 yzu/bz77v/1cOfj1XNWO6BeiwX1oHxFl+sjvIQxD9e95fNHax7DkbH4aizCJI0aRDY
-	 vGxprLJs5f16g==
+	b=rVdrSZYz7iZ9Jr7oX4TzxGpFG6S+xgZYLGZN14heLBiX2RaCXQ+9COvjR0EkrM/P/
+	 1Px2T3FeG8TzhjPawYTsH3LfZCpXeyP+Wr7CaRcsXsGLYUg5fvck+qYJLrmmvHtMCC
+	 OhCHlH/QIFrsRk8pkx6qDT41Hz1uSXTk/7ubPkSwGOwKGQBipJYb6OB+5rXcHCSnT7
+	 WiJeq3iw77BiGs08sDQ8H9g+G/zegQE6aH1RwchFUf+6d0fRzwrblwK3sIjTl3etmN
+	 0Jd3AGdYIXE3nAwmzsK01W53quvZjNTkLLdDKprEymoof0AIHCFxzFuAVlHcZJcVXX
+	 4uHbFIY8PXd0w==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>,
-	Matthieu Baerts <matttbe@kernel.org>
-Subject: [PATCH mptcp-next 2/3] mptcp: implement .splice_eof
-Date: Mon,  2 Feb 2026 17:21:50 +0800
-Message-ID: <9e3dddfc65f24c1a11e5f0353b497f1d4f1c6f82.1770023932.git.tanggeliang@kylinos.cn>
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next 3/3] selftests: mptcp: connect: trigger splice_eof
+Date: Mon,  2 Feb 2026 17:21:51 +0800
+Message-ID: <467dfcbcd3e11849c507db5360c3a394c3d117a5.1770023932.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <cover.1770023932.git.tanggeliang@kylinos.cn>
 References: <cover.1770023932.git.tanggeliang@kylinos.cn>
@@ -46,57 +45,34 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-This patch implements the .splice_eof interface for MPTCP, namely
-mptcp_splice_eof(), which sequentially calls do_tcp_splice_eof() for
-each subflow.
+Increase the sendfile count by one to ensure the transmission size
+exceeds the actual data length. This triggers the splice_eof path
+in the kernel, allowing the newly implemented MPTCP splice_eof
+interface to be exercised during testing.
 
-Suggested-by: Matthieu Baerts <matttbe@kernel.org>
+The change from 'count' to 'count + 1' forces the sendfile operation
+to attempt sending one more byte than available, which activates the
+end-of-file handling in the splicing logic and ensures coverage of
+the related MPTCP code paths.
+
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- net/mptcp/protocol.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ tools/testing/selftests/net/mptcp/mptcp_connect.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index c88882062c40..5635d196cb9f 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -4018,6 +4018,20 @@ static int mptcp_connect(struct sock *sk, struct sockaddr_unsized *uaddr,
- 	return 0;
- }
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+index cbe573c4ab3a..2aaf3ed11315 100644
+--- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
++++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+@@ -870,7 +870,7 @@ static int do_sendfile(int infd, int outfd, unsigned int count,
+ 	while (count > 0) {
+ 		ssize_t r;
  
-+static void mptcp_splice_eof(struct socket *sock)
-+{
-+	struct mptcp_subflow_context *subflow;
-+	struct sock *sk = sock->sk, *ssk;
-+
-+	lock_sock(sk);
-+	mptcp_for_each_subflow(mptcp_sk(sk), subflow) {
-+		ssk = mptcp_subflow_tcp_sock(subflow);
-+
-+		do_tcp_splice_eof(ssk);
-+	}
-+	release_sock(sk);
-+}
-+
- static struct proto mptcp_prot = {
- 	.name		= "MPTCP",
- 	.owner		= THIS_MODULE,
-@@ -4049,6 +4063,7 @@ static struct proto mptcp_prot = {
- 	.obj_size	= sizeof(struct mptcp_sock),
- 	.slab_flags	= SLAB_TYPESAFE_BY_RCU,
- 	.no_autobind	= true,
-+	.splice_eof	= mptcp_splice_eof,
- };
- 
- static int mptcp_bind(struct socket *sock, struct sockaddr_unsized *uaddr, int addr_len)
-@@ -4540,6 +4555,7 @@ static const struct proto_ops mptcp_stream_ops = {
- 	.set_rcvlowat	   = mptcp_set_rcvlowat,
- 	.read_sock	   = mptcp_read_sock,
- 	.splice_read	   = mptcp_splice_read,
-+	.splice_eof	   = inet_splice_eof,
- };
- 
- static struct inet_protosw mptcp_protosw = {
+-		r = sendfile(outfd, infd, NULL, count);
++		r = sendfile(outfd, infd, NULL, count + 1);
+ 		if (r < 0) {
+ 			perror("sendfile");
+ 			return 3;
 -- 
 2.51.0
 
