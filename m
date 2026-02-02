@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4D6D2DA779
-	for <mptcp@lists.linux.dev>; Mon,  2 Feb 2026 19:17:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F5C92DA779
+	for <mptcp@lists.linux.dev>; Mon,  2 Feb 2026 19:17:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770059878; cv=none; b=gOah+xaPA4dbe/fxKSGI3NuH27lDAoqx7r2BOWOTlcUJ8xN28NB4Ru+IJD+WxBY9kMlCYEmVMooNUlOrfa5YR3Qenzvx9cIz62YbHbaPLGusRioo7G073Fd3bTZpF2lRsc1EPkBgO3wKTQU3JUlegnyPuuESlEoA0pg8uLJTnQ4=
+	t=1770059879; cv=none; b=mxbGvn5xQuFYiK5E7keWhsYHbi/x/FBX0kxQw7nFcgaov3C/pNHFFwunzz/VOYGJ9d+DYecI/YQhzTLRRohOUDZr3maM84IF0wjAA7RuT55ziEsxoGkA4YlvcPZKHZWEeZjRL1hla0GYgKds8Xo6kBgdIRGtxRmpJhUe6Ot/R2k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770059878; c=relaxed/simple;
-	bh=v4kTnqScRZuUtLRCVAtXAtKqgLzygEXoPXjbr70VXRI=;
+	s=arc-20240116; t=1770059879; c=relaxed/simple;
+	bh=95zxeuc0jpT98w/9SfKxG95bYoI/CttavxMvtT0ff3w=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=GEC3dKpJ6PJus4XXDAc9fo8Ttr44OpIW2Ddm0dwu9P+CiYEtv0U+Xtqk42ZC0WMU4FIRAUr50jklgLjrBXqVUH7XOFd7kyFYR7V658zmyk4RFigBl+n3c6tzCRUlkieIywjGSdZTOXdjUpzWViv1cQdwBV1K4OQg5HOCgvXfRhk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gfm0HDbk; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=h3hs4vyrBoIgwbgfhV6bKvXt+9dDbLIqVvmDEOF5/1BwgV8FwJVCAmOUWO5aILhDFHLENd24Jko5p3w7D5eszmUI9Fi2eiczTyS9agnwELCb/UPCmsfj3bR/TY3j85hQM5zpXgzBL7Z75itWYRRnTVvEVUpejmAtoqqwCt2cgDQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KdwyI5qy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gfm0HDbk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDCBEC116C6;
-	Mon,  2 Feb 2026 19:17:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KdwyI5qy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B998FC19422;
+	Mon,  2 Feb 2026 19:17:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770059878;
-	bh=v4kTnqScRZuUtLRCVAtXAtKqgLzygEXoPXjbr70VXRI=;
+	s=k20201202; t=1770059879;
+	bh=95zxeuc0jpT98w/9SfKxG95bYoI/CttavxMvtT0ff3w=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=gfm0HDbkAML2aeriuEPxhOCMqcA/ex3XoeShUwk6I8VdaWsi+NYQ1tIzcllRzJ793
-	 xuRB0VxTNv7oZtNHpyYcWpTYZNDE7exqCn2JjNxFC2znqTE8XSbNQoS/Wci2JX1swZ
-	 W6zt2fJuJs9xCDx8JQok35WMLcrLalOSWTmOFvcYk3gFJAd6Wpdo5z9MhEWTRex6l4
-	 LY4stFch9S6y8BDQnSNQ7jSVnCJ0g3W2QTFsdgWNylGwg8kOfXmtDdQql/yZT0PEX5
-	 AYY1yiZkdHdujLEqui+OJ0+/0sxjIY8m6DwReedl1MtV9g3v1SbsyH5rbYWovJKlxH
-	 W1c5UfWEc2HmA==
+	b=KdwyI5qy/YkzEKluejYaD6t1/KN498UNTxhj1pFouY1zWNDHoFMegNV+PqnTEcxb6
+	 f2C2mzLlhJNTE7UHgN0Ng9qJEY3ggIpm2MohmnG66xTwZJCzb7IcYaId8f+mDCeVPS
+	 F1mo60ulncDqb1J/97enqxkJUOmZhfMU3d6R1QH/qMksz0hrSm1wXfnkdcbD80rKD7
+	 eYbauPQS2LDyR8Ui8ggudceXxxofnbSgeiSAyBaVL5YihaJBqvGzWW21n+LqTvmCA+
+	 HGr5GFmIIK36iN0OcaZDSDHuNeyAVN/60atq9xhKRZF12DvwykJBu3S701QFgfucmP
+	 D5fwOP8xrlDpQ==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Mon, 02 Feb 2026 20:17:37 +0100
-Subject: [PATCH mptcp-net v2 1/2] mptcp: pm: in-kernel: always set as
- unavail when removing addr
+Date: Mon, 02 Feb 2026 20:17:38 +0100
+Subject: [PATCH mptcp-net v2 2/2] mptcp: pm: in-kernel: clarify
+ mptcp_pm_remove_anno_addr()
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,162 +38,69 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260202-issue-606-mark-subflow-endp-avail-v2-1-7f9df0ae6157@kernel.org>
+Message-Id: <20260202-issue-606-mark-subflow-endp-avail-v2-2-7f9df0ae6157@kernel.org>
 References: <20260202-issue-606-mark-subflow-endp-avail-v2-0-7f9df0ae6157@kernel.org>
 In-Reply-To: <20260202-issue-606-mark-subflow-endp-avail-v2-0-7f9df0ae6157@kernel.org>
 To: MPTCP Upstream <mptcp@lists.linux.dev>
-Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
- syzbot+f56f7d56e2c6e11a01b6@syzkaller.appspotmail.com
+Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7312; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=v4kTnqScRZuUtLRCVAtXAtKqgLzygEXoPXjbr70VXRI=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDIbfiRXeq8w5ErJ3LfkSuI+hvYHGay2Eed/1p3Nne1yc
- X7CpP93O0pZGMS4GGTFFFmk2yLzZz6v4i3x8rOAmcPKBDKEgYtTACYyqYGRoSPz892D7nFb7h2W
- Cj+j/3OdSOzDa7NdYu/3FTZrfzF36WBkmPPSxHnv9ard4pc8P22r/P0qidvF7caNFdtW2+jOZD2
- czQ4A
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1585; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=95zxeuc0jpT98w/9SfKxG95bYoI/CttavxMvtT0ff3w=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDIbfqRcf++zbsXB+nsWMrd8PNM13x7Z4vtPtN+0dK2Jj
+ cdx6RczOkpZGMS4GGTFFFmk2yLzZz6v4i3x8rOAmcPKBDKEgYtTACay+iAjw7t6ceYf37tvx12s
+ PeXfwsF8e2+I+Xr5Z8J7oxuT53U52jD8T/U7LvTWaneC2eonxjPFAy8+NdD7eexAwLfIxsIvbjb
+ iHAA=
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Syzkaller managed to find a combination of actions that was generating
-this warning:
+The variable 'ret' was used, but it was not cleared what it was, and
+probably led to an issue [1].
 
-  WARNING: net/mptcp/pm_kernel.c:1074 at __mark_subflow_endp_available net/mptcp/pm_kernel.c:1074 [inline], CPU#1: syz.7.48/2535
-  WARNING: net/mptcp/pm_kernel.c:1074 at mptcp_pm_nl_fullmesh net/mptcp/pm_kernel.c:1446 [inline], CPU#1: syz.7.48/2535
-  WARNING: net/mptcp/pm_kernel.c:1074 at mptcp_pm_nl_set_flags_all net/mptcp/pm_kernel.c:1474 [inline], CPU#1: syz.7.48/2535
-  WARNING: net/mptcp/pm_kernel.c:1074 at mptcp_pm_nl_set_flags+0x5de/0x640 net/mptcp/pm_kernel.c:1538, CPU#1: syz.7.48/2535
-  Modules linked in:
-  CPU: 1 UID: 0 PID: 2535 Comm: syz.7.48 Not tainted 6.18.0-03987-gea5f5e676cf5 #17 PREEMPT(voluntary)
-  Hardware name: QEMU Ubuntu 25.10 PC (i440FX + PIIX, 1996), BIOS 1.17.0-debian-1.17.0-1 04/01/2014
-  RIP: 0010:__mark_subflow_endp_available net/mptcp/pm_kernel.c:1074 [inline]
-  RIP: 0010:mptcp_pm_nl_fullmesh net/mptcp/pm_kernel.c:1446 [inline]
-  RIP: 0010:mptcp_pm_nl_set_flags_all net/mptcp/pm_kernel.c:1474 [inline]
-  RIP: 0010:mptcp_pm_nl_set_flags+0x5de/0x640 net/mptcp/pm_kernel.c:1538
-  Code: 89 c7 e8 c5 8c 73 fe e9 f7 fd ff ff 49 83 ef 80 e8 b7 8c 73 fe 4c 89 ff be 03 00 00 00 e8 4a 29 e3 fe eb ac e8 a3 8c 73 fe 90 <0f> 0b 90 e9 3d ff ff ff e8 95 8c 73 fe b8 a1 ff ff ff eb 1a e8 89
-  RSP: 0018:ffffc9001535b820 EFLAGS: 00010287
-  netdevsim0: tun_chr_ioctl cmd 1074025677
-  RAX: ffffffff82da294d RBX: 0000000000000001 RCX: 0000000000080000
-  RDX: ffffc900096d0000 RSI: 00000000000006d6 RDI: 00000000000006d7
-  netdevsim0: linktype set to 823
-  RBP: ffff88802cdb2240 R08: 00000000000104ae R09: ffffffffffffffff
-  R10: ffffffff82da27d4 R11: 0000000000000000 R12: 0000000000000000
-  R13: ffff88801246d8c0 R14: ffffc9001535b8b8 R15: ffff88802cdb1800
-  FS:  00007fc6ac5a76c0(0000) GS:ffff8880f90c8000(0000) knlGS:0000000000000000
-  netlink: 'syz.3.50': attribute type 5 has an invalid length.
-  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  netlink: 1232 bytes leftover after parsing attributes in process `syz.3.50'.
-  CR2: 0000200000010000 CR3: 0000000025b1a000 CR4: 0000000000350ef0
-  Call Trace:
-   <TASK>
-   mptcp_pm_set_flags net/mptcp/pm_netlink.c:277 [inline]
-   mptcp_pm_nl_set_flags_doit+0x1d7/0x210 net/mptcp/pm_netlink.c:282
-   genl_family_rcv_msg_doit+0x117/0x180 net/netlink/genetlink.c:1115
-   genl_family_rcv_msg net/netlink/genetlink.c:1195 [inline]
-   genl_rcv_msg+0x3a8/0x3f0 net/netlink/genetlink.c:1210
-   netlink_rcv_skb+0x16d/0x240 net/netlink/af_netlink.c:2550
-   genl_rcv+0x28/0x40 net/netlink/genetlink.c:1219
-   netlink_unicast_kernel net/netlink/af_netlink.c:1318 [inline]
-   netlink_unicast+0x3e9/0x4c0 net/netlink/af_netlink.c:1344
-   netlink_sendmsg+0x4ab/0x5b0 net/netlink/af_netlink.c:1894
-   sock_sendmsg_nosec net/socket.c:718 [inline]
-   __sock_sendmsg+0xc9/0xf0 net/socket.c:733
-   ____sys_sendmsg+0x272/0x3b0 net/socket.c:2608
-   ___sys_sendmsg+0x2de/0x320 net/socket.c:2662
-   __sys_sendmsg net/socket.c:2694 [inline]
-   __do_sys_sendmsg net/socket.c:2699 [inline]
-   __se_sys_sendmsg net/socket.c:2697 [inline]
-   __x64_sys_sendmsg+0x110/0x1a0 net/socket.c:2697
-   do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-   do_syscall_64+0xed/0x360 arch/x86/entry/syscall_64.c:94
-   entry_SYSCALL_64_after_hwframe+0x77/0x7f
-  RIP: 0033:0x7fc6adb66f6d
-  Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 e8 ff ff ff f7 d8 64 89 01 48
-  RSP: 002b:00007fc6ac5a6ff8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-  RAX: ffffffffffffffda RBX: 00007fc6addf5fa0 RCX: 00007fc6adb66f6d
-  RDX: 0000000000048084 RSI: 00002000000002c0 RDI: 000000000000000e
-  RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
-  R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-  netlink: 'syz.5.51': attribute type 2 has an invalid length.
-  R13: 00007fff25e91fe0 R14: 00007fc6ac5a7ce4 R15: 00007fff25e920d7
-   </TASK>
+Rename it to 'announced' to avoid confusions.
 
-The actions that caused that seem to be:
+While at it, remove the returned value of the helper: it is only used in
+one place, and the returned value is not used.
 
- - Create an MPTCP endpoint for address A without any flags
- - Create a new MPTCP connection from address A
- - Remove the MPTCP endpoint: the corresponding subflows will be removed
- - Recreate the endpoint with the same ID, but with the subflow flag
- - Change the same endpoint to add the fullmesh flag
-
-In this case, msk->pm.local_addr_used has been decremented, but the
-corresponding bit in msk->pm.id_avail_bitmap has not been reset.
-
-When removing an endpoint, the corresponding endpoint ID was only marked
-as available for announced addresses, not the other types. In these
-cases, re-creating an endpoint with the same ID didn't signal/create
-anything. Adding the fullmesh flag was creating the splat when calling
-__mark_subflow_endp_available() from mptcp_pm_nl_fullmesh(), because
-msk->pm.local_addr_used was set to 0 while the ID was marked as used.
-
-Note: instead of adding a new spin_(un)lock_bh that would be taken in
-all cases, do all the actions requiring the spin lock under the same
-block.
-
-This modification potentially fixes another issue reported by syzbot,
-see [1]. But without a reproducer or more details about what exactly
-happened before, it is hard to confirm.
-
-Fixes: e255683c06df ("mptcp: pm: re-using ID of unused removed ADD_ADDR")
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/606
-Reported-by: syzbot+f56f7d56e2c6e11a01b6@syzkaller.appspotmail.com
-Closes: https://lore.kernel.org/68fcfc4a.050a0220.346f24.02fb.GAE@google.com [1]
+Link: https://github.com/multipath-tcp/mptcp_net-next/issues/606 [1]
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
-v2: avoid setting the bit twice + comment (Mat)
----
- net/mptcp/pm_kernel.c | 20 ++++++++------------
- 1 file changed, 8 insertions(+), 12 deletions(-)
+ net/mptcp/pm_kernel.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
 diff --git a/net/mptcp/pm_kernel.c b/net/mptcp/pm_kernel.c
-index c8d02ca0a6d5..94a4fdab28f5 100644
+index 94a4fdab28f5..87e37c729f81 100644
 --- a/net/mptcp/pm_kernel.c
 +++ b/net/mptcp/pm_kernel.c
-@@ -1057,10 +1057,8 @@ static bool mptcp_pm_remove_anno_addr(struct mptcp_sock *msk,
- 	ret = mptcp_remove_anno_list_by_saddr(msk, addr);
- 	if (ret || force) {
+@@ -1045,24 +1045,23 @@ int mptcp_pm_nl_add_addr_doit(struct sk_buff *skb, struct genl_info *info)
+ 	return ret;
+ }
+ 
+-static bool mptcp_pm_remove_anno_addr(struct mptcp_sock *msk,
++static void mptcp_pm_remove_anno_addr(struct mptcp_sock *msk,
+ 				      const struct mptcp_addr_info *addr,
+ 				      bool force)
+ {
+ 	struct mptcp_rm_list list = { .nr = 0 };
+-	bool ret;
++	bool announced;
+ 
+ 	list.ids[list.nr++] = mptcp_endp_get_local_id(msk, addr);
+ 
+-	ret = mptcp_remove_anno_list_by_saddr(msk, addr);
+-	if (ret || force) {
++	announced = mptcp_remove_anno_list_by_saddr(msk, addr);
++	if (announced || force) {
  		spin_lock_bh(&msk->pm.lock);
--		if (ret) {
--			__set_bit(addr->id, msk->pm.id_avail_bitmap);
-+		if (ret)
+-		if (ret)
++		if (announced)
  			msk->pm.add_addr_signaled--;
--		}
  		mptcp_pm_remove_addr(msk, &list);
  		spin_unlock_bh(&msk->pm.lock);
  	}
-@@ -1098,17 +1096,15 @@ static int mptcp_nl_remove_subflow_and_signal_addr(struct net *net,
- 					  !(entry->flags & MPTCP_PM_ADDR_FLAG_IMPLICIT));
+-	return ret;
+ }
  
- 		list.ids[0] = mptcp_endp_get_local_id(msk, addr);
--		if (remove_subflow) {
--			spin_lock_bh(&msk->pm.lock);
--			mptcp_pm_rm_subflow(msk, &list);
--			spin_unlock_bh(&msk->pm.lock);
--		}
- 
--		if (entry->flags & MPTCP_PM_ADDR_FLAG_SUBFLOW) {
--			spin_lock_bh(&msk->pm.lock);
-+		spin_lock_bh(&msk->pm.lock);
-+		if (remove_subflow)
-+			mptcp_pm_rm_subflow(msk, &list);
-+		if (entry->flags & MPTCP_PM_ADDR_FLAG_SUBFLOW)
- 			__mark_subflow_endp_available(msk, list.ids[0]);
--			spin_unlock_bh(&msk->pm.lock);
--		}
-+		else /* mark endp ID as available, e.g. Signal or MPC endp */
-+			__set_bit(addr->id, msk->pm.id_avail_bitmap);
-+		spin_unlock_bh(&msk->pm.lock);
- 
- 		if (msk->mpc_endpoint_id == entry->addr.id)
- 			msk->mpc_endpoint_id = 0;
+ static void __mark_subflow_endp_available(struct mptcp_sock *msk, u8 id)
 
 -- 
 2.51.0
