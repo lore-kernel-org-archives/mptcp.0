@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D89562E7199
-	for <mptcp@lists.linux.dev>; Mon,  2 Feb 2026 10:09:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69A191A9F88
+	for <mptcp@lists.linux.dev>; Mon,  2 Feb 2026 10:28:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770026957; cv=none; b=M3T3UNmXTsQACS6pJKxwcn/Xf6xyrlgg0FSilSF5tgKajRb/dfA26ZEzQJoBjgCOvo0f7rY+FqIVyqjCJPogqSJxRMmEDd/FIrNJtmrKehuXTCSmGGnRyDerzpxlosMge6GoeFaPEQ/6SPpdORfDwW2AmKrkjT7h8X5yE7E/XPw=
+	t=1770028085; cv=none; b=D/vVbBIrHoyu0VaXDuhRr/wdNP/rxk6cmUXUuc1j/p6wUTry5TIUgcKaHA8QNfBZ7SQrkHOVzLUIddsTWjWxzmhUV56FXb01mJIyKoTGmkQT/ErHLNWlY5DQRc3jZhsB/QYFVwsvE3m2ammcgWhQxPKHiVTL/qNsfNBbfmmss68=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770026957; c=relaxed/simple;
-	bh=olddjK2JJD8n50GHfDQTlfZg9pG3FFYTamK7tey2eZc=;
+	s=arc-20240116; t=1770028085; c=relaxed/simple;
+	bh=TGeuuK7fOYRfoe6a8DhpoHdMGzI2E5kOAf8iKFMGuSA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FjAG6bgUeFCFC3gVvcZZ5z0NV1daK16nbyKZEoJUQhU5V6dtqyHSN5f5yw0m+12r0LaRMN/J1JjgT2O6aqPY3BR1USSJl96FeeyxSf+qSbzT6l06UX+QfiTMxlttOgyfgig1AmUF2TnKay4lryMLd3jLH/CLG/aEOmnUJHkFDZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CjzJuWkN; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=Qm4uRe/nuIwtwTsAMfzJST+8S3u2UeOLai2CE4d3RdLSx0OjJbExc5cmb9LczkcJi5MwQWPm8qu9a9JMfUDSWqabNLjG+deiDgvEOZtgwmOWRZof/MxT8f52fWct7hjxScquvyWgVAhTyaF9vGWASBgbhvemA8EPxY7BErnKe04=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fVKGVbUo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CjzJuWkN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F912C116C6;
-	Mon,  2 Feb 2026 10:09:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fVKGVbUo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31B59C116C6;
+	Mon,  2 Feb 2026 10:28:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770026957;
-	bh=olddjK2JJD8n50GHfDQTlfZg9pG3FFYTamK7tey2eZc=;
+	s=k20201202; t=1770028084;
+	bh=TGeuuK7fOYRfoe6a8DhpoHdMGzI2E5kOAf8iKFMGuSA=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=CjzJuWkNtO3f/O1HBVwqjVaK+7eoxxqH+o9smTwExf264GTxgc8jOT6MqZR0+MHcz
-	 icgg+j01nCjKXTV5kI8q+ElosFZhxNDsySYKJ52o6v98wgSGTUur2+XTdm5Ipz05qU
-	 J2DlNaeIvS1hzck+00EULPXIRGe0Zr4o7iEiUWFMb1YgKv8hzwqNPcgD1t5RSEiCOW
-	 Hu9a7Pa9RkhcpZEMoWXYpRWkBbxmjkIej2Km6B7Eas8JP+OQvG2oK7QJR9ghOzTbIX
-	 +n8w2SJxjktBp7LwpYQ2esvBW/n6AnbJDDueDFVh/uFtfRaN0HTDdvbg5DRIu2W61Z
-	 +dJEzS71fkBFw==
-Message-ID: <09050e23-1292-4d3c-8056-b23ffbbef0b4@kernel.org>
-Date: Mon, 2 Feb 2026 11:09:14 +0100
+	b=fVKGVbUoamI24K6bILks02TU1ztDe91CfyI1uqXi3t2/v4Q5twR5AopI02D93u3t/
+	 r1JGb0/mEBUn3oIOZg/SFnXw3GAmiEB6TA/Z8AgKuyOe0yF9vifINv3AUErRT5uT1L
+	 UzZjYYzibsvT2/BOq2axZX/t4lSkm0+AhMpIaOj/wrjMTwwCfbg+FsDiRuOqkM3WSS
+	 R6m3+p2qvxMNnKtyB5hDvJXKywAhA1IkxgQ+7ss2INSV/VMuOP2ziG9lJ2ByTUIDrN
+	 wXCRWjREseOXEOwuL9AhTP0nmZQA+PMr65/zQwOcfcLDBKS6U9P8r3FEqEAOjT81VK
+	 fnOy7NKU5l1HQ==
+Message-ID: <2cf2897c-00dd-4f1a-aceb-404959a8eb4c@kernel.org>
+Date: Mon, 2 Feb 2026 11:28:01 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,11 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next 3/3] selftests: mptcp: connect: trigger
- splice_eof
+Subject: Re: [RFC mptcp-next] mptcp: support MSG_EOR in mptcp_sendmsg
 Content-Language: en-GB, fr-BE
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1770023932.git.tanggeliang@kylinos.cn>
- <467dfcbcd3e11849c507db5360c3a394c3d117a5.1770023932.git.tanggeliang@kylinos.cn>
+To: Gang Yan <gang.yan@linux.dev>, mptcp@lists.linux.dev
+Cc: Gang Yan <yangang@kylinos.cn>
+References: <20260202040916.626066-1-gang.yan@linux.dev>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,31 +85,67 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <467dfcbcd3e11849c507db5360c3a394c3d117a5.1770023932.git.tanggeliang@kylinos.cn>
+In-Reply-To: <20260202040916.626066-1-gang.yan@linux.dev>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+Hi Gang,
 
-On 02/02/2026 10:21, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
+On 02/02/2026 05:09, Gang Yan wrote:
+> From: Gang Yan <yangang@kylinos.cn>
 > 
-> Increase the sendfile count by one to ensure the transmission size
-> exceeds the actual data length. This triggers the splice_eof path
-> in the kernel, allowing the newly implemented MPTCP splice_eof
-> interface to be exercised during testing.
+> This patch adds support for the MSG_EOR flag in MPTCP's sendmsg path,
+> ensuring that data fragments marked with MSG_EOR are properly handled
+> to prevent coalescing with subsequent data.
 > 
-> The change from 'count' to 'count + 1' forces the sendfile operation
-> to attempt sending one more byte than available, which activates the
-> end-of-file handling in the splicing logic and ensures coverage of
-> the related MPTCP code paths.
+> Key changes:
+> 1. Added an 'eor' field to struct mptcp_data_frag to track MSG_EOR marking
+> 2. Initialize the eor field to 0 in mptcp_carve_data_frag()
+> 3. In mptcp_sendmsg_frag(), when sending the last chunk of a data fragment
+>    that has MSG_EOR set, mark the corresponding skb with TCP_SKB_CB(skb)->eor = 1
+>    to prevent coalescing with subsequent data
+> 4. Modified mptcp_sendmsg() to:
+>    - Preserve MSG_EOR flag in msg_flags filtering
+>    - Mark the last pending data fragment with eor = 1 when MSG_EOR is set
+>      in the message flags
+> 
+> This ensures that applications using MSG_EOR to indicate record boundaries
+> have their intent preserved across MPTCP subflows, maintaining proper
+> message segmentation semantics.
 
-I'm a bit confused: is this splice_eof interface not linked to "splice"?
-Why is it used with sendfile()?
+Thank you for looking at this.
 
-Also, what's the behaviour without the implementation of "splice_eof()"?
-Was it a wrong behaviour or is it the same? What's the differences
-between the situation before and after this series?
+> 
+> Signed-off-by: Gang Yan <yangang@kylinos.cn>
+> ---
+> 
+> Notes:
+>     Hi Matt,
+>     
+>     I create two packetdrill scripts to test the 'MSG_EOR' in
+>     single/multi subflow(s). The link is attached below:
+>     https://github.com/multipath-tcp/packetdrill/compare/mptcp-net-next...Dwyane-Yan:packetdrill:mptcp-net-next
+>     
+>     Please ignore the indent problems, I will fix them when
+>     the 'MSG_EOR' patch is accepted.
+
+I think it is better to be able to review the tests at the same time as
+the implementation. Can you then fix the indent problems and open a PR
+please?
+
+In the meantime, it looks like checkpatch is complaining here:
+
+> WARNING: Prefer a maximum 75 chars per line (possible unwrapped commit description?)
+> #14: 
+>    that has MSG_EOR set, mark the corresponding skb with TCP_SKB_CB(skb)->eor = 1
+> 
+> WARNING: line length of 107 exceeds 80 columns
+> #95: FILE: net/mptcp/protocol.h:270:
+> +	u8 eor;					/* Is MSG_EOR marked? Prevents coalescing with next frag */
+> 
+> total: 0 errors, 2 warnings, 0 checks, 54 lines checked
+
+Can you look at that, please?
 
 Cheers,
 Matt
