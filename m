@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60A9D63B9
-	for <mptcp@lists.linux.dev>; Tue,  3 Feb 2026 09:07:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA169396D1A
+	for <mptcp@lists.linux.dev>; Tue,  3 Feb 2026 09:42:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770109658; cv=none; b=rzcOAMt6d+ODWVpC5Ju6zeMCNo4jc+6ixROW/PDG9IZ2h9dHNulVDfUFS9y/Y3HTqUo6qSTU3vkW6i1Pwszsbz2FtLUs/l5FMZbhcHaA5TZKyKZV48Jwo037DWMI5gb35OomFKwkR+5vZa1OU+SHXRp01QbjEMkespwF2KOq4Rk=
+	t=1770111771; cv=none; b=iyCXdyrw5UNhxwuGQ5CwyYQ/FpPW8IFRpDdSKpsuikl7GM9tfETRCmr+FZeuvJqKwTMyGeEgunAmAwyxCNPl/2XQWvNGmh2XrR5lUi1dwyD7Ds7UC5J3TpFEvPfbhxhBD0Pe3qJfsd3tPmE0AuvBT/QCparRF6f4jCiQGA+jScI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770109658; c=relaxed/simple;
-	bh=giGXWo+4vd/WgnjKgtn9V+E3elOMsFGEc8drcvYhYas=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=Cnp5uXTdiyC8oMaEnPb0orjNtIMFfztDJ5TYxAJICuj4FR0DFTOgqe6nrGBmdctPTY4Sp5Scry/j6R7WlyHsuDbjvHCRCUl4HM1HkHyXjlohsVN0Vq0BVgaHPHlNoH7GJzAn0xzO2hdmDzmLBri7UGMdLURRF319DdMT8LBZ/WY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BhuD73vc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1770111771; c=relaxed/simple;
+	bh=/ph3kmlr7yZ/B5AUCzVT2pAy8kwWTewVUZnzlS4Q/Oo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=km6VPeK44601Zm3RN1POeIaWxTZkZqsc6IGitPDjIjckp9aW/J4PHFaE9MLPLnbc7zu7TU07U/Oh4rb+KAnp8yD+cuL4mKloDkNI1xTsABT8wxIIL9hqXeRyV5Q98ft9KkmXZs9WJt+Jxlus62djfb15P1Ipg4iuqtQJ18hGENk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t/5oIfvQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BhuD73vc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82302C19421;
-	Tue,  3 Feb 2026 09:07:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t/5oIfvQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A17F6C116D0;
+	Tue,  3 Feb 2026 09:42:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770109658;
-	bh=giGXWo+4vd/WgnjKgtn9V+E3elOMsFGEc8drcvYhYas=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=BhuD73vcQrRoZnqFCdg1lFlk/1uSeEicVe+s59VSYlBwy/yjYncKciiNxat4nYwhs
-	 xLrSoq6JPD04WrIX+zcEJpRL6M0MwefzBy4UbuiKuh1oeQx4Tl12GLOn41Nu8ilIC2
-	 AZtAjVCdwbUSL59LQKMYI4hdg5IR00dOo/zaGD576i2UhiV3i3NSYXPPQJQWHSRDOS
-	 1B3eywAa72nqBG6Vq9vSTpDg3TSzUBRGemJikOjdZhzHyWDvWlxyv67DQKt5530eVg
-	 VRihYTEf1AMpD2EBxSVqhxy2krUXGihJojuZ8rv7rEn8pAKcMKxcN7ovogqF2DQl5U
-	 SMeMXu3MVNrAA==
-Message-ID: <6eb6a640-8837-4970-b58f-e2ad5eef9b0e@kernel.org>
-Date: Tue, 3 Feb 2026 10:07:35 +0100
+	s=k20201202; t=1770111770;
+	bh=/ph3kmlr7yZ/B5AUCzVT2pAy8kwWTewVUZnzlS4Q/Oo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=t/5oIfvQeDWQHA37d7IWG0q/34TIVPPYEbgnKlOASY5hwVlVn1rcPgUb4vVYuvhav
+	 fvxlpfNKIaDvp+haoKxtAHenX3PXrxOpfLVXZZU/9A+NIoUKHdubMiGvbG+xkfvFRk
+	 /h+ki2p0EqW7YDBbKi6hOJmcoo+eucx8F97ImJA4MR90ufIGsqn360EDi/VOvkOERh
+	 xSvnz1ewsMiGL6c9t/2kxaKOXibi9BsPmqhBviMbB+hNAhoJbW7wHyLTHMxNn5jUcw
+	 iMS9oofDIAx3F/wpJOk7qchDbYWV7pM5j4Zru2OBwQ6PsjEcfyTok7hLQ4CqXorWoj
+	 2w3QiMgnJZkbw==
+Message-ID: <3a02e802-56c6-4c99-8f7d-aa618a8f46b7@kernel.org>
+Date: Tue, 3 Feb 2026 10:42:47 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,15 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next 2/3] mptcp: implement .splice_eof
+Subject: Re: [PATCH mptcp-next v2 2/3] mptcp: allow overridden write_space to
+ be invoked
 Content-Language: en-GB, fr-BE
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-References: <cover.1770023932.git.tanggeliang@kylinos.cn>
- <9e3dddfc65f24c1a11e5f0353b497f1d4f1c6f82.1770023932.git.tanggeliang@kylinos.cn>
- <5866364b-87b9-4abd-9eed-5437e6c56ffb@kernel.org>
- <b0ca46ead8c060d093b8aefc4939cadc1f4c159f.camel@kernel.org>
+To: Geliang Tang <geliang@kernel.org>, Mat Martineau <martineau@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>
+Cc: Gang Yan <yangang@kylinos.cn>, mptcp@lists.linux.dev
+References: <cover.1767504329.git.tanggeliang@kylinos.cn>
+ <2efc3455052c3a33cad0c8744b171dfc6e7a6d8a.1767504329.git.tanggeliang@kylinos.cn>
+ <9a2ce3981452685fe178892d0631b289b8d55e01.camel@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,140 +89,41 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <b0ca46ead8c060d093b8aefc4939cadc1f4c159f.camel@kernel.org>
+In-Reply-To: <9a2ce3981452685fe178892d0631b289b8d55e01.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-Thank you for your reply!
-
-On 03/02/2026 07:36, Geliang Tang wrote:
-> Hi Matt,
+On 03/02/2026 07:54, Geliang Tang wrote:
+> Hi Matt, Mat, Paolo,
 > 
-> On Mon, 2026-02-02 at 11:07 +0100, Matthieu Baerts wrote:
->> Hi Geliang,
+> On Sun, 2026-01-04 at 13:29 +0800, Geliang Tang wrote:
+>> From: Geliang Tang <tanggeliang@kylinos.cn>
 >>
->> Thank you for looking at that!
+>> psock may override its own sk_write_space functions. This patch
+>> ensures
+>> that the overridden sk_write_space can be invoked by MPTCP.
 >>
->> On 02/02/2026 10:21, Geliang Tang wrote:
->>> From: Geliang Tang <tanggeliang@kylinos.cn>
->>>
->>> This patch implements the .splice_eof interface for MPTCP, namely
->>> mptcp_splice_eof(), which sequentially calls do_tcp_splice_eof()
->>> for
->>> each subflow.
->>
->> Can you please explain what this hook is supposed to do / used for
->> please?
+>> Note: This patch was initially included in the NVME MPTCP set.
 > 
-> do_tcp_splice_eof() ensures that any remaining data in the TCP send
-> queue is flushed immediately when a sendfile() operation reaches end-
-> of-file (EOF).
+> This patch was initially developed to resolve the "timeout" errors
+> observed in the NVMe MPTCP tests described in [1], because NVMe TCP
+> overrides its own sk_write_space. During subsequent development, I
+> discovered that not only NVMe TCP overrides its own sk_write_space, but
+> KTLS and psock also override it. 
+> 
+> Therefore, this patch is needed in all three series. To reduce
+> dependencies between these three series, I propose to merge this patch
+> into the mainline first.
 
-OK, so if I understand correctly, it means that without .splice_eof()
-support, the queue is not flushed immediately when a sendfile()
-operation reaches end-of-file (EOF). But that's OK, it will be flushed,
-eventually with a small delay but the most important is that all data
-will be transferred. Is that correct?
+Just to be sure, when you say "mainline", do you mean our MPTCP tree
+with the export branch?
 
-If it is, can you please reflect that in the commit message?
-I think it is essential to mention it is not linked to the 'splice()'
-syscall, it is an improvement, and nothing was broken before.
-
->> And also why the solution is to call do_tcp_splice_eof() on each
->> subflow?
-> 
-> MPTCP operates over multiple TCP subflows. When splicing data through
-> an MPTCP socket, each subflow may have pending data in its send buffer
-> that needs to be properly finalized. So here calls do_tcp_splice_eof()
-> on each subflow.
-
-Can you also please add a note about that in the commit message?
-
->> Also, I'm a bit confused: why is this needed? Does it fix something
->> or
->> is it a new feature or an optimisation?
-> 
-> It is not a fix, but a new feature, to keep consistent with TCP. Since
-> TCP handles the splice EOF notification but MPTCP didn't.
-> 
->>
->>> Suggested-by: Matthieu Baerts <matttbe@kernel.org>
->>> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
->>> ---
->>>  net/mptcp/protocol.c | 16 ++++++++++++++++
->>>  1 file changed, 16 insertions(+)
->>>
->>> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
->>> index c88882062c40..5635d196cb9f 100644
->>> --- a/net/mptcp/protocol.c
->>> +++ b/net/mptcp/protocol.c
->>> @@ -4018,6 +4018,20 @@ static int mptcp_connect(struct sock *sk,
->>> struct sockaddr_unsized *uaddr,
->>>  	return 0;
->>>  }
->>>  
->>> +static void mptcp_splice_eof(struct socket *sock)
->>> +{
->>> +	struct mptcp_subflow_context *subflow;
->>> +	struct sock *sk = sock->sk, *ssk;
->>> +
->>> +	lock_sock(sk);
->>> +	mptcp_for_each_subflow(mptcp_sk(sk), subflow) {
->>> +		ssk = mptcp_subflow_tcp_sock(subflow);
->>> +
->>> +		do_tcp_splice_eof(ssk);
->>
->> Is it fine to call this on closed subflows? e.g. if the initial
->> subflow
->> has been closed. (I didn't check, maybe that's OK)
-> 
-> Good point. I will add this check in v2:
-> 
->        if (ssk->sk_state == TCP_CLOSE)
->                continue;
-> 
->>
->>> +	}
->>> +	release_sock(sk);
->>> +}
->>> +
->>>  static struct proto mptcp_prot = {
->>>  	.name		= "MPTCP",
->>>  	.owner		= THIS_MODULE,
->>> @@ -4049,6 +4063,7 @@ static struct proto mptcp_prot = {
->>>  	.obj_size	= sizeof(struct mptcp_sock),
->>>  	.slab_flags	= SLAB_TYPESAFE_BY_RCU,
->>>  	.no_autobind	= true,
->>> +	.splice_eof	= mptcp_splice_eof,
->>>  };
->>>  
->>>  static int mptcp_bind(struct socket *sock, struct sockaddr_unsized
->>> *uaddr, int addr_len)
->>> @@ -4540,6 +4555,7 @@ static const struct proto_ops
->>> mptcp_stream_ops = {
->>>  	.set_rcvlowat	   = mptcp_set_rcvlowat,
->>>  	.read_sock	   = mptcp_read_sock,
->>>  	.splice_read	   = mptcp_splice_read,
->>> +	.splice_eof	   = inet_splice_eof,
->>
->> Is this line required? Will it not call inet_splice_eof() by default?
->> (I
->> didn't check)
-> 
-> Yes, this is required.
-> 
-> sock_splice_eof() needs to call the .splice_eof interface from struct
-> proto_ops. To maintain consistency with regular TCP behavior, the 
-> .splice_eof interface of mptcp_stream_ops is set to inet_splice_eof
-> too. inet_splice_eof() will switch to the protocol-specific
-> implementation (sk->sk_prot->splice_eof), which for MPTCP is
-> mptcp_splice_eof().
-
-OK. Then be careful that inet_splice_eof() will call inet_send_prepare()
-which will call sock_rps_record_flow(sk). mptcp_rps_record_subflows()
-should be called on each subflow, probably from mptcp_splice_eof().
+Because we are at the end of a cycle here, my priority is to flush
+patches that are ready or fix issues. If I'm not mistaken, this patch is
+needed for new features that are not in our tree, not in net or net-next
+trees, right?
 
 Cheers,
 Matt
