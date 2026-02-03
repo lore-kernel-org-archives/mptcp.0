@@ -1,35 +1,36 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83D5C1A073F;
-	Tue,  3 Feb 2026 02:30:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C5833002DD
+	for <mptcp@lists.linux.dev>; Tue,  3 Feb 2026 02:31:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770085827; cv=none; b=pvJI9y853j1PWqJPdc5TFrh71uewYOIblRQC49OQZXMY/+WEpU5AVPP+0sf476i0yEAVBPQeI7RXq1hBdphm2rBA19p7OrXZ1+XZAgcJ1KAxZeGZGRkigwfVl7SqQg5mX8GVHqrwMOrPSLikLwOT/V6j4SgvjJ37x+CIHzoTPl8=
+	t=1770085869; cv=none; b=RG6aiG/9ZL/FKRU/bsty9QccUyJ3I7rNJV/qgzLgw5IHuspFjbaqUAdDsHK0nHpE32rsz6G/1kDbcWIk4MU3HWVJwzYX8po97UwdHJVvm0jsxY38Fl73WrSUjigPLa0fMfar4LbpPCqqlYaeAx4vGz9d2b2/QaFSyxaJtefKWxw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770085827; c=relaxed/simple;
-	bh=lX8dUKz+kZPoLRJ/NK05u+YSz9Nvge7N8Rt8EjIGNgc=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=NYc1/GeCYGmBvcEw3FJEAD9knF8CL4BnRrRaFIhLB3Kn04qVaANVBcF3G55LPDaOUd9gtaeICUbKk708pNftNbn67vMeOal9TkCKrFJVqB7xbcrPnQoHyohZjNb6BvA3CAFPrf4SPf1FnSWZHCLfbRpzNH4OXFgDlSLn9kWmuZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qIlV0kgT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1770085869; c=relaxed/simple;
+	bh=GszT6jc4zCkzSJriyc0A3YFrcRFJqImz5hv1/1CD4qA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NydpceEDkChXTY19jCCr29dz4pZ4M1OaW/nnnOQ/lyeoBQSdvube89hx/njaywO3xpRpEUVekzja+2YcIryNKGD2YZN9JU/tiPpKpL0XDU6ufSylA2bnPDDDqtxdWcrQ3RwIUXpsAOf9Svtol9+WkqEhl1zVIjW9tG6+WGuENtA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=dufWoBHS; arc=none smtp.client-ip=95.215.58.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qIlV0kgT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 261F2C116C6;
-	Tue,  3 Feb 2026 02:30:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770085827;
-	bh=lX8dUKz+kZPoLRJ/NK05u+YSz9Nvge7N8Rt8EjIGNgc=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=qIlV0kgT3rG4JV3oDiQ60I/HYU5JvsuLwZGU2fEdZYx+RWCR7+Z2qgxhaBtDxFGY6
-	 O4zgJPrxFAlpWJgY9OlkuktipA1JZ37OI3G5hwCWTBGkpuS6FtuMbM+G1tB6hIb14y
-	 b89d0f+Isp1sWBWGUZrFGqXnQa/w8mX/t1npep9L7eBmsb07hS4olOfeG2779eCrLg
-	 e9e/74BNW3FDVkZHpsykUm4PrSW69WIR4y0FxJyC6IpxXBQg8InIOfJq/Uhq66wvF8
-	 x6SwsLz5OdIGeRmas3ucLXc+KMeKG6vtbvCIVEdKsLcx1GNlC6GZdBjQi+ctrUr1Vo
-	 00eQrips+/aaA==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 16E543808200;
-	Tue,  3 Feb 2026 02:30:25 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="dufWoBHS"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1770085863;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=8uCrrWIOC4tJ+wLYPp3/56O1abbC1ldSwfYXhEe8gH0=;
+	b=dufWoBHSpfLqWjRl+C8p5JZvZ5ZxKvRql2FvYYmJDsqzconf9bakwY8qFumg5IELiYg7Zk
+	26uPw2uVJTHjC0BGxDgld06HYRo1ygBFm0I9XKYgUvCKKDJXBOBe8uAWyjFfJk9eZDQK/S
+	3KjZo9HF/LyMBWHKdkzBK5S+GiJwgMk=
+From: Gang Yan <gang.yan@linux.dev>
+To: mptcp@lists.linux.dev
+Cc: Gang Yan <yangang@kylinos.cn>
+Subject: [RFC v2 mptcp-next] mptcp: support MSG_EOR in mptcp_sendmsg
+Date: Tue,  3 Feb 2026 10:30:29 +0800
+Message-ID: <20260203023029.855434-1-gang.yan@linux.dev>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -37,54 +38,118 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next v2 0/6] mptcp: implement .read_sock and
- .splice_read
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <177008582361.1282989.10777198341213634475.git-patchwork-notify@kernel.org>
-Date: Tue, 03 Feb 2026 02:30:23 +0000
-References: <20260130-net-next-mptcp-splice-v2-0-31332ba70d7f@kernel.org>
-In-Reply-To: <20260130-net-next-mptcp-splice-v2-0-31332ba70d7f@kernel.org>
-To: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Cc: martineau@kernel.org, geliang@kernel.org, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
- ncardwell@google.com, kuniyu@google.com, dsahern@kernel.org,
- shuah@kernel.org, netdev@vger.kernel.org, mptcp@lists.linux.dev,
- linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
- hare@kernel.org
+X-Migadu-Flow: FLOW_OUT
 
-Hello:
+From: Gang Yan <yangang@kylinos.cn>
 
-This series was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+This patch adds support for the MSG_EOR flag in MPTCP's sendmsg path,
+ensuring that data fragments marked with MSG_EOR are properly handled
+to prevent coalescing with subsequent data.
 
-On Fri, 30 Jan 2026 20:24:23 +0100 you wrote:
-> This series is a preparation work for future in-kernel MPTCP sockets
-> usage. Here, two interfaces are implemented: read_sock and splice_read.
-> As a result of this series, splice() with MPTCP sockets -- which was
-> already supported -- is now improved.
-> 
-> - Patches 1-2: .read_sock implementation
-> 
-> [...]
+Key changes:
+1. Added an 'eor' field to struct mptcp_data_frag to track MSG_EOR marking
+2. Initialize the eor field to 0 in mptcp_carve_data_frag()
+3. In mptcp_sendmsg_frag(), when sending the last chunk of a data fragment
+   that has MSG_EOR set, mark the corresponding skb with
+   'TCP_SKB_CB(skb)->eor=1' to prevent coalescing with subsequent data
+4. Modified mptcp_sendmsg() to:
+   - Preserve MSG_EOR flag in msg_flags filtering
+   - Mark the last pending data fragment with eor = 1 when MSG_EOR is set
+     in the message flags
 
-Here is the summary with links:
-  - [net-next,v2,1/6] mptcp: add eat_recv_skb helper
-    https://git.kernel.org/netdev/net-next/c/436510df0caf
-  - [net-next,v2,2/6] mptcp: implement .read_sock
-    https://git.kernel.org/netdev/net-next/c/250d9766a984
-  - [net-next,v2,3/6] tcp: export tcp_splice_state
-    https://git.kernel.org/netdev/net-next/c/2d85088d467f
-  - [net-next,v2,4/6] mptcp: implement .splice_read
-    https://git.kernel.org/netdev/net-next/c/22f3bd9bf8e8
-  - [net-next,v2,5/6] selftests: mptcp: add splice io mode
-    https://git.kernel.org/netdev/net-next/c/6a059c6bfb55
-  - [net-next,v2,6/6] selftests: mptcp: connect: cover splice mode
-    https://git.kernel.org/netdev/net-next/c/2f2dc84645fb
+This ensures that applications using MSG_EOR to indicate record boundaries
+have their intent preserved across MPTCP subflows, maintaining proper
+message segmentation semantics.
 
-You are awesome, thank you!
+Signed-off-by: Gang Yan <yangang@kylinos.cn>
+---
+
+Notes:
+    changelog:
+      v2:
+        - Fix code-style issues.
+        - Submitted a pull request to the mptcp_packetdrill repository:
+          https://github.com/multipath-tcp/packetdrill/pull/189
+    
+    Hi Matt:
+    
+    Thank you for your feedback on v1. I've addressed the suggestions in this
+    updated version. Please take a look when you have a moment.
+    
+    Thanks
+    Gang
+
+ net/mptcp/protocol.c | 22 +++++++++++++++++++---
+ net/mptcp/protocol.h |  1 +
+ 2 files changed, 20 insertions(+), 3 deletions(-)
+
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index c88882062c40..b8200765506f 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -1174,6 +1174,7 @@ mptcp_carve_data_frag(const struct mptcp_sock *msk, struct page_frag *pfrag,
+ 	dfrag->offset = offset + sizeof(struct mptcp_data_frag);
+ 	dfrag->already_sent = 0;
+ 	dfrag->page = pfrag->page;
++	dfrag->eor = 0;
+ 
+ 	return dfrag;
+ }
+@@ -1434,6 +1435,13 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
+ 		mptcp_update_infinite_map(msk, ssk, mpext);
+ 	trace_mptcp_sendmsg_frag(mpext);
+ 	mptcp_subflow_ctx(ssk)->rel_write_seq += copy;
++
++	 /* If this is the last chunk of a dfrag with MSG_EOR set
++	  * mark the skb to prevent coalescing with subsequent data
++	  */
++	if (dfrag->eor && info->sent + copy >= dfrag->data_len)
++		TCP_SKB_CB(skb)->eor = 1;
++
+ 	return copy;
+ }
+ 
+@@ -1894,7 +1902,8 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
+ 	long timeo;
+ 
+ 	/* silently ignore everything else */
+-	msg->msg_flags &= MSG_MORE | MSG_DONTWAIT | MSG_NOSIGNAL | MSG_FASTOPEN;
++	msg->msg_flags &= MSG_MORE | MSG_DONTWAIT | MSG_NOSIGNAL |
++			  MSG_FASTOPEN | MSG_EOR;
+ 
+ 	lock_sock(sk);
+ 
+@@ -2001,9 +2010,16 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
+ 			goto do_error;
+ 	}
+ 
+-	if (copied)
+-		__mptcp_push_pending(sk, msg->msg_flags);
++	if (copied) {
++		/* Mark the last dfrag with EOR if MSG_EOR was set */
++		if (msg->msg_flags & MSG_EOR) {
++			struct mptcp_data_frag *dfrag = mptcp_pending_tail(sk);
+ 
++			if (dfrag)
++				dfrag->eor = 1;
++		}
++		__mptcp_push_pending(sk, msg->msg_flags);
++	}
+ out:
+ 	release_sock(sk);
+ 	return copied;
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index cd5266099993..8b243062009c 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -267,6 +267,7 @@ struct mptcp_data_frag {
+ 	u16 overhead;
+ 	u16 already_sent;
+ 	struct page *page;
++	u8 eor;  /* Is MSG_EOR marked? Prevents coalescing with next frag */
+ };
+ 
+ /* Arbitrary compromise between as low as possible to react timely to subflow
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.43.0
 
