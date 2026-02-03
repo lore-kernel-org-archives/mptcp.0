@@ -1,132 +1,68 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA169396D1A
-	for <mptcp@lists.linux.dev>; Tue,  3 Feb 2026 09:42:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5909E30ACF8
+	for <mptcp@lists.linux.dev>; Tue,  3 Feb 2026 10:19:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770111771; cv=none; b=iyCXdyrw5UNhxwuGQ5CwyYQ/FpPW8IFRpDdSKpsuikl7GM9tfETRCmr+FZeuvJqKwTMyGeEgunAmAwyxCNPl/2XQWvNGmh2XrR5lUi1dwyD7Ds7UC5J3TpFEvPfbhxhBD0Pe3qJfsd3tPmE0AuvBT/QCparRF6f4jCiQGA+jScI=
+	t=1770113960; cv=none; b=GnFwUdT5NKQhZh00XkYpX7XBGCQgK7Y+KVYvJTCQi9A39aEveREwU9d0AWuig4yBCFn52B1UE95rYeaRByzxgeX9BcS2wnlyKuTVBr/azdCnq15/4rEhSCO2kCxtlP4ih66gcYgHRt9EtUZiBTd6wfyX7k0DzVBlo4wYExorX+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770111771; c=relaxed/simple;
-	bh=/ph3kmlr7yZ/B5AUCzVT2pAy8kwWTewVUZnzlS4Q/Oo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=km6VPeK44601Zm3RN1POeIaWxTZkZqsc6IGitPDjIjckp9aW/J4PHFaE9MLPLnbc7zu7TU07U/Oh4rb+KAnp8yD+cuL4mKloDkNI1xTsABT8wxIIL9hqXeRyV5Q98ft9KkmXZs9WJt+Jxlus62djfb15P1Ipg4iuqtQJ18hGENk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t/5oIfvQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1770113960; c=relaxed/simple;
+	bh=qnxtIAgM/9fKSHzoc1X3nZV1mZmASS50vu5mJ1i8ByE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tudx4PaYRYQfK7cBNF+NKym2UE/BXSTb0o7/iNuoRpEy9zoDmOs5iuBDlZ37GtkDsxeFRdg12tGvH0/PqzyXCyZ6GB8S3nvJy6J1wAjI7m7sEnOB8ETH6EFfQG3zlQKKZzRyRKoUraaFeLhuKelCJFzDHU5GCktTNaXP6xfl5Ek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZGBVFi7y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t/5oIfvQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A17F6C116D0;
-	Tue,  3 Feb 2026 09:42:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZGBVFi7y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F1C9C116D0;
+	Tue,  3 Feb 2026 10:19:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770111770;
-	bh=/ph3kmlr7yZ/B5AUCzVT2pAy8kwWTewVUZnzlS4Q/Oo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=t/5oIfvQeDWQHA37d7IWG0q/34TIVPPYEbgnKlOASY5hwVlVn1rcPgUb4vVYuvhav
-	 fvxlpfNKIaDvp+haoKxtAHenX3PXrxOpfLVXZZU/9A+NIoUKHdubMiGvbG+xkfvFRk
-	 /h+ki2p0EqW7YDBbKi6hOJmcoo+eucx8F97ImJA4MR90ufIGsqn360EDi/VOvkOERh
-	 xSvnz1ewsMiGL6c9t/2kxaKOXibi9BsPmqhBviMbB+hNAhoJbW7wHyLTHMxNn5jUcw
-	 iMS9oofDIAx3F/wpJOk7qchDbYWV7pM5j4Zru2OBwQ6PsjEcfyTok7hLQ4CqXorWoj
-	 2w3QiMgnJZkbw==
-Message-ID: <3a02e802-56c6-4c99-8f7d-aa618a8f46b7@kernel.org>
-Date: Tue, 3 Feb 2026 10:42:47 +0100
+	s=k20201202; t=1770113960;
+	bh=qnxtIAgM/9fKSHzoc1X3nZV1mZmASS50vu5mJ1i8ByE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=ZGBVFi7yET5uwu2xQq4h60geAPeFKTA7+VVtvnC8yNKq6FampLWSd0TTDejgVOHrK
+	 QkZJ+iheeyNAwjJA+oQbO3YT1kS86HUOcQ5mvY6fvmWf1jzVbuMIvZYB9L/R+ZgoIO
+	 ngbHsW4lZbFtW3INefpx/xGWklqhnPN0cYi6EIBJPZEwUkgx7WpxwR+NZKspCStE0E
+	 qyk991D+WFhnDnllls8ivJO/s4MBslUPNzJ79W7vvLk09P/DgNbk75U0Wg5hz8USEu
+	 lX0aFl55UzpZs0xI29JKtOBtpNnyMn1ywjsThaWJszk6NnwgUA58OaIlHiZpnI6e0J
+	 Q57RhPfOOjT2g==
+From: Geliang Tang <geliang@kernel.org>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v2 0/3] implement .splice_eof
+Date: Tue,  3 Feb 2026 18:19:06 +0800
+Message-ID: <cover.1770113743.git.tanggeliang@kylinos.cn>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v2 2/3] mptcp: allow overridden write_space to
- be invoked
-Content-Language: en-GB, fr-BE
-To: Geliang Tang <geliang@kernel.org>, Mat Martineau <martineau@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>
-Cc: Gang Yan <yangang@kylinos.cn>, mptcp@lists.linux.dev
-References: <cover.1767504329.git.tanggeliang@kylinos.cn>
- <2efc3455052c3a33cad0c8744b171dfc6e7a6d8a.1767504329.git.tanggeliang@kylinos.cn>
- <9a2ce3981452685fe178892d0631b289b8d55e01.camel@kernel.org>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <9a2ce3981452685fe178892d0631b289b8d55e01.camel@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Geliang,
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
-On 03/02/2026 07:54, Geliang Tang wrote:
-> Hi Matt, Mat, Paolo,
-> 
-> On Sun, 2026-01-04 at 13:29 +0800, Geliang Tang wrote:
->> From: Geliang Tang <tanggeliang@kylinos.cn>
->>
->> psock may override its own sk_write_space functions. This patch
->> ensures
->> that the overridden sk_write_space can be invoked by MPTCP.
->>
->> Note: This patch was initially included in the NVME MPTCP set.
-> 
-> This patch was initially developed to resolve the "timeout" errors
-> observed in the NVMe MPTCP tests described in [1], because NVMe TCP
-> overrides its own sk_write_space. During subsequent development, I
-> discovered that not only NVMe TCP overrides its own sk_write_space, but
-> KTLS and psock also override it. 
-> 
-> Therefore, this patch is needed in all three series. To reduce
-> dependencies between these three series, I propose to merge this patch
-> into the mainline first.
+v2:
+ - add sk_state check in mptcp_splice_eof. (Matt)
+ - call mptcp_rps_record_subflows in mptcp_splice_eof. (Matt)
+ - update commit logs.
 
-Just to be sure, when you say "mainline", do you mean our MPTCP tree
-with the export branch?
+This set implements .splice_eof for MPTCP and tests it.
 
-Because we are at the end of a cycle here, my priority is to flush
-patches that are ready or fix issues. If I'm not mistaken, this patch is
-needed for new features that are not in our tree, not in net or net-next
-trees, right?
+v1:
+ - Link: https://patchwork.kernel.org/project/mptcp/cover/cover.1770023932.git.tanggeliang@kylinos.cn/
 
-Cheers,
-Matt
+Geliang Tang (3):
+  tcp: export do_tcp_splice_eof
+  mptcp: implement .splice_eof
+  selftests: mptcp: connect: trigger splice_eof
+
+ include/net/tcp.h                             |  1 +
+ net/ipv4/tcp.c                                |  8 +++++--
+ net/mptcp/protocol.c                          | 23 +++++++++++++++++++
+ .../selftests/net/mptcp/mptcp_connect.c       |  2 +-
+ 4 files changed, 31 insertions(+), 3 deletions(-)
+
 -- 
-Sponsored by the NGI0 Core fund.
+2.52.0
 
