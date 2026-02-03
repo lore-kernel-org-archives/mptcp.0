@@ -1,127 +1,130 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f195.google.com (mail-oi1-f195.google.com [209.85.167.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CE42330657
-	for <mptcp@lists.linux.dev>; Tue,  3 Feb 2026 11:42:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3671A22339
+	for <mptcp@lists.linux.dev>; Tue,  3 Feb 2026 11:54:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770118947; cv=none; b=u+3w7mj0eD+/qD9qvco0Nb3t5c/Hing72O/vImV8t0TjCWohVtzkjLwhujsyJV0YxvPAIY4gkrEHPZ9iTbSBtntuxyFrCE3DMZRI20Io+GmOlN6sblznsB12Ei4tGha4sVobEod5NG2O83qx+TXWLMJRQLflkJD3ntpUgPNp/IU=
+	t=1770119700; cv=none; b=omTOgv3vz8i7rBFyApsRfqndjEo2FH+UOCV2JSjUu+AzVbfV5a18NWxjqXdM5yrgsUvXdYUwPRPzIWa2ZCsKJhrWytxOcIUap/X7kL4TbPN1oquSE7vIStgYogAvy40ir5UeanknBT4tiYaanbit8hta5xvVrJWakD5sPV7v0ao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770118947; c=relaxed/simple;
-	bh=f/4jPZjlH43hVd7djQf+N42+eV6nxJtc05EPg7iYKfI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=d9xh8asrCGIzfjpQdYFzhSMPSOYu0DGaaGqMMSxIg3m36oZcpL8CghP0gj0QhmQogS3/8Qy3XlCwHDWTl+rx93hoBxZwAHAEKATgdlEtAq3JaUT7rEIX3OrgW5XsFkaUXh2ehhXzkn7Ybr3TWfS32NyUvrbelTFjToxcKlVOsqo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Is5q8smq; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=kzcip55z; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1770119700; c=relaxed/simple;
+	bh=1ZWzqYL42En2VoGEAHnk7cp/mJMeMEeCtTiuGfUEGU8=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=FEOr3AuM2+XsSOcqn9y7QLl6vLMOnSn2RCsq8gU+XA6PWtZA0o+cLTXEgWEexAkssWvj5yok+TEJyPw+ymWubK7HqSjs+Pw22Q/XszdeNtCvMNghol7Rzp69Dgjmqsa1nHAFm54SnDi+rgv58Oy6erXDrIKa7Ah84Eez0ejVC2c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mY3Ym0My; arc=none smtp.client-ip=209.85.167.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Is5q8smq";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kzcip55z"
-Date: Tue, 3 Feb 2026 12:42:22 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1770118943;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Okjru8snA57GtyYjXxOgEFvqQ11nIpWc1KWAif9Vb94=;
-	b=Is5q8smq+1zCbNi8BcIT2F9JYkNoW4I2f6h3IsAC9+TAHZAJA+ptGoNxcksmNb9TJO7ASM
-	GrBNDpYopQXBfgTY5M6dWw4bCJMOtSruU2w8tp2eZKjimAA7Ubd1/OALNQQKUG+MLkwnUd
-	QRxbn1zb/g1zvxcC0GPrJcXHA9tPI/baTjQBdtonqWrDpkipE2wNvACjNoyebH1Ydp8s50
-	A946N23gdg226yVCStxech6jmC/7kbE9izKiwBmJX4vSz09YNs35yZeWZTuvY25R9TIzTe
-	p6tIfDELXJ+D1UMNJYD9v/kqx9EK1ZaQ5UlQiuNoexqlLkUa4DGFCiYIuHFNLQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1770118943;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Okjru8snA57GtyYjXxOgEFvqQ11nIpWc1KWAif9Vb94=;
-	b=kzcip55zJZvPYHswIjpDmmP5Hv1N0sjB+RQRB7cIM929AaKZ+VGOUSayo7E5Sl+KS/jTXA
-	BYV4WQ5EQ7zRpvCA==
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Eric Dumazet <edumazet@google.com>, 
-	Kuniyuki Iwashima <kuniyu@google.com>, Paolo Abeni <pabeni@redhat.com>, 
-	Willem de Bruijn <willemb@google.com>, "David S. Miller" <davem@davemloft.net>, 
-	Simon Horman <horms@kernel.org>, Shuah Khan <shuah@kernel.org>, 
-	Matthieu Baerts <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>, 
-	Geliang Tang <geliang@kernel.org>, =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>, 
-	=?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Jesper Dangaard Brouer <hawk@kernel.org>, 
-	John Fastabend <john.fastabend@gmail.com>, Stanislav Fomichev <sdf@fomichev.me>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-api@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-kselftest@vger.kernel.org, 
-	mptcp@lists.linux.dev, linux-security-module@vger.kernel.org, bpf@vger.kernel.org, 
-	libc-alpha@sourceware.org, Carlos O'Donell <carlos@redhat.com>, 
-	Adhemerval Zanella <adhemerval.zanella@linaro.org>, Rich Felker <dalias@libc.org>, klibc@zytor.com, 
-	Florian Weimer <fweimer@redhat.com>
-Subject: Re: [PATCH net-next v2 0/4] net: uapi: Provide an UAPI definition of
- 'struct sockaddr'
-Message-ID: <20260203122715-eeb304f9-4b42-4fc6-a527-658182a92ba5@linutronix.de>
-References: <20260120-uapi-sockaddr-v2-0-63c319111cf6@linutronix.de>
- <20260121192729.2095aa25@kernel.org>
- <20260130112309-28f2645b-e756-4173-96da-cf5c59191520@linutronix.de>
- <20260130081741.425a92e0@kernel.org>
- <3c46fc49-b41b-44a2-b42a-669cc7e6bb02@linutronix.de>
- <20260131092517.6639d84c@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mY3Ym0My"
+Received: by mail-oi1-f195.google.com with SMTP id 5614622812f47-45c70afbeebso3673919b6e.0
+        for <mptcp@lists.linux.dev>; Tue, 03 Feb 2026 03:54:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1770119698; x=1770724498; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=l4zm3ujhQzmPp4n/jiQ8KwJYIF9aaT0KTBy3FZGCdn4=;
+        b=mY3Ym0My7ZFqL7Mm6x1bH/jFZLCFRv8UusRtsoqj/cuyp/HQCnXEIlrHkThtBS/EyL
+         8q+1sPycb8U6m4wxWB0wzod/522ORD3GO01HLVxaZuJOb/q5/JhhlwyLM8Gtfof6EL0n
+         wXe8jOYIIawRb+dH4++3iJk3pZFdxAkpVFVndnttNEJgfIMFVA8uyYZ0RE3QC7VVmo3H
+         uDPrn43llBqerqL7r3s/pPdv46bqfue6zPBfGMwjMsY1mT9Ytslk1iEZUaJi+NcKEWNJ
+         NPszoSnzcqgkCkmkLzWltjZZir+t7bOFvtGLwL+hyRPjgO0VHdEua7ffFFVKjt//2Sao
+         5oeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1770119698; x=1770724498;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=l4zm3ujhQzmPp4n/jiQ8KwJYIF9aaT0KTBy3FZGCdn4=;
+        b=VxZ+nOJqJCYE4GytrBXEvH9jqvbFB5GvwZvjOLGUDp4T5/xK6/mdV7tw3OjPLudwG2
+         aATJ/6byhYEdT27ZUKWwMA0N3GROUw4kj0Od1zEZbuzoA/+LlL8owZeq24DOiyOxbzLn
+         qJwyJrZk6+FFwHXBpYM+WsITWKahOdFobLJBURRHYk4d0q9khSiBjgHymIpkLWfm+PwS
+         wdpaH/6SJInSoPk2GvS/OAeCEAk/ka/rjgS/MMSMg1mF7J2GE/WcqxIztJAyUo/2DXF9
+         /JvV4QYDV6A/x02w3GsZt9H1k+MBp2qCrUWd47YstTwa7Q9p9hccEbRvAtsu+wWXxnTF
+         ROkg==
+X-Gm-Message-State: AOJu0YzFC5cStvbVMifZJJHfIXhHc0wJqFyCduUocV8+pzanRdSAlxGX
+	yJLLVg/5Zl8sM2KSH3ynsgZvZ2rTvzIawmgwa7FoZuicNxDIC4rzZ78DaWMxZaw=
+X-Gm-Gg: AZuq6aIIHtKs6qOWpAuX2whXahOKiHOLenMKprB4T5cNDExKP8MiXBPG1/b419H84be
+	BjKs+3ZeY4k74WCvV7wUMBWdea2CrfIna3JYIS0D0yF8E6Dp+keq5MtP+8kdxxcaz9y/BFhuJ9S
+	X7GHDof/wXmElJe9Plc0khdrZLsvcH6HSw+dHYWguCVAeOE2/TO/BGNhAh6BWkZCZJk4f7TR4l9
+	2PbKVMpcA8+d3GGie31UgHrpk6nUfewvMW3Ng3NnNVHlp42lob75zcU6K3L3SlWVzr4Hgw3ZxUH
+	otRKgPCfBBizMqmyNPTDqcnkuyZzANPQggwb12FhY+KHRPqPWLYEtMeNBL1FVxDW4/y4PF6yx9x
+	Xj4DVnujH/UXD2G+3KqNuFy45hjc+bOv2JNnpifH6Iq0i/60etP0x3OfYvuEQgqeXcPC9CEFHIQ
+	BhIzfMjC6bI3Z05lxIPLpxifDb
+X-Received: by 2002:a05:6808:309d:b0:45c:881c:e0c0 with SMTP id 5614622812f47-45f34cff8c6mr7993147b6e.47.1770119697975;
+        Tue, 03 Feb 2026 03:54:57 -0800 (PST)
+Received: from [127.0.0.1] ([52.176.138.198])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-45f08f20ddbsm10751406b6e.14.2026.02.03.03.54.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Feb 2026 03:54:57 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Geliang Tang <tanggeliang@kylinos.cn>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <cover.1770113743.git.tanggeliang@kylinos.cn>
+References: <cover.1770113743.git.tanggeliang@kylinos.cn>
+Subject: Re: [PATCH mptcp-next v2 0/3] implement .splice_eof
+Message-ID: <dd77c2f7-90f2-a6a1-8d8f-58b41c0ae70d@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 03 Feb 2026 11:54:56 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260131092517.6639d84c@kernel.org>
 
-On Sat, Jan 31, 2026 at 09:25:17AM -0800, Jakub Kicinski wrote:
-> On Sat, 31 Jan 2026 11:26:32 +0100 Thomas Weißschuh wrote:
-> > Jan 30, 2026 17:17:46 Jakub Kicinski <kuba@kernel.org>:
-> > 
-> > > On Fri, 30 Jan 2026 11:34:15 +0100 Thomas Weißschuh wrote:  
-> > >> Some of them get broken by the new 'struct sockaddr', but some others are
-> > >> already broken just by the new transitive inclusion of libc-compat.h.
-> > >> So any header starting to use the compatibility machinery may trigger breakage
-> > >> in code including UAPI headers before libc header, even for completely new type
-> > >> definitions which themselves would not conflict with libc.  
-> > >
-> > > Let's split the uAPI header changes from any selftest changes.
-> > > If you're saying the the selftests no longer build after the uAPI
-> > > header changes then of course we can't apply the patches.  
-> > 
-> > Yes, the selftests don't build anymore after the uAPI changes.
-> > 
-> > "can't apply" as in
-> > * "can't apply separately"
-> > * "are unacceptable in general"
-> 
-> this one
-> 
-> > * "are too late for this cycle"
-> > ?
-> > 
-> > None of this is urgent.
-> > We can do the selftests in one cycle and the uAPI in another one.
-> > Feel free to pick up the patches as you see fit.
-> > (The mptcp changes already go through their tree, so need to be dropped here)
-> > I can also resubmit the patches differently if preferred.
-> 
-> The selftests are just a canary in the coalmine. If we break a bunch of
-> selftests chances are we'll also break compilation of real applications
-> for people. Subjective, but I don't see a sufficient upside here to do
-> that.
+Hi Geliang,
 
-Okay. We'll have around this inconsistency then.
+Thank you for your modifications, that's great!
 
-> FWIW the typelimits change broke compilation of ethtool, we'll see if
-> anyone "outside kernel community itself" complains.
+Our CI did some validations and here is its report:
 
-Can you point me to that breakage? I was unable to find it.
+- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Unstable: 1 failed =
+test(s): packetdrill_dss =F0=9F=94=B4
+- KVM Validation: debug (only =
+selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal (only=
+ bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only =
+bpftest_all): Success! =E2=9C=85
+- Task: https://github.=
+com/multipath-tcp/mptcp_net-next/actions/runs/21626946431
+
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/7342aaed0c88
+Patchwork: https://patchwork.kernel.=
+org/project/mptcp/list/?series=3D1050219
 
 
-Thomas
+If there are some issues, you =
+can reproduce them using the same environment as
+the one used by the CI =
+thanks to a docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
+
+
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 Core)
