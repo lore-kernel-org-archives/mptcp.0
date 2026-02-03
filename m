@@ -1,78 +1,104 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E427321B9FD
-	for <mptcp@lists.linux.dev>; Tue,  3 Feb 2026 10:19:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D56431ED8A
+	for <mptcp@lists.linux.dev>; Tue,  3 Feb 2026 10:31:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770113966; cv=none; b=N/bIyROp2NZG73WTs8eMMuFYQ6gVLc8sKeKaZmN0pRWtNV+mQl+g/7Px90ZEYIKM3A3VKh+i6+FZirwHRkWkAL8AF2nVj6r9OMwmvLMkEPbg2ns/VeifI5/y7jRdyfLs4ZCtwSSlETl3fg6kzgaKePDhThLXMylQAGGpXo9SxHI=
+	t=1770114676; cv=none; b=C7vg2dMIao0mvGGhERttqm13CXL1Y08tlUJ32iQ4Kiu2/bNhfDPfyNS/+2Q/X51s02cQQ6/irQL17L3TigFHFn3axZEY9zxByfIGYXQHgNntPYPEqMSX9vgGBrKiGFfO0jA9U7H4nyMbnVDCiO2P9ib/Uces2sbyC1Und6orxdI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770113966; c=relaxed/simple;
-	bh=YP9o68zmYp7nXVGJNVZtKDZZz0cV6rTSpFUCjtxKjc0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=R9fyqQmsSFEiRMyaJjRDgcOEe/mzqzvxe5ZNZlDwJEJvatOagpXrCCizP8Bnf7p+mcwX+9maorTPVVbCW3kLHfhSfrOp/dD61bOg8tgB9f4nTSyZtre6N1MqGH3yUXtfXJaAT6HhMgAxEPQHJsryjxo563Ro6eOzAXm87mVpS+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kYx7mQ4P; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1770114676; c=relaxed/simple;
+	bh=8EqXSPylvbySNAr5Oei+u1o6rSgjgsVLZjgK41Gu8I8=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=RRc+IUXKb5shkXWEMt0PP1vEpDKpAvUUgwTYE/dWRsLU85YH43uH9pM2xTHovLlOT+sArq956oJy3HNOYna5Fucf7GFrXMCMUkHxPSLevHSEFFx0TXBYPcpfz3g5hUg/fKC6/Wl+CAPYXtVRVNpV5L2cPkXgOLaNM2f31hY+7QI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VvrBuFXD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kYx7mQ4P"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75358C19422;
-	Tue,  3 Feb 2026 10:19:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VvrBuFXD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C2D3C116D0;
+	Tue,  3 Feb 2026 10:31:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770113965;
-	bh=YP9o68zmYp7nXVGJNVZtKDZZz0cV6rTSpFUCjtxKjc0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=kYx7mQ4P64BCC/qHhgyd4lAEl1RPoq3i5UoJFcN55hH8A9xz8uZOSJIs4KcTEdCvN
-	 rUqzS6+h+b1tSWsUzNmCdHUAYWvdmbq2bmbX8ryn7PPvIJ/eN9z5ZSSwLJ9hfs+BiY
-	 E3IdKAxjTGu+6DH6go7yfoKZBy0Cg6rvhoR80/gQWYsiExLKDlHj9z6Z5W4vrmrmnc
-	 eYxYJ7xYROI7IEzBEuikniNGjQiHVNJHqK8qTKxQ4dkM9XsZtCzvPQ/SKZZy4RtymQ
-	 TG+y1RNwNHFQ5z1k7Ry5JjI0dd/YjLkBuLid1Jat32JgTzYWJ96Cfev2Cx7QmNZwwe
-	 b0OYGSh5RiGow==
+	s=k20201202; t=1770114676;
+	bh=8EqXSPylvbySNAr5Oei+u1o6rSgjgsVLZjgK41Gu8I8=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=VvrBuFXD+nKjZEyMftT5LcJYsO2yW4rhMLOo/IzlM2PKqHOxMrR3aj4k6ldp+nSFM
+	 6JkPFseyjY8ayDiKBAqZHH0qnXJCbQtWPIpOZ9M3JkzAeOyyRIJIJcSZbs2TLIz4+6
+	 SqA1jtsTPeXmhQpHLjQRej9hjGYjGUyN9q5HdTGRW3oG4j8DkOA3u66m+98NJyv7i1
+	 N69T9UfcCogsVAeQUKDbvEAoEV9ugPdw0HhzmWsOUmpgogSVOOB/GiK8CcwejVmIwe
+	 JhkjjFRg7/DFV0mc2YxiwKFinXXIFCPs6YC6GkXVeC/kOG43k8Km0C+lw1REfo1Gmi
+	 iY44jt0dbTtTA==
+Message-ID: <19b28307eb2492546fbf363ede5856447e4fe06d.camel@kernel.org>
+Subject: Re: [PATCH mptcp-next v2 2/3] mptcp: allow overridden write_space
+ to be invoked
 From: Geliang Tang <geliang@kernel.org>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v2 3/3] selftests: mptcp: connect: trigger splice_eof
-Date: Tue,  3 Feb 2026 18:19:09 +0800
-Message-ID: <626f90b0c80e0ef7773094a46a7d4e9809fc7d26.1770113743.git.tanggeliang@kylinos.cn>
-X-Mailer: git-send-email 2.52.0
-In-Reply-To: <cover.1770113743.git.tanggeliang@kylinos.cn>
-References: <cover.1770113743.git.tanggeliang@kylinos.cn>
+To: Matthieu Baerts <matttbe@kernel.org>, Mat Martineau
+ <martineau@kernel.org>,  Paolo Abeni <pabeni@redhat.com>
+Cc: Gang Yan <yangang@kylinos.cn>, mptcp@lists.linux.dev
+Date: Tue, 03 Feb 2026 18:31:09 +0800
+In-Reply-To: <3a02e802-56c6-4c99-8f7d-aa618a8f46b7@kernel.org>
+References: <cover.1767504329.git.tanggeliang@kylinos.cn>
+	 <2efc3455052c3a33cad0c8744b171dfc6e7a6d8a.1767504329.git.tanggeliang@kylinos.cn>
+	 <9a2ce3981452685fe178892d0631b289b8d55e01.camel@kernel.org>
+	 <3a02e802-56c6-4c99-8f7d-aa618a8f46b7@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.58.2 (3.58.2-1.fc43) 
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+Hi Matt,
 
-Increase the sendfile count by one to ensure the transmission size
-exceeds the actual data length. This triggers the splice_eof path
-in the kernel, allowing the newly implemented MPTCP splice_eof
-interface to be exercised during testing.
+Thanks for your reply.
 
-The change from 'count' to 'count + 1' forces the sendfile operation
-to attempt sending one more byte than available, which activates the
-end-of-file handling in the splicing logic and ensures coverage of
-the related MPTCP code paths.
+On Tue, 2026-02-03 at 10:42 +0100, Matthieu Baerts wrote:
+> Hi Geliang,
+> 
+> On 03/02/2026 07:54, Geliang Tang wrote:
+> > Hi Matt, Mat, Paolo,
+> > 
+> > On Sun, 2026-01-04 at 13:29 +0800, Geliang Tang wrote:
+> > > From: Geliang Tang <tanggeliang@kylinos.cn>
+> > > 
+> > > psock may override its own sk_write_space functions. This patch
+> > > ensures
+> > > that the overridden sk_write_space can be invoked by MPTCP.
+> > > 
+> > > Note: This patch was initially included in the NVME MPTCP set.
+> > 
+> > This patch was initially developed to resolve the "timeout" errors
+> > observed in the NVMe MPTCP tests described in [1], because NVMe TCP
+> > overrides its own sk_write_space. During subsequent development, I
+> > discovered that not only NVMe TCP overrides its own sk_write_space,
+> > but
+> > KTLS and psock also override it. 
+> > 
+> > Therefore, this patch is needed in all three series. To reduce
+> > dependencies between these three series, I propose to merge this
+> > patch
+> > into the mainline first.
+> 
+> Just to be sure, when you say "mainline", do you mean our MPTCP tree
+> with the export branch?
+> 
+> Because we are at the end of a cycle here, my priority is to flush
+> patches that are ready or fix issues. If I'm not mistaken, this patch
+> is
+> needed for new features that are not in our tree, not in net or net-
+> next
+> trees, right?
 
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
----
- tools/testing/selftests/net/mptcp/mptcp_connect.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Yes, it is needed for new features. In this case, merging it into the
+export branch first is also an option. It can be sent to net-next in
+the next cycle. I plan to submit the KTLS series and the NVMe series to
+the KTLS and NVMe communities for feedback respectively. If this
+write_space patch enters net-next early, it would be more convenient.
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-index cbe573c4ab3a..2aaf3ed11315 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-@@ -870,7 +870,7 @@ static int do_sendfile(int infd, int outfd, unsigned int count,
- 	while (count > 0) {
- 		ssize_t r;
- 
--		r = sendfile(outfd, infd, NULL, count);
-+		r = sendfile(outfd, infd, NULL, count + 1);
- 		if (r < 0) {
- 			perror("sendfile");
- 			return 3;
--- 
-2.52.0
+Thanks,
+-Geliang
 
+> 
+> Cheers,
+> Matt
