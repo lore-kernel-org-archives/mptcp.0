@@ -1,130 +1,142 @@
-Received: from mail-oi1-f195.google.com (mail-oi1-f195.google.com [209.85.167.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3671A22339
-	for <mptcp@lists.linux.dev>; Tue,  3 Feb 2026 11:54:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7630B2F7ACA;
+	Tue,  3 Feb 2026 18:42:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770119700; cv=none; b=omTOgv3vz8i7rBFyApsRfqndjEo2FH+UOCV2JSjUu+AzVbfV5a18NWxjqXdM5yrgsUvXdYUwPRPzIWa2ZCsKJhrWytxOcIUap/X7kL4TbPN1oquSE7vIStgYogAvy40ir5UeanknBT4tiYaanbit8hta5xvVrJWakD5sPV7v0ao=
+	t=1770144148; cv=none; b=kOf+8Hr21Jpu6Yadka4x0Pdu3drlpZqU/6Fo41TkkJiyhMKgeC2v+JLBW/HInk5mJSGYj+ypHtE6UXlSm+2Vxpg86D8Y1QJ2vfunxg+pTnT3jzAffdBts3zY9+0O4AhLKwptpQhmvXMvK0tjQTQK2zgvU99k8wiRp1/1ZLfPvWI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770119700; c=relaxed/simple;
-	bh=1ZWzqYL42En2VoGEAHnk7cp/mJMeMEeCtTiuGfUEGU8=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=FEOr3AuM2+XsSOcqn9y7QLl6vLMOnSn2RCsq8gU+XA6PWtZA0o+cLTXEgWEexAkssWvj5yok+TEJyPw+ymWubK7HqSjs+Pw22Q/XszdeNtCvMNghol7Rzp69Dgjmqsa1nHAFm54SnDi+rgv58Oy6erXDrIKa7Ah84Eez0ejVC2c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mY3Ym0My; arc=none smtp.client-ip=209.85.167.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1770144148; c=relaxed/simple;
+	bh=wRIpaO20lQckRnYerb9WukDrN5roa3A/MNA4U+4guRg=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=u2qLhfI9HJLOgBZ31D9f/t1yo5LlwVRhbCR98auk+I4T54mAgr5w6YT8gNWHZyaAvnZf/S+oplj+TjCDioYwLW8yi6zaUevO90aoCP8GWIDJaQ0m91yu9j8Rnpkwn8d7NWSDZ9oDJ+IcmP2EqN6sOtx+rI2WWr51fsqQSNZFnvU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tiZJ35sP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mY3Ym0My"
-Received: by mail-oi1-f195.google.com with SMTP id 5614622812f47-45c70afbeebso3673919b6e.0
-        for <mptcp@lists.linux.dev>; Tue, 03 Feb 2026 03:54:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1770119698; x=1770724498; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=l4zm3ujhQzmPp4n/jiQ8KwJYIF9aaT0KTBy3FZGCdn4=;
-        b=mY3Ym0My7ZFqL7Mm6x1bH/jFZLCFRv8UusRtsoqj/cuyp/HQCnXEIlrHkThtBS/EyL
-         8q+1sPycb8U6m4wxWB0wzod/522ORD3GO01HLVxaZuJOb/q5/JhhlwyLM8Gtfof6EL0n
-         wXe8jOYIIawRb+dH4++3iJk3pZFdxAkpVFVndnttNEJgfIMFVA8uyYZ0RE3QC7VVmo3H
-         uDPrn43llBqerqL7r3s/pPdv46bqfue6zPBfGMwjMsY1mT9Ytslk1iEZUaJi+NcKEWNJ
-         NPszoSnzcqgkCkmkLzWltjZZir+t7bOFvtGLwL+hyRPjgO0VHdEua7ffFFVKjt//2Sao
-         5oeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770119698; x=1770724498;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=l4zm3ujhQzmPp4n/jiQ8KwJYIF9aaT0KTBy3FZGCdn4=;
-        b=VxZ+nOJqJCYE4GytrBXEvH9jqvbFB5GvwZvjOLGUDp4T5/xK6/mdV7tw3OjPLudwG2
-         aATJ/6byhYEdT27ZUKWwMA0N3GROUw4kj0Od1zEZbuzoA/+LlL8owZeq24DOiyOxbzLn
-         qJwyJrZk6+FFwHXBpYM+WsITWKahOdFobLJBURRHYk4d0q9khSiBjgHymIpkLWfm+PwS
-         wdpaH/6SJInSoPk2GvS/OAeCEAk/ka/rjgS/MMSMg1mF7J2GE/WcqxIztJAyUo/2DXF9
-         /JvV4QYDV6A/x02w3GsZt9H1k+MBp2qCrUWd47YstTwa7Q9p9hccEbRvAtsu+wWXxnTF
-         ROkg==
-X-Gm-Message-State: AOJu0YzFC5cStvbVMifZJJHfIXhHc0wJqFyCduUocV8+pzanRdSAlxGX
-	yJLLVg/5Zl8sM2KSH3ynsgZvZ2rTvzIawmgwa7FoZuicNxDIC4rzZ78DaWMxZaw=
-X-Gm-Gg: AZuq6aIIHtKs6qOWpAuX2whXahOKiHOLenMKprB4T5cNDExKP8MiXBPG1/b419H84be
-	BjKs+3ZeY4k74WCvV7wUMBWdea2CrfIna3JYIS0D0yF8E6Dp+keq5MtP+8kdxxcaz9y/BFhuJ9S
-	X7GHDof/wXmElJe9Plc0khdrZLsvcH6HSw+dHYWguCVAeOE2/TO/BGNhAh6BWkZCZJk4f7TR4l9
-	2PbKVMpcA8+d3GGie31UgHrpk6nUfewvMW3Ng3NnNVHlp42lob75zcU6K3L3SlWVzr4Hgw3ZxUH
-	otRKgPCfBBizMqmyNPTDqcnkuyZzANPQggwb12FhY+KHRPqPWLYEtMeNBL1FVxDW4/y4PF6yx9x
-	Xj4DVnujH/UXD2G+3KqNuFy45hjc+bOv2JNnpifH6Iq0i/60etP0x3OfYvuEQgqeXcPC9CEFHIQ
-	BhIzfMjC6bI3Z05lxIPLpxifDb
-X-Received: by 2002:a05:6808:309d:b0:45c:881c:e0c0 with SMTP id 5614622812f47-45f34cff8c6mr7993147b6e.47.1770119697975;
-        Tue, 03 Feb 2026 03:54:57 -0800 (PST)
-Received: from [127.0.0.1] ([52.176.138.198])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-45f08f20ddbsm10751406b6e.14.2026.02.03.03.54.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Feb 2026 03:54:57 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <tanggeliang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <cover.1770113743.git.tanggeliang@kylinos.cn>
-References: <cover.1770113743.git.tanggeliang@kylinos.cn>
-Subject: Re: [PATCH mptcp-next v2 0/3] implement .splice_eof
-Message-ID: <dd77c2f7-90f2-a6a1-8d8f-58b41c0ae70d@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 03 Feb 2026 11:54:56 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tiZJ35sP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08EB7C19425;
+	Tue,  3 Feb 2026 18:42:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1770144148;
+	bh=wRIpaO20lQckRnYerb9WukDrN5roa3A/MNA4U+4guRg=;
+	h=From:Subject:Date:To:Cc:From;
+	b=tiZJ35sP0M7IuI9LonWVl2o0SvN79IdtumFLpGZnlqZCEI7NXgdz11zLhC293ptU+
+	 StHwcR3tUAyCuDTLlM0xSJZFaYK+dYbcYip2VqCCjrsfhinabJ6fTAelAPemxxjm6C
+	 gWg7Vh5Ge8vlj0mXnknrEoqWsyoAWqico2g2MlBqc9HYQOC2i5dqHssUlnvzq/k+GP
+	 SybrfYmsPXYYqs+B39P5/Lfdu1sAJ4l569lQF5JXOowdfifzo8EsNaeyd1gpIeQg1C
+	 WKmALzfh1m8wfULj3noJIbJ1rsHSinpSuR62GbxZSmSchZamNUW7X/TwjVFzsvz9IK
+	 sOmIuGSp74KLg==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH net-next 00/15] mptcp: misc. features for v6.20/7.0
+Date: Tue, 03 Feb 2026 19:41:16 +0100
+Message-Id: <20260203-net-next-mptcp-misc-feat-6-20-v1-0-31ec8bfc56d1@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAExBgmkC/zWMQQqAIBAAvxJ7bkEtpPpKdFDbag+ZqEQQ/T0JO
+ sxhDjM3JIpMCYbqhkgnJz58EVlX4DbjV0Kei4MSSgupOvSUC1fGPWQXcOfkcCGTUaMSKMj22sr
+ GutZAeYRIC1/ff4Q/hel5Xo9H2dx5AAAA
+X-Change-ID: 20260128-net-next-mptcp-misc-feat-6-20-0eb96b13bc4a
+To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Simon Horman <horms@kernel.org>, Shuah Khan <shuah@kernel.org>
+Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, 
+ linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+ "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
+ Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+ linux-trace-kernel@vger.kernel.org, 
+ David Laight <david.laight.linux@gmail.com>, Gang Yan <yangang@kylinos.cn>, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
+ Geliang Tang <geliang@kernel.org>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3082; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=wRIpaO20lQckRnYerb9WukDrN5roa3A/MNA4U+4guRg=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDKbHNuemLbz3WC2nPS2bfbHc8fsbTx7V3RwW7Sx1H1m9
+ au5vvRvRykLgxgXg6yYIot0W2T+zOdVvCVefhYwc1iZQIYwcHEKwETmpjP8T9nAoLJzu+vmzPS+
+ q0vPbzfjsfE6uu30hLf6/fsCd86eNo2RoXHhPqPSx95fb74/Umqy9IfSpj8BL13NPQ9OvmB96M2
+ SFGYA
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hi Geliang,
+This series contains a few independent new features, and small fixes for
+net-next:
 
-Thank you for your modifications, that's great!
+ - Patches 1-2: two small fixes linked to the MPTCP receive buffer that
+   are not urgent, requiring code that has been recently changed, and is
+   needed for the next patch. Because we are at the end of the cycle, it
+   seems easier to send them to net-next, instead of dealing with
+   conflicts between net and net-next.
 
-Our CI did some validations and here is its report:
+ - Patch 3: a refactoring to simplify the code around MPTCP DRS.
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Unstable: 1 failed =
-test(s): packetdrill_dss =F0=9F=94=B4
-- KVM Validation: debug (only =
-selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only=
- bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only =
-bpftest_all): Success! =E2=9C=85
-- Task: https://github.=
-com/multipath-tcp/mptcp_net-next/actions/runs/21626946431
+ - Patch 4: a new trace event for MPTCP to help debugging receive buffer
+   auto-tuning issues.
 
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/7342aaed0c88
-Patchwork: https://patchwork.kernel.=
-org/project/mptcp/list/?series=3D1050219
+ - Patch 5: align internal MPTCP PM structure with NL specs, just to
+   manipulate the same thing.
 
+ - Patch 6: convert some min_t(int, ...) to min(): cleaner, and to avoid
+   future warnings.
 
-If there are some issues, you =
-can reproduce them using the same environment as
-the one used by the CI =
-thanks to a docker image, e.g.:
+ - Patch 7: prepare future extensions replacing sk_write_space().
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+ - Patch 8: sort all #include in MPTCP Diag tool in the selftests to
+   prevent future potential conflicts and ease the reading.
 
-For more details:
+ - Patches 9-11: improve the MPTCP Join selftest by waiting for an event
+   instead of a "random" sleep.
 
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
+ - Patches 12-14: some small cleanups in the selftests, seen while
+   working on the previous patches.
 
+ - Patch 15: avoid marking subtests as skipped while still validating
+   most checks when executing the last MPTCP selftests on older kernels.
 
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+David Laight (1):
+      mptcp: Change some dubious min_t(int, ...) to min()
 
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 Core)
+Geliang Tang (1):
+      mptcp: allow overridden write_space to be invoked
+
+Matthieu Baerts (NGI0) (9):
+      mptcp: pm: align endpoint flags size with the NL specs
+      selftests: mptcp: diag: sort all #include
+      selftests: mptcp: join: wait for estab event instead of MPJ
+      selftests: mptcp: join: fix wait_mpj helper
+      selftests: mptcp: join: userspace: wait for new events
+      selftests: mptcp: join chk_stale_nr: avoid dup stats
+      selftests: mptcp: join: avoid declaring i if not used
+      selftests: mptcp: connect cleanup TFO setup
+      selftests: mptcp: join: no SKIP mark for group checks
+
+Paolo Abeni (4):
+      mptcp: do not account for OoO in mptcp_rcvbuf_grow()
+      mptcp: fix receive space timestamp initialization
+      mptcp: consolidate rcv space init
+      trace: mptcp: add mptcp_rcvbuf_grow tracepoint
+
+ include/trace/events/mptcp.h                      |  80 ++++++++++++++++
+ net/mptcp/protocol.c                              |  56 ++++++-----
+ net/mptcp/protocol.h                              |  12 ++-
+ net/mptcp/subflow.c                               |   2 -
+ tools/testing/selftests/net/mptcp/mptcp_connect.c |  17 ++--
+ tools/testing/selftests/net/mptcp/mptcp_diag.c    |  29 +++---
+ tools/testing/selftests/net/mptcp/mptcp_join.sh   | 107 +++++++++++-----------
+ 7 files changed, 189 insertions(+), 114 deletions(-)
+---
+base-commit: fae1c659d7bd5640012be21b5b5d6490b83c0df8
+change-id: 20260128-net-next-mptcp-misc-feat-6-20-0eb96b13bc4a
+
+Best regards,
+-- 
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
+
