@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E095331204
-	for <mptcp@lists.linux.dev>; Tue,  3 Feb 2026 11:13:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AFF63314B4
+	for <mptcp@lists.linux.dev>; Tue,  3 Feb 2026 11:14:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770117194; cv=none; b=i7UrvniNAgrLW81mkO7AnMaTOYQowVu2+HQWZvVIZBOMQXBK42pOrkjZzlSCtULNhKaaAaiEVSR6j9Dg/UYGL4U8LwE44GY10LHkwqL2OSvO9wXB7lnZwz6sZwpaIOxCOud5Omtq7se/KCThxe5z3pDTVQTwN/2xNQYt4XlxAjo=
+	t=1770117260; cv=none; b=r3JKYycJUjlo91ZxqU1/qbyHhgxo/jbEl7yPiYT8+SHNVutVhvgixImHGao+WbOEzLwcLsBMPLOrBV39nTN9Q+fudmKx6+12I1gn5PXF+6y3hhSIxuzJkGwbnAxXQ6WNGFPOk+hqRJpLjpq+lS8o6IW0KHOfTbv5pbtKurzkUe8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770117194; c=relaxed/simple;
-	bh=eXYNk9J492ABHpQXjbt3sxcDGcIJag186sPpSIqwwzU=;
+	s=arc-20240116; t=1770117260; c=relaxed/simple;
+	bh=ltcgHlC3MRT12wdsdBssD5T1kDVzRL5N9kVJwmLAVWg=;
 	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=EASrwuFCrxqNX3UURK4rA7s/2fSUtEdDtzaYtCoydwgvlQBrxQ+UricrBc5gi2e/3TGfiLcBDHXFYTvCTr5Q1ARiFqmyjICslUJHkPXbe9ZgS5hOeGCdKgWIeSt245uElEdsB7Be6t1QZOIPESE8hqWdAF8rgZsOc0ar4rjERgg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e5Y2He6Q; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=Cgqxzx0+RPErRYABWkVE+AujvZcSKSKSw63FVOlnedm71vxmhelQ6DXHK4BHyNuIJdc7KTrPKZLKa9Ld4tlbQA4bYvz0zbNHZp8+29+4iOjxSfVMce20htSHcJdWkasL8n4NOzNulTlMjSWhFrLNoEXPLE37hyg6TBm2+uP71FM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qQu6CBMY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e5Y2He6Q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D7CEC2BC86;
-	Tue,  3 Feb 2026 11:13:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qQu6CBMY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19277C116D0;
+	Tue,  3 Feb 2026 11:14:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770117193;
-	bh=eXYNk9J492ABHpQXjbt3sxcDGcIJag186sPpSIqwwzU=;
+	s=k20201202; t=1770117260;
+	bh=ltcgHlC3MRT12wdsdBssD5T1kDVzRL5N9kVJwmLAVWg=;
 	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=e5Y2He6Qt8tOxyutOsh9mA5xbHfmRj+RF91vlCluxumZWyDeZLoc5FoqxcgQbrk2G
-	 Mx3kVvLGnA45UltZpXn7UgBRA8ocUosPdqRh3nX2faunJ/FkbPuYEnvgy2PldJctSj
-	 jpNnxpBiB/qqmULIHgkKTFK7ytRxgJAMWJCKhhySjP5B8z5/P/6BoXJnsSC4Zn81YD
-	 iHN/Cq0Tc2uc/ajne/CHLHiElvIAXd5W62SZVlYX9Zg70pMFXMNc27EnIU2q/OlTQK
-	 qh/+RzmZapU4UD1hYdwfJHLmIWPFzmzvIymigrAqoCN3v/sTvkaNtH6JDKvMhWxSPf
-	 i35pXM+N4m3uQ==
-Message-ID: <b21ef1e4-5d3d-4e12-aade-4ac94d18be26@kernel.org>
-Date: Tue, 3 Feb 2026 12:13:10 +0100
+	b=qQu6CBMY7eHVd7pshuXqgusIBay97f18xo+p4RMFixSobNN75LAPrSrpVrEh5HzE2
+	 Oq3xME+8UcS1IjFxhMN0J0lrEOeF3tF2oVwGyDXl6tLe3ntGII9KvvOcmkZhnj8AXo
+	 cEygv5lWHVrIIjuKZORtETaYqgqR8rHGjOyHTYzL4e7j2KbqpJ/6ObS6ecs9A3DJYQ
+	 24yVsN0JpDebghe3aZRPohnU0erZwH2P5WQyaw+t60mVFLVbeG0ooO3BK4APv+8QYg
+	 CfQOVBuYvCCpzLfQ1cN0smO/fOu+8TfMWw4U7zq1dqyZhzJC1iOeVTlSY3JV35p4CV
+	 KVR327XGfipmw==
+Message-ID: <8ee8b5cb-0673-49bf-a2dc-f5855516f65c@kernel.org>
+Date: Tue, 3 Feb 2026 12:14:16 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -48,6 +48,7 @@ References: <cover.1767504329.git.tanggeliang@kylinos.cn>
  <3a02e802-56c6-4c99-8f7d-aa618a8f46b7@kernel.org>
  <19b28307eb2492546fbf363ede5856447e4fe06d.camel@kernel.org>
  <f6bbb80f-0c08-4c28-908f-6d7422a990c6@kernel.org>
+ <b21ef1e4-5d3d-4e12-aade-4ac94d18be26@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -92,69 +93,77 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <f6bbb80f-0c08-4c28-908f-6d7422a990c6@kernel.org>
+In-Reply-To: <b21ef1e4-5d3d-4e12-aade-4ac94d18be26@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
-
-On 03/02/2026 11:56, Matthieu Baerts wrote:
-> On 03/02/2026 11:31, Geliang Tang wrote:
->> Hi Matt,
->>
->> Thanks for your reply.
->>
->> On Tue, 2026-02-03 at 10:42 +0100, Matthieu Baerts wrote:
->>> Hi Geliang,
->>>
->>> On 03/02/2026 07:54, Geliang Tang wrote:
->>>> Hi Matt, Mat, Paolo,
->>>>
->>>> On Sun, 2026-01-04 at 13:29 +0800, Geliang Tang wrote:
->>>>> From: Geliang Tang <tanggeliang@kylinos.cn>
->>>>>
->>>>> psock may override its own sk_write_space functions. This patch
->>>>> ensures
->>>>> that the overridden sk_write_space can be invoked by MPTCP.
->>>>>
->>>>> Note: This patch was initially included in the NVME MPTCP set.
->>>>
->>>> This patch was initially developed to resolve the "timeout" errors
->>>> observed in the NVMe MPTCP tests described in [1], because NVMe TCP
->>>> overrides its own sk_write_space. During subsequent development, I
->>>> discovered that not only NVMe TCP overrides its own sk_write_space,
->>>> but
->>>> KTLS and psock also override it. 
->>>>
->>>> Therefore, this patch is needed in all three series. To reduce
->>>> dependencies between these three series, I propose to merge this
->>>> patch
->>>> into the mainline first.
->>>
->>> Just to be sure, when you say "mainline", do you mean our MPTCP tree
->>> with the export branch?
->>>
->>> Because we are at the end of a cycle here, my priority is to flush
->>> patches that are ready or fix issues. If I'm not mistaken, this patch
->>> is
->>> needed for new features that are not in our tree, not in net or net-
->>> next
->>> trees, right?
->>
->> Yes, it is needed for new features. In this case, merging it into the
->> export branch first is also an option. It can be sent to net-next in
->> the next cycle. I plan to submit the KTLS series and the NVMe series to
->> the KTLS and NVMe communities for feedback respectively. If this
->> write_space patch enters net-next early, it would be more convenient.
+On 03/02/2026 12:13, Matthieu Baerts wrote:
+> Hi Geliang,
 > 
-> I see.
+> On 03/02/2026 11:56, Matthieu Baerts wrote:
+>> On 03/02/2026 11:31, Geliang Tang wrote:
+>>> Hi Matt,
+>>>
+>>> Thanks for your reply.
+>>>
+>>> On Tue, 2026-02-03 at 10:42 +0100, Matthieu Baerts wrote:
+>>>> Hi Geliang,
+>>>>
+>>>> On 03/02/2026 07:54, Geliang Tang wrote:
+>>>>> Hi Matt, Mat, Paolo,
+>>>>>
+>>>>> On Sun, 2026-01-04 at 13:29 +0800, Geliang Tang wrote:
+>>>>>> From: Geliang Tang <tanggeliang@kylinos.cn>
+>>>>>>
+>>>>>> psock may override its own sk_write_space functions. This patch
+>>>>>> ensures
+>>>>>> that the overridden sk_write_space can be invoked by MPTCP.
+>>>>>>
+>>>>>> Note: This patch was initially included in the NVME MPTCP set.
+>>>>>
+>>>>> This patch was initially developed to resolve the "timeout" errors
+>>>>> observed in the NVMe MPTCP tests described in [1], because NVMe TCP
+>>>>> overrides its own sk_write_space. During subsequent development, I
+>>>>> discovered that not only NVMe TCP overrides its own sk_write_space,
+>>>>> but
+>>>>> KTLS and psock also override it. 
+>>>>>
+>>>>> Therefore, this patch is needed in all three series. To reduce
+>>>>> dependencies between these three series, I propose to merge this
+>>>>> patch
+>>>>> into the mainline first.
+>>>>
+>>>> Just to be sure, when you say "mainline", do you mean our MPTCP tree
+>>>> with the export branch?
+>>>>
+>>>> Because we are at the end of a cycle here, my priority is to flush
+>>>> patches that are ready or fix issues. If I'm not mistaken, this patch
+>>>> is
+>>>> needed for new features that are not in our tree, not in net or net-
+>>>> next
+>>>> trees, right?
+>>>
+>>> Yes, it is needed for new features. In this case, merging it into the
+>>> export branch first is also an option. It can be sent to net-next in
+>>> the next cycle. I plan to submit the KTLS series and the NVMe series to
+>>> the KTLS and NVMe communities for feedback respectively. If this
+>>> write_space patch enters net-next early, it would be more convenient.
+>>
+>> I see.
+>>
+>> Is only this patch 2/3 from this series needed? Or the whole series?
 > 
-> Is only this patch 2/3 from this series needed? Or the whole series?
+> I just applied this patch (only this one) and I will try to send it this
+> cycle.
 
-I just applied this patch (only this one) and I will try to send it this
-cycle.
+New patches for t/upstream:
+- d8af4a2b24b5: mptcp: allow overridden write_space to be invoked
+- Results: 9577d6866c4a..a5bb737958a3 (export)
 
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Tests are now in progress:
+
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/9dd2299cd09c36fd30169ecf0f0d984746c0ea66/checks
 
 Cheers,
 Matt
