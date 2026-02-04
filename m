@@ -1,78 +1,147 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B988E2E65D
-	for <mptcp@lists.linux.dev>; Wed,  4 Feb 2026 01:45:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3FA73502BF
+	for <mptcp@lists.linux.dev>; Wed,  4 Feb 2026 05:51:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770169531; cv=none; b=UqlAHha/PR2GkO+rmur+RRs54refAJbW5sc3/ngmbAxPL29NKmOFo9js0mliTG/mB7FXUe/nDQhfwV1rDxPSPbj4D7Vjjwidf4+M96fiirro3soFZK7zD3GaX73smaPPnCMEmQMtCOL8/7N+oy1yjtLRIFS/SiqUOu51IWAa/+o=
+	t=1770184311; cv=none; b=DfNGdCpErIqkxD8AnfDMSyt21id1UwKZc8+eCC3Y4kryu6MJdy5EqW7RYstnG1sfz/T4SCztuGaNWJbVQ0gKBsWkZcJ5MWczTTJRmLRxhw9RU6Jud0ebcK3Tq74DOIZw3cGk6aOw3/n8Bt3L3HhLZWrbuRkOHA1o9qL5i5/A5Rk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770169531; c=relaxed/simple;
-	bh=O1XZdB6YGcONi2DHJvn/xOkL6EiQcFEc+n+lG9II8Mk=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=STOtcWxZlbT1GnhB8MoY0i1nOhZdtshBOClQ6sUtqgFEPHXbnrM/2OsF8W+ydMSGwn0kikEn6qqlFZHXX2AIF1oDW+Ukq8OqNkwrAueGXRpy7JX/gjyXVQrVujQ9jb8y2e6IwD06ly4O+6NBIJKrhiyk/X/ut5CDLtGzL+52bA8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qkwxCo6L; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1770184311; c=relaxed/simple;
+	bh=WyeMu1AkwqKC5I7WTqh9UrxM26rqyj+dwIwTtP2n/uA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OyTpPnMVPJmVRzfW4eAZ1gmzg1ckR0JF4Z8Iia4QBQu/5JdxmUmwamOFdsfBH8xpaQE2OTh1234tVWiIhTB2ETgIpCb3aH2nX8uV7hjL++DtAj1cyzumAqUlugu72FNInSFquMTtomJT5A/WJqDyKr+g9blfFIFiZCXDPp71vlE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=mH1c+uNa; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=d6ZMtz0u; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qkwxCo6L"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E489C116D0;
-	Wed,  4 Feb 2026 01:45:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770169531;
-	bh=O1XZdB6YGcONi2DHJvn/xOkL6EiQcFEc+n+lG9II8Mk=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=qkwxCo6LVWagoG1X3sNvN9HWqctxt0wag9JQ1jcIDN7uFderceQ7fltVS5lUQbg1P
-	 2G7g7wQbEuPlx7PVqFokRKjSZowXwsZDRDle+myE7E2RwFcS2KrtwQvASo7luU+KNA
-	 6omhwJrt7WorNNtR5DS6WZNMfV5Zv7MVl4BcT8XPZSNSvs15ciHgmbEEh1xdIYRe6J
-	 SZKp7DkFJp51F2d1x3N2PJ/1q2qY48fnAgyvshAWfWOIn/Mzr6Mpzb0mEeScSbBv10
-	 v0GfDcb1QDX4pwbT58+Rhfg5T9nzESmLvowAwaEpwLZMiB9FcmkcwqVbYIrqSMpaPa
-	 mE3JgjzSu7AWw==
-Date: Tue, 3 Feb 2026 17:45:30 -0800 (PST)
-From: Mat Martineau <martineau@kernel.org>
-To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-cc: MPTCP Upstream <mptcp@lists.linux.dev>, 
-    syzbot+f56f7d56e2c6e11a01b6@syzkaller.appspotmail.com
-Subject: Re: [PATCH mptcp-net v2 0/2] mptcp: pm: in-kernel: fix issue 606
-In-Reply-To: <20260202-issue-606-mark-subflow-endp-avail-v2-0-7f9df0ae6157@kernel.org>
-Message-ID: <b57d780e-8395-39c3-4758-61ba85967f3e@kernel.org>
-References: <20260202-issue-606-mark-subflow-endp-avail-v2-0-7f9df0ae6157@kernel.org>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mH1c+uNa";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="d6ZMtz0u"
+Date: Wed, 4 Feb 2026 06:51:46 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1770184308;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=sZHCk7fKGvf7QzEKyi64QeW2Liq4IP/rnnD/aBkMl5c=;
+	b=mH1c+uNacxWRUNxmS4+KhnW02S+ScCNg0PSMrRBV3jl5Y9gLNvMzn2wKTFE119EqwrHZVK
+	0Xs2BQCwy0xLs2a7+gdd8+UIN1NJkFxmfKrvCWu8BRowAICffN4IDMn7nvd5n8pRhGlOTI
+	/lcoeDTVwx4C/5arPqxl4Pr1DwVM/XXISPy+Ud/+o5dE+3KjyDGBJawYLfFhBLuzKlHeEe
+	Jjaaa07nXgXxFL74kUd+x+t5iZVGeWcu8qhM/QlOyI3o3mdtjH2S9THZPgLNdLZakBJJlE
+	ZR3GP0J25NhG4p4mppsRJ+sb9ftJwtMZWzQmpngxhxJY0va5sW06twgDzT0yog==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1770184308;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=sZHCk7fKGvf7QzEKyi64QeW2Liq4IP/rnnD/aBkMl5c=;
+	b=d6ZMtz0uUl3VOFryIOVmf39EYhSjv1iRpyzj0W6e5d3GCAZeC1TF0aBjXeboj7tm1lJ6gw
+	gmXb8/M6hAEDp/DQ==
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Eric Dumazet <edumazet@google.com>, 
+	Kuniyuki Iwashima <kuniyu@google.com>, Paolo Abeni <pabeni@redhat.com>, 
+	Willem de Bruijn <willemb@google.com>, "David S. Miller" <davem@davemloft.net>, 
+	Simon Horman <horms@kernel.org>, Shuah Khan <shuah@kernel.org>, 
+	Matthieu Baerts <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>, 
+	Geliang Tang <geliang@kernel.org>, =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>, 
+	=?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Jesper Dangaard Brouer <hawk@kernel.org>, 
+	John Fastabend <john.fastabend@gmail.com>, Stanislav Fomichev <sdf@fomichev.me>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-api@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-kselftest@vger.kernel.org, 
+	mptcp@lists.linux.dev, linux-security-module@vger.kernel.org, bpf@vger.kernel.org, 
+	libc-alpha@sourceware.org, Carlos O'Donell <carlos@redhat.com>, 
+	Adhemerval Zanella <adhemerval.zanella@linaro.org>, Rich Felker <dalias@libc.org>, klibc@zytor.com, 
+	Florian Weimer <fweimer@redhat.com>
+Subject: Re: [PATCH net-next v2 0/4] net: uapi: Provide an UAPI definition of
+ 'struct sockaddr'
+Message-ID: <20260204064248-d9c4ab78-f6d4-4ac6-8d55-e939bc1df6d2@linutronix.de>
+References: <20260120-uapi-sockaddr-v2-0-63c319111cf6@linutronix.de>
+ <20260121192729.2095aa25@kernel.org>
+ <20260130112309-28f2645b-e756-4173-96da-cf5c59191520@linutronix.de>
+ <20260130081741.425a92e0@kernel.org>
+ <3c46fc49-b41b-44a2-b42a-669cc7e6bb02@linutronix.de>
+ <20260131092517.6639d84c@kernel.org>
+ <20260203122715-eeb304f9-4b42-4fc6-a527-658182a92ba5@linutronix.de>
+ <20260203144011.32d5b223@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260203144011.32d5b223@kernel.org>
 
-On Mon, 2 Feb 2026, Matthieu Baerts (NGI0) wrote:
+On Tue, Feb 03, 2026 at 02:40:11PM -0800, Jakub Kicinski wrote:
+> On Tue, 3 Feb 2026 12:42:22 +0100 Thomas Weißschuh wrote:
+> > > FWIW the typelimits change broke compilation of ethtool, we'll see if
+> > > anyone "outside kernel community itself" complains.  
+> > 
+> > Can you point me to that breakage? I was unable to find it.
+> 
+> Not reported on the ML, and it's kinda annoying to repro because 
+> the uAPI header sync script isn't committed :/ You have to check 
+> this out
+> 
+>  https://git.kernel.org/pub/scm/network/ethtool/ethtool.git/
+> 
+> and run a script like this to sync headers from the kernel (then build):
+> 
+> #!/bin/bash -e
+> 
+> sn="${0##*/}"
+> export ARCH="x86_64"
+> 
+> if [ ! -d "$LINUX_GIT" ]; then
+>     echo "${sn}: LINUX_GIT not set" >&2
+>     exit 1
+> fi
+> 
+> pushd "$LINUX_GIT"
+> if [ -n "$1" ]; then
+>     git checkout "$1"
+> fi
+> desc=$(git describe --exact-match 2>/dev/null \
+>        || git show -s --abbrev=12 --pretty='commit %h')
+> kobj=$(mktemp -d)
 
-> The first patch fixes it, the other one clarify the code. I think both
-> can go to -net.
->
-> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> ---
-> Changes in v2:
-> - Patch 1: avoid setting the bit twice + comment (Mat)
-> - Link to v1: https://patch.msgid.link/20251215-issue-606-mark-subflow-endp-avail-v1-0-2f1b36da8993@kernel.org
+> make -j16 O="$kobj" allmodconfig
+> make -j16 O="$kobj" prepare
 
-Thanks for the v2 Matthieu, LGTM:
+These are not necessary.
+The UAPI generation does not need a kernel configuration.
 
-Reviewed-by: Mat Martineau <martineau@kernel.org>
+> make -j16 O="$kobj" INSTALL_HDR_PATH="${kobj}/hdr" headers_install
+> popd
+> 
+> pushd uapi
+> find . -type f -name '*.h' -exec cp -v "${kobj}/hdr/include/{}" {} \;
 
->
-> ---
-> Matthieu Baerts (NGI0) (2):
->      mptcp: pm: in-kernel: always set as unavail when removing addr
->      mptcp: pm: in-kernel: clarify mptcp_pm_remove_anno_addr()
->
-> net/mptcp/pm_kernel.c | 29 ++++++++++++-----------------
-> 1 file changed, 12 insertions(+), 17 deletions(-)
-> ---
-> base-commit: 1f27d14ad2803370bd6232df91f864f12f77ead7
-> change-id: 20251212-issue-606-mark-subflow-endp-avail-ccc3322ff800
->
-> Best regards,
-> -- 
-> Matthieu Baerts (NGI0) <matttbe@kernel.org>
->
->
->
+Here only those headers which already exist in ethtool's uapi/ directory
+are copied. As linux/typelimits.h is new, it is now missing.
+Honestly, if a user fiddles with the internals of the UAPI headers like
+this, it is on them to update their code if the internal structure
+changes. In your case a simple 'touch uapi/linux/typelimits.h'
+before running the script will be enough. Also internal.h now requires
+an explicit inclusion of <limits.h>, as that is not satisfied by the
+UAPI anymore.
+
+> popd
+> rm -rf "$kobj"
+> 
+> git add uapi
+> git commit -s -F - <<EOT
+> update UAPI header copies
+> 
+> Update to kernel ${desc}.
+> 
+> EOT
