@@ -1,98 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C2FA346AF2;
-	Wed,  4 Feb 2026 16:57:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6469B3126CA;
+	Wed,  4 Feb 2026 17:37:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770224275; cv=none; b=U/TliRUPQANi5ghtvIondKwGylKNgVR1kNbJOOIeKo4f6t3gSgR9dn09/gZzFsExL+ks6c3rvMsSP9hd6J/b0L2jNLw4cvr57ml7/LtPMdX1Xt2PmC5qB3AIZRpBgs5PJPMmBLlC93H1cYkDYz4dPd+rId4v/nfHcLfWEuvRXTc=
+	t=1770226622; cv=none; b=I+rKezR4Wq2ABiUhVzhncRxCK6T5Cw7w1IeZ0qQ+xRmzlQOlCZVNAyZ44PPIimdQ+dN1P6VCARwVF74rJ2m9t6InTShIvbBnQtspux+oCEgdipFY0eQMjhNrq2PqC7p06/WmbqzX6xvDbc5UXB+EQ/1rrtmv4HrkVtbgX5Urap4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770224275; c=relaxed/simple;
-	bh=1zfybBZwVsB3HlU8u8Zo9i/xyLjeozTzroCm71b7qm0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=QHK+531JtSBZmd625gxqRv5OGCTNR9CJZeWlG7fRejXfFcDGd0BrPZprff4cxM5qU0ZRJJdaWKDCVh34IMKuzH7ZC+UvZT2DZHGd+9GhOiKgKb8NgDTOD9KSgt076pmx3OuXCxhvE890+YFfvIW4bzE/OPGnJETc/OIR38FtaHI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XIvZxaBv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1770226622; c=relaxed/simple;
+	bh=J2jhiLUXHNETK2K/WGWGWhQG5ZFzPf+8CA9bAvmEsLc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=h5FCGsOYVocDCuMGNsf7R8l4VYHqD38d9DgLcHrgr2nkG+XgtI2qhzbS94e4NBu0vqIVEmL2o6d225vEOLMhDiv24Bynu7IAzfzOJztXyVA9/hXibdoNGi5LWb/eRwyvVc5E4b3MlN4fsN/wUNy5mE+vhwyujXJS+kG5FVLE+h8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=dznvGs0o; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XIvZxaBv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3EDCFC19424;
-	Wed,  4 Feb 2026 16:57:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770224275;
-	bh=1zfybBZwVsB3HlU8u8Zo9i/xyLjeozTzroCm71b7qm0=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=XIvZxaBvol0eCnYqMTn/MRmMybWNNsHgsd4NaBClWDHWN8lP+KngAQJ7qdrjTte4S
-	 huaH8t4AIQLLKv7h6OtExepK/UdQFBQfAC9Hi1YfGqMCF96/CR5gDnmrf6Npiuvclu
-	 pe+BtCxjN1YQIxrk2oAD28Mw+amTvgfujHsakihk+P37G4jeVlbwwa/61Otsa2IBy6
-	 qRpWNTG2UqboYpWFhC/LnBHu7gYBFF/tqbSfjLnd3iPg0yot8cK0LT29lTQ81AE/Qb
-	 hDUj2wJhx38uES8n7+1yHdFzEsW7KHassmbJsiokE6O3j6ei2ax/UZB/DWSNkiOWUJ
-	 kcSYbQGMmM6rw==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Wed, 04 Feb 2026 17:57:28 +0100
-Subject: [PATCH net 4/4] selftests: mptcp: connect: fix maybe-uninitialize
- warn
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dznvGs0o"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+	bh=QWG6XA1USI93n7EaNAxIq7oC93YNnSuGbppQJOFb4SY=; b=dznvGs0o7RqqFD9nveYtENGHB9
+	Zo7ZZyh/oVQrjWAPJZ+rCnsaB4ojIFyE6tqsNmaf303yXiJ7llXXmV0qloWCwwd9NjQXea1opVAAe
+	0k3AbdNS4P4LYzkRddhuTuv2rtmoyLkz70C82u6gQJtywZkdfBOHixhFK1GPbckGlnBy37ahfrsga
+	T0qPKvExIjKaRiN15sMvcQZoKlZfBw3CJcAFn7zyjE7XVA1lRI/tOLpbwb67tbntJ8a9ArwrVgvS8
+	/RdGtD+5f0dZ2MYVx8SrbgFrIlJb7KMzJF9Fo5dqABXftijUPXvpeUCHC530o1duiKUiZEdJOwSXQ
+	ZB5pSELA==;
+Received: from [50.53.43.113] (helo=[192.168.254.34])
+	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vngoD-00000008rOR-2BNf;
+	Wed, 04 Feb 2026 17:36:57 +0000
+Message-ID: <989c798c-c320-4cf3-9609-43dea5e5d478@infradead.org>
+Date: Wed, 4 Feb 2026 09:36:56 -0800
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20260204-net-mptcp-misc-fixes-6-19-rc8-v1-4-cb559fb6b50a@kernel.org>
-References: <20260204-net-mptcp-misc-fixes-6-19-rc8-v1-0-cb559fb6b50a@kernel.org>
-In-Reply-To: <20260204-net-mptcp-misc-fixes-6-19-rc8-v1-0-cb559fb6b50a@kernel.org>
-To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net 3/4] mptcp: fix kdoc warnings
+To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>,
+ Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
  Simon Horman <horms@kernel.org>, Shuah Khan <shuah@kernel.org>
-Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, 
- linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
- "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1434; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=1zfybBZwVsB3HlU8u8Zo9i/xyLjeozTzroCm71b7qm0=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDKbq9oYDdOP3f4xTcxiHsvne0rLUramaSw01L66csbVd
- ZM55qS5d5SyMIhxMciKKbJIt0Xmz3xexVvi5WcBM4eVCWQIAxenAEzk+FFGhtuPfnHe5F7dr/P0
- 3dJFGY63ZHN63Rucdp9bsaGOpVBO2YThnwHXm/e/9hlPV+S/GnZ5Dm+68JIj23Y67yqcrfjvjZf
- PFU4A
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev,
+ linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+References: <20260204-net-mptcp-misc-fixes-6-19-rc8-v1-0-cb559fb6b50a@kernel.org>
+ <20260204-net-mptcp-misc-fixes-6-19-rc8-v1-3-cb559fb6b50a@kernel.org>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20260204-net-mptcp-misc-fixes-6-19-rc8-v1-3-cb559fb6b50a@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-This warning can be seen with GCC 15.2:
 
-  mptcp_connect.c: In function ‘main_loop’:
-  mptcp_connect.c:1422:37: warning: ‘peer’ may be used uninitialized [-Wmaybe-uninitialized]
-   1422 |                 if (connect(fd, peer->ai_addr, peer->ai_addrlen))
-        |                                 ~~~~^~~~~~~~~
-  mptcp_connect.c:1377:26: note: ‘peer’ was declared here
-   1377 |         struct addrinfo *peer;
-        |                          ^~~~
 
-This variable is set in sock_connect_mptcp() in some conditions. If not,
-this helper returns an error, and the program stops. So this is a false
-positive, but better removing it by initialising peer to NULL.
+On 2/4/26 8:57 AM, Matthieu Baerts (NGI0) wrote:
+> The following warnings were visible:
+> 
+>   $ ./scripts/kernel-doc -Wall -none \
+>         net/mptcp/ include/net/mptcp.h include/uapi/linux/mptcp*.h \
+>         include/trace/events/mptcp.h
+>   Warning: net/mptcp/token.c:108 No description found for return value of 'mptcp_token_new_request'
+>   Warning: net/mptcp/token.c:151 No description found for return value of 'mptcp_token_new_connect'
+>   Warning: net/mptcp/token.c:246 No description found for return value of 'mptcp_token_get_sock'
+>   Warning: net/mptcp/token.c:298 No description found for return value of 'mptcp_token_iter_next'
+>   Warning: net/mptcp/protocol.c:4431 No description found for return value of 'mptcp_splice_read'
+>   Warning: include/uapi/linux/mptcp_pm.h:13 missing initial short description on line:
+>    * enum mptcp_event_type
+> 
+> Address all of them: either by using the 'Return:' keyword, or by adding
+> a missing initial short description.
+> 
+> The MPTCP CI will soon report issues with kdoc to avoid introducing new
+> issues and being flagged by the Netdev CI.
+> 
+> Reviewed-by: Geliang Tang <geliang@kernel.org>
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> ---
+>  include/uapi/linux/mptcp_pm.h |  2 +-
+>  net/mptcp/token.c             | 16 +++++++++-------
+>  2 files changed, 10 insertions(+), 8 deletions(-)
 
-Reviewed-by: Geliang Tang <geliang@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- tools/testing/selftests/net/mptcp/mptcp_connect.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+LGTM. Thanks.
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-index 10f6f99cfd4e..24b4abac8687 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-@@ -1296,8 +1296,8 @@ void xdisconnect(int fd)
- 
- int main_loop(void)
- {
-+	struct addrinfo *peer = NULL;
- 	int fd = 0, ret, fd_in = 0;
--	struct addrinfo *peer;
- 	struct wstate winfo;
- 
- 	if (cfg_input && cfg_sockopt_types.mptfo) {
+Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
 
 -- 
-2.51.0
-
+~Randy
