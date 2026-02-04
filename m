@@ -1,34 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26C65343200;
-	Wed,  4 Feb 2026 16:57:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C2FA346AF2;
+	Wed,  4 Feb 2026 16:57:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770224273; cv=none; b=QdCP7FGoVcQbwLkxuUAcWT2hGdescGrmniNyGv/1GClc2S3N+8FaMontCRlpFueC7kJVILwYRqkIY7D3oOj8FMmZ29CsUBQ50VqxSP+4O9lAoUlS5PAxfuLKEAOWHRSNeaXxtE91c7Q1M9ccGdPohHGOCnXtR6V7pRwjHC5Iqro=
+	t=1770224275; cv=none; b=U/TliRUPQANi5ghtvIondKwGylKNgVR1kNbJOOIeKo4f6t3gSgR9dn09/gZzFsExL+ks6c3rvMsSP9hd6J/b0L2jNLw4cvr57ml7/LtPMdX1Xt2PmC5qB3AIZRpBgs5PJPMmBLlC93H1cYkDYz4dPd+rId4v/nfHcLfWEuvRXTc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770224273; c=relaxed/simple;
-	bh=oQrIrDfVl4PepNgPPdzQwgI/kMNP/CA7VfcOXfAUYiQ=;
+	s=arc-20240116; t=1770224275; c=relaxed/simple;
+	bh=1zfybBZwVsB3HlU8u8Zo9i/xyLjeozTzroCm71b7qm0=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=qkpj8Jr9lFOOnb5wBq1PQth3Z8XFQRetuW8pz7pjBs9g1gzQBXpkUxiB02wjwW/MLKaKe9rpkrF2he7Wihr4WU5iD+O8qC7qBusFsMZH2h34JaiQ2VrWQ+pTtHv6aqIBT6/XTOIhWhSjbL7TNSFcs1xm2iYKumYzar4EZtt7HwI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RJELLuzP; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=QHK+531JtSBZmd625gxqRv5OGCTNR9CJZeWlG7fRejXfFcDGd0BrPZprff4cxM5qU0ZRJJdaWKDCVh34IMKuzH7ZC+UvZT2DZHGd+9GhOiKgKb8NgDTOD9KSgt076pmx3OuXCxhvE890+YFfvIW4bzE/OPGnJETc/OIR38FtaHI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XIvZxaBv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RJELLuzP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D86BEC19423;
-	Wed,  4 Feb 2026 16:57:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XIvZxaBv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3EDCFC19424;
+	Wed,  4 Feb 2026 16:57:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770224272;
-	bh=oQrIrDfVl4PepNgPPdzQwgI/kMNP/CA7VfcOXfAUYiQ=;
+	s=k20201202; t=1770224275;
+	bh=1zfybBZwVsB3HlU8u8Zo9i/xyLjeozTzroCm71b7qm0=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=RJELLuzP+RIur+Fsia8tS7AaxU2kaaRTR6KElUpyd8qiL4hRZKKEkuTxpoYsn5lI/
-	 BPflU7nPt+WtoaKXFaD/SUdg2WXVBeQKeHGxFTKAJGU+Uab7zDxXz+WacTDxzZYduy
-	 Hu2qhe2F2zXQZPrTB3pYpwxemsV0xpIRT6nZvktMVJqpUcG+xPabhBoq/CMoH6Lup1
-	 Q+/BfSL0K138IDtHsicOZ7XX/MXRymMQ+asEPGhP1kGRxqgSZDiwtX2egxvhwdU9pC
-	 hTMn0bg+X2YB+zAW9xlZzbCGilL98tG3YD57/6FtaXQnkdOVD4UduV3lGvkpdhPrZN
-	 C9vct5yzHH7AA==
+	b=XIvZxaBvol0eCnYqMTn/MRmMybWNNsHgsd4NaBClWDHWN8lP+KngAQJ7qdrjTte4S
+	 huaH8t4AIQLLKv7h6OtExepK/UdQFBQfAC9Hi1YfGqMCF96/CR5gDnmrf6Npiuvclu
+	 pe+BtCxjN1YQIxrk2oAD28Mw+amTvgfujHsakihk+P37G4jeVlbwwa/61Otsa2IBy6
+	 qRpWNTG2UqboYpWFhC/LnBHu7gYBFF/tqbSfjLnd3iPg0yot8cK0LT29lTQ81AE/Qb
+	 hDUj2wJhx38uES8n7+1yHdFzEsW7KHassmbJsiokE6O3j6ei2ax/UZB/DWSNkiOWUJ
+	 kcSYbQGMmM6rw==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Wed, 04 Feb 2026 17:57:27 +0100
-Subject: [PATCH net 3/4] mptcp: fix kdoc warnings
+Date: Wed, 04 Feb 2026 17:57:28 +0100
+Subject: [PATCH net 4/4] selftests: mptcp: connect: fix maybe-uninitialize
+ warn
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -36,8 +37,8 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260204-net-mptcp-misc-fixes-6-19-rc8-v1-3-cb559fb6b50a@kernel.org>
+Content-Transfer-Encoding: 8bit
+Message-Id: <20260204-net-mptcp-misc-fixes-6-19-rc8-v1-4-cb559fb6b50a@kernel.org>
 References: <20260204-net-mptcp-misc-fixes-6-19-rc8-v1-0-cb559fb6b50a@kernel.org>
 In-Reply-To: <20260204-net-mptcp-misc-fixes-6-19-rc8-v1-0-cb559fb6b50a@kernel.org>
 To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, 
@@ -48,103 +49,49 @@ Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev,
  linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
  "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3873; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=oQrIrDfVl4PepNgPPdzQwgI/kMNP/CA7VfcOXfAUYiQ=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDKbq9r63lbOn9TOH2MXd0+q4ujbhN1bdUQjhb5Om3WE9
- 9eZpCyXjlIWBjEuBlkxRRbptsj8mc+reEu8/Cxg5rAygQxh4OIUgInsOMjIsKqn1s5I1Dqj4/as
- R/Yrc6xaHz0uYuS6/Ef0gM/W9Dn7vRj+e16K8TjtbsWcueq0lW/iFdmLs5ls3i5jrDR8qbtXqEe
- QDwA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1434; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=1zfybBZwVsB3HlU8u8Zo9i/xyLjeozTzroCm71b7qm0=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDKbq9oYDdOP3f4xTcxiHsvne0rLUramaSw01L66csbVd
+ ZM55qS5d5SyMIhxMciKKbJIt0Xmz3xexVvi5WcBM4eVCWQIAxenAEzk+FFGhtuPfnHe5F7dr/P0
+ 3dJFGY63ZHN63Rucdp9bsaGOpVBO2YThnwHXm/e/9hlPV+S/GnZ5Dm+68JIj23Y67yqcrfjvjZf
+ PFU4A
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-The following warnings were visible:
+This warning can be seen with GCC 15.2:
 
-  $ ./scripts/kernel-doc -Wall -none \
-        net/mptcp/ include/net/mptcp.h include/uapi/linux/mptcp*.h \
-        include/trace/events/mptcp.h
-  Warning: net/mptcp/token.c:108 No description found for return value of 'mptcp_token_new_request'
-  Warning: net/mptcp/token.c:151 No description found for return value of 'mptcp_token_new_connect'
-  Warning: net/mptcp/token.c:246 No description found for return value of 'mptcp_token_get_sock'
-  Warning: net/mptcp/token.c:298 No description found for return value of 'mptcp_token_iter_next'
-  Warning: net/mptcp/protocol.c:4431 No description found for return value of 'mptcp_splice_read'
-  Warning: include/uapi/linux/mptcp_pm.h:13 missing initial short description on line:
-   * enum mptcp_event_type
+  mptcp_connect.c: In function ‘main_loop’:
+  mptcp_connect.c:1422:37: warning: ‘peer’ may be used uninitialized [-Wmaybe-uninitialized]
+   1422 |                 if (connect(fd, peer->ai_addr, peer->ai_addrlen))
+        |                                 ~~~~^~~~~~~~~
+  mptcp_connect.c:1377:26: note: ‘peer’ was declared here
+   1377 |         struct addrinfo *peer;
+        |                          ^~~~
 
-Address all of them: either by using the 'Return:' keyword, or by adding
-a missing initial short description.
-
-The MPTCP CI will soon report issues with kdoc to avoid introducing new
-issues and being flagged by the Netdev CI.
+This variable is set in sock_connect_mptcp() in some conditions. If not,
+this helper returns an error, and the program stops. So this is a false
+positive, but better removing it by initialising peer to NULL.
 
 Reviewed-by: Geliang Tang <geliang@kernel.org>
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- include/uapi/linux/mptcp_pm.h |  2 +-
- net/mptcp/token.c             | 16 +++++++++-------
- 2 files changed, 10 insertions(+), 8 deletions(-)
+ tools/testing/selftests/net/mptcp/mptcp_connect.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/uapi/linux/mptcp_pm.h b/include/uapi/linux/mptcp_pm.h
-index c97d060ee90b..fe9863d75350 100644
---- a/include/uapi/linux/mptcp_pm.h
-+++ b/include/uapi/linux/mptcp_pm.h
-@@ -11,7 +11,7 @@
- #define MPTCP_PM_VER	1
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+index 10f6f99cfd4e..24b4abac8687 100644
+--- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
++++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+@@ -1296,8 +1296,8 @@ void xdisconnect(int fd)
  
- /**
-- * enum mptcp_event_type
-+ * enum mptcp_event_type - Netlink MPTCP event types
-  * @MPTCP_EVENT_UNSPEC: unused event
-  * @MPTCP_EVENT_CREATED: A new MPTCP connection has been created. It is the
-  *   good time to allocate memory and send ADD_ADDR if needed. Depending on the
-diff --git a/net/mptcp/token.c b/net/mptcp/token.c
-index 5bb924534387..f1a50f367add 100644
---- a/net/mptcp/token.c
-+++ b/net/mptcp/token.c
-@@ -103,7 +103,7 @@ static void mptcp_crypto_key_gen_sha(u64 *key, u32 *token, u64 *idsn)
-  * It creates a unique token to identify the new mptcp connection,
-  * a secret local key and the initial data sequence number (idsn).
-  *
-- * Returns 0 on success.
-+ * Return: 0 on success.
-  */
- int mptcp_token_new_request(struct request_sock *req)
+ int main_loop(void)
  {
-@@ -146,7 +146,7 @@ int mptcp_token_new_request(struct request_sock *req)
-  * the computed token at a later time, this is needed to process
-  * join requests.
-  *
-- * returns 0 on success.
-+ * Return: 0 on success.
-  */
- int mptcp_token_new_connect(struct sock *ssk)
- {
-@@ -241,7 +241,7 @@ bool mptcp_token_exists(u32 token)
-  * This function returns the mptcp connection structure with the given token.
-  * A reference count on the mptcp socket returned is taken.
-  *
-- * returns NULL if no connection with the given token value exists.
-+ * Return: NULL if no connection with the given token value exists.
-  */
- struct mptcp_sock *mptcp_token_get_sock(struct net *net, u32 token)
- {
-@@ -288,11 +288,13 @@ EXPORT_SYMBOL_GPL(mptcp_token_get_sock);
-  * @s_slot: start slot number
-  * @s_num: start number inside the given lock
-  *
-- * This function returns the first mptcp connection structure found inside the
-- * token container starting from the specified position, or NULL.
-+ * Description:
-+ *   On successful iteration, the iterator is moved to the next position and a
-+ *   reference to the returned socket is acquired.
-  *
-- * On successful iteration, the iterator is moved to the next position and
-- * a reference to the returned socket is acquired.
-+ * Return:
-+ *   The first mptcp connection structure found inside the token container
-+ *   starting from the specified position, or NULL.
-  */
- struct mptcp_sock *mptcp_token_iter_next(const struct net *net, long *s_slot,
- 					 long *s_num)
++	struct addrinfo *peer = NULL;
+ 	int fd = 0, ret, fd_in = 0;
+-	struct addrinfo *peer;
+ 	struct wstate winfo;
+ 
+ 	if (cfg_input && cfg_sockopt_types.mptfo) {
 
 -- 
 2.51.0
