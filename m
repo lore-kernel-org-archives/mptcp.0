@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA7E03A7840
-	for <mptcp@lists.linux.dev>; Wed,  4 Feb 2026 10:16:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17F62372B3F;
+	Wed,  4 Feb 2026 10:47:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770200171; cv=none; b=jTt9VyTCxa3ptNL6w81vFgSvyS8SegqdcXDwbsSeNGqxC6yjGm2qlstVhJWs5qsUl3f8Ve5EO1EoVIoC8LaHeb0JGMpLAPxNqgXBJDRbZjyOYZNMWPLrcUmykDbKbQKodehoZZpmaBKHIy1Kkv7bDWhSts+LQbnQf8f0JPcvVhU=
+	t=1770202039; cv=none; b=eIfC3uycOkG4SElkM1YWti0MybWF6JocGTLAk+EAuPTgPpAVJtcP9C2o6LwAVkF/zqxbm4SIHHy8bon0SYV/v2PxWc2KOJ2WQ9EAaelEcQEdbBmF8meaAaMWxF/63Te6vZM7oSeJowKp7sst676lvMG6jNh8kqZLByTyNbMg+10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770200171; c=relaxed/simple;
-	bh=zE7ue2IDbGV4KHgSIF8pCT5Roaj29rCHRnlpzBg4YMo=;
+	s=arc-20240116; t=1770202039; c=relaxed/simple;
+	bh=D/vdlnLyzaN0QF3n8GIGTjf2NTZ9bLWnm071K/SuhDM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=F1F28ZJDPCislGADrzv5KO0yHs9Zjn8pFPxCF3pDCLGpmYwbbTRd5D1a5Qygl4teSD0q7EuYgE0uReeF0D2037ZjZd30KAXLhPzwFG6051mkQU/7pgUXFCeds6kLrtB3t38NBvjsVg7la/3TtgLcTzAJj7GKUtEPRPG0Tq/H7Bk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tdhPLDh1; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=cOEemx5xKb7HZCuYK57lVRDW/2+XqScS+O0eQ9C5+D09LsWav2uJe+0PAeFXYQN44WRXO0BmJobMMZJX7LTC5BTrIyTUFv39aV8K2l9BvPEmG7KKF5Eb/DmV2vtVdacbwVFInX4ZOW2tiA4DP5TZo0bLLzpBYYU2UlhSkKUNEuE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c5XUfZfG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tdhPLDh1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3AC4C19422;
-	Wed,  4 Feb 2026 10:16:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c5XUfZfG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 171DDC4CEF7;
+	Wed,  4 Feb 2026 10:47:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770200171;
-	bh=zE7ue2IDbGV4KHgSIF8pCT5Roaj29rCHRnlpzBg4YMo=;
+	s=k20201202; t=1770202038;
+	bh=D/vdlnLyzaN0QF3n8GIGTjf2NTZ9bLWnm071K/SuhDM=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=tdhPLDh13Vbx4XOam/4E8n6lxWdINvFM00LOy/Z5J1WKNf2haOp4p0VieVdN/QjQu
-	 HGoZI1/UsL20GJv9zboKHdepXPR8AAO3pZp9OO6DcfsCEHQk94+CNKlQsjkhcHgyBm
-	 GMY4Jc2OSAMKDxne34rmB5qJh8MwOkOfntHUTjVlueKy/9k3HYjGoul6TsBZgG38xb
-	 T8sECXvUOAua626meJ7+Yvs2S6b/bddPgbxdwXuiIuKF9Y+DcaOARWuOcC9zlg0c6M
-	 RDvpsQvDwMkQOXxEGXn6aum8GymmwLaR8yvj/N6gES2603YlyMCRb/i1hbcfHVtlzu
-	 NesuW8hJ0EKfg==
-Message-ID: <7e0833e9-46b8-4ae5-9613-37bf1c5550fd@kernel.org>
-Date: Wed, 4 Feb 2026 11:16:08 +0100
+	b=c5XUfZfG0nTUy6F//9h+mGVevHuruLKwgme7sYOi6qFt3r+x3At/ugswNtwXh3fld
+	 PP9eAL6BKHQ7JsywLqLNEDYVeMJoLWeaVOj8fsKPOWG2Wd0v6/jEkzKmlISLNSYa2C
+	 YE76uPzLSk1WdR148Um037IgxF/DfHq3BGEpnv7W2bIqeJwWPsmZe9KpcpG/vuGcBi
+	 +AaarvCrp+eB85pIfjFvT77x1hrj+qlOJc6A9SZ5+55+swp7bRrqDJ6cYGc0kyX1Vf
+	 xZdwSUih5daDseFZ2WmlEJkfDm1YIRfgBEWlwGJVFTU8iePEoOD3u+3fw5I2K8o3mE
+	 hcaNwtVVKrTqg==
+Message-ID: <8037fb73-4e18-4ed1-9eaf-e4cd8b2c9d53@kernel.org>
+Date: Wed, 4 Feb 2026 11:47:13 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,14 +35,19 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net v2 0/2] mptcp: pm: in-kernel: fix issue 606
-To: Mat Martineau <martineau@kernel.org>
-Cc: MPTCP Upstream <mptcp@lists.linux.dev>,
- syzbot+f56f7d56e2c6e11a01b6@syzkaller.appspotmail.com
-References: <20260202-issue-606-mark-subflow-endp-avail-v2-0-7f9df0ae6157@kernel.org>
- <b57d780e-8395-39c3-4758-61ba85967f3e@kernel.org>
-From: Matthieu Baerts <matttbe@kernel.org>
+Subject: Re: [PATCH net-next 07/15] mptcp: allow overridden write_space to be
+ invoked
 Content-Language: en-GB, fr-BE
+To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Simon Horman <horms@kernel.org>, Shuah Khan <shuah@kernel.org>
+Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev,
+ linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ Gang Yan <yangang@kylinos.cn>
+References: <20260203-net-next-mptcp-misc-feat-6-20-v1-0-31ec8bfc56d1@kernel.org>
+ <20260203-net-next-mptcp-misc-feat-6-20-v1-7-31ec8bfc56d1@kernel.org>
+From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -87,46 +92,56 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <b57d780e-8395-39c3-4758-61ba85967f3e@kernel.org>
+In-Reply-To: <20260203-net-next-mptcp-misc-feat-6-20-v1-7-31ec8bfc56d1@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Mat,
+Hello,
 
-On 04/02/2026 02:45, Mat Martineau wrote:
-> On Mon, 2 Feb 2026, Matthieu Baerts (NGI0) wrote:
+On 03/02/2026 19:41, Matthieu Baerts (NGI0) wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
->> The first patch fixes it, the other one clarify the code. I think both
->> can go to -net.
->>
->> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
->> ---
->> Changes in v2:
->> - Patch 1: avoid setting the bit twice + comment (Mat)
->> - Link to v1: https://patch.msgid.link/20251215-issue-606-mark-
->> subflow-endp-avail-v1-0-2f1b36da8993@kernel.org
+> Future extensions with psock will override their own sk->sk_write_space
+> callback. This patch ensures that the overridden sk_write_space can be
+> invoked by MPTCP.
 > 
-> Thanks for the v2 Matthieu, LGTM:
+> INDIRECT_CALL is used to keep the default path optimised.
 > 
-> Reviewed-by: Mat Martineau <martineau@kernel.org>
+> This patch is shared early to ease discussions around future RFC and
+> avoid confusions with this "fix" that is needed for different future
+> extensions.
+> 
+> Suggested-by: Paolo Abeni <pabeni@redhat.com>
+> Co-developed-by: Gang Yan <yangang@kylinos.cn>
+> Signed-off-by: Gang Yan <yangang@kylinos.cn>
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> ---
+>  net/mptcp/protocol.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index f4bfe91ca7f9..0bd1ee860316 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -975,7 +975,7 @@ static inline void mptcp_write_space(struct sock *sk)
+>  	/* pairs with memory barrier in mptcp_poll */
+>  	smp_mb();
+>  	if (mptcp_stream_memory_free(sk, 1))
+> -		sk_stream_write_space(sk);
+> +		INDIRECT_CALL_1(sk->sk_write_space, sk_stream_write_space, sk);
 
-Thank you for the review!
+Is it possible to drop only this patch from this series? It is
+independent of the rest, and the AI review tool spotted that
+sk->sk_write_space is not sk_stream_write_space by default.
 
-Now in our tree:
+I can send a v2 without this patch if preferred.
 
-New patches for t/upstream-net and t/upstream:
-- cee9083edbf5: mptcp: pm: in-kernel: always set as unavail when
-removing addr
-- 86e2def61c79: mptcp: pm: in-kernel: clarify mptcp_pm_remove_anno_addr()
-- Results: 67f92bf018dc..706883b2eaf9 (export-net)
-- Results: e5a8401c4fcf..7fc1dc7ad76c (export)
-
-Tests are now in progress:
-
-- export-net:
-https://github.com/multipath-tcp/mptcp_net-next/commit/fd385d67a3ac50c56251c8ef5727bfc9d4f75433/checks
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/d9da9924531f74d3d66b4f4a07daacb006917111/checks
+>  }
+>  
+>  static inline void __mptcp_sync_sndbuf(struct sock *sk)
+> 
 
 Cheers,
 Matt
