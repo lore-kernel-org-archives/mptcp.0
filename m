@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17F62372B3F;
-	Wed,  4 Feb 2026 10:47:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E081729ACDB
+	for <mptcp@lists.linux.dev>; Wed,  4 Feb 2026 11:56:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770202039; cv=none; b=eIfC3uycOkG4SElkM1YWti0MybWF6JocGTLAk+EAuPTgPpAVJtcP9C2o6LwAVkF/zqxbm4SIHHy8bon0SYV/v2PxWc2KOJ2WQ9EAaelEcQEdbBmF8meaAaMWxF/63Te6vZM7oSeJowKp7sst676lvMG6jNh8kqZLByTyNbMg+10=
+	t=1770206216; cv=none; b=bPCXtKOT+s/m9yFlRbEaTrYOnv2JDaJEIa5zOL5FU+2ccP6t6/dAdEnca1NH/Gwy48dyY1RDQmaxxjFYEM3b54UQIihhFLsGF9mmrf2CZZFzFGPUwvpV8edICIw1N/Q71xN4d5+CjoErb4BXZ8DOEbOMQyRzTVPuPS8iJKKZODo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770202039; c=relaxed/simple;
-	bh=D/vdlnLyzaN0QF3n8GIGTjf2NTZ9bLWnm071K/SuhDM=;
+	s=arc-20240116; t=1770206216; c=relaxed/simple;
+	bh=UrdQR6ij/YY33G+USHtaRG4g7BQeNQm85Bt2voFIGm8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cOEemx5xKb7HZCuYK57lVRDW/2+XqScS+O0eQ9C5+D09LsWav2uJe+0PAeFXYQN44WRXO0BmJobMMZJX7LTC5BTrIyTUFv39aV8K2l9BvPEmG7KKF5Eb/DmV2vtVdacbwVFInX4ZOW2tiA4DP5TZo0bLLzpBYYU2UlhSkKUNEuE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c5XUfZfG; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=LmBXfFfWR62N8r73BtZIP9zweAruc1aLxhpBSbGpfH8vwaUhXXC7tUOy2fav1BEd6aHJY5K1DH9v7zSdsuZsOCkhh7K4Or2MU/fXDFSNsoyM+c13nCp8/XWzwji+sABLMQE0+AzsaSDpSrOaRZ+EoIA1S3zgrf1GJ7CQ1RxLXRw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YqfvAlf7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c5XUfZfG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 171DDC4CEF7;
-	Wed,  4 Feb 2026 10:47:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YqfvAlf7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65825C19422;
+	Wed,  4 Feb 2026 11:56:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770202038;
-	bh=D/vdlnLyzaN0QF3n8GIGTjf2NTZ9bLWnm071K/SuhDM=;
+	s=k20201202; t=1770206215;
+	bh=UrdQR6ij/YY33G+USHtaRG4g7BQeNQm85Bt2voFIGm8=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=c5XUfZfG0nTUy6F//9h+mGVevHuruLKwgme7sYOi6qFt3r+x3At/ugswNtwXh3fld
-	 PP9eAL6BKHQ7JsywLqLNEDYVeMJoLWeaVOj8fsKPOWG2Wd0v6/jEkzKmlISLNSYa2C
-	 YE76uPzLSk1WdR148Um037IgxF/DfHq3BGEpnv7W2bIqeJwWPsmZe9KpcpG/vuGcBi
-	 +AaarvCrp+eB85pIfjFvT77x1hrj+qlOJc6A9SZ5+55+swp7bRrqDJ6cYGc0kyX1Vf
-	 xZdwSUih5daDseFZ2WmlEJkfDm1YIRfgBEWlwGJVFTU8iePEoOD3u+3fw5I2K8o3mE
-	 hcaNwtVVKrTqg==
-Message-ID: <8037fb73-4e18-4ed1-9eaf-e4cd8b2c9d53@kernel.org>
-Date: Wed, 4 Feb 2026 11:47:13 +0100
+	b=YqfvAlf72uKDmhJHX3FyZ+2K8BJxovdzo6MP9vFxmPCa2j2LHU6fVfUtiLKwqM7Xu
+	 IDZ3NcLZL1tbMKDzVKs4CFVNjgFDbdo91+vKIcf+wThwKMZADhAAAXxV2xq7d0Si98
+	 Eu4NwEog7bzlIR4+xc+UpaW3gr5y4ngY3Sq7eHLc7hb3zprXlHAVQ4ufg+u+btRkM4
+	 uhOgi7ReAR6BAAdr9FHcoJYYU8Vlws+94FY8ki+MYRh/OlQLh1RRpyljSzFQJ+ywHZ
+	 e7X3KAp01QbNSo6gwwS4vDQI5xyO7iMriTrzMcARmbb4t1LMJRL5hChSDLGoTutCE1
+	 B9U4rfANmseVQ==
+Message-ID: <85d8137d-77a5-4bda-90e3-29b399431c8d@kernel.org>
+Date: Wed, 4 Feb 2026 12:56:52 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,18 +35,14 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH net-next 07/15] mptcp: allow overridden write_space to be
- invoked
+Subject: Re: [PATCH mptcp-next v2 2/3] mptcp: allow overridden write_space to
+ be invoked
 Content-Language: en-GB, fr-BE
-To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Simon Horman <horms@kernel.org>, Shuah Khan <shuah@kernel.org>
-Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev,
- linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
- Gang Yan <yangang@kylinos.cn>
-References: <20260203-net-next-mptcp-misc-feat-6-20-v1-0-31ec8bfc56d1@kernel.org>
- <20260203-net-next-mptcp-misc-feat-6-20-v1-7-31ec8bfc56d1@kernel.org>
+To: Geliang Tang <geliang@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: Geliang Tang <tanggeliang@kylinos.cn>, Gang Yan <yangang@kylinos.cn>,
+ mptcp@lists.linux.dev
+References: <cover.1767504329.git.tanggeliang@kylinos.cn>
+ <2efc3455052c3a33cad0c8744b171dfc6e7a6d8a.1767504329.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -92,56 +88,52 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20260203-net-next-mptcp-misc-feat-6-20-v1-7-31ec8bfc56d1@kernel.org>
+In-Reply-To: <2efc3455052c3a33cad0c8744b171dfc6e7a6d8a.1767504329.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hello,
+Hi Geliang, Paolo,
 
-On 03/02/2026 19:41, Matthieu Baerts (NGI0) wrote:
+On 04/01/2026 06:29, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> Future extensions with psock will override their own sk->sk_write_space
-> callback. This patch ensures that the overridden sk_write_space can be
-> invoked by MPTCP.
+> psock may override its own sk_write_space functions. This patch ensures
+> that the overridden sk_write_space can be invoked by MPTCP.
 > 
-> INDIRECT_CALL is used to keep the default path optimised.
-> 
-> This patch is shared early to ease discussions around future RFC and
-> avoid confusions with this "fix" that is needed for different future
-> extensions.
+> Note: This patch was initially included in the NVME MPTCP set.
 > 
 > Suggested-by: Paolo Abeni <pabeni@redhat.com>
 > Co-developed-by: Gang Yan <yangang@kylinos.cn>
 > Signed-off-by: Gang Yan <yangang@kylinos.cn>
 > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 > ---
 >  net/mptcp/protocol.h | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
 > diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index f4bfe91ca7f9..0bd1ee860316 100644
+> index cd5266099993..f5d4d7d030f2 100644
 > --- a/net/mptcp/protocol.h
 > +++ b/net/mptcp/protocol.h
-> @@ -975,7 +975,7 @@ static inline void mptcp_write_space(struct sock *sk)
+> @@ -1014,7 +1014,7 @@ static inline void mptcp_write_space(struct sock *sk)
 >  	/* pairs with memory barrier in mptcp_poll */
 >  	smp_mb();
 >  	if (mptcp_stream_memory_free(sk, 1))
 > -		sk_stream_write_space(sk);
 > +		INDIRECT_CALL_1(sk->sk_write_space, sk_stream_write_space, sk);
 
-Is it possible to drop only this patch from this series? It is
-independent of the rest, and the AI review tool spotted that
-sk->sk_write_space is not sk_stream_write_space by default.
+As I mentioned on the netdev ML when sending this patch upstream, there
+is something fishy here: sk->sk_write_space is never set to
+sk_stream_write_space here with the MPTCP sockets, but to
+sock_def_write_space. (Subflow sockets use sk_stream_write_space.)
 
-I can send a v2 without this patch if preferred.
+In other words, this patch changes the behaviour, which was not supposed
+to be the case, now calling sock_def_write_space() instead of
+sk_stream_write_space().
 
->  }
->  
->  static inline void __mptcp_sync_sndbuf(struct sock *sk)
-> 
+So either sk->sk_write_space should be set to sk_stream_write_space for
+the MPTCP sockets (I guess, I don't think sk->sk_write_space() is ever
+called with an MPTCP socket for the moment), or sock_def_write_space()
+should have been called before (then a fix is needed).
 
 Cheers,
 Matt
