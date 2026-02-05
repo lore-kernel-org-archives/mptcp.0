@@ -1,35 +1,37 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4276D1FDE01;
-	Thu,  5 Feb 2026 02:50:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 053FA84A35
+	for <mptcp@lists.linux.dev>; Thu,  5 Feb 2026 06:42:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770259826; cv=none; b=WGlhtBYU6gzFAXHkFs+9wsLKeK1+fFFL3RXf2VYScgQbowqohwSVzkptTRfZJqa0RUaATW/BcCzkNST9dfHCrVwp3CRpI+bSCyBD5ZtmlBuDgAzNoeOYpweY5aymI5gqXELmr4esZZhR+o6s3P67PPDSR7tG/S2QkNfAxTr6igI=
+	t=1770273729; cv=none; b=oaHW84SeBvedQtMdNIA8O2hsdfK0NCiRZIGf3B4nnYojp3wnu5+qmYLC48W8lJKnqzfsoyuVPBTx4GOznO/lebDvtBni/G/e2KXcc4+CbXtpjIXVHK9XkiGi5N3BUqXv07N83cHlfx7cASuVTHHk/5Jj5GJ88c6+VJHOE3Kao1c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770259826; c=relaxed/simple;
-	bh=gEsHVpsl/uccpoAAATd0oIOnvhSELF8QeFYFxJSgi/0=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=XuWDH5cBScoaeBPQg6IfILgtDott+wsxsTt5Dei173I6UElC8+l63fgk1HwMOYdrx0qq4FbJ7MCD/Kq1C0d7uHjIBUDy2WLKfJrUaKKMK3e0q5XKkKqQzVWSg7F4K0e+QhpBumVNY7SkOTCGNtBhywGxGdLcz5wdic2XQuwMB28=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jzp5j7ic; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1770273729; c=relaxed/simple;
+	bh=0kAqMgTagocLDxSuo6AeA8JCgdvV6jGui8RBoze2u/8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SnPB7Zuul4ATgzw+pu2igeJlnuRO1MjF3Tze9hTkHYxMpzfExRQ9xxwKNRsZadKpzYGXqxGKFt21s93pAw8XiPwELMnme/ljHoUaUGc2h9x6ue3Hggj16obzYWC868fMPQDXl70OyHC1nubvifdZnNBpuNVIQOKG0Rq/ua8H44g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=NIBgQCdB; arc=none smtp.client-ip=95.215.58.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jzp5j7ic"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC9C4C4CEF7;
-	Thu,  5 Feb 2026 02:50:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770259825;
-	bh=gEsHVpsl/uccpoAAATd0oIOnvhSELF8QeFYFxJSgi/0=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=Jzp5j7icXMg0GCWM/CtFH9fWTmWOkwDJIt7TqjxfPgoMrcwT9OfiS678uuzo6zcC4
-	 U1yQdmGsQ7rE4HRdQMo0Vwk0EyAonVwHogGxCxnJmmepahXoZy8r2xhOoXOinu+VAi
-	 WtS51tgz2fKYct1yhXgggHvrgxvQ9kfs8GoBwy0bLPKFB8MnYk32Kk9+FOzUloPLQ9
-	 zdJ/yYyCr8k/DU3qZ4PRd8bTQ77X+C2TPTaTjrSDgDJdxjX2DLcFEChddQ6hp4YtCA
-	 kmYrk0WjqhC/Flq7gxoDJivzSlS5wFHTwO+vsqTrhDSf+Z158orNiWlY5IuvaFWGGL
-	 5mOygrjpGwk2A==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 0B2AA3808200;
-	Thu,  5 Feb 2026 02:50:25 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="NIBgQCdB"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1770273726;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=jY15egL/xqswYHIAe5ZXNLHO6xVaiQLEyOSnN0QWCns=;
+	b=NIBgQCdB0TzQ2takDRbTeGtaMbYvQhOmy4AEhcXuvA0ISDi9ey0L7wOTGEqzJXllaRGqkE
+	/VytUJvjj9OEvgbphXO7dMjBldv9mKNy5letco9wEu2t85X1OTxSCauvrdwh8G+N2C2R//
+	T4IDnUAd2Qy436+83VJA2HqklAPbbww=
+From: Gang Yan <gang.yan@linux.dev>
+To: mptcp@lists.linux.dev,
+	pabeni@redhat.com
+Cc: Gang Yan <yangang@kylinos.cn>
+Subject: [Patch mptcp-net 0/3] Fix the transmission stall due to backlog
+Date: Thu,  5 Feb 2026 14:41:28 +0800
+Message-ID: <cover.1770273341.git.yangang@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -37,76 +39,36 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next 00/15] mptcp: misc. features for v6.20/7.0
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <177025982383.136386.13338094196936067289.git-patchwork-notify@kernel.org>
-Date: Thu, 05 Feb 2026 02:50:23 +0000
-References: 
- <20260203-net-next-mptcp-misc-feat-6-20-v1-0-31ec8bfc56d1@kernel.org>
-In-Reply-To: 
- <20260203-net-next-mptcp-misc-feat-6-20-v1-0-31ec8bfc56d1@kernel.org>
-To: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Cc: martineau@kernel.org, geliang@kernel.org, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
- shuah@kernel.org, netdev@vger.kernel.org, mptcp@lists.linux.dev,
- linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
- rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- linux-trace-kernel@vger.kernel.org, david.laight.linux@gmail.com,
- yangang@kylinos.cn, thomas.weissschuh@linutronix.de
+X-Migadu-Flow: FLOW_OUT
 
-Hello:
+From: Gang Yan <yangang@kylinos.cn>
 
-This series was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
 
-On Tue, 03 Feb 2026 19:41:16 +0100 you wrote:
-> This series contains a few independent new features, and small fixes for
-> net-next:
-> 
->  - Patches 1-2: two small fixes linked to the MPTCP receive buffer that
->    are not urgent, requiring code that has been recently changed, and is
->    needed for the next patch. Because we are at the end of the cycle, it
->    seems easier to send them to net-next, instead of dealing with
->    conflicts between net and net-next.
-> 
-> [...]
+Hi Matt, Paolo:
 
-Here is the summary with links:
-  - [net-next,01/15] mptcp: do not account for OoO in mptcp_rcvbuf_grow()
-    https://git.kernel.org/netdev/net-next/c/6b329393502e
-  - [net-next,02/15] mptcp: fix receive space timestamp initialization
-    https://git.kernel.org/netdev/net-next/c/70274765fef5
-  - [net-next,03/15] mptcp: consolidate rcv space init
-    https://git.kernel.org/netdev/net-next/c/5c4dcc52c68a
-  - [net-next,04/15] trace: mptcp: add mptcp_rcvbuf_grow tracepoint
-    https://git.kernel.org/netdev/net-next/c/2002286e68c9
-  - [net-next,05/15] mptcp: pm: align endpoint flags size with the NL specs
-    https://git.kernel.org/netdev/net-next/c/d7e712b66f9b
-  - [net-next,06/15] mptcp: Change some dubious min_t(int, ...) to min()
-    https://git.kernel.org/netdev/net-next/c/b582090005d5
-  - [net-next,07/15] mptcp: allow overridden write_space to be invoked
-    (no matching commit)
-  - [net-next,08/15] selftests: mptcp: diag: sort all #include
-    https://git.kernel.org/netdev/net-next/c/f7f4e8e9448c
-  - [net-next,09/15] selftests: mptcp: join: wait for estab event instead of MPJ
-    https://git.kernel.org/netdev/net-next/c/32207bed0547
-  - [net-next,10/15] selftests: mptcp: join: fix wait_mpj helper
-    https://git.kernel.org/netdev/net-next/c/ab8b64ca3af3
-  - [net-next,11/15] selftests: mptcp: join: userspace: wait for new events
-    https://git.kernel.org/netdev/net-next/c/62c0774f0f18
-  - [net-next,12/15] selftests: mptcp: join chk_stale_nr: avoid dup stats
-    https://git.kernel.org/netdev/net-next/c/91453a62e5ec
-  - [net-next,13/15] selftests: mptcp: join: avoid declaring i if not used
-    https://git.kernel.org/netdev/net-next/c/79d5069cfbec
-  - [net-next,14/15] selftests: mptcp: connect cleanup TFO setup
-    https://git.kernel.org/netdev/net-next/c/ae68da495ae9
-  - [net-next,15/15] selftests: mptcp: join: no SKIP mark for group checks
-    https://git.kernel.org/netdev/net-next/c/4dca8d0030c7
+During my testing, I discovered two issues in MPTCP related to the 
+backlog_list, both of which can lead to transmission stalls. In this
+patchset, I have added a test program to reproduce the issues, along with
+two workarounds. Additional details and more specific workarounds are also
+included in the notes to help clarify the exact scenarios where the
+problems occur.
 
-You are awesome, thank you!
+I would appreciate your feedback and hope we can find a better fix for
+these issues.
+
+Gang Yan (3):
+  mptcp: add backlog_list bug reproducer test
+  mptcp: fix receive stalls when 'ack_seq' in backlog_list
+  mptcp: fix stall because of data_ready
+
+ net/mptcp/protocol.c                          |   9 +-
+ tools/testing/selftests/net/mptcp/Makefile    |   1 +
+ .../testing/selftests/net/mptcp/multi_chunk.c | 148 ++++++++++++++++++
+ .../selftests/net/mptcp/multi_chunk.sh        |  37 +++++
+ 4 files changed, 192 insertions(+), 3 deletions(-)
+ create mode 100644 tools/testing/selftests/net/mptcp/multi_chunk.c
+ create mode 100755 tools/testing/selftests/net/mptcp/multi_chunk.sh
+
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.43.0
 
