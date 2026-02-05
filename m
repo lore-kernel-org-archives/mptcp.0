@@ -1,92 +1,94 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6469B3126CA;
-	Wed,  4 Feb 2026 17:37:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 058EA1A23B1;
+	Thu,  5 Feb 2026 01:55:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770226622; cv=none; b=I+rKezR4Wq2ABiUhVzhncRxCK6T5Cw7w1IeZ0qQ+xRmzlQOlCZVNAyZ44PPIimdQ+dN1P6VCARwVF74rJ2m9t6InTShIvbBnQtspux+oCEgdipFY0eQMjhNrq2PqC7p06/WmbqzX6xvDbc5UXB+EQ/1rrtmv4HrkVtbgX5Urap4=
+	t=1770256519; cv=none; b=tSO5MsOha7JXKG5RdDCkQ0/xFNsyt3DV8Ta3z74K94zkz0ystYrzXAiMKhespL1KjFwbrvht9scOO/Bs62Mb3Wgh0+jvBwBZ8CddXzHEwJO2NyjfPVFxh2qRR6Cl2aBH+Z7ivpnsG1342zdmMyhXHaohUzXuNXj0SHjNausgO6w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770226622; c=relaxed/simple;
-	bh=J2jhiLUXHNETK2K/WGWGWhQG5ZFzPf+8CA9bAvmEsLc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=h5FCGsOYVocDCuMGNsf7R8l4VYHqD38d9DgLcHrgr2nkG+XgtI2qhzbS94e4NBu0vqIVEmL2o6d225vEOLMhDiv24Bynu7IAzfzOJztXyVA9/hXibdoNGi5LWb/eRwyvVc5E4b3MlN4fsN/wUNy5mE+vhwyujXJS+kG5FVLE+h8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=dznvGs0o; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1770256519; c=relaxed/simple;
+	bh=DqFzxfYKPrIKrr839txO83upVWq6NyZCqghWeivv+sM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Jm90W8NQMcsFR/Vk2jwF1k/DHh2WDma+pE7GhtZoUfll6FJP/bpEjvIaLI82jlayqKyw2TOS9+tTDFZWPtnonasVl8R+9qLEpdvadjqA2t7UwOXQxJwN2fdrjhP731MoNyloojvA52it+brw2mqaIJopq0VP68KnLjXgRws3/28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u4MTjYBz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dznvGs0o"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-	bh=QWG6XA1USI93n7EaNAxIq7oC93YNnSuGbppQJOFb4SY=; b=dznvGs0o7RqqFD9nveYtENGHB9
-	Zo7ZZyh/oVQrjWAPJZ+rCnsaB4ojIFyE6tqsNmaf303yXiJ7llXXmV0qloWCwwd9NjQXea1opVAAe
-	0k3AbdNS4P4LYzkRddhuTuv2rtmoyLkz70C82u6gQJtywZkdfBOHixhFK1GPbckGlnBy37ahfrsga
-	T0qPKvExIjKaRiN15sMvcQZoKlZfBw3CJcAFn7zyjE7XVA1lRI/tOLpbwb67tbntJ8a9ArwrVgvS8
-	/RdGtD+5f0dZ2MYVx8SrbgFrIlJb7KMzJF9Fo5dqABXftijUPXvpeUCHC530o1duiKUiZEdJOwSXQ
-	ZB5pSELA==;
-Received: from [50.53.43.113] (helo=[192.168.254.34])
-	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vngoD-00000008rOR-2BNf;
-	Wed, 04 Feb 2026 17:36:57 +0000
-Message-ID: <989c798c-c320-4cf3-9609-43dea5e5d478@infradead.org>
-Date: Wed, 4 Feb 2026 09:36:56 -0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u4MTjYBz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFC52C4CEF7;
+	Thu,  5 Feb 2026 01:55:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1770256518;
+	bh=DqFzxfYKPrIKrr839txO83upVWq6NyZCqghWeivv+sM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=u4MTjYBzUC00Jp6Rz0XqqegSaclwupRA1DEMrwtQ8N9rHkJRVDInSW3JHT9UX1xMo
+	 XxUiteY99zUGZ0zTEf39+is5Wg8dyRyqTNGS238N7RoGf5Jdup1jsgdY8I0Ehg9FFH
+	 MLSys+JKlvQpuUIXImWIDq49UH+JCB0BZmr0vZMCt61jtrMcwCvnXLhrOKdE+yrauu
+	 YPnRXW2gnG0n16PqCFnx/jNdV/IzB9kKyuNjAo+SCKVt+LUwoe+xQXdqrk+Eylimt5
+	 oIRggQV7kkEatTNb9LArL2uuxwGFpla+txIj6KCQ7vPCwmlYOxVMIDrEIM+G0ASFON
+	 iVZ8s7AXcPCZg==
+Date: Wed, 4 Feb 2026 17:55:16 -0800
+From: Jakub Kicinski <kuba@kernel.org>
+To: Thomas =?UTF-8?B?V2Vpw59zY2h1aA==?= <thomas.weissschuh@linutronix.de>
+Cc: Eric Dumazet <edumazet@google.com>, Kuniyuki Iwashima
+ <kuniyu@google.com>, Paolo Abeni <pabeni@redhat.com>, Willem de Bruijn
+ <willemb@google.com>, "David S. Miller" <davem@davemloft.net>, Simon Horman
+ <horms@kernel.org>, Shuah Khan <shuah@kernel.org>, Matthieu Baerts
+ <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>, Geliang Tang
+ <geliang@kernel.org>, =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?=
+ <mic@digikod.net>, =?UTF-8?B?R8O8bnRoZXI=?= Noack <gnoack@google.com>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann
+ <daniel@iogearbox.net>, Jesper Dangaard Brouer <hawk@kernel.org>, John
+ Fastabend <john.fastabend@gmail.com>, Stanislav Fomichev <sdf@fomichev.me>,
+ Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau
+ <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu
+ <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, KP Singh
+ <kpsingh@kernel.org>, Hao Luo <haoluo@google.com>, Jiri Olsa
+ <jolsa@kernel.org>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-api@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+ linux-kselftest@vger.kernel.org, mptcp@lists.linux.dev,
+ linux-security-module@vger.kernel.org, bpf@vger.kernel.org,
+ libc-alpha@sourceware.org, Carlos O'Donell <carlos@redhat.com>, Adhemerval
+ Zanella <adhemerval.zanella@linaro.org>, Rich Felker <dalias@libc.org>,
+ klibc@zytor.com, Florian Weimer <fweimer@redhat.com>
+Subject: Re: [PATCH net-next v2 0/4] net: uapi: Provide an UAPI definition
+ of 'struct sockaddr'
+Message-ID: <20260204175516.4fb11966@kernel.org>
+In-Reply-To: <20260204064248-d9c4ab78-f6d4-4ac6-8d55-e939bc1df6d2@linutronix.de>
+References: <20260120-uapi-sockaddr-v2-0-63c319111cf6@linutronix.de>
+	<20260121192729.2095aa25@kernel.org>
+	<20260130112309-28f2645b-e756-4173-96da-cf5c59191520@linutronix.de>
+	<20260130081741.425a92e0@kernel.org>
+	<3c46fc49-b41b-44a2-b42a-669cc7e6bb02@linutronix.de>
+	<20260131092517.6639d84c@kernel.org>
+	<20260203122715-eeb304f9-4b42-4fc6-a527-658182a92ba5@linutronix.de>
+	<20260203144011.32d5b223@kernel.org>
+	<20260204064248-d9c4ab78-f6d4-4ac6-8d55-e939bc1df6d2@linutronix.de>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net 3/4] mptcp: fix kdoc warnings
-To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>,
- Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Simon Horman <horms@kernel.org>, Shuah Khan <shuah@kernel.org>
-Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev,
- linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-References: <20260204-net-mptcp-misc-fixes-6-19-rc8-v1-0-cb559fb6b50a@kernel.org>
- <20260204-net-mptcp-misc-fixes-6-19-rc8-v1-3-cb559fb6b50a@kernel.org>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20260204-net-mptcp-misc-fixes-6-19-rc8-v1-3-cb559fb6b50a@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, 4 Feb 2026 06:51:46 +0100 Thomas Wei=C3=9Fschuh wrote:
+> > make -j16 O=3D"$kobj" INSTALL_HDR_PATH=3D"${kobj}/hdr" headers_install
+> > popd
+> >=20
+> > pushd uapi
+> > find . -type f -name '*.h' -exec cp -v "${kobj}/hdr/include/{}" {} \; =
+=20
+>=20
+> Here only those headers which already exist in ethtool's uapi/ directory
+> are copied. As linux/typelimits.h is new, it is now missing.
+> Honestly, if a user fiddles with the internals of the UAPI headers like
+> this, it is on them to update their code if the internal structure
+> changes. In your case a simple 'touch uapi/linux/typelimits.h'
+> before running the script will be enough. Also internal.h now requires
+> an explicit inclusion of <limits.h>, as that is not satisfied by the
+> UAPI anymore.
 
-
-On 2/4/26 8:57 AM, Matthieu Baerts (NGI0) wrote:
-> The following warnings were visible:
-> 
->   $ ./scripts/kernel-doc -Wall -none \
->         net/mptcp/ include/net/mptcp.h include/uapi/linux/mptcp*.h \
->         include/trace/events/mptcp.h
->   Warning: net/mptcp/token.c:108 No description found for return value of 'mptcp_token_new_request'
->   Warning: net/mptcp/token.c:151 No description found for return value of 'mptcp_token_new_connect'
->   Warning: net/mptcp/token.c:246 No description found for return value of 'mptcp_token_get_sock'
->   Warning: net/mptcp/token.c:298 No description found for return value of 'mptcp_token_iter_next'
->   Warning: net/mptcp/protocol.c:4431 No description found for return value of 'mptcp_splice_read'
->   Warning: include/uapi/linux/mptcp_pm.h:13 missing initial short description on line:
->    * enum mptcp_event_type
-> 
-> Address all of them: either by using the 'Return:' keyword, or by adding
-> a missing initial short description.
-> 
-> The MPTCP CI will soon report issues with kdoc to avoid introducing new
-> issues and being flagged by the Netdev CI.
-> 
-> Reviewed-by: Geliang Tang <geliang@kernel.org>
-> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> ---
->  include/uapi/linux/mptcp_pm.h |  2 +-
->  net/mptcp/token.c             | 16 +++++++++-------
->  2 files changed, 10 insertions(+), 8 deletions(-)
-
-LGTM. Thanks.
-
-Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
-
--- 
-~Randy
+Hopefully you understand that while due to uapi header copy this is not
+a huge issue for ethtool itself, but it is a proof that your changes
+can break normal user space applications which do not vendor in uapi.
