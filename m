@@ -1,131 +1,349 @@
-Received: from mail-dy1-f194.google.com (mail-dy1-f194.google.com [74.125.82.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-183.mta1.migadu.com (out-183.mta1.migadu.com [95.215.58.183])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D28A42D46A2
-	for <mptcp@lists.linux.dev>; Thu,  5 Feb 2026 12:49:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA5924414
+	for <mptcp@lists.linux.dev>; Thu,  5 Feb 2026 13:05:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770295778; cv=none; b=sOfzPuOle1MyASuQqXYMZM7BoVpjyJmGuIBFON0Csn/y94PrkMceix2TKpu2VaORk4zfltxD8wwbcnrfEZL9N8hqDauuYv3bvKm3ijXzR661tIvUqydX0F3zg9VCywlPrJeErGmA913xLoMb6yUSo8KafXdDHWG0ehpXKMVQxIs=
+	t=1770296716; cv=none; b=YSyZBBjj3z+9nnuZC2A4aIfgl3Bs3H9PvfLK3FuDNdzDjTCBM+X6K53+CrI/RozuylDGzfUS6j+JR8C8KXpUB2NrSIaRoQ4hobiQpr8V1yEF5Z57/EIUPb0jv01dgQ2uf6p9bYdxWoRSxBB+fHMcbIwoDSBhdAvgoOAN47x27n4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770295778; c=relaxed/simple;
-	bh=UIMqsx6t+p6e1zuwxkcfUHiSYiosEjyKoCo18UHJ1DI=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=bDFVXijph3BArn6EXH7kux2kVThIXjgsx/aLRs1+F3Y/beg3ipxAtkgXj7jIu9KOSa90vjdlymkR2CZSTYq9YipYBfmJvv5hLFZ9fgR4k0K/P3eXEOiib47vELRUiNwr7WbXBJA27QNW7Rcpy9S4UBEsl2R8cuRl0kvws7XtFCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f+BjzAnj; arc=none smtp.client-ip=74.125.82.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1770296716; c=relaxed/simple;
+	bh=tgxW0+QtIFT9hQAXtNZzoz4enPFO9NNISFwn0USKYrE=;
+	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:
+	 In-Reply-To:References; b=asPA89rrNlAYWxLkrKF+4Hv41yPLB73ShSAE6SisxnsA13lJPkn/PqFkteNVa+sHkFFAat81hXK7y5oUSsbbfpw/+DrMzHkNHWxydLxT4uAMQvdjjOYhxVvn0vnHlDQWzmS7WnF5vK1iPe6tSCVScPLxN+cLxEzPe7JnSw7nSAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=tVOpp+ah; arc=none smtp.client-ip=95.215.58.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f+BjzAnj"
-Received: by mail-dy1-f194.google.com with SMTP id 5a478bee46e88-2b73112ab62so688706eec.1
-        for <mptcp@lists.linux.dev>; Thu, 05 Feb 2026 04:49:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1770295777; x=1770900577; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DouzKdxxyMjj3tx6CFjI7dOcC4MGLtwoFQ53qvVzxBU=;
-        b=f+BjzAnj0ykC7fYHWBtBlbKzxocqiaDEv3apB1IuMbdzyrObvTXE0sQ1D5BzCNdaVs
-         QcLd/8eB/fZK9CGcMmfeBEkYsGZ+OiQYV0svxa9VNHt9a1t01+o44+shsmZe8ZtDy0aY
-         EGTjwC1Sjjwd/g7V75l7y7ppgUTgP1Ld4d+7HwpMaJ+g4QDVSMfXSwIs28Df6eDbyet8
-         Fhr1LIVlbmOZU7gIctWmKKpb2vG+cYHFETgz6wres+JOMP0CW4W5kdFyeVMcwmwir+Ee
-         WgD+m+umL2ODvJw48pG7wQubObolBnLUwrgoBLHPNIWr0hgSZLDZfo8HSr4KuhzF1Y0E
-         F0uQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770295777; x=1770900577;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DouzKdxxyMjj3tx6CFjI7dOcC4MGLtwoFQ53qvVzxBU=;
-        b=p4BW9l0XCWIgDMRf7jXLr7coUlewC+9QuqNwWWBHSsip/AKLQGEYe+by/WTSCcIokg
-         /vKPdwV5oexoryW14rp1c6RgY5FtqFCzrnMp5jM+7Qj+XU6jwIAI0QDMiXcQaYPmnWKe
-         zjmCIR9RwrOLa9cF6500kLLdvzhplECENwH+FpcXuUk5xbCbWMEY2T2aLNo5P4NqrynY
-         NOpFFTyOSrpqfopsaACmKvw45Gi90gQOoMErKb7a3Srp14XujKLWDUhYz/KYYKwMcBck
-         yNikwKNe+B8L00Tyo+EM2/aqDg3CenVNF/AxP3q9dOg7dBUmTFgdesQp54i04YIsFrgP
-         HQEg==
-X-Gm-Message-State: AOJu0Yxrs4ekStgTiT43OavaM2wAOJ5aQCWx3hSP/KU49K2/zjwR5ozT
-	yDzurd2jeyGoyDTPPCjpq5gWWoW9sZwOS4CS0cglMpqEnO3aNZtjwy8=
-X-Gm-Gg: AZuq6aI+EmcUw/K2J5U2w8w20FmOGUkUhKwZ49Y9LXekgOOhUh7IDpHRF1r0U6TfyPP
-	EWWe+3PtsjbTEga8+7WW7Kvvo20sNgTNZRkk4mmRNZFRcMycPirp+Q8Mlg58pl1TAs/TjBi//iR
-	ESGQp8PpoRJ+/HfsDScpMKOdiRpbrrLu7QJZv6WmtLCWT220nSGBfYqopnH4d9Va5kMTS2/2s3j
-	3oih3WS0C8jtQH54veGFNJJDLZorY1jRgSXnv771dYVEww/zQb38q21udePxpSl/2NxL3WQORrC
-	qwWHWT8ovhPsmKR+T3vT0QvoObIXjqOJq3IByEx6K6s40F4xrf2ymN2I/hwiPFUZdu5T2Sdn3ua
-	xQQgD9yQ0rmBn06et28GGdXUcMT+Yy+YnTS7B75lzQ9tL+2/xuK1hToafSqVFxSPltk5ZZtxQFF
-	V1SKRxZm4GllMa5b6SZJI/06GV
-X-Received: by 2002:a05:7300:dc86:b0:2a4:3593:c7ca with SMTP id 5a478bee46e88-2b8328951a2mr2537409eec.10.1770295776793;
-        Thu, 05 Feb 2026 04:49:36 -0800 (PST)
-Received: from [127.0.0.1] ([20.171.126.216])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2b832f8e987sm3101805eec.18.2026.02.05.04.49.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Feb 2026 04:49:36 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20260205-mptcp-fix-kdoc-yml-v1-1-9858c4b7baf6@kernel.org>
-References: <20260205-mptcp-fix-kdoc-yml-v1-1-9858c4b7baf6@kernel.org>
-Subject: =?UTF-8?Q?Re=3A_=5BPATCH_mptcp-next=5D_Squash_to_?=
- =?UTF-8?Q?=22mptcp=3A_fix_kdoc_warnings=22?=
-Message-ID: <ea3b07eb-0095-4f1e-05b7-2c333a6aa5b2@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 05 Feb 2026 12:49:35 +0000
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="tVOpp+ah"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1770296713;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bzLnjfVVKkSiV/FevzhEYr1WwORii41oqkbfBb3RSlY=;
+	b=tVOpp+ah91w0MPsBiRxTT/b5g8qd5PuH0gUYB3sDbb1YLQYdo8+rvAfc0Sltsns4uDmr2u
+	rZ/GyrEcIA4UTtLYPsx4mtNiQ/9LPYeAjkr06LRVsBLiiWY8WdRFV69yh1BOUNqlUkP1G3
+	JOI7gW1gIpxAlbFYwNLXdUV6hhABGAw=
+Date: Thu, 05 Feb 2026 13:05:04 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: gang.yan@linux.dev
+Message-ID: <8e2151925594cdb075fa75486645e2e2c07415d4@linux.dev>
+TLS-Required: No
+Subject: Re: [Patch mptcp-net 1/3] mptcp: add backlog_list bug reproducer
+ test
+To: "Paolo Abeni" <pabeni@redhat.com>, mptcp@lists.linux.dev
+In-Reply-To: <aa6f6618-d89c-4804-95ef-745b449a71d8@redhat.com>
+References: <cover.1770273341.git.yangang@kylinos.cn>
+ <500a8fe690cb8718ea32c33ae8cdcb2df203ecd0.1770273341.git.yangang@kylinos.cn>
+ <aa6f6618-d89c-4804-95ef-745b449a71d8@redhat.com>
+X-Migadu-Flow: FLOW_OUT
 
-Hi Matthieu,
+>February 5, 2026 at 5:20 PM, "Paolo Abeni" <pabeni@redhat.com mailto:pab=
+eni@redhat.com?to=3D%22Paolo%20Abeni%22%20%3Cpabeni%40redhat.com%3E > wro=
+te:
+Hi, Paolo:
 
-Thank you for your modifications, that's great!
+Thanks for your detailed review comments.
 
-Our CI did some validations and here is its report:
+This patch is for temporary testing purposes only to reproduce the
+backlog_list-related issues, and it's not meant for merging. In the upcom=
+ing
+v2 version, I'll incorporate all your suggestions and add the appropriate
+"do-not-merge" tag.
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Unstable: 2 failed =
-test(s): packetdrill_dss packetdrill_sockopts =F0=9F=94=B4
-- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/217098=
-63967
+Best regards,
+Gang
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/101313424f47
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1051124
-
-
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+>=20
+>=20On 2/5/26 7:41 AM, Gang Yan wrote:
+>=20
+>=20>=20
+>=20> From: Gang Yan <yangang@kylinos.cn>
+> >=20=20
+>=20>  This patch introduces a test program to reproduce bugs related to =
+the
+> >  backlog_list in MPTCP. The test is derived from tls.c in the selftes=
+ts
+> >  suite, but adapted to work without TLS configuration specifically fo=
+r
+> >  MPTCP testing.
+> >=20=20
+>=20>  The program performs chunked sendfile operations with various payl=
+oad
+> >  sizes to exercise different code paths and trigger backlog_list-rela=
+ted
+> >  issues.
+> >=20=20
+>=20>  It can be run in .virtme-exec-run:
+> >  run_loop run_selftest_one ./multi_chunk.sh
+> >=20=20
+>=20>  '''
+> >  selftest Test: ./multi_chunk.sh
+> >  TAP version 13
+> >  1..1
+> >  [stalls for a while]
+> >  ^C
+> >=20=20
+>=20>  '''
+> >=20=20
+>=20>  Co-developed-by: Geliang Tang <tanggeliang@kylinos.cn>
+> >  Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> >  Signed-off-by: Gang Yan <yangang@kylinos.cn>
+> >  ---
+> >  tools/testing/selftests/net/mptcp/Makefile | 1 +
+> >  .../testing/selftests/net/mptcp/multi_chunk.c | 148 ++++++++++++++++=
+++
+> >  .../selftests/net/mptcp/multi_chunk.sh | 37 +++++
+> >  3 files changed, 186 insertions(+)
+> >  create mode 100644 tools/testing/selftests/net/mptcp/multi_chunk.c
+> >  create mode 100755 tools/testing/selftests/net/mptcp/multi_chunk.sh
+> >=20=20
+>=20>  diff --git a/tools/testing/selftests/net/mptcp/Makefile b/tools/te=
+sting/selftests/net/mptcp/Makefile
+> >  index 22ba0da2adb8..087e6ae6f0b8 100644
+> >  --- a/tools/testing/selftests/net/mptcp/Makefile
+> >  +++ b/tools/testing/selftests/net/mptcp/Makefile
+> >  @@ -24,6 +24,7 @@ TEST_GEN_FILES :=3D \
+> >  mptcp_diag \
+> >  mptcp_inq \
+> >  mptcp_sockopt \
+> >  + multi_chunk \
+> >  pm_nl_ctl \
+> >  # end of TEST_GEN_FILES
+> >=20=20
+>=20>  diff --git a/tools/testing/selftests/net/mptcp/multi_chunk.c b/too=
+ls/testing/selftests/net/mptcp/multi_chunk.c
+> >  new file mode 100644
+> >  index 000000000000..8c97db58a6db
+> >  --- /dev/null
+> >  +++ b/tools/testing/selftests/net/mptcp/multi_chunk.c
+> >  @@ -0,0 +1,148 @@
+> >  +#define _GNU_SOURCE
+> >  +#include <stdio.h>
+> >  +#include <stdlib.h>
+> >  +#include <string.h>
+> >  +#include <unistd.h>
+> >  +#include <fcntl.h>
+> >  +#include <sys/socket.h>
+> >  +#include <netinet/in.h>
+> >  +#include <sys/sendfile.h>
+> >  +#include <sys/types.h>
+> >  +#include <sys/stat.h>
+> >  +#include <errno.h>
+> >  +#include <arpa/inet.h>
+> >  +#include <sys/wait.h>
+> >  +
+> >  +#ifndef IPPROTO_MPTCP
+> >  +#define IPPROTO_MPTCP 262
+> >  +#endif
+> >=20
+>=20Minor nit: I think we can avoid the compiler guards here; older test
+> program have them for historical reasons.
+>=20
+>=20>=20
+>=20> +
+> >  +#define TLS_PAYLOAD_MAX_LEN 16384
+> >=20
+>=20Possibly this macro should be renamed, i.e. to PAYLOAD_MAX_LEN and
+> likely the value increased to 64K
+>=20
+>=20>=20
+>=20> +#define TEST_PORT 12345
+> >  +
+> >  +static void chunked_sendfile(int cfd, int sfd,
+> >  + size_t chunk_size,
+> >  + size_t extra_payload_size)
+> >  +{
+> >  + char buf[TLS_PAYLOAD_MAX_LEN];
+> >  + uint16_t test_payload_size;
+> >  + size_t recved =3D 0;
+> >  + size_t sent =3D 0;
+> >  + int size =3D 0;
+> >  + int ret;
+> >  + char filename[] =3D "/tmp/mytemp.XXXXXX";
+> >  + int fd =3D mkstemp(filename);
+> >  + off_t offset =3D 0;
+> >  +
+> >  + unlink(filename);
+> >  + if (fd <=3D 0) {
+> >  + perror("tempfile");
+> >  + exit(1);
+> >=20
+>=20Here and below you could use the error() libcall instead of the
+> perror/exit combo.
+>=20
+>=20>=20
+>=20> + }
+> >  + if (chunk_size < 1) {
+> >  + perror("chunksize");
+> >  + exit(1);
+> >  + }
+> >  +
+> >  + test_payload_size =3D chunk_size + extra_payload_size;
+> >  + if (test_payload_size > TLS_PAYLOAD_MAX_LEN) {
+> >  + perror("payload_size");
+> >  + exit(1);
+> >  + }
+> >  + memset(buf, 1, test_payload_size);
+> >  + size =3D write(fd, buf, test_payload_size);
+> >  + if (size !=3D test_payload_size) {
+> >  + perror("file write");
+> >  + exit(1);
+> >  + }
+> >  + fsync(fd);
+> >  +
+> >  + while (size > 0) {
+> >  + ret =3D sendfile(sfd, fd, &offset, chunk_size);
+> >  + if (ret <=3D 0)
+> >  + exit(1);
+> >  + size -=3D ret;
+> >  + sent +=3D ret;
+> >  + }
+> >  + printf("[client] sent %zu bytes\n", sent);
+> >  +
+> >  + recved =3D recv(cfd, buf, test_payload_size, MSG_WAITALL);
+> >  + printf("[server] receieved %zu bytes\n", recved);
+> >=20
+>=20Possibly the above 2 print should be off by default and enabled via
+> command line switch.
+>=20
+>=20>=20
+>=20> +
+> >  + if (recved !=3D test_payload_size)
+> >  + exit(1);
+> >  +
+> >  + close(fd);
+> >  +}
+> >  +
+> >  +int main()
+> >  +{
+> >  + int sfd =3D socket(AF_INET, SOCK_STREAM, IPPROTO_MPTCP);
+> >  + int cfd =3D socket(AF_INET, SOCK_STREAM, IPPROTO_MPTCP);
+> >  + struct sockaddr_in addr =3D {0};
+> >  + socklen_t addrlen =3D sizeof(addr);
+> >  +
+> >  + printf("=3D=3D=3D=3D multi_chunk_sendfile MPTCP test =3D=3D=3D=3D\=
+n");
+> >  +
+> >  + if (sfd < 0 || cfd < 0) {
+> >  + perror("socket");
+> >  + exit(1);
+> >  + }
+> >  +
+> >  + addr.sin_family =3D AF_INET;
+> >  + addr.sin_addr.s_addr =3D htonl(INADDR_LOOPBACK);
+> >  + addr.sin_port =3D htons(TEST_PORT);
+> >  +
+> >  + if (bind(sfd, (struct sockaddr *)&addr, sizeof(addr)) < 0) {
+> >  + perror("bind");
+> >  + exit(1);
+> >  + }
+> >  +
+> >  + if (listen(sfd, 1) < 0) {
+> >  + perror("listen");
+> >  + exit(1);
+> >  + }
+> >  +
+> >  + if (getsockname(sfd, (struct sockaddr *)&addr, &addrlen) < 0) {
+> >  + perror("getsockname");
+> >  + exit(1);
+> >  + }
+> >  +
+> >  + if (connect(cfd, (struct sockaddr *)&addr, sizeof(addr)) < 0) {
+> >  + perror("connect");
+> >  + exit(1);
+> >  + }
+> >  +
+> >  + int nfd =3D accept(sfd, NULL, NULL);
+> >  + if (nfd < 0) {
+> >  + perror("accept");
+> >  + exit(1);
+> >  + }
+> >  +
+> >  + chunked_sendfile(cfd, nfd, 4096, 4096);
+> >  + chunked_sendfile(cfd, nfd, 4096, 0);
+> >  + chunked_sendfile(cfd, nfd, 4096, 1);
+> >  + chunked_sendfile(cfd, nfd, 4096, 2048);
+> >  + chunked_sendfile(cfd, nfd, 8192, 2048);
+> >  + chunked_sendfile(cfd, nfd, 4096, 8192);
+> >  + chunked_sendfile(cfd, nfd, 8192, 4096);
+> >  + chunked_sendfile(cfd, nfd, 12288, 1024);
+> >  + chunked_sendfile(cfd, nfd, 12288, 2000);
+> >  + chunked_sendfile(cfd, nfd, 15360, 100);
+> >  + chunked_sendfile(cfd, nfd, 15360, 300);
+> >  + chunked_sendfile(cfd, nfd, 1, 4096);
+> >  + chunked_sendfile(cfd, nfd, 2048, 4096);
+> >  + chunked_sendfile(cfd, nfd, 2048, 8192);
+> >  + chunked_sendfile(cfd, nfd, 4096, 8192);
+> >  + chunked_sendfile(cfd, nfd, 1024, 12288);
+> >  + chunked_sendfile(cfd, nfd, 2000, 12288);
+> >  + chunked_sendfile(cfd, nfd, 100, 15360);
+> >  + chunked_sendfile(cfd, nfd, 300, 15360);
+> >  +
+> >  + close(cfd);
+> >  + close(nfd);
+> >  + close(sfd);
+> >  +
+> >  + printf("=3D=3D=3D=3D test ends =3D=3D=3D=3D\n");
+> >  + return 0;
+> >  +}
+> >  diff --git a/tools/testing/selftests/net/mptcp/multi_chunk.sh b/tool=
+s/testing/selftests/net/mptcp/multi_chunk.sh
+> >  new file mode 100755
+> >  index 000000000000..c0352c89087f
+> >  --- /dev/null
+> >  +++ b/tools/testing/selftests/net/mptcp/multi_chunk.sh
+> >  @@ -0,0 +1,37 @@
+> >  +#!/bin/bash
+> >  +# SPDX-License-Identifier: GPL-2.0
+> >  +
+> >  +. "$(dirname "${0}")/mptcp_lib.sh"
+> >  +
+> >  +cleanup()
+> >  +{
+> >  + if [ -n "$pid" ] && kill -0 "$pid" 2>/dev/null; then
+> >  + kill "$pid" 2>/dev/null
+> >  + wait "$pid" 2>/dev/null
+> >  + fi
+> >  +
+> >  + mptcp_lib_ns_exit "${ns1}"
+> >  +}
+> >  +
+> >  +init()
+> >  +{
+> >  + mptcp_lib_ns_init ns1
+> >  +
+> >  + local i
+> >  + for i in $(seq 1 4); do
+> >  + mptcp_lib_pm_nl_add_endpoint "${ns1}" "127.0.0.1" flags signal por=
+t 1000$i
+> >  + done
+> >  +
+> >  + mptcp_lib_pm_nl_set_limits "${ns1}" 8 8
+> >  +
+> >  + ip netns exec ${ns1} ip=20mptcp endpoint show
+> >  + ip netns exec ${ns1} ip mptcp limits
+> >  +}
+> >  +
+> >  +init
+> >  +trap cleanup EXIT
+> >  +
+> >  +ip netns exec $ns1 ./multi_chunk &
+> >  +
+> >  +pid=3D$!
+> >  +wait $pid
+> >=20
+>=20I think it would be nice to emit an ok/fail message as other tests
+>=20
+> /P
+>
