@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBCC72773F9
-	for <mptcp@lists.linux.dev>; Thu,  5 Feb 2026 18:20:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FC1F30C345;
+	Fri,  6 Feb 2026 09:34:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770315658; cv=none; b=kK5pMxik/5Y7/UAESkXEelA/DSfeMWssvSiGEhnIt8obSSc68SZizjpeZjcHXvdUQFiMvprNm6N56VQD5CN3Z/olo+XLDg7LuU13J4S2f2vpwyJjvQCkSYSUkSbxrfLIbk39xDgGpqiMt+rqHTKHU2JMYAR2PkwcV/ns7VCJepw=
+	t=1770370441; cv=none; b=LmROYOsr6ofhv7/ABYfUWtdvZ04Ean2FQxKddwf64fkpMWDIrTsjYTNrk6GtcggfYDC18THns29+C6lTB2TXTn2Xav/YT2qRJPaDKEmO56WGWFIvsNaVXVUHJRDzYBE7QhFxTjNOo4IaD8y/4k7GdPKYYxXMwLQV5ZC+YrRR1xM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770315658; c=relaxed/simple;
-	bh=TwBsT6HQjk2KhRCHDmudr6RSo9s5AoDyeamwS0gtGQI=;
+	s=arc-20240116; t=1770370441; c=relaxed/simple;
+	bh=dvUEdFjqvMZQLut8kiitetf6Knxbh6r5+j1oy/SnpFg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gHU/Z6eyF0ENIHsLxIinQx3DE3dxI2zxt7N7ykJxmaayEZDC+421vr+5nPGRIambOkr4Ql5kZE7594PeREdQdJAnNwcytZ8rpvZv/Mw5FLaXaY2OMiJdsSxregSF6RfBxv3nB+kGryXN2d1fTOxmPl9EbM3iwcrOUYXW2doW8Bs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Epdim5jg; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=a8g7KIb8IynKHn44g9VnZqGU2s4KDNKOYyXvMF7TylpoN5qpzWhgt5+RcWOlidoDBICgKVrO5Cw8qz7KKSWyiBHMlaAdmCcCKq/4J2rCK0YBGDDfRc+WRYCPQ3Nv0byShkTdT3OtsVDKt7mcUu19/cQrzopA/Vf8HYzc1pXIHwI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mre03dUm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Epdim5jg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B007DC4CEF7;
-	Thu,  5 Feb 2026 18:20:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mre03dUm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51427C116C6;
+	Fri,  6 Feb 2026 09:33:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770315658;
-	bh=TwBsT6HQjk2KhRCHDmudr6RSo9s5AoDyeamwS0gtGQI=;
+	s=k20201202; t=1770370440;
+	bh=dvUEdFjqvMZQLut8kiitetf6Knxbh6r5+j1oy/SnpFg=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Epdim5jg1bxd3rZoXrSv33tt5O3gaHwijaBYJf9isL2vP0q1ezVPsFmYVpDKjwcQB
-	 I95Q6EssYxhJUZDaktMx3zFpJv/dYPoDhmBKm/KYXw37ZEquMZmR+e5T2Wki7ty91U
-	 wuEC86/TIMugI/0D35NpWwA4/UzqFvJXH5Fa5YFky4uSy38ph+RlIBkVA2zYXm1eds
-	 y6ZB80d69R3DHD6nN9KQuj/cKLdHETl0zbV8Ae8cs7ZjJWY7sUPwuxuT/k3mAVOtqa
-	 GLOV82zkTa+i/Ene8E1C7ZOf0gyDb76PTxQVkLhKKkHHb+ylr3Qrx7idcJ507m3my9
-	 f1gpUihe/90sA==
-Message-ID: <6053680a-9264-4f56-ab03-174789bcb1d5@kernel.org>
-Date: Thu, 5 Feb 2026 19:20:55 +0100
+	b=Mre03dUmtsC9Kz6zPu6exNP6c13IvGojD/GUXDQWO2OlHqEQ9vIo1llqyfHyfmmpr
+	 HxP3u+Ynz5iWs8WqP1hbCEffQSSqDvHSOGNs2bKTlDLtvdd2n2kG7gPVTQpwD5+USW
+	 zudIXajlic6zzqcKQhOVldYLySG365y0P/unF/kbt6Ixuj7ijjLFNEoFC5uv32r3Yv
+	 lCnlo07GSYJRH49Vo73yszGJ3NK+NfJZ2EAuT5jzi8/MJY5s2mXLF5sB472ZuPvY8+
+	 DcJltobyO5LPGLZGYJ2vIWodAE4ne4UCn1p83Ag36JCFxFNLzshcGGf5B/jJy+rH97
+	 S2JNUASR2+cwg==
+Message-ID: <144e31a9-e29c-4809-af2e-5ac45150d3f7@kernel.org>
+Date: Fri, 6 Feb 2026 10:33:53 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,20 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next] Squash to "mptcp: allow overridden write_space
- to be invoked"
+Subject: Re: rcu stalls during fstests runs for xfs
 Content-Language: en-GB, fr-BE
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <f044ee2401fe23dbb0d917765ca07c1d8f601758.1770277185.git.tanggeliang@kylinos.cn>
+To: Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+Cc: Kunwu Chan <kunwu.chan@hotmail.com>,
+ "rcu@vger.kernel.org" <rcu@vger.kernel.org>,
+ "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>, hch <hch@lst.de>,
+ "Paul E. McKenney" <paulmck@kernel.org>, MPTCP Linux <mptcp@lists.linux.dev>
+References: <aXdO52wh2rqTUi1E@shinmob>
+ <IA1PR14MB565903564F4AA105AF6A21099791A@IA1PR14MB5659.namprd14.prod.outlook.com>
+ <fc611e8e-0da9-4b88-83ef-092d300307e3@paulmck-laptop>
+ <aXrl46PxeHQSpYbX@shinmob>
+ <13b25e07-d7b8-4b4e-a249-b6826b2eea39@paulmck-laptop>
+ <c33c3d3e-a59c-4f5a-a562-13e2cabc2faf@paulmck-laptop>
+ <aXyRRaOBkvENTlBE@shinmob>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,34 +94,54 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <f044ee2401fe23dbb0d917765ca07c1d8f601758.1770277185.git.tanggeliang@kylinos.cn>
+In-Reply-To: <aXyRRaOBkvENTlBE@shinmob>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+Hi Shinichiro,
 
-On 05/02/2026 08:39, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
+Sorry to jump in, but I *think* our CI for the MPTCP subsystem is
+hitting the same issue.
+
+On 30/01/2026 12:16, Shinichiro Kawasaki wrote:
+> On Jan 29, 2026 / 15:19, Paul E. McKenney wrote:
+> [...]
+>>>>> I have seen the static-key pattern called out by Dave Chinner when running
+>>>>> KASAN on large systems.  We worked around this by disabling KASAN's use
+>>>>> of static keys.  In case you were running KASAN in these tests.
+>>>>
+>>>> As to KASAN, yes, I enable it in my test runs. I find three static-keys under
+>>>> mm/kasan/*. I will think if they can be disabled in my test runs. Thanks.
+>>>
+>>> There is a set of Kconfig options that disables static branches.  If you
+>>> cannot find them quickly, please let me know and I can look them up.
 > 
-> The default value of sk->sk_write_space is sock_def_write_space,
-> which causes the original patch to change the behavior. For MPTCP
-> sockets, sk->sk_write_space should be set to sk_stream_write_space
-> here.
+> Thank you. But now I know the fix series by Thomas is available. I prioritize
+> the evaluation of the fix series. Later on, I will try disabling the static-keys
+> if it is required.
+> 
+>>
+>> And Thomas Gleixner posted an alleged fix to the CID issue here:
+>>
+>> https://lore.kernel.org/lkml/20260129210219.452851594@kernel.org/
+>>
+>> Please let him know whether or not it helps.
+> 
+> Good to see this fix candidate series, thanks :) I have set up the patches and
+> started my regular test runs. So far, the hangs have been observed once or twice
+> a week. To confirm the effect of the fix series, I think two weeks runs will be
+> required. Once I get the result, will share it on this thread and with Thomas.
 
-Thanks for the fix. I also updated the commit message of the exported
-commit. Can you please check it is OK before me sending it (hopefully
-this Friday):
+I know it is only one week now, but did you see any effects so far? On
+my side, I applied the v2 series -- which has been applied in
+tip/sched/urgent -- but I still have issues, and it looks like it is
+even more frequent. Maybe what I see is different. If you no longer see
+the issues on your side after one week, I'm going to start a new thread
+with my issues not to mix them.
 
-New patches for t/upstream:
-- 55e4e979ac67: Squash to "mptcp: allow overridden write_space to be
-invoked"
-- 42f06f700e58: tg:msg: clarify the behaviour is not changed
-- Results: 073024280a58..7b6c434aafe6 (export)
-
-Tests are now in progress:
-
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/526555deb2ae5fac245a38f29a157c396ef1e4ee/checks
+Note that in my case, the issue is visible on a system where nested VMs
+are used, with and without KASAN (enabled via debug.config), just after
+having started a VSOCK listening socket via socat.
 
 Cheers,
 Matt
