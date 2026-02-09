@@ -1,130 +1,113 @@
-Received: from mail-qv1-f65.google.com (mail-qv1-f65.google.com [209.85.219.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0295367F4B
-	for <mptcp@lists.linux.dev>; Mon,  9 Feb 2026 10:48:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C320A76026
+	for <mptcp@lists.linux.dev>; Mon,  9 Feb 2026 13:34:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770634108; cv=none; b=ZxW1kkf0bRQoZzYnfQtBAkmI+a2NLGVTNodKazo7mQh5XxsTRnUT/aw6uj5xd/lNsCzcnfQszWEnwhT80aWi1zvzH4RomO+0xUcL3Y3NNCsa227j69+OJhryqfxHItSLX/lPrsXZ3La3egFMsNH2U5Db8IcBom2VrpmKkGl6VQc=
+	t=1770644054; cv=none; b=fDKucmtPTsnP0aTXnIVn5aSNofGt8UocUDWSWGb+XWZ0ifxbq3wRkaJuxmimou0ek17NLq3TjUbYjA00N+P6/Qh/EqB5es/ecX7sdM+tRDP+qWtsGaZ+GMIr1F8IZz2npDky3C78k0WgS6zWA2cuISLdjThJRjmhH3hRtq86ufo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770634108; c=relaxed/simple;
-	bh=60HszaKwPmDvWRZNwbyamd3RjbokSV03j25ld8wfJhE=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=VkMh1edcttCVOuEIecLx98EppilV2gUYKj3xqYnIIV6t0tgqNY/H3Dcf+YZocvOs9x217U0/kDxgRy5Mffup+ADqBDGX8O69wi3K/NuoNvF18v9t7twcind7lZiyyxT0ObHHhdvPh7zSmIoZ7k6QKopTMBly/I6oBsa/Pa+ddi0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ik2P2moJ; arc=none smtp.client-ip=209.85.219.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1770644054; c=relaxed/simple;
+	bh=IOCckDQmO3bCx6vIbKsdQfr+uc3RnkYrCh6Yh98UfAA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HXQoA2Dzz1AmrArXrWzIEOb5EUX+t9h/5Y866oJGh5pyAHEp2N4I8GCIVM5hV3HJFNqboc+Y9qqENpTG9bzCuLhACh6cI3pFPKvMbjkE+n5rzsPJvSO0h8ND6F4T954HXATHNoT1Ea0VMeJd8X9bhdfPzW22COSE7wMtHdY+8H8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=YlR9bj5Z; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=1J7rxPcV; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ik2P2moJ"
-Received: by mail-qv1-f65.google.com with SMTP id 6a1803df08f44-896fb37d1f0so17261246d6.2
-        for <mptcp@lists.linux.dev>; Mon, 09 Feb 2026 02:48:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1770634107; x=1771238907; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Fywbk7BwKxmYKLKj9iOrh5x7bXVCKg/FX5YDbuhPbG0=;
-        b=Ik2P2moJsfMbPQn8FnyA4kmHD+iD5MErugc72WXAvx9LTw8JkJ6VmYiv7qOgWGDB/S
-         R5sVpiT0pjnsRyj1Sne2Zd/6/vy34uSA6lMc54jAnytDcGwFDPzt5ye6dIWyubrlM0tt
-         WGiJO9Z/KSFdGWgeeqnLaPTVSlluP7E87BpHwAodTy8WUfezdV7UOMFxEIwoJzu4EqmB
-         b8yXDoj7f0xczgCBHwR1Bs45HSLY3UZ3w4AE+dJmzn9svjaWcrNiFi6gnblLg3LOkH0b
-         4PQ6Qza9o7TdE4amdBWD5eJfNE1r6uZWbdOFtFV1QY7U09oMsLVsnssWotO/a4BzdbTb
-         jk5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770634107; x=1771238907;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Fywbk7BwKxmYKLKj9iOrh5x7bXVCKg/FX5YDbuhPbG0=;
-        b=XQUpsCzE/MCAM3dADPTYMGIyUzZA0aPDfrgRUH6IcIbBdi8ZAwWFeghyTjM4qQBIJC
-         6yPGDHhH/55A+O5bHwWHaJ3r2oE/BBYdcB4JXHZCIAfwvnhE+DXCkeJPyAJNBxcVJGNi
-         Zb5LtZR7Q/4sCAehhsvL4euuaLqoboYSO05YIa3jYk4vb1fSjLdrjynKJEgT7poT6+5d
-         KnnnCbHtzWOJOAeNX++ZbSiV9GY79xWaxzVDW28prZbP1vLo6yNClRQuVlaP5Pv2Ui5r
-         ZhV9yXchmBPb4Dxp2Xfaagzs9iBbgmIoqQULU1pEvBgmMgzPIspIevPMW/ePDZ6Xbfvv
-         Nn5Q==
-X-Gm-Message-State: AOJu0YwoqOcCE2gYSNnTBczXCRR8YAFABEFHuv4xv3TZVZlRuZYIausH
-	JMO4fTXcZvVyjh2oP/DdG7lLVMUdM4MKus/0qEYCFoG3DwTgU4PnKy6zRpPCh7c=
-X-Gm-Gg: AZuq6aIrycOvbme/DBRRetSKHU9PYGPNltWC1MH2uowRp9aHEU8BWaZ0cQrxipQbYex
-	6rQ3/Ss9M3aDJ9mxlxXZJCdDV64TzBw4ByaVgkaRv1IIJnIfS5shJHEvoyghWoCcYcW9VWzzTXz
-	2I/5tc4XUx1g5Tu7pK3qxmmVKjBi0UElGyOvw8bfkpKAVruIkvJgu7827PM1YIQG1txwhBSY95a
-	WSvZTQypQRHptRDFuYzyoOQT9aR5c4BEqgcXKC4eX5Jlznsw2+0t4zYRYnmMjBF15FdYJTBv+EP
-	iDR7D/WQqyLB8/YvKLoD15ozQyp/tqsll7CHqk7SzxS0fCbav9EzIoryRn7VpuFXqXv+5dFjRla
-	G3kuInP87KSMYD9mP2vqf/glYKksxT2wfqWnOTz9OnEt+uAkPhPzjl892bZ8OdAYrKzAQcOCf3G
-	gzuyJQtP8FNM98Pkf0NcpojFY=
-X-Received: by 2002:ad4:4ead:0:b0:890:247e:dce2 with SMTP id 6a1803df08f44-8953c7d74famr158456486d6.1.1770634106603;
-        Mon, 09 Feb 2026 02:48:26 -0800 (PST)
-Received: from [127.0.0.1] ([4.246.135.164])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-5064543c20bsm60590131cf.29.2026.02.09.02.48.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Feb 2026 02:48:26 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <tanggeliang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <cover.1770627071.git.tanggeliang@kylinos.cn>
-References: <cover.1770627071.git.tanggeliang@kylinos.cn>
-Subject: Re: [RFC mptcp-next v3 0/7] NVME over MPTCP
-Message-ID: <513516ed-9638-d934-e67c-2bc0a61788e9@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 09 Feb 2026 10:48:25 +0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YlR9bj5Z";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1J7rxPcV"
+Date: Mon, 9 Feb 2026 14:34:09 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1770644051;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=60PQiy2iBpgFewxiruovzAslbmJSAAtPFOFOOiKjjPA=;
+	b=YlR9bj5ZIrN5Hl5gkUFTHUhbBNirduv8CgJZeENp11uU3U6thi6j/OtC/KQPAKc9QoY16b
+	iqhuyzi/b0ZQ7M7VUfUOm6xDjdKBiVAcL0NDslJlAhb3BeoAwDRRtJnPjGMbf1mFXVv7bt
+	NMrFeatDijOgXhtd0UkwblQQRQ31qH8+8sJoew6J5Wkmb20RAzlLTsuX1HheIftYOGQ2/H
+	DD0vYw+2DrYDfmR/vW+TfUOUQruDrKryktRtVAgS4glEN42/iCi7e94OG0AE7SlxspDuCq
+	Or+Gco28APE0lsa0wk71wKJNamcmGRe8DaKywyoaJhATqU9E7ZWe6UypX84Xbg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1770644051;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=60PQiy2iBpgFewxiruovzAslbmJSAAtPFOFOOiKjjPA=;
+	b=1J7rxPcVC/2n9mif2u5PsOumsh3UqugEaRYJHku7wMkXPEW7VFN4X8Fwwg9s/kVlJ7j0qj
+	wEPG5ci9hZIbMODg==
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Eric Dumazet <edumazet@google.com>, 
+	Kuniyuki Iwashima <kuniyu@google.com>, Paolo Abeni <pabeni@redhat.com>, 
+	Willem de Bruijn <willemb@google.com>, "David S. Miller" <davem@davemloft.net>, 
+	Simon Horman <horms@kernel.org>, Shuah Khan <shuah@kernel.org>, 
+	Matthieu Baerts <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>, 
+	Geliang Tang <geliang@kernel.org>, =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>, 
+	=?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Jesper Dangaard Brouer <hawk@kernel.org>, 
+	John Fastabend <john.fastabend@gmail.com>, Stanislav Fomichev <sdf@fomichev.me>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-api@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-kselftest@vger.kernel.org, 
+	mptcp@lists.linux.dev, linux-security-module@vger.kernel.org, bpf@vger.kernel.org, 
+	libc-alpha@sourceware.org, Carlos O'Donell <carlos@redhat.com>, 
+	Adhemerval Zanella <adhemerval.zanella@linaro.org>, Rich Felker <dalias@libc.org>, klibc@zytor.com, 
+	Florian Weimer <fweimer@redhat.com>
+Subject: Re: [PATCH net-next v2 0/4] net: uapi: Provide an UAPI definition of
+ 'struct sockaddr'
+Message-ID: <20260209143003-80d3cb63-38c6-4280-a319-ee6879eeab11@linutronix.de>
+References: <20260120-uapi-sockaddr-v2-0-63c319111cf6@linutronix.de>
+ <20260121192729.2095aa25@kernel.org>
+ <20260130112309-28f2645b-e756-4173-96da-cf5c59191520@linutronix.de>
+ <20260130081741.425a92e0@kernel.org>
+ <3c46fc49-b41b-44a2-b42a-669cc7e6bb02@linutronix.de>
+ <20260131092517.6639d84c@kernel.org>
+ <20260203122715-eeb304f9-4b42-4fc6-a527-658182a92ba5@linutronix.de>
+ <20260203144011.32d5b223@kernel.org>
+ <20260204064248-d9c4ab78-f6d4-4ac6-8d55-e939bc1df6d2@linutronix.de>
+ <20260204175516.4fb11966@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260204175516.4fb11966@kernel.org>
 
-Hi Geliang,
+On Wed, Feb 04, 2026 at 05:55:16PM -0800, Jakub Kicinski wrote:
+> On Wed, 4 Feb 2026 06:51:46 +0100 Thomas Weißschuh wrote:
+> > > make -j16 O="$kobj" INSTALL_HDR_PATH="${kobj}/hdr" headers_install
+> > > popd
+> > > 
+> > > pushd uapi
+> > > find . -type f -name '*.h' -exec cp -v "${kobj}/hdr/include/{}" {} \;  
+> > 
+> > Here only those headers which already exist in ethtool's uapi/ directory
+> > are copied. As linux/typelimits.h is new, it is now missing.
+> > Honestly, if a user fiddles with the internals of the UAPI headers like
+> > this, it is on them to update their code if the internal structure
+> > changes. In your case a simple 'touch uapi/linux/typelimits.h'
+> > before running the script will be enough. Also internal.h now requires
+> > an explicit inclusion of <limits.h>, as that is not satisfied by the
+> > UAPI anymore.
+> 
+> Hopefully you understand that while due to uapi header copy this is not
+> a huge issue for ethtool itself, but it is a proof that your changes
+> can break normal user space applications which do not vendor in uapi.
 
-Thank you for your modifications, that's great!
-
-Our CI did some validations and here is its report:
-
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Unstable: 1 failed =
-test(s): packetdrill_dss =F0=9F=94=B4
-- KVM Validation: debug (only =
-selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only=
- bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only =
-bpftest_all): Success! =E2=9C=85
-- Task: https://github.=
-com/multipath-tcp/mptcp_net-next/actions/runs/21819574281
-
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/ea245e8c4ab9
-Patchwork: https://patchwork.kernel.=
-org/project/mptcp/list/?series=3D1052185
-
-
-If there are some issues, you =
-can reproduce them using the same environment as
-the one used by the CI =
-thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
+A regular application which uses a full UAPI headers tree will get
+access to the new header automatically.
+If the application uses symbols from <limits.h> without including <limits.h>
+on its own, it is broken.
 
 
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 Core)
+Thomas
