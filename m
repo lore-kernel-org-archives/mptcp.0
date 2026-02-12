@@ -1,142 +1,125 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB2482FE579;
-	Thu, 12 Feb 2026 11:51:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CB422E7635;
+	Thu, 12 Feb 2026 15:06:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770897066; cv=none; b=tnM7znYteFrXyaQ4S4nJy/2RMEB10xjg3OjkKktvmpAbKuBYzKy++seN698Rumn8OpoEwCrdDNVfIBzgrWaRDwvMaAXMSOllhonSn1xdBgee224kbeJyOzHvNVZjticw2ho7CoJsmM5NCkQkrl4GfpYcYBNiGHJ4TXlm241fMNc=
+	t=1770908773; cv=none; b=EqXTIJEytzVxnUYJM2xj3SOdvPsKhTUEtngZ3NeGydbJUNOjFL7+MLdyZVD9/n90a7WahohCkIp72NmOs9AqdmaXpJrGzwS129+6PZ/SgW8w8O5TsXh7PqrSAsMZjrrUCbXUnqH8NOMVg2ia3LA0v3XMu/3gDCCJx8ZaZ94Z+10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770897066; c=relaxed/simple;
-	bh=WmbzLKDB0Uaqeg3tAn1+tey25NxlODgd+5JE8M2pG88=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LbFMEIEaHUc1f+G+6DbdLh67Uc5DDigpdyD/a4xtffEHhtmDwitlb9uTRDdGHQ0kcKFf1E4bHsei3g0iOFre9RBWkeo9gC3RUTO5NbOVfPYr9UFROxqzMBWa07KcSMepoVzanvmrg+B3ekTnVYZtAWVGprvw/4JpiLoAIqy7u7I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u57jX9Km; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1770908773; c=relaxed/simple;
+	bh=K7i/IEqYAIP3hwqfxxBGOuWS4B0xoeIJM9ICOS9WQ54=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rUk6XyatihIsYWyodAFeRbvRh+DV40kTNy87Lqt2WXOSe4TL9lDbN7aWJS+7qMKvibwkHF03uQPYcrtLTBctPmf130M0DyngkCUgyOp4erTUU/urpRfodSvEXfLvFf0iUgYMYa7L34UQbKWOmdzHqXh35CVGZrLJL6Y6aLHWVd4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d5BsC5DV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u57jX9Km"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24A76C4CEF7;
-	Thu, 12 Feb 2026 11:51:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d5BsC5DV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4854CC4CEF7;
+	Thu, 12 Feb 2026 15:06:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770897065;
-	bh=WmbzLKDB0Uaqeg3tAn1+tey25NxlODgd+5JE8M2pG88=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=u57jX9Km3ju/LH5+ytVyhvQI7LBpNCKNjSu0bNZicWxQGrCsqvWMJgTtNG8qHZQc8
-	 F4gyV6SkzMrxOrwOaVq+MdXupEwq7hBD7RAdYBCvgMogXywJELcqDrMPXzcZNJCF3A
-	 LSxd/ZXa0aW0W+acrNEvleYAHC8Aqv0jzFy3bFJvetotbMpHa5zZpGeCaI5gStW3Sv
-	 /a/KD/9pC/mjS0YemjqzLlCmd+WzDaxVZ2CT6ZmULkqb92yrMIsS68mY8L/x+RhY/b
-	 9qsb2n+PWf18h11G6CbU3xTQfajQ2v+wtDcur05YHqUhcJZRIovfN6vE7TxiQZNfD1
-	 ob/6/tDBmAgdg==
+	s=k20201202; t=1770908772;
+	bh=K7i/IEqYAIP3hwqfxxBGOuWS4B0xoeIJM9ICOS9WQ54=;
+	h=From:To:Cc:Subject:Date:From;
+	b=d5BsC5DVxypDBstvfFN4IbNmsOPxByal+71ukjnEdrKxA13EyXORz0zZNzVJEgesP
+	 3rTyxcrQgIGmVmMPuzFy5A72NVWxw+mGh1gIcOkGpObNlkw5o1gd+f2K780q45bkuM
+	 ARtyTAyRJRsKFiCOKcY2c89clWtrnRqBhaNcGuau7CGtEePF2SCeJWGYGSYnKP7z0h
+	 7sqZ54qJH533xxRSDqYpGQLsTk7uKUcj9F6Kn6eCi9GNdhmDYWFWT+Uj7mNOQkZRe9
+	 /c/GqfSQpe6tWn/N+tUtbljGi683PEQlPvxiffHu1Ko3k44DMMUlts4xydGoaLIn+A
+	 pyVBCNw6k8gcA==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 To: stable@vger.kernel.org,
 	gregkh@linuxfoundation.org
 Cc: MPTCP Upstream <mptcp@lists.linux.dev>,
-	"Matthieu Baerts (NGI0)" <matttbe@kernel.org>,
+	Eric Dumazet <edumazet@google.com>,
+	syzbot+5498a510ff9de39d37da@syzkaller.appspotmail.com,
+	Eulgyu Kim <eulgyukim@snu.ac.kr>,
 	Mat Martineau <martineau@kernel.org>,
+	"Matthieu Baerts (NGI0)" <matttbe@kernel.org>,
 	Jakub Kicinski <kuba@kernel.org>
-Subject: [PATCH 5.10.y] selftests: mptcp: pm: ensure unknown flags are ignored
-Date: Thu, 12 Feb 2026 12:50:57 +0100
-Message-ID: <20260212115056.898313-2-matttbe@kernel.org>
+Subject: [PATCH 6.12.y] mptcp: fix race in mptcp_pm_nl_flush_addrs_doit()
+Date: Thu, 12 Feb 2026 16:05:48 +0100
+Message-ID: <20260212150547.1345709-2-matttbe@kernel.org>
 X-Mailer: git-send-email 2.51.0
-In-Reply-To: <2025122947-clapping-zookeeper-5d32@gregkh>
-References: <2025122947-clapping-zookeeper-5d32@gregkh>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3927; i=matttbe@kernel.org; h=from:subject; bh=WmbzLKDB0Uaqeg3tAn1+tey25NxlODgd+5JE8M2pG88=; b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDJ79y18opx92rg+kGnPjfLyFRdsnnU5/fF+cWlXRu/6o DOnv++a31HKwiDGxSArpsgi3RaZP/N5FW+Jl58FzBxWJpAhDFycAjCRcyGMDDceskVdfbDNO/zy aV/L21PtpxuezHkt/dJlo+RrllPRUy0YGX6ZeJ4NPaUR1VrKrq2wQb334qNg/6Tt59V/m2QuKdM 1ZQEA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2925; i=matttbe@kernel.org; h=from:subject; bh=YxruUXO+vGA4F+8DkfEKookwW/IrvLpnYlr9D467xAA=; b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDJ73/gsF+K5VK6vvOOmudWqR9J22e1OZidWrLJbnLpcP /TY1dnTOkpZGMS4GGTFFFmk2yLzZz6v4i3x8rOAmcPKBDKEgYtTACai8p2RYWXwlf8rvW7eiZ14 nKHtwqvqxy+ZWHNOZVzMZHyucOHF888M/6NnMheU9i9+Edy5MtvaIG/O92l9T2ZpR+uXsX5JNw4 MYQYA
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 Content-Transfer-Encoding: 8bit
 
-commit 29f4801e9c8dfd12bdcb33b61a6ac479c7162bd7 upstream.
+From: Eric Dumazet <edumazet@google.com>
 
-This validates the previous commit: the userspace can set unknown flags
--- the 7th bit is currently unused -- without errors, but only the
-supported ones are printed in the endpoints dumps.
+commit e2a9eeb69f7d4ca4cf4c70463af77664fdb6ab1d upstream.
 
-The 'Fixes' tag here below is the same as the one from the previous
-commit: this patch here is not fixing anything wrong in the selftests,
-but it validates the previous fix for an issue introduced by this commit
-ID.
+syzbot and Eulgyu Kim reported crashes in mptcp_pm_nl_get_local_id()
+and/or mptcp_pm_nl_is_backup()
 
-Fixes: 01cacb00b35c ("mptcp: add netlink-based PM")
-Cc: stable@vger.kernel.org
+Root cause is list_splice_init() in mptcp_pm_nl_flush_addrs_doit()
+which is not RCU ready.
+
+list_splice_init_rcu() can not be called here while holding pernet->lock
+spinlock.
+
+Many thanks to Eulgyu Kim for providing a repro and testing our patches.
+
+Fixes: 141694df6573 ("mptcp: remove address when netlink flushes addrs")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot+5498a510ff9de39d37da@syzkaller.appspotmail.com
+Closes: https://lore.kernel.org/all/6970a46d.a00a0220.3ad28e.5cf0.GAE@google.com/T/
+Reported-by: Eulgyu Kim <eulgyukim@snu.ac.kr>
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/611
 Reviewed-by: Mat Martineau <martineau@kernel.org>
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Link: https://patch.msgid.link/20251205-net-mptcp-misc-fixes-6-19-rc1-v1-2-9e4781a6c1b8@kernel.org
+Link: https://patch.msgid.link/20260124-net-mptcp-race_nl_flush_addrs-v3-1-b2dc1b613e9d@kernel.org
 Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-[ Conflicts in pm_netlink.sh, because some refactoring have been done
-  later on: commit 0d16ed0c2e74 ("selftests: mptcp: add
-  {get,format}_endpoint(s) helpers") and commit c99d57d0007a
-  ("selftests: mptcp: use pm_nl endpoint ops") are not in this version.
-  The same operation can still be done at the same place, without using
-  the new helpers.
-  Also, commit 1dc88d241f92 ("selftests: mptcp: pm_nl_ctl: always look
-  for errors") is not in this version, and create a conflict in the
-  context which is not related to the modification here.
-  In v5.10, endpoints couldn't be re-used directly, so the flag is
-  tested before.
-  Conflicts in pm_nl_ctl.c, because commit 69c6ce7b6eca ("selftests:
-  mptcp: add implicit endpoint test case") and commit 371b90377e60
-  ("selftests: mptcp: set and print the fullmesh flag") are not in this
-  version, and caused a conflict in the context which is not related to
-  the modification here. ]
+[ Conflicts because the code has been moved from pm_netlink.c to
+  pm_kernel.c later on in commit 8617e85e04bd ("mptcp: pm: split
+  in-kernel PM specific code"). The same modifications can be applied
+  in pm_netlink.c with one exception, because 'pernet->local_addr_list'
+  has been renamed to 'pernet->endp_list' in commit 35e71e43a56d
+  ("mptcp: pm: in-kernel: rename 'local_addr_list' to 'endp_list'"). The
+  previous name is then still being used in this version. ]
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- tools/testing/selftests/net/mptcp/pm_netlink.sh |  2 +-
- tools/testing/selftests/net/mptcp/pm_nl_ctl.c   | 11 +++++++++++
- 2 files changed, 12 insertions(+), 1 deletion(-)
+ net/mptcp/pm_netlink.c | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
-diff --git a/tools/testing/selftests/net/mptcp/pm_netlink.sh b/tools/testing/selftests/net/mptcp/pm_netlink.sh
-index 7d194f5c2939..9d95d7e5b70a 100755
---- a/tools/testing/selftests/net/mptcp/pm_netlink.sh
-+++ b/tools/testing/selftests/net/mptcp/pm_netlink.sh
-@@ -80,7 +80,7 @@ if mptcp_lib_expect_all_features; then
- subflows 0" "defaults limits"
- fi
- 
--ip netns exec $ns1 ./pm_nl_ctl add 10.0.1.1
-+ip netns exec $ns1 ./pm_nl_ctl add 10.0.1.1 flags unknown
- ip netns exec $ns1 ./pm_nl_ctl add 10.0.1.2 flags subflow dev lo
- ip netns exec $ns1 ./pm_nl_ctl add 10.0.1.3 flags signal,backup
- check "ip netns exec $ns1 ./pm_nl_ctl get 1" "id 1 flags  10.0.1.1" "simple add/get addr"
-diff --git a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
-index b24a2f17d415..c6d7e0f2a8b8 100644
---- a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
-+++ b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
-@@ -22,6 +22,8 @@
- #define MPTCP_PM_NAME		"mptcp_pm"
- #endif
- 
-+#define MPTCP_PM_ADDR_FLAG_UNKNOWN _BITUL(7)
-+
- static void syntax(char *argv[])
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index 0b4ab3c816da..864c26e22b24 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -1811,16 +1811,26 @@ static void __reset_counters(struct pm_nl_pernet *pernet)
+ int mptcp_pm_nl_flush_addrs_doit(struct sk_buff *skb, struct genl_info *info)
  {
- 	fprintf(stderr, "%s add|get|del|flush|dump|accept [<args>]\n", argv[0]);
-@@ -236,6 +238,8 @@ int add_addr(int fd, int pm_family, int argc, char *argv[])
- 					flags |= MPTCP_PM_ADDR_FLAG_SIGNAL;
- 				else if (!strcmp(tok, "backup"))
- 					flags |= MPTCP_PM_ADDR_FLAG_BACKUP;
-+				else if (!strcmp(tok, "unknown"))
-+					flags |= MPTCP_PM_ADDR_FLAG_UNKNOWN;
- 				else
- 					error(1, errno,
- 					      "unknown flag %s", argv[arg]);
-@@ -373,6 +377,13 @@ static void print_addr(struct rtattr *attrs, int len)
- 					printf(",");
- 			}
+ 	struct pm_nl_pernet *pernet = genl_info_pm_nl(info);
+-	LIST_HEAD(free_list);
++	struct list_head free_list;
  
-+			if (flags & MPTCP_PM_ADDR_FLAG_UNKNOWN) {
-+				printf("unknown");
-+				flags &= ~MPTCP_PM_ADDR_FLAG_UNKNOWN;
-+				if (flags)
-+					printf(",");
-+			}
+ 	spin_lock_bh(&pernet->lock);
+-	list_splice_init(&pernet->local_addr_list, &free_list);
++	free_list = pernet->local_addr_list;
++	INIT_LIST_HEAD_RCU(&pernet->local_addr_list);
+ 	__reset_counters(pernet);
+ 	pernet->next_id = 1;
+ 	bitmap_zero(pernet->id_bitmap, MPTCP_PM_MAX_ADDR_ID + 1);
+ 	spin_unlock_bh(&pernet->lock);
+-	mptcp_nl_flush_addrs_list(sock_net(skb->sk), &free_list);
 +
- 			/* bump unknown flags, if any */
- 			if (flags)
- 				printf("0x%x", flags);
++	if (free_list.next == &pernet->local_addr_list)
++		return 0;
++
+ 	synchronize_rcu();
++
++	/* Adjust the pointers to free_list instead of pernet->local_addr_list */
++	free_list.prev->next = &free_list;
++	free_list.next->prev = &free_list;
++
++	mptcp_nl_flush_addrs_list(sock_net(skb->sk), &free_list);
+ 	__flush_addrs(&free_list);
+ 	return 0;
+ }
 -- 
 2.51.0
 
