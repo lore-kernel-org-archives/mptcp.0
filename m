@@ -1,30 +1,30 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CB422E7635;
-	Thu, 12 Feb 2026 15:06:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E73307E110;
+	Thu, 12 Feb 2026 17:38:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770908773; cv=none; b=EqXTIJEytzVxnUYJM2xj3SOdvPsKhTUEtngZ3NeGydbJUNOjFL7+MLdyZVD9/n90a7WahohCkIp72NmOs9AqdmaXpJrGzwS129+6PZ/SgW8w8O5TsXh7PqrSAsMZjrrUCbXUnqH8NOMVg2ia3LA0v3XMu/3gDCCJx8ZaZ94Z+10=
+	t=1770917917; cv=none; b=NaDwjVLI+psGuL+RdzWrmnLm2P4kYjlAJQ199fUYBV67yxbkCELY0MOxpbv8XEjH9ybj/NBFJ0brB2ZVnuls05dgFfcYtv2PJH+tnF2d7EjcwTvNDSbl6cJ11VdlNN8+x/D5m5LKrPUk9urjOCCak2yfpx0TCv+3oxYOVtpw0Tg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770908773; c=relaxed/simple;
-	bh=K7i/IEqYAIP3hwqfxxBGOuWS4B0xoeIJM9ICOS9WQ54=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rUk6XyatihIsYWyodAFeRbvRh+DV40kTNy87Lqt2WXOSe4TL9lDbN7aWJS+7qMKvibwkHF03uQPYcrtLTBctPmf130M0DyngkCUgyOp4erTUU/urpRfodSvEXfLvFf0iUgYMYa7L34UQbKWOmdzHqXh35CVGZrLJL6Y6aLHWVd4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d5BsC5DV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1770917917; c=relaxed/simple;
+	bh=ykgZuO7gieD0L3G2D1age0y4AlvnU72zKeBhb9bo88I=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ShZyMB1Ct2+3SPBc5Vjs+2eXmPmioLArfRa/0/BM63kDhJmbk05EWnjZhaWsM8OIkXk1usIshNmxIqCj3ITRNAvvP7rVl+6MZa0SuevZWD0IOr9uqdNNz3nhz5RWPzn9dEsfqaNaqGoK78sciZUjEGlMToP7dZRmULeYgDcFxJ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QP32udXe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d5BsC5DV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4854CC4CEF7;
-	Thu, 12 Feb 2026 15:06:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QP32udXe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2473C4CEF7;
+	Thu, 12 Feb 2026 17:38:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770908772;
-	bh=K7i/IEqYAIP3hwqfxxBGOuWS4B0xoeIJM9ICOS9WQ54=;
+	s=k20201202; t=1770917916;
+	bh=ykgZuO7gieD0L3G2D1age0y4AlvnU72zKeBhb9bo88I=;
 	h=From:To:Cc:Subject:Date:From;
-	b=d5BsC5DVxypDBstvfFN4IbNmsOPxByal+71ukjnEdrKxA13EyXORz0zZNzVJEgesP
-	 3rTyxcrQgIGmVmMPuzFy5A72NVWxw+mGh1gIcOkGpObNlkw5o1gd+f2K780q45bkuM
-	 ARtyTAyRJRsKFiCOKcY2c89clWtrnRqBhaNcGuau7CGtEePF2SCeJWGYGSYnKP7z0h
-	 7sqZ54qJH533xxRSDqYpGQLsTk7uKUcj9F6Kn6eCi9GNdhmDYWFWT+Uj7mNOQkZRe9
-	 /c/GqfSQpe6tWn/N+tUtbljGi683PEQlPvxiffHu1Ko3k44DMMUlts4xydGoaLIn+A
-	 pyVBCNw6k8gcA==
+	b=QP32udXe9sz8z/3MNmFjLWZOsRgRC+wSYRVTk9mqmrjs1aKkek2d/LXFvxs/5Rcqd
+	 Sr2B+3PKXIA/XArsyG72IC6dCVFna6aXqcaM+D8AmcmvCrPUyQmctnRsixxMi99wTx
+	 t2DV3xO7L8u6jY1w3miy/wv9JJNBPzYg1g8Gg/zXGRV+y5MYc4U5fNwUzpf+ivEICi
+	 Wl3yr8chQMLaIDAmTKDRKcnEcLUbaaM/Qynx2yrZtmdhhYo71G+F1V6eMY5zJznTMK
+	 bE2Nf+dcoVaxZXujQFfkppVHdzU9m3M2w9b6TY/7b33JIfbTZDzxyV5MblUNPbDV+R
+	 hKTN/MkECJgEg==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 To: stable@vger.kernel.org,
 	gregkh@linuxfoundation.org
@@ -35,9 +35,9 @@ Cc: MPTCP Upstream <mptcp@lists.linux.dev>,
 	Mat Martineau <martineau@kernel.org>,
 	"Matthieu Baerts (NGI0)" <matttbe@kernel.org>,
 	Jakub Kicinski <kuba@kernel.org>
-Subject: [PATCH 6.12.y] mptcp: fix race in mptcp_pm_nl_flush_addrs_doit()
-Date: Thu, 12 Feb 2026 16:05:48 +0100
-Message-ID: <20260212150547.1345709-2-matttbe@kernel.org>
+Subject: [PATCH 6.6.y] mptcp: fix race in mptcp_pm_nl_flush_addrs_doit()
+Date: Thu, 12 Feb 2026 18:37:26 +0100
+Message-ID: <20260212173725.1834288-2-matttbe@kernel.org>
 X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -45,7 +45,7 @@ List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2925; i=matttbe@kernel.org; h=from:subject; bh=YxruUXO+vGA4F+8DkfEKookwW/IrvLpnYlr9D467xAA=; b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDJ73/gsF+K5VK6vvOOmudWqR9J22e1OZidWrLJbnLpcP /TY1dnTOkpZGMS4GGTFFFmk2yLzZz6v4i3x8rOAmcPKBDKEgYtTACai8p2RYWXwlf8rvW7eiZ14 nKHtwqvqxy+ZWHNOZVzMZHyucOHF888M/6NnMheU9i9+Edy5MtvaIG/O92l9T2ZpR+uXsX5JNw4 MYQYA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3192; i=matttbe@kernel.org; h=from:subject; bh=BJDmpspCA5oQqlpGL5+/OOHDzb4xxJwCzQ0zlzFS/YM=; b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDL7+K+dPaj+h4X9nnVDm9QD7aNC/5bI8D5QnD2Xcdaqi uMaR21tOkpZGMS4GGTFFFmk2yLzZz6v4i3x8rOAmcPKBDKEgYtTACYS58zIsC9u5u4ziRsmvQq9 whqTf+Bq8m+WO5Ic553Pifzeu/SxYSIjQ586v/1EufYN9x1eaFz44/X5n9qUZW+2dd+INb6ZvFi 0gwkA
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 Content-Transfer-Encoding: 8bit
 
@@ -80,18 +80,22 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
   in pm_netlink.c with one exception, because 'pernet->local_addr_list'
   has been renamed to 'pernet->endp_list' in commit 35e71e43a56d
   ("mptcp: pm: in-kernel: rename 'local_addr_list' to 'endp_list'"). The
-  previous name is then still being used in this version. ]
+  previous name is then still being used in this version.
+  Also, another conflict is caused by commit 7bcf4d8022f9 ("mptcp: pm:
+  rename helpers linked to 'flush'") which is not in this version:
+  mptcp_nl_remove_addrs_list() has been renamed to
+  mptcp_nl_flush_addrs_list(). The previous name has then been kept. ]
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
  net/mptcp/pm_netlink.c | 16 +++++++++++++---
  1 file changed, 13 insertions(+), 3 deletions(-)
 
 diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 0b4ab3c816da..864c26e22b24 100644
+index 9f25cfd96f98..4b805d7f5769 100644
 --- a/net/mptcp/pm_netlink.c
 +++ b/net/mptcp/pm_netlink.c
-@@ -1811,16 +1811,26 @@ static void __reset_counters(struct pm_nl_pernet *pernet)
- int mptcp_pm_nl_flush_addrs_doit(struct sk_buff *skb, struct genl_info *info)
+@@ -1859,16 +1859,26 @@ static void __reset_counters(struct pm_nl_pernet *pernet)
+ static int mptcp_nl_cmd_flush_addrs(struct sk_buff *skb, struct genl_info *info)
  {
  	struct pm_nl_pernet *pernet = genl_info_pm_nl(info);
 -	LIST_HEAD(free_list);
@@ -105,7 +109,7 @@ index 0b4ab3c816da..864c26e22b24 100644
  	pernet->next_id = 1;
  	bitmap_zero(pernet->id_bitmap, MPTCP_PM_MAX_ADDR_ID + 1);
  	spin_unlock_bh(&pernet->lock);
--	mptcp_nl_flush_addrs_list(sock_net(skb->sk), &free_list);
+-	mptcp_nl_remove_addrs_list(sock_net(skb->sk), &free_list);
 +
 +	if (free_list.next == &pernet->local_addr_list)
 +		return 0;
@@ -116,7 +120,7 @@ index 0b4ab3c816da..864c26e22b24 100644
 +	free_list.prev->next = &free_list;
 +	free_list.next->prev = &free_list;
 +
-+	mptcp_nl_flush_addrs_list(sock_net(skb->sk), &free_list);
++	mptcp_nl_remove_addrs_list(sock_net(skb->sk), &free_list);
  	__flush_addrs(&free_list);
  	return 0;
  }
