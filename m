@@ -1,134 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f68.google.com (mail-ej1-f68.google.com [209.85.218.68])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFF13358D38;
-	Fri, 13 Feb 2026 11:01:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770980478; cv=none; b=CImcWo/22SdMiad8ZvLVCoPcvqgCF9Rj7n+xxwTIDpiW12ukla0ZZcMG8zv6ujaoGwhvoby1xtqK/qp3J94lWIIos5LVWRMOaK7dZ2UN/S5CldtF9EU1etk/Wn8wEuWI7H7BaNZ7T2olsDiJJKZaGhQCW7YKE4eHpW3/5pXXdmE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770980478; c=relaxed/simple;
-	bh=O8wM9o9jaxRKe7Tiam8Z/rkhWEXGulI51Shgv0HO4ns=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
-	 In-Reply-To:Content-Type; b=ovCMN1cWx7owgDJZ8eMnB4YdAfzHfXgBFUm2UzO2dD1uEG2G9gytFQL9mejvVqv40SYJuh1MKd5mxm4aIvBEX/kGqw255yG5JYhrDZiPnmIyVsgn7rTxDIHD6do2LsKFndv4Xq4DHXEsRWTk7cclh1RTBS1whvPUuNqAJV353Ow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eoLdi4St; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A4141A08BC
+	for <mptcp@lists.linux.dev>; Sun, 15 Feb 2026 08:19:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.68
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1771143542; cv=pass; b=dHdusD0tDNCOKvx+v6W1JfnvUtxpYG1Ht2W46EUQiJlVlKpmdPrSdZah2yCFCPHZYkiCftVXmMS0R4jbEX2FQTL/FTN8WEX6J0XUogq3d5YOY99aOpmiKvUA8DDJxRsFiMQkQAkUGJUNePqL41OUOnPFv1fyby1tennR33C+BVc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1771143542; c=relaxed/simple;
+	bh=G2lw/WlT9t87EZJy/y7VIZYQGtCU2fBi+OU93zM5oA0=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=rchiX74pAEFOezbwfVThf9M9LgfXD+GIQm3DwAfHKDp20YHlNP6D6KGCCGakiyIah1NsUZcjHJ2oI3AAgS75SHiS6vhN+xgKLCECDNJ5lMLNVsgmuK3AjSv0+f6ZOhLXTGwHydbcDw8ILPOZ1Rlwhe4e7lS7va5tUTqhorLrSsk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unrealasia.net; spf=pass smtp.mailfrom=unrealasia.net; dkim=pass (2048-bit key) header.d=unrealasia-net.20230601.gappssmtp.com header.i=@unrealasia-net.20230601.gappssmtp.com header.b=aOwW0nwT; arc=pass smtp.client-ip=209.85.218.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unrealasia.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unrealasia.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eoLdi4St"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 444E0C116C6;
-	Fri, 13 Feb 2026 11:01:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770980478;
-	bh=O8wM9o9jaxRKe7Tiam8Z/rkhWEXGulI51Shgv0HO4ns=;
-	h=Date:Subject:To:References:From:Cc:In-Reply-To:From;
-	b=eoLdi4StQSVyv6YfrnOLlPuT6Fv4mfyBPyywLSJDToOzqBDOkYaKIlzrMarvpHtOY
-	 Piu/cigMt869GgDsDTd2AF05U8llCsW/73K7Iv8uBpnwKLMFFRzj2crM0R5/FCLUhd
-	 HbSC9eegxwnkT84/iH8OfKmBtC3/4wVhDnd8+l6HrUTaZRp2f47BwIjU+UqHBSdgzE
-	 5DHZ+oSNSUzxQtbI+BBgER3dPYWkjE5PKcuwwRFECnX7I7Vq9LA4lH2kwmavk4KEsn
-	 /0neDp+CmcQnl/wVTTLubDLSkBQy/Srn/OPHaBuap57aHtUQGqHNRQbrn/UzWoB0wj
-	 UocqffkZXeO1g==
-Message-ID: <12774ad8-6d81-4dc1-b3af-e62f623b467a@kernel.org>
-Date: Fri, 13 Feb 2026 12:01:15 +0100
+	dkim=pass (2048-bit key) header.d=unrealasia-net.20230601.gappssmtp.com header.i=@unrealasia-net.20230601.gappssmtp.com header.b="aOwW0nwT"
+Received: by mail-ej1-f68.google.com with SMTP id a640c23a62f3a-b8fd976e90cso81900366b.0
+        for <mptcp@lists.linux.dev>; Sun, 15 Feb 2026 00:19:01 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1771143539; cv=none;
+        d=google.com; s=arc-20240605;
+        b=gOdqKZMBpOvbbnFEV8oyKiCWNvd0MFgRNeABc43w9NTAMLuQ4DEhdMI9COCn7oO+xr
+         i5Jgko/VJUiijHuqsin5L/0o7MGWfk6t2eEajvJVblGw4jC99E7Ws5vVc9QfDQ8d6x+G
+         Zn4nx2y4ipGN0zM/Oqd14cYdsOyZ01VVO3jgHO7UVeZN0fPqUY/1MxJQI+UJ20+N4M62
+         PdbLGB1Oz2YDNr8AJhII/ugw3nlcRjIeg/2f6w/9VbDMTd+o7OKrN1LP//tMQwWZeOIO
+         bKhGdemvAGvnGVywfwdjgtk+WbKj2IjtDUEZRER+1QpdVRtPh3YLfGsxF4nfTtfB92Bj
+         VUAw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=to:subject:message-id:date:from:mime-version:dkim-signature;
+        bh=G2lw/WlT9t87EZJy/y7VIZYQGtCU2fBi+OU93zM5oA0=;
+        fh=KoOOhf6J2pokZKo/B0+oz08+WVYAFzmgcZVfHglZF2o=;
+        b=L6RCJoGrzCRMp/Yqr1HKYLRE45VEU1d9HC3x+P8cF2bXJA5ramCJ5dObXQbyPwICpm
+         IG1BKkU/RwL3Tsmux0SevTdQyoaAhs3bRcWAW9jjXm2jaMBySkmWY8Nlgw1DYGW97NSm
+         dez2dOsFD1xD32GP+F+U9veELDMAXXtgkZB5xnc5rLolMPwepwK6MbC1f8wjze0p15DO
+         TuhI/Sqpo9AJw4Q14//nqyWqqlbJzUkYJiy9VaXKZvRWd7C3ZChC1sxOtkLOTrlalQ7B
+         +Al7O60va7Asg3SDBT/KwX5uL2nAWEC79JRQx2raAPOg5mo2VjR94LrrVm5lFDPWXDul
+         FLTA==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=unrealasia-net.20230601.gappssmtp.com; s=20230601; t=1771143539; x=1771748339; darn=lists.linux.dev;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=G2lw/WlT9t87EZJy/y7VIZYQGtCU2fBi+OU93zM5oA0=;
+        b=aOwW0nwTGUBIYRdFJJGVpyKPDcZT/m4QLqCW+FyF8K/regkKZcRS3nHbxUl5As/pjM
+         o5qjbgRhvXkGVg9IgsUO5Wz6Mzws8AdRypNkVbX4HLFnSQautntbrEpmzzT5rBz+jPOS
+         BSp4bws/r71XONPCXgrVgoUfR+aYBV12vAz5fuEv2vGE3JlOIZZLtWwSj8QRs4Da0rrI
+         m/mKgtH2sC1p1QkqWTgCGb3ANQTVfV49c546XCwf2mr+dHtiOBJO4cm2TTYZSyGtnts7
+         PCom2MMqJRFpVchBMx2HB0wq7jCPFx1H59Fx0v9L0Tv9+0xJ0e37LRthHW+FUypoKgbS
+         lGFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1771143539; x=1771748339;
+        h=to:subject:message-id:date:from:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=G2lw/WlT9t87EZJy/y7VIZYQGtCU2fBi+OU93zM5oA0=;
+        b=Kg5NhwFzksvO69KiBSig0/g2O0hfgisLIMrB+CNrl3INhBbyt8zUlL75EK1HW+Poel
+         wb3JuYmh7V+iPa4qFT6FCbEtBI2/DzCJ79yjDuvz4xQi48rijtna5edqbtkYS9xRlXXq
+         /Gl4VV8O+58SuSM4yHcqgAu4i9k0N7j/M3tFNEs5OQe5KT4Lr1FklD6Bzn2pl2MoFNEO
+         Ku0NCe4K39EyiQ2ppu36psKSasp7r7e/AAl7BsNoOrPb0LezRu4Xu6WGnUAqUSg+KHzW
+         V1OBTnUSdiajC7JThR3jHsiJHzkst0bL/2Ewo6GG8W0cc0/Lp1I8dDWNDkyjaHNldNBz
+         UHKg==
+X-Gm-Message-State: AOJu0Yz3sqFydePHLmjrLwHKkWu9jNjwN2/x5brN3pAhPY8gQG1gY1Bt
+	RUhuSfM/Oz8tkl4yfRmsnOXcaHVcdKbPSDI6e1N+7E523WKtwnx3o3waza0ppp6s4/deLCaT2vU
+	kczAV+k3mpJ0cpAm00JUsApq+GGOXXuAmcPnNZ9XsSFHVcaDknPD573hI3Y2zdO4sGA==
+X-Gm-Gg: AZuq6aKSfA7CMKFtiMdlVKe6fGRuirIeq5JUZYyRxrMVPdTZ22EW3nXhic0ykhRbVQX
+	FVpbTYj8FFaA8sWCqA2dkMzIGiM7hFmeFHsNeARFRINWhml/Jy2Gwc4JqYgmdFSWiXo3q3+djSN
+	c1Hy0cM2BmxlVrXUdx+ced0vdt8rcjUSrS5dU8inNTgp9Ic2W7sLxwsp1NNemAvLB7w7Q8YGQXz
+	0aqU6YJUeeZc/vxRWxoUaNprVAGVORIQuQaXUucjXD/82AS5TTMSkwCn7i+oDgJsMlvPoUFDske
+	97fgAXP/N08ZJIcVkWQVd2aXo7DbBKGAkTaTB6+iExtFWPXFKA==
+X-Received: by 2002:a17:907:9409:b0:b87:3174:9bbe with SMTP id
+ a640c23a62f3a-b8facf9849bmr443959166b.61.1771143539213; Sun, 15 Feb 2026
+ 00:18:59 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [syzbot] [mptcp?] WARNING in __mptcp_move_skbs_from_subflow (2)
-Content-Language: en-GB, fr-BE
-To: syzbot <syzbot+9475dcc0b42355ded022@syzkaller.appspotmail.com>
-References: <692056f6.a70a0220.2ea503.004e.GAE@google.com>
-From: Matthieu Baerts <matttbe@kernel.org>
-Cc: geliang@kernel.org, linux-kernel@vger.kernel.org, martineau@kernel.org,
- mptcp@lists.linux.dev, pabeni@redhat.com, syzkaller-bugs@googlegroups.com
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <692056f6.a70a0220.2ea503.004e.GAE@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: Muhammad Nuzaihan <zaihan@unrealasia.net>
+Date: Sun, 15 Feb 2026 16:18:48 +0800
+X-Gm-Features: AaiRm52Djwe3mrg4LocW0PVAMXai3UkS51lVfU_zxlRTadqDrgZPG5KDCT6KcKU
+Message-ID: <CACNYkD4A=omPgoK+EZGuid7=xk5WH1HS8nJja5p0N86J0j4uWQ@mail.gmail.com>
+Subject: Initial work on adding MPTCP support to Firefox nightly
+To: mptcp@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-Hello,
+Hi,
 
--cc netdev & maintainers
+I had been on sabbatical from working on anything MPTCP (after getting
+disappointed by Google for Chrome) and getting my enthusiasm back,
+i've started working on MPTCP support for Firefox (nightly).
 
-On 21/11/2025 13:11, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following issue on:
-> 
-> HEAD commit:    fd95357fd8c6 Merge tag 'sched_ext-for-6.18-rc6-fixes-2' of..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=17220e92580000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=1cd7f786c0f5182f
-> dashboard link: https://syzkaller.appspot.com/bug?extid=9475dcc0b42355ded022
-> compiler:       gcc (Debian 12.2.0-14+deb12u1) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-> userspace arch: i386
-> 
-> Unfortunately, I don't have any reproducer for this issue yet.
-> 
-> Downloadable assets:
-> disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/d900f083ada3/non_bootable_disk-fd95357f.raw.xz
-> vmlinux: https://storage.googleapis.com/syzbot-assets/9301ea2e80a9/vmlinux-fd95357f.xz
-> kernel image: https://storage.googleapis.com/syzbot-assets/13592a9d2a74/bzImage-fd95357f.xz
-> 
-> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> Reported-by: syzbot+9475dcc0b42355ded022@syzkaller.appspotmail.com
+https://bugzilla.mozilla.org/show_bug.cgi?id=1833182
 
-This bug has not been seen for quite a while, and we didn't find
-anything wrong when looking at the related code. We then think it was
-induced by a previous memory corruption. It can be re-opened if needed.
+It is still a WIP, as it seems that Firefox "hardcodes" IPPROTO_TCP
+(0) in their codebase so there might be a lot of work to change the
+codepath to be able to toggle MPTCP feature in the UI.
 
-#syz invalid
-
-Ref on our side:
-
-  https://github.com/multipath-tcp/mptcp_net-next/issues/608
-
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
-
+Regards,
+Zaihan
