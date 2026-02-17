@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3D02339B39;
-	Tue, 17 Feb 2026 12:28:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C371D347FE6;
+	Tue, 17 Feb 2026 12:33:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771331325; cv=none; b=qJBtvd2uH24nzRchyRdmiPWj7e5wNUNW8DY2yW4etnCPg8BbDDHSn7/UajEqaN8GP+iQyeMfn/aEv5SoT+ibwuMbz4ELlkMw2o9ocMGBuQEQDB0bp7V9Vj+qanoK7ZCFMdnBs9tn8i5Cq+JElQhoSNEEJu6MoZfZkbd8WCtwrEE=
+	t=1771331630; cv=none; b=tgIS+XBMUSyJdVQsFQDWSayXqgjMyOB3rymI4MlthjKeJ3BTV23oIGtbOdqdnUwMvwgVvgLWHICC8bgRyMgoWvsxZ7UdFNNxw1vGmZabp56MxRPwdLG3MuglGLDClqRLZaIdCoMIwVkFYhZ4pHqOxlm9xcKn3Kx2lMrcVkVLSAg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771331325; c=relaxed/simple;
-	bh=nP6Jnfpz5OXJnJE+oFsrEjnyDIvKY/istSs37fDo2Ms=;
+	s=arc-20240116; t=1771331630; c=relaxed/simple;
+	bh=mmmuNYnHvf2LCc3AFd1I2DzH+ExHY11c5oCmwtxcCrI=;
 	h=Subject:To:Cc:From:Date:In-Reply-To:Message-ID:MIME-Version:
-	 Content-Type; b=oYL0zFnHi8i/KSFX8PYF5LitfBB5X4kupnUO9ci9gYujgPn5Zz5lTeqW6utV8SraS7jJz77yRToiAkJEVDR2eCrM61PmcJI0MdBg5juXmoaECKwEcwcb+pNrJ4BPkPTObX09XfuOaxogpllhUJfb3YRJGx66SWgqJ0mTpw8bqNs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=np2X3L54; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type; b=VZ1IUB6xoInZmvDS5DWHTi+5PJlNn46NJl0piA6Hx/+dUBYofN6JS7QkvOUbLWz9Z/ztKo8Wx7H2R7N0ytUfbimBjqpZqLtCe/u2Fk8Lwtzt3IR5SPMcjshVejkBAMB3bpDCvKzQjRBHwkpnjgXRiCZgABKVFhDWqcu46gZyF98=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=CWeTU7Tc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="np2X3L54"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D7DDC4CEF7;
-	Tue, 17 Feb 2026 12:28:45 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="CWeTU7Tc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15351C4CEF7;
+	Tue, 17 Feb 2026 12:33:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1771331325;
-	bh=nP6Jnfpz5OXJnJE+oFsrEjnyDIvKY/istSs37fDo2Ms=;
+	s=korg; t=1771331630;
+	bh=mmmuNYnHvf2LCc3AFd1I2DzH+ExHY11c5oCmwtxcCrI=;
 	h=Subject:To:Cc:From:Date:In-Reply-To:From;
-	b=np2X3L54X2tQ85XHkONXmb177hrC0UKh8F+47dS45ZbzQLwR1GtDmBBxchUzCWu4B
-	 Hw5QtzmfWS78aCe+R4ICrJ/xga4jbZz4JRhCUa8es9bolpgFazktys0p9tauSf2u28
-	 DO5ZUhiCiPmZAJCQOtDSytPFK6vB1BWY8VH2t5qo=
-Subject: Patch "selftests: mptcp: pm: ensure unknown flags are ignored" has been added to the 6.1-stable tree
-To: gregkh@linuxfoundation.org,kuba@kernel.org,martineau@kernel.org,matttbe@kernel.org,mptcp@lists.linux.dev,sashal@kernel.org
+	b=CWeTU7TcpM53StWjP6hVSlkcT3g5WhBD0QcpJaYETi0lT/FMck5M37cIuNcUStH+v
+	 wIWIQcaqRiu1j1eE2DWoGfFzIZxDluEokNflxGeGZVMITCkXMoBUq4zJ5cEyBXLnLj
+	 OC+VTkUYRKAd6XBgu6Od+CTfsVo2Ahn1NK7jGcP4=
+Subject: Patch "mptcp: fix race in mptcp_pm_nl_flush_addrs_doit()" has been added to the 6.1-stable tree
+To: edumazet@google.com,eulgyukim@snu.ac.kr,gregkh@linuxfoundation.org,kuba@kernel.org,martineau@kernel.org,matttbe@kernel.org,mptcp@lists.linux.dev,syzbot+5498a510ff9de39d37da@syzkaller.appspotmail.com
 Cc: <stable-commits@vger.kernel.org>
 From: <gregkh@linuxfoundation.org>
-Date: Tue, 17 Feb 2026 13:28:23 +0100
-In-Reply-To: <20260211190617.77192-9-matttbe@kernel.org>
-Message-ID: <2026021722-depravity-whacking-38b5@gregkh>
+Date: Tue, 17 Feb 2026 13:33:39 +0100
+In-Reply-To: <20260212174051.1839592-2-matttbe@kernel.org>
+Message-ID: <2026021739-spinal-tree-c8cf@gregkh>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -44,114 +44,107 @@ X-Patchwork-Hint: ignore
 
 This is a note to let you know that I've just added the patch titled
 
-    selftests: mptcp: pm: ensure unknown flags are ignored
+    mptcp: fix race in mptcp_pm_nl_flush_addrs_doit()
 
 to the 6.1-stable tree which can be found at:
     http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
 
 The filename of the patch is:
-     selftests-mptcp-pm-ensure-unknown-flags-are-ignored.patch
+     mptcp-fix-race-in-mptcp_pm_nl_flush_addrs_doit.patch
 and it can be found in the queue-6.1 subdirectory.
 
 If you, or anyone else, feels it should not be added to the stable tree,
 please let <stable@vger.kernel.org> know about it.
 
 
-From matttbe@kernel.org Wed Feb 11 20:06:54 2026
+From stable+bounces-215983-greg=kroah.com@vger.kernel.org Thu Feb 12 18:41:08 2026
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Wed, 11 Feb 2026 20:06:19 +0100
-Subject: selftests: mptcp: pm: ensure unknown flags are ignored
-To: mptcp@lists.linux.dev, stable@vger.kernel.org, gregkh@linuxfoundation.org
-Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, sashal@kernel.org, Mat Martineau <martineau@kernel.org>, Jakub Kicinski <kuba@kernel.org>
-Message-ID: <20260211190617.77192-9-matttbe@kernel.org>
+Date: Thu, 12 Feb 2026 18:40:52 +0100
+Subject: mptcp: fix race in mptcp_pm_nl_flush_addrs_doit()
+To: stable@vger.kernel.org, gregkh@linuxfoundation.org
+Cc: MPTCP Upstream <mptcp@lists.linux.dev>, Eric Dumazet <edumazet@google.com>, syzbot+5498a510ff9de39d37da@syzkaller.appspotmail.com, Eulgyu Kim <eulgyukim@snu.ac.kr>, Mat Martineau <martineau@kernel.org>, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, Jakub Kicinski <kuba@kernel.org>
+Message-ID: <20260212174051.1839592-2-matttbe@kernel.org>
 
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+From: Eric Dumazet <edumazet@google.com>
 
-commit 29f4801e9c8dfd12bdcb33b61a6ac479c7162bd7 upstream.
+commit e2a9eeb69f7d4ca4cf4c70463af77664fdb6ab1d upstream.
 
-This validates the previous commit: the userspace can set unknown flags
--- the 7th bit is currently unused -- without errors, but only the
-supported ones are printed in the endpoints dumps.
+syzbot and Eulgyu Kim reported crashes in mptcp_pm_nl_get_local_id()
+and/or mptcp_pm_nl_is_backup()
 
-The 'Fixes' tag here below is the same as the one from the previous
-commit: this patch here is not fixing anything wrong in the selftests,
-but it validates the previous fix for an issue introduced by this commit
-ID.
+Root cause is list_splice_init() in mptcp_pm_nl_flush_addrs_doit()
+which is not RCU ready.
 
-Fixes: 01cacb00b35c ("mptcp: add netlink-based PM")
-Cc: stable@vger.kernel.org
+list_splice_init_rcu() can not be called here while holding pernet->lock
+spinlock.
+
+Many thanks to Eulgyu Kim for providing a repro and testing our patches.
+
+Fixes: 141694df6573 ("mptcp: remove address when netlink flushes addrs")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot+5498a510ff9de39d37da@syzkaller.appspotmail.com
+Closes: https://lore.kernel.org/all/6970a46d.a00a0220.3ad28e.5cf0.GAE@google.com/T/
+Reported-by: Eulgyu Kim <eulgyukim@snu.ac.kr>
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/611
 Reviewed-by: Mat Martineau <martineau@kernel.org>
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Link: https://patch.msgid.link/20251205-net-mptcp-misc-fixes-6-19-rc1-v1-2-9e4781a6c1b8@kernel.org
+Link: https://patch.msgid.link/20260124-net-mptcp-race_nl_flush_addrs-v3-1-b2dc1b613e9d@kernel.org
 Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-[ Conflicts in pm_netlink.sh, because some refactoring have been done
-  later on: commit 0d16ed0c2e74 ("selftests: mptcp: add
-  {get,format}_endpoint(s) helpers") and commit c99d57d0007a
-  ("selftests: mptcp: use pm_nl endpoint ops") are not in this version.
-  The same operation can still be done at the same place, without using
-  the new helpers.
-  Also, commit 1dc88d241f92 ("selftests: mptcp: pm_nl_ctl: always look
-  for errors") is not in this version, and create a conflict in the
-  context which is not related to the modification here. ]
+[ Conflicts because the code has been moved from pm_netlink.c to
+  pm_kernel.c later on in commit 8617e85e04bd ("mptcp: pm: split
+  in-kernel PM specific code"). The same modifications can be applied
+  in pm_netlink.c with one exception, because 'pernet->local_addr_list'
+  has been renamed to 'pernet->endp_list' in commit 35e71e43a56d
+  ("mptcp: pm: in-kernel: rename 'local_addr_list' to 'endp_list'"). The
+  previous name is then still being used in this version.
+  Also, another conflict is caused by commit 7bcf4d8022f9 ("mptcp: pm:
+  rename helpers linked to 'flush'") which is not in this version:
+  mptcp_nl_remove_addrs_list() has been renamed to
+  mptcp_nl_flush_addrs_list(). The previous name has then been kept. ]
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- tools/testing/selftests/net/mptcp/pm_netlink.sh |    4 ++++
- tools/testing/selftests/net/mptcp/pm_nl_ctl.c   |   11 +++++++++++
- 2 files changed, 15 insertions(+)
+ net/mptcp/pm_netlink.c |   16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
---- a/tools/testing/selftests/net/mptcp/pm_netlink.sh
-+++ b/tools/testing/selftests/net/mptcp/pm_netlink.sh
-@@ -124,6 +124,10 @@ id 8 flags signal 10.0.1.8" "id limit"
- ip netns exec $ns1 ./pm_nl_ctl flush
- check "ip netns exec $ns1 ./pm_nl_ctl dump" "" "flush addrs"
- 
-+ip netns exec $ns1 ./pm_nl_ctl add 10.0.1.1 flags unknown
-+check "ip netns exec $ns1 ./pm_nl_ctl dump" "id 1 flags  10.0.1.1" "ignore unknown flags"
-+ip netns exec $ns1 ./pm_nl_ctl flush
-+
- ip netns exec $ns1 ./pm_nl_ctl limits 9 1
- check "ip netns exec $ns1 ./pm_nl_ctl limits" "$default_limits" "rcv addrs above hard limit"
- 
---- a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
-+++ b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
-@@ -29,6 +29,8 @@
- #define IPPROTO_MPTCP 262
- #endif
- 
-+#define MPTCP_PM_ADDR_FLAG_UNKNOWN _BITUL(7)
-+
- static void syntax(char *argv[])
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -1855,16 +1855,26 @@ static void __reset_counters(struct pm_n
+ static int mptcp_nl_cmd_flush_addrs(struct sk_buff *skb, struct genl_info *info)
  {
- 	fprintf(stderr, "%s add|ann|rem|csf|dsf|get|set|del|flush|dump|events|listen|accept [<args>]\n", argv[0]);
-@@ -814,6 +816,8 @@ int add_addr(int fd, int pm_family, int
- 					flags |= MPTCP_PM_ADDR_FLAG_BACKUP;
- 				else if (!strcmp(tok, "fullmesh"))
- 					flags |= MPTCP_PM_ADDR_FLAG_FULLMESH;
-+				else if (!strcmp(tok, "unknown"))
-+					flags |= MPTCP_PM_ADDR_FLAG_UNKNOWN;
- 				else
- 					error(1, errno,
- 					      "unknown flag %s", argv[arg]);
-@@ -1018,6 +1022,13 @@ static void print_addr(struct rtattr *at
- 				if (flags)
- 					printf(",");
- 			}
-+
-+			if (flags & MPTCP_PM_ADDR_FLAG_UNKNOWN) {
-+				printf("unknown");
-+				flags &= ~MPTCP_PM_ADDR_FLAG_UNKNOWN;
-+				if (flags)
-+					printf(",");
-+			}
+ 	struct pm_nl_pernet *pernet = genl_info_pm_nl(info);
+-	LIST_HEAD(free_list);
++	struct list_head free_list;
  
- 			/* bump unknown flags, if any */
- 			if (flags)
+ 	spin_lock_bh(&pernet->lock);
+-	list_splice_init(&pernet->local_addr_list, &free_list);
++	free_list = pernet->local_addr_list;
++	INIT_LIST_HEAD_RCU(&pernet->local_addr_list);
+ 	__reset_counters(pernet);
+ 	pernet->next_id = 1;
+ 	bitmap_zero(pernet->id_bitmap, MPTCP_PM_MAX_ADDR_ID + 1);
+ 	spin_unlock_bh(&pernet->lock);
+-	mptcp_nl_remove_addrs_list(sock_net(skb->sk), &free_list);
++
++	if (free_list.next == &pernet->local_addr_list)
++		return 0;
++
+ 	synchronize_rcu();
++
++	/* Adjust the pointers to free_list instead of pernet->local_addr_list */
++	free_list.prev->next = &free_list;
++	free_list.next->prev = &free_list;
++
++	mptcp_nl_remove_addrs_list(sock_net(skb->sk), &free_list);
+ 	__flush_addrs(&free_list);
+ 	return 0;
+ }
 
 
 Patches currently in stable-queue which might be from matttbe@kernel.org are
 
 queue-6.1/selftests-mptcp-join-fix-local-endp-not-being-tracked.patch
+queue-6.1/mptcp-fix-race-in-mptcp_pm_nl_flush_addrs_doit.patch
 queue-6.1/mptcp-schedule-rtx-timer-only-after-pushing-data.patch
 queue-6.1/mptcp-ensure-context-reset-on-disconnect.patch
 queue-6.1/selftests-mptcp-pm-ensure-unknown-flags-are-ignored.patch
