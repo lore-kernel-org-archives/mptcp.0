@@ -1,82 +1,117 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFFF622FE0E;
-	Mon, 16 Feb 2026 23:27:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 499C0318B8C
+	for <mptcp@lists.linux.dev>; Tue, 17 Feb 2026 09:45:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771284463; cv=none; b=WiYzKi6qbJ09qu5Pn+nkyc+x/oYNX3Sw8FEuFd3RM4pR+QEZKK50PFe7v3qJIM61VwUUup+wnuwrKUsAcZMsaIatsiGZs+SsCxlYSAgOw0+9f2UHtupNn7p4hMH5EYqFI9zPyFyi7DdG2g3odga5d0sUEY6ZdU/Yb9BTUduWzmg=
+	t=1771321528; cv=none; b=pgA0I+ACNitmy7TkcyNvloFc/SyGIfv3tNH6mCrPCf3uC/S49yxmaCfmkUm7yEQ+4K2Ws+e6uCyVVTXkdWnMkhgSOpIk3vqWHyphySITwe75sB8sMNzd5GlNBIF0Yyp3vtSC0mybV4mxEKqVs5Nc2WRyGjw8hLRMIfBr3BdUdLg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771284463; c=relaxed/simple;
-	bh=3eDHWBAgzyRpVy0JHZiN7AznMUh9cfiBNLfrzAZOgSE=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=gI1/oGiY9aLf6eKn55RAjM/dsqZaq2x4b/QgZf1DUMDFlYuJNtLOFaV9jdy//r6/2GKL7bFnljcFNIfG4x/D1qkGAAatLyEPCrlzvIzUfgGwZIantXDPl8eVdx1a9FCa5xdzwS8+9mXHjxc5aKhYCVY8ys44BESoxATSun3JwGE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WmrmcIxJ; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1771321528; c=relaxed/simple;
+	bh=80ZjLDoAg6O84zQGLgtXaMtBkSkCzGtkGj2eIgHjE1s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=Nbp5KMMq8CL9NcdXj860gbMJR/dVkftEeq1JqopHwQnC2/wae2AubPhBHvlzzW0dmMGJoOFdEf3g9G3idu56C4hGXzx9BZu5kBdiK4pzVA3pcb4I01HFaX1YoYV0TNbWRW1ryxrljRykfpj7YeI/MkMgErLUK204X3KAmo4qa9c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PRx/86Z6; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WmrmcIxJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1771284462; x=1802820462;
-  h=date:from:to:cc:subject:message-id;
-  bh=3eDHWBAgzyRpVy0JHZiN7AznMUh9cfiBNLfrzAZOgSE=;
-  b=WmrmcIxJ0BfthdyDbXSSYEpa8JPbBBdhPVpzR3VOLhdBb2+uNoxjlJE1
-   mWywoF4MeK5S/Yq04Dx2uoRP3Wm0JvhrdVbgbZFsrxLwatbmZvznuwo+z
-   /8AOV2uP59cgRJLxHXo+Pn8Up5XtC+GMPVhui69b5OSHd1w3TFm5tj9OK
-   KrMOZ3kDjLmQvk7w0sW6XkK5Hos2xJTLmOZs3F+lum8BJ+AM8O9+LxysT
-   ICv3prhePgy2krmYOnZonczuz54eMNnGOm7Urh5pdlZDdqD28EVhyofAz
-   fnLIGU6FZi0n9cYtlkHEJC20SvYYNZdWtvwjAytorKHpWeVA1FqJ/GpeM
-   w==;
-X-CSE-ConnectionGUID: sgzmWYH+QkO+M6j/kkpQZw==
-X-CSE-MsgGUID: NIdpNNbpTeegCOsayeg78A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11703"; a="76201692"
-X-IronPort-AV: E=Sophos;i="6.21,295,1763452800"; 
-   d="scan'208";a="76201692"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Feb 2026 15:27:41 -0800
-X-CSE-ConnectionGUID: 1sNRUuHQTVqIf3+d9KcZnw==
-X-CSE-MsgGUID: KaBz59NqR4ym11rskUJmMQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,295,1763452800"; 
-   d="scan'208";a="212240603"
-Received: from lkp-server01.sh.intel.com (HELO 765f4a05e27f) ([10.239.97.150])
-  by fmviesa006.fm.intel.com with ESMTP; 16 Feb 2026 15:27:39 -0800
-Received: from kbuild by 765f4a05e27f with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1vs809-000000010Me-3b7A;
-	Mon, 16 Feb 2026 23:27:37 +0000
-Date: Tue, 17 Feb 2026 07:27:26 +0800
-From: kernel test robot <lkp@intel.com>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, mptcp@lists.linux.dev
-Subject: [mptcp:export-net 1/12] .git_markup: warning: ignored by one
- of the .gitignore files
-Message-ID: <202602170758.Dxr6HX9l-lkp@intel.com>
-User-Agent: s-nail v14.9.25
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PRx/86Z6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1771321526;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9s0y1ovOo1BZFM6x3/T/9dr9qWpfR1VROZWtKFV0XFY=;
+	b=PRx/86Z6YHgHb2f8QtFTEbxCwtf+whhPyxCVNGCSpcs34ElUgyLpU+xrA2qmo1t2EkM3kE
+	nVIIMWcZdVOxTtfU802T2RMAZdPhTLV4WdUMHoi3OSOA1CcIfBIKSgSsAJ+N9Jm6OaKBhu
+	s16yiHJzIFjyVDJSUsAIeEaz82yWoZ4=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-140-nrpYpdp8Pp-t_FL8bvF5Mw-1; Tue, 17 Feb 2026 04:45:24 -0500
+X-MC-Unique: nrpYpdp8Pp-t_FL8bvF5Mw-1
+X-Mimecast-MFC-AGG-ID: nrpYpdp8Pp-t_FL8bvF5Mw_1771321524
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-43630b02fb4so4451392f8f.3
+        for <mptcp@lists.linux.dev>; Tue, 17 Feb 2026 01:45:24 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1771321523; x=1771926323;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=9s0y1ovOo1BZFM6x3/T/9dr9qWpfR1VROZWtKFV0XFY=;
+        b=ErC4c/fXUUS7khdj5FjUDMLIVOyXHTdOlBlx2sV86tZgahNt/8Mq1v1D7aFbTcN+5b
+         yjjuYd1nxfN14HXsudN8kyVpWe0364q7+FtmCeA5u0O8iH50bWtGb52cDMr0X7kBkHYo
+         p1vAiESK1R9mWfHB5BpFjoOwP42NrMtyigzEZ0NMSG/j91yMIKZeabCVeBggdTGjprmx
+         +t5TlwxZOq5/fmThMRhF8RvAwWBAF8RT23CRTblcLsn8KHF6Uf8nFG/d5dJbNkyGptrC
+         cTUzM9mYs+QxCceIJxLRt6Yw9yY05jvycgCebptgcb5HPdJZOG1vzGp0QulleiTaKkHm
+         TpJA==
+X-Gm-Message-State: AOJu0YwINCFCZCAgEIbWTjMFEdM7hFCVXg7leHfPBXGzLsShduAS9Oko
+	1QSPqyFe42FoiDpckBv54OOBAgCEdtdeWMqemrHwzAaybwc8FBQT5++CeJh2QBxbeae79uRBwx8
+	XemB//30e1tVwEeSesTQniFBhM3vEiVAS+NqxjzpF3nrh3QDcOQwfDwutl8NOClfSMCSb8BAans
+	FUzxyjqmatSVo/0BQ1bJYD2aj3UmywSc7oscNXAw==
+X-Gm-Gg: AZuq6aJkv8GpIb6GIKwWimaD7CqkRH3pXuEkjNPVYI+q0bOCL0K9faM5/2yT8pr4BvC
+	1dbNvrE0XrdBEQLNwdzxY9uIoiyttaCiaH8zZe2V0jMZLYVK1etbOt1AK8GxJnIluDzZ5gpZIUS
+	XVrh8t9I2deiFzVwDaXs/CtYyMc40nn3quriXdTlffO8qagHIrKtaw/SLHzNQoKMpmMDS+qFywL
+	sIvdfE3B/pXgBAvamqK2z2w7myreQpvJSW1KnMUFx3yzChJOGmiWhkJ16JAxp8Uv0AG6Pab1Lyt
+	PN4X131xjQjk8ekhzC1361lIEXanfvVNS5Xet10cmCWpwOtNUbhoEBeRG1vXwI+wCZXPo8H2v7Z
+	JekIcq1+0huGFJo9whWS/BXbHuQ==
+X-Received: by 2002:a05:6000:230b:b0:437:8f98:8c93 with SMTP id ffacd0b85a97d-437978c9a26mr21701435f8f.7.1771321523238;
+        Tue, 17 Feb 2026 01:45:23 -0800 (PST)
+X-Received: by 2002:a05:6000:230b:b0:437:8f98:8c93 with SMTP id ffacd0b85a97d-437978c9a26mr21701388f8f.7.1771321522505;
+        Tue, 17 Feb 2026 01:45:22 -0800 (PST)
+Received: from [192.168.88.32] ([169.155.232.137])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43796ad112bsm33457733f8f.36.2026.02.17.01.45.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Feb 2026 01:45:22 -0800 (PST)
+Message-ID: <a4f25306-0f9c-4411-aaf3-e2f2d12ca0bc@redhat.com>
+Date: Tue, 17 Feb 2026 10:45:21 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH mptcp-next] selftests: mptcp: more stable simult_flows
+ tests
+To: mptcp@lists.linux.dev, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+References: <ec938f018aed693c624c7a61366b28c863a1d56d.1771276854.git.pabeni@redhat.com>
+ <604e9832-4fac-b3b2-dfa2-e40e481cf94b@gmail.com>
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <604e9832-4fac-b3b2-dfa2-e40e481cf94b@gmail.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: lT6J3-aaoreEA_iuA28q14YfudhRyMGpwiVbRB-dgTw_1771321524
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-tree:   https://github.com/multipath-tcp/mptcp_net-next.git export-net
-head:   d8b476dcafa197a8e66cf6e87f2441848269af0a
-commit: d09ac91885d528e93a8ae458b877d0d5faa897b3 [1/12] DO-NOT-MERGE: git markup: net
-config: x86_64-rhel-9.4 (https://download.01.org/0day-ci/archive/20260217/202602170758.Dxr6HX9l-lkp@intel.com/config)
-compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260217/202602170758.Dxr6HX9l-lkp@intel.com/reproduce)
+On 2/16/26 11:31 PM, MPTCP CI wrote:
+> Hi Paolo,
+> 
+> Thank you for your modifications, that's great!
+> 
+> Our CI did some validations and here is its report:
+> 
+> - KVM Validation: normal (except selftest_mptcp_join): Success! ✅
+> - KVM Validation: normal (only selftest_mptcp_join): Critical: Global Timeout ❌
+> - KVM Validation: debug (except selftest_mptcp_join): Unstable: 2 failed test(s): packetdrill_dss packetdrill_sockopts 🔴
+> - KVM Validation: debug (only selftest_mptcp_join): Notice: Call Traces at boot time, rebooted and continued 🔴
+> - KVM Validation: btf-normal (only bpftest_all): Success! ✅
+> - KVM Validation: btf-debug (only bpftest_all): Success! ✅
+> - Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/22078199700
+> 
+> Initiator: Patchew Applier
+> Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/92395bd88118
+> Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=1054688
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202602170758.Dxr6HX9l-lkp@intel.com/
+It looks like the CI exploded above, but it looks like an infra issue.
 
-All warnings (new ones prefixed by >>):
+@Matt: do you have any insight?
 
-   .b4-config: warning: ignored by one of the .gitignore files
->> .git_markup: warning: ignored by one of the .gitignore files
-   Documentation/.renames.txt: warning: ignored by one of the .gitignore files
+Thanks,
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Paolo
+
