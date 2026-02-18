@@ -1,153 +1,173 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 968CE2BE7DB;
-	Wed, 18 Feb 2026 19:03:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A63DC344DAE
+	for <mptcp@lists.linux.dev>; Wed, 18 Feb 2026 19:25:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771441404; cv=none; b=c2LSNjI1mav9ZKtbW5CsQbqK0C6GoUsLcG9O/XGXDbKLIIN3USfR6DULF9VtrJJc1c7BEKmb4rESyLzxm1enUkrlae6mj+Jfq4SMrDcE5/Fv5GmdbqHbhvCcWQPOazk4PM6QjtQxnui/R6eVC73MHTuzuNO5x1GmWP9ntaJGl3M=
+	t=1771442708; cv=none; b=M2A+mi9ZDWS1PyvUuo5S8Q3ErABS9wrWnteZIZb8GvC8D2qbqITxlVWBlpBxWYjA1fvcaDS8ASr8zKGtJCnVBF3CZDTQX7dSL9OALSN1t43NFvVbTfeIR0vaAj/o7aD/1/7HJHTB3pZPH810dPH3TPEBSTgRMB1sPQKG1arsKdo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771441404; c=relaxed/simple;
-	bh=BAQtKcmUqn0rzieOnfXIH8svXhZHRYWkh8xiImtkSCg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YkvKIn6P9vnHPIMGTjPHW+FolbbS3m/Odb4uSYFdHoW5KW0T1UUvL8AMDiGg/YyUkAJPqD6yRIYghsCDxxQ///vtgvBUF/yCtodg6MgkdjY0A8GwRjGQhLDNPpcK/evsMrY0V2Jf9PcSUP+vfDO/paIxk2SuN+SovB+0l4e+nZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o0NuuTL5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1771442708; c=relaxed/simple;
+	bh=gfkgrGanGjFMRRW6wiVBK5Bjq8qnqju16909Uey9QFc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=c+BUg92p5Priw0JMnBcnkRV87+a29CzhYnUlKLfEK6MeVoupD7Y0ZvZfKLnm/IInDGegMd2ZbRoO2GACdb5oWdi7GJ1iyyjVWQ1VHBBHO/7+atxG4NRTSC1uRuhh5+iL9wFxp8jCdAef3vgt/fQEALU2wcLlRe530EZCkFsq4Bs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sIqGE/Xh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o0NuuTL5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 521D3C19422;
-	Wed, 18 Feb 2026 19:03:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sIqGE/Xh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D99F8C116D0;
+	Wed, 18 Feb 2026 19:25:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771441404;
-	bh=BAQtKcmUqn0rzieOnfXIH8svXhZHRYWkh8xiImtkSCg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=o0NuuTL5RKY39y4U0t3bBDMTIIjT7Se1zgarexM4mBmr1bCyLhiQJUrJFy2PWSYUp
-	 KwAfflmTqoNnbidvZ6edufO6WKSzpDNVh309jCgvrWf3ds+6K9WtgtMEmceUKj4EwN
-	 YdOmEGJ8Eg3VMPWJI+7YpTm5p/8Yk84uymMnig7qIEvYJgGgMao3wJRmwBMgdgL51y
-	 qhDKDQxYsJ9QX2OR58BvZKCmMqf8yw4eaNi96td30QPjsalfGY0fg5yx5X+WMWm7Q2
-	 4vcPcRWSZevtVq1iCsA1AxYQv31u+rjjbe6L5ET//JQa2pF0pTZ2HZmKeoOSw2Hotm
-	 X2KSiP8PLAgFw==
-Message-ID: <a44c1f27-e9f0-4f33-beda-e5f611197e35@kernel.org>
-Date: Wed, 18 Feb 2026 20:03:20 +0100
+	s=k20201202; t=1771442708;
+	bh=gfkgrGanGjFMRRW6wiVBK5Bjq8qnqju16909Uey9QFc=;
+	h=From:Date:Subject:To:Cc:From;
+	b=sIqGE/Xhip2Mntb9Ub+U37vuu/gUI63mylN9gT58H29gXu2LxdFRLXB6ooPirRTaU
+	 vlwDh5MUVypMArr3lOufDq2do/ZCkebaDTiejtWadU29OmKohT9zEW25mdTHkSOk5h
+	 5N6OMgazOOSoEl5q2YQy6IjtZ4SXNuIg9gGJrv2s6ZrsC5qN6ssXWAd49diQeGfSqB
+	 +F9iQC/HAQuWXvnpgKEQVyu5UDYCeDIQv4KgcOkRPTVXggmQQ6t56Z7JK1jR9O13OB
+	 LH7gEWkJq9AUZnzBi9Sjco51P/OKnzFGUYI9YNKJdMgKlqwG30lr2nXg//IP53B+MW
+	 CUi6PKuF4kAtw==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Date: Wed, 18 Feb 2026 20:24:58 +0100
+Subject: [PATCH mptcp-net] mptcp: pm: in-kernel: always mark signal+subflow
+ endp as used
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH iproute2 1/2] mptcp: monitor: also show iface name
-Content-Language: en-GB, fr-BE
-To: Stephen Hemminger <stephen@networkplumber.org>
-Cc: David Ahern <dsahern@kernel.org>, netdev@vger.kernel.org,
- mptcp@lists.linux.dev
-References: <20260211-mptcp-color-v1-0-01832777611d@kernel.org>
- <20260211-mptcp-color-v1-1-01832777611d@kernel.org>
- <20260218103155.486d20ee@phoenix.local>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <20260218103155.486d20ee@phoenix.local>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20260218-mptcp-issue-613-v1-1-f8e9adb12010@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAAkSlmkC/yWMQQqEMAwAvyI5G2gqivgV8VBrds3BWhoVofh3y
+ +5xYGYyKCdhhaHKkPgSlT0UoLoCv7rwZZSlMFhjO2Opxy0ePqKonowdNWjcQnPbeke9h1LFxB+
+ 5f8cR/nLgA6bneQFzD5SVbAAAAA==
+X-Change-ID: 20260218-mptcp-issue-613-0ad1b55ca18c
+To: MPTCP Upstream <mptcp@lists.linux.dev>
+Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6160; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=gfkgrGanGjFMRRW6wiVBK5Bjq8qnqju16909Uey9QFc=;
+ b=kA0DAAoWfCLwwvNHCpcByyZiAGmWEhOg0IrLOfwSeVidVRjn92Xc0iX/EbTck/wBLH013YkFc
+ Yh1BAAWCgAdFiEEG4ZZb5nneg10Sk44fCLwwvNHCpcFAmmWEhMACgkQfCLwwvNHCpcolQD9EHCT
+ ocKmufHiS0fwGJT/O9DH1UxJrXeX5AVWDXmZBdIBAMQ8gRXJZRfoUZ63uUrL/J4qsSLudz2vrC/
+ L9jZBVk4B
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hi Stephen,
+Syzkaller managed to find a combination of actions that was generating
+this warning:
 
-Thank you for the review!
+  msk->pm.local_addr_used == 0
+  WARNING: net/mptcp/pm_kernel.c:1071 at __mark_subflow_endp_available net/mptcp/pm_kernel.c:1071 [inline], CPU#1: syz.2.17/961
+  WARNING: net/mptcp/pm_kernel.c:1071 at mptcp_nl_remove_subflow_and_signal_addr net/mptcp/pm_kernel.c:1103 [inline], CPU#1: syz.2.17/961
+  WARNING: net/mptcp/pm_kernel.c:1071 at mptcp_pm_nl_del_addr_doit+0x81d/0x8f0 net/mptcp/pm_kernel.c:1210, CPU#1: syz.2.17/961
+  Modules linked in:
+  CPU: 1 UID: 0 PID: 961 Comm: syz.2.17 Not tainted 6.19.0-08368-gfafda3b4b06b #22 PREEMPT(full)
+  Hardware name: QEMU Ubuntu 25.10 PC v2 (i440FX + PIIX, + 10.1 machine, 1996), BIOS 1.17.0-debian-1.17.0-1build1 04/01/2014
+  RIP: 0010:__mark_subflow_endp_available net/mptcp/pm_kernel.c:1071 [inline]
+  RIP: 0010:mptcp_nl_remove_subflow_and_signal_addr net/mptcp/pm_kernel.c:1103 [inline]
+  RIP: 0010:mptcp_pm_nl_del_addr_doit+0x81d/0x8f0 net/mptcp/pm_kernel.c:1210
+  Code: 89 c5 e8 46 30 6f fe e9 21 fd ff ff 49 83 ed 80 e8 38 30 6f fe 4c 89 ef be 03 00 00 00 e8 db 49 df fe eb ac e8 24 30 6f fe 90 <0f> 0b 90 e9 1d ff ff ff e8 16 30 6f fe eb 05 e8 0f 30 6f fe e8 9a
+  RSP: 0018:ffffc90001663880 EFLAGS: 00010293
+  RAX: ffffffff82de1a6c RBX: 0000000000000000 RCX: ffff88800722b500
+  RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
+  RBP: ffff8880158b22d0 R08: 0000000000010425 R09: ffffffffffffffff
+  R10: ffffffff82de18ba R11: 0000000000000000 R12: ffff88800641a640
+  R13: ffff8880158b1880 R14: ffff88801ec3c900 R15: ffff88800641a650
+  FS:  00005555722c3500(0000) GS:ffff8880f909d000(0000) knlGS:0000000000000000
+  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  CR2: 00007f66346e0f60 CR3: 000000001607c000 CR4: 0000000000350ef0
+  Call Trace:
+   <TASK>
+   genl_family_rcv_msg_doit+0x117/0x180 net/netlink/genetlink.c:1115
+   genl_family_rcv_msg net/netlink/genetlink.c:1195 [inline]
+   genl_rcv_msg+0x3a8/0x3f0 net/netlink/genetlink.c:1210
+   netlink_rcv_skb+0x16d/0x240 net/netlink/af_netlink.c:2550
+   genl_rcv+0x28/0x40 net/netlink/genetlink.c:1219
+   netlink_unicast_kernel net/netlink/af_netlink.c:1318 [inline]
+   netlink_unicast+0x3e9/0x4c0 net/netlink/af_netlink.c:1344
+   netlink_sendmsg+0x4aa/0x5b0 net/netlink/af_netlink.c:1894
+   sock_sendmsg_nosec net/socket.c:727 [inline]
+   __sock_sendmsg+0xc9/0xf0 net/socket.c:742
+   ____sys_sendmsg+0x272/0x3b0 net/socket.c:2592
+   ___sys_sendmsg+0x2de/0x320 net/socket.c:2646
+   __sys_sendmsg net/socket.c:2678 [inline]
+   __do_sys_sendmsg net/socket.c:2683 [inline]
+   __se_sys_sendmsg net/socket.c:2681 [inline]
+   __x64_sys_sendmsg+0x110/0x1a0 net/socket.c:2681
+   do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+   do_syscall_64+0x143/0x440 arch/x86/entry/syscall_64.c:94
+   entry_SYSCALL_64_after_hwframe+0x77/0x7f
+  RIP: 0033:0x7f66346f826d
+  Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 e8 ff ff ff f7 d8 64 89 01 48
+  RSP: 002b:00007ffc83d8bdc8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+  RAX: ffffffffffffffda RBX: 00007f6634985fa0 RCX: 00007f66346f826d
+  RDX: 00000000040000b0 RSI: 0000200000000740 RDI: 0000000000000007
+  RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+  R10: 0000000000000000 R11: 0000000000000246 R12: 00007f6634985fa8
+  R13: 00007f6634985fac R14: 0000000000000000 R15: 0000000000001770
+   </TASK>
 
-On 18/02/2026 19:31, Stephen Hemminger wrote:
-> On Wed, 11 Feb 2026 13:03:17 +0100
-> "Matthieu Baerts (NGI0)" <matttbe@kernel.org> wrote:
-> 
->> @@ -530,7 +541,7 @@ static int mptcp_monitor_msg(struct rtnl_ctrl_data *ctrl,
->>  	if (tb[MPTCP_ATTR_TIMEOUT])
->>  		printf(" timeout=%u", rta_getattr_u32(tb[MPTCP_ATTR_TIMEOUT]));
->>  	if (tb[MPTCP_ATTR_IF_IDX])
->> -		printf(" ifindex=%d", rta_getattr_s32(tb[MPTCP_ATTR_IF_IDX]));
->> +		print_iface(rta_getattr_s32(tb[MPTCP_ATTR_IF_IDX]));
->>  	if (tb[MPTCP_ATTR_RESET_REASON])
->>  		printf(" reset_reason=%u", rta_getattr_u32(tb[MPTCP_ATTR_RESET_REASON]));
->>  	if (tb[MPTCP_ATTR_RESET_FLAGS])
-> 
-> 
-> The whole monitor message output format here is divergent from what other
-> iproute2 commands do. If you look at ip monitor there are no '=' signs
-> in the output.
+The actions that caused that seem to be:
 
-Indeed, the output is different from 'ip monitor' (but similar to 'ip
-ioam monitor').
+ - Set the MPTCP subflows limit to 0
+ - Create an MPTCP endpoint with both the 'signal' and 'subflow' flags
+ - Create a new MPTCP connection from a different address: an ADD_ADDR
+   linked to the MPTCP endpoint will be sent ('signal' flag), but no
+   subflows is initiated ('subflow' flag)
+ - Remove the MPTCP endpoint
 
-> Please fix the whole function.
+In this case, msk->pm.local_addr_used has been kept to 0 -- because no
+subflows have been created -- but the corresponding bit in
+msk->pm.id_avail_bitmap has been cleared when the ADD_ADDR has been
+sent. This later causes a splat when removing the MPTCP endpoint because
+msk->pm.local_addr_used has been kept to 0.
 
-Doing that would likely break scripts parsing 'ip mptcp monitor' output,
-are you sure we should still change this output format?
+Now, if an endpoint has both the signal and subflow flags, but it is not
+possible to create subflows because of the limits or the c-flag case,
+then the local endpoint counter is still incremented: the endpoint is
+used at the end. This avoids issues later when removing the endpoint and
+calling __mark_subflow_endp_available(), which expects
+msk->pm.local_addr_used to have been previously incremented if the
+endpoint was marked as used according to msk->pm.id_avail_bitmap.
 
-Please note that compared to 'ip monitor', this commands can print quite
-a few attributes, and I guess the '=' signs have been added to improve
-the parsing (or even the reading?).
+Note that signal_and_subflow variable is reset to false when the limits
+and the c-flag case allows subflows creation. Also, local_addr_used is
+only incremented for non ID0 subflows.
 
-  [         CREATED] token=d8392d7c remid=0 locid=0 saddr6=2001:db8:1234:5678:302e:d9cb:3bca:3d88 daddr6=2001:41d0:a:ffcf:1234:5678:8765:1 sport=57432 dport=443 deny_join_id0
-  [     ESTABLISHED] token=d8392d7c remid=0 locid=0 saddr6=2001:db8:1234:5678:302e:d9cb:3bca:3d88 daddr6=2001:41d0:a:ffcf:1234:5678:8765:1 sport=57432 dport=443 deny_join_id0
-  [       ANNOUNCED] token=d8392d7c remid=1 daddr4=5.196.67.297 dport=443
-  [  SF_ESTABLISHED] token=d8392d7c remid=0 locid=22 saddr6=2001:db8:1234:5678:20e:c6ff:fed9:8d06 daddr6=2001:41d0:a:ffcf:1234:5678:8765:1 sport=38949 dport=443 backup=0 ifindex=23
-  [         SF_PRIO] token=d8392d7c remid=0 locid=22 saddr6=2001:db8:1234:5678:20e:c6ff:fed9:8d06 daddr6=2001:41d0:a:ffcf:1234:5678:8765:1 sport=38949 dport=443 backup=1 ifindex=23
-  [  SF_ESTABLISHED] token=d8392d7c remid=0 locid=27 saddr6=2001:db8:1234:5678:d892:9a8:b192:3428 daddr6=2001:41d0:a:ffcf:1234:5678:8765:1 sport=53295 dport=443 backup=0 ifindex=5
-  [       SF_CLOSED] token=d8392d7c remid=0 locid=22 saddr6=2001:db8:1234:5678:20e:c6ff:fed9:8d06 daddr6=2001:41d0:a:ffcf:1234:5678:8765:1 sport=38949 dport=443 backup=1 ifindex=23 error=104
-  [          CLOSED] token=d8392d7c
+Fixes: 85df533a787b ("mptcp: pm: do not ignore 'subflow' if 'signal' flag is also set")
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/613
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+ net/mptcp/pm_kernel.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-The event type and the way it is displayed is also specific to 'ip mptcp
-monitor'.
+diff --git a/net/mptcp/pm_kernel.c b/net/mptcp/pm_kernel.c
+index 87e37c729f81..2710abcd4065 100644
+--- a/net/mptcp/pm_kernel.c
++++ b/net/mptcp/pm_kernel.c
+@@ -418,6 +418,15 @@ static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
+ 	}
+ 
+ exit:
++	/* If an endpoint has both the signal and subflow flags, but it is not
++	 * possible to create subflows because of the limits or the c-flag case,
++	 * then still mark the endp as used, which is the case. This avoids
++	 * issues later when removing the endpoint and calling
++	 * __mark_subflow_endp_available(), which expects the increment here.
++	 */
++	if (signal_and_subflow && local.addr.id != msk->mpc_endpoint_id)
++		msk->pm.local_addr_used++;
++
+ 	mptcp_pm_nl_check_work_pending(msk);
+ }
+ 
 
-> Ideally all of iproute commands should
-> support JSON in monitor mode as well. But that is a bigger effort.
+---
+base-commit: eb01783b4b05934951774780509d96f7fe64c4a3
+change-id: 20260218-mptcp-issue-613-0ad1b55ca18c
 
-I agree with you. I guess we copied the behaviour of 'ip monitor' here.
-If there is a JSON support, we can probably more easily change the plain
-text output format to force people to use the JSON one if still needed.
-
-Cheers,
-Matt
+Best regards,
 -- 
-Sponsored by the NGI0 Core fund.
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
