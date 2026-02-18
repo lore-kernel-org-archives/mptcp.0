@@ -1,137 +1,160 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE37C2D9EF3
-	for <mptcp@lists.linux.dev>; Wed, 18 Feb 2026 12:43:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51EC42765D4
+	for <mptcp@lists.linux.dev>; Wed, 18 Feb 2026 15:48:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771418620; cv=none; b=GF7etl3lYleJUwT57aVz3PC4HUXzeCyfoI2bBYEnHOWa8+fMXuv37zDa1YOtBC7N23WzEmBH+uM4Qv2M2ftSOTPGoa8wL4qg3DnPEhP8DHTLJkKh4wDz5Xcc0sniFhwO2MVF/l38yrfX2eB2tuZMI75npHOFImX4K4c8UVqdKOc=
+	t=1771429706; cv=none; b=HUQsvOsSmj3vFQapNV17Rqp9Y5V2b+9Ea9a1FKzsXFBYVBSEqRUwbH4WKLWNhq5iFO+PenNhqYKFuztJKiK+ZRx/qxV3f0Ki/ok3Mi7Py+CrU03t/v5HBY7RnkGTaMvvLg2dhnwX3efYGQp1XrF11REg602rYGDm91R00BIsLEc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771418620; c=relaxed/simple;
-	bh=soyCwoBZeLjFBw4oPPcQYdz0vqXiUsh+8UCGczPU1Z0=;
+	s=arc-20240116; t=1771429706; c=relaxed/simple;
+	bh=hdGNmljsZleLflqNo/xfhnASWvb4hlHcPHK7PTG0gE0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=GpBIKnf41bP93puhIMG4Xiu9HEHDJJEGWp05vkSP7HXz1cTHhDn5z4CesgSlbrgIR388kZHLPYul4N/viPDr5msjxft5ZlReRhTpj4LjnzF77ywHhe1ILenWIdI38/jeUa0OHGKIfKa3BhoQzA6WCPz2PXl00N3NBCG3ZFAm8k0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qLfdZLeK; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=bGVFO5USve4EfdKSXblbGvV7aCFwhvSvkFdpIVPfFADNgf2v6PrLwBCKg5MmqLRPJ0Ik28rv6I4n9M6CziGhIY5jto5gsxh7lTUHEzTWzfGGCLR9ERW7BwEtnA6eunQcIUiq1crrwdi/SKdPNcao7ZnhXLxE7064Cwvo5lZMN/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SpfrsknU; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qLfdZLeK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A288AC19421;
-	Wed, 18 Feb 2026 12:43:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771418620;
-	bh=soyCwoBZeLjFBw4oPPcQYdz0vqXiUsh+8UCGczPU1Z0=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=qLfdZLeKW/OOZaAQlQKmJ9kag9j94walyvzBcAzmDiy/goqKxyOmPbCp4ns1fln9d
-	 evXvVN7EjTo+brXUhuWCwP07oo99xOZIfh1KUkDWbjq8mxN3F1DH7BqpKwBacmHFvL
-	 ZWRpoK+ZzdOrWRQDEFHK3nDfd69/Jy3L5RcMmOCTPGt5i+2KBWC6WIi0NdGctaH1cU
-	 GFE2h29CukTL3xxqtPjjZh9LzrNHm4yco0uwpguNroIuZs/CNTcIYmeNf2zD0MfHdy
-	 GUQu1IoXix3ADtDZIjNGUboOxog9P2JOQTauzjJHW7CdBRwuL7jkke6N3DjQGpFbSk
-	 d0L+sMo9yYSnw==
-Message-ID: <033cc315-9ac6-4b65-ba2c-a58779a39e20@kernel.org>
-Date: Wed, 18 Feb 2026 13:43:37 +0100
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SpfrsknU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1771429704;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EhttjQ0HJeqDTHjfQ3+C76tNwtEX8volF0vOI/0FrMk=;
+	b=SpfrsknU1SHGuazr0vF1JEYY6fhB7ZF4rqY3/W/uY5QWemUQsas86tbE+ijIIOyFHR5rp0
+	a9MEkdeW9I+pvsiY2DqHYoVOJmyaspYMJJKe24rfHPXRxJK+a0u+yIaVCUplgMAKP9QKVq
+	38f2mxyxuJD053Z5oIa1pQG093OiBi8=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-648-lU46SbEHPqyISmwBWEzeVw-1; Wed, 18 Feb 2026 10:48:23 -0500
+X-MC-Unique: lU46SbEHPqyISmwBWEzeVw-1
+X-Mimecast-MFC-AGG-ID: lU46SbEHPqyISmwBWEzeVw_1771429702
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-4376b624589so4868536f8f.3
+        for <mptcp@lists.linux.dev>; Wed, 18 Feb 2026 07:48:22 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1771429701; x=1772034501;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=EhttjQ0HJeqDTHjfQ3+C76tNwtEX8volF0vOI/0FrMk=;
+        b=fG9swr8baAjK5oPSmMxb5hpCndeYXnWU9Vtgf5MGLqG84awUBDdN21GYmC4JLYyC/d
+         SsHvw4HlDYXu4h+LEcNbzmkFEa5Mk6rGu0DP17nLnvU5d0DR9rlTtfX+sayWmnpKd83/
+         ipScsiarh5Ugq/kYkyp0dYKtEZZLlp+pGIXp4ra01vDG6oxRHAT+EB75CaMhkskWEf4R
+         pqRtMeDxtWhZm7OjABzuoOoFV0vwCo9qXGyEBNS/V7i9Eu5+VvAu+gpEjXU8eIJL7J9m
+         liWwcRPTQ5Jk2lPO8jyyPGEcQ0fO+jIpx4s/VJtgWqbeIomcqUq+4seeHEqGVIVTSubB
+         XwRg==
+X-Forwarded-Encrypted: i=1; AJvYcCVEinlOPE47SQfoZnTF0CasVNhsFZT2XNbepqCDXsM/vTSHJKnWsb0j2I/wTcKOjj0LVhjP6A==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yxi0yLs4JqNxs4ABA0U6HDVvLccrtSZclSBUGjQ9txv7/E0fJ+f
+	vdCMIKQ+NfEnNeiwSkY44AKp3YMP5IGvY3o26Wc+IFHCiiUmUAmR66U/BOSumJZdRkKvLDH1FaX
+	LxhOeGue378rqe0+mqzhpYzx8UI/8jx6wvc5tiklnoG+Dqcmvm0boLusaOSZuLGBp
+X-Gm-Gg: AZuq6aKZ07496cBFucZSBv1twSCgiP5ZqpMSl5/yKckXCD3DV4yR4zYCTB3/iXZK0Vb
+	Mu5/SEzYkBiu4TQaVbiwRZtU/mP5mioHZ8KprNmrGNX1K2jZY3BZjtyx2jUX9xHrsmkbVTqk7nz
+	9AgaioB3sE6cs0vGAQjiGASZ2yOqt8cZ1a+/7mM2wGMmkU9CTwCTOcLENfELwbHkRXIZF+xgjk/
+	kNHZpqi+IeIJHQLeGy1XAG7aefpM+af3Iwy16koF/cDXqBHleUWgvegRJ976BZNMqaOTnUQDbt+
+	0S2jN1yjS8SYSpTe85Cm1CZz9JjEkPKz89psuQl3anZhrGMjdERO/2UC4MsMWXEHWbTQUDNQUk2
+	/R5WWXrI40Xjfv4O5K35SLxo7
+X-Received: by 2002:a05:6000:2407:b0:435:a7fa:249a with SMTP id ffacd0b85a97d-43796b0548dmr31796014f8f.61.1771429701368;
+        Wed, 18 Feb 2026 07:48:21 -0800 (PST)
+X-Received: by 2002:a05:6000:2407:b0:435:a7fa:249a with SMTP id ffacd0b85a97d-43796b0548dmr31795966f8f.61.1771429700855;
+        Wed, 18 Feb 2026 07:48:20 -0800 (PST)
+Received: from [192.168.88.32] ([150.228.93.112])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-439567aad3csm8262703f8f.36.2026.02.18.07.48.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 18 Feb 2026 07:48:20 -0800 (PST)
+Message-ID: <e196b480-eaec-4e47-89eb-7ecb6ca7d58f@redhat.com>
+Date: Wed, 18 Feb 2026 16:48:19 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
+User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH mptcp-next] selftests: mptcp: more stable simult_flows
  tests
-Content-Language: en-GB, fr-BE
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+To: Matthieu Baerts <matttbe@kernel.org>, mptcp@lists.linux.dev
 References: <ec938f018aed693c624c7a61366b28c863a1d56d.1771276854.git.pabeni@redhat.com>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <ec938f018aed693c624c7a61366b28c863a1d56d.1771276854.git.pabeni@redhat.com>
+ <45ade886-44c0-4889-b825-82fa12fb03cc@kernel.org>
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <45ade886-44c0-4889-b825-82fa12fb03cc@kernel.org>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: epHw5NzHjWND4kuaFOtB8VevKYuNISu0e6zNsNkBMak_1771429702
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Paolo,
-
-On 16/02/2026 22:20, Paolo Abeni wrote:
-> By default, the netem qdisc can keep up to 1000 packets under its belly
-> to deal with the configured rate and delay. The simult flows test-case
-> simulates very low speed links, to avoid problems due to slow CPUs and
-> the TCP stack tend to transmit at a slightly higher rate than the
-> (virtual) link constraints.
+On 2/18/26 1:13 PM, Matthieu Baerts wrote:
+> On 16/02/2026 22:20, Paolo Abeni wrote:
+>> By default, the netem qdisc can keep up to 1000 packets under its belly
+>> to deal with the configured rate and delay. The simult flows test-case
+>> simulates very low speed links, to avoid problems due to slow CPUs and
+>> the TCP stack tend to transmit at a slightly higher rate than the
+>> (virtual) link constraints.
+>>
+>> All the above causes a relatively large amount of packets being enqueued
+>> in the netem qdiscs - the longer the transfer, the longer the queue -
+>> producing increasingly high TCP RTT samples and consequently increasingly
+>> larger receive buffer size due to DRS.
+>>
+>> When the receive buffer size becomes considerably larger than the needed
+>> size, the tests results can flake, i.e. because minimal inaccuracy in the
+>> pacing rate can lead to a single subflow usage towards the end of the
+>> connection for a considerable amount of data.
+>>
+>> Address the issue explicitly setting netem limits suitable for the
+>> configured link speeds and unflake all the affected tests.
 > 
-> All the above causes a relatively large amount of packets being enqueued
-> in the netem qdiscs - the longer the transfer, the longer the queue -
-> producing increasingly high TCP RTT samples and consequently increasingly
-> larger receive buffer size due to DRS.
+> Thank you for having taken the time to analyse this, and provided a fix!
+> Bufferbloat is a plague, even in the selftests!
 > 
-> When the receive buffer size becomes considerably larger than the needed
-> size, the tests results can flake, i.e. because minimal inaccuracy in the
-> pacing rate can lead to a single subflow usage towards the end of the
-> connection for a considerable amount of data.
+> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 > 
-> Address the issue explicitly setting netem limits suitable for the
-> configured link speeds and unflake all the affected tests.
+> I suggest applying this in -net, hopefully to help to validate stable
+> kernel versions.
+> 
+>> Fixes: 1a418cb8e888 ("mptcp: simult flow self-tests")
+>> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+>> ---
+>>  tools/testing/selftests/net/mptcp/simult_flows.sh | 13 ++++++++-----
+>>  1 file changed, 8 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/tools/testing/selftests/net/mptcp/simult_flows.sh b/tools/testing/selftests/net/mptcp/simult_flows.sh
+>> index a9c9927d6cbc..d11a8b949aab 100755
+>> --- a/tools/testing/selftests/net/mptcp/simult_flows.sh
+>> +++ b/tools/testing/selftests/net/mptcp/simult_flows.sh
+>> @@ -237,10 +237,13 @@ run_test()
+>>  	for dev in ns2eth1 ns2eth2; do
+>>  		tc -n $ns2 qdisc del dev $dev root >/dev/null 2>&1
+>>  	done
+>> -	tc -n $ns1 qdisc add dev ns1eth1 root netem rate ${rate1}mbit $delay1
+>> -	tc -n $ns1 qdisc add dev ns1eth2 root netem rate ${rate2}mbit $delay2
+>> -	tc -n $ns2 qdisc add dev ns2eth1 root netem rate ${rate1}mbit $delay1
+>> -	tc -n $ns2 qdisc add dev ns2eth2 root netem rate ${rate2}mbit $delay2
+>> +
+>> +	# keep the queued pkts number low, or the RTT estimator will see
+>> +	# increasing latency over time.
+>> +	tc -n $ns1 qdisc add dev ns1eth1 root netem rate ${rate1}mbit $delay1 limit 50
+>> +	tc -n $ns1 qdisc add dev ns1eth2 root netem rate ${rate2}mbit $delay2 limit 50
+>> +	tc -n $ns2 qdisc add dev ns2eth1 root netem rate ${rate1}mbit $delay1 limit 50
+>> +	tc -n $ns2 qdisc add dev ns2eth2 root netem rate ${rate2}mbit $delay2 limit 50
+>>  
+>>  	# time is measured in ms, account for transfer size, aggregated link speed
+>>  	# and header overhead (10%)
+>> @@ -304,7 +307,7 @@ run_test 10 10 1 25 "balanced bwidth with unbalanced delay"
+>>  # we still need some additional infrastructure to pass the following test-cases
+>>  MPTCP_LIB_SUBTEST_FLAKY=1 run_test 10 3 0 0 "unbalanced bwidth"
+> 
+> By any chance, did you check if your modification was helping this case
+> as well? If not, I can try on my side when I have the opportunity (no
+> urgency anyway).
 
-Now in our tree:
+I'm still investigating the overall scenarios, but AFAICS we still need
+the FLAKY annotation there.
 
-New patches for t/upstream-net and t/upstream:
-- d4a47ee7f8da: selftests: mptcp: more stable simult_flows tests
-- Results: cf97a02cb523..656b5899eb47 (export-net)
-- Results: 40e2b2255e42..683fca3ca9ae (export)
-
-New patches for t/upstream:
-- 86c0019571dc: tg: revert 'mark some simult flows tests as flaky'
-- Results: 683fca3ca9ae..eb01783b4b05 (export)
-
-
-Tests are now in progress:
-
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/ea2e74b9a2b44abc3e5e102cb25cf415b3eb3727/checks
-- export-net:
-https://github.com/multipath-tcp/mptcp_net-next/commit/abb26bf620660fa96804166f9452ad49d6b14c18/checks
-
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
+/P
 
