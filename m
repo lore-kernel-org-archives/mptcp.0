@@ -1,159 +1,77 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD10B2AE77;
-	Tue, 17 Feb 2026 12:46:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D46FF199920;
+	Wed, 18 Feb 2026 04:00:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771332389; cv=none; b=DUbN4HKjgAmuHUeSpLDAdsN35cM/XwhRz4wsq990taloLVVYOqY3reUUYEHJcSvLOGHYiRCUkF90lLaaBCJlDlpUrPgIrtq5OqzUoC/m/OJy6jTBfY3QbZvkH5QIJuoRM9hwtg2JQ7KEhi45MMktXrCmEqUkyOp6L7zoVhi7RQE=
+	t=1771387216; cv=none; b=t8t/yWkyNW9i4Q4/90nv4zIbVe+/Rh3WaFrMgr2B2Qf477OetbzHJdwLshjOJNkeJvGNXuiGr9ctle9Y1NAliQEB8BlnENeq6lSTYl34cSwKzPSnaeoTwPA2a6/Ox59ZoEZNVxRAu1XiEc37/6KOVIIJLYTfveVSyXA7n1tzwsg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771332389; c=relaxed/simple;
-	bh=lCtz0F6g3LSm8PHx1blPD7UZS/a2Me8K2nfU6zBh2nU=;
-	h=Subject:To:Cc:From:Date:In-Reply-To:Message-ID:MIME-Version:
-	 Content-Type; b=fz2G/vTgdIc3HZFJlqwiEQVEgWOPe7WeEiWmpBh3Aa0alycWxSeBP5XyALqoU0R9UUr5VVZdS1lwL11GwV95D4eCmDS/gAKlqAxGjA6Xxx5Oz8jVHAVUOOh6Nyv/K5IEdkBQ4Pq+J71/nf/7OmL8k6P+wFGpu4Q7ekr3ufmVUbQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=MyVDnLp+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1771387216; c=relaxed/simple;
+	bh=jCDFTWj8B28n15p634bpYjKVmP/NY91tKfteMX7riKs=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=XEA/B6Zc2a5ePvEiNpEYRgl3THoMHn3G/Ju9v6qvGYSQULvbEAcKxMa90KzKn5T2TUK6mkH21tcER+FWblnNmdt7ZZtYR9tFl3afY3iD1/f6Ue2ARBHpC+iQW34U24Y2OkC8j7hAx2qmKNPwQBjAOA3qQaty3nzwvFY2FDkKoBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MPPD1VKq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="MyVDnLp+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40A6EC4CEF7;
-	Tue, 17 Feb 2026 12:46:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1771332389;
-	bh=lCtz0F6g3LSm8PHx1blPD7UZS/a2Me8K2nfU6zBh2nU=;
-	h=Subject:To:Cc:From:Date:In-Reply-To:From;
-	b=MyVDnLp+l85QcXyRq0UFuYTcIKllbf72rEVv8Z4WB58eR1cJ3amqxPAXYRbgPCTf4
-	 pAyGdBzRsFUq2va+OQgCIqH/i8UhZPXFUx5PmfsBJOAqL4B5rvoLqPSGNPqboWX86i
-	 o8OwPryHThRNNgAlZWlHUA7KpkSvTGBoB7Xg+pJA=
-Subject: Patch "selftests: mptcp: pm: ensure unknown flags are ignored" has been added to the 5.15-stable tree
-To: gregkh@linuxfoundation.org,kuba@kernel.org,martineau@kernel.org,matttbe@kernel.org,mptcp@lists.linux.dev
-Cc: <stable-commits@vger.kernel.org>
-From: <gregkh@linuxfoundation.org>
-Date: Tue, 17 Feb 2026 13:45:31 +0100
-In-Reply-To: <20260212110344.781836-2-matttbe@kernel.org>
-Message-ID: <2026021731-puzzle-crusher-67bc@gregkh>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MPPD1VKq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 611AFC19422;
+	Wed, 18 Feb 2026 04:00:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1771387216;
+	bh=jCDFTWj8B28n15p634bpYjKVmP/NY91tKfteMX7riKs=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=MPPD1VKqklEdHzX05FVGx7RPhgd9EGe98buqzaU3cvMERLEJXfZ7vqFUkchLnZl20
+	 gdXu3dsKVx84ijB90LBx8D8YdbPw9g+U01yHlGfW1oZbjQD/bj1vkJxteuApbz6VjP
+	 VjuTObt2b0nmPdcTYLU0pLmhcJAIhjHCFDFAE49ZIsEjf21YNk8D/75jig+fOgklKU
+	 hDt+o9XfM8Jp4xDIelqUmISp43DbOd6MDZWf/zCwtW4K6HkivGKgZdwj677j+BSpMp
+	 NWJc0N6dvcAcboICzPeHh/1M+sUjwr+yXOhxRPjQs9MgeUOAgwBAZ8vmfvp80h9V27
+	 JACE3kq+lWDNQ==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 481383806667;
+	Wed, 18 Feb 2026 04:00:09 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ANSI_X3.4-1968
 Content-Transfer-Encoding: 8bit
-X-stable: commit
-X-Patchwork-Hint: ignore 
+Subject: Re: [PATCH iproute2 0/2] mptcp: support colors & display iface name
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <177138720782.803761.5504004597190844411.git-patchwork-notify@kernel.org>
+Date: Wed, 18 Feb 2026 04:00:07 +0000
+References: <20260211-mptcp-color-v1-0-01832777611d@kernel.org>
+In-Reply-To: <20260211-mptcp-color-v1-0-01832777611d@kernel.org>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: stephen@networkplumber.org, dsahern@kernel.org, netdev@vger.kernel.org,
+ mptcp@lists.linux.dev
+
+Hello:
+
+This series was applied to iproute2/iproute2-next.git (main)
+by David Ahern <dsahern@kernel.org>:
+
+On Wed, 11 Feb 2026 13:03:16 +0100 you wrote:
+> Here are two small patches to support colors in "ip mptcp endpoint show"
+> and "ip mptcp monitor" commands.
+> 
+> Now the IP addresses and interface names are printed in the
+> corresponding colors. "ip mptcp monitor" will also print the interface
+> name if any.
+> 
+> [...]
+
+Here is the summary with links:
+  - [iproute2,1/2] mptcp: monitor: also show iface name
+    https://git.kernel.org/pub/scm/network/iproute2/iproute2-next.git/commit/?id=ff8a8423f613
+  - [iproute2,2/2] mptcp: display addr & ifname in color
+    https://git.kernel.org/pub/scm/network/iproute2/iproute2-next.git/commit/?id=55600ddd9b6b
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
 
-This is a note to let you know that I've just added the patch titled
-
-    selftests: mptcp: pm: ensure unknown flags are ignored
-
-to the 5.15-stable tree which can be found at:
-    http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
-
-The filename of the patch is:
-     selftests-mptcp-pm-ensure-unknown-flags-are-ignored.patch
-and it can be found in the queue-5.15 subdirectory.
-
-If you, or anyone else, feels it should not be added to the stable tree,
-please let <stable@vger.kernel.org> know about it.
-
-
-From matttbe@kernel.org Thu Feb 12 12:04:04 2026
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Thu, 12 Feb 2026 12:03:45 +0100
-Subject: selftests: mptcp: pm: ensure unknown flags are ignored
-To: stable@vger.kernel.org, gregkh@linuxfoundation.org
-Cc: MPTCP Upstream <mptcp@lists.linux.dev>, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>, Jakub Kicinski <kuba@kernel.org>
-Message-ID: <20260212110344.781836-2-matttbe@kernel.org>
-
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-
-commit 29f4801e9c8dfd12bdcb33b61a6ac479c7162bd7 upstream.
-
-This validates the previous commit: the userspace can set unknown flags
--- the 7th bit is currently unused -- without errors, but only the
-supported ones are printed in the endpoints dumps.
-
-The 'Fixes' tag here below is the same as the one from the previous
-commit: this patch here is not fixing anything wrong in the selftests,
-but it validates the previous fix for an issue introduced by this commit
-ID.
-
-Fixes: 01cacb00b35c ("mptcp: add netlink-based PM")
-Cc: stable@vger.kernel.org
-Reviewed-by: Mat Martineau <martineau@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Link: https://patch.msgid.link/20251205-net-mptcp-misc-fixes-6-19-rc1-v1-2-9e4781a6c1b8@kernel.org
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-[ Conflicts in pm_netlink.sh, because some refactoring have been done
-  later on: commit 0d16ed0c2e74 ("selftests: mptcp: add
-  {get,format}_endpoint(s) helpers") and commit c99d57d0007a
-  ("selftests: mptcp: use pm_nl endpoint ops") are not in this version.
-  The same operation can still be done at the same place, without using
-  the new helpers.
-  Also, commit 1dc88d241f92 ("selftests: mptcp: pm_nl_ctl: always look
-  for errors") is not in this version, and create a conflict in the
-  context which is not related to the modification here.
-  Conflicts in pm_nl_ctl.c, because commit 69c6ce7b6eca ("selftests:
-  mptcp: add implicit endpoint test case") is not in this version, and
-  caused a conflict in the context which is not related to the
-  modification here. ]
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- tools/testing/selftests/net/mptcp/pm_netlink.sh |    4 ++++
- tools/testing/selftests/net/mptcp/pm_nl_ctl.c   |   11 +++++++++++
- 2 files changed, 15 insertions(+)
-
---- a/tools/testing/selftests/net/mptcp/pm_netlink.sh
-+++ b/tools/testing/selftests/net/mptcp/pm_netlink.sh
-@@ -124,6 +124,10 @@ id 8 flags signal 10.0.1.8" "id limit"
- ip netns exec $ns1 ./pm_nl_ctl flush
- check "ip netns exec $ns1 ./pm_nl_ctl dump" "" "flush addrs"
- 
-+ip netns exec $ns1 ./pm_nl_ctl add 10.0.1.1 flags unknown
-+check "ip netns exec $ns1 ./pm_nl_ctl dump" "id 1 flags  10.0.1.1" "ignore unknown flags"
-+ip netns exec $ns1 ./pm_nl_ctl flush
-+
- ip netns exec $ns1 ./pm_nl_ctl limits 9 1
- check "ip netns exec $ns1 ./pm_nl_ctl limits" "$default_limits" "rcv addrs above hard limit"
- 
---- a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
-+++ b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
-@@ -22,6 +22,8 @@
- #define MPTCP_PM_NAME		"mptcp_pm"
- #endif
- 
-+#define MPTCP_PM_ADDR_FLAG_UNKNOWN _BITUL(7)
-+
- static void syntax(char *argv[])
- {
- 	fprintf(stderr, "%s add|get|set|del|flush|dump|accept [<args>]\n", argv[0]);
-@@ -238,6 +240,8 @@ int add_addr(int fd, int pm_family, int
- 					flags |= MPTCP_PM_ADDR_FLAG_BACKUP;
- 				else if (!strcmp(tok, "fullmesh"))
- 					flags |= MPTCP_PM_ADDR_FLAG_FULLMESH;
-+				else if (!strcmp(tok, "unknown"))
-+					flags |= MPTCP_PM_ADDR_FLAG_UNKNOWN;
- 				else
- 					error(1, errno,
- 					      "unknown flag %s", argv[arg]);
-@@ -435,6 +439,13 @@ static void print_addr(struct rtattr *at
- 				if (flags)
- 					printf(",");
- 			}
-+
-+			if (flags & MPTCP_PM_ADDR_FLAG_UNKNOWN) {
-+				printf("unknown");
-+				flags &= ~MPTCP_PM_ADDR_FLAG_UNKNOWN;
-+				if (flags)
-+					printf(",");
-+			}
- 
- 			/* bump unknown flags, if any */
- 			if (flags)
-
-
-Patches currently in stable-queue which might be from matttbe@kernel.org are
-
-queue-5.15/mptcp-fix-race-in-mptcp_pm_nl_flush_addrs_doit.patch
-queue-5.15/selftests-mptcp-pm-ensure-unknown-flags-are-ignored.patch
