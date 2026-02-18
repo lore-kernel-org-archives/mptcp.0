@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 055CA309F18
-	for <mptcp@lists.linux.dev>; Wed, 18 Feb 2026 12:13:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE37C2D9EF3
+	for <mptcp@lists.linux.dev>; Wed, 18 Feb 2026 12:43:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771416795; cv=none; b=X6MZWsSqfEOfEEuPkYzfzWoAUhDNBgpuZCBaAT8+WenAhvStLtYnFSMtzk1akEtOyj0lHkiKkEoFexqS5KMzWsRyy3JhKPNj3rudqZIGJrWwIK6ZxSkFAycH206bXWXUCqfZjoewAyJ/PRdyT1QufIkjGFB2vnjLkUy9e0co9Ro=
+	t=1771418620; cv=none; b=GF7etl3lYleJUwT57aVz3PC4HUXzeCyfoI2bBYEnHOWa8+fMXuv37zDa1YOtBC7N23WzEmBH+uM4Qv2M2ftSOTPGoa8wL4qg3DnPEhP8DHTLJkKh4wDz5Xcc0sniFhwO2MVF/l38yrfX2eB2tuZMI75npHOFImX4K4c8UVqdKOc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771416795; c=relaxed/simple;
-	bh=nDwykEoAbQyL+JtBoqtCMMsQZ1wBzA1aYrlqV9M3MlE=;
+	s=arc-20240116; t=1771418620; c=relaxed/simple;
+	bh=soyCwoBZeLjFBw4oPPcQYdz0vqXiUsh+8UCGczPU1Z0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=VgXQynhDK2IjGdL0jQbrJRS5JEdRWImGoBdYRzVC/z8rfvkdNO6RrGKvClGrD/vZRfwHAsBKEXQCT+0nAl1z6+ctQq1vtMGPGrMA62TT/fBzhvVZHc4YtB45z8eFnqWJFWHY8NgTf+FOHwsXvEJMKg6kOL+fUKYFz7UHpyOXlco=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t86s5fhB; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=GpBIKnf41bP93puhIMG4Xiu9HEHDJJEGWp05vkSP7HXz1cTHhDn5z4CesgSlbrgIR388kZHLPYul4N/viPDr5msjxft5ZlReRhTpj4LjnzF77ywHhe1ILenWIdI38/jeUa0OHGKIfKa3BhoQzA6WCPz2PXl00N3NBCG3ZFAm8k0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qLfdZLeK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t86s5fhB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0549BC19421;
-	Wed, 18 Feb 2026 12:13:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qLfdZLeK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A288AC19421;
+	Wed, 18 Feb 2026 12:43:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771416794;
-	bh=nDwykEoAbQyL+JtBoqtCMMsQZ1wBzA1aYrlqV9M3MlE=;
+	s=k20201202; t=1771418620;
+	bh=soyCwoBZeLjFBw4oPPcQYdz0vqXiUsh+8UCGczPU1Z0=;
 	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=t86s5fhBTMsEtNjplDkHf2cMERc206BuyRrbH1tB4t0c73EJtzXnAetEHdfrpODtF
-	 irecY5dJIWzp2ZJ7OePm5aZj9wRRhB+c5zb/t5J/2YGeKxHoKCQhX4Pw8yjGl2Qlvh
-	 aIjIE1oHzWjq5jt2hExFZ+TSAzVQuEBG2gcn6Swb9/797MKJVgC/XqbhOS+u+m+dD3
-	 lNkQLHYPp8IH4EX3MzYmRht6muzerAJxj9iYxk3poWfcCzB2nCnMJKL71p9cq9DCj9
-	 RhOcsJ6XHEPa7MS4TQC/ox7cv+FL0qj4PMSAW7fr0Hd6aLfJl2zmBwarHCByOYC5CN
-	 8Zcp7JdOjWKaw==
-Message-ID: <45ade886-44c0-4889-b825-82fa12fb03cc@kernel.org>
-Date: Wed, 18 Feb 2026 13:13:11 +0100
+	b=qLfdZLeKW/OOZaAQlQKmJ9kag9j94walyvzBcAzmDiy/goqKxyOmPbCp4ns1fln9d
+	 evXvVN7EjTo+brXUhuWCwP07oo99xOZIfh1KUkDWbjq8mxN3F1DH7BqpKwBacmHFvL
+	 ZWRpoK+ZzdOrWRQDEFHK3nDfd69/Jy3L5RcMmOCTPGt5i+2KBWC6WIi0NdGctaH1cU
+	 GFE2h29CukTL3xxqtPjjZh9LzrNHm4yco0uwpguNroIuZs/CNTcIYmeNf2zD0MfHdy
+	 GUQu1IoXix3ADtDZIjNGUboOxog9P2JOQTauzjJHW7CdBRwuL7jkke6N3DjQGpFbSk
+	 d0L+sMo9yYSnw==
+Message-ID: <033cc315-9ac6-4b65-ba2c-a58779a39e20@kernel.org>
+Date: Wed, 18 Feb 2026 13:43:37 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -111,56 +111,24 @@ On 16/02/2026 22:20, Paolo Abeni wrote:
 > Address the issue explicitly setting netem limits suitable for the
 > configured link speeds and unflake all the affected tests.
 
-Thank you for having taken the time to analyse this, and provided a fix!
-Bufferbloat is a plague, even in the selftests!
+Now in our tree:
 
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+New patches for t/upstream-net and t/upstream:
+- d4a47ee7f8da: selftests: mptcp: more stable simult_flows tests
+- Results: cf97a02cb523..656b5899eb47 (export-net)
+- Results: 40e2b2255e42..683fca3ca9ae (export)
 
-I suggest applying this in -net, hopefully to help to validate stable
-kernel versions.
+New patches for t/upstream:
+- 86c0019571dc: tg: revert 'mark some simult flows tests as flaky'
+- Results: 683fca3ca9ae..eb01783b4b05 (export)
 
-> Fixes: 1a418cb8e888 ("mptcp: simult flow self-tests")
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> ---
->  tools/testing/selftests/net/mptcp/simult_flows.sh | 13 ++++++++-----
->  1 file changed, 8 insertions(+), 5 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/net/mptcp/simult_flows.sh b/tools/testing/selftests/net/mptcp/simult_flows.sh
-> index a9c9927d6cbc..d11a8b949aab 100755
-> --- a/tools/testing/selftests/net/mptcp/simult_flows.sh
-> +++ b/tools/testing/selftests/net/mptcp/simult_flows.sh
-> @@ -237,10 +237,13 @@ run_test()
->  	for dev in ns2eth1 ns2eth2; do
->  		tc -n $ns2 qdisc del dev $dev root >/dev/null 2>&1
->  	done
-> -	tc -n $ns1 qdisc add dev ns1eth1 root netem rate ${rate1}mbit $delay1
-> -	tc -n $ns1 qdisc add dev ns1eth2 root netem rate ${rate2}mbit $delay2
-> -	tc -n $ns2 qdisc add dev ns2eth1 root netem rate ${rate1}mbit $delay1
-> -	tc -n $ns2 qdisc add dev ns2eth2 root netem rate ${rate2}mbit $delay2
-> +
-> +	# keep the queued pkts number low, or the RTT estimator will see
-> +	# increasing latency over time.
-> +	tc -n $ns1 qdisc add dev ns1eth1 root netem rate ${rate1}mbit $delay1 limit 50
-> +	tc -n $ns1 qdisc add dev ns1eth2 root netem rate ${rate2}mbit $delay2 limit 50
-> +	tc -n $ns2 qdisc add dev ns2eth1 root netem rate ${rate1}mbit $delay1 limit 50
-> +	tc -n $ns2 qdisc add dev ns2eth2 root netem rate ${rate2}mbit $delay2 limit 50
->  
->  	# time is measured in ms, account for transfer size, aggregated link speed
->  	# and header overhead (10%)
-> @@ -304,7 +307,7 @@ run_test 10 10 1 25 "balanced bwidth with unbalanced delay"
->  # we still need some additional infrastructure to pass the following test-cases
->  MPTCP_LIB_SUBTEST_FLAKY=1 run_test 10 3 0 0 "unbalanced bwidth"
 
-By any chance, did you check if your modification was helping this case
-as well? If not, I can try on my side when I have the opportunity (no
-urgency anyway).
+Tests are now in progress:
 
->  run_test 10 3 1 25 "unbalanced bwidth with unbalanced delay"
-> -MPTCP_LIB_SUBTEST_FLAKY=1 run_test 10 3 25 1 "unbalanced bwidth with opposed, unbalanced delay"
-> +run_test 10 3 25 1 "unbalanced bwidth with opposed, unbalanced delay"
->  
->  mptcp_lib_result_print_all_tap
->  exit $ret
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/ea2e74b9a2b44abc3e5e102cb25cf415b3eb3727/checks
+- export-net:
+https://github.com/multipath-tcp/mptcp_net-next/commit/abb26bf620660fa96804166f9452ad49d6b14c18/checks
 
 Cheers,
 Matt
