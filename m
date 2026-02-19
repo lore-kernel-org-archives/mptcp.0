@@ -1,138 +1,119 @@
-Received: from mail-qk1-f195.google.com (mail-qk1-f195.google.com [209.85.222.195])
+Received: from mail-oa1-f45.google.com (mail-oa1-f45.google.com [209.85.160.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86709333729
-	for <mptcp@lists.linux.dev>; Thu, 19 Feb 2026 11:19:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 675C034B194
+	for <mptcp@lists.linux.dev>; Thu, 19 Feb 2026 17:11:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771499971; cv=none; b=ebvJCN11PwSmyRgABVQs9PcdoZ49C7IWZoD3tclQbMamj3mGaAKK0GX86YnU1kxQ9/dI+Q/84S/ERH9duCoVlI2c4UMjE6zfI6f+/eMZ0MiE1lffOkz9iMZdqQObFL9PTH7OZuHyhe3PuQtd04LU9a3TY5+jZmISML/TFYY4/Ho=
+	t=1771521068; cv=none; b=myAg/anCGM7Ql8vG8+44zqmvk86DEHjRyUUfRuTZkeKlFTr4TG+DRPhHwmbXZJoUrAzhJ36ouPSVuy9wfpaEpzKe9rBNm9n1W63NP9TK7gTPb1E6De1iFZH4SkONa/xI+t6RsFC3Wcck2KGIskvCn+cckdJx5E7F13tVv6j9RhI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771499971; c=relaxed/simple;
-	bh=j5yaUbNVrCUtAeMCNTWvf8I9mT52M5/hLhG0YjaO+vc=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=u39dgHRt+lEnrpampxxVQS2dBHHN4Dol5vsDz4llUUmLhicM9eBH5cFjQTEqWRr1W98g12HMcYGb+D0wFe+2Bvr/s2TxRGynDcjiyfkQ3zDcyqRa8EGSWAmqjT2mwoNRs/h2GRr9iZiVIaYlxCPw3pkeS1iQnUqmrlqlnByowNU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g6CKpxKD; arc=none smtp.client-ip=209.85.222.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1771521068; c=relaxed/simple;
+	bh=p+0yoUYOgqdCSsNYmHj7zM+lo5ChPaixfv+pRNVOGdU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=gpjVnYtA7F1RI2VqLOeHIuNwjTiykpX+qCgdAnL3luTzeRM9VHknXyRA3Mjmn0ycRU19VrArCkMYLycirtzqTWd0SV7KDDZNNA7DP3KtBaEAdbnuC3X5MDrdTAb6INatA5+APY5YUrZxwXFhT+OAww07ybz1bRcTocsTNoCIymg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=networkplumber.org; spf=pass smtp.mailfrom=networkplumber.org; dkim=pass (2048-bit key) header.d=networkplumber-org.20230601.gappssmtp.com header.i=@networkplumber-org.20230601.gappssmtp.com header.b=KLjXywJq; arc=none smtp.client-ip=209.85.160.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=networkplumber.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=networkplumber.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g6CKpxKD"
-Received: by mail-qk1-f195.google.com with SMTP id af79cd13be357-8cb3dfb3461so82230885a.3
-        for <mptcp@lists.linux.dev>; Thu, 19 Feb 2026 03:19:30 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=networkplumber-org.20230601.gappssmtp.com header.i=@networkplumber-org.20230601.gappssmtp.com header.b="KLjXywJq"
+Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-40946982a78so412173fac.2
+        for <mptcp@lists.linux.dev>; Thu, 19 Feb 2026 09:11:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1771499969; x=1772104769; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+        d=networkplumber-org.20230601.gappssmtp.com; s=20230601; t=1771521065; x=1772125865; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ktMCTsyzuxJ1Hye4+KY6h3bU/qg50sehgZAajkE5beI=;
-        b=g6CKpxKDvcv817vt2MtNjT844O1J5jUSpmjVWzALiTNs+q/gt4J1ozYRaVaOZ+f2WL
-         DqV3k44uL1/uxn84CSQbWZXfR5x6+wDVB2naOpBvMDxSdrN1v2A1zllS8LdzbE6LkM+k
-         0nCJ+4ikgid37wB27NXghTs91825xcIwPzHcu1dl15AVkoW1P4Lt4jEklqYqXb1zsjI7
-         2YL8m8gcZNp//5K5GBQRDmOnvI3arXF2gns99WKcjTETrOFr2g83cGEVVWLdA29HOanZ
-         VFO2MDAtSzvboJcZanl2qdQ+Z4A5YRIUjRNcVVfWNvYs0LnAsu548qYR64YimXu7vWXL
-         3yXA==
+        bh=dyrjZBaOYWnsTcDoFAVLra9VVv9NrS1xfuVC945Eoh4=;
+        b=KLjXywJqAux5MV7/YjDk1l0+Jk3D87QRMw/wYJXT+V759DJDTNCGFCKY1pyVRy5LII
+         qJYuyspxUGPkVFnVnp4ABukb9VQdeaOVoTrv0FInqy9ASDS4JEjS4V374t8BZojJ5cDP
+         yScFggGMrTpaeEoL5SzrAH/arI8EgLO4y+t1eD+5+qAqQ6kGQuKoE9Bg734rg9fLjajQ
+         D1OrQ58dXRJqAUvffiDi05774aJomdtdWnkKfBlhQKAH8zY9DdtZN8bTQO4DBXXniWf6
+         w9j+pJIaExgIaQbpXfYlrrLJmWFPr2l7S4cvaJ7OCvVSslYdvAi3+5Be+ol6hje518Ju
+         u2jQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771499969; x=1772104769;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ktMCTsyzuxJ1Hye4+KY6h3bU/qg50sehgZAajkE5beI=;
-        b=nZpaIYga5FEKd55vZGQsTd2Z4HM85t5tdyR3PHJnbKKbWjB6t+75WkzmmG8j8c43Qp
-         rwgYwqU2RETxlZ0TteaVOWqius+J0dZH7VCKtzNco4UJ+CU7X7+gM8vX4QFfzwyKCfXP
-         d3aoz3u0YPQ2oZq6sxK5a9/Zd6u5+0PkJChBL0P2mcoUQ4s9pMsvPxTxnBj7OXKFZ4Id
-         Hk9hT205rt9sF1hYKCHko5cGgoJ8cI+3TGtjg4zdN0ibXNGa/htWp9056EJftFKEA1RE
-         so/h1pk3VXa2Je7EYjfo7jUsxAISmkcluxG6MJdUhk53yGiYh3dug2oeN+qgZE/tlEfP
-         D8Nw==
-X-Gm-Message-State: AOJu0Yzzs4OalM5k89OBfedMme1kA1qLC2iVYNNdDw+nNkwRL2OUizea
-	ub4ZLBmniuiJnkCHIV5gYwFmZJKqv5pbgXS3pkwcZMUhTUfhY+4gMtI=
-X-Gm-Gg: AZuq6aKw5GCuGR5glx257QrqB/leTFvqsXh7ur6zFTHUTCQ9syfsyvaogYVLVfxfwIF
-	tYgC0ifr/PQpO3BbFQlog+k5Bg0gSCO3ZanxO+lyvLRoG4fXdyMRDEl4GTYYLss2uhKMY03o2kU
-	SI4azBkQ2wA1vry4tCa/mFMxQZN+OCuD/rI2fIUfKkFskRch88eZZ3wxyhryZSE/F/++Hya57/c
-	gWGREa1/ld3qVmH3igZ9464MHFoLcw1FH6vfaOsj3/ln3Vw4J4qK7B0p84YTztjTW7RZYXdpjfc
-	bNSaAw0psKAnu/04TjBgncCYr1pY5LBZHaY/SDoRCXcEuZ/iO7khYDw0VYAjuDQk8iud126BNpg
-	zu6IfEf/HoXR0oEAnIscnfcD/llpQpQgfyPJXB31cyEydUM2x+8dOoIA4aTq7+HX6/kgI9JO7z1
-	+ZI+T/ysQL5Lg4SvAbyobnLhl0f5j0dbB3Jg==
-X-Received: by 2002:a05:620a:4505:b0:8c6:a723:415a with SMTP id af79cd13be357-8cb4081fa72mr2528164485a.11.1771499969148;
-        Thu, 19 Feb 2026 03:19:29 -0800 (PST)
-Received: from [127.0.0.1] ([20.55.13.164])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-8cb2b1c883dsm1988474485a.32.2026.02.19.03.19.28
+        d=1e100.net; s=20230601; t=1771521065; x=1772125865;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=dyrjZBaOYWnsTcDoFAVLra9VVv9NrS1xfuVC945Eoh4=;
+        b=OEsOwZ/cFhGwwxh+miJTqMTemVH3wwvq8CeevQ754UMC2bpjViWt5JYp2wGmm5fIgq
+         6Zu9GxoDfXAC1ud7Q0H+oIrWvvYlP4UJ5Ien8VLGb8a45a3XS62vB94gl0TON7CZLHly
+         gE0wXv0Cg3dgo5kmVeF0U3mTll3nc5aGAScvnj0VHudOczBTLOOqWWed/w04diHqNqCW
+         dZCQ3vhysmzEvORZu3NMjmHUpB2WGWOr6XEB/Ne5lPv723XtGYOaG7IZIGS33BuUhYKH
+         HnjFIClTYUMy9PK3CXWw18DCrQsz4yxqLH6xxJUBXNnJbhK+R+0rarw6WrXXowsBiWkF
+         PT2g==
+X-Forwarded-Encrypted: i=1; AJvYcCWXm79e2+EuYnraDDf6vuFfS91scwd4DC3ifkby2uynDKZI+4r19oXa1WutS35o/O+Z+ZBZEA==@lists.linux.dev
+X-Gm-Message-State: AOJu0YyvBymaRlJExt5vCqc8kmErLEcRRFuhprcLqkimG3A42Mp54msr
+	D0FRDNiC8tSSKJDnuUAsf1ZFCdLkcOuSJ++qNQkrjCy4Qh8pzkjCEb7ZEP0REmz9upg=
+X-Gm-Gg: AZuq6aKxiW14qqDvQcsBdcqrfTCg6fPyEzZCHpzbHY3Z+mx9y5lP95n9qw4hL61nMwu
+	+RE7BiVUGi38aJoa+lUGspMap4PMsbxkU740iSTx7k2ciGqMFSv4qezm0luHo6iMjfJaKbytOR6
+	5fYv7a6BK7hMly/p21gGvoOp3mYhzr0Tf6PVHbVxuv+OPP7MklpP82iqPWvIavwwKyZjfbMZeMu
+	ZYF/sBbG1aA/hBcEXO6WukgvSdljHbP+eRoltMr+5iq1/PzYRVZId0dM93EZDX8jcYV7eIxlYAU
+	3V9n3o67f012gT1vr24CnOmp9TLHydYuwN+ffaQEtR2dT0Le2VFYDYm6OkPwntjXtL0MnFeGsvN
+	3I8owE8YtPDxTSWaHckCnP3K+Km+8lfGhUJq2ftDDsc8D6i/HT9QSF4n/4IuHqKKsYj4Oxa9/hF
+	Y5Ol741nYhcD73lUjCkyYWR09j1TI3ymyhAZV1Ldmuk4JYA6P98PSdcUYZo8wugVPw
+X-Received: by 2002:a05:6871:7508:b0:3fa:df3:b198 with SMTP id 586e51a60fabf-40ef3b771famr12402059fac.3.1771521064925;
+        Thu, 19 Feb 2026 09:11:04 -0800 (PST)
+Received: from phoenix.local (204-195-96-226.wavecable.com. [204.195.96.226])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-40eaf178c1fsm24492608fac.17.2026.02.19.09.11.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Feb 2026 03:19:28 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+        Thu, 19 Feb 2026 09:11:04 -0800 (PST)
+Date: Thu, 19 Feb 2026 09:11:01 -0800
+From: Stephen Hemminger <stephen@networkplumber.org>
 To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20260219101033.716403-2-matttbe@kernel.org>
-References: <20260219101033.716403-2-matttbe@kernel.org>
-Subject: Re: [PATCH mptcp-net] selftests: mptcp: join: check removing
- signal+subflow endp
-Message-ID: <e3c2c6c5-8479-c855-14c2-b8304d60d19b@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 19 Feb 2026 11:19:28 +0000
+Cc: David Ahern <dsahern@kernel.org>, netdev@vger.kernel.org,
+ mptcp@lists.linux.dev
+Subject: Re: [PATCH iproute2 1/2] mptcp: monitor: also show iface name
+Message-ID: <20260219091101.551377a9@phoenix.local>
+In-Reply-To: <a44c1f27-e9f0-4f33-beda-e5f611197e35@kernel.org>
+References: <20260211-mptcp-color-v1-0-01832777611d@kernel.org>
+ <20260211-mptcp-color-v1-1-01832777611d@kernel.org>
+ <20260218103155.486d20ee@phoenix.local>
+ <a44c1f27-e9f0-4f33-beda-e5f611197e35@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Matthieu,
+On Wed, 18 Feb 2026 20:03:20 +0100
+Matthieu Baerts <matttbe@kernel.org> wrote:
 
-Thank you for your modifications, that's great!
+> Hi Stephen,
+> 
+> Thank you for the review!
+> 
+> On 18/02/2026 19:31, Stephen Hemminger wrote:
+> > On Wed, 11 Feb 2026 13:03:17 +0100
+> > "Matthieu Baerts (NGI0)" <matttbe@kernel.org> wrote:
+> >   
+> >> @@ -530,7 +541,7 @@ static int mptcp_monitor_msg(struct rtnl_ctrl_data *ctrl,
+> >>  	if (tb[MPTCP_ATTR_TIMEOUT])
+> >>  		printf(" timeout=%u", rta_getattr_u32(tb[MPTCP_ATTR_TIMEOUT]));
+> >>  	if (tb[MPTCP_ATTR_IF_IDX])
+> >> -		printf(" ifindex=%d", rta_getattr_s32(tb[MPTCP_ATTR_IF_IDX]));
+> >> +		print_iface(rta_getattr_s32(tb[MPTCP_ATTR_IF_IDX]));
+> >>  	if (tb[MPTCP_ATTR_RESET_REASON])
+> >>  		printf(" reset_reason=%u", rta_getattr_u32(tb[MPTCP_ATTR_RESET_REASON]));
+> >>  	if (tb[MPTCP_ATTR_RESET_FLAGS])  
+> > 
+> > 
+> > The whole monitor message output format here is divergent from what other
+> > iproute2 commands do. If you look at ip monitor there are no '=' signs
+> > in the output.  
+> 
+> Indeed, the output is different from 'ip monitor' (but similar to 'ip
+> ioam monitor').
 
-Our CI did some validations and here is its report:
+IMHO ioam monitor is outlier as well. Should have seen that during review.
 
-- KVM Validation: normal (except selftest_mptcp_join): Unstable: 1 failed =
-test(s): selftest_mptcp_connect - Notice: Call Traces at boot time, =
-rebooted and continued =F0=9F=94=B4
-- KVM Validation: normal (only =
-selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except =
-selftest_mptcp_join): Unstable: 1 failed test(s): packetdrill_dss =
-=F0=9F=94=B4
-- KVM Validation: debug (only selftest_mptcp_join): Success! =
-=E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =
-=E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =
-=E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
-uns/22177895301
+> 
+> > Please fix the whole function.  
+> 
+> Doing that would likely break scripts parsing 'ip mptcp monitor' output,
+> are you sure we should still change this output format?
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/970da72339eb
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1055468
-
-
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+I doubt scripts are parsing this weird format. That is one more reason for JSON
