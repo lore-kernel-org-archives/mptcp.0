@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31E8332FA21
-	for <mptcp@lists.linux.dev>; Fri, 20 Feb 2026 11:26:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEACD32FA1B
+	for <mptcp@lists.linux.dev>; Fri, 20 Feb 2026 11:26:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771586763; cv=none; b=UZAbrytqVTy3b03LCKdIcJx9Hv9KVXdtztpA/Bt0D0rNw7m0h9Vi/Eqg4QthNL/oFJS73t5a6Zxe3JIRCZ8txAtiKvYanyMplnptYzZPc5J22kEHg62MoyNhN7WSyhY/YWhW883UOG2VJCyrWCPfLJjFbp6zbN1USjoe2bKOOyc=
+	t=1771586763; cv=none; b=JONQH5jBv03MHntgqwldXCEtsuZAJRIbrM4Z0s8HvwbMjlCC1iIoQAKeHSSlaWR4QIQXAhNDBiXsXCerTYGKpvBDQNP9bETVunmGSbyGp9BS4RHca2bGJfkkgXqfzsn9uTTuDiOG7REuHtxaeK2M61Ptc2gaHiwH0vm7p/s8ZyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1771586763; c=relaxed/simple;
-	bh=9yHv6I9m4AAyY9fYg8kP6keOd5BcpwippxVuLsnhfoc=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=POfDVGBzZXYyjktWVuPkvWM5rPdxRmePt1a6+BMCnGvpOp727QWGenJ53I1J+7ucVTzNLOIDyg6cjNgtBJH0KF4o0RdO4qvR7T58cyOEoqles09HAdWDuTlF+YKizZ80iGvyQ72bI5Eaqc2LfkZg20+nU7wIQdh213jFgM31mBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=go3rUhJO; arc=none smtp.client-ip=10.30.226.201
+	bh=1s2cb4OZKRQpmugLeWzPD2pp5/O6/J+IgRSyDn4fk54=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=fJlfQcEAIhWcFrKPHcc0KHFeJjcVkCFA6HFReHzokx8w92hVjEHTcAFJqI3cS/iPtzWOKFg4qtm8G77avH9hHEmSk/zuYhtgo1IG9eBauE6y9Nc85ngv9ENpuLfubyP7ArvQ6SnIRFu8ooYI0WSTIr5pVLAwluFRy0YGVeulkTg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F+wM7s3P; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="go3rUhJO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5526DC116C6;
-	Fri, 20 Feb 2026 11:26:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F+wM7s3P"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40DE5C19425;
+	Fri, 20 Feb 2026 11:26:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771586762;
-	bh=9yHv6I9m4AAyY9fYg8kP6keOd5BcpwippxVuLsnhfoc=;
-	h=From:Subject:Date:To:Cc:From;
-	b=go3rUhJOdZGM9yQT4Hin/dZxXB5Ha26+JkHsOtRoF9S9yXDcPZbQ5IOWrmw3FsF0B
-	 bLetvMdr/3dldTfugtWmDMYBMWorsVoWOmqGiEN8LSnlXBk7XtUkceway4tb6W9U2c
-	 Znu4ibc3RgerGc9vaNEZwW3RUDymZ70CGCYSoFT9ZZkZGQLhBIHL7Rb5Gln66Nbh6R
-	 eRrSXBo7biraegysC5S0+i2XiI1uwnLDrKc9D7Fu7Cvog+mNOQ0q3TbXEXdU8ttnEK
-	 /fIpSgRhE42F6bp9SsFl3QhKVd3VStPoUO1MHN64aeldV1bVIk9WABBPDySmQCapoK
-	 7FlEZx1uQkhFA==
+	s=k20201202; t=1771586763;
+	bh=1s2cb4OZKRQpmugLeWzPD2pp5/O6/J+IgRSyDn4fk54=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=F+wM7s3PbTMKGawIWZ7yJqbnj/4gs7XyFZ9MY0Ll41XYuZI263vKgzb8L3gT8zitN
+	 KgnWuG9uXgwUpHNmLmogpM8dd+QeCnitQye1xZ2UnooMObiVZB7xlbCyDMrb2n7myk
+	 zBB8QvGW8YbN+lbeo28TDBaSbdUzNnGTyHJzg5WpiA8t40fnM8Jruk58A5y21JzT0q
+	 HYG2Og7tZdHdPQTzsfOzvot1+xKZwGFXx4dUFqAEto+MCPnL9KYxBPMkoPRZzyaW62
+	 cCGHxfP1y+ibUxPX7IpLHmAh8fUL4J9QXdaC/vA8foGew85Qec1Xdb5IxdqIifk1ky
+	 5dy71uBQvHdlg==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Subject: [PATCH mptcp-net v2 0/2] mptcp: pm: avoid sending RM_ADDR over the
+Date: Fri, 20 Feb 2026 12:25:51 +0100
+Subject: [PATCH mptcp-net v2 1/2] mptcp: pm: avoid sending RM_ADDR over
  same subflow
-Date: Fri, 20 Feb 2026 12:25:50 +0100
-Message-Id: <20260220-mptcp-issue-612-v2-0-089684a6edcb@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,49 +38,138 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAL9EmGkC/3WNwQ7CIBBEf6XZs2sAFcWT/2F6MGVpNyoQqETT8
- O+SevY4mTdvFsiUmDKcuwUSFc4cfAtq08Ew3fxIyLZlUEJpoaTBZ5yHiJzzi1BLhdbshTk4Ka0
- gaKuYyPF7NV7hB3uaoW/VxHkO6bN+FbkCf7VFosDTzpAS1mhHx8udkqfHNqQR+lrrF684yLy6A
- AAA
-X-Change-ID: 20260219-mptcp-issue-612-d94095f11d0e
+Message-Id: <20260220-mptcp-issue-612-v2-1-089684a6edcb@kernel.org>
+References: <20260220-mptcp-issue-612-v2-0-089684a6edcb@kernel.org>
+In-Reply-To: <20260220-mptcp-issue-612-v2-0-089684a6edcb@kernel.org>
 To: MPTCP Upstream <mptcp@lists.linux.dev>
 Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=998; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=9yHv6I9m4AAyY9fYg8kP6keOd5BcpwippxVuLsnhfoc=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDJnuJw46zddQur39xdFTTfz5J5ubrNhqU916/Z4+vT8k
- SNJHy5wd5SyMIhxMciKKbJIt0Xmz3xexVvi5WcBM4eVCWQIAxenAEykcTbD/8T0qKqVgkZrfgaV
- qgnsmNH9ccIfK+Xq6+c+bb35pWe5qy8jw3fZ7SxhnPvqwh5MNT54RXb28wqO684n11r4r7r//Xj
- JLGYA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3761; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=1s2cb4OZKRQpmugLeWzPD2pp5/O6/J+IgRSyDn4fk54=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDJnuJy4qn14Fb8046S8/1Z5kVpGgRpRTG/ulj0tdvc5k
+ 7Xgp/S2jlIWBjEuBlkxRRbptsj8mc+reEu8/Cxg5rAygQxh4OIUgIk0fGFk2HCzKPCH/qvUqCVh
+ L+reiUqy+X1OjTphM9M3fMpp78uLIhkZDnjUJ8ZWzZSfsrylLSb4rfq3ZX33znkyrClrLZfZbKH
+ HAQA=
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-This should close the issue 612 reported by Frank Lorenz:
+RM_ADDR are sent over an active subflow, the first one in the subflows
+list. There is then a high chance the initial subflow is picked. With
+the in-kernel PM, when an endpoint is removed, a RM_ADDR is sent, then
+linked subflows are closed. This is done for each active MPTCP
+connection.
 
-- Patch 1: avoid sending RM_ADDR over the same subflow as the one going
-  to be removed.
+MPTCP endpoints are likely removed because the attached network is no
+longer available or usable. In this case, it is better to avoid sending
+this RM_ADDR over the subflow that is going to be removed, but prefer
+sending it over another active and non stale subflow, if any.
 
-- Patch 2: validate that in the MPTCP Join selftest.
+This modification avoids situations where the other end is not notified
+when a subflow is no longer usable: typically when the endpoint linked
+to the initial subflow is removed, especially on the server side.
 
+Fixes: 8dd5efb1f91b ("mptcp: send ack for rm_addr")
+Reported-by: Frank Lorenz
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/612
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
-Changes in v2:
-- Patch 1: small refactoring to reduce the indentation level
-- Link to v1: https://patch.msgid.link/20260219-mptcp-issue-612-v1-0-839e20d96fe7@kernel.org
+Note: in my initial version, I only used one alternative for both
+"stale" and "same id" subflows. I guess it is better to send over the
+same subflow than a stale one, hence the priority, but there are then a
+few more lines of code (but still readable, I think). To be discussed.
 
+v2:
+ - reduce one indentation level and s/rlist/rm_list/g
 ---
-Matthieu Baerts (NGI0) (2):
-      mptcp: pm: avoid sending RM_ADDR over same subflow
-      selftests: mptcp: join: check RM_ADDR not sent over same subflow
+ net/mptcp/pm.c | 55 +++++++++++++++++++++++++++++++++++++++++++------------
+ 1 file changed, 43 insertions(+), 12 deletions(-)
 
- net/mptcp/pm.c                                  | 55 +++++++++++++++++++------
- tools/testing/selftests/net/mptcp/mptcp_join.sh | 36 ++++++++++++++++
- 2 files changed, 79 insertions(+), 12 deletions(-)
----
-base-commit: d81a02a671623999f5ec963b73181d845c665747
-change-id: 20260219-mptcp-issue-612-d94095f11d0e
+diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+index 8206b0fd2377..daef91e597ae 100644
+--- a/net/mptcp/pm.c
++++ b/net/mptcp/pm.c
+@@ -212,9 +212,24 @@ void mptcp_pm_send_ack(struct mptcp_sock *msk,
+ 	spin_lock_bh(&msk->pm.lock);
+ }
+ 
+-void mptcp_pm_addr_send_ack(struct mptcp_sock *msk)
++static bool subflow_in_rm_list(const struct mptcp_subflow_context *subflow,
++			       const struct mptcp_rm_list *rm_list)
+ {
+-	struct mptcp_subflow_context *subflow, *alt = NULL;
++	u8 i, id = subflow_get_local_id(subflow);
++
++	for (i = 0; i < rm_list->nr; i++) {
++		if (rm_list->ids[i] == id)
++			return true;
++	}
++
++	return false;
++}
++
++static void
++mptcp_pm_addr_send_ack_avoid_list(struct mptcp_sock *msk,
++				  const struct mptcp_rm_list *rm_list)
++{
++	struct mptcp_subflow_context *subflow, *stale = NULL, *same_id = NULL;
+ 
+ 	msk_owned_by_me(msk);
+ 	lockdep_assert_held(&msk->pm.lock);
+@@ -224,19 +239,35 @@ void mptcp_pm_addr_send_ack(struct mptcp_sock *msk)
+ 		return;
+ 
+ 	mptcp_for_each_subflow(msk, subflow) {
+-		if (__mptcp_subflow_active(subflow)) {
+-			if (!subflow->stale) {
+-				mptcp_pm_send_ack(msk, subflow, false, false);
+-				return;
+-			}
++		if (!__mptcp_subflow_active(subflow))
++			continue;
+ 
+-			if (!alt)
+-				alt = subflow;
++		if (unlikely(subflow->stale)) {
++			if (!stale)
++				stale = subflow;
++		} else if (unlikely(rm_list &&
++				    subflow_in_rm_list(subflow, rm_list))) {
++			if (!same_id)
++				same_id = subflow;
++		} else {
++			goto send_ack;
+ 		}
+ 	}
+ 
+-	if (alt)
+-		mptcp_pm_send_ack(msk, alt, false, false);
++	if (same_id)
++		subflow = same_id;
++	else if (stale)
++		subflow = stale;
++	else
++		return;
++
++send_ack:
++	mptcp_pm_send_ack(msk, subflow, false, false);
++}
++
++void mptcp_pm_addr_send_ack(struct mptcp_sock *msk)
++{
++	mptcp_pm_addr_send_ack_avoid_list(msk, NULL);
+ }
+ 
+ int mptcp_pm_mp_prio_send_ack(struct mptcp_sock *msk,
+@@ -470,7 +501,7 @@ int mptcp_pm_remove_addr(struct mptcp_sock *msk, const struct mptcp_rm_list *rm_
+ 	msk->pm.rm_list_tx = *rm_list;
+ 	rm_addr |= BIT(MPTCP_RM_ADDR_SIGNAL);
+ 	WRITE_ONCE(msk->pm.addr_signal, rm_addr);
+-	mptcp_pm_addr_send_ack(msk);
++	mptcp_pm_addr_send_ack_avoid_list(msk, rm_list);
+ 	return 0;
+ }
+ 
 
-Best regards,
 -- 
-Matthieu Baerts (NGI0) <matttbe@kernel.org>
+2.51.0
 
