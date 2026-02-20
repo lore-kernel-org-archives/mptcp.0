@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B40D2E7BB4;
-	Fri, 20 Feb 2026 18:54:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38D7E366DAB;
+	Fri, 20 Feb 2026 18:54:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771613656; cv=none; b=G6ISSaDb7u/zwqdbvKB5Mgu04YWR70BwaNFpw7edGziYCBFJ5cXK89TXxkDzXU5IVYtZedcmDulhUtI0jZbWsvk2UOUMCZhBIvKJYnAm4P4q8UN/PFPMGnA5/7d0cVZumsO2MVXxfCkXPlrITKvURo3tyuGxS4tHeFjdDSpTHyo=
+	t=1771613657; cv=none; b=si0dTmjsb/UHdE0iNsLqSdz3Pgcj+iUP9jc5/ALOQNIJUbz2fWjltu55s3mYPDZurLdSvbnvKp85UR2LZrYzhislqofHRa0+ROky8RkgPGtlRE0o5beJEMfkuX0cW9u6HSEWXm4bdAyG9kujzvlg1uUA8iZvc0CltEc/BEnqde8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771613656; c=relaxed/simple;
-	bh=hFetM3+clZO7c6XVenc/oELmwqh4574Kor3LRRxJ5P8=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Q2MwzhbBEKxZt4Edm54Bq69/bhFk7zIBRaUaJTn3sanKvlwTpmVkTEbt9Br0wEYrTVkIK8LnDQ3jARpgI+xhirp4u0zZJL/uiNq0nJx/gBgS5jpZchNL6P4853+m3e50EMV68g7s3bP2CY3/S6Nni1iAGynIKs9zTtK/XDfZ4O0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RTvfJTk1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1771613657; c=relaxed/simple;
+	bh=VT10bXnZOZstjp5Z5qwmfPi+JX233sJrsM9ySP83Dxo=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=Ukr5VCu5vz6XZnbhddV7hBx8ar6Txmp94nHUKX+NYDqAP3qYJwozVSpSFgGajeGvNPsA9n85G3+3AmeH9ZVPlzhJjMoQ9I5XZD5SJVnBnTnsIBKqQvGtOgfkgYODAfHAfHvIOiUbtgyx7H5WRbjC1tOzmlqbysBH8XSy0OZHaj8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hf5h3Tz6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RTvfJTk1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF015C116C6;
-	Fri, 20 Feb 2026 18:54:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hf5h3Tz6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CD83C19425;
+	Fri, 20 Feb 2026 18:54:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771613655;
-	bh=hFetM3+clZO7c6XVenc/oELmwqh4574Kor3LRRxJ5P8=;
-	h=From:Subject:Date:To:Cc:From;
-	b=RTvfJTk1rQYRuEpVer6/q4yxaHfNYY0VPgJOFzjP4R3WvhN4JPipUtLnD0im5TZeW
-	 77oOcZpzbgqa4Eh9RRjUqAJ0V5EbdTlYKm8876xLhxbk61NNiKvtZ2irWSF3nRr87Y
-	 RjKuOeUUQCJCuSDTzOoxC82GU7LssWDoIi4wAqkIdaWrCMUjJ4kXs7igijfXKYXK4Y
-	 0O8by0WXxRCQF/9IPXRCo2MmFbwX29GC6Btqoaj18YE4cV3NTp9sS43PW6oJWk0QZn
-	 h3Jq+J6+mcDp9uaOt6q2LTa6s52f7BvKQfEa2Oy1WqIyZM5ZU5Ju725FP5oE5vBcru
-	 x1sVR7pojOLYQ==
+	s=k20201202; t=1771613657;
+	bh=VT10bXnZOZstjp5Z5qwmfPi+JX233sJrsM9ySP83Dxo=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=hf5h3Tz6+sMQQLjbFBrnQcBFWC0SlXNRV7/ZmwKPx8SdCo0uH/vdIRzBc+DT7Pp9y
+	 a2wEEoZbbUip647+RucobHmgI0g9IMZ/HGMS/RpnagkTkdkJTv3cadSJDXLT/82NPN
+	 vGCqyZG4HARi3x0dxnEPIWJWhXeEdc3qI3Uiq5T629p4i0Gf82jZJlnaGtnD4dKw6I
+	 +dePGqXTblVj1c4tPrky48oGqUZWwxn8WV8pNx2E5oGPZg6XD9BBSY32aDq8gOM7SB
+	 b6o0Iq/iDhGrrSbUQGreVkxTBpb5VOwx4Vg4OSa/1dvT5H6lv0OTaUHerF/wFjWeDV
+	 5F5u47e+m3qMg==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Subject: [PATCH iproute2-next 0/3] ip mptcp monitor: add JSON support
-Date: Fri, 20 Feb 2026 19:54:00 +0100
-Message-Id: <20260220-ipr-monitor-json-v1-0-eb4b0d5f7820@kernel.org>
+Date: Fri, 20 Feb 2026 19:54:01 +0100
+Subject: [PATCH iproute2-next 1/3] mptcp: uniform stream closure
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -37,49 +37,60 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAMitmGkC/x2MywqDQAwAf0VyNrAbX9BfKR7ExjZCE8muIoj/3
- qXHgZm5ILELJ3hUFzgfksS0QKwrmD+TvhnlVRgoUB+IAsrm+DWVbI5rMsXYDU0zxI7aOULJNud
- Fzv/yCcW2PTOh8plhvO8fAACp73EAAAA=
-X-Change-ID: 20260220-ipr-monitor-json-1573371524c1
+Message-Id: <20260220-ipr-monitor-json-v1-1-eb4b0d5f7820@kernel.org>
+References: <20260220-ipr-monitor-json-v1-0-eb4b0d5f7820@kernel.org>
+In-Reply-To: <20260220-ipr-monitor-json-v1-0-eb4b0d5f7820@kernel.org>
 To: Stephen Hemminger <stephen@networkplumber.org>, 
  David Ahern <dsahern@kernel.org>
 Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, 
  "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=858; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=hFetM3+clZO7c6XVenc/oELmwqh4574Kor3LRRxJ5P8=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDJnrL080Zqju0ll008RTsajE5YnRla4rDKfuj37V/y6d
- zeW/dl1oKOUhUGMi0FWTJFFui0yf+bzKt4SLz8LmDmsTCBDGLg4BWAiu34x/PdcxLDBcMq5X/WH
- jE+t2FozyyZrtkWOz61X/mXtbGXn7GMZ/hmvsDhneEOC3YbfTjbY9GT+hJuJu+SzJ3qkrJvZnvT
- wFC8A
+X-Developer-Signature: v=1; a=openpgp-sha256; l=917; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=VT10bXnZOZstjp5Z5qwmfPi+JX233sJrsM9ySP83Dxo=;
+ b=kA0DAAoWfCLwwvNHCpcByyZiAGmYrdTIGeRqWFY3yOeED5a6jA9m2fRAjZwlfr2z6xRlfcuMM
+ Yh1BAAWCgAdFiEEG4ZZb5nneg10Sk44fCLwwvNHCpcFAmmYrdQACgkQfCLwwvNHCpf31AEA9+5g
+ w8WnKnsu/TFb5KAEF+wDUT70Z2ruCYR1aNIENfoA/i2pjaRb0MEYKlyQKCzT0DLv1mMUTqWD40q
+ ilEs9444L
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-With this series, the command 'ip [-t[s]] mptcp monitor' produces an
-output with the JSON format.
-
-- Patch 1: a small refactoring to uniform the code.
-
-- Patch 2: add JSON support in print_timestamp() helper.
-
-- Patch 3: add JSON support to 'ip mptcp monitor' as requested by
-  Stephen.
+Use print_nl() instead of print_string(), close the json object, then flush
+the stream to flush the end of the JSON object ASAP.
 
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
-Matthieu Baerts (NGI0) (3):
-      mptcp: uniform stream closure
-      utils: timestamp: add JSON support
-      mptcp: monitor: add JSON support
+ ip/ipmptcp.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
- ip/ipmptcp.c | 96 +++++++++++++++++++++++++++++++++++++++++-------------------
- lib/utils.c  | 19 ++++++++----
- 2 files changed, 80 insertions(+), 35 deletions(-)
----
-base-commit: f120cdb35da76ca99932d0428a0917bd01a843da
-change-id: 20260220-ipr-monitor-json-1573371524c1
+diff --git a/ip/ipmptcp.c b/ip/ipmptcp.c
+index ec9ef62a..18ec05a8 100644
+--- a/ip/ipmptcp.c
++++ b/ip/ipmptcp.c
+@@ -273,8 +273,8 @@ static int print_mptcp_addrinfo(struct rtattr *addrinfo)
+ 		}
+ 	}
+ 
++	print_nl();
+ 	close_json_object();
+-	print_string(PRINT_FP, NULL, "\n", NULL);
+ 	fflush(stdout);
+ 
+ 	return 0;
+@@ -426,9 +426,11 @@ static int print_mptcp_limit(struct nlmsghdr *n, void *arg)
+ 
+ 		print_uint(PRINT_ANY, "subflows", "subflows %d ", val);
+ 	}
+-	print_string(PRINT_FP, NULL, "%s", "\n");
+-	fflush(stdout);
++
++	print_nl();
+ 	close_json_object();
++	fflush(stdout);
++
+ 	return 0;
+ }
+ 
 
-Best regards,
 -- 
-Matthieu Baerts (NGI0) <matttbe@kernel.org>
+2.51.0
 
