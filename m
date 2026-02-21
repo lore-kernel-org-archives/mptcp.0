@@ -1,250 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f43.google.com (mail-ot1-f43.google.com [209.85.210.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAD8E309DDC;
-	Fri, 20 Feb 2026 18:54:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFDDC274FD3
+	for <mptcp@lists.linux.dev>; Sat, 21 Feb 2026 05:23:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771613659; cv=none; b=qwKD2tDP9JH2K20LMRpwM+K/O07TBiMcupXfifIf+Gw+mlczwi+58x52f6uRL/otZ+y5bU6NY46CqmkQJLxw71Sqi9FdB0xA6i5n4l9CdOWd9w9rCFNi5CQRJbKMocGgfx+3M9OuV2/fo38KteSPpHozPIEZ9k7tVZ8tvJWMfxw=
+	t=1771651427; cv=none; b=GflXOFrzs/QFNzkl+0lYxeofGs3fWL/xAxszUUyGGd/mxqBjt8s/lWLQe20W0M+6j+B2FvssS0sg5QKVdRzoJ9gAfJzbKIJlA7dYO3R8fnhFUQ25zObg91a00d3zKMUH2da7+6v+V6pgzuHZJl7+j4nMgetUjESE5d2T2cBZLUU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771613659; c=relaxed/simple;
-	bh=kZ7T4vbLUXDKQ17IlLgmTMSibj0aZOJgM0z313YivSY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Eb/MG3dXUkwgSNjh9FzPTx+4YUdBRRXd1XLN4bxgq4fB3bZ8cf8LdCKUZxWiNVBu+Cfm0Y2/5OveajYKQWv2Y4Zw5Rt9Row7e55ekdiMBZ/hNzHiz8fXVrqnLBTW4WKsMBomsqgXuc3hstvIA9y2o9fPsW9WLrbU9c+VN7R4Vec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HuUAWBP8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1771651427; c=relaxed/simple;
+	bh=p/xtHdMPk1pR+VdyNY1pDhFYN4fePitbnyNh4l8YYbE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=aiJkNRa1AgkHIRY9qSRfWULihiveDaAT33e+XfBT+2kbxWy6ZPGmCiDfRRygQPaEUuBUaG8AmL6tIeQaiR/Mc4dMzEucTM8R9mGLFEVjHMIffmCweVhCtDetKm11AhFJ0lkZIma72HXatwsutq2VXO+q2ycdSA/DANp/2o2l/ng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=networkplumber.org; spf=pass smtp.mailfrom=networkplumber.org; dkim=pass (2048-bit key) header.d=networkplumber-org.20230601.gappssmtp.com header.i=@networkplumber-org.20230601.gappssmtp.com header.b=KcYFYHaB; arc=none smtp.client-ip=209.85.210.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=networkplumber.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=networkplumber.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HuUAWBP8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F30BC19424;
-	Fri, 20 Feb 2026 18:54:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771613659;
-	bh=kZ7T4vbLUXDKQ17IlLgmTMSibj0aZOJgM0z313YivSY=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=HuUAWBP880lAmefrMpf0L+bo/05NRCNZoqPjqnfyIsFrFIgAWo1QIIR0AVLUxjc8W
-	 xVARvpO/R+amslmMVdxEzkPKIL37vgjAH2DL1sK+ylX3CEQOko6X/cci0f5hs0Htax
-	 STQt3l6vZNfAvm/CPY7HQCL1h4s1y86ihVofcdhXd/FfiHwuuajhx6j1VJ9U0pPqnV
-	 MclrfGQ+QhSAVP1OZa1FyKQ+FX17siGhzOI6QQF3s4F23r+kVO/0n/edM9p3FtwXON
-	 Kpd1mXi6jO+HcgkcrURhKot5I2JJWYXKVy2hTvTO5Rwaltl7nXqB7FDDH0E1fGi3nu
-	 pQf1wGlnqzxrw==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Fri, 20 Feb 2026 19:54:03 +0100
-Subject: [PATCH iproute2-next 3/3] mptcp: monitor: add JSON support
+	dkim=pass (2048-bit key) header.d=networkplumber-org.20230601.gappssmtp.com header.i=@networkplumber-org.20230601.gappssmtp.com header.b="KcYFYHaB"
+Received: by mail-ot1-f43.google.com with SMTP id 46e09a7af769-7d4c65d772cso2526708a34.1
+        for <mptcp@lists.linux.dev>; Fri, 20 Feb 2026 21:23:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=networkplumber-org.20230601.gappssmtp.com; s=20230601; t=1771651424; x=1772256224; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6Pg2SfmNcjcuUaWT9UVC8V53BPdNDRsv1m5oJtLpHbc=;
+        b=KcYFYHaBd3EJ9N1H0Edaazjs9gup49oaRQdo7SZE8FPxmFpL3peFylSTGKqhshRo7s
+         OzRMahSZjbVmnohLebR9ardrl755aRuU9atlDlz16voKhYU/XrNdBeKARHaVpkrVnikp
+         gHUGgFfhV896+0UQ8bA/uM5lHrMNPz6TXypaPhIpYvVdMIM91q8KSUfqkEGwdPyyp9my
+         bAykhRM1KtisTLB01bHnlgzcIaHUQz8YHGxWqcQH/pG6NGNJ6ub6Xwut30qH9I6yCgNi
+         jotbEVmpPTl6pxCnrFAiDs1VjpdxP4r8DW7H9SkZVhKE2FGTuohL0YnSgdsRm3T5DXuJ
+         bCuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1771651424; x=1772256224;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=6Pg2SfmNcjcuUaWT9UVC8V53BPdNDRsv1m5oJtLpHbc=;
+        b=dFYHSPXKjBv4dIohY9jFWm0p4gLDazKXNUD0W5htdjZ6mfOc4XEXZBJcsZrmQAeLU5
+         vmSBM7x1jcnhFvMOfZCAkTFgsd52CneLWBYVzGkf1np9fIXozK237oOGNKZGgBGS31AF
+         nrdGEAhS7r5NQD0EQDGa65zTTsYxmcTaxOIOfCje5UeO1xVT5Dx6I3Ms1dhG7c7xcSm9
+         9IJxKsC+RqFbdIqAmRyY0n95IJnpreDot7WPFPhKgxk2wjxiNI3lm8uiMPlihRp/TdjK
+         GqhvfNWKz5GbFriYmPbp1fqx+13XcDuYaycKrgY/AiyIM2hQPCBAD8vmLAtqs7fePsPv
+         riug==
+X-Forwarded-Encrypted: i=1; AJvYcCWcXQ1v/s51B/oNk6p8PncQlRqYTZBmzWS5AFBQqIkU3VYiXmNIpLPOr5ST5nEWT5umoC73UA==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwCgibhmtgOCkJnLv7rH1i8aUkPx7V+KIlpHV4IKH5rIifdPew8
+	hCyZnBBruVcUAhQtcS4i9bbJk0XYDjes2NXoZKs4i/AW6JL1Zi4LxCl/korZ+E2ljXI=
+X-Gm-Gg: AZuq6aJTYUFud1A3qQDObVeGeE6NFpj1NGbHJzqoyvZpcHa0XGxZvIUM32KVuWFfeow
+	eUyQAYwG5ZJQaqCbnsbIa2XhFwLuBaiB8cG1/Es2QFt8WWDHM3/9vSUI1Nw4GhWbIeBT84jGzjv
+	w0DxF82sGGYw0zeK12c5rhLv7aswtUc5vjV+Yj/C4rKhsYZFX1pzWdxq0lyEbmyuZYb//qtYy/W
+	ybpzFPT0ixpE3RASYjcdJkzl+y6S0kogHt4DVZ5EmWA24NCeYtTMPUtdsiIPNL78xqNJT1tA8Eg
+	HtppIvBXDtRoGDXnj1TPG0VK4GqdCrDfCeZZGeLo8YqZBRYXVE1t43bLDyArFJj484wm/AQRd1d
+	Y5t/H2VW2WFq1zGKK1UmYV/FW39NzXkgm4XyEGvYJqGwfrV80rpBsWvD5oOuVB2KNcQ9d4N/oD4
+	kthvdYLT1Dw2NrXa5uwKt1+Y5t8iy4cW8imvkb1iE4MKRG9TVpjEGhm6QOUjAbvC+o7kgETPipf
+	QE=
+X-Received: by 2002:a05:6830:2aab:b0:7cb:125d:2a47 with SMTP id 46e09a7af769-7d52beb1751mr1373900a34.1.1771651424472;
+        Fri, 20 Feb 2026 21:23:44 -0800 (PST)
+Received: from phoenix.local (204-195-96-226.wavecable.com. [204.195.96.226])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7d52d04e0bbsm1473746a34.24.2026.02.20.21.23.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Feb 2026 21:23:44 -0800 (PST)
+Date: Fri, 20 Feb 2026 21:23:41 -0800
+From: Stephen Hemminger <stephen@networkplumber.org>
+To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Cc: David Ahern <dsahern@kernel.org>, netdev@vger.kernel.org,
+ mptcp@lists.linux.dev
+Subject: Re: [PATCH iproute2-next 3/3] mptcp: monitor: add JSON support
+Message-ID: <20260220212341.2481f496@phoenix.local>
+In-Reply-To: <20260220-ipr-monitor-json-v1-3-eb4b0d5f7820@kernel.org>
+References: <20260220-ipr-monitor-json-v1-0-eb4b0d5f7820@kernel.org>
+	<20260220-ipr-monitor-json-v1-3-eb4b0d5f7820@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260220-ipr-monitor-json-v1-3-eb4b0d5f7820@kernel.org>
-References: <20260220-ipr-monitor-json-v1-0-eb4b0d5f7820@kernel.org>
-In-Reply-To: <20260220-ipr-monitor-json-v1-0-eb4b0d5f7820@kernel.org>
-To: Stephen Hemminger <stephen@networkplumber.org>, 
- David Ahern <dsahern@kernel.org>
-Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, 
- "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6393; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=kZ7T4vbLUXDKQ17IlLgmTMSibj0aZOJgM0z313YivSY=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDJnrL3mKcsztbdixvRpW+50xbN+aPx2pzkqUjRr97oFQ
- ouEZXgdO0pZGMS4GGTFFFmk2yLzZz6v4i3x8rOAmcPKBDKEgYtTACbiv5aR4c9V2bgtpfcY+bIN
- yrw0mcUurZdTW3amkqHoxpq0CUntVxkZXj1eH+J9sdrTMXFie1KAv+zaDsUFapfrNk24r+uwmUG
- XCwA=
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-The command 'ip [-t[s]] mptcp monitor' now produces an output with the JSON
-format.
+On Fri, 20 Feb 2026 19:54:03 +0100
+"Matthieu Baerts (NGI0)" <matttbe@kernel.org> wrote:
 
-The previous text output has been preserved.
+> +static void sig_exit_json(int signo)
+> +{
+> +	delete_json_obj();
+> +	rtnl_close(&genl_rth);
+> +	exit(0);
+> +}
+> +
 
-The JSON support has been added thanks to the print_*() helpers. Note that
-it is also needed to add a signal handler to close the JSON and print the
-final ']' when stopping 'ip mptcp monitor' which can only be done via a
-SIGINT or a SIGTERM.
+Technically, none of these functions are signal safe.
 
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- ip/ipmptcp.c | 88 +++++++++++++++++++++++++++++++++++++++++-------------------
- 1 file changed, 61 insertions(+), 27 deletions(-)
-
-diff --git a/ip/ipmptcp.c b/ip/ipmptcp.c
-index 18ec05a8..87557998 100644
---- a/ip/ipmptcp.c
-+++ b/ip/ipmptcp.c
-@@ -2,6 +2,7 @@
- 
- #include <arpa/inet.h>
- #include <netinet/in.h>
-+#include <signal.h>
- #include <stdbool.h>
- #include <stdio.h>
- #include <stdlib.h>
-@@ -476,8 +477,9 @@ static void print_addr(const char *key, int af, struct rtattr *value)
- 	char str[INET6_ADDRSTRLEN];
- 
- 	if (inet_ntop(af, data, str, sizeof(str))) {
--		printf(" %s=", key);
--		color_fprintf(stdout, ifa_family_color(af), "%s", str);
-+		print_string(PRINT_FP, NULL, " %s=", key);
-+		print_color_string(PRINT_ANY, ifa_family_color(af), key, "%s",
-+				   str);
- 	}
- }
- 
-@@ -485,12 +487,13 @@ static void print_iface(int index)
- {
- 	const char *ifname;
- 
--	printf(" ifindex=%d", index);
-+	print_int(PRINT_ANY, "ifindex", " ifindex=%d", index);
- 
- 	ifname = index ? ll_index_to_name(index) : NULL;
- 	if (ifname) {
--		printf(" dev=");
--		color_fprintf(stdout, COLOR_IFNAME, "%s", ifname);
-+		print_string(PRINT_FP, NULL, " dev=", NULL);
-+		print_color_string(PRINT_ANY, COLOR_IFNAME, "dev", "%s",
-+				   ifname);
- 	}
- }
- 
-@@ -509,30 +512,34 @@ static int mptcp_monitor_msg(struct rtnl_ctrl_data *ctrl,
- 	if (n->nlmsg_type != genl_family)
- 		return 0;
- 
-+	open_json_object(NULL);
-+
- 	if (timestamp)
- 		print_timestamp(stdout);
- 
--	if (ghdr->cmd >= ARRAY_SIZE(event_to_str)) {
--		printf("[UNKNOWN %u]\n", ghdr->cmd);
-+	if (ghdr->cmd >= ARRAY_SIZE(event_to_str) ||
-+	    event_to_str[ghdr->cmd] == NULL) {
-+		char event[40];
-+
-+		snprintf(event, sizeof(event), "UNKNOWN %u", ghdr->cmd);
-+		print_string(PRINT_ANY, "event", "[%s]", event);
- 		goto out;
- 	}
- 
--	if (event_to_str[ghdr->cmd] == NULL) {
--		printf("[UNKNOWN %u]\n", ghdr->cmd);
--		goto out;
--	}
--
--	printf("[%16s]", event_to_str[ghdr->cmd]);
-+	print_string(PRINT_ANY, "event", "[%16s]", event_to_str[ghdr->cmd]);
- 
- 	parse_rtattr(tb, MPTCP_ATTR_MAX, (void *) ghdr + GENL_HDRLEN, len);
- 
- 	if (tb[MPTCP_ATTR_TOKEN])
--		printf(" token=%08x", rta_getattr_u32(tb[MPTCP_ATTR_TOKEN]));
-+		print_uint(PRINT_ANY, "token"," token=%08x",
-+			   rta_getattr_u32(tb[MPTCP_ATTR_TOKEN]));
- 
- 	if (tb[MPTCP_ATTR_REM_ID])
--		printf(" remid=%u", rta_getattr_u8(tb[MPTCP_ATTR_REM_ID]));
-+		print_uint(PRINT_ANY, "remid", " remid=%u",
-+			   rta_getattr_u8(tb[MPTCP_ATTR_REM_ID]));
- 	if (tb[MPTCP_ATTR_LOC_ID])
--		printf(" locid=%u", rta_getattr_u8(tb[MPTCP_ATTR_LOC_ID]));
-+		print_uint(PRINT_ANY, "locid", " locid=%u",
-+			   rta_getattr_u8(tb[MPTCP_ATTR_LOC_ID]));
- 
- 	if (tb[MPTCP_ATTR_SADDR4])
- 		print_addr("saddr4", AF_INET, tb[MPTCP_ATTR_SADDR4]);
-@@ -543,42 +550,60 @@ static int mptcp_monitor_msg(struct rtnl_ctrl_data *ctrl,
- 	if (tb[MPTCP_ATTR_DADDR6])
- 		print_addr("daddr6", AF_INET6, tb[MPTCP_ATTR_DADDR6]);
- 	if (tb[MPTCP_ATTR_SPORT])
--		printf(" sport=%u", rta_getattr_be16(tb[MPTCP_ATTR_SPORT]));
-+		print_uint(PRINT_ANY, "sport", " sport=%u",
-+			   rta_getattr_be16(tb[MPTCP_ATTR_SPORT]));
- 	if (tb[MPTCP_ATTR_DPORT])
--		printf(" dport=%u", rta_getattr_be16(tb[MPTCP_ATTR_DPORT]));
-+		print_uint(PRINT_ANY, "dport", " dport=%u",
-+			   rta_getattr_be16(tb[MPTCP_ATTR_DPORT]));
- 	if (tb[MPTCP_ATTR_BACKUP])
--		printf(" backup=%u", rta_getattr_u8(tb[MPTCP_ATTR_BACKUP]));
-+		print_uint(PRINT_ANY, "backup", " backup=%u",
-+			   rta_getattr_u8(tb[MPTCP_ATTR_BACKUP]));
- 	if (tb[MPTCP_ATTR_ERROR])
--		printf(" error=%u", rta_getattr_u8(tb[MPTCP_ATTR_ERROR]));
-+		print_uint(PRINT_ANY, "error", " error=%u",
-+			   rta_getattr_u8(tb[MPTCP_ATTR_ERROR]));
- 	if (tb[MPTCP_ATTR_TIMEOUT])
--		printf(" timeout=%u", rta_getattr_u32(tb[MPTCP_ATTR_TIMEOUT]));
-+		print_uint(PRINT_ANY, "timeout", " timeout=%u",
-+			   rta_getattr_u32(tb[MPTCP_ATTR_TIMEOUT]));
- 	if (tb[MPTCP_ATTR_IF_IDX])
- 		print_iface(rta_getattr_s32(tb[MPTCP_ATTR_IF_IDX]));
- 	if (tb[MPTCP_ATTR_RESET_REASON])
--		printf(" reset_reason=%u", rta_getattr_u32(tb[MPTCP_ATTR_RESET_REASON]));
-+		print_uint(PRINT_ANY, "reset_reason", " reset_reason=%u",
-+			   rta_getattr_u32(tb[MPTCP_ATTR_RESET_REASON]));
- 	if (tb[MPTCP_ATTR_RESET_FLAGS])
--		printf(" reset_flags=0x%x", rta_getattr_u32(tb[MPTCP_ATTR_RESET_FLAGS]));
-+		print_0xhex(PRINT_ANY, "reset_flags", " reset_flags=%#x",
-+			    rta_getattr_u32(tb[MPTCP_ATTR_RESET_FLAGS]));
- 
- 	if (tb[MPTCP_ATTR_FLAGS])
- 		flags = rta_getattr_u16(tb[MPTCP_ATTR_FLAGS]);
- 	if ((flags & MPTCP_PM_EV_FLAG_SERVER_SIDE) ||
- 	    (tb[MPTCP_ATTR_SERVER_SIDE] && rta_getattr_u8(tb[MPTCP_ATTR_SERVER_SIDE]))) {
- 		flags &= ~MPTCP_PM_EV_FLAG_SERVER_SIDE;
--		printf(" server_side");
-+		print_string(PRINT_FP, NULL, " server_side", NULL);
-+		print_bool(PRINT_JSON, "server_side", NULL, true);
- 	}
- 	if (flags & MPTCP_PM_EV_FLAG_DENY_JOIN_ID0) {
- 		flags &= ~MPTCP_PM_EV_FLAG_DENY_JOIN_ID0;
--		printf(" deny_join_id0");
-+		print_string(PRINT_FP, NULL, " deny_join_id0", NULL);
-+		print_bool(PRINT_JSON, "deny_join_id0", NULL, true);
- 	}
- 	if (flags) /* remaining bits */
--		printf(" flags=0x%x", flags);
-+		print_0xhex(PRINT_ANY, "flags", " flags=%#x", flags);
- 
--	puts("");
- out:
-+	print_nl();
-+	close_json_object();
- 	fflush(stdout);
-+
- 	return 0;
- }
- 
-+static void sig_exit_json(int signo)
-+{
-+	delete_json_obj();
-+	rtnl_close(&genl_rth);
-+	exit(0);
-+}
-+
- static int mptcp_monitor(void)
- {
- 	if (genl_add_mcast_grp(&genl_rth, genl_family, MPTCP_PM_EV_GRP_NAME) < 0) {
-@@ -586,6 +611,15 @@ static int mptcp_monitor(void)
- 		return 1;
- 	}
- 
-+	new_json_obj(json);
-+
-+	if (is_json_context()) {
-+		struct sigaction sa = { .sa_handler = sig_exit_json };
-+
-+		sigaction(SIGINT, &sa, NULL);
-+		sigaction(SIGTERM, &sa, NULL);
-+	}
-+
- 	if (rtnl_listen(&genl_rth, mptcp_monitor_msg, stdout) < 0)
- 		return 2;
- 
-
--- 
-2.51.0
-
+Maybe an atexit cleanup function, or on_exit, or destructor.
