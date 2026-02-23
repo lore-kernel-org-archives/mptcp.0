@@ -1,95 +1,130 @@
-Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01A7330BBB6
-	for <mptcp@lists.linux.dev>; Sat, 21 Feb 2026 05:39:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0A25156661;
+	Mon, 23 Feb 2026 13:20:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771652345; cv=none; b=tv2mbSSDDdRc+k1U+Xy5418HEE5XojtOV1ilK0VTiBCVY8LObumVUYf4yovS5kZ5L+zrd/tn9kgDa8Myd6eFymhKwYhGCIzIjWPBPnZlHEP7KyKRsqrhIAYof/y3CUVIb2MPWp8sX3tYGBIjoJplghBID6k9g3FZuU5TWk61bpk=
+	t=1771852836; cv=none; b=GnoIerkeQE6KYK/0rm7wXs3imtj9qiUxFUpF5Gt5uAhOODYmaf8MqVfcwXNXdVu3/nMu5ZG4U1+0LSY2jNmWow1YayKMzGEQ2HKh0SeUMlMl31h+m5wLhWcQZKNXMMoO5KTJlq+RZ6Zf87vQtjWPjNGWkzxRQC/jHUEAVINmD8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771652345; c=relaxed/simple;
-	bh=ahXtCAjLyzpktbzU9Uo5EQqnUb3w3OlwKLRRzTyTsfI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bUb4khY+7QVccGtQNYWdtkz43+qDE1bo4MWOBm521y3e6/YpyDcr3oCDQu85heHFhcq3OWp4+TBvO2xlEeyTf5ajcZKUPOZiewLFIBkdCoy1HkqsNKu5OdLBETZ5/YfVtk3+YR+JPW7No4YecyzqW3UB+Y/ZUkfBPW8+b0AQFIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=networkplumber.org; spf=pass smtp.mailfrom=networkplumber.org; dkim=pass (2048-bit key) header.d=networkplumber-org.20230601.gappssmtp.com header.i=@networkplumber-org.20230601.gappssmtp.com header.b=PPYQrqIL; arc=none smtp.client-ip=209.85.219.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=networkplumber.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=networkplumber.org
+	s=arc-20240116; t=1771852836; c=relaxed/simple;
+	bh=UM5uAas2+oPaEQtliTzSO+741krCLvx89znH8iLeZv8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=N2hW33LPU373KrvkB30C27Di04ICc33Yd6Gep9EQj2Bkn9y03P4VM0KL3TEzeuIk21mMYe1+s90sUd+0evW66oB1j+oxfuojb1yJMCa9f92FSE5v/3k5AJUHOR9/CQKzCvzyr1UmKPg+C6Mh0qB483KqFSmEuwBKS2sdo+EYeP4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TUjLNisP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=networkplumber-org.20230601.gappssmtp.com header.i=@networkplumber-org.20230601.gappssmtp.com header.b="PPYQrqIL"
-Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-897002b7576so34566656d6.3
-        for <mptcp@lists.linux.dev>; Fri, 20 Feb 2026 21:39:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=networkplumber-org.20230601.gappssmtp.com; s=20230601; t=1771652343; x=1772257143; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bCOEccdl1+Um0o8Qy8pjpdJNLvrpEJcLKiSSv8fk4VA=;
-        b=PPYQrqILk7/LMgs+smLEplpplqgXsShCc3QQkc3MXa8h9+jPEZvYjCGYnxcFdN8ymD
-         d0ouKGkpPJmiMGBauPSMemeY6DjxXDnSmYLPNzAzgLy0L2xbkbuf1LNUxXRkI8A9uL/e
-         L+NfkzaJSbO5aOVvvCrBvskq77x9kambjpOt+w6pd/S9qIRndgDmSjLdUd95OWl2pt05
-         OPYm20XwmokOX2Umt+96fTrU5gEDNqrwvfdAjWdy+n9S31HX6q9Segah647Jl6Mde08n
-         qWcAbG8EyGfyZfoF7fskZlRTNDg7Mr9GtTsQxK5vUtRin8Y1vGT9DyMN4DnGODho0j3S
-         ImGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771652343; x=1772257143;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=bCOEccdl1+Um0o8Qy8pjpdJNLvrpEJcLKiSSv8fk4VA=;
-        b=YPiZmkqGtTG9ywstVT3kda+LUIJ/m+Rhiui0O9DBeLM9xfXZ8I7xkwjOPdFJYsojuW
-         AkjQ8dcRWUjVTl8dinhjGIUSQSqKEqBRT/w0Fz4Gvh2VIu+MPBI5xAHegP8kRfbLtVy+
-         HLuzQVgYRRclNjI0zEf+bfApfieIv9uUnn+ZVRPpaA+Aj+p8sEydNVrXxE+HKFUMgNmY
-         MvbSCd27IziErDqRyijnV/8OFAy2fC7J82ypLhjylG9ONuEYdL/JhfWUdH3vdHR0sWY0
-         65NBTDNcgXumejyxarhNlwbWJR+WyIW0GP0sDfk/RI5FOVJGDNdb45+gwDpZpYXeNMqz
-         p/Wg==
-X-Forwarded-Encrypted: i=1; AJvYcCXDE+I4NTU2OtjZj0SY0vJHYZouF76qlYX3VntRYNHagQCv6/0SD/X4quRIvVS0Kkw+getRpA==@lists.linux.dev
-X-Gm-Message-State: AOJu0YyFNr34iqIrg74+Zc96yNNZpxvuL1VRe/4XM5+wZ8Lq2+CNIPY2
-	WwhIfjcWg4hfgyutSyrRSzwpVTY3E4eX5ix1G+kalAjtPM+o+qawOV0Ttgg8NPWRjBo=
-X-Gm-Gg: AZuq6aLfNjbTV/Dv+Qb8Bokw2eW4v/hcM+7Nds14sVEaZ/fF1wJCqNRowpkarjEYDbK
-	UdM+RiOh8yluukhisP//ZcxphNAksFLUOPJHm31e8r/8cyhBFP53HP+WNkYmgrxjpaxNiu9vhLp
-	l8ZNk9cfY9XY5s2HlY9pMMr/bNIzBkVRS5Y2SGuvMdCV9AY7NfqIg4unemdS+xybG05T+Bx6Pce
-	BPGYxi+yVip25zbhqGX0J1NFO4Qz5jd1lXdKvaKeCxmJxS2fsZDierd+VYVpYSiHQT4PBcP6syP
-	JmHw0wNA4cotaSk9SxVgQGHb2SRjVD2jZ/8l4t74lG9D+1hH/Or2r7AcxZZkQSok2u2cxkaPQM+
-	8ShSU4y+4o+n1gchD9EuCnP8bVhNkTUAPPlhEb2hemFEwiYCigtjPY5GzYy1lBSrjDytugoZ2Q7
-	v4Ut0VLij2r6oKlu+LA0xkgMW7eyy1qXMEWKq8tjvKtJdlbK9oTy6lLE0Gi+NxTzTySI6q2AvyG
-	bU=
-X-Received: by 2002:a05:6214:300d:b0:880:8600:efbf with SMTP id 6a1803df08f44-89979d90729mr35805436d6.56.1771652342958;
-        Fri, 20 Feb 2026 21:39:02 -0800 (PST)
-Received: from phoenix.local (204-195-96-226.wavecable.com. [204.195.96.226])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-8cb8d060846sm122327385a.14.2026.02.20.21.39.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Feb 2026 21:39:02 -0800 (PST)
-Date: Fri, 20 Feb 2026 21:39:00 -0800
-From: Stephen Hemminger <stephen@networkplumber.org>
-To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Cc: David Ahern <dsahern@kernel.org>, netdev@vger.kernel.org,
- mptcp@lists.linux.dev
-Subject: Re: [PATCH iproute2-next 2/3] utils: timestamp: add JSON support
-Message-ID: <20260220213900.76198834@phoenix.local>
-In-Reply-To: <20260220-ipr-monitor-json-v1-2-eb4b0d5f7820@kernel.org>
-References: <20260220-ipr-monitor-json-v1-0-eb4b0d5f7820@kernel.org>
-	<20260220-ipr-monitor-json-v1-2-eb4b0d5f7820@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TUjLNisP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB2A9C19424;
+	Mon, 23 Feb 2026 13:20:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1771852836;
+	bh=UM5uAas2+oPaEQtliTzSO+741krCLvx89znH8iLeZv8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=TUjLNisP07ZWrnDtJj/fbjkJFkdGXibs0StqzQi6ersq7RgfLOWCsh4x8yxRJROsF
+	 7viKo9PK0jrSdmBs9CE3c4XJLb9Y3UW5oSpyus8yMb6ktrs32HqxQFDmwyLBYFUYwV
+	 pZwe6+EPoxHNGSe+I178ztEgEwN9lJTYeEj/CqLnQnr79kGN+QX3L7vfVECPPi/EqT
+	 Y03x37Da9KEt0CQ2ZtTeX/NlQzJsEWkzX68V6kb9fxT7Vh+9q3O8k6VQf+KkHhxlC4
+	 nv7o8PT+kbsiQLCiQlTALLp7DpoH8te+dYe+DRPchY111ai9GAyVHMyfp5T4zG3H9n
+	 Vd9hoxIDS62WQ==
+Message-ID: <1bdb2c3d-a1b8-432c-8933-d7df3fc10ce5@kernel.org>
+Date: Mon, 23 Feb 2026 14:20:33 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH iproute2-next 2/3] utils: timestamp: add JSON support
+Content-Language: en-GB, fr-BE
+To: Stephen Hemminger <stephen@networkplumber.org>
+Cc: David Ahern <dsahern@kernel.org>, netdev@vger.kernel.org,
+ mptcp@lists.linux.dev
+References: <20260220-ipr-monitor-json-v1-0-eb4b0d5f7820@kernel.org>
+ <20260220-ipr-monitor-json-v1-2-eb4b0d5f7820@kernel.org>
+ <20260220213900.76198834@phoenix.local>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <20260220213900.76198834@phoenix.local>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On Fri, 20 Feb 2026 19:54:02 +0100
-"Matthieu Baerts (NGI0)" <matttbe@kernel.org> wrote:
+Hi Stephen,
 
-> Only if the output stream is 'stdout', because all JSON helpers like
-> print_string() only write on 'stdout'.
+On 21/02/2026 06:39, Stephen Hemminger wrote:
+> On Fri, 20 Feb 2026 19:54:02 +0100
+> "Matthieu Baerts (NGI0)" <matttbe@kernel.org> wrote:
 > 
-> Supporting JSON is easy with the helpers. The biggest modification is to
-> extract the end value.
+>> Only if the output stream is 'stdout', because all JSON helpers like
+>> print_string() only write on 'stdout'.
+>>
+>> Supporting JSON is easy with the helpers. The biggest modification is to
+>> extract the end value.
+>>
+>> No behavioural changes intended for the moment, this is a preparation for a
+>> future usage of print_timestamp() within a JSON context.
+>>
+>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 > 
-> No behavioural changes intended for the moment, this is a preparation for a
-> future usage of print_timestamp() within a JSON context.
-> 
-> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> I would go farther, fp is always stdout. Drop the argument to the function.
 
-I would go farther, fp is always stdout. Drop the argument to the function.
+Good idea!
+
+To be coherent with the rest, I started to look at removing the same
+argument from the caller functions, and similar ones. I did a very quick
+draft with a few sed, etc. but I'm not sure whether I should take this
+direction:
+
+  https://github.com/matttbe/iproute2/commit/585b0109
+
+WDYT? Or should I only drop fp from print_timestamp()? Or simply not use
+it like it is done in many other helpers supporting JSON?
+
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
+
