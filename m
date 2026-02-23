@@ -1,253 +1,139 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 162082F3621;
-	Mon, 23 Feb 2026 15:31:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DA012E7635;
+	Mon, 23 Feb 2026 15:31:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771860685; cv=none; b=m4OXXsYPNsCLeI+Db5ScceB2pyK4IdsygHdsavG/LOdDO6PyAQyGLkPvSYV9EOT6lY4+tJMPrnHiUGsiyqFGu+ZoFMqvPhVvEgc7vcHMOo98LH5gqxHb1vWRbapM86noOBXMyYHkXP6q+agjanjJD6Hyz09SLvbpHULQUJvQLSE=
+	t=1771860697; cv=none; b=Svtipps/gNtHXuVfTaCvFcWc6MDM4+9+U0Pdb3HLItkYfMzhMCQ7nnYGHzSScLxUYfMPI5JDnpALz8ulDTdADckclEk3lJQ75Mi2E0rUQv5Cv5qF5Tua45QbFVrRW49o2LqJfQo4JL5ewtpSp4S2CfLuDKktbIrU3phhhcslvl8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771860685; c=relaxed/simple;
-	bh=Ht0t75qRYANDA/1+A7psyigJet3N9S4aK9ekPlRMMsI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=uLSck1bS+DVxBzF+1TGtKwq9TT6/A+6JuB6lKq8+71ECYCaVy5bvsghdAh5GU3n+hesiskG8nw83Qb23+2hxtM6Ids8gj2Lx7J5GK8IGpe/A8Z6PbopRimqk6zmz1cHIzeyCjpZlkNJXiNy2O1Ov9E8sZdD3d97IKxrq+bv0xAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FvcUDEp9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1771860697; c=relaxed/simple;
+	bh=hMz6eL99P2CVGsJzD+zo6hqmd4ANA39QPFMTWKAp8uA=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=KzS/6NzPc8siOm5Z+F4gXjFfr7IN9vMWhssas82/QTgdSJnL8waaDBzyrEerdlUjTZqt9HASsrbpRe9k48kgyPVpLJcKBnkXvXAn+9MG4OR9Oz5MhRiR+W1FBLx4ndu08I86xZScZLSiL4E3Za5CelSNdCWXCL6p549U0VeFQz0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nJgC6976; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FvcUDEp9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D0C3C116C6;
-	Mon, 23 Feb 2026 15:31:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nJgC6976"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53E9EC116C6;
+	Mon, 23 Feb 2026 15:31:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771860684;
-	bh=Ht0t75qRYANDA/1+A7psyigJet3N9S4aK9ekPlRMMsI=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=FvcUDEp9nplL594VW7tBZtGhrrgE6quoEUBLVsndKdahNVVWjxUhx7JbkCE6GOQ+U
-	 D85XztQC+6LvEZU6CA8XAZmOd1nQp0M1Oii4N5bIXd3STyLI5ujnkPd/qmeOUZhb5s
-	 DCEgdwxx71NgOPAJXe1y0i9uE5JXE+o3Sw0rBrjOkzaVf33ISt0w4FrkxGg1KJzicL
-	 YUpTaMQm9PVLTAfc9hg1NIqSWdaA7vpmFXEpjusX+KTNuKVnsMs8zEivNnUxskWn/8
-	 UjwrahOe182dvwCqaEPIkH2Ji0ntHRzE2QZCCeqnow/ApmRdGAucT2qKMzJiehav+M
-	 H760X4hRlRV3w==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Mon, 23 Feb 2026 16:28:40 +0100
-Subject: [PATCH iproute2-next v2 3/3] mptcp: monitor: add JSON support
+	s=k20201202; t=1771860697;
+	bh=hMz6eL99P2CVGsJzD+zo6hqmd4ANA39QPFMTWKAp8uA=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=nJgC6976tIWIUbAmB1qtUtZ2E4o0N8k6Qz2ZqXG27r2FJC7WzjhTOEXgtYA/qK0AJ
+	 37NhtgV6+Bvjjvd9jLHJJqeu+uZ83b0GAGAutLrG29Qbe8O9gB3p6ZoDRP6caBjgMa
+	 qpUFCvdfNxNomOAZg8/Z3S2boCa5Si40LMu3elMOOVeVi2FqzL6PAwx5xu7HhSlVOD
+	 CB6uDoo2Ssj951z1g+jbZyt+0r1QSDi/TStf2dDPy7ITh3gseMrgQGDQ+ifUwQp84K
+	 muWPA9sjrqH2bCDZF7LAoREfR7q1EQ5Vl9HQBCTyPSYJFZNMsGnKb3yLDo6l/rtjg+
+	 iMGszK8DzPUaA==
+Message-ID: <9c6d3ee0-1394-4cb7-92f2-ea50d5a02bbe@kernel.org>
+Date: Mon, 23 Feb 2026 16:31:33 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH iproute2-next 2/3] utils: timestamp: add JSON support
+Content-Language: en-GB, fr-BE
+From: Matthieu Baerts <matttbe@kernel.org>
+To: Stephen Hemminger <stephen@networkplumber.org>
+Cc: David Ahern <dsahern@kernel.org>, netdev@vger.kernel.org,
+ mptcp@lists.linux.dev
+References: <20260220-ipr-monitor-json-v1-0-eb4b0d5f7820@kernel.org>
+ <20260220-ipr-monitor-json-v1-2-eb4b0d5f7820@kernel.org>
+ <20260220213900.76198834@phoenix.local>
+ <1bdb2c3d-a1b8-432c-8933-d7df3fc10ce5@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <1bdb2c3d-a1b8-432c-8933-d7df3fc10ce5@kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260223-ipr-monitor-json-v2-3-f91fccccf917@kernel.org>
-References: <20260223-ipr-monitor-json-v2-0-f91fccccf917@kernel.org>
-In-Reply-To: <20260223-ipr-monitor-json-v2-0-f91fccccf917@kernel.org>
-To: Stephen Hemminger <stephen@networkplumber.org>, 
- David Ahern <dsahern@kernel.org>
-Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, 
- "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6581; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=Ht0t75qRYANDA/1+A7psyigJet3N9S4aK9ekPlRMMsI=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDLnFB3PWfFJMu/Omvzfq6KurnlnydEgcWLjb+3idctYD
- kr7OWTyd5SyMIhxMciKKbJIt0Xmz3xexVvi5WcBM4eVCWQIAxenAEwk7AQjwxsPO6+XZTw5flOi
- eBP1A/wOBDs0zbwbeqiNz6Wv3POJNSPDnqBN6RPfdtkb+6b5LphzLiuvxvT4X7nDMv3Twh0DO26
- yAAA=
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-The command 'ip [-t[s]] mptcp monitor' now produces an output with the JSON
-format.
+Hi Stephen,
 
-The previous text output has been preserved.
+On 23/02/2026 14:20, Matthieu Baerts wrote:
+> Hi Stephen,
+> 
+> On 21/02/2026 06:39, Stephen Hemminger wrote:
+>> On Fri, 20 Feb 2026 19:54:02 +0100
+>> "Matthieu Baerts (NGI0)" <matttbe@kernel.org> wrote:
+>>
+>>> Only if the output stream is 'stdout', because all JSON helpers like
+>>> print_string() only write on 'stdout'.
+>>>
+>>> Supporting JSON is easy with the helpers. The biggest modification is to
+>>> extract the end value.
+>>>
+>>> No behavioural changes intended for the moment, this is a preparation for a
+>>> future usage of print_timestamp() within a JSON context.
+>>>
+>>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+>>
+>> I would go farther, fp is always stdout. Drop the argument to the function.
+> 
+> Good idea!
+> 
+> To be coherent with the rest, I started to look at removing the same
+> argument from the caller functions, and similar ones. I did a very quick
+> draft with a few sed, etc. but I'm not sure whether I should take this
+> direction:
+> 
+>   https://github.com/matttbe/iproute2/commit/585b0109
+> 
+> WDYT? Or should I only drop fp from print_timestamp()? Or simply not use
+> it like it is done in many other helpers supporting JSON?
 
-The JSON support has been added thanks to the print_*() helpers. Note that
-it is also needed to add a signal handler to exit without errors in case of
-SIGINT or SIGTERM, and close the JSON. This last step will print the final
-']' when stopping 'ip -j mptcp monitor'.
+I just sent a v2 with the minimal modifications around print_timestamp:
+the argument is now simply ignored like it is the case in other helpers
+supporting JSON. If there is a need to continue the cleanup, probably
+better to do that in a different series I guess.
 
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
-v2:
- - print token with print_0xhex(), and add missing space after ',' (AI)
- - use atexit() to close the JSON (Stephen)
- - always call delete_json_obj(): nothing is done when JSON is not used.
----
- ip/ipmptcp.c | 86 +++++++++++++++++++++++++++++++++++++++++-------------------
- 1 file changed, 59 insertions(+), 27 deletions(-)
-
-diff --git a/ip/ipmptcp.c b/ip/ipmptcp.c
-index 18ec05a8..3df89db5 100644
---- a/ip/ipmptcp.c
-+++ b/ip/ipmptcp.c
-@@ -2,6 +2,7 @@
- 
- #include <arpa/inet.h>
- #include <netinet/in.h>
-+#include <signal.h>
- #include <stdbool.h>
- #include <stdio.h>
- #include <stdlib.h>
-@@ -476,8 +477,9 @@ static void print_addr(const char *key, int af, struct rtattr *value)
- 	char str[INET6_ADDRSTRLEN];
- 
- 	if (inet_ntop(af, data, str, sizeof(str))) {
--		printf(" %s=", key);
--		color_fprintf(stdout, ifa_family_color(af), "%s", str);
-+		print_string(PRINT_FP, NULL, " %s=", key);
-+		print_color_string(PRINT_ANY, ifa_family_color(af), key, "%s",
-+				   str);
- 	}
- }
- 
-@@ -485,12 +487,13 @@ static void print_iface(int index)
- {
- 	const char *ifname;
- 
--	printf(" ifindex=%d", index);
-+	print_int(PRINT_ANY, "ifindex", " ifindex=%d", index);
- 
- 	ifname = index ? ll_index_to_name(index) : NULL;
- 	if (ifname) {
--		printf(" dev=");
--		color_fprintf(stdout, COLOR_IFNAME, "%s", ifname);
-+		print_string(PRINT_FP, NULL, " dev=", NULL);
-+		print_color_string(PRINT_ANY, COLOR_IFNAME, "dev", "%s",
-+				   ifname);
- 	}
- }
- 
-@@ -509,30 +512,34 @@ static int mptcp_monitor_msg(struct rtnl_ctrl_data *ctrl,
- 	if (n->nlmsg_type != genl_family)
- 		return 0;
- 
-+	open_json_object(NULL);
-+
- 	if (timestamp)
- 		print_timestamp(stdout);
- 
--	if (ghdr->cmd >= ARRAY_SIZE(event_to_str)) {
--		printf("[UNKNOWN %u]\n", ghdr->cmd);
-+	if (ghdr->cmd >= ARRAY_SIZE(event_to_str) ||
-+	    event_to_str[ghdr->cmd] == NULL) {
-+		char event[40];
-+
-+		snprintf(event, sizeof(event), "UNKNOWN %u", ghdr->cmd);
-+		print_string(PRINT_ANY, "event", "[%s]", event);
- 		goto out;
- 	}
- 
--	if (event_to_str[ghdr->cmd] == NULL) {
--		printf("[UNKNOWN %u]\n", ghdr->cmd);
--		goto out;
--	}
--
--	printf("[%16s]", event_to_str[ghdr->cmd]);
-+	print_string(PRINT_ANY, "event", "[%16s]", event_to_str[ghdr->cmd]);
- 
- 	parse_rtattr(tb, MPTCP_ATTR_MAX, (void *) ghdr + GENL_HDRLEN, len);
- 
- 	if (tb[MPTCP_ATTR_TOKEN])
--		printf(" token=%08x", rta_getattr_u32(tb[MPTCP_ATTR_TOKEN]));
-+		print_0xhex(PRINT_ANY, "token", " token=%08x",
-+			    rta_getattr_u32(tb[MPTCP_ATTR_TOKEN]));
- 
- 	if (tb[MPTCP_ATTR_REM_ID])
--		printf(" remid=%u", rta_getattr_u8(tb[MPTCP_ATTR_REM_ID]));
-+		print_uint(PRINT_ANY, "remid", " remid=%u",
-+			   rta_getattr_u8(tb[MPTCP_ATTR_REM_ID]));
- 	if (tb[MPTCP_ATTR_LOC_ID])
--		printf(" locid=%u", rta_getattr_u8(tb[MPTCP_ATTR_LOC_ID]));
-+		print_uint(PRINT_ANY, "locid", " locid=%u",
-+			   rta_getattr_u8(tb[MPTCP_ATTR_LOC_ID]));
- 
- 	if (tb[MPTCP_ATTR_SADDR4])
- 		print_addr("saddr4", AF_INET, tb[MPTCP_ATTR_SADDR4]);
-@@ -543,49 +550,74 @@ static int mptcp_monitor_msg(struct rtnl_ctrl_data *ctrl,
- 	if (tb[MPTCP_ATTR_DADDR6])
- 		print_addr("daddr6", AF_INET6, tb[MPTCP_ATTR_DADDR6]);
- 	if (tb[MPTCP_ATTR_SPORT])
--		printf(" sport=%u", rta_getattr_be16(tb[MPTCP_ATTR_SPORT]));
-+		print_uint(PRINT_ANY, "sport", " sport=%u",
-+			   rta_getattr_be16(tb[MPTCP_ATTR_SPORT]));
- 	if (tb[MPTCP_ATTR_DPORT])
--		printf(" dport=%u", rta_getattr_be16(tb[MPTCP_ATTR_DPORT]));
-+		print_uint(PRINT_ANY, "dport", " dport=%u",
-+			   rta_getattr_be16(tb[MPTCP_ATTR_DPORT]));
- 	if (tb[MPTCP_ATTR_BACKUP])
--		printf(" backup=%u", rta_getattr_u8(tb[MPTCP_ATTR_BACKUP]));
-+		print_uint(PRINT_ANY, "backup", " backup=%u",
-+			   rta_getattr_u8(tb[MPTCP_ATTR_BACKUP]));
- 	if (tb[MPTCP_ATTR_ERROR])
--		printf(" error=%u", rta_getattr_u8(tb[MPTCP_ATTR_ERROR]));
-+		print_uint(PRINT_ANY, "error", " error=%u",
-+			   rta_getattr_u8(tb[MPTCP_ATTR_ERROR]));
- 	if (tb[MPTCP_ATTR_TIMEOUT])
--		printf(" timeout=%u", rta_getattr_u32(tb[MPTCP_ATTR_TIMEOUT]));
-+		print_uint(PRINT_ANY, "timeout", " timeout=%u",
-+			   rta_getattr_u32(tb[MPTCP_ATTR_TIMEOUT]));
- 	if (tb[MPTCP_ATTR_IF_IDX])
- 		print_iface(rta_getattr_s32(tb[MPTCP_ATTR_IF_IDX]));
- 	if (tb[MPTCP_ATTR_RESET_REASON])
--		printf(" reset_reason=%u", rta_getattr_u32(tb[MPTCP_ATTR_RESET_REASON]));
-+		print_uint(PRINT_ANY, "reset_reason", " reset_reason=%u",
-+			   rta_getattr_u32(tb[MPTCP_ATTR_RESET_REASON]));
- 	if (tb[MPTCP_ATTR_RESET_FLAGS])
--		printf(" reset_flags=0x%x", rta_getattr_u32(tb[MPTCP_ATTR_RESET_FLAGS]));
-+		print_0xhex(PRINT_ANY, "reset_flags", " reset_flags=%#x",
-+			    rta_getattr_u32(tb[MPTCP_ATTR_RESET_FLAGS]));
- 
- 	if (tb[MPTCP_ATTR_FLAGS])
- 		flags = rta_getattr_u16(tb[MPTCP_ATTR_FLAGS]);
- 	if ((flags & MPTCP_PM_EV_FLAG_SERVER_SIDE) ||
- 	    (tb[MPTCP_ATTR_SERVER_SIDE] && rta_getattr_u8(tb[MPTCP_ATTR_SERVER_SIDE]))) {
- 		flags &= ~MPTCP_PM_EV_FLAG_SERVER_SIDE;
--		printf(" server_side");
-+		print_string(PRINT_FP, NULL, " server_side", NULL);
-+		print_bool(PRINT_JSON, "server_side", NULL, true);
- 	}
- 	if (flags & MPTCP_PM_EV_FLAG_DENY_JOIN_ID0) {
- 		flags &= ~MPTCP_PM_EV_FLAG_DENY_JOIN_ID0;
--		printf(" deny_join_id0");
-+		print_string(PRINT_FP, NULL, " deny_join_id0", NULL);
-+		print_bool(PRINT_JSON, "deny_join_id0", NULL, true);
- 	}
- 	if (flags) /* remaining bits */
--		printf(" flags=0x%x", flags);
-+		print_0xhex(PRINT_ANY, "flags", " flags=%#x", flags);
- 
--	puts("");
- out:
-+	print_nl();
-+	close_json_object();
- 	fflush(stdout);
-+
- 	return 0;
- }
- 
-+static void sig_exit(int signo)
-+{
-+	exit(0);
-+}
-+
- static int mptcp_monitor(void)
- {
-+	struct sigaction sa = { .sa_handler = sig_exit,
-+				.sa_flags = SA_RESTART };
-+
- 	if (genl_add_mcast_grp(&genl_rth, genl_family, MPTCP_PM_EV_GRP_NAME) < 0) {
- 		perror("can't subscribe to mptcp events");
- 		return 1;
- 	}
- 
-+	new_json_obj(json);
-+	atexit(delete_json_obj);
-+
-+	sigaction(SIGINT, &sa, NULL);
-+	sigaction(SIGTERM, &sa, NULL);
-+
- 	if (rtnl_listen(&genl_rth, mptcp_monitor_msg, stdout) < 0)
- 		return 2;
- 
-
+Cheers,
+Matt
 -- 
-2.51.0
+Sponsored by the NGI0 Core fund.
 
