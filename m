@@ -1,128 +1,151 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B54C2E541F
-	for <mptcp@lists.linux.dev>; Wed, 25 Feb 2026 05:58:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DF7E3ACF1B
+	for <mptcp@lists.linux.dev>; Wed, 25 Feb 2026 12:18:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771999095; cv=none; b=l4ozPaEe8dOKXsMhcrxQ8C1Yok8rYc+uXXD5xf7qU/GvJCQWf/pIDkuEgqyw4kLf3NJNdLsBqOMNv1Lf+tDIw/+gaLBwXwLt7PQ/InTI6NVxppRhn1UGkwyBxS6cyw/XYr148gnRJBMekniKTUZ3xGmfcT44MNNEvf6P8uVW+R8=
+	t=1772021902; cv=none; b=l1vcxRYhWK2MMKTtNDPsIc1mj9CwOe5GoVtbFcO/rEuxu5xC8PDVoHCOOKYffdSg+LNKXzDZn3Oq3E5Ql04bigdfnBeFKIkyy4Oyi5is3kAjWyD1uwR17DQzCCiiGZ74eWW66S/o0l06I6Zf2wpxCX1I45LbDWWwlA5ulr/gpPg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771999095; c=relaxed/simple;
-	bh=2o8lpR8oeKEXTRK8jqVnKf3DCeDvANsp1x4gOPAJ8cc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 In-Reply-To:Content-Type:Content-Disposition; b=NvX/mdFRcDtZJWFOhqlE+2cXvOPjBCsjLhLaR2M+aBhljw4Pg2GcMZ1+uq/XMML4JlZqkwB9drH5Iya9rnAJMyFkUvxEQjN6bCCZz9pOsxcGnXjisAOP05UfDZ4CXuuc8md3NfCk93PEC0lDis93fEq9q168uxQIKmkN/O9nno8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hiGQOqxl; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1772021902; c=relaxed/simple;
+	bh=4XFviIswc7EKRhSHuPY+bppJtA59w66yRPsszM3vAVM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=R08gxG3yEXJkA1ekJO7Za82cPB6+XLFPYHAMACaoKgz9n+5ff7890yMP0X8mER2tSrNWLhrnnrin3YenEFLRUMhtOcL0pL1+s73V6WuhwBLx30kf/bVsjUXsss9917sJunYm/ZU1miHB9vRunZMc/YQyV/eO+ZK6ytopm7i2vWw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EptwnCip; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hiGQOqxl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1771999092;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+WTYB6lVXw606x/HBX2m1Jcvv1uQbq325pOYgX2g38U=;
-	b=hiGQOqxl9j8/a0/Znybu4WvxKvPAdOaW6zVfcSTVbmoTx0IwBxvYAFQIyW3p7KznNNW76F
-	Q51d2RHdUK7huOvFMNuYL62ntNgddNSo0teTaDM6ovidCF+EVGUnP4b0ke0gdE1IRtXX+8
-	NPGS3jFvKW+y4W9m5CyJSh095a4WERA=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-379-Ts0wPBUmODWpQO4ks_ZNpw-1; Wed,
- 25 Feb 2026 00:58:08 -0500
-X-MC-Unique: Ts0wPBUmODWpQO4ks_ZNpw-1
-X-Mimecast-MFC-AGG-ID: Ts0wPBUmODWpQO4ks_ZNpw_1771999087
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 001B8195605A;
-	Wed, 25 Feb 2026 05:58:07 +0000 (UTC)
-Received: from fedora (unknown [10.72.116.18])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id EE4261955D71;
-	Wed, 25 Feb 2026 05:57:59 +0000 (UTC)
-Date: Wed, 25 Feb 2026 13:57:54 +0800
-From: Ming Lei <ming.lei@redhat.com>
-To: Geliang Tang <geliang@kernel.org>
-Cc: lsf-pc@lists.linux-foundation.org, linux-nvme@lists.infradead.org,
-	mptcp@lists.linux.dev, Matthieu Baerts <matttbe@kernel.org>,
-	Mat Martineau <martineau@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>, Hannes Reinecke <hare@suse.de>
-Subject: Re: [LSF/MM/BPF TOPIC] NVMe over MPTCP: Multi-Fold Acceleration for
- NVMe over TCP in Multi-NIC Environments
-Message-ID: <aZ6PYgJ0ZWeSc_GS@fedora>
-References: <a9f115aa5719e1088702a3fdeee766a3166611b1.camel@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EptwnCip"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55EBDC116D0;
+	Wed, 25 Feb 2026 12:18:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1772021902;
+	bh=4XFviIswc7EKRhSHuPY+bppJtA59w66yRPsszM3vAVM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=EptwnCipLYGxLyZWwFg7rCP29Tv4D9AcoLkx/uwe1krAn5wNhlh5vXfNE2q83IcPe
+	 2+XNUIwn7qSbTRgkcJa3cTXATQ9UgWHM8How55COqGkWHUVjAL0o1+t2dQJ9tEQZDh
+	 ECNviRHsxgoKWzPwxzQDfap2XmRuCia6sauO/bjeoj6T1ep4RzGCQUmG1V/lTQ1l8A
+	 j2EzmTYFfozKcF5W5/fbkCruzyi0qpPZkzZ9lwWI2yInBbRXevggqEEdn8Zo4opAfS
+	 KBzvxHJ5MGONaWTRGqyUyiwufJG1mF11lOZEC1GxFDZsg/Zf/TEhfPe/Fp/ykrX9Nz
+	 8MjKS2FSRsZVA==
+Message-ID: <886fecf3-e73c-4f23-9dc8-21a7c5aba9e4@kernel.org>
+Date: Wed, 25 Feb 2026 13:18:19 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <a9f115aa5719e1088702a3fdeee766a3166611b1.camel@kernel.org>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: QeRyfFYkrjPkUgwlQlJkVF95CEiPrzm7thBXJqNQ3xU_1771999087
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH mptcp-net v2 1/2] mptcp: pm: avoid sending RM_ADDR over
+ same subflow
+Content-Language: en-GB, fr-BE
+To: Mat Martineau <martineau@kernel.org>
+Cc: MPTCP Upstream <mptcp@lists.linux.dev>
+References: <20260220-mptcp-issue-612-v2-0-089684a6edcb@kernel.org>
+ <20260220-mptcp-issue-612-v2-1-089684a6edcb@kernel.org>
+ <60bfc032-effc-f85f-6e64-7af0cd3daeeb@kernel.org>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <60bfc032-effc-f85f-6e64-7af0cd3daeeb@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+Hi Mat,
 
-Looks one interesting topic!
+Thank you for the review!
 
-On Thu, Jan 29, 2026 at 12:13:25PM +0800, Geliang Tang wrote:
-> As one of the MPTCP upstream developers, I'm recently working on adding
-> MPTCP support to 'NVMe over TCP'. This approach achieves a multi-fold
-> performance improvement over using standard TCP. The implementation and
-> testing phases are largely complete. The code is currently in the RFC
-> stage and has undergone several rounds of discussion and iteration on
-> the MPTCP mailing list [1]. It will be sent to the NVMe mailing list
-> shortly.
+On 25/02/2026 05:12, Mat Martineau wrote:
+> On Fri, 20 Feb 2026, Matthieu Baerts (NGI0) wrote:
 > 
-> 1. Introduction to MPTCP
-> 
-> Multipath TCP (MPTCP), standardized in RFC 8684, represents a major
-> evolution of the TCP protocol. It enables a single transport connection
-> to utilize multiple network paths simultaneously, providing benefits in
-> redundancy, resilience, and bandwidth aggregation. Since its
-> introduction in Linux kernel v5.6, it has become a key technology for
-> modern networking, particularly in multi-NIC environments.
-> 
-> On a supported system such as Linux, an MPTCP socket is created by
-> specifying the IPPROTO_MPTCP protocol in the socket() system call:
-> 
-> 	int fd = socket(AF_INET, SOCK_STREAM, IPPROTO_MPTCP);
-> 
-> This creates a socket that appears as a standard TCP socket to the
-> application but uses the MPTCP protocol stack underneath.
-> 
-> For more details, please visit the project website: https://mptcp.dev.
-> 
-> 2. Implementation
-> 
-> 'NVMe over TCP' establishes multiple TCP connections between the target
-> and host for data transfer. This includes one admin queue connection
-> for management traffic and multiple I/O queue connections for data
-> traffic, with the number typically scaling with available CPU cores.
-> While these multiple TCP connections (using the same IP address but
-> different ports) help distribute computational load across CPUs, all
-> data traffic still flows through a single network interface card (NIC),
-> even in multi-NIC environments.
-> 
-> The 'NVMe over MPTCP' solution enhances 'NVMe over TCP' by replacing
-> the multiple TCP connections with multiple MPTCP connections, leaving
-> other mechanisms unchanged. Internally, each MPTCP connection can
-> establish multiple subflows based on the number of configured NICs.
-> This distributes data traffic across all available NICs, thereby
-> increasing aggregate transmission speed.
+>> RM_ADDR are sent over an active subflow, the first one in the subflows
+>> list. There is then a high chance the initial subflow is picked. With
+>> the in-kernel PM, when an endpoint is removed, a RM_ADDR is sent, then
+>> linked subflows are closed. This is done for each active MPTCP
+>> connection.
+>>
+>> MPTCP endpoints are likely removed because the attached network is no
+>> longer available or usable. In this case, it is better to avoid sending
+>> this RM_ADDR over the subflow that is going to be removed, but prefer
+>> sending it over another active and non stale subflow, if any.
+>>
+>> This modification avoids situations where the other end is not notified
+>> when a subflow is no longer usable: typically when the endpoint linked
+>> to the initial subflow is removed, especially on the server side.
 
-NVMe supports multipath, which can apply load balance or sort of algorithm
-to maximize network link/bandwidth too.
+(...)
 
-Maybe you can compare mptcp with multipath in this viewpoint.
+> This is definitely an improvement over the older code, thanks! It does
+> still send RM_ADDR exactly once. It could also RM_ADDR using *all*
+> active non-stale subflows (any that are delivered after the first would
+> be ignored). In terms of interoperability there is the risk of confusing
+> the peer's path manager if it doesn't handle RM_ADDR for a non-existant
+> subflow.
+> 
+> Maybe that's more of a mptcp-next feature (if it makes sense to do at all).
 
+I think implementing this would definitively be mptcp-next material. If
+we want this, we will also need to change the way the option is added:
+for the moment, the rm_list is copied in the msk, and a bit is set
+before triggering the ACK, and when sending the ACK, the bit is reset.
+So we would need to also record the subflow IDs that should send the
+RM_ADDR, and only remove the main bit when all of subflows have sent it.
 
+Now regarding the behaviour, I think it more likely to have concurrent
+issues: maybe a subflow could be re-created or an ADD_ADDR could be
+received before all RM_ADDR are transmitted, e.g. in case of bufferbloat
+on one path?
 
-Thanks,
-Ming
+> The v2 patch here is closer to the existing behavior so I'm ok with
+> approving it:
+> 
+> Reviewed-by: Mat Martineau <martineau@kernel.org>
+
+Thanks! Is this tag also covering patch 2/2?
+
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
 
