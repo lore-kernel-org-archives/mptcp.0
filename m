@@ -1,106 +1,157 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A18253D1CA7
-	for <mptcp@lists.linux.dev>; Wed, 25 Feb 2026 17:51:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41E282ED154
+	for <mptcp@lists.linux.dev>; Wed, 25 Feb 2026 18:14:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772041880; cv=none; b=ItuLL33LJzV+fmcqbXTls2p1xIdxn0BUqxPTss1atQcftzWzoopzgNbSCewkKM15dAFqi0FqCX1Rtx0c72oytAD4Krb/7obenfrt9KBtk1PwZwGh0xuyDMLazXD7397oA20P06bo4YXQtS4toSqrX3VYg6JHNCpRvvSGkinfWVc=
+	t=1772043272; cv=none; b=Fh7lwKpErxR6Hy17VJyWsxJCm/bIr/dxCaajraxLFf/IWrNLQsKTIO0a4oDEfnKjVhR01Mww+EAxy0yAobI++XcQsd3fvm5sfdg60VA+nObeWZbT2zpLwvzPYGpv6fULGdlMrpa50JCmfO7zBdUUpGnj97v4JlI69G5889OSYCE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772041880; c=relaxed/simple;
-	bh=9KACtRSsnmfVn5XCKTiwUinEDyUzvp4EIYF6H9RLuTQ=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=BpUJHO9NpIzeo3rHU0vod4roXOudkdBArOaxPxroP3R0OooRsmVX5bQiSBfSR49vA+/u/SgHetcctddMD+VW5oTmNh6KNZOefKqeTNcmfss15/enfvSUbiSu2HO55agnN05Z4uxkjtz0z5FRlJgT0rG6CmuHrgyP2iBD59JHUXI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=btDIqrSD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1772043272; c=relaxed/simple;
+	bh=jCgO30oBwEcQKCFQKmxpcnrA0y5/xU3xpQUd6Wl1vLQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hLjpt0jciRPbmpr9nOsngtEkrnnA3c6Li9qf5gmvxImKk0pW4IJks1Yj+d+F74wOuUaXJln6Oeem5am2ge2nIEILsL9DdRXmIdZJyJiMJPv2Rnj2+uJofjQjXSJ5WYNBuATXvutpInCP7QjS5jq2xRyeuzoUjd+f9IHEIzbrk6w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JLDs2dzI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="btDIqrSD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43C0FC116D0;
-	Wed, 25 Feb 2026 17:51:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JLDs2dzI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5ABD3C116D0;
+	Wed, 25 Feb 2026 18:14:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772041880;
-	bh=9KACtRSsnmfVn5XCKTiwUinEDyUzvp4EIYF6H9RLuTQ=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=btDIqrSDQqyiICPrVJX/DnY+o2truq1E4VoPhOgGIkKRkgFebu/SAIZv2C4EqTNEB
-	 IG4F5Rz9cUlTF+Xf7P0TCYB8BXmnpIkGfJsEqTdbMRUy1PCaKXJNojoCMX/BZw/pLE
-	 bGWQOGJ0pp510vCPoSgONsMYllkTtue8IWe/KvAhn9FZHKnU6CNvyzJ3wA6T26t4mu
-	 1NjMPWEwtNUhHTpi//oKmygqZgGJ42PAK2crK6cQGHPaXMY9dsFQSxbp3+tw0aFqGJ
-	 V4qWHhM+y6Bg3oLeowjPBNCWRqCPyeqpcxjrQT/qQ6dGtC2S6gVfHB5mk/ZIvrc5EB
-	 CjdjA6GRihLWA==
-Date: Wed, 25 Feb 2026 09:51:19 -0800 (PST)
-From: Mat Martineau <martineau@kernel.org>
-To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-cc: MPTCP Upstream <mptcp@lists.linux.dev>
-Subject: Re: [PATCH mptcp-net] selftests: mptcp: join: check removing
- signal+subflow endp
-In-Reply-To: <20260219101033.716403-2-matttbe@kernel.org>
-Message-ID: <e9828ca4-f91a-3f31-5ef6-6608012acf89@kernel.org>
-References: <20260219101033.716403-2-matttbe@kernel.org>
+	s=k20201202; t=1772043271;
+	bh=jCgO30oBwEcQKCFQKmxpcnrA0y5/xU3xpQUd6Wl1vLQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=JLDs2dzIArMdWa/tVIdnL4k+4re9Zp4u0fHwTz7YgjRALkpcKe03O3rZTeLj7n0jP
+	 MKRc2+/GKBSzgQ6/EdVJ8qkVGSJnvwBafOpe0ZHhctOpiEtpW1KszszK5FUntcYEyB
+	 oG0CVG9Mn4sK7g5r6THKnDGN7Dn2rTpMBXVp1NtmbzY/XSKPDwvAV+OIGYGqXIUD8k
+	 uIH3wm6C9lEtVXQGSMzmXq8pbhm4kUuiPsOj10Fyn7WPswppf3jzhi1/OpJTRTKOht
+	 RNHGwloRntTTQfIeNAvuKbdYb4eiCFw0gPZOfIYmHivT/sYjG+b4d3rBZwN8AOHcoQ
+	 iq1JBjVdYxpmw==
+Message-ID: <847f7e20-3c94-45a1-8c42-392701be8464@kernel.org>
+Date: Wed, 25 Feb 2026 19:14:29 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH mptcp-net] mptcp: pm: in-kernel: always mark
+ signal+subflow endp as used
+Content-Language: en-GB, fr-BE
+To: Mat Martineau <martineau@kernel.org>
+Cc: MPTCP Upstream <mptcp@lists.linux.dev>
+References: <20260218-mptcp-issue-613-v1-1-f8e9adb12010@kernel.org>
+ <bffe9f3d-298b-1142-7cbe-e8bb768e9b38@kernel.org>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <bffe9f3d-298b-1142-7cbe-e8bb768e9b38@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, 19 Feb 2026, Matthieu Baerts (NGI0) wrote:
+Hi Mat,
 
-> This validates the previous commit: endpoints with both the signal and
-> subflow flags should always be marked as used even if it was not
-> possible to create new subflows due to the MPTCP PM limits.
->
-> For this test, an extra endpoint is created with both the signal and the
-> subflow flags, and limits are set not to create extra subflows. In this
-> case, an ADD_ADDR is sent, but no subflows are created. Still, the local
-> endpoint is marked as used, and no warning is fired when removing the
-> endpoint, after having sent a RM_ADDR.
->
-> The 'Fixes' tag here below is the same as the one from the previous
-> commit: this patch here is not fixing anything wrong in the selftests,
-> but it validates the previous fix for an issue introduced by this commit
-> ID.
->
-> Fixes: 85df533a787b ("mptcp: pm: do not ignore 'subflow' if 'signal' flag is also set")
-> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> ---
-> Linked to "mptcp: pm: in-kernel: always mark signal+subflow endp as
-> used" sent earlier.
->
-> Based-on: <20260218-mptcp-issue-613-v1-1-f8e9adb12010@kernel.org>
-> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Thank you for the review!
 
-Reviewed-by: Mat Martineau <martineau@kernel.org>
+On 25/02/2026 18:50, Mat Martineau wrote:
+> On Wed, 18 Feb 2026, Matthieu Baerts (NGI0) wrote:
+> 
+>> Syzkaller managed to find a combination of actions that was generating
+>> this warning:
 
-> ---
-> tools/testing/selftests/net/mptcp/mptcp_join.sh | 13 +++++++++++++
-> 1 file changed, 13 insertions(+)
->
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> index dc1f200aaa81..afb6fd3daced 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> @@ -2608,6 +2608,19 @@ remove_tests()
-> 		chk_rst_nr 0 0
-> 	fi
->
-> +	# signal+subflow with limits, remove
-> +	if reset "remove signal+subflow with limits"; then
-> +		pm_nl_set_limits $ns1 0 0
-> +		pm_nl_add_endpoint $ns1 10.0.2.1 flags signal,subflow
-> +		pm_nl_set_limits $ns2 0 0
-> +		addr_nr_ns1=-1 speed=slow \
-> +			run_tests $ns1 $ns2 10.0.1.1
-> +		chk_join_nr 0 0 0
-> +		chk_add_nr 1 1
-> +		chk_rm_nr 1 0 invert
-> +		chk_rst_nr 0 0
-> +	fi
-> +
-> 	# addresses remove
-> 	if reset "remove addresses"; then
-> 		pm_nl_set_limits $ns1 3 3
-> -- 
-> 2.51.0
->
->
->
+(...)
+
+>> Note that signal_and_subflow variable is reset to false when the limits
+>> and the c-flag case allows subflows creation. Also, local_addr_used is
+>> only incremented for non ID0 subflows.
+
+(...)
+
+>> diff --git a/net/mptcp/pm_kernel.c b/net/mptcp/pm_kernel.c
+>> index 87e37c729f81..2710abcd4065 100644
+>> --- a/net/mptcp/pm_kernel.c
+>> +++ b/net/mptcp/pm_kernel.c
+>> @@ -418,6 +418,15 @@ static void
+>> mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
+>>     }
+>>
+>> exit:
+>> +    /* If an endpoint has both the signal and subflow flags, but it
+>> is not
+>> +     * possible to create subflows because of the limits or the c-
+>> flag case,
+>> +     * then still mark the endp as used, which is the case. This avoids
+>> +     * issues later when removing the endpoint and calling
+>> +     * __mark_subflow_endp_available(), which expects the increment
+>> here.
+>> +     */
+>> +    if (signal_and_subflow && local.addr.id != msk->mpc_endpoint_id)
+>> +        msk->pm.local_addr_used++;
+>> +
+> 
+> Looking at the code above, signal_and_subflow == TRUE is an indicator
+> that the body of the while loop never executed. Please add a comment
+> above this code in the while loop:
+> 
+>         if (signal_and_subflow)
+>             signal_and_subflow = false;
+> 
+> to point out that the code at the "exit:" label is assuming that
+> signal_and_subflow is always false if the loop body runs.
+
+That's a good idea, but I'm hesitating to add that: adding such comment
+might cause more conflicts. Plus, the use of this variable is quite
+limited I think: init to false, set only in one case, and reset after
+use. Do you think this comment is helpful there? Or should I add
+something else here at the end of the function?
+
+(There is something about that in the commit message, but that's
+probably not enough I suppose)
+
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
+
