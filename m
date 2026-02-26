@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2564B2D7386
-	for <mptcp@lists.linux.dev>; Thu, 26 Feb 2026 07:49:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC956372B5F
+	for <mptcp@lists.linux.dev>; Thu, 26 Feb 2026 07:49:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772092160; cv=none; b=JzWgfrtQ2goh9nzAkMch5MtkYyrnf9+FvJ76kC5aXtq73qlNb065SGsMqOPAoa9WC5hQiuEhiBG8kj7/03kjd5aDcNP53s+5DoayBnYBZG27ZO+F6WhfB8KJ758GUDJ/Sn8pdWvVm4L8KjNU60cOsW30pmwxCqXECzl0UkxrKIo=
+	t=1772092165; cv=none; b=lbIs8vbsXzdfJU/28RXp6SfN3ANo7kCImyMKCmPFSYr504Yku/+LeV3xEHNivvcdutN8Gu2fF9GMQDJaLMpkLthwaO2zq/iC+TVcR9iHQB/yEnJm4XyTJ1PN7HXNLTxOcAhP8qDLUQIpNf5MZzOBJamgBz/bft5YzcKfZMn8zd8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772092160; c=relaxed/simple;
-	bh=tSDNPz4GK2M5XZA2cHemuypbhX43Xp4n1LWw2aKwSXE=;
+	s=arc-20240116; t=1772092165; c=relaxed/simple;
+	bh=k/wxBtxaxuaxQLhJgOqCnzzZ90w2fs9LqE7GflJvgLU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RO636O/Z8dFTurvOB2rPFC0AQLB3hYurI6vB1IsC5afkqjqMjhSzDbdMRtK5knnO8mfMFFrgnfTlAF+eIKpHpGQ6mEpoEytx+qL80pcr86bGnLMwU2PiXIyRb79gL0L8Sn+0nZ2bn8idQNe6/fwUf86IeFhtZ6/cA7Wy+jAKDRM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ArjLGrj/; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=YYY84lIYqEvNJ/rirSaEMhpCrD+AwylHPLmOzx1MrlbONOSBUouMIVo6brnh2XBOBBERlMfsNKioq5LW8zrSVvf4d8/gssyvUtV3xOzcD2Lef1iLjdb532Uc9+4vodYaLyKK/dMvbaIXElLT8DtwRifM07Gsfh5VzILx8SGWPBQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MdXrnh3Q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ArjLGrj/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BED3C19422;
-	Thu, 26 Feb 2026 07:49:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MdXrnh3Q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAC92C19422;
+	Thu, 26 Feb 2026 07:49:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772092159;
-	bh=tSDNPz4GK2M5XZA2cHemuypbhX43Xp4n1LWw2aKwSXE=;
+	s=k20201202; t=1772092165;
+	bh=k/wxBtxaxuaxQLhJgOqCnzzZ90w2fs9LqE7GflJvgLU=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ArjLGrj/3AKM0gEfU4t3tJIBDJTlUL9P2fi2uoYCXuuaWplmdPd4lJnAwrt4veu1u
-	 /9MsqfPqErbT3YHUPNF4EZ2p1VJ4HIWFOjJPU8Bxv+p8tLVFtCA/GNsVW8m67tep/y
-	 Lh/qWPalIke0T481Gy+fz3LmAjFwNMqKpbP1r9QTfongBeDuPXrc35eGw3pKlPJbts
-	 Dut0T1JSIJBF7LQW3DnSeUgaIquD93NThIXmrckiYyjX6TX4r9wHA9anjBkBt8gyvz
-	 ofJI0+93X7H0WQmnMlkytRGjL/SdZDy9DZqpbpQKklVhJaZvGrHIsNB7LAHDLBzvHJ
-	 3h0YQ7k9UJs3g==
-Message-ID: <9bed7905-af41-4ba0-86b7-a6801c6d7c59@kernel.org>
-Date: Thu, 26 Feb 2026 08:49:17 +0100
+	b=MdXrnh3QrT47DhMC3Kes3fATzYAcp+dDRkaqAWl5qC4UDnqd5onMRgzcj9T4opXJ+
+	 K/vNoC0vqfXcGgSPP4IQXDUiqw0a20Mtw9zHtoAsplxzHtcMzHvQqqvPZloZE8j5R4
+	 T2W2fTyxUYahJfSUZYJTUSmyiAI/6+UJYXyPMrrwJYeed41FfAvsFd5now1pqRvwtD
+	 2wI0OWKNYM+rh3x/eHLKsIv3qickiS/onhtuZ3uP0RRBi50qU3YwTPicyt4P3KOsMi
+	 QNZ1fsaVWGg6oSSqXWjAN8J2IKf51DwjlrYel2y5bGJ4CWpXou2vRtKBz0vtKH7AoC
+	 dQSEpUZTLhDlg==
+Message-ID: <1df224ba-93ab-49b0-a3ad-dd43084f5be9@kernel.org>
+Date: Thu, 26 Feb 2026 08:49:24 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,15 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-net] mptcp: pm: in-kernel: always mark
- signal+subflow endp as used
+Subject: Re: [PATCH mptcp-net] selftests: mptcp: join: check removing
+ signal+subflow endp
 Content-Language: en-GB, fr-BE
 To: Mat Martineau <martineau@kernel.org>
 Cc: MPTCP Upstream <mptcp@lists.linux.dev>
-References: <20260218-mptcp-issue-613-v1-1-f8e9adb12010@kernel.org>
- <bffe9f3d-298b-1142-7cbe-e8bb768e9b38@kernel.org>
- <847f7e20-3c94-45a1-8c42-392701be8464@kernel.org>
- <0316ea8e-38e0-6cc5-6d02-4defed40772b@kernel.org>
+References: <20260219101033.716403-2-matttbe@kernel.org>
+ <e9828ca4-f91a-3f31-5ef6-6608012acf89@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -89,89 +87,45 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <0316ea8e-38e0-6cc5-6d02-4defed40772b@kernel.org>
+In-Reply-To: <e9828ca4-f91a-3f31-5ef6-6608012acf89@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 Hi Mat,
 
-On 25/02/2026 19:46, Mat Martineau wrote:
-> On Wed, 25 Feb 2026, Matthieu Baerts wrote:
+On 25/02/2026 18:51, Mat Martineau wrote:
+> On Thu, 19 Feb 2026, Matthieu Baerts (NGI0) wrote:
 > 
->> Hi Mat,
+>> This validates the previous commit: endpoints with both the signal and
+>> subflow flags should always be marked as used even if it was not
+>> possible to create new subflows due to the MPTCP PM limits.
 >>
->> Thank you for the review!
+>> For this test, an extra endpoint is created with both the signal and the
+>> subflow flags, and limits are set not to create extra subflows. In this
+>> case, an ADD_ADDR is sent, but no subflows are created. Still, the local
+>> endpoint is marked as used, and no warning is fired when removing the
+>> endpoint, after having sent a RM_ADDR.
 >>
->> On 25/02/2026 18:50, Mat Martineau wrote:
->>> On Wed, 18 Feb 2026, Matthieu Baerts (NGI0) wrote:
->>>
->>>> Syzkaller managed to find a combination of actions that was generating
->>>> this warning:
+>> The 'Fixes' tag here below is the same as the one from the previous
+>> commit: this patch here is not fixing anything wrong in the selftests,
+>> but it validates the previous fix for an issue introduced by this commit
+>> ID.
 >>
->> (...)
+>> Fixes: 85df533a787b ("mptcp: pm: do not ignore 'subflow' if 'signal'
+>> flag is also set")
+>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+>> ---
+>> Linked to "mptcp: pm: in-kernel: always mark signal+subflow endp as
+>> used" sent earlier.
 >>
->>>> Note that signal_and_subflow variable is reset to false when the limits
->>>> and the c-flag case allows subflows creation. Also, local_addr_used is
->>>> only incremented for non ID0 subflows.
->>
->> (...)
->>
->>>> diff --git a/net/mptcp/pm_kernel.c b/net/mptcp/pm_kernel.c
->>>> index 87e37c729f81..2710abcd4065 100644
->>>> --- a/net/mptcp/pm_kernel.c
->>>> +++ b/net/mptcp/pm_kernel.c
->>>> @@ -418,6 +418,15 @@ static void
->>>> mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
->>>>     }
->>>>
->>>> exit:
->>>> +    /* If an endpoint has both the signal and subflow flags, but it
->>>> is not
->>>> +     * possible to create subflows because of the limits or the c-
->>>> flag case,
->>>> +     * then still mark the endp as used, which is the case. This
->>>> avoids
->>>> +     * issues later when removing the endpoint and calling
->>>> +     * __mark_subflow_endp_available(), which expects the increment
->>>> here.
->>>> +     */
->>>> +    if (signal_and_subflow && local.addr.id != msk->mpc_endpoint_id)
->>>> +        msk->pm.local_addr_used++;
->>>> +
->>>
->>> Looking at the code above, signal_and_subflow == TRUE is an indicator
->>> that the body of the while loop never executed. Please add a comment
->>> above this code in the while loop:
->>>
->>>         if (signal_and_subflow)
->>>             signal_and_subflow = false;
->>>
->>> to point out that the code at the "exit:" label is assuming that
->>> signal_and_subflow is always false if the loop body runs.
->>
->> That's a good idea, but I'm hesitating to add that: adding such comment
->> might cause more conflicts. Plus, the use of this variable is quite
->> limited I think: init to false, set only in one case, and reset after
->> use. Do you think this comment is helpful there? Or should I add
->> something else here at the end of the function?
->>
+>> Based-on: <20260218-mptcp-issue-613-v1-1-f8e9adb12010@kernel.org>
+>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 > 
-> True, it does run the risk of the comment and the code below getting out
-> of sync and it's pointless to say "if you change the value of the
-> variable it affects other code using that variable" (of course it does!).
-> 
-> I agree with you, and suggest updating the comment in the patch similar
-> to "If an endpoint has both the signal and subflow flags and the 'while'
-> loop body above never executed, ..."
+> Reviewed-by: Mat Martineau <martineau@kernel.org>
 
-Good idea, I just updated this comment before applying the patch:
+Thank you for the review!
 
-/* If an endpoint has both the signal and subflow flags, but it is not
- * possible to create subflows -- the 'while' loop body above never
- * executed --  then still mark the endp as used, which is somehow the
- * case. This avoids issues later when removing the endpoint and calling
- * __mark_subflow_endp_available(), which expects the increment here.
- */
+Now in our tree:
 
 New patches for t/upstream-net and t/upstream:
 - 402de2bca118: mptcp: pm: in-kernel: always mark signal+subflow endp as
@@ -186,7 +140,6 @@ Tests are now in progress:
 https://github.com/multipath-tcp/mptcp_net-next/commit/ca3a60dc7df9f019289be14d7ca6898f8431381e/checks
 - export:
 https://github.com/multipath-tcp/mptcp_net-next/commit/866d58409123388cf9032de57af875fbe418a642/checks
-
 
 Cheers,
 Matt
