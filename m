@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E043238A733
-	for <mptcp@lists.linux.dev>; Thu, 26 Feb 2026 07:53:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1729126056D
+	for <mptcp@lists.linux.dev>; Thu, 26 Feb 2026 07:59:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772092407; cv=none; b=UIU0+kE6Rmr1BAKjr8KJaWgLgcXT7FJwQhMdh4F6Gx3Kn8x9F3oHnATJpW6CmeUDaCENbIGIByhtvYRckwzuK13onaZas2zy+RM8PAmPMMI97SzXApEhgXISGTnPYA2O3mCCRMVHkSXpQN/kHGfoXQhmCNPG3n2ipoXz/VoUEnY=
+	t=1772092758; cv=none; b=NDjPqHy4rPBNCOGqIpYpCG+8NdE9xs6NFWxmvgVs5h0CbePYhL0t6b0UpaCRIWNvm5TCeycdKgWnjbDaXg9aNxwJETuWzOYXdSvUeKQliFNawxE0ZgfJ3PuK1cBx+CWPbqlUKxXGh1fWQ+4PWlCdzwMxkL0T3GvQ1QcIU6M6c2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772092407; c=relaxed/simple;
-	bh=6BC3FxF3yWoF9K4gjGTEwVQXLvCRI5DtAKAEamZTOLY=;
+	s=arc-20240116; t=1772092758; c=relaxed/simple;
+	bh=lgIUa7obngeHJyz7nYQKR6VbVh+6QJ/jxdP/UNwb93s=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=cVcbpQAc+J4SHh/mUMU+rH5B1+x0cHrAKMTfjONmT4+FTi7xYmlHFi+VS5eFfX1CcYO3xJ6dYF434YD1VcU1N/bjPv7zangHu3Ola4uy2Nb2oZTqrF24TvZ3/iISZTgU4X1KfJe+9IYV6cCnFef7O0XIZXE+Ynonyk5HsRoz6Y4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q1JJdxDT; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=ODsfSOtpK8G8vhv3czZzx/1UdBDdC28FAVGDpMibv63mjTCDK2dKNYYHNdHzUj+qdQZ0rr/5G0cgk5KR2OGwMnOxyPTHeFFN2pa8i1fzVD9hMmVb1YTcPa0oMzXxAJZso8aWW2M5OBwNCn2d1koY1kUFs3+Zhttg+CG9xjDsJo4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HviMRGeq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q1JJdxDT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2A34C19422;
-	Thu, 26 Feb 2026 07:53:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HviMRGeq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CBF0C19422;
+	Thu, 26 Feb 2026 07:59:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772092407;
-	bh=6BC3FxF3yWoF9K4gjGTEwVQXLvCRI5DtAKAEamZTOLY=;
+	s=k20201202; t=1772092757;
+	bh=lgIUa7obngeHJyz7nYQKR6VbVh+6QJ/jxdP/UNwb93s=;
 	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=Q1JJdxDTv/qrE6clzuBKUWvVV6SXKYp1tbyZCi0QxkxYsFWofnMgPHp/gg5Ov2Iv/
-	 YAMf2a5MYgbFzNZydDSnUrU4HoFMfxiZf4qllyrQDUIo/rDsi9oA+V8HhpeyVMohcb
-	 NEEDw6BDva7NJAyz5BlhOGZZ8J72hr0nG+yGhWsmyrmyexTQ+g2lQv8ReeJmcQ1JUp
-	 mugd82T1WLnaDGGq5QbwqjzWM5Rjg8CmTBfW/snV3rf9rOYRaR7Qbsfhx2rObx33aY
-	 spllMh3s0u590p6nXMPvlQzWok7JoMAmpqMUNf+tAfPuB4sG5i1cSFgmGUNZDswSOf
-	 cUqiot2Kw4j+A==
-Message-ID: <b6a1b7d1-d42c-4379-b59f-865edc863449@kernel.org>
-Date: Thu, 26 Feb 2026 08:53:24 +0100
+	b=HviMRGeqJjp0+vzaARW+TdMUj1LqBOpissv+xxYJ2H/HIoCHAudBwbcxyCRm9zv+O
+	 6c9+wPl+bTutnLn1NB/KOpm0vjrrEuStVKS4bepYOGF6+cf3ZgmLljcpM+JZ+Bnikm
+	 KC2ohgiU6cnXQKbCz05rzLfsF8CB9O+3ysBRotSiz/dSXaIby9PRzN5Q6iF/KPxwMj
+	 D+jz0qiFnfHnORvK2d0gWFyBzJLAfjtzsmz9iuWr1krgQIVg4jVt/9W0/rzREitrDn
+	 0Rh2BWZFexUjsqMfyHWlwQZsaa6Er3Aqx3GaWt7hcYmz6X1TUlkB1tHEU5qz/r6mA4
+	 GYH2Hk0Mzolfw==
+Message-ID: <cbc6a1bc-69f8-448b-8323-ea3ae17a0b44@kernel.org>
+Date: Thu, 26 Feb 2026 08:59:14 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next] mptcp: pm: in-kernel: remove
- mptcp_pm_has_addr_attr_id
+Subject: Re: [PATCH mptcp-next] selftests: mptcp: join: recreate signal endp
+ with same ID
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, MPTCP Upstream <mptcp@lists.linux.dev>
-References: <20260223-mptcp_pm_has_addr_attr_id-v1-1-1efb38ad6488@kernel.org>
- <e7a8a27fd92c1f99e34bd535e8f77f9568bcd1ec.camel@kernel.org>
+References: <20260223-mptcp-sft-re-use-id-v1-1-ec648a8bda22@kernel.org>
+ <b84b2296e37d0835c309947c1eaa2da86af13374.camel@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,41 +86,47 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <e7a8a27fd92c1f99e34bd535e8f77f9568bcd1ec.camel@kernel.org>
+In-Reply-To: <b84b2296e37d0835c309947c1eaa2da86af13374.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 26/02/2026 02:56, Geliang Tang wrote:
+On 26/02/2026 02:58, Geliang Tang wrote:
 > Hi Matt,
 > 
 > Thanks for this patch.
 > 
-> On Mon, 2026-02-23 at 18:35 +0100, Matthieu Baerts (NGI0) wrote:
->> There is no need to call this helper: it will check if the address ID
->> attribute is set, but this attribute has already been parsed
->> previously.
+> On Mon, 2026-02-23 at 19:46 +0100, Matthieu Baerts (NGI0) wrote:
+>> In this "delete re-add signal" MPTCP Join subtest, the endpoint
+>> linked
+>> to the initial subflow is removed, but readded once with different
+>> ID.
 >>
->> Indeed, the value has been set in 'entry->addr.id' if it was set and
->> positive, which is what we were looking at. Then only looking at this
->> already parsed value is enough, not need to re-extract all Netlink
->> attributes again.
+>> It appears that there was an issue when reusing the same ID, recently
+>> fixed by commit d191101dee25 ("mptcp: pm: in-kernel: always set ID as
+>> avail when rm endp"). The test then now reuses the same ID the first
+>> time, but continue to use another one (88) the second time.
+>>
+>> This should then cover more cases.
+>>
+>> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/615
+>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 > 
-> Yes indeed.
+> Looks good to me.
 > 
 >     Reviewed-by: Geliang Tang <geliang@kernel.org>
 
 Thank you for the review!
 
 New patches for t/upstream:
-- 34089fd1812f: mptcp: pm: in-kernel: remove mptcp_pm_has_addr_attr_id
-- Results: c0858783271a..cc839747fb54 (export)
+- aa395cce7724: selftests: mptcp: join: recreate signal endp with same ID
+- Results: cc839747fb54..8e5eefda4630 (export)
 
 Tests are now in progress:
 
 - export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/0a6bf9713531722bee20a1f3d24ad42c68e18206/checks
+https://github.com/multipath-tcp/mptcp_net-next/commit/8c746bc846a4148976c11a69c1175a049fff5da7/checks
 
 Cheers,
 Matt
