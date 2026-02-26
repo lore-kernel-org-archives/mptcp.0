@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC956372B5F
-	for <mptcp@lists.linux.dev>; Thu, 26 Feb 2026 07:49:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E043238A733
+	for <mptcp@lists.linux.dev>; Thu, 26 Feb 2026 07:53:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772092165; cv=none; b=lbIs8vbsXzdfJU/28RXp6SfN3ANo7kCImyMKCmPFSYr504Yku/+LeV3xEHNivvcdutN8Gu2fF9GMQDJaLMpkLthwaO2zq/iC+TVcR9iHQB/yEnJm4XyTJ1PN7HXNLTxOcAhP8qDLUQIpNf5MZzOBJamgBz/bft5YzcKfZMn8zd8=
+	t=1772092407; cv=none; b=UIU0+kE6Rmr1BAKjr8KJaWgLgcXT7FJwQhMdh4F6Gx3Kn8x9F3oHnATJpW6CmeUDaCENbIGIByhtvYRckwzuK13onaZas2zy+RM8PAmPMMI97SzXApEhgXISGTnPYA2O3mCCRMVHkSXpQN/kHGfoXQhmCNPG3n2ipoXz/VoUEnY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772092165; c=relaxed/simple;
-	bh=k/wxBtxaxuaxQLhJgOqCnzzZ90w2fs9LqE7GflJvgLU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YYY84lIYqEvNJ/rirSaEMhpCrD+AwylHPLmOzx1MrlbONOSBUouMIVo6brnh2XBOBBERlMfsNKioq5LW8zrSVvf4d8/gssyvUtV3xOzcD2Lef1iLjdb532Uc9+4vodYaLyKK/dMvbaIXElLT8DtwRifM07Gsfh5VzILx8SGWPBQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MdXrnh3Q; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1772092407; c=relaxed/simple;
+	bh=6BC3FxF3yWoF9K4gjGTEwVQXLvCRI5DtAKAEamZTOLY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=cVcbpQAc+J4SHh/mUMU+rH5B1+x0cHrAKMTfjONmT4+FTi7xYmlHFi+VS5eFfX1CcYO3xJ6dYF434YD1VcU1N/bjPv7zangHu3Ola4uy2Nb2oZTqrF24TvZ3/iISZTgU4X1KfJe+9IYV6cCnFef7O0XIZXE+Ynonyk5HsRoz6Y4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q1JJdxDT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MdXrnh3Q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAC92C19422;
-	Thu, 26 Feb 2026 07:49:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q1JJdxDT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2A34C19422;
+	Thu, 26 Feb 2026 07:53:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772092165;
-	bh=k/wxBtxaxuaxQLhJgOqCnzzZ90w2fs9LqE7GflJvgLU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=MdXrnh3QrT47DhMC3Kes3fATzYAcp+dDRkaqAWl5qC4UDnqd5onMRgzcj9T4opXJ+
-	 K/vNoC0vqfXcGgSPP4IQXDUiqw0a20Mtw9zHtoAsplxzHtcMzHvQqqvPZloZE8j5R4
-	 T2W2fTyxUYahJfSUZYJTUSmyiAI/6+UJYXyPMrrwJYeed41FfAvsFd5now1pqRvwtD
-	 2wI0OWKNYM+rh3x/eHLKsIv3qickiS/onhtuZ3uP0RRBi50qU3YwTPicyt4P3KOsMi
-	 QNZ1fsaVWGg6oSSqXWjAN8J2IKf51DwjlrYel2y5bGJ4CWpXou2vRtKBz0vtKH7AoC
-	 dQSEpUZTLhDlg==
-Message-ID: <1df224ba-93ab-49b0-a3ad-dd43084f5be9@kernel.org>
-Date: Thu, 26 Feb 2026 08:49:24 +0100
+	s=k20201202; t=1772092407;
+	bh=6BC3FxF3yWoF9K4gjGTEwVQXLvCRI5DtAKAEamZTOLY=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=Q1JJdxDTv/qrE6clzuBKUWvVV6SXKYp1tbyZCi0QxkxYsFWofnMgPHp/gg5Ov2Iv/
+	 YAMf2a5MYgbFzNZydDSnUrU4HoFMfxiZf4qllyrQDUIo/rDsi9oA+V8HhpeyVMohcb
+	 NEEDw6BDva7NJAyz5BlhOGZZ8J72hr0nG+yGhWsmyrmyexTQ+g2lQv8ReeJmcQ1JUp
+	 mugd82T1WLnaDGGq5QbwqjzWM5Rjg8CmTBfW/snV3rf9rOYRaR7Qbsfhx2rObx33aY
+	 spllMh3s0u590p6nXMPvlQzWok7JoMAmpqMUNf+tAfPuB4sG5i1cSFgmGUNZDswSOf
+	 cUqiot2Kw4j+A==
+Message-ID: <b6a1b7d1-d42c-4379-b59f-865edc863449@kernel.org>
+Date: Thu, 26 Feb 2026 08:53:24 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-net] selftests: mptcp: join: check removing
- signal+subflow endp
+Subject: Re: [PATCH mptcp-next] mptcp: pm: in-kernel: remove
+ mptcp_pm_has_addr_attr_id
 Content-Language: en-GB, fr-BE
-To: Mat Martineau <martineau@kernel.org>
-Cc: MPTCP Upstream <mptcp@lists.linux.dev>
-References: <20260219101033.716403-2-matttbe@kernel.org>
- <e9828ca4-f91a-3f31-5ef6-6608012acf89@kernel.org>
+To: Geliang Tang <geliang@kernel.org>, MPTCP Upstream <mptcp@lists.linux.dev>
+References: <20260223-mptcp_pm_has_addr_attr_id-v1-1-1efb38ad6488@kernel.org>
+ <e7a8a27fd92c1f99e34bd535e8f77f9568bcd1ec.camel@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,59 +86,41 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <e9828ca4-f91a-3f31-5ef6-6608012acf89@kernel.org>
+In-Reply-To: <e7a8a27fd92c1f99e34bd535e8f77f9568bcd1ec.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Mat,
+Hi Geliang,
 
-On 25/02/2026 18:51, Mat Martineau wrote:
-> On Thu, 19 Feb 2026, Matthieu Baerts (NGI0) wrote:
+On 26/02/2026 02:56, Geliang Tang wrote:
+> Hi Matt,
 > 
->> This validates the previous commit: endpoints with both the signal and
->> subflow flags should always be marked as used even if it was not
->> possible to create new subflows due to the MPTCP PM limits.
->>
->> For this test, an extra endpoint is created with both the signal and the
->> subflow flags, and limits are set not to create extra subflows. In this
->> case, an ADD_ADDR is sent, but no subflows are created. Still, the local
->> endpoint is marked as used, and no warning is fired when removing the
->> endpoint, after having sent a RM_ADDR.
->>
->> The 'Fixes' tag here below is the same as the one from the previous
->> commit: this patch here is not fixing anything wrong in the selftests,
->> but it validates the previous fix for an issue introduced by this commit
->> ID.
->>
->> Fixes: 85df533a787b ("mptcp: pm: do not ignore 'subflow' if 'signal'
->> flag is also set")
->> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
->> ---
->> Linked to "mptcp: pm: in-kernel: always mark signal+subflow endp as
->> used" sent earlier.
->>
->> Based-on: <20260218-mptcp-issue-613-v1-1-f8e9adb12010@kernel.org>
->> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> Thanks for this patch.
 > 
-> Reviewed-by: Mat Martineau <martineau@kernel.org>
+> On Mon, 2026-02-23 at 18:35 +0100, Matthieu Baerts (NGI0) wrote:
+>> There is no need to call this helper: it will check if the address ID
+>> attribute is set, but this attribute has already been parsed
+>> previously.
+>>
+>> Indeed, the value has been set in 'entry->addr.id' if it was set and
+>> positive, which is what we were looking at. Then only looking at this
+>> already parsed value is enough, not need to re-extract all Netlink
+>> attributes again.
+> 
+> Yes indeed.
+> 
+>     Reviewed-by: Geliang Tang <geliang@kernel.org>
 
 Thank you for the review!
 
-Now in our tree:
-
-New patches for t/upstream-net and t/upstream:
-- 402de2bca118: mptcp: pm: in-kernel: always mark signal+subflow endp as
-used
-- e8f38bbd8b67: selftests: mptcp: join: check removing signal+subflow endp
-- Results: 652750a9d6a6..eefe19f1a175 (export-net)
-- Results: d3854ef490c9..c0858783271a (export)
+New patches for t/upstream:
+- 34089fd1812f: mptcp: pm: in-kernel: remove mptcp_pm_has_addr_attr_id
+- Results: c0858783271a..cc839747fb54 (export)
 
 Tests are now in progress:
 
-- export-net:
-https://github.com/multipath-tcp/mptcp_net-next/commit/ca3a60dc7df9f019289be14d7ca6898f8431381e/checks
 - export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/866d58409123388cf9032de57af875fbe418a642/checks
+https://github.com/multipath-tcp/mptcp_net-next/commit/0a6bf9713531722bee20a1f3d24ad42c68e18206/checks
 
 Cheers,
 Matt
