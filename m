@@ -1,146 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 161353921DC;
-	Thu, 26 Feb 2026 10:37:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA5441E8320
+	for <mptcp@lists.linux.dev>; Sat, 28 Feb 2026 01:15:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772102249; cv=none; b=SZ90tzeOe4vu0IG8Mv7K+aZ2Q+58zRFDNocNaBQrNCGxotO5Ff6TV0bAYShBQlI4JP6dCqp/rISO8WioPqqpStyhVdSQT/vaBKn341kFVd0LVlwp41yoq+bRphnD5EK1R08Z2/y5TuEjEEmuVdYsUHCus8oT/RuDZxT7QxTFhk8=
+	t=1772241335; cv=none; b=IiKJQevfPReozGJFmn9Sd/+4lcc3BlPGGZQ5V5E+Q42sBTm7DqMMqr1SQK1H0Q3W5uQR150KW3NkrFCw5fx+aUWv/vgoyWgic9avL50fZC7GiiqGZhad7QfnLEEgjSa5i85gHWOGXySFYL1wfEjArPuYzMt/QgvbeTAu5cFUdZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772102249; c=relaxed/simple;
-	bh=jRguEYYtb4ZZbxpzkqF/CDzS5i7msaNviAjY3Nd+mJc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EERU3CkxYMHRffAEEcSFuCTqPDuhx3EF/zq8jAPcZSvjys4EVqJ5zPDhR8VH7uCP3UwsxoiBuK5DtmO8pPytAaPnFX6NOSRF/L8pSnQXN5NGA1lGRQn66vcY1k8o2MqNbfhNosbj2t1mlvSDg8lRuzSeGK+w6+fGQhN2W/LU5Og=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cda4uqdt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1772241335; c=relaxed/simple;
+	bh=HTSn2E8VSNxH5vxl4BHDJAJhmX/a0M1xldLbUro/yOE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=XSMrqntQMS/hQXBJd9NgFb+V1jqZGy2ls947WJJjwAMbIKdIis2vWPI+ZRcwG6bkTjRWOV2DcWAUpKGFaxbHjJGrbuGQFX7iAtU/9nYKZoL261IzdRoD9K4BMuUeaIE87NHUjTdNO4liDCwGgvw27M/3+FyYDgrXJq1L4v5d/84=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=hGRxfYBF; arc=none smtp.client-ip=91.218.175.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cda4uqdt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BFEF3C116C6;
-	Thu, 26 Feb 2026 10:37:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772102248;
-	bh=jRguEYYtb4ZZbxpzkqF/CDzS5i7msaNviAjY3Nd+mJc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Cda4uqdt0BgL+RT4YlpvVgnK8h6oHFEpj5J/6/yFj2+jHNHI7rshLnhl//UP9aXFW
-	 5/CHa4KYAJy/FHHxBpnRIXGBxBD0cE7uxMaFDwdrOlR7wjqbb8QK9fthU4zG6UBcDO
-	 zZjugzma31Elj/j9d4zdSrLPl4Tvqrd+hx7meV5kdrvd3S4bqgvkNb3alUDE8Jmnyp
-	 BM1YFgzIfQCKU2/ZaCwE+stUv5XC6DqXrAKMiZPuxeqMdqNGuLMctpSDlV+nrCqBt6
-	 LlWGLBwqoF/rc2atTGikKQ8Rx5R9rZ8vDu95JMvqTDpo24uSfO2CovcyHpdzQW6uLL
-	 0UniQX59zyuRA==
-Message-ID: <7f3e74d7-67dc-48d7-99d2-0b87f671651b@kernel.org>
-Date: Thu, 26 Feb 2026 11:37:23 +0100
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="hGRxfYBF"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1772241330;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=vQrh2XjeEfIGvyvnPA2XM4RakSauP8+IVYJ7n+3ppQg=;
+	b=hGRxfYBFcCbloHKeI+htiTMJssfK4kACh9JPbo06E5I2OsiQFV0YnEw5crItZYVV8uPvv8
+	3ovKoVAYpMvheMwgAlklY9UXM3rhhelKyUY2fYVJl1NYe9SD6+eCmayfYlUTfUmp9S5rvg
+	DuyUa30rHAF2vxE1MQL21ToC0l5gxj4=
+From: Gang Yan <gang.yan@linux.dev>
+To: mptcp@lists.linux.dev
+Cc: pabeni@redhat.com,
+	Gang Yan <yangang@kylinos.cn>,
+	Geliang Tang <geliang@kernel.org>
+Subject: [RESEND PATCH mptcp-net v2] mptcp: fix stall because of data_ready
+Date: Sat, 28 Feb 2026 09:15:07 +0800
+Message-ID: <20260228011511.440437-1-gang.yan@linux.dev>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Stalls when starting a VSOCK listening socket: soft lockups, RCU
- stalls, timeout
-To: Matthieu Baerts <matttbe@kernel.org>,
- Stefan Hajnoczi <stefanha@redhat.com>,
- Stefano Garzarella <sgarzare@redhat.com>
-Cc: kvm@vger.kernel.org, virtualization@lists.linux.dev,
- Netdev <netdev@vger.kernel.org>, rcu@vger.kernel.org,
- MPTCP Linux <mptcp@lists.linux.dev>,
- Linux Kernel <linux-kernel@vger.kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@kernel.org>,
- Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
- "Paul E. McKenney" <paulmck@kernel.org>,
- Dave Hansen <dave.hansen@linux.intel.com>, "luto@kernel.org"
- <luto@kernel.org>
-References: <b24ffcb3-09d5-4e48-9070-0b69bc654281@kernel.org>
-Content-Language: en-US
-From: Jiri Slaby <jirislaby@kernel.org>
-Autocrypt: addr=jirislaby@kernel.org; keydata=
- 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
-In-Reply-To: <b24ffcb3-09d5-4e48-9070-0b69bc654281@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=y
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On 06. 02. 26, 12:54, Matthieu Baerts wrote:
-> Our CI for the MPTCP subsystem is now regularly hitting various stalls
-> before even starting the MPTCP test suite. These issues are visible on
-> top of the latest net and net-next trees, which have been sync with
-> Linus' tree yesterday. All these issues have been seen on a "public CI"
-> using GitHub-hosted runners with KVM support, where the tested kernel is
-> launched in a nested (I suppose) VM. I can see the issue with or without
-> debug.config. According to the logs, it might have started around
-> v6.19-rc0, but I was unavailable for a few weeks, and I couldn't react
-> quicker, sorry for that. Unfortunately, I cannot reproduce this locally,
-> and the CI doesn't currently have the ability to execute bisections.
+From: Gang Yan <yangang@kylinos.cn>
 
-Hmm, after the switch of the qemu guest kernels to 6.19, our (opensuse) 
-build service is stalling in smp_call_function_many_cond() randomly too:
-https://bugzilla.suse.com/show_bug.cgi?id=1258936
+This patch fixes the second type of backlog_list stall issue that
+occurs when the data_ready callback attempts to trigger data transfer.
+The issue reproduces at approximately a 20% rate (once every five runs)
+when running multi_chunk.sh tests.
 
-The attachment from there contains sysrq-t logs too:
-https://bugzilla.suse.com/attachment.cgi?id=888612
+The stall occurs under the following conditions:
+1. A large amount of out-of-order (OFO) data causes sk_rmem_alloc to
+   exceed sk_rcvbuf
+2. The skb matching the current ack_seq is not present in backlog_list
+3. Data reception relies on data_ready callback notification
 
-> The stalls happen before starting the MPTCP test suite. The init program
-> creates a VSOCK listening socket via socat [1], and different hangs are
-> then visible: RCU stalls followed by a soft lockup [2], only a soft
-> lockup [3], sometimes the soft lockup comes with a delay [4] [5], or
-> there is no RCU stalls or soft lockups detected after one minute, but VM
-> is stalled [6]. In the last case, the VM is stopped after having
-> launched GDB to get more details about what was being executed.
-> 
-> It feels like the issue is not directly caused by the VSOCK listening
-> socket, but the stalls always happen after having started the socat
-> command [1] in the background.
+In this scenario, the data_ready callback (via mptcp_data_ready() ->
+sk->sk_data_ready()) attempts to trigger data movement, but
+__mptcp_move_skbs_from_subflow() repeatedly moves the ack_seq skb into
+backlog_list and returns false:
 
-It fails randomly while building random packages (go, libreoffice, 
-bayle, ...). I don't think it is VSOCK related in those cases, but who 
-knows what the builds do...
+'''
+msk->ack_seq:3442119990924456661, map_seq:3442119990924456661, offset:0, fin:0
+[MPTCP_BACKLOG] #0 map_seq=3442119990924655746 end_seq=3442119990924660542 len=4796
+[MPTCP_BACKLOG] #1 map_seq=3442119990924491850 end_seq=3442119990924500364 len=8514
+[MPTCP_BACKLOG] #2 map_seq=3442119990924660542 end_seq=3442119990924726001 len=65459
+[MPTCP_BACKLOG] #3 map_seq=3442119990924508114 end_seq=3442119990924514971 len=6857
+[MPTCP_BACKLOG] #4 map_seq=3442119990924726001 end_seq=3442119990924731093 len=5092
+[MPTCP_BACKLOG] #5 map_seq=3442119990924456661 end_seq=3442119990924464310 len=7649
+[MPTCP_BACKLOG] #6 map_seq=3442119990924456661 end_seq=3442119990924464310 len=7649
+[MPTCP_BACKLOG] #7 map_seq=3442119990924456661 end_seq=3442119990924464310 len=7649
+[MPTCP_BACKLOG] #8 map_seq=3442119990924456661 end_seq=3442119990924464310 len=7649
+[MPTCP_BACKLOG] #9 map_seq=3442119990924456661 end_seq=3442119990924464310 len=7649
+[MPTCP_BACKLOG] #10 map_seq=3442119990924456661 end_seq=3442119990924464310 len=7649
+[MPTCP_BACKLOG] #11 map_seq=3442119990924456661 end_seq=3442119990924464310 len=7649
+[MPTCP_BACKLOG] #12 map_seq=3442119990924456661 end_seq=3442119990924464310 len=7649
+...
+'''
 
-I cannot reproduce locally either.
+The fix allows moving in-sequence SKBs (map_seq == ack_seq) even when
+the receive buffer is full, preventing the stall condition.
 
-I came across:
-   614da1d3d4cd x86: make page fault handling disable interrupts properly
-but I have no idea if it could have impact on this at all.
+Fixes: 6228efe0cc01 ("mptcp: leverage the backlog for RX packet processing")
+Co-developed-by: Geliang Tang <geliang@kernel.org>
+Signed-off-by: Geliang Tang <geliang@kernel.org>
+Signed-off-by: Gang Yan <yangang@kylinos.cn>
+---
 
-thanks,
+Notes:
+    changelog:
+      v2:
+       - As suggested by Paolo, the previous empty‑queue check on the
+         receive queue has been replaced with a check that permits
+         in‑sequence SKBs.
+      v1:
+       - Paolo has reviewed at:
+	 https://patchwork.kernel.org/project/mptcp/patch/de0a7e3ea6a3cac75b3c2c811695c5d674d929ef.1770273341.git.yangang@kylinos.cn/
+
+ net/mptcp/protocol.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index c020882521b4..25ed246db7fb 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -739,7 +739,8 @@ static bool __mptcp_move_skbs_from_subflow(struct mptcp_sock *msk,
+ 
+ 			mptcp_init_skb(ssk, skb, offset, len);
+ 
+-			if (own_msk && sk_rmem_alloc_get(sk) < sk->sk_rcvbuf) {
++			if (own_msk && (sk_rmem_alloc_get(sk) < sk->sk_rcvbuf ||
++					MPTCP_SKB_CB(skb)->map_seq == msk->ack_seq)) {
+ 				mptcp_subflow_lend_fwdmem(subflow, skb);
+ 				ret |= __mptcp_move_skb(sk, skb);
+ 			} else {
 -- 
-js
-suse labs
+2.43.0
 
