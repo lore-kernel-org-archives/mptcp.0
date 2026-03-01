@@ -1,93 +1,221 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 102373EFD21
-	for <mptcp@lists.linux.dev>; Sat, 28 Feb 2026 09:12:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 368E1285C84;
+	Sun,  1 Mar 2026 01:26:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772269975; cv=none; b=of1ywa4Thy0kJtJCQpwVwHL5bPRegbHT9n1UIXopajMEpa4Hax6vUOTTOhS6Rj5tuQMEaHcGmzgFJtpEvWXuDZ+oC/ztK2lwJ0XucKoDU8fycVJSGKRWcCrlGZ4ap+bx9btdBk3s49ZfjJ5OrmgUZFjiXtsFnyqkEYpd9CBCYRM=
+	t=1772328380; cv=none; b=mI2PZxlLvSw9GBDWnyvtcIENgYXvustZ0MJoubAR+80OD7q2Pkv0mE70EBVegimgY2VwQeqLODgXHnkzGaET/VBA1A9tXW0/0fohJemya+0XJbldJP4rJRxcMZPKiaeY6Nkmfcsjtoy9bBBPphgre31HiB2JaesdwjeXeVhV4Ts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772269975; c=relaxed/simple;
-	bh=xZCLbbUQs162sJ097sBKXz7R9hRsLTBJsXMnMTlnzqE=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=S5ZO5zpkXk8Ldu9d2Xt1qDHLFD/Mid9DyTM8fUvA826OiK0lH/kGD3R/1hZ18kU2vPNqmHYs/DV1USDfJN83k1uayDGjduF4m02zFYJtKHk1dZTi+oR2EFWzsgXRa2wDrNmhI/4HBUhW+Uf8J3rymc6fM5n60iMJ4NkfXLUV8nc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gh5P560N; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1772328380; c=relaxed/simple;
+	bh=cPGA4ydUjzVA5xlidOPwWJo+JHLvxEKQ8FHN66/70X4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HNTT3v1h1XZbe2dBnwZVvE+avTjQR7cNekTPuJvF3kLFjXKV9bSExu5uGCNfBRcFO3FK+cagDSwVOqamldWBIC4/bJhkR9CbMcqpzoKue9wGpFM/Te3UttEjNPQByXfOtpdpcwrwa+mYLHWfAkk3Wf882gPgTi7HetBmY4o6k6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QaBB7lPJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gh5P560N"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 282F3C116D0;
-	Sat, 28 Feb 2026 09:12:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QaBB7lPJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B18AC19421;
+	Sun,  1 Mar 2026 01:26:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772269974;
-	bh=xZCLbbUQs162sJ097sBKXz7R9hRsLTBJsXMnMTlnzqE=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=Gh5P560NDGyxPtOtxpM2Y20AV2j8Oe5l7cUc+VDFRJVrY+N/H3x/0W8QsuClkQfTZ
-	 UUKa0D5PIQgvqI/+Y+seqALXVeSEEHng3VBjpnLjtWAFc3SZMOzTJqOdFcEKQHzdrq
-	 aDOLE2poc5WGps3G33LL3jPI9kaCVs4E/X8fAXvE9aw0NOBKX1ozD4fql2/Lr2vty3
-	 978iJmMsjrxuzY3PT60V6i5OzQqX5zsu0N2WjYnyHBphDPiFpIsFlLbB03Vn7VkGpu
-	 USMQO4pI1+vOaxZ8q2wrtWCqOhhONduIFzk0iUT7/r63ZhHYTX9jHq1oNP+9DE+46F
-	 PQcWxNkV3sSkA==
-Message-ID: <cfe4ed715628a84625c7fdafcee587581d880338.camel@kernel.org>
-Subject: Re: [RFC v2 mptcp-next] mptcp: support MSG_EOR in mptcp_sendmsg
-From: Geliang Tang <geliang@kernel.org>
-To: Paolo Abeni <pabeni@redhat.com>, Gang Yan <gang.yan@linux.dev>, 
+	s=k20201202; t=1772328380;
+	bh=cPGA4ydUjzVA5xlidOPwWJo+JHLvxEKQ8FHN66/70X4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=QaBB7lPJ/BRnH7FgIT09G7Y+7louw1VAm6Yu7+sII7m2OU/nkjM7OiwsWpxH3/rXy
+	 iMU+f12h1TYtDAHTJKxy5qFisGUyvC5M1kfzzFPnn09RFlWZ2xZ4ztcjBZw7kKjNOk
+	 iKRlvckvRNSO3PSf6kZ1jMPLBb0z5Ea9toRDF2tzTd19eNCh+7VGKaTaDD1R6cPm6T
+	 RmQaVwOOkpTYiiahvu4z1wFxQNBbdf1NCGqtiYxzuK44oMo6OY+LccTGMlsCarIorX
+	 vRWwScamYPPCWitADIYHf462FptgXfE7Vm/pyMVp9YRpt5Wr3vOF63DiFQUd2cCrNw
+	 zEIeUG0XGuQXA==
+From: Sasha Levin <sashal@kernel.org>
+To: stable@vger.kernel.org,
+	matttbe@kernel.org
+Cc: syzbot+f56f7d56e2c6e11a01b6@syzkaller.appspotmail.com,
+	Mat Martineau <martineau@kernel.org>,
+	Jakub Kicinski <kuba@kernel.org>,
+	netdev@vger.kernel.org,
 	mptcp@lists.linux.dev
-Cc: Gang Yan <yangang@kylinos.cn>
-Date: Sat, 28 Feb 2026 17:12:49 +0800
-In-Reply-To: <f3235ddf-9d39-42a7-8e44-a847b7402e39@redhat.com>
-References: <20260203023029.855434-1-gang.yan@linux.dev>
-	 <f3235ddf-9d39-42a7-8e44-a847b7402e39@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.58.2 (3.58.2-1.fc43) 
+Subject: FAILED: Patch "mptcp: pm: in-kernel: always set ID as avail when rm endp" failed to apply to 6.12-stable tree
+Date: Sat, 28 Feb 2026 20:26:17 -0500
+Message-ID: <20260301012618.1683684-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-Patchwork-Hint: ignore
+X-stable: review
 Content-Transfer-Encoding: 8bit
 
-Hi Gang,
-
-On Thu, 2026-02-12 at 10:04 +0100, Paolo Abeni wrote:
-> On 2/3/26 3:30 AM, Gang Yan wrote:
-> > diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> > index cd5266099993..8b243062009c 100644
-> > --- a/net/mptcp/protocol.h
-> > +++ b/net/mptcp/protocol.h
-> > @@ -267,6 +267,7 @@ struct mptcp_data_frag {
-> >  	u16 overhead;
-> >  	u16 already_sent;
-> >  	struct page *page;
-> > +	u8 eor;  /* Is MSG_EOR marked? Prevents coalescing with
-> > next frag */
-> 
-> I'm sorry for the late feedback, but the above will waste quite a bit
-> of
-> memory due to alignment. I think you can change the 'overhead' size
-> to
-> u8 and place 'eor' after such field.
-
-I completely agree.
-I think it's better not to let 'eor' use all 8 bits here; just one bit
-is
-sufficient, leaving the other 7 bits for future use, similar to:
-
-	u8 eor:1,
-	   __unused:7;
-
-I changed the state of this patch as "Changes Requested".
+The patch below does not apply to the 6.12-stable tree.
+If someone wants it applied there, or to any other stable or longterm
+tree, then please email the backport, including the original git commit
+id to <stable@vger.kernel.org>.
 
 Thanks,
--Geliang
+Sasha
 
-> 
-> Such change could be paired with build time check vs 'overhead'
-> overflow. i.e.
-> 
-> 	BUILD_BUG_ON(ALIGN(1, sizeof(long)) + sizeof(struct
-> mptcp_data_frag) >
-> U8_MAX);
-> 
-> /P
-> 
+------------------ original commit in Linus's tree ------------------
+
+From d191101dee25567c2af3b28565f45346c33d65f5 Mon Sep 17 00:00:00 2001
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Date: Thu, 5 Feb 2026 18:34:21 +0100
+Subject: [PATCH] mptcp: pm: in-kernel: always set ID as avail when rm endp
+
+Syzkaller managed to find a combination of actions that was generating
+this warning:
+
+  WARNING: net/mptcp/pm_kernel.c:1074 at __mark_subflow_endp_available net/mptcp/pm_kernel.c:1074 [inline], CPU#1: syz.7.48/2535
+  WARNING: net/mptcp/pm_kernel.c:1074 at mptcp_pm_nl_fullmesh net/mptcp/pm_kernel.c:1446 [inline], CPU#1: syz.7.48/2535
+  WARNING: net/mptcp/pm_kernel.c:1074 at mptcp_pm_nl_set_flags_all net/mptcp/pm_kernel.c:1474 [inline], CPU#1: syz.7.48/2535
+  WARNING: net/mptcp/pm_kernel.c:1074 at mptcp_pm_nl_set_flags+0x5de/0x640 net/mptcp/pm_kernel.c:1538, CPU#1: syz.7.48/2535
+  Modules linked in:
+  CPU: 1 UID: 0 PID: 2535 Comm: syz.7.48 Not tainted 6.18.0-03987-gea5f5e676cf5 #17 PREEMPT(voluntary)
+  Hardware name: QEMU Ubuntu 25.10 PC (i440FX + PIIX, 1996), BIOS 1.17.0-debian-1.17.0-1 04/01/2014
+  RIP: 0010:__mark_subflow_endp_available net/mptcp/pm_kernel.c:1074 [inline]
+  RIP: 0010:mptcp_pm_nl_fullmesh net/mptcp/pm_kernel.c:1446 [inline]
+  RIP: 0010:mptcp_pm_nl_set_flags_all net/mptcp/pm_kernel.c:1474 [inline]
+  RIP: 0010:mptcp_pm_nl_set_flags+0x5de/0x640 net/mptcp/pm_kernel.c:1538
+  Code: 89 c7 e8 c5 8c 73 fe e9 f7 fd ff ff 49 83 ef 80 e8 b7 8c 73 fe 4c 89 ff be 03 00 00 00 e8 4a 29 e3 fe eb ac e8 a3 8c 73 fe 90 <0f> 0b 90 e9 3d ff ff ff e8 95 8c 73 fe b8 a1 ff ff ff eb 1a e8 89
+  RSP: 0018:ffffc9001535b820 EFLAGS: 00010287
+  netdevsim0: tun_chr_ioctl cmd 1074025677
+  RAX: ffffffff82da294d RBX: 0000000000000001 RCX: 0000000000080000
+  RDX: ffffc900096d0000 RSI: 00000000000006d6 RDI: 00000000000006d7
+  netdevsim0: linktype set to 823
+  RBP: ffff88802cdb2240 R08: 00000000000104ae R09: ffffffffffffffff
+  R10: ffffffff82da27d4 R11: 0000000000000000 R12: 0000000000000000
+  R13: ffff88801246d8c0 R14: ffffc9001535b8b8 R15: ffff88802cdb1800
+  FS:  00007fc6ac5a76c0(0000) GS:ffff8880f90c8000(0000) knlGS:0000000000000000
+  netlink: 'syz.3.50': attribute type 5 has an invalid length.
+  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  netlink: 1232 bytes leftover after parsing attributes in process `syz.3.50'.
+  CR2: 0000200000010000 CR3: 0000000025b1a000 CR4: 0000000000350ef0
+  Call Trace:
+   <TASK>
+   mptcp_pm_set_flags net/mptcp/pm_netlink.c:277 [inline]
+   mptcp_pm_nl_set_flags_doit+0x1d7/0x210 net/mptcp/pm_netlink.c:282
+   genl_family_rcv_msg_doit+0x117/0x180 net/netlink/genetlink.c:1115
+   genl_family_rcv_msg net/netlink/genetlink.c:1195 [inline]
+   genl_rcv_msg+0x3a8/0x3f0 net/netlink/genetlink.c:1210
+   netlink_rcv_skb+0x16d/0x240 net/netlink/af_netlink.c:2550
+   genl_rcv+0x28/0x40 net/netlink/genetlink.c:1219
+   netlink_unicast_kernel net/netlink/af_netlink.c:1318 [inline]
+   netlink_unicast+0x3e9/0x4c0 net/netlink/af_netlink.c:1344
+   netlink_sendmsg+0x4ab/0x5b0 net/netlink/af_netlink.c:1894
+   sock_sendmsg_nosec net/socket.c:718 [inline]
+   __sock_sendmsg+0xc9/0xf0 net/socket.c:733
+   ____sys_sendmsg+0x272/0x3b0 net/socket.c:2608
+   ___sys_sendmsg+0x2de/0x320 net/socket.c:2662
+   __sys_sendmsg net/socket.c:2694 [inline]
+   __do_sys_sendmsg net/socket.c:2699 [inline]
+   __se_sys_sendmsg net/socket.c:2697 [inline]
+   __x64_sys_sendmsg+0x110/0x1a0 net/socket.c:2697
+   do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+   do_syscall_64+0xed/0x360 arch/x86/entry/syscall_64.c:94
+   entry_SYSCALL_64_after_hwframe+0x77/0x7f
+  RIP: 0033:0x7fc6adb66f6d
+  Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 e8 ff ff ff f7 d8 64 89 01 48
+  RSP: 002b:00007fc6ac5a6ff8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+  RAX: ffffffffffffffda RBX: 00007fc6addf5fa0 RCX: 00007fc6adb66f6d
+  RDX: 0000000000048084 RSI: 00002000000002c0 RDI: 000000000000000e
+  RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+  R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+  netlink: 'syz.5.51': attribute type 2 has an invalid length.
+  R13: 00007fff25e91fe0 R14: 00007fc6ac5a7ce4 R15: 00007fff25e920d7
+   </TASK>
+
+The actions that caused that seem to be:
+
+ - Create an MPTCP endpoint for address A without any flags
+ - Create a new MPTCP connection from address A
+ - Remove the MPTCP endpoint: the corresponding subflows will be removed
+ - Recreate the endpoint with the same ID, but with the subflow flag
+ - Change the same endpoint to add the fullmesh flag
+
+In this case, msk->pm.local_addr_used has been kept to 0 as expected,
+but the corresponding bit in msk->pm.id_avail_bitmap was still unset
+after having removed the endpoint, causing the splat later on.
+
+When removing an endpoint, the corresponding endpoint ID was only marked
+as available for "signal" types with an announced address, plus all
+"subflow" types, but not the other types like an endpoint corresponding
+to the initial subflow. In these cases, re-creating an endpoint with the
+same ID didn't signal/create anything. Here, adding the fullmesh flag
+was creating the splat when calling __mark_subflow_endp_available() from
+mptcp_pm_nl_fullmesh(), because msk->pm.local_addr_used was set to 0
+while the ID was marked as used.
+
+To fix this issue, the corresponding bit in msk->pm.id_avail_bitmap can
+always be set as available when removing an MPTCP in-kernel endpoint. In
+other words, moving the call to __set_bit() to do it in all cases,
+except for "subflow" types where this bit is handled in a dedicated
+helper.
+
+Note: instead of adding a new spin_(un)lock_bh that would be taken in
+all cases, do all the actions requiring the spin lock under the same
+block.
+
+This modification potentially fixes another issue reported by syzbot,
+see [1]. But without a reproducer or more details about what exactly
+happened before, it is hard to confirm.
+
+Fixes: e255683c06df ("mptcp: pm: re-using ID of unused removed ADD_ADDR")
+Cc: stable@vger.kernel.org
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/606
+Reported-by: syzbot+f56f7d56e2c6e11a01b6@syzkaller.appspotmail.com
+Closes: https://lore.kernel.org/68fcfc4a.050a0220.346f24.02fb.GAE@google.com [1]
+Reviewed-by: Mat Martineau <martineau@kernel.org>
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Link: https://patch.msgid.link/20260205-net-mptcp-misc-fixes-6-19-rc8-v2-1-c2720ce75c34@kernel.org
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+---
+ net/mptcp/pm_kernel.c | 20 ++++++++------------
+ 1 file changed, 8 insertions(+), 12 deletions(-)
+
+diff --git a/net/mptcp/pm_kernel.c b/net/mptcp/pm_kernel.c
+index b26675054b0dc..4972c19fc73e2 100644
+--- a/net/mptcp/pm_kernel.c
++++ b/net/mptcp/pm_kernel.c
+@@ -1056,10 +1056,8 @@ static bool mptcp_pm_remove_anno_addr(struct mptcp_sock *msk,
+ 	ret = mptcp_remove_anno_list_by_saddr(msk, addr);
+ 	if (ret || force) {
+ 		spin_lock_bh(&msk->pm.lock);
+-		if (ret) {
+-			__set_bit(addr->id, msk->pm.id_avail_bitmap);
++		if (ret)
+ 			msk->pm.add_addr_signaled--;
+-		}
+ 		mptcp_pm_remove_addr(msk, &list);
+ 		spin_unlock_bh(&msk->pm.lock);
+ 	}
+@@ -1097,17 +1095,15 @@ static int mptcp_nl_remove_subflow_and_signal_addr(struct net *net,
+ 					  !(entry->flags & MPTCP_PM_ADDR_FLAG_IMPLICIT));
+ 
+ 		list.ids[0] = mptcp_endp_get_local_id(msk, addr);
+-		if (remove_subflow) {
+-			spin_lock_bh(&msk->pm.lock);
+-			mptcp_pm_rm_subflow(msk, &list);
+-			spin_unlock_bh(&msk->pm.lock);
+-		}
+ 
+-		if (entry->flags & MPTCP_PM_ADDR_FLAG_SUBFLOW) {
+-			spin_lock_bh(&msk->pm.lock);
++		spin_lock_bh(&msk->pm.lock);
++		if (remove_subflow)
++			mptcp_pm_rm_subflow(msk, &list);
++		if (entry->flags & MPTCP_PM_ADDR_FLAG_SUBFLOW)
+ 			__mark_subflow_endp_available(msk, list.ids[0]);
+-			spin_unlock_bh(&msk->pm.lock);
+-		}
++		else /* mark endp ID as available, e.g. Signal or MPC endp */
++			__set_bit(addr->id, msk->pm.id_avail_bitmap);
++		spin_unlock_bh(&msk->pm.lock);
+ 
+ 		if (msk->mpc_endpoint_id == entry->addr.id)
+ 			msk->mpc_endpoint_id = 0;
+-- 
+2.51.0
+
+
+
 
