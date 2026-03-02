@@ -1,221 +1,160 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from canpmsgout10.his.huawei.com (canpmsgout10.his.huawei.com [113.46.200.225])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9417722AE65;
-	Sun,  1 Mar 2026 01:45:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F5511B4F1F
+	for <mptcp@lists.linux.dev>; Mon,  2 Mar 2026 05:02:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.225
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772329547; cv=none; b=DOSwKZu7qajEUgrhSNnH4X1oncy5ChZKzyzHJku3+BA9vAddu0RzcHJOyBa49USoIJxlJNVvO6gXeL1wJdKeWpDR08RcBypBPlXTFnp80/mLWuoX1ZKucy5w6yc8JtEFG9Rf7wpcDyg5v1bqoVfhi8h/JQ8BUKqo3+jxFY21nOY=
+	t=1772427750; cv=none; b=Pk0kMAZxhxnQ6PacN1JA7vmjMXVfo9RfKzm2UJ8+T8bOs2KAdjq02KRefH8nPZfaGdaNHYVMc4zp8u2HXCe8vTa8rcO27PhfTe5dCKxKA7tLzEEcrmOL/H7boArmxUdQfs/BZHDCknzoVGYWrzhPoAS0znWuhVvAJtZevgKle3E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772329547; c=relaxed/simple;
-	bh=TbtkU/0/NOr2Mvi4tg2UHXNnDpShU40ZKVo9FGeR+w8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HwMfMowQRZDIVfwTkl8sMxkdCUxb7+nPn97XIdqzPIj1qki+7KJm39MTgPEErClwxZjB6ERt4IswudcgP7+C8rcr4xBDYxF6frXmpfroTq1Dgq3sYGfTZ7ZGlgShCYYT9PWgt+j3I0OGdCaGCe0HbReyBQWb6O2zf4u/Vy/8yQo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MvbUeeP+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1772427750; c=relaxed/simple;
+	bh=JSLnltizuRPn6CwAgjoGO+dMG3OxBLRggzZpbQ0Yo+s=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=RYNApKa/GvFM3H92/l4snGt6wGaUuJ+i3MKgl2E5FZkhE0tIRm06iYekAFg9Nm2Tbm9HO4WwHeggEX80yt1bhqoN6YJttbD1jYQEIkITjUmCA7e3bSloKldM62UOotI9OMKQhunPX/uwp/CWc1E50bIi/TMg62PODrsKGC9PAFo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=nDsbAAS9; arc=none smtp.client-ip=113.46.200.225
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MvbUeeP+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B28EEC19421;
-	Sun,  1 Mar 2026 01:45:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772329547;
-	bh=TbtkU/0/NOr2Mvi4tg2UHXNnDpShU40ZKVo9FGeR+w8=;
-	h=From:To:Cc:Subject:Date:From;
-	b=MvbUeeP+hrqjnBwsqt+Ymi5m/b54i8D9FKgdAcgWRl7egcjzUU/m75VQLTn/VdHVz
-	 j2PYFWfMIWmroX4e345QCYpH26gtuyvXo+m5umx5nnx83FoppOiZ50JDaI+VNs0zyf
-	 occMjAB22bISaPwl6odYCNXMjJ9r8Gbewe0hgxY2nbksi3g36G+ZPknEJAv42xvkLP
-	 EN+BIjbVQiCzeCI8dPYad4WBSamm7Nu8xG4wjFB4RcHTlHTjuQZmofQ9fqG+QzPn0O
-	 CzjOnO88wE6XIlG2inCnEle5J5PGr/3Gd8qX07wcFWuGopuDkg53oFV8liD29g/AFd
-	 oAOler7g39X9w==
-From: Sasha Levin <sashal@kernel.org>
-To: stable@vger.kernel.org,
-	matttbe@kernel.org
-Cc: syzbot+f56f7d56e2c6e11a01b6@syzkaller.appspotmail.com,
-	Mat Martineau <martineau@kernel.org>,
-	Jakub Kicinski <kuba@kernel.org>,
-	netdev@vger.kernel.org,
-	mptcp@lists.linux.dev
-Subject: FAILED: Patch "mptcp: pm: in-kernel: always set ID as avail when rm endp" failed to apply to 6.1-stable tree
-Date: Sat, 28 Feb 2026 20:45:45 -0500
-Message-ID: <20260301014545.1708548-1-sashal@kernel.org>
-X-Mailer: git-send-email 2.51.0
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="nDsbAAS9"
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=SI9FLDsxgn0wLMHqZBnpavtvFfxk9bqG169b2B7HPLg=;
+	b=nDsbAAS9abg2NHjngiv/ohaxfqN1V/WnTI06HSjcUqzRbWNRtAp6PiC81yK2XcuOihzJlby/V
+	IaqqrgvzdkBNWwxP9UOXATJm6y4BZ99K4h/SwgCtYHWdvVbA6bPyGUZ7pXyk9O1d4Xb9+fN+Z2C
+	VgOuaUj1tNjkNrKraUfHSbk=
+Received: from mail.maildlp.com (unknown [172.19.163.15])
+	by canpmsgout10.his.huawei.com (SkyGuard) with ESMTPS id 4fPRWH0KB8z1K97f;
+	Mon,  2 Mar 2026 12:57:31 +0800 (CST)
+Received: from kwepemj500018.china.huawei.com (unknown [7.202.194.48])
+	by mail.maildlp.com (Postfix) with ESMTPS id 7B8D140565;
+	Mon,  2 Mar 2026 13:02:18 +0800 (CST)
+Received: from huawei.com (10.50.85.128) by kwepemj500018.china.huawei.com
+ (7.202.194.48) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 2 Mar
+ 2026 13:02:17 +0800
+From: Li Xiasong <lixiasong1@huawei.com>
+To: <matttbe@kernel.org>, <martineau@kernel.org>, <geliang@kernel.org>,
+	<davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
+	<pabeni@redhat.com>, <horms@kernel.org>
+CC: <netdev@vger.kernel.org>, <mptcp@lists.linux.dev>,
+	<linux-kernel@vger.kernel.org>, <weiyongjun1@huawei.com>,
+	<yuehaibing@huawei.com>, <zhangchangzhong@huawei.com>
+Subject: [PATCH net] mptcp: fix soft lockup in mptcp_recvmsg()
+Date: Mon, 2 Mar 2026 13:26:51 +0800
+Message-ID: <20260302052651.1466983-1-lixiasong1@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Patchwork-Hint: ignore
-X-stable: review
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: kwepems500001.china.huawei.com (7.221.188.70) To
+ kwepemj500018.china.huawei.com (7.202.194.48)
 
-The patch below does not apply to the 6.1-stable tree.
-If someone wants it applied there, or to any other stable or longterm
-tree, then please email the backport, including the original git commit
-id to <stable@vger.kernel.org>.
+syzbot reported a soft lockup in mptcp_recvmsg() [0].
 
-Thanks,
-Sasha
+When receiving data with MSG_PEEK | MSG_WAITALL flags, the skb is not
+removed from the sk_receive_queue. This causes sk_wait_data() to always
+find available data and never perform actual waiting, leading to a soft
+lockup.
 
------------------- original commit in Linus's tree ------------------
+Fix this by adding a 'last' parameter to track the last peeked skb.
+This allows sk_wait_data() to make informed waiting decisions and prevent
+infinite loops when MSG_PEEK is used.
 
-From d191101dee25567c2af3b28565f45346c33d65f5 Mon Sep 17 00:00:00 2001
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Thu, 5 Feb 2026 18:34:21 +0100
-Subject: [PATCH] mptcp: pm: in-kernel: always set ID as avail when rm endp
+[0]:
+watchdog: BUG: soft lockup - CPU#2 stuck for 156s! [server:1963]
+Modules linked in:
+CPU: 2 UID: 0 PID: 1963 Comm: server Not tainted 6.19.0-rc8 #61 PREEMPT(none)
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1 04/01/2014
+RIP: 0010:sk_wait_data+0x15/0x190
+Code: 80 00 00 00 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 41 56 41 55 41 54 49 89 f4 55 48 89 d5 53 48 89 fb <48> 83 ec 30 65 48 8b 05 17 a4 6b 01 48 89 44 24 28 31 c0 65 48 8b
+RSP: 0018:ffffc90000603ca0 EFLAGS: 00000246
+RAX: 0000000000000000 RBX: ffff888102bf0800 RCX: 0000000000000001
+RDX: 0000000000000000 RSI: ffffc90000603d18 RDI: ffff888102bf0800
+RBP: 0000000000000000 R08: 0000000000000002 R09: 0000000000000101
+R10: 0000000000000000 R11: 0000000000000075 R12: ffffc90000603d18
+R13: ffff888102bf0800 R14: ffff888102bf0800 R15: 0000000000000000
+FS:  00007f6e38b8c4c0(0000) GS:ffff8881b877e000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000055aa7bff1680 CR3: 0000000105cbe000 CR4: 00000000000006f0
+Call Trace:
+ <TASK>
+ mptcp_recvmsg+0x547/0x8c0 net/mptcp/protocol.c:2329
+ inet_recvmsg+0x11f/0x130 net/ipv4/af_inet.c:891
+ sock_recvmsg+0x94/0xc0 net/socket.c:1100
+ __sys_recvfrom+0xb2/0x130 net/socket.c:2256
+ __x64_sys_recvfrom+0x1f/0x30 net/socket.c:2267
+ do_syscall_64+0x59/0x2d0 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x76/0x7e arch/x86/entry/entry_64.S:131
+RIP: 0033:0x7f6e386a4a1d
+Code: 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 48 8d 05 f1 de 2c 00 41 89 ca 8b 00 85 c0 75 20 45 31 c9 45 31 c0 b8 2d 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 6b f3 c3 66 0f 1f 84 00 00 00 00 00 41 56 41
+RSP: 002b:00007ffc3c4bb078 EFLAGS: 00000246 ORIG_RAX: 000000000000002d
+RAX: ffffffffffffffda RBX: 000000000000861e RCX: 00007f6e386a4a1d
+RDX: 00000000000003ff RSI: 00007ffc3c4bb150 RDI: 0000000000000004
+RBP: 00007ffc3c4bb570 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000103 R11: 0000000000000246 R12: 00005605dbc00be0
+R13: 00007ffc3c4bb650 R14: 0000000000000000 R15: 0000000000000000
+ </TASK>
 
-Syzkaller managed to find a combination of actions that was generating
-this warning:
-
-  WARNING: net/mptcp/pm_kernel.c:1074 at __mark_subflow_endp_available net/mptcp/pm_kernel.c:1074 [inline], CPU#1: syz.7.48/2535
-  WARNING: net/mptcp/pm_kernel.c:1074 at mptcp_pm_nl_fullmesh net/mptcp/pm_kernel.c:1446 [inline], CPU#1: syz.7.48/2535
-  WARNING: net/mptcp/pm_kernel.c:1074 at mptcp_pm_nl_set_flags_all net/mptcp/pm_kernel.c:1474 [inline], CPU#1: syz.7.48/2535
-  WARNING: net/mptcp/pm_kernel.c:1074 at mptcp_pm_nl_set_flags+0x5de/0x640 net/mptcp/pm_kernel.c:1538, CPU#1: syz.7.48/2535
-  Modules linked in:
-  CPU: 1 UID: 0 PID: 2535 Comm: syz.7.48 Not tainted 6.18.0-03987-gea5f5e676cf5 #17 PREEMPT(voluntary)
-  Hardware name: QEMU Ubuntu 25.10 PC (i440FX + PIIX, 1996), BIOS 1.17.0-debian-1.17.0-1 04/01/2014
-  RIP: 0010:__mark_subflow_endp_available net/mptcp/pm_kernel.c:1074 [inline]
-  RIP: 0010:mptcp_pm_nl_fullmesh net/mptcp/pm_kernel.c:1446 [inline]
-  RIP: 0010:mptcp_pm_nl_set_flags_all net/mptcp/pm_kernel.c:1474 [inline]
-  RIP: 0010:mptcp_pm_nl_set_flags+0x5de/0x640 net/mptcp/pm_kernel.c:1538
-  Code: 89 c7 e8 c5 8c 73 fe e9 f7 fd ff ff 49 83 ef 80 e8 b7 8c 73 fe 4c 89 ff be 03 00 00 00 e8 4a 29 e3 fe eb ac e8 a3 8c 73 fe 90 <0f> 0b 90 e9 3d ff ff ff e8 95 8c 73 fe b8 a1 ff ff ff eb 1a e8 89
-  RSP: 0018:ffffc9001535b820 EFLAGS: 00010287
-  netdevsim0: tun_chr_ioctl cmd 1074025677
-  RAX: ffffffff82da294d RBX: 0000000000000001 RCX: 0000000000080000
-  RDX: ffffc900096d0000 RSI: 00000000000006d6 RDI: 00000000000006d7
-  netdevsim0: linktype set to 823
-  RBP: ffff88802cdb2240 R08: 00000000000104ae R09: ffffffffffffffff
-  R10: ffffffff82da27d4 R11: 0000000000000000 R12: 0000000000000000
-  R13: ffff88801246d8c0 R14: ffffc9001535b8b8 R15: ffff88802cdb1800
-  FS:  00007fc6ac5a76c0(0000) GS:ffff8880f90c8000(0000) knlGS:0000000000000000
-  netlink: 'syz.3.50': attribute type 5 has an invalid length.
-  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  netlink: 1232 bytes leftover after parsing attributes in process `syz.3.50'.
-  CR2: 0000200000010000 CR3: 0000000025b1a000 CR4: 0000000000350ef0
-  Call Trace:
-   <TASK>
-   mptcp_pm_set_flags net/mptcp/pm_netlink.c:277 [inline]
-   mptcp_pm_nl_set_flags_doit+0x1d7/0x210 net/mptcp/pm_netlink.c:282
-   genl_family_rcv_msg_doit+0x117/0x180 net/netlink/genetlink.c:1115
-   genl_family_rcv_msg net/netlink/genetlink.c:1195 [inline]
-   genl_rcv_msg+0x3a8/0x3f0 net/netlink/genetlink.c:1210
-   netlink_rcv_skb+0x16d/0x240 net/netlink/af_netlink.c:2550
-   genl_rcv+0x28/0x40 net/netlink/genetlink.c:1219
-   netlink_unicast_kernel net/netlink/af_netlink.c:1318 [inline]
-   netlink_unicast+0x3e9/0x4c0 net/netlink/af_netlink.c:1344
-   netlink_sendmsg+0x4ab/0x5b0 net/netlink/af_netlink.c:1894
-   sock_sendmsg_nosec net/socket.c:718 [inline]
-   __sock_sendmsg+0xc9/0xf0 net/socket.c:733
-   ____sys_sendmsg+0x272/0x3b0 net/socket.c:2608
-   ___sys_sendmsg+0x2de/0x320 net/socket.c:2662
-   __sys_sendmsg net/socket.c:2694 [inline]
-   __do_sys_sendmsg net/socket.c:2699 [inline]
-   __se_sys_sendmsg net/socket.c:2697 [inline]
-   __x64_sys_sendmsg+0x110/0x1a0 net/socket.c:2697
-   do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-   do_syscall_64+0xed/0x360 arch/x86/entry/syscall_64.c:94
-   entry_SYSCALL_64_after_hwframe+0x77/0x7f
-  RIP: 0033:0x7fc6adb66f6d
-  Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 e8 ff ff ff f7 d8 64 89 01 48
-  RSP: 002b:00007fc6ac5a6ff8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-  RAX: ffffffffffffffda RBX: 00007fc6addf5fa0 RCX: 00007fc6adb66f6d
-  RDX: 0000000000048084 RSI: 00002000000002c0 RDI: 000000000000000e
-  RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
-  R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-  netlink: 'syz.5.51': attribute type 2 has an invalid length.
-  R13: 00007fff25e91fe0 R14: 00007fc6ac5a7ce4 R15: 00007fff25e920d7
-   </TASK>
-
-The actions that caused that seem to be:
-
- - Create an MPTCP endpoint for address A without any flags
- - Create a new MPTCP connection from address A
- - Remove the MPTCP endpoint: the corresponding subflows will be removed
- - Recreate the endpoint with the same ID, but with the subflow flag
- - Change the same endpoint to add the fullmesh flag
-
-In this case, msk->pm.local_addr_used has been kept to 0 as expected,
-but the corresponding bit in msk->pm.id_avail_bitmap was still unset
-after having removed the endpoint, causing the splat later on.
-
-When removing an endpoint, the corresponding endpoint ID was only marked
-as available for "signal" types with an announced address, plus all
-"subflow" types, but not the other types like an endpoint corresponding
-to the initial subflow. In these cases, re-creating an endpoint with the
-same ID didn't signal/create anything. Here, adding the fullmesh flag
-was creating the splat when calling __mark_subflow_endp_available() from
-mptcp_pm_nl_fullmesh(), because msk->pm.local_addr_used was set to 0
-while the ID was marked as used.
-
-To fix this issue, the corresponding bit in msk->pm.id_avail_bitmap can
-always be set as available when removing an MPTCP in-kernel endpoint. In
-other words, moving the call to __set_bit() to do it in all cases,
-except for "subflow" types where this bit is handled in a dedicated
-helper.
-
-Note: instead of adding a new spin_(un)lock_bh that would be taken in
-all cases, do all the actions requiring the spin lock under the same
-block.
-
-This modification potentially fixes another issue reported by syzbot,
-see [1]. But without a reproducer or more details about what exactly
-happened before, it is hard to confirm.
-
-Fixes: e255683c06df ("mptcp: pm: re-using ID of unused removed ADD_ADDR")
-Cc: stable@vger.kernel.org
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/606
-Reported-by: syzbot+f56f7d56e2c6e11a01b6@syzkaller.appspotmail.com
-Closes: https://lore.kernel.org/68fcfc4a.050a0220.346f24.02fb.GAE@google.com [1]
-Reviewed-by: Mat Martineau <martineau@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Link: https://patch.msgid.link/20260205-net-mptcp-misc-fixes-6-19-rc8-v2-1-c2720ce75c34@kernel.org
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Fixes: 612f71d7328c ("mptcp: fix possible stall on recvmsg()")
+Signed-off-by: Li Xiasong <lixiasong1@huawei.com>
 ---
- net/mptcp/pm_kernel.c | 20 ++++++++------------
- 1 file changed, 8 insertions(+), 12 deletions(-)
+ net/mptcp/protocol.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/net/mptcp/pm_kernel.c b/net/mptcp/pm_kernel.c
-index b26675054b0dc..4972c19fc73e2 100644
---- a/net/mptcp/pm_kernel.c
-+++ b/net/mptcp/pm_kernel.c
-@@ -1056,10 +1056,8 @@ static bool mptcp_pm_remove_anno_addr(struct mptcp_sock *msk,
- 	ret = mptcp_remove_anno_list_by_saddr(msk, addr);
- 	if (ret || force) {
- 		spin_lock_bh(&msk->pm.lock);
--		if (ret) {
--			__set_bit(addr->id, msk->pm.id_avail_bitmap);
-+		if (ret)
- 			msk->pm.add_addr_signaled--;
--		}
- 		mptcp_pm_remove_addr(msk, &list);
- 		spin_unlock_bh(&msk->pm.lock);
- 	}
-@@ -1097,17 +1095,15 @@ static int mptcp_nl_remove_subflow_and_signal_addr(struct net *net,
- 					  !(entry->flags & MPTCP_PM_ADDR_FLAG_IMPLICIT));
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index cf1852b99963..7a65c2101f63 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -2006,7 +2006,7 @@ static void mptcp_eat_recv_skb(struct sock *sk, struct sk_buff *skb)
+ static int __mptcp_recvmsg_mskq(struct sock *sk, struct msghdr *msg,
+ 				size_t len, int flags, int copied_total,
+ 				struct scm_timestamping_internal *tss,
+-				int *cmsg_flags)
++				int *cmsg_flags, struct sk_buff **last)
+ {
+ 	struct mptcp_sock *msk = mptcp_sk(sk);
+ 	struct sk_buff *skb, *tmp;
+@@ -2058,6 +2058,8 @@ static int __mptcp_recvmsg_mskq(struct sock *sk, struct msghdr *msg,
+ 			}
  
- 		list.ids[0] = mptcp_endp_get_local_id(msk, addr);
--		if (remove_subflow) {
--			spin_lock_bh(&msk->pm.lock);
--			mptcp_pm_rm_subflow(msk, &list);
--			spin_unlock_bh(&msk->pm.lock);
--		}
+ 			mptcp_eat_recv_skb(sk, skb);
++		} else {
++			*last = skb;
+ 		}
  
--		if (entry->flags & MPTCP_PM_ADDR_FLAG_SUBFLOW) {
--			spin_lock_bh(&msk->pm.lock);
-+		spin_lock_bh(&msk->pm.lock);
-+		if (remove_subflow)
-+			mptcp_pm_rm_subflow(msk, &list);
-+		if (entry->flags & MPTCP_PM_ADDR_FLAG_SUBFLOW)
- 			__mark_subflow_endp_available(msk, list.ids[0]);
--			spin_unlock_bh(&msk->pm.lock);
--		}
-+		else /* mark endp ID as available, e.g. Signal or MPC endp */
-+			__set_bit(addr->id, msk->pm.id_avail_bitmap);
-+		spin_unlock_bh(&msk->pm.lock);
+ 		if (copied >= len)
+@@ -2263,6 +2265,7 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
+ {
+ 	struct mptcp_sock *msk = mptcp_sk(sk);
+ 	struct scm_timestamping_internal tss;
++	struct sk_buff *last = NULL;
+ 	int copied = 0, cmsg_flags = 0;
+ 	int target;
+ 	long timeo;
+@@ -2291,7 +2294,8 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
+ 		int err, bytes_read;
  
- 		if (msk->mpc_endpoint_id == entry->addr.id)
- 			msk->mpc_endpoint_id = 0;
+ 		bytes_read = __mptcp_recvmsg_mskq(sk, msg, len - copied, flags,
+-						  copied, &tss, &cmsg_flags);
++						  copied, &tss, &cmsg_flags,
++						  &last);
+ 		if (unlikely(bytes_read < 0)) {
+ 			if (!copied)
+ 				copied = bytes_read;
+@@ -2343,7 +2347,7 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
+ 
+ 		pr_debug("block timeout %ld\n", timeo);
+ 		mptcp_cleanup_rbuf(msk, copied);
+-		err = sk_wait_data(sk, &timeo, NULL);
++		err = sk_wait_data(sk, &timeo, last);
+ 		if (err < 0) {
+ 			err = copied ? : err;
+ 			goto out_err;
 -- 
-2.51.0
-
-
-
+2.34.1
 
