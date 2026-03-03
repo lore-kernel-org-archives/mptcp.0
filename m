@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 274F6345CD3;
-	Tue,  3 Mar 2026 13:23:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38669381AE7;
+	Tue,  3 Mar 2026 18:07:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772544224; cv=none; b=eQHQONCdbku/dIBWMvUxSYgOC2LTupXX8Ij/8Qo55efTAJ9/fyMVpc458aUxB09meYSj+sD0AmqGr/jgpfwYwFKgbQUIBeD5apPL9ruDRin3HxigyBezEFXNsGI2p43KBK3GBy53hBVSod4mfXV7p4sk+Pvz/7gvXpRN7cuExVI=
+	t=1772561226; cv=none; b=kd2Ivn/LjpyReLOG6jWSSq3727OLF+rhMFGXAzRCafyCEqmQDc9YPwCwGGAIiH63J6+gD6pjAjF1d2Ke9+5XU3YeT3uJ3MDagiIbagKYCt1g4G6QBEYO0jiOaifzlix3Z2qhMGLvcARDHllppeWtF5b7MDC9w9z23nIqJtxFE1k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772544224; c=relaxed/simple;
-	bh=QXKFZaIGCPMx+aACFmMjJlQcbli93BFDeSlduovypIE=;
+	s=arc-20240116; t=1772561226; c=relaxed/simple;
+	bh=Vbtwpil7ZEF+eSxTpXm54O7ORfkDhNMpmIaREOK4zcI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oYvFByKF4oBMoOxG2Fuk6yJDlbM2xNVjCXLjge33phcmrdHQLtAKBL1VW6lYO0xw85tymfAdh/G7pLvE8ABx/1CFqwDV01zM/GocT2kaHa3YWr6Y7qkufXcl36gXmOoXnXoAD/M3V0fWdfv2995hgcNm+dvnGfAqoQmPeYb7u7I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RUqskrCw; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=oK5PIIPxi7WqAJhpmbI1Vb6j2O8ni1f0Qlf22bVi0egpjz8hmarv/cj+TZYCp/bXqYVeP9x8rqOBl2vxB8TGoMkNmaYq7+YJDH8mfKyH1U3Vael212IJhhwNEevITX+sY+4GXpLfWCXb6u5w7HLsXM/k2e21Ah2iVRehc4ullZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gFn59tBE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RUqskrCw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D507C116C6;
-	Tue,  3 Mar 2026 13:23:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gFn59tBE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7190EC116C6;
+	Tue,  3 Mar 2026 18:07:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772544223;
-	bh=QXKFZaIGCPMx+aACFmMjJlQcbli93BFDeSlduovypIE=;
+	s=k20201202; t=1772561225;
+	bh=Vbtwpil7ZEF+eSxTpXm54O7ORfkDhNMpmIaREOK4zcI=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=RUqskrCwytKCoz7NpxBgmM4C3jhH3crzoSTNxyVDDTwdv8G6ut6sKfUyApTW2XPoX
-	 9WHaPeALwgD1XPhAKHOr8dE5Mmp1hV0mv0icFbbVLyfqOMlB3UFv/NkSMzIy7aazPM
-	 LdTVjsG8/D2BW2Zl/G9fcDN8ulWmHcRG52y8mHgO0MyvHUIjhvPYk2YZ18z0zXPDpj
-	 yuJOHNq8K+qFXpcELSHkihdCXpjX+HOVnTo0OJK69xLWZ/AgFFQfFspe14PlLLfoZJ
-	 NKogQHOeytqZA3J7+vluUG0QdVF0rs6keDsM4BukFNuOL5XGuuFpvWPQbjoNvL4Gc4
-	 iY8vhh/W4qIcw==
-Message-ID: <29d38308-e8ae-42aa-8eeb-1c3b347c284b@kernel.org>
-Date: Tue, 3 Mar 2026 14:23:32 +0100
+	b=gFn59tBETeDBUA4ZijYtktG36jO0BmtokcBGSoH8Vvwqk+6J0guotA+DUq3YEBN3U
+	 0VBaK1uxB8KU4JbPjcYqI4wtgDqB+NeUqC5G+KES9ETvIbSAMyX6ctZZk6Bly29fER
+	 yPxsX2RiADfiV8E8bNq3GonralDGNaAGRu/vOSa2VtJjGMfRxEpuPCti4MunhM2Vya
+	 ++ODQNIf2ZMi4T7jfTn11yCbq6rhSPWAyHAAJTECg4KuBz6JoRM4i0Po/DhpcCmWaS
+	 geWX/n3/N7MgnWk/Yf0Zq8hEFUt937JN9Nuxf6FxrKggKcm1qYRCTz3MHQjCjoO3iF
+	 M27QDjKTLum2w==
+Message-ID: <57061768-a136-49b8-b020-609016f217ed@kernel.org>
+Date: Tue, 3 Mar 2026 19:06:59 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,22 +35,15 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Stalls when starting a VSOCK listening socket: soft lockups, RCU
- stalls, timeout
+Subject: Re: [PATCH net] mptcp: fix soft lockup in mptcp_recvmsg()
 Content-Language: en-GB, fr-BE
-To: Jiri Slaby <jirislaby@kernel.org>
-Cc: kvm@vger.kernel.org, virtualization@lists.linux.dev,
- Netdev <netdev@vger.kernel.org>, rcu@vger.kernel.org,
- MPTCP Linux <mptcp@lists.linux.dev>,
- Linux Kernel <linux-kernel@vger.kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@kernel.org>,
- Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
- "Paul E. McKenney" <paulmck@kernel.org>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- Stefan Hajnoczi <stefanha@redhat.com>, "luto@kernel.org" <luto@kernel.org>,
- Stefano Garzarella <sgarzare@redhat.com>
-References: <b24ffcb3-09d5-4e48-9070-0b69bc654281@kernel.org>
- <7f3e74d7-67dc-48d7-99d2-0b87f671651b@kernel.org>
+To: Li Xiasong <lixiasong1@huawei.com>, martineau@kernel.org,
+ geliang@kernel.org, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, horms@kernel.org
+Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev,
+ linux-kernel@vger.kernel.org, weiyongjun1@huawei.com, yuehaibing@huawei.com,
+ zhangchangzhong@huawei.com
+References: <20260302052651.1466983-1-lixiasong1@huawei.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -96,69 +89,93 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <7f3e74d7-67dc-48d7-99d2-0b87f671651b@kernel.org>
+In-Reply-To: <20260302052651.1466983-1-lixiasong1@huawei.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Jiri,
+Hi Li,
 
-On 26/02/2026 11:37, Jiri Slaby wrote:
-> On 06. 02. 26, 12:54, Matthieu Baerts wrote:
->> Our CI for the MPTCP subsystem is now regularly hitting various stalls
->> before even starting the MPTCP test suite. These issues are visible on
->> top of the latest net and net-next trees, which have been sync with
->> Linus' tree yesterday. All these issues have been seen on a "public CI"
->> using GitHub-hosted runners with KVM support, where the tested kernel is
->> launched in a nested (I suppose) VM. I can see the issue with or without
->> debug.config. According to the logs, it might have started around
->> v6.19-rc0, but I was unavailable for a few weeks, and I couldn't react
->> quicker, sorry for that. Unfortunately, I cannot reproduce this locally,
->> and the CI doesn't currently have the ability to execute bisections.
+On 02/03/2026 06:26, Li Xiasong wrote:
+> syzbot reported a soft lockup in mptcp_recvmsg() [0].
 > 
-> Hmm, after the switch of the qemu guest kernels to 6.19, our (opensuse)
-> build service is stalling in smp_call_function_many_cond() randomly too:
-> https://bugzilla.suse.com/show_bug.cgi?id=1258936
+> When receiving data with MSG_PEEK | MSG_WAITALL flags, the skb is not
+> removed from the sk_receive_queue. This causes sk_wait_data() to always
+> find available data and never perform actual waiting, leading to a soft
+> lockup.
 > 
-> The attachment from there contains sysrq-t logs too:
-> https://bugzilla.suse.com/attachment.cgi?id=888612
+> Fix this by adding a 'last' parameter to track the last peeked skb.
+> This allows sk_wait_data() to make informed waiting decisions and prevent
+> infinite loops when MSG_PEEK is used.
 
-I'm glad I'm not the only one with this issue :)
+(...)
 
-In your case, do you also have nested VMs with KVM support?
-
-Are you able to easily reproduce the issue and change the guest kernel
-in your build service?
-
-On my side, any debugging steps need to be automated. Lately, it looks
-like the issue is more easily triggered on a stable 6.19 kernel, than on
-the last RC.
-
->> The stalls happen before starting the MPTCP test suite. The init program
->> creates a VSOCK listening socket via socat [1], and different hangs are
->> then visible: RCU stalls followed by a soft lockup [2], only a soft
->> lockup [3], sometimes the soft lockup comes with a delay [4] [5], or
->> there is no RCU stalls or soft lockups detected after one minute, but VM
->> is stalled [6]. In the last case, the VM is stopped after having
->> launched GDB to get more details about what was being executed.
->>
->> It feels like the issue is not directly caused by the VSOCK listening
->> socket, but the stalls always happen after having started the socat
->> command [1] in the background.
+> Fixes: 612f71d7328c ("mptcp: fix possible stall on recvmsg()")
+> Signed-off-by: Li Xiasong <lixiasong1@huawei.com>
+> ---
+>  net/mptcp/protocol.c | 10 +++++++---
+>  1 file changed, 7 insertions(+), 3 deletions(-)
 > 
-> It fails randomly while building random packages (go, libreoffice,
-> bayle, ...). I don't think it is VSOCK related in those cases, but who
-> knows what the builds do...
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index cf1852b99963..7a65c2101f63 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -2006,7 +2006,7 @@ static void mptcp_eat_recv_skb(struct sock *sk, struct sk_buff *skb)
+>  static int __mptcp_recvmsg_mskq(struct sock *sk, struct msghdr *msg,
+>  				size_t len, int flags, int copied_total,
+>  				struct scm_timestamping_internal *tss,
+> -				int *cmsg_flags)
+> +				int *cmsg_flags, struct sk_buff **last)
+>  {
+>  	struct mptcp_sock *msk = mptcp_sk(sk);
+>  	struct sk_buff *skb, *tmp;
+> @@ -2058,6 +2058,8 @@ static int __mptcp_recvmsg_mskq(struct sock *sk, struct msghdr *msg,
+>  			}
+>  
+>  			mptcp_eat_recv_skb(sk, skb);
+> +		} else {
+> +			*last = skb;
 
-Indeed, unlikely to be VSOCK then.
+Out of curiosity, why only setting *last for MSG_PEEK? Is it not better
+to always call sk_wait_data() later with the last skb, even when
+MSG_PEEK is not used?
 
-> I cannot reproduce locally either.
-> 
-> I came across:
->   614da1d3d4cd x86: make page fault handling disable interrupts properly
-> but I have no idea if it could have impact on this at all.
+Or will this cause other troubles?
 
-Did it help to revert it?
+>  		}
+>  
+>  		if (copied >= len)
+> @@ -2263,6 +2265,7 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
+>  {
+>  	struct mptcp_sock *msk = mptcp_sk(sk);
+>  	struct scm_timestamping_internal tss;
+> +	struct sk_buff *last = NULL;
 
+Detail: the scope of this variable could eventually be reduced by moving
+it inside the while-loop. This should hopefully help to reduce conflicts
+during backports.
+
+>  	int copied = 0, cmsg_flags = 0;
+>  	int target;
+>  	long timeo;
+> @@ -2291,7 +2294,8 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
+>  		int err, bytes_read;
+>  
+>  		bytes_read = __mptcp_recvmsg_mskq(sk, msg, len - copied, flags,
+> -						  copied, &tss, &cmsg_flags);
+> +						  copied, &tss, &cmsg_flags,
+> +						  &last);
+>  		if (unlikely(bytes_read < 0)) {
+>  			if (!copied)
+>  				copied = bytes_read;
+> @@ -2343,7 +2347,7 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
+>  
+>  		pr_debug("block timeout %ld\n", timeo);
+>  		mptcp_cleanup_rbuf(msk, copied);
+> -		err = sk_wait_data(sk, &timeo, NULL);
+> +		err = sk_wait_data(sk, &timeo, last);
+>  		if (err < 0) {
+>  			err = copied ? : err;
+>  			goto out_err;
 Cheers,
 Matt
 -- 
