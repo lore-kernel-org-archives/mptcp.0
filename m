@@ -1,40 +1,72 @@
-Received: from canpmsgout06.his.huawei.com (canpmsgout06.his.huawei.com [113.46.200.221])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FB44352FBA
-	for <mptcp@lists.linux.dev>; Wed,  4 Mar 2026 09:24:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.221
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2456E3988FC
+	for <mptcp@lists.linux.dev>; Wed,  4 Mar 2026 09:38:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772616295; cv=none; b=NAWjyLr3aW9TFHbsU0VbGdoZhmWh4+xIjsNpx2GlLPRJazs3TczfO4LMEGVn+pvBQyBUL1XdjVsiXaiKBWZyDUy2pG59ZxN4rsJTDQTMjevrc/T7Tu3i+NvJtuxpP8Q3frx+AccdLtuG4FTac+ETK32b1PdTVMZH9pixhm8sfsM=
+	t=1772617093; cv=none; b=BFwNWtF4XszQQyjQJhiuHqbqAgoYEPM63nJcYibyaohyT/C7/68BQcHg21V9nHnqx28EFp++r4qnr7MTQcpOX0KBmtoY9ZMjdZ5Omfmm7iZrPeSrss8aOusv764HORGKa4Ye1ULV3//N8u3f2c+OfnJ0a0CTBsN4PKoPiFQaU/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772616295; c=relaxed/simple;
-	bh=MVQhcGBn6YW7ExDvSL0VET30MB3SKZt+vNQgsoR9ju0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=te2IbjnEQ5/wvlJgnbOuPhmyQw0F7Nc0M79CLtV1X3eT+hLOM26sQXDxKIds+5kanuZVma0ZApRLMFe8le4KNlxxae8OGR/PZ3YAinOqJ4AnFxiSk8vfGOB82fqDh7F7qmWXo4CkkzJd29ZttD05tyjr6oxRW6hnljmqZCc/z08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=i7x4nBGo; arc=none smtp.client-ip=113.46.200.221
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+	s=arc-20240116; t=1772617093; c=relaxed/simple;
+	bh=zOjV9G/E5kEE7rU0o6VCU6dYLOBv6HltxVIxOK5Xz8M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OmhHexZ+H+K+SsB5HDCjHZANjpP+PHDeasHQls+ojuLISJiljFAEQyAw3ziMDBOyFrkjZ8p8PsQLODXs0GJLZqm5zHYfN32U4XaTqAtqBaqiDgHpBzSpJJv45YlIeBdUQ8/fn3aT71NP+kGFSKU5wf54rMyYVoGMp0mvNh2mJMM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aE0NKBd+; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="i7x4nBGo"
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=JNYzYS3a/7M1z++lKGXx05x1L7768oI/UUytgZ80oNY=;
-	b=i7x4nBGoHTL9c2BCZecME8ZeikLulrQT3xjh3bT0NQwYhQ8SdEWlryY8lXA8GdqGG8PEiDKsy
-	sfkxlISK07oo+K/+46AqSBdzsvZhkTBU6KSrChkLYpHLsJb2FOj9Cz6XFwAu+x4PtlUDwxz6tSt
-	ze9MUoy5uny1MILtoag1cig=
-Received: from mail.maildlp.com (unknown [172.19.162.197])
-	by canpmsgout06.his.huawei.com (SkyGuard) with ESMTPS id 4fQnFC633KzRhT3;
-	Wed,  4 Mar 2026 17:19:59 +0800 (CST)
-Received: from kwepemj500018.china.huawei.com (unknown [7.202.194.48])
-	by mail.maildlp.com (Postfix) with ESMTPS id 3C4C240569;
-	Wed,  4 Mar 2026 17:24:50 +0800 (CST)
-Received: from [10.174.178.79] (10.174.178.79) by
- kwepemj500018.china.huawei.com (7.202.194.48) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Wed, 4 Mar 2026 17:24:49 +0800
-Message-ID: <e91bf909-bf4d-4f90-a370-688a9424478b@huawei.com>
-Date: Wed, 4 Mar 2026 17:24:48 +0800
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aE0NKBd+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1772617091;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pwH9nBhlw7SiaLrCiaRSy0D6mo7wMqo2GQ+mrsiKXtM=;
+	b=aE0NKBd+Y2Nd7FUBnNr1m327ToPWaUMB2TasdXjwziv/6X8YL+CZyIxkWotBUSnc4IpEpQ
+	LJgINh0aQo950UmZl+PU4xoc8M2WjYj12nuBBY8dnwqXO9+GF8KJYsNNuBOvLEAoHyX8C5
+	TKFMDmR8nMEyq0qLji7PghYYfBLm+LM=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-68-b8hYd5DsONyEtfMdnjMPQg-1; Wed, 04 Mar 2026 04:38:09 -0500
+X-MC-Unique: b8hYd5DsONyEtfMdnjMPQg-1
+X-Mimecast-MFC-AGG-ID: b8hYd5DsONyEtfMdnjMPQg_1772617089
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-4836cd6dfe6so54703525e9.2
+        for <mptcp@lists.linux.dev>; Wed, 04 Mar 2026 01:38:09 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1772617088; x=1773221888;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=pwH9nBhlw7SiaLrCiaRSy0D6mo7wMqo2GQ+mrsiKXtM=;
+        b=X8JLdYfy1Rlu5FSuVKbL5FHw3QtZ5qcqvthJAvNqw2xhdr3SbeO3CYjumPe/s3IYyK
+         IFpQhHAEIPn0o4RPeh2jdSrIJr2zyIEjuedcl4/3jy6gRbTd0crgWaXYFVZ21xqcOrjN
+         EIUcLVFcYDyZCEG7Iule8cI0LQPnULpFhQTkRPT217J2ykRuJT4/H8oo4NSTTmZHg6Is
+         hG/9amd7gf8FsPaatg5WwpDl7mgJHvYMwc/v4GlQMuysrHz5mPhGgylgkGtN989CsNDR
+         SoXzPM6LmLMnO38LgvwGBdm87QuOXQlHHLJJnQdMb6EwYu6SxNa6il7BbCkOhEIvgBjb
+         95XQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUUBar1WqssAeCotzbOqtwOx4CaGRwcBnXKGAhu1CiHyxX5j2TQTo0GWKw6+fOP2MatI4NE+w==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxmlRjt2xRiNlxuTg2iz7/SaUK8HplunFEocpiD5J1TzdnJFGSP
+	se36fvf1JWf7R8c3MoyMMcUa864ay/spBM+kFVDNoY8B4C3+NlfbIRvX8j1QJv8oqbLQ4Ewgau2
+	ubKT5rdrtF/d/ZonT44dS+1v+uZ4ShThTPc4xPdqj/TQXsJL0RwUqROr4cOdnsksh
+X-Gm-Gg: ATEYQzxStWEMJlEk68msPcZpwEOzJSxKuq6ykfs1QpsmsASBs09KM34+zbyOIz93dGw
+	WADvW2deX6UaUoTk7h3U899oaAVD6CYRAMWsHbth+rrU21HSk5V+xjtwppTiDXS1zmuVb3qN6Ew
+	fZgnRnkR40lreoSTN6zVN8swabF3PbyOiCe9ZVP1/VVtph4x1WvbwKV6vBk0fRTSRAio0dG0bna
+	dftwGTTWh0ATiRZVQRkoP3s+6aw4E05vbBCB0qK/KztEq4wutfClGhDvvyUtx32tCHkrRwDp5Iq
+	SigNaGAydFCSTu+H4sQOKrU8xB9FucnnbFHVacHvEAxpLhDU4aujTVbK5LzI4V/hgEkv94gG5PK
+	w6J033fiq/bFXjMJx39HRvGq4Og==
+X-Received: by 2002:a05:600c:6091:b0:477:561f:6fc8 with SMTP id 5b1f17b1804b1-48519837bb1mr23793055e9.5.1772617088331;
+        Wed, 04 Mar 2026 01:38:08 -0800 (PST)
+X-Received: by 2002:a05:600c:6091:b0:477:561f:6fc8 with SMTP id 5b1f17b1804b1-48519837bb1mr23792525e9.5.1772617087823;
+        Wed, 04 Mar 2026 01:38:07 -0800 (PST)
+Received: from [192.168.88.32] ([212.105.149.216])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4851881264fsm36172745e9.14.2026.03.04.01.38.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 04 Mar 2026 01:38:07 -0800 (PST)
+Message-ID: <f4d04706-9061-4642-bc3e-31e8f0f06e0c@redhat.com>
+Date: Wed, 4 Mar 2026 10:38:06 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -42,315 +74,159 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net] mptcp: fix soft lockup in mptcp_recvmsg()
-To: Matthieu Baerts <matttbe@kernel.org>
-CC: <geliang@kernel.org>, <davem@davemloft.net>, <edumazet@google.com>,
-	<kuba@kernel.org>, <pabeni@redhat.com>, <horms@kernel.org>,
-	<martineau@kernel.org>, <netdev@vger.kernel.org>, <mptcp@lists.linux.dev>,
-	<linux-kernel@vger.kernel.org>, <weiyongjun1@huawei.com>,
-	<yuehaibing@huawei.com>, <zhangchangzhong@huawei.com>
-References: <20260302052651.1466983-1-lixiasong1@huawei.com>
- <57061768-a136-49b8-b020-609016f217ed@kernel.org>
-From: Li Xiasong <lixiasong1@huawei.com>
-In-Reply-To: <57061768-a136-49b8-b020-609016f217ed@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [RESEND PATCH mptcp-net v2] mptcp: fix stall because of
+ data_ready
+To: Gang Yan <gang.yan@linux.dev>, mptcp@lists.linux.dev
+Cc: Gang Yan <yangang@kylinos.cn>, Geliang Tang <geliang@kernel.org>
+References: <20260228011511.440437-1-gang.yan@linux.dev>
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <20260228011511.440437-1-gang.yan@linux.dev>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: ygKxeJS62cSKe_x8EZWXsn21WxLYKOl3BjdIcyKEh4o_1772617089
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: kwepems200002.china.huawei.com (7.221.188.68) To
- kwepemj500018.china.huawei.com (7.202.194.48)
 
-Hi Matt,
-
-On 3/4/2026 2:06 AM, Matthieu Baerts wrote:
-> Hi Li,
+On 2/28/26 2:15 AM, Gang Yan wrote:
+> From: Gang Yan <yangang@kylinos.cn>
 > 
-> On 02/03/2026 06:26, Li Xiasong wrote:
->> syzbot reported a soft lockup in mptcp_recvmsg() [0].
->>
->> When receiving data with MSG_PEEK | MSG_WAITALL flags, the skb is not
->> removed from the sk_receive_queue. This causes sk_wait_data() to always
->> find available data and never perform actual waiting, leading to a soft
->> lockup.
->>
->> Fix this by adding a 'last' parameter to track the last peeked skb.
->> This allows sk_wait_data() to make informed waiting decisions and prevent
->> infinite loops when MSG_PEEK is used.
+> This patch fixes the second type of backlog_list stall issue that
+> occurs when the data_ready callback attempts to trigger data transfer.
+> The issue reproduces at approximately a 20% rate (once every five runs)
+> when running multi_chunk.sh tests.
 > 
-> (...)
+> The stall occurs under the following conditions:
+> 1. A large amount of out-of-order (OFO) data causes sk_rmem_alloc to
+>    exceed sk_rcvbuf
+> 2. The skb matching the current ack_seq is not present in backlog_list
+> 3. Data reception relies on data_ready callback notification
 > 
->> Fixes: 612f71d7328c ("mptcp: fix possible stall on recvmsg()")
->> Signed-off-by: Li Xiasong <lixiasong1@huawei.com>
->> ---
->>  net/mptcp/protocol.c | 10 +++++++---
->>  1 file changed, 7 insertions(+), 3 deletions(-)
->>
->> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
->> index cf1852b99963..7a65c2101f63 100644
->> --- a/net/mptcp/protocol.c
->> +++ b/net/mptcp/protocol.c
->> @@ -2006,7 +2006,7 @@ static void mptcp_eat_recv_skb(struct sock *sk, struct sk_buff *skb)
->>  static int __mptcp_recvmsg_mskq(struct sock *sk, struct msghdr *msg,
->>  				size_t len, int flags, int copied_total,
->>  				struct scm_timestamping_internal *tss,
->> -				int *cmsg_flags)
->> +				int *cmsg_flags, struct sk_buff **last)
->>  {
->>  	struct mptcp_sock *msk = mptcp_sk(sk);
->>  	struct sk_buff *skb, *tmp;
->> @@ -2058,6 +2058,8 @@ static int __mptcp_recvmsg_mskq(struct sock *sk, struct msghdr *msg,
->>  			}
->>  
->>  			mptcp_eat_recv_skb(sk, skb);
->> +		} else {
->> +			*last = skb;
+> In this scenario, the data_ready callback (via mptcp_data_ready() ->
+> sk->sk_data_ready()) attempts to trigger data movement, but
+> __mptcp_move_skbs_from_subflow() repeatedly moves the ack_seq skb into
+> backlog_list and returns false:
 > 
-> Out of curiosity, why only setting *last for MSG_PEEK? Is it not better
-> to always call sk_wait_data() later with the last skb, even when
-> MSG_PEEK is not used?
+> '''
+> msk->ack_seq:3442119990924456661, map_seq:3442119990924456661, offset:0, fin:0
+> [MPTCP_BACKLOG] #0 map_seq=3442119990924655746 end_seq=3442119990924660542 len=4796
+> [MPTCP_BACKLOG] #1 map_seq=3442119990924491850 end_seq=3442119990924500364 len=8514
+> [MPTCP_BACKLOG] #2 map_seq=3442119990924660542 end_seq=3442119990924726001 len=65459
+> [MPTCP_BACKLOG] #3 map_seq=3442119990924508114 end_seq=3442119990924514971 len=6857
+> [MPTCP_BACKLOG] #4 map_seq=3442119990924726001 end_seq=3442119990924731093 len=5092
+> [MPTCP_BACKLOG] #5 map_seq=3442119990924456661 end_seq=3442119990924464310 len=7649
+> [MPTCP_BACKLOG] #6 map_seq=3442119990924456661 end_seq=3442119990924464310 len=7649
+> [MPTCP_BACKLOG] #7 map_seq=3442119990924456661 end_seq=3442119990924464310 len=7649
+> [MPTCP_BACKLOG] #8 map_seq=3442119990924456661 end_seq=3442119990924464310 len=7649
+> [MPTCP_BACKLOG] #9 map_seq=3442119990924456661 end_seq=3442119990924464310 len=7649
+> [MPTCP_BACKLOG] #10 map_seq=3442119990924456661 end_seq=3442119990924464310 len=7649
+> [MPTCP_BACKLOG] #11 map_seq=3442119990924456661 end_seq=3442119990924464310 len=7649
+> [MPTCP_BACKLOG] #12 map_seq=3442119990924456661 end_seq=3442119990924464310 len=7649
+> ...
+> '''
 > 
-> Or will this cause other troubles?
-
-
-Yes, unconditionally updating last (like tcp_recvmsg_locked) makes
-sense. The current hesitation is due to mptcp_eat_recv_skb releasing the
-skb in non-MSG_PEEK cases—if the address is reused, keeping a last
-pointer could lead to misjudgment.
-
+> The fix allows moving in-sequence SKBs (map_seq == ack_seq) even when
+> the receive buffer is full, preventing the stall condition.
 > 
->>  		}
->>  
->>  		if (copied >= len)
->> @@ -2263,6 +2265,7 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
->>  {
->>  	struct mptcp_sock *msk = mptcp_sk(sk);
->>  	struct scm_timestamping_internal tss;
->> +	struct sk_buff *last = NULL;
+> Fixes: 6228efe0cc01 ("mptcp: leverage the backlog for RX packet processing")
+> Co-developed-by: Geliang Tang <geliang@kernel.org>
+> Signed-off-by: Geliang Tang <geliang@kernel.org>
+> Signed-off-by: Gang Yan <yangang@kylinos.cn>
+> ---
 > 
-> Detail: the scope of this variable could eventually be reduced by moving
-> it inside the while-loop. This should hopefully help to reduce conflicts
-> during backports.
+> Notes:
+>     changelog:
+>       v2:
+>        - As suggested by Paolo, the previous empty‑queue check on the
+>          receive queue has been replaced with a check that permits
+>          in‑sequence SKBs.
+>       v1:
+>        - Paolo has reviewed at:
+> 	 https://patchwork.kernel.org/project/mptcp/patch/de0a7e3ea6a3cac75b3c2c811695c5d674d929ef.1770273341.git.yangang@kylinos.cn/
 > 
+>  net/mptcp/protocol.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index c020882521b4..25ed246db7fb 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -739,7 +739,8 @@ static bool __mptcp_move_skbs_from_subflow(struct mptcp_sock *msk,
+>  
+>  			mptcp_init_skb(ssk, skb, offset, len);
+>  
+> -			if (own_msk && sk_rmem_alloc_get(sk) < sk->sk_rcvbuf) {
+> +			if (own_msk && (sk_rmem_alloc_get(sk) < sk->sk_rcvbuf ||
+> +					MPTCP_SKB_CB(skb)->map_seq == msk->ack_seq)) {
+>  				mptcp_subflow_lend_fwdmem(subflow, skb);
+>  				ret |= __mptcp_move_skb(sk, skb);
+>  			} else {
 
+It just occurred to me since commit 6787b7e350d ("mptcp: avoid
+processing packet if a subflow reset") we could early drop OoB skb in
+mptcp_incoming_options() and possibly/likely completely remove the check
+from here and elsewhere, something alike the following:
 
-You're right. My initial thought was to move `last` into the while loop,
-but in practice, to retain the last MSG_PEEK skb, `last` must be updated
-very early in __mptcp_recvmsg_mskq as we begin traversing
-&sk->sk_receive_queue. The issue is that if a subsequent step fails—such
-as skb_copy_datagram_msg—we'd then need to roll `last` back to the
-previous skb, which adds significant complexity. This suggests the
-current approach may be the safer trade-off.
+---
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index ac16e4bd496f..4834b2cd8142 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -1167,6 +1167,9 @@ bool mptcp_incoming_options(struct sock *sk,
+struct sk_buff *skb)
+ 	struct mptcp_options_received mp_opt;
+ 	struct mptcp_ext *mpext;
 
->>  	int copied = 0, cmsg_flags = 0;
->>  	int target;
->>  	long timeo;
->> @@ -2291,7 +2294,8 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
->>  		int err, bytes_read;
->>  
->>  		bytes_read = __mptcp_recvmsg_mskq(sk, msg, len - copied, flags,
->> -						  copied, &tss, &cmsg_flags);
->> +						  copied, &tss, &cmsg_flags,
->> +						  &last);
->>  		if (unlikely(bytes_read < 0)) {
->>  			if (!copied)
->>  				copied = bytes_read;
->> @@ -2343,7 +2347,7 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
->>  
->>  		pr_debug("block timeout %ld\n", timeo);
->>  		mptcp_cleanup_rbuf(msk, copied);
->> -		err = sk_wait_data(sk, &timeo, NULL);
->> +		err = sk_wait_data(sk, &timeo, last);
->>  		if (err < 0) {
->>  			err = copied ? : err;
->>  			goto out_err;
-> Cheers,
-> Matt
++	if (sk_rmem_alloc_get(msk) > READ_ONCE(subflow->conn->sk_rcvbuf))
++		return false;
++
+ 	if (__mptcp_check_fallback(msk)) {
+ 		/* Keep it simple and unconditionally trigger send data cleanup and
+ 		 * pending queue spooling. We will need to acquire the data lock
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index c020882521b4..78ce00b14b23 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -739,7 +739,7 @@ static bool __mptcp_move_skbs_from_subflow(struct
+mptcp_sock *msk,
 
+ 			mptcp_init_skb(ssk, skb, offset, len);
 
-As requested, here are the two minimal test programs.
+-			if (own_msk && sk_rmem_alloc_get(sk) < sk->sk_rcvbuf) {
++			if (own_msk) {
+ 				mptcp_subflow_lend_fwdmem(subflow, skb);
+ 				ret |= __mptcp_move_skb(sk, skb);
+ 			} else {
+@@ -2176,10 +2176,6 @@ static bool __mptcp_move_skbs(struct sock *sk,
+struct list_head *skbs, u32 *delt
 
-Steps to reproduce
-1.Save as client.c and server.c.
+ 	*delta = 0;
+ 	while (1) {
+-		/* If the msk recvbuf is full stop, don't drop */
+-		if (sk_rmem_alloc_get(sk) > sk->sk_rcvbuf)
+-			break;
+-
+ 		prefetch(skb->next);
+ 		list_del(&skb->list);
+ 		*delta += skb->truesize;
+@@ -2207,9 +2203,7 @@ static bool mptcp_can_spool_backlog(struct sock
+*sk, struct list_head *skbs)
+ 	DEBUG_NET_WARN_ON_ONCE(msk->backlog_unaccounted && sk->sk_socket &&
+ 			       mem_cgroup_from_sk(sk));
 
-2.Compile:
-    gcc client.c -o client
-    gcc server.c -o server
+-	/* Don't spool the backlog if the rcvbuf is full. */
+-	if (list_empty(&msk->backlog_list) ||
+-	    sk_rmem_alloc_get(sk) > sk->sk_rcvbuf)
++	if (list_empty(&msk->backlog_list))
+ 		return false;
 
-3.Run ./server, then ./client in another terminal.
+ 	INIT_LIST_HEAD(skbs);
+---
 
---- client.c ---
+Note there could be unexpected side effects, it would need a bit of
+testing in fast and slow env with/without drops, but on the flip side it
+should also solve the more problematic "receive stalls when 'ack_seq' in
+backlog_list"
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <arpa/inet.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <netinet/tcp.h>
-#include <time.h>
-#include <errno.h>
-
-#ifndef IPPROTO_MPTCP
-#define IPPROTO_MPTCP 262
-#endif
-
-#define PORT 8888
-
-int main() {
-    int sock_fd;
-    struct sockaddr_in server_addr;
-    int enable = 1;
-
-    if ((sock_fd = socket(AF_INET, SOCK_STREAM, IPPROTO_MPTCP)) < 0) {
-        perror("Socket creation failed");
-        exit(EXIT_FAILURE);
-    }
-    printf("Created MPTCP socket\n");
-
-    if (setsockopt(sock_fd, SOL_SOCKET, SO_REUSEADDR, &enable,
-sizeof(enable)) < 0) {
-        perror("Setsockopt SO_REUSEADDR failed");
-        close(sock_fd);
-        exit(EXIT_FAILURE);
-    }
-
-    memset(&server_addr, 0, sizeof(server_addr));
-    server_addr.sin_family = AF_INET;
-    server_addr.sin_port = htons(PORT);
-    server_addr.sin_addr.s_addr = inet_addr("127.0.0.1");
-
-    printf("Connecting to 127.0.0.1:%d...\n", PORT);
-    if (connect(sock_fd, (struct sockaddr*)&server_addr,
-sizeof(server_addr)) < 0) {
-        perror("Connection failed");
-        close(sock_fd);
-        exit(EXIT_FAILURE);
-    }
-    printf("Connected successfully\n");
-
-    sleep(3);
-    printf("\nStarting data transmission test...\n");
-
-    send(sock_fd, "A", 1, 0);
-
-    while (1) {
-        sleep(1); // wait
-    }
-
-    close(sock_fd);
-
-    printf("Bye!\n");
-    return 0;
-}
-
---- client.c ends ---
-
---- server.c ---
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <arpa/inet.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <netinet/tcp.h>
-#include <errno.h>
-#include <signal.h>
-
-#define PORT 8888
-#define BUFFER_SIZE 1024
-#define BACKLOG 5
-
-#ifndef IPPROTO_MPTCP
-#define IPPROTO_MPTCP 262
-#endif
-
-int sock_fd = -1;
-int client_fd = -1;
-
-void handle_signal(int sig) {
-    printf("\nSignal %d received, cleaning up...\n", sig);
-    if (client_fd > 0) close(client_fd);
-    if (sock_fd > 0) close(sock_fd);
-    exit(0);
-}
-
-int main() {
-    struct sockaddr_in server_addr, client_addr;
-    socklen_t client_len = sizeof(client_addr);
-    char buffer[BUFFER_SIZE];
-    int enable = 1;
-    long total_received = 0;
-    long long start_time = 0;
-
-    signal(SIGINT, handle_signal);
-    signal(SIGTERM, handle_signal);
-
-    if ((sock_fd = socket(AF_INET, SOCK_STREAM, IPPROTO_MPTCP)) < 0) {
-        perror("Socket creation failed");
-        exit(EXIT_FAILURE);
-    }
-    printf("Created MPTCP socket\n");
-
-    if (setsockopt(sock_fd, SOL_SOCKET, SO_REUSEADDR, &enable,
-sizeof(enable)) < 0) {
-        perror("Setsockopt SO_REUSEADDR failed");
-        close(sock_fd);
-        exit(EXIT_FAILURE);
-    }
-
-    memset(&server_addr, 0, sizeof(server_addr));
-    server_addr.sin_family = AF_INET;
-    server_addr.sin_port = htons(PORT);
-    server_addr.sin_addr.s_addr = INADDR_ANY;
-
-    if (bind(sock_fd, (struct sockaddr*)&server_addr,
-sizeof(server_addr)) < 0) {
-        perror("Bind failed");
-        close(sock_fd);
-        exit(EXIT_FAILURE);
-    }
-    printf("Bound to port %d\n", PORT);
-
-    if (listen(sock_fd, BACKLOG) < 0) {
-        perror("Listen failed");
-        close(sock_fd);
-        exit(EXIT_FAILURE);
-    }
-    printf("Listening for MPTCP connections...\n");
-
-    client_fd = accept(sock_fd, (struct sockaddr*)&client_addr,
-&client_len);
-    if (client_fd < 0) {
-        perror("Accept failed");
-        close(sock_fd);
-        exit(EXIT_FAILURE);
-    }
-    printf("Client connected from %s:%d\n",
-           inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
-
-    printf("\nWaiting for data...\n");
-
-    while (1) {
-        int bytes_received = recv(client_fd, buffer, BUFFER_SIZE - 1,
-MSG_PEEK | MSG_WAITALL);
-        if (bytes_received <= 0) {
-            // Just break out
-            break;
-        }
-        printf("Receive bytes size %d\n", bytes_received);
-    }
-
-    close(client_fd);
-    close(sock_fd);
-    return 0;
-}
-
---- server.c ends ---
-
-Best regards,
-Li Xiasong
-
-
-
+/P
 
