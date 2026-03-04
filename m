@@ -1,72 +1,33 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79BD1347523
-	for <mptcp@lists.linux.dev>; Wed,  4 Mar 2026 09:16:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 673E5372675;
+	Wed,  4 Mar 2026 09:22:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772615782; cv=none; b=Vp1KikugvaJhlCYY4YshBjc0ZMKMXOiK1/0hNB3vpv495StCVH/lzkJMZs+xwOTGcpOxN9r3f5zBJbXpHSFCY0wgdJxElkjTG/vURZGTx7hJlMGRkTXRGZ5ONY/Opn/vIS/AjruvHA4tHrMSgE3ZiI6BWwSf0tCbtBZVx2eMoOY=
+	t=1772616147; cv=none; b=MCCZhwz79frlkYjY8Vpvd+Jq4zTT57sMBpByixL46LSwO0rwCqbQ/ChZRSS0HJ+y3NqZUuwO9cPZ2/tyBG+BxWlnfdDIjLcAimC87hW+Uww36apEJbT91+FAChGno4FsQSrvfQcMsKlmbiY9wpCowLIHP//BCJwIHqGPDxPqbLA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772615782; c=relaxed/simple;
-	bh=YpQvbmqpeYpb2AK+FdxS8aZVqvtbgfJX3SSqHUCfjUM=;
+	s=arc-20240116; t=1772616147; c=relaxed/simple;
+	bh=l0lWwdxWORqLXsJM6tbxvmdK9uvSDQhvLoF0Kob8MYE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EeWsLm/RuzTTRW8Mo70xXPAtMQKldIqjAkbdU+iQ0sSf3ru6qCC+D4sDKMB8a4zbrtJFHlOaSAqhrZInNKjG8KPrkIS+ulmMsawQs98fU1DqNgu2bWsx7E1csomm0hZ7OgH1WM0PA/lkbQg+pq1OY/rFCfRaM44JeEENYWJDNDo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Xv0oRSae; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=dmt/uiKgjDJPL9Yn0hjn97RFNYYHLhrxOGvmE8qvx7tKZRfaqUBbwBjRMpEKWYMxjLRduFstZxocPPO1Mq5q/dshkyzgTJuQ+cOyeUy11RiHoRYQYeQvi5pEu8P02uvmYaVvmqd6QEp5epPBKz0KSiIPihuQMDCHHrxDDLMpNF4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jotPM3cx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Xv0oRSae"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1772615780;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZXas3AyRjkAslEjrx2sAXcKxe2TuLSXc5Z/CuPrz3WA=;
-	b=Xv0oRSae8Ziu6iuQahSJYr7wMi4B7VcSY0u82kdHvRp5acnvI9KWIJuTK7DS9FTWAkWcVS
-	wsaEzpJ1ulAlaJ+lUGud+Lqo1w5Vpa/l12UpgySvPdCs7AyxvuwyvbOLnS2JQjkCQ2RgV4
-	sIQlcbojy830y4iWkdXNEa2o5yWpGoE=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-643-DCys2MuINx-uHtksZ5s8tQ-1; Wed, 04 Mar 2026 04:16:19 -0500
-X-MC-Unique: DCys2MuINx-uHtksZ5s8tQ-1
-X-Mimecast-MFC-AGG-ID: DCys2MuINx-uHtksZ5s8tQ_1772615778
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-4839fc4cef6so65214715e9.0
-        for <mptcp@lists.linux.dev>; Wed, 04 Mar 2026 01:16:19 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772615777; x=1773220577;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ZXas3AyRjkAslEjrx2sAXcKxe2TuLSXc5Z/CuPrz3WA=;
-        b=ryZd/ryr1lwj+KTGEb9XntN65to7XYisJlTFVh0N/26cqz7fPl6c6//F+XJ5H0sTsC
-         isHHpt8qa2JW5uYcPcXoNbbmQtUJGg7HW49Sj/+WjsWloubAp08tYRP/7ANtlR2mFbfq
-         CI4fQPyOJvTNStTEIFdq60OLzmo5tF9DyYXiefWkWZxmnbtFAmDt8BGdA8CViPt2eCeg
-         uzncIioic/EelzouiY4PCxCadJ/24pwnnzsmUyhBWiGo1iLlptcyFynv/j744b4FcPqL
-         MshonqKQ8TPrm2grkTbLCvAzIxNh93l8JVVI00kczxKL9lJl2orkNu5n/MPPpCydCSob
-         O49g==
-X-Forwarded-Encrypted: i=1; AJvYcCU7Uru/drmNhLgOloYbzU7wHOk00y4HnADpDIYc+HKhm5U/ZD/riFdDU3bok8dlQ/IwIlB9TA==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxqKqDoAQS8Uz7w1yItcxIBMtliOFDU4nq1YRxnaiHdxcuBQhSU
-	CUqY8dYNzrDJ6KP9/pTgYy8ixk5mFG3xfVTVl3QA2ayNRfh8LFDtsq9gW86XZqvrS0449TDi4Nd
-	bLa9sXbIxzvl40CaVoqaWAuHwjXu7EcZGckfMSNveZFGiKRnWDuONASddxrytkqN5
-X-Gm-Gg: ATEYQzzI5AESAlNE6BwYYqAz/wVYbJjJ+TqKctsngGVSAydCDxOvlPUsqG+meo6YCyH
-	o+e7EYS3hyG9QnOqRjLEgYMs+Lovbtd9ViWii07Dpiy1Z3Zn0QI/exSuJSkkP1CZK9jR4/bpRID
-	1twqnp0IEBL1oJnXraybqsi8Iz3hKP5fMRV0sr7N7snj+BisBO7Voleuzv53alJwh0tz6S4yns/
-	wHNmZ7rMH8A6sKoWb3KR2eF3jnre7zN42H5ek8qedjrW53LkRSblbBhy1op034YRSFw+afW9YGV
-	AIj+FbOWbRwYZF6C0w9H00NYHu1w+CA6nbr6iTjhJvGdkFVbn46+k0+Hcqqg6nAiL88ipZTr/ST
-	2oqbhuJqm+/8WIfiue2JNgxLXpg==
-X-Received: by 2002:a05:600c:37ce:b0:47e:e981:78b4 with SMTP id 5b1f17b1804b1-485198be785mr19265015e9.12.1772615777529;
-        Wed, 04 Mar 2026 01:16:17 -0800 (PST)
-X-Received: by 2002:a05:600c:37ce:b0:47e:e981:78b4 with SMTP id 5b1f17b1804b1-485198be785mr19264545e9.12.1772615777063;
-        Wed, 04 Mar 2026 01:16:17 -0800 (PST)
-Received: from [192.168.88.32] ([212.105.149.216])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4851883a012sm73307135e9.3.2026.03.04.01.16.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Mar 2026 01:16:16 -0800 (PST)
-Message-ID: <8f6304a2-c0d5-4c37-a569-b34dff431c29@redhat.com>
-Date: Wed, 4 Mar 2026 10:16:15 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jotPM3cx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82230C19423;
+	Wed,  4 Mar 2026 09:22:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1772616147;
+	bh=l0lWwdxWORqLXsJM6tbxvmdK9uvSDQhvLoF0Kob8MYE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=jotPM3cx/9O4URnSkY8s/5fK1deaT6YQ5CqP+kM9WZUdfTXfXoZPM1fAfxobUk9wu
+	 lekW0CvG1MyBE9imhkba0vcjYml+XHqe5kJ0CyU5nUs2oN0JQJ2LDWCaxC06Zdqow1
+	 uKeWQEyhN2wZdM7KhOXrVu03yqa7pSud0YBxX/2AsIxcT1qu3Xiphok2omuQ1E8OUl
+	 adpzL3pT2Y6kDAyerLt7CO6kGf3ySVP9WirmQqg5z7kS45V/srf51GTX7Fi436QPea
+	 VqYXvCoe5/mBsPsMKn1g2Lpr1gT8xSRTyjPODe3dDN/pcR5zUPS/QZGADNlGGMxYJx
+	 dXdciIMH8y0Dg==
+Message-ID: <af805e55-4372-4c76-8afa-e78c623d50eb@kernel.org>
+Date: Wed, 4 Mar 2026 10:22:21 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -74,63 +35,102 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC v2 mptcp-next] mptcp: support MSG_EOR in mptcp_sendmsg
-To: Geliang Tang <geliang@kernel.org>, Gang Yan <gang.yan@linux.dev>,
- mptcp@lists.linux.dev
-Cc: Gang Yan <yangang@kylinos.cn>
-References: <20260203023029.855434-1-gang.yan@linux.dev>
- <f3235ddf-9d39-42a7-8e44-a847b7402e39@redhat.com>
- <cfe4ed715628a84625c7fdafcee587581d880338.camel@kernel.org>
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <cfe4ed715628a84625c7fdafcee587581d880338.camel@kernel.org>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 7In1runvrdrLcbWhrbELmJOLZCGWFS6tA8fY2_lkZEI_1772615778
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
+Subject: Re: [PATCH net 4/5] mptcp: pm: in-kernel: always mark signal+subflow
+ endp as used
+Content-Language: en-GB, fr-BE
+To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Simon Horman <horms@kernel.org>, Shuah Khan <shuah@kernel.org>
+Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev,
+ linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org
+References: <20260303-net-mptcp-misc-fixes-7-0-rc2-v1-0-4b5462b6f016@kernel.org>
+ <20260303-net-mptcp-misc-fixes-7-0-rc2-v1-4-4b5462b6f016@kernel.org>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <20260303-net-mptcp-misc-fixes-7-0-rc2-v1-4-4b5462b6f016@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 2/28/26 10:12 AM, Geliang Tang wrote:
-> On Thu, 2026-02-12 at 10:04 +0100, Paolo Abeni wrote:
->> On 2/3/26 3:30 AM, Gang Yan wrote:
->>> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
->>> index cd5266099993..8b243062009c 100644
->>> --- a/net/mptcp/protocol.h
->>> +++ b/net/mptcp/protocol.h
->>> @@ -267,6 +267,7 @@ struct mptcp_data_frag {
->>>  	u16 overhead;
->>>  	u16 already_sent;
->>>  	struct page *page;
->>> +	u8 eor;  /* Is MSG_EOR marked? Prevents coalescing with
->>> next frag */
->>
->> I'm sorry for the late feedback, but the above will waste quite a bit
->> of
->> memory due to alignment. I think you can change the 'overhead' size
->> to
->> u8 and place 'eor' after such field.
-> 
-> I completely agree.
-> I think it's better not to let 'eor' use all 8 bits here; just one bit
-> is
-> sufficient, leaving the other 7 bits for future use, similar to:
-> 
-> 	u8 eor:1,
-> 	   __unused:7;
-> 
-> I changed the state of this patch as "Changes Requested".
+Hello,
 
-Note that adding a trailing filed will still increases the struct
-mptcp_data_frag effective size by 8 bytes.
+On 03/03/2026 11:56, Matthieu Baerts (NGI0) wrote:
+> Syzkaller managed to find a combination of actions that was generating
+> this warning:
+(...)
 
-The maximum value that can land into the 'overhead' field is
-'sizeof(struct mptcp_data_frag)' + 7; we can shrink such field to u8 and
-move the new one in the created hole. This will prevent struct
-mptcp_data_frag size increase.
+> diff --git a/net/mptcp/pm_kernel.c b/net/mptcp/pm_kernel.c
+> index b5316a6c7d1b..b2b9df43960e 100644
+> --- a/net/mptcp/pm_kernel.c
+> +++ b/net/mptcp/pm_kernel.c
+> @@ -418,6 +418,15 @@ static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
+>  	}
+>  
+>  exit:
+> +	/* If an endpoint has both the signal and subflow flags, but it is not
+> +	 * possible to create subflows -- the 'while' loop body above never
+> +	 * executed --  then still mark the endp as used, which is somehow the
+> +	 * case. This avoids issues later when removing the endpoint and calling
+> +	 * __mark_subflow_endp_available(), which expects the increment here.
+> +	 */
 
-An eventual build time check on the max 'overhead' value could be a
-plus, but it's probably too conservative, given that max is currently 47
-and should not increase.
+Regarding the AI review [1], I don't think the comment should be more
+precise by stating each case where the 'while' loop body is not
+executed: such comment would easily get outdated when the conditions are
+modified, and we forget to update it. The commit message explains the
+conditions which are used today, but might change later. Also, the
+endpoint is considered as used, not to create a subflow, but to signal
+it in this strange specific case that probably only syzbot will use.
 
-/P
+[1]
+https://netdev-ai.bots.linux.dev/ai-review.html?id=addc1ffd-bcde-4ce7-80a5-306564dde16f
+
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
 
