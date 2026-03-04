@@ -1,165 +1,96 @@
-Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from canpmsgout05.his.huawei.com (canpmsgout05.his.huawei.com [113.46.200.220])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF0353A8759
-	for <mptcp@lists.linux.dev>; Wed,  4 Mar 2026 11:15:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E38217BCA
+	for <mptcp@lists.linux.dev>; Wed,  4 Mar 2026 11:33:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.220
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772622930; cv=none; b=XRXoMF3qO2BnCkBHbKDizTNVCwfV7GUPZ97hd6xc1BRGCwngInoDMOUP7uFb7BI5cBWtHvxQ3TPS3Db2WSvlw54/ddng8itKPmwkqfKp/WFGXuJKWUJS1vM5o4VbXb7ji3trnHW9P2NzfFYYrhWDmnHVBiYQpw6kG2FQOa7j1Vg=
+	t=1772623997; cv=none; b=nN/kxqk8+7pAWrTOjFR/SQzx5MkrD0U6J43vC5cz7ec3OFpbQMLyyIzL+2EgkZDlKA0Z8YpFXN22W018FVI6HtrQUv1FiOrzjnuWHZFyFN2PaVi3k3MrcrjgKstOFZ2RuCaBIeatpg5Yucy/Z93asUlzCXKSPEiVDyRgYS36CrA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772622930; c=relaxed/simple;
-	bh=Fm9MITMvzrN1bUK+Cme/hMncR+Mx97/eQMgmDiY3OnQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=FnYeLOvsxrWD932BfcKnpCdd8HP+TRNq/jnEjEz/d9e/YqZdawBsQCnO36GpSWFsNV3nIpodtOuo7KzIeQ/FIltsXiq980z1f+oW9ddsPDq1zjFncnzvfNyL6ToiPOFKEGnQaH57UR79EFxP+8sQyvFKj8Y7TNDMLwWLH3CevUs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KhXh6Yit; arc=none smtp.client-ip=209.85.215.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1772623997; c=relaxed/simple;
+	bh=wk7qrXfDrYD6cJFDXktxKGoJNqd2Xpl/v52eEJv+3MI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:CC:
+	 In-Reply-To:Content-Type; b=n9VzEViCjlyq2BDCoLjKsUuhmS9PHjrBetpi6ygftcTSl196p6+f0mX2DrLvX8K7S2lhFAowt8MF+3VCKSwUx6s8TjZ5LQLaAq+t2Mh+a7ZePsIAF5EHkZTWnrpCmHdM1f1VDPs7mhGHPeB47ddHFObIW/K/JCN3kqJxo3vIAeY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=rHjF4s7c; arc=none smtp.client-ip=113.46.200.220
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KhXh6Yit"
-Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-c70ece855e2so2756054a12.0
-        for <mptcp@lists.linux.dev>; Wed, 04 Mar 2026 03:15:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1772622928; x=1773227728; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=+N0PSv0aNw5FsNqlrwbndBAJxWxb/es8/Rr+uh7lYSE=;
-        b=KhXh6Yitj8c/5E3N0fsP4vsna8qh6ZFda/ZsrqQLYSA+BHKv7vQ2xC9PFFSl/Z0dNY
-         b2cLheHk0coi5slB/JowexVPRRcStEWe6C8x/NFyLOo72UKhh/iAnBLa2IuybbIUO3gF
-         NJBNfwyyn51jBhAYXTC6EcC5HC+KyVJXOLt4zm8J6zpdf0FdFilenWfCX6wSpJuemBtQ
-         XowmtOvacs0XIrAZiy0jJ2aErE4RX14BL5RRAGDGChLeNRU9zhS353CtbCV0XSl56TEP
-         NTt3mDN99EebMC/uQqz/84IpssA0EXoKPoWfhU0G09oLe3FDU6vhbv2ZLRoMUv7ulxTY
-         6Mrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772622928; x=1773227728;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+N0PSv0aNw5FsNqlrwbndBAJxWxb/es8/Rr+uh7lYSE=;
-        b=k3Mra6hxzc5WIXEP6i6qycnVjGdD+P8Rr/pGKzSxtff4HH3Bu7FeJ4kPQg43/RBRex
-         UIkz5Px3DgpyfDVas1mTB9F2jckjNkg5ZTqY1LvFsBDhXcPCppH3IgQW8M0czcnVASIR
-         +HCOJ2bdgVE28pJuthJqHX678tM0bXN0TbPafelZaPP5JyflRS+AnZrVGYRDGCVtjh1r
-         7mu9WfVoJIGbun24CytWgqPhVA67XLLdmbyLZHbJp7DhgbIUXOWOPHqIvK8Hw6hhpaGh
-         oIweadvbasvM/Vulrj/LtY1/5lEQolc4xrCc7+I/aRyMianctYmZZsspSbkUvAAFxw5R
-         kU1g==
-X-Forwarded-Encrypted: i=1; AJvYcCXLJEZ4Rs+wGBbsx+wRTeFyifdz8iqm2bLpd7DhRt77v1ZeQmWXIh9W6rCfIAsYC0mXWinqTQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yygq/Ldb9qos38/0Zfbm5t6dWHY55XzPAU7jXDEzNdywaPk7yUS
-	A6Qc9lOIj7w0X0UQ1qrA6mboEEFrNBDIXgjNmR/n0RQeA/HgVSarT9IJ
-X-Gm-Gg: ATEYQzxJWRWQv5zs/nBmh2xVIIF0bUjTZi2es+jq28vLxFhHsJ3aVoPre6g5+y9ofBt
-	0ZdWNKJBVAi1l+gd5yeworMC+/dyHLw6AzTw+UgyfLOCqn9WsoE2err/Ci0QFJu6YHhpuWmCQzr
-	skFIM3TpCzplWQROhtLoWZEUKH9Po2q/TxOKj6cMccN3XE/rfn/sua/PQOdFOSnGaplz2GG/rpo
-	iVPlRnEn1yW+3zLtO0DqHpyPhgSkOWGrdXD86v0lANzICMskujhRkwL7IhG0JcNfMMFiXXmnuZH
-	IgOYLPTk2P8CuC4U5JQEpjis4ID15tvcbRIoBK/Bd0Z2ql5XX3ZpuarWHuzH735pQu+z3uojZ8W
-	yL6bC3NT6PKstT5yR0pDcHAYw3TX7EvUsPoZL5n8Sxdn4Ojc0jFfO05jTK/XxYwU9se1Ec+WAQ/
-	xl4iuiI5RoXrK4jHzCj+flIHa67m5VKDEO34FClEr9ZZFRmZLRbl/fRsGQlclH3DXX+qdf1l+rV
-	msoAJP70GgU
-X-Received: by 2002:a17:902:ce0a:b0:2ad:b213:feba with SMTP id d9443c01a7336-2ae6adcbc04mr14171985ad.5.1772622928153;
-        Wed, 04 Mar 2026 03:15:28 -0800 (PST)
-Received: from dpc2500057.. (fsb6a9315e.tkyc502.ap.nuro.jp. [182.169.49.94])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2ae4651e409sm127226495ad.44.2026.03.04.03.15.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2026 03:15:27 -0800 (PST)
-From: Keita Morisaki <kmta1236@gmail.com>
-To: Eric Dumazet <edumazet@google.com>,
-	Neal Cardwell <ncardwell@google.com>,
-	"David S . Miller" <davem@davemloft.net>,
-	David Ahern <dsahern@kernel.org>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
-Cc: Kuniyuki Iwashima <kuniyu@google.com>,
-	Simon Horman <horms@kernel.org>,
-	Jakub Sitnicki <jakub@cloudflare.com>,
-	Matthieu Baerts <matttbe@kernel.org>,
-	Mat Martineau <martineau@kernel.org>,
-	Geliang Tang <geliang@kernel.org>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org,
-	mptcp@lists.linux.dev,
-	Keita Morisaki <kmta1236@gmail.com>
-Subject: [PATCH net-next V2 RESEND] tcp: shrink per-packet memset in __tcp_transmit_skb()
-Date: Wed,  4 Mar 2026 20:15:17 +0900
-Message-Id: <20260304111517.2088694-1-kmta1236@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="rHjF4s7c"
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=eEYIAbhssCXP/hvMfg0IJSwg33oSZSj04dcBiemSHFk=;
+	b=rHjF4s7cSbzKNWekoCMwNPRZQr3RBfn1E5Dnrf4q6BIK/jKX6H4uf+PWJwkByyjh47eO2vmbM
+	BbKe1LyMebuSgqOfYURP1oepyH/GSG03se8JNDKz/x957foLTQwn1ZV/L9wU11QkvvG0ERAxvMJ
+	4IJ3QXupa7pCcWHpP2/9bRg=
+Received: from mail.maildlp.com (unknown [172.19.163.104])
+	by canpmsgout05.his.huawei.com (SkyGuard) with ESMTPS id 4fQr5b4tqBz12LCr;
+	Wed,  4 Mar 2026 19:28:35 +0800 (CST)
+Received: from kwepemj500018.china.huawei.com (unknown [7.202.194.48])
+	by mail.maildlp.com (Postfix) with ESMTPS id 1FB444056A;
+	Wed,  4 Mar 2026 19:33:12 +0800 (CST)
+Received: from [10.174.178.79] (10.174.178.79) by
+ kwepemj500018.china.huawei.com (7.202.194.48) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Wed, 4 Mar 2026 19:33:11 +0800
+Message-ID: <11702093-2cda-4d02-ac26-31d9c827c63e@huawei.com>
+Date: Wed, 4 Mar 2026 19:33:10 +0800
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net] mptcp: fix soft lockup in mptcp_recvmsg()
+To: Paolo Abeni <pabeni@redhat.com>
+References: <20260302052651.1466983-1-lixiasong1@huawei.com>
+ <64132462-e640-4ea6-82e8-48ca07a6ad44@redhat.com>
+From: Li Xiasong <lixiasong1@huawei.com>
+CC: <davem@davemloft.net>, <edumazet@google.com>, <geliang@kernel.org>,
+	<horms@kernel.org>, <kuba@kernel.org>, <linux-kernel@vger.kernel.org>,
+	<martineau@kernel.org>, Matthieu Baerts <matttbe@kernel.org>,
+	<mptcp@lists.linux.dev>, <netdev@vger.kernel.org>, <weiyongjun1@huawei.com>,
+	<yuehaibing@huawei.com>, <zhangchangzhong@huawei.com>
+In-Reply-To: <64132462-e640-4ea6-82e8-48ca07a6ad44@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: kwepems100001.china.huawei.com (7.221.188.238) To
+ kwepemj500018.china.huawei.com (7.202.194.48)
 
-Use struct_group() to group the three fields in tcp_out_options that are
-read unconditionally by tcp_options_write() and bpf_skops_write_hdr_opt()
-(mss, bpf_opt_len, num_sack_blocks), then replace the full-struct memset
-with a targeted memset of only that group.
+Hi Paolo,
 
-struct tcp_out_options is 40 bytes without MPTCP and 96 bytes with
-CONFIG_MPTCP=y (typical distro config). Every remaining field is either
-assigned before first use by tcp_established_options()/tcp_syn_options(),
-or gated behind its OPTION_* flag in tcp_options_write(). This memset
-runs on every transmitted TCP packet, so shrinking it from 96 (or 40)
-bytes to 4 bytes reduces per-packet overhead on the hot path.
+On 3/4/2026 5:07 PM, Paolo Abeni wrote:
+> On 3/2/26 6:26 AM, Li Xiasong wrote:
+>> @@ -2343,7 +2347,7 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
+>>  
+>>  		pr_debug("block timeout %ld\n", timeo);
+>>  		mptcp_cleanup_rbuf(msk, copied);
+>> -		err = sk_wait_data(sk, &timeo, NULL);
+>> +		err = sk_wait_data(sk, &timeo, last);
+> 
+> Isn't
+> 		err = sk_wait_data(sk, &timeo,  skb_peek_tail(&sk->sk_receive_queue));
+> 
+> Enough?
 
-Assembly comparison (x86-64, GCC 13, CONFIG_MPTCP=y):
+Thanks for the review! In the general case, letting sk_wait_data block is
+correct. The exception is within __mptcp_recvmsg_mskq, where a failure in
+skb_copy_datagram_msg will cause a break in the consumption loop. This
+leaves the actual processing position inconsistent with
+skb_peek_tail(&sk->sk_receive_queue), and at that point, we must not wait.
 
-  Before: rep stos zeroing 96 bytes (5 instructions, 12 8-byte stores)
-  After:  movl $0x0 zeroing 4 bytes (1 instruction, 1 store)
+> 
+> Also, could you please add a paired tests-case? Thanks!
+> 
 
-Also add opts->options = 0 at the top of tcp_syn_options(), which
-already used |= without a prior clear. tcp_established_options() already
-clears opts->options at its top.
+Further to our discussion, a minimal reproduction case for this scenario is
+available here:
+https://lore.kernel.org/netdev/e91bf909-bf4d-4f90-a370-688a9424478b@huawei.com/
 
-Reviewed-by: Jakub Sitnicki <jakub@cloudflare.com>
-Signed-off-by: Keita Morisaki <kmta1236@gmail.com>
----
- net/ipv4/tcp_output.c | 15 +++++++++++----
- 1 file changed, 11 insertions(+), 4 deletions(-)
+When running the reproduced program, you can observe the server's sy
+(system) CPU usage hitting 100%.
 
-diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
-index 326b58ff1118d..63ee037f46e50 100644
---- a/net/ipv4/tcp_output.c
-+++ b/net/ipv4/tcp_output.c
-@@ -429,14 +429,19 @@ static void smc_options_write(__be32 *ptr, u16 *options)
- }
+Thanks,
+Li Xiasong
 
- struct tcp_out_options {
-+	/* Following group is cleared in __tcp_transmit_skb() */
-+	struct_group(cleared,
-+		u16 mss;		/* 0 to disable */
-+		u8 bpf_opt_len;		/* length of BPF hdr option */
-+		u8 num_sack_blocks;	/* number of SACK blocks to include */
-+	);
-+
-+	/* Caution: following fields are not cleared in __tcp_transmit_skb() */
- 	u16 options;		/* bit field of OPTION_* */
--	u16 mss;		/* 0 to disable */
- 	u8 ws;			/* window scale, 0 to disable */
--	u8 num_sack_blocks;	/* number of SACK blocks to include */
- 	u8 num_accecn_fields:7,	/* number of AccECN fields needed */
- 	   use_synack_ecn_bytes:1; /* Use synack_ecn_bytes or not */
- 	u8 hash_size;		/* bytes in hash_location */
--	u8 bpf_opt_len;		/* length of BPF hdr option */
- 	__u8 *hash_location;	/* temporary pointer, overloaded */
- 	__u32 tsval, tsecr;	/* need to include OPTION_TS */
- 	struct tcp_fastopen_cookie *fastopen_cookie;	/* Fast open cookie */
-@@ -965,6 +970,8 @@ static unsigned int tcp_syn_options(struct sock *sk, struct sk_buff *skb,
- 	struct tcp_fastopen_request *fastopen = tp->fastopen_req;
- 	bool timestamps;
-
-+	opts->options = 0;
-+
- 	/* Better than switch (key.type) as it has static branches */
- 	if (tcp_key_is_md5(key)) {
- 		timestamps = false;
-@@ -1549,7 +1556,7 @@ static int __tcp_transmit_skb(struct sock *sk, struct sk_buff *skb,
-
- 	inet = inet_sk(sk);
- 	tcb = TCP_SKB_CB(skb);
--	memset(&opts, 0, sizeof(opts));
-+	memset(&opts.cleared, 0, sizeof(opts.cleared));
-
- 	tcp_get_current_key(sk, &key);
- 	if (unlikely(tcb->tcp_flags & TCPHDR_SYN)) {
-
-base-commit: af4e9ef3d78420feb8fe58cd9a1ab80c501b3c08
---
-2.34.1
