@@ -1,149 +1,129 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7FAB35898
-	for <mptcp@lists.linux.dev>; Thu,  5 Mar 2026 04:30:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772685011; cv=none; b=XV3cVN/dJeZdRx0r2A+ud+jNP214fiuDXHv/2nrHAEqv/jxK8ybCf+tlLvBBX8b6UlElCzlhCQNxrske9Uq+Pucz2zpPi24kSXi2XJG+agl/bmvii4SrXDkXAnSGOzjRbsLwLvt3f8tHBo+ToZ3ydIXJSFXb3pN0B+ZJikAiYfk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772685011; c=relaxed/simple;
-	bh=sDLL6kdLLLH5WQ7xMSOZqNd8dwEuaVg6Hh8JLKgdj74=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=umGgkxuQrLj8gBVqsjoPlt3jmd9BF7J+i3prrlGoEnihDrD1/buzbtUn6HwlfBhJDJgrT1bMEIpZ2ihKDEzgF8CNgmSKEx0euEyu6KotDbsNv6PkUAsnuYPPcTFvoDtNoq9H3ofwpha+gdEhahIOxoOTC05MiJPcjBQR71hVTFs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZUMShbbq; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DD0226F2A1
+	for <mptcp@lists.linux.dev>; Thu,  5 Mar 2026 04:42:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.48
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772685726; cv=pass; b=NjUT747D6T8odCyfx1WSnWuNvYYVnrnrkmOW6SZ2qk92ghsUFshrQ8FT4teGbzH1GLGzzpwgJZoXI8zbYh6tXnMH4kXqf5+LErMMWyB8Kd3keffS1fmpYuVYabjTBP3g6WXyhVoZi+wRe+xmn1/y/YpaJGMdLKCTxu3V8nLI++M=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772685726; c=relaxed/simple;
+	bh=b3Xkd4EKnRyb7vdnRVFaQz5szPGJij4qxH5oDzMhz34=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=S1MOW5AkE/Z786ibnQ0zpNMr7EmhCxNRYnTvsgUUs16Zho9lu18ojqzzxLtkmPSOzq/pGUmia3zIEp0uBC6LYF2u3xEjVUK3s/94kmbbvqPBpDB8ih5mLCBsa46XNVpRsHlRan4GC6OSA/rfqpgZ+4QgaAxFJDYMuebGTJjyDBY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=S/7WvcAx; arc=pass smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZUMShbbq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12CDBC116C6;
-	Thu,  5 Mar 2026 04:30:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772685011;
-	bh=sDLL6kdLLLH5WQ7xMSOZqNd8dwEuaVg6Hh8JLKgdj74=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=ZUMShbbqoby9u5IISgTeqFjl946q/mr9RwRks6xX4G0+/0f8DsySJIsW+EVX7AhkE
-	 TMX+AYIiJY9rSx2G99uZzy/sHKioM3KFhKaqi5DfWg7qitbd59kZO9Jt5dXYybVTuI
-	 eVonb+pEe0SKtkHW4Me1cRelNTfYth2WEf5V9vRY4r9sIfiNdUVAy2LowRC4iZUDmj
-	 R2PzWReSe6idGrhSqDga1q+03N9w22/zaOzbz7okaUnvajmq3UEZdhTRm7eID1vkR1
-	 O3OzNYhJTcxg6B6LQZZRobXoM0UTj1mRk3Bspdm6ndnFediHiQo9DJKhAqTyBTJMpF
-	 aECdJuXGY4cgw==
-Message-ID: <ffc23fb3bc82988608237be48a3eea7fdd3a4dd7.camel@kernel.org>
-Subject: Re: [LSF/MM/BPF TOPIC] NVMe over MPTCP: Multi-Fold Acceleration for
- NVMe over TCP in Multi-NIC Environments
-From: Geliang Tang <geliang@kernel.org>
-To: Nilay Shroff <nilay@linux.ibm.com>, lsf-pc@lists.linux-foundation.org, 
-	linux-nvme@lists.infradead.org, Ming Lei <ming.lei@redhat.com>, Javier
- =?ISO-8859-1?Q?Gonz=E1lez?=
-	 <javier.gonz@samsung.com>
-Cc: mptcp@lists.linux.dev, Matthieu Baerts <matttbe@kernel.org>, Mat
- Martineau	 <martineau@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Hannes
- Reinecke	 <hare@suse.de>
-Date: Thu, 05 Mar 2026 12:30:06 +0800
-In-Reply-To: <ecb30d89b67b992bfc136186f18550f9fb974baa.camel@kernel.org>
-References: <a9f115aa5719e1088702a3fdeee766a3166611b1.camel@kernel.org>
-		 <48e429f3-e29f-4eac-b4d3-3bf9e0d1c245@linux.ibm.com>
-	 <ecb30d89b67b992bfc136186f18550f9fb974baa.camel@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.58.2 (3.58.2-1.fc43) 
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="S/7WvcAx"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-660d2e4846cso2148159a12.2
+        for <mptcp@lists.linux.dev>; Wed, 04 Mar 2026 20:42:05 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1772685724; cv=none;
+        d=google.com; s=arc-20240605;
+        b=ZlVp5Tx93I08m8oBIh28V54maYAB0Bey5hBTa6FHuQXTtJAF+eRhRpF2D3S3TEf7Vg
+         yvP5S/VNI2Vzab5CGZE7Hp4i/I86zlj1o9Jz+tQr8pCzKQqvxRBBDrtKIw6gAY564tBk
+         ucwn0f9Nnbw5TZivvVgdjV9y1OD/rraus1+HTsgd8KkkOB8yJ2gp+GRgZDW9c6lrUh9k
+         L5GKR8ak//H3P29qzXdbEYbFBAgghcPWHKQrw6PEpjljI3CnmPDWZVC++BJGPG/fxbwX
+         MMqNIDMQBVnCkQaCzYl5ftE75SavRpIazkDvJor4PPkFlaOXReFuKQN2t6maewlH9ypX
+         PMLg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=qFs3o4E1Xye81GNOTEaZssjs4l2+yIjCY/hB9HWyfNo=;
+        fh=eDzP74dmSEVhC06XX61ThRRkjdvygCHoUnbktjEvIl4=;
+        b=XxqksvkUlZF4Oe5lp62cfmhRy9BJL1tDhruQm2kGRlUr8h1hw+qyIn7vVfs5nno4pM
+         7rb2YPNDGq1W2YohJlB3cOzDX3/feuYcok9AovUN8Bu0dqVShaEQlcp1/ThIyTXy76ey
+         Z36Mv3g2GLNIc3SahJ9BYNGyE7ik6MHUoJDdifYHJAO6DurZU6gjmPm6qH4ZSsTuvsR2
+         IHZ2tRTxdE+5yL/gWEi3LtqKpnsn+gIWtPrte6IosoU8gU7n1PLasrDBEikXdC6cA/u+
+         iG2tMJJi6u2pgOHTt2OEp7gpt79KzMRAWFvaNufsYqlvYiWh73MR/fh/ib/gFAQ9Hrpc
+         Gl6A==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1772685724; x=1773290524; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qFs3o4E1Xye81GNOTEaZssjs4l2+yIjCY/hB9HWyfNo=;
+        b=S/7WvcAxiYLGLwu57nJb1lOCc+TscvXpGRNpol3+aQSUznUyQNmN3OT4vuNdCdJFbT
+         cPDj4PRjDTjXy/W62zyFVBfJVzd4Hj8eCY0fFySzRPq0cBou8w8gM1x1XiL9bm6yPZ81
+         WskC87jZhAi4hVBsOGSgCSb6fxgoVlL67BOkNoSTVLiKcB6r+MN+ihsapbfgU4K/lmXp
+         IVQN5KErugtFWLTkVuTIT0uZtperPzsSqcRfNNKaxn2j1gK69L6SINgNTQTndLEQ+A0W
+         M1GIpXUk/8PkHITlMTbz4kmCQkli7yw64BX2SEH/syvqU8jY41ldT9MvmSD270zmBosf
+         VWpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1772685724; x=1773290524;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=qFs3o4E1Xye81GNOTEaZssjs4l2+yIjCY/hB9HWyfNo=;
+        b=WsJlMI0pziOwnBCSL0xKd7wShf+gWlbJ3XKJX6y9MQQxSTUGJ3E/JLahZ/FC91c01k
+         twPYSF6tAUByXUlRZnoqBE+LQFYAF5EmA6WGcEftuw2naf9z3/2Q5Zk4I3UqNBWX7dX8
+         2vVPheuhyBmbsozB4rvoHq06ynsymxh+PWG0oh+F7BTGHhyWE4pyG0ist9BMXIqWr18G
+         HIXbXDWF8eXzc5b3E3IJQSywCZcjwBPkyZq76X9GYUdqCxyAVs/Ieid/STu9Onv/5cmV
+         pHqwpZjx/xZ29vz03IgikH0XkgdWgB7j/VibO9yKCsT5kh3qDBTN/Kc17Z7j7xX+7Yk8
+         /ZyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWeJl29PkAiuMqi97/+5GzxC7Qz0v1guDMBuepjPPtn3R2VxGUa1xpbsbY++SEmFw4DXzKpLQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxQgkqxVCfs7L+3NmBRarekqa/EmQOC01AtQpwGeE2vsqH6WZFw
+	IZxIBiLRXB8yBVLKS+lRx7U5wyIfaBENfJjRV/FPc+2llXvZYJsBly3y7vRgJs261M0sBbPJABU
+	B4ZxVOYp1DBNDvna4JVbVnJn+EvGQyngMJmeB8e3d
+X-Gm-Gg: ATEYQzy4RyQ6D81JWYT0OIx1ksKwx27OhdXUMse6sVsK/7bOFa2pVvuVv/O7VwNa0wO
+	u1B31vUDkD1kDegfzn5D6ZDdrpsGfWCuI6uym3NseSP0ZjEvMXImZZoBdTKTJxBLJLDsRZYTuC8
+	g9pITgzWgpWSX5w0HRh0AHUZbGLKNNB2MaoKzIAhD9pDDeAH9JbBwxm2wRLPLFynLAO8lRhuXKN
+	A1l+31vNfpBx+ZGxfkNZYqQYdMEKnKKXo0JoybwHsUntY53CMng6AJ8yCki3x7TCLEUPr1mprUn
+	6KgPqHmP6DTjZdIWPxKGC0SyCXwQPJgCHqnKBtJXkdCLPY4MrctAnJdzhUUP3z6KRviTqBFa
+X-Received: by 2002:a17:906:6a1a:b0:b8f:bb98:b8f6 with SMTP id
+ a640c23a62f3a-b93f11c5ad3mr265537366b.19.1772685723621; Wed, 04 Mar 2026
+ 20:42:03 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <20260304111517.2088694-1-kmta1236@gmail.com>
+In-Reply-To: <20260304111517.2088694-1-kmta1236@gmail.com>
+From: Kuniyuki Iwashima <kuniyu@google.com>
+Date: Wed, 4 Mar 2026 20:41:50 -0800
+X-Gm-Features: AaiRm51le4VIOnY5bCLbPnwrxhsRbSgcv1k1w5UJIrgYGqVkL7f7CO9wRGze_zY
+Message-ID: <CAAVpQUD0gfpzZaMDBNuK2RQ1U5=3=5u-gb-jpLMxFvYPYQ+-Ow@mail.gmail.com>
+Subject: Re: [PATCH net-next V2 RESEND] tcp: shrink per-packet memset in __tcp_transmit_skb()
+To: Keita Morisaki <kmta1236@gmail.com>
+Cc: Eric Dumazet <edumazet@google.com>, Neal Cardwell <ncardwell@google.com>, 
+	"David S . Miller" <davem@davemloft.net>, David Ahern <dsahern@kernel.org>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	Jakub Sitnicki <jakub@cloudflare.com>, Matthieu Baerts <matttbe@kernel.org>, 
+	Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, mptcp@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Nilay, Ming,
+On Wed, Mar 4, 2026 at 3:15=E2=80=AFAM Keita Morisaki <kmta1236@gmail.com> =
+wrote:
+>
+> Use struct_group() to group the three fields in tcp_out_options that are
+> read unconditionally by tcp_options_write() and bpf_skops_write_hdr_opt()
+> (mss, bpf_opt_len, num_sack_blocks), then replace the full-struct memset
+> with a targeted memset of only that group.
+>
+> struct tcp_out_options is 40 bytes without MPTCP and 96 bytes with
+> CONFIG_MPTCP=3Dy (typical distro config). Every remaining field is either
+> assigned before first use by tcp_established_options()/tcp_syn_options(),
+> or gated behind its OPTION_* flag in tcp_options_write(). This memset
+> runs on every transmitted TCP packet, so shrinking it from 96 (or 40)
+> bytes to 4 bytes reduces per-packet overhead on the hot path.
+>
+> Assembly comparison (x86-64, GCC 13, CONFIG_MPTCP=3Dy):
+>
+>   Before: rep stos zeroing 96 bytes (5 instructions, 12 8-byte stores)
+>   After:  movl $0x0 zeroing 4 bytes (1 instruction, 1 store)
+>
+> Also add opts->options =3D 0 at the top of tcp_syn_options(), which
+> already used |=3D without a prior clear. tcp_established_options() alread=
+y
+> clears opts->options at its top.
+>
+> Reviewed-by: Jakub Sitnicki <jakub@cloudflare.com>
+> Signed-off-by: Keita Morisaki <kmta1236@gmail.com>
 
-Thank you again for your interest in NVMe over MPTCP.
-
-On Thu, 2026-02-26 at 17:54 +0800, Geliang Tang wrote:
-> Hi Nilay,
-> 
-> Thanks for your reply.
-> 
-> On Wed, 2026-02-25 at 20:37 +0530, Nilay Shroff wrote:
-> > 
-> > 
-> > On 1/29/26 9:43 AM, Geliang Tang wrote:
-> > > 3. Performance Benefits
-> > > 
-> > > This new feature has been evaluated in different environments:
-> > > 
-> > > I conducted 'NVMe over MPTCP' tests between two PCs, each
-> > > equipped
-> > > with
-> > > two Gigabit NICs and directly connected via Ethernet cables.
-> > > Using
-> > > 'NVMe over TCP', the fio benchmark showed a speed of
-> > > approximately
-> > > 100
-> > > MiB/s. In contrast, 'NVMe over MPTCP' achieved about 200 MiB/s
-> > > with
-> > > fio, doubling the throughput.
-> > > 
-> > > In a virtual machine test environment simulating four NICs on
-> > > both
-> > > sides, 'NVMe over MPTCP' delivered bandwidth up to four times
-> > > that
-> > > of
-> > > standard TCP.
-> > 
-> > This is interesting. Did you try using an NVMe multipath iopolicy
-> > other
-> > than the default numa policy? Assuming both the host and target are
-> > multihomed,
-> > configuring round-robin or queue-depth may provide performance
-> > comparable
-> > to what you are seeing with MPTCP.
-> > 
-> > I think MPTCP shall distribute traffic using transport-level
-> > metrics
-> > such as
-> > RTT, cwnd, and packet loss, whereas the NVMe multipath layer makes
-> > decisions
-> > based on ANA state, queue depth, and NUMA locality. In a setup with
-> > multiple
-> > active paths, switching the iopolicy from numa to round-robin or
-> > queue-depth
-> > could improve load distribution across controllers and thus improve
-> > performance.
-> > 
-> > IMO, it would be useful to test with those policies and compare the
-> > results
-> > against the MPTCP setup.
-> 
-> Ming Lei also made a similar comment. In my experiments, I didn't set
-> the multipath iopolicy, so I was using the default numa policy. In
-> the
-> follow-up, I'll adjust it to round-robin or queue-depth and rerun the
-> experiments. I'll share the results in this email thread.
-
-Based on your feedback, I have added iopolicy support to the NVMe over
-MPTCP selftest script (see patch 8 in [1]). We can set the iopolicy to
-round-robin like this:
-
- # ./mptcp_nvme.sh mptcp round-robin
-
-This demonstrates that "NVMe over MPTCP" and "NVMe multipath" can work
-simultaneously without conflict.
-
-Using this test script, I compared three I/O policies: numa, round-
-robin, and queue-depth. The results for fio were very similar. It's
-possible that this test environment doesn't fully reflect the
-differences in I/O policies. I will continue to follow up with further
-tests.
-
-Thanks,
--Geliang
-
-[1]
-NVME over MPTCP, v4
-https://patchwork.kernel.org/project/mptcp/cover/cover.1772683110.git.tanggeliang@kylinos.cn/
-
-> 
-> Thanks,
-> -Geliang
-> 
-> > 
-> > Thanks,
-> > --Nilay
+Reviewed-by: Kuniyuki Iwashima <kuniyu@google.com>
