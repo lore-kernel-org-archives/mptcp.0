@@ -1,40 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FC90336881
-	for <mptcp@lists.linux.dev>; Thu,  5 Mar 2026 04:05:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7B35336881
+	for <mptcp@lists.linux.dev>; Thu,  5 Mar 2026 04:05:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772683542; cv=none; b=d+Hn9Hs4s1xDIsBPkULcNljXD0Xt/YVkBIBrH+WHrhe9MlZrVDMjNCCGywlbG5+kAa3u3ua52X3r6dAn92F5+LnU/n7m1INlGYNNQTIyVmQgeB3N6KDS9F5H07e4n7ODwUIbBvIp+89069T/Y1hNXV/92PoIZM9VPV3FzIoU3jw=
+	t=1772683544; cv=none; b=H1yxZchxsI/54y74opGEWpaqE0nqy8X0DEl5jTnVEaANYZKw1GMO7C8YmYA8QW6QOiTORuP9O/xyEFTgM2XnR5uoNWSTwPIlmaVlUKv+Kfmzw49U94tTFIvNtdAKX+KvN8xkaPrKXHbAfnxdeGJ9QPwg5TNXi+e4hOJZSUbvReY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772683542; c=relaxed/simple;
-	bh=ACalUme6sFIV9clOCAZEDm1vLidxICFYi7+RXctnmoc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AIreTu+yFZrJbKVpPGq4KkPSRD5ls9MAPOjg5njHqjlwcbYRN/maWVvtDpmtLq7tRe4F+Ma1YDNssEx+QeiNsZ4xKxyfQ9WzfL6+urjTmWTyvimdub5qtJ+DiJzmaSL0ZfmlG1wK384/vDCU1DjL32TxwMDHIAuwXYaYtkiSN4s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TaIIqA4I; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1772683544; c=relaxed/simple;
+	bh=5wAqg4Y76q9Vqv/QfZpGMwdsak39VQtYVPozE4uN6y0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=JTSxFxoVdWyuvCmVVlMTtFh5C0vhO4v16LNncLYpHdOOw5ssP/egPw8ZIm85axIzaPx5ZBPvwlnIk3aNCiivje5N/zsuuqoh6wNZGhEVqnqvaetUgZazLxilD06/WGUEEIIGQNerc08zzlXOlCvUfmIixAx+tmxE+GqRafoMdpQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tJacmfZt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TaIIqA4I"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 581ADC116C6;
-	Thu,  5 Mar 2026 04:05:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tJacmfZt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35EB1C116C6;
+	Thu,  5 Mar 2026 04:05:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772683541;
-	bh=ACalUme6sFIV9clOCAZEDm1vLidxICFYi7+RXctnmoc=;
-	h=From:To:Cc:Subject:Date:From;
-	b=TaIIqA4IhVeZ0OEyxOXCk0zeXNqt6xi56Wcg/iEjf2V2oMmHXlAEURy04dc4ialYn
-	 wPREaUCyP12WPRkUs0yQzPWsb2LbtZMwbswcNDIrk8HCWR2Uft8U90MI0twch+xtT2
-	 Z2vB8PpWC7kHdZ0wTvqdSV20fA9fpi4EWslFuftBm3BPta5W+LKKFXiALtXe+g+M8l
-	 9Eb9Ibqzo9tHQ4e153ao14qc+e8WaTbaGMaOHkofC09Roceik/+yxB7NMmxq81ysav
-	 Hzq0m0tt/hpTHY5O+poCfoR2vmXvC6TA8X8oS5jdQXCf7cUF0dcrGkHcfrM/AOFnHS
-	 KAjZH0eepNelQ==
+	s=k20201202; t=1772683544;
+	bh=5wAqg4Y76q9Vqv/QfZpGMwdsak39VQtYVPozE4uN6y0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=tJacmfZt/GYz/2EB30OtN1jdzqS9vPwp6WNWFUjvZjC98YTA+9MrAa/l7sFZMyLnJ
+	 rQ9o8KQ30ioYppipATP27CSGa6qRg+tINPWWRct9UG1gKLUSnMFdCiud9fdBj8jPGo
+	 tFg4q1diBYbWE4TcE6riedxfqHCTkVpvxpTgcGbvpLEC1aLniYMsPoowNaWSIOpYff
+	 QkMdf3C/hr1smvL5eKb164OalbSidCx5/VgcuhjhGeS6bF1DahIUbeFZFjZZNhpIiA
+	 E3QuOCT1K5bcQy8WbCfFWfyI2DFuB9r47f3y9X4FmmvvM+9azHWqOSJSPszydQKBhG
+	 KjHRvIqb2Y6Dg==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev,
 	nilay@linux.ibm.com,
 	ming.lei@redhat.com,
 	hare@suse.de
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [RFC mptcp-next v4 0/8] NVME over MPTCP
-Date: Thu,  5 Mar 2026 12:05:18 +0800
-Message-ID: <cover.1772683110.git.tanggeliang@kylinos.cn>
+Subject: [RFC mptcp-next v4 1/8] mptcp: add sk_is_msk helper
+Date: Thu,  5 Mar 2026 12:05:19 +0800
+Message-ID: <20f722bb03b7e2b3959ac4cd377515a423c0b164.1772683110.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.53.0
+In-Reply-To: <cover.1772683110.git.tanggeliang@kylinos.cn>
+References: <cover.1772683110.git.tanggeliang@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -45,53 +48,46 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-v4:
- - a new patch to set nvme iopolicy as Nilay suggested.
- - resend all set to trigger AI review.
+This patch introduces a sk_is_msk() helper modeled after sk_is_tcp() to
+determine whether the socket is an MPTCP one. Unlike sk_is_mptcp(), which
+accepts a subflow socket as its parameter, this new helper specifically
+accepts an MPTCP socket parameter.
 
-v3:
- - update the implementation of sock_set_nodelay: originally it only set
-the first subflow, but now it sets every subflow.
- - use sk_is_msk helper in this set.
- - update the selftest to perform testing under a multi-interface
-environment.
+Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+---
+ include/net/mptcp.h | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-v2:
- - Patch 1 fixes the timeout issue reported in v1, thanks to Paolo and Gang
-Yan for their help.
- - Patch 5 implements an MPTCP-specific sock_set_syncnt helper.
-
-This series (previously named "MPTCP support to 'NVME over TCP'") had three
-RFC versions sent to Hannes in May, with subsequent revisions based on his
-input. Following that, I initiated the process of upstreaming the dependent
-"implement mptcp read_sock" series to the main MPTCP repository, which has
-been merged into net-next recently.
-
-Depends on: mptcp: fix stall because of data_ready
-Without this fix, NVMe-over-MPTCP test will probabilistically fail.
-Based-on: <20260228011511.440437-1-gang.yan@linux.dev>
-
-Geliang Tang (8):
-  mptcp: add sk_is_msk helper
-  nvmet-tcp: add mptcp support
-  nvme-tcp: add mptcp support
-  mptcp: add sock_set_nodelay
-  mptcp: add sock_set_reuseaddr
-  mptcp: add sock_set_syncnt
-  selftests: mptcp: add NVMe-over-MPTCP test
-  selftests: mptcp: nvme: set iopolicy
-
- drivers/nvme/host/tcp.c                       |  26 ++-
- drivers/nvme/target/configfs.c                |   1 +
- drivers/nvme/target/tcp.c                     |  38 +++-
- include/linux/nvme.h                          |   1 +
- include/net/mptcp.h                           |  27 +++
- net/mptcp/protocol.c                          |  51 +++++
- tools/testing/selftests/net/mptcp/config      |   7 +
- .../testing/selftests/net/mptcp/mptcp_nvme.sh | 187 ++++++++++++++++++
- 8 files changed, 335 insertions(+), 3 deletions(-)
- create mode 100755 tools/testing/selftests/net/mptcp/mptcp_nvme.sh
-
+diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+index 4cf59e83c1c5..82660374859a 100644
+--- a/include/net/mptcp.h
++++ b/include/net/mptcp.h
+@@ -150,6 +150,13 @@ static inline bool rsk_drop_req(const struct request_sock *req)
+ 	return tcp_rsk(req)->is_mptcp && tcp_rsk(req)->drop_req;
+ }
+ 
++static inline bool sk_is_msk(const struct sock *sk)
++{
++	return sk_is_inet(sk) &&
++	       sk->sk_type == SOCK_STREAM &&
++	       sk->sk_protocol == IPPROTO_MPTCP;
++}
++
+ void mptcp_space(const struct sock *ssk, int *space, int *full_space);
+ bool mptcp_syn_options(struct sock *sk, const struct sk_buff *skb,
+ 		       unsigned int *size, struct mptcp_out_options *opts);
+@@ -258,6 +265,11 @@ static inline bool rsk_drop_req(const struct request_sock *req)
+ 	return false;
+ }
+ 
++static inline bool sk_is_msk(const struct sock *sk)
++{
++	return false;
++}
++
+ static inline bool mptcp_syn_options(struct sock *sk, const struct sk_buff *skb,
+ 				     unsigned int *size,
+ 				     struct mptcp_out_options *opts)
 -- 
 2.53.0
 
