@@ -1,217 +1,124 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F297D3EBF37;
-	Fri,  6 Mar 2026 17:50:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3CA7306B1B;
+	Fri,  6 Mar 2026 18:31:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772819420; cv=none; b=bpjIIf05XJlZRCD4QrsW84WaZGg/sOY7scC8PPVLuwjXh2Kbn8BHn6O8Zb42ojARLvjGbLRQBdXx5btQ9JoiRif74smaUMdSihgtbJzVCOSq1362/dx5PbuQiYfkLTklBbpn3ivRuQRfrI/hX5dwjyKVnZH7sRbVN/nkPmxWUU8=
+	t=1772821878; cv=none; b=O4lyN4hLJLHwVXgclLXUf19sPkTaJEXY0JR51yaIRU7lSBRBlkf9GCdgUu4dWQ7/VKtRCT0nlXsu1JR29hbY+rVl16jcJdqEXHpmdw9Ic87d/lnkLq/LQIovRnly26pP6/Uyfjtsr+Tx5cY3Wyh8fH99IX/FTH3jb+qzwi/QvZU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772819420; c=relaxed/simple;
-	bh=VbJRlfY1MntFcbhcYNVoUDgBwW4O9vvGohXljbwTu2M=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YR2V63OO5KyNOqPLuMaOJ+DdKXzGWe7wX8+OCfXUvwY5twX8YnIOfUn1u6xt/r+X1dB8mvlMWNhQVic/FLHG/7busSjfosEF4BEYfdqlBxoSIWgIIpD04NTgJ/1arr9BSTqtotvrVngHMpBDtISLP/aSzvwnxtTwW7xGE87pZ44=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o8rzqp8O; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1772821878; c=relaxed/simple;
+	bh=O8qHcGyY3OBV+GYrqcLvI3k6DaTD+s8dw1QzDwMSMo8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=a4DtTvxl5uGTYmjRxRNx4FcamDCgXoq3r7UOYEOfE0sfSBUP/q6jtC1DBWUBTXLMuR+7ED33FeTw9Ip97HeiE3b8le4KemvtJCs6GsWZRmkKL75Ld4F65fmbi5u6E2JG0aRqYhTMZFhQ8MU5IVxZO6lJV/5SwFDHMu/v0cMWTrA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=npsIiHCU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o8rzqp8O"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11F31C4CEF7;
-	Fri,  6 Mar 2026 17:50:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="npsIiHCU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E53EDC2BC86;
+	Fri,  6 Mar 2026 18:31:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772819419;
-	bh=VbJRlfY1MntFcbhcYNVoUDgBwW4O9vvGohXljbwTu2M=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=o8rzqp8OVSqolFkVNeQspXer9okqfOX0L782LtG7QirXv//EHvzySIOfYLFfDuum6
-	 Wm7sEQeouDM2gHOydFL+E2mjww7fgJgqGF4HgVIMDFJocU861Us3pNpMmC3VxaZnZu
-	 cF0Pyz5k9PvVbAM8TRPMnu0pYYOtiHnSLEigu2sbkmghlwDxijNqPyoGjRNMuuUS0G
-	 2KKzm2m77jdAUZhgs3Si2OJ+mYgD99cxL6H12R9mX1q3LSa19mPSsyM0BQmXdGvr+T
-	 wImpPi7ASm6hCv+qQziUhR5HXbk88MRE5TSi8HRGPicvu1DjZNl+K2qGTk6OI7i1es
-	 uLJ1fVNhLfr/A==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-To: stable@vger.kernel.org,
-	gregkh@linuxfoundation.org,
-	sashal@kernel.org
-Cc: MPTCP Upstream <mptcp@lists.linux.dev>,
-	"Matthieu Baerts (NGI0)" <matttbe@kernel.org>,
-	syzbot+f56f7d56e2c6e11a01b6@syzkaller.appspotmail.com,
-	Mat Martineau <martineau@kernel.org>,
-	Jakub Kicinski <kuba@kernel.org>
-Subject: [PATCH 6.1.y] mptcp: pm: in-kernel: always set ID as avail when rm endp
-Date: Fri,  6 Mar 2026 18:50:10 +0100
-Message-ID: <20260306175009.2520964-2-matttbe@kernel.org>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20260301014545.1708548-1-sashal@kernel.org>
-References: <20260301014545.1708548-1-sashal@kernel.org>
+	s=k20201202; t=1772821878;
+	bh=O8qHcGyY3OBV+GYrqcLvI3k6DaTD+s8dw1QzDwMSMo8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=npsIiHCURklCu/sXQndCgWpvhwg75HHbTpaeq5yDwxmGDxw6j4jdhFUH6rqVkAt5e
+	 U8tUOXgRsfMTPZVTVbpZd5oFjnFuEbMU5myboxnykHK8btlY4BzXRUuVu8Ok13nH/0
+	 tQrjZBowxX9dCB53BRdhtdqpOd/TRA0sI3Fnm35J15qNfkTbV+/i32OsyzwzgU/j6m
+	 pP0CX40lOd+eqsv5TwnuVddzZ2oIo9TfNIJ4Ekh7JseyqUYCx86wyqgVUp1U/tIOlA
+	 TbSKa8aNbI9VzfwkTeoDIU5nIvUTsLSRw24uwlyZiS/YDlaTUC7OKgFEtJw/ngVWER
+	 rwDrHik0E0cdA==
+Message-ID: <65aa19d8-0ac3-40fd-8df7-7b67c05ae227@kernel.org>
+Date: Fri, 6 Mar 2026 19:31:11 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Patchwork-Hint: ignore
-X-Developer-Signature: v=1; a=openpgp-sha256; l=8520; i=matttbe@kernel.org; h=from:subject; bh=VbJRlfY1MntFcbhcYNVoUDgBwW4O9vvGohXljbwTu2M=; b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDJXC1/K7dqtLWFQat+TYe+Zr3f5UqXoilviSmYnlESn2 XWpfjfvKGVhEONikBVTZJFui8yf+byKt8TLzwJmDisTyBAGLk4BmMgNNYZ/Vm83rq8/+/nY4Z+b ef99spXNnbfgwu7Lubk3vA706D3+PpHhv4f57mUr3zrprlubcteq5c5jrW1KrJ+mek/erWrBZhz 6lBcA
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: Stalls when starting a VSOCK listening socket: soft lockups, RCU
+ stalls, timeout
+To: Matthieu Baerts <matttbe@kernel.org>, Thomas Gleixner <tglx@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>
+Cc: Stefan Hajnoczi <stefanha@redhat.com>,
+ Stefano Garzarella <sgarzare@redhat.com>, kvm@vger.kernel.org,
+ virtualization@lists.linux.dev, Netdev <netdev@vger.kernel.org>,
+ rcu@vger.kernel.org, MPTCP Linux <mptcp@lists.linux.dev>,
+ Linux Kernel <linux-kernel@vger.kernel.org>,
+ Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
+ "Paul E. McKenney" <paulmck@kernel.org>,
+ Dave Hansen <dave.hansen@linux.intel.com>, "luto@kernel.org"
+ <luto@kernel.org>, =?UTF-8?Q?Michal_Koutn=C3=BD?= <MKoutny@suse.com>,
+ Waiman Long <longman@redhat.com>
+References: <b24ffcb3-09d5-4e48-9070-0b69bc654281@kernel.org>
+ <7f3e74d7-67dc-48d7-99d2-0b87f671651b@kernel.org>
+ <863a5291-a636-47d0-891c-bb0524d2e134@kernel.org>
+ <20260302114636.GL606826@noisy.programming.kicks-ass.net>
+ <717310d8-6274-4b7f-8a19-561c45f5f565@kernel.org>
+ <a2b573b4-af61-4b84-a7d1-012ed6bb23c9@kernel.org>
+ <ba067933-bf3b-476d-a0bb-53eda56996ca@kernel.org> <87zf4m2qvo.ffs@tglx>
+ <47cba228-bba7-4e58-a69d-ea41f8de6602@kernel.org> <87tsuu2i59.ffs@tglx>
+ <7efde2b5-3b72-4858-9db0-22493d446301@kernel.org> <87qzpx2sck.ffs@tglx>
+ <9798cb27-0f52-42fa-b0da-a7834039da1f@kernel.org>
+ <bacd7e6a-18a3-4e81-9b37-3e59fb1b2183@kernel.org>
+Content-Language: en-US
+From: Jiri Slaby <jirislaby@kernel.org>
+Autocrypt: addr=jirislaby@kernel.org; keydata=
+ xsFNBE6S54YBEACzzjLwDUbU5elY4GTg/NdotjA0jyyJtYI86wdKraekbNE0bC4zV+ryvH4j
+ rrcDwGs6tFVrAHvdHeIdI07s1iIx5R/ndcHwt4fvI8CL5PzPmn5J+h0WERR5rFprRh6axhOk
+ rSD5CwQl19fm4AJCS6A9GJtOoiLpWn2/IbogPc71jQVrupZYYx51rAaHZ0D2KYK/uhfc6neJ
+ i0WqPlbtIlIrpvWxckucNu6ZwXjFY0f3qIRg3Vqh5QxPkojGsq9tXVFVLEkSVz6FoqCHrUTx
+ wr+aw6qqQVgvT/McQtsI0S66uIkQjzPUrgAEtWUv76rM4ekqL9stHyvTGw0Fjsualwb0Gwdx
+ ReTZzMgheAyoy/umIOKrSEpWouVoBt5FFSZUyjuDdlPPYyPav+hpI6ggmCTld3u2hyiHji2H
+ cDpcLM2LMhlHBipu80s9anNeZhCANDhbC5E+NZmuwgzHBcan8WC7xsPXPaiZSIm7TKaVoOcL
+ 9tE5aN3jQmIlrT7ZUX52Ff/hSdx/JKDP3YMNtt4B0cH6ejIjtqTd+Ge8sSttsnNM0CQUkXps
+ w98jwz+Lxw/bKMr3NSnnFpUZaxwji3BC9vYyxKMAwNelBCHEgS/OAa3EJoTfuYOK6wT6nadm
+ YqYjwYbZE5V/SwzMbpWu7Jwlvuwyfo5mh7w5iMfnZE+vHFwp/wARAQABzSFKaXJpIFNsYWJ5
+ IDxqaXJpc2xhYnlAa2VybmVsLm9yZz7CwXcEEwEIACEFAlW3RUwCGwMFCwkIBwIGFQgJCgsC
+ BBYCAwECHgECF4AACgkQvSWxBAa0cEnVTg//TQpdIAr8Tn0VAeUjdVIH9XCFw+cPSU+zMSCH
+ eCZoA/N6gitEcnvHoFVVM7b3hK2HgoFUNbmYC0RdcSc80pOF5gCnACSP9XWHGWzeKCARRcQR
+ 4s5YD8I4VV5hqXcKo2DFAtIOVbHDW+0okOzcecdasCakUTr7s2fXz97uuoc2gIBB7bmHUGAH
+ XQXHvdnCLjDjR+eJN+zrtbqZKYSfj89s/ZHn5Slug6w8qOPT1sVNGG+eWPlc5s7XYhT9z66E
+ l5C0rG35JE4PhC+tl7BaE5IwjJlBMHf/cMJxNHAYoQ1hWQCKOfMDQ6bsEr++kGUCbHkrEFwD
+ UVA72iLnnnlZCMevwE4hc0zVhseWhPc/KMYObU1sDGqaCesRLkE3tiE7X2cikmj/qH0CoMWe
+ gjnwnQ2qVJcaPSzJ4QITvchEQ+tbuVAyvn9H+9MkdT7b7b2OaqYsUP8rn/2k1Td5zknUz7iF
+ oJ0Z9wPTl6tDfF8phaMIPISYrhceVOIoL+rWfaikhBulZTIT5ihieY9nQOw6vhOfWkYvv0Dl
+ o4GRnb2ybPQpfEs7WtetOsUgiUbfljTgILFw3CsPW8JESOGQc0Pv8ieznIighqPPFz9g+zSu
+ Ss/rpcsqag5n9rQp/H3WW5zKUpeYcKGaPDp/vSUovMcjp8USIhzBBrmI7UWAtuedG9prjqfO
+ wU0ETpLnhgEQAM+cDWLL+Wvc9cLhA2OXZ/gMmu7NbYKjfth1UyOuBd5emIO+d4RfFM02XFTI
+ t4MxwhAryhsKQQcA4iQNldkbyeviYrPKWjLTjRXT5cD2lpWzr+Jx7mX7InV5JOz1Qq+P+nJW
+ YIBjUKhI03ux89p58CYil24Zpyn2F5cX7U+inY8lJIBwLPBnc9Z0An/DVnUOD+0wIcYVnZAK
+ DiIXODkGqTg3fhZwbbi+KAhtHPFM2fGw2VTUf62IHzV+eBSnamzPOBc1XsJYKRo3FHNeLuS8
+ f4wUe7bWb9O66PPFK/RkeqNX6akkFBf9VfrZ1rTEKAyJ2uqf1EI1olYnENk4+00IBa+BavGQ
+ 8UW9dGW3nbPrfuOV5UUvbnsSQwj67pSdrBQqilr5N/5H9z7VCDQ0dhuJNtvDSlTf2iUFBqgk
+ 3smln31PUYiVPrMP0V4ja0i9qtO/TB01rTfTyXTRtqz53qO5dGsYiliJO5aUmh8swVpotgK4
+ /57h3zGsaXO9PGgnnAdqeKVITaFTLY1ISg+Ptb4KoliiOjrBMmQUSJVtkUXMrCMCeuPDGHo7
+ 39Xc75lcHlGuM3yEB//htKjyprbLeLf1y4xPyTeeF5zg/0ztRZNKZicgEmxyUNBHHnBKHQxz
+ 1j+mzH0HjZZtXjGu2KLJ18G07q0fpz2ZPk2D53Ww39VNI/J9ABEBAAHCwV8EGAECAAkFAk6S
+ 54YCGwwACgkQvSWxBAa0cEk3tRAAgO+DFpbyIa4RlnfpcW17AfnpZi9VR5+zr496n2jH/1ld
+ wRO/S+QNSA8qdABqMb9WI4BNaoANgcg0AS429Mq0taaWKkAjkkGAT7mD1Q5PiLr06Y/+Kzdr
+ 90eUVneqM2TUQQbK+Kh7JwmGVrRGNqQrDk+gRNvKnGwFNeTkTKtJ0P8jYd7P1gZb9Fwj9YLx
+ jhn/sVIhNmEBLBoI7PL+9fbILqJPHgAwW35rpnq4f/EYTykbk1sa13Tav6btJ+4QOgbcezWI
+ wZ5w/JVfEJW9JXp3BFAVzRQ5nVrrLDAJZ8Y5ioWcm99JtSIIxXxt9FJaGc1Bgsi5K/+dyTKL
+ wLMJgiBzbVx8G+fCJJ9YtlNOPWhbKPlrQ8+AY52Aagi9WNhe6XfJdh5g6ptiOILm330mkR4g
+ W6nEgZVyIyTq3ekOuruftWL99qpP5zi+eNrMmLRQx9iecDNgFr342R9bTDlb1TLuRb+/tJ98
+ f/bIWIr0cqQmqQ33FgRhrG1+Xml6UXyJ2jExmlO8JljuOGeXYh6ZkIEyzqzffzBLXZCujlYQ
+ DFXpyMNVJ2ZwPmX2mWEoYuaBU0JN7wM+/zWgOf2zRwhEuD3A2cO2PxoiIfyUEfB9SSmffaK/
+ S4xXoB6wvGENZ85Hg37C7WDNdaAt6Xh2uQIly5grkgvWppkNy4ZHxE+jeNsU7tg=
+In-Reply-To: <bacd7e6a-18a3-4e81-9b37-3e59fb1b2183@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-commit d191101dee25567c2af3b28565f45346c33d65f5 upstream.
+On 06. 03. 26, 17:57, Matthieu Baerts wrote:
+>    653fda7ae73d ("sched/mmcid: Switch over to the new mechanism")
 
-Syzkaller managed to find a combination of actions that was generating
-this warning:
+It looks like there were similar issues reported in the thread with the 
+above submitted patch. Did the patchset mentioned at the end of the 
+thread here:
+   https://lore.kernel.org/all/87h5s4mjqw.ffs@tglx/
+made it to the list/some tree? Or are the two issues there different 
+from this one?
 
-  WARNING: net/mptcp/pm_kernel.c:1074 at __mark_subflow_endp_available net/mptcp/pm_kernel.c:1074 [inline], CPU#1: syz.7.48/2535
-  WARNING: net/mptcp/pm_kernel.c:1074 at mptcp_pm_nl_fullmesh net/mptcp/pm_kernel.c:1446 [inline], CPU#1: syz.7.48/2535
-  WARNING: net/mptcp/pm_kernel.c:1074 at mptcp_pm_nl_set_flags_all net/mptcp/pm_kernel.c:1474 [inline], CPU#1: syz.7.48/2535
-  WARNING: net/mptcp/pm_kernel.c:1074 at mptcp_pm_nl_set_flags+0x5de/0x640 net/mptcp/pm_kernel.c:1538, CPU#1: syz.7.48/2535
-  Modules linked in:
-  CPU: 1 UID: 0 PID: 2535 Comm: syz.7.48 Not tainted 6.18.0-03987-gea5f5e676cf5 #17 PREEMPT(voluntary)
-  Hardware name: QEMU Ubuntu 25.10 PC (i440FX + PIIX, 1996), BIOS 1.17.0-debian-1.17.0-1 04/01/2014
-  RIP: 0010:__mark_subflow_endp_available net/mptcp/pm_kernel.c:1074 [inline]
-  RIP: 0010:mptcp_pm_nl_fullmesh net/mptcp/pm_kernel.c:1446 [inline]
-  RIP: 0010:mptcp_pm_nl_set_flags_all net/mptcp/pm_kernel.c:1474 [inline]
-  RIP: 0010:mptcp_pm_nl_set_flags+0x5de/0x640 net/mptcp/pm_kernel.c:1538
-  Code: 89 c7 e8 c5 8c 73 fe e9 f7 fd ff ff 49 83 ef 80 e8 b7 8c 73 fe 4c 89 ff be 03 00 00 00 e8 4a 29 e3 fe eb ac e8 a3 8c 73 fe 90 <0f> 0b 90 e9 3d ff ff ff e8 95 8c 73 fe b8 a1 ff ff ff eb 1a e8 89
-  RSP: 0018:ffffc9001535b820 EFLAGS: 00010287
-  netdevsim0: tun_chr_ioctl cmd 1074025677
-  RAX: ffffffff82da294d RBX: 0000000000000001 RCX: 0000000000080000
-  RDX: ffffc900096d0000 RSI: 00000000000006d6 RDI: 00000000000006d7
-  netdevsim0: linktype set to 823
-  RBP: ffff88802cdb2240 R08: 00000000000104ae R09: ffffffffffffffff
-  R10: ffffffff82da27d4 R11: 0000000000000000 R12: 0000000000000000
-  R13: ffff88801246d8c0 R14: ffffc9001535b8b8 R15: ffff88802cdb1800
-  FS:  00007fc6ac5a76c0(0000) GS:ffff8880f90c8000(0000) knlGS:0000000000000000
-  netlink: 'syz.3.50': attribute type 5 has an invalid length.
-  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  netlink: 1232 bytes leftover after parsing attributes in process `syz.3.50'.
-  CR2: 0000200000010000 CR3: 0000000025b1a000 CR4: 0000000000350ef0
-  Call Trace:
-   <TASK>
-   mptcp_pm_set_flags net/mptcp/pm_netlink.c:277 [inline]
-   mptcp_pm_nl_set_flags_doit+0x1d7/0x210 net/mptcp/pm_netlink.c:282
-   genl_family_rcv_msg_doit+0x117/0x180 net/netlink/genetlink.c:1115
-   genl_family_rcv_msg net/netlink/genetlink.c:1195 [inline]
-   genl_rcv_msg+0x3a8/0x3f0 net/netlink/genetlink.c:1210
-   netlink_rcv_skb+0x16d/0x240 net/netlink/af_netlink.c:2550
-   genl_rcv+0x28/0x40 net/netlink/genetlink.c:1219
-   netlink_unicast_kernel net/netlink/af_netlink.c:1318 [inline]
-   netlink_unicast+0x3e9/0x4c0 net/netlink/af_netlink.c:1344
-   netlink_sendmsg+0x4ab/0x5b0 net/netlink/af_netlink.c:1894
-   sock_sendmsg_nosec net/socket.c:718 [inline]
-   __sock_sendmsg+0xc9/0xf0 net/socket.c:733
-   ____sys_sendmsg+0x272/0x3b0 net/socket.c:2608
-   ___sys_sendmsg+0x2de/0x320 net/socket.c:2662
-   __sys_sendmsg net/socket.c:2694 [inline]
-   __do_sys_sendmsg net/socket.c:2699 [inline]
-   __se_sys_sendmsg net/socket.c:2697 [inline]
-   __x64_sys_sendmsg+0x110/0x1a0 net/socket.c:2697
-   do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-   do_syscall_64+0xed/0x360 arch/x86/entry/syscall_64.c:94
-   entry_SYSCALL_64_after_hwframe+0x77/0x7f
-  RIP: 0033:0x7fc6adb66f6d
-  Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 e8 ff ff ff f7 d8 64 89 01 48
-  RSP: 002b:00007fc6ac5a6ff8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-  RAX: ffffffffffffffda RBX: 00007fc6addf5fa0 RCX: 00007fc6adb66f6d
-  RDX: 0000000000048084 RSI: 00002000000002c0 RDI: 000000000000000e
-  RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
-  R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-  netlink: 'syz.5.51': attribute type 2 has an invalid length.
-  R13: 00007fff25e91fe0 R14: 00007fc6ac5a7ce4 R15: 00007fff25e920d7
-   </TASK>
-
-The actions that caused that seem to be:
-
- - Create an MPTCP endpoint for address A without any flags
- - Create a new MPTCP connection from address A
- - Remove the MPTCP endpoint: the corresponding subflows will be removed
- - Recreate the endpoint with the same ID, but with the subflow flag
- - Change the same endpoint to add the fullmesh flag
-
-In this case, msk->pm.local_addr_used has been kept to 0 as expected,
-but the corresponding bit in msk->pm.id_avail_bitmap was still unset
-after having removed the endpoint, causing the splat later on.
-
-When removing an endpoint, the corresponding endpoint ID was only marked
-as available for "signal" types with an announced address, plus all
-"subflow" types, but not the other types like an endpoint corresponding
-to the initial subflow. In these cases, re-creating an endpoint with the
-same ID didn't signal/create anything. Here, adding the fullmesh flag
-was creating the splat when calling __mark_subflow_endp_available() from
-mptcp_pm_nl_fullmesh(), because msk->pm.local_addr_used was set to 0
-while the ID was marked as used.
-
-To fix this issue, the corresponding bit in msk->pm.id_avail_bitmap can
-always be set as available when removing an MPTCP in-kernel endpoint. In
-other words, moving the call to __set_bit() to do it in all cases,
-except for "subflow" types where this bit is handled in a dedicated
-helper.
-
-Note: instead of adding a new spin_(un)lock_bh that would be taken in
-all cases, do all the actions requiring the spin lock under the same
-block.
-
-This modification potentially fixes another issue reported by syzbot,
-see [1]. But without a reproducer or more details about what exactly
-happened before, it is hard to confirm.
-
-Fixes: e255683c06df ("mptcp: pm: re-using ID of unused removed ADD_ADDR")
-Cc: stable@vger.kernel.org
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/606
-Reported-by: syzbot+f56f7d56e2c6e11a01b6@syzkaller.appspotmail.com
-Closes: https://lore.kernel.org/68fcfc4a.050a0220.346f24.02fb.GAE@google.com [1]
-Reviewed-by: Mat Martineau <martineau@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Link: https://patch.msgid.link/20260205-net-mptcp-misc-fixes-6-19-rc8-v2-1-c2720ce75c34@kernel.org
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-[ Conflict in pm_netlink.c, because commit 8617e85e04bd ("mptcp: pm:
-  split in-kernel PM specific code") is not in this version, and move
-  code from pm_netlink.c to pm_kernel.c. Also, commit 636113918508
-  ("mptcp: pm: remove '_nl' from mptcp_pm_nl_rm_addr_received") renamed
-  mptcp_pm_nl_rm_subflow_received() to mptcp_pm_rm_subflow(). Apart from
-  that, the same patch can be applied in pm_netlink.c. ]
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- net/mptcp/pm_netlink.c | 20 ++++++++------------
- 1 file changed, 8 insertions(+), 12 deletions(-)
-
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 293ec3448f52..9450c85c1d87 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -1601,10 +1601,8 @@ static bool mptcp_pm_remove_anno_addr(struct mptcp_sock *msk,
- 	ret = remove_anno_list_by_saddr(msk, addr);
- 	if (ret || force) {
- 		spin_lock_bh(&msk->pm.lock);
--		if (ret) {
--			__set_bit(addr->id, msk->pm.id_avail_bitmap);
-+		if (ret)
- 			msk->pm.add_addr_signaled--;
--		}
- 		mptcp_pm_remove_addr(msk, &list);
- 		spin_unlock_bh(&msk->pm.lock);
- 	}
-@@ -1642,17 +1640,15 @@ static int mptcp_nl_remove_subflow_and_signal_addr(struct net *net,
- 					  !(entry->flags & MPTCP_PM_ADDR_FLAG_IMPLICIT));
- 
- 		list.ids[0] = mptcp_endp_get_local_id(msk, addr);
--		if (remove_subflow) {
--			spin_lock_bh(&msk->pm.lock);
--			mptcp_pm_nl_rm_subflow_received(msk, &list);
--			spin_unlock_bh(&msk->pm.lock);
--		}
- 
--		if (entry->flags & MPTCP_PM_ADDR_FLAG_SUBFLOW) {
--			spin_lock_bh(&msk->pm.lock);
-+		spin_lock_bh(&msk->pm.lock);
-+		if (remove_subflow)
-+			mptcp_pm_nl_rm_subflow_received(msk, &list);
-+		if (entry->flags & MPTCP_PM_ADDR_FLAG_SUBFLOW)
- 			__mark_subflow_endp_available(msk, list.ids[0]);
--			spin_unlock_bh(&msk->pm.lock);
--		}
-+		else /* mark endp ID as available, e.g. Signal or MPC endp */
-+			__set_bit(addr->id, msk->pm.id_avail_bitmap);
-+		spin_unlock_bh(&msk->pm.lock);
- 
- 		if (msk->mpc_endpoint_id == entry->addr.id)
- 			msk->mpc_endpoint_id = 0;
+thanks,
 -- 
-2.51.0
-
+js
+suse labs
