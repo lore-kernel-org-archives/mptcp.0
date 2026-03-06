@@ -1,126 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-185.mta0.migadu.com (out-185.mta0.migadu.com [91.218.175.185])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7373718DF80;
-	Fri,  6 Mar 2026 05:49:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEBAC366811
+	for <mptcp@lists.linux.dev>; Fri,  6 Mar 2026 06:23:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.185
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772776144; cv=none; b=rvHfsE2SZnETqRhur9zmxBScij+dyscL1bs8MqM2HPgHQ4YrrXPf8uYIqzEDUzCKKLxlf0X0C9Gd68atUnttpnsnHZcFxlJmW3+qvVDi0mLDHHkMv2r2vosVdlwfnznk8z1yTYQ1+lpbcSOnC7kJbMd3M1gKGRESZqLSpQl0aUA=
+	t=1772778219; cv=none; b=XtNlf3truBZpuRWgBOHnT+SzeNH3UZhVcXszfGVhHaMyj9taGtLqMt2xIHE+fcjxsB/KOF1L5L01QWq/BV4fOhz8zTXBsoVQXClDyDebfu8TXuIGD50i7mYpWyj+HJCrlrsYarAg/UtFQRN0QANBE43RsGPDQ27biDOGC/gS994=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772776144; c=relaxed/simple;
-	bh=jPdfD/G0MG2lwKeKWtrGbHHeFrPWH33eiStwxKz6vzo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cNvc2kMvcA8jH4h35a49VNjQY3Z9Wjg2yPWcgOpIS9uSB3ktkZ+j0QprZuNS6LMAJ5OP5hmxTKqij+DwBdHLNU7OSdC7+cacw/5WpK1D0YWUeWrU0CgCVcumGu0QuHB2rxDEWLhUm+CKjxRaBM1w7NXYpHZ5Nmtff035obCoIMA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QFe0CrBg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1772778219; c=relaxed/simple;
+	bh=hN1aS5W93Hg7N0jbakiyjndLVWU/uJ28dBnpZkAdovM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Di4aeZ9myvGmPI4L3E3CYdNhEI53/KCMOHmQwTpTV+0FVdkq1BwfRFFbUCDhSsxq0ISI+YPclM0x9au8BaSDqpEbwqTuO0zl98ueBHFVj2v/bwYlkaUj+Y8vKVywHFzep3pAVT8VsC8UcKP4j7f4teeNnvB/QQ1qgvJxMRKtTTE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Mp3v2Y+B; arc=none smtp.client-ip=91.218.175.185
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QFe0CrBg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C78BCC4CEF7;
-	Fri,  6 Mar 2026 05:49:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772776144;
-	bh=jPdfD/G0MG2lwKeKWtrGbHHeFrPWH33eiStwxKz6vzo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=QFe0CrBgB8yTKa1Rt8s6xDZks1gWZbdUVP1qxdAMHP40BR2ggZ9IYdYM3ag1Z9F8H
-	 ycY9ZRcFgHSQpVkWYiV/sZJaUF+Tpu/JiVU236+ZsSblhx0KU3mXUIHb3jte4lh4j2
-	 OW/6+bvA79gDGdAeXgsEHdJidEXy2llW8QY8DnraUEOMN3FkofSVqJAa5SuFHOGRyP
-	 5Qzi5m9qenIn5sNyJbSKZUFW5VVW0PhA5DWlMLHA6GCdreZd/MOUStoYeMWxegGzqY
-	 yFaOeb4QtFATmwnrfptZ6S0ijamrAPwVWyks1yL4RPn9s0iVsTfRb9eGDk2dywD06p
-	 y9ulfBtO11NLw==
-Message-ID: <7efde2b5-3b72-4858-9db0-22493d446301@kernel.org>
-Date: Fri, 6 Mar 2026 06:48:58 +0100
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Mp3v2Y+B"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1772778215;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=iX5jIRkk8IJ8nr3b5a7E1T+diBiy+u8oKQGYKXloZd4=;
+	b=Mp3v2Y+BAbxAmtWrJPS6eeSnwxJDEnAvW74IMxVNIkQyfcnqJmuckLRkEa/JiuJ/Ip8qmh
+	2I3cZktjsPfkP832KLtUHjq7UXAmhr4FhX/vVogawY06JnYNzk56WPs/7xT+L6W9FaG+NS
+	QYDqUjMzsc2PW/897C7n7h4WyauaJm4=
+From: Gang Yan <gang.yan@linux.dev>
+To: mptcp@lists.linux.dev
+Cc: pabeni@redhat.com,
+	Gang Yan <yangang@kylinos.cn>
+Subject: [RESEND PATCH mptcp-net] mptcp: sync the msk->sndbuf at accept() time
+Date: Fri,  6 Mar 2026 14:23:16 +0800
+Message-ID: <20260306062316.1333680-1-gang.yan@linux.dev>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Stalls when starting a VSOCK listening socket: soft lockups, RCU
- stalls, timeout
-To: Thomas Gleixner <tglx@kernel.org>, Peter Zijlstra <peterz@infradead.org>
-Cc: Matthieu Baerts <matttbe@kernel.org>,
- Stefan Hajnoczi <stefanha@redhat.com>,
- Stefano Garzarella <sgarzare@redhat.com>, kvm@vger.kernel.org,
- virtualization@lists.linux.dev, Netdev <netdev@vger.kernel.org>,
- rcu@vger.kernel.org, MPTCP Linux <mptcp@lists.linux.dev>,
- Linux Kernel <linux-kernel@vger.kernel.org>,
- Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
- "Paul E. McKenney" <paulmck@kernel.org>,
- Dave Hansen <dave.hansen@linux.intel.com>, "luto@kernel.org"
- <luto@kernel.org>, =?UTF-8?Q?Michal_Koutn=C3=BD?= <MKoutny@suse.com>,
- Waiman Long <longman@redhat.com>
-References: <b24ffcb3-09d5-4e48-9070-0b69bc654281@kernel.org>
- <7f3e74d7-67dc-48d7-99d2-0b87f671651b@kernel.org>
- <863a5291-a636-47d0-891c-bb0524d2e134@kernel.org>
- <20260302114636.GL606826@noisy.programming.kicks-ass.net>
- <717310d8-6274-4b7f-8a19-561c45f5f565@kernel.org>
- <a2b573b4-af61-4b84-a7d1-012ed6bb23c9@kernel.org>
- <ba067933-bf3b-476d-a0bb-53eda56996ca@kernel.org> <87zf4m2qvo.ffs@tglx>
- <47cba228-bba7-4e58-a69d-ea41f8de6602@kernel.org> <87tsuu2i59.ffs@tglx>
-Content-Language: en-US
-From: Jiri Slaby <jirislaby@kernel.org>
-Autocrypt: addr=jirislaby@kernel.org; keydata=
- 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
-In-Reply-To: <87tsuu2i59.ffs@tglx>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On 05. 03. 26, 20:25, Thomas Gleixner wrote:
-> Is there simple way to reproduce?
+From: Gang Yan <yangang@kylinos.cn>
 
-Unfortunately not at all. To date, I even cannot reproduce locally, it 
-reproduces exclusively in opensuse build service (and github CI as per 
-Matthieu's report). I have a project in there with packages which fail 
-more often than others:
-   https://build.opensuse.org/project/monitor/home:jirislaby:softlockup
-But it's all green ATM.
+After an MPTCP connection is established, the sk_sndbuf of client's msk
+can be updated through 'subflow_finish_connect'. However, the newly
+accepted msk on the server side has a small sk_sndbuf than
+msk->first->sk_sndbuf:
 
-Builds of Go 1.24 and tests of rust 1.90 fail the most. The former even 
-takes only ~ 8 minutes, so it's not that intensive build at all. So the 
-reasons are unknown to me. At least, Go apparently uses threads for 
-building (unlike gcc/clang with forks/processes). Dunno about rust.
+'''
+MPTCP: msk:00000000e55b09db, msk->sndbuf:20480, msk->first->sndbuf:2626560
+'''
 
-thanks,
+This means that when the server immediately sends MSG_DONTWAIT data to
+the client after the connection is established, it is more likely to
+encounter EAGAIN.
+
+This patch synchronizes the sk_sndbuf by triggering its update during accept.
+
+Fixes: 8005184fd1ca ("mptcp: refactor sndbuf auto-tuning")
+Link: https://github.com/multipath-tcp/mptcp_net-next/issues/602
+Signed-off-by: Gang Yan <yangang@kylinos.cn>
+---
+
+Notes:
+    Hi Paolo, Matt,
+    
+    Sorry for the late response for this patch. I've been analyzing this
+    issue recently, and the basic picture is as follows:
+    
+    The root cause is a timing gap between msk creation and TCP sndbuf
+    auto-tuning on the server side:
+    
+    1. When the server receives the SYN, mptcp_sk_clone_init() creates the
+       msk and calls __mptcp_propagate_sndbuf(). At this point, the TCP
+       subflow is still in SYN_RCVD state, so its sk_sndbuf has only the
+       initial value (tcp_wmem[1], typically ~16KB).
+    
+    2. When the 3-way handshake completes (ACK received), the TCP stack
+       calls tcp_init_buffer_space() -> tcp_sndbuf_expand(), which grows
+       the subflow's sk_sndbuf based on MSS, congestion window, etc.
+       (potentially up to tcp_wmem[2], ~4MB).
+    
+    3. However, this auto-tuning happens deep in the TCP stack without
+       any callback to MPTCP, so msk->sk_sndbuf is never updated to
+       reflect the new subflow sndbuf value.
+    
+    4. When accept() returns, msk->sk_sndbuf still holds the small initial
+       value, while msk->first->sk_sndbuf has been auto-tuned to a much
+       larger value.
+    
+    In contrast, the active (client) side doesn't have this issue because
+    subflow_finish_connect() calls mptcp_propagate_state() after the TCP
+    sndbuf auto-tuning has already occurred, ensuring proper synchronization.
+    
+    Thanks
+    Gang
+
+ net/mptcp/protocol.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index b5676b37f8f4..17e43aff4459 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -4232,6 +4232,7 @@ static int mptcp_stream_accept(struct socket *sock, struct socket *newsock,
+ 
+ 		mptcp_graft_subflows(newsk);
+ 		mptcp_rps_record_subflows(msk);
++		__mptcp_propagate_sndbuf(newsk, mptcp_subflow_tcp_sock(subflow));
+ 
+ 		/* Do late cleanup for the first subflow as necessary. Also
+ 		 * deal with bad peers not doing a complete shutdown.
 -- 
-js
-suse labs
+2.43.0
+
