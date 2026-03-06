@@ -1,46 +1,54 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEF773148D0;
-	Thu,  5 Mar 2026 19:25:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7373718DF80;
+	Fri,  6 Mar 2026 05:49:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772738730; cv=none; b=EuATIRvr0P2ssfc8PesAR9eOwqZ4OhBSuKB8D+5fIpQ/GWS6XvRxX9xoeeKjnF1TvnlYIE0RRJ6pboDLXlChT6vKkB3lEI+Mwfh+ec/G1HCD1F9IVqCXNtScK4LCKB/NlijZreGnjvqgqnnBXsaUdex98AMAkEEVbnh/W5rJNRg=
+	t=1772776144; cv=none; b=rvHfsE2SZnETqRhur9zmxBScij+dyscL1bs8MqM2HPgHQ4YrrXPf8uYIqzEDUzCKKLxlf0X0C9Gd68atUnttpnsnHZcFxlJmW3+qvVDi0mLDHHkMv2r2vosVdlwfnznk8z1yTYQ1+lpbcSOnC7kJbMd3M1gKGRESZqLSpQl0aUA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772738730; c=relaxed/simple;
-	bh=ln+zmT6dVmCfKEb11g1BjE/cjuoBJVgUvWUSnOfgvmc=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=YsO7aFuCqY6hE4e2Q7cDYOhUlMUpTwzqijsFOVbfB50tTlIm066Siwj+YtlD+zqxmnfTK9MiiLuOmaMHJ6GALgLgzQAZyaLfL9WKlKhijTC+nL7P84yqv1/+ukqSVZ/CdaeYJU4RLpef/9nX43glBk/B4f0WWccFWgC8XklcQsM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dLjeM4LE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1772776144; c=relaxed/simple;
+	bh=jPdfD/G0MG2lwKeKWtrGbHHeFrPWH33eiStwxKz6vzo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cNvc2kMvcA8jH4h35a49VNjQY3Z9Wjg2yPWcgOpIS9uSB3ktkZ+j0QprZuNS6LMAJ5OP5hmxTKqij+DwBdHLNU7OSdC7+cacw/5WpK1D0YWUeWrU0CgCVcumGu0QuHB2rxDEWLhUm+CKjxRaBM1w7NXYpHZ5Nmtff035obCoIMA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QFe0CrBg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dLjeM4LE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9412C116C6;
-	Thu,  5 Mar 2026 19:25:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QFe0CrBg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C78BCC4CEF7;
+	Fri,  6 Mar 2026 05:49:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772738730;
-	bh=ln+zmT6dVmCfKEb11g1BjE/cjuoBJVgUvWUSnOfgvmc=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=dLjeM4LE5dXR9m0xHLTdkzFdRU6WH5jM6sBt6bzgqmW/m1pCV1fgnxhtQ2vxfnQms
-	 lIGU1Pgqcrs0hGxEeqFBI2JOIInj1sdmbdDRuBYfadSL9HAfeu44vbjmZxV9XVqxsu
-	 4C7ekz8VQ87LFqLjcf3PWU32/mie8n5MOMtDpoUghFjAp+chM4CkkDwKwSZiFxLNLl
-	 n8u8HRhxDwFJ/qBA55nIwevYUCM+2DEL2RNTGVDIuGZ8NXVJFBE8FpD9HNZk2OAS2d
-	 Pz43CzlW1m78aO0KJB5qYNmiJvoxI7Z+3/LU80vHz0mDONbdHsIRnU3mKCsa8r2KVZ
-	 RNawaEMbOkqcQ==
-From: Thomas Gleixner <tglx@kernel.org>
-To: Jiri Slaby <jirislaby@kernel.org>, Peter Zijlstra <peterz@infradead.org>
-Cc: Matthieu Baerts <matttbe@kernel.org>, Stefan Hajnoczi
- <stefanha@redhat.com>, Stefano Garzarella <sgarzare@redhat.com>,
- kvm@vger.kernel.org, virtualization@lists.linux.dev, Netdev
- <netdev@vger.kernel.org>, rcu@vger.kernel.org, MPTCP Linux
- <mptcp@lists.linux.dev>, Linux Kernel <linux-kernel@vger.kernel.org>,
- Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>, "Paul E. McKenney"
- <paulmck@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>,
- "luto@kernel.org" <luto@kernel.org>, Michal =?utf-8?Q?Koutn=C3=BD?=
- <MKoutny@suse.com>,
+	s=k20201202; t=1772776144;
+	bh=jPdfD/G0MG2lwKeKWtrGbHHeFrPWH33eiStwxKz6vzo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=QFe0CrBgB8yTKa1Rt8s6xDZks1gWZbdUVP1qxdAMHP40BR2ggZ9IYdYM3ag1Z9F8H
+	 ycY9ZRcFgHSQpVkWYiV/sZJaUF+Tpu/JiVU236+ZsSblhx0KU3mXUIHb3jte4lh4j2
+	 OW/6+bvA79gDGdAeXgsEHdJidEXy2llW8QY8DnraUEOMN3FkofSVqJAa5SuFHOGRyP
+	 5Qzi5m9qenIn5sNyJbSKZUFW5VVW0PhA5DWlMLHA6GCdreZd/MOUStoYeMWxegGzqY
+	 yFaOeb4QtFATmwnrfptZ6S0ijamrAPwVWyks1yL4RPn9s0iVsTfRb9eGDk2dywD06p
+	 y9ulfBtO11NLw==
+Message-ID: <7efde2b5-3b72-4858-9db0-22493d446301@kernel.org>
+Date: Fri, 6 Mar 2026 06:48:58 +0100
+Precedence: bulk
+X-Mailing-List: mptcp@lists.linux.dev
+List-Id: <mptcp.lists.linux.dev>
+List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
+List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: Stalls when starting a VSOCK listening socket: soft lockups, RCU
+ stalls, timeout
+To: Thomas Gleixner <tglx@kernel.org>, Peter Zijlstra <peterz@infradead.org>
+Cc: Matthieu Baerts <matttbe@kernel.org>,
+ Stefan Hajnoczi <stefanha@redhat.com>,
+ Stefano Garzarella <sgarzare@redhat.com>, kvm@vger.kernel.org,
+ virtualization@lists.linux.dev, Netdev <netdev@vger.kernel.org>,
+ rcu@vger.kernel.org, MPTCP Linux <mptcp@lists.linux.dev>,
+ Linux Kernel <linux-kernel@vger.kernel.org>,
+ Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
+ "Paul E. McKenney" <paulmck@kernel.org>,
+ Dave Hansen <dave.hansen@linux.intel.com>, "luto@kernel.org"
+ <luto@kernel.org>, =?UTF-8?Q?Michal_Koutn=C3=BD?= <MKoutny@suse.com>,
  Waiman Long <longman@redhat.com>
-Subject: Re: Stalls when starting a VSOCK listening socket: soft lockups,
- RCU stalls, timeout
-In-Reply-To: <47cba228-bba7-4e58-a69d-ea41f8de6602@kernel.org>
 References: <b24ffcb3-09d5-4e48-9070-0b69bc654281@kernel.org>
  <7f3e74d7-67dc-48d7-99d2-0b87f671651b@kernel.org>
  <863a5291-a636-47d0-891c-bb0524d2e134@kernel.org>
@@ -48,82 +56,71 @@ References: <b24ffcb3-09d5-4e48-9070-0b69bc654281@kernel.org>
  <717310d8-6274-4b7f-8a19-561c45f5f565@kernel.org>
  <a2b573b4-af61-4b84-a7d1-012ed6bb23c9@kernel.org>
  <ba067933-bf3b-476d-a0bb-53eda56996ca@kernel.org> <87zf4m2qvo.ffs@tglx>
- <47cba228-bba7-4e58-a69d-ea41f8de6602@kernel.org>
-Date: Thu, 05 Mar 2026 20:25:22 +0100
-Message-ID: <87tsuu2i59.ffs@tglx>
-Precedence: bulk
-X-Mailing-List: mptcp@lists.linux.dev
-List-Id: <mptcp.lists.linux.dev>
-List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
-List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain
+ <47cba228-bba7-4e58-a69d-ea41f8de6602@kernel.org> <87tsuu2i59.ffs@tglx>
+Content-Language: en-US
+From: Jiri Slaby <jirislaby@kernel.org>
+Autocrypt: addr=jirislaby@kernel.org; keydata=
+ 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
+In-Reply-To: <87tsuu2i59.ffs@tglx>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Mar 05 2026 at 18:33, Jiri Slaby wrote:
-> On 05. 03. 26, 17:16, Thomas Gleixner wrote:
->
-> ====== PID 7680 (spinning in mm_get_cid()) ======
-> 4 tasks with
->    mm = 0xffff8cc406824680
->      mm_cid.pcpu = 0x66222619df00,
->
->
-> crash> task -x -R mm_cid ffff8cc4038525c0 ffff8cc40ad40000 
-> ffff8cc40683cb80 ffff8cc418424b80
-> PID: 7680     TASK: ffff8cc4038525c0  CPU: 1    COMMAND: "asm"
->    mm_cid = {
->      active = 0x1,
->      cid = 0x80000000
->    },
+On 05. 03. 26, 20:25, Thomas Gleixner wrote:
+> Is there simple way to reproduce?
 
-So CID 3 has gone AWOL...
+Unfortunately not at all. To date, I even cannot reproduce locally, it 
+reproduces exclusively in opensuse build service (and github CI as per 
+Matthieu's report). I have a project in there with packages which fail 
+more often than others:
+   https://build.opensuse.org/project/monitor/home:jirislaby:softlockup
+But it's all green ATM.
 
-> PID: 7681     TASK: ffff8cc40ad40000  CPU: 3    COMMAND: "asm"
->    mm_cid = {
->      active = 0x1,
->      cid = 0x40000000
->    },
->
-> PID: 7682     TASK: ffff8cc40683cb80  CPU: 0    COMMAND: "asm"
->    mm_cid = {
->      active = 0x1,
->      cid = 0x40000002
->    },
->
-> PID: 7684     TASK: ffff8cc418424b80  CPU: 2    COMMAND: "asm"
->    mm_cid = {
->      active = 0x1,
->      cid = 0x40000001
->    },
->
-> crash> struct mm_cid_pcpu -x 0xfffff2e9bfc09f00
-> struct mm_cid_pcpu {
->    cid = 0x40000002
-> }
-> crash> struct mm_cid_pcpu -x 0xfffff2e9bfc89f00
-> struct mm_cid_pcpu {
->    cid = 0x0
-> }
-> crash> struct mm_cid_pcpu -x 0xfffff2e9bfd09f00
-> struct mm_cid_pcpu {
->    cid = 0x40000001
-> }
-> crash> struct mm_cid_pcpu -x 0xfffff2e9bfd89f00
-> struct mm_cid_pcpu {
->    cid = 0x40000000
-> }
+Builds of Go 1.24 and tests of rust 1.90 fail the most. The former even 
+takes only ~ 8 minutes, so it's not that intensive build at all. So the 
+reasons are unknown to me. At least, Go apparently uses threads for 
+building (unlike gcc/clang with forks/processes). Dunno about rust.
 
-... as 0, 1, 2 are owned by CPUs 3, 2, 0. 
-
-The other process is not relevant. That's just fallout and has a
-different CID space, which is consistent.
-
-Is there simple way to reproduce?
-
-Thanks,
-
-        tglx
-
-
-
-
+thanks,
+-- 
+js
+suse labs
