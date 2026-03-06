@@ -1,117 +1,134 @@
-Received: from out-185.mta0.migadu.com (out-185.mta0.migadu.com [91.218.175.185])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEBAC366811
-	for <mptcp@lists.linux.dev>; Fri,  6 Mar 2026 06:23:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.185
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAB28374194
+	for <mptcp@lists.linux.dev>; Fri,  6 Mar 2026 08:00:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772778219; cv=none; b=XtNlf3truBZpuRWgBOHnT+SzeNH3UZhVcXszfGVhHaMyj9taGtLqMt2xIHE+fcjxsB/KOF1L5L01QWq/BV4fOhz8zTXBsoVQXClDyDebfu8TXuIGD50i7mYpWyj+HJCrlrsYarAg/UtFQRN0QANBE43RsGPDQ27biDOGC/gS994=
+	t=1772784023; cv=none; b=MUt2wJUKomAx/qO7MlFUBjn3lB0tiZfN5S1BnrX0mk9SZtAkjsa15h6R2SvOne+j2k4TudigYcONBxNnJrxwR1BQE932lVNXuLZ1m/EK3fc6KvtYSwrtErtaj3NpGCPnYDZ3fB7y8IDFHL7wby8auoaS4UuAjWluDpOQo/Le+dI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772778219; c=relaxed/simple;
-	bh=hN1aS5W93Hg7N0jbakiyjndLVWU/uJ28dBnpZkAdovM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Di4aeZ9myvGmPI4L3E3CYdNhEI53/KCMOHmQwTpTV+0FVdkq1BwfRFFbUCDhSsxq0ISI+YPclM0x9au8BaSDqpEbwqTuO0zl98ueBHFVj2v/bwYlkaUj+Y8vKVywHFzep3pAVT8VsC8UcKP4j7f4teeNnvB/QQ1qgvJxMRKtTTE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Mp3v2Y+B; arc=none smtp.client-ip=91.218.175.185
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1772784023; c=relaxed/simple;
+	bh=W8pkZBCrOO00mLsQ8vA8EWbuUbGgatLSLffGvH4C9oA=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=fWh4o+P+92araFHFfJkzLP4aBCEjjXPEy4/twYIIai+InD0EZpZcLEDAMS0+olasHBDn3JUkXg8PI9mgR/N7UtIz6UIw++v0Itr+Ybpa5sDtg19edMP/xXYGCClPG0IJP1gXkmHAb82mEZEUc238sLvDprXw8+qd6h/99uaHqCo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k1nhvtAU; arc=none smtp.client-ip=209.85.219.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Mp3v2Y+B"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1772778215;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=iX5jIRkk8IJ8nr3b5a7E1T+diBiy+u8oKQGYKXloZd4=;
-	b=Mp3v2Y+BAbxAmtWrJPS6eeSnwxJDEnAvW74IMxVNIkQyfcnqJmuckLRkEa/JiuJ/Ip8qmh
-	2I3cZktjsPfkP832KLtUHjq7UXAmhr4FhX/vVogawY06JnYNzk56WPs/7xT+L6W9FaG+NS
-	QYDqUjMzsc2PW/897C7n7h4WyauaJm4=
-From: Gang Yan <gang.yan@linux.dev>
-To: mptcp@lists.linux.dev
-Cc: pabeni@redhat.com,
-	Gang Yan <yangang@kylinos.cn>
-Subject: [RESEND PATCH mptcp-net] mptcp: sync the msk->sndbuf at accept() time
-Date: Fri,  6 Mar 2026 14:23:16 +0800
-Message-ID: <20260306062316.1333680-1-gang.yan@linux.dev>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k1nhvtAU"
+Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-89a0ecbc713so47317796d6.1
+        for <mptcp@lists.linux.dev>; Fri, 06 Mar 2026 00:00:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1772784022; x=1773388822; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PMyiorWShlE5Ze0Es/tUcIZ1PVJ+Acwokl3Lo+Inm5U=;
+        b=k1nhvtAUuw/0YnpSfkyeLaICUx/j6dws5a4ArnwGM11oLUjHng5xtGFOCUB25B9sjh
+         oUAk3lIxg4sd7Tf9X7LZ+e7q+BctWnLhOUTQdvddIrhIk6AMgfWSQAZhWWaonDmX2+t2
+         pBJ4yhy9Vv00iNaMJvFYX2WjzRLiA6hg3+SKy6UjzxSL/SzU0Cv+TmlDWM5gQLPGw9jU
+         BrBYRszMtMppDUFpzBWHyZJw5z0Wy8Gh21AXRUE7DejN5sqYYPPM9xkQD2/Glb1vwOfh
+         oDi/g9CTYODUySWjqJwhs8bUMutKZd/DvMc/KDNk++ducOUVSu5/Tj8ALUv0/eby6010
+         dTEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1772784022; x=1773388822;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=PMyiorWShlE5Ze0Es/tUcIZ1PVJ+Acwokl3Lo+Inm5U=;
+        b=FZ+ssatT9uzR4/wl+URSs5yUZxSPARcVb2BHv7k/Ms8KQl53kU0Ul5qL3YvUe+1YLp
+         1lK0StWTKMXh0M0irHTUVXyF8Lh/r8IYluL+/eoII+O5mdRMEbuoKbJeLJrgIPpffBds
+         V4n3sOZwJNZ7q44/U8S/nHGdcZVpDXxrD/OBmHRtWj02aOv3bf+W9frBmxtKoUfuJgQL
+         9hTAVqoByOsEl3vbezgjFx/JsbGBFy/vIzaZ4sHGHiDGUaEWgIrz/8ZHWO8hYzfqsoOV
+         kW8QiSwoqyDaZNr1PqrBTeqlarpE1qMiquFL2RzcyTGjgHxJEFGLEeiUym38iIEV9EpV
+         Q73g==
+X-Gm-Message-State: AOJu0YxzDqZYnADFIWUxXCGDmFC2syPaI4TIdqlUT76KyTrA6vyxqane
+	p/fHvsw8bGGFntcKlY9Fy0vV7aGGf31yB3NdBIfgOh7Am/mvvMciPUL0eDga
+X-Gm-Gg: ATEYQzyMkYr5jMksqpcFeq3SM4g+GT0Oqt4rIfwlbp85/ckb4Zi7b2eaA9+Zd+lsrZG
+	xB2WnbmTwFkRIlVjZpsbVZbR6ClDuM0RF5FDERY2Lwo7yr2LpFkWHABgMUyrmdmssmTuOBDz0rW
+	pNlIywjEruVtnMENPxjm6eag6rQxYp5IwbgSKgoGSyLxeOsETpoDsC6iB0hNqHCM3RFlkfqynB/
+	ZMyPsY8To67M2JyBClEicbHY2cpuRfV9ODpXu+EkYhtY28RFzGulSGv/53oM5PRY814v2DJ7tPE
+	TdL5Hk7EzZ5EEuSAz9cMgHAOrrEEQkxXELFEg9SdveeNGU471ila3XSPwuRrXBFWmZC+5h7LqTm
+	rbyjrnW1ZPqQGi+XQOv3V8+hzJ+LwUdTzIJoR7uGUHZPQQEsuOKG2ql9mo1u0g054xxEXa4o/0J
+	CD7y8ch8tQWd4lHRgnkTKLBrqttrmQ3MSJ0EXlXg==
+X-Received: by 2002:a05:6214:29e1:b0:899:ee6a:50ad with SMTP id 6a1803df08f44-89a2457f7famr75960546d6.9.1772784021500;
+        Fri, 06 Mar 2026 00:00:21 -0800 (PST)
+Received: from [127.0.0.1] ([135.232.176.170])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-89a316e8eb2sm5742916d6.35.2026.03.06.00.00.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Mar 2026 00:00:20 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Gang Yan <yangang@kylinos.cn>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20260306062316.1333680-1-gang.yan@linux.dev>
+References: <20260306062316.1333680-1-gang.yan@linux.dev>
+Subject: Re: [RESEND PATCH mptcp-net] mptcp: sync the msk->sndbuf at
+ accept() time
+Message-ID: <5200ce5e-52ef-8144-6724-6b92e61eb90a@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 06 Mar 2026 08:00:19 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-From: Gang Yan <yangang@kylinos.cn>
+Hi Gang,
 
-After an MPTCP connection is established, the sk_sndbuf of client's msk
-can be updated through 'subflow_finish_connect'. However, the newly
-accepted msk on the server side has a small sk_sndbuf than
-msk->first->sk_sndbuf:
+Thank you for your modifications, that's great!
 
-'''
-MPTCP: msk:00000000e55b09db, msk->sndbuf:20480, msk->first->sndbuf:2626560
-'''
+Our CI did some validations and here is its report:
 
-This means that when the server immediately sends MSG_DONTWAIT data to
-the client after the connection is established, it is more likely to
-encounter EAGAIN.
+- KVM Validation: normal (except selftest_mptcp_join): Notice: Boot =
+failures, rebooted and continued =F0=9F=94=B4
+- KVM Validation: normal =
+(only selftest_mptcp_join): Notice: Call Traces at boot time, rebooted and =
+continued =F0=9F=94=B4
+- KVM Validation: debug (except =
+selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (only =
+selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal (only=
+ bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only =
+bpftest_all): Success! =E2=9C=85
+- Task: https://github.=
+com/multipath-tcp/mptcp_net-next/actions/runs/22752507226
 
-This patch synchronizes the sk_sndbuf by triggering its update during accept.
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/56845d31abb3
+Patchwork: https://patchwork.kernel.=
+org/project/mptcp/list/?series=3D1062356
 
-Fixes: 8005184fd1ca ("mptcp: refactor sndbuf auto-tuning")
-Link: https://github.com/multipath-tcp/mptcp_net-next/issues/602
-Signed-off-by: Gang Yan <yangang@kylinos.cn>
----
 
-Notes:
-    Hi Paolo, Matt,
-    
-    Sorry for the late response for this patch. I've been analyzing this
-    issue recently, and the basic picture is as follows:
-    
-    The root cause is a timing gap between msk creation and TCP sndbuf
-    auto-tuning on the server side:
-    
-    1. When the server receives the SYN, mptcp_sk_clone_init() creates the
-       msk and calls __mptcp_propagate_sndbuf(). At this point, the TCP
-       subflow is still in SYN_RCVD state, so its sk_sndbuf has only the
-       initial value (tcp_wmem[1], typically ~16KB).
-    
-    2. When the 3-way handshake completes (ACK received), the TCP stack
-       calls tcp_init_buffer_space() -> tcp_sndbuf_expand(), which grows
-       the subflow's sk_sndbuf based on MSS, congestion window, etc.
-       (potentially up to tcp_wmem[2], ~4MB).
-    
-    3. However, this auto-tuning happens deep in the TCP stack without
-       any callback to MPTCP, so msk->sk_sndbuf is never updated to
-       reflect the new subflow sndbuf value.
-    
-    4. When accept() returns, msk->sk_sndbuf still holds the small initial
-       value, while msk->first->sk_sndbuf has been auto-tuned to a much
-       larger value.
-    
-    In contrast, the active (client) side doesn't have this issue because
-    subflow_finish_connect() calls mptcp_propagate_state() after the TCP
-    sndbuf auto-tuning has already occurred, ensuring proper synchronization.
-    
-    Thanks
-    Gang
+If there are some issues, you =
+can reproduce them using the same environment as
+the one used by the CI =
+thanks to a docker image, e.g.:
 
- net/mptcp/protocol.c | 1 +
- 1 file changed, 1 insertion(+)
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index b5676b37f8f4..17e43aff4459 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -4232,6 +4232,7 @@ static int mptcp_stream_accept(struct socket *sock, struct socket *newsock,
- 
- 		mptcp_graft_subflows(newsk);
- 		mptcp_rps_record_subflows(msk);
-+		__mptcp_propagate_sndbuf(newsk, mptcp_subflow_tcp_sock(subflow));
- 
- 		/* Do late cleanup for the first subflow as necessary. Also
- 		 * deal with bad peers not doing a complete shutdown.
--- 
-2.43.0
+For more details:
 
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
+
+
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 Core)
