@@ -1,81 +1,85 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FF0F36C599;
-	Sun,  8 Mar 2026 16:58:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDB63286412;
+	Sun,  8 Mar 2026 17:23:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772989106; cv=none; b=fxpHFNd9g+NoZ9meaS/JIPtesGmdFclgG/L5vqbmEgSx/LfkZyW2CiPpb/x41D+831mseuUqThC7qQ7Dhhk9UoZ0AcRjGb3O0xvawKI23NWSeq+HUUbZysY5vllFshZedQOETecVTRGO3BzoSSW2Dh+cDQ7E7eJvW/+NzuWlv1E=
+	t=1772990597; cv=none; b=UcqAVlZKBurGLSAxMpHkkehx08H8IanslVA7E2PMNf01cE8Msqyo9TYmtHDhABqxltKb737Qvj/Xhj4RtTAmV11vY77o+N3dIypFqCyfehiCh9PDgT1WTAvWtp241+pGBq+MbB8T4S8yNfsfpPZjl8U4cDFXNdV4dBEgDCieZuU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772989106; c=relaxed/simple;
-	bh=csuDDmQUnwguBiq4+JZat8SV2l/GqXHFvrAKc109vHU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=KXlesJFjb1l8j41DeAjIxVndfnkruByB02AJ7K0sg1/K+FZvHC8VItOVBomzGdDJEfkvHHggT9bQWD9vvJdCK4KIdkViMID+QrPG5RX3J/5ygYUnn42zvTVOTcHeXnwn8iG5IB5yRlfkpyIriQbGaWznTC3FkDIxs6tWmMwK3j0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cHNthfgw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1772990597; c=relaxed/simple;
+	bh=aKTiLeBUT/yyVrfF+UX9Dm/tjm0IVzbkGDksBmzpY0Y=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=PioeYBUGINGx9gCVU2T51vtI971lTBzSDOiS+B2wZpQOjhVgbgbqoxcEstd3hsvcDntq2wAtGFZoQRGjqhkq4dJTpEG6G0bF1kUJHoZi2CRWgBwH7PZ1AkMndoX0N4Hi3NxUI7OGoSBYiUJK4yOUpHLuPkicdqAPkZ4NKRKd1Gc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AxLf6j4G; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cHNthfgw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E074EC116C6;
-	Sun,  8 Mar 2026 16:58:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AxLf6j4G"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC301C116C6;
+	Sun,  8 Mar 2026 17:23:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772989105;
-	bh=csuDDmQUnwguBiq4+JZat8SV2l/GqXHFvrAKc109vHU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=cHNthfgwDqntovvB18ootlkTTvGH7yhvj+9JaRyixo95eyizCxRr2wtZN7CnGusH+
-	 5qDTU51vqRLFJLWiMdvzCCcFALfpem18eE+Ia30vCaPIHH9PPtDq2DRE9b+Q/ApPF6
-	 2M10EK3E1+T8nbDWOkIRrSKWv3yerwqRcWfj0FFsYB/P33NJO0V0yf6uXJInh65/5N
-	 x15j6N3UM7eJ3BM6F28XedPb8BXsPOkS1ad3sLOFoAMu1ACEqCjGasSTCkvvPMdxZr
-	 6DzmGu+bApgAKHkFHqEZ6F9xAWG8/+8J7iFg7ReoGGw6LX1zuZ3vgY3BCvNosG5DQw
-	 Hg3XCvgCcSj+Q==
-From: Thomas Gleixner <tglx@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Jiri Slaby <jirislaby@kernel.org>, Matthieu Baerts <matttbe@kernel.org>,
- Stefan Hajnoczi <stefanha@redhat.com>, Stefano Garzarella
- <sgarzare@redhat.com>, kvm@vger.kernel.org,
- virtualization@lists.linux.dev, Netdev <netdev@vger.kernel.org>,
- rcu@vger.kernel.org, MPTCP Linux <mptcp@lists.linux.dev>, Linux Kernel
- <linux-kernel@vger.kernel.org>, Shinichiro Kawasaki
- <shinichiro.kawasaki@wdc.com>, "Paul E. McKenney" <paulmck@kernel.org>,
- Dave Hansen <dave.hansen@linux.intel.com>, "luto@kernel.org"
- <luto@kernel.org>, Michal =?utf-8?Q?Koutn=C3=BD?= <MKoutny@suse.com>,
- Waiman Long
- <longman@redhat.com>, Marco Elver <elver@google.com>
+	s=k20201202; t=1772990596;
+	bh=aKTiLeBUT/yyVrfF+UX9Dm/tjm0IVzbkGDksBmzpY0Y=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=AxLf6j4GvGHT+C8ZRyPQ8SdmNN8dUN+vRNWyNZgN/eeKcMM83VgsKiv2Thvnni7mF
+	 CfgmTPF5cBDong5YKy9PoAEZZLFYWmSGaY/yFgJtjGTUB++iQ0ZTbwUwg41cVL2Hb4
+	 aVDzcTTxsw+4N3cFJLEvBKbS0+/gIDH6gRh1dsIbaYxkTvJmMEHmDQkpGBhoMAbTtQ
+	 yiPpUo051i5ohiLr/B8HHuV9Jw6JIpHsXv65F8axnnjl4GvPp5YG5dLQbEOC3wVSye
+	 wmL+EvQq9IJY1MIDsWdo/YtrWIjcfslHSeKCRPBvaG1GdZz4KFU1L8KJDa5bRAczNO
+	 ioxyQ4Cvo8vUQ==
+Date: Sun, 8 Mar 2026 18:23:08 +0100
+From: Matthieu Baerts <matttbe@kernel.org>
+To: Thomas Gleixner <tglx@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Jiri Slaby <jirislaby@kernel.org>,
+	Stefan Hajnoczi <stefanha@redhat.com>,
+	Stefano Garzarella <sgarzare@redhat.com>, kvm@vger.kernel.org,
+	virtualization@lists.linux.dev, Netdev <netdev@vger.kernel.org>,
+	rcu@vger.kernel.org, MPTCP Linux <mptcp@lists.linux.dev>,
+	Linux Kernel <linux-kernel@vger.kernel.org>,
+	Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Dave Hansen <dave.hansen@linux.intel.com>, luto@kernel.org,
+	=?UTF-8?Q?Michal_Koutn=C3=BD?= <MKoutny@suse.com>,
+	Waiman Long <longman@redhat.com>, Marco Elver <elver@google.com>
+Message-ID: <57c1e171-9520-4288-9e2d-10a72a499968@kernel.org>
+In-Reply-To: <87v7f61cnl.ffs@tglx>
+References: <863a5291-a636-47d0-891c-bb0524d2e134@kernel.org> <20260302114636.GL606826@noisy.programming.kicks-ass.net> <717310d8-6274-4b7f-8a19-561c45f5f565@kernel.org> <a2b573b4-af61-4b84-a7d1-012ed6bb23c9@kernel.org> <ba067933-bf3b-476d-a0bb-53eda56996ca@kernel.org> <87zf4m2qvo.ffs@tglx> <47cba228-bba7-4e58-a69d-ea41f8de6602@kernel.org> <87tsuu2i59.ffs@tglx> <7efde2b5-3b72-4858-9db0-22493d446301@kernel.org> <87qzpx2sck.ffs@tglx> <20260306152458.GT606826@noisy.programming.kicks-ass.net> <87ldg42eu7.ffs@tglx> <87h5qr2rzi.ffs@tglx> <87eclu3coa.ffs@tglx> <87v7f61cnl.ffs@tglx>
 Subject: Re: Stalls when starting a VSOCK listening socket: soft lockups,
  RCU stalls, timeout
-In-Reply-To: <87eclu3coa.ffs@tglx>
-References: <863a5291-a636-47d0-891c-bb0524d2e134@kernel.org>
- <20260302114636.GL606826@noisy.programming.kicks-ass.net>
- <717310d8-6274-4b7f-8a19-561c45f5f565@kernel.org>
- <a2b573b4-af61-4b84-a7d1-012ed6bb23c9@kernel.org>
- <ba067933-bf3b-476d-a0bb-53eda56996ca@kernel.org> <87zf4m2qvo.ffs@tglx>
- <47cba228-bba7-4e58-a69d-ea41f8de6602@kernel.org> <87tsuu2i59.ffs@tglx>
- <7efde2b5-3b72-4858-9db0-22493d446301@kernel.org> <87qzpx2sck.ffs@tglx>
- <20260306152458.GT606826@noisy.programming.kicks-ass.net>
- <87ldg42eu7.ffs@tglx> <87h5qr2rzi.ffs@tglx> <87eclu3coa.ffs@tglx>
-Date: Sun, 08 Mar 2026 17:58:22 +0100
-Message-ID: <87v7f61cnl.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Correlation-ID: <57c1e171-9520-4288-9e2d-10a72a499968@kernel.org>
 
-On Sun, Mar 08 2026 at 10:15, Thomas Gleixner wrote:
+08 Mar 2026 17:58:26 Thomas Gleixner <tglx@kernel.org>:
 
-> On Sat, Mar 07 2026 at 23:29, Thomas Gleixner wrote:
->> I'll look at it more tomorrow in the hope that this rested brain
->> approach works out again.
+> On Sun, Mar 08 2026 at 10:15, Thomas Gleixner wrote:
 >
-> There is another one of the same category. Combo patch below.
+>> On Sat, Mar 07 2026 at 23:29, Thomas Gleixner wrote:
+>>> I'll look at it more tomorrow in the hope that this rested brain
+>>> approach works out again.
+>>
+>> There is another one of the same category. Combo patch below.
+>
+> This rested brain thing is clearly a myth. The patch actually solves
+> nothing because the code ensures that the TRANSIT bit is never set
+> together with the ONCPU bit.
 
-This rested brain thing is clearly a myth. The patch actually solves
-nothing because the code ensures that the TRANSIT bit is never set
-together with the ONCPU bit.
+Thank you for having shared these patches. I confirm the myth: I can
+still reproduce the issue on my side.
 
-One of those moments where you just hope that the earth opens up and
-swallows you.
+> One of those moments where you just hope that the earth opens up and
+> swallows you.
+>
+> So I'm back to square one. I go and do what I should have done in the
+> first place. Write a debug patch with trace_printks and let the people
+> who can actually trigger the problem run with it.
 
-So I'm back to square one. I go and do what I should have done in the
-first place. Write a debug patch with trace_printks and let the people
-who can actually trigger the problem run with it.
+Happy to test such debug patches!
+
+Cheers,
+Matt
