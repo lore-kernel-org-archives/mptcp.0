@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7D8536A022;
-	Sat,  7 Mar 2026 22:29:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66E912BF3D7;
+	Sun,  8 Mar 2026 09:15:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772922581; cv=none; b=PGwboNYyJXAZ3N14GVFYbeUo84KQs/uUl1vLcol2p4VjzdGt6/XOyAgoKWCwmFm2VeyILXxsG7zqzAYJg250jSzO0IcKOMnWIayIM/8sgvqI/R2pYcSVjshTq3tl9yMEQSandviXRjNvHHOt5h09iqnHYUJ2PwYfIscNOOCCDn4=
+	t=1772961305; cv=none; b=u/RqxIabZmVagsg+Lpvl5eUIUZGbt6CrZj+pW8M2TIxYraRK7fCgan48TiLpx1pcYaAZecBbSd83tSlNghEVaXl6X/rxGibxTQG1DYfWp/WzC7+HDaS1WqbRHjSLAF4xM0UzRmaDZtqs+or/iCZt8sES4CVOWLXlwEvG0fmqdGU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772922581; c=relaxed/simple;
-	bh=86FT+jrr9lGMW3QHw5UUhDZPyggZzHYm9O0FiRH+WkU=;
+	s=arc-20240116; t=1772961305; c=relaxed/simple;
+	bh=52QtocqDKEObTSjQNRtNF9jdSncGF37NJ1ZjaGX9/Qo=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=biE7RJcSz8blcX0IbLbaLesFsKomQQd+0HtN2AGdxKz1OtLUHbHxsbKAaXK5I18PrIWnUQ6rS+saykRXQ3eq3bYUoHl0AhFnwDkSAsVqlgQaNUxwc+gm5dtKe6VqNRKwv/OTaTbTcLfn9TXeToL3l0dbdGpQNDh+OJOBDlew5SE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gPlKjvtQ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=bI399Jxno9S2wOG/PgG/13ebev5XaIOdQ1NdIEBSeS2DQThuxfrfA/4EWc7QFANk4TD6624eZ74OgK/VhfOE/1/a96eVPi+Pwpae3v7TbvFMh5kNgOsB7WSWKje306DDKxB4EggxQfHzdJnXhU65UCTrIflBfj4U2dveQH6C1FY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MzKCGzS/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gPlKjvtQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99543C2BC87;
-	Sat,  7 Mar 2026 22:29:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MzKCGzS/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B1B5C116C6;
+	Sun,  8 Mar 2026 09:15:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772922581;
-	bh=86FT+jrr9lGMW3QHw5UUhDZPyggZzHYm9O0FiRH+WkU=;
+	s=k20201202; t=1772961305;
+	bh=52QtocqDKEObTSjQNRtNF9jdSncGF37NJ1ZjaGX9/Qo=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=gPlKjvtQ5cF+gE/3W0nLutAk5CKaszMueR5skxzq/VMBn5QO/gCsJVXZ0UIWABUyM
-	 ABMXz/bXvcP25SRqoPk+yAZak0P2Txk8pUVnQC/3TIAOlNokLvwrPypJ0ZnlXQBPtI
-	 281Nmu2q8wdMiHjc8NM4FZ3B5+COBSN8OxZoUmQ2rPj4RHjevT0QhutpmVjFKbsRja
-	 Isl+/hDXMez1W6w5Zo6PSZohvesCgb4tPbygO3lMfc7BNxI2jJ3elX4fxvtye8gjW8
-	 BDJJUB+ht/tAEy7Fad/DMR8U3gbgPQvVrlfF8UvFCdX3Yqp+ZyS8WaSG0dyNHV6bUE
-	 PHtBGVseM+TYQ==
+	b=MzKCGzS/azSRPm5/oQl177GlGpOoeGhcJaCKo+2Idc1YUvVXCbmYV+bQeZBPjPTwq
+	 MwEgnXbQQvLp0loNEbMy53d1Cd8GPMHcu4T8M7TJmAuhPtbR7E6fwyq9UeLTLteBJr
+	 00ZWoOfMGR/DCrCNPLqULlPUWMiOBGVN68RBw0JSL7g0UC+xhmcPvMyb9nZ3kBNwhU
+	 0ksE9hHhUprn9x1j1FYLqFoU6DvQR0ZVEvXVhOhQ+FsBaMlaUmbeLudXveVyIt8bYY
+	 pBbMHE4jxQrOeMHmBwv2vHReqMSWPB0mGq8PjxYiEhybEF/vkh+yVF4NNYBZSbsi/s
+	 6h6sJdrejS1Dw==
 From: Thomas Gleixner <tglx@kernel.org>
 To: Peter Zijlstra <peterz@infradead.org>
 Cc: Jiri Slaby <jirislaby@kernel.org>, Matthieu Baerts <matttbe@kernel.org>,
@@ -41,7 +41,7 @@ Cc: Jiri Slaby <jirislaby@kernel.org>, Matthieu Baerts <matttbe@kernel.org>,
  <longman@redhat.com>, Marco Elver <elver@google.com>
 Subject: Re: Stalls when starting a VSOCK listening socket: soft lockups,
  RCU stalls, timeout
-In-Reply-To: <87ldg42eu7.ffs@tglx>
+In-Reply-To: <87h5qr2rzi.ffs@tglx>
 References: <863a5291-a636-47d0-891c-bb0524d2e134@kernel.org>
  <20260302114636.GL606826@noisy.programming.kicks-ass.net>
  <717310d8-6274-4b7f-8a19-561c45f5f565@kernel.org>
@@ -50,9 +50,9 @@ References: <863a5291-a636-47d0-891c-bb0524d2e134@kernel.org>
  <47cba228-bba7-4e58-a69d-ea41f8de6602@kernel.org> <87tsuu2i59.ffs@tglx>
  <7efde2b5-3b72-4858-9db0-22493d446301@kernel.org> <87qzpx2sck.ffs@tglx>
  <20260306152458.GT606826@noisy.programming.kicks-ass.net>
- <87ldg42eu7.ffs@tglx>
-Date: Sat, 07 Mar 2026 23:29:37 +0100
-Message-ID: <87h5qr2rzi.ffs@tglx>
+ <87ldg42eu7.ffs@tglx> <87h5qr2rzi.ffs@tglx>
+Date: Sun, 08 Mar 2026 10:15:01 +0100
+Message-ID: <87eclu3coa.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -61,40 +61,80 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain
 
-On Sat, Mar 07 2026 at 10:01, Thomas Gleixner wrote:
-> I gave up staring at it yesterday as my brain started to melt. Let me
-> try again.
+On Sat, Mar 07 2026 at 23:29, Thomas Gleixner wrote:
+> I'll look at it more tomorrow in the hope that this rested brain
+> approach works out again.
 
-[Un]Surprisingly a rested and awake brain works way better.
-
-The good news is that I actually found a nasty brown paperbag bug in
-mm_cid_schedout() while going through all of this with a fine comb:
-
-     cid = cid_from_transit_cid(...);
-
-     That preserves the MM_CID_ONCPU bit, which makes mm_drop_cid()
-     clear bit 0x40000000 + CID. That is obviously way outside of the
-     bitmap. So the actual CID bit is not cleared and the clear just
-     corrupts some other piece of memory.
-
-     I just retried with all the K*SAN muck enabled which should catch
-     that out of bounds access, but it never triggered and I haven't
-     seen syzbot reports to that effect either.
-
-     Fix for that is below.
-
-The bad news is that I couldn't come up with a scenario yet where this
-bug leads to the outcome observed by Jiri and Matthieu, because the not
-dropped CID bit in the bitmap is by chance cleaned up on the next
-schedule in on that CPU due to the ONCPU bit still being set.
-
-I'll look at it more tomorrow in the hope that this rested brain
-approach works out again.
+There is another one of the same category. Combo patch below.
 
 Thanks,
 
         tglx
 ---
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -10584,6 +10584,11 @@ static void mm_cid_fixup_cpus_to_tasks(s
+ 
+ 		/* Remote access to mm::mm_cid::pcpu requires rq_lock */
+ 		guard(rq_lock_irq)(rq);
++
++		/* If the transit bit is set already, nothing to do anymore.  */
++		if (cid_in_transit(pcp->cid))
++			continue;
++
+ 		/* Is the CID still owned by the CPU? */
+ 		if (cid_on_cpu(pcp->cid)) {
+ 			/*
+@@ -10598,12 +10603,9 @@ static void mm_cid_fixup_cpus_to_tasks(s
+ 		} else if (rq->curr->mm == mm && rq->curr->mm_cid.active) {
+ 			unsigned int cid = rq->curr->mm_cid.cid;
+ 
+-			/* Ensure it has the transition bit set */
+-			if (!cid_in_transit(cid)) {
+-				cid = cid_to_transit_cid(cid);
+-				rq->curr->mm_cid.cid = cid;
+-				pcp->cid = cid;
+-			}
++			cid = cid_to_transit_cid(cid);
++			rq->curr->mm_cid.cid = cid;
++			pcp->cid = cid;
+ 		}
+ 	}
+ 	mm_cid_complete_transit(mm, 0);
+@@ -10733,11 +10735,30 @@ void sched_mm_cid_fork(struct task_struc
+ static bool sched_mm_cid_remove_user(struct task_struct *t)
+ {
+ 	t->mm_cid.active = 0;
+-	scoped_guard(preempt) {
+-		/* Clear the transition bit */
++	/*
++	 * If @t is current and the CID is in transition mode, then this has to
++	 * handle both the task and the per CPU storage.
++	 *
++	 * If the CID has TRANSIT and ONCPU set, then mm_unset_cid_on_task()
++	 * won't drop the CID. As @t has already mm_cid::active cleared
++	 * mm_cid_schedout() won't drop it either.
++	 *
++	 * A failed fork cleanup can't have the transit bit set because the task
++	 * never showed up in the task list or got on a CPU.
++	 */
++	if (t == current) {
++		/* Invalidate the per CPU CID */
++		this_cpu_ptr(t->mm->mm_cid.pcpu)->cid = 0;
++		/*
++		 * Clear TRANSIT and ONCPU, so the CID gets actually dropped
++		 * below.
++		 */
+ 		t->mm_cid.cid = cid_from_transit_cid(t->mm_cid.cid);
+-		mm_unset_cid_on_task(t);
++		t->mm_cid.cid = cpu_cid_to_cid(t->mm_cid.cid);
+ 	}
++
++	mm_unset_cid_on_task(t);
++
+ 	t->mm->mm_cid.users--;
+ 	return mm_update_max_cids(t->mm);
+ }
 --- a/kernel/sched/sched.h
 +++ b/kernel/sched/sched.h
 @@ -3809,7 +3809,8 @@ static __always_inline bool cid_on_task(
