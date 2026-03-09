@@ -1,131 +1,137 @@
-Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDCA517993
-	for <mptcp@lists.linux.dev>; Mon,  9 Mar 2026 04:07:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B15CA35CBC4;
+	Mon,  9 Mar 2026 08:03:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773029253; cv=none; b=jlcHOHB64YdJpLAPt91dv59uWzF7mn6gUASJdOqD8OqwpnjM0KwvLiA0W75COdkIHud3CVjFoqvRxoF0jjhBSuovXVFXyDYq4wFi0RBtHzXbKYvn+4k2FS1hQpyeSorUGoZMhCpnThSRjRpXV96MtA4JBODHs8vHF8Rox9hTpkA=
+	t=1773043426; cv=none; b=FVtqKVbrmUZPM86elKg/5ssFRDNlac8tPMzMt+1y0NlVEBCZJbI6SNViMBb3bNw+73ZFP1p0EP53Et0aZc1DDej67k+tycwsmeDPBqPrwJiti5+NjwzADtbJ16vasXM9nTJGIwCYC2xyBg0o/3dPOSaHbJwzeoRK/+R63Knzo5c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773029253; c=relaxed/simple;
-	bh=QLXf62UFxvYI96HBdeCdB6UE5V71T+S0lxbtygFt8S0=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=OPWASm7z3QffqAbsH0+0/lHZ49n4cwJL9tddxGocCsTILXXyjZu4i+XC4V2hK7TpcdFlD65/ut+ipgjvrtFmkvoukr6aH1wj9irJL9iIMxHMCjQwF2HUn0w9axEA/A5VN30wIhv8MBAoctWfwzg2EwXtdlXCiSs1jZlp6yhsdZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SBPLdLV6; arc=none smtp.client-ip=209.85.222.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1773043426; c=relaxed/simple;
+	bh=3vpHAvYSJE1/E/Zw+R+U696ggtTJgVYAry+AHza2BC0=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=T3lZWeeGlnyJyI7lucIc4sHyoIQye+0LyH5MOK2XgiDYcv0iODltta6BkSI1B5/cBNeR+Fp+k47aCq67LKkPvKoI+GEQTQR6NKAACoAYRe5XTFT1uXwsuJWueQsOksCBNZrYzZUusqGm8usVgY0PEn84EWIC0S1MwS5vUTqmTWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Aqte8O1C; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SBPLdLV6"
-Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-8cd7a75c680so123268685a.1
-        for <mptcp@lists.linux.dev>; Sun, 08 Mar 2026 21:07:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773029251; x=1773634051; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HH1IUU8kUFUqQSfnkgDVkfmxbborNHy/Ry5K8/QDPSo=;
-        b=SBPLdLV6pYiSLlVCzglme6M30DuP2oVnX3+paOpw4PRe7BCywrAjxEzCIKODLejI08
-         S+p9BYpAcUU+aGFCqoLCevT4XONU58+LgW77DTxSUPAY9NT6TPb00hk/g2ka6ot+Tb3j
-         2l9a3epg51sq++A3nd+FWP4jVt5XQE+QeP7dGijOclrURzwPCcEU7QEfaon1VilzC+rf
-         VQ7IPdRQ4kA83kd1YsA2LuOekf05Eahu3nWqWMXWcRAEah33UM/Zw+v/rjSp/P8KNriH
-         u6GyXYFxlgsqeIWpCa3g11L7U02zcCQBLApCQAZUQrcIuD7iijBnxosef5mBEtGHRtOY
-         brFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773029251; x=1773634051;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=HH1IUU8kUFUqQSfnkgDVkfmxbborNHy/Ry5K8/QDPSo=;
-        b=KIcf54lj3LQz/Gmx11HNoHNzR8ccG7xlNUHHctyiFu0Ysne/7cMeqVW7J+RDB4zGI8
-         ARJukD+cmyZ0MLJflLMxWtYMQ1y/0l9b7NyDgjT+SgiDc2ENedhma6YoljZhjHAYW9QC
-         9SCQEJK2TcNuAHL0GRX0scWIuPTIVMOFih+rBZfxAMAymxEaMxI25xHCkJt1HlAZORY6
-         XKXP+F0cx5ZcjBQa0vvh8ZtKtvxuYUOLXJVSTPUvzDNkoGIsmbgEr7B5ekVPtUL/4lLl
-         JoRkCBWIYWmi1F3eSa+wOUUqtIlb/NmXVZU9c0iTMh0EPpXwtGvXOi7UMzh1WgSD53DN
-         4uiQ==
-X-Gm-Message-State: AOJu0YygcmBf6Nwxau0JeZ1fDn0BJP2IDVHR4lKZDyKWll7V+QW2VUCO
-	5IwCfJx5SzJrroowcLYDvKBriytUND+l5zLst+FoB7qPY/HSxeupbfC+ItMg
-X-Gm-Gg: ATEYQzxkG1dJc1GB8pySzgFcV+ca67atg1jq3iPkkXiE1MUnZ9xLflE3dfFhXJc+Owj
-	mktw5Ravj+/mVy62mRApLEY3C5PDoAHI+skPKHSaN60sTWBau/ZQXAnE5qywijQbxXkzAM31GPx
-	101sfP701OLCIwWavEK72TO9dnUyMiNVb4kFiJ7Xg9/e3ADsxfUSCV9MwdpoYDq2iI9fzMbx8Qj
-	eDyXbSf9ufaPT/9umQthgb8FsQGwa5UpblFUB7uhh4lK/n06geMDxFBbwr4v2BgrSz70pLg0vua
-	cP9Fb5ylyB9DoezqT9Ggz7Str5aMn41EwwvJhcUgf0v5pbz1J0sYazaR/CvchLa0MOOGHLCuFap
-	wTPzKZlUb+6+PlQxL9ATvVYZhCPRXYXJAxoZONZrlUAM4crEGYIxrJhgvVuAgjq8B+l8E9WFVBK
-	wDotiB00aDj/+LmUDA52byy5yimShfO8+iK41gQD9OJoEhEIg=
-X-Received: by 2002:a05:620a:288e:b0:8c6:c983:dddb with SMTP id af79cd13be357-8cd632bee0cmr1533168885a.0.1773029250614;
-        Sun, 08 Mar 2026 21:07:30 -0700 (PDT)
-Received: from [127.0.0.1] ([145.132.103.21])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-8cd6f53bf4esm676745585a.26.2026.03.08.21.07.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 08 Mar 2026 21:07:30 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Gang Yan <yangang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20260309025431.125943-1-gang.yan@linux.dev>
-References: <20260309025431.125943-1-gang.yan@linux.dev>
-Subject: Re: [PATCH mptcp-next] mptcp: preserve MSG_EOR semantics in
- sendmsg path
-Message-ID: <5d73cffe-cc0b-d280-e278-d1c75cf3308e@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 09 Mar 2026 04:07:29 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Aqte8O1C"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 4FB41C4CEF7;
+	Mon,  9 Mar 2026 08:03:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1773043426;
+	bh=3vpHAvYSJE1/E/Zw+R+U696ggtTJgVYAry+AHza2BC0=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=Aqte8O1Cm40S2wOMu2x7Feh8H5HruVyUqkCwIz9uvhTbBZK4tIrnlTYKElFUgozOU
+	 vDx17qJSpyMJRw8ZhdNEvStgwXyarUKdPK2Nl9wMsWb/T0/xQo2nLQ/qS0Li8rtNp+
+	 qJRZMhgRlqELCTvwpsg/6tQ3Q7/Tv2SDzUx0XnVrm9Dq6UJnmks4GFMAb+kJe9Wqir
+	 bjx/MefvwvEfHmLNUCIOFo2MPOa6+sxoYs/I5iV5yB7PftjIZ9gKarKDJ7Yt6SRhzR
+	 v5qrcQKQUHW4SsoZ4/KeD9jW4U6J8V8R5xoj+mIise3a4B+ZdiOQfvmOzgjCYohxiL
+	 6QG65DA+fXtSw==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39449EF36F0;
+	Mon,  9 Mar 2026 08:03:46 +0000 (UTC)
+From: Simon Baatz via B4 Relay <devnull+gmbnomis.gmail.com@kernel.org>
+Subject: [PATCH net-next v3 0/6] tcp: RFC 7323-compliant window retraction
+ handling
+Date: Mon, 09 Mar 2026 09:02:25 +0100
+Message-Id: <20260309-tcp_rfc7323_retract_wnd_rfc-v3-0-4c7f96b1ec69@gmail.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/43NQQ6CMBQE0KuQrq0pv1jAlfcwhpTPLzSRQkqDG
+ MLdrax0Y1zOTPJmZRN5SxM7JyvzNNvJDi4GeUgYdtq1xG0TMwMBSgAIHnCsvMFcgqw8Ba8xVA/
+ XvDuOhYYGak11QywKoydjl12/MkeBO1oCu8Wls1MY/HO/ndN9/+thTrngpcjKDE4qzfLy0vba3
+ o849Ls7w6elflsQLa2lKUyJqOSXtW3bC63aRgkcAQAA
+X-Change-ID: 20260220-tcp_rfc7323_retract_wnd_rfc-c8a2d2baebde
+To: Eric Dumazet <edumazet@google.com>, 
+ Neal Cardwell <ncardwell@google.com>, Kuniyuki Iwashima <kuniyu@google.com>, 
+ "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
+ David Ahern <dsahern@kernel.org>, Jon Maloy <jmaloy@redhat.com>, 
+ Jason Xing <kerneljasonxing@gmail.com>, mfreemon@cloudflare.com, 
+ Shuah Khan <shuah@kernel.org>, Stefano Brivio <sbrivio@redhat.com>, 
+ Matthieu Baerts <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>, 
+ Geliang Tang <geliang@kernel.org>
+Cc: netdev@vger.kernel.org, linux-doc@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+ mptcp@lists.linux.dev, Simon Baatz <gmbnomis@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1773043425; l=2738;
+ i=gmbnomis@gmail.com; s=20260220; h=from:subject:message-id;
+ bh=3vpHAvYSJE1/E/Zw+R+U696ggtTJgVYAry+AHza2BC0=;
+ b=kjc0s3J5JCYmq3GL3c4pN+j3Sh2jXUPcSLsACTyzPCeAcEecc5kYPGGaFYIVKCviKD9I/pjtE
+ SqZlBqN54oHBpEBmApZTEBi2NMxOI3WSLi8DVVvnBfjjWaJhu1fQ5fm
+X-Developer-Key: i=gmbnomis@gmail.com; a=ed25519;
+ pk=T/JIz/6F5bf1uQJr69lmyi7czVG+F9TVZ/8x5z9Wtqw=
+X-Endpoint-Received: by B4 Relay for gmbnomis@gmail.com/20260220 with
+ auth_id=641
+X-Original-From: Simon Baatz <gmbnomis@gmail.com>
+Reply-To: gmbnomis@gmail.com
 
-Hi Gang,
+Hi,
 
-Thank you for your modifications, that's great!
+this series implements the receiver-side requirements for TCP window
+retraction as specified in RFC 7323 and adds packetdrill tests to
+cover the new behavior.
 
-Our CI did some validations and here is its report:
+Please see the first patch for background and implementation
+details. Since MPTCP adjusts the TCP receive window on subflows, the
+relevant MPTCP code paths are updated accordingly.
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Unstable: 1 failed =
-test(s): packetdrill_dss =F0=9F=94=B4
-- KVM Validation: debug (only =
-selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only=
- bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only =
-bpftest_all): Success! =E2=9C=85
-- Task: https://github.=
-com/multipath-tcp/mptcp_net-next/actions/runs/22836823300
+Signed-off-by: Simon Baatz <gmbnomis@gmail.com>
+---
+Changes in v3:
 
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/070dbf41676b
-Patchwork: https://patchwork.kernel.=
-org/project/mptcp/list/?series=3D1063383
+- Address MPTCP subflow-level rcv_wnd adjustments
+- Removed RFC status
+- Adapt tcp_rcv_wnd_shrink_nomem.pkt to reflect 026dfef287c0 ("tcp:
+  give up on stronger sk_rcvbuf checks (for now)")
+- Link to v2: https://lore.kernel.org/r/20260226-tcp_rfc7323_retract_wnd_rfc-v2-0-aa3f8f9cc639@gmail.com
+
+Changes in v2:
+
+- tcp_rcv_wnd_shrink_nomem.pkt tests more RX code paths using various
+  segment types. It also uses a more drastic rcv. buffer reduction (1MB
+  to 16KB).
+- Setting the TCP_REPAIR_WINDOW socket option initializes rcv_mwnd_seq.
+- SKB_DROP_REASON_TCP_OVERWINDOW increases LINUX_MIB_BEYOND_WINDOW now.
+- Moved rcv_mwnd_seq into rcv_wnd's cacheline group.
+- Small editorial changes
+- Link to v1: https://lore.kernel.org/r/20260220-tcp_rfc7323_retract_wnd_rfc-v1-0-904942561479@gmail.com
+
+---
+Simon Baatz (6):
+      tcp: implement RFC 7323 window retraction receiver requirements
+      mptcp: keep rcv_mwnd_seq in sync with subflow rcv_wnd
+      tcp: increase LINUX_MIB_BEYOND_WINDOW for SKB_DROP_REASON_TCP_OVERWINDOW
+      selftests/net: packetdrill: add tcp_rcv_wnd_shrink_nomem.pkt
+      selftests/net: packetdrill: add tcp_rcv_wnd_shrink_allowed.pkt
+      selftests/net: packetdrill: add tcp_rcv_neg_window.pkt
+
+ .../networking/net_cachelines/tcp_sock.rst         |   1 +
+ include/linux/tcp.h                                |   3 +
+ include/net/tcp.h                                  |  22 ++++
+ net/ipv4/tcp.c                                     |   2 +
+ net/ipv4/tcp_fastopen.c                            |   1 +
+ net/ipv4/tcp_input.c                               |  11 +-
+ net/ipv4/tcp_minisocks.c                           |   1 +
+ net/ipv4/tcp_output.c                              |   3 +
+ net/mptcp/options.c                                |   6 +-
+ .../net/packetdrill/tcp_rcv_big_endseq.pkt         |   2 +-
+ .../net/packetdrill/tcp_rcv_neg_window.pkt         |  26 ++++
+ .../net/packetdrill/tcp_rcv_wnd_shrink_allowed.pkt |  40 +++++++
+ .../net/packetdrill/tcp_rcv_wnd_shrink_nomem.pkt   | 132 +++++++++++++++++++++
+ 13 files changed, 242 insertions(+), 8 deletions(-)
+---
+base-commit: 0bcac7b11262557c990da1ac564d45777eb6b005
+change-id: 20260220-tcp_rfc7323_retract_wnd_rfc-c8a2d2baebde
+
+Best regards,
+-- 
+Simon Baatz <gmbnomis@gmail.com>
 
 
-If there are some issues, you =
-can reproduce them using the same environment as
-the one used by the CI =
-thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
-
-
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 Core)
