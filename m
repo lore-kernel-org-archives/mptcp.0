@@ -1,383 +1,171 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB9F23093C3;
-	Mon,  9 Mar 2026 08:43:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773045832; cv=none; b=AAmuIBCuhISA+E+TDEaikBoadfVqzmIg4/IPNVMHTwswa43TWd6B23wY5mOrDIpqAPY+YsQFeGlXmnHAixEyS1xdk1G4SUeC53LlsZ9Ks7xmddaw9Cjs99liwKYJEw9CL/+f+l9pNg/UcT0RDzCpMxSbj4E5q7XCuXa3zcUDhe0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773045832; c=relaxed/simple;
-	bh=R0Tj8WHPpvIY04QiJfIurzlhzjfV000u26yyDgGvweo=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=ns9l44uiBiNooKuBXvbOtWpf2QAsUGZLfWOsXnSW9RZcFATx7B8tSsDjWMBv+3IohYv9HaJ6vgtKX7AnUEp276Y1GzTRyw3XFd/xkV8MipYHMlUG4aygOZtVJsXT+amKiPVJpfJ83vCnfhNjQI6ZrZigvWOf4ed1JT58+BbDudY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LvJhrhdh; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC2FD361664
+	for <mptcp@lists.linux.dev>; Mon,  9 Mar 2026 09:22:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.182
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773048173; cv=pass; b=GtnWkIMKxt2PLYTYWA+NfAMsdXYHsgbBNQu+KkAiaOCpG3W/c3gnp0tDW2DiBFPa2he7PWDaOh5p2pfKyY9JLc45BrZaCz8Z6NF+/vXAZ+S+sSOaxigJSL7i9pyiXVx7lxe51bIwDx1s+DuzReNDFmBUyN5NFumPhTVzLQMKiRU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773048173; c=relaxed/simple;
+	bh=upio09NojrFHMRimK65FKWysiVde+qA9+o9ztExC8qM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GUmqyA/4y0Xm3D7Ayk/BBZr5cilwEKy6ja7dAfVlK8YQKc24bXEVHHNLqaICxm1boCs6j0CGZl3uYc5Dt0h4uUXVcUYewIsWfh80PSOYnvSaTS9lVxrVt736Xe9mBp6wnYr/onkQK1l71pMc7vkHhcYdjzHJCzcqsQqEaGeGZJM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3x+pB7rM; arc=pass smtp.client-ip=209.85.160.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LvJhrhdh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B812EC4CEF7;
-	Mon,  9 Mar 2026 08:43:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773045832;
-	bh=R0Tj8WHPpvIY04QiJfIurzlhzjfV000u26yyDgGvweo=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=LvJhrhdhbQozIAuWAlqXW3bj0cWo8FxnOWgkdMke7eRZtRR20Tv8o5cECmuZmGYK+
-	 dBqhRaiCqlkEO0AdOUsxXmyF4MqENquSuSHBmz2RU47VGIJdubddTYCV9qRakBnbje
-	 O5unNYzBed62xZ5MFgbrtjoTo28MBcjxmyBaGbRFpwxHRYoVzlpO3sSOS8ggVcqOFq
-	 HbmwYbvG57oSLBYDozAq6nXOliqgesdIs76MP+Pa/lkgzIW3gkLP7SsXzNAn8IT0FP
-	 Rwr0N9MBjMJld+itIy9r6hlCbW/vmJHmxt5o5a088yXOn46IJZ0xMCwU1Mzza1obzD
-	 X5xgE1A2esdCQ==
-From: Thomas Gleixner <tglx@kernel.org>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Jiri Slaby
- <jirislaby@kernel.org>, Stefan Hajnoczi <stefanha@redhat.com>, Stefano
- Garzarella <sgarzare@redhat.com>, kvm@vger.kernel.org,
- virtualization@lists.linux.dev, Netdev <netdev@vger.kernel.org>,
- rcu@vger.kernel.org, MPTCP Linux <mptcp@lists.linux.dev>, Linux Kernel
- <linux-kernel@vger.kernel.org>, Shinichiro Kawasaki
- <shinichiro.kawasaki@wdc.com>, "Paul E. McKenney" <paulmck@kernel.org>,
- Dave Hansen <dave.hansen@linux.intel.com>, luto@kernel.org, Michal
- =?utf-8?Q?Koutn=C3=BD?=
- <MKoutny@suse.com>, Waiman Long <longman@redhat.com>, Marco Elver
- <elver@google.com>
-Subject: Re: Stalls when starting a VSOCK listening socket: soft lockups,
- RCU stalls, timeout
-In-Reply-To: <57c1e171-9520-4288-9e2d-10a72a499968@kernel.org>
-References: <863a5291-a636-47d0-891c-bb0524d2e134@kernel.org>
- <20260302114636.GL606826@noisy.programming.kicks-ass.net>
- <717310d8-6274-4b7f-8a19-561c45f5f565@kernel.org>
- <a2b573b4-af61-4b84-a7d1-012ed6bb23c9@kernel.org>
- <ba067933-bf3b-476d-a0bb-53eda56996ca@kernel.org> <87zf4m2qvo.ffs@tglx>
- <47cba228-bba7-4e58-a69d-ea41f8de6602@kernel.org> <87tsuu2i59.ffs@tglx>
- <7efde2b5-3b72-4858-9db0-22493d446301@kernel.org> <87qzpx2sck.ffs@tglx>
- <20260306152458.GT606826@noisy.programming.kicks-ass.net>
- <87ldg42eu7.ffs@tglx> <87h5qr2rzi.ffs@tglx> <87eclu3coa.ffs@tglx>
- <87v7f61cnl.ffs@tglx> <57c1e171-9520-4288-9e2d-10a72a499968@kernel.org>
-Date: Mon, 09 Mar 2026 09:43:48 +0100
-Message-ID: <87pl5ds88r.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3x+pB7rM"
+Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-506a747448dso102119631cf.0
+        for <mptcp@lists.linux.dev>; Mon, 09 Mar 2026 02:22:51 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1773048171; cv=none;
+        d=google.com; s=arc-20240605;
+        b=Ph/sLv6dF/yYoonI0lrIp3dxReDxy/BF1PSn/+7728mnTwd26BroRGt1CaPzW5nWAO
+         KQDRsD1FYnuW2fUK2TWFuFi8v/sFMrYEqIQ8l1jgwd/h6tGqBw6255eZ3LOa6uJsnx7E
+         lOld9KPIxQupUdA3XzT1tQUi7WjT+k+ArgWI9fIqx9HSFVphSiSoZkH+vrl+kR8T+rGw
+         +56YSixlhHevswTHgSkORk9MkyGb7loJaUsBrB6S1Z502PFG9tC6mX3MqkSK9xtY0LRQ
+         OFmGSaJtXqyIEe7JjNNIG2niK8cN8L8+r3WGU9ONim0neuDYgSM6Cej2/2MIM47jvg5u
+         0vUw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=N7fC3bjKwQcF/Me1NQG71BV/tCAMZf7S0tDB0ddNnBM=;
+        fh=w2q0T1FvOb9PkDwxJ+scN6HYV4SLRyJrn0/cQ5Icoj8=;
+        b=P0CIsY+uHWoa7xroAXov3gO1jNaLP1aLcBPAOlxAC9IyPvv64Dlr/bZnAfSmRwdD0F
+         XC+4FGZxFDxQIzIBZUwGa6TJvo4gnaVC4Sxj3pOlV8tqpLe5YM/ElHLM9679RkYyrBKm
+         sccaUyTta7D7xC/kN3ICr1I0rqmTkkRmGTJOCtnIY8aIS6GKsu/Fvc+OXMcyU8YHzECx
+         uD6XHXGyNApFADKJdNAICJ/fbryA1r4G6QmCwYID9Ru5cs6GU2I4a9hkD8+c8GHqWG2c
+         sJ4T30c4DInrddNZnXj1rJJt+LLR0EzMZAfbTL8ri5OQroJaBQYurowJ12SWBVFlWHMv
+         98Pg==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1773048171; x=1773652971; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=N7fC3bjKwQcF/Me1NQG71BV/tCAMZf7S0tDB0ddNnBM=;
+        b=3x+pB7rMHbg8JhOLAX32ASpQnR8RLee7KUh0KRWhykIiXHGRPbfmyRtmo40skivFhZ
+         RXdziv7oUfjL+D48+e/tLLwkyIMCpHJnUrDqCv9hJ0hpGj7fInXEzc9ViY1PfTwJJc15
+         4a/389TnFDfhEnZMzJfzHk64wr+TNxr2EvaC9+JcFbmBCC6STttOeAaoNv0dtmHOOA3P
+         Gbtt5tuzfFC+zPNagRv4a18rsLmUwvhXS1fNYQgKLpYc0h1GtNgoHJR6iaXCstRZcbpw
+         yVNdoJ2ucjNGwhfnwl+sQen/S72jaMjzGO+vgwSn1A+fJxDhYgWbmPQms9M/FcNFF9HF
+         f7QQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1773048171; x=1773652971;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=N7fC3bjKwQcF/Me1NQG71BV/tCAMZf7S0tDB0ddNnBM=;
+        b=jT0GtROLvG7BwzMB6+w6iwTkU8ddMF1AQjLGp6vt0pVCMB+WxKOVzyHeUI2nPr1Vtz
+         Uf+5oPkv7BjfdZsSFwNlko3fqpfYBudIV7LFXOawB8vSEoPuvpGfwSUNBm6XwYTja04e
+         S5uDUIYRPvqrd8HRA0k4gyMJBU/jSS88n9iVtnRfBbm3CAyDnmYIbFCjQNNiQVafIKv8
+         O+UASo7GPan5SukwLEGkRUAYlbL1J6OdO5wNqZPw6f72IF+JYUfd+v96mWKC6FuS+aaV
+         2qhiCJ1SqIlFe/y/LqFpoaeo6UDxjdShTVfeH6+rwSZffgvmlzm1YYoLkGhvvExK5CH2
+         wmMg==
+X-Forwarded-Encrypted: i=1; AJvYcCV3P8w3sDfsP9AySz9nzEInCu05rQf5F+hwIZxRKgqB86FGIAWSfuLoa/9f8kaQkTh/cwccWg==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yxydfn+i+OU3XF8YUOzr7tfa8/AhB/ZqFqCIAUlma72+OmxlGJv
+	w+F+FpT/Evk/FhZ44ceTgB3X0u7lsSgKsdJoq2TwG/BLjEX70+VCFmH/JwjYj4HK6cZMtX4Mvbr
+	hXGZ9dD5O5NywVRJG6nKoD7GnLSNlX8Th0Q/1amj9
+X-Gm-Gg: ATEYQzzIsgksI5Yz9M16AvadJwSpEEScP37zYEa03FRAc8i5uy15otLl48w4L/Ew/40
+	sXC9u/o4868ji3gaBBOo9cDAvGCy3Vg3Mpwk9faU9H2U7sug2yvxi/badn8gPs3T11eOHkUgFf/
+	OKwnp/nspBiXD04o3b/cESkju4uUIyeQDkcfQjlGz1tux8x0CgNkEqu3zcC8DSHPfRF1+lXzuiP
+	Hh8Caq0TQfgFKJ5vhxXY781uovZ6d9UfP12zIlQ2ow+dNZlYaoXXWrE0BNmphzejtot/BiUo9nU
+	C4Q1YSs5Vix1gEkmFg==
+X-Received: by 2002:a05:622a:7c91:b0:509:882:9e72 with SMTP id
+ d75a77b69052e-5090882e153mr50961191cf.1.1773048170529; Mon, 09 Mar 2026
+ 02:22:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20260309-tcp_rfc7323_retract_wnd_rfc-v3-0-4c7f96b1ec69@gmail.com> <20260309-tcp_rfc7323_retract_wnd_rfc-v3-1-4c7f96b1ec69@gmail.com>
+In-Reply-To: <20260309-tcp_rfc7323_retract_wnd_rfc-v3-1-4c7f96b1ec69@gmail.com>
+From: Eric Dumazet <edumazet@google.com>
+Date: Mon, 9 Mar 2026 10:22:39 +0100
+X-Gm-Features: AaiRm515VzWer9rfQTDKEwoECAFtXOyO-47wB6RLAYk2qz4MnRNOLIFCZe96lfc
+Message-ID: <CANn89i+38t+PpB5duS_-FX_=PwyCQaN2HYohocJBAvZ7Cd8-KQ@mail.gmail.com>
+Subject: Re: [PATCH net-next v3 1/6] tcp: implement RFC 7323 window retraction
+ receiver requirements
+To: gmbnomis@gmail.com
+Cc: Neal Cardwell <ncardwell@google.com>, Kuniyuki Iwashima <kuniyu@google.com>, 
+	"David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Simon Horman <horms@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
+	Shuah Khan <skhan@linuxfoundation.org>, David Ahern <dsahern@kernel.org>, 
+	Jon Maloy <jmaloy@redhat.com>, Jason Xing <kerneljasonxing@gmail.com>, mfreemon@cloudflare.com, 
+	Shuah Khan <shuah@kernel.org>, Stefano Brivio <sbrivio@redhat.com>, 
+	Matthieu Baerts <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>, 
+	Geliang Tang <geliang@kernel.org>, netdev@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	mptcp@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, Mar 08 2026 at 18:23, Matthieu Baerts wrote:
-> 08 Mar 2026 17:58:26 Thomas Gleixner <tglx@kernel.org>:
->> So I'm back to square one. I go and do what I should have done in the
->> first place. Write a debug patch with trace_printks and let the people
->> who can actually trigger the problem run with it.
+On Mon, Mar 9, 2026 at 9:03=E2=80=AFAM Simon Baatz via B4 Relay
+<devnull+gmbnomis.gmail.com@kernel.org> wrote:
 >
-> Happy to test such debug patches!
+> From: Simon Baatz <gmbnomis@gmail.com>
+>
+> By default, the Linux TCP implementation does not shrink the
+> advertised window (RFC 7323 calls this "window retraction") with the
+> following exceptions:
+>
+> - When an incoming segment cannot be added due to the receive buffer
+>   running out of memory. Since commit 8c670bdfa58e ("tcp: correct
+>   handling of extreme memory squeeze") a zero window will be
+>   advertised in this case. It turns out that reaching the required
+>   memory pressure is easy when window scaling is in use. In the
+>   simplest case, sending a sufficient number of segments smaller than
+>   the scale factor to a receiver that does not read data is enough.
+>
+> - Commit b650d953cd39 ("tcp: enforce receive buffer memory limits by
+>   allowing the tcp window to shrink") addressed the "eating memory"
+>   problem by introducing a sysctl knob that allows shrinking the
+>   window before running out of memory.
+>
+> However, RFC 7323 does not only state that shrinking the window is
+> necessary in some cases, it also formulates requirements for TCP
+> implementations when doing so (Section 2.4).
+>
+> This commit addresses the receiver-side requirements: After retracting
+> the window, the peer may have a snd_nxt that lies within a previously
+> advertised window but is now beyond the retracted window. This means
+> that all incoming segments (including pure ACKs) will be rejected
+> until the application happens to read enough data to let the peer's
+> snd_nxt be in window again (which may be never).
+>
+> To comply with RFC 7323, the receiver MUST honor any segment that
+> would have been in window for any ACK sent by the receiver and, when
+> window scaling is in effect, SHOULD track the maximum window sequence
+> number it has advertised. This patch tracks that maximum window
+> sequence number rcv_mwnd_seq throughout the connection and uses it in
+> tcp_sequence() when deciding whether a segment is acceptable.
+>
+> rcv_mwnd_seq is updated together with rcv_wup and rcv_wnd in
+> tcp_select_window(). If we count tcp_sequence() as fast path, it is
+> read in the fast path. Therefore, rcv_mwnd_seq is put into rcv_wnd's
+> cacheline group.
+>
+> The logic for handling received data in tcp_data_queue() is already
+> sufficient and does not need to be updated.
+>
+> Signed-off-by: Simon Baatz <gmbnomis@gmail.com>
 
-See below.
+...
 
-Enable the tracepoints either on the kernel command line:
+> diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
+> index f0ebcc7e287173be6198fd100130e7ba1a1dbf03..c86910d147f2394bf414d7691=
+d8f90ed41c1b0e3 100644
+> --- a/net/ipv4/tcp_output.c
+> +++ b/net/ipv4/tcp_output.c
+> @@ -293,6 +293,7 @@ static u16 tcp_select_window(struct sock *sk)
+>                 tp->pred_flags =3D 0;
+>                 tp->rcv_wnd =3D 0;
+>                 tp->rcv_wup =3D tp->rcv_nxt;
+> +               tcp_update_max_rcv_wnd_seq(tp);
 
-    trace_event=sched_switch,mmcid:*
+Presumably we do not need  tcp_update_max_rcv_wnd_seq() here ?
 
-or before starting the test case:
-
-    echo 1 >/sys/kernel/tracing/events/sched/sched_switch/enable
-    echo 1 >/sys/kernel/tracing/events/mmcid/enable
-
-I added a 50ms timeout into mm_cid_get() which freezes the trace and
-emits a warning. If you enable panic_on_warn and ftrace_dump_on_oops,
-then it dumps the trace buffer once it hits the warning.
-
-Either kernel command line:
-
-   panic_on_warn ftrace_dump_on_oops
-
-or
-
-  echo 1 >/proc/sys/kernel/panic_on_warn
-  echo 1 >/proc/sys/kernel/ftrace_dump_on_oops
-
-That should provide enough information to decode this mystery.
-
-Thanks,
-
-        tglx
----
- include/trace/events/mmcid.h |  138 +++++++++++++++++++++++++++++++++++++++++++
- kernel/sched/core.c          |   10 +++
- kernel/sched/sched.h         |   20 +++++-
- 3 files changed, 165 insertions(+), 3 deletions(-)
-
---- /dev/null
-+++ b/include/trace/events/mmcid.h
-@@ -0,0 +1,138 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM mmcid
-+
-+#if !defined(_TRACE_MMCID_H) || defined(TRACE_HEADER_MULTI_READ)
-+#define _TRACE_MMCID_H
-+
-+#include <linux/sched.h>
-+#include <linux/tracepoint.h>
-+
-+DECLARE_EVENT_CLASS(mmcid_class,
-+
-+	TP_PROTO(struct mm_struct *mm, unsigned int cid),
-+
-+	TP_ARGS(mm, cid),
-+
-+	TP_STRUCT__entry(
-+		__field( void *,	mm	)
-+		__field( unsigned int,	cid	)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->mm	= mm;
-+		__entry->cid	= cid;
-+	),
-+
-+	TP_printk("mm=%p cid=%08x", __entry->mm, __entry->cid)
-+);
-+
-+DEFINE_EVENT(mmcid_class, mmcid_getcid,
-+
-+	TP_PROTO(struct mm_struct *mm, unsigned int cid),
-+
-+	TP_ARGS(mm, cid)
-+);
-+
-+DEFINE_EVENT(mmcid_class, mmcid_putcid,
-+
-+	TP_PROTO(struct mm_struct *mm, unsigned int cid),
-+
-+	TP_ARGS(mm, cid)
-+);
-+
-+DECLARE_EVENT_CLASS(mmcid_task_class,
-+
-+	TP_PROTO(struct task_struct *t, struct mm_struct *mm, unsigned int cid),
-+
-+	TP_ARGS(t, mm, cid),
-+
-+	TP_STRUCT__entry(
-+		__field( void *,	t	)
-+		__field( void *,	mm	)
-+		__field( unsigned int,	cid	)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->t	= t;
-+		__entry->mm	= mm;
-+		__entry->cid	= cid;
-+	),
-+
-+	TP_printk("t=%p mm=%p cid=%08x", __entry->t, __entry->mm, __entry->cid)
-+);
-+
-+DEFINE_EVENT(mmcid_task_class, mmcid_task_update,
-+
-+	TP_PROTO(struct task_struct *t, struct mm_struct *mm, unsigned int cid),
-+
-+	TP_ARGS(t, mm, cid)
-+);
-+
-+DECLARE_EVENT_CLASS(mmcid_cpu_class,
-+
-+	TP_PROTO(unsigned int cpu, struct mm_struct *mm, unsigned int cid),
-+
-+	TP_ARGS(cpu, mm, cid),
-+
-+	TP_STRUCT__entry(
-+		__field( unsigned int,	cpu	)
-+		__field( void *,	mm	)
-+		__field( unsigned int,	cid	)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->cpu	= cpu;
-+		__entry->mm	= mm;
-+		__entry->cid	= cid;
-+	),
-+
-+	TP_printk("cpu=%u mm=%p cid=%08x", __entry->cpu, __entry->mm, __entry->cid)
-+);
-+
-+DEFINE_EVENT(mmcid_cpu_class, mmcid_cpu_update,
-+
-+	TP_PROTO(unsigned int cpu, struct mm_struct *mm, unsigned int cid),
-+
-+	TP_ARGS(cpu, mm, cid)
-+);
-+
-+DECLARE_EVENT_CLASS(mmcid_user_class,
-+
-+	TP_PROTO(struct task_struct *t, struct mm_struct *mm),
-+
-+	TP_ARGS(t, mm),
-+
-+	TP_STRUCT__entry(
-+		__field( void *,	t	)
-+		__field( void *,	mm	)
-+		__field( unsigned int,	users	)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->t	= t;
-+		__entry->mm	= mm;
-+		__entry->users	= mm->mm_cid.users;
-+	),
-+
-+	TP_printk("t=%p mm=%p users=%u", __entry->t, __entry->mm, __entry->users)
-+);
-+
-+DEFINE_EVENT(mmcid_user_class, mmcid_user_add,
-+
-+	TP_PROTO(struct task_struct *t, struct mm_struct *mm),
-+
-+	TP_ARGS(t, mm)
-+);
-+
-+DEFINE_EVENT(mmcid_user_class, mmcid_user_del,
-+
-+	TP_PROTO(struct task_struct *t, struct mm_struct *mm),
-+
-+	     TP_ARGS(t, mm)
-+);
-+
-+#endif
-+
-+/* This part must be outside protection */
-+#include <trace/define_trace.h>
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -86,6 +86,7 @@
- #include <linux/sched/rseq_api.h>
- #include <trace/events/sched.h>
- #include <trace/events/ipi.h>
-+#include <trace/events/mmcid.h>
- #undef CREATE_TRACE_POINTS
- 
- #include "sched.h"
-@@ -10569,7 +10570,9 @@ static inline void mm_cid_transit_to_tas
- 		unsigned int cid = cpu_cid_to_cid(t->mm_cid.cid);
- 
- 		t->mm_cid.cid = cid_to_transit_cid(cid);
-+		trace_mmcid_task_update(t, t->mm, t->mm_cid.cid);
- 		pcp->cid = t->mm_cid.cid;
-+		trace_mmcid_cpu_update(task_cpu(t), t->mm, pcp->cid);
- 	}
- }
- 
-@@ -10602,7 +10605,9 @@ static void mm_cid_fixup_cpus_to_tasks(s
- 			if (!cid_in_transit(cid)) {
- 				cid = cid_to_transit_cid(cid);
- 				rq->curr->mm_cid.cid = cid;
-+				trace_mmcid_task_update(rq->curr, rq->curr->mm, cid);
- 				pcp->cid = cid;
-+				trace_mmcid_cpu_update(cpu, mm, cid);
- 			}
- 		}
- 	}
-@@ -10613,7 +10618,9 @@ static inline void mm_cid_transit_to_cpu
- {
- 	if (cid_on_task(t->mm_cid.cid)) {
- 		t->mm_cid.cid = cid_to_transit_cid(t->mm_cid.cid);
-+		trace_mmcid_task_update(t, t->mm, t->mm_cid.cid);
- 		pcp->cid = t->mm_cid.cid;
-+		trace_mmcid_cpu_update(task_cpu(t), t->mm, pcp->cid);
- 	}
- }
- 
-@@ -10685,6 +10692,7 @@ static bool sched_mm_cid_add_user(struct
- {
- 	t->mm_cid.active = 1;
- 	mm->mm_cid.users++;
-+	trace_mmcid_user_add(t, mm);
- 	return mm_update_max_cids(mm);
- }
- 
-@@ -10727,6 +10735,7 @@ void sched_mm_cid_fork(struct task_struc
- 	} else {
- 		mm_cid_fixup_cpus_to_tasks(mm);
- 		t->mm_cid.cid = mm_get_cid(mm);
-+		trace_mmcid_task_update(t, t->mm, t->mm_cid.cid);
- 	}
- }
- 
-@@ -10739,6 +10748,7 @@ static bool sched_mm_cid_remove_user(str
- 		mm_unset_cid_on_task(t);
- 	}
- 	t->mm->mm_cid.users--;
-+	trace_mmcid_user_del(t, t->mm);
- 	return mm_update_max_cids(t->mm);
- }
- 
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -75,6 +75,7 @@
- #include <linux/delayacct.h>
- #include <linux/mmu_context.h>
- 
-+#include <trace/events/mmcid.h>
- #include <trace/events/power.h>
- #include <trace/events/sched.h>
- 
-@@ -3809,6 +3810,7 @@ static __always_inline bool cid_on_task(
- 
- static __always_inline void mm_drop_cid(struct mm_struct *mm, unsigned int cid)
- {
-+	trace_mmcid_putcid(mm, cid);
- 	clear_bit(cid, mm_cidmask(mm));
- }
- 
-@@ -3817,6 +3819,7 @@ static __always_inline void mm_unset_cid
- 	unsigned int cid = t->mm_cid.cid;
- 
- 	t->mm_cid.cid = MM_CID_UNSET;
-+	trace_mmcid_task_update(t, t->mm, t->mm_cid.cid);
- 	if (cid_on_task(cid))
- 		mm_drop_cid(t->mm, cid);
- }
-@@ -3838,6 +3841,7 @@ static inline unsigned int __mm_get_cid(
- 		return MM_CID_UNSET;
- 	if (test_and_set_bit(cid, mm_cidmask(mm)))
- 		return MM_CID_UNSET;
-+	trace_mmcid_getcid(mm, cid);
- 	return cid;
- }
- 
-@@ -3845,9 +3849,17 @@ static inline unsigned int mm_get_cid(st
- {
- 	unsigned int cid = __mm_get_cid(mm, READ_ONCE(mm->mm_cid.max_cids));
- 
--	while (cid == MM_CID_UNSET) {
--		cpu_relax();
--		cid = __mm_get_cid(mm, num_possible_cpus());
-+	if (cid == MM_CID_UNSET) {
-+		ktime_t t0 = ktime_get();
-+
-+		while (cid == MM_CID_UNSET) {
-+			cpu_relax();
-+			cid = __mm_get_cid(mm, num_possible_cpus());
-+			if (ktime_get() - t0 > 50 * NSEC_PER_MSEC) {
-+				tracing_off();
-+				WARN_ON_ONCE(1);
-+			}
-+		}
- 	}
- 	return cid;
- }
-@@ -3874,6 +3886,7 @@ static inline unsigned int mm_cid_conver
- static __always_inline void mm_cid_update_task_cid(struct task_struct *t, unsigned int cid)
- {
- 	if (t->mm_cid.cid != cid) {
-+		trace_mmcid_task_update(t, t->mm, cid);
- 		t->mm_cid.cid = cid;
- 		rseq_sched_set_ids_changed(t);
- 	}
-@@ -3881,6 +3894,7 @@ static __always_inline void mm_cid_updat
- 
- static __always_inline void mm_cid_update_pcpu_cid(struct mm_struct *mm, unsigned int cid)
- {
-+	trace_mmcid_cpu_update(smp_processor_id(), mm, cid);
- 	__this_cpu_write(mm->mm_cid.pcpu->cid, cid);
- }
- 
+Otherwise patch looks good, thanks.
