@@ -1,144 +1,181 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CA75347FC4;
-	Mon,  9 Mar 2026 18:30:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74B9734BA2E
+	for <mptcp@lists.linux.dev>; Mon,  9 Mar 2026 18:35:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773081010; cv=none; b=uCcqtg83b8jGVbu0LTJl/JGF1Eqep4EBHqT+Iftq0LqCOix/KftbdG5Tzib9CkVRLVrddL2FqAxIENb32w2WhjGuUx6BIz2hEbziQXWBbiyx/WqXCxGhZJlMgDVQuBTz+N7AycBBw5tVcUvXzp98kkIbFYySRY1qoOOhJ/MW89A=
+	t=1773081322; cv=none; b=cB4PsnBNVDckQfjf14XuGDiN5YCW3G+/jUb8tD10BG92iGJHQIRWBYNZtsMh3zPO7z2oA1OWadjobFEI/jg2ToRfQyoLFu18voP4H9VEOtPPajPF1dk0ajeozMf83+mbTYRBTXK79NjXe6z1F8jGN/QzQNdQLLec4rz7coZQ0Nc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773081010; c=relaxed/simple;
-	bh=+UJzHjLZwGGuI0AfcKQEJwS7MIb4u6KWqXh3m3TH5Xc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JHgLjLhOxzBj+/JSyRl9nAx5HuT+mudoU+9XuXebiwNaou7hBnZzaWzO/CcYsqpM+QrdELKPu4f1O7aJbd38J9EHZky3lGXh0EGb6Y7K8pFesMorRjdT+H631ThloDD/JNzGSqyPrbH6hDsNEpd3Dd1EwDwqWUE97/zQJeGG4O0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uaLDyC/Q; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1773081322; c=relaxed/simple;
+	bh=srg+dxIhiAQAT4kVm4zitW6wSGv/aiVh6j6o8T2Wnnw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=osg5ppok4uq6A3bPWrE1WRIvJ6DB3jLLCIWQM7RUOfBi68KYVeqKMMfxOLVVZFpRTfb5DShrR0my/d7aerugecpIN0vBGEblN7LpmZQOJGTQEUjlIHRLL7oBbgwen2gm7uFPhTOyYhMvQsooBNmQ5yaXkHzpu+yioBuapNDLcTo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JoctPFBD; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uaLDyC/Q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC7DEC4CEF7;
-	Mon,  9 Mar 2026 18:30:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773081010;
-	bh=+UJzHjLZwGGuI0AfcKQEJwS7MIb4u6KWqXh3m3TH5Xc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=uaLDyC/Qu4fy3deedF/z2hM1aI3c2Gcg8EgLOV7AOL//UeUIBB9JuM9N+i6shGkzg
-	 4SWrQguTccGJFTKQXdq2SiYxestVtCoivtoCeIh66kCBt5xs74Isc/kbw4nZjaud3v
-	 5Qd37dK40jfFSERQ2QmT6WLRgHN4UzR04W1ipAZ48RQECrpVQiLX5y5cPY++5GD7QH
-	 2gUXiNs5o9pGxcolfkti6P5q26SrkTfBUIP4svv6CfgBtL4+KrhIaZpsNCwLCOTh1v
-	 bl33Ax5d315dur+HvExLqTW6qN02aqieyLFwmQzaoX7x6E0agtrx7KUIrHuZrUfyJT
-	 uu0GelEVTJKCA==
-Message-ID: <6d263c6c-9a2c-46ef-bbd5-fd812f57b902@kernel.org>
-Date: Mon, 9 Mar 2026 19:30:06 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JoctPFBD"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-439c6fc2910so4160242f8f.0
+        for <mptcp@lists.linux.dev>; Mon, 09 Mar 2026 11:35:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1773081320; x=1773686120; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=dHSASEtvOfEiBqmxuf7zhZcsqNoilbHkrVseGDfvsXw=;
+        b=JoctPFBDYWyq5psZonOF9kFSZxE8Hs1u20t8OSmY7SGArSfpUtWKddv3zf6HlpHacv
+         m6s/bR412k/JpPDG2nYPmh/WQDE5ad98O5fA7P5Yu7LUWyOw3uSOinr6O6dHwGZ70RYO
+         oUSQdkEn+7Ng61aERkMlpbVdCmSUi50RMG3tSYlnCXtuwBSwFuCj2XKrZ1DdtX+BcH/n
+         +AAJY6QeBucAqmhNPM45B/UsKhUB8LA+F3sJajDNfR84KBduDditxJBLJsvCs9gPj3GV
+         k9lESvaUJ0xNkFgfk/icyeMkpuEyOSyhG3SDf5ToMUErWDB/lJYHbXse183K84ZXJRtg
+         NsCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1773081320; x=1773686120;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dHSASEtvOfEiBqmxuf7zhZcsqNoilbHkrVseGDfvsXw=;
+        b=WxrrR2KLW4BGJ/tTjlwS4Ymyn0ItWmGODnsgWZIuOUzjFr2AaXXQqwRHUkPzE/Cbui
+         F2CT42EKS7PChKJt62Rbc5hWXI71Txrx/zpNjE6C6q8bGW6FfXdtBAuBY8ecO3Qb4Rzv
+         GCekOsAFqwzObWoyJeqMLPtjBDybxwkYYOZ2MA6mO2+9lSFlMbMTopl27jpWHF8cj/mm
+         EmVceFdzAZekZhvoTwANHqnIakk6RT4LhWnmJqytn2jppp5la62uFgjxIwIvcU0eqQKQ
+         NwRU3JdnYO+MkLdEHQGVX+mmBPxyyCYaX3OGovx5p0BZZIYanOqA0DgPBZnZp26m1lCv
+         7M7w==
+X-Forwarded-Encrypted: i=1; AJvYcCX872pCAA0qNz9k7511EA7ZH3/6ykUJO5IdDieSqBXs6SVQPyFWY862ZQKcRwu51ssDdq8flQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxSuiGnaBE67TcWijw1u2EnoigjHxcJ5Y0I5aRsk9a3YjiYSJfG
+	9ZEC0Q4UZ8AgOrV5hpnLkpaxttQbE9Vcw3+Y8GiH0hDRq65cuqohY8vL
+X-Gm-Gg: ATEYQzz121SkTPIeoLnSDHQTPbNIGP3zqOsNGREw4AsByPnesgmW1QQaGa3yjY8kRpO
+	pQwj9PBKi7oVrGU9kkM9V0pvdhjcvxJmZppA93Zq3BeZRAhcK8M8PHNc1ClKpLnn4HV/NAFgfw+
+	Rc/ajlUylT/vP2Kj1rtaXqkAJVzZFFq25mnkSd2i0Mz8ryVMeUtgdSqceOE+Wwgf3WXpKP2TpgS
+	szRo7gEY8EZabDLkib4IyaY5fOscRYc3qCx+NuuHNKl+vmXFyZ4bR+u1QfkbzyKH341d0txZXMI
+	lSFlCzUAvVLCAOoQ/ToNW6Mt9+m9UVZLLNuKVsErUATgkFkZPqSjetnxJNm7nbB3mfnfhLCr3sX
+	cxXLjcvR23QYiG85esguM9JSi5mB21pN3a/+yk5jsMURZsxCK04vF0AtbE1G4OydPMaBcBmziGG
+	F1PQDJv4P2yVW9N8K3JA1Q+u4KQ/ld5R1MGDvS5yt1Q3rlTBktr4dziWIYb+LtbOAFaBApPSmXY
+	nSc2WWNgPc/uKvTaW+257s=
+X-Received: by 2002:a05:6000:2285:b0:439:c67d:9fe8 with SMTP id ffacd0b85a97d-439da3526ddmr20856163f8f.22.1773081319621;
+        Mon, 09 Mar 2026 11:35:19 -0700 (PDT)
+Received: from gandalf.schnuecks.de (p200300c14f1996009e6b00fffe39b8a7.dip0.t-ipconnect.de. [2003:c1:4f19:9600:9e6b:ff:fe39:b8a7])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-439dad1cb7csm29257753f8f.0.2026.03.09.11.35.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Mar 2026 11:35:19 -0700 (PDT)
+Received: by gandalf.schnuecks.de (Postfix, from userid 500)
+	id AB67F30287C9; Mon, 09 Mar 2026 19:35:18 +0100 (CET)
+Date: Mon, 9 Mar 2026 19:35:18 +0100
+From: Simon Baatz <gmbnomis@gmail.com>
+To: Eric Dumazet <edumazet@google.com>
+Cc: Neal Cardwell <ncardwell@google.com>,
+	Kuniyuki Iwashima <kuniyu@google.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	David Ahern <dsahern@kernel.org>, Jon Maloy <jmaloy@redhat.com>,
+	Jason Xing <kerneljasonxing@gmail.com>, mfreemon@cloudflare.com,
+	Shuah Khan <shuah@kernel.org>, Stefano Brivio <sbrivio@redhat.com>,
+	Matthieu Baerts <matttbe@kernel.org>,
+	Mat Martineau <martineau@kernel.org>,
+	Geliang Tang <geliang@kernel.org>, netdev@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, mptcp@lists.linux.dev
+Subject: Re: [PATCH net-next v3 1/6] tcp: implement RFC 7323 window
+ retraction receiver requirements
+Message-ID: <aa8S5pEbxXIG5oZQ@gandalf.schnuecks.de>
+References: <20260309-tcp_rfc7323_retract_wnd_rfc-v3-0-4c7f96b1ec69@gmail.com>
+ <20260309-tcp_rfc7323_retract_wnd_rfc-v3-1-4c7f96b1ec69@gmail.com>
+ <CANn89i+38t+PpB5duS_-FX_=PwyCQaN2HYohocJBAvZ7Cd8-KQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: FAILED: patch "[PATCH] selftests: mptcp: join: check RM_ADDR not
- sent over same" failed to apply to 5.15-stable tree
-Content-Language: fr
-To: gregkh@linuxfoundation.org, kuba@kernel.org, martineau@kernel.org
-Cc: stable@vger.kernel.org, MPTCP Linux <mptcp@lists.linux.dev>
-References: <2026030948-nickname-laxative-fd1d@gregkh>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <2026030948-nickname-laxative-fd1d@gregkh>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANn89i+38t+PpB5duS_-FX_=PwyCQaN2HYohocJBAvZ7Cd8-KQ@mail.gmail.com>
 
-Hi Greg, Sasha,
+Hi Eric,
 
-On 09/03/2026 11:29, gregkh@linuxfoundation.org wrote:
+thank you for the quick review.
+
+On Mon, Mar 09, 2026 at 10:22:39AM +0100, Eric Dumazet wrote:
+> On Mon, Mar 9, 2026 at 9:03???AM Simon Baatz via B4 Relay
+> <devnull+gmbnomis.gmail.com@kernel.org> wrote:
+> >
+> > From: Simon Baatz <gmbnomis@gmail.com>
+> >
+> > By default, the Linux TCP implementation does not shrink the
+> > advertised window (RFC 7323 calls this "window retraction") with the
+> > following exceptions:
+> >
+> > - When an incoming segment cannot be added due to the receive buffer
+> >   running out of memory. Since commit 8c670bdfa58e ("tcp: correct
+> >   handling of extreme memory squeeze") a zero window will be
+> >   advertised in this case. It turns out that reaching the required
+> >   memory pressure is easy when window scaling is in use. In the
+> >   simplest case, sending a sufficient number of segments smaller than
+> >   the scale factor to a receiver that does not read data is enough.
+> >
+> > - Commit b650d953cd39 ("tcp: enforce receive buffer memory limits by
+> >   allowing the tcp window to shrink") addressed the "eating memory"
+> >   problem by introducing a sysctl knob that allows shrinking the
+> >   window before running out of memory.
+> >
+> > However, RFC 7323 does not only state that shrinking the window is
+> > necessary in some cases, it also formulates requirements for TCP
+> > implementations when doing so (Section 2.4).
+> >
+> > This commit addresses the receiver-side requirements: After retracting
+> > the window, the peer may have a snd_nxt that lies within a previously
+> > advertised window but is now beyond the retracted window. This means
+> > that all incoming segments (including pure ACKs) will be rejected
+> > until the application happens to read enough data to let the peer's
+> > snd_nxt be in window again (which may be never).
+> >
+> > To comply with RFC 7323, the receiver MUST honor any segment that
+> > would have been in window for any ACK sent by the receiver and, when
+> > window scaling is in effect, SHOULD track the maximum window sequence
+> > number it has advertised. This patch tracks that maximum window
+> > sequence number rcv_mwnd_seq throughout the connection and uses it in
+> > tcp_sequence() when deciding whether a segment is acceptable.
+> >
+> > rcv_mwnd_seq is updated together with rcv_wup and rcv_wnd in
+> > tcp_select_window(). If we count tcp_sequence() as fast path, it is
+> > read in the fast path. Therefore, rcv_mwnd_seq is put into rcv_wnd's
+> > cacheline group.
+> >
+> > The logic for handling received data in tcp_data_queue() is already
+> > sufficient and does not need to be updated.
+> >
+> > Signed-off-by: Simon Baatz <gmbnomis@gmail.com>
 > 
-> The patch below does not apply to the 5.15-stable tree.
-> If someone wants it applied there, or to any other stable or longterm
-> tree, then please email the backport, including the original git commit
-> id to <stable@vger.kernel.org>.
-
-Thank you for the notification! And thank you Sasha for having resolved
-some conflicts already!
-
-(...)
-
-> ------------------ original commit in Linus's tree ------------------
+> ...
 > 
-> From 560edd99b5f58b2d4bbe3c8e51e1eed68d887b0e Mon Sep 17 00:00:00 2001
-> From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-> Date: Tue, 3 Mar 2026 11:56:04 +0100
-> Subject: [PATCH] selftests: mptcp: join: check RM_ADDR not sent over same
->  subflow
+> > diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
+> > index f0ebcc7e287173be6198fd100130e7ba1a1dbf03..c86910d147f2394bf414d7691d8f90ed41c1b0e3 100644
+> > --- a/net/ipv4/tcp_output.c
+> > +++ b/net/ipv4/tcp_output.c
+> > @@ -293,6 +293,7 @@ static u16 tcp_select_window(struct sock *sk)
+> >                 tp->pred_flags = 0;
+> >                 tp->rcv_wnd = 0;
+> >                 tp->rcv_wup = tp->rcv_nxt;
+> > +               tcp_update_max_rcv_wnd_seq(tp);
 > 
-> This validates the previous commit: RM_ADDR were sent over the first
-> found active subflow which could be the same as the one being removed.
-> It is more likely to loose this notification.
-> 
-> For this check, RM_ADDR are explicitly dropped when trying to send them
-> over the initial subflow, when removing the endpoint attached to it. If
-> it is dropped, the test will complain because some RM_ADDR have not been
-> received.
-> 
-> Note that only the RM_ADDR are dropped, to allow the linked subflow to
-> be quickly and cleanly closed. To only drop those RM_ADDR, a cBPF byte
-> code is used. If the IPTables commands fail, that's OK, the tests will
-> continue to pass, but not validate this part. This can be ignored:
-> another subtest fully depends on such command, and will be marked as
-> skipped.
-> 
-> The 'Fixes' tag here below is the same as the one from the previous
-> commit: this patch here is not fixing anything wrong in the selftests,
-> but it validates the previous fix for an issue introduced by this commit
-> ID.
+> Presumably we do not need  tcp_update_max_rcv_wnd_seq() here ?
 
-No need to backport this patch: it is just a validation in the selftest
-for the parent commit, and the subtest that it modifies is not in v5.15.
-CI can use newer selftests version to validate the fix on v5.15.
+When we don't update here and are forced to accept a beyond-window
+packet because the receive queue is empty, we can reach a state where
 
-Cheers,
-Matt
+ rcv_mwnd_seq < rcv_wup + rcv_wnd == rcv_nxt 
+
+I noticed this case when instrumenting the kernel and got violations
+of the invariant rcv_wup + rcv_wnd <= rcv_mwnd_seq.
+
+So, while not strictly needed (tcp_max_receive_window() would still
+be 0 as rcv_nxt > rcv_mwnd_seq), I opted to include the call here to
+keep rcv_mwnd_seq the actual maximum sequence number at all times.
+
+> 
+> Otherwise patch looks good, thanks.
+
 -- 
-Sponsored by the NGI0 Core fund.
-
+Simon Baatz <gmbnomis@gmail.com>
