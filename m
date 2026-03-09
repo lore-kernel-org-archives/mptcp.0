@@ -1,120 +1,383 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB66536B075;
-	Mon,  9 Mar 2026 08:03:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB9F23093C3;
+	Mon,  9 Mar 2026 08:43:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773043427; cv=none; b=QcnTcbRjuLLr8A2Id4szHFnDwORwcLoLC2zNq0BWOfaeY88n9P2QGZ7w70AuCIkGA7JkqzE4yx/y2cJiYwTRoZX1/cD23RyfaMJ8d/d8mkD4YSklxJBUCoXbMuAutMy9b8NUBjB7GpG4dziOhjzncGrGW8J0zS/QsUhOUvCDPo8=
+	t=1773045832; cv=none; b=AAmuIBCuhISA+E+TDEaikBoadfVqzmIg4/IPNVMHTwswa43TWd6B23wY5mOrDIpqAPY+YsQFeGlXmnHAixEyS1xdk1G4SUeC53LlsZ9Ks7xmddaw9Cjs99liwKYJEw9CL/+f+l9pNg/UcT0RDzCpMxSbj4E5q7XCuXa3zcUDhe0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773043427; c=relaxed/simple;
-	bh=emTIU1TaBbIx/tDTZhzmiIjXQ7JpqWXdQa8oeCKbuEQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=aHk5yrEehq+l1hFrEqVteW1YDhvggGdj1JV2kxClgxkhrrQQ+Uy0bxUHBnK+EnOkgXT4yM3WTskgYJR/eU5/ZQJ9Bc8M0sHwC/ogOnN67mW1+2RZuHCweEzJ7JjQw3PgIYoyZGde0kOcxG2FWhY+z+e4Iu9Cm1vNV2MyafW7fGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oHylr5Sr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1773045832; c=relaxed/simple;
+	bh=R0Tj8WHPpvIY04QiJfIurzlhzjfV000u26yyDgGvweo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=ns9l44uiBiNooKuBXvbOtWpf2QAsUGZLfWOsXnSW9RZcFATx7B8tSsDjWMBv+3IohYv9HaJ6vgtKX7AnUEp276Y1GzTRyw3XFd/xkV8MipYHMlUG4aygOZtVJsXT+amKiPVJpfJ83vCnfhNjQI6ZrZigvWOf4ed1JT58+BbDudY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LvJhrhdh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oHylr5Sr"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id AB3B9C2BCB6;
-	Mon,  9 Mar 2026 08:03:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LvJhrhdh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B812EC4CEF7;
+	Mon,  9 Mar 2026 08:43:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773043426;
-	bh=emTIU1TaBbIx/tDTZhzmiIjXQ7JpqWXdQa8oeCKbuEQ=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=oHylr5SrJEEJoOjUUMs9zV6AckkonQRN0XrGTbbHE83Da7QroQPZaES3D+Z5aZ2N8
-	 3usNEzeJuI7aoNsGkKob0GnInh4jvA4pkGJjMA6y+NKBBeYvZOD5Pg6AZEnNnGmPKK
-	 XSdEFvXZ0lsm0hV7vxWkfXUvVfqCGEGio3Nla9LhPhbINCYNbLpKRVD/zHwCQoiWEA
-	 5+iuEjOaHRvI2u1Zd4zlyDIERUdoupdeBJX1uCOPDa0HfU1Q+Wr1Vs9Brtb+zewo4b
-	 nQIWLYM4duf1ofqydrzmjchMYOh7qxgWJMi6A7iritfagvFJ/kNSROhrJmMETEEI8T
-	 uoqHbwT2velXw==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1F02EF3709;
-	Mon,  9 Mar 2026 08:03:46 +0000 (UTC)
-From: Simon Baatz via B4 Relay <devnull+gmbnomis.gmail.com@kernel.org>
-Date: Mon, 09 Mar 2026 09:02:31 +0100
-Subject: [PATCH net-next v3 6/6] selftests/net: packetdrill: add
- tcp_rcv_neg_window.pkt
+	s=k20201202; t=1773045832;
+	bh=R0Tj8WHPpvIY04QiJfIurzlhzjfV000u26yyDgGvweo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=LvJhrhdhbQozIAuWAlqXW3bj0cWo8FxnOWgkdMke7eRZtRR20Tv8o5cECmuZmGYK+
+	 dBqhRaiCqlkEO0AdOUsxXmyF4MqENquSuSHBmz2RU47VGIJdubddTYCV9qRakBnbje
+	 O5unNYzBed62xZ5MFgbrtjoTo28MBcjxmyBaGbRFpwxHRYoVzlpO3sSOS8ggVcqOFq
+	 HbmwYbvG57oSLBYDozAq6nXOliqgesdIs76MP+Pa/lkgzIW3gkLP7SsXzNAn8IT0FP
+	 Rwr0N9MBjMJld+itIy9r6hlCbW/vmJHmxt5o5a088yXOn46IJZ0xMCwU1Mzza1obzD
+	 X5xgE1A2esdCQ==
+From: Thomas Gleixner <tglx@kernel.org>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Jiri Slaby
+ <jirislaby@kernel.org>, Stefan Hajnoczi <stefanha@redhat.com>, Stefano
+ Garzarella <sgarzare@redhat.com>, kvm@vger.kernel.org,
+ virtualization@lists.linux.dev, Netdev <netdev@vger.kernel.org>,
+ rcu@vger.kernel.org, MPTCP Linux <mptcp@lists.linux.dev>, Linux Kernel
+ <linux-kernel@vger.kernel.org>, Shinichiro Kawasaki
+ <shinichiro.kawasaki@wdc.com>, "Paul E. McKenney" <paulmck@kernel.org>,
+ Dave Hansen <dave.hansen@linux.intel.com>, luto@kernel.org, Michal
+ =?utf-8?Q?Koutn=C3=BD?=
+ <MKoutny@suse.com>, Waiman Long <longman@redhat.com>, Marco Elver
+ <elver@google.com>
+Subject: Re: Stalls when starting a VSOCK listening socket: soft lockups,
+ RCU stalls, timeout
+In-Reply-To: <57c1e171-9520-4288-9e2d-10a72a499968@kernel.org>
+References: <863a5291-a636-47d0-891c-bb0524d2e134@kernel.org>
+ <20260302114636.GL606826@noisy.programming.kicks-ass.net>
+ <717310d8-6274-4b7f-8a19-561c45f5f565@kernel.org>
+ <a2b573b4-af61-4b84-a7d1-012ed6bb23c9@kernel.org>
+ <ba067933-bf3b-476d-a0bb-53eda56996ca@kernel.org> <87zf4m2qvo.ffs@tglx>
+ <47cba228-bba7-4e58-a69d-ea41f8de6602@kernel.org> <87tsuu2i59.ffs@tglx>
+ <7efde2b5-3b72-4858-9db0-22493d446301@kernel.org> <87qzpx2sck.ffs@tglx>
+ <20260306152458.GT606826@noisy.programming.kicks-ass.net>
+ <87ldg42eu7.ffs@tglx> <87h5qr2rzi.ffs@tglx> <87eclu3coa.ffs@tglx>
+ <87v7f61cnl.ffs@tglx> <57c1e171-9520-4288-9e2d-10a72a499968@kernel.org>
+Date: Mon, 09 Mar 2026 09:43:48 +0100
+Message-ID: <87pl5ds88r.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260309-tcp_rfc7323_retract_wnd_rfc-v3-6-4c7f96b1ec69@gmail.com>
-References: <20260309-tcp_rfc7323_retract_wnd_rfc-v3-0-4c7f96b1ec69@gmail.com>
-In-Reply-To: <20260309-tcp_rfc7323_retract_wnd_rfc-v3-0-4c7f96b1ec69@gmail.com>
-To: Eric Dumazet <edumazet@google.com>, 
- Neal Cardwell <ncardwell@google.com>, Kuniyuki Iwashima <kuniyu@google.com>, 
- "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
- Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
- David Ahern <dsahern@kernel.org>, Jon Maloy <jmaloy@redhat.com>, 
- Jason Xing <kerneljasonxing@gmail.com>, mfreemon@cloudflare.com, 
- Shuah Khan <shuah@kernel.org>, Stefano Brivio <sbrivio@redhat.com>, 
- Matthieu Baerts <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>, 
- Geliang Tang <geliang@kernel.org>
-Cc: netdev@vger.kernel.org, linux-doc@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
- mptcp@lists.linux.dev, Simon Baatz <gmbnomis@gmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1773043425; l=1560;
- i=gmbnomis@gmail.com; s=20260220; h=from:subject:message-id;
- bh=/JWWw4Fx6ONTjfm9hTqMNguk1B74iLUSkQSY5L1syFw=;
- b=2D7v4mt8UrAsF6NRbarJgDDGMJrIAAIk6UGHgHlbR6lGUYUnBAQbYbj1gZaxxGqnn6xPfh8YQ
- y5j57Qjr1c9BLHK8/b0/n69p50Qeg1agzXfds2tVH6K9S9xPkL77w9u
-X-Developer-Key: i=gmbnomis@gmail.com; a=ed25519;
- pk=T/JIz/6F5bf1uQJr69lmyi7czVG+F9TVZ/8x5z9Wtqw=
-X-Endpoint-Received: by B4 Relay for gmbnomis@gmail.com/20260220 with
- auth_id=641
-X-Original-From: Simon Baatz <gmbnomis@gmail.com>
-Reply-To: gmbnomis@gmail.com
+Content-Type: text/plain
 
-From: Simon Baatz <gmbnomis@gmail.com>
+On Sun, Mar 08 2026 at 18:23, Matthieu Baerts wrote:
+> 08 Mar 2026 17:58:26 Thomas Gleixner <tglx@kernel.org>:
+>> So I'm back to square one. I go and do what I should have done in the
+>> first place. Write a debug patch with trace_printks and let the people
+>> who can actually trigger the problem run with it.
+>
+> Happy to test such debug patches!
 
-The test ensures we correctly apply the maximum advertised window limit
-when rcv_nxt advances past rcv_mwnd_seq, so that the "usable window"
-is properly clamped to zero rather than becoming negative.
+See below.
 
-Signed-off-by: Simon Baatz <gmbnomis@gmail.com>
+Enable the tracepoints either on the kernel command line:
+
+    trace_event=sched_switch,mmcid:*
+
+or before starting the test case:
+
+    echo 1 >/sys/kernel/tracing/events/sched/sched_switch/enable
+    echo 1 >/sys/kernel/tracing/events/mmcid/enable
+
+I added a 50ms timeout into mm_cid_get() which freezes the trace and
+emits a warning. If you enable panic_on_warn and ftrace_dump_on_oops,
+then it dumps the trace buffer once it hits the warning.
+
+Either kernel command line:
+
+   panic_on_warn ftrace_dump_on_oops
+
+or
+
+  echo 1 >/proc/sys/kernel/panic_on_warn
+  echo 1 >/proc/sys/kernel/ftrace_dump_on_oops
+
+That should provide enough information to decode this mystery.
+
+Thanks,
+
+        tglx
 ---
- .../net/packetdrill/tcp_rcv_neg_window.pkt         | 26 ++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+ include/trace/events/mmcid.h |  138 +++++++++++++++++++++++++++++++++++++++++++
+ kernel/sched/core.c          |   10 +++
+ kernel/sched/sched.h         |   20 +++++-
+ 3 files changed, 165 insertions(+), 3 deletions(-)
 
-diff --git a/tools/testing/selftests/net/packetdrill/tcp_rcv_neg_window.pkt b/tools/testing/selftests/net/packetdrill/tcp_rcv_neg_window.pkt
-new file mode 100644
-index 0000000000000000000000000000000000000000..15a9b4938f16d175ac54f3fd192ed2b59b0a4399
 --- /dev/null
-+++ b/tools/testing/selftests/net/packetdrill/tcp_rcv_neg_window.pkt
-@@ -0,0 +1,26 @@
-+// SPDX-License-Identifier: GPL-2.0
++++ b/include/trace/events/mmcid.h
+@@ -0,0 +1,138 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#undef TRACE_SYSTEM
++#define TRACE_SYSTEM mmcid
 +
-+--mss=1000
++#if !defined(_TRACE_MMCID_H) || defined(TRACE_HEADER_MULTI_READ)
++#define _TRACE_MMCID_H
 +
-+`./defaults.sh`
++#include <linux/sched.h>
++#include <linux/tracepoint.h>
 +
-+// Establish a connection.
-+   +0 socket(..., SOCK_STREAM, IPPROTO_TCP) = 3
-+   +0 setsockopt(3, SOL_SOCKET, SO_REUSEADDR, [1], 4) = 0
-+   +0 setsockopt(3, SOL_SOCKET, SO_RCVBUF, [20000], 4) = 0
-+   +0 bind(3, ..., ...) = 0
-+   +0 listen(3, 1) = 0
++DECLARE_EVENT_CLASS(mmcid_class,
 +
-+   +0 < S 0:0(0) win 32792 <mss 1000,nop,wscale 7>
-+   +0 > S. 0:0(0) ack 1 win 18980 <mss 1460,nop,wscale 0>
-+  +.1 < . 1:1(0) ack 1 win 257
++	TP_PROTO(struct mm_struct *mm, unsigned int cid),
 +
-+   +0 accept(3, ..., ...) = 4
++	TP_ARGS(mm, cid),
 +
-+// A too big packet is accepted if the receive queue is empty
-+   +0 < P. 1:20001(20000) ack 1 win 257
-+// Send a RST immediately so that there is no rcv_wup/rcv_mwnd_seq update yet
-+   +0 < R. 20001:20001(0) ack 1 win 257
++	TP_STRUCT__entry(
++		__field( void *,	mm	)
++		__field( unsigned int,	cid	)
++	),
 +
-+  +.1 %{ assert tcpi_state == TCP_CLOSE, tcpi_state }%
++	TP_fast_assign(
++		__entry->mm	= mm;
++		__entry->cid	= cid;
++	),
 +
-
--- 
-2.53.0
-
-
++	TP_printk("mm=%p cid=%08x", __entry->mm, __entry->cid)
++);
++
++DEFINE_EVENT(mmcid_class, mmcid_getcid,
++
++	TP_PROTO(struct mm_struct *mm, unsigned int cid),
++
++	TP_ARGS(mm, cid)
++);
++
++DEFINE_EVENT(mmcid_class, mmcid_putcid,
++
++	TP_PROTO(struct mm_struct *mm, unsigned int cid),
++
++	TP_ARGS(mm, cid)
++);
++
++DECLARE_EVENT_CLASS(mmcid_task_class,
++
++	TP_PROTO(struct task_struct *t, struct mm_struct *mm, unsigned int cid),
++
++	TP_ARGS(t, mm, cid),
++
++	TP_STRUCT__entry(
++		__field( void *,	t	)
++		__field( void *,	mm	)
++		__field( unsigned int,	cid	)
++	),
++
++	TP_fast_assign(
++		__entry->t	= t;
++		__entry->mm	= mm;
++		__entry->cid	= cid;
++	),
++
++	TP_printk("t=%p mm=%p cid=%08x", __entry->t, __entry->mm, __entry->cid)
++);
++
++DEFINE_EVENT(mmcid_task_class, mmcid_task_update,
++
++	TP_PROTO(struct task_struct *t, struct mm_struct *mm, unsigned int cid),
++
++	TP_ARGS(t, mm, cid)
++);
++
++DECLARE_EVENT_CLASS(mmcid_cpu_class,
++
++	TP_PROTO(unsigned int cpu, struct mm_struct *mm, unsigned int cid),
++
++	TP_ARGS(cpu, mm, cid),
++
++	TP_STRUCT__entry(
++		__field( unsigned int,	cpu	)
++		__field( void *,	mm	)
++		__field( unsigned int,	cid	)
++	),
++
++	TP_fast_assign(
++		__entry->cpu	= cpu;
++		__entry->mm	= mm;
++		__entry->cid	= cid;
++	),
++
++	TP_printk("cpu=%u mm=%p cid=%08x", __entry->cpu, __entry->mm, __entry->cid)
++);
++
++DEFINE_EVENT(mmcid_cpu_class, mmcid_cpu_update,
++
++	TP_PROTO(unsigned int cpu, struct mm_struct *mm, unsigned int cid),
++
++	TP_ARGS(cpu, mm, cid)
++);
++
++DECLARE_EVENT_CLASS(mmcid_user_class,
++
++	TP_PROTO(struct task_struct *t, struct mm_struct *mm),
++
++	TP_ARGS(t, mm),
++
++	TP_STRUCT__entry(
++		__field( void *,	t	)
++		__field( void *,	mm	)
++		__field( unsigned int,	users	)
++	),
++
++	TP_fast_assign(
++		__entry->t	= t;
++		__entry->mm	= mm;
++		__entry->users	= mm->mm_cid.users;
++	),
++
++	TP_printk("t=%p mm=%p users=%u", __entry->t, __entry->mm, __entry->users)
++);
++
++DEFINE_EVENT(mmcid_user_class, mmcid_user_add,
++
++	TP_PROTO(struct task_struct *t, struct mm_struct *mm),
++
++	TP_ARGS(t, mm)
++);
++
++DEFINE_EVENT(mmcid_user_class, mmcid_user_del,
++
++	TP_PROTO(struct task_struct *t, struct mm_struct *mm),
++
++	     TP_ARGS(t, mm)
++);
++
++#endif
++
++/* This part must be outside protection */
++#include <trace/define_trace.h>
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -86,6 +86,7 @@
+ #include <linux/sched/rseq_api.h>
+ #include <trace/events/sched.h>
+ #include <trace/events/ipi.h>
++#include <trace/events/mmcid.h>
+ #undef CREATE_TRACE_POINTS
+ 
+ #include "sched.h"
+@@ -10569,7 +10570,9 @@ static inline void mm_cid_transit_to_tas
+ 		unsigned int cid = cpu_cid_to_cid(t->mm_cid.cid);
+ 
+ 		t->mm_cid.cid = cid_to_transit_cid(cid);
++		trace_mmcid_task_update(t, t->mm, t->mm_cid.cid);
+ 		pcp->cid = t->mm_cid.cid;
++		trace_mmcid_cpu_update(task_cpu(t), t->mm, pcp->cid);
+ 	}
+ }
+ 
+@@ -10602,7 +10605,9 @@ static void mm_cid_fixup_cpus_to_tasks(s
+ 			if (!cid_in_transit(cid)) {
+ 				cid = cid_to_transit_cid(cid);
+ 				rq->curr->mm_cid.cid = cid;
++				trace_mmcid_task_update(rq->curr, rq->curr->mm, cid);
+ 				pcp->cid = cid;
++				trace_mmcid_cpu_update(cpu, mm, cid);
+ 			}
+ 		}
+ 	}
+@@ -10613,7 +10618,9 @@ static inline void mm_cid_transit_to_cpu
+ {
+ 	if (cid_on_task(t->mm_cid.cid)) {
+ 		t->mm_cid.cid = cid_to_transit_cid(t->mm_cid.cid);
++		trace_mmcid_task_update(t, t->mm, t->mm_cid.cid);
+ 		pcp->cid = t->mm_cid.cid;
++		trace_mmcid_cpu_update(task_cpu(t), t->mm, pcp->cid);
+ 	}
+ }
+ 
+@@ -10685,6 +10692,7 @@ static bool sched_mm_cid_add_user(struct
+ {
+ 	t->mm_cid.active = 1;
+ 	mm->mm_cid.users++;
++	trace_mmcid_user_add(t, mm);
+ 	return mm_update_max_cids(mm);
+ }
+ 
+@@ -10727,6 +10735,7 @@ void sched_mm_cid_fork(struct task_struc
+ 	} else {
+ 		mm_cid_fixup_cpus_to_tasks(mm);
+ 		t->mm_cid.cid = mm_get_cid(mm);
++		trace_mmcid_task_update(t, t->mm, t->mm_cid.cid);
+ 	}
+ }
+ 
+@@ -10739,6 +10748,7 @@ static bool sched_mm_cid_remove_user(str
+ 		mm_unset_cid_on_task(t);
+ 	}
+ 	t->mm->mm_cid.users--;
++	trace_mmcid_user_del(t, t->mm);
+ 	return mm_update_max_cids(t->mm);
+ }
+ 
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -75,6 +75,7 @@
+ #include <linux/delayacct.h>
+ #include <linux/mmu_context.h>
+ 
++#include <trace/events/mmcid.h>
+ #include <trace/events/power.h>
+ #include <trace/events/sched.h>
+ 
+@@ -3809,6 +3810,7 @@ static __always_inline bool cid_on_task(
+ 
+ static __always_inline void mm_drop_cid(struct mm_struct *mm, unsigned int cid)
+ {
++	trace_mmcid_putcid(mm, cid);
+ 	clear_bit(cid, mm_cidmask(mm));
+ }
+ 
+@@ -3817,6 +3819,7 @@ static __always_inline void mm_unset_cid
+ 	unsigned int cid = t->mm_cid.cid;
+ 
+ 	t->mm_cid.cid = MM_CID_UNSET;
++	trace_mmcid_task_update(t, t->mm, t->mm_cid.cid);
+ 	if (cid_on_task(cid))
+ 		mm_drop_cid(t->mm, cid);
+ }
+@@ -3838,6 +3841,7 @@ static inline unsigned int __mm_get_cid(
+ 		return MM_CID_UNSET;
+ 	if (test_and_set_bit(cid, mm_cidmask(mm)))
+ 		return MM_CID_UNSET;
++	trace_mmcid_getcid(mm, cid);
+ 	return cid;
+ }
+ 
+@@ -3845,9 +3849,17 @@ static inline unsigned int mm_get_cid(st
+ {
+ 	unsigned int cid = __mm_get_cid(mm, READ_ONCE(mm->mm_cid.max_cids));
+ 
+-	while (cid == MM_CID_UNSET) {
+-		cpu_relax();
+-		cid = __mm_get_cid(mm, num_possible_cpus());
++	if (cid == MM_CID_UNSET) {
++		ktime_t t0 = ktime_get();
++
++		while (cid == MM_CID_UNSET) {
++			cpu_relax();
++			cid = __mm_get_cid(mm, num_possible_cpus());
++			if (ktime_get() - t0 > 50 * NSEC_PER_MSEC) {
++				tracing_off();
++				WARN_ON_ONCE(1);
++			}
++		}
+ 	}
+ 	return cid;
+ }
+@@ -3874,6 +3886,7 @@ static inline unsigned int mm_cid_conver
+ static __always_inline void mm_cid_update_task_cid(struct task_struct *t, unsigned int cid)
+ {
+ 	if (t->mm_cid.cid != cid) {
++		trace_mmcid_task_update(t, t->mm, cid);
+ 		t->mm_cid.cid = cid;
+ 		rseq_sched_set_ids_changed(t);
+ 	}
+@@ -3881,6 +3894,7 @@ static __always_inline void mm_cid_updat
+ 
+ static __always_inline void mm_cid_update_pcpu_cid(struct mm_struct *mm, unsigned int cid)
+ {
++	trace_mmcid_cpu_update(smp_processor_id(), mm, cid);
+ 	__this_cpu_write(mm->mm_cid.pcpu->cid, cid);
+ }
+ 
