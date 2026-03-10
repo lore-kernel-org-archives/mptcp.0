@@ -1,45 +1,55 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8B4E438FFB;
-	Tue, 10 Mar 2026 10:06:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCFA8387343;
+	Tue, 10 Mar 2026 11:24:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773137175; cv=none; b=uYph+YAF9jqgtQjuUGbcpt6K+qnCAfVLQSo4/ZAZtZW2sc73Ue7xxNtJizH99Mva00GrBfOUr50z+RGuJWsuOtjhOd5qiPuE3f2fjEYFP8zPUe67TejxF1U1HbaQ5jrkjruW4PiYj0bn1oZtsYECNm+ck3gWomyevudBx3R8u/s=
+	t=1773141850; cv=none; b=glNg8H3J0CGa1KYYywjEMpBnfB1XhNlPtHjK322Kedquf4M98kfp0NjiJYSc+N3hDcPVqlNvK7Jw47BfDEZhQ2//Ujfx7DS6NJHTFJobz0n6yjflOZrbjtpY8ctmZsJ54x1lyBnSF/PXT91Lc9vEZnCToMKKj0Fuw5nKDBGgrBA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773137175; c=relaxed/simple;
-	bh=nkTeKtYAxvOE8cjUWoFY/AoxsTZhGKLRXEKPvssARPg=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=MI7nBmmLi4t0iOfvEb6bkHpqG6D7DMDCfDp/aE64GX/D2jFhpb64ScouFrj7b9b08IKVOkU7Q3uwTe2/CZyaUwFf/bRf7GGddu7sIphPW2DQx2Bj+D5n4RiwPn/W4+2jrI7xxnbUi7Ro1ouE8aLahOj1XLU6BAKZlzRFqAx0Gpo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=legXCpth; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1773141850; c=relaxed/simple;
+	bh=U5+O6eb/a/OOX6fvPyffxWd4zi4YXOFBkLe1u2WC2+s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NxKVp9Eg9+OBacfF307yFDTK1LYyLVtUa5koT5pryQmmEyYuq7YZVSc8DutT05EHb75LiUd5jMmR0N/kkOaxsaAQAZ30PAmvMiiElYILt17qhI6XHD1l12XxtRv9JRTSUA6dKqwAMe2eqwRe3MqLYXg145EDiydHBvTK2igHqTM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RH9zcyrJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="legXCpth"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBD12C19423;
-	Tue, 10 Mar 2026 10:06:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RH9zcyrJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58195C2BC86;
+	Tue, 10 Mar 2026 11:24:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773137175;
-	bh=nkTeKtYAxvOE8cjUWoFY/AoxsTZhGKLRXEKPvssARPg=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=legXCpthGDI6HF6Z/0f4SsBc9/7skaC07+94t14VCGrxQZybTR7XHXwIDkj6XIZ+o
-	 KQdAOE+2HSVg2lX7cJq59LBKCB0ZvE2U+5jyPnWuILfRVETHuSL0kYUaU2/PC5AxoC
-	 IKHmzr08yvZ9Yqnp0nfDyE+1d1iON+f2znz4VaPPKRGNJ21LHsg/A1vjeUw1NZdWlj
-	 wpV1hJVjeSUF1ircpvVCKhssHUuPmTA+FsTh5Ti1Cz79hMT6dTceMjqTNKACG8OuZY
-	 O2pJaiPVy55xtTL51qxvAxXTi/ATtcQqN4bqa705dUAozhHkYFvgaxAzfXs8lDG1Ub
-	 DSZwWDQFbdCww==
-From: Thomas Gleixner <tglx@kernel.org>
-To: Jiri Slaby <jirislaby@kernel.org>, Matthieu Baerts <matttbe@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Stefan Hajnoczi
- <stefanha@redhat.com>, Stefano Garzarella <sgarzare@redhat.com>,
- kvm@vger.kernel.org, virtualization@lists.linux.dev, Netdev
- <netdev@vger.kernel.org>, rcu@vger.kernel.org, MPTCP Linux
- <mptcp@lists.linux.dev>, Linux Kernel <linux-kernel@vger.kernel.org>,
- Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>, "Paul E. McKenney"
- <paulmck@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>,
- luto@kernel.org, Michal =?utf-8?Q?Koutn=C3=BD?= <MKoutny@suse.com>, Waiman
- Long <longman@redhat.com>, Marco Elver <elver@google.com>
-Subject: Re: Stalls when starting a VSOCK listening socket: soft lockups,
- RCU stalls, timeout
-In-Reply-To: <878qc0rofr.ffs@tglx>
+	s=k20201202; t=1773141850;
+	bh=U5+O6eb/a/OOX6fvPyffxWd4zi4YXOFBkLe1u2WC2+s=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=RH9zcyrJ2JDGdkmy8/GQ01j+DnKslHM6yRx4sWhVUA+pBVRBAsRoYi/Fdcv0ERfav
+	 X+9ZTPpR+H9251Em/rFrTQc+BFA7aATqGW+py5/PXNqoElZ+3ZdcIfA16LVRMn0b+p
+	 0gkO1EoEXz93nNtfXB6rPv8h6z7g8wwxJ5s3EdV8P75rlQN2NtMDtR8UXk1/wzc9ZU
+	 X1bXh5P6LEVAqpLv/80iBLKM38+UzoZsOO2PH4+tmExCrG7vZt1/SSM8dSrS711uZ4
+	 BkWiUvXVXUcdqxdHEP6evhRUvF7kLQllBbuKoLQaQFNJ6z6ne1B+R7k28gnnLtLOHO
+	 uVgU5Zaf5gzGQ==
+Message-ID: <4cad1b9a-e157-427b-9896-cf54cf6fba36@kernel.org>
+Date: Tue, 10 Mar 2026 12:24:02 +0100
+Precedence: bulk
+X-Mailing-List: mptcp@lists.linux.dev
+List-Id: <mptcp.lists.linux.dev>
+List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
+List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: Stalls when starting a VSOCK listening socket: soft lockups, RCU
+ stalls, timeout
+Content-Language: fr
+To: Thomas Gleixner <tglx@kernel.org>, Jiri Slaby <jirislaby@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>,
+ Stefan Hajnoczi <stefanha@redhat.com>,
+ Stefano Garzarella <sgarzare@redhat.com>, kvm@vger.kernel.org,
+ virtualization@lists.linux.dev, Netdev <netdev@vger.kernel.org>,
+ rcu@vger.kernel.org, MPTCP Linux <mptcp@lists.linux.dev>,
+ Linux Kernel <linux-kernel@vger.kernel.org>,
+ Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
+ "Paul E. McKenney" <paulmck@kernel.org>,
+ Dave Hansen <dave.hansen@linux.intel.com>, luto@kernel.org,
+ =?UTF-8?Q?Michal_Koutn=C3=BD?= <MKoutny@suse.com>,
+ Waiman Long <longman@redhat.com>, Marco Elver <elver@google.com>
 References: <863a5291-a636-47d0-891c-bb0524d2e134@kernel.org>
  <717310d8-6274-4b7f-8a19-561c45f5f565@kernel.org>
  <a2b573b4-af61-4b84-a7d1-012ed6bb23c9@kernel.org>
@@ -52,438 +62,80 @@ References: <863a5291-a636-47d0-891c-bb0524d2e134@kernel.org>
  <87pl5ds88r.ffs@tglx> <0ae4d678-5676-4523-bae3-5ad73b526e27@kernel.org>
  <87eclsrtqg.ffs@tglx> <e846cb5f-65c4-4a9b-9f9b-593e4af526d8@kernel.org>
  <76e2b909-98db-49de-a8eb-f6f0a192f630@kernel.org> <878qc0rofr.ffs@tglx>
-Date: Tue, 10 Mar 2026 11:06:11 +0100
-Message-ID: <874imorobw.ffs@tglx>
-Precedence: bulk
-X-Mailing-List: mptcp@lists.linux.dev
-List-Id: <mptcp.lists.linux.dev>
-List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
-List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain
+ <874imorobw.ffs@tglx>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <874imorobw.ffs@tglx>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Mar 10 2026 at 11:03, Thomas Gleixner wrote:
-> On Tue, Mar 10 2026 at 10:00, Jiri Slaby wrote:
-> Yes. There is an issue. Peter and me just discovered that as well, but
-> in the case at hand it can't be the problem. The missing task is on the
-> CPU which means it must be visible in the thread list and task list.
+Hi Thomas,
 
-The updated debug patch fixes this fork problem and adds more tracing to
-it.
+On 10/03/2026 11:06, Thomas Gleixner wrote:
+> On Tue, Mar 10 2026 at 11:03, Thomas Gleixner wrote:
+>> On Tue, Mar 10 2026 at 10:00, Jiri Slaby wrote:
+>> Yes. There is an issue. Peter and me just discovered that as well, but
+>> in the case at hand it can't be the problem. The missing task is on the
+>> CPU which means it must be visible in the thread list and task list.
+> 
+> The updated debug patch fixes this fork problem and adds more tracing to
+> it.
 
-Mathieu, can you give it another spin please?
+Thank you for this new patch, and for continuing to look at this!
 
-Thanks,
+> Mathieu, can you give it another spin please?
 
-        tglx
----
- include/linux/sched.h        |    2 
- include/trace/events/mmcid.h |  171 +++++++++++++++++++++++++++++++++++++++++++
- kernel/fork.c                |    2 
- kernel/sched/core.c          |   34 ++++++--
- kernel/sched/sched.h         |   20 ++++-
- 5 files changed, 215 insertions(+), 14 deletions(-)
+Just did. Output is available there:
 
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -2354,7 +2354,6 @@ static __always_inline void alloc_tag_re
- #ifdef CONFIG_SCHED_MM_CID
- void sched_mm_cid_before_execve(struct task_struct *t);
- void sched_mm_cid_after_execve(struct task_struct *t);
--void sched_mm_cid_fork(struct task_struct *t);
- void sched_mm_cid_exit(struct task_struct *t);
- static __always_inline int task_mm_cid(struct task_struct *t)
- {
-@@ -2363,7 +2362,6 @@ static __always_inline int task_mm_cid(s
- #else
- static inline void sched_mm_cid_before_execve(struct task_struct *t) { }
- static inline void sched_mm_cid_after_execve(struct task_struct *t) { }
--static inline void sched_mm_cid_fork(struct task_struct *t) { }
- static inline void sched_mm_cid_exit(struct task_struct *t) { }
- static __always_inline int task_mm_cid(struct task_struct *t)
- {
---- /dev/null
-+++ b/include/trace/events/mmcid.h
-@@ -0,0 +1,171 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM mmcid
-+
-+#if !defined(_TRACE_MMCID_H) || defined(TRACE_HEADER_MULTI_READ)
-+#define _TRACE_MMCID_H
-+
-+#include <linux/sched.h>
-+#include <linux/tracepoint.h>
-+
-+DECLARE_EVENT_CLASS(mmcid_class,
-+
-+	TP_PROTO(struct mm_struct *mm, unsigned int cid),
-+
-+	TP_ARGS(mm, cid),
-+
-+	TP_STRUCT__entry(
-+		__field( void *,	mm	)
-+		__field( unsigned int,	cid	)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->mm	= mm;
-+		__entry->cid	= cid;
-+	),
-+
-+	TP_printk("mm=%p cid=%08x", __entry->mm, __entry->cid)
-+);
-+
-+DEFINE_EVENT(mmcid_class, mmcid_getcid,
-+
-+	TP_PROTO(struct mm_struct *mm, unsigned int cid),
-+
-+	TP_ARGS(mm, cid)
-+);
-+
-+DEFINE_EVENT(mmcid_class, mmcid_putcid,
-+
-+	TP_PROTO(struct mm_struct *mm, unsigned int cid),
-+
-+	TP_ARGS(mm, cid)
-+);
-+
-+DECLARE_EVENT_CLASS(mmcid_task_class,
-+
-+	TP_PROTO(struct task_struct *t, struct mm_struct *mm, unsigned int cid),
-+
-+	TP_ARGS(t, mm, cid),
-+
-+	TP_STRUCT__entry(
-+		__field( unsigned int,	pid	)
-+		__field( unsigned int,	cid	)
-+		__field( void *,	mm	)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->pid	= t->pid;
-+		__entry->cid	= cid;
-+		__entry->mm	= mm;
-+	),
-+
-+	TP_printk("pid=%u cid=%08x mm=%p", __entry->pid, __entry->cid, __entry->mm)
-+);
-+
-+DEFINE_EVENT(mmcid_task_class, mmcid_task_update,
-+
-+	TP_PROTO(struct task_struct *t, struct mm_struct *mm, unsigned int cid),
-+
-+	TP_ARGS(t, mm, cid)
-+);
-+
-+DECLARE_EVENT_CLASS(mmcid_fixup_class,
-+
-+	TP_PROTO(struct task_struct *t, unsigned int users),
-+
-+	TP_ARGS(t, users),
-+
-+	TP_STRUCT__entry(
-+		__field( unsigned int,	pid	)
-+		__field( unsigned int,	cid	)
-+		__field( unsigned int,	active	)
-+		__field( unsigned int,	users	)
-+		__field( void *,	mm	)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->pid	= t->pid;
-+		__entry->cid	= t->mm_cid.cid;
-+		__entry->active	= t->mm_cid.active;
-+		__entry->users	= users;
-+		__entry->mm	= t->mm;
-+	),
-+
-+	TP_printk("pid=%u cid=%08x active=%u users=%u mm=%p", __entry->pid, __entry->cid,
-+		  __entry->active, __entry->users, __entry->mm)
-+);
-+
-+DEFINE_EVENT(mmcid_fixup_class, mmcid_fixup_task,
-+
-+	TP_PROTO(struct task_struct *t, unsigned int users),
-+
-+	TP_ARGS(t, users)
-+);
-+
-+DECLARE_EVENT_CLASS(mmcid_cpu_class,
-+
-+	TP_PROTO(unsigned int cpu, struct mm_struct *mm, unsigned int cid),
-+
-+	TP_ARGS(cpu, mm, cid),
-+
-+	TP_STRUCT__entry(
-+		__field( unsigned int,	cpu	)
-+		__field( unsigned int,	cid	)
-+		__field( void *,	mm	)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->cpu	= cpu;
-+		__entry->cid	= cid;
-+		__entry->mm	= mm;
-+	),
-+
-+	TP_printk("cpu=%u cid=%08x mm=%p", __entry->cpu, __entry->cid, __entry->mm)
-+);
-+
-+DEFINE_EVENT(mmcid_cpu_class, mmcid_cpu_update,
-+
-+	TP_PROTO(unsigned int cpu, struct mm_struct *mm, unsigned int cid),
-+
-+	TP_ARGS(cpu, mm, cid)
-+);
-+
-+DECLARE_EVENT_CLASS(mmcid_user_class,
-+
-+	TP_PROTO(struct task_struct *t, struct mm_struct *mm),
-+
-+	TP_ARGS(t, mm),
-+
-+	TP_STRUCT__entry(
-+		__field( unsigned int,	pid	)
-+		__field( unsigned int,	users	)
-+		__field( void *,	mm	)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->pid	= t->pid;
-+		__entry->users	= mm->mm_cid.users;
-+		__entry->mm	= mm;
-+	),
-+
-+	TP_printk("pid=%u users=%u mm=%p", __entry->pid, __entry->users, __entry->mm)
-+);
-+
-+DEFINE_EVENT(mmcid_user_class, mmcid_user_add,
-+
-+	TP_PROTO(struct task_struct *t, struct mm_struct *mm),
-+
-+	TP_ARGS(t, mm)
-+);
-+
-+DEFINE_EVENT(mmcid_user_class, mmcid_user_del,
-+
-+	TP_PROTO(struct task_struct *t, struct mm_struct *mm),
-+
-+	     TP_ARGS(t, mm)
-+);
-+
-+#endif
-+
-+/* This part must be outside protection */
-+#include <trace/define_trace.h>
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -1586,7 +1586,6 @@ static int copy_mm(u64 clone_flags, stru
- 
- 	tsk->mm = mm;
- 	tsk->active_mm = mm;
--	sched_mm_cid_fork(tsk);
- 	return 0;
- }
- 
-@@ -2498,7 +2497,6 @@ static bool need_futex_hash_allocate_def
- 	exit_nsproxy_namespaces(p);
- bad_fork_cleanup_mm:
- 	if (p->mm) {
--		sched_mm_cid_exit(p);
- 		mm_clear_owner(p->mm, p);
- 		mmput(p->mm);
- 	}
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -86,6 +86,7 @@
- #include <linux/sched/rseq_api.h>
- #include <trace/events/sched.h>
- #include <trace/events/ipi.h>
-+#include <trace/events/mmcid.h>
- #undef CREATE_TRACE_POINTS
- 
- #include "sched.h"
-@@ -4729,8 +4730,12 @@ void sched_cancel_fork(struct task_struc
- 	scx_cancel_fork(p);
- }
- 
-+static void sched_mm_cid_fork(struct task_struct *t);
-+
- void sched_post_fork(struct task_struct *p)
- {
-+	if (IS_ENABLED(CONFIG_SCHED_MM_CID))
-+		sched_mm_cid_fork(p);
- 	uclamp_post_fork(p);
- 	scx_post_fork(p);
- }
-@@ -10569,7 +10574,9 @@ static inline void mm_cid_transit_to_tas
- 		unsigned int cid = cpu_cid_to_cid(t->mm_cid.cid);
- 
- 		t->mm_cid.cid = cid_to_transit_cid(cid);
-+		trace_mmcid_task_update(t, t->mm, t->mm_cid.cid);
- 		pcp->cid = t->mm_cid.cid;
-+		trace_mmcid_cpu_update(task_cpu(t), t->mm, pcp->cid);
- 	}
- }
- 
-@@ -10602,7 +10609,9 @@ static void mm_cid_fixup_cpus_to_tasks(s
- 			if (!cid_in_transit(cid)) {
- 				cid = cid_to_transit_cid(cid);
- 				rq->curr->mm_cid.cid = cid;
-+				trace_mmcid_task_update(rq->curr, rq->curr->mm, cid);
- 				pcp->cid = cid;
-+				trace_mmcid_cpu_update(cpu, mm, cid);
- 			}
- 		}
- 	}
-@@ -10613,7 +10622,9 @@ static inline void mm_cid_transit_to_cpu
- {
- 	if (cid_on_task(t->mm_cid.cid)) {
- 		t->mm_cid.cid = cid_to_transit_cid(t->mm_cid.cid);
-+		trace_mmcid_task_update(t, t->mm, t->mm_cid.cid);
- 		pcp->cid = t->mm_cid.cid;
-+		trace_mmcid_cpu_update(task_cpu(t), t->mm, pcp->cid);
- 	}
- }
- 
-@@ -10646,15 +10657,17 @@ static void mm_cid_do_fixup_tasks_to_cpu
- 	 * possible switch back to per task mode happens either in the
- 	 * deferred handler function or in the next fork()/exit().
- 	 *
--	 * The caller has already transferred. The newly incoming task is
--	 * already accounted for, but not yet visible.
-+	 * The caller has already transferred so remove it from the users
-+	 * count. The incoming task is already visible and has mm_cid.active,
-+	 * but has task::mm_cid::cid == UNSET. Still it needs to be accounted
-+	 * for. Concurrent fork()s might add more threads, but all of them have
-+	 * task::mm_cid::active = 0, so they don't affect the accounting here.
- 	 */
--	users = mm->mm_cid.users - 2;
--	if (!users)
--		return;
-+	users = mm->mm_cid.users - 1;
- 
- 	guard(rcu)();
- 	for_other_threads(current, t) {
-+		trace_mmcid_fixup_task(t, users);
- 		if (mm_cid_fixup_task_to_cpu(t, mm))
- 			users--;
- 	}
-@@ -10666,6 +10679,7 @@ static void mm_cid_do_fixup_tasks_to_cpu
- 	for_each_process_thread(p, t) {
- 		if (t == current || t->mm != mm)
- 			continue;
-+		trace_mmcid_fixup_task(t, users);
- 		if (mm_cid_fixup_task_to_cpu(t, mm)) {
- 			if (--users == 0)
- 				return;
-@@ -10685,15 +10699,19 @@ static bool sched_mm_cid_add_user(struct
- {
- 	t->mm_cid.active = 1;
- 	mm->mm_cid.users++;
-+	trace_mmcid_user_add(t, mm);
- 	return mm_update_max_cids(mm);
- }
- 
--void sched_mm_cid_fork(struct task_struct *t)
-+static void sched_mm_cid_fork(struct task_struct *t)
- {
- 	struct mm_struct *mm = t->mm;
- 	bool percpu;
- 
--	WARN_ON_ONCE(!mm || t->mm_cid.cid != MM_CID_UNSET);
-+	if (!mm)
-+		return;
-+
-+	WARN_ON_ONCE(t->mm_cid.cid != MM_CID_UNSET);
- 
- 	guard(mutex)(&mm->mm_cid.mutex);
- 	scoped_guard(raw_spinlock_irq, &mm->mm_cid.lock) {
-@@ -10727,6 +10745,7 @@ void sched_mm_cid_fork(struct task_struc
- 	} else {
- 		mm_cid_fixup_cpus_to_tasks(mm);
- 		t->mm_cid.cid = mm_get_cid(mm);
-+		trace_mmcid_task_update(t, t->mm, t->mm_cid.cid);
- 	}
- }
- 
-@@ -10739,6 +10758,7 @@ static bool sched_mm_cid_remove_user(str
- 		mm_unset_cid_on_task(t);
- 	}
- 	t->mm->mm_cid.users--;
-+	trace_mmcid_user_del(t, t->mm);
- 	return mm_update_max_cids(t->mm);
- }
- 
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -75,6 +75,7 @@
- #include <linux/delayacct.h>
- #include <linux/mmu_context.h>
- 
-+#include <trace/events/mmcid.h>
- #include <trace/events/power.h>
- #include <trace/events/sched.h>
- 
-@@ -3809,6 +3810,7 @@ static __always_inline bool cid_on_task(
- 
- static __always_inline void mm_drop_cid(struct mm_struct *mm, unsigned int cid)
- {
-+	trace_mmcid_putcid(mm, cid);
- 	clear_bit(cid, mm_cidmask(mm));
- }
- 
-@@ -3817,6 +3819,7 @@ static __always_inline void mm_unset_cid
- 	unsigned int cid = t->mm_cid.cid;
- 
- 	t->mm_cid.cid = MM_CID_UNSET;
-+	trace_mmcid_task_update(t, t->mm, t->mm_cid.cid);
- 	if (cid_on_task(cid))
- 		mm_drop_cid(t->mm, cid);
- }
-@@ -3838,6 +3841,7 @@ static inline unsigned int __mm_get_cid(
- 		return MM_CID_UNSET;
- 	if (test_and_set_bit(cid, mm_cidmask(mm)))
- 		return MM_CID_UNSET;
-+	trace_mmcid_getcid(mm, cid);
- 	return cid;
- }
- 
-@@ -3845,9 +3849,17 @@ static inline unsigned int mm_get_cid(st
- {
- 	unsigned int cid = __mm_get_cid(mm, READ_ONCE(mm->mm_cid.max_cids));
- 
--	while (cid == MM_CID_UNSET) {
--		cpu_relax();
--		cid = __mm_get_cid(mm, num_possible_cpus());
-+	if (cid == MM_CID_UNSET) {
-+		ktime_t t0 = ktime_get();
-+
-+		while (cid == MM_CID_UNSET) {
-+			cpu_relax();
-+			cid = __mm_get_cid(mm, num_possible_cpus());
-+			if (ktime_get() - t0 > 50 * NSEC_PER_MSEC) {
-+				tracing_off();
-+				WARN_ON_ONCE(1);
-+			}
-+		}
- 	}
- 	return cid;
- }
-@@ -3874,6 +3886,7 @@ static inline unsigned int mm_cid_conver
- static __always_inline void mm_cid_update_task_cid(struct task_struct *t, unsigned int cid)
- {
- 	if (t->mm_cid.cid != cid) {
-+		trace_mmcid_task_update(t, t->mm, cid);
- 		t->mm_cid.cid = cid;
- 		rseq_sched_set_ids_changed(t);
- 	}
-@@ -3881,6 +3894,7 @@ static __always_inline void mm_cid_updat
- 
- static __always_inline void mm_cid_update_pcpu_cid(struct mm_struct *mm, unsigned int cid)
- {
-+	trace_mmcid_cpu_update(smp_processor_id(), mm, cid);
- 	__this_cpu_write(mm->mm_cid.pcpu->cid, cid);
- }
- 
+  https://github.com/user-attachments/files/25867817/issue-617-debug-20260310.txt.gz
+
+Only 7.7k lines this time.
+
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
+
