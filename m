@@ -1,55 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69416436377;
-	Tue, 10 Mar 2026 09:00:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0F1144A725;
+	Tue, 10 Mar 2026 10:03:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773133207; cv=none; b=ROjDj0avosEosB3WKwYsQyu+Ih7IOhw6rc63/k/nd0grxd+agCgUPxlemDyuRs/2uLoS2gBi+NoiGmaOL8flccjXeFs/rbDF1Wk7fw75i+AIHFQdWKgb3rrjszWH8NRreZF/M0Kc6u2UEfDj3s6Z3NYAfoGAJHZJFIbESbUzqo4=
+	t=1773137037; cv=none; b=RzBaQlOdEkD/Lmw6kqdlfzESy5bvt0A6lnEJFF+WiQaJjnuQgBWgHx4fSJxdpIH40NDZZrmgEl1K4cUQWKqNklWbLsP/zvO15zftFqVfI3WpXj7UBesUsRI9x2+rVeChyzsTxz4+KaWUzHYu5bEpea7iJO8G4l1anSSAGomhnTU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773133207; c=relaxed/simple;
-	bh=bx403b/zRrbKVsyudjpDKxSmcDF0O3Ag34b2nfgC1jQ=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=MXMUyk6v+2w1+sE2hHCU6LUzYUyzndqBQqqlmDlvw9VoP9Y4Br+PlOBmvVpckSx+Hm7Sj3FGx++bGoc0ankCZskcfpTwgli+vQPhJy7wVNbBJTNct9RX8SAQ0orFDRPjY3l9Aqkxn5tWvimoR+w7OKuwfp5cAVjgQb+IK8GEU0M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UjfYJGaT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1773137037; c=relaxed/simple;
+	bh=/u2WQp5fcyZioDQPVTsvawNu/rZDRBfSQ4FJERE46Es=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Pp9ugbw31IDHQaWWYxt2gh2yPAQhcA9Q0KNjwW87qIQSDt5SlHbd3zWv58fODzfN9+ouQib34UQMvudzqeOrZXgOWTOhYa/dn0k5/nb2pPI/Ss+Ynwg8zXeGjtWj+aEIsR0NyrVe2XAq+jOKWiEcRiDWjNzxk5t/QFMKxyYJ30Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ps7jYfJl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UjfYJGaT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C31BFC19423;
-	Tue, 10 Mar 2026 09:00:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ps7jYfJl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42CC8C2BCB9;
+	Tue, 10 Mar 2026 10:03:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773133207;
-	bh=bx403b/zRrbKVsyudjpDKxSmcDF0O3Ag34b2nfgC1jQ=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=UjfYJGaT36r5iqwTQs5p/a4GzNj9rwUkkMg9ynEkOW22RR+2pXqpRDNFEyLcYuaF/
-	 96fHUBIMf3gtm3BZhPLQk94N703UupLqiwGnPynyLS0HPDe2sdy3W4UhfgtCggHBPF
-	 f0qyIp+JCu5L0hrYwwUqjRp9hnVEVYTImlvXiWeyvG3PR8Hfl5URW5a79xJINbE3u6
-	 aKWWEKvRcwj+IO20svoSOEkoz2wvmoT0YU9B+WUig8a6ZKJy2Oxh9+7kwskYH/etNl
-	 aljrMsFN3suDlT+Bj+TmBWx9oXxXiyH4mnyjDDzPutK5sav2NMnckpXFBBclhSLKyI
-	 BORFHt/xUq/OA==
-Message-ID: <76e2b909-98db-49de-a8eb-f6f0a192f630@kernel.org>
-Date: Tue, 10 Mar 2026 10:00:01 +0100
-Precedence: bulk
-X-Mailing-List: mptcp@lists.linux.dev
-List-Id: <mptcp.lists.linux.dev>
-List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
-List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Stalls when starting a VSOCK listening socket: soft lockups, RCU
- stalls, timeout
-From: Jiri Slaby <jirislaby@kernel.org>
-To: Thomas Gleixner <tglx@kernel.org>, Matthieu Baerts <matttbe@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>,
- Stefan Hajnoczi <stefanha@redhat.com>,
- Stefano Garzarella <sgarzare@redhat.com>, kvm@vger.kernel.org,
- virtualization@lists.linux.dev, Netdev <netdev@vger.kernel.org>,
- rcu@vger.kernel.org, MPTCP Linux <mptcp@lists.linux.dev>,
- Linux Kernel <linux-kernel@vger.kernel.org>,
- Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
- "Paul E. McKenney" <paulmck@kernel.org>,
- Dave Hansen <dave.hansen@linux.intel.com>, luto@kernel.org,
- =?UTF-8?Q?Michal_Koutn=C3=BD?= <MKoutny@suse.com>,
- Waiman Long <longman@redhat.com>, Marco Elver <elver@google.com>
+	s=k20201202; t=1773137037;
+	bh=/u2WQp5fcyZioDQPVTsvawNu/rZDRBfSQ4FJERE46Es=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=ps7jYfJlkO/135q6uJIpCJxv8N3QQmQQZYf8wqQ0nHQnGTWPOidr2ZoiCVPRdlXjq
+	 HeiaG2cjDw2cOvwj3sMh6BXEEVSacKzshS2e78bko9EHKCN3cCiKFiJUpKkifGgA+r
+	 qy4iFh+ssIkJyjTCkQY7wYUl3VJdGiHvY0PXSqReVlmmEbyESpIY2776zLCyIvE050
+	 yb+pvEdZmZ4wGzHM5Vy+LgopgO8sS1TdW0ORurwHemCzQkTH1WiF2Df4lCM9t1YSCc
+	 pXfryUmV6x0lw84L9A29rv6SCcE8QaqWoN2I8uymA91DAlxCY+t7fZQfObs7WHhn0o
+	 XDVzFVlWaFr/w==
+From: Thomas Gleixner <tglx@kernel.org>
+To: Jiri Slaby <jirislaby@kernel.org>, Matthieu Baerts <matttbe@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Stefan Hajnoczi
+ <stefanha@redhat.com>, Stefano Garzarella <sgarzare@redhat.com>,
+ kvm@vger.kernel.org, virtualization@lists.linux.dev, Netdev
+ <netdev@vger.kernel.org>, rcu@vger.kernel.org, MPTCP Linux
+ <mptcp@lists.linux.dev>, Linux Kernel <linux-kernel@vger.kernel.org>,
+ Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>, "Paul E. McKenney"
+ <paulmck@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>,
+ luto@kernel.org, Michal =?utf-8?Q?Koutn=C3=BD?= <MKoutny@suse.com>, Waiman
+ Long
+ <longman@redhat.com>, Marco Elver <elver@google.com>
+Subject: Re: Stalls when starting a VSOCK listening socket: soft lockups,
+ RCU stalls, timeout
+In-Reply-To: <76e2b909-98db-49de-a8eb-f6f0a192f630@kernel.org>
 References: <863a5291-a636-47d0-891c-bb0524d2e134@kernel.org>
  <20260302114636.GL606826@noisy.programming.kicks-ass.net>
  <717310d8-6274-4b7f-8a19-561c45f5f565@kernel.org>
@@ -62,70 +53,40 @@ References: <863a5291-a636-47d0-891c-bb0524d2e134@kernel.org>
  <87v7f61cnl.ffs@tglx> <57c1e171-9520-4288-9e2d-10a72a499968@kernel.org>
  <87pl5ds88r.ffs@tglx> <0ae4d678-5676-4523-bae3-5ad73b526e27@kernel.org>
  <87eclsrtqg.ffs@tglx> <e846cb5f-65c4-4a9b-9f9b-593e4af526d8@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=jirislaby@kernel.org; keydata=
- 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
-In-Reply-To: <e846cb5f-65c4-4a9b-9f9b-593e4af526d8@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+ <76e2b909-98db-49de-a8eb-f6f0a192f630@kernel.org>
+Date: Tue, 10 Mar 2026 11:03:52 +0100
+Message-ID: <878qc0rofr.ffs@tglx>
+Precedence: bulk
+X-Mailing-List: mptcp@lists.linux.dev
+List-Id: <mptcp.lists.linux.dev>
+List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
+List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 10. 03. 26, 9:56, Jiri Slaby wrote:
-> Thomas,
-> 
-> On 10. 03. 26, 9:09, Thomas Gleixner wrote:
->>     2) task is not longer in the task list w/o going through do_exit()
-> 
-> After a quick look (I have to run now, so I could be completely wrong): 
-> what about the task is not in the list *yet*. You use RCU -> 
-> for_each_process_thread(), so there could be a race with attach_pid() 
-> protected by tasklist_lock.
+On Tue, Mar 10 2026 at 10:00, Jiri Slaby wrote:
+> On 10. 03. 26, 9:56, Jiri Slaby wrote:
+>> Thomas,
+>>=20
+>> On 10. 03. 26, 9:09, Thomas Gleixner wrote:
+>>> =C2=A0=C2=A0=C2=A0 2) task is not longer in the task list w/o going thr=
+ough do_exit()
+>>=20
+>> After a quick look (I have to run now, so I could be completely wrong):=
+=20
+>> what about the task is not in the list *yet*. You use RCU ->=20
+>> for_each_process_thread(), so there could be a race with attach_pid()=20
+>> protected by tasklist_lock.
+>
+> Not attach_pid(), that's irrelevant here.
+>
+> But one line below in copy_process(): list_add_tail().
 
-Not attach_pid(), that's irrelevant here.
+Yes. There is an issue. Peter and me just discovered that as well, but
+in the case at hand it can't be the problem. The missing task is on the
+CPU which means it must be visible in the thread list and task list.
 
-But one line below in copy_process(): list_add_tail().
+Thanks,
 
-> thanks,
--- 
-js
-suse labs
-
+        tglx
