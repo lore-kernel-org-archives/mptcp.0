@@ -1,196 +1,154 @@
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71D5A3E95B6
-	for <mptcp@lists.linux.dev>; Tue, 10 Mar 2026 07:41:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.177
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773128475; cv=pass; b=jv1lB7sb26rPu8qlkIr2jFc95rFygw++dj/YPoLT2YQqdLS8wPX0yn7IZVoohHzuXaQi9XPGKnpgTj+CxkzzLNM1KwDVgIrxWcqu+J67Dw1VjqES/t60plcSf3OvXHLc5pFZCsSTe37QLomvannfG4QKu3tdS1C92KvQowsHJ7Y=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773128475; c=relaxed/simple;
-	bh=7cTgaURun945ZBxkV8bmKWLaXe5u+DBTf6pF7YLrF4g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NL7lCthdJW0J9Yj0mqYIvV6svnds3Leb8gdCKHafYqlY1bqRI0rvpiYoFNnbVWKLmULoEuSe0zg/27HCdKY/HJIS+FsnbQmSrU1QStk8AvZh5SEccCN4coi4Hv1XUgcgfSiBAJdVWfU+0PJxoC/biuzNwmu+O7Sqz1A5m3tTNrs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Bm7SSANV; arc=pass smtp.client-ip=209.85.160.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7598429DB6A;
+	Tue, 10 Mar 2026 08:09:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773130171; cv=none; b=PbRHtEGfJ2myOKvbTUMg88V3fjDVV5JfsjT87/bJFvZbHph0SJGH/clfTz/uu0DBzkEGgY/7j3bdfCBipZc6V0aIsSloNyWtLLwkJlaRIhB3kCbr2EggaOHqQCb9p0VucF5Kk+E+R+Lyvr4PR6ocfoT9XM+TDypcXrjekwEx/AU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773130171; c=relaxed/simple;
+	bh=fyxdW4yZLM/QBT6DaWDRFhNx2Iad5yVhiTbU7gZmarY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=hKPPGuOkwl5sbBYAJj9pyL3IZvGdP78cZOuc7k9Y2fVJzhat2m+1r8s1HyDoRBxp19VM3UaQBAYj4EGpksgfLVEeC9ZEAs/uDZkQCFdeBH99xCHnpfrHfb1SLRGj2KEP+3G+KrI5QEOIMWP/M0qpm0QeOGl9rK5FRExGNKTJnFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DPcgR2N3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Bm7SSANV"
-Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-5090c27d3f6so26608841cf.0
-        for <mptcp@lists.linux.dev>; Tue, 10 Mar 2026 00:41:10 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1773128469; cv=none;
-        d=google.com; s=arc-20240605;
-        b=F27WQKg+pduN7fNwxxoqYDMV5jL/DgADTiFi7PwYyfNC1OkALzIGtpNXbeHMTZZfTM
-         LgvsN9Xz26Rjz84aWjHYF68MBrscMYtm4BDpwDXVsBlg+YZiMuVRAVJNUDMIu4QQPonu
-         QMzhIe24hfNkLXp2xPs1dLkDQC5ZQGn/R1MWso5x9cUEhImV0yvym9gEgmE8HpEGrXju
-         vKLmWvNXV/YQX0w3a5VB7/WKIlnZlTwvzZHACF5ELkYxc0yCI9KbSa+g1b1QK4lGeE1N
-         D27JUrfucya4J8Jhcb+6hoZIrjKKNixTEQBwWM5gDl83VTm3ODpduicZXllMG5o0rYnw
-         9buQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=rcMzOrru+dNP0H3b9Nuh0ONkl84RLF9HUfefvP22L6g=;
-        fh=Oq0+SHfsdroZwfQ8qyHKJL1Z685puZraVF/JcdXlHiQ=;
-        b=gpEPVXz5NSGbmYm8MB4pfOALixI3zw3Cuwntd1pluHRKc1Sc0pFFxuTGeIIjPNIYlQ
-         SLo1uqbSQ3x4KftRwQXj7MpFp0cnyIGpz/zzxtuXNasNgIwz1Ny8N7xeCG2bstXh6iZW
-         SSerkMjcRzjjiy1fbAh8F9gM0pHqjzXx+uRs3GIXrCLlXoAbuyIQ+wUFCXvejr/VqxFN
-         sR33lB0pe86NLGNq8UZkIQfWn70MecKG2lCNfm2ONQyZjMBOEaW6mHfd18LALhzBY3cd
-         Wikk4hlyTDXxpFrXNowks+AOzZ7elK6MC0OY3j7kmRQeB6qUY8n4hYIIMvsv0e88TLKV
-         zDaA==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1773128469; x=1773733269; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rcMzOrru+dNP0H3b9Nuh0ONkl84RLF9HUfefvP22L6g=;
-        b=Bm7SSANVkj8er+V9T2PkWHtXEK5zW/JHeQr5CvUk8LdgT+rGih1e0BlswIeUvv5QL6
-         KmewgyJ+gTr7X90StcZWbgKWyP2kLN+0m7+yL6jVW/g30B9n2ZO+qLjOj4aJtVZunbbQ
-         ywYTZSz/w14La5utZ0+yLCA/nhwvIqJj6JVD2NAGCEbqHD8MzpehrhzWzU1scrTg1Taa
-         efQIl7UU6ez4cThFRS47FvNly5DLoYRGyit6rk3B66R7qjNJJ5Kml5VaAJInrahWKtB5
-         rU2sJo+6pzKvKL0A+YqeAXg0iSqWba74Ga2UjBFCbeUoaq0K3BqydH5b40X4Cnv8lbKd
-         1HDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773128469; x=1773733269;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=rcMzOrru+dNP0H3b9Nuh0ONkl84RLF9HUfefvP22L6g=;
-        b=oMFSQjpB353n5HUYw6/jcHEH9bQvuUHM0V3YvV60k6jS3zyN1S3sMLs/cWRCMSN7OC
-         HCl779ZWFEvEGcm7VNjGCer9J4lgsAxJtZPTO6vm0nwyRZ0zX94BtWGCWIrH9GOhXKDi
-         5KqVloibT84zOQV4RjEQ7FXLRlgiAw26dtu+vxdT8sL9TnY3fILzOBtVa684GX91czhv
-         m48pq66TbOJ7nth3fjTL6/hXgpr3N+YwoXHk7mxchz2MCZiuFc+6xWH19INSlkxBwD1E
-         nGpND9Wxpsja5GNeANrv0YUybMplhRmKnj7ja5sYk7Ok553K0ZqbuyVRSXO/IWAM9Y1R
-         OYIg==
-X-Forwarded-Encrypted: i=1; AJvYcCWTwWxMZ3ZEfey8mspAnjJCbvfBBiRHwTgqd0OV8r1qdnUjY34OoKEsiAu6WrCOHvn9BtzB6A==@lists.linux.dev
-X-Gm-Message-State: AOJu0YyeENp75nU70VLWp5SKIeuSBz5PgvEgqAiSpOhKoHUqsPNvgTs1
-	60Yyz8TOdcLF3PpAaaHy7XooHxI7xU9cCrjQMYSz6oCn6UhTmR9+ChYJHiMr0xw5bB0WP4JTZ4o
-	R5NT+bGZXKU7tKvIIyxAkXnlvfbPBDbzWfSzNndaU
-X-Gm-Gg: ATEYQzwZlcDy1z3+cmA00mvPNDhGvjBBMTvZ91eHKEKYL0psXi5WwiSEzqU6k14yzrV
-	O3wE4MruK7UP3hENQi/gZlodEAfRGZ3BCJ04M+UH/AV9wpz/KxLMKoOftR7NNyZrRHFCnpW9nlQ
-	WV8P06uVwi6uNRTDt0t9R20ctbHfCnAfxWLJHTZvAozgpBACp+JLPWPPRFinNCH82egxVCNXYwh
-	s8ogUD6yXZy+mYywS6p82GlPLI6gXFvHIK3aGunTXMfl5JjOpn8MnBJMVqFzS+C9BoMEOK7kElM
-	mS2iPiQ=
-X-Received: by 2002:a05:622a:144c:b0:509:1d55:6368 with SMTP id
- d75a77b69052e-5091d556a83mr65534491cf.39.1773128468646; Tue, 10 Mar 2026
- 00:41:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DPcgR2N3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C851C19423;
+	Tue, 10 Mar 2026 08:09:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1773130171;
+	bh=fyxdW4yZLM/QBT6DaWDRFhNx2Iad5yVhiTbU7gZmarY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=DPcgR2N3EvgQXwzVDlz+dYXRb6mNgvI1kcNVEMg3KV2JK5PRyKpKjep+FrbCzCGkw
+	 tBE6iwa3A1diNd8s0ZynTe2bTIX+8EoQaAOXv06f6S2Ts2F0q0G3E2I3G0A9qeOCqW
+	 emhs9Je2mce98Pt6Mm2qK9yt7ZtyykdOAfUxWDbcthoHCjflfMblBjmN6l76XhWHce
+	 oSmHNtnVBOsPt/EJ0ZlBXXIVei4xdrawuEUgqBuBGBLlvW8oHexHRgtLhynKhOxfvY
+	 RoWxe42pFKDJpnZDNsEZiIpM64az4odfksXIRfSUeL5HVYcNm6CzZAhO0n2KKyo4Ps
+	 EAk+LR5Gb5baw==
+From: Thomas Gleixner <tglx@kernel.org>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Jiri Slaby
+ <jirislaby@kernel.org>, Stefan Hajnoczi <stefanha@redhat.com>, Stefano
+ Garzarella <sgarzare@redhat.com>, kvm@vger.kernel.org,
+ virtualization@lists.linux.dev, Netdev <netdev@vger.kernel.org>,
+ rcu@vger.kernel.org, MPTCP Linux <mptcp@lists.linux.dev>, Linux Kernel
+ <linux-kernel@vger.kernel.org>, Shinichiro Kawasaki
+ <shinichiro.kawasaki@wdc.com>, "Paul E. McKenney" <paulmck@kernel.org>,
+ Dave Hansen <dave.hansen@linux.intel.com>, luto@kernel.org, Michal
+ =?utf-8?Q?Koutn=C3=BD?=
+ <MKoutny@suse.com>, Waiman Long <longman@redhat.com>, Marco Elver
+ <elver@google.com>
+Subject: Re: Stalls when starting a VSOCK listening socket: soft lockups,
+ RCU stalls, timeout
+In-Reply-To: <0ae4d678-5676-4523-bae3-5ad73b526e27@kernel.org>
+References: <863a5291-a636-47d0-891c-bb0524d2e134@kernel.org>
+ <20260302114636.GL606826@noisy.programming.kicks-ass.net>
+ <717310d8-6274-4b7f-8a19-561c45f5f565@kernel.org>
+ <a2b573b4-af61-4b84-a7d1-012ed6bb23c9@kernel.org>
+ <ba067933-bf3b-476d-a0bb-53eda56996ca@kernel.org> <87zf4m2qvo.ffs@tglx>
+ <47cba228-bba7-4e58-a69d-ea41f8de6602@kernel.org> <87tsuu2i59.ffs@tglx>
+ <7efde2b5-3b72-4858-9db0-22493d446301@kernel.org> <87qzpx2sck.ffs@tglx>
+ <20260306152458.GT606826@noisy.programming.kicks-ass.net>
+ <87ldg42eu7.ffs@tglx> <87h5qr2rzi.ffs@tglx> <87eclu3coa.ffs@tglx>
+ <87v7f61cnl.ffs@tglx> <57c1e171-9520-4288-9e2d-10a72a499968@kernel.org>
+ <87pl5ds88r.ffs@tglx> <0ae4d678-5676-4523-bae3-5ad73b526e27@kernel.org>
+Date: Tue, 10 Mar 2026 09:09:27 +0100
+Message-ID: <87eclsrtqg.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260309-tcp_rfc7323_retract_wnd_rfc-v3-0-4c7f96b1ec69@gmail.com>
- <20260309-tcp_rfc7323_retract_wnd_rfc-v3-1-4c7f96b1ec69@gmail.com>
- <CANn89i+38t+PpB5duS_-FX_=PwyCQaN2HYohocJBAvZ7Cd8-KQ@mail.gmail.com> <aa8S5pEbxXIG5oZQ@gandalf.schnuecks.de>
-In-Reply-To: <aa8S5pEbxXIG5oZQ@gandalf.schnuecks.de>
-From: Eric Dumazet <edumazet@google.com>
-Date: Tue, 10 Mar 2026 08:40:57 +0100
-X-Gm-Features: AaiRm51UmLT8Xio3yOAS3_qG-3b3ZlXXtISzZ5JqQOuDaTGLlV85GE2K7N5HJFc
-Message-ID: <CANn89iJeVSfU3_Ub023j5mo5g=bTxTw_A+5-dPw59DaXFrLmDA@mail.gmail.com>
-Subject: Re: [PATCH net-next v3 1/6] tcp: implement RFC 7323 window retraction
- receiver requirements
-To: Simon Baatz <gmbnomis@gmail.com>
-Cc: Neal Cardwell <ncardwell@google.com>, Kuniyuki Iwashima <kuniyu@google.com>, 
-	"David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Simon Horman <horms@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
-	Shuah Khan <skhan@linuxfoundation.org>, David Ahern <dsahern@kernel.org>, 
-	Jon Maloy <jmaloy@redhat.com>, Jason Xing <kerneljasonxing@gmail.com>, mfreemon@cloudflare.com, 
-	Shuah Khan <shuah@kernel.org>, Stefano Brivio <sbrivio@redhat.com>, 
-	Matthieu Baerts <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>, 
-	Geliang Tang <geliang@kernel.org>, netdev@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	mptcp@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-On Mon, Mar 9, 2026 at 7:35=E2=80=AFPM Simon Baatz <gmbnomis@gmail.com> wro=
-te:
->
-> Hi Eric,
->
-> thank you for the quick review.
->
-> On Mon, Mar 09, 2026 at 10:22:39AM +0100, Eric Dumazet wrote:
-> > On Mon, Mar 9, 2026 at 9:03???AM Simon Baatz via B4 Relay
-> > <devnull+gmbnomis.gmail.com@kernel.org> wrote:
-> > >
-> > > From: Simon Baatz <gmbnomis@gmail.com>
-> > >
-> > > By default, the Linux TCP implementation does not shrink the
-> > > advertised window (RFC 7323 calls this "window retraction") with the
-> > > following exceptions:
-> > >
-> > > - When an incoming segment cannot be added due to the receive buffer
-> > >   running out of memory. Since commit 8c670bdfa58e ("tcp: correct
-> > >   handling of extreme memory squeeze") a zero window will be
-> > >   advertised in this case. It turns out that reaching the required
-> > >   memory pressure is easy when window scaling is in use. In the
-> > >   simplest case, sending a sufficient number of segments smaller than
-> > >   the scale factor to a receiver that does not read data is enough.
-> > >
-> > > - Commit b650d953cd39 ("tcp: enforce receive buffer memory limits by
-> > >   allowing the tcp window to shrink") addressed the "eating memory"
-> > >   problem by introducing a sysctl knob that allows shrinking the
-> > >   window before running out of memory.
-> > >
-> > > However, RFC 7323 does not only state that shrinking the window is
-> > > necessary in some cases, it also formulates requirements for TCP
-> > > implementations when doing so (Section 2.4).
-> > >
-> > > This commit addresses the receiver-side requirements: After retractin=
-g
-> > > the window, the peer may have a snd_nxt that lies within a previously
-> > > advertised window but is now beyond the retracted window. This means
-> > > that all incoming segments (including pure ACKs) will be rejected
-> > > until the application happens to read enough data to let the peer's
-> > > snd_nxt be in window again (which may be never).
-> > >
-> > > To comply with RFC 7323, the receiver MUST honor any segment that
-> > > would have been in window for any ACK sent by the receiver and, when
-> > > window scaling is in effect, SHOULD track the maximum window sequence
-> > > number it has advertised. This patch tracks that maximum window
-> > > sequence number rcv_mwnd_seq throughout the connection and uses it in
-> > > tcp_sequence() when deciding whether a segment is acceptable.
-> > >
-> > > rcv_mwnd_seq is updated together with rcv_wup and rcv_wnd in
-> > > tcp_select_window(). If we count tcp_sequence() as fast path, it is
-> > > read in the fast path. Therefore, rcv_mwnd_seq is put into rcv_wnd's
-> > > cacheline group.
-> > >
-> > > The logic for handling received data in tcp_data_queue() is already
-> > > sufficient and does not need to be updated.
-> > >
-> > > Signed-off-by: Simon Baatz <gmbnomis@gmail.com>
-> >
-> > ...
-> >
-> > > diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
-> > > index f0ebcc7e287173be6198fd100130e7ba1a1dbf03..c86910d147f2394bf414d=
-7691d8f90ed41c1b0e3 100644
-> > > --- a/net/ipv4/tcp_output.c
-> > > +++ b/net/ipv4/tcp_output.c
-> > > @@ -293,6 +293,7 @@ static u16 tcp_select_window(struct sock *sk)
-> > >                 tp->pred_flags =3D 0;
-> > >                 tp->rcv_wnd =3D 0;
-> > >                 tp->rcv_wup =3D tp->rcv_nxt;
-> > > +               tcp_update_max_rcv_wnd_seq(tp);
-> >
-> > Presumably we do not need  tcp_update_max_rcv_wnd_seq() here ?
->
-> When we don't update here and are forced to accept a beyond-window
-> packet because the receive queue is empty, we can reach a state where
->
->  rcv_mwnd_seq < rcv_wup + rcv_wnd =3D=3D rcv_nxt
->
-> I noticed this case when instrumenting the kernel and got violations
-> of the invariant rcv_wup + rcv_wnd <=3D rcv_mwnd_seq.
->
-> So, while not strictly needed (tcp_max_receive_window() would still
-> be 0 as rcv_nxt > rcv_mwnd_seq), I opted to include the call here to
-> keep rcv_mwnd_seq the actual maximum sequence number at all times.
+Matthieu!
 
-Fair enough, thanks !
+On Mon, Mar 09 2026 at 13:23, Matthieu Baerts wrote:
+> On 09/03/2026 09:43, Thomas Gleixner wrote:
+>> That should provide enough information to decode this mystery.
 
-Reviewed-by: Eric Dumazet <edumazet@google.com>
+That was wishful thinking, but at least it narrows down the search space.
+
+> Thank you for the debug patch and the clear instructions. I managed to
+> reproduce the issue with the extra debug. The ouput is available here:
+>
+>   https://github.com/user-attachments/files/25841808/issue-617-debug.txt.gz
+
+Thank you for testing. So what I can see from the trace is:
+
+[    2.101917] virtme-n-68        3d..1. 703536us : mmcid_user_add: t=00000000e4425b1d mm=00000000a22be644 users=3
+[    2.102057] virtme-n-68        3d..1. 703537us : mmcid_getcid: mm=00000000a22be644 cid=00000002
+[    2.102195] virtme-n-68        3d..2. 703548us : sched_switch: prev_comm=virtme-ng-init prev_pid=68 prev_prio=120 prev_state=D ==> next_comm=swapper/3 next_pid=0 next_prio=120
+
+This one creates the third thread related to the mm and schedules
+out. The new thread schedules in a moment later:
+
+[    2.102828]   <idle>-0         2d..2. 703565us : sched_switch: prev_comm=swapper/2 prev_pid=0 prev_prio=120 prev_state=R ==> next_comm=virtme-ng-init next_pid=69 next_prio=120
+[    2.103039]   <idle>-0         2d..2. 703567us : mmcid_cpu_update: cpu=2 mm=00000000a22be644 cid=00000002
+
+[    2.104283]   <idle>-0         0d..2. 703642us : sched_switch: prev_comm=swapper/0 prev_pid=0 prev_prio=120 prev_state=R ==> next_comm=virtme-ng-init next_pid=1 next_prio=120
+[    2.104493]   <idle>-0         0d..2. 703643us : mmcid_cpu_update: cpu=0 mm=00000000a22be644 cid=00000000
+
+virtme-n-1 owns CID 0 and after scheduled in it creates the 4th thread,
+which is still in the CID space (0..3)
+
+[    2.104616] virtme-n-1         0d..1. 703690us : mmcid_user_add: t=0000000031a5ee91 mm=00000000a22be644 users=4
+
+Unsurprisingly this assignes CID 3:
+
+[    2.104757] virtme-n-1         0d..1. 703691us : mmcid_getcid: mm=00000000a22be644 cid=00000003
+
+And the newly created task schedules in on CPU3:
+
+[    2.104880]   <idle>-0         3d..2. 703708us : sched_switch: prev_comm=swapper/3 prev_pid=0 prev_prio=120 prev_state=R ==> next_comm=virtme-ng-init next_pid=70 next_prio=120
+[    2.105091]   <idle>-0         3d..2. 703708us : mmcid_cpu_update: cpu=3 mm=00000000a22be644 cid=00000003
+
+Now n-1 continues and creates the 5th thread:
+
+[    2.105227] virtme-n-1         0d..1. 703730us : mmcid_user_add: t=00000000f2e4a8c8 mm=00000000a22be644 users=5
+
+which makes it switch to per CPU ownership mode. Then it continues to go
+through the tasks in mm_cid_do_fixup_tasks_to_cpus() and fixes up:
+
+[    2.105368] virtme-n-1         0d..1. 703730us : mmcid_task_update: t=00000000c923c125 mm=00000000a22be644 cid=20000000
+[    2.105509] virtme-n-1         0d..1. 703731us : mmcid_cpu_update: cpu=0 mm=00000000a22be644 cid=20000000
+
+Itself to be in TRANSIT mode
+
+[    2.105632] virtme-n-1         0d..2. 703731us : mmcid_task_update: t=00000000478c5e8d mm=00000000a22be644 cid=80000000
+[    2.105773] virtme-n-1         0d..2. 703731us : mmcid_putcid: mm=00000000a22be644 cid=00000001
+
+Drops the CID of one task which is not on a CPU
+
+[    2.105896] virtme-n-1         0d..2. 703731us : mmcid_task_update: t=0000000031a5ee91 mm=00000000a22be644 cid=20000003
+[    2.106037] virtme-n-1         0d..2. 703731us : mmcid_cpu_update: cpu=3 mm=00000000a22be644 cid=20000003
+
+and puts the third one correctly into TRANSIT mode
+
+[    2.106174] virtme-n-69        2d..2. 703736us : sched_switch: prev_comm=virtme-ng-init prev_pid=69 prev_prio=120 prev_state=S ==> next_comm=swapper/2 next_pid=0 next_prio=120
+
+Here the one which owns CID 2 schedules out without notice, which is
+just wrong as the above should have already moved it over to TRANSIT
+mode. Why didn't that happen?
+
+So the only circumstances where mm_cid_do_fixup_tasks_to_cpus() fails to
+do that are:
+
+   1) task->mm != mm.
+
+or
+
+   2) task is not longer in the task list w/o going through do_exit()
+
+How the heck is either one of them possible?
+
+Just for the record. The picture Jiri decoded from the VM crash dump is
+exactly the same. One task is not listed.
+
+Confused
+
+        tglx
+
+
