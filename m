@@ -1,141 +1,149 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCFA8387343;
-	Tue, 10 Mar 2026 11:24:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DE0E38A71F;
+	Tue, 10 Mar 2026 11:54:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773141850; cv=none; b=glNg8H3J0CGa1KYYywjEMpBnfB1XhNlPtHjK322Kedquf4M98kfp0NjiJYSc+N3hDcPVqlNvK7Jw47BfDEZhQ2//Ujfx7DS6NJHTFJobz0n6yjflOZrbjtpY8ctmZsJ54x1lyBnSF/PXT91Lc9vEZnCToMKKj0Fuw5nKDBGgrBA=
+	t=1773143698; cv=none; b=b2na+ODqGeJlTnhVwyEEuVTU9LCTRYDE1NX4YNDnVqTO36wafm7rKh8pumRyPzH3rHGczw/hf7U8vgOrCNKjkddMv5rQTRloIoyHjy4tP7PL8VtphtXRAD45Vv2bopOTz9AXstQRkVtyKmLmZmG6l/5gZtyJwyDFECuUKp2O9oE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773141850; c=relaxed/simple;
-	bh=U5+O6eb/a/OOX6fvPyffxWd4zi4YXOFBkLe1u2WC2+s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NxKVp9Eg9+OBacfF307yFDTK1LYyLVtUa5koT5pryQmmEyYuq7YZVSc8DutT05EHb75LiUd5jMmR0N/kkOaxsaAQAZ30PAmvMiiElYILt17qhI6XHD1l12XxtRv9JRTSUA6dKqwAMe2eqwRe3MqLYXg145EDiydHBvTK2igHqTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RH9zcyrJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1773143698; c=relaxed/simple;
+	bh=JJ0/wgz5fHNJeUNDzrX/vGzpt/sg5tDTkEJEVh7c6s4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=D66iQgMTKpg67B/z2rkEq8TRdYRiFJrq0RyLzGtNS8Ft1didenq9e3pKBmoe+3fJbzCs3JQVyAuA81QE3el48ray4VGxp6vuU91tiAP6MkHcUwfxCsbhzzIurjr0HD0djw9Wkas8D7odd8V2eJvcM+kAnQkJOA2tZhyGENrlFN4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=R6x7Cjvu; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RH9zcyrJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58195C2BC86;
-	Tue, 10 Mar 2026 11:24:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773141850;
-	bh=U5+O6eb/a/OOX6fvPyffxWd4zi4YXOFBkLe1u2WC2+s=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=RH9zcyrJ2JDGdkmy8/GQ01j+DnKslHM6yRx4sWhVUA+pBVRBAsRoYi/Fdcv0ERfav
-	 X+9ZTPpR+H9251Em/rFrTQc+BFA7aATqGW+py5/PXNqoElZ+3ZdcIfA16LVRMn0b+p
-	 0gkO1EoEXz93nNtfXB6rPv8h6z7g8wwxJ5s3EdV8P75rlQN2NtMDtR8UXk1/wzc9ZU
-	 X1bXh5P6LEVAqpLv/80iBLKM38+UzoZsOO2PH4+tmExCrG7vZt1/SSM8dSrS711uZ4
-	 BkWiUvXVXUcdqxdHEP6evhRUvF7kLQllBbuKoLQaQFNJ6z6ne1B+R7k28gnnLtLOHO
-	 uVgU5Zaf5gzGQ==
-Message-ID: <4cad1b9a-e157-427b-9896-cf54cf6fba36@kernel.org>
-Date: Tue, 10 Mar 2026 12:24:02 +0100
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="R6x7Cjvu"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=6YUglPdTeT6PnJ2VigHuPaBWpc+wHGHPrtyvjVV6qA0=; b=R6x7CjvuXPCoP6BGCRfRaOSi1f
+	2omxMlzdTHgcbeIAwTLRL7FtITb4pdwvJLsNfX3gOgddtPAp06k6jAZivoy4mIDMcv+wqQ/OGebD5
+	DqG68XVNyc9kV3AYj4WYGAvawUEY+713TRJPU6CeF+TaTH9YupXptRq+w86Ng70i0FAqChDG9ux8s
+	8RK1VBEkDIaSa8gyzmHJu3qG2wlCqSyT3Z1rnEY3XwxKtKFsmQmFXiUTw0gNv9YNh38BltrxbIRUz
+	OlIdHCj+AFEXfS3JtTIZacl3w1RW16QG7RKL/3U7hj5fbKCRhwyK8qcanfzQH85+3/S42ov9HnENN
+	Pgv45iqQ==;
+Received: from 2001-1c00-8d85-5700-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d85:5700:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vzvfc-00000007lSG-00ba;
+	Tue, 10 Mar 2026 11:54:40 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id A1BF030027B; Tue, 10 Mar 2026 12:54:33 +0100 (CET)
+Date: Tue, 10 Mar 2026 12:54:33 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: Thomas Gleixner <tglx@kernel.org>, Jiri Slaby <jirislaby@kernel.org>,
+	Stefan Hajnoczi <stefanha@redhat.com>,
+	Stefano Garzarella <sgarzare@redhat.com>, kvm@vger.kernel.org,
+	virtualization@lists.linux.dev, Netdev <netdev@vger.kernel.org>,
+	rcu@vger.kernel.org, MPTCP Linux <mptcp@lists.linux.dev>,
+	Linux Kernel <linux-kernel@vger.kernel.org>,
+	Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Dave Hansen <dave.hansen@linux.intel.com>, luto@kernel.org,
+	Michal =?iso-8859-1?Q?Koutn=FD?= <MKoutny@suse.com>,
+	Waiman Long <longman@redhat.com>, Marco Elver <elver@google.com>
+Subject: Re: Stalls when starting a VSOCK listening socket: soft lockups, RCU
+ stalls, timeout
+Message-ID: <20260310115433.GV1282955@noisy.programming.kicks-ass.net>
+References: <87v7f61cnl.ffs@tglx>
+ <57c1e171-9520-4288-9e2d-10a72a499968@kernel.org>
+ <87pl5ds88r.ffs@tglx>
+ <0ae4d678-5676-4523-bae3-5ad73b526e27@kernel.org>
+ <87eclsrtqg.ffs@tglx>
+ <e846cb5f-65c4-4a9b-9f9b-593e4af526d8@kernel.org>
+ <76e2b909-98db-49de-a8eb-f6f0a192f630@kernel.org>
+ <878qc0rofr.ffs@tglx>
+ <874imorobw.ffs@tglx>
+ <4cad1b9a-e157-427b-9896-cf54cf6fba36@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: Stalls when starting a VSOCK listening socket: soft lockups, RCU
- stalls, timeout
-Content-Language: fr
-To: Thomas Gleixner <tglx@kernel.org>, Jiri Slaby <jirislaby@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>,
- Stefan Hajnoczi <stefanha@redhat.com>,
- Stefano Garzarella <sgarzare@redhat.com>, kvm@vger.kernel.org,
- virtualization@lists.linux.dev, Netdev <netdev@vger.kernel.org>,
- rcu@vger.kernel.org, MPTCP Linux <mptcp@lists.linux.dev>,
- Linux Kernel <linux-kernel@vger.kernel.org>,
- Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
- "Paul E. McKenney" <paulmck@kernel.org>,
- Dave Hansen <dave.hansen@linux.intel.com>, luto@kernel.org,
- =?UTF-8?Q?Michal_Koutn=C3=BD?= <MKoutny@suse.com>,
- Waiman Long <longman@redhat.com>, Marco Elver <elver@google.com>
-References: <863a5291-a636-47d0-891c-bb0524d2e134@kernel.org>
- <717310d8-6274-4b7f-8a19-561c45f5f565@kernel.org>
- <a2b573b4-af61-4b84-a7d1-012ed6bb23c9@kernel.org>
- <ba067933-bf3b-476d-a0bb-53eda56996ca@kernel.org> <87zf4m2qvo.ffs@tglx>
- <47cba228-bba7-4e58-a69d-ea41f8de6602@kernel.org> <87tsuu2i59.ffs@tglx>
- <7efde2b5-3b72-4858-9db0-22493d446301@kernel.org> <87qzpx2sck.ffs@tglx>
- <20260306152458.GT606826@noisy.programming.kicks-ass.net>
- <87ldg42eu7.ffs@tglx> <87h5qr2rzi.ffs@tglx> <87eclu3coa.ffs@tglx>
- <87v7f61cnl.ffs@tglx> <57c1e171-9520-4288-9e2d-10a72a499968@kernel.org>
- <87pl5ds88r.ffs@tglx> <0ae4d678-5676-4523-bae3-5ad73b526e27@kernel.org>
- <87eclsrtqg.ffs@tglx> <e846cb5f-65c4-4a9b-9f9b-593e4af526d8@kernel.org>
- <76e2b909-98db-49de-a8eb-f6f0a192f630@kernel.org> <878qc0rofr.ffs@tglx>
- <874imorobw.ffs@tglx>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <874imorobw.ffs@tglx>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4cad1b9a-e157-427b-9896-cf54cf6fba36@kernel.org>
 
-Hi Thomas,
+On Tue, Mar 10, 2026 at 12:24:02PM +0100, Matthieu Baerts wrote:
 
-On 10/03/2026 11:06, Thomas Gleixner wrote:
-> On Tue, Mar 10 2026 at 11:03, Thomas Gleixner wrote:
->> On Tue, Mar 10 2026 at 10:00, Jiri Slaby wrote:
->> Yes. There is an issue. Peter and me just discovered that as well, but
->> in the case at hand it can't be the problem. The missing task is on the
->> CPU which means it must be visible in the thread list and task list.
+> Just did. Output is available there:
 > 
-> The updated debug patch fixes this fork problem and adds more tracing to
-> it.
+>   https://github.com/user-attachments/files/25867817/issue-617-debug-20260310.txt.gz
+> 
+> Only 7.7k lines this time.
 
-Thank you for this new patch, and for continuing to look at this!
+Same damn thing again...
 
-> Mathieu, can you give it another spin please?
+[    2.533811] virtme-n-1         3d..1. 849756us : mmcid_user_add: pid=1 users=1 mm=000000002b3f8459
+[    4.523998] virtme-n-1         3d..1. 1115085us : mmcid_user_add: pid=71 users=2 mm=000000002b3f8459
+[    4.529065] virtme-n-1         3d..1. 1115937us : mmcid_user_add: pid=72 users=3 mm=000000002b3f8459
 
-Just did. Output is available there:
+[    4.529448] virtme-n-71        2d..1. 1115969us : mmcid_user_add: pid=73 users=4 mm=000000002b3f8459         <=== missing!
+[    4.529946] virtme-n-71        2d..1. 1115971us : mmcid_getcid: mm=000000002b3f8459 cid=00000003
 
-  https://github.com/user-attachments/files/25867817/issue-617-debug-20260310.txt.gz
+71 spawns 73, assigns cid 3
 
-Only 7.7k lines this time.
+[    4.530573]   <idle>-0         1d..2. 1115991us : sched_switch: prev_comm=swapper/1 prev_pid=0 prev_prio=120 prev_state=R ==> next_comm=virtme-ng-init next_pid=73 next_prio=120
+[    4.530865]   <idle>-0         1d..2. 1115993us : mmcid_cpu_update: cpu=1 cid=00000003 mm=000000002b3f8459
 
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
+It gets scheduled on CPU-1, sets CID...
+
+[    4.531038] virtme-n-1         3d..1. 1116013us : mmcid_user_add: pid=74 users=5 mm=000000002b3f8459
+
+Then 1 spawns 74 on CPU 3, this is the 5th task, so we initiate a
+task->cpu cid transition:
+
+[    4.531203] virtme-n-1         3d..1. 1116014us : mmcid_task_update: pid=1 cid=20000000 mm=000000002b3f8459
+[    4.531369] virtme-n-1         3d..1. 1116014us : mmcid_cpu_update: cpu=3 cid=20000000 mm=000000002b3f8459
+
+Task 1
+
+[    4.531530] virtme-n-1         3..... 1116014us : mmcid_fixup_task: pid=71 cid=00000001 active=1 users=4 mm=000000002b3f8459
+[    4.531790] virtme-n-1         3d..2. 1116015us : mmcid_task_update: pid=71 cid=80000000 mm=000000002b3f8459
+[    4.532000] virtme-n-1         3d..2. 1116015us : mmcid_putcid: mm=000000002b3f8459 cid=00000001
+
+Task 71
+
+[    4.532169] virtme-n-1         3..... 1116015us : mmcid_fixup_task: pid=72 cid=00000002 active=1 users=3 mm=000000002b3f8459
+[    4.532362] virtme-n-1         3d..2. 1116016us : mmcid_task_update: pid=72 cid=20000002 mm=000000002b3f8459
+[    4.532514] virtme-n-1         3d..2. 1116016us : mmcid_cpu_update: cpu=0 cid=20000002 mm=000000002b3f8459
+
+Task 72
+
+[    4.532649] virtme-n-1         3..... 1116016us : mmcid_fixup_task: pid=74 cid=80000000 active=1 users=2 mm=000000002b3f8459
+
+Task 74, note the glaring lack of 73!!! which all this time is running
+on CPU 1. Per the fact that it got scheduled it must be on tasklist,
+per the fact that 1 spawns 74 after it on CPU3, we must observe any
+prior tasklist changes and per the fact that it got a cid ->active must
+be set. WTF!
+
+That said, we set active after tasklist_lock now, so it might be
+possible we simply miss that store, observe the 'old' 0 and skip over
+it?
+
+Let me stare hard at that...
+
+
+[    4.532912] virtme-n-1         3..... 1116017us : mmcid_fixup_task: pid=71 cid=80000000 active=1 users=1 mm=000000002b3f8459
+[    4.533386] virtme-n-1         3d..2. 1116041us : mmcid_cpu_update: cpu=3 cid=40000000 mm=000000002b3f8459
+
+I *think* this is the for_each_process_thread() hitting 71 again.
+
+[    4.533805]   <idle>-0         2d..2. 1116043us : mmcid_getcid: mm=000000002b3f8459 cid=00000001
+[    4.533980]   <idle>-0         2d..2. 1116044us : mmcid_cpu_update: cpu=2 cid=40000001 mm=000000002b3f8459
+[    4.534156]   <idle>-0         2d..2. 1116044us : mmcid_task_update: pid=74 cid=40000001 mm=000000002b3f8459
+[    4.534579] virtme-n-72        0d..2. 1116046us : mmcid_cpu_update: cpu=0 cid=40000002 mm=000000002b3f8459
+
+[    4.535803] virtme-n-73        1d..2. 1116179us : sched_switch: prev_comm=virtme-ng-init prev_pid=73 prev_prio=120 prev_state=S ==> next_comm=swapper/1 next_pid=0 next_prio=120
+
+And then after all that, 73 blocks.. not having been marked TRANSIT or
+anything and thus holding on to the CID, leading to all this trouble.
+
+
 
