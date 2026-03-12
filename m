@@ -1,125 +1,173 @@
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B99F3382E8
-	for <mptcp@lists.linux.dev>; Thu, 12 Mar 2026 01:49:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.181
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773280154; cv=pass; b=YT2QtAD0yDn7wmFImTIU8GaeiqW/4h57fP/YyakLbzFP8b702mQZcLKl+y+GfyUUmHSjjK5IGRBdZnqL2OGWXx7UxqiuCcxPdhizja3GPpCgNYUGInrowt1gdv1uFgsByZyUF7mzvnNOfLoL7C75St6HnxqYEDdT9D5rIqnQlfQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773280154; c=relaxed/simple;
-	bh=l0pdZ6aJXNzjnX3WguteAiYv+XlY3/vYQqBj1jhOzDg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qR/rZtSIQscelnnm7ULh2B2gSvNohI1LCuWcV6Zu+Ws2pouhWYe3hdLw3heUydDxNrVecPWUttH6fAuRop1g0NoXGOjnnu/C264TdJUGA4FXvbvvW6K76xuiA1Ew6CB3wJyriaNogfkanTPq9w9bq/oFeMoaN58smTt4mTrWp3A=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2C+BHtYI; arc=pass smtp.client-ip=209.85.160.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B91B823DD;
+	Thu, 12 Mar 2026 11:01:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773313292; cv=none; b=Fh4EwCRoTl1XLCS4JbS6L8Wz66U1+lPqr5cltyLJ8n5WOYJBl/UTFEZZ9Q3MQJWIGQAq2AHZ2Xnbnm22k/+8uQ6aVALbDwDSIs3WhTzSUEEyuLcRZjM3k75m/h83LL/4RexAtAMtZZj7Ex3ZM8ftjXJpWjw5ZXQ0myaw8OW9V1A=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773313292; c=relaxed/simple;
+	bh=+Ulv+PCYekiAEop42YtuVmuhDO5Wmf5GGZG23pHYKps=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SEcJF27GIEhBbEk1m4R2vjVQjXkNCrfLd6MRMF+nVAaE4l6bNcdQeqnT2R3yqdLzMO1cKnytbxQ+3f4bCKWanmH7zbLbfmIvTmpupZcN2bWE4NJGy3F6nCJj2Y9XGK3RrIBnEWseAEaSFmUf8E1t0Yr5ODM3FjZGDNuZR/JarAw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p+SGG5FR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2C+BHtYI"
-Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-506a747448dso4275211cf.0
-        for <mptcp@lists.linux.dev>; Wed, 11 Mar 2026 18:49:13 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1773280152; cv=none;
-        d=google.com; s=arc-20240605;
-        b=LyTFS0SJ1WCZLJ5ia6UM4UBuFHu6JWOouKNnYaNRsquUALofprncWY7PQbZPyoIKxX
-         r6WAKZPPqhSmSYKG0MZPhTAYP46XlEXfdQHhSPUtatdUD7q1PI9ykT8ga5B/zL+7N2/p
-         oDCObkK6Glg+B/Q+zQp5cZqHWyT3dkdJCcQHkaOzAVDyDbBFzy17Wf0u9+/O62S1W1wN
-         zC1gJLqZOF80nDcU4Uz/yVW7NZulMPcHehDEVHUycPG8FSwDlqzPxCVDDN+r3dyb77eL
-         SsNWP1bH9AfjrZsoGLuQuz9IbNArTWl1uxZZyVjNBO3vq6Ck+AHxQtX+9p5ssvw0ld10
-         wQcA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=l0pdZ6aJXNzjnX3WguteAiYv+XlY3/vYQqBj1jhOzDg=;
-        fh=pwmbn5jjDZ6WZ98Zhk3qgCZbWyaZ07PHX0kFwh8vCmw=;
-        b=locGm2MKLDaZ1ovLEH5tOqHA6CwcsniX9jQZFUaxjvRTdRoNGZQNdVguOYY9i6XCXX
-         /oJTldFZSIDKFDID92zIpudcvGXhTnwLQtkwKLA/iM56aI5GTI8ddTtIVURIRsZ5VRFM
-         C4qy69vEj4OOEfMl72Q0OoReO4pP3mYcHN0NdOqvRQWgHwfFzbMAKIEK8L+dqmQUetyv
-         GcAc6ypBa4/HAO4YBMLJQ/1qGYCM12CskjoobQePcYlQ+NpXpQchzx1y1VoKTYzjptVi
-         jtf2wa+Eb2pXW2ygBMU+tJg3dyidaciq5REgyiFyBvH9WnORsaAHrRuG40RbmIZ902+M
-         /v+A==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1773280152; x=1773884952; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=l0pdZ6aJXNzjnX3WguteAiYv+XlY3/vYQqBj1jhOzDg=;
-        b=2C+BHtYIYZJLGqxPJMgi/aNT0uTY8GJky1US/duNS12nrrd1qc85J7wSHqqjdy/3al
-         d2HGYWaoHYmKABNSPIT2sm6+LrXYurzsW4GkR3DzexGuFUuqK8oEs2sD53NHHMb14QuR
-         RoiMsArxdrsV6+wD+tbSHPmrsLZDFMCY6oTxtz9iYZE6rVvnp8IELgL9QkqsIntUPBq9
-         piyuE3O8xHZrQQnnIZalpx/oMTi/0mqvJ8s891mwOT6wFEioylxcLeAdkezcfPNWwgbm
-         Gw00VRl6n0xOKeZl8T2QAAo5MvXCiU9Q6GTkC04tu7pMvfp3l/B+YmyzMGIJ6g6YmErv
-         9atg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773280152; x=1773884952;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=l0pdZ6aJXNzjnX3WguteAiYv+XlY3/vYQqBj1jhOzDg=;
-        b=V7T49U2DjIiWaAkZxgIzQhRbB+aNmWr8WHY98RyEHsjGQRIGkBo+p750Tgtg/ij8XL
-         FnncSYf3lW/MVtYqh5b5mucgmbS3mxoRW+2MWKD7CmzHUsh6x2SFiMaq7HCLiOes2xvX
-         93QADqKDR83pIa2TldExwsLa6CC+NFAzKSwsfUXOvP2aMYr+NrRiY7CILTWlr2QLC3Gc
-         jRvVDV7bdFrM/nb46wfaKCSCE1lP19nPTu3RSgBhFpB+eHIIjkQ2sMETTbuheFLGCYtZ
-         ShLWGhBvMIQzlxNhynXmCd1kbCeHKv5W4jpXv2h5PDShKb6b+s+OqmbcOutAhkjl7nVs
-         p+/A==
-X-Forwarded-Encrypted: i=1; AJvYcCXe+vipNYQS4Jb77vAnTtGS2sS0c//SR4+d44iSipQC+T5J/pzDuzujVTRt02EO559EtCra7g==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxXYd1qDKrG6YDrG/QUesqUJOo4etAm9Iw1XKycx8QN9LjNLpJ6
-	8nLJOA9B2S3mFI3DwfUj+Hgb1ltZnTtNVnI3ZptYja8XGW4GSJqelVYS2Ea1PepP4Aah1o4/PEd
-	bF4LfkmWsnHedWxnKzUSKpmda5rNGlujuCRH6xqSX
-X-Gm-Gg: ATEYQzwKOq3h7EM4WGUlt+el7frFWxkuzI4h77hCtIbsnjPwlkjhhBORhLvSdjHSNIN
-	0XyTHqA7Kq4aAfHBAaFqXT3BC/P7aQDOK9TP1Apr4XOLTIEyxVQBNcALp8h9EydqI20DTjw2EgO
-	Uq4Gx1V+7WRZt9kN+E/ivLQgYppxYiig3a4qXIpJLMevn81AOWM5mSpbPd8ENNXBhNLJQpwYeVH
-	CQbZIlpyrpy270rI9jZVmSMC4TxpddHrqDsrdFqzksdrJPf1oBc/xQceWQfLrRc1/xPATP+2FPV
-	2k2TzHk=
-X-Received: by 2002:a05:622a:245:b0:509:16ba:d537 with SMTP id
- d75a77b69052e-50939fc6311mr62588591cf.19.1773280152190; Wed, 11 Mar 2026
- 18:49:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p+SGG5FR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 591C6C4CEF7;
+	Thu, 12 Mar 2026 11:01:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1773313291;
+	bh=+Ulv+PCYekiAEop42YtuVmuhDO5Wmf5GGZG23pHYKps=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=p+SGG5FRxlZ4uxcoqLLyxtMOuhYboEMc3iKZe+NZ8LRsukrNgN6+d6B5uyGWLC71y
+	 6fTSEq9NXVq3wpguq2DWqJbiAEl+bm3Jb6GCwCngidmv9YWRzV4yTyfBYE1t84CUrT
+	 dL+kXjY7gaKtBULPEUKubNEGW+tXF8GwO8s/fHtvRyORxb0E9ASZGbnAuAQa1CRKZ5
+	 MTaMHrNlASOYf8pr6ZITrsyx9OBXcSzOdoD/ex/srzXYQi/TRepcLBm6QBZKS6erBv
+	 AjyZpp2Jx7u79jhe5J5Nav83z/FZxx8qk1Nxz9AT7lz/s3u/pzZxETib+jNHEZt9eg
+	 HtCi9k+LloE1w==
+Message-ID: <bb4e4feb-cc51-4418-93a5-47c2781e6d17@kernel.org>
+Date: Thu, 12 Mar 2026 12:01:21 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260311075600.948413-1-atwellwea@gmail.com> <CANn89i+dojcg=TDh6E1++g_TM7qdcpnyu47n2Q9DRW_w73TjzA@mail.gmail.com>
- <20260311174154.5fadb207@kernel.org>
-In-Reply-To: <20260311174154.5fadb207@kernel.org>
-From: Eric Dumazet <edumazet@google.com>
-Date: Thu, 12 Mar 2026 02:49:01 +0100
-X-Gm-Features: AaiRm52zaoXRZHJbWhVYmknx0ZhJd77Ysbeej4LqlWfvsr4aOTCUEXNpCukM3UU
-Message-ID: <CANn89i+8LBnbwGE+4qfXv3uKrwLXog1hXqabSK57dCABJ6Nx0w@mail.gmail.com>
-Subject: Re: [PATCH net 0/7] tcp: preserve advertised rwnd accounting across
- receive-memory decisions
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Wesley Atwell <atwellwea@gmail.com>, Simon Baatz <gmbnomis@gmail.com>, davem@davemloft.net, 
-	pabeni@redhat.com, ncardwell@google.com, dsahern@kernel.org, 
-	matttbe@kernel.org, martineau@kernel.org, netdev@vger.kernel.org, 
-	mptcp@lists.linux.dev, kuniyu@google.com, horms@kernel.org, 
-	geliang@kernel.org, corbet@lwn.net, skhan@linuxfoundation.org, 
-	rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
-	0x7f454c46@gmail.com, linux-doc@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-api@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH net-next v3 2/6] mptcp: keep rcv_mwnd_seq in sync with
+ subflow rcv_wnd
+Content-Language: fr
+To: Simon Baatz <gmbnomis@gmail.com>
+Cc: netdev@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ mptcp@lists.linux.dev, Eric Dumazet <edumazet@google.com>,
+ Neal Cardwell <ncardwell@google.com>, Kuniyuki Iwashima <kuniyu@google.com>,
+ "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
+ David Ahern <dsahern@kernel.org>, Jon Maloy <jmaloy@redhat.com>,
+ Jason Xing <kerneljasonxing@gmail.com>, mfreemon@cloudflare.com,
+ Shuah Khan <shuah@kernel.org>, Stefano Brivio <sbrivio@redhat.com>,
+ Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>
+References: <20260309-tcp_rfc7323_retract_wnd_rfc-v3-0-4c7f96b1ec69@gmail.com>
+ <20260309-tcp_rfc7323_retract_wnd_rfc-v3-2-4c7f96b1ec69@gmail.com>
+ <334053df-9824-4bfe-b37c-8711d0a5a9bd@kernel.org>
+ <abHnyJInqmGNIWiq@gandalf.schnuecks.de>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <abHnyJInqmGNIWiq@gandalf.schnuecks.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Mar 12, 2026 at 1:41=E2=80=AFAM Jakub Kicinski <kuba@kernel.org> wr=
-ote:
->
-> On Wed, 11 Mar 2026 09:34:32 +0100 Eric Dumazet wrote:
-> > Your series will heavily conflict with Simon's one
-> >
-> > https://patchwork.kernel.org/project/netdevbpf/list/?series=3D1063486&s=
-tate=3D%2A&archive=3Dboth
-> >
-> > I suggest you rebase/retest/resend after we merge it.
->
-> Would it make sense to extend netdevsim and packetdrill to be able to
-> exercise scaling ratio a little more? Having it optionally clone the
-> skb and truesize +=3D X would be trivial. IDK how many bugs this would
-> let us catch tho :(
+Hi Simon,
 
-Yes, I think we mentioned this at some point.
-packetdrill uses tun device.
-Adding a TUN ioctl() to control how many additional bytes are added to
-skb->truesize after tun allocates an skb is doable.
+On 11/03/2026 23:08, Simon Baatz wrote:
+> On Wed, Mar 11, 2026 at 07:27:34PM +0100, Matthieu Baerts wrote:
+>> On 09/03/2026 09:02, Simon Baatz via B4 Relay wrote:
+>>> From: Simon Baatz <gmbnomis@gmail.com>
+>>>
+>>> MPTCP shares a receive window across subflows and applies it at the
+>>> subflow level by adjusting each subflow's rcv_wnd when needed.  With
+>>> the new TCP tracking of the maximum advertised window sequence,
+>>> rcv_mwnd_seq must stay consistent with these subflow-level rcv_wnd
+>>> adjustments.
+>>
+>> Thank you for these modifications!
+>>
+>>> Signed-off-by: Simon Baatz <gmbnomis@gmail.com>
+>>> ---
+>>>  net/mptcp/options.c | 6 ++++--
+>>>  1 file changed, 4 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+>>> index 43df4293f58bfbd8a8df6bf24b9f15e0f9e238f6..8a1c5698983cff3082d68290626dd8f1e044527f 100644
+>>> --- a/net/mptcp/options.c
+>>> +++ b/net/mptcp/options.c
+>>
+>> (...)
+>>
+>>> @@ -1338,8 +1339,9 @@ static void mptcp_set_rwin(struct tcp_sock *tp, struct tcphdr *th)
+>>>  		 */
+>>>  		rcv_wnd_new = rcv_wnd_old;
+>>>  		win = rcv_wnd_old - ack_seq;
+>>> -		tp->rcv_wnd = min_t(u64, win, U32_MAX);
+>>> -		new_win = tp->rcv_wnd;
+>>> +		new_win = min_t(u64, win, U32_MAX);
+>>> +		tp->rcv_wnd = new_win;
+>>
+>> Out of curiosity, why did you change the two lines above?
+>> (even if it makes sense, the diff is a bit confusing, and the commit
+>> message doesn't mention this :) )
+> 
+> I wanted to keep tcp_update_max_rcv_wnd_seq() calls close to the
+> respective update sites (same pattern everywhere).
+
+Thanks, I now understand the reason.
+
+> In the original form
+> 
+> tp->rcv_wnd = min_t(u64, win, U32_MAX);
+> tcp_update_max_rcv_wnd_seq(tp);
+> new_win = tp->rcv_wnd;
+> 
+> the ordering suggests that tcp_update_max_rcv_wnd_seq() might modify
+> tp->rcv_wnd.
+
+Note that if tp->rcv_mwnd_seq always needs to be modified when
+tp->rcv_wnd and/or tp->rcv_wup are modified, maybe a single helper could
+be called to modify all of them, so it might be less likely to forget
+about modifying tp->rcv_mwnd_seq as well in the future.
+
+But probably it might be unlikely to have new places where tp->rcv_wnd
+and/or tp->rcv_wup need to be modified like here with MPTCP. So probably
+fine like that.
+
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
+
