@@ -1,37 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4238B28488F
-	for <mptcp@lists.linux.dev>; Fri, 13 Mar 2026 04:13:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EE2617A300
+	for <mptcp@lists.linux.dev>; Fri, 13 Mar 2026 04:13:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773375191; cv=none; b=PQZTpRI/orjD67Je7DM19gFit2A0BmqidyWJPiIMvrbsKkhxAB/DMcZFvPN85x288PxfcCbO8YoThsdaeyhMErD8Z+XcWaCu7b588kZymD1wbNapRd0VskcbYGZB3BEz1IoKGCu2BpSDyv/e5SEqVhThV1PNyg5Fchg7j1cXAeI=
+	t=1773375193; cv=none; b=Hp2kj+OpdUrjs6AHnB/rL7s1OBmXN1NiWPMMQuYB5hFDem9OXp37YniAnjbRnqUWP1zZfies6T5K7tW/tr+d34w1l0vB9qUHCi7IsiaEgkHgeeZgfMA1UAdBYgcLyz26iE5/ZbYi8VpWu11hQv9rvmr1/Ztctdyx4JHk2mlgJeQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773375191; c=relaxed/simple;
-	bh=5wAqg4Y76q9Vqv/QfZpGMwdsak39VQtYVPozE4uN6y0=;
+	s=arc-20240116; t=1773375193; c=relaxed/simple;
+	bh=9fGVPeyCC48lSRiLlOwPbwecJBzIGIxPHEt+eOWhs9E=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=k87Jd+8HY2yrSGRPFlIEXnUAUocunzpacXU/XffSNzE5D86xtS+P9ujeNfER48gItWs0ImDBasZ5r7tKbWWfyW6+C4upgrKnh3oYwbXc9apbm6gc018GftprsGS0f12lBbQpy1rNuR9DcqhLru3gm3TZkTAEHk7RGiHf7Uq+Dkc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=prr8HL5S; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=JaPfnNovlHcGniVascOrSE37pMbQ2w/MxB/cPrnHHgMN39YgZ7RZhyhPNKdiaWWgLzpRAKPJtjJmk2rvid7ryEJIRteqzqFpqiPPl4NdcgY73txiikPVk8+X5Uc1Ur3odBs9tviHBFRShMP42gIoobsmXpyFomOtVZ4QXeKnG+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T4IxTeZK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="prr8HL5S"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BAD7C19421;
-	Fri, 13 Mar 2026 04:13:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T4IxTeZK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C135C19421;
+	Fri, 13 Mar 2026 04:13:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773375190;
-	bh=5wAqg4Y76q9Vqv/QfZpGMwdsak39VQtYVPozE4uN6y0=;
+	s=k20201202; t=1773375193;
+	bh=9fGVPeyCC48lSRiLlOwPbwecJBzIGIxPHEt+eOWhs9E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=prr8HL5SM1iDgwv2pjRijYnJTZrywAYoIw8dJWa8M6y1TiJeJEjmANFWc7RiEYUN+
-	 EqJzsvNR6zBzS4AlsMqb8nuxeP7/Ux0rHpR+cBVSCPfBGmx+ksjNxeTaMwT4JKdYze
-	 tFCWs3oN7oxPoQsAbPA1sRhTfrrDwWD0QDfvMF7Jx2NwnWbUnqf2HaEJSWDns7nGZT
-	 HYDKze6gY11Dg6hsfUHsBgEMmD2eEk1ocH1XwmEjhXnOxGU9/hqdOaMdYfhBuSac9P
-	 /Tke2lIYiWL4u0AYt1IyVfz3qwi7ya29kAX6nOj3FESHDMDenRs3LHFK1gRDqdR7/C
-	 ImqnCSb8fA+EA==
+	b=T4IxTeZKPHCInLIorT46y3IniDpHg0aFhVthGiZNomfF6ulJduJ/pR2FB7PQ/21XT
+	 uX/LU2aay48WvMGl83FUqWKemZAFjraPJzLRElDlpYgwg+Mvw/zyXq1MnIphnt6XY7
+	 Hgh1FohO/ZxVSaq54XKQrt0O2d77a8LDq0+FSBpacSfWY1K/osqh1y21WiY0SnEqkf
+	 DxO6VeGhzJuibIGuAlwUIa+vV67ix7CC7HyTFrbESm0nW88xoaGuet1GUAm4QTzBKN
+	 EkVmkz/jHve5FdQkPQt8+w6tJae55GKYQxZejGeahH65mm5G29+vkfOpVnsXbtybtE
+	 GPfQjF6EzZlBA==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [RFC mptcp-next v5 1/7] mptcp: add sk_is_msk helper
-Date: Fri, 13 Mar 2026 12:12:45 +0800
-Message-ID: <c8218399b642cbfe9730430e4385e8b29c8e082e.1773374342.git.tanggeliang@kylinos.cn>
+Cc: Geliang Tang <tanggeliang@kylinos.cn>,
+	zhenwei pi <zhenwei.pi@linux.dev>,
+	Hui Zhu <zhuhui@kylinos.cn>,
+	Gang Yan <yangang@kylinos.cn>
+Subject: [RFC mptcp-next v5 2/7] mptcp: add sock_set_nodelay
+Date: Fri, 13 Mar 2026 12:12:46 +0800
+Message-ID: <1f53896c2bdd54166639b28da5e8968f1e11e2f9.1773374342.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <cover.1773374342.git.tanggeliang@kylinos.cn>
 References: <cover.1773374342.git.tanggeliang@kylinos.cn>
@@ -45,46 +48,87 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-This patch introduces a sk_is_msk() helper modeled after sk_is_tcp() to
-determine whether the socket is an MPTCP one. Unlike sk_is_mptcp(), which
-accepts a subflow socket as its parameter, this new helper specifically
-accepts an MPTCP socket parameter.
+This patch introduces an MPTCP-specific helper, mptcp_sock_set_nodelay,
+which sets the TCP_NODELAY option for every subflow socket within an
+MPTCP connection. It will be utilized on both the target and host sides
+in the 'NVMe over MPTCP' implementation.
 
+Using tcp_sock_set_nodelay() with MPTCP will cause list corruption:
+
+  nvmet: adding nsid 1 to subsystem nqn.2014-08.org.nvmexpress.mptcpdev
+  nvmet_tcp: enabling port 1234 (127.0.0.1:4420)
+   slab MPTCP start ffff8880108f0b80 pointer offset 2480 size 2816
+  list_add corruption. prev->next should be next (ffff8880108f1530), but
+  was ffff8885108f1530. (prev=ffff8880108f1530).
+  ------------[ cut here ]------------
+  kernel BUG at lib/list_debug.c:32!
+  Oops: invalid opcode: 0000 [#1] SMP KASAN NOPTI
+  CPU: 1 UID: 0 PID: 182 Comm: nvme Not tainted 6.16.0-rc3+ #1 PREEMPT(full)
+  Hardware name: Bochs Bochs, BIOS Bochs 01/01/2011
+
+Co-developed-by: zhenwei pi <zhenwei.pi@linux.dev>
+Signed-off-by: zhenwei pi <zhenwei.pi@linux.dev>
+Co-developed-by: Hui Zhu <zhuhui@kylinos.cn>
+Signed-off-by: Hui Zhu <zhuhui@kylinos.cn>
+Co-developed-by: Gang Yan <yangang@kylinos.cn>
+Signed-off-by: Gang Yan <yangang@kylinos.cn>
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- include/net/mptcp.h | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ include/net/mptcp.h  |  4 ++++
+ net/mptcp/protocol.c | 18 ++++++++++++++++++
+ 2 files changed, 22 insertions(+)
 
 diff --git a/include/net/mptcp.h b/include/net/mptcp.h
-index 4cf59e83c1c5..82660374859a 100644
+index 82660374859a..60cbf29448b0 100644
 --- a/include/net/mptcp.h
 +++ b/include/net/mptcp.h
-@@ -150,6 +150,13 @@ static inline bool rsk_drop_req(const struct request_sock *req)
- 	return tcp_rsk(req)->is_mptcp && tcp_rsk(req)->drop_req;
+@@ -244,6 +244,8 @@ static inline __be32 mptcp_reset_option(const struct sk_buff *skb)
  }
  
-+static inline bool sk_is_msk(const struct sock *sk)
-+{
-+	return sk_is_inet(sk) &&
-+	       sk->sk_type == SOCK_STREAM &&
-+	       sk->sk_protocol == IPPROTO_MPTCP;
-+}
+ void mptcp_active_detect_blackhole(struct sock *sk, bool expired);
 +
- void mptcp_space(const struct sock *ssk, int *space, int *full_space);
- bool mptcp_syn_options(struct sock *sk, const struct sk_buff *skb,
- 		       unsigned int *size, struct mptcp_out_options *opts);
-@@ -258,6 +265,11 @@ static inline bool rsk_drop_req(const struct request_sock *req)
- 	return false;
++void mptcp_sock_set_nodelay(struct sock *sk);
+ #else
+ 
+ static inline void mptcp_init(void)
+@@ -335,6 +337,8 @@ static inline struct request_sock *mptcp_subflow_reqsk_alloc(const struct reques
+ static inline __be32 mptcp_reset_option(const struct sk_buff *skb)  { return htonl(0u); }
+ 
+ static inline void mptcp_active_detect_blackhole(struct sock *sk, bool expired) { }
++
++static inline void mptcp_sock_set_nodelay(struct sock *sk) { }
+ #endif /* CONFIG_MPTCP */
+ 
+ #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 7c06b8d9eb37..692111941808 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -3800,6 +3800,24 @@ static void mptcp_sock_check_graft(struct sock *sk, struct sock *ssk)
+ 	}
  }
  
-+static inline bool sk_is_msk(const struct sock *sk)
++void mptcp_sock_set_nodelay(struct sock *sk)
 +{
-+	return false;
-+}
++	struct mptcp_sock *msk = mptcp_sk(sk);
++	struct mptcp_subflow_context *subflow;
 +
- static inline bool mptcp_syn_options(struct sock *sk, const struct sk_buff *skb,
- 				     unsigned int *size,
- 				     struct mptcp_out_options *opts)
++	lock_sock(sk);
++	msk->nodelay = true;
++	mptcp_for_each_subflow(msk, subflow) {
++		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
++
++		lock_sock(ssk);
++		__tcp_sock_set_nodelay(ssk, true);
++		release_sock(ssk);
++	}
++	release_sock(sk);
++}
++EXPORT_SYMBOL(mptcp_sock_set_nodelay);
++
+ bool mptcp_finish_join(struct sock *ssk)
+ {
+ 	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk);
 -- 
 2.53.0
 
