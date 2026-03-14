@@ -1,207 +1,202 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+Received: from mail-oa1-f41.google.com (mail-oa1-f41.google.com [209.85.160.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99D2132D0FC
-	for <mptcp@lists.linux.dev>; Sat, 14 Mar 2026 17:07:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F3BB383C9C
+	for <mptcp@lists.linux.dev>; Sat, 14 Mar 2026 20:14:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773508030; cv=none; b=h/w+lRJVWmtMMbnq4DBx7kps/SqT3m4l1lW1B0LCKSblGfKYeBhN/OGt+7Guo7Lm//4bJRbSXZoOmDK7lnnnMA28MghmjGhnGMl9xDi4tCRbtJkTMBkg09KsQh/1tIjI5ADQ7q9iGZI0e7nUvES59ISCqv678NoASLC4howu/Q8=
+	t=1773519283; cv=none; b=auKH7/bWjSXwJrrLYA7r7q8y4wAjZOUQD+aVfY+7muo593H7FtGTsMEZlhK2WeuInjxcISdKNC2fVGYi2ZPxeECSXoRu1XGQkZmqRfOidYogO1Ay1ePkUVG8msMdz6UCihqbpPyqOE4zDYeR6J8byB7lhU1IElINhrZLLixtup8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773508030; c=relaxed/simple;
-	bh=JmwWTR8tdLBqN2ZJaJyR7rVbXUX1qdfFYCxVt/hEa7g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FbMpaXNyLXHK/tszCcOHfTKzEqcmn2BFQLigNjN9FhZT5hHc3N8SwYE+wiCY6B+/FDSKwSK97XUB9Kf5UkdnHAK3HXuDs9UgSrdSHDUViHA7MN5OtJ4Qm1BfqRwCHG1k+foDNH9b3xMEXE/KdDxmNEGtXcv1jeiKh4p7RB4jPpQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g7TgU32T; arc=none smtp.client-ip=209.85.221.45
+	s=arc-20240116; t=1773519283; c=relaxed/simple;
+	bh=BynOgwAYPtb/KpshiEi9Ah5xEZa4UMFbs/5oRQMyRbo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MbfXFsw/f0Q1q6PbehDWDn/jNIcADhK4UDXDYSCP0ux/h9BjwwGxc9kZsDlOZTP8OK9YhMsIqer4REQnBcDTah2YqOR+Ge/s9alFc2Ya8grAuqU0CcBkcD6glOSXpGcH7SyxgK+FtOetNXOKX8hWEBzofNQYqTRha6WGl5vA58U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gdjOD4oi; arc=none smtp.client-ip=209.85.160.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g7TgU32T"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-439c5b40f60so2569776f8f.0
-        for <mptcp@lists.linux.dev>; Sat, 14 Mar 2026 10:07:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gdjOD4oi"
+Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-41708e43f61so1125093fac.1
+        for <mptcp@lists.linux.dev>; Sat, 14 Mar 2026 13:14:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773508027; x=1774112827; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=n5sXk7QR4yMzNPBEKkRLre6dWWa+kcD2gx8NHV2qKsY=;
-        b=g7TgU32Tv74JO85KQBWjo8Dxq80wd8rlP3jL9u9tyP+TVTPau9JpA3Ks8d1VTUM1U+
-         RSbrlNXfpbF/tuMZ724to/Ts+lkrKzVZuMX9XNhlGq0XHy8RupH5LVIN7kXX9MYX/98V
-         s72kXS5ulnNIw0IdYEt7GFjm5k1dIlKGO2t6eVXvF/kxVcqw8VD5cLz03WSgNydkjBLl
-         wmS7VeWRsxm7XgU7sTCFt8Zz1skTMUWyCJ8BtwHEzbgeNgGjXCW4TU8idyHTD13jd1yT
-         SfihzA8xEhpz7HToPBqQyQ3QqT027A8bg+M229K0Gu1HDidgwrao1IjJw9GJ93qbxENU
-         cmJQ==
+        d=gmail.com; s=20230601; t=1773519280; x=1774124080; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=2ZQP7SyWGDwwAMOAnxSbi4O+tM8xtS6WH81TGDPwQ5w=;
+        b=gdjOD4oihhDl6wwjzw9jtaVUAlCRjrK7b6XvZTXAWzGEh7iKxz0fLa3wjIQECmIO32
+         EZzXI8VHr65uus9tTksFXK0FTsVaB4r0wO9/Lnucr620jm87k3lbCHYaql5AA82HOdZ2
+         k1ySwXZL2GOw6YeY09SuFbmDRG5Xx3l8am5aVHtLkZR+MKiW/JR+XIa1AHwjQLG0zokz
+         g7ZPz7RoHsONPB7HimKuK4ObSrOXbtSYCQh5FUocgUbDOPGCconNp45/QZIEhjnKKq0b
+         yEVceq7yfp46KtKeGPkUTA8RBE+UXPvcYkkKIrAc0KRbz5HgFkbdVakruO7P0v+MPfmr
+         kkEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773508027; x=1774112827;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=n5sXk7QR4yMzNPBEKkRLre6dWWa+kcD2gx8NHV2qKsY=;
-        b=cK5HQ0eVVN2cMu7UGYzG3iPQhFc78xmi6plmltzuRi3ZvpP8pshZd4E2PFI7pVhsJR
-         aBOTdtJ1eXwLYPazD8hxlRs9kynGkwLndU6CTBjHxJRSB582J1qh3ZBktw3RBnolieAt
-         piFzCpWh/ywiiImF3AViuasrg8gg5rC3+z2I1z8xD1htZZaChpbn5tIyNhiKwbvVRAQZ
-         dNoIpYE1WpPHw+HP766ew5i512ZbUW2LMA4NfhRBZuVrdah1DwUsv+FQnaJbk83wuntz
-         E409mjTClcVe6BzCh1KYvF2ugiuCVs9J+T+1vYZ/vPlME3n1sNIyM4nu3g9sbITTglK+
-         w2sw==
-X-Forwarded-Encrypted: i=1; AJvYcCX+P7oikRwBm7SKyLPkIWRWIqBfURp92xhtIdpzJopWKoihnOrQWKTSgfRza4QTwyevdp1RdA==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxOYPAFIvBio7VE1SPBqc4gwPzb7fMVaGgyoq1xMRuy46Cpy4i8
-	ys94tOUEO4CaELeX9xrMz46aXqDUOnnFcEuFx6URZyAG/EmgDdifwVcp
-X-Gm-Gg: ATEYQzzEqt0RQr7VgoWCUKsx3gOtjLxHoU9Ip1dBMaNXkyzkE4YiX0G/uhUOQ9Ios+I
-	gsEGgl8+jkKHnSf/D8cmgIGnMt0nU4iR946Sx+hjuTnnPQtzTvJ6xyikatKViT9p4RwmmgCFGkq
-	xSu3SR1WBJyjkUlmxp2U2iI8aT6lU3FpfuSczqbm6lzvC7KYenFwFXUIDvJoiI7bI67MDII1pvV
-	UT3cSjlJIK0R0rYwr1t9v4eWhzMIeFoFxKKsr9saCKjxUEuBjkQsT4UReJzsXy7nbhiEVH3mJZ8
-	Mar9R5OnbVLCJa+vCRgqiWHnFFTeo5nT9CErw0ZlsRJ8UiAFkMUvNji1thpxeThvDQ6g7rmU9YF
-	ErZXGlSY4P9jU8GFm1KrMY9TfOVPtA5NWrGtMf0sQYRxZKTqA09AO5rP4msj67zvI3ryMJGS+WV
-	UaVRQ0CgP4989WLyGwpBSRcDHOAZokqSC1Hcidw302fjE/yIGfPRvsje/3lmDc0IOnKOVU9TE1q
-	7IP5x3gItip1NZ+j/wLUIQ=
-X-Received: by 2002:a05:6000:2dc2:b0:439:d74f:2109 with SMTP id ffacd0b85a97d-43a04dc36c8mr12532240f8f.49.1773508026649;
-        Sat, 14 Mar 2026 10:07:06 -0700 (PDT)
-Received: from gandalf.schnuecks.de (p200300c14f1996009e6b00fffe39b8a7.dip0.t-ipconnect.de. [2003:c1:4f19:9600:9e6b:ff:fe39:b8a7])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-439fe2186e3sm31604155f8f.26.2026.03.14.10.07.06
+        d=1e100.net; s=20251104; t=1773519280; x=1774124080;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2ZQP7SyWGDwwAMOAnxSbi4O+tM8xtS6WH81TGDPwQ5w=;
+        b=AR1eGVF0Z2+2kp8dQwORHJUj0hXyawD0uhme/qOYAVEarXSlFS9j1NXLxVnvOGoh1U
+         g5QI755hh/gf/+8WM8UnXTQ3AwNyjj5F3u3trFUFQIlcgNW7g+WcXsFJMbdEbBInX1d2
+         c9KVy5HgRmAaPuG28l8bT/IWuZrV5pNR2T2atyVEBOYmvWAOt+Fc5sFMLgrNmRrX0Rv+
+         8rFken+XNMmBv/RuLjFh/GueUvswJ39L+0k6qwl4gRdVT7gjB9Zd9VTPjMG5PaYPuclb
+         QXz2wLzyiWupCoGsDIklSU/T127/icT4zYbhoyhsPkga/nCj3rDqZ3CTW86zIGjLMfwi
+         OWIw==
+X-Forwarded-Encrypted: i=1; AJvYcCXNIx6I6HTxezLfWOmaENCEUKn6zqjUxmNcFD+AwAV7QKIWRzsaQQiencP3zpoAjV0s5e67aw==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzbjGAgxgIOIDK86vqEGmmfCGLI2Vsg0zNJMoyg2yh0ZZymtsHp
+	qvGItIpXrgduQUejiQSDBs5RKsNpAtBtz2jnYttT+rlYetLKa+rh3gXp
+X-Gm-Gg: ATEYQzzI26yN6i2Yu0B3uY+4uUM/SbBUPcbWRQUIog7SZDYkr4I3IzgeIfddOvb72GE
+	X/qHCZHRthP/kmBattQey/EGn0zsQEgGc6+UPn8JL2Ff3lK9k7ZAcckrXnA3J3fsO7iMwK/+CpE
+	QX4513KqiSzUZcZ5Da/JXJon07rVHvISe+FqDypszbY847kwQZpDf/vRjX/dBGEVNjsxxlgFZIz
+	hxZr7VGfrF+PBCIAisATF8CfMllvZB/BHpDc4LcntUZ8qCljSOHa1w3h2JlRgPFfQMbvt9nI/GD
+	665im4rvCYHCN7POBXiVLcJZdNUd4iDUCfz0WxfuvWAnduFcvYpJ8T52yW2v7jEPAw8IzMeDIox
+	tA0HW6tZacCTTFD7fSnHh2SiIXs3whJHWknEoCvSGPgLwvugEKlxH6uVFppXY27QwzrixXXT4Vm
+	JTdQXNC4EtteF/s6Lc76fIvQ5Olr3M4+7pEAxkDH5wMspksQhmXCdgXNLQto+HH4YSTtcjpXKY1
+	81/xzYxM0I75rHGmvDAuJsO0pMQmj80sLjf69bj
+X-Received: by 2002:a05:6871:ca:b0:417:6237:cf82 with SMTP id 586e51a60fabf-417b923e031mr4502917fac.23.1773519280265;
+        Sat, 14 Mar 2026 13:14:40 -0700 (PDT)
+Received: from Atwell-Laptop.. (108-212-132-20.lightspeed.irvnca.sbcglobal.net. [108.212.132.20])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-4177e5e8185sm11914165fac.12.2026.03.14.13.14.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 14 Mar 2026 10:07:06 -0700 (PDT)
-Received: by gandalf.schnuecks.de (Postfix, from userid 500)
-	id A232730395F4; Sat, 14 Mar 2026 18:07:05 +0100 (CET)
-Date: Sat, 14 Mar 2026 18:07:05 +0100
-From: Simon Baatz <gmbnomis@gmail.com>
-To: Eric Dumazet <edumazet@google.com>
-Cc: Neal Cardwell <ncardwell@google.com>,
-	Kuniyuki Iwashima <kuniyu@google.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	David Ahern <dsahern@kernel.org>, Jon Maloy <jmaloy@redhat.com>,
-	Jason Xing <kerneljasonxing@gmail.com>, mfreemon@cloudflare.com,
-	Shuah Khan <shuah@kernel.org>, Stefano Brivio <sbrivio@redhat.com>,
-	Matthieu Baerts <matttbe@kernel.org>,
-	Mat Martineau <martineau@kernel.org>,
-	Geliang Tang <geliang@kernel.org>, netdev@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, mptcp@lists.linux.dev
-Subject: Re: [PATCH net-next v3 6/6] selftests/net: packetdrill: add
- tcp_rcv_neg_window.pkt
-Message-ID: <abWVuS1XJaKrndJw@gandalf.schnuecks.de>
-References: <20260309-tcp_rfc7323_retract_wnd_rfc-v3-0-4c7f96b1ec69@gmail.com>
- <20260309-tcp_rfc7323_retract_wnd_rfc-v3-6-4c7f96b1ec69@gmail.com>
- <CANn89i+PypF1cK4mnp8L_eCG_z+3Aj6uxJoohm_=DwGfR1=4FA@mail.gmail.com>
- <abCkmiCSPkmxzECa@gandalf.schnuecks.de>
- <CANn89iKYxs644ardFFSKo8d0EXL_2A5eUQjWZ3yp9-Q4tVLKzQ@mail.gmail.com>
+        Sat, 14 Mar 2026 13:14:39 -0700 (PDT)
+From: atwellwea@gmail.com
+To: netdev@vger.kernel.org,
+	davem@davemloft.net,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	edumazet@google.com,
+	ncardwell@google.com
+Cc: linux-kernel@vger.kernel.org,
+	linux-api@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	mptcp@lists.linux.dev,
+	dsahern@kernel.org,
+	horms@kernel.org,
+	kuniyu@google.com,
+	andrew+netdev@lunn.ch,
+	willemdebruijn.kernel@gmail.com,
+	jasowang@redhat.com,
+	skhan@linuxfoundation.org,
+	corbet@lwn.net,
+	matttbe@kernel.org,
+	martineau@kernel.org,
+	geliang@kernel.org,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	0x7f454c46@gmail.com
+Subject: [PATCH net-next v2 00/14] tcp: preserve receive-window accounting across ratio drift
+Date: Sat, 14 Mar 2026 14:13:34 -0600
+Message-ID: <20260314201348.1786972-1-atwellwea@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANn89iKYxs644ardFFSKo8d0EXL_2A5eUQjWZ3yp9-Q4tVLKzQ@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Eric,
+From: Wesley Atwell <atwellwea@gmail.com>
 
-On Sat, Mar 14, 2026 at 04:58:28AM +0100, Eric Dumazet wrote:
-> On Wed, Mar 11, 2026 at 12:09???AM Simon Baatz <gmbnomis@gmail.com> wrote:
-> >
-> > Hi Eric,
-> >
-> > On Tue, Mar 10, 2026 at 09:54:58AM +0100, Eric Dumazet wrote:
-> > > On Mon, Mar 9, 2026 at 9:03???AM Simon Baatz via B4 Relay
-> > > <devnull+gmbnomis.gmail.com@kernel.org> wrote:
-> > > >
-> > > > From: Simon Baatz <gmbnomis@gmail.com>
-> > > >
-> > > > The test ensures we correctly apply the maximum advertised window limit
-> > > > when rcv_nxt advances past rcv_mwnd_seq, so that the "usable window"
-> > > > is properly clamped to zero rather than becoming negative.
-> > > >
-> > > > Signed-off-by: Simon Baatz <gmbnomis@gmail.com>
-> > > > ---
-> > > >  .../net/packetdrill/tcp_rcv_neg_window.pkt         | 26 ++++++++++++++++++++++
-> > > >  1 file changed, 26 insertions(+)
-> > > >
-> > > > diff --git a/tools/testing/selftests/net/packetdrill/tcp_rcv_neg_window.pkt b/tools/testing/selftests/net/packetdrill/tcp_rcv_neg_window.pkt
-> > > > new file mode 100644
-> > > > index 0000000000000000000000000000000000000000..15a9b4938f16d175ac54f3fd192ed2b59b0a4399
-> > > > --- /dev/null
-> > > > +++ b/tools/testing/selftests/net/packetdrill/tcp_rcv_neg_window.pkt
-> > > > @@ -0,0 +1,26 @@
-> > > > +// SPDX-License-Identifier: GPL-2.0
-> > > > +
-> > > > +--mss=1000
-> > > > +
-> > > > +`./defaults.sh`
-> > > > +
-> > > > +// Establish a connection.
-> > > > +   +0 socket(..., SOCK_STREAM, IPPROTO_TCP) = 3
-> > > > +   +0 setsockopt(3, SOL_SOCKET, SO_REUSEADDR, [1], 4) = 0
-> > > > +   +0 setsockopt(3, SOL_SOCKET, SO_RCVBUF, [20000], 4) = 0
-> > > > +   +0 bind(3, ..., ...) = 0
-> > > > +   +0 listen(3, 1) = 0
-> > > > +
-> > > > +   +0 < S 0:0(0) win 32792 <mss 1000,nop,wscale 7>
-> > > > +   +0 > S. 0:0(0) ack 1 win 18980 <mss 1460,nop,wscale 0>
-> > > > +  +.1 < . 1:1(0) ack 1 win 257
-> > > > +
-> > > > +   +0 accept(3, ..., ...) = 4
-> > > > +
-> > > > +// A too big packet is accepted if the receive queue is empty
-> > > > +   +0 < P. 1:20001(20000) ack 1 win 257
-> > >
-> > > We do not see the answer, it seems this test is not complete ?
-> >
-> > Actually we do not want to see an answer.  The packet won't trigger
-> > an immediate ACK (it is larger than the advertised window, but does
-> > not cause immediate memory pressure).
-> >
-> > When we then send a RST before the delayed ACK would be generated:
-> >
-> > > > +// Send a RST immediately so that there is no rcv_wup/rcv_mwnd_seq update yet
-> > > > +   +0 < R. 20001:20001(0) ack 1 win 257
-> >
-> > We are in a state where rcv_wup, rcv_wnd, and rcv_mwnd_seq have not
-> > been updated yet, but we must still accept the RST
-> > (rcv_nxt == 20001 > rcv_mwnd_seq, tcp_max_receive_window() == 0)
-> >
-> > > > +
-> > > > +  +.1 %{ assert tcpi_state == TCP_CLOSE, tcpi_state }%
-> >
-> > And we verify that we accepted the RST here.
-> >
-> > Given how subtle this sequence is, and considering the limited value
-> > of this test, I am also fine with dropping it if it is too fragile or
-> > confusing.
-> 
-> Sorry I missed your answer.
-> 
-> Ok then please use :
-> 
-> // A too big packet is accepted if the receive queue is empty
->    +0 < P. 1:20001(20000) ack 1 win 257
->    +0 %{ assert tcpi_bytes_received == 20000, tcpi_bytes_received;
-> assert tcpi_bytes_acked == 0, tcpi_bytes_acked }%
+This series keeps sender-visible TCP receive-window accounting tied to the
+scaling basis that was in force when the window was advertised, even if
+later receive-side truesize inflation lowers scaling_ratio or the live
+receive window retracts below the largest right edge already exposed to the
+sender.
 
-Unfortunately, tcpi_bytes_acked is the TX direction, it will always
-be 0 here.
+After the receive-window retraction changes, the receive path needs to keep
+track of two related pieces of sender-visible state:
 
-Instead, we can still test that the oversized packet is accepted and
-indirectly verify that no immediate ACK is sent by eliciting and
-checking a RST:
+  1. the live advertised receive window
+  2. the maximum advertised right edge and the basis it was exposed with
 
-// A too big packet is accepted if the receive queue is empty, but does not trigger
-// an immediate ACK.
-   +0 < P. 1:20001(20000) ack 1 win 257
-   +0 %{ assert tcpi_bytes_received == 20000, tcpi_bytes_received; }%
+This repost snapshots both, uses them to repair receive-buffer backing when
+ratio drift would otherwise strand sender-visible space, extends
+TCP_REPAIR_WINDOW so repair/restore can round-trip the new state, and adds
+truesize-drift coverage through TUN packetdrill tests and netdevsim-based
+selftests.
 
-// Send a RST immediately so that there is no rcv_wup/rcv_mwnd_seq update yet
-   +0 < R. 20001:20001(0) ack 1 win 257
+v2:
+- repost to net-next and use the [PATCH net-next v2] prefix
+- rebase the receive-window accounting changes on top of the retraction
+  model
+- split the series more finely
+- snapshot both the live rwnd basis and the max advertised-window basis
+- extend TCP_REPAIR_WINDOW to preserve legacy, v1, and current layouts
+- add TUN RX truesize injection and packetdrill coverage for ratio drift
+- split the generic netdevsim PSP extension cleanup into its own final
+  patch after the peer RX truesize support
+- add the requested ABI/runtime comments at the non-obvious review points
 
-// Verify that the RST was accepted. Indirectly this also verifies that no immediate
-// ACK was sent for the data packet above.
-   +0 < . 20001:20001(0) ack 1 win 257
-    * > R 1:1(0)
+Testing:
 
-As the series is merged now (thank you!), I will send this
-separately, as suggested.
+- full runtime selftest coverage for netdevsim, tcp_ao, mptcp, and
+  packetdrill; all runtime suites completed successfully
+- tcp_ao completed 24/24 top-level tests, covering 803 passing checks,
+  6 expected failures, 36 skips, and 0 unexpected failures
+- mptcp completed 588 passing checks in aggregate, with 28 skips and
+  0 unexpected failures
+- packetdrill completed 219/219 runtime cases with 0 failures,
+  including the new tests
+- netdevsim completed 18/18 top-level runtime tests with 0 failures,
+  including the peer RX truesize and related netdevsim coverage used by
+  this series
 
-- Simon
+Wesley Atwell (14):
+  tcp: factor receive-memory accounting helpers
+  tcp: snapshot advertise-time scaling for rcv_wnd
+  tcp: refresh rcv_wnd snapshots at TCP write sites
+  tcp: snapshot the maximum advertised receive window
+  tcp: grow rcvbuf to back scaled-window quantization slack
+  tcp: regrow rcvbuf when scaling_ratio drops after advertisement
+  tcp: honor the maximum advertised window after live retraction
+  tcp: extend TCP_REPAIR_WINDOW for live and max-window snapshots
+  mptcp: refresh TCP receive-window snapshots on subflows
+  tcp: expose rmem and backlog in tcp and mptcp rcvbuf_grow tracepoints
+  selftests: tcp_ao: cover legacy, v1, and retracted repair windows
+  tun/selftests: add RX truesize injection for TCP window tests
+  netdevsim: add peer RX truesize support for selftests
+  netdevsim: release pinned PSP ext on drop paths
 
+ .../networking/net_cachelines/tcp_sock.rst    |   2 +
+ drivers/net/netdevsim/netdev.c                | 156 ++++++-
+ drivers/net/netdevsim/netdevsim.h             |   4 +
+ drivers/net/tun.c                             |  65 +++
+ include/linux/tcp.h                           |   2 +
+ include/net/tcp.h                             | 118 ++++-
+ include/trace/events/mptcp.h                  |  11 +-
+ include/trace/events/tcp.h                    |  12 +-
+ include/uapi/linux/if_tun.h                   |   4 +
+ include/uapi/linux/tcp.h                      |   8 +
+ net/ipv4/tcp.c                                |  75 ++-
+ net/ipv4/tcp_fastopen.c                       |   2 +-
+ net/ipv4/tcp_input.c                          | 160 ++++++-
+ net/ipv4/tcp_minisocks.c                      |   4 +-
+ net/ipv4/tcp_output.c                         |  25 +-
+ net/mptcp/options.c                           |  14 +-
+ net/mptcp/protocol.h                          |  14 +-
+ .../selftests/drivers/net/netdevsim/Makefile  |   1 +
+ .../drivers/net/netdevsim/peer-rx-truesize.sh | 426 ++++++++++++++++++
+ .../tcp_rcv_neg_window_truesize.pkt           | 143 ++++++
+ .../net/packetdrill/tcp_rcv_toobig.pkt        |  35 ++
+ .../packetdrill/tcp_rcv_toobig_default.pkt    |  97 ++++
+ .../tcp_rcv_toobig_default_truesize.pkt       | 118 +++++
+ .../tcp_rcv_wnd_shrink_allowed_truesize.pkt   |  49 ++
+ .../testing/selftests/net/tcp_ao/lib/aolib.h  |  83 +++-
+ .../testing/selftests/net/tcp_ao/lib/repair.c |  18 +-
+ .../selftests/net/tcp_ao/self-connect.c       | 201 ++++++++-
+ tools/testing/selftests/net/tun.c             | 140 +++++-
+ 28 files changed, 1911 insertions(+), 76 deletions(-)
+ create mode 100755 tools/testing/selftests/drivers/net/netdevsim/peer-rx-truesize.sh
+ create mode 100644 tools/testing/selftests/net/packetdrill/tcp_rcv_neg_window_truesize.pkt
+ create mode 100644 tools/testing/selftests/net/packetdrill/tcp_rcv_toobig.pkt
+ create mode 100644 tools/testing/selftests/net/packetdrill/tcp_rcv_toobig_default.pkt
+ create mode 100644 tools/testing/selftests/net/packetdrill/tcp_rcv_toobig_default_truesize.pkt
+ create mode 100644 tools/testing/selftests/net/packetdrill/tcp_rcv_wnd_shrink_allowed_truesize.pkt
+
+
+base-commit: f807b5b9b89eb9220d034115c272c312251cbcac
 -- 
-Simon Baatz <gmbnomis@gmail.com>
+2.43.0
+
