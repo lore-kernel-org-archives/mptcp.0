@@ -1,64 +1,64 @@
-Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
+Received: from mail-oa1-f46.google.com (mail-oa1-f46.google.com [209.85.160.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D970A386457
-	for <mptcp@lists.linux.dev>; Sat, 14 Mar 2026 20:14:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF94438553D
+	for <mptcp@lists.linux.dev>; Sat, 14 Mar 2026 20:14:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773519290; cv=none; b=g8sKnNxAEC6RtD8ivVSKHgh1BFf//bNc3u4vlBggaUNaJYz7Km25o0aPOOjpU5woThhitm3q9ZNblFwaeC0ih47cL1hhzHRw8I5hflpQTzKc8gxxdgH8Ud0gkKsznCBGcFOlHoO3TzcefXuRb4JPBhaQa+GYzjhL/cxdo5YZlKg=
+	t=1773519291; cv=none; b=X+gAFDeZqofik2yomoljdUyn7uP8/Kbz7yA9mV+nsWZyXad5zTm7ss0Q3tueK9KlGeMRJT0HfQgyhjr4MLmlaHMN/YLzH2M9yUye/FZqDYJOXXFgAl9F8qwTDlQIS/x2hb/ZvdpMPxnezwg7tvzUGUhcnOi43FuFOfIiu+emX9k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773519290; c=relaxed/simple;
-	bh=2EkRqoGXrOUfHB63oRGb5TDy5HRb1y3sBh+IDjMEZ3s=;
+	s=arc-20240116; t=1773519291; c=relaxed/simple;
+	bh=7izhNqLY7+iqpp+D5zcP+czL6od/LnGYqCsmQoSJSu4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=R/NN2DyjukGXRwMvC7aPPsgI0QnO1+1h3TkWPN0WZ4MAtSzyfMl3EenPCTcAvU31oXqfQ0u3khx4TE2E4gT82aS1cOvuzlAWPjzHzSeORQO50BmwKfeuDMxZeGUr2fQoNOyJ97vYL9c9ONYLB3Zhhy+s/XYFzKslcTcg3ffBEBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GPvUubli; arc=none smtp.client-ip=209.85.167.170
+	 MIME-Version; b=Seac3XxSH24DLtwY1pd601Xrzf27+tKKXM/JcA7F2N20m4uZYy+pRpRn7WIxauz96vRpogs8jDYVrSLlXs7tH/iz2qax99jBqUmjBeYM7MW1wO3OMZjBv7hlzjH3VTI+hP1O599/3Vmd3rs85iGuLkW0GDBs9JUF64ITJ1nxy38=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VFoEiCOM; arc=none smtp.client-ip=209.85.160.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GPvUubli"
-Received: by mail-oi1-f170.google.com with SMTP id 5614622812f47-46704fbf62dso2144280b6e.1
-        for <mptcp@lists.linux.dev>; Sat, 14 Mar 2026 13:14:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VFoEiCOM"
+Received: by mail-oa1-f46.google.com with SMTP id 586e51a60fabf-40974bf7781so3244009fac.0
+        for <mptcp@lists.linux.dev>; Sat, 14 Mar 2026 13:14:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773519287; x=1774124087; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1773519289; x=1774124089; darn=lists.linux.dev;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=RTjO+z47PYHq3eZ5eRulxWts7U/pAeGFmyBg9Cf0dZo=;
-        b=GPvUubliQBIWrFJ3pKz83VLqZb0ZVkf87BlvGmqGjTENhRcvtVWP5hj7MXcXshlfOC
-         Qfi/Vpsp+/fBEdVDGDlDE2/fHGdHkKfhcdoonp9ac6vWXuNlAkrIevzROPW0ddo3p/AL
-         Z5o8sYM27LmrtJeaOtszYVFr+nrB/wpXzjaV5NpAIRG72ZXD8PMDj66oMm2BMsN9AJNd
-         Pql1f/QU5q7g4qLEsT/QQe04DUmUwbkaVYg+5YkBFpJXtXbSQKLPpQfs8jGDAwRWcZjT
-         n2KTBMYcvKXBGNs4ScxtpKQMSuttKJKAz62BQWTV6tI21FlknjhlYO4G/mnXpgkkRAt7
-         POkA==
+        bh=fOOOdlrS2+fu1x+v8Rmi5MAUGmJW2DC+1z1Ah1tHPHA=;
+        b=VFoEiCOM2YcyAxVCFKRJ/TI39aDTiHG+a4nVSemZ1nIRBvdZB8V60fxiGVeLWl4bUY
+         zJYlFGpzgqUU+vh7obOsiCixWOBkFxWexhwGdIJ1+TGZG+IgJtM6rFgHcdj95+WBYkHp
+         J0IEUAcBXBX6nkTFSMC+TBSMyzAvMTttOk+8pIYSB0hkfjsgTYnQMcJQcKZ7yDJQthlm
+         +60eJqc7N77oEcqN6m9gEb1Qg9IN98KRxo/2NcOUetNQRTUakpJAoSvthLsBNbv/Ay5c
+         j5vLevf+Ia16PwSKYKYKXn3+HAWtZYuGe14iCtS7cXwjMWkCySjwYpzWjcK3hBupX9CY
+         qonw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773519287; x=1774124087;
+        d=1e100.net; s=20251104; t=1773519289; x=1774124089;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=RTjO+z47PYHq3eZ5eRulxWts7U/pAeGFmyBg9Cf0dZo=;
-        b=LNcAHVJIwblZQtscf/c978sEbEylhtrW9rhPPT+Fm90fHHzc2dUDoDM2jjy7Ig3RiF
-         CU7rlj860lhmIfaM/WIDyCeDQrXSoOV42Siz1/8jnkmM2ZVt/Z66xzCLvF0v1zP8HQ4V
-         DIPehOlFybl5MrNh9vOwL5fuvhrDPeVUCnxxoCZ2b7In53RTZlZyIn0YMjtIaA/uSIls
-         DtFEahjnEUt55gqNVciOTQF+XHtoqSLuX/ewPuleaYg7LF2eLxohla32FwPqd2hv8BLc
-         4hxVqEvxalo2lHMmw8UvAd8LF3rKYi+Qq66vMm/9SuM9qFdqEi1XTeE0r7gYHkW6mO02
-         ZOVg==
-X-Forwarded-Encrypted: i=1; AJvYcCWDI/vs0H6XOLcBx+QzzxfdCK8Ka4Vhpx32Z6FNR03+hRtwUsJzPTochqlSpvKdkvWEftJ6Yg==@lists.linux.dev
-X-Gm-Message-State: AOJu0Ywv5aXUNLd5/TqeMLghe/qGdyfN9AyOIWgkoJnZANmoH4+nZX0h
-	tFjWBiSKqb7le/tr25cyXS7dV4pHuJIWdnlFS+Ku7nvDAXsKg3uqUWDW
-X-Gm-Gg: ATEYQzwkxptuqWrWxdnEG/GOmW+sZRztW/vw2P8dTywl4gVNDH5JIZwh4o1Bxwp3P4n
-	uCrAnCqDQunmI7bR53KpYQlSYPH6rImdKqKvt1+BXHl62bhJKHfvkyAAXSlXDo8rh5sDYIiSndw
-	qIGHlH064592dJAR5BRYSC0pBJ6XYZ+dXd8asZ5+FtM15NPKV92b/x2lDP8T+eP/vmoLHdXrEGF
-	tJTJAvxGYchyfbc0OfrvlC0rfs2ZDRuH8WbnaNNJ2OtlDoHCLQov80yLQP1CVmJbwMmx/QhWPbU
-	wbJyAYexcKH7uNMXrIou7WpZxoKW8rhDPvqNLJIiDjdjnIPFApapf2PeO2hbqI0IMPxXrTPNgCo
-	mFLS+E9FEv+6oQTprxVLHhU0iYt/F1C532wmncG/1Mg770k+GZTVkCrghVuDyHIdca9/Nk57W1O
-	aEuj8HzjFk/ULZpuMjaLgwHxDgerd8mASMTd9nF0anf45JYOie/uDGgwld1UOPC7QpZYW6mPnih
-	Faz0XZpRwI7QOejJQVe46HN4QDG9R6CT7K4AHqH3ZO3n5MbD9k=
-X-Received: by 2002:a05:6808:23d1:b0:467:15ad:9de5 with SMTP id 5614622812f47-467570a27f2mr4101052b6e.13.1773519287456;
-        Sat, 14 Mar 2026 13:14:47 -0700 (PDT)
+        bh=fOOOdlrS2+fu1x+v8Rmi5MAUGmJW2DC+1z1Ah1tHPHA=;
+        b=BljsGK7A7GBzNomtA6bDgO+IHYwz7Dh7Pr7OSIPKzRUsW4CFLLrPx+qAI4/V+mg8pe
+         /xYAgKIqyNKb3pk6R5Fyj7d8Jw39b6dwCL00oxSOtzXZ+H8WT2P5w8GB+ghdatFbODNW
+         f0AHwB5gTt1FYdUTK91h8h6wLKTI0IffsZHmDOBEJqipUXCCP/S+fElr8BoENdbk7iaM
+         VWI6PF6HZ7jYY7qPc8vJNVgXGFyzqhHoPjmdsPoAgsk0kPU4vOufvnS2bO5KiwaUOPER
+         S/rZGmXCK1sq5xD1Fzqqaq6wb0D6hk/538q/QSsUNL3zFhT7xxO4hme+P5MjxRXGGfg8
+         qrmA==
+X-Forwarded-Encrypted: i=1; AJvYcCXSKWc47imAf6Nw2Adcsvvd6DnAcHPqUdgn52vWavExY9D8qksmr6rxvU/5uHwwzlvLwo1egA==@lists.linux.dev
+X-Gm-Message-State: AOJu0YyqqvMdnufrcrZY7GQkmT3Y/OWxQvQ9qcX6DcnffhF954QaAbfg
+	KsCu5gbE9a60KDtTxYXkRnyNUXs0PTWdu6zim/QDhJnhwkDsX0ujj8GB
+X-Gm-Gg: ATEYQzxTWbwdcgxbLQ48D2E3Nnd2LPCGSRb1rs1J3Zx1DpoYzvUoQS10oSydzRs26Vq
+	YFXR8quAP2c4cPz60c2AHpaR+0fCAqjRegcXGO8/8pxlQKbO/fQwVUzBm11eZ1ytMIsx6fctMNX
+	9PXezba3+c6x2Us3KWCuUYaIpGHzv8dRTlw3u/84a91gbdWIx2puisGs8R86gusjyvQ/OSVsWfY
+	1T1USquu4QfFQKwiC26zOjKLEbY4/rS/b0ruApZjJboPA1MTSQtZ5hruWSdMvRMJDnD7ADJPLIl
+	e/AawYm7xu4dcFlZc3W7ajBaLbjDsW8YhTMSL5fEd+5VZcCbGQN8MHmwSjey8kMyJAkQUqqWIEV
+	bfPxQZbBAchCXFSmDmtGmNwuK0cWVTu21VotgcrJz4EzobE0tvbb8Z2oT4TeLxVs2kNSsPdiA22
+	UIlCnnTVuF8tMMoGNMBrPW63qtK0xGwWB9G4s/IHyeqSeAL5cedbZ6pU6qZd71jq8JEOsjKi5q6
+	xVvXpoGFhX6QLDDM+c7NjOPSZEgGTUCgtrNO9mw
+X-Received: by 2002:a05:6870:7d86:b0:40a:5870:98bb with SMTP id 586e51a60fabf-4179911cfccmr6459609fac.21.1773519288902;
+        Sat, 14 Mar 2026 13:14:48 -0700 (PDT)
 Received: from Atwell-Laptop.. (108-212-132-20.lightspeed.irvnca.sbcglobal.net. [108.212.132.20])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-4177e5e8185sm11914165fac.12.2026.03.14.13.14.46
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-4177e5e8185sm11914165fac.12.2026.03.14.13.14.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 14 Mar 2026 13:14:47 -0700 (PDT)
+        Sat, 14 Mar 2026 13:14:48 -0700 (PDT)
 From: atwellwea@gmail.com
 To: netdev@vger.kernel.org,
 	davem@davemloft.net,
@@ -87,9 +87,9 @@ Cc: linux-kernel@vger.kernel.org,
 	mhiramat@kernel.org,
 	mathieu.desnoyers@efficios.com,
 	0x7f454c46@gmail.com
-Subject: [PATCH net-next v2 04/14] tcp: snapshot the maximum advertised receive window
-Date: Sat, 14 Mar 2026 14:13:38 -0600
-Message-ID: <20260314201348.1786972-5-atwellwea@gmail.com>
+Subject: [PATCH net-next v2 05/14] tcp: grow rcvbuf to back scaled-window quantization slack
+Date: Sat, 14 Mar 2026 14:13:39 -0600
+Message-ID: <20260314201348.1786972-6-atwellwea@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260314201348.1786972-1-atwellwea@gmail.com>
 References: <20260314201348.1786972-1-atwellwea@gmail.com>
@@ -103,175 +103,142 @@ Content-Transfer-Encoding: 8bit
 
 From: Wesley Atwell <atwellwea@gmail.com>
 
-Track the maximum sender-visible receive-window right edge separately
-from the live rwnd, along with the scaling basis that was in force when
-that larger window was advertised.
+Teach TCP to grow sk_rcvbuf when scale rounding would otherwise expose
+more sender-visible window than the current hard receive-memory backing
+can cover.
 
-This gives later admission and restore paths enough information to
-reason about retracted windows without losing the original sender-
-visible bound.
+The new helper keeps backlog and memory-pressure limits in the same
+units as the rest of the receive path, while __tcp_select_window()
+backs any rounding slack before advertising it.
 
 Signed-off-by: Wesley Atwell <atwellwea@gmail.com>
 ---
- .../networking/net_cachelines/tcp_sock.rst    |  1 +
- include/linux/tcp.h                           |  1 +
- include/net/tcp.h                             | 21 ++++++++++++++++++-
- net/ipv4/tcp.c                                |  1 +
- net/ipv4/tcp_fastopen.c                       |  2 +-
- net/ipv4/tcp_input.c                          |  4 ++--
- net/ipv4/tcp_minisocks.c                      |  2 +-
- net/ipv4/tcp_output.c                         |  2 +-
- 8 files changed, 28 insertions(+), 6 deletions(-)
+ include/net/tcp.h     | 12 ++++++++++++
+ net/ipv4/tcp_input.c  | 36 ++++++++++++++++++++++++++++++++++--
+ net/ipv4/tcp_output.c | 15 +++++++++++++--
+ 3 files changed, 59 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/networking/net_cachelines/tcp_sock.rst b/Documentation/networking/net_cachelines/tcp_sock.rst
-index 09ece1c59c2d..d58a3b1eb55d 100644
---- a/Documentation/networking/net_cachelines/tcp_sock.rst
-+++ b/Documentation/networking/net_cachelines/tcp_sock.rst
-@@ -11,6 +11,7 @@ Type                          Name                    fastpath_tx_access  fastpa
- struct inet_connection_sock   inet_conn
- u16                           tcp_header_len          read_mostly         read_mostly         tcp_bound_to_half_wnd,tcp_current_mss(tx);tcp_rcv_established(rx)
- u16                           gso_segs                read_mostly                             tcp_xmit_size_goal
-+u8                            rcv_mwnd_scaling_ratio  read_write          read_mostly         tcp_init_max_rcv_wnd_seq,tcp_update_max_rcv_wnd_seq,tcp_repair_set_window,do_tcp_getsockopt
- u8                            rcv_wnd_scaling_ratio   read_write          read_mostly         tcp_set_rcv_wnd,tcp_can_ingest,tcp_repair_set_window,do_tcp_getsockopt
- __be32                        pred_flags              read_write          read_mostly         tcp_select_window(tx);tcp_rcv_established(rx)
- u64                           bytes_received                              read_write          tcp_rcv_nxt_update(rx)
-diff --git a/include/linux/tcp.h b/include/linux/tcp.h
-index 2ace563d59d6..e5d7a65ac439 100644
---- a/include/linux/tcp.h
-+++ b/include/linux/tcp.h
-@@ -297,6 +297,7 @@ struct tcp_sock {
- 		est_ecnfield:2,/* ECN field for AccECN delivered estimates */
- 		accecn_opt_demand:2,/* Demand AccECN option for n next ACKs */
- 		prev_ecnfield:2; /* ECN bits from the previous segment */
-+	u8	rcv_mwnd_scaling_ratio; /* 0 if unknown, else tp->rcv_mwnd_seq basis */
- 	u8	rcv_wnd_scaling_ratio; /* 0 if unknown, else tp->rcv_wnd basis */
- 	__be32	pred_flags;
- 	u64	tcp_clock_cache; /* cache last tcp_clock_ns() (see tcp_mstamp_refresh()) */
 diff --git a/include/net/tcp.h b/include/net/tcp.h
-index 6fa7cdb0979e..fc22ab6b80d5 100644
+index fc22ab6b80d5..5b479ad44f89 100644
 --- a/include/net/tcp.h
 +++ b/include/net/tcp.h
-@@ -947,13 +947,21 @@ static inline u32 tcp_max_receive_window(const struct tcp_sock *tp)
- 	return (u32) win;
+@@ -397,6 +397,7 @@ int tcp_ioctl(struct sock *sk, int cmd, int *karg);
+ enum skb_drop_reason tcp_rcv_state_process(struct sock *sk, struct sk_buff *skb);
+ void tcp_rcv_established(struct sock *sk, struct sk_buff *skb);
+ void tcp_rcvbuf_grow(struct sock *sk, u32 newval);
++bool tcp_try_grow_rcvbuf(struct sock *sk, int needed);
+ void tcp_rcv_space_adjust(struct sock *sk);
+ int tcp_twsk_unique(struct sock *sk, struct sock *sktw, void *twp);
+ void tcp_twsk_destructor(struct sock *sk);
+@@ -1844,6 +1845,17 @@ static inline int tcp_rwnd_avail(const struct sock *sk)
+ 	return tcp_rmem_avail(sk) - READ_ONCE(sk->sk_backlog.len);
  }
  
-+static inline void tcp_init_max_rcv_wnd_seq(struct tcp_sock *tp)
-+{
-+	tp->rcv_mwnd_seq = tp->rcv_wup + tp->rcv_wnd;
-+	tp->rcv_mwnd_scaling_ratio = tp->rcv_wnd_scaling_ratio;
-+}
-+
- /* Check if we need to update the maximum receive window sequence number */
- static inline void tcp_update_max_rcv_wnd_seq(struct tcp_sock *tp)
- {
- 	u32 wre = tp->rcv_wup + tp->rcv_wnd;
- 
--	if (after(wre, tp->rcv_mwnd_seq))
-+	if (after(wre, tp->rcv_mwnd_seq)) {
- 		tp->rcv_mwnd_seq = wre;
-+		tp->rcv_mwnd_scaling_ratio = tp->rcv_wnd_scaling_ratio;
-+	}
- }
- 
- /* Choose a new window, without checks for shrinking, and without
-@@ -1766,6 +1774,16 @@ static inline bool tcp_space_from_rcv_wnd(const struct tcp_sock *tp, int win,
- 					   space);
- }
- 
-+/* Same as tcp_space_from_rcv_wnd(), but for the remembered maximum
-+ * sender-visible receive window.
++/* Passive children clone the listener's sk_socket until accept() grafts
++ * their own struct socket, so only sockets that point back to themselves
++ * should autotune receive-buffer backing.
 + */
-+static inline bool tcp_space_from_rcv_mwnd(const struct tcp_sock *tp, int win,
-+					   int *space)
++static inline bool tcp_rcvbuf_grow_allowed(const struct sock *sk)
 +{
-+	return tcp_space_from_wnd_snapshot(tp->rcv_mwnd_scaling_ratio, win,
-+					   space);
++	struct socket *sock = READ_ONCE(sk->sk_socket);
++
++	return sock && READ_ONCE(sock->sk) == sk;
 +}
 +
- /* Assume a 50% default for skb->len/skb->truesize ratio.
-  * This may be adjusted later in tcp_measure_rcv_mss().
-  */
-@@ -1776,6 +1794,7 @@ static inline void tcp_scaling_ratio_init(struct sock *sk)
- 	struct tcp_sock *tp = tcp_sk(sk);
- 
- 	tp->scaling_ratio = TCP_DEFAULT_SCALING_RATIO;
-+	tp->rcv_mwnd_scaling_ratio = TCP_DEFAULT_SCALING_RATIO;
- 	tp->rcv_wnd_scaling_ratio = TCP_DEFAULT_SCALING_RATIO;
- }
- 
-diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
-index 0383ee8d3b78..66706dbb90f5 100644
---- a/net/ipv4/tcp.c
-+++ b/net/ipv4/tcp.c
-@@ -5275,6 +5275,7 @@ static void __init tcp_struct_check(void)
- 	CACHELINE_ASSERT_GROUP_MEMBER(struct tcp_sock, tcp_sock_write_txrx, received_ce);
- 	CACHELINE_ASSERT_GROUP_MEMBER(struct tcp_sock, tcp_sock_write_txrx, received_ecn_bytes);
- 	CACHELINE_ASSERT_GROUP_MEMBER(struct tcp_sock, tcp_sock_write_txrx, app_limited);
-+	CACHELINE_ASSERT_GROUP_MEMBER(struct tcp_sock, tcp_sock_write_txrx, rcv_mwnd_scaling_ratio);
- 	CACHELINE_ASSERT_GROUP_MEMBER(struct tcp_sock, tcp_sock_write_txrx, rcv_wnd_scaling_ratio);
- 	CACHELINE_ASSERT_GROUP_MEMBER(struct tcp_sock, tcp_sock_write_txrx, rcv_wnd);
- 	CACHELINE_ASSERT_GROUP_MEMBER(struct tcp_sock, tcp_sock_write_txrx, rcv_mwnd_seq);
-diff --git a/net/ipv4/tcp_fastopen.c b/net/ipv4/tcp_fastopen.c
-index 4e389d609f91..56113cf2a165 100644
---- a/net/ipv4/tcp_fastopen.c
-+++ b/net/ipv4/tcp_fastopen.c
-@@ -377,7 +377,7 @@ static struct sock *tcp_fastopen_create_child(struct sock *sk,
- 
- 	tcp_rsk(req)->rcv_nxt = tp->rcv_nxt;
- 	tp->rcv_wup = tp->rcv_nxt;
--	tp->rcv_mwnd_seq = tp->rcv_wup + tp->rcv_wnd;
-+	tcp_init_max_rcv_wnd_seq(tp);
- 	/* tcp_conn_request() is sending the SYNACK,
- 	 * and queues the child into listener accept queue.
- 	 */
+ /* Note: caller must be prepared to deal with negative returns */
+ static inline int tcp_space(const struct sock *sk)
+ {
 diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
-index b8e65e31255e..352f814a4ff6 100644
+index 352f814a4ff6..32256519a085 100644
 --- a/net/ipv4/tcp_input.c
 +++ b/net/ipv4/tcp_input.c
-@@ -6902,7 +6902,7 @@ static int tcp_rcv_synsent_state_process(struct sock *sk, struct sk_buff *skb,
- 		 */
- 		WRITE_ONCE(tp->rcv_nxt, TCP_SKB_CB(skb)->seq + 1);
- 		tp->rcv_wup = TCP_SKB_CB(skb)->seq + 1;
--		tp->rcv_mwnd_seq = tp->rcv_wup + tp->rcv_wnd;
-+		tcp_init_max_rcv_wnd_seq(tp);
+@@ -774,6 +774,38 @@ static void tcp_init_buffer_space(struct sock *sk)
+ 				    (u32)TCP_INIT_CWND * tp->advmss);
+ }
  
- 		/* RFC1323: The window in SYN & SYN/ACK segments is
- 		 * never scaled.
-@@ -7015,7 +7015,7 @@ static int tcp_rcv_synsent_state_process(struct sock *sk, struct sk_buff *skb,
- 		WRITE_ONCE(tp->rcv_nxt, TCP_SKB_CB(skb)->seq + 1);
- 		WRITE_ONCE(tp->copied_seq, tp->rcv_nxt);
- 		tp->rcv_wup = TCP_SKB_CB(skb)->seq + 1;
--		tp->rcv_mwnd_seq = tp->rcv_wup + tp->rcv_wnd;
-+		tcp_init_max_rcv_wnd_seq(tp);
++/* Try to grow sk_rcvbuf so the hard receive-memory limit covers @needed
++ * bytes beyond sk_rmem_alloc while preserving sender-visible headroom
++ * already consumed by sk_backlog.len.
++ */
++bool tcp_try_grow_rcvbuf(struct sock *sk, int needed)
++{
++	struct net *net = sock_net(sk);
++	int backlog;
++	int rmem2;
++	int target;
++
++	needed = max(needed, 0);
++	backlog = READ_ONCE(sk->sk_backlog.len);
++	target = tcp_rmem_used(sk) + backlog + needed;
++
++	if (target <= READ_ONCE(sk->sk_rcvbuf))
++		return true;
++
++	rmem2 = READ_ONCE(net->ipv4.sysctl_tcp_rmem[2]);
++	if (READ_ONCE(sk->sk_rcvbuf) >= rmem2 ||
++	    (sk->sk_userlocks & SOCK_RCVBUF_LOCK) ||
++	    tcp_under_memory_pressure(sk) ||
++	    sk_memory_allocated(sk) >= sk_prot_mem_limits(sk, 0))
++		return false;
++
++	WRITE_ONCE(sk->sk_rcvbuf,
++		   min_t(int, rmem2,
++			 max_t(int, READ_ONCE(sk->sk_rcvbuf), target)));
++
++	return target <= READ_ONCE(sk->sk_rcvbuf);
++}
++
+ /* 4. Recalculate window clamp after socket hit its memory bounds. */
+ static void tcp_clamp_window(struct sock *sk)
+ {
+@@ -785,14 +817,14 @@ static void tcp_clamp_window(struct sock *sk)
+ 	icsk->icsk_ack.quick = 0;
+ 	rmem2 = READ_ONCE(net->ipv4.sysctl_tcp_rmem[2]);
  
- 		/* RFC1323: The window in SYN & SYN/ACK segments is
- 		 * never scaled.
-diff --git a/net/ipv4/tcp_minisocks.c b/net/ipv4/tcp_minisocks.c
-index 1c02c9cd13fe..85bd9580caf9 100644
---- a/net/ipv4/tcp_minisocks.c
-+++ b/net/ipv4/tcp_minisocks.c
-@@ -604,7 +604,7 @@ struct sock *tcp_create_openreq_child(const struct sock *sk,
- 	newtp->window_clamp = req->rsk_window_clamp;
- 	newtp->rcv_ssthresh = req->rsk_rcv_wnd;
- 	tcp_set_rcv_wnd(newtp, req->rsk_rcv_wnd);
--	newtp->rcv_mwnd_seq = newtp->rcv_wup + req->rsk_rcv_wnd;
-+	tcp_init_max_rcv_wnd_seq(newtp);
- 	newtp->rx_opt.wscale_ok = ireq->wscale_ok;
- 	if (newtp->rx_opt.wscale_ok) {
- 		newtp->rx_opt.snd_wscale = ireq->snd_wscale;
+-	if (sk->sk_rcvbuf < rmem2 &&
++	if (READ_ONCE(sk->sk_rcvbuf) < rmem2 &&
+ 	    !(sk->sk_userlocks & SOCK_RCVBUF_LOCK) &&
+ 	    !tcp_under_memory_pressure(sk) &&
+ 	    sk_memory_allocated(sk) < sk_prot_mem_limits(sk, 0)) {
+ 		WRITE_ONCE(sk->sk_rcvbuf,
+ 			   min(atomic_read(&sk->sk_rmem_alloc), rmem2));
+ 	}
+-	if (atomic_read(&sk->sk_rmem_alloc) > sk->sk_rcvbuf)
++	if (atomic_read(&sk->sk_rmem_alloc) > READ_ONCE(sk->sk_rcvbuf))
+ 		tp->rcv_ssthresh = min(tp->window_clamp, 2U * tp->advmss);
+ }
+ 
 diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
-index 0b082726d7c4..57a2a6daaad3 100644
+index 57a2a6daaad3..53781cf591d2 100644
 --- a/net/ipv4/tcp_output.c
 +++ b/net/ipv4/tcp_output.c
-@@ -4171,7 +4171,7 @@ static void tcp_connect_init(struct sock *sk)
- 	else
- 		tp->rcv_tstamp = tcp_jiffies32;
- 	tp->rcv_wup = tp->rcv_nxt;
--	tp->rcv_mwnd_seq = tp->rcv_nxt + tp->rcv_wnd;
-+	tcp_init_max_rcv_wnd_seq(tp);
- 	WRITE_ONCE(tp->copied_seq, tp->rcv_nxt);
+@@ -3375,13 +3375,24 @@ u32 __tcp_select_window(struct sock *sk)
+ 	 * scaled window will not line up with the MSS boundary anyway.
+ 	 */
+ 	if (tp->rx_opt.rcv_wscale) {
++		int rcv_wscale = 1 << tp->rx_opt.rcv_wscale;
++
+ 		window = free_space;
  
- 	inet_csk(sk)->icsk_rto = tcp_timeout_init(sk);
+ 		/* Advertise enough space so that it won't get scaled away.
+-		 * Import case: prevent zero window announcement if
++		 * Important case: prevent zero-window announcement if
+ 		 * 1<<rcv_wscale > mss.
+ 		 */
+-		window = ALIGN(window, (1 << tp->rx_opt.rcv_wscale));
++		window = ALIGN(window, rcv_wscale);
++
++		/* Back any scale-quantization slack before we expose it.
++		 * Otherwise tcp_can_ingest() can reject data which is still
++		 * within the sender-visible window.
++		 */
++		if (window > free_space &&
++		    (!tcp_rcvbuf_grow_allowed(sk) ||
++		     !tcp_try_grow_rcvbuf(sk, tcp_space_from_win(sk, window))))
++			window = round_down(free_space, rcv_wscale);
+ 	} else {
+ 		window = tp->rcv_wnd;
+ 		/* Get the largest window that is a nice multiple of mss.
 -- 
 2.43.0
 
