@@ -1,64 +1,64 @@
-Received: from mail-oa1-f45.google.com (mail-oa1-f45.google.com [209.85.160.45])
+Received: from mail-oa1-f44.google.com (mail-oa1-f44.google.com [209.85.160.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4E5538E12A
-	for <mptcp@lists.linux.dev>; Sat, 14 Mar 2026 20:15:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9029138E137
+	for <mptcp@lists.linux.dev>; Sat, 14 Mar 2026 20:15:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773519307; cv=none; b=BgFV5ZYePpiTFVa3qk8RiSzaf2kZIop38w8ocamut3SEDD+8ViehttbLe3oL2LYzNvjwmoG8TDy0KVS1oTYQCdAFIXQ2LmjqLeoRLC6sxvLES0t0oUUsXJhpxUdF71AdYA5RV4FDslT/HojRAX38ioUD18VdbzSyJ4cOf863gVY=
+	t=1773519308; cv=none; b=Hwgun+GiC4hPN7cLLh9LXqEKUe/GWTn9l2yvXiqUmcf257cE2BAPs8OLCTMwJaILWbZbywSVjrBPz5AvZJCMo0Y4GsWGM/+bAJZNYFOnJFsrBD6bI2AvtOJgdxYmBG1lu7YdJwqq39Lwwnp9M3aOnxdhQgcXEO27RZkAwaw6DVM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773519307; c=relaxed/simple;
-	bh=6JX3Yctd8bDnEGsPO4CjvDQJ7QxYVDLwhFVJibho2l4=;
+	s=arc-20240116; t=1773519308; c=relaxed/simple;
+	bh=cj/seZubwP7nLqBoz8ofrtucQHhr4mn40yQgMXMr40Y=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JtSMwUCqh450y8TJ1O15kZHHjKFARFQS6QSDJzwX7N6Os2TtOt1q+S3Dgees4dOz0X5FJkiDtu+r/Q7gMM0CcgV6ycNMnnOrJ/SYnOIqq3+rfpNNTX3YBtlMJgkZg7BISjAz0uDqwxYX2a3lqA6jANvY6fNwjlnXsRwjKvX3QAM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XGOBVJqS; arc=none smtp.client-ip=209.85.160.45
+	 MIME-Version; b=C7wfl1tFYmMXP00I29MsD3eW2ew0S2pHmCFzDC+wNaxgL9HJIJUwlt3BGNcHyEP3C+1sm4yY1upLEOWrJXOHzj0fiJL9vNDYJEdvWMc/ArubiXq1DaiK+CONIeJpImmHv2BOUStFITsbhFZjsd4ffb9MaP+r8o371ymfhzGwLrM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gKcJUgY0; arc=none smtp.client-ip=209.85.160.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XGOBVJqS"
-Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-417571c6083so1955135fac.2
-        for <mptcp@lists.linux.dev>; Sat, 14 Mar 2026 13:15:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gKcJUgY0"
+Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-40429b1d8baso1292806fac.0
+        for <mptcp@lists.linux.dev>; Sat, 14 Mar 2026 13:15:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773519303; x=1774124103; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1773519304; x=1774124104; darn=lists.linux.dev;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=5cgfXJCeRN9gp7HY5pu2xM6oON8ruZZKeF5hMpMsDXs=;
-        b=XGOBVJqSDKew2eGmfYE/7xIafCiEVLUdrEOoBwDpp0OhX/x4DvdRTQ9hdXeVSljPue
-         cT/q9aajQYD6qH/FgTKwnY/6KKI+I4t0FG3SeC2+/Wqk1Z5WhPnb29U4e9YSd+V3r9Jy
-         vpt+bCz2k0jlxsQJ35xBSd4BnhPREPXDOT9Be4zgret1RnoP5IkOmpGEem3VwMz4AkyI
-         qx/H+a0uWKeTmGGiuEYWX8jMt4tZm2oTOXIuEF8/tO9Rd0Ef+KbXB+U05DstzHl4acd8
-         L+EOtmjynzEfWfAC2jRyqTw+PRzRbjoGZDfOCpgiqzl+pfen5t24dqYk6wO1MWIH/bQb
-         MNdg==
+        bh=ib/vlu986mcpuvwIbmamafwqas870ti4JrE+4bqQJAA=;
+        b=gKcJUgY0ebP3agWtOrRO6koIuMrXqSVunYRAa3SByZwIF0UBbcKcjExd2hQK+ksdTR
+         I+cD4Fs7gXB4IC15SCC+UbxBjBOTjeNL7iI0Hw/hDciWqE/huyukHzrPTXuDcOzcToce
+         Zt6QXIITcOEd5NrFa6pJjaAQ7I15Ok9FUDpVahNDIG3exeVGyuElOCNcus1aOcVHSDvN
+         E+sQQSlNYOUiOvke2Xziki/W21SaxcEZl6KBWfoigWr96sK4iGOHNodiDrDpVMR/xCDp
+         zXf+jPKv42VquccSTrvYPuCCh3REU5lMBeM1EkTHKbCXq8/hOwro5ue/ydh6q8D2dVyv
+         yttQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773519303; x=1774124103;
+        d=1e100.net; s=20251104; t=1773519304; x=1774124104;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=5cgfXJCeRN9gp7HY5pu2xM6oON8ruZZKeF5hMpMsDXs=;
-        b=CsZAlJQMqArbJo1aeMEidWdd3hNhEQBzcJgFkZnyIDErPPil1MV3QXoV6TYcft91In
-         V0A++Gb3a0mgYiEvoUZBKCxKTXxFjZRbSkM82+ZNvPsPJI8tHjuluQxoUb67pdshX8kn
-         2Qi8A6xm8VJ/My2f06HVNuujXdI259T8FIAxaLatrbXXOxoGwC7CkXqyatHCIetzDnoB
-         zKc5wfXzllFdXsLdoJihmPjjv7a2BDYC8+nocESat40GnIyW0As/DnENg/xnX5DoF5yc
-         Y1H9L57S34ymBKDENUgbtJd06AUTfSS8DwdGRhDiWf69FfQxc7IUsKs1P2oLZu8ZTFl8
-         i8Lw==
-X-Forwarded-Encrypted: i=1; AJvYcCVCiG8fXXWoez+YRp/Y08O3QDlnzY+9yIfgTPDTDGFBBcX4EUnhdnd1Umo7dRZK3O4g/dgDrw==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwPE9qpnFW577ZltoQZ0IzFRbPOyXd1j6VPQY69MMcn0LoFnBLh
-	K6mjCNA3WcnQpyfIhDqjKl8ioshq2U+CU7hjxPNN+RHml16z7BQOzSWm
-X-Gm-Gg: ATEYQzyEy7PcT3SKThGEjhNu3oo+McKWuYKIKos7ImGZXNGqxxu4mrO2dBandh5oXhA
-	z/DxfxIed7msrOErQCBT5gnVFefj42H2AGL1qPntoAwhnDcNr9NibEFaVL82CeWVtEE4NUt44D1
-	zMZoEeYZNQnNuZTO0a2BFWF/Lf0U/eILA6tTds6F3w/q5JzpR8d1o18+PS3Xm8OJf9NwHrogaOC
-	WT4vwLs2lXeIQRquC8ix2sdpJl4GET/tjV/9az38p/KY52rGEvxAMmxP4uiHG3MClX9A3QuowlP
-	CG4eEu5OViB0UQJdoaNnUYl9JSQNoFmzN9c/7gFuN6f5Ptwz+WEKzCG20b0wM6mKi6b8AgMjHc8
-	/oXNoSVPUtnbshdA5k2Iw2APeM87br8cKezHnG/L8v0Itdc2aZbxJTNHBOTKpCJfxxCD4lQNhNX
-	SE28REYMnQ0R5mJLhFULtxO/soy/LLZ5GwbGjq3A3six0HbtykAFmUGg9G07YiZWa1yIxUsW3nY
-	/LoosYwtOrZwWmEmmL9BrzAYZy0LFm9voin3RO/
-X-Received: by 2002:a05:6870:7d16:b0:417:4bd3:f5f5 with SMTP id 586e51a60fabf-417b93e2407mr4714434fac.37.1773519302604;
-        Sat, 14 Mar 2026 13:15:02 -0700 (PDT)
+        bh=ib/vlu986mcpuvwIbmamafwqas870ti4JrE+4bqQJAA=;
+        b=ci2riulVuEr4TqYEGJcNZs5RbdCOnx1fcmVLoQlfMPosGHR6fNuw7+L92PeTUA9LBO
+         ylWydx/TdZ2zz4P8i7G91mhYYnyshyVH//BO1b7ecPpELDkEvAe6Ru8bgfnypg2g2QNy
+         kxiDUflRBKBVccxzp+EB+HLTsWFSAHE/x5B9CXRZuCZvGCHcBVjnvH/xXUr0BCfSNcap
+         p8nYt/gtTTOR+fPyC8RYhEXyVcWgWhB04JNnMK8Vy6+E9SHorWttfX6ezkFFGxHYoA77
+         MIxzmT7/+v+zU2t6wJSdnAUr8GR/+938WBxQ3bUALK3+hZl6nkcXS188B/O1AvVEWYiG
+         FfIg==
+X-Forwarded-Encrypted: i=1; AJvYcCUlgOnMRCipZ/9+0AbxkDjHrAZd8DfCrC1e2kvbspdWS7kiPDj7B8SLkSqztOhSQvDTE/hgWA==@lists.linux.dev
+X-Gm-Message-State: AOJu0Ywk5Mfc2l50tvSBowOoPQftM/m/f81+AJhonRDptSiC+oSn/uEk
+	0kp13Zo4gKKH54LHHGKpq2OOWEGR9Co+AP/7EqZzpU7LstqkJtC/FaHm
+X-Gm-Gg: ATEYQzxo4ATXMB2aA93ERlZaz2n/ZqzDq2Su4fSgs2YyR1aG3ZsqIoheyv8lwtRJbpE
+	LnhZIKdHm+5a4ES8g3wh2iE9Xq39ZonOZfZh0LEit+dMm+0X8dlF0CK7AzWAi9Ii3Rw3y7aZRtt
+	NQPwOI1lItWV0eL00NK2VL0PzF9USe97xzoSnWmXGmN1EZRh1/eN3Zi1KkkPKf4DwMizgd+UL0q
+	vxW3vuVO3gXOfO77ViRNNmUOXgRj8ZEB2DVgzobN1o6DKSnYGWo6H3XC1SqR7uJ/aPu3GuXTvfv
+	WmlSa/51IMxs9jvQjc7AqEjdiENijoeu0AvaODkaM7g56SCd1vnLo3cy002HQl4PUB8pRXMDx5N
+	u6EmiG5zOjz8ZRH6nE8MVX/2zEMO7alsJ/nuiTtMCWvXKFA1NVP7Tv6VxJTLXYzw/EuOj4kxB4f
+	TK5YZGYDfsX6Qh8YM4sWDFN5M7fj3+iU1QsRbVPLP9ji0QbtVRXGw8ZK5xytn4/Rcf0l/TNGJhS
+	Q2/odzQ8xOpXAVVP569kTIIIuG51oeHNG7On9aK
+X-Received: by 2002:a05:6871:c949:b0:404:168:3ba1 with SMTP id 586e51a60fabf-417b91d86f7mr5008979fac.18.1773519304503;
+        Sat, 14 Mar 2026 13:15:04 -0700 (PDT)
 Received: from Atwell-Laptop.. (108-212-132-20.lightspeed.irvnca.sbcglobal.net. [108.212.132.20])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-4177e5e8185sm11914165fac.12.2026.03.14.13.15.00
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-4177e5e8185sm11914165fac.12.2026.03.14.13.15.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 14 Mar 2026 13:15:02 -0700 (PDT)
+        Sat, 14 Mar 2026 13:15:04 -0700 (PDT)
 From: atwellwea@gmail.com
 To: netdev@vger.kernel.org,
 	davem@davemloft.net,
@@ -87,9 +87,9 @@ Cc: linux-kernel@vger.kernel.org,
 	mhiramat@kernel.org,
 	mathieu.desnoyers@efficios.com,
 	0x7f454c46@gmail.com
-Subject: [PATCH net-next v2 13/14] netdevsim: add peer RX truesize support for selftests
-Date: Sat, 14 Mar 2026 14:13:47 -0600
-Message-ID: <20260314201348.1786972-14-atwellwea@gmail.com>
+Subject: [PATCH net-next v2 14/14] netdevsim: release pinned PSP ext on drop paths
+Date: Sat, 14 Mar 2026 14:13:48 -0600
+Message-ID: <20260314201348.1786972-15-atwellwea@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260314201348.1786972-1-atwellwea@gmail.com>
 References: <20260314201348.1786972-1-atwellwea@gmail.com>
@@ -103,719 +103,73 @@ Content-Transfer-Encoding: 8bit
 
 From: Wesley Atwell <atwellwea@gmail.com>
 
-Add a debugfs-controlled peer RX truesize knob to netdevsim, inflate the
-forwarded skb only on the peer RX side, and cover the resulting socket
-memory-accounting behavior with a dedicated selftest.
+nsim_do_psp() can leave an extra extension reference pinned until
+nsim_psp_handle_ext() reattaches it to a forwarded skb.
 
-This keeps the synthetic cost out of the sender-side skb geometry while
-giving the selftests a second runtime vehicle for the receive-memory
-accounting exercised by the TCP rwnd work.
+Route the drop paths through a common helper and release that extra
+reference when __dev_forward_skb() fails and when start_xmit() drops the
+skb before it reaches the peer RX path.
+
+This is separate from the peer RX truesize test hook itself.
 
 Signed-off-by: Wesley Atwell <atwellwea@gmail.com>
 ---
- drivers/net/netdevsim/netdev.c                | 145 +++++-
- drivers/net/netdevsim/netdevsim.h             |   4 +
- .../selftests/drivers/net/netdevsim/Makefile  |   1 +
- .../drivers/net/netdevsim/peer-rx-truesize.sh | 426 ++++++++++++++++++
- 4 files changed, 575 insertions(+), 1 deletion(-)
- create mode 100755 tools/testing/selftests/drivers/net/netdevsim/peer-rx-truesize.sh
+ drivers/net/netdevsim/netdev.c | 19 ++++++++++++++-----
+ 1 file changed, 14 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/net/netdevsim/netdev.c b/drivers/net/netdevsim/netdev.c
-index 5ec028a00c62..22238df79b6a 100644
+index 22238df79b6a..c22513c523d6 100644
 --- a/drivers/net/netdevsim/netdev.c
 +++ b/drivers/net/netdevsim/netdev.c
-@@ -17,8 +17,10 @@
- #include <linux/etherdevice.h>
- #include <linux/ethtool_netlink.h>
- #include <linux/kernel.h>
-+#include <linux/kstrtox.h>
- #include <linux/module.h>
- #include <linux/netdevice.h>
-+#include <linux/refcount.h>
- #include <linux/slab.h>
- #include <net/netdev_queues.h>
- #include <net/netdev_rx_queue.h>
-@@ -37,6 +39,91 @@ MODULE_IMPORT_NS("NETDEV_INTERNAL");
- 
- #define NSIM_RING_SIZE		256
- 
-+struct nsim_rx_truesize {
-+	refcount_t refs;
-+	u32 value;
-+};
-+
-+static struct nsim_rx_truesize *
-+nsim_rx_truesize_get(struct nsim_rx_truesize *rx_truesize)
-+{
-+	if (!rx_truesize)
-+		return NULL;
-+
-+	if (!refcount_inc_not_zero(&rx_truesize->refs))
-+		return NULL;
-+
-+	return rx_truesize;
-+}
-+
-+static void nsim_rx_truesize_put(struct nsim_rx_truesize *rx_truesize)
-+{
-+	if (!rx_truesize)
-+		return;
-+
-+	if (refcount_dec_and_test(&rx_truesize->refs))
-+		kfree(rx_truesize);
-+}
-+
-+static ssize_t nsim_rx_truesize_read(struct file *file, char __user *user_buf,
-+				     size_t count, loff_t *ppos)
-+{
-+	struct nsim_rx_truesize *rx_truesize = file->private_data;
-+	char buf[24];
-+	int len;
-+
-+	len = scnprintf(buf, sizeof(buf), "%u\n",
-+			READ_ONCE(rx_truesize->value));
-+
-+	return simple_read_from_buffer(user_buf, count, ppos, buf, len);
-+}
-+
-+static ssize_t nsim_rx_truesize_write(struct file *file,
-+				      const char __user *user_buf,
-+				      size_t count, loff_t *ppos)
-+{
-+	struct nsim_rx_truesize *rx_truesize = file->private_data;
-+	u32 value;
-+	int err;
-+
-+	err = kstrtou32_from_user(user_buf, count, 0, &value);
-+	if (err)
-+		return err;
-+
-+	WRITE_ONCE(rx_truesize->value, value);
-+
-+	return count;
-+}
-+
-+static int nsim_rx_truesize_open(struct inode *inode, struct file *file)
-+{
-+	struct nsim_rx_truesize *rx_truesize;
-+
-+	rx_truesize = nsim_rx_truesize_get(inode->i_private);
-+	if (!rx_truesize)
-+		return -ENODEV;
-+
-+	file->private_data = rx_truesize;
-+
-+	return nonseekable_open(inode, file);
-+}
-+
-+static int nsim_rx_truesize_release(struct inode *inode, struct file *file)
-+{
-+	nsim_rx_truesize_put(file->private_data);
-+
-+	return 0;
-+}
-+
-+static const struct file_operations nsim_rx_truesize_fops = {
-+	.owner		= THIS_MODULE,
-+	.open		= nsim_rx_truesize_open,
-+	.read		= nsim_rx_truesize_read,
-+	.write		= nsim_rx_truesize_write,
-+	.release	= nsim_rx_truesize_release,
-+	.llseek		= noop_llseek,
-+};
-+
- static void nsim_start_peer_tx_queue(struct net_device *dev, struct nsim_rq *rq)
- {
- 	struct netdevsim *ns = netdev_priv(dev);
-@@ -117,6 +204,28 @@ static int nsim_forward_skb(struct net_device *tx_dev,
- 	return nsim_napi_rx(tx_dev, rx_dev, rq, skb);
+@@ -187,6 +187,15 @@ static int nsim_napi_rx(struct net_device *tx_dev, struct net_device *rx_dev,
+ 	return NET_RX_SUCCESS;
  }
  
-+/* Tests can inflate peer RX skb->truesize to exercise receiver-side TCP
-+ * accounting under scaling-ratio drift without perturbing sender-side skb
-+ * ownership.
++/* nsim_do_psp() pins an extra extension ref until nsim_psp_handle_ext()
++ * reattaches it to a forwarded skb.
 + */
-+static void nsim_rx_update_truesize(struct sk_buff *skb, u32 extra)
++static void nsim_psp_ext_put(struct skb_ext *psp_ext)
 +{
-+	unsigned int truesize;
-+
-+	if (!extra)
-+		return;
-+
-+	if (check_add_overflow(skb->truesize, extra, &truesize))
-+		truesize = UINT_MAX;
-+
-+	skb->truesize = truesize;
++	if (psp_ext)
++		__skb_ext_put(psp_ext);
 +}
 +
-+static u32 nsim_rx_extra_truesize(const struct netdevsim *ns)
-+{
-+	return READ_ONCE(ns->rx_truesize->value);
-+}
-+
- static netdev_tx_t nsim_start_xmit(struct sk_buff *skb, struct net_device *dev)
- {
- 	struct netdevsim *ns = netdev_priv(dev);
-@@ -125,7 +234,9 @@ static netdev_tx_t nsim_start_xmit(struct sk_buff *skb, struct net_device *dev)
- 	unsigned int len = skb->len;
- 	struct netdevsim *peer_ns;
- 	struct netdev_config *cfg;
-+	struct sk_buff *nskb;
- 	struct nsim_rq *rq;
-+	u32 extra;
- 	int rxq;
- 	int dr;
+ static int nsim_forward_skb(struct net_device *tx_dev,
+ 			    struct net_device *rx_dev,
+ 			    struct sk_buff *skb,
+@@ -196,8 +205,10 @@ static int nsim_forward_skb(struct net_device *tx_dev,
+ 	int ret;
  
-@@ -160,7 +271,24 @@ static netdev_tx_t nsim_start_xmit(struct sk_buff *skb, struct net_device *dev)
- 	      cfg->hds_thresh > len)))
- 		skb_linearize(skb);
- 
-+	extra = nsim_rx_extra_truesize(peer_ns);
- 	skb_tx_timestamp(skb);
-+	if (extra) {
-+		/* Clone before inflating truesize so only the peer RX path sees
-+		 * the synthetic cost; sender-side skb accounting stays put.
-+		 */
-+		nskb = skb_clone(skb, GFP_ATOMIC);
-+		if (!nskb) {
-+			if (psp_ext)
-+				__skb_ext_put(psp_ext);
-+			goto out_drop_free;
-+		}
-+
-+		consume_skb(skb);
-+		skb = nskb;
-+		nsim_rx_update_truesize(skb, extra);
+ 	ret = __dev_forward_skb(rx_dev, skb);
+-	if (ret)
++	if (ret) {
++		nsim_psp_ext_put(psp_ext);
+ 		return ret;
 +	}
-+
- 	if (unlikely(nsim_forward_skb(dev, peer_dev,
- 				      skb, rq, psp_ext) == NET_RX_DROP))
- 		goto out_drop_cnt;
-@@ -1121,6 +1249,7 @@ struct netdevsim *nsim_create(struct nsim_dev *nsim_dev,
- 			      u8 perm_addr[ETH_ALEN])
- {
- 	struct net_device *dev;
-+	struct nsim_rx_truesize *rx_truesize;
- 	struct netdevsim *ns;
- 	int err;
  
-@@ -1140,6 +1269,13 @@ struct netdevsim *nsim_create(struct nsim_dev *nsim_dev,
- 	ns->nsim_bus_dev = nsim_dev->nsim_bus_dev;
- 	SET_NETDEV_DEV(dev, &ns->nsim_bus_dev->dev);
- 	SET_NETDEV_DEVLINK_PORT(dev, &nsim_dev_port->devlink_port);
-+	rx_truesize = kzalloc_obj(*rx_truesize);
-+	if (!rx_truesize) {
-+		err = -ENOMEM;
-+		goto err_free_netdev;
-+	}
-+	refcount_set(&rx_truesize->refs, 1);
-+	ns->rx_truesize = rx_truesize;
- 	nsim_ethtool_init(ns);
- 	if (nsim_dev_port_is_pf(nsim_dev_port))
- 		err = nsim_init_netdevsim(ns);
-@@ -1153,21 +1289,27 @@ struct netdevsim *nsim_create(struct nsim_dev *nsim_dev,
- 	ns->qr_dfs = debugfs_create_file("queue_reset", 0200,
- 					 nsim_dev_port->ddir, ns,
- 					 &nsim_qreset_fops);
-+	ns->rx_truesize_dfs = debugfs_create_file("rx_extra_truesize", 0600,
-+						  nsim_dev_port->ddir,
-+						  ns->rx_truesize,
-+						  &nsim_rx_truesize_fops);
- 	return ns;
+ 	nsim_psp_handle_ext(skb, psp_ext);
  
- err_free_netdev:
-+	nsim_rx_truesize_put(ns->rx_truesize);
- 	free_netdev(dev);
- 	return ERR_PTR(err);
- }
+@@ -278,11 +289,8 @@ static netdev_tx_t nsim_start_xmit(struct sk_buff *skb, struct net_device *dev)
+ 		 * the synthetic cost; sender-side skb accounting stays put.
+ 		 */
+ 		nskb = skb_clone(skb, GFP_ATOMIC);
+-		if (!nskb) {
+-			if (psp_ext)
+-				__skb_ext_put(psp_ext);
++		if (!nskb)
+ 			goto out_drop_free;
+-		}
  
- void nsim_destroy(struct netdevsim *ns)
- {
-+	struct nsim_rx_truesize *rx_truesize = ns->rx_truesize;
- 	struct net_device *dev = ns->netdev;
- 	struct netdevsim *peer;
- 
-+	debugfs_remove(ns->rx_truesize_dfs);
- 	debugfs_remove(ns->qr_dfs);
- 	debugfs_remove(ns->pp_dfs);
--
- 	if (ns->nb.notifier_call)
- 		unregister_netdevice_notifier_dev_net(ns->netdev, &ns->nb,
- 						      &ns->nn);
-@@ -1198,6 +1340,7 @@ void nsim_destroy(struct netdevsim *ns)
- 	}
- 
- 	free_netdev(dev);
-+	nsim_rx_truesize_put(rx_truesize);
- }
- 
- bool netdev_is_nsim(struct net_device *dev)
-diff --git a/drivers/net/netdevsim/netdevsim.h b/drivers/net/netdevsim/netdevsim.h
-index f767fc8a7505..972ad274060e 100644
---- a/drivers/net/netdevsim/netdevsim.h
-+++ b/drivers/net/netdevsim/netdevsim.h
-@@ -75,6 +75,8 @@ struct nsim_macsec {
- 	u8 nsim_secy_count;
- };
- 
-+struct nsim_rx_truesize;
-+
- struct nsim_ethtool_pauseparam {
- 	bool rx;
- 	bool tx;
-@@ -144,6 +146,8 @@ struct netdevsim {
- 	} udp_ports;
- 
- 	struct page *page;
-+	struct nsim_rx_truesize *rx_truesize;
-+	struct dentry *rx_truesize_dfs;
- 	struct dentry *pp_dfs;
- 	struct dentry *qr_dfs;
- 
-diff --git a/tools/testing/selftests/drivers/net/netdevsim/Makefile b/tools/testing/selftests/drivers/net/netdevsim/Makefile
-index 1a228c5430f5..9e9e48d5913b 100644
---- a/tools/testing/selftests/drivers/net/netdevsim/Makefile
-+++ b/tools/testing/selftests/drivers/net/netdevsim/Makefile
-@@ -14,6 +14,7 @@ TEST_PROGS := \
- 	macsec-offload.sh \
- 	nexthop.sh \
- 	peer.sh \
-+	peer-rx-truesize.sh \
- 	psample.sh \
- 	tc-mq-visibility.sh \
- 	udp_tunnel_nic.sh \
-diff --git a/tools/testing/selftests/drivers/net/netdevsim/peer-rx-truesize.sh b/tools/testing/selftests/drivers/net/netdevsim/peer-rx-truesize.sh
-new file mode 100755
-index 000000000000..6d1101d20847
---- /dev/null
-+++ b/tools/testing/selftests/drivers/net/netdevsim/peer-rx-truesize.sh
-@@ -0,0 +1,426 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0-only
-+
-+set -euo pipefail
-+
-+lib_dir=$(dirname "$0")/../../../net
-+source "$lib_dir"/lib.sh
-+
-+NSIM_SRV_ID=$((1024 + RANDOM % 1024))
-+NSIM_CLI_ID=$((2048 + RANDOM % 1024))
-+NSIM_SYS_LINK=/sys/bus/netdevsim/link_device
-+SERVER_ADDR=192.0.2.1
-+CLIENT_ADDR=192.0.2.2
-+RMEM_PORT=12345
-+WARM_PORT=12346
-+RMEM_QUEUED_LEN=65000
-+RMEM_INFLATED_LEN=65000
-+RMEM_SMALL_EXTRA=4096
-+RMEM_LARGE_EXTRA=65536
-+WARM_WARMUP_ROUNDS=16
-+WARM_WARMUP_LEN=65000
-+WARM_QUEUED_LEN=62000
-+WARM_INFLATED_LEN=65000
-+WARM_EXTRA=65536
-+
-+srv_dev=
-+cli_dev=
-+srv_pid=
-+cli_pid=
-+srv_fd=
-+cli_fd=
-+stage_dir=
-+CASE_BASE_METRIC=
-+CASE_FINAL_METRIC=
-+
-+cleanup()
-+{
-+	local rc=$?
-+
-+	if [ -n "${srv_pid:-}" ]; then
-+		kill "${srv_pid}" 2>/dev/null || true
-+		wait "${srv_pid}" 2>/dev/null || true
-+	fi
-+
-+	if [ -n "${cli_pid:-}" ]; then
-+		kill "${cli_pid}" 2>/dev/null || true
-+		wait "${cli_pid}" 2>/dev/null || true
-+	fi
-+
-+	if [ -n "${srv_fd:-}" ]; then
-+		eval "exec ${srv_fd}<&-"
-+	fi
-+
-+	if [ -n "${cli_fd:-}" ]; then
-+		eval "exec ${cli_fd}<&-"
-+	fi
-+
-+	if [ -d "${stage_dir:-}" ]; then
-+		rm -rf "${stage_dir}"
-+	fi
-+
-+	cleanup_netdevsim "${NSIM_SRV_ID}" 2>/dev/null || true
-+	cleanup_netdevsim "${NSIM_CLI_ID}" 2>/dev/null || true
-+	cleanup_ns "${SRV:-}" "${CLI:-}" 2>/dev/null || true
-+
-+	exit "${rc}"
-+}
-+
-+trap cleanup EXIT
-+
-+ensure_debugfs()
-+{
-+	if mount | grep -q 'on /sys/kernel/debug type debugfs'; then
-+		return 0
-+	fi
-+
-+	if ! mount -t debugfs none /sys/kernel/debug >/dev/null 2>&1; then
-+		echo "SKIP: failed to mount debugfs"
-+		exit "${ksft_skip}"
-+	fi
-+}
-+
-+ensure_netdevsim()
-+{
-+	if [ -w /sys/bus/netdevsim/new_device ]; then
-+		return 0
-+	fi
-+
-+	if ! modprobe netdevsim >/dev/null 2>&1; then
-+		echo "SKIP: no netdevsim support"
-+		exit "${ksft_skip}"
-+	fi
-+}
-+
-+create_nsim()
-+{
-+	local id="$1"
-+	local ns="$2"
-+	local addr="$3"
-+	local dev
-+
-+	echo "${id}" | ip netns exec "${ns}" tee /sys/bus/netdevsim/new_device >/dev/null
-+	udevadm settle
-+
-+	dev=$(ip netns exec "${ns}" ls /sys/bus/netdevsim/devices/netdevsim"${id}"/net)
-+	ip -netns "${ns}" link set dev "${dev}" name "nsim${id}"
-+	ip -netns "${ns}" addr add "${addr}/24" dev "nsim${id}"
-+	ip -netns "${ns}" link set dev "nsim${id}" up
-+
-+	echo "nsim${id}"
-+}
-+
-+link_nsim_peers()
-+{
-+	local srv_ifindex
-+	local cli_ifindex
-+
-+	eval "exec {srv_fd}</var/run/netns/${SRV}"
-+	eval "exec {cli_fd}</var/run/netns/${CLI}"
-+
-+	srv_ifindex=$(ip netns exec "${SRV}" cat /sys/class/net/"${srv_dev}"/ifindex)
-+	cli_ifindex=$(ip netns exec "${CLI}" cat /sys/class/net/"${cli_dev}"/ifindex)
-+
-+	echo "${srv_fd}:${srv_ifindex} ${cli_fd}:${cli_ifindex}" > "${NSIM_SYS_LINK}"
-+}
-+
-+wait_for_file()
-+{
-+	local path="$1"
-+	local i
-+
-+	for i in $(seq 100); do
-+		if [ -e "${path}" ]; then
-+			return 0
-+		fi
-+		sleep 0.1
-+	done
-+
-+	return 1
-+}
-+
-+server_python='
-+import array
-+import fcntl
-+import os
-+import socket
-+import struct
-+import sys
-+import time
-+
-+SO_MEMINFO = 55
-+SK_MEMINFO_RMEM_ALLOC = 0
-+TCP_MAXSEG = getattr(socket, "TCP_MAXSEG", 2)
-+FIONREAD = 0x541B
-+POLL_INTERVAL = 0.01
-+POLL_TIMEOUT = 20.0
-+
-+(mode, host, port, warmup_rounds, warmup_len, queued_len, inflated_len,
-+ ready_file, result_file) = sys.argv[1:]
-+port = int(port)
-+warmup_rounds = int(warmup_rounds)
-+warmup_len = int(warmup_len)
-+queued_len = int(queued_len)
-+inflated_len = int(inflated_len)
-+
-+def queued_bytes(sock):
-+    buf = array.array("I", [0])
-+    fcntl.ioctl(sock.fileno(), FIONREAD, buf, True)
-+    return buf[0]
-+
-+def wait_for_queued(sock, target):
-+    deadline = time.time() + POLL_TIMEOUT
-+    while time.time() < deadline:
-+        if queued_bytes(sock) >= target:
-+            return
-+        time.sleep(POLL_INTERVAL)
-+    raise SystemExit(f"timed out waiting for {target} queued bytes")
-+
-+def meminfo(sock):
-+    raw = sock.getsockopt(socket.SOL_SOCKET, SO_MEMINFO, 9 * 4)
-+    return struct.unpack("=9I", raw)
-+
-+def wait_for_growth(sock, idx, base):
-+    deadline = time.time() + POLL_TIMEOUT
-+    while time.time() < deadline:
-+        cur = meminfo(sock)[idx]
-+        if cur > base:
-+            return cur
-+        time.sleep(POLL_INTERVAL)
-+    raise SystemExit(f"timed out waiting for SO_MEMINFO[{idx}] growth from {base}")
-+
-+def write_metric(path, value):
-+    with open(path, "w", encoding="ascii") as fp:
-+        fp.write(f"{value}\n")
-+
-+def recv_all(sock, total):
-+    remaining = total
-+    while remaining:
-+        chunk = sock.recv(min(65536, remaining))
-+        if not chunk:
-+            raise SystemExit("unexpected EOF while draining receive data")
-+        remaining -= len(chunk)
-+
-+listener = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-+listener.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-+listener.setsockopt(socket.IPPROTO_TCP, TCP_MAXSEG, 1000)
-+listener.bind((host, port))
-+listener.listen(1)
-+conn, _ = listener.accept()
-+
-+for _ in range(warmup_rounds):
-+    recv_all(conn, warmup_len)
-+
-+if mode == "rmem_alloc":
-+    wait_for_queued(conn, queued_len)
-+    base_metric = meminfo(conn)[SK_MEMINFO_RMEM_ALLOC]
-+    write_metric(ready_file, base_metric)
-+
-+    recv_all(conn, queued_len)
-+    wait_for_queued(conn, inflated_len)
-+    grown_metric = meminfo(conn)[SK_MEMINFO_RMEM_ALLOC]
-+    write_metric(result_file, grown_metric)
-+elif mode == "rmem_alloc_warm":
-+    wait_for_queued(conn, queued_len)
-+    base_metric = meminfo(conn)[SK_MEMINFO_RMEM_ALLOC]
-+    write_metric(ready_file, base_metric)
-+
-+    wait_for_queued(conn, queued_len + 1)
-+    grown_metric = wait_for_growth(conn, SK_MEMINFO_RMEM_ALLOC, base_metric)
-+    write_metric(result_file, grown_metric)
-+elif mode == "rmem_alloc_growth":
-+    # The growth cases compare against a live socket metric, so wait for
-+    # observed growth instead of trusting one instantaneous post-queue sample.
-+    wait_for_queued(conn, queued_len)
-+    base_metric = meminfo(conn)[SK_MEMINFO_RMEM_ALLOC]
-+    write_metric(ready_file, base_metric)
-+
-+    recv_all(conn, queued_len)
-+    wait_for_queued(conn, inflated_len)
-+    grown_metric = wait_for_growth(conn, SK_MEMINFO_RMEM_ALLOC, base_metric)
-+    write_metric(result_file, grown_metric)
-+else:
-+    raise SystemExit(f"unknown mode: {mode}")
-+'
-+
-+client_python='
-+import os
-+import socket
-+import sys
-+import time
-+
-+POLL_INTERVAL = 0.01
-+POLL_TIMEOUT = 20.0
-+
-+host, port, warmup_rounds, warmup_len, queued_len, inflated_len, gate_file = sys.argv[1:]
-+port = int(port)
-+warmup_rounds = int(warmup_rounds)
-+warmup_len = int(warmup_len)
-+queued_len = int(queued_len)
-+inflated_len = int(inflated_len)
-+
-+def send_all(sock, total):
-+    payload = b"a" * min(total, 65536)
-+    left = total
-+    while left:
-+        chunk = payload[: min(len(payload), left)]
-+        sent = sock.send(chunk)
-+        if sent <= 0:
-+            raise SystemExit("short send")
-+        left -= sent
-+
-+def wait_for_file(path):
-+    deadline = time.time() + POLL_TIMEOUT
-+    while time.time() < deadline:
-+        if os.path.exists(path):
-+            return
-+        time.sleep(POLL_INTERVAL)
-+    raise SystemExit(f"timed out waiting for {path}")
-+
-+cli = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-+cli.setsockopt(socket.IPPROTO_TCP, socket.TCP_MAXSEG, 1000)
-+cli.connect((host, port))
-+for _ in range(warmup_rounds):
-+    send_all(cli, warmup_len)
-+send_all(cli, queued_len)
-+wait_for_file(gate_file)
-+send_all(cli, inflated_len)
-+cli.close()
-+'
-+
-+read_metric()
-+{
-+	local path="$1"
-+	local value
-+
-+	if ! read -r value < "${path}"; then
-+		echo "FAIL: unable to read metric from ${path}"
-+		exit "${ksft_fail}"
-+	fi
-+
-+	printf '%s\n' "${value}"
-+}
-+
-+run_case()
-+{
-+	local case_id="$1"
-+	local mode="$2"
-+	local port="$3"
-+	local warmups="$4"
-+	local warmup_len="$5"
-+	local queued_len="$6"
-+	local inflated_len="$7"
-+	local extra="$8"
-+	local label="$9"
-+	local ready_file="${stage_dir}/${case_id}.ready"
-+	local result_file="${stage_dir}/${case_id}.result"
-+	local gate_file="${stage_dir}/${case_id}.gate"
-+
-+	rm -f "${ready_file}" "${result_file}" "${gate_file}"
-+	echo 0 > "${dfs_file}"
-+
-+	ip netns exec "${SRV}" python3 - "${mode}" "${SERVER_ADDR}" "${port}" \
-+		"${warmups}" "${warmup_len}" "${queued_len}" "${inflated_len}" \
-+		"${ready_file}" "${result_file}" <<PY &
-+${server_python}
-+PY
-+	srv_pid=$!
-+
-+	wait_local_port_listen "${SRV}" "${port}" tcp
-+
-+	ip netns exec "${CLI}" python3 - "${SERVER_ADDR}" "${port}" \
-+		"${warmups}" "${warmup_len}" "${queued_len}" "${inflated_len}" \
-+		"${gate_file}" <<PY &
-+${client_python}
-+PY
-+	cli_pid=$!
-+
-+	if ! wait_for_file "${ready_file}"; then
-+		echo "FAIL: ${label}: ready marker did not appear"
-+		exit "${ksft_fail}"
-+	fi
-+
-+	echo "${extra}" > "${dfs_file}"
-+	touch "${gate_file}"
-+
-+	wait "${cli_pid}"
-+	cli_pid=
-+	wait "${srv_pid}"
-+	srv_pid=
-+
-+	CASE_BASE_METRIC=$(read_metric "${ready_file}")
-+	CASE_FINAL_METRIC=$(read_metric "${result_file}")
-+
-+	echo "PASS: ${label}"
-+}
-+
-+# This test only proves that injected truesize reaches socket memory
-+# accounting. Packetdrill covers the sender-visible rwnd accept/drop logic.
-+
-+assert_no_growth()
-+{
-+	local label="$1"
-+
-+	if [ "${CASE_FINAL_METRIC}" -gt "${CASE_BASE_METRIC}" ]; then
-+		echo "FAIL: ${label}: metric grew unexpectedly:" \
-+		     "base=${CASE_BASE_METRIC}" \
-+		     "after=${CASE_FINAL_METRIC}"
-+		exit "${ksft_fail}"
-+	fi
-+}
-+
-+assert_growth()
-+{
-+	local label="$1"
-+
-+	if [ "${CASE_FINAL_METRIC}" -le "${CASE_BASE_METRIC}" ]; then
-+		echo "FAIL: ${label}: metric did not grow:" \
-+		     "base=${CASE_BASE_METRIC}" \
-+		     "after=${CASE_FINAL_METRIC}"
-+		exit "${ksft_fail}"
-+	fi
-+}
-+
-+ensure_debugfs
-+ensure_netdevsim
-+set +u
-+setup_ns SRV CLI
-+set -u
-+
-+srv_dev=$(create_nsim "${NSIM_SRV_ID}" "${SRV}" "${SERVER_ADDR}")
-+cli_dev=$(create_nsim "${NSIM_CLI_ID}" "${CLI}" "${CLIENT_ADDR}")
-+link_nsim_peers
-+
-+ip netns exec "${SRV}" sysctl -wq net.ipv4.tcp_moderate_rcvbuf=0
-+
-+stage_dir=$(mktemp -d)
-+dfs_file="/sys/kernel/debug/netdevsim/netdevsim${NSIM_SRV_ID}/ports/0/rx_extra_truesize"
-+
-+run_case "rmem_noop" "rmem_alloc" "${RMEM_PORT}" 0 0 \
-+	"${RMEM_QUEUED_LEN}" "${RMEM_INFLATED_LEN}" 0 \
-+	"peer rx truesize zero no-op"
-+assert_no_growth "peer rx truesize zero no-op"
-+
-+run_case "rmem_small" "rmem_alloc_growth" "${RMEM_PORT}" 0 0 \
-+	"${RMEM_QUEUED_LEN}" "${RMEM_INFLATED_LEN}" "${RMEM_SMALL_EXTRA}" \
-+	"peer rx truesize small rmem_alloc"
-+assert_growth "peer rx truesize small rmem_alloc"
-+small_delta=$((CASE_FINAL_METRIC - CASE_BASE_METRIC))
-+
-+run_case "rmem_large" "rmem_alloc_growth" "${RMEM_PORT}" 0 0 \
-+	"${RMEM_QUEUED_LEN}" "${RMEM_INFLATED_LEN}" "${RMEM_LARGE_EXTRA}" \
-+	"peer rx truesize large rmem_alloc"
-+assert_growth "peer rx truesize large rmem_alloc"
-+large_delta=$((CASE_FINAL_METRIC - CASE_BASE_METRIC))
-+
-+if [ "${large_delta}" -le "${small_delta}" ]; then
-+	echo "FAIL: peer rx truesize stepped rmem_alloc:" \
-+	     "small_delta=${small_delta}" \
-+	     "large_delta=${large_delta}"
-+	exit "${ksft_fail}"
-+fi
-+
-+run_case "rmem_warm" "rmem_alloc_warm" "${WARM_PORT}" "${WARM_WARMUP_ROUNDS}" "${WARM_WARMUP_LEN}" \
-+	"${WARM_QUEUED_LEN}" "${WARM_INFLATED_LEN}" "${WARM_EXTRA}" \
-+	"peer rx truesize warm rmem_alloc"
-+assert_growth "peer rx truesize warm rmem_alloc"
+ 		consume_skb(skb);
+ 		skb = nskb;
+@@ -303,6 +311,7 @@ static netdev_tx_t nsim_start_xmit(struct sk_buff *skb, struct net_device *dev)
+ out_drop_any:
+ 	dr = SKB_DROP_REASON_NOT_SPECIFIED;
+ out_drop_free:
++	nsim_psp_ext_put(psp_ext);
+ 	kfree_skb_reason(skb, dr);
+ out_drop_cnt:
+ 	rcu_read_unlock();
 -- 
 2.43.0
 
