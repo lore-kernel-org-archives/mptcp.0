@@ -1,76 +1,96 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86DC426AAAB;
-	Sat, 14 Mar 2026 15:01:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45EE6299A87;
+	Sat, 14 Mar 2026 15:40:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773500489; cv=none; b=C3k/6e0dtTIjyrAsu4+YG4uyUGp+0+xmz8a29QsgRG6pAPYGlhKHtYdx4yCQwsZHyN1Ksab3HUPeFYllkKpSToZOR+UnZmX38Rj8agGbz1ZePHzg1a4UhnXdXbRFwe9eJ0gz1KdJrr/gbgf6fK7UyI4x1AQqbtE4ceIXeydbC/A=
+	t=1773502822; cv=none; b=vFdEN2ZT0eqfpEuLjDXeZ8bakMvn5sfq5Yk9bn/0LFMU6kDz0n5hIRCvOWaociLgCLXMgmRLNw5JGAYgctWsDERfPb1DUeZ9dgZSePow+kLeJwXPsYLNPQ9+Y2fQQVtSbygtmkNdwAvYT96DlvrVSRed+bjY8Qn7x2v8E7Oh4Nc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773500489; c=relaxed/simple;
-	bh=z7quPe0rAnb5gy0IrP1jE1rt857r2N1nCt5JlTUcjHc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cWVmY+PYrvkoZQG/ZoSLM21uM+WnqJZfKkf/a6jyWGwnK1VjB+T0405kxFVcYtWWEbHs7JL7VWG3HRNTav/9RfRoVbxtPdftrno5cj2IkLIEZLxDzKgHmw3NUJ4lPZL0OiGOA/mOMqFatkbyIjHXcHze5iMkO8EQAb5W3CIKHOY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DvUhqRwN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1773502822; c=relaxed/simple;
+	bh=WoPbqZeSHQS7/U+Zg1lu7MCzHBCJT+hDh8F/zCHEdfU=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=KCLhRnRaU07o/JSnEn23V9EnqMUCtIdj7OdRJWgNhNJVBTYsAnLRg/UUhA1Hu4WHm9vG0ylSR/r0Sc1QgndnSO8G2oE/M5a2Y38RHbR0Cj+2zc9jmdzIQloKCe6SVh0ZcD7puqVnAzC488JMEBNZ7xVANAZ9C99v1yN6iFiAS/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xj3JbUmK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DvUhqRwN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F61EC116C6;
-	Sat, 14 Mar 2026 15:01:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xj3JbUmK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBC7DC116C6;
+	Sat, 14 Mar 2026 15:40:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773500489;
-	bh=z7quPe0rAnb5gy0IrP1jE1rt857r2N1nCt5JlTUcjHc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=DvUhqRwNpd2qyK1AKASFLQ2+I6HhiPb41EywsmqJ0CLH95QP1y+R5WL+VZivP05Jd
-	 /3Jsat1NXfVNwb6oieEez3wP3NhPzhlNjm1JOj0sjDc7vSdIfeVie6HncrXj3s1uQP
-	 n5BPuFaxYAPD7vrZggtP+2d82OOPBBVFbM1iJVFxco2UCfEwl+ZmPix6U1sMxrZqY3
-	 s+p0c/oGuMvEDrr5TG6m0LyLAuezr6Lil8J0ALVguiO7oJ8otHVKZG+QhIEb47T8oN
-	 6W1eSWoC+llzhKIQc1IYS3bZRcJHjCr7suPnRs0VHv+yuWcER8vvt8iNEWEgvoYqtA
-	 M+22JSVOgCYPQ==
-Date: Sat, 14 Mar 2026 08:01:27 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Eric Dumazet <edumazet@google.com>
-Cc: Simon Baatz <gmbnomis@gmail.com>, Neal Cardwell <ncardwell@google.com>,
- Kuniyuki Iwashima <kuniyu@google.com>, "David S. Miller"
- <davem@davemloft.net>, Paolo Abeni <pabeni@redhat.com>, Simon Horman
- <horms@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Shuah Khan
- <skhan@linuxfoundation.org>, David Ahern <dsahern@kernel.org>, Jon Maloy
- <jmaloy@redhat.com>, Jason Xing <kerneljasonxing@gmail.com>,
- mfreemon@cloudflare.com, Shuah Khan <shuah@kernel.org>, Stefano Brivio
- <sbrivio@redhat.com>, Matthieu Baerts <matttbe@kernel.org>, Mat Martineau
- <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
- netdev@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
- mptcp@lists.linux.dev
-Subject: Re: [PATCH net-next v3 6/6] selftests/net: packetdrill: add
- tcp_rcv_neg_window.pkt
-Message-ID: <20260314080127.633fb3cb@kernel.org>
-In-Reply-To: <CANn89i+sEmZxcYDXHE=jtjNxoitGE-z4qkcS_eWSbiWHyNTs2w@mail.gmail.com>
-References: <20260309-tcp_rfc7323_retract_wnd_rfc-v3-0-4c7f96b1ec69@gmail.com>
-	<20260309-tcp_rfc7323_retract_wnd_rfc-v3-6-4c7f96b1ec69@gmail.com>
-	<CANn89i+PypF1cK4mnp8L_eCG_z+3Aj6uxJoohm_=DwGfR1=4FA@mail.gmail.com>
-	<abCkmiCSPkmxzECa@gandalf.schnuecks.de>
-	<CANn89iKYxs644ardFFSKo8d0EXL_2A5eUQjWZ3yp9-Q4tVLKzQ@mail.gmail.com>
-	<CANn89i+sEmZxcYDXHE=jtjNxoitGE-z4qkcS_eWSbiWHyNTs2w@mail.gmail.com>
+	s=k20201202; t=1773502821;
+	bh=WoPbqZeSHQS7/U+Zg1lu7MCzHBCJT+hDh8F/zCHEdfU=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=Xj3JbUmKkanbsDjkE/3Byh+gqQTGmHKnhZaI6Z1U35pQMoOszufYV3Qrne9mZSRBN
+	 ++Gj8dVw3EOi87nLPIm52u0T2zvchjYdpxIAMRORdR+qE/KLLSFRJLVmtzZbj+0kq1
+	 +/+VkLA8chEuMNvDXUhPvjEOr6/LkTcKRJBrb9340y++jggBFvIRT3/o3r36UyJFOo
+	 f4vzO/58MHMxP9qIEU0/JyUuuklqJmo4c7v8AYSfknR9+RYRYvIwiNCjgCeY7SyfPd
+	 Za+G/i3r0KlmG7RJ0ahd5l9TgclIFP6ghLhgcoKAh6wtVXf88i9VEnd0ijP52uiqCn
+	 0kSWvazn0MIpQ==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 402493808200;
+	Sat, 14 Mar 2026 15:40:17 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next v3 0/6] tcp: RFC 7323-compliant window retraction
+ handling
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <177350281603.1717807.13218820187988201902.git-patchwork-notify@kernel.org>
+Date: Sat, 14 Mar 2026 15:40:16 +0000
+References: <20260309-tcp_rfc7323_retract_wnd_rfc-v3-0-4c7f96b1ec69@gmail.com>
+In-Reply-To: 
+ <20260309-tcp_rfc7323_retract_wnd_rfc-v3-0-4c7f96b1ec69@gmail.com>
+To: Simon Baatz <gmbnomis@gmail.com>
+Cc: edumazet@google.com, ncardwell@google.com, kuniyu@google.com,
+ davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
+ corbet@lwn.net, skhan@linuxfoundation.org, dsahern@kernel.org,
+ jmaloy@redhat.com, kerneljasonxing@gmail.com, mfreemon@cloudflare.com,
+ shuah@kernel.org, sbrivio@redhat.com, matttbe@kernel.org,
+ martineau@kernel.org, geliang@kernel.org, netdev@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, mptcp@lists.linux.dev
 
-On Sat, 14 Mar 2026 15:55:35 +0100 Eric Dumazet wrote:
-> On Sat, Mar 14, 2026 at 4:58=E2=80=AFAM Eric Dumazet <edumazet@google.com=
-> wrote:
-> > Then add my
-> > Reviewed-by: Eric Dumazet <edumazet@google.com> =20
->=20
-> BTW, this can be done in a followup.
->=20
-> Jakub/Paolo feel free to apply v3 series if this is still possible.
+Hello:
 
-Roger that!
+This series was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-For the record I'll fix the trailing white space on patch 4 when
-applying.
+On Mon, 09 Mar 2026 09:02:25 +0100 you wrote:
+> Hi,
+> 
+> this series implements the receiver-side requirements for TCP window
+> retraction as specified in RFC 7323 and adds packetdrill tests to
+> cover the new behavior.
+> 
+> Please see the first patch for background and implementation
+> details. Since MPTCP adjusts the TCP receive window on subflows, the
+> relevant MPTCP code paths are updated accordingly.
+> 
+> [...]
+
+Here is the summary with links:
+  - [net-next,v3,1/6] tcp: implement RFC 7323 window retraction receiver requirements
+    https://git.kernel.org/netdev/net-next/c/0e24d17bd966
+  - [net-next,v3,2/6] mptcp: keep rcv_mwnd_seq in sync with subflow rcv_wnd
+    https://git.kernel.org/netdev/net-next/c/81714374a29c
+  - [net-next,v3,3/6] tcp: increase LINUX_MIB_BEYOND_WINDOW for SKB_DROP_REASON_TCP_OVERWINDOW
+    https://git.kernel.org/netdev/net-next/c/e2b9c52a2b00
+  - [net-next,v3,4/6] selftests/net: packetdrill: add tcp_rcv_wnd_shrink_nomem.pkt
+    https://git.kernel.org/netdev/net-next/c/ec1adf8ecf95
+  - [net-next,v3,5/6] selftests/net: packetdrill: add tcp_rcv_wnd_shrink_allowed.pkt
+    https://git.kernel.org/netdev/net-next/c/ba58b3e70b86
+  - [net-next,v3,6/6] selftests/net: packetdrill: add tcp_rcv_neg_window.pkt
+    https://git.kernel.org/netdev/net-next/c/3eb371eddad0
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
