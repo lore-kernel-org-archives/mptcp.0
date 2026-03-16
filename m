@@ -1,101 +1,118 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ABD03CD8B1
-	for <mptcp@lists.linux.dev>; Mon, 16 Mar 2026 16:39:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D88E9335067
+	for <mptcp@lists.linux.dev>; Mon, 16 Mar 2026 17:26:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773679159; cv=none; b=qHHCSsuxub3TpVlWtx1tu93wSfs0KlnPG5nCsaygCa+3o0pnDzPeQsWQXBjd+GUU+HAti0eKZ11ucLjKY2tdLjMq9+h3fHqU0WGHts5mLNGeDD1GzOYAe2jwq/9Syzyd33Ih9z6pzp5tDC27tkiAny2LzJ2ylMcamAoFoJu/PgI=
+	t=1773681995; cv=none; b=LLb6QD00Ai7haSh0DySBxutgBnNT8QrXn7a11vwNNDJVLZ+TL17HTCF71FcdAcpolqhHvQo5rQoAyPrfVEa8WanM/e9SKdnxfqFBtGntMCWVQStX3oalJjZ+Vhwo4pwNRF8HDcI0tHOeBzf19XPjTYvt6fAL+JjXOD0tZCDNjDQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773679159; c=relaxed/simple;
-	bh=ISC1/Jh54d+ohhihvSYDEPtSjfdOLOrb+J0C63v34eQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
-	 In-Reply-To:Content-Type; b=K2bqivSMrHWJd777GgSi3E3BXjUyoxO/uVbPli8HpPEGhraDkCZtXHr4nCB6aiAT1QR3+dsTfpFoM1ZadJAIhnzU2uhf1NzPlCSpksrUfQZOMkeEiPqThB9eN8bu8iPWFNpry5c0kkCMXyz0MBNNOkCgIveQPWmtFCw3zoh6x/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XaCw2pEH; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1773681995; c=relaxed/simple;
+	bh=u2AwtlOilxi+nXmhv1kI/xu0JpuY1SQe5r7GAP69fzk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OrFlkYHMlhpE6FJbh/iCayk4mNGQXleIERmpOQ+xlPuOBxx8pU2MofRsrYBuJASjCpdUp0amg9eAq3Ur6oFx1e6GuaOaxQvmGfR3ouQ0TIgkpsi1GrLxCVvVfATMTBJPkaTJhBYJ75YisY1COIcMPThKHKF7V2cK/PaUjyxU4/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QhnwXakH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XaCw2pEH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1773679155;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ISC1/Jh54d+ohhihvSYDEPtSjfdOLOrb+J0C63v34eQ=;
-	b=XaCw2pEHtecZe3D1G61DZ3RPvBe/ipSo7UHHNDtepyJpO/C4lX7HOlJKzemW1piMXBJcil
-	6/kQxNoHRol85sRf+Gul2xSThbaBiWYlbWA+2Wk60IsTo7sr1AS/MUuJakrCD9GYBKbf4u
-	vkeRlFS5GPjzERsmJWzohMj0B46Rtdc=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-164-bw_602tONs2xUuV_wBDFjw-1; Mon, 16 Mar 2026 12:39:13 -0400
-X-MC-Unique: bw_602tONs2xUuV_wBDFjw-1
-X-Mimecast-MFC-AGG-ID: bw_602tONs2xUuV_wBDFjw_1773679152
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-48531e6012bso50288405e9.1
-        for <mptcp@lists.linux.dev>; Mon, 16 Mar 2026 09:39:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773679152; x=1774283952;
-        h=content-transfer-encoding:in-reply-to:cc:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ISC1/Jh54d+ohhihvSYDEPtSjfdOLOrb+J0C63v34eQ=;
-        b=A9Iqmz7grvRO3TxwahWimjbsfABo/n/KoXOpfbVSApc0FO9Kzg1bg5BII8OCsj/DCu
-         InboYlRWW2GQejBdYIN8r+tSi3kAfchWCNv73XsGni7r36B6jkqokIC/Pi6uJEsMPYX7
-         atJTAABrPXbU0i/mfhToF0Z2na8iXZVIeYY1ovYec0xvYlAF+RJXGEQRQbEZ+z3Vd0Wn
-         ceOFCq3iHCHLXtGKMG7p9BDIPCrxEpGmU5v8iNxzRkEfCqrE+r8P5c3wzv2so4iE9m3w
-         lpt6f/Rq9QmNPlHH0pGy5iLYqhqEjf3OH9zTsRsHa64GdZDt4gtSCsW/7NG2LlI1VcQg
-         Oy3g==
-X-Gm-Message-State: AOJu0YzIcQOALALFcKpoGTfLrtkLxsEV+UzawSXO3I0g8NhP9dcMVhgA
-	mD6Rsc8+m0EQTvsCo2q5sgDT4G+I1dihnqJHwWhFzqP8hihRjsEeSVPbO2nEcN3ofHEZqYDm/b7
-	0CNKTXtO3vnkNkelbp8btfcIl+aPDTyBrc/ef61417We4l2mT7e9dxPi5
-X-Gm-Gg: ATEYQzxBp+om4DtxNEoZ52aSQoznZh5SJOeivYN/prVZKFWIO8f4IafqUU1/vOekQtX
-	gdf4onir/sG7L38KZuJ9Gtznb9GengZfYSI7JBSnUtsDcMMc5zJVVULIEi53lQIFl4Yl6jAKIlW
-	9sm7avsUaz0ESn3Xa8n8AS11Xhpone3zuYw+r4dy+BVFCRXslyJ+YWgSNrpQAkpq2F9YOM1bOyX
-	zZ5MWQTgzFVVzzKguIz8E5Qb4jlsGB77ZxY3TTtmO5nWoRMthk3SOdMB6UicxtAHFYpiNbd4eal
-	8R6mgJDc+iu0MGXo7qV4thq0s6Q17rImFteNMPqJCzQS4TLyRy7f/f06i02oEsYp7Frvrg4GQcK
-	R0tbCbzsSSYCMWpJJM+Zk9miTw7YHoOWlXBnm9fgWsAY9nhsz+tHk/eU=
-X-Received: by 2002:a05:600c:a4a:b0:47f:f952:d207 with SMTP id 5b1f17b1804b1-485566facc8mr232465675e9.19.1773679152438;
-        Mon, 16 Mar 2026 09:39:12 -0700 (PDT)
-X-Received: by 2002:a05:600c:a4a:b0:47f:f952:d207 with SMTP id 5b1f17b1804b1-485566facc8mr232465135e9.19.1773679151987;
-        Mon, 16 Mar 2026 09:39:11 -0700 (PDT)
-Received: from [192.168.88.32] ([216.128.11.95])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43b3b0e9b99sm21050236f8f.18.2026.03.16.09.39.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Mar 2026 09:39:11 -0700 (PDT)
-Message-ID: <2ae6ee59-6412-4f47-bc20-47d8df3dbefd@redhat.com>
-Date: Mon, 16 Mar 2026 17:39:10 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QhnwXakH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37D46C19421;
+	Mon, 16 Mar 2026 17:26:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1773681995;
+	bh=u2AwtlOilxi+nXmhv1kI/xu0JpuY1SQe5r7GAP69fzk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=QhnwXakH7QP57J92eQxHMDuMh6ey5ckIyHOvIKEWPbBDuWbLGiJBqetRKdXyec5lE
+	 LPPq8GYKkgsRcLmxh7K8/vek1Nb7PPXboB1PuzbvEH7P5UqlNiQNqEwAnLmJi2EkUi
+	 doaYW/ZFWRoZyurN+5CbpyR2Vxhxmu+rWumMGLIHjmVRXRcrdSCnF3qCO79XoeivMW
+	 6UdteJQiq2lqIc22PJNb8pBEM7DDFejYvgZM1MOv1rQVva6Zn1xJFsIakbUxYniPsJ
+	 8QCzbRly040oyqwCmcjCH9T0xnTgHjbtwRGZBqpeAb7WJAbG/1EvkXemZQEB6yHVxF
+	 WbF0x2dzEqLlw==
+Message-ID: <afa66f6a-2e74-4e38-a9a8-f50da7df343b@kernel.org>
+Date: Mon, 16 Mar 2026 18:26:33 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
+User-Agent: Mozilla Thunderbird Beta
 Subject: Re: [PATCH mptcp-net] mptcp: fix data-race in __mptcp_retrans /
  mptcp_incoming_options
-To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-References: <20260316-mptcp-data-race-snd_una-v1-1-221704522c67@kernel.org>
-From: Paolo Abeni <pabeni@redhat.com>
+Content-Language: fr
+To: Paolo Abeni <pabeni@redhat.com>
 Cc: MPTCP Linux <mptcp@lists.linux.dev>
-In-Reply-To: <20260316-mptcp-data-race-snd_una-v1-1-221704522c67@kernel.org>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: lMGukHNHS9gaqHgbYM2NivPbyPc3Tj34QCjtrgvKFjw_1773679152
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
+References: <20260316-mptcp-data-race-snd_una-v1-1-221704522c67@kernel.org>
+ <2ae6ee59-6412-4f47-bc20-47d8df3dbefd@redhat.com>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <2ae6ee59-6412-4f47-bc20-47d8df3dbefd@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 3/16/26 12:47 PM, Matthieu Baerts (NGI0) wrote:
-> It looks like msk->snd_una was being modified in __mptcp_snd_una_update
-> while being accessed in mptcp_rtx_head().
+Hi Paolo,
 
-For future memory it could be possibly useful to specify that update is
-under the mptcp data lock/msk spin lock and the reader is under the msk
-socket lock - and possibly drop a comment near the fields definition.
+On 16/03/2026 17:39, Paolo Abeni wrote:
+> On 3/16/26 12:47 PM, Matthieu Baerts (NGI0) wrote:
+>> It looks like msk->snd_una was being modified in __mptcp_snd_una_update
+>> while being accessed in mptcp_rtx_head().
+> 
+> For future memory it could be possibly useful to specify that update is
+> under the mptcp data lock/msk spin lock and the reader is under the msk
+> socket lock - and possibly drop a comment near the fields definition.
 
-Patch LGTM!
+Good idea! I will send a v2 with and update of the commit message, and
+in short comment where snd_una is defined in protocol.h (hopefully not
+causing conflicts during backports, but if it is, it will be worth it,
+and easy to fix).
 
-/P
+> Patch LGTM!
+
+Thank you for the review :)
+
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
 
