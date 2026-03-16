@@ -1,72 +1,72 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2AA526D4E5
-	for <mptcp@lists.linux.dev>; Mon, 16 Mar 2026 11:04:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9ED22765F8
+	for <mptcp@lists.linux.dev>; Mon, 16 Mar 2026 11:09:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773659054; cv=none; b=gjjqarIiNpVbPq7m+rgSlAOplh4Iai1m1BMZUWKvhJw632tIj8LhDkCE2O7p6oGb2DlPeZOjifp+9VZpyorCHmgcMiwiRQ+GQpl5ZkFrmeUpwdCHHgbbOLvspZAw0dQimDcpOGH6iEe61fb++jGYEgSQtDzh3osZJjXA6yPJwSo=
+	t=1773659380; cv=none; b=RqvLU+Rm3ztqusNLUcoqAzGnp+PtXUW7FzPmT55+ML2mwTd7W+myXjHTxRTVUQ/LPBT0/XiKVlf5y+sT+8ULhDxOAhJnj1fWXlVZq4/GgaVvRHXb2ALk5V9eZyqRfT+tsPTwKbTajw6Ntb7odFi6RZCDAeRPT/q7Z2hQR1GQj+o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773659054; c=relaxed/simple;
-	bh=1Z2K5uAxzV9s8L4/BC8KNuwonWVfjkCKvcQHutx8mBU=;
+	s=arc-20240116; t=1773659380; c=relaxed/simple;
+	bh=4jmmhwQ9HX1nE0wu5X/8gnKDvmvDMxjNyuG7KPrwFyo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=u5H/dUiqG8MQk41Yn8KlVL4qw2hMu/og+jCAhI/fDGfoHgNGwWx/OmKyRThSsYWMk2nwg7ASDpAQFJfGzsSt+qcaJHHUgI1YIzVUwNDKSCYbTFUoOZVag3A/nCYYcfZw3nWOQ2ZsYEKGCfKkvDbyouolALB8Sr18qJZLoUac138=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ICET6ahO; arc=none smtp.client-ip=170.10.133.124
+	 In-Reply-To:Content-Type; b=WP0OYMjiJrGgs7oKsQB9O0EWl9MhHLs1xeDBjKTVHMfnNBKEcHdOlj1QnMzOZU1P+S+VYBtRWueCJayMdEPHiZ2AIf/xqXUtp3m6LOdkd5Fj0E2IWyafXu7okpBiGnSwU9oUwKACo9ufwRTZRXh6NeZnba+IVEIXcWaJXR/adkM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aJmyttGJ; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ICET6ahO"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aJmyttGJ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1773659051;
+	s=mimecast20190719; t=1773659377;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=EGzcfaMu1FLaomn7Oe2DL0qLnEzAPj3x2+LI9gIhWi0=;
-	b=ICET6ahOcEmeSuifDilNtqfn6IujVNVMITSg+N695hw1weOf/TEE9NR+TROs2JM8Cu8WyD
-	4RvKYifVMRb3P80EWCBsRXMRegfvwx5SWgy2H3jwY828vKQ//la3PmWgJus+I2rSKa5ziO
-	WH5BvuHC4Pb1QQ9XdxyWwIG0tawGIVI=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=yJ1qCUPpj4bfVKkIIWkXXV0ps2+j94E+3GVF/7CvIho=;
+	b=aJmyttGJVUFAI9sl6w0H+S1qR8xULZmZXGX+0nG9xXKVGdVOOaiqmd9VP1oc5pffWTR5Mn
+	VNlPoM4YXu6EZJ5ct05/IAPOiwdg2M9ly8reBzhlpvL7EFPwatvHYLtalEPHXM9gBt1z1P
+	+sYdHjloxX6KyPaKiTLabW4DTLsfXtc=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-446-LFZAfBLaN966yHdw7k91Cw-1; Mon, 16 Mar 2026 07:04:10 -0400
-X-MC-Unique: LFZAfBLaN966yHdw7k91Cw-1
-X-Mimecast-MFC-AGG-ID: LFZAfBLaN966yHdw7k91Cw_1773659049
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-439af7ba802so5400955f8f.2
-        for <mptcp@lists.linux.dev>; Mon, 16 Mar 2026 04:04:10 -0700 (PDT)
+ us-mta-408-yheZ3vg3PhOYcGcYENJ6Ww-1; Mon, 16 Mar 2026 07:09:36 -0400
+X-MC-Unique: yheZ3vg3PhOYcGcYENJ6Ww-1
+X-Mimecast-MFC-AGG-ID: yheZ3vg3PhOYcGcYENJ6Ww_1773659375
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-48541cac34dso41925825e9.0
+        for <mptcp@lists.linux.dev>; Mon, 16 Mar 2026 04:09:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773659049; x=1774263849;
+        d=1e100.net; s=20251104; t=1773659375; x=1774264175;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=EGzcfaMu1FLaomn7Oe2DL0qLnEzAPj3x2+LI9gIhWi0=;
-        b=Kz6wVhRbYK8Zk0Bna1rfyYW7TBvqloawNSiSKDGPBKK++hdDZwghg3r5GGZvmuUXmV
-         JWjnrx72lJ0NJPdUwKzlYEB0SW24uFOWKG4v3c+BAqxvwnHx4fRZ+75SqTUK2OZ6RZSO
-         Mj5PgVeJKq2nCJbtDXUK+50VL3ANpZZOTNnenmt5NtpHqnXAqHpijznI6ObxEhGxmIjN
-         V4Rx2boY+xz1zSmxkoC1S3FQQItoX3heLSZdmQy3wma20zbthCxxJuP3Uef8sNtZsXN0
-         M72fBVY2ZIEvJc1GJlbC1px8MJUdXxpMAgY7mDUqn61GbJKlzayupX+JR8NUcMdCtQyv
-         9rlQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX6Oi1zrKUet4vxSn7/bCXcmFk7RahJlbDjhikFD3V5hjkQvK8j+W2Njd+DmRXgpujNZU30qw==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yxg69AYd4CEFbK78QAMKLhY35b4PTdFkTESmlmu+sHj/aDfJdus
-	xYpzZdhETI3VFL+sm4inIb4KE/Y4rDyaRCGBVpjLI4zEZeoKJzPpWhIW60hglJrG2zTvzAaMxvR
-	gpbLrqLiiXg8KLD7TCXUBhncvccdtJ6Uo9RGd9YqXwBiE2z1J57uNes9q
-X-Gm-Gg: ATEYQzxIKSaYLPfMLShEdJOqqDRZoDiHBpYcm2fl+/wbA4g10hMxIH10omFpJRRxkD8
-	hDrOJvJVzvVVL14om3uPn8zrvxud65Iq+MyfxouK8DZx7HLOZWumX1vUteDzYkU2TvPR9Iyj5fV
-	I53SrnnNxJeVIXCY1JWbnBL5fPkNMVdW5bKei07zObFP4+JVoI0W0YYpxszqupqVI0Nt9+Ey0d/
-	z+6bApjEbbo1Xhj7E96F9KPiGAxhBsfs/cE0eKW9rLETV5wGxV/grrUvhlI846wBwTcEcXLN8hA
-	WFIZxLvazcUYjsjD5eMcdj9IUp3LyxTB0qWUVyGi9llHPI5LczfxCldlvV1OTVSI75xaoXfdFV6
-	WERR5yb8JgZhe78in+o0IPFF1GxFLzehi26/spvtAF8eHTLmQxtLqh84=
-X-Received: by 2002:a05:6000:2901:b0:439:b3d2:376b with SMTP id ffacd0b85a97d-43a04d86856mr21339373f8f.14.1773659049165;
-        Mon, 16 Mar 2026 04:04:09 -0700 (PDT)
-X-Received: by 2002:a05:6000:2901:b0:439:b3d2:376b with SMTP id ffacd0b85a97d-43a04d86856mr21339273f8f.14.1773659048589;
-        Mon, 16 Mar 2026 04:04:08 -0700 (PDT)
+        bh=yJ1qCUPpj4bfVKkIIWkXXV0ps2+j94E+3GVF/7CvIho=;
+        b=tD/J8Kg5PeGMc3ccwg1k2PcsOVaxtXEaeubf8tbGURmRVRwuyaPAvmHeeNiql1ZBkX
+         nGFQTomg1Kl0zyA0TDcVLrrGCcd5xRiLiExKTgyo6yJ9AzIpHa2cbVKhaWoR36dtDKpD
+         opuOCGPxtnKfP+3crnyRoXDKuTJ7tw5H7Vb5MJKOYqcRE0zPUAEg+u8A6uvgqKbwe1Qd
+         bO+6dV1M2HGHjlxJcRa6e+q00PC6r70A+h5MXeAfcClhWO/e44BiikVYvYXbTtlKi7a3
+         UrBUeBBW7Md8spuv3ceddOhZKxjpdjGr5etv101SiyIeG3EA/dClFdDydo26+DrpUxkG
+         twdQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUymtu2QGKkFId/kZiOe4qFVl2n7CdPyJpY940HE6FR5Lw0vUequszqmCsz1QWE+gWlNOcThw==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwTR5gO9TtilYq/5vKT+Njn4RzKSlijPjjMeNOqmjC8mNIqxWoa
+	icy2reVeT+No1U8DzgyktOacfMgrseIh3iropUpyLCuPJU996rWVwDKblyJWppOxARtdG+OkxvF
+	SCf4U0TOTEuae6qR8A2Ne7MqkhWeczzWgfGxrWnTm8gD8euQgJiXUVOh1
+X-Gm-Gg: ATEYQzxVpDpGgBepFr5t+bmhJq6fW2PL5sB9eIOad2KzfyV2EJSR7pQie5QR97rBXgn
+	mgZm/qhghyj77pvx/jvfMKWbDRLQQAYZ4ae0sVO3mAeYG5zITpG2+IaScU6d6NNiQdm/6fLLarP
+	WA0ORUju8cHHsl6D3PPqXGQc6j52pRLe3HEU3IZYSK79Euf2emuVvi5so84IPvTPLMCQ1sqHiEz
+	CcJAdjeu5Us0ffCvS3iF+/pib9FK3oS6V9d4ntL+RQDfKGAGmGSLFUNqdkI3hr6Fne2vLvfOCcO
+	Ue4AOItPpXsAEgKJs769eEL6MTQhVHacd+jz6muhPpRwvAA8cU8A3XaAyTRP0u4BAgEPcGDk//L
+	bXCra1E/CVfiZz/AqdttsWTsyFLr2UGANGjMCiYhQrPHDTnVKbtx6l4A=
+X-Received: by 2002:a05:600c:a4a:b0:47f:f952:d207 with SMTP id 5b1f17b1804b1-485566facc8mr211849415e9.19.1773659375341;
+        Mon, 16 Mar 2026 04:09:35 -0700 (PDT)
+X-Received: by 2002:a05:600c:a4a:b0:47f:f952:d207 with SMTP id 5b1f17b1804b1-485566facc8mr211848875e9.19.1773659374904;
+        Mon, 16 Mar 2026 04:09:34 -0700 (PDT)
 Received: from [192.168.88.32] ([216.128.11.95])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-439fe19aec5sm41595197f8f.4.2026.03.16.04.04.06
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48541aa73dasm1212991845e9.2.2026.03.16.04.09.33
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Mar 2026 04:04:08 -0700 (PDT)
-Message-ID: <442cfa35-78b1-48f4-9565-e884e7e60d79@redhat.com>
-Date: Mon, 16 Mar 2026 12:04:05 +0100
+        Mon, 16 Mar 2026 04:09:34 -0700 (PDT)
+Message-ID: <b042de90-79e3-4976-9bbe-b6df3266caea@redhat.com>
+Date: Mon, 16 Mar 2026 12:09:32 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -74,8 +74,8 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v2 05/14] tcp: grow rcvbuf to back scaled-window
- quantization slack
+Subject: Re: [PATCH net-next v2 00/14] tcp: preserve receive-window accounting
+ across ratio drift
 To: atwellwea@gmail.com, netdev@vger.kernel.org, davem@davemloft.net,
  kuba@kernel.org, edumazet@google.com, ncardwell@google.com
 Cc: linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
@@ -87,11 +87,10 @@ Cc: linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
  martineau@kernel.org, geliang@kernel.org, rostedt@goodmis.org,
  mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 0x7f454c46@gmail.com
 References: <20260314201348.1786972-1-atwellwea@gmail.com>
- <20260314201348.1786972-6-atwellwea@gmail.com>
 From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <20260314201348.1786972-6-atwellwea@gmail.com>
+In-Reply-To: <20260314201348.1786972-1-atwellwea@gmail.com>
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: UKr-7rktusbCkqkFAwJdo4aa-sGUz6oMGYv7Mxy65zg_1773659049
+X-Mimecast-MFC-PROC-ID: QLibotoHvVUBDUIGREq-cw4NulJ4RWs5nNQMVpbOTT8_1773659375
 X-Mimecast-Originator: redhat.com
 Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8
@@ -100,94 +99,30 @@ Content-Transfer-Encoding: 7bit
 On 3/14/26 9:13 PM, atwellwea@gmail.com wrote:
 > From: Wesley Atwell <atwellwea@gmail.com>
 > 
-> Teach TCP to grow sk_rcvbuf when scale rounding would otherwise expose
-> more sender-visible window than the current hard receive-memory backing
-> can cover.
+> This series keeps sender-visible TCP receive-window accounting tied to the
+> scaling basis that was in force when the window was advertised, even if
+> later receive-side truesize inflation lowers scaling_ratio or the live
+> receive window retracts below the largest right edge already exposed to the
+> sender.
 > 
-> The new helper keeps backlog and memory-pressure limits in the same
-> units as the rest of the receive path, while __tcp_select_window()
-> backs any rounding slack before advertising it.
+> After the receive-window retraction changes, the receive path needs to keep
+> track of two related pieces of sender-visible state:
 > 
-> Signed-off-by: Wesley Atwell <atwellwea@gmail.com>
-> ---
->  include/net/tcp.h     | 12 ++++++++++++
->  net/ipv4/tcp_input.c  | 36 ++++++++++++++++++++++++++++++++++--
->  net/ipv4/tcp_output.c | 15 +++++++++++++--
->  3 files changed, 59 insertions(+), 4 deletions(-)
+>   1. the live advertised receive window
+>   2. the maximum advertised right edge and the basis it was exposed with
 > 
-> diff --git a/include/net/tcp.h b/include/net/tcp.h
-> index fc22ab6b80d5..5b479ad44f89 100644
-> --- a/include/net/tcp.h
-> +++ b/include/net/tcp.h
-> @@ -397,6 +397,7 @@ int tcp_ioctl(struct sock *sk, int cmd, int *karg);
->  enum skb_drop_reason tcp_rcv_state_process(struct sock *sk, struct sk_buff *skb);
->  void tcp_rcv_established(struct sock *sk, struct sk_buff *skb);
->  void tcp_rcvbuf_grow(struct sock *sk, u32 newval);
-> +bool tcp_try_grow_rcvbuf(struct sock *sk, int needed);
->  void tcp_rcv_space_adjust(struct sock *sk);
->  int tcp_twsk_unique(struct sock *sk, struct sock *sktw, void *twp);
->  void tcp_twsk_destructor(struct sock *sk);
-> @@ -1844,6 +1845,17 @@ static inline int tcp_rwnd_avail(const struct sock *sk)
->  	return tcp_rmem_avail(sk) - READ_ONCE(sk->sk_backlog.len);
->  }
->  
-> +/* Passive children clone the listener's sk_socket until accept() grafts
-> + * their own struct socket, so only sockets that point back to themselves
-> + * should autotune receive-buffer backing.
-> + */
-> +static inline bool tcp_rcvbuf_grow_allowed(const struct sock *sk)
-> +{
-> +	struct socket *sock = READ_ONCE(sk->sk_socket);
-> +
-> +	return sock && READ_ONCE(sock->sk) == sk;
+> This repost snapshots both, uses them to repair receive-buffer backing when
+> ratio drift would otherwise strand sender-visible space, extends
+> TCP_REPAIR_WINDOW so repair/restore can round-trip the new state, and adds
+> truesize-drift coverage through TUN packetdrill tests and netdevsim-based
+> selftests.
 
-This is executed under the sk socket lock, ONCE annotation not needed.
+The series is IMHO significantly not trivial. Can the end-user meet the
+relevant condition in practice? How? What is the net benefit in
+practice? Is that observable under usual conditions or require
+exceptional circumstances?
 
-> +}
-> +
->  /* Note: caller must be prepared to deal with negative returns */
->  static inline int tcp_space(const struct sock *sk)
->  {
-> diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
-> index 352f814a4ff6..32256519a085 100644
-> --- a/net/ipv4/tcp_input.c
-> +++ b/net/ipv4/tcp_input.c
-> @@ -774,6 +774,38 @@ static void tcp_init_buffer_space(struct sock *sk)
->  				    (u32)TCP_INIT_CWND * tp->advmss);
->  }
->  
-> +/* Try to grow sk_rcvbuf so the hard receive-memory limit covers @needed
-> + * bytes beyond sk_rmem_alloc while preserving sender-visible headroom
-> + * already consumed by sk_backlog.len.
-> + */
-> +bool tcp_try_grow_rcvbuf(struct sock *sk, int needed)
-> +{
-> +	struct net *net = sock_net(sk);
-> +	int backlog;
-> +	int rmem2;
-> +	int target;
-> +
-> +	needed = max(needed, 0);
-> +	backlog = READ_ONCE(sk->sk_backlog.len);
-> +	target = tcp_rmem_used(sk) + backlog + needed;
-> +
-> +	if (target <= READ_ONCE(sk->sk_rcvbuf))
-> +		return true;
-> +
-> +	rmem2 = READ_ONCE(net->ipv4.sysctl_tcp_rmem[2]);
-> +	if (READ_ONCE(sk->sk_rcvbuf) >= rmem2 ||
-> +	    (sk->sk_userlocks & SOCK_RCVBUF_LOCK) ||
-> +	    tcp_under_memory_pressure(sk) ||
-> +	    sk_memory_allocated(sk) >= sk_prot_mem_limits(sk, 0))
-> +		return false;
-> +
-> +	WRITE_ONCE(sk->sk_rcvbuf,
-> +		   min_t(int, rmem2,
-> +			 max_t(int, READ_ONCE(sk->sk_rcvbuf), target)));
-> +
-> +	return target <= READ_ONCE(sk->sk_rcvbuf);
-
-Same here, and more cases below.
+I think we need a strong motivation to merge this kind of changes.
 
 /P
 
