@@ -1,118 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D88E9335067
-	for <mptcp@lists.linux.dev>; Mon, 16 Mar 2026 17:26:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BB473321BF
+	for <mptcp@lists.linux.dev>; Mon, 16 Mar 2026 17:47:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773681995; cv=none; b=LLb6QD00Ai7haSh0DySBxutgBnNT8QrXn7a11vwNNDJVLZ+TL17HTCF71FcdAcpolqhHvQo5rQoAyPrfVEa8WanM/e9SKdnxfqFBtGntMCWVQStX3oalJjZ+Vhwo4pwNRF8HDcI0tHOeBzf19XPjTYvt6fAL+JjXOD0tZCDNjDQ=
+	t=1773683269; cv=none; b=pHXg0rBc9Jnl9F3Us38esGkswN618xqvuhACXb0oEe34vpPpdmQNojWyopL08zHVeeU+kS7PWounmSxXCHt6TFs1wGObm3svTCZQ7dkZTNMXDq+PeCHl9dsINsoBx1rQZJk5JJcDvV0OdpUcWsfgCtCTtemIHEucdM45FAl/fpI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773681995; c=relaxed/simple;
-	bh=u2AwtlOilxi+nXmhv1kI/xu0JpuY1SQe5r7GAP69fzk=;
+	s=arc-20240116; t=1773683269; c=relaxed/simple;
+	bh=gRVifA1HxZ+4XsSQaEhHgwmLLQrL+5Qxxw1GlMu4spw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OrFlkYHMlhpE6FJbh/iCayk4mNGQXleIERmpOQ+xlPuOBxx8pU2MofRsrYBuJASjCpdUp0amg9eAq3Ur6oFx1e6GuaOaxQvmGfR3ouQ0TIgkpsi1GrLxCVvVfATMTBJPkaTJhBYJ75YisY1COIcMPThKHKF7V2cK/PaUjyxU4/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QhnwXakH; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=WbzZeSxqrB80e2JzRZ3kLxlSyIJ+4fP82XLow7SC19/Cfsr2dFAaybY0ScDqCeD3yxiIyVp0uh38EHNbupU7V+QZ29v6Ntg66qn18+ZiblJ0sr+NprVSB6l/BK/P6GoyT4/a2UM3Fph5Dsf1xf+9zzZpB3TfZQ3svW2F5q9DpOk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=duj3MXX+; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QhnwXakH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37D46C19421;
-	Mon, 16 Mar 2026 17:26:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773681995;
-	bh=u2AwtlOilxi+nXmhv1kI/xu0JpuY1SQe5r7GAP69fzk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=QhnwXakH7QP57J92eQxHMDuMh6ey5ckIyHOvIKEWPbBDuWbLGiJBqetRKdXyec5lE
-	 LPPq8GYKkgsRcLmxh7K8/vek1Nb7PPXboB1PuzbvEH7P5UqlNiQNqEwAnLmJi2EkUi
-	 doaYW/ZFWRoZyurN+5CbpyR2Vxhxmu+rWumMGLIHjmVRXRcrdSCnF3qCO79XoeivMW
-	 6UdteJQiq2lqIc22PJNb8pBEM7DDFejYvgZM1MOv1rQVva6Zn1xJFsIakbUxYniPsJ
-	 8QCzbRly040oyqwCmcjCH9T0xnTgHjbtwRGZBqpeAb7WJAbG/1EvkXemZQEB6yHVxF
-	 WbF0x2dzEqLlw==
-Message-ID: <afa66f6a-2e74-4e38-a9a8-f50da7df343b@kernel.org>
-Date: Mon, 16 Mar 2026 18:26:33 +0100
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="duj3MXX+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1773683267;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gRVifA1HxZ+4XsSQaEhHgwmLLQrL+5Qxxw1GlMu4spw=;
+	b=duj3MXX+njab/VmBcvZw8iSHnEVw8y88Qw7L3ta4xobC5cVUB6q191Irw6IgQEuTHApnha
+	nuFaS2q6BLjsPjdi2ZLDLAnTRhm6sJj+AnwxMp9f4c0NjjRdCl/3SblC2HzB+LC0qFVPXt
+	H8r3v61AXtLQpEsrSuELzOJ5RMokaZY=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-668-o9rPQDHhP5qeyTTQJs9_ig-1; Mon, 16 Mar 2026 13:47:45 -0400
+X-MC-Unique: o9rPQDHhP5qeyTTQJs9_ig-1
+X-Mimecast-MFC-AGG-ID: o9rPQDHhP5qeyTTQJs9_ig_1773683265
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-439fbfd93e8so3241677f8f.0
+        for <mptcp@lists.linux.dev>; Mon, 16 Mar 2026 10:47:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1773683264; x=1774288064;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=gRVifA1HxZ+4XsSQaEhHgwmLLQrL+5Qxxw1GlMu4spw=;
+        b=OeNK0maSt854p9FfwabIwz/e9HArsKuOtpuj584LEDH85oyUIZkqwHHNm8nvkqd2m6
+         EfQvcy3sOKMSLx87eqr3AALXrEOwsid4SvzUmlnhN5LCMHPKAgqTCqHcBixfhqxme7p6
+         +NRvSw81SUGhzpLYb/z35Z641N5bNQ9Bz3LoN1t80ya49FpWoBN8kCzNPxlrxJWXfYRg
+         jvU7VuXUKZut23AcniaZeuc0GpNrAOtmo8rZ3JWBKKcQgkRZkJMt0RDTi48nsXalQskw
+         BHAlswDphUqufLo9lngUdp7nApHRcSuq2IqVPMyS/MX65ZhzXvz7e3cYUis9wOcK/5zp
+         hifQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWxzdMJ1yBg3uygQ8H5rhRK+45nBxOEenaykL0GO0xKRggI9seqGbj0WS7uIP1/oHJnDgXK+w==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxtkMW2AB7BEGxo/4Qs6TXcs33Tq2lX/C9IBYW2lWPqMmha+xJW
+	XiqTzKhZlbhkKk+pSzG8LDnMa1kd31XScWNOp++swn33HB+ADkr3/VklmaLalm+2skn/E4OtJod
+	yldO9FAnopPEXzmOagKzeHhYb32vy+CFomcP5Xhu1it37r/wzUT+Gx0f1
+X-Gm-Gg: ATEYQzyTcjmOTe2E1ChxMDJ8gqKsa/obtlq/Ayk6rh0WKqY6xMdqi1Dl2nFw+f8P2Yv
+	O19z7B4l6nRQngOVPMXkbC7h/9o24NCY24F/mxz8W9dynp9j8YLilDhYFIoyURXnaWTNeaZY8bn
+	U4Ci3KBAte/IyYxKYzXeqcvH94JNT3Soh9gGOlOkAAO0Qy7bz59qCqiJXaUdcJHWsvkuymZw6uK
+	XP9vPlPNkfuGpe5gcl5EzxURVE5rJ1eJeKo+CZwGlyax+OKeF4CYrgLyFvgIfFPC6CqdT68M60w
+	JnV+Ri4hh13zT2Jo3AgFsj0arMf6r5lyITFm9MEydWgONaynKSPuQp+be4GFW1McyHPBoJR4wbp
+	sl//Goa5HEek4uk3txUaxb+tMo4PhoWZ7E1YPEQE3vPMVztMc1btPr+4=
+X-Received: by 2002:a05:6000:616:b0:43b:4352:1bff with SMTP id ffacd0b85a97d-43b43521da3mr8977680f8f.43.1773683264563;
+        Mon, 16 Mar 2026 10:47:44 -0700 (PDT)
+X-Received: by 2002:a05:6000:616:b0:43b:4352:1bff with SMTP id ffacd0b85a97d-43b43521da3mr8977613f8f.43.1773683264127;
+        Mon, 16 Mar 2026 10:47:44 -0700 (PDT)
+Received: from [192.168.88.32] ([216.128.11.95])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43b41ff92a6sm17659188f8f.11.2026.03.16.10.47.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Mar 2026 10:47:43 -0700 (PDT)
+Message-ID: <e93ce797-4153-4e6e-89b6-3839a0b8bca2@redhat.com>
+Date: Mon, 16 Mar 2026 18:47:41 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net] mptcp: fix data-race in __mptcp_retrans /
- mptcp_incoming_options
-Content-Language: fr
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: MPTCP Linux <mptcp@lists.linux.dev>
-References: <20260316-mptcp-data-race-snd_una-v1-1-221704522c67@kernel.org>
- <2ae6ee59-6412-4f47-bc20-47d8df3dbefd@redhat.com>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <2ae6ee59-6412-4f47-bc20-47d8df3dbefd@redhat.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v2 00/14] tcp: preserve receive-window accounting
+ across ratio drift
+To: Wesley Atwell <atwellwea@gmail.com>
+Cc: netdev@vger.kernel.org, davem@davemloft.net, kuba@kernel.org,
+ edumazet@google.com, ncardwell@google.com, linux-kernel@vger.kernel.org,
+ linux-api@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ mptcp@lists.linux.dev, dsahern@kernel.org, horms@kernel.org,
+ kuniyu@google.com, andrew+netdev@lunn.ch, willemdebruijn.kernel@gmail.com,
+ jasowang@redhat.com, skhan@linuxfoundation.org, corbet@lwn.net,
+ matttbe@kernel.org, martineau@kernel.org, geliang@kernel.org,
+ rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ 0x7f454c46@gmail.com
+References: <20260314201348.1786972-1-atwellwea@gmail.com>
+ <b042de90-79e3-4976-9bbe-b6df3266caea@redhat.com>
+ <CAN=sVvyNpkyok_bt8eQSmqc4f7g7QoZBUmRmNRLoFz1HasEzMA@mail.gmail.com>
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <CAN=sVvyNpkyok_bt8eQSmqc4f7g7QoZBUmRmNRLoFz1HasEzMA@mail.gmail.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: y6IBsAbFTdELH7l1dA20IeNey3ZpOl_2Sw3mEGP5xpg_1773683265
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Paolo,
+Hi,
 
-On 16/03/2026 17:39, Paolo Abeni wrote:
-> On 3/16/26 12:47 PM, Matthieu Baerts (NGI0) wrote:
->> It looks like msk->snd_una was being modified in __mptcp_snd_una_update
->> while being accessed in mptcp_rtx_head().
-> 
-> For future memory it could be possibly useful to specify that update is
-> under the mptcp data lock/msk spin lock and the reader is under the msk
-> socket lock - and possibly drop a comment near the fields definition.
+On 3/16/26 6:29 PM, Wesley Atwell wrote:
+> The strongest real anchor here is the already documented regression
+> around sender-visible rwnd diverging from hard receive-memory backing,
+> rather than a general receive-accounting cleanup.
 
-Good idea! I will send a v2 with and update of the commit message, and
-in short comment where snd_una is defined in protocol.h (hopefully not
-causing conflicts during backports, but if it is, it will be worth it,
-and easy to fix).
+I likely missed some of the prior discussion. Could you please share a
+pointer/link to the mentioned regression report?
 
-> Patch LGTM!
+When posting on netdev please:
+- use plaintext only messages
+- avoid top-posting
 
-Thank you for the review :)
+Thanks,
 
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
+Paolo
 
