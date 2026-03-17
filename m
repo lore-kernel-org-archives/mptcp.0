@@ -1,40 +1,40 @@
-Received: from out-183.mta1.migadu.com (out-183.mta1.migadu.com [95.215.58.183])
+Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0187C37FF78
-	for <mptcp@lists.linux.dev>; Tue, 17 Mar 2026 08:38:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 164AD37FF78
+	for <mptcp@lists.linux.dev>; Tue, 17 Mar 2026 08:38:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773736684; cv=none; b=AVUEPDky6IXqZ+m9cD3N5TP+rdkyf37wWrDCi/FKR6WvOTUSxlOMOU8y0EqoNGw7GTi1gnDN41Q0PdYkKoAxLL7apDo5KQsAzHGTUr8GOuCA9ruUB13u2jg/ypKgxj6f/GSj+FmQ2WhkOviIO75s3iwtOUYe0jSkxcxbtqlmsNc=
+	t=1773736687; cv=none; b=k6dDcRzzm9wKM2wLO67XT+yT9+UgRveRecyvmrkxau+zB/lIZCg98idjCV/56nLlY1WiWM6ygHg4rA110u9jrpz5wXo4b9reWhZ0S4VhsCYNNRYSUK/jFhHpqomkypSnuqfrVd4wYsGDYZQ5END48fdRTyhfssLwAEA2sIIxA50=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773736684; c=relaxed/simple;
-	bh=bm1ZVRLsdS11cVaGGB7GcDaC+TJeTlng3Z7IW4B1BTs=;
+	s=arc-20240116; t=1773736687; c=relaxed/simple;
+	bh=2SwIzlipmsPxfg/8ClMgnZqp4IM6UnYkS2wtK8DQlg0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Z6MdtJYfTyKavok9MlzAm7Ab4DH0ZB8kvRizwo4DgSmIMRBg5vdy5cAkKggaC8uEXEfaGauQld9alpAwJy0vy+3dKSvK2jrDTAR4MWqB0nZ3yBubFfmjf2ZJxXsNeD/+IFUvjD3dtY1GlSuuuLQeasAr6abraE4vq6P0OXwtpOw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=MYCHlWdf; arc=none smtp.client-ip=95.215.58.183
+	 MIME-Version; b=mkBFOoHL4AYfldhFynsm5i7X9o3Yg2vbrEA5sSGkrwEJkl0vnR2XeKYFjIIUNoWrICjaLtLYZOZ53SdCuR6q2qmx7Tj/2F0v8RaBOP4RilkB+FflzqCKIKxk3xa/b7us8u1JWKWNIHrej8coTJfxxGmCVy2Cf4N4EUyR97UDUMo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=dfStd3uO; arc=none smtp.client-ip=95.215.58.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="MYCHlWdf"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="dfStd3uO"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1773736681;
+	t=1773736684;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=x6iyn65WlbKceIDMk1WyXp73F8sE6Kf1Sf5MuRT0/+0=;
-	b=MYCHlWdfw00rFlQi+wZ0hkKoK/my4dMujU8jQLNR8ITlGChLC/RBmkFcmSObrkoXMqY9Z8
-	aGg+Gc7ZXKmx1fWmnxmaf6LxNMaZaUsS+VoUakGvUTWMPaGaVa9nYrlMTkE7wrWSwQkJIs
-	U29SsWXNBwUaEUT9vbroDfwnJmua/Ks=
+	bh=PHMGdq3HkhVNqtdQd2+IcJoGkTfCwNqwTqzwUpJVoKo=;
+	b=dfStd3uO3l1WY8/AH7t6LNVz7Xiu/QBME88q+Itdv8G/GjojSqk3ep5p/27NJDMbUQAOSw
+	72YYKR3bc0bPrlP2VhBJJsx7PAknzWT7rrIpobgD73Q4nRhNTvpAmmGEoqaeDfPlEbvLSd
+	haxnc4GXm3qW04E1L5RokIrZRmsyORI=
 From: Gang Yan <gang.yan@linux.dev>
 To: mptcp@lists.linux.dev
 Cc: pabeni@redhat.com,
 	Gang Yan <yangang@kylinos.cn>,
 	Geliang Tang <geliang@kernel.org>
-Subject: [PATCH mptcp-net v3 2/3] mptcp: fix the stall problems using backlog_queue
-Date: Tue, 17 Mar 2026 16:36:56 +0800
-Message-ID: <2cfa46433a6dd3c4b8c0f75e9c37430fad08f6d8.1773735950.git.yangang@kylinos.cn>
+Subject: [PATCH mptcp-net v3 3/3] mptcp: fix the stall problems with data_ready
+Date: Tue, 17 Mar 2026 16:36:57 +0800
+Message-ID: <9883dd53b01a0e307e35fe54005e0176a030cc30.1773735950.git.yangang@kylinos.cn>
 In-Reply-To: <cover.1773735950.git.yangang@kylinos.cn>
 References: <cover.1773735950.git.yangang@kylinos.cn>
 Precedence: bulk
@@ -48,48 +48,54 @@ X-Migadu-Flow: FLOW_OUT
 
 From: Gang Yan <yangang@kylinos.cn>
 
-The original condition would stop moving skbs or spooling backlog even
-when the receive queue is empty, leading to receive stall.
+There exists a stall caused by unprocessed backlog_queue in
+'move_skbs_to_msk'.
 
-Modify the condition in __mptcp_move_skbs() and mptcp_can_spool_backlog()
-to only treat rcvbuf as full when:
-  sk_rmem_alloc_get(sk) > sk->sk_rcvbuf && !skb_queue_empty(&sk->sk_receive_queue)
-
-This ensures the backlog can still be moved to the receive queue when
-the queue is empty, avoiding stall problems.
+This patch adds a check for backlog_queue and move skbs to receive
+queue when no skbs were moved from subflow but backlog_queue is not
+empty.
 
 Fixes: 6228efe0cc01 ("mptcp: leverage the backlog for RX packet processing")
 Co-developed-by: Geliang Tang <geliang@kernel.org>
 Signed-off-by: Geliang Tang <geliang@kernel.org>
 Signed-off-by: Gang Yan <yangang@kylinos.cn>
 ---
- net/mptcp/protocol.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ net/mptcp/protocol.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 759f0486c40b..b1915eef4dcf 100644
+index b1915eef4dcf..023a4fb68617 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -2204,7 +2204,8 @@ static bool __mptcp_move_skbs(struct sock *sk, struct list_head *skbs, u32 *delt
- 	*delta = 0;
- 	while (1) {
- 		/* If the msk recvbuf is full stop, don't drop */
--		if (sk_rmem_alloc_get(sk) > sk->sk_rcvbuf)
-+		if (sk_rmem_alloc_get(sk) > sk->sk_rcvbuf &&
-+		    !skb_queue_empty(&sk->sk_receive_queue))
- 			break;
+@@ -29,6 +29,10 @@
+ #include "mib.h"
  
- 		prefetch(skb->next);
-@@ -2259,7 +2260,8 @@ static bool mptcp_can_spool_backlog(struct sock *sk, struct list_head *skbs)
+ static unsigned int mptcp_inq_hint(const struct sock *sk);
++static bool mptcp_can_spool_backlog(struct sock *sk, struct list_head *skbs);
++static void mptcp_backlog_spooled(struct sock *sk, u32 moved,
++				  struct list_head *skbs);
++static bool __mptcp_move_skbs(struct sock *sk, struct list_head *skbs, u32 *delta);
  
- 	/* Don't spool the backlog if the rcvbuf is full. */
- 	if (RB_EMPTY_ROOT(&msk->backlog_queue) ||
--	    sk_rmem_alloc_get(sk) > sk->sk_rcvbuf)
-+	    (sk_rmem_alloc_get(sk) > sk->sk_rcvbuf &&
-+	     !skb_queue_empty(&sk->sk_receive_queue)))
- 		return false;
+ #define CREATE_TRACE_POINTS
+ #include <trace/events/mptcp.h>
+@@ -892,6 +896,17 @@ static bool move_skbs_to_msk(struct mptcp_sock *msk, struct sock *ssk)
+ 	bool moved;
  
- 	INIT_LIST_HEAD(skbs);
+ 	moved = __mptcp_move_skbs_from_subflow(msk, ssk, true);
++	if (!moved && skb_queue_empty(&sk->sk_receive_queue) &&
++	    !RB_EMPTY_ROOT(&msk->backlog_queue)) {
++		struct list_head skbs;
++		u32 delta;
++
++		while (mptcp_can_spool_backlog(sk, &skbs)) {
++			moved |= __mptcp_move_skbs(sk, &skbs, &delta);
++			mptcp_backlog_spooled(sk, moved, &skbs);
++		}
++	}
++
+ 	__mptcp_ofo_queue(msk);
+ 	if (unlikely(ssk->sk_err))
+ 		__mptcp_subflow_error_report(sk, ssk);
 -- 
 2.43.0
 
