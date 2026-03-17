@@ -1,156 +1,129 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f178.google.com (mail-dy1-f178.google.com [74.125.82.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26C1733F361
-	for <mptcp@lists.linux.dev>; Tue, 17 Mar 2026 10:52:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D0B33A7F61
+	for <mptcp@lists.linux.dev>; Tue, 17 Mar 2026 11:13:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773744733; cv=none; b=KVn51pxctX75rwLr1zRSfsF98W1nGwi8mEu786IOLk5+ZCuA6wU4ApRtsFcffkRPUelLIUUsfPYZziKs/qOapRGPIcsFkMZsaJO2KrZ7FN1/ALuslG+Tst/ThPZQC2ajGEE9kDJnbENqY8n+PX+iZtLmjEsfEuXZ2MmWqFacUu8=
+	t=1773746020; cv=none; b=EJNKqFn2yUks2Te3bkfNyToaXiEK3/WXfqa0xvqHr7nBfC2/GWpUeQMiLjrWkQbTCTwL9jGwGZcCflgmRFCqKfZpQjtsym+kqQ/NiTBFwQhC/jFI7mIbzSEtjl0/SkRIABRiIz8D/ZD1PbO1nxUnxMmmpooe9K4HuI7x/I5NhRQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773744733; c=relaxed/simple;
-	bh=KxKEtJC9Qo12p1jKqM/nMfhSCEIlogweQ6xCsZTGLdk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=qUJnIHQIUTlPcGWTgvskBpeq6PH8N4bPmjyM2mAAqo+yCFkQNbWGYnWjAc6z+Tid3aiVo5R5XGx/gbzN9jGocRjAyY5kaIQKXd4MIBFaK4oz8kFa5xM60iJo/Qs2AqDHzVVHDQJ0Hyh9WoRqNsgsY/PDpa2pilnJbPw232aEC+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VV3B7ehh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1773746020; c=relaxed/simple;
+	bh=+8xiqGU4gz7IaD0blSIiKfkKw0Sx4dWN48Y33+1KPUE=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=S5sWqWJi8XuCACrKAmiHu2uw9h10KzgZBnIanhzQQW+v1DLJCkCAN/J3c87QOlqHtFeCQlwtNCZLtsxoiN4uiDnJC5BOUIt0n96bOe29qUzmL3GM8PnCEQ8kCDWNRT6joh6ekCR/IQIspxL8faJTCggoaFkcLhdwlN7mEkdmin8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l9jL4Jou; arc=none smtp.client-ip=74.125.82.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VV3B7ehh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22E37C4CEF7;
-	Tue, 17 Mar 2026 10:52:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773744732;
-	bh=KxKEtJC9Qo12p1jKqM/nMfhSCEIlogweQ6xCsZTGLdk=;
-	h=From:Date:Subject:To:Cc:From;
-	b=VV3B7ehhdRXgUMC6zHaQVZoVVdEH3Ad1Zz4Fk1/bgQ0WqSv4j9x+2UVEEAwNda3Lq
-	 sKmyT96H7ZBbdweQQN93v6dzbPg++tfyl/NUYZt7g5OXAB0tndhqdTtXICAoSiVzbI
-	 V+wEByJ8IBVUp09DfApzjiPnJUy8pnlMo2ceL79gaDPBqXx9QGf/Vr8C2kdPjcY2Bi
-	 fmM03xYqlU4j4UGeCXjupoZaYFxqomZeo/O1s266tTCgmAwMaZF5jDCtdD30JFYLTv
-	 HsspehTUT1sNA2Ggrk6h6+QgAr44skhCDa3STPdAEourmzdWL44Yd7sGSWqclXvNP2
-	 0uDRoCsnFJKMw==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Tue, 17 Mar 2026 11:52:03 +0100
-Subject: [PATCH mptcp-net v2] mptcp: fix data-race in __mptcp_retrans /
- mptcp_incoming_options
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l9jL4Jou"
+Received: by mail-dy1-f178.google.com with SMTP id 5a478bee46e88-2c0b7eda342so2232080eec.1
+        for <mptcp@lists.linux.dev>; Tue, 17 Mar 2026 04:13:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1773746018; x=1774350818; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CDtN5s8QSbG2xFwrwONTG0yBkmL4IRVqNIzYC0Qhl7Y=;
+        b=l9jL4JouT388S+4L5LvG794RXVy6LjwOgqWeCAVmTHInLeVI6CzkdJruPFNbSdrduH
+         GcfgnWoMTaxDaQI1ngejDLZUvLShhaplD43kDH1whpBkw55IKSX24MrBFUncKwbo3WTd
+         uXhlU1kyNvHFwnIl3fE8T992IEV7Y94aginwY++xwBtyC9RXFHTwYiXGAgyLIMazLbas
+         tGprvl+S1sLPOxkYYXOXv+zaFK8KaZ+e6t1bwQAqV1EL60UUMxZ75n4ejLoHYpNXUvix
+         fXvV651B9Y//WSewto23f//qgygr59HvNRLEnTrhAXTPmdPAXcYisfEz1VPFbOyZRBvO
+         kQyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1773746018; x=1774350818;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=CDtN5s8QSbG2xFwrwONTG0yBkmL4IRVqNIzYC0Qhl7Y=;
+        b=EIoJjCwyB6DSGDKvC28ocbF7jUeDRbCMsWpUgim/92QogzdUC9JNNSJKhw/a4ywk2P
+         a12kqlpKDtkF/KkzBKgfXtmSYaT6yUsidHXCKT8eMKya1xjW+6xjWQxiMzNadUDH1Pul
+         opcEEATmK/aMPEzmZUCifRPJieD8JPLClvHiuKDY6zf19dQ+IoRoGhD1xNzgSsNzzd1F
+         3e/0EWpYtUIO647VxZrEcz0alVW+syr2c9GuaUxBLHYCXAnxdPQpZLhgj/SpZxBrPohx
+         Lmn+M4YnZHlTu06Q6dScSoFMBmIx+srfEtqfXuKjX/rcbpj9uf+DzyXZllw9rtBs4jDf
+         4DoA==
+X-Gm-Message-State: AOJu0YxE3hiXn8Zns5ztFxwO7ebvAtLlAY722V0ortgtng7JJ/nA2stV
+	wDnpECfaymPgawIC188odW1yI/uLXhNI5IKV4prVEQEHo8PUIHVp9Km7n+QV
+X-Gm-Gg: ATEYQzzaT1VbzblzRK5ZwaJWGAGSgO/zgCj02AZV9o54WFu22AwbdFJ4Ploq97tBVZt
+	rEEky8dVH8qWi+MbvyWKz74SEsKrIhztpm6EeXkAP++kQCR3bMqWO69R+bjtM/UXhEra38O/A2+
+	avCTyhxbL5JmWt0Ohtuls+ZvS3EXEFc8A2U8FET3CwZsfPIqTyIMj6oB1hOtz7RnS4WFb1s+PKm
+	8N4QyhNnneLKK7ePRud7/79COTBf3PIBHCOqoIWdq178wckCyr5RpxKY22JF8eiFND0UKTH2MEW
+	jBa0acSxVtyFKgN5e9oxUQWdvrWyuG/qEyMzBvxMOYWzGnJxPKrHz3b/pvlmflMvdhYt4sj07CD
+	Jcw908PV9OfUfDyocpZhU+TF7HFSnkHdIsEH20lxUXblutY91yUZj59IMjVWb3Tt+pMWMjPBN+D
+	DAXaKRWrsMKKfRJak65p2HtACLN+e0+hDs8tb4Kg==
+X-Received: by 2002:a05:7301:19a9:b0:2be:80c4:2c89 with SMTP id 5a478bee46e88-2bea54361a0mr6772466eec.6.1773746017904;
+        Tue, 17 Mar 2026 04:13:37 -0700 (PDT)
+Received: from [127.0.0.1] ([172.182.201.165])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2beab5706bdsm22168369eec.28.2026.03.17.04.13.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Mar 2026 04:13:37 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Geliang Tang <tanggeliang@kylinos.cn>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <cover.1773740635.git.tanggeliang@kylinos.cn>
+References: <cover.1773740635.git.tanggeliang@kylinos.cn>
+Subject: Re: [RESEND mptcp-next v2 0/2] add tcp_recv_should_stop helper
+Message-ID: <08603262-1fd9-173e-8bcb-d8cfb3a7c195@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 17 Mar 2026 11:13:36 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260317-mptcp-data-race-snd_una-v2-1-2caac60de92a@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/4WNUQ6CMBBEr0L22zV0waJ+eQ9DTCkrNEoh20o0h
- Lvb4AH8nMy8NwsEFscBztkCwrMLbvQp0C4D2xvfMbo2ZaCcdF4ojcMU7YStiQbFWMbg29vLG9R
- Nw6UqTg3RERI9Cd/dezNf4Qd5jlCnqnchjvLZPme1Df7qZ4UKiVSVlwciq6vLg8Xzcz9KB/W6r
- l9eeFJJygAAAA==
-X-Change-ID: 20260316-mptcp-data-race-snd_una-6bbe4139b228
-To: MPTCP Upstream <mptcp@lists.linux.dev>
-Cc: Paolo Abeni <pabeni@redhat.com>, 
- "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4054; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=KxKEtJC9Qo12p1jKqM/nMfhSCEIlogweQ6xCsZTGLdk=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDJ3GkXfmy9lcrFM48R6n0PrHXI+q1S9ktW8UmBi0Hx1p
- Rv/admGjlIWBjEuBlkxRRbptsj8mc+reEu8/Cxg5rAygQxh4OIUgInsimRkmFhWeHnzcpPPuTPd
- H0csuX52zwTR17cfae+dWarjbpysk83wz5bn1fUHXolupwS4toT09KcXP10aKlNXdELGTUH8vaw
- /BwA=
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-SyzKaller found this data-race:
+Hi Geliang,
 
-  BUG: KCSAN: data-race in __mptcp_retrans / mptcp_incoming_options
+Thank you for your modifications, that's great!
 
-  write (marked) to 0xffff888015e8e5f0 of 8 bytes by interrupt on cpu 0:
-   __mptcp_snd_una_update net/mptcp/options.c:1055 [inline]
-   mptcp_incoming_options+0x6a3/0x1ac0 net/mptcp/options.c:1183
-   tcp_data_queue+0x101b/0x2440 net/ipv4/tcp_input.c:5583
-   tcp_rcv_established+0x684/0x1fc0 net/ipv4/tcp_input.c:6654
-   tcp_v4_do_rcv+0x35c/0x690 net/ipv4/tcp_ipv4.c:1866
-   tcp_v4_rcv+0x1d91/0x25a0 net/ipv4/tcp_ipv4.c:2263
-   ip_protocol_deliver_rcu+0x46/0x280 net/ipv4/ip_input.c:207
-   ip_local_deliver_finish+0x190/0x270 net/ipv4/ip_input.c:241
-   NF_HOOK include/linux/netfilter.h:318 [inline]
-   NF_HOOK include/linux/netfilter.h:312 [inline]
-   ip_local_deliver+0xe3/0x210 net/ipv4/ip_input.c:262
-   dst_input include/net/dst.h:480 [inline]
-   ip_rcv_finish net/ipv4/ip_input.c:492 [inline]
-   NF_HOOK include/linux/netfilter.h:318 [inline]
-   NF_HOOK include/linux/netfilter.h:312 [inline]
-   ip_rcv+0x200/0x220 net/ipv4/ip_input.c:612
-   __netif_receive_skb_one_core+0xeb/0x110 net/core/dev.c:6178
-   __netif_receive_skb+0x1f/0xc0 net/core/dev.c:6291
-   process_backlog+0x168/0x360 net/core/dev.c:6642
-   __napi_poll+0x71/0x460 net/core/dev.c:7706
-   napi_poll net/core/dev.c:7769 [inline]
-   net_rx_action+0x6f8/0x810 net/core/dev.c:7926
-   handle_softirqs+0xc9/0x2e0 kernel/softirq.c:622
-   run_ksoftirqd kernel/softirq.c:1063 [inline]
-   run_ksoftirqd+0x20/0x30 kernel/softirq.c:1055
-   smpboot_thread_fn+0x287/0x520 kernel/smpboot.c:160
-   kthread+0x1f2/0x240 kernel/kthread.c:436
-   ret_from_fork+0x321/0x440 arch/x86/kernel/process.c:158
-   ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+Our CI did some validations and here is its report:
 
-  read to 0xffff888015e8e5f0 of 8 bytes by task 24 on cpu 1:
-   mptcp_rtx_head net/mptcp/protocol.h:487 [inline]
-   __mptcp_retrans+0x169/0x8f0 net/mptcp/protocol.c:2759
-   mptcp_worker+0x6a6/0xb30 net/mptcp/protocol.c:2980
-   process_one_work+0x3ee/0x970 kernel/workqueue.c:3275
-   process_scheduled_works kernel/workqueue.c:3358 [inline]
-   worker_thread+0x3c3/0x730 kernel/workqueue.c:3439
-   kthread+0x1f2/0x240 kernel/kthread.c:436
-   ret_from_fork+0x321/0x440 arch/x86/kernel/process.c:158
-   ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/231891=
+52154
 
-  value changed: 0x0b17a4285ae6137d -> 0x0b17a4285b078905
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/10891a8a1061
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1067876
 
-It looks like msk->snd_una was being modified in __mptcp_snd_una_update
-under the msk data lock (spin lock), while being accessed in
-mptcp_rtx_head() under a different lock: the msk socket lock.
 
-Annotate access to msk->snd_una in mptcp_rtx_head() to prevent such
-issue.
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
 
-Fixes: 64b9cea7a0af ("mptcp: fix spurious retransmissions")
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
-- Link to v1: https://lore.kernel.org/r/20260316-mptcp-data-race-snd_una-v1-1-221704522c67@kernel.org
----
-v2:
- - mention under which locks the field is being updated and read (Paolo)
- - add comment where snd_una is defined to help future changes (Paolo)
----
- net/mptcp/protocol.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
 
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index f5d4d7d030f2..9ff23c858077 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -300,7 +300,7 @@ struct mptcp_sock {
- 						 * protection
- 						 */
- 	u64		bytes_acked;
--	u64		snd_una;
-+	u64		snd_una;		/* updated under the msk data lock, lockless read */
- 	u64		wnd_end;
- 	u32		last_data_sent;
- 	u32		last_data_recv;
-@@ -484,7 +484,7 @@ static inline struct mptcp_data_frag *mptcp_rtx_head(struct sock *sk)
- {
- 	struct mptcp_sock *msk = mptcp_sk(sk);
- 
--	if (msk->snd_una == msk->snd_nxt)
-+	if (READ_ONCE(msk->snd_una) == msk->snd_nxt)
- 		return NULL;
- 
- 	return list_first_entry_or_null(&msk->rtx_queue, struct mptcp_data_frag, list);
+For more details:
 
----
-base-commit: 767b686e12d42196211fe3efef07310ae2ce382a
-change-id: 20260316-mptcp-data-race-snd_una-6bbe4139b228
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
 
-Best regards,
--- 
-Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
