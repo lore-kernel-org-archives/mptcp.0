@@ -1,139 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 638963A1E70
-	for <mptcp@lists.linux.dev>; Tue, 17 Mar 2026 09:45:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 836AF355F48
+	for <mptcp@lists.linux.dev>; Tue, 17 Mar 2026 09:58:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773740709; cv=none; b=HF8343Gs+d9bPwzfAfyebgMBo9YLV/ru9X8GdOXF+BaLEx4c6vwhiVUc0HxUhxkS5GwYlhaiKLvvucStmN88QiqXwk0IwiYZXifE7hSKRQN2IveRQS8UPT60GKKgRQ1h7qyFSSWR1QDL7vC4MiTjFcKvVxWg9V2j5Mcn6qCsRLU=
+	t=1773741501; cv=none; b=XQRe/ETRUMMVLM7DtpZFjDOof86b76/hAYVpS5MwmUIKIjw5S9r39QM0cwu+Q2gv0SifNqwyNnLzrUAhtX83zny5c0MgErhz3hNNzEFkWDNF5h8+kpbhfhkkvRA6teEa5CIpwXCQgmd04x4RLop1r4XHVe+6W+av2OK2Lo2sgmo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773740709; c=relaxed/simple;
-	bh=HJ5b3TSndkwwnnkR0RentRAdetUxBBRAdYQyiAtkqg8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gcv080yK2QYEGMOhm1bB0t7f2XswuEBpS188AOlimE2KeRfZNoJeCZ6dhMCK5mNNRYBuIUx59e5Ob7TNJAjHPFs1mQF1vHCatiLdFKtU1cgZdqK6SqZNpGgSd0huPbs1Qvb+fX7g0fwasf9RaSD/zVOsq161ZMlb3bctl1+n/ZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IAbqAiP9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1773741501; c=relaxed/simple;
+	bh=oh/BHobeMZo+uN+1qjzLoZmg70aY3DCkrN7vQecqk5w=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=ri8r6OOR5njSi5QyK68fPA6bOFOEcfIIjTmHGYZpWuIQD/c3S7mC2bFUwpC2Z8jpfg4eKDhBd1cZ1i6gj9SGGp3NOblabohxmrGidkyVOS3/ZmZgo6RfXkXx/HDm7GAhTWbBsO1EVlLO/9nU4v68HCBJJxV6ynyQMfo+bw1zxWU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JjdCFfsa; arc=none smtp.client-ip=209.85.160.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IAbqAiP9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C661C19425;
-	Tue, 17 Mar 2026 09:45:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773740709;
-	bh=HJ5b3TSndkwwnnkR0RentRAdetUxBBRAdYQyiAtkqg8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=IAbqAiP9V4rIVDMyB/gxGaeDGxsFnPeilSsi2zEq7EXjA52PUea8BqY0v2O7j6sBN
-	 eO4gtnXTdHbgp218W9X2LzXzIcaJeHsJ5i7nHoJ+95qFP6Fp0kkPDUeZBO83iFr8av
-	 nnU8kH8un0dfL/5bosYMuVdANE6Na+X42iMazF63sNEOe17cJKZfuioRZ5bHW2xWwb
-	 +lplAYxDIcbvFrtGlIq7UChBM/uWHvkj2+YpxbEcE4fHcahheIs9OFBr4wQfwu93w7
-	 1juA2fhEnoW2Y3BA1xWc4G+HIcwJKYFvt2SCtEghwQpfX/OB46tdhO7vrFFCvKPes/
-	 VcxQl2pb31Ytg==
-From: Geliang Tang <geliang@kernel.org>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Mat Martineau <martineau@kernel.org>
-Subject: [RESEND mptcp-next v2 2/2] tcp: add recv_should_stop helper
-Date: Tue, 17 Mar 2026 17:44:55 +0800
-Message-ID: <2c01b49782e2f648813389caa6138a1b1540f64b.1773740635.git.tanggeliang@kylinos.cn>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <cover.1773740635.git.tanggeliang@kylinos.cn>
-References: <cover.1773740635.git.tanggeliang@kylinos.cn>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JjdCFfsa"
+Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-509149ab7d7so46229811cf.2
+        for <mptcp@lists.linux.dev>; Tue, 17 Mar 2026 02:58:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1773741499; x=1774346299; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=a94Mj6F+OWqETDCcObBbX+tFrh3fjqli1iRAoq83qo8=;
+        b=JjdCFfsakB+OHW00mJR7+06UejEqz1V0SVr6ohTwRO5vBbWHGRf+n753n/lzB4klgc
+         QwHpRKaifxdX9HNje8vujTHbCXEbiB8cbT09Jii2fufhG+oMqiorjCbuT2+q4j0qPvU8
+         VRyROf8gVlf+zCbA4W4xh0KYOOaMh+ZI9acYIHpggXyU+YRXuaoCAIOgMrpA2WCRGHnB
+         Sf5uVzSwJvSMHlM2TzdXp2E84Er6s2gq4IBfx5uY8vfuKiN49pjK02U/+7cxoqiIjWuh
+         z2DnPWumUHi+5kezvDnZ386luO0jGdpbc9bWHDg74wRN2Gc6nlFotpkz2yiCPiTI2UQX
+         od1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1773741499; x=1774346299;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=a94Mj6F+OWqETDCcObBbX+tFrh3fjqli1iRAoq83qo8=;
+        b=E2AmHj8B0v0TyWsUzHyRPfOsGhtfIroV230RDwxXPgr9p92G4OZu5HVkUc/OdXV05Y
+         gMD/vssYcQqDtu/F1qWCdjBXcK2vnxJYEjC8K8CgTA++L784Dp4ZKYzbK+PrNHfZGpUv
+         us3j/I3+qb2egAPRjzmfgNvpx6wHNNJ4FM6UhoDEEYyQZ4B5Dgt9worTfUhrSrxcqjur
+         JH0wKne1Ii4/YWE9ipCZdAMp3ka9y5bOjryMEgPop3cT3IYv2uvY2f4umyfk2M46AEbs
+         JYQ9oyz5creiGLjgXPRFLVOQ16fKG+AWSBOcPPSAtCYMy55pyL9sDCzJh771vCqFNCJG
+         8h7A==
+X-Gm-Message-State: AOJu0Ywms4JrRnzxdrax69tTZnA+RF5rZQre9v5Yi3qE0/qe/ZJA+8fi
+	bDNaBfnxtMY0LQdct7e+QH3/wa1tVbo9iqXgOO40oTppQj/SgJtE076w3pZA
+X-Gm-Gg: ATEYQzwr6XjEsyOubolD19QiYCf3YITJkDAFk9kjiFEaXs3nOizZEn138/y/J8lygLo
+	iXlDNou4ifICzlpfcDqcw3NDPP6QUq94lwML3scoot+Y8Gb33p+Kkbd5Klz4Rd0CCmpvSxxWEwx
+	6EUfQ8Q6IKeo1YArJQTitBnV9kbAEH4mwaKdx1GqlDc+5bo4NP/aCccJmfQAxY2JFNwPOibbx23
+	x8t66ewv5enQr/qsB5bjVNffoyZBw1+pChNbTZPuMZZFKavue+vPBBtmvzp9YYK3/alFX8pOxAr
+	Dv2laR582dgTQoJAIVB5AhTlE/Z3lrhbqyv44pgkDDid57sEqxZa6zIVOSY3iIzMqIk0Cl9Xkbu
+	WvJp7QH4Cqo7HoY/j4bwCUZioi1aGHwEHEbDy6kjoBGPX+JDPN9h3X+svYE91LkXhzbMg4L9zq+
+	9dVtO5fD9jA0TwWg1vkn3uRTf2uUPq96DCDtlMKphm26g=
+X-Received: by 2002:ac8:5714:0:b0:4ff:b1eb:2d03 with SMTP id d75a77b69052e-50957e67f9emr193604111cf.72.1773741499455;
+        Tue, 17 Mar 2026 02:58:19 -0700 (PDT)
+Received: from [127.0.0.1] ([20.98.18.64])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-5093a0f3ae0sm135087721cf.20.2026.03.17.02.58.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Mar 2026 02:58:18 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Gang Yan <yangang@kylinos.cn>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <cover.1773735950.git.yangang@kylinos.cn>
+References: <cover.1773735950.git.yangang@kylinos.cn>
+Subject: Re: [PATCH mptcp-net v3 0/3] mptcp: fix stall because of
+ data_ready
+Message-ID: <59a251ca-246e-bd6c-3459-c57c8117fb5e@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 17 Mar 2026 09:58:17 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+Hi Gang,
 
-Factor out a new helper tcp_recv_should_stop() from tcp_recvmsg_locked()
-and tcp_splice_read() to check whether to stop receiving. And use this
-helper in mptcp_recvmsg() and mptcp_splice_read() to reduce redundant code.
+Thank you for your modifications, that's great!
 
-Suggested-by: Paolo Abeni <pabeni@redhat.com>
-Acked-by: Mat Martineau <martineau@kernel.org>
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
----
- include/net/tcp.h    |  9 +++++++++
- net/ipv4/tcp.c       | 10 ++--------
- net/mptcp/protocol.c | 10 ++--------
- 3 files changed, 13 insertions(+), 16 deletions(-)
+Our CI did some validations and here is its report:
 
-diff --git a/include/net/tcp.h b/include/net/tcp.h
-index f87bdacb5a69..229613b56f73 100644
---- a/include/net/tcp.h
-+++ b/include/net/tcp.h
-@@ -3069,4 +3069,13 @@ enum skb_drop_reason tcp_inbound_hash(struct sock *sk,
- 		const void *saddr, const void *daddr,
- 		int family, int dif, int sdif);
- 
-+static inline int tcp_recv_should_stop(struct sock *sk, long timeo)
-+{
-+	return sk->sk_err ||
-+	       sk->sk_state == TCP_CLOSE ||
-+	       (sk->sk_shutdown & RCV_SHUTDOWN) ||
-+	       signal_pending(current) ||
-+	       !timeo;
-+}
-+
- #endif	/* _TCP_H */
-diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
-index dfd677c689ef..b0df7c4a0e20 100644
---- a/net/ipv4/tcp.c
-+++ b/net/ipv4/tcp.c
-@@ -895,9 +895,7 @@ ssize_t tcp_splice_read(struct socket *sock, loff_t *ppos,
- 		release_sock(sk);
- 		lock_sock(sk);
- 
--		if (sk->sk_err || sk->sk_state == TCP_CLOSE ||
--		    (sk->sk_shutdown & RCV_SHUTDOWN) ||
--		    signal_pending(current))
-+		if (tcp_recv_should_stop(sk, timeo))
- 			break;
- 	}
- 
-@@ -2767,11 +2765,7 @@ static int tcp_recvmsg_locked(struct sock *sk, struct msghdr *msg, size_t len,
- 			break;
- 
- 		if (copied) {
--			if (!timeo ||
--			    sk->sk_err ||
--			    sk->sk_state == TCP_CLOSE ||
--			    (sk->sk_shutdown & RCV_SHUTDOWN) ||
--			    signal_pending(current))
-+			if (tcp_recv_should_stop(sk, timeo))
- 				break;
- 		} else {
- 			if (sock_flag(sk, SOCK_DONE))
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index dc9fdd664871..b26b1098751a 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2317,11 +2317,7 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
- 			break;
- 
- 		if (copied) {
--			if (sk->sk_err ||
--			    sk->sk_state == TCP_CLOSE ||
--			    (sk->sk_shutdown & RCV_SHUTDOWN) ||
--			    !timeo ||
--			    signal_pending(current))
-+			if (tcp_recv_should_stop(sk, timeo))
- 				break;
- 		} else {
- 			if (sk->sk_err) {
-@@ -4508,9 +4504,7 @@ static ssize_t mptcp_splice_read(struct socket *sock, loff_t *ppos,
- 		release_sock(sk);
- 		lock_sock(sk);
- 
--		if (sk->sk_err || sk->sk_state == TCP_CLOSE ||
--		    (sk->sk_shutdown & RCV_SHUTDOWN) ||
--		    signal_pending(current))
-+		if (tcp_recv_should_stop(sk, timeo))
- 			break;
- 	}
- 
--- 
-2.53.0
+- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Unstable: 1 failed =
+test(s): packetdrill_mp_capable =F0=9F=94=B4
+- KVM Validation: debug (only =
+selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal (only=
+ bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only =
+bpftest_all): Success! =E2=9C=85
+- Task: https://github.=
+com/multipath-tcp/mptcp_net-next/actions/runs/23186215138
 
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/68246fd6f6f3
+Patchwork: https://patchwork.kernel.=
+org/project/mptcp/list/?series=3D1067816
+
+
+If there are some issues, you =
+can reproduce them using the same environment as
+the one used by the CI =
+thanks to a docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
+
+
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 Core)
