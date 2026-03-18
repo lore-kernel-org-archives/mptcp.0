@@ -1,39 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 546F938F22E
-	for <mptcp@lists.linux.dev>; Wed, 18 Mar 2026 09:40:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B1F13A9618
+	for <mptcp@lists.linux.dev>; Wed, 18 Mar 2026 09:41:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773826859; cv=none; b=dP+wRC3YUVGidPVuaVoAI9vVK8WNPC5QrRI5aAvyHV5crkW0yMKPdc0hqhu5up4QC0iGEbxfm7/EjAElADaNqbuSBXI5la2DqBtPTp5IQBHnR1PPziYkR8Y9yvjN6NVb3KFGFGmUDB+1zOZEzkDl9iNRITTaiIZqZQ6bJ32LvMk=
+	t=1773826860; cv=none; b=XwvnqBjlqNZWIN7QX58/EoPrZ7awef4wA1GpYcWisYKXeavaf6pWK9sgXYJaBo0qBWHjNI29zm8ka/R+1Aw2Dc5/syefvlODcLoST6bHLlVkLACatlvgHh7lRHimpH36kUBM+ibi1jh9qFA1XFZ9ZU3p7CDPKcg0ixAPTNXbK2w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773826859; c=relaxed/simple;
-	bh=fXiT8+IIsaXUVoJXkDRFU8L+QHnD8jAk5djxW5gqXPk=;
+	s=arc-20240116; t=1773826860; c=relaxed/simple;
+	bh=wwtV46sjJuFK7MQZZ26BBqIKPtvlAmz4AtaoH8ab2K4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YG+QG605sj475TnxCGQK4zBbWZvh0trGU9oKGqzZrsjp0WIVap1ePkA9z/+wratOziDASgKyME0PoMzwLxLRYb7f2xKAD6XBVVw0J/cCn9g7ZzxE4VwQirGSeO9C4pSb0uRTTFd7H7jfvOT+MlMC77p7HC4bFYsKdWIpIjM9CMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lF469pYZ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=RyjcXYWcZSQg6NloqkN90Wd7miZAXO0OBVTxNTSNNTzv6P0oE5VWbiYGWw9rt51qXSI5vmk16U8eD8sbLYuc50fxut0SWxv4mAGnoVfoxrhSkETnI0C1p+08+8+ifnyWo07osG6oIAUw4sxIhb6sy02rvWbIlma8ohXZgEMX1Fs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cy6bcXZ3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lF469pYZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E67DC19424;
-	Wed, 18 Mar 2026 09:40:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cy6bcXZ3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22EDAC2BC9E;
+	Wed, 18 Mar 2026 09:40:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773826858;
-	bh=fXiT8+IIsaXUVoJXkDRFU8L+QHnD8jAk5djxW5gqXPk=;
+	s=k20201202; t=1773826859;
+	bh=wwtV46sjJuFK7MQZZ26BBqIKPtvlAmz4AtaoH8ab2K4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=lF469pYZJT1giI/2iIi4jZfAcv7djlROdepCTIhQRakRizDKGDnPqYM6GNlU7o+bs
-	 dIIDurO53nvJar2olHdAa0dtEpij4gzmSS4++5oxloebPhw57fvZUvhVzvwLJyfCv4
-	 RXXwJJ3m4ri9V4gnw+RL2NIsdpfJ8Zmhgu+a77RcMBFO5Z/dhL86SkQpzIX8MjDyOs
-	 z25Jo711Wvltd48cfxo7w8RZZDBVW8AkBpdOEM86keQGjcev3JLvxT/IkT+DsGM9FL
-	 gcu/lhKZSh00xwSuC6vCEysuVzXarrscPmQAWUQXfqCjQeAdycgoeGtzRbi+OHt3Vo
-	 zUDOJ1alydyrQ==
+	b=cy6bcXZ3SuNIfreSYzzstW1S1971sxMQfimemKQIGuKfbtjc8DubtiNqxeOcUc63J
+	 6A4PW4wsRgPF5EFmwuPP/J/Zv58IZ+fc4zLpoK8RRKPvJm8MYZdyDqbkyiGz/JIszs
+	 arHV2iKu4nUw6cvRqgUqh5a3NX0ayGOmrokf57MlD/v/ACm7s4/G6kXKPfN7P8Lqlu
+	 IHr0QblpMQy015HahUhmlrGjmsfzQVspNkTudLe53fgSdn478kfgfwYw2+yR/QklyZ
+	 cKQjQr49S904HO0k+z8ahKE2qaGLrrbp6Bb0OHAk8feFuD4ZJZP7kok40bUN1BN7iN
+	 ZnMgZMdhsSthw==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>,
-	kernel test robot <lkp@intel.com>,
-	Cong Wang <xiyou.wangcong@gmail.com>
-Subject: [PATCH mptcp-next v3 1/2] mptcp: implement psock_update_sk_prot
-Date: Wed, 18 Mar 2026 17:40:49 +0800
-Message-ID: <30cc0b1a7ecee5473df79e02fe4863154af0331a.1773826662.git.tanggeliang@kylinos.cn>
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v3 2/2] selftests/bpf: Update sockmap tests for MPTCP
+Date: Wed, 18 Mar 2026 17:40:50 +0800
+Message-ID: <6ea1d998b51cf6cf68e08e6ae87c2e93888464ed.1773826662.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <cover.1773826662.git.tanggeliang@kylinos.cn>
 References: <cover.1773826662.git.tanggeliang@kylinos.cn>
@@ -47,163 +45,62 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Add MPTCP support for BPF sockmap by implementing psock_update_sk_prot
-callback. This allows MPTCP sockets to dynamically switch protocol
-handlers when attached to or detached from sockmap programs. Separate
-protocol structures are maintained for IPv4/IPv6 and TX/RX configurations.
+Update sockmap tests to reflect new MPTCP support. MPTCP sockets are now
+allowed in sockmap, so test expectations are adjusted accordingly.
 
-tcp_bpf_update_proto() in net/ipv4/tcp_bpf.c is a frame of reference for
-this patch.
+Use a different key (1) for MPTCP client sockets to validate sockmap.
 
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202512261144.DxrvwMS3-lkp@intel.com/
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/521
-Cc: Cong Wang <xiyou.wangcong@gmail.com>
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- net/mptcp/protocol.c | 113 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 113 insertions(+)
+ tools/testing/selftests/bpf/prog_tests/mptcp.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index b5676b37f8f4..7a485694323b 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -11,6 +11,7 @@
- #include <linux/netdevice.h>
- #include <linux/sched/signal.h>
- #include <linux/atomic.h>
-+#include <linux/skmsg.h>
- #include <net/aligned_data.h>
- #include <net/rps.h>
- #include <net/sock.h>
-@@ -4020,6 +4021,106 @@ static int mptcp_connect(struct sock *sk, struct sockaddr_unsized *uaddr,
- 	return 0;
+diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools/testing/selftests/bpf/prog_tests/mptcp.c
+index 7f48fd9e94e1..4806ccb6b502 100644
+--- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
++++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
+@@ -545,11 +545,11 @@ static void test_sockmap_with_mptcp_fallback(struct mptcp_sockmap *skel)
+ 	close(listen_fd);
  }
  
-+#ifdef CONFIG_BPF_SYSCALL
-+enum {
-+	MPTCP_BPF_IPV4,
-+	MPTCP_BPF_IPV6,
-+	MPTCP_BPF_NUM_PROTS,
-+};
-+
-+enum {
-+	MPTCP_BPF_BASE,
-+	MPTCP_BPF_TX,
-+	MPTCP_BPF_RX,
-+	MPTCP_BPF_TXRX,
-+	MPTCP_BPF_NUM_CFGS,
-+};
-+
-+static struct proto mptcp_bpf_prots[MPTCP_BPF_NUM_PROTS][MPTCP_BPF_NUM_CFGS];
-+
-+static void mptcp_bpf_rebuild_protos(struct proto prot[MPTCP_BPF_NUM_CFGS],
-+				     struct proto *base)
-+{
-+	prot[MPTCP_BPF_BASE]			= *base;
-+	prot[MPTCP_BPF_BASE].destroy		= sock_map_destroy;
-+	prot[MPTCP_BPF_BASE].close		= sock_map_close;
-+	prot[MPTCP_BPF_BASE].sock_is_readable	= sk_msg_is_readable;
-+
-+	prot[MPTCP_BPF_TX]			= prot[MPTCP_BPF_BASE];
-+	prot[MPTCP_BPF_RX]			= prot[MPTCP_BPF_BASE];
-+	prot[MPTCP_BPF_TXRX]			= prot[MPTCP_BPF_TX];
-+}
-+
-+#if IS_ENABLED(CONFIG_MPTCP_IPV6)
-+static struct proto *mptcpv6_prot_saved __read_mostly;
-+static DEFINE_SPINLOCK(mptcpv6_prot_lock);
-+
-+static void mptcp_bpf_check_v6_needs_rebuild(struct proto *ops)
-+{
-+	/*
-+	 * Load with acquire semantics to ensure we see the latest protocol
-+	 * structure before checking for rebuild.
-+	 */
-+	if (unlikely(ops != smp_load_acquire(&mptcpv6_prot_saved))) {
-+		spin_lock_bh(&mptcpv6_prot_lock);
-+		if (likely(ops != mptcpv6_prot_saved)) {
-+			mptcp_bpf_rebuild_protos(mptcp_bpf_prots[MPTCP_BPF_IPV6],
-+						 ops);
-+			/* Ensure mptcpv6_prot_saved update is visible before
-+			 * releasing lock
-+			 */
-+			smp_store_release(&mptcpv6_prot_saved, ops);
-+		}
-+		spin_unlock_bh(&mptcpv6_prot_lock);
-+	}
-+}
-+
-+static int mptcp_bpf_assert_proto_ops(struct proto *ops)
-+{
-+	/* In order to avoid retpoline, we make assumptions when we call
-+	 * into ops if e.g. a psock is not present. Make sure they are
-+	 * indeed valid assumptions.
-+	 */
-+	return ops->recvmsg  == mptcp_recvmsg &&
-+	       ops->sendmsg  == mptcp_sendmsg ? 0 : -EOPNOTSUPP;
-+}
-+#endif
-+
-+static int mptcp_bpf_update_proto(struct sock *sk,
-+				  struct sk_psock *psock,
-+				  bool restore)
-+{
-+	int family = sk->sk_family == AF_INET6 ? MPTCP_BPF_IPV6 :
-+						 MPTCP_BPF_IPV4;
-+	int config = psock->progs.msg_parser   ? MPTCP_BPF_TX   :
-+						 MPTCP_BPF_BASE;
-+
-+	if (psock->progs.stream_verdict || psock->progs.skb_verdict)
-+		config = (config == MPTCP_BPF_TX) ? MPTCP_BPF_TXRX :
-+						    MPTCP_BPF_RX;
-+
-+	if (restore) {
-+		WRITE_ONCE(sk->sk_write_space, psock->saved_write_space);
-+		/* Pairs with lockless read in sk_clone_lock() */
-+		sock_replace_proto(sk, psock->sk_proto);
-+		return 0;
-+	}
-+
-+#if IS_ENABLED(CONFIG_MPTCP_IPV6)
-+	if (sk->sk_family == AF_INET6) {
-+		if (mptcp_bpf_assert_proto_ops(psock->sk_proto))
-+			return -EINVAL;
-+
-+		mptcp_bpf_check_v6_needs_rebuild(psock->sk_proto);
-+	}
-+#endif
-+
-+	/* Pairs with lockless read in sk_clone_lock() */
-+	sock_replace_proto(sk, &mptcp_bpf_prots[family][config]);
-+	return 0;
-+}
-+#endif
-+
- static struct proto mptcp_prot = {
- 	.name		= "MPTCP",
- 	.owner		= THIS_MODULE,
-@@ -4051,8 +4152,20 @@ static struct proto mptcp_prot = {
- 	.obj_size	= sizeof(struct mptcp_sock),
- 	.slab_flags	= SLAB_TYPESAFE_BY_RCU,
- 	.no_autobind	= true,
-+#ifdef CONFIG_BPF_SYSCALL
-+	.psock_update_sk_prot	= mptcp_bpf_update_proto,
-+#endif
- };
- 
-+#ifdef CONFIG_BPF_SYSCALL
-+static int __init mptcp_bpf_v4_build_proto(void)
-+{
-+	mptcp_bpf_rebuild_protos(mptcp_bpf_prots[MPTCP_BPF_IPV4], &mptcp_prot);
-+	return 0;
-+}
-+late_initcall(mptcp_bpf_v4_build_proto);
-+#endif
-+
- static int mptcp_bind(struct socket *sock, struct sockaddr_unsized *uaddr, int addr_len)
+-/* Test sockmap rejection of MPTCP sockets - both server and client sides. */
+-static void test_sockmap_reject_mptcp(struct mptcp_sockmap *skel)
++/* Test sockmap of MPTCP sockets - both server and client sides. */
++static void test_sockmap_mptcp_support(struct mptcp_sockmap *skel)
  {
- 	struct mptcp_sock *msk = mptcp_sk(sock->sk);
+ 	int listen_fd = -1, server_fd = -1, client_fd1 = -1;
+-	int err, zero = 0;
++	int err, zero = 0, one = 1;
+ 
+ 	/* start server with MPTCP enabled */
+ 	listen_fd = start_mptcp_server(AF_INET, NULL, 0, 0);
+@@ -570,13 +570,13 @@ static void test_sockmap_reject_mptcp(struct mptcp_sockmap *skel)
+ 	server_fd = accept(listen_fd, NULL, 0);
+ 	err = bpf_map_update_elem(bpf_map__fd(skel->maps.sock_map),
+ 				  &zero, &server_fd, BPF_NOEXIST);
+-	if (!ASSERT_EQ(err, -EOPNOTSUPP, "server should be disallowed"))
++	if (!ASSERT_EQ(err, 0, "server should be allowed"))
+ 		goto end;
+ 
+-	/* MPTCP client should also be disallowed */
++	/* MPTCP client should also be allowed */
+ 	err = bpf_map_update_elem(bpf_map__fd(skel->maps.sock_map),
+-				  &zero, &client_fd1, BPF_NOEXIST);
+-	if (!ASSERT_EQ(err, -EOPNOTSUPP, "client should be disallowed"))
++				  &one, &client_fd1, BPF_NOEXIST);
++	if (!ASSERT_EQ(err, 0, "client should be allowed"))
+ 		goto end;
+ end:
+ 	if (client_fd1 >= 0)
+@@ -619,7 +619,7 @@ static void test_mptcp_sockmap(void)
+ 		goto close_netns;
+ 
+ 	test_sockmap_with_mptcp_fallback(skel);
+-	test_sockmap_reject_mptcp(skel);
++	test_sockmap_mptcp_support(skel);
+ 
+ close_netns:
+ 	netns_free(netns);
 -- 
 2.51.0
 
