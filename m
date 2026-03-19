@@ -1,130 +1,143 @@
-Received: from mail-dl1-f54.google.com (mail-dl1-f54.google.com [74.125.82.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 226B9364E8B
-	for <mptcp@lists.linux.dev>; Thu, 19 Mar 2026 12:27:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12B8435949;
+	Thu, 19 Mar 2026 12:55:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773923248; cv=none; b=ay+z41I55sOku6bNk2qxy7SISVZ0WFf9ED4WYHfcDduTEliR9uSWgJllwP3z9YEuamhe5tEvk1kRcPZ7ceNOLRS4h6irEurcRY0bHDLIbG53zcLK6PmgNxxGXXlG0XyfMaDnwNP0s2BVSIWbSRUvvND/zQrTtM2kcNIfEfVjY8U=
+	t=1773924929; cv=none; b=pNJkJ2sIBBIngtJo6AFOebG5kQlN/gjX7mZ/7VNSgdMCwl6Bezj2Ud0TjYAFM6yPT8diEdPlTo5lDDPbmFEymXt0sBjPTrXY8I3MVfDG8G5q9QhxiyWg8CAQtzwsJlkfIf60gXHjexsW02uvrOu0cA10AfjvyjCSaMkkVvkuAMU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773923248; c=relaxed/simple;
-	bh=9+li7O/15UhlQAAFZqcDjRgqA5KInmn03xSESA4egs0=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=dvg0h1R0sEyFEv1HrknJTPzv82Al13BQDOhHnUkY6nBbez6FRr5ClsxEBAy21nMqPiHZJ8PCd6rcXFpGMd6/TZzEQovb9L872B/y8hwkHF9mP5aPxF2TnFyWMw8rK/TMw0TBG5Vw0Akclu8HJk2ZR8w8Pq6jDuyh0BtpItF3+cI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gku3WDSe; arc=none smtp.client-ip=74.125.82.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1773924929; c=relaxed/simple;
+	bh=9rlUs9kmzpZtY6ZtD+fUwCCJLpx09o1aGtWBG1kSIIc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=H2XzJx2vNWIKCu7m4kVEt1L6P5VEvaY3zQ+T1XnQlYhH/feq3uQCKpDMSOYgINEUFz/zed9CCHFzuKnD/IfvALsIFmol0SCPXs9xj539p4vCfSkRN5fneyqVYjKnbSZap7aD0nK6AYCRx1RBBt3NihdRW6m71FZDVa5OQP5wsgM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S4VDMSBB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gku3WDSe"
-Received: by mail-dl1-f54.google.com with SMTP id a92af1059eb24-12776bebe9fso45002c88.1
-        for <mptcp@lists.linux.dev>; Thu, 19 Mar 2026 05:27:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773923246; x=1774528046; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=u6OAZPPL47TwLIqV0QlTnH6cIOgNK8+I3zGZ/IXFJGY=;
-        b=gku3WDSe+P/sCXeosiV3Ryw5OPAobnjw/tE5D5s9s4qGUCZrDBoAqIWpUa8Nf9RJec
-         PppndleIFGPeqDbrnBg31PW1vxX3wFhklath/Mo1GPuldWdSLx9OVDTHfexBQcc9uKsi
-         cdpCR/CMHFIeQ6Dy8ZRpJtHgKjziiXGrc2YGtSiwkvOoAltStg6gzahd21ikNvIQTZf/
-         w/p1EuanET0kmHmkuf4gC3AKOmUs5mWg8h1GKBcYbGQZS81/7APtl4f1uyzR4RQiWPCq
-         Go7bLErWdvbNQqq94V0+VTT5Mmp/0Ncb6mqQB9j3et5f99rTa1vIuM+xxAEiMNvHi5e0
-         RUCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773923246; x=1774528046;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=u6OAZPPL47TwLIqV0QlTnH6cIOgNK8+I3zGZ/IXFJGY=;
-        b=KkDuSI267NSNzuUqAhdWG2NdoEEfhvYlZe3H7zG2fR7TTUevr/yZC9nOJn4RK5ITlw
-         o0e+6MSubxbaseQ3ZDhltW+izTiDgFu+8wKOOUjones3Urg8tYGNIiHbo6sG8MGZ+jXN
-         c0f8W9ujap5eD2aedwYWtq1OX9GFQs4JvS6OHRCwIocrIA7f7V8mOMbn4tCLaSaSDMD1
-         o6tGsqtDcp29UjA75eZLoqkGFJU4ZP7QfXKS/pXOfyewS0z8D26BIeLAPLk15x80kp5K
-         meka/nLdY17Mxaqg48V0pYHMz0FN5xusUj2GU3Ev3U3rQEpKZN9/dPH9q/i9Cm2nJai1
-         VX+w==
-X-Gm-Message-State: AOJu0YwnTWeknvlGb98qcQ6jfPDUY93ivy2Llr8fv4tAvtBDyXE0usnX
-	Y0BZlR4pDE+DHLIoYYQN8eXwC4h2OgowL2JnhkjWU428r0AnetfStdomzuAg
-X-Gm-Gg: ATEYQzyXgvGlUhCYae/YzYnAY/tvC+BOS2AeEC/GvM5MygXK7LMp773U8LMlZ4InjfJ
-	8E96KKivSz6KQFne64MRJAWVfFL0uzo7ky35TxJmaMFzojMAQVcEYX40YFjc8u4C67yIrg89xR9
-	SMoa3GvryKV77qCeqmOeLC0MRRIzRC/JpVwKN3pIWIAcvKSTxq0B8YTT5bp7p5sOHxchSTecDpG
-	R4kaY6ffQCNlpnCMekifIlu/6gSkuLzjZ0Pbo6Nonlj37MLtVey29RYEQcXRZINf+Zwxv0VsptR
-	BcRYM/Zaj3jSql8sU91hKj/w1Fi+U3mqRBWOfKICmpEfUwwDdSJY0sgDx+ybzUJQ67MwDvCie3g
-	Q1Nc/sj4mJKZDEZguk/ZWqOjhfUg3brdr/RunJsC30dhWZR9nO41+X1dcOIK7OfU8f1qRzyZjQ5
-	PO9vN9zqW7SSPxcLjn17kCjrDOQbSd+1KXXMBby0MtpyJxdA==
-X-Received: by 2002:a05:7022:68e:b0:128:d967:4674 with SMTP id a92af1059eb24-129a7160559mr3620497c88.19.1773923246023;
-        Thu, 19 Mar 2026 05:27:26 -0700 (PDT)
-Received: from [127.0.0.1] ([20.169.74.226])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-12a6b5f7ec0sm1523181c88.8.2026.03.19.05.27.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Mar 2026 05:27:25 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <tanggeliang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <cover.1773911536.git.tanggeliang@kylinos.cn>
-References: <cover.1773911536.git.tanggeliang@kylinos.cn>
-Subject: Re: [RFC mptcp-next v11 00/15] MPTCP KTLS support
-Message-ID: <ae1f6a10-0097-140b-d4e9-5a9fbd478d07@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 19 Mar 2026 12:27:25 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S4VDMSBB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF7ADC19424;
+	Thu, 19 Mar 2026 12:55:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1773924928;
+	bh=9rlUs9kmzpZtY6ZtD+fUwCCJLpx09o1aGtWBG1kSIIc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=S4VDMSBBZnIaT/gxf5YhzmGp6m2u8ZC5i2dI2+1Zi4MfMr0Ee2p0Sbj+A33L40PvX
+	 VUKe2YlEylY/tb7/KDyV9giIvBinLHpGqIYK3t2lSG0nkWK1njMIN+YM1pDXVNU3MS
+	 oOns9Xmduu+L/F1IM9j0rzgguXJ3qsjdd5nrmIFJZgNGwTr1sCJFnIgew63sI13Hta
+	 06LvwMdUmjwYdLshhvV84YdhYqouJ0LJjo12/VSgODK71rNaLoQhb/edOJrxl52yNj
+	 RRjVwHRMG/LZ+JBQ9EMn3Dm1YAEBsrhXCEP5MOumTkBoD3AEynqhr5unsbvEHsQhIv
+	 71uYbw/YOfO7w==
+Message-ID: <90943080-7580-4491-9669-63034f4acb42@kernel.org>
+Date: Thu, 19 Mar 2026 13:55:23 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH net] MPTCP: fix lock class name family in
+ pm_nl_create_listen_socket
+Content-Language: fr
+To: Li Xiasong <lixiasong1@huawei.com>, Mat Martineau <martineau@kernel.org>,
+ Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>
+Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev,
+ linux-kernel@vger.kernel.org, yuehaibing@huawei.com,
+ zhangchangzhong@huawei.com, weiyongjun1@huawei.com
+References: <20260319112159.3118874-1-lixiasong1@huawei.com>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <20260319112159.3118874-1-lixiasong1@huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+Hi Li,
 
-Thank you for your modifications, that's great!
+On 19/03/2026 12:21, Li Xiasong wrote:
+> In mptcp_pm_nl_create_listen_socket(), use entry->addr.family
+> instead of sk->sk_family for lock class setup. The 'sk' parameter
+> is a netlink socket, not the MPTCP subflow socket being created.
+> 
+> Fixes: cee4034a3db1 ("mptcp: fix lockdep false positive in mptcp_pm_nl_create_listen_socket()")
+> Signed-off-by: Li Xiasong <lixiasong1@huawei.com>
+> ---
+>  net/mptcp/pm_kernel.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/net/mptcp/pm_kernel.c b/net/mptcp/pm_kernel.c
+> index b2b9df43960e..82e59f9c6dd9 100644
+> --- a/net/mptcp/pm_kernel.c
+> +++ b/net/mptcp/pm_kernel.c
+> @@ -838,7 +838,7 @@ static struct lock_class_key mptcp_keys[2];
+>  static int mptcp_pm_nl_create_listen_socket(struct sock *sk,
+>  					    struct mptcp_pm_addr_entry *entry)
+>  {
+> -	bool is_ipv6 = sk->sk_family == AF_INET6;
+> +	bool is_ipv6 = entry->addr.family == AF_INET6;
 
-Our CI did some validations and here is its report:
+Good catch! 'sk' name is confusing, it would probably be better to pass
+"struct net *" instead. But this can be done later, that's more a
+net-next material.
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Unstable: 2 failed =
-test(s): packetdrill_dss packetdrill_mp_capable =F0=9F=94=B4
-- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/232907=
-12003
-
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/2e6e6160b271
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1069182
-
-
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+(For next time, please use 'mptcp:' prefix instead of 'MPTCP:' in the
+subject, similar to all other commits in this directory.)
 
 
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+
+
+@Netdev maintainers: this patch can be applied in the 'net' tree directly.
+
+>  	int addrlen = sizeof(struct sockaddr_in);
+>  	struct sockaddr_storage addr;
+>  	struct sock *newsk, *ssk;
 
 Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
+
