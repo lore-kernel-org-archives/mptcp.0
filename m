@@ -1,37 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EAAA3B8BCA
-	for <mptcp@lists.linux.dev>; Thu, 19 Mar 2026 10:08:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC75C3BC69C
+	for <mptcp@lists.linux.dev>; Thu, 19 Mar 2026 10:08:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773914938; cv=none; b=iNTuH8KVp9ISs2gV6Kx/1yVjUxo0o0tOvcp44Q+J81O/DmzVDIwU9YdeCvWRWGEt6RiTFGi93sTU+gF6KUhSpwsLn8Ur2rYNc9RB0ueazfsHRTmzUM13gMN7wcgLvj9J7XYDmr/HnebHg+tPmSoqcqY6v3rjTQz6E6b7LwTGDKo=
+	t=1773914939; cv=none; b=uvOujfsL/Ng1TFbc8vzVJiou5rG4HKquGFMIY0L3m7P9cJgmzYvGYCdO1WNpCYKN2qlJP/lnk6D3XkYOhMrSxYe0e4yhz/ZELwENjgS6sXRSCJpZ1kxkjslBqASCI8oZ/W0WuQYLkvKgJ/aUVNkQOvRm2rqnYZx8do77JNGvXq0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773914938; c=relaxed/simple;
-	bh=ivGo11FJLzVXLCfjDRfu/utjOcPZgskvnCUtF3F+nGE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZXyC18OguEkbYROu0RK6pXcQR/5AjOQiJJkmR9uD18DLgMIZFhJfI8i6H22uDPRf8/yiSoPyVt+cSI+VfjvNtexiGw0nq4wdlKMR/dSf1YD//lnT87XpEKqYH5qaM+EhNHSVerjeJdm/vH6v3Cvz6vIs2r8gpOrSNdw5CccfNwg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WkKg9Acn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1773914939; c=relaxed/simple;
+	bh=UefsDU3FPKLQUMrAaw7Ven5+aMb/HMw3/+MaqT+6/gM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ID1te4VST3iJRYsGC1CmOS5PmgxyBmm0jmw9U9snCYISsByPuhz/tfKf6YlZT4SRAJDkAkM/Yl+P3LvQ/I2KcRWPBXyh5qBRMjjxqOi1/4MZFA0vhOIWVf6GLhsV+FVX5f3rRbDsXBGUl9zR/B95xv5q4UF+6nCKZoPSgRouwCA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uVoKzaqP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WkKg9Acn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0BA8C2BC87;
-	Thu, 19 Mar 2026 10:08:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uVoKzaqP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64194C2BCAF;
+	Thu, 19 Mar 2026 10:08:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773914937;
-	bh=ivGo11FJLzVXLCfjDRfu/utjOcPZgskvnCUtF3F+nGE=;
-	h=From:To:Cc:Subject:Date:From;
-	b=WkKg9AcnW2vv1PWTKJwOvDXJJqdFCCw9fbxvW3iop/7JAHbgCs8i4NifVfau9/H+8
-	 mZ7DucdlnLsLLAicZKlWqfwAgZjj7v26O4f+7ArMwGnFBbrpuVMsCNaJbHFER66dpC
-	 ZwdOsKGLxr3cACXsHBvWE2ljQbf2OBI9Fkl241G2fdBl9DgAt1fQPx/AyYfRHQVH+8
-	 dM83DE/wxuFOJMRduvEuFh3L9qaCrRivQB25nd5BpL4GgO4KorQBr4huyqt+2fh4n/
-	 VVEPHfyf7cxp4eZw2m6jv2M/NIx2nDHPCr8HugRqf9bi24D9xD1TNcLZzzQK3/bXIc
-	 mXK5+M7EojBRg==
+	s=k20201202; t=1773914939;
+	bh=UefsDU3FPKLQUMrAaw7Ven5+aMb/HMw3/+MaqT+6/gM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=uVoKzaqPROvI2tmObYgd2tID6Rxb9NN6ZGIVjTpTMmO9ICv+cpqFIRljP6lkOmUVi
+	 Vi5B+xV6QFtUUGMWmGyfXttLKHZ8FXeR1XEnBRVJPRiY80J9XdEgVHCkM5PvbxeMaM
+	 Mc6ytGNata3J4SkFBHGxkfgU+DztzW6znu/LPAkuYRmlPdN5eGW/DOdYbUmYqWB0Uk
+	 IHIa49TVxKZIAqg907tvGKChPpC4Kz/CDH5PEsZmGVRQoeiWAoNc1EW6ZseXZ7+uHS
+	 qUWK9aK9z/A0wxpnnQN+93jtlDHWvC7ECLHfi9mtWz6k6cFUhMSI4qMWLZcGOEAMtL
+	 hUfftOwZcy1RA==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [RFC mptcp-next v11 00/15] MPTCP KTLS support
-Date: Thu, 19 Mar 2026 18:08:33 +0800
-Message-ID: <cover.1773911536.git.tanggeliang@kylinos.cn>
+Cc: Geliang Tang <tanggeliang@kylinos.cn>,
+	Gang Yan <yangang@kylinos.cn>
+Subject: [RFC mptcp-next v11 01/15] tls: introduce struct tls_prot_ops for protocol ops
+Date: Thu, 19 Mar 2026 18:08:34 +0800
+Message-ID: <0b078c3c3ceda966bcc2f379c584f695a6a13f00.1773911536.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.53.0
+In-Reply-To: <cover.1773911536.git.tanggeliang@kylinos.cn>
+References: <cover.1773911536.git.tanggeliang@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -42,156 +46,160 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-v11:
- - Fix memory leak errors reported by CI. In v10, these occurred in
-   the shutdown_reuse test and "usleep(500000)" caused the memory
-   leaks. In v11, a dedicated helper wait_for_tcp_close() has been
-   added to provide an appropriate delay.
- - Drop the code that used mptcp_data_trylock() in mptcp_move_skbs()
-   to fix a deadlock issue, as that deadlock no longer occurs in v11.
- - Do not add "mptcp" variable for the "tls_err" tests, adding it for
-   the "tls" tests is sufficient.
- - No longer increase timeout values for poll/epoll tests, as they
-   are no longer needed.
- - Add ns1 definition in mptcp_tls.sh to fix "ns1 is referenced but
-   not assigned" error.
+To extend MPTCP support based on TCP TLS, a tls_prot_ops structure has
+been introduced for TLS, encapsulating TCP-specific helpers within this
+structure.
 
-Based-on: <cover.1773735950.git.yangang@kylinos.cn>
+Add registering, validating and finding functions for this structure to
+add, validate and find a tls_prot_ops on the global list tls_prot_ops_list.
 
-v10:
- - Address comments by ai review:
-   - patch 2: call tls_ctx_free(sk, ctx) and clear icsk_ulp_data before
-     goto out.
-   - patch 3: update commit log as "validate each SKB's offset except
-     the first".
-   - patch 5: add sock_owned_by_user() checks.
-   - patch 7: disable device offload for MPTCP sockets.
-   - patch 9: use TCP_ULP_NAME_MAX in mptcp_setsockopt_tcp_ulp(), drop
-     SOL_TLS in mptcp_supported_sockopt().
- - Make .get_skb_off optional instead of mandatory, TCP does not need
-   to define it.
- - Test "espintcp" ULP instead of "smc" in patch 10. "smc" ULP is
-   removed recently.
- - With Gang Yan's "mptcp: fix stall because of data_ready" v3, mptcp
-   tls selftests can run without failures. Now add them in this set.
- - Link: https://patchwork.kernel.org/project/mptcp/cover/cover.1773737371.git.tanggeliang@kylinos.cn/
+Register TCP-specific structure tls_tcp_ops in tls_init().
 
-v9:
- - add a new patch to "add MPTCP SKB offset check in strp queue walk",
-   thanks to Gang Yan for the fix.
- - add a new patch to "avoid deadlocks in read_sock path", replacing the
-   "in_softirq()" check used in v8.
- - update the selftests.
- - Link: https://patchwork.kernel.org/project/mptcp/cover/cover.1773365606.git.tanggeliang@kylinos.cn/
+Co-developed-by: Gang Yan <yangang@kylinos.cn>
+Signed-off-by: Gang Yan <yangang@kylinos.cn>
+Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+---
+ include/net/tls.h  | 19 +++++++++++
+ net/tls/tls_main.c | 82 ++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 101 insertions(+)
 
-v8:
- - do not hold tls_prot_ops_lock in tls_init(); otherwise, a deadlock
-   occurs.
- - change return value of mptcp_stream_is_readable() as 'bool' to fix the
-   "expected restricted __poll_t" warning reported by CI.
- - fixed other CI checkpatch warnings regarding excessively long lines.
- - Link: https://patchwork.kernel.org/project/mptcp/cover/cover.1768294706.git.tanggeliang@kylinos.cn/
-
-v7:
- - Passing an MPTCP socket to tcp_sock_rate_check_app_limited() causes a
-   crash. In v7, an MPTCP version of check_app_limited() is implemented,
-   which calls tcp_sock_rate_check_app_limited() for each subflow.
- - Register tls_tcp_ops and tls_mptcp_ops in tls_register() rather than in
-   tls_init().
- - Set ctx->ops in tls_init() instead of in do_tls_setsockopt_conf().
- - Keep tls_device.c unchanged. MPTCP TLS_HW mode has not been implemented
-   yet, so EOPNOTSUPP is returned in this case.
- - Also add TCP TLS tests in mptcp_join.sh.
- - Link: https://patchwork.kernel.org/project/mptcp/cover/cover.1768284047.git.tanggeliang@kylinos.cn/
-
-v6:
- - register each ops as Matt suggested.
- - drop sk_is_msk().
- - add tcp_sock_get_ulp/tcp_sock_set_ulp helpers.
- - set another ULP in sock_test_tcpulp as Matt suggested.
- - add tls tests using multiple subflows in mptcp_join.sh.
- - Link: https://patchwork.kernel.org/project/mptcp/cover/cover.1767518836.git.tanggeliang@kylinos.cn/
-
-v5:
- - As suggested by Mat and Matt, this set introduces struct tls_prot_ops
-   for TLS.
- - Includes Gang Yan's patches to add MPTCP support to the TLS selftests.
- - Link: https://patchwork.kernel.org/project/mptcp/cover/cover.1766372799.git.tanggeliang@kylinos.cn/
-
-v4:
- - split "tls: add MPTCP protocol support" into smaller, more
-   focused patches.
- - a new mptcp_inq helper has been implemented instead of directly
-   using mptcp_inq_hint to fix the issue mentioned in [1].
- - add sk_is_msk helper.
- - the 'expect' parameter will no longer be added to sock_test_tcpulp.
-   Instead, SOCK_TEST_TCPULP items causing the tests failure will be
-   directly removed.
- - remove the "TCP KTLS" tests, keeping only the MPTCP-related ones.
- - Link: https://patchwork.kernel.org/project/mptcp/cover/cover.1765505775.git.tanggeliang@kylinos.cn/
-
-[1]
-https://patchwork.kernel.org/project/mptcp/patch/ce74452f4c095a1761ef493b767b4bd9f9c14359.1764333805.git.tanggeliang@kylinos.cn/
-
-v3:
- - mptcp_read_sock() and mptcp_poll() are not exported, as mptcp_sockopt
-   test does not use read_sock/poll interfaces. They will be exported when
-   new tests are added in the future.
- - call mptcp_inq_hint in tls_device_rx_resync_new_rec(),
-   tls_device_core_ctrl_rx_resync() and tls_read_flush_backlog() too.
- - update selftests.
- - Link: https://patchwork.kernel.org/project/mptcp/cover/cover.1763800601.git.tanggeliang@kylinos.cn/
-
-v2:
- - fix disconnect.
- - update selftests.
-
-This series adds KTLS support for MPTCP. Since the ULP of msk is not being
-used, ULP KTLS can be directly configured onto msk without affecting its
-communication.
-
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/480
-
-Gang Yan (2):
-  tls: add MPTCP SKB offset check in strp queue walk
-  mptcp: update mptcp_check_readable for TLS use
-
-Geliang Tang (13):
-  tls: introduce struct tls_prot_ops for protocol ops
-  tls: add tls_prot_ops pointer to tls_context
-  mptcp: avoid sleeping in read_sock path under softirq
-  mptcp: implement tls_mptcp_ops for MPTCP TLS
-  tls: disable device offload for MPTCP sockets
-  mptcp: update ULP getsockopt for TLS support
-  mptcp: enable ULP setsockopt for TLS support
-  selftests: mptcp: connect: use espintcp for ULP test
-  selftests: tls: add mptcp variant for testing
-  selftests: tls: increase nonblocking data size for MPTCP
-  selftests: tls: wait TCP_CLOSE in shutdown_reuse for MPTCP
-  selftests: tls: add MPTCP test cases
-  selftests: mptcp: cover mptcp tls tests
-
- include/linux/tcp.h                           |   2 +
- include/net/mptcp.h                           |   2 +
- include/net/tcp.h                             |   1 +
- include/net/tls.h                             |  20 +++
- net/ipv4/tcp.c                                |  87 ++++++----
- net/mptcp/protocol.c                          | 133 +++++++++++++--
- net/mptcp/sockopt.c                           |  39 ++++-
- net/tls/tls_device.c                          |   6 +
- net/tls/tls_main.c                            | 100 ++++++++++-
- net/tls/tls_strp.c                            |  32 ++--
- net/tls/tls_sw.c                              |   7 +-
- tools/testing/selftests/net/mptcp/Makefile    |   2 +
- tools/testing/selftests/net/mptcp/config      |   4 +
- .../selftests/net/mptcp/mptcp_connect.c       |   2 +-
- .../testing/selftests/net/mptcp/mptcp_tls.sh  |  53 ++++++
- tools/testing/selftests/net/mptcp/tls.c       |   1 +
- tools/testing/selftests/net/tls.c             | 157 ++++++++++++++++--
- 17 files changed, 566 insertions(+), 82 deletions(-)
- create mode 100755 tools/testing/selftests/net/mptcp/mptcp_tls.sh
- create mode 120000 tools/testing/selftests/net/mptcp/tls.c
-
+diff --git a/include/net/tls.h b/include/net/tls.h
+index ebd2550280ae..40001110bccb 100644
+--- a/include/net/tls.h
++++ b/include/net/tls.h
+@@ -220,6 +220,25 @@ struct tls_prot_info {
+ 	u16 tail_size;
+ };
+ 
++struct tls_prot_ops {
++	int			protocol;
++	struct module		*owner;
++	struct list_head	list;
++
++	int (*inq)(struct sock *sk);
++	int (*sendmsg_locked)(struct sock *sk, struct msghdr *msg, size_t size);
++	struct sk_buff *(*recv_skb)(struct sock *sk, u32 *off);
++	int (*read_sock)(struct sock *sk, read_descriptor_t *desc,
++			 sk_read_actor_t recv_actor);
++	void (*read_done)(struct sock *sk, size_t len);
++	u32 (*get_skb_off)(struct sk_buff *skb);
++	u32 (*get_skb_seq)(struct sk_buff *skb);
++	__poll_t (*poll)(struct file *file, struct socket *sock,
++			 struct poll_table_struct *wait);
++	bool (*epollin_ready)(const struct sock *sk);
++	void (*check_app_limited)(struct sock *sk);
++};
++
+ struct tls_context {
+ 	/* read-only cache line */
+ 	struct tls_prot_info prot_info;
+diff --git a/net/tls/tls_main.c b/net/tls/tls_main.c
+index fd39acf41a61..e628b729cbd3 100644
+--- a/net/tls/tls_main.c
++++ b/net/tls/tls_main.c
+@@ -128,6 +128,24 @@ static struct proto_ops tls_proto_ops[TLS_NUM_PROTS][TLS_NUM_CONFIG][TLS_NUM_CON
+ static void build_protos(struct proto prot[TLS_NUM_CONFIG][TLS_NUM_CONFIG],
+ 			 const struct proto *base);
+ 
++static DEFINE_SPINLOCK(tls_prot_ops_lock);
++static LIST_HEAD(tls_prot_ops_list);
++
++/* Must be called with rcu read lock held */
++static struct tls_prot_ops *tls_prot_ops_find(int protocol)
++{
++	struct tls_prot_ops *ops, *ret = NULL;
++
++	list_for_each_entry_rcu(ops, &tls_prot_ops_list, list) {
++		if (ops->protocol == protocol) {
++			ret = ops;
++			break;
++		}
++	}
++
++	return ret;
++}
++
+ void update_sk_prot(struct sock *sk, struct tls_context *ctx)
+ {
+ 	int ip_ver = sk->sk_family == AF_INET6 ? TLSV6 : TLSV4;
+@@ -1236,6 +1254,68 @@ static struct tcp_ulp_ops tcp_tls_ulp_ops __read_mostly = {
+ 	.get_info_size		= tls_get_info_size,
+ };
+ 
++static int tls_validate_prot_ops(const struct tls_prot_ops *ops)
++{
++	if (!ops->inq || !ops->sendmsg_locked ||
++	    !ops->recv_skb || !ops->read_sock ||
++	    !ops->read_done || !ops->get_skb_seq ||
++	    !ops->poll || !ops->epollin_ready ||
++	    !ops->check_app_limited) {
++		pr_err("%d does not implement required ops\n", ops->protocol);
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
++static int tls_register_prot_ops(struct tls_prot_ops *ops)
++{
++	int ret;
++
++	ret = tls_validate_prot_ops(ops);
++	if (ret)
++		return ret;
++
++	spin_lock(&tls_prot_ops_lock);
++	if (tls_prot_ops_find(ops->protocol)) {
++		spin_unlock(&tls_prot_ops_lock);
++		return -EEXIST;
++	}
++	list_add_tail_rcu(&ops->list, &tls_prot_ops_list);
++	spin_unlock(&tls_prot_ops_lock);
++
++	pr_debug("tls_prot_ops %d registered\n", ops->protocol);
++	return 0;
++}
++
++static struct sk_buff *tls_tcp_recv_skb(struct sock *sk, u32 *off)
++{
++	return tcp_recv_skb(sk, tcp_sk(sk)->copied_seq, off);
++}
++
++static u32 tls_tcp_get_skb_seq(struct sk_buff *skb)
++{
++	return TCP_SKB_CB(skb)->seq;
++}
++
++static bool tls_tcp_epollin_ready(const struct sock *sk)
++{
++	return tcp_epollin_ready(sk, INT_MAX);
++}
++
++static struct tls_prot_ops tls_tcp_ops = {
++	.protocol		= IPPROTO_TCP,
++	.inq			= tcp_inq,
++	.sendmsg_locked		= tcp_sendmsg_locked,
++	.recv_skb		= tls_tcp_recv_skb,
++	.read_sock		= tcp_read_sock,
++	.read_done		= tcp_read_done,
++	.get_skb_seq		= tls_tcp_get_skb_seq,
++	.poll			= tcp_poll,
++	.epollin_ready		= tls_tcp_epollin_ready,
++	.check_app_limited	= tcp_rate_check_app_limited,
++};
++
+ static int __init tls_register(void)
+ {
+ 	int err;
+@@ -1254,6 +1334,8 @@ static int __init tls_register(void)
+ 
+ 	tcp_register_ulp(&tcp_tls_ulp_ops);
+ 
++	tls_register_prot_ops(&tls_tcp_ops);
++
+ 	return 0;
+ err_strp:
+ 	tls_strp_dev_exit();
 -- 
 2.53.0
 
