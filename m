@@ -1,164 +1,237 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B63D3BD242
-	for <mptcp@lists.linux.dev>; Thu, 19 Mar 2026 10:09:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 707B83C3BE7;
+	Thu, 19 Mar 2026 10:42:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773914964; cv=none; b=WG9xbEOAE+j68prrNK8DhiyQbS8xYOXOVYs5WnHYLpOgysYsi6MjLYLmSzn7qcEk0C2lJuStZ9o3zWSZ6IBHBbGpGGuBM/2VB6H2ZBFhMhk19/602ZIOJ0i7x6PqyLQBRisDzx27AgjvpHqfscUPKxqxh12i3mgOLRAqeknV/3M=
+	t=1773916927; cv=none; b=qqf+t7EbyQPEAQ5ve6DO4JLX6oe0X89K4QTqwsuwledWmCXlg/Z5GbJ5WDnPsHGLJ7DWpZrE5TaTH6zv9WJnXc4x6w2WBjwDdmIB7tULDKQmBC2XSsqqMQezvnDnL69ocg4a8b3hIea9CtDORTWgDsYdnZKNtotNzltDvEgrJ0g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773914964; c=relaxed/simple;
-	bh=P/VbPc6nzXHUtnt2XJ9fN+R9cJSxqarYu7inTXRT6qs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VlnRXTCEPjJjYi2lSXiZGTzdimURv2brQm0QUGNpTUVnMQCgaxd3ov6jKzh60u/1SwnVO4s/jBPVd+1WPo+vC1esyaeKYrTAMKDlO2YFY476vQ7S+XD0I1SWAsr8hf/uKp+R1U64qdpzx00Bo84nnSTwmdN6INPyjh61OHc3HKI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pjc+35j5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1773916927; c=relaxed/simple;
+	bh=5l9HU9L1bm15mmbsumbMbx+pE27az2/4gHmhUElloSI=;
+	h=Subject:To:Cc:From:Date:In-Reply-To:Message-ID:MIME-Version:
+	 Content-Type; b=GzQ9zMoFtUcel5xWcaStmwRtwbMgHexocDtXk3t/KJP45IlEqeSvwmP8EZ2Ml4vCa1SXddjlggbDzAsVcPw8AxfUtTkkmSfSBRbBY9iU2dex6DB7meeklJrs4AP7EmYBQDTv75650KxfWGmGMvqOeflYVzzJ8ItqgZOPHe9IgS4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=zcX/ibUn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pjc+35j5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1212C2BC87;
-	Thu, 19 Mar 2026 10:09:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773914964;
-	bh=P/VbPc6nzXHUtnt2XJ9fN+R9cJSxqarYu7inTXRT6qs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=pjc+35j5Ehm27oCG1836hzLQeLBPKa0IrKqWNtY5ToBHXI4UTzh9GRbkyET9+odcf
-	 SNnJkmgUFg5cCJbPXYGCwK+k9GCCeknnKruo93yoU+8anbuG/o0sNnmEXof22Qx7M5
-	 t2aMelRh73O4Pspv5PQd6k6ERjldR0GWWcNM0YrwLOy/XBUunFwuKckPYq6dXbfw2c
-	 R5BMMInXdwsKU0pdHRZVCzqgHpUqTaCaUMGL3KxuB4moDPXwn32MbYSJXIu17C74Qn
-	 YWlut/ADJiyN6nahdwzlf+ZJziIH6f6IEPEbLwvH0ZOXqOhECot0ukmYqbLwS6qdz9
-	 q/mXprbSe7QBw==
-From: Geliang Tang <geliang@kernel.org>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>,
-	Gang Yan <yangang@kylinos.cn>
-Subject: [RFC mptcp-next v11 15/15] selftests: mptcp: cover mptcp tls tests
-Date: Thu, 19 Mar 2026 18:08:48 +0800
-Message-ID: <7dfdc9c184b8f96cb4a808e1022ef5a6af15099e.1773911536.git.tanggeliang@kylinos.cn>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <cover.1773911536.git.tanggeliang@kylinos.cn>
-References: <cover.1773911536.git.tanggeliang@kylinos.cn>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="zcX/ibUn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBC64C19424;
+	Thu, 19 Mar 2026 10:42:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1773916927;
+	bh=5l9HU9L1bm15mmbsumbMbx+pE27az2/4gHmhUElloSI=;
+	h=Subject:To:Cc:From:Date:In-Reply-To:From;
+	b=zcX/ibUnmrHJXi8oe+sU/BTXkkwxA2k1CBxtzd9L1JY+p1HAj1Z9jC7A0hf3GreHI
+	 FWyREXegXIK6wybz2N8nU5aKnktJWGvt6ROyOUHQlxyT6RdmMWE4A/TbIltfas9u1v
+	 +RlO2DggdBnDhXWDE9U6OqauRYKcLr/PLFf2An7w=
+Subject: Patch "mptcp: pm: in-kernel: always set ID as avail when rm endp" has been added to the 6.12-stable tree
+To: gregkh@linuxfoundation.org,kuba@kernel.org,martineau@kernel.org,matttbe@kernel.org,mptcp@lists.linux.dev,sashal@kernel.org,syzbot+f56f7d56e2c6e11a01b6@syzkaller.appspotmail.com
+Cc: <stable-commits@vger.kernel.org>
+From: <gregkh@linuxfoundation.org>
+Date: Thu, 19 Mar 2026 11:41:23 +0100
+In-Reply-To: <20260306174813.2517544-2-matttbe@kernel.org>
+Message-ID: <2026031923-exclaim-pellet-8fd1@gregkh>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=ANSI_X3.4-1968
 Content-Transfer-Encoding: 8bit
+X-stable: commit
+X-Patchwork-Hint: ignore 
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
 
-The mptcp tests for tls.c is available now, this patch adds mptcp_tls.sh
-to test it in the MPTCP CI by default.
+This is a note to let you know that I've just added the patch titled
 
-Co-developed-by: Gang Yan <yangang@kylinos.cn>
-Signed-off-by: Gang Yan <yangang@kylinos.cn>
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+    mptcp: pm: in-kernel: always set ID as avail when rm endp
+
+to the 6.12-stable tree which can be found at:
+    http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
+
+The filename of the patch is:
+     mptcp-pm-in-kernel-always-set-id-as-avail-when-rm-endp.patch
+and it can be found in the queue-6.12 subdirectory.
+
+If you, or anyone else, feels it should not be added to the stable tree,
+please let <stable@vger.kernel.org> know about it.
+
+
+From stable+bounces-223373-greg=kroah.com@vger.kernel.org Fri Mar  6 18:49:00 2026
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Date: Fri,  6 Mar 2026 18:48:14 +0100
+Subject: mptcp: pm: in-kernel: always set ID as avail when rm endp
+To: stable@vger.kernel.org, gregkh@linuxfoundation.org, sashal@kernel.org
+Cc: MPTCP Upstream <mptcp@lists.linux.dev>, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, syzbot+f56f7d56e2c6e11a01b6@syzkaller.appspotmail.com, Mat Martineau <martineau@kernel.org>, Jakub Kicinski <kuba@kernel.org>
+Message-ID: <20260306174813.2517544-2-matttbe@kernel.org>
+
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+
+commit d191101dee25567c2af3b28565f45346c33d65f5 upstream.
+
+Syzkaller managed to find a combination of actions that was generating
+this warning:
+
+  WARNING: net/mptcp/pm_kernel.c:1074 at __mark_subflow_endp_available net/mptcp/pm_kernel.c:1074 [inline], CPU#1: syz.7.48/2535
+  WARNING: net/mptcp/pm_kernel.c:1074 at mptcp_pm_nl_fullmesh net/mptcp/pm_kernel.c:1446 [inline], CPU#1: syz.7.48/2535
+  WARNING: net/mptcp/pm_kernel.c:1074 at mptcp_pm_nl_set_flags_all net/mptcp/pm_kernel.c:1474 [inline], CPU#1: syz.7.48/2535
+  WARNING: net/mptcp/pm_kernel.c:1074 at mptcp_pm_nl_set_flags+0x5de/0x640 net/mptcp/pm_kernel.c:1538, CPU#1: syz.7.48/2535
+  Modules linked in:
+  CPU: 1 UID: 0 PID: 2535 Comm: syz.7.48 Not tainted 6.18.0-03987-gea5f5e676cf5 #17 PREEMPT(voluntary)
+  Hardware name: QEMU Ubuntu 25.10 PC (i440FX + PIIX, 1996), BIOS 1.17.0-debian-1.17.0-1 04/01/2014
+  RIP: 0010:__mark_subflow_endp_available net/mptcp/pm_kernel.c:1074 [inline]
+  RIP: 0010:mptcp_pm_nl_fullmesh net/mptcp/pm_kernel.c:1446 [inline]
+  RIP: 0010:mptcp_pm_nl_set_flags_all net/mptcp/pm_kernel.c:1474 [inline]
+  RIP: 0010:mptcp_pm_nl_set_flags+0x5de/0x640 net/mptcp/pm_kernel.c:1538
+  Code: 89 c7 e8 c5 8c 73 fe e9 f7 fd ff ff 49 83 ef 80 e8 b7 8c 73 fe 4c 89 ff be 03 00 00 00 e8 4a 29 e3 fe eb ac e8 a3 8c 73 fe 90 <0f> 0b 90 e9 3d ff ff ff e8 95 8c 73 fe b8 a1 ff ff ff eb 1a e8 89
+  RSP: 0018:ffffc9001535b820 EFLAGS: 00010287
+  netdevsim0: tun_chr_ioctl cmd 1074025677
+  RAX: ffffffff82da294d RBX: 0000000000000001 RCX: 0000000000080000
+  RDX: ffffc900096d0000 RSI: 00000000000006d6 RDI: 00000000000006d7
+  netdevsim0: linktype set to 823
+  RBP: ffff88802cdb2240 R08: 00000000000104ae R09: ffffffffffffffff
+  R10: ffffffff82da27d4 R11: 0000000000000000 R12: 0000000000000000
+  R13: ffff88801246d8c0 R14: ffffc9001535b8b8 R15: ffff88802cdb1800
+  FS:  00007fc6ac5a76c0(0000) GS:ffff8880f90c8000(0000) knlGS:0000000000000000
+  netlink: 'syz.3.50': attribute type 5 has an invalid length.
+  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  netlink: 1232 bytes leftover after parsing attributes in process `syz.3.50'.
+  CR2: 0000200000010000 CR3: 0000000025b1a000 CR4: 0000000000350ef0
+  Call Trace:
+   <TASK>
+   mptcp_pm_set_flags net/mptcp/pm_netlink.c:277 [inline]
+   mptcp_pm_nl_set_flags_doit+0x1d7/0x210 net/mptcp/pm_netlink.c:282
+   genl_family_rcv_msg_doit+0x117/0x180 net/netlink/genetlink.c:1115
+   genl_family_rcv_msg net/netlink/genetlink.c:1195 [inline]
+   genl_rcv_msg+0x3a8/0x3f0 net/netlink/genetlink.c:1210
+   netlink_rcv_skb+0x16d/0x240 net/netlink/af_netlink.c:2550
+   genl_rcv+0x28/0x40 net/netlink/genetlink.c:1219
+   netlink_unicast_kernel net/netlink/af_netlink.c:1318 [inline]
+   netlink_unicast+0x3e9/0x4c0 net/netlink/af_netlink.c:1344
+   netlink_sendmsg+0x4ab/0x5b0 net/netlink/af_netlink.c:1894
+   sock_sendmsg_nosec net/socket.c:718 [inline]
+   __sock_sendmsg+0xc9/0xf0 net/socket.c:733
+   ____sys_sendmsg+0x272/0x3b0 net/socket.c:2608
+   ___sys_sendmsg+0x2de/0x320 net/socket.c:2662
+   __sys_sendmsg net/socket.c:2694 [inline]
+   __do_sys_sendmsg net/socket.c:2699 [inline]
+   __se_sys_sendmsg net/socket.c:2697 [inline]
+   __x64_sys_sendmsg+0x110/0x1a0 net/socket.c:2697
+   do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+   do_syscall_64+0xed/0x360 arch/x86/entry/syscall_64.c:94
+   entry_SYSCALL_64_after_hwframe+0x77/0x7f
+  RIP: 0033:0x7fc6adb66f6d
+  Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 e8 ff ff ff f7 d8 64 89 01 48
+  RSP: 002b:00007fc6ac5a6ff8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+  RAX: ffffffffffffffda RBX: 00007fc6addf5fa0 RCX: 00007fc6adb66f6d
+  RDX: 0000000000048084 RSI: 00002000000002c0 RDI: 000000000000000e
+  RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+  R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+  netlink: 'syz.5.51': attribute type 2 has an invalid length.
+  R13: 00007fff25e91fe0 R14: 00007fc6ac5a7ce4 R15: 00007fff25e920d7
+   </TASK>
+
+The actions that caused that seem to be:
+
+ - Create an MPTCP endpoint for address A without any flags
+ - Create a new MPTCP connection from address A
+ - Remove the MPTCP endpoint: the corresponding subflows will be removed
+ - Recreate the endpoint with the same ID, but with the subflow flag
+ - Change the same endpoint to add the fullmesh flag
+
+In this case, msk->pm.local_addr_used has been kept to 0 as expected,
+but the corresponding bit in msk->pm.id_avail_bitmap was still unset
+after having removed the endpoint, causing the splat later on.
+
+When removing an endpoint, the corresponding endpoint ID was only marked
+as available for "signal" types with an announced address, plus all
+"subflow" types, but not the other types like an endpoint corresponding
+to the initial subflow. In these cases, re-creating an endpoint with the
+same ID didn't signal/create anything. Here, adding the fullmesh flag
+was creating the splat when calling __mark_subflow_endp_available() from
+mptcp_pm_nl_fullmesh(), because msk->pm.local_addr_used was set to 0
+while the ID was marked as used.
+
+To fix this issue, the corresponding bit in msk->pm.id_avail_bitmap can
+always be set as available when removing an MPTCP in-kernel endpoint. In
+other words, moving the call to __set_bit() to do it in all cases,
+except for "subflow" types where this bit is handled in a dedicated
+helper.
+
+Note: instead of adding a new spin_(un)lock_bh that would be taken in
+all cases, do all the actions requiring the spin lock under the same
+block.
+
+This modification potentially fixes another issue reported by syzbot,
+see [1]. But without a reproducer or more details about what exactly
+happened before, it is hard to confirm.
+
+Fixes: e255683c06df ("mptcp: pm: re-using ID of unused removed ADD_ADDR")
+Cc: stable@vger.kernel.org
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/606
+Reported-by: syzbot+f56f7d56e2c6e11a01b6@syzkaller.appspotmail.com
+Closes: https://lore.kernel.org/68fcfc4a.050a0220.346f24.02fb.GAE@google.com [1]
+Reviewed-by: Mat Martineau <martineau@kernel.org>
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Link: https://patch.msgid.link/20260205-net-mptcp-misc-fixes-6-19-rc8-v2-1-c2720ce75c34@kernel.org
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+[ Conflict in pm_netlink.c, because commit 8617e85e04bd ("mptcp: pm:
+  split in-kernel PM specific code") is not in this version, and move
+  code from pm_netlink.c to pm_kernel.c. Also, commit 636113918508
+  ("mptcp: pm: remove '_nl' from mptcp_pm_nl_rm_addr_received") renamed
+  mptcp_pm_nl_rm_subflow_received() to mptcp_pm_rm_subflow(). Apart from
+  that, the same patch can be applied in pm_netlink.c. ]
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- tools/testing/selftests/net/mptcp/Makefile    |  2 +
- tools/testing/selftests/net/mptcp/config      |  3 ++
- .../testing/selftests/net/mptcp/mptcp_tls.sh  | 53 +++++++++++++++++++
- tools/testing/selftests/net/mptcp/tls.c       |  1 +
- 4 files changed, 59 insertions(+)
- create mode 100755 tools/testing/selftests/net/mptcp/mptcp_tls.sh
- create mode 120000 tools/testing/selftests/net/mptcp/tls.c
+ net/mptcp/pm_netlink.c |   20 ++++++++------------
+ 1 file changed, 8 insertions(+), 12 deletions(-)
 
-diff --git a/tools/testing/selftests/net/mptcp/Makefile b/tools/testing/selftests/net/mptcp/Makefile
-index 22ba0da2adb8..f7c959a25b3b 100644
---- a/tools/testing/selftests/net/mptcp/Makefile
-+++ b/tools/testing/selftests/net/mptcp/Makefile
-@@ -14,6 +14,7 @@ TEST_PROGS := \
- 	mptcp_connect_splice.sh \
- 	mptcp_join.sh \
- 	mptcp_sockopt.sh \
-+	mptcp_tls.sh \
- 	pm_netlink.sh \
- 	simult_flows.sh \
- 	userspace_pm.sh \
-@@ -25,6 +26,7 @@ TEST_GEN_FILES := \
- 	mptcp_inq \
- 	mptcp_sockopt \
- 	pm_nl_ctl \
-+	tls \
- # end of TEST_GEN_FILES
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -1599,10 +1599,8 @@ static bool mptcp_pm_remove_anno_addr(st
+ 	ret = remove_anno_list_by_saddr(msk, addr);
+ 	if (ret || force) {
+ 		spin_lock_bh(&msk->pm.lock);
+-		if (ret) {
+-			__set_bit(addr->id, msk->pm.id_avail_bitmap);
++		if (ret)
+ 			msk->pm.add_addr_signaled--;
+-		}
+ 		mptcp_pm_remove_addr(msk, &list);
+ 		spin_unlock_bh(&msk->pm.lock);
+ 	}
+@@ -1640,17 +1638,15 @@ static int mptcp_nl_remove_subflow_and_s
+ 					  !(entry->flags & MPTCP_PM_ADDR_FLAG_IMPLICIT));
  
- TEST_FILES := \
-diff --git a/tools/testing/selftests/net/mptcp/config b/tools/testing/selftests/net/mptcp/config
-index 18bd29ac5b24..471c7e0ba2be 100644
---- a/tools/testing/selftests/net/mptcp/config
-+++ b/tools/testing/selftests/net/mptcp/config
-@@ -35,3 +35,6 @@ CONFIG_NFT_TPROXY=m
- CONFIG_SYN_COOKIES=y
- CONFIG_VETH=y
- CONFIG_TLS=y
-+CONFIG_CRYPTO_ARIA=y
-+CONFIG_CRYPTO_CHACHA20POLY1305=m
-+CONFIG_CRYPTO_SM4_GENERIC=y
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_tls.sh b/tools/testing/selftests/net/mptcp/mptcp_tls.sh
-new file mode 100755
-index 000000000000..9d928a3a5ed4
---- /dev/null
-+++ b/tools/testing/selftests/net/mptcp/mptcp_tls.sh
-@@ -0,0 +1,53 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+
-+. "$(dirname "${0}")/mptcp_lib.sh"
-+
-+ret=0
-+ns1=""
-+
-+cleanup()
-+{
-+	if [ -n "$pid" ] && kill -0 "$pid" 2>/dev/null; then
-+		kill "$pid" 2>/dev/null
-+		wait "$pid" 2>/dev/null
-+	fi
-+
-+        mptcp_lib_ns_exit "$ns1"
-+}
-+
-+init()
-+{
-+        mptcp_lib_ns_init ns1
-+
-+        mptcp_lib_pm_nl_set_limits "$ns1" 8 8
-+
-+        local i
-+        for i in $(seq 1 4); do
-+                mptcp_lib_pm_nl_add_endpoint "$ns1" \
-+			"127.0.0.1" flags signal port 1000"$i"
-+        done
-+}
-+
-+init
-+trap cleanup EXIT
-+
-+ip netns exec "$ns1" ./tls -v 12_aes_gcm_mptcp \
-+			   -v 13_aes_gcm_mptcp \
-+			   -v 12_chacha_mptcp \
-+			   -v 13_chacha_mptcp \
-+			   -v 13_sm4_gcm_mptcp \
-+			   -v 13_sm4_ccm_mptcp \
-+			   -v 12_aes_ccm_mptcp \
-+			   -v 13_aes_ccm_mptcp \
-+			   -v 12_aes_gcm_256_mptcp \
-+			   -v 13_aes_gcm_256_mptcp \
-+			   -v 13_nopad_mptcp \
-+			   -v 12_aria_gcm_mptcp \
-+			   -v 12_aria_gcm_256_mptcp &
-+pid=$!
-+wait $pid
-+ret=$?
-+
-+mptcp_lib_result_print_all_tap
-+exit $ret
-diff --git a/tools/testing/selftests/net/mptcp/tls.c b/tools/testing/selftests/net/mptcp/tls.c
-new file mode 120000
-index 000000000000..724b1f047c89
---- /dev/null
-+++ b/tools/testing/selftests/net/mptcp/tls.c
-@@ -0,0 +1 @@
-+../tls.c
-\ No newline at end of file
--- 
-2.53.0
+ 		list.ids[0] = mptcp_endp_get_local_id(msk, addr);
+-		if (remove_subflow) {
+-			spin_lock_bh(&msk->pm.lock);
+-			mptcp_pm_nl_rm_subflow_received(msk, &list);
+-			spin_unlock_bh(&msk->pm.lock);
+-		}
+ 
+-		if (entry->flags & MPTCP_PM_ADDR_FLAG_SUBFLOW) {
+-			spin_lock_bh(&msk->pm.lock);
++		spin_lock_bh(&msk->pm.lock);
++		if (remove_subflow)
++			mptcp_pm_nl_rm_subflow_received(msk, &list);
++		if (entry->flags & MPTCP_PM_ADDR_FLAG_SUBFLOW)
+ 			__mark_subflow_endp_available(msk, list.ids[0]);
+-			spin_unlock_bh(&msk->pm.lock);
+-		}
++		else /* mark endp ID as available, e.g. Signal or MPC endp */
++			__set_bit(addr->id, msk->pm.id_avail_bitmap);
++		spin_unlock_bh(&msk->pm.lock);
+ 
+ 		if (msk->mpc_endpoint_id == entry->addr.id)
+ 			msk->mpc_endpoint_id = 0;
 
+
+Patches currently in stable-queue which might be from matttbe@kernel.org are
+
+queue-6.12/mptcp-pm-avoid-sending-rm_addr-over-same-subflow.patch
+queue-6.12/mptcp-pm-in-kernel-always-mark-signal-subflow-endp-as-used.patch
+queue-6.12/selftests-mptcp-add-a-check-for-add_addr_accepted.patch
+queue-6.12/selftests-mptcp-join-check-rm_addr-not-sent-over-same-subflow.patch
+queue-6.12/mptcp-pm-in-kernel-always-set-id-as-avail-when-rm-endp.patch
