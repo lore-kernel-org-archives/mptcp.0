@@ -1,143 +1,79 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12B8435949;
-	Thu, 19 Mar 2026 12:55:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ED303EDAAD;
+	Thu, 19 Mar 2026 16:40:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773924929; cv=none; b=pNJkJ2sIBBIngtJo6AFOebG5kQlN/gjX7mZ/7VNSgdMCwl6Bezj2Ud0TjYAFM6yPT8diEdPlTo5lDDPbmFEymXt0sBjPTrXY8I3MVfDG8G5q9QhxiyWg8CAQtzwsJlkfIf60gXHjexsW02uvrOu0cA10AfjvyjCSaMkkVvkuAMU=
+	t=1773938421; cv=none; b=beRuGFfyFvvKT0xsarzdoxaCTBaKpTF7ecwxklG6hS5u4QV8tPmcZXcRUW67M+5v2et8PnFJsGcJYqNa1JHuXyY3YFk/G5xzaiF4VnXjKwzWrKzwoOwFGgzHMaVfNqY+c2ceRqHBe7tiKIhtp1WC8NQJLbap5Ekaip8IRqXeMWE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773924929; c=relaxed/simple;
-	bh=9rlUs9kmzpZtY6ZtD+fUwCCJLpx09o1aGtWBG1kSIIc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=H2XzJx2vNWIKCu7m4kVEt1L6P5VEvaY3zQ+T1XnQlYhH/feq3uQCKpDMSOYgINEUFz/zed9CCHFzuKnD/IfvALsIFmol0SCPXs9xj539p4vCfSkRN5fneyqVYjKnbSZap7aD0nK6AYCRx1RBBt3NihdRW6m71FZDVa5OQP5wsgM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S4VDMSBB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1773938421; c=relaxed/simple;
+	bh=iPml70KCaSGxb9G1y6ne8CjhBWAGGD5+u3vLzLKQjxo=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=oK8Wv+qtZnaV03OkvXKWsVoVCU0MHFlGSVeeTTah2xyikyhNccEIFNG0IlZ41AymaxL6CscdyMfVk+uqy+gwAI4JZoYIsol3ZPYQQvwrl2DPLEEoha1pD1pjwaL/NDP5DoFDmrqxuTJ9eJS0PJOtUANJ2ZZGcM/4/ILuTVmDWic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cUjyhmlz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S4VDMSBB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF7ADC19424;
-	Thu, 19 Mar 2026 12:55:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cUjyhmlz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 910A1C19424;
+	Thu, 19 Mar 2026 16:40:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773924928;
-	bh=9rlUs9kmzpZtY6ZtD+fUwCCJLpx09o1aGtWBG1kSIIc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=S4VDMSBBZnIaT/gxf5YhzmGp6m2u8ZC5i2dI2+1Zi4MfMr0Ee2p0Sbj+A33L40PvX
-	 VUKe2YlEylY/tb7/KDyV9giIvBinLHpGqIYK3t2lSG0nkWK1njMIN+YM1pDXVNU3MS
-	 oOns9Xmduu+L/F1IM9j0rzgguXJ3qsjdd5nrmIFJZgNGwTr1sCJFnIgew63sI13Hta
-	 06LvwMdUmjwYdLshhvV84YdhYqouJ0LJjo12/VSgODK71rNaLoQhb/edOJrxl52yNj
-	 RRjVwHRMG/LZ+JBQ9EMn3Dm1YAEBsrhXCEP5MOumTkBoD3AEynqhr5unsbvEHsQhIv
-	 71uYbw/YOfO7w==
-Message-ID: <90943080-7580-4491-9669-63034f4acb42@kernel.org>
-Date: Thu, 19 Mar 2026 13:55:23 +0100
+	s=k20201202; t=1773938420;
+	bh=iPml70KCaSGxb9G1y6ne8CjhBWAGGD5+u3vLzLKQjxo=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=cUjyhmlzKAb+LMmJUd8K8xJXPcmt+1OIw9ViNv7wzIqzE1COeSKFSqs9zS5DXKNte
+	 FCaJBkSUNOE/2mfSt2Q5zIwHyf23THpJshqRXQn0f1f2i/EX3MA2NjzAzncVuFDSZl
+	 7vnczA6qY/Sv75DrEoMEu7+5NxDuom60ItLoNfnDQXKknJv1tRKXXz339s0e03oQjm
+	 ia1zf4xk4kxSA4Ww1p+VPg5P5s42HxzNjrJEfgYgbLUxJW+H9p7QjKleQt9izDqPJO
+	 McaGkpm06OJ2BVysZJZwDckTL70Txx+zlzrmTkctqlmnfnAI5JeJi3GyTv0os4Nagu
+	 U2CRHPvd7xsEg==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id B9F96380692A;
+	Thu, 19 Mar 2026 16:40:12 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
+Content-Transfer-Encoding: 8bit
 Subject: Re: [PATCH net] MPTCP: fix lock class name family in
  pm_nl_create_listen_socket
-Content-Language: fr
-To: Li Xiasong <lixiasong1@huawei.com>, Mat Martineau <martineau@kernel.org>,
- Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>
-Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev,
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <177393841126.1701817.17610297112158397385.git-patchwork-notify@kernel.org>
+Date: Thu, 19 Mar 2026 16:40:11 +0000
+References: <20260319112159.3118874-1-lixiasong1@huawei.com>
+In-Reply-To: <20260319112159.3118874-1-lixiasong1@huawei.com>
+To: Li Xiasong <lixiasong1@huawei.com>
+Cc: matttbe@kernel.org, martineau@kernel.org, geliang@kernel.org,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ horms@kernel.org, netdev@vger.kernel.org, mptcp@lists.linux.dev,
  linux-kernel@vger.kernel.org, yuehaibing@huawei.com,
  zhangchangzhong@huawei.com, weiyongjun1@huawei.com
-References: <20260319112159.3118874-1-lixiasong1@huawei.com>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <20260319112159.3118874-1-lixiasong1@huawei.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-Hi Li,
+Hello:
 
-On 19/03/2026 12:21, Li Xiasong wrote:
+This patch was applied to netdev/net.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
+
+On Thu, 19 Mar 2026 19:21:59 +0800 you wrote:
 > In mptcp_pm_nl_create_listen_socket(), use entry->addr.family
 > instead of sk->sk_family for lock class setup. The 'sk' parameter
 > is a netlink socket, not the MPTCP subflow socket being created.
 > 
 > Fixes: cee4034a3db1 ("mptcp: fix lockdep false positive in mptcp_pm_nl_create_listen_socket()")
 > Signed-off-by: Li Xiasong <lixiasong1@huawei.com>
-> ---
->  net/mptcp/pm_kernel.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/net/mptcp/pm_kernel.c b/net/mptcp/pm_kernel.c
-> index b2b9df43960e..82e59f9c6dd9 100644
-> --- a/net/mptcp/pm_kernel.c
-> +++ b/net/mptcp/pm_kernel.c
-> @@ -838,7 +838,7 @@ static struct lock_class_key mptcp_keys[2];
->  static int mptcp_pm_nl_create_listen_socket(struct sock *sk,
->  					    struct mptcp_pm_addr_entry *entry)
->  {
-> -	bool is_ipv6 = sk->sk_family == AF_INET6;
-> +	bool is_ipv6 = entry->addr.family == AF_INET6;
+> [...]
 
-Good catch! 'sk' name is confusing, it would probably be better to pass
-"struct net *" instead. But this can be done later, that's more a
-net-next material.
+Here is the summary with links:
+  - [net] MPTCP: fix lock class name family in pm_nl_create_listen_socket
+    https://git.kernel.org/netdev/net/c/7ab4a7c5d969
 
-(For next time, please use 'mptcp:' prefix instead of 'MPTCP:' in the
-subject, similar to all other commits in this directory.)
-
-
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-
-
-@Netdev maintainers: this patch can be applied in the 'net' tree directly.
-
->  	int addrlen = sizeof(struct sockaddr_in);
->  	struct sockaddr_storage addr;
->  	struct sock *newsk, *ssk;
-
-Cheers,
-Matt
+You are awesome, thank you!
 -- 
-Sponsored by the NGI0 Core fund.
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
