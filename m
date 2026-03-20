@@ -1,35 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ED303EDAAD;
-	Thu, 19 Mar 2026 16:40:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FAF1946A
+	for <mptcp@lists.linux.dev>; Fri, 20 Mar 2026 07:45:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773938421; cv=none; b=beRuGFfyFvvKT0xsarzdoxaCTBaKpTF7ecwxklG6hS5u4QV8tPmcZXcRUW67M+5v2et8PnFJsGcJYqNa1JHuXyY3YFk/G5xzaiF4VnXjKwzWrKzwoOwFGgzHMaVfNqY+c2ceRqHBe7tiKIhtp1WC8NQJLbap5Ekaip8IRqXeMWE=
+	t=1773992758; cv=none; b=FTWJEBlD+zJHrVj/OW1sMoRezg//abN7olD33PpfJ03SpwG+ssQ4VV+XfHi3gpxMn+B7AkgGPhEGNxL3xbl/LLeFWm52oftm1gWJ/Vp3o3oZKncZeOxAAkPN6+yHLq5Knrd74GqRkHjnKHr5AqKsCMxy8IIKDEWnRaA9VBXB4f0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773938421; c=relaxed/simple;
-	bh=iPml70KCaSGxb9G1y6ne8CjhBWAGGD5+u3vLzLKQjxo=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=oK8Wv+qtZnaV03OkvXKWsVoVCU0MHFlGSVeeTTah2xyikyhNccEIFNG0IlZ41AymaxL6CscdyMfVk+uqy+gwAI4JZoYIsol3ZPYQQvwrl2DPLEEoha1pD1pjwaL/NDP5DoFDmrqxuTJ9eJS0PJOtUANJ2ZZGcM/4/ILuTVmDWic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cUjyhmlz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1773992758; c=relaxed/simple;
+	bh=91PV7KoT5q1h0LqmcN19juVNFNqSWdLx2IbwCna97gY=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=a5InYO8sfkeIJAqhs9bXxkrAU1O0ry5Mh8IVBUvqpDywAgaDs4ad6LD5nN2pRLvtn4P5fG3OeKTpohP8uGFPB12tXGDeI3VflprPWSE9QlAn5nn8Sn+ClAkMMutwalDUn5Ulrxr/RCwh8c6UjhRSo9FbL28N9G4LcWqJXLlEb3c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iQGWF5AZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cUjyhmlz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 910A1C19424;
-	Thu, 19 Mar 2026 16:40:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iQGWF5AZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56345C4CEF7;
+	Fri, 20 Mar 2026 07:45:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773938420;
-	bh=iPml70KCaSGxb9G1y6ne8CjhBWAGGD5+u3vLzLKQjxo=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=cUjyhmlzKAb+LMmJUd8K8xJXPcmt+1OIw9ViNv7wzIqzE1COeSKFSqs9zS5DXKNte
-	 FCaJBkSUNOE/2mfSt2Q5zIwHyf23THpJshqRXQn0f1f2i/EX3MA2NjzAzncVuFDSZl
-	 7vnczA6qY/Sv75DrEoMEu7+5NxDuom60ItLoNfnDQXKknJv1tRKXXz339s0e03oQjm
-	 ia1zf4xk4kxSA4Ww1p+VPg5P5s42HxzNjrJEfgYgbLUxJW+H9p7QjKleQt9izDqPJO
-	 McaGkpm06OJ2BVysZJZwDckTL70Txx+zlzrmTkctqlmnfnAI5JeJi3GyTv0os4Nagu
-	 U2CRHPvd7xsEg==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id B9F96380692A;
-	Thu, 19 Mar 2026 16:40:12 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1773992758;
+	bh=91PV7KoT5q1h0LqmcN19juVNFNqSWdLx2IbwCna97gY=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=iQGWF5AZYm1/jEQd0r55qdkAEeZoo40Uz6dD9PR9Mn15OJls2w21Hvsv0GpEoIgjS
+	 gejFdBly/tomzR4NCFf4wBP0SMvtFgxqWrjZq7EL7341a+WsxV400RJGyLRtV8zVYU
+	 1Iq58CwE8jLuL8Vb8rMzzf6eM1QX1iLMHOF/m15rDz6gXa0XMz4PL8vduKe5EoFtiE
+	 kYcXBwv0GWVCbl1aNJd6YkT7CZU24k7M0KqL5KGqekp7dymqOTLB5B40B3XLl/MzwY
+	 nDHvuhmB7gsGt6E6rO32HSPcr/I73851DSHNvGle/HqLvd3tUDGpQu2VSzCD48M74o
+	 3DDWnjsgQaoFw==
+Message-ID: <d229f43010fd00178c87d2acd78bc7519d3c516d.camel@kernel.org>
+Subject: Re: [RFC mptcp-next v10 00/14] MPTCP KTLS support
+From: Geliang Tang <geliang@kernel.org>
+To: Matthieu Baerts <matttbe@kernel.org>, Geliang Tang
+ <tanggeliang@kylinos.cn>
+Cc: mptcp@lists.linux.dev
+Date: Fri, 20 Mar 2026 15:45:52 +0800
+In-Reply-To: <b7ce3e8b-dd6a-49c7-aede-23c846c6dfc4@kernel.org>
+References: <cover.1773737371.git.tanggeliang@kylinos.cn>
+	 <347b9b69-7fcb-d7eb-a3f8-921d1a6060de@gmail.com>
+	 <b7ce3e8b-dd6a-49c7-aede-23c846c6dfc4@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.58.3 (3.58.3-1.fc43) 
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -37,43 +46,41 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net] MPTCP: fix lock class name family in
- pm_nl_create_listen_socket
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <177393841126.1701817.17610297112158397385.git-patchwork-notify@kernel.org>
-Date: Thu, 19 Mar 2026 16:40:11 +0000
-References: <20260319112159.3118874-1-lixiasong1@huawei.com>
-In-Reply-To: <20260319112159.3118874-1-lixiasong1@huawei.com>
-To: Li Xiasong <lixiasong1@huawei.com>
-Cc: matttbe@kernel.org, martineau@kernel.org, geliang@kernel.org,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- horms@kernel.org, netdev@vger.kernel.org, mptcp@lists.linux.dev,
- linux-kernel@vger.kernel.org, yuehaibing@huawei.com,
- zhangchangzhong@huawei.com, weiyongjun1@huawei.com
 
-Hello:
+Hi Matt,
 
-This patch was applied to netdev/net.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
-
-On Thu, 19 Mar 2026 19:21:59 +0800 you wrote:
-> In mptcp_pm_nl_create_listen_socket(), use entry->addr.family
-> instead of sk->sk_family for lock class setup. The 'sk' parameter
-> is a netlink socket, not the MPTCP subflow socket being created.
+On Tue, 2026-03-17 at 14:15 +0100, Matthieu Baerts wrote:
+> Hi Geliang,
 > 
-> Fixes: cee4034a3db1 ("mptcp: fix lockdep false positive in mptcp_pm_nl_create_listen_socket()")
-> Signed-off-by: Li Xiasong <lixiasong1@huawei.com>
+> On 17/03/2026 11:41, MPTCP CI wrote:
+> > Hi Geliang,
+> > 
+> > Thank you for your modifications, that's great!
+> > 
+> > Our CI did some validations and here is its report:
+> > 
+> > - KVM Validation: normal (except selftest_mptcp_join): Success! ✅
+> > - KVM Validation: normal (only selftest_mptcp_join): Success! ✅
+> > - KVM Validation: debug (except selftest_mptcp_join): Critical:
+> > KMemLeak ❌
 > 
-> [...]
+> It looks like the leak is linked to the new code. Is that right?
 
-Here is the summary with links:
-  - [net] MPTCP: fix lock class name family in pm_nl_create_listen_socket
-    https://git.kernel.org/netdev/net/c/7ab4a7c5d969
+Yes, it's related to the changes to shutdown_reuse() in patch 12, and
+it has been fixed in v11.
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+However, I noticed that v10 and v11 didn't trigger AI review. Any idea
+why?
 
+Thanks,
+-Geliang
 
+> 
+> No hurry if it is, it is just to make sure it is not linked to:
+> 
+>   https://github.com/multipath-tcp/mptcp_net-next/issues/583
+> 
+> (if it is linked, then we have a reproducer, that might be helpful)
+> 
+> Cheers,
+> Matt
