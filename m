@@ -1,169 +1,129 @@
-Received: from canpmsgout01.his.huawei.com (canpmsgout01.his.huawei.com [113.46.200.216])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f180.google.com (mail-dy1-f180.google.com [74.125.82.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5680B36C9ED
-	for <mptcp@lists.linux.dev>; Tue, 24 Mar 2026 08:27:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.216
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08A4F3DDDC1
+	for <mptcp@lists.linux.dev>; Tue, 24 Mar 2026 09:47:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774340889; cv=none; b=rDuL7FdBBKb1B03oiHokU4NfpH3yjRAQvYgB4FgSRpnUyh501eHpeNFzhZSZ3a0rdWqnM3P7QcuCygBWcAPlw/lLFOfQWcerbMrGPQEuVUHEGOd5m5HZt0esyGGBcPMRj7r2ygUNzDCL8ylu5ZZrY2wLHLBMYox8CkwKm/vO3cs=
+	t=1774345637; cv=none; b=RFruXP32cvYHhjCdFT/zpMzkC7+LQhAIIH4iKRrjZPZ/cdO80e5KxbHIGqY/RFobwRk9ufjnBmapBWv30nJtl3srPrTxORghUGr1rsQDGl+R1DgyXneye+cbfWABuIq+bat3zYTEoFx/WkcztJfSBwfwrGNiW8H/oPMIRB2GyBM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774340889; c=relaxed/simple;
-	bh=5OmiqRxWiKh0ez82OpMgvuHil+XNZD/gFxvFPhrYaRM=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=pmGjFUokL7odGOe6MeW2QwLNyUNi9jZ1f8GFA7lG/U/3emVY+lPtFhdddSwfzUpTdEytXz4Mptc5ti4KXAzr1hxKtdu5jwx+VkFdY91kG2BhSpnC0bFfCeKiw0JH3qGFCNDcPVwihJd0RbGzalyFXYvc/QUT+XR/QqO6bHl0yME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=PR1mkROC; arc=none smtp.client-ip=113.46.200.216
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+	s=arc-20240116; t=1774345637; c=relaxed/simple;
+	bh=z/pPI/ZySBuS2yj/P9rkv/58dvdQ3zBOatJ9t+k/WnE=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
+	 MIME-Version:Content-Type; b=YlSGsjyB5/aRXaeED9zPM6yD+fIUNeOZOuvekEgIaybUvD7sEfQo45qqMqZTnuAuGDq4t38kz1Ml+5yQZsHZVfiYKq1944BSrAcc1Ijm7TErqW0/PHacdLTMEmZwLkYFyiiRJC4wAiM+VRayxbqaJLu3Z6SBHzeGYz5yJn546JQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=olZBM+QT; arc=none smtp.client-ip=74.125.82.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="PR1mkROC"
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=k7LVUOAVZGg1oxOaM2rw3QIxJxXLJ8+38eC7I9YTytk=;
-	b=PR1mkROCMmgFSYOIS6Zd9PHKq6UmgWPJH1lswZJQOIbpNMN9+ruKikjz9VBBIwjRZmJRu0i1Z
-	3W7Gmn4syyq9x3iRmO7ZIal+qRCWMyPxFsl1hrEiNN7IcOcgIWxopDaoESrEsA/SH6Pj3HiaCnx
-	Tu0dBKeknlL0IFiEN1t/m0c=
-Received: from mail.maildlp.com (unknown [172.19.163.104])
-	by canpmsgout01.his.huawei.com (SkyGuard) with ESMTPS id 4fg31Z1l5Zz1T4KL;
-	Tue, 24 Mar 2026 16:22:26 +0800 (CST)
-Received: from kwepemj500018.china.huawei.com (unknown [7.202.194.48])
-	by mail.maildlp.com (Postfix) with ESMTPS id D07964056A;
-	Tue, 24 Mar 2026 16:27:55 +0800 (CST)
-Received: from huawei.com (10.50.85.128) by kwepemj500018.china.huawei.com
- (7.202.194.48) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 24 Mar
- 2026 16:27:55 +0800
-From: Li Xiasong <lixiasong1@huawei.com>
-To: Matthieu Baerts <matttbe@kernel.org>, Mat Martineau
-	<martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, "David S. Miller"
-	<davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
-	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman
-	<horms@kernel.org>
-CC: <netdev@vger.kernel.org>, <mptcp@lists.linux.dev>,
-	<linux-kernel@vger.kernel.org>, <yuehaibing@huawei.com>,
-	<zhangchangzhong@huawei.com>, <weiyongjun1@huawei.com>
-Subject: [PATCH net v2] mptcp: fix soft lockup in mptcp_recvmsg()
-Date: Tue, 24 Mar 2026 16:51:31 +0800
-Message-ID: <20260324085131.4187473-1-lixiasong1@huawei.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="olZBM+QT"
+Received: by mail-dy1-f180.google.com with SMTP id 5a478bee46e88-2c156c4a9efso109838eec.1
+        for <mptcp@lists.linux.dev>; Tue, 24 Mar 2026 02:47:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1774345634; x=1774950434; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=v6uWH8IYm487bvabK7D6EBEMeNuqlEyQXrvmGFp892s=;
+        b=olZBM+QTlnQnF7668e+/z9PydG90ZMS/P2wsSLbSjtRc7Cf9COvzCeu5yDTItB60ZO
+         Xw8/D2JjES2Qo9LuVVC1wr9qag5TDWoUue4zLid71/UqjDCmwhywtd1HeBEsGEUvF4oW
+         II1e/2IsauV7rdJVAz84FZ1HNU7jLmM6tWoJNFs/mByRCDKEAttazoeLir7il+YXMqZ6
+         9krgp85fLOPbQLyMA7QpvocR7XUeVXL7cRtzuQ5x9obiwzU5wJPZaPUk4S6beK12tS3H
+         ZYvRfizjjRpRZwIyIsj3Q3NCwIiA5UK9kmKHEDJn9Zdma0R0WBzcuDfUn58t8j1ssMbv
+         nRxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1774345634; x=1774950434;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=v6uWH8IYm487bvabK7D6EBEMeNuqlEyQXrvmGFp892s=;
+        b=Us7APqr7655NWkUUiA8lgtI1mt2gBTXKGHzUMI3qnmnTOIA20AZJdnobIDMJt+aKhN
+         WOga5mJhq+z6NAGeNvKdfu6AIxJrKUw6SinUKRaYY4UYGwXbODy8irhuT2Nu+KAyJr5R
+         4Jqw4TMbHeE5dbsRj6t7pLtLA6p6pQj5CtzSrBD0tTMik4rSkBga97wSu295gTqqAbr2
+         u06jh53NUGt5ororfvYtLiT7yKC/9hDj6JuDD9RzVuvYqA20/uOjncX4RXSUkgPkOEOi
+         K5WarZUzxdykGwQBAIC91iKAEF5dEgYiE1V56lzYGz1WCs57MSgPtdPBmTKhc1yI4gXd
+         fbDw==
+X-Gm-Message-State: AOJu0YxnRKj9dIooASQ0OewHjDgtOVHfBBaF4m/5Bo7FwnEAHcuMZUB9
+	l+2RvK123Ga9AzTNPpuTv8rfk0y/k6fPVPR75f5djM1vsvuJXHfxOEQ=
+X-Gm-Gg: ATEYQzxhRuBTFEEkKRQkvunGuXbKjUDuyUtq0kf9ixtqHjyMQfmaLcNITMx8F/ZioBx
+	tFbsB8bPjEcsTyxFWdQs2/HNv0uUXgEHzpRRGpkWPKIUwXm9N0/ko3POtEtZKaet9ctfTYNZjLf
+	wMqDtV7NKamx+Ipku5BfdYFMBKBDPKW6gD+VmXnRbXgorqu1IBULGOQqPrbe59MXXzOMQ/HSO/8
+	by2yUEjLwUMggpV7WIoKI4TTE7HGhaK7Z9LhcjXIOMuk0nYL4QVIL/gnh6CqGyYxhXEInVx/IUe
+	hFrapiAOxsCy/Bfn7ypGk9KbgH/5eoeK7ym5aX3VZ3/GQ1folHD/ntxH+x3uefptNYV/vCux/2F
+	W8TDCLEGzhf5XV+j4UV0JnxWyGNCtUBUK3ZjT468ayGEVmMeDDuI8z/6LGbIjgHm/TUiCHR7Oed
+	v6tqOPI5yshv5hLboLYn1d6mrahGn5WDTzZJM=
+X-Received: by 2002:a05:7300:cb87:b0:2c0:ba91:48b6 with SMTP id 5a478bee46e88-2c10976028cmr6961882eec.26.1774345633656;
+        Tue, 24 Mar 2026 02:47:13 -0700 (PDT)
+Received: from [127.0.0.1] ([20.168.119.25])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2c10b2cf068sm14531680eec.22.2026.03.24.02.47.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Mar 2026 02:47:13 -0700 (PDT)
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Li Xiasong <lixiasong1@huawei.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20260324085131.4187473-1-lixiasong1@huawei.com>
+References: <20260324085131.4187473-1-lixiasong1@huawei.com>
+Subject: Re: [PATCH net v2] mptcp: fix soft lockup in mptcp_recvmsg()
+Message-ID: <51cd296e-d79e-4c53-df3c-a8ffa3d16869@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 24 Mar 2026 09:47:12 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
- kwepemj500018.china.huawei.com (7.202.194.48)
+Content-Type: text/plain; charset=utf-8
 
-syzbot reported a soft lockup in mptcp_recvmsg() [0].
+Hi Li,
 
-When receiving data with MSG_PEEK | MSG_WAITALL flags, the skb is not
-removed from the sk_receive_queue. This causes sk_wait_data() to always
-find available data and never perform actual waiting, leading to a soft
-lockup.
+Thank you for your modifications, that's great!
 
-Fix this by adding a 'last' parameter to track the last peeked skb.
-This allows sk_wait_data() to make informed waiting decisions and prevent
-infinite loops when MSG_PEEK is used.
+Our CI did some validations and here is its report:
 
-[0]:
-watchdog: BUG: soft lockup - CPU#2 stuck for 156s! [server:1963]
-Modules linked in:
-CPU: 2 UID: 0 PID: 1963 Comm: server Not tainted 6.19.0-rc8 #61 PREEMPT(none)
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1 04/01/2014
-RIP: 0010:sk_wait_data+0x15/0x190
-Code: 80 00 00 00 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 41 56 41 55 41 54 49 89 f4 55 48 89 d5 53 48 89 fb <48> 83 ec 30 65 48 8b 05 17 a4 6b 01 48 89 44 24 28 31 c0 65 48 8b
-RSP: 0018:ffffc90000603ca0 EFLAGS: 00000246
-RAX: 0000000000000000 RBX: ffff888102bf0800 RCX: 0000000000000001
-RDX: 0000000000000000 RSI: ffffc90000603d18 RDI: ffff888102bf0800
-RBP: 0000000000000000 R08: 0000000000000002 R09: 0000000000000101
-R10: 0000000000000000 R11: 0000000000000075 R12: ffffc90000603d18
-R13: ffff888102bf0800 R14: ffff888102bf0800 R15: 0000000000000000
-FS:  00007f6e38b8c4c0(0000) GS:ffff8881b877e000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000055aa7bff1680 CR3: 0000000105cbe000 CR4: 00000000000006f0
-Call Trace:
- <TASK>
- mptcp_recvmsg+0x547/0x8c0 net/mptcp/protocol.c:2329
- inet_recvmsg+0x11f/0x130 net/ipv4/af_inet.c:891
- sock_recvmsg+0x94/0xc0 net/socket.c:1100
- __sys_recvfrom+0xb2/0x130 net/socket.c:2256
- __x64_sys_recvfrom+0x1f/0x30 net/socket.c:2267
- do_syscall_64+0x59/0x2d0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x76/0x7e arch/x86/entry/entry_64.S:131
-RIP: 0033:0x7f6e386a4a1d
-Code: 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 48 8d 05 f1 de 2c 00 41 89 ca 8b 00 85 c0 75 20 45 31 c9 45 31 c0 b8 2d 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 6b f3 c3 66 0f 1f 84 00 00 00 00 00 41 56 41
-RSP: 002b:00007ffc3c4bb078 EFLAGS: 00000246 ORIG_RAX: 000000000000002d
-RAX: ffffffffffffffda RBX: 000000000000861e RCX: 00007f6e386a4a1d
-RDX: 00000000000003ff RSI: 00007ffc3c4bb150 RDI: 0000000000000004
-RBP: 00007ffc3c4bb570 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000103 R11: 0000000000000246 R12: 00005605dbc00be0
-R13: 00007ffc3c4bb650 R14: 0000000000000000 R15: 0000000000000000
- </TASK>
+- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/234809=
+63888
 
-Fixes: 612f71d7328c ("mptcp: fix possible stall on recvmsg()")
-Signed-off-by: Li Xiasong <lixiasong1@huawei.com>
----
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/74f1911c8f43
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1071486
 
-v1->v2:
-Thanks to Matthieu Baerts for the suggestion and review.
-- Move 'last' variable definition into the while loop in mptcp_recvmsg() to
-  narrow its scope.
-- In __mptcp_recvmsg_mskq(), assign 'last' right after 'copied' is updated,
-  regardless of MSG_PEEK flag.
 
-v1:
-https://lore.kernel.org/netdev/20260302052651.1466983-1-lixiasong1@huawei.com/
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
 
----
- net/mptcp/protocol.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index cf1852b99963..401fb2b17685 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2006,7 +2006,7 @@ static void mptcp_eat_recv_skb(struct sock *sk, struct sk_buff *skb)
- static int __mptcp_recvmsg_mskq(struct sock *sk, struct msghdr *msg,
- 				size_t len, int flags, int copied_total,
- 				struct scm_timestamping_internal *tss,
--				int *cmsg_flags)
-+				int *cmsg_flags, struct sk_buff **last)
- {
- 	struct mptcp_sock *msk = mptcp_sk(sk);
- 	struct sk_buff *skb, *tmp;
-@@ -2048,6 +2048,7 @@ static int __mptcp_recvmsg_mskq(struct sock *sk, struct msghdr *msg,
- 		}
- 
- 		copied += count;
-+		*last = skb;
- 
- 		if (!(flags & MSG_PEEK)) {
- 			msk->bytes_consumed += count;
-@@ -2288,10 +2289,12 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
- 		cmsg_flags = MPTCP_CMSG_INQ;
- 
- 	while (copied < len) {
-+		struct sk_buff *last = skb_peek_tail(&sk->sk_receive_queue);
- 		int err, bytes_read;
- 
- 		bytes_read = __mptcp_recvmsg_mskq(sk, msg, len - copied, flags,
--						  copied, &tss, &cmsg_flags);
-+						  copied, &tss, &cmsg_flags,
-+						  &last);
- 		if (unlikely(bytes_read < 0)) {
- 			if (!copied)
- 				copied = bytes_read;
-@@ -2343,7 +2346,7 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
- 
- 		pr_debug("block timeout %ld\n", timeo);
- 		mptcp_cleanup_rbuf(msk, copied);
--		err = sk_wait_data(sk, &timeo, NULL);
-+		err = sk_wait_data(sk, &timeo, last);
- 		if (err < 0) {
- 			err = copied ? : err;
- 			goto out_err;
--- 
-2.34.1
+For more details:
 
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
