@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C779386C09
-	for <mptcp@lists.linux.dev>; Tue, 24 Mar 2026 15:44:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D386313527
+	for <mptcp@lists.linux.dev>; Tue, 24 Mar 2026 18:58:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774367071; cv=none; b=Z4WVOrl7H9OG/r3chJT6fRimd8eVZvnv+ToYGYzDuqvX/sQuvPg5ylGsAcm+9fZj24CPCcJa17up+iIrpzUxGYdw9R8LD0CUJREKj4rVljcPd0fjpps/O0mjfnBmlKuWTHmqTj7Fvty+uGNif1KmQdL/jeA0Yl/G4MjmfSziVzg=
+	t=1774378717; cv=none; b=nLp+i1wDmJ32Ln8orRUpWmpl2TvGhtFf9KGw33Ef9ueBKuoHOdTVmFpsOxW+P4CTdl5+B0EwNmJZwQqQ83Z6f+AndHnxJQ3m8/m0YsQ8MOulwFwzsnlMzQUp/ObtocpdlXQMyjfISTEtICp8xpEZ9ou6ID3sxYkMopcqIWrc308=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774367071; c=relaxed/simple;
-	bh=2Jfzlsljrio9QWKRfkoUH3Yv5OsvD1LZpQHeWmHiex4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=E1txvFSJUBW8af1quSeDYGYMTYCrCqA09B0e1SfUIxvXqrPkIm3ZV7cZhdaWo3tPbbqVSV/vSGF9QFthfH4BDVQz3XZJckMHycOyXKs8ySTA87rWX+Iw7EnKqYn4OvxWbkrC2oVkVZUL5/1qRrHZf4nfaLWvxJNxjhM4QOvmfFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JGEtgri2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1774378717; c=relaxed/simple;
+	bh=KTEqxraSFNW3E3Eq7DzEG6+Ky5D2dc79KFUGsaWiIg4=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=FmTb1nq/w11Bo/+tpkFMkamGNgbZyuVAqlXHYJ1c/4aWGs1n/ccfZADmBwk4RqkZ2kBbtmnJ6zWZTEX0h2lnBjAsP/bmS3rbXBJg63l5aBex9f6cJmtLprzy1xI8Y7A7883Ibusx7FwU4MAEbI4cdZb++dGLmWaCX6RKiD/LY5k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QVDik6/v; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JGEtgri2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30CFEC19424;
-	Tue, 24 Mar 2026 15:44:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QVDik6/v"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 435F5C19424;
+	Tue, 24 Mar 2026 18:58:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774367070;
-	bh=2Jfzlsljrio9QWKRfkoUH3Yv5OsvD1LZpQHeWmHiex4=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=JGEtgri2GVKeqFrTtsQ6SnnWvMAwLPNFb58o56PjY+jE8exzVkBi1hpsHmYmND52y
-	 Jn5tYq5cZ3kFYLPp1oelVg2EWHFaUYcInlxVk4UEl9OXwlYTiX4R/oJiOhyPyGPhe7
-	 idNIH1Lf5vPnXEYn/15ISiHPlX8Ak8kjBk1zaIkMaZtxBa3w+3k8B9vZveq3/9PBK6
-	 0oZ/8efVD4mPcx0EHT2R2I+yGyWK3KdPXd9Lrv3Uqcv90QzNLQTfo9zx55y2UewClK
-	 WuEdlKxL/gEpyAMHdMvFIuNQrAyTk5UtjKsGiCBF2e3sqeLWY50dzBkLGdWMgFB0Il
-	 lP84a5f7vznmA==
-Message-ID: <128b82c0-5947-482a-94e0-fbb53f865baf@kernel.org>
-Date: Tue, 24 Mar 2026 16:44:28 +0100
+	s=k20201202; t=1774378716;
+	bh=KTEqxraSFNW3E3Eq7DzEG6+Ky5D2dc79KFUGsaWiIg4=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=QVDik6/vLEnDhW7Hf5eVtDv0OaF6wy/yaHm31tkfU2ryfbUYR1/KOCleBXSQVh2rb
+	 rmsu++MI5wjAgltYTy0EwSYLBQicpkt9LOH+WrPa2YiOxvQbI7DfeOzMt+MbMK8ctr
+	 ja6geDoJiGZgymID9QiLZr9S2YUyzsgki/h3tghPyWDaarsDeY12BukYDNWN71t5fo
+	 p1M2iGpVaepw6ghfVp1As6UaD9Dft3QgSx9njNVZZPPYTTnnZq0tHCEtl0WjrZVjhb
+	 0GZjaJFMnpPB7GuBLCPqiwg9PJ6an869Ig95oBwTxvZKaW2zj6Q7IejLfNuccPTQex
+	 83mNu6+w694ww==
+Message-ID: <b7c986c5-5cae-4bdc-889d-9d3608cdbeba@kernel.org>
+Date: Tue, 24 Mar 2026 19:58:33 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,11 +35,16 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: New resource for patch reviews
-Content-Language: fr
-To: Mat Martineau <martineau@kernel.org>, mptcp@lists.linux.dev
-References: <8f042587-32fc-b008-a60f-e1fe16800dfb@kernel.org>
+Subject: Re: [RFC mptcp-next v10 00/14] MPTCP KTLS support
 From: Matthieu Baerts <matttbe@kernel.org>
+To: Geliang Tang <geliang@kernel.org>
+Cc: Geliang Tang <tanggeliang@kylinos.cn>, mptcp@lists.linux.dev
+References: <cover.1773737371.git.tanggeliang@kylinos.cn>
+ <347b9b69-7fcb-d7eb-a3f8-921d1a6060de@gmail.com>
+ <b7ce3e8b-dd6a-49c7-aede-23c846c6dfc4@kernel.org>
+ <d229f43010fd00178c87d2acd78bc7519d3c516d.camel@kernel.org>
+ <d7e039cb-0cb4-47c4-bbd2-11d890c5d381@kernel.org>
+Content-Language: fr
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -84,30 +89,49 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <8f042587-32fc-b008-a60f-e1fe16800dfb@kernel.org>
+In-Reply-To: <d7e039cb-0cb4-47c4-bbd2-11d890c5d381@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Mat & community,
+Hi Geliang,
 
-On 17/03/2026 19:36, Mat Martineau wrote:
+On 20/03/2026 09:07, Matthieu Baerts wrote:
+> Hi Geliang,
 > 
-> Hi Matthieu & community -
+> 20 Mar 2026 08:45:58 Geliang Tang <geliang@kernel.org>:
 > 
-> Roman Gushchin (a former coworker of mine) announced a new resource for
-> automated Linux kernel patch review: https://sashiko.dev
+>> Hi Matt,
+>>
+>> On Tue, 2026-03-17 at 14:15 +0100, Matthieu Baerts wrote:
+>>> Hi Geliang,
+>>>
+>>> On 17/03/2026 11:41, MPTCP CI wrote:
+>>>> Hi Geliang,
+>>>>
+>>>> Thank you for your modifications, that's great!
+>>>>
+>>>> Our CI did some validations and here is its report:
+>>>>
+>>>> - KVM Validation: normal (except selftest_mptcp_join): Success! ✅
+>>>> - KVM Validation: normal (only selftest_mptcp_join): Success! ✅
+>>>> - KVM Validation: debug (except selftest_mptcp_join): Critical:
+>>>> KMemLeak ❌
+>>>
+>>> It looks like the leak is linked to the new code. Is that right?
+>>
+>> Yes, it's related to the changes to shutdown_reuse() in patch 12, and
+>> it has been fixed in v11.
 > 
-> More info at https://lwn.net/Articles/1063292/
+> Great, thanks!
 > 
-> It's already configured for the netdev list in addition to LKML and
-> several major subsystems: https://sashiko.dev/#/?
-> list=org.kernel.vger.netdev
+>> However, I noticed that v10 and v11 didn't trigger AI review. Any idea
+>> why?
+> 
+> Not sure, maybe the RFC prefix?
 
-Our MPTCP mailing list has also been added to the list:
-
-  https://sashiko.dev/#/?list=dev.linux.lists.mptcp
-
-Patches from last week will also be reviewed, no need to re-send them.
+Most likely the AI review system doesn't support the Based-on tag you
+are using, and it fails to apply the series without the dependence. I
+don't have logs to confirm that.
 
 Cheers,
 Matt
