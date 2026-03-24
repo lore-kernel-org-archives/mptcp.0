@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E35991A239A;
-	Tue, 24 Mar 2026 11:35:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C779386C09
+	for <mptcp@lists.linux.dev>; Tue, 24 Mar 2026 15:44:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774352160; cv=none; b=VRzyhSfiujQhahds1DIhZEoPP3aD7agyLIT07R86OEzNuUpTn1lE+VHeIJYjoSst+dH6E8hv3cDnqdS4unM1qkaE3aqD4NtpjeUjmB7QXZCbWhcjXLJ7pT5KrJCa2YmaoHvCItK5erfuD7vlyAgvqOqVrc64YY/gY+fWvbdTA/c=
+	t=1774367071; cv=none; b=Z4WVOrl7H9OG/r3chJT6fRimd8eVZvnv+ToYGYzDuqvX/sQuvPg5ylGsAcm+9fZj24CPCcJa17up+iIrpzUxGYdw9R8LD0CUJREKj4rVljcPd0fjpps/O0mjfnBmlKuWTHmqTj7Fvty+uGNif1KmQdL/jeA0Yl/G4MjmfSziVzg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774352160; c=relaxed/simple;
-	bh=GzWJZWvrSxyK7AyTNYVtRExrkZ8VaKmTSKVZ/2r0kU8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qLyUBb7DLFdRuIh7E4oEt2N+Kpr7F7nuQuFIOHulQAM6gC9iUdT+y52blQqbib4Q1AkQysSRL/qpY7MPmna3OrNUQcN+hQbfOS1qKGsckFjEhjMShdO2vowM/IAgvuCnsZXzSJnYPcpEgG4EGhv9+DfrGjUGtYDiSi6XCLQslFs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rVBg4QEq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1774367071; c=relaxed/simple;
+	bh=2Jfzlsljrio9QWKRfkoUH3Yv5OsvD1LZpQHeWmHiex4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=E1txvFSJUBW8af1quSeDYGYMTYCrCqA09B0e1SfUIxvXqrPkIm3ZV7cZhdaWo3tPbbqVSV/vSGF9QFthfH4BDVQz3XZJckMHycOyXKs8ySTA87rWX+Iw7EnKqYn4OvxWbkrC2oVkVZUL5/1qRrHZf4nfaLWvxJNxjhM4QOvmfFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JGEtgri2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rVBg4QEq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FA8DC19424;
-	Tue, 24 Mar 2026 11:35:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JGEtgri2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30CFEC19424;
+	Tue, 24 Mar 2026 15:44:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774352159;
-	bh=GzWJZWvrSxyK7AyTNYVtRExrkZ8VaKmTSKVZ/2r0kU8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=rVBg4QEqABHqdYucETEN0uKUgmc3dwF7gIRvJKYFS4pC2/yzrCDudrBcLdJXqvtM6
-	 esj1HUGkqnkCcL1LkKaHj23aFNZ6trK0C1ipmnwnq5Bw3o67QLxyoYRwr65vysvg39
-	 icPuFkKjoRY1qqc0G2bXTiNUigOfoGm18tJENvpC5jn1hNUwH8pEp11Sck9KiOjePC
-	 /9fexX1Q++SrLY2Mk07SOU8G0wKqctrgTo7wAUoGQ3LNkcoysXMZ8dFNInH/h0ECFE
-	 ZrDCu16vqaSnuVva04YddxX/Q3jWqM0sDU/aYswkXBnxAhX5IlAR7BF3XSZnsmWk73
-	 a2KSvB68wT2ng==
-Message-ID: <1f4c6375-dfb7-4dbf-9ca3-227ef584ffb0@kernel.org>
-Date: Tue, 24 Mar 2026 12:35:51 +0100
+	s=k20201202; t=1774367070;
+	bh=2Jfzlsljrio9QWKRfkoUH3Yv5OsvD1LZpQHeWmHiex4=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=JGEtgri2GVKeqFrTtsQ6SnnWvMAwLPNFb58o56PjY+jE8exzVkBi1hpsHmYmND52y
+	 Jn5tYq5cZ3kFYLPp1oelVg2EWHFaUYcInlxVk4UEl9OXwlYTiX4R/oJiOhyPyGPhe7
+	 idNIH1Lf5vPnXEYn/15ISiHPlX8Ak8kjBk1zaIkMaZtxBa3w+3k8B9vZveq3/9PBK6
+	 0oZ/8efVD4mPcx0EHT2R2I+yGyWK3KdPXd9Lrv3Uqcv90QzNLQTfo9zx55y2UewClK
+	 WuEdlKxL/gEpyAMHdMvFIuNQrAyTk5UtjKsGiCBF2e3sqeLWY50dzBkLGdWMgFB0Il
+	 lP84a5f7vznmA==
+Message-ID: <128b82c0-5947-482a-94e0-fbb53f865baf@kernel.org>
+Date: Tue, 24 Mar 2026 16:44:28 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,17 +35,11 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH net v2] mptcp: fix soft lockup in mptcp_recvmsg()
-To: Li Xiasong <lixiasong1@huawei.com>, Mat Martineau <martineau@kernel.org>,
- Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>
-Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev,
- linux-kernel@vger.kernel.org, yuehaibing@huawei.com,
- zhangchangzhong@huawei.com, weiyongjun1@huawei.com
-References: <20260324085131.4187473-1-lixiasong1@huawei.com>
-From: Matthieu Baerts <matttbe@kernel.org>
+Subject: Re: New resource for patch reviews
 Content-Language: fr
+To: Mat Martineau <martineau@kernel.org>, mptcp@lists.linux.dev
+References: <8f042587-32fc-b008-a60f-e1fe16800dfb@kernel.org>
+From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -90,29 +84,30 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20260324085131.4187473-1-lixiasong1@huawei.com>
+In-Reply-To: <8f042587-32fc-b008-a60f-e1fe16800dfb@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Li,
+Hi Mat & community,
 
-On 24/03/2026 09:51, Li Xiasong wrote:
-> syzbot reported a soft lockup in mptcp_recvmsg() [0].
+On 17/03/2026 19:36, Mat Martineau wrote:
 > 
-> When receiving data with MSG_PEEK | MSG_WAITALL flags, the skb is not
-> removed from the sk_receive_queue. This causes sk_wait_data() to always
-> find available data and never perform actual waiting, leading to a soft
-> lockup.
+> Hi Matthieu & community -
 > 
-> Fix this by adding a 'last' parameter to track the last peeked skb.
-> This allows sk_wait_data() to make informed waiting decisions and prevent
-> infinite loops when MSG_PEEK is used.
+> Roman Gushchin (a former coworker of mine) announced a new resource for
+> automated Linux kernel patch review: https://sashiko.dev
+> 
+> More info at https://lwn.net/Articles/1063292/
+> 
+> It's already configured for the netdev list in addition to LKML and
+> several major subsystems: https://sashiko.dev/#/?
+> list=org.kernel.vger.netdev
 
-Thank you for the v2, it looks good to me:
+Our MPTCP mailing list has also been added to the list:
 
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+  https://sashiko.dev/#/?list=dev.linux.lists.mptcp
 
-@Netdev maintainers: this patch can be applied in "net" directly.
+Patches from last week will also be reviewed, no need to re-send them.
 
 Cheers,
 Matt
