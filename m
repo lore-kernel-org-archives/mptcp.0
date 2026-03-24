@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D386313527
-	for <mptcp@lists.linux.dev>; Tue, 24 Mar 2026 18:58:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C63F2E091E;
+	Tue, 24 Mar 2026 19:23:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774378717; cv=none; b=nLp+i1wDmJ32Ln8orRUpWmpl2TvGhtFf9KGw33Ef9ueBKuoHOdTVmFpsOxW+P4CTdl5+B0EwNmJZwQqQ83Z6f+AndHnxJQ3m8/m0YsQ8MOulwFwzsnlMzQUp/ObtocpdlXQMyjfISTEtICp8xpEZ9ou6ID3sxYkMopcqIWrc308=
+	t=1774380221; cv=none; b=kKhGMAEa1jZTSmIfYcqXzs0JSBl10Evd2CRO4isK3MPo2uhcUlEqXu15imyq4xei/t2J6Uee5HiPAoTEWTqdYj9X7UodJ8fWT3xEhjPo8h7CxSVqA3AAYQ9E5ITnRWgKJbbVESQrDxiGBBq6XWCshn4UU/jju79tdtD2Dt/c30E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774378717; c=relaxed/simple;
-	bh=KTEqxraSFNW3E3Eq7DzEG6+Ky5D2dc79KFUGsaWiIg4=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=FmTb1nq/w11Bo/+tpkFMkamGNgbZyuVAqlXHYJ1c/4aWGs1n/ccfZADmBwk4RqkZ2kBbtmnJ6zWZTEX0h2lnBjAsP/bmS3rbXBJg63l5aBex9f6cJmtLprzy1xI8Y7A7883Ibusx7FwU4MAEbI4cdZb++dGLmWaCX6RKiD/LY5k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QVDik6/v; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1774380221; c=relaxed/simple;
+	bh=M6BaYp+o6NW7QEKfWc+kQxWN0t/QRnWTE0dlOGQ3QyY=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=IMz/5W3Ne9ZIgHnJVm4nBrzS9jIWPkPxrT+Kx78EIB3P04NJhzxvGVA4Ai763Gae6YZSI/LGrQUdul5aPLyXI2Iyx5Mkd3DgMKiPh5v2zrMLu0dKjleu7cYuHqWkXmRfL1asM1V6IxWo/CTjbrXtgjRrNSVAonifTfclkk5SSBQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XgTQWuyu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QVDik6/v"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 435F5C19424;
-	Tue, 24 Mar 2026 18:58:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XgTQWuyu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B381C19424;
+	Tue, 24 Mar 2026 19:23:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774378716;
-	bh=KTEqxraSFNW3E3Eq7DzEG6+Ky5D2dc79KFUGsaWiIg4=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=QVDik6/vLEnDhW7Hf5eVtDv0OaF6wy/yaHm31tkfU2ryfbUYR1/KOCleBXSQVh2rb
-	 rmsu++MI5wjAgltYTy0EwSYLBQicpkt9LOH+WrPa2YiOxvQbI7DfeOzMt+MbMK8ctr
-	 ja6geDoJiGZgymID9QiLZr9S2YUyzsgki/h3tghPyWDaarsDeY12BukYDNWN71t5fo
-	 p1M2iGpVaepw6ghfVp1As6UaD9Dft3QgSx9njNVZZPPYTTnnZq0tHCEtl0WjrZVjhb
-	 0GZjaJFMnpPB7GuBLCPqiwg9PJ6an869Ig95oBwTxvZKaW2zj6Q7IejLfNuccPTQex
-	 83mNu6+w694ww==
-Message-ID: <b7c986c5-5cae-4bdc-889d-9d3608cdbeba@kernel.org>
-Date: Tue, 24 Mar 2026 19:58:33 +0100
+	s=k20201202; t=1774380221;
+	bh=M6BaYp+o6NW7QEKfWc+kQxWN0t/QRnWTE0dlOGQ3QyY=;
+	h=Date:From:Subject:To:Cc:References:In-Reply-To:From;
+	b=XgTQWuyu9PtYdh07P2VXFwTdXiL4+5kvn45rWh57bK4R1NVFS7Me9ZZcUBfPNhWL1
+	 i3xrDU62ZroJfzS9H0dax4EJvzh4/iYYVwxBcD987HUfu/6eKLaz0E6Q7cyeqoiLFh
+	 bvhbi0rAwUIZX2l6PjU38L4haJTDx6S8gdDcDrul1g6lZMfU23EnhDbJGmrkHo1PGQ
+	 OidigxWIePAhuVfzNtssSKrV4Mm5iqndg6etYThUyykUm/gGWjOrNbg49zBhLJq9Wp
+	 SokWsXVkWMJUppJ10zbpJv7R9xZqK+fwpRhSLC+x32hMKJgm8Nzbr0bl3guwhHkSCI
+	 yW7QN4k992Frg==
+Message-ID: <12ad947e-f386-4fcc-9043-bf4f95a7db83@kernel.org>
+Date: Tue, 24 Mar 2026 20:23:33 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,15 +35,16 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [RFC mptcp-next v10 00/14] MPTCP KTLS support
 From: Matthieu Baerts <matttbe@kernel.org>
-To: Geliang Tang <geliang@kernel.org>
-Cc: Geliang Tang <tanggeliang@kylinos.cn>, mptcp@lists.linux.dev
-References: <cover.1773737371.git.tanggeliang@kylinos.cn>
- <347b9b69-7fcb-d7eb-a3f8-921d1a6060de@gmail.com>
- <b7ce3e8b-dd6a-49c7-aede-23c846c6dfc4@kernel.org>
- <d229f43010fd00178c87d2acd78bc7519d3c516d.camel@kernel.org>
- <d7e039cb-0cb4-47c4-bbd2-11d890c5d381@kernel.org>
+Subject: Re: [PATCH net v2] mptcp: fix soft lockup in mptcp_recvmsg()
+To: Li Xiasong <lixiasong1@huawei.com>, Mat Martineau <martineau@kernel.org>,
+ Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>
+Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev,
+ linux-kernel@vger.kernel.org, yuehaibing@huawei.com,
+ zhangchangzhong@huawei.com, weiyongjun1@huawei.com
+References: <20260324085131.4187473-1-lixiasong1@huawei.com>
 Content-Language: fr
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -89,52 +90,63 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <d7e039cb-0cb4-47c4-bbd2-11d890c5d381@kernel.org>
+In-Reply-To: <20260324085131.4187473-1-lixiasong1@huawei.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+Hi Li,
 
-On 20/03/2026 09:07, Matthieu Baerts wrote:
-> Hi Geliang,
+On 24/03/2026 09:51, Li Xiasong wrote:
+> syzbot reported a soft lockup in mptcp_recvmsg() [0].
 > 
-> 20 Mar 2026 08:45:58 Geliang Tang <geliang@kernel.org>:
+> When receiving data with MSG_PEEK | MSG_WAITALL flags, the skb is not
+> removed from the sk_receive_queue. This causes sk_wait_data() to always
+> find available data and never perform actual waiting, leading to a soft
+> lockup.
 > 
->> Hi Matt,
->>
->> On Tue, 2026-03-17 at 14:15 +0100, Matthieu Baerts wrote:
->>> Hi Geliang,
->>>
->>> On 17/03/2026 11:41, MPTCP CI wrote:
->>>> Hi Geliang,
->>>>
->>>> Thank you for your modifications, that's great!
->>>>
->>>> Our CI did some validations and here is its report:
->>>>
->>>> - KVM Validation: normal (except selftest_mptcp_join): Success! ✅
->>>> - KVM Validation: normal (only selftest_mptcp_join): Success! ✅
->>>> - KVM Validation: debug (except selftest_mptcp_join): Critical:
->>>> KMemLeak ❌
->>>
->>> It looks like the leak is linked to the new code. Is that right?
->>
->> Yes, it's related to the changes to shutdown_reuse() in patch 12, and
->> it has been fixed in v11.
-> 
-> Great, thanks!
-> 
->> However, I noticed that v10 and v11 didn't trigger AI review. Any idea
->> why?
-> 
-> Not sure, maybe the RFC prefix?
+> Fix this by adding a 'last' parameter to track the last peeked skb.
+> This allows sk_wait_data() to make informed waiting decisions and prevent
+> infinite loops when MSG_PEEK is used.
 
-Most likely the AI review system doesn't support the Based-on tag you
-are using, and it fails to apply the series without the dependence. I
-don't have logs to confirm that.
+(...)
+
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index cf1852b99963..401fb2b17685 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -2006,7 +2006,7 @@ static void mptcp_eat_recv_skb(struct sock *sk, struct sk_buff *skb)
+>  static int __mptcp_recvmsg_mskq(struct sock *sk, struct msghdr *msg,
+>  				size_t len, int flags, int copied_total,
+>  				struct scm_timestamping_internal *tss,
+> -				int *cmsg_flags)
+> +				int *cmsg_flags, struct sk_buff **last)
+>  {
+>  	struct mptcp_sock *msk = mptcp_sk(sk);
+>  	struct sk_buff *skb, *tmp;
+> @@ -2048,6 +2048,7 @@ static int __mptcp_recvmsg_mskq(struct sock *sk, struct msghdr *msg,
+>  		}
+>  
+>  		copied += count;
+> +		*last = skb;
+
+My bad, my recommendation to move this assignment here was not a good
+idea, because 'skb' can be freed at some points after mptcp_eat_recv_skb
+that can be called here below.
+
+If I'm not mistaken, when MSG_PEEK is not used, sk_wait_data() can
+always be called with NULL for the last skb, because the queue is
+supposed to be empty. If not, no need to wait for new packets, so NULL
+can be used. Is that correct?
+
+If yes, then I guess 'last' can be initialised to NULL before calling
+__mptcp_recvmsg_mskq (limit scope), and only set to 'skb' here below,
+when MSG_PEEK is not used (what you had in v1).
+
+Would that work for you?
 
 Cheers,
 Matt
 -- 
 Sponsored by the NGI0 Core fund.
+
 
