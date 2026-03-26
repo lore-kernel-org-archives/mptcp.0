@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C801E3043BE;
-	Wed, 25 Mar 2026 09:04:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1881032ABCA
+	for <mptcp@lists.linux.dev>; Thu, 26 Mar 2026 16:42:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774429492; cv=none; b=g0Zupkcs1mKBUhvaKR7c1r4a9AwqC4MbzbpmV2xM33u2BlPCDW9D1oWzVpp45GQF3BVDfYRMMsd4gsdXfo5TFconm3FAdtNeRl9CgOwpElFRt9QHdgTvQjN9ZYjIxvuigHWaEfMrQ0Y4SvZLffq1m+t/09ISUdpYHaC29VWD0Sg=
+	t=1774543370; cv=none; b=oMIkEdn8R1OpQ+bwEpizwLozMzSwpCWQUwcytefF8x3PV6ri8o8oFtbX3XntW3jJRo/oQkMr1n6FVrK60f6ySKXC3DiHg5Z2i7JMFwjYHutJ3kUYVkzlnYZ+m+je6FYczV4yVB2nCES/7vGHhostOhwUrElFfosX2MuOe6XfQzA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774429492; c=relaxed/simple;
-	bh=ui5jwegU4OLOS+z60QNhyMislxj9h80Sy917sqNwYmg=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=c6hk3xLgpX4YKWYEpdkol/mr+2x5O8D91/GiKyoJhnTNkPqaQfJyo4KJ2Bs6sBwM9fa9lTI/j2hIzUP347FOOI2/SJxoLdea1lnQuU1AWi1JTngm+97//by1hVbQRvqMpDY+P98Q8473qvAG1lUhoRm5YchCAyqeFOSBY9o+05A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B9wpEBrV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1774543370; c=relaxed/simple;
+	bh=SeEZekrLBy8o17HgV465Yez2LzpT6n8JCStYRvR7ZVU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KaDnx7cErwda9bjOGYDByTsvhJRQOkKz0zAZNLZOhc7x1baT6vkpXcR71r9WNPoG6hZSqgPxACn5u1iUICZnoDzOKDrC/R/Ybs9mJ0T+KJImh1HLLiKzokaQSbejhjLTqsZEyJxbC9SvVcIEgKYFlvbC0TWFE57Z7jKAe7+Pgrc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lLU80fQz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B9wpEBrV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E291C4CEF7;
-	Wed, 25 Mar 2026 09:04:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lLU80fQz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 791C6C116C6;
+	Thu, 26 Mar 2026 16:42:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774429492;
-	bh=ui5jwegU4OLOS+z60QNhyMislxj9h80Sy917sqNwYmg=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=B9wpEBrVYArfi+e1noQ5LkzwNm6yiIdZiLNIxXS2n8jYNmFLEfdUshnz5GwQ35JCi
-	 eoNBKB+fNjk0qCFU4ICkl2BGOBdltLcl2C4+lwh8F5tdNCyUJt6izjoaj5hYVYkraE
-	 c1UuVvyvOnZqeGo8Bn3x9VaTnq3gyR9lgB8b8CF2SYtyBF3YNDTukm9mR0it0GbFLL
-	 ik5mVvYbsBXUjRYqjc/I5L/pGho8ZLdXaBaVJI3D1KlV47iloPRnk+IAP3dR7TIRje
-	 TuwUXs5jfFoNsPiIthMu7ntsQr6RAaUe27r3LBlNB7rR6WEt6Vkbr+G+9IaxdRG+Kr
-	 3i3VuIVaSplQQ==
-Message-ID: <73d7be31-f066-474d-989b-731b0b15f134@kernel.org>
-Date: Wed, 25 Mar 2026 10:04:46 +0100
+	s=k20201202; t=1774543369;
+	bh=SeEZekrLBy8o17HgV465Yez2LzpT6n8JCStYRvR7ZVU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=lLU80fQzYCZFaCu+exfsh77A37mGabzZCK2Suczum6Jl/OGKSdOJIqILkW+UMcQMw
+	 JzoqeL8KZlBauIJwmQUaeLTFrPeryVJEg0L1fYRyfCjHWUg2aAqTnJQ86N84k387hS
+	 RSr/oIqOft2zuavkvoD755uZOsIXXUECHtHpAVRDJsNXEEjw3hlRDfwd7BWav0dJm7
+	 h8pQ4t9WEBSHNiVQr0pfBR9EFKsuz9LYd/ZHBaIPySGnFJHjrsu62CfmwBXv9L6oUU
+	 B+PIlmVpbmNRMhb9mGHNQ7Ru27jxjhl9QehvgJ3hOsysfsO1bvZrWNzyTqpChRcoZH
+	 Y2qeOMySL+1xg==
+Message-ID: <c572547f-449b-43e9-bd76-e0ffe2ebf735@kernel.org>
+Date: Thu, 26 Mar 2026 17:42:46 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,20 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH net v2] mptcp: fix soft lockup in mptcp_recvmsg()
+Subject: Re: [PATCH mptcp-next] mptcp: preserve MSG_EOR semantics in sendmsg
+ path
 Content-Language: fr
+To: Gang Yan <gang.yan@linux.dev>, mptcp@lists.linux.dev
+Cc: pabeni@redhat.com, geliang@kernel.org, Gang Yan <yangang@kylinos.cn>
+References: <20260309025431.125943-1-gang.yan@linux.dev>
 From: Matthieu Baerts <matttbe@kernel.org>
-To: Li Xiasong <lixiasong1@huawei.com>
-Cc: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Simon Horman <horms@kernel.org>, netdev@vger.kernel.org,
- mptcp@lists.linux.dev, linux-kernel@vger.kernel.org, yuehaibing@huawei.com,
- zhangchangzhong@huawei.com, weiyongjun1@huawei.com
-References: <20260324085131.4187473-1-lixiasong1@huawei.com>
- <12ad947e-f386-4fcc-9043-bf4f95a7db83@kernel.org>
- <2da353a7-96cf-40ed-9d83-f256ec6965e1@huawei.com>
- <5d5d6905-4348-409a-9bb3-8eee30f215b1@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -93,91 +86,67 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <5d5d6905-4348-409a-9bb3-8eee30f215b1@kernel.org>
+In-Reply-To: <20260309025431.125943-1-gang.yan@linux.dev>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 25/03/2026 08:16, Matthieu Baerts wrote:
-> Hi Li,
-> 
-> 25 Mar 2026 03:39:13 Li Xiasong <lixiasong1@huawei.com>:
-> 
->> Hi Matt,
->>
->> On 3/25/2026 3:23 AM, Matthieu Baerts wrote:
->>> Hi Li,
->>>
->>> On 24/03/2026 09:51, Li Xiasong wrote:
->>>> syzbot reported a soft lockup in mptcp_recvmsg() [0].
->>>>
->>>> When receiving data with MSG_PEEK | MSG_WAITALL flags, the skb is not
->>>> removed from the sk_receive_queue. This causes sk_wait_data() to always
->>>> find available data and never perform actual waiting, leading to a soft
->>>> lockup.
->>>>
->>>> Fix this by adding a 'last' parameter to track the last peeked skb.
->>>> This allows sk_wait_data() to make informed waiting decisions and prevent
->>>> infinite loops when MSG_PEEK is used.
->>>
->>> (...)
->>>
->>>> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
->>>> index cf1852b99963..401fb2b17685 100644
->>>> --- a/net/mptcp/protocol.c
->>>> +++ b/net/mptcp/protocol.c
->>>> @@ -2006,7 +2006,7 @@ static void mptcp_eat_recv_skb(struct sock *sk, struct sk_buff *skb)
->>>> static int __mptcp_recvmsg_mskq(struct sock *sk, struct msghdr *msg,
->>>>                 size_t len, int flags, int copied_total,
->>>>                 struct scm_timestamping_internal *tss,
->>>> -               int *cmsg_flags)
->>>> +               int *cmsg_flags, struct sk_buff **last)
->>>> {
->>>>     struct mptcp_sock *msk = mptcp_sk(sk);
->>>>     struct sk_buff *skb, *tmp;
->>>> @@ -2048,6 +2048,7 @@ static int __mptcp_recvmsg_mskq(struct sock *sk, struct msghdr *msg,
->>>>         }
->>>>
->>>>         copied += count;
->>>> +       *last = skb;
->>>
->>> My bad, my recommendation to move this assignment here was not a good
->>> idea, because 'skb' can be freed at some points after mptcp_eat_recv_skb
->>> that can be called here below.
->>>
->>> If I'm not mistaken, when MSG_PEEK is not used, sk_wait_data() can
->>> always be called with NULL for the last skb, because the queue is
->>> supposed to be empty. If not, no need to wait for new packets, so NULL
->>> can be used. Is that correct?
->>>
->>> If yes, then I guess 'last' can be initialised to NULL before calling
->>> __mptcp_recvmsg_mskq (limit scope), and only set to 'skb' here below,
->>> when MSG_PEEK is not used (what you had in v1).
->>>
->>> Would that work for you?
->>>
->>> Cheers,
->>> Matt
->>
->> Thanks for the review. I analyzed the concern about the 'last' pointer.
->>
->> When writing the v2 patch, I did consider this case - in non-MSG_PEEK
->> scenario, the skb is freed by mptcp_eat_recv_skb() after setting *last =
->> skb, making 'last' point to freed memory. However, in sk_wait_data(), the
->> 'last' parameter is only used for pointer comparison:
->>
->>     skb_peek_tail(&sk->sk_receive_queue) != skb
->>
->> It only compares the pointer value without dereferencing, so there's no
->> actual UAF issue.
-> 
-> Indeed, but the skb could be (unlikely) reused at that stage.
-> 
-> For me, the main point is that mptcp_eat_recv_skb() will remove the
-> skb from the queue. Then NULL can be passed instead, safer.
-One last thing: as noticed by the AI review, this Fixes tag could be
-used instead, as it is more tied to MSG_PEEK:
+Hi Gang,
 
-  Fixes: 8e04ce45a8db ("mptcp: fix MSG_PEEK stream corruption")
+Thank you for the new version.
+
+On 09/03/2026 03:54, Gang Yan wrote:
+> From: Gang Yan <yangang@kylinos.cn>
+> 
+> Extend MPTCP's sendmsg handling to recognize and honor the MSG_EOR flag,
+> which marks the end of a record for application-level message boundaries.
+> 
+> Data fragments tagged with MSG_EOR are explicitly marked in the
+> mptcp_data_frag structure and skb context to prevent unintended
+> coalescing with subsequent data chunks. This ensures the intent of
+> applications using MSG_EOR is preserved across MPTCP subflows,
+> maintaining consistent message segmentation behavior.
+> 
+> Signed-off-by: Gang Yan <yangang@kylinos.cn>
+> ---
+> 
+> Notes:
+>       - This patch incorporates feedback and suggestions from Paolo Abeni
+>         and Geliang Tang, including memory alignment optimizations for the
+>         mptcp_data_frag struct (shrinking overhead to u8 and using bitfield
+>         for eor to avoid size increase) and compile-time checks with BUILD_BUG_ON.
+
+Please mention why you shrank "overhead" to a u8 (not to increase the
+struct size), and why it is OK to do so (u16 not needed because ...) +
+explaining the BUILD_BUG_ON().
+
+>       - Packetdrill test cases validating this feature are available at:
+>         https://github.com/multipath-tcp/packetdrill/pull/189/changes/d6ce92a4786704fe749bbd848ced0c047632282e
+
+Thank you, I just reviewed it.
+
+Do you mind checking the AI review there please:
+
+
+https://netdev-ai.bots.linux.dev/ai-review.html?id=22434689-7326-48c8-af75-273d99fbef55
+
+I think it is valid, but better to double-check.
+
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 17e43aff4459..3e574c87301b 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+
+(...)
+
+> @@ -4621,6 +4638,9 @@ void __init mptcp_proto_init(void)
+>  	inet_register_protosw(&mptcp_protosw);
+>  
+>  	BUILD_BUG_ON(sizeof(struct mptcp_skb_cb) > sizeof_field(struct sk_buff, cb));
+> +	/* Compile-time check: ensure 'overhead' (alignment + struct size) fits in u8 */
+> +	BUILD_BUG_ON(ALIGN(1, sizeof(long)) + sizeof(struct mptcp_data_frag) > U8_MAX);
+
+Sorry, I'm not sure what you are checking here. Do you mind explaining
+it please?
 
 Cheers,
 Matt
