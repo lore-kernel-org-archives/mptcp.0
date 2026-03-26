@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D7BC3A2577
-	for <mptcp@lists.linux.dev>; Thu, 26 Mar 2026 18:21:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8443266B46
+	for <mptcp@lists.linux.dev>; Thu, 26 Mar 2026 18:29:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774549293; cv=none; b=IHL/XQrl9niWQGUioI4hs/Xr0u/bzTcdl0vqW/3f9vu4VKdAmNX784ycnRiiraEyObOAV+LY+cftxOjgxoQ6jYaLt3KceP5D0NT3Hamw25xNKc4bFuZZ1j1HjHzsGzknbyMNXwzyE4gvCrIuaBdL+U9WgviacdY/bEHvyymhJUE=
+	t=1774549746; cv=none; b=Zj/+QoC3PrHo3wQzgB7GdD9EIs5pUKLuWIZIF+G/NLQtJ0s3wrC3hHn1ALAHmmPYY5B0NhkFfwJK2XWWJKaTWN3/a7K2Sl9M8KodFvbOM61I8EGT/9cqGZahSBnd6190/DraU/81/ys2r04Z77/QeXXHuAPLaBsC5mahanDcWag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774549293; c=relaxed/simple;
-	bh=7cdenDAYIJi0/yb1Nk/WdplromHYT4I5uw3NRge3LZc=;
+	s=arc-20240116; t=1774549746; c=relaxed/simple;
+	bh=J9Dl7B6KrT4n7yMEu/xwO+o2Pa7/xBn/1VLU3g3Y6HM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qeHDC7zZGnTUktkEdQdLK0wx3+0U2Gp8GqM9PyKd+1ykJKqDXJq9DTz1t4ud0IiGDvRGfV5xbaBDFPYg6biZuIeOEra/NTB86b5wo1h/1ir7yBUTLL+15ILaZKbPAiACp52U9bvwyJBm4nR/GdT+DXV9N6y/WM8sBlneoCTDqOE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fIRkMbqU; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=NYnB3cPXW0SVH16eeWZ4JcMOFvb3rxQudwXxR5wGSo3IFrUAedaUN02co1Ks67nrB+XnR814F/QveAf3tXRDCaZ7NTYUjCfvtaWRZvwaWXCp7tuwm/IvWxYs4uCfK9b2HsEjzUmjSc6SSDOcc/q4M6ATXaDDorQ4DBKxW9ZDFIk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zc3iKFGi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fIRkMbqU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51D66C19423;
-	Thu, 26 Mar 2026 18:21:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zc3iKFGi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A53FC116C6;
+	Thu, 26 Mar 2026 18:29:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774549293;
-	bh=7cdenDAYIJi0/yb1Nk/WdplromHYT4I5uw3NRge3LZc=;
+	s=k20201202; t=1774549746;
+	bh=J9Dl7B6KrT4n7yMEu/xwO+o2Pa7/xBn/1VLU3g3Y6HM=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=fIRkMbqUnT9BC9gct+6eWnxFARlpHfhBxyVaXZ0DFo/kwHfJxNSfVAcBxlGWtciJq
-	 iDyKx4k2BckhfDKITcuuIt73hVvdqP1WGRGHJvBuafbKxtFmbY7SyJtm8eHOUcdai5
-	 aRihF7CwF97IlVHXAmexpwTdhHUqWWH5wdPrrhSLZdyU3FvZtsD16lsP9z0NqTadnX
-	 a39BbGb88SserGg8ZSZFxUhdYRocg84rGdtvIjUj7cOLEeqBzBxUWI0eNIibjln1cR
-	 C+gcdLKIPhVvOy0yFsIou1l0QzdBIf3m5CEV0Ilvsz6sHKM2bZ9Ukfj25EOt3L314l
-	 v6CWsreBcvGJQ==
-Message-ID: <a8f35df2-e109-4c9f-aff4-c23c49f6ffbd@kernel.org>
-Date: Thu, 26 Mar 2026 19:21:30 +0100
+	b=Zc3iKFGiQpyWaJdj8YZJ5tosmqrxx6O1LNz4V8OWVWm54ZLiybXdgr4hM5Qt6TAZ2
+	 VQ4mthXqXByT8I7zPpEOQsOzV0aSfi5X58fC96tB+uoAB2tCPdpJtIBLkQ9CozbmcS
+	 qYY4EHArmcfAThroesX/g18k+yGDliD/vMuFOZYHbOBW0MlYSKwVCDPO7xbKPLOBG+
+	 53z/ck6voQTw4VLFMUvz2Zp0qd/OwM2FEjfUTci2XDymCAvi5l0gzTlhv2yy4PTs+N
+	 vPp4hxSzDg5QvsopdIyrqfscyLq4cxgETSeZ22YUlpv15jtD3PguScF/4IIk53DiR2
+	 lX1XCe0x3SEPw==
+Message-ID: <d72915b0-a473-47c4-96c0-d7a0075619b5@kernel.org>
+Date: Thu, 26 Mar 2026 19:29:03 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [RESEND mptcp-next v2 1/2] mptcp: check desc->count in read_sock
+Subject: Re: [RESEND mptcp-next v2 2/2] tcp: add recv_should_stop helper
 Content-Language: fr
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Gang Yan <yangang@kylinos.cn>
+Cc: Geliang Tang <tanggeliang@kylinos.cn>, Paolo Abeni <pabeni@redhat.com>,
+ Mat Martineau <martineau@kernel.org>
 References: <cover.1773740635.git.tanggeliang@kylinos.cn>
- <b404cbca4b0d30f82c56f65b38e1c2038bd7e5fe.1773740635.git.tanggeliang@kylinos.cn>
+ <2c01b49782e2f648813389caa6138a1b1540f64b.1773740635.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,29 +87,73 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <b404cbca4b0d30f82c56f65b38e1c2038bd7e5fe.1773740635.git.tanggeliang@kylinos.cn>
+In-Reply-To: <2c01b49782e2f648813389caa6138a1b1540f64b.1773740635.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Gang,
+Hi Geliang,
 
 On 17/03/2026 10:44, Geliang Tang wrote:
-> From: Gang Yan <yangang@kylinos.cn>
+> From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> In __tcp_read_sock(), it checks whether desc->count equals 0 within the
-> loop and breaks the loop if true. This check should also be synchronized
-> to __mptcp_read_sock().
+> Factor out a new helper tcp_recv_should_stop() from tcp_recvmsg_locked()
+> and tcp_splice_read() to check whether to stop receiving. And use this
+> helper in mptcp_recvmsg() and mptcp_splice_read() to reduce redundant code.
+> 
+> Suggested-by: Paolo Abeni <pabeni@redhat.com>
+> Acked-by: Mat Martineau <martineau@kernel.org>
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> ---
+>  include/net/tcp.h    |  9 +++++++++
+>  net/ipv4/tcp.c       | 10 ++--------
+>  net/mptcp/protocol.c | 10 ++--------
+>  3 files changed, 13 insertions(+), 16 deletions(-)
+> 
+> diff --git a/include/net/tcp.h b/include/net/tcp.h
+> index f87bdacb5a69..229613b56f73 100644
+> --- a/include/net/tcp.h
+> +++ b/include/net/tcp.h
+> @@ -3069,4 +3069,13 @@ enum skb_drop_reason tcp_inbound_hash(struct sock *sk,
+>  		const void *saddr, const void *daddr,
+>  		int family, int dif, int sdif);
+>  
+> +static inline int tcp_recv_should_stop(struct sock *sk, long timeo)
+> +{
+> +	return sk->sk_err ||
+> +	       sk->sk_state == TCP_CLOSE ||
+> +	       (sk->sk_shutdown & RCV_SHUTDOWN) ||
+> +	       signal_pending(current) ||
+> +	       !timeo;
+> +}
+> +
+>  #endif	/* _TCP_H */
+> diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
+> index dfd677c689ef..b0df7c4a0e20 100644
+> --- a/net/ipv4/tcp.c
+> +++ b/net/ipv4/tcp.c
+> @@ -895,9 +895,7 @@ ssize_t tcp_splice_read(struct socket *sock, loff_t *ppos,
+>  		release_sock(sk);
+>  		lock_sock(sk);
+>  
+> -		if (sk->sk_err || sk->sk_state == TCP_CLOSE ||
+> -		    (sk->sk_shutdown & RCV_SHUTDOWN) ||
+> -		    signal_pending(current))
+> +		if (tcp_recv_should_stop(sk, timeo))
 
-This description sounds "strange":
+Here, you are changing the behaviour, that's then not a simple
+refactoring like what you are describing in the commit message. Same in
+mptcp_splice_read(). If checking 'timeo' here is better for some reason,
+please add these two checks in a dedicated commit clearly explaining
+this reason.
 
-- Is this a fix or an optimisation? i.e. is this check needed for some
-  reason?
-  → If yes, please explain why in the commit message, and eventually add
-    a Fixes tag.
+The alternative is not to include 'timeo' in the new helper, so here you
+would have:
 
-- Or is it just some extra code that is not needed for MPTCP, but
-  doesn't hurt
-  → If yes, do we really need it?
+  if (tcp_recv_should_stop(sk))
+
+and in tcp_recvmsg_locked():
+
+  if (!timeo || tcp_recv_should_stop(sk))
 
 Cheers,
 Matt
