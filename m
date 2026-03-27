@@ -1,130 +1,176 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from canpmsgout11.his.huawei.com (canpmsgout11.his.huawei.com [113.46.200.226])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96A92393DDF
-	for <mptcp@lists.linux.dev>; Thu, 26 Mar 2026 18:59:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65F8034B410
+	for <mptcp@lists.linux.dev>; Fri, 27 Mar 2026 07:32:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.226
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774551587; cv=none; b=UlCTIB0r/3Y5Gw7pzyUQpIFRlkcfpG3mGtoHtgbepFng7Cdbyfn8qxadgk/zj5+Tp2X7DnLXCHWaKVcQSei0v09p1PBMDehrbMVl6nzLggLPXL64AD96hOMK0bwH8MewKyjf+5Ofjl7Oecye/ngdhly2NFHadYZKIYCPs4kRob4=
+	t=1774596741; cv=none; b=J2ox5F1vYm0Xa6Wnzkyw3oHsO0xy+p4E4+8c/hY/+I/iiVmRQ7ffYhFSAmhf3tF8p8iXB8S3RgF1jQNoB3VM+KNWowfzy38DTirRgeXdR/7ysyDwq+vgtz2glW4vBS9IORUgDd1OeCXTBsYObZdRmNriA/HBl1CNvj6gU5kPSy0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774551587; c=relaxed/simple;
-	bh=itEtf55vTMMLM2Fy1wpNtWm/i9tNMQpln7Z46bjIJVw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iOGkohE99VJr2tfKl6AGPCupSqbba4fSiGfqbNAMQuxLy8vKYmN0NnPCtWgmpGdYzul5QzidKr5XmIhBVoRJXTZVKOf4Z8P8ZHvWlP0PDsxKa/5ReSxm2zi52Yx6ZTI/Td9uvEVMVA+Ja+j2NY0t1SLpQalwexEHmCO37i6zP2Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mbxqeAAl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1774596741; c=relaxed/simple;
+	bh=sPIq4oegDN+UKCJQyVm2Z2Ah5A/OXXT0CKNhqwvY1ec=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=LG5wJp1evHytObiQjoPzW2xwri60hEwEBFvfxyh5c9Xu7mPbQa1vVOFOHv7L25AoK9mmHe0ZXGtUI+51LNEaOfDdIu6S0JxcFbj1os8wnVGq5YdxXyY8z3NKMB1zLZIu0O9j3/7JFCYHyB0NIYeAJVj1umTN4Pkv2Y13U7+XsGU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=yrxc40M2; arc=none smtp.client-ip=113.46.200.226
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mbxqeAAl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84ECEC116C6;
-	Thu, 26 Mar 2026 18:59:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774551587;
-	bh=itEtf55vTMMLM2Fy1wpNtWm/i9tNMQpln7Z46bjIJVw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=mbxqeAAlWEJoyv+696d4RHtRdR1tXHcFqWI63RxZfM7fFOaAQR0969E77cTl6wJ1y
-	 XNdKcOaByEbO1w0i+7JkPJw+nB1RWTYOHcqdAJA2yQS2YSasaNk96WsGIJ30IQG2LS
-	 swlBDKXrK5vvqac2DCv4oyU4vt/cBiq6i6KqDR3W/d9zBXkvKx1QnyS+whkGK+9oqd
-	 CkC0bAXludl0gt9IGUHsV1JQbu5eZWsmIdrMv6ua5UAOobRwzfZZW8AxRQ1F4derYF
-	 apa8gzB/dBL17KIBOeh4VoyJIjwapYnBEDP6QeBkRZM8aSZKVZhChtFFGWTySV1iKS
-	 Y9G66hvZ3zAkQ==
-Message-ID: <931bd8a3-3269-4782-bd63-93b36cc657e6@kernel.org>
-Date: Thu, 26 Mar 2026 19:59:44 +0100
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="yrxc40M2"
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=JlOVJvch5CnHpSnAoS69wCZR9XjUE7/EkqJycR+1o9A=;
+	b=yrxc40M20ytoWJ3FnjbvHeDJVvaRzULkYULAsjamP8Ae3DDI1wDzh/nkIs0Pjev787bpuhmiR
+	LeqOP0DhZk07NkXP/QE/nPh2ICgcd/AiHOGl7u6VZwT7+KiGz1yss/BOLzyFNN9hl8TssktuDMf
+	Alc+K/TpCK+9++VYFbii0aY=
+Received: from mail.maildlp.com (unknown [172.19.163.200])
+	by canpmsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4fhsd60zZ0zKm67;
+	Fri, 27 Mar 2026 15:26:02 +0800 (CST)
+Received: from kwepemj500018.china.huawei.com (unknown [7.202.194.48])
+	by mail.maildlp.com (Postfix) with ESMTPS id B04E94055B;
+	Fri, 27 Mar 2026 15:32:10 +0800 (CST)
+Received: from huawei.com (10.50.85.128) by kwepemj500018.china.huawei.com
+ (7.202.194.48) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Fri, 27 Mar
+ 2026 15:32:10 +0800
+From: Li Xiasong <lixiasong1@huawei.com>
+To: Matthieu Baerts <matttbe@kernel.org>, Mat Martineau
+	<martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, "David S. Miller"
+	<davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman
+	<horms@kernel.org>
+CC: <netdev@vger.kernel.org>, <mptcp@lists.linux.dev>,
+	<linux-kernel@vger.kernel.org>, <yuehaibing@huawei.com>,
+	<zhangchangzhong@huawei.com>, <weiyongjun1@huawei.com>
+Subject: [PATCH net v3] mptcp: fix soft lockup in mptcp_recvmsg()
+Date: Fri, 27 Mar 2026 15:55:44 +0800
+Message-ID: <20260327075544.3622851-1-lixiasong1@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [RESEND PATCH mptcp-next v2 2/3] mptcp: implement .splice_eof
-Content-Language: fr
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1773740361.git.tanggeliang@kylinos.cn>
- <e4666472729bc32c8a4d5ec2692bdecec4dbb4b6.1773740361.git.tanggeliang@kylinos.cn>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <e4666472729bc32c8a4d5ec2692bdecec4dbb4b6.1773740361.git.tanggeliang@kylinos.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: kwepems200002.china.huawei.com (7.221.188.68) To
+ kwepemj500018.china.huawei.com (7.202.194.48)
 
-Hi Geliang,
+syzbot reported a soft lockup in mptcp_recvmsg() [0].
 
-On 17/03/2026 10:41, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
-> 
-> This patch implements the .splice_eof interface for MPTCP, namely
-> mptcp_splice_eof(), which calls do_tcp_splice_eof() for each active
-> subflow when a sendfile() operation reaches end-of-file.
-> 
-> do_tcp_splice_eof() flushes any remaining data in the TCP send queue.
-> MPTCP operates over multiple TCP subflows, and each subflow may have
-> pending data in its send buffer that needs to be properly finalized
-> when splicing data through an MPTCP socket.
-> 
-> sock_splice_eof() calls the .splice_eof interface from struct proto_ops.
-> To maintain consistency with regular TCP behavior, the .splice_eof
-> interface of mptcp_stream_ops is set to inet_splice_eof, which will
-> switch to the protocol-specific implementation (sk->sk_prot->splice_eof)
-> - for MPTCP, that is mptcp_splice_eof().
-> 
-> This is an improvement; nothing was broken before. MPTCP previously did not
-> handle the splice EOF notification, while TCP did. Without .splice_eof()
-> support, the queue is not flushed immediately when sendfile() reaches EOF,
-> but it will eventually be flushed after a small delay.
+When receiving data with MSG_PEEK | MSG_WAITALL flags, the skb is not
+removed from the sk_receive_queue. This causes sk_wait_data() to always
+find available data and never perform actual waiting, leading to a soft
+lockup.
 
-Thank you for this patch!
+Fix this by adding a 'last' parameter to track the last peeked skb.
+This allows sk_wait_data() to make informed waiting decisions and prevent
+infinite loops when MSG_PEEK is used.
 
-Do you mind checking the comments from sashiko please?
+[0]:
+watchdog: BUG: soft lockup - CPU#2 stuck for 156s! [server:1963]
+Modules linked in:
+CPU: 2 UID: 0 PID: 1963 Comm: server Not tainted 6.19.0-rc8 #61 PREEMPT(none)
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1 04/01/2014
+RIP: 0010:sk_wait_data+0x15/0x190
+Code: 80 00 00 00 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 41 56 41 55 41 54 49 89 f4 55 48 89 d5 53 48 89 fb <48> 83 ec 30 65 48 8b 05 17 a4 6b 01 48 89 44 24 28 31 c0 65 48 8b
+RSP: 0018:ffffc90000603ca0 EFLAGS: 00000246
+RAX: 0000000000000000 RBX: ffff888102bf0800 RCX: 0000000000000001
+RDX: 0000000000000000 RSI: ffffc90000603d18 RDI: ffff888102bf0800
+RBP: 0000000000000000 R08: 0000000000000002 R09: 0000000000000101
+R10: 0000000000000000 R11: 0000000000000075 R12: ffffc90000603d18
+R13: ffff888102bf0800 R14: ffff888102bf0800 R15: 0000000000000000
+FS:  00007f6e38b8c4c0(0000) GS:ffff8881b877e000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000055aa7bff1680 CR3: 0000000105cbe000 CR4: 00000000000006f0
+Call Trace:
+ <TASK>
+ mptcp_recvmsg+0x547/0x8c0 net/mptcp/protocol.c:2329
+ inet_recvmsg+0x11f/0x130 net/ipv4/af_inet.c:891
+ sock_recvmsg+0x94/0xc0 net/socket.c:1100
+ __sys_recvfrom+0xb2/0x130 net/socket.c:2256
+ __x64_sys_recvfrom+0x1f/0x30 net/socket.c:2267
+ do_syscall_64+0x59/0x2d0 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x76/0x7e arch/x86/entry/entry_64.S:131
+RIP: 0033:0x7f6e386a4a1d
+Code: 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 48 8d 05 f1 de 2c 00 41 89 ca 8b 00 85 c0 75 20 45 31 c9 45 31 c0 b8 2d 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 6b f3 c3 66 0f 1f 84 00 00 00 00 00 41 56 41
+RSP: 002b:00007ffc3c4bb078 EFLAGS: 00000246 ORIG_RAX: 000000000000002d
+RAX: ffffffffffffffda RBX: 000000000000861e RCX: 00007f6e386a4a1d
+RDX: 00000000000003ff RSI: 00007ffc3c4bb150 RDI: 0000000000000004
+RBP: 00007ffc3c4bb570 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000103 R11: 0000000000000246 R12: 00005605dbc00be0
+R13: 00007ffc3c4bb650 R14: 0000000000000000 R15: 0000000000000000
+ </TASK>
 
-https://sashiko.dev/#/patchset/cover.1773740361.git.tanggeliang%40kylinos.cn
+Fixes: 8e04ce45a8db ("mptcp: fix MSG_PEEK stream corruption")
+Signed-off-by: Li Xiasong <lixiasong1@huawei.com>
+---
 
-They look plausible, but better to double-check.
+v2->v3:
+Thanks to Matthieu Baerts for the review.
+- Initialize last to NULL.
+- Only update 'last' when MSG_PEEK is set, avoiding dangling pointer.
 
-Cheers,
-Matt
+v1->v2:
+Thanks to Matthieu Baerts for the suggestion and review.
+- Move 'last' variable definition into the while loop in mptcp_recvmsg() to
+  narrow its scope.
+- In __mptcp_recvmsg_mskq(), assign 'last' right after 'copied' is updated,
+  regardless of MSG_PEEK flag.
+https://lore.kernel.org/netdev/20260324085131.4187473-1-lixiasong1@huawei.com/
+
+v1:
+https://lore.kernel.org/netdev/20260302052651.1466983-1-lixiasong1@huawei.com/
+
+---
+ net/mptcp/protocol.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
+
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index cf1852b99963..60f6e6a189b7 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -2006,7 +2006,7 @@ static void mptcp_eat_recv_skb(struct sock *sk, struct sk_buff *skb)
+ static int __mptcp_recvmsg_mskq(struct sock *sk, struct msghdr *msg,
+ 				size_t len, int flags, int copied_total,
+ 				struct scm_timestamping_internal *tss,
+-				int *cmsg_flags)
++				int *cmsg_flags, struct sk_buff **last)
+ {
+ 	struct mptcp_sock *msk = mptcp_sk(sk);
+ 	struct sk_buff *skb, *tmp;
+@@ -2058,6 +2058,8 @@ static int __mptcp_recvmsg_mskq(struct sock *sk, struct msghdr *msg,
+ 			}
+ 
+ 			mptcp_eat_recv_skb(sk, skb);
++		} else {
++			*last = skb;
+ 		}
+ 
+ 		if (copied >= len)
+@@ -2288,10 +2290,12 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
+ 		cmsg_flags = MPTCP_CMSG_INQ;
+ 
+ 	while (copied < len) {
++		struct sk_buff *last = NULL;
+ 		int err, bytes_read;
+ 
+ 		bytes_read = __mptcp_recvmsg_mskq(sk, msg, len - copied, flags,
+-						  copied, &tss, &cmsg_flags);
++						  copied, &tss, &cmsg_flags,
++						  &last);
+ 		if (unlikely(bytes_read < 0)) {
+ 			if (!copied)
+ 				copied = bytes_read;
+@@ -2343,7 +2347,7 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
+ 
+ 		pr_debug("block timeout %ld\n", timeo);
+ 		mptcp_cleanup_rbuf(msk, copied);
+-		err = sk_wait_data(sk, &timeo, NULL);
++		err = sk_wait_data(sk, &timeo, last);
+ 		if (err < 0) {
+ 			err = copied ? : err;
+ 			goto out_err;
 -- 
-Sponsored by the NGI0 Core fund.
+2.34.1
 
