@@ -1,176 +1,113 @@
-Received: from out-188.mta0.migadu.com (out-188.mta0.migadu.com [91.218.175.188])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 022D937EFEE
-	for <mptcp@lists.linux.dev>; Mon, 30 Mar 2026 08:19:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BAA81A682C
+	for <mptcp@lists.linux.dev>; Mon, 30 Mar 2026 09:45:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774858758; cv=none; b=iYwNAATJiADqUhW5/XvY37hzuvu3c+fU/lVGCOlGcgIB/ym3D2OrVDJo64DIiGFO/7HYBCFgfrUQv+hgrPq2C0wnOyW4cY34Hn/nf3KONS1bMAqDIxGFtULfavc6pIWZAFtfi7GzugVhKpuOkS2ODtJ+YuZt4xxMM58XfQ/TnQI=
+	t=1774863935; cv=none; b=ZcU0BkCcDmhA29UklNzNthRpYZzhTB5afAvzo2PazgfWnDTEz50bvpLRJ8/q0iWjiqWVQmGQayfgj6BySH0o4dbeQKwXGhbbwG5KDRB1pHlEKYhDwI2Aae/bdc159OqIyGkOONnyn+4ing3vbPCM0nuLrFq83EKjTMREHmBdVGk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774858758; c=relaxed/simple;
-	bh=5LiH2PMLXnbW30gSarjbOl4YJEP5Cj3aQcJnWiHJA7U=;
-	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:
-	 In-Reply-To:References; b=NAcJSVBs7znYQTV+UxujVCULidxikel5L1hxh9JuRVvDfc7Djww5ioHagb1mn1JBBUVcRbjxhe75rwRZuHbAQfI40bBxZ+QI2q4f+tMxfX++0mW93GXKV4MBRg+mnu4pV9OoDA4cTXBey0AwY2sirs+jYLWCZiR9QehgLtAmhqE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=xqs0otmH; arc=none smtp.client-ip=91.218.175.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1774863935; c=relaxed/simple;
+	bh=9H8gNTqlKxNY/xNRH7D69q9hIz2AYSi71eT8VrZ+8Ws=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lOM/gJzFGCulPG0/QtLizKt9idg3VcdSgWC/zsOHb7Y4PPvKfvSNbmO0iwV1clcGYfZeQDDKOAGu5lI2QzjAGyttLOYh1wS9DqVJ+18XtXHmwSK6Mf8Mafiun9OGAGr2lt/uYxUP9gktJ1uLHBG2CYbXc2dOeh1D0MF76aASMZg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TbqCX/FQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="xqs0otmH"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TbqCX/FQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E523C4CEF7;
+	Mon, 30 Mar 2026 09:45:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1774863935;
+	bh=9H8gNTqlKxNY/xNRH7D69q9hIz2AYSi71eT8VrZ+8Ws=;
+	h=From:To:Cc:Subject:Date:From;
+	b=TbqCX/FQ3ZGNTBClLSbezFNcHPYYO89guUvimrZ4IQwi9uUHaD4ULrwdRxXpJzJEB
+	 2BHLYCZ6JBbOP3+Dnycp+hW4xIwNq/tkcJVTf5VaNay5xktOo6+fmNKJgVKMAW6cGl
+	 OjDIGOzqN0TwuZ1dZYMbJ0wOmrwM6zd6P3Sbww2ZEChx3okxcrFnvDYu/7erzSeFBq
+	 juRiwXe3lTrkSX+TGOFSh3fOUgnDTZoknV/b6YAFDVQvISyPpOKYVnqzrO6H3TyQCU
+	 8363Or2I2HpiGubVziTfww2p4j82EmH2BRCUxXv2Ws98oXS6bULVhRx/l4FJ0dLKmp
+	 QYbSffqTbKVig==
+From: Geliang Tang <geliang@kernel.org>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Subject: [RFC mptcp-next v6 0/7] NVME over MPTCP
+Date: Mon, 30 Mar 2026 17:43:25 +0800
+Message-ID: <cover.1774862875.git.tanggeliang@kylinos.cn>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1774858755;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oo1yfvqB54IzdHY3lL9WfHVPn1z/EXQWKB1IAmfSe0o=;
-	b=xqs0otmH7+8MdlgtE0cigBIRSGNPFGtDYRkKbTAiNYburcQ7JVtxyxHZudTV2JLT3ODb+G
-	A20I9ku8RdxMZlgOtA2GBPWA+CfIaCnTq+HiqUEBSoCFpkqMG8hV94+qxrmDswJYIwU7gN
-	InzS0stjTTapxkRrKc3raFw8cUSo13A=
-Date: Mon, 30 Mar 2026 08:19:13 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: gang.yan@linux.dev
-Message-ID: <be87d58dcca25715b3f992acd152a6778de44dec@linux.dev>
-TLS-Required: No
-Subject: Re: [PATCH mptcp-next] mptcp: preserve MSG_EOR semantics in sendmsg
- path
-To: "Matthieu Baerts" <matttbe@kernel.org>, mptcp@lists.linux.dev
-In-Reply-To: <c572547f-449b-43e9-bd76-e0ffe2ebf735@kernel.org>
-References: <20260309025431.125943-1-gang.yan@linux.dev>
- <c572547f-449b-43e9-bd76-e0ffe2ebf735@kernel.org>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
 
-March 27, 2026 at 12:42 AM, "Matthieu Baerts" <matttbe@kernel.org mailto:=
-matttbe@kernel.org?to=3D%22Matthieu%20Baerts%22%20%3Cmatttbe%40kernel.org=
-%3E > wrote:
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
+v6:
+ - introduce nvmet_tcp_sockops and nvme_tcp_sockops structures
+ - fix set_reuseaddr, set_nodelay and set_syncnt, add sockopt_seq_inc
+ calls, only set the first subflow, and synchronize to other subflows in
+ sync_socket_options
+ - Add implementations for no_linger, set_priority and set_tos
+ - This version no longer depends on the "mptcp: fix stall because of
+ data_ready" series of fixes
 
->=20
->=20Hi Gang,
->=20
->=20Thank you for the new version.
->=20
->=20On 09/03/2026 03:54, Gang Yan wrote:
->=20
->=20>=20
->=20> From: Gang Yan <yangang@kylinos.cn>
-> >=20=20
->=20>  Extend MPTCP's sendmsg handling to recognize and honor the MSG_EOR=
- flag,
-> >  which marks the end of a record for application-level message bounda=
-ries.
-> >=20=20
->=20>  Data fragments tagged with MSG_EOR are explicitly marked in the
-> >  mptcp_data_frag structure and skb context to prevent unintended
-> >  coalescing with subsequent data chunks. This ensures the intent of
-> >  applications using MSG_EOR is preserved across MPTCP subflows,
-> >  maintaining consistent message segmentation behavior.
-> >=20=20
->=20>  Signed-off-by: Gang Yan <yangang@kylinos.cn>
-> >  ---
-> >=20=20
->=20>  Notes:
-> >  - This patch incorporates feedback and suggestions from Paolo Abeni
-> >  and Geliang Tang, including memory alignment optimizations for the
-> >  mptcp_data_frag struct (shrinking overhead to u8 and using bitfield
-> >  for eor to avoid size increase) and compile-time checks with BUILD_B=
-UG_ON.
-> >=20
->=20Please mention why you shrank "overhead" to a u8 (not to increase the
-> struct size), and why it is OK to do so (u16 not needed because ...) +
-> explaining the BUILD_BUG_ON().
+v5:
+ - address comments reported by ai-review: set msk->nodelay to true in
+   mptcp_sock_set_nodelay, set sk->sk_reuse to ssk->sk_reuse in
+   mptcp_sock_set_reuseaddr, add mptcp_nvme.sh to TEST_PROGS, and adjust
+   the order of patches.
+ - remove TLS-related options from .allowed_opts of
+   nvme_mptcp_transport.
+ - some cleanups for selftest.
+ - Link: https://patchwork.kernel.org/project/mptcp/cover/cover.1773374342.git.tanggeliang@kylinos.cn/
 
-The =E2=80=98u8=E2=80=99 is one of Paolo's suggestions[1]. I think 'u16' =
-is not needed because:
- - 'offset =3D ALIGN(orig_offset, sizeof(long));'
- - 'dfrag->offset =3D offset - origin_offset + sizeof(struct mptcp_data_f=
-rag);',
-the max value of offset is 7, and sizeof(struct mptcp_data_frag)) is
-usually 40, so the overhead is 47, far less than 255.
+v4:
+ - a new patch to set nvme iopolicy as Nilay suggested.
+ - resend all set to trigger AI review.
+ - Link: https://patchwork.kernel.org/project/mptcp/cover/cover.1772683110.git.tanggeliang@kylinos.cn/
 
-Another suggestion from Paolo[1] is a build time check on the max 'overhe=
-ad'
-value. So I use 'ALIGN(1, sizeof(long)) + sizeof(struct mptcp_data_frag)'=
- to
-represent the max_val of 'overhead'.
+v3:
+ - update the implementation of sock_set_nodelay: originally it only set
+the first subflow, but now it sets every subflow.
+ - use sk_is_msk helper in this set.
+ - update the selftest to perform testing under a multi-interface
+environment.
+ - Link: https://patchwork.kernel.org/project/mptcp/cover/cover.1770627071.git.tanggeliang@kylinos.cn/
 
-But Paolo also mention it's probably too conservative. WDYT?
+v2:
+ - Patch 1 fixes the timeout issue reported in v1, thanks to Paolo and Gang
+Yan for their help.
+ - Patch 5 implements an MPTCP-specific sock_set_syncnt helper.
+ - Link: https://patchwork.kernel.org/project/mptcp/cover/cover.1764152990.git.tanggeliang@kylinos.cn/
 
-[1] https://patchwork.kernel.org/project/mptcp/patch/20260203023029.85543=
-4-1-gang.yan@linux.dev/
+This series (previously named "MPTCP support to 'NVME over TCP'") had three
+RFC versions sent to Hannes in May, with subsequent revisions based on his
+input. Following that, I initiated the process of upstreaming the dependent
+"implement mptcp read_sock" series to the main MPTCP repository, which has
+been merged into net-next recently.
 
->=20
->=20>=20
->=20> - Packetdrill test cases validating this feature are available at:
-> >  https://github.com/multipath-tcp/packetdrill/pull/189/changes/d6ce92=
-a4786704fe749bbd848ced0c047632282e
-> >=20
->=20Thank you, I just reviewed it.
+Geliang Tang (7):
+  nvmet-tcp: define target tcp_sockops struct
+  nvmet-tcp: implement target mptcp sockops
+  nvmet-tcp: register target mptcp transport
+  nvme-tcp: define host tcp_sockops struct
+  nvme-tcp: implement host mptcp sockops
+  nvme-tcp: register host mptcp transport
+  selftests: mptcp: add NVMe over MPTCP test
 
-Thanks=EF=BC=8C I'll try to fix them.
+ drivers/nvme/host/tcp.c                       |  66 +++++-
+ drivers/nvme/target/configfs.c                |   1 +
+ drivers/nvme/target/tcp.c                     |  79 ++++++-
+ include/linux/nvme.h                          |   1 +
+ include/net/mptcp.h                           |  27 +++
+ net/mptcp/protocol.h                          |   1 +
+ net/mptcp/sockopt.c                           | 120 ++++++++++
+ tools/testing/selftests/net/mptcp/Makefile    |   1 +
+ tools/testing/selftests/net/mptcp/config      |   7 +
+ .../testing/selftests/net/mptcp/mptcp_nvme.sh | 205 ++++++++++++++++++
+ 10 files changed, 494 insertions(+), 14 deletions(-)
+ create mode 100755 tools/testing/selftests/net/mptcp/mptcp_nvme.sh
 
->=20
->=20Do you mind checking the AI review there please:
->=20
->=20https://netdev-ai.bots.linux.dev/ai-review.html?id=3D22434689-7326-48=
-c8-af75-273d99fbef55
->=20
->=20I think it is valid, but better to double-check.
+-- 
+2.51.0
 
-Yes, I think it's a good catch, and we should fix it as follows:
-
-@@ -1032,7 +1032,8 @@ static bool mptcp_frag_can_collapse_to(const struct=
- mptcp_sock *msk,
-                                       const struct page_frag *pfrag,
-                                       const struct mptcp_data_frag *df)
- {
--       return df && pfrag->page =3D=3D df->page &&
-+       return df && !df->eor &&
-+               pfrag->page =3D=3D df->page &&
-                pfrag->size - pfrag->offset > 0 &&
-                pfrag->offset =3D=3D (df->offset + df->data_len) &&
-                df->data_seq + df->data_len =3D=3D msk->write_seq;
-If OK, I'll apply it when sending v2.
-
->=20
->=20>=20
->=20> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> >  index 17e43aff4459..3e574c87301b 100644
-> >  --- a/net/mptcp/protocol.c
-> >  +++ b/net/mptcp/protocol.c
-> >=20
->=20(...)
->=20
->=20>=20
->=20> @@ -4621,6 +4638,9 @@ void __init mptcp_proto_init(void)
-> >  inet_register_protosw(&mptcp_protosw);
-> >=20=20
->=20>  BUILD_BUG_ON(sizeof(struct mptcp_skb_cb) > sizeof_field(struct sk_=
-buff, cb));
-> >  + /* Compile-time check: ensure 'overhead' (alignment + struct size)=
- fits in u8 */
-> >  + BUILD_BUG_ON(ALIGN(1, sizeof(long)) + sizeof(struct mptcp_data_fra=
-g) > U8_MAX);
-> >=20
->=20Sorry, I'm not sure what you are checking here. Do you mind explainin=
-g
-> it please?
->=20
-
-The=20'BUILD_BUG_ON' is explained at the beginning of the reply, thanks.
-
-Cheers,
-Gang
-
-> Cheers,
-> Matt
-> --=20
->=20Sponsored by the NGI0 Core fund.
->
