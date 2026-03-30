@@ -1,337 +1,162 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 732B62DCF7D
-	for <mptcp@lists.linux.dev>; Mon, 30 Mar 2026 09:45:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4546A2253EB
+	for <mptcp@lists.linux.dev>; Mon, 30 Mar 2026 09:50:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774863954; cv=none; b=UBFCZXjkIhi6ZlRC5nq1fR8HcuBXj7V1fGXEajVLocSMYb5DJymh1RqtcJvBCrJTz/Iqz4cpmefzsrapKuL/OmhIAm2Z4WGqLpEYULoKxuA4G5umoEighfyZXn6/LRf1wtk8938rbK4m0EEft0fvuldI4aCGfaKuZMf3o/aAywU=
+	t=1774864255; cv=none; b=FqTK9hbo1bF4JIMCxvpSTcW91nLJF+5bAdiQGRa/LjeBxbPei78GTZJJy1zcp7MQmeD10KkvjF+MmxNUUlge/x2SMTAzpXk2jl8kMvcXXBTgagI2FSFAkfuYp7OUSwZZZDIydW1vr5UeWI3ubkbvIbWnh14gice5i7qYirFFA00=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774863954; c=relaxed/simple;
-	bh=3/F87lLjSijxgWKapSYtLfD9bvz04cjurB9h/9D9EAg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dxSpX1OoT8bHj1LLa0/SLezD2dzskeoNpfCtL8aZDPFrOU42xyONvGaW1kRTHwZB6UdBTp4bHLHpzE8jatIBPsmyaiNWIXXjITJWmKBPezsXVzz3yBfk1SpOfkbG9Xz3n2PX7SKZC1AkOJa6BJvyHuLUkOHs3ByuleivCkkC/jc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HQ9J2xew; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1774864255; c=relaxed/simple;
+	bh=Ab8tdkv6TFBe+ZBzSrrHUImKbY9vTxWj/ATWHkjeRRA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=twelT9UE+Y+XlwfxzUCOeIujv+upMC8c+lHMsLPtxseqEqP9hIa92SvjGr3fQKlbXKgYRtGA6eHTlkjayYjgATEPDWpwvH/Ah4/KmApoQvq9VoHzSN6hh7lilEUuX2iTdHwHMjJ2RwqtYPaTALFKhz3O5Zwe1hXJTRmX/wVtfoI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=geCGW48+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HQ9J2xew"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47324C2BC9E;
-	Mon, 30 Mar 2026 09:45:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="geCGW48+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F100C4CEF7;
+	Mon, 30 Mar 2026 09:50:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774863954;
-	bh=3/F87lLjSijxgWKapSYtLfD9bvz04cjurB9h/9D9EAg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=HQ9J2xewJmJ9ugqK4Ayz9gU5kXz+CWnrhb+qfn25jqOXZmbovm/hGbblTBywOaqa9
-	 FXv74JpRpJQQFecheED33yDX9wZMSHFGsJc/kohdoprj60P0fxW7NWNo1iTMISHx5/
-	 hYSnxQM/yJNNQ74SSw9qgXCG247R3J6ltT4q1P+LweSRHMIGPZc+Bq8MpkQFEUxw/j
-	 Z1oKlMm0fhfsQuB9p28uQWzYkxEUBePbemy3P68LPsEY63h6gHtk0oEP8c7O8xMSFf
-	 p94rZdrEDc9Y2RTmMxtxiDql5rFNHUGNDZL7ecUygjfEBQmTrYln7YgXfTcmAlL3qC
-	 WJ/we2Wz4H/JA==
-From: Geliang Tang <geliang@kernel.org>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>,
-	Hannes Reinecke <hare@suse.de>,
-	Nilay Shroff <nilay@linux.ibm.com>,
-	Ming Lei <ming.lei@redhat.com>,
-	zhenwei pi <zhenwei.pi@linux.dev>,
-	Hui Zhu <zhuhui@kylinos.cn>,
-	Gang Yan <yangang@kylinos.cn>
-Subject: [RFC mptcp-next v6 7/7] selftests: mptcp: add NVMe over MPTCP test
-Date: Mon, 30 Mar 2026 17:43:32 +0800
-Message-ID: <9a7326ba90c41ffb18b779261158e76274beebcf.1774862875.git.tanggeliang@kylinos.cn>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <cover.1774862875.git.tanggeliang@kylinos.cn>
-References: <cover.1774862875.git.tanggeliang@kylinos.cn>
+	s=k20201202; t=1774864254;
+	bh=Ab8tdkv6TFBe+ZBzSrrHUImKbY9vTxWj/ATWHkjeRRA=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=geCGW48+If+pi6ykcgZs+LZEhE9g1Iw3w/zc2aL5SxqH0XjNPHREe/wbAu2cFVhUk
+	 hcvtkiHHNWU8h8FHSt0/W3DWvB6BbhY8w5NEMrQm7if0FNAqfinZjuc+Lb84kxgtUO
+	 dsSjHNwq1S1msGNPX9EAk6GIkfrXwbEF+tcrifgbdI2BnpGRr0u2w4xrS88sA2Osjy
+	 hxdiT2qQKrF6yPELckWdAdDcqpFoNU+2Ry70EwlbUt0U6JjjRh/oVhrZLp6j35+7FT
+	 y1plaZOhduqygdQdqwRitEt3EcmLXLgb3IW4Vbo3XhE2Mu070ao6+YFdvM0KWmbxrP
+	 CUye+5VQgJzmw==
+Message-ID: <8eb9b926-9402-41e7-9574-f2886f67d14e@kernel.org>
+Date: Mon, 30 Mar 2026 11:50:51 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-next] mptcp: preserve MSG_EOR semantics in sendmsg
+ path
+To: gang.yan@linux.dev, mptcp@lists.linux.dev
+References: <20260309025431.125943-1-gang.yan@linux.dev>
+ <c572547f-449b-43e9-bd76-e0ffe2ebf735@kernel.org>
+ <be87d58dcca25715b3f992acd152a6778de44dec@linux.dev>
+From: Matthieu Baerts <matttbe@kernel.org>
+Content-Language: fr
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <be87d58dcca25715b3f992acd152a6778de44dec@linux.dev>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+Hi Gang,
 
-A test case for NVMe over MPTCP has been implemented. It verifies the
-proper functionality of nvme list, discover, connect, and disconnect
-commands. Additionally, read/write performance has been evaluated using
-fio.
+On 30/03/2026 10:19, gang.yan@linux.dev wrote:
+> March 27, 2026 at 12:42 AM, "Matthieu Baerts" <matttbe@kernel.org mailto:matttbe@kernel.org?to=%22Matthieu%20Baerts%22%20%3Cmatttbe%40kernel.org%3E > wrote:
+> 
+> 
+>>
+>> Hi Gang,
+>>
+>> Thank you for the new version.
+>>
+>> On 09/03/2026 03:54, Gang Yan wrote:
+>>
+>>>
+>>> From: Gang Yan <yangang@kylinos.cn>
+>>>  
+>>>  Extend MPTCP's sendmsg handling to recognize and honor the MSG_EOR flag,
+>>>  which marks the end of a record for application-level message boundaries.
+>>>  
+>>>  Data fragments tagged with MSG_EOR are explicitly marked in the
+>>>  mptcp_data_frag structure and skb context to prevent unintended
+>>>  coalescing with subsequent data chunks. This ensures the intent of
+>>>  applications using MSG_EOR is preserved across MPTCP subflows,
+>>>  maintaining consistent message segmentation behavior.
+>>>  
+>>>  Signed-off-by: Gang Yan <yangang@kylinos.cn>
+>>>  ---
+>>>  
+>>>  Notes:
+>>>  - This patch incorporates feedback and suggestions from Paolo Abeni
+>>>  and Geliang Tang, including memory alignment optimizations for the
+>>>  mptcp_data_frag struct (shrinking overhead to u8 and using bitfield
+>>>  for eor to avoid size increase) and compile-time checks with BUILD_BUG_ON.
+>>>
+>> Please mention why you shrank "overhead" to a u8 (not to increase the
+>> struct size), and why it is OK to do so (u16 not needed because ...) +
+>> explaining the BUILD_BUG_ON().
+> 
+> The ‘u8’ is one of Paolo's suggestions[1]. I think 'u16' is not needed because:
+>  - 'offset = ALIGN(orig_offset, sizeof(long));'
+>  - 'dfrag->offset = offset - origin_offset + sizeof(struct mptcp_data_frag);',
+> the max value of offset is 7, and sizeof(struct mptcp_data_frag)) is
+> usually 40, so the overhead is 47, far less than 255.
 
-This test simulats four NICs on both target and host sides, each limited
-to 100MB/s. It shows that 'NVMe over MPTCP' delivered bandwidth up to
-four times that of standard TCP:
+Thank you for the explanation. Can you then mention in the commit
+message that it is fine to reduce overhead to a 'u8', and add the above
+explanation, please?
 
- # ./mptcp_nvme.sh tcp
-  READ: bw=112MiB/s (118MB/s), 112MiB/s-112MiB/s (118MB/s-118MB/s),
-		io=1123MiB (1177MB), run=10018-10018msec
-  WRITE: bw=112MiB/s (117MB/s), 112MiB/s-112MiB/s (117MB/s-117MB/s),
-		io=1118MiB (1173MB), run=10018-10018msec
+If 'offset' max value is 7, it could also be reduced from a u16 to a u8
+then, no?
 
- # ./mptcp_nvme.sh mptcp
-  READ: bw=427MiB/s (448MB/s), 427MiB/s-427MiB/s (448MB/s-448MB/s),
-		io=4286MiB (4494MB), run=10039-10039msec
-  WRITE: bw=387MiB/s (406MB/s), 387MiB/s-387MiB/s (406MB/s-406MB/s),
-		io=3885MiB (4073MB), run=10043-10043msec
+> Another suggestion from Paolo[1] is a build time check on the max 'overhead'
+> value. So I use 'ALIGN(1, sizeof(long)) + sizeof(struct mptcp_data_frag)' to
+> represent the max_val of 'overhead'.
 
-Also add NVMe iopolicy testing to mptcp_nvme.sh, with the default set
-to "numa". It can be set to "round-robin" or "queue-depth".
+It might be good to add a comment here too, at least to explain that
+"ALIGN(1, sizeof(long))" represents 'offset' maximum size.
 
- # ./mptcp_nvme.sh mptcp round-robin
+> But Paolo also mention it's probably too conservative. WDYT?
 
-Cc: Hannes Reinecke <hare@suse.de>
-Cc: Nilay Shroff <nilay@linux.ibm.com>
-Cc: Ming Lei <ming.lei@redhat.com>
-Co-developed-by: zhenwei pi <zhenwei.pi@linux.dev>
-Signed-off-by: zhenwei pi <zhenwei.pi@linux.dev>
-Co-developed-by: Hui Zhu <zhuhui@kylinos.cn>
-Signed-off-by: Hui Zhu <zhuhui@kylinos.cn>
-Co-developed-by: Gang Yan <yangang@kylinos.cn>
-Signed-off-by: Gang Yan <yangang@kylinos.cn>
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
----
- tools/testing/selftests/net/mptcp/Makefile    |   1 +
- tools/testing/selftests/net/mptcp/config      |   7 +
- .../testing/selftests/net/mptcp/mptcp_nvme.sh | 205 ++++++++++++++++++
- 3 files changed, 213 insertions(+)
- create mode 100755 tools/testing/selftests/net/mptcp/mptcp_nvme.sh
+Maybe, but it doesn't hurt I suppose. As long as this check is clearly
+linked to different fields from the mptcp_data_frag structure → having a
+comment explaining that.
 
-diff --git a/tools/testing/selftests/net/mptcp/Makefile b/tools/testing/selftests/net/mptcp/Makefile
-index 22ba0da2adb8..7b308447a58b 100644
---- a/tools/testing/selftests/net/mptcp/Makefile
-+++ b/tools/testing/selftests/net/mptcp/Makefile
-@@ -13,6 +13,7 @@ TEST_PROGS := \
- 	mptcp_connect_sendfile.sh \
- 	mptcp_connect_splice.sh \
- 	mptcp_join.sh \
-+	mptcp_nvme.sh \
- 	mptcp_sockopt.sh \
- 	pm_netlink.sh \
- 	simult_flows.sh \
-diff --git a/tools/testing/selftests/net/mptcp/config b/tools/testing/selftests/net/mptcp/config
-index 59051ee2a986..0eee348eff8b 100644
---- a/tools/testing/selftests/net/mptcp/config
-+++ b/tools/testing/selftests/net/mptcp/config
-@@ -34,3 +34,10 @@ CONFIG_NFT_SOCKET=m
- CONFIG_NFT_TPROXY=m
- CONFIG_SYN_COOKIES=y
- CONFIG_VETH=y
-+CONFIG_CONFIGFS_FS=y
-+CONFIG_NVME_CORE=y
-+CONFIG_NVME_FABRICS=y
-+CONFIG_NVME_TCP=y
-+CONFIG_NVME_TARGET=y
-+CONFIG_NVME_TARGET_TCP=y
-+CONFIG_NVME_MULTIPATH=y
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_nvme.sh b/tools/testing/selftests/net/mptcp/mptcp_nvme.sh
-new file mode 100755
-index 000000000000..bc201a300b72
---- /dev/null
-+++ b/tools/testing/selftests/net/mptcp/mptcp_nvme.sh
-@@ -0,0 +1,205 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+
-+. "$(dirname "$0")/mptcp_lib.sh"
-+
-+ret=0
-+trtype="${1:-mptcp}"
-+iopolicy=${2:-"numa"} # round-robin, queue-depth
-+nqn=nqn.2014-08.org.nvmexpress.${trtype}dev
-+ns=1
-+port=1234
-+trsvcid=4420
-+ns1=""
-+ns2=""
-+
-+ns1_cleanup()
-+{
-+	mount -t configfs none /sys/kernel/config
-+
-+	rm -rf /sys/kernel/config/nvmet/ports/"${port}"/subsystems/"${trtype}"subsys
-+	rmdir /sys/kernel/config/nvmet/ports/"${port}"
-+	echo 0 > /sys/kernel/config/nvmet/subsystems/"${nqn}"/namespaces/"${ns}"/enable
-+	echo -n 0 > /sys/kernel/config/nvmet/subsystems/"${nqn}"/namespaces/"${ns}"/device_path
-+	rmdir /sys/kernel/config/nvmet/subsystems/"${nqn}"/namespaces/"${ns}"
-+	rmdir /sys/kernel/config/nvmet/subsystems/"${nqn}"
-+}
-+
-+ns2_cleanup()
-+{
-+	nvme disconnect -n "${nqn}" || true
-+}
-+
-+cleanup()
-+{
-+	ip netns exec "$ns2" bash <<- EOF
-+		$(declare -f ns2_cleanup)
-+		ns2_cleanup
-+	EOF
-+
-+	sleep 1
-+
-+	ip netns exec "$ns1" bash <<- EOF
-+		$(declare -f ns1_cleanup)
-+		ns1_cleanup
-+	EOF
-+
-+	losetup -d /dev/loop100
-+	rm -rf /tmp/test.raw
-+
-+	mptcp_lib_ns_exit "$ns1" "$ns2"
-+
-+	kill "$monitor_pid_ns1" 2>/dev/null
-+	wait "$monitor_pid_ns1" 2>/dev/null
-+
-+	kill "$monitor_pid_ns2" 2>/dev/null
-+	wait "$monitor_pid_ns2" 2>/dev/null
-+
-+	unset -v trtype nqn ns port trsvcid
-+}
-+
-+init()
-+{
-+	mptcp_lib_ns_init ns1 ns2
-+
-+	# ns1		ns2
-+	# 10.1.1.1	10.1.1.2
-+	# 10.1.2.1	10.1.2.2
-+	# 10.1.3.1	10.1.3.2
-+	# 10.1.4.1	10.1.4.2
-+	for i in {1..4}; do
-+		ip link add ns1eth"$i" netns "$ns1" type veth peer name ns2eth"$i" netns "$ns2"
-+		ip -net "$ns1" addr add 10.1."$i".1/24 dev ns1eth"$i"
-+		ip -net "$ns1" addr add dead:beef:"$i"::1/64 dev ns1eth"$i" nodad
-+		ip -net "$ns1" link set ns1eth"$i" up
-+		ip -net "$ns2" addr add 10.1."$i".2/24 dev ns2eth"$i"
-+		ip -net "$ns2" addr add dead:beef:"$i"::2/64 dev ns2eth"$i" nodad
-+		ip -net "$ns2" link set ns2eth"$i" up
-+		ip -net "$ns2" route add default via 10.1."$i".1 dev ns2eth"$i" metric 10"$i"
-+		ip -net "$ns2" route add default via dead:beef:"$i"::1 dev ns2eth"$i" metric 10"$i"
-+
-+		# Add tc qdisc to both namespaces for bandwidth limiting
-+		tc -n "$ns1" qdisc add dev ns1eth"$i" root netem rate 1000mbit
-+		tc -n "$ns2" qdisc add dev ns2eth"$i" root netem rate 1000mbit
-+	done
-+
-+	mptcp_lib_pm_nl_set_limits "${ns1}" 8 8
-+
-+	mptcp_lib_pm_nl_add_endpoint "$ns1" 10.1.2.1 flags signal
-+	mptcp_lib_pm_nl_add_endpoint "$ns1" 10.1.3.1 flags signal
-+	mptcp_lib_pm_nl_add_endpoint "$ns1" 10.1.4.1 flags signal
-+
-+	mptcp_lib_pm_nl_set_limits "${ns2}" 8 8
-+
-+	mptcp_lib_pm_nl_add_endpoint "$ns2" 10.1.2.2 flags subflow
-+	mptcp_lib_pm_nl_add_endpoint "$ns2" 10.1.3.2 flags subflow
-+	mptcp_lib_pm_nl_add_endpoint "$ns2" 10.1.4.2 flags subflow
-+
-+	ip -n "${ns1}" mptcp monitor &
-+	monitor_pid_ns1=$!
-+	ip -n "${ns2}" mptcp monitor &
-+	monitor_pid_ns2=$!
-+}
-+
-+run_target()
-+{
-+	mount -t configfs none /sys/kernel/config
-+
-+	cd /sys/kernel/config/nvmet/subsystems || exit
-+	mkdir -p "${nqn}"
-+	cd "${nqn}" || exit
-+	echo 1 > attr_allow_any_host
-+	mkdir -p namespaces/"${ns}"
-+	echo /dev/loop100 > namespaces/"${ns}"/device_path
-+	echo 1 > namespaces/"${ns}"/enable
-+
-+	cd /sys/kernel/config/nvmet/ports || exit
-+	mkdir -p "${port}"
-+	cd "${port}" || exit
-+	echo "${trtype}" > addr_trtype
-+	echo ipv4 > addr_adrfam
-+	echo 0.0.0.0 > addr_traddr
-+	echo "${trsvcid}" > addr_trsvcid
-+
-+	cd subsystems || exit
-+	ln -sf ../../../subsystems/"${nqn}" "${trtype}"subsys
-+}
-+
-+run_host()
-+{
-+	local traddr=10.1.1.1
-+
-+	echo "nvme discover -a ${traddr}"
-+	nvme discover -t "${trtype}" -a "${traddr}" -s "${trsvcid}"
-+	if [ $? -ne 0 ]; then
-+		return "${KSFT_FAIL}"
-+	fi
-+
-+	echo "nvme connect"
-+	devname=$(nvme connect -t "${trtype}" -a "${traddr}" -s "${trsvcid}" -n "${nqn}" |
-+		  awk '{print $NF}')
-+
-+	sleep 1
-+
-+	echo "nvme list"
-+	nvme list
-+
-+	subname=$(nvme list-subsys /dev/"${devname}"n1 |
-+		  grep -o 'nvme-subsys[0-9]*' | head -1)
-+
-+	echo "${iopolicy}" > /sys/class/nvme-subsystem/"${subname}"/iopolicy
-+	cat /sys/class/nvme-subsystem/"${subname}"/iopolicy
-+
-+	echo "fio randread /dev/${devname}n1"
-+	fio --name=global --direct=1 --norandommap --randrepeat=0 --ioengine=libaio \
-+	    --thread=1 --blocksize=4k --runtime=10 --time_based --rw=randread --numjobs=4 \
-+	    --iodepth=256 --group_reporting --size=100% --name=libaio_4_256_4k_randread \
-+	    --size=4m --filename=/dev/"${devname}"n1
-+
-+	sleep 1
-+
-+	echo "fio randwrite /dev/${devname}n1"
-+	fio --name=global --direct=1 --norandommap --randrepeat=0 --ioengine=libaio \
-+	    --thread=1 --blocksize=4k --runtime=10 --time_based --rw=randwrite --numjobs=4 \
-+	    --iodepth=256 --group_reporting --size=100% --name=libaio_4_256_4k_randwrite \
-+	    --size=4m --filename=/dev/"${devname}"n1
-+
-+	nvme flush /dev/"${devname}"n1
-+
-+	sleep 1
-+}
-+
-+init
-+trap cleanup EXIT
-+
-+dd if=/dev/zero of=/tmp/test.raw bs=1M count=0 seek=512
-+losetup /dev/loop100 /tmp/test.raw
-+
-+run_test()
-+{
-+	export trtype nqn ns port trsvcid
-+	export iopolicy
-+
-+	if ! ip netns exec "$ns1" bash <<- EOF
-+		$(declare -f run_target)
-+		run_target
-+		exit \$?
-+	EOF
-+	then
-+		ret="${KSFT_FAIL}"
-+	fi
-+
-+	if ! ip netns exec "$ns2" bash <<- EOF
-+		$(declare -f run_host)
-+		run_host
-+		exit \$?
-+	EOF
-+	then
-+		ret="${KSFT_FAIL}"
-+	fi
-+}
-+
-+run_test "$@"
-+
-+mptcp_lib_result_print_all_tap
-+exit "$ret"
+Cheers,
+Matt
 -- 
-2.51.0
+Sponsored by the NGI0 Core fund.
 
