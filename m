@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA7093B5843
-	for <mptcp@lists.linux.dev>; Mon, 30 Mar 2026 09:45:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A0702DF136
+	for <mptcp@lists.linux.dev>; Mon, 30 Mar 2026 09:45:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774863937; cv=none; b=QmIab23hf4gzScjksWrgjOnRjh4W4sIyMxe3qrk3GwU5AOvXFWo8J4qzmjFqIFzTOB4yr+ITflzKAMt38Nlp5mJBiT5uGc2Q20kWchI0Z5gPaHg3qBCk26Re+pDWlVR3AaJubOwux8vVefHl1YvsOxOSvcZpk1BLVBqIG/ynlpw=
+	t=1774863940; cv=none; b=SHuaAZOTAVBvCCtL4dZaw70qaleiOY3y7flK1ir3FaQldfzhcixPtHV4iB8R+EQr5l8uDvE4HHd2qCXRWmxo6qWIgo4gsBUMPx3KveGOoJ/BgonpqK/HKbucL3uMkrenaYLCkZARm3H3H+9Xf4IvH1Ko+tRgOtweFei5kzxjb0c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774863937; c=relaxed/simple;
-	bh=a6a9elLO5pbsPZwCLVSkYM8VOjFqcciy8j35wvE6els=;
+	s=arc-20240116; t=1774863940; c=relaxed/simple;
+	bh=/PZQFCXDulJ8vLfSgkMtQ6gYJ90ctQj+2kufTur7CVk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=p1fpqOeOdHJR77p+WNQuQjNfQKeLA3Yc5hly8caQSxTnJP3h+K/YEZBhN+wmThIPr/bHhp6HbeCIeU+eT7NyTfvF/Zv3gBkrsGta+CwFoYaRN7FnfgetVll9XMPlaFK+XzwEbvzMe9F4w4DyVwpf6nXMcNGjEad6Zu4Kencnupo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t4+rJfg+; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Z0ipSKpG4Mqu7Lgjhyr5MvrB2fWkrPturJJzmoIWSziBzOade8yyn0QOOdnXe80oWAVnkmvlrjaHzwx4nNiCZ3D6tzt99tcjUvqyjZ9JHznE3/OtMQf/0oo5Wc2KLN9NdW02weg0U+xpPpA7XSrPwPwl1c+cp9ujtEGQ9dNMwJQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TsyIUSzb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t4+rJfg+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84709C4CEF7;
-	Mon, 30 Mar 2026 09:45:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TsyIUSzb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0383C4CEF7;
+	Mon, 30 Mar 2026 09:45:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774863937;
-	bh=a6a9elLO5pbsPZwCLVSkYM8VOjFqcciy8j35wvE6els=;
+	s=k20201202; t=1774863940;
+	bh=/PZQFCXDulJ8vLfSgkMtQ6gYJ90ctQj+2kufTur7CVk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=t4+rJfg+Nz5l3xD+HXJCWYyA76ubnVCdI5i5e+mvqqp7Oqvik/obVPFaQYuszJCVq
-	 6jWgJFC4YgTB02hxW87OQJ890KHi4kYcbh9MsGo/M2hy2AejiNabbSW1V7YOZmeGSW
-	 NRRo6QQM/RFowZ3b1FEEInlO8haBlTMmTkzXsKAO6XSWPJ6+2TjaJeMIQ7X+ZGLif4
-	 MFVNfmPosk64givyCSatK6ic1KKTIyGNq61wt7Jrb+/cyJ59YkGaGAYOfC+vG5tLy3
-	 tG7ki1hVnm7yLJ+hN0LYujd503QAGt9zKsp4R8ekul5vo8YPHfKMIl+IAI8jqlWBCf
-	 /bjsfjNyD/C+g==
+	b=TsyIUSzbKV2+iKuAeJ+E1n6wKWuuBAIKY/n2Mi4aFfmNWT69X9EfbBJKXRWfFGsf8
+	 wKIaduAH0tKAMUnCTkdYoxaYPYVWOwKxH2q8VnwONCgEBsGosOv+R6wTfZjFb3DsjE
+	 ihQVJMUM9bUZ5bzqgyZtMm8PzFUBin0YvM/+A0WdNOwBE1MY9WIrn80+LHA7NHhf8m
+	 BPD0uIe6azLrCH+sXGAUMRTviBDzRmltDz0vCtQwUg98lNe1pQ8MyBARoO1LBvvKwe
+	 6iV4xEWc8tejuo4ccfS4UbOHStJDPi+kT+1gVsNvRn/S8Ltqw6AfSfmxJ6OdMeNvcI
+	 JnqxG/U/3e0LA==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>,
@@ -33,9 +33,9 @@ Cc: Geliang Tang <tanggeliang@kylinos.cn>,
 	zhenwei pi <zhenwei.pi@linux.dev>,
 	Hui Zhu <zhuhui@kylinos.cn>,
 	Gang Yan <yangang@kylinos.cn>
-Subject: [RFC mptcp-next v6 1/7] nvmet-tcp: define target tcp_sockops struct
-Date: Mon, 30 Mar 2026 17:43:26 +0800
-Message-ID: <e8ce1eae682a0c478d976f8ab1572e2004bd3815.1774862875.git.tanggeliang@kylinos.cn>
+Subject: [RFC mptcp-next v6 2/7] nvmet-tcp: implement target mptcp sockops
+Date: Mon, 30 Mar 2026 17:43:27 +0800
+Message-ID: <d7afdc0639d6aadcb50579f8e52221ed5d404af6.1774862875.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <cover.1774862875.git.tanggeliang@kylinos.cn>
 References: <cover.1774862875.git.tanggeliang@kylinos.cn>
@@ -49,20 +49,16 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-To add MPTCP support in "NVMe over TCP", the target side needs to pass
-IPPROTO_MPTCP to sock_create() instead of IPPROTO_TCP to create an MPTCP
-socket. Additionally, the setsockopt operations for this socket need to
-be switched to a set of MPTCP-specific functions.
+This patch introduces a new NVMe target transport type NVMF_TRTYPE_MPTCP
+to support MPTCP.
 
-This patch defines the nvmet_tcp_sockops structure, which contains the
-protocol of the socket and a set of function pointers for these socket
-operations. A "sockops" field is also added to struct nvmet_tcp_port.
+An MPTCP-specific version of struct nvmet_tcp_sockops is implemented,
+and it is assigned to port->sockops when the transport type is MPTCP.
 
-A TCP-specific version of struct nvmet_tcp_sockops is defined. In
-nvmet_tcp_add_port(), port->sockops is set to nvmet_tcp_sockops based on
-whether trtype is TCP. All locations that previously called TCP setsockopt
-functions are updated to call the corresponding function pointers in the
-nvmet_tcp_sockops structure.
+Dedicated MPTCP helpers are introduced for setting socket options. These
+helpers set the values on the first subflow socket of an MPTCP connection.
+The values are then synchronized to other newly created subflows in
+sync_socket_options().
 
 Cc: Hannes Reinecke <hare@suse.de>
 Co-developed-by: zhenwei pi <zhenwei.pi@linux.dev>
@@ -73,107 +69,213 @@ Co-developed-by: Gang Yan <yangang@kylinos.cn>
 Signed-off-by: Gang Yan <yangang@kylinos.cn>
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- drivers/nvme/target/tcp.c | 40 ++++++++++++++++++++++++++++++++-------
- 1 file changed, 33 insertions(+), 7 deletions(-)
+ drivers/nvme/target/tcp.c | 13 ++++++
+ include/linux/nvme.h      |  1 +
+ include/net/mptcp.h       | 20 ++++++++
+ net/mptcp/sockopt.c       | 98 +++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 132 insertions(+)
 
 diff --git a/drivers/nvme/target/tcp.c b/drivers/nvme/target/tcp.c
-index acc71a26733f..b20adfb10737 100644
+index b20adfb10737..03f876440f6d 100644
 --- a/drivers/nvme/target/tcp.c
 +++ b/drivers/nvme/target/tcp.c
-@@ -198,12 +198,22 @@ struct nvmet_tcp_queue {
- 	void (*write_space)(struct sock *);
+@@ -2049,6 +2049,15 @@ static const struct nvmet_tcp_sockops nvmet_tcp_sockops = {
+ 	.set_tos	= ip_sock_set_tos,
  };
  
-+struct nvmet_tcp_sockops {
-+	int			proto;
-+	void (*set_reuseaddr)(struct sock *sk);
-+	void (*set_nodelay)(struct sock *sk);
-+	void (*set_priority)(struct sock *sk, u32 priority);
-+	void (*no_linger)(struct sock *sk);
-+	void (*set_tos)(struct sock *sk, int val);
-+};
-+
- struct nvmet_tcp_port {
- 	struct socket		*sock;
- 	struct work_struct	accept_work;
- 	struct nvmet_port	*nport;
- 	struct sockaddr_storage addr;
- 	void (*data_ready)(struct sock *);
-+	struct nvmet_tcp_sockops sockops;
- };
- 
- static DEFINE_IDA(nvmet_tcp_queue_ida);
-@@ -1703,14 +1713,14 @@ static int nvmet_tcp_set_queue_sock(struct nvmet_tcp_queue *queue)
- 	 * close. This is done to prevent stale data from being sent should
- 	 * the network connection be restored before TCP times out.
- 	 */
--	sock_no_linger(sock->sk);
-+	queue->port->sockops.no_linger(sock->sk);
- 
- 	if (so_priority > 0)
--		sock_set_priority(sock->sk, so_priority);
-+		queue->port->sockops.set_priority(sock->sk, so_priority);
- 
- 	/* Set socket type of service */
- 	if (inet->rcv_tos > 0)
--		ip_sock_set_tos(sock->sk, inet->rcv_tos);
-+		queue->port->sockops.set_tos(sock->sk, inet->rcv_tos);
- 
- 	ret = 0;
- 	write_lock_bh(&sock->sk->sk_callback_lock);
-@@ -2030,6 +2040,15 @@ static void nvmet_tcp_listen_data_ready(struct sock *sk)
- 	read_unlock_bh(&sk->sk_callback_lock);
- }
- 
-+static const struct nvmet_tcp_sockops nvmet_tcp_sockops = {
-+	.proto		= IPPROTO_TCP,
-+	.set_reuseaddr	= sock_set_reuseaddr,
-+	.set_nodelay	= tcp_sock_set_nodelay,
-+	.set_priority	= sock_set_priority,
-+	.no_linger	= sock_no_linger,
-+	.set_tos	= ip_sock_set_tos,
++static const struct nvmet_tcp_sockops nvmet_mptcp_sockops = {
++	.proto		= IPPROTO_MPTCP,
++	.set_reuseaddr	= mptcp_sock_set_reuseaddr,
++	.set_nodelay	= mptcp_sock_set_nodelay,
++	.set_priority	= mptcp_sock_set_priority,
++	.no_linger	= mptcp_sock_no_linger,
++	.set_tos	= mptcp_sock_set_tos,
 +};
 +
  static int nvmet_tcp_add_port(struct nvmet_port *nport)
  {
  	struct nvmet_tcp_port *port;
-@@ -2054,6 +2073,13 @@ static int nvmet_tcp_add_port(struct nvmet_port *nport)
- 		goto err_port;
- 	}
+@@ -2075,6 +2084,10 @@ static int nvmet_tcp_add_port(struct nvmet_port *nport)
  
-+	if (nport->disc_addr.trtype == NVMF_TRTYPE_TCP) {
-+		port->sockops = nvmet_tcp_sockops;
-+	} else {
-+		ret = -EINVAL;
-+		goto err_port;
-+	}
+ 	if (nport->disc_addr.trtype == NVMF_TRTYPE_TCP) {
+ 		port->sockops = nvmet_tcp_sockops;
++#ifdef CONFIG_MPTCP
++	} else if (nport->disc_addr.trtype == NVMF_TRTYPE_MPTCP) {
++		port->sockops = nvmet_mptcp_sockops;
++#endif
+ 	} else {
+ 		ret = -EINVAL;
+ 		goto err_port;
+diff --git a/include/linux/nvme.h b/include/linux/nvme.h
+index 655d194f8e72..8069667ad47e 100644
+--- a/include/linux/nvme.h
++++ b/include/linux/nvme.h
+@@ -68,6 +68,7 @@ enum {
+ 	NVMF_TRTYPE_RDMA	= 1,	/* RDMA */
+ 	NVMF_TRTYPE_FC		= 2,	/* Fibre Channel */
+ 	NVMF_TRTYPE_TCP		= 3,	/* TCP/IP */
++	NVMF_TRTYPE_MPTCP	= 4,	/* Multipath TCP */
+ 	NVMF_TRTYPE_LOOP	= 254,	/* Reserved for host usage */
+ 	NVMF_TRTYPE_MAX,
+ };
+diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+index 4cf59e83c1c5..6eca3ff13324 100644
+--- a/include/net/mptcp.h
++++ b/include/net/mptcp.h
+@@ -237,6 +237,16 @@ static inline __be32 mptcp_reset_option(const struct sk_buff *skb)
+ }
+ 
+ void mptcp_active_detect_blackhole(struct sock *sk, bool expired);
 +
- 	ret = inet_pton_with_scope(&init_net, af, nport->disc_addr.traddr,
- 			nport->disc_addr.trsvcid, &port->addr);
- 	if (ret) {
-@@ -2068,7 +2094,7 @@ static int nvmet_tcp_add_port(struct nvmet_port *nport)
- 		port->nport->inline_data_size = NVMET_TCP_DEF_INLINE_DATA_SIZE;
++void mptcp_sock_set_reuseaddr(struct sock *sk);
++
++void mptcp_sock_set_nodelay(struct sock *sk);
++
++void mptcp_sock_set_priority(struct sock *sk, u32 priority);
++
++void mptcp_sock_no_linger(struct sock *sk);
++
++void mptcp_sock_set_tos(struct sock *sk, int val);
+ #else
  
- 	ret = sock_create(port->addr.ss_family, SOCK_STREAM,
--				IPPROTO_TCP, &port->sock);
-+				port->sockops.proto, &port->sock);
- 	if (ret) {
- 		pr_err("failed to create a socket\n");
- 		goto err_port;
-@@ -2077,10 +2103,10 @@ static int nvmet_tcp_add_port(struct nvmet_port *nport)
- 	port->sock->sk->sk_user_data = port;
- 	port->data_ready = port->sock->sk->sk_data_ready;
- 	port->sock->sk->sk_data_ready = nvmet_tcp_listen_data_ready;
--	sock_set_reuseaddr(port->sock->sk);
--	tcp_sock_set_nodelay(port->sock->sk);
-+	port->sockops.set_reuseaddr(port->sock->sk);
-+	port->sockops.set_nodelay(port->sock->sk);
- 	if (so_priority > 0)
--		sock_set_priority(port->sock->sk, so_priority);
-+		port->sockops.set_priority(port->sock->sk, so_priority);
+ static inline void mptcp_init(void)
+@@ -323,6 +333,16 @@ static inline struct request_sock *mptcp_subflow_reqsk_alloc(const struct reques
+ static inline __be32 mptcp_reset_option(const struct sk_buff *skb)  { return htonl(0u); }
  
- 	ret = kernel_bind(port->sock, (struct sockaddr_unsized *)&port->addr,
- 			sizeof(port->addr));
+ static inline void mptcp_active_detect_blackhole(struct sock *sk, bool expired) { }
++
++static inline void mptcp_sock_set_reuseaddr(struct sock *sk) { }
++
++static inline void mptcp_sock_set_nodelay(struct sock *sk) { }
++
++static void mptcp_sock_set_priority(struct sock *sk, u32 priority) { }
++
++static inline void mptcp_sock_no_linger(struct sock *sk) { }
++
++static void mptcp_sock_set_tos(struct sock *sk, int val) { }
+ #endif /* CONFIG_MPTCP */
+ 
+ #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+index de90a2897d2d..c6a2ccab7049 100644
+--- a/net/mptcp/sockopt.c
++++ b/net/mptcp/sockopt.c
+@@ -1537,6 +1537,7 @@ static void sync_socket_options(struct mptcp_sock *msk, struct sock *ssk)
+ 	static const unsigned int tx_rx_locks = SOCK_RCVBUF_LOCK | SOCK_SNDBUF_LOCK;
+ 	struct sock *sk = (struct sock *)msk;
+ 	bool keep_open;
++	u32 priority;
+ 
+ 	keep_open = sock_flag(sk, SOCK_KEEPOPEN);
+ 	if (ssk->sk_prot->keepalive)
+@@ -1586,6 +1587,11 @@ static void sync_socket_options(struct mptcp_sock *msk, struct sock *ssk)
+ 	inet_assign_bit(FREEBIND, ssk, inet_test_bit(FREEBIND, sk));
+ 	inet_assign_bit(BIND_ADDRESS_NO_PORT, ssk, inet_test_bit(BIND_ADDRESS_NO_PORT, sk));
+ 	WRITE_ONCE(inet_sk(ssk)->local_port_range, READ_ONCE(inet_sk(sk)->local_port_range));
++
++	ssk->sk_reuse = sk->sk_reuse;
++	priority = READ_ONCE(sk->sk_priority);
++	if (priority > 0)
++		sock_set_priority(ssk, priority);
+ }
+ 
+ void mptcp_sockopt_sync_locked(struct mptcp_sock *msk, struct sock *ssk)
+@@ -1652,3 +1658,95 @@ int mptcp_set_rcvlowat(struct sock *sk, int val)
+ 	}
+ 	return 0;
+ }
++
++void mptcp_sock_set_reuseaddr(struct sock *sk)
++{
++	struct mptcp_sock *msk = mptcp_sk(sk);
++	struct sock *ssk;
++
++	lock_sock(sk);
++	sockopt_seq_inc(msk);
++	sk->sk_reuse = SK_CAN_REUSE;
++	ssk = __mptcp_nmpc_sk(msk);
++	if (IS_ERR(ssk))
++		goto unlock;
++	sock_set_reuseaddr(ssk);
++unlock:
++	release_sock(sk);
++}
++EXPORT_SYMBOL(mptcp_sock_set_reuseaddr);
++
++void mptcp_sock_set_nodelay(struct sock *sk)
++{
++	struct mptcp_sock *msk = mptcp_sk(sk);
++	struct sock *ssk;
++
++	lock_sock(sk);
++	sockopt_seq_inc(msk);
++	msk->nodelay = true;
++	ssk = __mptcp_nmpc_sk(msk);
++	if (IS_ERR(ssk))
++		goto unlock;
++	lock_sock(ssk);
++	__tcp_sock_set_nodelay(ssk, true);
++	release_sock(ssk);
++unlock:
++	release_sock(sk);
++}
++EXPORT_SYMBOL(mptcp_sock_set_nodelay);
++
++void mptcp_sock_set_priority(struct sock *sk, u32 priority)
++{
++	struct mptcp_sock *msk = mptcp_sk(sk);
++	struct sock *ssk;
++
++	lock_sock(sk);
++	sockopt_seq_inc(msk);
++	sock_set_priority(sk, priority);
++	ssk = __mptcp_nmpc_sk(msk);
++	if (IS_ERR(ssk))
++		goto unlock;
++	lock_sock(ssk);
++	sock_set_priority(ssk, priority);
++	release_sock(ssk);
++unlock:
++	release_sock(sk);
++}
++EXPORT_SYMBOL(mptcp_sock_set_priority);
++
++void mptcp_sock_no_linger(struct sock *sk)
++{
++	struct mptcp_sock *msk = mptcp_sk(sk);
++	struct sock *ssk;
++
++	lock_sock(sk);
++	sockopt_seq_inc(msk);
++	WRITE_ONCE(sk->sk_lingertime, 0);
++	sock_set_flag(sk, SOCK_LINGER);
++	ssk = __mptcp_nmpc_sk(msk);
++	if (IS_ERR(ssk))
++		goto unlock;
++	sock_no_linger(ssk);
++unlock:
++	release_sock(sk);
++}
++EXPORT_SYMBOL(mptcp_sock_no_linger);
++
++void mptcp_sock_set_tos(struct sock *sk, int val)
++{
++	struct mptcp_sock *msk = mptcp_sk(sk);
++	struct sock *ssk;
++
++	lock_sock(sk);
++	sockopt_seq_inc(msk);
++	__ip_sock_set_tos(sk, val);
++	ssk = __mptcp_nmpc_sk(msk);
++	if (IS_ERR(ssk))
++		goto unlock;
++	lock_sock(ssk);
++	__ip_sock_set_tos(ssk, val);
++	release_sock(ssk);
++unlock:
++	release_sock(sk);
++}
++EXPORT_SYMBOL(mptcp_sock_set_tos);
 -- 
 2.51.0
 
