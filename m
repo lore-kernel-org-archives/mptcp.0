@@ -1,130 +1,122 @@
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4A263D2FF0
-	for <mptcp@lists.linux.dev>; Mon, 30 Mar 2026 12:50:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03AD73D7D6E;
+	Mon, 30 Mar 2026 13:54:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774875026; cv=none; b=EiL0zE/Z/Toy354q0/SSO4r3y3tp/2EdsaJ2cCDLG81l+02qcvlmaVBsNabALsXv1iuG3SDnrRn4AwcEAhTsWMn+ekZVBUyj7n8OB7grIepGhd4sVa1mFn1N+GFWlvJQaaROZs3tZ02XDrFeOs8eMuFiQnH9dd9C1Ld3RfNcGUQ=
+	t=1774878862; cv=none; b=dpRSYVX/eE+jy40ep8pxoVdPnoJftQhCdxEuES7Onre906nyc/e9/FnkmU11/kN1hMiwGxOrVeVsPlOgklAHKKiwqEBhzDvQdAjz6Y0Y2NFLC3joiM1ka1q/DaEuL0sPVxeLMme30YN2f7pmPbxZkxPXWoF62viFz1+cUpAXIjE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774875026; c=relaxed/simple;
-	bh=l1sAMnPYahH359HDLaA8REMWPbqEnXePfeMPiS+AreA=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
-	 MIME-Version:Content-Type; b=XqdScsX7dSaZQoI5j5a+1npFzEge2O/PFH7LnMarEkmbyYJXyZbo5Bi1z6bLjp4c179tLIUh/U7Zm524Iqc81n/yaZZzXftKkvBmB9OBrQYtG6VDoGejBJYFrnIn3ErXmcA3aC2XNPOeChj4b2rHcOOZ31kVNuG5/9xj+Tyon0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NmArgXxN; arc=none smtp.client-ip=209.85.222.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1774878862; c=relaxed/simple;
+	bh=kiV33SNaIHt2u3ZiqMFhM9GNQZkQJS6RAT81XUGT0uY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TKZYCqDb6V41VPnVUJpEqbw+b9iI/m31V6+RZAtgDqHo8Hzub91i2qjU9PeMaaXZC1AE2frVs9t0CV7fx/g0rkjEtvh2RcHHmhXBYNNDdNEX6b0QXFFbKCdDglsZAHBIP1m8k9RNZpT2p94fGBvQDyAu4Ilc1TeL1y6NQTlg8iE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u2CMbGLW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NmArgXxN"
-Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-8cb38e86cf2so480778585a.1
-        for <mptcp@lists.linux.dev>; Mon, 30 Mar 2026 05:50:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1774875024; x=1775479824; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=B1onEgnsYc+QtTB5JS28aRcHFM/YoI1YnAyKUfEb8tg=;
-        b=NmArgXxNXQ6yA+umlXNAsrEKkvRasUFDbWLIsU5rVOC7g55FpXsTfMIXwOcd0sSl1C
-         59vy3nVjKTpkB5tKP9d48B4tm0gsIH8ogxiyXb0HHwcWA9Jq5ww+h9RHsJRt3ORycqgn
-         Yf5VG4JxkOuDVBLVs/Gh4aENKoL3FMOgxP4lfPifX4dr9pTQfm2pAieX4Ec4hIP+uBZL
-         8mtkW1HXR/f3jgf/1hLOwmCRUGq3CvL61Ujw4rdebRWV2pk9mVm7DmHparh88gORd5uu
-         t5sDviKbWXPpBSUYpC7OB8UYTXjYeRsxZVdZvpwBtO2hhwc11f2OX60rnBAiLiUyVDmx
-         vQ9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774875024; x=1775479824;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=B1onEgnsYc+QtTB5JS28aRcHFM/YoI1YnAyKUfEb8tg=;
-        b=W9cq+zPUcRPtjDrWmPnKe5053v/uuePF96W2zd1nSkAWjpDMgjDR7oc0nEy+P83OmP
-         BvN8egDmsZAfd0v4w7v7fxRGtd5Crl757n+x1yCbhv2nvzDCE5uh45W9w0RmqNfUty61
-         Eh73kUxU+FNkvcDJ/iryChO7TILMUixgjqp2Ldx5IfOUZyOB0dvqZZzachzbUnIzadyy
-         oNyEEOc5ehyEz4sRX8OxHC4vXNTHEv8GB1C/pbz2BrHjYTxnQ0gzbMOmOv+H/WBGq+zG
-         QIsDhdzHBMN/r+ciwRIV87SGLXlHpWVA/a6sMlkvqfjo9I0c9MHzM4pYpYB7X6dQ+Anq
-         ObiA==
-X-Gm-Message-State: AOJu0Yy2aeI6BongzUNdbiDxd2GOjvf3uL7XYSnr7fBzHoH83InKmUGR
-	/bpt/evg+KFKEy6F1Min0V+XsBgbmkMzQS7KR7L4OCg+UN/s+HykLS4=
-X-Gm-Gg: ATEYQzx952GKhGFn01QPCU2oQakWnp7KR47VZUkbgH6Ms/qdPrqxv959Uhm2qcbCgiI
-	FlJKiGD4jcNGTUpiRkAt2aJgfP2xUjKe5Meg4j6mb3d/xGhO85WPxJWBZ6fGXZFEj2l/8ejnkpu
-	KDFc17W0JoSGXXdcSJyvLl0KsUkrEwjWCn3lkvYytnBO16lAxZIYFOO5p0MOU0r3xmTn0AfOqzf
-	em3MsHhLsLzt8h2D3c6KdwWleqNBMuwSR2AW12VtJvtITNO4J/c1dns0qgllTa01O7o2V8gjNox
-	7DFqQhhzF6j6egLCh17YG2K2/0w4sUHA25iXA8NkeOqgWwgVmX4fB2vkkhBo/K0iabCzklj/QaB
-	T1PO092uCqQWCP6t765GkcNlOdytCpGoe/RwF5fcE4AgXkwkGe9UeLcw+T6LA5VgyhIObogRrUQ
-	XbIpo08h12eGZ8C15w7YaXuRjCDYjsag3Qcvi0
-X-Received: by 2002:a05:622a:2307:b0:50b:36e5:ba0b with SMTP id d75a77b69052e-50ba37f5b78mr176712171cf.18.1774875023820;
-        Mon, 30 Mar 2026 05:50:23 -0700 (PDT)
-Received: from [127.0.0.1] ([48.214.54.112])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-89ed0521d64sm61529366d6.49.2026.03.30.05.50.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2026 05:50:23 -0700 (PDT)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Li Xiasong <lixiasong1@huawei.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20260330120335.659027-1-lixiasong1@huawei.com>
-References: <20260330120335.659027-1-lixiasong1@huawei.com>
-Subject: Re: [PATCH net v4] mptcp: fix soft lockup in mptcp_recvmsg()
-Message-ID: <3c73dc30-aa12-725b-824f-b7ce0849e8b3@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 30 Mar 2026 12:50:22 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u2CMbGLW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39E09C2BCB0;
+	Mon, 30 Mar 2026 13:54:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1774878861;
+	bh=kiV33SNaIHt2u3ZiqMFhM9GNQZkQJS6RAT81XUGT0uY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=u2CMbGLWor5UcJriYfajC9KWK9zzWl1NibpjsHMIGKKuFLFZr4XkT77I38Pk8kR1U
+	 BtZFmndQPNxZhEP4mYQXI6EPJTHFVGvtTbcCCYyWpuBWGpG31ekcKjW8yVWcmhKAyf
+	 r002uGhfqGopJIZgdQv+xD7pIfntPrI1kv6JWswQWqMvY+U4QXDBNGtbyyt+ZpmaRg
+	 q87ONgxlwY8a+pCR0XpZoEpCBBU2dHTbkxxOzGnYCMKJAvQMHdqUu1GNondfeKVl6S
+	 rTBPT9vLWVFu66sYVZjbXZg0XeBDDgI3QEp7SLz4ng8VJ+nEsl6NOSLEPo15bjfjaz
+	 UERv6RfNwsiSg==
+Message-ID: <37a72b05-1429-4f82-8b68-e394760c7369@kernel.org>
+Date: Mon, 30 Mar 2026 15:54:14 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH net v4] mptcp: fix soft lockup in mptcp_recvmsg()
+Content-Language: fr
+To: Li Xiasong <lixiasong1@huawei.com>
+Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev,
+ linux-kernel@vger.kernel.org, yuehaibing@huawei.com,
+ zhangchangzhong@huawei.com, weiyongjun1@huawei.com,
+ Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Simon Horman <horms@kernel.org>
+References: <20260330120335.659027-1-lixiasong1@huawei.com>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <20260330120335.659027-1-lixiasong1@huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 Hi Li,
 
-Thank you for your modifications, that's great!
+On 30/03/2026 14:03, Li Xiasong wrote:
+> syzbot reported a soft lockup in mptcp_recvmsg() [0].
+> 
+> When receiving data with MSG_PEEK | MSG_WAITALL flags, the skb is not
+> removed from the sk_receive_queue. This causes sk_wait_data() to always
+> find available data and never perform actual waiting, leading to a soft
+> lockup.
+> 
+> Fix this by adding a 'last' parameter to track the last peeked skb.
+> This allows sk_wait_data() to make informed waiting decisions and prevent
+> infinite loops when MSG_PEEK is used.
 
-Our CI did some validations and here is its report:
+Thank you for this new version:
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Unstable: 1 failed =
-test(s): packetdrill_dss =F0=9F=94=B4
-- KVM Validation: debug (only =
-selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only=
- bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only =
-bpftest_all): Success! =E2=9C=85
-- Task: https://github.=
-com/multipath-tcp/mptcp_net-next/actions/runs/23743540784
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/d71e80e5a45d
-Patchwork: https://patchwork.kernel.=
-org/project/mptcp/list/?series=3D1074553
-
-
-If there are some issues, you =
-can reproduce them using the same environment as
-the one used by the CI =
-thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
-
-
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
+@netdev maintainers: this patch can be applied in 'net' directly, thank you!
 
 Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 Core)
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
+
