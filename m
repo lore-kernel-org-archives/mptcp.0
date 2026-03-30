@@ -1,162 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4546A2253EB
-	for <mptcp@lists.linux.dev>; Mon, 30 Mar 2026 09:50:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B826E3A6B72
+	for <mptcp@lists.linux.dev>; Mon, 30 Mar 2026 10:06:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774864255; cv=none; b=FqTK9hbo1bF4JIMCxvpSTcW91nLJF+5bAdiQGRa/LjeBxbPei78GTZJJy1zcp7MQmeD10KkvjF+MmxNUUlge/x2SMTAzpXk2jl8kMvcXXBTgagI2FSFAkfuYp7OUSwZZZDIydW1vr5UeWI3ubkbvIbWnh14gice5i7qYirFFA00=
+	t=1774865173; cv=none; b=gJNX5ZpvTuMDt2S/iQGJdC2SxnuXExHeHWnyX0P1JBpXbDmblh0YCvDHdXi3aP5huYgkQlnqAs/WfvbMIOWJDwvSqmlcam2DBujymst/UvPEXSNB2avaRAmd64Y6cSAd7G7S79ByekbEhW1uFAoGa+zUHc+LwvvRdE7TGCRebzg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774864255; c=relaxed/simple;
-	bh=Ab8tdkv6TFBe+ZBzSrrHUImKbY9vTxWj/ATWHkjeRRA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=twelT9UE+Y+XlwfxzUCOeIujv+upMC8c+lHMsLPtxseqEqP9hIa92SvjGr3fQKlbXKgYRtGA6eHTlkjayYjgATEPDWpwvH/Ah4/KmApoQvq9VoHzSN6hh7lilEUuX2iTdHwHMjJ2RwqtYPaTALFKhz3O5Zwe1hXJTRmX/wVtfoI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=geCGW48+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1774865173; c=relaxed/simple;
+	bh=+1WicrAR18uioG3pVHRcEUG/wEkxYFc4KvdtUolFpi4=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
+	 MIME-Version:Content-Type; b=mAEGTU+4FpuLdDr23U6xx/dV/NVKVatZPnNlFp6zIHOou+CDvAAZLohc0te1B96w9CUjqJeZoDjwGvbkKeeTHqyjwfAiqVmkk4DKw2j6Vll6Fc8WU7EFYJ8g51+e3OC7URrCH+LuDW8ZAoU32zPU2YDJGlBuh0coD3FJbVcwO7M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kRu2C72G; arc=none smtp.client-ip=209.85.219.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="geCGW48+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F100C4CEF7;
-	Mon, 30 Mar 2026 09:50:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774864254;
-	bh=Ab8tdkv6TFBe+ZBzSrrHUImKbY9vTxWj/ATWHkjeRRA=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=geCGW48+If+pi6ykcgZs+LZEhE9g1Iw3w/zc2aL5SxqH0XjNPHREe/wbAu2cFVhUk
-	 hcvtkiHHNWU8h8FHSt0/W3DWvB6BbhY8w5NEMrQm7if0FNAqfinZjuc+Lb84kxgtUO
-	 dsSjHNwq1S1msGNPX9EAk6GIkfrXwbEF+tcrifgbdI2BnpGRr0u2w4xrS88sA2Osjy
-	 hxdiT2qQKrF6yPELckWdAdDcqpFoNU+2Ry70EwlbUt0U6JjjRh/oVhrZLp6j35+7FT
-	 y1plaZOhduqygdQdqwRitEt3EcmLXLgb3IW4Vbo3XhE2Mu070ao6+YFdvM0KWmbxrP
-	 CUye+5VQgJzmw==
-Message-ID: <8eb9b926-9402-41e7-9574-f2886f67d14e@kernel.org>
-Date: Mon, 30 Mar 2026 11:50:51 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kRu2C72G"
+Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-89cd8596724so49693146d6.0
+        for <mptcp@lists.linux.dev>; Mon, 30 Mar 2026 03:06:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1774865170; x=1775469970; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xFlTnS5JYheaxhCD3/oqMlfX0wRff0G54vgXf7XHIKM=;
+        b=kRu2C72GNsxypOY3prX/zJzq0gIKQFYzy0RhqQGxoKezVBJZ7KOJmcx9vzSLNjHgCG
+         B9qKVaTBloZfWoylTGizLu20N6XA+VGbdBsJDsqxIzKli6K6qfSioVX0EpesRCcwCrhv
+         406tW450gw6B273EaJBWzNSY7od6X7DAzEoEcXsYbTqj3sURtkDsFUP6Zq3n+Bx9KQJV
+         39D1aKmmS+x/r6EoXBTu9CSOLoNyGbhflL1x8Yif4/bwDtM24tJTxvmZ3r9jjGjK9sC/
+         FRuuW6lsro5ZLX8ARpg5EohC5D9i8BrcwGxzZc9r/W/w4m25/EFdcZ2Z66DSPnacXRaK
+         rBEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1774865170; x=1775469970;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xFlTnS5JYheaxhCD3/oqMlfX0wRff0G54vgXf7XHIKM=;
+        b=M4I/TTTTMgoXuWL2s9UughKMhhm6DyLKK5S4FtvVIpPiMSJXDyoA049xUJhpQ/psDo
+         0Ouk/+WyhLp92YuUqxJblI9MvjO9szJFJtZATnTHTMBfv1+Quw7J6rPzKOkrou5unsRV
+         3ZyTmdYlBPUK1ew3U1g7Vh/QIXFEcELADwsYQBWtwt7xX/LnSE6Hhl8aFHJyxLgKd5/j
+         fbLaZG+tv6xQKMKUeoNk5Ls6o3emHKz9SLzB2BI75+FkTCiPVMCyDm5hhXPrMYmLpoCs
+         6KusvkQNidQqU08u2D/0sFvOw34AL+xn9Tl1lfHm2r9qECxmk5UwHZnI5Nzh3bjg+67a
+         ZUwQ==
+X-Gm-Message-State: AOJu0YyBw1UaidI0Xt83XJeV1yINQgCHum9cgFsViJWon5n4FYjG/NRo
+	0mOLhGD18ZiFiRvh6GVnRMWpaYtx2qfaS84+T2dUMDDvIzQaWK1idwSkVhYf
+X-Gm-Gg: ATEYQzzmr0MHU+TzyP/OKcNxTqErqWcxKgpRWZlC1Iv8aTzjfaoEXYpxAYWQHnmgLea
+	PjbI6AJeowKHgXng9NlPWe+DRqSwO9wdXavsRBf40soRcnjxbBnJGvMsEtPq+Ntqmcr3nQGf6eI
+	+BVSE0qUbYkRAH2MTCW2XguM50ogWCLjvqGdVDMDo91kSUwkAw673feGb9uArLxq6Wt+Bk14u7H
+	N4XT/JGmsrjhL7GJkZVPy+Q5ThtsElys1J/Pj3TilGvJCzSDqTitV2kf2Jo9Jlc44aOlPbW9F+N
+	tmut3X2fu4sKHua+Zk0LJ876wwSEAejtpoxbQycUEBXpiYiandi5iJ5ZoFuMtA/bZpBIaLJN+5p
+	YSSeDzv2XTUwnS79rwbVJ6D1BZh9uZ9qQXHt+Xz5dDPxuaFu+IH9mNPua/svUZNCQxJ1qJsfSW2
+	w12Zb2HI3qkZz6B4T2dGtLh4i74Jc600TyZujf
+X-Received: by 2002:a05:6214:4992:b0:89c:866d:15c9 with SMTP id 6a1803df08f44-89ce8f73b25mr177631186d6.56.1774865170517;
+        Mon, 30 Mar 2026 03:06:10 -0700 (PDT)
+Received: from [127.0.0.1] ([64.236.201.39])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-89ecf2852dbsm59517706d6.27.2026.03.30.03.06.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Mar 2026 03:06:10 -0700 (PDT)
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Geliang Tang <tanggeliang@kylinos.cn>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <cover.1774862875.git.tanggeliang@kylinos.cn>
+References: <cover.1774862875.git.tanggeliang@kylinos.cn>
+Subject: Re: [RFC mptcp-next v6 0/7] NVME over MPTCP
+Message-ID: <f2cf00b0-f646-be45-5ab6-75f6736b3cd0@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 30 Mar 2026 10:06:09 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next] mptcp: preserve MSG_EOR semantics in sendmsg
- path
-To: gang.yan@linux.dev, mptcp@lists.linux.dev
-References: <20260309025431.125943-1-gang.yan@linux.dev>
- <c572547f-449b-43e9-bd76-e0ffe2ebf735@kernel.org>
- <be87d58dcca25715b3f992acd152a6778de44dec@linux.dev>
-From: Matthieu Baerts <matttbe@kernel.org>
-Content-Language: fr
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <be87d58dcca25715b3f992acd152a6778de44dec@linux.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
 
-Hi Gang,
+Hi Geliang,
 
-On 30/03/2026 10:19, gang.yan@linux.dev wrote:
-> March 27, 2026 at 12:42 AM, "Matthieu Baerts" <matttbe@kernel.org mailto:matttbe@kernel.org?to=%22Matthieu%20Baerts%22%20%3Cmatttbe%40kernel.org%3E > wrote:
-> 
-> 
->>
->> Hi Gang,
->>
->> Thank you for the new version.
->>
->> On 09/03/2026 03:54, Gang Yan wrote:
->>
->>>
->>> From: Gang Yan <yangang@kylinos.cn>
->>>  
->>>  Extend MPTCP's sendmsg handling to recognize and honor the MSG_EOR flag,
->>>  which marks the end of a record for application-level message boundaries.
->>>  
->>>  Data fragments tagged with MSG_EOR are explicitly marked in the
->>>  mptcp_data_frag structure and skb context to prevent unintended
->>>  coalescing with subsequent data chunks. This ensures the intent of
->>>  applications using MSG_EOR is preserved across MPTCP subflows,
->>>  maintaining consistent message segmentation behavior.
->>>  
->>>  Signed-off-by: Gang Yan <yangang@kylinos.cn>
->>>  ---
->>>  
->>>  Notes:
->>>  - This patch incorporates feedback and suggestions from Paolo Abeni
->>>  and Geliang Tang, including memory alignment optimizations for the
->>>  mptcp_data_frag struct (shrinking overhead to u8 and using bitfield
->>>  for eor to avoid size increase) and compile-time checks with BUILD_BUG_ON.
->>>
->> Please mention why you shrank "overhead" to a u8 (not to increase the
->> struct size), and why it is OK to do so (u16 not needed because ...) +
->> explaining the BUILD_BUG_ON().
-> 
-> The ‘u8’ is one of Paolo's suggestions[1]. I think 'u16' is not needed because:
->  - 'offset = ALIGN(orig_offset, sizeof(long));'
->  - 'dfrag->offset = offset - origin_offset + sizeof(struct mptcp_data_frag);',
-> the max value of offset is 7, and sizeof(struct mptcp_data_frag)) is
-> usually 40, so the overhead is 47, far less than 255.
+Thank you for your modifications, that's great!
 
-Thank you for the explanation. Can you then mention in the commit
-message that it is fine to reduce overhead to a 'u8', and add the above
-explanation, please?
+But sadly, our CI spotted some issues with it when trying to build it.
 
-If 'offset' max value is 7, it could also be reduced from a u16 to a u8
-then, no?
+You can find more details there:
 
-> Another suggestion from Paolo[1] is a build time check on the max 'overhead'
-> value. So I use 'ALIGN(1, sizeof(long)) + sizeof(struct mptcp_data_frag)' to
-> represent the max_val of 'overhead'.
+  https://github.com/multipath-tcp/mptcp_=
+net-next/actions/runs/23738944865
 
-It might be good to add a comment here too, at least to explain that
-"ALIGN(1, sizeof(long))" represents 'offset' maximum size.
+Status: failure
+Initiator: Patchew =
+Applier
+Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/6c=
+b584e4f7f0
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1074466
 
-> But Paolo also mention it's probably too conservative. WDYT?
-
-Maybe, but it doesn't hurt I suppose. As long as this check is clearly
-linked to different fields from the mptcp_data_frag structure → having a
-comment explaining that.
+Feel free to reply to this email if you cannot access =
+logs, if you need
+some support to fix the error, if this doesn't seem to be=
+ caused by your
+modifications or if the error is a false positive one.
 
 Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
-
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
