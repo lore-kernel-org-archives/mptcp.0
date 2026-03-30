@@ -1,105 +1,77 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-184.mta0.migadu.com (out-184.mta0.migadu.com [91.218.175.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CD5D280336
-	for <mptcp@lists.linux.dev>; Fri, 27 Mar 2026 19:02:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECB76286D73
+	for <mptcp@lists.linux.dev>; Mon, 30 Mar 2026 05:33:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774638126; cv=none; b=b8riHdYwB7fyjcej2GcyjLuA9NoZGJ59qNRZZRMD+C1/EC7X30+67FbOQOa7hzzaf/Dyk8MwMYO/UQ8D7JABnWxJ6/SAALN6f3Y+Uo3kyeZZiY5SS8D6b3sHCsDsEl9NVwyrybWEgMc/L3+j/ojfLu3PvPgPODrhDt4ZCG524sg=
+	t=1774848794; cv=none; b=k3uybUmhtXMb+J0Q8AVeID4CWjdZY9eOMt/dGFM3o0bO+ixA2VIyvc9WbHTim1LdsbH9GCBlsVcV8EfqhbHICHO+wSdkEO423uMT4MVWvsNT1MYlIICEAqGcFn0FcxY+3bIxJ3sHXCS4/C+xqAo0Fd+HvJL+dHK6OeoDVaM5Lqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774638126; c=relaxed/simple;
-	bh=UUuR+GWM/uUNmukrWkzA3/9hDGAKi1F4sJ9I3fOxH50=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=Mpn14cUAmI9hRpvUb6MvPUowSe9s/G2Bq62GXDkWcM/lPAWKz/LalmzCKNynr9SDFmsKkmimLCs90f8c8u/QFa0F8A6zlIpHwRUDxefdXZDo9V2+JDw+TyvhU72nwyDygTOE8hks/8vNM7ADLRohnyEVU4/y6JfbIXAYEP5JE7c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MjfTY26d; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1774848794; c=relaxed/simple;
+	bh=efQh//uYFn/oYbToUEnBI8cW9Y/pU3CfPQLyKYy5HsU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jabDMHv/27ZyNXw/qKbSK3CKnfxyk90iT1u8QbcqU9RqHA4CNVc8D3SDxQpi6bH2Xy/cP1GkglFVVgWQh8ax2Gln4W4hI1zoY3w8YQWNRn3FbE75zHKGtnSzzJt3jhGj1LmRczlLWV1uUbnxnroXLJ+Hhi9c17k5lN1Wec/PPQ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=whP3Psna; arc=none smtp.client-ip=91.218.175.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MjfTY26d"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D30ECC19423
-	for <mptcp@lists.linux.dev>; Fri, 27 Mar 2026 19:02:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774638126;
-	bh=UUuR+GWM/uUNmukrWkzA3/9hDGAKi1F4sJ9I3fOxH50=;
-	h=Date:Subject:From:To:References:In-Reply-To:From;
-	b=MjfTY26d6e762Cajij2W16rTX2xyJ0BuC2KNUYhf9I0FHrC5IDDfqP4av+1i77Ws/
-	 zXy2W6PMZHOMNpr62DzlrQlZc0ybTY1LUqiiNv6u6jLOhFSbyzsvlsovR8oo5XZbo7
-	 cmM2IEhqlVIFGQPdoInGVFfYscirZiktiDV7Bhs27Nvfe7cwP+egpOxv/hdFlLkh8m
-	 IZ7qjoivf9VW5LDe9XVn/knhFeapSiSC5cevMd3WQ+19lcP4iCCTev78ll5DK6R/ga
-	 7qPP/Us70TDkFPrWGc/4bd7BopCxS6MF++ANN0gUrfEDPxVmvjqzUmsyWplgqkUByW
-	 +hSfauN2CekDw==
-Message-ID: <0e581740-6031-492a-b997-2aaa359e59e6@kernel.org>
-Date: Fri, 27 Mar 2026 20:02:03 +0100
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="whP3Psna"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1774848791;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=aUx3lmn9LCa7YFiFS5lXiooDvN38q5XlRO3vV8Q0t9Q=;
+	b=whP3PsnaQHD4F56IHZBhyKTEKiWq02eLdL3dO/PmE+GUirQF3/yuQZncEX/q2w8gb+90fD
+	1ZQmRHCNFiRvtWI1bwUH82zGiz9J1DQm2kDsC63HEvlJScgi+lHuv55mEOlwZummWGAhXS
+	DAqaQL5SeAqrr58fNVHVOhJUQTwioK4=
+From: Gang Yan <gang.yan@linux.dev>
+To: mptcp@lists.linux.dev
+Cc: pabeni@redhat.com,
+	Gang Yan <yangang@kylinos.cn>
+Subject: [PATCH mptcp-net v4 0/5] mptcp: fix stall because of data_ready
+Date: Mon, 30 Mar 2026 13:32:55 +0800
+Message-ID: <20260330053300.15717-1-gang.yan@linux.dev>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [Weekly meetings] MoM - 25th of March 2026
-Content-Language: fr
-From: Matthieu Baerts <matttbe@kernel.org>
-To: MPTCP Linux <mptcp@lists.linux.dev>
-References: <8a9beead-811b-4dbb-8afd-4308fec8a0a6@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <8a9beead-811b-4dbb-8afd-4308fec8a0a6@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On 27/03/2026 19:58, Matthieu Baerts wrote:
+From: Gang Yan <yangang@kylinos.cn>
 
-(...)
+Changelog:
+  v4:
+    - Pass 'delta' to 'move_skbs_to_msk' to fix the potential problems,
+      and add a helper named 'move_skbs_from_backlog' to achieve this.
+    - Add a test case in mptcp_join.sh which can reproduce such stall
+      prolems.
+    - Fix a dead_lock problems which is imported in the 1d77124a6322
+      ('mptcp: fix the stall problems with data_ready.').
+  v3:
+    - Replace backlog list with backlog_queue(rb-tree) to solve the
+      stall problems.
+    Link: https://patchwork.kernel.org/project/mptcp/cover/cover.1773735950.git.yangang@kylinos.cn/
+  v2:
+    Link: https://patchwork.kernel.org/project/mptcp/patch/20260209084717.506379-1-gang.yan@linux.dev/
+  v1:
+    Link: https://patchwork.kernel.org/project/mptcp/cover/cover.1770273341.git.yangang@kylinos.cn/
 
-> Next meeting:
->     - Next one on Wednesday, the 8th of April.
->     - 17:30 UTC (8.30am PDT, 5.30pm CEST, 11.30pm CST)
+Gang Yan (5):
+  mptcp: replace backlog_list with backlog_queue
+  mptcp: fix the stall problems using backlog_queue
+  mptcp: fix the stall problems with data_ready
+  mptcp: fix the dead_loack in mptcp_data_ready
+  selftests: mptcp: test transmission with small rcvbuf
 
-Errata: At 15:30 UTC (8.30am PST, 5.30pm CEST, 12.30am CST)
+ net/mptcp/protocol.c                          | 112 +++++++++++++++---
+ net/mptcp/protocol.h                          |   2 +-
+ .../testing/selftests/net/mptcp/mptcp_join.sh |  20 ++++
+ 3 files changed, 117 insertions(+), 17 deletions(-)
 
-Cheers,
-Matt
 -- 
-Sponsored by the NGI0 Core fund.
+2.43.0
 
