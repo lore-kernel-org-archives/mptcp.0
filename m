@@ -1,39 +1,36 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66EC43E5ED8
-	for <mptcp@lists.linux.dev>; Tue, 31 Mar 2026 08:40:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDD533876B9
+	for <mptcp@lists.linux.dev>; Tue, 31 Mar 2026 09:08:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774946429; cv=none; b=GohLJIVP7aGr6ZRUDvqGkaKFzw8IMTZULyyDZqYuMpabtSVdRjPeVScZlGWYgUM1rXCJw1PzBndZu5GLTXFkeweiS4oOdsUt1WeHn11OYDFW+49pbOFC8qegjGVVG+QfAZcdSmKCNs4qlQddh/z4mJm2nKpeMITKYLYzCbt5CYE=
+	t=1774948132; cv=none; b=dKFoUaVk10xyjoGa6x1YPAQFaNiEwPmEJJox62wvooUtY4M7cJYfQqO9bwMdauWSlVzEsLPA+h2k1hTzmDqT2mXL7KYx0XhAN/xZSbNbRx1AvZY07WFtU7WDpXBVBsnOzsBdO/faYDr7eP+qbX7SPvyqkBOjko7AzhuiKXEpWx0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774946429; c=relaxed/simple;
-	bh=yH3eQ0OFkKEdpojeVp6orkFO9dDTX9u259AQVZtX940=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=obGQ2IMAGkGs1pvJU/JhuTHHhd7O/Q//zoy16KrXkyrgQvlv0xsw7WWG0eqGjNudyxelVp+2LL6ZMOucIr/9542h4xrKRDLt46UTZdZewfJgOyKi9rCQQND8VZn0A4C4Nyias4V8DfhIXmb+sYoJ4UvdjCpbemv9L0NLj9qHktw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tejmudJF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1774948132; c=relaxed/simple;
+	bh=dT9UHDesKUd/FCSN+aNlKdXqFO6dRRvSVFmaGWDtBzQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mc0bQ+l+MZVNaCS4zrQIDdnSfiK3yWGw3Gifh4f+HDWpMqnk7T8HnSuS0W2ZFEUfISgkAeLhd02Vxkl+DSiDebEqFnRdGF5Ht3hZTEclFoYZG5NYA1RXMT2TqazLNYUMBRbQtdpPVazJ/gCAfSAPnxWWBiaY++MhP9WpnLRSoNM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=iQ737ijM; arc=none smtp.client-ip=91.218.175.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tejmudJF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19254C2BCB1;
-	Tue, 31 Mar 2026 08:40:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774946429;
-	bh=yH3eQ0OFkKEdpojeVp6orkFO9dDTX9u259AQVZtX940=;
-	h=From:To:Cc:Subject:Date:From;
-	b=tejmudJFkSU1seHa5+tvJB2z7Q8uTut+7z07MF6DwXPrwh5lgLsmthqq3QrN5OHL8
-	 ZkhIzhE9NcSBOBPU1aT47cA4fRE8EqSjKeZ6LplPqn/ydXDxnkd89fE7VUuZhCxgHJ
-	 s/CMGND3KfkypFY0HNxBxEgTqysIIgGL77tsApwChaiFgTKg+pPOYn1Hcm+MWlLYXY
-	 52vf9Y7GJJ3RMDlAHbveWmOjHrZauS8vNKemsKcAGBlBTUPbxVWDplUINetXbBtfeV
-	 acwJG6MQbmK2UGdZGirAIEVDixPzRt+rgn8fK0stdagt2ZWIfohYK7OE6fkuE196vb
-	 u6hRPYPXNV1nA==
-From: Geliang Tang <geliang@kernel.org>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="iQ737ijM"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1774948127;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=R5Kitshv2h9rTstk1o61PrJsjSpykhTnHavGSw4tkFE=;
+	b=iQ737ijMhOJwJGs3cXwb6q/H60FNVopnqZPav9JmhnyOOflqBN3kkr71eFK93oWST0vsHu
+	Un+wL6I3kcSMMYAPHR1c73t5455TsjGaqmtz0OJkejku4D1bY5/RCVkROYY6qFLl0Eorok
+	eN1U3hJB9sknBhaiIIzKke8mbItuCZs=
+From: Gang Yan <gang.yan@linux.dev>
 To: mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Mat Martineau <martineau@kernel.org>
-Subject: [PATCH mptcp-next v3] tcp: add recv_should_stop helper
-Date: Tue, 31 Mar 2026 16:40:22 +0800
-Message-ID: <7d66c0d1f1384b142b064a760545ee6e2a8bcbde.1774946177.git.tanggeliang@kylinos.cn>
-X-Mailer: git-send-email 2.51.0
+Cc: Gang Yan <yangang@kylinos.cn>
+Subject: [PATCH mptcp-next v2 0/2] mptcp: preserve MSG_EOR semantics in sendmsg path
+Date: Tue, 31 Mar 2026 17:08:07 +0800
+Message-ID: <cover.1774947296.git.yangang@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -41,109 +38,43 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+From: Gang Yan <yangang@kylinos.cn>
 
-Factor out a new helper tcp_recv_should_stop() from tcp_recvmsg_locked()
-and tcp_splice_read() to check whether to stop receiving. And use this
-helper in mptcp_recvmsg() and mptcp_splice_read() to reduce redundant code.
+Hi, Matt:
 
-Suggested-by: Paolo Abeni <pabeni@redhat.com>
-Acked-by: Mat Martineau <martineau@kernel.org>
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+With this v2 version, the packetdrill scripts also updated at
+https://github.com/multipath-tcp/packetdrill/pull/189.
+
+I removed the 'mptcp_eor_subflows.pkt', and made some improvements in
+'mptcp_eor_no_collapse.pkt'.
+
+Thanks,
+Gang
+
 ---
-v3:
- - drop timeo parameter of tcp_recv_should_stop as Matt suggested.
- - drop patch 1 "mptcp: check desc->count in read_sock" in v2 as
-   Matt suggested. I changed the state of it as "Rejected".
-
+Changelog:
 v2:
- - v1 changed the original behavior when replacing tcp_recv_should_stop.
-   This version preserves the behavior unchanged.
- - add a cleanup patch for read_sock into this set.
- - Link: https://patchwork.kernel.org/project/mptcp/cover/cover.1773740635.git.tanggeliang@kylinos.cn/
+  - Split the change into two independent patches:
+    Patch 1 changes overhead to u8 (with BUILD_BUG_ON).
+    Patch 2 implements the actual MSG_EOR handling.
+    This split makes the series easier to review.
+  - Added a !df->eor check in mptcp_frag_can_collapse_to() to prevent
+    appending new data after a dfrag with the EOR flag set.
+  - Improved comments at the new BUILD_BUG_ON check.
 
 v1:
- - Link: https://patchwork.kernel.org/project/mptcp/cover/cover.1765607485.git.tanggeliang@kylinos.cn/
----
- include/net/tcp.h    |  8 ++++++++
- net/ipv4/tcp.c       |  9 ++-------
- net/mptcp/protocol.c | 11 +++--------
- 3 files changed, 13 insertions(+), 15 deletions(-)
+  - Link: https://patchwork.kernel.org/project/mptcp/patch/20260309025431.125943-1-gang.yan@linux.dev/
 
-diff --git a/include/net/tcp.h b/include/net/tcp.h
-index 565943c34b7e..6156d1d068e1 100644
---- a/include/net/tcp.h
-+++ b/include/net/tcp.h
-@@ -3077,4 +3077,12 @@ enum skb_drop_reason tcp_inbound_hash(struct sock *sk,
- 		const void *saddr, const void *daddr,
- 		int family, int dif, int sdif);
- 
-+static inline int tcp_recv_should_stop(struct sock *sk)
-+{
-+	return sk->sk_err ||
-+	       sk->sk_state == TCP_CLOSE ||
-+	       (sk->sk_shutdown & RCV_SHUTDOWN) ||
-+	       signal_pending(current);
-+}
-+
- #endif	/* _TCP_H */
-diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
-index 2a69441568b3..f2d2884652ea 100644
---- a/net/ipv4/tcp.c
-+++ b/net/ipv4/tcp.c
-@@ -888,9 +888,7 @@ ssize_t tcp_splice_read(struct socket *sock, loff_t *ppos,
- 		release_sock(sk);
- 		lock_sock(sk);
- 
--		if (sk->sk_err || sk->sk_state == TCP_CLOSE ||
--		    (sk->sk_shutdown & RCV_SHUTDOWN) ||
--		    signal_pending(current))
-+		if (tcp_recv_should_stop(sk))
- 			break;
- 	}
- 
-@@ -2755,10 +2753,7 @@ static int tcp_recvmsg_locked(struct sock *sk, struct msghdr *msg, size_t len,
- 
- 		if (copied) {
- 			if (!timeo ||
--			    sk->sk_err ||
--			    sk->sk_state == TCP_CLOSE ||
--			    (sk->sk_shutdown & RCV_SHUTDOWN) ||
--			    signal_pending(current))
-+			    tcp_recv_should_stop(sk))
- 				break;
- 		} else {
- 			if (sock_flag(sk, SOCK_DONE))
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 98a6caf9af97..2f0d7f9f7c3c 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2322,11 +2322,8 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
- 			break;
- 
- 		if (copied) {
--			if (sk->sk_err ||
--			    sk->sk_state == TCP_CLOSE ||
--			    (sk->sk_shutdown & RCV_SHUTDOWN) ||
--			    !timeo ||
--			    signal_pending(current))
-+			if (tcp_recv_should_stop(sk) ||
-+			    !timeo)
- 				break;
- 		} else {
- 			if (sk->sk_err) {
-@@ -4511,9 +4508,7 @@ static ssize_t mptcp_splice_read(struct socket *sock, loff_t *ppos,
- 		release_sock(sk);
- 		lock_sock(sk);
- 
--		if (sk->sk_err || sk->sk_state == TCP_CLOSE ||
--		    (sk->sk_shutdown & RCV_SHUTDOWN) ||
--		    signal_pending(current))
-+		if (tcp_recv_should_stop(sk))
- 			break;
- 	}
- 
+Gang Yan (2):
+  mptcp: reduce 'overhead' from u16 to u8
+  mptcp: preserve MSG_EOR semantics in sendmsg path
+
+ net/mptcp/protocol.c | 28 +++++++++++++++++++++++++---
+ net/mptcp/protocol.h |  4 +++-
+ 2 files changed, 28 insertions(+), 4 deletions(-)
+
 -- 
-2.51.0
+2.43.0
 
