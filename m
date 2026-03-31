@@ -1,157 +1,149 @@
-Received: from out-181.mta1.migadu.com (out-181.mta1.migadu.com [95.215.58.181])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D1BA37C92E
-	for <mptcp@lists.linux.dev>; Tue, 31 Mar 2026 06:55:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66EC43E5ED8
+	for <mptcp@lists.linux.dev>; Tue, 31 Mar 2026 08:40:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774940104; cv=none; b=eP49EQx+RwxaKygD9yj3hb94fPqpqqI1tyMinxLl0H0X4lU74gEiGdvsNUE+VpOfTdA/gzeN4Qq5FVeJ7cVgLYDgS6j7Kp0tB4GKHk/SgKk0tdQBwVeY6fBzPRKPN9ll/G2lAApRmZBK09YR5C9waYmqYIBYmJruz921xfwACKc=
+	t=1774946429; cv=none; b=GohLJIVP7aGr6ZRUDvqGkaKFzw8IMTZULyyDZqYuMpabtSVdRjPeVScZlGWYgUM1rXCJw1PzBndZu5GLTXFkeweiS4oOdsUt1WeHn11OYDFW+49pbOFC8qegjGVVG+QfAZcdSmKCNs4qlQddh/z4mJm2nKpeMITKYLYzCbt5CYE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774940104; c=relaxed/simple;
-	bh=2yMFKjyCIxPlIAiaae/dh9NVo4dyuCLIYWJSYqWGUlU=;
-	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:
-	 In-Reply-To:References; b=St4RkOBWFsvSaz/ud3DMcyxBlLW7Kb0SoxVdHFTROaayKmD/Z5VbQFqN5qM2uTkaZ9XxVV17RXMzmPVGMvTfVNCfE4IGhyt37VA2qLOkXwgtoCRh3SbFZE7NadTTB9DTB2yYyFiGtQZuvUxVYZRmkAL0l8nNF+bqHXVGyFIl4Ho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=KZlfhOrR; arc=none smtp.client-ip=95.215.58.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1774946429; c=relaxed/simple;
+	bh=yH3eQ0OFkKEdpojeVp6orkFO9dDTX9u259AQVZtX940=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=obGQ2IMAGkGs1pvJU/JhuTHHhd7O/Q//zoy16KrXkyrgQvlv0xsw7WWG0eqGjNudyxelVp+2LL6ZMOucIr/9542h4xrKRDLt46UTZdZewfJgOyKi9rCQQND8VZn0A4C4Nyias4V8DfhIXmb+sYoJ4UvdjCpbemv9L0NLj9qHktw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tejmudJF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="KZlfhOrR"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tejmudJF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19254C2BCB1;
+	Tue, 31 Mar 2026 08:40:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1774946429;
+	bh=yH3eQ0OFkKEdpojeVp6orkFO9dDTX9u259AQVZtX940=;
+	h=From:To:Cc:Subject:Date:From;
+	b=tejmudJFkSU1seHa5+tvJB2z7Q8uTut+7z07MF6DwXPrwh5lgLsmthqq3QrN5OHL8
+	 ZkhIzhE9NcSBOBPU1aT47cA4fRE8EqSjKeZ6LplPqn/ydXDxnkd89fE7VUuZhCxgHJ
+	 s/CMGND3KfkypFY0HNxBxEgTqysIIgGL77tsApwChaiFgTKg+pPOYn1Hcm+MWlLYXY
+	 52vf9Y7GJJ3RMDlAHbveWmOjHrZauS8vNKemsKcAGBlBTUPbxVWDplUINetXbBtfeV
+	 acwJG6MQbmK2UGdZGirAIEVDixPzRt+rgn8fK0stdagt2ZWIfohYK7OE6fkuE196vb
+	 u6hRPYPXNV1nA==
+From: Geliang Tang <geliang@kernel.org>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Mat Martineau <martineau@kernel.org>
+Subject: [PATCH mptcp-next v3] tcp: add recv_should_stop helper
+Date: Tue, 31 Mar 2026 16:40:22 +0800
+Message-ID: <7d66c0d1f1384b142b064a760545ee6e2a8bcbde.1774946177.git.tanggeliang@kylinos.cn>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1774940100;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ssNIrGA51ibt7TKqlacnJQAy4JwFn4K7csbhFC6aHcM=;
-	b=KZlfhOrRpH7f88lXzA6ArnMiwyKsjzCfD7r+/T7FXys1wY/xohUo1nPNBPxB/Gdh/b2/5P
-	tbiCnz41euVSC5fusfgy4N0FLms2yBzfXAlzaqym0+4bK1mFX3rIOHxdaEYCunMKp6G1wH
-	kriGxE8mZzYqowM9Vca13erJFXLzz0M=
-Date: Tue, 31 Mar 2026 06:54:58 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: gang.yan@linux.dev
-Message-ID: <4e5dee5ddbad71843a3ff2cb463690324df18acf@linux.dev>
-TLS-Required: No
-Subject: Re: [PATCH mptcp-next] mptcp: preserve MSG_EOR semantics in sendmsg
- path
-To: "Matthieu Baerts" <matttbe@kernel.org>, mptcp@lists.linux.dev
-In-Reply-To: <8eb9b926-9402-41e7-9574-f2886f67d14e@kernel.org>
-References: <20260309025431.125943-1-gang.yan@linux.dev>
- <c572547f-449b-43e9-bd76-e0ffe2ebf735@kernel.org>
- <be87d58dcca25715b3f992acd152a6778de44dec@linux.dev>
- <8eb9b926-9402-41e7-9574-f2886f67d14e@kernel.org>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
 
-March 30, 2026 at 5:50 PM, "Matthieu Baerts" <matttbe@kernel.org mailto:m=
-atttbe@kernel.org?to=3D%22Matthieu%20Baerts%22%20%3Cmatttbe%40kernel.org%=
-3E > wrote:
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
+Factor out a new helper tcp_recv_should_stop() from tcp_recvmsg_locked()
+and tcp_splice_read() to check whether to stop receiving. And use this
+helper in mptcp_recvmsg() and mptcp_splice_read() to reduce redundant code.
 
->=20
->=20Hi Gang,
->=20
->=20On 30/03/2026 10:19, gang.yan@linux.dev wrote:
->=20
->=20>=20
->=20> March 27, 2026 at 12:42 AM, "Matthieu Baerts" <matttbe@kernel.org m=
-ailto:matttbe@kernel.org?to=3D%22Matthieu%20Baerts%22%20%3Cmatttbe%40kern=
-el.org%3E > wrote:
-> >=20=20
->=20>=20=20
->=20>=20
->=20> >=20
->=20> > Hi Gang,
-> > >=20
->=20> >  Thank you for the new version.
-> > >=20
->=20> >  On 09/03/2026 03:54, Gang Yan wrote:
-> > >=20
->=20>  From: Gang Yan <yangang@kylinos.cn>
-> >=20=20
->=20>  Extend MPTCP's sendmsg handling to recognize and honor the MSG_EOR=
- flag,
-> >  which marks the end of a record for application-level message bounda=
-ries.
-> >=20=20
->=20>  Data fragments tagged with MSG_EOR are explicitly marked in the
-> >  mptcp_data_frag structure and skb context to prevent unintended
-> >  coalescing with subsequent data chunks. This ensures the intent of
-> >  applications using MSG_EOR is preserved across MPTCP subflows,
-> >  maintaining consistent message segmentation behavior.
-> >=20=20
->=20>  Signed-off-by: Gang Yan <yangang@kylinos.cn>
-> >  ---
-> >=20=20
->=20>  Notes:
-> >  - This patch incorporates feedback and suggestions from Paolo Abeni
-> >  and Geliang Tang, including memory alignment optimizations for the
-> >  mptcp_data_frag struct (shrinking overhead to u8 and using bitfield
-> >  for eor to avoid size increase) and compile-time checks with BUILD_B=
-UG_ON.
-> >=20
->=20> >=20
->=20> > Please mention why you shrank "overhead" to a u8 (not to increase=
- the
-> > >  struct size), and why it is OK to do so (u16 not needed because ..=
-.) +
-> > >  explaining the BUILD_BUG_ON().
-> > >=20
->=20>=20=20
->=20>  The =E2=80=98u8=E2=80=99 is one of Paolo's suggestions[1]. I think=
- 'u16' is not needed because:
-> >  - 'offset =3D ALIGN(orig_offset, sizeof(long));'
-> >  - 'dfrag->offset =3D offset - origin_offset + sizeof(struct mptcp_da=
-ta_frag);',
-> >  the max value of offset is 7, and sizeof(struct mptcp_data_frag)) is
-> >  usually 40, so the overhead is 47, far less than 255.
-> >=20
->=20Thank you for the explanation. Can you then mention in the commit
-> message that it is fine to reduce overhead to a 'u8', and add the above
-> explanation, please?
->=20
->=20If 'offset' max value is 7, it could also be reduced from a u16 to a =
-u8
-> then, no?
+Suggested-by: Paolo Abeni <pabeni@redhat.com>
+Acked-by: Mat Martineau <martineau@kernel.org>
+Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+---
+v3:
+ - drop timeo parameter of tcp_recv_should_stop as Matt suggested.
+ - drop patch 1 "mptcp: check desc->count in read_sock" in v2 as
+   Matt suggested. I changed the state of it as "Rejected".
 
-Hi, Matt:
+v2:
+ - v1 changed the original behavior when replacing tcp_recv_should_stop.
+   This version preserves the behavior unchanged.
+ - add a cleanup patch for read_sock into this set.
+ - Link: https://patchwork.kernel.org/project/mptcp/cover/cover.1773740635.git.tanggeliang@kylinos.cn/
 
-Sorry, there was an error in the explanation. The maximum value of
-(offset - origin_offset) is 7, so the 'offset' variable should use u16.
+v1:
+ - Link: https://patchwork.kernel.org/project/mptcp/cover/cover.1765607485.git.tanggeliang@kylinos.cn/
+---
+ include/net/tcp.h    |  8 ++++++++
+ net/ipv4/tcp.c       |  9 ++-------
+ net/mptcp/protocol.c | 11 +++--------
+ 3 files changed, 13 insertions(+), 15 deletions(-)
 
->=20
->=20>=20
->=20> Another suggestion from Paolo[1] is a build time check on the max '=
-overhead'
-> >  value. So I use 'ALIGN(1, sizeof(long)) + sizeof(struct mptcp_data_f=
-rag)' to
-> >  represent the max_val of 'overhead'.
-> >=20
->=20It might be good to add a comment here too, at least to explain that
-> "ALIGN(1, sizeof(long))" represents 'offset' maximum size.
+diff --git a/include/net/tcp.h b/include/net/tcp.h
+index 565943c34b7e..6156d1d068e1 100644
+--- a/include/net/tcp.h
++++ b/include/net/tcp.h
+@@ -3077,4 +3077,12 @@ enum skb_drop_reason tcp_inbound_hash(struct sock *sk,
+ 		const void *saddr, const void *daddr,
+ 		int family, int dif, int sdif);
+ 
++static inline int tcp_recv_should_stop(struct sock *sk)
++{
++	return sk->sk_err ||
++	       sk->sk_state == TCP_CLOSE ||
++	       (sk->sk_shutdown & RCV_SHUTDOWN) ||
++	       signal_pending(current);
++}
++
+ #endif	/* _TCP_H */
+diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
+index 2a69441568b3..f2d2884652ea 100644
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -888,9 +888,7 @@ ssize_t tcp_splice_read(struct socket *sock, loff_t *ppos,
+ 		release_sock(sk);
+ 		lock_sock(sk);
+ 
+-		if (sk->sk_err || sk->sk_state == TCP_CLOSE ||
+-		    (sk->sk_shutdown & RCV_SHUTDOWN) ||
+-		    signal_pending(current))
++		if (tcp_recv_should_stop(sk))
+ 			break;
+ 	}
+ 
+@@ -2755,10 +2753,7 @@ static int tcp_recvmsg_locked(struct sock *sk, struct msghdr *msg, size_t len,
+ 
+ 		if (copied) {
+ 			if (!timeo ||
+-			    sk->sk_err ||
+-			    sk->sk_state == TCP_CLOSE ||
+-			    (sk->sk_shutdown & RCV_SHUTDOWN) ||
+-			    signal_pending(current))
++			    tcp_recv_should_stop(sk))
+ 				break;
+ 		} else {
+ 			if (sock_flag(sk, SOCK_DONE))
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 98a6caf9af97..2f0d7f9f7c3c 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -2322,11 +2322,8 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
+ 			break;
+ 
+ 		if (copied) {
+-			if (sk->sk_err ||
+-			    sk->sk_state == TCP_CLOSE ||
+-			    (sk->sk_shutdown & RCV_SHUTDOWN) ||
+-			    !timeo ||
+-			    signal_pending(current))
++			if (tcp_recv_should_stop(sk) ||
++			    !timeo)
+ 				break;
+ 		} else {
+ 			if (sk->sk_err) {
+@@ -4511,9 +4508,7 @@ static ssize_t mptcp_splice_read(struct socket *sock, loff_t *ppos,
+ 		release_sock(sk);
+ 		lock_sock(sk);
+ 
+-		if (sk->sk_err || sk->sk_state == TCP_CLOSE ||
+-		    (sk->sk_shutdown & RCV_SHUTDOWN) ||
+-		    signal_pending(current))
++		if (tcp_recv_should_stop(sk))
+ 			break;
+ 	}
+ 
+-- 
+2.51.0
 
-Good idea, I'll apply your suggestions in v2.
-
-Thanks
-Gang
->=20
->=20>=20
->=20> But Paolo also mention it's probably too conservative. WDYT?
-> >=20
->=20Maybe, but it doesn't hurt I suppose. As long as this check is clearl=
-y
-> linked to different fields from the mptcp_data_frag structure =E2=86=92=
- having a
-> comment explaining that.
->=20
->=20Cheers,
-> Matt
-> --=20
->=20Sponsored by the NGI0 Core fund.
->
