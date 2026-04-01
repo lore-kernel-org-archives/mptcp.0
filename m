@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F4953C552E
-	for <mptcp@lists.linux.dev>; Wed,  1 Apr 2026 09:23:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECAD23D5226
+	for <mptcp@lists.linux.dev>; Wed,  1 Apr 2026 09:26:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775035418; cv=none; b=sx4bQY1fmi+I+aQ0mg7Mc0C6jqOFF/iGsjsSpP2DwPPnc8c9lPMYzjmWZqgYPmEA0YMuRx5tOmSA5dmbrJN4tPcTQjuk+6jxVBgr7EzuTM306l6fMRG99XodPVQq99VjUghUgetsI9HyG1pvQezZv0YSaLcVJyhWC9hyIm4eW3c=
+	t=1775035601; cv=none; b=c34ws6E6jgYE1D/UZNvpav8TpBhNlHC5Utyr0Ac9v/0HDyAVSNxWaovJwx+LxpU06DMOhlcMonoAdltCqkptdWyOduLcP9GOBKD0nvuFAIyFsiKXxRoNT0AWAtTuyywZWHYBOQNqRnnd2Jzm6jgsBBHuKx81rqlufCoJcig4q2Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775035418; c=relaxed/simple;
-	bh=nFypYvoH6Za4+1smte+A0TSp3Q9F+VCK2MEPC3ZSMu0=;
+	s=arc-20240116; t=1775035601; c=relaxed/simple;
+	bh=fevENUdWRnj1vmi9SrOI8VprRCRLCBeXWMXwGF4Tcsg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LJhFayEkTrE0RAB5qLOv02u55joh9zBKNviZFWissl8Hwr17LNllCLcsuXAK0vjkbszolxYWmJ1jkdJ8ViCScRakpxzfz3CMwtGnHakMA6L0XmeZJsRkqADc58wY7qjvVF/DqJOJa7XoI2ObsPUfj/LsTCHus2BeiO+mEFakQ4w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W7jIm0WF; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=jFad1nP5D4kNVLeiTX+a0qTAEK/Sq0SiSb02Q0+jg/PrK/+Y3mBKrVdOJiA40qUS6hiXcPTRCB4Scv42oUBg15/pkYyv/jy14p4CdFif9rgG/RlEweGE40bI9POC3B1xD59D9K48Lr0G2OfaWfmQ5Bct+BFH+8dIyvX5rPzg/5k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c6HmQBOx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W7jIm0WF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 028FCC4CEF7;
-	Wed,  1 Apr 2026 09:23:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c6HmQBOx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FC32C2BCB0;
+	Wed,  1 Apr 2026 09:26:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775035418;
-	bh=nFypYvoH6Za4+1smte+A0TSp3Q9F+VCK2MEPC3ZSMu0=;
+	s=k20201202; t=1775035600;
+	bh=fevENUdWRnj1vmi9SrOI8VprRCRLCBeXWMXwGF4Tcsg=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=W7jIm0WFoy1jJ0PbDgaCeHiEvuRedcCc4hz8mRXySUwlYjA/y5UXN/bp/nD9bLGat
-	 tLNc1zMVInBDlkFWMN+f/1g+KyFkVT+YvoZhXK0DD8Yq55eAFdjqGEZPzkjdZSsaYZ
-	 Gd40K8/kqVVq8J0UuXWeAnIxBHGyre5OpBcSPR7WolctKmh8OSomxi2j6soawFDRjc
-	 JR351mLNZIFlHYt7oIV6eJhtKWiyG6hnDTNPbw7kwgTI9uMuzZoSmScictLzKYJL6Y
-	 mGSjt3vmke14cRW6otofgqYQnEtcZmQ1Mpru1KhQABseYT9UD68gTa7yISIj00vkhc
-	 u0I9yf72+xrrg==
-Message-ID: <a0f9c7d9-3486-444b-bdbd-193bc4213df0@kernel.org>
-Date: Wed, 1 Apr 2026 11:23:35 +0200
+	b=c6HmQBOxgSV8qZC6zutZnk/45YwBttLjZgqyOpRpfBsSN6X7DaaCrVVZ3erODdP82
+	 HVNmCT4TMYeN1OG/bKhUtx13iiHQkl8F48oglnXKf55vC3nJ/K6fLJOoxumoM3FrFo
+	 vWuQ36jPpJpByZxuW6MDxAiCfG87YrN4XT9Ui4s+/ZccOtoFCL8nXOrz12GGtioIfZ
+	 WwqZLT3EFsZoUk54gmr87LzTI7s0409pF9LmI7iUJSgqL7KkIVPIyVcqbieVm9kS7p
+	 f5vfgz7ftYToaelb1M9thw5cBp+bKVbrn6ilyANU2vUJy+3l8y0d/i9RigXBW8a627
+	 iO2FWChZP066Q==
+Message-ID: <bb759aec-6b28-4c62-826b-d205b3d7e120@kernel.org>
+Date: Wed, 1 Apr 2026 11:26:37 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -98,19 +98,17 @@ On 31/03/2026 10:40, Geliang Tang wrote:
 > Factor out a new helper tcp_recv_should_stop() from tcp_recvmsg_locked()
 > and tcp_splice_read() to check whether to stop receiving. And use this
 > helper in mptcp_recvmsg() and mptcp_splice_read() to reduce redundant code.
-> 
-> Suggested-by: Paolo Abeni <pabeni@redhat.com>
-> Acked-by: Mat Martineau <martineau@kernel.org>
-> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-> ---
-> v3:
->  - drop timeo parameter of tcp_recv_should_stop as Matt suggested.
->  - drop patch 1 "mptcp: check desc->count in read_sock" in v2 as
->    Matt suggested. I changed the state of it as "Rejected".
 
-Thank you! This v3 looks good to me:
+Now in our tree:
 
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+New patches for t/upstream:
+- 9c3c48dcf714: tcp: add recv_should_stop helper
+- Results: 64764461d86c..cbbf0a1eaf50 (export)
+
+Tests are now in progress:
+
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/2181bea59443fcf1527a72c6e0f99a01c245314e/checks
 
 Cheers,
 Matt
