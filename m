@@ -1,396 +1,130 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90E083C457D
-	for <mptcp@lists.linux.dev>; Wed,  1 Apr 2026 12:54:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DCD12D5C8E
+	for <mptcp@lists.linux.dev>; Wed,  1 Apr 2026 14:04:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775048071; cv=none; b=lD/RJ5HC4NS23x16hDSIXCbQYFVkTcOzpz09xPjgXrKR0iqCDGONrNGCV2AhBbECcRvwl5vVUmbHbIkk/ZWzQ4JllPKyDuWhuk0REORxoUBNMiOxqOeK7JhvdmERJ33AQjqtkX4mrnqGDWt9vDiBl8GXAo6kVfUBWsLrApHtlHU=
+	t=1775052299; cv=none; b=gyeIaK7QAKp89Z5WpkQdA87unynVC+eRanSfMdV0Hku7LC7DnZTcX4QydXtuDLNa/XKBCDxnC6Snup0Zgp1u2FJriy9k+y0E9b56QITtS/apxEMMdWmZJmV3ZXuwcDJhuJj+f6dLsUuzw3lS+WDs7Sjho2rXJT2x/gwQdqtqbyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775048071; c=relaxed/simple;
-	bh=SSwrmnxlgId8ZBAiDfe9i9qiHSefb/jOBMjHtpkcMQA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qwFBuGm6SBUDd3C7EP20HHNF3ufywD87cQ/iAZAXsv96gyt5DscUgd7+yIeyKnq5B/ZIVrFdgNm7OQ2GvUzjM071f2yuYE3/SoMRxR1lit4q6E9Rx3iK2vJHf06V1pOOnxhlxwiPbFdwxshtb9TQe59vEPZdqsNv9Y8+Qp74wCI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JIAdI73w; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1775052299; c=relaxed/simple;
+	bh=/P68g2zrVB7WYq3RAwi7kaGcD4aK4q2HJE1NBm1waNg=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
+	 MIME-Version:Content-Type; b=rMVHoUTJk+J6ftKElZWiIvplEP5qmzyBkiZ/U2UroXZ0+hTAvSxFIMg05cyeuBAdytU/Npa6OLii0rbyEeZS46nZZAhHpYDQik/nzKkmF4nDF7GTf+tCPbBlbIrjs+Rqx2rfRk/18WtrTYuDUZ3A8kgm0vx7Wv9kSE4+9v8o6dw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OlUl0t1F; arc=none smtp.client-ip=209.85.167.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JIAdI73w"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C1A3C116C6;
-	Wed,  1 Apr 2026 12:54:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775048071;
-	bh=SSwrmnxlgId8ZBAiDfe9i9qiHSefb/jOBMjHtpkcMQA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=JIAdI73w9vBkmQpOVBp7sF5jwqKphTJ1FKEgBmXktURxbmKqabfEoYLLoi3W6idpB
-	 lCna7cy/TKMZ7erYblm4AV0JIz2cBu/BDd2ZRc7j9YxifDaaXkHImSA/PadW9FKYTV
-	 h0/ewS3wahBZUUpLP2qllDfriLIKm4FMKkrLPPqIWOsf2MuHorCRFmq9+/qxxIqlEI
-	 0gK80qphc7jK6faE/AByQpEi7xN8kktXCHg/y1FDWT2ERgic1HC7vq6/b08rvo8d4p
-	 AyLRu3qigLBDTNEAQpJyQzItRUdtpziW03zD84uCzNu8LW0Hbg12pCTAG9/uBOTaTs
-	 JXT0fMgTPcd3Q==
-From: Geliang Tang <geliang@kernel.org>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>,
-	Hannes Reinecke <hare@suse.de>,
-	Nilay Shroff <nilay@linux.ibm.com>,
-	Ming Lei <ming.lei@redhat.com>,
-	zhenwei pi <zhenwei.pi@linux.dev>,
-	Hui Zhu <zhuhui@kylinos.cn>,
-	Gang Yan <yangang@kylinos.cn>
-Subject: [RFC mptcp-next v8 7/7] selftests: mptcp: add NVMe over MPTCP test
-Date: Wed,  1 Apr 2026 20:53:45 +0800
-Message-ID: <dba0380e9fbe9241db27895cff9c28fc3f77e957.1775047736.git.tanggeliang@kylinos.cn>
-X-Mailer: git-send-email 2.51.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OlUl0t1F"
+Received: by mail-oi1-f171.google.com with SMTP id 5614622812f47-467fd082ffeso4329394b6e.1
+        for <mptcp@lists.linux.dev>; Wed, 01 Apr 2026 07:04:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1775052297; x=1775657097; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vVooRHZVVVUd09nqcvUiCUVmW2iFdjd54bXUDiZhs1M=;
+        b=OlUl0t1FVGglU6jM8l/OrIP3zGhFz0K00Ia1fUUwiU48GgBwrf156BrcLjl19Lnvib
+         BlOGlu4MNnpHxZx7UurktpszYkKcQmaHQhOvAHYCucLqKLklpG88kseL60hRsdLQNaG+
+         rkIbs+IBIWwNnwlxGGhO2CREe5Ykxd/nbQWeLu0OdYw4s/JlW9AGxs/yZZnUZKqro/eV
+         me7UYdSbk3ZgeeyvpNoL1zYDoABeVgfgD5EC8yERn+LwL/LkRlyiByCYuILgpd5ubm0j
+         XvMcRYLbi7Q5BCAnMiwD2ZD1lR0cZcb5L2WIdpbiOkuUAjDTSG63isseE9MFvhuKkhBj
+         RUyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1775052297; x=1775657097;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vVooRHZVVVUd09nqcvUiCUVmW2iFdjd54bXUDiZhs1M=;
+        b=iinn6T18P5cdTYax5qWtW3UMqyvxlZ3fzeSGZc+4h2g/32iQMZSVZFPNO9wysnScqm
+         wWs/H8gtVbWObf3n7H7+sNfkk3EOLBViYLAADCOXoQKeOMRN09akQgjLpI1wpGriOtMk
+         Gm/ZOtdFGQTIae/hE7r+Q5+ltM1u1ErEYXPNIy7aCDxP9U4whNljEgdZFnKfMVR3yjYO
+         8Ayt4DTBU5PE+laElgN500g0rsl283LOD72I/oTn6WrL+JYe7+oFXhWnuxHU38QgnAcS
+         4bSLOFMv3JRkJ3ac1CbfpevMYpcloPu6kvePXq5JWT0bnvqpTTqlrdF0EX8YjiPBy+a0
+         Fcvw==
+X-Gm-Message-State: AOJu0Yy9vuuXtHLbR3DD8gVb+WnmrUHmu6h/Mh+2LBQYKLLPtipZnUj6
+	Mxld55HLY0NxA5J/XxjD2vLdrQW9YeVlsXaQBA38nNK36K9sgND6MAoDULLDPSc=
+X-Gm-Gg: ATEYQzy07L7P/VTubFm0ObuOc/wsm1cxLdTjtTYz0P8RwMy35Jq0SvylCqq0bDB52Jq
+	sBIdX3Tr4rGMauLLn+Qh/I7DGEv/rQk4UAYEFW/Oo6X+ZXnik/AaDebuoDTnD/3nGWz1Z5sIGQT
+	jD+jitGccq0nWk+OsFbonRpq75Uye/eixZwXP8gjMVJSupEr6xg38KZscdvOqgBc9B2pBVRtbAl
+	pYD3ZjmsO5BkZ5M+hbOY466JVKret6XIq+p5D6HB1TsBUxgVPdAjF7ivxM8glMLXNC2l6E7WUIJ
+	NjUEQBEhzTJt/cPyuOY8qk8XIG893NTDNlvZlqJSmXngVIoTZvBp43bgxvUX/09v4xma2DkupW1
+	/gJ+OxpN/1hV58+QnHfmqsmBKNLoh+G6B48lxJCeYlCehi4bNmkWXRbNs965VYa1tAj8bUPDQ7n
+	qkrlfhUkx4xdL2sgt0TbYm9ylAIkd7jJi+Zs8W
+X-Received: by 2002:a05:6808:13c2:b0:45e:b5f9:8a1d with SMTP id 5614622812f47-46ae0140105mr2245995b6e.35.1775052296671;
+        Wed, 01 Apr 2026 07:04:56 -0700 (PDT)
+Received: from [127.0.0.1] ([40.76.191.164])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-89ecf2852a1sm114838046d6.32.2026.04.01.07.04.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Apr 2026 07:04:55 -0700 (PDT)
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Geliang Tang <tanggeliang@kylinos.cn>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
 In-Reply-To: <cover.1775047736.git.tanggeliang@kylinos.cn>
 References: <cover.1775047736.git.tanggeliang@kylinos.cn>
+Subject: Re: [RFC mptcp-next v8 0/7] NVME over MPTCP
+Message-ID: <29d505d4-a120-f987-eb0e-15d5de0b5ad5@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 01 Apr 2026 14:04:55 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+Hi Geliang,
 
-A test case for NVMe over MPTCP has been implemented. It verifies the
-proper functionality of nvme list, discover, connect, and disconnect
-commands. Additionally, read/write performance has been evaluated using
-fio.
+Thank you for your modifications, that's great!
 
-This test simulates four NICs on both target and host sides, each limited
-to 100MB/s. It shows that 'NVMe over MPTCP' delivered bandwidth up to
-four times that of standard TCP:
+Our CI did some validations and here is its report:
 
- # ./mptcp_nvme.sh tcp
-  READ: bw=112MiB/s (118MB/s), 112MiB/s-112MiB/s (118MB/s-118MB/s),
-		io=1123MiB (1177MB), run=10018-10018msec
-  WRITE: bw=112MiB/s (117MB/s), 112MiB/s-112MiB/s (117MB/s-117MB/s),
-		io=1118MiB (1173MB), run=10018-10018msec
+- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Unstable: 1 failed =
+test(s): packetdrill_dss =E2=9A=A0=EF=B8=8F=20
+- KVM Validation: debug =
+(only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal=
+ (only bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only =
+bpftest_all): Success! =E2=9C=85
+- Task: https://github.=
+com/multipath-tcp/mptcp_net-next/actions/runs/23850182531
 
- # ./mptcp_nvme.sh mptcp
-  READ: bw=427MiB/s (448MB/s), 427MiB/s-427MiB/s (448MB/s-448MB/s),
-		io=4286MiB (4494MB), run=10039-10039msec
-  WRITE: bw=387MiB/s (406MB/s), 387MiB/s-387MiB/s (406MB/s-406MB/s),
-		io=3885MiB (4073MB), run=10043-10043msec
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/dd36aba092d9
+Patchwork: https://patchwork.kernel.=
+org/project/mptcp/list/?series=3D1075844
 
-Also add NVMe iopolicy testing to mptcp_nvme.sh, with the default set
-to "numa". It can be set to "round-robin" or "queue-depth".
 
- # ./mptcp_nvme.sh mptcp round-robin
+If there are some issues, you =
+can reproduce them using the same environment as
+the one used by the CI =
+thanks to a docker image, e.g.:
 
-Cc: Hannes Reinecke <hare@suse.de>
-Cc: Nilay Shroff <nilay@linux.ibm.com>
-Cc: Ming Lei <ming.lei@redhat.com>
-Co-developed-by: zhenwei pi <zhenwei.pi@linux.dev>
-Signed-off-by: zhenwei pi <zhenwei.pi@linux.dev>
-Co-developed-by: Hui Zhu <zhuhui@kylinos.cn>
-Signed-off-by: Hui Zhu <zhuhui@kylinos.cn>
-Co-developed-by: Gang Yan <yangang@kylinos.cn>
-Signed-off-by: Gang Yan <yangang@kylinos.cn>
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
----
- tools/testing/selftests/net/mptcp/Makefile    |   1 +
- tools/testing/selftests/net/mptcp/config      |   7 +
- .../testing/selftests/net/mptcp/mptcp_lib.sh  |  12 +
- .../testing/selftests/net/mptcp/mptcp_nvme.sh | 240 ++++++++++++++++++
- 4 files changed, 260 insertions(+)
- create mode 100755 tools/testing/selftests/net/mptcp/mptcp_nvme.sh
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
 
-diff --git a/tools/testing/selftests/net/mptcp/Makefile b/tools/testing/selftests/net/mptcp/Makefile
-index 22ba0da2adb8..7b308447a58b 100644
---- a/tools/testing/selftests/net/mptcp/Makefile
-+++ b/tools/testing/selftests/net/mptcp/Makefile
-@@ -13,6 +13,7 @@ TEST_PROGS := \
- 	mptcp_connect_sendfile.sh \
- 	mptcp_connect_splice.sh \
- 	mptcp_join.sh \
-+	mptcp_nvme.sh \
- 	mptcp_sockopt.sh \
- 	pm_netlink.sh \
- 	simult_flows.sh \
-diff --git a/tools/testing/selftests/net/mptcp/config b/tools/testing/selftests/net/mptcp/config
-index 59051ee2a986..0eee348eff8b 100644
---- a/tools/testing/selftests/net/mptcp/config
-+++ b/tools/testing/selftests/net/mptcp/config
-@@ -34,3 +34,10 @@ CONFIG_NFT_SOCKET=m
- CONFIG_NFT_TPROXY=m
- CONFIG_SYN_COOKIES=y
- CONFIG_VETH=y
-+CONFIG_CONFIGFS_FS=y
-+CONFIG_NVME_CORE=y
-+CONFIG_NVME_FABRICS=y
-+CONFIG_NVME_TCP=y
-+CONFIG_NVME_TARGET=y
-+CONFIG_NVME_TARGET_TCP=y
-+CONFIG_NVME_MULTIPATH=y
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-index 5fea7e7df628..62e01afc50ed 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-@@ -526,6 +526,18 @@ mptcp_lib_check_tools() {
- 				exit ${KSFT_SKIP}
- 			fi
- 			;;
-+		"nvme")
-+			if ! nvme --version &> /dev/null; then
-+				mptcp_lib_pr_skip "Could not run test without nvme tool"
-+				exit ${KSFT_SKIP}
-+			fi
-+			;;
-+		"fio")
-+			if ! fio -h &> /dev/null; then
-+				mptcp_lib_pr_skip "Could not run test without fio tool"
-+				exit ${KSFT_SKIP}
-+			fi
-+			;;
- 		*)
- 			mptcp_lib_pr_fail "Internal error: unsupported tool: ${tool}"
- 			exit ${KSFT_FAIL}
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_nvme.sh b/tools/testing/selftests/net/mptcp/mptcp_nvme.sh
-new file mode 100755
-index 000000000000..101536b66b9d
---- /dev/null
-+++ b/tools/testing/selftests/net/mptcp/mptcp_nvme.sh
-@@ -0,0 +1,240 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+
-+. "$(dirname "$0")/mptcp_lib.sh"
-+
-+ret=0
-+trtype="${1:-mptcp}"
-+iopolicy=${2:-"numa"} # round-robin, queue-depth
-+nqn="nqn.2014-08.org.nvmexpress.${trtype}dev.$$.${RANDOM}"
-+ns=1
-+port=$((RANDOM % 10000 + 20000))
-+trsvcid=$((RANDOM % 64512 + 1024))
-+ns1=""
-+ns2=""
-+temp_file=$(mktemp /tmp/test.XXXXXX.raw)
-+loop_dev=""
-+
-+ns1_cleanup()
-+{
-+	mount -t configfs none /sys/kernel/config
-+
-+	pushd /sys/kernel/config/nvmet || exit 1
-+	rm -rf ports/"${port}"/subsystems/"${trtype}"subsys
-+	rmdir ports/"${port}"
-+	echo 0 > subsystems/"${nqn}"/namespaces/"${ns}"/enable
-+	echo -n 0 > subsystems/"${nqn}"/namespaces/"${ns}"/device_path
-+	rmdir subsystems/"${nqn}"/namespaces/"${ns}"
-+	rmdir subsystems/"${nqn}"
-+	popd || exit 1
-+}
-+
-+ns2_cleanup()
-+{
-+	nvme disconnect -n "${nqn}" || true
-+}
-+
-+cleanup()
-+{
-+	ip netns exec "$ns2" bash <<- EOF
-+		$(declare -f ns2_cleanup)
-+		ns2_cleanup
-+	EOF
-+
-+	sleep 1
-+
-+	ip netns exec "$ns1" bash <<- EOF
-+		$(declare -f ns1_cleanup)
-+		ns1_cleanup
-+	EOF
-+
-+	if [ -n "${loop_dev}" ] && [ -b "${loop_dev}" ]; then
-+		losetup -d "${loop_dev}" 2>/dev/null || true
-+	fi
-+	rm -rf "${temp_file}"
-+
-+	mptcp_lib_ns_exit "$ns1" "$ns2"
-+
-+	kill "$monitor_pid_ns1" 2>/dev/null
-+	wait "$monitor_pid_ns1" 2>/dev/null
-+
-+	kill "$monitor_pid_ns2" 2>/dev/null
-+	wait "$monitor_pid_ns2" 2>/dev/null
-+
-+	unset -v trtype nqn ns port trsvcid
-+}
-+
-+init()
-+{
-+	mptcp_lib_ns_init ns1 ns2
-+
-+	# ns1		ns2
-+	# 10.1.1.1	10.1.1.2
-+	# 10.1.2.1	10.1.2.2
-+	# 10.1.3.1	10.1.3.2
-+	# 10.1.4.1	10.1.4.2
-+	for i in {1..4}; do
-+		ip link add ns1eth"$i" netns "$ns1" type veth peer \
-+					name ns2eth"$i" netns "$ns2"
-+		ip -net "$ns1" addr add 10.1."$i".1/24 dev ns1eth"$i"
-+		ip -net "$ns1" addr add dead:beef:"$i"::1/64 \
-+					dev ns1eth"$i" nodad
-+		ip -net "$ns1" link set ns1eth"$i" up
-+		ip -net "$ns2" addr add 10.1."$i".2/24 dev ns2eth"$i"
-+		ip -net "$ns2" addr add dead:beef:"$i"::2/64 \
-+					dev ns2eth"$i" nodad
-+		ip -net "$ns2" link set ns2eth"$i" up
-+		ip -net "$ns2" route add default via 10.1."$i".1 \
-+					dev ns2eth"$i" metric 10"$i"
-+		ip -net "$ns2" route add default via dead:beef:"$i"::1 \
-+					dev ns2eth"$i" metric 10"$i"
-+
-+		# Add tc qdisc to both namespaces for bandwidth limiting
-+		tc -n "$ns1" qdisc add dev ns1eth"$i" root netem rate 1000mbit
-+		tc -n "$ns2" qdisc add dev ns2eth"$i" root netem rate 1000mbit
-+	done
-+
-+	mptcp_lib_pm_nl_set_limits "${ns1}" 8 8
-+
-+	mptcp_lib_pm_nl_add_endpoint "$ns1" 10.1.2.1 flags signal
-+	mptcp_lib_pm_nl_add_endpoint "$ns1" 10.1.3.1 flags signal
-+	mptcp_lib_pm_nl_add_endpoint "$ns1" 10.1.4.1 flags signal
-+
-+	mptcp_lib_pm_nl_set_limits "${ns2}" 8 8
-+
-+	mptcp_lib_pm_nl_add_endpoint "$ns2" 10.1.2.2 flags subflow
-+	mptcp_lib_pm_nl_add_endpoint "$ns2" 10.1.3.2 flags subflow
-+	mptcp_lib_pm_nl_add_endpoint "$ns2" 10.1.4.2 flags subflow
-+
-+	ip -n "${ns1}" mptcp monitor &
-+	monitor_pid_ns1=$!
-+	ip -n "${ns2}" mptcp monitor &
-+	monitor_pid_ns2=$!
-+}
-+
-+run_target()
-+{
-+	mount -t configfs none /sys/kernel/config
-+
-+	cd /sys/kernel/config/nvmet/subsystems || exit
-+	mkdir -p "${nqn}"
-+	cd "${nqn}" || exit
-+	echo 1 > attr_allow_any_host
-+	mkdir -p namespaces/"${ns}"
-+	echo "${loop_dev}" > namespaces/"${ns}"/device_path
-+	echo 1 > namespaces/"${ns}"/enable
-+
-+	cd /sys/kernel/config/nvmet/ports || exit
-+	mkdir -p "${port}"
-+	cd "${port}" || exit
-+	echo "${trtype}" > addr_trtype
-+	echo ipv4 > addr_adrfam
-+	echo 0.0.0.0 > addr_traddr
-+	echo "${trsvcid}" > addr_trsvcid
-+
-+	cd subsystems || exit
-+	ln -sf ../../../subsystems/"${nqn}" "${trtype}"subsys
-+}
-+
-+run_host()
-+{
-+	local traddr=10.1.1.1
-+	local output
-+	local devname
-+	local subname
-+
-+	echo "nvme discover -a ${traddr}"
-+	nvme discover -t "${trtype}" -a "${traddr}" -s "${trsvcid}"
-+	if [ $? -ne 0 ]; then
-+		return 1
-+	fi
-+
-+	echo "nvme connect"
-+	output=$(nvme connect -t "${trtype}" -a "${traddr}" \
-+			      -s "${trsvcid}" -n "${nqn}" 2>&1)
-+	if [ $? -ne 0 ]; then
-+		echo "nvme connect failed: $output" >&2
-+		return 1
-+	fi
-+
-+	devname=$(echo "$output" | awk '{print $NF}')
-+	if [ -z "$devname" ]; then
-+		echo "Failed to parse device name from output: $output" >&2
-+		return 1
-+	fi
-+
-+	sleep 1
-+
-+	echo "nvme list"
-+	nvme list
-+
-+	subname=$(nvme list-subsys /dev/"${devname}"n1 |
-+		  grep -o 'nvme-subsys[0-9]*' | head -1)
-+
-+	echo "${iopolicy}" > /sys/class/nvme-subsystem/"${subname}"/iopolicy
-+	cat /sys/class/nvme-subsystem/"${subname}"/iopolicy
-+
-+	echo "fio randread /dev/${devname}n1"
-+	fio --name=global --direct=1 --norandommap --randrepeat=0 \
-+	    --ioengine=libaio --thread=1 --blocksize=4k --runtime=10 \
-+	    --time_based --rw=randread --numjobs=4 --iodepth=256 \
-+	    --group_reporting --size=100% --name=libaio_4_256_4k_randread \
-+	    --filename=/dev/"${devname}"n1
-+	if [ $? -ne 0 ]; then
-+		return 1
-+	fi
-+
-+	sleep 1
-+
-+	echo "fio randwrite /dev/${devname}n1"
-+	fio --name=global --direct=1 --norandommap --randrepeat=0 \
-+	    --ioengine=libaio --thread=1 --blocksize=4k --runtime=10 \
-+	    --time_based --rw=randwrite --numjobs=4 --iodepth=256 \
-+	    --group_reporting --size=100% --name=libaio_4_256_4k_randwrite \
-+	    --filename=/dev/"${devname}"n1
-+	if [ $? -ne 0 ]; then
-+		return 1
-+	fi
-+
-+	nvme flush /dev/"${devname}"n1
-+}
-+
-+mptcp_lib_check_tools nvme fio
-+
-+init
-+trap cleanup EXIT
-+
-+dd if=/dev/zero of="${temp_file}" bs=1M count=0 seek=512
-+loop_dev=$(losetup -f --show "${temp_file}")
-+
-+run_test()
-+{
-+	export trtype nqn ns port trsvcid
-+	export loop_dev temp_file
-+	export iopolicy
-+
-+	if ! ip netns exec "$ns1" bash <<- EOF
-+		$(declare -f run_target)
-+		run_target
-+		exit \$?
-+	EOF
-+	then
-+		ret="${KSFT_FAIL}"
-+	fi
-+
-+	if ! ip netns exec "$ns2" bash <<- EOF
-+		$(declare -f run_host)
-+		run_host
-+		exit \$?
-+	EOF
-+	then
-+		ret="${KSFT_FAIL}"
-+	fi
-+
-+	sleep 1
-+}
-+
-+run_test "$@"
-+
-+mptcp_lib_result_print_all_tap
-+exit "$ret"
--- 
-2.51.0
+For more details:
 
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
+
+
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 Core)
