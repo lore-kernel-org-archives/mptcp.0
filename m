@@ -1,117 +1,141 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECAD23D5226
-	for <mptcp@lists.linux.dev>; Wed,  1 Apr 2026 09:26:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B04793C457D
+	for <mptcp@lists.linux.dev>; Wed,  1 Apr 2026 12:54:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775035601; cv=none; b=c34ws6E6jgYE1D/UZNvpav8TpBhNlHC5Utyr0Ac9v/0HDyAVSNxWaovJwx+LxpU06DMOhlcMonoAdltCqkptdWyOduLcP9GOBKD0nvuFAIyFsiKXxRoNT0AWAtTuyywZWHYBOQNqRnnd2Jzm6jgsBBHuKx81rqlufCoJcig4q2Q=
+	t=1775048052; cv=none; b=KCx0o1NwBGGpQzNOlctgKFLeV3tc6QuxMkj3qUjOF5aRH8KoRopYptOtZbTqAGqAN6QGUQN42dVBYXCLK80d26LgDlTcnWYtaMUPEK1hTskkLm+rZvVVs6//SZairM4Pogd+VXuoA4btqELiBuHsILvfcme85PGmMPLivhpySKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775035601; c=relaxed/simple;
-	bh=fevENUdWRnj1vmi9SrOI8VprRCRLCBeXWMXwGF4Tcsg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jFad1nP5D4kNVLeiTX+a0qTAEK/Sq0SiSb02Q0+jg/PrK/+Y3mBKrVdOJiA40qUS6hiXcPTRCB4Scv42oUBg15/pkYyv/jy14p4CdFif9rgG/RlEweGE40bI9POC3B1xD59D9K48Lr0G2OfaWfmQ5Bct+BFH+8dIyvX5rPzg/5k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c6HmQBOx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1775048052; c=relaxed/simple;
+	bh=3tyYBW/sJ5pXTVW1SQTUW+cl4FUKAixVszevYTTIglc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VdQa+1GW1UrIgk6Hgq1bjpIMBJ6c4PCTioSF1VMLMnJJ0ibvnh4qk1O0ovgKJJzifgZdLaKjZcbtYZN/vEujZuaLUO4LO86BBj6WehH1zGKaJA8AtO67/cgrfJC+pvWzedKsxZAsVQbyD4NY1eE/nz2JEyu0hG2SjJVZKMHjnlQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PG5XrBuR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c6HmQBOx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FC32C2BCB0;
-	Wed,  1 Apr 2026 09:26:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PG5XrBuR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2ADE1C4CEF7;
+	Wed,  1 Apr 2026 12:54:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775035600;
-	bh=fevENUdWRnj1vmi9SrOI8VprRCRLCBeXWMXwGF4Tcsg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=c6HmQBOxgSV8qZC6zutZnk/45YwBttLjZgqyOpRpfBsSN6X7DaaCrVVZ3erODdP82
-	 HVNmCT4TMYeN1OG/bKhUtx13iiHQkl8F48oglnXKf55vC3nJ/K6fLJOoxumoM3FrFo
-	 vWuQ36jPpJpByZxuW6MDxAiCfG87YrN4XT9Ui4s+/ZccOtoFCL8nXOrz12GGtioIfZ
-	 WwqZLT3EFsZoUk54gmr87LzTI7s0409pF9LmI7iUJSgqL7KkIVPIyVcqbieVm9kS7p
-	 f5vfgz7ftYToaelb1M9thw5cBp+bKVbrn6ilyANU2vUJy+3l8y0d/i9RigXBW8a627
-	 iO2FWChZP066Q==
-Message-ID: <bb759aec-6b28-4c62-826b-d205b3d7e120@kernel.org>
-Date: Wed, 1 Apr 2026 11:26:37 +0200
+	s=k20201202; t=1775048052;
+	bh=3tyYBW/sJ5pXTVW1SQTUW+cl4FUKAixVszevYTTIglc=;
+	h=From:To:Cc:Subject:Date:From;
+	b=PG5XrBuRAPTundLOgE/tSV7JF0MiQATx1QLsWBK0/ALjxNdAKBy94XmElGFFZASwK
+	 evG6bgSXfbjwQ/bFXT08Mq5lvPXfspXZU8YLUAsMRhOkqlGqdkUZeHtgG5l/+5ltcu
+	 x0vuvdMPrNDwnJRZa56nA+RoLGRA9asIewS+xW8s73e2bE+UK1ilW1lUqCp4slr2l5
+	 pcAG+0CIRb4r7oZawZUoT1LuyHVl6KDw+R379HYsJCeA297i8tuxSX+qiYQMlEA74X
+	 aOP7fY68A9nxNM8DAgwEKTjI6r60RIU7erNm3RhoLxYXIpf3tbAZV8cZ0g64Wuy3gT
+	 blmdk9GjCzCDw==
+From: Geliang Tang <geliang@kernel.org>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Subject: [RFC mptcp-next v8 0/7] NVME over MPTCP
+Date: Wed,  1 Apr 2026 20:53:38 +0800
+Message-ID: <cover.1775047736.git.tanggeliang@kylinos.cn>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v3] tcp: add recv_should_stop helper
-Content-Language: fr
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>, Paolo Abeni <pabeni@redhat.com>,
- Mat Martineau <martineau@kernel.org>
-References: <7d66c0d1f1384b142b064a760545ee6e2a8bcbde.1774946177.git.tanggeliang@kylinos.cn>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <7d66c0d1f1384b142b064a760545ee6e2a8bcbde.1774946177.git.tanggeliang@kylinos.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Geliang,
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
-On 31/03/2026 10:40, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
-> 
-> Factor out a new helper tcp_recv_should_stop() from tcp_recvmsg_locked()
-> and tcp_splice_read() to check whether to stop receiving. And use this
-> helper in mptcp_recvmsg() and mptcp_splice_read() to reduce redundant code.
+v8:
+ - address comments reported by ai-review for v7.
+ - add RCU protection for queue->port on target side.
+ - add RCU protection ctrl->proto on host side.
+ - check !msk->first instead of "IS_ERR(msk->first)".
+ - fix return value of mptcp_sock_set_syncnt.
+ - update selftest.
+ - fix CI error: "[SKIP] Could not run all tests without nvme".
 
-Now in our tree:
+v7:
+ - address comments reported by ai-review.
+ - change sockops in nvmet_tcp_port and nvme_tcp_ctrl as a pointer.
+ - add null checks for queue->port->sockops in nvmet_tcp_set_queue_sock.
+ - add inline for mptcp_sock_set_priority and mptcp_sock_set_tos in
+   mptcp.h
+ - use "ssk = msk->first" instead of "ssk = __mptcp_nmpc_sk(msk)" in
+   mptcp_sock_set_priority, mptcp_sock_no_linger and mptcp_sock_set_tos.
+ - drop sk_is_tcp in nvmet_tcp_done_recv_pdu
+ - move ctrl->sockops setting before nvme_init_ctrl in
+   nvme_tcp_alloc_ctrl
+ - define nvme_mptcp_ctrl_ops
+ - add MODULE_ALIAS("nvme-mptcp")
+ - add more CONFIG_MPTCP checks
+ - update selftest
+ - Link: https://patchwork.kernel.org/project/mptcp/cover/cover.1774952107.git.tanggeliang@kylinos.cn/
 
-New patches for t/upstream:
-- 9c3c48dcf714: tcp: add recv_should_stop helper
-- Results: 64764461d86c..cbbf0a1eaf50 (export)
+v6:
+ - introduce nvmet_tcp_sockops and nvme_tcp_sockops structures
+ - fix set_reuseaddr, set_nodelay and set_syncnt, add sockopt_seq_inc
+ calls, only set the first subflow, and synchronize to other subflows in
+ sync_socket_options
+ - Add implementations for no_linger, set_priority and set_tos
+ - This version no longer depends on the "mptcp: fix stall because of
+ data_ready" series of fixes
+ - Link: https://patchwork.kernel.org/project/mptcp/cover/cover.1774862875.git.tanggeliang@kylinos.cn/
 
-Tests are now in progress:
+v5:
+ - address comments reported by ai-review: set msk->nodelay to true in
+   mptcp_sock_set_nodelay, set sk->sk_reuse to ssk->sk_reuse in
+   mptcp_sock_set_reuseaddr, add mptcp_nvme.sh to TEST_PROGS, and adjust
+   the order of patches.
+ - remove TLS-related options from .allowed_opts of
+   nvme_mptcp_transport.
+ - some cleanups for selftest.
+ - Link: https://patchwork.kernel.org/project/mptcp/cover/cover.1773374342.git.tanggeliang@kylinos.cn/
 
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/2181bea59443fcf1527a72c6e0f99a01c245314e/checks
+v4:
+ - a new patch to set nvme iopolicy as Nilay suggested.
+ - resend all set to trigger AI review.
+ - Link: https://patchwork.kernel.org/project/mptcp/cover/cover.1772683110.git.tanggeliang@kylinos.cn/
 
-Cheers,
-Matt
+v3:
+ - update the implementation of sock_set_nodelay: originally it only set
+the first subflow, but now it sets every subflow.
+ - use sk_is_msk helper in this set.
+ - update the selftest to perform testing under a multi-interface
+environment.
+ - Link: https://patchwork.kernel.org/project/mptcp/cover/cover.1770627071.git.tanggeliang@kylinos.cn/
+
+v2:
+ - Patch 1 fixes the timeout issue reported in v1, thanks to Paolo and Gang
+Yan for their help.
+ - Patch 5 implements an MPTCP-specific sock_set_syncnt helper.
+ - Link: https://patchwork.kernel.org/project/mptcp/cover/cover.1764152990.git.tanggeliang@kylinos.cn/
+
+This series (previously named "MPTCP support to 'NVME over TCP'") had three
+RFC versions sent to Hannes in May, with subsequent revisions based on his
+input. Following that, I initiated the process of upstreaming the dependent
+"implement mptcp read_sock" series to the main MPTCP repository, which has
+been merged into net-next recently.
+
+Geliang Tang (7):
+  nvmet-tcp: define target tcp_proto struct
+  nvmet-tcp: register target mptcp transport
+  nvmet-tcp: implement target mptcp proto
+  nvme-tcp: define host tcp_proto struct
+  nvme-tcp: register host mptcp transport
+  nvme-tcp: implement host mptcp proto
+  selftests: mptcp: add NVMe over MPTCP test
+
+ drivers/nvme/host/tcp.c                       | 108 +++++++-
+ drivers/nvme/target/configfs.c                |   1 +
+ drivers/nvme/target/tcp.c                     | 112 +++++++-
+ include/linux/nvme.h                          |   1 +
+ include/net/mptcp.h                           |  27 ++
+ net/mptcp/protocol.h                          |   1 +
+ net/mptcp/sockopt.c                           | 116 +++++++++
+ tools/testing/selftests/net/mptcp/Makefile    |   1 +
+ tools/testing/selftests/net/mptcp/config      |   7 +
+ .../testing/selftests/net/mptcp/mptcp_lib.sh  |  12 +
+ .../testing/selftests/net/mptcp/mptcp_nvme.sh | 240 ++++++++++++++++++
+ 11 files changed, 607 insertions(+), 19 deletions(-)
+ create mode 100755 tools/testing/selftests/net/mptcp/mptcp_nvme.sh
+
 -- 
-Sponsored by the NGI0 Core fund.
+2.51.0
 
