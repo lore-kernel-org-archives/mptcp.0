@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A2F8263F5E
-	for <mptcp@lists.linux.dev>; Thu,  2 Apr 2026 07:48:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FAF6312803
+	for <mptcp@lists.linux.dev>; Thu,  2 Apr 2026 07:48:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775116100; cv=none; b=asCuu/DhSmUCsssvySSAwbNz7MSSi8N3sLNk7747gfkpgUqJXCm3AX1h21PJiEhjuPljRXnPtj2p+cZKK0fJ0NBluTHIkhwRYqBFxfjQ4uOmcY+5meV6DyFspcm9W9cYPlonr8/u7FltmpD91PDKhK19r5buo5T4b+5izbWGx5g=
+	t=1775116102; cv=none; b=hCAEe1oFL7D3CNk4ha4wxZGyNMp6yumQietQ7uj9CaOQ/SjC0FcVAndCi/+wO7TI94k5DZjzRbMCxEJodYQTTpiOf8PLgjgLf+Fs++vf9WkU5zHdfgmgWU9gWVm9bq6NG28KrotpW0tUzOzTILc1meZGll7cTUyOeb7eOMEOJx8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775116100; c=relaxed/simple;
-	bh=EvfTd40wLYuAuTYtIwMKsXtjNvkZfSXFg941Fz/UDf8=;
+	s=arc-20240116; t=1775116102; c=relaxed/simple;
+	bh=xoJ3bBSG1SCcawQx4SYTYaiMdeRLt6DS489jattyxn0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PnUYgDCuUrR/YFN94KNwR+bF7CH7GA9CKB8cS6j3toWAOG2uPWgammWcnA3p//Nj9XpL/4fM0rZY1wb9dxv5bUp/Mo0PE+RFwTOAEX4yT2sQxUGX96fMJRtAM2lx56AtCoubJx5UZK1QXrZW5eR8eY2NQg0XL0wgMaAlsOM6Zx8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i+GLVb68; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=d0dmh220Y0l2mNIbYKe+SZDUMZkUaYHpZu+KOG0Ij9OSkbz2FPbaHLFmy0c0UoTacZLF8mmI2kvvBT1WaiyP/b4tCfYd8YDPY+hgj8WRCbVCPUSBboxutOOD0As+zmN0vIUEBvKiC+RXDhxtqx88m5cNjc0TY1LcQ/HEvfmdNZg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BXYGTiMM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i+GLVb68"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DB33C19423;
-	Thu,  2 Apr 2026 07:48:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BXYGTiMM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53DE4C19423;
+	Thu,  2 Apr 2026 07:48:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775116099;
-	bh=EvfTd40wLYuAuTYtIwMKsXtjNvkZfSXFg941Fz/UDf8=;
+	s=k20201202; t=1775116101;
+	bh=xoJ3bBSG1SCcawQx4SYTYaiMdeRLt6DS489jattyxn0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=i+GLVb68mYPU5EOB5FpTTOh8rEezBo7z0FYzWSwjEElnR0aJYHHloU3W2xj4Ls3df
-	 fw4pfOsCtGgVsD4/Pjm9uT9b3mALQT2ubdb2jfCJbAyuGN6X7vTAXDSw1GcbBaE44k
-	 WP40cOEkJBMMjlAartuZ8SQg+QZ05D9LpZUQ+w8cPIn1zfAFva8nGYZIaBRR3vEqcy
-	 L8WRQKCmaeOJK2P51S5MSn0fIWrofRAEO/K2bLHNW6wEIouV448pwR5smm97oiqKUR
-	 gdpwYbQdq8jFy/imnW+HN6S2k3aZmAjHVN5VCanGhfeq81+t8UowAO0Js3Y3v0SKGZ
-	 OLsV054hQnwcQ==
+	b=BXYGTiMM0LukphugAfvMblAnC9VKYOK0+6KkhfTe9bo1L4vlkOxr/FWCCcxobX5r8
+	 9c+Cx5UGyz+thy7qnBDF45sgXMeBtGpHj4xiuDrfhQshMjHl5jlzd6TBJsIH4GEiJ8
+	 AOY+Nkr6bgM8sdmws8V4XUxrvY9Oj0V62ufxmPdsl6aPgzZraVgOd6JcPhPztiDgRH
+	 DTRCXpHjLYEvU+K+FasxFIofjbAXY4vsjvec6JKcRZFxW+2Ud6T4h1i+JYm4yGew09
+	 y227t8SbfgPEesVDOFUKxLaxr/HB+OnzJq3SJG4+UGaVAbBAHLDqOtTxUS+08BxNHW
+	 Liyx8Kw4dESgw==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>,
 	Gang Yan <yangang@kylinos.cn>
-Subject: [RFC mptcp-next v12 12/15] selftests: tls: increase nonblocking data size for mptcp
-Date: Thu,  2 Apr 2026 15:47:47 +0800
-Message-ID: <46ad3cae861014200cefd0826138416c10a433fd.1775115102.git.tanggeliang@kylinos.cn>
+Subject: [RFC mptcp-next v12 13/15] selftests: tls: wait close in shutdown_reuse for mptcp
+Date: Thu,  2 Apr 2026 15:47:48 +0800
+Message-ID: <2990c1cf84bd8789ec8f9bc83db71e76cf4d7b7b.1775115102.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <cover.1775115102.git.tanggeliang@kylinos.cn>
 References: <cover.1775115102.git.tanggeliang@kylinos.cn>
@@ -46,35 +46,90 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Increase the data size in nonblocking tests to accommodate MPTCP's
-multi-subflow behavior and ensure sufficient data for testing,
+In shutdown_reuse tests, add a delay after shutdown to wait for
+MPTCP sockets to reach TCP_CLOSE state before reuse via bind(),
 avoiding the following errors:
 
- #  RUN           tls.12_aria_gcm_mptcp.nonblocking ...
- # tls.c:1534:nonblocking:Expected 0 (0) != eagain (0)
- # nonblocking: Test failed
+ #  RUN           tls.12_aes_gcm_mptcp.shutdown_reuse ...
+ # tls.c:1790:shutdown_reuse:Expected ret (-1) == 0 (0)
+ # shutdown_reuse: Test failed
+ #          FAIL  tls.12_aes_gcm_mptcp.shutdown_reuse
+ not ok 14 tls.12_aes_gcm_mptcp.shutdown_reuse
+ #  RUN           tls.13_aes_gcm_mptcp.shutdown_reuse ...
+ # tls.c:1790:shutdown_reuse:Expected ret (-1) == 0 (0)
+ # shutdown_reuse: Test failed
+ #          FAIL  tls.13_aes_gcm_mptcp.shutdown_reuse
+ not ok 15 tls.13_aes_gcm_mptcp.shutdown_reuse
+ #  RUN           tls.12_chacha_mptcp.shutdown_reuse ...
+ #            OK  tls.12_chacha_mptcp.shutdown_reuse
+ ok 16 tls.12_chacha_mptcp.shutdown_reuse
+ #  RUN           tls.13_chacha_mptcp.shutdown_reuse ...
+ #            OK  tls.13_chacha_mptcp.shutdown_reuse
+ ok 17 tls.13_chacha_mptcp.shutdown_reuse
+ #  RUN           tls.13_sm4_gcm_mptcp.shutdown_reuse ...
+ # tls.c:1790:shutdown_reuse:Expected ret (-1) == 0 (0)
+ # shutdown_reuse: Test failed
+ #          FAIL  tls.13_sm4_gcm_mptcp.shutdown_reuse
+ not ok 18 tls.13_sm4_gcm_mptcp.shutdown_reuse
 
 Co-developed-by: Gang Yan <yangang@kylinos.cn>
 Signed-off-by: Gang Yan <yangang@kylinos.cn>
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- tools/testing/selftests/net/tls.c | 3 +++
- 1 file changed, 3 insertions(+)
+ tools/testing/selftests/net/tls.c | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
 diff --git a/tools/testing/selftests/net/tls.c b/tools/testing/selftests/net/tls.c
-index 64e999c6e14d..c3227b718160 100644
+index c3227b718160..f12744b178d5 100644
 --- a/tools/testing/selftests/net/tls.c
 +++ b/tools/testing/selftests/net/tls.c
-@@ -1405,6 +1405,9 @@ TEST_F(tls, nonblocking)
- 	int flags;
- 	int res;
+@@ -30,6 +30,10 @@
+ #define IPPROTO_MPTCP 262
+ #endif
+ 
++#ifndef TCP_CLOSE
++#define TCP_CLOSE 7
++#endif
++
+ static int fips_enabled;
+ 
+ struct tls_crypto_info_keys {
+@@ -1678,6 +1682,25 @@ TEST_F(tls, shutdown_unsent)
+ 	shutdown(self->cfd, SHUT_RDWR);
+ }
+ 
++static bool wait_for_tcp_close(struct __test_metadata *_metadata,
++			       int fd, int max)
++{
++	struct tcp_info info;
++	socklen_t len;
++	int i, ret;
++
++	len = sizeof(info);
++	for (i = 0; i < max; i++) {
++		ret = getsockopt(fd, IPPROTO_TCP, TCP_INFO, &info, &len);
++		EXPECT_EQ(ret, 0);
++		if (info.tcpi_state == TCP_CLOSE)
++			return true;
++		usleep(1000);
++	}
++
++	return false;
++}
++
+ TEST_F(tls, shutdown_reuse)
+ {
+ 	struct sockaddr_in addr;
+@@ -1687,6 +1710,9 @@ TEST_F(tls, shutdown_reuse)
+ 	shutdown(self->cfd, SHUT_RDWR);
+ 	close(self->cfd);
  
 +	if (variant->mptcp)
-+		data *= 4;
++		EXPECT_TRUE(wait_for_tcp_close(_metadata, self->fd, 1000));
 +
- 	flags = fcntl(self->fd, F_GETFL, 0);
- 	fcntl(self->fd, F_SETFL, flags | O_NONBLOCK);
- 	fcntl(self->cfd, F_SETFL, flags | O_NONBLOCK);
+ 	addr.sin_family = AF_INET;
+ 	addr.sin_addr.s_addr = htonl(INADDR_ANY);
+ 	addr.sin_port = 0;
 -- 
 2.51.0
 
