@@ -1,111 +1,119 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 222CB38CFE9
-	for <mptcp@lists.linux.dev>; Thu,  2 Apr 2026 10:26:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5625A3C0617
+	for <mptcp@lists.linux.dev>; Thu,  2 Apr 2026 12:19:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775125599; cv=none; b=NZHK6JEmBMNRL8mZ5yEJ1tohKinJn4OUQcyoHv4ziiKnjNc8bM/3URDBmadvA1OXjBNKrT/DPDHF9x8opXWPxu0Lv2TbsaD8H5lLmLrRdWCzR6z9Fwz+TbSOaFQZVoYJ6esubdXnzJEBfV46sZMRWTqhdYYETboWUfqhfVd31E8=
+	t=1775132370; cv=none; b=bzAMWhVkVFS3CVBS560eJ1VO+Xije9i92/QVPXx1v5A8gBZJU/28pca5x5NhcyDrT7C86TIl5a02HuT4jl1ZdGdfo2haM2vM2tjj9kj36Vpr68o67vool8ywEn2+BauP0m897YzdqkYmQGlT/6/Auo0GsF3ii83Mt9syB3jHFL4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775125599; c=relaxed/simple;
-	bh=KjjDtFLl3URziGGRbAPaFFXdnrMZSogppB/AqAgoLpE=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=hmcYPfl08KAVbdrvtjRYTLNyHKY4GjhnYQ02idvnAYwgQcOIJtt/nIG93XdM2g01LI5qCc6t6DGa370FLYkmxJy9Ly2aE8JYbY2g1dh4Rq4yH9clXiNZoZW8J5kOUCnyFtAVwzabKV8xnhVuzxzzjWHPRcf/9UDGf3yHmhJx/OI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tkYhTbqs; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1775132370; c=relaxed/simple;
+	bh=Bg5CfsFehfncfVjswQk/rE9T7RcWF2EaZRhCWbRGyIY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SYB0qbA5IyMYFuijBUzsq7Qo7VTRGozmVIJB0XWQYkpEjk+SLbqGyNS72IVYMEy3n5ulgN0pPgo2raQl6yCoksw136ec3Eav83/YjLHRZdYncM4QTzNCQjrqTgDrPISo40Q5uHxzHf1C1kh52mNQTIkl4TKJzxhVBV/g6yWPojo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lwQgZN7R; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tkYhTbqs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D2F2C116C6;
-	Thu,  2 Apr 2026 10:26:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lwQgZN7R"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79179C116C6;
+	Thu,  2 Apr 2026 12:19:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775125598;
-	bh=KjjDtFLl3URziGGRbAPaFFXdnrMZSogppB/AqAgoLpE=;
-	h=Subject:From:To:Date:In-Reply-To:References:From;
-	b=tkYhTbqs7ncYkrwjk6XXyk+kQ7XPNXzckn3aM+Mrk3EslBr+SMh/MmS4EyVLUVUMy
-	 fFazphgEDKKEfgV6NE5XK5t8hwpg6d8Log1FD1kGsFzVue/ZWLfyLgrf+d2d/a6EFU
-	 4/i3KyGxEs7D5WICCjCgEGcDTWoxbAOOMX7NKs3Dy+bhGWH4e1vwOUBWjsAUvEPZIt
-	 o0YmVc5okVyY8CIdGYQVyfSQti54CspfmmR59tvUdaYg49bAw32+cDbq0p6O/8bC/S
-	 VhB2cv1ZYl3aRytgZNBh8xamNq8vYjsNcasjWJQCu0HRskkW/bR28KUz5RQicZJTVN
-	 KdI1cr7CO7dAA==
-Message-ID: <8bb754486ad9151ab971fe25364f07894d8c5940.camel@kernel.org>
-Subject: Re: [RFC mptcp-next v12 00/15] MPTCP KTLS support
-From: Geliang Tang <geliang@kernel.org>
-To: mptcp@lists.linux.dev, Geliang Tang <tanggeliang@kylinos.cn>
-Date: Thu, 02 Apr 2026 18:26:33 +0800
-In-Reply-To: <fd0f8787-5395-4a72-451b-d348429e66a5@gmail.com>
-References: <cover.1775115102.git.tanggeliang@kylinos.cn>
-	 <fd0f8787-5395-4a72-451b-d348429e66a5@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.56.2-4 
+	s=k20201202; t=1775132370;
+	bh=Bg5CfsFehfncfVjswQk/rE9T7RcWF2EaZRhCWbRGyIY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=lwQgZN7Rk4khLMhkJwaufjEWctNOiKNQysO0KPihhUwIQnQ2uR3JsPdcf8Hfd+7X2
+	 Q8Bxju11gbalmAPbPrtvbjsODaq/XmYblTe4/KzGmIcetZEgoHuDklI0RGHre9cM1W
+	 StvVkaqW1Rz6xCsTAxaho6UQ3lKS3lMhTjpEqH5AJDAoAUX0rcRNgbkhKMSKyaGKn9
+	 5+pOhIe40GBLpTXp99BVUZ7wlF9KUg50TPtvQcH0LzRif1OaxdJXZokBF6lMnmbY5m
+	 orGtqtwZeMRbdf5D0/GLYzMSA88usc1Avodf0r4+/DGiFUSVIalg3nxqZwPXPmD09P
+	 bg//236HDYqRg==
+Message-ID: <baf3fac7-d0f4-4778-b771-4220e8893aad@kernel.org>
+Date: Thu, 2 Apr 2026 14:19:27 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-next v2 0/2] mptcp: preserve MSG_EOR semantics in
+ sendmsg path
+Content-Language: fr
+To: Gang Yan <gang.yan@linux.dev>, mptcp@lists.linux.dev
+Cc: Gang Yan <yangang@kylinos.cn>
+References: <cover.1774947296.git.yangang@kylinos.cn>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
+ YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
+ c7SPFMpMesgpcu1xFt0F6bcxE+0ojRtSCZ5HDElKlHJNYtD1uwY4UYVGWUGCF/+cY1YLmtfb
+ WdNb/SFo+Mp0HItfBC12qtDIXYvbfNUGVnA5jXeWMEyYhSNktLnpDL2gBUCsdbkov5VjiOX7
+ CRTkX0UgNWRjyFZwThaZADEvAOo12M5uSBk7h07yJ97gqvBtcx45IsJwfUJE4hy8qZqsA62A
+ nTRflBvp647IXAiCcwWsEgE5AXKwA3aL6dcpVR17JXJ6nwHHnslVi8WesiqzUI9sbO/hXeXw
+ TDSB+YhErbNOxvHqCzZEnGAAFf6ges26fRVyuU119AzO40sjdLV0l6LE7GshddyazWZf0iac
+ nEhX9NKxGnuhMu5SXmo2poIQttJuYAvTVUNwQVEx/0yY5xmiuyqvXa+XT7NKJkOZSiAPlNt6
+ VffjgOP62S7M9wDShUghN3F7CPOrrRsOHWO/l6I/qJdUMW+MHSFYPfYiFXoLUZyPvNVCYSgs
+ 3oQaFhHapq1f345XBtfG3fOYp1K2wTXd4ThFraTLl8PHxCn4ywARAQABzSRNYXR0aGlldSBC
+ YWVydHMgPG1hdHR0YmVAa2VybmVsLm9yZz7CwZEEEwEIADsCGwMFCwkIBwIGFQoJCAsCBBYC
+ AwECHgECF4AWIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZUDpDAIZAQAKCRD2t4JPQmmgcz33
+ EACjROM3nj9FGclR5AlyPUbAq/txEX7E0EFQCDtdLPrjBcLAoaYJIQUV8IDCcPjZMJy2ADp7
+ /zSwYba2rE2C9vRgjXZJNt21mySvKnnkPbNQGkNRl3TZAinO1Ddq3fp2c/GmYaW1NWFSfOmw
+ MvB5CJaN0UK5l0/drnaA6Hxsu62V5UnpvxWgexqDuo0wfpEeP1PEqMNzyiVPvJ8bJxgM8qoC
+ cpXLp1Rq/jq7pbUycY8GeYw2j+FVZJHlhL0w0Zm9CFHThHxRAm1tsIPc+oTorx7haXP+nN0J
+ iqBXVAxLK2KxrHtMygim50xk2QpUotWYfZpRRv8dMygEPIB3f1Vi5JMwP4M47NZNdpqVkHrm
+ jvcNuLfDgf/vqUvuXs2eA2/BkIHcOuAAbsvreX1WX1rTHmx5ud3OhsWQQRVL2rt+0p1DpROI
+ 3Ob8F78W5rKr4HYvjX2Inpy3WahAm7FzUY184OyfPO/2zadKCqg8n01mWA9PXxs84bFEV2mP
+ VzC5j6K8U3RNA6cb9bpE5bzXut6T2gxj6j+7TsgMQFhbyH/tZgpDjWvAiPZHb3sV29t8XaOF
+ BwzqiI2AEkiWMySiHwCCMsIH9WUH7r7vpwROko89Tk+InpEbiphPjd7qAkyJ+tNIEWd1+MlX
+ ZPtOaFLVHhLQ3PLFLkrU3+Yi3tXqpvLE3gO3LM7BTQRV4/npARAA5+u/Sx1n9anIqcgHpA7l
+ 5SUCP1e/qF7n5DK8LiM10gYglgY0XHOBi0S7vHppH8hrtpizx+7t5DBdPJgVtR6SilyK0/mp
+ 9nWHDhc9rwU3KmHYgFFsnX58eEmZxz2qsIY8juFor5r7kpcM5dRR9aB+HjlOOJJgyDxcJTwM
+ 1ey4L/79P72wuXRhMibN14SX6TZzf+/XIOrM6TsULVJEIv1+NdczQbs6pBTpEK/G2apME7vf
+ mjTsZU26Ezn+LDMX16lHTmIJi7Hlh7eifCGGM+g/AlDV6aWKFS+sBbwy+YoS0Zc3Yz8zrdbi
+ Kzn3kbKd+99//mysSVsHaekQYyVvO0KD2KPKBs1S/ImrBb6XecqxGy/y/3HWHdngGEY2v2IP
+ Qox7mAPznyKyXEfG+0rrVseZSEssKmY01IsgwwbmN9ZcqUKYNhjv67WMX7tNwiVbSrGLZoqf
+ Xlgw4aAdnIMQyTW8nE6hH/Iwqay4S2str4HZtWwyWLitk7N+e+vxuK5qto4AxtB7VdimvKUs
+ x6kQO5F3YWcC3vCXCgPwyV8133+fIR2L81R1L1q3swaEuh95vWj6iskxeNWSTyFAVKYYVskG
+ V+OTtB71P1XCnb6AJCW9cKpC25+zxQqD2Zy0dK3u2RuKErajKBa/YWzuSaKAOkneFxG3LJIv
+ Hl7iqPF+JDCjB5sAEQEAAcLBXwQYAQIACQUCVeP56QIbDAAKCRD2t4JPQmmgc5VnD/9YgbCr
+ HR1FbMbm7td54UrYvZV/i7m3dIQNXK2e+Cbv5PXf19ce3XluaE+wA8D+vnIW5mbAAiojt3Mb
+ 6p0WJS3QzbObzHNgAp3zy/L4lXwc6WW5vnpWAzqXFHP8D9PTpqvBALbXqL06smP47JqbyQxj
+ Xf7D2rrPeIqbYmVY9da1KzMOVf3gReazYa89zZSdVkMojfWsbq05zwYU+SCWS3NiyF6QghbW
+ voxbFwX1i/0xRwJiX9NNbRj1huVKQuS4W7rbWA87TrVQPXUAdkyd7FRYICNW+0gddysIwPoa
+ KrLfx3Ba6Rpx0JznbrVOtXlihjl4KV8mtOPjYDY9u+8x412xXnlGl6AC4HLu2F3ECkamY4G6
+ UxejX+E6vW6Xe4n7H+rEX5UFgPRdYkS1TA/X3nMen9bouxNsvIJv7C6adZmMHqu/2azX7S7I
+ vrxxySzOw9GxjoVTuzWMKWpDGP8n71IFeOot8JuPZtJ8omz+DZel+WCNZMVdVNLPOd5frqOv
+ mpz0VhFAlNTjU1Vy0CnuxX3AM51J8dpdNyG0S8rADh6C8AKCDOfUstpq28/6oTaQv7QZdge0
+ JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <cover.1774947296.git.yangang@kylinos.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, 2026-04-02 at 09:21 +0000, MPTCP CI wrote:
-> Hi Geliang,
-> 
-> Thank you for your modifications, that's great!
-> 
-> Our CI did some validations and here is its report:
-> 
-> - KVM Validation: normal (except selftest_mptcp_join): Script error!
-> ❓
-> - KVM Validation: normal (only selftest_mptcp_join): Script error! ❓
-> - KVM Validation: debug (except selftest_mptcp_join): Unstable: 3
-> failed test(s): packetdrill_mp_capable packetdrill_sockopts
-> selftest_mptcp_tls - Critical: KMemLeak ❌
+Hi Gang,
 
-It's strange.
+On 31/03/2026 11:08, Gang Yan wrote:
+> From: Gang Yan <yangang@kylinos.cn>
+> 
+> Hi, Matt:
+> 
+> With this v2 version, the packetdrill scripts also updated at
+> https://github.com/multipath-tcp/packetdrill/pull/189.
 
-Based-on: <cover.1775033340.git.yangang@kylinos.cn> tag didn't work,
-this is "mptcp: fix stall because of data_ready" v5.
+Thank you for this v2. Now in our tree:
 
-Without this set, the TLS tests failed. This resulted in a KMemLeak. If
-this set is successfully applied, the tests will not fail, and there
-will be no KMemLeak error.
+New patches for t/upstream:
+- 15ac3c9af026: mptcp: reduce 'overhead' from u16 to u8
+- 6e9b7b0c8325: mptcp: preserve MSG_EOR semantics in sendmsg path
+- Results: 987a22862c63..53f431e3d0f4 (export)
 
-Thanks,
--Geliang
+Tests are now in progress:
 
-> - KVM Validation: debug (only selftest_mptcp_join): Success! ✅
-> - KVM Validation: btf-normal (only bpftest_all): Script error! ❓
-> - KVM Validation: btf-debug (only bpftest_all): Success! ✅
-> - Task:
-> https://github.com/multipath-tcp/mptcp_net-next/actions/runs/23890722536
-> 
-> Initiator: Patchew Applier
-> Commits:
-> https://github.com/multipath-tcp/mptcp_net-next/commits/88f07fcab32d
-> Patchwork:
-> https://patchwork.kernel.org/project/mptcp/list/?series=1076267
-> 
-> 
-> If there are some issues, you can reproduce them using the same
-> environment as
-> the one used by the CI thanks to a docker image, e.g.:
-> 
->     $ cd [kernel source code]
->     $ docker run -v "${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm
-> -it \
->         --pull always mptcp/mptcp-upstream-virtme-docker:latest \
->         auto-normal
-> 
-> For more details:
-> 
->     https://github.com/multipath-tcp/mptcp-upstream-virtme-docker
-> 
-> 
-> Please note that despite all the efforts that have been already done
-> to have a
-> stable tests suite when executed on a public CI like here, it is
-> possible some
-> reported issues are not due to your modifications. Still, do not
-> hesitate to
-> help us improve that ;-)
-> 
-> Cheers,
-> MPTCP GH Action bot
-> Bot operated by Matthieu Baerts (NGI0 Core)
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/bf3cf8c6aab683f6c5d82ed923487bc50ef7a1f5/checks
+
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
+
