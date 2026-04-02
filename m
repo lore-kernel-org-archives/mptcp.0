@@ -1,150 +1,209 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21846346797
-	for <mptcp@lists.linux.dev>; Wed,  1 Apr 2026 20:12:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91CDE263F5E
+	for <mptcp@lists.linux.dev>; Thu,  2 Apr 2026 07:47:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775074340; cv=none; b=MF2zS1M/PjVmVw6KGXQ8Av/Dol6O4M//Zz1HnNaPn3Y4Whksr6n1uQKPS0dxv5lZzqwUfKajNfnrP4V4y1ldOaPK1fltFV2tT9UjNhdT4PZFf1pq8C6B1OZvfl18SBqF1qt5BRxor5mQmUbyXQG9idm1cRXfhZEh1TrUQ8q4JeI=
+	t=1775116076; cv=none; b=n3MeKrF4lQDn+Ojd+E84t/Y2zdAexOw+y3+MfTV3mFhmUu37cguqsQMm0i5gfRqsIA1igPriV1MRLwHPNvylZu09FCsQM08r+YNGGFQpI/Zm6+CRcXgc6GHAsa7bTeozwVq26IGVmbYBKTiPmkqWpnTtW7iksyht/1OEcfsPblk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775074340; c=relaxed/simple;
-	bh=TbuopAE8Zid65GusjMJxwlFOKntnvUUSO/51zyzoTKI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WvqKUFl3eiFf6hM6C7Uv4Zoco1CRYi4N5J53MmsXM3zO7RQ6diCNGxkkbXqgCw7SUlxoLIfvBrFy2dMb0Gx+OytYKJPJh34fJGhLgJY5dHP8gx0nvhn/93xdDNkJjyl0XMvo5GNzBaycPr2lQh6TtolWzYpzCa3Jaz7QI2sVe6w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gCXhJCaa; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1775116076; c=relaxed/simple;
+	bh=44XJNmGnMJS5kp5frFmLFXq3MwWeaVBzfjmJ8PPhPrg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=p/21fMAb0tQSu+2yGgUlTzVezjQY6yJ+fgOh4Y+6FRyfKbpRbsUY7VbJzd5DgK4GvlFjeFd+Hr7CXnaYqA+jsdz55azXN648EmASVwtBiKx/lt6tlExzEWaZIikn4RPyHZMjBeci0SjknPYcUaZdKElJu3R2kGVdak6wkp4UmdY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tlLnVnJm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gCXhJCaa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1775074338;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uePJYWW1bMWyzB+d1PBuHoI+CzpppVEmg8wdaHT2GcY=;
-	b=gCXhJCaafzrYnPgjdTTzzOVWfJdJZOE7yduc7DFv4L4rI7VrSogpXEd3BGTHOZF38rqKGR
-	d4hkm3aP/cHkSONx2VEij4556a2cOowEMXgCo8v5BNr0NEi87yungAG93eo5mCr35G0rTG
-	obnEYHLPBW/URNZyJg6GKVo2y2wBsK4=
-Received: from mail-lf1-f72.google.com (mail-lf1-f72.google.com
- [209.85.167.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-644-aLH7ln_UOp-m330KfGml8w-1; Wed, 01 Apr 2026 16:12:16 -0400
-X-MC-Unique: aLH7ln_UOp-m330KfGml8w-1
-X-Mimecast-MFC-AGG-ID: aLH7ln_UOp-m330KfGml8w_1775074335
-Received: by mail-lf1-f72.google.com with SMTP id 2adb3069b0e04-5a2c47e107eso150878e87.1
-        for <mptcp@lists.linux.dev>; Wed, 01 Apr 2026 13:12:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775074335; x=1775679135;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=uePJYWW1bMWyzB+d1PBuHoI+CzpppVEmg8wdaHT2GcY=;
-        b=dBCjzmc9lQw5VAtT+liQDmEnOcbtZ2OLZ5YQqwUF7J6i3676m3oS8rFPHUnFXCkjfs
-         QhvMq5ePxjby0vwJpRed4sl5HTwLuUWtqaPZZA/A1Dec7YOs1KWV+sEH2RwK7/KbKNB0
-         K6a0dxrlGRnXPW9jFF8iCn5C/CY9S01ntrqOCvgxdU/vIfRtDFRSmYHZXkpt+jwIpbyo
-         /6D/UqfI6GmUJowjf4dvZLiRu04c9ObMyjLIEBYfgLwnW9z9W4o/zkJzGlDNXTEbMs9p
-         P8mNbp0QWNZYOpr/Ks0AkN3Qwdu7XDqC/ePzBBTrqyl4a8Bdp/FjTrxqhZ+GTLTOGC4Q
-         yBvg==
-X-Forwarded-Encrypted: i=1; AJvYcCUMiZb21brmzeUxH70k18oPKEFHqid7jBcZOvl2IcK7QjNc7IHrhm4iVCUFamQOG+haZsXExw==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzmD1APk1fDQYXeHXSxsX+wbN5TMQr3Hu+cmYVKbHItgZGIqFuG
-	13DngdSPCmhlB0Cpdh0CgJNRGfEEicQmXQqdRj1ZZDqv5/c0FTuCI1TLLKA5eyv4zSMzmBWVQ+F
-	oxmDO8zE4y4sXhUqSHLbRKXMxGT40wFJcQquxb4+PBIxyS8GgfXfh7a3I
-X-Gm-Gg: ATEYQzzSVVHtgGkmBnC/cuywk5H8YF82cJxWB03OP/BrzpGHHMmSN4krbH6jbprMHy+
-	rdN8clM+Kx+WIxrlgQxbpYxIsj5zC68leqTiNr1phUHKJyfahjBseOqZCPcvAkiiM1cD6mbNmEC
-	5oRuKtsF7uyUvJtVf6z/HB8HXyhniGJXp9aVdPNp6xaZcqv6197Aacegl7OCVcs0x/217Ezc8aC
-	6WqiuvhG9xxNq7bEwo/HGkc/Codoc3Z4FzjHloLxeFNbhYPMLV5OcoXgT+4dyB6abthxMgF43mp
-	tzIecQ9sSWGuton/JrYNovNS6Eufrsa71Tqzi3t0WV6PbsXeN2V4jWgSLLn/1rujiwljJQCj3Lm
-	cqxHjtnZouTflHnKWof1chxg+0wIyWkA1SlxF5zLPQHkj7hOhFPAxcmLGvQ==
-X-Received: by 2002:a05:6512:2255:b0:5a2:bb0f:e28b with SMTP id 2adb3069b0e04-5a2c1eedbd5mr1922702e87.18.1775074335196;
-        Wed, 01 Apr 2026 13:12:15 -0700 (PDT)
-X-Received: by 2002:a05:6512:2255:b0:5a2:bb0f:e28b with SMTP id 2adb3069b0e04-5a2c1eedbd5mr1922697e87.18.1775074334671;
-        Wed, 01 Apr 2026 13:12:14 -0700 (PDT)
-Received: from [192.168.88.32] ([212.105.155.230])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5a2c6c951b1sm183255e87.6.2026.04.01.13.12.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 01 Apr 2026 13:12:13 -0700 (PDT)
-Message-ID: <d749b513-158d-4a3d-ad95-09bfc29c6648@redhat.com>
-Date: Wed, 1 Apr 2026 22:12:11 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tlLnVnJm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F39CC19423;
+	Thu,  2 Apr 2026 07:47:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1775116076;
+	bh=44XJNmGnMJS5kp5frFmLFXq3MwWeaVBzfjmJ8PPhPrg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=tlLnVnJmN3SoVIfpvkWxeLJ8zHaIag/5HJZjG1TeHboUa+WsQD0nnfyeuQbGF0pxD
+	 XASnD98j1e4i5Df09/gSGbEtQ7dy72XCCl24P2pxC7CmEg89iouTrtm7vUPPbWTuH+
+	 y+Xcro3B0nhQnF3UC5xQttxsvSctDTEMgcDVMfdoYMTIk3XUd+Ajvbe9wTTc7cW/a0
+	 JLDRVvytOB9HxLq9OgTlAK98CsdtCJSbiDVl9SDEJaQjSD0gr9/j2CEe6/QuiN70j2
+	 eo1ZYrvD/WyRLONV2bUI4aDdLeoPzRXRzvbTleFozfe1PXhEkuqCvh8J3QWBEwSWMh
+	 KA0JjoqRi2woQ==
+From: Geliang Tang <geliang@kernel.org>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Subject: [RFC mptcp-next v12 00/15] MPTCP KTLS support
+Date: Thu,  2 Apr 2026 15:47:35 +0800
+Message-ID: <cover.1775115102.git.tanggeliang@kylinos.cn>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-net v5 1/5] mptcp: replace backlog_list with
- backlog_queue
-To: Gang Yan <gang.yan@linux.dev>, mptcp@lists.linux.dev
-Cc: Gang Yan <yangang@kylinos.cn>, Geliang Tang <geliang@kernel.org>
-References: <cover.1775033340.git.yangang@kylinos.cn>
- <085a4d26a05fc6625e6e4e4c0e0225b38a01f178.1775033340.git.yangang@kylinos.cn>
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <085a4d26a05fc6625e6e4e4c0e0225b38a01f178.1775033340.git.yangang@kylinos.cn>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: JvilLl5Odg6wEAPXyYcLiRSD7-19yl7KWrSrqv9ROPg_1775074335
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 4/1/26 10:54 AM, Gang Yan wrote:
-> @@ -2199,6 +2226,29 @@ static bool __mptcp_move_skbs(struct sock *sk, struct list_head *skbs, u32 *delt
->  	return moved;
->  }
->  
-> +static void mptcp_backlog_queue_to_list(struct mptcp_sock *msk,
-> +					struct list_head *list)
-> +{
-> +	struct sk_buff *skb;
-> +
-> +	while ((skb = skb_rb_first(&msk->backlog_queue)) != NULL) {
-> +		rb_erase(&skb->rbnode, &msk->backlog_queue);
-> +		RB_CLEAR_NODE(&skb->rbnode);
-> +		list_add_tail(&skb->list, list);
-> +	}
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
-This is O(N * log(N))
+v12:
+ - Thanks for the help from Paolo and Gang Yan, I finally solved the
+   deadlock issue in read_sock. As a result, the patch "mptcp: avoid
+   sleeping in read_sock path under softirq" in v11 has been dropped,
+   and instead a lock_is_held interface has been added to struct
+   tls_prot_ops. When MPTCP implements this interface, it not only
+   checks sock_owned_by_user_nocheck(sk) as TCP does, but also needs
+   to check whether the MPTCP data lock is held.
+ - Update selftests to make them more stable.
+ - Fix shellcheck errors for the selftests.
 
-> +}
-> +
-> +static void mptcp_backlog_list_to_queue(struct mptcp_sock *msk,
-> +					struct list_head *list)
-> +{
-> +	struct sk_buff *skb, *tmp;
-> +
-> +	list_for_each_entry_safe(skb, tmp, list, list) {
-> +		list_del(&skb->list);
-> +		mptcp_queue_backlog(msk, skb);
-> +	}
-> +}
-> +
->  static bool mptcp_can_spool_backlog(struct sock *sk, struct list_head *skbs)
->  {
->  	struct mptcp_sock *msk = mptcp_sk(sk);
-> @@ -2210,12 +2260,12 @@ static bool mptcp_can_spool_backlog(struct sock *sk, struct list_head *skbs)
->  			       mem_cgroup_from_sk(sk));
->  
->  	/* Don't spool the backlog if the rcvbuf is full. */
-> -	if (list_empty(&msk->backlog_list) ||
-> +	if (RB_EMPTY_ROOT(&msk->backlog_queue) ||
->  	    sk_rmem_alloc_get(sk) > sk->sk_rcvbuf)
->  		return false;
->  
->  	INIT_LIST_HEAD(skbs);
-> -	list_splice_init(&msk->backlog_list, skbs);
-> +	mptcp_backlog_queue_to_list(msk, skbs);
+Based-on: <cover.1775033340.git.yangang@kylinos.cn>
 
-This is under a spinlock with BH disabled, and N is potentially quite
-high. This code is problematic as it could cause stall and delay BH for
-a significant amount of time.
+v11:
+ - Fix memory leak errors reported by CI. In v10, these occurred in
+   the shutdown_reuse test and "usleep(500000)" caused the memory
+   leaks. In v11, a dedicated helper wait_for_tcp_close() has been
+   added to provide an appropriate delay.
+ - Drop the code that used mptcp_data_trylock() in mptcp_move_skbs()
+   to fix a deadlock issue, as that deadlock no longer occurs in v11.
+ - Do not add "mptcp" variable for the "tls_err" tests, adding it for
+   the "tls" tests is sufficient.
+ - No longer increase timeout values for poll/epoll tests, as they
+   are no longer needed.
+ - Add ns1 definition in mptcp_tls.sh to fix "ns1 is referenced but
+   not assigned" error.
+ - Link: https://patchwork.kernel.org/project/mptcp/cover/cover.1773911536.git.tanggeliang@kylinos.cn/
 
-Note that there are more chunks later and in later patches with similar
-problem.
+v10:
+ - Address comments by ai review:
+   - patch 2: call tls_ctx_free(sk, ctx) and clear icsk_ulp_data before
+     goto out.
+   - patch 3: update commit log as "validate each SKB's offset except
+     the first".
+   - patch 5: add sock_owned_by_user() checks.
+   - patch 7: disable device offload for MPTCP sockets.
+   - patch 9: use TCP_ULP_NAME_MAX in mptcp_setsockopt_tcp_ulp(), drop
+     SOL_TLS in mptcp_supported_sockopt().
+ - Make .get_skb_off optional instead of mandatory, TCP does not need
+   to define it.
+ - Test "espintcp" ULP instead of "smc" in patch 10. "smc" ULP is
+   removed recently.
+ - With Gang Yan's "mptcp: fix stall because of data_ready" v3, mptcp
+   tls selftests can run without failures. Now add them in this set.
+ - Link: https://patchwork.kernel.org/project/mptcp/cover/cover.1773737371.git.tanggeliang@kylinos.cn/
 
-I don't have a good solution on top of my head, I'll try to go back to
-the design table.
+v9:
+ - add a new patch to "add MPTCP SKB offset check in strp queue walk",
+   thanks to Gang Yan for the fix.
+ - add a new patch to "avoid deadlocks in read_sock path", replacing the
+   "in_softirq()" check used in v8.
+ - update the selftests.
+ - Link: https://patchwork.kernel.org/project/mptcp/cover/cover.1773365606.git.tanggeliang@kylinos.cn/
 
-/P
+v8:
+ - do not hold tls_prot_ops_lock in tls_init(); otherwise, a deadlock
+   occurs.
+ - change return value of mptcp_stream_is_readable() as 'bool' to fix the
+   "expected restricted __poll_t" warning reported by CI.
+ - fixed other CI checkpatch warnings regarding excessively long lines.
+ - Link: https://patchwork.kernel.org/project/mptcp/cover/cover.1768294706.git.tanggeliang@kylinos.cn/
+
+v7:
+ - Passing an MPTCP socket to tcp_sock_rate_check_app_limited() causes a
+   crash. In v7, an MPTCP version of check_app_limited() is implemented,
+   which calls tcp_sock_rate_check_app_limited() for each subflow.
+ - Register tls_tcp_ops and tls_mptcp_ops in tls_register() rather than in
+   tls_init().
+ - Set ctx->ops in tls_init() instead of in do_tls_setsockopt_conf().
+ - Keep tls_device.c unchanged. MPTCP TLS_HW mode has not been implemented
+   yet, so EOPNOTSUPP is returned in this case.
+ - Also add TCP TLS tests in mptcp_join.sh.
+ - Link: https://patchwork.kernel.org/project/mptcp/cover/cover.1768284047.git.tanggeliang@kylinos.cn/
+
+v6:
+ - register each ops as Matt suggested.
+ - drop sk_is_msk().
+ - add tcp_sock_get_ulp/tcp_sock_set_ulp helpers.
+ - set another ULP in sock_test_tcpulp as Matt suggested.
+ - add tls tests using multiple subflows in mptcp_join.sh.
+ - Link: https://patchwork.kernel.org/project/mptcp/cover/cover.1767518836.git.tanggeliang@kylinos.cn/
+
+v5:
+ - As suggested by Mat and Matt, this set introduces struct tls_prot_ops
+   for TLS.
+ - Includes Gang Yan's patches to add MPTCP support to the TLS selftests.
+ - Link: https://patchwork.kernel.org/project/mptcp/cover/cover.1766372799.git.tanggeliang@kylinos.cn/
+
+v4:
+ - split "tls: add MPTCP protocol support" into smaller, more
+   focused patches.
+ - a new mptcp_inq helper has been implemented instead of directly
+   using mptcp_inq_hint to fix the issue mentioned in [1].
+ - add sk_is_msk helper.
+ - the 'expect' parameter will no longer be added to sock_test_tcpulp.
+   Instead, SOCK_TEST_TCPULP items causing the tests failure will be
+   directly removed.
+ - remove the "TCP KTLS" tests, keeping only the MPTCP-related ones.
+ - Link: https://patchwork.kernel.org/project/mptcp/cover/cover.1765505775.git.tanggeliang@kylinos.cn/
+
+[1]
+https://patchwork.kernel.org/project/mptcp/patch/ce74452f4c095a1761ef493b767b4bd9f9c14359.1764333805.git.tanggeliang@kylinos.cn/
+
+v3:
+ - mptcp_read_sock() and mptcp_poll() are not exported, as mptcp_sockopt
+   test does not use read_sock/poll interfaces. They will be exported when
+   new tests are added in the future.
+ - call mptcp_inq_hint in tls_device_rx_resync_new_rec(),
+   tls_device_core_ctrl_rx_resync() and tls_read_flush_backlog() too.
+ - update selftests.
+ - Link: https://patchwork.kernel.org/project/mptcp/cover/cover.1763800601.git.tanggeliang@kylinos.cn/
+
+v2:
+ - fix disconnect.
+ - update selftests.
+
+This series adds KTLS support for MPTCP. Since the ULP of msk is not being
+used, ULP KTLS can be directly configured onto msk without affecting its
+communication.
+
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/480
+
+Gang Yan (2):
+  tls: add skb offset check for mptcp
+  mptcp: update mptcp_check_readable
+
+Geliang Tang (13):
+  tls: introduce struct tls_prot_ops
+  tls: add tls_prot_ops pointer to tls_context
+  mptcp: implement tls_mptcp_ops
+  tls: disable device offload for mptcp sockets
+  mptcp: update ulp getsockopt for tls support
+  mptcp: enable ulp setsockopt for tls support
+  selftests: mptcp: connect: use espintcp for ulp test
+  selftests: tls: add mptcp variant for testing
+  selftests: tls: increase pollin timeouts for mptcp
+  selftests: tls: increase nonblocking data size for mptcp
+  selftests: tls: wait close in shutdown_reuse for mptcp
+  selftests: tls: add mptcp test cases
+  selftests: mptcp: cover mptcp tls tests
+
+ include/linux/tcp.h                           |   2 +
+ include/net/mptcp.h                           |   2 +
+ include/net/tcp.h                             |   1 +
+ include/net/tls.h                             |  21 +++
+ net/ipv4/tcp.c                                |  87 ++++++----
+ net/mptcp/protocol.c                          | 122 +++++++++++++-
+ net/mptcp/sockopt.c                           |  39 ++++-
+ net/tls/tls_device.c                          |   6 +
+ net/tls/tls_main.c                            | 107 +++++++++++-
+ net/tls/tls_strp.c                            |  36 ++--
+ net/tls/tls_sw.c                              |   7 +-
+ tools/testing/selftests/net/mptcp/Makefile    |   2 +
+ tools/testing/selftests/net/mptcp/config      |   4 +
+ .../selftests/net/mptcp/mptcp_connect.c       |   2 +-
+ .../testing/selftests/net/mptcp/mptcp_tls.sh  |  55 +++++++
+ tools/testing/selftests/net/mptcp/tls.c       |   1 +
+ tools/testing/selftests/net/tls.c             | 154 +++++++++++++++++-
+ 17 files changed, 579 insertions(+), 69 deletions(-)
+ create mode 100755 tools/testing/selftests/net/mptcp/mptcp_tls.sh
+ create mode 120000 tools/testing/selftests/net/mptcp/tls.c
+
+-- 
+2.51.0
 
