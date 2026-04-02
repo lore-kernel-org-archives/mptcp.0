@@ -1,142 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f179.google.com (mail-dy1-f179.google.com [74.125.82.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1974029B78F
-	for <mptcp@lists.linux.dev>; Thu,  2 Apr 2026 08:08:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C370230276A
+	for <mptcp@lists.linux.dev>; Thu,  2 Apr 2026 08:17:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775117332; cv=none; b=mmfFa48xE8kX/I+CNR2hivhSao1p7s8dpEBVP3uHAUMxdQzBlJyajH0EbwieRQ0lAGtiv1t5qxuBALcKAQ6ZWdLBLQOfEWTM2iyK+rKEI4JI1o3NuPtUP0wpcRKh+glvTf2xqia2Dl8fxLSnWiO/ZizNVYmforZ8UKFQhWZkzmA=
+	t=1775117868; cv=none; b=QNvq3cscxb+vXAc0nGmHv6+XhwsP3goQT4iFB3QbwXvV3EZ6vJlq804wlk4r4E+1Qo3gc9WqYvvugwqLBxW1ZdR4jzN8S6QqgenQRxLR6YHRe1aOUYpRqxklyb1dXkqHqo1EilfuS0Aw76pfFd8LvRKBi/kOghqFRtSbg78H2+o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775117332; c=relaxed/simple;
-	bh=vs6B+RHnPO28CNVgBjn9RMqHFcuTJBzMndgV7C6zGBg=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=rclyujYH5ej/Qi3yzxSSqTT5UGjcAeEkuww67YGgr0msWls8vuw4MVibB8GFn2qDua7+HxlE2fFXpKIuY+s/LzbTSsHsjdrIfTaOPfpit1JPWGoLrNDo2fFWEN/Cp3iIVlGJdtVULgtE4mE1FmhrB0CDRNbrbQpKKDjjkRBzfHc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rxLOphbN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1775117868; c=relaxed/simple;
+	bh=BTGDQj1HOGwGLKQsNgFU05o6rGCswci5CY3UOPqnr6s=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
+	 MIME-Version:Content-Type; b=cW82GjLnEZ4MYrS8DYyIti15hqU1jWI35xVH6aeJIgt06uOFUW/CQffhY8jrujNpg4Sy0MRw77iK3idf7i9v20GF2hBWPjtoAUTO4XFpOZg2v+6FtTiqM+H9f3L1KLr+wICrWPopnMY2UwW6GwbCEVaB0UquLfC28DV25WKyJ14=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=tKk9nykB; arc=none smtp.client-ip=74.125.82.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rxLOphbN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7AE57C19423;
-	Thu,  2 Apr 2026 08:08:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775117331;
-	bh=vs6B+RHnPO28CNVgBjn9RMqHFcuTJBzMndgV7C6zGBg=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=rxLOphbNgZKTrxaJw4xYEBwRXaWhYgDl1Lj69go/FVfVmoKPhIwHcQAoDZvEg3XCz
-	 GO1K52PHBh9cNdRIZnv3ksSwozCTzWwHgErGFNz6aybvgq62ISQlsrJ9bZls4i4/li
-	 KoOh+rusLipcjQMlyOAyqhLZ1y1YI0IU0V2RZc+qc+YvyHl3dZLJnMMI6LAaFuYz8s
-	 6mobyXy80JmYViVU2PEgou14Qm+Rnp/vjULsUZKXlP3zhcwDKshLowLpmBounzmurl
-	 glpeGQgafqu782gIXxdBqK02nkeT+aDHV1dXijRL2BanaAnr8RiWKDknSOMizWHANm
-	 Ic342OSVrjtnQ==
-Message-ID: <10262ffce0d3bcb6159ba1e8da54ab8a9a650188.camel@kernel.org>
-Subject: Re: [RFC mptcp-next v11 05/15] mptcp: avoid sleeping in read_sock
- path under softirq
-From: Geliang Tang <geliang@kernel.org>
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>, Gang Yan <yangang@kylinos.cn>
-Date: Thu, 02 Apr 2026 16:08:47 +0800
-In-Reply-To: <7d09f88d-052c-4932-bb25-3831b32e0f94@redhat.com>
-References: <cover.1773911536.git.tanggeliang@kylinos.cn>
-	 <b7b6fd287877f7b2cb585c3b552ef0925da41858.1773911536.git.tanggeliang@kylinos.cn>
-	 <7d09f88d-052c-4932-bb25-3831b32e0f94@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.56.2-4 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tKk9nykB"
+Received: by mail-dy1-f179.google.com with SMTP id 5a478bee46e88-2c5b3d8eab1so24662eec.1
+        for <mptcp@lists.linux.dev>; Thu, 02 Apr 2026 01:17:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1775117867; x=1775722667; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=W7L8rbQyNTaW4ZHHtZMCpL+IbrCTcvvmdv3N6ZQijMo=;
+        b=tKk9nykBCDV78xlP3/9HdYB7/rP0zINM2TDyl2h8EvN6GfmDnANCzNvkqAC1L1IDkI
+         zlxl7lriIQngTBsaiS8VN/XnzuErV1oJudbf4cazPaUcPFw8MPfhobQaRGLy2wRV9MmI
+         MfzYGOK4AQlYVkJnrkutFR3rLFyhrrnHii+5ZddT2QQ//Oux3vjZoh3ciCl+TANRGqNg
+         wom5rKlVvrOgAuqF5o8mUMLvjW9abIW9OP3KdL8YJsl6p85VrMufjlKZBCliUFOGjNXQ
+         yutS4wVvynHHNzfZE30jlih/6nmGMWvG1qsx+TVCtSAM0Mlz0Uh+0/F4DZ9lhbf8Ho8f
+         kb8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1775117867; x=1775722667;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=W7L8rbQyNTaW4ZHHtZMCpL+IbrCTcvvmdv3N6ZQijMo=;
+        b=hMSh25SiVW0DdgxH/Uh2Q/ucc7n/7DecfHRluSxIwl+JPcpjpW5kvSZBK5y57dHczt
+         AQ1e/Yw6ztbN7yhSEY/6ePdAcvpSkQsK2ETMUMiHVoI7K0VZ8dMmliXm7v8dhV+S+VDR
+         /6CYh6akEskhHS804PZy0FomLTEJtdvR/0aWi7o2iZjxhnGjfKYzzbCO7EwEnCCdbPe/
+         zw6W69akH+84OP2u53dj6YXyqphxYiZaB/DoTP3kY4QyPnNiPZwWv5X/gv9UpKkQWBHh
+         FZfpEp2BR4g/5H2JhV10D4184Z2rZUWvWSrLc+84ldkXl7bRK5cT88mSqc4SogTz0MiS
+         t2Jg==
+X-Gm-Message-State: AOJu0YxTSLlZiYeeelnywvsDWCRXM+JbVQH26XwCqHvAQUfNUyxi/qCw
+	ZLQLv/fMpmLQxTKw7m6xqynnvOWWPNxgz9C+uc2XNlThNnQ9a1Xt39cIedXC
+X-Gm-Gg: ATEYQzx97rz6Cjgz16rcetT3rpNAJlWsYR1ejHT8+FsHnO63x6Mj5LKforGJLvnQSzX
+	5XAbH5hBgEphh63+O9lE/5T++ye0rE1xFdLWSiY/ll4u7yNcsoGFoZUIOHlvMf/FPLuNQ6sRv33
+	UcaGcqaNq8MyABUAx725bdwRsrcHAZY6MFjMRXJLwIIQjh3oybrlt0o/4cTdKkfYvTzipe6OE5+
+	E6Ag4oga9BVXqcGApU8tC7D1hfuozUR7UNgY6L3LUO9Vxr7CztrH78Di/X9N19pw/sP9J0Wnq6i
+	Gj2KFeU3LCgfv5ilbgHERVdSxaWWJe2x8r4GLGLRwhDu1L9C9aiSRaS/CboQwVvIiV/pc2lPvnl
+	tMD6EXv00CPfp8Xu6hLc1DiuFDUIZ77CCS4S/JYcNCLYa2fqV9uc9ieH9Um7dWkCsWjTiTsIs6O
+	ovDyJ4pSIEYNzmX56nxIdAuqcROr484NGG9C6TL3gbghkD4HE=
+X-Received: by 2002:a05:7301:1298:b0:2c4:ab8f:1da2 with SMTP id 5a478bee46e88-2c9323bb002mr3624008eec.21.1775117866749;
+        Thu, 02 Apr 2026 01:17:46 -0700 (PDT)
+Received: from [127.0.0.1] ([68.220.62.146])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2ca78df3c11sm1894696eec.4.2026.04.02.01.17.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Apr 2026 01:17:46 -0700 (PDT)
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Geliang Tang <tanggeliang@kylinos.cn>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <cover.1775115102.git.tanggeliang@kylinos.cn>
+References: <cover.1775115102.git.tanggeliang@kylinos.cn>
+Subject: Re: [RFC mptcp-next v12 00/15] MPTCP KTLS support
+Message-ID: <0a9f16f7-6991-8e13-7e2e-80f361579e33@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 02 Apr 2026 08:17:45 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
 
-Hi Paolo,
+Hi Geliang,
 
-Thanks for you help, I finally solved this deadlock issue as you
-suggested.
+Thank you for your modifications, that's great!
 
-On Wed, 2026-04-01 at 21:57 +0200, Paolo Abeni wrote:
-> On 3/19/26 11:08 AM, Geliang Tang wrote:
-> > From: Geliang Tang <tanggeliang@kylinos.cn>
-> > 
-> > When mptcp_read_sock() is called from softirq context via TLS
-> > read_sock, lock_sock_fast() in mptcp_rcv_space_adjust() and
-> > mptcp_cleanup_rbuf() may trigger might_sleep() warnings or
-> > illegal sleeps, as softirq context cannot block.
-> > 
-> > Replace lock_sock_fast() with spin_trylock_bh() to make locking
-> > non-blocking and context-safe. Skip operations if the lock cannot
-> > be acquired.
-> > 
-> > Co-developed-by: Gang Yan <yangang@kylinos.cn>
-> > Signed-off-by: Gang Yan <yangang@kylinos.cn>
-> > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-> > ---
-> >  net/mptcp/protocol.c | 18 +++++++++---------
-> >  1 file changed, 9 insertions(+), 9 deletions(-)
-> > 
-> > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> > index 5585f43cf879..e9e40dfab5ea 100644
-> > --- a/net/mptcp/protocol.c
-> > +++ b/net/mptcp/protocol.c
-> > @@ -561,12 +561,11 @@ static void mptcp_send_ack(struct mptcp_sock
-> > *msk)
-> >  
-> >  static void mptcp_subflow_cleanup_rbuf(struct sock *ssk, int
-> > copied)
-> >  {
-> > -	bool slow;
-> > -
-> > -	slow = lock_sock_fast(ssk);
-> > -	if (tcp_can_send_ack(ssk))
-> > +	if (!spin_trylock_bh(&ssk->sk_lock.slock))
-> > +		return;
-> 
-> I discussed this topic off-list with Geliang. Let me report the info
-> here, too, for future memory.
-> 
-> This does not look like the correct solution: we risk not sending out
-> the needed ack.
-> 
-> The exact, complete and decoded call trace leading to the problematic
-> lock could be helpful.
-> 
-> I *guess* a better solution would be detecting the critical scenario
-> from the mptcp/tls caller and in such a case queue the strp->work and
+But sadly, our CI spotted some issues with it when trying to build it.
 
-That's indeed the problem here.
+You can find more details there:
 
-/* Lower sock lock held */
-void tls_strp_data_ready(struct tls_strparser *strp)
-{
-        struct tls_context *ctx = tls_get_ctx(strp->sk);
+  https://github.com/multipath-tcp/mptcp_=
+net-next/actions/runs/23890722509
 
-        /* This check is needed to synchronize with do_tls_strp_work.
-         * do_tls_strp_work acquires a process lock (lock_sock) whereas
-         * the lock held here is bh_lock_sock. The two locks can be
-         * held by different threads at the same time, but bh_lock_sock
-         * allows a thread in BH context to safely check if the process
-         * lock is held. In this case, if the lock is held, queue work.
-         */
-        if (sock_owned_by_user_nocheck(strp->sk)) {
-                queue_work(tls_strp_wq, &strp->work);
-                return;
-        }
+Status: failure
+Initiator: Patchew =
+Applier
+Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/88=
+f07fcab32d
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1076267
 
-        tls_strp_check_rcv(strp);
-}
+Feel free to reply to this email if you cannot access =
+logs, if you need
+some support to fix the error, if this doesn't seem to be=
+ caused by your
+modifications or if the error is a false positive one.
 
-MPTCP should not only checks sock_owned_by_user_nocheck(sk) as TCP
-does, but also needs to check whether the MPTCP data lock is held.
-
-So I added a new .lock_is_held interface for struct tls_prot_ops in
-v12. Also dropped this patch in v12.
-
-Thanks,
--Geliang
-
-> do
-> not call into the tcp/mptcp code. The later strp worker invocation
-> will
-> happen from process context and could acquire the subflow lock
-> without
-> locking issues.
-> 
-> /P
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
