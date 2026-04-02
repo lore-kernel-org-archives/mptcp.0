@@ -1,30 +1,30 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FC1336F40C;
-	Thu,  2 Apr 2026 17:39:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 560F336F40C;
+	Thu,  2 Apr 2026 17:42:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775151556; cv=none; b=GHysDjllcKYA/Czf4mLrK8yTp6U7Co+XURC92mqPuLR6E9dgQON1iPyRu7G2lCss+I358PqBHeZddVe0c/JukTyYMNmvbDYRdwVoPJcm3lAo4RAb6FrINqPNnU847Twf+RwOf7Arz2p+wTRQapxqlOjiTXwpVG+yGmMcfgXdst8=
+	t=1775151727; cv=none; b=ngJtXDANOYWL8gLPiOBVxUau6lYEcCeXta8VAOt8kNRfCxSCq3AjV4b7ZCRxrsAbWZG5c+cJPsVaNlI8cIOdx002eGwhIsFvQeVjjDoEEfcifnn39O+dVmCrE0lJZQMTMBE5D26HpUly6wYaSnrf25qW54YpRKUlIkQsNC+ogiM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775151556; c=relaxed/simple;
-	bh=5Lo2pZBp8DRj5ymhR2VNlMfCWFu5xTE6bY8ModPE4Gs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UivOpUSN9EJxxPeq4sNorzLzWEBqUxohlZ4HJJ2K3KHQOlgIn7BVN3Zc0AqPvVmxbQmo9uekdApaEhnU2WbBDkNCMJbjIzr0qId9CtiE7nFVcfZ2nRb3B/S/kleLRKXd5F7bN0OGV4Fp2BVXYv68s+0nkjnUKfRoO8+xv/KaKV0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y0O03JfO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1775151727; c=relaxed/simple;
+	bh=A1GzfmivvuhCSCB/nkSJihhA1T5J/EcQFeWiGdMOIy8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CAoM5OYpKAiAAQAaJ47GpOCm0aXcnV673C5iWTFT3MolY4z1d/53cKneBqTxgmavPg0gpwAPOxP3dVO1xvmDE3Gx4LGyVdB1xNLCDl9PUMkQuCYn4LkWbgETy9ul90JCpg21gLDxLtJZLGm/z0vSqt4MikdIO/Bdlk7HwvAh5MA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A2wmrbjv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y0O03JfO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD8A0C116C6;
-	Thu,  2 Apr 2026 17:39:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A2wmrbjv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2250C116C6;
+	Thu,  2 Apr 2026 17:42:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775151555;
-	bh=5Lo2pZBp8DRj5ymhR2VNlMfCWFu5xTE6bY8ModPE4Gs=;
+	s=k20201202; t=1775151727;
+	bh=A1GzfmivvuhCSCB/nkSJihhA1T5J/EcQFeWiGdMOIy8=;
 	h=From:To:Cc:Subject:Date:From;
-	b=Y0O03JfOt8wipsvwN65SPYO72GmD2OuQJbCgQINRz0TaJ/EFaJ1rv3t1S1Ab3gRCO
-	 AzabyziLQvABymxK0JNGQqXTN8NcLSsfozWedikTdUN9+XalWiKn+pe4nRzKpIyxZ/
-	 RHb6NSrI3snHTSuPsnPWuH7eaD9FVo3ACEgrqG1p+tWqX9RXs1EVoBovPoFwFFH6kr
-	 3hBlV1ZnoEQRctEgh++zBBxeH0Mq2IZ4pMU7vUL1lz3/Nt1I8tFlwkALPNZCX2V3OJ
-	 DMGcbHXavnmEIpfPSoOWUN0DorlKeGFxMlA+EblnGqhSoMLoVYmPE+ghg75R8gkMBD
-	 1/Cm8ENfDTBHQ==
+	b=A2wmrbjvi2aspjTF32LSuFNS82MuDzntfoLqmf/oFFQmggi7HjNi2pzb4Rv109H7d
+	 ceWjEdV9CH2mYB0GSVwIktlzDnpIWZCn1KagNwVdy4oKm78YXb/SlHK7Swgx+ZYEpk
+	 CoPS6ivA71tXJ+B/AQ6ejjXhn0bdAXyv7sXkG9EeJ4qkFhpwlzLsjnBtvaxbhUPyG8
+	 NvAMNLSOBhnELvfTeDl3GYOWLq9vgPoJ4yg6HwOd0ZEfDOJT5l/yLFeg2J/2cAzdmk
+	 BErgtxrXYg8q2Tp04ILtrDaWJ/z0ne/c4TbEFo9gP5rRnbC//ECQcWBiFx4IR3f73c
+	 RRERWvyfhGiBA==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 To: stable@vger.kernel.org,
 	gregkh@linuxfoundation.org
@@ -32,9 +32,9 @@ Cc: MPTCP Upstream <mptcp@lists.linux.dev>,
 	Li Xiasong <lixiasong1@huawei.com>,
 	"Matthieu Baerts (NGI0)" <matttbe@kernel.org>,
 	Jakub Kicinski <kuba@kernel.org>
-Subject: [PATCH 6.1.y] MPTCP: fix lock class name family in pm_nl_create_listen_socket
-Date: Thu,  2 Apr 2026 19:39:08 +0200
-Message-ID: <20260402173907.3408529-2-matttbe@kernel.org>
+Subject: [PATCH 5.15.y] MPTCP: fix lock class name family in pm_nl_create_listen_socket
+Date: Thu,  2 Apr 2026 19:42:01 +0200
+Message-ID: <20260402174200.3474039-2-matttbe@kernel.org>
 X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -42,7 +42,7 @@ List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1479; i=matttbe@kernel.org; h=from:subject; bh=lgXVEg5WDiRgJUR7mWu5I3fljHJc0h+9IcxEN0jIKi8=; b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDLPrdw9d3+sf53ivzNC0TOiO6LC3iTtM7LbvmfmhcnFE TbmiQWcHaUsDGJcDLJiiizSbZH5M59X8ZZ4+VnAzGFlAhnCwMUpABNJUGRk6H/U9omF//67PHUf 8/rsFMYP3dpnap6ceeFcKeZ3paMqlZFhebnfds0u7r3bd3I9Xxysf7qvo2OpzpUv/u7ffFeLvt7 NAwA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1479; i=matttbe@kernel.org; h=from:subject; bh=AwTs4DicXzyi2VlRzLAa8AqUkkfLg1gGpoGeSakWuxc=; b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDLPrcrojvkibiIatrz6veT3x8d4dtnt3/h5QUtY8U1JD 4auK2H+HaUsDGJcDLJiiizSbZH5M59X8ZZ4+VnAzGFlAhnCwMUpABM5uoXhf+bhIs+HT/6tvr6B ddrMm+4Mon6cxr9DTDIl1Dt//0iWTmFk+M9Wl3Nwb5yt9LrKoviTYvu713mVSxgF3VXe1LNjZT4 7BwA=
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 Content-Transfer-Encoding: 8bit
 
@@ -68,10 +68,10 @@ Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 5d8dada1dbbb..92ca81a5df67 100644
+index 634fe0360c49..03e9a861140c 100644
 --- a/net/mptcp/pm_netlink.c
 +++ b/net/mptcp/pm_netlink.c
-@@ -1184,7 +1184,7 @@ static struct lock_class_key mptcp_keys[2];
+@@ -1042,7 +1042,7 @@ static struct lock_class_key mptcp_keys[2];
  static int mptcp_pm_nl_create_listen_socket(struct sock *sk,
  					    struct mptcp_pm_addr_entry *entry)
  {
