@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDC662248A5
-	for <mptcp@lists.linux.dev>; Fri,  3 Apr 2026 14:53:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58A232248A5
+	for <mptcp@lists.linux.dev>; Fri,  3 Apr 2026 14:53:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775227986; cv=none; b=CJwYGhNgR1QnWErxRVEpK8PQmPrkAskVzm0CtSM7DWA9wo+odpIvv0xKdcmfIQjhoDWewjy7IjLUihAUN9HRD5h1pvPdlt+Ps1saTi/QBiCW1gM/qvj9x4dnz9CjAgroNgzazZHA42EDyVkFiU4SYx4mvO6DgQWtX06gsp59eIc=
+	t=1775227988; cv=none; b=DIuEXl670MjGT8PbuzSM6rl+4kS8i627fPkvIhzt5xMQx2D/TlgC6g02wFhQ9IYOkibysV3I+6qEkfVxzQstAQBZdI/9xupYBhpCk60aJ0kUT7Fsp4T05+8P5qDZoRwLXBYKlnHCKuzKvmb9YLFbVJxM2sqSLZk5p8Qj8ZdGizY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775227986; c=relaxed/simple;
-	bh=Coj3K5+cTuOJt1kVCCMY5Nve9QgI6eVg/eO6kq+Dt7o=;
+	s=arc-20240116; t=1775227988; c=relaxed/simple;
+	bh=gc3kjfrCJ5uKs/bGwENX9cmA15ExHaeJ2A9jtvTzg94=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=scYhqI31tAE9iKSrWYKyWge/EaGpbBxcgPUV1IkINt2lfgjNVMUbjQKrKDsaUSfRkAf3uL0iMTwsijnOgKU7AsZBg39DbfhWSwetquNh6urdMqtS8YdQAxY36lAxeKhNbk4B9RZzNWELCQ3im0S+6qCpxJFz5cHg7u/4nse6OMw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZyqspAH1; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=NZH7pQ+yzImIAmodl/cxbsGykECgVdynU0wYhVd7raH7sLoo9zJUkUrq7N54xaWBXL+RQctRc9Xup3ll/YxFhZs1UwhiF/+05qq9we+Br/caLN+5tK3gqFYtcr623pKO4LL0f/SzQrab426sC60Shz0Ncw2Kdnaiy5Ajo1A/EoI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EIl0wi0P; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZyqspAH1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98F33C4CEF7;
-	Fri,  3 Apr 2026 14:53:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EIl0wi0P"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22B86C4CEF7;
+	Fri,  3 Apr 2026 14:53:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775227986;
-	bh=Coj3K5+cTuOJt1kVCCMY5Nve9QgI6eVg/eO6kq+Dt7o=;
+	s=k20201202; t=1775227988;
+	bh=gc3kjfrCJ5uKs/bGwENX9cmA15ExHaeJ2A9jtvTzg94=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ZyqspAH1uJKgTfCq8qbXM0cmq4Gz0utIJjIG1o+3FRtMexjaaf/gjM0I63QDCSFQc
-	 NEgw6BCGQSKK5etTaS+Tu7XdXBkvwBjKgrTnewPmA589X19s/zI/hrnzTcHD3pSl5w
-	 fACwn7oIsSx6YYFfdMfSTyXYdFWWNSFzKpJLbxCUpqX1W9vW9IbIDOn3LXbA9YtV3Z
-	 vzJM4kd4n55jDSXrllvx/DxO2FqbUQ8P0unXUnYzz8nCRONlU3C3zfFW1s4Bz3f0e5
-	 7JMQ7+fux+ewrDlTtS/K7dykeaHO2FPHCfYdtOzRpqK6ZlZpV5iCcMMbTyxwg2hgde
-	 U0yoUjGCRnnCw==
+	b=EIl0wi0P/fYVqBp3NqD7JyfQFVvGxGncgyBVCsqxNL7WMPfQHGH4mGoTEngIqDw3S
+	 iHNE3tvTenLfsKLVthiSnOcKLJ+F48m8dAMyQhzEU81zmU70mOTaBAPiEu52A/5GYP
+	 ctiWFbJuHkoDOHmuGYlFfOqkpxtAJ259jnZTYbwuneXi9L3C8ODnXs4P7KTYCdLuYd
+	 PhO4DPE5W2ooy8TEOe/aWWmpk23kSlvzEJpjWhbgzAuQpqSMQ/sb20JjvaL5iAKVF6
+	 P2izisMM+sKbYmVy8Tb1gh9RgF73rNOXGcUb2RWClCCp9TKRWReObzV3h4KGoBPJrv
+	 2g2AZhsd2DE5A==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>,
 	Gang Yan <yangang@kylinos.cn>
-Subject: [RFC mptcp-next v13 14/16] selftests: tls: wait close in shutdown_reuse for mptcp
-Date: Fri,  3 Apr 2026 22:51:32 +0800
-Message-ID: <de0d72824e1c7959af470b17550eaabf7c606070.1775227717.git.tanggeliang@kylinos.cn>
+Subject: [RFC mptcp-next v13 15/16] selftests: tls: add mptcp test cases
+Date: Fri,  3 Apr 2026 22:51:33 +0800
+Message-ID: <6c5bd8dae7bbafe7f1eb11425c97a86002a01771.1775227717.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <cover.1775227717.git.tanggeliang@kylinos.cn>
 References: <cover.1775227717.git.tanggeliang@kylinos.cn>
@@ -46,90 +46,124 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-In shutdown_reuse tests, add a delay after shutdown to wait for
-MPTCP sockets to reach TCP_CLOSE state before reuse via bind(),
-avoiding the following errors:
-
- #  RUN           tls.12_aes_gcm_mptcp.shutdown_reuse ...
- # tls.c:1790:shutdown_reuse:Expected ret (-1) == 0 (0)
- # shutdown_reuse: Test failed
- #          FAIL  tls.12_aes_gcm_mptcp.shutdown_reuse
- not ok 14 tls.12_aes_gcm_mptcp.shutdown_reuse
- #  RUN           tls.13_aes_gcm_mptcp.shutdown_reuse ...
- # tls.c:1790:shutdown_reuse:Expected ret (-1) == 0 (0)
- # shutdown_reuse: Test failed
- #          FAIL  tls.13_aes_gcm_mptcp.shutdown_reuse
- not ok 15 tls.13_aes_gcm_mptcp.shutdown_reuse
- #  RUN           tls.12_chacha_mptcp.shutdown_reuse ...
- #            OK  tls.12_chacha_mptcp.shutdown_reuse
- ok 16 tls.12_chacha_mptcp.shutdown_reuse
- #  RUN           tls.13_chacha_mptcp.shutdown_reuse ...
- #            OK  tls.13_chacha_mptcp.shutdown_reuse
- ok 17 tls.13_chacha_mptcp.shutdown_reuse
- #  RUN           tls.13_sm4_gcm_mptcp.shutdown_reuse ...
- # tls.c:1790:shutdown_reuse:Expected ret (-1) == 0 (0)
- # shutdown_reuse: Test failed
- #          FAIL  tls.13_sm4_gcm_mptcp.shutdown_reuse
- not ok 18 tls.13_sm4_gcm_mptcp.shutdown_reuse
+This patch introduces MPTCP test cases for the TLS fixture. These "mptcp"
+variants are configured to create MPTCP sockets specifically for MPTCP TLS
+testing purposes.
 
 Co-developed-by: Gang Yan <yangang@kylinos.cn>
 Signed-off-by: Gang Yan <yangang@kylinos.cn>
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- tools/testing/selftests/net/tls.c | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+ tools/testing/selftests/net/tls.c | 96 +++++++++++++++++++++++++++++++
+ 1 file changed, 96 insertions(+)
 
 diff --git a/tools/testing/selftests/net/tls.c b/tools/testing/selftests/net/tls.c
-index ced333c9abcf..85f4b16dfa68 100644
+index 85f4b16dfa68..861801476e99 100644
 --- a/tools/testing/selftests/net/tls.c
 +++ b/tools/testing/selftests/net/tls.c
-@@ -30,6 +30,10 @@
- #define IPPROTO_MPTCP 262
- #endif
+@@ -413,6 +413,102 @@ FIXTURE_VARIANT_ADD(tls, 12_aria_gcm_256)
+ 	.cipher_type = TLS_CIPHER_ARIA_GCM_256,
+ };
  
-+#ifndef TCP_CLOSE
-+#define TCP_CLOSE 7
-+#endif
-+
- static int fips_enabled;
- 
- struct tls_crypto_info_keys {
-@@ -1680,6 +1684,25 @@ TEST_F(tls, shutdown_unsent)
- 	shutdown(self->cfd, SHUT_RDWR);
- }
- 
-+static bool wait_for_tcp_close(struct __test_metadata *_metadata,
-+			       int fd, int max)
++FIXTURE_VARIANT_ADD(tls, 12_aes_gcm_mptcp)
 +{
-+	struct tcp_info info;
-+	socklen_t len;
-+	int i, ret;
++	.tls_version = TLS_1_2_VERSION,
++	.cipher_type = TLS_CIPHER_AES_GCM_128,
++	.mptcp = true,
++};
 +
-+	for (i = 0; i < max; i++) {
-+		len = sizeof(info);
-+		ret = getsockopt(fd, IPPROTO_TCP, TCP_INFO, &info, &len);
-+		ASSERT_EQ(ret, 0);
-+		if (info.tcpi_state == TCP_CLOSE)
-+			return true;
-+		usleep(1000);
-+	}
++FIXTURE_VARIANT_ADD(tls, 13_aes_gcm_mptcp)
++{
++	.tls_version = TLS_1_3_VERSION,
++	.cipher_type = TLS_CIPHER_AES_GCM_128,
++	.mptcp = true,
++};
 +
-+	return false;
-+}
++FIXTURE_VARIANT_ADD(tls, 12_chacha_mptcp)
++{
++	.tls_version = TLS_1_2_VERSION,
++	.cipher_type = TLS_CIPHER_CHACHA20_POLY1305,
++	.fips_non_compliant = true,
++	.mptcp = true,
++};
 +
- TEST_F(tls, shutdown_reuse)
++FIXTURE_VARIANT_ADD(tls, 13_chacha_mptcp)
++{
++	.tls_version = TLS_1_3_VERSION,
++	.cipher_type = TLS_CIPHER_CHACHA20_POLY1305,
++	.fips_non_compliant = true,
++	.mptcp = true,
++};
++
++FIXTURE_VARIANT_ADD(tls, 13_sm4_gcm_mptcp)
++{
++	.tls_version = TLS_1_3_VERSION,
++	.cipher_type = TLS_CIPHER_SM4_GCM,
++	.fips_non_compliant = true,
++	.mptcp = true,
++};
++
++FIXTURE_VARIANT_ADD(tls, 13_sm4_ccm_mptcp)
++{
++	.tls_version = TLS_1_3_VERSION,
++	.cipher_type = TLS_CIPHER_SM4_CCM,
++	.fips_non_compliant = true,
++	.mptcp = true,
++};
++
++FIXTURE_VARIANT_ADD(tls, 12_aes_ccm_mptcp)
++{
++	.tls_version = TLS_1_2_VERSION,
++	.cipher_type = TLS_CIPHER_AES_CCM_128,
++	.mptcp = true,
++};
++
++FIXTURE_VARIANT_ADD(tls, 13_aes_ccm_mptcp)
++{
++	.tls_version = TLS_1_3_VERSION,
++	.cipher_type = TLS_CIPHER_AES_CCM_128,
++	.mptcp = true,
++};
++
++FIXTURE_VARIANT_ADD(tls, 12_aes_gcm_256_mptcp)
++{
++	.tls_version = TLS_1_2_VERSION,
++	.cipher_type = TLS_CIPHER_AES_GCM_256,
++	.mptcp = true,
++};
++
++FIXTURE_VARIANT_ADD(tls, 13_aes_gcm_256_mptcp)
++{
++	.tls_version = TLS_1_3_VERSION,
++	.cipher_type = TLS_CIPHER_AES_GCM_256,
++	.mptcp = true,
++};
++
++FIXTURE_VARIANT_ADD(tls, 13_nopad_mptcp)
++{
++	.tls_version = TLS_1_3_VERSION,
++	.cipher_type = TLS_CIPHER_AES_GCM_128,
++	.nopad = true,
++	.mptcp = true,
++};
++
++FIXTURE_VARIANT_ADD(tls, 12_aria_gcm_mptcp)
++{
++	.tls_version = TLS_1_2_VERSION,
++	.cipher_type = TLS_CIPHER_ARIA_GCM_128,
++	.mptcp = true,
++};
++
++FIXTURE_VARIANT_ADD(tls, 12_aria_gcm_256_mptcp)
++{
++	.tls_version = TLS_1_2_VERSION,
++	.cipher_type = TLS_CIPHER_ARIA_GCM_256,
++	.mptcp = true,
++};
++
+ FIXTURE_SETUP(tls)
  {
- 	struct sockaddr_in addr;
-@@ -1689,6 +1712,9 @@ TEST_F(tls, shutdown_reuse)
- 	shutdown(self->cfd, SHUT_RDWR);
- 	close(self->cfd);
- 
-+	if (variant->mptcp)
-+		EXPECT_TRUE(wait_for_tcp_close(_metadata, self->fd, 1000));
-+
- 	addr.sin_family = AF_INET;
- 	addr.sin_addr.s_addr = htonl(INADDR_ANY);
- 	addr.sin_port = 0;
+ 	struct tls_crypto_info_keys tls12;
 -- 
 2.51.0
 
