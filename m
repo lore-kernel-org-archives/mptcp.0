@@ -1,132 +1,152 @@
-Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9813D3A9D93
-	for <mptcp@lists.linux.dev>; Fri,  3 Apr 2026 12:45:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF8462DCF45
+	for <mptcp@lists.linux.dev>; Fri,  3 Apr 2026 13:07:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775220324; cv=none; b=HWEaOkwg4ZnYY0IIpButytYezLT0lZeuUYJUZvaCGijyHgrSv9JM6ajnX8Lxdx5Axeivh0y94XB5CFLyKviW7SE1UBYlrBm28LTegIDjbClB6p8iI23WXJGeOYSB7wyqZ82tuRkxq4k0T90cY8VtzKn/MD41CWYl2HIEwiiLTnk=
+	t=1775221681; cv=none; b=PriYxeWYEq9p0u0+MrHH/euq2VSvzE/UAKxnsqv50yNwlfsWY15O6QeFIl5hp0qKrtxjyLLlcgRwgirGeqFCEWLLkJDAFCTyoonF13nc611VtOWTwUPzlpRzKvSwliJSBvC3SoXvUSfsJjvyywDQqO+4k66vEG782ddPg8Dc2f4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775220324; c=relaxed/simple;
-	bh=ZFWq9fahOZlCpPnOCev2LCXMBVcyCOtI/YuBQF1bkJ8=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
-	 MIME-Version:Content-Type; b=odGKl36CBRsCk1XIvBPWCs/LX+heMnfDscQDrTJw45AsMmS0MkHM2N72KQqR35yZtQ6iA+nmZNRuxLMmupoi/amfuUMuAgbzz5B7cqE+FcSP1PtDeu4wjW/LtPYmKlqda2O6P97yUzv8CxWUNav10+HycFr3TXsTrUYJ7qVutAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=tOZckh15; arc=none smtp.client-ip=209.85.219.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1775221681; c=relaxed/simple;
+	bh=wD0HQ2QPMI7IaiQGwEwbRAWOKIzYl/MwjepzMuSNXYg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Xz8QgoQ2+wRW/XIeWN4SKbT+DBFKKfSb/gBzoSOHdkfVMAWD21byQZmeEJUFf3l1+paP54uhxTsE7cNDcd8iZ38aHXG/ZJrjRkwTfL4aKBXFIrrk7G92s4BIqFTeYcj0yw3AzD1hJxrc4PaYyQHueZ1F+xTcobMzyuBUPoNeIIE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=SnUl4ChE; arc=none smtp.client-ip=95.215.58.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tOZckh15"
-Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-8a3b0242631so24158136d6.3
-        for <mptcp@lists.linux.dev>; Fri, 03 Apr 2026 05:45:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1775220318; x=1775825118; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9DdBBzq2PB44d6DAsnzwYxjYrQ6Uk7UaBxxe569Bm8w=;
-        b=tOZckh15Pqk388WxLS+WZd3gO5pCXPHFCVoX/V5S978CSp8534hg+lVldt52Zt5+iJ
-         icNSl43lfgRs38XRkjlXWpDrfxYZe6EM+SDCjcnIbWzHB+sPKiJ6AVIvfBaxPw+sfrEm
-         PcjAqMwFIvnOPXL2RbHn1rzXkmsn5fQyPE1mfCZoOI/tE77NfXxvqEY8rtpXQUMcJzGf
-         kntX9G7wf6/Xev5xpxlZj2uRis2XJxWDdi0W4hji59rYazRrqWVeSAdsiL4xPkq/22DJ
-         SuJiU643xXX9TYu6Q2UlTgzQpklComKp2x60iBHIVrLaoMuUxL0MbRf4ETJ5Kf/9LWE2
-         5kiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775220318; x=1775825118;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9DdBBzq2PB44d6DAsnzwYxjYrQ6Uk7UaBxxe569Bm8w=;
-        b=ElWrcisFxHhwL2Np4Y+rQPvqHPgYTvsBHPRkRvO2pUyavQIZHf5Y2ALHLR+Z18l2Ct
-         yJ8GSpfwSN6owEy0chhGRQfYpEHYz00h9AHiH+mAUvhAT31c5HCOllYGdO6ejJck3kn0
-         b8staR1Nz1LJawGJErXfpL1LwC7dwkGClvxcw1jSQNJonh5ETPpx6nWvI5GqD4LPm8E5
-         KqFB7mSjWC1orwDHenpqCAcHVWbNZ+XxCDjekgRHK1DHescB4p3Nnl3Ji8rP+Qo4GeWK
-         TyUPX5R2y3a1P/tBMN7BqqHthwWdozxS/4BVjg/gxbHvrfrwQQNLdObZ6fMg7hLe4OqT
-         VWrA==
-X-Gm-Message-State: AOJu0YyTzZGSfUxTCNqeaVCrD/cw59WHNua76VEs35aG2zhkBRakuHio
-	5VQ071sZfR0otiVK+3StyKyOFyrZPLrSedJ1xtrcdEicEhcyQ7t8KumrTHDR
-X-Gm-Gg: AeBDievN7YAxYM7kwEKPHc+ZDNGIheD9laygnj9L2whLcPqPXbmgXa56F9gXZvu06Uv
-	q/aX6kHhJcuxBP4+R+KiMPXtOkjTvD+ZZVMgzvF6ych7GNo2Ylieoxe2wR8xex1ZHCCd0wCWG/z
-	4V8mD1oks5TOWqA7JneXtxIXQPzgdSazL0g5njqEW9TTeDkWTRf7rpWfe0gh8AeNVuRMh+Z+JlO
-	1rwbV/q5PffD8cqXtqmXZaHZGw36GkIGGmbyT+cuR5XH82gpjK7HxmFjomN3U3jknBvzpEWg6sV
-	XfB9HLKgZr257VkRt33zpCoL+DON5jTEapBmChhsQCzdsLtj/7zmJgV7F03acDQeQumLtDT0fpF
-	Amv6c7747Q/lDagBMDiLR/AntKRhjzcYpiUhF+cTdjWKa2T2XdRnm2cIsC0CU0OZuonbcNKJOlK
-	qo6IlL7WvfnxsaXipxBgT8veYSbgvxZCE+mVh8DQ==
-X-Received: by 2002:a0c:e006:0:b0:89c:4cda:3cb1 with SMTP id 6a1803df08f44-8a7020c0a1amr39633346d6.10.1775220318320;
-        Fri, 03 Apr 2026 05:45:18 -0700 (PDT)
-Received: from [127.0.0.1] ([172.214.45.198])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8a593bf2769sm48369916d6.14.2026.04.03.05.45.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Apr 2026 05:45:17 -0700 (PDT)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <20260403-mptcp-fix-better-mptcp-level-rtt-estimator-v1-1-b22152ecd69d@kernel.org>
-References:
- <20260403-mptcp-fix-better-mptcp-level-rtt-estimator-v1-1-b22152ecd69d@kernel.org>
-Subject: =?UTF-8?Q?Re=3A_=5BPATCH_mptcp-next=5D_Squash_to_?=
- =?UTF-8?Q?=22mptcp=3A_better_mptcp-level_RTT_estim?= =?UTF-8?Q?ator=22?=
-Message-ID: <39dae2fd-bb32-fb40-5bc2-cad29d5a9b4a@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 03 Apr 2026 12:45:17 +0000
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="SnUl4ChE"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1775221667;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=j/YZxgwy/QvL7kUQHh7K5WqqI+LKCK+a5twSKtnFHGE=;
+	b=SnUl4ChE15aZeGTnJn+dmNS147UUaMeSjbdfoN0Vd2SBIcFc97uOxZ/R9g+IKnDpOIbjj8
+	Ey3OhS0Ps7Y7h7gAUUyjjbcov8knlD07WkCM+htMFXEwklV/bRyqG8her5fIhWrM5oYluM
+	QjyiqNXHnasMxaHs9AG4oMCNC5LYU8c=
+From: Jiayuan Chen <jiayuan.chen@linux.dev>
+To: mptcp@lists.linux.dev,
+	netdev@vger.kernel.org
+Cc: Jiayuan Chen <jiayuan.chen@linux.dev>,
+	Matthieu Baerts <matttbe@kernel.org>,
+	Mat Martineau <martineau@kernel.org>,
+	Geliang Tang <geliang@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net v1] net: mptcp: fix slab-use-after-free in __inet_lookup_established
+Date: Fri,  3 Apr 2026 21:07:33 +0800
+Message-ID: <20260403130734.93981-1-jiayuan.chen@linux.dev>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Hi Matthieu,
+The ehash table lookups are lockless and rely on
+SLAB_TYPESAFE_BY_RCU to guarantee socket memory stability
+during RCU read-side critical sections. Both tcp_prot and
+tcpv6_prot have their slab caches created with this flag
+via proto_register().
 
-Thank you for your modifications, that's great!
+However, MPTCP's mptcp_subflow_init() copies tcpv6_prot into
+tcpv6_prot_override during inet_init() (fs_initcall, level 5),
+before inet6_init() (module_init/device_initcall, level 6) has
+called proto_register(&tcpv6_prot). At that point,
+tcpv6_prot.slab is still NULL, so tcpv6_prot_override.slab
+remains NULL permanently.
 
-Our CI did some validations and here is its report:
+This causes MPTCP v6 subflow child sockets to be allocated via
+kmalloc (falling into kmalloc-4k) instead of the TCPv6 slab
+cache. The kmalloc-4k cache lacks SLAB_TYPESAFE_BY_RCU, so
+when these sockets are freed without SOCK_RCU_FREE (which is
+cleared for child sockets by design), the memory can be
+immediately reused. Concurrent ehash lookups under
+rcu_read_lock can then access freed memory, triggering a
+slab-use-after-free in __inet_lookup_established.
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/239453=
-39282
+Fix this by splitting the IPv6-specific initialization out of
+mptcp_subflow_init() into a new mptcp_subflow_v6_init(), which
+is called from mptcpv6_init() after proto_register(&tcpv6_prot)
+has completed. This ensures tcpv6_prot_override.slab correctly
+inherits the SLAB_TYPESAFE_BY_RCU slab cache.
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/abb75c9867cc
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1076965
+Fixes: b19bc2945b40 ("mptcp: implement delegated actions")
+Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
+---
+ net/mptcp/ctrl.c     |  6 +++++-
+ net/mptcp/protocol.h |  1 +
+ net/mptcp/subflow.c  | 15 +++++++++------
+ 3 files changed, 15 insertions(+), 7 deletions(-)
 
+diff --git a/net/mptcp/ctrl.c b/net/mptcp/ctrl.c
+index d96130e49942..5887ddcdb875 100644
+--- a/net/mptcp/ctrl.c
++++ b/net/mptcp/ctrl.c
+@@ -583,7 +583,11 @@ int __init mptcpv6_init(void)
+ 	int err;
+ 
+ 	err = mptcp_proto_v6_init();
++	if (err)
++		return err;
+ 
+-	return err;
++	mptcp_subflow_v6_init();
++
++	return 0;
+ }
+ #endif
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 0bd1ee860316..ec15e503da8b 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -875,6 +875,7 @@ static inline void mptcp_subflow_tcp_fallback(struct sock *sk,
+ void __init mptcp_proto_init(void);
+ #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+ int __init mptcp_proto_v6_init(void);
++void __init mptcp_subflow_v6_init(void);
+ #endif
+ 
+ struct sock *mptcp_sk_clone_init(const struct sock *sk,
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 6716970693e9..4ff5863aa9fd 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -2165,7 +2165,15 @@ void __init mptcp_subflow_init(void)
+ 	tcp_prot_override.psock_update_sk_prot = NULL;
+ #endif
+ 
++	mptcp_diag_subflow_init(&subflow_ulp_ops);
++
++	if (tcp_register_ulp(&subflow_ulp_ops) != 0)
++		panic("MPTCP: failed to register subflows to ULP\n");
++}
++
+ #if IS_ENABLED(CONFIG_MPTCP_IPV6)
++void __init mptcp_subflow_v6_init(void)
++{
+ 	/* In struct mptcp_subflow_request_sock, we assume the TCP request sock
+ 	 * structures for v4 and v6 have the same size. It should not changed in
+ 	 * the future but better to make sure to be warned if it is no longer
+@@ -2204,10 +2212,5 @@ void __init mptcp_subflow_init(void)
+ 	/* Disable sockmap processing for subflows */
+ 	tcpv6_prot_override.psock_update_sk_prot = NULL;
+ #endif
+-#endif
+-
+-	mptcp_diag_subflow_init(&subflow_ulp_ops);
+-
+-	if (tcp_register_ulp(&subflow_ulp_ops) != 0)
+-		panic("MPTCP: failed to register subflows to ULP\n");
+ }
++#endif
+-- 
+2.43.0
 
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
