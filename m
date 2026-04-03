@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F81C2248A5
-	for <mptcp@lists.linux.dev>; Fri,  3 Apr 2026 14:53:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4987374730
+	for <mptcp@lists.linux.dev>; Fri,  3 Apr 2026 14:53:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775227980; cv=none; b=F20yxvSiPnuzz9VZERFI2+uRAsT7yLuWG9adeHL61dg6l5TFp4wYzfG+etjG7JRYkCotAswfbLOoYBQPNNURSeuSsK1+tb7pS/wlp+wVqrUP2m5WmXey/hfZpcgeuhjHzIdNJfEz/bf9KHPXRAe/pmIl1VtnsMYdblAHUcSO/c0=
+	t=1775227981; cv=none; b=DtS6mivpbetNCGw26dVkDM9pv6jNimLr7FAif87/fKdzsolFuyzMIk/LThcnyiHf3BpcUe73LnXAk/QMKWPOUok4b77HIY3rNA72XfRcG5RwVOtApcgPnO5R1bP8P+tjnwVzo4IhdSufzTj+ihUrjo8HNok9pik8F/Hk/g0nhso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775227980; c=relaxed/simple;
-	bh=R5QTa+UMnwEotML4wVygilpV5Ox1rdyBp9tddMx9YDs=;
+	s=arc-20240116; t=1775227981; c=relaxed/simple;
+	bh=pcD8gb+mn5Hyv7N/O0iCN9i22C1PsVJhivac82eZRCs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mF32unbZ/SXKfvC+29nMZI5BbCwmFZD37NGJN34Q+PmrboevGpQbaKZzEm9B5XAjJNuV1S9+85EFCH/WzpqxiOqzUEsTGomwBiwDbMk8hwtMVTNN/+AgmG0bRLPsf5/xGBLBCJDqTVq4K5BY/q9yExnidrJZHTY+4oQho+1iz/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mx2r+ITT; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=T/Vp4sOC5fTRmes3aboZOSpZ1/f9y2uRqBU36912M7x326HJVc56eAN5lh64FTqGLq4oK3SKWcJPVLrrFNvJPaI4xNo92/rZrs3YXVNBcQHMmO31WYLBY7az/tkclsIZXGS0udTiXcgGg+bdPUBww2olIoAYa33qojoWHueDgD4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P68jPkiR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mx2r+ITT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2ADBBC19421;
-	Fri,  3 Apr 2026 14:52:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P68jPkiR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE3FCC19421;
+	Fri,  3 Apr 2026 14:53:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775227980;
-	bh=R5QTa+UMnwEotML4wVygilpV5Ox1rdyBp9tddMx9YDs=;
+	s=k20201202; t=1775227981;
+	bh=pcD8gb+mn5Hyv7N/O0iCN9i22C1PsVJhivac82eZRCs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=mx2r+ITTcWWN8IQjuGy09rcMCTmD1sqj5nHs/Y6GU3Tjejjtn8zQAirte+MDHR6BH
-	 dGtjmMMn4jMcdzHk0JkadAgWRYbZyW0YFB3CdIe4dAEjb6YVeVt/+/MMzQqysQNE9u
-	 mYTxXnLrnDneZYpFCnZEsrzMVJOmCOAT0NJHBGHIyTJO3n8E47rQKz7HZpODkIK4pQ
-	 sjEmT8yb+7QlKcpbpHzB9LDkQHGy0t5WUhRj/WnBlLehxdM50rGKIS8pWOPjZo4E5C
-	 Hz3hcx1TMrqGH1N6A6UdMlcF1Am4iQdPJb4jg4bH0zRqGwWIR6TF/IT+bS9U6lUY4M
-	 6lMRdpYs30OUw==
+	b=P68jPkiR7yMIaffSmQa2GlOIctqhTqu3GbbO8tNzlwIp6g4qkAySr0Tdc7ZLYm7Ni
+	 HdVDZZeQ7m3BApMfoSWlpgraVwhEaVM0kER5H0YpwRgJmxgM2G+JYVT7ZPBARAGHVd
+	 NVAfr6gfgTMYhFIEFoo+itmeKGcOR0tTIxS6zLvlc4MLIPPHzIcBUBUW9cA4oLO0mJ
+	 2vGdqFR87h7ydduO50LQZHSKPx9OoVAJZGWBNGa9fPhX0RVD+X1J5RMitHLOlHYYwB
+	 N8PqtFrcydu7atqNDWR/BGxi+csK0iT0Op1pa1cgk0HnyZljvczl4Ba0+M4nx3AV1q
+	 9IQbbuPaST12g==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>,
 	Gang Yan <yangang@kylinos.cn>
-Subject: [RFC mptcp-next v13 10/16] selftests: mptcp: connect: use espintcp for ulp test
-Date: Fri,  3 Apr 2026 22:51:28 +0800
-Message-ID: <d313ac5ffd14b1f438d67ac88cc85a841a80cac8.1775227717.git.tanggeliang@kylinos.cn>
+Subject: [RFC mptcp-next v13 11/16] selftests: tls: add mptcp variant for testing
+Date: Fri,  3 Apr 2026 22:51:29 +0800
+Message-ID: <2931fd965bc4dfc70a5cb6fe1b3b0781f0f99070.1775227717.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <cover.1775227717.git.tanggeliang@kylinos.cn>
 References: <cover.1775227717.git.tanggeliang@kylinos.cn>
@@ -46,30 +46,93 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-With KTLS being implemented, "tls" should no longer be used in
-sock_test_tcpulp(), it breaks mptcp_connect.sh tests. Another ULP
-name, "espintcp", is set instead in this patch.
+To enable easy MPTCP socket creation in MPTCP TLS tests, two protocol
+parameters (cli_proto and srv_proto) have been added to ulp_sock_pair().
+These are passed as third arguments of socket(): 0 creates TCP sockets,
+IPPROTO_MPTCP creates MPTCP sockets.
+
+A new variant "mptcp" is added both in FIXTURE_VARIANT(tls) to control
+whether to create MPTCP sockets or not for tests.
 
 Co-developed-by: Gang Yan <yangang@kylinos.cn>
 Signed-off-by: Gang Yan <yangang@kylinos.cn>
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- tools/testing/selftests/net/mptcp/mptcp_connect.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/testing/selftests/net/tls.c | 26 +++++++++++++++++++++-----
+ 1 file changed, 21 insertions(+), 5 deletions(-)
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-index cbe573c4ab3a..0d4a944c4269 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-@@ -289,7 +289,7 @@ static void sock_test_tcpulp(int sock, int proto, unsigned int line)
- 		if (ret == 0)
- 			X("setsockopt");
- 	} else if (proto == IPPROTO_MPTCP) {
--		ret = do_ulp_so(sock, "tls");
-+		ret = do_ulp_so(sock, "espintcp");
- 		if (ret != -1)
- 			X("setsockopt");
- 	}
+diff --git a/tools/testing/selftests/net/tls.c b/tools/testing/selftests/net/tls.c
+index 9e2ccea13d70..21f73a9867ea 100644
+--- a/tools/testing/selftests/net/tls.c
++++ b/tools/testing/selftests/net/tls.c
+@@ -26,6 +26,10 @@
+ #define TLS_PAYLOAD_MAX_LEN 16384
+ #define SOL_TLS 282
+ 
++#ifndef IPPROTO_MPTCP
++#define IPPROTO_MPTCP 262
++#endif
++
+ static int fips_enabled;
+ 
+ struct tls_crypto_info_keys {
+@@ -108,8 +112,9 @@ static void memrnd(void *s, size_t n)
+ 		*byte++ = rand();
+ }
+ 
+-static void ulp_sock_pair(struct __test_metadata *_metadata,
+-			  int *fd, int *cfd, bool *notls)
++static void __ulp_sock_pair(struct __test_metadata *_metadata,
++			    int *fd, int *cfd, bool *notls,
++			    int cli_proto, int srv_proto)
+ {
+ 	struct sockaddr_in addr;
+ 	socklen_t len;
+@@ -122,8 +127,10 @@ static void ulp_sock_pair(struct __test_metadata *_metadata,
+ 	addr.sin_addr.s_addr = htonl(INADDR_ANY);
+ 	addr.sin_port = 0;
+ 
+-	*fd = socket(AF_INET, SOCK_STREAM, 0);
+-	sfd = socket(AF_INET, SOCK_STREAM, 0);
++	*fd = socket(AF_INET, SOCK_STREAM, cli_proto);
++	sfd = socket(AF_INET, SOCK_STREAM, srv_proto);
++	ASSERT_GE(*fd, 0);
++	ASSERT_GE(sfd, 0);
+ 
+ 	ret = bind(sfd, &addr, sizeof(addr));
+ 	ASSERT_EQ(ret, 0);
+@@ -153,6 +160,12 @@ static void ulp_sock_pair(struct __test_metadata *_metadata,
+ 	ASSERT_EQ(ret, 0);
+ }
+ 
++static void ulp_sock_pair(struct __test_metadata *_metadata,
++			  int *fd, int *cfd, bool *notls)
++{
++	__ulp_sock_pair(_metadata, fd, cfd, notls, 0, 0);
++}
++
+ /* Produce a basic cmsg */
+ static int tls_send_cmsg(int fd, unsigned char record_type,
+ 			 void *data, size_t len, int flags)
+@@ -310,6 +323,7 @@ FIXTURE_VARIANT(tls)
+ 	uint16_t tls_version;
+ 	uint16_t cipher_type;
+ 	bool nopad, fips_non_compliant;
++	bool mptcp;
+ };
+ 
+ FIXTURE_VARIANT_ADD(tls, 12_aes_gcm)
+@@ -407,7 +421,9 @@ FIXTURE_SETUP(tls)
+ 	tls_crypto_info_init(variant->tls_version, variant->cipher_type,
+ 			     &tls12, 0);
+ 
+-	ulp_sock_pair(_metadata, &self->fd, &self->cfd, &self->notls);
++	__ulp_sock_pair(_metadata, &self->fd, &self->cfd, &self->notls,
++			variant->mptcp ? IPPROTO_MPTCP : 0,
++			variant->mptcp ? IPPROTO_MPTCP : 0);
+ 
+ 	if (self->notls)
+ 		return;
 -- 
 2.51.0
 
