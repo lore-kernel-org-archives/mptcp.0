@@ -1,85 +1,127 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 560F336F40C;
-	Thu,  2 Apr 2026 17:42:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD70620B810
+	for <mptcp@lists.linux.dev>; Fri,  3 Apr 2026 01:18:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775151727; cv=none; b=ngJtXDANOYWL8gLPiOBVxUau6lYEcCeXta8VAOt8kNRfCxSCq3AjV4b7ZCRxrsAbWZG5c+cJPsVaNlI8cIOdx002eGwhIsFvQeVjjDoEEfcifnn39O+dVmCrE0lJZQMTMBE5D26HpUly6wYaSnrf25qW54YpRKUlIkQsNC+ogiM=
+	t=1775179083; cv=none; b=OKAL9lMgCih4o3v/NKvzmIwe0dY4jUXMERzUdutSSNirtELCf2N9u9GKUwRdaYC4hFtI4FBxyeCJpWYfyK6BVwZGG/DW+L85Nga1tVyvyqSUBNzmWBzWrLTuVEFNptO/0OQwQA/X1opNynL8xn9keJx+kl91nEVIygctYYiTyTQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775151727; c=relaxed/simple;
-	bh=A1GzfmivvuhCSCB/nkSJihhA1T5J/EcQFeWiGdMOIy8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CAoM5OYpKAiAAQAaJ47GpOCm0aXcnV673C5iWTFT3MolY4z1d/53cKneBqTxgmavPg0gpwAPOxP3dVO1xvmDE3Gx4LGyVdB1xNLCDl9PUMkQuCYn4LkWbgETy9ul90JCpg21gLDxLtJZLGm/z0vSqt4MikdIO/Bdlk7HwvAh5MA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A2wmrbjv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1775179083; c=relaxed/simple;
+	bh=/UDBfI48+Od4KC4c5HOPxaQ/6Z8FKiZlomnou5bgozw=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=c1ZJatGjq5mm4RQjNdtJWN5UsbdmwzLL7DEIvfUkufbEAb32yiFnnLuYZDl3T5+blKlFVf7XIPVTF7p2kD5TDq2gaPo4h+a6C4cHkFak2obX9VVhsgfJFYKid662Z0fjDnTPdj6e17At85svT3VVtSRz6MSoXp2e5EEBaSdcNVI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ncSRWDEA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A2wmrbjv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2250C116C6;
-	Thu,  2 Apr 2026 17:42:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ncSRWDEA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3987DC116C6;
+	Fri,  3 Apr 2026 01:18:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775151727;
-	bh=A1GzfmivvuhCSCB/nkSJihhA1T5J/EcQFeWiGdMOIy8=;
-	h=From:To:Cc:Subject:Date:From;
-	b=A2wmrbjvi2aspjTF32LSuFNS82MuDzntfoLqmf/oFFQmggi7HjNi2pzb4Rv109H7d
-	 ceWjEdV9CH2mYB0GSVwIktlzDnpIWZCn1KagNwVdy4oKm78YXb/SlHK7Swgx+ZYEpk
-	 CoPS6ivA71tXJ+B/AQ6ejjXhn0bdAXyv7sXkG9EeJ4qkFhpwlzLsjnBtvaxbhUPyG8
-	 NvAMNLSOBhnELvfTeDl3GYOWLq9vgPoJ4yg6HwOd0ZEfDOJT5l/yLFeg2J/2cAzdmk
-	 BErgtxrXYg8q2Tp04ILtrDaWJ/z0ne/c4TbEFo9gP5rRnbC//ECQcWBiFx4IR3f73c
-	 RRERWvyfhGiBA==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-To: stable@vger.kernel.org,
-	gregkh@linuxfoundation.org
-Cc: MPTCP Upstream <mptcp@lists.linux.dev>,
-	Li Xiasong <lixiasong1@huawei.com>,
-	"Matthieu Baerts (NGI0)" <matttbe@kernel.org>,
-	Jakub Kicinski <kuba@kernel.org>
-Subject: [PATCH 5.15.y] MPTCP: fix lock class name family in pm_nl_create_listen_socket
-Date: Thu,  2 Apr 2026 19:42:01 +0200
-Message-ID: <20260402174200.3474039-2-matttbe@kernel.org>
-X-Mailer: git-send-email 2.53.0
+	s=k20201202; t=1775179083;
+	bh=/UDBfI48+Od4KC4c5HOPxaQ/6Z8FKiZlomnou5bgozw=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=ncSRWDEAgY8kWhN87mrUhfpnmL/Q/UAduNYZRUjBebixFw3GH4CRP8K3stcmqfGj+
+	 0xog2Sr5+C5ifnltjQi1YTC5w3Fkrt3uBGU5PLpeXVxR9IkCklf+oHf0+Ky6X7jUyH
+	 0hssSW5bck4w5Aq9tNzXewpBnEECvYkXBazgPU+ECesVZValhwelq2xoB8DYZle9HB
+	 ROCx386Ab8NrOHpyGHRVhgWOdsrCxejMXRkfESyyBGpES0wwoIzeUYMdyNWtHE15FJ
+	 8hVxQ/x2U6l+Dm0TXoypiv8EDCzhv0vuRwRBi5iRGKxFB8ETTel4wA4BWZiaAXf56T
+	 6Oq31eKR3T40A==
+Message-ID: <bceb10c076ca92276779b177150b282f62a0917b.camel@kernel.org>
+Subject: Re: [PATCH mptcp-net v5 5/5] selftests: mptcp: test transmission
+ with small rcvbuf
+From: Geliang Tang <geliang@kernel.org>
+To: Gang Yan <gang.yan@linux.dev>, mptcp@lists.linux.dev
+Cc: pabeni@redhat.com, Gang Yan <yangang@kylinos.cn>
+Date: Fri, 03 Apr 2026 09:17:52 +0800
+In-Reply-To: <ee3b64c8f16734f94cb19d2615563c47e688b784.1775033340.git.yangang@kylinos.cn>
+References: <cover.1775033340.git.yangang@kylinos.cn>
+	 <ee3b64c8f16734f94cb19d2615563c47e688b784.1775033340.git.yangang@kylinos.cn>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.56.2-4 
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1479; i=matttbe@kernel.org; h=from:subject; bh=AwTs4DicXzyi2VlRzLAa8AqUkkfLg1gGpoGeSakWuxc=; b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDLPrcrojvkibiIatrz6veT3x8d4dtnt3/h5QUtY8U1JD 4auK2H+HaUsDGJcDLJiiizSbZH5M59X8ZZ4+VnAzGFlAhnCwMUpABM5uoXhf+bhIs+HT/6tvr6B ddrMm+4Mon6cxr9DTDIl1Dt//0iWTmFk+M9Wl3Nwb5yt9LrKoviTYvu713mVSxgF3VXe1LNjZT4 7BwA=
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 Content-Transfer-Encoding: 8bit
 
-From: Li Xiasong <lixiasong1@huawei.com>
+Hi Gang,
 
-commit 7ab4a7c5d969642782b8a5b608da0dd02aa9f229 upstream.
+On Wed, 2026-04-01 at 16:54 +0800, Gang Yan wrote:
+> From: Gang Yan <yangang@kylinos.cn>
+> 
+> This patch adds a test for transmission with a limited receive
+> buffer.
+> 
+> Without the fixes in this set, this test fails with errors:
+> 
+>  # 001 4 subflows with reduced rcvbuf
+>  # net.ipv4.tcp_rmem = 4096 4096 4096
+>  #       Info: Test file (size 1024 KB) for client
+>  #       Info: Test file (size 1024 KB) for server
+>  # copyfd_io_poll: poll timed out (events: POLLIN 1, POLLOUT 0)
+>  # copyfd_io_poll: poll timed out (events: POLLIN 0, POLLOUT 4)
+>  # [FAIL] client exit code 2, server 2
+>  # Server ns stats (ns2-qg1Hqo)
+> 
+> Co-developed-by: Geliang Tang <geliang@kernel.org>
+> Signed-off-by: Geliang Tang <geliang@kernel.org>
+> Signed-off-by: Gang Yan <yangang@kylinos.cn>
+> ---
+> Notes:
+> 
+> Changelog:
+> v5:
+>   - Drop the unnecessary tcp_rmem restore.
+> 
+> ---
+>  tools/testing/selftests/net/mptcp/mptcp_join.sh | 17
+> +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+> 
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> index beec41f6662a..a21333424085 100755
+> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> @@ -4417,6 +4417,22 @@ endpoint_tests()
+>  	fi
+>  }
+>  
+> +rcvbuf_tests()
+> +{
+> +	if reset "4 subflows with reduced rcvbuf"; then
+> +		ip netns exec $ns2 sysctl -w net.ipv4.tcp_rmem="4096
+> 4096 4096"
 
-In mptcp_pm_nl_create_listen_socket(), use entry->addr.family
-instead of sk->sk_family for lock class setup. The 'sk' parameter
-is a netlink socket, not the MPTCP subflow socket being created.
+Instead of using reset() here, it's better to set this sysctl in a new
+helper - for example, reset_with_tcp_rmem() - as is done in other
+tests.
 
-Fixes: cee4034a3db1 ("mptcp: fix lockdep false positive in mptcp_pm_nl_create_listen_socket()")
-Signed-off-by: Li Xiasong <lixiasong1@huawei.com>
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Link: https://patch.msgid.link/20260319112159.3118874-1-lixiasong1@huawei.com
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-[ Conflict in pm_kernel.c, because commit 8617e85e04bd ("mptcp: pm:
-  split in-kernel PM specific code") is not in this version, and moves
-  code from pm_netlink.c to pm_kernel.c. ]
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- net/mptcp/pm_netlink.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks,
+-Geliang
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 634fe0360c49..03e9a861140c 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -1042,7 +1042,7 @@ static struct lock_class_key mptcp_keys[2];
- static int mptcp_pm_nl_create_listen_socket(struct sock *sk,
- 					    struct mptcp_pm_addr_entry *entry)
- {
--	bool is_ipv6 = sk->sk_family == AF_INET6;
-+	bool is_ipv6 = entry->addr.family == AF_INET6;
- 	int addrlen = sizeof(struct sockaddr_in);
- 	struct sockaddr_storage addr;
- 	struct socket *ssock;
--- 
-2.53.0
-
+> +
+> +		pm_nl_set_limits $ns1 0 4
+> +		pm_nl_set_limits $ns2 0 4
+> +		pm_nl_add_endpoint $ns2 10.0.2.2 flags subflow
+> +		pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow
+> +		pm_nl_add_endpoint $ns2 10.0.4.2 flags subflow
+> +		speed=fast test_linkfail=1024 \
+> +			run_tests $ns1 $ns2 10.0.1.1
+> +		chk_join_nr 3 3 3
+> +	fi
+> +}
+> +
+>  # [$1: error message]
+>  usage()
+>  {
+> @@ -4467,6 +4483,7 @@ all_tests_sorted=(
+>  	F@fail_tests
+>  	u@userspace_tests
+>  	I@endpoint_tests
+> +	R@rcvbuf_tests
+>  )
+>  
+>  all_tests_args=""
