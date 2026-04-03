@@ -1,130 +1,135 @@
-Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C75E53BED24
-	for <mptcp@lists.linux.dev>; Fri,  3 Apr 2026 14:25:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0DCD2DCF67
+	for <mptcp@lists.linux.dev>; Fri,  3 Apr 2026 14:51:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775226317; cv=none; b=IdkSGJ62yBOdKrTejyLZWEsOBEfTTJm7g9KTJ9I96wrYx1NcQDkolYJ2fYkBMqJ4qLQQiy5lYXi/Pv/sIdNwU6X7ruRfQXVJ/nQlbdqU763DDomD4jh86ZdCsQyz6vCh4dF4Krbu6opPNi4ykaM2+Ji3rWwqqZk4QJHuELJon8U=
+	t=1775227868; cv=none; b=fW6Ib1lVcFx/44iAZg3/78QB3I6AJ3HREAJ2fgZvmGHcCurOKOBDXRNZHyxT7tGeJNwRvoHspFraW2nhab3Sw7f4R3yABfDIGOkWMc41c7hlYXu2YFYb63qE+FqJ6gHobFj8NN4QeN8DAdJ4gIUF7z3g7XF1fO/PAqANvRfh7Aw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775226317; c=relaxed/simple;
-	bh=G2AkWEu1Acw8mScTcOI04rM7TVn1POruGEMiOSF+7e8=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
-	 MIME-Version:Content-Type; b=XctDSc89fIt1dAX9mjnRh3HNVkeF3tMfsmXJr2HqNUJ9jfDAOi0j6RZZY/FAfTOR8vmtFK3EbXWHJ9ddbCDkhR46d7B86CyNXOslUrKKiJ+blPBmOZ85bWlYlAUU3PtXVymePYAVFFR1QRenEdGmBGIshSBkrEZx7Rvw+soweb0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JVm3JsBu; arc=none smtp.client-ip=209.85.219.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1775227868; c=relaxed/simple;
+	bh=x6DDgwpQDG+Q+kciBzre+cC+nGdnnavB3/a8/IZ/UgI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=iJIfBB0JtcM4jBpaG3ZBMuo/mbZn1iK0FtKFbh1izlKWDYCvMrhy+yg/ITAB0mtwQ0nMX8Bio9Tq4KaGgVw+qQt0FA2mM0e+3h9xoCn0E8+pL6DiMUCJA/VlvffPgJ537dRvo9BoS+NcK5LR8JWCZc9Yg1duhT3sSOReKCqkbQA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h0eAPl1I; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JVm3JsBu"
-Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-89cc797547fso22475396d6.2
-        for <mptcp@lists.linux.dev>; Fri, 03 Apr 2026 07:25:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1775226313; x=1775831113; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hSLaIfjil8PQHAtYdIsLHVlI/5tIxGeKRKWoqcBUHhw=;
-        b=JVm3JsBuMQSUVKE5RwbC1vRemk0HQO+q2vFGeyR1R6e+z20xQGTEULI7PWnRJC3Yuu
-         3DL+6eyYrWplk0Ix4MPRv93aCtofUXKp73CtLLSlMNL5Ulvy3qtINdPXS23QWZGRvRi3
-         X+xofxMXmtTxCI7dct7DW5jA9ibJ3LTmV8Wh4SPIF+vhwEHLjEI6OZVD1592qJPwiBSY
-         4OV4wwMh+61qgiFaO1eHKYCz7HjyKgD/10VY1iGpcbDQrheJHOJYGzT1nYrrjNUCzIOf
-         yGXm0Kx/+8Vj/QELGlYhiLXczNAI8qtApvMK2JdMsjQ15GE+kcVx8EhUzlaf2WrotRoS
-         /5Ow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775226313; x=1775831113;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hSLaIfjil8PQHAtYdIsLHVlI/5tIxGeKRKWoqcBUHhw=;
-        b=Qj63d39sxSoFQwMQkWyPWUUkF3Dp77KbtpGs4acO6uK5zlD1cMaBvd+f25GV2zA/pC
-         qmgbvPNg0iP2kcv0LCT+X4ReWDVqxISPfl/jzRp0cBOQwHJB2S7o/xapfYHco71CqUzS
-         N5MYRHL9OADtlpYf7x3BfP0HOSCWdIrDHtr6dJYnHBPgRpwpyv4Ot/lq07KlbIQRVMa/
-         hRJRCAZY1lXRP3JoBg1q/iDyyTeJO7u0lY3t9k/0ilQXL332ZZRLMpmb/PaiTyDGoCcd
-         f/dA9zuiKVdnlqHvJBaklbIxEWANgp2b+SYS4vuly8PR6P+NpWfJ3pLj2LikreVOZnm1
-         uNyw==
-X-Gm-Message-State: AOJu0YzdrjRho2p58Iru0nnPWnxopu+6xD/ors5jDaacqqdqH6Vv8W7B
-	cCrgjU8NNFIYg/kKJqfgQSVhRcqBB7Q7VVMNdnBUfmxkjC6Qi316DgfNUqGP9gM=
-X-Gm-Gg: AeBDiete62p84ipO3//5sC1V2DPH0x1MyGB0HHiJcYRLK8A8jmZQlu4PerX36PSyXnS
-	ujmvVT9JaPMbykOIiTOtp2sy9tGpQ2NZBYmpJ7cV4H2nvVoO/KmdfOH1qOqM85L32mEVgSxqrAx
-	ZGNDXGd90OpxvELQkr4LDfBtXOq4j9UJrb7TekNUXE5Ps0nCB4d188irgiOxOfNyeuZbY8GvUts
-	RlMb2gKKY7RXqBoH+buCibreyQ6/AOiXr1KbNvnqqsmWrrtSj3z8LzgHBVgUi+DgtWxNbaC6pGe
-	YHHNoFFI6cfVc0flXy6MfURbm7mbJuC+sCJsdYfYha1/0I9n0mPGPhaYZ0mPxjOsK7hnYiZOCAh
-	Ms0xB6nR61DB53Y5kBUjlfvkCGkzUC+ulCZFibvRfpjsip6fprPGk3gck0nOmggK+pl8syozKXJ
-	6t5GzJuAylPfA8gRKVhym/ygSxWE6cl3W15Krm57M=
-X-Received: by 2002:a05:6214:4c92:b0:89c:e371:2b4e with SMTP id 6a1803df08f44-8a7025b53ebmr48189496d6.17.1775226313410;
-        Fri, 03 Apr 2026 07:25:13 -0700 (PDT)
-Received: from [127.0.0.1] ([172.174.221.226])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8a5933333d0sm56161506d6.1.2026.04.03.07.25.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Apr 2026 07:25:13 -0700 (PDT)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Jiayuan Chen <jiayuan.chen@linux.dev>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20260403130734.93981-1-jiayuan.chen@linux.dev>
-References: <20260403130734.93981-1-jiayuan.chen@linux.dev>
-Subject: Re: [PATCH net v1] net: mptcp: fix slab-use-after-free in
- __inet_lookup_established
-Message-ID: <794357c2-e1a9-f78e-b43c-0f454224b023@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 03 Apr 2026 14:25:12 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h0eAPl1I"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A45BC4CEF7
+	for <mptcp@lists.linux.dev>; Fri,  3 Apr 2026 14:51:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1775227868;
+	bh=x6DDgwpQDG+Q+kciBzre+cC+nGdnnavB3/a8/IZ/UgI=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=h0eAPl1IIt5iVtjZQzFZwlkddlnfxXDU6XDCUewHsP6CAIP90tB8gYGeR07ea5sUB
+	 AT/lH6iVaQuZuvN0mK1uzj8+ahNscDx0EaPa2PJgO7encu7lRKNrXU03IpXt63+mTR
+	 TmS6foIR28e+23z83muYK7n6RL2xo4U1eN3G2EtdaZq598KDo5ScKUkmkxiFp2cJIR
+	 733XYTQgz8v2GGanhZrNUraZUVO7vJYKVVPB8SB/AlxdCUKYxKa4AhwNqc3CrLJyTE
+	 gWhs18A8MDBDEtPaHxrXZ+flzylBsCZeK028wytlEDH9MDoDT1jaB8eGlU1U5j1Ktw
+	 PtO4eTu711Ovw==
+Message-ID: <6f40e9dc-c028-465f-85d9-44dfd25cb42c@kernel.org>
+Date: Fri, 3 Apr 2026 16:51:06 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-next] mptcp: pm: in-kernel: remove
+ mptcp_pm_has_addr_attr_id
+Content-Language: fr
+To: MPTCP Linux <mptcp@lists.linux.dev>
+References: <20260223-mptcp_pm_has_addr_attr_id-v1-1-1efb38ad6488@kernel.org>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <20260223-mptcp_pm_has_addr_attr_id-v1-1-1efb38ad6488@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Jiayuan,
+Hello,
 
-Thank you for your modifications, that's great!
+On 23/02/2026 18:35, Matthieu Baerts (NGI0) wrote:
+> There is no need to call this helper: it will check if the address ID
+> attribute is set, but this attribute has already been parsed previously.
+> 
+> Indeed, the value has been set in 'entry->addr.id' if it was set and
+> positive, which is what we were looking at. Then only looking at this
+> already parsed value is enough, not need to re-extract all Netlink
+> attributes again.
+Linked to my message on the same patch sent to netdev [1] ...
 
-Our CI did some validations and here is its report:
+ https://lore.kernel.org/070ec312-4836-4220-b03f-07c14f1f5470@kernel.org
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/239480=
-54233
+... I suggest replacing the commit title and message here:
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/df0f3b32e603
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1076991
+------------------------- 8< -------------------------
+Revert "mptcp: add needs_id for netlink appending addr"
 
+This commit was originally adding the ability to add MPTCP endpoints
+with ID 0 by accident. The in-kernel PM, handling MPTCP endpoints at the
+net namespace level, is not supposed to handle endpoints with such ID,
+because this ID 0 is reserved to the initial subflow as mentioned in the
+MPTCPv1 protocol, a per-connection setting.
 
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
+Note that 'ip mptcp endpoint add id 0' stops early with an error, but
+other tools might still ask to create MPTCP endpoint with the ID 0.
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+In other words, it was wrong to call the mptcp_pm_has_addr_attr_id
+helper to check whether the address ID attribute is set: if it was set
+to 0, a new MPTCP endpoint would be created with ID 0, which is not
+expected, and might cause various issues later (even if in most cases,
+such endpoint is ignored).
 
-For more details:
+Fixes: 584f38942626 ("mptcp: add needs_id for netlink appending addr")
+------------------------- 8< -------------------------
 
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+Any objections?
 
 Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
+
