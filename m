@@ -1,207 +1,162 @@
-Received: from out-185.mta0.migadu.com (out-185.mta0.migadu.com [91.218.175.185])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E19B6A001
-	for <mptcp@lists.linux.dev>; Fri,  3 Apr 2026 06:45:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.185
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A2322DB795
+	for <mptcp@lists.linux.dev>; Fri,  3 Apr 2026 08:52:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775198746; cv=none; b=SGnsZPUwYCLreR850xQ2SY66n9P+AipjoaXTryItCHIm+a/XnfLtLSdgdTZuDNjfjhWk1fwteEh2D/n5Lsu0CkRKZa0CRbeo9jEiZULPYuxwGmNJQnUCsN7v3lCf9B8wX5tfngvwsntNcpGHe87kCRZ7ydyJJDxSfHCyaqHjKek=
+	t=1775206376; cv=none; b=CGUTkx9uuYtgeMBre9oBU3bJyLeLR9mb9ZOtJuGS1i1O2+fEl6TQKkOIepNr8z2HzmQI1KaBRFUXDJyeZaK891H2aSH6ZU2LdolBf5pXVhq0KEvcDPolvz79W42UXv4GtbTqdjt9lLhJyhFQa0tSuLEbx5mc4D5W03wBfETSnpA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775198746; c=relaxed/simple;
-	bh=0hYal9PyaFNY4cb5Kv+nazqJbVrdoRXZT9xAQpbOLZY=;
-	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:
-	 In-Reply-To:References; b=hhsZPOHksL62Lay9hodTG6P5h57M1jwyo88mQ6UEfSay+yzbjWYyE8Dn499nO9Z0W+aXqoMv1+a4ZT8dD+DUINRIf/AfogtE4nLsRLRyCXOr5gn/GC1DNSsx2NUZ+t52KnT9XjbXDBBLTE8IZfuIepDYJ6jYLgqcMgP+MUdjHWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=kM9U7Vf6; arc=none smtp.client-ip=91.218.175.185
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1775206376; c=relaxed/simple;
+	bh=LVUDtP0yU8aca2bGxmpjDVUak74/hMqzuPe6uW2sVWo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LULk2BSi4Ps/pJG1cQ4HuWs2INCU2VdwTFI9dUQR2jrZAp3lRnN7IsxjUlC8lgzkmOsLS2f3YmarmOnKqdjp3ccRYPOcOpOElyD50sH07VYNaJ0HuWhyj1EoKqybpRPTIjNNZA8+xRjVl/KeBIVSetJES+ptRLIfmWJhD7JjB58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dzEYOsSd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="kM9U7Vf6"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dzEYOsSd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95AABC19423;
+	Fri,  3 Apr 2026 08:52:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1775206375;
+	bh=LVUDtP0yU8aca2bGxmpjDVUak74/hMqzuPe6uW2sVWo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=dzEYOsSdhFIKF/+2XUVC0V8gCxt5V9WJu+AcG0rAqY9x4T7Zcp7T4MZpulSnmkC7N
+	 1sLg/xCywSAm/BvnZWDSi2wW13Bn1mRYiy+SVoar/Gk8hPNVLPxDLpb6kJq6dh1Eet
+	 D/GOB5tK0Yan0Qr7ao5ALNBMmoDx8RjbAqDZNsqWqnF4hrHv/0aO6m4tFvfXGxDyz7
+	 li+ZdEGXOB/PhKTgb8v1ttiJAnBWs0gwmegA37gOm0LvkSkn2YrHwyjQuhCP+bCYv0
+	 JXc77OJ8/Ub1dSdauEEjdIk3+hRBCMSPguRPrRNNQuZxp/Cc1LArlEdy2Tj7XR5HAU
+	 wbNboduUwbbRQ==
+Message-ID: <694ce322-4fc3-4086-be70-589c1279ef37@kernel.org>
+Date: Fri, 3 Apr 2026 10:52:52 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1775198741;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KdTOgPEhIO/LU6qeUf5NeNE6j9sRVdJpcQHZKbpHFes=;
-	b=kM9U7Vf6sUUMDq37mK9a5ftDmsVLEB6TKXs9ruzdHHz7xP+hut1RfYxCrQy1Gq/kthkBLi
-	Ke8kUfU6kFuZs2CFa5ylJP89K8e5nGPd0QHbEPQtR3tfMshPH7q5D1r73t3i1VlW/T7Yew
-	JR1/XY5Jd+Y1WidiTMxF0h7sj5qmQjw=
-Date: Fri, 03 Apr 2026 06:45:39 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: gang.yan@linux.dev
-Message-ID: <bd405b7aaedd030858f609e936c811903e139f32@linux.dev>
-TLS-Required: No
-Subject: Fwd: Re: [PATCH mptcp-net v5 4/5] mptcp: fix the dead_lock in
- mptcp_data_ready
-To: mptcp@lists.linux.dev
-In-Reply-To: <e1f58d941ad141f9f96a24d1a1d9d6ca74cc2f5e@linux.dev>
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-net v5 5/5] selftests: mptcp: test transmission with
+ small rcvbuf
+Content-Language: fr
+To: Geliang Tang <geliang@kernel.org>, Gang Yan <gang.yan@linux.dev>,
+ mptcp@lists.linux.dev
+Cc: pabeni@redhat.com, Gang Yan <yangang@kylinos.cn>
 References: <cover.1775033340.git.yangang@kylinos.cn>
- <8ed0aeb49f13410b25200d884c89ef3201d2c23b.1775033340.git.yangang@kylinos.cn>
- <159f8b70-4ffa-4eef-a3ca-13de3f8bc191@redhat.com>
- <e1f58d941ad141f9f96a24d1a1d9d6ca74cc2f5e@linux.dev>
-X-Migadu-Flow: FLOW_OUT
+ <ee3b64c8f16734f94cb19d2615563c47e688b784.1775033340.git.yangang@kylinos.cn>
+ <bceb10c076ca92276779b177150b282f62a0917b.camel@kernel.org>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <bceb10c076ca92276779b177150b282f62a0917b.camel@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
--------- Forwarded message -------
+Hi Geliang,
 
-From: gang.yan@linux.dev mailto:gang.yan@linux.dev=20
-To:=20"Paolo Abeni" <pabeni@redhat.com mailto:pabeni@redhat.com?to=3D%22P=
-aolo%20Abeni%22%20%3Cpabeni%40redhat.com%3E >
-Sent: April 3, 2026 at 2:44 PM
-Subject: Re: [PATCH mptcp-net v5 4/5] mptcp: fix the dead_lock in mptcp_d=
-ata_ready
+On 03/04/2026 03:17, Geliang Tang wrote:
+> Hi Gang,
+> 
+> On Wed, 2026-04-01 at 16:54 +0800, Gang Yan wrote:
+>> From: Gang Yan <yangang@kylinos.cn>
+>>
+>> This patch adds a test for transmission with a limited receive
+>> buffer.
+>>
+>> Without the fixes in this set, this test fails with errors:
+>>
+>>  # 001 4 subflows with reduced rcvbuf
+>>  # net.ipv4.tcp_rmem = 4096 4096 4096
+>>  #       Info: Test file (size 1024 KB) for client
+>>  #       Info: Test file (size 1024 KB) for server
+>>  # copyfd_io_poll: poll timed out (events: POLLIN 1, POLLOUT 0)
+>>  # copyfd_io_poll: poll timed out (events: POLLIN 0, POLLOUT 4)
+>>  # [FAIL] client exit code 2, server 2
+>>  # Server ns stats (ns2-qg1Hqo)
+>>
+>> Co-developed-by: Geliang Tang <geliang@kernel.org>
+>> Signed-off-by: Geliang Tang <geliang@kernel.org>
+>> Signed-off-by: Gang Yan <yangang@kylinos.cn>
+>> ---
+>> Notes:
+>>
+>> Changelog:
+>> v5:
+>>   - Drop the unnecessary tcp_rmem restore.
+>>
+>> ---
+>>  tools/testing/selftests/net/mptcp/mptcp_join.sh | 17
+>> +++++++++++++++++
+>>  1 file changed, 17 insertions(+)
+>>
+>> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+>> b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+>> index beec41f6662a..a21333424085 100755
+>> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+>> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+>> @@ -4417,6 +4417,22 @@ endpoint_tests()
+>>  	fi
+>>  }
+>>  
+>> +rcvbuf_tests()
+>> +{
+>> +	if reset "4 subflows with reduced rcvbuf"; then
+>> +		ip netns exec $ns2 sysctl -w net.ipv4.tcp_rmem="4096
+>> 4096 4096"
+> 
+> Instead of using reset() here, it's better to set this sysctl in a new
+> helper - for example, reset_with_tcp_rmem() - as is done in other
+> tests.
 
-April 2, 2026 at 4:02 AM, "Paolo Abeni" <pabeni@redhat.com mailto:pabeni@=
-redhat.com?to=3D%22Paolo%20Abeni%22%20%3Cpabeni%40redhat.com%3E > wrote:
+If there is only one test, I think it is fine to leave this here: at
+least it is clear what is being done. A helper only used once just to
+set one extra command might not be worth it.
 
+But what you can do is to use 'sysctl -q', like every time 'sysctl' is used.
 
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
 
->=20
->=20On 4/1/26 10:54 AM, Gang Yan wrote:
->=20=20
->=20=20
->=20 From: Gang Yan <yangang@kylinos.cn>
->=20=20
->=20 This patch defers mptcp_check_data_fin from __mptcp_move_skbs to avo=
-id
->  deadlock.
->=20=20
->=20 When processing backlogged data in softirq context, __mptcp_move_skb=
-s
->  directly calls mptcp_check_data_fin, which can lead to a deadlock if
->  the msk socket is in TCP_FIN_WAIT2 state. In that case,
->  mptcp_check_data_fin calls mptcp_shutdown_subflows, which attempts to
->  lock the subflow socket with lock_sock_fast() - a sleeping function
->  that cannot be called in atomic context (softirq).
->=20=20
->=20 The fix for such issue should be squashed inside the patch generatin=
-g
->  the issue itself.
->=20=20
->=20=20
->=20 The correct pattern is already used in move_skbs_to_msk: if a data f=
-in
->  is pending, schedule the work to be processed later in process context
->  rather than handling it directly.
->=20=20
->=20 Reported-by: Geliang Tang <geliang@kernel.org>
->  Co-developed-by: Geliang Tang <geliang@kernel.org>
->  Signed-off-by: Geliang Tang <geliang@kernel.org>
->  Signed-off-by: Gang Yan <yangang@kylinos.cn>
->  ---
->  Notes:
->=20=20
->=20 Hi Matt,Paolo:
->=20=20
->=20 Here is the response of AI review for this patch:
->=20=20
->=20 - Typo problem in subject line:
->  Already fixed in v5.
->=20=20
->=20 - Remove else branch:
->  It demonstrates a TOCTOU race, though the race window is extremely
->  narrow. The else branch is useless even without the race. So I
->  removed it in v5. WDYT?
->=20=20
->=20 Thanks,
->  Gang
->=20=20
->=20 Changelog:
->  v5:
->  - Fix typo in title.
->  - Remove the else branch.
->=20=20
->=20 ---
->  net/mptcp/protocol.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
->=20=20
->=20 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
->  index 326b5d4d79e7..88e19fa61b84 100644
->  --- a/net/mptcp/protocol.c
->  +++ b/net/mptcp/protocol.c
->  @@ -2247,8 +2247,9 @@ static bool __mptcp_move_skbs(struct sock *sk, s=
-truct list_head *skbs, u32 *delt
->  }
->=20=20
->=20 __mptcp_ofo_queue(msk);
->  - if (moved)
->  - mptcp_check_data_fin((struct sock *)msk);
->  + if (moved && mptcp_pending_data_fin(sk, NULL))
->  + mptcp_schedule_work(sk);
->=20=20
->=20 Scheduling the worker when we are not in BH could introduce problema=
-tic
->  delays. Instead you could factor out a ____mptcp_move_skbs() helper (a
->  better name would be nice!) not including the mptcp_check_data_fin()
->  call, use the latter in mptcp_data_ready() and in such function
->  eventually schedule the mptcp work as needed.
->=20
-Hi=20Paolo,
-
-Thanks for your review.=20
-I'm=20a little bit confused. Does this mean the 'move_skbs_to_msk' should=
- be
-fixed too? like:
-
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 6ce0d18c86b6..e90c8621683c 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -869,13 +869,6 @@ static bool move_skbs_to_msk(struct mptcp_sock *msk,=
- struct sock *ssk)
- if (unlikely(ssk->sk_err))
- __mptcp_subflow_error_report(sk, ssk);
-=20
--=20/* If the moves have caught up with the DATA_FIN sequence number
-- * it's time to ack the DATA_FIN and change socket state, but
-- * this is not a good place to change state. Let the workqueue
-- * do it.
-- */
-- if (mptcp_pending_data_fin(sk, NULL))
-- mptcp_schedule_work(sk);
- return moved;
- }
-=20
-@@=20-909,6 +902,7 @@ void mptcp_data_ready(struct sock *sk, struct sock =
-*ssk)
- {
- struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(ssk);
- struct mptcp_sock *msk =3D mptcp_sk(sk);
-+ bool moved =3D false;
-=20
-=20/* The peer can send data while we are shutting down this
- * subflow at subflow destruction time, but we must avoid enqueuing
-@@ -920,13 +914,17 @@ void mptcp_data_ready(struct sock *sk, struct sock =
-*ssk)
- mptcp_data_lock(sk);
- mptcp_rcv_rtt_update(msk, subflow);
- if (!sock_owned_by_user(sk)) {
-+ moved =3D move_skbs_to_msk(msk, ssk);=20
-=20/* Wake-up the reader only for in-sequence data */
-- if (move_skbs_to_msk(msk, ssk) && mptcp_epollin_ready(sk))
-+ if (moved && mptcp_epollin_ready(sk))
- sk->sk_data_ready(sk);
- } else {
- __mptcp_move_skbs_from_subflow(msk, ssk, false);
- }
- mptcp_data_unlock(sk);
-+=20
-+=20if (mptcp_pending_data_fin(sk, NULL))
-+ mptcp_check_data_fin(sk);
- }
-
-Looking forward for your reply
-
-Very thanks
-Gang
-
->=20
->=20/P
->
