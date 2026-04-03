@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7A633BED24
-	for <mptcp@lists.linux.dev>; Fri,  3 Apr 2026 14:52:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A061639FCD1
+	for <mptcp@lists.linux.dev>; Fri,  3 Apr 2026 14:52:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775227967; cv=none; b=oVk/w8NwqBnVFeneNlELQ3CxBlNiSudeqYZ2bTz/RYNQGcpZub5G1jevhBbYdKDyQZs02Z9E8TLhh4E46kURlQN8R2+cbrtn/wIQRmIuXwaqo2xoV7RiNgH72uDJbI3JAFFScLljhzd7h/CFqputBSbcP+pkhrfGTAi1D06JapA=
+	t=1775227969; cv=none; b=JWB7ya3Q4I3p10jt4BIcrCSh3YrcnCYTtlWZ3NF6D6GPn20DQop1o45D919EJNxoroH48BZUhQZ3R7eNA8s/3SfR0fsY/WzQIjzNo+oP9mOqOaXX3EFgJUdOkHMKrrVjarlaGkI+w4mVdHZ4iRHyNJ2iSuDV2NH/Zbi46JalDTs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775227967; c=relaxed/simple;
-	bh=cfsH1869VYPbl6I4ug957w39UVhd6OJS50M/Sf4fN94=;
+	s=arc-20240116; t=1775227969; c=relaxed/simple;
+	bh=Qb+b49EsUwbWF1Uol2fCPNajHRc1J2sV/HflC5DFKrw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=m6EF9zmXUufvFtdFSjwg0HGlXslHJfsKQJz6aEkr4HA6c397fa2eoOl4XQAuIlplFzQ8df5iSo1jigL9fUJbyhbaPL5j8beT5BAmcy/e799q82v9gZs/VW7U8ezzm/Qv4Fufdq9mQ2GJhVHQLClIV3yfH3F4t5XCqgXeJN391aE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WByhdrBe; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=BQLnHvudsgVEWp5Ebmhe0bZVNw67+g2CUeFsYQZrE9k5pzWLcZ2IKMfsNbo91YznKaw7f08gffED2TuZqKMhO297TtGUkLXBVOp7RiZiHJ/9RWbZO+Q3IBnLcyvijGnFvVAVBoNPAo1+nsHgI6Bssn95eT4biLAQ4719kHvKDhQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LlQ/DayJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WByhdrBe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74DC2C4CEF7;
-	Fri,  3 Apr 2026 14:52:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LlQ/DayJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 036C2C4CEF7;
+	Fri,  3 Apr 2026 14:52:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775227967;
-	bh=cfsH1869VYPbl6I4ug957w39UVhd6OJS50M/Sf4fN94=;
+	s=k20201202; t=1775227969;
+	bh=Qb+b49EsUwbWF1Uol2fCPNajHRc1J2sV/HflC5DFKrw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=WByhdrBeXS68Jk48wMio2S7Fop+G2VIlD4IM8d5/rSCNHdys4s9PLVPU5oqe5axiV
-	 oBQ0IQsAWT4Xw4gnGVZvuxRGJyXh+Bi+5iBflz0sauu7Yt6p0kl63O9F2EGpDYsvlG
-	 zqsGyVk68EI+FHD/JKUpiUK7bpVQwVL0dHes5euygNLmoXAo7+CLRX7jOaHuupHzMh
-	 IFjhtU6x3YBflMvGKbyVCtlNNcs0tZ8r428rNkqP0S2e1p2QhDWATTumxZjSW+rhk1
-	 Wm2XP6zoN5azLtIWe8yFw19rZtE7zXE6e7bAGpCtw07QfBKeVb4HMVL/sh7SK/6OBu
-	 uwRxdua4ffjqw==
+	b=LlQ/DayJYZ4UzRDdTNorI1lcUYPI+fMMfcYLC9tObG5iRbU2mZRJ2cv1M6HKj4Z0W
+	 Lw+/5Or6DTEqembkEUHZCk8ZKPGYLbGSqaunhHpYk+pERawdwI2ZAumYBzjMVqvp3J
+	 mXHNEWatgQFUXrxCCbmIlOA9mt4PbEhTl3RLFTNnnCPrUgYTH+DN77aM7r8tVzKjtg
+	 wEv1RRTcEIuibj14B3uV+7cdEontHbE8ijcFU1yrS23F32C6guSWaHFlIzKJC//RWG
+	 5gwzBGSEPXGEcsNXc5ZSLofnT+lFNJc/9JUFA9odGq6+gS6lkXF0DJdrYfgFbMUSBU
+	 xAC1ymNjoLIDw==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>,
 	Gang Yan <yangang@kylinos.cn>
-Subject: [RFC mptcp-next v13 02/16] tls: introduce struct tls_prot_ops
-Date: Fri,  3 Apr 2026 22:51:20 +0800
-Message-ID: <2b8799f2ed4885fd546bc0105bb67aea6e9a714b.1775227717.git.tanggeliang@kylinos.cn>
+Subject: [RFC mptcp-next v13 03/16] tls: add tls_prot_ops pointer to tls_context
+Date: Fri,  3 Apr 2026 22:51:21 +0800
+Message-ID: <96046d77837fc871630fdb19ab461d2376379813.1775227717.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <cover.1775227717.git.tanggeliang@kylinos.cn>
 References: <cover.1775227717.git.tanggeliang@kylinos.cn>
@@ -46,169 +46,280 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-To extend MPTCP support based on TCP TLS, a tls_prot_ops structure has
-been introduced for TLS, encapsulating TCP-specific helpers within this
-structure.
+A pointer to struct tls_prot_ops, named 'ops', has been added to struct
+tls_context. The places originally calling TLS-specific helpers have now
+been modified to indirectly invoke them via 'ops' pointer in tls_context.
 
-Add registering, validating and finding functions for this structure to
-add, validate and find a tls_prot_ops on the global list tls_prot_ops_list.
-
-Register TCP-specific structure tls_tcp_ops in tls_init().
+In tls_init(), ctx->ops is assigned either 'tls_mptcp_ops' or 'tls_tcp_ops'
+based on the socket protocol.
 
 Co-developed-by: Gang Yan <yangang@kylinos.cn>
 Signed-off-by: Gang Yan <yangang@kylinos.cn>
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- include/net/tls.h  | 20 +++++++++++
- net/tls/tls_main.c | 90 ++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 110 insertions(+)
+ include/net/tls.h  |  1 +
+ net/tls/tls_main.c | 16 ++++++++++++----
+ net/tls/tls_strp.c | 33 ++++++++++++++++++++++-----------
+ net/tls/tls_sw.c   |  7 +++++--
+ 4 files changed, 40 insertions(+), 17 deletions(-)
 
 diff --git a/include/net/tls.h b/include/net/tls.h
-index fbd3979d718b..c6bd905c8416 100644
+index c6bd905c8416..0f358f9d4578 100644
 --- a/include/net/tls.h
 +++ b/include/net/tls.h
-@@ -220,6 +220,26 @@ struct tls_prot_info {
- 	u16 tail_size;
- };
+@@ -279,6 +279,7 @@ struct tls_context {
+ 	struct sock *sk;
  
-+struct tls_prot_ops {
-+	int			protocol;
-+	struct module		*owner;
-+	struct list_head	list;
-+
-+	int (*inq)(struct sock *sk);
-+	int (*sendmsg_locked)(struct sock *sk, struct msghdr *msg, size_t size);
-+	struct sk_buff *(*recv_skb)(struct sock *sk, u32 *off);
-+	bool (*lock_is_held)(struct sock *sk);
-+	int (*read_sock)(struct sock *sk, read_descriptor_t *desc,
-+			 sk_read_actor_t recv_actor);
-+	void (*read_done)(struct sock *sk, size_t len);
-+	u32 (*get_skb_off)(struct sk_buff *skb);
-+	u32 (*get_skb_seq)(struct sk_buff *skb);
-+	__poll_t (*poll)(struct file *file, struct socket *sock,
-+			 struct poll_table_struct *wait);
-+	bool (*epollin_ready)(const struct sock *sk);
-+	void (*check_app_limited)(struct sock *sk);
-+};
-+
- struct tls_context {
- 	/* read-only cache line */
- 	struct tls_prot_info prot_info;
+ 	void (*sk_destruct)(struct sock *sk);
++	const struct tls_prot_ops *ops;
+ 
+ 	union tls_crypto_context crypto_send;
+ 	union tls_crypto_context crypto_recv;
 diff --git a/net/tls/tls_main.c b/net/tls/tls_main.c
-index 7ee76e60a15e..a073259e318f 100644
+index a073259e318f..7da3138fbb55 100644
 --- a/net/tls/tls_main.c
 +++ b/net/tls/tls_main.c
-@@ -131,6 +131,25 @@ static DEFINE_MUTEX(tls_proto_mutex);
- static void build_protos(struct proto prot[TLS_NUM_CONFIG][TLS_NUM_CONFIG],
- 			 const struct proto *base);
+@@ -211,13 +211,13 @@ int tls_push_sg(struct sock *sk,
+ 	ctx->splicing_pages = true;
+ 	while (1) {
+ 		/* is sending application-limited? */
+-		tcp_rate_check_app_limited(sk);
++		ctx->ops->check_app_limited(sk);
+ 		p = sg_page(sg);
+ retry:
+ 		bvec_set_page(&bvec, p, size, offset);
+ 		iov_iter_bvec(&msg.msg_iter, ITER_SOURCE, &bvec, 1, size);
  
-+static DEFINE_SPINLOCK(tls_prot_ops_lock);
-+static LIST_HEAD(tls_prot_ops_list);
-+
-+static struct tls_prot_ops *tls_prot_ops_find(int protocol)
-+{
-+	struct tls_prot_ops *ops, *ret = NULL;
-+
-+	rcu_read_lock();
-+	list_for_each_entry_rcu(ops, &tls_prot_ops_list, list) {
-+		if (ops->protocol == protocol) {
-+			ret = ops;
-+			break;
-+		}
+-		ret = tcp_sendmsg_locked(sk, &msg, size);
++		ret = ctx->ops->sendmsg_locked(sk, &msg, size);
+ 
+ 		if (ret != size) {
+ 			if (ret > 0) {
+@@ -432,14 +432,14 @@ static __poll_t tls_sk_poll(struct file *file, struct socket *sock,
+ 	u8 shutdown;
+ 	int state;
+ 
+-	mask = tcp_poll(file, sock, wait);
++	tls_ctx = tls_get_ctx(sk);
++	mask = tls_ctx->ops->poll(file, sock, wait);
+ 
+ 	state = inet_sk_state_load(sk);
+ 	shutdown = READ_ONCE(sk->sk_shutdown);
+ 	if (unlikely(state != TCP_ESTABLISHED || shutdown & RCV_SHUTDOWN))
+ 		return mask;
+ 
+-	tls_ctx = tls_get_ctx(sk);
+ 	ctx = tls_sw_ctx_rx(tls_ctx);
+ 	psock = sk_psock_get(sk);
+ 
+@@ -1118,6 +1118,14 @@ static int tls_init(struct sock *sk)
+ 	ctx->tx_conf = TLS_BASE;
+ 	ctx->rx_conf = TLS_BASE;
+ 	ctx->tx_max_payload_len = TLS_MAX_PAYLOAD_SIZE;
++	ctx->ops = tls_prot_ops_find(sk->sk_protocol);
++	if (!ctx->ops) {
++		tls_ctx_free(sk, ctx);
++		inet_csk(sk)->icsk_ulp_ops = NULL;
++		rcu_assign_pointer(inet_csk(sk)->icsk_ulp_data, NULL);
++		rc = -EINVAL;
++		goto out;
 +	}
-+	rcu_read_unlock();
-+
-+	return ret;
-+}
-+
- void update_sk_prot(struct sock *sk, struct tls_context *ctx)
+ 	update_sk_prot(sk, ctx);
+ out:
+ 	write_unlock_bh(&sk->sk_callback_lock);
+diff --git a/net/tls/tls_strp.c b/net/tls/tls_strp.c
+index 98e12f0ff57e..71f44bf9ed59 100644
+--- a/net/tls/tls_strp.c
++++ b/net/tls/tls_strp.c
+@@ -120,6 +120,7 @@ struct sk_buff *tls_strp_msg_detach(struct tls_sw_context_rx *ctx)
+ int tls_strp_msg_cow(struct tls_sw_context_rx *ctx)
  {
- 	int ip_ver = sk->sk_family == AF_INET6 ? TLSV6 : TLSV4;
-@@ -1259,6 +1278,75 @@ static struct tcp_ulp_ops tcp_tls_ulp_ops __read_mostly = {
- 	.get_info_size		= tls_get_info_size,
- };
+ 	struct tls_strparser *strp = &ctx->strp;
++	struct tls_context *tls_ctx;
+ 	struct sk_buff *skb;
  
-+static int tls_validate_prot_ops(const struct tls_prot_ops *ops)
-+{
-+	if (!ops->inq || !ops->sendmsg_locked ||
-+	    !ops->recv_skb || !ops->lock_is_held ||
-+	    !ops->read_sock || !ops->read_done ||
-+	    !ops->get_skb_seq ||
-+	    !ops->poll || !ops->epollin_ready ||
-+	    !ops->check_app_limited) {
-+		pr_err("%d does not implement required ops\n", ops->protocol);
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static int tls_register_prot_ops(struct tls_prot_ops *ops)
-+{
-+	int ret;
-+
-+	ret = tls_validate_prot_ops(ops);
-+	if (ret)
-+		return ret;
-+
-+	spin_lock(&tls_prot_ops_lock);
-+	if (tls_prot_ops_find(ops->protocol)) {
-+		spin_unlock(&tls_prot_ops_lock);
-+		return -EEXIST;
-+	}
-+	list_add_tail_rcu(&ops->list, &tls_prot_ops_list);
-+	spin_unlock(&tls_prot_ops_lock);
-+
-+	pr_debug("tls_prot_ops %d registered\n", ops->protocol);
-+	return 0;
-+}
-+
-+static struct sk_buff *tls_tcp_recv_skb(struct sock *sk, u32 *off)
-+{
-+	return tcp_recv_skb(sk, tcp_sk(sk)->copied_seq, off);
-+}
-+
-+static bool tls_tcp_lock_is_held(struct sock *sk)
-+{
-+	return sock_owned_by_user_nocheck(sk);
-+}
-+
-+static u32 tls_tcp_get_skb_seq(struct sk_buff *skb)
-+{
-+	return TCP_SKB_CB(skb)->seq;
-+}
-+
-+static bool tls_tcp_epollin_ready(const struct sock *sk)
-+{
-+	return tcp_epollin_ready(sk, INT_MAX);
-+}
-+
-+static struct tls_prot_ops tls_tcp_ops = {
-+	.protocol		= IPPROTO_TCP,
-+	.inq			= tcp_inq,
-+	.sendmsg_locked		= tcp_sendmsg_locked,
-+	.recv_skb		= tls_tcp_recv_skb,
-+	.lock_is_held		= tls_tcp_lock_is_held,
-+	.read_sock		= tcp_read_sock,
-+	.read_done		= tcp_read_done,
-+	.get_skb_seq		= tls_tcp_get_skb_seq,
-+	.poll			= tcp_poll,
-+	.epollin_ready		= tls_tcp_epollin_ready,
-+	.check_app_limited	= tcp_rate_check_app_limited,
-+};
-+
- static int __init tls_register(void)
- {
- 	int err;
-@@ -1277,6 +1365,8 @@ static int __init tls_register(void)
+ 	if (strp->copy_mode)
+@@ -132,7 +133,8 @@ int tls_strp_msg_cow(struct tls_sw_context_rx *ctx)
+ 	tls_strp_anchor_free(strp);
+ 	strp->anchor = skb;
  
- 	tcp_register_ulp(&tcp_tls_ulp_ops);
+-	tcp_read_done(strp->sk, strp->stm.full_len);
++	tls_ctx = tls_get_ctx(strp->sk);
++	tls_ctx->ops->read_done(strp->sk, strp->stm.full_len);
+ 	strp->copy_mode = 1;
  
-+	tls_register_prot_ops(&tls_tcp_ops);
-+
  	return 0;
- err_strp:
- 	tls_strp_dev_exit();
+@@ -376,6 +378,7 @@ static int tls_strp_copyin(read_descriptor_t *desc, struct sk_buff *in_skb,
+ 
+ static int tls_strp_read_copyin(struct tls_strparser *strp)
+ {
++	struct tls_context *ctx = tls_get_ctx(strp->sk);
+ 	read_descriptor_t desc;
+ 
+ 	desc.arg.data = strp;
+@@ -383,13 +386,14 @@ static int tls_strp_read_copyin(struct tls_strparser *strp)
+ 	desc.count = 1; /* give more than one skb per call */
+ 
+ 	/* sk should be locked here, so okay to do read_sock */
+-	tcp_read_sock(strp->sk, &desc, tls_strp_copyin);
++	ctx->ops->read_sock(strp->sk, &desc, tls_strp_copyin);
+ 
+ 	return desc.error;
+ }
+ 
+ static int tls_strp_read_copy(struct tls_strparser *strp, bool qshort)
+ {
++	struct tls_context *ctx = tls_get_ctx(strp->sk);
+ 	struct skb_shared_info *shinfo;
+ 	struct page *page;
+ 	int need_spc, len;
+@@ -398,7 +402,7 @@ static int tls_strp_read_copy(struct tls_strparser *strp, bool qshort)
+ 	 * to read the data out. Otherwise the connection will stall.
+ 	 * Without pressure threshold of INT_MAX will never be ready.
+ 	 */
+-	if (likely(qshort && !tcp_epollin_ready(strp->sk, INT_MAX)))
++	if (likely(qshort && !ctx->ops->epollin_ready(strp->sk)))
+ 		return 0;
+ 
+ 	shinfo = skb_shinfo(strp->anchor);
+@@ -434,12 +438,13 @@ static int tls_strp_read_copy(struct tls_strparser *strp, bool qshort)
+ static bool tls_strp_check_queue_ok(struct tls_strparser *strp)
+ {
+ 	unsigned int len = strp->stm.offset + strp->stm.full_len;
++	struct tls_context *ctx = tls_get_ctx(strp->sk);
+ 	struct sk_buff *first, *skb;
+ 	u32 seq;
+ 
+ 	first = skb_shinfo(strp->anchor)->frag_list;
+ 	skb = first;
+-	seq = TCP_SKB_CB(first)->seq;
++	seq = ctx->ops->get_skb_seq(first);
+ 
+ 	/* Make sure there's no duplicate data in the queue,
+ 	 * and the decrypted status matches.
+@@ -449,7 +454,7 @@ static bool tls_strp_check_queue_ok(struct tls_strparser *strp)
+ 		len -= skb->len;
+ 		skb = skb->next;
+ 
+-		if (TCP_SKB_CB(skb)->seq != seq)
++		if (ctx->ops->get_skb_seq(skb) != seq)
+ 			return false;
+ 		if (skb_cmp_decrypted(first, skb))
+ 			return false;
+@@ -460,11 +465,11 @@ static bool tls_strp_check_queue_ok(struct tls_strparser *strp)
+ 
+ static void tls_strp_load_anchor_with_queue(struct tls_strparser *strp, int len)
+ {
+-	struct tcp_sock *tp = tcp_sk(strp->sk);
++	struct tls_context *ctx = tls_get_ctx(strp->sk);
+ 	struct sk_buff *first;
+ 	u32 offset;
+ 
+-	first = tcp_recv_skb(strp->sk, tp->copied_seq, &offset);
++	first = ctx->ops->recv_skb(strp->sk, &offset);
+ 	if (WARN_ON_ONCE(!first))
+ 		return;
+ 
+@@ -483,6 +488,7 @@ static void tls_strp_load_anchor_with_queue(struct tls_strparser *strp, int len)
+ 
+ bool tls_strp_msg_load(struct tls_strparser *strp, bool force_refresh)
+ {
++	struct tls_context *ctx = tls_get_ctx(strp->sk);
+ 	struct strp_msg *rxm;
+ 	struct tls_msg *tlm;
+ 
+@@ -490,7 +496,7 @@ bool tls_strp_msg_load(struct tls_strparser *strp, bool force_refresh)
+ 	DEBUG_NET_WARN_ON_ONCE(!strp->stm.full_len);
+ 
+ 	if (!strp->copy_mode && force_refresh) {
+-		if (unlikely(tcp_inq(strp->sk) < strp->stm.full_len)) {
++		if (unlikely(ctx->ops->inq(strp->sk) < strp->stm.full_len)) {
+ 			WRITE_ONCE(strp->msg_ready, 0);
+ 			memset(&strp->stm, 0, sizeof(strp->stm));
+ 			return false;
+@@ -511,9 +517,10 @@ bool tls_strp_msg_load(struct tls_strparser *strp, bool force_refresh)
+ /* Called with lock held on lower socket */
+ static int tls_strp_read_sock(struct tls_strparser *strp)
+ {
++	struct tls_context *ctx = tls_get_ctx(strp->sk);
+ 	int sz, inq;
+ 
+-	inq = tcp_inq(strp->sk);
++	inq = ctx->ops->inq(strp->sk);
+ 	if (inq < 1)
+ 		return 0;
+ 
+@@ -556,6 +563,8 @@ void tls_strp_check_rcv(struct tls_strparser *strp)
+ /* Lower sock lock held */
+ void tls_strp_data_ready(struct tls_strparser *strp)
+ {
++	struct tls_context *ctx = tls_get_ctx(strp->sk);
++
+ 	/* This check is needed to synchronize with do_tls_strp_work.
+ 	 * do_tls_strp_work acquires a process lock (lock_sock) whereas
+ 	 * the lock held here is bh_lock_sock. The two locks can be
+@@ -563,7 +572,7 @@ void tls_strp_data_ready(struct tls_strparser *strp)
+ 	 * allows a thread in BH context to safely check if the process
+ 	 * lock is held. In this case, if the lock is held, queue work.
+ 	 */
+-	if (sock_owned_by_user_nocheck(strp->sk)) {
++	if (ctx->ops->lock_is_held(strp->sk)) {
+ 		queue_work(tls_strp_wq, &strp->work);
+ 		return;
+ 	}
+@@ -583,10 +592,12 @@ static void tls_strp_work(struct work_struct *w)
+ 
+ void tls_strp_msg_done(struct tls_strparser *strp)
+ {
++	struct tls_context *ctx = tls_get_ctx(strp->sk);
++
+ 	WARN_ON(!strp->stm.full_len);
+ 
+ 	if (likely(!strp->copy_mode))
+-		tcp_read_done(strp->sk, strp->stm.full_len);
++		ctx->ops->read_done(strp->sk, strp->stm.full_len);
+ 	else
+ 		tls_strp_flush_anchor_copy(strp);
+ 
+diff --git a/net/tls/tls_sw.c b/net/tls/tls_sw.c
+index 20f8fc84c5f5..ad8066c2e248 100644
+--- a/net/tls/tls_sw.c
++++ b/net/tls/tls_sw.c
+@@ -1953,13 +1953,14 @@ tls_read_flush_backlog(struct sock *sk, struct tls_prot_info *prot,
+ 		       size_t len_left, size_t decrypted, ssize_t done,
+ 		       size_t *flushed_at)
+ {
++	struct tls_context *tls_ctx = tls_get_ctx(sk);
+ 	size_t max_rec;
+ 
+ 	if (len_left <= decrypted)
+ 		return false;
+ 
+ 	max_rec = prot->overhead_size - prot->tail_size + TLS_MAX_PAYLOAD_SIZE;
+-	if (done - *flushed_at < SZ_128K && tcp_inq(sk) > max_rec)
++	if (done - *flushed_at < SZ_128K && tls_ctx->ops->inq(sk) > max_rec)
+ 		return false;
+ 
+ 	*flushed_at = done;
+@@ -2445,6 +2446,7 @@ int tls_rx_msg_size(struct tls_strparser *strp, struct sk_buff *skb)
+ 	size_t cipher_overhead;
+ 	size_t data_len = 0;
+ 	int ret;
++	u32 seq;
+ 
+ 	/* Verify that we have a full TLS header, or wait for more data */
+ 	if (strp->stm.offset + prot->prepend_size > skb->len)
+@@ -2487,8 +2489,9 @@ int tls_rx_msg_size(struct tls_strparser *strp, struct sk_buff *skb)
+ 		goto read_failure;
+ 	}
+ 
++	seq = tls_ctx->ops->get_skb_seq(skb);
+ 	tls_device_rx_resync_new_rec(strp->sk, data_len + TLS_HEADER_SIZE,
+-				     TCP_SKB_CB(skb)->seq + strp->stm.offset);
++				     seq + strp->stm.offset);
+ 	return data_len + TLS_HEADER_SIZE;
+ 
+ read_failure:
 -- 
 2.51.0
 
