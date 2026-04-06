@@ -1,131 +1,138 @@
-Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E46433263B
-	for <mptcp@lists.linux.dev>; Mon,  6 Apr 2026 12:35:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF92A1F192E;
+	Mon,  6 Apr 2026 13:42:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775478915; cv=none; b=ifWzBKTR+ZffiBuok39Qwqw3iplZa4+y6zrDz8eH5kjpqS0MOmUO1nhwEbFNT3KOIzLZl0S8vTto4fEY4fP5ECFwR4STEp9TbhT3U45c4p+sWM9SyFH4wJrts/EtQ2DfKB9Stzmj24OmCJOHHE7hbRdegPnTC1QPk1zwe4RAkdQ=
+	t=1775482963; cv=none; b=gtXkLnP9czRqg7j31KLmWTLBeQVTCUZ4pjyFttORpHBACQ25Y39CcsmWGCnRDwsJ5o9quFrkkbakS6opo3TCGYk/uI+UbWuxNZdvIhkreMc0oqmhssPN8wsthukLIw6aMbKD5cYAIzBRbSODUDL/yx/V96YiBK8spk8VTUxOtz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775478915; c=relaxed/simple;
-	bh=qhQV2A/ECzNJnJ3a3dCPr2KyPp5gwDc1g5iYb2WnnKM=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
-	 MIME-Version:Content-Type; b=ous8TXmJ6eK39Gu6O0zkaeNH7eFjWXgd3h8/kwe0VVDMieFZeJYpLubJIxihTymNPEPx03qo00trGFONG9nQGp3+u7GSqucZ5SO9LBcoVk4WGFTCrqpat/3d+8K4RCjH2StHDatbYsSKyrlHdOBBd91565iJY02UYR86F3DMCvk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y0zle++F; arc=none smtp.client-ip=209.85.219.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1775482963; c=relaxed/simple;
+	bh=jANf0IObKTsu14cOcfV1CkIyvtSt/n5DZrs4qMON/tM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XsfgWGzmoxt+h6/ZfZ5jFeStpJvvVCbj6Nuqy9vtOXFm9zcOpA2R+VEX/p1bWE5+icC/dGdIji/puRAZdwMuRQ2BoNSq++TzsN9YaiGXVHdodwZLy0J0NNt1TPIW84uhmjbH4PWxryGwv1dkMQGfX4IvYoOGyGDykd9M6PXdtKI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sD1bEh8w; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y0zle++F"
-Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-899a5db525cso34028216d6.3
-        for <mptcp@lists.linux.dev>; Mon, 06 Apr 2026 05:35:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1775478913; x=1776083713; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=W7RWpag5vaV35UjjEfgo+f8VxE92VIYJvhneCv+J7ns=;
-        b=Y0zle++FAPy9BHiCXh5/uFnUi7/W54A3MGLRxaJpRzGcw6ET92TWk5AcX4Eyy3dIfb
-         B/GuW1Hh3mhHeXuz0F/hWakYu7ymS1SFNrxJ8wS0BUtfCEz2u9wWyUk5Np8tOwqs+kic
-         hR2DF3xHe8i+4Y3+EGiOLv6bencWK9AGOKKEQ9MElywi+9hf8woqTEC3FZtuMm494zuB
-         hAJHMnfKVqVbzzT6npkwKHyZktFIWsg5p0F5Wwyb1PgfxAb22eKVBJGC48fqycPrvdpw
-         z4FvbT+x/zPZnJ9BeGwue2MFAWTtronUM8sfJjgP1QfV29S4m+/jfOuZks8wQ56c3SoS
-         UIdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775478913; x=1776083713;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=W7RWpag5vaV35UjjEfgo+f8VxE92VIYJvhneCv+J7ns=;
-        b=V2DlhQ3TzrpwO3CYqQjEHCTB13ejvwZJfBISOeR52hl8g/wBEcMOfd2KqhkfvfRmf4
-         +vTnUYqZYqoFauaSFrEN9gp3ZGUOGOlJtw99tG4tnFSkHL5/2EzZbO2qBtOBhrnvwH22
-         bvkDO8jXkzQ3sX4HuEYW2flBMU006JnK/kfYoSbCKUKrRObUUjE8VD9JMc1ljpT0leot
-         AWennWCTB3lPrwanNuoPuZfRmXC6jZ0h4TCW24VbKh2iLo/xx3DH6SR0SM5NzBaXK4/n
-         2HOjU/4nd8cBG7czTHJNP/viLkIeZZtxqyNaR5IyVNoiWim+cGshJ2DafQ4kF4nVSJ3T
-         2G/Q==
-X-Gm-Message-State: AOJu0YxPKhzTtCC9oBb5spx3JVVcLH/BZ+gEf2vr/NLhs4phHEBMwdCx
-	2AoPbEiOc4NmOWRYshz2Tstc7MN7DRLjokTF61YwHj+uQPW1Hwyqkg4tmz99
-X-Gm-Gg: AeBDieu7DqYT/ujvhin6eXgDLaZjvanBSVcd/RxkSVzPZfru1qCHmdFljI09TC3k072
-	Xu4Xnz9Rmtm7SOiiju8522YgwnbFC+MoL2MshATAuBlXphT5nh3uEldM5q0+3ANg1Thw9zKxx4g
-	ztvRIrfGOHbpq/n0o3Arcli/TM9b3ennWYJXNy9pGtuhTVSSnEbIzbMImp/n+XX/CHVz6wdj+tL
-	HKBG0MtUjButCTsEDKoBRqSsVh8+ux0d9AxdCeicBEigTPkxzVQDJrdVbXTPZyyPrSCtFlQRCrb
-	OxmbPWRdaBUbSW4RiPBEI0vQ9wj4Vzm732R+sG40BntX0Djw3te1UE5PrPNKTk98NhwczViQbVv
-	/W/muCRmM02kIIV8jZF3Pgxxn3D/04BIrkutxohPNdUs7lhFvfEQ2F4+Viaa4CZMQFqAvA+HELf
-	XxxVkQPrmBJqs0BESKDMq64nXkp4ZvF1AJGTys
-X-Received: by 2002:a05:6214:29c4:b0:899:efbf:9287 with SMTP id 6a1803df08f44-8a7049c75dbmr203005906d6.31.1775478913009;
-        Mon, 06 Apr 2026 05:35:13 -0700 (PDT)
-Received: from [127.0.0.1] ([64.236.201.19])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8a596e03dc6sm140621626d6.34.2026.04.06.05.35.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Apr 2026 05:35:12 -0700 (PDT)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Jiayuan Chen <jiayuan.chen@linux.dev>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20260406031512.189159-1-jiayuan.chen@linux.dev>
-References: <20260406031512.189159-1-jiayuan.chen@linux.dev>
-Subject: Re: [PATCH net v2] mptcp: fix slab-use-after-free in
- __inet_lookup_established
-Message-ID: <157dc22c-113d-bc53-210e-fd60e98ad216@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 06 Apr 2026 12:35:12 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sD1bEh8w"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09004C4CEF7;
+	Mon,  6 Apr 2026 13:42:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1775482962;
+	bh=jANf0IObKTsu14cOcfV1CkIyvtSt/n5DZrs4qMON/tM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=sD1bEh8wpg/TJ3IOolGUORPcsGKlVZTYdefVGhBtzM2h7knswCIKlTYDv7PSO70BL
+	 Fr8QxYa4m925aDzF422fQZmW82TGBGByV2IjIKWv24J5HZ7EZpSdMgu4asbmJepTPG
+	 mRChSfBQ54+zmPOnDWn8EnGLGVFlgkkGRCQhvuyYEi7k1npvSLwQEwDblCUBLgs0UO
+	 vGVTvnPUneQaeqHrI1YB4X3y6sxhMrtbEqcRePpWQmfOx0E2hI0frnBnEflBVuWV0w
+	 lvinEn0h1E/OcnY/ETkoB2V6KVWCzSsQjkNNJvVgeagvG19n4/btwUgBR/Se4Trn8f
+	 ci6t2e7lWCOiQ==
+Message-ID: <63935f53-5701-48d1-815c-02695479bc47@kernel.org>
+Date: Mon, 6 Apr 2026 15:42:36 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH net v2] mptcp: fix slab-use-after-free in
+ __inet_lookup_established
+Content-Language: fr
+To: Jiayuan Chen <jiayuan.chen@linux.dev>
+Cc: stable@vger.kernel.org, Mat Martineau <martineau@kernel.org>,
+ Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org, mptcp@lists.linux.dev
+References: <20260406031512.189159-1-jiayuan.chen@linux.dev>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <20260406031512.189159-1-jiayuan.chen@linux.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 Hi Jiayuan,
 
-Thank you for your modifications, that's great!
+On 06/04/2026 05:15, Jiayuan Chen wrote:
+> The ehash table lookups are lockless and rely on
+> SLAB_TYPESAFE_BY_RCU to guarantee socket memory stability
+> during RCU read-side critical sections. Both tcp_prot and
+> tcpv6_prot have their slab caches created with this flag
+> via proto_register().
+> 
+> However, MPTCP's mptcp_subflow_init() copies tcpv6_prot into
+> tcpv6_prot_override during inet_init() (fs_initcall, level 5),
+> before inet6_init() (module_init/device_initcall, level 6) has
+> called proto_register(&tcpv6_prot). At that point,
+> tcpv6_prot.slab is still NULL, so tcpv6_prot_override.slab
+> remains NULL permanently.
+> 
+> This causes MPTCP v6 subflow child sockets to be allocated via
+> kmalloc (falling into kmalloc-4k) instead of the TCPv6 slab
+> cache. The kmalloc-4k cache lacks SLAB_TYPESAFE_BY_RCU, so
+> when these sockets are freed without SOCK_RCU_FREE (which is
+> cleared for child sockets by design), the memory can be
+> immediately reused. Concurrent ehash lookups under
+> rcu_read_lock can then access freed memory, triggering a
+> slab-use-after-free in __inet_lookup_established.
+> 
+> Fix this by splitting the IPv6-specific initialization out of
+> mptcp_subflow_init() into a new mptcp_subflow_v6_init(), called
+> from mptcp_proto_v6_init() before protocol registration. This
+> ensures tcpv6_prot_override.slab correctly inherits the
+> SLAB_TYPESAFE_BY_RCU slab cache.
 
-Our CI did some validations and here is its report:
+Thank you for this v2, it looks good to me:
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Unstable: 2 failed =
-test(s): packetdrill_dss packetdrill_fastopen =E2=9A=A0=EF=B8=8F=20
-- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/240292=
-52526
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-Initiator: Matthieu Baerts (NGI0)
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/269f5127d03d
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1077546
-
-
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+@Netdev maintainers: this patch can be applied in 'net' directly.
 
 Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
+
