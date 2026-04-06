@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39893318B9C
-	for <mptcp@lists.linux.dev>; Mon,  6 Apr 2026 12:20:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB89A318EF6
+	for <mptcp@lists.linux.dev>; Mon,  6 Apr 2026 12:20:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775478009; cv=none; b=Di1EAk4FS4nBRK61avJcu88dVxjHP4SySRLtDHtaOISI2fo+D0ww3tMioWbwYJVEFNMG/dzjWCJ62H5LnCfZeTo5ovcNQULtkKNvjqL9QbG1FWxmcRbtAAArSI7DNrlBiexb54zqUNkr4hR3s4e9Ak3ISHB5zcqRtlg+pr5l//w=
+	t=1775478011; cv=none; b=uajQEeVsVjuEn+ibG2wh8TJAm+mKnMoqr3t3zV8ZkJf1EBm7Pe0HKNFO0Bodpl9tj6nS1psqcfZYPHDREL2POkg6GdkkF7FWVkoJ34xv5xy/mgs+9n4EU3KqZ+TbzB8t3LLQwAqqaG3Dq2YKRQveiGGfX+zN3kU0gWXOHCuAWBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775478009; c=relaxed/simple;
-	bh=6GzcsaFMq28d0FWn520aOq92c8IsBigTgiZ49vjCiME=;
+	s=arc-20240116; t=1775478011; c=relaxed/simple;
+	bh=jkRGq64Rf3n+mGcXg3lE8TykyXEweiZS76DCihu4OZY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LxTs1rxw6W1Rirg/o7F/3Y10PJesZ0Rr3O1PIvPdk4D9ZipBZX9E5Jqh7Uxw8dLfTa6OyWxZ2VGnXpETIfuDhdf7ORwhkOyn2GBout2YNQgtDIfyQTzuPVrlAs1mwDg5MPMgDzw6cFhYiAHb+L/YKENWuyHhc+yi0CLX13gwnBE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CcZ8pS96; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=cneTvqRpb6rwO+d114yHFBEqqWC/GJR1x7/Z/AmXhmj7gmiDaH8k1nuDS8P+xMURizxhYrnhJkROsug8bwfLmrqLS8E+N1+vKw3y5EGZg2nbBAtbgJTNe38aleNT4h2ohrtfJvbgYezhvRVYXI+szZbQTKCKtTTJuRjBb0o+6cI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qm+8Q+f9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CcZ8pS96"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95C4BC2BC9E;
-	Mon,  6 Apr 2026 12:20:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qm+8Q+f9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA727C19425;
+	Mon,  6 Apr 2026 12:20:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775478009;
-	bh=6GzcsaFMq28d0FWn520aOq92c8IsBigTgiZ49vjCiME=;
+	s=k20201202; t=1775478011;
+	bh=jkRGq64Rf3n+mGcXg3lE8TykyXEweiZS76DCihu4OZY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=CcZ8pS963mEhOzhI9TtU9cEX+60o20EIOOvnLvja1du9uiVg5uCQdIpdLxrCkLoFr
-	 8MS/PWple0EcE99+Ydxd3xUNRqbiEFXcB/aqYreFl7TBL0gLUIbI52EJ77MMOpDMgd
-	 VRLCB5Z5g12wqje5j3WgeNhtLXaLjRk0IWSaAlgTjtRdV4ZgNfjSsZTx/pld4AYZxg
-	 Romt2t2gi/Cqkb7unqRJBhGtQsvjpfZNVMyd48PCLddYCrxSmO3i0DrF0B1W8cEtUp
-	 pBqBq6u4omrkI0Qhry8pM9+kSpnOotEgqIrc28xqeT0PLA0x6eCv1Jv8p0VLLp9qx2
-	 RgkDKDD0gRUsA==
+	b=qm+8Q+f9Wa6ivfAj/0a8rt1yLkla2/O6+PRQjKBj74g/V2HUqTKPffjRqOz6VBIhw
+	 RJbQ2Et6XxCh5Zl0GjA8gPL4zFV/ZH2md/hlG+sS6dC9/a5p4Jzndz2ww10g7MigfK
+	 kp28IJzFjQM28vWGHWAF4JPOSKAFOjWrjTIu3Ba05yoHPhgSj0zn/RsV1rgs/rZEHg
+	 uyby6wuE3MVYgypmNNHTFcz4yprmDo7sH5uSUUcQBiVT5/XDwUPyxfKhkAq5KGaOMQ
+	 79bvLticwWfAsSD2UQDZa39ZSMvw0OcFdxR8UYbWubDIFhTtJhjxz+Xk4z1kvF1PQZ
+	 Z+MKEKX42dIMQ==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>,
 	Gang Yan <yangang@kylinos.cn>
-Subject: [RFC mptcp-next v14 06/15] tls: disable device offload for mptcp sockets
-Date: Mon,  6 Apr 2026 20:18:46 +0800
-Message-ID: <2509eec8a60a3a34074b11cdab205fcc634a7d92.1775476921.git.tanggeliang@kylinos.cn>
+Subject: [RFC mptcp-next v14 07/15] mptcp: update ulp getsockopt for tls support
+Date: Mon,  6 Apr 2026 20:18:47 +0800
+Message-ID: <7a0590d4080526199545a59005ee0aa1b6478a3a.1775476921.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <cover.1775476921.git.tanggeliang@kylinos.cn>
 References: <cover.1775476921.git.tanggeliang@kylinos.cn>
@@ -46,40 +46,124 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-MPTCP TLS hardware offload is not yet implemented. Return -EOPNOTSUPP
-when attempting to enable device offload on MPTCP sockets.
+This patch extracts TCP_ULP getsockopt operation into a tcp_sock_get_ulp()
+helper so that it can also be used in MPTCP.
+
+TCP_ULP was obtained by calling mptcp_getsockopt_first_sf_only() to get
+ULP of the first subflow. Now that the mechanism has changed, a new helper
+mptcp_getsockopt_tcp_ulp() is added to get ULP of msk.
 
 Co-developed-by: Gang Yan <yangang@kylinos.cn>
 Signed-off-by: Gang Yan <yangang@kylinos.cn>
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- net/tls/tls_device.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ include/linux/tcp.h |  1 +
+ net/ipv4/tcp.c      | 36 ++++++++++++++++++++++--------------
+ net/mptcp/sockopt.c | 18 ++++++++++++++++++
+ 3 files changed, 41 insertions(+), 14 deletions(-)
 
-diff --git a/net/tls/tls_device.c b/net/tls/tls_device.c
-index 99c8eff9783e..6744c2494740 100644
---- a/net/tls/tls_device.c
-+++ b/net/tls/tls_device.c
-@@ -1074,6 +1074,9 @@ int tls_set_device_offload(struct sock *sk)
- 	ctx = tls_get_ctx(sk);
- 	prot = &ctx->prot_info;
+diff --git a/include/linux/tcp.h b/include/linux/tcp.h
+index 6982f10e826b..2bb1cbd3eeab 100644
+--- a/include/linux/tcp.h
++++ b/include/linux/tcp.h
+@@ -653,6 +653,7 @@ void tcp_sock_set_quickack(struct sock *sk, int val);
+ int tcp_sock_set_syncnt(struct sock *sk, int val);
+ int tcp_sock_set_user_timeout(struct sock *sk, int val);
+ int tcp_sock_set_maxseg(struct sock *sk, int val);
++int tcp_sock_get_ulp(struct sock *sk, sockptr_t optval, sockptr_t optlen);
  
-+	if (sk->sk_protocol == IPPROTO_MPTCP)
-+		return -EOPNOTSUPP;
+ static inline bool dst_tcp_usec_ts(const struct dst_entry *dst)
+ {
+diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
+index 4b8cf7ca2695..c3c6cd6ee95a 100644
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -4473,6 +4473,27 @@ struct sk_buff *tcp_get_timestamping_opt_stats(const struct sock *sk,
+ 	return stats;
+ }
+ 
++int tcp_sock_get_ulp(struct sock *sk, sockptr_t optval, sockptr_t optlen)
++{
++	struct inet_connection_sock *icsk = inet_csk(sk);
++	int len;
 +
- 	if (ctx->priv_ctx_tx)
- 		return -EEXIST;
- 
-@@ -1196,6 +1199,9 @@ int tls_set_device_offload_rx(struct sock *sk, struct tls_context *ctx)
- 	struct net_device *netdev;
- 	int rc = 0;
- 
-+	if (sk->sk_protocol == IPPROTO_MPTCP)
-+		return -EOPNOTSUPP;
++	if (copy_from_sockptr(&len, optlen, sizeof(int)))
++		return -EFAULT;
++	len = min_t(unsigned int, len, TCP_ULP_NAME_MAX);
++	if (!icsk->icsk_ulp_ops) {
++		len = 0;
++		if (copy_to_sockptr(optlen, &len, sizeof(int)))
++			return -EFAULT;
++		return 0;
++	}
++	if (copy_to_sockptr(optlen, &len, sizeof(int)))
++		return -EFAULT;
++	if (copy_to_sockptr(optval, icsk->icsk_ulp_ops->name, len))
++		return -EFAULT;
++	return 0;
++}
 +
- 	if (ctx->crypto_recv.info.version != TLS_1_2_VERSION)
- 		return -EOPNOTSUPP;
+ int do_tcp_getsockopt(struct sock *sk, int level,
+ 		      int optname, sockptr_t optval, sockptr_t optlen)
+ {
+@@ -4582,20 +4603,7 @@ int do_tcp_getsockopt(struct sock *sk, int level,
+ 		return 0;
  
+ 	case TCP_ULP:
+-		if (copy_from_sockptr(&len, optlen, sizeof(int)))
+-			return -EFAULT;
+-		len = min_t(unsigned int, len, TCP_ULP_NAME_MAX);
+-		if (!icsk->icsk_ulp_ops) {
+-			len = 0;
+-			if (copy_to_sockptr(optlen, &len, sizeof(int)))
+-				return -EFAULT;
+-			return 0;
+-		}
+-		if (copy_to_sockptr(optlen, &len, sizeof(int)))
+-			return -EFAULT;
+-		if (copy_to_sockptr(optval, icsk->icsk_ulp_ops->name, len))
+-			return -EFAULT;
+-		return 0;
++		return tcp_sock_get_ulp(sk, optval, optlen);
+ 
+ 	case TCP_FASTOPEN_KEY: {
+ 		u64 key[TCP_FASTOPEN_KEY_BUF_LENGTH / sizeof(u64)];
+diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+index de90a2897d2d..59742c956154 100644
+--- a/net/mptcp/sockopt.c
++++ b/net/mptcp/sockopt.c
+@@ -1393,6 +1393,23 @@ static int mptcp_put_int_option(struct mptcp_sock *msk, char __user *optval,
+ 	return 0;
+ }
+ 
++static int mptcp_getsockopt_tcp_ulp(struct sock *sk, char __user *optval,
++				    int __user *optlen)
++{
++	int ret, len;
++
++	if (copy_from_sockptr(&len, USER_SOCKPTR(optlen), sizeof(int)))
++		return -EFAULT;
++
++	if (len < 0)
++		return -EINVAL;
++
++	lock_sock(sk);
++	ret = tcp_sock_get_ulp(sk, USER_SOCKPTR(optval), USER_SOCKPTR(optlen));
++	release_sock(sk);
++	return ret;
++}
++
+ static int mptcp_getsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
+ 				    char __user *optval, int __user *optlen)
+ {
+@@ -1400,6 +1417,7 @@ static int mptcp_getsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
+ 
+ 	switch (optname) {
+ 	case TCP_ULP:
++		return mptcp_getsockopt_tcp_ulp(sk, optval, optlen);
+ 	case TCP_CONGESTION:
+ 	case TCP_INFO:
+ 	case TCP_CC_INFO:
 -- 
 2.51.0
 
