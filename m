@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF92A1F192E;
-	Mon,  6 Apr 2026 13:42:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC462371D19;
+	Mon,  6 Apr 2026 14:13:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775482963; cv=none; b=gtXkLnP9czRqg7j31KLmWTLBeQVTCUZ4pjyFttORpHBACQ25Y39CcsmWGCnRDwsJ5o9quFrkkbakS6opo3TCGYk/uI+UbWuxNZdvIhkreMc0oqmhssPN8wsthukLIw6aMbKD5cYAIzBRbSODUDL/yx/V96YiBK8spk8VTUxOtz8=
+	t=1775484805; cv=none; b=grxhQWSyemJFWWvmL7DChJtm7m18RoQSQuiVI/yvfkIchKNhwUf4s+ER2IMxQcoBmCe8w8lFfS2jAkVVofIBegt6ChSNixxWbftS/ePoleDhRw9Knr2/4EaWNy1T0Pf5cJfDzKrpiLmpIkRUKE0DIVpnT5rfDUh5uqrJFFbtpSQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775482963; c=relaxed/simple;
-	bh=jANf0IObKTsu14cOcfV1CkIyvtSt/n5DZrs4qMON/tM=;
+	s=arc-20240116; t=1775484805; c=relaxed/simple;
+	bh=2P7nhu2n6o0APZ12xRvAE1wF/VnlsD5jHOe9F41i8cU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XsfgWGzmoxt+h6/ZfZ5jFeStpJvvVCbj6Nuqy9vtOXFm9zcOpA2R+VEX/p1bWE5+icC/dGdIji/puRAZdwMuRQ2BoNSq++TzsN9YaiGXVHdodwZLy0J0NNt1TPIW84uhmjbH4PWxryGwv1dkMQGfX4IvYoOGyGDykd9M6PXdtKI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sD1bEh8w; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=EbjrOzeStVj8K/Avhms8zS3AHvMcN6RwT6Kz8j/9Z2eiRufZ5UnqMYFP3NPUWsptMucs7jQndwkhrfZP7pT4ZUdAs/y5yz2nrhMA69cRjh721SNIYDH365fyQoL21hmTS4SsGRMbwMd9FsWSrDwlsTwVZO2TYxbS1V7X5mdQKUA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=empCJTdB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sD1bEh8w"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09004C4CEF7;
-	Mon,  6 Apr 2026 13:42:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="empCJTdB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 182ADC4CEF7;
+	Mon,  6 Apr 2026 14:13:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775482962;
-	bh=jANf0IObKTsu14cOcfV1CkIyvtSt/n5DZrs4qMON/tM=;
+	s=k20201202; t=1775484805;
+	bh=2P7nhu2n6o0APZ12xRvAE1wF/VnlsD5jHOe9F41i8cU=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=sD1bEh8wpg/TJ3IOolGUORPcsGKlVZTYdefVGhBtzM2h7knswCIKlTYDv7PSO70BL
-	 Fr8QxYa4m925aDzF422fQZmW82TGBGByV2IjIKWv24J5HZ7EZpSdMgu4asbmJepTPG
-	 mRChSfBQ54+zmPOnDWn8EnGLGVFlgkkGRCQhvuyYEi7k1npvSLwQEwDblCUBLgs0UO
-	 vGVTvnPUneQaeqHrI1YB4X3y6sxhMrtbEqcRePpWQmfOx0E2hI0frnBnEflBVuWV0w
-	 lvinEn0h1E/OcnY/ETkoB2V6KVWCzSsQjkNNJvVgeagvG19n4/btwUgBR/Se4Trn8f
-	 ci6t2e7lWCOiQ==
-Message-ID: <63935f53-5701-48d1-815c-02695479bc47@kernel.org>
-Date: Mon, 6 Apr 2026 15:42:36 +0200
+	b=empCJTdBBTuUKZqnWlozijYep6KhdQ0ElZHQ7j2k/fp/a8+AgNDgoFWf1dcv73WU/
+	 l7ZRCT2dI33s5jo6Ixmdx4wFynF+ix8GRs/4bP4OVUVHVgREaIZJxdbTTRmlp+1L6X
+	 fwckUo67Gi0ZkqPA2RVgfrIqZ3kVFJZUQ2ZLU2nLCc7JbbJJK4X7c5g5+/DJhfx5Pa
+	 aQfx1UT4IE++3/CqFVPEWloUs3G6oywfys6vaIIMRfAdhKn0TLfjNGp/hhFAqMPexA
+	 3qB9U+UTYOWWVaKOJ8xW4P44/hNLo9lrFAqaV33EM1ATTiWaCVvY9Kr+nOtCgRmHcB
+	 X9MH/+vkxvF1w==
+Message-ID: <268a9951-c1a6-4b24-8578-0a8bf4b957a3@kernel.org>
+Date: Mon, 6 Apr 2026 16:13:14 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,16 +35,24 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH net v2] mptcp: fix slab-use-after-free in
- __inet_lookup_established
+Subject: Re: [PATCH v3 net-next] net: use get_random_u{16,32,64}() where
+ appropriate
 Content-Language: fr
-To: Jiayuan Chen <jiayuan.chen@linux.dev>
-Cc: stable@vger.kernel.org, Mat Martineau <martineau@kernel.org>,
- Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org, mptcp@lists.linux.dev
-References: <20260406031512.189159-1-jiayuan.chen@linux.dev>
+To: David Carlier <devnexen@gmail.com>
+Cc: Jakub Kicinski <kuba@kernel.org>, "David S . Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Paolo Abeni <pabeni@redhat.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ Simon Horman <horms@kernel.org>, Ilya Dryomov <idryomov@gmail.com>,
+ Johannes Berg <johannes@sipsolutions.net>,
+ Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
+ Aaron Conole <aconole@redhat.com>, Ilya Maximets <i.maximets@ovn.org>,
+ Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+ Xin Long <lucien.xin@gmail.com>, Jon Maloy <jmaloy@redhat.com>,
+ netdev@vger.kernel.org, ceph-devel@vger.kernel.org,
+ linux-wireless@vger.kernel.org, mptcp@lists.linux.dev, dev@openvswitch.org,
+ linux-sctp@vger.kernel.org, tipc-discussion@lists.sourceforge.net,
+ linux-kernel@vger.kernel.org
+References: <20260405154816.4774-1-devnexen@gmail.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -90,46 +98,43 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20260406031512.189159-1-jiayuan.chen@linux.dev>
+In-Reply-To: <20260405154816.4774-1-devnexen@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Jiayuan,
+Hi David,
 
-On 06/04/2026 05:15, Jiayuan Chen wrote:
-> The ehash table lookups are lockless and rely on
-> SLAB_TYPESAFE_BY_RCU to guarantee socket memory stability
-> during RCU read-side critical sections. Both tcp_prot and
-> tcpv6_prot have their slab caches created with this flag
-> via proto_register().
-> 
-> However, MPTCP's mptcp_subflow_init() copies tcpv6_prot into
-> tcpv6_prot_override during inet_init() (fs_initcall, level 5),
-> before inet6_init() (module_init/device_initcall, level 6) has
-> called proto_register(&tcpv6_prot). At that point,
-> tcpv6_prot.slab is still NULL, so tcpv6_prot_override.slab
-> remains NULL permanently.
-> 
-> This causes MPTCP v6 subflow child sockets to be allocated via
-> kmalloc (falling into kmalloc-4k) instead of the TCPv6 slab
-> cache. The kmalloc-4k cache lacks SLAB_TYPESAFE_BY_RCU, so
-> when these sockets are freed without SOCK_RCU_FREE (which is
-> cleared for child sockets by design), the memory can be
-> immediately reused. Concurrent ehash lookups under
-> rcu_read_lock can then access freed memory, triggering a
-> slab-use-after-free in __inet_lookup_established.
-> 
-> Fix this by splitting the IPv6-specific initialization out of
-> mptcp_subflow_init() into a new mptcp_subflow_v6_init(), called
-> from mptcp_proto_v6_init() before protocol registration. This
-> ensures tcpv6_prot_override.slab correctly inherits the
-> SLAB_TYPESAFE_BY_RCU slab cache.
+On 05/04/2026 17:48, David Carlier wrote:
+> Use the typed random integer helpers instead of
+> get_random_bytes() when filling a single integer variable.
+> The helpers return the value directly, require no pointer
+> or size argument, and better express intent.
 
-Thank you for this v2, it looks good to me:
+Regarding the modifications in net/mptcp, it looks good to me:
 
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org> # net/mptcp
 
-@Netdev maintainers: this patch can be applied in 'net' directly.
+> Skipped sites writing into __be16 fields (netdevsim) where
+> a direct assignment would trigger sparse endianness warnings.
+
+Note that the AI reviews are mentioning that auth->client_challenge from
+net/ceph/auth_x.c is declared as __le64, and it might then also cause
+sparse warnings:
+
+  https://sashiko.dev/#/patchset/20260405154816.4774-1-devnexen%40gmail.com
+
+
+It looks like they are right:
+
+  $ make C=1 net/ceph/auth_x.o
+  net/ceph/auth_x.c:574:40: warning: incorrect type in assignment (different base types)
+  net/ceph/auth_x.c:574:40:    expected restricted __le64 [usertype] client_challenge
+  net/ceph/auth_x.c:574:40:    got unsigned long long
+
+
+Note that the Netdev CI currently doesn't check sparse warnings:
+
+  https://github.com/linux-netdev/nipa/issues/76
 
 Cheers,
 Matt
