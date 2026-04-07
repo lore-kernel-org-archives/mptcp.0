@@ -1,82 +1,103 @@
-Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22B1037DE9C
-	for <mptcp@lists.linux.dev>; Tue,  7 Apr 2026 08:45:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.186
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEDD02ED141;
+	Tue,  7 Apr 2026 08:45:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775551529; cv=none; b=S96Mm00950T3oeKdWBVl8JtXJvNj4bCcTxS8uGMer6cCqc0R1w9XSB31pbe+qt7SjYuTNygNv+dfXyo93l4YsK2CuIrGHWQ09+3JFh1fRss1aVem86CuxYSHPkys2ZwpRXgdXhSVEG9fgnVr/+Um5w2dP//1zPFhNfHzskVhRZ4=
+	t=1775551531; cv=none; b=p4axW/UISuCqK+I/CYQavFUOkZ8wbn16aQdP/XAecwsO6Y0UNN8m8hmQNpz5iZQSEhTg3JyuijM4wpFl1cxIo6JM62np4u2O/E9cd4O1ihdaztnAnXmSjuzAWigPQp2AhNc/K/TlNsvbNvVZ5HcTf82qfgk1E2eyWXDMuOmwhIM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775551529; c=relaxed/simple;
-	bh=g2eW1nMdaW6VL+m0ASgXi99o9/qf9CWGwcJAU1pHkKA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZkCYA8bik1HcmwrJC4SQK86/B+53wpsAAjxkDTgE1U2RyNgub37XzF9Gp+JMVxr9wV4bcEXt3oy+FLq1RSEg8eVD8YRd6tVpyLLfd3q+3VSt33sap6kIXzpAroGy7i7nDjpgFZyi5/JLpKJrS7vEyQjwCqGhVhYI0t0MZbWaK6s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=mSRMufMr; arc=none smtp.client-ip=91.218.175.186
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1775551531; c=relaxed/simple;
+	bh=m3OfzQ/7lPnEqmiY2vJFdVN/V5m87Zv7hfY8AuSS9RA=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=mbtIFR4J4sfR4RPsZtR+PcUHwj/JaOP8QycwVzweCL6DEDdoqwdEI/2OCChsP3F6EKVqkPPR7o34RVopcGlW7cZ3O6vcWU+QISKy1zOZ8ThTIxD/3YTz6RoY/cnPoJ7vQ9zFdgdDiSAeQ0cbo32IkNlZouNbtFu7AES7XFD7ecQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BaFx76So; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="mSRMufMr"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1775551526;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9UhkCR8dMWNhP0Ox118MboKkrzRl7+ZLC3l7hzIYGbw=;
-	b=mSRMufMrKD5MHwzlj0hlL3FCLwpqm0N1g+oIg8gu1rXd46hOCBjFUesnJ0enu7I29SuWes
-	hSmVJYho6iRyP2aXlDg5o6UeEs7wIwl5SYNraIZamUrKl7G9m/sDq7y8CqcSIKxlUSQPmt
-	bD0lTNoToyFU+UORKvBxBlzjGD5WwEU=
-From: Gang Yan <gang.yan@linux.dev>
-To: mptcp@lists.linux.dev
-Cc: Gang Yan <yangang@kylinos.cn>
-Subject: [PATCH mptcp-net v3 1/2] mptcp: sync the msk->sndbuf at accept() time
-Date: Tue,  7 Apr 2026 16:45:17 +0800
-Message-ID: <79d5862da1c7db353e27c56a26da78e6dd548659.1775551182.git.yangang@kylinos.cn>
-In-Reply-To: <cover.1775551182.git.yangang@kylinos.cn>
-References: <cover.1775551182.git.yangang@kylinos.cn>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BaFx76So"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21BF6C116C6;
+	Tue,  7 Apr 2026 08:45:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1775551530;
+	bh=m3OfzQ/7lPnEqmiY2vJFdVN/V5m87Zv7hfY8AuSS9RA=;
+	h=From:Subject:Date:To:Cc:From;
+	b=BaFx76SozDlGLZVRZpQjNvzSxED0mV+e/7eEkieo6sW95XPQnWnk4TVJl7lVwrsaD
+	 doyB6Gjc4E39SPNHDsN7OfGM8Vi0VbunthbVLKP06lmrl4rJgfT1sZokWnLZN5j32T
+	 dPm7knRQG3Df4UnKYtcqXmBl/5GnkO/Hr9g5zMb2uCB03NZBht1VKUPE/cXsLObZot
+	 fNoplZPYTlOtI1KEjmDG8I9pwjrX5gesNegO1XaxJrjKd8TPZnkG9HRObNPA3qjqWP
+	 8MHRU3bfkyAO/XLiV9PFWa/7KKoz3rGzhLz6TVrcKsxqMBLcKkr1jIom75eKJzCqG3
+	 BMEaDZ4I8YKyg==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH net-next v2 0/2] mptcp: autotune related improvement
+Date: Tue, 07 Apr 2026 10:45:16 +0200
+Message-Id: <20260407-net-next-mptcp-reduce-rbuf-v2-0-0d1d135bf6f6@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/32NwQ6CMBBEf8Xs2TVtwSKe/A/DAcoWGrWQbSEYw
+ r/bEL16mMPLZOatEIgdBbgeVmCaXXCDT6COBzB97TtC1yYGJZQWmdDoKaYsEV9jNCMytZMh5Ga
+ ymEutm1rbptAZpIORybplP7/DbwdVanoX4sDv3TrLvf8Kyn+CWaLAi80LqYS2pTnfHsSenqeBO
+ 6i2bfsAY5WdSs8AAAA=
+X-Change-ID: 20260306-net-next-mptcp-reduce-rbuf-4166ba6fb763
+To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Simon Horman <horms@kernel.org>, Florian Westphal <fw@strlen.de>
+Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, 
+ linux-kernel@vger.kernel.org, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
+ Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+ linux-trace-kernel@vger.kernel.org
+X-Mailer: b4 0.15.1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1683; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=m3OfzQ/7lPnEqmiY2vJFdVN/V5m87Zv7hfY8AuSS9RA=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDKvHFH7vXXasvyvzg0n7d49PauwKbUxkuP5bVEl5bAVb
+ 7yiHZYKdpSyMIhxMciKKbJIt0Xmz3xexVvi5WcBM4eVCWQIAxenAExE7ynDfz+LjKr9ce/booyu
+ tx2/PufZixXyl5z/mWomur98Vxe6+ykjw6/F6+pYi69OXhQXdG/a6flfXr/X/8b+U1B4hfrVqiW
+ ntJgA
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-From: Gang Yan <yangang@kylinos.cn>
+Here are two patches from Paolo that have been crafted a couple of
+months ago, but needed more validation because they were indirectly
+causing instabilities in the sefltests. The root cause has been fixed in
+'net' recently in commit 8c09412e584d ("selftests: mptcp: more stable
+simult_flows tests").
 
-After an MPTCP connection is established, the sk_sndbuf of client's msk
-can be updated through 'subflow_finish_connect'. However, the newly
-accepted msk on the server side has a small sk_sndbuf than
-msk->first->sk_sndbuf:
+These patches refactor the receive space and RTT estimator, overall
+making DRS more correct while avoiding receive buffer drifting to
+tcp_rmem[2], which in turn makes the throughput more stable and less
+bursty, especially with high bandwidth and low delay environments.
 
-'''
-MPTCP: msk:00000000e55b09db, msk->sndbuf:20480, msk->first->sndbuf:2626560
-'''
+Note that the first patch addresses a very old issue. 'net-next' is
+targeted because the change is quite invasive and based on a recent
+backlog refactor. The 'Fixes' tag is then there more as a FYI, because
+backporting this patch will quickly be blocked due to large conflicts.
 
-This patch synchronizes the sk_sndbuf by triggering its update during
-accept.
-
-Fixes: 8005184fd1ca ("mptcp: refactor sndbuf auto-tuning")
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/602
-Signed-off-by: Gang Yan <yangang@kylinos.cn>
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- net/mptcp/protocol.c | 1 +
- 1 file changed, 1 insertion(+)
+Changes in v2:
+- Patch 1: add missing READ_ONCE() and remove unused entry. (AI)
+- Link to v1: https://patch.msgid.link/20260309-net-next-mptcp-reduce-rbuf-v1-0-8f471206f9c5@kernel.org
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 17b9a8c13ebf..6f6c8cabf74f 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -4252,6 +4252,7 @@ static int mptcp_stream_accept(struct socket *sock, struct socket *newsock,
- 
- 		mptcp_graft_subflows(newsk);
- 		mptcp_rps_record_subflows(msk);
-+		__mptcp_propagate_sndbuf(newsk, mptcp_subflow_tcp_sock(subflow));
- 
- 		/* Do late cleanup for the first subflow as necessary. Also
- 		 * deal with bad peers not doing a complete shutdown.
--- 
-2.43.0
+---
+Paolo Abeni (2):
+      mptcp: better mptcp-level RTT estimator
+      mptcp: add receive queue awareness in tcp_rcv_space_adjust()
+
+ include/trace/events/mptcp.h |  2 +-
+ net/mptcp/protocol.c         | 71 +++++++++++++++++++++++++-------------------
+ net/mptcp/protocol.h         | 37 ++++++++++++++++++++++-
+ 3 files changed, 77 insertions(+), 33 deletions(-)
+---
+base-commit: c149d90e260ca1b6b9175468955a15c4d95a9f3b
+change-id: 20260306-net-next-mptcp-reduce-rbuf-4166ba6fb763
+
+Best regards,
+--  
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
