@@ -1,66 +1,105 @@
-Received: from mta-spfb-e01.commufa.jp (mta-spfb-e01.commufa.jp [106.153.250.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E7A538758D
-	for <mptcp@lists.linux.dev>; Tue,  7 Apr 2026 23:55:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=106.153.250.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBF5B3B27D2;
+	Wed,  8 Apr 2026 13:08:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775606113; cv=none; b=cif3trnWh3LxKujxdOYxpJnu4U/QIwDQC6UYMspiEPTmFfttuW+AdAc9dccJsBA1yi4LI+DDw+w+5kUbVksedEOArW43R9iDAf0dbVPdZOrLSoP3lt2GxxtdIHJbFy45ihIK9z66Ed4mfuxb+zcQ8qZVo5wwZX5N3IiumgF2S5k=
+	t=1775653704; cv=none; b=Q+cp5bJYWd/RJlnIkLmAwv9BqMHVmhnXp0b7nD8G5v0n2DwJVch4Ws0kWR7Wkww+8Mo/BFA85jHGdsLWr+ybh7bVQBOq8ysCd0cf9wF7RUlfVj3QKiJLhklniQTwK4upkuP5CGxFRGe/eVsD3hkUmKBG3dMmTmn2sFGnQiwdG6E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775606113; c=relaxed/simple;
-	bh=9mg5M8JzStoGX6OAzSWgtKp2QSwMmuyfhSPRDpb/kwM=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=fM33i6Z2O5W04mFyb6W0JUbCwEOQ4NhA5F4pz30gOuTFjgZfP1SN8DvNKcL+0JmzS+eBoFtIZlT8vVcO4XGQw2k1MN8vIOreRiHVkzvtqL9E4f2ZTtozyBM/eSm38zPhcZGJ+waVauzvY9zWvBY6yk3gu0WXVKe3FSKq2jAHblA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=sf.commufa.jp; spf=pass smtp.mailfrom=sf.commufa.jp; dkim=pass (2048-bit key) header.d=sf.commufa.jp header.i=@sf.commufa.jp header.b=CjHntgTf; arc=none smtp.client-ip=106.153.250.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=sf.commufa.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sf.commufa.jp
+	s=arc-20240116; t=1775653704; c=relaxed/simple;
+	bh=EUvdbzYF1Iub7xY0mp83gMzacz/3Ecvi+GE9RR1J0Vo=;
+	h=Subject:To:Cc:From:Date:In-Reply-To:Message-ID:MIME-Version:
+	 Content-Type; b=qmoEIuyjJjN+9VhK9iXC7kzaHGIvCpz61wGV5pTjHoxNqJQ7/CZS41eEhg9zaOUPUvu0qnP5FXbSVQ6ZMF3F0UcJMbYAhUjFuScyzJPNkzQcX8IrzW+XOp7vePU02rbNccO3XcyQ6M6fVLwT4QPqL4kJpctWCJRKiyLJrbHCJ78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=iayaQx0a; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sf.commufa.jp header.i=@sf.commufa.jp header.b="CjHntgTf"
-Received: from mta-snd-e03.commufa.jp by mta-sp-e03.commufa.jp with ESMTP
-          id <20260407235239077.ORIO.29338.mta-snd-e03.commufa.jp@commufa.jp>
-          for <mptcp@lists.linux.dev>; Wed, 8 Apr 2026 08:52:39 +0900
-Received: from sf.commufa.jp by mta-snd-e03.commufa.jp with ESMTP
-          id <20260407235238296.IGFN.20493.sf.commufa.jp@commufa.jp>
-          for <mptcp@lists.linux.dev>; Wed, 8 Apr 2026 08:52:38 +0900
-Reply-To: export@stsglobalcompany.com
-From: STS GLOBAL COMPANY <cubsuper@sf.commufa.jp>
-To: mptcp@lists.linux.dev
-Subject: Re: Inquiry about your products
-Date: 07 Apr 2026 16:52:37 -0700
-Message-ID: <20260407034631.7D7C0F15FC485954@sf.commufa.jp>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="iayaQx0a"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01380C19421;
+	Wed,  8 Apr 2026 13:08:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1775653704;
+	bh=EUvdbzYF1Iub7xY0mp83gMzacz/3Ecvi+GE9RR1J0Vo=;
+	h=Subject:To:Cc:From:Date:In-Reply-To:From;
+	b=iayaQx0ay8TX9K63bUwMz/OcC10fCwoR+RKCUV8mRzjuypnLWu/3sj9g7cHOCFjey
+	 uSZiRt87sKgeR+gkvwoWhK3N3Lo9meKJvPiwxevw3DOvayg8YPRj8cUipb7NtVBQFz
+	 nOsB0R1Uv2fJGPwzIghsvKHtY2KFg9Xzspt1DAdk=
+Subject: Patch "MPTCP: fix lock class name family in pm_nl_create_listen_socket" has been added to the 6.12-stable tree
+To: gregkh@linuxfoundation.org,kuba@kernel.org,lixiasong1@huawei.com,matttbe@kernel.org,mptcp@lists.linux.dev
+Cc: <stable-commits@vger.kernel.org>
+From: <gregkh@linuxfoundation.org>
+Date: Wed, 08 Apr 2026 15:07:41 +0200
+In-Reply-To: <20260402173309.3282169-2-matttbe@kernel.org>
+Message-ID: <2026040841-diocese-cheese-a9cb@gregkh>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain;
-	charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Authentication-Info: gah09h46
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sf.commufa.jp; s=default-1th84yt82rvi; t=1775605959;
- bh=9mg5M8JzStoGX6OAzSWgtKp2QSwMmuyfhSPRDpb/kwM=;
- h=Reply-To:From:To:Subject:Date;
- b=CjHntgTfgf1xDVwlabX3e4PyNS7XAfxSSwKOm14wFxIsC/Bdyx+gLu24b7VOv2EQawDWHQFw
- g6jFUtfYaYK0vKeRlzHRxQbPEXlZc0I03MLRTLq706urDT4cP+YMzDaMfWNEGVZb4wKw4P9Lrc
- Y5CjYh0fnBHvIyo/2zGL8RnjR9AHwP5f6Bq+t3XWOTBshUjNdOT0Dj9kVlLmfJAVmHO9H23a5B
- 8qKPo36oQ8dYdP+/xe9KyjdNy7k9RaNfeNgXRmuXpkYSdJkKlkw5fXmsDSvmplpCo/N3V9g96x
- 7vX3vIxoNHBWhv40eBzQATuqwtJdxKOrIhc2+oqIRa7HnT1Q==
+Content-Type: text/plain; charset=ANSI_X3.4-1968
+Content-Transfer-Encoding: 8bit
+X-stable: commit
+X-Patchwork-Hint: ignore 
 
-Hi Dear,
 
-I am writing to enquire about your product and would appreciate=20
-it if you could provide further information, including pricing,=20
-specifications, and availability.
+This is a note to let you know that I've just added the patch titled
 
-Please also let me know if there are any brochures or additional=20
-details you can share.
+    MPTCP: fix lock class name family in pm_nl_create_listen_socket
 
-I look forward to your response.
+to the 6.12-stable tree which can be found at:
+    http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
 
-Best Regards
-Nesmith Jones
-STS GLOBAL COMPANY., LTD.
-(Purchasing manager)
-287/308 Liap Khlong Lam Ko Phai Road
-LAT KRABANG - 10520
- THAILAND=20=20
+The filename of the patch is:
+     mptcp-fix-lock-class-name-family-in-pm_nl_create_listen_socket.patch
+and it can be found in the queue-6.12 subdirectory.
+
+If you, or anyone else, feels it should not be added to the stable tree,
+please let <stable@vger.kernel.org> know about it.
+
+
+From stable+bounces-233080-greg=kroah.com@vger.kernel.org Thu Apr  2 19:35:28 2026
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Date: Thu,  2 Apr 2026 19:33:10 +0200
+Subject: MPTCP: fix lock class name family in pm_nl_create_listen_socket
+To: stable@vger.kernel.org, gregkh@linuxfoundation.org
+Cc: MPTCP Upstream <mptcp@lists.linux.dev>, Li Xiasong <lixiasong1@huawei.com>, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, Jakub Kicinski <kuba@kernel.org>
+Message-ID: <20260402173309.3282169-2-matttbe@kernel.org>
+
+From: Li Xiasong <lixiasong1@huawei.com>
+
+commit 7ab4a7c5d969642782b8a5b608da0dd02aa9f229 upstream.
+
+In mptcp_pm_nl_create_listen_socket(), use entry->addr.family
+instead of sk->sk_family for lock class setup. The 'sk' parameter
+is a netlink socket, not the MPTCP subflow socket being created.
+
+Fixes: cee4034a3db1 ("mptcp: fix lockdep false positive in mptcp_pm_nl_create_listen_socket()")
+Signed-off-by: Li Xiasong <lixiasong1@huawei.com>
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Link: https://patch.msgid.link/20260319112159.3118874-1-lixiasong1@huawei.com
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+[ Conflict in pm_kernel.c, because commit 8617e85e04bd ("mptcp: pm:
+  split in-kernel PM specific code") is not in this version, and moves
+  code from pm_netlink.c to pm_kernel.c. ]
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ net/mptcp/pm_netlink.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -1186,7 +1186,7 @@ static struct lock_class_key mptcp_keys[
+ static int mptcp_pm_nl_create_listen_socket(struct sock *sk,
+ 					    struct mptcp_pm_addr_entry *entry)
+ {
+-	bool is_ipv6 = sk->sk_family == AF_INET6;
++	bool is_ipv6 = entry->addr.family == AF_INET6;
+ 	int addrlen = sizeof(struct sockaddr_in);
+ 	struct sockaddr_storage addr;
+ 	struct sock *newsk, *ssk;
+
+
+Patches currently in stable-queue which might be from matttbe@kernel.org are
+
+queue-6.12/mptcp-fix-lock-class-name-family-in-pm_nl_create_listen_socket.patch
