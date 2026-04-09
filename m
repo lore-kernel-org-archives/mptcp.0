@@ -1,151 +1,85 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9CC43CEB9C;
-	Wed,  8 Apr 2026 13:31:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9476636AB7B;
+	Thu,  9 Apr 2026 02:40:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775655085; cv=none; b=mS5qeo3Ke3SjHGk1agy/BKYfy0Mk/qq1EzapPMGj4UmvQKSpdEMuLjEg1MD5IigCZcalymcjOjA0r3sqZSSd0GOuEwv7xJgh50Za8EN6Ky0K8P8CIntHvxj5Cil8dQic1fIjJXsoQx4qpC7MFEh2uN2HoTIJScaPS5I3GGouNAE=
+	t=1775702448; cv=none; b=n8Sh2Y17kj8qdsAH6Sy+YE87NZa2riEcOxr279+GBLMbxQYXaVJHe4sMcCcHW4DO8RhZXIQXQkgLSAznUedHNgz0KNsyv44+FJmQOkbkGtkweDZbl9unNYga6zPwyME2dXPkT5nT21UQ8kTGgPJe2SloJCqiu1ZhruA88rROl9k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775655085; c=relaxed/simple;
-	bh=ZeDtvD8QZmjvgcXH9yXNYA3hloxCEeiClGkPvzAAGNQ=;
-	h=Subject:To:Cc:From:Date:In-Reply-To:Message-ID:MIME-Version:
-	 Content-Type; b=KDsDxsL8wRhdB7VUKa4MQT4liOyd0DHW4Vz4B5z6UXwyHMgmcCW0LKjgbCOX94YiKhGvq7cq+UL7kYxvkw9eTm26ZhQwvYOB7AjPRXCZoZYlypyFjNI74Rez/K+J8K6eGar5XxsI7YgZFLwIKLQ9g+p9DWBzv7+EtBSu9pB/Mhc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=i/qg71N8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1775702448; c=relaxed/simple;
+	bh=+Noc+9+EBGnV4khiWUb560zb5tB/H+l3DU7nWirRqvg=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=Ex/4o/LAxSExKxHZ/BShGPtxn0duXl4xgS7VYxxifCkXzhvWehjfl7hfwKCAOnXNJVl+WRNAizxhCkQB6ycrYmr4Cpr4dph/9QyQeZkukevRozEmGlo3GUQxdc/QObHpEHmUTBf/P5KFwovlmEgZHeuRMpDfOP0FyCKUvk7lxlo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G8j97VF0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="i/qg71N8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80233C19421;
-	Wed,  8 Apr 2026 13:31:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1775655084;
-	bh=ZeDtvD8QZmjvgcXH9yXNYA3hloxCEeiClGkPvzAAGNQ=;
-	h=Subject:To:Cc:From:Date:In-Reply-To:From;
-	b=i/qg71N8OReg52Ol/FssjrEJ/5r+fpWgXOS6n5OGSOm3WZLvDuFi0hh16idgcCaAW
-	 swSqvYsbkG+v0nl1bx9sH03ACvPjC2q2/kZN7h+kMQzz9M7mm1NjoVOVhTyb3KTqII
-	 I4Ac/L3h2srqMaefpmU4TpHOTrQkAGW/si2UZR9s=
-Subject: Patch "selftests: mptcp: join: implicit: stop transfer after last check" has been added to the 6.1-stable tree
-To: gregkh@linuxfoundation.org,matttbe@kernel.org,mptcp@lists.linux.dev,sashal@kernel.org
-Cc: <stable-commits@vger.kernel.org>
-From: <gregkh@linuxfoundation.org>
-Date: Wed, 08 Apr 2026 15:30:52 +0200
-In-Reply-To: <20260324094936.1826804-5-matttbe@kernel.org>
-Message-ID: <2026040852-exclusion-draw-169b@gregkh>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G8j97VF0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1701BC2BC87;
+	Thu,  9 Apr 2026 02:40:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1775702445;
+	bh=+Noc+9+EBGnV4khiWUb560zb5tB/H+l3DU7nWirRqvg=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=G8j97VF0BOImnoRaA+wI27G6KIAkgeSaeCYatzDRk3J3XEt8zZvbj1t9a0UklLHV7
+	 /DTgOWAO3sUwGSxecVZHw08WPcrmXhX9nWs9lffnfzzVew3zLOrbEcO5/QiAmQfak6
+	 AWDOoCTOjtvMSFVmGJfb8P8vOMy+3tzJPeGLIdlvjzeQ865U7mTB6vawFGlOFZJXuG
+	 +MDDgpngrXmH+bX7SRYpqov8lUZ39Ueihx7Pml33EFLDxxUEpJKSWCWzPd0t81b3Yf
+	 +fZI0AfvzUlGKiomi1/Ayqi+UgR98Tbaitsgs1igguoJaoV9oUAaeAQq580ti7yaa1
+	 YdLfvLnAEmbQw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 7CE3B3930793;
+	Thu,  9 Apr 2026 02:40:22 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ANSI_X3.4-1968
 Content-Transfer-Encoding: 8bit
-X-stable: commit
-X-Patchwork-Hint: ignore 
+Subject: Re: [PATCH net-next v2 0/2] mptcp: autotune related improvement
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <177570242103.964658.15750765856068467028.git-patchwork-notify@kernel.org>
+Date: Thu, 09 Apr 2026 02:40:21 +0000
+References: <20260407-net-next-mptcp-reduce-rbuf-v2-0-0d1d135bf6f6@kernel.org>
+In-Reply-To: 
+ <20260407-net-next-mptcp-reduce-rbuf-v2-0-0d1d135bf6f6@kernel.org>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: martineau@kernel.org, geliang@kernel.org, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
+ fw@strlen.de, netdev@vger.kernel.org, mptcp@lists.linux.dev,
+ linux-kernel@vger.kernel.org, rostedt@goodmis.org, mhiramat@kernel.org,
+ mathieu.desnoyers@efficios.com, linux-trace-kernel@vger.kernel.org
+
+Hello:
+
+This series was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
+
+On Tue, 07 Apr 2026 10:45:16 +0200 you wrote:
+> Here are two patches from Paolo that have been crafted a couple of
+> months ago, but needed more validation because they were indirectly
+> causing instabilities in the sefltests. The root cause has been fixed in
+> 'net' recently in commit 8c09412e584d ("selftests: mptcp: more stable
+> simult_flows tests").
+> 
+> These patches refactor the receive space and RTT estimator, overall
+> making DRS more correct while avoiding receive buffer drifting to
+> tcp_rmem[2], which in turn makes the throughput more stable and less
+> bursty, especially with high bandwidth and low delay environments.
+> 
+> [...]
+
+Here is the summary with links:
+  - [net-next,v2,1/2] mptcp: better mptcp-level RTT estimator
+    https://git.kernel.org/netdev/net-next/c/d2000361e4dd
+  - [net-next,v2,2/2] mptcp: add receive queue awareness in tcp_rcv_space_adjust()
+    https://git.kernel.org/netdev/net-next/c/7272d8131a9d
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
 
-This is a note to let you know that I've just added the patch titled
-
-    selftests: mptcp: join: implicit: stop transfer after last check
-
-to the 6.1-stable tree which can be found at:
-    http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
-
-The filename of the patch is:
-     selftests-mptcp-join-implicit-stop-transfer-after-last-check.patch
-and it can be found in the queue-6.1 subdirectory.
-
-If you, or anyone else, feels it should not be added to the stable tree,
-please let <stable@vger.kernel.org> know about it.
-
-
-From matttbe@kernel.org Tue Mar 24 10:50:55 2026
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Tue, 24 Mar 2026 10:49:38 +0100
-Subject: selftests: mptcp: join: implicit: stop transfer after last check
-To: mptcp@lists.linux.dev, stable@vger.kernel.org, gregkh@linuxfoundation.org
-Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, sashal@kernel.org
-Message-ID: <20260324094936.1826804-5-matttbe@kernel.org>
-
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-
-With this kernel version, the 'implicit EP' MPTCP Join selftest ended
-with an error message:
-
-  115 implicit EP                          creation[ ok ]
-                                           ID change is prevented[ ok ]
-                                           modif is allowed[ ok ]
-  TcpPassiveOpens                 2                  0.0
-  TcpEstabResets                  2                  0.0
-  TcpInSegs                       315                0.0
-  TcpOutSegs                      617                0.0
-  TcpOutRsts                      1                  0.0
-  TcpExtDelayedACKs               289                0.0
-  TcpExtTCPPureAcks               6                  0.0
-  TcpExtTCPOrigDataSent           306                0.0
-  TcpExtTCPDelivered              306                0.0
-  MPTcpExtMPCapableSYNRX          1                  0.0
-  MPTcpExtMPCapableACKRX          1                  0.0
-  MPTcpExtMPJoinSynRx             1                  0.0
-  MPTcpExtMPJoinAckRx             1                  0.0
-  MPTcpExtAddAddr                 1                  0.0
-  MPTcpExtEchoAdd                 1                  0.0
-  MPTcpExtMPFastcloseTx           1                  0.0
-  MPTcpExtMPRstTx                 1                  0.0
-  MPTcpExtMPRstRx                 1                  0.0
-  TcpActiveOpens                  2                  0.0
-  TcpEstabResets                  2                  0.0
-  TcpInSegs                       617                0.0
-  TcpOutSegs                      315                0.0
-  TcpOutRsts                      1                  0.0
-  TcpExtTCPPureAcks               308                0.0
-  TcpExtTCPOrigDataSent           306                0.0
-  TcpExtTCPDelivered              307                0.0
-  MPTcpExtMPCapableSYNTX          1                  0.0
-  MPTcpExtMPCapableSYNACKRX       1                  0.0
-  MPTcpExtMPJoinSynAckRx          1                  0.0
-  MPTcpExtAddAddr                 1                  0.0
-  MPTcpExtEchoAdd                 1                  0.0
-  MPTcpExtMPFastcloseRx           1                  0.0
-  MPTcpExtMPRstTx                 1                  0.0
-  MPTcpExtMPRstRx                 1                  0.0
-  MPTcpExtRcvWndShared            1                  0.0
-
-That's because the test was waiting for the end of the transfer for no
-reasons, which ended after a timeout with an error. In this case, the
-stats were displayed, but this error was ignored: the end of transfer is
-not validated in this test.
-
-To fix that, stop the transfer after the last check, similar to what is
-done in the other tests.
-
-Fixes: 699879d5f866 ("selftests: mptcp: join: endpoints: longer transfer")
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- tools/testing/selftests/net/mptcp/mptcp_join.sh |    2 ++
- 1 file changed, 2 insertions(+)
-
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -3429,6 +3429,7 @@ endpoint_tests()
- 		pm_nl_set_limits $ns2 2 2
- 		pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
- 		run_tests $ns1 $ns2 10.0.1.1 128 0 0 slow 2>/dev/null &
-+		local tests_pid=$!
- 
- 		wait_mpj $ns1
- 		pm_nl_check_endpoint 1 "creation" \
-@@ -3441,6 +3442,7 @@ endpoint_tests()
- 		pm_nl_add_endpoint $ns2 10.0.2.2 flags signal
- 		pm_nl_check_endpoint 0 "modif is allowed" \
- 			$ns2 10.0.2.2 id 1 flags signal
-+		kill_wait "${tests_pid}"
- 		kill_tests_wait
- 	fi
- 
-
-
-Patches currently in stable-queue which might be from matttbe@kernel.org are
-
-queue-6.1/selftests-mptcp-join-implicit-stop-transfer-after-last-check.patch
-queue-6.1/selftests-mptcp-join-check-removing-signal-subflow-endp.patch
-queue-6.1/mptcp-fix-lock-class-name-family-in-pm_nl_create_listen_socket.patch
