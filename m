@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9476636AB7B;
-	Thu,  9 Apr 2026 02:40:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6108F36EA8F;
+	Thu,  9 Apr 2026 02:51:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775702448; cv=none; b=n8Sh2Y17kj8qdsAH6Sy+YE87NZa2riEcOxr279+GBLMbxQYXaVJHe4sMcCcHW4DO8RhZXIQXQkgLSAznUedHNgz0KNsyv44+FJmQOkbkGtkweDZbl9unNYga6zPwyME2dXPkT5nT21UQ8kTGgPJe2SloJCqiu1ZhruA88rROl9k=
+	t=1775703078; cv=none; b=hPrQAQy5n+CfvONg3FttUDvh3PX59mMefZ8wl+xBpbCHbox8lRhv70dDSuQ4Xvi21/KC/A2TOP2mvPLKVFGDM81Al4S4PMj2AL9HpoYHKOzHSFOsWGljDmaKK0eRpNmnlduFcicDaHhcm6yCBX9zyS8uBmTj7kvxT/Vi/iDQg4w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775702448; c=relaxed/simple;
-	bh=+Noc+9+EBGnV4khiWUb560zb5tB/H+l3DU7nWirRqvg=;
+	s=arc-20240116; t=1775703078; c=relaxed/simple;
+	bh=tcfDya9MYNNiDKrZlg8HsEmnKPVeUFjzwubY5+gbTFM=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=Ex/4o/LAxSExKxHZ/BShGPtxn0duXl4xgS7VYxxifCkXzhvWehjfl7hfwKCAOnXNJVl+WRNAizxhCkQB6ycrYmr4Cpr4dph/9QyQeZkukevRozEmGlo3GUQxdc/QObHpEHmUTBf/P5KFwovlmEgZHeuRMpDfOP0FyCKUvk7lxlo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G8j97VF0; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=oNt6Ru7Xiq7Nc3hAKwPDu9RaRteVr2GFfz1AQArYMYEauP4IpzFGjeatA9m94TZuuaHMT1ovzyQCpmT9Rdgke8HEq3XS8b2fRpH3Bihq+osbxw+0WP7h+SprqW/Z4aVdmbCsLsLDoTPFf5HiTDZ0HX7n5D5szKecLbwfox0OK0A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kl7VHVcr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G8j97VF0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1701BC2BC87;
-	Thu,  9 Apr 2026 02:40:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kl7VHVcr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 181E2C2BC9E;
+	Thu,  9 Apr 2026 02:51:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775702445;
-	bh=+Noc+9+EBGnV4khiWUb560zb5tB/H+l3DU7nWirRqvg=;
+	s=k20201202; t=1775703078;
+	bh=tcfDya9MYNNiDKrZlg8HsEmnKPVeUFjzwubY5+gbTFM=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=G8j97VF0BOImnoRaA+wI27G6KIAkgeSaeCYatzDRk3J3XEt8zZvbj1t9a0UklLHV7
-	 /DTgOWAO3sUwGSxecVZHw08WPcrmXhX9nWs9lffnfzzVew3zLOrbEcO5/QiAmQfak6
-	 AWDOoCTOjtvMSFVmGJfb8P8vOMy+3tzJPeGLIdlvjzeQ865U7mTB6vawFGlOFZJXuG
-	 +MDDgpngrXmH+bX7SRYpqov8lUZ39Ueihx7Pml33EFLDxxUEpJKSWCWzPd0t81b3Yf
-	 +fZI0AfvzUlGKiomi1/Ayqi+UgR98Tbaitsgs1igguoJaoV9oUAaeAQq580ti7yaa1
-	 YdLfvLnAEmbQw==
+	b=Kl7VHVcr1JyqWb1Z1fexDnvGjkAOnEmQsa5UPZx/a4e5EKArWPfrvGoDZA80sJ8FU
+	 mhYJqTCSE8zpvvOBqXbb9pVSoJHORH8W6u1/WS11f67tEp/60uYFstknCMfMivpz7R
+	 91DnTXgd0lCgL1ka4Nk45/dd2Cmls5i0JUfAlE6HGCrCykuWDV4V3F/Ii2mZliY0Y0
+	 kQ7e5cnDhE8Iu8xLESsTqnT2XrjdVAbygp0Wyek01/PGA3w3L6RvPRliivHZE3k5/c
+	 f2dBSd8ofN3OFuV++0TFV3x0x+m6gAceJcXj4QGNgS9xn+TnMbARMMleqPxuf45vOC
+	 yjYNGa5TcVbaw==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 7CE3B3930793;
-	Thu,  9 Apr 2026 02:40:22 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 7CE763930793;
+	Thu,  9 Apr 2026 02:50:55 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -37,45 +37,43 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next v2 0/2] mptcp: autotune related improvement
+Subject: Re: [PATCH net v2] Revert "mptcp: add needs_id for netlink appending
+ addr"
 From: patchwork-bot+netdevbpf@kernel.org
 Message-Id: 
- <177570242103.964658.15750765856068467028.git-patchwork-notify@kernel.org>
-Date: Thu, 09 Apr 2026 02:40:21 +0000
-References: <20260407-net-next-mptcp-reduce-rbuf-v2-0-0d1d135bf6f6@kernel.org>
+ <177570305429.968772.9148300524372539778.git-patchwork-notify@kernel.org>
+Date: Thu, 09 Apr 2026 02:50:54 +0000
+References: 
+ <20260407-net-mptcp-revert-pm-needs-id-v2-1-7a25cbc324f8@kernel.org>
 In-Reply-To: 
- <20260407-net-next-mptcp-reduce-rbuf-v2-0-0d1d135bf6f6@kernel.org>
+ <20260407-net-mptcp-revert-pm-needs-id-v2-1-7a25cbc324f8@kernel.org>
 To: Matthieu Baerts <matttbe@kernel.org>
 Cc: martineau@kernel.org, geliang@kernel.org, davem@davemloft.net,
  edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
- fw@strlen.de, netdev@vger.kernel.org, mptcp@lists.linux.dev,
- linux-kernel@vger.kernel.org, rostedt@goodmis.org, mhiramat@kernel.org,
- mathieu.desnoyers@efficios.com, linux-trace-kernel@vger.kernel.org
+ netdev@vger.kernel.org, mptcp@lists.linux.dev, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org
 
 Hello:
 
-This series was applied to netdev/net-next.git (main)
+This patch was applied to netdev/net.git (main)
 by Jakub Kicinski <kuba@kernel.org>:
 
-On Tue, 07 Apr 2026 10:45:16 +0200 you wrote:
-> Here are two patches from Paolo that have been crafted a couple of
-> months ago, but needed more validation because they were indirectly
-> causing instabilities in the sefltests. The root cause has been fixed in
-> 'net' recently in commit 8c09412e584d ("selftests: mptcp: more stable
-> simult_flows tests").
+On Tue, 07 Apr 2026 10:41:41 +0200 you wrote:
+> This commit was originally adding the ability to add MPTCP endpoints
+> with ID 0 by accident. The in-kernel PM, handling MPTCP endpoints at the
+> net namespace level, is not supposed to handle endpoints with such ID,
+> because this ID 0 is reserved to the initial subflow, as mentioned in
+> the MPTCPv1 protocol [1], a per-connection setting.
 > 
-> These patches refactor the receive space and RTT estimator, overall
-> making DRS more correct while avoiding receive buffer drifting to
-> tcp_rmem[2], which in turn makes the throughput more stable and less
-> bursty, especially with high bandwidth and low delay environments.
+> Note that 'ip mptcp endpoint add id 0' stops early with an error, but
+> other tools might still request the in-kernel PM to create MPTCP
+> endpoints with this restricted ID 0.
 > 
 > [...]
 
 Here is the summary with links:
-  - [net-next,v2,1/2] mptcp: better mptcp-level RTT estimator
-    https://git.kernel.org/netdev/net-next/c/d2000361e4dd
-  - [net-next,v2,2/2] mptcp: add receive queue awareness in tcp_rcv_space_adjust()
-    https://git.kernel.org/netdev/net-next/c/7272d8131a9d
+  - [net,v2] Revert "mptcp: add needs_id for netlink appending addr"
+    https://git.kernel.org/netdev/net/c/8e2760eaab77
 
 You are awesome, thank you!
 -- 
