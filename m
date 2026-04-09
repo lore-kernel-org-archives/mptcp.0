@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 826A033D6DD
-	for <mptcp@lists.linux.dev>; Thu,  9 Apr 2026 20:52:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5442F86329
+	for <mptcp@lists.linux.dev>; Thu,  9 Apr 2026 20:52:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775767936; cv=none; b=lZsogPkICjOBIjUS9aVCSYDLnvJGYwBOrvIBF23w0gBkeLT4vBc+YzZzGxp8nvYpB+rPWi1TExh5PW07nsd/q4Ddq1DvOpaNAHIXWkubLaO9bBubmO2B/hvOBxd4h8Cs0Ok/zUreuey2FO5Hug7OtZEqyzclzxfyOx1LP9+HNaI=
+	t=1775767937; cv=none; b=XNv24csoB6Ytzo2kKy90JhVmg+qvXqy8tfKvz3/VqENrwBQ+EaRCzXh5O3FedzqV1L7VO2Cmas0i1SFP9fI8muCkMkkNmQkQC+SGbDPQL8giOMuSfRbQv/yBYUczKbOgwod9izayqdyVFcWGLkjZebfzrdbse8ZR3J2TtN7Y9Bo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775767936; c=relaxed/simple;
-	bh=cINc5UYgsEJ/hJ7zwgFjc3aPTT3u8hV8n0aQdsQMYXw=;
+	s=arc-20240116; t=1775767937; c=relaxed/simple;
+	bh=0wHmk6A4DRGr56r/kPjXDjlut04j2hg65yYWe+lbaFw=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Ot3KeK82Fgsnklj35fJJi/EufUEZeko6qbz3Xd22LApEJ0YXkNLh6h4fl1O08QadFa2Hvq7jFiag6kuPzz/kJvprdHe73ncoBc0nxSJKgMlT5ogVJO/KqscBkyZwdslF0Z/WGwOtYXIypD5ZH5lnv9GakFuV8ngaMn3/oeQHEFM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nNyvPlnQ; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=ebZnH14Azv6zCcEypZpkjLg7RX/4StB9jANztPDXEKyglm6Y4G7YFfXHys2xCE295kFxHXAbAI7yCIhOu4g34GJMnhcImPOqHlgmUfAEiII6qWK+QBRNgy9Z62QrvNWHsZfKV0DEEBWX7hBEndjmABibY6WrmrM7erEtHAQf/d0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=loJKg2nv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nNyvPlnQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6849C19424;
-	Thu,  9 Apr 2026 20:52:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="loJKg2nv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D538C2BC87;
+	Thu,  9 Apr 2026 20:52:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775767936;
-	bh=cINc5UYgsEJ/hJ7zwgFjc3aPTT3u8hV8n0aQdsQMYXw=;
+	s=k20201202; t=1775767937;
+	bh=0wHmk6A4DRGr56r/kPjXDjlut04j2hg65yYWe+lbaFw=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=nNyvPlnQEaomHxBsorUmskzPTRMtUj8/Lp65yQhWFH5/+ujeLEpqoGd83frPFb7s2
-	 BkY41h8gWxnfelISWZcrX28zH5kJ1uHF0x4LyJwU3Vd1mXs0rw0Yp91PSahaPNqdIY
-	 Y8XGyBzhQQLTfSRSdhl1qPRE7UrSN7R7kFW0T++yDJfLYP0HEwIVIcw8Bno+9XwEsC
-	 xQimkWGduV8gTditdh3ADGVBOQfcDszKBZRNRZKOEriM9n1dkHqKH7hE3U8oVZsmgO
-	 6ilVjP2RbcHBdDNrcfbdxNzYORNZAI9W8Uw06tlRpsAjfjUJrlpphpErMpdcHffPAC
-	 RC6ItnPsRSf5g==
+	b=loJKg2nvy+x/PFXvZxr3MoXYEjquX31kvrGAocNyRFHEWGfNJxRTpdeOh2S6eu6K4
+	 BpVek3/KcVxkvPsgB/j8F7TlUnr+Ka6D58BPVo33lbPk+NpmGTcJ2Jg2ELKyUCZDVz
+	 jcNX9/9VXQfrBCMMou54NKuX2K9sPH4Z+niQ8c7rVhsb+M6WtFN/Gtz8hlCcJd2M3I
+	 gkTjoZVs8pMTXoXAz6iC91a8FhEDz4OCbI77iZ6zKz3dU29BVHDnwEQH5TZX2+e9Hb
+	 iDsA0z5xMyxwwQamCmY0itDiXXELRLyokFhXrl4LQB6fB2m7AeyBRV/CtlxZUQx7gR
+	 NboDUvgEgfJMw==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Thu, 09 Apr 2026 22:51:45 +0200
-Subject: [PATCH mptcp-next 05/16] mptcp: pm: retrans ADD_ADDR: skip
- inactive subflows
+Date: Thu, 09 Apr 2026 22:51:46 +0200
+Subject: [PATCH mptcp-next 06/16] mptcp: pm: retrans ADD_ADDR: return early
+ if no retrans
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,73 +38,45 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260409-mptcp-inc-limits-v1-5-0e45fa30d914@kernel.org>
+Message-Id: <20260409-mptcp-inc-limits-v1-6-0e45fa30d914@kernel.org>
 References: <20260409-mptcp-inc-limits-v1-0-0e45fa30d914@kernel.org>
 In-Reply-To: <20260409-mptcp-inc-limits-v1-0-0e45fa30d914@kernel.org>
 To: MPTCP Upstream <mptcp@lists.linux.dev>
 Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.15.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1765; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=cINc5UYgsEJ/hJ7zwgFjc3aPTT3u8hV8n0aQdsQMYXw=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDJvCBY1LawNnWDxj7O2jydygtrLz3dMJe5IsUcap/odN
- FsuLn+ro5SFQYyLQVZMkUW6LTJ/5vMq3hIvPwuYOaxMIEMYuDgFYCL33Rn+p+m/vnT29L5PMk9P
- mC5d8bLxguJbhyfv3r/lSe051pphu4zhf1hY08XGbfw7X2q6HjmzWW3q37L3rKIKxRcF5+y3Wpm
- 9nQsA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=747; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=0wHmk6A4DRGr56r/kPjXDjlut04j2hg65yYWe+lbaFw=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDJvCBZ/dlpb2PiUIWPFl5WbXHe5T9vZK5i+edYF2wkq8
+ /dzKR6P7ihlYRDjYpAVU2SRbovMn/m8irfEy88CZg4rE8gQBi5OAZiIfg4jwwWTR45S8UkWl6Nb
+ noqxCH38oZx1pyFL6O/LH/fnrjt4/CsjQ/OyvZ5citx/9TNuGZsl73ngWPlwd7g1k2KQcNKeRIe
+ 1bAA=
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-When looking at the maximum RTO amongst the subflows, inactive subflows
-were taken into account: that includes stale ones, and the initial one
-if it has been already been closed.
+No need to iterate over all subflows if there is no retransmission
+needed.
 
-Unusable subflows are now simply skipped. Stale ones are used as an
-alternative: if there are only stale ones, to take their maximum RTO and
-avoid to eventually fallback to net.mptcp.add_addr_timeout, which is set
-to 2 minutes by default.
+Exit early in this case then.
 
-Fixes: 30549eebc4d8 ("mptcp: make ADD_ADDR retransmission timeout adaptive")
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- net/mptcp/pm.c | 17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
+ net/mptcp/pm.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index 78a2ad71700b..e954dc46e6bc 100644
+index e954dc46e6bc..beb06213585a 100644
 --- a/net/mptcp/pm.c
 +++ b/net/mptcp/pm.c
-@@ -305,20 +305,27 @@ static unsigned int mptcp_adjust_add_addr_timeout(struct mptcp_sock *msk)
- 	const struct net *net = sock_net((struct sock *)msk);
- 	unsigned int rto = mptcp_get_add_addr_timeout(net);
+@@ -307,6 +307,9 @@ static unsigned int mptcp_adjust_add_addr_timeout(struct mptcp_sock *msk)
  	struct mptcp_subflow_context *subflow;
--	unsigned int max = 0;
-+	unsigned int max = 0, max_stale = 0;
+ 	unsigned int max = 0, max_stale = 0;
  
++	if (!rto)
++		return 0;
++
  	mptcp_for_each_subflow(msk, subflow) {
  		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
  		struct inet_connection_sock *icsk = inet_csk(ssk);
- 
--		if (icsk->icsk_rto > max)
-+		if (!__mptcp_subflow_active(subflow))
-+			continue;
-+
-+		if (unlikely(subflow->stale)) {
-+			if (icsk->icsk_rto > max_stale)
-+				max_stale = icsk->icsk_rto;
-+		} else {
- 			max = icsk->icsk_rto;
-+		}
- 	}
- 
--	if (max && max < rto)
--		rto = max;
-+	if (max)
-+		return max < rto ? max : rto;
- 
--	return rto;
-+	return max_stale && max_stale < rto ? max_stale : rto;
- }
- 
- static void mptcp_pm_add_timer(struct timer_list *timer)
 
 -- 
 2.53.0
