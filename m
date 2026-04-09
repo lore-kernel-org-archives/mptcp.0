@@ -1,30 +1,30 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B862E3C1405;
-	Thu,  9 Apr 2026 11:45:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8D1438836A;
+	Thu,  9 Apr 2026 11:45:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775735117; cv=none; b=pLcpo6Rvd2i79iPnF3+ImbNqNdHusn0Iy5uxrK9qD1wWPWVaf9N4JIN+nNAIAPSLvv8ez/WQ8X2cNKp0ggy/coslp4D+77rUayxvly+qLHVj82b/5tgqI8Xt6zQGE/PxOPEWg+WiYxwAFSjTucl46hbCCSmgaSjLXChJnPwKouI=
+	t=1775735134; cv=none; b=nZnIm1l9ivhrzyx9BjhZBRDf4q8s+KjwWw1H3IJRM3OtgeK4+masd6CxmlYqLtE8zdoplBDOCJ/YesV2Dg+n3rFm6u+injJibpiNmFRDPTiJFMf9ySSrUdqqVLSjgSgNm5aBHzzJ4uPf3t3eFG3BneaN65KxOq/D1uuwUnBktHE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775735117; c=relaxed/simple;
-	bh=Y1j3MmZpUQlVDuFTcw/PNkbo7UGMUuMOhCn3l9JqQ7Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Hf8QJJEuZcx8VpGFoQtjt4y6/OHAM6kfFZXOzflsEQoEf8wZT1aDUjotylk19BFqnLSR3QeAvkAj0dwPPqAA1xUUqYCflhFlH3/6yE+A/H3XNg6Dw1Wru1LbCfVlqshKR1LIb00UhRC1rgAxUu4c4a/pbWIyEbkPQa19ts6gTW4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=npZBTkp5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1775735134; c=relaxed/simple;
+	bh=50MkiAbVt7I8o9d1BKURD7MtyMbFg2dS4KX3vjddlsA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JVPV40okyTfcSrpmVT36pr0YV8oXmdl2JGvCU2GUAMt0xzE/mubqg0Bg5kZoDV7HhhzKuVwTxJIFokM8Kso7DSBzQ1r2sCjEpe185na6ChMvqFCydzHGWeaPhhyMX0DGwh8cU4O+Dp8NEbbAP+d42W+UiTV+t0K/79czFb3UTtE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=odAE712+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="npZBTkp5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31641C2BC87;
-	Thu,  9 Apr 2026 11:45:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="odAE712+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 524A8C2BC87;
+	Thu,  9 Apr 2026 11:45:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775735117;
-	bh=Y1j3MmZpUQlVDuFTcw/PNkbo7UGMUuMOhCn3l9JqQ7Y=;
+	s=k20201202; t=1775735134;
+	bh=50MkiAbVt7I8o9d1BKURD7MtyMbFg2dS4KX3vjddlsA=;
 	h=From:To:Cc:Subject:Date:From;
-	b=npZBTkp5+KLL64sUhvX8CaQR+i3F+ReJQFlr4Nb/WqBV7nYzP5e3soZWEJBJPyoPs
-	 EoxPBT2nKw4iiiOhPcJTrBC60gf91iV28YXvGV4bdYMzmDsODsjP5txn80kkKuUkxC
-	 v+TlPsGPH2XtD0pAJMha1h1kBSL4EHj8Bi0ddaT4FhWl/LcJHTySoPOAEm5SGPC8M1
-	 gGk/ZQme+ZPqD8oUDxCdTCemFXtW1Vz7g/IOQoRlBD8Nrfzr3bmZ4HF3i36NW8Lv7d
-	 rWDksFFF0NZQ3aUVK6vg+AIeiJkV0p+Co0P77hTmGOh2Cay1RnyHFoW/bV+EOPKFyW
-	 IeI7Pzr+uH3eA==
+	b=odAE712+YzJkCWXpMCKqBPvOXky+il3Qs33PFyl2IVDg6LTrtnQ6tYkuZwkOuVKd+
+	 2Scmrjk4hfE75I7Q844sJjRCNqWiWaV0Sbhu5uBA0Q1feyHdOOxd8MLas9dPOzw4Ge
+	 fNIao1iCHakTwUZSM2CNKJP9ve/rRZ77EZAA2BH8B0Q+ryX9GBape+wa1jtRsdT50E
+	 xm1quN5u46MQCU4D6yrldaHVgpz41iVuH669Pn7IMOW8o8l0Up1MW/P2Agd67eDAIE
+	 /DjTVFl4gQkQt8qoQnUNoBpzSnczr3cyNJUbsJUENufVZdHZdw9mJucdMzxwfGUDJj
+	 rCaxT8JbczoxQ==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 To: stable@vger.kernel.org,
 	gregkh@linuxfoundation.org,
@@ -33,9 +33,9 @@ Cc: MPTCP Upstream <mptcp@lists.linux.dev>,
 	Li Xiasong <lixiasong1@huawei.com>,
 	"Matthieu Baerts (NGI0)" <matttbe@kernel.org>,
 	Jakub Kicinski <kuba@kernel.org>
-Subject: [PATCH 6.12.y] mptcp: fix soft lockup in mptcp_recvmsg()
-Date: Thu,  9 Apr 2026 13:44:40 +0200
-Message-ID: <20260409114439.1158386-2-matttbe@kernel.org>
+Subject: [PATCH 6.6.y] mptcp: fix soft lockup in mptcp_recvmsg()
+Date: Thu,  9 Apr 2026 13:45:26 +0200
+Message-ID: <20260409114525.1159899-2-matttbe@kernel.org>
 X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -43,7 +43,7 @@ List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5224; i=matttbe@kernel.org; h=from:subject; bh=5reSsoATsqAIK/gcQNsgdVYQUtbmZgGtG20KQdaivkA=; b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDKvT1RntdEJMOmsYnfzZpzYoNmkueDY+8+si/0YlqQYW S8VTvTsKGVhEONikBVTZJFui8yf+byKt8TLzwJmDisTyBAGLk4BmMgHJ0aGe8VR3PwX5+x6NV3x DueUCwqiXboH733+sdEvQvWiCyfnNkaGL9cfSvc5OvyeEy/wuNKplOnG9Rlvt+skF9tPXsQn4LC GGwA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5224; i=matttbe@kernel.org; h=from:subject; bh=a/uxjm+nSJGTdf8zPfmSiLHrAtbKBhqHQHfs5R2JC1I=; b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDKvTwyLfu6Snm2iJrzEVf2PxLQu3emZQcsvp0wMejDvo 9fRRHvfjlIWBjEuBlkxRRbptsj8mc+reEu8/Cxg5rAygQxh4OIUgIl8c2VkWKguH31NafeTmz+9 j96cdORgWfmv+PMCN1x3PbK/22RX/p3hf/49b42WdQ+zIq88at0rmXVn5eLsnVJdcpKPbPycDHW NmAE=
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 Content-Transfer-Encoding: 8bit
 
@@ -113,10 +113,10 @@ Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
  1 file changed, 8 insertions(+), 3 deletions(-)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index e682d52a06b7..c34a06b4f21f 100644
+index 85ef9042873b..517b9a5b6867 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -1997,7 +1997,7 @@ static int __mptcp_recvmsg_mskq(struct mptcp_sock *msk,
+@@ -1960,7 +1960,7 @@ static int __mptcp_recvmsg_mskq(struct mptcp_sock *msk,
  				struct msghdr *msg,
  				size_t len, int flags, int copied_total,
  				struct scm_timestamping_internal *tss,
@@ -125,7 +125,7 @@ index e682d52a06b7..c34a06b4f21f 100644
  {
  	struct sk_buff *skb, *tmp;
  	int total_data_len = 0;
-@@ -2013,6 +2013,7 @@ static int __mptcp_recvmsg_mskq(struct mptcp_sock *msk,
+@@ -1976,6 +1976,7 @@ static int __mptcp_recvmsg_mskq(struct mptcp_sock *msk,
  			/* skip already peeked skbs */
  			if (total_data_len + data_len <= copied_total) {
  				total_data_len += data_len;
@@ -133,7 +133,7 @@ index e682d52a06b7..c34a06b4f21f 100644
  				continue;
  			}
  
-@@ -2053,6 +2054,8 @@ static int __mptcp_recvmsg_mskq(struct mptcp_sock *msk,
+@@ -2016,6 +2017,8 @@ static int __mptcp_recvmsg_mskq(struct mptcp_sock *msk,
  			WRITE_ONCE(msk->rmem_released, msk->rmem_released + skb->truesize);
  			__skb_unlink(skb, &msk->receive_queue);
  			__kfree_skb(skb);
@@ -142,7 +142,7 @@ index e682d52a06b7..c34a06b4f21f 100644
  		}
  
  		if (copied >= len)
-@@ -2274,10 +2277,12 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
+@@ -2237,10 +2240,12 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
  		cmsg_flags = MPTCP_CMSG_INQ;
  
  	while (copied < len) {
@@ -156,7 +156,7 @@ index e682d52a06b7..c34a06b4f21f 100644
  		if (unlikely(bytes_read < 0)) {
  			if (!copied)
  				copied = bytes_read;
-@@ -2335,7 +2340,7 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
+@@ -2298,7 +2303,7 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
  
  		pr_debug("block timeout %ld\n", timeo);
  		mptcp_cleanup_rbuf(msk, copied);
