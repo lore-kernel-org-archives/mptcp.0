@@ -1,82 +1,116 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 705863C73F8;
-	Fri, 10 Apr 2026 12:23:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 470F130FC36
+	for <mptcp@lists.linux.dev>; Fri, 10 Apr 2026 14:32:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775823820; cv=none; b=c886YNDtakYyifUe//k20f1+/zRbHLIM3GOR4zqLjitDKxGz098dD9Th3vHWEaPpweZG3FzVZejF2bHFanGQACy8KXOuW8av+z49y0C4rOQ9DP5Gn7Q/I+gcpbeTygEPgvNNMUsXA47Ru0WcPbBDzghLcM8ddAfGSbg3F+ddJk4=
+	t=1775831527; cv=none; b=Upm4XP/M3XQd0O4BcRX/898+W0Y7EXTGH5aVDKDq6mkR9W5giVxJQGIGWFMP2cTe7kphWLXcP0IcZTUhOM7cyFgGBf3wlxQ+zhUgtjjCVBr/kWbfY66FWQ0fftMNySdCbVifXO27ZaMJRWJo+1NC8UWaSIHN5YW6ECE2uMv1aMQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775823820; c=relaxed/simple;
-	bh=iIxRPLPBvFWLpD25+SKalR/P6tHK+MH+eYz2ibDdhUk=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=eZonqQHSCpXtX5qBteFZO5BuK7GiR/XM6spBp6DixpYpawjXz5ddZeBWFxVF3mIrh09/VvnGFNpq0JlYgvXbNZZR4C7tW2lKV2atBqoEFe2dvky6UWyNLKugqXYe0Au6WYcoOhY26J4YpNfQUkI0dlnJFWKvAHmEuCE4Wi8ALyo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WEvR3YIK; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1775831527; c=relaxed/simple;
+	bh=LE6AHa7bAvkwFkcbe740Kgb/SySFTvV+LQcxoxfKpy0=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=ff4d3IYzk/BveecHvDqYFJIbVN4vPGEJPvKHhQXtsr7jzmE0aZsnpKs0pHUol6gZ485ECns++Hyx9dFa+i2pq5zI53IA0TpSrMb6LJoplRCcR8V32+TuepmIZJ9HMuroRWOtXQPByOZ1JJ/0QYNHJm4Pf6l4oGivg/f+gyqd0EY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CCYXnbXB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WEvR3YIK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1775823818; x=1807359818;
-  h=date:from:to:cc:subject:message-id;
-  bh=iIxRPLPBvFWLpD25+SKalR/P6tHK+MH+eYz2ibDdhUk=;
-  b=WEvR3YIKDinuQhSvHytTKGiz/RnJ8mPZ3s7eix0XbC9qcbqNNR6+WPDs
-   VAEAzXP7vJrc29utkSQ9tZ9buIfDpv2U2VGctzPSkYz44XLO5YBjYiE9u
-   F5pJImR/zZGSu8/MEhR7xTLtfkljV8Hlm2ImTNHIaDtJnsvwIy5DXeXQg
-   y3Yb1BSL2JCcVPOXMgiQBvT2HcDCMkL0geCOBs22l73js2eMdKWJ8+SKN
-   R/v3PBuWwOms2aFEZ3XPhamo2hG6wmNeXTn8039TufH4rR5BGr73IBvM4
-   Ovb3lYNtoXQgsFcjqUqa5FLjzQDcrafaEIremHTkceydcnsn10IgYzqer
-   Q==;
-X-CSE-ConnectionGUID: 1c86j1dyRxKaGWbVhQvacg==
-X-CSE-MsgGUID: JuBxitO/RWSWAuIvLCb8wQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11754"; a="94235173"
-X-IronPort-AV: E=Sophos;i="6.23,171,1770624000"; 
-   d="scan'208";a="94235173"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2026 05:23:38 -0700
-X-CSE-ConnectionGUID: m9a/Iwc/RhesWslbwLfItw==
-X-CSE-MsgGUID: PBcVDlSmTs63CwRhTy+i2g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,171,1770624000"; 
-   d="scan'208";a="224328695"
-Received: from lkp-server01.sh.intel.com (HELO 6449335cace3) ([10.239.97.150])
-  by fmviesa006.fm.intel.com with ESMTP; 10 Apr 2026 05:23:36 -0700
-Received: from kbuild by 6449335cace3 with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1wBAta-000000003ir-0W89;
-	Fri, 10 Apr 2026 12:23:34 +0000
-Date: Fri, 10 Apr 2026 20:22:36 +0800
-From: kernel test robot <lkp@intel.com>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, mptcp@lists.linux.dev
-Subject: [mptcp:export-net 1/10] .b4-config: warning: ignored by one
- of the .gitignore files
-Message-ID: <202604102025.D4dPgief-lkp@intel.com>
-User-Agent: s-nail v14.9.25
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CCYXnbXB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7404CC2BC87;
+	Fri, 10 Apr 2026 14:32:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1775831526;
+	bh=LE6AHa7bAvkwFkcbe740Kgb/SySFTvV+LQcxoxfKpy0=;
+	h=From:Subject:Date:To:Cc:From;
+	b=CCYXnbXBSWR9lG4oTLVArhXZKGMOlNejy68UbDuZLrOk2gR2VDKP3u/p2bz4T/HCb
+	 5TurrlKawnzvArlo/KvQiyA+2dEhIisQOaQlk2EHsv7X4N1/vV3bnuL70XXxmFBLfH
+	 nMDnSDT16cdQSy8ea+DMIJ4qB7WTALQLMjKv3I08SjyQaDbwUryK2TOYiwwL+i7qQY
+	 zA8aq57M79ZlzE3/uz5ek0CsRRZFdNvlwDKQocYUeS4Q3oBgRiJosDiqu/kwr6YHay
+	 3vNEQa8i/78GDBwl/GKmk9D0Q0YOZFd8tVedC3KgbF0E8GE+fU3ewgt29wDjWXsSmD
+	 A+T8O1Rf7mYCw==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH mptcp-next v2 00/17] mptcp: pm: increase limits, and
+ related fixes and cleanup
+Date: Fri, 10 Apr 2026 16:31:38 +0200
+Message-Id: <20260410-mptcp-inc-limits-v2-0-5402209f05d3@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/2WNzQ6CMBCEX4Xs2ZptqUQ88R6GA5YFVqGQthIM4
+ d3lx5vHycw33wyeHJOHWzSDo5E993YN6hSBaQpbk+ByzaBQJagxFt0QzCDYGtFyx8ELQ+lVSlQ
+ akwRWbHBU8bRf3uFYW5oC5Efn348nmbB9buuGfejdZ/ePcmd+qvRfNUqBAklfqiLGMpU6e5Gz1
+ J57V0O+LMsXs8EaQM8AAAA=
+X-Change-ID: 20260403-mptcp-inc-limits-ce9811024066
+To: MPTCP Upstream <mptcp@lists.linux.dev>
+Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+X-Mailer: b4 0.15.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2756; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=LE6AHa7bAvkwFkcbe740Kgb/SySFTvV+LQcxoxfKpy0=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDJvcl73niS/IfCuSPlD/wMnO/57bNrHer1zpjGDrqjc8
+ R3zl//Y0FHKwiDGxSArpsgi3RaZP/N5FW+Jl58FzBxWJpAhDFycAjCRRUGMDDfu3ReNmVUyx/hd
+ 9I2/yyfZx+aq52gzT+d9/tjReGvA8lMM/5TjJrMvz983Z4uj9EzXXy/mXk7R3DrHU6y2O7iM7cr
+ RLj4A
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-tree:   https://github.com/multipath-tcp/mptcp_net-next.git export-net
-head:   323758aa61504449b3abc7d2adeddfcd62b2a56e
-commit: 8705d5d473b289fab5a0af20cba9660ca4c6414a [1/10] DO-NOT-MERGE: git markup: net
-config: x86_64-rhel-9.4 (https://download.01.org/0day-ci/archive/20260410/202604102025.D4dPgief-lkp@intel.com/config)
-compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260410/202604102025.D4dPgief-lkp@intel.com/reproduce)
+The initial intension was to increase the limits, but some fixes were
+needed, then when looking at the code around, other fixes had to be
+added too. So now I ended up with 8 fixes (including one early exit
+while at it), followed by 3 patches increasing limits, 3 to validate the
+modifications, one small improvement in the selftests, and some
+renaming.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202604102025.D4dPgief-lkp@intel.com/
+The patches with a Fixes tag are for -net, the rest for net-next.
 
-All warnings (new ones prefixed by >>):
+The last patch contains multiple renaming: please tell me what you
+think before I start splitting in smaller commits.
 
->> .b4-config: warning: ignored by one of the .gitignore files
-   .git_markup: warning: ignored by one of the .gitignore files
-   Documentation/.renames.txt: warning: ignored by one of the .gitignore files
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+Changes in v2:
+- patch 2: fix potential data-race.
+- re-order patches 1 to 5 and use shorter prefix (ADD_ADDR rtx).
+- patch 6: restore accidentally deleted icsk->icsk_rto > max check.
+- patch 16: fix already present checkpatch warning.
+- Link to v1: https://patch.msgid.link/20260409-mptcp-inc-limits-v1-0-0e45fa30d914@kernel.org
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+---
+Matthieu Baerts (NGI0) (17):
+      mptcp: pm: ADD_ADDR rtx: free sk if last
+      mptcp: pm: ADD_ADDR rtx: fix potential data-race
+      mptcp: pm: ADD_ADDR rtx: allow ID 0
+      mptcp: pm: ADD_ADDR rtx: always decrease sk refcount
+      mptcp: pm: ADD_ADDR rtx: resched blocked ADD_ADDR quicker
+      mptcp: pm: ADD_ADDR rtx: skip inactive subflows
+      mptcp: pm: retrans ADD_ADDR: return early if no retrans
+      mptcp: pm: prio: skip closed subflows
+      selftests: mptcp: pm: restrict 'unknown' check to pm_nl_ctl
+      mptcp: pm: in-kernel: explicitly limit batches to array size
+      mptcp: pm: in-kernel: increase all limits to 64
+      mptcp: pm: in-kernel: increase endpoints limit
+      selftests: mptcp: join: allow changing ifaces nr per test
+      selftests: mptcp: join: validate 8x8 subflows
+      selftests: mptcp: pm: validate new limits
+      selftests: mptcp: pm: use simpler send/recv forms
+      mptcp: pm: clearer ADD_ADDR related helpers names
+
+ net/mptcp/options.c                             |   2 +-
+ net/mptcp/pm.c                                  | 174 +++++++++++++-----------
+ net/mptcp/pm_kernel.c                           |  59 ++++----
+ net/mptcp/pm_userspace.c                        |   6 +-
+ net/mptcp/protocol.h                            |  19 +--
+ net/mptcp/subflow.c                             |   4 +-
+ tools/testing/selftests/net/mptcp/mptcp_join.sh |  33 ++++-
+ tools/testing/selftests/net/mptcp/pm_netlink.sh |  62 +++++----
+ tools/testing/selftests/net/mptcp/pm_nl_ctl.c   |   8 +-
+ 9 files changed, 219 insertions(+), 148 deletions(-)
+---
+base-commit: 0d8ee8bb5ee08c331531dc4ee482409d7fcef713
+change-id: 20260403-mptcp-inc-limits-ce9811024066
+
+Best regards,
+--  
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
+
