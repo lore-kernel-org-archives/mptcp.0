@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33DA83B4EA1
-	for <mptcp@lists.linux.dev>; Fri, 10 Apr 2026 09:10:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 271013AD53F
+	for <mptcp@lists.linux.dev>; Fri, 10 Apr 2026 09:12:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775812220; cv=none; b=RappDj66skBNUfAEnOPfQRQGkHqxlr3jJ/N1XuzAddqaS8eUYx6+0PaDbOxmHRYoVxw835RbzOzDMKr4V1AlGrqB2Z+wdhxaiNZ2khcYqDmsSUnw0QglzHOuqmFjjQkJEVsKIc0tFi7nBwLEzR/cxLNo1AjYz3xxpbAaWsQ+t/Q=
+	t=1775812377; cv=none; b=WlKhFneWrNskbihiXyH8K8+36BHLWm2FMsNUFqzWqFcktuOD1tQRI22lDlq6oN+R+JnWob2nSbCk621Fm2gFxbxwDJ8w+SavKsH1Qbe9hGG8GhjaGgvhzhaRknHLtXhEtWUgT+uPlzBfaGZ1L7NHxyVxPkvjFor1Ut2TWh5dbac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775812220; c=relaxed/simple;
-	bh=wTiLJ84/+v5uyKOVO4pQvAV8SAxbT8nm2vOWbyYAZqk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=n6uYqhAPjyE7QK3y+tgMkh/EMerBb8ghXSz7N1T60Sq59BBR1ZMNuS4mNieJeqBXOycBlOSLHJOtCKL3dWi2gp3O6iXkCbgnQwAsI8fUdSXWDyDyxc8I2+x75dWpEhp9sbUKkBGk23DZS3fQ1cHVOY/NVHAaYzoN3rhup8EoFls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TwJXPpH/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1775812377; c=relaxed/simple;
+	bh=h34D2+ncpP6apR8rS36g2oEjVvk9sXKeBY3bxXEmbac=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=Ef5rqWr6RbK9mXyi/FhrhoOSN1MbPk29qwzvg72VCEQcA2wNhoT0O8A6/CU1Oq7ilPHr4h0Ma46pjRfzXn46W5k4Zj1vtbKqNOGTDqoayc3oTergsvmXD5yG6M8XnP/3xrv9c5V9XPZQXJpRB12LQ71EMv+/VGTKQY37DIe2Cpw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AlJmxYry; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TwJXPpH/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBE6CC19421;
-	Fri, 10 Apr 2026 09:10:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AlJmxYry"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 614E3C19421
+	for <mptcp@lists.linux.dev>; Fri, 10 Apr 2026 09:12:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775812219;
-	bh=wTiLJ84/+v5uyKOVO4pQvAV8SAxbT8nm2vOWbyYAZqk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=TwJXPpH/kdgYLYoJTjQ30JNlRvILzW5MnivGxizTxNix6mgVRZvUiBp1L484+lfQ3
-	 YOnr3XJ7/HqAv96/sFIO6QbYPK9oWDSTsSbs8ekb7p7gf7yacqPSUQMs78Jz89DNYx
-	 OQFn+CjbnTM4M2f9UACv3SievSBdjsHFwluvgyWSwk++hLrZ36ofTQ1MwC0/xTS7tR
-	 2UdydnuvmS8YGMBRm1b/IlNDb6jt6vDsxf+qUvRrCzaDBEZ6jFsQ91xFoAtf35gpKj
-	 3bIHPCbHQj2v+N8Dw5xOk/fag4QplroC4ndhVnbyLfxQC+j9bTJZd6Be51dgjLPKDR
-	 NVlOq5UBKNifg==
-Message-ID: <612df34e-d54c-4a23-b72b-0e8ab78a5a50@kernel.org>
-Date: Fri, 10 Apr 2026 11:10:16 +0200
+	s=k20201202; t=1775812376;
+	bh=h34D2+ncpP6apR8rS36g2oEjVvk9sXKeBY3bxXEmbac=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=AlJmxYryirWnqc8fGvbuYL1O2v42Y4FLgD3pyBxMD1lqZXErMWrSnuNgOQ7ssigMs
+	 /QpMy7Q2fhTgpjJRdo9ZnekRV57VWc3MHI2UA5j9FRwJb9QJgi/XRPcNAkHc4AU/Jy
+	 Gi7xjh7cXtFAUBJg539OEHdPPpPI9U8hUVXoyP9SqvEYxOcvBq4UfAe4U/uik/tQ7s
+	 VATIvLIBfoW58/zQOfXPHn9tqrwT1Nfgb6sEunEgW+E9pQB4TgM8C9NLfXnGEShFFw
+	 WuYGRGtbTRqP1OsckhjHmRVp9sfK3IFBWo1ls1IqbAPpUq5kP60oWQOO4AI9Njgmks
+	 mAlpIKa0P9zkg==
+Message-ID: <a42212ec-b8f6-450d-877b-3b05b0fc550d@kernel.org>
+Date: Fri, 10 Apr 2026 11:12:54 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,15 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net v3 1/2] mptcp: sync the msk->sndbuf at accept()
- time
+Subject: Re: [PATCH mptcp-next 05/16] mptcp: pm: retrans ADD_ADDR: skip
+ inactive subflows
 Content-Language: fr
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: Gang Yan <yangang@kylinos.cn>, Gang Yan <gang.yan@linux.dev>,
- mptcp@lists.linux.dev
-References: <cover.1775551182.git.yangang@kylinos.cn>
- <79d5862da1c7db353e27c56a26da78e6dd548659.1775551182.git.yangang@kylinos.cn>
- <9b3a7675-cf38-4107-8c79-6ec7ccdbb2e4@redhat.com>
+To: MPTCP Linux <mptcp@lists.linux.dev>
+References: <20260409-mptcp-inc-limits-v1-0-0e45fa30d914@kernel.org>
+ <20260409-mptcp-inc-limits-v1-5-0e45fa30d914@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -89,40 +86,71 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <9b3a7675-cf38-4107-8c79-6ec7ccdbb2e4@redhat.com>
+In-Reply-To: <20260409-mptcp-inc-limits-v1-5-0e45fa30d914@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Paolo,
+Hello
 
-On 10/04/2026 11:04, Paolo Abeni wrote:
-> On 4/7/26 10:45 AM, Gang Yan wrote:
->> From: Gang Yan <yangang@kylinos.cn>
->>
->> After an MPTCP connection is established, the sk_sndbuf of client's msk
->> can be updated through 'subflow_finish_connect'. However, the newly
->> accepted msk on the server side has a small sk_sndbuf than
->> msk->first->sk_sndbuf:
->>
->> '''
->> MPTCP: msk:00000000e55b09db, msk->sndbuf:20480, msk->first->sndbuf:2626560
->> '''
->>
->> This patch synchronizes the sk_sndbuf by triggering its update during
->> accept.
+On 09/04/2026 22:51, Matthieu Baerts (NGI0) wrote:
+> When looking at the maximum RTO amongst the subflows, inactive subflows
+> were taken into account: that includes stale ones, and the initial one
+> if it has been already been closed.
 > 
-> I finally could wrap my head around the root cause: tcp_child_process()
-> -> tcp_init_transfer() -> tcp_sndbuf_expand() can and will grow the ssk
-> sndbuf _after_ tcp_check_req() -> subflow_syn_recv_sock() ->
-> mptcp_sk_clone_init() where __mptcp_propagate_sndbuf() is currently hooked.
+> Unusable subflows are now simply skipped. Stale ones are used as an
+> alternative: if there are only stale ones, to take their maximum RTO and
+> avoid to eventually fallback to net.mptcp.add_addr_timeout, which is set
+> to 2 minutes by default.
 > 
-> I think the latter __mptcp_propagate_sndbuf() invocation can be removed,
-> and the commit message expanded to capture some of the above.
+> Fixes: 30549eebc4d8 ("mptcp: make ADD_ADDR retransmission timeout adaptive")
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> ---
+>  net/mptcp/pm.c | 17 ++++++++++++-----
+>  1 file changed, 12 insertions(+), 5 deletions(-)
 > 
-> With the above included feel free to add:
+> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+> index 78a2ad71700b..e954dc46e6bc 100644
+> --- a/net/mptcp/pm.c
+> +++ b/net/mptcp/pm.c
+> @@ -305,20 +305,27 @@ static unsigned int mptcp_adjust_add_addr_timeout(struct mptcp_sock *msk)
+>  	const struct net *net = sock_net((struct sock *)msk);
+>  	unsigned int rto = mptcp_get_add_addr_timeout(net);
+>  	struct mptcp_subflow_context *subflow;
+> -	unsigned int max = 0;
+> +	unsigned int max = 0, max_stale = 0;
+>  
+>  	mptcp_for_each_subflow(msk, subflow) {
+>  		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
+>  		struct inet_connection_sock *icsk = inet_csk(ssk);
+>  
+> -		if (icsk->icsk_rto > max)
+> +		if (!__mptcp_subflow_active(subflow))
+> +			continue;
+> +
+> +		if (unlikely(subflow->stale)) {
+> +			if (icsk->icsk_rto > max_stale)
+> +				max_stale = icsk->icsk_rto;
+> +		} else {
+
+I accidentally removed the condition here, it should be:
+
+  } else if (icsk->icsk_rto > max) {
+
+>  			max = icsk->icsk_rto;
+> +		}
+>  	}
+>  
+> -	if (max && max < rto)
+> -		rto = max;
+> +	if (max)
+> +		return max < rto ? max : rto;
+>  
+> -	return rto;
+> +	return max_stale && max_stale < rto ? max_stale : rto;
+>  }
+>  
+>  static void mptcp_pm_add_timer(struct timer_list *timer)
 > 
-> Acked-by: Paolo Abeni <pabeni@redhat.com>
-Thank you for this review!
 
 Cheers,
 Matt
