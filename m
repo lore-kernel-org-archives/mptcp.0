@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 271013AD53F
-	for <mptcp@lists.linux.dev>; Fri, 10 Apr 2026 09:12:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE0C337EFFE;
+	Fri, 10 Apr 2026 11:13:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775812377; cv=none; b=WlKhFneWrNskbihiXyH8K8+36BHLWm2FMsNUFqzWqFcktuOD1tQRI22lDlq6oN+R+JnWob2nSbCk621Fm2gFxbxwDJ8w+SavKsH1Qbe9hGG8GhjaGgvhzhaRknHLtXhEtWUgT+uPlzBfaGZ1L7NHxyVxPkvjFor1Ut2TWh5dbac=
+	t=1775819604; cv=none; b=VXQqKdqApfDOkJugUrvGAztYTkXQEM3WRPdEeta3Ok/EZHuUeVpwGXiEehO0+WFzlfpl9+rodKAW95BRSAFGlSo60Y4IDML9ncOaopelOrvNsh19KvCnXmPT56v/UitjX7tuMaS33vbblBdK4vtWryeCA9gSpuPu0DDJTAyLauc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775812377; c=relaxed/simple;
-	bh=h34D2+ncpP6apR8rS36g2oEjVvk9sXKeBY3bxXEmbac=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=Ef5rqWr6RbK9mXyi/FhrhoOSN1MbPk29qwzvg72VCEQcA2wNhoT0O8A6/CU1Oq7ilPHr4h0Ma46pjRfzXn46W5k4Zj1vtbKqNOGTDqoayc3oTergsvmXD5yG6M8XnP/3xrv9c5V9XPZQXJpRB12LQ71EMv+/VGTKQY37DIe2Cpw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AlJmxYry; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1775819604; c=relaxed/simple;
+	bh=AQPeXi1aoQgGM8nK0LxMPVH1DZGL9c5t02oOQpq3BS8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
+	 In-Reply-To:Content-Type; b=E23zvSLxGCVM3UIG/+SoQR8nhzXG/ATI0VvV6eTRYT5cRxtHlV3LByEEIw2pT2OUH/0g65Gm21Gwq02vFT/NZNnvLr8c/6vDEza9yss63HCxmhn2+lP/x54PRmm/WZEAuageLTU6eBarG0QWUO9rNsepS4FEKl5OrDwrrjJU8XI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xj96enwI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AlJmxYry"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 614E3C19421
-	for <mptcp@lists.linux.dev>; Fri, 10 Apr 2026 09:12:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xj96enwI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDDD1C19421;
+	Fri, 10 Apr 2026 11:13:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775812376;
-	bh=h34D2+ncpP6apR8rS36g2oEjVvk9sXKeBY3bxXEmbac=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=AlJmxYryirWnqc8fGvbuYL1O2v42Y4FLgD3pyBxMD1lqZXErMWrSnuNgOQ7ssigMs
-	 /QpMy7Q2fhTgpjJRdo9ZnekRV57VWc3MHI2UA5j9FRwJb9QJgi/XRPcNAkHc4AU/Jy
-	 Gi7xjh7cXtFAUBJg539OEHdPPpPI9U8hUVXoyP9SqvEYxOcvBq4UfAe4U/uik/tQ7s
-	 VATIvLIBfoW58/zQOfXPHn9tqrwT1Nfgb6sEunEgW+E9pQB4TgM8C9NLfXnGEShFFw
-	 WuYGRGtbTRqP1OsckhjHmRVp9sfK3IFBWo1ls1IqbAPpUq5kP60oWQOO4AI9Njgmks
-	 mAlpIKa0P9zkg==
-Message-ID: <a42212ec-b8f6-450d-877b-3b05b0fc550d@kernel.org>
-Date: Fri, 10 Apr 2026 11:12:54 +0200
+	s=k20201202; t=1775819604;
+	bh=AQPeXi1aoQgGM8nK0LxMPVH1DZGL9c5t02oOQpq3BS8=;
+	h=Date:Subject:To:References:From:Cc:In-Reply-To:From;
+	b=Xj96enwIbyhLeNEpPKkua5HcdXt5CcAvLVgG33GySaF/R+9xs/qNbYvG0nf7xBzNh
+	 Ml4KWJuVLHTqlVOO9YqjayOxajpXWGQxhM+wVQ1DhVh/SLmImXKGlNmrZyLRiOtcbH
+	 uFDd6tPt9pZjBYciIPOTGy8L69ds7n5tYX3aFwQdMi2J1+ij9SrO6Oa8kFOBDd3GCl
+	 rTO5zn8VOvktDmpZzA1rRrskz/geiOi+rccMymHlkfThICvtKlk67Fo5KSjHW+mURb
+	 O0q10Rz5MYVAKj6EwfPAFF2h+1S+XcMzD4sZDM2z2CtUudPznMMDvY8PdHyQlrD0zi
+	 BxKmYuYCKYoRg==
+Message-ID: <72122fb3-c1db-4dde-8f89-0ad4011badea@kernel.org>
+Date: Fri, 10 Apr 2026 13:13:18 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,15 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next 05/16] mptcp: pm: retrans ADD_ADDR: skip
- inactive subflows
+Subject: Re: [syzbot] [mptcp?] possible deadlock in mptcp_pm_mp_prio_send_ack
 Content-Language: fr
-To: MPTCP Linux <mptcp@lists.linux.dev>
-References: <20260409-mptcp-inc-limits-v1-0-0e45fa30d914@kernel.org>
- <20260409-mptcp-inc-limits-v1-5-0e45fa30d914@kernel.org>
+To: syzbot <syzbot+2204dbe6a049b3218db9@syzkaller.appspotmail.com>
+References: <69d7de34.050a0220.3030df.0019.GAE@google.com>
 From: Matthieu Baerts <matttbe@kernel.org>
+Cc: davem@davemloft.net, edumazet@google.com, geliang@kernel.org,
+ horms@kernel.org, kuba@kernel.org, linux-kernel@vger.kernel.org,
+ martineau@kernel.org, mptcp@lists.linux.dev, netdev@vger.kernel.org,
+ pabeni@redhat.com, syzkaller-bugs@googlegroups.com
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -86,71 +88,66 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20260409-mptcp-inc-limits-v1-5-0e45fa30d914@kernel.org>
+In-Reply-To: <69d7de34.050a0220.3030df.0019.GAE@google.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hello
+Hello,
 
-On 09/04/2026 22:51, Matthieu Baerts (NGI0) wrote:
-> When looking at the maximum RTO amongst the subflows, inactive subflows
-> were taken into account: that includes stale ones, and the initial one
-> if it has been already been closed.
+On 09/04/2026 19:13, syzbot wrote:
+> Hello,
 > 
-> Unusable subflows are now simply skipped. Stale ones are used as an
-> alternative: if there are only stale ones, to take their maximum RTO and
-> avoid to eventually fallback to net.mptcp.add_addr_timeout, which is set
-> to 2 minutes by default.
+> syzbot found the following issue on:
 > 
-> Fixes: 30549eebc4d8 ("mptcp: make ADD_ADDR retransmission timeout adaptive")
-> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> ---
->  net/mptcp/pm.c | 17 ++++++++++++-----
->  1 file changed, 12 insertions(+), 5 deletions(-)
+> HEAD commit:    1caa871bb061 Merge branch 'net-stmmac-fix-tegra234-mgbe-cl..
+> git tree:       net
+> console output: https://syzkaller.appspot.com/x/log.txt?x=11d74e06580000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=6754c86e8d9e4c91
+> dashboard link: https://syzkaller.appspot.com/bug?extid=2204dbe6a049b3218db9
+> compiler:       Debian clang version 21.1.8 (++20251221033036+2078da43e25a-1~exp1~20251221153213.50), Debian LLD 21.1.8
 > 
-> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-> index 78a2ad71700b..e954dc46e6bc 100644
-> --- a/net/mptcp/pm.c
-> +++ b/net/mptcp/pm.c
-> @@ -305,20 +305,27 @@ static unsigned int mptcp_adjust_add_addr_timeout(struct mptcp_sock *msk)
->  	const struct net *net = sock_net((struct sock *)msk);
->  	unsigned int rto = mptcp_get_add_addr_timeout(net);
->  	struct mptcp_subflow_context *subflow;
-> -	unsigned int max = 0;
-> +	unsigned int max = 0, max_stale = 0;
->  
->  	mptcp_for_each_subflow(msk, subflow) {
->  		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
->  		struct inet_connection_sock *icsk = inet_csk(ssk);
->  
-> -		if (icsk->icsk_rto > max)
-> +		if (!__mptcp_subflow_active(subflow))
-> +			continue;
-> +
-> +		if (unlikely(subflow->stale)) {
-> +			if (icsk->icsk_rto > max_stale)
-> +				max_stale = icsk->icsk_rto;
-> +		} else {
+> Unfortunately, I don't have any reproducer for this issue yet.
+> 
+> Downloadable assets:
+> disk image: https://storage.googleapis.com/syzbot-assets/014aae23b990/disk-1caa871b.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/c574a710638c/vmlinux-1caa871b.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/b29909f4efc4/bzImage-1caa871b.xz
+> 
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+2204dbe6a049b3218db9@syzkaller.appspotmail.com
+> 
+> netlink: 8 bytes leftover after parsing attributes in process `syz.2.2034'.
+> netlink: 8 bytes leftover after parsing attributes in process `syz.2.2034'.
+> ======================================================
+> WARNING: possible circular locking dependency detected
+> syzkaller #0 Not tainted
+> ------------------------------------------------------
+> syz.2.2034/13659 is trying to acquire lock:
+> ffff888031173560 (k-sk_lock-AF_INET){+.+.}-{0:0}, at: mptcp_pm_mp_prio_send_ack+0xaf8/0xba0 net/mptcp/pm.c:296
+> 
+> but task is already holding lock:
+> ffff88807e300ea0 (sk_lock-AF_INET){+.+.}-{0:0}, at: lock_sock include/net/sock.h:1709 [inline]
+> ffff88807e300ea0 (sk_lock-AF_INET){+.+.}-{0:0}, at: mptcp_pm_nl_set_flags_all net/mptcp/pm_kernel.c:1482 [inline]
+> ffff88807e300ea0 (sk_lock-AF_INET){+.+.}-{0:0}, at: mptcp_pm_nl_set_flags+0x795/0xc90 net/mptcp/pm_kernel.c:1551
+> 
+> which lock already depends on the new lock.
+> 
+> 
+> the existing dependency chain (in reverse order) is:
+> 
+> -> #7 (sk_lock-AF_INET){+.+.}-{0:0}:
+>        lock_sock_nested+0x48/0x100 net/core/sock.c:3780
+>        lock_sock include/net/sock.h:1709 [inline]
+>        inet_shutdown+0x6a/0x390 net/ipv4/af_inet.c:919
+>        nbd_mark_nsock_dead+0x2e9/0x560 drivers/block/nbd.c:318
 
-I accidentally removed the condition here, it should be:
+If I'm not mistaken, it looks like this issue is also due to nbd
+introducing a lockdep dependency between reclaim and af_socket, and this
+is similar to a previous report:
 
-  } else if (icsk->icsk_rto > max) {
+#syz dup: [syzbot] [mptcp?] possible deadlock in mptcp_subflow_create_socket (2)
 
->  			max = icsk->icsk_rto;
-> +		}
->  	}
->  
-> -	if (max && max < rto)
-> -		rto = max;
-> +	if (max)
-> +		return max < rto ? max : rto;
->  
-> -	return rto;
-> +	return max_stale && max_stale < rto ? max_stale : rto;
->  }
->  
->  static void mptcp_pm_add_timer(struct timer_list *timer)
-> 
+If that's not correct, please unduplicate it.
 
 Cheers,
 Matt
