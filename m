@@ -1,39 +1,38 @@
-Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
+Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7891A21E091
-	for <mptcp@lists.linux.dev>; Sat, 11 Apr 2026 03:49:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07D9721E091
+	for <mptcp@lists.linux.dev>; Sat, 11 Apr 2026 03:49:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775879388; cv=none; b=bJFtrXz1jXv+LBQLX0wAEqp4H77JFrLCRl/gQj7/D3wRvJLmgTZtQAsq29wN4saq5lP7iHnHKgmR8FjcMSTXYC8legGXQXfaMV9SAJsF+N0fBxhw/OrkFH15PQ/Hf4IdjiiXA8THYTrVEQLl7a29U75bjITgv65ldhiIktCEfmM=
+	t=1775879391; cv=none; b=IH7QUwZjhQKa4IUPb1gUdwAj/f9KgP4PyyJcmd7pGPPXYqms5hJUeMC+zBEZnQnOEMzjGTZ9qrOeimwnQzdGmM73ASpx3VeauYSQtOUkfvZ75iBK04QX+gaHOiGYV6CYLVuQIrwy9Cm75Y8Qj42NbHsm4nfOh8pvDLb3wMRQDRM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775879388; c=relaxed/simple;
-	bh=d9JPc1B8Jh62jVBuK2SkYCEKFYpVLC+uBht7K4PRaOU=;
+	s=arc-20240116; t=1775879391; c=relaxed/simple;
+	bh=esv7ZeQ43ZEeJFfgZ29RQf0m+bFqbQezLTyrIcV2B9U=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mN15MLDI0L76pFbdoAN+gVlAIoqEsP+ixWLtdBl5wdtDlnl2Lowcgp8S743l0zl9RZBonliFUCrHyiRyExPMN0NA5nqWj3C/cAjj0dKES/MNlUYum0wrqCW5N/K4MY3yr11l/fuHZbu9iu4gS+e55ZFuazhS6euHERlWAtH4OKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Pc650lgP; arc=none smtp.client-ip=91.218.175.177
+	 MIME-Version; b=CniPXQD7/6856JPLiLVArQ8/1SuV01aLvCseO/NP266d8AwZtwJqA5wl3TON0lUCiQpbZWB7IYnBSc0mZPkk9UBdgtAcd7+WucClFyKH5p4SV0ReOXFaHLoLWr0Hav6AfZmqUK/0DD0v3tc9Rwp1oHkVIQ3XCnY+xAoIXxAXTWk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=a3V8VykB; arc=none smtp.client-ip=91.218.175.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Pc650lgP"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="a3V8VykB"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1775879384;
+	t=1775879388;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=zyYxWWPmEXwCiAw2A5XpCWQKadPpXI3oo1ifsXeyqk8=;
-	b=Pc650lgPsHsGTgzS6aC+xeMQEHso8PhGralpQO4MFL/eKgq6J8Dn1UFyqVoSv9WqrclX/k
-	8NYfP0Xn9aDU4SUSdVKs1EO5gIU/Zmg1LI4XVr80tU0jrMD/MsZyeM9zfsAO25fUbsCZL2
-	nL58ud6mLx6omVJvBuLWP4gbBybfrYY=
+	bh=7G3rlNMUMHrWpCCGcLdF2LLnHkfXSbIyIpjlhqhjQSg=;
+	b=a3V8VykBLRh2oTiMKZr6ZWMQNlgmnnt0lRPF6IRUrPnDagZZ/cf/t6exnZfcpzv0NeMhtv
+	lT4OkbpzCUJ3oTOhiQ4yeyGN8xBOeooSohnB5qIX8k3tVIYct1RxHsg7iNlBfABlgUisbk
+	ixFwmeYxaf+8Fw4334URzsJX33ZUgQE=
 From: Gang Yan <gang.yan@linux.dev>
 To: mptcp@lists.linux.dev
-Cc: Gang Yan <yangang@kylinos.cn>,
-	Paolo Abeni <pabeni@redhat.com>
-Subject: [PATCH mptcp-net v4 1/2] mptcp: sync the msk->sndbuf at accept() time
-Date: Sat, 11 Apr 2026 11:48:59 +0800
-Message-ID: <483c31e532e8e63a38fec5bf6501c9f69ff66052.1775878944.git.yangang@kylinos.cn>
+Cc: Gang Yan <yangang@kylinos.cn>
+Subject: [PATCH mptcp-net v4 2/2] selftests: mptcp: add a check for sndbuf of S/C
+Date: Sat, 11 Apr 2026 11:49:00 +0800
+Message-ID: <e3f6d29137bbb6885f5af8ea1f23a2404e31a952.1775878944.git.yangang@kylinos.cn>
 In-Reply-To: <cover.1775878944.git.yangang@kylinos.cn>
 References: <cover.1775878944.git.yangang@kylinos.cn>
 Precedence: bulk
@@ -47,52 +46,67 @@ X-Migadu-Flow: FLOW_OUT
 
 From: Gang Yan <yangang@kylinos.cn>
 
-On passive MPTCP connections, the msk sndbuf is not updated correctly.
+Add a new chk_sndbuf() helper to diag.sh that extracts the sndbuf
+(the 'tb' field from 'ss -m' skmem output) for both server and
+client MPTCP sockets, and verifies they are equal.
 
-The root cause is a timing issue in the accept path:
-- tcp_check_req() -> subflow_syn_recv_sock() -> mptcp_sk_clone_init()
-  calls __mptcp_propagate_sndbuf() to copy the ssk sndbuf into msk
-- Later, tcp_child_process() -> tcp_init_transfer() ->
-  tcp_sndbuf_expand() grows the ssk sndbuf.
+Without the previous patch, it will fail:
 
-So __mptcp_propagate_sndbuf() runs before the ssk sndbuf has been
-expanded and the msk ends up with a much smaller sndbuf than the
-subflow:
-  MPTCP: msk->sndbuf:20480, msk->first->sndbuf:2626560
+'''
+07 ....chk sndbuf server/client    [FAIL] sndbuf S=20480 != C=2630656
+'''
 
-Fix this by removing the __mptcp_propagate_sndbuf() call in
-mptcp_sk_clone_init(), as the ssk sndbuf is not yet finalized there.
-Instead, call __mptcp_propagate_sndbuf() at accept() time, when the
-ssk sndbuf has been fully expanded by tcp_sndbuf_expand().
-
-Fixes: 8005184fd1ca ("mptcp: refactor sndbuf auto-tuning")
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/602
 Signed-off-by: Gang Yan <yangang@kylinos.cn>
-Acked-by: Paolo Abeni <pabeni@redhat.com>
 ---
- net/mptcp/protocol.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/testing/selftests/net/mptcp/diag.sh | 28 +++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 17b9a8c13ebf..6b486fc94c16 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -3594,7 +3594,6 @@ struct sock *mptcp_sk_clone_init(const struct sock *sk,
- 	 * uses the correct data
- 	 */
- 	mptcp_copy_inaddrs(nsk, ssk);
--	__mptcp_propagate_sndbuf(nsk, ssk);
+diff --git a/tools/testing/selftests/net/mptcp/diag.sh b/tools/testing/selftests/net/mptcp/diag.sh
+index d847ff1737c3..27cbda68144e 100755
+--- a/tools/testing/selftests/net/mptcp/diag.sh
++++ b/tools/testing/selftests/net/mptcp/diag.sh
+@@ -322,6 +322,33 @@ wait_connected()
+ 	done
+ }
  
- 	mptcp_rcv_space_init(msk, ssk);
- 	msk->rcvq_space.time = mptcp_stamp();
-@@ -4252,6 +4251,7 @@ static int mptcp_stream_accept(struct socket *sock, struct socket *newsock,
++chk_sndbuf()
++{
++	local server_sndbuf client_sndbuf msg
++	local port=${1}
++
++	msg="....chk sndbuf server/client"
++	server_sndbuf=$(ss -N "${ns}" -inmHM "sport" "${port}" | \
++			sed -n 's/.*tb\([0-9]\+\).*/\1/p')
++	client_sndbuf=$(ss -N "${ns}" -inmHM "dport" "${port}" | \
++			sed -n 's/.*tb\([0-9]\+\).*/\1/p')
++
++	mptcp_lib_print_title "${msg}"
++	if [ -z "${server_sndbuf}" ] || [ -z "${client_sndbuf}" ]; then
++		mptcp_lib_pr_fail "sndbuf S=${server_sndbuf} C=${client_sndbuf}"
++		mptcp_lib_result_fail "${msg}"
++		ret=${KSFT_FAIL}
++	elif [ "${server_sndbuf}" != "${client_sndbuf}" ]; then
++		mptcp_lib_pr_fail "sndbuf S=${server_sndbuf} != C=${client_sndbuf}"
++		mptcp_lib_result_fail "${msg}"
++		ret=${KSFT_FAIL}
++	else
++		mptcp_lib_pr_ok
++		mptcp_lib_result_pass "${msg}"
++	fi
++}
++
++
+ trap cleanup EXIT
+ mptcp_lib_ns_init ns
  
- 		mptcp_graft_subflows(newsk);
- 		mptcp_rps_record_subflows(msk);
-+		__mptcp_propagate_sndbuf(newsk, mptcp_subflow_tcp_sock(subflow));
- 
- 		/* Do late cleanup for the first subflow as necessary. Also
- 		 * deal with bad peers not doing a complete shutdown.
+@@ -341,6 +368,7 @@ echo "b" | \
+ 				127.0.0.1 >/dev/null &
+ wait_connected $ns 10000
+ chk_msk_nr 2 "after MPC handshake"
++chk_sndbuf 10000
+ chk_last_time_info 10000
+ chk_msk_remote_key_nr 2 "....chk remote_key"
+ chk_msk_fallback_nr 0 "....chk no fallback"
 -- 
 2.43.0
 
