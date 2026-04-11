@@ -1,36 +1,41 @@
-Received: from out-184.mta0.migadu.com (out-184.mta0.migadu.com [91.218.175.184])
+Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B70B321E091
-	for <mptcp@lists.linux.dev>; Sat, 11 Apr 2026 03:49:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7891A21E091
+	for <mptcp@lists.linux.dev>; Sat, 11 Apr 2026 03:49:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775879383; cv=none; b=Uk9mruwcNpFNbI0gI8KXlxKYEVLS8tPV4mSt1ujt9xL61VIQaYvyxyQUFUW2lq9HfUChgJ5uVYRmlSEMjY9YxRUCCOgEY7cTZOEbKaBKj/zr5CK1XhJ3Hxi29N0KCA6ySgay9zT2hIEvJgOta02q2Vu9pEbil1+IkkJcTcyaIaY=
+	t=1775879388; cv=none; b=bJFtrXz1jXv+LBQLX0wAEqp4H77JFrLCRl/gQj7/D3wRvJLmgTZtQAsq29wN4saq5lP7iHnHKgmR8FjcMSTXYC8legGXQXfaMV9SAJsF+N0fBxhw/OrkFH15PQ/Hf4IdjiiXA8THYTrVEQLl7a29U75bjITgv65ldhiIktCEfmM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775879383; c=relaxed/simple;
-	bh=Md4HfVEUlUvfJ5xuJObCyxkOlhcnRZa6nqggFQwL0CY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oBIdFU9dg5eoANZ5BqdsJmW05qhIiPanHnmDh1Vdx5IDx4SRgqDjtAOWr0tTem4+gWi/OeX6JdJ+pQ1wSNPMHSeQVAb1xgxQMhvHLLT2Vfk7sFd1dbtM1bPn3YLn1cYLHWFGuaqEHe4lgmUfO60HSneCDaDtbKW3S7um8Xjr+Wk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=WKhPihFo; arc=none smtp.client-ip=91.218.175.184
+	s=arc-20240116; t=1775879388; c=relaxed/simple;
+	bh=d9JPc1B8Jh62jVBuK2SkYCEKFYpVLC+uBht7K4PRaOU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=mN15MLDI0L76pFbdoAN+gVlAIoqEsP+ixWLtdBl5wdtDlnl2Lowcgp8S743l0zl9RZBonliFUCrHyiRyExPMN0NA5nqWj3C/cAjj0dKES/MNlUYum0wrqCW5N/K4MY3yr11l/fuHZbu9iu4gS+e55ZFuazhS6euHERlWAtH4OKo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Pc650lgP; arc=none smtp.client-ip=91.218.175.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="WKhPihFo"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Pc650lgP"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1775879378;
+	t=1775879384;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=+MIuDl7MwiVdjwx2uuc70uNeRl67Z/1QVBmz8Yj3Icg=;
-	b=WKhPihFoFLXFFsK9P60bLTYimeETwCleUKaMZk1DqPa/Cv0PYH17/Fr9FiY4MhXIOIEkN3
-	2/LzMhnO7Bu3qUlQAuwkHJW+eDA+wjyPbvolgLYg7+7voJWfqz+hdabcJSbPn+JN726rfW
-	ctsuhqLQKkWH0l15IAyCAztUXV22qnU=
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zyYxWWPmEXwCiAw2A5XpCWQKadPpXI3oo1ifsXeyqk8=;
+	b=Pc650lgPsHsGTgzS6aC+xeMQEHso8PhGralpQO4MFL/eKgq6J8Dn1UFyqVoSv9WqrclX/k
+	8NYfP0Xn9aDU4SUSdVKs1EO5gIU/Zmg1LI4XVr80tU0jrMD/MsZyeM9zfsAO25fUbsCZL2
+	nL58ud6mLx6omVJvBuLWP4gbBybfrYY=
 From: Gang Yan <gang.yan@linux.dev>
 To: mptcp@lists.linux.dev
-Cc: Gang Yan <yangang@kylinos.cn>
-Subject: [PATCH mptcp-net v4 0/2] mptcp: sync the msk->sndbuf at accept() time
-Date: Sat, 11 Apr 2026 11:48:58 +0800
-Message-ID: <cover.1775878944.git.yangang@kylinos.cn>
+Cc: Gang Yan <yangang@kylinos.cn>,
+	Paolo Abeni <pabeni@redhat.com>
+Subject: [PATCH mptcp-net v4 1/2] mptcp: sync the msk->sndbuf at accept() time
+Date: Sat, 11 Apr 2026 11:48:59 +0800
+Message-ID: <483c31e532e8e63a38fec5bf6501c9f69ff66052.1775878944.git.yangang@kylinos.cn>
+In-Reply-To: <cover.1775878944.git.yangang@kylinos.cn>
+References: <cover.1775878944.git.yangang@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -42,25 +47,52 @@ X-Migadu-Flow: FLOW_OUT
 
 From: Gang Yan <yangang@kylinos.cn>
 
-Changelog:
-v4:
-  - Update the coomit log to show the root cause.
-  - Remove the '__mptcp_propagate_sndbuf' in 'mptcp_sk_clone_init'
-    according to Paolo's advice.
-  - Replace 'grep' with 'sed' according to AI's suggestions.
-  - Crete a packetdrill PR for test:
-    https://github.com/multipath-tcp/packetdrill/pull/193
-v3:
-  - Add a check in diag.sh to check the sndbuf of the server side.
+On passive MPTCP connections, the msk sndbuf is not updated correctly.
 
-Gang Yan (2):
-  mptcp: sync the msk->sndbuf at accept() time
-  selftests: mptcp: add a check for sndbuf of S/C
+The root cause is a timing issue in the accept path:
+- tcp_check_req() -> subflow_syn_recv_sock() -> mptcp_sk_clone_init()
+  calls __mptcp_propagate_sndbuf() to copy the ssk sndbuf into msk
+- Later, tcp_child_process() -> tcp_init_transfer() ->
+  tcp_sndbuf_expand() grows the ssk sndbuf.
 
- net/mptcp/protocol.c                      |  2 +-
- tools/testing/selftests/net/mptcp/diag.sh | 28 +++++++++++++++++++++++
- 2 files changed, 29 insertions(+), 1 deletion(-)
+So __mptcp_propagate_sndbuf() runs before the ssk sndbuf has been
+expanded and the msk ends up with a much smaller sndbuf than the
+subflow:
+  MPTCP: msk->sndbuf:20480, msk->first->sndbuf:2626560
 
+Fix this by removing the __mptcp_propagate_sndbuf() call in
+mptcp_sk_clone_init(), as the ssk sndbuf is not yet finalized there.
+Instead, call __mptcp_propagate_sndbuf() at accept() time, when the
+ssk sndbuf has been fully expanded by tcp_sndbuf_expand().
+
+Fixes: 8005184fd1ca ("mptcp: refactor sndbuf auto-tuning")
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/602
+Signed-off-by: Gang Yan <yangang@kylinos.cn>
+Acked-by: Paolo Abeni <pabeni@redhat.com>
+---
+ net/mptcp/protocol.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 17b9a8c13ebf..6b486fc94c16 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -3594,7 +3594,6 @@ struct sock *mptcp_sk_clone_init(const struct sock *sk,
+ 	 * uses the correct data
+ 	 */
+ 	mptcp_copy_inaddrs(nsk, ssk);
+-	__mptcp_propagate_sndbuf(nsk, ssk);
+ 
+ 	mptcp_rcv_space_init(msk, ssk);
+ 	msk->rcvq_space.time = mptcp_stamp();
+@@ -4252,6 +4251,7 @@ static int mptcp_stream_accept(struct socket *sock, struct socket *newsock,
+ 
+ 		mptcp_graft_subflows(newsk);
+ 		mptcp_rps_record_subflows(msk);
++		__mptcp_propagate_sndbuf(newsk, mptcp_subflow_tcp_sock(subflow));
+ 
+ 		/* Do late cleanup for the first subflow as necessary. Also
+ 		 * deal with bad peers not doing a complete shutdown.
 -- 
 2.43.0
 
