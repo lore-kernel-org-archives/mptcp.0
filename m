@@ -1,131 +1,237 @@
-Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com [209.85.222.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F3C53A1A2D
-	for <mptcp@lists.linux.dev>; Fri, 10 Apr 2026 15:42:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D6E52C235E
+	for <mptcp@lists.linux.dev>; Sat, 11 Apr 2026 00:40:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775835726; cv=none; b=SCOY9dUOXQB7Igh3t+Gm/5+be32wVRteB1uyAX4nK2OlgLkyTO2gRNzJ1XLuHlQfNjq5gscNhsbYnOLIAW5IrnkMP/8dEKQ9c51k2/fB7OxIO6T/pwk1+bhoUbXGg1yT9p6qZ+SL8y+YqptQb+pcE1Z+Ay9kFJ27SHTmkMFOSvk=
+	t=1775868001; cv=none; b=XpXEe27Dg1StnWInrwBQ/Ni5ELW7ToyVAneOQRcIB8gLiKtYEQ9e8I9WOZe/FYP0lfDhQjR/PiMr+d9hL4O52gDltpB42zaZCF/p4qo3MD7DwSgGrNyWaRTIp2CWheCavGJb60GKc2o/SH1pudxa5x24DK7pWM2HmytJWJgZRF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775835726; c=relaxed/simple;
-	bh=fPGeuxKoaG6Ca5PhVO5rLXbbzK8RAKbiPiqXUO44Eo4=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
-	 MIME-Version:Content-Type; b=sCrHk+svnTMYiiwmEJZKtvTBnXTUVAnrhEXklqjrUQcxxvVV6kxffR/eXq6GC6FHdhlCqp+N3Z6Rl5HRPn1HqBJ3jWrSlRNfpraIwZ/Br22Mz29dL2NHf8K7IJ3NOGnAggRtyynwkA9w2sJodof+ybgr1ZieOeIYI8mVogczN4o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nzCp3st5; arc=none smtp.client-ip=209.85.222.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1775868001; c=relaxed/simple;
+	bh=9bovpwFaE/c/kUpyJtyXyVfP0AUceLsZ/oF1U0P0mSQ=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=NqmTT1hOAjHSBZtc8XkEt9PH6nrKHXZUoJJY3QFIEk1ozmYcPUMOz8uXktq/mQLItwqftyAMpigY5OJiGo3zJ523a8QqYEXOQf75AJU4UWFx7+c07KBZ8aiUST8LFc89e3s9tg32ZVm1s9xcLq24dNJZMtS0XYhabTPX8fTOin8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jlH937NO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nzCp3st5"
-Received: by mail-ua1-f48.google.com with SMTP id a1e0cc1a2514c-944168e8c5fso1263875241.2
-        for <mptcp@lists.linux.dev>; Fri, 10 Apr 2026 08:42:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1775835724; x=1776440524; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rJJHT7DmJJQ+906r6sn20PPvhQlZENH6F93jdxCpRrY=;
-        b=nzCp3st5vRE7QPDNiAKLAAc27y7Umrb7jimavZxKg4yayBDYYcqFeEZk6ngh2bxjg0
-         dvLj2IVXON/UaSFKtTFk06pakaDq+V8Q+/E9Gt6CT25cOno2f367L3aWa9LOecvmn8Vq
-         RBejzOTdCOLfYXFPmOqSDHfoNV74lITsqL8vZw9U16S/g/RBe9zLTYMGslHGLqVznFiE
-         NEmCArAHQrPyxgtzu2Gk5u5XWQmkEdg1nrvtyuOmHhNCmq4Cw+CNqmp6HOSCsIHpIi9X
-         Nc/UxsFS0zFBA9rKYPIk67xjONrZ7JrFhI3/RV3jyptr2wwFy+yGzMyredYISU2/f3Je
-         EYJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775835724; x=1776440524;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=rJJHT7DmJJQ+906r6sn20PPvhQlZENH6F93jdxCpRrY=;
-        b=VIAbav2lidOIsfYuYPLFbRiyLzr9aikG4w7lcnWG7035deOSKQKTByusy47X8Swq0K
-         nXDkToMNesQ5FhDuRJMQBKssox2M7aqKnEUdPBaDvdX5h6x998/FMBCihMHbS8ijHSfM
-         al+o/GlIMAQW+mWdO5pua6w3N5telT32GJhGaklPgLYv6LwsJHbg7tKi0v3FJq3fK/fX
-         f9wlvhr4JP2zbhASoXaX2/xJ1VNlJubyIURDXK7kOy8qnsrz+aIKdJbnhRBf+wZuuJqu
-         aCqR7BBgI+N/mGLknRlAdc5qJSk3aJCpZVKGUZMZA6TweH1qGtd2mGeaR9GYToYeh9Sa
-         5dgQ==
-X-Gm-Message-State: AOJu0Yxat+AwsOJiAaBmj4dLr6BNDFWbkGmjvD0ygAm4V0vez9pEN3pF
-	ae1CgyvqQzbYI03RZU0/uGMk0vO9aQvBq0qZuqAuM64WFOAUJ4fH07SCvcgi
-X-Gm-Gg: AeBDieu1Ev8DRejFBhzmkchSViEBx9hu6sLR0M9o6fX2wKKNe3MYQHSeMxSEFgASgQr
-	B+sl+X37lU+1As4yQI4DX7+BM5GrZy36JXfnRgyMhk1/BhpTuHcujbg9tfDtRtu5tbUzQmDCTGg
-	P6nQrKAjPO5XQG6VGELLQYFeDrh3oESgzmZ4T8PaKUPlzAZ3belDRD/2XmnNR/q78F7OjSplwZW
-	g6vcrmlyZeAikgHxGJIJJEwcoYHVeexQaY2599twy4hcIHDeuls5egPm/o3natgLE7fkz/k4g1Z
-	g8LiH7Rk2T7hmdEmBxiunGRJqs40m116wpvhIJVVIT4GemOzkIWW30CfqwKy+T0Tjv5ckm58Eo9
-	CLb/XwW9t3M0Ej6xfrqNVfMo2LYxvFWbCz7dvbKes5E3dfzlImqH2t6rlqkvub+82p+fE75pNF2
-	Pgi5cO3Gv0BwW75omPWWcY7fWGPXfnyIrPQYJxQw==
-X-Received: by 2002:a05:6102:441b:b0:609:4d86:77b with SMTP id ada2fe7eead31-60a00f39005mr1755561137.24.1775835724298;
-        Fri, 10 Apr 2026 08:42:04 -0700 (PDT)
-Received: from [127.0.0.1] ([64.236.135.112])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8ac84a4800dsm24778536d6.21.2026.04.10.08.42.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Apr 2026 08:42:03 -0700 (PDT)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20260410-mptcp-inc-limits-v2-0-5402209f05d3@kernel.org>
-References: <20260410-mptcp-inc-limits-v2-0-5402209f05d3@kernel.org>
-Subject: Re: [PATCH mptcp-next v2 00/17] mptcp: pm: increase limits, and
- related fixes and cleanup
-Message-ID: <152ae6fd-a622-acf5-c6b1-bb4530842f86@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 10 Apr 2026 15:42:03 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jlH937NO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4816C19421;
+	Sat, 11 Apr 2026 00:40:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1775868001;
+	bh=9bovpwFaE/c/kUpyJtyXyVfP0AUceLsZ/oF1U0P0mSQ=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=jlH937NO+NDbJSlaM9RJKYcJCAXnovoMOpe2KG2S62ZwkOpT0WyGtbto9jrkzZveW
+	 dcNORfH1UTYbweY9wAlj2QTf3qlwUTiwZ5LKLu+TQhk3a5nffY8qFPxrlCRTTmAIOM
+	 +4T2RZwA14O4eFovwCUK3/ANwfeL7eHRtbMu8d0G+kXvlrKWdHK0vlmbxpDw8nrXF/
+	 GRqWzUESSZyacKPESb/oWUHx2aQ3xNeCPO609RMJ/uoDJvVH6VFWm6LW7zmXH9J4jT
+	 M3nbligMDzmKHXiMGGAOjO3nzrmhV0kz9HjvamHbuKp1Q2S5yV18rgqkOOrPuIzxrR
+	 bloExDN+zcqxw==
+Date: Fri, 10 Apr 2026 17:40:00 -0700 (PDT)
+From: Mat Martineau <martineau@kernel.org>
+To: Geliang Tang <geliang@kernel.org>
+cc: mptcp@lists.linux.dev, Geliang Tang <tanggeliang@kylinos.cn>, 
+    kernel test robot <lkp@intel.com>, Cong Wang <xiyou.wangcong@gmail.com>
+Subject: Re: [PATCH mptcp-next v3 1/2] mptcp: implement
+ psock_update_sk_prot
+In-Reply-To: <30cc0b1a7ecee5473df79e02fe4863154af0331a.1773826662.git.tanggeliang@kylinos.cn>
+Message-ID: <d20a2b87-c4c4-983a-7f16-480f390d3586@kernel.org>
+References: <cover.1773826662.git.tanggeliang@kylinos.cn> <30cc0b1a7ecee5473df79e02fe4863154af0331a.1773826662.git.tanggeliang@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; format=flowed; charset=US-ASCII
 
-Hi Matthieu,
+On Wed, 18 Mar 2026, Geliang Tang wrote:
 
-Thank you for your modifications, that's great!
+> From: Geliang Tang <tanggeliang@kylinos.cn>
+>
+> Add MPTCP support for BPF sockmap by implementing psock_update_sk_prot
+> callback. This allows MPTCP sockets to dynamically switch protocol
+> handlers when attached to or detached from sockmap programs. Separate
+> protocol structures are maintained for IPv4/IPv6 and TX/RX configurations.
+>
+> tcp_bpf_update_proto() in net/ipv4/tcp_bpf.c is a frame of reference for
+> this patch.
+>
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202512261144.DxrvwMS3-lkp@intel.com/
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/521
+> Cc: Cong Wang <xiyou.wangcong@gmail.com>
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> ---
+> net/mptcp/protocol.c | 113 +++++++++++++++++++++++++++++++++++++++++++
+> 1 file changed, 113 insertions(+)
+>
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index b5676b37f8f4..7a485694323b 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -11,6 +11,7 @@
+> #include <linux/netdevice.h>
+> #include <linux/sched/signal.h>
+> #include <linux/atomic.h>
+> +#include <linux/skmsg.h>
+> #include <net/aligned_data.h>
+> #include <net/rps.h>
+> #include <net/sock.h>
+> @@ -4020,6 +4021,106 @@ static int mptcp_connect(struct sock *sk, struct sockaddr_unsized *uaddr,
+> 	return 0;
+> }
+>
+> +#ifdef CONFIG_BPF_SYSCALL
+> +enum {
+> +	MPTCP_BPF_IPV4,
+> +	MPTCP_BPF_IPV6,
+> +	MPTCP_BPF_NUM_PROTS,
+> +};
+> +
+> +enum {
+> +	MPTCP_BPF_BASE,
+> +	MPTCP_BPF_TX,
+> +	MPTCP_BPF_RX,
+> +	MPTCP_BPF_TXRX,
+> +	MPTCP_BPF_NUM_CFGS,
+> +};
+> +
+> +static struct proto mptcp_bpf_prots[MPTCP_BPF_NUM_PROTS][MPTCP_BPF_NUM_CFGS];
+> +
+> +static void mptcp_bpf_rebuild_protos(struct proto prot[MPTCP_BPF_NUM_CFGS],
+> +				     struct proto *base)
+> +{
+> +	prot[MPTCP_BPF_BASE]			= *base;
+> +	prot[MPTCP_BPF_BASE].destroy		= sock_map_destroy;
+> +	prot[MPTCP_BPF_BASE].close		= sock_map_close;
+> +	prot[MPTCP_BPF_BASE].sock_is_readable	= sk_msg_is_readable;
+> +
+> +	prot[MPTCP_BPF_TX]			= prot[MPTCP_BPF_BASE];
+> +	prot[MPTCP_BPF_RX]			= prot[MPTCP_BPF_BASE];
+> +	prot[MPTCP_BPF_TXRX]			= prot[MPTCP_BPF_TX];
 
-Our CI did some validations and here is its report:
+Hi Geliang -
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Unstable: 1 failed =
-test(s): packetdrill_dss =E2=9A=A0=EF=B8=8F=20
-- KVM Validation: debug =
-(only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal=
- (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only =
-bpftest_all): Success! =E2=9C=85
-- Task: https://github.=
-com/multipath-tcp/mptcp_net-next/actions/runs/24248950937
+Minor thing, can you change the last line to also assign from 
+prot[MPTCP_BPF_BASE]? The tcp_bpf.c code does copy from TCP_BPF_TX but it 
+has a different sendmsg member value.
 
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/512df030c138
-Patchwork: https://patchwork.kernel.=
-org/project/mptcp/list/?series=3D1079802
+Related question: why does TCP have separate sendmsg/recvmsg for BPF but 
+MPTCP does not? The cover letter mentions "basic MPTCP BPF sockmap 
+support", so it looks like not all sockmap functionality is implemented. 
+Can you update the commit message and add some comment explaining what 
+sockmap functionality is missing in MPTCP relative to TCP?
 
 
-If there are some issues, you =
-can reproduce them using the same environment as
-the one used by the CI =
-thanks to a docker image, e.g.:
+> +}
+> +
+> +#if IS_ENABLED(CONFIG_MPTCP_IPV6)
+> +static struct proto *mptcpv6_prot_saved __read_mostly;
+> +static DEFINE_SPINLOCK(mptcpv6_prot_lock);
+> +
+> +static void mptcp_bpf_check_v6_needs_rebuild(struct proto *ops)
+> +{
+> +	/*
+> +	 * Load with acquire semantics to ensure we see the latest protocol
+> +	 * structure before checking for rebuild.
+> +	 */
+> +	if (unlikely(ops != smp_load_acquire(&mptcpv6_prot_saved))) {
+> +		spin_lock_bh(&mptcpv6_prot_lock);
+> +		if (likely(ops != mptcpv6_prot_saved)) {
+> +			mptcp_bpf_rebuild_protos(mptcp_bpf_prots[MPTCP_BPF_IPV6],
+> +						 ops);
+> +			/* Ensure mptcpv6_prot_saved update is visible before
+> +			 * releasing lock
+> +			 */
+> +			smp_store_release(&mptcpv6_prot_saved, ops);
+> +		}
+> +		spin_unlock_bh(&mptcpv6_prot_lock);
+> +	}
+> +}
+> +
+> +static int mptcp_bpf_assert_proto_ops(struct proto *ops)
+> +{
+> +	/* In order to avoid retpoline, we make assumptions when we call
+> +	 * into ops if e.g. a psock is not present. Make sure they are
+> +	 * indeed valid assumptions.
+> +	 */
+> +	return ops->recvmsg  == mptcp_recvmsg &&
+> +	       ops->sendmsg  == mptcp_sendmsg ? 0 : -EOPNOTSUPP;
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+Please fix the extra space before each "==" as well.
 
-For more details:
+> +}
+> +#endif
+> +
+> +static int mptcp_bpf_update_proto(struct sock *sk,
+> +				  struct sk_psock *psock,
+> +				  bool restore)
+> +{
+> +	int family = sk->sk_family == AF_INET6 ? MPTCP_BPF_IPV6 :
+> +						 MPTCP_BPF_IPV4;
+> +	int config = psock->progs.msg_parser   ? MPTCP_BPF_TX   :
+> +						 MPTCP_BPF_BASE;
+> +
+> +	if (psock->progs.stream_verdict || psock->progs.skb_verdict)
+> +		config = (config == MPTCP_BPF_TX) ? MPTCP_BPF_TXRX :
+> +						    MPTCP_BPF_RX;
+> +
+> +	if (restore) {
+> +		WRITE_ONCE(sk->sk_write_space, psock->saved_write_space);
+> +		/* Pairs with lockless read in sk_clone_lock() */
+> +		sock_replace_proto(sk, psock->sk_proto);
+> +		return 0;
+> +	}
+> +
+> +#if IS_ENABLED(CONFIG_MPTCP_IPV6)
+> +	if (sk->sk_family == AF_INET6) {
+> +		if (mptcp_bpf_assert_proto_ops(psock->sk_proto))
+> +			return -EINVAL;
+> +
+> +		mptcp_bpf_check_v6_needs_rebuild(psock->sk_proto);
+> +	}
+> +#endif
+> +
+> +	/* Pairs with lockless read in sk_clone_lock() */
 
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
+I see where this was copied from the tcp code, but there is no lockless 
+read in sk_clone_lock(). It's in sk_clone().
+
+Thanks,
+Mat
 
 
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 Core)
+> +	sock_replace_proto(sk, &mptcp_bpf_prots[family][config]);
+> +	return 0;
+> +}
+> +#endif
+> +
+> static struct proto mptcp_prot = {
+> 	.name		= "MPTCP",
+> 	.owner		= THIS_MODULE,
+> @@ -4051,8 +4152,20 @@ static struct proto mptcp_prot = {
+> 	.obj_size	= sizeof(struct mptcp_sock),
+> 	.slab_flags	= SLAB_TYPESAFE_BY_RCU,
+> 	.no_autobind	= true,
+> +#ifdef CONFIG_BPF_SYSCALL
+> +	.psock_update_sk_prot	= mptcp_bpf_update_proto,
+> +#endif
+> };
+>
+> +#ifdef CONFIG_BPF_SYSCALL
+> +static int __init mptcp_bpf_v4_build_proto(void)
+> +{
+> +	mptcp_bpf_rebuild_protos(mptcp_bpf_prots[MPTCP_BPF_IPV4], &mptcp_prot);
+> +	return 0;
+> +}
+> +late_initcall(mptcp_bpf_v4_build_proto);
+> +#endif
+> +
+> static int mptcp_bind(struct socket *sock, struct sockaddr_unsized *uaddr, int addr_len)
+> {
+> 	struct mptcp_sock *msk = mptcp_sk(sock->sk);
+> -- 
+> 2.51.0
+>
+>
+>
