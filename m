@@ -1,131 +1,191 @@
-Received: from mail-dy1-f169.google.com (mail-dy1-f169.google.com [74.125.82.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F93A3C07A
-	for <mptcp@lists.linux.dev>; Sat, 11 Apr 2026 05:00:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBD4E35F8B7;
+	Mon, 13 Apr 2026 11:52:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775883641; cv=none; b=F6XIPdxxP+m5+n4bBzmlfJTiEf2gkY57153w0nJV5D8dnpKJgtgpvaolbwbNwslbE+W/Zm0LXI0MUvQgYdLMCKTm+YOJIqPPBN7szfbCEioy7da63kBYZYlr97z7dCKYPTdZ59fu9k0JK/UAgeHCjBL4QMckIPYuDV9+/zlcmv8=
+	t=1776081157; cv=none; b=hiuxxq9RfmXFIn7IVyP15e25O/z2zInxXr0tdahB6mA33i5aqmt05VdZTRoWvVsb9ndMB98YuA0TLd4VZmyAoaeCcpIuQdAlxN7J69EQLWFodEIVESIftHL3mzvpdCmMhIr48P0aCVyzg5lctw1CKdKizQ9XtWfTKys9GxL/CvI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775883641; c=relaxed/simple;
-	bh=ykh76M9n2JYDPo7Dn0bTdGHOkO418uOoap3eliMwOl8=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
-	 MIME-Version:Content-Type; b=PrOI7EerrFS7ClZqQpXnrEUl8N7syZpYhG2i7KP0m1bDZxGjrZ+OhQ55Sl690e0f+Vcykq683kLM5Jno8EqEmL2L+T9tvI3qPLTgDcKshU6ioxNCb8XhY7wPVI2auflqSuBHIsdQlTB4N0t1JjN9rqauNQ5QFuy2XmSQsT1RpDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aMgmJjsJ; arc=none smtp.client-ip=74.125.82.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1776081157; c=relaxed/simple;
+	bh=du7Z0sbNf7DADFo57XaAI3jhu1g4I6I2KhMky8I+aNU=;
+	h=Subject:To:Cc:From:Date:In-Reply-To:Message-ID:MIME-Version:
+	 Content-Type; b=ONU6QMahuD0I+o5POjB5URDk/gKbw6x5ulMtUZ/34JEyetojERKhuO02n7Q4Tkgclux8MauONOC7AL7FCVwyu6PmmubQnv1ov/NOiNgMCAEggMkDbtQO9OiVL5VQjr2qkMwRsHhliN6vsJtHASYll6gq93QWBhf5FOx8tVSBvhE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=VZRKK/9t; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aMgmJjsJ"
-Received: by mail-dy1-f169.google.com with SMTP id 5a478bee46e88-2c156c4a9efso3952740eec.1
-        for <mptcp@lists.linux.dev>; Fri, 10 Apr 2026 22:00:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1775883640; x=1776488440; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xsURKGnmbM6kXngKz/J1aSiLPDXCmExQ1ZU082i1dYs=;
-        b=aMgmJjsJ/e7JDh/G41H9ONl/FVTQRe942B2SzJ4De234gfITaRUYYdWQapi6AvV8S+
-         kmF6XNUkqRdqfMsgb8vKmKTTSouXxX7kklD/Bb2n6Cc70PNy6iG+RtqsC9RPbF49vf3i
-         PBlGLW9djZg8kS7fUbyV2fYB9d0/oenmlV2wgaJsO8Cn8B604ee/oAK1Galg3A6zRcuR
-         OmxJA93DcpsEQbllNM584FUokPsU1mY7i/lSrXorP60eh+ulin3RHWMXu7uxrS/UVICr
-         n49Impqk6R795fyDCobTtqxAWk+tjEb1p/xesWEynie/dgJDl02BxGN44M3c1utzJGiG
-         b6mw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775883640; x=1776488440;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xsURKGnmbM6kXngKz/J1aSiLPDXCmExQ1ZU082i1dYs=;
-        b=HkvSo4qkLPcSgwUwBl0xpxknMen5Sqh3ffI67X2qqvCTBzEJNmT1N2VLVU7pyLVD/B
-         mDIJzr8aT2sHLckaNc00Vh3h/YVc+y8SR0Gwu04Cy53vUeK1GKqwQwKQw6gQxjtaq/zn
-         BVgvWvc4u+r05h7KslczvJdSJN2CHHhfLEoGV+0iScTDpAcXxknl4yt8q07zUNUOCJ3d
-         PAJtBWl4swfW4OwRk5nwFuAdUeOXHUntoPrx6AEvPqHV2Ifa4K9EpCp0q/smRoHkabKD
-         rO0ZAWyYRVTrmfvH5xJO5PNZM82jGYB/FzXNWKUfATu6v6BTC76H1rokCMhwpmqpAe2Y
-         nurQ==
-X-Gm-Message-State: AOJu0Yyq7+yeqKEolS+Sqn8xwW4DZldv/CPJwjJbhBLTNNj3ZVSGmDX2
-	/Xd4HrPy/ILjYhDWZdu6SmpO/DG5yZtrmr3Ga/JoW4OaErkKD55a6IY=
-X-Gm-Gg: AeBDieseBefOnycVpgakiYhfTdmaqhs9WKZQSMyWzeH9eOkKAdxKprUrp93TExkfcFr
-	qO/gays0nnvgA12I/bjzgm4qBIrKTxY22cmyGdI+2B33BURku/DpMJOkUNE5NY9a4Nn2pVHj+zZ
-	jMymat/PHjyFxbEk1X8wWVVeWbnRsNAIb5s5UXK8AttkICjqf3+4Rh7+tsjHmZtGeYWWIcCfmNN
-	GNBJNSeenTbMggXmj5TyNvql7AJtbEwhQ3NjR/zATcePzDR9plBDaZVwTfOb5Fc9hWwecsiRarP
-	qwt/tQ8H9r6GMWfY3AmAG7Yb4k4gUpwPb31XTp9TiIbMGsoe+ix3IymCoBjhA3bv95RJQynAVcx
-	SHMhADmPQhuq4QXij0b/rSU6wCQRSQve7m92X05zBioSrvHhN153LuwkAA6/l6O+p3j1Bva1aK+
-	mk0FHRVRyy1i0Er8QBOXnZ2N1/AIV+4gw4qa2RqNI=
-X-Received: by 2002:a05:7301:1f10:b0:2c0:ba91:48b6 with SMTP id 5a478bee46e88-2d5898ad1a3mr3773735eec.26.1775883637742;
-        Fri, 10 Apr 2026 22:00:37 -0700 (PDT)
-Received: from [127.0.0.1] ([172.182.200.148])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2d55faa42dasm7409756eec.7.2026.04.10.22.00.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Apr 2026 22:00:37 -0700 (PDT)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Gang Yan <yangang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <cover.1775878944.git.yangang@kylinos.cn>
-References: <cover.1775878944.git.yangang@kylinos.cn>
-Subject: Re: [PATCH mptcp-net v4 0/2] mptcp: sync the msk->sndbuf at
- accept() time
-Message-ID: <ddb8c55d-d3a4-dc9d-4bd3-cab6cc4d1512@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Sat, 11 Apr 2026 05:00:36 +0000
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="VZRKK/9t"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61446C116C6;
+	Mon, 13 Apr 2026 11:52:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1776081157;
+	bh=du7Z0sbNf7DADFo57XaAI3jhu1g4I6I2KhMky8I+aNU=;
+	h=Subject:To:Cc:From:Date:In-Reply-To:From;
+	b=VZRKK/9tgtxEQeys6kACgh/1zsJGaVmwbb/VhI625D3hX+8qJ4pQj6Qwlo7Y+J/B0
+	 oMBR79WeeOXhI2jJppwyEB53GWAZ21EqhIEVn05fpvPC9hJ0UL5Fx1vlouLUiynoVV
+	 zdvtk25tmGbqafMNcp0/pTWaKqckYw694xee6tJE=
+Subject: Patch "mptcp: fix soft lockup in mptcp_recvmsg()" has been added to the 6.12-stable tree
+To: gregkh@linuxfoundation.org,kuba@kernel.org,lixiasong1@huawei.com,matttbe@kernel.org,mptcp@lists.linux.dev,sashal@kernel.org
+Cc: <stable-commits@vger.kernel.org>
+From: <gregkh@linuxfoundation.org>
+Date: Mon, 13 Apr 2026 13:52:22 +0200
+In-Reply-To: <20260409114439.1158386-2-matttbe@kernel.org>
+Message-ID: <2026041322-wreath-unlearned-8dc9@gregkh>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-
-Hi Gang,
-
-Thank you for your modifications, that's great!
-
-Our CI did some validations and here is its report:
-
-- KVM Validation: normal (except selftest_mptcp_join): Unstable: 1 failed =
-test(s): packetdrill_mp_reset =E2=9A=A0=EF=B8=8F=20
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/242743=
-65063
-
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/414e68b0e64e
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1080031
+Content-Type: text/plain; charset=ANSI_X3.4-1968
+Content-Transfer-Encoding: 8bit
+X-stable: commit
+X-Patchwork-Hint: ignore 
 
 
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
+This is a note to let you know that I've just added the patch titled
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+    mptcp: fix soft lockup in mptcp_recvmsg()
 
-For more details:
+to the 6.12-stable tree which can be found at:
+    http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
 
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+The filename of the patch is:
+     mptcp-fix-soft-lockup-in-mptcp_recvmsg.patch
+and it can be found in the queue-6.12 subdirectory.
+
+If you, or anyone else, feels it should not be added to the stable tree,
+please let <stable@vger.kernel.org> know about it.
 
 
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+From matttbe@kernel.org Thu Apr  9 13:45:18 2026
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Date: Thu,  9 Apr 2026 13:44:40 +0200
+Subject: mptcp: fix soft lockup in mptcp_recvmsg()
+To: stable@vger.kernel.org, gregkh@linuxfoundation.org, sashal@kernel.org
+Cc: MPTCP Upstream <mptcp@lists.linux.dev>, Li Xiasong <lixiasong1@huawei.com>, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, Jakub Kicinski <kuba@kernel.org>
+Message-ID: <20260409114439.1158386-2-matttbe@kernel.org>
 
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+From: Li Xiasong <lixiasong1@huawei.com>
+
+commit 5dd8025a49c268ab6b94d978532af3ad341132a7 upstream.
+
+syzbot reported a soft lockup in mptcp_recvmsg() [0].
+
+When receiving data with MSG_PEEK | MSG_WAITALL flags, the skb is not
+removed from the sk_receive_queue. This causes sk_wait_data() to always
+find available data and never perform actual waiting, leading to a soft
+lockup.
+
+Fix this by adding a 'last' parameter to track the last peeked skb.
+This allows sk_wait_data() to make informed waiting decisions and prevent
+infinite loops when MSG_PEEK is used.
+
+[0]:
+watchdog: BUG: soft lockup - CPU#2 stuck for 156s! [server:1963]
+Modules linked in:
+CPU: 2 UID: 0 PID: 1963 Comm: server Not tainted 6.19.0-rc8 #61 PREEMPT(none)
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1 04/01/2014
+RIP: 0010:sk_wait_data+0x15/0x190
+Code: 80 00 00 00 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 41 56 41 55 41 54 49 89 f4 55 48 89 d5 53 48 89 fb <48> 83 ec 30 65 48 8b 05 17 a4 6b 01 48 89 44 24 28 31 c0 65 48 8b
+RSP: 0018:ffffc90000603ca0 EFLAGS: 00000246
+RAX: 0000000000000000 RBX: ffff888102bf0800 RCX: 0000000000000001
+RDX: 0000000000000000 RSI: ffffc90000603d18 RDI: ffff888102bf0800
+RBP: 0000000000000000 R08: 0000000000000002 R09: 0000000000000101
+R10: 0000000000000000 R11: 0000000000000075 R12: ffffc90000603d18
+R13: ffff888102bf0800 R14: ffff888102bf0800 R15: 0000000000000000
+FS:  00007f6e38b8c4c0(0000) GS:ffff8881b877e000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000055aa7bff1680 CR3: 0000000105cbe000 CR4: 00000000000006f0
+Call Trace:
+ <TASK>
+ mptcp_recvmsg+0x547/0x8c0 net/mptcp/protocol.c:2329
+ inet_recvmsg+0x11f/0x130 net/ipv4/af_inet.c:891
+ sock_recvmsg+0x94/0xc0 net/socket.c:1100
+ __sys_recvfrom+0xb2/0x130 net/socket.c:2256
+ __x64_sys_recvfrom+0x1f/0x30 net/socket.c:2267
+ do_syscall_64+0x59/0x2d0 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x76/0x7e arch/x86/entry/entry_64.S:131
+RIP: 0033:0x7f6e386a4a1d
+Code: 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 48 8d 05 f1 de 2c 00 41 89 ca 8b 00 85 c0 75 20 45 31 c9 45 31 c0 b8 2d 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 6b f3 c3 66 0f 1f 84 00 00 00 00 00 41 56 41
+RSP: 002b:00007ffc3c4bb078 EFLAGS: 00000246 ORIG_RAX: 000000000000002d
+RAX: ffffffffffffffda RBX: 000000000000861e RCX: 00007f6e386a4a1d
+RDX: 00000000000003ff RSI: 00007ffc3c4bb150 RDI: 0000000000000004
+RBP: 00007ffc3c4bb570 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000103 R11: 0000000000000246 R12: 00005605dbc00be0
+R13: 00007ffc3c4bb650 R14: 0000000000000000 R15: 0000000000000000
+ </TASK>
+
+Fixes: 8e04ce45a8db ("mptcp: fix MSG_PEEK stream corruption")
+Signed-off-by: Li Xiasong <lixiasong1@huawei.com>
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Link: https://patch.msgid.link/20260330120335.659027-1-lixiasong1@huawei.com
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+[ Conflicts in protocol.c, because commit bc68b0efa1bf ("mptcp: move the
+  whole rx path under msk socket lock protection") and commit
+  d88b2127b242 ("mptcp: add eat_recv_skb helper") (with some
+  dependences) are not in this version. These conflicts were in the
+  context, and not related to this fix. ]
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ net/mptcp/protocol.c |   11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
+
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -1997,7 +1997,7 @@ static int __mptcp_recvmsg_mskq(struct m
+ 				struct msghdr *msg,
+ 				size_t len, int flags, int copied_total,
+ 				struct scm_timestamping_internal *tss,
+-				int *cmsg_flags)
++				int *cmsg_flags, struct sk_buff **last)
+ {
+ 	struct sk_buff *skb, *tmp;
+ 	int total_data_len = 0;
+@@ -2013,6 +2013,7 @@ static int __mptcp_recvmsg_mskq(struct m
+ 			/* skip already peeked skbs */
+ 			if (total_data_len + data_len <= copied_total) {
+ 				total_data_len += data_len;
++				*last = skb;
+ 				continue;
+ 			}
+ 
+@@ -2053,6 +2054,8 @@ static int __mptcp_recvmsg_mskq(struct m
+ 			WRITE_ONCE(msk->rmem_released, msk->rmem_released + skb->truesize);
+ 			__skb_unlink(skb, &msk->receive_queue);
+ 			__kfree_skb(skb);
++		} else {
++			*last = skb;
+ 		}
+ 
+ 		if (copied >= len)
+@@ -2274,10 +2277,12 @@ static int mptcp_recvmsg(struct sock *sk
+ 		cmsg_flags = MPTCP_CMSG_INQ;
+ 
+ 	while (copied < len) {
++		struct sk_buff *last = NULL;
+ 		int err, bytes_read;
+ 
+ 		bytes_read = __mptcp_recvmsg_mskq(msk, msg, len - copied, flags,
+-						  copied, &tss, &cmsg_flags);
++						  copied, &tss, &cmsg_flags,
++						  &last);
+ 		if (unlikely(bytes_read < 0)) {
+ 			if (!copied)
+ 				copied = bytes_read;
+@@ -2335,7 +2340,7 @@ static int mptcp_recvmsg(struct sock *sk
+ 
+ 		pr_debug("block timeout %ld\n", timeo);
+ 		mptcp_cleanup_rbuf(msk, copied);
+-		err = sk_wait_data(sk, &timeo, NULL);
++		err = sk_wait_data(sk, &timeo, last);
+ 		if (err < 0) {
+ 			err = copied ? : err;
+ 			goto out_err;
+
+
+Patches currently in stable-queue which might be from matttbe@kernel.org are
+
+queue-6.12/mptcp-fix-slab-use-after-free-in-__inet_lookup_established.patch
+queue-6.12/revert-mptcp-add-needs_id-for-netlink-appending-addr.patch
+queue-6.12/mptcp-fix-soft-lockup-in-mptcp_recvmsg.patch
