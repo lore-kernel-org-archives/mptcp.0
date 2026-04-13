@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D92B23CBE63
-	for <mptcp@lists.linux.dev>; Mon, 13 Apr 2026 14:12:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B5C73D75C3
+	for <mptcp@lists.linux.dev>; Mon, 13 Apr 2026 14:12:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776089539; cv=none; b=WJ2EnSodXoKauuA7B14tqX3T2TyI3Uw6qnm+EeRwIOvZc3D+E+qog5C/cgiy3TeBDe8INorR0Z9ZBNPMRu2MqsSOFHgfTj/imA634iJEL2IjTvCnGmDELOtUt226h07WkJ+CjlMswmGsT/k0CyD+KQMc8OfvKw8lp0t4A2yMWVw=
+	t=1776089540; cv=none; b=YRFS99KVw5vBw4u1i4ToyhxtB9QVVPL3RpgwNDwap8+GZt2rOSMIDjtduJz3ECqhSkqakBmHIjcrrvHwHqnNnD0ArsWDAb3kI0kL3wB9AqPtrv2rAflVRl1BIiMGK4yBGshlMLMOOKTgF92RabOYLKrX2j54n6PS3M0rx1WweWs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776089539; c=relaxed/simple;
-	bh=8PZLLeOwVPMc3bpT7xW7wYZklUFV3vxacK3H8M3nvfg=;
+	s=arc-20240116; t=1776089540; c=relaxed/simple;
+	bh=N19jazivXTMDBQM5jY7wG5Ec0mUGbrDn/0Y2kORbl90=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Abo1Uh8GdSYw9+9defCYYhQb0UVIgliqhwPspnLrU4E2uO7FvJA/rK2Gj1/v0ceXl+UfcRusR6V1MXG6qcZp+SvS2XL/mNUHmCWsxV3mYuHsiVy/16SCA5QNnl9stFquPUBAxeeRlJYDU958l0xlnblJ/93Ec7JdWlJe3UJGFx8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=caqrhBaq; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=cxGDHhGNgynwtMzSG4JOVfqhQaHDLPnOL9d2HIyv1crPHV3DmZU8mpaud+3eBVfbDI457TPW4dtTgqBNdOnNRNnbZ/C6qh5XRwWnp+rkh2DnwaOBiGGrSKnxx5e+Aj8RgjVT4LiMRYY8f383H7Kd8B+VKvaYsWbOffRW682qHG0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=El3byyYd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="caqrhBaq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17637C2BCC4;
-	Mon, 13 Apr 2026 14:12:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="El3byyYd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D275FC2BCAF;
+	Mon, 13 Apr 2026 14:12:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776089539;
-	bh=8PZLLeOwVPMc3bpT7xW7wYZklUFV3vxacK3H8M3nvfg=;
+	s=k20201202; t=1776089540;
+	bh=N19jazivXTMDBQM5jY7wG5Ec0mUGbrDn/0Y2kORbl90=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=caqrhBaq+qJ/OfOchEAc+6/1hoATyO/F+RLVqUJ+1W8MnlGHl+2Tzi+kTYjnsfsMS
-	 nzXHQ+x7l9t6jV6etkLYUwcUfaxQgt73HcfqiucxU5hdkKEHuJcFmz/Cv/ht9sxVBG
-	 5lTaQOi8xsn3mzEd9lHIg0Q0Q9oULr1d3H9lHuKVSHEndojNniydk+IV0Om9ooVyME
-	 OdxzuOAWbubk3FK2JZ3tnac4/EeicroThJTPSvoskQcnRG4K7xdJvT34ETKFJnj/A+
-	 LRAWV57Xp+UzzkK4H9NO89bllIjMJOROpA89pOOK2Z2gepnSM5UZeeTq/jA7ykuabO
-	 ORkVbleVPQ/Gw==
+	b=El3byyYddgtbUehpdbmztDafj0I6YX2u2G1Iw6TnQlhNBN1i7jsj5VcfDuF5utVca
+	 /GaLdbGhEu08KjAc8IYhedI+rpwQ8W/856+1N6PNWCPJIZ9uzmpH2HohzEFEASjsHK
+	 V2nHVlkofDoYJ0Rqnf2rt0LJQ1mFTeuGdKbaPBrPbwZYwCJLEdlFF99cREfC98UJTs
+	 SwP9nBjnYcjRdC6/d1ZrbClagBn5XiooH/bao24u+o7qF+lF43JmLG/OL2NuGI+FW6
+	 dvqoTzXqVv9PDzLaql2iM4D0QwtRdlJVcScNuFLw9mIp2eFs7ScKz4iMRxCZeWNtLd
+	 mQIKvM12zRuuQ==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Mon, 13 Apr 2026 16:12:03 +0200
-Subject: [PATCH mptcp-net v3 17/19] selftests: mptcp: pm: validate new
- limits
+Date: Mon, 13 Apr 2026 16:12:04 +0200
+Subject: [PATCH mptcp-net v3 18/19] selftests: mptcp: pm: use simpler
+ send/recv forms
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,128 +38,67 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260413-mptcp-inc-limits-v3-17-dd36c9360432@kernel.org>
+Message-Id: <20260413-mptcp-inc-limits-v3-18-dd36c9360432@kernel.org>
 References: <20260413-mptcp-inc-limits-v3-0-dd36c9360432@kernel.org>
 In-Reply-To: <20260413-mptcp-inc-limits-v3-0-dd36c9360432@kernel.org>
 To: MPTCP Upstream <mptcp@lists.linux.dev>
 Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3660; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=8PZLLeOwVPMc3bpT7xW7wYZklUFV3vxacK3H8M3nvfg=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDLv/NzCuyVjZcXr2KaaL5nPxU57n/0r+jD03U7BRdpPL
- Y2iWFw5O0pZGMS4GGTFFFmk2yLzZz6v4i3x8rOAmcPKBDKEgYtTACbC0s/I0KDnUXh7l+WVTmH3
- R05lGbGzkv7N3L51RYPp36N6bW+euTD89/rV/FPQpKHnrdRspZ/zZohGcClzX5phYBHO7+O03Ww
- nCwA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1778; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=N19jazivXTMDBQM5jY7wG5Ec0mUGbrDn/0Y2kORbl90=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDLv/NzCp6r4JGbXeS0+sTTv7CifAFc96/vz3aR5NLJMu
+ g/v6fjeUcrCIMbFICumyCLdFpk/83kVb4mXnwXMHFYmkCEMXJwCMJFDUxkZ+tuaq3id/U6mTV6Y
+ ECUwTebHuw+aRfa7KkM5J97quMO0leGfCdf9JikN6+c3f0jXeLoaCvEvXPxU+f29/7HnawvXW8l
+ wAwA=
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-These limits have been recently updated, from 8 to:
+Instead of sendto() and recvfrom() which the NL address that was already
+provided before.
 
-- 64 for the subflows and accepted add_addr
+Just simpler and easier to read without the to/from variants.
 
-- 255 for the MPTCP endpoints
-
-These modifications validate the new limits, but are also compatible
-with the previous ones, to be able to continue to validate stable kernel
-using the last version of the selftests. That's why new variables are
-now used instead of hard-coded values.
+While at it, fix a checkpatch warning by removing multiple assignments.
 
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- tools/testing/selftests/net/mptcp/pm_netlink.sh | 52 +++++++++++++++----------
- 1 file changed, 31 insertions(+), 21 deletions(-)
+v2: fix already present checkpatch warning.
+---
+ tools/testing/selftests/net/mptcp/pm_nl_ctl.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/tools/testing/selftests/net/mptcp/pm_netlink.sh b/tools/testing/selftests/net/mptcp/pm_netlink.sh
-index d844ee687a29..1ce5903c89c0 100755
---- a/tools/testing/selftests/net/mptcp/pm_netlink.sh
-+++ b/tools/testing/selftests/net/mptcp/pm_netlink.sh
-@@ -66,6 +66,15 @@ get_limits() {
- 	fi
- }
+diff --git a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
+index 99eecccbf0c8..78180da1efcc 100644
+--- a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
++++ b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
+@@ -217,8 +217,6 @@ static int capture_events(int fd, int event_group)
+ /* do a netlink command and, if max > 0, fetch the reply ; nh's size >1024B */
+ static int do_nl_req(int fd, struct nlmsghdr *nh, int len, int max)
+ {
+-	struct sockaddr_nl nladdr = { .nl_family = AF_NETLINK };
+-	socklen_t addr_len;
+ 	void *data = nh;
+ 	int rem, ret;
+ 	int err = 0;
+@@ -230,15 +228,15 @@ static int do_nl_req(int fd, struct nlmsghdr *nh, int len, int max)
+ 	}
  
-+get_limits_nb() {
-+	if mptcp_lib_is_ip_mptcp; then
-+		ip -n "${ns1}" mptcp limits | awk '{ print $2" "$4 }'
-+	else
-+		ip netns exec "${ns1}" ./pm_nl_ctl limits | \
-+			awk '{ printf "%s ", $2 }'
-+	fi
-+}
-+
- format_endpoints() {
- 	mptcp_lib_pm_nl_format_endpoints "${@}"
- }
-@@ -162,6 +171,7 @@ check "get_endpoint 2" "" "simple del addr"
- check "show_endpoints" \
- 	"$(format_endpoints "1,10.0.1.1" \
- 			    "3,10.0.1.3,signal backup")" "dump addrs after del"
-+add_endpoint 10.0.1.2 id 2
+ 	nh->nlmsg_len = len;
+-	ret = sendto(fd, data, len, 0, (void *)&nladdr, sizeof(nladdr));
++	ret = send(fd, data, len, 0);
+ 	if (ret != len)
+ 		error(1, errno, "send netlink: %uB != %uB\n", ret, len);
  
- add_endpoint 10.0.1.3 2>/dev/null
- check "get_endpoint 4" "" "duplicate addr"
-@@ -169,25 +179,25 @@ check "get_endpoint 4" "" "duplicate addr"
- add_endpoint 10.0.1.4 flags signal
- check "get_endpoint 4" "$(format_endpoints "4,10.0.1.4,signal")" "id addr increment"
+-	addr_len = sizeof(nladdr);
+-	rem = ret = recvfrom(fd, data, max, 0, (void *)&nladdr, &addr_len);
++	ret = recv(fd, data, max, 0);
+ 	if (ret < 0)
+ 		error(1, errno, "recv netlink: %uB\n", ret);
  
--for i in $(seq 5 9); do
--	add_endpoint "10.0.1.${i}" flags signal >/dev/null 2>&1
--done
--check "get_endpoint 9" "$(format_endpoints "9,10.0.1.9,signal")" "hard addr limit"
--check "get_endpoint 10" "" "above hard addr limit"
-+read -r -a default_limits_nb <<< "$(get_limits_nb)"
-+# limits have been increased: from 8 to 64 for subflows/add_addr & 255 for endp
-+if mptcp_lib_expect_all_features || set_limits 9 9 2>/dev/null; then
-+	max_endp=255
-+	max_limits=64
-+else
-+	max_endp=8
-+	max_limits=8
-+fi
-+set_limits "${default_limits_nb[@]}"
- 
--del_endpoint 9
--for i in $(seq 10 255); do
--	add_endpoint 10.0.0.9 id "${i}"
--	del_endpoint "${i}"
-+for i in $(seq 5 ${max_endp}); do
-+	add_endpoint "10.0.0.${i}" id "${i}"
- done
--check "show_endpoints" \
--	"$(format_endpoints "1,10.0.1.1" \
--			    "3,10.0.1.3,signal backup" \
--			    "4,10.0.1.4,signal" \
--			    "5,10.0.1.5,signal" \
--			    "6,10.0.1.6,signal" \
--			    "7,10.0.1.7,signal" \
--			    "8,10.0.1.8,signal")" "id limit"
-+check "get_endpoint ${max_endp}" \
-+	"$(format_endpoints "${max_endp},10.0.0.${max_endp}")" "id limit"
-+
-+check "add_endpoint '10.0.1.1' &>/dev/null && echo 'no error'" "" \
-+	"above hard addr limit"
- 
- flush_endpoint
- check "show_endpoints" "" "flush addrs"
-@@ -200,15 +210,15 @@ if ! mptcp_lib_is_ip_mptcp; then
- 	flush_endpoint
- fi
- 
--set_limits 9 1 2>/dev/null
-+set_limits $((max_limits + 1)) 1 2>/dev/null
- check "get_limits" "${default_limits}" "rcv addrs above hard limit"
- 
--set_limits 1 9 2>/dev/null
-+set_limits 1 $((max_limits + 1)) 2>/dev/null
- check "get_limits" "${default_limits}" "subflows above hard limit"
- 
--set_limits 8 8
-+set_limits ${max_limits} ${max_limits}
- flush_endpoint  ## to make sure it doesn't affect the limits
--check "get_limits" "$(format_limits 8 8)" "set limits"
-+check "get_limits" "$(format_limits ${max_limits} ${max_limits})" "set limits"
- 
- flush_endpoint
- add_endpoint 10.0.1.1
++	rem = ret;
+ 	/* Beware: the NLMSG_NEXT macro updates the 'rem' argument */
+ 	for (; NLMSG_OK(nh, rem); nh = NLMSG_NEXT(nh, rem)) {
+ 		if (nh->nlmsg_type == NLMSG_DONE)
 
 -- 
 2.53.0
