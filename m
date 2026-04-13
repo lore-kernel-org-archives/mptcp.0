@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBD4E35F8B7;
-	Mon, 13 Apr 2026 11:52:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F5762405E1;
+	Mon, 13 Apr 2026 11:55:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776081157; cv=none; b=hiuxxq9RfmXFIn7IVyP15e25O/z2zInxXr0tdahB6mA33i5aqmt05VdZTRoWvVsb9ndMB98YuA0TLd4VZmyAoaeCcpIuQdAlxN7J69EQLWFodEIVESIftHL3mzvpdCmMhIr48P0aCVyzg5lctw1CKdKizQ9XtWfTKys9GxL/CvI=
+	t=1776081349; cv=none; b=FAe5czlmkMN0VCW73GajYGDu7O3Hih8ZzAUJ8l8S2WMe/iyAr/b1e2+LIEKNYibzZo0uTkqFnekm4FpCIxLJJYz1EgCDtvDzotgBUxvuxeHI+lS573yS7wSGM6+U5A3O6PK6PxE95Zr/Vxs0w7jlkG4MBqg2+9/EyY03DOC1HNc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776081157; c=relaxed/simple;
-	bh=du7Z0sbNf7DADFo57XaAI3jhu1g4I6I2KhMky8I+aNU=;
+	s=arc-20240116; t=1776081349; c=relaxed/simple;
+	bh=+NFfu646i5eUO0SnfmTE7FFRmy+PjhkXZCPu+wn+BLE=;
 	h=Subject:To:Cc:From:Date:In-Reply-To:Message-ID:MIME-Version:
-	 Content-Type; b=ONU6QMahuD0I+o5POjB5URDk/gKbw6x5ulMtUZ/34JEyetojERKhuO02n7Q4Tkgclux8MauONOC7AL7FCVwyu6PmmubQnv1ov/NOiNgMCAEggMkDbtQO9OiVL5VQjr2qkMwRsHhliN6vsJtHASYll6gq93QWBhf5FOx8tVSBvhE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=VZRKK/9t; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type; b=lj10E+5DPa+j9LmxGXvSHieARuuuM/9bpymgRigRwwyaxgo26jdj+F8zr6nOW+DpcdnxatEQG+WqhKuvpnKpnOzHITmxE0qnCvs2VYsAnilzF1AZd35Z+WbVU7GejvvpY1Llsqi3oGGH7Xjfgqh3mtpprVC/QKyZbbswbBNPn6Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=GjZ9Q2mW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="VZRKK/9t"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61446C116C6;
-	Mon, 13 Apr 2026 11:52:37 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="GjZ9Q2mW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F197FC116C6;
+	Mon, 13 Apr 2026 11:55:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1776081157;
-	bh=du7Z0sbNf7DADFo57XaAI3jhu1g4I6I2KhMky8I+aNU=;
+	s=korg; t=1776081348;
+	bh=+NFfu646i5eUO0SnfmTE7FFRmy+PjhkXZCPu+wn+BLE=;
 	h=Subject:To:Cc:From:Date:In-Reply-To:From;
-	b=VZRKK/9tgtxEQeys6kACgh/1zsJGaVmwbb/VhI625D3hX+8qJ4pQj6Qwlo7Y+J/B0
-	 oMBR79WeeOXhI2jJppwyEB53GWAZ21EqhIEVn05fpvPC9hJ0UL5Fx1vlouLUiynoVV
-	 zdvtk25tmGbqafMNcp0/pTWaKqckYw694xee6tJE=
-Subject: Patch "mptcp: fix soft lockup in mptcp_recvmsg()" has been added to the 6.12-stable tree
+	b=GjZ9Q2mWMsIMoiFuZBmm9SEH4TTe+nxxM1mhUeSUVsCpgtsKVoMy+oPAUUp5E90/S
+	 l00s/QuKR0SRyVDOmS6JqjSw2Th7dsFlTkpAvZkDhlZLp8LeFKi2LXdgfp904SJJ1i
+	 IPYpma3iASkHoqPfqF74niWbvKWFpbijIEYCTwaY=
+Subject: Patch "mptcp: fix soft lockup in mptcp_recvmsg()" has been added to the 6.6-stable tree
 To: gregkh@linuxfoundation.org,kuba@kernel.org,lixiasong1@huawei.com,matttbe@kernel.org,mptcp@lists.linux.dev,sashal@kernel.org
 Cc: <stable-commits@vger.kernel.org>
 From: <gregkh@linuxfoundation.org>
-Date: Mon, 13 Apr 2026 13:52:22 +0200
-In-Reply-To: <20260409114439.1158386-2-matttbe@kernel.org>
-Message-ID: <2026041322-wreath-unlearned-8dc9@gregkh>
+Date: Mon, 13 Apr 2026 13:55:46 +0200
+In-Reply-To: <20260409114525.1159899-2-matttbe@kernel.org>
+Message-ID: <2026041345-unscathed-jailhouse-348d@gregkh>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -46,24 +46,24 @@ This is a note to let you know that I've just added the patch titled
 
     mptcp: fix soft lockup in mptcp_recvmsg()
 
-to the 6.12-stable tree which can be found at:
+to the 6.6-stable tree which can be found at:
     http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
 
 The filename of the patch is:
      mptcp-fix-soft-lockup-in-mptcp_recvmsg.patch
-and it can be found in the queue-6.12 subdirectory.
+and it can be found in the queue-6.6 subdirectory.
 
 If you, or anyone else, feels it should not be added to the stable tree,
 please let <stable@vger.kernel.org> know about it.
 
 
-From matttbe@kernel.org Thu Apr  9 13:45:18 2026
+From matttbe@kernel.org Thu Apr  9 13:45:35 2026
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Thu,  9 Apr 2026 13:44:40 +0200
+Date: Thu,  9 Apr 2026 13:45:26 +0200
 Subject: mptcp: fix soft lockup in mptcp_recvmsg()
 To: stable@vger.kernel.org, gregkh@linuxfoundation.org, sashal@kernel.org
 Cc: MPTCP Upstream <mptcp@lists.linux.dev>, Li Xiasong <lixiasong1@huawei.com>, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, Jakub Kicinski <kuba@kernel.org>
-Message-ID: <20260409114439.1158386-2-matttbe@kernel.org>
+Message-ID: <20260409114525.1159899-2-matttbe@kernel.org>
 
 From: Li Xiasong <lixiasong1@huawei.com>
 
@@ -133,7 +133,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -1997,7 +1997,7 @@ static int __mptcp_recvmsg_mskq(struct m
+@@ -1960,7 +1960,7 @@ static int __mptcp_recvmsg_mskq(struct m
  				struct msghdr *msg,
  				size_t len, int flags, int copied_total,
  				struct scm_timestamping_internal *tss,
@@ -142,7 +142,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
  {
  	struct sk_buff *skb, *tmp;
  	int total_data_len = 0;
-@@ -2013,6 +2013,7 @@ static int __mptcp_recvmsg_mskq(struct m
+@@ -1976,6 +1976,7 @@ static int __mptcp_recvmsg_mskq(struct m
  			/* skip already peeked skbs */
  			if (total_data_len + data_len <= copied_total) {
  				total_data_len += data_len;
@@ -150,7 +150,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
  				continue;
  			}
  
-@@ -2053,6 +2054,8 @@ static int __mptcp_recvmsg_mskq(struct m
+@@ -2016,6 +2017,8 @@ static int __mptcp_recvmsg_mskq(struct m
  			WRITE_ONCE(msk->rmem_released, msk->rmem_released + skb->truesize);
  			__skb_unlink(skb, &msk->receive_queue);
  			__kfree_skb(skb);
@@ -159,7 +159,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
  		}
  
  		if (copied >= len)
-@@ -2274,10 +2277,12 @@ static int mptcp_recvmsg(struct sock *sk
+@@ -2237,10 +2240,12 @@ static int mptcp_recvmsg(struct sock *sk
  		cmsg_flags = MPTCP_CMSG_INQ;
  
  	while (copied < len) {
@@ -173,7 +173,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
  		if (unlikely(bytes_read < 0)) {
  			if (!copied)
  				copied = bytes_read;
-@@ -2335,7 +2340,7 @@ static int mptcp_recvmsg(struct sock *sk
+@@ -2298,7 +2303,7 @@ static int mptcp_recvmsg(struct sock *sk
  
  		pr_debug("block timeout %ld\n", timeo);
  		mptcp_cleanup_rbuf(msk, copied);
@@ -186,6 +186,6 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 Patches currently in stable-queue which might be from matttbe@kernel.org are
 
-queue-6.12/mptcp-fix-slab-use-after-free-in-__inet_lookup_established.patch
-queue-6.12/revert-mptcp-add-needs_id-for-netlink-appending-addr.patch
-queue-6.12/mptcp-fix-soft-lockup-in-mptcp_recvmsg.patch
+queue-6.6/mptcp-fix-slab-use-after-free-in-__inet_lookup_established.patch
+queue-6.6/revert-mptcp-add-needs_id-for-netlink-appending-addr.patch
+queue-6.6/mptcp-fix-soft-lockup-in-mptcp_recvmsg.patch
