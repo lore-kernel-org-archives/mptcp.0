@@ -1,191 +1,126 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F5762405E1;
-	Mon, 13 Apr 2026 11:55:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4A163CBE63
+	for <mptcp@lists.linux.dev>; Mon, 13 Apr 2026 14:12:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776081349; cv=none; b=FAe5czlmkMN0VCW73GajYGDu7O3Hih8ZzAUJ8l8S2WMe/iyAr/b1e2+LIEKNYibzZo0uTkqFnekm4FpCIxLJJYz1EgCDtvDzotgBUxvuxeHI+lS573yS7wSGM6+U5A3O6PK6PxE95Zr/Vxs0w7jlkG4MBqg2+9/EyY03DOC1HNc=
+	t=1776089526; cv=none; b=WC9024NqLu+w45U3HgPrIctPnfiJXeKv5mZDqBE4yU+H3++jJUM+WSHG+WeN9GT/hFTgjCNKdYzq0JItNyTbSFbc751kiI/vxx+ROk0Gic6mnMio9aRUxz0ETYT3wcWhIE9AE+7nZzvPUjyQIQmleJ4xAYiIjGaXoZB+qconyok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776081349; c=relaxed/simple;
-	bh=+NFfu646i5eUO0SnfmTE7FFRmy+PjhkXZCPu+wn+BLE=;
-	h=Subject:To:Cc:From:Date:In-Reply-To:Message-ID:MIME-Version:
-	 Content-Type; b=lj10E+5DPa+j9LmxGXvSHieARuuuM/9bpymgRigRwwyaxgo26jdj+F8zr6nOW+DpcdnxatEQG+WqhKuvpnKpnOzHITmxE0qnCvs2VYsAnilzF1AZd35Z+WbVU7GejvvpY1Llsqi3oGGH7Xjfgqh3mtpprVC/QKyZbbswbBNPn6Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=GjZ9Q2mW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1776089526; c=relaxed/simple;
+	bh=7tq7wc2XBfXdeD3BAFLzTXQ3rCNZMn2lF1mZJKFJMko=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=n3c6p4a1NKOSC4itT+T4BZNA9S1qA0MHer/ClyJGwSkHS6QDEAnQVFE8vMRpTDWQoSGXlzH3LZQoew59hileQaEUG3CO4FFNwaBOq12J2AtnMqtL+GQ0pBUc0LkbfrtTPRA1IOgS+zD27AUCKY0scfBIRG088BSNhXMqpA1K8yo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=maPd4bmf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="GjZ9Q2mW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F197FC116C6;
-	Mon, 13 Apr 2026 11:55:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1776081348;
-	bh=+NFfu646i5eUO0SnfmTE7FFRmy+PjhkXZCPu+wn+BLE=;
-	h=Subject:To:Cc:From:Date:In-Reply-To:From;
-	b=GjZ9Q2mWMsIMoiFuZBmm9SEH4TTe+nxxM1mhUeSUVsCpgtsKVoMy+oPAUUp5E90/S
-	 l00s/QuKR0SRyVDOmS6JqjSw2Th7dsFlTkpAvZkDhlZLp8LeFKi2LXdgfp904SJJ1i
-	 IPYpma3iASkHoqPfqF74niWbvKWFpbijIEYCTwaY=
-Subject: Patch "mptcp: fix soft lockup in mptcp_recvmsg()" has been added to the 6.6-stable tree
-To: gregkh@linuxfoundation.org,kuba@kernel.org,lixiasong1@huawei.com,matttbe@kernel.org,mptcp@lists.linux.dev,sashal@kernel.org
-Cc: <stable-commits@vger.kernel.org>
-From: <gregkh@linuxfoundation.org>
-Date: Mon, 13 Apr 2026 13:55:46 +0200
-In-Reply-To: <20260409114525.1159899-2-matttbe@kernel.org>
-Message-ID: <2026041345-unscathed-jailhouse-348d@gregkh>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="maPd4bmf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A802C2BCAF;
+	Mon, 13 Apr 2026 14:12:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1776089526;
+	bh=7tq7wc2XBfXdeD3BAFLzTXQ3rCNZMn2lF1mZJKFJMko=;
+	h=From:Subject:Date:To:Cc:From;
+	b=maPd4bmf2+Z0cAdy43HiinHOI/lRnhmQm7uN1h42E1TZ7BB04fgtQtOpXPZcz26xE
+	 bSxjLfXPXiJYrwcDWC33NebCGDDEGE5ZiaSgW6ZDjmYEIqzqPlhAOb1rSuXHCpJgOI
+	 l6IVOYdz7sbTrS5z0G12cZrjib2q5EspCvjMhiR2eqSTKsrnMYmunWLStI+qa/0Sgv
+	 DbprT6k4eYuk9Z1bJ9SLef1dJCs/y1hI7HnDZR0Q/jZX8oS5mHuAOCD3HQcfUKODe8
+	 8hl7XZzqEk5ZGlp3X3FAErt9bAs+RnS9CaHB+GH/akW8/zBKRP4s6D0IkCpxhSle8V
+	 YO94soyyhb5hg==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH mptcp-net v3 00/19] mptcp: pm: increase limits, and related
+ fixes and cleanup
+Date: Mon, 13 Apr 2026 16:11:46 +0200
+Message-Id: <20260413-mptcp-inc-limits-v3-0-dd36c9360432@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ANSI_X3.4-1968
-Content-Transfer-Encoding: 8bit
-X-stable: commit
-X-Patchwork-Hint: ignore 
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/23NTQ6CMBAF4KuQrq2Z/kDElfcwLrAMMIqFtJVoC
+ HcXiguNLl9m3vdG5tERerZPRuZwIE+dnYPaJMw0ha2RUzlnJkFmoEHxWx9Mz8ka3tKNgucG850
+ QIDVkGZtrvcOKHpE8svXbYmCn9eTv5wuasJDLc0M+dO4Z5wcRK++l/HdpEBw4oE6rQkGZC324o
+ rPYbjtXR3+QH4KAP4KchVSDlJBXkJbqS5im6QV1E5S9EAEAAA==
+X-Change-ID: 20260403-mptcp-inc-limits-ce9811024066
+To: MPTCP Upstream <mptcp@lists.linux.dev>
+Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+X-Mailer: b4 0.15.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3271; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=7tq7wc2XBfXdeD3BAFLzTXQ3rCNZMn2lF1mZJKFJMko=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDLv/Fzxj38Hl/xhB0U9GYX/l9/aiAkdYlxxLfGbypd3v
+ HKm0y74dJSyMIhxMciKKbJIt0Xmz3xexVvi5WcBM4eVCWQIAxenAEzkuBEjwzJjeZEVy9b8b7ea
+ +N/zedTia7H8T+VCkn2P/L0bEBd07h8jw1x+m4YtxeITsxjuHYt/eiaNxWO52ePkit0/YptX1ux
+ tZQAA
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
+The initial intension was to increase the limits, but some fixes were
+needed, then when looking at the code around, other fixes had to be
+added too. So now I ended up with 8 fixes (including one early exit
+while at it), followed by 3 patches increasing limits, 3 to validate the
+modifications, one small improvement in the selftests, and some
+renaming.
 
-This is a note to let you know that I've just added the patch titled
+The patches with a Fixes tag are for -net, the rest for net-next.
 
-    mptcp: fix soft lockup in mptcp_recvmsg()
+The last patch contains multiple renaming: please tell me what you
+think before I start splitting in smaller commits.
 
-to the 6.6-stable tree which can be found at:
-    http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
-
-The filename of the patch is:
-     mptcp-fix-soft-lockup-in-mptcp_recvmsg.patch
-and it can be found in the queue-6.6 subdirectory.
-
-If you, or anyone else, feels it should not be added to the stable tree,
-please let <stable@vger.kernel.org> know about it.
-
-
-From matttbe@kernel.org Thu Apr  9 13:45:35 2026
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Thu,  9 Apr 2026 13:45:26 +0200
-Subject: mptcp: fix soft lockup in mptcp_recvmsg()
-To: stable@vger.kernel.org, gregkh@linuxfoundation.org, sashal@kernel.org
-Cc: MPTCP Upstream <mptcp@lists.linux.dev>, Li Xiasong <lixiasong1@huawei.com>, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, Jakub Kicinski <kuba@kernel.org>
-Message-ID: <20260409114525.1159899-2-matttbe@kernel.org>
-
-From: Li Xiasong <lixiasong1@huawei.com>
-
-commit 5dd8025a49c268ab6b94d978532af3ad341132a7 upstream.
-
-syzbot reported a soft lockup in mptcp_recvmsg() [0].
-
-When receiving data with MSG_PEEK | MSG_WAITALL flags, the skb is not
-removed from the sk_receive_queue. This causes sk_wait_data() to always
-find available data and never perform actual waiting, leading to a soft
-lockup.
-
-Fix this by adding a 'last' parameter to track the last peeked skb.
-This allows sk_wait_data() to make informed waiting decisions and prevent
-infinite loops when MSG_PEEK is used.
-
-[0]:
-watchdog: BUG: soft lockup - CPU#2 stuck for 156s! [server:1963]
-Modules linked in:
-CPU: 2 UID: 0 PID: 1963 Comm: server Not tainted 6.19.0-rc8 #61 PREEMPT(none)
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1 04/01/2014
-RIP: 0010:sk_wait_data+0x15/0x190
-Code: 80 00 00 00 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 41 56 41 55 41 54 49 89 f4 55 48 89 d5 53 48 89 fb <48> 83 ec 30 65 48 8b 05 17 a4 6b 01 48 89 44 24 28 31 c0 65 48 8b
-RSP: 0018:ffffc90000603ca0 EFLAGS: 00000246
-RAX: 0000000000000000 RBX: ffff888102bf0800 RCX: 0000000000000001
-RDX: 0000000000000000 RSI: ffffc90000603d18 RDI: ffff888102bf0800
-RBP: 0000000000000000 R08: 0000000000000002 R09: 0000000000000101
-R10: 0000000000000000 R11: 0000000000000075 R12: ffffc90000603d18
-R13: ffff888102bf0800 R14: ffff888102bf0800 R15: 0000000000000000
-FS:  00007f6e38b8c4c0(0000) GS:ffff8881b877e000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000055aa7bff1680 CR3: 0000000105cbe000 CR4: 00000000000006f0
-Call Trace:
- <TASK>
- mptcp_recvmsg+0x547/0x8c0 net/mptcp/protocol.c:2329
- inet_recvmsg+0x11f/0x130 net/ipv4/af_inet.c:891
- sock_recvmsg+0x94/0xc0 net/socket.c:1100
- __sys_recvfrom+0xb2/0x130 net/socket.c:2256
- __x64_sys_recvfrom+0x1f/0x30 net/socket.c:2267
- do_syscall_64+0x59/0x2d0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x76/0x7e arch/x86/entry/entry_64.S:131
-RIP: 0033:0x7f6e386a4a1d
-Code: 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 48 8d 05 f1 de 2c 00 41 89 ca 8b 00 85 c0 75 20 45 31 c9 45 31 c0 b8 2d 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 6b f3 c3 66 0f 1f 84 00 00 00 00 00 41 56 41
-RSP: 002b:00007ffc3c4bb078 EFLAGS: 00000246 ORIG_RAX: 000000000000002d
-RAX: ffffffffffffffda RBX: 000000000000861e RCX: 00007f6e386a4a1d
-RDX: 00000000000003ff RSI: 00007ffc3c4bb150 RDI: 0000000000000004
-RBP: 00007ffc3c4bb570 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000103 R11: 0000000000000246 R12: 00005605dbc00be0
-R13: 00007ffc3c4bb650 R14: 0000000000000000 R15: 0000000000000000
- </TASK>
-
-Fixes: 8e04ce45a8db ("mptcp: fix MSG_PEEK stream corruption")
-Signed-off-by: Li Xiasong <lixiasong1@huawei.com>
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Link: https://patch.msgid.link/20260330120335.659027-1-lixiasong1@huawei.com
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-[ Conflicts in protocol.c, because commit bc68b0efa1bf ("mptcp: move the
-  whole rx path under msk socket lock protection") and commit
-  d88b2127b242 ("mptcp: add eat_recv_skb helper") (with some
-  dependences) are not in this version. These conflicts were in the
-  context, and not related to this fix. ]
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/mptcp/protocol.c |   11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+Changes in v3:
+- patch 1: new: retransmit ADD_ADDR for ID 0 with right ID.
+- patch 5: moved below + support calling sk_free().
+- patch 13: new: allow flushing more than 8 endpoints.
+- patch 12: clarify single batch of 8 subflows as known limit.
+- patch 16: fix typo in comment.
+- Link to v2: https://patch.msgid.link/20260410-mptcp-inc-limits-v2-0-5402209f05d3@kernel.org
 
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1960,7 +1960,7 @@ static int __mptcp_recvmsg_mskq(struct m
- 				struct msghdr *msg,
- 				size_t len, int flags, int copied_total,
- 				struct scm_timestamping_internal *tss,
--				int *cmsg_flags)
-+				int *cmsg_flags, struct sk_buff **last)
- {
- 	struct sk_buff *skb, *tmp;
- 	int total_data_len = 0;
-@@ -1976,6 +1976,7 @@ static int __mptcp_recvmsg_mskq(struct m
- 			/* skip already peeked skbs */
- 			if (total_data_len + data_len <= copied_total) {
- 				total_data_len += data_len;
-+				*last = skb;
- 				continue;
- 			}
- 
-@@ -2016,6 +2017,8 @@ static int __mptcp_recvmsg_mskq(struct m
- 			WRITE_ONCE(msk->rmem_released, msk->rmem_released + skb->truesize);
- 			__skb_unlink(skb, &msk->receive_queue);
- 			__kfree_skb(skb);
-+		} else {
-+			*last = skb;
- 		}
- 
- 		if (copied >= len)
-@@ -2237,10 +2240,12 @@ static int mptcp_recvmsg(struct sock *sk
- 		cmsg_flags = MPTCP_CMSG_INQ;
- 
- 	while (copied < len) {
-+		struct sk_buff *last = NULL;
- 		int err, bytes_read;
- 
- 		bytes_read = __mptcp_recvmsg_mskq(msk, msg, len - copied, flags,
--						  copied, &tss, &cmsg_flags);
-+						  copied, &tss, &cmsg_flags,
-+						  &last);
- 		if (unlikely(bytes_read < 0)) {
- 			if (!copied)
- 				copied = bytes_read;
-@@ -2298,7 +2303,7 @@ static int mptcp_recvmsg(struct sock *sk
- 
- 		pr_debug("block timeout %ld\n", timeo);
- 		mptcp_cleanup_rbuf(msk, copied);
--		err = sk_wait_data(sk, &timeo, NULL);
-+		err = sk_wait_data(sk, &timeo, last);
- 		if (err < 0) {
- 			err = copied ? : err;
- 			goto out_err;
+Changes in v2:
+- patch 2: new: fix potential data-race.
+- re-order patches 1 to 5 and use shorter prefix (ADD_ADDR rtx).
+- patch 6: restore accidentally deleted icsk->icsk_rto > max check.
+- patch 16: fix already present checkpatch warning.
+- Link to v1: https://patch.msgid.link/20260409-mptcp-inc-limits-v1-0-0e45fa30d914@kernel.org
 
+---
+Matthieu Baerts (NGI0) (19):
+      mptcp: pm: kernel: correctly retransmit ADD_ADDR ID 0
+      mptcp: pm: ADD_ADDR rtx: fix potential data-race
+      mptcp: pm: ADD_ADDR rtx: allow ID 0
+      mptcp: pm: ADD_ADDR rtx: always decrease sk refcount
+      mptcp: pm: ADD_ADDR rtx: free sk if last
+      mptcp: pm: ADD_ADDR rtx: resched blocked ADD_ADDR quicker
+      mptcp: pm: ADD_ADDR rtx: skip inactive subflows
+      mptcp: pm: retrans ADD_ADDR: return early if no retrans
+      mptcp: pm: prio: skip closed subflows
+      selftests: mptcp: pm: restrict 'unknown' check to pm_nl_ctl
+      mptcp: pm: in-kernel: explicitly limit batches to array size
+      mptcp: pm: in-kernel: increase all limits to 64
+      mptcp: pm: kernel: allow flushing more than 8 endpoints
+      mptcp: pm: in-kernel: increase endpoints limit
+      selftests: mptcp: join: allow changing ifaces nr per test
+      selftests: mptcp: join: validate 8x8 subflows
+      selftests: mptcp: pm: validate new limits
+      selftests: mptcp: pm: use simpler send/recv forms
+      mptcp: pm: clearer ADD_ADDR related helpers names
 
-Patches currently in stable-queue which might be from matttbe@kernel.org are
+ net/mptcp/options.c                             |   2 +-
+ net/mptcp/pm.c                                  | 184 +++++++++++++-----------
+ net/mptcp/pm_kernel.c                           | 106 +++++++++-----
+ net/mptcp/pm_userspace.c                        |   6 +-
+ net/mptcp/protocol.h                            |  19 +--
+ net/mptcp/subflow.c                             |   4 +-
+ tools/testing/selftests/net/mptcp/mptcp_join.sh |  33 ++++-
+ tools/testing/selftests/net/mptcp/pm_netlink.sh |  62 ++++----
+ tools/testing/selftests/net/mptcp/pm_nl_ctl.c   |   8 +-
+ 9 files changed, 259 insertions(+), 165 deletions(-)
+---
+base-commit: 0d8ee8bb5ee08c331531dc4ee482409d7fcef713
+change-id: 20260403-mptcp-inc-limits-ce9811024066
 
-queue-6.6/mptcp-fix-slab-use-after-free-in-__inet_lookup_established.patch
-queue-6.6/revert-mptcp-add-needs_id-for-netlink-appending-addr.patch
-queue-6.6/mptcp-fix-soft-lockup-in-mptcp_recvmsg.patch
+Best regards,
+--  
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
+
