@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49A903806AA
-	for <mptcp@lists.linux.dev>; Mon, 13 Apr 2026 14:12:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12EF83D6CD2
+	for <mptcp@lists.linux.dev>; Mon, 13 Apr 2026 14:12:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776089537; cv=none; b=gqXkvsazrpO9JbemB2Ferssr3WnlLAXWQ1BQ/gtaEqnrS0ta+3uDoLPW8ZKRSIzroGUeL9eHeMvmYkdL/P8WUgH+ee63lO+zGahaZcrCxCxmDuyOmnKt4rwICWqA5eq67XP6NB69sAe3vzb9L0FXSV1Np1V6ugG8nuWIrHrMo9w=
+	t=1776089538; cv=none; b=bLj2SLdZwN2piZYVcRE9JuEHzAcFTP/Q3FUpgkexPakgO8aH+RjgDcPBQdOkIMNwlWfVh4eRUfsU5BHm1bcA+APTZQA4y8K98gu4QIfkzFT1kQkKsvu7oGo4D7veDb4XtydKHTyBR4VWLrReX2ZhkRYgAZ/jz8RyUEqYVoRXEHM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776089537; c=relaxed/simple;
-	bh=FzoQpH+/1rJAZNWER5wf3XVojQhw8DWII+Nl045Pjg4=;
+	s=arc-20240116; t=1776089538; c=relaxed/simple;
+	bh=k+RpxqRdGerfGFAGy1z4N+ND2xXyRKGbPOpBhMvR2Mc=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=YAjMw6ivum6xIdyq5+KaJnN2WhWKUTH3zRYrOL18w/DU41YkaYJUYZA5g/3SsheY390az7vTVHvXPm2H2MhM5Ddhm19SGSbRwcNrHkGfcAacunPfQ0H6VVUFfbBCr9banFot4UwoOVkcfCNSpnswfk+nQZ3OEqrX41St8n9/yZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fd656njF; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=KChKptP7rVJ3U6ZFuIZRVUuD1K+ow2uRivUoTf28QwK3XrIyyHJHVvXpgRMcdFfdzixDBiEBFAi0m3Fv6TR1N3eqgbbD+wKgW6fXuSn+Pj0PZTNlBG8hwB7+g64CN54AfUpYjEZAYZUB3kdL51ARBByHjS5LmEzA7awDGzxHUmc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rf1ORehF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fd656njF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2768C2BCAF;
-	Mon, 13 Apr 2026 14:12:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rf1ORehF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8950BC2BCB7;
+	Mon, 13 Apr 2026 14:12:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1776089537;
-	bh=FzoQpH+/1rJAZNWER5wf3XVojQhw8DWII+Nl045Pjg4=;
+	bh=k+RpxqRdGerfGFAGy1z4N+ND2xXyRKGbPOpBhMvR2Mc=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=fd656njFzHf+b/TzAqfx1QoEU6tK48NKjs+hajuwoywHb8aNJ0vEkrjIiuneWkOpH
-	 Xj2i7XHO4FbM+90rJTRTWq2/ju7VIy/rdW2HK0gLUlsDXhok/6ePUeZ4spQFejAmom
-	 2XWnD0dHnNNFMxxsSpM2atPBjYmUY8TfiDwtmCtfzrl6/DLBIeqLpGa1LCVnn/6+Mq
-	 Pe55gPSYhC5H9hqpg0Bv7SL8bmVP0LSXy1NaeFLOX44Kze9pPbe41FxPRIXKGu70/Q
-	 Bq9bCDidPdlv4xylGiAuAi7uNNyqp2Kax/82WApG0zGfilwX5k1a2PJ07RuP+VzytS
-	 krLADEeHUz1AQ==
+	b=rf1ORehFNLKbJYz+4GTH8bo4RJdy04ZiIKCcOwLRmXQ3d8YBt5VDB7qhY2fNSh+gX
+	 aJ2tHyGukfehCx/OjNRvnWC44B+1GxZnyrThyfQT6KmNYxkkYBwK+VMT0M5nOCRs0J
+	 ERQzV02eBiynUTIpU2JMNLU26VAw1o/qKPF5d8+o5SGNFcc+Gqktg1c7Wg0tw8xRWJ
+	 yyXaDvF6oVueobzDDFjoacg8W41YjU+vJI2s2VjNRieZts13Gl5VExrbpzavVuDgIu
+	 nBjH+H0qHA5xkWb0625//UIvD+oWUQceRwRAQ89bVR0kxqNIYQfkeHrJGhJjEepa73
+	 ZJ0dRlf5jrUBg==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Mon, 13 Apr 2026 16:12:00 +0200
-Subject: [PATCH mptcp-net v3 14/19] mptcp: pm: in-kernel: increase
- endpoints limit
+Date: Mon, 13 Apr 2026 16:12:01 +0200
+Subject: [PATCH mptcp-net v3 15/19] selftests: mptcp: join: allow changing
+ ifaces nr per test
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,51 +38,71 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260413-mptcp-inc-limits-v3-14-dd36c9360432@kernel.org>
+Message-Id: <20260413-mptcp-inc-limits-v3-15-dd36c9360432@kernel.org>
 References: <20260413-mptcp-inc-limits-v3-0-dd36c9360432@kernel.org>
 In-Reply-To: <20260413-mptcp-inc-limits-v3-0-dd36c9360432@kernel.org>
 To: MPTCP Upstream <mptcp@lists.linux.dev>
 Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1182; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=FzoQpH+/1rJAZNWER5wf3XVojQhw8DWII+Nl045Pjg4=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDLv/NzYEqzT9S7xqs6sOuV9R+Za3vK/cWp1fIiXwPLFJ
- 17tCzqp3lHKwiDGxSArpsgi3RaZP/N5FW+Jl58FzBxWJpAhDFycAjARNyOGf1ZaOxPeyPUdWDVP
- bcGGOXHrdHeIrz/NIu204l3XMmv+w7YM/+N37X+Us1DWOXXT0aJ5G2vK5vlF3/Ver94TxbKrK7e
- HgxkA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1877; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=k+RpxqRdGerfGFAGy1z4N+ND2xXyRKGbPOpBhMvR2Mc=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDLv/Nxk5LFMnut+x4pfXieLD8lt8Mr/+9L5UEH3Kf4Xl
+ kfO/TwR0FHKwiDGxSArpsgi3RaZP/N5FW+Jl58FzBxWJpAhDFycAjCRDg+Gf8qFaRe2KTnPX95j
+ 9qX65O0jKxfe43u4+Mbyx4lz1ebI/oliZJi9zuP2a8eULdVNJUeLNE2PmK/+tGiasnCNwxX9Nfv
+ 9i1kA
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-The endpoints are managed in a list which was limited to 8 entries.
+By default, 4 network interfaces are created per subtest in a dedicated
+net namespace. Each netns has a dedicated pair of v4 and v6 addresses.
+Future tests will need more.
 
-This limit can be too small in some cases: by having the same limit as
-the number of subflows, it might not allow creating all expected
-subflows when having a mix of v4 and v6 addresses that can all use MPTCP
-on v4/v6 only networks.
+Simply always creating more network interfaces per test will increase
+the execution time for all other tests, for no other benefits. So now it
+is possible to change this number only when needed, by setting ifaces_nr
+when calling 'reset', e.g.
 
-While increasing the limit above the new subflows one, why not using the
-technical limit: 254. Indeed, the endpoint will each have an ID that
-will be used on the wire, limited to u8, and the ID 0 is reserved to the
-initial subflow.
+  ifaces_nr=8 reset "Subtest title"
+
+Note that it might also be interesting to decrease the default value to
+2 to reduce the setup time, especially when a debug kernel config is
+being used.
 
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- net/mptcp/pm_kernel.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/testing/selftests/net/mptcp/mptcp_join.sh | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/net/mptcp/pm_kernel.c b/net/mptcp/pm_kernel.c
-index 1480bb7473b4..c75a2c29bcf2 100644
---- a/net/mptcp/pm_kernel.c
-+++ b/net/mptcp/pm_kernel.c
-@@ -746,7 +746,7 @@ static int mptcp_pm_nl_append_new_local_addr(struct pm_nl_pernet *pernet,
- 	 */
- 	if (pernet->next_id == MPTCP_PM_MAX_ADDR_ID)
- 		pernet->next_id = 1;
--	if (pernet->endpoints >= MPTCP_PM_ADDR_MAX) {
-+	if (pernet->endpoints == MPTCP_PM_MAX_ADDR_ID) {
- 		ret = -ERANGE;
- 		goto out;
- 	}
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+index beec41f6662a..28da9df797ae 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -63,6 +63,7 @@ unset fastclose
+ unset fullmesh
+ unset speed
+ unset bind_addr
++unset ifaces_nr
+ unset join_syn_rej
+ unset join_csum_ns1
+ unset join_csum_ns2
+@@ -146,7 +147,7 @@ init_partial()
+ 	# ns1eth4    ns2eth4
+ 
+ 	local i
+-	for i in $(seq 1 4); do
++	for i in $(seq 1 "${ifaces_nr:-4}"); do
+ 		ip link add ns1eth$i netns "$ns1" type veth peer name ns2eth$i netns "$ns2"
+ 		ip -net "$ns1" addr add 10.0.$i.1/24 dev ns1eth$i
+ 		ip -net "$ns1" addr add dead:beef:$i::1/64 dev ns1eth$i nodad
+@@ -165,7 +166,7 @@ init_partial()
+ init_shapers()
+ {
+ 	local i
+-	for i in $(seq 1 4); do
++	for i in $(seq 1 "${ifaces_nr:-4}"); do
+ 		tc -n $ns1 qdisc add dev ns1eth$i root netem rate 20mbit delay 1ms
+ 		tc -n $ns2 qdisc add dev ns2eth$i root netem rate 20mbit delay 1ms
+ 	done
 
 -- 
 2.53.0
