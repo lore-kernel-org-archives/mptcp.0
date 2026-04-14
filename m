@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A714E2C21C7
-	for <mptcp@lists.linux.dev>; Tue, 14 Apr 2026 13:34:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FF68271A94
+	for <mptcp@lists.linux.dev>; Tue, 14 Apr 2026 13:34:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776173656; cv=none; b=AsMDpzsTR5ary9mdZPZ0JXp5UH98MqlLW31qoPKkTEjCZUlVQ9g4OdYrXQgCpwQLK95zNvWs3k0QzjsCBRCM47Sq9grSaciEmnGnh7042DyCyyiPmIx761As3DK8M2/i4grNy8rDsDJzgPHbF0QK1BR2Hti/KK31gN0mbZTGbhg=
+	t=1776173657; cv=none; b=UyjUq29/OY7quhzKb49asMD8JnQHPZ7o3mxM0op00dGxjIRuv/96rMr8bae9vn4QQriOpwE2rXJ2m9QcKyqcnXSEZoGLqsauP9HJKwGOxvpUU5Zjt0yge8qHEh2IDZU5Df03hq91w5r2nj1uc1Q3N39RTZ8gUN9LMW9eLki7d3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776173656; c=relaxed/simple;
-	bh=L6POWmFKgcQjWjV+YPFwktx+/aPgcYJ8oOYMNleizKg=;
+	s=arc-20240116; t=1776173657; c=relaxed/simple;
+	bh=jXEpLOQ67t49RysWKZgvu3qP8jtz8NSTjoKZIw5ytXE=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=FU+jPws+5CC4r1jd0Mj0cmBIgZhwsTyiLWLB2u9h5CaroxXsXJDKCdT5WVDXUijk7QDakJYDE4eBNkD9UKIT4ruPr9mEw9tgeTKMDxOnavfeJA8St2Lmur20tjeQPxkLZbku3duh0mzJj4BEHCEZON/PErqGns4D3HpHRkdNnrc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pY97o1Cc; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=FgExLMF/+tPBY+gi7r9UZk+MUwfBjXYw8kpImHbt6EA6kLgzP8i44bJbjMdfWhWUjaE5wnMwdgwUENgPWuiWVMJIsBFHKgDI3hGrS8IxYEDzr7/+2Jhf2b8fz0r1YaQTuKc0s6fbkjxM743LNM8hCjto0Ot6XycMpEk0a91QLVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ukAdYywD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pY97o1Cc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0A75C2BCB5;
-	Tue, 14 Apr 2026 13:34:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ukAdYywD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B81D1C2BCB0;
+	Tue, 14 Apr 2026 13:34:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776173656;
-	bh=L6POWmFKgcQjWjV+YPFwktx+/aPgcYJ8oOYMNleizKg=;
+	s=k20201202; t=1776173657;
+	bh=jXEpLOQ67t49RysWKZgvu3qP8jtz8NSTjoKZIw5ytXE=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=pY97o1CcMynHv3roJivee+P+Dv/g8EoJQvQ1HPpMhSm3BWhhoAnQTrkzmpYrc74O7
-	 bWjpjOir8Z4d0ZOhkkKgVOgT3sfi+SCudhIMB9lG+Sn4Y+tGeP5xNQHNxMM8CVnfDZ
-	 27onRPcQVACG4qEGSvTZYU6KV13mvrYzjzm9hEK33ZJSyOfBu81XD8oI7Jo/j91uy3
-	 VLvXEKR7uKuez8z6LLVj85gMVIeK8weEsSpN7NgByEhns0RrFu7dbuGAmuEO3miwQx
-	 1S8KNwEtgO3dtZdoH/lj94JQ+JgyuDrx7H+2y6clvGrTW62HxMf817B/VnE9iFgVH3
-	 AfjyE52ZgcgJw==
+	b=ukAdYywDQnkZDhnrxiBAR5DNCbb9r6vzYp6EDwRuVh3iiYkX/CZ55KROVEZL7sHLk
+	 Qmya/OZKqUkSP0RfyvW7Rw/SLC7sAdrcmbgfSm0JFF3WUe0dyqOqIatE9hZaZnKa2g
+	 lD4Yvb8b7T7yGmzYKwKPUSW+zzeXj40m+whS/u6VdKpgP5AeVYK8oyoG5QM8pFPEoY
+	 nYKhFJH2savSOjbilbL5QEdn0l6tYHhToODw6uAba4FEKEOuc3Q2OUQL3MAyteumKj
+	 9eTK3+J84/EDfA2pDAW5gtHCk6odjkgjuqY/VajynDEbNnibCY81WW1zpuywMAMAzI
+	 4wE7Po+4PQ8Sw==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Tue, 14 Apr 2026 15:33:59 +0200
-Subject: [PATCH mptcp-net v4 06/20] mptcp: pm: ADD_ADDR rtx: resched
- blocked ADD_ADDR quicker
+Date: Tue, 14 Apr 2026 15:34:00 +0200
+Subject: [PATCH mptcp-net v4 07/20] mptcp: pm: ADD_ADDR rtx: skip inactive
+ subflows
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,63 +38,75 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260414-mptcp-inc-limits-v4-6-78274edda5dd@kernel.org>
+Message-Id: <20260414-mptcp-inc-limits-v4-7-78274edda5dd@kernel.org>
 References: <20260414-mptcp-inc-limits-v4-0-78274edda5dd@kernel.org>
 In-Reply-To: <20260414-mptcp-inc-limits-v4-0-78274edda5dd@kernel.org>
 To: MPTCP Upstream <mptcp@lists.linux.dev>
 Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1553; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=L6POWmFKgcQjWjV+YPFwktx+/aPgcYJ8oOYMNleizKg=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDLvOfmEf+SI8xTVnP5xMnPMaqMbnN8P528JS5gt3uK7P
- rG1a/qejlIWBjEuBlkxRRbptsj8mc+reEu8/Cxg5rAygQxh4OIUgIlUtTIyfOL7xFSozy1d2pr/
- 78yh+1Wct87MNDpuem/ZA5+5oXyCggz/VFd2VcTwy+5PPSO1xW3dYb5jJ34YGmqXuBnvkxDZ9ug
- WLwA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1857; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=jXEpLOQ67t49RysWKZgvu3qP8jtz8NSTjoKZIw5ytXE=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDLvOfnUq9kcKO/TFWP56ujxp8TwSxBT7L/HVp3zNqtrn
+ 7I5vPdWRykLgxgXg6yYIot0W2T+zOdVvCVefhYwc1iZQIYwcHEKwER0NzIyTA77dL6+h2eTR6uj
+ 9sOmjoz+zZIbJ3TvfvRTTiFHdHfBNYZ/tu/Y5D4uniHHsMb0g/1tVpkVtlckH8jNzku3cvI92if
+ PCgA=
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-When an ADD_ADDR needs to be retransmitted and another one has already
-been prepared -- e.g. multiple ADD_ADDRs have been sent in a row and
-need to be retransmitted later -- this additional retransmission will
-need to wait.
+When looking at the maximum RTO amongst the subflows, inactive subflows
+were taken into account: that includes stale ones, and the initial one
+if it has been already been closed.
 
-In this case, the timer was reset to TCP_RTO_MAX / 8, which is ~15
-seconds. This delay is unnecessary long: it should just be rescheduled
-at the next opportunity, e.g. after the retransmission timeout.
+Unusable subflows are now simply skipped. Stale ones are used as an
+alternative: if there are only stale ones, to take their maximum RTO and
+avoid to eventually fallback to net.mptcp.add_addr_timeout, which is set
+to 2 minutes by default.
 
-Without this modification, some issues can be seen from time to time in
-the selftests when multiple ADD_ADDRs are sent, and the host takes time
-to process them, e.g. the "signal addresses, ADD_ADDR timeout" MPTCP
-Join selftest, especially with a debug kernel config.
-
-Note that on older kernels, 'timeout' is not available. It should be
-enough to replace it by one second (HZ).
-
-Fixes: 00cfd77b9063 ("mptcp: retransmit ADD_ADDR when timeout")
+Fixes: 30549eebc4d8 ("mptcp: make ADD_ADDR retransmission timeout adaptive")
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- net/mptcp/pm.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+v2: restore accidentally deleted icsk->icsk_rto > max check
+---
+ net/mptcp/pm.c | 17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
 
 diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index e477f6a7a740..4ea896c83b38 100644
+index 4ea896c83b38..89a9790e50bb 100644
 --- a/net/mptcp/pm.c
 +++ b/net/mptcp/pm.c
-@@ -342,13 +342,8 @@ static void mptcp_pm_add_timer(struct timer_list *timer)
- 		goto out;
+@@ -306,20 +306,27 @@ static unsigned int mptcp_adjust_add_addr_timeout(struct mptcp_sock *msk)
+ 	const struct net *net = sock_net((struct sock *)msk);
+ 	unsigned int rto = mptcp_get_add_addr_timeout(net);
+ 	struct mptcp_subflow_context *subflow;
+-	unsigned int max = 0;
++	unsigned int max = 0, max_stale = 0;
+ 
+ 	mptcp_for_each_subflow(msk, subflow) {
+ 		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
+ 		struct inet_connection_sock *icsk = inet_csk(ssk);
+ 
+-		if (icsk->icsk_rto > max)
++		if (!__mptcp_subflow_active(subflow))
++			continue;
++
++		if (unlikely(subflow->stale)) {
++			if (icsk->icsk_rto > max_stale)
++				max_stale = icsk->icsk_rto;
++		} else if (icsk->icsk_rto > max) {
+ 			max = icsk->icsk_rto;
++		}
  	}
  
--	if (mptcp_pm_should_add_signal_addr(msk)) {
--		timeout = TCP_RTO_MAX / 8;
--		goto out;
--	}
--
- 	timeout = mptcp_adjust_add_addr_timeout(msk);
--	if (!timeout)
-+	if (!timeout || mptcp_pm_should_add_signal_addr(msk))
- 		goto out;
+-	if (max && max < rto)
+-		rto = max;
++	if (max)
++		return max < rto ? max : rto;
  
- 	spin_lock_bh(&msk->pm.lock);
+-	return rto;
++	return max_stale && max_stale < rto ? max_stale : rto;
+ }
+ 
+ static void mptcp_pm_add_timer(struct timer_list *timer)
 
 -- 
 2.53.0
