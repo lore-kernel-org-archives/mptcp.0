@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA5523346B4;
-	Tue, 14 Apr 2026 07:36:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 862D73A8722
+	for <mptcp@lists.linux.dev>; Tue, 14 Apr 2026 08:20:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776152194; cv=none; b=RXbmbOYoClg2UXH1f4mgQ53ItJi7/LfPU9xQrNnB0XJolha/Ixy2QDeWx8Ilvs7Zss0c2rGs0fFiFz4qb0eGTa8BuvoQNyvNIDQQn7S46mFYtqtnrQjRpK9SmbZHSfZMb3GxCtXQ1/RIpkleiRdLTrXsByMDFBw6tPzVuDpHg/Q=
+	t=1776154847; cv=none; b=b02atYqVhCc8aUpqp8aC5f72vzr86zBiZ55Nkr7Sv2ddgkxYPYZvHz5ivCguOp2uUgH1UviHqMozSpHCpdad7nlFLAZdT4S5YYIVuc/UfN2oyzosAhNCWryx+XhXJvn6si80KH5wLtvyBJLWQTdfjAN9x4RUVPDgUuAsbPf4XRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776152194; c=relaxed/simple;
-	bh=r28If2+5dneJ3zDWyp6sWnRMvV8IQrGn3kpj9EIQvgk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cE/86sLPFoxASVHitmeX4QuabCDSPHiznTAIFk5A9MB2EgT9ZPhXy0XZxmxfUP480B6iFXFrUnJ3PxW2Ljkuhtm8rUQNd+T6h0lH2jDvW09jXzzgSXJvvmMoiv1B/PRvaIilvR2R/KysWTyjd80799PZkF+6EjWF+O7ntmtduus=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d3MdxTay; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1776154847; c=relaxed/simple;
+	bh=VfXDpj/qaaPTgTHrqIwCPXnI71Ntvm0oeuPe1eZbDPw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=UT3V+6tlxRB7cHcD+3Rddl0qUXtdEImsVLyQl681VR4W4zs/nSM/iaxH3Ex0v9JjwoVaSTwi6sc03ASb0er2YfWYvg4h5+x8tXLiXCE0Pa3wn9ZEuDWyySL/UorLClqnwZeY/C90y+68c9K/XQumbWi68nl+6UZNAPJOXBgtkr8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LK4IcYQe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d3MdxTay"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DAE1C19425;
-	Tue, 14 Apr 2026 07:36:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LK4IcYQe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 876B5C19425
+	for <mptcp@lists.linux.dev>; Tue, 14 Apr 2026 08:20:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776152194;
-	bh=r28If2+5dneJ3zDWyp6sWnRMvV8IQrGn3kpj9EIQvgk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=d3MdxTayICQ4sPLy+FIUSwaV2GNA4ExqByjlkFhW07zJLpBfV9Gu/3M+CFyA4ViI7
-	 obimD3yN/8YtCZU6jjcZnJCQi4Bb60SN9/Ai0C2IJDkAALooUSaboXuPH0nxtx1Oz4
-	 K1C/dBrC7u5cEKHV/fjy+3TPsj8jk9tdGd6V+jdnHTDY9Dw2G6YyCRvwLSOCBb/2/4
-	 as8L421LCI0ObSmnxdknTO3DcwqOhdOYmqF1bNqWDrTLSqfbqcE04NcHdT6/myF50c
-	 +FBGxZxaS7j3Ajso8ygRhhmu46oelu69/CGiCPf8HLx12bGAfdgYsq9AVq5+YR1qfy
-	 BYqehf4WVQ8ug==
-Message-ID: <871cc11d-610c-47d4-b78f-31541461ab13@kernel.org>
-Date: Tue, 14 Apr 2026 09:36:31 +0200
+	s=k20201202; t=1776154847;
+	bh=VfXDpj/qaaPTgTHrqIwCPXnI71Ntvm0oeuPe1eZbDPw=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=LK4IcYQeXY/bdogrBbmpmPS9AsE+wIHMw/e/SEq3AieID2xZWgFExXf+5y78CA3cg
+	 ppzw7X2Tn1VN0lnjjCUUCAF8VVdtf1AFBcJtt+S/sLLUO2XYs9/ZERBf4zJdM75NsE
+	 ZBCAocwYAbz2JEGx+pHayBYxMQAFSK60vMq3IbGHzGYn1lKKk0Zah8Q4q/Tcu0q3W9
+	 4XUN3Cl9k987SoD/edwlEkFwnBNI7xspAiSbS3bE0sURDTtP/ov1KJy3Auub4S2nml
+	 ryI5O8u+ZURcibZFO4bLzQMZziL0Ldc1Pe/7cZCVqIGvt1G62shxJNHIXlCvNKbpWl
+	 dSpzAFG87mqPQ==
+Message-ID: <756803ac-53f8-4eb2-b53c-2db4c2e1791d@kernel.org>
+Date: Tue, 14 Apr 2026 10:20:44 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [mptcp:export 6/27] include/net/sch_generic.h:1203:39: warning:
- implicit conversion from 'enum qdisc_drop_reason' to 'enum skb_drop_reason'
+Subject: Re: [PATCH mptcp-net v3 05/19] mptcp: pm: ADD_ADDR rtx: free sk if
+ last
 Content-Language: fr
-To: kernel test robot <lkp@intel.com>
-Cc: oe-kbuild-all@lists.linux.dev, mptcp@lists.linux.dev
-References: <202604140826.OEgqGMGh-lkp@intel.com>
+To: MPTCP Linux <mptcp@lists.linux.dev>
+References: <20260413-mptcp-inc-limits-v3-0-dd36c9360432@kernel.org>
+ <20260413-mptcp-inc-limits-v3-5-dd36c9360432@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,34 +86,138 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <202604140826.OEgqGMGh-lkp@intel.com>
+In-Reply-To: <20260413-mptcp-inc-limits-v3-5-dd36c9360432@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 14/04/2026 08:54, kernel test robot wrote:
-> tree:   https://github.com/multipath-tcp/mptcp_net-next.git export
-> head:   75aa4557daa0edb98d48ab835de0a6badda5c1f1
-> commit: 23dd38834c40d151dce2449203dee4421efec2ed [6/27] TopGit-driven merge of branches:
-> config: x86_64-rhel-9.4-ltp (https://download.01.org/0day-ci/archive/20260414/202604140826.OEgqGMGh-lkp@intel.com/config)
-> compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
-> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260414/202604140826.OEgqGMGh-lkp@intel.com/reproduce)
-> 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202604140826.OEgqGMGh-lkp@intel.com/
-> 
-> All warnings (new ones prefixed by >>):
-> 
->    In file included from include/linux/filter.h:27,
->                     from kernel/extable.c:14:
->    include/net/sch_generic.h: In function 'qdisc_dequeue_drop':
->>> include/net/sch_generic.h:1203:39: warning: implicit conversion from 'enum qdisc_drop_reason' to 'enum skb_drop_reason' [-Wenum-conversion]
->     1203 |                 kfree_skb_reason(skb, reason);
->          |                                       ^~~~~~
+Hello,
 
-Indeed, thanks, but it has been fixed yesterday in: 4e3337ef0966 ("net:
-sched: cast qdisc reason").
+On 13/04/2026 16:11, Matthieu Baerts (NGI0) wrote:
+> When an ADD_ADDR is retransmitted, the sk is held in sk_reset_timer(),
+> and released at the end.
+> 
+> If at that moment, it was the last reference being held, the sk would
+> not be freed. sock_put() should then be called instead of __sock_put().
+> 
+> But that's not enough: if it is the last reference, sock_put() will call
+> sk_free(), which will end up calling sk_stop_timer_sync() on the same
+> timer, and waiting indefinitely to finish. So it is needed to mark that
+> the timer is done, and no need to call sk_stop_timer_sync().
+> 
+> Fixes: 00cfd77b9063 ("mptcp: retransmit ADD_ADDR when timeout")
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> ---
+> v3: support calling sk_free() from the timer handler. Note: I'm not very
+>     happy with this patch, it looks too big. Did I miss a simpler way?
+> ---
+>  net/mptcp/pm.c | 32 +++++++++++++++++++++-----------
+>  1 file changed, 21 insertions(+), 11 deletions(-)
+> 
+> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+> index d3fcf441b208..adbebf46dcce 100644
+> --- a/net/mptcp/pm.c
+> +++ b/net/mptcp/pm.c
+> @@ -16,6 +16,7 @@ struct mptcp_pm_add_entry {
+>  	struct list_head	list;
+>  	struct mptcp_addr_info	addr;
+>  	u8			retrans_times;
+> +	bool			timer_done;
+>  	struct timer_list	add_timer;
+>  	struct mptcp_sock	*sock;
+>  	struct rcu_head		rcu;
+> @@ -327,22 +328,22 @@ static void mptcp_pm_add_timer(struct timer_list *timer)
+>  							      add_timer);
+>  	struct mptcp_sock *msk = entry->sock;
+>  	struct sock *sk = (struct sock *)msk;
+> -	unsigned int timeout;
+> +	unsigned int timeout = 0;
+>  
+>  	pr_debug("msk=%p\n", msk);
+>  
+> -	if (unlikely(inet_sk_state_load(sk) == TCP_CLOSE))
+> -		goto exit;
+> -
+>  	bh_lock_sock(sk);
+> +	if (unlikely(inet_sk_state_load(sk) == TCP_CLOSE))
+> +		goto out;
+> +
+>  	if (sock_owned_by_user(sk)) {
+>  		/* Try again later. */
+> -		sk_reset_timer(sk, timer, jiffies + HZ / 20);
+> +		timeout = HZ / 20;
+>  		goto out;
+>  	}
+>  
+>  	if (mptcp_pm_should_add_signal_addr(msk)) {
+> -		sk_reset_timer(sk, timer, jiffies + TCP_RTO_MAX / 8);
+> +		timeout = TCP_RTO_MAX / 8;
+>  		goto out;
+>  	}
+>  
+> @@ -360,8 +361,9 @@ static void mptcp_pm_add_timer(struct timer_list *timer)
+>  	}
+>  
+>  	if (entry->retrans_times < ADD_ADDR_RETRANS_MAX)
+> -		sk_reset_timer(sk, timer,
+> -			       jiffies + (timeout << entry->retrans_times));
+> +		timeout <<= entry->retrans_times;
+> +	else
+> +		timeout = 0;
+>  
+>  	spin_unlock_bh(&msk->pm.lock);
+>  
+> @@ -369,9 +371,13 @@ static void mptcp_pm_add_timer(struct timer_list *timer)
+>  		mptcp_pm_subflow_established(msk);
+>  
+>  out:
+> +	if (timeout)
+> +		sk_reset_timer(sk, timer, jiffies + timeout);
+> +	else
+> +		/* if sock_put calls sk_free: avoid waiting for this timer */
+> +		entry->timer_done = true;
+>  	bh_unlock_sock(sk);
+> -exit:
+> -	__sock_put(sk);
+> +	sock_put(sk);
+>  }
+>  
+>  struct mptcp_pm_add_entry *
+> @@ -431,12 +437,15 @@ bool mptcp_pm_alloc_anno_list(struct mptcp_sock *msk,
+>  	add_entry->addr = *addr;
+>  	add_entry->sock = msk;
+>  	add_entry->retrans_times = 0;
+> +	add_entry->timer_done = false;
+
+As recommended by sashiko, this should be moved under the "reset_timer"
+label just in case the sysctl value has been changed in between.
+
+Also, I don't think we need to protect that with READ/WRITE_ONCE: this
+variable is only useful when 'sock_put()' is called from the timer
+handler, and it removes the last socket reference: when it is the last
+consumer, alone, no concurrency then.
+
+>  
+>  	timer_setup(&add_entry->add_timer, mptcp_pm_add_timer, 0);
+>  reset_timer:
+>  	timeout = mptcp_adjust_add_addr_timeout(msk);
+>  	if (timeout)
+>  		sk_reset_timer(sk, &add_entry->add_timer, jiffies + timeout);
+> +	else
+> +		add_entry->timer_done = true;
+>  
+>  	return true;
+>  }
+> @@ -454,7 +463,8 @@ static void mptcp_pm_free_anno_list(struct mptcp_sock *msk)
+>  	spin_unlock_bh(&msk->pm.lock);
+>  
+>  	list_for_each_entry_safe(entry, tmp, &free_list, list) {
+> -		sk_stop_timer_sync(sk, &entry->add_timer);
+> +		if (!entry->timer_done)
+> +			sk_stop_timer_sync(sk, &entry->add_timer);
+>  		kfree_rcu(entry, rcu);
+>  	}
+>  }
+> 
 
 Cheers,
 Matt
