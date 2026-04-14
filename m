@@ -1,250 +1,390 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FDF235A95A
-	for <mptcp@lists.linux.dev>; Mon, 13 Apr 2026 15:49:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2599B1D61A3;
+	Tue, 14 Apr 2026 06:55:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776095382; cv=none; b=AGVI6ovcPRf1PLh8JT9H3KYTex3PrQw2YQh/+u49LOXapdgFwKl0am7QEx0QtF1aEy40NQ0W4ksfqh7yJlK4lOw9hDQc6AD2djjfWlDyrpOvlzwRKwJAE/nT2u2ycFqQuOiwlCN+1DJltKoJQecqqNoGdhCEbkn9IUnO+Tq+kh4=
+	t=1776149703; cv=none; b=CA0LehnN6RbJpt5NLgkES2Hj1nza9tuunPboL0wj5H0DaJrGEeb3n1WDB/trg/MiQgsl0PI4UtxKQDZoDHktm/xwq6zm9bCmnarsEHwrBIdyy52/N1CWGSlu91XG2E+9RXUy4O3AcnM7euPKunnh0J2gdLk0A7t6FKyR0HB26Zs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776095382; c=relaxed/simple;
-	bh=+zVo8Npe9WC9LO9spfh4o21LlHumSIzq+Q/ZZr9dZVE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=KjaISEBWgmPxwvf5iDC3jg4DA+cgEHSbsIZ5h4yLLbVM1ZFVCMWknyTx46dGE4GpUWnlNmcpLyAeygoTy8mr9i6te9GMCzWUNqz15ePlnCnqqELq33QJUbtIqhvQ0kFfDSWeDfM5MLzg4YUS6DpCzxnCaE3Y9Y06UMMBS6qWU2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ffzc01LK; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1776149703; c=relaxed/simple;
+	bh=48uY8Yr6mrulRwh4NSVYgz8aOPw2kADAr0C+CpGSsMY=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=k4tSiDofSDl493MGunHBK6zNEJUUrvL6uyCXrfcHbyi0jb6c0tz6Cqgn6ae9y/E3Cskc9VIDj4EidP/BJBuVB7uHeUt9F2BcNz661Rh75p51+sn9nZToiI7Rnu2wCDbr4AN1wVuuFJ4i5grPo93bT9HEEGKBYaNPjy/FEOqXNqs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=C8qnW20k; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ffzc01LK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1776095380;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MrtrZDv601JCoZBNuRIUNbFu+dPTjBpn2WL1XKFca4g=;
-	b=Ffzc01LKeRbHr/xxWh7Kr9pJjdycID8wUzUoJ1xiSzPsh/X1DIayFrw6yMqzk2CrcxRTt2
-	51S1/7UkRma4AlJ1WWc4zsUaQT8q8jccPYnfsvKewtzfLidqroa6A/vQv1sWJa0CcQVtbl
-	pGFKuC8V2KrZIpD9Ob+Bo/S1U3LgIPM=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-711-CEt7lfHSNGiE7bM-vWBtPQ-1; Mon, 13 Apr 2026 11:49:39 -0400
-X-MC-Unique: CEt7lfHSNGiE7bM-vWBtPQ-1
-X-Mimecast-MFC-AGG-ID: CEt7lfHSNGiE7bM-vWBtPQ_1776095378
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-43cff5ef652so2879707f8f.2
-        for <mptcp@lists.linux.dev>; Mon, 13 Apr 2026 08:49:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776095378; x=1776700178;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=MrtrZDv601JCoZBNuRIUNbFu+dPTjBpn2WL1XKFca4g=;
-        b=lg0E5a+lY8LALZ4YZO279Q00w5jQjRBYLICY3fVtw74JgGt+eFdRRpzAzHbtvNMbcS
-         XSyNLmBDLrtv20sdzxz6Jfh6jCesKZyU6FXVwDJhNBpwd46acAYOEHx9eNIQOq54pKFI
-         /JEfdUaZT5mqKxaGWXvnyIVL4fvtwswklLzDRJu0sNScP0Vb4SX9w6bex7IcYt6evUhL
-         FDFcw9jQ90ewdpYSdbPiHonefKESyvchQySob9tk1utdletUJ3XZ3D71in7OPBlNAnPi
-         tROJfF/nSjr9iXsr46tB8jdwX9kZoEJzD/CHmkVTvTWs5+K7pBhUv4siIgtlm19DBeRa
-         7xQQ==
-X-Forwarded-Encrypted: i=1; AFNElJ8/FwuKfnbx6hYkIoO8XU+jmYITRkGRLJ74iQrnfhIzsPr8VvsdopFOwzZw7h1pNTesaQP7gA==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxROjzE6vaC9YnUCNqQNJlqjC8b8POisF9Ndp/TOsiMQ67R7KOk
-	Y7lAwOYJSK1eCpJHJO4k31147qWPBz7zSkwzqapKAyf7QwXMBeBvBAUofnSePX8ak5OzPTIVOpS
-	pyTrtn8cN3y+xzEg9+CO1b1ZY+wW7YwM1YPf76iWMpfDZojgCnjjD8X00BgbL4Zkp
-X-Gm-Gg: AeBDieuYMTGYL3rocTs1hfoyBBmDRo3pkDwhDfTltyC8NGjyWmYGKsOFHHLQb0GG/8K
-	fnexGLgNlvBj72BVoXDNnmBGhXjNlxP09Prt95ZEA6gdUx3bZSBOiTbYLj2mK72nQ3+Ek7X8dU8
-	MLVqwVT1mufx/PnfZzfRfoElIFCOzxUhR4UfqZXi9/q0vJvg3tjUPwxVRTeOjxrJKt1V2bqZucO
-	40k9IUaj8cfLJx3KizQ4cgn3gDmU8pUgPRxCDoBx8eOOUo03yyDf15X+Gm0TEPmaIWseH/WpFFJ
-	KxPaSFqE8HgE1cE7qw4IjTy6i/FpGj8VkhIoZat4yggUjM59gybBn7D75el2F7KYS+WxcHNvJaw
-	dWcBHwJsLVwolbxaf5QFryBPXHEv6prr7syLdowYeIxEQdtvJcVJ4NHxd
-X-Received: by 2002:a05:6000:26cd:b0:43d:7b90:fa21 with SMTP id ffacd0b85a97d-43d7b90fc9fmr4633800f8f.12.1776095377688;
-        Mon, 13 Apr 2026 08:49:37 -0700 (PDT)
-X-Received: by 2002:a05:6000:26cd:b0:43d:7b90:fa21 with SMTP id ffacd0b85a97d-43d7b90fc9fmr4633750f8f.12.1776095377197;
-        Mon, 13 Apr 2026 08:49:37 -0700 (PDT)
-Received: from [192.168.88.32] ([216.128.11.125])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43d63e5061fsm34790546f8f.30.2026.04.13.08.49.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Apr 2026 08:49:36 -0700 (PDT)
-Message-ID: <29fbf2db-d678-4144-96e1-a03f63df2988@redhat.com>
-Date: Mon, 13 Apr 2026 17:49:35 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="C8qnW20k"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1776149701; x=1807685701;
+  h=date:from:to:cc:subject:message-id;
+  bh=48uY8Yr6mrulRwh4NSVYgz8aOPw2kADAr0C+CpGSsMY=;
+  b=C8qnW20kgYBJiTJRDC4EiZ0t30tOwCp7jqRhmezDIfbrHHGq7tThMqRS
+   72AJ+iDA3qq4yXhzz6dXhrHvAnC2DQF/p6GO1ZkHVdMUZRcKPYEL6dRUr
+   FD/AdYS+orjMuW+Tf0p2wOPXijjLrYTxAPMWM6Oq0JdxI48ObLee391cs
+   Xkn3hK4VwKP2YuMDblf6tbCzeeALvE/q1McE+QDXsvFiNNQDJqNj40DKU
+   3a5UMT7NDlcLVFtMX9XEIlNS/oWhjesUFd95C/j8DSPNf71qLLm1xvYuY
+   cWBMMPQarHvhgYhx7dP6PuzP6OopZu6STjuoZ7qMwLhcxDqUcz6Jdf0jl
+   w==;
+X-CSE-ConnectionGUID: hlZertI2SFqIqvyswQt4iQ==
+X-CSE-MsgGUID: LvvO9yjbT+CcC3yHoM44JQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11758"; a="77003763"
+X-IronPort-AV: E=Sophos;i="6.23,179,1770624000"; 
+   d="scan'208";a="77003763"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2026 23:55:00 -0700
+X-CSE-ConnectionGUID: Ptb2NbFZSGmxZ+4zK2p6rg==
+X-CSE-MsgGUID: Y8lSVD23R0W5PPTtxyc9MQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,179,1770624000"; 
+   d="scan'208";a="229129098"
+Received: from igk-lkp-server01.igk.intel.com (HELO bdf09bfdbd5f) ([10.211.93.152])
+  by orviesa010.jf.intel.com with ESMTP; 13 Apr 2026 23:54:58 -0700
+Received: from kbuild by bdf09bfdbd5f with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1wCXfk-000000000Lx-1THA;
+	Tue, 14 Apr 2026 06:54:56 +0000
+Date: Tue, 14 Apr 2026 08:54:40 +0200
+From: kernel test robot <lkp@intel.com>
+To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, mptcp@lists.linux.dev
+Subject: [mptcp:export 6/27] include/net/sch_generic.h:1203:39:
+ warning: implicit conversion from 'enum qdisc_drop_reason' to 'enum
+ skb_drop_reason'
+Message-ID: <202604140826.OEgqGMGh-lkp@intel.com>
+User-Agent: s-nail v14.9.25
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Fwd: Re: [PATCH mptcp-net v5 4/5] mptcp: fix the dead_lock in
- mptcp_data_ready
-To: gang.yan@linux.dev, mptcp@lists.linux.dev
-References: <cover.1775033340.git.yangang@kylinos.cn>
- <8ed0aeb49f13410b25200d884c89ef3201d2c23b.1775033340.git.yangang@kylinos.cn>
- <159f8b70-4ffa-4eef-a3ca-13de3f8bc191@redhat.com>
- <e1f58d941ad141f9f96a24d1a1d9d6ca74cc2f5e@linux.dev>
- <bd405b7aaedd030858f609e936c811903e139f32@linux.dev>
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <bd405b7aaedd030858f609e936c811903e139f32@linux.dev>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: ptAYPAniqqNkdHTbLWxn95E9BeKTYpPZWl6Vm__Jigo_1776095378
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-hi,
+tree:   https://github.com/multipath-tcp/mptcp_net-next.git export
+head:   75aa4557daa0edb98d48ab835de0a6badda5c1f1
+commit: 23dd38834c40d151dce2449203dee4421efec2ed [6/27] TopGit-driven merge of branches:
+config: x86_64-rhel-9.4-ltp (https://download.01.org/0day-ci/archive/20260414/202604140826.OEgqGMGh-lkp@intel.com/config)
+compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260414/202604140826.OEgqGMGh-lkp@intel.com/reproduce)
 
-I'm sorry for the very late reply. I'm really can't keep-up with
-everything, my latency here is going to be even worse.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202604140826.OEgqGMGh-lkp@intel.com/
 
-On 4/3/26 8:45 AM, gang.yan@linux.dev wrote:
-> -------- Forwarded message -------
-> 
-> From: gang.yan@linux.dev mailto:gang.yan@linux.dev 
-> To: "Paolo Abeni" <pabeni@redhat.com mailto:pabeni@redhat.com?to=%22Paolo%20Abeni%22%20%3Cpabeni%40redhat.com%3E >
-> Sent: April 3, 2026 at 2:44 PM
-> Subject: Re: [PATCH mptcp-net v5 4/5] mptcp: fix the dead_lock in mptcp_data_ready
-> 
-> April 2, 2026 at 4:02 AM, "Paolo Abeni" <pabeni@redhat.com mailto:pabeni@redhat.com?to=%22Paolo%20Abeni%22%20%3Cpabeni%40redhat.com%3E > wrote:
-> 
-> 
-> 
->>
->> On 4/1/26 10:54 AM, Gang Yan wrote:
->>  
->>  
->>  From: Gang Yan <yangang@kylinos.cn>
->>  
->>  This patch defers mptcp_check_data_fin from __mptcp_move_skbs to avoid
->>  deadlock.
->>  
->>  When processing backlogged data in softirq context, __mptcp_move_skbs
->>  directly calls mptcp_check_data_fin, which can lead to a deadlock if
->>  the msk socket is in TCP_FIN_WAIT2 state. In that case,
->>  mptcp_check_data_fin calls mptcp_shutdown_subflows, which attempts to
->>  lock the subflow socket with lock_sock_fast() - a sleeping function
->>  that cannot be called in atomic context (softirq).
->>  
->>  The fix for such issue should be squashed inside the patch generating
->>  the issue itself.
->>  
->>  
->>  The correct pattern is already used in move_skbs_to_msk: if a data fin
->>  is pending, schedule the work to be processed later in process context
->>  rather than handling it directly.
->>  
->>  Reported-by: Geliang Tang <geliang@kernel.org>
->>  Co-developed-by: Geliang Tang <geliang@kernel.org>
->>  Signed-off-by: Geliang Tang <geliang@kernel.org>
->>  Signed-off-by: Gang Yan <yangang@kylinos.cn>
->>  ---
->>  Notes:
->>  
->>  Hi Matt,Paolo:
->>  
->>  Here is the response of AI review for this patch:
->>  
->>  - Typo problem in subject line:
->>  Already fixed in v5.
->>  
->>  - Remove else branch:
->>  It demonstrates a TOCTOU race, though the race window is extremely
->>  narrow. The else branch is useless even without the race. So I
->>  removed it in v5. WDYT?
->>  
->>  Thanks,
->>  Gang
->>  
->>  Changelog:
->>  v5:
->>  - Fix typo in title.
->>  - Remove the else branch.
->>  
->>  ---
->>  net/mptcp/protocol.c | 5 +++--
->>  1 file changed, 3 insertions(+), 2 deletions(-)
->>  
->>  diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
->>  index 326b5d4d79e7..88e19fa61b84 100644
->>  --- a/net/mptcp/protocol.c
->>  +++ b/net/mptcp/protocol.c
->>  @@ -2247,8 +2247,9 @@ static bool __mptcp_move_skbs(struct sock *sk, struct list_head *skbs, u32 *delt
->>  }
->>  
->>  __mptcp_ofo_queue(msk);
->>  - if (moved)
->>  - mptcp_check_data_fin((struct sock *)msk);
->>  + if (moved && mptcp_pending_data_fin(sk, NULL))
->>  + mptcp_schedule_work(sk);
->>  
->>  Scheduling the worker when we are not in BH could introduce problematic
->>  delays. Instead you could factor out a ____mptcp_move_skbs() helper (a
->>  better name would be nice!) not including the mptcp_check_data_fin()
->>  call, use the latter in mptcp_data_ready() and in such function
->>  eventually schedule the mptcp work as needed.
->>
-> Hi Paolo,
-> 
-> Thanks for your review. 
-> I'm a little bit confused. Does this mean the 'move_skbs_to_msk' should be
-> fixed too? like:
+All warnings (new ones prefixed by >>):
 
-The additional latency due to the schedule work is the lesser problem,
-the main one is the potentially very long time spent in RB tree processing.
+   In file included from include/linux/filter.h:27,
+                    from kernel/extable.c:14:
+   include/net/sch_generic.h: In function 'qdisc_dequeue_drop':
+>> include/net/sch_generic.h:1203:39: warning: implicit conversion from 'enum qdisc_drop_reason' to 'enum skb_drop_reason' [-Wenum-conversion]
+    1203 |                 kfree_skb_reason(skb, reason);
+         |                                       ^~~~~~
+--
+   In file included from include/linux/filter.h:27,
+                    from include/net/sock_reuseport.h:5,
+                    from include/net/tcp.h:36,
+                    from drivers/net/ethernet/broadcom/bnx2.c:43:
+   include/net/sch_generic.h: In function 'qdisc_dequeue_drop':
+>> include/net/sch_generic.h:1203:39: warning: implicit conversion from 'enum qdisc_drop_reason' to 'enum skb_drop_reason' [-Wenum-conversion]
+    1203 |                 kfree_skb_reason(skb, reason);
+         |                                       ^~~~~~
+   drivers/net/ethernet/broadcom/bnx2.c: In function 'bnx2_setup_int_mode':
+   drivers/net/ethernet/broadcom/bnx2.c:6288:56: warning: '%d' directive output may be truncated writing between 1 and 10 bytes into a region of size between 2 and 17 [-Wformat-truncation=]
+    6288 |                 snprintf(bp->irq_tbl[i].name, len, "%s-%d", dev->name, i);
+         |                                                        ^~
+   In function 'bnx2_enable_msix',
+       inlined from 'bnx2_setup_int_mode' at drivers/net/ethernet/broadcom/bnx2.c:6314:3:
+   drivers/net/ethernet/broadcom/bnx2.c:6288:52: note: directive argument in the range [0, 2147483646]
+    6288 |                 snprintf(bp->irq_tbl[i].name, len, "%s-%d", dev->name, i);
+         |                                                    ^~~~~~~
+   drivers/net/ethernet/broadcom/bnx2.c:6288:17: note: 'snprintf' output between 3 and 27 bytes into a destination of size 18
+    6288 |                 snprintf(bp->irq_tbl[i].name, len, "%s-%d", dev->name, i);
+         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--
+   In file included from include/linux/filter.h:27,
+                    from include/net/sock_reuseport.h:5,
+                    from include/net/tcp.h:36,
+                    from include/net/tls.h:47,
+                    from drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c:69:
+   include/net/sch_generic.h: In function 'qdisc_dequeue_drop':
+>> include/net/sch_generic.h:1203:39: warning: implicit conversion from 'enum qdisc_drop_reason' to 'enum skb_drop_reason' [-Wenum-conversion]
+    1203 |                 kfree_skb_reason(skb, reason);
+         |                                       ^~~~~~
+   drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c: In function 'setup_sge_queues':
+   drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c:1074:48: warning: '%d' directive output may be truncated writing between 1 and 11 bytes into a region of size between 8 and 23 [-Wformat-truncation=]
+    1074 |                                          "%s-Rx%d", dev->name, j);
+         |                                                ^~
+   drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c:1074:42: note: directive argument in the range [-2147483641, 254]
+    1074 |                                          "%s-Rx%d", dev->name, j);
+         |                                          ^~~~~~~~~
+   drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c:1072:33: note: 'snprintf' output between 5 and 30 bytes into a destination of size 26
+    1072 |                                 snprintf(adap->msix_info[msix].desc,
+         |                                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    1073 |                                          sizeof(adap->msix_info[msix].desc),
+         |                                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    1074 |                                          "%s-Rx%d", dev->name, j);
+         |                                          ~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c: In function 'cxgb4_port_mirror_alloc_queues':
+   drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c:1356:47: warning: '%d' directive output may be truncated writing between 1 and 5 bytes into a region of size between 1 and 16 [-Wformat-truncation=]
+    1356 |                                  "%s-mirrorrxq%d", dev->name, i);
+         |                                               ^~
+   drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c:1356:34: note: directive argument in the range [0, 65534]
+    1356 |                                  "%s-mirrorrxq%d", dev->name, i);
+         |                                  ^~~~~~~~~~~~~~~~
+   drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c:1354:25: note: 'snprintf' output between 12 and 31 bytes into a destination of size 26
+    1354 |                         snprintf(mirror_rxq->msix->desc,
+         |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    1355 |                                  sizeof(mirror_rxq->msix->desc),
+         |                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    1356 |                                  "%s-mirrorrxq%d", dev->name, i);
+         |                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--
+   In file included from include/linux/filter.h:27,
+                    from include/net/sock_reuseport.h:5,
+                    from include/net/tcp.h:36,
+                    from include/net/tls.h:47,
+                    from drivers/net/ethernet/chelsio/cxgb4/cxgb4_uld.h:43,
+                    from drivers/net/ethernet/chelsio/cxgb4/cxgb4.h:59,
+                    from drivers/net/ethernet/chelsio/cxgb4/cxgb4_ethtool.c:9:
+   include/net/sch_generic.h: In function 'qdisc_dequeue_drop':
+>> include/net/sch_generic.h:1203:39: warning: implicit conversion from 'enum qdisc_drop_reason' to 'enum skb_drop_reason' [-Wenum-conversion]
+    1203 |                 kfree_skb_reason(skb, reason);
+         |                                       ^~~~~~
+   drivers/net/ethernet/chelsio/cxgb4/cxgb4_ethtool.c: In function 'get_drvinfo':
+   drivers/net/ethernet/chelsio/cxgb4/cxgb4_ethtool.c:209:52: warning: '%u' directive output may be truncated writing between 1 and 3 bytes into a region of size between 0 and 14 [-Wformat-truncation=]
+     209 |                          "%u.%u.%u.%u, TP %u.%u.%u.%u",
+         |                                                    ^~
+   drivers/net/ethernet/chelsio/cxgb4/cxgb4_ethtool.c:209:26: note: directive argument in the range [0, 255]
+     209 |                          "%u.%u.%u.%u, TP %u.%u.%u.%u",
+         |                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/net/ethernet/chelsio/cxgb4/cxgb4_ethtool.c:208:17: note: 'snprintf' output between 20 and 36 bytes into a destination of size 32
+     208 |                 snprintf(info->fw_version, sizeof(info->fw_version),
+         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     209 |                          "%u.%u.%u.%u, TP %u.%u.%u.%u",
+         |                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     210 |                          FW_HDR_FW_VER_MAJOR_G(adapter->params.fw_vers),
+         |                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     211 |                          FW_HDR_FW_VER_MINOR_G(adapter->params.fw_vers),
+         |                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     212 |                          FW_HDR_FW_VER_MICRO_G(adapter->params.fw_vers),
+         |                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     213 |                          FW_HDR_FW_VER_BUILD_G(adapter->params.fw_vers),
+         |                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     214 |                          FW_HDR_FW_VER_MAJOR_G(adapter->params.tp_vers),
+         |                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     215 |                          FW_HDR_FW_VER_MINOR_G(adapter->params.tp_vers),
+         |                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     216 |                          FW_HDR_FW_VER_MICRO_G(adapter->params.tp_vers),
+         |                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     217 |                          FW_HDR_FW_VER_BUILD_G(adapter->params.tp_vers));
+         |                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--
+   In file included from include/linux/filter.h:27,
+                    from include/net/sock_reuseport.h:5,
+                    from include/net/tcp.h:36,
+                    from include/net/tls.h:47,
+                    from drivers/net/ethernet/chelsio/cxgb4/cxgb4_uld.h:43,
+                    from drivers/net/ethernet/chelsio/cxgb4/cxgb4.h:59,
+                    from drivers/net/ethernet/chelsio/cxgb4/cxgb4_uld.c:48:
+   include/net/sch_generic.h: In function 'qdisc_dequeue_drop':
+>> include/net/sch_generic.h:1203:39: warning: implicit conversion from 'enum qdisc_drop_reason' to 'enum skb_drop_reason' [-Wenum-conversion]
+    1203 |                 kfree_skb_reason(skb, reason);
+         |                                       ^~~~~~
+   drivers/net/ethernet/chelsio/cxgb4/cxgb4_uld.c: In function 'alloc_uld_rxqs':
+   drivers/net/ethernet/chelsio/cxgb4/cxgb4_uld.c:141:38: warning: '%s' directive output may be truncated writing up to 15 bytes into a region of size between 10 and 25 [-Wformat-truncation=]
+     141 |                                  "%s-%s%d",
+         |                                      ^~
+   drivers/net/ethernet/chelsio/cxgb4/cxgb4_uld.c:141:34: note: directive argument in the range [0, 131069]
+     141 |                                  "%s-%s%d",
+         |                                  ^~~~~~~~~
+   drivers/net/ethernet/chelsio/cxgb4/cxgb4_uld.c:139:25: note: 'snprintf' output between 3 and 38 bytes into a destination of size 26
+     139 |                         snprintf(adap->msix_info[msi_idx].desc,
+         |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     140 |                                  sizeof(adap->msix_info[msi_idx].desc),
+         |                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     141 |                                  "%s-%s%d",
+         |                                  ~~~~~~~~~~
+     142 |                                  adap->port[0]->name, rxq_info->name, i);
+         |                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--
+   In file included from include/linux/filter.h:27,
+                    from include/net/sock_reuseport.h:5,
+                    from include/net/tcp.h:36,
+                    from net/netfilter/ipvs/ip_vs_core.c:33:
+   include/net/sch_generic.h: In function 'qdisc_dequeue_drop':
+>> include/net/sch_generic.h:1203:39: warning: implicit conversion from 'enum qdisc_drop_reason' to 'enum skb_drop_reason' [-Wenum-conversion]
+    1203 |                 kfree_skb_reason(skb, reason);
+         |                                       ^~~~~~
+   net/netfilter/ipvs/ip_vs_core.c: In function 'ip_vs_in_icmp':
+   net/netfilter/ipvs/ip_vs_core.c:1769:15: warning: variable 'outer_proto' set but not used [-Wunused-but-set-variable]
+    1769 |         char *outer_proto = "IPIP";
+         |               ^~~~~~~~~~~
+--
+   In file included from include/linux/filter.h:27,
+                    from include/net/xdp.h:10,
+                    from include/net/busy_poll.h:19,
+                    from drivers/net/ethernet/cisco/enic/enic_main.c:47:
+   include/net/sch_generic.h: In function 'qdisc_dequeue_drop':
+>> include/net/sch_generic.h:1203:39: warning: implicit conversion from 'enum qdisc_drop_reason' to 'enum skb_drop_reason' [-Wenum-conversion]
+    1203 |                 kfree_skb_reason(skb, reason);
+         |                                       ^~~~~~
+   drivers/net/ethernet/cisco/enic/enic_main.c: In function 'enic_request_intr':
+   drivers/net/ethernet/cisco/enic/enic_main.c:1576:40: warning: '%u' directive output may be truncated writing between 1 and 10 bytes into a region of size between 5 and 20 [-Wformat-truncation=]
+    1576 |                                 "%s-rx-%u", netdev->name, i);
+         |                                        ^~
+   drivers/net/ethernet/cisco/enic/enic_main.c:1576:33: note: directive argument in the range [0, 4294967294]
+    1576 |                                 "%s-rx-%u", netdev->name, i);
+         |                                 ^~~~~~~~~~
+   drivers/net/ethernet/cisco/enic/enic_main.c:1574:25: note: 'snprintf' output between 6 and 30 bytes into a destination of size 24
+    1574 |                         snprintf(enic->msix[intr].devname,
+         |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    1575 |                                 sizeof(enic->msix[intr].devname),
+         |                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    1576 |                                 "%s-rx-%u", netdev->name, i);
+         |                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/net/ethernet/cisco/enic/enic_main.c:1587:40: warning: '%u' directive output may be truncated writing between 1 and 10 bytes into a region of size between 5 and 20 [-Wformat-truncation=]
+    1587 |                                 "%s-tx-%u", netdev->name, i);
+         |                                        ^~
+   drivers/net/ethernet/cisco/enic/enic_main.c:1587:33: note: directive argument in the range [0, 4294967294]
+    1587 |                                 "%s-tx-%u", netdev->name, i);
+         |                                 ^~~~~~~~~~
+   drivers/net/ethernet/cisco/enic/enic_main.c:1585:25: note: 'snprintf' output between 6 and 30 bytes into a destination of size 24
+    1585 |                         snprintf(enic->msix[intr].devname,
+         |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    1586 |                                 sizeof(enic->msix[intr].devname),
+         |                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    1587 |                                 "%s-tx-%u", netdev->name, i);
+         |                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--
+   In file included from include/linux/filter.h:27,
+                    from include/net/sock_reuseport.h:5,
+                    from include/net/tcp.h:36,
+                    from drivers/net/ethernet/emulex/benet/be.h:20,
+                    from drivers/net/ethernet/emulex/benet/be_ethtool.c:14:
+   include/net/sch_generic.h: In function 'qdisc_dequeue_drop':
+>> include/net/sch_generic.h:1203:39: warning: implicit conversion from 'enum qdisc_drop_reason' to 'enum skb_drop_reason' [-Wenum-conversion]
+    1203 |                 kfree_skb_reason(skb, reason);
+         |                                       ^~~~~~
+   drivers/net/ethernet/emulex/benet/be_ethtool.c: In function 'be_get_drvinfo':
+   drivers/net/ethernet/emulex/benet/be_ethtool.c:229:29: warning: ' [' directive output may be truncated writing 2 bytes into a region of size between 1 and 32 [-Wformat-truncation=]
+     229 |                          "%s [%s]", adapter->fw_ver, adapter->fw_on_flash);
+         |                             ^~
+   drivers/net/ethernet/emulex/benet/be_ethtool.c:228:17: note: 'snprintf' output between 4 and 66 bytes into a destination of size 32
+     228 |                 snprintf(drvinfo->fw_version, sizeof(drvinfo->fw_version),
+         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     229 |                          "%s [%s]", adapter->fw_ver, adapter->fw_on_flash);
+         |                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--
+   In file included from include/linux/filter.h:27,
+                    from include/net/sock_reuseport.h:5,
+                    from include/net/tcp.h:36,
+                    from drivers/net/ethernet/myricom/myri10ge/myri10ge.c:71:
+   include/net/sch_generic.h: In function 'qdisc_dequeue_drop':
+>> include/net/sch_generic.h:1203:39: warning: implicit conversion from 'enum qdisc_drop_reason' to 'enum skb_drop_reason' [-Wenum-conversion]
+    1203 |                 kfree_skb_reason(skb, reason);
+         |                                       ^~~~~~
+   drivers/net/ethernet/myricom/myri10ge/myri10ge.c: In function 'myri10ge_request_irq':
+   drivers/net/ethernet/myricom/myri10ge/myri10ge.c:2197:44: warning: '%d' directive output may be truncated writing between 1 and 11 bytes into a region of size between 10 and 25 [-Wformat-truncation=]
+    2197 |                                  "%s:slice-%d", netdev->name, i);
+         |                                            ^~
+   drivers/net/ethernet/myricom/myri10ge/myri10ge.c:2197:34: note: directive argument in the range [-2147483643, 2147483646]
+    2197 |                                  "%s:slice-%d", netdev->name, i);
+         |                                  ^~~~~~~~~~~~~
+   drivers/net/ethernet/myricom/myri10ge/myri10ge.c:2196:25: note: 'snprintf' output between 9 and 34 bytes into a destination of size 32
+    2196 |                         snprintf(ss->irq_desc, sizeof(ss->irq_desc),
+         |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    2197 |                                  "%s:slice-%d", netdev->name, i);
+         |                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--
+   In file included from include/linux/filter.h:27,
+                    from include/net/sock_reuseport.h:5,
+                    from include/net/tcp.h:36,
+                    from drivers/net/ethernet/qlogic/qede/qede_main.c:28:
+   include/net/sch_generic.h: In function 'qdisc_dequeue_drop':
+>> include/net/sch_generic.h:1203:39: warning: implicit conversion from 'enum qdisc_drop_reason' to 'enum skb_drop_reason' [-Wenum-conversion]
+    1203 |                 kfree_skb_reason(skb, reason);
+         |                                       ^~~~~~
+   drivers/net/ethernet/qlogic/qede/qede_main.c: In function 'qede_init_fp':
+   drivers/net/ethernet/qlogic/qede/qede_main.c:1881:61: warning: '%d' directive output may be truncated writing between 1 and 11 bytes into a region of size between 5 and 20 [-Wformat-truncation=]
+    1881 |                 snprintf(fp->name, sizeof(fp->name), "%s-fp-%d",
+         |                                                             ^~
+   drivers/net/ethernet/qlogic/qede/qede_main.c:1881:54: note: directive argument in the range [-2147483641, 65534]
+    1881 |                 snprintf(fp->name, sizeof(fp->name), "%s-fp-%d",
+         |                                                      ^~~~~~~~~~
+   drivers/net/ethernet/qlogic/qede/qede_main.c:1881:17: note: 'snprintf' output between 6 and 31 bytes into a destination of size 24
+    1881 |                 snprintf(fp->name, sizeof(fp->name), "%s-fp-%d",
+         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    1882 |                          edev->ndev->name, queue_id);
+         |                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--
+   In file included from include/linux/filter.h:27,
+                    from include/net/xdp.h:10,
+                    from drivers/net/ethernet/qlogic/qede/qede.h:16,
+                    from drivers/net/ethernet/qlogic/qede/qede_ethtool.c:17:
+   include/net/sch_generic.h: In function 'qdisc_dequeue_drop':
+>> include/net/sch_generic.h:1203:39: warning: implicit conversion from 'enum qdisc_drop_reason' to 'enum skb_drop_reason' [-Wenum-conversion]
+    1203 |                 kfree_skb_reason(skb, reason);
+         |                                       ^~~~~~
+   drivers/net/ethernet/qlogic/qede/qede_ethtool.c: In function 'qede_get_drvinfo':
+   drivers/net/ethernet/qlogic/qede/qede_ethtool.c:621:34: warning: '%s' directive output may be truncated writing up to 31 bytes into a region of size 25 [-Wformat-truncation=]
+     621 |                          "[storm %s]", storm);
+         |                                  ^~    ~~~~~
+   drivers/net/ethernet/qlogic/qede/qede_ethtool.c:620:17: note: 'snprintf' output between 9 and 40 bytes into a destination of size 32
+     620 |                 snprintf(info->version, sizeof(info->version),
+         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     621 |                          "[storm %s]", storm);
+         |                          ~~~~~~~~~~~~~~~~~~~~
+   drivers/net/ethernet/qlogic/qede/qede_ethtool.c:638:31: warning: '%s' directive output may be truncated writing up to 31 bytes into a region of size 28 [-Wformat-truncation=]
+     638 |                          "mfw %s", mfw);
+         |                               ^~   ~~~
+   drivers/net/ethernet/qlogic/qede/qede_ethtool.c:637:17: note: 'snprintf' output between 5 and 36 bytes into a destination of size 32
+     637 |                 snprintf(info->fw_version, sizeof(info->fw_version),
+         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     638 |                          "mfw %s", mfw);
+         |                          ~~~~~~~~~~~~~~
+   drivers/net/ethernet/qlogic/qede/qede_ethtool.c:635:31: warning: '%s' directive output may be truncated writing up to 31 bytes into a region of size 28 [-Wformat-truncation=]
+     635 |                          "mbi %s [mfw %s]", mbi, mfw);
+         |                               ^~            ~~~
+   drivers/net/ethernet/qlogic/qede/qede_ethtool.c:634:17: note: 'snprintf' output between 12 and 74 bytes into a destination of size 32
+     634 |                 snprintf(info->fw_version, sizeof(info->fw_version),
+         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     635 |                          "mbi %s [mfw %s]", mbi, mfw);
+         |                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+..
 
-> 
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 6ce0d18c86b6..e90c8621683c 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -869,13 +869,6 @@ static bool move_skbs_to_msk(struct mptcp_sock *msk, struct sock *ssk)
->  if (unlikely(ssk->sk_err))
->  __mptcp_subflow_error_report(sk, ssk);
->  
-> - /* If the moves have caught up with the DATA_FIN sequence number
-> - * it's time to ack the DATA_FIN and change socket state, but
-> - * this is not a good place to change state. Let the workqueue
-> - * do it.
-> - */
-> - if (mptcp_pending_data_fin(sk, NULL))
-> - mptcp_schedule_work(sk);
 
-Also, on top of my memory, this is like that since the beginning, and
-never caused problem. The point vs the proposed patch is that it adds
-latency to the current status quo.
+vim +1203 include/net/sch_generic.h
 
->  return moved;
->  }
->  
-> @@ -909,6 +902,7 @@ void mptcp_data_ready(struct sock *sk, struct sock *ssk)
->  {
->  struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk);
->  struct mptcp_sock *msk = mptcp_sk(sk);
-> + bool moved = false;
->  
->  /* The peer can send data while we are shutting down this
->  * subflow at subflow destruction time, but we must avoid enqueuing
-> @@ -920,13 +914,17 @@ void mptcp_data_ready(struct sock *sk, struct sock *ssk)
->  mptcp_data_lock(sk);
->  mptcp_rcv_rtt_update(msk, subflow);
->  if (!sock_owned_by_user(sk)) {
-> + moved = move_skbs_to_msk(msk, ssk); 
->  /* Wake-up the reader only for in-sequence data */
-> - if (move_skbs_to_msk(msk, ssk) && mptcp_epollin_ready(sk))
-> + if (moved && mptcp_epollin_ready(sk))
->  sk->sk_data_ready(sk);
->  } else {
->  __mptcp_move_skbs_from_subflow(msk, ssk, false);
->  }
->  mptcp_data_unlock(sk);
-> + 
-> + if (mptcp_pending_data_fin(sk, NULL))
-> + mptcp_check_data_fin(sk);
+0170d7f47c8bb0 Eric Dumazet               2025-11-21  1186  
+191ff13e42a7b7 Eric Dumazet               2025-11-21  1187  static inline void qdisc_dequeue_drop(struct Qdisc *q, struct sk_buff *skb,
+ff2998f29f390d Jesper Dangaard Brouer     2026-02-26  1188  				      enum qdisc_drop_reason reason)
+191ff13e42a7b7 Eric Dumazet               2025-11-21  1189  {
+a6bd339dbb3514 Fernando Fernandez Mancera 2026-04-08  1190  	struct Qdisc *root;
+a6bd339dbb3514 Fernando Fernandez Mancera 2026-04-08  1191  
+191ff13e42a7b7 Eric Dumazet               2025-11-21  1192  	DEBUG_NET_WARN_ON_ONCE(!(q->flags & TCQ_F_DEQUEUE_DROPS));
+191ff13e42a7b7 Eric Dumazet               2025-11-21  1193  	DEBUG_NET_WARN_ON_ONCE(q->flags & TCQ_F_NOLOCK);
+191ff13e42a7b7 Eric Dumazet               2025-11-21  1194  
+a6bd339dbb3514 Fernando Fernandez Mancera 2026-04-08  1195  	rcu_read_lock();
+a6bd339dbb3514 Fernando Fernandez Mancera 2026-04-08  1196  	root = qdisc_root_sleeping(q);
+a6bd339dbb3514 Fernando Fernandez Mancera 2026-04-08  1197  
+a6bd339dbb3514 Fernando Fernandez Mancera 2026-04-08  1198  	if (root->flags & TCQ_F_DEQUEUE_DROPS) {
+ff2998f29f390d Jesper Dangaard Brouer     2026-02-26  1199  		tcf_set_qdisc_drop_reason(skb, reason);
+a6bd339dbb3514 Fernando Fernandez Mancera 2026-04-08  1200  		skb->next = root->to_free;
+a6bd339dbb3514 Fernando Fernandez Mancera 2026-04-08  1201  		root->to_free = skb;
+a6bd339dbb3514 Fernando Fernandez Mancera 2026-04-08  1202  	} else {
+a6bd339dbb3514 Fernando Fernandez Mancera 2026-04-08 @1203  		kfree_skb_reason(skb, reason);
+a6bd339dbb3514 Fernando Fernandez Mancera 2026-04-08  1204  	}
+a6bd339dbb3514 Fernando Fernandez Mancera 2026-04-08  1205  	rcu_read_unlock();
+191ff13e42a7b7 Eric Dumazet               2025-11-21  1206  }
+191ff13e42a7b7 Eric Dumazet               2025-11-21  1207  
 
-Finally this chunk should still be (mostly) in atomic context as it's
-invoked by the subflow sk_data_ready and sk_state_change callbacks with
-run almost always in bh scope.
+:::::: The code at line 1203 was first introduced by commit
+:::::: a6bd339dbb3514bce690fdcf252e788dfab4ee76 net_sched: fix skb memory leak in deferred qdisc drops
 
-DL:DR: this chunk is not needed.
+:::::: TO: Fernando Fernandez Mancera <fmancera@suse.de>
+:::::: CC: Jakub Kicinski <kuba@kernel.org>
 
-/P
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
