@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0335A33EB10
-	for <mptcp@lists.linux.dev>; Wed, 15 Apr 2026 09:58:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A27112EA171
+	for <mptcp@lists.linux.dev>; Wed, 15 Apr 2026 09:58:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776247091; cv=none; b=eqAWRcEIdXs8+p6YtiF02xJJezaVyPU8WPKdpK/I0qV2Hir1Alg9lmmn7tQqZ8vq9BlI9Rd1rL+/7qKCedtC7cAt1CjR3tZtfG5B9CKLvKozi1yFkqikNlm34SeQOpkjnxxyj9ExPff5x5ou+/ugIpEAtjk5jNTfXMj9gTw7U8k=
+	t=1776247091; cv=none; b=bNzl1TbX7XWhm4zUEkswVsE+xKJUvoqZI1WRVrIcM4VgJ5Kw09qn6z1qUKzyHq7dG+vseXwPM7Voo+0o3LjuKO5Eo/kTPl8PewBLlZuUxh0Dj7ckwINrBY/JxtE/FMQ9tJGkxePXA4wDjBSrnkqMEWdHXjpnYExBMvd+V8ah7Es=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1776247091; c=relaxed/simple;
-	bh=eOyW8wz5+N6rl1kWachoZ76LpA4DjM/NuDQRQrOt5t4=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=nqXbgEFBFVWPaliRq6ZwdUgrE+jfEzirM5jbume0o9b2nvTP8uZ80JEuY0U5blnshMU+HgZaNNgT5/zbUvr2UGxTEJhdrRZn4WP8tlymZSbvrNnij+Ze1hIj6M1SYF6rH6Gtzrl7NcNgN1ghYfSTcL4eHjDkvEcfI1a5JL/op/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fd88R4Pb; arc=none smtp.client-ip=10.30.226.201
+	bh=qU2gO4U+rLHR/oV2lgldodaiCkxfghI5r1NFCTslTiA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=sOvkcqI1xVoAeoub8daCXAWwJcfTFLIQd+nVEpAwTHXNQJyfJctCx8sMKL3MKxu1CgD1qpHlkOV1dDUMYpJ1MeBTSiMctsqSeQ2JHvmo+CHoqaN3e+rjdR9dzYaKI3dIwhctkJ8eu2FP3WdHsrjqiekjRITeofS8vc3gyRwS7Wk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Thqf0L4w; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fd88R4Pb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E0CAC19424;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Thqf0L4w"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B7A2C2BCB5;
 	Wed, 15 Apr 2026 09:58:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776247090;
-	bh=eOyW8wz5+N6rl1kWachoZ76LpA4DjM/NuDQRQrOt5t4=;
-	h=From:Subject:Date:To:Cc:From;
-	b=fd88R4PbZdajHknH71XwCfWE49gFHBMBvEFc5dfMafqtWqJdSZpO2kn3oEaCDqY4I
-	 I5461P512BhPC4CZLB8s7Jr47ROnyW41g/dmGrEF3H9pnX8Z92Gvy4WI9t9meEAXhO
-	 t5vpRP8c5Yl9IHkjYNHC9EQh0GMmIV2cx70afwaRiRiLOVNr/RWJQS69oBKZXnGnsS
-	 89RG8c/rj9oPfMVSLAcAE4ewRoCgQpaqjRIsg36WbtpHXachGKrHkUVfT2txemCtmp
-	 CFH2zGE0kNbNzskZVOsP7rzfwPZiwIdCeNdMiXTwUbI7FE2r9QEYDyuq69z2KfQlb4
-	 GP5/ekJWe6UAA==
+	s=k20201202; t=1776247091;
+	bh=qU2gO4U+rLHR/oV2lgldodaiCkxfghI5r1NFCTslTiA=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=Thqf0L4wpYNFC23Wag0O0tD9uo/tNqXUVuw8v/lwGQIu3JN9lHDHXflX4BWNCLDp8
+	 pFf1uqq99x+nSz/4CpBVdeCYJEX0z3MX2KwLmo9ARNdrTJS2ZDevAoBgLc4ucIVXVH
+	 lkiJVcDQKw2Etij7dOmlqr2zljlxh1xWWKuc3t9Z3d+ZNngfHgz9TPRRhEXkWIKt8N
+	 koGTYs6Xmj1qTqi/8AtTB3Jd5KGGQo4FP84EUeH2fTXBxe7Wjqd8MvXrPSGyho5xv2
+	 TGHWgFQ7xtgrf/ikF/jDjP4RCVHBLP7UjR9cFFDH9NlARkNuneoDQfZGGCBGau/6oj
+	 SJnMFx34SyLvw==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Subject: [PATCH mptcp-net v5 00/20] mptcp: pm: increase limits, and related
- fixes and cleanup
-Date: Wed, 15 Apr 2026 11:56:48 +0200
-Message-Id: <20260415-mptcp-inc-limits-v5-0-e54c3bf80e4e@kernel.org>
+Date: Wed, 15 Apr 2026 11:56:49 +0200
+Subject: [PATCH mptcp-net v5 01/20] mptcp: pm: kernel: correctly retransmit
+ ADD_ADDR ID 0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,105 +38,76 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/23PwW7DIAwG4FepOI/KGEhLT32PaocMnJatJREwt
- KnKu4+mPWRKjpZ/f798Z4mip8QOmzuLVHzyfaiDftswe2nDmbh3dWYI2IACyW9DtgP3wfKrv/m
- cuCWzFwJQQdOwejZE6vzPRJ7YMx0os/fnKn1/fJLND/IRvviU+/g71RcxnbyazLKpCA4cSOmul
- eCMUMcvioGu2z6eJ7/gTBCwImAVtAJEMB1oJxeCnAsr3xZZBedkY42sEYkLQc0FtSKoKuz2uFP
- kXKud+yeM4/gHheAzyJQBAAA=
-X-Change-ID: 20260403-mptcp-inc-limits-ce9811024066
+Message-Id: <20260415-mptcp-inc-limits-v5-1-e54c3bf80e4e@kernel.org>
+References: <20260415-mptcp-inc-limits-v5-0-e54c3bf80e4e@kernel.org>
+In-Reply-To: <20260415-mptcp-inc-limits-v5-0-e54c3bf80e4e@kernel.org>
 To: MPTCP Upstream <mptcp@lists.linux.dev>
 Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4043; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=eOyW8wz5+N6rl1kWachoZ76LpA4DjM/NuDQRQrOt5t4=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDLvJyqd9xNIP74zIUTaT8n/vv/5fpfMlJuHTJNWS8TkZ
- UR4xMzqKGVhEONikBVTZJFui8yf+byKt8TLzwJmDisTyBAGLk4BmIioFSPDjC11G8o4G6P3cr+y
- mOptt/77K+nKSXnBhRHb3C6dlVSbzPBX/FPFl4OLl4qb2l9tOHJT6nXbIZkeNxvZmln9LyQtWdW
- YAQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2074; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=qU2gO4U+rLHR/oV2lgldodaiCkxfghI5r1NFCTslTiA=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDLvJyofvV/iE7NbyaNBf3X73e2t4WUqa+dm7nVVezzzz
+ zSZ92d3dZSyMIhxMciKKbJIt0Xmz3xexVvi5WcBM4eVCWQIAxenAEwkN4vhr1BgeHDeg/RPczjz
+ FEuTt23Wi5xtWS+Qnjq/R+38W32DDkaGtZIX7yw42Jq87eOBusDuJOOHR5/mvJ9i01mot6bj6Os
+ QFgA=
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-The initial intension was to increase the limits, but some fixes were
-needed, then when looking at the code around, other fixes had to be
-added too. So now I ended up with 11 fixes (including one early exit
-while at it), followed by 4 patches increasing limits, 3 to validate the
-modifications, one small improvement in the selftests, and some
-renaming.
+When adding the ADD_ADDR to the list, the address including the IP, port
+and ID are copied. On the other hand, when the endpoint corresponds to
+the one from the initial subflow, the ID is set to 0, as specified by
+the MPTCP protocol.
 
-The patches with a Fixes tag are for -net, the rest for net-next.
+The issue is that the ID was reset after having copied the ID in the
+ADD_ADDR entry. So the retransmission was done, but using a different ID
+than the initial one.
 
-The last patch contains multiple renaming: please tell me what you
-think before I start splitting in smaller commits.
-
+Fixes: 8b8ed1b429f8 ("mptcp: pm: reuse ID 0 after delete and re-add")
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
-Changes in v5:
-- patch 5: only set timer_done to true in the timer handler: safer.
-- patch 9: fix typo in commit message.
-- patch 10: 3rd check expects error, better err msg, rename var.
-- Link to v4: https://patch.msgid.link/20260414-mptcp-inc-limits-v4-0-78274edda5dd@kernel.org
+ net/mptcp/pm_kernel.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
-Changes in v4:
-- patch 5: reset timer_done when the timer is reset.
-- patch 10: new: selftests: correctly catch error in 'check output'.
-- patch 16: add example with init_shapers to silence AI reviews
-- Patch 18: clearer way to check errors (without buggy '&&')
-- Link to v3: https://patch.msgid.link/20260413-mptcp-inc-limits-v3-0-dd36c9360432@kernel.org
+diff --git a/net/mptcp/pm_kernel.c b/net/mptcp/pm_kernel.c
+index 7895fb5f982e..906a1d5ab9ed 100644
+--- a/net/mptcp/pm_kernel.c
++++ b/net/mptcp/pm_kernel.c
+@@ -347,6 +347,8 @@ static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
+ 
+ 	/* check first for announce */
+ 	if (msk->pm.add_addr_signaled < endp_signal_max) {
++		u8 endp_id;
++
+ 		/* due to racing events on both ends we can reach here while
+ 		 * previous add address is still running: if we invoke now
+ 		 * mptcp_pm_announce_addr(), that will fail and the
+@@ -360,19 +362,20 @@ static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
+ 		if (!select_signal_address(pernet, msk, &local))
+ 			goto subflow;
+ 
++		/* Special case for ID0: set the correct ID */
++		endp_id = local.addr.id;
++		if (endp_id == msk->mpc_endpoint_id)
++			local.addr.id = 0;
++
+ 		/* If the alloc fails, we are on memory pressure, not worth
+ 		 * continuing, and trying to create subflows.
+ 		 */
+ 		if (!mptcp_pm_alloc_anno_list(msk, &local.addr))
+ 			return;
+ 
+-		__clear_bit(local.addr.id, msk->pm.id_avail_bitmap);
++		__clear_bit(endp_id, msk->pm.id_avail_bitmap);
+ 		msk->pm.add_addr_signaled++;
+ 
+-		/* Special case for ID0: set the correct ID */
+-		if (local.addr.id == msk->mpc_endpoint_id)
+-			local.addr.id = 0;
+-
+ 		mptcp_pm_announce_addr(msk, &local.addr, false);
+ 		mptcp_pm_addr_send_ack(msk);
+ 
 
-Changes in v3:
-- patch 1: new: retransmit ADD_ADDR for ID 0 with right ID.
-- patch 5: moved below + support calling sk_free().
-- patch 13: new: allow flushing more than 8 endpoints.
-- patch 12: clarify single batch of 8 subflows as known limit.
-- patch 16: fix typo in comment.
-- Link to v2: https://patch.msgid.link/20260410-mptcp-inc-limits-v2-0-5402209f05d3@kernel.org
-
-Changes in v2:
-- patch 2: new: fix potential data-race.
-- re-order patches 1 to 5 and use shorter prefix (ADD_ADDR rtx).
-- patch 6: restore accidentally deleted icsk->icsk_rto > max check.
-- patch 16: fix already present checkpatch warning.
-- Link to v1: https://patch.msgid.link/20260409-mptcp-inc-limits-v1-0-0e45fa30d914@kernel.org
-
----
-Matthieu Baerts (NGI0) (20):
-      mptcp: pm: kernel: correctly retransmit ADD_ADDR ID 0
-      mptcp: pm: ADD_ADDR rtx: fix potential data-race
-      mptcp: pm: ADD_ADDR rtx: allow ID 0
-      mptcp: pm: ADD_ADDR rtx: always decrease sk refcount
-      mptcp: pm: ADD_ADDR rtx: free sk if last
-      mptcp: pm: ADD_ADDR rtx: resched blocked ADD_ADDR quicker
-      mptcp: pm: ADD_ADDR rtx: skip inactive subflows
-      mptcp: pm: retrans ADD_ADDR: return early if no retrans
-      mptcp: pm: prio: skip closed subflows
-      selftests: mptcp: check output: catch cmd errors
-      selftests: mptcp: pm: restrict 'unknown' check to pm_nl_ctl
-      mptcp: pm: in-kernel: explicitly limit batches to array size
-      mptcp: pm: in-kernel: increase all limits to 64
-      mptcp: pm: kernel: allow flushing more than 8 endpoints
-      mptcp: pm: in-kernel: increase endpoints limit
-      selftests: mptcp: join: allow changing ifaces nr per test
-      selftests: mptcp: join: validate 8x8 subflows
-      selftests: mptcp: pm: validate new limits
-      selftests: mptcp: pm: use simpler send/recv forms
-      mptcp: pm: clearer ADD_ADDR related helpers names
-
- net/mptcp/options.c                             |   2 +-
- net/mptcp/pm.c                                  | 182 +++++++++++++-----------
- net/mptcp/pm_kernel.c                           | 106 +++++++++-----
- net/mptcp/pm_userspace.c                        |   6 +-
- net/mptcp/protocol.h                            |  19 +--
- net/mptcp/subflow.c                             |   4 +-
- tools/testing/selftests/net/mptcp/mptcp_join.sh |  33 ++++-
- tools/testing/selftests/net/mptcp/mptcp_lib.sh  |  16 ++-
- tools/testing/selftests/net/mptcp/pm_netlink.sh |  74 ++++++----
- tools/testing/selftests/net/mptcp/pm_nl_ctl.c   |   8 +-
- 10 files changed, 276 insertions(+), 174 deletions(-)
----
-base-commit: 438914ced649b46cb53b49d7cb5ff99860bbe103
-change-id: 20260403-mptcp-inc-limits-ce9811024066
-
-Best regards,
---  
-Matthieu Baerts (NGI0) <matttbe@kernel.org>
+-- 
+2.53.0
 
