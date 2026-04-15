@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA7D1395D9F
-	for <mptcp@lists.linux.dev>; Wed, 15 Apr 2026 17:09:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 166463E025F
+	for <mptcp@lists.linux.dev>; Wed, 15 Apr 2026 17:10:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776272965; cv=none; b=JxJUm8an401yhp5kNegPFk4FFrntClbWfA0nibwe4NSPLlhfArUPDPBdmfeEEOeEV2hO7VbcVXEQIhPjAHoBhSeuxQK187YO6BE7EF6vLEWNa4ExDvlgBEZdGTzoX3pu7QsfV1BAk2ChRVx4BDJGEG2IXSkHNoNOpkIjp3cgTjE=
+	t=1776273049; cv=none; b=qiVN07Cg8BWeqfOdxdziGsBxXUsUdxSa9Nf/PDH3V1x6hrwzT6AwUaEj0MKy/9Na0YnJM+h9l9be2Bv/+iS6b3KaZpdIkLapUtyKodF1MPF4ZKMYP2BvNzofLWohy0/pfKu1ijVLu6LR5eAXECHQmSOiesZ30K9+hT5StIV1vJ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776272965; c=relaxed/simple;
-	bh=eTg5R/Tun0zNqEkM9kRNlgJ7qsUPw3Kkq+5NA9CtdYQ=;
+	s=arc-20240116; t=1776273049; c=relaxed/simple;
+	bh=Ut6JkFDb+rOayDvf/9jqJAL8TMj5a7ksRvQEkPuy2sY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=tZfTGDyAR4HzYDUqcJt6D4GLnaoqzvRZms3VZDhnGeSPxaUeDii7diOqNaSbERGz02JpMgD53ZTEJR5V2KIAf7GiJl0Xw/xospOTwjLzwSiqH4VO5z9lsfF2gboHUea8EKyNniCiPcTIq03cZnWFHbP6MqozYTTTCpRZlYTKjs8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MMgx+Lue; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=jIqo+65QoLu6xHnMZQSUqHteaq/Nu9gBmFNVplmGfXn4PAGJR2B6SDodUVzISt9AXG5GQn7D77St0PlfeUyyfv8SslDeJo0IyLNwg6rYLeHsJA0wdyRYBmkSUV8kMacGyQK4LxB0ciZ4hPEUxc9mawBnHdXuT8XpgNiYiUUM/jA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PrF+i5tF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MMgx+Lue"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1413C19424
-	for <mptcp@lists.linux.dev>; Wed, 15 Apr 2026 17:09:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PrF+i5tF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1116C19424
+	for <mptcp@lists.linux.dev>; Wed, 15 Apr 2026 17:10:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776272965;
-	bh=eTg5R/Tun0zNqEkM9kRNlgJ7qsUPw3Kkq+5NA9CtdYQ=;
+	s=k20201202; t=1776273048;
+	bh=Ut6JkFDb+rOayDvf/9jqJAL8TMj5a7ksRvQEkPuy2sY=;
 	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=MMgx+LueRdaChgJ9a95o2J+GUICV/XYt48HgYYwqGJgigP/0e8lvgFZcYzD2c/cZC
-	 tfgC/bxnCTZHHBZXvl8Eq397Sp/h+jFCGrR4qekGc5ymX78miPQ1YQCpp+0JilZmLy
-	 /zjBjrwNo5dri3saQDwbALKT/3VumVZOtqNUIoEwPfDoRa6sqT21oH23mdk/9v3Yat
-	 DwtKL87pPfTkzgQvxjm5y6HYLD72C4mGVWDOtRO0wMfrylvafE6CfO+i3cOITgFPz8
-	 e7MrDwUmZ07+1LEyY7gfczwBRhsLDkajTtc761ZlCXIL7Iuni/H6QY7tlj68rH16su
-	 fZIYiHP9lhPJw==
-Message-ID: <401b186d-bc9a-4d10-bb1b-cf4d5d9a2dd4@kernel.org>
-Date: Wed, 15 Apr 2026 19:09:22 +0200
+	b=PrF+i5tFH9HXH3deL7o2C9/bFze7EtWr9A0WpqTpmkvEbiu9dyCBgFMOf4OiFZBfH
+	 sDoETKPagkoYlDsN91RuI/Yap5qWzx8+fBpPTIxCWBimvsvdzWdxk0UOj12Eqnx/mW
+	 03qvFrDqlAOkqFnAE9m/7gsLyei9tzMc0RhCANTyZy0SO30py9tXeOT4hAh64TShyZ
+	 Cwf2iRWf866SileffJpa3TCX1sFoqvjWPp0hnUiWkjXz2hjwj1k2C79aRREYwaVtpN
+	 XqEhNwXQd0Sfsq2t8LeYKaV3at3+55Ib4vAFLcD1S5y2k/CYfy4lTQW7mFej6cwnr/
+	 lI14uQXf2kw/A==
+Message-ID: <b051b923-b804-45d9-9312-ff75a2fd760e@kernel.org>
+Date: Wed, 15 Apr 2026 19:10:46 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net v5 04/20] mptcp: pm: ADD_ADDR rtx: always
- decrease sk refcount
+Subject: Re: [PATCH mptcp-net v5 15/20] mptcp: pm: in-kernel: increase
+ endpoints limit
+Content-Language: fr
 To: MPTCP Linux <mptcp@lists.linux.dev>
 References: <20260415-mptcp-inc-limits-v5-0-e54c3bf80e4e@kernel.org>
- <20260415-mptcp-inc-limits-v5-4-e54c3bf80e4e@kernel.org>
+ <20260415-mptcp-inc-limits-v5-15-e54c3bf80e4e@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
-Content-Language: fr
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -86,26 +86,27 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20260415-mptcp-inc-limits-v5-4-e54c3bf80e4e@kernel.org>
+In-Reply-To: <20260415-mptcp-inc-limits-v5-15-e54c3bf80e4e@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hello,
 
-On 15/04/2026 11:56, Matthieu Baerts (NGI0) wrote:
-> When an ADD_ADDR is retransmitted, the sk is held in sk_reset_timer().
-> It should then be released in all cases at the end.
+On 15/04/2026 11:57, Matthieu Baerts (NGI0) wrote:
+> The endpoints are managed in a list which was limited to 8 entries.
 > 
-> Some (unlikely) checks were returning directly instead of calling
-> sock_put() to decrease the refcount. Jump to the 'out' label to fix this
+> This limit can be too small in some cases: by having the same limit as
+> the number of subflows, it might not allow creating all expected
+> subflows when having a mix of v4 and v6 addresses that can all use MPTCP
+> on v4/v6 only networks.
+> 
+> While increasing the limit above the new subflows one, why not using the
+> technical limit: 254. Indeed, the endpoint will each have an ID that
 
-Detail: after rebasing, it should be 'exit':
+Detail: s/254/255/
 
- Jump to a new 'exit' label to call __sock_put() (which will become
- sock_put() in the next commit) to fix this potential leak.
-
-> potential leak.
-
+> will be used on the wire, limited to u8, and the ID 0 is reserved to the
+> initial subflow.
 Cheers,
 Matt
 -- 
