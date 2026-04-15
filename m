@@ -1,247 +1,142 @@
-Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E90AF3FCC
-	for <mptcp@lists.linux.dev>; Wed, 15 Apr 2026 08:21:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DABDF318EFF
+	for <mptcp@lists.linux.dev>; Wed, 15 Apr 2026 09:11:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776241272; cv=none; b=JgCQ7dRSofP4Kts2bp4bGij5cjhDoKF/Bl7WPh+8PFCN3niHlqwp2uDTq/EUgA4MfTn0hlV4qaq4SEr/1nAATXULnMAOOrLb4wmJs6zIzP82a/TGgzTyiAQrlqTZSTqtSiVFtPVm1FZpcWDjiZTabizdjII7oTS8qFPkmayzAVQ=
+	t=1776244260; cv=none; b=V+dnPf+1bA7y53Qfod/a560NJybFxE/4+PXO0QO9q3WPB/zXWdeM1G3245f6+ms/wBlV0GY3EJaFgdCswpgXhBhbKtjQ9b58WAwDj14PgAE85iNlhgVVTEUj2TZl9v8dx+6zB6b/l5M+y5Z/5ZjRyVBCN+PSoFLpMIYyEe7Dook=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776241272; c=relaxed/simple;
-	bh=/Skx+ZlltwFpzaqPjgI0DODH5uRCPlhWVZOVT4omYW8=;
-	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:
-	 In-Reply-To:References; b=d6k5uBzNhE5jwF2/O7gIyJeKJRpOUoRNl5y20kKo0dR6PFuRCkeVJCjEeMy3Aq6ybSja88nEUUzkpZO2Te4wkWY1tLI1FC6A2/jmhBJy2+9WS7p8/4eXyT5sdLhSNNclB6gOk7RS5J2IleOA9LEXqpGAEG6c6B8+Dpid/JzqdUY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=UT6TMKuE; arc=none smtp.client-ip=95.215.58.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1776244260; c=relaxed/simple;
+	bh=soBUuKS5sRmGb2DFR/M8ybkDs/mjxio9YvZ+0F/Iyuc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=OHEnYBp4iKz+E4sm0S09HmAtopz01P6WpQVTHghx86EgYdHJ8nMDmJVPdSpyPP7B1+ud73x79o8ZR18b+2vme0hRtePI2FGAovqaUvwOLsbCE58WkrfFFBayr2BjNjafdwy1OazETpZJ8+D+ST1p7l0uPknqW86z0RnL98cX+Ck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dd8D/Doi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="UT6TMKuE"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dd8D/Doi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3EF41C19424
+	for <mptcp@lists.linux.dev>; Wed, 15 Apr 2026 09:11:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1776244260;
+	bh=soBUuKS5sRmGb2DFR/M8ybkDs/mjxio9YvZ+0F/Iyuc=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=dd8D/Doijtk7U/Q+OyL1gPmAv18o/3VYPQLLwaboaBicN2iGeGAYdD7OOI/8+RkXo
+	 8gHHJvTiuEf9XOOnwfqQaeC4QBz6zZG69jYDWtV2UuIwOjAEcc5WBcm8mVQZ73ZjjY
+	 fWclZfQx0DGfhpCrAJVzHtX0jdrhQmMUPDkkf8feQYAWvi+GtH1+7gQ+D77tOoR27x
+	 UKygg77m3VCCXobfXKO8x++h0iO06GdtUaLbAy6t6Kj/THUrG9wSmPt422opvOaKpp
+	 gR8MOsJJYDUc+oJbliefaXDis8hYhwe/5CmlNVdRN2/LRoR9M4FZaMAg9JDfT2TReb
+	 8CzUaDCcxQByg==
+Message-ID: <12f3f929-8c84-4025-90dc-adb032177ca5@kernel.org>
+Date: Wed, 15 Apr 2026 11:10:58 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1776241268;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kcNaE1Tss2xYEiElu7nOZC4mEVpRES/lI787ykX4bUk=;
-	b=UT6TMKuESxRSkD/j8VQIDd2JC/kGGWyhEHsBJ3ViHUWSZT6uoifE8iF5MzTpGyn6ByqfmK
-	EgLo4E04k2d60SWdo38Tu1HqjqwSj33s80JxNmK9qt0oe/wOAyjJzf1WCIQaHZd1lB9RVb
-	7vUbfqmLyUmVQEmEV42rTb6766zxPG0=
-Date: Wed, 15 Apr 2026 08:21:04 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: gang.yan@linux.dev
-Message-ID: <ef0ce8465f0b852d5e4dc5e54031a156f606b636@linux.dev>
-TLS-Required: No
-Subject: Re: [PATCH mptcp-net v5 1/5] mptcp: replace backlog_list with
- backlog_queue
-To: "Paolo Abeni" <pabeni@redhat.com>, mptcp@lists.linux.dev
-In-Reply-To: <d34641c0-01af-4273-83d7-5e7ed92e8da7@redhat.com>
-References: <cover.1775033340.git.yangang@kylinos.cn>
- <085a4d26a05fc6625e6e4e4c0e0225b38a01f178.1775033340.git.yangang@kylinos.cn>
- <d749b513-158d-4a3d-ad95-09bfc29c6648@redhat.com>
- <d34641c0-01af-4273-83d7-5e7ed92e8da7@redhat.com>
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-net v4 05/20] mptcp: pm: ADD_ADDR rtx: free sk if
+ last
+Content-Language: fr
+To: MPTCP Linux <mptcp@lists.linux.dev>
+References: <20260414-mptcp-inc-limits-v4-0-78274edda5dd@kernel.org>
+ <20260414-mptcp-inc-limits-v4-5-78274edda5dd@kernel.org>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
+ YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
+ c7SPFMpMesgpcu1xFt0F6bcxE+0ojRtSCZ5HDElKlHJNYtD1uwY4UYVGWUGCF/+cY1YLmtfb
+ WdNb/SFo+Mp0HItfBC12qtDIXYvbfNUGVnA5jXeWMEyYhSNktLnpDL2gBUCsdbkov5VjiOX7
+ CRTkX0UgNWRjyFZwThaZADEvAOo12M5uSBk7h07yJ97gqvBtcx45IsJwfUJE4hy8qZqsA62A
+ nTRflBvp647IXAiCcwWsEgE5AXKwA3aL6dcpVR17JXJ6nwHHnslVi8WesiqzUI9sbO/hXeXw
+ TDSB+YhErbNOxvHqCzZEnGAAFf6ges26fRVyuU119AzO40sjdLV0l6LE7GshddyazWZf0iac
+ nEhX9NKxGnuhMu5SXmo2poIQttJuYAvTVUNwQVEx/0yY5xmiuyqvXa+XT7NKJkOZSiAPlNt6
+ VffjgOP62S7M9wDShUghN3F7CPOrrRsOHWO/l6I/qJdUMW+MHSFYPfYiFXoLUZyPvNVCYSgs
+ 3oQaFhHapq1f345XBtfG3fOYp1K2wTXd4ThFraTLl8PHxCn4ywARAQABzSRNYXR0aGlldSBC
+ YWVydHMgPG1hdHR0YmVAa2VybmVsLm9yZz7CwZEEEwEIADsCGwMFCwkIBwIGFQoJCAsCBBYC
+ AwECHgECF4AWIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZUDpDAIZAQAKCRD2t4JPQmmgcz33
+ EACjROM3nj9FGclR5AlyPUbAq/txEX7E0EFQCDtdLPrjBcLAoaYJIQUV8IDCcPjZMJy2ADp7
+ /zSwYba2rE2C9vRgjXZJNt21mySvKnnkPbNQGkNRl3TZAinO1Ddq3fp2c/GmYaW1NWFSfOmw
+ MvB5CJaN0UK5l0/drnaA6Hxsu62V5UnpvxWgexqDuo0wfpEeP1PEqMNzyiVPvJ8bJxgM8qoC
+ cpXLp1Rq/jq7pbUycY8GeYw2j+FVZJHlhL0w0Zm9CFHThHxRAm1tsIPc+oTorx7haXP+nN0J
+ iqBXVAxLK2KxrHtMygim50xk2QpUotWYfZpRRv8dMygEPIB3f1Vi5JMwP4M47NZNdpqVkHrm
+ jvcNuLfDgf/vqUvuXs2eA2/BkIHcOuAAbsvreX1WX1rTHmx5ud3OhsWQQRVL2rt+0p1DpROI
+ 3Ob8F78W5rKr4HYvjX2Inpy3WahAm7FzUY184OyfPO/2zadKCqg8n01mWA9PXxs84bFEV2mP
+ VzC5j6K8U3RNA6cb9bpE5bzXut6T2gxj6j+7TsgMQFhbyH/tZgpDjWvAiPZHb3sV29t8XaOF
+ BwzqiI2AEkiWMySiHwCCMsIH9WUH7r7vpwROko89Tk+InpEbiphPjd7qAkyJ+tNIEWd1+MlX
+ ZPtOaFLVHhLQ3PLFLkrU3+Yi3tXqpvLE3gO3LM7BTQRV4/npARAA5+u/Sx1n9anIqcgHpA7l
+ 5SUCP1e/qF7n5DK8LiM10gYglgY0XHOBi0S7vHppH8hrtpizx+7t5DBdPJgVtR6SilyK0/mp
+ 9nWHDhc9rwU3KmHYgFFsnX58eEmZxz2qsIY8juFor5r7kpcM5dRR9aB+HjlOOJJgyDxcJTwM
+ 1ey4L/79P72wuXRhMibN14SX6TZzf+/XIOrM6TsULVJEIv1+NdczQbs6pBTpEK/G2apME7vf
+ mjTsZU26Ezn+LDMX16lHTmIJi7Hlh7eifCGGM+g/AlDV6aWKFS+sBbwy+YoS0Zc3Yz8zrdbi
+ Kzn3kbKd+99//mysSVsHaekQYyVvO0KD2KPKBs1S/ImrBb6XecqxGy/y/3HWHdngGEY2v2IP
+ Qox7mAPznyKyXEfG+0rrVseZSEssKmY01IsgwwbmN9ZcqUKYNhjv67WMX7tNwiVbSrGLZoqf
+ Xlgw4aAdnIMQyTW8nE6hH/Iwqay4S2str4HZtWwyWLitk7N+e+vxuK5qto4AxtB7VdimvKUs
+ x6kQO5F3YWcC3vCXCgPwyV8133+fIR2L81R1L1q3swaEuh95vWj6iskxeNWSTyFAVKYYVskG
+ V+OTtB71P1XCnb6AJCW9cKpC25+zxQqD2Zy0dK3u2RuKErajKBa/YWzuSaKAOkneFxG3LJIv
+ Hl7iqPF+JDCjB5sAEQEAAcLBXwQYAQIACQUCVeP56QIbDAAKCRD2t4JPQmmgc5VnD/9YgbCr
+ HR1FbMbm7td54UrYvZV/i7m3dIQNXK2e+Cbv5PXf19ce3XluaE+wA8D+vnIW5mbAAiojt3Mb
+ 6p0WJS3QzbObzHNgAp3zy/L4lXwc6WW5vnpWAzqXFHP8D9PTpqvBALbXqL06smP47JqbyQxj
+ Xf7D2rrPeIqbYmVY9da1KzMOVf3gReazYa89zZSdVkMojfWsbq05zwYU+SCWS3NiyF6QghbW
+ voxbFwX1i/0xRwJiX9NNbRj1huVKQuS4W7rbWA87TrVQPXUAdkyd7FRYICNW+0gddysIwPoa
+ KrLfx3Ba6Rpx0JznbrVOtXlihjl4KV8mtOPjYDY9u+8x412xXnlGl6AC4HLu2F3ECkamY4G6
+ UxejX+E6vW6Xe4n7H+rEX5UFgPRdYkS1TA/X3nMen9bouxNsvIJv7C6adZmMHqu/2azX7S7I
+ vrxxySzOw9GxjoVTuzWMKWpDGP8n71IFeOot8JuPZtJ8omz+DZel+WCNZMVdVNLPOd5frqOv
+ mpz0VhFAlNTjU1Vy0CnuxX3AM51J8dpdNyG0S8rADh6C8AKCDOfUstpq28/6oTaQv7QZdge0
+ JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <20260414-mptcp-inc-limits-v4-5-78274edda5dd@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-April 15, 2026 at 3:17 PM, "Paolo Abeni" <pabeni@redhat.com mailto:pabeni=
-@redhat.com?to=3D%22Paolo%20Abeni%22%20%3Cpabeni%40redhat.com%3E > wrote:
+Hello,
 
+On 14/04/2026 15:33, Matthieu Baerts (NGI0) wrote:
+> When an ADD_ADDR is retransmitted, the sk is held in sk_reset_timer(),
+> and released at the end.
+> 
+> If at that moment, it was the last reference being held, the sk would
+> not be freed. sock_put() should then be called instead of __sock_put().
+> 
+> But that's not enough: if it is the last reference, sock_put() will call
+> sk_free(), which will end up calling sk_stop_timer_sync() on the same
+> timer, and waiting indefinitely to finish. So it is needed to mark that
+> the timer is done, and no need to call sk_stop_timer_sync().
 
->=20
->=20On 4/1/26 10:12 PM, Paolo Abeni wrote:
->=20
->=20>=20
->=20> On 4/1/26 10:54 AM, Gang Yan wrote:
-> >=20
->=20> >=20
->=20> > @@ -2210,12 +2260,12 @@ static bool mptcp_can_spool_backlog(struc=
-t sock *sk, struct list_head *skbs)
-> > >  mem_cgroup_from_sk(sk));
-> > >=20=20
->=20> >  /* Don't spool the backlog if the rcvbuf is full. */
-> > >  - if (list_empty(&msk->backlog_list) ||
-> > >  + if (RB_EMPTY_ROOT(&msk->backlog_queue) ||
-> > >  sk_rmem_alloc_get(sk) > sk->sk_rcvbuf)
-> > >  return false;
-> > >=20=20
->=20> >  INIT_LIST_HEAD(skbs);
-> > >  - list_splice_init(&msk->backlog_list, skbs);
-> > >  + mptcp_backlog_queue_to_list(msk, skbs);
-> > >=20
->=20>=20=20
->=20>  This is under a spinlock with BH disabled, and N is potentially qu=
-ite
-> >  high. This code is problematic as it could cause stall and delay BH =
-for
-> >  a significant amount of time.
-> >=20=20
->=20>  Note that there are more chunks later and in later patches with si=
-milar
-> >  problem.
-> >=20=20
->=20>  I don't have a good solution on top of my head, I'll try to go bac=
-k to
-> >  the design table.
-> >=20
->=20I had some time to have a better look at the whole problem and how it
-> manifest itself in the included self-tests - comprising the initial one
-> using sendfile().
->=20
->=20AFAICS the stall in the self-tests in patch 5/5 is caused by the sysc=
-tl
-> setting taking effect on the server side _after_ that the 3whs
-> negotiated the initial window; the rcvbuf suddenly shrinks from ~128K t=
-o
-> 4K and almost every incoming packet is dropped.
->=20
->=20The test itself is really an extreme condition; we should accept any
-> implementation able to complete the transfer - even at very low speed.
->=20
->=20The initial test-case, the one using sendfile(), operates in a
-> significantly different way: it generates 1-bytes len DSS preventing
-> coalescing (I've not understood yet why coalescing does not happen),
-> which cause an extremely bad skb->truesize/skb->len ratio, which in tur=
-n
-> causes the initial window being way too "optimistic", extreme rcvbuf
-> squeeze at runtime and a behavior similar to the previous one.
->=20
->=20In both cases simply dropping incoming packets early/in
-> mptcp_incoming_options() when the rcvbuf is full does not solve the
-> issue: if the rcvbuf is used (mostly) by the OoO queue, retransmissions
-> always hit the same rcvbuf condition and are also dropped.
->=20
->=20The root cause of both scenario is that some very unlikely condition
-> calls to retract the announced rcv wnd, but mptcp can't do that.
->=20
->=20Currently I start to think that we need a strategy similar to plain T=
-CP
-> to deal with such scenario: when rcvbuf is full we need to condense and
-> eventually prune the OoO queue (see tcp_prune_queue(),
-> tcp_collapse_ofo_queue(), tcp_collapse()).
->=20
->=20The above has some serious downsides, i.e. it could lead to large sli=
-ce
-> of almost duplicate complex code, as is diff to abstract the MPTCP vs
-> TCP differences (CB, seq numbers, drop reasons). Still under investigat=
-ion.
->=20
->=20/P
->
-Hi, Paolo
-Thanks a lot for your detailed and insightful analysis of this problem!
+(...)
 
-I fully agree with your points: MPTCP should allow the transfer to comple=
-te
-even under extremely slow or harsh conditions, just as you mentioned.
+> @@ -434,9 +440,12 @@ bool mptcp_pm_alloc_anno_list(struct mptcp_sock *msk,
+>  
+>  	timer_setup(&add_entry->add_timer, mptcp_pm_add_timer, 0);
+>  reset_timer:
+> +	add_entry->timer_done = false;
+>  	timeout = mptcp_adjust_add_addr_timeout(msk);
+>  	if (timeout)
+>  		sk_reset_timer(sk, &add_entry->add_timer, jiffies + timeout);
+> +	else
+> +		add_entry->timer_done = true;
 
-Regarding the TCP-style mechanisms like 'tcp_prune_queue' for handling fu=
-ll
-rcvbuf conditions =E2=80=94 I have actually attempted similar implementat=
-ions before.
-As you pointed out, this approach is indeed highly complex for MPTCP. The=
-re
-are far too many aspects that require careful modification and considerat=
-ion,
-making it extremely challenging to implement correctly.
+Here it sounds better to drop the else part, because we could have this
+scenario:
 
-I=E2=80=99ve also made some progress on this issue recently. I implemente=
-d a solution
-based on the backlog list structure: when a transfer stall is detected, I
-traverse the backlog_list, and only move the skbs where 'map_seq =3D=3D a=
-ck_seq' into
-the rcv_queue to unblock the transfer.
+- a first ADD_ADDR is prepared with a (long) timer
+- this ADD_ADDR is not acked (echoed)
+- the ADD_ADDR timeout sysctl is set to 0
+- the same ADD_ADDR is prepared again (userspace PM request)
+- the connection is closed
+→ the timer is then not cancelled.
 
-This approach effectively prevents unbounded growth of rmem_alloc, and ha=
-s nearly
-no impact on performance. The core logic is roughly as follows:
+It is fine not to mark it to true here. In the normal case, the timer
+will be cancelled when closing the connection (if done before receiving
+the echoed ADD_ADDR) but it will not wait because the handler is not
+being executed.
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 17b9a8c13ebf..c733dd2aa85f 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2189,6 +2189,18 @@ static void mptcp_rcv_space_adjust(struct mptcp_so=
-ck *msk, int copied)
-        msk->rcvq_space.time =3D mstamp;
- }
+If there are no other changes, maybe I can do the modification when
+applying the patch?
 
-+static bool mptcp_stop_spool_backlog(struct sock *sk)
-+{
-+       return sk_rmem_alloc_get(sk) > sk->sk_rcvbuf &&
-+              !skb_queue_empty(&sk->sk_receive_queue);
-+}
-+
-+static bool mptcp_recv_stall(struct sock *sk)
-+{
-+       return sk_rmem_alloc_get(sk) > sk->sk_rcvbuf &&
-+              skb_queue_empty(&sk->sk_receive_queue);
-+}
-+
- static bool __mptcp_move_skbs(struct sock *sk, struct list_head *skbs, u=
-32 *delta)
- {
-        struct sk_buff *skb =3D list_first_entry(skbs, struct sk_buff, li=
-st);
-@@ -2198,7 +2210,7 @@ static bool __mptcp_move_skbs(struct sock *sk, stru=
-ct list_head *skbs, u32 *delt
-        *delta =3D 0;
-        while (1) {
-                /* If the msk recvbuf is full stop, don't drop */
--               if (sk_rmem_alloc_get(sk) > sk->sk_rcvbuf)
-+               if (mptcp_stop_spool_backlog(sk))
-                        break;
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
 
-                prefetch(skb->next);
-@@ -2228,12 +2240,32 @@ static bool mptcp_can_spool_backlog(struct sock *=
-sk, struct list_head *skbs)
-        DEBUG_NET_WARN_ON_ONCE(msk->backlog_unaccounted && sk->sk_socket =
-&&
-                               mem_cgroup_from_sk(sk));
-
--       /* Don't spool the backlog if the rcvbuf is full. */
-+       /* Don't spool the backlog if the rcvbuf is full when rcv_queue i=
-s
-+        * not empty.=20
-+=20       */
-        if (list_empty(&msk->backlog_list) ||
--           sk_rmem_alloc_get(sk) > sk->sk_rcvbuf)
-+           mptcp_stop_spool_backlog(sk))
-                return false;
-
-        INIT_LIST_HEAD(skbs);
-+
-+       /* If the rcvbuf is full and the rcv_queue is empty, the transmis=
-sion
-+        * will stall. To prevent this, move the ack_seq skb from the
-+        * backlog_list to the receive queue.
-+        */
-+       if (mptcp_recv_stall(sk)) {
-+               struct sk_buff *iter, *tmp;
-+
-+               list_for_each_entry_safe(iter, tmp, &msk->backlog_list, l=
-ist) {
-+                       if (MPTCP_SKB_CB(iter)->map_seq =3D=3D msk->ack_s=
-eq) {
-+                               list_del(&iter->list);
-+                               list_add(&iter->list, skbs);
-+                               break;
-+                       }
-+               }
-+               return !list_empty(skbs);
-+       }
-+
-        list_splice_init(&msk->backlog_list, skbs);
-        return true;
- }
-
-I would really appreciate it if you could share your thoughts on this app=
-roach when
-you have time.
-
-Cheers,=20
-Gang
