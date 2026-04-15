@@ -1,34 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE6252EA171
-	for <mptcp@lists.linux.dev>; Wed, 15 Apr 2026 09:58:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C88533EAF9
+	for <mptcp@lists.linux.dev>; Wed, 15 Apr 2026 09:58:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776247097; cv=none; b=KnJV7hAc7/O2ECdWJ1Ztq5MCaTsBGrzMDXiDO6UdcNuQZr6A7lzRhJmfnsyrM7ZOBiyuTc2OPJMF3xsOTgLDTttfgd72vj8ilaRVSdc0vFURW6RfTqNasoUtd5kKxajhdeHZ7pZrhTO8ct6uwY8HJTSyt6+g2jGythVnurBvnLI=
+	t=1776247098; cv=none; b=m54e0cNAQCfg0O/VIZ6YanWMoL1DrfEGgVxBemmQ+tZWhHrkrpQuAwXab9o1emsDOl9T+zIqjofRjw2jICWWw/jAvv8wKpEh9e+NFI1arkfX8jUj32wzyTVqVYNC0+9AIW6nxAHg71fuVlKDgBEc1S+W2cATfkKcaL+XmsakoBU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776247097; c=relaxed/simple;
-	bh=awkPvRqvIliDOSYlLhGGuN/RUqHCdebo60QpsHNoDSU=;
+	s=arc-20240116; t=1776247098; c=relaxed/simple;
+	bh=4iemWZyS23XFlX1CT3kuENuF5DWJNQBzNrxo6eWgvYg=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=NVQq6bzOOVkiLwb6VpJ+9flEjt4s0iunTAIbbekdbfdpu+yHpw6tTI/qkkrWbDigAeeOVLJz8Faw7fiY1NM+b+nMPbM+NHD1WeplQqJbfYflgtCjkCeBOLmOSdf2NF9Q0szW3DtxtdgME3GO2iJQDZnorIKWDAEd73lS7A9TFTc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KRv8rEba; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=pj9N2cHncmu+NSFS0H9LVtrNco2eNbMgPkYFvKyl4dUbaoiqej8VZtldWx2Rra1ZslpF5W/wJCN4X9tWkjbzy9I5o0F27btwTjQmcQBjQWrc4gBVt7/RqwPOHW+xuIr7W88n6ZqY4TLDCY6OmjPAHfvH4AH9nTVbyqA+GYP/JTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uqB7b6bS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KRv8rEba"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B0FFC19424;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uqB7b6bS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5DC6C2BCB5;
 	Wed, 15 Apr 2026 09:58:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776247097;
-	bh=awkPvRqvIliDOSYlLhGGuN/RUqHCdebo60QpsHNoDSU=;
+	s=k20201202; t=1776247098;
+	bh=4iemWZyS23XFlX1CT3kuENuF5DWJNQBzNrxo6eWgvYg=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=KRv8rEbaIcWNTAqN0Klq67MfcbQp7LJbsq664UOP2SHG34vqB9445P4WxuH8RPM9y
-	 VMlhNiDJUO8YC3rPgCHRDev1YKiddmv7P0Hj/R3UL6IL67YstCAeV+z+h7pyWxetFl
-	 qg5A28HiSDveUENOubTpr1PP0WACbAPAahwQ7z5lQDhvKDTj9Sb9rtooWWmu1mhsl3
-	 F9xEiJogQTjtEwpu8JaHACP2MpMm1PUtwyoNn3WIcqiTLYHbEHXNjKEvwuvz+EuNC6
-	 xd0LcbxRDQ9QeGPaFR8UMXshNu+fyJrppJk4WIfdziSJvL9cBzDcDyVyUze1QPNHtC
-	 cJHg9b5fb0vjw==
+	b=uqB7b6bSw9BHHdV6nuaBrePIzpB+vNR7uKEvbG97q9LQ2vf765WLtH3ZsY5jh2vuE
+	 SvxU+mhttRwcBEHWivO08ewYfCM6QPnH9VIVPhQa8VRFIZzRCCgl9hrKyoAli4qOmE
+	 FYMehL0QWIjdvD/qV597ZM/3MjqlnmLATT3DZhlxdzp3W5owzCCXoftVrkpEdLvzqr
+	 K7DAO8CBWUX+BI78rjcpy1uPPHOEA2JbCSCcrfCyZSJEeXO0TkcZi3UGwpveSEWH23
+	 tT+2FTXBBMm6f5iJB3KE07AYuUG/dgbya+5FVlOUjlUBOg5CbfI3o735XywE7l3dKd
+	 uBC1O9AuQTNEg==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Wed, 15 Apr 2026 11:56:57 +0200
-Subject: [PATCH mptcp-net v5 09/20] mptcp: pm: prio: skip closed subflows
+Date: Wed, 15 Apr 2026 11:56:58 +0200
+Subject: [PATCH mptcp-net v5 10/20] selftests: mptcp: check output: catch
+ cmd errors
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -37,50 +38,127 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260415-mptcp-inc-limits-v5-9-e54c3bf80e4e@kernel.org>
+Message-Id: <20260415-mptcp-inc-limits-v5-10-e54c3bf80e4e@kernel.org>
 References: <20260415-mptcp-inc-limits-v5-0-e54c3bf80e4e@kernel.org>
 In-Reply-To: <20260415-mptcp-inc-limits-v5-0-e54c3bf80e4e@kernel.org>
 To: MPTCP Upstream <mptcp@lists.linux.dev>
 Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1076; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=awkPvRqvIliDOSYlLhGGuN/RUqHCdebo60QpsHNoDSU=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDLvJ2qarev0dqu6W/lAqGr3tshTJZ+MIqPv837azPTJ6
- JjWhg0HOkpZGMS4GGTFFFmk2yLzZz6v4i3x8rOAmcPKBDKEgYtTACZyeC8jQ/PtZzy95v4qLfN/
- v/ohlbth2qHJCZNl5v7Qzehqf8SblMbwP6Eg+bTk3GlX3+75v3LPHAdGt4ViR1dVGx/2E9//2Ge
- vOTcA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3981; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=4iemWZyS23XFlX1CT3kuENuF5DWJNQBzNrxo6eWgvYg=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDLvJ2rxX7b+lRD2pHv9DtnsnLLHNc75MdeXL2ytiV74a
+ uk0t++KHaUsDGJcDLJiiizSbZH5M59X8ZZ4+VnAzGFlAhnCwMUpABMJmMrIsJRNmz2uLDbnWHoV
+ b8h85frrWz9+27rk0mmOkDVZV3a/X8jI8D1k2u9lqk5BRxn7wpnefL4QVLnp6PHCnC5xUc8P8zz
+ qGAE=
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-When sending an MP_PRIO, closed subflows need to be skipped.
+Using '${?}' inside the if-statement to check the returned value from
+the command that was evaluated as part of the if-statement is not
+correct: here, '${?}' will be linked to the previous instruction, not
+the one that is expected here (${cmd}).
 
-This fixes the case where the initial subflow got closed, re-opened
-later, then an MP_PRIO is needed for the same local address.
+Instead, simply mark the error, except if an error is expected. If
+that's the case, 1 can be passed as the 4th argument of this helper.
+Three checks from pm_netlink.sh expect an error.
 
-Note that explicit MP_PRIO cannot be sent during the 3WHS, so it is fine
-to use __mptcp_subflow_active().
+While at it, improve the error message when the command unexpectedly
+fails or succeeds.
 
-Fixes: 067065422fcd ("mptcp: add the outgoing MP_PRIO support")
-Fixes: b29fcfb54cd7 ("mptcp: full disconnect implementation")
+Note that we could expect a specific returned value, but the checks
+currently expecting an error can be used with 'ip mptcp' or 'pm_nl_ctl',
+and these two tools don't return the same error code.
+
+Fixes: 2d0c1d27ea4e ("selftests: mptcp: add mptcp_lib_check_output helper")
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- net/mptcp/pm.c | 3 +++
- 1 file changed, 3 insertions(+)
+v5:
+ - improve err msg in mptcp_lib.sh, supporting unexpected success
+ - s/no_err/exp_error/ in pm_netlink.sh
+ - a 3rd check expects an error in pm_netlink.sh (removed later on)
+---
+ tools/testing/selftests/net/mptcp/mptcp_lib.sh  | 16 ++++++++++------
+ tools/testing/selftests/net/mptcp/pm_netlink.sh | 10 ++++++----
+ 2 files changed, 16 insertions(+), 10 deletions(-)
 
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index 25cfc5b7cb98..0bbb6054f0b1 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -284,6 +284,9 @@ int mptcp_pm_mp_prio_send_ack(struct mptcp_sock *msk,
- 		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
- 		struct mptcp_addr_info local, remote;
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+index 5fea7e7df628..989a5975dcea 100644
+--- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+@@ -474,20 +474,24 @@ mptcp_lib_wait_local_port_listen() {
+ 	wait_local_port_listen "${@}" "tcp"
+ }
  
-+		if (!__mptcp_subflow_active(subflow))
-+			continue;
-+
- 		mptcp_local_address((struct sock_common *)ssk, &local);
- 		if (!mptcp_addresses_equal(&local, addr, addr->port))
- 			continue;
++# $1: error file, $2: cmd, $3: expected msg, [$4: expected error]
+ mptcp_lib_check_output() {
+ 	local err="${1}"
+ 	local cmd="${2}"
+ 	local expected="${3}"
++	local exp_error="${4:-0}"
+ 	local cmd_ret=0
+ 	local out
+ 
+-	if ! out=$(${cmd} 2>"${err}"); then
+-		cmd_ret=${?}
+-	fi
++	out=$(${cmd} 2>"${err}") || cmd_ret=1
+ 
+-	if [ ${cmd_ret} -ne 0 ]; then
+-		mptcp_lib_pr_fail "command execution '${cmd}' stderr"
+-		cat "${err}"
++	if [ "${cmd_ret}" != "${exp_error}" ]; then
++		mptcp_lib_pr_fail "unexpected returned code for '${cmd}', info:"
++		if [ "${exp_error}" = 0 ]; then
++			cat "${err}"
++		else
++			echo "${out}"
++		fi
+ 		return 2
+ 	elif [ "${out}" = "${expected}" ]; then
+ 		return 0
+diff --git a/tools/testing/selftests/net/mptcp/pm_netlink.sh b/tools/testing/selftests/net/mptcp/pm_netlink.sh
+index 123d9d7a0278..b69f30fcb91e 100755
+--- a/tools/testing/selftests/net/mptcp/pm_netlink.sh
++++ b/tools/testing/selftests/net/mptcp/pm_netlink.sh
+@@ -122,10 +122,12 @@ check()
+ 	local cmd="$1"
+ 	local expected="$2"
+ 	local msg="$3"
++	local exp_error="$4"
+ 	local rc=0
+ 
+ 	mptcp_lib_print_title "$msg"
+-	mptcp_lib_check_output "${err}" "${cmd}" "${expected}" || rc=${?}
++	mptcp_lib_check_output "${err}" "${cmd}" "${expected}" "${exp_error}" ||
++		rc=${?}
+ 	if [ ${rc} -eq 2 ]; then
+ 		mptcp_lib_result_fail "${msg} # error ${rc}"
+ 		ret=${KSFT_FAIL}
+@@ -158,13 +160,13 @@ check "show_endpoints" \
+ 			    "3,10.0.1.3,signal backup")" "dump addrs"
+ 
+ del_endpoint 2
+-check "get_endpoint 2" "" "simple del addr"
++check "get_endpoint 2" "" "simple del addr" 1
+ check "show_endpoints" \
+ 	"$(format_endpoints "1,10.0.1.1" \
+ 			    "3,10.0.1.3,signal backup")" "dump addrs after del"
+ 
+ add_endpoint 10.0.1.3 2>/dev/null
+-check "get_endpoint 4" "" "duplicate addr"
++check "get_endpoint 4" "" "duplicate addr" 1
+ 
+ add_endpoint 10.0.1.4 flags signal
+ check "get_endpoint 4" "$(format_endpoints "4,10.0.1.4,signal")" "id addr increment"
+@@ -173,7 +175,7 @@ for i in $(seq 5 9); do
+ 	add_endpoint "10.0.1.${i}" flags signal >/dev/null 2>&1
+ done
+ check "get_endpoint 9" "$(format_endpoints "9,10.0.1.9,signal")" "hard addr limit"
+-check "get_endpoint 10" "" "above hard addr limit"
++check "get_endpoint 10" "" "above hard addr limit" 1
+ 
+ del_endpoint 9
+ for i in $(seq 10 255); do
 
 -- 
 2.53.0
