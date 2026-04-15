@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AD40217704
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D77E933F8C3
 	for <mptcp@lists.linux.dev>; Wed, 15 Apr 2026 09:58:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776247103; cv=none; b=B8/Zy5/S+wwdzMiFhcJ+tP+CGk039e49T+SA32cpSGMMKOLPeS+5UJML/ei4zHzoyKB0sa+d+POGpFUre57gKIc7RsEJ2G4MnaRZAfrRtBLA3nxSF4UJndZBvixe09OnsT5QHInGLjv3U8K94MnYZ5+qL59njkyvFlt35R2+RIc=
+	t=1776247103; cv=none; b=ZUbYLZd3x/p2g07AEiaXrdh4JuKXJAj8MKAG5fbnPLWDbs7xAxYi4Jb+72HwH/54H1vY1rCMPbn6jmFvgj1UiUHK21nIaXKSJg0OpzWhHEAakK/9T7XEICO0FNJF5FRTtRf8DIPRb4WOH679dfgNVrL3Hvl3NdNDI9CqtaazwFw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1776247103; c=relaxed/simple;
-	bh=WPXlOnsY4b8ca/bPVxQbeZN3bFUC8KRS1pNiKQk+mGY=;
+	bh=+qaBdb9rEAmToN4IiTNcZrtY6yqx3a4Lvoh95OjNc1Y=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=N1flsBaNTLxPnFpSldkpp6LqgL6OCxhPrS3Zq0oDf0YrdirdAzzmAM6FIXhMmB/kdIWVJstbTMfjd4n2igZy30rrh2hAi95WRCOKu6zLm766cDcz+U2cMm8mzgv00FmEkJ+RwLn32TY9lFLDbkH4Pgbk8NIhBczQnraGX1C03N4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tDz88Rbx; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=MZduz/PTrtw1/YMBK0hTpkvwnZO0SsxHT+20z/pKgos0hlwAvmhaTGl6v8KY+b1fpZwZHt6THX06uTWoqIUseBBjnAVZ1wis4NvCjd2cE3IxL20OR3n/nq+sl/DDJNBmiDIqgN8OOtq4u1vzUKufwrzJ4fhn/6vUmk2pUvU+ypQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ba36bNnV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tDz88Rbx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83B3CC2BCB5;
-	Wed, 15 Apr 2026 09:58:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ba36bNnV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A8A0C19424;
+	Wed, 15 Apr 2026 09:58:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776247102;
-	bh=WPXlOnsY4b8ca/bPVxQbeZN3bFUC8KRS1pNiKQk+mGY=;
+	s=k20201202; t=1776247103;
+	bh=+qaBdb9rEAmToN4IiTNcZrtY6yqx3a4Lvoh95OjNc1Y=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=tDz88Rbx3phUBTAQBAwMjSxSyXs58XTmid2+VXROWYYKrBDLL3P3r6J/v6JNqqZ8N
-	 2kvyZaQa6DR02yOseuTDdirk4kkrEFBXer2ESD30aHwH1TS+1LMxs0xhduzLF7GA5y
-	 KiZKNYAZTaoQsE/YyXwCMyYEB4Kf/CFPvgcfF38OsaSTgq+oJHN7VuZU0ziLAsYUs2
-	 SZu1b6jGKQyZILW7C0nj6fPDp1Fl1kSe+XxdEftBKVQOhB+fcEaPpGx4Y2m8mNjQf7
-	 o+Zbbft04TAuGj8AK87TYEz+/pm0K5X279eG37hPUZ7Ak0+5BUrFQSF0QJ3T4RsiIv
-	 rr9BQ3NPtIBVg==
+	b=ba36bNnV1t5wTp691n+TdrRNkk3/OULbhB6ec5eocsNuBntQlGzeJlevhnKP3Dwg3
+	 0OftnWa3czmJJvT3HoaEDpGW9skw2wpFxMLNdTOaUgP/3XyAMclH21M4KgzmL5C8f9
+	 fAtJO5IPvkPhS6iv+ehJM/cl3/Lb+RDd7W2XgITGpiIKiFuo/ONiFap7qRXAC1QFAF
+	 FRsX3e8UvClgC/TSp/IVelruL+AuEAg7p1q2Bt9NZj6jVE43CsrKkvbA1Tny7CfuA1
+	 VE3pfDAUUmvn+53xmRAGqqBfDm7cqhg66gfPM2jZjWzXH210STdiHLPEm7pYF5QAUR
+	 xez5TrApPJh8A==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Wed, 15 Apr 2026 11:57:04 +0200
-Subject: [PATCH mptcp-net v5 16/20] selftests: mptcp: join: allow changing
- ifaces nr per test
+Date: Wed, 15 Apr 2026 11:57:05 +0200
+Subject: [PATCH mptcp-net v5 17/20] selftests: mptcp: join: validate 8x8
+ subflows
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,72 +38,85 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260415-mptcp-inc-limits-v5-16-e54c3bf80e4e@kernel.org>
+Message-Id: <20260415-mptcp-inc-limits-v5-17-e54c3bf80e4e@kernel.org>
 References: <20260415-mptcp-inc-limits-v5-0-e54c3bf80e4e@kernel.org>
 In-Reply-To: <20260415-mptcp-inc-limits-v5-0-e54c3bf80e4e@kernel.org>
 To: MPTCP Upstream <mptcp@lists.linux.dev>
 Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1924; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=WPXlOnsY4b8ca/bPVxQbeZN3bFUC8KRS1pNiKQk+mGY=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDLvJ+oxey8sOpp/K11e7ZY/s4hBtoO5Vu8dU5uzerN2C
- V2//+9VRykLgxgXg6yYIot0W2T+zOdVvCVefhYwc1iZQIYwcHEKwETUUhj+x53+uixbZKv7idzb
- GkfeBbfLdmn1Ciqs0tsQPPmUddacFEaGhxvOrz9jvqvsUOLbTmnbovUTjz3/PO/zmp6eN7E7Npt
- J8wIA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2160; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=+qaBdb9rEAmToN4IiTNcZrtY6yqx3a4Lvoh95OjNc1Y=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDLvJ+rL/GmSvuneUx37puHrB0ZX1oNe+sd3PXYLjN3z1
+ 2TBvy8TO0pZGMS4GGTFFFmk2yLzZz6v4i3x8rOAmcPKBDKEgYtTACbyx4rhr1zHv5JfDs3X56Rc
+ +ns9X+nvzBtboqq3tuXcK63WefIrtZaR4QS/QQPz87S5wZvCT+bt3f5CsNindRHvtYBDs9YliCp
+ G8gMA
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-By default, 4 network interfaces are created per subtest in a dedicated
-net namespace. Each netns has a dedicated pair of v4 and v6 addresses.
-Future tests will need more.
+The limits have been recently increased, it is required to validate that
+having 64 subflows is allowed.
 
-Simply always creating more network interfaces per test will increase
-the execution time for all other tests, for no other benefits. So now it
-is possible to change this number only when needed, by setting ifaces_nr
-when calling 'reset' and 'init_shapers', e.g.
+Here, both the client and the server have 8 network interfaces. The
+server has 8 endpoints marked as 'signal' to announce all its v4
+addresses. The client also has 8 endpoints, but marked as 'subflow' and
+'fullmesh' in order to create 8 subflows to each address announced by
+the server. This means 63 additional subflows will be created after the
+initial one.
 
-  ifaces_nr=8 reset "Subtest title"
-  ifaces_nr=8 init_shapers
-
-Note that it might also be interesting to decrease the default value to
-2 to reduce the setup time, especially when a debug kernel config is
-being used.
+If it is not possible to increase the limits to 64, it means an older
+kernel version is being used, and the test is skipped.
 
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- tools/testing/selftests/net/mptcp/mptcp_join.sh | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ tools/testing/selftests/net/mptcp/mptcp_join.sh | 28 +++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index beec41f6662a..28da9df797ae 100755
+index 28da9df797ae..c6bb345d056b 100755
 --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
 +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -63,6 +63,7 @@ unset fastclose
- unset fullmesh
- unset speed
- unset bind_addr
-+unset ifaces_nr
- unset join_syn_rej
- unset join_csum_ns1
- unset join_csum_ns2
-@@ -146,7 +147,7 @@ init_partial()
- 	# ns1eth4    ns2eth4
+@@ -513,6 +513,19 @@ reset_with_tcp_filter()
+ 	fi
+ }
  
- 	local i
--	for i in $(seq 1 4); do
-+	for i in $(seq 1 "${ifaces_nr:-4}"); do
- 		ip link add ns1eth$i netns "$ns1" type veth peer name ns2eth$i netns "$ns2"
- 		ip -net "$ns1" addr add 10.0.$i.1/24 dev ns1eth$i
- 		ip -net "$ns1" addr add dead:beef:$i::1/64 dev ns1eth$i nodad
-@@ -165,7 +166,7 @@ init_partial()
- init_shapers()
++# For kernel supporting limits above 8
++# $1: title ; $2,4: addrs limit ns1,2 ; $3,5: subflows limit ns1,2
++reset_with_high_limits()
++{
++	reset "${1}" || return 1
++
++	if ! pm_nl_set_limits "${ns1}" "${2}" "${3}" 2>/dev/null ||
++	   ! pm_nl_set_limits "${ns2}" "${4}" "${5}" 2>/dev/null; then
++		mark_as_skipped "unable to set the limits to ${*:2}"
++		return 1
++	fi
++}
++
+ # $1: err msg
+ fail_test()
  {
- 	local i
--	for i in $(seq 1 4); do
-+	for i in $(seq 1 "${ifaces_nr:-4}"); do
- 		tc -n $ns1 qdisc add dev ns1eth$i root netem rate 20mbit delay 1ms
- 		tc -n $ns2 qdisc add dev ns2eth$i root netem rate 20mbit delay 1ms
- 	done
+@@ -3670,6 +3683,21 @@ fullmesh_tests()
+ 		chk_prio_nr 0 1 1 0
+ 		chk_rm_nr 0 1
+ 	fi
++
++	# fullmesh in 8x8 to create 63 additional subflows
++	if ifaces_nr=8 reset_with_high_limits "fullmesh 8x8" 64 64 64 64; then
++		# higher chance to lose ADD_ADDR: allow retransmissions
++		ip netns exec $ns1 sysctl -q net.mptcp.add_addr_timeout=1
++		local i
++		for i in $(seq 1 8); do
++			pm_nl_add_endpoint $ns2 10.0.$i.2 flags subflow,fullmesh
++			pm_nl_add_endpoint $ns1 10.0.$i.1 flags signal
++		done
++		speed=slow \
++			run_tests $ns1 $ns2 10.0.1.1
++		chk_join_nr 63 63 63
++	fi
++
+ }
+ 
+ fastclose_tests()
 
 -- 
 2.53.0
