@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DABDF318EFF
-	for <mptcp@lists.linux.dev>; Wed, 15 Apr 2026 09:11:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B972A330B22
+	for <mptcp@lists.linux.dev>; Wed, 15 Apr 2026 09:23:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776244260; cv=none; b=V+dnPf+1bA7y53Qfod/a560NJybFxE/4+PXO0QO9q3WPB/zXWdeM1G3245f6+ms/wBlV0GY3EJaFgdCswpgXhBhbKtjQ9b58WAwDj14PgAE85iNlhgVVTEUj2TZl9v8dx+6zB6b/l5M+y5Z/5ZjRyVBCN+PSoFLpMIYyEe7Dook=
+	t=1776245025; cv=none; b=htP+V2zznixJP1gM0o4KZHU2w0o/zKgJdAbNAconwrKwh0W8hDPcKYiWMNp4Lt8J0fimmqcFYSlMuD6cky2hm6jpcdSISCW+Io3h83gUJrJHEOE5TYvwUL5BalSeB+I/95ri2CNkrrYALHGxrUGD0B5Du6AamxU9V3I9sbdo5gU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776244260; c=relaxed/simple;
-	bh=soBUuKS5sRmGb2DFR/M8ybkDs/mjxio9YvZ+0F/Iyuc=;
+	s=arc-20240116; t=1776245025; c=relaxed/simple;
+	bh=LjOwLdqNkOKXCdfwlMLyTO7oqeEtboomShG7MqR28yM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=OHEnYBp4iKz+E4sm0S09HmAtopz01P6WpQVTHghx86EgYdHJ8nMDmJVPdSpyPP7B1+ud73x79o8ZR18b+2vme0hRtePI2FGAovqaUvwOLsbCE58WkrfFFBayr2BjNjafdwy1OazETpZJ8+D+ST1p7l0uPknqW86z0RnL98cX+Ck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dd8D/Doi; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=phF6gq8jZ3+4FXa0N/2NlGKHXBSI35NCqnfO5MdFtdsR00oj69xzPlX6j1wGX7F+m9JLkZW41hdLEHfbQlMf8mf4+osfUqgok6184EBF8K/cs5U0nTAsg1kXohTKn0xzn70wLDIYIVGJJA0aib2QrSvbxOG2fJrLnXfALc0iRKI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RfiB50bj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dd8D/Doi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3EF41C19424
-	for <mptcp@lists.linux.dev>; Wed, 15 Apr 2026 09:11:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RfiB50bj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04606C2BCB4
+	for <mptcp@lists.linux.dev>; Wed, 15 Apr 2026 09:23:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776244260;
-	bh=soBUuKS5sRmGb2DFR/M8ybkDs/mjxio9YvZ+0F/Iyuc=;
+	s=k20201202; t=1776245025;
+	bh=LjOwLdqNkOKXCdfwlMLyTO7oqeEtboomShG7MqR28yM=;
 	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=dd8D/Doijtk7U/Q+OyL1gPmAv18o/3VYPQLLwaboaBicN2iGeGAYdD7OOI/8+RkXo
-	 8gHHJvTiuEf9XOOnwfqQaeC4QBz6zZG69jYDWtV2UuIwOjAEcc5WBcm8mVQZ73ZjjY
-	 fWclZfQx0DGfhpCrAJVzHtX0jdrhQmMUPDkkf8feQYAWvi+GtH1+7gQ+D77tOoR27x
-	 UKygg77m3VCCXobfXKO8x++h0iO06GdtUaLbAy6t6Kj/THUrG9wSmPt422opvOaKpp
-	 gR8MOsJJYDUc+oJbliefaXDis8hYhwe/5CmlNVdRN2/LRoR9M4FZaMAg9JDfT2TReb
-	 8CzUaDCcxQByg==
-Message-ID: <12f3f929-8c84-4025-90dc-adb032177ca5@kernel.org>
-Date: Wed, 15 Apr 2026 11:10:58 +0200
+	b=RfiB50bjTVRWziy71VfmA1UEnYLWI7fKpskpM+hfYxsSms9o6qrfC0KlBCR0u6nrf
+	 iXREX+oitch/x+iEsJpWak4PAGBpNfeZedvSevb1SQMS0Ao1f734mtXSTBxnZQfrif
+	 k3xHlLTYrZZ/xBrKzETX92JkitUpocEQxRgtiY+Ri951mkiuGifRUkzzdIlt4iTyYU
+	 236koFZB3QfK7MzabI+aXhMwc0+AFxN/Cn8bx3rql0y5s0Hvxs0oUym4infebrjs6B
+	 kMVOtFXGHE4ItjO6ZSldMuBITo+1/eddPXAAFfz1vJkXtrIAaktn25imP59JVP+fMG
+	 r05W4/tF3DZyA==
+Message-ID: <35f1fc27-b706-4942-a729-3bd7124bb44e@kernel.org>
+Date: Wed, 15 Apr 2026 11:23:42 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net v4 05/20] mptcp: pm: ADD_ADDR rtx: free sk if
- last
+Subject: Re: [PATCH mptcp-net v4 10/20] selftests: mptcp: check output: catch
+ cmd errors
 Content-Language: fr
 To: MPTCP Linux <mptcp@lists.linux.dev>
 References: <20260414-mptcp-inc-limits-v4-0-78274edda5dd@kernel.org>
- <20260414-mptcp-inc-limits-v4-5-78274edda5dd@kernel.org>
+ <20260414-mptcp-inc-limits-v4-10-78274edda5dd@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,54 +86,82 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20260414-mptcp-inc-limits-v4-5-78274edda5dd@kernel.org>
+In-Reply-To: <20260414-mptcp-inc-limits-v4-10-78274edda5dd@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 Hello,
 
-On 14/04/2026 15:33, Matthieu Baerts (NGI0) wrote:
-> When an ADD_ADDR is retransmitted, the sk is held in sk_reset_timer(),
-> and released at the end.
+On 14/04/2026 15:34, Matthieu Baerts (NGI0) wrote:
+> Using '${?}' inside the if-statement to check the returned value from
+> the command that was evaluated as part of the if-statement is not
+> correct: here, '${?}' will be linked to the previous instruction, not
+> the one that is expected here (${cmd}).
 > 
-> If at that moment, it was the last reference being held, the sk would
-> not be freed. sock_put() should then be called instead of __sock_put().
+> Instead, simply mark the error, except if an error is expected. If
+> that's the case, 1 can be passed as the 4th argument of this helper. Two
+> checks from pm_netlink.sh expect an error.
 > 
-> But that's not enough: if it is the last reference, sock_put() will call
-> sk_free(), which will end up calling sk_stop_timer_sync() on the same
-> timer, and waiting indefinitely to finish. So it is needed to mark that
-> the timer is done, and no need to call sk_stop_timer_sync().
+> Note that we could expect a specific returned value, but the checks
+> currently expecting an error can be used with 'ip mptcp' or 'pm_nl_ctl',
+> and these two tools don't return the same error code.
 
 (...)
 
-> @@ -434,9 +440,12 @@ bool mptcp_pm_alloc_anno_list(struct mptcp_sock *msk,
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+> index 5fea7e7df628..9e0cd426845d 100644
+> --- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+> @@ -474,18 +474,18 @@ mptcp_lib_wait_local_port_listen() {
+>  	wait_local_port_listen "${@}" "tcp"
+>  }
 >  
->  	timer_setup(&add_entry->add_timer, mptcp_pm_add_timer, 0);
->  reset_timer:
-> +	add_entry->timer_done = false;
->  	timeout = mptcp_adjust_add_addr_timeout(msk);
->  	if (timeout)
->  		sk_reset_timer(sk, &add_entry->add_timer, jiffies + timeout);
-> +	else
-> +		add_entry->timer_done = true;
+> +# $1: error file, $2: cmd, $3: expected msg, [$4: expected error]
+>  mptcp_lib_check_output() {
+>  	local err="${1}"
+>  	local cmd="${2}"
+>  	local expected="${3}"
+> +	local exp_error="${4:-0}"
+>  	local cmd_ret=0
+>  	local out
+>  
+> -	if ! out=$(${cmd} 2>"${err}"); then
+> -		cmd_ret=${?}
+> -	fi
+> +	out=$(${cmd} 2>"${err}") || cmd_ret=1
+>  
+> -	if [ ${cmd_ret} -ne 0 ]; then
+> +	if [ "${cmd_ret}" != "${exp_error}" ]; then
+>  		mptcp_lib_pr_fail "command execution '${cmd}' stderr"
+>  		cat "${err}"
 
-Here it sounds better to drop the else part, because we could have this
-scenario:
+Here, we could print a better error and output:
 
-- a first ADD_ADDR is prepared with a (long) timer
-- this ADD_ADDR is not acked (echoed)
-- the ADD_ADDR timeout sysctl is set to 0
-- the same ADD_ADDR is prepared again (userspace PM request)
-- the connection is closed
-→ the timer is then not cancelled.
+-               mptcp_lib_pr_fail "command execution '${cmd}' stderr"
+-               cat "${err}"
++               mptcp_lib_pr_fail "unexpected returned code for
+'${cmd}', info:"
++               if [ "${exp_error}" = 0 ]; then
++                       cat "${err}"
++               else
++                       echo "${out}"
++               fi
 
-It is fine not to mark it to true here. In the normal case, the timer
-will be cancelled when closing the connection (if done before receiving
-the echoed ADD_ADDR) but it will not wait because the handler is not
-being executed.
 
-If there are no other changes, maybe I can do the modification when
-applying the patch?
+>  		return 2
+> diff --git a/tools/testing/selftests/net/mptcp/pm_netlink.sh b/tools/testing/selftests/net/mptcp/pm_netlink.sh
+> index 123d9d7a0278..26ff4c360a77 100755
+> --- a/tools/testing/selftests/net/mptcp/pm_netlink.sh
+> +++ b/tools/testing/selftests/net/mptcp/pm_netlink.sh
+> @@ -122,10 +122,12 @@ check()
+>  	local cmd="$1"
+>  	local expected="$2"
+>  	local msg="$3"
+> +	local no_err="$4"
+
+I forgot to rename this one to "exp_error".
+
+I can do that when applying the patches if there are nothing else.
 
 Cheers,
 Matt
