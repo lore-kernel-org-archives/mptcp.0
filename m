@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C67835E529
-	for <mptcp@lists.linux.dev>; Fri, 17 Apr 2026 10:18:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF74B3B47F7
+	for <mptcp@lists.linux.dev>; Fri, 17 Apr 2026 10:30:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776421128; cv=none; b=AXsyHtJPhwzdAeBAzMk9Nb5zd4CeJJUEEXXpmsic5OpRKvA2yb0f4zwfJEeD7JnEzU4QQw55WYiHmdG5M+3YwUReKqEETXnCqRgWTWtRpGf9ihAPCDDTY4uJE5U/vC0fLdkMjwojtAygBUvjBHhNovAmTR4Bg+F1oN0/mvjRnag=
+	t=1776421821; cv=none; b=QqX3cRVQhMVuu2pPctFmXES/ydQL/PRiRjLX+jhPfjpD8DfpnEOqK4qXr4y13cnjDfGeXctaAFyrhspv313XhqMNhCxicdLiTMugQcztBRWuMm5vTU0lLtVQYaWoVAJ91FM6W+QEFOnftjKuYWxYnqO5s5Qe9t2ltsZroO0ZWg0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776421128; c=relaxed/simple;
-	bh=P6Mt6GrPg6vyv9Da3a/wQ9HSk9zE/1aul7VGf2CJnXc=;
+	s=arc-20240116; t=1776421821; c=relaxed/simple;
+	bh=reV+nkpnhUWRjbb+k05C4zXobWMdS7ASiim79ciEZOs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rJZUYO6jhTr2ip8lN/BZRWWCYiq1w8hKhuvby3xncwa2usM613nmzUOFogSjq5cecDdTmxryFkVFLTFFB3cyVtJOskpJTpp6iDm3dX/GBpi4+Ia+t4LXCPHqDr2cxlVTgwReF53XUGvmkSeHaZb0fyMap3O5Ryf+NRumgBbUu0U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CyzpSAvw; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=Kf7HkljMHF0ZlPsNHJgEsl0o+SyKmg4cGhcIQS/7KvVNMQfKJvPnqN/0tGfnNh+vS1GnPEGkKYZ/T3X6oDBbhF1SacvBRwZkuuHF31Nfm35Ec002VssgKvTRJImUUmlg5bgULJqECy0+uucQn+JVu8vZ12ccH+OIFXGlhT8fv80=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M6oB4Rz/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CyzpSAvw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F294CC2BCB6;
-	Fri, 17 Apr 2026 10:18:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M6oB4Rz/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9722CC19425;
+	Fri, 17 Apr 2026 10:30:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776421127;
-	bh=P6Mt6GrPg6vyv9Da3a/wQ9HSk9zE/1aul7VGf2CJnXc=;
+	s=k20201202; t=1776421821;
+	bh=reV+nkpnhUWRjbb+k05C4zXobWMdS7ASiim79ciEZOs=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=CyzpSAvwxI4RJ802lrR+zVPOCKh7zTxQr0M10yzx292G5+vQKurKw+iTPs1J/Mkio
-	 LN2LwwpiBsApwzZhcCjLEuQXoh+Fx1kBO+0zkqdOlf4AYXXyZuEvKxPwhFuW/sYeOk
-	 xF9B0O2hFzqEm4LlMoq47jxfUzmnEFMIqUBzZkz2TqblyCNMe8jL839xobTRRqixub
-	 VM0gT8Ur4Xm0usc70x+jTlCaQUktallM/Z7PRLbIFYLy7eIu5+7xtWSXVbIVS0a5rS
-	 iCHhE1z2VHVRQU6YK5m4tUe9hf8kANOI18fvno994Z8bFuDGXTVeUyidCAysdsBk0i
-	 KzyeiBgGd+2uw==
-Message-ID: <f0a7847c-4dea-4d3b-9c91-7b50fd90f35d@kernel.org>
-Date: Fri, 17 Apr 2026 12:18:44 +0200
+	b=M6oB4Rz/kHIFqOIQDGTJ//ZOTI7ZUFZZ5n+OBQbJVGJWJSowW5AmWh64BJGXa1xql
+	 /A++CKPmITCHZpHwAZJa7HuAAmJ5u6tQYoSpY6DNZKQbKom92Ba5fCZp8rSbTEkr5e
+	 zq9S0Um7FbGitJEc4jZBzRsGEC60BQw7ZtXzBu7cvmWUA6a9WfaaG1UuBv0ILnUq53
+	 pBW5bf2hIRlT2k5ZyrzmV/ErA5FMTXg3+JD34XvMtD9uXEWNfSQSgVr63qrk8iHzZX
+	 PlLlBaEJkojL70vNLnOtx+DmuXIfrWeHEA7Lbr20qLjTtinNapQuO9sMqHobGt7Tno
+	 Z8VKohPTunwxQ==
+Message-ID: <0754a2e8-4847-4224-9b44-3463728ce24b@kernel.org>
+Date: Fri, 17 Apr 2026 12:30:18 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -104,10 +104,20 @@ On 11/04/2026 05:48, Gang Yan wrote:
 >   - Crete a packetdrill PR for test:
 >     https://github.com/multipath-tcp/packetdrill/pull/193
 
-Thank you for the new version and the new packetdrill test. It looks
-good to me.
+Thank you for these patches. Now in our tree:
 
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+New patches for t/upstream-net and t/upstream:
+- 3fb2d76a499a: mptcp: sync the msk->sndbuf at accept() time
+- a30244625bec: selftests: mptcp: add a check for sndbuf of S/C
+- Results: 04a2a52011ad..46cef22df2cd (export-net)
+- Results: f4ace5138b04..bbaa3169f0ab (export)
+
+Tests are now in progress:
+
+- export-net:
+https://github.com/multipath-tcp/mptcp_net-next/commit/c654c5c9b558ff5c29ceb069e91a2a23f9aadce4/checks
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/b587e221edde5e92c4aed7fd8c58f258ee164de1/checks
 
 Cheers,
 Matt
