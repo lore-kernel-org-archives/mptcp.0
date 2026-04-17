@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F18330AAD8
-	for <mptcp@lists.linux.dev>; Fri, 17 Apr 2026 23:48:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E23630AAD8
+	for <mptcp@lists.linux.dev>; Fri, 17 Apr 2026 23:48:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776469722; cv=none; b=b8rF5FsRTl8rERbCKO9aIGLAM1yHKqNyrv8z5s+ycTYh82Sj4b2fLKhx4qqnOow+Nols2Ma4/0AMDzvPo5xiMl1tfd2WsqI0pbyBGl/X9nufQslS6gHlvQaCoJfgVUM1i+dPxG9Jtf+ggnUS53dE5m/D5EhS7JSLPnZDq073w8g=
+	t=1776469723; cv=none; b=MqcboKx5AtAr4SN2vPAT/uOmd3zuYeQ54dRjpqi2tqgUR/WH/bcnOFwoVFWDaLDBGs3qsiiv89liK04RD01uhOJKorzXd7AN9AmNY2FmlqIeUmeAvPDqHKpW8Oo2T3bYnQQ9Sqcx9VTkA+mpzYC4Vp/5Gjcs/s11AL40i+8cZXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776469722; c=relaxed/simple;
-	bh=uXh0I7JdF5A2waQ6hlA3HXd5IMtboNzJdSIVpsNyyWs=;
+	s=arc-20240116; t=1776469723; c=relaxed/simple;
+	bh=IYmzj3X50jh3wdEINOsNrgDyrehEPz9IfS4ohbE91QQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qmEBOlwQYIqpWF1yoBbNPtyY9EPjzPchHj+sh3yWUQ9Brobn4ROx9C1/0xCGz6nx9Tx1mgoX5LNTyuCcEAsWKNxcjrqlYCvQ4c0C0we44zV5A7pmEPu8nWSpu8ELAlHB0JhWguJBCCleFpEq9js9NfcheEavtZ11N+oUHkFAYFA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bUTVcUO0; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Xh81P3bH/OaSXOBVkQeBw2Tk2uPIJDcd5Jo66u2ngfjxVJ/M6XrcVWrknA6F/EyBvAKu3W3Iqozd9Rvfp+0c8b0qArxSdd0lTFKK77ZJzxP2OD9rg6+5/CfhUcX4xj4d+tB5vjLKdYpB6WoycPoFDhVmV3ct4czGmyKI1ipfUvA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tlScb3ja; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bUTVcUO0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2CA2C2BCB3;
-	Fri, 17 Apr 2026 23:48:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tlScb3ja"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62C2FC2BCB3;
+	Fri, 17 Apr 2026 23:48:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776469721;
-	bh=uXh0I7JdF5A2waQ6hlA3HXd5IMtboNzJdSIVpsNyyWs=;
+	s=k20201202; t=1776469723;
+	bh=IYmzj3X50jh3wdEINOsNrgDyrehEPz9IfS4ohbE91QQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=bUTVcUO0AT4468zywK6i7GojRUN9mYytfXt+HuFqyCcS7l+bOv2hCJ17iM1I4YBxh
-	 aMWEphwYuwZFBXGBXRtro9OVj6yrmrQoGWK+XdEA18X5g9gAGAeYe63RapTbMmYpJj
-	 +xgRCcm/C6bch/RyHASEgL5Zh4ny/6cigsEW9Y1+/IMHGO3bmFmu+qY6vFsiDAemOF
-	 3k9m48RSyckHNeFFnLoBADlPicWH2pmtl9Kpftw4tblXTFdpb847/4mfUxJyL4BW5a
-	 MhbuXImmpgbRyo+nB2ew37+SOPNg1G9kgPmhWqZlJnUNsomAfKTUCMIkdYb2s+TtuW
-	 YdkqGzubdfJAg==
+	b=tlScb3jaQviJxphfyEptolD2phrlSUri+UQYMRRT1sN1uyhtoXEGR0ofHqVVU6i7j
+	 fwNw9+kiGR43DGWRKAfhDaEp+3FFBDjbXktkCyZr9if38kmirKM0VUkcGn7oTcEUKV
+	 CbcZKhsHhxVzkxvnkSMoAIcNIH5Q4EW5NqIKlx5v0lP0s4YOIinz289I9VTw3W/vST
+	 ScETZNxEs4KWwnVc6euACsr4VPOpgoMG1NTcBF75jlP8DOMthH+cQPSIklL1t//VmI
+	 StDSlmsfWxJb4gZupZbT2PEt03z+6Gxn7M3FP57QcVxDDL6CUNinEsn3wIqs6K2ZYM
+	 HSAkTyiuV2kHA==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>,
 	Gang Yan <yangang@kylinos.cn>
-Subject: [RFC mptcp-next v15 14/15] selftests: tls: add mptcp test cases
-Date: Sat, 18 Apr 2026 07:47:53 +0800
-Message-ID: <ced184831757eaae9e690f65d799809ed22cae28.1776469069.git.tanggeliang@kylinos.cn>
+Subject: [RFC mptcp-next v15 15/15] selftests: mptcp: cover mptcp tls tests
+Date: Sat, 18 Apr 2026 07:47:54 +0800
+Message-ID: <0f4e0bfd3d9d42cde090e523a12f7f5132ca1445.1776469069.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <cover.1776469068.git.tanggeliang@kylinos.cn>
 References: <cover.1776469068.git.tanggeliang@kylinos.cn>
@@ -46,149 +46,141 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-This patch introduces MPTCP test cases for the TLS fixture. These "mptcp"
-variants are configured to create MPTCP sockets specifically for MPTCP TLS
-testing purposes.
-
-The default limit of 1024 for file descriptor values is too low for the
-newly added MPTCP tests, causing accept() to fail when the fd number
-exceeds 1024. Raise the limit to 4096 to avoid test failures.
+The mptcp tests for tls.c is available now, this patch adds mptcp_tls.sh
+to test it in the MPTCP CI by default.
 
 Co-developed-by: Gang Yan <yangang@kylinos.cn>
 Signed-off-by: Gang Yan <yangang@kylinos.cn>
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- tools/testing/selftests/net/tls.c | 105 ++++++++++++++++++++++++++++++
- 1 file changed, 105 insertions(+)
+ tools/testing/selftests/net/mptcp/.gitignore  |  1 +
+ tools/testing/selftests/net/mptcp/Makefile    |  2 +
+ tools/testing/selftests/net/mptcp/config      |  5 ++
+ .../testing/selftests/net/mptcp/mptcp_tls.sh  | 62 +++++++++++++++++++
+ tools/testing/selftests/net/mptcp/tls.c       |  1 +
+ 5 files changed, 71 insertions(+)
+ create mode 100755 tools/testing/selftests/net/mptcp/mptcp_tls.sh
+ create mode 120000 tools/testing/selftests/net/mptcp/tls.c
 
-diff --git a/tools/testing/selftests/net/tls.c b/tools/testing/selftests/net/tls.c
-index face5bde8c67..1d30d14efd10 100644
---- a/tools/testing/selftests/net/tls.c
-+++ b/tools/testing/selftests/net/tls.c
-@@ -20,6 +20,7 @@
- #include <sys/sendfile.h>
- #include <sys/socket.h>
- #include <sys/stat.h>
-+#include <sys/resource.h>
+diff --git a/tools/testing/selftests/net/mptcp/.gitignore b/tools/testing/selftests/net/mptcp/.gitignore
+index 833279fb34e2..f6defec6eeb5 100644
+--- a/tools/testing/selftests/net/mptcp/.gitignore
++++ b/tools/testing/selftests/net/mptcp/.gitignore
+@@ -4,4 +4,5 @@ mptcp_diag
+ mptcp_inq
+ mptcp_sockopt
+ pm_nl_ctl
++tls
+ *.pcap
+diff --git a/tools/testing/selftests/net/mptcp/Makefile b/tools/testing/selftests/net/mptcp/Makefile
+index 22ba0da2adb8..f7c959a25b3b 100644
+--- a/tools/testing/selftests/net/mptcp/Makefile
++++ b/tools/testing/selftests/net/mptcp/Makefile
+@@ -14,6 +14,7 @@ TEST_PROGS := \
+ 	mptcp_connect_splice.sh \
+ 	mptcp_join.sh \
+ 	mptcp_sockopt.sh \
++	mptcp_tls.sh \
+ 	pm_netlink.sh \
+ 	simult_flows.sh \
+ 	userspace_pm.sh \
+@@ -25,6 +26,7 @@ TEST_GEN_FILES := \
+ 	mptcp_inq \
+ 	mptcp_sockopt \
+ 	pm_nl_ctl \
++	tls \
+ # end of TEST_GEN_FILES
  
- #include "kselftest_harness.h"
- 
-@@ -411,6 +412,102 @@ FIXTURE_VARIANT_ADD(tls, 12_aria_gcm_256)
- 	.cipher_type = TLS_CIPHER_ARIA_GCM_256,
- };
- 
-+FIXTURE_VARIANT_ADD(tls, 12_aes_gcm_mptcp)
-+{
-+	.tls_version = TLS_1_2_VERSION,
-+	.cipher_type = TLS_CIPHER_AES_GCM_128,
-+	.mptcp = true,
-+};
+ TEST_FILES := \
+diff --git a/tools/testing/selftests/net/mptcp/config b/tools/testing/selftests/net/mptcp/config
+index 59051ee2a986..e8e852e0a842 100644
+--- a/tools/testing/selftests/net/mptcp/config
++++ b/tools/testing/selftests/net/mptcp/config
+@@ -34,3 +34,8 @@ CONFIG_NFT_SOCKET=m
+ CONFIG_NFT_TPROXY=m
+ CONFIG_SYN_COOKIES=y
+ CONFIG_VETH=y
++CONFIG_TLS=m
++CONFIG_CRYPTO_ARIA=m
++CONFIG_CRYPTO_CCM=m
++CONFIG_CRYPTO_CHACHA20POLY1305=m
++CONFIG_CRYPTO_SM4_GENERIC=m
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_tls.sh b/tools/testing/selftests/net/mptcp/mptcp_tls.sh
+new file mode 100755
+index 000000000000..ea366d149a20
+--- /dev/null
++++ b/tools/testing/selftests/net/mptcp/mptcp_tls.sh
+@@ -0,0 +1,62 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0
 +
-+FIXTURE_VARIANT_ADD(tls, 13_aes_gcm_mptcp)
-+{
-+	.tls_version = TLS_1_3_VERSION,
-+	.cipher_type = TLS_CIPHER_AES_GCM_128,
-+	.mptcp = true,
-+};
++. "$(dirname "${0}")/mptcp_lib.sh"
 +
-+FIXTURE_VARIANT_ADD(tls, 12_chacha_mptcp)
-+{
-+	.tls_version = TLS_1_2_VERSION,
-+	.cipher_type = TLS_CIPHER_CHACHA20_POLY1305,
-+	.fips_non_compliant = true,
-+	.mptcp = true,
-+};
++ret=0
++ns1=""
 +
-+FIXTURE_VARIANT_ADD(tls, 13_chacha_mptcp)
++# This function is used in the cleanup trap
++#shellcheck disable=SC2317,SC2329
++cleanup()
 +{
-+	.tls_version = TLS_1_3_VERSION,
-+	.cipher_type = TLS_CIPHER_CHACHA20_POLY1305,
-+	.fips_non_compliant = true,
-+	.mptcp = true,
-+};
++	if [ -n "$pid" ] && kill -0 "$pid" 2>/dev/null; then
++		kill "$pid" 2>/dev/null
++		wait "$pid" 2>/dev/null
++	fi
 +
-+FIXTURE_VARIANT_ADD(tls, 13_sm4_gcm_mptcp)
-+{
-+	.tls_version = TLS_1_3_VERSION,
-+	.cipher_type = TLS_CIPHER_SM4_GCM,
-+	.fips_non_compliant = true,
-+	.mptcp = true,
-+};
-+
-+FIXTURE_VARIANT_ADD(tls, 13_sm4_ccm_mptcp)
-+{
-+	.tls_version = TLS_1_3_VERSION,
-+	.cipher_type = TLS_CIPHER_SM4_CCM,
-+	.fips_non_compliant = true,
-+	.mptcp = true,
-+};
-+
-+FIXTURE_VARIANT_ADD(tls, 12_aes_ccm_mptcp)
-+{
-+	.tls_version = TLS_1_2_VERSION,
-+	.cipher_type = TLS_CIPHER_AES_CCM_128,
-+	.mptcp = true,
-+};
-+
-+FIXTURE_VARIANT_ADD(tls, 13_aes_ccm_mptcp)
-+{
-+	.tls_version = TLS_1_3_VERSION,
-+	.cipher_type = TLS_CIPHER_AES_CCM_128,
-+	.mptcp = true,
-+};
-+
-+FIXTURE_VARIANT_ADD(tls, 12_aes_gcm_256_mptcp)
-+{
-+	.tls_version = TLS_1_2_VERSION,
-+	.cipher_type = TLS_CIPHER_AES_GCM_256,
-+	.mptcp = true,
-+};
-+
-+FIXTURE_VARIANT_ADD(tls, 13_aes_gcm_256_mptcp)
-+{
-+	.tls_version = TLS_1_3_VERSION,
-+	.cipher_type = TLS_CIPHER_AES_GCM_256,
-+	.mptcp = true,
-+};
-+
-+FIXTURE_VARIANT_ADD(tls, 13_nopad_mptcp)
-+{
-+	.tls_version = TLS_1_3_VERSION,
-+	.cipher_type = TLS_CIPHER_AES_GCM_128,
-+	.nopad = true,
-+	.mptcp = true,
-+};
-+
-+FIXTURE_VARIANT_ADD(tls, 12_aria_gcm_mptcp)
-+{
-+	.tls_version = TLS_1_2_VERSION,
-+	.cipher_type = TLS_CIPHER_ARIA_GCM_128,
-+	.mptcp = true,
-+};
-+
-+FIXTURE_VARIANT_ADD(tls, 12_aria_gcm_256_mptcp)
-+{
-+	.tls_version = TLS_1_2_VERSION,
-+	.cipher_type = TLS_CIPHER_ARIA_GCM_256,
-+	.mptcp = true,
-+};
-+
- static bool is_mptcp_enable(struct __test_metadata *_metadata)
- {
- 	char buf[16] = { 0 };
-@@ -3372,4 +3469,12 @@ static void __attribute__((constructor)) fips_check(void) {
- 	}
- }
- 
-+static void __attribute__((constructor)) increase_rlimit(void)
-+{
-+	struct rlimit rl = { 4096, 4096 };
-+
-+	if (setrlimit(RLIMIT_NOFILE, &rl) != 0)
-+		perror("setrlimit");
++	mptcp_lib_ns_exit "$ns1"
 +}
 +
- TEST_HARNESS_MAIN
++init()
++{
++	local max="${1:-4}"
++
++	mptcp_lib_ns_init ns1
++
++	mptcp_lib_pm_nl_set_limits "$ns1" "$max" "$max"
++
++	local i
++	for i in $(seq 1 "$max"); do
++		mptcp_lib_pm_nl_add_endpoint "$ns1" \
++			"127.0.0.1" flags signal port 1000"$i"
++	done
++}
++
++trap cleanup EXIT
++
++mptcp_lib_check_mptcp
++# Temporarily set max to '0' to disable multipath testing,
++# as it depends on "mptcp: fix stall because of data_ready" series of fixes.
++# It will be re-enabled together with that series later as a squash-to patch.
++init 0
++
++ip netns exec "$ns1" ./tls -v 12_aes_gcm_mptcp \
++			   -v 13_aes_gcm_mptcp \
++			   -v 12_chacha_mptcp \
++			   -v 13_chacha_mptcp \
++			   -v 13_sm4_gcm_mptcp \
++			   -v 13_sm4_ccm_mptcp \
++			   -v 12_aes_ccm_mptcp \
++			   -v 13_aes_ccm_mptcp \
++			   -v 12_aes_gcm_256_mptcp \
++			   -v 13_aes_gcm_256_mptcp \
++			   -v 13_nopad_mptcp \
++			   -v 12_aria_gcm_mptcp \
++			   -v 12_aria_gcm_256_mptcp &
++pid=$!
++wait $pid
++ret=$?
++
++mptcp_lib_result_print_all_tap
++exit $ret
+diff --git a/tools/testing/selftests/net/mptcp/tls.c b/tools/testing/selftests/net/mptcp/tls.c
+new file mode 120000
+index 000000000000..724b1f047c89
+--- /dev/null
++++ b/tools/testing/selftests/net/mptcp/tls.c
+@@ -0,0 +1 @@
++../tls.c
+\ No newline at end of file
 -- 
 2.51.0
 
