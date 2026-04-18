@@ -1,130 +1,171 @@
-Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2C74359A82
-	for <mptcp@lists.linux.dev>; Sat, 18 Apr 2026 11:03:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F30892E413
+	for <mptcp@lists.linux.dev>; Sat, 18 Apr 2026 18:00:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776510194; cv=none; b=aFgD5GfceySQkSqJL5uIeZpyHm5Ix7+jXYHpA6Ix1cNlTMbUFSl07fwuxoMo72B41fbNmAoSgGhOM6ABr2pRLXRCtd7OMPnlyQojVFOwiTSY4w2Hh1GEDvTzydxOMcA1cVg8QqewF0+7TqDyB9jCHEvhlhx/kk8KgWCwqGftqGY=
+	t=1776535221; cv=none; b=I6bxYWexdWMUx15GSiWNSTOVxsBQKg5t30K7Lns816OYvwQfwJ9p+qZ7Xhm6tRt6hQPMBT3i7uJTR1PWQoqbvXEas3hascQBhpmIYebk0yWOVQe7UCQy5gD8bool88/1CmWK92Ip7eVw8RXSfxZm7Ul2gl9fXd1Nrfp39E6GrEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776510194; c=relaxed/simple;
-	bh=u2AnkD6jmi06A2Z2mlmrDNlwAVICKlMWb6cFOm78HoY=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
-	 MIME-Version:Content-Type; b=OldzMn+tBGa1LLaFQVKBNcMo9Gq9HRevSxTHyyRVI132DC3ixQJQU8FE2m5bohN2pa/xqEX76zA9l2F3OK2eyMFWsGHUGuzcO7a3inntdJDX27tcKu1xaf+cxJbPDTVfrPFqMAs0ACuluilMFL7VE6SCuwCdzjQnxzsSatd4oHI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UioxwyAm; arc=none smtp.client-ip=209.85.222.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1776535221; c=relaxed/simple;
+	bh=qCqgLAV+a8utLjegozP8S46KhPxIKkLcHQ9dDQTZOh8=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=YDGp6BgkM6Cho85N1LY2pzHmjjUDsqTpGcyUPW9WBwMMclVBUv/J5xeWIfgOhjohFeSSPlKd3GXjHyFFHaBicPQIw4xUc0c1okik1NeKH2/WUM9JduLOBGgpRDAJ2xg0z18Vhy4joYG7rRfcfVQRk/4A6ogdiULw6s5PHLrqTj8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K4DXk6Sw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UioxwyAm"
-Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-8dfb9139008so101378185a.1
-        for <mptcp@lists.linux.dev>; Sat, 18 Apr 2026 04:03:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1776510191; x=1777114991; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=evR0Hw1NaYGq5EgtC+l0P/UoeV+Rl3RTpNDCV7Pap9s=;
-        b=UioxwyAm20OrxPY7jznbXo1e9fDWD4I2SGkgX2a2JnJEXJWqMWrfvbLruboEHraj+e
-         mdnzfygg+GH+NLkK6EVuWbud97r1LuRIVP4u9wsqxWXPZ+aHjmFBYQCSZvBx9W5jNm7d
-         GktE2Hfa3+4XdByIYMd/Cv/LwQigTRAumQuutXthi9AlSOWiFqGnq6JgveqNuru9wj/D
-         AqhxwTOxWnJItXnGYGSpI+K2cHMawqORxAUQGLPKSqoEfiBM4MAiKsyR8xRr2XT8Cwxo
-         FHxYASRI4wetHCaYx80oTcIpra56xNRJgWA4M85poGCiavpgetB1/mOfKUCW8uEonbtI
-         KLRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776510191; x=1777114991;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=evR0Hw1NaYGq5EgtC+l0P/UoeV+Rl3RTpNDCV7Pap9s=;
-        b=sypTBwtmoDA2F2ObHI5nfdGygQOVhvsTTbdJllVQDhjO6UaW7GY6U5ICNfyEzFXmdN
-         xxgG49Nx7Lk0X+D9hsu7qc+rW49lQWQrvxavDRt9TTCKNkGcIOMvHD0ioTxLiHOMmnAh
-         Qo4z1cj3/QcTODZhoGeKeEuxr2FKBzHwP0aqF+ZCwt4AWGU8gYItiN30zE2MD8Driw9Z
-         1rd6ep3lQRngS0QdVEKGRhWIfoyQyOwL+E9tPaqLXOPF494LU/vnPZ0d5K4GM6EFCdb+
-         zC/g/FqI6JOydOu73/8wuPKZ369MFVvueroXjj08kx2ldMh0CkqjO72xE4v6qPkNfgln
-         9fYg==
-X-Gm-Message-State: AOJu0Yy2PuJtYeW6dstzI2+6R+gbYS8nixfioVSyRFdhbKLFRYecZdxT
-	82vCw51ZFqGQVIuqm3VGfpPBBC3BC23hqN67YS5SjLvEuRcml7wetEy93Y4u
-X-Gm-Gg: AeBDiet7uRClPMsx5XS6yyVJNWNR4t7zgFohGnZ8UwO5ok5U21vdsxH4ohw+AiW6lNq
-	2ajiV3rWANPVj3wlXFqyXnuO+iJlMAw2FiZTCWwZLwwCuhRYzmzMZ6rCOmy8lhd2RftNnwFpT78
-	zQQcZ9ngTjlu0m/hX11Ezb9C5/FXaYvlGrtsnqIQbBk7gtrIaXPhw9xLprUXmX56xvD9C6rGbAv
-	3wqmOu4YTMu2fUjf79VYFGsIxrnyD22GeZSq+n5tHAAlDfXXMAwX+WzL7sw1+dwjs3Tgkk9ZAIV
-	W4vHIsRnJGH/FTI4thpDao/M+5IwXIHWcxyHCHwg+0gEzrfcusQ+EP7ZePCJs3BnsnsXdoCDalu
-	LBcZ+r0hIV02Uz6X6BfIMlQ7863zi+UKnic33mjDWVVRwfmjUpgo2CF+/ELPYdWB+hRWp6z4Jtb
-	UfW0ZmedFEBs/P5tXMYs3lwk0dogO0ucHSbcDARXVEo1UlU8odYA==
-X-Received: by 2002:a05:620a:2587:b0:8de:c429:552d with SMTP id af79cd13be357-8e790016461mr864262685a.20.1776510191485;
-        Sat, 18 Apr 2026 04:03:11 -0700 (PDT)
-Received: from [127.0.0.1] ([172.203.196.181])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-8e7d5febde5sm328112585a.4.2026.04.18.04.03.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 18 Apr 2026 04:03:10 -0700 (PDT)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Li Xiasong <lixiasong1@huawei.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20260418100018.2219500-1-lixiasong1@huawei.com>
-References: <20260418100018.2219500-1-lixiasong1@huawei.com>
-Subject: Re: [RFC PATCH net] mptcp: pm: fix ADD_ADDR timer infinite retry
- on option space insufficient
-Message-ID: <2eb6da2e-1393-c1ff-46f7-24fcfdbcb7eb@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Sat, 18 Apr 2026 11:03:09 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K4DXk6Sw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7CD87C19424;
+	Sat, 18 Apr 2026 18:00:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1776535220;
+	bh=qCqgLAV+a8utLjegozP8S46KhPxIKkLcHQ9dDQTZOh8=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=K4DXk6SwhYUbvVYyvPBqSKGJuZKmX7xnCEP24OKzS6S+66tQhnGnPiDvF4hm59uqf
+	 5uBivuU5K5NuUNPQeeC4+hDXIF5LLVLW0JK63+ruT4w/I6YFKqfY6MCNMsB4Su6vv1
+	 8Kep/Q67D+gn8ZEQ0QgnUId69pfiwmCalaIX6azjYCXo9yK7Q1u2Ol2xtDQM29mQ1C
+	 FYtJNtvGI8maouWpmGlRfTIIbPwh2HftGY3Z6KYnKcJKTeZU4a8VO/8rJs2FnPOd7r
+	 nKjaSJ/ITziqPstie/pRBEJS+YR6wiaOvA/ZQDjAEnmB8lhmsojxlONOfUmNFozoxz
+	 QmgXzkJDq8ojg==
+Date: Sat, 18 Apr 2026 11:00:19 -0700 (PDT)
+From: Mat Martineau <martineau@kernel.org>
+To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+cc: MPTCP Upstream <mptcp@lists.linux.dev>
+Subject: Re: [PATCH mptcp-net v5 05/20] mptcp: pm: ADD_ADDR rtx: free sk if
+ last
+In-Reply-To: <20260415-mptcp-inc-limits-v5-5-e54c3bf80e4e@kernel.org>
+Message-ID: <679eb0b7-304f-43b7-0f6b-5a9d6b7d382f@kernel.org>
+References: <20260415-mptcp-inc-limits-v5-0-e54c3bf80e4e@kernel.org> <20260415-mptcp-inc-limits-v5-5-e54c3bf80e4e@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-Hi Li,
+On Wed, 15 Apr 2026, Matthieu Baerts (NGI0) wrote:
 
-Thank you for your modifications, that's great!
+> When an ADD_ADDR is retransmitted, the sk is held in sk_reset_timer(),
+> and released at the end.
+>
+> If at that moment, it was the last reference being held, the sk would
+> not be freed. sock_put() should then be called instead of __sock_put().
+>
+> But that's not enough: if it is the last reference, sock_put() will call
+> sk_free(), which will end up calling sk_stop_timer_sync() on the same
+> timer, and waiting indefinitely to finish. So it is needed to mark that
+> the timer is done at the end of the timer handler when it has not been
+> rescheduled, not to call sk_stop_timer_sync() on "itself".
+>
+> Fixes: 00cfd77b9063 ("mptcp: retransmit ADD_ADDR when timeout")
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> ---
+> v3: support calling sk_free() from the timer handler. Note: I'm not very
+>    happy with this patch, it looks too big. Did I miss a simpler way?
+> v4: init timer_done after 'reset_timer' label to handle cases where the
+>    sysctl is changed in between.
+> v5: only set timer_done to true in the timer handler, safer and easier.
+> ---
+> net/mptcp/pm.c | 30 +++++++++++++++++++-----------
+> 1 file changed, 19 insertions(+), 11 deletions(-)
+>
+> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+> index d3fcf441b208..0ff35f49d451 100644
+> --- a/net/mptcp/pm.c
+> +++ b/net/mptcp/pm.c
+> @@ -16,6 +16,7 @@ struct mptcp_pm_add_entry {
+> 	struct list_head	list;
+> 	struct mptcp_addr_info	addr;
+> 	u8			retrans_times;
+> +	bool			timer_done;
+> 	struct timer_list	add_timer;
+> 	struct mptcp_sock	*sock;
+> 	struct rcu_head		rcu;
+> @@ -327,22 +328,22 @@ static void mptcp_pm_add_timer(struct timer_list *timer)
+> 							      add_timer);
+> 	struct mptcp_sock *msk = entry->sock;
+> 	struct sock *sk = (struct sock *)msk;
+> -	unsigned int timeout;
+> +	unsigned int timeout = 0;
+>
+> 	pr_debug("msk=%p\n", msk);
+>
+> -	if (unlikely(inet_sk_state_load(sk) == TCP_CLOSE))
+> -		goto exit;
+> -
+> 	bh_lock_sock(sk);
+> +	if (unlikely(inet_sk_state_load(sk) == TCP_CLOSE))
+> +		goto out;
+> +
+> 	if (sock_owned_by_user(sk)) {
+> 		/* Try again later. */
+> -		sk_reset_timer(sk, timer, jiffies + HZ / 20);
+> +		timeout = HZ / 20;
+> 		goto out;
+> 	}
+>
+> 	if (mptcp_pm_should_add_signal_addr(msk)) {
+> -		sk_reset_timer(sk, timer, jiffies + TCP_RTO_MAX / 8);
+> +		timeout = TCP_RTO_MAX / 8;
+> 		goto out;
+> 	}
+>
+> @@ -360,8 +361,9 @@ static void mptcp_pm_add_timer(struct timer_list *timer)
+> 	}
+>
+> 	if (entry->retrans_times < ADD_ADDR_RETRANS_MAX)
+> -		sk_reset_timer(sk, timer,
+> -			       jiffies + (timeout << entry->retrans_times));
+> +		timeout <<= entry->retrans_times;
+> +	else
+> +		timeout = 0;
+>
+> 	spin_unlock_bh(&msk->pm.lock);
+>
+> @@ -369,9 +371,13 @@ static void mptcp_pm_add_timer(struct timer_list *timer)
+> 		mptcp_pm_subflow_established(msk);
+>
+> out:
+> +	if (timeout)
+> +		sk_reset_timer(sk, timer, jiffies + timeout);
+> +	else
+> +		/* if sock_put calls sk_free: avoid waiting for this timer */
+> +		entry->timer_done = true;
+> 	bh_unlock_sock(sk);
+> -exit:
 
-Our CI did some validations and here is its report:
+This label was just added in the previous patch (which was quite small). I 
+suggest squashing these two patches, but not a big problem to leave them 
+separate.
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/246022=
-64963
+- Mat
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/32c3fb79b0b4
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1082765
-
-
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+> -	__sock_put(sk);
+> +	sock_put(sk);
+> }
+>
+> struct mptcp_pm_add_entry *
+> @@ -434,6 +440,7 @@ bool mptcp_pm_alloc_anno_list(struct mptcp_sock *msk,
+>
+> 	timer_setup(&add_entry->add_timer, mptcp_pm_add_timer, 0);
+> reset_timer:
+> +	add_entry->timer_done = false;
+> 	timeout = mptcp_adjust_add_addr_timeout(msk);
+> 	if (timeout)
+> 		sk_reset_timer(sk, &add_entry->add_timer, jiffies + timeout);
+> @@ -454,7 +461,8 @@ static void mptcp_pm_free_anno_list(struct mptcp_sock *msk)
+> 	spin_unlock_bh(&msk->pm.lock);
+>
+> 	list_for_each_entry_safe(entry, tmp, &free_list, list) {
+> -		sk_stop_timer_sync(sk, &entry->add_timer);
+> +		if (!entry->timer_done)
+> +			sk_stop_timer_sync(sk, &entry->add_timer);
+> 		kfree_rcu(entry, rcu);
+> 	}
+> }
+>
+> -- 
+> 2.53.0
+>
+>
+>
