@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F30892E413
-	for <mptcp@lists.linux.dev>; Sat, 18 Apr 2026 18:00:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9236A30E0E5
+	for <mptcp@lists.linux.dev>; Sat, 18 Apr 2026 18:09:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776535221; cv=none; b=I6bxYWexdWMUx15GSiWNSTOVxsBQKg5t30K7Lns816OYvwQfwJ9p+qZ7Xhm6tRt6hQPMBT3i7uJTR1PWQoqbvXEas3hascQBhpmIYebk0yWOVQe7UCQy5gD8bool88/1CmWK92Ip7eVw8RXSfxZm7Ul2gl9fXd1Nrfp39E6GrEo=
+	t=1776535759; cv=none; b=Od8cMckd7T1etGDWVP4/aGCY8Ao8tQxY1hqZ9H6YG22aJU64i390uHsY5zAPNzagZO2pbR97OsNXNsOKH1WRlRcNq4DRN5fwW0PUM3BgxOBihXTsTcC5f29IAdi7kHa5Vh3EswwrO3vM1JSvLxG8cHHH3wCsboTn+jbPOemzl98=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776535221; c=relaxed/simple;
-	bh=qCqgLAV+a8utLjegozP8S46KhPxIKkLcHQ9dDQTZOh8=;
+	s=arc-20240116; t=1776535759; c=relaxed/simple;
+	bh=peasedNtfhJHSn//vG0EIrbyYiHSntaL62TPXdTsLDo=;
 	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=YDGp6BgkM6Cho85N1LY2pzHmjjUDsqTpGcyUPW9WBwMMclVBUv/J5xeWIfgOhjohFeSSPlKd3GXjHyFFHaBicPQIw4xUc0c1okik1NeKH2/WUM9JduLOBGgpRDAJ2xg0z18Vhy4joYG7rRfcfVQRk/4A6ogdiULw6s5PHLrqTj8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K4DXk6Sw; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=AXUo3tumr4/P8mf1tL2J9r+4tZgaBZM4Mp1qkhAVDqVbgzXHOpv4dwAMZlJLap2SguTVczAcCSHM4RwCbd7QJD1INUX39FlYUhKjrbBJiqqbsONkGLFL/dp0wZEwMwDhLeYiz6N93WbBZSnUKIXqFPNuRyA05jYTOzQpK+h33/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NpmcEsvU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K4DXk6Sw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7CD87C19424;
-	Sat, 18 Apr 2026 18:00:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NpmcEsvU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F43EC19424;
+	Sat, 18 Apr 2026 18:09:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776535220;
-	bh=qCqgLAV+a8utLjegozP8S46KhPxIKkLcHQ9dDQTZOh8=;
+	s=k20201202; t=1776535759;
+	bh=peasedNtfhJHSn//vG0EIrbyYiHSntaL62TPXdTsLDo=;
 	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=K4DXk6SwhYUbvVYyvPBqSKGJuZKmX7xnCEP24OKzS6S+66tQhnGnPiDvF4hm59uqf
-	 5uBivuU5K5NuUNPQeeC4+hDXIF5LLVLW0JK63+ruT4w/I6YFKqfY6MCNMsB4Su6vv1
-	 8Kep/Q67D+gn8ZEQ0QgnUId69pfiwmCalaIX6azjYCXo9yK7Q1u2Ol2xtDQM29mQ1C
-	 FYtJNtvGI8maouWpmGlRfTIIbPwh2HftGY3Z6KYnKcJKTeZU4a8VO/8rJs2FnPOd7r
-	 nKjaSJ/ITziqPstie/pRBEJS+YR6wiaOvA/ZQDjAEnmB8lhmsojxlONOfUmNFozoxz
-	 QmgXzkJDq8ojg==
-Date: Sat, 18 Apr 2026 11:00:19 -0700 (PDT)
+	b=NpmcEsvU/PMi2LjOKYPARn6kYpu3JI1+TKBnyzyh4iDo6h+N0OVLSUgQFndsd6BOM
+	 BG1wPcI8FJRkGi/YEm8XpDaHYWSLBt6xAe+QUOeA5cdlh5ybmHMm5caCDDrOGwSfIy
+	 NruDrl0k0VfBRAtoeQbzL3vcK9sFCTttlHd2X6v1vKLAyTrOFnbG52H6HpG8atOsZ6
+	 qJnikXQEGEWBhdpQ4NPfPFHnwmKT489rTXGDQMfhNG11RKmcFy2NHI0p7z2oG+/zOu
+	 HzsoPuh3CY8Z87rTew7SBAA58rd8aCtTJyCRn+FktLSV8hWdy2a+WfWnaakRJ30u3a
+	 CfjwgiNRuOjXA==
+Date: Sat, 18 Apr 2026 11:09:18 -0700 (PDT)
 From: Mat Martineau <martineau@kernel.org>
 To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 cc: MPTCP Upstream <mptcp@lists.linux.dev>
-Subject: Re: [PATCH mptcp-net v5 05/20] mptcp: pm: ADD_ADDR rtx: free sk if
- last
-In-Reply-To: <20260415-mptcp-inc-limits-v5-5-e54c3bf80e4e@kernel.org>
-Message-ID: <679eb0b7-304f-43b7-0f6b-5a9d6b7d382f@kernel.org>
-References: <20260415-mptcp-inc-limits-v5-0-e54c3bf80e4e@kernel.org> <20260415-mptcp-inc-limits-v5-5-e54c3bf80e4e@kernel.org>
+Subject: Re: [PATCH mptcp-net v5 07/20] mptcp: pm: ADD_ADDR rtx: skip inactive
+ subflows
+In-Reply-To: <20260415-mptcp-inc-limits-v5-7-e54c3bf80e4e@kernel.org>
+Message-ID: <632253e0-5a82-3594-ad77-df344e71cccb@kernel.org>
+References: <20260415-mptcp-inc-limits-v5-0-e54c3bf80e4e@kernel.org> <20260415-mptcp-inc-limits-v5-7-e54c3bf80e4e@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -45,124 +45,73 @@ Content-Type: text/plain; charset=US-ASCII; format=flowed
 
 On Wed, 15 Apr 2026, Matthieu Baerts (NGI0) wrote:
 
-> When an ADD_ADDR is retransmitted, the sk is held in sk_reset_timer(),
-> and released at the end.
+> When looking at the maximum RTO amongst the subflows, inactive subflows
+> were taken into account: that includes stale ones, and the initial one
+> if it has been already been closed.
 >
-> If at that moment, it was the last reference being held, the sk would
-> not be freed. sock_put() should then be called instead of __sock_put().
+> Unusable subflows are now simply skipped. Stale ones are used as an
+> alternative: if there are only stale ones, to take their maximum RTO and
+> avoid to eventually fallback to net.mptcp.add_addr_timeout, which is set
+> to 2 minutes by default.
 >
-> But that's not enough: if it is the last reference, sock_put() will call
-> sk_free(), which will end up calling sk_stop_timer_sync() on the same
-> timer, and waiting indefinitely to finish. So it is needed to mark that
-> the timer is done at the end of the timer handler when it has not been
-> rescheduled, not to call sk_stop_timer_sync() on "itself".
->
-> Fixes: 00cfd77b9063 ("mptcp: retransmit ADD_ADDR when timeout")
+> Fixes: 30549eebc4d8 ("mptcp: make ADD_ADDR retransmission timeout adaptive")
 > Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 > ---
-> v3: support calling sk_free() from the timer handler. Note: I'm not very
->    happy with this patch, it looks too big. Did I miss a simpler way?
-> v4: init timer_done after 'reset_timer' label to handle cases where the
->    sysctl is changed in between.
-> v5: only set timer_done to true in the timer handler, safer and easier.
+> v2: restore accidentally deleted icsk->icsk_rto > max check
 > ---
-> net/mptcp/pm.c | 30 +++++++++++++++++++-----------
-> 1 file changed, 19 insertions(+), 11 deletions(-)
+> net/mptcp/pm.c | 17 ++++++++++++-----
+> 1 file changed, 12 insertions(+), 5 deletions(-)
 >
 > diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-> index d3fcf441b208..0ff35f49d451 100644
+> index bc5168831085..22ba75fa876c 100644
 > --- a/net/mptcp/pm.c
 > +++ b/net/mptcp/pm.c
-> @@ -16,6 +16,7 @@ struct mptcp_pm_add_entry {
-> 	struct list_head	list;
-> 	struct mptcp_addr_info	addr;
-> 	u8			retrans_times;
-> +	bool			timer_done;
-> 	struct timer_list	add_timer;
-> 	struct mptcp_sock	*sock;
-> 	struct rcu_head		rcu;
-> @@ -327,22 +328,22 @@ static void mptcp_pm_add_timer(struct timer_list *timer)
-> 							      add_timer);
-> 	struct mptcp_sock *msk = entry->sock;
-> 	struct sock *sk = (struct sock *)msk;
-> -	unsigned int timeout;
-> +	unsigned int timeout = 0;
+> @@ -306,20 +306,27 @@ static unsigned int mptcp_adjust_add_addr_timeout(struct mptcp_sock *msk)
+> 	const struct net *net = sock_net((struct sock *)msk);
+> 	unsigned int rto = mptcp_get_add_addr_timeout(net);
+> 	struct mptcp_subflow_context *subflow;
+> -	unsigned int max = 0;
+> +	unsigned int max = 0, max_stale = 0;
 >
-> 	pr_debug("msk=%p\n", msk);
+> 	mptcp_for_each_subflow(msk, subflow) {
+> 		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
+> 		struct inet_connection_sock *icsk = inet_csk(ssk);
 >
-> -	if (unlikely(inet_sk_state_load(sk) == TCP_CLOSE))
-> -		goto exit;
-> -
-> 	bh_lock_sock(sk);
-> +	if (unlikely(inet_sk_state_load(sk) == TCP_CLOSE))
-> +		goto out;
+> -		if (icsk->icsk_rto > max)
+> +		if (!__mptcp_subflow_active(subflow))
+> +			continue;
 > +
-> 	if (sock_owned_by_user(sk)) {
-> 		/* Try again later. */
-> -		sk_reset_timer(sk, timer, jiffies + HZ / 20);
-> +		timeout = HZ / 20;
-> 		goto out;
+> +		if (unlikely(subflow->stale)) {
+> +			if (icsk->icsk_rto > max_stale)
+> +				max_stale = icsk->icsk_rto;
+> +		} else if (icsk->icsk_rto > max) {
+> 			max = icsk->icsk_rto;
+> +		}
 > 	}
 >
-> 	if (mptcp_pm_should_add_signal_addr(msk)) {
-> -		sk_reset_timer(sk, timer, jiffies + TCP_RTO_MAX / 8);
-> +		timeout = TCP_RTO_MAX / 8;
-> 		goto out;
-> 	}
+> -	if (max && max < rto)
+> -		rto = max;
+> +	if (max)
+> +		return max < rto ? max : rto;
 >
-> @@ -360,8 +361,9 @@ static void mptcp_pm_add_timer(struct timer_list *timer)
-> 	}
->
-> 	if (entry->retrans_times < ADD_ADDR_RETRANS_MAX)
-> -		sk_reset_timer(sk, timer,
-> -			       jiffies + (timeout << entry->retrans_times));
-> +		timeout <<= entry->retrans_times;
-> +	else
-> +		timeout = 0;
->
-> 	spin_unlock_bh(&msk->pm.lock);
->
-> @@ -369,9 +371,13 @@ static void mptcp_pm_add_timer(struct timer_list *timer)
-> 		mptcp_pm_subflow_established(msk);
->
-> out:
-> +	if (timeout)
-> +		sk_reset_timer(sk, timer, jiffies + timeout);
-> +	else
-> +		/* if sock_put calls sk_free: avoid waiting for this timer */
-> +		entry->timer_done = true;
-> 	bh_unlock_sock(sk);
-> -exit:
+> -	return rto;
+> +	return max_stale && max_stale < rto ? max_stale : rto;
 
-This label was just added in the previous patch (which was quite small). I 
-suggest squashing these two patches, but not a big problem to leave them 
-separate.
+I'd find this more readable as
+
+if (max)
+         return min(max, rto);
+else if (max_stale)
+         return min(max_stale, rto);
+else
+         return rto;
 
 - Mat
 
-> -	__sock_put(sk);
-> +	sock_put(sk);
+
 > }
 >
-> struct mptcp_pm_add_entry *
-> @@ -434,6 +440,7 @@ bool mptcp_pm_alloc_anno_list(struct mptcp_sock *msk,
->
-> 	timer_setup(&add_entry->add_timer, mptcp_pm_add_timer, 0);
-> reset_timer:
-> +	add_entry->timer_done = false;
-> 	timeout = mptcp_adjust_add_addr_timeout(msk);
-> 	if (timeout)
-> 		sk_reset_timer(sk, &add_entry->add_timer, jiffies + timeout);
-> @@ -454,7 +461,8 @@ static void mptcp_pm_free_anno_list(struct mptcp_sock *msk)
-> 	spin_unlock_bh(&msk->pm.lock);
->
-> 	list_for_each_entry_safe(entry, tmp, &free_list, list) {
-> -		sk_stop_timer_sync(sk, &entry->add_timer);
-> +		if (!entry->timer_done)
-> +			sk_stop_timer_sync(sk, &entry->add_timer);
-> 		kfree_rcu(entry, rcu);
-> 	}
-> }
+> static void mptcp_pm_add_timer(struct timer_list *timer)
 >
 > -- 
 > 2.53.0
