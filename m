@@ -1,73 +1,72 @@
-Received: from mail-dy1-f174.google.com (mail-dy1-f174.google.com [74.125.82.174])
+Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F58F40DFB4
-	for <mptcp@lists.linux.dev>; Sat, 18 Apr 2026 00:15:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A65F23C1F
+	for <mptcp@lists.linux.dev>; Sat, 18 Apr 2026 01:21:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776471331; cv=none; b=iB7LaUWgLYUdGr5g75wykdKr2NvIMAHiylE/KJVKk0TdW+XWpP0u5yz6eeSpPNgmrNMF8834r0Mh2f3/vpI7VXolMZXZeeYhIJY4K5+jJ3ghw/nKQn4aCun8twX3CqsmhiJoPpAEmWCpwBa45JmeEgzKiXCmM2v+cvjFSBCQS08=
+	t=1776475308; cv=none; b=PxGGJRRoqDvMaQy/kkXomD2tiCdGw5rZhqPltrcylmsEZViz7rgaJ5jyqGG15p7Vyv0l3shHG4O+rOOF/u9dfgzWcpCBMJQEcfqhGr6x/qXIHT61XBmGbqr5oS5CgLo/cIkc+cEEwxpzEJPpHzUoVd5JSsGkg116qZ2Mnl2L46M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776471331; c=relaxed/simple;
-	bh=PwMxp9YS7jzIOStqWSYDZRzvCwTUeWzQX8LJGV6H6Fk=;
+	s=arc-20240116; t=1776475308; c=relaxed/simple;
+	bh=WRw7xRsbOJwK1Z/+a0Jgol3dvMhfhfOXYiDq4vKf/pM=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
-	 MIME-Version:Content-Type; b=WhcWOi5WLFxs+9rKIJhdThO51aH2kfxsp1TG+yIOR/asWZxN5pznJ7mjTmLQO4rKRmqDF1umz74EbQ9Pxe5AfD0gxsBwDj4cYiE6+mAy0Oc/4Pbc6pCT8Gs+SLQLJj+diNIiBsznSORsmWqphDm1zurqJtj6CYEeBbUeEBSgASg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lE3dBpzS; arc=none smtp.client-ip=74.125.82.174
+	 MIME-Version:Content-Type; b=AP+RMaaV+gCfiDt8X3gewhwIvpoZ2mF1L1Q70aL1Xd7FGlzKWEY+UjeZT+mBFRr/kDzu0AlZgaCgygvKab8DN3+7grWFkkUeuMGTvUEqS8CK+SDjpFnxlor91wtB6b3ayYL/3ZHxczo8Vn7SQECAKKsNQz1OeuGzuExitQpvwAY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gZA7x++S; arc=none smtp.client-ip=209.85.219.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lE3dBpzS"
-Received: by mail-dy1-f174.google.com with SMTP id 5a478bee46e88-2b4520f6b32so1619902eec.0
-        for <mptcp@lists.linux.dev>; Fri, 17 Apr 2026 17:15:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gZA7x++S"
+Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-8aca4e14411so15503496d6.3
+        for <mptcp@lists.linux.dev>; Fri, 17 Apr 2026 18:21:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1776471329; x=1777076129; darn=lists.linux.dev;
+        d=gmail.com; s=20251104; t=1776475306; x=1777080106; darn=lists.linux.dev;
         h=mime-version:date:content-transfer-encoding:message-id:subject
          :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=P5wac2m0R6BkfnzeE1Q/aEcApRwn7MJRdCjY5vf3H+I=;
-        b=lE3dBpzS3AOd7XRXfHTP5Vy1uOsORzZ9C29L9aO8CcJIB/b/vF/4jfltPgDmUhfRod
-         QJCSolzud/9jUhNxI35oQ66az1zJMqquFp4yfr9+KqQ3MisAF0+k4ltO3mi/zMEtIHOr
-         tzS/z5xLLpKnzboXcf4USc5wNbRCNPP4m6Q/EM4lbtpTJsLZKTTKcShNx1QolxH+XIIi
-         xt8LCR0oKvigsa6uJLc1FkD2fgJUnAyQWKdRTgGttB9OwcIColBzOM2FARbVzOVRQegY
-         oktw5hn8toMtBZ+xjyItqzaemra2OMwJN2rROSdvoK/k9R8te2e7z7cVDVZiVSVOVbLp
-         4hFw==
+        bh=4WaJM35hNRCycXQ1J1OstKdyPjWSxZHTtVDfuDk7Ugc=;
+        b=gZA7x++SX3t792B/bjak+G/da+HKm5EAPt7iYdrZlr5tgzsvM2LrMpwhBMeX7PFwPX
+         jpyFFS9kWBp1SdZXA1F73LQiXm/iCwJ0/tK/sxLHsdlcnGVgL+OxD8r7mKw1yLIy+zDi
+         RP6VJnmfoh93AiGhQIXWPMh8ijwiVdcDX4EwH3b2205zyt8NlDQGlBjIBlwH77L1hjE6
+         /ckiuv2+UYQCzHYzkl6lpTvDnXV0aJpl20cuu0V4DS7P0vcUYAbRQg5myUtAw5d5m2cp
+         X24AI6Vt73q1yF6CW3PI64zOgw7qWOrvGKepoEUTwwwT/kVyU+erp9SUFoB8i8PmdVIy
+         ub7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776471329; x=1777076129;
+        d=1e100.net; s=20251104; t=1776475306; x=1777080106;
         h=mime-version:date:content-transfer-encoding:message-id:subject
          :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=P5wac2m0R6BkfnzeE1Q/aEcApRwn7MJRdCjY5vf3H+I=;
-        b=hjRHL+gNyi2PVWIBZXBy0YwHoKOgBH8NpOhxujeC2Mklo4AQaPvohhGiH8IQt4aCD6
-         tR9QD5/sRNmkV4I9pbraBCTVE4Vzy+CvCm5yt93wzXVDxN5/6QbJiWlPhJViPtb/w58V
-         15ncZiOSqnF9JwbexYZ6BSxoz5O5xVl95UanxrDtLSBPjs641U1RJjwzjfR9Y5gS7zPY
-         +IwcH6BCx6NmCPFIRc1ortH8uqSalcJfbLdiavv2IBysoRtS6QuIlM4+X4RR0gxKn9AJ
-         yfKo7TQmdL2Ussx5WN++Jj7Q8pZ0v2o9dz/hUB6kcD3MNyaynAu8TMR09EOb53Bw0c9M
-         lCCw==
-X-Gm-Message-State: AOJu0YyEYKbeRIQ+ztgODcFtlVt6PW8xDnjqjObt7sY9NO00fBpOuxW/
-	cT/3q3d1ZIpi21DITGesoebsoq0G1p918wqOzbpFIFgB0aUnnUj2ra5oUUhQ
-X-Gm-Gg: AeBDiesuhzFuWjvztTP6EBBrL4cxdoB0GTMkN70Nu1QeiYqxhkU2rQPafPq8JxjbEj6
-	W691dmpsLFe3w+EjPCe+aY9p3jnX40C2DJsimoi0BetlsqkURhwomZAZBFsOniJWFSp8emtTW7h
-	2k+gUP0O+XsV/SID9FD9oJoWKqkFi3XlMp1mqjbn1WN4k+3Fa5Cr3icBhYUOWAw29lm75QUnB+J
-	RdD0aUPD4aynLCZQfPSc3GXh58VgoYgXTHvK1w8dfM77V4bIKNn4QzMLfPsPQ7bDEjMccoLcFpB
-	jGCvJlrc7stw7064SxLeXMWy4fxgNYVW1Wjoks0B7GpXGFeo5xXYns2dRv76RgP6O7BUPRNojvR
-	QZwljN9r1VT2GJcMg5Fd1PWL8ab00kFlIQZwUqiDpkWA8sjB9Ya1twbMp+ENNvbmtsRqXjin+8w
-	/8OaTnn6JLFcHxRWN3HilfDfV8tqQCGqIEZVPSxoR9Slj8f1aK
-X-Received: by 2002:a05:7300:fb94:b0:2c4:61be:1d33 with SMTP id 5a478bee46e88-2e464eaa230mr2467442eec.6.1776471328806;
-        Fri, 17 Apr 2026 17:15:28 -0700 (PDT)
-Received: from [127.0.0.1] ([104.209.11.209])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2e536e54562sm4418278eec.0.2026.04.17.17.15.28
+        bh=4WaJM35hNRCycXQ1J1OstKdyPjWSxZHTtVDfuDk7Ugc=;
+        b=Ju+Ac0Ii4EFC5HE0BL+mxwh/meavz0lCi88XO3n7mk4wd1xNJzd2Jyr8zU7k8CDDtz
+         KSQ5WhNghXTljgOP+12xKp3ykZ5VqDGLZ2owJfJDeJmcup+yA6v0D535JgSCImRfKPvx
+         2CBQZANXUvrD8G9sTSwyw5qWYCRjRi9tvVdJr37ltGB/WJYd79fw0Hej2ZyauGA0y823
+         7Fney79t8U5WVQ5xMZ4B2NS3HrimK6wMMPZ0hDxxFH9w7XLASkJNDTsOxvfyUlio49MR
+         Dp6AOrObnuTxpH1qHSc3iQrvDBuLGMPnBHH23/rJqXymx+q6pkOExYFukPQsfXgXYh1i
+         y7/A==
+X-Gm-Message-State: AOJu0YzLZlY/vh1Eor5qvRD8E8zKr/z5nhlDBi9hchUGX7gGCr7hsVRi
+	q3WDONokvZoAeEm4cQMk2Gxfve27RjBRZ48UiB91kitSdISmKlQbKjsWwoU+
+X-Gm-Gg: AeBDieszJCIA0YlWUEIBRuhmveReXatV0zSNGgOs8PNe0EkNHnw4D3lrXj9Y2ULr3M8
+	hihllIGoZcNEvwCVWLZKesCh9s4dvKYZUw9bb0vStHBGQKUvCtzqGvlVhf8w7VU7L7k6OHs0NAq
+	xQ6MHqN1i9LFBvqanIDd51V5jC7YPt9Wg7505aGTnbpl5eZadenlOhoC9edEk7gA/tddfiYNuNz
+	XZNHwC3aKCWgvLNyZNKXmoecTmWcBfl7f2e85rmjwCFLy4I9rzFmbZ8lt1pLlDfvUKoajXtqyC+
+	0T+tyfj03yJ8UZrwG6Td1y6FDqXLTLxvqD9gk3ZISf1RkiycbPWlNAeJksahjwYLi1gsrxIjve2
+	wGnjKuB3dkCsVHbKvnZXs6tLmqbErSB4zq+S5nnNxA62/+Df26Kpr/8sGR1/rKIMoJ89coEX0t5
+	r+RSPfLhyHJMl1ZGTFe2DCZ7BnEc7uwora+h0bBUIfDUZdBByx
+X-Received: by 2002:a05:6214:459d:b0:899:f0b1:7332 with SMTP id 6a1803df08f44-8b0280d6c95mr87492176d6.32.1776475306478;
+        Fri, 17 Apr 2026 18:21:46 -0700 (PDT)
+Received: from [127.0.0.1] ([64.236.142.136])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8b02aea639fsm22087566d6.45.2026.04.17.18.21.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Apr 2026 17:15:28 -0700 (PDT)
+        Fri, 17 Apr 2026 18:21:45 -0700 (PDT)
 From: MPTCP CI <wpasupplicant.patchew@gmail.com>
 To: Geliang Tang <tanggeliang@kylinos.cn>
 Cc: mptcp@lists.linux.dev
 Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <cover.1776466833.git.tanggeliang@kylinos.cn>
-References: <cover.1776466833.git.tanggeliang@kylinos.cn>
-Subject: Re: [PATCH mptcp-next v4 0/3] only remove entry from
- local_addr_list when sending a REMOVE_ADDR
-Message-ID: <64a09241-edaf-0519-ec03-5a8526ca608b@gmail.com>
+In-Reply-To: <cover.1776469068.git.tanggeliang@kylinos.cn>
+References: <cover.1776469068.git.tanggeliang@kylinos.cn>
+Subject: Re: [RFC mptcp-next v15 00/15] MPTCP KTLS support
+Message-ID: <74546542-f95d-c44c-9c95-082d21c50c34@gmail.com>
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 18 Apr 2026 00:15:27 +0000
+Date: Sat, 18 Apr 2026 01:21:44 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -88,14 +87,14 @@ Our CI did some validations and here is its report:
 - KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
 - KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
 - KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/245910=
-44565
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/245921=
+08878
 
 Initiator: Patchew Applier
 Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/df304e308870
+com/multipath-tcp/mptcp_net-next/commits/eddd9cab992c
 Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1082700
+series=3D1082710
 
 
 If there are some issues, you can reproduce them using =
