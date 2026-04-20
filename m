@@ -1,132 +1,161 @@
-Received: from mail-dy1-f177.google.com (mail-dy1-f177.google.com [74.125.82.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F00B23876C0
-	for <mptcp@lists.linux.dev>; Mon, 20 Apr 2026 08:14:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD21E214204;
+	Mon, 20 Apr 2026 08:26:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776672898; cv=none; b=M/IRyniSxQazISzc2Xjn09Lf3b/lplW+F5g4BLaC9D7b3AoJuYTEtcNN/iqycfuxpLvPih6LY6g3TNUmNW4HO9Vi7UqHhBWmWg/dYGlqZbRTohzOAs2wU1NL6kuk371r7mRQ4WPZ//EaGi5T4lQ9dnSgpd9BKUTwfVMEvuJBCbA=
+	t=1776673572; cv=none; b=UyRVQWtdzNTT8VoR37N7hZ9Nbq5Fy8bugEy4TndjtGxkcTW8ARWah1Z6vbOKa87RtbbcWBUku9aJiH3EEtguU+nQfTNTpYgJ0/k9WWatasy5jBMZNXeI98bsF7aRzdYiRAypBapvpCBEbh+MHIngASYBsgr5jh3hhWP6MChUXAU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776672898; c=relaxed/simple;
-	bh=yj3bSNSAhZ8HRY44fVvKTLCPmd4ciDnfJ9bQHXtaHkY=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
-	 MIME-Version:Content-Type; b=O4Zuw9hOF2iGyldOw3n+hz1ZtfWsSoFgVhzZLAHFnjBt6ASPmpNTQRNdUQO1zlLDPszjgp4tdeaBMxDLyS/rw6ZhhzE02XijT5nYgC7ydOa2FaFDGKINL+vmKt+I8/z+Gk6xPkuESNhUSYmm5hZfKP1lZ0c747380Ht0TxA30Mc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=d/H4NtDy; arc=none smtp.client-ip=74.125.82.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1776673572; c=relaxed/simple;
+	bh=hatqTacSUEjbtlKRMDm5wqYoQ4FvRrpWBAKeel5SoHg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jptx6k7Ozf9sO0AGgA+FYO3uBkWswXp3QqhDQDAXKLewjtMMajP5IaQ6vS+K+EImAwz7oPIxSZfsM09nHOedLC+mO+lPyZsMz63Ml7/BU674tZhsWqCPu5o/te44saeANMNFVnmxhq/dchT3z/+8E1YuOA1Xf8qgjaCMDAdkXgA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KDEjtn7s; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d/H4NtDy"
-Received: by mail-dy1-f177.google.com with SMTP id 5a478bee46e88-2bd9a485bd6so1663116eec.1
-        for <mptcp@lists.linux.dev>; Mon, 20 Apr 2026 01:14:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1776672896; x=1777277696; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=26HF2gTe/IIOWAIanI6JD54fQPM447SChmcVkqPBGOA=;
-        b=d/H4NtDyavmFHPEDsILnXbJRaGJPDI49qRSnOFEmOnSoZpvCPQEu8GJw315zLCEMHV
-         MCdfYdGLdE4MIjbWl7CD4zpvoQ3QwcGx6tuWMULW5phvEcTGmGqJpZITjqoixIzMF0+H
-         VZng8yW3tG2ZJpMefsQH5+vSLuDGrS4B3dv/gXNSVu7Xs2CgDGV2iwMIpUhHge/3S0r4
-         kRcE/xNudNDfVdF0xlY+kpvBLQoX00bM4QJ9o2tDFgkS6P80u/64bnr7BM6z74d5FDlZ
-         4GmX73lGTfNsfeFFMD+V1nKn1M4Z+bvF5KCAHp7+pn4VgwpMjKwQjm6Vw4wkFbJuRRyo
-         pksQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776672896; x=1777277696;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=26HF2gTe/IIOWAIanI6JD54fQPM447SChmcVkqPBGOA=;
-        b=qjP6ZsAppgYi52jLfemU5nZC4k5cYVcZipqHML3w389K4DjPpzk8hu745h70YVYR4f
-         Xmzj6fP/PC/hEkH+5/+a2wctRa7VI+qzuT74ZDex+QptktQ1eRea33mYYEcHYhuza9ni
-         oeFsz/AfsqtfMIyvkGOMxQ27tj2rQDYTknfyVu695ZkSedcTHrwBVN1oRTZxhLwqrQ+l
-         cOuRGAuOCwPH7pw23npim1VO0LSWuHQZIhjH4mGMAaUglSxozMJ2CUDMHhyGTTMKNYSm
-         PeCCNfMK8eYtEQ79kR41p8gMd4lJ5n1jEm5+414QYmr9WhkTPDAG9/KVIqq00EPZ5rW5
-         q7JQ==
-X-Gm-Message-State: AOJu0YwRnnEoKcl+8jK7Wv1nmuEOPE8Qdq3mdiW8os90udPkNgqfkbLb
-	elzSDEhnKwUvMPp8oqR01A8HVK2Qg04ohGu3cQn7yAiLR/yPNPtVpPndQJMUYHo=
-X-Gm-Gg: AeBDiesn1mpXFfNweypFi+KJzuyeJWrO+LPeODzFlXjFJ7dDkAgFacEdoBGk9PSi29a
-	RyPz20KN3S43Ohu6vOivYsgXPVv45JjcZ1GaY2zgktsItSq1ExJD8ZlFJRQ910yPg+7YhMGLT/3
-	BfZpsBBDZmqLMlvW1oKZ7Nkvf73uUREZYLaLtSk8CX5P/gG2/3nRU8i7knXEWc8/pz8TK7gz+ms
-	pRPdWtzEtPn70dYxdsgIZawE971KgGQOXt2CAsyXBKM5jySdXs7bH9aKLTLfGzgCViWxF2qCwxh
-	H2bHgEOasXjS8JU65iKyNH+IfBNt7eHnqWE2OJXItwK1ivgl6uCA5aR8AnpG6RST6PssxKCwMO1
-	ggSfJx1rFN1tISqsjXKJYfk7ZqDf0VBW4rlI2eaY8NADGRlngaG0na3F+/YCs+Spd4ZbncVaIWA
-	yYBbMzKzZuhZH0+jytCEOzP+L/DkP88OLTrSVK9MG3cCm9
-X-Received: by 2002:a05:7300:dc05:b0:2dd:6937:79c8 with SMTP id 5a478bee46e88-2e46519e697mr6681367eec.5.1776672895963;
-        Mon, 20 Apr 2026 01:14:55 -0700 (PDT)
-Received: from [127.0.0.1] ([13.83.42.72])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2e53d2cff04sm12839163eec.23.2026.04.20.01.14.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2026 01:14:55 -0700 (PDT)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <tanggeliang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <f6a4cf56c8c361d3e7373d83fd3930bd28600b4c.1776668161.git.tanggeliang@kylinos.cn>
-References:
- <f6a4cf56c8c361d3e7373d83fd3930bd28600b4c.1776668161.git.tanggeliang@kylinos.cn>
-Subject: Re: [PATCH] selftests: harness: fix pidfd leak in __wait_for_test
-Message-ID: <d52b6937-e58e-0527-1d92-576b6ac66fab@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 20 Apr 2026 08:14:54 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KDEjtn7s"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 130EBC19425;
+	Mon, 20 Apr 2026 08:26:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1776673572;
+	bh=hatqTacSUEjbtlKRMDm5wqYoQ4FvRrpWBAKeel5SoHg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=KDEjtn7sF7+FeuU8A2B0AeQPixQcZu4kMVTqOh1v1Dc0N6zlhBYLzS5h4RTC6/YGb
+	 mXQC+xMWUKinU10S8ToOJUU19q4RC0FKWR3GJ1M28v6fCz+9KLn3mH1h2KSsH1qEbl
+	 DeN88tOQ/hYnbL1e4V5+4TTSFsM0b5unveFIWMR6oxNxZIGTLArVT7N4BF+r5dDWd3
+	 R+ajOnR6750VZF99dyW/cHlJ8bSqO3EiwuArC4FyhNyTf9bV3QYwYwj06mwNpL+Fqz
+	 y6y0+nXwF+lniQKHheHmbJ6wGkiiUjtWmADlcxSwIhQkPo+KGdZpX0S02vC+grHm0t
+	 0W2NOkMnYA7XA==
+Message-ID: <54abe469-dc16-4ed7-a90e-c7ffd419d91e@kernel.org>
+Date: Mon, 20 Apr 2026 10:26:02 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH net 1/1] mptcp: hold subflow request owners when cloning
+ reqsk
+Content-Language: fr
+To: Yuan Tan <yuantan098@gmail.com>, Kuniyuki Iwashima <kuniyu@google.com>
+Cc: Ren Wei <n05ec@lzu.edu.cn>, netdev@vger.kernel.org,
+ mptcp@lists.linux.dev, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, horms@kernel.org, ncardwell@google.com,
+ dsahern@kernel.org, martineau@kernel.org, geliang@kernel.org,
+ daniel@iogearbox.net, kafai@fb.com, yifanwucs@gmail.com,
+ tomapufckgml@gmail.com, bird@lzu.edu.cn, caoruide123@gmail.com,
+ enjou1224z@gmail.com
+References: <cover.1776149210.git.caoruide123@gmail.com>
+ <86e2514b533bf4d55d4aa2fdbf1404022e8c9430.1776149210.git.caoruide123@gmail.com>
+ <5f06a4e8-0b49-4119-94f9-3a8a1e430e0d@kernel.org>
+ <CAAVpQUDzh-dGsQpBCZjN3rUsoDc2QjzWh-o5yVWoBWDQNXbjmQ@mail.gmail.com>
+ <05a19f8d-360e-41d1-bc8a-0b4caab3d354@gmail.com>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <05a19f8d-360e-41d1-bc8a-0b4caab3d354@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Geliang,
+Hi Yuan Tan,
 
-Thank you for your modifications, that's great!
+On 19/04/2026 11:51, Yuan Tan wrote:
+> 
+> On 4/16/2026 11:48 AM, Kuniyuki Iwashima wrote:
+>> On Thu, Apr 16, 2026 at 10:45 AM Matthieu Baerts <matttbe@kernel.org> wrote:
+>>> Hi Ren,
+>>>
+>>> On 15/04/2026 11:31, Ren Wei wrote:
+>>>> From: Ruide Cao <caoruide123@gmail.com>
+>>>>
+>>>> TCP request migration clones pending request sockets with
+>>>> inet_reqsk_clone(). For MPTCP MP_JOIN requests this raw-copies
+>>>> subflow_req->msk, but the cloned request does not take a new reference.
+>>>>
+>>>> Both the original and the cloned request can later drop the same msk in
+>>>> subflow_req_destructor(), and a migrated request may keep a dangling msk
+>>>> pointer after the original owner has already been released.
+>>>>
+>>>> Add a request_sock clone callback and let MPTCP grab a reference for cloned
+>>>> subflow requests that carry an msk. This keeps ownership balanced across
+>>>> both successful migrations and failed clone/insert paths without changing
+>>>> other protocols.
 
-Our CI did some validations and here is its report:
+(...)
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Unstable: 2 failed =
-test(s): packetdrill_dss packetdrill_mp_capable =E2=9A=A0=EF=B8=8F=20
-- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/246537=
-26761
+>>>> diff --git a/net/ipv4/inet_connection_sock.c b/net/ipv4/inet_connection_sock.c
+>>>> index e961936b6be7..140a9e96ad58 100644
+>>>> --- a/net/ipv4/inet_connection_sock.c
+>>>> +++ b/net/ipv4/inet_connection_sock.c
+>>>> @@ -954,6 +954,9 @@ static struct request_sock *inet_reqsk_clone(struct request_sock *req,
+>>>>       if (sk->sk_protocol == IPPROTO_TCP && tcp_rsk(nreq)->tfo_listener)
+>>>>               rcu_assign_pointer(tcp_sk(nreq->sk)->fastopen_rsk, nreq);
+>>> (Maybe TCP with fastopen could be this other user to call
+>>> rcu_assign_pointer()? (net-next material))
+>>>
+>>>> +     if (req->rsk_ops->init_clone)
+>>>> +             req->rsk_ops->init_clone(req, nreq);
+>> I think a simple direct call is better.
+>>
+>> #ifdef CONFIG_MPTCP
+>>     if (tcp_rsk(req)->is_mptcp)
+>>         mptcp_reqsk_clone(nreq);
+>> #endif
+>>
+>  Thank you very much for your suggestion. We will use this approach in
+> the next version of the patch. Would you like us to add your
+> Suggested-by tag?
+No need to add a Suggested-by tag: this tag is used when the whole patch
+idea has been suggested by someone. That's not the case here: we only
+proposed a small modification in the code, without changing the idea.
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/08cec27d8824
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1083166
-
-
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+https://docs.kernel.org/process/submitting-patches.html#using-reported-by-tested-by-reviewed-by-suggested-by-and-fixes
 
 Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
+
