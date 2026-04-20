@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C0E4386551;
-	Mon, 20 Apr 2026 09:20:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2654B1891A9
+	for <mptcp@lists.linux.dev>; Mon, 20 Apr 2026 09:24:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776676852; cv=none; b=md+jMu7pzKkm6A5Yrm/VmW8LNI8rymgjMEy88SFkFRl8euaC8DVYWR/sverDRYoCmoxhFPY+rKAfbBqGbd3e7TwcAEE4BtqK8HaMDJAbCf37y1ZEGtBIflj8HLW6sZ7r/4HuePoKS4jqsBiPAI5PkTKLTzLKScI/gid+0ra0pb0=
+	t=1776677099; cv=none; b=l4A9HVQ6/EZYDQ4qkCVpIVqVVxbtFNuFDFk5ylNmkqFlP3nQlu/OQ9JWc3lMaXgIkqneLN9DnURVImVG2/0p3uj7BTcyonrk9524LtSbrKadtYg73pGrQ9Sq6gmpJ2t58EkapIw+2NJ4T59aY+kkvmOwI0V3zWsUGRpeGqBQXhE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776676852; c=relaxed/simple;
-	bh=gkxq/Nwp4gagSaRmvJoBhNBlh7EipRtZPgiQOKbMmbY=;
+	s=arc-20240116; t=1776677099; c=relaxed/simple;
+	bh=iRejl7XZQUULzdBuLlzbSyxV4XPbzIy5hYwFYM0mUVg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=quwuBfsGfy57DqduQ/noiCcS8xLSt8TlXvJZIOQWZJ5KSzOZO0qVT4Ypqp3l3ggIYEOCbu9sAyfb1EhkeW/IyYzFIRQWP8Mn3l6tqbJ+ehqgEVpRVG43k3UmDxmornMhA+q8T4qn1SNz+AodvEm84nG1SlxwVyqJXvXVkloF1Hc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vhr8lB6W; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=Eg7gcyTyLsgDdYeoOS0w4CZnXoJ5OIMjEdjNbbKnlpXUGeU5hyfhMeNKOCWXzOx/IyWaEPMv09vCWywWf9ZiuYJS9Fppk0oHjgPhlY3hcDZ9zfTCnrhrda570q0sneCfaW1kHQ3aXcA/ifiBOADuQ7WyTkvfbYur0Ey99e3L6WQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RhL2p4Ac; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vhr8lB6W"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABA9BC19425;
-	Mon, 20 Apr 2026 09:20:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RhL2p4Ac"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E91AEC2BCB3;
+	Mon, 20 Apr 2026 09:24:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776676852;
-	bh=gkxq/Nwp4gagSaRmvJoBhNBlh7EipRtZPgiQOKbMmbY=;
+	s=k20201202; t=1776677098;
+	bh=iRejl7XZQUULzdBuLlzbSyxV4XPbzIy5hYwFYM0mUVg=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Vhr8lB6WPXOuWuiUUP+s1XBKwOSqKNCLG1s4ZC4gD7FFdxX8lAhpVu3POQ/U3bEU2
-	 tVZGt5hbIQkFAlhdw+2hOl7GF2xFPO+W1LLqocpDf/EyYetBJhPKASiw4Hik0DM0p4
-	 QXqjgyJiWfOJDuqL3nnbsURXqzV8pdnoXVLfjYcZrf0H7RINmNdv2cmFvU2tmZUgQr
-	 ehL5rvLWiMVRvf5OPVzFLuI0AM0kxSfe9HNOvyNlOXkNpWqGWVSWTOnVAozykwlVO6
-	 hAXu05YwiM84o017wMRAfKcn1oRhxDmISEzP9WUCX/CaV0e/kl9Cx3ngjvp+JL2nw2
-	 AHIyKG2eJdx+w==
-Message-ID: <fcdaad38-573e-47c1-b8d4-f89fcc728142@kernel.org>
-Date: Mon, 20 Apr 2026 11:20:44 +0200
+	b=RhL2p4AcdYIcZf6mJiW1tQL+FOZh55M8prhRegCdy/D6zk9DCg8cNf5EmfmnvoHOD
+	 +ur6Ym5PXNd8CH5kTUdsVq7aGjtLZWjftd1rUbX1IvIDUKJZOjiFOjwsT/QTlxrU1G
+	 dgjZm04k1o/TkxPgjU1QPOrK0Ms3DoJRecP1NXdtVWWk47kNsL5AE71BdgGuB9WtVH
+	 kH9YE5fRgZQNFAca0EI7lee0Rw51GZLnqjJQI6zpdwccAd527B06H3i+72F32dE1x/
+	 QXLmhbIsFW4xxj4rDsY+sALttm+WEwA251CvSXteOlvGjVSLw0dFEvxrfcFSWZPTLe
+	 9TG+4VGQ7iQQQ==
+Message-ID: <05de925c-b9e6-4e85-997c-e98fcadc5980@kernel.org>
+Date: Mon, 20 Apr 2026 11:24:54 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,18 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [RFC PATCH net] mptcp: pm: fix ADD_ADDR timer infinite retry on
- option space insufficient
+Subject: Re: [RESEDN PATCH mptcp-net] mptcp: update window_clamp on subflows
+ when SO_RCVBUF is set
 Content-Language: fr
-To: Li Xiasong <lixiasong1@huawei.com>
-Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev,
- linux-kernel@vger.kernel.org, yuehaibing@huawei.com,
- zhangchangzhong@huawei.com, weiyongjun1@huawei.com,
- Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Simon Horman <horms@kernel.org>
-References: <20260418100018.2219500-1-lixiasong1@huawei.com>
+To: Gang Yan <gang.yan@linux.dev>, mptcp@lists.linux.dev
+Cc: Gang Yan <yangang@kylinos.cn>
+References: <20260420085613.4650-1-gang.yan@linux.dev>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -92,125 +86,24 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20260418100018.2219500-1-lixiasong1@huawei.com>
+In-Reply-To: <20260420085613.4650-1-gang.yan@linux.dev>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Li,
+Hi Gang,
 
-On 18/04/2026 12:00, Li Xiasong wrote:
-> When TCP option space is insufficient (e.g., IPv6 with tcp_timestamps
-> enabled), the original code jumped to out_unlock without clearing the
-> addr_signal flag. This caused mptcp_pm_add_timer to keep rescheduling
-> indefinitely without sending ADD_ADDR,
-
-Funny, I was looking at this issue on Friday evening :)
-
-> preventing the endpoint list from being traversed.
-
-It might help to add a bit of context: I guess here you meant that it
-prevent advertising other ADD_ADDR, not using other subflows when
-sending data, right?
-
-> In a pure ACK scenario (indicated by drop_other_suboptions=true), if
-> the option space is insufficient to carry the ADD_ADDR suboption, it
-> is appropriate to drop this address signal to allow the timer handler
-> to move on to other addresses.
+On 20/04/2026 10:56, Gang Yan wrote:
+> From: Gang Yan <yangang@kylinos.cn>
 > 
-> Fixes: 00cfd77b9063 ("mptcp: retransmit ADD_ADDR when timeout")
-> Signed-off-by: Li Xiasong <lixiasong1@huawei.com>
-> ---
-> 
-> Seeking feedback on:
-> 
-> When announcing addresses to the peer, MPTCP sends a pure ACK packet
-> to carry MPTCP options (ADD_ADDR). In this scenario, if the option space
-> is insufficient for ADD_ADDR, clearing addr_signal would:
-> 
->   - Prevent the timer from retrying infinitely
->   - Allow the timer to continue traversing and processing other addresses
->   - Not block other subflow creation or address announcement operations
-> 
-> Is there any scenario where we should retry later instead of clearing
-> the address signal/echo flag? However, if a pure ACK doesn't have
-> enough space for the flag, subsequent packets won't either.
+> Add __mptcp_subflow_set_rcvbuf() helper that calls the tcp_set_rcvbuf
+> to update window_clamp, in addition to writing sk_rcvbuf. Use it in
+> both mptcp_sol_socket_sync_intval() (setsockopt path) and
+> sync_socket_options() (new subflow creation path).
 
-That's correct: for the moment, if it is a pure ACK and there is not
-enough space, no need to retry later because it is not possible to have
-more space. It should only happen with an ADD_ADDR containing an IPv6
-address and a port number. It might be good to specify this in the
-commit message.
-
-> ---
->  net/mptcp/pm.c | 17 ++++++++---------
->  1 file changed, 8 insertions(+), 9 deletions(-)
-> 
-> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-> index 57a456690406..1d49779c6a1f 100644
-> --- a/net/mptcp/pm.c
-> +++ b/net/mptcp/pm.c
-> @@ -881,19 +881,18 @@ bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, const struct sk_buff *skb,
->  	}
->  
->  	*echo = mptcp_pm_should_add_signal_echo(msk);
-> +	add_addr = msk->pm.addr_signal &
-> +		~(*echo ? BIT(MPTCP_ADD_ADDR_ECHO) : BIT(MPTCP_ADD_ADDR_SIGNAL));
->  	port = !!(*echo ? msk->pm.remote.port : msk->pm.local.port);
-> -
->  	family = *echo ? msk->pm.remote.family : msk->pm.local.family;
-
-nit: while at it, maybe clearer to have a dedicated 'if (*echo)' instead
-of 3 lines with '*echo ? ... : ..., no?
-
-  if (*echo) {
-      add_addr = ...
-      port = ...
-      family = ...
-  } else {
-      add_addr = ...
-      port = ...
-      family = ...
-  }
-
-> -	if (remaining < mptcp_add_addr_len(family, *echo, port))
-> -		goto out_unlock;
->  
-> -	if (*echo) {
-> -		*addr = msk->pm.remote;
-> -		add_addr = msk->pm.addr_signal & ~BIT(MPTCP_ADD_ADDR_ECHO);
-> -	} else {
-> -		*addr = msk->pm.local;
-> -		add_addr = msk->pm.addr_signal & ~BIT(MPTCP_ADD_ADDR_SIGNAL);
-> +	if (remaining < mptcp_add_addr_len(family, *echo, port)) {
-> +		if (*drop_other_suboptions)
-> +			WRITE_ONCE(msk->pm.addr_signal, add_addr);
-
-If it is dropped, it would be helpful to increment the ADDADDRTXDROP MIB
-counter, and ideally check that in the MPTCP selftests (e.g. adding a
-new subtest in mptcp_join.sh, in add_addr_ports_tests()?).
-
-Also, I wonder if it would not be clearer to jump to a new label here...
-
-> +		goto out_unlock;
->  	}
-> +
-> +	*addr = *echo ? msk->pm.remote : msk->pm.local;
->  	WRITE_ONCE(msk->pm.addr_signal, add_addr);
->  	ret = true;
-
-... inverting the two lines above, and adding "drop_signal_mark" label?
-
-Apart from the comments above, I think your patch is doing the right thing.
-
-Also, one last request: do you mind sending the v2 only to the mptcp ML,
-please? I have a bunch of related fixes [1] plus this one is not urgent.
-
-In fact, except for (urgent) fixes, it might be better to send MPTCP
-patches only the to MPTCP ML: to a restricted number of people for the
-first versions, there is enough traffic on Netdev.
-
-[1]
-https://lore.kernel.org/20260415-mptcp-inc-limits-v5-0-e54c3bf80e4e@kernel.org
+I didn't review the code yet, but just a note for next time: please
+don't use the RESEND tag if you did a modification, even if it is only
+in the commit message. Instead, increment the version and add a
+changelog describing the modifications.
 
 Cheers,
 Matt
