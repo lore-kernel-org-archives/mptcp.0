@@ -1,145 +1,163 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF21038F950
-	for <mptcp@lists.linux.dev>; Mon, 20 Apr 2026 09:35:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8E04388E7C
+	for <mptcp@lists.linux.dev>; Mon, 20 Apr 2026 09:41:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776677722; cv=none; b=SxHx0Gs+WJyWGqX2RoaqdCCZQrTggT8319Z3IK/jEkxSRuULvyWFmzPaknqXQHaGcolYIP2jB4TIC4EFgGt28jX6y0DYOMl88ZBow/dw5qLRIYtl4bIxy332eUgzRvhXzW3x7rvXKnVyXq2r3N6b8W7gaEjFMSTI5L52ob8phl8=
+	t=1776678109; cv=none; b=XH8AxrPbbVD1ovYynU6M4eQivmhvh06UzHrmdCXrSjq98RAJQGIoKRkpZRR9S2Z1V1PC9hYWlItCrPOtIiek3iS+WYYiR4e7EFmyMusKJ75QsXXw13BmI5QDNKTeaokeQm8i1SL6aK/fKQfiGEGJfNKhWJjgbNRI8jXsU5rEVhM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776677722; c=relaxed/simple;
-	bh=dO/Tj571ZVl1h2QpabvJaLYKZJTh2zqzHAj2J9+qamY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=TVgWJX12CVhjcRkj7r/hG4UGcl84+SncJsaiUAm/h75Fca2FXYC4EWdFb9xVLLoIgqnuEJh5ssWWbW6jR9L1aSmC3swgN/tG4je13huwWCi84MF0PwdNtRIdJ463bT/MXv7ajrDfFoN+YRLAPfYNJXtc65Ds7Z36dVlNOxud4Hg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GQYLAO0R; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1776678109; c=relaxed/simple;
+	bh=bDkDmJEgV7KuIrfAWQa7e89uQuV8EHkP16cTRtujr8Q=;
+	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:
+	 In-Reply-To:References; b=QtG9HdcdBYazMKexpiCKt3TzJ2a66cvs405jBCQqJ6m84Z4G0O2qDupAUMTUi7urgTkrK5kedCNAoiBEgew8UOQBctsi8Yv9/REK4ajUVEYla5s4ga5iK831/0ivCf8O9Z/fw7b+s5Hezx0tK/qAD37IOUWs544rnYKaQeTzrlg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=uuaFvESp; arc=none smtp.client-ip=95.215.58.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GQYLAO0R"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92C26C2BCB7;
-	Mon, 20 Apr 2026 09:35:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776677722;
-	bh=dO/Tj571ZVl1h2QpabvJaLYKZJTh2zqzHAj2J9+qamY=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=GQYLAO0RrVYahZKbXgx+JnFtxEzNcs+iIMjyiej6Td4aaav3c+GqLMaRiWjJzaA13
-	 aR72gqjdZFldD2rbNqKOPaCPFjmKo1tmMLiur+JoQr1N7lgcofxeAtBBH0Jsd8gSEA
-	 EeESMGbu172KH8WLjtXX7Hr1kB1ZNo5sgrS2WjXQBms0KUwtoanW1BHUOz8xyXrjbL
-	 LnG2L1A7e8kcExj3xzC7x58j8B0vcSAVH8ZctSeoAOqCWslM/8rBmT/cIRBjMN0aKz
-	 3YMG05UZq1oOANSULOil290qo9uaZB7DGXlW4rfNJo6pGpsCV67TYhVSduooMjAbi/
-	 +rRr9xghtEwWA==
-Message-ID: <711cd795-c309-4d33-873d-d049df48622c@kernel.org>
-Date: Mon, 20 Apr 2026 11:35:19 +0200
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="uuaFvESp"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [RESEDN PATCH mptcp-net] mptcp: update window_clamp on subflows
- when SO_RCVBUF is set
-Content-Language: fr
-To: gang.yan@linux.dev, mptcp@lists.linux.dev
-References: <20260420085613.4650-1-gang.yan@linux.dev>
- <05de925c-b9e6-4e85-997c-e98fcadc5980@kernel.org>
- <759c28ad07974bee4f83d69bd85ab5477690c0da@linux.dev>
- <7b58555aba7fc56f135ee198a592e4d72e01f849@linux.dev>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <7b58555aba7fc56f135ee198a592e4d72e01f849@linux.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1776678106;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jx5+NlZe3r+Yl32yM/e8Oxp+NT8NguO4JZZKr5Z/X7Q=;
+	b=uuaFvESpUgLoAMlGTHCidt0PIvZZlwkdO+LSJ3aS0Yomot5Cl4fnJuIjwqKDwwBPXH+UDl
+	RiGTVyUsumER/RYSdsNxwI/WUcPnRBhu0FSfWm0GVx2ruawNReQDTQYIJLggzNNaoCREfx
+	ashSbhY9hHuDj3H4IhN/pAlzg4x3rN8=
+Date: Mon, 20 Apr 2026 09:41:44 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: gang.yan@linux.dev
+Message-ID: <7dc554be0c3343fee71e09a4fda5179cfe0571f0@linux.dev>
+TLS-Required: No
+Subject: Re: [PATCH mptcp-net v5 1/5] mptcp: replace backlog_list with
+ backlog_queue
+To: "Paolo Abeni" <pabeni@redhat.com>, mptcp@lists.linux.dev
+In-Reply-To: <e04bd2eb-0107-4011-97d5-a672d770767c@redhat.com>
+References: <cover.1775033340.git.yangang@kylinos.cn>
+ <085a4d26a05fc6625e6e4e4c0e0225b38a01f178.1775033340.git.yangang@kylinos.cn>
+ <d749b513-158d-4a3d-ad95-09bfc29c6648@redhat.com>
+ <d34641c0-01af-4273-83d7-5e7ed92e8da7@redhat.com>
+ <ef0ce8465f0b852d5e4dc5e54031a156f606b636@linux.dev>
+ <e04bd2eb-0107-4011-97d5-a672d770767c@redhat.com>
+X-Migadu-Flow: FLOW_OUT
 
-On 20/04/2026 11:31, gang.yan@linux.dev wrote:
-> -------- Forwarded message -------
-> 
-> From: gang.yan@linux.dev mailto:gang.yan@linux.dev 
-> To: "Matthieu Baerts" <matttbe@kernel.org mailto:matttbe@kernel.org?to=%22Matthieu%20Baerts%22%20%3Cmatttbe%40kernel.org%3E >
-> Sent: April 20, 2026 at 5:30 PM
-> Subject: Re: [RESEDN PATCH mptcp-net] mptcp: update window_clamp on subflows when SO_RCVBUF is set
-> 
-> April 20, 2026 at 5:24 PM, "Matthieu Baerts" <matttbe@kernel.org mailto:matttbe@kernel.org?to=%22Matthieu%20Baerts%22%20%3Cmatttbe%40kernel.org%3E > wrote:
-> 
-> 
-> 
->>
->> Hi Gang,
->>  
->>  On 20/04/2026 10:56, Gang Yan wrote:
->>  
->>  
->>  From: Gang Yan <yangang@kylinos.cn>
->>  
->>  Add __mptcp_subflow_set_rcvbuf() helper that calls the tcp_set_rcvbuf
->>  to update window_clamp, in addition to writing sk_rcvbuf. Use it in
->>  both mptcp_sol_socket_sync_intval() (setsockopt path) and
->>  sync_socket_options() (new subflow creation path).
->>  
->>  I didn't review the code yet, but just a note for next time: please
->>  don't use the RESEND tag if you did a modification, even if it is only
->>  in the commit message. Instead, increment the version and add a
->>  changelog describing the modifications.
->>
-> Thanks for the advice and reminder!
-> 
-> The reason I sent this patch with the RESEND tag is that I wanted to
-> trigger the CI checks, especially the AI reivew, to see if there are any
-> issues that need to be fixed. It seems my previous patch didn't properly
-> trigger those tests.
-
-Strange, I don't see your previous patch on Patchew:
-
-  https://patchew.org/MPTCP/
-
-And sashiko had some issues with it:
+April 20, 2026 at 5:34 PM, "Paolo Abeni" <pabeni@redhat.com mailto:pabeni=
+@redhat.com?to=3D%22Paolo%20Abeni%22%20%3Cpabeni%40redhat.com%3E > wrote:
 
 
-https://sashiko.dev/#/patchset/20260416122945.324166-1-gang.yan%40linux.dev
+>=20
+>=20On 4/15/26 10:21 AM, gang.yan@linux.dev wrote:
+>=20
+>=20>=20
+>=20> April 15, 2026 at 3:17 PM, "Paolo Abeni" <pabeni@redhat.com mailto:=
+pabeni@redhat.com?to=3D%22Paolo%20Abeni%22%20%3Cpabeni%40redhat.com%3E > =
+wrote:
+> >=20
+>=20> >=20
+>=20> > AFAICS the stall in the self-tests in patch 5/5 is caused by the =
+sysctl
+> > >  setting taking effect on the server side _after_ that the 3whs
+> > >  negotiated the initial window; the rcvbuf suddenly shrinks from ~1=
+28K to
+> > >  4K and almost every incoming packet is dropped.
+> > >=20
+>=20> >  The test itself is really an extreme condition; we should accept=
+ any
+> > >  implementation able to complete the transfer - even at very low sp=
+eed.
+> > >=20
+>=20> >  The initial test-case, the one using sendfile(), operates in a
+> > >  significantly different way: it generates 1-bytes len DSS preventi=
+ng
+> > >  coalescing (I've not understood yet why coalescing does not happen=
+),
+> > >  which cause an extremely bad skb->truesize/skb->len ratio, which i=
+n turn
+> > >  causes the initial window being way too "optimistic", extreme rcvb=
+uf
+> > >  squeeze at runtime and a behavior similar to the previous one.
+> > >=20
+>=20> >  In both cases simply dropping incoming packets early/in
+> > >  mptcp_incoming_options() when the rcvbuf is full does not solve th=
+e
+> > >  issue: if the rcvbuf is used (mostly) by the OoO queue, retransmis=
+sions
+> > >  always hit the same rcvbuf condition and are also dropped.
+> > >=20
+>=20> >  The root cause of both scenario is that some very unlikely condi=
+tion
+> > >  calls to retract the announced rcv wnd, but mptcp can't do that.
+> > >=20
+>=20> >  Currently I start to think that we need a strategy similar to pl=
+ain TCP
+> > >  to deal with such scenario: when rcvbuf is full we need to condens=
+e and
+> > >  eventually prune the OoO queue (see tcp_prune_queue(),
+> > >  tcp_collapse_ofo_queue(), tcp_collapse()).
+> > >=20
+>=20> >  The above has some serious downsides, i.e. it could lead to larg=
+e slice
+> > >  of almost duplicate complex code, as is diff to abstract the MPTCP=
+ vs
+> > >  TCP differences (CB, seq numbers, drop reasons). Still under inves=
+tigation.
+> > >=20
+>=20> >  /P
+> > >=20
+>=20>  Hi, Paolo
+> >  Thanks a lot for your detailed and insightful analysis of this probl=
+em!
+> >=20=20
+>=20>  I fully agree with your points: MPTCP should allow the transfer to=
+ complete
+> >  even under extremely slow or harsh conditions, just as you mentioned=
+.
+> >=20
+>=20I was likely not clear in my previous message. IMHO the key point is
+> that in the mentioned scenario we should consider suitable any fix that
+> would allow completing the transfer, even at a extremely low average
+> bitrate - because the memory conditions are indeed extreme.
+>=20
+>=20I.e. we can/should consider this case an extreme slow path.
+>=20
+>=20>=20
+>=20> Regarding the TCP-style mechanisms like 'tcp_prune_queue' for handl=
+ing full
+> >  rcvbuf conditions =E2=80=94 I have actually attempted similar implem=
+entations before.
+> >  As you pointed out, this approach is indeed highly complex for MPTCP=
+. There
+> >  are far too many aspects that require careful modification and consi=
+deration,
+> >  making it extremely challenging to implement correctly.
+> >=20
+>=20I agree duplicating the TCP pruning code inside MPTCP does not look a
+> viable solution.
+>=20
+>=20I think we can instead share it (at least the most cumbersome helper)=
+,
+> with some caveat. I have a few very rough patches doing that. Let me ad=
+d
+> some comments to at least somehow make the code readable and I'll share
+> them here.
+>=20
 
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
+Thank=20you so much for your help and for working on this!
 
+Looking forward to your updates.
+
+Thanks
+Gang
+
+> /P
+>
