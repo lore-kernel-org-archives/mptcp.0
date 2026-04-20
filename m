@@ -1,52 +1,52 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FA70388392
-	for <mptcp@lists.linux.dev>; Mon, 20 Apr 2026 21:07:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2CAB946C
+	for <mptcp@lists.linux.dev>; Mon, 20 Apr 2026 21:07:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776719225; cv=none; b=VrkKIMG55ZAgws28Pd9CglRK+k2OxnAyZjvNYzEfVNtmXGNM+rOGFU0ZYZs/h4Q3DIeAuykjKHDeArc0aoZyBIOoTMJ8bjI8RTjkT6JZES03uOoGBKrzWusb72Np+rk5VwpiIJzFPa9pVduTVIYuJ0XYxYzbpQCjbdiYr4nORyA=
+	t=1776719262; cv=none; b=LasoV7t5+BJcc4ET3CCJuBNnTgk+FDU6uENl0xi1bt8xjaMtimMB2b2xWOSpdbqr8E4ncApFBxOoF7Nf5nUDKT1laWQMcFYUpF/JIBQTCLRvBQ0l+ArhkRCP/xrjjfLVQoLBsptSAxRAvvym5Ur+iW5pS5s16XWesmrppIJaEnM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776719225; c=relaxed/simple;
-	bh=gr5dkCmesRXB7nzAo4Pf5NMms5O0MzI4iZGperasuuY=;
+	s=arc-20240116; t=1776719262; c=relaxed/simple;
+	bh=WSAgtKAWSEy7aUl8LgDPiOi2X9HiFe9KQdixZaDbPwc=;
 	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=X8BAyoKqkJDxYFzALnDqa1G1/7Pwp84n9wPBW5TA+fL/Y+o8UUma9nxTMmjLYcQZaZNPUVr9Ztzp8DZdcBe0liwnc+G/tlpYjqnM0TW5UPYeV8lEsA4EB1ZAzyuWWgley7DkoISU/O5KvVcWXXoAH9r9tKBLo2MfnwA43HEbl9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rC+zJz+w; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=qQ/6STrujKqfeha0a0ybZ0xKQVft9Pb4AGDlvFtHO5uklrsbWRCUojVnj/Pztder3cf7LprY5c6yGgegGyl+/X78xh+0215Ues1wXFLanOFAz1PIhub6k7mvvsYCdBw0BRfJnTeA1D68Q9mrUvfoJjYLZgqiQhF9+J29m+bK1+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XXdlQ7PM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rC+zJz+w"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0B4DC19425;
-	Mon, 20 Apr 2026 21:07:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XXdlQ7PM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66EC1C19425;
+	Mon, 20 Apr 2026 21:07:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776719224;
-	bh=gr5dkCmesRXB7nzAo4Pf5NMms5O0MzI4iZGperasuuY=;
+	s=k20201202; t=1776719262;
+	bh=WSAgtKAWSEy7aUl8LgDPiOi2X9HiFe9KQdixZaDbPwc=;
 	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=rC+zJz+w5W522OLv4LWuwE3LhoHAevaP0eFssTeZ3JvGf+7TX6kuG/kRk4niCu+PQ
-	 2lV3Y48M1LblXRRPh+7Tx7rxdEic4cg0v0NOw+3PMSOw7MUh1Ts/YDetX9BwBcCDpE
-	 5vAVMtY3q2PeFH3N1o+VONVblcrde+wP+Iu4sejp2Ao6W0oT4luE4fklwK6HRa2JLO
-	 xtgCANap1o23/C7wmCo8AeqqouI5OPeWngbf3B+aPZeI8vtuDMq0ZIn/NfAlEbBeQB
-	 +lbJyTU2Ym69NHCrdj7psZtzzlArIt7PLJTqfxr1Rq7Q+QZC04EYpb2pjq4/rXJEpb
-	 2gIiNYUa4abDg==
-Date: Mon, 20 Apr 2026 14:07:04 -0700 (PDT)
+	b=XXdlQ7PMc7OP232LeJVbEb+5zgkWNQBuSg0QSd+5+zSooqqA2QJCrt9MFq7Ng8SFg
+	 aw9IcKpCJ9RVKIWYJdiEXpJtqQfA6fVgGPli0kkXJreixQlhcAbd42zxhiKCJa+0vV
+	 aPIdIjHbgr/2DwFmPEKqoQnAQWqSL9wdrgFUndMA+3nDpti+77SPtA9m1Y2Bh7xGvU
+	 B+DUYDGo8zvrWpAItMvfY2btK2pSwGtJb2UKclyPYoVJgd+M4QYh/qIUFWT+v45+a9
+	 dPD+xgg57WXsa8WJNdnInwAs/SwaV8hrrQrSuSCUPzdt9SYJcv94McmqlVEp9LbpH6
+	 aGg23vfFc4d7Q==
+Date: Mon, 20 Apr 2026 14:07:41 -0700 (PDT)
 From: Mat Martineau <martineau@kernel.org>
 To: Matthieu Baerts <matttbe@kernel.org>
 cc: MPTCP Upstream <mptcp@lists.linux.dev>
-Subject: Re: [PATCH mptcp-net v5 05/20] mptcp: pm: ADD_ADDR rtx: free sk if
- last
-In-Reply-To: <0b920b72-2da1-490b-b2fa-69518bf911b8@kernel.org>
-Message-ID: <31a54865-f4bd-630c-dddb-98df44aad162@kernel.org>
-References: <20260415-mptcp-inc-limits-v5-0-e54c3bf80e4e@kernel.org> <20260415-mptcp-inc-limits-v5-5-e54c3bf80e4e@kernel.org> <679eb0b7-304f-43b7-0f6b-5a9d6b7d382f@kernel.org> <0b920b72-2da1-490b-b2fa-69518bf911b8@kernel.org>
+Subject: Re: [PATCH mptcp-net v5 07/20] mptcp: pm: ADD_ADDR rtx: skip inactive
+ subflows
+In-Reply-To: <bad500fc-31cc-4ef3-831e-6159e6f17d5d@kernel.org>
+Message-ID: <43736f87-1d40-ea45-96a2-539496cd786c@kernel.org>
+References: <20260415-mptcp-inc-limits-v5-0-e54c3bf80e4e@kernel.org> <20260415-mptcp-inc-limits-v5-7-e54c3bf80e4e@kernel.org> <632253e0-5a82-3594-ad77-df344e71cccb@kernel.org> <bad500fc-31cc-4ef3-831e-6159e6f17d5d@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="0-2007030456-1776719224=:14764"
+Content-Type: multipart/mixed; boundary="0-2107310592-1776719262=:14764"
 
   This message is in MIME format.  The first part should be readable text,
   while the remaining parts are likely unreadable without MIME-aware tools.
 
---0-2007030456-1776719224=:14764
+--0-2107310592-1776719262=:14764
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8BIT
 
@@ -54,61 +54,76 @@ On Mon, 20 Apr 2026, Matthieu Baerts wrote:
 
 > Hi Mat,
 >
-> Thank you very much for this review!
->
-> On 18/04/2026 20:00, Mat Martineau wrote:
+> On 18/04/2026 20:09, Mat Martineau wrote:
 >> On Wed, 15 Apr 2026, Matthieu Baerts (NGI0) wrote:
 >>
->>> When an ADD_ADDR is retransmitted, the sk is held in sk_reset_timer(),
->>> and released at the end.
+>>> When looking at the maximum RTO amongst the subflows, inactive subflows
+>>> were taken into account: that includes stale ones, and the initial one
+>>> if it has been already been closed.
 >>>
->>> If at that moment, it was the last reference being held, the sk would
->>> not be freed. sock_put() should then be called instead of __sock_put().
+>>> Unusable subflows are now simply skipped. Stale ones are used as an
+>>> alternative: if there are only stale ones, to take their maximum RTO and
+>>> avoid to eventually fallback to net.mptcp.add_addr_timeout, which is set
+>>> to 2 minutes by default.
 >>>
->>> But that's not enough: if it is the last reference, sock_put() will call
->>> sk_free(), which will end up calling sk_stop_timer_sync() on the same
->>> timer, and waiting indefinitely to finish. So it is needed to mark that
->>> the timer is done at the end of the timer handler when it has not been
->>> rescheduled, not to call sk_stop_timer_sync() on "itself".
->
-> (...)
->
+>>> Fixes: 30549eebc4d8 ("mptcp: make ADD_ADDR retransmission timeout
+>>> adaptive")
+>>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+>>> ---
+>>> v2: restore accidentally deleted icsk->icsk_rto > max check
+>>> ---
+>>> net/mptcp/pm.c | 17 ++++++++++++-----
+>>> 1 file changed, 12 insertions(+), 5 deletions(-)
+>>>
 >>> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
->>> index d3fcf441b208..0ff35f49d451 100644
+>>> index bc5168831085..22ba75fa876c 100644
 >>> --- a/net/mptcp/pm.c
 >>> +++ b/net/mptcp/pm.c
->
-> (...)
->
->>> @@ -369,9 +371,13 @@ static void mptcp_pm_add_timer(struct timer_list
->>> *timer)
->>>         mptcp_pm_subflow_established(msk);
+>>> @@ -306,20 +306,27 @@ static unsigned int
+>>> mptcp_adjust_add_addr_timeout(struct mptcp_sock *msk)
+>>>     const struct net *net = sock_net((struct sock *)msk);
+>>>     unsigned int rto = mptcp_get_add_addr_timeout(net);
+>>>     struct mptcp_subflow_context *subflow;
+>>> -    unsigned int max = 0;
+>>> +    unsigned int max = 0, max_stale = 0;
 >>>
->>> out:
->>> +    if (timeout)
->>> +        sk_reset_timer(sk, timer, jiffies + timeout);
->>> +    else
->>> +        /* if sock_put calls sk_free: avoid waiting for this timer */
->>> +        entry->timer_done = true;
->>>     bh_unlock_sock(sk);
->>> -exit:
+>>>     mptcp_for_each_subflow(msk, subflow) {
+>>>         struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
+>>>         struct inet_connection_sock *icsk = inet_csk(ssk);
+>>>
+>>> -        if (icsk->icsk_rto > max)
+>>> +        if (!__mptcp_subflow_active(subflow))
+>>> +            continue;
+>>> +
+>>> +        if (unlikely(subflow->stale)) {
+>>> +            if (icsk->icsk_rto > max_stale)
+>>> +                max_stale = icsk->icsk_rto;
+>>> +        } else if (icsk->icsk_rto > max) {
+>>>             max = icsk->icsk_rto;
+>>> +        }
+>>>     }
+>>>
+>>> -    if (max && max < rto)
+>>> -        rto = max;
+>>> +    if (max)
+>>> +        return max < rto ? max : rto;
+>>>
+>>> -    return rto;
+>>> +    return max_stale && max_stale < rto ? max_stale : rto;
 >>
->> This label was just added in the previous patch (which was quite small).
->> I suggest squashing these two patches, but not a big problem to leave
->> them separate.
->
-> I understand, but if that's OK, I would prefer to keep them separated:
-> even if they are linked, the problems are different. The previous patch
-> makes sure the refcount is decremented in all cases, while this one
-> actually free the socket if it was the last one.
->
-> In fact, I was looking at squashing them, but I didn't know what commit
-> message to add. Having "while at it, always decrement the refcount"
-> feels like hiding this important issue. But maybe not. Up to you for the
-> squashing.
->
+>> I'd find this more readable as
+>>
+>> if (max)
+>>         return min(max, rto);
+>> else if (max_stale)
+>>         return min(max_stale, rto);
+>> else
+>>         return rto;
+> Good idea! I will switch to that, but without the 'else', if that's OK.
 
-It's fine to leave them separate, thanks for explaining.
+Sure, that's even better.
+
 
 - Mat
---0-2007030456-1776719224=:14764--
+
+--0-2107310592-1776719262=:14764--
