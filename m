@@ -1,158 +1,145 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4AC337FF50
-	for <mptcp@lists.linux.dev>; Mon, 20 Apr 2026 09:34:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF21038F950
+	for <mptcp@lists.linux.dev>; Mon, 20 Apr 2026 09:35:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776677669; cv=none; b=Won+3uofojJQo9r26l9TFYALmjg3QO9kJ8icdsLeGeJOC0qANYqGq8MG8GXCgsZHsQUXJi2+SnMn5DAgVy84wvK3jzxPiA96jvF3sxGK0BCCH3yVEsto0qb+w4Kae8Qsayd9ddiOI9GYKkYmSVc/a1JaE+fTdWYfXUrETA0CJ+8=
+	t=1776677722; cv=none; b=SxHx0Gs+WJyWGqX2RoaqdCCZQrTggT8319Z3IK/jEkxSRuULvyWFmzPaknqXQHaGcolYIP2jB4TIC4EFgGt28jX6y0DYOMl88ZBow/dw5qLRIYtl4bIxy332eUgzRvhXzW3x7rvXKnVyXq2r3N6b8W7gaEjFMSTI5L52ob8phl8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776677669; c=relaxed/simple;
-	bh=MnLVrdjf0fKkFyK3k5/63LsTdAd4JZHjfe2ABoDBoZM=;
+	s=arc-20240116; t=1776677722; c=relaxed/simple;
+	bh=dO/Tj571ZVl1h2QpabvJaLYKZJTh2zqzHAj2J9+qamY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=MMKHV+oS29d5Ar0a/+VqCyeuoM+4DHc7AB3Bkjjd5hN3s46uZChUiXWpr3zRJx5ConXkUUOovbpe7ci+ihhCTzfLot3D1bsbgClyzqzf2H8XFH0p3+lp+z+E0n+F5b/ZGNM/Kfh8SAthY/YoTjEiPfNK2WjZvh/yfce1TXqPbQg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=b6dSP+X8; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=TVgWJX12CVhjcRkj7r/hG4UGcl84+SncJsaiUAm/h75Fca2FXYC4EWdFb9xVLLoIgqnuEJh5ssWWbW6jR9L1aSmC3swgN/tG4je13huwWCi84MF0PwdNtRIdJ463bT/MXv7ajrDfFoN+YRLAPfYNJXtc65Ds7Z36dVlNOxud4Hg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GQYLAO0R; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b6dSP+X8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1776677666;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=X10qDJVKbs+jO0qtcXGJmbL26Yp7AKSRayBfBeGGc0Q=;
-	b=b6dSP+X8bszVgNC1+Q6poEOQfZhZnw8N2iPwnQA6E/1JDMgQgOGlmJLjvVmWiL3Gb4EONO
-	/hZk++JwwcNRBDS54tgmP4C3K94A81hGYTG0wivyXeqIfbidt/B+WWy5TUUu6b60/Enl/6
-	yzOm0+nYkogShYLXt4Ngp8kdCt1MMHg=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-625-Vx6QeHdzMH2_OgApggptlQ-1; Mon, 20 Apr 2026 05:34:25 -0400
-X-MC-Unique: Vx6QeHdzMH2_OgApggptlQ-1
-X-Mimecast-MFC-AGG-ID: Vx6QeHdzMH2_OgApggptlQ_1776677664
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-488c0fcc6deso15571335e9.2
-        for <mptcp@lists.linux.dev>; Mon, 20 Apr 2026 02:34:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776677664; x=1777282464;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=X10qDJVKbs+jO0qtcXGJmbL26Yp7AKSRayBfBeGGc0Q=;
-        b=UPrm8FboWX5G4d8HTFoU7sYDy/9UVWbiFIV7hkQLagI/SIfuXhza4tPo8zDWN53uaN
-         aNZMXjrMNxyMIXVbl8xaVQbUeaOrFDgN87BycyUTl2IzkiGkvIPqj/gGhPjfcLnlggZS
-         nMZ+hALl48oR/8yAlU8i7TyMlftGMF9uiiz39+uCqKN8rnjBoGPVQf6LoqBXkj1ZCs7q
-         QjDVlieu0mA/A3qZzm4/7cWGpRB5Q0iIpOAOUyHTydprOcl2/TFZIuH23zt6hxF7ZYxs
-         r4PwbmHLJqLtyRULoXUnBg/3MnRqjoPLENbrJq1qy79/XPeELTRALpZ7aM6jILLWOnjR
-         FWRQ==
-X-Forwarded-Encrypted: i=1; AFNElJ8g/rZcXY1qjGhc6L7GFK7O4kU2t7/zwo6K8RxWwGrwu2rhT2UH24UEg4RAcQT9LaqjYOIRWg==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwXzVg9I/TYHIHJ46sKYeSCHDRmSVLvUjvctaU0ixjzgNmLc4cR
-	uXsgckxUkpFhfOTabIdnfVmDC/EeB7XiMkzh3trxOWaZqOCbCS1zBlTtX0OQ44rpn0zN+KzFYy/
-	hFcJtAqd+z7ZoJMcWia0OesaSDxqbtrfI7L6P6Bq5jFCMf218fZuJ3cqq
-X-Gm-Gg: AeBDies0Kf52w7bSoevPHsFFbaFAa1wKPrtrunbs3X/cTUxxbT+wu8MuxZjh3AWwNWd
-	p+jNvTEpjXO+7cF7iiMTOJ2FPDRa3omza6JtuFEFmfRqovv87usoDr5zhd7mimaNHCU8oNSPTMu
-	LR17uicUgBrXsK6AgNNnMcDka6ws0cN+YVE7Zu1AhJFGtnjGKw0gtuoJmw0eSYWAcPgD9OCTdhc
-	LpOtDxHL7ogLU5R8MI32D50/ISDRelYmI87+CLkbbCkF3c3DGvza64hzWYkNPR+I6YZrM3n5Rgr
-	e0cUcbOgZ35UlTQDqLUNM9nJ4jcIv6U3d5XyWeeQM04N/Dz3WIRMMWy6cNVLDfHqWSLdOYXtdSA
-	2J4u2XdNhONKSmRVzuWAEvAc4pVo1TCTdHLb7QvNUllOgvZCW+gpfyeSAAH7airHIfr0=
-X-Received: by 2002:a05:600c:8115:b0:488:ac01:72b6 with SMTP id 5b1f17b1804b1-488fb77d7d3mr145972875e9.21.1776677664134;
-        Mon, 20 Apr 2026 02:34:24 -0700 (PDT)
-X-Received: by 2002:a05:600c:8115:b0:488:ac01:72b6 with SMTP id 5b1f17b1804b1-488fb77d7d3mr145972535e9.21.1776677663635;
-        Mon, 20 Apr 2026 02:34:23 -0700 (PDT)
-Received: from [192.168.88.32] ([150.228.93.142])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-488fc1393f5sm257027645e9.9.2026.04.20.02.34.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 20 Apr 2026 02:34:23 -0700 (PDT)
-Message-ID: <e04bd2eb-0107-4011-97d5-a672d770767c@redhat.com>
-Date: Mon, 20 Apr 2026 11:34:22 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GQYLAO0R"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92C26C2BCB7;
+	Mon, 20 Apr 2026 09:35:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1776677722;
+	bh=dO/Tj571ZVl1h2QpabvJaLYKZJTh2zqzHAj2J9+qamY=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=GQYLAO0RrVYahZKbXgx+JnFtxEzNcs+iIMjyiej6Td4aaav3c+GqLMaRiWjJzaA13
+	 aR72gqjdZFldD2rbNqKOPaCPFjmKo1tmMLiur+JoQr1N7lgcofxeAtBBH0Jsd8gSEA
+	 EeESMGbu172KH8WLjtXX7Hr1kB1ZNo5sgrS2WjXQBms0KUwtoanW1BHUOz8xyXrjbL
+	 LnG2L1A7e8kcExj3xzC7x58j8B0vcSAVH8ZctSeoAOqCWslM/8rBmT/cIRBjMN0aKz
+	 3YMG05UZq1oOANSULOil290qo9uaZB7DGXlW4rfNJo6pGpsCV67TYhVSduooMjAbi/
+	 +rRr9xghtEwWA==
+Message-ID: <711cd795-c309-4d33-873d-d049df48622c@kernel.org>
+Date: Mon, 20 Apr 2026 11:35:19 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-net v5 1/5] mptcp: replace backlog_list with
- backlog_queue
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [RESEDN PATCH mptcp-net] mptcp: update window_clamp on subflows
+ when SO_RCVBUF is set
+Content-Language: fr
 To: gang.yan@linux.dev, mptcp@lists.linux.dev
-References: <cover.1775033340.git.yangang@kylinos.cn>
- <085a4d26a05fc6625e6e4e4c0e0225b38a01f178.1775033340.git.yangang@kylinos.cn>
- <d749b513-158d-4a3d-ad95-09bfc29c6648@redhat.com>
- <d34641c0-01af-4273-83d7-5e7ed92e8da7@redhat.com>
- <ef0ce8465f0b852d5e4dc5e54031a156f606b636@linux.dev>
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <ef0ce8465f0b852d5e4dc5e54031a156f606b636@linux.dev>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: zDozgUBVwAFs8ZHUtJaNPhGNihvgxHX8E86MkltPhyw_1776677664
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
+References: <20260420085613.4650-1-gang.yan@linux.dev>
+ <05de925c-b9e6-4e85-997c-e98fcadc5980@kernel.org>
+ <759c28ad07974bee4f83d69bd85ab5477690c0da@linux.dev>
+ <7b58555aba7fc56f135ee198a592e4d72e01f849@linux.dev>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
+ YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
+ c7SPFMpMesgpcu1xFt0F6bcxE+0ojRtSCZ5HDElKlHJNYtD1uwY4UYVGWUGCF/+cY1YLmtfb
+ WdNb/SFo+Mp0HItfBC12qtDIXYvbfNUGVnA5jXeWMEyYhSNktLnpDL2gBUCsdbkov5VjiOX7
+ CRTkX0UgNWRjyFZwThaZADEvAOo12M5uSBk7h07yJ97gqvBtcx45IsJwfUJE4hy8qZqsA62A
+ nTRflBvp647IXAiCcwWsEgE5AXKwA3aL6dcpVR17JXJ6nwHHnslVi8WesiqzUI9sbO/hXeXw
+ TDSB+YhErbNOxvHqCzZEnGAAFf6ges26fRVyuU119AzO40sjdLV0l6LE7GshddyazWZf0iac
+ nEhX9NKxGnuhMu5SXmo2poIQttJuYAvTVUNwQVEx/0yY5xmiuyqvXa+XT7NKJkOZSiAPlNt6
+ VffjgOP62S7M9wDShUghN3F7CPOrrRsOHWO/l6I/qJdUMW+MHSFYPfYiFXoLUZyPvNVCYSgs
+ 3oQaFhHapq1f345XBtfG3fOYp1K2wTXd4ThFraTLl8PHxCn4ywARAQABzSRNYXR0aGlldSBC
+ YWVydHMgPG1hdHR0YmVAa2VybmVsLm9yZz7CwZEEEwEIADsCGwMFCwkIBwIGFQoJCAsCBBYC
+ AwECHgECF4AWIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZUDpDAIZAQAKCRD2t4JPQmmgcz33
+ EACjROM3nj9FGclR5AlyPUbAq/txEX7E0EFQCDtdLPrjBcLAoaYJIQUV8IDCcPjZMJy2ADp7
+ /zSwYba2rE2C9vRgjXZJNt21mySvKnnkPbNQGkNRl3TZAinO1Ddq3fp2c/GmYaW1NWFSfOmw
+ MvB5CJaN0UK5l0/drnaA6Hxsu62V5UnpvxWgexqDuo0wfpEeP1PEqMNzyiVPvJ8bJxgM8qoC
+ cpXLp1Rq/jq7pbUycY8GeYw2j+FVZJHlhL0w0Zm9CFHThHxRAm1tsIPc+oTorx7haXP+nN0J
+ iqBXVAxLK2KxrHtMygim50xk2QpUotWYfZpRRv8dMygEPIB3f1Vi5JMwP4M47NZNdpqVkHrm
+ jvcNuLfDgf/vqUvuXs2eA2/BkIHcOuAAbsvreX1WX1rTHmx5ud3OhsWQQRVL2rt+0p1DpROI
+ 3Ob8F78W5rKr4HYvjX2Inpy3WahAm7FzUY184OyfPO/2zadKCqg8n01mWA9PXxs84bFEV2mP
+ VzC5j6K8U3RNA6cb9bpE5bzXut6T2gxj6j+7TsgMQFhbyH/tZgpDjWvAiPZHb3sV29t8XaOF
+ BwzqiI2AEkiWMySiHwCCMsIH9WUH7r7vpwROko89Tk+InpEbiphPjd7qAkyJ+tNIEWd1+MlX
+ ZPtOaFLVHhLQ3PLFLkrU3+Yi3tXqpvLE3gO3LM7BTQRV4/npARAA5+u/Sx1n9anIqcgHpA7l
+ 5SUCP1e/qF7n5DK8LiM10gYglgY0XHOBi0S7vHppH8hrtpizx+7t5DBdPJgVtR6SilyK0/mp
+ 9nWHDhc9rwU3KmHYgFFsnX58eEmZxz2qsIY8juFor5r7kpcM5dRR9aB+HjlOOJJgyDxcJTwM
+ 1ey4L/79P72wuXRhMibN14SX6TZzf+/XIOrM6TsULVJEIv1+NdczQbs6pBTpEK/G2apME7vf
+ mjTsZU26Ezn+LDMX16lHTmIJi7Hlh7eifCGGM+g/AlDV6aWKFS+sBbwy+YoS0Zc3Yz8zrdbi
+ Kzn3kbKd+99//mysSVsHaekQYyVvO0KD2KPKBs1S/ImrBb6XecqxGy/y/3HWHdngGEY2v2IP
+ Qox7mAPznyKyXEfG+0rrVseZSEssKmY01IsgwwbmN9ZcqUKYNhjv67WMX7tNwiVbSrGLZoqf
+ Xlgw4aAdnIMQyTW8nE6hH/Iwqay4S2str4HZtWwyWLitk7N+e+vxuK5qto4AxtB7VdimvKUs
+ x6kQO5F3YWcC3vCXCgPwyV8133+fIR2L81R1L1q3swaEuh95vWj6iskxeNWSTyFAVKYYVskG
+ V+OTtB71P1XCnb6AJCW9cKpC25+zxQqD2Zy0dK3u2RuKErajKBa/YWzuSaKAOkneFxG3LJIv
+ Hl7iqPF+JDCjB5sAEQEAAcLBXwQYAQIACQUCVeP56QIbDAAKCRD2t4JPQmmgc5VnD/9YgbCr
+ HR1FbMbm7td54UrYvZV/i7m3dIQNXK2e+Cbv5PXf19ce3XluaE+wA8D+vnIW5mbAAiojt3Mb
+ 6p0WJS3QzbObzHNgAp3zy/L4lXwc6WW5vnpWAzqXFHP8D9PTpqvBALbXqL06smP47JqbyQxj
+ Xf7D2rrPeIqbYmVY9da1KzMOVf3gReazYa89zZSdVkMojfWsbq05zwYU+SCWS3NiyF6QghbW
+ voxbFwX1i/0xRwJiX9NNbRj1huVKQuS4W7rbWA87TrVQPXUAdkyd7FRYICNW+0gddysIwPoa
+ KrLfx3Ba6Rpx0JznbrVOtXlihjl4KV8mtOPjYDY9u+8x412xXnlGl6AC4HLu2F3ECkamY4G6
+ UxejX+E6vW6Xe4n7H+rEX5UFgPRdYkS1TA/X3nMen9bouxNsvIJv7C6adZmMHqu/2azX7S7I
+ vrxxySzOw9GxjoVTuzWMKWpDGP8n71IFeOot8JuPZtJ8omz+DZel+WCNZMVdVNLPOd5frqOv
+ mpz0VhFAlNTjU1Vy0CnuxX3AM51J8dpdNyG0S8rADh6C8AKCDOfUstpq28/6oTaQv7QZdge0
+ JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <7b58555aba7fc56f135ee198a592e4d72e01f849@linux.dev>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 4/15/26 10:21 AM, gang.yan@linux.dev wrote:
-> April 15, 2026 at 3:17 PM, "Paolo Abeni" <pabeni@redhat.com mailto:pabeni@redhat.com?to=%22Paolo%20Abeni%22%20%3Cpabeni%40redhat.com%3E > wrote:
->> AFAICS the stall in the self-tests in patch 5/5 is caused by the sysctl
->> setting taking effect on the server side _after_ that the 3whs
->> negotiated the initial window; the rcvbuf suddenly shrinks from ~128K to
->> 4K and almost every incoming packet is dropped.
->>
->> The test itself is really an extreme condition; we should accept any
->> implementation able to complete the transfer - even at very low speed.
->>
->> The initial test-case, the one using sendfile(), operates in a
->> significantly different way: it generates 1-bytes len DSS preventing
->> coalescing (I've not understood yet why coalescing does not happen),
->> which cause an extremely bad skb->truesize/skb->len ratio, which in turn
->> causes the initial window being way too "optimistic", extreme rcvbuf
->> squeeze at runtime and a behavior similar to the previous one.
->>
->> In both cases simply dropping incoming packets early/in
->> mptcp_incoming_options() when the rcvbuf is full does not solve the
->> issue: if the rcvbuf is used (mostly) by the OoO queue, retransmissions
->> always hit the same rcvbuf condition and are also dropped.
->>
->> The root cause of both scenario is that some very unlikely condition
->> calls to retract the announced rcv wnd, but mptcp can't do that.
->>
->> Currently I start to think that we need a strategy similar to plain TCP
->> to deal with such scenario: when rcvbuf is full we need to condense and
->> eventually prune the OoO queue (see tcp_prune_queue(),
->> tcp_collapse_ofo_queue(), tcp_collapse()).
->>
->> The above has some serious downsides, i.e. it could lead to large slice
->> of almost duplicate complex code, as is diff to abstract the MPTCP vs
->> TCP differences (CB, seq numbers, drop reasons). Still under investigation.
->>
->> /P
->>
-> Hi, Paolo
-> Thanks a lot for your detailed and insightful analysis of this problem!
+On 20/04/2026 11:31, gang.yan@linux.dev wrote:
+> -------- Forwarded message -------
 > 
-> I fully agree with your points: MPTCP should allow the transfer to complete
-> even under extremely slow or harsh conditions, just as you mentioned.
+> From: gang.yan@linux.dev mailto:gang.yan@linux.dev 
+> To: "Matthieu Baerts" <matttbe@kernel.org mailto:matttbe@kernel.org?to=%22Matthieu%20Baerts%22%20%3Cmatttbe%40kernel.org%3E >
+> Sent: April 20, 2026 at 5:30 PM
+> Subject: Re: [RESEDN PATCH mptcp-net] mptcp: update window_clamp on subflows when SO_RCVBUF is set
+> 
+> April 20, 2026 at 5:24 PM, "Matthieu Baerts" <matttbe@kernel.org mailto:matttbe@kernel.org?to=%22Matthieu%20Baerts%22%20%3Cmatttbe%40kernel.org%3E > wrote:
+> 
+> 
+> 
+>>
+>> Hi Gang,
+>>  
+>>  On 20/04/2026 10:56, Gang Yan wrote:
+>>  
+>>  
+>>  From: Gang Yan <yangang@kylinos.cn>
+>>  
+>>  Add __mptcp_subflow_set_rcvbuf() helper that calls the tcp_set_rcvbuf
+>>  to update window_clamp, in addition to writing sk_rcvbuf. Use it in
+>>  both mptcp_sol_socket_sync_intval() (setsockopt path) and
+>>  sync_socket_options() (new subflow creation path).
+>>  
+>>  I didn't review the code yet, but just a note for next time: please
+>>  don't use the RESEND tag if you did a modification, even if it is only
+>>  in the commit message. Instead, increment the version and add a
+>>  changelog describing the modifications.
+>>
+> Thanks for the advice and reminder!
+> 
+> The reason I sent this patch with the RESEND tag is that I wanted to
+> trigger the CI checks, especially the AI reivew, to see if there are any
+> issues that need to be fixed. It seems my previous patch didn't properly
+> trigger those tests.
 
-I was likely not clear in my previous message. IMHO the key point is
-that in the mentioned scenario we should consider suitable any fix that
-would allow completing the transfer, even at a extremely low average
-bitrate - because the memory conditions are indeed extreme.
+Strange, I don't see your previous patch on Patchew:
 
-I.e. we can/should consider this case an extreme slow path.
+  https://patchew.org/MPTCP/
 
-> Regarding the TCP-style mechanisms like 'tcp_prune_queue' for handling full
-> rcvbuf conditions — I have actually attempted similar implementations before.
-> As you pointed out, this approach is indeed highly complex for MPTCP. There
-> are far too many aspects that require careful modification and consideration,
-> making it extremely challenging to implement correctly.
+And sashiko had some issues with it:
 
-I agree duplicating the TCP pruning code inside MPTCP does not look a
-viable solution.
 
-I think we can instead share it (at least the most cumbersome helper),
-with some caveat. I have a few very rough patches doing that. Let me add
-some comments to at least somehow make the code readable and I'll share
-them here.
+https://sashiko.dev/#/patchset/20260416122945.324166-1-gang.yan%40linux.dev
 
-/P
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
 
