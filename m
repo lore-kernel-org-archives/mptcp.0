@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6453B37AA63
-	for <mptcp@lists.linux.dev>; Mon, 20 Apr 2026 17:12:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8056039E19A
+	for <mptcp@lists.linux.dev>; Mon, 20 Apr 2026 17:18:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776705142; cv=none; b=DpVnEm+ohkgmlfA/8hCNCjzNIjUMqFBlehADF8WFYorXkBCYdIImlLIkYbQJyaEkVlgX+v1GjpMvgA2v0eOyiSM9BiUvFtXHaINd+2X/1Yofn9D/AksQL8wR4TO8iKUaDXdpbP+qCAhL+W2a9y0UaosG8ZA6F24wf0zYfiNhzHQ=
+	t=1776705534; cv=none; b=Vm4Dcq5SKBsQOIcoaUpb5uN2z46k883SSq5q2EXBARsGDdCrFyhnxMs/wnxMj1DNjO6ed1zFb0yyWS98g3F/saWaRN42NuNH0YQX4gR851GWrtZ9d4YfaQR5UFh/QhVNonPwETb+a2s1JhwL8BzRqlsfvIZqXMsMXz/2gecRRUE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776705142; c=relaxed/simple;
-	bh=xRng/d98VtuT3zVSS6RhZ+eSFHOMYyMTGZga4XXclUQ=;
+	s=arc-20240116; t=1776705534; c=relaxed/simple;
+	bh=E6WGQy8qWjjdbhKBn5NH3TmROGHfxbsxf1okDjCtyxs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ozow+dJcyoR8ZWJkUn+aCpbDB2GRPlnIlmDitH/rd8BRp0rUF3O4rWFUhcYTU01p3vJMV3giugWHUz7g+NdjjstQmOpPM333T3lbpVDiPY9qrKPDleAgrta90ISwKViKp+LuwZanLPpMcrnPKk0HWQAh7i6XNarCGpH6KXuEoGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qVF5UJvc; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=O04wV+YmvZMhIH+hGD2tHFAPutVgFsZC4N5RGeelLgDkInzKkTQazDqcjok2YJ4mdH/yRx3XdxJnnZonJkI/U0YWzrElngL4Zfa5X6Z7jMxdWFb/FgliZocMYqR3VCQ1UJtDstYJZKSZc1AljMRXSWRVtvuU2TAhkIeS0lGG4YY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RYLhgnCq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qVF5UJvc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 513A6C19425;
-	Mon, 20 Apr 2026 17:12:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RYLhgnCq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7209FC19425;
+	Mon, 20 Apr 2026 17:18:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776705142;
-	bh=xRng/d98VtuT3zVSS6RhZ+eSFHOMYyMTGZga4XXclUQ=;
+	s=k20201202; t=1776705534;
+	bh=E6WGQy8qWjjdbhKBn5NH3TmROGHfxbsxf1okDjCtyxs=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=qVF5UJvcbrBNvPXWUfaE65PSc/G0kqeOQMm/JTDG0EQrpwLXIcHuXiEu0+7CrD+wH
-	 qi7offtQdMFecWwpHj4GGFba/xQfMVfMTUrOu2g9BCuidfevhxzkQvI6WnbBVd54k8
-	 lqyTKHfdmYdcOZ6ine3CXi4nsvNVanFb4cnD93NaDcM1X5DVNJsffo89+oMjQkNOHE
-	 8/tMkw5CSsKtCr6Cp7MO/hPIgvu71Pq8MCznYfrd39bVbtEihHsLmRHzAbZSatzd1i
-	 1Hz+kFnLS4PCFEcKJAU7M9Figo82GjC3xrfBedMHW2OT7B2f6XswBC3H/+aR1IoaPl
-	 O5jlhqFUM5Csg==
-Message-ID: <0b920b72-2da1-490b-b2fa-69518bf911b8@kernel.org>
-Date: Mon, 20 Apr 2026 19:12:18 +0200
+	b=RYLhgnCqzI04cAE7JKn3JfkHU2xNrDmM1qqZYiqv9fpDvJjhOXlh6DrDCfGRDgnup
+	 5ALdYyxXbLNG4/O4I1/JmnQr8pENMvub9hdUvQgxzKu+LFMX+pe+wiHVz/Ox+/t1W1
+	 KDwsa/1ySpQqy8VqWv1FWS1AEapkQ14etRKo/O63ePy9X827kSpKTIjy8IQtB8JV9z
+	 vQ+c4ubGvzMGxjllQPWcfqpY4gr2glqwEv/1I0mcB6MBD7S9xVA47LUPCs+diHSkDJ
+	 J2sVltcvEvqmDQWgmQeqXnCzKEjGPyKSyPzl7HIYN1UKEHJqhBAtbG33AxHcUbeyb0
+	 OBG5q18BuWUIQ==
+Message-ID: <bad500fc-31cc-4ef3-831e-6159e6f17d5d@kernel.org>
+Date: Mon, 20 Apr 2026 19:18:51 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,14 +35,14 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net v5 05/20] mptcp: pm: ADD_ADDR rtx: free sk if
- last
+Subject: Re: [PATCH mptcp-net v5 07/20] mptcp: pm: ADD_ADDR rtx: skip inactive
+ subflows
 Content-Language: fr
 To: Mat Martineau <martineau@kernel.org>
 Cc: MPTCP Upstream <mptcp@lists.linux.dev>
 References: <20260415-mptcp-inc-limits-v5-0-e54c3bf80e4e@kernel.org>
- <20260415-mptcp-inc-limits-v5-5-e54c3bf80e4e@kernel.org>
- <679eb0b7-304f-43b7-0f6b-5a9d6b7d382f@kernel.org>
+ <20260415-mptcp-inc-limits-v5-7-e54c3bf80e4e@kernel.org>
+ <632253e0-5a82-3594-ad77-df344e71cccb@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -88,64 +88,78 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <679eb0b7-304f-43b7-0f6b-5a9d6b7d382f@kernel.org>
+In-Reply-To: <632253e0-5a82-3594-ad77-df344e71cccb@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 Hi Mat,
 
-Thank you very much for this review!
-
-On 18/04/2026 20:00, Mat Martineau wrote:
+On 18/04/2026 20:09, Mat Martineau wrote:
 > On Wed, 15 Apr 2026, Matthieu Baerts (NGI0) wrote:
 > 
->> When an ADD_ADDR is retransmitted, the sk is held in sk_reset_timer(),
->> and released at the end.
+>> When looking at the maximum RTO amongst the subflows, inactive subflows
+>> were taken into account: that includes stale ones, and the initial one
+>> if it has been already been closed.
 >>
->> If at that moment, it was the last reference being held, the sk would
->> not be freed. sock_put() should then be called instead of __sock_put().
+>> Unusable subflows are now simply skipped. Stale ones are used as an
+>> alternative: if there are only stale ones, to take their maximum RTO and
+>> avoid to eventually fallback to net.mptcp.add_addr_timeout, which is set
+>> to 2 minutes by default.
 >>
->> But that's not enough: if it is the last reference, sock_put() will call
->> sk_free(), which will end up calling sk_stop_timer_sync() on the same
->> timer, and waiting indefinitely to finish. So it is needed to mark that
->> the timer is done at the end of the timer handler when it has not been
->> rescheduled, not to call sk_stop_timer_sync() on "itself".
-
-(...)
-
+>> Fixes: 30549eebc4d8 ("mptcp: make ADD_ADDR retransmission timeout
+>> adaptive")
+>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+>> ---
+>> v2: restore accidentally deleted icsk->icsk_rto > max check
+>> ---
+>> net/mptcp/pm.c | 17 ++++++++++++-----
+>> 1 file changed, 12 insertions(+), 5 deletions(-)
+>>
 >> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
->> index d3fcf441b208..0ff35f49d451 100644
+>> index bc5168831085..22ba75fa876c 100644
 >> --- a/net/mptcp/pm.c
 >> +++ b/net/mptcp/pm.c
-
-(...)
-
->> @@ -369,9 +371,13 @@ static void mptcp_pm_add_timer(struct timer_list
->> *timer)
->>         mptcp_pm_subflow_established(msk);
+>> @@ -306,20 +306,27 @@ static unsigned int
+>> mptcp_adjust_add_addr_timeout(struct mptcp_sock *msk)
+>>     const struct net *net = sock_net((struct sock *)msk);
+>>     unsigned int rto = mptcp_get_add_addr_timeout(net);
+>>     struct mptcp_subflow_context *subflow;
+>> -    unsigned int max = 0;
+>> +    unsigned int max = 0, max_stale = 0;
 >>
->> out:
->> +    if (timeout)
->> +        sk_reset_timer(sk, timer, jiffies + timeout);
->> +    else
->> +        /* if sock_put calls sk_free: avoid waiting for this timer */
->> +        entry->timer_done = true;
->>     bh_unlock_sock(sk);
->> -exit:
+>>     mptcp_for_each_subflow(msk, subflow) {
+>>         struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
+>>         struct inet_connection_sock *icsk = inet_csk(ssk);
+>>
+>> -        if (icsk->icsk_rto > max)
+>> +        if (!__mptcp_subflow_active(subflow))
+>> +            continue;
+>> +
+>> +        if (unlikely(subflow->stale)) {
+>> +            if (icsk->icsk_rto > max_stale)
+>> +                max_stale = icsk->icsk_rto;
+>> +        } else if (icsk->icsk_rto > max) {
+>>             max = icsk->icsk_rto;
+>> +        }
+>>     }
+>>
+>> -    if (max && max < rto)
+>> -        rto = max;
+>> +    if (max)
+>> +        return max < rto ? max : rto;
+>>
+>> -    return rto;
+>> +    return max_stale && max_stale < rto ? max_stale : rto;
 > 
-> This label was just added in the previous patch (which was quite small).
-> I suggest squashing these two patches, but not a big problem to leave
-> them separate.
-
-I understand, but if that's OK, I would prefer to keep them separated:
-even if they are linked, the problems are different. The previous patch
-makes sure the refcount is decremented in all cases, while this one
-actually free the socket if it was the last one.
-
-In fact, I was looking at squashing them, but I didn't know what commit
-message to add. Having "while at it, always decrement the refcount"
-feels like hiding this important issue. But maybe not. Up to you for the
-squashing.
+> I'd find this more readable as
+> 
+> if (max)
+>         return min(max, rto);
+> else if (max_stale)
+>         return min(max_stale, rto);
+> else
+>         return rto;
+Good idea! I will switch to that, but without the 'else', if that's OK.
 
 Cheers,
 Matt
