@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8056039E19A
-	for <mptcp@lists.linux.dev>; Mon, 20 Apr 2026 17:18:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4559D3A5E68
+	for <mptcp@lists.linux.dev>; Mon, 20 Apr 2026 17:30:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776705534; cv=none; b=Vm4Dcq5SKBsQOIcoaUpb5uN2z46k883SSq5q2EXBARsGDdCrFyhnxMs/wnxMj1DNjO6ed1zFb0yyWS98g3F/saWaRN42NuNH0YQX4gR851GWrtZ9d4YfaQR5UFh/QhVNonPwETb+a2s1JhwL8BzRqlsfvIZqXMsMXz/2gecRRUE=
+	t=1776706218; cv=none; b=D2OEH0Vunr3CsFeRz/BYuibiekx9nlaKsmFPlbCCmWTP8svT7GqP2IjILDP7Qkg4Np5tbfmnKXHUMjfLznF7KNg2Q3KaMRTG77ph6SgvIRA1HXUx2vFInlwGC0MVWY1xZ/9Pk8lqSc99lrV6CLTxvTYC3bHBQWv336L7yuTSwRg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776705534; c=relaxed/simple;
-	bh=E6WGQy8qWjjdbhKBn5NH3TmROGHfxbsxf1okDjCtyxs=;
+	s=arc-20240116; t=1776706218; c=relaxed/simple;
+	bh=mGFuesU0CJWNNSzvU6hZPjwpeSxj9kTGjxXlX60kzOk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=O04wV+YmvZMhIH+hGD2tHFAPutVgFsZC4N5RGeelLgDkInzKkTQazDqcjok2YJ4mdH/yRx3XdxJnnZonJkI/U0YWzrElngL4Zfa5X6Z7jMxdWFb/FgliZocMYqR3VCQ1UJtDstYJZKSZc1AljMRXSWRVtvuU2TAhkIeS0lGG4YY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RYLhgnCq; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=a7Yc6NmR2bTgHHF4fLy/KGTkV/UEjxonhpKvUAGub09mBzV81BrZ/nDZaRtZv1ea3bVnlgEC21TnKI5D/4RtmvT5bBA2Yima3cNPDqGzYpLv7OdrsK6SWvJoPRIDBVvYNzkk7HuiqNBn0thqhbc3e7sAzjVYfCJdMcUN+A4bfUc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gnDfY2DC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RYLhgnCq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7209FC19425;
-	Mon, 20 Apr 2026 17:18:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gnDfY2DC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E953C19425;
+	Mon, 20 Apr 2026 17:30:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776705534;
-	bh=E6WGQy8qWjjdbhKBn5NH3TmROGHfxbsxf1okDjCtyxs=;
+	s=k20201202; t=1776706218;
+	bh=mGFuesU0CJWNNSzvU6hZPjwpeSxj9kTGjxXlX60kzOk=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=RYLhgnCqzI04cAE7JKn3JfkHU2xNrDmM1qqZYiqv9fpDvJjhOXlh6DrDCfGRDgnup
-	 5ALdYyxXbLNG4/O4I1/JmnQr8pENMvub9hdUvQgxzKu+LFMX+pe+wiHVz/Ox+/t1W1
-	 KDwsa/1ySpQqy8VqWv1FWS1AEapkQ14etRKo/O63ePy9X827kSpKTIjy8IQtB8JV9z
-	 vQ+c4ubGvzMGxjllQPWcfqpY4gr2glqwEv/1I0mcB6MBD7S9xVA47LUPCs+diHSkDJ
-	 J2sVltcvEvqmDQWgmQeqXnCzKEjGPyKSyPzl7HIYN1UKEHJqhBAtbG33AxHcUbeyb0
-	 OBG5q18BuWUIQ==
-Message-ID: <bad500fc-31cc-4ef3-831e-6159e6f17d5d@kernel.org>
-Date: Mon, 20 Apr 2026 19:18:51 +0200
+	b=gnDfY2DCK04VbMPLI4+VAgagqqlyFe1Y3AYdcGIN3lALSA9ny2TBlq1MFfntnkhDM
+	 3uNgQBk9s6dAA2oy/AtclBkfxGYuTseNYTh3XVfoPhemksUG5z9IN8YH1TVW0fDYeC
+	 VyyIeNEVBpitQLfXuEdKodxKsnP3qwSpdlyk60R6bV2HgCPkLjfVAtDHCf/wR7gl0c
+	 Me+UgdO+SiX2+bK6+zfE8ebHbMc7ME9fKtvY/I2dX512q8Btu0Tqag+xXchRq/ersF
+	 sD1rb1eFrLU/R/0d24GMU/ogdnvWUX/mRYgU0CtrV89uNXDUvEg4NYqZbD/dVimCII
+	 pmLJAdeMqM1pw==
+Message-ID: <d3b5d201-4e4c-4857-bbb2-5ce3ea265e63@kernel.org>
+Date: Mon, 20 Apr 2026 19:30:15 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,14 +35,14 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net v5 07/20] mptcp: pm: ADD_ADDR rtx: skip inactive
+Subject: Re: [PATCH mptcp-net v5 17/20] selftests: mptcp: join: validate 8x8
  subflows
 Content-Language: fr
 To: Mat Martineau <martineau@kernel.org>
 Cc: MPTCP Upstream <mptcp@lists.linux.dev>
 References: <20260415-mptcp-inc-limits-v5-0-e54c3bf80e4e@kernel.org>
- <20260415-mptcp-inc-limits-v5-7-e54c3bf80e4e@kernel.org>
- <632253e0-5a82-3594-ad77-df344e71cccb@kernel.org>
+ <20260415-mptcp-inc-limits-v5-17-e54c3bf80e4e@kernel.org>
+ <54880733-bd55-a589-20bd-3806585c6e14@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -88,78 +88,50 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <632253e0-5a82-3594-ad77-df344e71cccb@kernel.org>
+In-Reply-To: <54880733-bd55-a589-20bd-3806585c6e14@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 Hi Mat,
 
-On 18/04/2026 20:09, Mat Martineau wrote:
+On 18/04/2026 20:22, Mat Martineau wrote:
 > On Wed, 15 Apr 2026, Matthieu Baerts (NGI0) wrote:
 > 
->> When looking at the maximum RTO amongst the subflows, inactive subflows
->> were taken into account: that includes stale ones, and the initial one
->> if it has been already been closed.
+>> The limits have been recently increased, it is required to validate that
+>> having 64 subflows is allowed.
 >>
->> Unusable subflows are now simply skipped. Stale ones are used as an
->> alternative: if there are only stale ones, to take their maximum RTO and
->> avoid to eventually fallback to net.mptcp.add_addr_timeout, which is set
->> to 2 minutes by default.
+>> Here, both the client and the server have 8 network interfaces. The
+>> server has 8 endpoints marked as 'signal' to announce all its v4
+>> addresses. The client also has 8 endpoints, but marked as 'subflow' and
+>> 'fullmesh' in order to create 8 subflows to each address announced by
+>> the server. This means 63 additional subflows will be created after the
+>> initial one.
 >>
->> Fixes: 30549eebc4d8 ("mptcp: make ADD_ADDR retransmission timeout
->> adaptive")
->> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
->> ---
->> v2: restore accidentally deleted icsk->icsk_rto > max check
->> ---
->> net/mptcp/pm.c | 17 ++++++++++++-----
->> 1 file changed, 12 insertions(+), 5 deletions(-)
+>> If it is not possible to increase the limits to 64, it means an older
+>> kernel version is being used, and the test is skipped.
 >>
->> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
->> index bc5168831085..22ba75fa876c 100644
->> --- a/net/mptcp/pm.c
->> +++ b/net/mptcp/pm.c
->> @@ -306,20 +306,27 @@ static unsigned int
->> mptcp_adjust_add_addr_timeout(struct mptcp_sock *msk)
->>     const struct net *net = sock_net((struct sock *)msk);
->>     unsigned int rto = mptcp_get_add_addr_timeout(net);
->>     struct mptcp_subflow_context *subflow;
->> -    unsigned int max = 0;
->> +    unsigned int max = 0, max_stale = 0;
->>
->>     mptcp_for_each_subflow(msk, subflow) {
->>         struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
->>         struct inet_connection_sock *icsk = inet_csk(ssk);
->>
->> -        if (icsk->icsk_rto > max)
->> +        if (!__mptcp_subflow_active(subflow))
->> +            continue;
->> +
->> +        if (unlikely(subflow->stale)) {
->> +            if (icsk->icsk_rto > max_stale)
->> +                max_stale = icsk->icsk_rto;
->> +        } else if (icsk->icsk_rto > max) {
->>             max = icsk->icsk_rto;
->> +        }
->>     }
->>
->> -    if (max && max < rto)
->> -        rto = max;
->> +    if (max)
->> +        return max < rto ? max : rto;
->>
->> -    return rto;
->> +    return max_stale && max_stale < rto ? max_stale : rto;
 > 
-> I'd find this more readable as
+> Does this have much of an impact on total time for the tests? Would it
+> be worthwhile to test the larger limits on kernels that can handle it,
+> and run the existing tests on older kernels?
 > 
-> if (max)
->         return min(max, rto);
-> else if (max_stale)
->         return min(max_stale, rto);
-> else
->         return rto;
-Good idea! I will switch to that, but without the 'else', if that's OK.
+> In other words, the larger limit test seems to have redundant coverage
+> with some older tests, so maybe skip the redundant tests on new kernels.
+
+Good point. In terms of time, like most tests there, it waits for the
+whole transfer, so the same time as other 'speed=slow' tests.
+
+Surprisingly, we didn't have similar tests before setting multiple
+'signal' endpoints on the server side, and multiple 'subflow + fullmesh'
+on the client side. It was either one or the other. Plus we didn't check
+with subflows up the previous limit (8), it was max 5. So no redundancy
+here, I think. Or we disable the simple ones focussing on the client and
+server side separately? (but then it no longer validates that on older
+kernels)
+
+Note that this test helped me find the issue that led to "mptcp: pm:
+ADD_ADDR rtx: resched blocked ADD_ADDR quicker", which led to most of
+the other Fixes patches :)
 
 Cheers,
 Matt
