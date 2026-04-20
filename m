@@ -1,126 +1,219 @@
-Received: from out-170.mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 128723890F6
-	for <mptcp@lists.linux.dev>; Mon, 20 Apr 2026 08:56:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C0E4386551;
+	Mon, 20 Apr 2026 09:20:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776675388; cv=none; b=LmdfzXIPXMyCoVg37dQC38D6yjtq6dge9Y2/lhv00iz3uq6I2erUtB7G1e9cPjvQdG/4PeYHRomSNhYK8IfO9O56Vua8VfRsU4MnaLdWeXZHfjdlFR5FIlhKOhY1knZD1UHQdLdatIM4SBT20JeaOZusCacF43TB3fxdDIlzHKk=
+	t=1776676852; cv=none; b=md+jMu7pzKkm6A5Yrm/VmW8LNI8rymgjMEy88SFkFRl8euaC8DVYWR/sverDRYoCmoxhFPY+rKAfbBqGbd3e7TwcAEE4BtqK8HaMDJAbCf37y1ZEGtBIflj8HLW6sZ7r/4HuePoKS4jqsBiPAI5PkTKLTzLKScI/gid+0ra0pb0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776675388; c=relaxed/simple;
-	bh=J8/Xu8VZCw30i5Hl7tr7sddsI2g3o2U2v5Y0o1JQ024=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Y+0HJIFSpZZusdKWKMMS+lgKSUBunYZLPf/nxmmXp7r926PNNHF5Pbt7UZ/PXbl2lXYOcFjo0S7ZDeKNqBDfaEWhTw23ZR83r9pwi0czsmS0JSbOJ715LMlYd3GSUWo4ubpdydtMA7r2KozWOt85qtmEHZVZUDrIWzD08r3T80Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=hlIDRjzU; arc=none smtp.client-ip=91.218.175.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1776676852; c=relaxed/simple;
+	bh=gkxq/Nwp4gagSaRmvJoBhNBlh7EipRtZPgiQOKbMmbY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=quwuBfsGfy57DqduQ/noiCcS8xLSt8TlXvJZIOQWZJ5KSzOZO0qVT4Ypqp3l3ggIYEOCbu9sAyfb1EhkeW/IyYzFIRQWP8Mn3l6tqbJ+ehqgEVpRVG43k3UmDxmornMhA+q8T4qn1SNz+AodvEm84nG1SlxwVyqJXvXVkloF1Hc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vhr8lB6W; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="hlIDRjzU"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1776675384;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=u0ezpVQ6vq1iA5Jf9/VSckwvb/RZvW8/eFNGdiuA0b8=;
-	b=hlIDRjzUAN6WH/euv62lc44XYtRY7FRlFfaIQ/Wr82Rtnp9gZuQ5/1RGxyQLXXZTTaL5kc
-	EzI7ZCYE4KcFXiGSvztr7LvRqWifSjX7z+J5w0wrcZ5aQ8bbD78RBQntXk0zg4MkJV28fW
-	SCSlmtGIcSXxPlnFA+E5wk7wO1ogr8Y=
-From: Gang Yan <gang.yan@linux.dev>
-To: mptcp@lists.linux.dev
-Cc: Gang Yan <yangang@kylinos.cn>
-Subject: [RESEDN PATCH mptcp-net] mptcp: update window_clamp on subflows when SO_RCVBUF is set
-Date: Mon, 20 Apr 2026 16:56:11 +0800
-Message-ID: <20260420085613.4650-1-gang.yan@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vhr8lB6W"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABA9BC19425;
+	Mon, 20 Apr 2026 09:20:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1776676852;
+	bh=gkxq/Nwp4gagSaRmvJoBhNBlh7EipRtZPgiQOKbMmbY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Vhr8lB6WPXOuWuiUUP+s1XBKwOSqKNCLG1s4ZC4gD7FFdxX8lAhpVu3POQ/U3bEU2
+	 tVZGt5hbIQkFAlhdw+2hOl7GF2xFPO+W1LLqocpDf/EyYetBJhPKASiw4Hik0DM0p4
+	 QXqjgyJiWfOJDuqL3nnbsURXqzV8pdnoXVLfjYcZrf0H7RINmNdv2cmFvU2tmZUgQr
+	 ehL5rvLWiMVRvf5OPVzFLuI0AM0kxSfe9HNOvyNlOXkNpWqGWVSWTOnVAozykwlVO6
+	 hAXu05YwiM84o017wMRAfKcn1oRhxDmISEzP9WUCX/CaV0e/kl9Cx3ngjvp+JL2nw2
+	 AHIyKG2eJdx+w==
+Message-ID: <fcdaad38-573e-47c1-b8d4-f89fcc728142@kernel.org>
+Date: Mon, 20 Apr 2026 11:20:44 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=a
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [RFC PATCH net] mptcp: pm: fix ADD_ADDR timer infinite retry on
+ option space insufficient
+Content-Language: fr
+To: Li Xiasong <lixiasong1@huawei.com>
+Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev,
+ linux-kernel@vger.kernel.org, yuehaibing@huawei.com,
+ zhangchangzhong@huawei.com, weiyongjun1@huawei.com,
+ Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Simon Horman <horms@kernel.org>
+References: <20260418100018.2219500-1-lixiasong1@huawei.com>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <20260418100018.2219500-1-lixiasong1@huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Gang Yan <yangang@kylinos.cn>
+Hi Li,
 
-Add __mptcp_subflow_set_rcvbuf() helper that calls the tcp_set_rcvbuf
-to update window_clamp, in addition to writing sk_rcvbuf. Use it in
-both mptcp_sol_socket_sync_intval() (setsockopt path) and
-sync_socket_options() (new subflow creation path).
+On 18/04/2026 12:00, Li Xiasong wrote:
+> When TCP option space is insufficient (e.g., IPv6 with tcp_timestamps
+> enabled), the original code jumped to out_unlock without clearing the
+> addr_signal flag. This caused mptcp_pm_add_timer to keep rescheduling
+> indefinitely without sending ADD_ADDR,
 
-Fixes: a2cbb1603943 ("tcp: Update window clamping condition")
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/619
-Signed-off-by: Gang Yan <yangang@kylinos.cn>
----
-Notes:
+Funny, I was looking at this issue on Friday evening :)
 
-Hi Matt:
+> preventing the endpoint list from being traversed.
 
-Note that I do not implement set_rcvbuf in mptcp_stream_ops for the                                                                                                                                                                                  
-following reasons:
+It might help to add a bit of context: I guess here you meant that it
+prevent advertising other ADD_ADDR, not using other subflows when
+sending data, right?
 
-  - The callback receives the MPTCP meta socket as 'sk', but
-    tcp_set_rcvbuf() must be called on each TCP subflow to update
-    window_clamp. A callback implementation would need to iterate all
-    subflows, duplicating the work already done by
-    mptcp_sol_socket_sync_intval().
+> In a pure ACK scenario (indicated by drop_other_suboptions=true), if
+> the option space is insufficient to carry the ADD_ADDR suboption, it
+> is appropriate to drop this address signal to allow the timer handler
+> to move on to other addresses.
+> 
+> Fixes: 00cfd77b9063 ("mptcp: retransmit ADD_ADDR when timeout")
+> Signed-off-by: Li Xiasong <lixiasong1@huawei.com>
+> ---
+> 
+> Seeking feedback on:
+> 
+> When announcing addresses to the peer, MPTCP sends a pure ACK packet
+> to carry MPTCP options (ADD_ADDR). In this scenario, if the option space
+> is insufficient for ADD_ADDR, clearing addr_signal would:
+> 
+>   - Prevent the timer from retrying infinitely
+>   - Allow the timer to continue traversing and processing other addresses
+>   - Not block other subflow creation or address announcement operations
+> 
+> Is there any scenario where we should retry later instead of clearing
+> the address signal/echo flag? However, if a pure ACK doesn't have
+> enough space for the flag, subsequent packets won't either.
 
-  - Subflows are grafted to the MPTCP socket via mptcp_sock_graft(),
-    so ssk->sk_socket->ops points to mptcp_stream_ops, not
-    inet_stream_ops. This means the TCP set_rcvbuf callback is not
-    reachable through the subflow's ops either.
+That's correct: for the moment, if it is a pure ACK and there is not
+enough space, no need to retry later because it is not possible to have
+more space. It should only happen with an ADD_ADDR containing an IPv6
+address and a port number. It might be good to specify this in the
+commit message.
 
-  - The existing subflow sync functions cover both the setsockopt path
-    (mptcp_sol_socket_sync_intval) and new subflow creation path
-    (sync_socket_options), making the proto_ops callback unnecessary.
+> ---
+>  net/mptcp/pm.c | 17 ++++++++---------
+>  1 file changed, 8 insertions(+), 9 deletions(-)
+> 
+> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+> index 57a456690406..1d49779c6a1f 100644
+> --- a/net/mptcp/pm.c
+> +++ b/net/mptcp/pm.c
+> @@ -881,19 +881,18 @@ bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, const struct sk_buff *skb,
+>  	}
+>  
+>  	*echo = mptcp_pm_should_add_signal_echo(msk);
+> +	add_addr = msk->pm.addr_signal &
+> +		~(*echo ? BIT(MPTCP_ADD_ADDR_ECHO) : BIT(MPTCP_ADD_ADDR_SIGNAL));
+>  	port = !!(*echo ? msk->pm.remote.port : msk->pm.local.port);
+> -
+>  	family = *echo ? msk->pm.remote.family : msk->pm.local.family;
 
-WDYT？
+nit: while at it, maybe clearer to have a dedicated 'if (*echo)' instead
+of 3 lines with '*echo ? ... : ..., no?
 
-The packetdrill tests is also implemented:
-  -Link: https://github.com/multipath-tcp/packetdrill/pull/194
+  if (*echo) {
+      add_addr = ...
+      port = ...
+      family = ...
+  } else {
+      add_addr = ...
+      port = ...
+      family = ...
+  }
 
-Thanks
-Gang
+> -	if (remaining < mptcp_add_addr_len(family, *echo, port))
+> -		goto out_unlock;
+>  
+> -	if (*echo) {
+> -		*addr = msk->pm.remote;
+> -		add_addr = msk->pm.addr_signal & ~BIT(MPTCP_ADD_ADDR_ECHO);
+> -	} else {
+> -		*addr = msk->pm.local;
+> -		add_addr = msk->pm.addr_signal & ~BIT(MPTCP_ADD_ADDR_SIGNAL);
+> +	if (remaining < mptcp_add_addr_len(family, *echo, port)) {
+> +		if (*drop_other_suboptions)
+> +			WRITE_ONCE(msk->pm.addr_signal, add_addr);
 
----
- net/mptcp/sockopt.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+If it is dropped, it would be helpful to increment the ADDADDRTXDROP MIB
+counter, and ideally check that in the MPTCP selftests (e.g. adding a
+new subtest in mptcp_join.sh, in add_addr_ports_tests()?).
 
-diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-index de90a2897d2d..abe63392826b 100644
---- a/net/mptcp/sockopt.c
-+++ b/net/mptcp/sockopt.c
-@@ -67,6 +67,12 @@ static int mptcp_get_int_option(struct mptcp_sock *msk, sockptr_t optval,
- 	return 0;
- }
- 
-+static inline void __mptcp_subflow_set_rcvbuf(struct sock *ssk, int val)
-+{
-+	WRITE_ONCE(ssk->sk_rcvbuf, val);
-+	tcp_set_rcvbuf(ssk, val);
-+}
-+
- static void mptcp_sol_socket_sync_intval(struct mptcp_sock *msk, int optname, int val)
- {
- 	struct mptcp_subflow_context *subflow;
-@@ -100,7 +106,7 @@ static void mptcp_sol_socket_sync_intval(struct mptcp_sock *msk, int optname, in
- 		case SO_RCVBUF:
- 		case SO_RCVBUFFORCE:
- 			ssk->sk_userlocks |= SOCK_RCVBUF_LOCK;
--			WRITE_ONCE(ssk->sk_rcvbuf, sk->sk_rcvbuf);
-+			__mptcp_subflow_set_rcvbuf(ssk, sk->sk_rcvbuf);
- 			break;
- 		case SO_MARK:
- 			if (READ_ONCE(ssk->sk_mark) != sk->sk_mark) {
-@@ -1556,7 +1562,7 @@ static void sync_socket_options(struct mptcp_sock *msk, struct sock *ssk)
- 			mptcp_subflow_ctx(ssk)->cached_sndbuf = sk->sk_sndbuf;
- 		}
- 		if (sk->sk_userlocks & SOCK_RCVBUF_LOCK)
--			WRITE_ONCE(ssk->sk_rcvbuf, sk->sk_rcvbuf);
-+			__mptcp_subflow_set_rcvbuf(ssk, sk->sk_rcvbuf);
- 	}
- 
- 	if (sock_flag(sk, SOCK_LINGER)) {
+Also, I wonder if it would not be clearer to jump to a new label here...
+
+> +		goto out_unlock;
+>  	}
+> +
+> +	*addr = *echo ? msk->pm.remote : msk->pm.local;
+>  	WRITE_ONCE(msk->pm.addr_signal, add_addr);
+>  	ret = true;
+
+... inverting the two lines above, and adding "drop_signal_mark" label?
+
+Apart from the comments above, I think your patch is doing the right thing.
+
+Also, one last request: do you mind sending the v2 only to the mptcp ML,
+please? I have a bunch of related fixes [1] plus this one is not urgent.
+
+In fact, except for (urgent) fixes, it might be better to send MPTCP
+patches only the to MPTCP ML: to a restricted number of people for the
+first versions, there is enough traffic on Netdev.
+
+[1]
+https://lore.kernel.org/20260415-mptcp-inc-limits-v5-0-e54c3bf80e4e@kernel.org
+
+Cheers,
+Matt
 -- 
-2.43.0
+Sponsored by the NGI0 Core fund.
 
