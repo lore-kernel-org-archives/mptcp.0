@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4559D3A5E68
-	for <mptcp@lists.linux.dev>; Mon, 20 Apr 2026 17:30:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57CBE37DEAB
+	for <mptcp@lists.linux.dev>; Mon, 20 Apr 2026 17:50:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776706218; cv=none; b=D2OEH0Vunr3CsFeRz/BYuibiekx9nlaKsmFPlbCCmWTP8svT7GqP2IjILDP7Qkg4Np5tbfmnKXHUMjfLznF7KNg2Q3KaMRTG77ph6SgvIRA1HXUx2vFInlwGC0MVWY1xZ/9Pk8lqSc99lrV6CLTxvTYC3bHBQWv336L7yuTSwRg=
+	t=1776707403; cv=none; b=m5eYzB5bYLuWaJ7A7GHfDj+Am6fPq53hTspUyTydyBMWXE9q/4CxLTAyDoQywJ2t4nhd/D5P0r5b9VtWA5wdg5C72nNG85xPD58zETwp1JpNhLo/jam2HNszIp/0sb91O7g5nPnKGLxBEtcNqwACGYeEIdUev1RcOyAMlxY3xvw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776706218; c=relaxed/simple;
-	bh=mGFuesU0CJWNNSzvU6hZPjwpeSxj9kTGjxXlX60kzOk=;
+	s=arc-20240116; t=1776707403; c=relaxed/simple;
+	bh=Jv6qRuoPW576IZK7hSn6j0rQAfk0WoZ9NM62G/gn+Sg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=a7Yc6NmR2bTgHHF4fLy/KGTkV/UEjxonhpKvUAGub09mBzV81BrZ/nDZaRtZv1ea3bVnlgEC21TnKI5D/4RtmvT5bBA2Yima3cNPDqGzYpLv7OdrsK6SWvJoPRIDBVvYNzkk7HuiqNBn0thqhbc3e7sAzjVYfCJdMcUN+A4bfUc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gnDfY2DC; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=D5Z+PUbkHdbdE3jpnYsFmEz1seZrNWRvFyCQLTLXVkRS72Ah7rTzuyp+rVxNQ2+A77ERe1ZndpkE67CtVArBtU4fbHuTk9Q5br4p/7qO6Xp+cAn8h3x22+1qGmDg45MYrcU2LRxBxRyYssEFAFFxs+UQQ47cuBaKTquwyUdvHaM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kNbNpAvE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gnDfY2DC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E953C19425;
-	Mon, 20 Apr 2026 17:30:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kNbNpAvE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33D38C19425;
+	Mon, 20 Apr 2026 17:50:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776706218;
-	bh=mGFuesU0CJWNNSzvU6hZPjwpeSxj9kTGjxXlX60kzOk=;
+	s=k20201202; t=1776707403;
+	bh=Jv6qRuoPW576IZK7hSn6j0rQAfk0WoZ9NM62G/gn+Sg=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=gnDfY2DCK04VbMPLI4+VAgagqqlyFe1Y3AYdcGIN3lALSA9ny2TBlq1MFfntnkhDM
-	 3uNgQBk9s6dAA2oy/AtclBkfxGYuTseNYTh3XVfoPhemksUG5z9IN8YH1TVW0fDYeC
-	 VyyIeNEVBpitQLfXuEdKodxKsnP3qwSpdlyk60R6bV2HgCPkLjfVAtDHCf/wR7gl0c
-	 Me+UgdO+SiX2+bK6+zfE8ebHbMc7ME9fKtvY/I2dX512q8Btu0Tqag+xXchRq/ersF
-	 sD1rb1eFrLU/R/0d24GMU/ogdnvWUX/mRYgU0CtrV89uNXDUvEg4NYqZbD/dVimCII
-	 pmLJAdeMqM1pw==
-Message-ID: <d3b5d201-4e4c-4857-bbb2-5ce3ea265e63@kernel.org>
-Date: Mon, 20 Apr 2026 19:30:15 +0200
+	b=kNbNpAvE1UCC2arL6Vk05CeGH92x34zBcu6BisfB/8+ftne2nchcAs+oVuv9Lp3xH
+	 0JdT6iwpSO5TRBMF7vT66xOwRscJNaof0LgzWCt5rOKUgnBKa9wDY9/ZGqDlA4JW8n
+	 dplm6x7+V83PE9gLDBXBrzjZNxHM1oHlSTxhciisyNaHsi73VCJ8H54lyy2nROAZ+r
+	 XOPGQ5UqjFsiGvT4qhc5/NsX45OvWcuB4nR7Dpybes3kfWqg6NGD06bE6BoYxz29Y0
+	 Cwz/ILAa0pFdmOxy0MCqepyz/ZdZTbCBcr3/SU7gfy5fLAqkMtas59rNRM1t0Xc3cD
+	 pHKCRFfEqld/g==
+Message-ID: <7c079890-cbe1-4181-96a6-1252a62a1278@kernel.org>
+Date: Mon, 20 Apr 2026 19:50:00 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,14 +35,14 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net v5 17/20] selftests: mptcp: join: validate 8x8
- subflows
+Subject: Re: [PATCH mptcp-net v5 20/20] mptcp: pm: clearer ADD_ADDR related
+ helpers names
 Content-Language: fr
 To: Mat Martineau <martineau@kernel.org>
 Cc: MPTCP Upstream <mptcp@lists.linux.dev>
 References: <20260415-mptcp-inc-limits-v5-0-e54c3bf80e4e@kernel.org>
- <20260415-mptcp-inc-limits-v5-17-e54c3bf80e4e@kernel.org>
- <54880733-bd55-a589-20bd-3806585c6e14@kernel.org>
+ <20260415-mptcp-inc-limits-v5-20-e54c3bf80e4e@kernel.org>
+ <3919ba71-1f12-cd8e-2674-9e49dbcd8285@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -88,50 +88,36 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <54880733-bd55-a589-20bd-3806585c6e14@kernel.org>
+In-Reply-To: <3919ba71-1f12-cd8e-2674-9e49dbcd8285@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Mat,
-
-On 18/04/2026 20:22, Mat Martineau wrote:
+On 18/04/2026 20:27, Mat Martineau wrote:
 > On Wed, 15 Apr 2026, Matthieu Baerts (NGI0) wrote:
 > 
->> The limits have been recently increased, it is required to validate that
->> having 64 subflows is allowed.
+>> Here is a suggestion, and if it is OK, I will split this in multiple
+>> commits: it is not the first time the 'add' and 'anno' names to describe
+>> ADD_ADDR related functions are confusing. Eric already pointed that in
+>> [1].
 >>
->> Here, both the client and the server have 8 network interfaces. The
->> server has 8 endpoints marked as 'signal' to announce all its v4
->> addresses. The client also has 8 endpoints, but marked as 'subflow' and
->> 'fullmesh' in order to create 8 subflows to each address announced by
->> the server. This means 63 additional subflows will be created after the
->> initial one.
+>> I started by renaming only the internal helper names, then while at it,
+>> I tried to uniform everything linked to ADD_ADDR.
 >>
->> If it is not possible to increase the limits to 64, it means an older
->> kernel version is being used, and the test is skipped.
+>> WDYT?
 >>
 > 
-> Does this have much of an impact on total time for the tests? Would it
-> be worthwhile to test the larger limits on kernels that can handle it,
-> and run the existing tests on older kernels?
-> 
-> In other words, the larger limit test seems to have redundant coverage
-> with some older tests, so maybe skip the redundant tests on new kernels.
+> I do think the new names are clearer, but for stable backports the
+> renames might create a lot more work in the future. I slightly lean
+> towards "leave as is" but it's not a strong opinion :)
 
-Good point. In terms of time, like most tests there, it waits for the
-whole transfer, so the same time as other 'speed=slow' tests.
+Indeed, I understand. I still think it is worth it, mostly because Eric
+got confused as well :)
 
-Surprisingly, we didn't have similar tests before setting multiple
-'signal' endpoints on the server side, and multiple 'subflow + fullmesh'
-on the client side. It was either one or the other. Plus we didn't check
-with subflows up the previous limit (8), it was max 5. So no redundancy
-here, I think. Or we disable the simple ones focussing on the client and
-server side separately? (but then it no longer validates that on older
-kernels)
+Note that it looks Sasha can "easily" resolve such conflicts with his
+tools, and might even backport such patches renaming variables. So it
+might not be "that bad". (And I'm used to resolving such conflicts :) )
 
-Note that this test helped me find the issue that led to "mptcp: pm:
-ADD_ADDR rtx: resched blocked ADD_ADDR quicker", which led to most of
-the other Fixes patches :)
+I will check if I can reduce this patch, and split it later.
 
 Cheers,
 Matt
