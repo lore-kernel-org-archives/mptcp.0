@@ -1,163 +1,92 @@
-Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8E04388E7C
-	for <mptcp@lists.linux.dev>; Mon, 20 Apr 2026 09:41:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28FA7389115;
+	Mon, 20 Apr 2026 09:45:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776678109; cv=none; b=XH8AxrPbbVD1ovYynU6M4eQivmhvh06UzHrmdCXrSjq98RAJQGIoKRkpZRR9S2Z1V1PC9hYWlItCrPOtIiek3iS+WYYiR4e7EFmyMusKJ75QsXXw13BmI5QDNKTeaokeQm8i1SL6aK/fKQfiGEGJfNKhWJjgbNRI8jXsU5rEVhM=
+	t=1776678341; cv=none; b=miz5UI2RB2GR2Pb8DcITlECrfnxo+V4Dmxle/8Kn/sRQylRUNoNsQLjopc6q+LsUTVb5OpEoDbzUE9h/es8NVqxzl75a9UBOh4C6B8s38I2GvIU3J/q38CWz2eT4Jy0ORi/2Ik9Rbi/DhImyM22bAX2HxUpFVTu607LbdGnz3pA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776678109; c=relaxed/simple;
-	bh=bDkDmJEgV7KuIrfAWQa7e89uQuV8EHkP16cTRtujr8Q=;
-	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:
-	 In-Reply-To:References; b=QtG9HdcdBYazMKexpiCKt3TzJ2a66cvs405jBCQqJ6m84Z4G0O2qDupAUMTUi7urgTkrK5kedCNAoiBEgew8UOQBctsi8Yv9/REK4ajUVEYla5s4ga5iK831/0ivCf8O9Z/fw7b+s5Hezx0tK/qAD37IOUWs544rnYKaQeTzrlg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=uuaFvESp; arc=none smtp.client-ip=95.215.58.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1776678341; c=relaxed/simple;
+	bh=IAU1bHCbQ5+FeWpXknOjlErf4fcRMW610sxyZWiIDi4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gRg8926AlLAWdLRNMf1FEn8ij3B442MJfDc6Tn4UnWP04a0B6NoePQWUU9x4R2z6hNauw9k5ercxQhY34qiX7LTdKjg+TR+iLixPXcrI0UDYNlet+QwBuGqaLTqs5oP9yI3Ncod1DHCvAw8S+OvZJt8LQUvXtSIyPZTtJxooUpo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lBzf3ygM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="uuaFvESp"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lBzf3ygM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 982B1C19425;
+	Mon, 20 Apr 2026 09:45:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1776678340;
+	bh=IAU1bHCbQ5+FeWpXknOjlErf4fcRMW610sxyZWiIDi4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=lBzf3ygM7PIeFiXKtHiap2Sy32giL7IQzi/IhW7yvq3UJq1RltI1koNy5j3ZYDGpH
+	 S4J3cvgmGrfvxo6yl1FSEBJRLbdpRJxatl3RAgs/VqfQrNaH17482BsqCpK71c+/kw
+	 9T2wLpjK/w985znPNk8kIoCtcel68PKN6HmCEBIdmSzUAXscDcbmqo2DBxQ1GKZlg6
+	 F/ftV7br4NGO0P8xVwpGGl4uHcgid7Ck1OiXSg4mpHORPrhorXuzvNg3rPNFJeQWtH
+	 DNJXGvHGARxNsBU0XYepWJxoGpqsmzmtQYtlHi6lVZXUrSm0uVmu1/t6OYMZXj4KX7
+	 Kwkpk3W37Qprw==
+From: Geliang Tang <geliang@kernel.org>
+To: Kees Cook <kees@kernel.org>,
+	Andy Lutomirski <luto@amacapital.net>,
+	Will Drewry <wad@chromium.org>,
+	Shuah Khan <shuah@kernel.org>,
+	Christian Brauner <brauner@kernel.org>,
+	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+Cc: Geliang Tang <tanggeliang@kylinos.cn>,
+	linux-kselftest@vger.kernel.org,
+	mptcp@lists.linux.dev
+Subject: [PATCH v2] selftests: harness: fix pidfd leak in __wait_for_test
+Date: Mon, 20 Apr 2026 17:45:28 +0800
+Message-ID: <a82e275ccfb2609a1984d90ab559fa3af78f1e81.1776678050.git.tanggeliang@kylinos.cn>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1776678106;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jx5+NlZe3r+Yl32yM/e8Oxp+NT8NguO4JZZKr5Z/X7Q=;
-	b=uuaFvESpUgLoAMlGTHCidt0PIvZZlwkdO+LSJ3aS0Yomot5Cl4fnJuIjwqKDwwBPXH+UDl
-	RiGTVyUsumER/RYSdsNxwI/WUcPnRBhu0FSfWm0GVx2ruawNReQDTQYIJLggzNNaoCREfx
-	ashSbhY9hHuDj3H4IhN/pAlzg4x3rN8=
-Date: Mon, 20 Apr 2026 09:41:44 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: gang.yan@linux.dev
-Message-ID: <7dc554be0c3343fee71e09a4fda5179cfe0571f0@linux.dev>
-TLS-Required: No
-Subject: Re: [PATCH mptcp-net v5 1/5] mptcp: replace backlog_list with
- backlog_queue
-To: "Paolo Abeni" <pabeni@redhat.com>, mptcp@lists.linux.dev
-In-Reply-To: <e04bd2eb-0107-4011-97d5-a672d770767c@redhat.com>
-References: <cover.1775033340.git.yangang@kylinos.cn>
- <085a4d26a05fc6625e6e4e4c0e0225b38a01f178.1775033340.git.yangang@kylinos.cn>
- <d749b513-158d-4a3d-ad95-09bfc29c6648@redhat.com>
- <d34641c0-01af-4273-83d7-5e7ed92e8da7@redhat.com>
- <ef0ce8465f0b852d5e4dc5e54031a156f606b636@linux.dev>
- <e04bd2eb-0107-4011-97d5-a672d770767c@redhat.com>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
 
-April 20, 2026 at 5:34 PM, "Paolo Abeni" <pabeni@redhat.com mailto:pabeni=
-@redhat.com?to=3D%22Paolo%20Abeni%22%20%3Cpabeni%40redhat.com%3E > wrote:
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
+Fix the pidfd leak in kselftest_harness.h's __wait_for_test() where
+childfd = syscall(__NR_pidfd_open, t->pid, 0) is never closed.
 
->=20
->=20On 4/15/26 10:21 AM, gang.yan@linux.dev wrote:
->=20
->=20>=20
->=20> April 15, 2026 at 3:17 PM, "Paolo Abeni" <pabeni@redhat.com mailto:=
-pabeni@redhat.com?to=3D%22Paolo%20Abeni%22%20%3Cpabeni%40redhat.com%3E > =
-wrote:
-> >=20
->=20> >=20
->=20> > AFAICS the stall in the self-tests in patch 5/5 is caused by the =
-sysctl
-> > >  setting taking effect on the server side _after_ that the 3whs
-> > >  negotiated the initial window; the rcvbuf suddenly shrinks from ~1=
-28K to
-> > >  4K and almost every incoming packet is dropped.
-> > >=20
->=20> >  The test itself is really an extreme condition; we should accept=
- any
-> > >  implementation able to complete the transfer - even at very low sp=
-eed.
-> > >=20
->=20> >  The initial test-case, the one using sendfile(), operates in a
-> > >  significantly different way: it generates 1-bytes len DSS preventi=
-ng
-> > >  coalescing (I've not understood yet why coalescing does not happen=
-),
-> > >  which cause an extremely bad skb->truesize/skb->len ratio, which i=
-n turn
-> > >  causes the initial window being way too "optimistic", extreme rcvb=
-uf
-> > >  squeeze at runtime and a behavior similar to the previous one.
-> > >=20
->=20> >  In both cases simply dropping incoming packets early/in
-> > >  mptcp_incoming_options() when the rcvbuf is full does not solve th=
-e
-> > >  issue: if the rcvbuf is used (mostly) by the OoO queue, retransmis=
-sions
-> > >  always hit the same rcvbuf condition and are also dropped.
-> > >=20
->=20> >  The root cause of both scenario is that some very unlikely condi=
-tion
-> > >  calls to retract the announced rcv wnd, but mptcp can't do that.
-> > >=20
->=20> >  Currently I start to think that we need a strategy similar to pl=
-ain TCP
-> > >  to deal with such scenario: when rcvbuf is full we need to condens=
-e and
-> > >  eventually prune the OoO queue (see tcp_prune_queue(),
-> > >  tcp_collapse_ofo_queue(), tcp_collapse()).
-> > >=20
->=20> >  The above has some serious downsides, i.e. it could lead to larg=
-e slice
-> > >  of almost duplicate complex code, as is diff to abstract the MPTCP=
- vs
-> > >  TCP differences (CB, seq numbers, drop reasons). Still under inves=
-tigation.
-> > >=20
->=20> >  /P
-> > >=20
->=20>  Hi, Paolo
-> >  Thanks a lot for your detailed and insightful analysis of this probl=
-em!
-> >=20=20
->=20>  I fully agree with your points: MPTCP should allow the transfer to=
- complete
-> >  even under extremely slow or harsh conditions, just as you mentioned=
-.
-> >=20
->=20I was likely not clear in my previous message. IMHO the key point is
-> that in the mentioned scenario we should consider suitable any fix that
-> would allow completing the transfer, even at a extremely low average
-> bitrate - because the memory conditions are indeed extreme.
->=20
->=20I.e. we can/should consider this case an extreme slow path.
->=20
->=20>=20
->=20> Regarding the TCP-style mechanisms like 'tcp_prune_queue' for handl=
-ing full
-> >  rcvbuf conditions =E2=80=94 I have actually attempted similar implem=
-entations before.
-> >  As you pointed out, this approach is indeed highly complex for MPTCP=
-. There
-> >  are far too many aspects that require careful modification and consi=
-deration,
-> >  making it extremely challenging to implement correctly.
-> >=20
->=20I agree duplicating the TCP pruning code inside MPTCP does not look a
-> viable solution.
->=20
->=20I think we can instead share it (at least the most cumbersome helper)=
-,
-> with some caveat. I have a few very rough patches doing that. Let me ad=
-d
-> some comments to at least somehow make the code readable and I'll share
-> them here.
->=20
+Fixes: 73a3cde97677 ("selftests: harness: Implement test timeouts through pidfd")
+Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+---
+v2:
+ - move close() directly after poll() as Thomas suggested.
 
-Thank=20you so much for your help and for working on this!
+Hi,
 
-Looking forward to your updates.
+While adding more TLS selftests for MPTCP KTLS development, a segmentation
+fault occurred. Debugging revealed that the accept() failure was due to MPTCP
+tests requiring over 1024 file descriptors simultaneously. I initially raised
+the limit to 4096 in [1], but sashiko noted that the real issue was a pidfd
+leak in kselftest_harness.h's __wait_for_test(). Hence, this fix addresses that.
 
-Thanks
-Gang
+Thanks,
+-Geliang
 
-> /P
->
+[1]
+https://patchwork.kernel.org/project/mptcp/patch/ced184831757eaae9e690f65d799809ed22cae28.1776469069.git.tanggeliang@kylinos.cn/
+---
+ tools/testing/selftests/kselftest_harness.h | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/tools/testing/selftests/kselftest_harness.h b/tools/testing/selftests/kselftest_harness.h
+index 75fb016cd190..53535c188b33 100644
+--- a/tools/testing/selftests/kselftest_harness.h
++++ b/tools/testing/selftests/kselftest_harness.h
+@@ -996,6 +996,7 @@ static void __wait_for_test(struct __test_metadata *t)
+ 	poll_child.fd = childfd;
+ 	poll_child.events = POLLIN;
+ 	ret = poll(&poll_child, 1, t->timeout * 1000);
++	close(childfd);
+ 	if (ret == -1) {
+ 		t->exit_code = KSFT_FAIL;
+ 		fprintf(TH_LOG_STREAM,
+-- 
+2.51.0
+
