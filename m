@@ -1,106 +1,130 @@
-Received: from mail-dl1-f48.google.com (mail-dl1-f48.google.com [74.125.82.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C77F21C5F11
-	for <mptcp@lists.linux.dev>; Tue, 21 Apr 2026 15:48:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9FC3295DA6;
+	Tue, 21 Apr 2026 16:07:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776786520; cv=none; b=sINx8Hs+T4uMMWXJtUMDiPiafPbWTVCOBz1k0DybZ7OrsE/OHNmF6ZUuOm8CcHkO9IsLy51vWCAux+3TTevCFkLdwcXnfGq+msRiK3fN/0SuvIqDS60Q3OnLSmDcVTEvUr9nyMb2ZXEiP+WX3lCsQ3KJCEMLVNE+tQiSuGQTHRg=
+	t=1776787641; cv=none; b=OKGca9zkmlJhFR7kn0nQKtP3t4sqPrTlWGCcL/a1o9eUq/25j4jjzEp4q+xbTq6PuwCWi54fZsn8uS+3TqHuTxxVD9jSAiGZEuFf+KaWNKQIaxt2XUegCIYMPkpBLMcAH4g+Osx+HFXx/T31XQqeeJfmW3+9hHdPs+HXhGO8/fw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776786520; c=relaxed/simple;
-	bh=gmtXe66dVvHwbob/VmgPTSO2D7SZnKZ16AXlzBqT0FY=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
-	 MIME-Version:Content-Type; b=XmDdlm6T3/iAFtDswORtL34mOBBK+dmZW3mLPVIwdFxMUZ7IC068lSIHKtJ6JH0hKFvqsjnpr4FGLBbGtw2dMO23fPEPgNgQnsVW9bJF1mW4BZpQL18kABkKKvazZvnTbIK6AnqdAb+ds57dHcieiOK8KgHFalBpaudW27bFNig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Mdj/TOV/; arc=none smtp.client-ip=74.125.82.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1776787641; c=relaxed/simple;
+	bh=fKowrHbZJCe7YKyNI7Ish5wGyNOJSRJrxLJLMwb//RI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dkLWCO+tozuOxPnEiCYyooOUB6pSlmzTVuRMuXEkpYEyx30ImPUtbKOoPUsEYmqKCxmhwEG3H3u5XICdrhj2rDmcWOGs8pXdm4M4tC71ZbKUKgAAXt0QcdTdZL5dI1RwqzgZTd7dQhPn4OeuSMzsc0LANVQZQWzgl3y7sFLCqCc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uZifecUu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mdj/TOV/"
-Received: by mail-dl1-f48.google.com with SMTP id a92af1059eb24-12c8c9c4cd8so1108033c88.0
-        for <mptcp@lists.linux.dev>; Tue, 21 Apr 2026 08:48:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1776786519; x=1777391319; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=X63yjZ8H3mV1qiV6gj51ZJZ2CZ1mZCYqxiOUjn+Qu+8=;
-        b=Mdj/TOV/XN9RU79zm5mJPL01WiHUmVJalMmAHLl9wwysD/fZBDoG2zasXBMX+9IfzM
-         MffUIp6c/ZrzFC9HmZCMpdOlAvfCG7R1/HbfuoHinZnBb2DGwHCGBGVTXNj1Ydf2b0O0
-         RpwtHq45mFelWxgmdFQanFBkNkftHheGMZGHhtJZnCa/bIgFTHO/gAJMjrzgc4Rlt74X
-         J+k+2u0zPYQ63uRzJYhIuqpu08QmVaYijq7Aowd2PJzx2C88KwNbfjw/HRy07MVij1Ds
-         pX5a8BFmuvB7GEhPPg2PPZB6GpJGrpPr331n6FA/K5BPiL3ildPo8JeRt1QJWV0OT8v2
-         8rrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776786519; x=1777391319;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=X63yjZ8H3mV1qiV6gj51ZJZ2CZ1mZCYqxiOUjn+Qu+8=;
-        b=U8UPlycaqTF1K10ybmd3ISU8ndRITi7/mK0Belpy5ZJ9zAOZ2C3ziszYI9WoYhRbjk
-         I4lp11wLE1kY2jDblHQpz+H+DXlwF4VolRpgDo1ULrwk3VlnZm/XJOx/ysoX7NoSvamF
-         B/vminxQxW4xU9lIb/Qc8tjwfREEjmj6CJ2r8E46eyND9I/N33XZKhlxgQpAe88Cuwwj
-         LETa8mqEVGcXXb23N9CDeErJwug0WNpLFae2F9KxXvWA/yyjeLwGtfl/J/BrkmYMIJqv
-         oPd9dZx2OSYrtgiLGGKSaPFae25ODosYT2QieV5UrxYzXTM2EMNMPvKPzx2veNQMMYTF
-         FmUA==
-X-Gm-Message-State: AOJu0YysMfwLlnkmyDNDKuB13kx8ju7ZgIyWkDGBpp+CkwSL++XV8b1P
-	kWujPfhjFNZ66enR7SLbkEwNrJPHUtNzOMPO4ZJ8fkpGedN1rbhGJgo=
-X-Gm-Gg: AeBDiesFAuBJ79M714DKsR6VNgphOIWBS1cly9ZXOghzCi93JsmVbn5fWl5F9H5g4NU
-	jtvgY/duPmte58ofQyVbDl7/8jCmkUdJGbMxPRK+eWDyX89SXv1gpp1YcpIKNfj8TUUc+wWaLZn
-	NrqHdd1QrurxG/q/TL+AwTOE+Ec4iG8iPENlOUu+gZYMKNo6fagGQVS2n8tcviepiFou4ThHOAW
-	isyQ/kZg81fKZ6z1ScUHJ8ErmJ8CfXDuGMbRtxIrfmHWZvsGJUoqdIpAp977wg0YaF6X25KG0qW
-	K+SWkyA3Vjh2Biji6q6szu1YpMufd+FCmAnx5YJ0RPE3nZKNhPcbx1gcmcJq/zvjoDUnjC7W7c1
-	pHwf4E/D0yfY9PGztK3Acgwf6SQBvJq5mowLU3MVW9t8DhSsxi0Mq1JcSXx4Wa+oi7D2ikEsbxz
-	IK3HhY/ygD/CRoQA027enD8wUthBqVLFeIL/S6S5HCnVo9lbRkVkMorVFuaA==
-X-Received: by 2002:a05:7023:b0d:b0:12a:6d05:3938 with SMTP id a92af1059eb24-12c73afc31fmr6622583c88.7.1776786518815;
-        Tue, 21 Apr 2026 08:48:38 -0700 (PDT)
-Received: from [127.0.0.1] ([20.169.76.211])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-12db8684f90sm313461c88.13.2026.04.21.08.48.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Apr 2026 08:48:38 -0700 (PDT)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: David Carlier <devnexen@gmail.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20260421152216.38127-1-devnexen@gmail.com>
-References: <20260421152216.38127-1-devnexen@gmail.com>
-Subject: Re: [PATCH 0/3] mptcp: add RECVERR and MSG_ERRQUEUE support
-Message-ID: <4d97ea72-1ab1-b037-e434-5a32b60ac867@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 21 Apr 2026 15:48:37 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uZifecUu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A953C2BCB0;
+	Tue, 21 Apr 2026 16:07:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1776787641;
+	bh=fKowrHbZJCe7YKyNI7Ish5wGyNOJSRJrxLJLMwb//RI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=uZifecUuEovU4uCy7/OkoJAYaN5EbLkhRENzu2sCsqyrbjiGtlu25mmmH424rC705
+	 sU1IHpnZX2Hfyq2JiLYnDE9STwgsSFoXj6q7hDgBlav0Yp7WjZXCKGxf8OYBO9YA55
+	 Fb7+t6dL54FBWveGEI4Ka0rBNyJNNDkQBfxIKV6EasVUUXN766/jlMXt5Wq0y4DXeM
+	 zhAt6b9BZYpGoz0EPu8SeEgcUPelnrT8X55UXje8qs3C7fG2kZHDCIqUaphe9GIWFI
+	 54f3q5QZCRMJYHZtNNqW4aMeGfABtcPyBo5Te9Hoy9H6X0beX/hvdh0ru/Q4wQmTzk
+	 lbM2ydP1do4LA==
+Message-ID: <e190409c-3dee-4de8-b1a0-7867213cb801@kernel.org>
+Date: Tue, 21 Apr 2026 18:07:15 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH 0/3] mptcp: add RECVERR and MSG_ERRQUEUE support
+To: David Carlier <devnexen@gmail.com>, netdev@vger.kernel.org,
+ mptcp@lists.linux.dev
+Cc: martineau@kernel.org, geliang@kernel.org, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org
+References: <20260421152216.38127-1-devnexen@gmail.com>
+From: Matthieu Baerts <matttbe@kernel.org>
+Content-Language: fr
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <20260421152216.38127-1-devnexen@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 Hi David,
 
-Thank you for your modifications, that's great!
+On 21/04/2026 17:22, David Carlier wrote:
+> MPTCP already advertises IP_RECVERR/IPV6_RECVERR as supported, but the
+> parent socket does not currently provide usable MSG_ERRQUEUE handling.
+> 
+> This series wires the MPTCP socket up to the IPv4/IPv6 error queue
+> paths. It propagates RECVERR-related sockopts to existing and future
+> subflows, makes poll() report pending errqueue activity through the
+> parent socket, and allows recvmsg(MSG_ERRQUEUE) on the MPTCP socket to
+> consume queued errors with the parent socket ABI.
+> 
+> The series also handles mixed-family subflows by applying the matching
+> sockopt according to each subflow family, and avoids silently losing an
+> error skb if requeueing to the parent socket fails under rmem pressure.
+Thank you for this series!
 
-But sadly, our CI spotted some issues with it when trying to build it.
+Even if I agree it would be good to have full MSG_ERRQUEUE support,
+net-next is currently closed, and only bug fixes are accepted, see:
 
-You can find more details there:
+  https://docs.kernel.org/process/maintainer-netdev.html
 
-  https://github.com/multipath-tcp/mptcp_=
-net-next/actions/runs/24731734238
+pw-bot: defer
 
-Status: failure
-Initiator: Patchew =
-Applier
-Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/5d=
-c9123ab172
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1083918
+Instead, I suggest switching the discussions only to the MPTCP ML if
+that's OK. If the CI is happy, someone will try to review it over there,
+when time permits. If not, please send the new versions only to the
+MPTCP ML, with the 'PATCH mptcp-next' prefix, and ideally on top of the
+'export' (or 'for-review') branch of our tree. For more details:
 
-Feel free to reply to this email if you cannot access =
-logs, if you need
-some support to fix the error, if this doesn't seem to be=
- caused by your
-modifications or if the error is a false positive one.
+  https://www.mptcp.dev/contributing.html#kernel-development
 
 Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
+
