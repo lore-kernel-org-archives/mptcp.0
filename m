@@ -1,127 +1,135 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B644217F33
-	for <mptcp@lists.linux.dev>; Tue, 21 Apr 2026 16:18:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F64737D114
+	for <mptcp@lists.linux.dev>; Tue, 21 Apr 2026 16:50:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776788297; cv=none; b=Xp0pv3DDpmTpSec6NidZSGicYC+zoyh/WVv1ZNZL3mPjTlh/iAxW3ThrI2knWV3Rfhgr+RQDx0GVEpm4JdxycaxzotjQyIAiFSJzhbtjB1f2m+J+y8SWGo7rzOrQO6OwRIHD9YZedkbRh4YPOPK1K0BPAaGfc7c0rKXbMaWadGI=
+	t=1776790254; cv=none; b=lwYdVuC+tfVNTNQDVMFK+Qhd462LsO8a5/oaIqwYa3/0grJnXIvLdI2QZLk+zreOaPWEzZQj12aGrBzrOihsnvW5jO+3SRTXcgHpVl70ZyN/p9JEjOgNxsS0qriUMhv6hSD3drFyVg5bSFTxBDAePyzQyAGt4sw1VwoTNbuYECk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776788297; c=relaxed/simple;
-	bh=COAnQJJl2ND6wXhExzdF3axt5yX+j/Q8Lq+ZRnTWEII=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WDu7RMjmhT7YntY9i3ZorSBztyjTEfX2pvFRJ6vnJqox32eHLMPajz420HSo7rWjhok/DTHdMWGaq4qh4Bh+ArrrC9XYiNcFjnKkRkhQYoUrZkG+PvVlsFeVBDXOOtxB2gwOtdKlBkSkcYRvv8umUEhGCal2vMiry8gKl26NlZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k5mEqv7O; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1776790254; c=relaxed/simple;
+	bh=8Eo7ggSL40jrTt/xDQxe+vhafK+uj20QJaTyNzN930o=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
+	 MIME-Version:Content-Type; b=Png7BFDRflauRFCISR8VD1mxohcGqehqKYNtng2JwXvW8Rd1Qz22wcZWj3I2U/TWEnzKOlvGlyxUiO4Cv4sRXKL535i+pJeny2u2wasBziUyA7b/pdWjQUdDwcnfv7ljRTN0PqpVvZVczV9PDHRA4TuBYCSpDLCHKrqqA4pccKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S8ZZQLsy; arc=none smtp.client-ip=209.85.219.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k5mEqv7O"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9975BC2BCB3;
-	Tue, 21 Apr 2026 16:18:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776788297;
-	bh=COAnQJJl2ND6wXhExzdF3axt5yX+j/Q8Lq+ZRnTWEII=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=k5mEqv7O1lre5FgOSBhanYj+9bmGg7ldHb5jbfz9apz7fObfoRWUeJ/F61Ahpu3Iu
-	 KBWrXKOKCSMZAaFUzWRKjdxne1EcZQpR+qP51R+3zaNClp6kJNevEhorj2AdFBsZdC
-	 8GKKoW/075utBKMS8+za27g14z3aaKocLmN18axXqKCJrNY179X1kkwA8uoNUvmvjQ
-	 7wx8fWo/P6j604ZM4/I9NRiCNyIc02Bw5FYLoFh8ClaC8iWROdfvSCgQprWTKtIlfo
-	 Fzd0N5PooGjp1vs0OSyQvCDtiSg8eA79EL7ZRsq8qR855e/NdBGu0C1GVcILHXWVBl
-	 x6yJkvZMDoUYA==
-Message-ID: <1b74a6dc-6cdb-4046-b327-46470105ba05@kernel.org>
-Date: Tue, 21 Apr 2026 18:18:14 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S8ZZQLsy"
+Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-8a151012558so49025556d6.3
+        for <mptcp@lists.linux.dev>; Tue, 21 Apr 2026 09:50:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1776790251; x=1777395051; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PeFVlYem7bS54bh3S2LnfnhwA7r6NOEQ1TCFDYHkggU=;
+        b=S8ZZQLsyKo1caFfbzPm+HJrCUiBl3BlreTtBi14lQys4PgFuXCwXEH0d7krk0XOgNY
+         CCbSMQR56QUzgDoVL0Aa4vXmEA6Ld/NtGAQDxoU7nYNSgzHjw/szLTZQpWWNwlZAr5D3
+         kn7QheVOOKaPTlVVnkVBnB1MD4T4BVei5wskie/U/YGS5Fune4IOM19+qvp7RlBnnCqn
+         0TQFyRH+77Ynv7G3+Aa+54dc9ya5CYdpgUGY6hHowNNuugFywRHezUOUJ59Kq1lkHwA8
+         lxaHnhsK+FoeYVYv/+D0BXZ3mdRV/fDexYFq4iZmJ25v/ZhLE4HWgXYGQnh4lUy9KKt2
+         gcug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776790251; x=1777395051;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=PeFVlYem7bS54bh3S2LnfnhwA7r6NOEQ1TCFDYHkggU=;
+        b=rgQNkseGBBCHtZKY0AEz2Rq9ZAoZMkXxew1GqYceOzO1ugtjTHjdQTKOvPH7NvGJVC
+         QUlscUxqGAWaXngx0FnF/XihIrxNBvL9K2s0Mj3C3mOw7FP8R3MWSb7Ekm3IQs5Nmepg
+         4ki40E3s9mY3GsvC4hsAyfjwQoPkPBGwos8v0O/hkprAVUpqJ9L8b8ikUjNr975waLOZ
+         48012iYiD9GRGnQRt4NusJV5aMP3aIlzszDlTYlt8Y7hlDGE7a1rF5OKqi4If2Dduc1P
+         Z0xo4m/A4vVXwnkehB8OUxoib+NZ+koSaYWuBWGE9jZmOB7WaN/pSgWHG7ajW2Ok8X5t
+         34EQ==
+X-Gm-Message-State: AOJu0YwzOUWQ6ehvAI1O2dqILoPhBVM9K8kL6aQyYM1r8I1Pf2/wla+8
+	ud4jT9tz7DigDyDt372ayFSUxieKFeBJxUT0VIYenUReHQmXKQRSoUk=
+X-Gm-Gg: AeBDiesysFek2r9XL7J06HoveMkMRz3ENaFWwoIPdERppQxlf0TwqJnaqggfRzrQO99
+	YaFrLLW+a4URo7pGHwP92kBVeg03SWxNOKnAeRPvTFRHu3qk/RmmuA2Jx/2WWKP/iiTElF1YOmh
+	kkEo4qMgmgGnf2Mc13ueYpnnb5kCkEKoipSpb8qiOdm8+c/+rfmQRxO7qnZrTTS+eTn4ibNjTh5
+	CCLGZ0XUUV/t454i0BXvofT35DJ5LXzVry8FeoqTclQ6m1U3NS82ZN2lQjIqvynLh9o2G0w9TYC
+	WIX9ZlApjw136OoFfLQ1RQW8SVsPp8N/MCRohQknhLexKXXKUYj4Wy0jfbCBzwtni5ZZ6rcIdry
+	ySMhk05MJ4GXbjWY8T7rz9+flJ0hmQlAYiAhVfLqvh6rX+jlZxrEPuIaW8p/6APli/MBUrNmDf2
+	1MWDeCvPjiUv/4GNJbB+4D/ghOsrDvwSk0FKNYjH0bV99SDm4=
+X-Received: by 2002:a05:6214:5b87:b0:8ac:ab13:8f15 with SMTP id 6a1803df08f44-8b027ff994cmr330527626d6.7.1776790250816;
+        Tue, 21 Apr 2026 09:50:50 -0700 (PDT)
+Received: from [127.0.0.1] ([48.214.54.105])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8b02ae5c26csm109860186d6.31.2026.04.21.09.50.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Apr 2026 09:50:50 -0700 (PDT)
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: David Carlier <devnexen@gmail.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20260421152216.38127-1-devnexen@gmail.com>
+References: <20260421152216.38127-1-devnexen@gmail.com>
+Subject: Re: [PATCH 0/3] mptcp: add RECVERR and MSG_ERRQUEUE support
+Message-ID: <790ed396-c01e-b324-b631-8f9cb28698e8@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 21 Apr 2026 16:50:49 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net] mptcp: sockopt: set timestamp flags on subflow
- socket, not msk
-Content-Language: fr
-To: Gang Yan <gang.yan@linux.dev>, mptcp@lists.linux.dev
-Cc: Gang Yan <yangang@kylinos.cn>
-References: <20260420093343.16443-1-gang.yan@linux.dev>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <20260420093343.16443-1-gang.yan@linux.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
 
-Hi Gang,
+Hi David,
 
-On 20/04/2026 11:33, Gang Yan wrote:
-> From: Gang Yan <yangang@kylinos.cn>
-> 
-> Both mptcp_setsockopt_sol_socket_tstamp() and
-> mptcp_setsockopt_sol_socket_timestamping() iterate over subflows,
-> acquire the subflow socket lock, but then erroneously pass the MPTCP
-> msk socket to sock_set_timestamp() / sock_set_timestamping() instead
-> of the subflow ssk. As a result, the timestamp flags are set on the
-> wrong socket and have no effect on the actual subflows.
-> 
-> Pass ssk instead of sk to both helpers.
+Thank you for your modifications, that's great!
 
-Thank you for the patch, now in our tree (but don't forget the other
-questions in my other emails in this email thread ;-) )
+Our CI did some validations and here is its report:
 
-New patches for t/upstream-net and t/upstream:
-- 7ed202c8815a: mptcp: sockopt: set timestamp flags on subflow socket,
-not msk
-- Results: 4ef37f659c52..4f7190e1b98d (export-net)
-- Results: 3662f0d0a0b4..823280e7c25b (export)
+- KVM Validation: normal (except selftest_mptcp_join): Unstable: 1 failed =
+test(s): selftest_mptcp_sockopt =E2=9A=A0=EF=B8=8F=20
+- KVM Validation: normal (only selftest_mptcp_join): Unstable: 1 failed =
+test(s): selftest_mptcp_join =E2=9A=A0=EF=B8=8F=20
+- KVM Validation: debug =
+(except selftest_mptcp_join): Unstable: 4 failed test(s): packetdrill_dss =
+packetdrill_fastopen packetdrill_mp_join selftest_mptcp_sockopt =
+=E2=9A=A0=EF=B8=8F=20
+- KVM Validation: debug (only selftest_mptcp_join): =
+Unstable: 1 failed test(s): selftest_mptcp_join =E2=9A=A0=EF=B8=8F=20
+- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/247317=
+34242
 
-Tests are now in progress:
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/5dc9123ab172
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1083918
 
-- export-net:
-https://github.com/multipath-tcp/mptcp_net-next/commit/7f79e7f6f65de8de0d206d00b4e689e52a94b0ce/checks
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/4464afe97dc56e817a23b730979cbc6fc48f1912/checks
+
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
 
 Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
-
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
