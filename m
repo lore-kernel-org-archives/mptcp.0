@@ -1,89 +1,130 @@
-Received: from sender4-of-o52.zoho.com (sender4-of-o52.zoho.com [136.143.188.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C8C729430
-	for <mptcp@lists.linux.dev>; Tue, 21 Apr 2026 10:24:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.52
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776767092; cv=pass; b=ZEJKLwGF1rcpVI+dtslaFAW3y5xmXLe2MbCAnv4tzaFPsjJqlPUtaJPiaC1qjBTrbnRlj2sVyLg5AF4KhUMGc2yTbdNZ5TYcFbfGNxzVZkJJxU5ECGBquzlW99MwqcJ+c7zEL4s3arrc0omq36xYpUsx1IAhxMT0/S/Qkc9D6S0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776767092; c=relaxed/simple;
-	bh=KaGTlPZXiPTlJ0f3MdwaHLZAa92QuIJ1/2j5TTnV4do=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=JC7zEY3wQXYF1xSsEaUNuy7bq14LfgoLugynAVKl+etsu2GgeXI/uvOvzQqaeqefLvfFyYABZKgEJL7D4R71kvADwo1A6dUBwokKiSP+3mIXPRwQ04N6r8L1yBaFRb/u4qsSMugjb4bV5PxuWP7ue46RMQ3psyaALGxhcyhVwbM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com; spf=pass smtp.mailfrom=mpiricsoftware.com; dkim=pass (1024-bit key) header.d=mpiricsoftware.com header.i=shardul.b@mpiricsoftware.com header.b=gwz+hbh7; arc=pass smtp.client-ip=136.143.188.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mpiricsoftware.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F5E618C2C
+	for <mptcp@lists.linux.dev>; Tue, 21 Apr 2026 11:08:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.41
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1776769719; cv=none; b=cptefCsZylAULKFjpWG5gST8x0zHYV/UWDXR86hgBVIwZrSvHxHXd9zBawoyr721vKbqqdksPwo8B03ak05PCOolB/pyuyNaG5OJ4e3Cc3F0zlRXA0DoR/DR4W69JU/V/nfeieTeTgO7nQ+/EX4QBIHRcRvNY430OySQ4BY2x3E=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1776769719; c=relaxed/simple;
+	bh=AQgw97q98BzHEyp4YvbanXclwpn9aNFfib8XbKaQ5Ck=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
+	 MIME-Version:Content-Type; b=s56+nlTs6Y83moN0zvUuaUv5q/zNA8gmgtMZd7TuwPBjSBVegvzcvA/KThfdAPBMEsHseQSEAwtklleVUBwF9vxNtsHpHoc8CRG+gq3k4SpuoXaslkQQA5ACuN156tlCE8Q9fgTrIO/os4/5QRgffVwjvvA/3aJkCgJcCMz0BFU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kLlsxjSy; arc=none smtp.client-ip=209.85.219.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mpiricsoftware.com header.i=shardul.b@mpiricsoftware.com header.b="gwz+hbh7"
-ARC-Seal: i=1; a=rsa-sha256; t=1776767064; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=TGIOuWJv/Ckvq6riNOhm3BDnSx268RiJIdLq8jNZgAO8lx4aPWWHSRNJqFby/AD8j0WTZD2jqkq14itu9GmX7iNqXkiBHAev1gMXbZw/5YnVVds7JauQdjo4DKpIc4RjoejVhqLbLT4H4FfgcHCTa1Wsc1NCg54sxS1L3I7atxI=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1776767064; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=KaGTlPZXiPTlJ0f3MdwaHLZAa92QuIJ1/2j5TTnV4do=; 
-	b=YxUPvPSdFLqeY0IvdD/ARrr//eB2nuvuRe/q3JWPtP//6/BPf7wzQM/aLrh9WFPPa5AhpBhsY26fXY+rR5L94gl0siAuRdZ7VwGdEsJnK4cf0k9JI4QQzHX4VoeYoAfLos9qYVj23VW1CCpbapMBukSxPpWUQeyfjXE4z4QdvB4=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=mpiricsoftware.com;
-	spf=pass  smtp.mailfrom=shardul.b@mpiricsoftware.com;
-	dmarc=pass header.from=<shardul.b@mpiricsoftware.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1776767064;
-	s=mpiric; d=mpiricsoftware.com; i=shardul.b@mpiricsoftware.com;
-	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:Date:Date:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:MIME-Version:Message-Id:Reply-To;
-	bh=KaGTlPZXiPTlJ0f3MdwaHLZAa92QuIJ1/2j5TTnV4do=;
-	b=gwz+hbh7cL0SvKKTF2fxffes6u1HTNbtInTdKYtidXXrjxUowxIGaqzkK94+YLkz
-	OQq8YfvTS1pYklOGu7vqfLK7fBs+vVMFkdHjOhKMQjGltFTaxS+042LQL+WEPR8BLk4
-	Vh5Nc8FTDA0clwygoP7k+YN6hxSwo0DM9GJjJZbA=
-Received: by mx.zohomail.com with SMTPS id 1776767061654640.3401165179158;
-	Tue, 21 Apr 2026 03:24:21 -0700 (PDT)
-Message-ID: <4d2d7d0e9fcaf6a3039555e4870ee23d59dd3b3d.camel@mpiricsoftware.com>
-Subject: Re: [PATCH] mptcp: add per-reason MIB counters for MPTCP_RST_EMPTCP
- resets
-From: Shardul Bankar <shardul.b@mpiricsoftware.com>
-To: Matthieu Baerts <matttbe@kernel.org>, martineau@kernel.org
-Cc: geliang@kernel.org, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org,  pabeni@redhat.com, horms@kernel.org,
- netdev@vger.kernel.org, mptcp@lists.linux.dev, 
- linux-kernel@vger.kernel.org, janak@mpiric.us,
- kalpan.jani@mpiricsoftware.com
-Date: Tue, 21 Apr 2026 15:54:14 +0530
-In-Reply-To: <3dbda2d2-c7e5-4a12-90c0-d1f98e3d89ee@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kLlsxjSy"
+Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-89f87257904so34245276d6.1
+        for <mptcp@lists.linux.dev>; Tue, 21 Apr 2026 04:08:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1776769717; x=1777374517; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=g3q5CGgHfKcTUm39i8JuJKJrFWpbAWrLMcfucOqL0EA=;
+        b=kLlsxjSyu/x/yv0m6M53ZjhaDfU5Obfd2ywXRhtyHzSA5CHXoLX2Xq/yhyulX/LCk2
+         I3bnkOXaNrbzpx2U86HxBZZgKKO/lH2HAUFrrQZq4LjqUWc2yjXUTd0A4w0UVDJ3M86J
+         f1E1WeKZbyIwExFWJO8HsBj6ya+8iZg45//ooJP2GGXgib20gwuCjnsKoJvV8W/hywVB
+         HSsf/d7n2n9kd5c3VKTISmOSIqtFc3gnvy9NxbVa9w+0w00YEhlt17f5QZmewF0tr7E2
+         s2eKO2zeD8lbJKp8xu5FJSiHllgSAswSmShxmu5vTDmpT4dB518nl5r06wlKRfZujrov
+         A69w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776769717; x=1777374517;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=g3q5CGgHfKcTUm39i8JuJKJrFWpbAWrLMcfucOqL0EA=;
+        b=p6dT8B6iTpblnqXutaQu4xFhFhIsG9jlxpibwdUDCPi/SkSIA9qYt4B1JrrMQNw+mj
+         gMrvvqT/ybn4diJXqf4d5y6GlLoGGqmSqT/n1CZRB2Y3Mz+zJ/LRFGYGu9I1s/nii5qN
+         kSISgsKY2wKhTW3RaUNVjFx3Yk496+xfdcTXJUrYgWCW4OZNNFlzR4/yGkTizQpbzz+4
+         AtK0jpcdca7yiJfZ8/I1k1MetELEDPcg0u+PwrE4gnvth5i29laKfvBQIW3e0oiHsZgJ
+         TEvOBZ8Ykd5840a3r92RPxoKUIbXB3iQQxYdX/u5brso2cLlnoJtYRExT/EGHk54vw2j
+         Ku9w==
+X-Gm-Message-State: AOJu0YwOZUOLGXyrdz1X28NSYCnSLOqG+ogTiYDG1+jZvD1aUVSzq02L
+	titesEIXJYzvabB7wOKiGBI+i1MX0T1/tC21h54rVEP7GNQUhIEXJxU=
+X-Gm-Gg: AeBDievvmZbujIFUbWJYNYX98KWEQxalTBPJWU02EEnrO9W5wgS8do6Av7OJ0I/88H2
+	b4sejWJvp18fGYCTYmXBI9IG67c9+/nJuqqbUBBW75zshO6mK5kkpvacvvsErwwk+sXHhEdLId7
+	t6xgBwWO9epqF+HkeiRpvDqO3/LPZYSDGcK+1SQRp9+mf0N79Djjn3h+RY7XljdnV28zsGkoDci
+	2hXW0Peh+O2MrdXtV4UFpDZxSqsxyU/yjC9Zr5qu6YJkrUR0vlny2OteqeIzHtDK+SyK55InkPQ
+	aDY++HrlCvgHcA66AbFiPWnS6v20OkH8uxKiiTKyy/fjD0LK0SedGl0YQHmd852B6X+O538nQU0
+	4i7gx2SwpR7q484haI5MOlxmL6hrNycgm3tkSn4//WSlkdQ7ot7ERrDnGlQnS6O4QXP3iq7Ur6H
+	5VPxj/Q+B3nRlRoq5XLs1mK2b/5ZcH9Zourde9jl6Fme+5yD5dQQ==
+X-Received: by 2002:ad4:4eaf:0:b0:8b0:2ae4:da26 with SMTP id 6a1803df08f44-8b02ae4ddc1mr276524376d6.10.1776769717547;
+        Tue, 21 Apr 2026 04:08:37 -0700 (PDT)
+Received: from [127.0.0.1] ([172.174.157.137])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8b02ae5ec2dsm103699496d6.29.2026.04.21.04.08.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Apr 2026 04:08:37 -0700 (PDT)
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Shardul Bankar <shardulsb08@gmail.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20260421095646.3741956-1-shardul.b@mpiricsoftware.com>
 References: <20260421095646.3741956-1-shardul.b@mpiricsoftware.com>
-	 <3dbda2d2-c7e5-4a12-90c0-d1f98e3d89ee@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH] mptcp: add per-reason MIB counters for
+ MPTCP_RST_EMPTCP resets
+Message-ID: <d1434c9c-d6ca-a796-3d87-7e961a34a7bd@gmail.com>
 Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4-0ubuntu2.1 
+Date: Tue, 21 Apr 2026 11:08:36 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=utf-8
 
-On Tue, 2026-04-21 at 12:14 +0200, Matthieu Baerts wrote:
-> Hi Shardul,
->=20
->=20
-> Even if the patch looks globally good, net-next is currently closed,
-> and
-> only bug fixes are accepted, see:
->=20
-> https://docs.kernel.org/process/maintainer-netdev.html
->=20
-> pw-bot: defer
->=20
-> Instead, I suggest switching the discussions only on the MPTCP ML: I
-> will try to review this patch and only send a reply to you and the
-> MPTCP
-> list, if that's OK.
->=20
-> Cheers,
-> Matt
+Hi Shardul,
 
-Hi Matt,
+Thank you for your modifications, that's great!
 
-Thanks for looking at this. Happy to continue on the MPTCP list.
+Our CI did some validations and here is its report:
 
-Thanks,
-Shardul
+- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/247170=
+43493
+
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/e67c367c37f3
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1083751
+
+
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
