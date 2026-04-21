@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD346373BF6
-	for <mptcp@lists.linux.dev>; Tue, 21 Apr 2026 16:12:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B644217F33
+	for <mptcp@lists.linux.dev>; Tue, 21 Apr 2026 16:18:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776787956; cv=none; b=FTJDY4aiVLI/kZw+OqAmbSZmVMm1Q9kSitWLuwYHFYkSc7MW5FmqhIrjy06p+rcmftSj1Z3g4q/0H4mJ5Zc0n7Mqjg8BJt0e1Vy94wj0ufMBnW/FRqiArVnNYn4eWKDl3c5sVqbpwUeI6tkDQDeftmrB77h10qJWbFX1ueVRxvk=
+	t=1776788297; cv=none; b=Xp0pv3DDpmTpSec6NidZSGicYC+zoyh/WVv1ZNZL3mPjTlh/iAxW3ThrI2knWV3Rfhgr+RQDx0GVEpm4JdxycaxzotjQyIAiFSJzhbtjB1f2m+J+y8SWGo7rzOrQO6OwRIHD9YZedkbRh4YPOPK1K0BPAaGfc7c0rKXbMaWadGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776787956; c=relaxed/simple;
-	bh=QnLGJYp6YZoBtIJS4m9UFD4y67urr2fqhbDUt22dsbo=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=cCs8I5cu9WWeHhhW/TDwr08jwQt24aAJImXmRdxECaiHK/In5b748K5dBS9YRA3G280yKUhVengGW+9m5CqatzT1S+cM2Inn9ecmHuzk/E/N1Oyr2HVOSHvAJwBFrpyOM3OP1PANQzqpFfBkxINHmskXAX2RIVHUWZBVd6tMRhg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=REkUNy3m; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1776788297; c=relaxed/simple;
+	bh=COAnQJJl2ND6wXhExzdF3axt5yX+j/Q8Lq+ZRnTWEII=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WDu7RMjmhT7YntY9i3ZorSBztyjTEfX2pvFRJ6vnJqox32eHLMPajz420HSo7rWjhok/DTHdMWGaq4qh4Bh+ArrrC9XYiNcFjnKkRkhQYoUrZkG+PvVlsFeVBDXOOtxB2gwOtdKlBkSkcYRvv8umUEhGCal2vMiry8gKl26NlZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k5mEqv7O; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="REkUNy3m"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EED9C2BCB0;
-	Tue, 21 Apr 2026 16:12:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k5mEqv7O"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9975BC2BCB3;
+	Tue, 21 Apr 2026 16:18:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776787956;
-	bh=QnLGJYp6YZoBtIJS4m9UFD4y67urr2fqhbDUt22dsbo=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=REkUNy3mebEFyOPyi3sXtxc0zjyPIaVwDezVCKf/bL1wYp0mUrGpF+JKBDyb0vGD/
-	 AGFy9kvf17J4DPraTBoLwx1JGkm0X/MlAlUGdvDMojp2WodHpJEBCjr6w9wyxqDe9/
-	 wCtNvmnRFYwD9FAhmOkxh11kwy9cBhbxHTci9MGyBbklprLzTbO5N1Z7rDP5LxjOX+
-	 esMSBblX7Qbt3Tqy6aHcW5jc81NlqOhcYRDDrHW8wso+E8v0qsYhGk9DdEFirBVsW2
-	 EXWqD+p8IFCGiSEdqCBI1lqFxhIpXKbna+3uNRL67ZZ4IiVm6TOc089NluYAiSolct
-	 jNwd3qPYMPiow==
-Message-ID: <bbc40289-5b21-4c8c-8864-c37f9738cbcb@kernel.org>
-Date: Tue, 21 Apr 2026 18:12:33 +0200
+	s=k20201202; t=1776788297;
+	bh=COAnQJJl2ND6wXhExzdF3axt5yX+j/Q8Lq+ZRnTWEII=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=k5mEqv7O1lre5FgOSBhanYj+9bmGg7ldHb5jbfz9apz7fObfoRWUeJ/F61Ahpu3Iu
+	 KBWrXKOKCSMZAaFUzWRKjdxne1EcZQpR+qP51R+3zaNClp6kJNevEhorj2AdFBsZdC
+	 8GKKoW/075utBKMS8+za27g14z3aaKocLmN18axXqKCJrNY179X1kkwA8uoNUvmvjQ
+	 7wx8fWo/P6j604ZM4/I9NRiCNyIc02Bw5FYLoFh8ClaC8iWROdfvSCgQprWTKtIlfo
+	 Fzd0N5PooGjp1vs0OSyQvCDtiSg8eA79EL7ZRsq8qR855e/NdBGu0C1GVcILHXWVBl
+	 x6yJkvZMDoUYA==
+Message-ID: <1b74a6dc-6cdb-4046-b327-46470105ba05@kernel.org>
+Date: Tue, 21 Apr 2026 18:18:14 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,11 +38,10 @@ User-Agent: Mozilla Thunderbird Beta
 Subject: Re: [PATCH mptcp-net] mptcp: sockopt: set timestamp flags on subflow
  socket, not msk
 Content-Language: fr
-From: Matthieu Baerts <matttbe@kernel.org>
 To: Gang Yan <gang.yan@linux.dev>, mptcp@lists.linux.dev
 Cc: Gang Yan <yangang@kylinos.cn>
 References: <20260420093343.16443-1-gang.yan@linux.dev>
- <0709c747-463f-4f5f-995b-156764f35da3@kernel.org>
+From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -87,55 +86,39 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <0709c747-463f-4f5f-995b-156764f35da3@kernel.org>
+In-Reply-To: <20260420093343.16443-1-gang.yan@linux.dev>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Gang,
 
-On 20/04/2026 11:46, Matthieu Baerts wrote:
-> Hi Gang,
+On 20/04/2026 11:33, Gang Yan wrote:
+> From: Gang Yan <yangang@kylinos.cn>
 > 
-> On 20/04/2026 11:33, Gang Yan wrote:
->> From: Gang Yan <yangang@kylinos.cn>
->>
->> Both mptcp_setsockopt_sol_socket_tstamp() and
->> mptcp_setsockopt_sol_socket_timestamping() iterate over subflows,
->> acquire the subflow socket lock, but then erroneously pass the MPTCP
->> msk socket to sock_set_timestamp() / sock_set_timestamping() instead
->> of the subflow ssk. As a result, the timestamp flags are set on the
->> wrong socket and have no effect on the actual subflows.
->>
->> Pass ssk instead of sk to both helpers.
+> Both mptcp_setsockopt_sol_socket_tstamp() and
+> mptcp_setsockopt_sol_socket_timestamping() iterate over subflows,
+> acquire the subflow socket lock, but then erroneously pass the MPTCP
+> msk socket to sock_set_timestamp() / sock_set_timestamping() instead
+> of the subflow ssk. As a result, the timestamp flags are set on the
+> wrong socket and have no effect on the actual subflows.
 > 
-> Good catch! How did you find the issue? It would be good to add a test
-> for that, but not sure how.
-> 
->> Fixes: 3f4f958c3a3c ("mptcp: sockopt: propagate timestamp request to subflows")
-> 
-> It looks like this commit doesn't exist in the 'export' or 'export-net'
-> branches. I guess you meant to use 9061f24bf82e instead?
-> 
-> When you do a git blame, do not use branches from the TopGit tree. Use
-> 'net', 'net-next', or the 'export' ones.
-> 
->> Fixes: 6c9a0a0f2333 ("mptcp: setsockopt: convert to mptcp_setsockopt_sol_socket_timestamping()")
->> Assisted-by: GLM-5.1
-> 
-> Thank you for using this tag!
-> 
-> Apart from the above, it looks good to me:
-> 
-> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> 
-> I will wait for the CI, but I can also fix the SHA (if correct) when
-> applying the patch.
-I'm going to apply the patch, but I noticed sashiko mentioned a possible
-other existing issue:
+> Pass ssk instead of sk to both helpers.
 
-  https://sashiko.dev/#/patchset/20260420093343.16443-1-gang.yan@linux.dev
+Thank you for the patch, now in our tree (but don't forget the other
+questions in my other emails in this email thread ;-) )
 
-Do you mind checking if what was reported is correct, please?
+New patches for t/upstream-net and t/upstream:
+- 7ed202c8815a: mptcp: sockopt: set timestamp flags on subflow socket,
+not msk
+- Results: 4ef37f659c52..4f7190e1b98d (export-net)
+- Results: 3662f0d0a0b4..823280e7c25b (export)
+
+Tests are now in progress:
+
+- export-net:
+https://github.com/multipath-tcp/mptcp_net-next/commit/7f79e7f6f65de8de0d206d00b4e689e52a94b0ce/checks
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/4464afe97dc56e817a23b730979cbc6fc48f1912/checks
 
 Cheers,
 Matt
