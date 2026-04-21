@@ -1,227 +1,136 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36B7D37FF60
-	for <mptcp@lists.linux.dev>; Tue, 21 Apr 2026 09:56:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54632388E77;
+	Tue, 21 Apr 2026 10:14:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776765412; cv=none; b=DUOSrtozOzVA6Wxw8QiKDjsbDjk0omP1z0iWwsLt+WyI19kCgCM6z/Z0KtTFczMdEiHcU8l71/AweR6CSVp/07ALBoDgmtH7V0scyyFv4xsC1BcWRVu88N5ty3Sjx/2+i366WDxAYqg/IrIL3g3EstC+GOktzkZwl4KLuzy2dmg=
+	t=1776766472; cv=none; b=bScD3tr34vBcVDeFepFMkPOMw5Psd7YdTLYxf5LY7zPevDi2JhpPECaSqeKDF+l1xgM5jDkyCUzfh+qQH4UmHjMgRpyBfHNtG6ks4bcRVmwRaxaVU9/VyvtifSRSBn1WBktJHgFY7JR5Nssge40MndFvbfW3suKOb5RlBds1OGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776765412; c=relaxed/simple;
-	bh=3BUnvxyuGd1DgomwnEK0E0FhgwItQGQvkyS6mj6Ii+I=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=IBIB67pGq8W9nBrNGMEmUeynrg81R4O6L0RjF/TOy30/EHKVFO8boLPt+eQDaAQEvSA2J+ckuYnoWcnOrg7fRop5PQiYSWfl4pMA7OvVTIK1Fs6/JxhSTJSQtgGiktJE5r+Jv8A1DhrgQe8LL/1EltYK4ycloZ4FpYAho0mheJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SVkDNytn; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1776766472; c=relaxed/simple;
+	bh=CTuYW6gGpLC1FJNsWlxwex+LKlHwkNObQN92CJgtbIY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WGPESDk/DNyuGunpkSj4E5eu6nkZrG/645O/Mk5chG9xlRFFH/Cb0rq8oK1Xo1K/5TMubxd2YgNd86cGXPbFtVAqI52/bKj3Hb06N1biJCp9xG41uLIdjIfqvxhcqF1UYEB3O+YxhjZk5TonJ09tZXjUpJIsJz4J1T9wgbotlG4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dkE9QqFv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SVkDNytn"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2b24fcc2b5dso25633875ad.1
-        for <mptcp@lists.linux.dev>; Tue, 21 Apr 2026 02:56:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1776765410; x=1777370210; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=qKZpSpV9EOuGvsbHlyyvc1vofUH1wihyDABD3Zf9nCg=;
-        b=SVkDNytnV5erwkNAb2YIw3HROBOjRem1YvW6uoru9GoMM5Z9A1U1zOxv4nSQbrTJpe
-         X03fC/8KBWHAt1Cc/0gJiWjxBXLCP2Zhy5u9ClTVq1yBDWTE5pkXFm4lvBdpMOs1BgYW
-         m7JgYdqvUHfJcjqBsCNHtcAjx0FBBXTBr4j3mAYVSOg8FlptJ3Ini5XD+46cuZWJjqJ7
-         vV11353QyHoQtcRar4Ykxz5/6v9yK1+VwzLOUXTt4Rg+aihXhU7rfcoxgGocrKlnrYYk
-         onHCFP6zpTvdnOSXXl+zMR3DlRiAi4dDkm6MDPPno6iEygBkJIRXPxtGKe5op+Fn6kKX
-         1mcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776765410; x=1777370210;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qKZpSpV9EOuGvsbHlyyvc1vofUH1wihyDABD3Zf9nCg=;
-        b=sK1rlxCtDj1AK1pXeNw4u3dcz3paaFHGAaaq0rWsEzueBbC2qmwlu82cwbevh06Q3/
-         kl/g0LxIJZw8bvrOKs3nlt0VzPqDqZ/mh76iUgTIwg52OrTWXI2hFjKEwdobchLfI6a9
-         WWh7tB5SimS+02C8a0Ku6Bhz5XSNkYbqVxzPhm3jMCbjWaikYnkGRYXEkxspJRLA6NBX
-         plra7n8fvWb7AEAmTzgQc1GbmfjKnaeBTSaCZarxO747S8jFd06W2huRmYh/oAiK5nVu
-         P7+0gC9FU40911kYp0UxXELcP4mJ5tF9ChK9gaKf9eV+g/WkDypNnywJAXn+QHaEA1o4
-         /oCw==
-X-Forwarded-Encrypted: i=1; AFNElJ+lAk4Rrsdo3Yp97t+odhcPzwCRCi/AiIfHQFQj64LNCdHagQBPXneooVVVSJZPVAZODUg2rg==@lists.linux.dev
-X-Gm-Message-State: AOJu0Ywee39JvwxRfFMgLz/KMBHhQGo0r99CJe4H3DhTyZ1kh1DJZyrI
-	jShyhrB3Hnc9rP9/f81JXp6nwpO7GkrNZep7lLZf52Dz0G78I1Us1YGJ
-X-Gm-Gg: AeBDiesdBqdUIrrAqkR2svlrh03F8zAexOw0M6ZxnKzWnjZaVFKT0ho7awTatJSVZnT
-	4WLNoOmveOxOB0G4EOdSUTr/IKpRw40jLy0EYBcU3EqwB6cPr8HrjxXH1+QO14WL+OexyqDq9En
-	Lruuqmh4emD3WaX34GX4IlL48bUpj7u57nDTSOkAi0T2dMvZCapu1edlPF+5HeFeJbuufrefKzf
-	7CL1VmEZm7Oq31kIoWmnPbKEOuVkeiT22TX6lyHvb6fma9ZNlsIKhiQYWGkyrPqnjVULWOfLzAQ
-	PbUI+7JRkhu3hROpZRya0pcMdkegzVo+I7sPrvIHXWGazPMJSx2GKQkNPwcREh6m62KkeZ5gmZz
-	mV3m8pMLaiMJvVT3AQ7qoBx6bQWKySK9nt5CXfnIfoafq0nQ3DORMqBWpFSsECDEJCHK2TsPLrQ
-	UxkfDKGMYfIKNGumdkPBxGmITwZYihm+0zKWhYSpr4JA==
-X-Received: by 2002:a17:902:9044:b0:2ae:d09c:5241 with SMTP id d9443c01a7336-2b5f9e7a9b6mr126550535ad.2.1776765410430;
-        Tue, 21 Apr 2026 02:56:50 -0700 (PDT)
-Received: from localhost ([223.185.43.14])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2b5faa32ad8sm134467025ad.31.2026.04.21.02.56.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Apr 2026 02:56:49 -0700 (PDT)
-From: Shardul Bankar <shardulsb08@gmail.com>
-X-Google-Original-From: Shardul Bankar <shardul.b@mpiricsoftware.com>
-To: matttbe@kernel.org,
-	martineau@kernel.org
-Cc: geliang@kernel.org,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	horms@kernel.org,
-	netdev@vger.kernel.org,
-	mptcp@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	janak@mpiric.us,
-	kalpan.jani@mpiricsoftware.com,
-	shardulsb08@gmail.com,
-	Shardul Bankar <shardul.b@mpiricsoftware.com>
-Subject: [PATCH] mptcp: add per-reason MIB counters for MPTCP_RST_EMPTCP resets
-Date: Tue, 21 Apr 2026 15:26:46 +0530
-Message-Id: <20260421095646.3741956-1-shardul.b@mpiricsoftware.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dkE9QqFv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47355C2BCB0;
+	Tue, 21 Apr 2026 10:14:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1776766471;
+	bh=CTuYW6gGpLC1FJNsWlxwex+LKlHwkNObQN92CJgtbIY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=dkE9QqFvn3VDahJ0bsw1W8XlUHoCLspn/+VYCh5pKLuuJxw4rkFN+LHfVUSqYotzM
+	 z93jR8tqlgVgS960+v5iHD3Dtb3JvKNc1/ToUEYKljXbMuaf+rXsgmnmOBRvBzhb5U
+	 mxfqbWOa0M3W2yOP/jBqMRud0gwZmeWuSvNg7OgdGM8oneH4U4+D8Vrh0cF/aG75pQ
+	 66+9FfrVTx3o9AtI4UObI1LPQQvPtemVQw50r/0vsVeK8L03CH3WdC8ZNmqmFwHjKV
+	 dhLkLDzbaK2inxmE1sFUr9onNgMEQSIjShAVFgRCnkdPDLzGt+3bd514VasQyFzY3o
+	 PZAfvUNWxF7tw==
+Message-ID: <3dbda2d2-c7e5-4a12-90c0-d1f98e3d89ee@kernel.org>
+Date: Tue, 21 Apr 2026 12:14:23 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH] mptcp: add per-reason MIB counters for MPTCP_RST_EMPTCP
+ resets
+Content-Language: fr
+To: Shardul Bankar <shardulsb08@gmail.com>, martineau@kernel.org
+Cc: geliang@kernel.org, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
+ netdev@vger.kernel.org, mptcp@lists.linux.dev, linux-kernel@vger.kernel.org,
+ janak@mpiric.us, kalpan.jani@mpiricsoftware.com,
+ Shardul Bankar <shardul.b@mpiricsoftware.com>
+References: <20260421095646.3741956-1-shardul.b@mpiricsoftware.com>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
+ YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
+ c7SPFMpMesgpcu1xFt0F6bcxE+0ojRtSCZ5HDElKlHJNYtD1uwY4UYVGWUGCF/+cY1YLmtfb
+ WdNb/SFo+Mp0HItfBC12qtDIXYvbfNUGVnA5jXeWMEyYhSNktLnpDL2gBUCsdbkov5VjiOX7
+ CRTkX0UgNWRjyFZwThaZADEvAOo12M5uSBk7h07yJ97gqvBtcx45IsJwfUJE4hy8qZqsA62A
+ nTRflBvp647IXAiCcwWsEgE5AXKwA3aL6dcpVR17JXJ6nwHHnslVi8WesiqzUI9sbO/hXeXw
+ TDSB+YhErbNOxvHqCzZEnGAAFf6ges26fRVyuU119AzO40sjdLV0l6LE7GshddyazWZf0iac
+ nEhX9NKxGnuhMu5SXmo2poIQttJuYAvTVUNwQVEx/0yY5xmiuyqvXa+XT7NKJkOZSiAPlNt6
+ VffjgOP62S7M9wDShUghN3F7CPOrrRsOHWO/l6I/qJdUMW+MHSFYPfYiFXoLUZyPvNVCYSgs
+ 3oQaFhHapq1f345XBtfG3fOYp1K2wTXd4ThFraTLl8PHxCn4ywARAQABzSRNYXR0aGlldSBC
+ YWVydHMgPG1hdHR0YmVAa2VybmVsLm9yZz7CwZEEEwEIADsCGwMFCwkIBwIGFQoJCAsCBBYC
+ AwECHgECF4AWIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZUDpDAIZAQAKCRD2t4JPQmmgcz33
+ EACjROM3nj9FGclR5AlyPUbAq/txEX7E0EFQCDtdLPrjBcLAoaYJIQUV8IDCcPjZMJy2ADp7
+ /zSwYba2rE2C9vRgjXZJNt21mySvKnnkPbNQGkNRl3TZAinO1Ddq3fp2c/GmYaW1NWFSfOmw
+ MvB5CJaN0UK5l0/drnaA6Hxsu62V5UnpvxWgexqDuo0wfpEeP1PEqMNzyiVPvJ8bJxgM8qoC
+ cpXLp1Rq/jq7pbUycY8GeYw2j+FVZJHlhL0w0Zm9CFHThHxRAm1tsIPc+oTorx7haXP+nN0J
+ iqBXVAxLK2KxrHtMygim50xk2QpUotWYfZpRRv8dMygEPIB3f1Vi5JMwP4M47NZNdpqVkHrm
+ jvcNuLfDgf/vqUvuXs2eA2/BkIHcOuAAbsvreX1WX1rTHmx5ud3OhsWQQRVL2rt+0p1DpROI
+ 3Ob8F78W5rKr4HYvjX2Inpy3WahAm7FzUY184OyfPO/2zadKCqg8n01mWA9PXxs84bFEV2mP
+ VzC5j6K8U3RNA6cb9bpE5bzXut6T2gxj6j+7TsgMQFhbyH/tZgpDjWvAiPZHb3sV29t8XaOF
+ BwzqiI2AEkiWMySiHwCCMsIH9WUH7r7vpwROko89Tk+InpEbiphPjd7qAkyJ+tNIEWd1+MlX
+ ZPtOaFLVHhLQ3PLFLkrU3+Yi3tXqpvLE3gO3LM7BTQRV4/npARAA5+u/Sx1n9anIqcgHpA7l
+ 5SUCP1e/qF7n5DK8LiM10gYglgY0XHOBi0S7vHppH8hrtpizx+7t5DBdPJgVtR6SilyK0/mp
+ 9nWHDhc9rwU3KmHYgFFsnX58eEmZxz2qsIY8juFor5r7kpcM5dRR9aB+HjlOOJJgyDxcJTwM
+ 1ey4L/79P72wuXRhMibN14SX6TZzf+/XIOrM6TsULVJEIv1+NdczQbs6pBTpEK/G2apME7vf
+ mjTsZU26Ezn+LDMX16lHTmIJi7Hlh7eifCGGM+g/AlDV6aWKFS+sBbwy+YoS0Zc3Yz8zrdbi
+ Kzn3kbKd+99//mysSVsHaekQYyVvO0KD2KPKBs1S/ImrBb6XecqxGy/y/3HWHdngGEY2v2IP
+ Qox7mAPznyKyXEfG+0rrVseZSEssKmY01IsgwwbmN9ZcqUKYNhjv67WMX7tNwiVbSrGLZoqf
+ Xlgw4aAdnIMQyTW8nE6hH/Iwqay4S2str4HZtWwyWLitk7N+e+vxuK5qto4AxtB7VdimvKUs
+ x6kQO5F3YWcC3vCXCgPwyV8133+fIR2L81R1L1q3swaEuh95vWj6iskxeNWSTyFAVKYYVskG
+ V+OTtB71P1XCnb6AJCW9cKpC25+zxQqD2Zy0dK3u2RuKErajKBa/YWzuSaKAOkneFxG3LJIv
+ Hl7iqPF+JDCjB5sAEQEAAcLBXwQYAQIACQUCVeP56QIbDAAKCRD2t4JPQmmgc5VnD/9YgbCr
+ HR1FbMbm7td54UrYvZV/i7m3dIQNXK2e+Cbv5PXf19ce3XluaE+wA8D+vnIW5mbAAiojt3Mb
+ 6p0WJS3QzbObzHNgAp3zy/L4lXwc6WW5vnpWAzqXFHP8D9PTpqvBALbXqL06smP47JqbyQxj
+ Xf7D2rrPeIqbYmVY9da1KzMOVf3gReazYa89zZSdVkMojfWsbq05zwYU+SCWS3NiyF6QghbW
+ voxbFwX1i/0xRwJiX9NNbRj1huVKQuS4W7rbWA87TrVQPXUAdkyd7FRYICNW+0gddysIwPoa
+ KrLfx3Ba6Rpx0JznbrVOtXlihjl4KV8mtOPjYDY9u+8x412xXnlGl6AC4HLu2F3ECkamY4G6
+ UxejX+E6vW6Xe4n7H+rEX5UFgPRdYkS1TA/X3nMen9bouxNsvIJv7C6adZmMHqu/2azX7S7I
+ vrxxySzOw9GxjoVTuzWMKWpDGP8n71IFeOot8JuPZtJ8omz+DZel+WCNZMVdVNLPOd5frqOv
+ mpz0VhFAlNTjU1Vy0CnuxX3AM51J8dpdNyG0S8rADh6C8AKCDOfUstpq28/6oTaQv7QZdge0
+ JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <20260421095646.3741956-1-shardul.b@mpiricsoftware.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-MPTCP_RST_EMPTCP (reset reason 1) is used as a catch-all for seven
-distinct error conditions across subflow setup, authentication, and
-data path validation.  The existing MPRstTx/MPRstRx counters only
-track aggregate reset volume, making it difficult to diagnose which
-code path is triggering subflow resets in production.
+Hi Shardul,
 
-Add per-reason MIB counters for each MPTCP_RST_EMPTCP use site:
+On 21/04/2026 11:56, Shardul Bankar wrote:
+> MPTCP_RST_EMPTCP (reset reason 1) is used as a catch-all for seven
+> distinct error conditions across subflow setup, authentication, and
+> data path validation.  The existing MPRstTx/MPRstRx counters only
+> track aggregate reset volume, making it difficult to diagnose which
+> code path is triggering subflow resets in production.
+> 
+> Add per-reason MIB counters for each MPTCP_RST_EMPTCP use site:
+> 
+>   MPRstMD5SIG         - MD5SIG on listener, incompatible with MPTCP
+>   MPRstNoToken        - JOIN token lookup failed, no matching conn
+>   MPRstNoMPJ          - SYN/ACK missing MP_JOIN option
+>   MPRstHMAC           - HMAC validation failed during subflow join
+>   MPRstFatalFallback  - fatal fallback during child socket creation
+>   MPRstBadMap         - invalid data mapping on established subflow
+>   MPRstNotEstablished - JOIN on not-fully-established msk
+> 
+> These counters are incremented alongside the existing reset_reason
+> assignment and are visible via nstat as MPTcpExtMPRst*.  The
+> aggregate MPRstTx/MPRstRx counters remain unchanged.
+Thank you for this patch.
 
-  MPRstMD5SIG         - MD5SIG on listener, incompatible with MPTCP
-  MPRstNoToken        - JOIN token lookup failed, no matching conn
-  MPRstNoMPJ          - SYN/ACK missing MP_JOIN option
-  MPRstHMAC           - HMAC validation failed during subflow join
-  MPRstFatalFallback  - fatal fallback during child socket creation
-  MPRstBadMap         - invalid data mapping on established subflow
-  MPRstNotEstablished - JOIN on not-fully-established msk
+Even if the patch looks globally good, net-next is currently closed, and
+only bug fixes are accepted, see:
 
-These counters are incremented alongside the existing reset_reason
-assignment and are visible via nstat as MPTcpExtMPRst*.  The
-aggregate MPRstTx/MPRstRx counters remain unchanged.
+https://docs.kernel.org/process/maintainer-netdev.html
 
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/511
-Signed-off-by: Shardul Bankar <shardul.b@mpiricsoftware.com>
----
- net/mptcp/mib.c      |  7 +++++++
- net/mptcp/mib.h      |  7 +++++++
- net/mptcp/protocol.c |  1 +
- net/mptcp/subflow.c  | 14 +++++++++++---
- 4 files changed, 26 insertions(+), 3 deletions(-)
+pw-bot: defer
 
-diff --git a/net/mptcp/mib.c b/net/mptcp/mib.c
-index f23fda0c55a7..ec42583c59cf 100644
---- a/net/mptcp/mib.c
-+++ b/net/mptcp/mib.c
-@@ -71,6 +71,13 @@ static const struct snmp_mib mptcp_snmp_list[] = {
- 	SNMP_MIB_ITEM("MPFastcloseRx", MPTCP_MIB_MPFASTCLOSERX),
- 	SNMP_MIB_ITEM("MPRstTx", MPTCP_MIB_MPRSTTX),
- 	SNMP_MIB_ITEM("MPRstRx", MPTCP_MIB_MPRSTRX),
-+	SNMP_MIB_ITEM("MPRstMD5SIG", MPTCP_MIB_MPRSTMD5SIG),
-+	SNMP_MIB_ITEM("MPRstNoToken", MPTCP_MIB_MPRSTNOTOKEN),
-+	SNMP_MIB_ITEM("MPRstNoMPJ", MPTCP_MIB_MPRSTNOMPJ),
-+	SNMP_MIB_ITEM("MPRstHMAC", MPTCP_MIB_MPRSTHMAC),
-+	SNMP_MIB_ITEM("MPRstFatalFallback", MPTCP_MIB_MPRSTFATALFALLBACK),
-+	SNMP_MIB_ITEM("MPRstBadMap", MPTCP_MIB_MPRSTBADMAP),
-+	SNMP_MIB_ITEM("MPRstNotEstablished", MPTCP_MIB_MPRSTNOTESTABLISHED),
- 	SNMP_MIB_ITEM("SubflowStale", MPTCP_MIB_SUBFLOWSTALE),
- 	SNMP_MIB_ITEM("SubflowRecover", MPTCP_MIB_SUBFLOWRECOVER),
- 	SNMP_MIB_ITEM("SndWndShared", MPTCP_MIB_SNDWNDSHARED),
-diff --git a/net/mptcp/mib.h b/net/mptcp/mib.h
-index 812218b5ed2b..0ac109b52d35 100644
---- a/net/mptcp/mib.h
-+++ b/net/mptcp/mib.h
-@@ -70,6 +70,13 @@ enum linux_mptcp_mib_field {
- 	MPTCP_MIB_MPFASTCLOSERX,	/* Received a MP_FASTCLOSE */
- 	MPTCP_MIB_MPRSTTX,		/* Transmit a MP_RST */
- 	MPTCP_MIB_MPRSTRX,		/* Received a MP_RST */
-+	MPTCP_MIB_MPRSTMD5SIG,		/* MP_RST: MD5SIG enabled on listener */
-+	MPTCP_MIB_MPRSTNOTOKEN,		/* MP_RST: JOIN token not found */
-+	MPTCP_MIB_MPRSTNOMPJ,		/* MP_RST: missing MPJ in SYN/ACK */
-+	MPTCP_MIB_MPRSTHMAC,		/* MP_RST: HMAC validation failed */
-+	MPTCP_MIB_MPRSTFATALFALLBACK,	/* MP_RST: fatal fallback on child */
-+	MPTCP_MIB_MPRSTBADMAP,		/* MP_RST: bad data mapping */
-+	MPTCP_MIB_MPRSTNOTESTABLISHED,	/* MP_RST: JOIN on not-established msk */
- 	MPTCP_MIB_SUBFLOWSTALE,		/* Subflows entered 'stale' status */
- 	MPTCP_MIB_SUBFLOWRECOVER,	/* Subflows returned to active status after being stale */
- 	MPTCP_MIB_SNDWNDSHARED,		/* Subflow snd wnd is overridden by msk's one */
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 17b9a8c13ebf..b06cbcf983f4 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -3836,6 +3836,7 @@ bool mptcp_finish_join(struct sock *ssk)
- 
- 	/* mptcp socket already closing? */
- 	if (!mptcp_is_fully_established(parent)) {
-+		MPTCP_INC_STATS(sock_net(parent), MPTCP_MIB_MPRSTNOTESTABLISHED);
- 		subflow->reset_reason = MPTCP_RST_EMPTCP;
- 		return false;
- 	}
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index e2cb9d23e4a0..71bffcda0138 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -160,6 +160,7 @@ static int subflow_check_req(struct request_sock *req,
- 	 * TCP option space.
- 	 */
- 	if (rcu_access_pointer(tcp_sk(sk_listener)->md5sig_info)) {
-+		MPTCP_INC_STATS(sock_net(sk_listener), MPTCP_MIB_MPRSTMD5SIG);
- 		subflow_add_reset_reason(skb, MPTCP_RST_EMPTCP);
- 		return -EINVAL;
- 	}
-@@ -227,6 +228,7 @@ static int subflow_check_req(struct request_sock *req,
- 
- 		/* Can't fall back to TCP in this case. */
- 		if (!subflow_req->msk) {
-+			MPTCP_INC_STATS(sock_net(sk_listener), MPTCP_MIB_MPRSTNOTOKEN);
- 			subflow_add_reset_reason(skb, MPTCP_RST_EMPTCP);
- 			return -EPERM;
- 		}
-@@ -568,6 +570,7 @@ static void subflow_finish_connect(struct sock *sk, const struct sk_buff *skb)
- 		u8 hmac[SHA256_DIGEST_SIZE];
- 
- 		if (!(mp_opt.suboptions & OPTION_MPTCP_MPJ_SYNACK)) {
-+			MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_MPRSTNOMPJ);
- 			subflow->reset_reason = MPTCP_RST_EMPTCP;
- 			goto do_reset;
- 		}
-@@ -582,6 +585,7 @@ static void subflow_finish_connect(struct sock *sk, const struct sk_buff *skb)
- 
- 		if (!subflow_thmac_valid(subflow)) {
- 			MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_JOINACKMAC);
-+			MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_MPRSTHMAC);
- 			subflow->reset_reason = MPTCP_RST_EMPTCP;
- 			goto do_reset;
- 		}
-@@ -870,6 +874,7 @@ static struct sock *subflow_syn_recv_sock(const struct sock *sk,
- 		 */
- 		if (!ctx || fallback) {
- 			if (fallback_is_fatal) {
-+				MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_MPRSTFATALFALLBACK);
- 				subflow_add_reset_reason(skb, MPTCP_RST_EMPTCP);
- 				goto dispose_child;
- 			}
-@@ -1421,9 +1426,12 @@ static bool subflow_check_data_avail(struct sock *ssk)
- 			 * subflow_error_report() will introduce the appropriate barriers
- 			 */
- 			subflow->reset_transient = 0;
--			subflow->reset_reason = status == MAPPING_NODSS ?
--						MPTCP_RST_EMIDDLEBOX :
--						MPTCP_RST_EMPTCP;
-+			if (status == MAPPING_NODSS) {
-+				subflow->reset_reason = MPTCP_RST_EMIDDLEBOX;
-+			} else {
-+				MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_MPRSTBADMAP);
-+				subflow->reset_reason = MPTCP_RST_EMPTCP;
-+			}
- 
- reset:
- 			WRITE_ONCE(ssk->sk_err, EBADMSG);
+Instead, I suggest switching the discussions only on the MPTCP ML: I
+will try to review this patch and only send a reply to you and the MPTCP
+list, if that's OK.
+
+Cheers,
+Matt
 -- 
-2.34.1
+Sponsored by the NGI0 Core fund.
 
