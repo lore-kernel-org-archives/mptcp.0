@@ -1,130 +1,104 @@
-Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F5E618C2C
-	for <mptcp@lists.linux.dev>; Tue, 21 Apr 2026 11:08:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D38272877E8
+	for <mptcp@lists.linux.dev>; Tue, 21 Apr 2026 15:19:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776769719; cv=none; b=cptefCsZylAULKFjpWG5gST8x0zHYV/UWDXR86hgBVIwZrSvHxHXd9zBawoyr721vKbqqdksPwo8B03ak05PCOolB/pyuyNaG5OJ4e3Cc3F0zlRXA0DoR/DR4W69JU/V/nfeieTeTgO7nQ+/EX4QBIHRcRvNY430OySQ4BY2x3E=
+	t=1776784797; cv=none; b=QaymJB7icRrRv2AiPd2bL7dTlcJA7D2PgBgJ9rZNRu6t0G5Un5SSTP+dC70houabU29+c28b1/R1ptLOCn/unIamK8+99AN8/06PKKnRvZKjpIOO9JgDXoa3X5DFRiCApu6B9SH7PtJiR0SFEqzQ6pkGAoSsO6PSHIHutHPhhuM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776769719; c=relaxed/simple;
-	bh=AQgw97q98BzHEyp4YvbanXclwpn9aNFfib8XbKaQ5Ck=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
-	 MIME-Version:Content-Type; b=s56+nlTs6Y83moN0zvUuaUv5q/zNA8gmgtMZd7TuwPBjSBVegvzcvA/KThfdAPBMEsHseQSEAwtklleVUBwF9vxNtsHpHoc8CRG+gq3k4SpuoXaslkQQA5ACuN156tlCE8Q9fgTrIO/os4/5QRgffVwjvvA/3aJkCgJcCMz0BFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kLlsxjSy; arc=none smtp.client-ip=209.85.219.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1776784797; c=relaxed/simple;
+	bh=exSQ6R35rvGwiDBFJtNX2ZMdkSTb86TkGXOrpM/94Dg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=UxaIw4d/FqfXPTQ6yOqtBv3sEMqLhVKTYP0hZWvSA+sUOQsyjmgT/ivaS9Jug3bynAGv6dkQnn9AcP09j7cJJlJYA7P9vaj8+1XKsECJFgdnBIwAgLFumokip179qbkotVQBEm28Xwh551WVrgacUzkbTLzlSAsanBI+xdwzFfU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LmY57ptD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kLlsxjSy"
-Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-89f87257904so34245276d6.1
-        for <mptcp@lists.linux.dev>; Tue, 21 Apr 2026 04:08:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1776769717; x=1777374517; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=g3q5CGgHfKcTUm39i8JuJKJrFWpbAWrLMcfucOqL0EA=;
-        b=kLlsxjSyu/x/yv0m6M53ZjhaDfU5Obfd2ywXRhtyHzSA5CHXoLX2Xq/yhyulX/LCk2
-         I3bnkOXaNrbzpx2U86HxBZZgKKO/lH2HAUFrrQZq4LjqUWc2yjXUTd0A4w0UVDJ3M86J
-         f1E1WeKZbyIwExFWJO8HsBj6ya+8iZg45//ooJP2GGXgib20gwuCjnsKoJvV8W/hywVB
-         HSsf/d7n2n9kd5c3VKTISmOSIqtFc3gnvy9NxbVa9w+0w00YEhlt17f5QZmewF0tr7E2
-         s2eKO2zeD8lbJKp8xu5FJSiHllgSAswSmShxmu5vTDmpT4dB518nl5r06wlKRfZujrov
-         A69w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776769717; x=1777374517;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=g3q5CGgHfKcTUm39i8JuJKJrFWpbAWrLMcfucOqL0EA=;
-        b=p6dT8B6iTpblnqXutaQu4xFhFhIsG9jlxpibwdUDCPi/SkSIA9qYt4B1JrrMQNw+mj
-         gMrvvqT/ybn4diJXqf4d5y6GlLoGGqmSqT/n1CZRB2Y3Mz+zJ/LRFGYGu9I1s/nii5qN
-         kSISgsKY2wKhTW3RaUNVjFx3Yk496+xfdcTXJUrYgWCW4OZNNFlzR4/yGkTizQpbzz+4
-         AtK0jpcdca7yiJfZ8/I1k1MetELEDPcg0u+PwrE4gnvth5i29laKfvBQIW3e0oiHsZgJ
-         TEvOBZ8Ykd5840a3r92RPxoKUIbXB3iQQxYdX/u5brso2cLlnoJtYRExT/EGHk54vw2j
-         Ku9w==
-X-Gm-Message-State: AOJu0YwOZUOLGXyrdz1X28NSYCnSLOqG+ogTiYDG1+jZvD1aUVSzq02L
-	titesEIXJYzvabB7wOKiGBI+i1MX0T1/tC21h54rVEP7GNQUhIEXJxU=
-X-Gm-Gg: AeBDievvmZbujIFUbWJYNYX98KWEQxalTBPJWU02EEnrO9W5wgS8do6Av7OJ0I/88H2
-	b4sejWJvp18fGYCTYmXBI9IG67c9+/nJuqqbUBBW75zshO6mK5kkpvacvvsErwwk+sXHhEdLId7
-	t6xgBwWO9epqF+HkeiRpvDqO3/LPZYSDGcK+1SQRp9+mf0N79Djjn3h+RY7XljdnV28zsGkoDci
-	2hXW0Peh+O2MrdXtV4UFpDZxSqsxyU/yjC9Zr5qu6YJkrUR0vlny2OteqeIzHtDK+SyK55InkPQ
-	aDY++HrlCvgHcA66AbFiPWnS6v20OkH8uxKiiTKyy/fjD0LK0SedGl0YQHmd852B6X+O538nQU0
-	4i7gx2SwpR7q484haI5MOlxmL6hrNycgm3tkSn4//WSlkdQ7ot7ERrDnGlQnS6O4QXP3iq7Ur6H
-	5VPxj/Q+B3nRlRoq5XLs1mK2b/5ZcH9Zourde9jl6Fme+5yD5dQQ==
-X-Received: by 2002:ad4:4eaf:0:b0:8b0:2ae4:da26 with SMTP id 6a1803df08f44-8b02ae4ddc1mr276524376d6.10.1776769717547;
-        Tue, 21 Apr 2026 04:08:37 -0700 (PDT)
-Received: from [127.0.0.1] ([172.174.157.137])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8b02ae5ec2dsm103699496d6.29.2026.04.21.04.08.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Apr 2026 04:08:37 -0700 (PDT)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Shardul Bankar <shardulsb08@gmail.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20260421095646.3741956-1-shardul.b@mpiricsoftware.com>
-References: <20260421095646.3741956-1-shardul.b@mpiricsoftware.com>
-Subject: Re: [PATCH] mptcp: add per-reason MIB counters for
- MPTCP_RST_EMPTCP resets
-Message-ID: <d1434c9c-d6ca-a796-3d87-7e961a34a7bd@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 21 Apr 2026 11:08:36 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LmY57ptD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05E64C2BCB3;
+	Tue, 21 Apr 2026 15:19:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1776784797;
+	bh=exSQ6R35rvGwiDBFJtNX2ZMdkSTb86TkGXOrpM/94Dg=;
+	h=From:Date:Subject:To:Cc:From;
+	b=LmY57ptDEn73xmLb6nOTxiMH/4VszpMEVb7+3bBlkyy9sjfQmxCOyaL5r1BqIzj2I
+	 nan4kWnu+j8coBknrKKoipm40R8+z+SV3CunDKimtCVbgWJ798xiopYmCPBLJKFZJk
+	 YTa1c39oTIAOU7ac7TvUg9FrDAatOd6rNTyxdGk+clum54O3gta5/xGSSjA9sX5PnZ
+	 1sCk/dI7Si4kic0awEIahCa0t/lg71JbExAiVSmfd5PZT8XYLvHo8ouY+Ew1h+EMCH
+	 cXUQte5FNjJeOTTXBjTvRnQPmQFKXOtBHJxxxu58AnbfB3XYyWRmqdHTlpEHhuie1M
+	 o5GT9EPi+L6zA==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Date: Tue, 21 Apr 2026 17:16:01 +0200
+Subject: [PATCH mptcp-net] mptcp: fastclose msk when linger time is 0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260421-mptcp-fastclose-linger-v1-1-de94d7bffc0a@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/yWMQQ6CMBBFr0JmzSRtpS68imEBw1THYGk6hZgQ7
+ m6V5cv/7+2gnIUVbs0OmTdRWWIF2zZAzyE+GGWqDM64q+mcxXcqlDAMWmhelHGWesoYTGcv3tH
+ k2UOVU+Ygn3/4DqcTuUB/TrqOL6byC8NxfAH171jChQAAAA==
+X-Change-ID: 20260421-mptcp-fastclose-linger-f041352cd5e5
+To: MPTCP Upstream <mptcp@lists.linux.dev>
+Cc: Lance Tuller <lance@lance0.com>, 
+ "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+X-Mailer: b4 0.15.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1857; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=exSQ6R35rvGwiDBFJtNX2ZMdkSTb86TkGXOrpM/94Dg=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDKfT51zryl7ScyCg3M1ZXq93KRmpb9siXDn4C/+7ud6f
+ 07a2+oJHaUsDGJcDLJiiizSbZH5M59X8ZZ4+VnAzGFlAhnCwMUpABOZwsHwz6pOI3Nq4t+6v1bX
+ PixY3jmr4KN6reUP95y1CX9UpLsVNzD8d+Fa35Vf8sk3ZJ3vuYy+ABlW8wr3XQdDJZP2M3EeFFr
+ BBwA=
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hi Shardul,
+The SO_LINGER socket option has been supported for a while with MPTCP
+sockets [1], but it didn't cause the equivalent of a TCP reset as
+expected when enabled and its time was set to 0. This was causing some
+behavioural differences with TCP where some connections were not
+promptly stopped as expected.
 
-Thank you for your modifications, that's great!
+To fix that, an extra condition is checked at close() time before
+sending an MP_FASTCLOSE, the MPTCP equivalent of a TCP reset.
 
-Our CI did some validations and here is its report:
+Note that backporting up to [1] will be difficult as more changes are
+needed to be able to send MP_FASTCLOSE. It seems better to stop at [2],
+which was supposed to already imitate TCP.
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/247170=
-43493
+Validated with MPTCP packetdrill tests [3].
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/e67c367c37f3
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1083751
+Fixes: 268b12387460 ("mptcp: setsockopt: support SO_LINGER") [1]
+Fixes: d21f83485518 ("mptcp: use fastclose on more edge scenarios") [2]
+Reported-by: Lance Tuller <lance@lance0.com>
+Closes: https://github.com/lance0/xfr/pull/67
+Link: https://github.com/multipath-tcp/packetdrill/pull/196 [3]
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+ net/mptcp/protocol.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 6b486fc94c16..0db50e3715c3 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -3302,7 +3302,8 @@ bool __mptcp_close(struct sock *sk, long timeout)
+ 		goto cleanup;
+ 	}
+ 
+-	if (mptcp_data_avail(msk) || timeout < 0) {
++	if (mptcp_data_avail(msk) || timeout < 0 ||
++	    (sock_flag(sk, SOCK_LINGER) && !sk->sk_lingertime)) {
+ 		/* If the msk has read data, or the caller explicitly ask it,
+ 		 * do the MPTCP equivalent of TCP reset, aka MPTCP fastclose
+ 		 */
 
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
+---
+base-commit: 3662f0d0a0b4cdc50193718dd64af57d671ebd59
+change-id: 20260421-mptcp-fastclose-linger-f041352cd5e5
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+Best regards,
+--  
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
