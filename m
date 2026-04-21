@@ -1,104 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D38272877E8
-	for <mptcp@lists.linux.dev>; Tue, 21 Apr 2026 15:19:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B989426290
+	for <mptcp@lists.linux.dev>; Tue, 21 Apr 2026 15:22:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776784797; cv=none; b=QaymJB7icRrRv2AiPd2bL7dTlcJA7D2PgBgJ9rZNRu6t0G5Un5SSTP+dC70houabU29+c28b1/R1ptLOCn/unIamK8+99AN8/06PKKnRvZKjpIOO9JgDXoa3X5DFRiCApu6B9SH7PtJiR0SFEqzQ6pkGAoSsO6PSHIHutHPhhuM=
+	t=1776784944; cv=none; b=gN8EJTvIzJ3+8OwFengwzADQ15KxG5Si7vKsixI9k1E6XadFOpM0uZ9ahQn93Wsxc00+61QPR+DDLYIEXOveOr3htPNhLG90KVbFyZqoBbkhDuZHecsh/IKmq9jdf1kUqzp/MrWFaPaWtBBTYIO6US1PfaxC45nYmy2niVCSQwQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776784797; c=relaxed/simple;
-	bh=exSQ6R35rvGwiDBFJtNX2ZMdkSTb86TkGXOrpM/94Dg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=UxaIw4d/FqfXPTQ6yOqtBv3sEMqLhVKTYP0hZWvSA+sUOQsyjmgT/ivaS9Jug3bynAGv6dkQnn9AcP09j7cJJlJYA7P9vaj8+1XKsECJFgdnBIwAgLFumokip179qbkotVQBEm28Xwh551WVrgacUzkbTLzlSAsanBI+xdwzFfU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LmY57ptD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1776784944; c=relaxed/simple;
+	bh=ONNuuXNmYreZdsSkPA82yNoEEKq06J/t0dBvR50GDeg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=i0VpS23Ty0LhxNdHH/kRT4fN4JgUtHX+k1txA/pce45fKz/EyEFOfRkYxXkY7D52nnQd4S5V3kXSCzV727+KPB7rax+Zs58idfpTyDr2onRA2f9pcWzeNr6RVRxosz00p8lHO++/C/st6nr5XRylGDTCkQSjirkv23Mzjv9T23o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WqPRantr; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LmY57ptD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05E64C2BCB3;
-	Tue, 21 Apr 2026 15:19:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776784797;
-	bh=exSQ6R35rvGwiDBFJtNX2ZMdkSTb86TkGXOrpM/94Dg=;
-	h=From:Date:Subject:To:Cc:From;
-	b=LmY57ptDEn73xmLb6nOTxiMH/4VszpMEVb7+3bBlkyy9sjfQmxCOyaL5r1BqIzj2I
-	 nan4kWnu+j8coBknrKKoipm40R8+z+SV3CunDKimtCVbgWJ798xiopYmCPBLJKFZJk
-	 YTa1c39oTIAOU7ac7TvUg9FrDAatOd6rNTyxdGk+clum54O3gta5/xGSSjA9sX5PnZ
-	 1sCk/dI7Si4kic0awEIahCa0t/lg71JbExAiVSmfd5PZT8XYLvHo8ouY+Ew1h+EMCH
-	 cXUQte5FNjJeOTTXBjTvRnQPmQFKXOtBHJxxxu58AnbfB3XYyWRmqdHTlpEHhuie1M
-	 o5GT9EPi+L6zA==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Tue, 21 Apr 2026 17:16:01 +0200
-Subject: [PATCH mptcp-net] mptcp: fastclose msk when linger time is 0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WqPRantr"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-483487335c2so44729305e9.2
+        for <mptcp@lists.linux.dev>; Tue, 21 Apr 2026 08:22:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1776784941; x=1777389741; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=UtgPgZ4HlQnl8j98LJ7hw96CMdHc/eqoj0ut28JAbyc=;
+        b=WqPRantrTuPtI6y8d59VwRosPX/z1bvHo5Iy/xhTTN51IMyFP5A09fLRmyg9e1xjLY
+         B/lQLf4TIe10tzdBw9jby1ZPF+h5F1oWwSiVVfeXl0BbXHzNh6mUxRRUAXjzUSESChCz
+         Z8Bp47LENqpG0JV24QS3xH86sm40QONKGiT37JxNuP77FrFVHwPEijF4U6VvjZDGuMQt
+         mznGWdAXQ6sIJAVVexiuMu6/V1VqHqgBYCDiXndCcr8bEBmYcX9f7rAapgfIlPGyCquh
+         MJjosDXJHqvgOdrZyA5gZ2OkFlWIGgGcxfvxuNJADRZDFHlJTMa6qbMLMn+ZGLgConkx
+         SlQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776784941; x=1777389741;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UtgPgZ4HlQnl8j98LJ7hw96CMdHc/eqoj0ut28JAbyc=;
+        b=ZFGsv4QeeIOlqsLFoFl5jPjJJpbU/8ZM6as+qpphH3Apcr3OWYb7aw54pSxzGZ8Wgd
+         /qfasyGsqyxD6E/9jrGXdFhWSf6nSWRf13FdlWn5/d1ehG5gwNvEOrdXnNrLVTwcevbR
+         0x2s7T0x5k+Ze5ov1E8yayrGtV+P2EtAeCnE0N2QVpXZJ0KEQO05hrpBZPrCYrMiaIAv
+         IuHrzROX7wWdsw6hfU1VoODQvrcA+2i6oHVaziwArgoYSZwxfRmLBS5jemeRvm8aQY1P
+         7o4YZN+okegMew1OmHdzfFeP2G9Sg8d8h5L5BCp7nq3Ntuu0Q2kfUunffWy6OOQAJY8z
+         CZhg==
+X-Forwarded-Encrypted: i=1; AFNElJ+dwhHNCNP6PJirj+oZk6Uq8w6eV8h7m8XzfSa7L8urC55M2AicuaeUDx1P/L8Y1l/8K5pCjQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0YyVKYZV9f/iZIsSvIW9ZxnggcqFnoL8P7iQvL1euE6a8hi/CWHP
+	rkFJlrifH4R4l/ifuWorRXUIx2aqMp0kvHdjDKc5Ht6suXB3jNyfr1cx
+X-Gm-Gg: AeBDiev+d4GyQ3EqHd4BIYNbMrEnZCWy/IP/BzyyBonhZclVS2iAVKrF936xp0qIEjX
+	Q/elGDPoQiHwJYPVB88dq6/BAqsMjCnn5WLX7QiWu7cu+rGYRZrwcHkWOICBEovYJ7W5lWtoEA/
+	OAv4ovAlYX9HDOm4FmnEFTeY/dhp3Uk4yk1MloC5x/qRDZstxtkXBKQJ85GiPQgeHFCsiAK0vxp
+	lIHdLgt/c9pbF0BPADGZ3T4ZAfABivgbCq3j1jjkHyLQbZ854Ap4p5C0BSPWMcbahnp5pxeKoIh
+	cHl1h6a98Q7GDYCZGZY+/8vEz5mvahACgmplNkJ4K/XYRPhe73gHH8Avwn+bvxefrqOGn490+9k
+	Cleef3CmVkmPzAk5EYvY+0dB6y8Z0aqXO4Z5f+zSa0Vx4HEsjHVlQGKSYcAGFFxaMfu9fjSov9k
+	YhXVqDB8EUIjTu03Fuy3YHv0YCnMSzAFkVGS2IIOLZPkDZ31SoavomqLbSldUltMRowWmWaIRtD
+	91dBVoo0fL5rHAlTg0Uvw==
+X-Received: by 2002:a05:600c:3150:b0:480:3ad0:93bf with SMTP id 5b1f17b1804b1-488fb7930famr275235665e9.24.1776784940756;
+        Tue, 21 Apr 2026 08:22:20 -0700 (PDT)
+Received: from dohko.chello.ie (188-141-5-72.dynamic.upc.ie. [188.141.5.72])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4411c9f4f03sm8975225f8f.1.2026.04.21.08.22.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Apr 2026 08:22:20 -0700 (PDT)
+From: David Carlier <devnexen@gmail.com>
+To: netdev@vger.kernel.org,
+	mptcp@lists.linux.dev
+Cc: matttbe@kernel.org,
+	martineau@kernel.org,
+	geliang@kernel.org,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	horms@kernel.org,
+	David Carlier <devnexen@gmail.com>
+Subject: [PATCH 0/3] mptcp: add RECVERR and MSG_ERRQUEUE support
+Date: Tue, 21 Apr 2026 16:22:08 +0100
+Message-ID: <20260421152216.38127-1-devnexen@gmail.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260421-mptcp-fastclose-linger-v1-1-de94d7bffc0a@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/yWMQQ6CMBBFr0JmzSRtpS68imEBw1THYGk6hZgQ7
- m6V5cv/7+2gnIUVbs0OmTdRWWIF2zZAzyE+GGWqDM64q+mcxXcqlDAMWmhelHGWesoYTGcv3tH
- k2UOVU+Ygn3/4DqcTuUB/TrqOL6byC8NxfAH171jChQAAAA==
-X-Change-ID: 20260421-mptcp-fastclose-linger-f041352cd5e5
-To: MPTCP Upstream <mptcp@lists.linux.dev>
-Cc: Lance Tuller <lance@lance0.com>, 
- "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1857; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=exSQ6R35rvGwiDBFJtNX2ZMdkSTb86TkGXOrpM/94Dg=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDKfT51zryl7ScyCg3M1ZXq93KRmpb9siXDn4C/+7ud6f
- 07a2+oJHaUsDGJcDLJiiizSbZH5M59X8ZZ4+VnAzGFlAhnCwMUpABOZwsHwz6pOI3Nq4t+6v1bX
- PixY3jmr4KN6reUP95y1CX9UpLsVNzD8d+Fa35Vf8sk3ZJ3vuYy+ABlW8wr3XQdDJZP2M3EeFFr
- BBwA=
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+Content-Transfer-Encoding: 8bit
 
-The SO_LINGER socket option has been supported for a while with MPTCP
-sockets [1], but it didn't cause the equivalent of a TCP reset as
-expected when enabled and its time was set to 0. This was causing some
-behavioural differences with TCP where some connections were not
-promptly stopped as expected.
+MPTCP already advertises IP_RECVERR/IPV6_RECVERR as supported, but the
+parent socket does not currently provide usable MSG_ERRQUEUE handling.
 
-To fix that, an extra condition is checked at close() time before
-sending an MP_FASTCLOSE, the MPTCP equivalent of a TCP reset.
+This series wires the MPTCP socket up to the IPv4/IPv6 error queue
+paths. It propagates RECVERR-related sockopts to existing and future
+subflows, makes poll() report pending errqueue activity through the
+parent socket, and allows recvmsg(MSG_ERRQUEUE) on the MPTCP socket to
+consume queued errors with the parent socket ABI.
 
-Note that backporting up to [1] will be difficult as more changes are
-needed to be able to send MP_FASTCLOSE. It seems better to stop at [2],
-which was supposed to already imitate TCP.
+The series also handles mixed-family subflows by applying the matching
+sockopt according to each subflow family, and avoids silently losing an
+error skb if requeueing to the parent socket fails under rmem pressure.
 
-Validated with MPTCP packetdrill tests [3].
+Patch 1 propagates the RECVERR sockopts to subflows.
+Patch 2 implements parent-socket MSG_ERRQUEUE handling and poll()
+reporting.
+Patch 3 adds selftest coverage for RECVERR sockopt round-trips and
+timestamping-driven MSG_ERRQUEUE delivery on the MPTCP parent socket.
 
-Fixes: 268b12387460 ("mptcp: setsockopt: support SO_LINGER") [1]
-Fixes: d21f83485518 ("mptcp: use fastclose on more edge scenarios") [2]
-Reported-by: Lance Tuller <lance@lance0.com>
-Closes: https://github.com/lance0/xfr/pull/67
-Link: https://github.com/multipath-tcp/packetdrill/pull/196 [3]
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- net/mptcp/protocol.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Testing:
+- make -C tools/testing/selftests/net/mptcp mptcp_sockopt
+- git diff --check
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 6b486fc94c16..0db50e3715c3 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -3302,7 +3302,8 @@ bool __mptcp_close(struct sock *sk, long timeout)
- 		goto cleanup;
- 	}
- 
--	if (mptcp_data_avail(msk) || timeout < 0) {
-+	if (mptcp_data_avail(msk) || timeout < 0 ||
-+	    (sock_flag(sk, SOCK_LINGER) && !sk->sk_lingertime)) {
- 		/* If the msk has read data, or the caller explicitly ask it,
- 		 * do the MPTCP equivalent of TCP reset, aka MPTCP fastclose
- 		 */
+David Carlier (3):
+  mptcp: propagate RECVERR sockopts to subflows
+  mptcp: support MSG_ERRQUEUE on the parent socket
+  selftests: mptcp: cover RECVERR and MSG_ERRQUEUE
 
----
-base-commit: 3662f0d0a0b4cdc50193718dd64af57d671ebd59
-change-id: 20260421-mptcp-fastclose-linger-f041352cd5e5
+ net/mptcp/protocol.c                          | 121 +++++++++++---
+ net/mptcp/sockopt.c                           | 125 ++++++++++++++
+ .../selftests/net/mptcp/mptcp_sockopt.c       | 152 ++++++++++++++++++
+ 3 files changed, 380 insertions(+), 18 deletions(-)
 
-Best regards,
---  
-Matthieu Baerts (NGI0) <matttbe@kernel.org>
-
+-- 
+2.53.0
