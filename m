@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9FC3295DA6;
-	Tue, 21 Apr 2026 16:07:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD346373BF6
+	for <mptcp@lists.linux.dev>; Tue, 21 Apr 2026 16:12:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776787641; cv=none; b=OKGca9zkmlJhFR7kn0nQKtP3t4sqPrTlWGCcL/a1o9eUq/25j4jjzEp4q+xbTq6PuwCWi54fZsn8uS+3TqHuTxxVD9jSAiGZEuFf+KaWNKQIaxt2XUegCIYMPkpBLMcAH4g+Osx+HFXx/T31XQqeeJfmW3+9hHdPs+HXhGO8/fw=
+	t=1776787956; cv=none; b=FTJDY4aiVLI/kZw+OqAmbSZmVMm1Q9kSitWLuwYHFYkSc7MW5FmqhIrjy06p+rcmftSj1Z3g4q/0H4mJ5Zc0n7Mqjg8BJt0e1Vy94wj0ufMBnW/FRqiArVnNYn4eWKDl3c5sVqbpwUeI6tkDQDeftmrB77h10qJWbFX1ueVRxvk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776787641; c=relaxed/simple;
-	bh=fKowrHbZJCe7YKyNI7Ish5wGyNOJSRJrxLJLMwb//RI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dkLWCO+tozuOxPnEiCYyooOUB6pSlmzTVuRMuXEkpYEyx30ImPUtbKOoPUsEYmqKCxmhwEG3H3u5XICdrhj2rDmcWOGs8pXdm4M4tC71ZbKUKgAAXt0QcdTdZL5dI1RwqzgZTd7dQhPn4OeuSMzsc0LANVQZQWzgl3y7sFLCqCc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uZifecUu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1776787956; c=relaxed/simple;
+	bh=QnLGJYp6YZoBtIJS4m9UFD4y67urr2fqhbDUt22dsbo=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=cCs8I5cu9WWeHhhW/TDwr08jwQt24aAJImXmRdxECaiHK/In5b748K5dBS9YRA3G280yKUhVengGW+9m5CqatzT1S+cM2Inn9ecmHuzk/E/N1Oyr2HVOSHvAJwBFrpyOM3OP1PANQzqpFfBkxINHmskXAX2RIVHUWZBVd6tMRhg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=REkUNy3m; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uZifecUu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A953C2BCB0;
-	Tue, 21 Apr 2026 16:07:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="REkUNy3m"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EED9C2BCB0;
+	Tue, 21 Apr 2026 16:12:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776787641;
-	bh=fKowrHbZJCe7YKyNI7Ish5wGyNOJSRJrxLJLMwb//RI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=uZifecUuEovU4uCy7/OkoJAYaN5EbLkhRENzu2sCsqyrbjiGtlu25mmmH424rC705
-	 sU1IHpnZX2Hfyq2JiLYnDE9STwgsSFoXj6q7hDgBlav0Yp7WjZXCKGxf8OYBO9YA55
-	 Fb7+t6dL54FBWveGEI4Ka0rBNyJNNDkQBfxIKV6EasVUUXN766/jlMXt5Wq0y4DXeM
-	 zhAt6b9BZYpGoz0EPu8SeEgcUPelnrT8X55UXje8qs3C7fG2kZHDCIqUaphe9GIWFI
-	 54f3q5QZCRMJYHZtNNqW4aMeGfABtcPyBo5Te9Hoy9H6X0beX/hvdh0ru/Q4wQmTzk
-	 lbM2ydP1do4LA==
-Message-ID: <e190409c-3dee-4de8-b1a0-7867213cb801@kernel.org>
-Date: Tue, 21 Apr 2026 18:07:15 +0200
+	s=k20201202; t=1776787956;
+	bh=QnLGJYp6YZoBtIJS4m9UFD4y67urr2fqhbDUt22dsbo=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=REkUNy3mebEFyOPyi3sXtxc0zjyPIaVwDezVCKf/bL1wYp0mUrGpF+JKBDyb0vGD/
+	 AGFy9kvf17J4DPraTBoLwx1JGkm0X/MlAlUGdvDMojp2WodHpJEBCjr6w9wyxqDe9/
+	 wCtNvmnRFYwD9FAhmOkxh11kwy9cBhbxHTci9MGyBbklprLzTbO5N1Z7rDP5LxjOX+
+	 esMSBblX7Qbt3Tqy6aHcW5jc81NlqOhcYRDDrHW8wso+E8v0qsYhGk9DdEFirBVsW2
+	 EXWqD+p8IFCGiSEdqCBI1lqFxhIpXKbna+3uNRL67ZZ4IiVm6TOc089NluYAiSolct
+	 jNwd3qPYMPiow==
+Message-ID: <bbc40289-5b21-4c8c-8864-c37f9738cbcb@kernel.org>
+Date: Tue, 21 Apr 2026 18:12:33 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,14 +35,14 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH 0/3] mptcp: add RECVERR and MSG_ERRQUEUE support
-To: David Carlier <devnexen@gmail.com>, netdev@vger.kernel.org,
- mptcp@lists.linux.dev
-Cc: martineau@kernel.org, geliang@kernel.org, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org
-References: <20260421152216.38127-1-devnexen@gmail.com>
-From: Matthieu Baerts <matttbe@kernel.org>
+Subject: Re: [PATCH mptcp-net] mptcp: sockopt: set timestamp flags on subflow
+ socket, not msk
 Content-Language: fr
+From: Matthieu Baerts <matttbe@kernel.org>
+To: Gang Yan <gang.yan@linux.dev>, mptcp@lists.linux.dev
+Cc: Gang Yan <yangang@kylinos.cn>
+References: <20260420093343.16443-1-gang.yan@linux.dev>
+ <0709c747-463f-4f5f-995b-156764f35da3@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -87,41 +87,55 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20260421152216.38127-1-devnexen@gmail.com>
+In-Reply-To: <0709c747-463f-4f5f-995b-156764f35da3@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi David,
+Hi Gang,
 
-On 21/04/2026 17:22, David Carlier wrote:
-> MPTCP already advertises IP_RECVERR/IPV6_RECVERR as supported, but the
-> parent socket does not currently provide usable MSG_ERRQUEUE handling.
+On 20/04/2026 11:46, Matthieu Baerts wrote:
+> Hi Gang,
 > 
-> This series wires the MPTCP socket up to the IPv4/IPv6 error queue
-> paths. It propagates RECVERR-related sockopts to existing and future
-> subflows, makes poll() report pending errqueue activity through the
-> parent socket, and allows recvmsg(MSG_ERRQUEUE) on the MPTCP socket to
-> consume queued errors with the parent socket ABI.
+> On 20/04/2026 11:33, Gang Yan wrote:
+>> From: Gang Yan <yangang@kylinos.cn>
+>>
+>> Both mptcp_setsockopt_sol_socket_tstamp() and
+>> mptcp_setsockopt_sol_socket_timestamping() iterate over subflows,
+>> acquire the subflow socket lock, but then erroneously pass the MPTCP
+>> msk socket to sock_set_timestamp() / sock_set_timestamping() instead
+>> of the subflow ssk. As a result, the timestamp flags are set on the
+>> wrong socket and have no effect on the actual subflows.
+>>
+>> Pass ssk instead of sk to both helpers.
 > 
-> The series also handles mixed-family subflows by applying the matching
-> sockopt according to each subflow family, and avoids silently losing an
-> error skb if requeueing to the parent socket fails under rmem pressure.
-Thank you for this series!
+> Good catch! How did you find the issue? It would be good to add a test
+> for that, but not sure how.
+> 
+>> Fixes: 3f4f958c3a3c ("mptcp: sockopt: propagate timestamp request to subflows")
+> 
+> It looks like this commit doesn't exist in the 'export' or 'export-net'
+> branches. I guess you meant to use 9061f24bf82e instead?
+> 
+> When you do a git blame, do not use branches from the TopGit tree. Use
+> 'net', 'net-next', or the 'export' ones.
+> 
+>> Fixes: 6c9a0a0f2333 ("mptcp: setsockopt: convert to mptcp_setsockopt_sol_socket_timestamping()")
+>> Assisted-by: GLM-5.1
+> 
+> Thank you for using this tag!
+> 
+> Apart from the above, it looks good to me:
+> 
+> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> 
+> I will wait for the CI, but I can also fix the SHA (if correct) when
+> applying the patch.
+I'm going to apply the patch, but I noticed sashiko mentioned a possible
+other existing issue:
 
-Even if I agree it would be good to have full MSG_ERRQUEUE support,
-net-next is currently closed, and only bug fixes are accepted, see:
+  https://sashiko.dev/#/patchset/20260420093343.16443-1-gang.yan@linux.dev
 
-  https://docs.kernel.org/process/maintainer-netdev.html
-
-pw-bot: defer
-
-Instead, I suggest switching the discussions only to the MPTCP ML if
-that's OK. If the CI is happy, someone will try to review it over there,
-when time permits. If not, please send the new versions only to the
-MPTCP ML, with the 'PATCH mptcp-next' prefix, and ideally on top of the
-'export' (or 'for-review') branch of our tree. For more details:
-
-  https://www.mptcp.dev/contributing.html#kernel-development
+Do you mind checking if what was reported is correct, please?
 
 Cheers,
 Matt
