@@ -1,40 +1,82 @@
-Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D9973C1969
-	for <mptcp@lists.linux.dev>; Wed, 22 Apr 2026 09:19:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CA7135F60F
+	for <mptcp@lists.linux.dev>; Wed, 22 Apr 2026 12:09:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776849587; cv=none; b=SWKxkWv1Pl/U2dID7Lx39++8L3y820N9F+Zo/oo8Aog2Iq/o3qPm125VG4XdJEbYHF0eGeDfNL3OPQ8yOdpvlSRAWx9ghEFpwxJrAEkFRcmNZpSSUWab7fhXfVJ2l0+r++04zW0YfAHNl2ML9yc1yrrIO6xw0ZlcJvgm8XbUor0=
+	t=1776859800; cv=none; b=myQowwvKcltnslhbEHOW+TIISGw2Sv7hLgSE/4KrGkF/Or6n6SubE/Z9PAB9LfdqPebX9GpYPmZTZDoiXERhZ0LrviEmz1YzpcVvx8ATrWIHbDxITSMRZvb1py/NvM+HxCdWfBLcrGIv7KJScgOYbkhILgcI0zJDy/lbEGm89eE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776849587; c=relaxed/simple;
-	bh=P7PP2jtqittMvosmQO7pdXyjNe3WOSx1GT3nKtz0aks=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=V5ljIgQIUFKxQ+W5r8hsN+7+uVXWnNrdqdkVskwaIG9+zPTqmFaaceO9uzd7NGDBUaqzgfDaw4duQ2/hA2mgnVlhSuwOiCcBdmdmYkdH5REMIAkC5IHV+o0KVl82UaQv84GsqSSMIdPkScq55+OEbr2LZs/iuGErk3h+y7iR9Tc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=AKGu2M1T; arc=none smtp.client-ip=95.215.58.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1776859800; c=relaxed/simple;
+	bh=hjsvYy51l4+d68+Ky+C/JI2f1kTJUYN+qBMx0/prB8M=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=DUlFHRE+LIqFbPbv4Vy6C5bRr2lCqwDh4w7nyJIlFQ4mMNDfkJ/TV/P4sCT8vQIARzgSLr1+HR+yd5brYkk4gFgt74pGolVIFm+h/Q/PfwnS64Od8sT0rYC/wgqD1NfQiCyUbQonrEZKo8eWGhvYVuvzfkGLqRNBo73dPYBMaN0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cVAgZlaL; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="AKGu2M1T"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1776849583;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6P6XI3we9NVLb5TX43wmOkIHiXGtuZM3DJbatEiDbM0=;
-	b=AKGu2M1TngZGIjAuJAAsoahkZaAHahu5me8W56jV1xpxNSHXkZzDC0ujd9HolJd3e0mLUP
-	3jobxMD0ia917tW+7JmHnBQyF0ybsg+N0Fwz81FaQ8+VWDsLJXpvYCxom+hGQqpFlzDJVy
-	G7uGc+rJegibxj17s5pSXqZOiij/0fc=
-From: Gang Yan <gang.yan@linux.dev>
-To: mptcp@lists.linux.dev
-Cc: Gang Yan <yangang@kylinos.cn>
-Subject: [PATCH mptcp-next 2/2] mptcp: use sockopt_lock(release)_sock in sockopt
-Date: Wed, 22 Apr 2026 17:19:22 +0800
-Message-ID: <20260422091927.77770-3-gang.yan@linux.dev>
-In-Reply-To: <20260422091927.77770-1-gang.yan@linux.dev>
-References: <20260422091927.77770-1-gang.yan@linux.dev>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cVAgZlaL"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-8296dabef74so4595600b3a.1
+        for <mptcp@lists.linux.dev>; Wed, 22 Apr 2026 05:09:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1776859799; x=1777464599; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=NebLMnO65OtCJ9kTmTFrhiV9D6tfIFz2CrdNbRxmY7A=;
+        b=cVAgZlaL64DEWHYdtNkAON6Et4OjkW3rsHcHQQRPFN1dCqJrE90VSnaNi6tIEafvqm
+         WUhlwPHdvnWFHzJVFIyNYtorHZeuNfWxqeU8mHLZVZynQxXK8YoY1ICQYX2Rsn4mWMu2
+         fG4hlhXqkPHZDG+66CK2hwshOLLJqzzhQhy+Tov8dtmV9sXce1JQ6wPdPhk0ZtVwBj1o
+         4TR6Pk5k0FRTOr6fZoMkabvm9NSuzoj7ClpoSCWr3otLHEbflx9CawzH4uUZ2nF7ergZ
+         BHzgWTT1vbNwg630vA3kLuFEkmkhBOo1gaZI2PDwT+0MUWrlluh/92Hs++znqnZ+XVsy
+         GTHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776859799; x=1777464599;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NebLMnO65OtCJ9kTmTFrhiV9D6tfIFz2CrdNbRxmY7A=;
+        b=NigKSpLG29lMfDdbtXTR033sTlz1/2hvj7rb3JR19kZAAz/SPUteNBGq6cyHOIq6sm
+         O9MsNkwMHfji0zewMJ3pofNsBRfUDcTnXVz3M9DHtOaQKJj3U9R+yMZHL6RqNNU8Uxjz
+         oT6UYp/bnRt94C49XUu4u35sLBUlQ5zLjn9OsmZCJe43MHPl6AMQNFAxGjqcV/CPlzew
+         09YHaS63LCPM0m6tVh+EK6yclPzayRcRRmfN90uhHYWFyXKDBvh/h1q2F/mqbq8L88c3
+         0K3361+d9SQWoGOhurW9EN+AvqwnBU4f7gIqZ6gmTVAmeHo+w3+Z230FM2rYiBtQVrCT
+         aoCw==
+X-Forwarded-Encrypted: i=1; AFNElJ/r8i0BPd5viLvYcboOqbENNz2qKtKQJgNki8u3FGYAYc3JTGACG60ojpSyRPMwVGAg2SsJBg==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yy4SnXVTUe3jRsMP5txFsE75pfu/DnKS1ErTOL0PgKl4YVijogP
+	rM7L9uM8ICjUIdjXjVK3GPV4tCSwUpDc5A5/FuLULcjHjW9LtNhvw2P2
+X-Gm-Gg: AeBDiesPwtWJFmji9BV55eMvn+jNOYLB8w2URwYqyLwQcWwRxP0kgJUmyJvwx/v8ojH
+	inwzeXATyn6gLHyLue7F82pUgNnGtVSHOKCbYflqT4oryDTLiQbRroizxXkB+TNTD3LI7eaFV0/
+	1ttI/PT7wRBKhvg7fstgtRzfRmJgpNh3PCMOMVpl0OfOXjU8nFfew4/cATL2dsXrCDCdzCtHd2w
+	DoSzF/7aa67CWzswnJ+sIeiHiGsbTqT6LHPiHrljtzpeRgpGlBzO1ja38KCE8diYH1/8dKWbhyA
+	eCc4MAHUgPeCnCDl+az6l9wVdbtB/l07WQNmLGPLUSu+z613NlBWYP41Mc9h3xj+d2ooAZdGsJY
+	XdQaeJC5FKbBmm7173KUjFnkfAEGY5sTvC4Fteg2PEtmHpZyevaYHBE9FqlFnEjT0oRGr4Ez5Rd
+	Kd5vn/UnSIhgmcSnuT1tAr6vEG4y1ayjw=
+X-Received: by 2002:a05:6a00:3e16:b0:82f:5571:1a8d with SMTP id d2e1a72fcca58-82f8c8308e0mr23715240b3a.2.1776859798571;
+        Wed, 22 Apr 2026 05:09:58 -0700 (PDT)
+Received: from localhost ([223.185.43.14])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-82f8e9fcea9sm21196745b3a.23.2026.04.22.05.09.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Apr 2026 05:09:58 -0700 (PDT)
+From: Shardul Bankar <shardulsb08@gmail.com>
+X-Google-Original-From: Shardul Bankar <shardul.b@mpiricsoftware.com>
+To: matttbe@kernel.org,
+	martineau@kernel.org
+Cc: geliang@kernel.org,
+	pabeni@redhat.com,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	horms@kernel.org,
+	netdev@vger.kernel.org,
+	mptcp@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	janak@mpiric.us,
+	kalpan.jani@mpiricsoftware.com,
+	shardulsb08@gmail.com,
+	Shardul Bankar <shardul.b@mpiricsoftware.com>
+Subject: [PATCH] mptcp: do not drop partial packets
+Date: Wed, 22 Apr 2026 17:39:54 +0530
+Message-Id: <20260422120954.8877-1-shardul.b@mpiricsoftware.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -42,457 +84,67 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-From: Gang Yan <yangang@kylinos.cn>
+When a packet arrives with map_seq < ack_seq < end_seq, the beginning
+of the packet has already been acknowledged but the end contains new
+data.  Currently the entire packet is dropped as "old data," forcing
+the sender to retransmit.
 
-TCP and the core socket layer all use sockopt_lock_sock()
-sockopt_release_sock() in their setsockopt and getsockopt handlers. It
-is a BPF-aware wrapper that skips lock acquisition when invoked from a
-BPF program, where the socket lock is already held.
+Instead, skip the already-acked bytes by adjusting the skb offset and
+enqueue only the new portion.  Update bytes_received and ack_seq to
+reflect the new data consumed.
 
-Using lock_sock_fast() on subflows requires extra care: the fast path
-holds the socket spinlock with BH disabled, creating an atomic context
-where sleeping is not allowed.  Switching to sockopt_lock_sock()
-avoids the risk of accidentally introducing sleeping operations inside
-the lock_sock_fast() critical section.
+A previous attempt at this fix (commit 1d2ce718811a ("mptcp: do not
+drop partial packets"), reverted in commit bf39160c4218 ("Revert
+"mptcp: do not drop partial packets"")) also added a zero-window
+check and changed rcv_wnd_sent initialization, which caused test
+regressions.  This version addresses only the partial packet handling
+without modifying receive window accounting.
 
-Signed-off-by: Gang Yan <yangang@kylinos.cn>
+Fixes: ab174ad8ef76 ("mptcp: move ooo skbs into msk out of order queue.")
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/600
+Signed-off-by: Shardul Bankar <shardul.b@mpiricsoftware.com>
 ---
- net/mptcp/sockopt.c | 121 ++++++++++++++++++++++----------------------
- 1 file changed, 60 insertions(+), 61 deletions(-)
+ net/mptcp/protocol.c | 25 ++++++++++++++++++++-----
+ 1 file changed, 20 insertions(+), 5 deletions(-)
 
-diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-index 0efe40be2fde..a4a7df4a3c8c 100644
---- a/net/mptcp/sockopt.c
-+++ b/net/mptcp/sockopt.c
-@@ -72,12 +72,12 @@ static void mptcp_sol_socket_sync_intval(struct mptcp_sock *msk, int optname, in
- 	struct mptcp_subflow_context *subflow;
- 	struct sock *sk = (struct sock *)msk;
- 
--	lock_sock(sk);
-+	sockopt_lock_sock(sk);
- 	sockopt_seq_inc(msk);
- 
- 	mptcp_for_each_subflow(msk, subflow) {
- 		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
--		bool slow = lock_sock_fast(ssk);
-+		sockopt_lock_sock(ssk);
- 
- 		switch (optname) {
- 		case SO_DEBUG:
-@@ -114,10 +114,10 @@ static void mptcp_sol_socket_sync_intval(struct mptcp_sock *msk, int optname, in
- 		}
- 
- 		subflow->setsockopt_seq = msk->setsockopt_seq;
--		unlock_sock_fast(ssk, slow);
-+		sockopt_release_sock(ssk);
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 614c3f583ca0..6858e6e283e3 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -397,12 +397,27 @@ static bool __mptcp_move_skb(struct sock *sk, struct sk_buff *skb)
+ 		return false;
  	}
  
--	release_sock(sk);
-+	sockopt_release_sock(sk);
- }
- 
- static int mptcp_sol_socket_intval(struct mptcp_sock *msk, int optname, int val)
-@@ -156,16 +156,16 @@ static int mptcp_setsockopt_sol_socket_tstamp(struct mptcp_sock *msk, int optnam
- 	if (ret)
- 		return ret;
- 
--	lock_sock(sk);
-+	sockopt_lock_sock(sk);
- 	mptcp_for_each_subflow(msk, subflow) {
- 		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
- 
--		lock_sock(ssk);
-+		sockopt_lock_sock(ssk);
- 		sock_set_timestamp(ssk, optname, !!val);
--		release_sock(ssk);
-+		sockopt_release_sock(ssk);
- 	}
- 
--	release_sock(sk);
-+	sockopt_release_sock(sk);
- 	return 0;
- }
- 
-@@ -231,17 +231,17 @@ static int mptcp_setsockopt_sol_socket_timestamping(struct mptcp_sock *msk,
- 	if (ret)
- 		return ret;
- 
--	lock_sock(sk);
-+	sockopt_lock_sock(sk);
- 
- 	mptcp_for_each_subflow(msk, subflow) {
- 		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
- 
--		lock_sock(ssk);
-+		sockopt_lock_sock(ssk);
- 		sock_set_timestamping(ssk, optname, timestamping);
--		release_sock(ssk);
-+		sockopt_release_sock(ssk);
- 	}
- 
--	release_sock(sk);
-+	sockopt_release_sock(sk);
- 
- 	return 0;
- }
-@@ -266,11 +266,11 @@ static int mptcp_setsockopt_sol_socket_linger(struct mptcp_sock *msk, sockptr_t
- 	if (ret)
- 		return ret;
- 
--	lock_sock(sk);
-+	sockopt_lock_sock(sk);
- 	sockopt_seq_inc(msk);
- 	mptcp_for_each_subflow(msk, subflow) {
- 		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
--		bool slow = lock_sock_fast(ssk);
-+		sockopt_lock_sock(ssk);
- 
- 		if (!ling.l_onoff) {
- 			sock_reset_flag(ssk, SOCK_LINGER);
-@@ -280,10 +280,10 @@ static int mptcp_setsockopt_sol_socket_linger(struct mptcp_sock *msk, sockptr_t
- 		}
- 
- 		subflow->setsockopt_seq = msk->setsockopt_seq;
--		unlock_sock_fast(ssk, slow);
-+		sockopt_release_sock(ssk);
- 	}
- 
--	release_sock(sk);
-+	sockopt_release_sock(sk);
- 	return 0;
- }
- 
-@@ -299,10 +299,10 @@ static int mptcp_setsockopt_sol_socket(struct mptcp_sock *msk, int optname,
- 	case SO_REUSEADDR:
- 	case SO_BINDTODEVICE:
- 	case SO_BINDTOIFINDEX:
--		lock_sock(sk);
-+		sockopt_lock_sock(sk);
- 		ssk = __mptcp_nmpc_sk(msk);
- 		if (IS_ERR(ssk)) {
--			release_sock(sk);
-+			sockopt_release_sock(sk);
- 			return PTR_ERR(ssk);
- 		}
- 
-@@ -317,7 +317,7 @@ static int mptcp_setsockopt_sol_socket(struct mptcp_sock *msk, int optname,
- 			else if (optname == SO_BINDTOIFINDEX)
- 				sk->sk_bound_dev_if = ssk->sk_bound_dev_if;
- 		}
--		release_sock(sk);
-+		sockopt_release_sock(sk);
- 		return ret;
- 	case SO_KEEPALIVE:
- 	case SO_PRIORITY:
-@@ -395,16 +395,16 @@ static int mptcp_setsockopt_v6(struct mptcp_sock *msk, int optname,
- 	case IPV6_V6ONLY:
- 	case IPV6_TRANSPARENT:
- 	case IPV6_FREEBIND:
--		lock_sock(sk);
-+		sockopt_lock_sock(sk);
- 		ssk = __mptcp_nmpc_sk(msk);
- 		if (IS_ERR(ssk)) {
--			release_sock(sk);
-+			sockopt_release_sock(sk);
- 			return PTR_ERR(ssk);
- 		}
- 
- 		ret = tcp_setsockopt(ssk, SOL_IPV6, optname, optval, optlen);
- 		if (ret != 0) {
--			release_sock(sk);
-+			sockopt_release_sock(sk);
- 			return ret;
- 		}
- 
-@@ -424,7 +424,7 @@ static int mptcp_setsockopt_v6(struct mptcp_sock *msk, int optname,
- 			break;
- 		}
- 
--		release_sock(sk);
-+		sockopt_release_sock(sk);
- 		break;
- 	}
- 
-@@ -601,24 +601,24 @@ static int mptcp_setsockopt_sol_tcp_congestion(struct mptcp_sock *msk, sockptr_t
- 	cap_net_admin = ns_capable(sock_net(sk)->user_ns, CAP_NET_ADMIN);
- 
- 	ret = 0;
--	lock_sock(sk);
-+	sockopt_lock_sock(sk);
- 	sockopt_seq_inc(msk);
- 	mptcp_for_each_subflow(msk, subflow) {
- 		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
- 		int err;
- 
--		lock_sock(ssk);
-+		sockopt_lock_sock(ssk);
- 		err = tcp_set_congestion_control(ssk, name, true, cap_net_admin);
- 		if (err < 0 && ret == 0)
- 			ret = err;
- 		subflow->setsockopt_seq = msk->setsockopt_seq;
--		release_sock(ssk);
-+		sockopt_release_sock(ssk);
- 	}
- 
- 	if (ret == 0)
- 		strscpy(msk->ca_name, name, sizeof(msk->ca_name));
- 
--	release_sock(sk);
-+	sockopt_release_sock(sk);
- 	return ret;
- }
- 
-@@ -633,10 +633,10 @@ static int __mptcp_setsockopt_set_val(struct mptcp_sock *msk, int max,
- 		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
- 		int ret;
- 
--		lock_sock(ssk);
-+		sockopt_lock_sock(ssk);
- 		ret = set_val(ssk, val);
- 		err = err ? : ret;
--		release_sock(ssk);
-+		sockopt_release_sock(ssk);
- 	}
- 
- 	if (!err) {
-@@ -657,9 +657,9 @@ static int __mptcp_setsockopt_sol_tcp_cork(struct mptcp_sock *msk, int val)
- 	mptcp_for_each_subflow(msk, subflow) {
- 		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
- 
--		lock_sock(ssk);
-+		sockopt_lock_sock(ssk);
- 		__tcp_sock_set_cork(ssk, !!val);
--		release_sock(ssk);
-+		sockopt_release_sock(ssk);
- 	}
- 	if (!val)
- 		mptcp_check_and_set_pending(sk);
-@@ -677,9 +677,9 @@ static int __mptcp_setsockopt_sol_tcp_nodelay(struct mptcp_sock *msk, int val)
- 	mptcp_for_each_subflow(msk, subflow) {
- 		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
- 
--		lock_sock(ssk);
-+		sockopt_lock_sock(ssk);
- 		__tcp_sock_set_nodelay(ssk, !!val);
--		release_sock(ssk);
-+		sockopt_release_sock(ssk);
- 	}
- 	if (val)
- 		mptcp_check_and_set_pending(sk);
-@@ -697,11 +697,11 @@ static int mptcp_setsockopt_sol_ip_set(struct mptcp_sock *msk, int optname,
- 	if (err != 0)
- 		return err;
- 
--	lock_sock(sk);
-+	sockopt_lock_sock(sk);
- 
- 	ssk = __mptcp_nmpc_sk(msk);
- 	if (IS_ERR(ssk)) {
--		release_sock(sk);
-+		sockopt_release_sock(sk);
- 		return PTR_ERR(ssk);
- 	}
- 
-@@ -722,13 +722,13 @@ static int mptcp_setsockopt_sol_ip_set(struct mptcp_sock *msk, int optname,
- 			   READ_ONCE(inet_sk(sk)->local_port_range));
- 		break;
- 	default:
--		release_sock(sk);
-+		sockopt_release_sock(sk);
- 		WARN_ON_ONCE(1);
- 		return -EOPNOTSUPP;
- 	}
- 
- 	sockopt_seq_inc(msk);
--	release_sock(sk);
-+	sockopt_release_sock(sk);
- 	return 0;
- }
- 
-@@ -744,18 +744,17 @@ static int mptcp_setsockopt_v4_set_tos(struct mptcp_sock *msk, int optname,
- 	if (err != 0)
- 		return err;
- 
--	lock_sock(sk);
-+	sockopt_lock_sock(sk);
- 	sockopt_seq_inc(msk);
- 	val = READ_ONCE(inet_sk(sk)->tos);
- 	mptcp_for_each_subflow(msk, subflow) {
- 		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
--		bool slow;
- 
--		slow = lock_sock_fast(ssk);
-+		sockopt_lock_sock(ssk);
- 		__ip_sock_set_tos(ssk, val);
--		unlock_sock_fast(ssk, slow);
-+		sockopt_release_sock(ssk);
- 	}
--	release_sock(sk);
-+	sockopt_release_sock(sk);
- 
- 	return 0;
- }
-@@ -784,7 +783,7 @@ static int mptcp_setsockopt_first_sf_only(struct mptcp_sock *msk, int level, int
- 	int ret;
- 
- 	/* Limit to first subflow, before the connection establishment */
--	lock_sock(sk);
-+	sockopt_lock_sock(sk);
- 	ssk = __mptcp_nmpc_sk(msk);
- 	if (IS_ERR(ssk)) {
- 		ret = PTR_ERR(ssk);
-@@ -794,7 +793,7 @@ static int mptcp_setsockopt_first_sf_only(struct mptcp_sock *msk, int level, int
- 	ret = tcp_setsockopt(ssk, level, optname, optval, optlen);
- 
- unlock:
--	release_sock(sk);
-+	sockopt_release_sock(sk);
- 	return ret;
- }
- 
-@@ -842,7 +841,7 @@ static int mptcp_setsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
- 	if (ret)
- 		return ret;
- 
--	lock_sock(sk);
-+	sockopt_lock_sock(sk);
- 	switch (optname) {
- 	case TCP_INQ:
- 		if (val < 0 || val > 1)
-@@ -885,7 +884,7 @@ static int mptcp_setsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
- 		ret = -ENOPROTOOPT;
- 	}
- 
--	release_sock(sk);
-+	sockopt_release_sock(sk);
- 	return ret;
- }
- 
-@@ -909,9 +908,9 @@ int mptcp_setsockopt(struct sock *sk, int level, int optname,
- 	 * is in TCP fallback, when TCP socket options are passed through
- 	 * to the one remaining subflow.
+-	/* old data, keep it simple and drop the whole pkt, sender
+-	 * will retransmit as needed, if needed.
++	/* Completely old data? */
++	if (!after64(MPTCP_SKB_CB(skb)->end_seq, msk->ack_seq)) {
++		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_DUPDATA);
++		mptcp_drop(sk, skb);
++		return false;
++	}
++
++	/* Partial packet: map_seq < ack_seq < end_seq.
++	 * Skip the already-acked bytes and enqueue the new data.
  	 */
--	lock_sock(sk);
-+	sockopt_lock_sock(sk);
- 	ssk = __mptcp_tcp_fallback(msk);
--	release_sock(sk);
-+	sockopt_release_sock(sk);
- 	if (ssk)
- 		return tcp_setsockopt(ssk, level, optname, optval, optlen);
- 
-@@ -934,7 +933,7 @@ static int mptcp_getsockopt_first_sf_only(struct mptcp_sock *msk, int level, int
- 	struct sock *ssk;
- 	int ret;
- 
--	lock_sock(sk);
-+	sockopt_lock_sock(sk);
- 	ssk = msk->first;
- 	if (ssk)
- 		goto get;
-@@ -949,7 +948,7 @@ static int mptcp_getsockopt_first_sf_only(struct mptcp_sock *msk, int level, int
- 	ret = tcp_getsockopt(ssk, level, optname, optval, optlen);
- 
- out:
--	release_sock(sk);
-+	sockopt_release_sock(sk);
- 	return ret;
+-	MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_DUPDATA);
+-	mptcp_drop(sk, skb);
+-	return false;
++	copy_len = MPTCP_SKB_CB(skb)->end_seq - msk->ack_seq;
++	MPTCP_SKB_CB(skb)->offset += msk->ack_seq - MPTCP_SKB_CB(skb)->map_seq;
++	msk->bytes_received += copy_len;
++	WRITE_ONCE(msk->ack_seq, msk->ack_seq + copy_len);
++	tail = skb_peek_tail(&sk->sk_receive_queue);
++	if (tail && mptcp_try_coalesce(sk, tail, skb))
++		return true;
++
++	skb_set_owner_r(skb, sk);
++	__skb_queue_tail(&sk->sk_receive_queue, skb);
++	return true;
  }
  
-@@ -1120,7 +1119,7 @@ static int mptcp_getsockopt_tcpinfo(struct mptcp_sock *msk, char __user *optval,
- 
- 	infoptr = optval + sfd.size_subflow_data;
- 
--	lock_sock(sk);
-+	sockopt_lock_sock(sk);
- 
- 	mptcp_for_each_subflow(msk, subflow) {
- 		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
-@@ -1133,7 +1132,7 @@ static int mptcp_getsockopt_tcpinfo(struct mptcp_sock *msk, char __user *optval,
- 			tcp_get_info(ssk, &info);
- 
- 			if (copy_to_user(infoptr, &info, sfd.size_user)) {
--				release_sock(sk);
-+				sockopt_release_sock(sk);
- 				return -EFAULT;
- 			}
- 
-@@ -1143,7 +1142,7 @@ static int mptcp_getsockopt_tcpinfo(struct mptcp_sock *msk, char __user *optval,
- 		}
- 	}
- 
--	release_sock(sk);
-+	sockopt_release_sock(sk);
- 
- 	sfd.num_subflows = sfcount;
- 
-@@ -1212,7 +1211,7 @@ static int mptcp_getsockopt_subflow_addrs(struct mptcp_sock *msk, char __user *o
- 
- 	addrptr = optval + sfd.size_subflow_data;
- 
--	lock_sock(sk);
-+	sockopt_lock_sock(sk);
- 
- 	mptcp_for_each_subflow(msk, subflow) {
- 		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
-@@ -1225,7 +1224,7 @@ static int mptcp_getsockopt_subflow_addrs(struct mptcp_sock *msk, char __user *o
- 			mptcp_get_sub_addrs(ssk, &a);
- 
- 			if (copy_to_user(addrptr, &a, sfd.size_user)) {
--				release_sock(sk);
-+				sockopt_release_sock(sk);
- 				return -EFAULT;
- 			}
- 
-@@ -1235,7 +1234,7 @@ static int mptcp_getsockopt_subflow_addrs(struct mptcp_sock *msk, char __user *o
- 		}
- 	}
- 
--	release_sock(sk);
-+	sockopt_release_sock(sk);
- 
- 	sfd.num_subflows = sfcount;
- 
-@@ -1321,7 +1320,7 @@ static int mptcp_getsockopt_full_info(struct mptcp_sock *msk, char __user *optva
- 				     sizeof(struct mptcp_subflow_info));
- 	tcpinfoptr = u64_to_user_ptr(mfi.tcp_info);
- 
--	lock_sock(sk);
-+	sockopt_lock_sock(sk);
- 	mptcp_for_each_subflow(msk, subflow) {
- 		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
- 		struct mptcp_subflow_info sfinfo;
-@@ -1351,7 +1350,7 @@ static int mptcp_getsockopt_full_info(struct mptcp_sock *msk, char __user *optva
- 		tcpinfoptr += mfi.size_tcpinfo_user;
- 		sfinfoptr += mfi.size_sfinfo_user;
- 	}
--	release_sock(sk);
-+	sockopt_release_sock(sk);
- 
- 	mfi.num_subflows = sfcount;
- 	if (mptcp_put_full_info(&mfi, optval, copylen, optlen))
-@@ -1360,7 +1359,7 @@ static int mptcp_getsockopt_full_info(struct mptcp_sock *msk, char __user *optva
- 	return 0;
- 
- fail_release:
--	release_sock(sk);
-+	sockopt_release_sock(sk);
- 	return -EFAULT;
- }
- 
-@@ -1515,9 +1514,9 @@ int mptcp_getsockopt(struct sock *sk, int level, int optname,
- 	 * is in TCP fallback, when socket options are passed through
- 	 * to the one remaining subflow.
- 	 */
--	lock_sock(sk);
-+	sockopt_lock_sock(sk);
- 	ssk = __mptcp_tcp_fallback(msk);
--	release_sock(sk);
-+	sockopt_release_sock(sk);
- 	if (ssk)
- 		return tcp_getsockopt(ssk, level, optname, optval, option);
- 
+ static void mptcp_stop_rtx_timer(struct sock *sk)
 -- 
-2.43.0
+2.34.1
 
