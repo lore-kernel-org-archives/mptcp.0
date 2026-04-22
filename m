@@ -1,131 +1,141 @@
-Received: from mail-dy1-f182.google.com (mail-dy1-f182.google.com [74.125.82.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECB92332EBD
-	for <mptcp@lists.linux.dev>; Wed, 22 Apr 2026 16:03:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 088E8299929
+	for <mptcp@lists.linux.dev>; Wed, 22 Apr 2026 16:40:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776873814; cv=none; b=am+SUCZGOxYRv0llvFyGWOT7tkWQu8Sm8aFSnfe5oacGMexucFabKr8/czJIQVLIZQaVaJRVdOOYIge1iLOdxGfLkOM1U1LuDWVOU/1ib+NvLPozGjq9MYwrwjdWUiwiok15YilHcgWzMAFAjg80S/XmUgCArAJ2tmRiwlEk+H0=
+	t=1776876042; cv=none; b=d0FzplE4qE/qRxQvyfBS5ynq5vPvGjQVmcUXqM31oDN4XGZ1TrquYtbei7OnDqqo/0Tw0Ojqpku782BfIWhcv5DbtScydWT0BFnJhRbMNvJBmBw1O4W8ZqRhaHfParrvoOst/vH9nC69GLbbEKkTSzQXx+pYp2egUxnyDEugA7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776873814; c=relaxed/simple;
-	bh=sgJJ9E+ndytfJUmQytG81w5lCIAnQTflddl7x02Qa3U=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
-	 MIME-Version:Content-Type; b=RcW/z7QWwyjAT3qkNIsY1QozEkAO5ksrqMv53CfvXBvQ7BHcKeXNAN3L14q5riFjxdCuDFZgezH6DsEy68rs9nSC1yJv0vV05bmLOQ26QFD1KbRvIDuo+8kZ+Rl18e1tLkFCRTa4BhmqQJgscmtdoG/hCcP/FwKbQLo6P+4oyHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IBSgaLdi; arc=none smtp.client-ip=74.125.82.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1776876042; c=relaxed/simple;
+	bh=0I/XEOl3BBbdBYy9Na7MR8Q09QeEPSBlH59S/lFHfog=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Jpxd13NKCrcLJPcxYK0QfqaY2D8ZkmoxX+yhy5G4uRxju633M1uQO1ozIFxx1TXry+BRY52EeoGM4VirAUI3RlQawJ4xNGRgD3Z6VsGLOzVOhpbOGf2OyHlgrxqWdmEPU+FRI5UVcn34ne4jFTlpMdj6G0D3H6lKK2R+MtjjTD8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nBq11yn3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IBSgaLdi"
-Received: by mail-dy1-f182.google.com with SMTP id 5a478bee46e88-2dee127b3c5so7290727eec.1
-        for <mptcp@lists.linux.dev>; Wed, 22 Apr 2026 09:03:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1776873812; x=1777478612; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PHlbKjw4HQELtZFrSUBET2SfkaG5iA6WjbklZVrJXg0=;
-        b=IBSgaLdibhyNthAKSd2bEfP6P4I4HorAsJSMqZnXDqdY1FTa3unNp9lNG1MmDUjfPr
-         fP8+d8P8tnzZAT+zpIxCwcdDA4nxcmdOPXCN9Z1mXd6rAaPuu1BQ1zAtlhkyEKFGAMUv
-         QRPyYsIwlBFthHjqSULxWRQEgyeGsNwTN0wPh0KU6N1e7y8IC8yoapa0XMAuQnKRovWk
-         zVpu4dYdjVMTtnttSJubXcSfmq82MfxemooPpG6dQz98dUL9WRZs1PGy0dmCdfLeuRiJ
-         880uODh0zgwC87d2Ain42lwdApAkuWpI/T4Min5ur61H1VCclPCnqqDlkmfny8OIMNnE
-         7XyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776873812; x=1777478612;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PHlbKjw4HQELtZFrSUBET2SfkaG5iA6WjbklZVrJXg0=;
-        b=csUZIlM6qvhV3K08/PeEWfJ5R+2HYStyWcFr4HP/48pLLlYnZax/oOL0yx04ho2+D4
-         CfmkTS0xW+zrWtwiz3aMWf9VOZkz9RLrcgW2y59l9B5i3Y8tGQXVkQ8ppykDy8Oo3rWh
-         GaRaWuRH/Ts7dtEiHF5WCxkFfsKePd25HomOZ2BkgaGZ2k3qY5zVGgLGL/TOCDVX12ud
-         fxEXMSXJFFmCwsJ6dBMwxxKWm0FVFwwH64AGooTW/CVLzI520tLBl0xWVaQ/RUYFHbQW
-         HTDnz+I/jQzINOdfF7RZZi/xzQKwbIkQG1urPLLPlwXqIyeLdItaocQSKl6fMmT2BdcL
-         rMTw==
-X-Gm-Message-State: AOJu0YwMlBhUk8syILz6TPPOCwWQCEPSNeExyiw4r+E3rv2f+5HdAYfi
-	AozGDaCoIOaITQ6SQyhFO0tk7OrUaYxwKbBUxuJnuHnz+MTegDOCNQU=
-X-Gm-Gg: AeBDieuy9ndtj/C768Qhj0+2IoWYS7vceeqLW1EHHoEtdJtafzQE32dU2RYBWmyYL33
-	akgpavluByERzdn8cUxyfv6omzLdncUpe3YvPXvFxC58OshD50uIHZixkmtjT8KAglrSjdhe1ZH
-	T2WKo2c2/RfRox6OkIpTQgvzKVuSFRueAf585tu9Sc2qz0LJGXYswFiVzPvhpNtpTK4xSV9OCC6
-	Fr4S8HaY1JVuRv0LzgK0xKYWP4qWEvwcg4k/4rcdfYt9BNeAWakYDW6zTe1XJmkQt7GZxRVSnC7
-	P+0S8cYl0u/WX6GMxdj6uCG3aVITkSwnvYUU1UzJTH60IH+8uabPrz15S/Dsa2uFOFF239XE8nf
-	KD0P0qWDFMGM0EhPFoS23+6sJXEwRu17RA7+dS3bh+heGckjcpHGBn9UfKNIMR/EkBXT5y5j4tg
-	LFj8Arrr39n6Z1+8LB/8PrOf3yE7Kb5o1Nc32D8vxVeUVqfVs=
-X-Received: by 2002:a05:7301:4185:b0:2c5:60d0:701e with SMTP id 5a478bee46e88-2e464ea8930mr12747479eec.3.1776873811663;
-        Wed, 22 Apr 2026 09:03:31 -0700 (PDT)
-Received: from [127.0.0.1] ([52.234.40.195])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2e53a4a8018sm29920928eec.8.2026.04.22.09.03.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Apr 2026 09:03:30 -0700 (PDT)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Shardul Bankar <shardulsb08@gmail.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20260422143931.43281-1-shardul.b@mpiricsoftware.com>
-References: <20260422143931.43281-1-shardul.b@mpiricsoftware.com>
-Subject: Re: [PATCH v2] mptcp: do not drop partial packets
-Message-ID: <acb99e61-e65c-0bf4-49cf-065f1dc99196@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 22 Apr 2026 16:03:29 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nBq11yn3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C88AC19425;
+	Wed, 22 Apr 2026 16:40:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1776876041;
+	bh=0I/XEOl3BBbdBYy9Na7MR8Q09QeEPSBlH59S/lFHfog=;
+	h=From:Subject:Date:To:Cc:From;
+	b=nBq11yn3EalpBSFxYb7lHuOuWYgywEnBKsFprWElIG0u6Qr4FO3iw6ZJdC6YjWXVn
+	 DBDOBO7r7o2awpsI7tknUvyq4BwAtr5RZa2A78+K9xcN7M6QmLz+i2eyqFdtVYsiKf
+	 yVebogUZndZoEfG2SXc2H5DcOvyGvvq+2jj6l2FOCv1+Og8jOkaIfx4dwdVKb4e04t
+	 kj3jYtVoZbZ1HcTpZqUYjMoHL2uGllQ07TnKzLWINYkKQGe+ovXyJmhGQaJCSWqHKE
+	 JhyhSnHWvRivfyephWHVNY7RtznvzN96EtOMeRqbZsa5cQGi3TyrVn92TPW7VqPlhz
+	 DbOgfMn5CApig==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH mptcp-net v6 00/19] mptcp: pm: increase limits, and related
+ fixes and cleanup
+Date: Wed, 22 Apr 2026 18:40:14 +0200
+Message-Id: <20260422-mptcp-inc-limits-v6-0-903181771530@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/23QQW7DIBAF0KtErEs1wEDsrnqPKgsHxgltgi2gK
+ FXku5c4XbiylyP+vC/mzhJFT4m97e4sUvHJD6EO5mXH7LkLJ+Le1ZlJkAYQFL+O2Y7cB8sv/up
+ z4pbaRgiQCMawujZG6v1tJj/YMx0os8PzKX0fP8nmB/kIn33KQ/yZ64uYV/6a2nVTERw4EOq+U
+ +Bage9fFANdXod4mv0iF4KADUFWQSNICW0P2qmVoJbCxm+LqoJzythW1YiSKwGXAm4IWIV9I/d
+ IznXauZWgl4LeEHQVSKNVx76p96B/wjRNv1AzrPTWAQAA
+X-Change-ID: 20260403-mptcp-inc-limits-ce9811024066
+To: MPTCP Upstream <mptcp@lists.linux.dev>
+Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+X-Mailer: b4 0.15.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3989; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=0I/XEOl3BBbdBYy9Na7MR8Q09QeEPSBlH59S/lFHfog=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDJf/Py554FDxc/ra0pnuGeY+esVrFz6O1B4yrxbFvfSf
+ SUaJAXZO0pZGMS4GGTFFFmk2yLzZz6v4i3x8rOAmcPKBDKEgYtTACayfSvD/5Qllfc3/zerPtjp
+ eP1Xf8aFrolXT/3/d0u4Pnn11ZkWEkkM/wuvTrmRsl/fYp2NTLaZzpr9MwXC0les+vr7xypz0U+
+ RTcwA
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hi Shardul,
+The initial intension was to increase the limits, but some fixes were
+needed, then when looking at the code around, other fixes had to be
+added too. So now I ended up with multiple fixes (including one early
+exit while at it), followed by patches increasing limits with some
+adaptations required before, some to validate the modifications, and one
+small improvement in the selftests.
 
-Thank you for your modifications, that's great!
+The patches with a Fixes tag are for -net, the rest for net-next.
 
-Our CI did some validations and here is its report:
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+Changes in v6:
+- patch 4: fix label name in commit message + mention next patch.
+- patch 7: use min() to improve clarity (Mat)
+- patch 15: fix typo.
+- patch 20: removed: will be sent in another series after that one.
+- Link to v5: https://patch.msgid.link/20260415-mptcp-inc-limits-v5-0-e54c3bf80e4e@kernel.org
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Unstable: 3 failed =
-test(s): packetdrill_dss packetdrill_mp_capable selftest_mptcp_connect_send=
-file =E2=9A=A0=EF=B8=8F=20
-- KVM Validation: debug (only =
-selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only=
- bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only =
-bpftest_all): Success! =E2=9C=85
-- Task: https://github.=
-com/multipath-tcp/mptcp_net-next/actions/runs/24785370107
+Changes in v5:
+- patch 5: only set timer_done to true in the timer handler: safer.
+- patch 9: fix typo in commit message.
+- patch 10: 3rd check expects error, better err msg, rename var.
+- Link to v4: https://patch.msgid.link/20260414-mptcp-inc-limits-v4-0-78274edda5dd@kernel.org
 
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/8d6488282da0
-Patchwork: https://patchwork.kernel.=
-org/project/mptcp/list/?series=3D1084324
+Changes in v4:
+- patch 5: reset timer_done when the timer is reset.
+- patch 10: new: selftests: correctly catch error in 'check output'.
+- patch 16: add example with init_shapers to silence AI reviews
+- Patch 18: clearer way to check errors (without buggy '&&')
+- Link to v3: https://patch.msgid.link/20260413-mptcp-inc-limits-v3-0-dd36c9360432@kernel.org
 
+Changes in v3:
+- patch 1: new: retransmit ADD_ADDR for ID 0 with right ID.
+- patch 5: moved below + support calling sk_free().
+- patch 13: new: allow flushing more than 8 endpoints.
+- patch 12: clarify single batch of 8 subflows as known limit.
+- patch 16: fix typo in comment.
+- Link to v2: https://patch.msgid.link/20260410-mptcp-inc-limits-v2-0-5402209f05d3@kernel.org
 
-If there are some issues, you =
-can reproduce them using the same environment as
-the one used by the CI =
-thanks to a docker image, e.g.:
+Changes in v2:
+- patch 2: new: fix potential data-race.
+- re-order patches 1 to 5 and use shorter prefix (ADD_ADDR rtx).
+- patch 6: restore accidentally deleted icsk->icsk_rto > max check.
+- patch 16: fix already present checkpatch warning.
+- Link to v1: https://patch.msgid.link/20260409-mptcp-inc-limits-v1-0-0e45fa30d914@kernel.org
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+---
+Matthieu Baerts (NGI0) (19):
+      mptcp: pm: kernel: correctly retransmit ADD_ADDR ID 0
+      mptcp: pm: ADD_ADDR rtx: fix potential data-race
+      mptcp: pm: ADD_ADDR rtx: allow ID 0
+      mptcp: pm: ADD_ADDR rtx: always decrease sk refcount
+      mptcp: pm: ADD_ADDR rtx: free sk if last
+      mptcp: pm: ADD_ADDR rtx: resched blocked ADD_ADDR quicker
+      mptcp: pm: ADD_ADDR rtx: skip inactive subflows
+      mptcp: pm: retrans ADD_ADDR: return early if no retrans
+      mptcp: pm: prio: skip closed subflows
+      selftests: mptcp: check output: catch cmd errors
+      selftests: mptcp: pm: restrict 'unknown' check to pm_nl_ctl
+      mptcp: pm: in-kernel: explicitly limit batches to array size
+      mptcp: pm: in-kernel: increase all limits to 64
+      mptcp: pm: kernel: allow flushing more than 8 endpoints
+      mptcp: pm: in-kernel: increase endpoints limit
+      selftests: mptcp: join: allow changing ifaces nr per test
+      selftests: mptcp: join: validate 8x8 subflows
+      selftests: mptcp: pm: validate new limits
+      selftests: mptcp: pm: use simpler send/recv forms
 
-For more details:
+ net/mptcp/pm.c                                  | 62 +++++++++++------
+ net/mptcp/pm_kernel.c                           | 90 ++++++++++++++++---------
+ tools/testing/selftests/net/mptcp/mptcp_join.sh | 33 ++++++++-
+ tools/testing/selftests/net/mptcp/mptcp_lib.sh  | 16 +++--
+ tools/testing/selftests/net/mptcp/pm_netlink.sh | 74 ++++++++++++--------
+ tools/testing/selftests/net/mptcp/pm_nl_ctl.c   |  8 +--
+ 6 files changed, 193 insertions(+), 90 deletions(-)
+---
+base-commit: b3fa12c3ddab70d570c42071efb0edd5dad07060
+change-id: 20260403-mptcp-inc-limits-ce9811024066
 
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
+Best regards,
+--  
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 Core)
