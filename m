@@ -1,45 +1,82 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B043306D2A
-	for <mptcp@lists.linux.dev>; Wed, 22 Apr 2026 08:36:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EA6434CFC7
+	for <mptcp@lists.linux.dev>; Wed, 22 Apr 2026 08:48:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776846990; cv=none; b=aOWLhh4sBx/h1/0VCQg4hS3ULy3JHdJl5tne9wa9nniNysfYr9UF4s3hqjeAcnc52g9+ap1d9AxktLCZqN1NW1EPHKr0r/+DJtiQtieGNRVPOrQH3VjxA97IkITzx3YmtYt6D4nr3AZHGYQaiqylP2OheXgN2ZS+fKfVIVFqTPc=
+	t=1776847716; cv=none; b=GG1U70mldFnPioOSQlhBOLmPblwj4jVpZDT/LkoBDfNo8DXKn4UHQwiGppmbKE1SJi7itL7CDHuvlnt1XXYWj6cV2u3P53J5FuRROVS9mUWYlqo5f9s1KBBmTPEZJyW5vBY4R8q1tz1lef8sFxs1izzHrGDmhLX3NAcij3CH7e4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776846990; c=relaxed/simple;
-	bh=AKzt73wa7g4IUj3pG4jjToGCAzvLare3tV2oezrUHKw=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=aPENvWKOkMcrqON1Dag+av+7syn/aMCb86i2KKSHO6hJYa83dUfbFf81nte6r6cd4qk4jrLprmkjHboxdk5k7SwTy0smXKK6JYUGEtCGX7zXAEwBOGWtM42JNRwM0WsI4zKFK3cHgg8jQuymoHOb7ufuIXnDj0pcJbhIG6islxw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T6u3fnbi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1776847716; c=relaxed/simple;
+	bh=19Qbyd3fEYH/9JletA34+NAQpOsK6F9a8N78VjlJc7A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Dsmty7lLvGko8bQhh3IoaNX1Bx6eowI+01EZs5S8rRxH6QKutV9/oxa3CXQhWQN9uGBZFU3VV4t7St3Jbjfb/QC1UO1FlXSQGGb8o/gb5hMRx/1EFHhelwdM8gwKItZFg7oPE7blaZJxxhc8mQ72iOwNCFHNM2zxINQyvDZ7ZZ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RvV4obMg; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T6u3fnbi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A20F9C19425;
-	Wed, 22 Apr 2026 08:36:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776846990;
-	bh=AKzt73wa7g4IUj3pG4jjToGCAzvLare3tV2oezrUHKw=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=T6u3fnbiqkygKYALNtdts1BWnqwzZ7rInXHMZo5B1hCnirn54AJie3v8ULvYH0uMy
-	 +kqKz30AgQV8KcE6c9tsnApQ5qLN5QpdkefeXjJPi6s1bbG+bowmBJhaYT9AKyCsb0
-	 5uTBzbAKWkCf3poVW562gqHj0NKRazizF1R4DD/G3vOXg64yREtplkC6HciZ2aF4nI
-	 mOCSylYOErmUfjhRpMPu4ukMC7IQaYS3w0jAnsdW5aPEnZgruSmVpJ0KFXwkI+XqpT
-	 Pm+6RXzNHNbOnB8+l/+OiVsPW6/+2J9WKAD3DKKE5nBtAxDHMDUAa4fzk0J4GtKh71
-	 J0Rno14BaJlPg==
-Message-ID: <1d0288a8-6122-444d-8dfa-1fa92d2a0090@kernel.org>
-Date: Wed, 22 Apr 2026 10:36:26 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RvV4obMg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1776847714;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SYRU5BQlWgAtMhVJJDQ45RKfAd9iefagcQp2Om/UneM=;
+	b=RvV4obMgi+OX3lAEJhOmncmpP0O86u7AcSJ8qpl5LtdSeUsNb3rUqhxFGdLneJJ19S6Wqx
+	Gum4mYvz2kirXMuBuxEL90euxJAdGEh2h0b9cZJ00Gi6IKiFydDjoPx9H8mRlGyRKYUO65
+	+7x6XuXLRUBp5H6D+zBCOGieqOM/dCg=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-134-dade4kq3Or-m9ZHA7M0f3g-1; Wed, 22 Apr 2026 04:48:31 -0400
+X-MC-Unique: dade4kq3Or-m9ZHA7M0f3g-1
+X-Mimecast-MFC-AGG-ID: dade4kq3Or-m9ZHA7M0f3g_1776847710
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-488c2aa6becso50594605e9.2
+        for <mptcp@lists.linux.dev>; Wed, 22 Apr 2026 01:48:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776847710; x=1777452510;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=SYRU5BQlWgAtMhVJJDQ45RKfAd9iefagcQp2Om/UneM=;
+        b=FmC4i+/B1dfC/Gr91zG1wRDv1eMtqwy4V42RnrER27uKYNXAHjHn20Ej2xiojYqRyG
+         tWR1bz7/3cRAvCqsgyAjEFXPwX8bxXREoV92Ad3nD/8RfT5+d5ULbxfYF5WwvFvxJq/5
+         VsgpYjXpFQDxwURGUbKIKxQO5IACjt3HSuR8V/0/53n+6W7tgsF02GSSG0FlXI2do6HI
+         c+0XAKOj/gVt92hT1ffPowcee5YjA/wDJb5sCmu7s92HdK0m0tfYupI1irnCgP63rqYT
+         7VS2BGnlhqHYYVau7h19Bfl0+2PPQppxQB7aQ34H8qDw6cTxDp6ken6tKYRRt0n6/Z0E
+         9Oiw==
+X-Forwarded-Encrypted: i=1; AFNElJ9omN3mgq7OpbYo2UpHFD2jfszMBFi/38P/0AI3tMgQVeO5y1ihT0YPiziTj6xyBNEUIqTfKQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0YyvaIBxRJc0koYuvin9+yPHCihOVfd9GU1Azi17M/5UbGBvcl59
+	P0evQXtFhgEfjwNP4kzxptel7YADfUuNyTtzuWypkZlonhBmY8F3YjH3tdkoA1xjOeKmSUpBrQP
+	safFRRYUQ3kEe7PFRFWHtDJagKYT+rTQ87VEFjsLT4iEot+IwClEZB5jQ
+X-Gm-Gg: AeBDieuTT0huk88xmp9pfk7hIlpofTWDVl51imfVUoH6hNNGMJrFvfN1ooxyZIxDWjV
+	lRz5GkY2m4YYPKmJT/Av/7hNPsqbMShuGYDCKmAsPJ/iWAv7NjM3wa/MJey2yPrJTrbQuK7lfYU
+	jo4yK06VAb+3tQPOhIttW/VwS57gyhZgoGiCoB4vNclmjNsaITUgIFGecGe99oOzHMmHLUZAILC
+	8Kx2Tv//OmuqinfoKdKEZ/uvCd9rJ+o5SaH4BNnA/4dWtXpLyCcH9k0uLsQZh+P0A7yAH2G0Vph
+	jFkEFvz0tQkFG9XvwcG303iP7/5c8FWoszQzuVzhuMHTIZylkU3SnxAOiQprP1SnC7dGx65OrTH
+	GZ/H8Vekb1pOTAflk68jdzwWKhqDJHHfhPCtCHySXPDkiOV7ESK+FP4TGFiSLj3HYGHU=
+X-Received: by 2002:a05:600c:8115:b0:488:8577:d9cc with SMTP id 5b1f17b1804b1-488fb77faacmr266982185e9.20.1776847709969;
+        Wed, 22 Apr 2026 01:48:29 -0700 (PDT)
+X-Received: by 2002:a05:600c:8115:b0:488:8577:d9cc with SMTP id 5b1f17b1804b1-488fb77faacmr266981705e9.20.1776847709429;
+        Wed, 22 Apr 2026 01:48:29 -0700 (PDT)
+Received: from [192.168.88.32] ([150.228.93.216])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4891ffd2030sm59441735e9.20.2026.04.22.01.48.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 Apr 2026 01:48:28 -0700 (PDT)
+Message-ID: <b0a882d8-3d33-47ae-9376-857f92bef86c@redhat.com>
+Date: Wed, 22 Apr 2026 10:48:27 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
+User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH mptcp-next v3 1/3] mptcp: propagate RECVERR sockopts to
  subflows
-Content-Language: fr
-From: Matthieu Baerts <matttbe@kernel.org>
-To: Paolo Abeni <pabeni@redhat.com>
+To: Matthieu Baerts <matttbe@kernel.org>
 Cc: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
  David Carlier <devnexen@gmail.com>, mptcp@lists.linux.dev
 References: <20260421223338.52743-1-devnexen@gmail.com>
@@ -47,60 +84,17 @@ References: <20260421223338.52743-1-devnexen@gmail.com>
  <e5dbdb08-f666-47d6-83b6-c157c7e9036c@redhat.com>
  <88df3189-4aa0-41fa-9a58-0d17fb736c87@kernel.org>
  <a7234091-4141-46ee-8db6-cf01baa25800@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
+From: Paolo Abeni <pabeni@redhat.com>
 In-Reply-To: <a7234091-4141-46ee-8db6-cf01baa25800@kernel.org>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: O-JmmnaqvTs2TSUWYo4wfEauvtsnBJDLfzNxDb84Qco_1776847710
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 22/04/2026 10:35, Matthieu Baerts wrote:
+On 4/22/26 10:35 AM, Matthieu Baerts wrote:
 > On 22/04/2026 10:32, Matthieu Baerts wrote:
->> Hi Paolo,
->>
->> Thank you for the review!
->>
 >> On 22/04/2026 10:05, Paolo Abeni wrote:
 >>> On 4/22/26 12:33 AM, David Carlier wrote:
 >>>> Propagate IP_RECVERR/IP_RECVERR_RFC4884 and
@@ -145,11 +139,15 @@ On 22/04/2026 10:35, Matthieu Baerts wrote:
 > 
 > (Not the same in __mptcp_setsockopt_set_val(): the sk is already locked)
 
-... same when calling mptcp_setsockopt_all_sf() for the moment. Maybe I
-should have prefixed with "__".
+AFAICS for mptcp_setsockopt_all_sf() the msk lock is acquired by the
+caller. Same for __mptcp_setsockopt_set_val().
 
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
+Side note; AFAICS a few other paths apparently lack the setsockopt_seq;
+that is minor problem/not a real issue: worst case it will cause a
+redundant mptcp_sockopt_sync_locked() call at finish_join time.
+
+The missing sockopt_seq_inc() instead looks really bogus, as it will
+caused missing synchronization for later subflows.
+
+/P
 
