@@ -1,150 +1,130 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CA7135F60F
-	for <mptcp@lists.linux.dev>; Wed, 22 Apr 2026 12:09:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 605B827713
+	for <mptcp@lists.linux.dev>; Wed, 22 Apr 2026 13:16:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776859800; cv=none; b=myQowwvKcltnslhbEHOW+TIISGw2Sv7hLgSE/4KrGkF/Or6n6SubE/Z9PAB9LfdqPebX9GpYPmZTZDoiXERhZ0LrviEmz1YzpcVvx8ATrWIHbDxITSMRZvb1py/NvM+HxCdWfBLcrGIv7KJScgOYbkhILgcI0zJDy/lbEGm89eE=
+	t=1776863765; cv=none; b=qcVIcZzj8ocCHwQVz3iJOvxhKEfA4V3Gmrl0ByruVQAHi3aWkXvLdKmLsplGr9CNQ18SPfVapOH58Oa20TD2WNHulYawPeAI8RDXIS2mXjMXZlsQyY3UQxrqknsdYONkVfsCWPyz7+zg153ZxNDkBWxlPwVXUTSk5vMXFbLksrI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776859800; c=relaxed/simple;
-	bh=hjsvYy51l4+d68+Ky+C/JI2f1kTJUYN+qBMx0/prB8M=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=DUlFHRE+LIqFbPbv4Vy6C5bRr2lCqwDh4w7nyJIlFQ4mMNDfkJ/TV/P4sCT8vQIARzgSLr1+HR+yd5brYkk4gFgt74pGolVIFm+h/Q/PfwnS64Od8sT0rYC/wgqD1NfQiCyUbQonrEZKo8eWGhvYVuvzfkGLqRNBo73dPYBMaN0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cVAgZlaL; arc=none smtp.client-ip=209.85.210.174
+	s=arc-20240116; t=1776863765; c=relaxed/simple;
+	bh=4ZdtPlRofaQMPq2QNylCZ8KJToF//PVvXMNSAq0Sr00=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
+	 MIME-Version:Content-Type; b=lod+p/vi9CNcgT8RZZV2dcjAWeEfylb3ziZO3mQj8bwGc3e1AkUVw2WFKgETcfFV56RjVvOAkcT1eM7O8w/WfoEJ5zJITX6k54kR6wflMnYmwlsw7QLJZWRzv9u3MV7hPeWJus9tBFN9W9Krrg2nrP7N8coVCPmTvs/gFq/RDwI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aFcVBChm; arc=none smtp.client-ip=209.85.160.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cVAgZlaL"
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-8296dabef74so4595600b3a.1
-        for <mptcp@lists.linux.dev>; Wed, 22 Apr 2026 05:09:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aFcVBChm"
+Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-505a1789a27so26991021cf.3
+        for <mptcp@lists.linux.dev>; Wed, 22 Apr 2026 06:16:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1776859799; x=1777464599; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=NebLMnO65OtCJ9kTmTFrhiV9D6tfIFz2CrdNbRxmY7A=;
-        b=cVAgZlaL64DEWHYdtNkAON6Et4OjkW3rsHcHQQRPFN1dCqJrE90VSnaNi6tIEafvqm
-         WUhlwPHdvnWFHzJVFIyNYtorHZeuNfWxqeU8mHLZVZynQxXK8YoY1ICQYX2Rsn4mWMu2
-         fG4hlhXqkPHZDG+66CK2hwshOLLJqzzhQhy+Tov8dtmV9sXce1JQ6wPdPhk0ZtVwBj1o
-         4TR6Pk5k0FRTOr6fZoMkabvm9NSuzoj7ClpoSCWr3otLHEbflx9CawzH4uUZ2nF7ergZ
-         BHzgWTT1vbNwg630vA3kLuFEkmkhBOo1gaZI2PDwT+0MUWrlluh/92Hs++znqnZ+XVsy
-         GTHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776859799; x=1777464599;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20251104; t=1776863763; x=1777468563; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=NebLMnO65OtCJ9kTmTFrhiV9D6tfIFz2CrdNbRxmY7A=;
-        b=NigKSpLG29lMfDdbtXTR033sTlz1/2hvj7rb3JR19kZAAz/SPUteNBGq6cyHOIq6sm
-         O9MsNkwMHfji0zewMJ3pofNsBRfUDcTnXVz3M9DHtOaQKJj3U9R+yMZHL6RqNNU8Uxjz
-         oT6UYp/bnRt94C49XUu4u35sLBUlQ5zLjn9OsmZCJe43MHPl6AMQNFAxGjqcV/CPlzew
-         09YHaS63LCPM0m6tVh+EK6yclPzayRcRRmfN90uhHYWFyXKDBvh/h1q2F/mqbq8L88c3
-         0K3361+d9SQWoGOhurW9EN+AvqwnBU4f7gIqZ6gmTVAmeHo+w3+Z230FM2rYiBtQVrCT
-         aoCw==
-X-Forwarded-Encrypted: i=1; AFNElJ/r8i0BPd5viLvYcboOqbENNz2qKtKQJgNki8u3FGYAYc3JTGACG60ojpSyRPMwVGAg2SsJBg==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yy4SnXVTUe3jRsMP5txFsE75pfu/DnKS1ErTOL0PgKl4YVijogP
-	rM7L9uM8ICjUIdjXjVK3GPV4tCSwUpDc5A5/FuLULcjHjW9LtNhvw2P2
-X-Gm-Gg: AeBDiesPwtWJFmji9BV55eMvn+jNOYLB8w2URwYqyLwQcWwRxP0kgJUmyJvwx/v8ojH
-	inwzeXATyn6gLHyLue7F82pUgNnGtVSHOKCbYflqT4oryDTLiQbRroizxXkB+TNTD3LI7eaFV0/
-	1ttI/PT7wRBKhvg7fstgtRzfRmJgpNh3PCMOMVpl0OfOXjU8nFfew4/cATL2dsXrCDCdzCtHd2w
-	DoSzF/7aa67CWzswnJ+sIeiHiGsbTqT6LHPiHrljtzpeRgpGlBzO1ja38KCE8diYH1/8dKWbhyA
-	eCc4MAHUgPeCnCDl+az6l9wVdbtB/l07WQNmLGPLUSu+z613NlBWYP41Mc9h3xj+d2ooAZdGsJY
-	XdQaeJC5FKbBmm7173KUjFnkfAEGY5sTvC4Fteg2PEtmHpZyevaYHBE9FqlFnEjT0oRGr4Ez5Rd
-	Kd5vn/UnSIhgmcSnuT1tAr6vEG4y1ayjw=
-X-Received: by 2002:a05:6a00:3e16:b0:82f:5571:1a8d with SMTP id d2e1a72fcca58-82f8c8308e0mr23715240b3a.2.1776859798571;
-        Wed, 22 Apr 2026 05:09:58 -0700 (PDT)
-Received: from localhost ([223.185.43.14])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-82f8e9fcea9sm21196745b3a.23.2026.04.22.05.09.57
+        bh=P10M/zrsEeDrWB+feQwa7TmrxbxMzpE4aua19QHMIdM=;
+        b=aFcVBChmNfB090Tyq2PS2UNz3kQjrsDhdIuIdhWKL1vT+ponR6t352u3+kEX2G2gGq
+         OWH3vy6zDTdYwtjns98UBu+hCFb+UyMJZZCFiFuxThPdBcVItFIXV8LIiBRrB1XCwDqi
+         F3m7/3b8l2UxWfnP0yhzgQcQbTbV24mZC3EOqEnQNBZe2fidTJAf7Mho8I0sRk4ShaSu
+         AHLlzQ1Bzp3C7NDQr5M65JBsMXHkzAUU8h32XOcMq4AoZfGAH6HszSUGHNeuaN2umknx
+         V2l9E6yEYBcy1yghdd+jrLI1LcL0tdt1V4Vqz5coo01XJHKcavfAsgU1QihiOjEXvDac
+         tzgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776863763; x=1777468563;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=P10M/zrsEeDrWB+feQwa7TmrxbxMzpE4aua19QHMIdM=;
+        b=gsXfYzITvqgbVvMtf0OgDcON6hFfXH5laO+twUxNU2trE6e97e8WbucWnjxXLPJ5dp
+         w46qdBiBoX0M0nx3gUn+iiXN4pocKS2JsztxOZ1hsJhfkh3SOPPbXy4ITjEfWy8brv6+
+         kJsj1bo4fhSmfx4VJZ0/7bBKDPeNcoymzcETIiZrDcBUisdPwWIAZ8cQXMQQl2EyVPyG
+         9DSq/zo4GSscm/9d6LtRUNkz1j8DiXZ2TlRK2Ux3yIarghRcoGlp7fNZiJhWJNdNsDGo
+         yueCnTZPQREB7HPUF7klLLVF6dG+y3SklEBETRD6asPDEqTPCCBwuYqvSr3pTCL9dG0G
+         ET/w==
+X-Gm-Message-State: AOJu0YxJy5G0L3vFZIIRrUUPEPuOxvuWgTHTzFJdHPynBRxURrjWDQlk
+	c+9ktU7+PVIQM988Zejp9ff3wtDGJpoedPq+/AgPhZaEfsV3X4yMXT4=
+X-Gm-Gg: AeBDiesYXFeluD8hX0J+klT0B6NAOp/9vsxi11SrtWpPEm32ALojDfWMPmBPVEeJ85S
+	qF84c2qwtXW/p1ovaPaj30DKhEyYpAUjrTtL2CtJq847DZUp887Xr5xfWZP8pwgONMFwdnWC48+
+	XbIVWmYugkIglJkNjJ+BR1WbQ8ljneKrvrejuxo3s5SqMz5uwqnSxUtovlpTOkAE30KOUSZQnr9
+	6Hssx3nkY56bzgmFGRCYuE3pUEBpSIa6c0q32mA2T4QxENJ1UZWk2Usgn2Q1/fTjfFwBQy/9a3k
+	WM5leHwRZBPcrwD2mZd1f2kqRLZCC3IxHlAUVPD7NQirtRw8fLnMIoVQC/sO1RBiY/RJg+B/llJ
+	zz5bhM4xonYm4dP54v89JsMSV/jWnKlT335CokHuBTNIGbtTsZ5+0yZXOZhcvM39UONwzGF0t/p
+	PNbalRIKU7Q9EQiSfrYqlfWZWzQ2flRp5N9D9yi1fwf3u0O5Za+A==
+X-Received: by 2002:a05:622a:65c5:b0:50e:5a87:6bfc with SMTP id d75a77b69052e-50e5a87750bmr113375151cf.24.1776863759863;
+        Wed, 22 Apr 2026 06:15:59 -0700 (PDT)
+Received: from [127.0.0.1] ([172.183.157.177])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-50e3945ae5bsm138756441cf.23.2026.04.22.06.15.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Apr 2026 05:09:58 -0700 (PDT)
-From: Shardul Bankar <shardulsb08@gmail.com>
-X-Google-Original-From: Shardul Bankar <shardul.b@mpiricsoftware.com>
-To: matttbe@kernel.org,
-	martineau@kernel.org
-Cc: geliang@kernel.org,
-	pabeni@redhat.com,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	horms@kernel.org,
-	netdev@vger.kernel.org,
-	mptcp@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	janak@mpiric.us,
-	kalpan.jani@mpiricsoftware.com,
-	shardulsb08@gmail.com,
-	Shardul Bankar <shardul.b@mpiricsoftware.com>
-Subject: [PATCH] mptcp: do not drop partial packets
-Date: Wed, 22 Apr 2026 17:39:54 +0530
-Message-Id: <20260422120954.8877-1-shardul.b@mpiricsoftware.com>
-X-Mailer: git-send-email 2.34.1
+        Wed, 22 Apr 2026 06:15:59 -0700 (PDT)
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Shardul Bankar <shardulsb08@gmail.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20260422120954.8877-1-shardul.b@mpiricsoftware.com>
+References: <20260422120954.8877-1-shardul.b@mpiricsoftware.com>
+Subject: Re: [PATCH] mptcp: do not drop partial packets
+Message-ID: <4e9538e7-3a09-4423-4b81-6c9bc663f0af@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 22 Apr 2026 13:15:58 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
 
-When a packet arrives with map_seq < ack_seq < end_seq, the beginning
-of the packet has already been acknowledged but the end contains new
-data.  Currently the entire packet is dropped as "old data," forcing
-the sender to retransmit.
+Hi Shardul,
 
-Instead, skip the already-acked bytes by adjusting the skb offset and
-enqueue only the new portion.  Update bytes_received and ack_seq to
-reflect the new data consumed.
+Thank you for your modifications, that's great!
 
-A previous attempt at this fix (commit 1d2ce718811a ("mptcp: do not
-drop partial packets"), reverted in commit bf39160c4218 ("Revert
-"mptcp: do not drop partial packets"")) also added a zero-window
-check and changed rcv_wnd_sent initialization, which caused test
-regressions.  This version addresses only the partial packet handling
-without modifying receive window accounting.
+Our CI did some validations and here is its report:
 
-Fixes: ab174ad8ef76 ("mptcp: move ooo skbs into msk out of order queue.")
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/600
-Signed-off-by: Shardul Bankar <shardul.b@mpiricsoftware.com>
----
- net/mptcp/protocol.c | 25 ++++++++++++++++++++-----
- 1 file changed, 20 insertions(+), 5 deletions(-)
+- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Unstable: 1 failed =
+test(s): packetdrill_dss =E2=9A=A0=EF=B8=8F=20
+- KVM Validation: debug =
+(only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal=
+ (only bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only =
+bpftest_all): Success! =E2=9C=85
+- Task: https://github.=
+com/multipath-tcp/mptcp_net-next/actions/runs/24778310704
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 614c3f583ca0..6858e6e283e3 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -397,12 +397,27 @@ static bool __mptcp_move_skb(struct sock *sk, struct sk_buff *skb)
- 		return false;
- 	}
- 
--	/* old data, keep it simple and drop the whole pkt, sender
--	 * will retransmit as needed, if needed.
-+	/* Completely old data? */
-+	if (!after64(MPTCP_SKB_CB(skb)->end_seq, msk->ack_seq)) {
-+		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_DUPDATA);
-+		mptcp_drop(sk, skb);
-+		return false;
-+	}
-+
-+	/* Partial packet: map_seq < ack_seq < end_seq.
-+	 * Skip the already-acked bytes and enqueue the new data.
- 	 */
--	MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_DUPDATA);
--	mptcp_drop(sk, skb);
--	return false;
-+	copy_len = MPTCP_SKB_CB(skb)->end_seq - msk->ack_seq;
-+	MPTCP_SKB_CB(skb)->offset += msk->ack_seq - MPTCP_SKB_CB(skb)->map_seq;
-+	msk->bytes_received += copy_len;
-+	WRITE_ONCE(msk->ack_seq, msk->ack_seq + copy_len);
-+	tail = skb_peek_tail(&sk->sk_receive_queue);
-+	if (tail && mptcp_try_coalesce(sk, tail, skb))
-+		return true;
-+
-+	skb_set_owner_r(skb, sk);
-+	__skb_queue_tail(&sk->sk_receive_queue, skb);
-+	return true;
- }
- 
- static void mptcp_stop_rtx_timer(struct sock *sk)
--- 
-2.34.1
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/46be5a27087c
+Patchwork: https://patchwork.kernel.=
+org/project/mptcp/list/?series=3D1084260
 
+
+If there are some issues, you =
+can reproduce them using the same environment as
+the one used by the CI =
+thanks to a docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
+
+
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 Core)
