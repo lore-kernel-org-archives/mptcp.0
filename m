@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB4022D238A;
-	Wed, 22 Apr 2026 17:03:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2962E35C190
+	for <mptcp@lists.linux.dev>; Wed, 22 Apr 2026 17:07:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776877420; cv=none; b=Lzh0N89C4Lkc9EuJ1i9SyrK1UNVZs4389TDbcenu2UqIwQshx8sH20FxqNC3TSnHxI4ujUWlCMrJr7eCqgUZR+k/HoCH81OGHCeSR4426WZJGkIA8KyZ6qqhmflBzz03rB7BktkBX3qSXZa6vNNaaUsr94OaNlTIggaSwhsXthM=
+	t=1776877641; cv=none; b=vEZfYCH3ovUfMuYF+nur3DEVP01j3adPXaOvbAmk/naXdcWQOIL/zdzXvBF7bBrgkMdQaVXj4fGdWkQh8+haO4kLf17ULl0PTaQWEteD+AQ5CrAm9WdR/jT8iFod0Aq0OFWAUxQsgq4BKkYvlBmUAmbP5H0FC7hSzdACc0H4MSU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776877420; c=relaxed/simple;
-	bh=sGU1Ygg4261DH8TZQZe0ZVqJxWuJ8RwjWKefE4X9LQ0=;
+	s=arc-20240116; t=1776877641; c=relaxed/simple;
+	bh=E+hOWq44Q75sDkXLlLyYQ+0OXVWpuxoy2mv2++bR4nY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BJBbngwG6uLtEnpKtyQ6iGCnBVWpWX+mMdwz1uMYF4LNNEKi/iI5mv62zMBOQ7TowZUsbIHVpizEUl1K2OYYvmGx7QaTUnz9PZe1aT4I4XNVNYVmIP30NUHbo4iGXm7hWZp92t26DbpB7s/Ebcy+MDtFFq1hJ+JSolwxstR5WI4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oim5eBkH; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=d5qgyYT2eXWBlgvJGgmJHG5bJGLBAIqwveLURmDU1PFnA8K5IykW0clK1TARyzzM38cUTYYuhYW1tVZSPrvqJitwu4Oqwozdc/tY8wGhjtxHM4Tjw0Vwd1SZZ9hMd3FdNQ4MZApXLbVee8BBK7zD2Y3ekgVE9wAgPTknVLsXa3g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bodUfitw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oim5eBkH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F5F2C19425;
-	Wed, 22 Apr 2026 17:03:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bodUfitw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F226BC19425;
+	Wed, 22 Apr 2026 17:07:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776877419;
-	bh=sGU1Ygg4261DH8TZQZe0ZVqJxWuJ8RwjWKefE4X9LQ0=;
+	s=k20201202; t=1776877640;
+	bh=E+hOWq44Q75sDkXLlLyYQ+0OXVWpuxoy2mv2++bR4nY=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=oim5eBkHgAMIMizlFEaaThX/7+30AN3978aOFCr6w6KytlJrvaZVfZgKzv0snfwFD
-	 4Ji7lQRWTTOyB/pvRK2ownamp/4jOIYVAFTjA9GY1bjSOoq0QtReY+YGprogHS34fF
-	 76sJSIM7SYtVkwxVWBjHr7zP0BfDh61aOLrP86yu70TU8e63n1auyySa+UEL9FOt5B
-	 +hjbA1l2xSnYFZ1DlanzyFRemZv9A2rOXOzOaUNHJqADa5E4mNu3YHtzMTOuokWjiw
-	 zloQ90zQe3X8ZO61OCWK2VyxOIMO/5mEUIXDmt+Q51D8wTE9IV6BLbvPdztDkn0gzD
-	 9YafaW9JZ1flw==
-Message-ID: <88096a1b-0c16-40ae-a03a-0d0d7f1702a4@kernel.org>
-Date: Wed, 22 Apr 2026 19:03:33 +0200
+	b=bodUfitwpc7affzDjhScp//PIvkQ1snaRL4IQqm4Xvx79iUbNBh+PVKxtpCV0Fz6C
+	 wozGaQDtDCwamvQ4svJM1NyRv3Z0KF0pCpWTwfeGKJ+PjmbZpxcOiooh4+Bt+kZI2m
+	 S2w/Cl/sPMfc5dKjYSyu/Rcu0Z4FLB+DaP4+jGKJlieV+SXirCfV7RPqj2CuhH0lQt
+	 WfBq3quTV2urohFyBK9Sq+HcT3fZ4sdjNoKA27wu5KWTIRFYR9lq+rhxeeIiEN0xnh
+	 IW1nyquImj2B+9Q3wyA2z5bYchHi1DSgR1Jy04PKED5+5FZS9vUS+Wa+cy8I7UwELH
+	 vNfDB2bB3I8sQ==
+Message-ID: <a26748a2-0bdb-4e8b-80d2-c01e44b67059@kernel.org>
+Date: Wed, 22 Apr 2026 19:07:17 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,16 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH v2] mptcp: do not drop partial packets
-To: Shardul Bankar <shardulsb08@gmail.com>, pabeni@redhat.com,
- martineau@kernel.org
-Cc: geliang@kernel.org, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, horms@kernel.org, netdev@vger.kernel.org,
- mptcp@lists.linux.dev, linux-kernel@vger.kernel.org, janak@mpiric.us,
- kalpan.jani@mpiricsoftware.com, Shardul Bankar <shardul.b@mpiricsoftware.com>
-References: <20260422143931.43281-1-shardul.b@mpiricsoftware.com>
-From: Matthieu Baerts <matttbe@kernel.org>
+Subject: Re: [PATCH mptcp-net] mptcp: fastclose msk when linger time is 0
 Content-Language: fr
+To: Mat Martineau <martineau@kernel.org>
+Cc: MPTCP Upstream <mptcp@lists.linux.dev>, Lance Tuller <lance@lance0.com>
+References: <20260421-mptcp-fastclose-linger-v1-1-de94d7bffc0a@kernel.org>
+ <0aebb36a-fabb-d189-255b-d6c630c08c3e@kernel.org>
+From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -89,65 +86,58 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20260422143931.43281-1-shardul.b@mpiricsoftware.com>
+In-Reply-To: <0aebb36a-fabb-d189-255b-d6c630c08c3e@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Shardul,
+Hi Mat,
 
-On 22/04/2026 16:39, Shardul Bankar wrote:
-> When a packet arrives with map_seq < ack_seq < end_seq, the beginning
-> of the packet has already been acknowledged but the end contains new
-> data.  Currently the entire packet is dropped as "old data," forcing
-> the sender to retransmit.
+On 22/04/2026 17:35, Mat Martineau wrote:
+> On Tue, 21 Apr 2026, Matthieu Baerts (NGI0) wrote:
 > 
-> Instead, skip the already-acked bytes by adjusting the skb offset and
-> enqueue only the new portion.  Update bytes_received and ack_seq to
-> reflect the new data consumed.
-
-Thank you for the v2.
-
-I didn't review it (yet), but just to let you know that there are some
-rules on Netdev [1] (that usually also applied on MPTCP side), and an
-important one is:
-
- - don't repost your patches within one 24h period
-
-Each version generates a lot of emails that are sent and need to be
-triaged. With the high volume, it is then harder for us to follow, plus
-a lot of shared resources are used, etc.
-
-One last thing, because this patch is not an urgent fix, do you mind
-sending new versions only the to MPTCP ML: to a restricted number of
-people for the first versions, there is enough traffic on Netdev.
-
-[1] https://docs.kernel.org/process/maintainer-netdev.html
-
-> A previous attempt at this fix (commit 1d2ce718811a ("mptcp: do not
-> drop partial packets"), reverted in commit bf39160c4218 ("Revert
-
-Note: these two commits should not be mentioned here, they have only
-been applied to the MPTCP tree, but not upstreamed. Instead, please use
-lore links, e.g.
-
-https://lore.kernel.org/c9b426a4e163aa3c4fe8b80c79f1a610f47ae7d8.1763075056.git.pabeni@redhat.com
-
-> "mptcp: do not drop partial packets"")) also added a zero-window
-> check and changed rcv_wnd_sent initialization, which caused test
-> regressions.  This version addresses only the partial packet handling
-> without modifying receive window accounting.
+>> The SO_LINGER socket option has been supported for a while with MPTCP
+>> sockets [1], but it didn't cause the equivalent of a TCP reset as
+>> expected when enabled and its time was set to 0. This was causing some
+>> behavioural differences with TCP where some connections were not
+>> promptly stopped as expected.
+>>
+>> To fix that, an extra condition is checked at close() time before
+>> sending an MP_FASTCLOSE, the MPTCP equivalent of a TCP reset.
+>>
+>> Note that backporting up to [1] will be difficult as more changes are
+>> needed to be able to send MP_FASTCLOSE. It seems better to stop at [2],
+>> which was supposed to already imitate TCP.
+>>
+>> Validated with MPTCP packetdrill tests [3].
+>>
+>> Fixes: 268b12387460 ("mptcp: setsockopt: support SO_LINGER") [1]
+>> Fixes: d21f83485518 ("mptcp: use fastclose on more edge scenarios") [2]
+>> Reported-by: Lance Tuller <lance@lance0.com>
+>> Closes: https://github.com/lance0/xfr/pull/67
+>> Link: https://github.com/multipath-tcp/packetdrill/pull/196 [3]
+>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+>> ---
+>> net/mptcp/protocol.c | 3 ++-
+>> 1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> Fixes: ab174ad8ef76 ("mptcp: move ooo skbs into msk out of order queue.")
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/600
-> Signed-off-by: Shardul Bankar <shardul.b@mpiricsoftware.com>
+> LGTM, thanks Matthieu!
+Thank you for the review!
 
-Checkpatch is complaining that the author of the patch is not the same
-as the one who sent the patch; You probably need to run this command to
-fix it:
+Now in our tree:
 
-  git commit --amend --reset-author
+New patches for t/upstream-net and t/upstream:
+- 0f10cdb3e082: mptcp: fastclose msk when linger time is 0
+- Results: 292dd6570cfd..102349628b51 (export-net)
+- Results: b3fa12c3ddab..67117a5e3e86 (export)
 
-(when the patch is sent, `git format-patch` will add a second From: tag)
+Tests are now in progress:
+
+- export-net:
+https://github.com/multipath-tcp/mptcp_net-next/commit/1acee4b422ad7ee72705775b633d8ae8fa75d508/checks
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/e676a2d67d616900b5d4be83471f12c5d7a1433e/checks
+
+And the packetdrill PR has been merged.
 
 Cheers,
 Matt
