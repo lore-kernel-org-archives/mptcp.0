@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95D2A299929
-	for <mptcp@lists.linux.dev>; Wed, 22 Apr 2026 16:40:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5266E299929
+	for <mptcp@lists.linux.dev>; Wed, 22 Apr 2026 16:40:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776876042; cv=none; b=jnP8K+oNUQbU+9oPQh7fIHA0hweMnHVLkPpB9Y4WHu6BtgCoRQjocFXEWmuX6aIXu3RpJhg/yxMvzccR6BbESSMO3uhGvdj6bf0i8VZ201h1/vfWInhDCAUz2kPPNzZYmX0Je1/wGZDw1/1E+6zhXDj+LNQt2UFYZPf4ipVUBDo=
+	t=1776876043; cv=none; b=IBZBe+fVpM6XVMvZUBdBnkPRDjlqF/N0c+6ido2jqlTndVsBe0grcm+s/4rjhCG1iAPl2jAlb1R4wrkM9ZtguhCT2EcXm2dZJJhZUcT5MwoD2xoViJs1x0pvXYK2TjRxGLVXS46mlQJwBkrM52W4qCugVd4RoU4+3OH7EtWXwiI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776876042; c=relaxed/simple;
-	bh=qU2gO4U+rLHR/oV2lgldodaiCkxfghI5r1NFCTslTiA=;
+	s=arc-20240116; t=1776876043; c=relaxed/simple;
+	bh=xqQ0XziJocJK+T47pPjFZrFCFv0UNP98JJxxWrafiv4=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=oF58EMUXkSLT3N1AWcaxWaaA3n7FXh1rbsTLSlKQ0NCng6XjCWpgN6jWdzXLgYb8PwPjE8uvaXDN+9KlR4a3Mzu0hFFHix4TDP/gy8vUYJg/Lm7OXbEyUbSx3qBvIawWaf5o+mvK/gBm7VVqdAte7d9dOHtnzO4qZnIFAAkito0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=snmP7txB; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=u4lIjbm+FAtMuQGIExrGrcZSVGCiJFiFF094DZg2+DCgvDKdmp2tp0AsWQgEwUeFr+vJ8hMC3GGxL65EHoACX+hJRhPCE91jEP5IRmD/yQPe94a0Mbl4s65G96Tw91jgj77Jtpb4CbKKTG2cEZOc027f60llDbfAslI/LzSeWFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DLFZK+Z0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="snmP7txB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F5D9C2BCAF;
-	Wed, 22 Apr 2026 16:40:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DLFZK+Z0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBD10C2BCB4;
+	Wed, 22 Apr 2026 16:40:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776876042;
-	bh=qU2gO4U+rLHR/oV2lgldodaiCkxfghI5r1NFCTslTiA=;
+	s=k20201202; t=1776876043;
+	bh=xqQ0XziJocJK+T47pPjFZrFCFv0UNP98JJxxWrafiv4=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=snmP7txBXguRf+sx0TEyHYX8/P1ChU7JU4JbvadKU8r3Gm1YE8kUHQwsPTq0U+hYq
-	 qTpOOW0FokJ+S2yl3qb2dAchVvk+/IbT76i32m6EYXWQtWqD1ycXOIRW6kb17+HuEc
-	 LMw/jxJNZ0dzNtD7M2SS9AVaoLOXEVkZpBoYOtgWpoRn2OxbSwUyMTmmDdgBCrowAZ
-	 sUDYg1oGa9OeYU3DA0SEwaEfl9c8qEq2hEMcxT5nsoDx8QWA0BcMEbLuqV7sdwgrcv
-	 MEF6BkVFiLTm6rey3ZcRbR3vYaOBnB2a+/Pg34DBhuk5hKGlZnpYklC2qT/DruAI4p
-	 NF5KfemwIFw+Q==
+	b=DLFZK+Z0bsvnbkz7VtTyuo7ckttBNCEKcsq56gNVwecl7jVDnLcTMQbPywojiT/af
+	 UGtEu4Bc5DcvFLJYH3CqCiURZXwWjoxK56yGUSV+H3XOdQi+3sdiuBIhc2DDa4crP5
+	 QLqfUIDdupN+yY8gt2aFz4C1Whj0FSgEprl2gTY7lNBm3OkoQHxCsqFFrB2Y8bC4wR
+	 CzsaSM2rpMrwGrNSuPW8vW1w/QCcjegdZWOp9DIMgM143hrXpd7TTY4WNdOh/9cZo6
+	 ek7rA6BXZQyN1pSRF1TMyY2TQhuimuGMnDxW2tbmdgHbWq3/HF2yVCrSL36iGcTRZY
+	 h2K4tAyLLkS1w==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Wed, 22 Apr 2026 18:40:15 +0200
-Subject: [PATCH mptcp-net v6 01/19] mptcp: pm: kernel: correctly retransmit
- ADD_ADDR ID 0
+Date: Wed, 22 Apr 2026 18:40:16 +0200
+Subject: [PATCH mptcp-net v6 02/19] mptcp: pm: ADD_ADDR rtx: fix potential
+ data-race
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,74 +38,59 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260422-mptcp-inc-limits-v6-1-903181771530@kernel.org>
+Message-Id: <20260422-mptcp-inc-limits-v6-2-903181771530@kernel.org>
 References: <20260422-mptcp-inc-limits-v6-0-903181771530@kernel.org>
 In-Reply-To: <20260422-mptcp-inc-limits-v6-0-903181771530@kernel.org>
 To: MPTCP Upstream <mptcp@lists.linux.dev>
 Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2074; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=qU2gO4U+rLHR/oV2lgldodaiCkxfghI5r1NFCTslTiA=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDJf/PwVH1d5Tn5l3gnRQ9PPXG2p2c/z4U+/ZeKNlsvho
- hsPOXxa2lHKwiDGxSArpsgi3RaZP/N5FW+Jl58FzBxWJpAhDFycAjARzgxGhnmpEafX35RWb89g
- F86VuVAUueHHpPV2WYZfbX6szHKT12f4Z3W37d8qz45lJb0qCg+jnqlc+8tQbBfAmLZJcM3TILv
- tTAA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1180; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=xqQ0XziJocJK+T47pPjFZrFCFv0UNP98JJxxWrafiv4=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDJf/Pz9qoyzZ5/c8hMxZ4R+Trlt9j2lLe/Za/V00Zo9g
+ VO3SR542VHKwiDGxSArpsgi3RaZP/N5FW+Jl58FzBxWJpAhDFycAjCRlcYM/0yEmowOMm6KY77S
+ G/lVwZizQNaGsUVPr3/trZa5s2afUmb4HxGaIezXfe9pruzMRZbnbA4f4qqLe7ZFquRvK+tUVr9
+ qbgA=
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-When adding the ADD_ADDR to the list, the address including the IP, port
-and ID are copied. On the other hand, when the endpoint corresponds to
-the one from the initial subflow, the ID is set to 0, as specified by
-the MPTCP protocol.
+This mptcp_pm_add_timer() helper is executed as a timer callback in
+softirq context. To avoid any data races, the socket lock needs to be
+held with bh_lock_sock().
 
-The issue is that the ID was reset after having copied the ID in the
-ADD_ADDR entry. So the retransmission was done, but using a different ID
-than the initial one.
+If the socket is in use, retry again soon after, similar to what is done
+with the keepalive timer.
 
-Fixes: 8b8ed1b429f8 ("mptcp: pm: reuse ID 0 after delete and re-add")
+Fixes: 00cfd77b9063 ("mptcp: retransmit ADD_ADDR when timeout")
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- net/mptcp/pm_kernel.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ net/mptcp/pm.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/net/mptcp/pm_kernel.c b/net/mptcp/pm_kernel.c
-index 7895fb5f982e..906a1d5ab9ed 100644
---- a/net/mptcp/pm_kernel.c
-+++ b/net/mptcp/pm_kernel.c
-@@ -347,6 +347,8 @@ static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
+diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+index fdadd0e8f77c..43a11b65235f 100644
+--- a/net/mptcp/pm.c
++++ b/net/mptcp/pm.c
+@@ -340,6 +340,13 @@ static void mptcp_pm_add_timer(struct timer_list *timer)
+ 	if (!entry->addr.id)
+ 		return;
  
- 	/* check first for announce */
- 	if (msk->pm.add_addr_signaled < endp_signal_max) {
-+		u8 endp_id;
++	bh_lock_sock(sk);
++	if (sock_owned_by_user(sk)) {
++		/* Try again later. */
++		sk_reset_timer(sk, timer, jiffies + HZ / 20);
++		goto out;
++	}
 +
- 		/* due to racing events on both ends we can reach here while
- 		 * previous add address is still running: if we invoke now
- 		 * mptcp_pm_announce_addr(), that will fail and the
-@@ -360,19 +362,20 @@ static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
- 		if (!select_signal_address(pernet, msk, &local))
- 			goto subflow;
+ 	if (mptcp_pm_should_add_signal_addr(msk)) {
+ 		sk_reset_timer(sk, timer, jiffies + TCP_RTO_MAX / 8);
+ 		goto out;
+@@ -368,6 +375,7 @@ static void mptcp_pm_add_timer(struct timer_list *timer)
+ 		mptcp_pm_subflow_established(msk);
  
-+		/* Special case for ID0: set the correct ID */
-+		endp_id = local.addr.id;
-+		if (endp_id == msk->mpc_endpoint_id)
-+			local.addr.id = 0;
-+
- 		/* If the alloc fails, we are on memory pressure, not worth
- 		 * continuing, and trying to create subflows.
- 		 */
- 		if (!mptcp_pm_alloc_anno_list(msk, &local.addr))
- 			return;
- 
--		__clear_bit(local.addr.id, msk->pm.id_avail_bitmap);
-+		__clear_bit(endp_id, msk->pm.id_avail_bitmap);
- 		msk->pm.add_addr_signaled++;
- 
--		/* Special case for ID0: set the correct ID */
--		if (local.addr.id == msk->mpc_endpoint_id)
--			local.addr.id = 0;
--
- 		mptcp_pm_announce_addr(msk, &local.addr, false);
- 		mptcp_pm_addr_send_ack(msk);
+ out:
++	bh_unlock_sock(sk);
+ 	__sock_put(sk);
+ }
  
 
 -- 
