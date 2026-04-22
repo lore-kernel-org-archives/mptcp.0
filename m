@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E27F3BFE2E
-	for <mptcp@lists.linux.dev>; Wed, 22 Apr 2026 08:35:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B043306D2A
+	for <mptcp@lists.linux.dev>; Wed, 22 Apr 2026 08:36:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776846910; cv=none; b=ZXzgjeRTtzcX9o/XtEioEK4YB6X2nVLPmLyOshFan+HCPfegyXMj3tDMlMiSwTI94tw1uO4bIKoukXwLSOm0T4+ceXnL8d7yFJJZI5NMeVmMAZRciRDxXWByeByJSJfII9eMPFSAwn0ArXMiZ7EDPm5KavaCoyn9mr2JaMt91l8=
+	t=1776846990; cv=none; b=aOWLhh4sBx/h1/0VCQg4hS3ULy3JHdJl5tne9wa9nniNysfYr9UF4s3hqjeAcnc52g9+ap1d9AxktLCZqN1NW1EPHKr0r/+DJtiQtieGNRVPOrQH3VjxA97IkITzx3YmtYt6D4nr3AZHGYQaiqylP2OheXgN2ZS+fKfVIVFqTPc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776846910; c=relaxed/simple;
-	bh=BuRwxCjmx49u4gV15o8v7wHvBoEQHr/LBIKLiM+l1aA=;
+	s=arc-20240116; t=1776846990; c=relaxed/simple;
+	bh=AKzt73wa7g4IUj3pG4jjToGCAzvLare3tV2oezrUHKw=;
 	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=g/4cXQimg0e9AFUfM5n4OhXocFnvWaYq/dAaIzAqr8FvNey0/m3xXHqrUkCKWO7jcAVKtMeaLNbVAe0CXpzey+J0BnMjgxZuM0STz23NiC4QNYj++Fj+gBj0cVJxvbdI/USrAq6NjdmDI19KVCtpt/eufXp6Yj8blLHdXDV7gQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RcUy0x1Y; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=aPENvWKOkMcrqON1Dag+av+7syn/aMCb86i2KKSHO6hJYa83dUfbFf81nte6r6cd4qk4jrLprmkjHboxdk5k7SwTy0smXKK6JYUGEtCGX7zXAEwBOGWtM42JNRwM0WsI4zKFK3cHgg8jQuymoHOb7ufuIXnDj0pcJbhIG6islxw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T6u3fnbi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RcUy0x1Y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1311C19425;
-	Wed, 22 Apr 2026 08:35:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T6u3fnbi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A20F9C19425;
+	Wed, 22 Apr 2026 08:36:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776846910;
-	bh=BuRwxCjmx49u4gV15o8v7wHvBoEQHr/LBIKLiM+l1aA=;
+	s=k20201202; t=1776846990;
+	bh=AKzt73wa7g4IUj3pG4jjToGCAzvLare3tV2oezrUHKw=;
 	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=RcUy0x1YJT6B/VOXY4UNIf7sql5c1Jq7aR8r58EjdWOi2GzfT86xNho/ELw/8x4a/
-	 LO4QQ1205d6nZjTWeb3oSif9fnqU4kgsSWVi+cyYqzz9EqZOSUUBK2u+xk5X/1Ltpt
-	 UcrsaqU+PByMhD+IvCFqhL0q2vMgkuC9UFVpd34MOCO5fjdJfJiYL6p/XVc19hKfqe
-	 ILOFufI9WKBHjm/eNrP/VjAK91EuZbCAVXa60TVRKQfo2PeLpHdCyoBygbalFlbUtS
-	 ump/nTjY1EC20c2qTOsgPTRcWq3fpa9i7aNA3yOmKRC7SFOg68kESov3re0sZtAdOn
-	 XwsdCmgAmVRkQ==
-Message-ID: <a7234091-4141-46ee-8db6-cf01baa25800@kernel.org>
-Date: Wed, 22 Apr 2026 10:35:06 +0200
+	b=T6u3fnbiqkygKYALNtdts1BWnqwzZ7rInXHMZo5B1hCnirn54AJie3v8ULvYH0uMy
+	 +kqKz30AgQV8KcE6c9tsnApQ5qLN5QpdkefeXjJPi6s1bbG+bowmBJhaYT9AKyCsb0
+	 5uTBzbAKWkCf3poVW562gqHj0NKRazizF1R4DD/G3vOXg64yREtplkC6HciZ2aF4nI
+	 mOCSylYOErmUfjhRpMPu4ukMC7IQaYS3w0jAnsdW5aPEnZgruSmVpJ0KFXwkI+XqpT
+	 Pm+6RXzNHNbOnB8+l/+OiVsPW6/+2J9WKAD3DKKE5nBtAxDHMDUAa4fzk0J4GtKh71
+	 J0Rno14BaJlPg==
+Message-ID: <1d0288a8-6122-444d-8dfa-1fa92d2a0090@kernel.org>
+Date: Wed, 22 Apr 2026 10:36:26 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -46,6 +46,7 @@ References: <20260421223338.52743-1-devnexen@gmail.com>
  <20260421223338.52743-2-devnexen@gmail.com>
  <e5dbdb08-f666-47d6-83b6-c157c7e9036c@redhat.com>
  <88df3189-4aa0-41fa-9a58-0d17fb736c87@kernel.org>
+ <a7234091-4141-46ee-8db6-cf01baa25800@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -90,58 +91,62 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <88df3189-4aa0-41fa-9a58-0d17fb736c87@kernel.org>
+In-Reply-To: <a7234091-4141-46ee-8db6-cf01baa25800@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 22/04/2026 10:32, Matthieu Baerts wrote:
-> Hi Paolo,
-> 
-> Thank you for the review!
-> 
-> On 22/04/2026 10:05, Paolo Abeni wrote:
->> On 4/22/26 12:33 AM, David Carlier wrote:
->>> Propagate IP_RECVERR/IP_RECVERR_RFC4884 and
->>> IPV6_RECVERR/IPV6_RECVERR_RFC4884 from the MPTCP socket to
->>> existing and future subflows.
+On 22/04/2026 10:35, Matthieu Baerts wrote:
+> On 22/04/2026 10:32, Matthieu Baerts wrote:
+>> Hi Paolo,
+>>
+>> Thank you for the review!
+>>
+>> On 22/04/2026 10:05, Paolo Abeni wrote:
+>>> On 4/22/26 12:33 AM, David Carlier wrote:
+>>>> Propagate IP_RECVERR/IP_RECVERR_RFC4884 and
+>>>> IPV6_RECVERR/IPV6_RECVERR_RFC4884 from the MPTCP socket to
+>>>> existing and future subflows.
+>>>>
+>>>> Apply the matching sockopt according to the subflow family so mixed-
+>>>> family subflows stay aligned with the parent socket configuration,
+>>>> including disable-time errqueue purge semantics.
+>>
+>> (...)
+>>
+>>>> +static int mptcp_setsockopt_v6_recverr(struct mptcp_sock *msk, int optname,
+>>>> +				       sockptr_t optval, unsigned int optlen)
+>>>> +{
+>>>> +	struct mptcp_subflow_context *subflow;
+>>>> +	struct sock *sk = (struct sock *)msk;
+>>>> +	int ret;
+>>>> +
+>>>> +	ret = ipv6_setsockopt(sk, SOL_IPV6, optname, optval, optlen);
+>>>> +	if (ret)
+>>>> +		return ret;
+>>>> +
+>>>> +	lock_sock(sk);
+>>>> +	sockopt_seq_inc(msk);
+>>>> +	mptcp_for_each_subflow(msk, subflow) {
+>>>> +		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
+>>>> +		bool rfc4884 = optname == IPV6_RECVERR_RFC4884;
+>>>> +
+>>>> +		ret = mptcp_subflow_set_recverr(sk, ssk, rfc4884);
 >>>
->>> Apply the matching sockopt according to the subflow family so mixed-
->>> family subflows stay aligned with the parent socket configuration,
->>> including disable-time errqueue purge semantics.
-> 
-> (...)
-> 
->>> +static int mptcp_setsockopt_v6_recverr(struct mptcp_sock *msk, int optname,
->>> +				       sockptr_t optval, unsigned int optlen)
->>> +{
->>> +	struct mptcp_subflow_context *subflow;
->>> +	struct sock *sk = (struct sock *)msk;
->>> +	int ret;
->>> +
->>> +	ret = ipv6_setsockopt(sk, SOL_IPV6, optname, optval, optlen);
->>> +	if (ret)
->>> +		return ret;
->>> +
->>> +	lock_sock(sk);
->>> +	sockopt_seq_inc(msk);
->>> +	mptcp_for_each_subflow(msk, subflow) {
->>> +		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
->>> +		bool rfc4884 = optname == IPV6_RECVERR_RFC4884;
->>> +
->>> +		ret = mptcp_subflow_set_recverr(sk, ssk, rfc4884);
+>>> The above looks a bit overcomplicated?!? It looks like you could
+>>> leverage mptcp_setsockopt_all_sf() in  and drop the
+>>> mptcp_subflow_set_recverr() and mptcp_recverr_enabled() helpers.
+>>>
+>>> @Mattbe: it's not clear to me why mptcp_setsockopt_all_sf() does not
+>>> call sockopt_seq_inc(msk) or sync the setsockopt_seq, possibly an
+>>> unrelated bug?
 >>
->> The above looks a bit overcomplicated?!? It looks like you could
->> leverage mptcp_setsockopt_all_sf() in  and drop the
->> mptcp_subflow_set_recverr() and mptcp_recverr_enabled() helpers.
->>
->> @Mattbe: it's not clear to me why mptcp_setsockopt_all_sf() does not
->> call sockopt_seq_inc(msk) or sync the setsockopt_seq, possibly an
->> unrelated bug?
+>> Oh yes, good catch! And a lock of the sk (msk) before iterating the
+>> subflows, no? Same in __mptcp_setsockopt_set_val()?
 > 
-> Oh yes, good catch! And a lock of the sk (msk) before iterating the
-> subflows, no? Same in __mptcp_setsockopt_set_val()?
+> (Not the same in __mptcp_setsockopt_set_val(): the sk is already locked)
 
-(Not the same in __mptcp_setsockopt_set_val(): the sk is already locked)
+... same when calling mptcp_setsockopt_all_sf() for the moment. Maybe I
+should have prefixed with "__".
 
 Cheers,
 Matt
