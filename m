@@ -1,105 +1,83 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F2DA3845AB;
-	Thu, 23 Apr 2026 11:29:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72A7A37DEB6;
+	Thu, 23 Apr 2026 11:30:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776943775; cv=none; b=ayOdrPVHGDywn7kj8kTEVnFlSPhSvTwr0IHPWuNmo9270/7pT9dWy++secy1V3LOC/q3VL3zGjVMXkiSZpjh1SmHAf0Gihsud9qFNDAOteDIApLET81KgBWkGOWoWOSLELKnrRqXChHKf2/cWbZQ3Ov7YlTvUcxcb2+ewpwjFeg=
+	t=1776943847; cv=none; b=eBMx32pIQOfRiCoDZ/jTqp+eXzQFuuLm9BKgslb2paJDghGLOEy+wkIYuuHxw0ZENS5ujK/OQAqta61kS8DGigJ3zG3pY5Al1G3Xjkxj3MQwjS9xgeKm3Qst8PBdFEKqaJSetKuJeiQFJVI01N7flcAjqcpvNw24oj1L/06U9C8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776943775; c=relaxed/simple;
-	bh=zeTyH3uEO7A/6yWlCdBx0+oDvE4382EN62vO+gWdbgA=;
-	h=Subject:To:Cc:From:Date:In-Reply-To:Message-ID:MIME-Version:
-	 Content-Type; b=MtOGS2SxP9sQKQ84gwzM/bFdziWo95I72dpb5kV4NLn2j6F1jD9czCg9D/fk+Qhzp87UEwX/fm/G+tjjKI6nfBnNJX7h7QprOaO+2ZwvXUqOd7NSyjdEjPKH5GjZUUnIYk8B+T8Z3isEgu6OJQhYbJrPMHknz0xZTGZ4M4UU1wI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=xxwzxtrq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1776943847; c=relaxed/simple;
+	bh=NrXVaIGlP5AkCzLvvuGh+M3UJGrqHoUqwFe78v+0LcQ=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=TVpB7j3Wk6MzUcXjMfN0g6qp4a3FvmdAXWn7fZ81fL34tlLDdfCB+PBeDstpTA5nG5BhnyxA3hKsnGt8JKguZeOxkhyCkQs18jFOcNvYevCs1+W1UMPG0QLKZ5sZAAXflmX5/r4wRBD9FIuaYTtWDrjF/5GKSmuTk7se8iwY7BY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nKZatFvi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="xxwzxtrq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4E04C2BCAF;
-	Thu, 23 Apr 2026 11:29:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1776943775;
-	bh=zeTyH3uEO7A/6yWlCdBx0+oDvE4382EN62vO+gWdbgA=;
-	h=Subject:To:Cc:From:Date:In-Reply-To:From;
-	b=xxwzxtrqIQJx4aRQDgfiWdCFNL9sUYbd51HYWgYEBvu9n4Kdn+nipKhVESpxScMru
-	 F2Ihm60I1qOw7xpuUojQ27O3mKYNwU4PJWbydxW8ZQ89g9TZocQKgXXl57o0PMIYRF
-	 4/+7e1DLnyy0PmUldkYoZ5NUqu0F9zlNTTA498SE=
-Subject: Patch "MPTCP: fix lock class name family in pm_nl_create_listen_socket" has been added to the 5.15-stable tree
-To: gregkh@linuxfoundation.org,kuba@kernel.org,lixiasong1@huawei.com,matttbe@kernel.org,mptcp@lists.linux.dev
-Cc: <stable-commits@vger.kernel.org>
-From: <gregkh@linuxfoundation.org>
-Date: Thu, 23 Apr 2026 13:29:14 +0200
-In-Reply-To: <20260402174200.3474039-2-matttbe@kernel.org>
-Message-ID: <2026042314-fantasize-stiffness-5819@gregkh>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nKZatFvi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F68EC2BCAF;
+	Thu, 23 Apr 2026 11:30:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1776943847;
+	bh=NrXVaIGlP5AkCzLvvuGh+M3UJGrqHoUqwFe78v+0LcQ=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=nKZatFvinew0FRPe+p/Wi9YN1SmGcOdRhkitnNgLbfGyrLAbhBRIJVeOVuLEqxXgL
+	 DGmT1MOVoEpJMla43mAJjmM0ZhAt1S5kT/3FJjD9GYUGxabqGwScF+L2+BLhUzqpVQ
+	 7ZlMsvgHZ1uo1c256yJfHj+zBRPDjXRKGHYdJjktkb91Rw9t4bP0raRxH9+5OGDgm0
+	 w61wmk2n7bRm1JEXUqn6hTLp0avAtyKFuFUhE9C5a/y2rafn4HJH8Go5jsLScT8Pxt
+	 88OCGQAdA73+Q58ptsDSHlTwBE4hawWQvocPjSD1jpXrqfqL99k4Xp13XdAZVHi1FR
+	 +tWkHSeIY05ug==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 02E85380CFFD;
+	Thu, 23 Apr 2026 11:30:10 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ANSI_X3.4-1968
 Content-Transfer-Encoding: 8bit
-X-stable: commit
-X-Patchwork-Hint: ignore 
+Subject: Re: [PATCH net 0/2] mptcp: sync the msk->sndbuf at accept() time
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <177694380880.122796.15654680587804880799.git-patchwork-notify@kernel.org>
+Date: Thu, 23 Apr 2026 11:30:08 +0000
+References: 
+ <20260420-net-mptcp-sync-sndbuf-accept-v1-0-e3523e3aeb44@kernel.org>
+In-Reply-To: 
+ <20260420-net-mptcp-sync-sndbuf-accept-v1-0-e3523e3aeb44@kernel.org>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: martineau@kernel.org, geliang@kernel.org, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
+ netdev@vger.kernel.org, mptcp@lists.linux.dev, linux-kernel@vger.kernel.org,
+ yangang@kylinos.cn, stable@vger.kernel.org, shuah@kernel.org,
+ linux-kselftest@vger.kernel.org
+
+Hello:
+
+This series was applied to netdev/net.git (main)
+by Paolo Abeni <pabeni@redhat.com>:
+
+On Mon, 20 Apr 2026 18:19:22 +0200 you wrote:
+> On passive MPTCP connections, the MPTCP socket send buffer doesn't have
+> the expected size at accept() time.
+> 
+> Patch 1 fixes the regression introduced in v6.7, while the following one
+> validates the fix in the selftests.
+> 
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> 
+> [...]
+
+Here is the summary with links:
+  - [net,1/2] mptcp: sync the msk->sndbuf at accept() time
+    https://git.kernel.org/netdev/net/c/fcf04b143346
+  - [net,2/2] selftests: mptcp: add a check for sndbuf of S/C
+    https://git.kernel.org/netdev/net/c/d0576eb8508e
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
 
-This is a note to let you know that I've just added the patch titled
-
-    MPTCP: fix lock class name family in pm_nl_create_listen_socket
-
-to the 5.15-stable tree which can be found at:
-    http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
-
-The filename of the patch is:
-     mptcp-fix-lock-class-name-family-in-pm_nl_create_listen_socket.patch
-and it can be found in the queue-5.15 subdirectory.
-
-If you, or anyone else, feels it should not be added to the stable tree,
-please let <stable@vger.kernel.org> know about it.
-
-
-From stable+bounces-233086-greg=kroah.com@vger.kernel.org Thu Apr  2 19:42:24 2026
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Thu,  2 Apr 2026 19:42:01 +0200
-Subject: MPTCP: fix lock class name family in pm_nl_create_listen_socket
-To: stable@vger.kernel.org, gregkh@linuxfoundation.org
-Cc: MPTCP Upstream <mptcp@lists.linux.dev>, Li Xiasong <lixiasong1@huawei.com>, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, Jakub Kicinski <kuba@kernel.org>
-Message-ID: <20260402174200.3474039-2-matttbe@kernel.org>
-
-From: Li Xiasong <lixiasong1@huawei.com>
-
-commit 7ab4a7c5d969642782b8a5b608da0dd02aa9f229 upstream.
-
-In mptcp_pm_nl_create_listen_socket(), use entry->addr.family
-instead of sk->sk_family for lock class setup. The 'sk' parameter
-is a netlink socket, not the MPTCP subflow socket being created.
-
-Fixes: cee4034a3db1 ("mptcp: fix lockdep false positive in mptcp_pm_nl_create_listen_socket()")
-Signed-off-by: Li Xiasong <lixiasong1@huawei.com>
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Link: https://patch.msgid.link/20260319112159.3118874-1-lixiasong1@huawei.com
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-[ Conflict in pm_kernel.c, because commit 8617e85e04bd ("mptcp: pm:
-  split in-kernel PM specific code") is not in this version, and moves
-  code from pm_netlink.c to pm_kernel.c. ]
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/mptcp/pm_netlink.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -1041,7 +1041,7 @@ static struct lock_class_key mptcp_keys[
- static int mptcp_pm_nl_create_listen_socket(struct sock *sk,
- 					    struct mptcp_pm_addr_entry *entry)
- {
--	bool is_ipv6 = sk->sk_family == AF_INET6;
-+	bool is_ipv6 = entry->addr.family == AF_INET6;
- 	int addrlen = sizeof(struct sockaddr_in);
- 	struct sockaddr_storage addr;
- 	struct socket *ssock;
-
-
-Patches currently in stable-queue which might be from matttbe@kernel.org are
-
-queue-5.15/mptcp-fix-lock-class-name-family-in-pm_nl_create_listen_socket.patch
