@@ -1,55 +1,55 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D3332FFFA4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6BF12AD3D
 	for <mptcp@lists.linux.dev>; Fri, 24 Apr 2026 14:09:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777039767; cv=none; b=QfMyaNJ5fHflR3lk/zH0N40NI6F4R4S2pQ7SB1STfrq3A5grvisKPhrg5JnN1k3Ub4Yu9fkmZAaJxLUTRGVgSptdn5z86l8HwcDWyKdBYPYencfiy3I4HZD6v53SoM1xETCy/P9WipFuqc8WZ9sxllskOEe+R5YCv/8xFFKcw08=
+	t=1777039768; cv=none; b=mDrorpyFmtQocB3SCIQpDUXlBMKeN6hZ6DB2Yva7Ogma9Lvi1iyP45jIk7qSVY8MXxfWaTxh81rUZovqyQPqI9Y8TrDrKU5JUzf2rMa0S/WznGsEWLVV32p33B1r8iMPs17toKIC2WCk0o194gclwpk5VCaH9PFHRrzmyiCgHJA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777039767; c=relaxed/simple;
-	bh=yn8gArUsMp6IUy0gfJ9mp4Dbjxl1SM0isoBQdCvT86E=;
+	s=arc-20240116; t=1777039768; c=relaxed/simple;
+	bh=n6OA5fuG6T/SlA1ZVjvHtLz2fbCkQOcs/rclLPH4Sno=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=V/DN6urr0AYVxQGTcXWZuKk7QuMg8TEQAuLVvRq9KeSNw0nL6zK+6kfh5w1WNvIXji5mUGEHUHpazrudYZbp0I0ll9YVQSFRnYRDvNXyWwoFSajiUefSS78B1PMDi+XJNRNDVGBSDtHg1xtbqpA81sSQzE74mK2chGCdI2hA7nc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZkPIt9RP; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:content-type; b=m5t8EZj0aQ/5geWN9QwpikPCggxCgbPgYIK0s8fXk00qqcfiklHd/7hsosJf7nU+nf80u6bF7fAl0h8WYzyqeyIOQ0GyLcp8DG7ofv2LSsDtTyFTXO6Wzo9ya2XXZR8I3anOGNwegpZ1vC4HtL6lorIvE6tq63cTtSH69d4V47Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=b9uauiDW; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZkPIt9RP"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b9uauiDW"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1777039765;
+	s=mimecast20190719; t=1777039766;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=d4TqL3/645XPBUisaZ1yLJTyUNsZsqkFv6eyLb+VhZY=;
-	b=ZkPIt9RPToyo/xmQ7ZugQokTZApSvrlQjXG0T1ptRw+rJcQ/kohpT6UXD4BMa+8xTpHRJF
-	/3VzwVvXxzoQOU6N4FJ3quo124J+iLJZDdvZVWbJncWJ53fdWc+Pkx65UjtzuLW/yHxRwl
-	pk0sC8PX4ELVi5W5fGX/YWyJuB51/T4=
+	bh=4aQ1vjMh9NWFbxjixA+Untf0GWwYPF8ar8JzPBmf0Ek=;
+	b=b9uauiDW5DrFWeWS6YNfbXveTskUgmLDzxPpwyjFhdYiYi6CdmfmozQLxl/W/4lMSmkXgg
+	aIU+RE8VpdAh+c76NH7L8svJDUkZOqsJio4rE0OfLcT/mpUBEfq6yB+9JNrJU6Q5oOCVGG
+	U6pvlY4aHJ5MQmaPGVhgyXZoxTlT4To=
 Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-552-JpjrpAeuN46KuXgoPRhXVQ-1; Fri,
- 24 Apr 2026 10:09:17 -0400
-X-MC-Unique: JpjrpAeuN46KuXgoPRhXVQ-1
-X-Mimecast-MFC-AGG-ID: JpjrpAeuN46KuXgoPRhXVQ_1777039755
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-295-C4pah452MU2MV2TQkkbVhw-1; Fri,
+ 24 Apr 2026 10:09:21 -0400
+X-MC-Unique: C4pah452MU2MV2TQkkbVhw-1
+X-Mimecast-MFC-AGG-ID: C4pah452MU2MV2TQkkbVhw_1777039760
 Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DA99D1808986;
-	Fri, 24 Apr 2026 14:09:03 +0000 (UTC)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 112B5185FD05;
+	Fri, 24 Apr 2026 14:09:06 +0000 (UTC)
 Received: from gerbillo.redhat.com (unknown [10.44.32.130])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 4D8C330078DC;
-	Fri, 24 Apr 2026 14:09:02 +0000 (UTC)
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 567E730078D7;
+	Fri, 24 Apr 2026 14:09:04 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
 Cc: yangang@kylinos.cn,
 	geliang@kernel.org,
 	matttbe@kernel.org
-Subject: [PATCH mptcp-next v1 3/9] mptcp: remove CB offset field
-Date: Fri, 24 Apr 2026 16:08:36 +0200
-Message-ID: <b2bd917110605374c618c8e951a9d4338e5f3c59.1777038888.git.pabeni@redhat.com>
+Subject: [PATCH mptcp-next v1 4/9] mptcp: sync mptcp skb cb layout with tcp one
+Date: Fri, 24 Apr 2026 16:08:37 +0200
+Message-ID: <463a0e14913560e006276ce35204fd106792a6e7.1777038888.git.pabeni@redhat.com>
 In-Reply-To: <cover.1777038888.git.pabeni@redhat.com>
 References: <cover.1777038888.git.pabeni@redhat.com>
 Precedence: bulk
@@ -60,182 +60,285 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: jvGDbmBuYIp4cOHNbZZmb9YpDGI8KjH6rMVZ81O6QV4_1777039755
+X-Mimecast-MFC-PROC-ID: FrS1ZwJvsqRH7Av-pEeY3d7t142FtP71iJdd8S1lBbo_1777039760
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 
-Instead, to track the bytes already consumed inside each skb, use a
-msk-level new field, tracking the amount of bytes already copied to
-user-space, alike what TCP is already doing.
+The MPTCP protocol uses a significantly different CB layout WRT TCP, as it
+includes different information and use 64 bits for the sequence numbers.
 
-This simplify a bit the code and will make possible the next patch.
+As the msk-level rcvbuf buffer size is limited by the core socket code the
+INT_MAX, we can safely use 32 bits for MPTCP-level sequence number. This
+allow updating the MPTCP CB layout so that fields with a corresponding TCP-level
+data use the same area inside the CB itself.
+
+Add build time check the unsure the latter invariant.
 
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 ---
-Note: this has the potential to break almost everything. On the flip
-side the CB->offset vs copied_seq difference from TCP is quite confusing
-and removing it will be for the good.
-
-Also this explicitly relays on "mptcp: do not drop partial packets" to
-avoid dropping partially consumed packets
+rfc -> v1:
+  - keep `ack_seq` up2date
 ---
- net/mptcp/fastopen.c |  1 -
- net/mptcp/protocol.c | 30 +++++++++++-------------------
- net/mptcp/protocol.h |  2 +-
- net/mptcp/subflow.c  |  1 +
- 4 files changed, 13 insertions(+), 21 deletions(-)
+ net/mptcp/protocol.c | 81 ++++++++++++++++++++++++++------------------
+ net/mptcp/protocol.h |  6 ++--
+ 2 files changed, 52 insertions(+), 35 deletions(-)
 
-diff --git a/net/mptcp/fastopen.c b/net/mptcp/fastopen.c
-index 82ec15bcfd7f..fe579e45ecdf 100644
---- a/net/mptcp/fastopen.c
-+++ b/net/mptcp/fastopen.c
-@@ -44,7 +44,6 @@ void mptcp_fastopen_subflow_synack_set_params(struct mptcp_subflow_context *subf
- 	/* Only the sequence delta is relevant */
- 	MPTCP_SKB_CB(skb)->map_seq = -skb->len;
- 	MPTCP_SKB_CB(skb)->end_seq = 0;
--	MPTCP_SKB_CB(skb)->offset = 0;
- 	MPTCP_SKB_CB(skb)->has_rxtstamp = TCP_SKB_CB(skb)->has_rxtstamp;
- 	MPTCP_SKB_CB(skb)->cant_coalesce = 1;
- 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index ad0a289b544b..c0b77d77c268 100644
+index c0b77d77c268..49e62f817fd6 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -161,7 +161,6 @@ static bool __mptcp_try_coalesce(struct sock *sk, struct sk_buff *to,
+@@ -28,7 +28,7 @@
+ #include "protocol.h"
+ #include "mib.h"
  
- 	if (MPTCP_SKB_CB(from)->map_seq != MPTCP_SKB_CB(to)->end_seq ||
- 	    unlikely(MPTCP_SKB_CB(to)->cant_coalesce) ||
--	    MPTCP_SKB_CB(from)->offset ||
- 	    ((to->len + from->len) > (limit >> 3)) ||
+-static unsigned int mptcp_inq_hint(const struct sock *sk);
++static int mptcp_inq_hint(const struct sock *sk);
+ 
+ #define CREATE_TRACE_POINTS
+ #include <trace/events/mptcp.h>
+@@ -165,7 +165,7 @@ static bool __mptcp_try_coalesce(struct sock *sk, struct sk_buff *to,
  	    !skb_try_coalesce(to, from, fragstolen, delta))
  		return false;
-@@ -343,8 +342,7 @@ static void mptcp_data_queue_ofo(struct mptcp_sock *msk, struct sk_buff *skb)
- 	skb_set_owner_r(skb, sk);
- }
  
--static void mptcp_init_skb(struct sock *ssk, struct sk_buff *skb, int offset,
--			   int copy_len)
-+static void mptcp_init_skb(struct sock *ssk, struct sk_buff *skb, int offset)
+-	pr_debug("colesced seq %llx into %llx new len %d new end seq %llx\n",
++	pr_debug("colesced seq %x into %x new len %d new end seq %x\n",
+ 		 MPTCP_SKB_CB(from)->map_seq, MPTCP_SKB_CB(to)->map_seq,
+ 		 to->len, MPTCP_SKB_CB(from)->end_seq);
+ 	MPTCP_SKB_CB(to)->end_seq = MPTCP_SKB_CB(from)->end_seq;
+@@ -235,20 +235,20 @@ static void mptcp_data_queue_ofo(struct mptcp_sock *msk, struct sk_buff *skb)
  {
- 	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk);
- 	bool has_rxtstamp = TCP_SKB_CB(skb)->has_rxtstamp;
-@@ -353,9 +351,8 @@ static void mptcp_init_skb(struct sock *ssk, struct sk_buff *skb, int offset,
+ 	struct sock *sk = (struct sock *)msk;
+ 	struct rb_node **p, *parent;
+-	u64 seq, end_seq, max_seq;
++	u32 seq, end_seq, max_seq;
+ 	struct sk_buff *skb1;
+ 
+ 	seq = MPTCP_SKB_CB(skb)->map_seq;
+ 	end_seq = MPTCP_SKB_CB(skb)->end_seq;
+ 	max_seq = atomic64_read(&msk->rcv_wnd_sent);
+ 
+-	pr_debug("msk=%p seq=%llx limit=%llx empty=%d\n", msk, seq, max_seq,
++	pr_debug("msk=%p seq=%x limit=%x empty=%d\n", msk, seq, max_seq,
+ 		 RB_EMPTY_ROOT(&msk->out_of_order_queue));
+-	if (after64(end_seq, max_seq)) {
++	if (after(end_seq, max_seq)) {
+ 		/* out of window */
+ 		mptcp_drop(sk, skb);
+-		pr_debug("oow by %lld, rcv_wnd_sent %llu\n",
+-			 (unsigned long long)end_seq - (unsigned long)max_seq,
++		pr_debug("oow by %d, rcv_wnd_sent %llu\n",
++			 end_seq - max_seq,
+ 			 (unsigned long long)atomic64_read(&msk->rcv_wnd_sent));
+ 		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_NODSSWINDOW);
+ 		return;
+@@ -273,7 +273,7 @@ static void mptcp_data_queue_ofo(struct mptcp_sock *msk, struct sk_buff *skb)
+ 	}
+ 
+ 	/* Can avoid an rbtree lookup if we are adding skb after ooo_last_skb */
+-	if (!before64(seq, MPTCP_SKB_CB(msk->ooo_last_skb)->end_seq)) {
++	if (!before(seq, MPTCP_SKB_CB(msk->ooo_last_skb)->end_seq)) {
+ 		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_OFOQUEUETAIL);
+ 		parent = &msk->ooo_last_skb->rbnode;
+ 		p = &parent->rb_right;
+@@ -285,18 +285,18 @@ static void mptcp_data_queue_ofo(struct mptcp_sock *msk, struct sk_buff *skb)
+ 	while (*p) {
+ 		parent = *p;
+ 		skb1 = rb_to_skb(parent);
+-		if (before64(seq, MPTCP_SKB_CB(skb1)->map_seq)) {
++		if (before(seq, MPTCP_SKB_CB(skb1)->map_seq)) {
+ 			p = &parent->rb_left;
+ 			continue;
+ 		}
+-		if (before64(seq, MPTCP_SKB_CB(skb1)->end_seq)) {
+-			if (!after64(end_seq, MPTCP_SKB_CB(skb1)->end_seq)) {
++		if (before(seq, MPTCP_SKB_CB(skb1)->end_seq)) {
++			if (!after(end_seq, MPTCP_SKB_CB(skb1)->end_seq)) {
+ 				/* All the bits are present. Drop. */
+ 				mptcp_drop(sk, skb);
+ 				MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_DUPDATA);
+ 				return;
+ 			}
+-			if (after64(seq, MPTCP_SKB_CB(skb1)->map_seq)) {
++			if (after(seq, MPTCP_SKB_CB(skb1)->map_seq)) {
+ 				/* partial overlap:
+ 				 *     |     skb      |
+ 				 *  |     skb1    |
+@@ -327,7 +327,7 @@ static void mptcp_data_queue_ofo(struct mptcp_sock *msk, struct sk_buff *skb)
+ merge_right:
+ 	/* Remove other segments covered by skb. */
+ 	while ((skb1 = skb_rb_next(skb)) != NULL) {
+-		if (before64(end_seq, MPTCP_SKB_CB(skb1)->end_seq))
++		if (before(end_seq, MPTCP_SKB_CB(skb1)->end_seq))
+ 			break;
+ 		rb_erase(&skb1->rbnode, &msk->out_of_order_queue);
+ 		mptcp_drop(sk, skb1);
+@@ -349,10 +349,11 @@ static void mptcp_init_skb(struct sock *ssk, struct sk_buff *skb, int offset)
+ 
+ 	/* the skb map_seq accounts for the skb offset:
  	 * mptcp_subflow_get_mapped_dsn() is based on the current tp->copied_seq
- 	 * value
+-	 * value
++	 * value; note that seq numbers are truncated to 32bits
  	 */
--	MPTCP_SKB_CB(skb)->map_seq = mptcp_subflow_get_mapped_dsn(subflow);
--	MPTCP_SKB_CB(skb)->end_seq = MPTCP_SKB_CB(skb)->map_seq + copy_len;
--	MPTCP_SKB_CB(skb)->offset = offset;
-+	MPTCP_SKB_CB(skb)->map_seq = mptcp_subflow_get_mapped_dsn(subflow) - offset;
-+	MPTCP_SKB_CB(skb)->end_seq = MPTCP_SKB_CB(skb)->map_seq + skb->len;
+ 	MPTCP_SKB_CB(skb)->map_seq = mptcp_subflow_get_mapped_dsn(subflow) - offset;
+ 	MPTCP_SKB_CB(skb)->end_seq = MPTCP_SKB_CB(skb)->map_seq + skb->len;
++	MPTCP_SKB_CB(skb)->flags = 0;
  	MPTCP_SKB_CB(skb)->has_rxtstamp = has_rxtstamp;
  	MPTCP_SKB_CB(skb)->cant_coalesce = 0;
  
-@@ -728,7 +725,7 @@ static bool __mptcp_move_skbs_from_subflow(struct mptcp_sock *msk,
- 		if (offset < skb->len) {
- 			size_t len = skb->len - offset;
+@@ -364,13 +365,14 @@ static void mptcp_init_skb(struct sock *ssk, struct sk_buff *skb, int offset)
  
--			mptcp_init_skb(ssk, skb, offset, len);
-+			mptcp_init_skb(ssk, skb, offset);
+ static bool __mptcp_move_skb(struct sock *sk, struct sk_buff *skb)
+ {
+-	u64 copy_len = MPTCP_SKB_CB(skb)->end_seq - MPTCP_SKB_CB(skb)->map_seq;
++	u32 copy_len = MPTCP_SKB_CB(skb)->end_seq - MPTCP_SKB_CB(skb)->map_seq;
+ 	struct mptcp_sock *msk = mptcp_sk(sk);
++	u32 ack_seq = msk->ack_seq;
+ 	struct sk_buff *tail;
  
- 			if (own_msk) {
- 				mptcp_subflow_lend_fwdmem(subflow, skb);
-@@ -795,8 +792,6 @@ static bool __mptcp_ofo_queue(struct mptcp_sock *msk)
- 			pr_debug("uncoalesced seq=%llx ack seq=%llx delta=%d\n",
- 				 MPTCP_SKB_CB(skb)->map_seq, msk->ack_seq,
+ 	mptcp_borrow_fwdmem(sk, skb);
+ 
+-	if (MPTCP_SKB_CB(skb)->map_seq == msk->ack_seq) {
++	if (MPTCP_SKB_CB(skb)->map_seq == ack_seq) {
+ 		/* in sequence */
+ 		msk->bytes_received += copy_len;
+ 		WRITE_ONCE(msk->ack_seq, msk->ack_seq + copy_len);
+@@ -381,7 +383,7 @@ static bool __mptcp_move_skb(struct sock *sk, struct sk_buff *skb)
+ 		skb_set_owner_r(skb, sk);
+ 		__skb_queue_tail(&sk->sk_receive_queue, skb);
+ 		return true;
+-	} else if (after64(MPTCP_SKB_CB(skb)->map_seq, msk->ack_seq)) {
++	} else if (after(MPTCP_SKB_CB(skb)->map_seq, ack_seq)) {
+ 		mptcp_data_queue_ofo(msk, skb);
+ 		return false;
+ 	}
+@@ -762,40 +764,40 @@ static bool __mptcp_ofo_queue(struct mptcp_sock *msk)
+ {
+ 	struct sock *sk = (struct sock *)msk;
+ 	struct sk_buff *skb, *tail;
++	u32 seq_delta, ack_seq;
+ 	bool moved = false;
+ 	struct rb_node *p;
+-	u64 end_seq;
+ 
+ 	p = rb_first(&msk->out_of_order_queue);
+ 	pr_debug("msk=%p empty=%d\n", msk, RB_EMPTY_ROOT(&msk->out_of_order_queue));
+ 	while (p) {
++		ack_seq = msk->ack_seq;
+ 		skb = rb_to_skb(p);
+-		if (after64(MPTCP_SKB_CB(skb)->map_seq, msk->ack_seq))
++		if (after(MPTCP_SKB_CB(skb)->map_seq, ack_seq))
+ 			break;
+ 
+ 		p = rb_next(p);
+ 		rb_erase(&skb->rbnode, &msk->out_of_order_queue);
+ 
+-		if (unlikely(!after64(MPTCP_SKB_CB(skb)->end_seq,
+-				      msk->ack_seq))) {
++		if (unlikely(!after(MPTCP_SKB_CB(skb)->end_seq, ack_seq))) {
+ 			mptcp_drop(sk, skb);
+ 			MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_DUPDATA);
+ 			continue;
+ 		}
+ 
+-		end_seq = MPTCP_SKB_CB(skb)->end_seq;
++		seq_delta = MPTCP_SKB_CB(skb)->end_seq - ack_seq;
+ 		tail = skb_peek_tail(&sk->sk_receive_queue);
+ 		if (!tail || !mptcp_try_coalesce(sk, tail, skb)) {
+-			int delta = msk->ack_seq - MPTCP_SKB_CB(skb)->map_seq;
++			int delta = ack_seq - MPTCP_SKB_CB(skb)->map_seq;
+ 
+ 			/* skip overlapping data, if any */
+-			pr_debug("uncoalesced seq=%llx ack seq=%llx delta=%d\n",
+-				 MPTCP_SKB_CB(skb)->map_seq, msk->ack_seq,
++			pr_debug("uncoalesced seq=%x ack seq=%x delta=%d\n",
++				 MPTCP_SKB_CB(skb)->map_seq, ack_seq,
  				 delta);
--			MPTCP_SKB_CB(skb)->offset += delta;
--			MPTCP_SKB_CB(skb)->map_seq += delta;
  			__skb_queue_tail(&sk->sk_receive_queue, skb);
  		}
- 		msk->bytes_received += end_seq - msk->ack_seq;
-@@ -2050,7 +2045,7 @@ static int __mptcp_recvmsg_mskq(struct sock *sk, struct msghdr *msg,
- 	int copied = 0;
- 
- 	skb_queue_walk_safe(&sk->sk_receive_queue, skb, tmp) {
--		u32 delta, offset = MPTCP_SKB_CB(skb)->offset;
-+		u32 delta, offset = msk->copied_seq - MPTCP_SKB_CB(skb)->map_seq;
- 		u32 data_len = skb->len - offset;
- 		u32 count;
- 		int err;
-@@ -2088,11 +2083,9 @@ static int __mptcp_recvmsg_mskq(struct sock *sk, struct msghdr *msg,
- 
- 		if (!(flags & MSG_PEEK)) {
- 			msk->bytes_consumed += count;
--			if (count < data_len) {
--				MPTCP_SKB_CB(skb)->offset += count;
--				MPTCP_SKB_CB(skb)->map_seq += count;
-+			msk->copied_seq += count;
-+			if (count < data_len)
- 				break;
--			}
- 
- 			mptcp_eat_recv_skb(sk, skb);
- 		} else {
-@@ -3457,6 +3450,7 @@ static int mptcp_disconnect(struct sock *sk, int flags)
- 
- 	/* for fallback's sake */
- 	WRITE_ONCE(msk->ack_seq, 0);
-+	WRITE_ONCE(msk->copied_seq, 0);
- 
- 	WRITE_ONCE(sk->sk_shutdown, 0);
- 	sk_error_report(sk);
-@@ -4340,7 +4334,7 @@ static struct sk_buff *mptcp_recv_skb(struct sock *sk, u32 *off)
- 		mptcp_move_skbs(sk);
- 
- 	while ((skb = skb_peek(&sk->sk_receive_queue)) != NULL) {
--		offset = MPTCP_SKB_CB(skb)->offset;
-+		offset = msk->copied_seq - MPTCP_SKB_CB(skb)->map_seq;
- 		if (offset < skb->len) {
- 			*off = offset;
- 			return skb;
-@@ -4382,11 +4376,9 @@ static int __mptcp_read_sock(struct sock *sk, read_descriptor_t *desc,
- 		copied += count;
- 
- 		msk->bytes_consumed += count;
--		if (count < data_len) {
--			MPTCP_SKB_CB(skb)->offset += count;
--			MPTCP_SKB_CB(skb)->map_seq += count;
-+		msk->copied_seq += count;
-+		if (count < data_len)
- 			break;
--		}
- 
- 		mptcp_eat_recv_skb(sk, skb);
+-		msk->bytes_received += end_seq - msk->ack_seq;
+-		WRITE_ONCE(msk->ack_seq, end_seq);
++		msk->bytes_received += seq_delta;
++		WRITE_ONCE(msk->ack_seq, msk->ack_seq + seq_delta);
+ 		moved = true;
  	}
+ 	return moved;
+@@ -2243,19 +2245,20 @@ static bool mptcp_move_skbs(struct sock *sk)
+ 	return enqueued;
+ }
+ 
+-static unsigned int mptcp_inq_hint(const struct sock *sk)
++static int mptcp_inq_hint(const struct sock *sk)
+ {
+ 	const struct mptcp_sock *msk = mptcp_sk(sk);
+ 	const struct sk_buff *skb;
+ 
+ 	skb = skb_peek(&sk->sk_receive_queue);
+ 	if (skb) {
+-		u64 hint_val = READ_ONCE(msk->ack_seq) - MPTCP_SKB_CB(skb)->map_seq;
++		int hint_val = (u32)READ_ONCE(msk->ack_seq) -
++			       MPTCP_SKB_CB(skb)->map_seq;
+ 
+-		if (hint_val >= INT_MAX)
+-			return INT_MAX;
++		if (hint_val < 0)
++			return -hint_val;
+ 
+-		return (unsigned int)hint_val;
++		return hint_val;
+ 	}
+ 
+ 	if (sk->sk_state == TCP_CLOSE || (sk->sk_shutdown & RCV_SHUTDOWN))
+@@ -2363,7 +2366,7 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
+ 			tcp_recv_timestamp(msg, sk, &tss);
+ 
+ 		if (cmsg_flags & MPTCP_CMSG_INQ) {
+-			unsigned int inq = mptcp_inq_hint(sk);
++			int inq = mptcp_inq_hint(sk);
+ 
+ 			put_cmsg(msg, SOL_TCP, TCP_CM_INQ, sizeof(inq), &inq);
+ 		}
+@@ -4583,11 +4586,23 @@ static int mptcp_napi_poll(struct napi_struct *napi, int budget)
+ 	return work_done;
+ }
+ 
++#define CHK_CB_FIELD(mptcp_field, tcp_field)	\
++	({					\
++		BUILD_BUG_ON(offsetof(struct mptcp_skb_cb, mptcp_field) !=    \
++			     offsetof(struct tcp_skb_cb, tcp_field));	      \
++		BUILD_BUG_ON(offsetofend(struct mptcp_skb_cb, mptcp_field) != \
++			     offsetofend(struct tcp_skb_cb, tcp_field));      \
++	})
++
+ void __init mptcp_proto_init(void)
+ {
+ 	struct mptcp_delegated_action *delegated;
+ 	int cpu;
+ 
++	CHK_CB_FIELD(map_seq, seq);
++	CHK_CB_FIELD(end_seq, end_seq);
++	CHK_CB_FIELD(flags, tcp_flags);
++
+ 	mptcp_prot.h.hashinfo = tcp_prot.h.hashinfo;
+ 
+ 	if (percpu_counter_init(&mptcp_sockets_allocated, 0, GFP_KERNEL))
 diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 661600f8b573..dd437643e604 100644
+index dd437643e604..e541f42fca25 100644
 --- a/net/mptcp/protocol.h
 +++ b/net/mptcp/protocol.h
-@@ -128,7 +128,6 @@
+@@ -126,8 +126,10 @@
+ #define MPTCP_SYNC_SNDBUF	7
+ 
  struct mptcp_skb_cb {
- 	u64 map_seq;
- 	u64 end_seq;
--	u32 offset;
+-	u64 map_seq;
+-	u64 end_seq;
++	u32 map_seq;
++	u32 end_seq;
++	u32 unused;
++	u16 flags;
  	u8  has_rxtstamp;
  	u8  cant_coalesce;
  };
-@@ -289,6 +288,7 @@ struct mptcp_sock {
- 	u64		bytes_sent;
- 	u64		snd_nxt;
- 	u64		bytes_received;
-+	u64		copied_seq;
- 	u64		ack_seq;
- 	atomic64_t	rcv_wnd_sent;
- 	u64		rcv_data_fin_seq;
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index c57ed27a5fb0..2a8d5da4aaea 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -494,6 +494,7 @@ static void subflow_set_remote_key(struct mptcp_sock *msk,
- 
- 	WRITE_ONCE(msk->remote_key, subflow->remote_key);
- 	WRITE_ONCE(msk->ack_seq, subflow->iasn);
-+	WRITE_ONCE(msk->copied_seq, subflow->iasn);
- 	WRITE_ONCE(msk->can_ack, true);
- 	atomic64_set(&msk->rcv_wnd_sent, subflow->iasn);
- }
 -- 
 2.53.0
 
