@@ -1,129 +1,114 @@
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ACFB3C1416
-	for <mptcp@lists.linux.dev>; Fri, 24 Apr 2026 12:07:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEE56366558;
+	Fri, 24 Apr 2026 13:21:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777032437; cv=none; b=p/0a8+CHgkL1msI+fooTVki2mdte8viEQJwuKg7dX//7dxY5AphDGPHfFQCoL2b4fyXwX6odvVAD7d8C7JnFE0BGfS8ArbYXRs0KyUC+UAF5M59SvG1KJhiSIl/rsfnieqlwOJgQ9fE02IkmooSzdXY0sbKfgHWyQFMhc5kuO8Q=
+	t=1777036878; cv=none; b=kBSwg70pU0xSUwpOENKZjvPcMnijnkZwfSWYacg/wXkOzhlaKmY7YaUuVNPkANhJiediZvPOSp/dDFUk/rV2MISgHkDsLDpNUTU0fCKgOHPX1clRK1grK+gHCJ6rluNAtknA1sgB/x07pgaaWVjonanatb9a+m1/JbZyiZPtiTY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777032437; c=relaxed/simple;
-	bh=ALsw77QQRISPlYxAMeCUViXp7FN7i3fVy6H5YHBEHUc=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
-	 MIME-Version:Content-Type; b=eVEIcwMqNgcs/D5vCKjEQgViOKBpuLkCOVerq8dsC8wPGA+1cdiV0bMZxmjii85Bvnwwt/EVh0DsIcI2NeeYVyXuBI+mNWg6oP4mGM290KfHJY5AQA6q4TQSi5Q0n8yOtuCIuK5Fqgp1AWnTztILSX+aj5TVP4Y+WZZXRbO3Zfc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UVOflux3; arc=none smtp.client-ip=209.85.160.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1777036878; c=relaxed/simple;
+	bh=M1D7kI8zdMSMgAR3ek5eSiS/trHp74trKeuUDZ2Wblc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=jv+btmSbYs67HvwR3o8QqjqtuwaF1aqCzkqnZsWXULEVN0Ej73yQtV6OOxJYiBZ7ZKjx2hFQcvoP5HOrIZNiYOEaf/mMSU47DcyCMogN48gaMlieYYJZ+X4sj4GOMI4f51avbutEtg3r5IfCHzwUFGDcGlx6nANeWhI2EgDCs6Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WMkWpvEn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UVOflux3"
-Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-50e5bea4045so48594321cf.3
-        for <mptcp@lists.linux.dev>; Fri, 24 Apr 2026 05:07:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1777032435; x=1777637235; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZwN6Vxe9M3wGNsN28Yii1Dl6tdaSocXWA//qG/9Vzak=;
-        b=UVOflux3vWXT8b9jdVkmaq+oXtvL+wOjfD84nci94LHybSV/fbbTvDE/Bng6X5QSD2
-         dOUcEPhgKDufDmAlyWj7fI6YGS3yHPtLfTmwPCgJrYXIlTsnqwpNpzK7gJPcLfG9gd4s
-         S6TYwLWXRIsQovJ3BnernTk1iOg5cR8adetxmEONi6PvRBGSbQ9/vXdh++oITY9VldU3
-         jJ6ioeuYy4Ohuxp2l60+udI967A48gSz8WhWcEcG2AFFPdOtHIfXiTN7g8GsqHCYMe27
-         b1qsUMbzgRavpdXDbnugpnJ7sH5eRuOqqLslLK+V32Ks7wPyBHLLUUjoh1pMnhEn1wbP
-         upCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777032435; x=1777637235;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZwN6Vxe9M3wGNsN28Yii1Dl6tdaSocXWA//qG/9Vzak=;
-        b=KOKV9n1Bjd4ja0snxD8hMMma7c+Hmbe9/bRjmm33xbWPprPz3uEl2Fhj1La7R+1Kfn
-         zK0dCfxkEKhAYHwiW3E5ER+8wym9LXUn/dpm74Kb5JrLJyciTBWpqXRfRFjqmEHxhMcE
-         tNid+y7nR0YCrj6WD3hp7rPqHaQ3TEYRDZxS2QudxAFBFT3vTU1m5n/MquGD+f7Q31i+
-         IbgyS11CKaOlEEkd6uEnZJHlEneAcpNG52nUqZNeahKbOpe3h0zAik5R3tcI0IwCnrCp
-         eige/Cw07j1mZQNFk22XGLoJOOOy6pE31VJPATt317i94rbHdUaIgIQWdvV+9tRvwuO1
-         GfOA==
-X-Gm-Message-State: AOJu0YyL8YiTRtPBtynvEQKoLW6kIxRKrGFLK0KDaq3iSQVxxKO+CXP8
-	YJipqQ62FuKPYVkwHfMkAjz9DMWbWs1+Yke10ciAMX3NaBnAKV3OJbAnqx5N
-X-Gm-Gg: AeBDievqc6/OmyBMdVx4SrIMMaYnb+fw7L3XlQRdGHTSJVDNM36AkWynoNkjoiA2M3Q
-	vF1ItuDzTMsmNMLrVSKHfc7rDVCBJuhu7SbOOc4MH1qSVklj0UhsOHr7TVIuxmsmlgjbLfMxEQs
-	77NKmVkY/Q4rEvYHdkwNdiTR7KFXSHD2VeFb0G1nCxmKLqoXF22Sqn1+AYy5MxKbRhdxH0CFoqA
-	JWaxQlArVGaArznAeaELD2UzlIZDlhThLpSsHWEJgwWtsodECOE7RcIPuEMsezTcABIgub8ZBv/
-	h6Q1KbPVFlgoviSY9apzqjX4nAybTEfqtorlb3ZyW4+bJa5OzqumyP35ZdTeBqdU6TF0c4zsY3I
-	lbDLdMYkEJQ34JUvSYrvNy3Ubrah+Fvx/s1EASHWfhfnzIN0aDcoDxyyGxgq3+skaSzYUQYacJ2
-	BpCaRtT85V/KzX7iuY0Jkl1IpHe4hbA4vEkYPfPlAM1me6cFk=
-X-Received: by 2002:a05:622a:212:b0:50e:ca38:e220 with SMTP id d75a77b69052e-50eca38f4f0mr296722531cf.45.1777032434583;
-        Fri, 24 Apr 2026 05:07:14 -0700 (PDT)
-Received: from [127.0.0.1] ([40.76.191.162])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-8ebce6ef86dsm1223001385a.30.2026.04.24.05.07.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Apr 2026 05:07:14 -0700 (PDT)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <tanggeliang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <cover.1777026753.git.tanggeliang@kylinos.cn>
-References: <cover.1777026753.git.tanggeliang@kylinos.cn>
-Subject: Re: [RFC mptcp-next v17 00/15] MPTCP KTLS support
-Message-ID: <8730e5b4-28ed-f1f1-2b36-fd6b5aefa026@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 24 Apr 2026 12:07:13 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WMkWpvEn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9DAEC19425;
+	Fri, 24 Apr 2026 13:21:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1777036878;
+	bh=M1D7kI8zdMSMgAR3ek5eSiS/trHp74trKeuUDZ2Wblc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=WMkWpvEn3tvwvFRB2F3yHj24YoM8zRxN5fRUooShcWXFvCzJJxU7Mo+rg1zhPnXPX
+	 oTcFLddEd2yI5B2Q32n6nSQbcpzyRcZBp3NbvyH0ZwNCHHgCDJwZiB2cjjF8uec329
+	 euyYJW2gjHAswXX6Tsv85a580gqhmv/wbSxyhat4u67WaW2NBztKbfLW2BclZygAn5
+	 /rFzneImy0h1sZ/vQTmDrYaum7/Y7sRgmX322ZxFGlRV6h32Qpky4aUHXZjS+hUh6+
+	 RlNdYflh9rMfafJyOhYQkMZRmWZ4rkNEIqYFo0IvUcMIdQnxLhciODLNsBKkLfzM6f
+	 4Yc3xHni6DEbA==
+From: Simon Horman <horms@kernel.org>
+To: shardulsb08@gmail.com
+Cc: 'Simon Horman' <horms@kernel.org>,
+	pabeni@redhat.com,
+	matttbe@kernel.org,
+	martineau@kernel.org,
+	geliang@kernel.org,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	netdev@vger.kernel.org,
+	mptcp@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	janak@mpiric.us,
+	kalpan.jani@mpiricsoftware.com,
+	shardul.b@mpiricsoftware.com
+Subject: Re: [PATCH v2] mptcp: do not drop partial packets
+Date: Fri, 24 Apr 2026 14:20:52 +0100
+Message-ID: <20260424132052.1066934-1-horms@kernel.org>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <20260422143931.43281-1-shardul.b@mpiricsoftware.com>
+References: <20260422143931.43281-1-shardul.b@mpiricsoftware.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 
-Hi Geliang,
+From: 'Simon Horman' <horms@kernel.org>
 
-Thank you for your modifications, that's great!
+This is an AI-generated review of your patch. The human sending this
+email has considered the AI review valid, or at least plausible.
+Full review at: https://sashiko.dev
+---
+mptcp: do not drop partial packets
 
-Our CI did some validations and here is its report:
+This commit modifies the handling of out-of-order packets where
+map_seq < ack_seq < end_seq. Instead of dropping the entire packet,
+it skips the already-acknowledged bytes and enqueues the remainder.
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/248858=
-72335
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/600
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/3dc18a1dc747
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1085149
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index fbffd3a43fe86..4e9fba692a701 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
 
+[ ... ]
 
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
+> @@ -397,12 +397,24 @@ static bool __mptcp_move_skb(struct sock *sk, struct sk_buff *skb)
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+[ ... ]
 
-For more details:
+> +	/* Partial packet: map_seq < ack_seq < end_seq.
+> +	 * Skip the already-acked bytes and enqueue the new data.
+> +	 */
+> +	copy_len = MPTCP_SKB_CB(skb)->end_seq - msk->ack_seq;
+> +	MPTCP_SKB_CB(skb)->offset += msk->ack_seq - MPTCP_SKB_CB(skb)->map_seq;
+> +	msk->bytes_received += copy_len;
+> +	WRITE_ONCE(msk->ack_seq, msk->ack_seq + copy_len);
 
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+Should MPTCP_SKB_CB(skb)->map_seq also be advanced here to reflect the newly
+adjusted offset?
 
+If map_seq remains stale after skipping the already-acked bytes, does this
+cause mptcp_inq_hint() to overestimate the amount of unread data? 
 
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+Looking at the hint calculation, it calculates the unread bytes using
+READ_ONCE(msk->ack_seq) - MPTCP_SKB_CB(skb)->map_seq for the first
+enqueued SKB.
 
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+If inq_hint is artificially large, could this corrupt the ioctl(FIONREAD)
+and TCP_INQ cmsg values returned to userspace?
+
+Furthermore, could this suppress receive window auto-tuning? In
+mptcp_rcv_space_adjust(), an artificially large inq_hint might cause
+the calculation copied -= mptcp_inq_hint(sk) to become negative, which
+would stall window growth.
+
+> +
+> +	skb_set_owner_r(skb, sk);
+> +	__skb_queue_tail(&sk->sk_receive_queue, skb);
+> +	return true;
+>  }
