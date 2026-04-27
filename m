@@ -1,134 +1,170 @@
-Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 733D03368A2
-	for <mptcp@lists.linux.dev>; Fri, 24 Apr 2026 21:00:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A78E0391501
+	for <mptcp@lists.linux.dev>; Mon, 27 Apr 2026 07:28:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777064442; cv=none; b=SbNsVauZ2AI7PiwKlWI8suwKoNKsMN1H+YVrL7/JEBFWreIlSxCOFF7/F0eyl+IDko6qulI12gudVnk0BVHjtyH1EFO3HwvD10pAW7GVFwbNQNQLEi1+cLs7AQ8uE3yuKOXBgv13i2jxeuNA39iaoAeh9CW3cTgmvHBrScipq0c=
+	t=1777274882; cv=none; b=fMbCNU24w9XBX4QWf2CArze7ypx7B1P5B33MgADj26vINzrd2bFP8mRJNUQa0dAMw6aVg+Bxh6D2RfkRsGx7fuxajLj50kh1C6ccvl91BmgeC8ui/K1a3dOY2FqFyghJDIfC+K4y3ssLAidHH00SV5XK4GTWxvC12qBxAZ/ZFn4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777064442; c=relaxed/simple;
-	bh=3jrEpgStnICOfskTl2BG39OOc2+/XJ+seXsWbBGQcZM=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
-	 MIME-Version:Content-Type; b=dCiQCoWnzb2LYhtizuOSMr5B/OcklPTFkuitn9K1+Oz11J0nrhXnOGmu49hbTEWv5cwNlQvnnbzEfL2/H+/Y8P8/NU+dceg2xzf3YoidYycG4F9s2SmtZoJvmFUkGhlLp7iPs2sOygY+F/njzT8j8Dpl5F9i/3mOA9FMhS6z6nQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YFaxF64R; arc=none smtp.client-ip=209.85.219.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1777274882; c=relaxed/simple;
+	bh=5MGbSAUEw1lBLn0isUn4wlCuNDwEA2M91kMZl4m3Vb0=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Cs1hwzGWNf6FEnS4z+Utvvn+BFS6VNFiZ/fQg5yo1SNAs4O+GhozT+NCnVHPDCtWYmqvQkQb20X9mPfAoPVedZ7JMx6Z0aiwJLo1n6iwcjLfIZIEUbyOhlITWovXzykkCqnN8ZEzUMdrVL8Pk499ZlCcyMo1FQHS8rYDdqdvpjo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f7cY1Tu1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YFaxF64R"
-Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-8a48deebe95so63427646d6.0
-        for <mptcp@lists.linux.dev>; Fri, 24 Apr 2026 14:00:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1777064440; x=1777669240; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=P8mWD39rtUaiKFfK5Oi85je4RauP4EirfuUPSy9hUc4=;
-        b=YFaxF64Rk0mO4it0kutY5MpadK+RHPi2xOSSXnnctHdvKU/L3ON2YxiSKz+toFbVXQ
-         BFs11FhdcqGcNlN9sdpf8x7FOmDbKDffZAXD3ok3ARdo1nul7L0nUvGCi+gbkIZjqXgZ
-         r02Uz8/E2Kwinmjo9qDlsBV8DYWTBzOUw54Yf/EBn3wBYjKDhEEG3dNSNE462t7VMP3X
-         9r20xscRlp5IUfjD3V63pOrR/Xcth79m9PRjW8TBvti3sI7l4MdMxiPe8zd1Bq15mUGs
-         mpmUTEr5muywU2FYTOCLJ1KbKosoxJBmZF0OgddeLL4WLkmbAVY5KfTUbg2TcKRPgcO5
-         ltxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777064440; x=1777669240;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=P8mWD39rtUaiKFfK5Oi85je4RauP4EirfuUPSy9hUc4=;
-        b=f3kShS68wKcAB8YMuEZG5g/KY92aD1kCM6u+TJ9rTguwpG93bO8qDGipYhblc6Qa8G
-         nKDppsJaQ4nU46L9I+yhoZ+J2CihSROiQIFXpzIx5NZ0CSsch5lg2qk+WEoPb9Ynl7nq
-         RrjVFm3uWyhHbot7uIilV3SSx+dpeYJxTXmTpmmAd9Ql6JhveCKPWlmxrMiny7nZQUCS
-         BJyVt8SZDO8LtiJ3CB1H7lmDzctoC2jlvd8d9Aiz1mRDS3LEMbql8R30UCmXV5OvV7tZ
-         hyQ1yDFtxCMZNYFu18asFTOoMLjXflyQsZCLsP4mW7OAruzCo0dtoYaalDE5M0BV1J1j
-         SrjQ==
-X-Gm-Message-State: AOJu0Yw67f5Ubp391UDBAZ9NUvySsoO+eEly6pB52KCPupSPPkR/pLwk
-	TBY0LQDG4m1E373CRkK//OUIQNtczhly0buWsD7Kp3WQ99bFG5dFhtXxOxt8
-X-Gm-Gg: AeBDieuYr443eInFbBA1splcwwhn3BWxMug2aHrSkVKvH/WoBf+IUQI9CaTh6MnrVpC
-	vyFP1Tr7/V4FbZRCIc9cAS7iCnzSZHnbFg7CSZzMXKjG/fa/JAYMR75klKN7CuatbUd2zRL3Idp
-	DR8xpxDvL5KJco79obFxLF8u93K6fczkoW3Fwn/p4kIcH+2HUKLPpFpPh4SzOIdNWkUGDwWkQgs
-	ji9ZxAkxN+s9nM0au1wFO9OdJSiiRIvxRqH7AscmMcuHFCHDfqnS9bmPG0c4LFzjnXa4nxnpyXa
-	qOFkGUhg2al8S+tbVuaTNCvqV0/pdsOey99L7wf3UCGdo6lv3bSAzXvJSWWWB/NxWDA/f+AtoLa
-	ObCtHIZBknptcy230qwO6VFk6STBlnux3g0Z7nfOtX4RlNQI4UjsLlQRcIp1arzmc6XLLWmbQSj
-	H6IMfdie4X4JuBbu4LzHBIsYonA4hsZlwigdyw8yjMSFx6RgBdvHKnXwlB1A==
-X-Received: by 2002:ad4:5de7:0:b0:8b1:f5da:f7dd with SMTP id 6a1803df08f44-8b1f5daf8fdmr255518256d6.43.1777064438624;
-        Fri, 24 Apr 2026 14:00:38 -0700 (PDT)
-Received: from [127.0.0.1] ([20.102.102.74])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8b02ac42586sm200166816d6.8.2026.04.24.14.00.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Apr 2026 14:00:38 -0700 (PDT)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <20260424-mptcp-pm-sockopt-set-all-sf-v1-1-38e7023822f8@kernel.org>
-References:
- <20260424-mptcp-pm-sockopt-set-all-sf-v1-1-38e7023822f8@kernel.org>
-Subject: Re: [PATCH mptcp-net] mptcp: sockopt: increase seq in
- mptcp_setsockopt_all_sf
-Message-ID: <c488a3fd-2d7b-1e36-249e-25e5fdb56bd0@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 24 Apr 2026 21:00:37 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f7cY1Tu1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 826D8C2BCB6;
+	Mon, 27 Apr 2026 07:27:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1777274882;
+	bh=5MGbSAUEw1lBLn0isUn4wlCuNDwEA2M91kMZl4m3Vb0=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=f7cY1Tu1kP+KZPTOC32O7JRk4H10QkRQnwWBFxhhpecD+h202AIqCvQ+v/asxQSiq
+	 UyGud6eqq0guuM+K4cRaD/xeLRYRqDacuuEm8riGbRJYyHfTu9SO8UUXW+YbTd3cp2
+	 Z70Ictoc190pRPxm5Z2Gc657io14aJNKZdMwlPeedoB38+FsMBGM1dgQwMVZgYQW2l
+	 lEo6ffiUyrqR5WkLZonWVr6aUJFirVNJawVKAZGhuPBM+ulxpwXbaE1MzB0nRyf9Jw
+	 zq1MF80CEyznF7M5rb0Suh3IwdC9bdGlk763lqqWGtE+wp9lwsc0mk6qW00bptIvSg
+	 xTS7YYxRBplgw==
+Message-ID: <d6eda172d5fea261bce865a0a6bb1779874cad5c.camel@kernel.org>
+Subject: Re: [PATCH mptcp-next v1 0/9] mptcp: address stall under memory
+ pressure
+From: Geliang Tang <geliang@kernel.org>
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+Cc: yangang@kylinos.cn, matttbe@kernel.org
+Date: Mon, 27 Apr 2026 15:27:14 +0800
+In-Reply-To: <cover.1777038888.git.pabeni@redhat.com>
+References: <cover.1777038888.git.pabeni@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.56.2-9 
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 
-Hi Matthieu,
+Hi Paolo,
 
-Thank you for your modifications, that's great!
+Thanks for these fixes.
 
-Our CI did some validations and here is its report:
+On Fri, 2026-04-24 at 16:08 +0200, Paolo Abeni wrote:
+> This an attempt to fix the data transfer stall reported by Geliang
+> and
+> Gang more carefully enforcing memory constraints at the MPTCP level.
+> 
+> Patch 1/9 moves the bound check before entering the TCP socket.
+> Patch 2, 3 and 4 are cleanups/refactors finalized to safely re-using
+> TCP
+> helpers on MPTCP skbs.
+> Patch 5 makes TCP pruning related helpers available to MPTCP and
+> patch 6
+> makes use of them. Patch 7 addresses an edge scenario that could
+> still
+> lead to transfer stall under memory pressure.
+> Finally patch 8 and 9 improve the MPTCP-level retransmission schema
+> to
+> make recovery from memory pressure significanly faster.
+> 
+> Note that the diffstat is biases by the quite large patch 4/9, which
+> contains mechanical transformation of existing code; "real" changes
+> are
+> noticiable smaller.
+> 
+> Tested successfully vs the test cases proposed by Geliang and Gang.
 
-- KVM Validation: normal (except selftest_mptcp_join): Unstable: 1 failed =
-test(s): selftest_userspace_pm =E2=9A=A0=EF=B8=8F=20
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Unstable: 1 failed =
-test(s): packetdrill_dss =E2=9A=A0=EF=B8=8F=20
-- KVM Validation: debug =
-(only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal=
- (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only =
-bpftest_all): Success! =E2=9C=85
-- Task: https://github.=
-com/multipath-tcp/mptcp_net-next/actions/runs/24909569350
+We found this issue while testing the MPTCP TLS selftests
+(tools/testing/selftests/net/tls.c). The multi_chunk.c test was
+actually extracted from chunked_sendfile() function in tls.c. The tls.c
+file contains many test groups, and chunked_sendfile() is just one of
+them. Therefore, passing the chunked_sendfile tests does not guarantee
+that all tests in tls.c will pass in the future. So we will provide you
+with a test similar to multi_chunk.c shortly, but includes a more
+complete set of the tests from tls.c.
 
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/e2f27c46b96f
-Patchwork: https://patchwork.kernel.=
-org/project/mptcp/list/?series=3D1085341
+> ---
+> RFC -> v1:
+>  - dropped old patch 4 & 5
+>  - addressed AI reported comments
+>  - added retrans refactor.
+> 
+> Paolo Abeni (9):
+>   mptcp: move checks vs rcvbuf size earlier in the RX path
+>   mptcp: drop the mptcp_ooo_try_coalesce() helper
+>   mptcp: remove CB offset field
 
+When implementing MPTCP KTLS, I used this offset field. Please see the
+implementation in [1], including mptcp_read_done() and
+mptcp_get_skb_seq(). After removing the offset field, I think the new
+version should be implemented as follows:
 
-If there are some issues, you =
-can reproduce them using the same environment as
-the one used by the CI =
-thanks to a docker image, e.g.:
+static void mptcp_read_done(struct sock *sk, size_t len) 
+{
+        struct mptcp_sock *msk = mptcp_sk(sk);
+        struct sk_buff *skb;
+        size_t left;
+        u32 offset;
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+        msk_owned_by_me(msk);
 
-For more details:
+        if (sk->sk_state == TCP_LISTEN)
+                return;
 
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
+        left = len; 
+        while (left && (skb = mptcp_recv_skb(sk, &offset)) != NULL) {
+                int used;
 
+                used = min_t(size_t, skb->len - offset, left);
+                msk->bytes_consumed += used;
+                msk->copied_seq += used;
+                left -= used;
 
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
+                if (skb->len > offset + used)
+                        break;
 
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 Core)
+                mptcp_eat_recv_skb(sk, skb);
+        }
+
+        mptcp_rcv_space_adjust(msk, len - left);
+
+        /* Clean up data we have read: This will do ACK frames. */
+        if (left != len) 
+                mptcp_cleanup_rbuf(msk, len - left);
+}
+
+static u32 mptcp_get_skb_seq(struct sk_buff *skb)
+{
+        return MPTCP_SKB_CB(skb)->map_seq;
+}
+
+But unfortunately, after this modification, with all your patches in
+this set, the newly added MPTCP test cases in tls.c did not all pass.
+Are there any obvious issues with my modification in these two
+function?
+
+Thanks again, and I will continue to follow up and test this series.
+
+-Geliang
+
+[1]
+https://patchwork.kernel.org/project/mptcp/patch/b86c642262c9718f4936ad52dab804b8f494aa6d.1777026753.git.tanggeliang@kylinos.cn/
+
+>   mptcp: sync mptcp skb cb layout with tcp one
+>   tcp: expose the tcp_collapse_ofo_queue() helper to mptcp usage, too
+>   mptcp: implemented OoO queue pruning
+>   mptcp: track prune recovery status
+>   mptcp: move the retrans loop to a separate helper
+>   mptcp: let the retrans scheduler do its job.
+> 
+>  include/net/tcp.h    |   8 ++
+>  net/ipv4/tcp_input.c |  55 +++++---
+>  net/mptcp/fastopen.c |   1 -
+>  net/mptcp/mib.c      |   3 +
+>  net/mptcp/mib.h      |   3 +
+>  net/mptcp/options.c  |  55 +++++++-
+>  net/mptcp/protocol.c | 328 ++++++++++++++++++++++++++++-------------
+> --
+>  net/mptcp/protocol.h |  11 +-
+>  net/mptcp/subflow.c  |   2 +
+>  9 files changed, 323 insertions(+), 143 deletions(-)
