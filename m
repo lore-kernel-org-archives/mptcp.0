@@ -1,202 +1,93 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83B313ECBC3
-	for <mptcp@lists.linux.dev>; Mon, 27 Apr 2026 19:52:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 196773909B5;
+	Mon, 27 Apr 2026 19:54:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777319550; cv=none; b=VkIXe47c90DAptKokZ/u+/oJEpBu5MBqoAijFQxC8hTf7uNRFdoSSoEZ8vvCaK2GZRNR6GfXMJDaH6zJhrjr2TQKuGjB0fwgiWYMaox5j7CD2K8P5XWKsATRR8jKJbNIAOtwtuZk6dg+2D/ZUfvjjRZNdVfkJPcyHW9xEgy54es=
+	t=1777319684; cv=none; b=LZ5TWryhwMnxmGQE/lyJF8mawcl4HJ/nvtQKqJBGf5dgpvLrL8HQheF4Qy6D1BkpRpHE7DKocP7cCETQeo49lUoZpurYQ8h2m7Ut6Rd4O0d/ocl9rR6TI3nPlTB0AuSRbbs7AiD9PmOOaJIUYwaJos3iD+c5SCxxDwjksgwhJCI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777319550; c=relaxed/simple;
-	bh=Vd9qBXPRaiKNerJzIHd6b7mFYw5CP7GqmnqKFmhFcmY=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=aq1i5s545QSO8gVZnqrIcfT8529vT83Fcmwmkm+/P4mXQCRGquCxReQdjfUqnYCKo0UDQZrXrkPGbwkQ2JJTHg6ICGJwYx7QiVTyNzAJnaK2UVo066jW+rVCb8K2Sc3n2lFob+GoOrBR0tAf02zFPkkwK0ymyv5/5tOnyfLMn/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gRrEmq8R; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1777319684; c=relaxed/simple;
+	bh=LkOJN2JyBEjfjEVDRBcI3nbg/osylkGzwxFnqtwGwx8=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=gEgeG3Cfd9x/I237o1aI9fH4XTQIN/72quN78lWwbS1rsVyUrqFVcvPHt9x57Z4b/cEYeS4jg2TY4sadnkISjvMGjONV9IoFuySypCqF+5R6BHtQM1b1RkFuDmHWcSRiEd8CilTRYamfTBkF8JMTz+8YLsJJ7grSwIviVfp5FH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qvE4vnr8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gRrEmq8R"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1777319548;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Xl4II/IQ4CCFA8AYAQmdS5PV4JEqtOSTwLOeEwEcidY=;
-	b=gRrEmq8RZ9xPaR0Y79/vD5WqPIWxNLquss3Vp5QnXnVHTDh35L0H9RBRiX0R+bMwz/UGTs
-	qA8RKt/gJIHocg+Wtzb4XBhhhKHrlj+DRaAKYhUbAK8P/fNesZ8x7XrPxKUV1hoCOe+vHx
-	54IRi1Q5OkSwIZ5LeyMwZ/9roKWyafU=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-379-0TmzMMBdNUKHQWBUIExzlQ-1; Mon,
- 27 Apr 2026 15:52:27 -0400
-X-MC-Unique: 0TmzMMBdNUKHQWBUIExzlQ-1
-X-Mimecast-MFC-AGG-ID: 0TmzMMBdNUKHQWBUIExzlQ_1777319546
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5A4C6180049F
-	for <mptcp@lists.linux.dev>; Mon, 27 Apr 2026 19:52:26 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.44.49.253])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 94FDC300070A
-	for <mptcp@lists.linux.dev>; Mon, 27 Apr 2026 19:52:25 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-next v2 10/10] mptcp: let the retrans scheduler do its job.
-Date: Mon, 27 Apr 2026 21:52:08 +0200
-Message-ID: <988764c7973b89d5105876aebb04098f855b7535.1777318959.git.pabeni@redhat.com>
-In-Reply-To: <cover.1777318959.git.pabeni@redhat.com>
-References: <cover.1777318959.git.pabeni@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qvE4vnr8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D555C19425;
+	Mon, 27 Apr 2026 19:54:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1777319683;
+	bh=LkOJN2JyBEjfjEVDRBcI3nbg/osylkGzwxFnqtwGwx8=;
+	h=From:Subject:Date:To:Cc:From;
+	b=qvE4vnr89iK63x8UdnJBM8PQyO8zfQFKm36gYubuBFmW9vKROBpMEubeSKouWiYYL
+	 HAIUO3R/UevPUEVQswuorQ2mrs8RpJDxOfcQm5PEEIwVjapVOxH7BwKU6MkF5DaVM1
+	 WoltWM2YcL5YUCoywImmtd/Kld6LA/vavgnLMLibzBCoE9zK8mUVhi4LKXfZIKKPcw
+	 oqrECDhnGu+i5IdAMQ/R6z1Va62PuejXDKK6FwJM4AByQXO2bebgZRKOS7kLpEmSbC
+	 FsyNh/V/lI34+GSd4hkWjNNNe5/hj1NwkfPzNp3uhuJiIlV9kSadXbETNxUHcRZVYe
+	 zkRcDxxpDOyPw==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH net 0/4] mptcp: misc fixes for v7.1-rc2
+Date: Mon, 27 Apr 2026 21:54:32 +0200
+Message-Id: <20260427-net-mptcp-misc-fixes-7-1-rc2-v1-0-7432b7f279fa@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: RSiy5y_9f9FxOSH3jd4LZCvCHNX9fZOXkfkZJ_UZ_FY_1777319546
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-content-type: text/plain; charset="US-ASCII"; x-default=true
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/yWM0QrCMAxFf2Xk2cBahhn+ytiDplEzWC1NFWHs3
+ 436eC73nA1MqorBqdugyktNH9khHDrg+znfBDU5Q+zjsR8iYZaGa2lccFVjvOpbDAkDVo4YKMl
+ AxGnkAJ4oVX4HL0zgJsz/0Z6XRbh9w7DvHwXwkbqFAAAA
+X-Change-ID: 20260427-net-mptcp-misc-fixes-7-1-rc2-17de477cd8c1
+To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Simon Horman <horms@kernel.org>, Florian Westphal <fw@strlen.de>
+Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, 
+ linux-kernel@vger.kernel.org, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
+ Gang Yan <yangang@kylinos.cn>, stable@vger.kernel.org, 
+ Sashiko <sashiko-bot@kernel.org>, Lance Tuller <lance@lance0.com>
+X-Mailer: b4 0.15.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1055; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=LkOJN2JyBEjfjEVDRBcI3nbg/osylkGzwxFnqtwGwx8=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDLf7/u7hH/SfCu/swJcu1tWHuZJPbD5yXFu079z+T8a3
+ 1dcwRG5vKOUhUGMi0FWTJFFui0yf+bzKt4SLz8LmDmsTCBDGLg4BWAi0UsYfrOtqFlgk335yLFp
+ WjULoiO/WPPdu/sgnzP4Eqt0pftTmx+MDE/SzqxYFT99mm/O11upbpVn2Wd+U9bfVrxjqsOv10w
+ JrSwA
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Currently the MPTCP core enforces that when MPTCP-level retrans timer
-fires, at most a single dfrag is retransmitted. If some corner-cases it
-may be necessary retransmit multiple dfrags, and the MPTCP socket will
-need to wait multiple retrans timeout to accomplish that.
+Here are various unrelated fixes:
 
-Remove the mentioned constraint, allowing to transmit multiple dfrags per
-retrans period, as long as the scheduler keeps selecting subflows for
-retransmissions and pending data is available in the rtx queue.
-The default scheduler will transmit a dfrag per available subflow.
+- Patches 1-2: set timestamp flags on 'ssk', not 'sk' (typo); Plus do
+  that with sleepable lock_sock/release_sock. A fix for v5.14.
 
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+- Patch 3: respect SO_LINGER(1, 0) by sending MP_FASTCLOSE at close time
+  as expected. A fix for v6.1.
+
+- Patch 4: reset fullmesh counter after a flush. A fix for v6.19.
+
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
-v1 -> v2:
-  - fix retrans sequence update (sashiko)
----
- net/mptcp/protocol.c | 82 ++++++++++++++++++++++++++------------------
- 1 file changed, 48 insertions(+), 34 deletions(-)
+Gang Yan (2):
+      mptcp: sockopt: set timestamp flags on subflow socket, not msk
+      mptcp: fix scheduling with atomic in timestamp sockopt
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 64991a5ee206..a4b2d664af80 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1219,13 +1219,6 @@ static void __mptcp_clean_una_wakeup(struct sock *sk)
- 	mptcp_write_space(sk);
- }
- 
--static void mptcp_clean_una_wakeup(struct sock *sk)
--{
--	mptcp_data_lock(sk);
--	__mptcp_clean_una_wakeup(sk);
--	mptcp_data_unlock(sk);
--}
--
- static void mptcp_enter_memory_pressure(struct sock *sk)
- {
- 	struct mptcp_subflow_context *subflow;
-@@ -2840,7 +2833,10 @@ static void mptcp_check_fastclose(struct mptcp_sock *msk)
- 	sk_error_report(sk);
- }
- 
--/* Retransmit the specified data fragment on all the selected subflows. */
-+/*
-+ * Retransmit the specified data fragment on all the selected subflows,
-+ * starting from the specified sequence
-+ */
- static int __mptcp_push_retrans(struct sock *sk, struct mptcp_data_frag *dfrag)
- {
- 	struct mptcp_sendmsg_info info = { .data_lock_held = true, };
-@@ -2906,42 +2902,60 @@ static void __mptcp_retrans(struct sock *sk)
- 	struct mptcp_sock *msk = mptcp_sk(sk);
- 	struct mptcp_subflow_context *subflow;
- 	struct mptcp_data_frag *dfrag;
-+	u64 retrans_seq;
- 	int err, len;
- 
--	mptcp_clean_una_wakeup(sk);
--
--	/* first check ssk: need to kick "stale" logic */
--	err = mptcp_sched_get_retrans(msk);
--	dfrag = mptcp_rtx_head(sk);
--	if (!dfrag) {
--		if (mptcp_data_fin_enabled(msk)) {
--			struct inet_connection_sock *icsk = inet_csk(sk);
-+	mptcp_data_lock(sk);
-+	__mptcp_clean_una_wakeup(sk);
-+	retrans_seq = msk->snd_una;
-+	mptcp_data_unlock(sk);
- 
--			WRITE_ONCE(icsk->icsk_retransmits,
--				   icsk->icsk_retransmits + 1);
--			mptcp_set_datafin_timeout(sk);
--			mptcp_send_ack(msk);
-+	for (;;) {
-+		/* first check ssk: need to kick "stale" logic */
-+		err = mptcp_sched_get_retrans(msk);
-+		dfrag = mptcp_rtx_head(sk);
-+		if (!dfrag) {
-+			if (mptcp_data_fin_enabled(msk)) {
-+				struct inet_connection_sock *icsk;
-+
-+				icsk = inet_csk(sk);
-+				WRITE_ONCE(icsk->icsk_retransmits,
-+					   icsk->icsk_retransmits + 1);
-+				mptcp_set_datafin_timeout(sk);
-+				mptcp_send_ack(msk);
-+				break;
-+			}
- 
--			goto reset_timer;
-+			if (!mptcp_send_head(sk))
-+				goto clear_scheduled;
-+			break;
- 		}
- 
--		if (!mptcp_send_head(sk))
--			goto clear_scheduled;
--
--		goto reset_timer;
--	}
-+		if (err)
-+			break;
- 
--	if (err)
--		goto reset_timer;
-+		/* Skip the data already retransmitted in this run */
-+		while (dfrag && !before64(retrans_seq, dfrag->data_seq +
-+					  dfrag->data_len))
-+			dfrag = list_is_last(&dfrag->list, &msk->rtx_queue) ?
-+				NULL : list_next_entry(dfrag, list);
-+		if (!dfrag || !dfrag->already_sent)
-+			break;
- 
--	len = __mptcp_push_retrans(sk, dfrag);
--	if (len < 0)
--		goto clear_scheduled;
-+		len = __mptcp_push_retrans(sk, dfrag);
-+		if (len < 0)
-+			goto clear_scheduled;
- 
--	msk->bytes_retrans += len;
--	dfrag->already_sent = max(dfrag->already_sent, len);
-+		retrans_seq += len;
-+		msk->bytes_retrans += len;
-+		dfrag->already_sent = max(dfrag->already_sent, len);
- 
--reset_timer:
-+		/* Attempt the next fragment only if the current one is
-+		 * completely retransmitted
-+		 */
-+		if (dfrag->already_sent < dfrag->data_len)
-+			break;
-+	}
- 	mptcp_check_and_set_pending(sk);
- 
- 	if (!mptcp_rtx_timer_pending(sk))
--- 
-2.53.0
+Matthieu Baerts (NGI0) (2):
+      mptcp: fastclose msk when linger time is 0
+      mptcp: pm: kernel: reset fullmesh counter after flush
+
+ net/mptcp/pm_kernel.c |  1 +
+ net/mptcp/protocol.c  |  3 ++-
+ net/mptcp/sockopt.c   | 12 ++++++------
+ 3 files changed, 9 insertions(+), 7 deletions(-)
+---
+base-commit: 254f49634ee16a731174d2ae34bc50bd5f45e731
+change-id: 20260427-net-mptcp-misc-fixes-7-1-rc2-17de477cd8c1
+
+Best regards,
+--  
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
