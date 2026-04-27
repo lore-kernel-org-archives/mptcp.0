@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A54934F275
-	for <mptcp@lists.linux.dev>; Mon, 27 Apr 2026 17:07:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17191125AA
+	for <mptcp@lists.linux.dev>; Mon, 27 Apr 2026 19:44:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777309671; cv=none; b=VlD9frCUxXdOkVowdRjmxSZapcTInN+TvK33iyetv9LVdBEv8UL+eofPOlDkV9r/gV+0fCNnCAuK1nH5cCy7h+IdmdpxxICwhRH6XbeVWtxghE0B8wBkjzngIOY4kDagr3dWBAcaeJcgd0CgX83n4lNk9ssf6f2i6oxmB0KmJjw=
+	t=1777319060; cv=none; b=B4Jw4TfFQeCePdA7I1LxnOhap0ILRPG8UEX5yiNyw7w2Geaqlz8kd16xugIbLKjH+YPD+k/fWPDH0lvPyabypeMpI4XF7AN4ACvq6ElCIpbQaXZGciJBhOD55pWm0SZ3odvT66+eqbkGCgINwDegkMVA/gpe+tQXGfYZwcL3clw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777309671; c=relaxed/simple;
-	bh=DFOnTgjRG4hnwzX7JwVkka8lNyJkSZG2+a9U1M6mcHM=;
+	s=arc-20240116; t=1777319060; c=relaxed/simple;
+	bh=jBHZd6c3c5Qk55L2E8ce36xk84WvGeMbJyXlQp3shDE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DUCXyjFZwCKcC7pyMD279kVJE2kpdeQShUqsgWrlbQvoot4AKEVR6bisc7J9oJV0LFOy1RygnYvn8/1K3VIrK5LMJOOcTyjdHc/E04p7b/dzK5CEUpzOHOioIr71f8E6Ce6GQo0aOtGQ8cQ1JGQrbWKeI46bXDF5FQDTaOcKgzo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NalTDRfi; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=QruFxf6uCsDkp+tc48dzFL/5UNI0lsOwkF6OvQZDtJ1uceMrY4Bez9s6nL0QzoFgBSonP1tarINhOLkDVIA3CCtQraMbjymfyIpyoOGVkTCO27s82XZus208CQj9c7cxx+7sE/7A4qjE6Db0qOT8Y0yFQsC/WLA16VPlAvkflqs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qWi2CZca; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NalTDRfi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15A4EC2BCB4;
-	Mon, 27 Apr 2026 17:07:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qWi2CZca"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0A11C19425;
+	Mon, 27 Apr 2026 19:44:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777309671;
-	bh=DFOnTgjRG4hnwzX7JwVkka8lNyJkSZG2+a9U1M6mcHM=;
+	s=k20201202; t=1777319059;
+	bh=jBHZd6c3c5Qk55L2E8ce36xk84WvGeMbJyXlQp3shDE=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=NalTDRfiZ/DCEzxrVw4oZxVTZ+WkFlV7szFOrrHU7/3NBMiAJSCJ645uMQY1BzADI
-	 X5BzHQfmCndcJbNrSHQ+h5XNXErUqoD2fwNCLEqQ0gSQ1tauGXr0NFribHqVcd5gY0
-	 +8nnMGzauo3P0msEU+1SOHBiu4sDL8+BS924flBC6yI61gn5S+Q2mYrLVd7qth7nBu
-	 AIt9ft4MRTFlJVYcYni7NQoKkvZGAaWuZtg55092hlPteGa/9LgZU08rUNuKoYBGy2
-	 KLGV1HbDmYOtIM4Msnz1ojtvAthNuNeHdI6XozKh0UauJP5GU7l5NjxqPL1+hK/cv2
-	 wGGveRRC9DICQ==
-Message-ID: <b9d69160-1a93-4788-a3b4-47b366645fde@kernel.org>
-Date: Mon, 27 Apr 2026 19:07:48 +0200
+	b=qWi2CZcaIVrendRNxk0KemSaccQwhbXkfQe7kZY42NPEYzgcnqwO+TNHviWqtaQtZ
+	 vy1RXQWzcLgZ3+T5VoWnQQRZbhDQy1z5KHRxm4zm61ZP2th2mvdmmN0FeX/P/tsHBG
+	 P5k+VZkfNTW6BMFeTyyw0v+R35LyC29kgtZDW/r3l6wojZ2mgcMNQjHLPS1kjzb7V4
+	 xmO57sjZ9iv4lUX8eJjjWu1J1ljDNiFdNcTpP3mb00xKnFWUEdacw1Xg3+mpt3GLSn
+	 vDfP0PToizy16e8A2D/eiKhOBgF/jfp+wJUmYKsQ/o9QxLZcyz8r2QDpCAss38cXSQ
+	 lGR6S9v8Uz0lQ==
+Message-ID: <b6e9028f-e576-4a51-88d9-7ef07e54e15f@kernel.org>
+Date: Mon, 27 Apr 2026 21:44:15 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,16 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v3 1/3] mptcp: propagate RECVERR sockopts to
- subflows
+Subject: Re: [PATCH] mptcp: add per-reason MIB counters for MPTCP_RST_EMPTCP
+ resets
 Content-Language: fr
-To: David CARLIER <devnexen@gmail.com>, Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>,
- Geliang Tang <geliang@kernel.org>
-References: <20260421223338.52743-1-devnexen@gmail.com>
- <20260421223338.52743-2-devnexen@gmail.com>
- <e5dbdb08-f666-47d6-83b6-c157c7e9036c@redhat.com>
- <CA+XhMqw5z0NbsXH0MRL=T7ZmRv_OT9Reke6Uo6Yq6kFQJL=2yA@mail.gmail.com>
+To: Shardul Bankar <shardulsb08@gmail.com>, martineau@kernel.org
+Cc: geliang@kernel.org, mptcp@lists.linux.dev, janak@mpiric.us,
+ kalpan.jani@mpiricsoftware.com, Shardul Bankar <shardul.b@mpiricsoftware.com>
+References: <20260421095646.3741956-1-shardul.b@mpiricsoftware.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -90,47 +87,241 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <CA+XhMqw5z0NbsXH0MRL=T7ZmRv_OT9Reke6Uo6Yq6kFQJL=2yA@mail.gmail.com>
+In-Reply-To: <20260421095646.3741956-1-shardul.b@mpiricsoftware.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi David,
+Hi Shardul,
 
-On 22/04/2026 23:51, David CARLIER wrote:
-> On 4/22/26 10:05 AM, Paolo Abeni wrote:
->   > You should drop this line, only a single SoB tag is needed.
+(-cc: Netdev)
+
+On 21/04/2026 11:56, Shardul Bankar wrote:
+> MPTCP_RST_EMPTCP (reset reason 1) is used as a catch-all for seven
+> distinct error conditions across subflow setup, authentication, and
+> data path validation.  The existing MPRstTx/MPRstRx counters only
+> track aggregate reset volume, making it difficult to diagnose which
+> code path is triggering subflow resets in production.
 > 
->   Ack.
-
-(I don't know why there is an indentation in your replies, but I guess
-most email readers will not interpret this properly, even lore [1]:
-check your messages vs. the other ones)
-
-https://lore.kernel.org/mptcp/CA+XhMqw4xRGdJbtX02++9eS8u_bWOzbPimM1Mk_dDNed5SX94w@mail.gmail.com/T/#mf03244a0e5af6ca0fdd80dfb1bff9f2f2d769e0b
-
-https://docs.kernel.org/process/email-clients.html
-
->   >> +          ret = mptcp_subflow_set_recverr(sk, ssk, rfc4884);
->   >
->   > The above looks a bit overcomplicated?!? It looks like you could
->   > leverage mptcp_setsockopt_all_sf() [...]
+> Add per-reason MIB counters for each MPTCP_RST_EMPTCP use site:
 > 
->   Will do, rebased on Matt's sockopt_seq_inc() fix.
+>   MPRstMD5SIG         - MD5SIG on listener, incompatible with MPTCP
+>   MPRstNoToken        - JOIN token lookup failed, no matching conn
+>   MPRstNoMPJ          - SYN/ACK missing MP_JOIN option
+>   MPRstHMAC           - HMAC validation failed during subflow join
+>   MPRstFatalFallback  - fatal fallback during child socket creation
+>   MPRstBadMap         - invalid data mapping on established subflow
+>   MPRstNotEstablished - JOIN on not-fully-established msk
 
-FYI, I sent my patch there:
+When looking at the other MIB counters we have where RST are sent in
+some cases, it might be better to link them to the event (e.g. MPJoin)
+or the issue (DSS issue), rather than the action (MPRst) I think. See below.
+> These counters are incremented alongside the existing reset_reason
+> assignment and are visible via nstat as MPTcpExtMPRst*.  The
+> aggregate MPRstTx/MPRstRx counters remain unchanged.
 
-https://lore.kernel.org/mptcp/20260424-mptcp-pm-sockopt-set-all-sf-v1-1-38e7023822f8@kernel.org/
+Do you mind also modifying the selftests in a separated patch to check
+these counters (if available -- if not, they can be ignored), please?
 
-I don't think you need to rebase your series on it, except if not having
-this patch breaks some tests. If that's the case, feel free to add this
-line in the cover-letter:
+e.g. by checking them in mptcp_join.sh, in chk_rst_nr(), assuming they
+are all at 0 except set → check how chk_join_nr() is used where specific
+errors need to be set explicitly:
 
-Based-on:
-<20260424-mptcp-pm-sockopt-set-all-sf-v1-1-38e7023822f8@kernel.org>
+  join_syn_rej=1 \
+      chk_join_nr (...)
 
-See this for more details:
+But I guess most/all these errors are not produced in the mptcp_join.sh
+selftest, right?. But I guess some can be seen in packetdrill tests:
 
-  https://github.com/multipath-tcp/mptcp_net-next/wiki/CI
+
+https://github.com/multipath-tcp/packetdrill/tree/mptcp-net-next/gtests/net/mptcp
+
+It would be good to check these counters are incremented there when
+expected, see how MPTcpExtMPCapableFallbackACK is checked for example.
+
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/511
+> Signed-off-by: Shardul Bankar <shardul.b@mpiricsoftware.com>
+> ---
+>  net/mptcp/mib.c      |  7 +++++++
+>  net/mptcp/mib.h      |  7 +++++++
+>  net/mptcp/protocol.c |  1 +
+>  net/mptcp/subflow.c  | 14 +++++++++++---
+>  4 files changed, 26 insertions(+), 3 deletions(-)
+> 
+> diff --git a/net/mptcp/mib.c b/net/mptcp/mib.c
+> index f23fda0c55a7..ec42583c59cf 100644
+> --- a/net/mptcp/mib.c
+> +++ b/net/mptcp/mib.c
+> @@ -71,6 +71,13 @@ static const struct snmp_mib mptcp_snmp_list[] = {
+>  	SNMP_MIB_ITEM("MPFastcloseRx", MPTCP_MIB_MPFASTCLOSERX),
+>  	SNMP_MIB_ITEM("MPRstTx", MPTCP_MIB_MPRSTTX),
+>  	SNMP_MIB_ITEM("MPRstRx", MPTCP_MIB_MPRSTRX),
+> +	SNMP_MIB_ITEM("MPRstMD5SIG", MPTCP_MIB_MPRSTMD5SIG),
+
+We already have MD5SigFallback, should we have MD5SigReset?
+
+> +	SNMP_MIB_ITEM("MPRstNoToken", MPTCP_MIB_MPRSTNOTOKEN),
+
+Maybe clearer if you add 'Found'. But this counter doesn't seem to be
+needed, see below.
+
+> +	SNMP_MIB_ITEM("MPRstNoMPJ", MPTCP_MIB_MPRSTNOMPJ),
+
+It doesn't seem very clear. Perhaps clearer to add that one with the
+other MPJoin? Possibly MPJoinSynAckNoMPJoin, or is it confusing?
+
+> +	SNMP_MIB_ITEM("MPRstHMAC", MPTCP_MIB_MPRSTHMAC),
+
+Not needed I think, see below.
+
+> +	SNMP_MIB_ITEM("MPRstFatalFallback", MPTCP_MIB_MPRSTFATALFALLBACK),
+
+That's a bit vague. See below.
+
+> +	SNMP_MIB_ITEM("MPRstBadMap", MPTCP_MIB_MPRSTBADMAP),
+
+Should it be linked to DSS? We have DssFallback, DSSCorruptionReset and
+DSSCorruptionFallback. Should we have DssReset for this one?
+
+> +	SNMP_MIB_ITEM("MPRstNotEstablished", MPTCP_MIB_MPRSTNOTESTABLISHED),
+
+Here, it is a bit to vague: see below.
+
+>  	SNMP_MIB_ITEM("SubflowStale", MPTCP_MIB_SUBFLOWSTALE),
+>  	SNMP_MIB_ITEM("SubflowRecover", MPTCP_MIB_SUBFLOWRECOVER),
+>  	SNMP_MIB_ITEM("SndWndShared", MPTCP_MIB_SNDWNDSHARED),
+> diff --git a/net/mptcp/mib.h b/net/mptcp/mib.h
+> index 812218b5ed2b..0ac109b52d35 100644
+> --- a/net/mptcp/mib.h
+> +++ b/net/mptcp/mib.h
+> @@ -70,6 +70,13 @@ enum linux_mptcp_mib_field {
+>  	MPTCP_MIB_MPFASTCLOSERX,	/* Received a MP_FASTCLOSE */
+>  	MPTCP_MIB_MPRSTTX,		/* Transmit a MP_RST */
+>  	MPTCP_MIB_MPRSTRX,		/* Received a MP_RST */
+> +	MPTCP_MIB_MPRSTMD5SIG,		/* MP_RST: MD5SIG enabled on listener */
+> +	MPTCP_MIB_MPRSTNOTOKEN,		/* MP_RST: JOIN token not found */
+> +	MPTCP_MIB_MPRSTNOMPJ,		/* MP_RST: missing MPJ in SYN/ACK */
+> +	MPTCP_MIB_MPRSTHMAC,		/* MP_RST: HMAC validation failed */
+> +	MPTCP_MIB_MPRSTFATALFALLBACK,	/* MP_RST: fatal fallback on child */
+> +	MPTCP_MIB_MPRSTBADMAP,		/* MP_RST: bad data mapping */
+> +	MPTCP_MIB_MPRSTNOTESTABLISHED,	/* MP_RST: JOIN on not-established msk */
+>  	MPTCP_MIB_SUBFLOWSTALE,		/* Subflows entered 'stale' status */
+>  	MPTCP_MIB_SUBFLOWRECOVER,	/* Subflows returned to active status after being stale */
+>  	MPTCP_MIB_SNDWNDSHARED,		/* Subflow snd wnd is overridden by msk's one */
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 17b9a8c13ebf..b06cbcf983f4 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -3836,6 +3836,7 @@ bool mptcp_finish_join(struct sock *ssk)
+>  
+>  	/* mptcp socket already closing? */
+>  	if (!mptcp_is_fully_established(parent)) {
+> +		MPTCP_INC_STATS(sock_net(parent), MPTCP_MIB_MPRSTNOTESTABLISHED);
+
+As you mentioned above in a comment, it is linked to a Join: then I
+think this should be reflected in the name. It might be better with
+something like: MPJoinSynAckClose? (or with the Rst suffix?)
+
+>  		subflow->reset_reason = MPTCP_RST_EMPTCP;
+>  		return false;
+>  	}
+> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> index e2cb9d23e4a0..71bffcda0138 100644
+> --- a/net/mptcp/subflow.c
+> +++ b/net/mptcp/subflow.c
+> @@ -160,6 +160,7 @@ static int subflow_check_req(struct request_sock *req,
+>  	 * TCP option space.
+>  	 */
+>  	if (rcu_access_pointer(tcp_sk(sk_listener)->md5sig_info)) {
+> +		MPTCP_INC_STATS(sock_net(sk_listener), MPTCP_MIB_MPRSTMD5SIG);
+
+MD5SigReset?
+
+>  		subflow_add_reset_reason(skb, MPTCP_RST_EMPTCP);
+>  		return -EINVAL;
+>  	}
+> @@ -227,6 +228,7 @@ static int subflow_check_req(struct request_sock *req,
+>  
+>  		/* Can't fall back to TCP in this case. */
+>  		if (!subflow_req->msk) {
+> +			MPTCP_INC_STATS(sock_net(sk_listener), MPTCP_MIB_MPRSTNOTOKEN);
+
+Do we not already have MPTCP_MIB_JOINNOTOKEN sent in this case?
+
+I was initially going to say that NoToken was confusing, NoTokenFound
+would be clearer, but it looks like we already have one for that.
+
+>  			subflow_add_reset_reason(skb, MPTCP_RST_EMPTCP);
+>  			return -EPERM;
+>  		}
+> @@ -568,6 +570,7 @@ static void subflow_finish_connect(struct sock *sk, const struct sk_buff *skb)
+>  		u8 hmac[SHA256_DIGEST_SIZE];
+>  
+>  		if (!(mp_opt.suboptions & OPTION_MPTCP_MPJ_SYNACK)) {
+> +			MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_MPRSTNOMPJ);
+
+MPJoinSynAckNoMPJoin?
+
+>  			subflow->reset_reason = MPTCP_RST_EMPTCP;
+>  			goto do_reset;
+>  		}
+> @@ -582,6 +585,7 @@ static void subflow_finish_connect(struct sock *sk, const struct sk_buff *skb)
+>  
+>  		if (!subflow_thmac_valid(subflow)) {
+>  			MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_JOINACKMAC);
+> +			MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_MPRSTHMAC);
+
+Do we need this one if we already have MPJoinAckHMacFailure just above?
+This other MIB counter is only used in case of HMAC issues and an MP_RST
+will be sent.
+
+Note that I see that at the other place where it is used, the reset
+reason looks wrong (Administratively prohibited), it should also be an
+MPTCP-specific error like here. Do you mind creating another patch
+fixing that please? That's not urgent, so also only to the MPTCP ML,
+with the 'mptcp-net' prefix this time, and a Fixes tag, please?
+
+Also, here, should it not be MPJoinSynAckHMacFailure instead (SynAck,
+not Ack)? If yes, we will need another patch with probably another Fixes
+tag.
+
+>  			subflow->reset_reason = MPTCP_RST_EMPTCP;
+>  			goto do_reset;
+>  		}
+> @@ -870,6 +874,7 @@ static struct sock *subflow_syn_recv_sock(const struct sock *sk,
+>  		 */
+>  		if (!ctx || fallback) {
+>  			if (fallback_is_fatal) {
+> +				MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_MPRSTFATALFALLBACK);
+
+Here, we should send a reset only for the MPJoin, so probably best to
+link it to that. Then there are two conditions:
+
+- fallback == true: MPJoin options are missing → MPJoinAckNoMPJoin?
+- !ctx == no ULP: so I guess alloc failure (or a fallback happened
+before? Not sure...) → MPJoinAckNoCtx?
+
+>  				subflow_add_reset_reason(skb, MPTCP_RST_EMPTCP);
+>  				goto dispose_child;
+>  			}
+> @@ -1421,9 +1426,12 @@ static bool subflow_check_data_avail(struct sock *ssk)
+>  			 * subflow_error_report() will introduce the appropriate barriers
+>  			 */
+>  			subflow->reset_transient = 0;
+> -			subflow->reset_reason = status == MAPPING_NODSS ?
+> -						MPTCP_RST_EMIDDLEBOX :
+> -						MPTCP_RST_EMPTCP;
+> +			if (status == MAPPING_NODSS) {
+> +				subflow->reset_reason = MPTCP_RST_EMIDDLEBOX;
+> +			} else {
+> +				MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_MPRSTBADMAP);
+> +				subflow->reset_reason = MPTCP_RST_EMPTCP;
+> +			}
+
+It sounds better to increment the MIB counter (DssReset?) even if it is
+due to a middlebox, no?
+
+>  reset:
+>  			WRITE_ONCE(ssk->sk_err, EBADMSG);
 
 Cheers,
 Matt
