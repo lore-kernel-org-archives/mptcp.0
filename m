@@ -1,34 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1BBA42189A;
-	Mon, 27 Apr 2026 19:54:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 544B5421F00;
+	Mon, 27 Apr 2026 19:54:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777319691; cv=none; b=ecFgLGxTnvLTTnWm7eu/JfqQXMkrXT4lhYbTHGd2D+EI/+jWaiG3hJpFxi9a8xCVoCjBiUrAYiXmKbyOKHCN00YveC92XTL9Z7kYS0lB9brt0//pbMtCLOnIQl3zxi8x3oBP8fLFx7sr9HTk0cJ+G8aFGRdEggkvBETt3Lpi11U=
+	t=1777319694; cv=none; b=DJHd4StlDVQQO6//W9Nmx5EeuDSoeDw40C3dPD0y9K9lHfb36OWFRsqYUV3l2t05uZwG8aV82mgzOffLkVl53FrEpi55sFmEcnww4xpoW6+B/pkmr7ubUtU3eUcU5+ZeGfzWbwHs2zK35DUJzkp+RGJvHA8hz9dxnqPPX3FXuAg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777319691; c=relaxed/simple;
-	bh=RSS32AhqrYieijWsPYjck0hKZlEjdH3hTLaQgWU9920=;
+	s=arc-20240116; t=1777319694; c=relaxed/simple;
+	bh=przPaxcMyBQzUmg2GX2M3OT2M/7tS8ONkDW/LqeDsoE=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=mu1n36LlDQ8L0neQu8XPFKIJet0QFr9aCvamfbyNJr322J3Yztq4nMi6Q7YThrmmIHmqrXJafQXb0eGTLJeaochJ4RwYvH6moVF6JUXG1Xna/bCmdRjxP6CZoRoh5D8j/69anPxMXftvZPEzOYf3TUpH5kYR4OHPoyzYvi6I20o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z6N0iGij; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=pdSLmEIN81Lxi1UOubMdP3g0pEPjN/cFWrUy5F/9ukU0ffQPlJKgergz4649a0/L6zXguBUte3Lz7e7jzP3rDUtMF1Ii0SHxS7kBt8wX7e4dP2tq5MqMZqCvqwObpMZ5GCidE9TH/mYg929ztGrG1mjyG77QVzlr+WTsLG98Bv0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=phhMefp/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z6N0iGij"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A416C19425;
-	Mon, 27 Apr 2026 19:54:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="phhMefp/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F413EC2BCB7;
+	Mon, 27 Apr 2026 19:54:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777319691;
-	bh=RSS32AhqrYieijWsPYjck0hKZlEjdH3hTLaQgWU9920=;
+	s=k20201202; t=1777319694;
+	bh=przPaxcMyBQzUmg2GX2M3OT2M/7tS8ONkDW/LqeDsoE=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=Z6N0iGij80AUMpSKSZqQMYC9qbljVvTa06qYGgIx0rnlpyXlaEoXaPIH1cRZ2b91g
-	 b6BAIBEbTL+dzmAa72prJXR5Dz6Pnrmt8mgN4B0Hq+f9u9Aa1LSZeUCSl2jkkB0pt1
-	 ki3cGMHfPqYL0+BDlLnZly+NHhJ6HMUobKWn40FHNW4sv0VqsWVMBU0alGGR0a7BBE
-	 1EqYC+2MSYdaLjwCm2yCi86FNtMWEXWboStfixp9z9B39BMy9qzjTpfzq0bzutrhtJ
-	 OEAvcxbzmIgNO+8urr2Gwbd3XVe2jfXVS28qik7+F9UhN6VY+Ux82NvMRMFU5QWzPK
-	 AHOFqbFEXvJ6Q==
+	b=phhMefp/bubG1wz7S69WSbqk2q9hthM4+xhqV8oyp/3VIXb+nsgE4CTpfO8I5nP01
+	 YIAAIdWDfhSOeimUtGYHSQxDGKNl+efO60p/rDmDix2mFad5uAohHZlbQqrZdqgpq+
+	 viiKxt8okhLVdGsthpCpBdoNy0XtePLbYQSmRbDRzEwKBphgPDoqKh+FDXw7AQYpU+
+	 WJdwXsi+ESkkfcBZnhlmX/Q3k9Dw6EIy4Jksdr2+6Rvn9HrFAbUA6dBNWgj6E8Qwzl
+	 qTbH9Ly2kysB5U3IiD/C+dtrA7/lZ7qsfnNzeKqvPeO6c5B+HHux308408BlGcDciP
+	 Z3yuEivMMHWDA==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Mon, 27 Apr 2026 21:54:35 +0200
-Subject: [PATCH net 3/4] mptcp: fastclose msk when linger time is 0
+Date: Mon, 27 Apr 2026 21:54:36 +0200
+Subject: [PATCH net 4/4] mptcp: pm: kernel: reset fullmesh counter after
+ flush
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -37,7 +38,7 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260427-net-mptcp-misc-fixes-7-1-rc2-v1-3-7432b7f279fa@kernel.org>
+Message-Id: <20260427-net-mptcp-misc-fixes-7-1-rc2-v1-4-7432b7f279fa@kernel.org>
 References: <20260427-net-mptcp-misc-fixes-7-1-rc2-v1-0-7432b7f279fa@kernel.org>
 In-Reply-To: <20260427-net-mptcp-misc-fixes-7-1-rc2-v1-0-7432b7f279fa@kernel.org>
 To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, 
@@ -46,58 +47,47 @@ To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
  Simon Horman <horms@kernel.org>, Florian Westphal <fw@strlen.de>
 Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, 
  linux-kernel@vger.kernel.org, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
- stable@vger.kernel.org, Lance Tuller <lance@lance0.com>
+ stable@vger.kernel.org, Sashiko <sashiko-bot@kernel.org>
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1764; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=RSS32AhqrYieijWsPYjck0hKZlEjdH3hTLaQgWU9920=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDLf7/vP1uAs5vXWZfXvl3fq7u63MN/8c8mRkL+sJ7Zk5
- EyXUkpX7yhlYRDjYpAVU2SRbovMn/m8irfEy88CZg4rE8gQBi5OAZjIfVGG/7UTl1mWXHx/1GRH
- 6v6711d2HXJrZed4dSbpmAXnesuFy28xMrwWf9yq+ayq5dLU33HyhiK7Kk4sWhPzxGwrx9v3l5T
- 60pgA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1261; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=przPaxcMyBQzUmg2GX2M3OT2M/7tS8ONkDW/LqeDsoE=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDLf72fgsAvJVZ6SxHpSN1d0RQ6vm0/JW54d66pP/jqg4
+ S4vu/5xRykLgxgXg6yYIot0W2T+zOdVvCVefhYwc1iZQIYwcHEKwEREvjEybD1hnKrt+kp5v+e/
+ jHcNRl9qFy0XNo5Je2jzsrd/tmzvBIZ/OjVrlLYEyDF4vVFxX3Bjq4LK56j8gviXEla/lZ78Wru
+ PFQA=
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-The SO_LINGER socket option has been supported for a while with MPTCP
-sockets [1], but it didn't cause the equivalent of a TCP reset as
-expected when enabled and its time was set to 0. This was causing some
-behavioural differences with TCP where some connections were not
-promptly stopped as expected.
+This variable counts how many MPTCP endpoints have a 'fullmesh' flag
+set. After having flushed all MPTCP endpoints, it is then needed to
+reset this counter.
 
-To fix that, an extra condition is checked at close() time before
-sending an MP_FASTCLOSE, the MPTCP equivalent of a TCP reset.
+Without this reset, this counter exposed to the userspace is wrong, but
+also non-fullmesh endpoints added after the flush will not be taken into
+account to create subflows in reaction to ADD_ADDRs.
 
-Note that backporting up to [1] will be difficult as more changes are
-needed to be able to send MP_FASTCLOSE. It seems better to stop at [2],
-which was supposed to already imitate TCP.
-
-Validated with MPTCP packetdrill tests [3].
-
-Fixes: 268b12387460 ("mptcp: setsockopt: support SO_LINGER") [1]
-Fixes: d21f83485518 ("mptcp: use fastclose on more edge scenarios") [2]
+Fixes: f88191c7f361 ("mptcp: pm: in-kernel: record fullmesh endp nb")
 Cc: stable@vger.kernel.org
-Reported-by: Lance Tuller <lance@lance0.com>
-Closes: https://github.com/lance0/xfr/pull/67
-Link: https://github.com/multipath-tcp/packetdrill/pull/196 [3]
+Reported-by: Sashiko <sashiko-bot@kernel.org>
+Closes: https://sashiko.dev/#/patchset/20260422-mptcp-inc-limits-v6-0-903181771530%40kernel.org?part=15
 Reviewed-by: Mat Martineau <martineau@kernel.org>
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- net/mptcp/protocol.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/mptcp/pm_kernel.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 718e910ff23f..4546a8b09884 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -3302,7 +3302,8 @@ bool __mptcp_close(struct sock *sk, long timeout)
- 		goto cleanup;
- 	}
+diff --git a/net/mptcp/pm_kernel.c b/net/mptcp/pm_kernel.c
+index 0ebf43be9939..c9f1e5af3cd3 100644
+--- a/net/mptcp/pm_kernel.c
++++ b/net/mptcp/pm_kernel.c
+@@ -1278,6 +1278,7 @@ static void __reset_counters(struct pm_nl_pernet *pernet)
+ 	WRITE_ONCE(pernet->endp_signal_max, 0);
+ 	WRITE_ONCE(pernet->endp_subflow_max, 0);
+ 	WRITE_ONCE(pernet->endp_laminar_max, 0);
++	WRITE_ONCE(pernet->endp_fullmesh_max, 0);
+ 	pernet->endpoints = 0;
+ }
  
--	if (mptcp_data_avail(msk) || timeout < 0) {
-+	if (mptcp_data_avail(msk) || timeout < 0 ||
-+	    (sock_flag(sk, SOCK_LINGER) && !sk->sk_lingertime)) {
- 		/* If the msk has read data, or the caller explicitly ask it,
- 		 * do the MPTCP equivalent of TCP reset, aka MPTCP fastclose
- 		 */
 
 -- 
 2.53.0
