@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACB963B27FB
-	for <mptcp@lists.linux.dev>; Mon, 27 Apr 2026 14:47:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F9813B634C
+	for <mptcp@lists.linux.dev>; Mon, 27 Apr 2026 14:50:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777301224; cv=none; b=oA+yIGFbe4BSd2A7DhnFhH5MxUer0McBD1CWS3SOi/FatnzO0QG1ibxCD+yJR5tqomXD5CVxZVlvjyXuB3V6EmOwBIygocUsQ/n1oAYQ5w0vrvDqyoEQiZ00Lqp07Czge9+BawYCtgF+zxwTOTobZoWcLbhy66Zx7AZykHlrQ/c=
+	t=1777301401; cv=none; b=O4hqWao3YQPF4F+RluxyW63xSvz+N6HXtG0zFp+qMJGA1i+vmdU/taH5/1PoCPd74gHyu19g7+GQSFo/TetrAUDzf1rs5WNmkInZbyNj8Tml16FBzYFpIbxJZgrlLZ5XB9ZkAC5s0pTJ++2sralJxXD3zDBWYf/TbRC7g+NXJHE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777301224; c=relaxed/simple;
-	bh=rrM75DK2QLePJ5cQrG47BLqGLvr3K/+x+yIRY/9EHic=;
+	s=arc-20240116; t=1777301401; c=relaxed/simple;
+	bh=QdnWY6dpTEGFf6LQuApAMVmq8yEp9VjJYRzw5MILDwM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZCNLu3WQl1dbpwQMELMeY4SL6kE33cWrbWLzAZ9MfPjsWDatyq42N4W4ryO+NHjmRGXC+aikkDpaFK+da7xgydpM6VjcGJ7+VWFIXI00OhStqstb/AxNVfDvMNMI0/JTPl9/iUjrI1Mt7C9YdvgVd30XtFwfJzby0kEJMJAjb2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YUCUeQft; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=GOFIPYnHLegiyR5zBqW5rvdVQrnnEcVKlCNId4qmrkI9/wat9/AUirfji1gz21SxFCQo8n9CviXMQhtrv6GXNQwDPrfoYsS/eY2WWbHkZWnblZ1AUPtqW1Y4RJeDOyg9sf8FmaG+TOIj7vawYf5TlCv3FLOicimOS35pCYys/60=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YevsVjV+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YUCUeQft"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 687A4C2BCB4;
-	Mon, 27 Apr 2026 14:47:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YevsVjV+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9B94C19425;
+	Mon, 27 Apr 2026 14:49:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777301224;
-	bh=rrM75DK2QLePJ5cQrG47BLqGLvr3K/+x+yIRY/9EHic=;
+	s=k20201202; t=1777301400;
+	bh=QdnWY6dpTEGFf6LQuApAMVmq8yEp9VjJYRzw5MILDwM=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=YUCUeQftqA/0//nrUy9hEHKLbF8cz71jL7WAc85MIh1lgNwaq6RFFPrB+pgGcTiR7
-	 lkOzgWKoe123/x7nX8n1oLFIrn35JfM6u443at2L4tLRgXxgWeFpH12g2+vVg1U5Rd
-	 WNcNA1xRnUWN9n1n+G51BUDtHo4NkZuaibD24a9U1pkMoELG8NV//QGQYx1+Nq+Uud
-	 einMkJD6TNWV24D9mWc4f+SRQov+T/WqLEjrwolwbEUKciHUnm+gnNtBVwNLO1x1aV
-	 xsNNKPGy4ldIqc2bgOCIqJZBxxm7S+XcQCq0lG58M/jpgyef4d+Hri0vaPIod+obJD
-	 1NfJvIeXIqfVQ==
-Message-ID: <318c9ceb-b446-499f-9ee0-ccef871b5b21@kernel.org>
-Date: Mon, 27 Apr 2026 16:47:01 +0200
+	b=YevsVjV+qfMeOs6cuq3mf8KA99yI62wwWF66KdbrkRMhvJlo9QQ7wQrelt8UByaEV
+	 SyN89PjR6r9QkCGgkSCl89wWo/4sz3Jn2x5DnRcWTVCs5GVaCMKCUyBB2W5YZifLMx
+	 b+8+Xs+4i1RwK+w/3iu60WhoFwGiBFOejrtRvsKZPwI6pT4UOyC5ndWclZD9efdjU6
+	 M49c6dE8/SCCQ+uT9VoAI5CsHTFPVww2L33MiaAHZShT0e1UpaBIZpQKYxWbXZdaS4
+	 dWtw1HwzJGn932v+TZXAA436IYmDSYJuRDnZ8oUXHruBxM6KECCaMeHrtkRwoA8k3b
+	 +8wi+v3r/AhNA==
+Message-ID: <42f34223-16e6-482a-b7cd-3ab7ad164752@kernel.org>
+Date: Mon, 27 Apr 2026 16:49:57 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next 2/2] mptcp: use sockopt_lock(release)_sock in
- sockopt
+Subject: Re: [PATCH mptcp-net 1/2] mptcp: fix scheduling with atomic in
+ timestamp sockopt
 Content-Language: fr
 To: Gang Yan <gang.yan@linux.dev>, mptcp@lists.linux.dev
 Cc: Gang Yan <yangang@kylinos.cn>
 References: <20260422091927.77770-1-gang.yan@linux.dev>
- <20260422091927.77770-3-gang.yan@linux.dev>
+ <20260422091927.77770-2-gang.yan@linux.dev>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,7 +87,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20260422091927.77770-3-gang.yan@linux.dev>
+In-Reply-To: <20260422091927.77770-2-gang.yan@linux.dev>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -96,29 +96,29 @@ Hi Gang,
 On 22/04/2026 11:19, Gang Yan wrote:
 > From: Gang Yan <yangang@kylinos.cn>
 > 
-> TCP and the core socket layer all use sockopt_lock_sock()
-> sockopt_release_sock() in their setsockopt and getsockopt handlers. It
-> is a BPF-aware wrapper that skips lock acquisition when invoked from a
-> BPF program, where the socket lock is already held.
+> Using lock_sock_fast() (atomic context) around sock_set_timestamp()
+> and sock_set_timestamping() is unsafe, as both helpers can sleep.
 > 
-> Using lock_sock_fast() on subflows requires extra care: the fast path
-> holds the socket spinlock with BH disabled, creating an atomic context
-> where sleeping is not allowed.  Switching to sockopt_lock_sock()
-> avoids the risk of accidentally introducing sleeping operations inside
-> the lock_sock_fast() critical section.
+> Replace lock_sock_fast() with sleepable lock_sock()/release_sock()
+> to avoid scheduling while atomic panic.
+> 
+> Assisted-by: Sashiko
 
-Good catch, I guess we need this too. I think this patch can be seen as
-a fix as well, maybe with this tag?
+I think Reported-by is better here, because Assisted requires the
+version, etc. See the Checkpatch error linked to that.
 
-  24426654ed3a ("bpf: net: Avoid sk_setsockopt() taking sk lock when
-called from bpf")
+Reported-by: Sashiko <sashiko-bot@kernel.org>
+Closes:
+https://sashiko.dev/#/patchset/20260420093343.16443-1-gang.yan@linux.dev
 
-WDYT?
+> Fixes: 9061f24bf82e ("mptcp: sockopt: propagate timestamp request to subflows")
+> Fixes: 6c9a0a0f2333 ("mptcp: setsockopt: convert to mptcp_setsockopt_sol_socket_timestamping()")
 
-Also, from the same BPF series, we probably need this, no?
+Probably the second one is not needed, the issue was already there before.
 
-  e42c7beee71d ("bpf: net: Consider has_current_bpf_ctx() when testing
-capable() in sk_setsockopt()")
+I can fix all that when applying the patch.
+
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
 Cheers,
 Matt
