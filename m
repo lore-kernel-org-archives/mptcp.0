@@ -1,170 +1,127 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A78E0391501
-	for <mptcp@lists.linux.dev>; Mon, 27 Apr 2026 07:28:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACB963B27FB
+	for <mptcp@lists.linux.dev>; Mon, 27 Apr 2026 14:47:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777274882; cv=none; b=fMbCNU24w9XBX4QWf2CArze7ypx7B1P5B33MgADj26vINzrd2bFP8mRJNUQa0dAMw6aVg+Bxh6D2RfkRsGx7fuxajLj50kh1C6ccvl91BmgeC8ui/K1a3dOY2FqFyghJDIfC+K4y3ssLAidHH00SV5XK4GTWxvC12qBxAZ/ZFn4=
+	t=1777301224; cv=none; b=oA+yIGFbe4BSd2A7DhnFhH5MxUer0McBD1CWS3SOi/FatnzO0QG1ibxCD+yJR5tqomXD5CVxZVlvjyXuB3V6EmOwBIygocUsQ/n1oAYQ5w0vrvDqyoEQiZ00Lqp07Czge9+BawYCtgF+zxwTOTobZoWcLbhy66Zx7AZykHlrQ/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777274882; c=relaxed/simple;
-	bh=5MGbSAUEw1lBLn0isUn4wlCuNDwEA2M91kMZl4m3Vb0=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Cs1hwzGWNf6FEnS4z+Utvvn+BFS6VNFiZ/fQg5yo1SNAs4O+GhozT+NCnVHPDCtWYmqvQkQb20X9mPfAoPVedZ7JMx6Z0aiwJLo1n6iwcjLfIZIEUbyOhlITWovXzykkCqnN8ZEzUMdrVL8Pk499ZlCcyMo1FQHS8rYDdqdvpjo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f7cY1Tu1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777301224; c=relaxed/simple;
+	bh=rrM75DK2QLePJ5cQrG47BLqGLvr3K/+x+yIRY/9EHic=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZCNLu3WQl1dbpwQMELMeY4SL6kE33cWrbWLzAZ9MfPjsWDatyq42N4W4ryO+NHjmRGXC+aikkDpaFK+da7xgydpM6VjcGJ7+VWFIXI00OhStqstb/AxNVfDvMNMI0/JTPl9/iUjrI1Mt7C9YdvgVd30XtFwfJzby0kEJMJAjb2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YUCUeQft; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f7cY1Tu1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 826D8C2BCB6;
-	Mon, 27 Apr 2026 07:27:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YUCUeQft"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 687A4C2BCB4;
+	Mon, 27 Apr 2026 14:47:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777274882;
-	bh=5MGbSAUEw1lBLn0isUn4wlCuNDwEA2M91kMZl4m3Vb0=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=f7cY1Tu1kP+KZPTOC32O7JRk4H10QkRQnwWBFxhhpecD+h202AIqCvQ+v/asxQSiq
-	 UyGud6eqq0guuM+K4cRaD/xeLRYRqDacuuEm8riGbRJYyHfTu9SO8UUXW+YbTd3cp2
-	 Z70Ictoc190pRPxm5Z2Gc657io14aJNKZdMwlPeedoB38+FsMBGM1dgQwMVZgYQW2l
-	 lEo6ffiUyrqR5WkLZonWVr6aUJFirVNJawVKAZGhuPBM+ulxpwXbaE1MzB0nRyf9Jw
-	 zq1MF80CEyznF7M5rb0Suh3IwdC9bdGlk763lqqWGtE+wp9lwsc0mk6qW00bptIvSg
-	 xTS7YYxRBplgw==
-Message-ID: <d6eda172d5fea261bce865a0a6bb1779874cad5c.camel@kernel.org>
-Subject: Re: [PATCH mptcp-next v1 0/9] mptcp: address stall under memory
- pressure
-From: Geliang Tang <geliang@kernel.org>
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-Cc: yangang@kylinos.cn, matttbe@kernel.org
-Date: Mon, 27 Apr 2026 15:27:14 +0800
-In-Reply-To: <cover.1777038888.git.pabeni@redhat.com>
-References: <cover.1777038888.git.pabeni@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.56.2-9 
+	s=k20201202; t=1777301224;
+	bh=rrM75DK2QLePJ5cQrG47BLqGLvr3K/+x+yIRY/9EHic=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=YUCUeQftqA/0//nrUy9hEHKLbF8cz71jL7WAc85MIh1lgNwaq6RFFPrB+pgGcTiR7
+	 lkOzgWKoe123/x7nX8n1oLFIrn35JfM6u443at2L4tLRgXxgWeFpH12g2+vVg1U5Rd
+	 WNcNA1xRnUWN9n1n+G51BUDtHo4NkZuaibD24a9U1pkMoELG8NV//QGQYx1+Nq+Uud
+	 einMkJD6TNWV24D9mWc4f+SRQov+T/WqLEjrwolwbEUKciHUnm+gnNtBVwNLO1x1aV
+	 xsNNKPGy4ldIqc2bgOCIqJZBxxm7S+XcQCq0lG58M/jpgyef4d+Hri0vaPIod+obJD
+	 1NfJvIeXIqfVQ==
+Message-ID: <318c9ceb-b446-499f-9ee0-ccef871b5b21@kernel.org>
+Date: Mon, 27 Apr 2026 16:47:01 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-next 2/2] mptcp: use sockopt_lock(release)_sock in
+ sockopt
+Content-Language: fr
+To: Gang Yan <gang.yan@linux.dev>, mptcp@lists.linux.dev
+Cc: Gang Yan <yangang@kylinos.cn>
+References: <20260422091927.77770-1-gang.yan@linux.dev>
+ <20260422091927.77770-3-gang.yan@linux.dev>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <20260422091927.77770-3-gang.yan@linux.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Paolo,
+Hi Gang,
 
-Thanks for these fixes.
-
-On Fri, 2026-04-24 at 16:08 +0200, Paolo Abeni wrote:
-> This an attempt to fix the data transfer stall reported by Geliang
-> and
-> Gang more carefully enforcing memory constraints at the MPTCP level.
+On 22/04/2026 11:19, Gang Yan wrote:
+> From: Gang Yan <yangang@kylinos.cn>
 > 
-> Patch 1/9 moves the bound check before entering the TCP socket.
-> Patch 2, 3 and 4 are cleanups/refactors finalized to safely re-using
-> TCP
-> helpers on MPTCP skbs.
-> Patch 5 makes TCP pruning related helpers available to MPTCP and
-> patch 6
-> makes use of them. Patch 7 addresses an edge scenario that could
-> still
-> lead to transfer stall under memory pressure.
-> Finally patch 8 and 9 improve the MPTCP-level retransmission schema
-> to
-> make recovery from memory pressure significanly faster.
+> TCP and the core socket layer all use sockopt_lock_sock()
+> sockopt_release_sock() in their setsockopt and getsockopt handlers. It
+> is a BPF-aware wrapper that skips lock acquisition when invoked from a
+> BPF program, where the socket lock is already held.
 > 
-> Note that the diffstat is biases by the quite large patch 4/9, which
-> contains mechanical transformation of existing code; "real" changes
-> are
-> noticiable smaller.
-> 
-> Tested successfully vs the test cases proposed by Geliang and Gang.
+> Using lock_sock_fast() on subflows requires extra care: the fast path
+> holds the socket spinlock with BH disabled, creating an atomic context
+> where sleeping is not allowed.  Switching to sockopt_lock_sock()
+> avoids the risk of accidentally introducing sleeping operations inside
+> the lock_sock_fast() critical section.
 
-We found this issue while testing the MPTCP TLS selftests
-(tools/testing/selftests/net/tls.c). The multi_chunk.c test was
-actually extracted from chunked_sendfile() function in tls.c. The tls.c
-file contains many test groups, and chunked_sendfile() is just one of
-them. Therefore, passing the chunked_sendfile tests does not guarantee
-that all tests in tls.c will pass in the future. So we will provide you
-with a test similar to multi_chunk.c shortly, but includes a more
-complete set of the tests from tls.c.
+Good catch, I guess we need this too. I think this patch can be seen as
+a fix as well, maybe with this tag?
 
-> ---
-> RFC -> v1:
->  - dropped old patch 4 & 5
->  - addressed AI reported comments
->  - added retrans refactor.
-> 
-> Paolo Abeni (9):
->   mptcp: move checks vs rcvbuf size earlier in the RX path
->   mptcp: drop the mptcp_ooo_try_coalesce() helper
->   mptcp: remove CB offset field
+  24426654ed3a ("bpf: net: Avoid sk_setsockopt() taking sk lock when
+called from bpf")
 
-When implementing MPTCP KTLS, I used this offset field. Please see the
-implementation in [1], including mptcp_read_done() and
-mptcp_get_skb_seq(). After removing the offset field, I think the new
-version should be implemented as follows:
+WDYT?
 
-static void mptcp_read_done(struct sock *sk, size_t len) 
-{
-        struct mptcp_sock *msk = mptcp_sk(sk);
-        struct sk_buff *skb;
-        size_t left;
-        u32 offset;
+Also, from the same BPF series, we probably need this, no?
 
-        msk_owned_by_me(msk);
+  e42c7beee71d ("bpf: net: Consider has_current_bpf_ctx() when testing
+capable() in sk_setsockopt()")
 
-        if (sk->sk_state == TCP_LISTEN)
-                return;
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
 
-        left = len; 
-        while (left && (skb = mptcp_recv_skb(sk, &offset)) != NULL) {
-                int used;
-
-                used = min_t(size_t, skb->len - offset, left);
-                msk->bytes_consumed += used;
-                msk->copied_seq += used;
-                left -= used;
-
-                if (skb->len > offset + used)
-                        break;
-
-                mptcp_eat_recv_skb(sk, skb);
-        }
-
-        mptcp_rcv_space_adjust(msk, len - left);
-
-        /* Clean up data we have read: This will do ACK frames. */
-        if (left != len) 
-                mptcp_cleanup_rbuf(msk, len - left);
-}
-
-static u32 mptcp_get_skb_seq(struct sk_buff *skb)
-{
-        return MPTCP_SKB_CB(skb)->map_seq;
-}
-
-But unfortunately, after this modification, with all your patches in
-this set, the newly added MPTCP test cases in tls.c did not all pass.
-Are there any obvious issues with my modification in these two
-function?
-
-Thanks again, and I will continue to follow up and test this series.
-
--Geliang
-
-[1]
-https://patchwork.kernel.org/project/mptcp/patch/b86c642262c9718f4936ad52dab804b8f494aa6d.1777026753.git.tanggeliang@kylinos.cn/
-
->   mptcp: sync mptcp skb cb layout with tcp one
->   tcp: expose the tcp_collapse_ofo_queue() helper to mptcp usage, too
->   mptcp: implemented OoO queue pruning
->   mptcp: track prune recovery status
->   mptcp: move the retrans loop to a separate helper
->   mptcp: let the retrans scheduler do its job.
-> 
->  include/net/tcp.h    |   8 ++
->  net/ipv4/tcp_input.c |  55 +++++---
->  net/mptcp/fastopen.c |   1 -
->  net/mptcp/mib.c      |   3 +
->  net/mptcp/mib.h      |   3 +
->  net/mptcp/options.c  |  55 +++++++-
->  net/mptcp/protocol.c | 328 ++++++++++++++++++++++++++++-------------
-> --
->  net/mptcp/protocol.h |  11 +-
->  net/mptcp/subflow.c  |   2 +
->  9 files changed, 323 insertions(+), 143 deletions(-)
