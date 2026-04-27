@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04D6321FF23
-	for <mptcp@lists.linux.dev>; Mon, 27 Apr 2026 16:57:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A54934F275
+	for <mptcp@lists.linux.dev>; Mon, 27 Apr 2026 17:07:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777309029; cv=none; b=Fe6ZOPjiii7Tg5UrqN8nqnPlVrueG1Gp5dSXIeOJpzHl2nS0Y34spsGPKC60nws5c3cG0WgX5JrHKmAMpwsoxUqb41MdsgbuZ/eWcTzyu3iccgbO6jMosNwWLim1ch+6nHlVqe3vCSHemmyIHmxniqe1iDE+cA+DRZrkFcoVvsQ=
+	t=1777309671; cv=none; b=VlD9frCUxXdOkVowdRjmxSZapcTInN+TvK33iyetv9LVdBEv8UL+eofPOlDkV9r/gV+0fCNnCAuK1nH5cCy7h+IdmdpxxICwhRH6XbeVWtxghE0B8wBkjzngIOY4kDagr3dWBAcaeJcgd0CgX83n4lNk9ssf6f2i6oxmB0KmJjw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777309029; c=relaxed/simple;
-	bh=fcHOLKIchPa6ZLHb1Fd4zA0TBnNmWMlKfhG3NfxGTc8=;
+	s=arc-20240116; t=1777309671; c=relaxed/simple;
+	bh=DFOnTgjRG4hnwzX7JwVkka8lNyJkSZG2+a9U1M6mcHM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VqG10rg/lhBPm3apCoRkJ5C5ek544hR4WB1htYFQNemeIVmC3CoyRqD1urEsEPAfCkC6nC+w44Z/PNYElBWNfxdr+dzNt2SoSGxs0cSvR9wcIctfOYSRVP1sIVPIYMAIlLCE9DjZtcagOC7fycnsEkIdC1ZiFgjAFu8juqBvsLE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hz4eF4Pk; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=DUCXyjFZwCKcC7pyMD279kVJE2kpdeQShUqsgWrlbQvoot4AKEVR6bisc7J9oJV0LFOy1RygnYvn8/1K3VIrK5LMJOOcTyjdHc/E04p7b/dzK5CEUpzOHOioIr71f8E6Ce6GQo0aOtGQ8cQ1JGQrbWKeI46bXDF5FQDTaOcKgzo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NalTDRfi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hz4eF4Pk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD778C19425;
-	Mon, 27 Apr 2026 16:57:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NalTDRfi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15A4EC2BCB4;
+	Mon, 27 Apr 2026 17:07:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777309028;
-	bh=fcHOLKIchPa6ZLHb1Fd4zA0TBnNmWMlKfhG3NfxGTc8=;
+	s=k20201202; t=1777309671;
+	bh=DFOnTgjRG4hnwzX7JwVkka8lNyJkSZG2+a9U1M6mcHM=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=hz4eF4PkTUhVIEbihiw5oa66hEtudNRIxR4effBqmo+siU1kFY9fBTYG28xmPkuOv
-	 Ww6v162yxWuHyEihIlCqnkX0jchh1LjsCB2UEedjzvBvvuary4x7hh8XcuXQf/sTVh
-	 J9bygukFZXk29W4PxCC+ZShMTxueBYdcpoGut7Kk7tnyUyldKi//tv1ArsP6SsKR6/
-	 zdoodQWd0VDEfM3iAbUlQRqy8rCrEah27RXNqP4PLS+nKMbK2qnQhgmOzXtVzyOk7B
-	 7pyAoTdHk6XmRBeXsDKQ5kQDfuN9y+/+gdhZ0Z8j/a/8OC6tqF1WzVeQHc25VTNwMF
-	 E507aY+yqT84Q==
-Message-ID: <81643e64-9d35-4b07-aa32-708d230b9586@kernel.org>
-Date: Mon, 27 Apr 2026 18:57:03 +0200
+	b=NalTDRfiZ/DCEzxrVw4oZxVTZ+WkFlV7szFOrrHU7/3NBMiAJSCJ645uMQY1BzADI
+	 X5BzHQfmCndcJbNrSHQ+h5XNXErUqoD2fwNCLEqQ0gSQ1tauGXr0NFribHqVcd5gY0
+	 +8nnMGzauo3P0msEU+1SOHBiu4sDL8+BS924flBC6yI61gn5S+Q2mYrLVd7qth7nBu
+	 AIt9ft4MRTFlJVYcYni7NQoKkvZGAaWuZtg55092hlPteGa/9LgZU08rUNuKoYBGy2
+	 KLGV1HbDmYOtIM4Msnz1ojtvAthNuNeHdI6XozKh0UauJP5GU7l5NjxqPL1+hK/cv2
+	 wGGveRRC9DICQ==
+Message-ID: <b9d69160-1a93-4788-a3b4-47b366645fde@kernel.org>
+Date: Mon, 27 Apr 2026 19:07:48 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,15 +35,16 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH v2] mptcp: do not drop partial packets
+Subject: Re: [PATCH mptcp-next v3 1/3] mptcp: propagate RECVERR sockopts to
+ subflows
 Content-Language: fr
-To: Shardul Bankar <shardulsb08@gmail.com>, pabeni@redhat.com,
- martineau@kernel.org
-Cc: geliang@kernel.org, mptcp@lists.linux.dev, janak@mpiric.us,
- kalpan.jani@mpiricsoftware.com
-References: <20260422143931.43281-1-shardul.b@mpiricsoftware.com>
- <88096a1b-0c16-40ae-a03a-0d0d7f1702a4@kernel.org>
- <c646167562e802438abc72435f126c6bc7263ec1.camel@gmail.com>
+To: David CARLIER <devnexen@gmail.com>, Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>,
+ Geliang Tang <geliang@kernel.org>
+References: <20260421223338.52743-1-devnexen@gmail.com>
+ <20260421223338.52743-2-devnexen@gmail.com>
+ <e5dbdb08-f666-47d6-83b6-c157c7e9036c@redhat.com>
+ <CA+XhMqw5z0NbsXH0MRL=T7ZmRv_OT9Reke6Uo6Yq6kFQJL=2yA@mail.gmail.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -89,32 +90,47 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <c646167562e802438abc72435f126c6bc7263ec1.camel@gmail.com>
+In-Reply-To: <CA+XhMqw5z0NbsXH0MRL=T7ZmRv_OT9Reke6Uo6Yq6kFQJL=2yA@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Shardul,
+Hi David,
 
--Cc: netdev
+On 22/04/2026 23:51, David CARLIER wrote:
+> On 4/22/26 10:05 AM, Paolo Abeni wrote:
+>   > You should drop this line, only a single SoB tag is needed.
+> 
+>   Ack.
 
-On 23/04/2026 14:39, Shardul Bankar wrote:
-> On Wed, 2026-04-22 at 19:03 +0200, Matthieu Baerts wrote:
->> Hi Shardul,
->>
->> On 22/04/2026 16:39, Shardul Bankar wrote:
->>>
->>
->> Thank you for the v2.
->>
->> I didn't review it (yet), but just to let you know that there are
+(I don't know why there is an indentation in your replies, but I guess
+most email readers will not interpret this properly, even lore [1]:
+check your messages vs. the other ones)
 
-(...)
-> Thanks for the pointers. I'll wait for your code review and address the
-> process feedback (recipient list, commit message, email mismatch) along
-> with any code comments together in v3.
-Just to avoid a deadlock here; don't hesitate to check Sashiko's
-reviewed -- forwarded by Simon -- to see if it makes sense or not. If it
-does, feel free to send a review. If it doesn't, please explain why.
+https://lore.kernel.org/mptcp/CA+XhMqw4xRGdJbtX02++9eS8u_bWOzbPimM1Mk_dDNed5SX94w@mail.gmail.com/T/#mf03244a0e5af6ca0fdd80dfb1bff9f2f2d769e0b
+
+https://docs.kernel.org/process/email-clients.html
+
+>   >> +          ret = mptcp_subflow_set_recverr(sk, ssk, rfc4884);
+>   >
+>   > The above looks a bit overcomplicated?!? It looks like you could
+>   > leverage mptcp_setsockopt_all_sf() [...]
+> 
+>   Will do, rebased on Matt's sockopt_seq_inc() fix.
+
+FYI, I sent my patch there:
+
+https://lore.kernel.org/mptcp/20260424-mptcp-pm-sockopt-set-all-sf-v1-1-38e7023822f8@kernel.org/
+
+I don't think you need to rebase your series on it, except if not having
+this patch breaks some tests. If that's the case, feel free to add this
+line in the cover-letter:
+
+Based-on:
+<20260424-mptcp-pm-sockopt-set-all-sf-v1-1-38e7023822f8@kernel.org>
+
+See this for more details:
+
+  https://github.com/multipath-tcp/mptcp_net-next/wiki/CI
 
 Cheers,
 Matt
