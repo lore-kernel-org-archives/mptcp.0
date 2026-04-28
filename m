@@ -1,21 +1,21 @@
-Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
+Received: from out-188.mta1.migadu.com (out-188.mta1.migadu.com [95.215.58.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F29902C3248
-	for <mptcp@lists.linux.dev>; Tue, 28 Apr 2026 02:56:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C89A31F9A2
+	for <mptcp@lists.linux.dev>; Tue, 28 Apr 2026 03:10:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777344986; cv=none; b=S5Vq8T6GIdBsi3fGJm2eY8L9JdesD2Xayh1mPodMGmq+aRP3toE6P4eHY8CaCuM1LtheSQ3TvI8WukoqNkZNzUKHywfS49X4VTnAz2mZudx4N0TZRIpjbm9mhm/tzNJEP7OnOYHFeUg6f3u4QI9diTHqxGDvu9GtGkPQEXTrI9s=
+	t=1777345805; cv=none; b=LCMpvVOQWdISW0ONBgiJATU/GPm/MNp2unJbJGX7uiIgAuzcCWRKVEmYALsF0zUZoO7do453q1vOe2Rgg7lDjPepVPsi6+qSxbUHlGfvyJgg+EbA0KdmXaE+RCxWGNwkZ3Q6GQFZYGMntEMi4kkhDGWa6RrnloptQAS5P3V9/lc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777344986; c=relaxed/simple;
-	bh=bJl+rGb4pbp6oNWWddGycFF3UebUt5fNrWFpZWD1OQ0=;
+	s=arc-20240116; t=1777345805; c=relaxed/simple;
+	bh=sKxEKtWrvEogLLMqxaivx8nINeAC7QGHR5gWglahvF8=;
 	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:
-	 In-Reply-To:References; b=Ng1r/1u8YN2N6zoSOLupmQ9GkA1hmBZjdmBAS/gNT025q9aLqJKWt2Bj+YwJcm/SIDzRHb2n542wd5e0Z6nPzagaJ+z4XhjEmTw+x0EzwTr4bk+4Sve/eV/bB10s3f+b0PCAiv27pDJNVj/7qBmlq4qEvyWlOU5egCxPKC1ElDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=whgWO9C4; arc=none smtp.client-ip=95.215.58.179
+	 In-Reply-To:References; b=s1FSV6W7XLqL6je3e5r5BalBLy7pkb8fJOKTOh3cctRsHqXMZViizDf/GvHbFFDd30H91G4iSJ6PMNCnikEgsQ8u3ZSbQlYv2DBLnM1JJqpvJIndQIzkfE9yceSNNIfNgoTbKftAeg2nxiZhqVKuwyUAr/UvTBs2vBonxkMOCfE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=cet2TLDW; arc=none smtp.client-ip=95.215.58.188
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="whgWO9C4"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="cet2TLDW"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -23,31 +23,32 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1777344982;
+	t=1777345801;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=9cD4KHmpYNlWnzIbZwvHEE6SQBeKy3mVKGnD6puV9Vw=;
-	b=whgWO9C4K2FpiXJUIcwQ8rqxcEATHolHERmYdk13fKUEw5e/hHX00mk7n0s9R87K6lUNqQ
-	HQRw2CcUL1vpuEZktZaBOfZ4ZvxRJGZ455/vVd/0xF2c1ab3DE4r8tzNclMqIjiAgirvwG
-	MmdKetCzbBERVQlAE6UxSR4mfNounb4=
-Date: Tue, 28 Apr 2026 02:56:20 +0000
+	bh=ZtJ5m+AhXuZI+6fPgOw2cW8jWVJYvnenztVqo56rQ40=;
+	b=cet2TLDWNyb7yAkJE5q9TJ0N4CXwOR+1p6mczh5ITxHVrNOl75QDUKqDZYqWuIVQVSO8EQ
+	KonAZ/gk/nGX26U6nXv9ESAyHykqui204qQW+SXCVAXCXu5hMwqSBZvq3bYpz1NgHS88fT
+	Op/gQed1iCazAh0VF2BEXSkXiZpZCF0=
+Date: Tue, 28 Apr 2026 03:09:57 +0000
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 From: gang.yan@linux.dev
-Message-ID: <e5a9d2b5e69853ce5a217d52f9e79530de988a2f@linux.dev>
+Message-ID: <c773d6a165a1abeb963481ef76117a049952ae87@linux.dev>
 TLS-Required: No
-Subject: Re: [PATCH mptcp-net 0/2] mptcp: replace lock_sock_fast with
- sleepable lock
+Subject: Re: [PATCH mptcp-next 2/2] mptcp: use sockopt_lock(release)_sock in
+ sockopt
 To: "Matthieu Baerts" <matttbe@kernel.org>, mptcp@lists.linux.dev
-In-Reply-To: <71e4db99-a4a3-4ce6-b154-1d65e1b3bdff@kernel.org>
+In-Reply-To: <318c9ceb-b446-499f-9ee0-ccef871b5b21@kernel.org>
 References: <20260422091927.77770-1-gang.yan@linux.dev>
- <71e4db99-a4a3-4ce6-b154-1d65e1b3bdff@kernel.org>
+ <20260422091927.77770-3-gang.yan@linux.dev>
+ <318c9ceb-b446-499f-9ee0-ccef871b5b21@kernel.org>
 X-Migadu-Flow: FLOW_OUT
 
-April 27, 2026 at 11:04 PM, "Matthieu Baerts" <matttbe@kernel.org mailto:=
+April 27, 2026 at 10:47 PM, "Matthieu Baerts" <matttbe@kernel.org mailto:=
 matttbe@kernel.org?to=3D%22Matthieu%20Baerts%22%20%3Cmatttbe%40kernel.org=
 %3E > wrote:
 
@@ -60,56 +61,48 @@ matttbe@kernel.org?to=3D%22Matthieu%20Baerts%22%20%3Cmatttbe%40kernel.org=
 >=20>=20
 >=20> From: Gang Yan <yangang@kylinos.cn>
 > >=20=20
->=20>  Hi Matt,
+>=20>  TCP and the core socket layer all use sockopt_lock_sock()
+> >  sockopt_release_sock() in their setsockopt and getsockopt handlers. =
+It
+> >  is a BPF-aware wrapper that skips lock acquisition when invoked from=
+ a
+> >  BPF program, where the socket lock is already held.
+> >=20=20
+>=20>  Using lock_sock_fast() on subflows requires extra care: the fast p=
+ath
+> >  holds the socket spinlock with BH disabled, creating an atomic conte=
+xt
+> >  where sleeping is not allowed. Switching to sockopt_lock_sock()
+> >  avoids the risk of accidentally introducing sleeping operations insi=
+de
+> >  the lock_sock_fast() critical section.
 > >=20
->=20(I'm not the only one here, anybody is very welcome to review the
-> patches: if you put only my name, other people will not tend to review
-> your patches ;) )
-Got it, thanks for your reminder.
-
+>=20Good catch, I guess we need this too. I think this patch can be seen =
+as
+> a fix as well, maybe with this tag?
 >=20
->=20>=20
->=20> I make some progress about the issue sashiko mentioned in:
-> >  https://sashiko.dev/#/patchset/20260420093343.16443-1-gang.yan@linux=
-.dev
-> >=20=20
->=20>  The problem does exist,though the trigger conditions seem quite st=
-rict.
-> >=20=20
->=20>  asdasda shjaksdjh askjd hjklajsdhfj klasjd aklshd kljasldkj akjlsd=
- klklk
-> >=20
->=20(Not sure what this =E2=86=91 means)
+>=20 24426654ed3a ("bpf: net: Avoid sk_setsockopt() taking sk lock when
+> called from bpf")
+>=20
+>=20WDYT?
+>=20
+>=20Also, from the same BPF series, we probably need this, no?
+>=20
+>=20 e42c7beee71d ("bpf: net: Consider has_current_bpf_ctx() when testing
+> capable() in sk_setsockopt()")
 
-The random garbled content was caused by accidental typing due to my loca=
-l
-environment issue, which was a careless mistake on my part.
+Great suggestions!
 
-Recently, I=E2=80=99m actively learning and getting familiar with the b4 =
-tool.=20
-I=20will standardize my patch submission process and ensure that such mes=
-sy content
-and irrelevant errors will not appear in future patches.
+I'm a bit busy with ongoing work recently, but will check those two commi=
+ts
+carefully this week later. If these changes are necessary, I will send ou=
+t a
+new complete patch series. If not required separately, I will post releva=
+nt
+updates in the mailing list thread accordingly.
 
 Thanks
 Gang
-
->=20
->=20I only applied patch 1/2:
->=20
->=20New patches for t/upstream-net and t/upstream:
-> - 38bf59aed203: mptcp: fix scheduling with atomic in timestamp sockopt
-> - Results: 6d491ca82084..1198f2f92b39 (export-net)
-> - Results: 2f9eb2a59db0..3c2b57fddf87 (export)
->=20
->=20Tests are now in progress:
->=20
->=20- export-net:
-> https://github.com/multipath-tcp/mptcp_net-next/commit/42417392e5ff4cba=
-41b6b585233d57bd9102f2da/checks
-> - export:
-> https://github.com/multipath-tcp/mptcp_net-next/commit/9b2ff7d1da660653=
-ed4d10f0888aa499b7988b54/checks
 >=20
 >=20Cheers,
 > Matt
