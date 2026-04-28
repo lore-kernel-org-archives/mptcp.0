@@ -1,139 +1,145 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f177.google.com (mail-oi1-f177.google.com [209.85.167.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2B1047CC87
-	for <mptcp@lists.linux.dev>; Tue, 28 Apr 2026 18:56:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777402587; cv=none; b=E6aMNIVtJ62ugha6NCwi9CSiera4KtXpavZm2jZzseBHO1dymm8tfA8OYm0njKqbj55+FmWgJrBv5st/Lq+qo0Bfs115NE7GIybTTARPOc8PM+jJ7P0dYa3JK99sf3IbaNTw+HvcoahaJson/HINH1PugEqqeXh+5k60DYR7Owo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777402587; c=relaxed/simple;
-	bh=to3mDg5QMD4b0AYv/qu1IvsUCyU4RoK0N8iWIPjw/B8=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=pTCrpGJGSWo3bIs3h1C60NXev6d3IC0UzJ5cO35TJA43YNt0UUUrAsaUY629UBlj/swpgu3wA7Jevc1C5cb1hComc9AG7MAtGNhbifHmgc+5KgAX0dpQ5Vx/d0bZ/f8Au9My2LpP74eLwwXGGg9DEZr3DTM+w4mMifg0ALu6IDQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KFNzbeiN; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2741C24501D
+	for <mptcp@lists.linux.dev>; Tue, 28 Apr 2026 19:15:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.167.177
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1777403756; cv=pass; b=dIqFuSMbtLDSyZVG6G4l3xVncBCLhN60498MLgzxD4hu616iwcAjGH6Fas/PbyFQo3g+iHTdD8IxW5ouXxBn2pjpRwLeksiiouTKBvLyFre2WNyE9j7QhKJnkozSv5yU11Op3waum0YuL988+QXnGgHVLqRO8q+k+D3Ce0Xg+os=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1777403756; c=relaxed/simple;
+	bh=TBRuca9JTg26505BMPOIV4RnsHVwXtbzPMHzwgnoCWg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=memWM5YpiWhrQz8J15iUcwBGmJI5qcGbrhWJeuezMTv5Fbxl5eE0jbTP6bJwRPUYyQ/wg0ikB5z/XBn9DKGFf0Ml/CzEhBV55Yfj7vQuBq1Ly+2QKrJQwpg+gXqy87afbiBq6iX4+UyBEhKfJ4Iy+3Sy85sn789fIhaQYie/2x4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hNvQUwwE; arc=pass smtp.client-ip=209.85.167.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KFNzbeiN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4EEBC2BCB9;
-	Tue, 28 Apr 2026 18:56:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777402587;
-	bh=to3mDg5QMD4b0AYv/qu1IvsUCyU4RoK0N8iWIPjw/B8=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=KFNzbeiNCJZTrQwn2jULYkYiMOWufedSWJwAKum9K04RzUlOWiJHxZQTy4DMHbOqe
-	 Ttxt6WCj6+fLvN5WJGMXSeQFClyyPXbi3TrYyT/XUxKzq4x9v3zM1PG49xkkX7A2xc
-	 t4UECouGOk1opgRC/ARJVQNjYGd+uosNwUf4CLWutB9ByL5dl3UC+3Ev7LnylHs+Uo
-	 Cf6pQfUpHJnndIah57fvXC8z4EaS7Y0yySAzLSa95XiVQZCLrBpz7YG6glpugFEX9G
-	 FHDEwycHa0UVadj5Fseb1GMNZvQ0ZeSxgy1Virmw23lnKK24yhXXQ+05w7m/RX+HVm
-	 avVEuOPEOS0Mg==
-Message-ID: <59eccce4-cbc6-48b9-9243-9b9b5a5ca066@kernel.org>
-Date: Tue, 28 Apr 2026 20:56:23 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hNvQUwwE"
+Received: by mail-oi1-f177.google.com with SMTP id 5614622812f47-479ef2b7979so5597493b6e.3
+        for <mptcp@lists.linux.dev>; Tue, 28 Apr 2026 12:15:54 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1777403754; cv=none;
+        d=google.com; s=arc-20240605;
+        b=cglJJyYjCGeVa0PIPZigo8dCAp0JzGWRRx1Nul3pMkRg/LeyGAXWQjrKHEn86aqj91
+         SmKtKGIvFPO2bDnxwABPI4K1/Gdq77GTzacunH1e24EYiS2rYX8L9tR5J5iuxGk8IRrG
+         yXYc79c0Z7FdCxhNWNvhl7Glj0kCl/pkJfFA/D6SYjL/yFVgIrDreVKepY4ZyMatGHY2
+         hIyV1xdAAbHeN8oP4qY7T0zyRtWNC9JXI4Zmci6Q2Mx0R/JkoIJgPFxF+JBhTI5r4Xqd
+         g5XovWxOlDIHCdaKyPySKE8KesRcnsoQNye4qhTx01evUbzE90Dq33iJkT4T2dt19xyU
+         smaQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=TBRuca9JTg26505BMPOIV4RnsHVwXtbzPMHzwgnoCWg=;
+        fh=3aq4rqqYDLX9E62ziLedLvZbHxOPygxBCZEI/Am5Y0o=;
+        b=VBegWriddRasRAjxelbIPjc2pQ/RML9DDz2OrU99ai6nkEGEikiHHpODS6bxshwKvf
+         eIdVCoOGjL5Tr47rxA8ZjM7IYn8v/emOJ1/lynps8BjyohW6+56kG+qKKQ69fZPVxfI6
+         0w3BbSJcJSicOcJ6wKDeFBQAHiY9qfiNkxEJuLxxKGbdX6gePsx5brr4GUR+Q0KpaESO
+         1lsfz6wZRCQquOfYbaMCM1A7CfA8zvpmTXFFwkXz7zdPJlF8pFl+zklol27Z3kn9F9li
+         4mSLaSSohq8BKRUobk/563j6Fr9u3WUPi8FRp5FKKhDRvqcd7k7dT1mEYlcFtz3K0KIM
+         rgGg==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1777403754; x=1778008554; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=TBRuca9JTg26505BMPOIV4RnsHVwXtbzPMHzwgnoCWg=;
+        b=hNvQUwwEciOh+Iip2SVMNNx/VaXStggMNNjhFgVDRQiWJoy8SgJ7VChFEVCV1pMiq7
+         R05nLvxSXU+lwvkTc+WXMcoqfBy4ab0nAeuYDTMwBV6oLkitQ14Q5K5Dno6DatHJIMWt
+         1+whVPSTiCJ+ohCLL9EH8Ls9u6W7Icazu+v/TyMpZAiZnYofqQZqtzlCREJe4M/i6p9F
+         lHk51+wPG750UUiW97y05HvZvmTgIOeZUFItpr5FE00PWoU00CD8Xqp23K0tYzhisPOw
+         wDyp02Va35GQSku+H9XRMViTlT8dvHy88iLeWBshwYhpfYLwuFhedxeNgZSvumhnbM/6
+         wkKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1777403754; x=1778008554;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TBRuca9JTg26505BMPOIV4RnsHVwXtbzPMHzwgnoCWg=;
+        b=mRzYjcg+9aEZU6/VwQEc2fwGKC1fo95tdd/wTomqj60m1/6Huh68Io2xBP0hjWOBlq
+         6THI4g3McTKJ4/7wRr2hKi4kDjZ2fFy5ZOCE8tQdiPwWMMVg4A2jh13+LtBYyNx6N0sM
+         s5kwo4A1uQula+tyUxT6EVdx8TFIzjvfI+/7Doo9ZEX+pz0pLMLvP7dPYfp5BNHWxVD6
+         E8cpLxRLuHJ5So530uoiLm/gGEtEehbl0r0ipM0ev8SLZSBqiIH3xyufHm81jHOnW+pj
+         ya6qyGxC12yBKVNQoE3C/Z5QAKpE8rZ3Q5ywR86wjNBNBEOuzDPkt70/CXWTOR41ftum
+         +MYA==
+X-Gm-Message-State: AOJu0YxcG2aS06ujjzOcM++CsZOa5ySXFDPhXhwZgx4Doi2qd6qDTQtw
+	Ht5u2Ahcv5L9Cf9fNp1St3GjJZj4pAskJJoPdeBR1C7en67+DAg2g1k+IpCZJsm2jCIrmDs2a0j
+	TlGs80Qfoi83xuuD8NwxJvXiCkPiIR8M=
+X-Gm-Gg: AeBDiesLED3/mGFzx5/ei96VkmKtjkGtMwymJKtk/TdEO913VPXL6iAMmdSY2nSkB1r
+	Zc7wxKVW/6kj1P93Xh8WIbRjHuCSFh87pdWsoFWIXiHgP9bYkg0gJXvKHxp1F0o8UVNsyNuXnvW
+	muQadAI7xuwFVtrnn/jK52KMYP69K2goRthOQ07V1XW7T4XILVPRVVA5IKHSQzj+QvtywlTiTkV
+	HRpwRMqamC5ZBeTFUoqf7X7uLdzoX6mBGUG+MpFzg3sUUbhxxLgUHl++QdscZdLbX7iGWLA7FQs
+	V6ojOWLXkxmH34v2ntR1cIKDk4R1QcEMzyrT7VjKQC58RVud
+X-Received: by 2002:a05:6820:2112:b0:694:9e11:dd46 with SMTP id
+ 006d021491bc7-696684dfc4emr464291eaf.48.1777403753973; Tue, 28 Apr 2026
+ 12:15:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
+References: <20260421223338.52743-1-devnexen@gmail.com> <cover.1777324037.git.devnexen@gmail.com>
+ <43f69e5e-b0a5-4bc5-8e6b-8f41ef4cf55a@kernel.org> <59eccce4-cbc6-48b9-9243-9b9b5a5ca066@kernel.org>
+In-Reply-To: <59eccce4-cbc6-48b9-9243-9b9b5a5ca066@kernel.org>
+From: David CARLIER <devnexen@gmail.com>
+Date: Tue, 28 Apr 2026 20:15:42 +0100
+X-Gm-Features: AVHnY4Ic_sDSAdOTi20huh3i7yXiHYSAY4q9vwDlD209X8NdKKsv2ELhDJaIyD8
+Message-ID: <CA+XhMqwnDRJJGiT2B-rqKSGKicS08m8q84uuSSUP60GJjfZXXQ@mail.gmail.com>
 Subject: Re: [PATCH mptcp-next v4 0/4] mptcp: MSG_ERRQUEUE support on the
  parent socket
-Content-Language: fr
-From: Matthieu Baerts <matttbe@kernel.org>
-To: David Carlier <devnexen@gmail.com>, mptcp@lists.linux.dev
-Cc: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>
-References: <20260421223338.52743-1-devnexen@gmail.com>
- <cover.1777324037.git.devnexen@gmail.com>
- <43f69e5e-b0a5-4bc5-8e6b-8f41ef4cf55a@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
- YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
- c7SPFMpMesgpcu1xFt0F6bcxE+0ojRtSCZ5HDElKlHJNYtD1uwY4UYVGWUGCF/+cY1YLmtfb
- WdNb/SFo+Mp0HItfBC12qtDIXYvbfNUGVnA5jXeWMEyYhSNktLnpDL2gBUCsdbkov5VjiOX7
- CRTkX0UgNWRjyFZwThaZADEvAOo12M5uSBk7h07yJ97gqvBtcx45IsJwfUJE4hy8qZqsA62A
- nTRflBvp647IXAiCcwWsEgE5AXKwA3aL6dcpVR17JXJ6nwHHnslVi8WesiqzUI9sbO/hXeXw
- TDSB+YhErbNOxvHqCzZEnGAAFf6ges26fRVyuU119AzO40sjdLV0l6LE7GshddyazWZf0iac
- nEhX9NKxGnuhMu5SXmo2poIQttJuYAvTVUNwQVEx/0yY5xmiuyqvXa+XT7NKJkOZSiAPlNt6
- VffjgOP62S7M9wDShUghN3F7CPOrrRsOHWO/l6I/qJdUMW+MHSFYPfYiFXoLUZyPvNVCYSgs
- 3oQaFhHapq1f345XBtfG3fOYp1K2wTXd4ThFraTLl8PHxCn4ywARAQABzSRNYXR0aGlldSBC
- YWVydHMgPG1hdHR0YmVAa2VybmVsLm9yZz7CwZEEEwEIADsCGwMFCwkIBwIGFQoJCAsCBBYC
- AwECHgECF4AWIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZUDpDAIZAQAKCRD2t4JPQmmgcz33
- EACjROM3nj9FGclR5AlyPUbAq/txEX7E0EFQCDtdLPrjBcLAoaYJIQUV8IDCcPjZMJy2ADp7
- /zSwYba2rE2C9vRgjXZJNt21mySvKnnkPbNQGkNRl3TZAinO1Ddq3fp2c/GmYaW1NWFSfOmw
- MvB5CJaN0UK5l0/drnaA6Hxsu62V5UnpvxWgexqDuo0wfpEeP1PEqMNzyiVPvJ8bJxgM8qoC
- cpXLp1Rq/jq7pbUycY8GeYw2j+FVZJHlhL0w0Zm9CFHThHxRAm1tsIPc+oTorx7haXP+nN0J
- iqBXVAxLK2KxrHtMygim50xk2QpUotWYfZpRRv8dMygEPIB3f1Vi5JMwP4M47NZNdpqVkHrm
- jvcNuLfDgf/vqUvuXs2eA2/BkIHcOuAAbsvreX1WX1rTHmx5ud3OhsWQQRVL2rt+0p1DpROI
- 3Ob8F78W5rKr4HYvjX2Inpy3WahAm7FzUY184OyfPO/2zadKCqg8n01mWA9PXxs84bFEV2mP
- VzC5j6K8U3RNA6cb9bpE5bzXut6T2gxj6j+7TsgMQFhbyH/tZgpDjWvAiPZHb3sV29t8XaOF
- BwzqiI2AEkiWMySiHwCCMsIH9WUH7r7vpwROko89Tk+InpEbiphPjd7qAkyJ+tNIEWd1+MlX
- ZPtOaFLVHhLQ3PLFLkrU3+Yi3tXqpvLE3gO3LM7BTQRV4/npARAA5+u/Sx1n9anIqcgHpA7l
- 5SUCP1e/qF7n5DK8LiM10gYglgY0XHOBi0S7vHppH8hrtpizx+7t5DBdPJgVtR6SilyK0/mp
- 9nWHDhc9rwU3KmHYgFFsnX58eEmZxz2qsIY8juFor5r7kpcM5dRR9aB+HjlOOJJgyDxcJTwM
- 1ey4L/79P72wuXRhMibN14SX6TZzf+/XIOrM6TsULVJEIv1+NdczQbs6pBTpEK/G2apME7vf
- mjTsZU26Ezn+LDMX16lHTmIJi7Hlh7eifCGGM+g/AlDV6aWKFS+sBbwy+YoS0Zc3Yz8zrdbi
- Kzn3kbKd+99//mysSVsHaekQYyVvO0KD2KPKBs1S/ImrBb6XecqxGy/y/3HWHdngGEY2v2IP
- Qox7mAPznyKyXEfG+0rrVseZSEssKmY01IsgwwbmN9ZcqUKYNhjv67WMX7tNwiVbSrGLZoqf
- Xlgw4aAdnIMQyTW8nE6hH/Iwqay4S2str4HZtWwyWLitk7N+e+vxuK5qto4AxtB7VdimvKUs
- x6kQO5F3YWcC3vCXCgPwyV8133+fIR2L81R1L1q3swaEuh95vWj6iskxeNWSTyFAVKYYVskG
- V+OTtB71P1XCnb6AJCW9cKpC25+zxQqD2Zy0dK3u2RuKErajKBa/YWzuSaKAOkneFxG3LJIv
- Hl7iqPF+JDCjB5sAEQEAAcLBXwQYAQIACQUCVeP56QIbDAAKCRD2t4JPQmmgc5VnD/9YgbCr
- HR1FbMbm7td54UrYvZV/i7m3dIQNXK2e+Cbv5PXf19ce3XluaE+wA8D+vnIW5mbAAiojt3Mb
- 6p0WJS3QzbObzHNgAp3zy/L4lXwc6WW5vnpWAzqXFHP8D9PTpqvBALbXqL06smP47JqbyQxj
- Xf7D2rrPeIqbYmVY9da1KzMOVf3gReazYa89zZSdVkMojfWsbq05zwYU+SCWS3NiyF6QghbW
- voxbFwX1i/0xRwJiX9NNbRj1huVKQuS4W7rbWA87TrVQPXUAdkyd7FRYICNW+0gddysIwPoa
- KrLfx3Ba6Rpx0JznbrVOtXlihjl4KV8mtOPjYDY9u+8x412xXnlGl6AC4HLu2F3ECkamY4G6
- UxejX+E6vW6Xe4n7H+rEX5UFgPRdYkS1TA/X3nMen9bouxNsvIJv7C6adZmMHqu/2azX7S7I
- vrxxySzOw9GxjoVTuzWMKWpDGP8n71IFeOot8JuPZtJ8omz+DZel+WCNZMVdVNLPOd5frqOv
- mpz0VhFAlNTjU1Vy0CnuxX3AM51J8dpdNyG0S8rADh6C8AKCDOfUstpq28/6oTaQv7QZdge0
- JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <43f69e5e-b0a5-4bc5-8e6b-8f41ef4cf55a@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
+	Geliang Tang <geliang@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On 28/04/2026 20:48, Matthieu Baerts wrote:
-> Hi David,
-> 
-> Thank you for the new version.
-> 
-> On 27/04/2026 23:10, David Carlier wrote:
->> MPTCP already advertises IP_RECVERR/IPV6_RECVERR as supported, but the
->> parent socket does not currently provide usable MSG_ERRQUEUE handling.
->>
->> This series wires the MPTCP socket up to the IPv4/IPv6 error queue
->> paths. It propagates RECVERR-related sockopts to existing and future
->> subflows, makes poll() report pending errqueue activity through the
->> parent socket, and lets recvmsg(MSG_ERRQUEUE) on the MPTCP socket
->> consume queued errors with the parent socket ABI.
->>
->> A new prerequisite patch factors the per-flag inet_flags propagation
->> in sync_socket_options() into a single masked word copy, so further
->> inet_flags propagated by MPTCP can be added by extending the mask
->> rather than touching the call site.
->>
->> Patch 2 then leverages the existing mptcp_setsockopt_all_sf() helper
->> for the setsockopt path and extends MPTCP_INET_FLAGS_MASK with the
->> four RECVERR bits, dropping the family-specific helpers from v3.
->>
->> Based-on: <20260424-mptcp-pm-sockopt-set-all-sf-v1-1-38e7023822f8@kernel.org>
-> 
-> I didn't review it, but I notice that the CI cannot apply your series,
-> because it looks like it is not based on the one you mentioned here.
-> 
-> Can you either remove this line, or rebase your series on top of this
-> other patch?
-> 
-> Also, please don't send your series as a reply to a previous posting,
-> please use a new thread. That's what is usually done, clearer, plus some
-> tools don't support replies.
+Hi Mathieu,
 
-Note: I just manually resolved the conflicts and sent the series to the
-CI, not to have to resend a series just to retrigger the CI.
+On Tue, 28 Apr 2026 at 19:56, Matthieu Baerts <matttbe@kernel.org> wrote:
+>
+> On 28/04/2026 20:48, Matthieu Baerts wrote:
+> > Hi David,
+> >
+> > Thank you for the new version.
+> >
+> > On 27/04/2026 23:10, David Carlier wrote:
+> >> MPTCP already advertises IP_RECVERR/IPV6_RECVERR as supported, but the
+> >> parent socket does not currently provide usable MSG_ERRQUEUE handling.
+> >>
+> >> This series wires the MPTCP socket up to the IPv4/IPv6 error queue
+> >> paths. It propagates RECVERR-related sockopts to existing and future
+> >> subflows, makes poll() report pending errqueue activity through the
+> >> parent socket, and lets recvmsg(MSG_ERRQUEUE) on the MPTCP socket
+> >> consume queued errors with the parent socket ABI.
+> >>
+> >> A new prerequisite patch factors the per-flag inet_flags propagation
+> >> in sync_socket_options() into a single masked word copy, so further
+> >> inet_flags propagated by MPTCP can be added by extending the mask
+> >> rather than touching the call site.
+> >>
+> >> Patch 2 then leverages the existing mptcp_setsockopt_all_sf() helper
+> >> for the setsockopt path and extends MPTCP_INET_FLAGS_MASK with the
+> >> four RECVERR bits, dropping the family-specific helpers from v3.
+> >>
+> >> Based-on: <20260424-mptcp-pm-sockopt-set-all-sf-v1-1-38e7023822f8@kernel.org>
+> >
+> > I didn't review it, but I notice that the CI cannot apply your series,
+> > because it looks like it is not based on the one you mentioned here.
+> >
+> > Can you either remove this line, or rebase your series on top of this
+> > other patch?
+> >
+> > Also, please don't send your series as a reply to a previous posting,
+> > please use a new thread. That's what is usually done, clearer, plus some
+> > tools don't support replies.
+>
+> Note: I just manually resolved the conflicts and sent the series to the
+> CI, not to have to resend a series just to retrigger the CI.
 
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
-
+appreciated. Cheers.
+>
+> Cheers,
+> Matt
+> --
+> Sponsored by the NGI0 Core fund.
+>
