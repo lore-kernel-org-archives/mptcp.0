@@ -1,111 +1,97 @@
-Received: from out-188.mta1.migadu.com (out-188.mta1.migadu.com [95.215.58.188])
+Received: from sender4-of-o54.zoho.com (sender4-of-o54.zoho.com [136.143.188.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C89A31F9A2
-	for <mptcp@lists.linux.dev>; Tue, 28 Apr 2026 03:10:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.188
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777345805; cv=none; b=LCMpvVOQWdISW0ONBgiJATU/GPm/MNp2unJbJGX7uiIgAuzcCWRKVEmYALsF0zUZoO7do453q1vOe2Rgg7lDjPepVPsi6+qSxbUHlGfvyJgg+EbA0KdmXaE+RCxWGNwkZ3Q6GQFZYGMntEMi4kkhDGWa6RrnloptQAS5P3V9/lc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777345805; c=relaxed/simple;
-	bh=sKxEKtWrvEogLLMqxaivx8nINeAC7QGHR5gWglahvF8=;
-	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:
-	 In-Reply-To:References; b=s1FSV6W7XLqL6je3e5r5BalBLy7pkb8fJOKTOh3cctRsHqXMZViizDf/GvHbFFDd30H91G4iSJ6PMNCnikEgsQ8u3ZSbQlYv2DBLnM1JJqpvJIndQIzkfE9yceSNNIfNgoTbKftAeg2nxiZhqVKuwyUAr/UvTBs2vBonxkMOCfE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=cet2TLDW; arc=none smtp.client-ip=95.215.58.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8B892DECD3
+	for <mptcp@lists.linux.dev>; Tue, 28 Apr 2026 07:49:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.54
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1777362573; cv=pass; b=WoL6ocntM6ql9BkTf56zyox1q87M881I8v86xzB2Itajw9RqLnvIeCV4g4MIzq0JBPua60Va2IssPah450QtJS5s6twQxdRBU+Vu7dJe1Y5LQHpHmdcSxcUNBc0wJ2mlZJeZYX2JotlPOKxzvuzhrx+WLoEQaSCctjDwH2NhHPo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1777362573; c=relaxed/simple;
+	bh=b6bex6WFRq6aDBcHqJBb0Gov5XokLYyS/cNhOS0NXHM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=LqytcjJ6zEyS6mwR1MniuR0rNPS4kelNPQbJdhcu2mw0B1xp5NaXUR6sFOQLttV6GFqT3hCAnKih8GfQz14vQca0vJb4c1Z8KzdUUuAXWDDodgXG6+WEqyS31IdlsyE9VVG6raI3U0IUcrV9eYxusqwaL0T/mqgpXMIcElVDNxU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com; spf=pass smtp.mailfrom=mpiricsoftware.com; dkim=pass (1024-bit key) header.d=mpiricsoftware.com header.i=shardul.b@mpiricsoftware.com header.b=hzu8xVb/; arc=pass smtp.client-ip=136.143.188.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mpiricsoftware.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="cet2TLDW"
+	dkim=pass (1024-bit key) header.d=mpiricsoftware.com header.i=shardul.b@mpiricsoftware.com header.b="hzu8xVb/"
+ARC-Seal: i=1; a=rsa-sha256; t=1777362534; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=cuiRRhuXgvyhNhpGLtOdWmNoFwm2Dmi0eqEQvgOuNZ9lcdhn6jTHNHmDR7l5MrWhC3wXhBLnjdjQtiWMMwKDEhTmRW6HjsI703VujIm9YAnOhkU4uNdK99q00RR8VthwGUr04g0poWMan40cPSFqEeM96DOuvg5GyxNkgYnm++8=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1777362534; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=8X1D7Re0OwwPN71om672yr0MR9k9nhXm05Hpv//9k/s=; 
+	b=G5h0GWw+Nna8AtrL792QhtQZjVlYkn9ADrp9UoXSGXy2aBzT2pN76TYBSef099jBonAq0hFPyLOLWF7CR9Sr90pLDS62vATV+7JSUpssUkuoMLW0VCezUG96w/s5lC31aP2TJRxhWy7HRdq+BYOLKTItaIZoSMyRGwOX1wdlGzQ=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=mpiricsoftware.com;
+	spf=pass  smtp.mailfrom=shardul.b@mpiricsoftware.com;
+	dmarc=pass header.from=<shardul.b@mpiricsoftware.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1777362534;
+	s=mpiric; d=mpiricsoftware.com; i=shardul.b@mpiricsoftware.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:MIME-Version:Content-Transfer-Encoding:Reply-To;
+	bh=8X1D7Re0OwwPN71om672yr0MR9k9nhXm05Hpv//9k/s=;
+	b=hzu8xVb/iBKeOLjdRnqtE3IIGfbMULGl/OEPq3wx5bNQagxP6ksaPlx9hA5vXAgU
+	D03/3hPkGqb+fJgQM9kHlwoR7bEcjSsj6uE+BKcb7PPZ8Et2zuovupd1sYMzswN8TVr
+	xk59usRzyEAnZsyr6RRdysWGl1tW7WfhHoqcTS3c=
+Received: by mx.zohomail.com with SMTPS id 1777362531931130.09521301305165;
+	Tue, 28 Apr 2026 00:48:51 -0700 (PDT)
+From: Shardul Bankar <shardul.b@mpiricsoftware.com>
+To: mptcp@lists.linux.dev
+Cc: matttbe@kernel.org,
+	martineau@kernel.org,
+	geliang@kernel.org,
+	pabeni@redhat.com,
+	janak@mpiric.us,
+	kalpan.jani@mpiricsoftware.com,
+	shardulsb08@gmail.com,
+	Shardul Bankar <shardul.b@mpiricsoftware.com>,
+	stable@vger.kernel.org
+Subject: [PATCH mptcp-net] mptcp: use MPJoinSynAckHMacFailure for SynAck HMAC failure
+Date: Tue, 28 Apr 2026 13:18:44 +0530
+Message-Id: <20260428074844.1746594-1-shardul.b@mpiricsoftware.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1777345801;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZtJ5m+AhXuZI+6fPgOw2cW8jWVJYvnenztVqo56rQ40=;
-	b=cet2TLDWNyb7yAkJE5q9TJ0N4CXwOR+1p6mczh5ITxHVrNOl75QDUKqDZYqWuIVQVSO8EQ
-	KonAZ/gk/nGX26U6nXv9ESAyHykqui204qQW+SXCVAXCXu5hMwqSBZvq3bYpz1NgHS88fT
-	Op/gQed1iCazAh0VF2BEXSkXiZpZCF0=
-Date: Tue, 28 Apr 2026 03:09:57 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: gang.yan@linux.dev
-Message-ID: <c773d6a165a1abeb963481ef76117a049952ae87@linux.dev>
-TLS-Required: No
-Subject: Re: [PATCH mptcp-next 2/2] mptcp: use sockopt_lock(release)_sock in
- sockopt
-To: "Matthieu Baerts" <matttbe@kernel.org>, mptcp@lists.linux.dev
-In-Reply-To: <318c9ceb-b446-499f-9ee0-ccef871b5b21@kernel.org>
-References: <20260422091927.77770-1-gang.yan@linux.dev>
- <20260422091927.77770-3-gang.yan@linux.dev>
- <318c9ceb-b446-499f-9ee0-ccef871b5b21@kernel.org>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
 
-April 27, 2026 at 10:47 PM, "Matthieu Baerts" <matttbe@kernel.org mailto:=
-matttbe@kernel.org?to=3D%22Matthieu%20Baerts%22%20%3Cmatttbe%40kernel.org=
-%3E > wrote:
+In subflow_finish_connect(), HMAC validation of the server's HMAC
+in SYN/ACK + MP_JOIN increments MPTCP_MIB_JOINACKMAC ("HMAC was
+wrong on ACK + MP_JOIN") on failure. The function processes the
+SYN/ACK, not the ACK; the matching MPTCP_MIB_JOINSYNACKMAC counter
+("HMAC was wrong on SYN/ACK + MP_JOIN") exists but is not
+incremented anywhere in the tree.
 
+The mirror site on the server, subflow_syn_recv_sock(), already
+uses JOINACKMAC correctly for ACK HMAC failure. Use JOINSYNACKMAC
+at the SYN/ACK validation site so each counter reflects the packet
+whose HMAC actually failed.
 
->=20
->=20Hi Gang,
->=20
->=20On 22/04/2026 11:19, Gang Yan wrote:
->=20
->=20>=20
->=20> From: Gang Yan <yangang@kylinos.cn>
-> >=20=20
->=20>  TCP and the core socket layer all use sockopt_lock_sock()
-> >  sockopt_release_sock() in their setsockopt and getsockopt handlers. =
-It
-> >  is a BPF-aware wrapper that skips lock acquisition when invoked from=
- a
-> >  BPF program, where the socket lock is already held.
-> >=20=20
->=20>  Using lock_sock_fast() on subflows requires extra care: the fast p=
-ath
-> >  holds the socket spinlock with BH disabled, creating an atomic conte=
-xt
-> >  where sleeping is not allowed. Switching to sockopt_lock_sock()
-> >  avoids the risk of accidentally introducing sleeping operations insi=
-de
-> >  the lock_sock_fast() critical section.
-> >=20
->=20Good catch, I guess we need this too. I think this patch can be seen =
-as
-> a fix as well, maybe with this tag?
->=20
->=20 24426654ed3a ("bpf: net: Avoid sk_setsockopt() taking sk lock when
-> called from bpf")
->=20
->=20WDYT?
->=20
->=20Also, from the same BPF series, we probably need this, no?
->=20
->=20 e42c7beee71d ("bpf: net: Consider has_current_bpf_ctx() when testing
-> capable() in sk_setsockopt()")
+Suggested-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Fixes: 3eccc998b50b ("mptcp: increment MIB counters in a few places")
+Cc: stable@vger.kernel.org
+Signed-off-by: Shardul Bankar <shardul.b@mpiricsoftware.com>
+---
+ net/mptcp/subflow.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Great suggestions!
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index e2cb9d23e4a0..bda6862264ca 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -581,7 +581,7 @@ static void subflow_finish_connect(struct sock *sk, const struct sk_buff *skb)
+ 			 subflow->backup);
+ 
+ 		if (!subflow_thmac_valid(subflow)) {
+-			MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_JOINACKMAC);
++			MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_JOINSYNACKMAC);
+ 			subflow->reset_reason = MPTCP_RST_EMPTCP;
+ 			goto do_reset;
+ 		}
+-- 
+2.34.1
 
-I'm a bit busy with ongoing work recently, but will check those two commi=
-ts
-carefully this week later. If these changes are necessary, I will send ou=
-t a
-new complete patch series. If not required separately, I will post releva=
-nt
-updates in the mailing list thread accordingly.
-
-Thanks
-Gang
->=20
->=20Cheers,
-> Matt
-> --=20
->=20Sponsored by the NGI0 Core fund.
->
