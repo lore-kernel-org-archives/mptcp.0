@@ -1,253 +1,134 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90704436367
-	for <mptcp@lists.linux.dev>; Tue, 28 Apr 2026 17:22:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27DFD46AEF0
+	for <mptcp@lists.linux.dev>; Tue, 28 Apr 2026 18:48:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777396955; cv=none; b=I5K6hjvAy79wnwxkNiicayx/Ho8CKj9kSDH5N8mdA3sZcomnN0HU68py0o02qD2j1saLRnl9sW5fq7klPHwwmIYrFAeuD7p/qTYbwSuybw8A9atHHCMNqL/1YgTFyf5S+ZQk2Iq3DPy8Q7wwVEdR7JmadXE3gaio/dFS0s9e2HA=
+	t=1777402139; cv=none; b=WLMfm+FHhg8bgGGa7l2TDukX/LaofrQ1u2yX9UUtRLWPNf5icdD9CjpTPbucM/6t50TF3ZwTIQOPFTUCQvyBRYcSDgSZbRt5ug3OOBhaaAWye9y+M/uiTTbL21JKdxdWosLcYuMLPSAeu02A00NNH+4NHdN/Lg2IFtNwnioaALQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777396955; c=relaxed/simple;
-	bh=Sdu1+sFEjY/+9cSF8CkZL8v02n31Djq8nZBoEovvjH0=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=CUjiWXq5MdD9xC5cRB3NtFmjzynFsGhqrb+FjKj86O/xUFcBrJeni1sxlrj1iX3LO4luuElr/4+p1yV4qmnwDgYxSdQnsLSYHjtVStEIRHCTBjswnNQUcE3+KPMXwCMNB8a6iukrHmwDdVJVlfjFscZQCbhA2JDRlQ1DVWZCsD4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bD+f5BVC; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1777402139; c=relaxed/simple;
+	bh=w7hgt4kB+472H7Pa6pDD/9zbUKQONuySEaWE+IdsJS4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uE1PvzaEbSpGURfAz2ggG9Dd1i6KgRZv3EaUgq7uBuwRvyUz1YzHk84Xytj/52wdaSqLwnZbINxfClea+lnvY3rLt+Co/yG4NQicInBOqP+c2GLoMLfEvk5uqEYVf9CMt0Z8LSnBP13XKEIKf7nFNGxKjVF5xwD3zyQpefNe/CM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fst54a2a; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bD+f5BVC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1777396952;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Jrutjh8gf+EN4MkJZkJQBqbjX5fzctUFg1Q5h8ewVZ0=;
-	b=bD+f5BVC/Kv1qM1dD+Ho17VSJ+40DqxZwVmMF1xAke1i9dtx7CB0tssx2HpKpGiHqcwcw0
-	SZxuguSRP0D9Ey/loi1tym9jstp0eagIq5/WxOcwuYN3R3+d6lSi2FMeAU3lJV++wWv3Qs
-	3GzMJsexrHsc6E9OT+PVIvpCiKdnkbU=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-627-brkBpUgINISv3wCCvVX-RQ-1; Tue, 28 Apr 2026 13:22:31 -0400
-X-MC-Unique: brkBpUgINISv3wCCvVX-RQ-1
-X-Mimecast-MFC-AGG-ID: brkBpUgINISv3wCCvVX-RQ_1777396950
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-4411a2ff53aso5770156f8f.0
-        for <mptcp@lists.linux.dev>; Tue, 28 Apr 2026 10:22:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777396949; x=1778001749;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :to:from:subject:user-agent:mime-version:date:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Jrutjh8gf+EN4MkJZkJQBqbjX5fzctUFg1Q5h8ewVZ0=;
-        b=K/BUFg2JrhODQqiG0Xytk/T4IbqYycxd2ZfTdXZcuhPmkXFxTeiYoHDASaaWofAjhj
-         P785YyB+CI1wk6e6ty3hmVVEk1Tv92Uv4j8B2JtIpt7zb9vN+qHOjrFLU9JLa7KOfvwd
-         XOmZayVMKlQiYLFr2MB1n3LN5c2X/jJM1K8OLJTaB+Y7vEGXclrVIdUhNOalAjbz7ddq
-         jo1VAzjczOOfD5ACVfleJuV4u51xA+rardlxn0SN+AKV2AmuSz2aEmblNYzgyMt8XYpl
-         IYBmKAO9Su2zZ9Xu1meOEvBt2h9mlL1BHCaLRc0b5YTHG0jgAGzYJkume5g9iXPLro7+
-         J/Gg==
-X-Gm-Message-State: AOJu0Yxpc7p8JJ53hVDcC9Lzrdg/mykFs6/efCQfLao/5El6SLmqZOPp
-	w+deeJl6Mlw+Vb38UferS3HMoN18ShLKA3Hw8hqMn4UmH0uYgnVVJrpsfIKddIlF8K5w0K/fPnX
-	TpJ2YPpg9r4cvinmpuLVOUH1MyJTFo184TvDcAVSVC9vchEV9VDEhnSMqB9pWcrvuc3FD9jos4Q
-	YBeMGfG7jDXDG2GNLGbv6EwHOs6wmMbXzy5E3W5Q==
-X-Gm-Gg: AeBDies3puLYlarmalTS882QkyL2EczdrUb7Qh3NqJfP3N585ZATohqeSST0IYTMHgu
-	tgFd5zfy0xfG6DLDh93S1jdofCjKLOaK6jWtNf5GfZeEUc+NLmt7oXabHAZfJQ5FDITAI9sIeUM
-	YJDpb3c00OdbDFXv+3c2S7olO0k0z3GzOCEvSVr+EZOL7xk7e/oL97/Y/OsyZEFK1VBQbmFWLeZ
-	qmCPHjVuMyxTkMa8ajXq3vrPFQUd6cRlPRDzd+G6uWfVqOatX4nOjErPEBy851jkp0CLqvgs0Sb
-	n7MvzVn084/1Dc4Jis/AsrJ9YNKnCR4IUgxYOkJNUdbNnXVVUP6biMlwBZICK8rcmboIsMP5hxy
-	OzWhPeq+Y/0pPNd9LvkIxKYiEuS7XCsL+mfrFwkJSGn4eCHFmmVesVCz3rN2G2BF/dA==
-X-Received: by 2002:a05:600c:8b85:b0:487:243f:dc3e with SMTP id 5b1f17b1804b1-48a77af3dcdmr65477255e9.6.1777396949293;
-        Tue, 28 Apr 2026 10:22:29 -0700 (PDT)
-X-Received: by 2002:a05:600c:8b85:b0:487:243f:dc3e with SMTP id 5b1f17b1804b1-48a77af3dcdmr65476495e9.6.1777396948544;
-        Tue, 28 Apr 2026 10:22:28 -0700 (PDT)
-Received: from [192.168.88.32] ([216.128.9.114])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48a7bc26b69sm457655e9.10.2026.04.28.10.22.27
-        for <mptcp@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Apr 2026 10:22:28 -0700 (PDT)
-Message-ID: <2feee48e-27d2-4e45-a925-4ee9195cbea8@redhat.com>
-Date: Tue, 28 Apr 2026 19:22:27 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fst54a2a"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6460DC2BCAF;
+	Tue, 28 Apr 2026 18:48:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1777402138;
+	bh=w7hgt4kB+472H7Pa6pDD/9zbUKQONuySEaWE+IdsJS4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Fst54a2aPkhV8g86b7J5hhktmTCF38tMuCtF0KMVUb2ZQSMNTRpUtBaGp71wbgb14
+	 UDbv4lC750MdTBA4jOYuFMnbLh9/v5uSSkz8Ubpiq9dUDu0z9rao5ajAy22WeXqWku
+	 XIWN+x+YqQOAfpggcxSTqt3ovsGvuLsADlsXjbiF5t99m+u4pPyOFEnTm36bZk+PdK
+	 If4mssngw4DC5TfsaPdVBvD/d08KI8bksdwLu+wbQ8SJSOjYENbMxCeagf0XIO0Kb8
+	 3rR4Ei+zWdD2M9yl52/iooajbcgqfokFUmHO55T/hJ5SWZ3jneUj0OwS9+cJLwaatb
+	 ThMyhKM+s9Mhg==
+Message-ID: <43f69e5e-b0a5-4bc5-8e6b-8f41ef4cf55a@kernel.org>
+Date: Tue, 28 Apr 2026 20:48:55 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v2 00/10] mptcp: address stall under memory
- pressure
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-References: <cover.1777318959.git.pabeni@redhat.com>
-In-Reply-To: <cover.1777318959.git.pabeni@redhat.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: Mfu_vmNXTOPd7iWOKgO80c7VPhnRjWBLklf6mbhlRHY_1777396950
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-next v4 0/4] mptcp: MSG_ERRQUEUE support on the
+ parent socket
+Content-Language: fr
+To: David Carlier <devnexen@gmail.com>, mptcp@lists.linux.dev
+Cc: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>
+References: <20260421223338.52743-1-devnexen@gmail.com>
+ <cover.1777324037.git.devnexen@gmail.com>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <cover.1777324037.git.devnexen@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 4/27/26 9:51 PM, Paolo Abeni wrote:
-> This an attempt to fix the data transfer stall reported by Geliang and
-> Gang more carefully enforcing memory constraints at the MPTCP level.
+Hi David,
+
+Thank you for the new version.
+
+On 27/04/2026 23:10, David Carlier wrote:
+> MPTCP already advertises IP_RECVERR/IPV6_RECVERR as supported, but the
+> parent socket does not currently provide usable MSG_ERRQUEUE handling.
 > 
-> Patch 1/10 moves the bound check before entering the TCP socket.
-> Patch 2, 3, 4 and 5 are cleanups/refactors finalized to safely re-using
-> TCP helpers on MPTCP skbs.
-> Patch 6 makes TCP pruning related helpers available to MPTCP and patch 7
-> makes use of them. Patch 8 addresses an edge scenario that could still
-> lead to transfer stall under memory pressure.
-> Finally patch 9 and 10 improve the MPTCP-level retransmission schema to
-> make recovery from memory pressure significanly faster.
+> This series wires the MPTCP socket up to the IPv4/IPv6 error queue
+> paths. It propagates RECVERR-related sockopts to existing and future
+> subflows, makes poll() report pending errqueue activity through the
+> parent socket, and lets recvmsg(MSG_ERRQUEUE) on the MPTCP socket
+> consume queued errors with the parent socket ABI.
 > 
-> Note that the diffstat is biases by the quite large patch 4/9, which
-> contains mechanical transformation of existing code; "real" changes are
-> noticiable smaller.
+> A new prerequisite patch factors the per-flag inet_flags propagation
+> in sync_socket_options() into a single masked word copy, so further
+> inet_flags propagated by MPTCP can be added by extending the mask
+> rather than touching the call site.
 > 
-> Tested successfully vs the test cases proposed by Geliang and Gang and
-> vs the selftests.
-> ---
-> Notes:
-> - Sashiko apparently can't understand that mptcp_data_lock() &&
-> sk not owned by the user-space is equivalent to the sk socket lock. As a
-> consequences marks incorrectly as racy a few accesses under the data
-> lock to the sk_rcvbuf.
-> - mptcp_join with "4 subflows with under pressure" may require longer
-> than default timeout, as the transfer in such condition can be really
-> slow.
+> Patch 2 then leverages the existing mptcp_setsockopt_all_sf() helper
+> for the setsockopt path and extends MPTCP_INET_FLAGS_MASK with the
+> four RECVERR bits, dropping the family-specific helpers from v3.
+> 
+> Based-on: <20260424-mptcp-pm-sockopt-set-all-sf-v1-1-38e7023822f8@kernel.org>
 
-Sashiko says:
----
-> +static bool mptcp_over_limit(struct sock *sk, const struct sock *ssk,
-> +			     const struct sk_buff *skb)
-> +{
-> +	if (likely(sk_rmem_alloc_get(sk) <= READ_ONCE(sk->sk_rcvbuf)))
-> +		return false;
-> +
-> +	/* Avoid silently dropping pure acks, fin or zero win probes. */
-> +	if (TCP_SKB_CB(skb)->seq == TCP_SKB_CB(skb)->end_seq ||
-> +	    TCP_SKB_CB(skb)->tcp_flags & TCPHDR_FIN ||
-> +	    !after(TCP_SKB_CB(skb)->end_seq, tcp_sk(ssk)->rcv_nxt))
-> +		return false;
-Will this silently drop 1-byte Zero Window Probes (ZWPs)? For a standard
-1-byte ZWP where seq = rcv_nxt and end_seq = rcv_nxt + 1, it seems it
-would fail these conditions, returning true and dropping the packet.
-Also, if mptcp_incoming_options() returns false due to being over limit,
-does this cause tcp_data_queue() to execute __kfree_skb(skb) and return
-without sending or scheduling a TCP ACK? If so, could this bypass standard
-drop handlers (like goto out_of_window) and cause connection timeouts by
-not informing the sender of the zero window condition?
----
+I didn't review it, but I notice that the CI cannot apply your series,
+because it looks like it is not based on the one you mentioned here.
 
-this is wrong: zero window probes use already acked sequence numbers.
+Can you either remove this line, or rebase your series on top of this
+other patch?
 
----
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 718e910ff23f..77d7c7fbe8ef 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -739,7 +739,7 @@ static bool __mptcp_move_skbs_from_subflow(struct
-mptcp_sock *msk,
->
->  			mptcp_init_skb(ssk, skb, offset, len);
->
-> -			if (own_msk && sk_rmem_alloc_get(sk) < sk->sk_rcvbuf) {
-> +			if (own_msk) {
-By removing the sk_rmem_alloc_get() limit check here and moving the limit
-enforcement exclusively to mptcp_incoming_options() in the TCP slow path,
-can this bypass the MSK receive buffer limit for fallback connections
-taking the TCP fast path?
-If an MPTCP connection falls back to plain TCP, it appears packets take
-the TCP fast path in tcp_rcv_established(), bypassing tcp_data_queue()
-and mptcp_incoming_options(). These packets would go directly through
-tcp_data_ready() to __mptcp_move_skbs_from_subflow(), which now
-unconditionally moves the packets to the MSK.
-Since ownership is transferred to the MSK, the subflow's sk_rmem_alloc
-would remain near zero, preventing it from falling back to the slow path.
-Could this allow unbounded memory growth in the MSK queue if a sender
-transmits an infinite amount of data?
----
+Also, please don't send your series as a reply to a previous posting,
+please use a new thread. That's what is usually done, clearer, plus some
+tools don't support replies.
 
-This is wrong, mptcp_incoming_options() is always invoked even for
-fallback msk, as msk explictly disables the header prediction.
-
----
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 28a7482b3887..26b9a23c63a9 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -352,9 +350,9 @@ static void mptcp_init_skb(struct sock *ssk,
-struct sk_buff *skb, int offset,
->  	 * mptcp_subflow_get_mapped_dsn() is based on the current tp->copied_seq
->  	 * value
->  	 */
-> -	MPTCP_SKB_CB(skb)->map_seq = mptcp_subflow_get_mapped_dsn(subflow);
-> -	MPTCP_SKB_CB(skb)->end_seq = MPTCP_SKB_CB(skb)->map_seq + copy_len;
-> -	MPTCP_SKB_CB(skb)->offset = offset;
-> +	MPTCP_SKB_CB(skb)->map_seq = mptcp_subflow_get_mapped_dsn(subflow) -
-> +				     offset;
-Could this cause packets with an offset greater than 0 to be incorrectly
-dropped?
-If map_seq represents the sequence of the entire SKB rather than just the
-unread data, and __mptcp_move_skb() checks if
-MPTCP_SKB_CB(skb)->map_seq == msk->ack_seq, valid packets with an offset
-(due
-to TCP retransmissions or overlapping segments) might fail the in-order
-check and be permanently dropped as old data.
----
-this is wrong, the main point is that this series has a functional
-dependency on "mptcp: do not drop partial packets".
-
----
-> @@ -4364,7 +4355,7 @@ static struct sk_buff *mptcp_recv_skb(struct
-sock *sk, u32 *off)
->  		mptcp_move_skbs(sk);
->
->  	while ((skb = skb_peek(&sk->sk_receive_queue)) != NULL) {
-> -		offset = MPTCP_SKB_CB(skb)->offset;
-> +		offset = msk->copied_seq - MPTCP_SKB_CB(skb)->map_seq;
->  		if (offset < skb->len) {
->  			*off = offset;
->  			return skb;
-Similar to the issue in mptcp_inq_hint(), if copied_seq evaluates to 0
-due to
-deferred initialization, could this offset calculation wrap around?
-Since map_seq is the crypto iasn, 0 - map_seq would wrap around to a large
-u32 value. This would cause offset < skb->len to evaluate to false and
-could lead to unconditionally dropping valid, unread SKBs via
-mptcp_eat_recv_skb() when called from __mptcp_read_sock().
----
-This is wrong; due to __mptcp_sync_rcv_sequence() `copied_seq` can be
-zero only if map_seq is 0, too.
-
----
-Also, what happens if __mptcp_push_retrans() successfully queues some data
-but returns a len less than dfrag->data_len?
-The loop will continue and pick the same dfrag again since retrans_seq
-advanced but still falls within the fragment. However, looking at
-__mptcp_push_retrans(), it appears to always start from the beginning:
-static int __mptcp_push_retrans(struct sock *sk, struct mptcp_data_frag
-*dfrag)
-{
-	...
-	info.sent = 0;
-	info.limit = READ_ONCE(msk->csum_enabled) ? dfrag->data_len :
-						    dfrag->already_sent;
-	while (info.sent < info.limit) {
-		ret = mptcp_sendmsg_frag(sk, ssk, dfrag, &info);
-	...
-}
-Since it doesn't take retrans_seq as an offset, will this incorrectly
-retransmit the first len bytes of the fragment multiple times, artificially
-incrementing retrans_seq until it exceeds the fragment bounds, and
-ultimately skipping the tail of the fragment entirely?
----
-AFAICS here the LLM is allucinating a lot, as the main termination
-condition for that loopis `dfrag->retrans_seq < than dfrag->data_len`
-
-The other comments looks valid and I'll try to address them in the next
-revision. I'm not sure how to guide sashiko on the above, I'll try
-adding more notes in the cover letter.
-
-/P
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
 
