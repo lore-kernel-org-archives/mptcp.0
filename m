@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27DFD46AEF0
-	for <mptcp@lists.linux.dev>; Tue, 28 Apr 2026 18:48:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2B1047CC87
+	for <mptcp@lists.linux.dev>; Tue, 28 Apr 2026 18:56:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777402139; cv=none; b=WLMfm+FHhg8bgGGa7l2TDukX/LaofrQ1u2yX9UUtRLWPNf5icdD9CjpTPbucM/6t50TF3ZwTIQOPFTUCQvyBRYcSDgSZbRt5ug3OOBhaaAWye9y+M/uiTTbL21JKdxdWosLcYuMLPSAeu02A00NNH+4NHdN/Lg2IFtNwnioaALQ=
+	t=1777402587; cv=none; b=E6aMNIVtJ62ugha6NCwi9CSiera4KtXpavZm2jZzseBHO1dymm8tfA8OYm0njKqbj55+FmWgJrBv5st/Lq+qo0Bfs115NE7GIybTTARPOc8PM+jJ7P0dYa3JK99sf3IbaNTw+HvcoahaJson/HINH1PugEqqeXh+5k60DYR7Owo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777402139; c=relaxed/simple;
-	bh=w7hgt4kB+472H7Pa6pDD/9zbUKQONuySEaWE+IdsJS4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uE1PvzaEbSpGURfAz2ggG9Dd1i6KgRZv3EaUgq7uBuwRvyUz1YzHk84Xytj/52wdaSqLwnZbINxfClea+lnvY3rLt+Co/yG4NQicInBOqP+c2GLoMLfEvk5uqEYVf9CMt0Z8LSnBP13XKEIKf7nFNGxKjVF5xwD3zyQpefNe/CM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fst54a2a; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777402587; c=relaxed/simple;
+	bh=to3mDg5QMD4b0AYv/qu1IvsUCyU4RoK0N8iWIPjw/B8=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=pTCrpGJGSWo3bIs3h1C60NXev6d3IC0UzJ5cO35TJA43YNt0UUUrAsaUY629UBlj/swpgu3wA7Jevc1C5cb1hComc9AG7MAtGNhbifHmgc+5KgAX0dpQ5Vx/d0bZ/f8Au9My2LpP74eLwwXGGg9DEZr3DTM+w4mMifg0ALu6IDQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KFNzbeiN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fst54a2a"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6460DC2BCAF;
-	Tue, 28 Apr 2026 18:48:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KFNzbeiN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4EEBC2BCB9;
+	Tue, 28 Apr 2026 18:56:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777402138;
-	bh=w7hgt4kB+472H7Pa6pDD/9zbUKQONuySEaWE+IdsJS4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Fst54a2aPkhV8g86b7J5hhktmTCF38tMuCtF0KMVUb2ZQSMNTRpUtBaGp71wbgb14
-	 UDbv4lC750MdTBA4jOYuFMnbLh9/v5uSSkz8Ubpiq9dUDu0z9rao5ajAy22WeXqWku
-	 XIWN+x+YqQOAfpggcxSTqt3ovsGvuLsADlsXjbiF5t99m+u4pPyOFEnTm36bZk+PdK
-	 If4mssngw4DC5TfsaPdVBvD/d08KI8bksdwLu+wbQ8SJSOjYENbMxCeagf0XIO0Kb8
-	 3rR4Ei+zWdD2M9yl52/iooajbcgqfokFUmHO55T/hJ5SWZ3jneUj0OwS9+cJLwaatb
-	 ThMyhKM+s9Mhg==
-Message-ID: <43f69e5e-b0a5-4bc5-8e6b-8f41ef4cf55a@kernel.org>
-Date: Tue, 28 Apr 2026 20:48:55 +0200
+	s=k20201202; t=1777402587;
+	bh=to3mDg5QMD4b0AYv/qu1IvsUCyU4RoK0N8iWIPjw/B8=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=KFNzbeiNCJZTrQwn2jULYkYiMOWufedSWJwAKum9K04RzUlOWiJHxZQTy4DMHbOqe
+	 Ttxt6WCj6+fLvN5WJGMXSeQFClyyPXbi3TrYyT/XUxKzq4x9v3zM1PG49xkkX7A2xc
+	 t4UECouGOk1opgRC/ARJVQNjYGd+uosNwUf4CLWutB9ByL5dl3UC+3Ev7LnylHs+Uo
+	 Cf6pQfUpHJnndIah57fvXC8z4EaS7Y0yySAzLSa95XiVQZCLrBpz7YG6glpugFEX9G
+	 FHDEwycHa0UVadj5Fseb1GMNZvQ0ZeSxgy1Virmw23lnKK24yhXXQ+05w7m/RX+HVm
+	 avVEuOPEOS0Mg==
+Message-ID: <59eccce4-cbc6-48b9-9243-9b9b5a5ca066@kernel.org>
+Date: Tue, 28 Apr 2026 20:56:23 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,12 +38,13 @@ User-Agent: Mozilla Thunderbird Beta
 Subject: Re: [PATCH mptcp-next v4 0/4] mptcp: MSG_ERRQUEUE support on the
  parent socket
 Content-Language: fr
+From: Matthieu Baerts <matttbe@kernel.org>
 To: David Carlier <devnexen@gmail.com>, mptcp@lists.linux.dev
 Cc: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
  Paolo Abeni <pabeni@redhat.com>
 References: <20260421223338.52743-1-devnexen@gmail.com>
  <cover.1777324037.git.devnexen@gmail.com>
-From: Matthieu Baerts <matttbe@kernel.org>
+ <43f69e5e-b0a5-4bc5-8e6b-8f41ef4cf55a@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -88,44 +89,48 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <cover.1777324037.git.devnexen@gmail.com>
+In-Reply-To: <43f69e5e-b0a5-4bc5-8e6b-8f41ef4cf55a@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi David,
-
-Thank you for the new version.
-
-On 27/04/2026 23:10, David Carlier wrote:
-> MPTCP already advertises IP_RECVERR/IPV6_RECVERR as supported, but the
-> parent socket does not currently provide usable MSG_ERRQUEUE handling.
+On 28/04/2026 20:48, Matthieu Baerts wrote:
+> Hi David,
 > 
-> This series wires the MPTCP socket up to the IPv4/IPv6 error queue
-> paths. It propagates RECVERR-related sockopts to existing and future
-> subflows, makes poll() report pending errqueue activity through the
-> parent socket, and lets recvmsg(MSG_ERRQUEUE) on the MPTCP socket
-> consume queued errors with the parent socket ABI.
+> Thank you for the new version.
 > 
-> A new prerequisite patch factors the per-flag inet_flags propagation
-> in sync_socket_options() into a single masked word copy, so further
-> inet_flags propagated by MPTCP can be added by extending the mask
-> rather than touching the call site.
+> On 27/04/2026 23:10, David Carlier wrote:
+>> MPTCP already advertises IP_RECVERR/IPV6_RECVERR as supported, but the
+>> parent socket does not currently provide usable MSG_ERRQUEUE handling.
+>>
+>> This series wires the MPTCP socket up to the IPv4/IPv6 error queue
+>> paths. It propagates RECVERR-related sockopts to existing and future
+>> subflows, makes poll() report pending errqueue activity through the
+>> parent socket, and lets recvmsg(MSG_ERRQUEUE) on the MPTCP socket
+>> consume queued errors with the parent socket ABI.
+>>
+>> A new prerequisite patch factors the per-flag inet_flags propagation
+>> in sync_socket_options() into a single masked word copy, so further
+>> inet_flags propagated by MPTCP can be added by extending the mask
+>> rather than touching the call site.
+>>
+>> Patch 2 then leverages the existing mptcp_setsockopt_all_sf() helper
+>> for the setsockopt path and extends MPTCP_INET_FLAGS_MASK with the
+>> four RECVERR bits, dropping the family-specific helpers from v3.
+>>
+>> Based-on: <20260424-mptcp-pm-sockopt-set-all-sf-v1-1-38e7023822f8@kernel.org>
 > 
-> Patch 2 then leverages the existing mptcp_setsockopt_all_sf() helper
-> for the setsockopt path and extends MPTCP_INET_FLAGS_MASK with the
-> four RECVERR bits, dropping the family-specific helpers from v3.
+> I didn't review it, but I notice that the CI cannot apply your series,
+> because it looks like it is not based on the one you mentioned here.
 > 
-> Based-on: <20260424-mptcp-pm-sockopt-set-all-sf-v1-1-38e7023822f8@kernel.org>
+> Can you either remove this line, or rebase your series on top of this
+> other patch?
+> 
+> Also, please don't send your series as a reply to a previous posting,
+> please use a new thread. That's what is usually done, clearer, plus some
+> tools don't support replies.
 
-I didn't review it, but I notice that the CI cannot apply your series,
-because it looks like it is not based on the one you mentioned here.
-
-Can you either remove this line, or rebase your series on top of this
-other patch?
-
-Also, please don't send your series as a reply to a previous posting,
-please use a new thread. That's what is usually done, clearer, plus some
-tools don't support replies.
+Note: I just manually resolved the conflicts and sent the series to the
+CI, not to have to resend a series just to retrigger the CI.
 
 Cheers,
 Matt
