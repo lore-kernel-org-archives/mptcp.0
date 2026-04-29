@@ -1,80 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C1E333F595
-	for <mptcp@lists.linux.dev>; Wed, 29 Apr 2026 11:08:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 080442BFC85
+	for <mptcp@lists.linux.dev>; Wed, 29 Apr 2026 11:08:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777460919; cv=none; b=sOhUlS6jrlAPoD/MZPuDCxrDP6ywFm7HSeaaTTSutDCNHx91CFyxS2rJmu6YrMoW8cx0qS4IBKJEeM7Ja5chGKuc/yeQXLXJ/jDXZvgwPH7Bq5aN1DdFbom2oR/xEws+lVQLS7+je2i3pj0jkNH1UfrdiooFM+Fq8y+gFGj3TLA=
+	t=1777460920; cv=none; b=tK/pE9UEIsKqvEeXyGRxQygmyrDe4pUghgfxcVSydHUkAUaBH02Qxc5NWxvhkrx9/sjQvr5YNNqJUVrf0Ah7VpVJfhN9Sd/XjCsQQ8nExJheDoXfjJniryqXwZlEq+NxU8KGpu9if85Cswp1neksK3lxLl+ekKHlPPhccFz4r10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777460919; c=relaxed/simple;
-	bh=9OeyXWwMDJZIMSpWczfQ/xfjYZU2iuZ3dTfJ7KE8hkw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rmiasFRfacx1m+UjVtJybM8RHi1hEqnJAOLPKrQxITc1C9SueV31leonjsHOl7kmLT+CBb2XAIGPMuhGkDC3V+eI73aNqTWXa7FFGtaYNQ8Bl1tLYynzvYAuzanSDxITb6f4dsHiL/VynqxJY6jKuw1PtmgtSBs3p3r0gTxHpow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e8TSFIDc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777460920; c=relaxed/simple;
+	bh=xs+DfEQS3OZqEqJZQUkiQ3u3Zhtr4bC9LsHFsv/QWO8=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:content-type; b=IZhOyqYthxrX3z6gEnikr6skchtvCtJY1qinJvQ+uhkMXjVQPxV9xaM5FqdsL8cFG4EUiZra12I6d9GSy++t5ZtnzM+1U0i1Di1phT1tzM9A0MC/4RkSNE0NwS9OQMI8SuJcP5WmE05tx5YkWMZmZIUAYzjIERqVJNM++/9mql0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LLREuU1C; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e8TSFIDc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8AEBC2BCB3;
-	Wed, 29 Apr 2026 11:08:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777460919;
-	bh=9OeyXWwMDJZIMSpWczfQ/xfjYZU2iuZ3dTfJ7KE8hkw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=e8TSFIDcHlyg5hwqcEaYHSJAoad5iINvf8L8oyUJVxLiJqbnRd1agremtO4DmQLit
-	 IiPf6ejr4BQGILwk5/cKu3tLr7qIXlmpc7hclRJQkKUdDcuIMUmIKGjOvKOoBSnBWe
-	 cgUiKSvAfZmoLNRwgegBmNr+d1Q1mDgDu2bPbeacmJY0xO+8BS9pYlyt8MUAsQALUg
-	 KE99wGqCUuhNonz2000iacy1KvhZdZuO74pKDdUkuq1PSxW95poUXnn+RMuM9KgWq2
-	 bCT3Jwny0eJsls0Vu1dxLcll/ULG8gMIMoxrvmeIy3ZP8TeNspPSJU8bSSiZP9LYaC
-	 oXmuPgezkqhpA==
-From: Geliang Tang <geliang@kernel.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LLREuU1C"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1777460917;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Z1qrjgkkirxPS5bR7WxBF06MZ+QB12CREsqv6xZvMRs=;
+	b=LLREuU1CPP7Vp/hdBA5l9jtllNgZgzqmr7YT1dqgKgxmwx+hqiDXQGO8bvrRYU0mr27r+c
+	/Op5ZfF8L9ac1xkex/B2O0/YQRjdLAo1F+XRCPn4RyqpKF0mlPNlpBmxK99akXIsqqwvOt
+	WgKqQ+67Z+MtMvPTZmFvacnOxg546ro=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-80-PuT63qtMNAaCHzu0NTqEqA-1; Wed,
+ 29 Apr 2026 07:08:36 -0400
+X-MC-Unique: PuT63qtMNAaCHzu0NTqEqA-1
+X-Mimecast-MFC-AGG-ID: PuT63qtMNAaCHzu0NTqEqA_1777460915
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 713A318003FC
+	for <mptcp@lists.linux.dev>; Wed, 29 Apr 2026 11:08:35 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.44.34.99])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id A11D01800480
+	for <mptcp@lists.linux.dev>; Wed, 29 Apr 2026 11:08:34 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>,
-	Gang Yan <yangang@kylinos.cn>
-Subject: [RFC mptcp-next v18 12/15] selftests: tls: increase nonblocking data size for mptcp
-Date: Wed, 29 Apr 2026 19:08:16 +0800
-Message-ID: <5a913371067061a1f1235031dbf72538a55e6e37.1777459066.git.tanggeliang@kylinos.cn>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <cover.1777459066.git.tanggeliang@kylinos.cn>
-References: <cover.1777459066.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-net] mptcp: fix rx timestamp corruption on fastopen
+Date: Wed, 29 Apr 2026 13:06:02 +0200
+Message-ID: <eaeec8e58b36820e2c592b7a88681f3c188cb64a.1777460572.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: GSJa48dhjbFQJtN4BIjPUufvcgDoBZivthTZthYRcsE_1777460915
+X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
+content-type: text/plain; charset="US-ASCII"; x-default=true
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+The skb cb offset containing the timestamp presence flag is cleared
+before loading such information. Cache such value before MPTCP CB
+initialization.
 
-Increase the data size in nonblocking tests to accommodate MPTCP's
-multi-subflow behavior and ensure sufficient data for testing,
-avoiding the following errors:
-
- #  RUN           tls.12_aria_gcm_mptcp.nonblocking ...
- # tls.c:1534:nonblocking:Expected 0 (0) != eagain (0)
- # nonblocking: Test failed
-
-Co-developed-by: Gang Yan <yangang@kylinos.cn>
-Signed-off-by: Gang Yan <yangang@kylinos.cn>
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+Fixes: 36b122baf6a8 ("mptcp: add subflow_v(4,6)_send_synack()")
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 ---
- tools/testing/selftests/net/tls.c | 3 +++
- 1 file changed, 3 insertions(+)
+ net/mptcp/fastopen.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/net/tls.c b/tools/testing/selftests/net/tls.c
-index 0dc6514c2c3f..bf8ecfdfdd18 100644
---- a/tools/testing/selftests/net/tls.c
-+++ b/tools/testing/selftests/net/tls.c
-@@ -1425,6 +1425,9 @@ TEST_F(tls, nonblocking)
- 	int flags;
- 	int res;
+diff --git a/net/mptcp/fastopen.c b/net/mptcp/fastopen.c
+index 82ec15bcfd7f..082c46c0f50e 100644
+--- a/net/mptcp/fastopen.c
++++ b/net/mptcp/fastopen.c
+@@ -12,6 +12,7 @@ void mptcp_fastopen_subflow_synack_set_params(struct mptcp_subflow_context *subf
+ 	struct sock *sk, *ssk;
+ 	struct sk_buff *skb;
+ 	struct tcp_sock *tp;
++	bool has_rxtstamp;
  
-+	if (variant->mptcp)
-+		data *= 4;
-+
- 	flags = fcntl(self->fd, F_GETFL, 0);
- 	fcntl(self->fd, F_SETFL, flags | O_NONBLOCK);
- 	fcntl(self->cfd, F_SETFL, flags | O_NONBLOCK);
+ 	/* on early fallback the subflow context is deleted by
+ 	 * subflow_syn_recv_sock()
+@@ -40,12 +41,13 @@ void mptcp_fastopen_subflow_synack_set_params(struct mptcp_subflow_context *subf
+ 	 */
+ 	tp->copied_seq += skb->len;
+ 	subflow->ssn_offset += skb->len;
++	has_rxtstamp = TCP_SKB_CB(skb)->has_rxtstamp;
+ 
+ 	/* Only the sequence delta is relevant */
+ 	MPTCP_SKB_CB(skb)->map_seq = -skb->len;
+ 	MPTCP_SKB_CB(skb)->end_seq = 0;
+ 	MPTCP_SKB_CB(skb)->offset = 0;
+-	MPTCP_SKB_CB(skb)->has_rxtstamp = TCP_SKB_CB(skb)->has_rxtstamp;
++	MPTCP_SKB_CB(skb)->has_rxtstamp = has_rxtstamp;
+ 	MPTCP_SKB_CB(skb)->cant_coalesce = 1;
+ 
+ 	mptcp_data_lock(sk);
 -- 
 2.53.0
 
