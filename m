@@ -1,100 +1,138 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 080442BFC85
-	for <mptcp@lists.linux.dev>; Wed, 29 Apr 2026 11:08:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB70F33F595
+	for <mptcp@lists.linux.dev>; Wed, 29 Apr 2026 11:08:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777460920; cv=none; b=tK/pE9UEIsKqvEeXyGRxQygmyrDe4pUghgfxcVSydHUkAUaBH02Qxc5NWxvhkrx9/sjQvr5YNNqJUVrf0Ah7VpVJfhN9Sd/XjCsQQ8nExJheDoXfjJniryqXwZlEq+NxU8KGpu9if85Cswp1neksK3lxLl+ekKHlPPhccFz4r10=
+	t=1777460922; cv=none; b=ZmyBog+D+B6QFPSu8AxTLGEY2YuCe6mHUPzlHVk4MmjX//GcYIjOABZFa+r0i0CMCY1JQtpnP+SoXqQagnNjE6pZ35GlUsTnCa44t0+hkGrslekkgFOyB3SOdDkb3dbB+LG/Swq7j3I8rVdrtMvm+Xg1NW/+NTNvxnUnWwysInA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777460920; c=relaxed/simple;
-	bh=xs+DfEQS3OZqEqJZQUkiQ3u3Zhtr4bC9LsHFsv/QWO8=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:content-type; b=IZhOyqYthxrX3z6gEnikr6skchtvCtJY1qinJvQ+uhkMXjVQPxV9xaM5FqdsL8cFG4EUiZra12I6d9GSy++t5ZtnzM+1U0i1Di1phT1tzM9A0MC/4RkSNE0NwS9OQMI8SuJcP5WmE05tx5YkWMZmZIUAYzjIERqVJNM++/9mql0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LLREuU1C; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1777460922; c=relaxed/simple;
+	bh=qgb0Osm6S4pRavM+0JGhfyEGRXZl67LV3MM0GVu9tPA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=oVcYjz4CGFQ2vXmDIEe+WKr8kSDzLGQbhGOkSyHlixH7mpu3fqZ/+XHwoJjegxtD28enL70DwCPp7vvWI+pzxZE9MKD6AtU0UInRHBZizWlq0g9wnmMDuAz+orcdQ6YiqIGvMDRF+NppzMYj/JeQIgsKW4MrwemVoGFsbOwnTzo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nT58BH8F; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LLREuU1C"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1777460917;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=Z1qrjgkkirxPS5bR7WxBF06MZ+QB12CREsqv6xZvMRs=;
-	b=LLREuU1CPP7Vp/hdBA5l9jtllNgZgzqmr7YT1dqgKgxmwx+hqiDXQGO8bvrRYU0mr27r+c
-	/Op5ZfF8L9ac1xkex/B2O0/YQRjdLAo1F+XRCPn4RyqpKF0mlPNlpBmxK99akXIsqqwvOt
-	WgKqQ+67Z+MtMvPTZmFvacnOxg546ro=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-80-PuT63qtMNAaCHzu0NTqEqA-1; Wed,
- 29 Apr 2026 07:08:36 -0400
-X-MC-Unique: PuT63qtMNAaCHzu0NTqEqA-1
-X-Mimecast-MFC-AGG-ID: PuT63qtMNAaCHzu0NTqEqA_1777460915
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 713A318003FC
-	for <mptcp@lists.linux.dev>; Wed, 29 Apr 2026 11:08:35 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.44.34.99])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id A11D01800480
-	for <mptcp@lists.linux.dev>; Wed, 29 Apr 2026 11:08:34 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nT58BH8F"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B572C2BCB3;
+	Wed, 29 Apr 2026 11:08:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1777460922;
+	bh=qgb0Osm6S4pRavM+0JGhfyEGRXZl67LV3MM0GVu9tPA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=nT58BH8Fp53JeT22iKedrnFiJYwxFGz2raPCmF9XAEKlbQR/VqzB5WpWBi0gVHBUV
+	 Z6trI/L+rUf6J0HawidGpiWcvM6qeNymkEursAL1RZIgUqz8A6t+h6osrcGC/+RJKD
+	 LoqIM5lpsvUtdX8vCtYLCPRxZWfFif+er9MPrVlwW6F9KbmTWlTViX5pziygymp5Lc
+	 pesusI3Vh/HR0eCGnN5umq0++zfxSIt39ndv3/7oIJ/tyCmyquTBA502oKZ1qEEfpG
+	 54TBjJ9+wtXmGgmcC5phmXPC1b4tEAi/DemdbOv50VBM5ejMO4XtmNcsp9UHcwdaWM
+	 pkQZa06yulPvw==
+From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-net] mptcp: fix rx timestamp corruption on fastopen
-Date: Wed, 29 Apr 2026 13:06:02 +0200
-Message-ID: <eaeec8e58b36820e2c592b7a88681f3c188cb64a.1777460572.git.pabeni@redhat.com>
+Cc: Geliang Tang <tanggeliang@kylinos.cn>,
+	Gang Yan <yangang@kylinos.cn>
+Subject: [RFC mptcp-next v18 13/15] selftests: tls: wait close in shutdown_reuse for mptcp
+Date: Wed, 29 Apr 2026 19:08:17 +0800
+Message-ID: <e09512f76f16c9f4da3ad4abf1c13fe22484cc2c.1777459066.git.tanggeliang@kylinos.cn>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <cover.1777459066.git.tanggeliang@kylinos.cn>
+References: <cover.1777459066.git.tanggeliang@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: GSJa48dhjbFQJtN4BIjPUufvcgDoBZivthTZthYRcsE_1777460915
-X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
-content-type: text/plain; charset="US-ASCII"; x-default=true
 
-The skb cb offset containing the timestamp presence flag is cleared
-before loading such information. Cache such value before MPTCP CB
-initialization.
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Fixes: 36b122baf6a8 ("mptcp: add subflow_v(4,6)_send_synack()")
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+In shutdown_reuse tests, add a delay after shutdown to wait for
+MPTCP sockets to reach TCP_CLOSE state before reuse via bind(),
+avoiding the following errors:
+
+ #  RUN           tls.12_aes_gcm_mptcp.shutdown_reuse ...
+ # tls.c:1790:shutdown_reuse:Expected ret (-1) == 0 (0)
+ # shutdown_reuse: Test failed
+ #          FAIL  tls.12_aes_gcm_mptcp.shutdown_reuse
+ not ok 14 tls.12_aes_gcm_mptcp.shutdown_reuse
+ #  RUN           tls.13_aes_gcm_mptcp.shutdown_reuse ...
+ # tls.c:1790:shutdown_reuse:Expected ret (-1) == 0 (0)
+ # shutdown_reuse: Test failed
+ #          FAIL  tls.13_aes_gcm_mptcp.shutdown_reuse
+ not ok 15 tls.13_aes_gcm_mptcp.shutdown_reuse
+ #  RUN           tls.12_chacha_mptcp.shutdown_reuse ...
+ #            OK  tls.12_chacha_mptcp.shutdown_reuse
+ ok 16 tls.12_chacha_mptcp.shutdown_reuse
+ #  RUN           tls.13_chacha_mptcp.shutdown_reuse ...
+ #            OK  tls.13_chacha_mptcp.shutdown_reuse
+ ok 17 tls.13_chacha_mptcp.shutdown_reuse
+ #  RUN           tls.13_sm4_gcm_mptcp.shutdown_reuse ...
+ # tls.c:1790:shutdown_reuse:Expected ret (-1) == 0 (0)
+ # shutdown_reuse: Test failed
+ #          FAIL  tls.13_sm4_gcm_mptcp.shutdown_reuse
+ not ok 18 tls.13_sm4_gcm_mptcp.shutdown_reuse
+
+This TCP_CLOSE check is just for MPTCP, because it should not slow
+down plain TCP tests.
+
+Co-developed-by: Gang Yan <yangang@kylinos.cn>
+Signed-off-by: Gang Yan <yangang@kylinos.cn>
+Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- net/mptcp/fastopen.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ tools/testing/selftests/net/tls.c | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-diff --git a/net/mptcp/fastopen.c b/net/mptcp/fastopen.c
-index 82ec15bcfd7f..082c46c0f50e 100644
---- a/net/mptcp/fastopen.c
-+++ b/net/mptcp/fastopen.c
-@@ -12,6 +12,7 @@ void mptcp_fastopen_subflow_synack_set_params(struct mptcp_subflow_context *subf
- 	struct sock *sk, *ssk;
- 	struct sk_buff *skb;
- 	struct tcp_sock *tp;
-+	bool has_rxtstamp;
+diff --git a/tools/testing/selftests/net/tls.c b/tools/testing/selftests/net/tls.c
+index bf8ecfdfdd18..8bedc2cde763 100644
+--- a/tools/testing/selftests/net/tls.c
++++ b/tools/testing/selftests/net/tls.c
+@@ -30,6 +30,10 @@
+ #define IPPROTO_MPTCP 262
+ #endif
  
- 	/* on early fallback the subflow context is deleted by
- 	 * subflow_syn_recv_sock()
-@@ -40,12 +41,13 @@ void mptcp_fastopen_subflow_synack_set_params(struct mptcp_subflow_context *subf
- 	 */
- 	tp->copied_seq += skb->len;
- 	subflow->ssn_offset += skb->len;
-+	has_rxtstamp = TCP_SKB_CB(skb)->has_rxtstamp;
++#ifndef TCP_CLOSE
++#define TCP_CLOSE 7
++#endif
++
+ static int fips_enabled;
  
- 	/* Only the sequence delta is relevant */
- 	MPTCP_SKB_CB(skb)->map_seq = -skb->len;
- 	MPTCP_SKB_CB(skb)->end_seq = 0;
- 	MPTCP_SKB_CB(skb)->offset = 0;
--	MPTCP_SKB_CB(skb)->has_rxtstamp = TCP_SKB_CB(skb)->has_rxtstamp;
-+	MPTCP_SKB_CB(skb)->has_rxtstamp = has_rxtstamp;
- 	MPTCP_SKB_CB(skb)->cant_coalesce = 1;
+ struct tls_crypto_info_keys {
+@@ -1698,6 +1702,25 @@ TEST_F(tls, shutdown_unsent)
+ 	shutdown(self->cfd, SHUT_RDWR);
+ }
  
- 	mptcp_data_lock(sk);
++static bool wait_for_tcp_close(struct __test_metadata *_metadata,
++			       int fd, int max)
++{
++	struct tcp_info info;
++	socklen_t len;
++	int i, ret;
++
++	for (i = 0; i < max; i++) {
++		len = sizeof(info);
++		ret = getsockopt(fd, IPPROTO_TCP, TCP_INFO, &info, &len);
++		ASSERT_EQ(ret, 0);
++		if (info.tcpi_state == TCP_CLOSE)
++			return true;
++		usleep(1000);
++	}
++
++	return false;
++}
++
+ TEST_F(tls, shutdown_reuse)
+ {
+ 	struct sockaddr_in addr;
+@@ -1707,6 +1730,9 @@ TEST_F(tls, shutdown_reuse)
+ 	shutdown(self->cfd, SHUT_RDWR);
+ 	close(self->cfd);
+ 
++	if (variant->mptcp)
++		EXPECT_TRUE(wait_for_tcp_close(_metadata, self->fd, 1000));
++
+ 	addr.sin_family = AF_INET;
+ 	addr.sin_addr.s_addr = htonl(INADDR_ANY);
+ 	addr.sin_port = 0;
 -- 
 2.53.0
 
