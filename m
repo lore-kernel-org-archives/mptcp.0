@@ -1,97 +1,87 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D15FA54739
-	for <mptcp@lists.linux.dev>; Wed, 29 Apr 2026 00:26:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31F4E33CEB0;
+	Wed, 29 Apr 2026 01:50:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777422398; cv=none; b=CW48+pETGcjAs5vmHx9JoN3WT/uYulPw/fU72UZ6IBeb4cQRheNMM4u339AqNjym31bVKi3Denn9NPHUZ7i+ivYzo2bFnI3iv4++ChJ/RaPrk1M7rixrDhwDzimIVZgcYbXEcjnW1GYumlMhp5m86OlYLLCfqdNzmKNwSn4nEJI=
+	t=1777427455; cv=none; b=ToL0FdQcW3CZTowzJ/jk/1Cmlj0FqOYhTycWMMpZKUaRbjvXfzZh1kJKXQ6OUGI5KVOhPY/u+OWFlXbp7feSlmvgy2yXwriuAuSEtS+PEggWQQkftwH3GMW61gVEe/odDDgpVLhVNSsbQfhYUfTysfI14OnMvnKOxgDA3gmlQ38=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777422398; c=relaxed/simple;
-	bh=Tx0WVMe2jFrGQayCxeUAoXbxf9CFOqKc5kTs9O1ryzA=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=rVKbkenJ5WwtUqSqc6wBRxkI5yp0RwpHPA5rwFm6LDz/Yz58SqRHiOxOdfb8QVRsWpLjPbAv9mIuajm4JbPnUnlYJk7RVzjCXTAYlhFfy4ZcjqjFbfvwhE01ecIksmldRlUnv+vQz+GYKsE+QKlOw4XbbAVvISpgm0pUEJVr+f8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t7ZUcj6E; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777427455; c=relaxed/simple;
+	bh=INbXNf2q6MmeJIX0oGNkmmY+3fO27A1j0CNgV9qd/tk=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=HP1DlxqXGj4WHmtPKvyOf4UwFfjrEIdk2PVdubTT9KBq72JKmVrrOK6DmmSUvMXIEoAapg4H0HgCDo7bQ8j+IF8d1tqz7wC0RU1wJIanyltRz613iM4nnr3cTcV4gJW95mL3KCXCFpILun562dJgKfDMAf00HpPtcw2ks+sPqsY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pe1MPdgp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t7ZUcj6E"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D4CCC2BCAF;
-	Wed, 29 Apr 2026 00:26:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pe1MPdgp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5F16C2BCB7;
+	Wed, 29 Apr 2026 01:50:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777422398;
-	bh=Tx0WVMe2jFrGQayCxeUAoXbxf9CFOqKc5kTs9O1ryzA=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=t7ZUcj6En5OG2eJZyiG9BwoflwAms2/FuMZgQ5gTW+QxayF9EeH+/zEw56kNFcgF0
-	 n6S9ICD/oF1dZ+DA2cUaWRR5HPya79WsvqiQqF9AShvbYCDBbAXnIA+BBxpGqNh7z1
-	 JAKrsHnrXCs3Lm6XR03wKEX6euV+XakpTm0WAmMgMGFs6IN5yGMWFwnxipAxL4gFEB
-	 VIxqCjoyX7pdzo8UeSh1mWlSWz35a7oCByqvFgc3Mv4J/UubdmypokH0Hnuyoo4Z6+
-	 6vTVh/8nwVb2RcDItPcY7ahkbxNVMZhwMaHgMYekxJg9dEkSfWLZRNytVHN9ea0Clv
-	 nFH3RZ/LRzZaw==
-Date: Tue, 28 Apr 2026 17:26:36 -0700 (PDT)
-From: Mat Martineau <martineau@kernel.org>
-To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-cc: MPTCP Upstream <mptcp@lists.linux.dev>, Paolo Abeni <pabeni@redhat.com>
-Subject: Re: [PATCH mptcp-net] mptcp: sockopt: increase seq in
- mptcp_setsockopt_all_sf
-In-Reply-To: <20260424-mptcp-pm-sockopt-set-all-sf-v1-1-38e7023822f8@kernel.org>
-Message-ID: <2d2f2e75-761c-2075-41cd-7e4b4da4962c@kernel.org>
-References: <20260424-mptcp-pm-sockopt-set-all-sf-v1-1-38e7023822f8@kernel.org>
+	s=k20201202; t=1777427454;
+	bh=INbXNf2q6MmeJIX0oGNkmmY+3fO27A1j0CNgV9qd/tk=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=pe1MPdgpgiLhcCA6RhSfk4qrj9/fC69pI1oywMecUUdf1ru+Q2O5G52/id3L/QqmV
+	 2DNGvAbqU8JWlsmwOhJinUk+usYV4rGhOuhnYa1vqcIebAhnSBpsb7a5oCmL9xa3RS
+	 mlSU6/WK8dQ/LOoCutl7J50EJVWWLmF2zAkvDlv1yIjBR2c2ETzk06FwRL69Ig17jf
+	 UP2/IYg3sLDeoAtmz1pEBA3fzk/992PjmF0+oP+ulsO3FlH4M3fKQmaQyjorPc2wJW
+	 GghelHFi8n1dmkuFn7zCueUHBxLEps1VrHHX3zBfjm8QHknXgnV+/NsEP4ayxql5SM
+	 tOpIG4nYeucQQ==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 3FD8639302C7;
+	Wed, 29 Apr 2026 01:50:12 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net 0/4] mptcp: misc fixes for v7.1-rc2
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <177742741105.1295091.8893336213893309310.git-patchwork-notify@kernel.org>
+Date: Wed, 29 Apr 2026 01:50:11 +0000
+References: 
+ <20260427-net-mptcp-misc-fixes-7-1-rc2-v1-0-7432b7f279fa@kernel.org>
+In-Reply-To: 
+ <20260427-net-mptcp-misc-fixes-7-1-rc2-v1-0-7432b7f279fa@kernel.org>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: martineau@kernel.org, geliang@kernel.org, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
+ fw@strlen.de, netdev@vger.kernel.org, mptcp@lists.linux.dev,
+ linux-kernel@vger.kernel.org, yangang@kylinos.cn, stable@vger.kernel.org,
+ sashiko-bot@kernel.org, lance@lance0.com
 
-On Fri, 24 Apr 2026, Matthieu Baerts (NGI0) wrote:
+Hello:
 
-> mptcp_setsockopt_all_sf() was missing a call to sockopt_seq_inc(). This
-> is required not to cause missing synchronization for newer subflows
-> created later on.
->
-> This helper is called each time a socket option is set on subflows, and
-> future ones will need to inherit this option after their creation.
->
-> Fixes: 51c5fd09e1b4 ("mptcp: add TCP_MAXSEG sockopt support")
-> Suggested-by: Paolo Abeni <pabeni@redhat.com>
-> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> ---
-> net/mptcp/sockopt.c | 4 ++++
-> 1 file changed, 4 insertions(+)
->
-> diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-> index 79db15903e7a..30b45d2ab38c 100644
-> --- a/net/mptcp/sockopt.c
-> +++ b/net/mptcp/sockopt.c
-> @@ -812,6 +812,10 @@ static int mptcp_setsockopt_all_sf(struct mptcp_sock *msk, int level,
-> 		if (ret)
-> 			break;
-> 	}
-> +
-> +	if (!ret)
-> +		sockopt_seq_inc(msk);
-> +
+This series was applied to netdev/net.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-This only appears to be used for TCP_MAXSEG, and the limits checked for 
-that sockopt are the same for every TCP socket - so there's currently no 
-risk of having the setting applied to some subflows but not others and 
-skipping the increment here seems like the right thing to do.
+On Mon, 27 Apr 2026 21:54:32 +0200 you wrote:
+> Here are various unrelated fixes:
+> 
+> - Patches 1-2: set timestamp flags on 'ssk', not 'sk' (typo); Plus do
+>   that with sleepable lock_sock/release_sock. A fix for v5.14.
+> 
+> - Patch 3: respect SO_LINGER(1, 0) by sending MP_FASTCLOSE at close time
+>   as expected. A fix for v6.1.
+> 
+> [...]
 
-Not sure if that's true for all possible socket options!
+Here is the summary with links:
+  - [net,1/4] mptcp: sockopt: set timestamp flags on subflow socket, not msk
+    https://git.kernel.org/netdev/net/c/5f95c21fc23a
+  - [net,2/4] mptcp: fix scheduling with atomic in timestamp sockopt
+    https://git.kernel.org/netdev/net/c/b5c52908d52c
+  - [net,3/4] mptcp: fastclose msk when linger time is 0
+    https://git.kernel.org/netdev/net/c/f14d6e9c3678
+  - [net,4/4] mptcp: pm: kernel: reset fullmesh counter after flush
+    https://git.kernel.org/netdev/net/c/1774d3cf3cf1
 
-Reviewed-by: Mat Martineau <martineau@kernel.org>
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-> 	return ret;
-> }
->
->
-> ---
-> base-commit: 2b52586ab2905a2e2546a2fcd28448c86677306d
-> change-id: 20260424-mptcp-pm-sockopt-set-all-sf-d14c92924e71
->
-> Best regards,
-> --
-> Matthieu Baerts (NGI0) <matttbe@kernel.org>
->
->
->
+
