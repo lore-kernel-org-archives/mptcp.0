@@ -1,34 +1,34 @@
-Received: from canpmsgout07.his.huawei.com (canpmsgout07.his.huawei.com [113.46.200.222])
+Received: from canpmsgout03.his.huawei.com (canpmsgout03.his.huawei.com [113.46.200.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A43D926FDBF
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD05F3BE623
 	for <mptcp@lists.linux.dev>; Thu, 30 Apr 2026 10:59:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.222
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777546754; cv=none; b=Xvd3kE85TDEe+AKAe7f97GykJuDgGiGlrLZy1r4jhbKEe1+xcDpWoHWLdVQexs8JSQJXquRKX9LeuwYnPqIUgMOJqClqhIJ6y8M0rOmv2WZeBcnu6eq1pnfY7rBQ6o2tyCdpP5wbHTGBToQr9J/aa154X5xYdq5cyFlc/ywI8Qo=
+	t=1777546754; cv=none; b=PkpY6YfjfBxkbVe5cPVZwzA+je0IzP57AGSNL/RcsMTFNfSc5QbBvRSyabjtIpsTm68PUtSfZDhlQBy02AO0yi/6XZnLsn67APwJhUZszAr+D76jE6URJ7cryJh0Qf+jYw+wBbthdGojqRAm/qWvGwmXuIX/6Ta0sDYrK7eLM7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1777546754; c=relaxed/simple;
-	bh=qLyenjR21Wk3FlfQFU+nj1Bm+8HWWde/8LUA/K3QAfs=;
+	bh=gaPWN26xhYkFH1aZ743VzyjxXZ98+OjhnhPa1ujgKQM=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=vAQgMiZTnpDH9xUqUGOizphOncRXa204SkVZ7vyGEjIvJvi6J+H98keNmCYVZ4NTDtlHZkOqhgxg0zyessqPYdgnLLvIatxBqBvD/7phNW+my8AcDTb2OgWt0+ikDfRRPCEwoSJ+nTK8NPFdRu1LniSrwSo76EiJ2M8GdRrHV/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=t6Qb3m7O; arc=none smtp.client-ip=113.46.200.222
+	 MIME-Version:Content-Type; b=nvuRSMqp49lM4uT0/7rgy3VbAtWzSi8VHSKQ+FXa1tCzj0mppPxO4pNqUs6t5x2ZgoktFh/kbiLRv1+a86atVdl6JGpskzqRL5DR7iIxxIohLzzcoHTvKhb6cRIqEw7DtHQmj/7ZFtuU7VA6yatEHNB9vx9eaX8YRuoZiWaAqs0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=AIGS/p2I; arc=none smtp.client-ip=113.46.200.218
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="t6Qb3m7O"
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="AIGS/p2I"
 dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
 	c=relaxed/relaxed; q=dns/txt;
 	h=From;
-	bh=t7e9LlSquh3uUVyRxXrYcGZmH5anQtlMog54fRV/E7Y=;
-	b=t6Qb3m7O8PJy4NoJvvDXjZcWxNOqeTY8DEsWUrUUKHMU0LN1+n65iqvBD5p7MbwDfke2keGWS
-	8jf1toqnpknkj0ag+tMW7xj7KpTaih614If5X4RRiYTYaYlaxAkt+WC4evwnhJIHdcyphuUkxFT
-	1xzY0/SlLzWupPNwbLYJ9H4=
-Received: from mail.maildlp.com (unknown [172.19.163.200])
-	by canpmsgout07.his.huawei.com (SkyGuard) with ESMTPS id 4g5rbm3hqkzLlVq
-	for <mptcp@lists.linux.dev>; Thu, 30 Apr 2026 18:52:36 +0800 (CST)
+	bh=KQwJFIAA/GiPHvAcWuWyTgGr+QgLBDKSRsya3RNQa60=;
+	b=AIGS/p2IwCpfSnIxpnhZMvtnxJ3KARo0MeN7VuiSMtRvzByP+RU2zEEWWfGGJWwD13O+I+Sml
+	hTQqdp4DadHmA98jji1rvRNexWSbDfqU+TJFIXJLdJw8KAYZvpdawo8phTwu+zewcXXWRu4dzuG
+	IqClAAqJPIGTKj/xaV+GkrI=
+Received: from mail.maildlp.com (unknown [172.19.162.144])
+	by canpmsgout03.his.huawei.com (SkyGuard) with ESMTPS id 4g5rbX0NN1zpStj
+	for <mptcp@lists.linux.dev>; Thu, 30 Apr 2026 18:52:24 +0800 (CST)
 Received: from kwepemj500018.china.huawei.com (unknown [7.202.194.48])
-	by mail.maildlp.com (Postfix) with ESMTPS id 4BA4640647
-	for <mptcp@lists.linux.dev>; Thu, 30 Apr 2026 18:59:03 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id CDEF74056E
+	for <mptcp@lists.linux.dev>; Thu, 30 Apr 2026 18:59:02 +0800 (CST)
 Received: from huawei.com (10.50.85.128) by kwepemj500018.china.huawei.com
  (7.202.194.48) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Thu, 30 Apr
@@ -37,9 +37,9 @@ From: Li Xiasong <lixiasong1@huawei.com>
 To: <mptcp@lists.linux.dev>
 CC: <weiyongjun1@huawei.com>, <yuehaibing@huawei.com>,
 	<zhangchangzhong@huawei.com>, <xiasong.lee@gmail.com>
-Subject: [PATCH mptcp-net v2 2/2] selftests: mptcp: join: cover ADD_ADDR tx drop and list progress
-Date: Thu, 30 Apr 2026 19:20:26 +0800
-Message-ID: <20260430112026.343691-3-lixiasong1@huawei.com>
+Subject: [PATCH mptcp-net v2 1/2] mptcp: pm: fix ADD_ADDR timer infinite retry on option space insufficient
+Date: Thu, 30 Apr 2026 19:20:25 +0800
+Message-ID: <20260430112026.343691-2-lixiasong1@huawei.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260430112026.343691-1-lixiasong1@huawei.com>
 References: <20260430112026.343691-1-lixiasong1@huawei.com>
@@ -54,86 +54,107 @@ Content-Type: text/plain
 X-ClientProxiedBy: kwepems500001.china.huawei.com (7.221.188.70) To
  kwepemj500018.china.huawei.com (7.202.194.48)
 
-Extend add_addr_ports_tests with IPv6 signaling cases that exercise
-ADD_ADDR tx-space shortage when tcp_timestamps are enabled.
+When TCP option space is insufficient (e.g., when sending ADD_ADDR with an
+IPv6 address and port while tcp_timestamps is enabled), the original code
+jumped to out_unlock without clearing the addr_signal flag. This caused
+mptcp_pm_add_timer to keep rescheduling indefinitely, not sending ADD_ADDR,
+preventing subsequent addresses in the endpoint list from being announced.
 
-Add one case to verify ADD_ADDR tx drop accounting via
-MPTcpExtAddAddrTxDrop, and another case to verify PM still progresses
-to later signal endpoints after the first one is dropped.
+Handle this case by clearing the ADD_ADDR signal and skipping the matching
+ADD_ADDR retransmission entry. The skip path cancels the matching timer
+(with id check) and advances PM state progression, preserving forward
+progress to subsequent PM work.
 
-This covers both failure accounting and the non-blocking behavior of
-the announce list after a tx-space drop on pure ACK.
+This avoids endless retries for an ADD_ADDR that cannot be emitted in the
+current pure-ACK option-space constrained path.
 
+Fixes: 00cfd77b9063 ("mptcp: retransmit ADD_ADDR when timeout")
 Signed-off-by: Li Xiasong <lixiasong1@huawei.com>
 ---
- .../testing/selftests/net/mptcp/mptcp_join.sh | 47 +++++++++++++++++++
- 1 file changed, 47 insertions(+)
+ net/mptcp/pm.c | 45 ++++++++++++++++++++++++++++++++++++++-------
+ 1 file changed, 38 insertions(+), 7 deletions(-)
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index beec41f6662a..59beddb487e3 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -1828,6 +1828,22 @@ chk_add_tx_nr()
- 	fi
+diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+index 57a456690406..a94177d9f265 100644
+--- a/net/mptcp/pm.c
++++ b/net/mptcp/pm.c
+@@ -401,6 +401,13 @@ mptcp_pm_del_add_timer(struct mptcp_sock *msk,
+ 	return entry;
  }
  
-+chk_add_drop_tx_nr()
++static void mptcp_pm_add_addr_skip(struct mptcp_sock *msk,
++				   const struct mptcp_addr_info *addr)
 +{
-+	local add_drop_tx_nr=$1
-+	local count
-+
-+	print_check "add addr tx drop"
-+	count=$(mptcp_lib_get_counter ${ns1} "MPTcpExtAddAddrTxDrop")
-+	if [ -z "$count" ]; then
-+		print_skip
-+	elif [ "$count" != "$add_drop_tx_nr" ]; then
-+		fail_test "got $count ADD_ADDR drop[s] TX, expected $add_drop_tx_nr"
-+	else
-+		print_ok
-+	fi
++	mptcp_pm_del_add_timer(msk, addr, true);
++	mptcp_pm_subflow_established(msk);
 +}
 +
- chk_rm_nr()
+ bool mptcp_pm_alloc_anno_list(struct mptcp_sock *msk,
+ 			      const struct mptcp_addr_info *addr)
  {
- 	local rm_addr_nr=$1
-@@ -3278,6 +3294,37 @@ add_addr_ports_tests()
+@@ -860,6 +867,7 @@ bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, const struct sk_buff *skb,
+ 			      struct mptcp_addr_info *addr, bool *echo,
+ 			      bool *drop_other_suboptions)
+ {
++	bool skip_add_addr = false;
+ 	int ret = false;
+ 	u8 add_addr;
+ 	u8 family;
+@@ -881,24 +889,47 @@ bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, const struct sk_buff *skb,
+ 	}
  
- 		chk_mpc_endp_attempt ${retl} 1
- 	fi
+ 	*echo = mptcp_pm_should_add_signal_echo(msk);
+-	port = !!(*echo ? msk->pm.remote.port : msk->pm.local.port);
+-
+-	family = *echo ? msk->pm.remote.family : msk->pm.local.family;
+-	if (remaining < mptcp_add_addr_len(family, *echo, port))
+-		goto out_unlock;
+-
+ 	if (*echo) {
+ 		*addr = msk->pm.remote;
+ 		add_addr = msk->pm.addr_signal & ~BIT(MPTCP_ADD_ADDR_ECHO);
++		port = !!msk->pm.remote.port;
++		family = msk->pm.remote.family;
+ 	} else {
+ 		*addr = msk->pm.local;
+ 		add_addr = msk->pm.addr_signal & ~BIT(MPTCP_ADD_ADDR_SIGNAL);
++		port = !!msk->pm.local.port;
++		family = msk->pm.local.family;
+ 	}
+-	WRITE_ONCE(msk->pm.addr_signal, add_addr);
 +
-+	# signal address with port IPv6: tx fails with tcp timestamp
-+	if reset "signal address with port IPv6 tx drop"; then
-+		pm_nl_set_limits $ns1 0 1
-+		pm_nl_set_limits $ns2 1 0
-+		ip netns exec $ns1 sysctl -q net.ipv4.tcp_timestamps=1
-+		ip netns exec $ns2 sysctl -q net.ipv4.tcp_timestamps=1
-+		pm_nl_add_endpoint $ns1 dead:beef:2::1 flags signal port 10100
-+		speed=slow \
-+			run_tests $ns1 $ns2 dead:beef:1::1
-+		chk_add_nr 0 0 0
-+		chk_add_drop_tx_nr 1
-+	fi
++	if (remaining < mptcp_add_addr_len(family, *echo, port)) {
++		struct net *net = sock_net((struct sock *)msk);
 +
-+	# first signal address drops, second one still progresses
-+	if reset "signal addr list progresses after tx drop"; then
-+		pm_nl_set_limits $ns1 0 2
-+		pm_nl_set_limits $ns2 1 0
-+		ip netns exec $ns1 sysctl -q net.ipv4.tcp_timestamps=1
-+		ip netns exec $ns2 sysctl -q net.ipv4.tcp_timestamps=1
++		if (!*drop_other_suboptions)
++			goto out_unlock;
 +
-+		pm_nl_add_endpoint $ns1 dead:beef:2::1 flags signal port 10100
-+		pm_nl_add_endpoint $ns1 dead:beef:3::1 flags signal
++		if (*echo) {
++			MPTCP_INC_STATS(net, MPTCP_MIB_ECHOADDTXDROP);
++		} else {
++			skip_add_addr = true;
++			MPTCP_INC_STATS(net, MPTCP_MIB_ADDADDRTXDROP);
++		}
++		goto drop_signal_mark;
++	}
 +
-+		speed=slow \
-+			run_tests $ns1 $ns2 dead:beef:1::1
+ 	ret = true;
+ 
++drop_signal_mark:
++	WRITE_ONCE(msk->pm.addr_signal, add_addr);
 +
-+		chk_add_drop_tx_nr 1
-+		chk_add_tx_nr 1 1
-+		chk_add_nr 1 1 0
-+	fi
+ out_unlock:
+ 	spin_unlock_bh(&msk->pm.lock);
++
++	/* On pure-ACK option-space exhaustion, stop retrying this ADD_ADDR:
++	 * clear the signal bit, cancel the matching retransmission timer, and
++	 * let the PM state machine progress.
++	 */
++	if (skip_add_addr)
++		mptcp_pm_add_addr_skip(msk, addr);
+ 	return ret;
  }
  
- bind_tests()
 -- 
 2.34.1
 
