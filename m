@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CB8634E746
-	for <mptcp@lists.linux.dev>; Thu, 30 Apr 2026 14:50:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B32542EECE
+	for <mptcp@lists.linux.dev>; Thu, 30 Apr 2026 14:51:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777560644; cv=none; b=s/Trj36rUOXXlyCgz6edKT6Z+D8Fpab2U44AS+eWp0G/vn7iHBErmpA/NZlDkzbBa2r2CivF3kNR9F3M142aw4q9TXm18mfFZdFebY5u9A4XwyP0xvM4TDlB1kYp+C5ltbEHldaEoEVAuBsP/h8X4G2aYWtrPv0FH6eftrDMn2U=
+	t=1777560692; cv=none; b=SNOhDuQZmOl3Cwldv5FJVkO5njCbjNMLM6bDOH1Z+tPh/vvXgGCjoMKhBPeZQSMmqXRqEEsPopKLMEFL5S26ioyGkJaGhVxrKXDrzqIrnFROVL5vvFlia/5ts/yQaGB7pmeEU+/YbT+w3XOVvwTU8sH2i+FpvAigJjwz7n5w+5I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777560644; c=relaxed/simple;
-	bh=bDUC6wC1YuDVU4Gel3lM+ag1x08pkXawLY7W6nQJicA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=MOZOfvdvkw8eDo0gT4HDe9DXqj58zw4XkIerxpYLd4YaKXR6KfmKC0pUvoJLr9+Lgz4Qu7mTZyS4PNeR6Uz7MixxdQxE0xLt9rTFQZLiOV5jwqyZQxlo4FiZ2knfodpTCkNqvQCYcC6c4+cV9YluJVzdUF6vXeOR00QwhrmNZaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=csVM5EUp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777560692; c=relaxed/simple;
+	bh=COBVhiewa0Z6IF38Vif6Si89+CfYflIzkPYKo6HFZsY=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=cIwjg1up7dch0kywAqLi7t2pTkS8B+ekbFhwlSGMWr4QMbwkMYKWirJjS+w1RiQljmgIx12pnz2kwUZsTpjaOXHAlfH6W6wzTDSh0Fkq/GGUldyOvyv3q3vymypo/TKUNu0FukKHB1aR0pp/xGMIQCV/SXeOzq/0onWs/DMhl94=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qFQbilSa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="csVM5EUp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9EB5AC2BCB3;
-	Thu, 30 Apr 2026 14:50:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qFQbilSa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7688CC2BCB3;
+	Thu, 30 Apr 2026 14:51:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777560644;
-	bh=bDUC6wC1YuDVU4Gel3lM+ag1x08pkXawLY7W6nQJicA=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=csVM5EUp5emyZnZZist/jEQONEm4wZ9l/fbqaKaOElB6D7V0d65Ydv0VdwQNXCFGH
-	 X2RkwEHCe8KokwP5dk/g2knLxdc2lWDfWouFonfROJ/O9pLtOde2SXWoZ/484m2KkZ
-	 p4Nz/S+CG7wdOhCXsjpKUT8WagSSroOtpa3k2jhafRMwjtm8p3vbwicxUL5my9oky3
-	 FO6nrTSM3Lel6Y1tpXmnMM9K0YA7NzuVZgw8ZM8cCt6lMM2mul37P7WPj0POAcae+0
-	 sDH0FZeuVciC1gYKDAvdutiIKs/hUvQXiTC/sW3YBHWOC9kDdFmW+NkpLdR5lRg0qc
-	 TEnn3seJyuElA==
-Message-ID: <b406abb1-1f97-46d0-842a-777d48c6cb32@kernel.org>
-Date: Thu, 30 Apr 2026 16:50:40 +0200
+	s=k20201202; t=1777560692;
+	bh=COBVhiewa0Z6IF38Vif6Si89+CfYflIzkPYKo6HFZsY=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=qFQbilSaNHmZmbZ3VRRAInuf8QGaHi1XpkytadZvlhc0qh4tYJ4cWxAO9mGfIeG+H
+	 6KN1BlZHZxTz2xAGvzAfgVlVhiWsCGYDg1u7xm6a+58CQ35Z6oL2p4BhldQl4Zbv4v
+	 aHXZfjveMymypnN4Z374R1zMSAFaU+vKHADN6FsHjBRvHVh1x17gaQUZjsrYcHSrnY
+	 3ccm/umMAyJNZC63YQoqQ/Www+5ZGAuOPSwEiCKwZN7Uz1ngJnTG9v94q+tH6GvrFM
+	 8PcJ80Y7SOpa6N3A/UT39VepSagp3wwOW4RxMqxPFfe/z0p3caU994kIK98sAh6CUJ
+	 JBVhFyQdol1DA==
+Message-ID: <43bd881a-4e98-46df-875a-c34f9b637fb8@kernel.org>
+Date: Thu, 30 Apr 2026 16:51:28 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -37,9 +37,11 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
 Subject: Re: [PATCH mptcp-net] mptcp: fix rx timestamp corruption on fastopen
 Content-Language: fr
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-References: <eaeec8e58b36820e2c592b7a88681f3c188cb64a.1777460572.git.pabeni@redhat.com>
 From: Matthieu Baerts <matttbe@kernel.org>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+References: <eaeec8e58b36820e2c592b7a88681f3c188cb64a.1777460572.git.pabeni@redhat.com>
+ <177755934008.1566930.11036454276948716689.b4-review@b4>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -84,29 +86,64 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <eaeec8e58b36820e2c592b7a88681f3c188cb64a.1777460572.git.pabeni@redhat.com>
+In-Reply-To: <177755934008.1566930.11036454276948716689.b4-review@b4>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Paolo,
 
-On 29/04/2026 13:06, Paolo Abeni wrote:
-> The skb cb offset containing the timestamp presence flag is cleared
-> before loading such information. Cache such value before MPTCP CB
-> initialization.
-Now in our tree:
+On 30/04/2026 16:29, Matthieu Baerts wrote:
+> On Wed, 29 Apr 2026 13:06:02 +0200, Paolo Abeni <pabeni@redhat.com> wrote:
+>> The skb cb offset containing the timestamp presence flag is cleared
+>> before loading such information. Cache such value before MPTCP CB
+>> initialization.
+> 
+> Good catch, thank you for the patch!
+> 
+>>
+>>
+>> diff --git a/net/mptcp/fastopen.c b/net/mptcp/fastopen.c
+>> index 82ec15bcfd7f..082c46c0f50e 100644
+>> --- a/net/mptcp/fastopen.c
+>> +++ b/net/mptcp/fastopen.c
+>> @@ -40,12 +41,13 @@ void mptcp_fastopen_subflow_synack_set_params(struct mptcp_subflow_context *subf
+>>  	 */
+>>  	tp->copied_seq += skb->len;
+>>  	subflow->ssn_offset += skb->len;
+>> +	has_rxtstamp = TCP_SKB_CB(skb)->has_rxtstamp;
+>>  
+>>  	/* Only the sequence delta is relevant */
+>>  	MPTCP_SKB_CB(skb)->map_seq = -skb->len;
+> 
+> From sashiko:
+> 
+>   Does this assignment result in a zero-extension issue?
+> 
+>   While not introduced by this patch, since skb->len is an unsigned int,
+>   applying the unary - operator results in a large positive unsigned int rather
+>   than a negative value.
+> 
+>   When this is assigned to map_seq, which is a u64, it gets zero-extended
+>   instead of sign-extended. Downstream in mptcp_inq_hint(), the calculation:
+> 
+>   READ_ONCE(msk->ack_seq) - MPTCP_SKB_CB(skb)->map_seq
+> 
+>   could underflow if msk->ack_seq is 0, resulting in a massive 64-bit value.
+> 
+>   Could this trigger a fallback where ioctl(FIONREAD) falsely reports INT_MAX
+>   bytes available?
+> 
+>   If a peer sends a TCP Fast Open SYN packet with a payload, server
+>   applications querying FIONREAD might attempt a 2GB allocation and crash.
+> 
+>   Should this be explicitly cast, such as -(u64)skb->len, before negation?
+> 
+> It looks like it didn't get that map_seq will be += skb->len later.
 
-New patches for t/upstream-net and t/upstream:
-- 11220629c0b6: mptcp: fix rx timestamp corruption on fastopen
-- Results: 74d088bb4493..53245e9a2f63 (export-net)
-- Results: b64555038d9a..fb282c0c802d (export)
+Wrong explanation: if it is += skb->len later, it will not be back to 0
+without the cast.
 
-Tests are now in progress:
-
-- export-net:
-https://github.com/multipath-tcp/mptcp_net-next/commit/19acdc9893d0404966344913456f96a33ee235ae/checks
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/a9a1aa04308af2b72dae77e1cb6382a079e4776c/checks
+@Paolo: do you remember why it is set to -(u32)skb->len here?
 
 Cheers,
 Matt
