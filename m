@@ -1,117 +1,128 @@
-Received: from mail-dy1-f175.google.com (mail-dy1-f175.google.com [74.125.82.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B71F335AC3B
-	for <mptcp@lists.linux.dev>; Thu, 30 Apr 2026 20:35:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.175
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777581336; cv=pass; b=VOE60T9XAj3D06bHWj+V1iazkkuu+yIgYgH+zMPfUDpIWVrQvpwfLT+Z1EyHgeE3Tl6mKcODQ4RY6/6K1D6WHU0ZwBBlKDffCmkpfAWWZ1kgSWVLsvucCpMGi6MpRcL1gtWbWBmRwdz/6JYw/ZuFEhu++hqtDBMe0pNMM20keH0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777581336; c=relaxed/simple;
-	bh=ANDvpIxfrHqHFRr6SwK5eAHivKDZmMQu+6Ow5bEPjY4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Dc54paJUl37WtZDQ+/S5LJ9XNbrtYxoOylufFSiRd4bwZPZiDEXiDgNmMdcNaqIlHtqqM3gtGwizrPDCjgL4LgoDzgmCcNtTQmQ/kG3Dz6/Vp5gKuQqUCxjtqkSxpu/c9yK1enYBksP4Opy1mXS3ofmpiBdXUU4ShkidrZS6eaI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MkgfZmVf; arc=pass smtp.client-ip=74.125.82.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE94C3AE712
+	for <mptcp@lists.linux.dev>; Thu, 30 Apr 2026 20:45:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1777581913; cv=none; b=j77bymZcCKEg2MOD4CihpjkE2BsUJ5Ct/jWO+8tp97c8OfEr8nfY+ClOWfk/irdW8yvl79l4/ntP00gXhYu+tqywg5AuInRYFr96NfoKQpO8qYX49dmvrfpBqfWpCXsvWqP8JWLALm1kSck7yhMCURlCwspiCWpZ+SYBzsru+So=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1777581913; c=relaxed/simple;
+	bh=FnAoPVSjrIw6cJQ1NHbpbQia8UjjbNlI7cXrv3pzsUU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XsNN5KkIm5ttBJwcjbN4phkyBUnhMzpXTrldDOU+ZU5Zdv45Pv29z6OJnYiQa/MoghCSumQRpxYXpUm89Wy7562pYONbrsjkU5wlsgINfK7oJ99bNqbY6/5DdT/h4EIy9GJFwNr5nOVdr9A06btzD8TpX9Kox7warCST4lGP5r0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L6V7p5/2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MkgfZmVf"
-Received: by mail-dy1-f175.google.com with SMTP id 5a478bee46e88-2e221a71e19so1947769eec.0
-        for <mptcp@lists.linux.dev>; Thu, 30 Apr 2026 13:35:35 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1777581335; cv=none;
-        d=google.com; s=arc-20240605;
-        b=DOP8vY0Kr4KSWy0J98iZCkjKrah1bwk4tTI9n5caw1cbnUvVpHA3m5kIYvCAzaPbcX
-         IH5UhWOz1qKc0IoatCxv6m+ystdGruBmTvWv2/8BDf3HYUb1KVpZu2TRg0mgZPsmbUwK
-         WGKTKtl3N/dSRoUyY4Bib5bGa7f4Y+/iCBkgtqsiwPT5AE+2kOuT94yWHivn6kmVax7n
-         9EWLIUmc9oRnaP1lMMjwNEC0LtzkXVp9MCX7LpGNvaYyJDQYcvF6jCxhvpPkLkuOyyhX
-         AgMIH+sU8BzOT5Cr1i2ptZkby+KxccmaE+NkfIeMlAvC4v/W2tgpzg7rFYLkzGBZRev6
-         +Rcw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=eDT4fRO0CYsk/JV/kLnG/AoLCWH7UTDX711nZg2FgiA=;
-        fh=nP910eg46cVlBNxUHlbriWBTGqShNF5/nSJNyVGu/Tc=;
-        b=h1pG75GLHlKsk1o0ZcuV8B0WEcGKMRJFzXSwcA3DSkzngxQw5XXt4l23TPsXEkd1oL
-         N/e8Teq2EnpQebhyH10qpMxqzXTpKySdEVsl0kwoHjBMaRrWWxSFDm7EXq33m2mg6bwr
-         A17TjjfZ2M+cF1b2PyfOmyZ5urMFTRaEKST12zho4vB7s3chCUmGbOQ1qfnZzoYRgT0l
-         K2rEpaTShtgLCXqAXVtSm3pnba92kpPZOfdUd9tVX0fQSluKed5IsZ1j6S90nGFH3yPp
-         KSNrh+IiOyiY0PM3A0YYd5Mrr/emSBEeA7QDWx657cghT3MGtYDHpNY745hsrJ5U/kqq
-         pr0A==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1777581335; x=1778186135; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eDT4fRO0CYsk/JV/kLnG/AoLCWH7UTDX711nZg2FgiA=;
-        b=MkgfZmVfIeFkhuI13xHrN5DC0z1Ge9oHCDxgqYoW+qu5IDugXV17bpYLU8RD3i8pOe
-         VEugoyXsFDJHaQiN2GWhrc7Aytj2muYn8aGeNUkwA0AJjwqjgNjEcpcBLbNlsiBUl7WR
-         wA5n/SouP+s4Wl3f5QCrv8XPUfr7MsSpCcVo3lclp8hWz3fGcuzkW6DbI+2gQADtriGU
-         AwSP2v0PE3NSa/2cTDY8bvm+lPaOSIq3Xgavg/StzZXjjPp/mUrD7+mqBr1EmhE6q27z
-         pG/zu+ioKH8uCatSlGHSAq3/UFqvsVYgT1OOESYuwwVrG8TU2naVTvwjdBwZmIRU7ea4
-         TCsw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777581335; x=1778186135;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=eDT4fRO0CYsk/JV/kLnG/AoLCWH7UTDX711nZg2FgiA=;
-        b=L8LZlYPn3trgTwmbtdQ9TK1IoXbqDOMXVSPzSlJX/IFfZoaBNxIrU03NOIVSdBUP9o
-         jN8T5zaiDzLQqSrkL1vthCrydWwOqwZgcgRgGqb4ANjdXbrHWPXN092nuocFc3AgNy6V
-         kmZLltYyqDjXC+i492s1ArsWYyOB4mcZPLsIfn/fVmJ6luX6IaAP9+ZUws6M/rEaCCpQ
-         auVS4Q9pYwa05cGDGcGxTFq/lGK5OZFCW5PIl1j1g6KierhBzmMGOu9Ii7Xe0KRIdoUF
-         pbdU0VzcI4bb4GCzlfA1yRfpSH45OVuHmB9QSVCHZ1D1+M+fH4Axf+/zQ+kD9nUaeu/F
-         ES0g==
-X-Gm-Message-State: AOJu0YwxGPWXd+VtmfQUFXyYpeR1q1tVwFBAxkTP+C/QmNLFLzRAlvaa
-	F5ZfcvxAg6H0AG9TxuhAP6/vzOzRqPsO4rKnilpt57bTaPpE7cXd9id2St1aXSx4HriiS5F1+qA
-	a4CjNlHMoLgKQDHDgdeEeJ90YEsN42fzz56bCYaWaRfQAlv78FCkVrg+E
-X-Gm-Gg: AeBDievfxwyV3+m4LxWiS/JXraeqX23XdpM2anuDjNOYltVwzwcU3+XvuQCzzReGK9C
-	rqF640/Y0yQqTVW+nT4+rG/AzHEpup/NGm5FK1kNoyHivIJvK33dpZ6CWqDEWTbdtbXYqg/IL6A
-	mfYDPpdojJ38ALB2imLwb1kM3tzAYl2l9Mw/I4Dy5Nli335ySAxHVP/MrC4hRhfzKynfsgLN34u
-	Uz4+94ODLzeFV+q1CFFndIzy3SZSSXg/wGqJEbT8pMkUjNCYKrID7DEHChEEYR6829mDF/bIiPj
-	Q6HZxq5L7fT44azKWVWKONji/I2ZZlB7DCApDwpPUhRMtmV+mWHKylg1t6dUeQuYWSwXsK68u8H
-	vF/hURwgbbwxb2ZZGtbiP2Gx+Z+ngYelEHAVhid4j7IpRZC/Owm8qpcGGoi/OGKcxl13KJMJZSy
-	/98I2wobcf
-X-Received: by 2002:a05:7300:e827:b0:2da:2ec2:64e5 with SMTP id
- 5a478bee46e88-2ed3dbc003dmr2476546eec.18.1777581334105; Thu, 30 Apr 2026
- 13:35:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L6V7p5/2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB78AC2BCB8;
+	Thu, 30 Apr 2026 20:45:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1777581913;
+	bh=FnAoPVSjrIw6cJQ1NHbpbQia8UjjbNlI7cXrv3pzsUU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=L6V7p5/2moXts8UqjlPjfW/3szMusweIdUIEIvwR1jY6VEqgOF8cAhZxHPnGW+HbU
+	 LK866zxoV7QtHhTO1U93n0Y3eslwMnn31YUko+5DNPxZujnxq5XodkuoIiPKfJHnLR
+	 2fave/Rg2t/D8PYm4KypdpMbaMgVr6tW9TqcmC7o1b0vEEy2/p9BZLG6pFSU+qeJ4S
+	 eQUfo9Q0+4c2Hk5C6ZRklQJ8bNoXC4SY31AA7J2A63hNPFaamoUdZukc65BEUMEeEQ
+	 0HJ3SmmBZXmst+AedSB+NFht1NeWGU/iGUHsABgZhhPH8NtSPkLKKJjZKzv8dFdE3m
+	 bYvURmObEQl4w==
+Message-ID: <fb2d66e0-b2bf-484d-85e3-c325d99bbfb2@kernel.org>
+Date: Thu, 30 Apr 2026 22:45:10 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260430-mptcp-bpf-mptcp-sock-type-v1-1-d2ed5cda7da9@kernel.org>
-In-Reply-To: <20260430-mptcp-bpf-mptcp-sock-type-v1-1-d2ed5cda7da9@kernel.org>
-From: Kuniyuki Iwashima <kuniyu@google.com>
-Date: Thu, 30 Apr 2026 13:35:22 -0700
-X-Gm-Features: AVHnY4IcdeOyuD_LEFpPjKd_jc4LwcXzI_L1gVqXovQphYv-9chxWOuIxfibhbE
-Message-ID: <CAAVpQUDeJRSTympB2QqQv8Ouc+WRnM_HjVyitqngQiM3Uayh4Q@mail.gmail.com>
-Subject: Re: [PATCH mptcp-net] mptcp: bpf: fix type confusion in bpf_mptcp_sock_from_subflow()
-To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-net] mptcp: bpf: fix type confusion in
+ bpf_mptcp_sock_from_subflow()
+Content-Language: fr
+To: Kuniyuki Iwashima <kuniyu@google.com>
 Cc: MPTCP Linux <mptcp@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+References: <20260430-mptcp-bpf-mptcp-sock-type-v1-1-d2ed5cda7da9@kernel.org>
+ <CAAVpQUDeJRSTympB2QqQv8Ouc+WRnM_HjVyitqngQiM3Uayh4Q@mail.gmail.com>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <CAAVpQUDeJRSTympB2QqQv8Ouc+WRnM_HjVyitqngQiM3Uayh4Q@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, Apr 30, 2026 at 1:27=E2=80=AFPM Matthieu Baerts (NGI0)
-<matttbe@kernel.org> wrote:
->
-> bpf_mptcp_sock_from_subflow() only checks if sk->sk_protocol is
-> IPPROTO_TCP, but RAW socket can bypass it:
->
->   socket(AF_INET, SOCK_RAW, IPPROTO_TCP)
->
-> In this case, it would NOT be valid to call sk_is_mptcp() which will
-> assume sk is a pointer to a struct tcp_sock, and wrongly checks for:
-> tcp_sk(sk)->is_mptcp.
->
-> This is similar to the modification done on TCP side [1], by Kuniyuki.
->
-> Fixes: 3bc253c2e652 ("bpf: Add bpf_skc_to_mptcp_sock_proto")
-> Link: https://lore.kernel.org/20260430184405.1227386-1-kuniyu@google.com =
-[1]
-> Cc: Kuniyuki Iwashima <kuniyu@google.com>
-> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Hi Kuniyuki,
 
-Reviewed-by: Kuniyuki Iwashima <kuniyu@google.com>
+On 30/04/2026 22:35, Kuniyuki Iwashima wrote:
+> On Thu, Apr 30, 2026 at 1:27 PM Matthieu Baerts (NGI0)
+> <matttbe@kernel.org> wrote:
+>>
+>> bpf_mptcp_sock_from_subflow() only checks if sk->sk_protocol is
+>> IPPROTO_TCP, but RAW socket can bypass it:
+>>
+>>   socket(AF_INET, SOCK_RAW, IPPROTO_TCP)
+>>
+>> In this case, it would NOT be valid to call sk_is_mptcp() which will
+>> assume sk is a pointer to a struct tcp_sock, and wrongly checks for:
+>> tcp_sk(sk)->is_mptcp.
+>>
+>> This is similar to the modification done on TCP side [1], by Kuniyuki.
+>>
+>> Fixes: 3bc253c2e652 ("bpf: Add bpf_skc_to_mptcp_sock_proto")
+>> Link: https://lore.kernel.org/20260430184405.1227386-1-kuniyu@google.com [1]
+>> Cc: Kuniyuki Iwashima <kuniyu@google.com>
+>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> 
+> Reviewed-by: Kuniyuki Iwashima <kuniyu@google.com>
+
+Thank you for the review!
+
+If you need to send a v2 of your series to the BPF ML, feel free to
+include this patch (without the last sentence, the Link and the Cc
+tags). But I can also send it separately later if preferred, up to you.
+
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
+
