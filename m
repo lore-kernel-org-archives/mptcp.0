@@ -1,131 +1,127 @@
-Received: from mail-dy1-f170.google.com (mail-dy1-f170.google.com [74.125.82.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30D123DA7ED
-	for <mptcp@lists.linux.dev>; Thu, 30 Apr 2026 12:16:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AA27413237
+	for <mptcp@lists.linux.dev>; Thu, 30 Apr 2026 13:20:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777551396; cv=none; b=a2EJlx0vuwpZZRIqmlsMYMQM3I2Urc+50Mcl3wLcK5gUjND9+i/KF8WOzaFFjyYf5SPcEkenUyP8UASmaGxnRRAaAyjrqPlWHmGR3nKwCDvxp4QaeXB4CHsklNtBJpumLYvDSgiAcDprwA9uCDQtb2hp4zyOCE5DdNLxmtKPuRA=
+	t=1777555253; cv=none; b=HAKAGeSfWGMZtfQ7qXXcDzdxRW15nK64pIvr7Gencl48yeuErL652HTiv+yEImbMm9vsG+J4Y1RuCMNlt/9qW6Nau2Z9Aezj93w+XhS6/1Yv7SSeEJvXiz3mTYyE+qNg4YNV/x/JmcU7numN8+1JBKsIy23O4x+hPHtkN+5DEdI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777551396; c=relaxed/simple;
-	bh=1slHtn1N+6LGVAHWvu53WQAw/VPPyISYVewR0Uu2/xo=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
-	 MIME-Version:Content-Type; b=EltSTNXbiWKikGmXPJgjT1ezTJko/JO7Eg6Ki6rC0UTVEU43vzEfq/CUROQj/u2OxTTN5U/RJtX2dohKTVKrgy09sculmwbEXgGY11Bfzwc81+WsgBqJbq32WyUc0ZgGsQJLSmeM+ZAjMLEqlMfkwrcaoCOh5W2aHKB7JRXlMlg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EIWTb5Fa; arc=none smtp.client-ip=74.125.82.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1777555253; c=relaxed/simple;
+	bh=JekrtzEYzVYLxVVTO1XY73/7OQqyfCAx32/vszCf8Y4=;
+	h=MIME-Version:Content-Type:Subject:From:To:Cc:In-Reply-To:
+	 References:Date:Message-Id; b=qGujnao0gDkwwzghNG8YmMvei2le7wZpRRXf/YA0rx9qZvQ7as9B36RQ8B97pgW/XEBewAWrpgoN7syCXn41k+Tf0j9G78f4/+Yq2bqx7hcVgjbCLM54skqcLH32dhU8s/RpDh0X9Blsn/3R8qDG7MRKL3VQ8oULcRmkp/0zTBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qSEzpHFA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EIWTb5Fa"
-Received: by mail-dy1-f170.google.com with SMTP id 5a478bee46e88-2dec803f9f0so1173326eec.0
-        for <mptcp@lists.linux.dev>; Thu, 30 Apr 2026 05:16:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1777551394; x=1778156194; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6w9+FkzzBs6fdpljm5QwkynuLOur3Z+J5P2Q3bXKrH4=;
-        b=EIWTb5FaKoyJHSML/vbqM1mAX0nGUpOGgnUs6LDR7PfS1NpmgeBp02F+tyfbKYyThn
-         Qd5Kd7wxjm0HU8osFT//FLyosRKCBuPSLfoInCtD7C+V9yRSXxjiMCLfyuGWz42uIY+o
-         5otm7WxpNJ9agu1S8m6NDa3HV7PsGZT8uyzXUXHWgmK0dnHZCDUHL8FAsbK5i7GzNXQ/
-         WiEzL3hosqqq/hyToSO9zfAcizwvobBlo5GP/Y3Yemn60zqC5vLHZOdkkt77U1Xt2Nbq
-         1f6XfYwzVCnGxlyEJMq/Bq4YrNjJJpj5FIgcyR68NY96j+9/auBCnO+5Xt9Hxt0R8dHe
-         RZ+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777551394; x=1778156194;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6w9+FkzzBs6fdpljm5QwkynuLOur3Z+J5P2Q3bXKrH4=;
-        b=FVE3UKJTIpPF6RIAxMTE2TDsCuRyxWAxeA5u3oaQWE7q0ne47DGzw0haejmo/HRm6e
-         9nCsAbfLiiA2fhSdatF9rh/yyOEP2aiyJkMAV27yPNLPlOqauqCuP7ykxuqiEO/tPYRZ
-         39VGPwdzYdd9geOqNu+JCzXbMKtPtm+bR6pg2fb9TllgzUSKMCgIw0CdiPYTdXyM2fMN
-         Rc6atr/Pp/plGA6EhKmMEZvc0yEiR2vIHAwq4DIkG/w42lbSAQO81ecHOsYJIYeRLseT
-         izbnBJrz4RfuatXyECT6YKjM/SsmEM5mgTgwhr7euV1zRpNgMIL2oMOAYpJ4GAQZYXdf
-         rjLQ==
-X-Gm-Message-State: AOJu0YxbgQpmfGAnU9TP5RBFkVqetchFtxfIqnwCqW4bDqTUtwp78Ejm
-	hHJzMawJRxh93r+rhXQAkDRh/NM3Fj2qqUKmzAoeMCf5FUhTd+tLjNg=
-X-Gm-Gg: AeBDieuRr+VaAa2duBPrHrugn38aH/THHHZeoAyb2tVJ96SLlKj68h+O5WwrJy0d2n1
-	wcQgjA7Qzn2sX9JzCyQFULg0Euc+CbvFo1osmHCQkP300MsgPc1COc1RzSxU5YQRg4E7f2i2V+V
-	zEUABI1h5V0wya8O/rbdc+ULgASMhiQERW2BZPZYUDAht20631SvDq2AGxDP/HqtimrVXCwX7Rq
-	R5TLV/55c3AXe2Erp9pWfc7pm2RqCH982dggMwXCU1MXpeEkmQrzP9Zy5Ao4DxZqWzB5V/2KzWq
-	pulW7/jmFxjifJpCcM4trB7eUdzlQ64/LYqvwD8kTs9dw//8jVoWUY5URzMG+w/hr1fvkdarXhL
-	k01XS4kM6Y2/1ceavbh+R3UFv5tdpWSTvKrMJ4nrEnoQz1sGICI5dP2wP7OscdOWHzS/lcC+QV8
-	fJoKPcabVJvKb4WQurR7On8Vvcrj7Z9lpHNUf0sNztWPOi0pq/vA==
-X-Received: by 2002:a05:7300:d0e:b0:2c6:67b6:3acc with SMTP id 5a478bee46e88-2ed4f6d8718mr915382eec.15.1777551394114;
-        Thu, 30 Apr 2026 05:16:34 -0700 (PDT)
-Received: from [127.0.0.1] ([172.182.193.129])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2ed1bf8e268sm6373723eec.12.2026.04.30.05.16.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Apr 2026 05:16:33 -0700 (PDT)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Li Xiasong <lixiasong1@huawei.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20260430112026.343691-1-lixiasong1@huawei.com>
-References: <20260430112026.343691-1-lixiasong1@huawei.com>
-Subject: Re: [PATCH mptcp-net v2 0/2] mptcp: pm: fix ADD_ADDR timer
- infinite retry on option space shortage
-Message-ID: <18707a46-51e4-edd2-103b-7e02b773db69@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 30 Apr 2026 12:16:33 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qSEzpHFA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C29A3C2BCB3;
+	Thu, 30 Apr 2026 13:20:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1777555252;
+	bh=JekrtzEYzVYLxVVTO1XY73/7OQqyfCAx32/vszCf8Y4=;
+	h=Subject:From:To:Cc:In-Reply-To:References:Date:From;
+	b=qSEzpHFAywnhHOXj1sVpmW5C2UPymKwZBvTUX75WM22Pm6ySoxJ4EtfqDjVX7tHc/
+	 fvUyurUNsDAzr45yx/j7J6W997WxpaACvfR3ZDN6NmNRBBt7Y7DFkmyjvDK+duOPJN
+	 LBQRcdZYeByYpUbI4hVIxpcq+iIP9y8pYbgGc+noL7p/gdAXytXx18KimjCIlaVgut
+	 /G5fNP25KvR5Rg8EGmyKwiI1UyS/zB7qgHl7RYGY8KvA3U7/fBhGUcdO8ZOJLpzmRM
+	 oQJuiI3IAKVZolDe/fKddlHoVFlvGTwjuzkokC5DScC0S38kxacyNWTdBpSS2g1j5J
+	 I8+GS/p0S0RDA==
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH mptcp-net v2 1/2] mptcp: pm: fix ADD_ADDR timer
+ infinite retry on option space insufficient
+From: Matthieu Baerts <matttbe@kernel.org>
+To: Li Xiasong <lixiasong1@huawei.com>
+Cc: mptcp@lists.linux.dev, weiyongjun1@huawei.com, yuehaibing@huawei.com, 
+ zhangchangzhong@huawei.com, xiasong.lee@gmail.com
+In-Reply-To: <20260430112026.343691-2-lixiasong1@huawei.com>
+References: <20260430112026.343691-1-lixiasong1@huawei.com>
+ <20260430112026.343691-2-lixiasong1@huawei.com>
+Date: Thu, 30 Apr 2026 15:20:42 +0200
+Message-Id: <177755524215.1566930.3209225574765644709.b4-review@b4>
+X-Mailer: b4 0.16-dev-76c3c
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2795; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=JekrtzEYzVYLxVVTO1XY73/7OQqyfCAx32/vszCf8Y4=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDI/hxtO3lDw89Li9feady9SMtJbttzlsHFi9UGWQ38Xq
+ zRNdOc621HKwiDGxSArpsgi3RaZP/N5FW+Jl58FzBxWJpAhDFycAjARgwSG36wRMgtYv62f1KXg
+ 9MhX4MCEOsGaT+Z7v3NWCAcfT6uy+MbwP+FW4hVfof0OMt81doUYJ1xTU3hhdV28fF1zqNLkh8t
+ 2MQEA
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hi Li,
+On Thu, 30 Apr 2026 19:20:25 +0800, Li Xiasong <lixiasong1@huawei.com> wrote:
+> When TCP option space is insufficient (e.g., when sending ADD_ADDR with an
+> IPv6 address and port while tcp_timestamps is enabled), the original code
+> jumped to out_unlock without clearing the addr_signal flag. This caused
+> mptcp_pm_add_timer to keep rescheduling indefinitely, not sending ADD_ADDR,
+> preventing subsequent addresses in the endpoint list from being announced.
+> 
+> Handle this case by clearing the ADD_ADDR signal and skipping the matching
+> ADD_ADDR retransmission entry. The skip path cancels the matching timer
+> (with id check) and advances PM state progression, preserving forward
+> progress to subsequent PM work.
+> 
+> This avoids endless retries for an ADD_ADDR that cannot be emitted in the
+> current pure-ACK option-space constrained path.
 
-Thank you for your modifications, that's great!
+Thank you for this new version!
 
-Our CI did some validations and here is its report:
+>
+>
+> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+> index 57a456690406..a94177d9f265 100644
+> --- a/net/mptcp/pm.c
+> +++ b/net/mptcp/pm.c
+> @@ -401,6 +401,13 @@ mptcp_pm_del_add_timer(struct mptcp_sock *msk,
+>  	return entry;
+>  }
+>  
+> +static void mptcp_pm_add_addr_skip(struct mptcp_sock *msk,
+> +				   const struct mptcp_addr_info *addr)
+> +{
+> +	mptcp_pm_del_add_timer(msk, addr, true);
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Unstable: 1 failed =
-test(s): packetdrill_dss =E2=9A=A0=EF=B8=8F=20
-- KVM Validation: debug =
-(only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal=
- (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only =
-bpftest_all): Success! =E2=9C=85
-- Task: https://github.=
-com/multipath-tcp/mptcp_net-next/actions/runs/25162701341
+I *think* sashiko is right here, and I guess sk_stop_timer() should be
+called instead of the _sync() version. Thinking about that, I wonder if
+sk_stop_timer() shouldn't always be called when check_id == true, no? Do
+you mind checking this please?
 
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/7d24b4ab078e
-Patchwork: https://patchwork.kernel.=
-org/project/mptcp/list/?series=3D1088056
+  https://sashiko.dev/#/patchset/15237?part=1
 
+> @@ -881,24 +889,47 @@ bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, const struct sk_buff *skb,
+> [ ... skip 26 lines ... ]
+> +			goto out_unlock;
+> +
+> +		if (*echo) {
+> +			MPTCP_INC_STATS(net, MPTCP_MIB_ECHOADDTXDROP);
+> +		} else {
+> +			skip_add_addr = true;
 
-If there are some issues, you =
-can reproduce them using the same environment as
-the one used by the CI =
-thanks to a docker image, e.g.:
+Even if I don't think we would have space issues with the echo, should
+this variable also be set also in case of ADD_ADDR echo?
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+(In this case, the variable could also simply be called 'skip', or
+'drop', similar to the MIB counters here.)
 
-For more details:
+> [ ... skip 13 lines ... ]
+> +	/* On pure-ACK option-space exhaustion, stop retrying this ADD_ADDR:
+> +	 * clear the signal bit, cancel the matching retransmission timer, and
+> +	 * let the PM state machine progress.
+> +	 */
+> +	if (skip_add_addr)
+> +		mptcp_pm_add_addr_skip(msk, addr);
 
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
+If you have to modify something else, maybe the new helper is not
+needed, and the code can be added here directly? I know I suggested the
+introduction of this helper, but now that I see the code, I think it
+would be easier to understand the new comment above without it, and to
+backport this patch.
 
-
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 Core)
+-- 
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
