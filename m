@@ -1,128 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from canpmsgout03.his.huawei.com (canpmsgout03.his.huawei.com [113.46.200.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E8E8379979;
-	Wed, 29 Apr 2026 17:41:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7A3B3BED31
+	for <mptcp@lists.linux.dev>; Thu, 30 Apr 2026 10:59:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777484492; cv=none; b=B9QQc3JcRu2WaPciexw67OAmQOhO4Yrtms+vws74q0wibhjA/rSe1CbozoXyTFjuykVxyKL/N5meJ6ncuGGdQw0/2qFJartAkH8AH82ahPynmj2pT6u7dvj5AUoapFe16SC8rdRhkLftJDwkHGrP8SExXU/s3xGwLzIRtox4Pyc=
+	t=1777546753; cv=none; b=UgpY+TCJaGXGnWZHx8OsYPbXfJRhs+X2BCgrlGymGK7xFmwVrki75UUpL6VTAeGz0SeXWN7yEGzslvDgTA6Ov7sXsv3dEDzlHaRDR0LochZel1yJCCD0H5uEK9ViX6CkB3UdXYvvQcS6TwbrUFXyQ4GX+aPDzgOYQ0rwwWoX0zk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777484492; c=relaxed/simple;
-	bh=M3BG+Ofis3GqXd+2CIpLjrDhCW+IsglJSqrSOaHdIxw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fjYKsQXprHEQmxaI7mSEIoiqcDAOEwr5MOn56Sa5KOyY+sYzkRRWqG0//5WVSDULeUZOKrFiLz5zE5clwkyGmpSAr+UZFlQbY8QurOl5X39778XyHtQrGRnaMMFmZKlONVIxJy5rewsF2OfVCpqU/3wePy6NBE9/pQYEc+cdU2Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YiqkAnVV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777546753; c=relaxed/simple;
+	bh=BUrl+sq/MYVEPetBKM5yvGj3IbI2v9gVN+VVFTNySSc=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=AKG4Si6PDBmm77xiBf8Ncc82f5Uqf8225xtByoLPlAu34rkheaiILDGwjV/wRcxE2H0IFpbHc4i7+0FUFexhP+e2Gz1pa1uhkb7ZDXvBOI2TMMptRCJsqhgLyx41hYPTwyLeBwRJ9XTA0f+OrlhcwfSss/eGDbJb8MLwukl88Zw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=ItRFZGg5; arc=none smtp.client-ip=113.46.200.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YiqkAnVV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2BD7AC19425;
-	Wed, 29 Apr 2026 17:41:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777484492;
-	bh=M3BG+Ofis3GqXd+2CIpLjrDhCW+IsglJSqrSOaHdIxw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=YiqkAnVVZGbcDibDLiOf0x1gp+g/rKpC5qMUSVa3Ad1A2pVweBlBcflehOrLBcfA6
-	 nmU+Afr9ysvXPpSXCWoX4cfnNlgTR+tBGJknFlCbAVouOZ8KzHSYOFtVFn0n7hnHN8
-	 hRu3v0OWGw4m7C7+BOsP36Y9I1JGo5NSaNBCy2+W/58U9MKHSB8g3Ua4ZmDNd5C6UE
-	 Lk7BaSh+yPURXYYYsFc+BmFpu2NWETY/TektTBC2quGjdwCng+aSwhDUsi5lN5mtM/
-	 dPi0Cte2bqmgqBNV2lTLXUpQcsZThCHJqB/T1H+jh4yGpKkfUxqsZwNN5thoPf2aKq
-	 +Ti6n3Olqq92Q==
-Message-ID: <9cf7168b-1d17-487a-8a99-329158da7581@kernel.org>
-Date: Wed, 29 Apr 2026 19:41:27 +0200
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="ItRFZGg5"
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=t0P3D1O2zjINK5/WI848wDLwQ6gEvx74gdoC5Ghziio=;
+	b=ItRFZGg5jgse90ocPRFMpFKcBnCTu4A1l/pHwZr3vc2RWqxbL0sKgMl5vu3NN2SslcSGWjjW/
+	pgWHnD/DoPEmKYXo2wbSrEBAMULPNDIcSDz0V+ITL+UJb7xFrXklsD8Lj/qdulQN5z4O+NpOGlz
+	31VGfAcL+CG5S5OR819xfMI=
+Received: from mail.maildlp.com (unknown [172.19.162.144])
+	by canpmsgout03.his.huawei.com (SkyGuard) with ESMTPS id 4g5rbW72ZzzpStj
+	for <mptcp@lists.linux.dev>; Thu, 30 Apr 2026 18:52:23 +0800 (CST)
+Received: from kwepemj500018.china.huawei.com (unknown [7.202.194.48])
+	by mail.maildlp.com (Postfix) with ESMTPS id BCC364056D
+	for <mptcp@lists.linux.dev>; Thu, 30 Apr 2026 18:59:02 +0800 (CST)
+Received: from huawei.com (10.50.85.128) by kwepemj500018.china.huawei.com
+ (7.202.194.48) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Thu, 30 Apr
+ 2026 18:59:02 +0800
+From: Li Xiasong <lixiasong1@huawei.com>
+To: <mptcp@lists.linux.dev>
+CC: <weiyongjun1@huawei.com>, <yuehaibing@huawei.com>,
+	<zhangchangzhong@huawei.com>, <xiasong.lee@gmail.com>
+Subject: [PATCH mptcp-net v2 0/2] mptcp: pm: fix ADD_ADDR timer infinite retry on option space shortage
+Date: Thu, 30 Apr 2026 19:20:24 +0800
+Message-ID: <20260430112026.343691-1-lixiasong1@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net] mptcp: use MPJoinSynAckHMacFailure for SynAck
- HMAC failure
-Content-Language: fr
-To: Shardul Bankar <shardul.b@mpiricsoftware.com>, mptcp@lists.linux.dev
-Cc: martineau@kernel.org, geliang@kernel.org, pabeni@redhat.com,
- janak@mpiric.us, kalpan.jani@mpiricsoftware.com, shardulsb08@gmail.com,
- stable@vger.kernel.org
-References: <20260428074844.1746594-1-shardul.b@mpiricsoftware.com>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <20260428074844.1746594-1-shardul.b@mpiricsoftware.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: kwepems500001.china.huawei.com (7.221.188.70) To
+ kwepemj500018.china.huawei.com (7.202.194.48)
 
-Hi Shardul,
+This patch fixes a bug where the ADD_ADDR timer keeps rescheduling
+indefinitely when TCP option space is insufficient, blocking subsequent
+addresses in the endpoint list from being announced.
 
-On 28/04/2026 09:48, Shardul Bankar wrote:
-> In subflow_finish_connect(), HMAC validation of the server's HMAC
-> in SYN/ACK + MP_JOIN increments MPTCP_MIB_JOINACKMAC ("HMAC was
-> wrong on ACK + MP_JOIN") on failure. The function processes the
-> SYN/ACK, not the ACK; the matching MPTCP_MIB_JOINSYNACKMAC counter
-> ("HMAC was wrong on SYN/ACK + MP_JOIN") exists but is not
-> incremented anywhere in the tree.
-> 
-> The mirror site on the server, subflow_syn_recv_sock(), already
-> uses JOINACKMAC correctly for ACK HMAC failure. Use JOINSYNACKMAC
-> at the SYN/ACK validation site so each counter reflects the packet
-> whose HMAC actually failed.
+The issue occurs when sending ADD_ADDR with an IPv6 address and port
+while tcp_timestamps is enabled. The first patch clears the signal in this
+path, skips the matching ADD_ADDR retransmission entry, and preserves PM
+state-machine progression semantics.
 
-Now in our tree (fixes for -net):
+The second patch adds a selftest to cover this behavior and prevent
+regressions.
 
-New patches for t/upstream-net and t/upstream:
-- aec458ef6eb7: mptcp: use MPJoinSynAckHMacFailure for SynAck HMAC failure
-- Results: 581441b9adeb..4d36cf47658c (export-net)
-- Results: d1636d717db9..83e40a2e5ca0 (export)
+Patch summary:
+  - patch 1: mptcp: pm: fix ADD_ADDR timer infinite retry on option space
+    insufficient
+  - patch 2: selftests: mptcp: join: cover ADD_ADDR tx drop and list
+    progress
 
-Tests are now in progress:
+Changes since v1:
+  - add explicit MIB accounting for this drop path:
+    - MPTCP_MIB_ADDADDRTXDROP for non-echo ADD_ADDR
+    - MPTCP_MIB_ECHOADDTXDROP for echo ADD_ADDR
+  - add explicit handling to stop the matching ADD_ADDR retransmission
+    timer when skipping non-echo ADD_ADDR on pure-ACK option-space
+    exhaustion
+  - keep PM forward progress by advancing PM state after a successful
+    skip of the matching ADD_ADDR entry
+  - Added selftest to verify IPv6 ADD_ADDR with port tx-drop when
+    tcp_timestamps is enabled
+  - Link to v1: https://lore.kernel.org/netdev/20260418100018.2219500-1-lixiasong1@huawei.com/
 
-- export-net:
-https://github.com/multipath-tcp/mptcp_net-next/commit/35ef198760c9a2bea1ce2edb5f5d503bef518644/checks
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/8a8f6fca4cf7c8d0b2f1f949e481a3d6840f3286/checks
+Thanks to Matthieu Baerts for the detailed review and suggestions on
+v1, especially around PM progression and retry/timer handling.
 
-Cheers,
-Matt
+Li Xiasong (2):
+  mptcp: pm: fix ADD_ADDR timer infinite retry on option space
+    insufficient
+  selftests: mptcp: join: cover ADD_ADDR tx drop and list progress
+
+ net/mptcp/pm.c                                | 45 +++++++++++++++---
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 47 +++++++++++++++++++
+ 2 files changed, 85 insertions(+), 7 deletions(-)
+
 -- 
-Sponsored by the NGI0 Core fund.
+2.34.1
 
