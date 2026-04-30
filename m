@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AA27413237
-	for <mptcp@lists.linux.dev>; Thu, 30 Apr 2026 13:20:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FE2441C31E
+	for <mptcp@lists.linux.dev>; Thu, 30 Apr 2026 13:20:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777555253; cv=none; b=HAKAGeSfWGMZtfQ7qXXcDzdxRW15nK64pIvr7Gencl48yeuErL652HTiv+yEImbMm9vsG+J4Y1RuCMNlt/9qW6Nau2Z9Aezj93w+XhS6/1Yv7SSeEJvXiz3mTYyE+qNg4YNV/x/JmcU7numN8+1JBKsIy23O4x+hPHtkN+5DEdI=
+	t=1777555254; cv=none; b=AvVZ7l3lkNrFmq5j5cru3iLmyTWGH6hMC7WKXL1JfdWodP/xnUpoyMCNFwe6Lwcr0AN3ciaQjXa1WlzRxTEJYT9t4cloqeqGuVkvbtpM28WYGX3niVbFkpBCQVjpOshFJ4RRuJDq8rzLydMDsYEArN5sbuSVi9zuI37v+saBnQM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777555253; c=relaxed/simple;
-	bh=JekrtzEYzVYLxVVTO1XY73/7OQqyfCAx32/vszCf8Y4=;
+	s=arc-20240116; t=1777555254; c=relaxed/simple;
+	bh=NR/gFz6sKYq/xwa3h8Awmeo83NTxriGbVIgiIw0Ezrs=;
 	h=MIME-Version:Content-Type:Subject:From:To:Cc:In-Reply-To:
-	 References:Date:Message-Id; b=qGujnao0gDkwwzghNG8YmMvei2le7wZpRRXf/YA0rx9qZvQ7as9B36RQ8B97pgW/XEBewAWrpgoN7syCXn41k+Tf0j9G78f4/+Yq2bqx7hcVgjbCLM54skqcLH32dhU8s/RpDh0X9Blsn/3R8qDG7MRKL3VQ8oULcRmkp/0zTBk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qSEzpHFA; arc=none smtp.client-ip=10.30.226.201
+	 References:Date:Message-Id; b=Bk9pyEEnFGNpkdCtGsGH/TfGxFeNn9j/8hZjmEmmyyZ8Vu1IsycpO9OQNY5QqBkJ8anun7VMk9GZ+KhWO2vvexq2YAFpBtSxjX2Ti9NUeT4kqq2Uj8Sfx5KVgGlDr3SIpH1c+PlmHLgKQo9at5kwjiodP6qU2ew9hacyB+hakkc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E0Nv7elH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qSEzpHFA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C29A3C2BCB3;
-	Thu, 30 Apr 2026 13:20:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E0Nv7elH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22B71C2BCB8;
+	Thu, 30 Apr 2026 13:20:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777555252;
-	bh=JekrtzEYzVYLxVVTO1XY73/7OQqyfCAx32/vszCf8Y4=;
+	s=k20201202; t=1777555254;
+	bh=NR/gFz6sKYq/xwa3h8Awmeo83NTxriGbVIgiIw0Ezrs=;
 	h=Subject:From:To:Cc:In-Reply-To:References:Date:From;
-	b=qSEzpHFAywnhHOXj1sVpmW5C2UPymKwZBvTUX75WM22Pm6ySoxJ4EtfqDjVX7tHc/
-	 fvUyurUNsDAzr45yx/j7J6W997WxpaACvfR3ZDN6NmNRBBt7Y7DFkmyjvDK+duOPJN
-	 LBQRcdZYeByYpUbI4hVIxpcq+iIP9y8pYbgGc+noL7p/gdAXytXx18KimjCIlaVgut
-	 /G5fNP25KvR5Rg8EGmyKwiI1UyS/zB7qgHl7RYGY8KvA3U7/fBhGUcdO8ZOJLpzmRM
-	 oQJuiI3IAKVZolDe/fKddlHoVFlvGTwjuzkokC5DScC0S38kxacyNWTdBpSS2g1j5J
-	 I8+GS/p0S0RDA==
+	b=E0Nv7elHlnSbs9BsRmQrYQNRySDV+dIQXM5UzBgFsDJv6QYG6BlAnpy38aDqwop/I
+	 SsiWYT+MWpjN+w2QA4i6bbLH2+pOtKz3Qx8cbLzSrBcyUiaAP0vk4qXY81l66Uoggi
+	 fQSg21uF32Az5dNOQXd34RJOaGd1G+8a+VfGgE1XI9HF3F1iO9nE1U2/6eiHzYJHHL
+	 2HFQ45WU3dzeHsQUZvuZ+jW8WHGb8iamnlkHe/vyQ3CVA0W0BhuDbLetJKlGgy6mja
+	 hONkY4dcZByMu1xmwcv38KsPG1saqHXkJYkaSyDoZiK78baV235gXFOIfbh/Vh5sOF
+	 tyo37x5ns5bKQ==
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -34,94 +34,92 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH mptcp-net v2 1/2] mptcp: pm: fix ADD_ADDR timer
- infinite retry on option space insufficient
+Subject: Re: [PATCH mptcp-net v2 2/2] selftests: mptcp: join: cover
+ ADD_ADDR tx drop and list progress
 From: Matthieu Baerts <matttbe@kernel.org>
 To: Li Xiasong <lixiasong1@huawei.com>
 Cc: mptcp@lists.linux.dev, weiyongjun1@huawei.com, yuehaibing@huawei.com, 
  zhangchangzhong@huawei.com, xiasong.lee@gmail.com
-In-Reply-To: <20260430112026.343691-2-lixiasong1@huawei.com>
+In-Reply-To: <20260430112026.343691-3-lixiasong1@huawei.com>
 References: <20260430112026.343691-1-lixiasong1@huawei.com>
- <20260430112026.343691-2-lixiasong1@huawei.com>
+ <20260430112026.343691-3-lixiasong1@huawei.com>
 Date: Thu, 30 Apr 2026 15:20:42 +0200
-Message-Id: <177755524215.1566930.3209225574765644709.b4-review@b4>
+Message-Id: <177755524217.1566930.4447011567120793753.b4-review@b4>
 X-Mailer: b4 0.16-dev-76c3c
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2795; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=JekrtzEYzVYLxVVTO1XY73/7OQqyfCAx32/vszCf8Y4=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDI/hxtO3lDw89Li9feady9SMtJbttzlsHFi9UGWQ38Xq
- zRNdOc621HKwiDGxSArpsgi3RaZP/N5FW+Jl58FzBxWJpAhDFycAjARgwSG36wRMgtYv62f1KXg
- 9MhX4MCEOsGaT+Z7v3NWCAcfT6uy+MbwP+FW4hVfof0OMt81doUYJ1xTU3hhdV28fF1zqNLkh8t
- 2MQEA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2429; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=NR/gFz6sKYq/xwa3h8Awmeo83NTxriGbVIgiIw0Ezrs=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDI/hxtNDv2meLjq6hX7a2/N5qju2n/GfulkVrapabMNg
+ qsOmsjqd5SyMIhxMciKKbJIt0Xmz3xexVvi5WcBM4eVCWQIAxenAEwkTpyRYSdvLLfgMpUZj85P
+ 25W66UvjQUsRt18TGbz3h134wD/T25mR4fubZRxdJ97WNTHbnLiRl3ioTonfrPJ2bsfal2zrvAp
+ PMAIA
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-On Thu, 30 Apr 2026 19:20:25 +0800, Li Xiasong <lixiasong1@huawei.com> wrote:
-> When TCP option space is insufficient (e.g., when sending ADD_ADDR with an
-> IPv6 address and port while tcp_timestamps is enabled), the original code
-> jumped to out_unlock without clearing the addr_signal flag. This caused
-> mptcp_pm_add_timer to keep rescheduling indefinitely, not sending ADD_ADDR,
-> preventing subsequent addresses in the endpoint list from being announced.
+On Thu, 30 Apr 2026 19:20:26 +0800, Li Xiasong <lixiasong1@huawei.com> wrote:
+> Extend add_addr_ports_tests with IPv6 signaling cases that exercise
+> ADD_ADDR tx-space shortage when tcp_timestamps are enabled.
 > 
-> Handle this case by clearing the ADD_ADDR signal and skipping the matching
-> ADD_ADDR retransmission entry. The skip path cancels the matching timer
-> (with id check) and advances PM state progression, preserving forward
-> progress to subsequent PM work.
+> Add one case to verify ADD_ADDR tx drop accounting via
+> MPTcpExtAddAddrTxDrop, and another case to verify PM still progresses
+> to later signal endpoints after the first one is dropped.
 > 
-> This avoids endless retries for an ADD_ADDR that cannot be emitted in the
-> current pure-ACK option-space constrained path.
+> This covers both failure accounting and the non-blocking behavior of
+> the announce list after a tx-space drop on pure ACK.
 
-Thank you for this new version!
+Thank you for this new test!
 
 >
 >
-> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-> index 57a456690406..a94177d9f265 100644
-> --- a/net/mptcp/pm.c
-> +++ b/net/mptcp/pm.c
-> @@ -401,6 +401,13 @@ mptcp_pm_del_add_timer(struct mptcp_sock *msk,
->  	return entry;
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> index beec41f6662a..59beddb487e3 100755
+> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> @@ -1828,6 +1828,22 @@ chk_add_tx_nr()
+>  	fi
 >  }
 >  
-> +static void mptcp_pm_add_addr_skip(struct mptcp_sock *msk,
-> +				   const struct mptcp_addr_info *addr)
+> +chk_add_drop_tx_nr()
 > +{
-> +	mptcp_pm_del_add_timer(msk, addr, true);
-
-I *think* sashiko is right here, and I guess sk_stop_timer() should be
-called instead of the _sync() version. Thinking about that, I wonder if
-sk_stop_timer() shouldn't always be called when check_id == true, no? Do
-you mind checking this please?
-
-  https://sashiko.dev/#/patchset/15237?part=1
-
-> @@ -881,24 +889,47 @@ bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, const struct sk_buff *skb,
-> [ ... skip 26 lines ... ]
-> +			goto out_unlock;
+> +	local add_drop_tx_nr=$1
+> +	local count
 > +
-> +		if (*echo) {
-> +			MPTCP_INC_STATS(net, MPTCP_MIB_ECHOADDTXDROP);
-> +		} else {
-> +			skip_add_addr = true;
+> +	print_check "add addr tx drop"
+> +	count=$(mptcp_lib_get_counter ${ns1} "MPTcpExtAddAddrTxDrop")
+> +	if [ -z "$count" ]; then
+> +		print_skip
+> +	elif [ "$count" != "$add_drop_tx_nr" ]; then
+> +		fail_test "got $count ADD_ADDR drop[s] TX, expected $add_drop_tx_nr"
 
-Even if I don't think we would have space issues with the echo, should
-this variable also be set also in case of ADD_ADDR echo?
+Nit, just to avoid a checkpatch warning, maybe rename add_drop_tx_nr?
+'expected'?
 
-(In this case, the variable could also simply be called 'skip', or
-'drop', similar to the MIB counters here.)
+  -> WARNING: line length of 84 exceeds 80 columns
 
-> [ ... skip 13 lines ... ]
-> +	/* On pure-ACK option-space exhaustion, stop retrying this ADD_ADDR:
-> +	 * clear the signal bit, cancel the matching retransmission timer, and
-> +	 * let the PM state machine progress.
-> +	 */
-> +	if (skip_add_addr)
-> +		mptcp_pm_add_addr_skip(msk, addr);
+> @@ -3278,6 +3294,37 @@ add_addr_ports_tests()
+> [ ... skip 22 lines ... ]
+> +		ip netns exec $ns2 sysctl -q net.ipv4.tcp_timestamps=1
+> +
+> +		pm_nl_add_endpoint $ns1 dead:beef:2::1 flags signal port 10100
+> +		pm_nl_add_endpoint $ns1 dead:beef:3::1 flags signal
+> +
+> +		speed=slow \
 
-If you have to modify something else, maybe the new helper is not
-needed, and the code can be added here directly? I know I suggested the
-introduction of this helper, but now that I see the code, I think it
-would be easier to understand the new comment above without it, and to
-backport this patch.
+Do you need 'speed=slow' here? Having a longer transfer is typically
+needed when endpoints are manipulated during the transfer, or when a few
+there are >= 3 signal endpoints. I don't think that's needed here. Or
+did you experimented any issues? (if yes, makes sure you are on top of
+our export/export-net or for-review/for-review-net branches)
+
+> +			run_tests $ns1 $ns2 dead:beef:1::1
+> +
+> +		chk_add_drop_tx_nr 1
+> +		chk_add_tx_nr 1 1
+> +		chk_add_nr 1 1 0
+> +	fi
+
+It feels like the second test covers the case tested by the previous
+one, no? I would only keep the second one, best to avoid redundant
+tests, this selftest is already slow enough :)
 
 -- 
 Matthieu Baerts (NGI0) <matttbe@kernel.org>
