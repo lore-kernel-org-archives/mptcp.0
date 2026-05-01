@@ -1,79 +1,81 @@
-Received: from mail-ot1-f80.google.com (mail-ot1-f80.google.com [209.85.210.80])
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C06622236E3
-	for <mptcp@lists.linux.dev>; Fri,  1 May 2026 06:15:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.80
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F176359A6F
+	for <mptcp@lists.linux.dev>; Fri,  1 May 2026 06:19:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777616136; cv=none; b=Os9LBTj58Oaf4GE/lB09ijyqjk4rraUiOasuutP8PMi20T0e+biv7j6bA7JtwEQdijtdQyr6LOQVxlKGNp5Oad8FVgMOVRve03HEiwEv75egbhlI+oaQ5kSazmI25XUWug8ItpuofK3+XyNga3yU2enAo+rTSz9NkwSzo4Yg59Q=
+	t=1777616384; cv=none; b=FXOquveoobLXOkyYnA/Kx34oUduhoF+QqgwcJdAFfdjFLwbxu16FBAcP5xoDUhSLwE49WCBBquPK8gYaHUbkw4KESs02BNId4xcjfeVCSOwkIWCAmDeGzODHOEpflIZ66LU4psj2SMOLWjRNzgqx+yuD7+uumbZz4z1QDBlOAZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777616136; c=relaxed/simple;
-	bh=qZ4WU2pBlLmoGsXwq3Ezn4egfYWE9pBO/xwux0q5+PY=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=beqC/HxUaNPXZHve0+LDXRqxmAWm+b6e4mhspqAlT5y97qBowIF2gp6OfYlOndbB0EL+9eMyZVdf7tpNZkWfZzSdWLoQ3Uk5CmRz7FkMqZHz4XjoipWf2dqODrKLDHcD+EDfvEmndtT5hohiiLCXd5cTHNpM/I90v2aWJBfEOt8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.210.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-ot1-f80.google.com with SMTP id 46e09a7af769-7dbc09d4e43so4202124a34.1
-        for <mptcp@lists.linux.dev>; Thu, 30 Apr 2026 23:15:34 -0700 (PDT)
+	s=arc-20240116; t=1777616384; c=relaxed/simple;
+	bh=gdksfWno4NRqZvRe5wW1agoNMgFD9rpiTe2Lex5rGUY=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=QRYVR3Htn6DdeIMtl0kO0p0dDGzLJrKovbgXC73aameiXfBMM5enoqAOMFn+FDbwP4OWOIO3WLgxVg6nU3v/QLhmK9O+u9WGOhaDzlF+UrjTXKk66Ow2qLnhyuffiDyWEL4SRQDWPXrVg7Xiib2I0YFKRcwGceVCl3NJMz0pfE0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--kuniyu.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ffveSl+X; arc=none smtp.client-ip=209.85.214.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--kuniyu.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ffveSl+X"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2b24cd2e2b3so16865725ad.0
+        for <mptcp@lists.linux.dev>; Thu, 30 Apr 2026 23:19:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1777616383; x=1778221183; darn=lists.linux.dev;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=wEqIbS/x+88BxBPbCEcElgpPI86CIU+0ClgeNLowLqE=;
+        b=ffveSl+XmxHxpCoJMq4b40uNafDWzSHVWJHVaafMZnNBCFuspjMk0qUqDBTDEdevgX
+         HrtvYQYUo/HuShPl/dMCJnJQqdsecYnW4/K0u36elW2cykcEzZ7XAwbx1tjbgI+Q/Fur
+         Ygf9Y1faMZGOCDLFXJRQzMHqEGO6fTDP0cRS9fuorHBsax5JNgPWqKKLcCnLy39UMerM
+         VySrzmBYjfwBT8nUnLZU52lPQU3F28pfRMIcmS8kN0MMeAa2p9tFlaXLqLHLQy3yCBlH
+         sqEuwoFjXw0NJFoCDHVvSGixQ7KHfmT5vzfsD8BRDxmfcluPCRk+ru7WfX3y4N61AhRo
+         301g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777616134; x=1778220934;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+        d=1e100.net; s=20251104; t=1777616383; x=1778221183;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=vnYtTOTH4t5DEazx+JuK0nr+p0ULTXMDrk/Z6Bp4+xc=;
-        b=nfz9ro4o7zYF/WE7TG80CPR9f9wFdOO7gkzT08Rvrm6fxVw87ZUlX3CoOy+yFo4dw3
-         T/41w+BUnMjt3ZK0sPhxY/CpQhEDzsb6tdSoy8GoorvFthkZbo3VJb/Lb1A8cGJswkAD
-         yEXygG1EhzqFbOytqfQJB0t4SOfoeGAE7Mb+GHAm6aTkQHIhkWsnVSqRuruChxKfOb+X
-         bKoWREZA3vCKtxkz5zOmh8fZ/T6kXXbPKBzNtriEyLMcVckA+z1rfNs9QziGQrm4hiUI
-         sPjcTGEY4lHMFzOn9+0PIiHLowA8SAETVBBNEfhmYD19FllPhk7nJQol4govwGmtYjN0
-         D1vQ==
-X-Forwarded-Encrypted: i=1; AFNElJ/f4PxI4YUqfT1N6TD1PK/NLpc00ZnYjCvxMR6E0TBlTQNZ3nBMIw/enyjgTxitDrXQQDWKIw==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzJkC5buQtjeKzaTUvHMCr849GZb8fBQeOxlNBQeng8ANpT+kCy
-	6yB6WQ8ca7/MheTebag/RIi8wm5znFzaYxIY0dVTFAp+Ck7o90Ud28NmvQB/a8qe0u29AUj28Of
-	Wtrvg0kccgoaqNI2II3nJC9x7T0Id9DLhaQovFwj+WoDMAjac8Q0I1id9Iwo=
+        bh=wEqIbS/x+88BxBPbCEcElgpPI86CIU+0ClgeNLowLqE=;
+        b=Uavluq8j7idO3glKnesmtUzQkcSGfQqnUhCOVhT2v+x271LrtjZTV48SFo21SxoVF8
+         5Z1jnBa5nBNrBNLLB5X+iXa1saxR3gmZS7xdxmeBfqI4jteHbryoHjV3WEg8OxAg/7X7
+         jjIcvPcfuNpLmKpnxAbLTNznrtJKY53Mkd9K8y5f/R1xtYJ+r+CBFMxITXmGOWlF6nzY
+         yvSq2TdDcFasrW+OzZrXBxBuMfJZqEVS8p70fq5rXmlzd0UMQ9KzeR+4zC5dxpLgBLzT
+         Vw0g5rsPPCd569vEBpmj5v5NLqpl5Ze9as8gLItAtLJvhopz41qMK/6N8Vp7CqR4pR49
+         z9fQ==
+X-Forwarded-Encrypted: i=1; AFNElJ+ypzrWzhkUG+Nzj/kuWMwNIZTXJNXn7dmh7FdSVoAT/kXV7hjsrJ5c+6U7dC0hf4qv2GAtEA==@lists.linux.dev
+X-Gm-Message-State: AOJu0YztidB+hx0ii0EbBxXDPnSw6o8QTDk9JV0UPc/upa/EgipszJGp
+	NHedM78GyIXilx2uc3hu/yjSqWzt1SImRE9DH2xGJtEa82a6MM55VQLWwJFNA//J9RPUkvVhQcR
+	ub/St2A==
+X-Received: from pldb13.prod.google.com ([2002:a17:902:ed0d:b0:2b0:6147:a0ee])
+ (user=kuniyu job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:124f:b0:2b2:4d36:7ba
+ with SMTP id d9443c01a7336-2b9d22db5b6mr15900245ad.0.1777616382358; Thu, 30
+ Apr 2026 23:19:42 -0700 (PDT)
+Date: Fri,  1 May 2026 06:19:35 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-X-Received: by 2002:a05:6820:160a:b0:694:95ae:c546 with SMTP id
- 006d021491bc7-6967bcc8597mr2734595eaf.2.1777616133780; Thu, 30 Apr 2026
- 23:15:33 -0700 (PDT)
-Date: Thu, 30 Apr 2026 23:15:33 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <69f44505.050a0220.3cbe47.0008.GAE@google.com>
-Subject: [syzbot] [mptcp?] KMSAN: uninit-value in mptcp_established_options
-From: syzbot <syzbot+ff020673c5e3d94d9478@syzkaller.appspotmail.com>
-To: davem@davemloft.net, edumazet@google.com, geliang@kernel.org, 
-	horms@kernel.org, kuba@kernel.org, linux-kernel@vger.kernel.org, 
-	martineau@kernel.org, matttbe@kernel.org, mptcp@lists.linux.dev, 
-	netdev@vger.kernel.org, pabeni@redhat.com, syzkaller-bugs@googlegroups.com
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.54.0.545.g6539524ca2-goog
+Message-ID: <20260501061939.1808489-1-kuniyu@google.com>
+Subject: [PATCH v1 mptcp] mptcp: Clear mptcp_out_options.ext_copy in mptcp_established_options_dss().
+From: Kuniyuki Iwashima <kuniyu@google.com>
+To: Matthieu Baerts <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>
+Cc: Geliang Tang <geliang@kernel.org>, Eric Dumazet <edumazet@google.com>, 
+	Keita Morisaki <kmta1236@gmail.com>, Kuniyuki Iwashima <kuniyu@google.com>, 
+	Kuniyuki Iwashima <kuni1840@gmail.com>, mptcp@lists.linux.dev, 
+	syzbot+ff020673c5e3d94d9478@syzkaller.appspotmail.com
 Content-Type: text/plain; charset="UTF-8"
 
-Hello,
+syzbot reported read of uninit-value in mptcp_write_data_fin().
 
-syzbot found the following issue on:
+Since the cited commit, struct mptcp_out_options is not cleared
+in __tcp_transmit_skb().
 
-HEAD commit:    08d0d3466664 Merge tag 'net-7.1-rc2' of git://git.kernel.o..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=15f6976c580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=1c3f61154f3bb7e5
-dashboard link: https://syzkaller.appspot.com/bug?extid=ff020673c5e3d94d9478
-compiler:       Debian clang version 21.1.8 (++20251221033036+2078da43e25a-1~exp1~20251221153213.50), Debian LLD 21.1.8
-userspace arch: i386
+Let's clear it in mptcp_established_options_dss().
 
-Unfortunately, I don't have any reproducer for this issue yet.
+Another option is to move struct mptcp_out_options to struct
+tcp_out_options.cleared, but this memset() is not needed for TCP.
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/8688db3eb9ae/disk-08d0d346.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/72c570681077/vmlinux-08d0d346.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/21669c9bddcd/bzImage-08d0d346.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+ff020673c5e3d94d9478@syzkaller.appspotmail.com
-
-=====================================================
+[0]:
 BUG: KMSAN: uninit-value in mptcp_write_data_fin net/mptcp/options.c:542 [inline]
 BUG: KMSAN: uninit-value in mptcp_established_options_dss net/mptcp/options.c:590 [inline]
 BUG: KMSAN: uninit-value in mptcp_established_options+0x112f/0x3530 net/mptcp/options.c:874
@@ -110,29 +112,29 @@ Local variable opts created at:
  __tcp_transmit_skb+0x4d/0x5fe0 net/ipv4/tcp_output.c:1536
  __tcp_send_ack+0x967/0xad0 net/ipv4/tcp_output.c:4499
 
-CPU: 0 UID: 0 PID: 24584 Comm: syz.4.6812 Tainted: G        W           syzkaller #0 PREEMPT(full) 
-Tainted: [W]=WARN
+CPU: 1 UID: 0 PID: 5855 Comm: syz.3.4 Not tainted syzkaller #0 PREEMPT(full)
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/18/2026
-=====================================================
 
-
+Fixes: cfcceb7a39fc ("tcp: shrink per-packet memset in __tcp_transmit_skb()")
+Reported-by: syzbot+ff020673c5e3d94d9478@syzkaller.appspotmail.com
+Closes: https://lore.kernel.org/mptcp/69f44505.050a0220.3cbe47.0008.GAE@google.com/
+Signed-off-by: Kuniyuki Iwashima <kuniyu@google.com>
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ net/mptcp/options.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index 8a1c5698983c..3fb914196987 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -572,6 +572,7 @@ static bool mptcp_established_options_dss(struct sock *sk, struct sk_buff *skb,
+ 	bool ret = false;
+ 	u64 ack_seq;
+ 
++	memset(&opts->ext_copy, 0, sizeof(opts->ext_copy));
+ 	opts->csum_reqd = READ_ONCE(msk->csum_enabled);
+ 	mpext = skb ? mptcp_get_ext(skb) : NULL;
+ 
+-- 
+2.54.0.545.g6539524ca2-goog
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
