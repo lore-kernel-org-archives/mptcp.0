@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEBCE3112BD
-	for <mptcp@lists.linux.dev>; Fri,  1 May 2026 17:34:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48F743112BD
+	for <mptcp@lists.linux.dev>; Fri,  1 May 2026 17:34:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777656871; cv=none; b=IpPE1fxZN5j+knRJbZb5M0XLb6JNIZr/oTzYmH2WW6xLGl6wmACjTSEqvuqxMKzezld83Cq/UB9Hr4W25mVjSrs7kuyoAXLlLvDtbsW0LlyLWQpAApZaZQKWzbrHb6TfAxH/TKVBWrjQXL+2ZIwIhbZH1pk8/+yBD2O8Dqk4/8E=
+	t=1777656872; cv=none; b=tIedZ7aNwyxiXpfk5CRnpi0Oa/JT8wCCBHz1tYbXOpCDp3+qpZiQdRYuCF7MC4DMP6xthzz3BK/FRucaeTi3/grOWH7XLnBHAwmWG0MOssRHd7FOKb37r9z/6xyhTq5E3iNBkVdLT+J49UmvQdKH0gjlUU5DFZHw3JsDgtWRmrg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777656871; c=relaxed/simple;
-	bh=ME5GtZBIozN3EIS0hDp02Kzh6uIOM81B3DSu8OVvaNo=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=YnfnkftUfG71P9Snlm3IisnFgvtTy1xvweJZbajrf67hofvkWFsDHuQCeQgwOat0dNh4y/om3sUb838sA1s9GlCfpFk53D9bjHDNozhczsqVxfJ4lei8qzEk/OIszGt7lCOy+iCiI4yrgpE7+wZ3UQmk4kAtDOVraAPEUQ6adRs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h6M1zxXa; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777656872; c=relaxed/simple;
+	bh=niaY+FAzSqhTDSuqgiFnjRSQP8WL3tuWBm04LgGYpjU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=BYmY31ezJAxL7KvBqCmo0PbNKahB5o0nM4Dldu+3pRsDB5R/L8znQZU0wcW8gUbzvH1Qy87ZVrqffqOyIAvFGpE7fdjIpk3oMWZY8GKBtBOEFkcFvk80lXzI3lqQmsMJjGMq4+l8KeByn3UPbkhYisoQOFrzJNWcgV4tWiFkNXg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=INzieP5C; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h6M1zxXa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BFC62C2BCB4;
-	Fri,  1 May 2026 17:34:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="INzieP5C"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93665C2BCC6;
+	Fri,  1 May 2026 17:34:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777656871;
-	bh=ME5GtZBIozN3EIS0hDp02Kzh6uIOM81B3DSu8OVvaNo=;
-	h=From:Subject:Date:To:Cc:From;
-	b=h6M1zxXaTgSJoJ3CIONG/momSdoloN/DC97XWomTSAlR8GdJVOnRgg/NYOKE66wPn
-	 8274iSw5ROojM5k0I5NxTUGbUCaro7bQsakrp+b9OMVv/eoNrGSVvWO9xEfrtMC68i
-	 81HrYi8sezZxuJTlbTis7pV3e6VZhlnYc5uzGyCiyZPKo4o2NvIFWmPxLJJfO7HKrq
-	 FzX7BDs7ZA0ag22sKh9zl+4XNgZi8i0j2VJPFLDhHlto5HWHO9M+l3jUG7DJR5kfmU
-	 /O2rmxkhXhIjwIL2/T5Vd+qm53p6sDzntKqt+7dZYGwjzuas28FPzpzpdkc7+9/qMe
-	 k+BqP53iQhobw==
+	s=k20201202; t=1777656872;
+	bh=niaY+FAzSqhTDSuqgiFnjRSQP8WL3tuWBm04LgGYpjU=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=INzieP5CAtlSvV6Vu7RsUQp4KQJ07PO9vM2aFEuAjw8JKXwe4TrILKXSS6SzL9T6C
+	 nYLYIZK0LHV/buB4flrOc4Ad7BCbU6WFEhQ36dKrlh+r1cZB0CKpeNYvSepCOZW57j
+	 ouBaKVnGqn6TEqdZiRUOkB/it4S+OZCCgkRO42b5Ljng44oOf7h8FaiQUgePh6aYrH
+	 uoTXo9Z2IevqaPBawV4IMNT4M3Ags6ciB0pekH6yqTlgfoueqBT1uHHhcsYvo/kcKF
+	 5bUmRp2CEgZnL/mRO35w8mGg+jFUK5hiuPBTCiXqW/DmVYRhLugNz0cSn1vVGy1VmS
+	 hhU6UCSJQ/jsA==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Subject: [PATCH mptcp-next 0/3] selftests: mptcp: small pcap-related
- improvements
-Date: Fri, 01 May 2026 19:34:19 +0200
-Message-Id: <20260501-mptcp-sft-pcap-prefix-v1-0-27affca69415@kernel.org>
+Date: Fri, 01 May 2026 19:34:20 +0200
+Subject: [PATCH mptcp-next 1/3] selftests: mptcp: connect: test name in
+ pcap file
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,42 +38,57 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/yWMwQqDMBBEf0X23IUYMIf+ivRg1rVdwbhk0yKI/
- 960gbm8Gd6cYJyFDe7dCZk/YrKnCv2tA3pN6ckoc2Xwzgc3uB43LaRoS0GlSVEzL3JgDDH4wVE
- NQ3Vb/f8doSmJjwKPttk7rkzldwzX9QUfE+IDhQAAAA==
-X-Change-ID: 20260501-mptcp-sft-pcap-prefix-b6b6250c50ce
+Message-Id: <20260501-mptcp-sft-pcap-prefix-v1-1-27affca69415@kernel.org>
+References: <20260501-mptcp-sft-pcap-prefix-v1-0-27affca69415@kernel.org>
+In-Reply-To: <20260501-mptcp-sft-pcap-prefix-v1-0-27affca69415@kernel.org>
 To: MPTCP Linux <mptcp@lists.linux.dev>
 Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=821; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=ME5GtZBIozN3EIS0hDp02Kzh6uIOM81B3DSu8OVvaNo=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDK/PFFa/6FplUjUIqk/MspdW9ZyfKzv8P4k0L09XnfZw
- wlLatTMOkpZGMS4GGTFFFmk2yLzZz6v4i3x8rOAmcPKBDKEgYtTACby2JCR4X3xS5bJS37q8oWv
- mjD94Lopn2W3bapdduJnGXulyxnzEBWG/0lJf9bd5rCbyTblaKn+7oyuFNHe/Zv+bi81dTDVfT7
- hGysA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1437; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=niaY+FAzSqhTDSuqgiFnjRSQP8WL3tuWBm04LgGYpjU=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDK/PFF2s+LgKJgqurL3h9WHDV/ae4smab8vfrTdhDPwz
+ IrlrI9Pd5SyMIhxMciKKbJIt0Xmz3xexVvi5WcBM4eVCWQIAxenAEykKJ7hr1wmj37OnjX8CWUV
+ 87OVTnCoLf5VzjhDe/OaY1EiB2+LijEyrJSQ/eTV0mR+81PE+odPnbo3qm2bv3Z9GuvL/KAIyfk
+ xjAA=
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-- Patches 1-2: add test name in pcap files.
+Even if the pcap prefix is printed in the test, it is clearer if this
+prefix also include the test name: mptcp_connect.
 
-- Patch 3: drop payload from pcap by limiting the per packet size.
+With this, it is easily possible to find out which pcap was produced by
+which test, and easily delete the right ones.
 
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
-Matthieu Baerts (NGI0) (3):
-      selftests: mptcp: connect: test name in pcap file
-      selftests: mptcp: simult_flow: test name in pcap file
-      selftests: mptcp: pcap: drop most of the payload
+ tools/testing/selftests/net/mptcp/mptcp_connect.sh | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
- tools/testing/selftests/net/mptcp/mptcp_connect.sh |  8 ++++----
- tools/testing/selftests/net/mptcp/mptcp_join.sh    |  2 +-
- tools/testing/selftests/net/mptcp/simult_flows.sh  | 11 ++++++++---
- 3 files changed, 13 insertions(+), 8 deletions(-)
----
-base-commit: 7478b1b74fb5013908a4237d3f929f3db03fb74e
-change-id: 20260501-mptcp-sft-pcap-prefix-b6b6250c50ce
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+index a6447f7a31fe..091edee9a7bf 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+@@ -212,8 +212,8 @@ if $checksum; then
+ fi
+ 
+ if $capture; then
+-	rndh="${ns1:4}"
+-	mptcp_lib_pr_info "Packet capture files will have this prefix: ${rndh}-"
++	capprefix="mptcp_connect-${ns1:4}"
++	mptcp_lib_pr_info "pcap will have this prefix: ${capprefix}-"
+ fi
+ 
+ set_ethtool_flags() {
+@@ -372,7 +372,7 @@ do_transfer()
+ 			capuser="-Z $SUDO_USER"
+ 		fi
+ 
+-		local capfile="${rndh}-${connector_ns:0:3}-${listener_ns:0:3}-${cl_proto}-${srv_proto}-${connect_addr}-${port}"
++		local capfile="${capprefix}-${connector_ns:0:3}-${listener_ns:0:3}-${cl_proto}-${srv_proto}-${connect_addr}-${port}"
+ 		local capopt="-i any -s 65535 -B 32768 ${capuser}"
+ 
+ 		ip netns exec ${listener_ns} tcpdump ${capopt} \
 
-Best regards,
---  
-Matthieu Baerts (NGI0) <matttbe@kernel.org>
+-- 
+2.53.0
 
