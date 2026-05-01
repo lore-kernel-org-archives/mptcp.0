@@ -1,136 +1,162 @@
-Received: from mail-oa1-f43.google.com (mail-oa1-f43.google.com [209.85.160.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B50873C1963
-	for <mptcp@lists.linux.dev>; Fri,  1 May 2026 15:28:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.43
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777649338; cv=pass; b=JpkN2ncapqrKuPsm1wEwsB7aFxg7X/npsv/CF7rMf3ffQnq+0O2wbdkhEYxgBEy9lP/heZzYiQAAZikuYBMsyCbwgenfVrpRViLIFz+YitXO2zdEinBCtJeRDSbpczcYYMGT5O/utCsGh8H6atPzWuxm7akjbmCrArfJrH/9n1M=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777649338; c=relaxed/simple;
-	bh=Ap3OAMcD8x3T4o1y3h8t9juLVbLeZ1qfKfU4UgGLQ98=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VazPnYaK5uWMJcdMyWf+ZQPBnStRtCqqLAz2mCmO0QbqIGNZbxvaYJt0XG4wb4EVtODwDpeHviR2X9OEnkFB29D/jc9Yfhd5Qre0Maa8a4NTsRMrd1jni4D2Ntd73XPmravv6cNimLMrurRmkdl216vB7GoEsM0Vpd3v3/Sw2/I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q0RKnK1D; arc=pass smtp.client-ip=209.85.160.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 989BF13E02A;
+	Fri,  1 May 2026 15:46:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1777650361; cv=none; b=peICEMnvMxir0Eus1J4sHtR7slYruqyRW0cicBLZgUsKOjcxVreQ7hZvXH4VIC4rCuKc+HIDyPLTTzhJMw2riJWDRbXn14O0S4TosNLNr9+cDJqAY+R8+5xN5PcQJ+wQrqCY2rDg4rizLnWeJJVQo5KEn9BSrCWWCQRXtfaR4fw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1777650361; c=relaxed/simple;
+	bh=LZDWViGmTKhCWD2dXNJkS+yut6Rys5QsqWiU9+4akSw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Sox9wzT/6DcFrGax9uE9htpqOSn1A+cCJXsXHKMFE5raeGZxBOAUhwhnUEKOUmrHv7lq78vDBrGDJuWPVf9LWnKtyLJEQYDuSdFjS70Dp4Xx8iLRU+s1CufjjemUbZ8+q7VDxHT7wVU+ZsutVIxlAjnc2TnB6r7ekUHPhSWZaJE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qRQhm9ud; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q0RKnK1D"
-Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-404254ffe8aso1742500fac.0
-        for <mptcp@lists.linux.dev>; Fri, 01 May 2026 08:28:56 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1777649336; cv=none;
-        d=google.com; s=arc-20240605;
-        b=g9xz5hDEDTy1eQTYFojSpmHolVCeh7y/otesElKdgU7B2jpasConRhT9zD6mCzlM6E
-         h+Xh0yWS26Dd7TVMRbFjy3DvQqb7U+/xf3A5l55v/rMQXSpxHjh305BdyznhKPSWh0Cd
-         y/8+yw7Q2z00rzC+Iq1OXTQAcQ6d5NL1qGPiPHdfHwzvM19duZ4z+BdKdEjNQ1RZqesB
-         JKFlc7bgxuk3jeT2uJMQ+XGaq9kbmDDRmqom2M+ZUoP04Lnkvb8Pf4OaRiIAzwm8HKzg
-         vNpgOlsndaOvPlu6XVRoSQW3eZKsX+FihPZrR4afPOQP+b6et89D9qksrQZEVi/kCukj
-         6ZhQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=4Um4tKSYogQqdzSJc+T9BAf1zSt724yxxd0zqs758aI=;
-        fh=3aq4rqqYDLX9E62ziLedLvZbHxOPygxBCZEI/Am5Y0o=;
-        b=lNRbXRiyXgbRX5vx2wHwJCU4oXNfU5sSRGNhfrAln4CoaOvtIcI/eEtb8IVJFEZtYK
-         YGIbDV3FuLpuHGY36d9hxx3RSvtXSfXGkWeg1P10bkXDcscPqassRipqiFixbK3TVdSN
-         o8kZWpPPtb1VnNn1ddOVIWpUNVw0YA/qh4cl6BCBMzuomt7N0k2qzEOs12RA3sc5K3PH
-         jvXhVJeDdDfaviEISIl2Qm5wQg4Z9ZKd+Rs2XZvmwic4allsytN8cUO2oYT8eIgCLjwi
-         h3PeC/kWILwSELrqZc8YE3IgdjGT74G4ee78AS7FL6vnWJJs9Ji2bovi7UTKfrRHocUa
-         BL0g==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1777649336; x=1778254136; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=4Um4tKSYogQqdzSJc+T9BAf1zSt724yxxd0zqs758aI=;
-        b=Q0RKnK1DB388gzUsPjBXuQS4YAC0bcXDD7+ijpjhEKlGdbMWOOAiizNL/HEBxvuC/b
-         hyAjjcliSv9hH7ePcljBnIFZZbBXb/uwnSo+1/cNixPFUE4Itb1/f+R9fbYGxV7IU/eJ
-         mhoUuGeiRfn2DYUR87MZs7eX8Oi4zZhnvKAw95uUfpZjTmMQegiyPnDlCmZQ/ix+szrs
-         J7hlcibgneIRbG5MmUP22CRrVzoAm49zf2og/sQxeccELjoJYJdemiUTNpYwz9blp8UI
-         pyvlFaYcb68fsLXSuXu15NoOC5R6Ui9K2pNU17yP1ZO5tIvd+iCI9CQ3dobRQbccFJRr
-         P/XA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777649336; x=1778254136;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4Um4tKSYogQqdzSJc+T9BAf1zSt724yxxd0zqs758aI=;
-        b=AZJI4bxnQ9YKCMLhrGhWm1nojlLuCSWTQDji1jgdPPCKQKpSIi3ZCCFlUY98zP+gQW
-         5RpuaBx2YmKrEFWYYY1TNBb1/x26J3gFaTwmf9e8BXW63lhFeCLbPtFBUK1yMxNbHps/
-         +kcvx+21mBtZl3dsFcU9F1ISNRpVhTE/STmPhz2/i1QohyZ2syaGr4xyFLfBbYzRFi9+
-         ZDlHDj5o1ozSrzLjlSLPndD3qybn+rilCe6E9yKChh8Hh57ljVLIiekSWp1xp9V3/vZr
-         VBCUKynwd/WMqaTGTTMB0RQNmMtSgE6Lo0dM129niREPnyuvKo43e0OZ8r57Xlb61Atb
-         2x/A==
-X-Gm-Message-State: AOJu0YwBFh405lHoj/9cOd9dcDoBPoZ5plYnzF+mEDwmcHBhPU5OswPF
-	2r/TXz+uJYctG5dgvRfaaSxfbu4Xz8jKsPjAaYuVgXziOgHcjxcHEx+o/hfIwZzb5IcaLChJNve
-	BTtKNVumuT1pSHpFAzF95DS7BlazP2YM=
-X-Gm-Gg: AeBDietRlnm9/n3g7dE3DLcIsuzQs1Y653CmXQFEBoObs1LWt5cm8Mwe4Bl6BDrsxKV
-	LHHVoEBurzdP3T3pDOIa84MGzIo8bgk0407xEsgzXVk5L1OUtrY4jFyCMPMwy+bMewCvce3+Vqo
-	xkyeTvl/UhSFppSgS+9ofPWL0wKv8Q/or+1ca46npqyI/l7hZho8I0FVLT086JLmiL/8oA44Eij
-	x4W+8rpxnNvKiR1ko4Dg0IGC3dl6wzY8RDOd/8I36ygOmV7nImK5hbFCFE5X0oIvLcTgE80YhUy
-	xHgQk4e7py7Ey4xU3U51Ak5CeoifiJOekeanEeLRe4E9OAJn
-X-Received: by 2002:a05:6870:a10d:b0:434:81e:4a1a with SMTP id
- 586e51a60fabf-43438b7a0dbmr3371469fac.17.1777649335558; Fri, 01 May 2026
- 08:28:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qRQhm9ud"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4AA23C2BCB4;
+	Fri,  1 May 2026 15:45:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1777650361;
+	bh=LZDWViGmTKhCWD2dXNJkS+yut6Rys5QsqWiU9+4akSw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=qRQhm9ud5DUwCEOZeLinJbC1bOMRzuNtnoU7wuy3dvbcql+eXWFS33PQxFVNQDRj1
+	 9bbxuVpMNqpGjN8hjf+VsmbdPUZW8YlRp8F1vhA4KOomJ0DDsQtmxW2xOn4GyeBcnV
+	 v2G8tZCxksyiAZbcNMTqtUpMOfrWqXfbhgPYhX2pvw5fPhINn0trXrSt8Q6SCNhFH4
+	 pYkeHl1CCtn3W5V+EFihadmjzYtCj6NmSLuW6NFUl9bEWb3BL7b0Jl64lqV0jcBlWQ
+	 f/D51SHGLyAeB/qksjFm/mRKHS9HcNidvEYJbqHu+d8z/426/J9+A2zX/CjlrkVOO4
+	 ybimtCqrlgqYw==
+Message-ID: <44e564f8-d059-407b-8f5e-a149dd76dea3@kernel.org>
+Date: Fri, 1 May 2026 17:45:56 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260421223338.52743-1-devnexen@gmail.com> <cover.1777324037.git.devnexen@gmail.com>
- <43f69e5e-b0a5-4bc5-8e6b-8f41ef4cf55a@kernel.org> <59eccce4-cbc6-48b9-9243-9b9b5a5ca066@kernel.org>
- <efb7cbc4-a4c9-4f84-b440-0a2aa3267c02@kernel.org>
-In-Reply-To: <efb7cbc4-a4c9-4f84-b440-0a2aa3267c02@kernel.org>
-From: David CARLIER <devnexen@gmail.com>
-Date: Fri, 1 May 2026 16:28:44 +0100
-X-Gm-Features: AVHnY4IzS_fO6qBlXIhJcM9MJQlZqsawJmEPm3FS5J2WQGKASRrBf28nYF4hYUE
-Message-ID: <CA+XhMqweRpN9-fjS19zx=a_Lm_XSsZsLB__xEzWyB4THsBOdiQ@mail.gmail.com>
-Subject: Re: [PATCH mptcp-next v4 0/4] mptcp: MSG_ERRQUEUE support on the
- parent socket
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
-	Geliang Tang <geliang@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH] selftests: mptcp: add test for IPv6 subflow SLAB
+ placement
+Content-Language: fr
+To: Vastargazing <vebohr@gmail.com>, martineau@kernel.org
+Cc: mptcp@lists.linux.dev, netdev@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, shuah@kernel.org, stable@vger.kernel.org,
+ Florian Westphal <fw@strlen.de>
+References: <20260501151454.211598-1-vebohr@gmail.com>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <20260501151454.211598-1-vebohr@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Matthieu,
+Hi Vastargazing,
 
-  On 01/05/2026 16:49, Matthieu Baerts wrote:
-  > It looks like the CI (and sashiko) found some issues with this series.
+(+cc Florian who did a similar review on netfilter ML)
 
-  For v5:
+On 01/05/2026 17:14, Vastargazing wrote:
+> Add mptcp_v6_initcall.sh to verify that MPTCP IPv6 subflow child
+> sockets are allocated from the TCPv6 SLAB cache, not the kmalloc-4k
+> fallback.
+> 
+> tcpv6_prot_override must copy tcpv6_prot after proto_register(&tcpv6_prot)
+> populates tcpv6_prot.slab. If the copy runs too early, override.slab
+> stays NULL (frozen by __ro_after_init) and subflow children fall back
+> to kmalloc-4k. This lacks SLAB_TYPESAFE_BY_RCU, allowing lockless
+> ehash lookups in __inet_lookup_established to read freed memory.
+> 
+> The test exercises the IPv6 accept path via MPTCP connections between
+> two network namespaces, then checks that the TCPv6 slab active object
+> count grew. On a fixed kernel, the delta is ~2 * NR_CONNS (one subflow
+> per side per connection); on a broken kernel, it stays near zero because
+> children land in kmalloc-4k instead.
+> 
+> Topology: two netns connected via veth pair with /64 ULA addresses;
+> NR_CONNS parallel short-lived MPTCP connections are established and held
+> open long enough to sample /proc/slabinfo. The test skips if
+> CONFIG_MPTCP_IPV6 is absent (checked via kallsyms) or /proc/slabinfo is
+> unreadable.
+> 
+> Verified on Ubuntu 6.17 kernel predating the fix: TAP "not ok 1 ...
+> TCPv6 slab gains MPTCPv6 subflow children" with delta=0. On kernels
+> with the fix, delta is well above the threshold of NR_CONNS/2.
+Thank you for adding this new test, and for having validated
+9b55b253907e ("mptcp: fix slab-use-after-free in
+__inet_lookup_established").
 
-  - 1/4: per-bit inet_assign_bit() loop instead of WRITE_ONCE(), keeps
-    atomicity.
-  - 2/4: add missing sockopt_seq_inc(msk).
-  - 2/4: skip family-mismatched subflows in the v4/v6 helpers.
-  - 2/4: snapshot optval to a local int, pass KERNEL_SOCKPTR(&val) into
-    the loop.
-  - 3/4: pull-on-drain from mptcp_recv_error() so a parent-ENOMEM does
-    not strand subflow skbs.
+(...)
 
-  Will also re-run the docker repro to check the selftest_mptcp_join /
-  packetdrill rows are pre-existing.
+My following review comments are very similar to the ones shared by
+Florian for another on the Netfilter ML.
 
-  > But globally, I'm a bit puzzled: with MPTCP, there might be multiple
-  > paths being used, and reporting errors about all of them when the
-  > "legacy" RECVERR socket options are used will confuse the userspace
-  > that doesn't (have to) know multiple subflows are being used.
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_v6_initcall.sh b/tools/testing/selftests/net/mptcp/mptcp_v6_initcall.sh
+> new file mode 100644
 
-  Fair, and Paolo raised it on v3. The use-case is tx timestamping and
-  MSG_ZEROCOPY completions - both are tied to user data, not the
-  subflow that carried it, so no subflow identity leaks into the cmsg.
-  ICMP/ICMPv6 is the part that does. v5 will filter the splice by
-  SO_EE_ORIGIN: forward TIMESTAMPING / ZEROCOPY / LOCAL, drop ICMP.
+This should say '755', else you get
 
-  > It might be easier to have a dedicated MPTCP_RECERR, and
-eventually
-  > propagate more MPTCP-specific messages. Something that could be
-  > linked to:
-  >   https://github.com/multipath-tcp/mptcp_net-next/issues/78
+  # Warning: file mptcp_v6_initcall.sh is not executable
 
-  Agreed - subflow ICMP and #78's lifecycle events belong there. As a
-  follow-up once v5 lands.
+(Plus our CI will not validate that test.)
 
-  Cheers
+Me too, I'm not sure whether we should add regression tests for
+regression tests sake. Else we'll also quickly accumulate thousands of
+such scripts and test run time will explode. Globally, we prefer adding
+a new subtest instead of a full test.
+
+Here, you are validating an issue in the init code, that is very
+unlikely to change. If a test was needed during the submission of the
+original fix, I would have suggested adding a quick test in our
+packetdrill repo instead:
+
+  https://github.com/multipath-tcp/packetdrill
+
+An existing packetdrill test could be modified to check the slabs in v4
+and v6, but I'm still not convinced it is worth it.
+
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
+
