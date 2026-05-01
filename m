@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 989BF13E02A;
-	Fri,  1 May 2026 15:46:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B02973A6B89
+	for <mptcp@lists.linux.dev>; Fri,  1 May 2026 15:56:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777650361; cv=none; b=peICEMnvMxir0Eus1J4sHtR7slYruqyRW0cicBLZgUsKOjcxVreQ7hZvXH4VIC4rCuKc+HIDyPLTTzhJMw2riJWDRbXn14O0S4TosNLNr9+cDJqAY+R8+5xN5PcQJ+wQrqCY2rDg4rizLnWeJJVQo5KEn9BSrCWWCQRXtfaR4fw=
+	t=1777650979; cv=none; b=hO32Tz/KazDhHh3Kktr4ySA9pjaduxNdVZ30AQd4347Gdr41fhbZEctFtjLbTKHINnp+rN3WLU6sJCsCYyZqWW/WyK4w7511UwwruBmaWO0VuD1VHjY7WqT38+vUW3zWx+SYyiSdvreHdfonN2bwQWzbFKE2lc1oTMIrnZEyjYM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777650361; c=relaxed/simple;
-	bh=LZDWViGmTKhCWD2dXNJkS+yut6Rys5QsqWiU9+4akSw=;
+	s=arc-20240116; t=1777650979; c=relaxed/simple;
+	bh=5ZbbcqSHQiw57QfRGV0935NzGGliKXjiMP4NoRcP3T4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Sox9wzT/6DcFrGax9uE9htpqOSn1A+cCJXsXHKMFE5raeGZxBOAUhwhnUEKOUmrHv7lq78vDBrGDJuWPVf9LWnKtyLJEQYDuSdFjS70Dp4Xx8iLRU+s1CufjjemUbZ8+q7VDxHT7wVU+ZsutVIxlAjnc2TnB6r7ekUHPhSWZaJE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qRQhm9ud; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=X9Kuf888bhe7tqVWEfvrlh3IlTiJR141mQYRrN2zt6iAQ7IHC6ReLYz99Y9R06EB3KzJMuR0oJMkSWXeL2WYnXBd173XNweZnoifj+GHyVKoK+g3aPaIpzF12fnH/Qi0sdgpNL7jferCQ0lPE8HrUcehjhUkhCZ/rAU84cio8lA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VdPUPiyg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qRQhm9ud"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4AA23C2BCB4;
-	Fri,  1 May 2026 15:45:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VdPUPiyg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28272C2BCB4;
+	Fri,  1 May 2026 15:56:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777650361;
-	bh=LZDWViGmTKhCWD2dXNJkS+yut6Rys5QsqWiU9+4akSw=;
+	s=k20201202; t=1777650979;
+	bh=5ZbbcqSHQiw57QfRGV0935NzGGliKXjiMP4NoRcP3T4=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=qRQhm9ud5DUwCEOZeLinJbC1bOMRzuNtnoU7wuy3dvbcql+eXWFS33PQxFVNQDRj1
-	 9bbxuVpMNqpGjN8hjf+VsmbdPUZW8YlRp8F1vhA4KOomJ0DDsQtmxW2xOn4GyeBcnV
-	 v2G8tZCxksyiAZbcNMTqtUpMOfrWqXfbhgPYhX2pvw5fPhINn0trXrSt8Q6SCNhFH4
-	 pYkeHl1CCtn3W5V+EFihadmjzYtCj6NmSLuW6NFUl9bEWb3BL7b0Jl64lqV0jcBlWQ
-	 f/D51SHGLyAeB/qksjFm/mRKHS9HcNidvEYJbqHu+d8z/426/J9+A2zX/CjlrkVOO4
-	 ybimtCqrlgqYw==
-Message-ID: <44e564f8-d059-407b-8f5e-a149dd76dea3@kernel.org>
-Date: Fri, 1 May 2026 17:45:56 +0200
+	b=VdPUPiygfZz70pCBwj2hnnBGbdVQZgHpStMYmGBYlTFW/nCbEdQdWf4j9qiXntVrw
+	 C4RcmOGh90sxhdqPmSRNyg5Umq48P++mis19rj3NtxeEtEOtb7ONA7WRC85CNwoX3B
+	 WC9XojUwNs0adVaZE9WI0zO3UWypV92joLv+b6gOb7kfxuyD2UI8lvlcjGCy4CTGBm
+	 VQMapPhjEC2qZ7uM69sl4LfS9DVLefhU7ZAsK1TnXkOJlqFSR7GzLXKpDKRl5ZYbH3
+	 vU0lF9O87Ke3WJDSP9fwvcGP4BBN63Cp4dnp6VbiwTKTd4d93w0UzMI8/Q0xveQ4WP
+	 L5YKGAkKvLDIg==
+Message-ID: <b9eb46be-0916-4932-b9d2-165eea2aeb6b@kernel.org>
+Date: Fri, 1 May 2026 17:56:16 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,14 +35,15 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH] selftests: mptcp: add test for IPv6 subflow SLAB
- placement
+Subject: Re: [PATCH mptcp-next v4 2/4] mptcp: propagate RECVERR sockopts to
+ subflows
 Content-Language: fr
-To: Vastargazing <vebohr@gmail.com>, martineau@kernel.org
-Cc: mptcp@lists.linux.dev, netdev@vger.kernel.org,
- linux-kselftest@vger.kernel.org, shuah@kernel.org, stable@vger.kernel.org,
- Florian Westphal <fw@strlen.de>
-References: <20260501151454.211598-1-vebohr@gmail.com>
+To: David Carlier <devnexen@gmail.com>, mptcp@lists.linux.dev
+Cc: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>
+References: <20260421223338.52743-1-devnexen@gmail.com>
+ <cover.1777324037.git.devnexen@gmail.com>
+ <21762831cbe0d70fd963dd7f0ed9e05b050a7d1f.1777324037.git.devnexen@gmail.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -88,72 +89,76 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20260501151454.211598-1-vebohr@gmail.com>
+In-Reply-To: <21762831cbe0d70fd963dd7f0ed9e05b050a7d1f.1777324037.git.devnexen@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Vastargazing,
-
-(+cc Florian who did a similar review on netfilter ML)
-
-On 01/05/2026 17:14, Vastargazing wrote:
-> Add mptcp_v6_initcall.sh to verify that MPTCP IPv6 subflow child
-> sockets are allocated from the TCPv6 SLAB cache, not the kmalloc-4k
-> fallback.
+On 27/04/2026 23:10, David Carlier wrote:
+> Propagate IP_RECVERR/IP_RECVERR_RFC4884 and
+> IPV6_RECVERR/IPV6_RECVERR_RFC4884 from the MPTCP socket to existing
+> and future subflows. The setsockopt path forwards each option to
+> every subflow via mptcp_setsockopt_all_sf(); newly-joining subflows
+> inherit the four RECVERR bits through sync_socket_options() now that
+> MPTCP_INET_FLAGS_MASK covers them.
 > 
-> tcpv6_prot_override must copy tcpv6_prot after proto_register(&tcpv6_prot)
-> populates tcpv6_prot.slab. If the copy runs too early, override.slab
-> stays NULL (frozen by __ro_after_init) and subflow children fall back
-> to kmalloc-4k. This lacks SLAB_TYPESAFE_BY_RCU, allowing lockless
-> ehash lookups in __inet_lookup_established to read freed memory.
+> Suggested-by: Paolo Abeni <pabeni@redhat.com>
+> Assisted-by: Codex:gpt-5
+> Signed-off-by: David Carlier <devnexen@gmail.com>
+> ---
+>  net/mptcp/sockopt.c | 97 ++++++++++++++++++++++++++++++++++++---------
+>  1 file changed, 79 insertions(+), 18 deletions(-)
 > 
-> The test exercises the IPv6 accept path via MPTCP connections between
-> two network namespaces, then checks that the TCPv6 slab active object
-> count grew. On a fixed kernel, the delta is ~2 * NR_CONNS (one subflow
-> per side per connection); on a broken kernel, it stays near zero because
-> children land in kmalloc-4k instead.
-> 
-> Topology: two netns connected via veth pair with /64 ULA addresses;
-> NR_CONNS parallel short-lived MPTCP connections are established and held
-> open long enough to sample /proc/slabinfo. The test skips if
-> CONFIG_MPTCP_IPV6 is absent (checked via kallsyms) or /proc/slabinfo is
-> unreadable.
-> 
-> Verified on Ubuntu 6.17 kernel predating the fix: TAP "not ok 1 ...
-> TCPv6 slab gains MPTCPv6 subflow children" with delta=0. On kernels
-> with the fix, delta is well above the threshold of NR_CONNS/2.
-Thank you for adding this new test, and for having validated
-9b55b253907e ("mptcp: fix slab-use-after-free in
-__inet_lookup_established").
+> diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+> index 41c9dc9cf95e..171e83e66a97 100644
+> --- a/net/mptcp/sockopt.c
+> +++ b/net/mptcp/sockopt.c
 
 (...)
 
-My following review comments are very similar to the ones shared by
-Florian for another on the Netfilter ML.
+> @@ -388,6 +394,41 @@ static int mptcp_setsockopt_sol_socket(struct mptcp_sock *msk, int optname,
+>  	return -EOPNOTSUPP;
+>  }
+>  
+> +static int mptcp_setsockopt_all_sf(struct mptcp_sock *msk, int level,
+> +				   int optname, sockptr_t optval,
+> +				   unsigned int optlen)
+> +{
+> +	struct mptcp_subflow_context *subflow;
+> +	int ret = 0;
+> +
+> +	mptcp_for_each_subflow(msk, subflow) {
+> +		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
+> +
+> +		ret = tcp_setsockopt(ssk, level, optname, optval, optlen);
+> +		if (ret)
+> +			break;
+> +	}
+> +	return ret;
+> +}
+> +
+> +#if IS_ENABLED(CONFIG_IPV6)
+> +static int mptcp_setsockopt_v6_recverr(struct mptcp_sock *msk, int optname,
+> +				       sockptr_t optval, unsigned int optlen)
+> +{
+> +	struct sock *sk = (struct sock *)msk;
+> +	int ret;
+> +
+> +	ret = ipv6_setsockopt(sk, SOL_IPV6, optname, optval, optlen);
+> +	if (ret)
+> +		return ret;
+> +
+> +	lock_sock(sk);
+> +	ret = mptcp_setsockopt_all_sf(msk, SOL_IPV6, optname, optval, optlen);
+> +	release_sock(sk);
+> +	return ret;
+> +}
+> +#endif
 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_v6_initcall.sh b/tools/testing/selftests/net/mptcp/mptcp_v6_initcall.sh
-> new file mode 100644
+Maybe you could have one generic helper to call xxx_setsockopt() on the
+MPTCP socket, and then call mptcp_setsockopt_all_sf(). You can pass the
+level, and call the right function.
 
-This should say '755', else you get
-
-  # Warning: file mptcp_v6_initcall.sh is not executable
-
-(Plus our CI will not validate that test.)
-
-Me too, I'm not sure whether we should add regression tests for
-regression tests sake. Else we'll also quickly accumulate thousands of
-such scripts and test run time will explode. Globally, we prefer adding
-a new subtest instead of a full test.
-
-Here, you are validating an issue in the init code, that is very
-unlikely to change. If a test was needed during the submission of the
-original fix, I would have suggested adding a quick test in our
-packetdrill repo instead:
-
-  https://github.com/multipath-tcp/packetdrill
-
-An existing packetdrill test could be modified to check the slabs in v4
-and v6, but I'm still not convinced it is worth it.
+(...)
 
 Cheers,
 Matt
