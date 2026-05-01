@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48F743112BD
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E791D3112BD
 	for <mptcp@lists.linux.dev>; Fri,  1 May 2026 17:34:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777656872; cv=none; b=tIedZ7aNwyxiXpfk5CRnpi0Oa/JT8wCCBHz1tYbXOpCDp3+qpZiQdRYuCF7MC4DMP6xthzz3BK/FRucaeTi3/grOWH7XLnBHAwmWG0MOssRHd7FOKb37r9z/6xyhTq5E3iNBkVdLT+J49UmvQdKH0gjlUU5DFZHw3JsDgtWRmrg=
+	t=1777656873; cv=none; b=biZc4rieO/0+9aft1sxSfHzzh/zhl6CtpZRFs+XPYBp8qdA5BgZOkZXZprLMCOsMooHWtt09IhbqT4fOl18+ybm9zhr/1c2FIA1dzgbc9zcBqszXKRhnHDLyc398ZzS4gcoVZpMvjAPXdnCVjTHcI5LK+UnC5qCblLpBFeyplqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777656872; c=relaxed/simple;
-	bh=niaY+FAzSqhTDSuqgiFnjRSQP8WL3tuWBm04LgGYpjU=;
+	s=arc-20240116; t=1777656873; c=relaxed/simple;
+	bh=wwUb3BZyMTTC+Han7DqcnDTy6V9E2tiSwyTfxfNhjeo=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=BYmY31ezJAxL7KvBqCmo0PbNKahB5o0nM4Dldu+3pRsDB5R/L8znQZU0wcW8gUbzvH1Qy87ZVrqffqOyIAvFGpE7fdjIpk3oMWZY8GKBtBOEFkcFvk80lXzI3lqQmsMJjGMq4+l8KeByn3UPbkhYisoQOFrzJNWcgV4tWiFkNXg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=INzieP5C; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=kDpGXmpsoc5J0lOvL50WgIa99FFNIE5/fGK9bDbZJt5jjINqGvvLf4OFluIEESnV/1q+p3UkvLelSbaGM9ymRH2xx2fAc3LjcqFKxoBlROpeYJ8uOug7SKHlATkN64+9qM/DsCETs1A788ME0t7qfSmWsHwrn3vKdRxCK4n7+bo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tvMeUsct; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="INzieP5C"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93665C2BCC6;
-	Fri,  1 May 2026 17:34:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tvMeUsct"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B003C2BCB9;
+	Fri,  1 May 2026 17:34:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1777656872;
-	bh=niaY+FAzSqhTDSuqgiFnjRSQP8WL3tuWBm04LgGYpjU=;
+	bh=wwUb3BZyMTTC+Han7DqcnDTy6V9E2tiSwyTfxfNhjeo=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=INzieP5CAtlSvV6Vu7RsUQp4KQJ07PO9vM2aFEuAjw8JKXwe4TrILKXSS6SzL9T6C
-	 nYLYIZK0LHV/buB4flrOc4Ad7BCbU6WFEhQ36dKrlh+r1cZB0CKpeNYvSepCOZW57j
-	 ouBaKVnGqn6TEqdZiRUOkB/it4S+OZCCgkRO42b5Ljng44oOf7h8FaiQUgePh6aYrH
-	 uoTXo9Z2IevqaPBawV4IMNT4M3Ags6ciB0pekH6yqTlgfoueqBT1uHHhcsYvo/kcKF
-	 5bUmRp2CEgZnL/mRO35w8mGg+jFUK5hiuPBTCiXqW/DmVYRhLugNz0cSn1vVGy1VmS
-	 hhU6UCSJQ/jsA==
+	b=tvMeUsctZPxWK41c7p21bF203yjoYtSJAXeNO9qFQRss+CVQHa31827voP42gZX5B
+	 qkVFoed/V86NVOm7DlFc/iz9T2vIMYhr5jZzPjtWIwPOuGXgIPWXvwf4x33SUW/0Da
+	 Arnkl8NIIwcIsfkUqiDG1+H5N1kghDQmRpaQZ6d0bAXt5eEcH12b+lVyDEY8FzkM2m
+	 nw1eTFPoUPpavBjowO7/zbuDCOi2NmQ7bCxKSW4mkZbIXgCdJkIuThlzzGoXs4/4Hz
+	 dOmKx+ZZ/v1ziEfNUBqs3/lkU2wAXR0+vJ+HiCLBJTvQ7gt3/a72T425YSiWiGSJJj
+	 UsFtP6QNEt8Yg==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Fri, 01 May 2026 19:34:20 +0200
-Subject: [PATCH mptcp-next 1/3] selftests: mptcp: connect: test name in
+Date: Fri, 01 May 2026 19:34:21 +0200
+Subject: [PATCH mptcp-next 2/3] selftests: mptcp: simult_flow: test name in
  pcap file
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -38,56 +38,73 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260501-mptcp-sft-pcap-prefix-v1-1-27affca69415@kernel.org>
+Message-Id: <20260501-mptcp-sft-pcap-prefix-v1-2-27affca69415@kernel.org>
 References: <20260501-mptcp-sft-pcap-prefix-v1-0-27affca69415@kernel.org>
 In-Reply-To: <20260501-mptcp-sft-pcap-prefix-v1-0-27affca69415@kernel.org>
 To: MPTCP Linux <mptcp@lists.linux.dev>
 Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1437; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=niaY+FAzSqhTDSuqgiFnjRSQP8WL3tuWBm04LgGYpjU=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDK/PFF2s+LgKJgqurL3h9WHDV/ae4smab8vfrTdhDPwz
- IrlrI9Pd5SyMIhxMciKKbJIt0Xmz3xexVvi5WcBM4eVCWQIAxenAEykKJ7hr1wmj37OnjX8CWUV
- 87OVTnCoLf5VzjhDe/OaY1EiB2+LijEyrJSQ/eTV0mR+81PE+odPnbo3qm2bv3Z9GuvL/KAIyfk
- xjAA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1760; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=wwUb3BZyMTTC+Han7DqcnDTy6V9E2tiSwyTfxfNhjeo=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDK/PFHhKZ7l7L2+aHvrc8PrfY9LF4o1trXVc8jm8Gj7B
+ x5RchLsKGVhEONikBVTZJFui8yf+byKt8TLzwJmDisTyBAGLk4BmMiNTkaG10VMXn67/+yeMftd
+ 5NLrS0Um3HQ1fdLf51FjICaxIO8dAyPDhZl8DE/lXRjL0zynzhfTyvEP2i60/5GqU9J2T6WUX+Z
+ 8AA==
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Even if the pcap prefix is printed in the test, it is clearer if this
-prefix also include the test name: mptcp_connect.
+To be able to easily find out which pcap was produced by which test, the
+selftest name is now added to the pcap file, similar to the other tests.
 
-With this, it is easily possible to find out which pcap was produced by
-which test, and easily delete the right ones.
+While at it, print the prefix name to be able to find which capture
+files have been produced by which test after several runs. This prefix
+was not printed anywhere before.
 
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- tools/testing/selftests/net/mptcp/mptcp_connect.sh | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ tools/testing/selftests/net/mptcp/simult_flows.sh | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-index a6447f7a31fe..091edee9a7bf 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-@@ -212,8 +212,8 @@ if $checksum; then
- fi
+diff --git a/tools/testing/selftests/net/mptcp/simult_flows.sh b/tools/testing/selftests/net/mptcp/simult_flows.sh
+index d11a8b949aab..2d26d09009f1 100755
+--- a/tools/testing/selftests/net/mptcp/simult_flows.sh
++++ b/tools/testing/selftests/net/mptcp/simult_flows.sh
+@@ -24,6 +24,7 @@ small=""
+ sout=""
+ cout=""
+ capout=""
++capprefix=""
+ size=0
  
- if $capture; then
--	rndh="${ns1:4}"
--	mptcp_lib_pr_info "Packet capture files will have this prefix: ${rndh}-"
-+	capprefix="mptcp_connect-${ns1:4}"
-+	mptcp_lib_pr_info "pcap will have this prefix: ${capprefix}-"
- fi
+ usage() {
+@@ -70,6 +71,11 @@ setup()
  
- set_ethtool_flags() {
-@@ -372,7 +372,7 @@ do_transfer()
+ 	mptcp_lib_ns_init ns1 ns2 ns3
+ 
++	if $capture; then
++		capprefix="simult_flows-${ns1:4}"
++		mptcp_lib_pr_info "pcap will have this prefix: ${capprefix}-"
++	fi
++
+ 	ip link add ns1eth1 netns "$ns1" type veth peer name ns2eth1 netns "$ns2"
+ 	ip link add ns1eth2 netns "$ns1" type veth peer name ns2eth2 netns "$ns2"
+ 	ip link add ns2eth3 netns "$ns2" type veth peer name ns3eth1 netns "$ns3"
+@@ -136,14 +142,13 @@ do_transfer()
+ 
+ 	if $capture; then
+ 		local capuser
+-		local rndh="${ns1:4}"
+ 		if [ -z $SUDO_USER ] ; then
+ 			capuser=""
+ 		else
  			capuser="-Z $SUDO_USER"
  		fi
  
--		local capfile="${rndh}-${connector_ns:0:3}-${listener_ns:0:3}-${cl_proto}-${srv_proto}-${connect_addr}-${port}"
-+		local capfile="${capprefix}-${connector_ns:0:3}-${listener_ns:0:3}-${cl_proto}-${srv_proto}-${connect_addr}-${port}"
+-		local capfile="${rndh}-${port}"
++		local capfile="${capprefix}-${port}"
  		local capopt="-i any -s 65535 -B 32768 ${capuser}"
  
- 		ip netns exec ${listener_ns} tcpdump ${capopt} \
+ 		ip netns exec ${ns3}  tcpdump ${capopt} -w "${capfile}-listener.pcap"  >> "${capout}" 2>&1 &
 
 -- 
 2.53.0
