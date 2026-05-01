@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B02973A6B89
-	for <mptcp@lists.linux.dev>; Fri,  1 May 2026 15:56:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B943F3D6CCA
+	for <mptcp@lists.linux.dev>; Fri,  1 May 2026 15:56:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777650979; cv=none; b=hO32Tz/KazDhHh3Kktr4ySA9pjaduxNdVZ30AQd4347Gdr41fhbZEctFtjLbTKHINnp+rN3WLU6sJCsCYyZqWW/WyK4w7511UwwruBmaWO0VuD1VHjY7WqT38+vUW3zWx+SYyiSdvreHdfonN2bwQWzbFKE2lc1oTMIrnZEyjYM=
+	t=1777651002; cv=none; b=nH0RFZaKcCNw0v0ONdAkiMTld4Rui2msNXZLCjohwdkB8fpCMgRseS0+ucLSYi+2VwDPRpF+vYJ/qwRngjocxNpKLeZP1oLvdTRzOPwJpMbHrHgL5Q7OSFuVgpyQb0KEGOutWePDdNyfuE1LJwA/vAjGXph91LRs8v1AWAp6MZw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777650979; c=relaxed/simple;
-	bh=5ZbbcqSHQiw57QfRGV0935NzGGliKXjiMP4NoRcP3T4=;
+	s=arc-20240116; t=1777651002; c=relaxed/simple;
+	bh=aC2XrvUnG5Qa31ySKV7/rNahl/9gSTgtZ9Y++MLlC+w=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=X9Kuf888bhe7tqVWEfvrlh3IlTiJR141mQYRrN2zt6iAQ7IHC6ReLYz99Y9R06EB3KzJMuR0oJMkSWXeL2WYnXBd173XNweZnoifj+GHyVKoK+g3aPaIpzF12fnH/Qi0sdgpNL7jferCQ0lPE8HrUcehjhUkhCZ/rAU84cio8lA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VdPUPiyg; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=gaqy6/N+3XMPqe8nAfg9eGgJWoO3nxQPgYHxe5yV2/DBioLRBljgkVyKmYE8FAPrKpvfmwKe3BRBPVqA7IDVER7Vva/Z+qQ3jKbf1nyj840Z2x8YYU6tKA258DRjJZwPfq9TGahn8jo5Bl5qalXxcobfpN8CejQRC3TFE38nSLA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=agsLldAr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VdPUPiyg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28272C2BCB4;
-	Fri,  1 May 2026 15:56:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="agsLldAr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3EBA0C2BCC7;
+	Fri,  1 May 2026 15:56:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777650979;
-	bh=5ZbbcqSHQiw57QfRGV0935NzGGliKXjiMP4NoRcP3T4=;
+	s=k20201202; t=1777651002;
+	bh=aC2XrvUnG5Qa31ySKV7/rNahl/9gSTgtZ9Y++MLlC+w=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=VdPUPiygfZz70pCBwj2hnnBGbdVQZgHpStMYmGBYlTFW/nCbEdQdWf4j9qiXntVrw
-	 C4RcmOGh90sxhdqPmSRNyg5Umq48P++mis19rj3NtxeEtEOtb7ONA7WRC85CNwoX3B
-	 WC9XojUwNs0adVaZE9WI0zO3UWypV92joLv+b6gOb7kfxuyD2UI8lvlcjGCy4CTGBm
-	 VQMapPhjEC2qZ7uM69sl4LfS9DVLefhU7ZAsK1TnXkOJlqFSR7GzLXKpDKRl5ZYbH3
-	 vU0lF9O87Ke3WJDSP9fwvcGP4BBN63Cp4dnp6VbiwTKTd4d93w0UzMI8/Q0xveQ4WP
-	 L5YKGAkKvLDIg==
-Message-ID: <b9eb46be-0916-4932-b9d2-165eea2aeb6b@kernel.org>
-Date: Fri, 1 May 2026 17:56:16 +0200
+	b=agsLldArg+UgYqKtkS5Uum+XmthPAN9hCsbYfsBQFKm9Vn4JChtlDUXJNe5H70/3o
+	 +AexNP4VyeWCjjb7h7KeuX70ASwzFaTTLih+SaTP5r14+CeWdK4VGZ3OriFXWu2lgA
+	 pQABC72HK5jojAJn5NjhMaKhWc29Z35rH/axwv5FHZ+eZvy4nSsEpCtJVo1R+dedFD
+	 YacpT9mWz0mDJ1tUch1reslWIypyCXNN4DHrivV/nirEkWxLdPxVz7FvllCpqPO6cj
+	 z/baKxJSc2UZ9hg4Q0nvP9rFhWyXJPCEMS37qi6fKHWDzduh87INMKhPxGGjdPryTS
+	 BAreoP97lQv8g==
+Message-ID: <b36e138a-d874-4eff-a428-55bcfbbfc495@kernel.org>
+Date: Fri, 1 May 2026 17:56:39 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,15 +35,18 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v4 2/4] mptcp: propagate RECVERR sockopts to
- subflows
+Subject: Re: [PATCH mptcp-next v4 0/4] mptcp: MSG_ERRQUEUE support on the
+ parent socket
 Content-Language: fr
-To: David Carlier <devnexen@gmail.com>, mptcp@lists.linux.dev
-Cc: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>
+To: David CARLIER <devnexen@gmail.com>
+Cc: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>,
+ Geliang Tang <geliang@kernel.org>, Paolo Abeni <pabeni@redhat.com>
 References: <20260421223338.52743-1-devnexen@gmail.com>
  <cover.1777324037.git.devnexen@gmail.com>
- <21762831cbe0d70fd963dd7f0ed9e05b050a7d1f.1777324037.git.devnexen@gmail.com>
+ <43f69e5e-b0a5-4bc5-8e6b-8f41ef4cf55a@kernel.org>
+ <59eccce4-cbc6-48b9-9243-9b9b5a5ca066@kernel.org>
+ <efb7cbc4-a4c9-4f84-b440-0a2aa3267c02@kernel.org>
+ <CA+XhMqweRpN9-fjS19zx=a_Lm_XSsZsLB__xEzWyB4THsBOdiQ@mail.gmail.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -89,76 +92,65 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <21762831cbe0d70fd963dd7f0ed9e05b050a7d1f.1777324037.git.devnexen@gmail.com>
+In-Reply-To: <CA+XhMqweRpN9-fjS19zx=a_Lm_XSsZsLB__xEzWyB4THsBOdiQ@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 27/04/2026 23:10, David Carlier wrote:
-> Propagate IP_RECVERR/IP_RECVERR_RFC4884 and
-> IPV6_RECVERR/IPV6_RECVERR_RFC4884 from the MPTCP socket to existing
-> and future subflows. The setsockopt path forwards each option to
-> every subflow via mptcp_setsockopt_all_sf(); newly-joining subflows
-> inherit the four RECVERR bits through sync_socket_options() now that
-> MPTCP_INET_FLAGS_MASK covers them.
+On 01/05/2026 17:28, David CARLIER wrote:
+> Hi Matthieu,
 > 
-> Suggested-by: Paolo Abeni <pabeni@redhat.com>
-> Assisted-by: Codex:gpt-5
-> Signed-off-by: David Carlier <devnexen@gmail.com>
-> ---
->  net/mptcp/sockopt.c | 97 ++++++++++++++++++++++++++++++++++++---------
->  1 file changed, 79 insertions(+), 18 deletions(-)
+>   On 01/05/2026 16:49, Matthieu Baerts wrote:
+>   > It looks like the CI (and sashiko) found some issues with this series.
+
+(Please do fix your email client to avoid this formatting: some of your
+emails are OK, but not all of them.)
+
+>   For v5:
 > 
-> diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-> index 41c9dc9cf95e..171e83e66a97 100644
-> --- a/net/mptcp/sockopt.c
-> +++ b/net/mptcp/sockopt.c
+>   - 1/4: per-bit inet_assign_bit() loop instead of WRITE_ONCE(), keeps
+>     atomicity.
+>   - 2/4: add missing sockopt_seq_inc(msk).
+>   - 2/4: skip family-mismatched subflows in the v4/v6 helpers.
+>   - 2/4: snapshot optval to a local int, pass KERNEL_SOCKPTR(&val) into
+>     the loop.
 
-(...)
+(While at it, your new helpers mptcp_setsockopt_v[46]_recverr could have
+a generic name)
 
-> @@ -388,6 +394,41 @@ static int mptcp_setsockopt_sol_socket(struct mptcp_sock *msk, int optname,
->  	return -EOPNOTSUPP;
->  }
->  
-> +static int mptcp_setsockopt_all_sf(struct mptcp_sock *msk, int level,
-> +				   int optname, sockptr_t optval,
-> +				   unsigned int optlen)
-> +{
-> +	struct mptcp_subflow_context *subflow;
-> +	int ret = 0;
-> +
-> +	mptcp_for_each_subflow(msk, subflow) {
-> +		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
-> +
-> +		ret = tcp_setsockopt(ssk, level, optname, optval, optlen);
-> +		if (ret)
-> +			break;
-> +	}
-> +	return ret;
-> +}
-> +
-> +#if IS_ENABLED(CONFIG_IPV6)
-> +static int mptcp_setsockopt_v6_recverr(struct mptcp_sock *msk, int optname,
-> +				       sockptr_t optval, unsigned int optlen)
-> +{
-> +	struct sock *sk = (struct sock *)msk;
-> +	int ret;
-> +
-> +	ret = ipv6_setsockopt(sk, SOL_IPV6, optname, optval, optlen);
-> +	if (ret)
-> +		return ret;
-> +
-> +	lock_sock(sk);
-> +	ret = mptcp_setsockopt_all_sf(msk, SOL_IPV6, optname, optval, optlen);
-> +	release_sock(sk);
-> +	return ret;
-> +}
-> +#endif
+>   - 3/4: pull-on-drain from mptcp_recv_error() so a parent-ENOMEM does
+>     not strand subflow skbs.
+> 
+>   Will also re-run the docker repro to check the selftest_mptcp_join /
+>   packetdrill rows are pre-existing.
 
-Maybe you could have one generic helper to call xxx_setsockopt() on the
-MPTCP socket, and then call mptcp_setsockopt_all_sf(). You can pass the
-level, and call the right function.
+The packetdrill errors might be pre-existing, someone should look at
+improving the situation there:
 
-(...)
+  https://ci-results.mptcp.dev/flakes.html
+
+>   > But globally, I'm a bit puzzled: with MPTCP, there might be multiple
+>   > paths being used, and reporting errors about all of them when the
+>   > "legacy" RECVERR socket options are used will confuse the userspace
+>   > that doesn't (have to) know multiple subflows are being used.
+> 
+>   Fair, and Paolo raised it on v3. The use-case is tx timestamping and
+>   MSG_ZEROCOPY completions - both are tied to user data, not the
+>   subflow that carried it, so no subflow identity leaks into the cmsg.
+>   ICMP/ICMPv6 is the part that does. v5 will filter the splice by
+>   SO_EE_ORIGIN: forward TIMESTAMPING / ZEROCOPY / LOCAL, drop ICMP.
+
+Maybe OK with this filter indeed..
+
+>   > It might be easier to have a dedicated MPTCP_RECERR, and
+> eventually
+>   > propagate more MPTCP-specific messages. Something that could be
+>   > linked to:
+>   >   https://github.com/multipath-tcp/mptcp_net-next/issues/78
+> 
+>   Agreed - subflow ICMP and #78's lifecycle events belong there. As a
+>   follow-up once v5 lands.
+
+Indeed, better to split them.
 
 Cheers,
 Matt
