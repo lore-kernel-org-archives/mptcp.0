@@ -1,165 +1,274 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AA642BDC32
-	for <mptcp@lists.linux.dev>; Fri,  1 May 2026 15:13:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 618BD3CBE9E
+	for <mptcp@lists.linux.dev>; Fri,  1 May 2026 15:14:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777648438; cv=none; b=AjZYP0BPJHBkOGVgdmbkmISnUPHLazY0rXgYdD7+pyt/vmAeIANW7QswcKb7WxCl6pVybp1G+hvgYZLkMSjBjiu5iGcbJb98pCh2j1Yt03MB94W1+L6QiK3LJzB3eNvUKPaC3BYnAouCtUxTY8KGTB7ftesqcmfgGB5J86bObPg=
+	t=1777648500; cv=none; b=CYthvHdOETv6ZW9RXWaxoyYn0rkW4hZEZ3Fabjvl1U9h+MV5KsNGcH6/qIzj7PCN5ZU/SroMM8eXb5naP4JnEs5ARVCzyBLp8xqcVpq7gEuhZy1an1qyMlCYF8OF7DKXFQOghj5S+TzUoaHo3mD7lJ4q4h0pIZNEnUTX3ly/CRw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777648438; c=relaxed/simple;
-	bh=5yJLkCyK/x2ht3SPdiI2h4PS+8TgQaSk09vZvKxSVMY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=q6oJ1xu4t+J15YF2jO9g/TjgRT+ygTCtESIzr5DvE6X3QQGZSf5I9d2k2HpKK9b+STZFgMdj2xrGxLqd6Xh0hYX2Hk9i+ZwLat1ZIVeT6NBpnSJ29XIYD8QE3uhFcgtYDPSymzIUhIbbud0jUkzI/8Ls8zSO7AgFte+vqnkfrow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DJb5Ar5V; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777648500; c=relaxed/simple;
+	bh=pgx4+xvjUVhKRcRqf68AvT3/u27B062g7R/oe/OG8Cs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oka13hCy8ydxu7jVQNVi7HISSEIiXtQJRFhWZ0nLz4njQ4w3c5U84m3u6URSy0QdCyZYFuDGHZZVTEuSGvH5W1K0Zhio8uBF6y4tdv2MsNigIIPH4fff0+K82Qc4CZ57v29oY29qwAp2YHUP1bNJnEDf3zWVmsmqMVGGlYf5Xlo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UCCsNDG0; arc=none smtp.client-ip=209.85.208.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DJb5Ar5V"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFED8C2BCB4;
-	Fri,  1 May 2026 15:13:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777648438;
-	bh=5yJLkCyK/x2ht3SPdiI2h4PS+8TgQaSk09vZvKxSVMY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=DJb5Ar5VWxIdQuCjr+wKp9tAVdW5K9SR5yH0mzOp/+IG9hYs83oBYZJfqWY8WuC/t
-	 9GTdqazX1mQtHmh6eS2kzAmOSjJlUTn3qSS9Fwu4VnUEUP48YTfeu9lHyPgS+yPfOq
-	 Iioi4g7rWWZQwhp03fg6Ps2jkmQa9i44J7PmN/+ZD9de99z59+imRwBo6TqF0FX/DI
-	 g2yELiN5dFofGDbiTK4z7gKNvN7LjcsHMxngH+dHfSsnT9WJsJSPJu+UieKlnuHHQZ
-	 mVooqTwfhiL5J0zzESnQ+bcrJRld8kdQb67pzmR9HiDhGT9Q/zGvweKABCLCqVMsca
-	 xwPGv3yf8Fmbw==
-Message-ID: <4792fa80-2485-47bc-9c50-0526c2f23484@kernel.org>
-Date: Fri, 1 May 2026 17:13:54 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UCCsNDG0"
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-38e84ed22bdso21938211fa.2
+        for <mptcp@lists.linux.dev>; Fri, 01 May 2026 08:14:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1777648497; x=1778253297; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=llmIKEf8xgxsjh1iuIkSY/YxURawHxS+HKKjGXhYgvc=;
+        b=UCCsNDG0Zplk6+9ClCs0j/zWr+C/+nQ2mf3QSq1YsjluGiq+4pT2iNbdcwmlfexqYl
+         veLZSV/v/i0NQ5SJ+K53YI8LOZVGKXSTEx2gUK4Aj3clyeWZMIgsjaylXuU2lmdeVCoW
+         k7BuPY5REqgPllpd+cXIvKZD6rdz2d7iWI/iWZqqCD8LjyAHv17BFQw7pFAHGJDcFdp/
+         PPQO0wceTQf5pB+ymHcQCbaI1lCYaz2O72pEPqEm1qtExhpy8iMHIf1l4Ionv6TUATep
+         4L8WwD5NwSE5nWfFONro5rroUFizocGDuQis9zRu3P5PKQqeCRClGtPhLorPJ02XcR1J
+         ivwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1777648497; x=1778253297;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=llmIKEf8xgxsjh1iuIkSY/YxURawHxS+HKKjGXhYgvc=;
+        b=UzlFf2OlgqoDeKvfQJY4KwKB4Ct7V3EKqQo6AQR4CukX35iL3kbxJ3DbzWgzE3PYm2
+         NEfhEb2W3pGPiz83vgPG/XFRk3YANT0BrBMNJFt6qSFtLcyDL1qLRtDZxAbZ2tkW6N95
+         Z7EX77H8VLvHgbCg/riRSPSkiiJt9D3n/9+glAhMCkwXtANtLOrujpuWnicVUEI8APx1
+         VCx69pFFcwyetvCcx+nOlp45W+HS1c3QE5/7/+eGHN89xmxbykrjhJ1JlDLZfnQrEQJW
+         FdTKHovkQLNw/5vL523WvxDrINrSohkax07qi3HssA5G537fAU6n9nWUtJ2AHExGwtp4
+         7HvQ==
+X-Gm-Message-State: AOJu0YyJJeY+SgQgphos1qz0cw5punv+QbZjDPk1iBfgrKEqCAtDSV1+
+	OWc9nr/vyUUuv++OZfTxX8g9VoHXgpjC4nwN+zCoIqOCUidKYe5YkKnN
+X-Gm-Gg: AeBDieur+D38W195iwpAC6mmN1U10pcIVnwglr9/CujEV+J7+zawhBMLjkL8PaJrgZ2
+	Mvu47pxZ4Hw8OTcb/LablnIWOTnirr8A3vnB5TWbmNd1h9+PGR+l6sM6SsjH4oIhddh3XwxUBiR
+	cyW/eswBfPwlyZp5RaHOT6VonTnDJ0WOXVy18I97w9LQFkuBWYxcVHj1FtghQkuzn9evTzB66wh
+	uo1eiE51tgThMoDfZfaq7FN11NFX3tKVJwLB8gJecGE9JGSthjKfD5YwmVFOdZk5Vps3UR0bYKw
+	MtixWWbcWFzYn0LkNYDdVVW6/UazsD9OFbLIsf+WD8oeRkfYyZg1AJzu39Aas7/Mh2iyhYwkIAa
+	7dL3O6u3hEF6UtSvK0tEyVzZDFAVJMk3AETCwrdlV7STKt3TZshOd55UQyLSMXYipo/dOODK5M4
+	H4CF31CZOsO+QHajI+c+zah6rRckcuvLxeZrg++enInv55XNpV/2F1tYYJ2bEPy6k7rUef9kM=
+X-Received: by 2002:a2e:a54a:0:b0:38e:a883:62e9 with SMTP id 38308e7fff4ca-393643b72c6mr12372401fa.15.1777648496200;
+        Fri, 01 May 2026 08:14:56 -0700 (PDT)
+Received: from va-HP-Pavilion-Desktop-595-p0xxx.mshome.net ([193.0.150.248])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-3936109039csm7984831fa.8.2026.05.01.08.14.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 May 2026 08:14:55 -0700 (PDT)
+From: Vastargazing <vebohr@gmail.com>
+To: matttbe@kernel.org,
+	martineau@kernel.org
+Cc: mptcp@lists.linux.dev,
+	netdev@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	shuah@kernel.org,
+	Vastargazing <vebohr@gmail.com>,
+	stable@vger.kernel.org
+Subject: [PATCH] selftests: mptcp: add test for IPv6 subflow SLAB placement
+Date: Fri,  1 May 2026 18:14:54 +0300
+Message-ID: <20260501151454.211598-1-vebohr@gmail.com>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net v2 1/2] mptcp: pm: fix ADD_ADDR timer infinite
- retry on option space insufficient
-Content-Language: fr
-To: Li Xiasong <xiasonglee@gmail.com>
-Cc: mptcp@lists.linux.dev, weiyongjun1@huawei.com, yuehaibing@huawei.com,
- zhangchangzhong@huawei.com, Li Xiasong <lixiasong1@huawei.com>
-References: <20260430112026.343691-1-lixiasong1@huawei.com>
- <20260430112026.343691-2-lixiasong1@huawei.com>
- <177755524215.1566930.3209225574765644709.b4-review@b4>
- <0430cd33-4d2e-4659-be1e-fada67bb9c6d@gmail.com>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <0430cd33-4d2e-4659-be1e-fada67bb9c6d@gmail.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi Li,
+Add mptcp_v6_initcall.sh to verify that MPTCP IPv6 subflow child
+sockets are allocated from the TCPv6 SLAB cache, not the kmalloc-4k
+fallback.
 
-On 01/05/2026 17:03, Li Xiasong wrote:
-> On 4/30/26 9:20 PM, Matthieu Baerts wrote:
->> On Thu, 30 Apr 2026 19:20:25 +0800, Li Xiasong <lixiasong1@huawei.com> wrote:
+tcpv6_prot_override must copy tcpv6_prot after proto_register(&tcpv6_prot)
+populates tcpv6_prot.slab. If the copy runs too early, override.slab
+stays NULL (frozen by __ro_after_init) and subflow children fall back
+to kmalloc-4k. This lacks SLAB_TYPESAFE_BY_RCU, allowing lockless
+ehash lookups in __inet_lookup_established to read freed memory.
 
-(...)
+The test exercises the IPv6 accept path via MPTCP connections between
+two network namespaces, then checks that the TCPv6 slab active object
+count grew. On a fixed kernel, the delta is ~2 * NR_CONNS (one subflow
+per side per connection); on a broken kernel, it stays near zero because
+children land in kmalloc-4k instead.
 
->>> @@ -881,24 +889,47 @@ bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, const struct sk_buff *skb,
->>> [ ... skip 26 lines ... ]
->>> +			goto out_unlock;
->>> +
->>> +		if (*echo) {
->>> +			MPTCP_INC_STATS(net, MPTCP_MIB_ECHOADDTXDROP);
->>> +		} else {
->>> +			skip_add_addr = true;
->>
->> Even if I don't think we would have space issues with the echo, should
->> this variable also be set also in case of ADD_ADDR echo?
->>
->> (In this case, the variable could also simply be called 'skip', or
->> 'drop', similar to the MIB counters here.)
->>
-> 
-> My current understanding is that the skip marker is only required for
-> the non-echo ADD_ADDR path, because that is the one tied to the local
-> ADD_ADDR retransmission timer flow.
-> 
-> For the echo case here, it looks more like a reply path to a received
-> peer ADD_ADDR, so on option-space shortage, clearing the signal bit and
-> accounting the drop might be sufficient.
-> 
-> But I may be missing something in this area — if you think echo should
-> also go through the same skip handling, I can align with that in v3.
+Topology: two netns connected via veth pair with /64 ULA addresses;
+NR_CONNS parallel short-lived MPTCP connections are established and held
+open long enough to sample /proc/slabinfo. The test skips if
+CONFIG_MPTCP_IPV6 is absent (checked via kallsyms) or /proc/slabinfo is
+unreadable.
 
-Indeed, you are right, I mixed thing up: when an ADD_ADDR echo is
-received, the timer for the linked ADD_ADDR is stopped, but no timer
-needs to be stopped when sending the ADD_ADDR echo. So no need to change
-anything here.
+Verified on Ubuntu 6.17 kernel predating the fix: TAP "not ok 1 ...
+TCPv6 slab gains MPTCPv6 subflow children" with delta=0. On kernels
+with the fix, delta is well above the threshold of NR_CONNS/2.
 
->>> [ ... skip 13 lines ... ]
->>> +	/* On pure-ACK option-space exhaustion, stop retrying this ADD_ADDR:
->>> +	 * clear the signal bit, cancel the matching retransmission timer, and
->>> +	 * let the PM state machine progress.
->>> +	 */
->>> +	if (skip_add_addr)
->>> +		mptcp_pm_add_addr_skip(msk, addr);
->>
->> If you have to modify something else, maybe the new helper is not
->> needed, and the code can be added here directly? I know I suggested the
->> introduction of this helper, but now that I see the code, I think it
->> would be easier to understand the new comment above without it, and to
->> backport this patch.
->>
-> 
-> Agreed. I'll likely inline that logic to keep the change simpler and
-> easier to backport.
-> 
-> FYI: I’m replying from my personal address during the holiday period, as
-> I currently don’t have access to my corporate mailbox. I’ll keep
-> following up on this patchset and send v3 shortly.
+Fixes: b19bc2945b40 ("mptcp: implement delegated actions")
+Cc: stable@vger.kernel.org
+Signed-off-by: Vastargazing <vebohr@gmail.com>
+---
+ tools/testing/selftests/net/mptcp/Makefile    |   1 +
+ .../selftests/net/mptcp/mptcp_v6_initcall.sh  | 140 ++++++++++++++++++
+ 2 files changed, 141 insertions(+)
+ create mode 100644 tools/testing/selftests/net/mptcp/mptcp_v6_initcall.sh
 
-All good, no hurry here.
-
-Cheers,
-Matt
+diff --git a/tools/testing/selftests/net/mptcp/Makefile b/tools/testing/selftests/net/mptcp/Makefile
+index 22ba0da2adb8..c9f329441490 100644
+--- a/tools/testing/selftests/net/mptcp/Makefile
++++ b/tools/testing/selftests/net/mptcp/Makefile
+@@ -14,6 +14,7 @@ TEST_PROGS := \
+ 	mptcp_connect_splice.sh \
+ 	mptcp_join.sh \
+ 	mptcp_sockopt.sh \
++	mptcp_v6_initcall.sh \
+ 	pm_netlink.sh \
+ 	simult_flows.sh \
+ 	userspace_pm.sh \
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_v6_initcall.sh b/tools/testing/selftests/net/mptcp/mptcp_v6_initcall.sh
+new file mode 100644
+index 000000000000..c55fc74b5ffb
+--- /dev/null
++++ b/tools/testing/selftests/net/mptcp/mptcp_v6_initcall.sh
+@@ -0,0 +1,140 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0
++#
++# Verify that MPTCP IPv6 subflow child sockets are allocated from the
++# TCPv6 slab cache.
++#
++# tcpv6_prot_override is initialised by copying tcpv6_prot, which is only
++# safe after proto_register(&tcpv6_prot) has populated tcpv6_prot.slab.
++# If the override copy runs too early during init, override.slab stays
++# NULL and __ro_after_init freezes that. Subflow child sockets then fall
++# back to kmalloc (kmalloc-4k for a TCPv6 sock), which lacks
++# SLAB_TYPESAFE_BY_RCU; lockless ehash lookups in __inet_lookup_established
++# can read freed memory.
++#
++# This test exercises the IPv6 accept path, which goes through the
++# override proto, and then asserts that the live TCPv6 slab population
++# grew. On a kernel where the override slab is NULL the delta is ~0,
++# because the children land in kmalloc-4k instead.
++
++#shellcheck disable=SC2086
++
++. "$(dirname "${0}")/mptcp_lib.sh"
++
++ns1=""
++ns2=""
++ret=0
++
++NR_CONNS=20
++TIMEOUT_POLL=30
++TIMEOUT_TEST=$((TIMEOUT_POLL * 2 + 1))
++PORT_BASE=20000
++
++# This function is used in the cleanup trap
++#shellcheck disable=SC2317,SC2329
++cleanup()
++{
++	for ns in "${ns1}" "${ns2}"; do
++		[ -n "${ns}" ] || continue
++		ip netns pids "${ns}" | xargs --no-run-if-empty kill -SIGKILL &>/dev/null
++	done
++	mptcp_lib_ns_exit "${ns1}" "${ns2}"
++}
++
++mptcp_lib_check_mptcp
++mptcp_lib_check_tools ip ss
++
++if ! mptcp_lib_kallsyms_has "tcpv6_prot_override$"; then
++	mptcp_lib_pr_skip "CONFIG_MPTCP_IPV6 not available"
++	exit ${KSFT_SKIP}
++fi
++
++if ! [ -r /proc/slabinfo ]; then
++	mptcp_lib_pr_skip "/proc/slabinfo not readable"
++	exit ${KSFT_SKIP}
++fi
++
++if ! awk '/^TCPv6 / { found = 1 } END { exit !found }' /proc/slabinfo; then
++	mptcp_lib_pr_skip "TCPv6 slab cache not present"
++	exit ${KSFT_SKIP}
++fi
++
++trap cleanup EXIT
++mptcp_lib_ns_init ns1 ns2
++
++ip -n "${ns1}" link add eth1 type veth peer name eth1 netns "${ns2}"
++ip -n "${ns1}" link set eth1 up
++ip -n "${ns1}" -6 addr add fc00::1/64 dev eth1 nodad
++ip -n "${ns2}" link set eth1 up
++ip -n "${ns2}" -6 addr add fc00::2/64 dev eth1 nodad
++
++# Wait for DAD-less addresses to settle
++ip -n "${ns1}" -6 route get fc00::2 >/dev/null 2>&1 || sleep 0.1
++
++get_tcpv6_active()
++{
++	awk '/^TCPv6 / { print $2 }' /proc/slabinfo
++}
++
++before=$(get_tcpv6_active)
++
++for i in $(seq 1 ${NR_CONNS}); do
++	echo "a" |
++		timeout ${TIMEOUT_TEST} \
++			ip netns exec "${ns2}" \
++				./mptcp_connect -6 -p $((PORT_BASE + i)) -l \
++					-t ${TIMEOUT_POLL} -w ${TIMEOUT_POLL} \
++					:: >/dev/null 2>&1 &
++done
++
++# wait_local_port_listen() only checks one port. Walk every port so we
++# do not start the connectors before all listeners are ready.
++for i in $(seq 1 ${NR_CONNS}); do
++	mptcp_lib_wait_local_port_listen "${ns2}" $((PORT_BASE + i))
++done
++
++for i in $(seq 1 ${NR_CONNS}); do
++	echo "b" |
++		timeout ${TIMEOUT_TEST} \
++			ip netns exec "${ns1}" \
++				./mptcp_connect -6 -p $((PORT_BASE + i)) \
++					-t ${TIMEOUT_POLL} -w ${TIMEOUT_POLL} \
++					fc00::2 >/dev/null 2>&1 &
++done
++
++# Wait for the accept side to materialise child sockets. ss reports the
++# number of established TCP connections in ns2 owned by mptcp_connect.
++established=0
++for _ in $(seq 20); do
++	established=$(ip netns exec "${ns2}" ss -H -t -6 state established 2>/dev/null | wc -l)
++	[ "${established}" -ge "${NR_CONNS}" ] && break
++	sleep 1
++done
++
++after=$(get_tcpv6_active)
++delta=$(( after - before ))
++
++# Conservative threshold: NR_CONNS connections (each producing at least
++# a server-side accepted child) must leave a clearly observable footprint
++# in the TCPv6 slab. On a regressed kernel, override.slab == NULL routes
++# every child into kmalloc-4k and the TCPv6 delta stays near zero.
++threshold=$(( NR_CONNS / 2 ))
++
++msg="TCPv6 slab gains MPTCPv6 subflow children"
++mptcp_lib_print_title "${msg}"
++if [ "${established}" -lt "${NR_CONNS}" ]; then
++	mptcp_lib_pr_fail "only ${established}/${NR_CONNS} connections established"
++	mptcp_lib_result_fail "${msg}"
++	ret=${KSFT_FAIL}
++elif [ "${delta}" -ge "${threshold}" ]; then
++	mptcp_lib_pr_ok "delta=${delta}"
++	mptcp_lib_result_pass "${msg}"
++else
++	mptcp_lib_pr_fail "delta=${delta} below ${threshold}:" \
++		"subflow children likely in kmalloc fallback"
++	mptcp_lib_result_fail "${msg}"
++	ret=${KSFT_FAIL}
++fi
++
++mptcp_lib_result_print_all_tap
++exit ${ret}
 -- 
-Sponsored by the NGI0 Core fund.
+2.51.0
 
