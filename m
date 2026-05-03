@@ -1,171 +1,118 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+Received: from mail-oo1-f77.google.com (mail-oo1-f77.google.com [209.85.161.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02140277C88
-	for <mptcp@lists.linux.dev>; Sat,  2 May 2026 21:20:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B985218EB1
+	for <mptcp@lists.linux.dev>; Sun,  3 May 2026 13:01:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777756821; cv=none; b=cX5I+lFAb+AnXn17DCIl1roIt0RueuEFwtf+t6YfrEeckgV1Vg++v1et98StKDZny14Rb1cFmLqxk8XJh2TKs7W69eloUqityx4x/GBmK5CqD5iFUDs5TxYrNmYJj5mfNrn7J83nqZUbYYJqvi2BvIk9H3Tka5hg7vYkDjPhbFE=
+	t=1777813302; cv=none; b=EZYWN7VxbxQECk6xOGmN54kq+B6WXyRJinmxrc/dSFIzjmjR4zmpsQBWbvrscu7hZDip9vHQIk6tWy0c+0fAfWrCsqb3JtMUwKQvq+SdBvlwUCX+ECO/533LT5ezqSP2SGCRi7D5reN2REjsNrwcSDfV5JYaBoxqCs7Lw51Wslg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777756821; c=relaxed/simple;
-	bh=QcNVzrHJDmzDhVBtHzMTu8HUGMD/QTYlMSpRK5EIoOU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TfJn8JmnwdpoZrblgQ4vu3CX8X16NMXkrX44Jw76J8M3aKA2XOOw23ELuqXTEWFVC4DSHnXVFA0/vLwl8HlXYKzCc3snEX8no3eIiRVr0Z+JVN+x5l2LH8S/eg4Fgpi+mc0PiR/eynC9imKy24X76S1uomNn57w3lii4825QBtI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z9y1w7yP; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z9y1w7yP"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-488b3f8fa2bso35651315e9.1
-        for <mptcp@lists.linux.dev>; Sat, 02 May 2026 14:20:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1777756818; x=1778361618; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+lXcg061bbhFrI0v23H2NQAB6iGsZBPcokYpsEnhLcE=;
-        b=Z9y1w7yPMCPOzF3kVs4FEQq/J4OGNy/EL5nEuPUAMqQEs7/XUVmsaM9TSg5j0mw7KB
-         pd1nJxyrbwbCHwlSxV7tXH8qCbVClg+55ITUyL40OhaOPsGS0vTHXE8a1SiwubCwbpgS
-         p24wTNa0qL+lyHBroHtCrQ3GgOxR7/2flH2BiceiqBDRKLnXEMs1DQw+TS05MoBS1RjD
-         9Iwtcl8DFHJVrRMvkXQweL2AKpYuc5wuv6AZP3CZI5bP/+gVFBYcrBsiWHch/uyvzLlE
-         pOq0WE47h41IECJrqOhuqRAhaPJJm3/hO/gCIvBmACnHXKwza3O+JO+l4slm5or8CBz1
-         t/vA==
+	s=arc-20240116; t=1777813302; c=relaxed/simple;
+	bh=4MyYuVobEooc7FlZ5RoUcpNWyRLHs4oRHgebplPcyR8=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=N8EipmBpI4KfzImMsWoigF9Ond21me+/gOxXaEVaLGiXXGzVVBK7GBaqG0UQLmsRdEs3k8xWaU0uV22XGU2SZw6hRgv8qMzX1aaAaOvJUFcMMEJncQmAh7M96dAGSdkj03Es3y/kBRnVTRIqfJA3KK9gftAiDQz3rna6zCLaI/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.161.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-oo1-f77.google.com with SMTP id 006d021491bc7-68e924f632bso6634318eaf.0
+        for <mptcp@lists.linux.dev>; Sun, 03 May 2026 06:01:41 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777756818; x=1778361618;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=+lXcg061bbhFrI0v23H2NQAB6iGsZBPcokYpsEnhLcE=;
-        b=cECd8hHm0sUBrOB010+K5TrFgcAHnuo5DMXgt3NoWESCbD1Mnyy3HoMBbsN2O8eoyn
-         GZ+FoEk5yj7zViPcqIEHgSt+LxRRdgutLncP2rZ0q+A+/mXtEWU2RP/gdfqaEupTyDCY
-         2Jk9g0JdEUGPaWzrWa1g6eByEQioG9ZKxAREh/uEoyzDNZIYhIkc+6jXv9atUorGqUv+
-         KOYS3Jp6go/ik7l+hT0DQIUnxsB8m9pVrl8t+vWUS6j9UakbQSZuj0rH+Zb9MuyawPtF
-         dQaF+yoxw0hzQ3XBzEcQH6+PFeVvRYkaLlVbhrBemEEEEgpqSrvklAIYIpAuzxUr48sb
-         oJZg==
-X-Gm-Message-State: AOJu0Yw3+IWYwt0kMIdIsKGFYD++yw6SVcWPg5ka3MyzhoZdC50BK5Nk
-	IcEuUsDeAKo5dzlMHaS2MEKJEuc4coyN0DNgvSMk2nVcJnM2DNdUdmylmrZyUPvP
-X-Gm-Gg: AeBDietQTfnElYfoY2O8wHT63FUvOTdCUmQZs+drlnA+EjrL344HGcL7m+eOlXEmSqL
-	3FmO/MT3pNvMpnFRFB2pNl7bighbulUmQkya59gWUgM5p5TOHf66e6UkJp0HEjCVHsTRuAMY8T5
-	RxlCg7xbWfVt1X2qerWqQ69u1eLaGCpY3ayWRfPRcNpm4xD5DXSbGmhpVAvRBP3xVRI6021JL9F
-	VTotgJjtEDf64y+IQQxVZPcNxxA2eAgZP/kopR1tXDW7Z+sNlxmA/8QVmm6L3l0yhr347qr8L7e
-	yqE2bdUZ0rvVb2yPbsTorUfvc7NdHlbsoyopn3JmesIf83gmGuYPjfL7PtZfEdToNrV29UPrqlU
-	fZ6LJecQc4omF0iCqAXG9XcNvDaBfvbp1CVyIJXFYTSWPIKsKtu02sOIGWihgwlG4I5te6DFmHc
-	9ReBgBOyCjO05JYTCLSC9Q7sjsHdGsPLDL4M5ndIdJfGZZLx8iHyKsSOAaoVwSjwLD3W3t84TQI
-	i5gbBJBVOUT3KBwPI+tXg==
-X-Received: by 2002:a05:600c:c1d7:10b0:489:1c0d:c9cb with SMTP id 5b1f17b1804b1-48a85e1fa62mr133732595e9.5.1777756818184;
-        Sat, 02 May 2026 14:20:18 -0700 (PDT)
-Received: from dohko.chello.ie (188-141-5-72.dynamic.upc.ie. [188.141.5.72])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-44a981defb3sm19490140f8f.20.2026.05.02.14.20.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 02 May 2026 14:20:17 -0700 (PDT)
-From: David Carlier <devnexen@gmail.com>
-To: mptcp@lists.linux.dev
-Cc: matttbe@kernel.org,
-	martineau@kernel.org,
-	geliang@kernel.org,
-	pabeni@redhat.com,
-	David Carlier <devnexen@gmail.com>
-Subject: [PATCH mptcp-next v5 4/4] selftests: mptcp: cover IP_RECVERR sockopt propagation
-Date: Sat,  2 May 2026 22:20:00 +0100
-Message-ID: <bd780ccbfb92be9023998a850c021b28b03a35fe.1777756707.git.devnexen@gmail.com>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <cover.1777756707.git.devnexen@gmail.com>
-References: <cover.1777756707.git.devnexen@gmail.com>
+        d=1e100.net; s=20251104; t=1777813300; x=1778418100;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=yA1yMAU0O+AvA9ZFzwU3JwYNJuEbLK2TSEVxoN0Rp2Y=;
+        b=KJq2H8u6k1GNbLMXUnZiZY4Utx5rGqzkXqxAGDuh0jLGNo4UmVRWk0sdXOai8JWIQa
+         SFICEdCyCWmZZ3XkJswp3kKrhXGLGdvOmZvLH9P0gZKnZuW0LoLdqT/8rYqC0gKGJMI+
+         bwTFnbUfI+xZQwyioDmlAEDEgYS3s52XR7YrTCgT1YPFaRcshZBXtGS9D4eDJM79hhql
+         k76mQ9RB9F5JHEhIej2cVenoTXE8NDF7Q5n5kCzQ0U9jxq6/ikzAG6lBo3Nhp0Frwhd5
+         B/9Mbs6V6e7ciJqqKYyBv78Zo1RhVyiTa+yDesGnKdmahOZNFMJJPtwsioJZ3HkKZQbI
+         N3NA==
+X-Forwarded-Encrypted: i=1; AFNElJ8jh/qq2rOr8sn7PqvJd7KKqHOrhv6/awB//3KWEiuA9yuwn8pFtEf4hE92ppU8SZKoJ2+X4g==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yzd2aSRwrrws9KQ94p1gs/hFeb37vXdAy9HBUz3moCfOaWDHbJU
+	zEOOWyXXC7doJtlEehGNZxzjWryc5BZoUJBzHeAmDRTSgFzHKrPcMIitG+s4/EFkfcl/0zvcO2g
+	QQxFGmvZEKMPzAPZacd4xiQCFIruNTwuAM3hJRQdG/XSE7ce/9OqAV8khSnw=
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6820:211:b0:696:8278:c619 with SMTP id
+ 006d021491bc7-696979ad7d2mr2963413eaf.6.1777813300089; Sun, 03 May 2026
+ 06:01:40 -0700 (PDT)
+Date: Sun, 03 May 2026 06:01:40 -0700
+In-Reply-To: <69f44505.050a0220.3cbe47.0008.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <69f74734.050a0220.312cd3.0033.GAE@google.com>
+Subject: Re: [syzbot] [mptcp?] KMSAN: uninit-value in mptcp_established_options
+From: syzbot <syzbot+ff020673c5e3d94d9478@syzkaller.appspotmail.com>
+To: davem@davemloft.net, edumazet@google.com, geliang@kernel.org, 
+	horms@kernel.org, kmta1236@gmail.com, kuba@kernel.org, kuni1840@gmail.com, 
+	kuniyu@google.com, linux-kernel@vger.kernel.org, martineau@kernel.org, 
+	matttbe@kernel.org, mptcp@lists.linux.dev, netdev@vger.kernel.org, 
+	pabeni@redhat.com, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Exercise setsockopt/getsockopt of IP_RECVERR and IPV6_RECVERR on the
-MPTCP parent socket, including the empty-errqueue EAGAIN contract on
-MSG_ERRQUEUE|MSG_DONTWAIT.
+syzbot has found a reproducer for the following issue on:
 
-End-to-end errqueue delivery (ICMP, TX timestamps, zerocopy) depends on
-subflow-side producers that are out of scope for this series and will be
-covered by follow-up work.
+HEAD commit:    66edb901bf87 Merge tag 'v7.1-p3' of git://git.kernel.org/p..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1086da36580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=1c3f61154f3bb7e5
+dashboard link: https://syzkaller.appspot.com/bug?extid=ff020673c5e3d94d9478
+compiler:       Debian clang version 21.1.8 (++20251221033036+2078da43e25a-1~exp1~20251221153213.50), Debian LLD 21.1.8
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1260fece580000
 
-Assisted-by: Codex:gpt-5
-Signed-off-by: David Carlier <devnexen@gmail.com>
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/9014c04fc561/disk-66edb901.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/a96b1e11a924/vmlinux-66edb901.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/680236de6331/bzImage-66edb901.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+ff020673c5e3d94d9478@syzkaller.appspotmail.com
+
+=====================================================
+BUG: KMSAN: uninit-value in mptcp_write_data_fin net/mptcp/options.c:542 [inline]
+BUG: KMSAN: uninit-value in mptcp_established_options_dss net/mptcp/options.c:590 [inline]
+BUG: KMSAN: uninit-value in mptcp_established_options+0x112f/0x3530 net/mptcp/options.c:874
+ mptcp_write_data_fin net/mptcp/options.c:542 [inline]
+ mptcp_established_options_dss net/mptcp/options.c:590 [inline]
+ mptcp_established_options+0x112f/0x3530 net/mptcp/options.c:874
+ tcp_established_options+0x312/0xcc0 net/ipv4/tcp_output.c:1192
+ __tcp_transmit_skb+0x5dc/0x5fe0 net/ipv4/tcp_output.c:1575
+ __tcp_send_ack+0x967/0xad0 net/ipv4/tcp_output.c:4499
+ tcp_send_ack+0x3d/0x60 net/ipv4/tcp_output.c:4505
+ mptcp_subflow_shutdown+0x164/0x690 net/mptcp/protocol.c:3137
+ mptcp_check_send_data_fin+0x31b/0x3d0 net/mptcp/protocol.c:3218
+ __mptcp_wr_shutdown net/mptcp/protocol.c:3234 [inline]
+ __mptcp_close+0x860/0x1360 net/mptcp/protocol.c:3313
+ mptcp_close+0x42/0x260 net/mptcp/protocol.c:3367
+ inet_release+0x1ee/0x2a0 net/ipv4/af_inet.c:442
+ __sock_release net/socket.c:722 [inline]
+ sock_close+0xd6/0x2f0 net/socket.c:1514
+ __fput+0x60e/0x1010 fs/file_table.c:510
+ ____fput+0x25/0x30 fs/file_table.c:538
+ task_work_run+0x208/0x2b0 kernel/task_work.c:233
+ resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
+ __exit_to_user_mode_loop kernel/entry/common.c:67 [inline]
+ exit_to_user_mode_loop+0x306/0x1b60 kernel/entry/common.c:98
+ __exit_to_user_mode_prepare include/linux/irq-entry-common.h:207 [inline]
+ syscall_exit_to_user_mode_prepare include/linux/irq-entry-common.h:238 [inline]
+ syscall_exit_to_user_mode include/linux/entry-common.h:318 [inline]
+ do_syscall_64+0x236/0xf80 arch/x86/entry/syscall_64.c:100
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Local variable opts created at:
+ __tcp_transmit_skb+0x4d/0x5fe0 net/ipv4/tcp_output.c:1536
+ __tcp_send_ack+0x967/0xad0 net/ipv4/tcp_output.c:4499
+
+CPU: 0 UID: 0 PID: 5905 Comm: syz.0.17 Not tainted syzkaller #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/18/2026
+=====================================================
+
+
 ---
- .../selftests/net/mptcp/mptcp_sockopt.c       | 55 +++++++++++++++++++
- 1 file changed, 55 insertions(+)
-
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-index b6e58d936ebe..95bb2cc8e2ff 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-+++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-@@ -769,6 +769,60 @@ static void test_ip_tos_sockopt(int fd)
- 		xerror("expect socklen_t == -1");
- }
- 
-+static void test_ip_recverr_sockopt(int fd)
-+{
-+	struct iovec iov = {
-+		.iov_base = &(char){ 0 },
-+		.iov_len = 1,
-+	};
-+	struct msghdr msg = {
-+		.msg_iov = &iov,
-+		.msg_iovlen = 1,
-+	};
-+	int one = 1, zero = 0, val = -1;
-+	socklen_t s = sizeof(val);
-+	int level, optname, r;
-+
-+	switch (pf) {
-+	case AF_INET:
-+		level = SOL_IP;
-+		optname = IP_RECVERR;
-+		break;
-+	case AF_INET6:
-+		level = SOL_IPV6;
-+		optname = IPV6_RECVERR;
-+		break;
-+	default:
-+		xerror("Unknown pf %d\n", pf);
-+	}
-+
-+	r = setsockopt(fd, level, optname, &one, sizeof(one));
-+	if (r)
-+		die_perror("setsockopt recverr on");
-+
-+	r = getsockopt(fd, level, optname, &val, &s);
-+	if (r)
-+		die_perror("getsockopt recverr on");
-+	if (s != sizeof(val) || val != one)
-+		xerror("recverr on mismatch val=%d len=%u", val, s);
-+
-+	r = recvmsg(fd, &msg, MSG_ERRQUEUE | MSG_DONTWAIT);
-+	if (r != -1 || errno != EAGAIN)
-+		xerror("expected empty errqueue to return EAGAIN, ret=%d errno=%d", r, errno);
-+
-+	r = setsockopt(fd, level, optname, &zero, sizeof(zero));
-+	if (r)
-+		die_perror("setsockopt recverr off");
-+
-+	val = -1;
-+	s = sizeof(val);
-+	r = getsockopt(fd, level, optname, &val, &s);
-+	if (r)
-+		die_perror("getsockopt recverr off");
-+	if (s != sizeof(val) || val != zero)
-+		xerror("recverr off mismatch val=%d len=%u", val, s);
-+}
-+
- static int client(int pipefd)
- {
- 	int fd = -1;
-@@ -787,6 +841,7 @@ static int client(int pipefd)
- 	}
- 
- 	test_ip_tos_sockopt(fd);
-+	test_ip_recverr_sockopt(fd);
- 
- 	connect_one_server(fd, pipefd);
- 
--- 
-2.53.0
-
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
