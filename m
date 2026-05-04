@@ -1,72 +1,108 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94559283FCF;
-	Mon,  4 May 2026 09:51:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E57838C437;
+	Mon,  4 May 2026 10:00:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777888319; cv=none; b=SvJKTNYsf3Glv4j271TBL3YSf120mlN6PLDC6qw266mbcVB+Z+Jzg1FrnUAdGpahBJjn+apN6yqwaTqDOeA9FM2DMmLamS5ropae4ngIjNmOjW3dqkLVVUMiQ6ynhmsVIXzNQSwt91jrisN6s++HMUzdfCZT5qf3MR1VkTIk06w=
+	t=1777888803; cv=none; b=YBnYl1K/DdE9iFar0VQGm1VG4aZaw6bZqhdnOK1xA8BcklmU6fhtri5EEsq3z5DxM5b5NpWqk+qu23NEUuQ8drl2YKFn6n67LKdFonNUfz/1LAxQ2x0Vu9LIFGxlIojUMF1c+msL7kcpE3FAd4wM+zNC6I0/ent3aAJuw2qSsYA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777888319; c=relaxed/simple;
-	bh=S5cf9/E9C4bvHrpvqQ7Fnx33EqDMw0al7kzY6fuZAf4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Xi297bNM8nYFTyDQViEtUyJvk2B0r2ftdEsoNErxbQ+IgTywKE9Uw9Uc8T7z9lYXX2tIig1EJ/lpYcDVht+2NX9aBb0RXytf7FAPrDuIKWN/2xrDQ7IkxSweZ9/nMki7J6ErAtbHGE1dEFNQYvTsHsMKNOkIcxmQ641VwxWVb6Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HlGv4TUo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777888803; c=relaxed/simple;
+	bh=vHpJCYw2078p0TiaafkuY62mET/Tf0pKY2x6ybysoGo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fssFyDrYFxK6Dqv0qVBohGi3jQby8DBumMDlwOLYw+519meYgkXG/23XrECGU/aUD6j7CCxOV9X3S0JPgC7G/W5GG2JCMHx54nOLPibybs8ZMVbthsiY5kipUy29o6YYf0VW1meX96qoTdWDUCI8QETkco4jSfCJ2roMAvQIvZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AEbJ2uEt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HlGv4TUo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E86F2C2BCB9;
-	Mon,  4 May 2026 09:51:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AEbJ2uEt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 924B3C2BCB8;
+	Mon,  4 May 2026 10:00:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777888319;
-	bh=S5cf9/E9C4bvHrpvqQ7Fnx33EqDMw0al7kzY6fuZAf4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=HlGv4TUohlBqRjXFj9boGXxPWlXHTJRV4W9S5uSGiyHqlt6sC9Z0/9GZ1AtOcFYKf
-	 T9XRIYHOFCYYaxX0CcdkxhEU5egSJsgI81xSXbE25jLVSXgTAAKmOQyVV/qpe7qAWi
-	 KMCNm1mLvW3rYPIArAU4kI9ilHQnU3jG+ZoxvFI7bf+c3te5Lwgbiqsk71D/fbRXGn
-	 owh4YX3LkCctbIjRMWmVq2mPIR0rqvdPOxLw6FqplZJoIEnEG9wjWUKCt6WPz5OuIL
-	 Hi8cxpCS7WVBB5LtP8MmxVk9wuxLXFTs+cRZRXk3uctq76xbjwj7BEaP7TKEs97giB
-	 FvH+yyHOLbxuQ==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-To: mptcp@lists.linux.dev
-Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>,
-	syzbot+ff020673c5e3d94d9478@syzkaller.appspotmail.com,
-	Paolo Abeni <pabeni@redhat.com>,
-	Kuniyuki Iwashima <kuniyu@google.com>,
-	syzkaller-bugs@googlegroups.com,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] mptcp: fix KMSAN: uninit-value in mptcp_established_options
-Date: Mon,  4 May 2026 11:51:02 +0200
-Message-ID: <20260504095101.852039-2-matttbe@kernel.org>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <69f44505.050a0220.3cbe47.0008.GAE@google.com>
-References: <69f44505.050a0220.3cbe47.0008.GAE@google.com>
+	s=k20201202; t=1777888803;
+	bh=vHpJCYw2078p0TiaafkuY62mET/Tf0pKY2x6ybysoGo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=AEbJ2uEtSSvt16PN1MV2cLpSCbNBz05tDYmiXdzG9JThZfox105BysSarQPzIB5D3
+	 BrsJDX2CTmncsPJDwbRnyX0NEc90BNYd0QwPvRVBVHTObr2cBENOTSI2K9afw1xr+o
+	 kWpwfaVGL6MR/9fPfETinOH8JKh98qy0ez+MPAYTVHGEOTywdLPjabJSVaF0VoAGNd
+	 2RxLmhNiF1tl8oYVYwuKne2ud7EPAARObIldvFPas/5Vzz+w1d2/5qbkaPd9zo/4pd
+	 c0ybp7eYS9Xv6KU+rS6WMj83nX4PxXTzwiKS5vV2q85S24OpNVda/MV6IVsGymPbUW
+	 aYxPpIZE2C2FA==
+Message-ID: <67030b5e-0435-49fc-8adb-8dd8536ad853@kernel.org>
+Date: Mon, 4 May 2026 11:59:59 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1098; i=matttbe@kernel.org; h=from:subject; bh=S5cf9/E9C4bvHrpvqQ7Fnx33EqDMw0al7kzY6fuZAf4=; b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDJ/5LD9f/Jf6Wsjj9m7Fk3jQznvSvTObryyhCEx+j3rL J64DPuqjlIWBjEuBlkxRRbptsj8mc+reEu8/Cxg5rAygQxh4OIUgImcCGdkODOj5b+pxy2NQxW6 fN6SM+wKGKbHnu9ymfT/Xu3cL/+rUxn+6QvH+aezxixWlc8IF7nN86bveYRi893uhZf1jx9bpqP CBAA=
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH] mptcp: fix KMSAN: uninit-value in
+ mptcp_established_options
+Content-Language: fr
+To: mptcp@lists.linux.dev
+Cc: syzbot+ff020673c5e3d94d9478@syzkaller.appspotmail.com,
+ Paolo Abeni <pabeni@redhat.com>, Kuniyuki Iwashima <kuniyu@google.com>,
+ syzkaller-bugs@googlegroups.com, linux-kernel@vger.kernel.org
+References: <69f44505.050a0220.3cbe47.0008.GAE@google.com>
+ <20260504095101.852039-2-matttbe@kernel.org>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <20260504095101.852039-2-matttbe@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Just to let syzbot testing it.
+Hello,
 
-See Paolo's suggestion from [1].
+On 04/05/2026 11:51, Matthieu Baerts (NGI0) wrote:
+> Just to let syzbot testing it.
 
-Link: https://lore.kernel.org/6d342ef2-d480-4be6-afad-a3841cf205a8@redhat.com [1]
-Fixes: cfcceb7a39fc ("tcp: shrink per-packet memset in __tcp_transmit_skb()")
-Reported-by: syzbot+ff020673c5e3d94d9478@syzkaller.appspotmail.com
-Closes: https://lore.kernel.org/69f44505.050a0220.3cbe47.0008.GAE@google.com
-Suggested-by: Paolo Abeni <pabeni@redhat.com>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
-Cc: Kuniyuki Iwashima <kuniyu@google.com>
-Cc: syzkaller-bugs@googlegroups.com
-Cc: linux-kernel@vger.kernel.org
----
- net/mptcp/options.c | 2 ++
- 1 file changed, 2 insertions(+)
+Sorry for the noise: I forgot to add the syzbot instruction... (and I
+forgot to remove the MPTCP ML from the sendmail.to option).
+
+Hopefully now the following is correct:
+#syz test
 
 diff --git a/net/mptcp/options.c b/net/mptcp/options.c
 index 8a1c5698983c..24903a12a4e0 100644
@@ -81,6 +117,3 @@ index 8a1c5698983c..24903a12a4e0 100644
  		}
  
  		dss_size = map_size;
--- 
-2.53.0
-
