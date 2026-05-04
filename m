@@ -1,309 +1,131 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFAF03E0233
-	for <mptcp@lists.linux.dev>; Mon,  4 May 2026 16:39:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C0B23783C7
+	for <mptcp@lists.linux.dev>; Mon,  4 May 2026 16:55:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777912748; cv=none; b=BbatBocg1TavncW01/fpBj9CDupcUtZ25Q/R9jh0ce0dMz9Ld2N33GuS31CVx7383ZQmsEfSoRzFEQm21lOiXLp02lukGlHmGOwfD7JH9+wcarN8G+shGu9sAwJDDvxkDF9yzUX2/MvDn2CfX28+/DQ40JFqczk8lW9PQ7EFiPA=
+	t=1777913733; cv=none; b=uWIXgo/lrwyKPe7z4IT8gr5HNPMHRz6kEdetCHJ7/E/oWxcIDiqA4B3/sSJsAiDu5e8h2D5Qj7hXJ43thy8zmn0Ns/JorQWMDOWlO22qlIQSQFcybt5wU5wRv9I9fsYet1jf0RViYPkDPTseUyVLQ3VcgqlIHPKiFrcCOc93bVo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777912748; c=relaxed/simple;
-	bh=lvCureQ3Zf4HHZRtDaWlFCvPI6QU6iXYHdSW+X0vJN0=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=cK5jcDZS3KzyolhESunA3PktOsBtsArFjx84wYuC4WTyhEcw8FLG841XAcMIgaZbd8Rhwy21JorpDa7oXRGKIB/as0/mSqLdR+15W6uxpVJgEZ1E0UyWwCVLLL21hSY74I/aDJz3f3rB+08AGRH5r4kgzuNsPDOzAlkAI2AENYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KmwTjAV6; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1777913733; c=relaxed/simple;
+	bh=5sfrVd9DGhzM8emUNcTA6OuaDmDo2bs5omLuiqAEtHI=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
+	 MIME-Version:Content-Type; b=OaKYEi9dvYNmKKHdUHK4p+kcXQs6EOxWQUPXeEwUpvypyE0DN5ftbEFpCw2ccS5uJiYyafhu8TrsYY4cZxDUPS0U5fii9W/HqPLZpDgPZxxooKNcJfe38V3C2nArnyQzoH4LDSBw2hu7etGIevOsTdGJdWKJYmsGQwZSgWSzPrI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gQ8Sdvtx; arc=none smtp.client-ip=209.85.222.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KmwTjAV6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1777912745;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=53vNZKkoxg+5LuhSbYGACr7t+MtiBk53dLO9FNa6Zcs=;
-	b=KmwTjAV6EGb0h3n76qK4YSJiEtMPRz7OYU2NbyTyHiARE0X32rwSv2l/Jflq9k4X2l9uy7
-	5lZnygmrxjWAPm/M7r3uU37+6RS6vmUE19KkOQjH50/f2qg27f3cwce7LqrRlRBbBdh863
-	zRnzvpD+OoXJH2yF8nLYzVqUpDvp920=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-117-jE9PoGg9NX-S2ZoxOCsnYA-1; Mon, 04 May 2026 12:39:04 -0400
-X-MC-Unique: jE9PoGg9NX-S2ZoxOCsnYA-1
-X-Mimecast-MFC-AGG-ID: jE9PoGg9NX-S2ZoxOCsnYA_1777912743
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-43fe791a398so3972096f8f.0
-        for <mptcp@lists.linux.dev>; Mon, 04 May 2026 09:39:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gQ8Sdvtx"
+Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-900fa9f178dso199771185a.1
+        for <mptcp@lists.linux.dev>; Mon, 04 May 2026 09:55:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1777913731; x=1778518531; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=X1mbWee8dEfCbS7JFH25qrSEAHIaRJVmSRWSdLzOKh8=;
+        b=gQ8SdvtxAI1DeOidaMBdsgXLFFIv8c0lUdGZI5RmvfkvXu0x2DcAmMB3G8VRmcW/i3
+         /OcmVzETrLDjCoLFeGQxufgKoCKq3QeZe4dnkSbaeSzViv31X8LJe8rN1DlHImmgorbU
+         Iy8I6ZH6tI7oVWKxWK8Yky9P0sl30uuw21n8hxyYj3HkFPl3WwPo6i93+FtpoJtfYRqy
+         7nv6jOk/2ONrqLljWiXYmpwi4/8HGDVtgmWCq3TRuTcdVokcAQyY3cXyCuw9upporVc1
+         LacUSSX/eKJ5sQRiAPYIx/7cODZaiHMC+maiew75ACK2TBj1odcSTPwpZLnc8F246+/W
+         6q5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777912743; x=1778517543;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id:x-gm-gg
+        d=1e100.net; s=20251104; t=1777913731; x=1778518531;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=53vNZKkoxg+5LuhSbYGACr7t+MtiBk53dLO9FNa6Zcs=;
-        b=eHjcPIU3JmJHTdoMb+sg0/ApEn9uhlBNqruMq2qjwyBWfj8+b0Nlgo6CvY85GzdO65
-         8gwHyVG6HwjpAFZmgqxZzyxFutfH+zQ8/cib7/BV2PGf745LkzOZW5BHX8Kw+DKK2mFH
-         vX6Tleu/I+CAq1HHFNMXlS4jF+Hj49w6pMuEJR0eF+z9EkM+Os1YSGoU7ZaWFbsRXGzP
-         02VaWtLqQa58eee6Kya9plxAiCNuI3iWf78fMT7G29mzmwx4Uefje1KKjFHnJR04BRNf
-         jAgXHbyTeJjcU+KrcPCk+jOd6BUBNSxM2qnxuopGnCqp5sndwB7UceJKDbjTgq8ZhKD3
-         m6Sw==
-X-Forwarded-Encrypted: i=1; AFNElJ/D9CkYWe46Nqqyyx6tK7L65+kodmm3v1kotAoFxFaw4Y/4aSfGRvitOQXehSe6gPRkz5gBEA==@lists.linux.dev
-X-Gm-Message-State: AOJu0YznTyAp9+TPgqiZtR1VVAedMmDyc0IRkEPXG1wJhno+2AK4/7iX
-	AK+o8bmHlg3D6Rqm2jV/GZWiVAqpdC0fGZCNJ5eFZgxhfcX3aKaqI/CpslLNLfrWV7fGkvsxb0y
-	V9iHWctClpPpRc6MtgQkKs3m3bE0ZeHdf5fVyKiVrLRObcQPDMgv4AGQ3
-X-Gm-Gg: AeBDievRCbPKBCFQLiZLNXQmPUf5/HoomBP44YrEQ09bT53+mzp/NE6RzFy2EfOmdan
-	C94jt/Y3jBgvIk/z3CnuKGPkypufhQnZMBvg3px7L0cOEaeEdPyZjJt6mnZ+rVcgyEV+5kA1nLr
-	kY+By7AAkPGlHRKc863ejIAw8fjx0KlW3iSOM87Y7dMd/BlFrTVxJSNRCL7xorWB6X+mHkvWFIi
-	4CeC7mofP7khYZ3kJ6q8cmKWZPWIuzsA26Qrne8lyI3ak+Fhg94sQYO6Z+a/qsQpnXbfmMUqlJu
-	vXfG2saWWVevDRY+tmrIvcwOlxEcrprOvQ+LpsJu82OPFExmUKtHnXeJNjP6STWpKbI+xEBcU8r
-	B8Q/7Ceiuz/0BT6i9UX2DbADtmHyBrsogFlI/tJsg7Ruw4jXffo2GCNctGmTY+nUZCg==
-X-Received: by 2002:a05:6000:1acf:b0:43f:ea25:c965 with SMTP id ffacd0b85a97d-44bb6205eb6mr17025756f8f.32.1777912743106;
-        Mon, 04 May 2026 09:39:03 -0700 (PDT)
-X-Received: by 2002:a05:6000:1acf:b0:43f:ea25:c965 with SMTP id ffacd0b85a97d-44bb6205eb6mr17025712f8f.32.1777912742515;
-        Mon, 04 May 2026 09:39:02 -0700 (PDT)
-Received: from [192.168.88.32] ([150.228.93.27])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-44a986aab44sm28253885f8f.29.2026.05.04.09.39.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 May 2026 09:39:02 -0700 (PDT)
-Message-ID: <0c361889-533f-4467-b908-0774dc23f08d@redhat.com>
-Date: Mon, 4 May 2026 18:39:01 +0200
+        bh=X1mbWee8dEfCbS7JFH25qrSEAHIaRJVmSRWSdLzOKh8=;
+        b=jn07SZR2FP9vkt/JWOjeI3NnZprOZ5sOyIzCnt5l6q5PsTUq5fKz3IwZ8DI74hNcr9
+         R+QvJgC4aGV2g4anHpK6LGM7xqyHX71lKPcTi2M3O0aWyNMT138GisJrZCUi23P/XLRJ
+         IKdpfOhkVtuSUD+1Ejf3AEd7TG/2cjBsAJ7jnymnA2fhuEPTEyRdkI2HEWDLSlnz8ok+
+         hCbEoOM8mrQOJb2D+IESWlzMQaplhhxtd0/r1aP15nPbqjd0LnOvFU2n0aSumiJN8FKa
+         i1wYCgA/kDCDHGhPD8zkv8xgD+r+KAI1oPWiHiG+dCiNLKxP0aNDdR4haQPyyFz+N1fW
+         DE8A==
+X-Gm-Message-State: AOJu0Yxr/XD4YkYNKKN04gVlyVII2W4T99M5KWpO0QjYRqb8E63c7oJ0
+	sCbFybRuME0gDVB3BW8Bd22LwxDD2WZWuK/V7EOasqf2CS7tKcWJQjGP0Pgl
+X-Gm-Gg: AeBDievtYRWso7DOMeaik5qOuddofm3+CB8hxfmmZDRRvrCSPS5IUT+qjgUdxTe8DB/
+	51ajMnJZfb3Wn3EwpXlHpuqkSyClIBfjFITuo/vue/8+aO6oZOHnMDQXRHZSEYWZhbvwkxHcx/n
+	21In70d4FDolEZQlYVb+FsgKlJ0koKPN436uyRSsGYvKCvpxx+XrpQcO9L0/F1B8XKlY4MeObYb
+	xVwWsS85PrxAd1YGYa2i+RaLlqtSE4TrdAhxZhh9Wl/OPAAtYTg0Hfbz06IDks/1CH6UIAOn0LQ
+	FLVBvQjEVtXNoMk3QEolCvM3zeymlz0m8PX8Mb0K8zuGRVbwmPA7uaH+PkPWTVx0BvwzFtw5fVi
+	TWPLC5bvtlipgVBwiuq+js6cY7xPKYfhui4k0CH3z4J8E6gy0QGzffLGcGRcUjoMZX92gJdRtoy
+	9nqOA1S+ta1mQR7XrdX4oTC0WrIgjFa5l8NcYJXKzA9sW6odF0
+X-Received: by 2002:a05:620a:1991:b0:8cd:942e:82dc with SMTP id af79cd13be357-8fd17e40756mr1511558285a.41.1777913731249;
+        Mon, 04 May 2026 09:55:31 -0700 (PDT)
+Received: from [127.0.0.1] ([135.232.232.55])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-8fc2c9229c8sm1182919785a.36.2026.05.04.09.55.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 May 2026 09:55:30 -0700 (PDT)
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <cover.1777908248.git.pabeni@redhat.com>
+References: <cover.1777908248.git.pabeni@redhat.com>
+Subject: Re: [PATCH v3 mptcp-next 00/10] mptcp: address stall under memory
+ pressure
+Message-ID: <0ad44769-2d1a-47f7-6076-fb902e2a57f9@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 04 May 2026 16:55:30 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 mptcp-next 06/10] tcp: expose the
- tcp_collapse_ofo_queue() helper to mptcp usage, too
-From: Paolo Abeni <pabeni@redhat.com>
-To: Eric Dumazet <edumazet@google.com>
-Cc: Geliang Tang <geliang@kernel.org>, gang.yan@linux.dev,
- mptcp@lists.linux.dev
-References: <cover.1777908248.git.pabeni@redhat.com>
- <eec217c214e8db54355c7708b328c34a92c2bdcb.1777908248.git.pabeni@redhat.com>
-In-Reply-To: <eec217c214e8db54355c7708b328c34a92c2bdcb.1777908248.git.pabeni@redhat.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 52aGaewN3MoB8suICoIbixu_HN7A5YQ4VmJCoMJ3AEU_1777912743
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
 
-Hi Eric,
+Hi Paolo,
 
-I'd like to re-use some existing TCP helpers (tcp_collapse_ofo_queue()
-and tcp_collapse()) in the MPTCP code, to avoid duplicating the non
-trivial logic there.
+Thank you for your modifications, that's great!
 
-The idea is that the 'struct sock *' in such helpers could be either a
-tcp_sock* or an mptcp_sock *, and the processed skbs could be sitting in
-TCP level queues or MPTCP ones.
+Our CI did some validations and here is its report:
 
-That poses some hard constraints on the sk fields that the helpers can
-access. To make them clear I'm renaming such helpers using an 'xtcp_'
-prefix.
+- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Unstable: 1 failed =
+test(s): packetdrill_sockopts =E2=9A=A0=EF=B8=8F=20
+- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/253291=
+94631
 
-The full patch touching the TCP code is below. For completeness,  the
-whole series is available here:
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/4ee2213ed212
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1089374
 
-https://lore.kernel.org/mptcp/cover.1777908248.git.pabeni@redhat.com/T/#me6eda13ec2c70fbb400b6223aa2d07a4fd3bf865
 
-but I guess most of it is not interesting for you/from TCP perspective.
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
 
-The MPTCP bits are not yet finalized, but I'd like to know it you would
-consider this approach doable or a complete no-go.
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
 
-Thanks,
+For more details:
 
-Paolo
----
-On 5/4/26 5:40 PM, Paolo Abeni wrote:
-> The end goal is to avoid duplicating the quite untrivial strategy at MPTCP
-> level.
-> 
-> After the previous patch, the mentioned helpers could process skbs standing
-> in MPTCP-level queues without any CB-related adaptation.
-> 
-> The only additional adjustment needed is explicitly providing the OoO queue
-> reference, to cope with different sk layout.
-> 
-> Additionally rename the helper to clearly document its hybrid nature and
-> let it return the number of collapsed skbs, to allow proper accounting from
-> the future MPTCP caller.
-> 
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> ---
-> rfc -> v1:
->  - fix arg typo
-> 
-> Note:
->  - this will need a significant amount of testing at the TCP level and
->    explicit approval from Eric, which I can't guess if we can hope.
-> ---
->  include/net/tcp.h    |  8 +++++++
->  net/ipv4/tcp_input.c | 55 ++++++++++++++++++++++++++++----------------
->  2 files changed, 43 insertions(+), 20 deletions(-)
-> 
-> diff --git a/include/net/tcp.h b/include/net/tcp.h
-> index 6156d1d068e1..34a96f0bcf0a 100644
-> --- a/include/net/tcp.h
-> +++ b/include/net/tcp.h
-> @@ -1828,6 +1828,14 @@ extern void tcp_openreq_init_rwin(struct request_sock *req,
->  
->  void tcp_enter_memory_pressure(struct sock *sk);
->  void tcp_leave_memory_pressure(struct sock *sk);
-> +unsigned int xtcp_collapse(struct sock *sk, struct sk_buff_head *list,
-> +			   struct rb_root *root, struct sk_buff *head,
-> +			   struct sk_buff *tail, u32 start, u32 end,
-> +			   u8 scaling_ratio);
-> +unsigned int xtcp_collapse_ofo_queue(struct sock *sk,
-> +				     struct rb_root *out_of_order_queue,
-> +				     struct sk_buff **ooo_last_skb,
-> +				     u8 scaling_ratio);
->  
->  static inline int keepalive_intvl_when(const struct tcp_sock *tp)
->  {
-> diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
-> index 7171442c3ed7..8417785fa48f 100644
-> --- a/net/ipv4/tcp_input.c
-> +++ b/net/ipv4/tcp_input.c
-> @@ -5725,16 +5725,22 @@ static struct sk_buff *tcp_collapse_one(struct sock *sk, struct sk_buff *skb,
->  /* Collapse contiguous sequence of skbs head..tail with
->   * sequence numbers start..end.
->   *
-> + * sk can be either a TCP or an MPTCP socket.
-> + *
->   * If tail is NULL, this means until the end of the queue.
->   *
->   * Segments with FIN/SYN are not collapsed (only because this
->   * simplifies code)
-> + *
-> + * Returns the number of collapsed skbs.
->   */
-> -static void
-> -tcp_collapse(struct sock *sk, struct sk_buff_head *list, struct rb_root *root,
-> -	     struct sk_buff *head, struct sk_buff *tail, u32 start, u32 end)
-> +unsigned int
-> +xtcp_collapse(struct sock *sk, struct sk_buff_head *list, struct rb_root *root,
-> +	      struct sk_buff *head, struct sk_buff *tail, u32 start, u32 end,
-> +	      u8 scaling_ratio)
->  {
->  	struct sk_buff *skb = head, *n;
-> +	unsigned int collapsed = 0;
->  	struct sk_buff_head tmp;
->  	bool end_of_skbs;
->  
-> @@ -5750,6 +5756,7 @@ tcp_collapse(struct sock *sk, struct sk_buff_head *list, struct rb_root *root,
->  
->  		/* No new bits? It is possible on ofo queue. */
->  		if (!before(start, TCP_SKB_CB(skb)->end_seq)) {
-> +			collapsed++;
->  			skb = tcp_collapse_one(sk, skb, list, root);
->  			if (!skb)
->  				break;
-> @@ -5762,7 +5769,7 @@ tcp_collapse(struct sock *sk, struct sk_buff_head *list, struct rb_root *root,
->  		 *   overlaps to the next one and mptcp allow collapsing.
->  		 */
->  		if (!(TCP_SKB_CB(skb)->tcp_flags & (TCPHDR_SYN | TCPHDR_FIN)) &&
-> -		    (tcp_win_from_space(sk, skb->truesize) > skb->len ||
-> +		    (__tcp_win_from_space(scaling_ratio, skb->truesize) > skb->len ||
->  		     before(TCP_SKB_CB(skb)->seq, start))) {
->  			end_of_skbs = false;
->  			break;
-> @@ -5782,7 +5789,7 @@ tcp_collapse(struct sock *sk, struct sk_buff_head *list, struct rb_root *root,
->  	if (end_of_skbs ||
->  	    (TCP_SKB_CB(skb)->tcp_flags & (TCPHDR_SYN | TCPHDR_FIN)) ||
->  	    !skb_frags_readable(skb))
-> -		return;
-> +		return collapsed;
->  
->  	__skb_queue_head_init(&tmp);
->  
-> @@ -5819,6 +5826,7 @@ tcp_collapse(struct sock *sk, struct sk_buff_head *list, struct rb_root *root,
->  				start += size;
->  			}
->  			if (!before(start, TCP_SKB_CB(skb)->end_seq)) {
-> +				collapsed++;
->  				skb = tcp_collapse_one(sk, skb, list, root);
->  				if (!skb ||
->  				    skb == tail ||
-> @@ -5832,23 +5840,26 @@ tcp_collapse(struct sock *sk, struct sk_buff_head *list, struct rb_root *root,
->  end:
->  	skb_queue_walk_safe(&tmp, skb, n)
->  		tcp_rbtree_insert(root, skb);
-> +	return collapsed;
->  }
->  
->  /* Collapse ofo queue. Algorithm: select contiguous sequence of skbs
-> - * and tcp_collapse() them until all the queue is collapsed.
-> + * and xtcp_collapse() them until all the queue is collapsed.
->   */
-> -static void tcp_collapse_ofo_queue(struct sock *sk)
-> +unsigned int xtcp_collapse_ofo_queue(struct sock *sk,
-> +				     struct rb_root *ooo_queue,
-> +				     struct sk_buff **ooo_last_skb,
-> +				     u8 scaling_ratio)
->  {
-> -	struct tcp_sock *tp = tcp_sk(sk);
-> -	u32 range_truesize, sum_tiny = 0;
-> +	u32 range_truesize, sum_tiny = 0, collapsed = 0;
->  	struct sk_buff *skb, *head;
->  	u32 start, end;
->  
-> -	skb = skb_rb_first(&tp->out_of_order_queue);
-> +	skb = skb_rb_first(ooo_queue);
->  new_range:
->  	if (!skb) {
-> -		tp->ooo_last_skb = skb_rb_last(&tp->out_of_order_queue);
-> -		return;
-> +		*ooo_last_skb = skb_rb_last(ooo_queue);
-> +		return collapsed;
->  	}
->  	start = TCP_SKB_CB(skb)->seq;
->  	end = TCP_SKB_CB(skb)->end_seq;
-> @@ -5866,12 +5877,13 @@ static void tcp_collapse_ofo_queue(struct sock *sk)
->  			/* Do not attempt collapsing tiny skbs */
->  			if (range_truesize != head->truesize ||
->  			    end - start >= SKB_WITH_OVERHEAD(PAGE_SIZE)) {
-> -				tcp_collapse(sk, NULL, &tp->out_of_order_queue,
-> -					     head, skb, start, end);
-> +				collapsed += xtcp_collapse(sk, NULL, ooo_queue,
-> +					      head, skb, start, end,
-> +					      scaling_ratio);
->  			} else {
->  				sum_tiny += range_truesize;
->  				if (sum_tiny > sk->sk_rcvbuf >> 3)
-> -					return;
-> +					return collapsed;
->  			}
->  			goto new_range;
->  		}
-> @@ -5882,6 +5894,7 @@ static void tcp_collapse_ofo_queue(struct sock *sk)
->  		if (after(TCP_SKB_CB(skb)->end_seq, end))
->  			end = TCP_SKB_CB(skb)->end_seq;
->  	}
-> +	return collapsed;
->  }
->  
->  /*
-> @@ -5969,12 +5982,14 @@ static int tcp_prune_queue(struct sock *sk, const struct sk_buff *in_skb)
->  	if (tcp_can_ingest(sk, in_skb))
->  		return 0;
->  
-> -	tcp_collapse_ofo_queue(sk);
-> +	xtcp_collapse_ofo_queue(sk, &tp->out_of_order_queue,
-> +				&tp->ooo_last_skb, tp->scaling_ratio);
->  	if (!skb_queue_empty(&sk->sk_receive_queue))
-> -		tcp_collapse(sk, &sk->sk_receive_queue, NULL,
-> -			     skb_peek(&sk->sk_receive_queue),
-> -			     NULL,
-> -			     tp->copied_seq, tp->rcv_nxt);
-> +		xtcp_collapse(sk, &sk->sk_receive_queue, NULL,
-> +			      skb_peek(&sk->sk_receive_queue),
-> +			      NULL,
-> +			      tp->copied_seq, tp->rcv_nxt,
-> +			      tp->scaling_ratio);
->  
->  	if (tcp_can_ingest(sk, in_skb))
->  		return 0;
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
 
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
