@@ -1,117 +1,110 @@
-Received: from mail-ot1-f69.google.com (mail-ot1-f69.google.com [209.85.210.69])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67E6F351C3B
-	for <mptcp@lists.linux.dev>; Mon,  4 May 2026 11:14:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.69
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96C743E0C40
+	for <mptcp@lists.linux.dev>; Mon,  4 May 2026 15:40:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777893243; cv=none; b=QQOOOE0Vu9BbTrUh4LT/wlfbGQj0eUCGwHsROXj1s1kQkqvX4TMXIYRh2wK4IcKOs4mg3hxsLCA2vQf9uKFXxWabRy/z33aI8e9QnTjEcvmUqwi336r+9mQJcVx1QW6ktYkwSmFGtI/E8AY42lBai+nmncuwTHFfNCSi2zn6NLs=
+	t=1777909222; cv=none; b=bqxaumYGrWXyTRWVU8pF89HSaMMnQ6ja5038fccHvNhcBt8sL8Y9Kyp4csUu/nld2Nwck1Q8bh+qPYcwMnlQ3VVAqtT4Unoz/pzxbaNwTzy3wEpIHuyMRpfk9ZI+QkLKK7IyuQT1iAXdOq/X4jbw6NLaAYrCv4Ku0bmpP8wzGv8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777893243; c=relaxed/simple;
-	bh=ffA07dVGqyKTJs6I2sJ5tNGcKQ9OO1TRa8nXa1DMkoE=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=rxFVDXNwVp/aTFoHeJ6w6jmtvlyeZDiLIl+bD9Vt5zwJ+/jQ404PoO5qKHgPimQ/EJazPdysDsp5Fql+lwpAPJvehXgHHsUUoDAFtJxsb84KMlK00u2n5Ir47zSkB5UK95e7uKk57w7JjGcdKdaLJdeSpou16YgkK9yQNwe2V/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.210.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-ot1-f69.google.com with SMTP id 46e09a7af769-7dcdcacd141so5706017a34.2
-        for <mptcp@lists.linux.dev>; Mon, 04 May 2026 04:14:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777893241; x=1778498041;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hMPkJTU7y3aDjTVQ8S+y7wzCSdd73w6yojQBO6HIlRA=;
-        b=oa46uXpQ/C5kFpV7yrjKWly9hBWXMbz/phbvu2sA8PdfZxUdODGNKqRlebeWh8vUYM
-         GGdd/c5A2NTnKDYkJn+xwAWtF+TmpCQvIzmBKCCAJmDGAeSiR27v84iuJ0ojP9V+2AWU
-         aaiYTJVgH6I/+JDK5SF+cFDSmkm6pwjTfChwwmf4Duz9NWbMnnde4Sfzt9AWCoCujJsr
-         WTnJxH3KGOcs/pIcqzQaZzs/5851hM8Td1BnF93+VnSd3RQjg3COIjBccmAPqHZuCIcn
-         TATRmNauSQSDC+O0WG6MNnR5+uRJbLZV/v+0ubSU7e1Sb4ZoaJjl41OrVS6E8Ch20Su5
-         nr9Q==
-X-Forwarded-Encrypted: i=1; AFNElJ/wwTH52+tQT5MDh60uX3nfSkOfpZEq4qBBQCOof1JrmAU1YKlbuIbgnM3Uz2FhQom2TBl3Xg==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yz4grAjo5k9xacKwKTxka8mDPErEqAtIZnxBppCy9N0qFy2tfHD
-	BeHwGfTmvhHjFCjmhxmGwA/GOgd/L8zfwz69dgviXQ48tc2DEmHY2VgsO3MkZRZwY0QIVq2382N
-	Yn3mY5dNU1U2Ayb7moSLi8QDtB0XPRDuaome2Vw7QFeZvAqPOtBHgUxzvz68=
+	s=arc-20240116; t=1777909222; c=relaxed/simple;
+	bh=bl2uobt9X+LcEmp3tRpjIqgNJFM/Zi9zDtlcXlPf274=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:content-type; b=FOGIljN2yDXFD4nmUkXsZCeYiCrve2U/ULS50525MNf6wMVQWj7YDtQ3a0toyjr+7iZR0+GXpOTjh6HGAfBTUfTsUnlrb8vbAUSQnFEsKdmr0acC/h9jvLHCEjFAKPsR6rTfspg31IT6usz3wj0OyWAjmlIJVf4L+yER8ysAlJk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JHLPEbwi; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JHLPEbwi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1777909219;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=1uc36C1BG42g9R0yvqAduA5mfWNYeIwkO/6I1a3xQj0=;
+	b=JHLPEbwik+MqXaFSSy3BCGCBpRFYvg7Rb8sai1JY/aoycF+4W+98U2chFiXxnarp0AuFbO
+	b/buxRajtK+VWE3oJhzc0rKvTrTOYqx4j7mLNkcvle/Awpykiw3J4yrLGua1Ch/NwbhQ4X
+	v8abDv6Qg6p4UKwfHrLZBv5RIYzt690=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-356-4R80UiZPMCKMAUAAITx9WQ-1; Mon,
+ 04 May 2026 11:40:17 -0400
+X-MC-Unique: 4R80UiZPMCKMAUAAITx9WQ-1
+X-Mimecast-MFC-AGG-ID: 4R80UiZPMCKMAUAAITx9WQ_1777909216
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 06949195608B;
+	Mon,  4 May 2026 15:40:16 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.44.49.107])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 7CE7F19560A6;
+	Mon,  4 May 2026 15:40:14 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <geliang@kernel.org>,
+	gang.yan@linux.dev
+Subject: [PATCH v3 mptcp-next 00/10] mptcp: address stall under memory pressure
+Date: Mon,  4 May 2026 17:39:55 +0200
+Message-ID: <cover.1777908248.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6820:1885:b0:694:980c:9606 with SMTP id
- 006d021491bc7-69697dfb0dfmr4449543eaf.32.1777893241517; Mon, 04 May 2026
- 04:14:01 -0700 (PDT)
-Date: Mon, 04 May 2026 04:14:01 -0700
-In-Reply-To: <67030b5e-0435-49fc-8adb-8dd8536ad853@kernel.org>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <69f87f79.050a0220.3460d5.0002.GAE@google.com>
-Subject: Re: [syzbot] [mptcp?] KMSAN: uninit-value in mptcp_established_options
-From: syzbot <syzbot+ff020673c5e3d94d9478@syzkaller.appspotmail.com>
-To: kuniyu@google.com, linux-kernel@vger.kernel.org, matttbe@kernel.org, 
-	mptcp@lists.linux.dev, pabeni@redhat.com, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: QLZ9OheSm1SP0QlpI4KIJD1PIyLsMsks3siKMaP2KI0_1777909216
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+content-type: text/plain; charset="US-ASCII"; x-default=true
 
-Hello,
+This an attempt to fix the data transfer stall reported by Geliang and
+Gang more carefully enforcing memory constraints at the MPTCP level.
 
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-KMSAN: uninit-value in mptcp_write_options
+Patch 1/10 moves the bound check before entering the TCP socket.
+Patch 2, 3, 4 and 5 are cleanups/refactors finalized to safely re-using
+TCP helpers on MPTCP skbs.
+Patch 6 makes TCP pruning related helpers available to MPTCP and patch 7
+makes use of them. Patch 8 addresses an edge scenario that could still
+lead to transfer stall under memory pressure.
+Finally patch 9 and 10 improve the MPTCP-level retransmission schema to
+make recovery from memory pressure significanly faster.
 
-=====================================================
-BUG: KMSAN: uninit-value in mptcp_write_options+0x410/0x32e0 net/mptcp/options.c:1462
- mptcp_write_options+0x410/0x32e0 net/mptcp/options.c:1462
- mptcp_options_write net/ipv4/tcp_output.c:457 [inline]
- tcp_options_write+0x1399/0x1920 net/ipv4/tcp_output.c:833
- __tcp_transmit_skb+0x36fe/0x5fe0 net/ipv4/tcp_output.c:1656
- __tcp_send_ack+0x967/0xad0 net/ipv4/tcp_output.c:4499
- tcp_send_ack+0x3d/0x60 net/ipv4/tcp_output.c:4505
- __mptcp_subflow_send_ack net/mptcp/protocol.c:538 [inline]
- mptcp_subflow_send_ack net/mptcp/protocol.c:546 [inline]
- mptcp_send_ack net/mptcp/protocol.c:555 [inline]
- mptcp_check_data_fin+0xa61/0xf00 net/mptcp/protocol.c:643
- mptcp_worker+0xde4/0x1ea0 net/mptcp/protocol.c:2980
- process_one_work kernel/workqueue.c:3302 [inline]
- process_scheduled_works+0xb65/0x1e40 kernel/workqueue.c:3385
- worker_thread+0xee4/0x1590 kernel/workqueue.c:3466
- kthread+0x53f/0x600 kernel/kthread.c:436
- ret_from_fork+0x20f/0x8d0 arch/x86/kernel/process.c:158
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+Note that the diffstat is biases by the quite large patch 4/9, which
+contains mechanical transformation of existing code; "real" changes are
+noticiable smaller.
 
-Uninit was stored to memory at:
- mptcp_established_options_dss net/mptcp/options.c:616 [inline]
- mptcp_established_options+0x2265/0x3580 net/mptcp/options.c:876
- tcp_established_options+0x312/0xcc0 net/ipv4/tcp_output.c:1192
- __tcp_transmit_skb+0x5dc/0x5fe0 net/ipv4/tcp_output.c:1575
- __tcp_send_ack+0x967/0xad0 net/ipv4/tcp_output.c:4499
- tcp_send_ack+0x3d/0x60 net/ipv4/tcp_output.c:4505
- __mptcp_subflow_send_ack net/mptcp/protocol.c:538 [inline]
- mptcp_subflow_send_ack net/mptcp/protocol.c:546 [inline]
- mptcp_send_ack net/mptcp/protocol.c:555 [inline]
- mptcp_check_data_fin+0xa61/0xf00 net/mptcp/protocol.c:643
- mptcp_worker+0xde4/0x1ea0 net/mptcp/protocol.c:2980
- process_one_work kernel/workqueue.c:3302 [inline]
- process_scheduled_works+0xb65/0x1e40 kernel/workqueue.c:3385
- worker_thread+0xee4/0x1590 kernel/workqueue.c:3466
- kthread+0x53f/0x600 kernel/kthread.c:436
- ret_from_fork+0x20f/0x8d0 arch/x86/kernel/process.c:158
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+Tested successfully vs the test cases proposed by Geliang and Gang and
+vs the selftests.
+---
+Some notes on each patch WRT ignored or false positive issues noticed
+by sashiko so far.
 
-Local variable opts created at:
- __tcp_transmit_skb+0x4d/0x5fe0 net/ipv4/tcp_output.c:1536
- __tcp_send_ack+0x967/0xad0 net/ipv4/tcp_output.c:4499
+Paolo Abeni (10):
+  mptcp: move checks vs rcvbuf size earlier in the RX path
+  mptcp: drop the mptcp_ooo_try_coalesce() helper
+  mptcp: drop the cant_coalesce CB field
+  mptcp: remove CB offset field
+  mptcp: sync mptcp skb cb layout with tcp one
+  tcp: expose the tcp_collapse_ofo_queue() helper to mptcp usage, too
+  mptcp: implemented OoO queue pruning
+  mptcp: track prune recovery status
+  mptcp: move the retrans loop to a separate helper
+  mptcp: let the retrans scheduler do its job.
 
-CPU: 0 UID: 0 PID: 4890 Comm: kworker/0:2 Not tainted syzkaller #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/18/2026
-Workqueue: events mptcp_worker
-=====================================================
+ include/net/tcp.h    |   8 +
+ net/ipv4/tcp_input.c |  55 +++---
+ net/mptcp/fastopen.c |  17 +-
+ net/mptcp/mib.c      |   3 +
+ net/mptcp/mib.h      |   3 +
+ net/mptcp/options.c  |  64 ++++++-
+ net/mptcp/protocol.c | 399 ++++++++++++++++++++++++++++---------------
+ net/mptcp/protocol.h |  24 ++-
+ net/mptcp/subflow.c  |  11 ++
+ 9 files changed, 414 insertions(+), 170 deletions(-)
 
-
-Tested on:
-
-commit:         6d35786d Merge tag 'for-linus' of git://git.kernel.org..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=123d6696580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=1c3f61154f3bb7e5
-dashboard link: https://syzkaller.appspot.com/bug?extid=ff020673c5e3d94d9478
-compiler:       Debian clang version 21.1.8 (++20251221033036+2078da43e25a-1~exp1~20251221153213.50), Debian LLD 21.1.8
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=1663f21f980000
+-- 
+2.54.0
 
