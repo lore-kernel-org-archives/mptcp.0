@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E57838C437;
-	Mon,  4 May 2026 10:00:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56B9A38D69D
+	for <mptcp@lists.linux.dev>; Mon,  4 May 2026 10:13:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777888803; cv=none; b=YBnYl1K/DdE9iFar0VQGm1VG4aZaw6bZqhdnOK1xA8BcklmU6fhtri5EEsq3z5DxM5b5NpWqk+qu23NEUuQ8drl2YKFn6n67LKdFonNUfz/1LAxQ2x0Vu9LIFGxlIojUMF1c+msL7kcpE3FAd4wM+zNC6I0/ent3aAJuw2qSsYA=
+	t=1777889622; cv=none; b=uzsT4d4JIrz1zOMl59J1faXHSMZL4U/a9cOZQpzrPwH3HOv5sbeT9IhvdKMKsIC5Dka2eqvcepHTyZBmgnvwI+avXjqdbrYs5Sd/Yshr4jLmo8JC6X0b0flZN5inTM7WFw4hxdXppu/mpxSMCFxyVoqDJlyqu1+ccway/CX97bI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777888803; c=relaxed/simple;
-	bh=vHpJCYw2078p0TiaafkuY62mET/Tf0pKY2x6ybysoGo=;
+	s=arc-20240116; t=1777889622; c=relaxed/simple;
+	bh=OVM+cj/2DNz82u/xqoopX6Cohr4J8hn5sZdci551zTM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fssFyDrYFxK6Dqv0qVBohGi3jQby8DBumMDlwOLYw+519meYgkXG/23XrECGU/aUD6j7CCxOV9X3S0JPgC7G/W5GG2JCMHx54nOLPibybs8ZMVbthsiY5kipUy29o6YYf0VW1meX96qoTdWDUCI8QETkco4jSfCJ2roMAvQIvZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AEbJ2uEt; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=hhhNVk/pFgQBDoNiaK2skIL2kFe72XJ1xgb0paO0r+DKrux0UiEihytZpGPw2GicooG9hGqlBuGiqG1XT3OWYpAm3qXDm07phfGVymkmHa76mBo1UKkX3+J7R04gICM+ss1KqnxWXb7ElD/3htrW57aS+Or2DSCzEMInU9cO6l4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZuZk/DN/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AEbJ2uEt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 924B3C2BCB8;
-	Mon,  4 May 2026 10:00:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZuZk/DN/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE440C2BCB8;
+	Mon,  4 May 2026 10:13:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777888803;
-	bh=vHpJCYw2078p0TiaafkuY62mET/Tf0pKY2x6ybysoGo=;
+	s=k20201202; t=1777889622;
+	bh=OVM+cj/2DNz82u/xqoopX6Cohr4J8hn5sZdci551zTM=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=AEbJ2uEtSSvt16PN1MV2cLpSCbNBz05tDYmiXdzG9JThZfox105BysSarQPzIB5D3
-	 BrsJDX2CTmncsPJDwbRnyX0NEc90BNYd0QwPvRVBVHTObr2cBENOTSI2K9afw1xr+o
-	 kWpwfaVGL6MR/9fPfETinOH8JKh98qy0ez+MPAYTVHGEOTywdLPjabJSVaF0VoAGNd
-	 2RxLmhNiF1tl8oYVYwuKne2ud7EPAARObIldvFPas/5Vzz+w1d2/5qbkaPd9zo/4pd
-	 c0ybp7eYS9Xv6KU+rS6WMj83nX4PxXTzwiKS5vV2q85S24OpNVda/MV6IVsGymPbUW
-	 aYxPpIZE2C2FA==
-Message-ID: <67030b5e-0435-49fc-8adb-8dd8536ad853@kernel.org>
-Date: Mon, 4 May 2026 11:59:59 +0200
+	b=ZuZk/DN/AnDAPEi+FkIgwUNwvHJM//Ro9rDt38/jJC73bA2mKXp32qGSJCpbMo/GY
+	 aHA/6aQTwOm8XwlZNpoJeRVCDnchk0bixgNiqYr0lituoNJDfFnXNL1Liu1UTJTWoV
+	 juhGVkvdVVVnZ/LEONAhhGnTZZRjfsisRk2KVN1nogy3jwvi6N0zoc/Hs0FMTHZDgO
+	 kmrSDgbejiDYdFpQjB2dfcgeyVLXYWMTm1obMy/Nq50ox3X/tk5bH0HoFX0Y8/oLQT
+	 mfKtf55u1976L/oyFrjdMJapYP+9w0co7ZVL2tlQWaK19rXyfTzmq+z98XhjJW1Sk+
+	 91Mq3GgbidIYA==
+Message-ID: <d06ddfbe-96a5-48f5-9ef5-b7892423b9e6@kernel.org>
+Date: Mon, 4 May 2026 12:13:38 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,15 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH] mptcp: fix KMSAN: uninit-value in
- mptcp_established_options
+Subject: Re: [PATCH mptcp-next v5 0/4] mptcp: MSG_ERRQUEUE support on the
+ parent socket
 Content-Language: fr
-To: mptcp@lists.linux.dev
-Cc: syzbot+ff020673c5e3d94d9478@syzkaller.appspotmail.com,
- Paolo Abeni <pabeni@redhat.com>, Kuniyuki Iwashima <kuniyu@google.com>,
- syzkaller-bugs@googlegroups.com, linux-kernel@vger.kernel.org
-References: <69f44505.050a0220.3cbe47.0008.GAE@google.com>
- <20260504095101.852039-2-matttbe@kernel.org>
+To: David Carlier <devnexen@gmail.com>, mptcp@lists.linux.dev
+Cc: martineau@kernel.org, geliang@kernel.org, pabeni@redhat.com
+References: <cover.1777756707.git.devnexen@gmail.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -89,31 +86,28 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20260504095101.852039-2-matttbe@kernel.org>
+In-Reply-To: <cover.1777756707.git.devnexen@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hello,
+Hi David,
 
-On 04/05/2026 11:51, Matthieu Baerts (NGI0) wrote:
-> Just to let syzbot testing it.
+On 02/05/2026 23:19, David Carlier wrote:
 
-Sorry for the noise: I forgot to add the syzbot instruction... (and I
-forgot to remove the MPTCP ML from the sendmail.to option).
+(...)
 
-Hopefully now the following is correct:
-#syz test
+> Changes in v5:
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 8a1c5698983c..24903a12a4e0 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -583,6 +583,8 @@ static bool mptcp_established_options_dss(struct sock *sk, struct sk_buff *skb,
- 				map_size += TCPOLEN_MPTCP_DSS_CHECKSUM;
- 
- 			opts->ext_copy = *mpext;
-+		} else {
-+			opts->ext_copy.use_map = 0;
- 		}
- 
- 		dss_size = map_size;
+Thank you for the v5. Please note that the CI was not able to apply it
+[1], because your patch was based on an old version of the export (or
+export-net, for-review, for-review-net) branches. I manually solved the
+conflicts and sent it to our repo, for our CI to test it.
+
+[1]
+https://patchew.org/MPTCP/cover.1777756707.git.devnexen@gmail.com/logs/git/
+
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
+
