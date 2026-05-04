@@ -1,176 +1,309 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AC77201004
-	for <mptcp@lists.linux.dev>; Mon,  4 May 2026 16:25:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFAF03E0233
+	for <mptcp@lists.linux.dev>; Mon,  4 May 2026 16:39:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777911930; cv=none; b=lThucrZPjiMqyaNTvTBovGfXgDwsk8LsV02+43MGDrgV6vBqoCnKDvJHEh3G/tE6V3VH+dBLV0EhAJzjDfnurUTSLJx/sf7wFZBdWHBGB4VZdJBZSoMgMrt7TrO4MnCxeXKRtC3GhYcY/lm7yQJ5cFPmtJigt6eRov+RVcdb4fo=
+	t=1777912748; cv=none; b=BbatBocg1TavncW01/fpBj9CDupcUtZ25Q/R9jh0ce0dMz9Ld2N33GuS31CVx7383ZQmsEfSoRzFEQm21lOiXLp02lukGlHmGOwfD7JH9+wcarN8G+shGu9sAwJDDvxkDF9yzUX2/MvDn2CfX28+/DQ40JFqczk8lW9PQ7EFiPA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777911930; c=relaxed/simple;
-	bh=4lxRM2PWjSi6A1LvZu+jL/FFRPLalGSPlWNWF0J2R3U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iXm98Z0hT46cXT1ZbQ+9N01fSp0t/sEVi36/iZPku/4TFulT9belG4qeFh4qISP4hMbaBPQqlexEFS5lMUsAEt4fpAtZX5A3B6WQDxyMRczaC134DdrnXmK48YIvFdQGcJ/11tCErXkCWCzSf3MhICGj4SGH0MVOZmMtQQ2Ffo0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lj0imMKe; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777912748; c=relaxed/simple;
+	bh=lvCureQ3Zf4HHZRtDaWlFCvPI6QU6iXYHdSW+X0vJN0=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=cK5jcDZS3KzyolhESunA3PktOsBtsArFjx84wYuC4WTyhEcw8FLG841XAcMIgaZbd8Rhwy21JorpDa7oXRGKIB/as0/mSqLdR+15W6uxpVJgEZ1E0UyWwCVLLL21hSY74I/aDJz3f3rB+08AGRH5r4kgzuNsPDOzAlkAI2AENYc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KmwTjAV6; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lj0imMKe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88435C2BCB8;
-	Mon,  4 May 2026 16:25:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777911929;
-	bh=4lxRM2PWjSi6A1LvZu+jL/FFRPLalGSPlWNWF0J2R3U=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=lj0imMKegcMpaFxsZ3zz7kK5s2CUT00MHgMV2eUfqD2hzwV5/ucAQRkASRNZuJ27R
-	 7qyiiCrusxdT9aG1vEwIfOSr4MkAi9yPiHTY8eSlGymsYwaybHWGAnB5YiJaa8ySlP
-	 u5eFm5Sc/fMBhlxDGrWEL9keD0h1K1IJC+CofPd7b4LCj1uDfMxjEQ7ibMhEqxc7/h
-	 r9RvdjcZYu+1icTXegW3nHFDV37l1NoobAKb33FF/uYKiffc7975AHB4EXN/JP7Xkt
-	 3YWma9er0VsUCKzJfoy45ZFa3/8wf5vf39zjnb9Zu21CokXmi8wRSVTXTJJsa5n5BM
-	 t6VSy9EZuWQ6Q==
-Message-ID: <84b38eb3-3ff5-4c6b-928a-ca9cde1d8009@kernel.org>
-Date: Mon, 4 May 2026 18:25:24 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KmwTjAV6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1777912745;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=53vNZKkoxg+5LuhSbYGACr7t+MtiBk53dLO9FNa6Zcs=;
+	b=KmwTjAV6EGb0h3n76qK4YSJiEtMPRz7OYU2NbyTyHiARE0X32rwSv2l/Jflq9k4X2l9uy7
+	5lZnygmrxjWAPm/M7r3uU37+6RS6vmUE19KkOQjH50/f2qg27f3cwce7LqrRlRBbBdh863
+	zRnzvpD+OoXJH2yF8nLYzVqUpDvp920=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-117-jE9PoGg9NX-S2ZoxOCsnYA-1; Mon, 04 May 2026 12:39:04 -0400
+X-MC-Unique: jE9PoGg9NX-S2ZoxOCsnYA-1
+X-Mimecast-MFC-AGG-ID: jE9PoGg9NX-S2ZoxOCsnYA_1777912743
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-43fe791a398so3972096f8f.0
+        for <mptcp@lists.linux.dev>; Mon, 04 May 2026 09:39:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1777912743; x=1778517543;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=53vNZKkoxg+5LuhSbYGACr7t+MtiBk53dLO9FNa6Zcs=;
+        b=eHjcPIU3JmJHTdoMb+sg0/ApEn9uhlBNqruMq2qjwyBWfj8+b0Nlgo6CvY85GzdO65
+         8gwHyVG6HwjpAFZmgqxZzyxFutfH+zQ8/cib7/BV2PGf745LkzOZW5BHX8Kw+DKK2mFH
+         vX6Tleu/I+CAq1HHFNMXlS4jF+Hj49w6pMuEJR0eF+z9EkM+Os1YSGoU7ZaWFbsRXGzP
+         02VaWtLqQa58eee6Kya9plxAiCNuI3iWf78fMT7G29mzmwx4Uefje1KKjFHnJR04BRNf
+         jAgXHbyTeJjcU+KrcPCk+jOd6BUBNSxM2qnxuopGnCqp5sndwB7UceJKDbjTgq8ZhKD3
+         m6Sw==
+X-Forwarded-Encrypted: i=1; AFNElJ/D9CkYWe46Nqqyyx6tK7L65+kodmm3v1kotAoFxFaw4Y/4aSfGRvitOQXehSe6gPRkz5gBEA==@lists.linux.dev
+X-Gm-Message-State: AOJu0YznTyAp9+TPgqiZtR1VVAedMmDyc0IRkEPXG1wJhno+2AK4/7iX
+	AK+o8bmHlg3D6Rqm2jV/GZWiVAqpdC0fGZCNJ5eFZgxhfcX3aKaqI/CpslLNLfrWV7fGkvsxb0y
+	V9iHWctClpPpRc6MtgQkKs3m3bE0ZeHdf5fVyKiVrLRObcQPDMgv4AGQ3
+X-Gm-Gg: AeBDievRCbPKBCFQLiZLNXQmPUf5/HoomBP44YrEQ09bT53+mzp/NE6RzFy2EfOmdan
+	C94jt/Y3jBgvIk/z3CnuKGPkypufhQnZMBvg3px7L0cOEaeEdPyZjJt6mnZ+rVcgyEV+5kA1nLr
+	kY+By7AAkPGlHRKc863ejIAw8fjx0KlW3iSOM87Y7dMd/BlFrTVxJSNRCL7xorWB6X+mHkvWFIi
+	4CeC7mofP7khYZ3kJ6q8cmKWZPWIuzsA26Qrne8lyI3ak+Fhg94sQYO6Z+a/qsQpnXbfmMUqlJu
+	vXfG2saWWVevDRY+tmrIvcwOlxEcrprOvQ+LpsJu82OPFExmUKtHnXeJNjP6STWpKbI+xEBcU8r
+	B8Q/7Ceiuz/0BT6i9UX2DbADtmHyBrsogFlI/tJsg7Ruw4jXffo2GCNctGmTY+nUZCg==
+X-Received: by 2002:a05:6000:1acf:b0:43f:ea25:c965 with SMTP id ffacd0b85a97d-44bb6205eb6mr17025756f8f.32.1777912743106;
+        Mon, 04 May 2026 09:39:03 -0700 (PDT)
+X-Received: by 2002:a05:6000:1acf:b0:43f:ea25:c965 with SMTP id ffacd0b85a97d-44bb6205eb6mr17025712f8f.32.1777912742515;
+        Mon, 04 May 2026 09:39:02 -0700 (PDT)
+Received: from [192.168.88.32] ([150.228.93.27])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-44a986aab44sm28253885f8f.29.2026.05.04.09.39.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 04 May 2026 09:39:02 -0700 (PDT)
+Message-ID: <0c361889-533f-4467-b908-0774dc23f08d@redhat.com>
+Date: Mon, 4 May 2026 18:39:01 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH v2 mptcp] mptcp: Clear mptcp_out_options in
- mptcp_{syn,synack,established}_options().
-Content-Language: fr
-To: Paolo Abeni <pabeni@redhat.com>, Kuniyuki Iwashima <kuniyu@google.com>,
- Mat Martineau <martineau@kernel.org>
-Cc: Geliang Tang <geliang@kernel.org>, Eric Dumazet <edumazet@google.com>,
- Keita Morisaki <kmta1236@gmail.com>, Kuniyuki Iwashima <kuni1840@gmail.com>,
- mptcp@lists.linux.dev, syzbot+ff020673c5e3d94d9478@syzkaller.appspotmail.com
-References: <20260504044051.3725846-1-kuniyu@google.com>
- <6d342ef2-d480-4be6-afad-a3841cf205a8@redhat.com>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <6d342ef2-d480-4be6-afad-a3841cf205a8@redhat.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 mptcp-next 06/10] tcp: expose the
+ tcp_collapse_ofo_queue() helper to mptcp usage, too
+From: Paolo Abeni <pabeni@redhat.com>
+To: Eric Dumazet <edumazet@google.com>
+Cc: Geliang Tang <geliang@kernel.org>, gang.yan@linux.dev,
+ mptcp@lists.linux.dev
+References: <cover.1777908248.git.pabeni@redhat.com>
+ <eec217c214e8db54355c7708b328c34a92c2bdcb.1777908248.git.pabeni@redhat.com>
+In-Reply-To: <eec217c214e8db54355c7708b328c34a92c2bdcb.1777908248.git.pabeni@redhat.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: 52aGaewN3MoB8suICoIbixu_HN7A5YQ4VmJCoMJ3AEU_1777912743
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Paolo, Kuniyuki,
+Hi Eric,
 
-On 04/05/2026 11:12, Paolo Abeni wrote:
-> On 5/4/26 6:40 AM, Kuniyuki Iwashima wrote:
->> syzbot reported read of uninit-value in mptcp_write_data_fin().
->>
->> Since the cited commit, struct mptcp_out_options is not cleared
->> in __tcp_transmit_skb().
+I'd like to re-use some existing TCP helpers (tcp_collapse_ofo_queue()
+and tcp_collapse()) in the MPTCP code, to avoid duplicating the non
+trivial logic there.
 
-(...)
+The idea is that the 'struct sock *' in such helpers could be either a
+tcp_sock* or an mptcp_sock *, and the processed skbs could be sitting in
+TCP level queues or MPTCP ones.
 
->> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
->> index 8a1c5698983c..02253c1a9f57 100644
->> --- a/net/mptcp/options.c
->> +++ b/net/mptcp/options.c
->> @@ -403,6 +403,8 @@ bool mptcp_syn_options(struct sock *sk, const struct sk_buff *skb,
->>  {
->>  	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
->>  
->> +	memset(opts, 0, sizeof(*opts));
+That poses some hard constraints on the sk fields that the helpers can
+access. To make them clear I'm renaming such helpers using an 'xtcp_'
+prefix.
+
+The full patch touching the TCP code is below. For completeness,  the
+whole series is available here:
+
+https://lore.kernel.org/mptcp/cover.1777908248.git.pabeni@redhat.com/T/#me6eda13ec2c70fbb400b6223aa2d07a4fd3bf865
+
+but I guess most of it is not interesting for you/from TCP perspective.
+
+The MPTCP bits are not yet finalized, but I'd like to know it you would
+consider this approach doable or a complete no-go.
+
+Thanks,
+
+Paolo
+---
+On 5/4/26 5:40 PM, Paolo Abeni wrote:
+> The end goal is to avoid duplicating the quite untrivial strategy at MPTCP
+> level.
 > 
-> I'm sorry for the latency. I think this is a bit overkill. Back than we
-> tried to avoid memsetting the whole opts, and it should be doable to
-> avoid it - at least for most packets.
+> After the previous patch, the mentioned helpers could process skbs standing
+> in MPTCP-level queues without any CB-related adaptation.
 > 
-> AFAICS the in the relevant code path, the egress skb has no extensions.
-> Something alike the following (completely untested) should be sufficient:
+> The only additional adjustment needed is explicitly providing the OoO queue
+> reference, to cope with different sk layout.
+> 
+> Additionally rename the helper to clearly document its hybrid nature and
+> let it return the number of collapsed skbs, to allow proper accounting from
+> the future MPTCP caller.
+> 
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 > ---
-> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index f816c26cbd14..63bbac884f18 100644
-> --- a/net/mptcp/options.c
-> +++ b/net/mptcp/options.c
-> @@ -583,6 +583,8 @@ static bool mptcp_established_options_dss(struct
-> sock *sk, struct sk_buff *skb,
->  				map_size += TCPOLEN_MPTCP_DSS_CHECKSUM;
+> rfc -> v1:
+>  - fix arg typo
 > 
->  			opts->ext_copy = *mpext;
-> +		} else {
-> +			opts->ext_copy.use_map = 0;
+> Note:
+>  - this will need a significant amount of testing at the TCP level and
+>    explicit approval from Eric, which I can't guess if we can hope.
+> ---
+>  include/net/tcp.h    |  8 +++++++
+>  net/ipv4/tcp_input.c | 55 ++++++++++++++++++++++++++++----------------
+>  2 files changed, 43 insertions(+), 20 deletions(-)
+> 
+> diff --git a/include/net/tcp.h b/include/net/tcp.h
+> index 6156d1d068e1..34a96f0bcf0a 100644
+> --- a/include/net/tcp.h
+> +++ b/include/net/tcp.h
+> @@ -1828,6 +1828,14 @@ extern void tcp_openreq_init_rwin(struct request_sock *req,
+>  
+>  void tcp_enter_memory_pressure(struct sock *sk);
+>  void tcp_leave_memory_pressure(struct sock *sk);
+> +unsigned int xtcp_collapse(struct sock *sk, struct sk_buff_head *list,
+> +			   struct rb_root *root, struct sk_buff *head,
+> +			   struct sk_buff *tail, u32 start, u32 end,
+> +			   u8 scaling_ratio);
+> +unsigned int xtcp_collapse_ofo_queue(struct sock *sk,
+> +				     struct rb_root *out_of_order_queue,
+> +				     struct sk_buff **ooo_last_skb,
+> +				     u8 scaling_ratio);
+>  
+>  static inline int keepalive_intvl_when(const struct tcp_sock *tp)
+>  {
+> diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
+> index 7171442c3ed7..8417785fa48f 100644
+> --- a/net/ipv4/tcp_input.c
+> +++ b/net/ipv4/tcp_input.c
+> @@ -5725,16 +5725,22 @@ static struct sk_buff *tcp_collapse_one(struct sock *sk, struct sk_buff *skb,
+>  /* Collapse contiguous sequence of skbs head..tail with
+>   * sequence numbers start..end.
+>   *
+> + * sk can be either a TCP or an MPTCP socket.
+> + *
+>   * If tail is NULL, this means until the end of the queue.
+>   *
+>   * Segments with FIN/SYN are not collapsed (only because this
+>   * simplifies code)
+> + *
+> + * Returns the number of collapsed skbs.
+>   */
+> -static void
+> -tcp_collapse(struct sock *sk, struct sk_buff_head *list, struct rb_root *root,
+> -	     struct sk_buff *head, struct sk_buff *tail, u32 start, u32 end)
+> +unsigned int
+> +xtcp_collapse(struct sock *sk, struct sk_buff_head *list, struct rb_root *root,
+> +	      struct sk_buff *head, struct sk_buff *tail, u32 start, u32 end,
+> +	      u8 scaling_ratio)
+>  {
+>  	struct sk_buff *skb = head, *n;
+> +	unsigned int collapsed = 0;
+>  	struct sk_buff_head tmp;
+>  	bool end_of_skbs;
+>  
+> @@ -5750,6 +5756,7 @@ tcp_collapse(struct sock *sk, struct sk_buff_head *list, struct rb_root *root,
+>  
+>  		/* No new bits? It is possible on ofo queue. */
+>  		if (!before(start, TCP_SKB_CB(skb)->end_seq)) {
+> +			collapsed++;
+>  			skb = tcp_collapse_one(sk, skb, list, root);
+>  			if (!skb)
+>  				break;
+> @@ -5762,7 +5769,7 @@ tcp_collapse(struct sock *sk, struct sk_buff_head *list, struct rb_root *root,
+>  		 *   overlaps to the next one and mptcp allow collapsing.
+>  		 */
+>  		if (!(TCP_SKB_CB(skb)->tcp_flags & (TCPHDR_SYN | TCPHDR_FIN)) &&
+> -		    (tcp_win_from_space(sk, skb->truesize) > skb->len ||
+> +		    (__tcp_win_from_space(scaling_ratio, skb->truesize) > skb->len ||
+>  		     before(TCP_SKB_CB(skb)->seq, start))) {
+>  			end_of_skbs = false;
+>  			break;
+> @@ -5782,7 +5789,7 @@ tcp_collapse(struct sock *sk, struct sk_buff_head *list, struct rb_root *root,
+>  	if (end_of_skbs ||
+>  	    (TCP_SKB_CB(skb)->tcp_flags & (TCPHDR_SYN | TCPHDR_FIN)) ||
+>  	    !skb_frags_readable(skb))
+> -		return;
+> +		return collapsed;
+>  
+>  	__skb_queue_head_init(&tmp);
+>  
+> @@ -5819,6 +5826,7 @@ tcp_collapse(struct sock *sk, struct sk_buff_head *list, struct rb_root *root,
+>  				start += size;
+>  			}
+>  			if (!before(start, TCP_SKB_CB(skb)->end_seq)) {
+> +				collapsed++;
+>  				skb = tcp_collapse_one(sk, skb, list, root);
+>  				if (!skb ||
+>  				    skb == tail ||
+> @@ -5832,23 +5840,26 @@ tcp_collapse(struct sock *sk, struct sk_buff_head *list, struct rb_root *root,
+>  end:
+>  	skb_queue_walk_safe(&tmp, skb, n)
+>  		tcp_rbtree_insert(root, skb);
+> +	return collapsed;
+>  }
+>  
+>  /* Collapse ofo queue. Algorithm: select contiguous sequence of skbs
+> - * and tcp_collapse() them until all the queue is collapsed.
+> + * and xtcp_collapse() them until all the queue is collapsed.
+>   */
+> -static void tcp_collapse_ofo_queue(struct sock *sk)
+> +unsigned int xtcp_collapse_ofo_queue(struct sock *sk,
+> +				     struct rb_root *ooo_queue,
+> +				     struct sk_buff **ooo_last_skb,
+> +				     u8 scaling_ratio)
+>  {
+> -	struct tcp_sock *tp = tcp_sk(sk);
+> -	u32 range_truesize, sum_tiny = 0;
+> +	u32 range_truesize, sum_tiny = 0, collapsed = 0;
+>  	struct sk_buff *skb, *head;
+>  	u32 start, end;
+>  
+> -	skb = skb_rb_first(&tp->out_of_order_queue);
+> +	skb = skb_rb_first(ooo_queue);
+>  new_range:
+>  	if (!skb) {
+> -		tp->ooo_last_skb = skb_rb_last(&tp->out_of_order_queue);
+> -		return;
+> +		*ooo_last_skb = skb_rb_last(ooo_queue);
+> +		return collapsed;
+>  	}
+>  	start = TCP_SKB_CB(skb)->seq;
+>  	end = TCP_SKB_CB(skb)->end_seq;
+> @@ -5866,12 +5877,13 @@ static void tcp_collapse_ofo_queue(struct sock *sk)
+>  			/* Do not attempt collapsing tiny skbs */
+>  			if (range_truesize != head->truesize ||
+>  			    end - start >= SKB_WITH_OVERHEAD(PAGE_SIZE)) {
+> -				tcp_collapse(sk, NULL, &tp->out_of_order_queue,
+> -					     head, skb, start, end);
+> +				collapsed += xtcp_collapse(sk, NULL, ooo_queue,
+> +					      head, skb, start, end,
+> +					      scaling_ratio);
+>  			} else {
+>  				sum_tiny += range_truesize;
+>  				if (sum_tiny > sk->sk_rcvbuf >> 3)
+> -					return;
+> +					return collapsed;
+>  			}
+>  			goto new_range;
 >  		}
-> 
->  		dss_size = map_size;
-> ---
-
-Thank you for the v2 and the review!
-
-I guess you noticed, but I asked syzbot to validate this patch, and it
-looks like it is not enough:
-
-  https://lore.kernel.org/69f87f79.050a0220.3460d5.0002.GAE@google.com
-
-Please note that the calltrace is different: now in mptcp_write_options.
-What's strange is that "if (mpext->use_ack)" didn't cause a warning, but
-"if (mpext->use_map)" did. Both "use_ack" and "use_map" are from the
-same u8 bitfield.
-
-https://github.com/torvalds/linux/blob/6d35786de28116ecf78797a62b84e6bf3c45aa5a/net/mptcp/options.c#L1450-L1460
-
-> BTW I'm not sure that the sashiko report on V1 is relevant/true/correct:
-> if such statement would be correct, syzbot would have reported the KMSAN
-> splat on the bitfield set operation, which happens earlier in the code
-> path WRT the actual syzbot splat and is hit on every packet.
-TBH, after having re-read KMSAN doc [1] I'm not sure how it deals with
-bitfields, but I guess it could only mark it as initialised when the
-whole byte is initialised. Maybe the second approach I suggested in v1
-could work?
-
- → using two new unions to clear these bitfields with
-'opts->cleared = 0' from mptcp_{syn,synack,established}_options() and
-'opts->ext_copy.cleared = 0' from mptcp_established_options_dss()?
-
-But it looks a bit too hacky.
-
-[1] https://docs.kernel.org/dev-tools/kmsan.html
-
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
+> @@ -5882,6 +5894,7 @@ static void tcp_collapse_ofo_queue(struct sock *sk)
+>  		if (after(TCP_SKB_CB(skb)->end_seq, end))
+>  			end = TCP_SKB_CB(skb)->end_seq;
+>  	}
+> +	return collapsed;
+>  }
+>  
+>  /*
+> @@ -5969,12 +5982,14 @@ static int tcp_prune_queue(struct sock *sk, const struct sk_buff *in_skb)
+>  	if (tcp_can_ingest(sk, in_skb))
+>  		return 0;
+>  
+> -	tcp_collapse_ofo_queue(sk);
+> +	xtcp_collapse_ofo_queue(sk, &tp->out_of_order_queue,
+> +				&tp->ooo_last_skb, tp->scaling_ratio);
+>  	if (!skb_queue_empty(&sk->sk_receive_queue))
+> -		tcp_collapse(sk, &sk->sk_receive_queue, NULL,
+> -			     skb_peek(&sk->sk_receive_queue),
+> -			     NULL,
+> -			     tp->copied_seq, tp->rcv_nxt);
+> +		xtcp_collapse(sk, &sk->sk_receive_queue, NULL,
+> +			      skb_peek(&sk->sk_receive_queue),
+> +			      NULL,
+> +			      tp->copied_seq, tp->rcv_nxt,
+> +			      tp->scaling_ratio);
+>  
+>  	if (tcp_can_ingest(sk, in_skb))
+>  		return 0;
 
