@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD70B3E5EEC;
-	Mon,  4 May 2026 17:44:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFC0E1C861D;
+	Mon,  4 May 2026 18:08:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777916665; cv=none; b=c2vQO7YnJgFGHYTgwRxbVswOZ5FgzUoVG30fYqNRnvvle3Yu5OiVoL0ihMSSEO4oy/dugvFh/mHCvqgufipSBWgv6g975l6oeD/tg/LuWVCruLX8UqZK1vi7Oh25rMTj5E79Y1z7UG8u4FORB8K7F71KfAHHOUm1y3Rb549Gl7I=
+	t=1777918106; cv=none; b=L2VQPsVmzBbHKMVfPqMPFKWNNhTkZpoiaJF2ZBrZBnK9lJStbQyw0gqHtmJXorhJiVKA96nc9KKi145tn90UFNHY/Y+noslXH0nNSQQ8SICz08nfKz6ae/AH3komtiEctLmmn7mfOQb31FW5RnUkX5EeWJGWeo/Sfah+009USrQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777916665; c=relaxed/simple;
-	bh=SYt/6mfv1hxpYYXycGJME0LULXLMsMNt89zTsuYg9a8=;
+	s=arc-20240116; t=1777918106; c=relaxed/simple;
+	bh=3UPZWevxPsrYPCrR7mOC/FIGar1XFQKQdBJDn/D/anM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JM7A/63rsUyfXJidJ4kfKyF4w8hg40Y7BhBBXooEvIcf8bJcIqb4RWuVCs70JS2izCrCidA8trTJvYUNymYPEapFmyAYyWYsTzauWLwgjV++L7SwbvwzU5Hepc95bza8eR7DCRx0Fi+uJ/6EoSyt6b2U9Eeu61XL1kCX6CS+8y4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dtSNHWSg; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=MlN070h7YvOL+a9sJOnWsS2AJajcOQ8/FkVInJpY28j+rtljdwFX1tT6pLhE7Om4Kh6q0WxAlIpbBjvsTMzXwvWAbvhToET4eIVzhj2KbvpFfUXEe9IwV1uO+runEiMHp5Q0gEewyDm3nQR9ILBTXIWL6d7BkBl4RKf2phPphtw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OsALomt5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dtSNHWSg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 682B4C2BCF4;
-	Mon,  4 May 2026 17:44:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OsALomt5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39D38C2BCB8;
+	Mon,  4 May 2026 18:08:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777916665;
-	bh=SYt/6mfv1hxpYYXycGJME0LULXLMsMNt89zTsuYg9a8=;
+	s=k20201202; t=1777918106;
+	bh=3UPZWevxPsrYPCrR7mOC/FIGar1XFQKQdBJDn/D/anM=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=dtSNHWSgtw873XBDl2N7bBnR9SEfhi+tYvYYHuAQEUaZzqDeXQr8HqJqfwJeAuW84
-	 3wOhn4iM9AE+CFPktOtx3q+KxorvVLNPzw2rxZnqnJjx9Ruoah5IVurjxR2q1ouFsi
-	 Auh960XEgjRnCPmgfWbpLfXsQDaWz7YMKNb5PXWMKArFa4hlJ5uJSNYvqsPPrSt1jA
-	 0vJBvTS9Vi03YqwaxNAyypmyvWS0D4Iq2xnrkqNB1wrJLXtitreFzxOM4376tBD0cV
-	 tB66y+eWhwiWm2/YjefYdVIk2dDaW8HENslcbruP/txjbQVkfCDZ6ofRrdZdObbs/c
-	 VJjvLfG8REs0w==
-Message-ID: <04434fce-df13-4251-b873-60f6fa18474d@kernel.org>
-Date: Mon, 4 May 2026 19:44:19 +0200
+	b=OsALomt5LyqBH08Erf6EWMdKqzWAnU6f7s1/ezvIEFLI1g3Qzf7kzNeSXUOskCd4Z
+	 a91VN4Bv7tJEv2JxQQlwgR8q2N3Ffoe8KR1tiqnW20YvEuAfbrr28//jjkBnyokJCb
+	 DsqSRACn1ooaYinBPMXj7dM1F8oSz9V8jy6YAdeGQVAwEp6wTy+Wf3JlRlA9pUZ90F
+	 zWMB2itqEqhGYzWSvbx/BRZsC40RxMEZLSBJdc5vIJXpaG8RqHKUrsgocCceYuhpE1
+	 T9lEFy+m4HMya5exU0I/VoMoJS16WCsSgPo+EmvtE7pEHX19CwHlv6nV/hMPvGXYC3
+	 E7bpIESCKP0uw==
+Message-ID: <66a22c70-6d8c-4d3b-baa3-b63ca22b804a@kernel.org>
+Date: Mon, 4 May 2026 20:08:20 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,16 +35,19 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH] selftests: mptcp: add test for IPv6 subflow SLAB
- placement
+Subject: Re: [PATCH net 4/4] mptcp: sockopt: increase seq in
+ mptcp_setsockopt_all_sf
 Content-Language: fr
-To: Vastargazing <vebohr@gmail.com>
-Cc: martineau@kernel.org, mptcp@lists.linux.dev, netdev@vger.kernel.org,
- linux-kselftest@vger.kernel.org, shuah@kernel.org, stable@vger.kernel.org,
- fw@strlen.de
-References: <20260501151454.211598-1-vebohr@gmail.com>
- <44e564f8-d059-407b-8f5e-a149dd76dea3@kernel.org>
- <20260501-reply-mptcp-v6-initcall@vebohr>
+To: netdev@vger.kernel.org
+Cc: mptcp@lists.linux.dev, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org, Mat Martineau <martineau@kernel.org>,
+ Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+ Florian Westphal <fw@strlen.de>, Gang Yan <yangang@kylinos.cn>,
+ Dmytro Shytyi <dmytro@shytyi.net>
+References: <20260501-net-mptcp-misc-fixes-7-1-rc3-v1-0-b70118df778e@kernel.org>
+ <20260501-net-mptcp-misc-fixes-7-1-rc3-v1-4-b70118df778e@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -90,34 +93,30 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20260501-reply-mptcp-v6-initcall@vebohr>
+In-Reply-To: <20260501-net-mptcp-misc-fixes-7-1-rc3-v1-4-b70118df778e@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Vastargazing,
+Hello,
 
-On 01/05/2026 19:01, Vastargazing wrote:
+On 01/05/2026 21:35, Matthieu Baerts (NGI0) wrote:
+> mptcp_setsockopt_all_sf() was missing a call to sockopt_seq_inc(). This
+> is required not to cause missing synchronization for newer subflows
+> created later on.
+> 
+> This helper is called each time a socket option is set on subflows, and
+> future ones will need to inherit this option after their creation.
 
-(...)
+Regarding Sashiko's review, I think this can be ignored: the comments
+are about existing code / architecture. In short, for the moment, most
+places in sockopt.c assumes that if there is an error to set a socket
+option with one subflow, the error will be visible when setting this
+option on all of them. Maybe (not sure) this could be changed, but then
+this can be done later, when modifying all the other places. Here I
+think it is better to keep the same logic as what is done with the other
+options.
 
-> One question if you don't mind: if something similar came up again and
-> a test *was* warranted, which existing script would be the natural
-> home? mptcp_join.sh seemed closest since it exercises the accept path,
-> but i'm not sure if checking /proc/slabinfo fits there or if there's a
-> better mechanism for that kind of thing.
-It depends on what needs to be covered:
-
-- diag.sh: check various counters
-- mptcp_connect.sh: single path
-- mptcp_join.sh: multiple paths
-- mptcp_sockopt.sh: socket options
-- pm_netlink.sh: in-kernel path-manager
-- simult_flows.sh: small multiple paths perf tests
-- userspace_pm.sh : userspace path-manager
-- + kunit: token and crypto
-- + packetdrill: various tests
-
-So not mptcp_join.sh. Maybe diag.sh, or in packetdrill.
+https://sashiko.dev/#/patchset/20260501-net-mptcp-misc-fixes-7-1-rc3-v1-0-b70118df778e%40kernel.org
 
 Cheers,
 Matt
