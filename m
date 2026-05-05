@@ -1,129 +1,88 @@
-Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 086783DEAD3
-	for <mptcp@lists.linux.dev>; Mon,  4 May 2026 19:07:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.180
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777921675; cv=pass; b=F48LChaek8sFZ0lOYWUYN8ouRtac9YAngY25y6Kjo+/lYRZ/+BTF34OSjU9eqrAnv+DM81jbIwzn0Kb0YQvcPU+kokdwOEfwFK5XiztCE3vocW5NYp+YTLLPDkL8BPEcxWyw9X7z9ePCVGMGzxI4N4LPtpVTUKpTQ3LvqNtKDCg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777921675; c=relaxed/simple;
-	bh=SFYV2WaZ3KR0u1Xwung7OxN5MEfXoB9EAmO06GPqHGk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=T2blFL3xNuN671E3uS0M+0hvNadMVyhKJycz133bING1a1ba4EmWeySfgNQXSUFWeTvlLTSsTJ6Yv+/4FowC3RRxp2k8o6yhLS6a/BnnxPelCpl0U1a6LW11f8eOFXTcWmCCrd7al1uFaspxsgCyQKZkEMebRrkoIZUH8sPqcpE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=l3gCg5Lu; arc=pass smtp.client-ip=209.85.160.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2616817AE11;
+	Tue,  5 May 2026 02:31:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1777948261; cv=none; b=KXm0lsN70O5/8guKp9dwKg9k/T225u3HVndoxHulArs3jTDDt+Bge4U7Y9uJMfmAqzxmG76dA6dsRPaaMhx4ykR+tmT+EpVpGVZIitHmkX8PqMVm0OfDCwCsFYK/gAk4YJaBHhxmCSycOuRnYNFjbnCTq25tqGRHXPJ67Yvu+RA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1777948261; c=relaxed/simple;
+	bh=AA8cH8hQ3P20TZYGC9RLfTAA7leVeZMi69S2rtE2FZY=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=sV8LMhNkHovjQaq8E7vMjlG83DYkdNTfY6/kQ9xf1u/ej+STQhEm03RU/94dEoALKOz4D6bFwlmS9CifZrWCDzwH0k51neYOUJh+gFLVaAltOkCqXwBe9LIDdw06K6dzjl9yH8WBx1/KLSmFEKOVV98aCib6Khef7u0bGQXe5Rs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CcPjOAws; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="l3gCg5Lu"
-Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-50fbd79350dso43834971cf.3
-        for <mptcp@lists.linux.dev>; Mon, 04 May 2026 12:07:53 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1777921673; cv=none;
-        d=google.com; s=arc-20240605;
-        b=a+DBBaM8mimrnTiP1MxFXxfdsI8a5FJYsEaW5i1mXq83t6CBod+YKJk8p3Y+albGgn
-         7qaXD8wL0Gy8abE9JLQ7IjFT57+B72JkXnTwr+NwRQ3lPdK2foPzT8CT5uXILoaCnx1B
-         R1Rr2oYdkJalS8XCyOUatu+1Lcz/8TJKU0TTjWDJtUUR2pWRNK47bSq1H0IqJcUz9WFK
-         zcPzJs0M9w2jcSqdBgSVEyjTpmPOR1vyoC8vJDhL3b/RgKYkkgWv4o1oBjsI6zWGMbc5
-         w+CVHHN+WRtwR31ZdjBo0wrYyXCKZI4Y5Sm5gFkkUJb0eLdzEoPGMHdnw7z/qtg2fOAI
-         5/ug==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=tIlvg+UAUgqyDAlwClHHqgLLxErxdpSJOsiJ5UFj1ho=;
-        fh=EH++s4Pp222m8t4i1afYnDN65AlO/qPSmACH4lv30pQ=;
-        b=QB8tVawciUQFAb3kj83HvHThQYx0fMavEjOSSY77/+LAAjVmTBfw2oXCVv+DwLpSxT
-         e1fV/58WfjwFfVlNGfr+Ab1mRq6ADwFAv/qUlX03LxR2HQ9ZCuMjN0Vm1s2CH+gLagk+
-         mxmtkroMeEQdcqM+FgyuCLPbsK8Rjgxs6ULtYThyZG8HUhI0ZIro5hTrH2/XUDbssvPM
-         N30y6XnI7OHNbiJjLFGvxuXTfMcrt4ucsbibPWyhHdoRbXmMgeEGW29aLHH8e3tmdBtr
-         +oCU82hYHnI/Ym/b1y+UFRrlkh3OslklUKQFz3GQMwMshTKPCucjiNIIFHh0Ahqfpd2f
-         Gifg==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1777921673; x=1778526473; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tIlvg+UAUgqyDAlwClHHqgLLxErxdpSJOsiJ5UFj1ho=;
-        b=l3gCg5LuU55hpDOmBdHAYmv4NhThdRRBiQPAAiPZIFl8xCBocT05a6FSAH0Jmgd6F0
-         /fG3OSWhznpn0H1BY3SiDVzPOqke1+kUlmCd5RxH5OH3ZjxYGC2jEuwGFXL9PRIhdzZM
-         KXJiVCaYHgaUOemuD5mIMy765wdKRFEVcTyD5RSCLfn73iN/cuN4zGEZH42fo8N/Jxw1
-         F45eDDTB2lWDt+WQGDvN1SiKS1tk++lopWI1UxfOn15kn33kFWim7kNCaMGqEc9/kg20
-         1z31owJHfUZqcwkiD7mcMmMsbt1zCldPMuWkJ3c+7F9vBMNjOpKcxNko5WyDE+OoM9TK
-         Pqiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777921673; x=1778526473;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=tIlvg+UAUgqyDAlwClHHqgLLxErxdpSJOsiJ5UFj1ho=;
-        b=UnBfKB9UzsQEUCEX5qiDTtytiSHMIQ57aNC9lX84oPZ/HRHYBdShGkneyKrx1keZ7I
-         D3Ra07ktk4z6sXh6jtfw3/TdZ03tTiE02jP8ff7R+Pqyykx4Hf2lPnJSlbpJbBYOdXM7
-         DpaqLkWsRG3Uuh50MfOhR4x/4zx1hypV0B8rLhVL5NO+xaYhQqnehcFlcQJhWuyUNty0
-         Czr3NaAA3jj5iZ5wua41UFz7WtByR01NZ+tr28M1GA/MTY95qouVDK4kiU/jqYMDMzGr
-         DxwLyKg33Qa3cAcGqthgWd0JR07CmUOv+nQeAAXO+9HZ2b81ke8sFXpgFtBBXlTlagc3
-         sJTQ==
-X-Forwarded-Encrypted: i=1; AFNElJ8qijKsJKE9uVZYEPEnRqzJRVNs4BEt819xNuDyFlu86P6HoqxYatxaTbtMgmmmtuMSZFKzaw==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwvUJEQl4USsG8rIJsZAVeAcblKwwIxJJj82QYAWlhfp6FJqq88
-	JaBBAb9lnR2Y0jfFECTRzhxsfEesa1o8yio2NsrJuOfYYANEX07b3x79jfLrvvtIKyLsuQe6GsE
-	FB7iUaWv+jgYoL2vO4479nIBwNKGMgKKNy8DKsU07
-X-Gm-Gg: AeBDietwEclv/yClz62mtRRSrdqTA6emzd+LgZGy96Oak/H25DqZn7+h4f1wtiEhh1U
-	G+fciY4LieXZ2H9KZ+yuoio35SPdNYXl0Z4QohGu9vSvXJesJiVovRFhpCLU4KKKHmIuaqtCDwN
-	ioi086/XVozFBYAZTvyverSGiqSiNIicrItZjkvr/m3a/d/lWmVl9JGv1+jnFe17rUjfyTbRmu7
-	O08RRJSJjRucD6ObCxycdjanh0OF40bvHNxLzOg1Hlw6IRs1fC4Qgn+281y8kr3g8BD/aFJybNJ
-	A91c2h4vf60mRxnf+XZnWV3HEla7FCVAHh90uYeq1e+Rkd9wuu7xgozQazw1g8trnP4p21GeQd8
-	7T0WjPLug7+dIleLaU/N/LMDKMFrz6lJSe2bYsIND
-X-Received: by 2002:a05:622a:4c8e:b0:50d:8b5a:1317 with SMTP id
- d75a77b69052e-5104be2b9b9mr160400901cf.13.1777921671974; Mon, 04 May 2026
- 12:07:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CcPjOAws"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C94DEC2BCB8;
+	Tue,  5 May 2026 02:31:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1777948260;
+	bh=AA8cH8hQ3P20TZYGC9RLfTAA7leVeZMi69S2rtE2FZY=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=CcPjOAwsGtV2b+oHpYToX8y5hgsqILoLGLvc2YNZ5OC6krSDgxyXMpzTuC7W7NjZg
+	 J8SOInSr4WwQgfAJVW35KenF1Rzsm8oiAMtko5BBAm05dYlQzjw1ONGXqmll6Ff9g5
+	 LbXofClyRiBaBKTsmfVvk2AX+uwo4KTsFH+cVxrwURIElnPKVRPy7y2hABaQXsTeFh
+	 hPeWCviMtkDTUMgyfSI5fWdFO7ORgFo7HcZWvIo05lNFAlFVbI5elZsOpQP2DV2F9O
+	 07Y6z3w7PcIKVGpgiGiIib/dFPMme0wH05qx61znz2Jzk8SRcTA1zlFL1wbE1Zlv55
+	 FnzYWKQn+Gl7g==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id B9E0A39301A2;
+	Tue,  5 May 2026 02:30:12 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1777908248.git.pabeni@redhat.com> <eec217c214e8db54355c7708b328c34a92c2bdcb.1777908248.git.pabeni@redhat.com>
- <0c361889-533f-4467-b908-0774dc23f08d@redhat.com>
-In-Reply-To: <0c361889-533f-4467-b908-0774dc23f08d@redhat.com>
-From: Eric Dumazet <edumazet@google.com>
-Date: Mon, 4 May 2026 12:07:39 -0700
-X-Gm-Features: AVHnY4KdZ7wP-zZM_hI7dHl94heF1D0xQJ5BnsedaS51t6a3CRnoTlNpb3N27iI
-Message-ID: <CANn89iJk+0M6hAxx+L8vfLzCzo=_7E141BYty8F4CiBUM2F6hA@mail.gmail.com>
-Subject: Re: [PATCH v3 mptcp-next 06/10] tcp: expose the tcp_collapse_ofo_queue()
- helper to mptcp usage, too
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: Geliang Tang <geliang@kernel.org>, gang.yan@linux.dev, mptcp@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net 0/4] mptcp: misc fixes for v7.1-rc3
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <177794821155.1394832.1837410198700398471.git-patchwork-notify@kernel.org>
+Date: Tue, 05 May 2026 02:30:11 +0000
+References: 
+ <20260501-net-mptcp-misc-fixes-7-1-rc3-v1-0-b70118df778e@kernel.org>
+In-Reply-To: 
+ <20260501-net-mptcp-misc-fixes-7-1-rc3-v1-0-b70118df778e@kernel.org>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: martineau@kernel.org, geliang@kernel.org, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
+ fw@strlen.de, yangang@kylinos.cn, dmytro@shytyi.net, netdev@vger.kernel.org,
+ mptcp@lists.linux.dev, linux-kernel@vger.kernel.org,
+ shardul.b@mpiricsoftware.com, stable@vger.kernel.org
 
-On Mon, May 4, 2026 at 9:39=E2=80=AFAM Paolo Abeni <pabeni@redhat.com> wrot=
-e:
->
-> Hi Eric,
->
-> I'd like to re-use some existing TCP helpers (tcp_collapse_ofo_queue()
-> and tcp_collapse()) in the MPTCP code, to avoid duplicating the non
-> trivial logic there.
->
-> The idea is that the 'struct sock *' in such helpers could be either a
-> tcp_sock* or an mptcp_sock *, and the processed skbs could be sitting in
-> TCP level queues or MPTCP ones.
->
-> That poses some hard constraints on the sk fields that the helpers can
-> access. To make them clear I'm renaming such helpers using an 'xtcp_'
-> prefix.
->
-> The full patch touching the TCP code is below. For completeness,  the
-> whole series is available here:
->
-> https://lore.kernel.org/mptcp/cover.1777908248.git.pabeni@redhat.com/T/#m=
-e6eda13ec2c70fbb400b6223aa2d07a4fd3bf865
->
-> but I guess most of it is not interesting for you/from TCP perspective.
->
-> The MPTCP bits are not yet finalized, but I'd like to know it you would
-> consider this approach doable or a complete no-go.
+Hello:
 
-No concerns from my side, if we except the fact that TCP collapses are
-a high risk, we might
-remove them completely (or at least guard them under a sysctl)
+This series was applied to netdev/net.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
+
+On Fri, 01 May 2026 21:35:33 +0200 you wrote:
+> Here are various unrelated fixes:
+> 
+> - Patch 1: increment the right MIB counter. A fix for v5.7.
+> 
+> - Patch 2: set the right MPTCP reset reason. A fix for v5.9.
+> 
+> - Patch 3: fix rx timestamp corruption when on MPTCP passive fastopen. A
+>   fix for v6.2.
+> 
+> [...]
+
+Here is the summary with links:
+  - [net,1/4] mptcp: use MPJoinSynAckHMacFailure for SynAck HMAC failure
+    https://git.kernel.org/netdev/net/c/c4a99a921949
+  - [net,2/4] mptcp: use MPTCP_RST_EMPTCP for ACK HMAC validation failure
+    https://git.kernel.org/netdev/net/c/a6da02d4c00f
+  - [net,3/4] mptcp: fix rx timestamp corruption on fastopen
+    https://git.kernel.org/netdev/net/c/6254a16d6f0c
+  - [net,4/4] mptcp: sockopt: increase seq in mptcp_setsockopt_all_sf
+    https://git.kernel.org/netdev/net/c/70ece9d7021c
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
