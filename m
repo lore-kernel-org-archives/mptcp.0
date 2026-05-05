@@ -1,163 +1,135 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66E3139B952;
-	Tue,  5 May 2026 15:14:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89B39481FDF
+	for <mptcp@lists.linux.dev>; Tue,  5 May 2026 15:57:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777994053; cv=none; b=L0O5NtIQ4pgvMm7c+Idtb4sL5+B0OTS5x0nK25zYVtzv8jRM/SUxdiue/cnyIGYs/MGnNYsX96XLjVvQ52Wb61+qbNfk+ZrQ5AXcJej6jxEoCwBzIl7AGGGjjp4vzecR8AeIETZevAOitmDk0sdxnCkkOvqd4zBOURzMnUIbcOg=
+	t=1777996640; cv=none; b=F8Ai+fBODXeuxHcyZjRaGK9Nz2e6Y1nK+bgws1KX1wP2xpsgB+TPj+6hbX/VhB3Yr5bPC1sshCOt7ZGBozxt7b5u/R6WAu33o5FNmUMkvFaE0BUYqnxvWHEPysW5jLaU9zqM0jdhXfDvj/bVMiYeTwgaHr6gyRjAMr70SGzMUjQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777994053; c=relaxed/simple;
-	bh=yJ/mQCKDNyWieksngGmTrHElKRuZ0mOGGcnfFjZfoqk=;
+	s=arc-20240116; t=1777996640; c=relaxed/simple;
+	bh=4tbkQD3qjzUNZYoGCbMdfdMn6j1OXzy+/hjj4tI7cOY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=W2T+JgacibGB6y1EKnDcgzTz94XO6KrQhZSIilU4MxP0J2rLhXn9XZlGqn0GhVfktKwu9evANrAmWR336A+aVSqDiTweEjg62+zBVqRZ34mHwRDPxF0d+s+yB5X+3CTVQFQ3bR5zMumPGX/pHXoRJLdGOV8qeScudZCBhqtmNXM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eqMQr+8E; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=XZrMUZWgN+1T56jvtPP+PJpgDtoR4yJTw+1WeRdFEUCEl5eW4JdfX2MytWQQadTKTHt885BFfU9btlP7fDkPdC26l/V9WFkRS/9eEtmiulgADuQBiHdLjDWOOSGCHPOisrONR+BJIdTeD/xOSFDhcSJ2gjuDYMXZbv93nDXw+jA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dgt0Soj0; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eqMQr+8E"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87951C2BCB4;
-	Tue,  5 May 2026 15:14:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777994053;
-	bh=yJ/mQCKDNyWieksngGmTrHElKRuZ0mOGGcnfFjZfoqk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=eqMQr+8EBUJ65SoEkkHVJK8O4j3mVUGSiFlBXcji5jIKi+gn7xoGcTfrt4UF7m9h5
-	 1xTyCxkWlU2Qlr+INPcwtfdEA0Wuqfmi50hFZgdN5FeCe+6+Q/jmz86p5YrjHMpRT5
-	 pOzGG2HwqocyR8wIzTEBJEAp4mp/18pUPAEe77F47mCJ0LOAcxP/1H385YJd160Qul
-	 DfboSff+xTkwSR6ucKFpr5yHv7+FlASzLzGfXMecYe0tyNO8lry9sF+yUqyfCwxz8+
-	 LLVa4TBrDWB0e0cTs+HiMWMQZ5m6QkAeHuZHgvmFLvU7SO/4QDgTqzj3JWeTjqmGl1
-	 1k2ulheBiDS/g==
-Message-ID: <64a691f2-4104-4538-9aa6-6feadc756c56@kernel.org>
-Date: Tue, 5 May 2026 17:14:08 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dgt0Soj0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1777996638;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8gbhNN4Y+U0874ckf/A+Q+33B/TiI+pxihIO3dt2UI8=;
+	b=dgt0Soj0nyO/rc1BtmzmZxHbr4LtbFrmUnY+nprdnUYOzAZq51hx0ZgNm35cjUvdjwJfzW
+	M5CXat2LZFNpeg7qNhJPwPXedIikspQr3KQcf4r1ODNbgAFpqNFxA6fnxG/ju0uE1GH7ZI
+	DmUZrbWTj/wbVc8hnVhng0Sdfel9mA0=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-189-qbSIJpGgOfaFnZ1h09dV9w-1; Tue, 05 May 2026 11:57:16 -0400
+X-MC-Unique: qbSIJpGgOfaFnZ1h09dV9w-1
+X-Mimecast-MFC-AGG-ID: qbSIJpGgOfaFnZ1h09dV9w_1777996635
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-44d79da8cf7so1967616f8f.2
+        for <mptcp@lists.linux.dev>; Tue, 05 May 2026 08:57:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1777996635; x=1778601435;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8gbhNN4Y+U0874ckf/A+Q+33B/TiI+pxihIO3dt2UI8=;
+        b=e5bw4pqI8h6nmRljguAQo/5XX/wxkL8ull8iBEPvwcdLWZMvNKKB/dqHmJ24ImK0KH
+         ugkTl/Mk76LdmaT7PHyFZGiSZeYbsYLcFuWSox7RLfBqSBNCYLgeYg7e5PjZmVof4gC6
+         icwscRAKLfLzLJ9Kr+p66l+Mmxe6ZpJBADNsWT6DZrDL869jRzQ6Kso7YzApjX31bh4+
+         wgWA6JK+tt33nKD6gY5K9fBCqHtdo/X2NBEQ8Lw2ItfORQrdzQd8sW/SqLmoLvmKm5Bk
+         Y5l0d+hSvY/nsBrO94O2XMeZivOH8b0wbIqPo0IHZC+icZBe3PKk1ljpV7qEmSblh+Zr
+         M7/w==
+X-Forwarded-Encrypted: i=1; AFNElJ8N1q2pym1xXZCTibBMH5w+mUysjAwTpBrgZE3ZJCNVyZzEHq6DuJwXwaaetW+kXJz6pLN2pw==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxO0zQH8YEkVZdjSOb+v0TBo3gfBC/kxlvBOjoNvuh/TNB4Ny0O
+	9WKkH9UJxx4Q4OsdMn4s1gQ3Ko7+DU1EKeWydJdcmCIlWAN1R7kWxl/We1dd+g5/uO83F4BwGhr
+	jwtH5hRHJDwThu4t+Hp6AqunGhl6O9ygW7APl4lIEfcmENCrnWpBmmKNn
+X-Gm-Gg: AeBDiettGk4pSAxNil1LawqsknoYJNGro2a26mOTUxImkZ4vDUuqWybdNYMHSX3+QXR
+	mgOs5WFxALc6fptuqLYipHU5o0UxLkMyzM2G58wvKh8iJns9ih/Q7ngFZfekrhsdK7/BfmcTaCb
+	vK2EsNCPbWzOOjq//AImR/nfJxNMGnQOdio2j0ppJihpf5/kBpPAU2RVL5Hfjt2DCjSHsGiv75m
+	+1RHHsKoopbiiffTB1PFZrZV+O7s8OHzXidRQyPMAcU/x93tBObkorpalA3BQekMuMNWXvQl9JG
+	R+4Gu/Qj/iRrqM4blOClKUSgeHP5YJ+hbBSY8mYLY9xd8rJ8BwJd60Fq8hPFbbYPPsi3a521ndE
+	LKOR9QxeJpFTVNENDnymr1xQ3sjYK4am9laM5GSUc80LMje2o2jpadrgfsqgRLayxsC0=
+X-Received: by 2002:a05:6000:228a:b0:43c:fd7e:72eb with SMTP id ffacd0b85a97d-44bb6ab1cb0mr23825913f8f.41.1777996635073;
+        Tue, 05 May 2026 08:57:15 -0700 (PDT)
+X-Received: by 2002:a05:6000:228a:b0:43c:fd7e:72eb with SMTP id ffacd0b85a97d-44bb6ab1cb0mr23825880f8f.41.1777996634677;
+        Tue, 05 May 2026 08:57:14 -0700 (PDT)
+Received: from [192.168.88.32] ([212.105.155.47])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4505285e765sm5359988f8f.10.2026.05.05.08.57.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 05 May 2026 08:57:14 -0700 (PDT)
+Message-ID: <1bcbd71b-8b7a-42d1-9726-c8b58e3bc3ad@redhat.com>
+Date: Tue, 5 May 2026 17:57:13 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH v2 bpf 3/6] mptcp: bpf: fix type confusion in
- bpf_mptcp_sock_from_subflow()
-Content-Language: fr
-To: Kuniyuki Iwashima <kuniyu@google.com>, sashiko@lists.linux.dev
-Cc: bpf@vger.kernel.org, MPTCP Linux <mptcp@lists.linux.dev>
-References: <20260504210610.180150-4-kuniyu@google.com>
- <20260505041435.187D0C2BCB4@smtp.kernel.org>
- <CAAVpQUB-K4YBE5Em4xg5wWsjtK=7xZwwXFynX2vUN4DQDx2tRw@mail.gmail.com>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <CAAVpQUB-K4YBE5Em4xg5wWsjtK=7xZwwXFynX2vUN4DQDx2tRw@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 mptcp-next 06/10] tcp: expose the
+ tcp_collapse_ofo_queue() helper to mptcp usage, too
+To: Eric Dumazet <edumazet@google.com>
+Cc: Geliang Tang <geliang@kernel.org>, gang.yan@linux.dev,
+ mptcp@lists.linux.dev
+References: <cover.1777908248.git.pabeni@redhat.com>
+ <eec217c214e8db54355c7708b328c34a92c2bdcb.1777908248.git.pabeni@redhat.com>
+ <0c361889-533f-4467-b908-0774dc23f08d@redhat.com>
+ <CANn89iJk+0M6hAxx+L8vfLzCzo=_7E141BYty8F4CiBUM2F6hA@mail.gmail.com>
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <CANn89iJk+0M6hAxx+L8vfLzCzo=_7E141BYty8F4CiBUM2F6hA@mail.gmail.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: 0sWtoAMrFzxu7lZTRnkyrLkErZg8Qo-SZuYvzvukDwg_1777996635
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi Kuniyuki,
-
-(+cc MPTCP ML)
-
-On 05/05/2026 07:43, Kuniyuki Iwashima wrote:
-> Could you follow up on the comments by Sashiko ?
-
-Thank you for having forwarded this!
-
-> On Mon, May 4, 2026 at 9:14 PM <sashiko-bot@kernel.org> wrote:
-
-(...)
-
->>> diff --git a/net/mptcp/bpf.c b/net/mptcp/bpf.c
->>> index 8a16672b94e2..4cc16cbeb328 100644
->>> --- a/net/mptcp/bpf.c
->>> +++ b/net/mptcp/bpf.c
->>> @@ -14,7 +14,7 @@
->>>
->>>  struct mptcp_sock *bpf_mptcp_sock_from_subflow(struct sock *sk)
->>>  {
->>> -     if (sk && sk_fullsock(sk) && sk->sk_protocol == IPPROTO_TCP && sk_is_mptcp(sk))
->>> +     if (sk && sk_fullsock(sk) && sk_is_tcp(sk) && sk_is_mptcp(sk))
->>>               return mptcp_sk(mptcp_subflow_ctx(sk)->conn);
+On 5/4/26 9:07 PM, Eric Dumazet wrote:
+> On Mon, May 4, 2026 at 9:39 AM Paolo Abeni <pabeni@redhat.com> wrote:
+>> I'd like to re-use some existing TCP helpers (tcp_collapse_ofo_queue()
+>> and tcp_collapse()) in the MPTCP code, to avoid duplicating the non
+>> trivial logic there.
 >>
->> Could this cause a regression by dereferencing a NULL pointer when accessed
->> concurrently?
+>> The idea is that the 'struct sock *' in such helpers could be either a
+>> tcp_sock* or an mptcp_sock *, and the processed skbs could be sitting in
+>> TCP level queues or MPTCP ones.
 >>
->> In subflow_ulp_fallback(), icsk->icsk_ulp_data is set to NULL prior to
->> clearing tcp_sk(sk)->is_mptcp. If a BPF program triggers in this window,
->> sk_is_mptcp() would return true but mptcp_subflow_ctx(sk) would return NULL,
->> leading to a NULL pointer dereference.
-
-This would need to be confirmed, but from what I see, that's not a new
-bug introduced by the patch here.
-
->> Additionally, could ctx->conn be NULL when read here?
+>> That poses some hard constraints on the sk fields that the helpers can
+>> access. To make them clear I'm renaming such helpers using an 'xtcp_'
+>> prefix.
 >>
->> During subflow_ulp_init(), the context is allocated and is_mptcp is set to 1,
->> but ctx->conn is initially NULL. Passing NULL to mptcp_sk(ctx->conn) triggers
->> a kernel panic on CONFIG_DEBUG_NET builds. On non-debug builds, it returns a
->> non-NULL offset pointer, which bypasses BPF verifier NULL checks and causes
->> invalid memory accesses.
-
-Same here: not a new bug.
-
->> Could this introduce a regression with a use-after-free of the mptcp_sock
->> during teardown?
+>> The full patch touching the TCP code is below. For completeness,  the
+>> whole series is available here:
 >>
->> During subflow_ulp_release(), sock_put(ctx->conn) drops the reference to the
->> parent mptcp_sock and may free it. However, ctx->conn is not cleared, and the
->> subflow context remains valid until the RCU grace period ends.
+>> https://lore.kernel.org/mptcp/cover.1777908248.git.pabeni@redhat.com/T/#me6eda13ec2c70fbb400b6223aa2d07a4fd3bf865
 >>
->> If a BPF tracing program triggers after sock_put(), could this retrieve
->> and return the dangling ctx->conn pointer, enabling the BPF program to read
->> from freed kernel slab memory?
-Same here: not a new bug.
+>> but I guess most of it is not interesting for you/from TCP perspective.
+>>
+>> The MPTCP bits are not yet finalized, but I'd like to know it you would
+>> consider this approach doable or a complete no-go.
+> 
+> No concerns from my side, if we except the fact that TCP collapses are
+> a high risk, we might
+> remove them completely (or at least guard them under a sysctl)
 
-Sashiko is good at finding potential existing bugs that predate a patch,
-which is good, but someone has to fix them :)
+I'm sorry I can't follow the above suggestion, could you please rephrase?
 
-Because the issues raised here are not new, I suggest not blocking this
-patch. I will check if someone can look at it quickly.
+The patch should not add bugs to TCP collapses for TCP sockets or MPTCP
+subflows (still tcp_sock). Collapses for MPTCP sockets could become
+buggy if the tcp_collapse_ofo_queue()/tcp_collapse() implementation will
+be modified in the future without care.
 
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
+Thanks,
+
+Paolo
+
+
 
