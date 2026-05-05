@@ -1,88 +1,116 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2616817AE11;
-	Tue,  5 May 2026 02:31:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81DFE175A87;
+	Tue,  5 May 2026 15:01:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777948261; cv=none; b=KXm0lsN70O5/8guKp9dwKg9k/T225u3HVndoxHulArs3jTDDt+Bge4U7Y9uJMfmAqzxmG76dA6dsRPaaMhx4ykR+tmT+EpVpGVZIitHmkX8PqMVm0OfDCwCsFYK/gAk4YJaBHhxmCSycOuRnYNFjbnCTq25tqGRHXPJ67Yvu+RA=
+	t=1777993287; cv=none; b=kxZo0kiK5nTVks1wSV0OnmQ4bML71PR3zcb9A7bFGKQ8Y5dGLSpDtx10GsRQ8MDfFJ0iPIy9rSUytwrcBLokD3U+ZLyejpZdPMT/qhb2jE2d0sT4CjMQ3tMQtfWtMBUDgJtFdT8sWgebOyNKAx6q9wzhfNooye/oN8FSDQR4WX8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777948261; c=relaxed/simple;
-	bh=AA8cH8hQ3P20TZYGC9RLfTAA7leVeZMi69S2rtE2FZY=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=sV8LMhNkHovjQaq8E7vMjlG83DYkdNTfY6/kQ9xf1u/ej+STQhEm03RU/94dEoALKOz4D6bFwlmS9CifZrWCDzwH0k51neYOUJh+gFLVaAltOkCqXwBe9LIDdw06K6dzjl9yH8WBx1/KLSmFEKOVV98aCib6Khef7u0bGQXe5Rs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CcPjOAws; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777993287; c=relaxed/simple;
+	bh=RfIY+/4lIX0lJsO9zD2c8kAfjhuWI0FcPTJxp5L6K2c=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Br50WjpHGy5uNO9GKE++EeGYCXNISJTwmNpGq15nRePA0Hc41tGEkZTzY4yUL6kGVMmkZ9N+iwRkm9EEqJu21fztGLJNbYDk+BTPIUQR7qD7Tb2EWh31vmbSrrUmlz3CAGwlAs+gMzOPCFUl+H/DjySKpw4Z3t8pzoQX7XFDI+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DK2k94Zd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CcPjOAws"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C94DEC2BCB8;
-	Tue,  5 May 2026 02:31:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DK2k94Zd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A13F4C2BCC7;
+	Tue,  5 May 2026 15:01:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777948260;
-	bh=AA8cH8hQ3P20TZYGC9RLfTAA7leVeZMi69S2rtE2FZY=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=CcPjOAwsGtV2b+oHpYToX8y5hgsqILoLGLvc2YNZ5OC6krSDgxyXMpzTuC7W7NjZg
-	 J8SOInSr4WwQgfAJVW35KenF1Rzsm8oiAMtko5BBAm05dYlQzjw1ONGXqmll6Ff9g5
-	 LbXofClyRiBaBKTsmfVvk2AX+uwo4KTsFH+cVxrwURIElnPKVRPy7y2hABaQXsTeFh
-	 hPeWCviMtkDTUMgyfSI5fWdFO7ORgFo7HcZWvIo05lNFAlFVbI5elZsOpQP2DV2F9O
-	 07Y6z3w7PcIKVGpgiGiIib/dFPMme0wH05qx61znz2Jzk8SRcTA1zlFL1wbE1Zlv55
-	 FnzYWKQn+Gl7g==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id B9E0A39301A2;
-	Tue,  5 May 2026 02:30:12 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1777993287;
+	bh=RfIY+/4lIX0lJsO9zD2c8kAfjhuWI0FcPTJxp5L6K2c=;
+	h=From:Subject:Date:To:Cc:From;
+	b=DK2k94Zdh8M4TXW65NOS8s4UF/jQ3lKoUwgV+0371pKtdcTZlWDS36CQt2f8g04y2
+	 ngv4ztlii5cfRu1vHcKycRsAaTXjEQy0qUAmNtGjlsRMQmV3tE9n4XEgYoojmWuiAB
+	 3qnd42mwqFL0W8tzMTUOmYnHe1VHQ2QnR4AvsuY6BvWFQuV3zq7oYnNCX+Uzx+/VH+
+	 ucaYyjK7vexqcdUIBqBbxm4sqtSNuMfQO9pFZ4kWCB5lufWqGvNVpgJrYDObwaSrpc
+	 8OiC5xhtQwo6E8Xh/xOPDQ0VmCAYR3ucMq3pacO2Y7MdQlquk9yrOTmglrpLsIBNv/
+	 mYMCunvr4qT5Q==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH net 00/11] mptcp: pm: misc. fixes for v7.1-rc3
+Date: Tue, 05 May 2026 17:00:48 +0200
+Message-Id: <20260505-net-mptcp-pm-fixes-7-1-rc3-v1-0-fca8091060a4@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net 0/4] mptcp: misc fixes for v7.1-rc3
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <177794821155.1394832.1837410198700398471.git-patchwork-notify@kernel.org>
-Date: Tue, 05 May 2026 02:30:11 +0000
-References: 
- <20260501-net-mptcp-misc-fixes-7-1-rc3-v1-0-b70118df778e@kernel.org>
-In-Reply-To: 
- <20260501-net-mptcp-misc-fixes-7-1-rc3-v1-0-b70118df778e@kernel.org>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: martineau@kernel.org, geliang@kernel.org, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
- fw@strlen.de, yangang@kylinos.cn, dmytro@shytyi.net, netdev@vger.kernel.org,
- mptcp@lists.linux.dev, linux-kernel@vger.kernel.org,
- shardul.b@mpiricsoftware.com, stable@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/yWM0QrCMBAEf6XcswdJW03xV8QHm656QmPIRSmU/
+ runPs6yMyspikDp2KxU8BaVZzLwu4bi/ZJuYJmMqXXtwe1dzwmV51xj5jzzVRYoB/ZcYsfop8G
+ HIXTOgSyQC34H809kHp3/o77GB2L9ZmnbPnXE0AaDAAAA
+X-Change-ID: 20260504-net-mptcp-pm-fixes-7-1-rc3-e4d81787300e
+To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Simon Horman <horms@kernel.org>, Christoph Paasch <cpaasch@openai.com>
+Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, 
+ linux-kernel@vger.kernel.org, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
+ stable@vger.kernel.org, Shuah Khan <shuah@kernel.org>, 
+ linux-kselftest@vger.kernel.org
+X-Mailer: b4 0.15.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2096; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=RfIY+/4lIX0lJsO9zD2c8kAfjhuWI0FcPTJxp5L6K2c=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDJ/sVmtTQ7qefTggk1ry2n+B4+9mLduuSC5qlii5OQao
+ adSTa3CHaUsDGJcDLJiiizSbZH5M59X8ZZ4+VnAzGFlAhnCwMUpABNp+83wP3BXlmmV4DoePpOl
+ 11gvPz0pouR/MMSye97puzWMFdqy/xgZdvM/CX6k37rR8+WPb8+0sxoi0/kKF4QWvT7a1vPMc9E
+ iXgA=
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hello:
+Here are various fixes, mainly related to ADD_ADDRs:
 
-This series was applied to netdev/net.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+- Patch 1: save ADD_ADDR for rtx with ID0 when needed. A fix for v6.1.
 
-On Fri, 01 May 2026 21:35:33 +0200 you wrote:
-> Here are various unrelated fixes:
-> 
-> - Patch 1: increment the right MIB counter. A fix for v5.7.
-> 
-> - Patch 2: set the right MPTCP reset reason. A fix for v5.9.
-> 
-> - Patch 3: fix rx timestamp corruption when on MPTCP passive fastopen. A
->   fix for v6.2.
-> 
-> [...]
+- Patch 2: remove unneeded exception for ID 0. A fix for v5.10.
 
-Here is the summary with links:
-  - [net,1/4] mptcp: use MPJoinSynAckHMacFailure for SynAck HMAC failure
-    https://git.kernel.org/netdev/net/c/c4a99a921949
-  - [net,2/4] mptcp: use MPTCP_RST_EMPTCP for ACK HMAC validation failure
-    https://git.kernel.org/netdev/net/c/a6da02d4c00f
-  - [net,3/4] mptcp: fix rx timestamp corruption on fastopen
-    https://git.kernel.org/netdev/net/c/6254a16d6f0c
-  - [net,4/4] mptcp: sockopt: increase seq in mptcp_setsockopt_all_sf
-    https://git.kernel.org/netdev/net/c/70ece9d7021c
+- Patches 3-5: fix potential data-race and leaks during ADD_ADDR rtx. A
+  fix for v5.10.
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+- Patch 6: resched blocked ADD_ADDR rtx after a more appropriated
+  timeout, not after 15 seconds. A fix for v5.10.
 
+- Patch 7: skip inactive subflows when when looking at the max RTO. A
+  fix for v6.18.
+
+- Patch 8: avoid iterating over all subflows when there is no need to. A
+  fix for v6.18.
+
+- Patch 9: skip closed subflows when looking at sending MP_PRIO. A fix
+  for v5.17.
+
+- Patch 10: properly catch errors when using check_output() in the
+  selftests. A fix for v6.9.
+
+- Patch 11: skip the 'unknown' flag test when 'ip mptcp' is used. A fix
+  for v6.10.
+
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+Matthieu Baerts (NGI0) (11):
+      mptcp: pm: kernel: correctly retransmit ADD_ADDR ID 0
+      mptcp: pm: ADD_ADDR rtx: allow ID 0
+      mptcp: pm: ADD_ADDR rtx: fix potential data-race
+      mptcp: pm: ADD_ADDR rtx: always decrease sk refcount
+      mptcp: pm: ADD_ADDR rtx: free sk if last
+      mptcp: pm: ADD_ADDR rtx: resched blocked ADD_ADDR quicker
+      mptcp: pm: ADD_ADDR rtx: skip inactive subflows
+      mptcp: pm: ADD_ADDR rtx: return early if no retrans
+      mptcp: pm: prio: skip closed subflows
+      selftests: mptcp: check output: catch cmd errors
+      selftests: mptcp: pm: restrict 'unknown' check to pm_nl_ctl
+
+ net/mptcp/pm.c                                  | 62 +++++++++++++++++--------
+ net/mptcp/pm_kernel.c                           | 13 ++++--
+ tools/testing/selftests/net/mptcp/mptcp_lib.sh  | 16 ++++---
+ tools/testing/selftests/net/mptcp/pm_netlink.sh | 20 +++++---
+ 4 files changed, 73 insertions(+), 38 deletions(-)
+---
+base-commit: 07d99587396024932e02474c3a5bede71d108454
+change-id: 20260504-net-mptcp-pm-fixes-7-1-rc3-e4d81787300e
+
+Best regards,
+--  
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
