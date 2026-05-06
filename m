@@ -1,160 +1,140 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FF1B2475E3
-	for <mptcp@lists.linux.dev>; Wed,  6 May 2026 14:18:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1710448C8B0
+	for <mptcp@lists.linux.dev>; Wed,  6 May 2026 16:56:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778077103; cv=none; b=kSuQijflXEzji44Ko2KqUnBCTSli93Bn6CnR02/7ZsZHPwKuyPjkHncYcd3IvMZyyPUxRRSIjFZ4RRtrA5EeMgWf57XF0ftu/OxDuqVZQNuMCAII9cOdbamS2ce43EvhRw/KRRb7823D0TCFX2xF6LABQYjwOxlImIWU1a1SFmE=
+	t=1778086565; cv=none; b=n1ULC3jIQ+M7Yc+qVuOZqCMZ/QgjCemV9NgTq31kmF6JEbQbYuBx2UWqMCRju90CT04N6BokEBZfYemlOUabSRGrNXFhvndMIXsd2IDdofoLREyzb7liM03eoc2L6fS6daZ96NdlBZyS496+3wXqlUf81DN50CosuY40nCwnCBY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778077103; c=relaxed/simple;
-	bh=OUyylME6LEzU8RnHJ6qJH+n1ofd5u1Twag+oKNHgxYc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=PyTV5n0EIW7ZE9eJKOVWHi5U4NjJYz4qZzCk5yaNYGxDzmjRvmiWurCsQgtIuLMd1KtqeWDPtFQOF4aGySYL13E3Y2oLJIwNyRjTZrFfZGUUfYYAnwlk7nib+Mmt554wzdBcQH4WYjnvQ9+CMrXVDuk0CmlZLUJEzuv9AMd2C2k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=6XqGl4/q; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=6XqGl4/q; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+	s=arc-20240116; t=1778086565; c=relaxed/simple;
+	bh=qosT+ruvwITclDF0NJ68R4Aby8ekKJM8VfSsMWq/y/Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=vBCQR0kGTAw86y4EF+mm+CMtzTppTC+tC+DSdQrmLeueZT0ZSIopjd3DFp2xmNcP9+F1h3pscgkcl2tTD8BocDNWH/6h8aaWK+42tjCvJX1MrHVGkYvElciX932Hs7hknGhnQEPIkhE1YaFECfBGpSndCgkFiFxnLhm7uHX4Pgw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MwNKDi1c; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="6XqGl4/q";
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="6XqGl4/q"
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=HXMKqjss1xQ6rc9p6VG6SCKPy4niohsDHKuyLzrsFOg=;
-	b=6XqGl4/q3lnk0jRYpziBezbzWap7zpgEkvP9MSKTJ3nGc2vus9nMN2b+IdIZU8n+jQatMZ6Az
-	A40/BvGCSNL9VxtEOxGEqlE6KepfsWoOw8cM/OcF/cJ4GyfINx4V5bIS5m6lIhszaqINgfgLX8y
-	4r9BEKWUpc2kLaqOupnMUGc=
-Received: from canpmsgout05.his.huawei.com (unknown [172.19.92.145])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTPS id 4g9cSS515Jz1BFy0
-	for <mptcp@lists.linux.dev>; Wed,  6 May 2026 21:59:20 +0800 (CST)
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=HXMKqjss1xQ6rc9p6VG6SCKPy4niohsDHKuyLzrsFOg=;
-	b=6XqGl4/q3lnk0jRYpziBezbzWap7zpgEkvP9MSKTJ3nGc2vus9nMN2b+IdIZU8n+jQatMZ6Az
-	A40/BvGCSNL9VxtEOxGEqlE6KepfsWoOw8cM/OcF/cJ4GyfINx4V5bIS5m6lIhszaqINgfgLX8y
-	4r9BEKWUpc2kLaqOupnMUGc=
-Received: from mail.maildlp.com (unknown [172.19.162.140])
-	by canpmsgout05.his.huawei.com (SkyGuard) with ESMTPS id 4g9cJM2Q8Tz12LDN;
-	Wed,  6 May 2026 21:52:19 +0800 (CST)
-Received: from kwepemj500018.china.huawei.com (unknown [7.202.194.48])
-	by mail.maildlp.com (Postfix) with ESMTPS id 774C720226;
-	Wed,  6 May 2026 21:59:28 +0800 (CST)
-Received: from [10.174.178.79] (10.174.178.79) by
- kwepemj500018.china.huawei.com (7.202.194.48) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Wed, 6 May 2026 21:59:27 +0800
-Message-ID: <17f67626-14a6-442a-9d86-7a81a2bf4d78@huawei.com>
-Date: Wed, 6 May 2026 21:59:27 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MwNKDi1c"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-488b150559bso46441665e9.1
+        for <mptcp@lists.linux.dev>; Wed, 06 May 2026 09:56:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1778086562; x=1778691362; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=8zJz68VAHZ5t5g+Gk/nEZDa9iG7OIx3Z96QaAXq0MJY=;
+        b=MwNKDi1cGDX5kc7BCzoTuz4IYNyNVK+Dr44EyUvKCo7cTfA6+tAK/CloR832ZbgMlO
+         K4TcQIJexuminp1VJ3T3lvvbytNxBdfKpG4iaHvDvMtTLfut0f6H3vo/jnbpWTpH/I1g
+         9PxcvgwWol9euGkXnKH0tAUol3u3x0KNem1inXFRaMcb6D+hRQOrXi0VcYc2xQPuZlmb
+         8VuiXgwxISTNZTj7yB3uJrEumDMb3EbQ8flazsQt9g/GZWBi+VCpgw3Wdt/AvpBxOCgR
+         gJOEmDtIvtT9sHj6YejXWnky7F5hSXIC5Ctnp1cKdEAscKVHNmcPpC4WNbBq8adtYvEc
+         CfyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1778086562; x=1778691362;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8zJz68VAHZ5t5g+Gk/nEZDa9iG7OIx3Z96QaAXq0MJY=;
+        b=KSerdeT7y91KJW0a5H2dt3bcxdjth4J6k627lJTwJ4pUZ/XixkBuD9E6CBDKrx7SVj
+         YYFUWzGGaZ/FTx2bofvunBToFBWKcLvRoOG/rLA72NE4cQ3pIxNvf+L8SrVyQt2wkrEE
+         V8SOErRjzr6ViBHLfa8SY93fptnN4smI807lkMFD2QYwtfTjHXuOaWhUKpDL7HfWiln3
+         pAM92Eg4rUgz+a/X/YXoJIUJTk5/G9InTBrlY1gQsDmNrLm7ldh4L+u3jfPBt80cmArA
+         Q3nVIQZl5Wepysofncc1RrcufJFQM2DHiNRA64H7uZpTQybxsVR1WwmEyfc04OOyYEVb
+         m0tw==
+X-Gm-Message-State: AOJu0YwrTbiF/sJmRJ7jsJc6u4m+ZhQcSzfi5CmA5TKW0J4h53EsmT1/
+	ghdwyzq5t39j7lCZ3sYWSt52l4JLW3cMBx2lPKhcOL74S2qR2b6vAdb5tRQdviNXnw0=
+X-Gm-Gg: AeBDies0wv9JjtAO+rLbKdp+Bt/h3B27q73J0dsTAEe4nNvQUDmLgbKxlIacznp9jn/
+	//QZrr0hzFHI/rVuKOH8o+g6Po1f1nFdl4pEHhv10l8CS+quylDuMtu26X9gnyuLDo0ivTAGjS1
+	VgkfVG950rZJHFoatLwWXnIVpcT7OQl2x6xa5EIv2kFzXeiWD2zTlQsaidhd694icYh5BqPZo7U
+	HhTswRMZ2fbiAyvBZQR/RyVUMN2GusKamyqMeH84I4/HflAjbUvuKSodnjQif437m/u+jTQgwjA
+	U6xeOvOROJ85XYJNo8cyJ54wxHJewNgkEdjhyCDM4HXMF9PtbMcWRibuKbA+Sffu+Yd7Fib+GCw
+	cL7/c0FsycV2CEwIoNqkLXePaeFUkOT6vSz1d/SaNoZP8OD28L9maS+a8+KUXmAYWcj+lbDL9Gl
+	8rtphra/NjdbvuJhjA4C0+1AmXUbWJqy9HnmEiavY8HyokqED7hZwMcvdSlZWNupojEHyO3DEUG
+	V99IijDDXOycRrZrO866g==
+X-Received: by 2002:a05:600c:a118:b0:486:d76c:fa57 with SMTP id 5b1f17b1804b1-48e51f37363mr58100775e9.17.1778086562085;
+        Wed, 06 May 2026 09:56:02 -0700 (PDT)
+Received: from dohko.chello.ie (188-141-5-72.dynamic.upc.ie. [188.141.5.72])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48e538d2878sm94586715e9.15.2026.05.06.09.56.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 May 2026 09:56:01 -0700 (PDT)
+From: David Carlier <devnexen@gmail.com>
+To: mptcp@lists.linux.dev
+Cc: Matthieu Baerts <matttbe@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Mat Martineau <martineau@kernel.org>,
+	Geliang Tang <geliang@kernel.org>,
+	netdev@vger.kernel.org,
+	David Carlier <devnexen@gmail.com>
+Subject: [PATCH mptcp-next v6 0/4] mptcp: MSG_ERRQUEUE support on the parent socket
+Date: Wed,  6 May 2026 17:55:52 +0100
+Message-ID: <cover.1778086500.git.devnexen@gmail.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-net v2 1/2] mptcp: pm: fix ADD_ADDR timer infinite
- retry on option space insufficient
-To: Matthieu Baerts <matttbe@kernel.org>
-CC: "mptcp@lists.linux.dev" <mptcp@lists.linux.dev>, "weiyongjun (A)"
-	<weiyongjun1@huawei.com>, yuehaibing <yuehaibing@huawei.com>, zhangchangzhong
-	<zhangchangzhong@huawei.com>, "xiasong.lee@gmail.com" <xiasong.lee@gmail.com>
-References: <20260430112026.343691-1-lixiasong1@huawei.com>
- <20260430112026.343691-2-lixiasong1@huawei.com>
- <177755524215.1566930.3209225574765644709.b4-review@b4>
- <0430cd33-4d2e-4659-be1e-fada67bb9c6d@gmail.com>
- <4792fa80-2485-47bc-9c50-0526c2f23484@kernel.org>
- <3245a905-81a8-46fb-8eac-8c42d259bb58@huawei.com>
- <4c4fbc89-ecfd-4eaf-b939-50e2d95b1f2b@kernel.org>
-From: Li Xiasong <lixiasong1@huawei.com>
-In-Reply-To: <4c4fbc89-ecfd-4eaf-b939-50e2d95b1f2b@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
- kwepemj500018.china.huawei.com (7.202.194.48)
 
-On 5/6/2026 9:34 PM, Matthieu Baerts wrote:
-> Hi Li,
-> 
-> On 06/05/2026 15:27, Li Xiasong wrote:
->> Hi Matt,
->>
->> I’m currently preparing the v3 update for this fix.
-> 
-> Thanks!
-> 
->> In mptcp_pm_add_addr_signal(), when TCP option space is insufficient, we
->> cancel the ADD_ADDR retrans timer via mptcp_pm_del_add_timer(). During
->> analysis, I found a race window that can lead to one extra ADD_ADDR send
->> attempt, so I’d like to confirm the intended semantics before posting v3.
->>
->> I see two race cases:
->>
->> Case 1: cancel state applied first (handled by existing counter check)
->>
->> CPU0 (cancel path)                          CPU1 (add_timer callback)
->> --------------------------------------      -----------------------------------
->> option space insufficient                   callback already running
->> call mptcp_pm_del_add_timer()               ...
->> acquire pm.lock                             ...
->> set retrans_times = ADD_ADDR_RETRANS_MAX    ...
->> release pm.lock                             ...
->> stop timer                                  ...
->>                                             acquire pm.lock
->>                                             check retrans_times <
->>                                               ADD_ADDR_RETRANS_MAX ?
->>                                             false -> skip announce/send
->>                                             release pm.lock
->>
->> For this case, gating send by
->> `retrans_times < ADD_ADDR_RETRANS_MAX` prevents stale send.
->>
->>
->> Case 2: callback takes lock first and sends before cancel applies
->>
->> CPU0 (cancel path)                          CPU1 (add_timer callback)
->> --------------------------------------      -----------------------------------
->> option space insufficient                   callback already running
->> call mptcp_pm_del_add_timer()               acquire pm.lock
->> try acquire pm.lock -> blocked              check send conditions
->>                                             announce/send ADD_ADDR  <- send
->>                                             retrans_times++
->>                                             release pm.lock
->> acquire pm.lock                             ...
->> set retrans_times = ADD_ADDR_RETRANS_MAX    ...
->> release pm.lock                             ...
->> stop timer                                  ...
->>
->>
->> I’d like to discuss which semantic target is better for v3:
->>
->> A) best-effort cancel:
->>    race may still allow at-most-one extra send attempt and `ADDADDRTXDROP`
->> send-failure statistics may be incremented one extra time.
-> 
-> I think that's OK to send an extra attempt, especially here where it is
-> quite unlikely to get this race.
-> 
+This series lets MPTCP applications use poll(EPOLLERR) and
+recvmsg(MSG_ERRQUEUE) on the parent socket to drain TX timestamps,
+MSG_ZEROCOPY completion notifications and SO_EE_ORIGIN_LOCAL events
+that are produced by the subflows, the same way they would on a plain
+TCP socket. ICMP-derived errors stay on the subflow queue: the legacy
+RECVERR ABI cannot convey their per-subflow peer identity, and they
+are intended for a future MPTCP_RECERR channel.
 
-Thanks, got it.
+Patch 1 factors the existing inet_flags subflow-propagation hard-coded
+list into a mask, so subsequent patches can extend it without churn.
 
->> B) strict cancel semantics:
->>    once cancel is decided, no further ADD_ADDR send action
->>
->> My current understanding:
->> - Case 1 can be covered by the existing retrans_times gate.
->> - Case 2 is the key trade-off between complexity and strictness.
-> 
-> Case 1 looks fine to me, but do you mind documenting the possible race
-> in the code and/or commit message depending on the patch, please?
-> 
+Patch 2 makes IP_RECVERR / IPV6_RECVERR (and the RFC4884 variants)
+propagate to the subflows. The parent stores the bit so MPTCP-aware
+helpers can branch on it.
 
-I’ll document the race consideration in v3 (in the commit message, and
-add an in-code note as needed for clarity), then send the updated patch in
-the next revision.
+Patch 3 splices subflow err-skbs onto the parent's sk_error_queue at
+error-report time. mptcp_poll() and __mptcp_subflow_error_report()
+already handle the parent path, so user-visible behaviour matches
+plain TCP.
 
-Best regards,
-Li Xiasong
+Patch 4 is a selftest covering the propagation path.
 
-> Cheers,
-> Matt
+Changes in v6 (addresses sashiko v5 review,
+https://sashiko.dev/#/patchset/cover.1777756707.git.devnexen@gmail.com):
+ - patch 2/4: take lock_sock() before the parent ip_setsockopt() and
+   re-read the freshly stored RECVERR bit via inet_test_bit() inside
+   the critical section, then propagate that to subflows. Two racing
+   setsockopt() callers can no longer leave parent and subflows
+   desynchronised. (sashiko v5 #1, High)
+ - patch 2/4: drop the local 4-byte snapshot and pass the user buffer
+   straight through to ip_setsockopt() / ipv6_setsockopt(), so 1-byte
+   boolean writes (char on=1; setsockopt(.., IP_RECVERR, &on, 1))
+   keep the same ABI as plain TCP. (sashiko v5 #2, High)
+ - patch 3/4: drain the parent err-queue first in mptcp_recv_error(),
+   then splice from the subflows. A previous splice that failed under
+   rmem pressure is retried once recvmsg(MSG_ERRQUEUE) frees parent
+   space, and the successful sock_queue_err_skb() re-asserts EPOLLERR
+   so userspace knows to drain again. No permanent event loss.
+   (sashiko v5 #3, High)
+ - patch 3/4: use skb_queue_empty_lockless() in mptcp_recv_error()'s
+   subflow loop, matching what mptcp_poll() already does. The plain
+   skb_queue_empty() pointer compare tripped KCSAN against softirq
+   writers. (sashiko v5 #4, Medium)
+
+v5: https://lore.kernel.org/mptcp/cover.1777756707.git.devnexen@gmail.com/
+
+David Carlier (4):
+  mptcp: sockopt: factor inet_flags propagation into a mask
+  mptcp: propagate RECVERR sockopts to subflows
+  mptcp: support MSG_ERRQUEUE on the parent socket
+  selftests: mptcp: cover IP_RECVERR sockopt propagation
+
+ net/mptcp/protocol.c                          |  74 +++++++++-
+ net/mptcp/sockopt.c                           | 136 ++++++++++++++----
+ .../selftests/net/mptcp/mptcp_sockopt.c       |  55 +++++++
+ 3 files changed, 235 insertions(+), 30 deletions(-)
+
+
+base-commit: aa15c271d79edde595fb6f4eedb52fbc16325a83
+--
+2.53.0
+
