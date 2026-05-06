@@ -1,129 +1,197 @@
-Received: from mail-dl1-f47.google.com (mail-dl1-f47.google.com [74.125.82.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from canpmsgout02.his.huawei.com (canpmsgout02.his.huawei.com [113.46.200.217])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F29136CDEB
-	for <mptcp@lists.linux.dev>; Wed,  6 May 2026 11:42:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CC243EDAD3
+	for <mptcp@lists.linux.dev>; Wed,  6 May 2026 13:27:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.217
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778067747; cv=none; b=T0RJVQGzCc53DgOmnlBbHxhNqs7kPSeGxd+K7pUZDnEwQZ5wh0G0jVsr6S0QY5T6UPIV89Slv91HQ89+nei5dMsRH7df7RPz/4yJKMR87ssgPETBQB5Dcp3SQ6cvz/rxxbcEM87xWNH62n+Ybaegna9BmRizeUkOJ5ThzFjXVhY=
+	t=1778074046; cv=none; b=mPHHQwxc94hP1WbTREETHveBKTVlF7nJd6MPtQDcdhy22oUnIgwhCwYUKLp9dvsYxxsRdxC8wLOpdZTNZl6C27M2jJBpYc952syCHARRSWzDKFgwFFnzFHDLnuVMyVZ/X0fWtVv2PKYtzzbY4zkr1oSJMZVnce3oR5v15Y2C6D4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778067747; c=relaxed/simple;
-	bh=cFEliZ/CH31J3E7XMcQlGiXo89QWTjxV57g4u36fL9A=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
-	 MIME-Version:Content-Type; b=fCYPQtHx4Rie37Rd7aAhwmPWGX6eyWABv66ScqEU5OmnuhogtKPpIPHyUZ/q92JtylON7LKMN+1KiZLCzJ8v3+/2z9yC9qigmjJTrcZAUqGerjN052qbd034mcaSx7gyiZ0gslRuyjd/cpc21LBVxqV36Y20LpeT4aRKDNCO6J4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GO8AFsg9; arc=none smtp.client-ip=74.125.82.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1778074046; c=relaxed/simple;
+	bh=QFqJBwCgBiSzO/KD0l2aNtWf4dwvNvY/LUA9OMrUapM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=WwB7Po5uDX2rl7NQOvBxpRpMlrB0BSOSIqTsZ/GtAvTWeRXpuMvFDTPpCzXDEau7qpY8UfzVdZDUykNsyI/dncfPuCHQ1Ed3Ev3KzO0pngi8a52ohzsWXeTbxYwDEa+DI0vd0cZHMaCJdeggLmt5ecYhoonpxTC6By5F/4a+Ivo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=tjcGq+k3; arc=none smtp.client-ip=113.46.200.217
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GO8AFsg9"
-Received: by mail-dl1-f47.google.com with SMTP id a92af1059eb24-12c19d23b19so9351845c88.0
-        for <mptcp@lists.linux.dev>; Wed, 06 May 2026 04:42:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1778067746; x=1778672546; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=z32lpHCwcB8VVZKxM1S4Lo8oLHLi0hV85Tk0tO2ksZc=;
-        b=GO8AFsg9+iPHM2rT9NktFLQgMsbKE11VqXEh4yR7LwLFn7/4DU+BdSA9LRJKoIgCnz
-         5ZG7WYKBxE7GN0GfX7mlbY9k3hBuqCOMYO7Ik1CK4e1ymoIKuYbGh7fJIi990NiIXbeQ
-         hNIft4IHwCPmmv/oaxIbKxUwgVlI4haKX1XsqLMTKSCpHLfbUKnTZ0okYreF+us1ZRqS
-         rT6AMiThleQbL3hb7wQQVUqoUUES8YudIMj2pEW9ECI9hunU+llyhcGvE0t7lWsVDYR3
-         T9HcX0qjH3UAvccY2gU/fhcEjHVGwlAmbZo438FeQk1227KNsqR8KnNtz1o8y1jOX1OL
-         2mGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778067746; x=1778672546;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=z32lpHCwcB8VVZKxM1S4Lo8oLHLi0hV85Tk0tO2ksZc=;
-        b=IIdRv2QdHkXuxk4q3PubixThOkg9Z4eEvO3/KpHXQ/R4gU9F9l+EXBw9SYq8Sq2jVl
-         2S5DBr5P1H5U8ggBGlI50b8jcwVakrOlzAiSsFazJKa0dRwj1IdZBYM+Rbs00SxbjEMO
-         TSJBW1+5dOsCGmR+uiZwQ8nrb25lhNhAUpX7A8Lmqbp3RR5SDB5AAPqHn6dfS1K06ZN5
-         Rp7Eo6pr4sA2phrueqLYZhXkQmH0sUifUrC4brgjZoYG3RvBGyQv8v+/n0j/AyAibQEW
-         2f+Fu0nXhaLbW7FxcuK+IXgzesd+xCz2g5n9UCbFXPSKxH5WzBoCQWWIbxmc8J1ONr+m
-         W6hw==
-X-Gm-Message-State: AOJu0YxtkUC/PU7NTNXmLksvRqmzd4/n/dmbP0EQ0uEy1sgTFkt6CJWD
-	CLd6NxeuzReSESnU4p1p+h+bmKmJAhBbVtWxBTUx+p7Ed/aAHysVYOx+ALxY
-X-Gm-Gg: AeBDieu0FIofQWP4+vA5vUQM4q03oe1K6DdK8Rl7DgFUs3/G/PZm6PxGqi1ybXf5A7Z
-	8ctaK8/kSDaz9i6IGhaHH80mXZRqNwt+lOXiCdN1+L/1t+4rZ8UGEa1hmKpqBCJ1oYiGR71+WcE
-	3ZIgKQb9439g0NPheoPsHmZ4Im7BP3v5BubKZAfleU+d37HBgVOWMz4sny/BjyoWl/bVIKC+p4Y
-	52dR+ahOI3QBT1bmIF9vAhj7NIKXYQJan/cWcDgNH8AqQ4eJlJ4xaF9fTVDsL2Nn372FrzHGE5F
-	sPPKKoDcg8La8MHSRkey7d3JviMxZ4QGF5lW/fkMHFbM0IHvHpp/Vnmg31o6mh92HfOybnsbTH2
-	9cPNBrgBlUis2wbh6wMxaJg2mfZLFvUCVeYdynX1NnKQjrXBMx53yp6IrOo/KJ6A2pYg15gt/6s
-	m1w4CxyajYXDKa+H99+zu8gB8od74h1mHigIWzK+TtPSiroA==
-X-Received: by 2002:a05:7022:1b0e:b0:12f:1f67:e747 with SMTP id a92af1059eb24-131a6af4231mr1365231c88.40.1778067745415;
-        Wed, 06 May 2026 04:42:25 -0700 (PDT)
-Received: from [127.0.0.1] ([52.161.50.36])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-131f9679db9sm2899042c88.1.2026.05.06.04.42.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 May 2026 04:42:25 -0700 (PDT)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Gang Yan <yangang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20260506-sockopt_lock-v3-0-06bd417c6d63@kylinos.cn>
-References: <20260506-sockopt_lock-v3-0-06bd417c6d63@kylinos.cn>
-Subject: Re: [PATCH mptcp-net v3 0/2] mptcp: convert to sockopt_lock_sock
-Message-ID: <01c4dee8-289d-a05a-9ba3-f1561b08ef18@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 06 May 2026 11:42:24 +0000
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="tjcGq+k3"
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=sLeebekImrTGqdUhdzh6GLhOFMzUSJ/Ha7Dr/siyfyE=;
+	b=tjcGq+k3t+zaw0fv5S5plTg0d39XYnRCAOQQ8bXOiujUXf/QxYk0i2ynCC4CslERTMYvdBaJn
+	sWNHDsLwkxXMX4iyuriEueXrjT1ad8WqvNeDM/Wtu7kRot3rM9eaOv4Eaj0wsMt0QASlg1WtLDE
+	99MPuLRzmI5B0myIHqIlfjA=
+Received: from mail.maildlp.com (unknown [172.19.162.223])
+	by canpmsgout02.his.huawei.com (SkyGuard) with ESMTPS id 4g9bb96Jq1zcZyK;
+	Wed,  6 May 2026 21:20:05 +0800 (CST)
+Received: from kwepemj500018.china.huawei.com (unknown [7.202.194.48])
+	by mail.maildlp.com (Postfix) with ESMTPS id AA3DC40561;
+	Wed,  6 May 2026 21:27:14 +0800 (CST)
+Received: from [10.174.178.79] (10.174.178.79) by
+ kwepemj500018.china.huawei.com (7.202.194.48) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Wed, 6 May 2026 21:27:14 +0800
+Message-ID: <3245a905-81a8-46fb-8eac-8c42d259bb58@huawei.com>
+Date: Wed, 6 May 2026 21:27:13 +0800
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH mptcp-net v2 1/2] mptcp: pm: fix ADD_ADDR timer infinite
+ retry on option space insufficient
+To: Matthieu Baerts <matttbe@kernel.org>
+CC: "mptcp@lists.linux.dev" <mptcp@lists.linux.dev>, "weiyongjun (A)"
+	<weiyongjun1@huawei.com>, yuehaibing <yuehaibing@huawei.com>, zhangchangzhong
+	<zhangchangzhong@huawei.com>, <xiasong.lee@gmail.com>
+References: <20260430112026.343691-1-lixiasong1@huawei.com>
+ <20260430112026.343691-2-lixiasong1@huawei.com>
+ <177755524215.1566930.3209225574765644709.b4-review@b4>
+ <0430cd33-4d2e-4659-be1e-fada67bb9c6d@gmail.com>
+ <4792fa80-2485-47bc-9c50-0526c2f23484@kernel.org>
+From: Li Xiasong <lixiasong1@huawei.com>
+In-Reply-To: <4792fa80-2485-47bc-9c50-0526c2f23484@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: kwepems200002.china.huawei.com (7.221.188.68) To
+ kwepemj500018.china.huawei.com (7.202.194.48)
 
-Hi Gang,
+Hi Matt,
 
-Thank you for your modifications, that's great!
+I’m currently preparing the v3 update for this fix.
 
-Our CI did some validations and here is its report:
+In mptcp_pm_add_addr_signal(), when TCP option space is insufficient, we
+cancel the ADD_ADDR retrans timer via mptcp_pm_del_add_timer(). During
+analysis, I found a race window that can lead to one extra ADD_ADDR send
+attempt, so I’d like to confirm the intended semantics before posting v3.
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/254308=
-78759
+I see two race cases:
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/3f21f88a724c
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1090398
+Case 1: cancel state applied first (handled by existing counter check)
 
+CPU0 (cancel path)                          CPU1 (add_timer callback)
+--------------------------------------      -----------------------------------
+option space insufficient                   callback already running
+call mptcp_pm_del_add_timer()               ...
+acquire pm.lock                             ...
+set retrans_times = ADD_ADDR_RETRANS_MAX    ...
+release pm.lock                             ...
+stop timer                                  ...
+                                            acquire pm.lock
+                                            check retrans_times <
+                                              ADD_ADDR_RETRANS_MAX ?
+                                            false -> skip announce/send
+                                            release pm.lock
 
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+For this case, gating send by
+`retrans_times < ADD_ADDR_RETRANS_MAX` prevents stale send.
 
 
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+Case 2: callback takes lock first and sends before cancel applies
 
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+CPU0 (cancel path)                          CPU1 (add_timer callback)
+--------------------------------------      -----------------------------------
+option space insufficient                   callback already running
+call mptcp_pm_del_add_timer()               acquire pm.lock
+try acquire pm.lock -> blocked              check send conditions
+                                            announce/send ADD_ADDR  <- send
+                                            retrans_times++
+                                            release pm.lock
+acquire pm.lock                             ...
+set retrans_times = ADD_ADDR_RETRANS_MAX    ...
+release pm.lock                             ...
+stop timer                                  ...
+
+
+I’d like to discuss which semantic target is better for v3:
+
+A) best-effort cancel:
+   race may still allow at-most-one extra send attempt and `ADDADDRTXDROP`
+send-failure statistics may be incremented one extra time.
+
+B) strict cancel semantics:
+   once cancel is decided, no further ADD_ADDR send action
+
+My current understanding:
+- Case 1 can be covered by the existing retrans_times gate.
+- Case 2 is the key trade-off between complexity and strictness.
+
+Happy to hear your thoughts on which direction is preferable.
+I can prepare v3 accordingly.
+
+Thanks for the guidance.
+
+Best regards,
+Li Xiasong
+
+On 5/1/2026 11:13 PM, Matthieu Baerts wrote:
+> Hi Li,
+> 
+> On 01/05/2026 17:03, Li Xiasong wrote:
+>> On 4/30/26 9:20 PM, Matthieu Baerts wrote:
+>>> On Thu, 30 Apr 2026 19:20:25 +0800, Li Xiasong <lixiasong1@huawei.com> wrote:
+> 
+> (...)
+> 
+>>>> @@ -881,24 +889,47 @@ bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, const struct sk_buff *skb,
+>>>> [ ... skip 26 lines ... ]
+>>>> +			goto out_unlock;
+>>>> +
+>>>> +		if (*echo) {
+>>>> +			MPTCP_INC_STATS(net, MPTCP_MIB_ECHOADDTXDROP);
+>>>> +		} else {
+>>>> +			skip_add_addr = true;
+>>>
+>>> Even if I don't think we would have space issues with the echo, should
+>>> this variable also be set also in case of ADD_ADDR echo?
+>>>
+>>> (In this case, the variable could also simply be called 'skip', or
+>>> 'drop', similar to the MIB counters here.)
+>>>
+>>
+>> My current understanding is that the skip marker is only required for
+>> the non-echo ADD_ADDR path, because that is the one tied to the local
+>> ADD_ADDR retransmission timer flow.
+>>
+>> For the echo case here, it looks more like a reply path to a received
+>> peer ADD_ADDR, so on option-space shortage, clearing the signal bit and
+>> accounting the drop might be sufficient.
+>>
+>> But I may be missing something in this area — if you think echo should
+>> also go through the same skip handling, I can align with that in v3.
+> 
+> Indeed, you are right, I mixed thing up: when an ADD_ADDR echo is
+> received, the timer for the linked ADD_ADDR is stopped, but no timer
+> needs to be stopped when sending the ADD_ADDR echo. So no need to change
+> anything here.
+> 
+>>>> [ ... skip 13 lines ... ]
+>>>> +	/* On pure-ACK option-space exhaustion, stop retrying this ADD_ADDR:
+>>>> +	 * clear the signal bit, cancel the matching retransmission timer, and
+>>>> +	 * let the PM state machine progress.
+>>>> +	 */
+>>>> +	if (skip_add_addr)
+>>>> +		mptcp_pm_add_addr_skip(msk, addr);
+>>>
+>>> If you have to modify something else, maybe the new helper is not
+>>> needed, and the code can be added here directly? I know I suggested the
+>>> introduction of this helper, but now that I see the code, I think it
+>>> would be easier to understand the new comment above without it, and to
+>>> backport this patch.
+>>>
+>>
+>> Agreed. I'll likely inline that logic to keep the change simpler and
+>> easier to backport.
+>>
+>> FYI: I’m replying from my personal address during the holiday period, as
+>> I currently don’t have access to my corporate mailbox. I’ll keep
+>> following up on this patchset and send v3 shortly.
+> 
+> All good, no hurry here.
+> 
+> Cheers,
+> Matt
