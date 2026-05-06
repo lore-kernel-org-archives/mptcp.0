@@ -1,197 +1,176 @@
-Received: from canpmsgout02.his.huawei.com (canpmsgout02.his.huawei.com [113.46.200.217])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CC243EDAD3
-	for <mptcp@lists.linux.dev>; Wed,  6 May 2026 13:27:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.217
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CB043F1654
+	for <mptcp@lists.linux.dev>; Wed,  6 May 2026 13:34:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778074046; cv=none; b=mPHHQwxc94hP1WbTREETHveBKTVlF7nJd6MPtQDcdhy22oUnIgwhCwYUKLp9dvsYxxsRdxC8wLOpdZTNZl6C27M2jJBpYc952syCHARRSWzDKFgwFFnzFHDLnuVMyVZ/X0fWtVv2PKYtzzbY4zkr1oSJMZVnce3oR5v15Y2C6D4=
+	t=1778074499; cv=none; b=S+VQT/gaNSxFy095K1U9nP8CT/fGW11qh2lmmuara7OgzFnGxGXHPIBTGiAPH0emaGLS/28Gsh2NCNHaMnxtgTCvC8h0G9B8UK6d3jsk2XLIVf8qmLZ8xv7dKHO9X4yWuUshk+DLtHWYlzEPWLOiZ6g9wSueNKGfgXjSAV6Ca7c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778074046; c=relaxed/simple;
-	bh=QFqJBwCgBiSzO/KD0l2aNtWf4dwvNvY/LUA9OMrUapM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=WwB7Po5uDX2rl7NQOvBxpRpMlrB0BSOSIqTsZ/GtAvTWeRXpuMvFDTPpCzXDEau7qpY8UfzVdZDUykNsyI/dncfPuCHQ1Ed3Ev3KzO0pngi8a52ohzsWXeTbxYwDEa+DI0vd0cZHMaCJdeggLmt5ecYhoonpxTC6By5F/4a+Ivo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=tjcGq+k3; arc=none smtp.client-ip=113.46.200.217
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+	s=arc-20240116; t=1778074499; c=relaxed/simple;
+	bh=gO6ms/Mf6jb3mbPKGQ+2CiSOhmU62MTEwIapQXpu73Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GsKoNOvM4XjAjfBKxFHZSe1nfxwcE+HkhdRB2bM6B/VXLsfbnHdNovxG1d8BJTVzJwf6FZcJrqZMHChEgJf3FXaGrVmE6LeQ9DJTTQz0hp//+TbMyBo3Wzh39Pc9N7hoMqwKME9JDbOQ8f3geufAZNODsQm7lWO1TCazegEnnu4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eK1zb153; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="tjcGq+k3"
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=sLeebekImrTGqdUhdzh6GLhOFMzUSJ/Ha7Dr/siyfyE=;
-	b=tjcGq+k3t+zaw0fv5S5plTg0d39XYnRCAOQQ8bXOiujUXf/QxYk0i2ynCC4CslERTMYvdBaJn
-	sWNHDsLwkxXMX4iyuriEueXrjT1ad8WqvNeDM/Wtu7kRot3rM9eaOv4Eaj0wsMt0QASlg1WtLDE
-	99MPuLRzmI5B0myIHqIlfjA=
-Received: from mail.maildlp.com (unknown [172.19.162.223])
-	by canpmsgout02.his.huawei.com (SkyGuard) with ESMTPS id 4g9bb96Jq1zcZyK;
-	Wed,  6 May 2026 21:20:05 +0800 (CST)
-Received: from kwepemj500018.china.huawei.com (unknown [7.202.194.48])
-	by mail.maildlp.com (Postfix) with ESMTPS id AA3DC40561;
-	Wed,  6 May 2026 21:27:14 +0800 (CST)
-Received: from [10.174.178.79] (10.174.178.79) by
- kwepemj500018.china.huawei.com (7.202.194.48) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Wed, 6 May 2026 21:27:14 +0800
-Message-ID: <3245a905-81a8-46fb-8eac-8c42d259bb58@huawei.com>
-Date: Wed, 6 May 2026 21:27:13 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eK1zb153"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 574E4C2BCB8;
+	Wed,  6 May 2026 13:34:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1778074498;
+	bh=gO6ms/Mf6jb3mbPKGQ+2CiSOhmU62MTEwIapQXpu73Y=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=eK1zb153rQLOGWYOpYUkCRaljVNBeuku9C3VzmR/PsdZ3F8U4skQRkrThZu5Uv1r6
+	 c2P9ps7qwiTvjeL1PjNjrgHb7rST6e56IhOogMeIu9pZYHF9emiS68II6UARZqDlTs
+	 m5iiIRKDX5+RlvnbiJ5/PLAOWOyCJ1Z5+wwm8D5SRh1WSZYSuZUdwLAVFQFX8+iU5P
+	 d4nLnWA86mjlrdGLrXpLcNkjD9VPWXKD+G5AIbYbMQsE5zdUTzIz8vMG704n2/8iTC
+	 0WmVP6lV03r9wnmdhWFq/BsK8ILypAOaFqwa3Qp349RMkLY3Lr/CvczfDPASu9F+GS
+	 V8CGRQdDs1nUw==
+Message-ID: <4c4fbc89-ecfd-4eaf-b939-50e2d95b1f2b@kernel.org>
+Date: Wed, 6 May 2026 15:34:54 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
+User-Agent: Mozilla Thunderbird Beta
 Subject: Re: [PATCH mptcp-net v2 1/2] mptcp: pm: fix ADD_ADDR timer infinite
  retry on option space insufficient
-To: Matthieu Baerts <matttbe@kernel.org>
-CC: "mptcp@lists.linux.dev" <mptcp@lists.linux.dev>, "weiyongjun (A)"
-	<weiyongjun1@huawei.com>, yuehaibing <yuehaibing@huawei.com>, zhangchangzhong
-	<zhangchangzhong@huawei.com>, <xiasong.lee@gmail.com>
+Content-Language: fr
+To: Li Xiasong <lixiasong1@huawei.com>
+Cc: "mptcp@lists.linux.dev" <mptcp@lists.linux.dev>,
+ "weiyongjun (A)" <weiyongjun1@huawei.com>, yuehaibing
+ <yuehaibing@huawei.com>, zhangchangzhong <zhangchangzhong@huawei.com>,
+ xiasong.lee@gmail.com
 References: <20260430112026.343691-1-lixiasong1@huawei.com>
  <20260430112026.343691-2-lixiasong1@huawei.com>
  <177755524215.1566930.3209225574765644709.b4-review@b4>
  <0430cd33-4d2e-4659-be1e-fada67bb9c6d@gmail.com>
  <4792fa80-2485-47bc-9c50-0526c2f23484@kernel.org>
-From: Li Xiasong <lixiasong1@huawei.com>
-In-Reply-To: <4792fa80-2485-47bc-9c50-0526c2f23484@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+ <3245a905-81a8-46fb-8eac-8c42d259bb58@huawei.com>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <3245a905-81a8-46fb-8eac-8c42d259bb58@huawei.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: kwepems200002.china.huawei.com (7.221.188.68) To
- kwepemj500018.china.huawei.com (7.202.194.48)
 
-Hi Matt,
+Hi Li,
 
-I’m currently preparing the v3 update for this fix.
-
-In mptcp_pm_add_addr_signal(), when TCP option space is insufficient, we
-cancel the ADD_ADDR retrans timer via mptcp_pm_del_add_timer(). During
-analysis, I found a race window that can lead to one extra ADD_ADDR send
-attempt, so I’d like to confirm the intended semantics before posting v3.
-
-I see two race cases:
-
-Case 1: cancel state applied first (handled by existing counter check)
-
-CPU0 (cancel path)                          CPU1 (add_timer callback)
---------------------------------------      -----------------------------------
-option space insufficient                   callback already running
-call mptcp_pm_del_add_timer()               ...
-acquire pm.lock                             ...
-set retrans_times = ADD_ADDR_RETRANS_MAX    ...
-release pm.lock                             ...
-stop timer                                  ...
-                                            acquire pm.lock
-                                            check retrans_times <
-                                              ADD_ADDR_RETRANS_MAX ?
-                                            false -> skip announce/send
-                                            release pm.lock
-
-For this case, gating send by
-`retrans_times < ADD_ADDR_RETRANS_MAX` prevents stale send.
-
-
-Case 2: callback takes lock first and sends before cancel applies
-
-CPU0 (cancel path)                          CPU1 (add_timer callback)
---------------------------------------      -----------------------------------
-option space insufficient                   callback already running
-call mptcp_pm_del_add_timer()               acquire pm.lock
-try acquire pm.lock -> blocked              check send conditions
-                                            announce/send ADD_ADDR  <- send
-                                            retrans_times++
-                                            release pm.lock
-acquire pm.lock                             ...
-set retrans_times = ADD_ADDR_RETRANS_MAX    ...
-release pm.lock                             ...
-stop timer                                  ...
-
-
-I’d like to discuss which semantic target is better for v3:
-
-A) best-effort cancel:
-   race may still allow at-most-one extra send attempt and `ADDADDRTXDROP`
-send-failure statistics may be incremented one extra time.
-
-B) strict cancel semantics:
-   once cancel is decided, no further ADD_ADDR send action
-
-My current understanding:
-- Case 1 can be covered by the existing retrans_times gate.
-- Case 2 is the key trade-off between complexity and strictness.
-
-Happy to hear your thoughts on which direction is preferable.
-I can prepare v3 accordingly.
-
-Thanks for the guidance.
-
-Best regards,
-Li Xiasong
-
-On 5/1/2026 11:13 PM, Matthieu Baerts wrote:
-> Hi Li,
+On 06/05/2026 15:27, Li Xiasong wrote:
+> Hi Matt,
 > 
-> On 01/05/2026 17:03, Li Xiasong wrote:
->> On 4/30/26 9:20 PM, Matthieu Baerts wrote:
->>> On Thu, 30 Apr 2026 19:20:25 +0800, Li Xiasong <lixiasong1@huawei.com> wrote:
+> I’m currently preparing the v3 update for this fix.
+
+Thanks!
+
+> In mptcp_pm_add_addr_signal(), when TCP option space is insufficient, we
+> cancel the ADD_ADDR retrans timer via mptcp_pm_del_add_timer(). During
+> analysis, I found a race window that can lead to one extra ADD_ADDR send
+> attempt, so I’d like to confirm the intended semantics before posting v3.
 > 
-> (...)
+> I see two race cases:
 > 
->>>> @@ -881,24 +889,47 @@ bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, const struct sk_buff *skb,
->>>> [ ... skip 26 lines ... ]
->>>> +			goto out_unlock;
->>>> +
->>>> +		if (*echo) {
->>>> +			MPTCP_INC_STATS(net, MPTCP_MIB_ECHOADDTXDROP);
->>>> +		} else {
->>>> +			skip_add_addr = true;
->>>
->>> Even if I don't think we would have space issues with the echo, should
->>> this variable also be set also in case of ADD_ADDR echo?
->>>
->>> (In this case, the variable could also simply be called 'skip', or
->>> 'drop', similar to the MIB counters here.)
->>>
->>
->> My current understanding is that the skip marker is only required for
->> the non-echo ADD_ADDR path, because that is the one tied to the local
->> ADD_ADDR retransmission timer flow.
->>
->> For the echo case here, it looks more like a reply path to a received
->> peer ADD_ADDR, so on option-space shortage, clearing the signal bit and
->> accounting the drop might be sufficient.
->>
->> But I may be missing something in this area — if you think echo should
->> also go through the same skip handling, I can align with that in v3.
+> Case 1: cancel state applied first (handled by existing counter check)
 > 
-> Indeed, you are right, I mixed thing up: when an ADD_ADDR echo is
-> received, the timer for the linked ADD_ADDR is stopped, but no timer
-> needs to be stopped when sending the ADD_ADDR echo. So no need to change
-> anything here.
+> CPU0 (cancel path)                          CPU1 (add_timer callback)
+> --------------------------------------      -----------------------------------
+> option space insufficient                   callback already running
+> call mptcp_pm_del_add_timer()               ...
+> acquire pm.lock                             ...
+> set retrans_times = ADD_ADDR_RETRANS_MAX    ...
+> release pm.lock                             ...
+> stop timer                                  ...
+>                                             acquire pm.lock
+>                                             check retrans_times <
+>                                               ADD_ADDR_RETRANS_MAX ?
+>                                             false -> skip announce/send
+>                                             release pm.lock
 > 
->>>> [ ... skip 13 lines ... ]
->>>> +	/* On pure-ACK option-space exhaustion, stop retrying this ADD_ADDR:
->>>> +	 * clear the signal bit, cancel the matching retransmission timer, and
->>>> +	 * let the PM state machine progress.
->>>> +	 */
->>>> +	if (skip_add_addr)
->>>> +		mptcp_pm_add_addr_skip(msk, addr);
->>>
->>> If you have to modify something else, maybe the new helper is not
->>> needed, and the code can be added here directly? I know I suggested the
->>> introduction of this helper, but now that I see the code, I think it
->>> would be easier to understand the new comment above without it, and to
->>> backport this patch.
->>>
->>
->> Agreed. I'll likely inline that logic to keep the change simpler and
->> easier to backport.
->>
->> FYI: I’m replying from my personal address during the holiday period, as
->> I currently don’t have access to my corporate mailbox. I’ll keep
->> following up on this patchset and send v3 shortly.
+> For this case, gating send by
+> `retrans_times < ADD_ADDR_RETRANS_MAX` prevents stale send.
 > 
-> All good, no hurry here.
 > 
-> Cheers,
-> Matt
+> Case 2: callback takes lock first and sends before cancel applies
+> 
+> CPU0 (cancel path)                          CPU1 (add_timer callback)
+> --------------------------------------      -----------------------------------
+> option space insufficient                   callback already running
+> call mptcp_pm_del_add_timer()               acquire pm.lock
+> try acquire pm.lock -> blocked              check send conditions
+>                                             announce/send ADD_ADDR  <- send
+>                                             retrans_times++
+>                                             release pm.lock
+> acquire pm.lock                             ...
+> set retrans_times = ADD_ADDR_RETRANS_MAX    ...
+> release pm.lock                             ...
+> stop timer                                  ...
+> 
+> 
+> I’d like to discuss which semantic target is better for v3:
+> 
+> A) best-effort cancel:
+>    race may still allow at-most-one extra send attempt and `ADDADDRTXDROP`
+> send-failure statistics may be incremented one extra time.
+
+I think that's OK to send an extra attempt, especially here where it is
+quite unlikely to get this race.
+
+> B) strict cancel semantics:
+>    once cancel is decided, no further ADD_ADDR send action
+> 
+> My current understanding:
+> - Case 1 can be covered by the existing retrans_times gate.
+> - Case 2 is the key trade-off between complexity and strictness.
+
+Case 1 looks fine to me, but do you mind documenting the possible race
+in the code and/or commit message depending on the patch, please?
+
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
+
