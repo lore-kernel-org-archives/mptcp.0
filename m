@@ -1,34 +1,34 @@
-Received: from out-180.mta1.migadu.com (out-180.mta1.migadu.com [95.215.58.180])
+Received: from out-182.mta1.migadu.com (out-182.mta1.migadu.com [95.215.58.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 446D93EBF36
-	for <mptcp@lists.linux.dev>; Wed,  6 May 2026 09:43:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A7F53ECBE8
+	for <mptcp@lists.linux.dev>; Wed,  6 May 2026 10:34:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778060613; cv=none; b=Pf9DhH37WbmE/9Qqi4OXtwYNtk4xvKx5IjGQF8TOB2FYbovTBaK3P06WnuPLuWdB3nhZA7VSOWvRYGFCTveCd+E0qzbuttpub6jggbhAk8GlQrhXJ1pdYKibhJJ55tqLhgVvRvikTxSzv9AaNs12eXN5dFWc/vTxdPbCSeQ4n2U=
+	t=1778063665; cv=none; b=hgsswGqNsr6i6tS3yQs9YAji8Povg6SdIZ5XRcJeixsw47vux98YhvWp3tPG9CU2IEOfksm4B++itlx5If6m9q5OTGmEtqdVwx58Y3SNNCkE157lBt2yMFCFJkjW+psi1vuFpzS8oMkzW8PIM4MGV2TbVcm63XQa5HGeU1ptzyI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778060613; c=relaxed/simple;
-	bh=JFmPt6gxAeFfyCVE/OjfuXZzCM0gGTT87J0l139SDmA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=O3TAMbI7bAcRUImNsSsjYwMTxzZ+XB0172DX0YJRT+wQi7mFkSYKPJsWdEZingmmxpVx/k4DReOxYPq39g0jMeV8okD/RbU2LcLgGSCQ8mr76tnLRahMARFGjl1h9WW6O5qcFERNqELZfrCxdL7UrMAnJXNpoDJL/K4Vhs0n8ms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=oxoDbEJt; arc=none smtp.client-ip=95.215.58.180
+	s=arc-20240116; t=1778063665; c=relaxed/simple;
+	bh=VfGH5jkceJ0FWPDjuYU+YNBPXiH61sxu9bUwgfW05Ic=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=UUxfzb+EFpAFLz13I9yWxia/xREcYQDdFQ1Rbmk6HUFZ/G7XXZObsb+r3KywbL7+PhejPW1pLqrLk6Wf/kNR3/r7A1p4GF5M7OelsuSBRJIMvgwCKf1DBVOVgbeHbKbJvILdMvrVUf6eDPjOb9Ai6eP/fhoQUUF/g9PWEDQvtxA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=YWvXh1Qb; arc=none smtp.client-ip=95.215.58.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="oxoDbEJt"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="YWvXh1Qb"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1778060609;
+	t=1778063661;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding;
-	bh=FN23yyCWNheCgqbUAJFZhYIRPNzsokrX9kl+ShPDAZ8=;
-	b=oxoDbEJtjjYMwcnqQX7jgFfFZplJ2cc4KPqP3T3p2M+xHl9If8ILORK0grXeAxpsi2cTMW
-	n1JJ2xQrJqH1UFJUGXUMj64traDWkR20szj5jwb2XG6C0FpPxCF4D4nLR0hRO651mWNBkM
-	Upsj9I2JZer7hv1wMylXA8JJ3hwaiWA=
+	bh=p8h9Urj4eeEpGS5gKIpvgQGlbvLFhtas4fT9pScXojk=;
+	b=YWvXh1Qb3tPtwY6njxFH9Bkx1Rz2r9k63lfdEya1wIW9E1sAV2BFUDCp1I+iFer7CHe2Aj
+	TBvEEv19n0+ikcmLzC7WIzSZdqM9dI6dXcmZdowhNtYVkMNhm8fudDSXYW6/ZPrzbI3BKT
+	YhzFfwL6nZFUITKMkcGE9ofA915zWYE=
 From: Gang Yan <gang.yan@linux.dev>
-Date: Wed, 06 May 2026 17:43:04 +0800
-Subject: [PATCH mptcp-net v3] mptcp: update window_clamp on subflows when
- SO_RCVBUF is set
+Subject: [PATCH mptcp-net v3 0/2] mptcp: convert to sockopt_lock_sock
+Date: Wed, 06 May 2026 18:33:53 +0800
+Message-Id: <20260506-sockopt_lock-v3-0-06bd417c6d63@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -37,76 +37,49 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260506-window_clamp-v3-1-ade82fbbebb2@kylinos.cn>
-X-B4-Tracking: v=1; b=H4sIACcN+2kC/x3MQQqAIBBA0avErBPESKyrRITpWANpolFBdPek5
- Vv8/0DGRJihrx5IeFKmPRQ0dQVm1WFBRrYYBBeSt1yyi4Ldr8ls2kemtLLCza5R2EFJYkJH978
- bwMfDRBbwgPF9PyoudXJpAAAA
+X-B4-Tracking: v=1; b=H4sIABEZ+2kC/x2MQQqAIBAAvxJ7ThArrb4SEaFbLZWKSgTR35NOw
+ xxmHogYCCP0xQMBL4rkbJaqLEBvs12RkckOggvJGy5ZdHp3Pk1HJtO1bCtlpOmMgpz4gAvd/26
+ A0yftmcUE4/t+FVcrnWkAAAA=
 To: MPTCP Linux <mptcp@lists.linux.dev>
 Cc: Gang Yan <yangang@kylinos.cn>
 X-Migadu-Flow: FLOW_OUT
 
-From: Gang Yan <yangang@kylinos.cn>
+This small series makes the MPTCP sockopt codepaths consistent with
+TCP and the core socket layer by using the BPF-aware
+sockopt_lock_sock()/sockopt_release_sock() helpers introduced in
+commit 24426654ed3a ("bpf: net: Avoid sk_setsockopt() taking sk lock
+when called from bpf").
 
-Add __mptcp_subflow_set_rcvbuf() helper that calls the tcp_set_rcvbuf
-to update window_clamp, in addition to writing sk_rcvbuf. Use it in
-both mptcp_sol_socket_sync_intval() (setsockopt path) and
-sync_socket_options() (new subflow creation path).
+Patch 1 switches all lock_sock()/release_sock()/lock_sock_fast() calls
+in MPTCP sockopt handlers to use the BPF-aware wrappers, avoiding the
+risk of sleeping in atomic context when lock_sock_fast() is used.
 
-Fixes: a2cbb1603943 ("tcp: Update window clamping condition")
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/619
-Signed-off-by: Gang Yan <yangang@kylinos.cn>
----
+Patch 2 switches ns_capable() to sockopt_ns_capable() in the
+congestion control setsockopt path, properly handling the case where
+BPF programs invoke setsockopt from softirq context.
+
+Both patches are fixes that should have been part of the original
+BPF sockopt series.
+
 Changelog:
 v3:
-  - Remove the special symbols.
+  - Remove the special symbols in v2.
+  - Use sockopt_ns_capable to replace ns_capable.
+
 v2:
-  - Optimize the commit msg.
-  Link: https://patchwork.kernel.org/project/mptcp/patch/20260416122945.324166-1-gang.yan@linux.dev/
-v1:
-  Link: https://patchwork.kernel.org/project/mptcp/patch/20260416122945.324166-1-gang.yan@linux.dev/
+  Link: https://patchwork.kernel.org/project/mptcp/patch/20260422091927.77770-3-gang.yan@linux.dev/
+
+Signed-off-by: Gang Yan <yangang@kylinos.cn>
 ---
- net/mptcp/sockopt.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+Gang Yan (2):
+      mptcp: use sockopt_lock(release)_sock in sockopt
+      mptcp: use sockopt_ns_capable() in setsockopt congestion control
 
-diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-index 1cf608e7357b..1544e3563852 100644
---- a/net/mptcp/sockopt.c
-+++ b/net/mptcp/sockopt.c
-@@ -67,6 +67,12 @@ static int mptcp_get_int_option(struct mptcp_sock *msk, sockptr_t optval,
- 	return 0;
- }
- 
-+static inline void __mptcp_subflow_set_rcvbuf(struct sock *ssk, int val)
-+{
-+	WRITE_ONCE(ssk->sk_rcvbuf, val);
-+	tcp_set_rcvbuf(ssk, val);
-+}
-+
- static void mptcp_sol_socket_sync_intval(struct mptcp_sock *msk, int optname, int val)
- {
- 	struct mptcp_subflow_context *subflow;
-@@ -100,7 +106,7 @@ static void mptcp_sol_socket_sync_intval(struct mptcp_sock *msk, int optname, in
- 		case SO_RCVBUF:
- 		case SO_RCVBUFFORCE:
- 			ssk->sk_userlocks |= SOCK_RCVBUF_LOCK;
--			WRITE_ONCE(ssk->sk_rcvbuf, sk->sk_rcvbuf);
-+			__mptcp_subflow_set_rcvbuf(ssk, sk->sk_rcvbuf);
- 			break;
- 		case SO_MARK:
- 			if (READ_ONCE(ssk->sk_mark) != sk->sk_mark) {
-@@ -1560,7 +1566,7 @@ static void sync_socket_options(struct mptcp_sock *msk, struct sock *ssk)
- 			mptcp_subflow_ctx(ssk)->cached_sndbuf = sk->sk_sndbuf;
- 		}
- 		if (sk->sk_userlocks & SOCK_RCVBUF_LOCK)
--			WRITE_ONCE(ssk->sk_rcvbuf, sk->sk_rcvbuf);
-+			__mptcp_subflow_set_rcvbuf(ssk, sk->sk_rcvbuf);
- 	}
- 
- 	if (sock_flag(sk, SOCK_LINGER)) {
-
+ net/mptcp/sockopt.c | 123 ++++++++++++++++++++++++++--------------------------
+ 1 file changed, 61 insertions(+), 62 deletions(-)
 ---
 base-commit: aa15c271d79edde595fb6f4eedb52fbc16325a83
-change-id: 20260506-window_clamp-8a8d2fbf38e9
+change-id: 20260506-sockopt_lock-c46837d6d9d7
 
 Best regards,
 -- 
