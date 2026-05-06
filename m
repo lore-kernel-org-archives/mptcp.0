@@ -1,115 +1,129 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dl1-f47.google.com (mail-dl1-f47.google.com [74.125.82.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2132E3A3E67;
-	Wed,  6 May 2026 11:21:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F29136CDEB
+	for <mptcp@lists.linux.dev>; Wed,  6 May 2026 11:42:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778066471; cv=none; b=oHsorOTub3879H2RyD233xW1T+vJpDrN7pTp+PlHMlKghRM3RtAJbI4Fc13fqgX+oJ+8AwO3JdgATrmR/9HsfzUNr/qlxHoyMd+iIakV99uxgyVMixmq9E/qbphacu7CLZ503A7GjgKKO/scG+3PesI8OjzMBT9PoZFe/rbtdgI=
+	t=1778067747; cv=none; b=T0RJVQGzCc53DgOmnlBbHxhNqs7kPSeGxd+K7pUZDnEwQZ5wh0G0jVsr6S0QY5T6UPIV89Slv91HQ89+nei5dMsRH7df7RPz/4yJKMR87ssgPETBQB5Dcp3SQ6cvz/rxxbcEM87xWNH62n+Ybaegna9BmRizeUkOJ5ThzFjXVhY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778066471; c=relaxed/simple;
-	bh=t8pAfFxbETZk+L6nG5wrJEImgnRQ7kft/H+f7Nkt/ao=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qIR6RUJxkGaBZ06z/r7T1wAym8V/k1BXHFxFl8c1jcfwp77KQFSU0nH5TOCFVosyf6oSLJ8R/xF5a0at+W5tpQV8tIDbin17QK0WiMOpMnHWOSxPAvhH3WJmuZrVczVLwVIng6E7I3SWxjKyw6bKiIdMVWWrDNUiKWqbXDeeHC4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qt3EbMvp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1778067747; c=relaxed/simple;
+	bh=cFEliZ/CH31J3E7XMcQlGiXo89QWTjxV57g4u36fL9A=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
+	 MIME-Version:Content-Type; b=fCYPQtHx4Rie37Rd7aAhwmPWGX6eyWABv66ScqEU5OmnuhogtKPpIPHyUZ/q92JtylON7LKMN+1KiZLCzJ8v3+/2z9yC9qigmjJTrcZAUqGerjN052qbd034mcaSx7gyiZ0gslRuyjd/cpc21LBVxqV36Y20LpeT4aRKDNCO6J4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GO8AFsg9; arc=none smtp.client-ip=74.125.82.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qt3EbMvp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D38AC2BCB8;
-	Wed,  6 May 2026 11:21:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778066470;
-	bh=t8pAfFxbETZk+L6nG5wrJEImgnRQ7kft/H+f7Nkt/ao=;
-	h=From:To:Cc:Subject:Date:From;
-	b=Qt3EbMvpi+yqn36ygSRnOcoR3iAOCw+/CUWshY2WmMJS/pvpvIwFqnPHCM6+l3D7u
-	 6r0DU/wkzllety+5i2sdnNyFBgt9GqROby3tjwIWG5Z51i2czIZJR6ivvFWfIFsrDe
-	 Zg+DSSI95mIDGRKaaI0afG4cIDzih08or4+7HTjzGIZAWicHD2TJRbJwPFK5lhmA6N
-	 R74LuY0JyZyYorcG8yQ8B3pJEhYN2ENo0uDzm3miXi8MpBPXIGLJ8PL/HZKK2Ncnua
-	 MCbXzGlqfBjv103GoAelaMf1ys9PODgvZgdC6kNB/khpac5s03wk6L3fnp3+bmwK6b
-	 XGAPtTzXfQVrQ==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-To: stable@vger.kernel.org,
-	gregkh@linuxfoundation.org,
-	sashal@kernel.org
-Cc: MPTCP Upstream <mptcp@lists.linux.dev>,
-	Gang Yan <yangang@kylinos.cn>,
-	Paolo Abeni <pabeni@redhat.com>,
-	"Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Subject: [PATCH 6.18.y] mptcp: sync the msk->sndbuf at accept() time
-Date: Wed,  6 May 2026 13:20:41 +0200
-Message-ID: <20260506112040.3503275-2-matttbe@kernel.org>
-X-Mailer: git-send-email 2.53.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GO8AFsg9"
+Received: by mail-dl1-f47.google.com with SMTP id a92af1059eb24-12c19d23b19so9351845c88.0
+        for <mptcp@lists.linux.dev>; Wed, 06 May 2026 04:42:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1778067746; x=1778672546; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=z32lpHCwcB8VVZKxM1S4Lo8oLHLi0hV85Tk0tO2ksZc=;
+        b=GO8AFsg9+iPHM2rT9NktFLQgMsbKE11VqXEh4yR7LwLFn7/4DU+BdSA9LRJKoIgCnz
+         5ZG7WYKBxE7GN0GfX7mlbY9k3hBuqCOMYO7Ik1CK4e1ymoIKuYbGh7fJIi990NiIXbeQ
+         hNIft4IHwCPmmv/oaxIbKxUwgVlI4haKX1XsqLMTKSCpHLfbUKnTZ0okYreF+us1ZRqS
+         rT6AMiThleQbL3hb7wQQVUqoUUES8YudIMj2pEW9ECI9hunU+llyhcGvE0t7lWsVDYR3
+         T9HcX0qjH3UAvccY2gU/fhcEjHVGwlAmbZo438FeQk1227KNsqR8KnNtz1o8y1jOX1OL
+         2mGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1778067746; x=1778672546;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=z32lpHCwcB8VVZKxM1S4Lo8oLHLi0hV85Tk0tO2ksZc=;
+        b=IIdRv2QdHkXuxk4q3PubixThOkg9Z4eEvO3/KpHXQ/R4gU9F9l+EXBw9SYq8Sq2jVl
+         2S5DBr5P1H5U8ggBGlI50b8jcwVakrOlzAiSsFazJKa0dRwj1IdZBYM+Rbs00SxbjEMO
+         TSJBW1+5dOsCGmR+uiZwQ8nrb25lhNhAUpX7A8Lmqbp3RR5SDB5AAPqHn6dfS1K06ZN5
+         Rp7Eo6pr4sA2phrueqLYZhXkQmH0sUifUrC4brgjZoYG3RvBGyQv8v+/n0j/AyAibQEW
+         2f+Fu0nXhaLbW7FxcuK+IXgzesd+xCz2g5n9UCbFXPSKxH5WzBoCQWWIbxmc8J1ONr+m
+         W6hw==
+X-Gm-Message-State: AOJu0YxtkUC/PU7NTNXmLksvRqmzd4/n/dmbP0EQ0uEy1sgTFkt6CJWD
+	CLd6NxeuzReSESnU4p1p+h+bmKmJAhBbVtWxBTUx+p7Ed/aAHysVYOx+ALxY
+X-Gm-Gg: AeBDieu0FIofQWP4+vA5vUQM4q03oe1K6DdK8Rl7DgFUs3/G/PZm6PxGqi1ybXf5A7Z
+	8ctaK8/kSDaz9i6IGhaHH80mXZRqNwt+lOXiCdN1+L/1t+4rZ8UGEa1hmKpqBCJ1oYiGR71+WcE
+	3ZIgKQb9439g0NPheoPsHmZ4Im7BP3v5BubKZAfleU+d37HBgVOWMz4sny/BjyoWl/bVIKC+p4Y
+	52dR+ahOI3QBT1bmIF9vAhj7NIKXYQJan/cWcDgNH8AqQ4eJlJ4xaF9fTVDsL2Nn372FrzHGE5F
+	sPPKKoDcg8La8MHSRkey7d3JviMxZ4QGF5lW/fkMHFbM0IHvHpp/Vnmg31o6mh92HfOybnsbTH2
+	9cPNBrgBlUis2wbh6wMxaJg2mfZLFvUCVeYdynX1NnKQjrXBMx53yp6IrOo/KJ6A2pYg15gt/6s
+	m1w4CxyajYXDKa+H99+zu8gB8od74h1mHigIWzK+TtPSiroA==
+X-Received: by 2002:a05:7022:1b0e:b0:12f:1f67:e747 with SMTP id a92af1059eb24-131a6af4231mr1365231c88.40.1778067745415;
+        Wed, 06 May 2026 04:42:25 -0700 (PDT)
+Received: from [127.0.0.1] ([52.161.50.36])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-131f9679db9sm2899042c88.1.2026.05.06.04.42.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 May 2026 04:42:25 -0700 (PDT)
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Gang Yan <yangang@kylinos.cn>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20260506-sockopt_lock-v3-0-06bd417c6d63@kylinos.cn>
+References: <20260506-sockopt_lock-v3-0-06bd417c6d63@kylinos.cn>
+Subject: Re: [PATCH mptcp-net v3 0/2] mptcp: convert to sockopt_lock_sock
+Message-ID: <01c4dee8-289d-a05a-9ba3-f1561b08ef18@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 06 May 2026 11:42:24 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2562; i=matttbe@kernel.org; h=from:subject; bh=BEaBaPBycOtz3qPcGxLrqt/+6Rdvbe/eSge+OnR3do0=; b=kA0DAAoWfCLwwvNHCpcByyZiAGn7JAnIoee95nSGgQiUt2HCyEkSz0B0gn2+2RUnHINB5V+B5 oh1BAAWCgAdFiEEG4ZZb5nneg10Sk44fCLwwvNHCpcFAmn7JAkACgkQfCLwwvNHCpeFSQEAkw6b OLP+ZCaA2uxVh4stcM10u2771uDgnZTnXSZQBhABAPv9gBWIVKNqPd4AqiWIQd98eOP+NiDLDsK SYReva3IE
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
 
-From: Gang Yan <yangang@kylinos.cn>
+Hi Gang,
 
-commit fcf04b14334641f4b0b8647824480935e9416d52 upstream.
+Thank you for your modifications, that's great!
 
-On passive MPTCP connections, the msk sndbuf is not updated correctly.
+Our CI did some validations and here is its report:
 
-The root cause is an order issue in the accept path:
+- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/254308=
+78759
 
-- tcp_check_req() -> subflow_syn_recv_sock() -> mptcp_sk_clone_init()
-  calls __mptcp_propagate_sndbuf() to copy the ssk sndbuf into msk
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/3f21f88a724c
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1090398
 
-- Later, tcp_child_process() -> tcp_init_transfer() ->
-  tcp_sndbuf_expand() grows the ssk sndbuf.
 
-So __mptcp_propagate_sndbuf() runs before the ssk sndbuf has been
-expanded and the msk ends up with a much smaller sndbuf than the
-subflow:
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
 
-  MPTCP: msk->sndbuf:20480, msk->first->sndbuf:2626560
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
 
-Fix this by moving the __mptcp_propagate_sndbuf() call from
-mptcp_sk_clone_init() -- the ssk sndbuf is not yet finalized there -- to
-__mptcp_propagate_sndbuf() at accept() time, when the ssk sndbuf has
-been fully expanded by tcp_sndbuf_expand().
+For more details:
 
-Fixes: 8005184fd1ca ("mptcp: refactor sndbuf auto-tuning")
-Cc: stable@vger.kernel.org
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/602
-Signed-off-by: Gang Yan <yangang@kylinos.cn>
-Acked-by: Paolo Abeni <pabeni@redhat.com>
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Link: https://patch.msgid.link/20260420-net-mptcp-sync-sndbuf-accept-v1-1-e3523e3aeb44@kernel.org
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-[ No conflicts, but move __mptcp_propagate_sndbuf() above the for-loop
-  (mptcp_for_each_subflow()) present in this version, which will modify
-  'subflow' used by __mptcp_propagate_sndbuf() in this new patch. ]
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- net/mptcp/protocol.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 09e1a93b7daa..c805d36fe50d 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -3428,7 +3428,6 @@ struct sock *mptcp_sk_clone_init(const struct sock *sk,
- 	 * uses the correct data
- 	 */
- 	mptcp_copy_inaddrs(nsk, ssk);
--	__mptcp_propagate_sndbuf(nsk, ssk);
- 
- 	mptcp_rcv_space_init(msk, ssk);
- 	msk->rcvq_space.time = mptcp_stamp();
-@@ -4027,6 +4026,8 @@ static int mptcp_stream_accept(struct socket *sock, struct socket *newsock,
- 		msk = mptcp_sk(newsk);
- 		msk->in_accept_queue = 0;
- 
-+		__mptcp_propagate_sndbuf(newsk, mptcp_subflow_tcp_sock(subflow));
-+
- 		/* set ssk->sk_socket of accept()ed flows to mptcp socket.
- 		 * This is needed so NOSPACE flag can be set from tcp stack.
- 		 */
--- 
-2.53.0
 
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
