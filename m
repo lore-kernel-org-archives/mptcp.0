@@ -1,130 +1,243 @@
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFD253F54D8
-	for <mptcp@lists.linux.dev>; Thu,  7 May 2026 13:40:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B11593EFD2A;
+	Thu,  7 May 2026 16:13:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778161240; cv=none; b=n0IVrsd4ax9Qk1aZXn4RPrciTEOMCLsVv5d+pROBS/L1tC/8HUcV1qFHaFA1/06aV3jySUu9NDGyrVshtwx0W/NQ8lGiNFuh0PabOcuPIGKizcaeXSJmtNIP2dDJPIJZk0infX9XijwOa6i0CB4O3bvc1xBLUTGFXdz99YPQLF0=
+	t=1778170382; cv=none; b=hFMFJw0ElRlJKmYc1HxqaobaFbNdNlEwSW99S4G1AqvixhgSIE05u/coR/KtppmeLSQwavfBlIw1UZWefG7XdLNBSjXHXfj3xSscL5r+94Mjs6WDwP4gNUAZxP9aAStNn+NSpNh+tuFHQ3FypGiwr/Wlzd5v2mKWgEQScKfaq1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778161240; c=relaxed/simple;
-	bh=7KRMbNqEGC5oymGBIrtELhP6CuQFaxxuTy1uzqYlPVU=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
-	 MIME-Version:Content-Type; b=S8DwMzMXuroFwSgjhNY+7m+s7XkErQoo5aGyoEPsUvtuDB7NsdYcw8DaEQZRplLxQMyFi5RZRIIRmIaJZ7LdQNOJmYwJP/GzXa/RYMze+R9SXNXvPyRysTKHGmb7k98n+WjKwS9MbaAmrf0ff6doW/K1cOmRE6L5K8b6h3XWBF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jNd7lbKX; arc=none smtp.client-ip=209.85.160.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1778170382; c=relaxed/simple;
+	bh=ex2k+tQzCOViUN/yUnsO5c6ctZ5+/pBXAtFzWgkCChY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Rty6YNetbdwT6I/f4Wh2EeDV/MJfAdqsX0LYi0o7aZG9Vw4RWP48BirK7iqion/0Un0fbujbnRJ6mZtvJ+L8inZqy1dHNSDT0F5oaOHmLloc+HOzlnzwWeuSSLhGLwpO/0z7QmWALGgoFSgdF343YvUlCfDUHK9wQNQqnfvPhm4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L2BDwGeA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jNd7lbKX"
-Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-50d6b9bca48so10349991cf.2
-        for <mptcp@lists.linux.dev>; Thu, 07 May 2026 06:40:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1778161238; x=1778766038; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7SJ63qvOZs1egGec9TVRxRv7ALGMg/maIJrgPV3xKWg=;
-        b=jNd7lbKXCzJRJdOflK5eYMzN91pO7UKKxodz7+Nht1Y4FngNYdOncL6zh3wuBWMd09
-         UcmNG2Wj3QXQ3kUvOgShwoFKAdXgqC7rnyDhQWEN4SUm5sCsYvvmuBvjfyqgDBfyANuC
-         AAtSslmE1vem/A2GkeiKmXulrhvNteUBKrDlW7CYVZcrerEXDcnsGq0fpI01Lh6E3ehC
-         9La27qUIbvXtBy1I7TsCaAgplMEb1rMJtSmNa0TB7YUcCSmkI94Xabd+IoM2po54RA/4
-         TgEfmBNbHsr9LAQSF4CbBlisB+NBBJPWKRQ9vdQtf5yEAFtyKJtqk8dP1VVbI3eleIoo
-         z/1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778161238; x=1778766038;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7SJ63qvOZs1egGec9TVRxRv7ALGMg/maIJrgPV3xKWg=;
-        b=iz48F5gxwqHmCxBALIl7XPTzsjwARXsHi8Immh4CBzmoOgd65F1Aa2CMjZOtqFUoCq
-         pCsWtyeWskhxSfkf6GlZbA9D95b8iX04bVRzmGgpR+FIXes2VYbTwsvKqICQNO0AGO4i
-         fRY7BzCbTDJ3Pbd06AJrwyA69MA7WHpYcujLaPH3g5DX1XdGd2nYbjj6QlLJpm43GmM0
-         rSlQV9ftZYYyScQuye2uv/itA3NtIs3jWQBmISLaAxWUh4SwfSUh5ajZEtMInhz5DAXD
-         yqStw0Vlkfff9mjoyt6SUBe9gUQ+Ss77opcNmKMI5va8Lu0JJ7+CxC85Jeb7FvR15hd7
-         T1MQ==
-X-Gm-Message-State: AOJu0YwHOTl3eARxN1jGR06ApGYltIvuk4Qs5fWiESNJI42+CDq/5zlI
-	8AUJ03l0MJyyKTpB8MWR/QUXaBFhnGv+UohKVLpF2ls5o4nJW6E6wkE=
-X-Gm-Gg: AeBDietdnrmkOHA3jdMuq6F4GHuxJbimso7WMPuY3g13Vy2NjcnlvRzbN0clUnOC6Og
-	TJsNMz5krHmD8whUbkrgxvp79/tmmRnhCK33iMB2h2SE4XC324SUSEXQv6GtPV8pxY6vZjTYdcO
-	t8WCXMpuKvz5hG+w/W/GfE1yiSbKPPe33vUIK9ImgDMkY2o6rvzFaHQo/Qydw4Y62lTamymDuA5
-	kCGU7/QL8tbFgfZiLSsjo8qohPieta5qbDpIupGDql28qcdZkoh05Yk0di8cMbTqgnlM12J/9MO
-	gh+iEOQhMRrX607F5Rm5wsPqZ4zfyv/Y/PHjiyQUlWMDyxo/d0h8rpcZpJ9reW8cvk7d8GoUE0m
-	H20m6fGa3FgFxcrs8McO4QJ7uxldxKJHGY9zacTpdEfTD48oiQgZ1D5fNJgb2BPLaC2R8FyoA+R
-	kKheg9rdDMkVnL2Wr1JaVfc375ZpwKQUcp5wQI/wEgOGm38Q==
-X-Received: by 2002:a05:622a:5989:b0:510:2506:1ba9 with SMTP id d75a77b69052e-51461fd438fmr120525691cf.49.1778161238411;
-        Thu, 07 May 2026 06:40:38 -0700 (PDT)
-Received: from [127.0.0.1] ([68.154.37.65])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-5104090bb03sm176058181cf.10.2026.05.07.06.40.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 May 2026 06:40:37 -0700 (PDT)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Li Xiasong <lixiasong1@huawei.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20260507125224.3536507-1-lixiasong1@huawei.com>
-References: <20260507125224.3536507-1-lixiasong1@huawei.com>
-Subject: Re: [PATCH mptcp-net v3 0/2] mptcp: pm: fix ADD_ADDR timer
- infinite retry on option space shortage
-Message-ID: <4a212ce3-57e1-7273-ce0d-40196d22409d@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 07 May 2026 13:40:37 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L2BDwGeA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34F0FC2BCB2;
+	Thu,  7 May 2026 16:13:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1778170382;
+	bh=ex2k+tQzCOViUN/yUnsO5c6ctZ5+/pBXAtFzWgkCChY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=L2BDwGeA+qWMKfoIi44IilHZ6osHmbOC/wdCJrh4Mdkf5tDKK/tfXpMKGwmQ64745
+	 bWvBT/EFIYqASy7P13+YlU6aWy4tM3e86TYFczDuBJNHJoFstBqlZ7eN6yj8jzKO2t
+	 j+XG6L4YR6MHl7W8bggDAQiBaDrVXpKmUaZU9ijpKhlkz0IVwE4KZSsnC50bbwl68O
+	 7zRdzyHg8hdPoWCbldwlog3y1HUeJVyJak8rz6y09mgnF+DCFKFKwzuD6DTaFSNt3F
+	 zQgB4zerHO9ZEdjbf5ZkDJti5iT89L27WBG4/JCWhQ/EWhaLYquUWcMvvBCmxPscAc
+	 B05nudQhDXT2A==
+Message-ID: <e04af31d-d472-4064-9490-c6554cd9ccc5@kernel.org>
+Date: Thu, 7 May 2026 18:12:56 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH] mptcp: serialize subflow->closing with RX path
+To: Kalpan Jani <kalpan.jani@mpiricsoftware.com>, martineau@kernel.org,
+ mptcp@lists.linux.dev, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: shardul.b@mpiricsoftware.com, janak@mpiric.us, kalpanjani009@gmail.com,
+ shardulsb08@gmail.com
+References: <20260507072802.612125-1-kalpan.jani@mpiricsoftware.com>
+From: Matthieu Baerts <matttbe@kernel.org>
+Content-Language: fr
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <20260507072802.612125-1-kalpan.jani@mpiricsoftware.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Li,
+Hi Kalpan,
 
-Thank you for your modifications, that's great!
+On 07/05/2026 09:28, Kalpan Jani wrote:
+> There is a race between mptcp_data_ready() (RX path) and
+> mptcp_close_ssk() (teardown path) when accessing subflow->closing.
 
-Our CI did some validations and here is its report:
+Thank you for sharing this patch!
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/254967=
-68062
+Sadly, this patch doesn't apply and looks corrupted:
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/274d555dc3cf
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1091028
+  Applying: mptcp: serialize subflow->closing with RX path
+  error: corrupt patch at line 44
+  error: could not build fake ancestor
 
+Did you manually edit it without changing the line references?
 
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
+While at it, please follow the rules from:
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+  https://docs.kernel.org/process/maintainer-netdev.html
 
-For more details:
+=> designate your patch to a tree: [PATCH net]
 
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+It might be easier if you send new versions only to the MPTCP ML (not
+ccing netdev).
 
+> Currently, mptcp_data_ready() checks subflow->closing before acquiring
+> mptcp_data_lock(), while mptcp_close_ssk() may concurrently set
+> subflow->closing and purge backlog entries. This creates a classic
+> time-of-check vs time-of-use (TOCTOU) race:
+> 
+>   CPU A (close path)              CPU B (RX path)
+>   ----------------------         -------------------------
+>   set closing = 1
+>                                  read closing == 0
+>   purge backlog
+>                                  enqueue skb to backlog
+> 
+> As a result, skb entries referencing the subflow socket (ssk) may be
+> enqueued after the subflow is marked closing and scheduled for cleanup.
+> This can lead to:
+> 
+>   - WARN in inet_sock_destruct() due to non-zero sk_rmem_alloc
+>   - potential use-after-free via stale skb->sk references
 
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+By chance, do you have (decoded) calltraces to share in the commit
+message? And even better: a reproducer? Or explaining how you found this
+issue, and eventually which tool helped you find it.
+
+> Fix this by serializing both the closing check and backlog enqueue
+> under mptcp_data_lock(). This ensures that subflow->closing state and
+> backlog operations are observed atomically, preventing new skb from
+> being enqueued once teardown begins.
+> 
+> Also protect backlog cleanup in mptcp_close_ssk() with the same lock
+> to guarantee mutual exclusion with the RX path.
+> 
+> This restores proper synchronization between RX and teardown paths
+> and prevents stale skb references to closing subflows.
+
+Also, for fixes, the "Fixes:" tag is required.
+
+> Signed-off-by: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
+> ---
+>  net/mptcp/protocol.c | 31 ++++++++++++++++++++++++++++---
+>  1 file changed, 28 insertions(+), 3 deletions(-)
+> 
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 718e910ff..295f8e1c0 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -910,14 +910,34 @@ void mptcp_data_ready(struct sock *sk, struct sock *ssk)
+>  	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk);
+>  	struct mptcp_sock *msk = mptcp_sk(sk);
+>  
+> +	/*
+> +	 * The close path can set subflow->closing while we are racing
+> +	 * from BH context here. The old check was done before taking
+> +	 * mptcp_data_lock(), leaving a TOCTOU window:
+> +	 *
+> +	 *   CPU A: close path sets closing = 1 and purges backlog
+> +	 *   CPU B: already observed closing == 0 and later enqueues skb
+> +	 *
+> +	 * That skb keeps skb->sk == ssk and can later trigger:
+> +	 * - WARN in inet_sock_destruct() (ssk->sk_rmem_alloc != 0)
+> +	 * - UAF in backlog purge via stale skb->sk
+> +	 */
+
+I don't think that's useful to add a comment referring an old behaviour.
+
+> +
+>  	/* The peer can send data while we are shutting down this
+>  	 * subflow at subflow destruction time, but we must avoid enqueuing
+>  	 * more data to the msk receive queue
+>  	 */
+
+Instead, I suggest moving this comment below as well, and merge it with
+the new one you added.
+> -	if (unlikely(subflow->closing))
+> -		return;
+>  
+>  	mptcp_data_lock(sk);
+> +
+> +	/* Serialize closing check with backlog enqueue */
+> +	if (unlikely(subflow->closing)) {
+> +		mptcp_data_unlock(sk);
+
+When locks are used, we usually prefer having one exit path: please add
+a new label above mptcp_data_unlock() below, and a goto here.
+
+> +		return;
+> +	}
+> +
+>  	mptcp_rcv_rtt_update(msk, subflow);
+>  	if (!sock_owned_by_user(sk)) {
+>  		/* Wake-up the reader only for in-sequence data */
+> @@ -2653,9 +2673,12 @@ void mptcp_close_ssk(struct sock *sk, struct sock *ssk,
+>  	if (sk->sk_state == TCP_ESTABLISHED)
+>  		mptcp_event(MPTCP_EVENT_SUB_CLOSED, mptcp_sk(sk), ssk, GFP_KERNEL);
+>  
+> -	/* Remove any reference from the backlog to this ssk; backlog skbs consume
+> +	/* Remove any reference from the backlog to this ssk.
+> +	 * Serialize cleanup with RX-side enqueue using mptcp_data_lock().
+
+Easier to add this new line at the end of the comment to reduce the diff.
+
+> +	 * Backlog skbs consume
+>  	 * space in the msk receive queue, no need to touch sk->sk_rmem_alloc
+>  	 */
+> +	mptcp_data_lock(sk);
+>  	list_for_each_entry(skb, &msk->backlog_list, list) {
+>  		if (skb->sk != ssk)
+>  			continue;
+> @@ -2663,6 +2686,8 @@ void mptcp_close_ssk(struct sock *sk, struct sock *ssk,
+>  		atomic_sub(skb->truesize, &skb->sk->sk_rmem_alloc);
+>  		skb->sk = NULL;
+>  	}
+> +	mptcp_data_unlock(sk);
+> +
+>  
+
+No double empty lines. I think 'checkpatch' would tell you that.
+
+>  	/* subflow aborted before reaching the fully_established status
+>  	 * attempt the creation of the next subflow
 
 Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
+
