@@ -1,202 +1,184 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from canpmsgout05.his.huawei.com (canpmsgout05.his.huawei.com [113.46.200.220])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A410133B6C2
-	for <mptcp@lists.linux.dev>; Thu,  7 May 2026 08:07:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ACB231AA8F
+	for <mptcp@lists.linux.dev>; Thu,  7 May 2026 12:26:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.220
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778141267; cv=none; b=ogtFRISh1V9qUGAQqSqOvNkf2aIFgLnhWeQ/KJ/POJyJ6QDJPRTs0PunGe+2nT1wM/oFttEXJKTDY04tff8/OeG4Ws1HK7Q+dnKoUuKSl64HgIjeuZ2b9eHfYVT4xYicf0T3z75WOozle5pwhR+CQJlrNE8tfochBjF+IcHoEAg=
+	t=1778156802; cv=none; b=CPINiuQgjOiz2/3KCMkZjKqxmjN5v/YEpCSw71EmRCjDWrxSBTkUcvmCRBiFa3TP6MmkOwbM0+Ghsoc6895+/qkJAEiS6ugE3qGom1obWPyXfFmZWijgcz7o+o5eIuuM2gyCxiYGJ6/NfYONy0CyAMIbT444FipujATIhGG1L7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778141267; c=relaxed/simple;
-	bh=Uq5cDmjtLz/ZzTBQJFrjSiNKlMnpxDNGfIaaw8/HPuQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YxViDXRXqV5yiGTfTf6dZMpC2Cx2mSOEuGYgoIqNPxAD47yzvfAoJVysbwIve7w3Q1OAMD0izZkVFCv8XII+xaiboF7SMZihsgCo5K9tpm3LHX/jMctLrJnYUl5OVac9iUqtjIJqMXtZnht7cY7oum6u2Ii9168tAZqRtrDfkO4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B5b2Acy9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1778156802; c=relaxed/simple;
+	bh=eMFG68upAmLsWxiMAxb1IeucRAS9XcLP6Cl75ZadINY=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=p53afztA3x3SJKygTrU2kz7G91nEWN49X2k+ZyWKvtyOhAG1v4xIMJzlxKql8YoJVQ6g9ycSvo1qAv8b+J9itgnjkEpUnvTOk8pZp72vqbm2NUJm73OvCImuS+enAXNGJQxJJBeav7V/ynR082NC75HQI0U70Hi6+Tsqokhu+Ys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=qqG7DJfS; arc=none smtp.client-ip=113.46.200.220
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B5b2Acy9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D04ACC2BCC7;
-	Thu,  7 May 2026 08:07:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778141267;
-	bh=Uq5cDmjtLz/ZzTBQJFrjSiNKlMnpxDNGfIaaw8/HPuQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=B5b2Acy9EfqfonwsGq6Y7Ty1D7UTioTcYrdsVfZD/ZYQ8YtVbjZgmJO3U6UF76VRh
-	 t4YFEG4eUxuEL7VjiEnWlCRayh7V+xeaaZrsYuDF9um7P6dSZxxmbDBph2M7vMkiu8
-	 kMmcZwHhUoSY8vRxF1x3Rj+LL+3qWKG0ItUb2ahtNJNbr/G8cvpfkeQ2Wp0gs+kkW/
-	 UvdQ3EuWvjwiU6ptNQfEHEv2xdnE5YjlHmatxB0wbVnbJE8WInyNtIHgR0A/fEuHun
-	 rRikaXh0kyvoC8gIUSuh3tfndcnJE65UOl+cE4wGmsvHZPIzLjMHp9dOnuo3rxVqOo
-	 Qpfd4mTiOamhA==
-Message-ID: <027acbe6-ccef-4c4d-8b85-927044326150@kernel.org>
-Date: Thu, 7 May 2026 10:07:43 +0200
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="qqG7DJfS"
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=8s66CzIdiweecbZohbgyMGsLwRWreTi3FQtn46xdxyk=;
+	b=qqG7DJfSUt3UuRjXUmUtuYTv+YlTCUMjnK5x0zxxeb8g/pToOs/kUhXhWONsp/exbPgOMrs2w
+	TehIUnMOJSBPSF/PhKCLMVqctFVrTan5fuDjsWZw1tTSlrjcf/PWKfLV2J3pzzsfLuRcZ1uryaV
+	ehBq3/O/VFue7Ih9JA7ZuaI=
+Received: from mail.maildlp.com (unknown [172.19.162.144])
+	by canpmsgout05.his.huawei.com (SkyGuard) with ESMTPS id 4gBBBk2XzMz12LCf
+	for <mptcp@lists.linux.dev>; Thu,  7 May 2026 20:19:26 +0800 (CST)
+Received: from kwepemj500018.china.huawei.com (unknown [7.202.194.48])
+	by mail.maildlp.com (Postfix) with ESMTPS id E91EF40538
+	for <mptcp@lists.linux.dev>; Thu,  7 May 2026 20:26:34 +0800 (CST)
+Received: from huawei.com (10.50.85.128) by kwepemj500018.china.huawei.com
+ (7.202.194.48) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Thu, 7 May
+ 2026 20:26:34 +0800
+From: Li Xiasong <lixiasong1@huawei.com>
+To: <mptcp@lists.linux.dev>
+CC: <weiyongjun1@huawei.com>, <yuehaibing@huawei.com>,
+	<zhangchangzhong@huawei.com>
+Subject: [PATCH mptcp-net v3 1/2] mptcp: pm: fix ADD_ADDR timer infinite retry on option space insufficient
+Date: Thu, 7 May 2026 20:52:23 +0800
+Message-ID: <20260507125224.3536507-2-lixiasong1@huawei.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20260507125224.3536507-1-lixiasong1@huawei.com>
+References: <20260507125224.3536507-1-lixiasong1@huawei.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH net 1/1] mptcp: hold subflow request owners when cloning
- reqsk
-Content-Language: fr
-To: Yuan Tan <yuantan098@gmail.com>, caoruide123@gmail.com,
- Ren Wei <n05ec@lzu.edu.cn>
-Cc: mptcp@lists.linux.dev, yifanwucs@gmail.com, tomapufckgml@gmail.com,
- enjou1224z@gmail.com, bird@lzu.edu.cn
-References: <cover.1776149210.git.caoruide123@gmail.com>
- <86e2514b533bf4d55d4aa2fdbf1404022e8c9430.1776149210.git.caoruide123@gmail.com>
- <5f06a4e8-0b49-4119-94f9-3a8a1e430e0d@kernel.org>
- <CAAVpQUDzh-dGsQpBCZjN3rUsoDc2QjzWh-o5yVWoBWDQNXbjmQ@mail.gmail.com>
- <05a19f8d-360e-41d1-bc8a-0b4caab3d354@gmail.com>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <05a19f8d-360e-41d1-bc8a-0b4caab3d354@gmail.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: kwepems200001.china.huawei.com (7.221.188.67) To
+ kwepemj500018.china.huawei.com (7.202.194.48)
 
-Hi Yuan, Ren, Ruide,
+When TCP option space is insufficient (e.g., when sending ADD_ADDR with an
+IPv6 address and port while tcp_timestamps is enabled), the original code
+jumped to out_unlock without clearing the addr_signal flag. This caused
+mptcp_pm_add_timer to keep rescheduling indefinitely, not sending ADD_ADDR,
+preventing subsequent addresses in the endpoint list from being announced.
 
-(-netdev list)
+Handle this case by clearing the ADD_ADDR signal and skipping the matching
+ADD_ADDR retransmission entry. The skip path cancels the matching timer
+(with id check) and advances PM state progression, preserving forward
+progress to subsequent PM work.
 
-On 19/04/2026 11:51, Yuan Tan wrote:
-> 
-> On 4/16/2026 11:48 AM, Kuniyuki Iwashima wrote:
->> On Thu, Apr 16, 2026 at 10:45 AM Matthieu Baerts <matttbe@kernel.org> wrote:
->>> Hi Ren,
->>>
->>> On 15/04/2026 11:31, Ren Wei wrote:
->>>> From: Ruide Cao <caoruide123@gmail.com>
->>>>
->>>> TCP request migration clones pending request sockets with
->>>> inet_reqsk_clone(). For MPTCP MP_JOIN requests this raw-copies
->>>> subflow_req->msk, but the cloned request does not take a new reference.
->>>>
->>>> Both the original and the cloned request can later drop the same msk in
->>>> subflow_req_destructor(), and a migrated request may keep a dangling msk
->>>> pointer after the original owner has already been released.
->>>>
->>>> Add a request_sock clone callback and let MPTCP grab a reference for cloned
->>>> subflow requests that carry an msk. This keeps ownership balanced across
->>>> both successful migrations and failed clone/insert paths without changing
->>>> other protocols.
->>> Thank you for this patch!
->>>
->>> Indeed, it looks like this path has not been covered by the MPTCP test
->>> suite so far.
->>>
->>> By chance, do you have any simpler reproducer using packetdrill? (the
->>> MPTCP fork)
->>>
->>>   https://github.com/multipath-tcp/packetdrill
->>>
->>> Also, I see Sashiko is pointing to a potential issue with MP_CAPABLE and
->>> the token, also only visible with net.ipv4.tcp_migrate_req=1:
->>>
->>> https://sashiko.dev/#/patchset/86e2514b533bf4d55d4aa2fdbf1404022e8c9430.1776149210.git.caoruide123%40gmail.com
->>>
->>> Are you also looking at that?
->>>
->>>> Fixes: c905dee62232 ("tcp: Migrate TCP_NEW_SYN_RECV requests at retransmitting SYN+ACKs.")
->>>> Cc: stable@kernel.org
->>>> Reported-by: Yuan Tan <yuantan098@gmail.com>
->>>> Reported-by: Yifan Wu <yifanwucs@gmail.com>
->>>> Reported-by: Juefei Pu <tomapufckgml@gmail.com>
->>>> Reported-by: Xin Liu <bird@lzu.edu.cn>
->>>> Signed-off-by: Ruide Cao <caoruide123@gmail.com>
->>>> Tested-by: Ren Wei <enjou1224z@gmail.com>
->>>> Signed-off-by: Ren Wei <n05ec@lzu.edu.cn>
->>>> ---
->>>>  include/net/request_sock.h      |  2 ++
->>>>  net/ipv4/inet_connection_sock.c |  3 +++
->>>>  net/mptcp/subflow.c             | 13 +++++++++++++
->>>>  3 files changed, 18 insertions(+)
->>>>
->>>> diff --git a/include/net/request_sock.h b/include/net/request_sock.h
->>>> index 5a9c826a7092..560e464c400f 100644
->>>> --- a/include/net/request_sock.h
->>>> +++ b/include/net/request_sock.h
->>>> @@ -36,6 +36,8 @@ struct request_sock_ops {
->>>>                                     struct sk_buff *skb,
->>>>                                     enum sk_rst_reason reason);
->>>>       void            (*destructor)(struct request_sock *req);
->>>> +     void            (*init_clone)(const struct request_sock *req,
->>>> +                                   struct request_sock *new_req);
->>> @TCP/INET maintainers: are you OK with this new function pointer?
->>>
->>> Currently, MPTCP is the only user, and "req" is not used, see below.
->>>
->>>>  };
->>>>
->>>>  struct saved_syn {
->>>> diff --git a/net/ipv4/inet_connection_sock.c b/net/ipv4/inet_connection_sock.c
->>>> index e961936b6be7..140a9e96ad58 100644
->>>> --- a/net/ipv4/inet_connection_sock.c
->>>> +++ b/net/ipv4/inet_connection_sock.c
->>>> @@ -954,6 +954,9 @@ static struct request_sock *inet_reqsk_clone(struct request_sock *req,
->>>>       if (sk->sk_protocol == IPPROTO_TCP && tcp_rsk(nreq)->tfo_listener)
->>>>               rcu_assign_pointer(tcp_sk(nreq->sk)->fastopen_rsk, nreq);
->>> (Maybe TCP with fastopen could be this other user to call
->>> rcu_assign_pointer()? (net-next material))
->>>
->>>> +     if (req->rsk_ops->init_clone)
->>>> +             req->rsk_ops->init_clone(req, nreq);
->> I think a simple direct call is better.
->>
->> #ifdef CONFIG_MPTCP
->>     if (tcp_rsk(req)->is_mptcp)
->>         mptcp_reqsk_clone(nreq);
->> #endif
->>
->  Thank you very much for your suggestion. We will use this approach in
-> the next version of the patch. Would you like us to add your
-> Suggested-by tag?
-For a question of organisation, do you still plan to send a v2
-addressing the review comments?
+This cancellation is inherently best-effort. A concurrent add_timer
+callback may already be running and may acquire pm.lock before the
+cancel path updates entry state. In that case, one final ADD_ADDR
+transmit attempt can still be executed.
 
-Cheers,
-Matt
+Once the cancel path sets entry->retrans_times to
+ADD_ADDR_RETRANS_MAX, the callback-side retrans_times check suppresses
+further ADD_ADDR retransmissions.
+
+Fixes: 00cfd77b9063 ("mptcp: retransmit ADD_ADDR when timeout")
+Signed-off-by: Li Xiasong <lixiasong1@huawei.com>
+---
+ net/mptcp/pm.c | 56 +++++++++++++++++++++++++++++++++++++++++---------
+ 1 file changed, 46 insertions(+), 10 deletions(-)
+
+diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+index 57a456690406..8a86f1e93b78 100644
+--- a/net/mptcp/pm.c
++++ b/net/mptcp/pm.c
+@@ -351,7 +351,13 @@ static void mptcp_pm_add_timer(struct timer_list *timer)
+ 
+ 	spin_lock_bh(&msk->pm.lock);
+ 
+-	if (!mptcp_pm_should_add_signal_addr(msk)) {
++	/* The cancel path (mptcp_pm_del_add_timer()) can race with this
++	 * callback. Once cancel updates retrans_times to MAX, suppress further
++	 * retransmissions here. If this callback acquires pm.lock first, one
++	 * final transmit attempt is still possible.
++	 */
++	if (entry->retrans_times < ADD_ADDR_RETRANS_MAX &&
++	    !mptcp_pm_should_add_signal_addr(msk)) {
+ 		pr_debug("retransmit ADD_ADDR id=%d\n", entry->addr.id);
+ 		mptcp_pm_announce_addr(msk, &entry->addr, false);
+ 		mptcp_pm_add_addr_send_ack(msk);
+@@ -394,8 +400,12 @@ mptcp_pm_del_add_timer(struct mptcp_sock *msk,
+ 	/* Note: entry might have been removed by another thread.
+ 	 * We hold rcu_read_lock() to ensure it is not freed under us.
+ 	 */
+-	if (stop_timer)
+-		sk_stop_timer_sync(sk, &entry->add_timer);
++	if (stop_timer) {
++		if (check_id)
++			sk_stop_timer(sk, &entry->add_timer);
++		else
++			sk_stop_timer_sync(sk, &entry->add_timer);
++	}
+ 
+ 	rcu_read_unlock();
+ 	return entry;
+@@ -860,6 +870,7 @@ bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, const struct sk_buff *skb,
+ 			      struct mptcp_addr_info *addr, bool *echo,
+ 			      bool *drop_other_suboptions)
+ {
++	bool skip_add_addr = false;
+ 	int ret = false;
+ 	u8 add_addr;
+ 	u8 family;
+@@ -881,24 +892,49 @@ bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, const struct sk_buff *skb,
+ 	}
+ 
+ 	*echo = mptcp_pm_should_add_signal_echo(msk);
+-	port = !!(*echo ? msk->pm.remote.port : msk->pm.local.port);
+-
+-	family = *echo ? msk->pm.remote.family : msk->pm.local.family;
+-	if (remaining < mptcp_add_addr_len(family, *echo, port))
+-		goto out_unlock;
+-
+ 	if (*echo) {
+ 		*addr = msk->pm.remote;
+ 		add_addr = msk->pm.addr_signal & ~BIT(MPTCP_ADD_ADDR_ECHO);
++		port = !!msk->pm.remote.port;
++		family = msk->pm.remote.family;
+ 	} else {
+ 		*addr = msk->pm.local;
+ 		add_addr = msk->pm.addr_signal & ~BIT(MPTCP_ADD_ADDR_SIGNAL);
++		port = !!msk->pm.local.port;
++		family = msk->pm.local.family;
+ 	}
+-	WRITE_ONCE(msk->pm.addr_signal, add_addr);
++
++	if (remaining < mptcp_add_addr_len(family, *echo, port)) {
++		struct net *net = sock_net((struct sock *)msk);
++
++		if (!*drop_other_suboptions)
++			goto out_unlock;
++
++		if (*echo) {
++			MPTCP_INC_STATS(net, MPTCP_MIB_ECHOADDTXDROP);
++		} else {
++			skip_add_addr = true;
++			MPTCP_INC_STATS(net, MPTCP_MIB_ADDADDRTXDROP);
++		}
++		goto drop_signal_mark;
++	}
++
+ 	ret = true;
+ 
++drop_signal_mark:
++	WRITE_ONCE(msk->pm.addr_signal, add_addr);
++
+ out_unlock:
+ 	spin_unlock_bh(&msk->pm.lock);
++
++	/* On pure-ACK option-space exhaustion, stop retrying this ADD_ADDR:
++	 * clear the signal bit, cancel the matching retransmission timer, and
++	 * let the PM state machine progress.
++	 */
++	if (skip_add_addr) {
++		mptcp_pm_del_add_timer(msk, addr, true);
++		mptcp_pm_subflow_established(msk);
++	}
+ 	return ret;
+ }
+ 
 -- 
-Sponsored by the NGI0 Core fund.
+2.34.1
 
