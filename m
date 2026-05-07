@@ -1,163 +1,159 @@
-Received: from sender4-of-o54.zoho.com (sender4-of-o54.zoho.com [136.143.188.54])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A070D2DEA9D
-	for <mptcp@lists.linux.dev>; Thu,  7 May 2026 07:28:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.54
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778138903; cv=pass; b=Q1xlxwuIOpPQbdVBOMIfNfJW6tdIA7ZieTVeQrebiH+qV0k22Bb6VmvSkO0qmaVAxHMNj4byx1GgueSpSIa73BOS/F+/XOtd4aJbOAJ7Mn11tefeYX49XERf9LnrSPRSDfrqHDlp4Gy/FkZa7uwoknyi2o3pNYOBWwjmseNOJXM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778138903; c=relaxed/simple;
-	bh=TCRmuExTfLETreVxmsAnbi6E0acKYtfNtUPhlE1yn7U=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WOviW2+BXemaQWH+Izx0fN8danYktMEJ/N8nIfd9Y39w/nW7JGYSk1ktFpwo51eJEKprgIrzXtaUXyASXKvYfSY98XvNCUNVyjFg5hh7x8b6LFIouv0sF1jrp4isPrDryFzvFEzFifIlrUZQUySucEW3A2ByADkw2vR0sVlBrCI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com; spf=pass smtp.mailfrom=mpiricsoftware.com; dkim=fail (0-bit key) header.d=mpiricsoftware.com header.i=kalpan.jani@mpiricsoftware.com header.b=UTRjS/7Z reason="key not found in DNS"; arc=pass smtp.client-ip=136.143.188.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mpiricsoftware.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E128371D05;
+	Thu,  7 May 2026 07:44:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1778139882; cv=none; b=XwDuz/J5uUPchfJLIQ/bmouiIx2gHHjDVL62s/1BLdXyOoVp2LBYrQhuhbFMXlt7wu3CXAVbn6ecB7yK+JaD/FAmSFLJM1uJms5xM2EeGxsYA0y6cCxQrMANSnQXxib0xlsgb27T5VfmT2A/FiaNGKF4f4QC6wpJ33km1rxsbmc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1778139882; c=relaxed/simple;
+	bh=3SB4V4RXsUIQ3+bqYGeO7CBlxhBdDGQk9jVAIk1hsdY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
+	 In-Reply-To:Content-Type; b=DftAWX4WmKf9bEKU1yxm5GJECGPaijQkQZE0dBqe9dDip+k1Fi07TDhgmUZHAHZlRXZXIS/6gWrAtt7qfZlWqKaKWrq2hzAZ642Vq3wobhCUuvgrRFUYwwUnMnEg/FyGORHF8WMe+priuf4n4f4Eqg/5AQHWjDiUiVw0EPWlMZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TVu6K0hM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mpiricsoftware.com header.i=kalpan.jani@mpiricsoftware.com header.b="UTRjS/7Z"
-ARC-Seal: i=1; a=rsa-sha256; t=1778138895; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=cA1aG1egAVm1Hd19ns1w68wn3QuAjGXjGwjfJ6MWR4/h523i0+FJtIbkGvhDJjRpW9OchTr+ik0zenCtZlj4i+8TQzY6akl+7V4lj8wdYStF5oVgnOD9KVI2SgzSjbDq/Dm02EWKS1mKtQ6Tnjmy8fv3ye4y9EA5hZWUC3Ex2GQ=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1778138895; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=QiJVXgyayyHMLKMZWZK+mVkIdqGHeFdd2k+GP/rQTfc=; 
-	b=QFewyrJw4VYoKB8Q3ZvqZFnsWk/T7b9MmLqH5vECOxm65lPoftmANTN4mOZ0vX0QWCURtw/o/0wyClQ/k4rOtM2TGTgcrfq70VMavbVMkPDCHfxK12oBDBBi3JqAQ5F9aT06JzkkKG2J9m6TRvsOafLnUBZiPp2TUhxrfYTX9EI=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=mpiricsoftware.com;
-	spf=pass  smtp.mailfrom=kalpan.jani@mpiricsoftware.com;
-	dmarc=pass header.from=<kalpan.jani@mpiricsoftware.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1778138895;
-	s=mpiric; d=mpiricsoftware.com; i=kalpan.jani@mpiricsoftware.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=QiJVXgyayyHMLKMZWZK+mVkIdqGHeFdd2k+GP/rQTfc=;
-	b=UTRjS/7Zu+5hmDoWo6p2Y0KZAfVWRWiwVGlmJsBCkvxqJXVEYMDpn28TpQHb13s+
-	T2xPCLIzCnCtvKQrtJD0cqeDnCvt5bkcFLGRWUZYsSPkD1flyCk9gd3LZqcG3Zn/Lce
-	Z5p4m5IwcHabVACFX8bsl2pGqan/Vq+40sIiqd/Q=
-Received: by mx.zohomail.com with SMTPS id 177813889302023.93978241630691;
-	Thu, 7 May 2026 00:28:13 -0700 (PDT)
-From: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
-To: matttbe@kernel.org,
-	martineau@kernel.org,
-	mptcp@lists.linux.dev,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: shardul.b@mpiricsoftware.com,
-	janak@mpiric.us,
-	kalpanjani009@gmail.com,
-	shardulsb08@gmail.com,
-	Kalpan Jani <kalpan.jani@mpiricsoftware.com>
-Subject: [PATCH] mptcp: serialize subflow->closing with RX path
-Date: Thu,  7 May 2026 12:58:02 +0530
-Message-ID: <20260507072802.612125-1-kalpan.jani@mpiricsoftware.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TVu6K0hM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8AA78C2BCB8;
+	Thu,  7 May 2026 07:44:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1778139881;
+	bh=3SB4V4RXsUIQ3+bqYGeO7CBlxhBdDGQk9jVAIk1hsdY=;
+	h=Date:Subject:To:References:From:Cc:In-Reply-To:From;
+	b=TVu6K0hM84GRFjkw7FrwNE5pt9hE+W+dyOmUaPhBvum9UqEhxgmCeS7IHoB0ySaji
+	 yRu2eyw/XwYfMJ6g3v66xGlJDy/4p0RiHWVbe230xZuH32z7cYuYuo+t2B3SNtd4gg
+	 Cf+t22dTBXvvAfCRGZqKJFOaEsEgU8NH6ec3ycpia4g5Zqm53o0Bl5IHdUmB/PZSbb
+	 yuNYnF30KGbvS68PIIgHDYZIno2ioqURabZ0xGiQM+Y+/BqPHcR55qj7IcZvs+Gked
+	 n54aRJHNbt4jn9q+G3OLwtXh2oXZ0haZh+FArpWDy8xTJzMzJ+gYR9qJ+sPaqF8gF/
+	 HQ31484Im5JbA==
+Message-ID: <2a9bde65-d2de-44cc-9192-e7aa8a0935a7@kernel.org>
+Date: Thu, 7 May 2026 09:44:37 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [syzbot] [mptcp?] KMSAN: uninit-value in
+ mptcp_established_options
+Content-Language: fr
+To: kuniyu@google.com, pabeni@redhat.com
+References: <69f8e352.170a0220.bb392.0005.GAE@google.com>
+From: Matthieu Baerts <matttbe@kernel.org>
+Cc: syzbot <syzbot+ff020673c5e3d94d9478@syzkaller.appspotmail.com>,
+ linux-kernel@vger.kernel.org, mptcp@lists.linux.dev,
+ syzkaller-bugs@googlegroups.com
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <69f8e352.170a0220.bb392.0005.GAE@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-There is a race between mptcp_data_ready() (RX path) and
-mptcp_close_ssk() (teardown path) when accessing subflow->closing.
+Hi Paolo, Kuniyuki,
 
-Currently, mptcp_data_ready() checks subflow->closing before acquiring
-mptcp_data_lock(), while mptcp_close_ssk() may concurrently set
-subflow->closing and purge backlog entries. This creates a classic
-time-of-check vs time-of-use (TOCTOU) race:
+On 04/05/2026 20:20, syzbot wrote:
+> Hello,
+> 
+> syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+> KMSAN: uninit-value in irqentry_exit_to_kernel_mode_preempt
 
-  CPU A (close path)              CPU B (RX path)
-  ----------------------         -------------------------
-  set closing = 1
-                                 read closing == 0
-  purge backlog
-                                 enqueue skb to backlog
+It looks like the issue is different now:
 
-As a result, skb entries referencing the subflow socket (ssk) may be
-enqueued after the subflow is marked closing and scheduled for cleanup.
-This can lead to:
+> =====================================================
+> BUG: KMSAN: uninit-value in irqentry_exit_to_kernel_mode_preempt+0xb0/0xc0 include/linux/irq-entry-common.h:472
+>  irqentry_exit_to_kernel_mode_preempt+0xb0/0xc0 include/linux/irq-entry-common.h:472
+>  irqentry_exit_to_kernel_mode include/linux/irq-entry-common.h:547 [inline]
+>  irqentry_exit+0x7b/0x760 kernel/entry/common.c:164
+>  sysvec_apic_timer_interrupt+0x52/0x90 arch/x86/kernel/apic/apic.c:1061
+>  asm_sysvec_apic_timer_interrupt+0x1f/0x30 arch/x86/include/asm/idtentry.h:697
+>  kmsan_get_metadata+0x17/0x160 mm/kmsan/shadow.c:125
+>  kmsan_get_shadow_origin_ptr+0x4a/0xb0 mm/kmsan/shadow.c:102
+>  get_shadow_origin_ptr mm/kmsan/instrumentation.c:38 [inline]
+>  __msan_metadata_ptr_for_load_4+0x24/0x40 mm/kmsan/instrumentation.c:93
+>  tcp_data_queue+0xdc/0x7c90 net/ipv4/tcp_input.c:5589
+>  tcp_rcv_established+0x19bb/0x3200 net/ipv4/tcp_input.c:6656
+>  tcp_v4_do_rcv+0xc4b/0x1b10 net/ipv4/tcp_ipv4.c:1852
+>  sk_backlog_rcv include/net/sock.h:1190 [inline]
 
-  - WARN in inet_sock_destruct() due to non-zero sk_rmem_alloc
-  - potential use-after-free via stale skb->sk references
+That's the input side.
 
-Fix this by serializing both the closing check and backlog enqueue
-under mptcp_data_lock(). This ensures that subflow->closing state and
-backlog operations are observed atomically, preventing new skb from
-being enqueued once teardown begins.
+>  __release_sock+0x360/0x7d0 net/core/sock.c:3216
+>  release_sock+0x22d/0x300 net/core/sock.c:3815
+>  mptcp_subflow_shutdown+0x358/0x690 net/mptcp/protocol.c:3144
+>  mptcp_check_send_data_fin+0x31b/0x3d0 net/mptcp/protocol.c:3218
+>  __mptcp_wr_shutdown net/mptcp/protocol.c:3234 [inline]
+>  __mptcp_close+0x860/0x1360 net/mptcp/protocol.c:3313
+>  mptcp_close+0x42/0x260 net/mptcp/protocol.c:3367
+>  inet_release+0x1ee/0x2a0 net/ipv4/af_inet.c:442
+>  __sock_release net/socket.c:722 [inline]
+>  sock_close+0xd6/0x2f0 net/socket.c:1514
+>  __fput+0x60e/0x1010 fs/file_table.c:510
+>  ____fput+0x25/0x30 fs/file_table.c:538
+>  task_work_run+0x208/0x2b0 kernel/task_work.c:233
+>  resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
+>  __exit_to_user_mode_loop kernel/entry/common.c:67 [inline]
+>  exit_to_user_mode_loop+0x306/0x1b60 kernel/entry/common.c:98
+>  __exit_to_user_mode_prepare include/linux/irq-entry-common.h:207 [inline]
+>  syscall_exit_to_user_mode_prepare include/linux/irq-entry-common.h:238 [inline]
+>  syscall_exit_to_user_mode include/linux/entry-common.h:318 [inline]
+>  do_syscall_64+0x236/0xf80 arch/x86/entry/syscall_64.c:100
+>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> 
+> Local variable mp_opt created at:
+>  mptcp_incoming_options+0x11d/0x43b0 net/mptcp/options.c:1171
 
-Also protect backlog cleanup in mptcp_close_ssk() with the same lock
-to guarantee mutual exclusion with the RX path.
+Confirmed here. With "struct mptcp_options_received" while the original
+issue was with "struct mptcp_out_options".
 
-This restores proper synchronization between RX and teardown paths
-and prevents stale skb references to closing subflows.
+Plus I'm not exactly sure to understand the issue here: mp_opt is
+defined and used only in mptcp_incoming_options(), and I don't see
+anything using it after the end of this function. Or did I miss something?
 
-Signed-off-by: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
----
- net/mptcp/protocol.c | 31 ++++++++++++++++++++++++++++---
- 1 file changed, 28 insertions(+), 3 deletions(-)
-
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 718e910ff..295f8e1c0 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -910,14 +910,34 @@ void mptcp_data_ready(struct sock *sk, struct sock *ssk)
- 	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk);
- 	struct mptcp_sock *msk = mptcp_sk(sk);
- 
-+	/*
-+	 * The close path can set subflow->closing while we are racing
-+	 * from BH context here. The old check was done before taking
-+	 * mptcp_data_lock(), leaving a TOCTOU window:
-+	 *
-+	 *   CPU A: close path sets closing = 1 and purges backlog
-+	 *   CPU B: already observed closing == 0 and later enqueues skb
-+	 *
-+	 * That skb keeps skb->sk == ssk and can later trigger:
-+	 * - WARN in inet_sock_destruct() (ssk->sk_rmem_alloc != 0)
-+	 * - UAF in backlog purge via stale skb->sk
-+	 */
-+
- 	/* The peer can send data while we are shutting down this
- 	 * subflow at subflow destruction time, but we must avoid enqueuing
- 	 * more data to the msk receive queue
- 	 */
--	if (unlikely(subflow->closing))
--		return;
- 
- 	mptcp_data_lock(sk);
-+
-+	/* Serialize closing check with backlog enqueue */
-+	if (unlikely(subflow->closing)) {
-+		mptcp_data_unlock(sk);
-+		return;
-+	}
-+
- 	mptcp_rcv_rtt_update(msk, subflow);
- 	if (!sock_owned_by_user(sk)) {
- 		/* Wake-up the reader only for in-sequence data */
-@@ -2653,9 +2673,12 @@ void mptcp_close_ssk(struct sock *sk, struct sock *ssk,
- 	if (sk->sk_state == TCP_ESTABLISHED)
- 		mptcp_event(MPTCP_EVENT_SUB_CLOSED, mptcp_sk(sk), ssk, GFP_KERNEL);
- 
--	/* Remove any reference from the backlog to this ssk; backlog skbs consume
-+	/* Remove any reference from the backlog to this ssk.
-+	 * Serialize cleanup with RX-side enqueue using mptcp_data_lock().
-+	 * Backlog skbs consume
- 	 * space in the msk receive queue, no need to touch sk->sk_rmem_alloc
- 	 */
-+	mptcp_data_lock(sk);
- 	list_for_each_entry(skb, &msk->backlog_list, list) {
- 		if (skb->sk != ssk)
- 			continue;
-@@ -2663,6 +2686,8 @@ void mptcp_close_ssk(struct sock *sk, struct sock *ssk,
- 		atomic_sub(skb->truesize, &skb->sk->sk_rmem_alloc);
- 		skb->sk = NULL;
- 	}
-+	mptcp_data_unlock(sk);
-+
- 
- 	/* subflow aborted before reaching the fully_established status
- 	 * attempt the creation of the next subflow
+Cheers,
+Matt
 -- 
-2.43.0
+Sponsored by the NGI0 Core fund.
+
