@@ -1,172 +1,226 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C80B43F9F54
-	for <mptcp@lists.linux.dev>; Thu,  7 May 2026 17:08:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778173723; cv=none; b=PIwCKLY9zeNtePmDo3yvESg5x3gDuhCBW95QpEvVuqczC6KGoKSRoi2ZJu9+4Xpgt2sgsQGv7GFS0z8IaguzHH/KA+Thlv/mrEAPd6EAnQMMpiUucM8Xo/8n6eghDSFuaroCQrjzHCcffmbA4BGCW5+o22V9c7WdPZRCl0SqlS4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778173723; c=relaxed/simple;
-	bh=k5L9T9HuspKLeaPcV4E6F4xntMBi1FakBcE91U1GjXc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tobjdh1dPmlkJFKAiG/G9gjB/HDd8C27ZBJtM81E2ijwujmtAedeaSH98rIePOVpxBWzHtpVONvjhfspvRypwmmeCjd06h62ltx2PgiGcPbdV/IMbW+0SGxTD8siZ5kCS/G995ojXyHF9/WvA8Zg4Uj3DNI7ACNC0blf+WEFkzo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GT6z0Nt/; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 970D12D73A6
+	for <mptcp@lists.linux.dev>; Thu,  7 May 2026 18:24:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.169
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1778178264; cv=pass; b=PCRhODxCODJ579gxNcV+roZuhzsGSjaARpQTiOiUm4giLOdePisSkSFHyGmsSJOjbokelDI8t1uBurQy/3AT8i2HUbGGhNFKOgWgvhzSndMbyRRqwjfVdZHHoRt3OZ1xPTm2ayeyJ+jEzcKRtqURg1yQnWCgZE5yagrweDaYSSk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1778178264; c=relaxed/simple;
+	bh=tcyoTvLyfq7be0zEpXcMVTj3MeE6gd8bdg8N21aFTgY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tCx3eW1BGzmOcAL0CqxFLSt+M3VgV8RagKzYydTWxPEFlBnyZbRxWHRRrCSbXds6N1IeKuInrY4pJL0zAm2DL6DQzQko3d3OSdgIn3n1CGvCLYwk5+ziP7jK98uhFQlg6M63lKltz+LxQUWcOjGrnJ+iCn7BB6meJayHcuvOpSk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a772rK5D; arc=pass smtp.client-ip=209.85.160.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GT6z0Nt/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1778173720;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0g8BZOUIqwFMf5MczCTWS57/QZes3BdStmRaQBqy/OM=;
-	b=GT6z0Nt/2SrkXA2FL7PpDkBWL6fviklKZm/vCGCGZdah3FZYaJ5ZzLr6Y919H673UOzUn+
-	d4gvs1KInL9EYo8bAjUdi4IMJyVQ8hgUlkhbCqlHcUoWz913FM8VCH5hseU/M8JdnT+zwh
-	itBPt0YqaL77PxiSchTt57AMIdJDpLA=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-30-X5n2ZkLVOGqzqiSOvAoyag-1; Thu, 07 May 2026 13:08:38 -0400
-X-MC-Unique: X5n2ZkLVOGqzqiSOvAoyag-1
-X-Mimecast-MFC-AGG-ID: X5n2ZkLVOGqzqiSOvAoyag_1778173717
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-48a7994e8ddso7756285e9.0
-        for <mptcp@lists.linux.dev>; Thu, 07 May 2026 10:08:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a772rK5D"
+Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-51306c9f2a8so10774081cf.1
+        for <mptcp@lists.linux.dev>; Thu, 07 May 2026 11:24:22 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1778178262; cv=none;
+        d=google.com; s=arc-20240605;
+        b=cB75XIrxEQV+GYn6k19JaaXaIagq+eHujqKPBf5qBSlUbsp6SStFHzkaLSNlmvOzVT
+         eFF+G0C/Wwjvvv+gFvAS2tLP/9dkPAJXMCYkU2LAfQstIAu98XDXi6DTtqeQw/04VhLx
+         ZX6fN+RAq/YQQn4kDHPNMIYF/l6/IrQSUQbajiCkcalCbgBlCGgGt8hkBkUCqZ4UU/k5
+         gHY/EVaM7PMFrTBHk+86ybYPTxLDNgv+sGIzz66TX440aCz3sk8M8CQcwfe/dB61rhGZ
+         QBmyPRmijwxSxq22Oy9SPIgauGnDiTZtpsWNF52S6DTJqJNMckycaB4/VHcS4xICv9Bi
+         wtEQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=LAwfLiW0vxr1+5uikUuotTzmkp2AYIoia+WnOZtNZaQ=;
+        fh=onEqDKNgRIzbE+4PEFOisFyjm58xGqA1xEtB0wKuYWs=;
+        b=T7wdDXg7SNA1qumVp5VvIYcbCBR4itayKf9LzTNcO945x7US1yPjyRB3jI7hcSZ9Tr
+         mTeCmioGQZRpKRh3j9CiuowHoKCPC0IJkhjUhS58ECVcQZmdzi7VPYaldvxf0eVSwOvw
+         ol2Gx841bpdwtM4NOiguNBxJx1BpnxlmphtGO6cTx3yNR8Oj4DbS7VcvEb1pKSWtdErH
+         2YmhK3lgIk/PlyU03yDsCF1ng86TvA8ogTGq5ZJVwtgN/piMB6e6Q6uA0dNJ5w21/dje
+         V1oZTuLBb2lsIkKGnn4zNrwH4touaabxywb6BJptNtAk6iXzFXQT5iIyDhYSGxSwfOA0
+         HDGA==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1778178262; x=1778783062; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LAwfLiW0vxr1+5uikUuotTzmkp2AYIoia+WnOZtNZaQ=;
+        b=a772rK5DeUQLNfpR6BgDdoUK7kRnSaJPosK0AD1i2FT7mtH1oTmha5YS4Uva+4TEi/
+         IgqE38ogeFh8ZvOlLK5ZEZNgyGmS9O5VLwnI5ZF9WdkkY0LhQWHG0v9if8KfQAZV08ay
+         EUdYjwznDJRjP+b9eFy0gIdag2WadbfX/Nt0Sr8qv4FKe3dJlBQcdg2IdurULTzskFWm
+         fPGPzh27wQrJizUQOpebWTNS5m729f8TbfwOzTigTrg1Km/kpDsbG+XNGL0TOX3a6A7p
+         UABnZA8n3n2OlCBqBw0ErVyove1zcNoxt5SlpD+/pgso0+sqrv7H9SlC4sxIxNzGrQLQ
+         n0PQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778173717; x=1778778517;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=0g8BZOUIqwFMf5MczCTWS57/QZes3BdStmRaQBqy/OM=;
-        b=OJIKkDHStakk+315YOqJsGXqGtsfxRwwu4SevWnou1cCwk4L/H/+AkarsGwBeEuFGK
-         VQntKRbqXcXEbKQiLg/pOdhxPv6J+54GczQ/ALtRNjPWpIu0iM5HleO1hCyrPajQxG0e
-         oJYnAaOWQIa/iJAAIozHnkEo25IJTtkIcJ/Ru1bkR4SiNLVBw2ZH2awdTM1U8CkA89Mt
-         641ykb5nceVZMTg16DGeTrgJOW+P4eHNhJmVQvn9iHRtz7rLUiYVRaPqyg9qCBclvuum
-         I5bPl+2ine3b4NTsMXNXVJ8yU+5OKleulCOluz1sXIc0PXSN0YFrWlEAs3/nv1DBjXK5
-         jyhA==
-X-Forwarded-Encrypted: i=1; AFNElJ80ONaSc2+FiDF1f5jc5BXyvN8dXTwwUCgfdhYWXhjWKbdy2G2MNhZIP7prVB+h7e8duppZ9g==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yz6hdTwOFtWQFvmRsKj44+ahmzJJRWdMg94GbUoSu4pR5W6LA3Y
-	GHja4nOULhplqfu//lT+ssiXXO1wtmL8XL+d7XdDZuaqKWL40WM6h7keYXMtZsKfbq8N3NjU3g5
-	zah/2XjCkvt2MO4jArdwROQ1RCVses5hHkT52bs9phjmlqAZyYbzXQ5gx
-X-Gm-Gg: AeBDieuD4WeVUi5q/XHh4paYT8KWaRSDmTiBOE/j/r0jcG4aCgzDCXIsapHoy1A9hbP
-	zU4lMisxUA35x6Ek2PAFTPq6Lobft8PWwMqBlTcN4OnyWFOJsJ9LP5Lg68oovcT7aVTfGP6A1ul
-	GjuBhy44Tm40NgeF93iVMa1nH08cZ1DRjpNMC701OJiWCOLIMtU2EeqIMQFt4yzhGFX/UAaTrY3
-	oaYfv+pdVwfqLUP1MWyp9gzjRmtT6h+r8/covtlcUlNZV26c1ekTry/o0+eA2pfqi6zXW4dV1qn
-	QSC5LCfZELTeWZ4WXF6R7V5DK7txPzAAer6q4oeGNxjhDU18pA1ITuRENZnG98X0o49NCeZWTop
-	guN9JaZaTmMYOY3/7bGUxFadsN6pPywqCUSVTiRDOP9bWrCaSLS2TJ/Y=
-X-Received: by 2002:a05:600c:8485:b0:48a:76a3:2b9b with SMTP id 5b1f17b1804b1-48e51f32811mr149911085e9.17.1778173716959;
-        Thu, 07 May 2026 10:08:36 -0700 (PDT)
-X-Received: by 2002:a05:600c:8485:b0:48a:76a3:2b9b with SMTP id 5b1f17b1804b1-48e51f32811mr149910515e9.17.1778173716440;
-        Thu, 07 May 2026 10:08:36 -0700 (PDT)
-Received: from [192.168.88.32] ([150.228.93.82])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-45417bb92ebsm329213f8f.37.2026.05.07.10.08.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 07 May 2026 10:08:35 -0700 (PDT)
-Message-ID: <b04ca1cb-6247-4a6d-9c86-d86648a7a4e0@redhat.com>
-Date: Thu, 7 May 2026 19:08:34 +0200
+        d=1e100.net; s=20251104; t=1778178262; x=1778783062;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=LAwfLiW0vxr1+5uikUuotTzmkp2AYIoia+WnOZtNZaQ=;
+        b=DFdk8AMlor7rM3IgFqkiisjt0YM8gttI2QrXDa/YnFxjbpheIJq+rnBhvkVw2znmo7
+         YHshfxSugXmxsK75oyF6KsD/r29CqYEegSxzPtF/7P2j6+9Fbbw0O7004rMWw3hPndvb
+         vlK0gamq+XCb0YUBxWKit4toUiE2FUPtLqfxcr4zCs9g/m1I6aVEpqmo8u43CnO3QpX4
+         eqv+Jiy6y+pih3EQVvUsL+azuNzhJ/2zEACPXhqqmnmqv7bQiA4hccwLJYjzAgxP2FpL
+         Sw0WDqmj4BemNVCxzpryeBqWw8xthq2eD+wjb5drW6SKZ9Srytd9KXP5yp4p4TZemNzG
+         EqUA==
+X-Forwarded-Encrypted: i=1; AFNElJ+fjcstoM0XKI137/xDcFIslmrphG+0ntJjUbgPwt0fzNGoQF8oBCagWYpi9BUVlDYbdYTBCw==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxBfBdRiw5UD85ZFiFi47sIWSppku4MK3Gpg7B+UAQHUb8wzjGP
+	pwaRYRKPOGppdov/pIijU+m62fnMR5gj9sx1VB52bLg6rfHr/nSA07C/HO6n5g609oYq9ZVFUCp
+	G7vsg62MfzIfWKoim/cGXr8McVR1d4I8=
+X-Gm-Gg: AeBDievxrzpoA7S2fGye1n3ngcePpZWna9m22Ossp9MZ7wc+tW7XPwpCqKioFPfJz0t
+	fIJTy16aNeIIiTrgC2ZZZzJu8L6NgGJF5ZkJc8IQWtuNIGXMGjToFfQzvQx0MiL9hJdxg1vq8vG
+	ygh4h4fAgwME6yVDL56xXOC05pqhxGzVteCbgWoDarOHofhIrsEStMo0D+pyWuaI7aKxp2YVxIe
+	WOmtUotFGhLRHKcKKoimOdqx1h3TgZWTTIjrAtBSRFcN0dKX3CV/wUT42vHcqyea25q2ZT8bHnw
+	/CD5Vp4+DtbBIa0+jMk=
+X-Received: by 2002:a05:622a:8c7:b0:50e:5fe2:83a9 with SMTP id
+ d75a77b69052e-51461bf0515mr132024011cf.5.1778178261397; Thu, 07 May 2026
+ 11:24:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mptcp: serialize subflow->closing with RX path
-To: Kalpan Jani <kalpan.jani@mpiricsoftware.com>, matttbe@kernel.org,
- martineau@kernel.org, mptcp@lists.linux.dev, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Cc: shardul.b@mpiricsoftware.com, janak@mpiric.us, kalpanjani009@gmail.com,
- shardulsb08@gmail.com
-References: <20260507072802.612125-1-kalpan.jani@mpiricsoftware.com>
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <20260507072802.612125-1-kalpan.jani@mpiricsoftware.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 7daClDhtpcxxfzuwAuBUAAPut0sxzjYkk93YEDl4Yic_1778173717
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <cover.1776149210.git.caoruide123@gmail.com> <86e2514b533bf4d55d4aa2fdbf1404022e8c9430.1776149210.git.caoruide123@gmail.com>
+ <5f06a4e8-0b49-4119-94f9-3a8a1e430e0d@kernel.org> <CAAVpQUDzh-dGsQpBCZjN3rUsoDc2QjzWh-o5yVWoBWDQNXbjmQ@mail.gmail.com>
+ <05a19f8d-360e-41d1-bc8a-0b4caab3d354@gmail.com> <027acbe6-ccef-4c4d-8b85-927044326150@kernel.org>
+In-Reply-To: <027acbe6-ccef-4c4d-8b85-927044326150@kernel.org>
+From: Yuan Tan <yuantan098@gmail.com>
+Date: Thu, 7 May 2026 11:23:45 -0700
+X-Gm-Features: AVHnY4KL6Fk32UJVkC2wlJ6gu9pwIbIP22C6FAIjmsvohtzOfzBrpziSR8vKLX8
+Message-ID: <CAPuPA7K8Dqsoy7W4ow+c=gpPEKEbEiLErym2mxCyY6bJFO9G-A@mail.gmail.com>
+Subject: Re: [PATCH net 1/1] mptcp: hold subflow request owners when cloning reqsk
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: caoruide123@gmail.com, Ren Wei <n05ec@lzu.edu.cn>, mptcp@lists.linux.dev, 
+	yifanwucs@gmail.com, tomapufckgml@gmail.com, enjou1224z@gmail.com, 
+	bird@lzu.edu.cn
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 5/7/26 9:28 AM, Kalpan Jani wrote:
-> There is a race between mptcp_data_ready() (RX path) and
-> mptcp_close_ssk() (teardown path) when accessing subflow->closing.
-> 
-> Currently, mptcp_data_ready() checks subflow->closing before acquiring
-> mptcp_data_lock(), while mptcp_close_ssk() may concurrently set
-> subflow->closing and 
+On Thu, May 7, 2026 at 1:07=E2=80=AFAM Matthieu Baerts <matttbe@kernel.org>=
+ wrote:
+>
+> Hi Yuan, Ren, Ruide,
+>
+> (-netdev list)
+>
+> On 19/04/2026 11:51, Yuan Tan wrote:
+> >
+> > On 4/16/2026 11:48 AM, Kuniyuki Iwashima wrote:
+> >> On Thu, Apr 16, 2026 at 10:45=E2=80=AFAM Matthieu Baerts <matttbe@kern=
+el.org> wrote:
+> >>> Hi Ren,
+> >>>
+> >>> On 15/04/2026 11:31, Ren Wei wrote:
+> >>>> From: Ruide Cao <caoruide123@gmail.com>
+> >>>>
+> >>>> TCP request migration clones pending request sockets with
+> >>>> inet_reqsk_clone(). For MPTCP MP_JOIN requests this raw-copies
+> >>>> subflow_req->msk, but the cloned request does not take a new referen=
+ce.
+> >>>>
+> >>>> Both the original and the cloned request can later drop the same msk=
+ in
+> >>>> subflow_req_destructor(), and a migrated request may keep a dangling=
+ msk
+> >>>> pointer after the original owner has already been released.
+> >>>>
+> >>>> Add a request_sock clone callback and let MPTCP grab a reference for=
+ cloned
+> >>>> subflow requests that carry an msk. This keeps ownership balanced ac=
+ross
+> >>>> both successful migrations and failed clone/insert paths without cha=
+nging
+> >>>> other protocols.
+> >>> Thank you for this patch!
+> >>>
+> >>> Indeed, it looks like this path has not been covered by the MPTCP tes=
+t
+> >>> suite so far.
+> >>>
+> >>> By chance, do you have any simpler reproducer using packetdrill? (the
+> >>> MPTCP fork)
+> >>>
+> >>>   https://github.com/multipath-tcp/packetdrill
+> >>>
+> >>> Also, I see Sashiko is pointing to a potential issue with MP_CAPABLE =
+and
+> >>> the token, also only visible with net.ipv4.tcp_migrate_req=3D1:
+> >>>
+> >>> https://sashiko.dev/#/patchset/86e2514b533bf4d55d4aa2fdbf1404022e8c94=
+30.1776149210.git.caoruide123%40gmail.com
+> >>>
+> >>> Are you also looking at that?
+> >>>
+> >>>> Fixes: c905dee62232 ("tcp: Migrate TCP_NEW_SYN_RECV requests at retr=
+ansmitting SYN+ACKs.")
+> >>>> Cc: stable@kernel.org
+> >>>> Reported-by: Yuan Tan <yuantan098@gmail.com>
+> >>>> Reported-by: Yifan Wu <yifanwucs@gmail.com>
+> >>>> Reported-by: Juefei Pu <tomapufckgml@gmail.com>
+> >>>> Reported-by: Xin Liu <bird@lzu.edu.cn>
+> >>>> Signed-off-by: Ruide Cao <caoruide123@gmail.com>
+> >>>> Tested-by: Ren Wei <enjou1224z@gmail.com>
+> >>>> Signed-off-by: Ren Wei <n05ec@lzu.edu.cn>
+> >>>> ---
+> >>>>  include/net/request_sock.h      |  2 ++
+> >>>>  net/ipv4/inet_connection_sock.c |  3 +++
+> >>>>  net/mptcp/subflow.c             | 13 +++++++++++++
+> >>>>  3 files changed, 18 insertions(+)
+> >>>>
+> >>>> diff --git a/include/net/request_sock.h b/include/net/request_sock.h
+> >>>> index 5a9c826a7092..560e464c400f 100644
+> >>>> --- a/include/net/request_sock.h
+> >>>> +++ b/include/net/request_sock.h
+> >>>> @@ -36,6 +36,8 @@ struct request_sock_ops {
+> >>>>                                     struct sk_buff *skb,
+> >>>>                                     enum sk_rst_reason reason);
+> >>>>       void            (*destructor)(struct request_sock *req);
+> >>>> +     void            (*init_clone)(const struct request_sock *req,
+> >>>> +                                   struct request_sock *new_req);
+> >>> @TCP/INET maintainers: are you OK with this new function pointer?
+> >>>
+> >>> Currently, MPTCP is the only user, and "req" is not used, see below.
+> >>>
+> >>>>  };
+> >>>>
+> >>>>  struct saved_syn {
+> >>>> diff --git a/net/ipv4/inet_connection_sock.c b/net/ipv4/inet_connect=
+ion_sock.c
+> >>>> index e961936b6be7..140a9e96ad58 100644
+> >>>> --- a/net/ipv4/inet_connection_sock.c
+> >>>> +++ b/net/ipv4/inet_connection_sock.c
+> >>>> @@ -954,6 +954,9 @@ static struct request_sock *inet_reqsk_clone(str=
+uct request_sock *req,
+> >>>>       if (sk->sk_protocol =3D=3D IPPROTO_TCP && tcp_rsk(nreq)->tfo_l=
+istener)
+> >>>>               rcu_assign_pointer(tcp_sk(nreq->sk)->fastopen_rsk, nre=
+q);
+> >>> (Maybe TCP with fastopen could be this other user to call
+> >>> rcu_assign_pointer()? (net-next material))
+> >>>
+> >>>> +     if (req->rsk_ops->init_clone)
+> >>>> +             req->rsk_ops->init_clone(req, nreq);
+> >> I think a simple direct call is better.
+> >>
+> >> #ifdef CONFIG_MPTCP
+> >>     if (tcp_rsk(req)->is_mptcp)
+> >>         mptcp_reqsk_clone(nreq);
+> >> #endif
+> >>
+> >  Thank you very much for your suggestion. We will use this approach in
+> > the next version of the patch. Would you like us to add your
+> > Suggested-by tag?
+> For a question of organisation, do you still plan to send a v2
+> addressing the review comments?
+>
+> Cheers,
+> Matt
+> --
+> Sponsored by the NGI0 Core fund.
+>
 
-Are you sure this race can really happen? both the relevant part of 
-__mptcp_close_ssk() and mptcp_data_ready() run under the ssk socket
-lock.
+Sorry for the delay. Please forgive us that we are all working on the
+patches part-time :)
 
-> @@ -2653,9 +2673,12 @@ void mptcp_close_ssk(struct sock *sk, struct sock *ssk,
->  	if (sk->sk_state == TCP_ESTABLISHED)
->  		mptcp_event(MPTCP_EVENT_SUB_CLOSED, mptcp_sk(sk), ssk, GFP_KERNEL);
->  
-> -	/* Remove any reference from the backlog to this ssk; backlog skbs consume
-> +	/* Remove any reference from the backlog to this ssk.
-> +	 * Serialize cleanup with RX-side enqueue using mptcp_data_lock().
-> +	 * Backlog skbs consume
->  	 * space in the msk receive queue, no need to touch sk->sk_rmem_alloc
->  	 */
-> +	mptcp_data_lock(sk);
->  	list_for_each_entry(skb, &msk->backlog_list, list) {
->  		if (skb->sk != ssk)
->  			continue;
-
-The real problem is here: the backlog is currently traversed without the
-data lock (wrong: the mptcp_data_lock() protects backlog updates), while
-the ssk is still possibly open, unlocked and can keep receiving packets
-and adding them to the BL.
-
-A better solution would be something alike the following patch (completely
-untested):
----
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 718e910ff23f..68d97926cb81 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2550,6 +2550,21 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
- 	lock_sock_nested(ssk, SINGLE_DEPTH_NESTING);
- 	subflow->closing = 1;
- 
-+	/* Remove any reference from the backlog to this ssk; backlog skbs consume
-+	 * space in the msk receive queue, no need to touch sk->sk_rmem_alloc
-+	 */
-+	if (flags & MPTCP_CF_PUSH) {
-+		mptcp_data_lock(sk);
-+		list_for_each_entry(skb, &msk->backlog_list, list) {
-+			if (skb->sk != ssk)
-+				continue;
-+
-+			atomic_sub(skb->truesize, &skb->sk->sk_rmem_alloc);
-+			skb->sk = NULL;
-+		}
-+		mptcp_data_unlock(sk);
-+	}
-+
- 	/* Borrow the fwd allocated page left-over; fwd memory for the subflow
- 	 * could be negative at this point, but will be reach zero soon - when
- 	 * the data allocated using such fragment will be freed.
-@@ -2653,17 +2668,6 @@ void mptcp_close_ssk(struct sock *sk, struct sock *ssk,
- 	if (sk->sk_state == TCP_ESTABLISHED)
- 		mptcp_event(MPTCP_EVENT_SUB_CLOSED, mptcp_sk(sk), ssk, GFP_KERNEL);
- 
--	/* Remove any reference from the backlog to this ssk; backlog skbs consume
--	 * space in the msk receive queue, no need to touch sk->sk_rmem_alloc
--	 */
--	list_for_each_entry(skb, &msk->backlog_list, list) {
--		if (skb->sk != ssk)
--			continue;
--
--		atomic_sub(skb->truesize, &skb->sk->sk_rmem_alloc);
--		skb->sk = NULL;
--	}
--
- 	/* subflow aborted before reaching the fully_established status
- 	 * attempt the creation of the next subflow
- 	 */
-
+Ruide will send v2 this weekend.
