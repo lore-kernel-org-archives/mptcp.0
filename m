@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E128371D05;
-	Thu,  7 May 2026 07:44:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A410133B6C2
+	for <mptcp@lists.linux.dev>; Thu,  7 May 2026 08:07:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778139882; cv=none; b=XwDuz/J5uUPchfJLIQ/bmouiIx2gHHjDVL62s/1BLdXyOoVp2LBYrQhuhbFMXlt7wu3CXAVbn6ecB7yK+JaD/FAmSFLJM1uJms5xM2EeGxsYA0y6cCxQrMANSnQXxib0xlsgb27T5VfmT2A/FiaNGKF4f4QC6wpJ33km1rxsbmc=
+	t=1778141267; cv=none; b=ogtFRISh1V9qUGAQqSqOvNkf2aIFgLnhWeQ/KJ/POJyJ6QDJPRTs0PunGe+2nT1wM/oFttEXJKTDY04tff8/OeG4Ws1HK7Q+dnKoUuKSl64HgIjeuZ2b9eHfYVT4xYicf0T3z75WOozle5pwhR+CQJlrNE8tfochBjF+IcHoEAg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778139882; c=relaxed/simple;
-	bh=3SB4V4RXsUIQ3+bqYGeO7CBlxhBdDGQk9jVAIk1hsdY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
-	 In-Reply-To:Content-Type; b=DftAWX4WmKf9bEKU1yxm5GJECGPaijQkQZE0dBqe9dDip+k1Fi07TDhgmUZHAHZlRXZXIS/6gWrAtt7qfZlWqKaKWrq2hzAZ642Vq3wobhCUuvgrRFUYwwUnMnEg/FyGORHF8WMe+priuf4n4f4Eqg/5AQHWjDiUiVw0EPWlMZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TVu6K0hM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1778141267; c=relaxed/simple;
+	bh=Uq5cDmjtLz/ZzTBQJFrjSiNKlMnpxDNGfIaaw8/HPuQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YxViDXRXqV5yiGTfTf6dZMpC2Cx2mSOEuGYgoIqNPxAD47yzvfAoJVysbwIve7w3Q1OAMD0izZkVFCv8XII+xaiboF7SMZihsgCo5K9tpm3LHX/jMctLrJnYUl5OVac9iUqtjIJqMXtZnht7cY7oum6u2Ii9168tAZqRtrDfkO4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B5b2Acy9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TVu6K0hM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8AA78C2BCB8;
-	Thu,  7 May 2026 07:44:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B5b2Acy9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D04ACC2BCC7;
+	Thu,  7 May 2026 08:07:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778139881;
-	bh=3SB4V4RXsUIQ3+bqYGeO7CBlxhBdDGQk9jVAIk1hsdY=;
-	h=Date:Subject:To:References:From:Cc:In-Reply-To:From;
-	b=TVu6K0hM84GRFjkw7FrwNE5pt9hE+W+dyOmUaPhBvum9UqEhxgmCeS7IHoB0ySaji
-	 yRu2eyw/XwYfMJ6g3v66xGlJDy/4p0RiHWVbe230xZuH32z7cYuYuo+t2B3SNtd4gg
-	 Cf+t22dTBXvvAfCRGZqKJFOaEsEgU8NH6ec3ycpia4g5Zqm53o0Bl5IHdUmB/PZSbb
-	 yuNYnF30KGbvS68PIIgHDYZIno2ioqURabZ0xGiQM+Y+/BqPHcR55qj7IcZvs+Gked
-	 n54aRJHNbt4jn9q+G3OLwtXh2oXZ0haZh+FArpWDy8xTJzMzJ+gYR9qJ+sPaqF8gF/
-	 HQ31484Im5JbA==
-Message-ID: <2a9bde65-d2de-44cc-9192-e7aa8a0935a7@kernel.org>
-Date: Thu, 7 May 2026 09:44:37 +0200
+	s=k20201202; t=1778141267;
+	bh=Uq5cDmjtLz/ZzTBQJFrjSiNKlMnpxDNGfIaaw8/HPuQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=B5b2Acy9EfqfonwsGq6Y7Ty1D7UTioTcYrdsVfZD/ZYQ8YtVbjZgmJO3U6UF76VRh
+	 t4YFEG4eUxuEL7VjiEnWlCRayh7V+xeaaZrsYuDF9um7P6dSZxxmbDBph2M7vMkiu8
+	 kMmcZwHhUoSY8vRxF1x3Rj+LL+3qWKG0ItUb2ahtNJNbr/G8cvpfkeQ2Wp0gs+kkW/
+	 UvdQ3EuWvjwiU6ptNQfEHEv2xdnE5YjlHmatxB0wbVnbJE8WInyNtIHgR0A/fEuHun
+	 rRikaXh0kyvoC8gIUSuh3tfndcnJE65UOl+cE4wGmsvHZPIzLjMHp9dOnuo3rxVqOo
+	 Qpfd4mTiOamhA==
+Message-ID: <027acbe6-ccef-4c4d-8b85-927044326150@kernel.org>
+Date: Thu, 7 May 2026 10:07:43 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,15 +35,19 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [syzbot] [mptcp?] KMSAN: uninit-value in
- mptcp_established_options
+Subject: Re: [PATCH net 1/1] mptcp: hold subflow request owners when cloning
+ reqsk
 Content-Language: fr
-To: kuniyu@google.com, pabeni@redhat.com
-References: <69f8e352.170a0220.bb392.0005.GAE@google.com>
+To: Yuan Tan <yuantan098@gmail.com>, caoruide123@gmail.com,
+ Ren Wei <n05ec@lzu.edu.cn>
+Cc: mptcp@lists.linux.dev, yifanwucs@gmail.com, tomapufckgml@gmail.com,
+ enjou1224z@gmail.com, bird@lzu.edu.cn
+References: <cover.1776149210.git.caoruide123@gmail.com>
+ <86e2514b533bf4d55d4aa2fdbf1404022e8c9430.1776149210.git.caoruide123@gmail.com>
+ <5f06a4e8-0b49-4119-94f9-3a8a1e430e0d@kernel.org>
+ <CAAVpQUDzh-dGsQpBCZjN3rUsoDc2QjzWh-o5yVWoBWDQNXbjmQ@mail.gmail.com>
+ <05a19f8d-360e-41d1-bc8a-0b4caab3d354@gmail.com>
 From: Matthieu Baerts <matttbe@kernel.org>
-Cc: syzbot <syzbot+ff020673c5e3d94d9478@syzkaller.appspotmail.com>,
- linux-kernel@vger.kernel.org, mptcp@lists.linux.dev,
- syzkaller-bugs@googlegroups.com
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -88,69 +92,108 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <69f8e352.170a0220.bb392.0005.GAE@google.com>
+In-Reply-To: <05a19f8d-360e-41d1-bc8a-0b4caab3d354@gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Paolo, Kuniyuki,
+Hi Yuan, Ren, Ruide,
 
-On 04/05/2026 20:20, syzbot wrote:
-> Hello,
+(-netdev list)
+
+On 19/04/2026 11:51, Yuan Tan wrote:
 > 
-> syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-> KMSAN: uninit-value in irqentry_exit_to_kernel_mode_preempt
-
-It looks like the issue is different now:
-
-> =====================================================
-> BUG: KMSAN: uninit-value in irqentry_exit_to_kernel_mode_preempt+0xb0/0xc0 include/linux/irq-entry-common.h:472
->  irqentry_exit_to_kernel_mode_preempt+0xb0/0xc0 include/linux/irq-entry-common.h:472
->  irqentry_exit_to_kernel_mode include/linux/irq-entry-common.h:547 [inline]
->  irqentry_exit+0x7b/0x760 kernel/entry/common.c:164
->  sysvec_apic_timer_interrupt+0x52/0x90 arch/x86/kernel/apic/apic.c:1061
->  asm_sysvec_apic_timer_interrupt+0x1f/0x30 arch/x86/include/asm/idtentry.h:697
->  kmsan_get_metadata+0x17/0x160 mm/kmsan/shadow.c:125
->  kmsan_get_shadow_origin_ptr+0x4a/0xb0 mm/kmsan/shadow.c:102
->  get_shadow_origin_ptr mm/kmsan/instrumentation.c:38 [inline]
->  __msan_metadata_ptr_for_load_4+0x24/0x40 mm/kmsan/instrumentation.c:93
->  tcp_data_queue+0xdc/0x7c90 net/ipv4/tcp_input.c:5589
->  tcp_rcv_established+0x19bb/0x3200 net/ipv4/tcp_input.c:6656
->  tcp_v4_do_rcv+0xc4b/0x1b10 net/ipv4/tcp_ipv4.c:1852
->  sk_backlog_rcv include/net/sock.h:1190 [inline]
-
-That's the input side.
-
->  __release_sock+0x360/0x7d0 net/core/sock.c:3216
->  release_sock+0x22d/0x300 net/core/sock.c:3815
->  mptcp_subflow_shutdown+0x358/0x690 net/mptcp/protocol.c:3144
->  mptcp_check_send_data_fin+0x31b/0x3d0 net/mptcp/protocol.c:3218
->  __mptcp_wr_shutdown net/mptcp/protocol.c:3234 [inline]
->  __mptcp_close+0x860/0x1360 net/mptcp/protocol.c:3313
->  mptcp_close+0x42/0x260 net/mptcp/protocol.c:3367
->  inet_release+0x1ee/0x2a0 net/ipv4/af_inet.c:442
->  __sock_release net/socket.c:722 [inline]
->  sock_close+0xd6/0x2f0 net/socket.c:1514
->  __fput+0x60e/0x1010 fs/file_table.c:510
->  ____fput+0x25/0x30 fs/file_table.c:538
->  task_work_run+0x208/0x2b0 kernel/task_work.c:233
->  resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
->  __exit_to_user_mode_loop kernel/entry/common.c:67 [inline]
->  exit_to_user_mode_loop+0x306/0x1b60 kernel/entry/common.c:98
->  __exit_to_user_mode_prepare include/linux/irq-entry-common.h:207 [inline]
->  syscall_exit_to_user_mode_prepare include/linux/irq-entry-common.h:238 [inline]
->  syscall_exit_to_user_mode include/linux/entry-common.h:318 [inline]
->  do_syscall_64+0x236/0xf80 arch/x86/entry/syscall_64.c:100
->  entry_SYSCALL_64_after_hwframe+0x77/0x7f
-> 
-> Local variable mp_opt created at:
->  mptcp_incoming_options+0x11d/0x43b0 net/mptcp/options.c:1171
-
-Confirmed here. With "struct mptcp_options_received" while the original
-issue was with "struct mptcp_out_options".
-
-Plus I'm not exactly sure to understand the issue here: mp_opt is
-defined and used only in mptcp_incoming_options(), and I don't see
-anything using it after the end of this function. Or did I miss something?
+> On 4/16/2026 11:48 AM, Kuniyuki Iwashima wrote:
+>> On Thu, Apr 16, 2026 at 10:45 AM Matthieu Baerts <matttbe@kernel.org> wrote:
+>>> Hi Ren,
+>>>
+>>> On 15/04/2026 11:31, Ren Wei wrote:
+>>>> From: Ruide Cao <caoruide123@gmail.com>
+>>>>
+>>>> TCP request migration clones pending request sockets with
+>>>> inet_reqsk_clone(). For MPTCP MP_JOIN requests this raw-copies
+>>>> subflow_req->msk, but the cloned request does not take a new reference.
+>>>>
+>>>> Both the original and the cloned request can later drop the same msk in
+>>>> subflow_req_destructor(), and a migrated request may keep a dangling msk
+>>>> pointer after the original owner has already been released.
+>>>>
+>>>> Add a request_sock clone callback and let MPTCP grab a reference for cloned
+>>>> subflow requests that carry an msk. This keeps ownership balanced across
+>>>> both successful migrations and failed clone/insert paths without changing
+>>>> other protocols.
+>>> Thank you for this patch!
+>>>
+>>> Indeed, it looks like this path has not been covered by the MPTCP test
+>>> suite so far.
+>>>
+>>> By chance, do you have any simpler reproducer using packetdrill? (the
+>>> MPTCP fork)
+>>>
+>>>   https://github.com/multipath-tcp/packetdrill
+>>>
+>>> Also, I see Sashiko is pointing to a potential issue with MP_CAPABLE and
+>>> the token, also only visible with net.ipv4.tcp_migrate_req=1:
+>>>
+>>> https://sashiko.dev/#/patchset/86e2514b533bf4d55d4aa2fdbf1404022e8c9430.1776149210.git.caoruide123%40gmail.com
+>>>
+>>> Are you also looking at that?
+>>>
+>>>> Fixes: c905dee62232 ("tcp: Migrate TCP_NEW_SYN_RECV requests at retransmitting SYN+ACKs.")
+>>>> Cc: stable@kernel.org
+>>>> Reported-by: Yuan Tan <yuantan098@gmail.com>
+>>>> Reported-by: Yifan Wu <yifanwucs@gmail.com>
+>>>> Reported-by: Juefei Pu <tomapufckgml@gmail.com>
+>>>> Reported-by: Xin Liu <bird@lzu.edu.cn>
+>>>> Signed-off-by: Ruide Cao <caoruide123@gmail.com>
+>>>> Tested-by: Ren Wei <enjou1224z@gmail.com>
+>>>> Signed-off-by: Ren Wei <n05ec@lzu.edu.cn>
+>>>> ---
+>>>>  include/net/request_sock.h      |  2 ++
+>>>>  net/ipv4/inet_connection_sock.c |  3 +++
+>>>>  net/mptcp/subflow.c             | 13 +++++++++++++
+>>>>  3 files changed, 18 insertions(+)
+>>>>
+>>>> diff --git a/include/net/request_sock.h b/include/net/request_sock.h
+>>>> index 5a9c826a7092..560e464c400f 100644
+>>>> --- a/include/net/request_sock.h
+>>>> +++ b/include/net/request_sock.h
+>>>> @@ -36,6 +36,8 @@ struct request_sock_ops {
+>>>>                                     struct sk_buff *skb,
+>>>>                                     enum sk_rst_reason reason);
+>>>>       void            (*destructor)(struct request_sock *req);
+>>>> +     void            (*init_clone)(const struct request_sock *req,
+>>>> +                                   struct request_sock *new_req);
+>>> @TCP/INET maintainers: are you OK with this new function pointer?
+>>>
+>>> Currently, MPTCP is the only user, and "req" is not used, see below.
+>>>
+>>>>  };
+>>>>
+>>>>  struct saved_syn {
+>>>> diff --git a/net/ipv4/inet_connection_sock.c b/net/ipv4/inet_connection_sock.c
+>>>> index e961936b6be7..140a9e96ad58 100644
+>>>> --- a/net/ipv4/inet_connection_sock.c
+>>>> +++ b/net/ipv4/inet_connection_sock.c
+>>>> @@ -954,6 +954,9 @@ static struct request_sock *inet_reqsk_clone(struct request_sock *req,
+>>>>       if (sk->sk_protocol == IPPROTO_TCP && tcp_rsk(nreq)->tfo_listener)
+>>>>               rcu_assign_pointer(tcp_sk(nreq->sk)->fastopen_rsk, nreq);
+>>> (Maybe TCP with fastopen could be this other user to call
+>>> rcu_assign_pointer()? (net-next material))
+>>>
+>>>> +     if (req->rsk_ops->init_clone)
+>>>> +             req->rsk_ops->init_clone(req, nreq);
+>> I think a simple direct call is better.
+>>
+>> #ifdef CONFIG_MPTCP
+>>     if (tcp_rsk(req)->is_mptcp)
+>>         mptcp_reqsk_clone(nreq);
+>> #endif
+>>
+>  Thank you very much for your suggestion. We will use this approach in
+> the next version of the patch. Would you like us to add your
+> Suggested-by tag?
+For a question of organisation, do you still plan to send a v2
+addressing the review comments?
 
 Cheers,
 Matt
