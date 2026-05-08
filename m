@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEC823CCA02
-	for <mptcp@lists.linux.dev>; Fri,  8 May 2026 11:37:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D579E3D7D7F
+	for <mptcp@lists.linux.dev>; Fri,  8 May 2026 11:37:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778240232; cv=none; b=W9I1eS04MqoM0Kldq0EoCqpyNenhJ3aGB9/Yk988fzMZneKcABjkJqP5Y3XZ+AFIVQya66qyeGQCx9dxhA6IbfxVZ0Lm8Qvl+UuulHLvIKiMz5UpzH9c0AUIDTTMguNffrbgkzbpBtzqkluwUzKv4CYXbAfrdNNal1NWzF6A11o=
+	t=1778240262; cv=none; b=bCFTfy/Os1YZ1kE0j67Qr2gvhSxaDCbss9cRkCBlWTiiDgGM1hXLDYt3WCc6tSEK13EcYPIkcWYrgmpwwnyJtvC/L9q1lWCIcQHW/1fJDajYD1D0fyNsS6OFc3ksEvz2pHlo38VuSDnlobd9uTG9V+kH3kaEUiuXVJh0rNdPpA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778240232; c=relaxed/simple;
-	bh=pAR+h2H4STiQkaiMdObC8kHoIpi4mW1ElDih26JofLg=;
+	s=arc-20240116; t=1778240262; c=relaxed/simple;
+	bh=7TD3SE2pC1I5awZkHnIk7an4VWLr1UwELB9A73JLb+M=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ikl+E6B5aRf1hxMdMgEbjRNFc/S6/skI99gslaAywOCsvBus89mYUww+LricjjdnsjTQrKDjT0Z0fYlox3PSKkqHROuldNOTZ7yIdRSaOvjhILJRJTEThbQkSoZjxJarGV8dkksM8smo0rl09iuZEelpH3ITn7tS8hKFiUK/TOs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vRelA+hE; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=KfmR1nM98+fctWaEAaT+/KqgdLnkrxwsH5Paz26hV9baQv27DCiJ6Jv2zQxlun1M82yBg2qtI1QisvkLDphyWNYtl/EoXoXnm0MEwrvo6ATHc2g1nIhsYOCsXKXg2UmXlNjCnWK9j7Ioz7nbfNSAf0gokIyw+OYIQjOFEGBjNLY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f1d3JR6L; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vRelA+hE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B85CAC2BCB0;
-	Fri,  8 May 2026 11:37:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f1d3JR6L"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40EEDC2BCB0;
+	Fri,  8 May 2026 11:37:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778240232;
-	bh=pAR+h2H4STiQkaiMdObC8kHoIpi4mW1ElDih26JofLg=;
+	s=k20201202; t=1778240262;
+	bh=7TD3SE2pC1I5awZkHnIk7an4VWLr1UwELB9A73JLb+M=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=vRelA+hEdj1skWiRhAaA9taSlw4kZurPGe1p566/ulWoNHayzJMzIQ2ff+NgyJ6aM
-	 fHtZ9ylWCeumlTttSTBK0nBViLs7XJc5VcIFJ62XhHU1LrLKIM6Lsxvq+FZoounPkd
-	 GUZfVVfZXHjpzpo8CjSGsEtXrBsTB17y0MjQqxiQJUWEAg1qnt/xFCmkwTKMPmADUt
-	 UYNhGZs2OWhFYeu9K6d8cIg+PGOkW5QGpeVruCqXdNJ+xTGJCin29jEHzhIu8LsTiN
-	 EU8sBJqnAZqgiosSvQ6EpvPTqZayp5zdRWsxZfxZeJbxuoqS+VYseBQnPRZrY5filJ
-	 3KFblQcq9vjUw==
-Message-ID: <c4bf25d5-46c7-4a3e-a59a-b8ab9105cf2f@kernel.org>
-Date: Fri, 8 May 2026 13:37:08 +0200
+	b=f1d3JR6LpClqaYduDgofmm3RKsi3R9AOotEPe77HnShgjQ/w2sAUbDjkjtNQiuPa4
+	 nSydPupLhyeGxmkNzhbtolSMRjA0GhEGE5j+ggVFU0qvb4wyxtylWBrm1ySS3D3/we
+	 orWi0k8sB7CMRCXU28S2FB5oopngH70xEHGckTz1oIguJU8h9towloJ+RndoIv5nyN
+	 xk7W/WH7yr3wbWpNKKCTAqLzS3wOMw9u9yGF0fV9qIMqg27crKieiudfXBN1iZFm8u
+	 vcltiuCzh8W3dC27LJzLW2MknCpAZB+2AWbOWfe9hcC7EmpRh1DKqwNe/aRDxLfkcI
+	 N1I5rkxRV+Q1A==
+Message-ID: <6dd57952-26c9-4f72-bb58-48e3f8b84caf@kernel.org>
+Date: Fri, 8 May 2026 13:37:38 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net v3 2/2] selftests: mptcp: join: cover ADD_ADDR
- tx drop and list progress
+Subject: Re: [PATCH mptcp-net v3 0/2] mptcp: pm: fix ADD_ADDR timer infinite
+ retry on option space shortage
 Content-Language: fr
 To: Li Xiasong <lixiasong1@huawei.com>, mptcp@lists.linux.dev
 Cc: weiyongjun1@huawei.com, yuehaibing@huawei.com, zhangchangzhong@huawei.com
 References: <20260507125224.3536507-1-lixiasong1@huawei.com>
- <20260507125224.3536507-3-lixiasong1@huawei.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,66 +86,51 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20260507125224.3536507-3-lixiasong1@huawei.com>
+In-Reply-To: <20260507125224.3536507-1-lixiasong1@huawei.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Li,
 
 On 07/05/2026 14:52, Li Xiasong wrote:
-> Extend add_addr_ports_tests with IPv6 signaling cases that exercise
-> ADD_ADDR tx-space shortage when tcp_timestamps are enabled.
+> This series fixes a bug where the ADD_ADDR timer can keep rescheduling
+> indefinitely when TCP option space is insufficient, blocking subsequent
+> addresses in the endpoint list from being announced.
 > 
-> Add one case to verify PM still progresses to later signal endpoints
-> after the first one is dropped.
+> The issue is reproducible when sending an IPv6 ADD_ADDR with port while
+> tcp_timestamps is enabled. In that case, option space may be exhausted on
+> pure ACKs, and ADD_ADDR retransmission can stall PM forward progress.
 > 
-> This covers both failure accounting and the non-blocking behavior of
-> the announce list after a tx-space drop on pure ACK.
+> Patch 1 clears the signal in this path, skips the matching ADD_ADDR
+> retransmission entry, and preserves PM state-machine progression.
 > 
-> Signed-off-by: Li Xiasong <lixiasong1@huawei.com>
-> ---
->  .../testing/selftests/net/mptcp/mptcp_join.sh | 31 +++++++++++++++++++
->  1 file changed, 31 insertions(+)
+> Note on concurrency: timer cancellation in this path is best-effort.
+> A concurrent add_timer callback that acquires pm.lock first may still
+> perform one final ADD_ADDR send attempt before cancel state is applied.
+> After cancel sets entry->retrans_times to ADD_ADDR_RETRANS_MAX, the
+> callback-side check prevents further ADD_ADDR retransmissions.
 > 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> index beec41f6662a..5acd12021e6e 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> Patch 2 adds a selftest to cover this behavior and prevent regressions.
+> 
+> Patch summary:
+>   - patch 1: mptcp: pm: fix ADD_ADDR timer infinite retry on option space
+>     insufficient
+>   - patch 2: selftests: mptcp: join: cover ADD_ADDR tx drop and list
+>     progress
+> 
+> Changes since v2:
+>   - document the possible timer-cancel race window in the commit message
+>     and code comments
+>   - keep best-effort cancellation semantics (possible one extra send
+>     attempt under lock-order race), while preventing further retries via
+>     retrans_times gating
+>   - selftests: remove the redundant ADD_ADDR tx-drop subtest that
+>     duplicated existing coverage for list progression behavior
+>   - link to v2:
+>     https://lore.kernel.org/mptcp/20260430112026.343691-1-lixiasong1@huawei.com/
+Thank you for the v3, it looks good to me!
 
-(...)
-
-> @@ -3278,6 +3294,21 @@ add_addr_ports_tests()
->  
->  		chk_mpc_endp_attempt ${retl} 1
->  	fi
-> +
-> +	# first signal address drops, second one still progresses
-> +	if reset "signal addr list progresses after tx drop"; then
-> +		pm_nl_set_limits $ns1 0 2
-> +		pm_nl_set_limits $ns2 1 0
-> +		ip netns exec $ns1 sysctl -q net.ipv4.tcp_timestamps=1
-> +		ip netns exec $ns2 sysctl -q net.ipv4.tcp_timestamps=1
-> +
-> +		pm_nl_add_endpoint $ns1 dead:beef:2::1 flags signal port 10100
-> +		pm_nl_add_endpoint $ns1 dead:beef:3::1 flags signal
-> +		run_tests $ns1 $ns2 dead:beef:1::1
-> +		chk_add_drop_tx_nr 1
-> +		chk_add_tx_nr 1 1
-
-It would be good to call chk_add_drop_tx_nr from chk_add_tx_nr, similar
-to what is done with chk_join_tx_nr from chk_join_nr. For example, by
-default, assuming there is no drop, except when add_addr_drop_tx_nr=X is
-passed when calling chk_add_tx_nr. Or as a new optional argument for
-chk_add_tx_nr.
-
-But that's more mptcp-next material, so I'm not going to block this
-patch for that! But if you are whiling to add this, don't hesitate to :)
-
-> +		chk_add_nr 1 1 0
-> +	fi
->  }
->  
->  bind_tests()
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
 Cheers,
 Matt
