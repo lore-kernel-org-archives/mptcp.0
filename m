@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF3382F87B;
-	Fri,  8 May 2026 10:46:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 233252F8EAF
+	for <mptcp@lists.linux.dev>; Fri,  8 May 2026 10:49:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778237202; cv=none; b=uz1pyI3aGOvAembJ/ZWTSkTKxmUfbBP4ng4PSw622J01M5lDjkOcH5lUi+3SlJnloPNyNrVVuId2pZWB46EDDxhLZj6rFtHaoemlwPjSL0qPJjw4bmvqJzAXc3tcPfMZ82CvpLEC3cVU3/SnZxN5AthAek5yCppo5RLCxq/A3qU=
+	t=1778237383; cv=none; b=kSNX4BQwkYBuWZs11n9TjMpShXkqdolJQBOIu+AjRZjT5vm3BQa4C65f9VfGq3To23qwEoE8c3kWNv0x5pK+i37k+CSPbRJ25BVnBH5E1wBHNnCXE0Kg5XNrQoJrh/mNve9vQjrO3nMUmtEp2lv8LzDPyCp5GZpzuxkL23j4+qs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778237202; c=relaxed/simple;
-	bh=xf6BGLSfRGHCKfcnkN3d0PQtyTozP0RjLq6vHzEGdiY=;
+	s=arc-20240116; t=1778237383; c=relaxed/simple;
+	bh=Gg3msXyuJ8ENU17KtpooAUBaLp0NkRlhWIKGdAnSdcU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=if/mN7QnbdvtFscnlUQalPkw0yaNkAwXPp3KgoElPVgl9JCC+SPQ5jwwjTQbwpefPhT8QFEuhBqLHkkrioA3ZEeLWcuLvsmxgFhnRmjt2sxFVVwF5N3Uh/En8vre5rsrWncGrYiNj3Ud5PgKQmFnxAKfky56zLYU4QP+LLe80yo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NXojbh09; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=QzcoB+08CUInfulZvnYvY0JBkb9idYlSTLYdOGLRWWywtDyqBBSBpKfIhZOPdZJA3xZ2t+mQ4bw4/jdG1q/aJmmrEntmiZyvsnfJyCPRmG7Z3XP+GBIIX2n3ySoD+Dbwm5dA+X7nIQmQ0hEfkQHiAaxY8mkEsGhBLdpOTyO2UGM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R3mp/dqD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NXojbh09"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF89FC2BCB0;
-	Fri,  8 May 2026 10:46:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R3mp/dqD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 954E7C2BCC7;
+	Fri,  8 May 2026 10:49:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778237201;
-	bh=xf6BGLSfRGHCKfcnkN3d0PQtyTozP0RjLq6vHzEGdiY=;
+	s=k20201202; t=1778237382;
+	bh=Gg3msXyuJ8ENU17KtpooAUBaLp0NkRlhWIKGdAnSdcU=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=NXojbh09MBN0F00EIlOJ7aNjEaicIcQ4nUbOEJzpMiblzunAcWr0c8RtpMOG+uXPh
-	 qXH7DGZD1xCGMUysWVkC2X8iWf0s4yqWNepZGYcZd3MlOgA+abtOS9327IzRidpOin
-	 dBsJZequpdXOmJiuJRu1RnWjANDl0mzaluk33cuZpHiLGHTEhONH0nQgGSOEMdGLzT
-	 IGKqI6W3S7r8wjVe0JueLP5L2wmZ5nCg0lDL/Bt1spMuE3wmXRTNm8cCStDb4p8TGw
-	 ov4HVJL6YARcw3moivN8V2JMnPk8eYTxU05ctUabYlbQTP4N65+ohgdm/imr/SmeIK
-	 GSMqUwYeagj5A==
-Message-ID: <43a84c8c-0d65-400e-b735-76210af4cddb@kernel.org>
-Date: Fri, 8 May 2026 12:46:36 +0200
+	b=R3mp/dqDEWRmP7x+j4CGzQ1E2lsY/5YhiBkb+ZGiBQ0XEUBCEjIyamQzz5aoCLb1o
+	 +MeFAP7oo0O8pFkklCSL74fAciwD2beTwxKWBTtdHXHgSwxK/Uev9/s0ZkQr1z3a1l
+	 RmTqGq2SfYeYUZ2pdDAjLiggcH7yrBlHWlNCixYGha5DvwHLmzf57rrXOLgRkvfpdE
+	 C3MUHQCATp6VVE9ppirf5ybzavlqBw0duasv7hPfRiHQrKjweFRDVpm95X5ZGSXOQN
+	 TsfVigBBFjUkazF6p2UAR3wcSCdTRfuDUxSNWDtxIUaQdQtypdYZVhDuWw+VVuLxCE
+	 oQwjm/wtlamEQ==
+Message-ID: <cc137cc2-718f-41e9-aabd-e65b9fbfd4ee@kernel.org>
+Date: Fri, 8 May 2026 12:49:39 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,18 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [syzbot] [mptcp?] KMSAN: uninit-value in
- mptcp_established_options
+Subject: Re: [PATCH v3 mptcp-next 00/10] mptcp: address stall under memory
+ pressure
 Content-Language: fr
-To: Alexander Potapenko <glider@google.com>, Paolo Abeni <pabeni@redhat.com>
-Cc: kuniyu@google.com,
- syzbot <syzbot+ff020673c5e3d94d9478@syzkaller.appspotmail.com>,
- linux-kernel@vger.kernel.org, mptcp@lists.linux.dev,
- syzkaller-bugs@googlegroups.com
-References: <69f8e352.170a0220.bb392.0005.GAE@google.com>
- <2a9bde65-d2de-44cc-9192-e7aa8a0935a7@kernel.org>
- <672f5b7d-6fa0-41c5-a950-2890028c8572@redhat.com>
- <CAG_fn=Ud-sXzebnwvsiwnu6e0uOHRAFzmUH91Du9pek7Fsx5bA@mail.gmail.com>
+To: Geliang Tang <geliang@kernel.org>, gang.yan@linux.dev
+Cc: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+References: <cover.1777908248.git.pabeni@redhat.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -92,92 +86,36 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <CAG_fn=Ud-sXzebnwvsiwnu6e0uOHRAFzmUH91Du9pek7Fsx5bA@mail.gmail.com>
+In-Reply-To: <cover.1777908248.git.pabeni@redhat.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Alexander,
+Hi Geliang, Gang,
 
-Thank you for your reply!
-
-On 08/05/2026 12:11, Alexander Potapenko wrote:
-> On Fri, May 8, 2026 at 11:27 AM 'Paolo Abeni' via syzkaller-bugs
-> <syzkaller-bugs@googlegroups.com> wrote:
->>
->> On 5/7/26 9:44 AM, Matthieu Baerts wrote:
->>> Hi Paolo, Kuniyuki,
->>>
->>> On 04/05/2026 20:20, syzbot wrote:
->>>> Hello,
->>>>
->>>> syzbot has tested the proposed patch but the reproducer is still triggering an issue:
->>>> KMSAN: uninit-value in irqentry_exit_to_kernel_mode_preempt
->>>
->>> It looks like the issue is different now:
->>>
->>>> =====================================================
->>>> BUG: KMSAN: uninit-value in irqentry_exit_to_kernel_mode_preempt+0xb0/0xc0 include/linux/irq-entry-common.h:472
->>>>  irqentry_exit_to_kernel_mode_preempt+0xb0/0xc0 include/linux/irq-entry-common.h:472
->>>>  irqentry_exit_to_kernel_mode include/linux/irq-entry-common.h:547 [inline]
->>>>  irqentry_exit+0x7b/0x760 kernel/entry/common.c:164
->>>>  sysvec_apic_timer_interrupt+0x52/0x90 arch/x86/kernel/apic/apic.c:1061
->>>>  asm_sysvec_apic_timer_interrupt+0x1f/0x30 arch/x86/include/asm/idtentry.h:697
->>>>  kmsan_get_metadata+0x17/0x160 mm/kmsan/shadow.c:125
->>>>  kmsan_get_shadow_origin_ptr+0x4a/0xb0 mm/kmsan/shadow.c:102
->>>>  get_shadow_origin_ptr mm/kmsan/instrumentation.c:38 [inline]
->>>>  __msan_metadata_ptr_for_load_4+0x24/0x40 mm/kmsan/instrumentation.c:93
->>>>  tcp_data_queue+0xdc/0x7c90 net/ipv4/tcp_input.c:5589
->>>>  tcp_rcv_established+0x19bb/0x3200 net/ipv4/tcp_input.c:6656
->>>>  tcp_v4_do_rcv+0xc4b/0x1b10 net/ipv4/tcp_ipv4.c:1852
->>>>  sk_backlog_rcv include/net/sock.h:1190 [inline]
->>>
->>> That's the input side.
->>>
->>>>  __release_sock+0x360/0x7d0 net/core/sock.c:3216
->>>>  release_sock+0x22d/0x300 net/core/sock.c:3815
->>>>  mptcp_subflow_shutdown+0x358/0x690 net/mptcp/protocol.c:3144
->>>>  mptcp_check_send_data_fin+0x31b/0x3d0 net/mptcp/protocol.c:3218
->>>>  __mptcp_wr_shutdown net/mptcp/protocol.c:3234 [inline]
->>>>  __mptcp_close+0x860/0x1360 net/mptcp/protocol.c:3313
->>>>  mptcp_close+0x42/0x260 net/mptcp/protocol.c:3367
->>>>  inet_release+0x1ee/0x2a0 net/ipv4/af_inet.c:442
->>>>  __sock_release net/socket.c:722 [inline]
->>>>  sock_close+0xd6/0x2f0 net/socket.c:1514
->>>>  __fput+0x60e/0x1010 fs/file_table.c:510
->>>>  ____fput+0x25/0x30 fs/file_table.c:538
->>>>  task_work_run+0x208/0x2b0 kernel/task_work.c:233
->>>>  resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
->>>>  __exit_to_user_mode_loop kernel/entry/common.c:67 [inline]
->>>>  exit_to_user_mode_loop+0x306/0x1b60 kernel/entry/common.c:98
->>>>  __exit_to_user_mode_prepare include/linux/irq-entry-common.h:207 [inline]
->>>>  syscall_exit_to_user_mode_prepare include/linux/irq-entry-common.h:238 [inline]
->>>>  syscall_exit_to_user_mode include/linux/entry-common.h:318 [inline]
->>>>  do_syscall_64+0x236/0xf80 arch/x86/entry/syscall_64.c:100
->>>>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
->>>>
->>>> Local variable mp_opt created at:
->>>>  mptcp_incoming_options+0x11d/0x43b0 net/mptcp/options.c:1171
->>>
->>> Confirmed here. With "struct mptcp_options_received" while the original
->>> issue was with "struct mptcp_out_options".
->>>
->>> Plus I'm not exactly sure to understand the issue here: mp_opt is
->>> defined and used only in mptcp_incoming_options(), and I don't see
->>> anything using it after the end of this function. Or did I miss something?
->>
->> I also had hard time understanding the backtrace, I think some frames
->> are omitted/missing (it happens sometime, IDK why), specifically the one
->> related to mptcp_options_received() - which would be useful to
->> understand the issue.
+On 04/05/2026 17:39, Paolo Abeni wrote:
+> This an attempt to fix the data transfer stall reported by Geliang and
+> Gang more carefully enforcing memory constraints at the MPTCP level.
 > 
-> This is probably related to
-> https://lore.kernel.org/all/69e7ee1f.a00a0220.17a17.001d.GAE@google.com/T/
+> Patch 1/10 moves the bound check before entering the TCP socket.
+> Patch 2, 3, 4 and 5 are cleanups/refactors finalized to safely re-using
+> TCP helpers on MPTCP skbs.
+> Patch 6 makes TCP pruning related helpers available to MPTCP and patch 7
+> makes use of them. Patch 8 addresses an edge scenario that could still
+> lead to transfer stall under memory pressure.
+> Finally patch 9 and 10 improve the MPTCP-level retransmission schema to
+> make recovery from memory pressure significanly faster.
+> 
+> Note that the diffstat is biases by the quite large patch 4/9, which
+> contains mechanical transformation of existing code; "real" changes are
+> noticiable smaller.
+> 
+> Tested successfully vs the test cases proposed by Geliang and Gang and
+> vs the selftests.
 
-Ah yes, it looks similar.
-
-> Let me send the patch, perhaps this issue will also go away.
-
-That would be great, thank you!
+At the last meeting on Wednesday, Geliang mentioned he validated this
+series. Just to be sure, was it the v2 -- from last week -- or the v3 --
+from this week, while you were in EU -- that you validated? Because
+Paolo couldn't reproduce the issue you mentioned on the v3 on his side.
 
 Cheers,
 Matt
