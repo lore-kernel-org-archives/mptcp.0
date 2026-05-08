@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 233252F8EAF
-	for <mptcp@lists.linux.dev>; Fri,  8 May 2026 10:49:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F06543161A1
+	for <mptcp@lists.linux.dev>; Fri,  8 May 2026 10:54:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778237383; cv=none; b=kSNX4BQwkYBuWZs11n9TjMpShXkqdolJQBOIu+AjRZjT5vm3BQa4C65f9VfGq3To23qwEoE8c3kWNv0x5pK+i37k+CSPbRJ25BVnBH5E1wBHNnCXE0Kg5XNrQoJrh/mNve9vQjrO3nMUmtEp2lv8LzDPyCp5GZpzuxkL23j4+qs=
+	t=1778237694; cv=none; b=o2XHjgx5A8YSLXyklIq2J+kTTMNnvWsMRBdQj6x9+1yBxdc8wI4jsOqbdgL1qpmTQxLLNYE+Mp5HNAdqHoshHhvDEmmh32GMvs/GIHvYmj1pr92tobhfxUElQrkUMoJ+jRlSICsxY+8zDhmia2QiQIU8bjoi4Cb9CarkV6d8c9U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778237383; c=relaxed/simple;
-	bh=Gg3msXyuJ8ENU17KtpooAUBaLp0NkRlhWIKGdAnSdcU=;
+	s=arc-20240116; t=1778237694; c=relaxed/simple;
+	bh=YgOf14/Pcu9KAbcd0F42CS6rXArNq2vclfQQiiGr30k=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QzcoB+08CUInfulZvnYvY0JBkb9idYlSTLYdOGLRWWywtDyqBBSBpKfIhZOPdZJA3xZ2t+mQ4bw4/jdG1q/aJmmrEntmiZyvsnfJyCPRmG7Z3XP+GBIIX2n3ySoD+Dbwm5dA+X7nIQmQ0hEfkQHiAaxY8mkEsGhBLdpOTyO2UGM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R3mp/dqD; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=g2gnKLkmzsPVNSu2YFeb4y2Ya49eZERIcHmg6njmcAiH8VJw1S2pqS2QjCW01ogKkzJHvOz6zqfS7BbulaF+XL3H9dZLFF3Y6bMK6zISepSp2twZiZYn1S9Q+2bRhzoRkLB+g8J6WTt81Va683YNXmGZDWKm6i2raEFxohCQ/4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RW9e2H5x; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R3mp/dqD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 954E7C2BCC7;
-	Fri,  8 May 2026 10:49:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RW9e2H5x"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DFCBC2BCB0;
+	Fri,  8 May 2026 10:54:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778237382;
-	bh=Gg3msXyuJ8ENU17KtpooAUBaLp0NkRlhWIKGdAnSdcU=;
+	s=k20201202; t=1778237693;
+	bh=YgOf14/Pcu9KAbcd0F42CS6rXArNq2vclfQQiiGr30k=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=R3mp/dqDEWRmP7x+j4CGzQ1E2lsY/5YhiBkb+ZGiBQ0XEUBCEjIyamQzz5aoCLb1o
-	 +MeFAP7oo0O8pFkklCSL74fAciwD2beTwxKWBTtdHXHgSwxK/Uev9/s0ZkQr1z3a1l
-	 RmTqGq2SfYeYUZ2pdDAjLiggcH7yrBlHWlNCixYGha5DvwHLmzf57rrXOLgRkvfpdE
-	 C3MUHQCATp6VVE9ppirf5ybzavlqBw0duasv7hPfRiHQrKjweFRDVpm95X5ZGSXOQN
-	 TsfVigBBFjUkazF6p2UAR3wcSCdTRfuDUxSNWDtxIUaQdQtypdYZVhDuWw+VVuLxCE
-	 oQwjm/wtlamEQ==
-Message-ID: <cc137cc2-718f-41e9-aabd-e65b9fbfd4ee@kernel.org>
-Date: Fri, 8 May 2026 12:49:39 +0200
+	b=RW9e2H5x1w+ZPjpC5uz87vvYDYdbO/vWtzV88H0D967Tg1p8fX2wJgHs0z/bQzTPL
+	 vXhM2+WjC5UkRC+JBCv1cFySafTqmIkSyskwZRik5N48EHnr1Y2jKxcdtwR3ACipPA
+	 jHszP5a1hpvjv/b1PwkGJyPbhLeFXZPfODpdF85k0qIRFoEg7/p1SzLcRYmy0HnGcI
+	 1K0NgKnkP+mea8CM6ZnXaTiyKdMYwSw0FmTl7IgQ39fh65YWKfGksE0qTBP953aspk
+	 eTH0JEvb1HxHxNkxERIxxSaKTAUHGxWLsSWxP9aRxJNxNTAkcU3yY9ULVYdg7/Ol6K
+	 e2tExVUL1/QyQ==
+Message-ID: <ef8a156b-e0ce-4ecc-8b40-9b826eea897f@kernel.org>
+Date: Fri, 8 May 2026 12:54:50 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH v3 mptcp-next 00/10] mptcp: address stall under memory
- pressure
+Subject: Re: [PATCH mptcp-net v3] mptcp: update window_clamp on subflows when
+ SO_RCVBUF is set
 Content-Language: fr
-To: Geliang Tang <geliang@kernel.org>, gang.yan@linux.dev
-Cc: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-References: <cover.1777908248.git.pabeni@redhat.com>
+To: Gang Yan <gang.yan@linux.dev>, MPTCP Linux <mptcp@lists.linux.dev>
+Cc: Gang Yan <yangang@kylinos.cn>
+References: <20260506-window_clamp-v3-1-ade82fbbebb2@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,36 +86,33 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <cover.1777908248.git.pabeni@redhat.com>
+In-Reply-To: <20260506-window_clamp-v3-1-ade82fbbebb2@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Geliang, Gang,
+Hi Gang,
 
-On 04/05/2026 17:39, Paolo Abeni wrote:
-> This an attempt to fix the data transfer stall reported by Geliang and
-> Gang more carefully enforcing memory constraints at the MPTCP level.
+On 06/05/2026 11:43, Gang Yan wrote:
+> From: Gang Yan <yangang@kylinos.cn>
 > 
-> Patch 1/10 moves the bound check before entering the TCP socket.
-> Patch 2, 3, 4 and 5 are cleanups/refactors finalized to safely re-using
-> TCP helpers on MPTCP skbs.
-> Patch 6 makes TCP pruning related helpers available to MPTCP and patch 7
-> makes use of them. Patch 8 addresses an edge scenario that could still
-> lead to transfer stall under memory pressure.
-> Finally patch 9 and 10 improve the MPTCP-level retransmission schema to
-> make recovery from memory pressure significanly faster.
-> 
-> Note that the diffstat is biases by the quite large patch 4/9, which
-> contains mechanical transformation of existing code; "real" changes are
-> noticiable smaller.
-> 
-> Tested successfully vs the test cases proposed by Geliang and Gang and
-> vs the selftests.
+> Add __mptcp_subflow_set_rcvbuf() helper that calls the tcp_set_rcvbuf
+> to update window_clamp, in addition to writing sk_rcvbuf. Use it in
+> both mptcp_sol_socket_sync_intval() (setsockopt path) and
+> sync_socket_options() (new subflow creation path).
 
-At the last meeting on Wednesday, Geliang mentioned he validated this
-series. Just to be sure, was it the v2 -- from last week -- or the v3 --
-from this week, while you were in EU -- that you validated? Because
-Paolo couldn't reproduce the issue you mentioned on the v3 on his side.
+Now in our tree, with small modifications in the commit message.
+
+New patches for t/upstream-net and t/upstream:
+- 840fb208ba03: mptcp: update window_clamp on subflows when SO_RCVBUF is set
+- Results: 83b57683234a..a968ca54c292 (export-net)
+- Results: fac20e19a7d2..9ec315f69069 (export)
+
+Tests are now in progress:
+
+- export-net:
+https://github.com/multipath-tcp/mptcp_net-next/commit/ebbd36260bf0fc51690fbf16c146a51f95d32602/checks
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/876e5cac2c615fa953d03f4b90ab234ebfca3c73/checks
 
 Cheers,
 Matt
