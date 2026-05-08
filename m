@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFF32413223;
-	Fri,  8 May 2026 17:40:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A541E2566F7;
+	Fri,  8 May 2026 17:40:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778262029; cv=none; b=dFvnrpaGlHWH2Itefm+0BN0/XhFO7wduwKlnIw/64u0dXcpgVSZiAg6AkcgJs0jbbVCFoP53qt+YmITQRzFFzeMGcv+wzoiKDzetgt9ggDdpSA9kz9MqXBBsGbKy0C1sVteabTilO4IaL0K9IcUzSsRaoLm4H8KPnfDlKHKlW3E=
+	t=1778262033; cv=none; b=WHsLt+bNmxlQZzRK3mYYrNcoSN8BllqLVmkT9VpW5MsqgVQ3ia5VJe+qdiLiPsEwvQxqqhyf6GkSd1rCIb+X2EbZUcG/6NOUqLyoSFYNHiaOP+mT0n+nbX6jC7NRGw99xzTPPciRCeFYO2vnfd/otgt8BY8nWYzFoVwGy/I45D8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778262029; c=relaxed/simple;
-	bh=ChYyR8m0KntemIUgUhus0V3d5Xjk7lIn7Zs3/5xUEXs=;
+	s=arc-20240116; t=1778262033; c=relaxed/simple;
+	bh=GXQ5B1E4M/10/Qhs297jUYWm95hJVGjkrfRK8xxzgRg=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=YAugyoGBJPdGDVkjzTyvONqUsaKW8ErT0prUj5Wj2DbQn98Rtcy8wp0ebkeISi3OSza5Jo626bhVitFHNf3vIojUoYBZH4+8TxNkNY/sLpRgUPwfFGMT5ik6+//RZ6NPmf4P5M2fBeMyXTOv3lEcC/tAF8vo34rbs+qmJh3WTVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GCCOukoX; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=LB52s5EsJU10t9koJNuqc7qVfZ7qzSdn+Vc7PnrpBqMBGuINtcyg8/yZssSHLyYbzXWlO3UbR8EuM5XEBnmJbcKDtcRqcxIRtJcu1gP5IRvlsyf/bDx0tw4QSNDVHsNdTi16bDZPuYq9YVOiZTvaYFuF6be5v4sbnEzdPAPdKNU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qgb/oTAG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GCCOukoX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC576C2BCC9;
-	Fri,  8 May 2026 17:40:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qgb/oTAG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D15D1C2BCB0;
+	Fri,  8 May 2026 17:40:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778262029;
-	bh=ChYyR8m0KntemIUgUhus0V3d5Xjk7lIn7Zs3/5xUEXs=;
+	s=k20201202; t=1778262033;
+	bh=GXQ5B1E4M/10/Qhs297jUYWm95hJVGjkrfRK8xxzgRg=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=GCCOukoX46awkCDnJceAsD6tmYWCAhD3lsQoJotQM6dntW5EC47mJn6+locodz8Wb
-	 byOA3qVrdcmykLNtLDXv3v2g056BZs/iybtFBxGWheIdSeKjt+NWRJEOGfH8CVE1hN
-	 dORvQrEkR8g8vQiKBk/lA/mGk7rV3ItCewrEwu+3xVYotsxVGjdF+JLxRj0ZCfGxqS
-	 p2/zlSJTnHnHQwnm4jLD2e6w1qhD46nTsz0g6ny1egd3LF2ZHOiHjV+5LNq9U2HU2A
-	 tmbEwwCQ3shJS5Otl492AXob+O9wvrOYWWqki+/RmZvT9ayQZLFJyinH+tIUNkm0B3
-	 8YmesyeUiPfUQ==
+	b=qgb/oTAGNVPb0Nva+oNEMhOZBH9r4l/H+XsomVNaoOkPhk8wDd4D1W3sAp9J43U10
+	 LDuRhayRSEZ4ZbL/k+zaRCudW2U62HWLc8Hz/SCzPmuiej73Am7kaxXK+tWe5BNNAK
+	 FFtJohz0eui1M4bXsBnUuB4nJwaOsTCAo64w1fR577QuVbsBhnQb5KARhQBOOQie61
+	 IQf6d8pylYO9k37YixpveFLWKyXpSpRq2BrjxD7XJXG3azj3+ur90G5z/rTrFtALnr
+	 JJfgBuAQonzCR4qPqP7UIUGbytceo7yb87F/8Vki+ollVKuC7JjYMVBK6OQYFrCs3C
+	 eLi+ThUMNoMOw==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Fri, 08 May 2026 17:40:47 +0200
-Subject: [PATCH net-next 2/8] mptcp: pm: in-kernel: increase all limits to
- 64
+Date: Fri, 08 May 2026 17:40:49 +0200
+Subject: [PATCH net-next 4/8] mptcp: pm: in-kernel: increase endpoints
+ limit
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,7 +38,7 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260508-net-next-mptcp-pm-inc-limits-v1-2-c84e3fdf9b6a@kernel.org>
+Message-Id: <20260508-net-next-mptcp-pm-inc-limits-v1-4-c84e3fdf9b6a@kernel.org>
 References: <20260508-net-next-mptcp-pm-inc-limits-v1-0-c84e3fdf9b6a@kernel.org>
 In-Reply-To: <20260508-net-next-mptcp-pm-inc-limits-v1-0-c84e3fdf9b6a@kernel.org>
 To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, 
@@ -48,69 +48,46 @@ To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
 Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, 
  linux-kernel@vger.kernel.org, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2263; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=ChYyR8m0KntemIUgUhus0V3d5Xjk7lIn7Zs3/5xUEXs=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDL/KTBeav7rX1H2I95lepyMbJVW/c61yiJde3t3nOIIW
- V630V6yo5SFQYyLQVZMkUW6LTJ/5vMq3hIvPwuYOaxMIEMYuDgFYCJbDjP8lRZrD5cWly8K2fPr
- 4tO3btpTOvbPcn507Pq73Quv1M2VdGX4xfzv4G3bws4XJzfsF5tQukT88p/dFdNrmHaXXpleM+/
- XAS4A
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1233; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=GXQ5B1E4M/10/Qhs297jUYWm95hJVGjkrfRK8xxzgRg=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDL/KTAr7POvLTcsSt9VLjbt9fOtTU/5ebQXid50vz7Vc
+ 9vD1jarjlIWBjEuBlkxRRbptsj8mc+reEu8/Cxg5rAygQxh4OIUgIncFWJk+GQccSHeqFrW7RWr
+ veDqhgNPpzVYXS748bDqmLmhiojPNEaG/bUMnO/eKdkePTiB40rjw6BbrXNm1ISI3pdz9K636Lv
+ ECgA=
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-This means switching the maximum from 8 to 64 for the number of subflows
-and accepted ADD_ADDR.
+The endpoints are managed in a list which was limited to 8 entries.
 
-The previous limit of 8 subflows makes sense in most cases. Using more
-subflows will very likely *not* improve the situation, and could even
-decrease the performances. But there are no technical limitations nor
-performance impact to raise this limit, so let's do it: this will allow
-people with very specific use-cases, and researchers to easily create
-more subflows, and measure the performance impact by themselves.
+This limit can be too small in some cases: by having the same limit as
+the number of subflows, it might not allow creating all expected
+subflows when having a mix of v4 and v6 addresses that can all use MPTCP
+on v4/v6 only networks.
 
-The theoretical limit is 255 -- the ID is written in a u8 on the wire --
-but 64 is more than enough. With so many subflows, it will be costly to
-iterate over all of them when operations are done in bottom half.
+While increasing the limit above the new subflows one, why not using the
+technical limit: 255. Indeed, the endpoint will each have an ID that
+will be used on the wire, limited to u8, and the ID 0 is reserved to the
+initial subflow.
 
-Note that the in-kernel PM will continue to create subflows in reply to
-ADD_ADDR with a single batch of maximum 8 subflows. Same when adding new
-"subflow" endpoints with the fullmesh flag. Increasing those batch
-limits would have a memory impact, and it looks fine not to cover these
-cases with larger batches for the moment. If more is needed later, the
-position of the last subflow from the list could be remembered, and the
-list iteration could continue later.
-
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/434
 Reviewed-by: Mat Martineau <martineau@kernel.org>
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- net/mptcp/pm_kernel.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ net/mptcp/pm_kernel.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/net/mptcp/pm_kernel.c b/net/mptcp/pm_kernel.c
-index f8987a33bed4..aabd73d15c15 100644
+index ea3a7ea82013..4ba4346d7adc 100644
 --- a/net/mptcp/pm_kernel.c
 +++ b/net/mptcp/pm_kernel.c
-@@ -30,6 +30,7 @@ struct pm_nl_pernet {
- };
- 
- #define MPTCP_PM_ADDR_MAX	8
-+#define MPTCP_PM_SUBFLOWS_MAX	64
- 
- static struct pm_nl_pernet *pm_nl_get_pernet(const struct net *net)
- {
-@@ -1381,10 +1382,10 @@ static int parse_limit(struct genl_info *info, int id, unsigned int *limit)
- 		return 0;
- 
- 	*limit = nla_get_u32(attr);
--	if (*limit > MPTCP_PM_ADDR_MAX) {
-+	if (*limit > MPTCP_PM_SUBFLOWS_MAX) {
- 		NL_SET_ERR_MSG_ATTR_FMT(info->extack, attr,
- 					"limit greater than maximum (%u)",
--					MPTCP_PM_ADDR_MAX);
-+					MPTCP_PM_SUBFLOWS_MAX);
- 		return -EINVAL;
+@@ -746,7 +746,7 @@ static int mptcp_pm_nl_append_new_local_addr(struct pm_nl_pernet *pernet,
+ 	 */
+ 	if (pernet->next_id == MPTCP_PM_MAX_ADDR_ID)
+ 		pernet->next_id = 1;
+-	if (pernet->endpoints >= MPTCP_PM_ADDR_MAX) {
++	if (pernet->endpoints == MPTCP_PM_MAX_ADDR_ID) {
+ 		ret = -ERANGE;
+ 		goto out;
  	}
- 	return 0;
 
 -- 
 2.53.0
