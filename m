@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D579E3D7D7F
-	for <mptcp@lists.linux.dev>; Fri,  8 May 2026 11:37:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52555371868
+	for <mptcp@lists.linux.dev>; Fri,  8 May 2026 11:47:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778240262; cv=none; b=bCFTfy/Os1YZ1kE0j67Qr2gvhSxaDCbss9cRkCBlWTiiDgGM1hXLDYt3WCc6tSEK13EcYPIkcWYrgmpwwnyJtvC/L9q1lWCIcQHW/1fJDajYD1D0fyNsS6OFc3ksEvz2pHlo38VuSDnlobd9uTG9V+kH3kaEUiuXVJh0rNdPpA0=
+	t=1778240868; cv=none; b=I0AnMTemEI7r9iGeVroEFHiqSh07I3jzvW0Fdk4M3weGbE9BG7aiOywMusmDApLjJQQcoq3o/N6AGfcX3RdYF/QcI8tRw3YXeSjIP6kCCUNPSISY2TdBgl7KbIF9bT5etHAHUJS35YvQB4+ZvVIsfYFIWVCh25689t+DUas/21g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778240262; c=relaxed/simple;
-	bh=7TD3SE2pC1I5awZkHnIk7an4VWLr1UwELB9A73JLb+M=;
+	s=arc-20240116; t=1778240868; c=relaxed/simple;
+	bh=klm1ijCRrVb4Ab0DbW6EALTD8hoUYQdC6SRa0ljIoxE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KfmR1nM98+fctWaEAaT+/KqgdLnkrxwsH5Paz26hV9baQv27DCiJ6Jv2zQxlun1M82yBg2qtI1QisvkLDphyWNYtl/EoXoXnm0MEwrvo6ATHc2g1nIhsYOCsXKXg2UmXlNjCnWK9j7Ioz7nbfNSAf0gokIyw+OYIQjOFEGBjNLY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f1d3JR6L; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=LLBmfCpwU4r0Jkv9mUYneiZ8ODj9nHniNkFkg5DLbLe44qS32BL6JluP3QtUFLcrekdbDxJMcowV3PykLj6v38hdAtA+qROqh8qlXOqhi0z3qDEpUOjsxn0nDb28qmxqTbzby8e3w2Mkckafw8+Vi6Z6yReqXughRH0jFYx0o3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S6YuIi2s; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f1d3JR6L"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40EEDC2BCB0;
-	Fri,  8 May 2026 11:37:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S6YuIi2s"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C651AC2BCB0;
+	Fri,  8 May 2026 11:47:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778240262;
-	bh=7TD3SE2pC1I5awZkHnIk7an4VWLr1UwELB9A73JLb+M=;
+	s=k20201202; t=1778240868;
+	bh=klm1ijCRrVb4Ab0DbW6EALTD8hoUYQdC6SRa0ljIoxE=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=f1d3JR6LpClqaYduDgofmm3RKsi3R9AOotEPe77HnShgjQ/w2sAUbDjkjtNQiuPa4
-	 nSydPupLhyeGxmkNzhbtolSMRjA0GhEGE5j+ggVFU0qvb4wyxtylWBrm1ySS3D3/we
-	 orWi0k8sB7CMRCXU28S2FB5oopngH70xEHGckTz1oIguJU8h9towloJ+RndoIv5nyN
-	 xk7W/WH7yr3wbWpNKKCTAqLzS3wOMw9u9yGF0fV9qIMqg27crKieiudfXBN1iZFm8u
-	 vcltiuCzh8W3dC27LJzLW2MknCpAZB+2AWbOWfe9hcC7EmpRh1DKqwNe/aRDxLfkcI
-	 N1I5rkxRV+Q1A==
-Message-ID: <6dd57952-26c9-4f72-bb58-48e3f8b84caf@kernel.org>
-Date: Fri, 8 May 2026 13:37:38 +0200
+	b=S6YuIi2skTfq/WFDJ6+6edWLUzkUK5EjnATsRzBwZnB0hqFsf9Nh/isHfWJ/cgj8w
+	 2dxkrOiQYA6dbZb1VW/RFzg/WZT1/8r1jblTFz8UlFZtqSjSpaeZozZIMUHTHztziz
+	 sD598eA0Qs3QorlM6rRnslYgX0IRWjKSktB5LjaaNLMEEPeoLM9EC8xMuTu6xhngQo
+	 j6zaOnj5V/I+1nZugiGsUbQNUBfcS7UIaYWsjz9ngOLHrqPtXe73qpAA1jP/sNFwhG
+	 RIXH8rB7KxK+ll00Ew79mFQn/3MzRymnoFvWeFFkRDJHofD4kQLfOmd++ABCMWeX1f
+	 ZwnBwSP8rK6QA==
+Message-ID: <120b5a4e-b73a-464c-969e-0abd27407ddc@kernel.org>
+Date: Fri, 8 May 2026 13:47:44 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -100,37 +100,23 @@ On 07/05/2026 14:52, Li Xiasong wrote:
 > The issue is reproducible when sending an IPv6 ADD_ADDR with port while
 > tcp_timestamps is enabled. In that case, option space may be exhausted on
 > pure ACKs, and ADD_ADDR retransmission can stall PM forward progress.
-> 
-> Patch 1 clears the signal in this path, skips the matching ADD_ADDR
-> retransmission entry, and preserves PM state-machine progression.
-> 
-> Note on concurrency: timer cancellation in this path is best-effort.
-> A concurrent add_timer callback that acquires pm.lock first may still
-> perform one final ADD_ADDR send attempt before cancel state is applied.
-> After cancel sets entry->retrans_times to ADD_ADDR_RETRANS_MAX, the
-> callback-side check prevents further ADD_ADDR retransmissions.
-> 
-> Patch 2 adds a selftest to cover this behavior and prevent regressions.
-> 
-> Patch summary:
->   - patch 1: mptcp: pm: fix ADD_ADDR timer infinite retry on option space
->     insufficient
->   - patch 2: selftests: mptcp: join: cover ADD_ADDR tx drop and list
->     progress
-> 
-> Changes since v2:
->   - document the possible timer-cancel race window in the commit message
->     and code comments
->   - keep best-effort cancellation semantics (possible one extra send
->     attempt under lock-order race), while preventing further retries via
->     retrans_times gating
->   - selftests: remove the redundant ADD_ADDR tx-drop subtest that
->     duplicated existing coverage for list progression behavior
->   - link to v2:
->     https://lore.kernel.org/mptcp/20260430112026.343691-1-lixiasong1@huawei.com/
-Thank you for the v3, it looks good to me!
 
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Now in our tree:
+
+New patches for t/upstream-net and t/upstream:
+- 89d79b9cc99b: mptcp: pm: fix ADD_ADDR timer infinite retry on option
+space insufficient
+- 330dfb1d1df7: selftests: mptcp: join: cover ADD_ADDR tx drop and list
+progress
+- Results: 112def6c73e7..67f6d956336b (export-net)
+- Results: 3fc124e79727..1b5f90649a5a (export)
+
+Tests are now in progress:
+
+- export-net:
+https://github.com/multipath-tcp/mptcp_net-next/commit/292cba7c4eb827d0bf79fa02422e6c3daacf8229/checks
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/63b133728231ebba5167bd1e53dda9bcf0bee7c7/checks
 
 Cheers,
 Matt
