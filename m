@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A98B387359
-	for <mptcp@lists.linux.dev>; Fri,  8 May 2026 11:17:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEC823CCA02
+	for <mptcp@lists.linux.dev>; Fri,  8 May 2026 11:37:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778239026; cv=none; b=P52VIHNZaX6XVMb+Sy+VudQ1D7Fn8uQIaGCJFIunIzwCzob+iMMWLU9vyzxgHdsqbTp6aSyAryT+E3wgIiiEZbzTRqosc8DskaKyfEdMcE2mGhInSGfymsI7cXRCRDRrvKUXCmjWEmco++1FkcFAxszmT9baSXktJO5bR4FnWpI=
+	t=1778240232; cv=none; b=W9I1eS04MqoM0Kldq0EoCqpyNenhJ3aGB9/Yk988fzMZneKcABjkJqP5Y3XZ+AFIVQya66qyeGQCx9dxhA6IbfxVZ0Lm8Qvl+UuulHLvIKiMz5UpzH9c0AUIDTTMguNffrbgkzbpBtzqkluwUzKv4CYXbAfrdNNal1NWzF6A11o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778239026; c=relaxed/simple;
-	bh=TjVm+Rd2qn1j3WRFr/rDx1QXwb41SwnJPJix5nsxSQU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=KQ30zaiCFsVlUupuNzdyr4iZ42q/KyJUDDug7yKlPoCun8FMqOsWhFCsPHe3pQvVtJXcqPLoTOgNAlHIDMUoh1f0yvgTJc9bZc28Ar3Y+i8j9SFo1bEqd8GE+wR5iU1FHHkRK1/mziHiYuC5unCsxERsDlBbAY6yht/tmok93yU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SRQLEfB/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1778240232; c=relaxed/simple;
+	bh=pAR+h2H4STiQkaiMdObC8kHoIpi4mW1ElDih26JofLg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ikl+E6B5aRf1hxMdMgEbjRNFc/S6/skI99gslaAywOCsvBus89mYUww+LricjjdnsjTQrKDjT0Z0fYlox3PSKkqHROuldNOTZ7yIdRSaOvjhILJRJTEThbQkSoZjxJarGV8dkksM8smo0rl09iuZEelpH3ITn7tS8hKFiUK/TOs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vRelA+hE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SRQLEfB/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF255C2BCF6;
-	Fri,  8 May 2026 11:17:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vRelA+hE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B85CAC2BCB0;
+	Fri,  8 May 2026 11:37:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778239025;
-	bh=TjVm+Rd2qn1j3WRFr/rDx1QXwb41SwnJPJix5nsxSQU=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=SRQLEfB/MDIYM82sZZNUcjn1a+zKE3jcEbYAd+qf0duq/riUIil3+dKvAjmmJZ+a9
-	 kp+v7+SCSKzPqxcrrLLHtVFmIfIZyWer5s4K4s56gAagOx2R8GFzKZWAkPTqIYS7jX
-	 1VR6TMJEJuLe3hLq8THFjFbj2SHtl+0Ap+Ari69kvF+9hjG8q1Nasz6bY7KdOqRU+S
-	 iub77PBCssMqai7Vze/vTL5iBiWWOMWhXyQ44zbI0ZszNkibQYLa6Wx43gv5k6CTHA
-	 jY8Ln2KUplIpCpN+EyPU4zuFb2VLathdOBXxwWC55o9Up9FidnlUlu3v+p4GmkNpBB
-	 mcmqSvkedrXhQ==
-Message-ID: <8fe4c158-d719-430d-8e56-03d868da772e@kernel.org>
-Date: Fri, 8 May 2026 13:17:03 +0200
+	s=k20201202; t=1778240232;
+	bh=pAR+h2H4STiQkaiMdObC8kHoIpi4mW1ElDih26JofLg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=vRelA+hEdj1skWiRhAaA9taSlw4kZurPGe1p566/ulWoNHayzJMzIQ2ff+NgyJ6aM
+	 fHtZ9ylWCeumlTttSTBK0nBViLs7XJc5VcIFJ62XhHU1LrLKIM6Lsxvq+FZoounPkd
+	 GUZfVVfZXHjpzpo8CjSGsEtXrBsTB17y0MjQqxiQJUWEAg1qnt/xFCmkwTKMPmADUt
+	 UYNhGZs2OWhFYeu9K6d8cIg+PGOkW5QGpeVruCqXdNJ+xTGJCin29jEHzhIu8LsTiN
+	 EU8sBJqnAZqgiosSvQ6EpvPTqZayp5zdRWsxZfxZeJbxuoqS+VYseBQnPRZrY5filJ
+	 3KFblQcq9vjUw==
+Message-ID: <c4bf25d5-46c7-4a3e-a59a-b8ab9105cf2f@kernel.org>
+Date: Fri, 8 May 2026 13:37:08 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,10 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net] mptcp: reset rcv wnd on disconnect
+Subject: Re: [PATCH mptcp-net v3 2/2] selftests: mptcp: join: cover ADD_ADDR
+ tx drop and list progress
 Content-Language: fr
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-References: <71899029874998e8436cab708b41cbc029772ad9.1778233686.git.pabeni@redhat.com>
+To: Li Xiasong <lixiasong1@huawei.com>, mptcp@lists.linux.dev
+Cc: weiyongjun1@huawei.com, yuehaibing@huawei.com, zhangchangzhong@huawei.com
+References: <20260507125224.3536507-1-lixiasong1@huawei.com>
+ <20260507125224.3536507-3-lixiasong1@huawei.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -84,38 +87,66 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <71899029874998e8436cab708b41cbc029772ad9.1778233686.git.pabeni@redhat.com>
+In-Reply-To: <20260507125224.3536507-3-lixiasong1@huawei.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Paolo,
+Hi Li,
 
-On 08/05/2026 11:48, Paolo Abeni wrote:
-> If the MPTCP socket fallback to TCP before the MP handshake completion,
-> the IASN remain 0, and the rcv_wnd_sent filed is not explicitly
-> initialized, just incremented over time with the data transfer.
+On 07/05/2026 14:52, Li Xiasong wrote:
+> Extend add_addr_ports_tests with IPv6 signaling cases that exercise
+> ADD_ADDR tx-space shortage when tcp_timestamps are enabled.
 > 
-> At disconnect time such value is not cleared. If the next connection falls
-> back to TCP before the MP handshake completion, the data transfer will
-> keep incrementing the receive window end sequence starting from the last
-> value used in the previous connection: the announced window will be
-> unrelated from the actual receiver buffer size and likely too big.
+> Add one case to verify PM still progresses to later signal endpoints
+> after the first one is dropped.
 > 
-> Address the issue zeroing the field at disconnect time.
+> This covers both failure accounting and the non-blocking behavior of
+> the announce list after a tx-space drop on pure ACK.
+> 
+> Signed-off-by: Li Xiasong <lixiasong1@huawei.com>
+> ---
+>  .../testing/selftests/net/mptcp/mptcp_join.sh | 31 +++++++++++++++++++
+>  1 file changed, 31 insertions(+)
+> 
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> index beec41f6662a..5acd12021e6e 100755
+> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
 
-Now in our tree:
+(...)
 
-New patches for t/upstream-net and t/upstream:
-- 0f76d24d882c: mptcp: reset rcv wnd on disconnect
-- Results: a968ca54c292..112def6c73e7 (export-net)
-- Results: 9ec315f69069..3fc124e79727 (export)
+> @@ -3278,6 +3294,21 @@ add_addr_ports_tests()
+>  
+>  		chk_mpc_endp_attempt ${retl} 1
+>  	fi
+> +
+> +	# first signal address drops, second one still progresses
+> +	if reset "signal addr list progresses after tx drop"; then
+> +		pm_nl_set_limits $ns1 0 2
+> +		pm_nl_set_limits $ns2 1 0
+> +		ip netns exec $ns1 sysctl -q net.ipv4.tcp_timestamps=1
+> +		ip netns exec $ns2 sysctl -q net.ipv4.tcp_timestamps=1
+> +
+> +		pm_nl_add_endpoint $ns1 dead:beef:2::1 flags signal port 10100
+> +		pm_nl_add_endpoint $ns1 dead:beef:3::1 flags signal
+> +		run_tests $ns1 $ns2 dead:beef:1::1
+> +		chk_add_drop_tx_nr 1
+> +		chk_add_tx_nr 1 1
 
-Tests are now in progress:
+It would be good to call chk_add_drop_tx_nr from chk_add_tx_nr, similar
+to what is done with chk_join_tx_nr from chk_join_nr. For example, by
+default, assuming there is no drop, except when add_addr_drop_tx_nr=X is
+passed when calling chk_add_tx_nr. Or as a new optional argument for
+chk_add_tx_nr.
 
-- export-net:
-https://github.com/multipath-tcp/mptcp_net-next/commit/a5f6725b24b3335e9b3126803421c6e917b94f2b/checks
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/a079ed0689463df3c830498b52c92f871c178586/checks
+But that's more mptcp-next material, so I'm not going to block this
+patch for that! But if you are whiling to add this, don't hesitate to :)
+
+> +		chk_add_nr 1 1 0
+> +	fi
+>  }
+>  
+>  bind_tests()
 
 Cheers,
 Matt
