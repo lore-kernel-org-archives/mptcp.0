@@ -1,125 +1,103 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52555371868
-	for <mptcp@lists.linux.dev>; Fri,  8 May 2026 11:47:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DD38410D36;
+	Fri,  8 May 2026 17:40:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778240868; cv=none; b=I0AnMTemEI7r9iGeVroEFHiqSh07I3jzvW0Fdk4M3weGbE9BG7aiOywMusmDApLjJQQcoq3o/N6AGfcX3RdYF/QcI8tRw3YXeSjIP6kCCUNPSISY2TdBgl7KbIF9bT5etHAHUJS35YvQB4+ZvVIsfYFIWVCh25689t+DUas/21g=
+	t=1778262025; cv=none; b=i0HAS7EoH9XOfh3DTP6TqLK9NtETcZUmCu/BpcDgYzbPS/IskzSc6YE0U6hayur4lfI0dWgG7JdXt3/8JiQz1nehffdxVn2rB/3TbARPHcwVsHxrb3yGCuM/6eT1L7BQf1+veaKm+xdfx5gqOZ2vncriShq1QW15x7S/7x+ERRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778240868; c=relaxed/simple;
-	bh=klm1ijCRrVb4Ab0DbW6EALTD8hoUYQdC6SRa0ljIoxE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LLBmfCpwU4r0Jkv9mUYneiZ8ODj9nHniNkFkg5DLbLe44qS32BL6JluP3QtUFLcrekdbDxJMcowV3PykLj6v38hdAtA+qROqh8qlXOqhi0z3qDEpUOjsxn0nDb28qmxqTbzby8e3w2Mkckafw8+Vi6Z6yReqXughRH0jFYx0o3U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S6YuIi2s; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1778262025; c=relaxed/simple;
+	bh=djDWZ/MHnIHGN/6+CsSoHzZgeOd2vJrN4iKTIdki/ws=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=OSoT2c2/6OCl1NPNRXk4pV3qYtdPh5DJc+w70ilTAritV9s7yViYgP7/FHTYruVAQoqjqQp9yIEMH2Ek05h7bdLJBf1N+AzXfse71ZwUloMrWetQlctkq9Y/EhRcLIj0PXSefJQzfgdnnor7IazP9VqMCN/Q0mxDf5wc4oDTqNI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T6fEarwk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S6YuIi2s"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C651AC2BCB0;
-	Fri,  8 May 2026 11:47:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T6fEarwk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37BF0C2BCB0;
+	Fri,  8 May 2026 17:40:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778240868;
-	bh=klm1ijCRrVb4Ab0DbW6EALTD8hoUYQdC6SRa0ljIoxE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=S6YuIi2skTfq/WFDJ6+6edWLUzkUK5EjnATsRzBwZnB0hqFsf9Nh/isHfWJ/cgj8w
-	 2dxkrOiQYA6dbZb1VW/RFzg/WZT1/8r1jblTFz8UlFZtqSjSpaeZozZIMUHTHztziz
-	 sD598eA0Qs3QorlM6rRnslYgX0IRWjKSktB5LjaaNLMEEPeoLM9EC8xMuTu6xhngQo
-	 j6zaOnj5V/I+1nZugiGsUbQNUBfcS7UIaYWsjz9ngOLHrqPtXe73qpAA1jP/sNFwhG
-	 RIXH8rB7KxK+ll00Ew79mFQn/3MzRymnoFvWeFFkRDJHofD4kQLfOmd++ABCMWeX1f
-	 ZwnBwSP8rK6QA==
-Message-ID: <120b5a4e-b73a-464c-969e-0abd27407ddc@kernel.org>
-Date: Fri, 8 May 2026 13:47:44 +0200
+	s=k20201202; t=1778262025;
+	bh=djDWZ/MHnIHGN/6+CsSoHzZgeOd2vJrN4iKTIdki/ws=;
+	h=From:Subject:Date:To:Cc:From;
+	b=T6fEarwktXiptA8Kiz9sOAKykMvRos9O7h36N6zNHZI8c6lir6knidIYHkkxNSfDX
+	 9vSl+jKtOOOXNMg6YgrUQwQNmipNBzZzPQilnWvB5L0O+gJtEuh6QLKmVNZTS5B3Bp
+	 KE3Ms2n1ZUtUIEi8wd2w1rclCzdh2pZJNt1U4QfPjbbkIszBm5wxRTXwG1Y/SvyA6n
+	 HClERfV5WO89YUZCYErGROHwjscJLTn2JTNqbxDMlUi9tiu/M2dYKhoEE/qkWc42+Q
+	 1CQ3Vz3H33LAP5tSFx7dfHxnAWk1EU3Ps0s+hs58D73i64zZZKTBrLLX3LXiQ+QIyC
+	 Nznq0nqmXBcrg==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH net-next 0/8] mptcp: pm: in-kernel: increase limits
+Date: Fri, 08 May 2026 17:40:45 +0200
+Message-Id: <20260508-net-next-mptcp-pm-inc-limits-v1-0-c84e3fdf9b6a@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net v3 0/2] mptcp: pm: fix ADD_ADDR timer infinite
- retry on option space shortage
-Content-Language: fr
-To: Li Xiasong <lixiasong1@huawei.com>, mptcp@lists.linux.dev
-Cc: weiyongjun1@huawei.com, yuehaibing@huawei.com, zhangchangzhong@huawei.com
-References: <20260507125224.3536507-1-lixiasong1@huawei.com>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <20260507125224.3536507-1-lixiasong1@huawei.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/zWMQQrCMBBFr1Jm7cAYTCleRVy0cWqnNDFkRimU3
+ t2ouPiLx+e9DZSLsMK52aDwS1QeqcLx0ECY+nRnlFtlcORa8tRhYqtbDWO2kDFHlBRwkSimOHT
+ O96MnPhFBTeTCo6zf/AX+Jlx/jz6HmYN96rDvb1ZCykiKAAAA
+X-Change-ID: 20260508-net-next-mptcp-pm-inc-limits-b825af50e400
+To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Simon Horman <horms@kernel.org>
+Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, 
+ linux-kernel@vger.kernel.org, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
+ Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org
+X-Mailer: b4 0.15.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1912; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=djDWZ/MHnIHGN/6+CsSoHzZgeOd2vJrN4iKTIdki/ws=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDL/KTAc3ZQR8Opv4+2whcf3f5ArEYvfWSvyZtH/kN1zz
+ 3+5OyeHtaOUhUGMi0FWTJFFui0yf+bzKt4SLz8LmDmsTCBDGLg4BWAiNz8x/NMr2Lyezd3Q6FWr
+ /eF1geyTLNp7Gi6m1TVVSz3zPGvNksXwV2JfPOf/As+Jiyu0t+VVcnmmTL7zjD9wGpuImowk76t
+ 37AA=
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hi Li,
+Allow switching from 8 to 64 for the maximum number of subflows and
+accepted ADD_ADDR, and from 8 to 255 for the number of MPTCP endpoints.
 
-On 07/05/2026 14:52, Li Xiasong wrote:
-> This series fixes a bug where the ADD_ADDR timer can keep rescheduling
-> indefinitely when TCP option space is insufficient, blocking subsequent
-> addresses in the endpoint list from being announced.
-> 
-> The issue is reproducible when sending an IPv6 ADD_ADDR with port while
-> tcp_timestamps is enabled. In that case, option space may be exhausted on
-> pure ACKs, and ADD_ADDR retransmission can stall PM forward progress.
+The previous limit of 8 subflows makes sense in most cases. Using more
+subflows will very likely *not* improve the situation, and could even
+decrease the performances. But there are no technical limitations nor
+performance impact to raise this limit, so let's do it: this will allow
+people with very specific use-cases, and researchers to easily create
+more subflows, and measure the performance impact by themselves.
 
-Now in our tree:
+- Patches 1-2: increase subflows and accepted ADD_ADDR limits.
 
-New patches for t/upstream-net and t/upstream:
-- 89d79b9cc99b: mptcp: pm: fix ADD_ADDR timer infinite retry on option
-space insufficient
-- 330dfb1d1df7: selftests: mptcp: join: cover ADD_ADDR tx drop and list
-progress
-- Results: 112def6c73e7..67f6d956336b (export-net)
-- Results: 3fc124e79727..1b5f90649a5a (export)
+- Patches 3-4: increase endpoints limit.
 
-Tests are now in progress:
+- Patches 5-7: validate the new limits: 64 subflows, 255 endpoints.
 
-- export-net:
-https://github.com/multipath-tcp/mptcp_net-next/commit/292cba7c4eb827d0bf79fa02422e6c3daacf8229/checks
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/63b133728231ebba5167bd1e53dda9bcf0bee7c7/checks
+- Patch 8: selftests: use send()/recv() instead of sendto()/recvfrom().
 
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+Matthieu Baerts (NGI0) (8):
+      mptcp: pm: in-kernel: explicitly limit batches to array size
+      mptcp: pm: in-kernel: increase all limits to 64
+      mptcp: pm: kernel: allow flushing more than 8 endpoints
+      mptcp: pm: in-kernel: increase endpoints limit
+      selftests: mptcp: join: allow changing ifaces nr per test
+      selftests: mptcp: join: validate 8x8 subflows
+      selftests: mptcp: pm: validate new limits
+      selftests: mptcp: pm: use simpler send/recv forms
+
+ net/mptcp/pm_kernel.c                           | 77 +++++++++++++++++--------
+ tools/testing/selftests/net/mptcp/mptcp_join.sh | 33 ++++++++++-
+ tools/testing/selftests/net/mptcp/pm_netlink.sh | 56 +++++++++++-------
+ tools/testing/selftests/net/mptcp/pm_nl_ctl.c   |  8 +--
+ 4 files changed, 121 insertions(+), 53 deletions(-)
+---
+base-commit: 6a4c4656b0d2d4056a1f0c35442db4e8a5cf8021
+change-id: 20260508-net-next-mptcp-pm-inc-limits-b825af50e400
+
+Best regards,
+--  
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
