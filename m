@@ -1,227 +1,136 @@
-Received: from sender4-of-o54.zoho.com (sender4-of-o54.zoho.com [136.143.188.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9479C2F1FD0
-	for <mptcp@lists.linux.dev>; Sat,  9 May 2026 18:34:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.54
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778351648; cv=pass; b=oJ7GPa0qVdNezRtdaMcmy5sSlgCf2pg1HQm7/zrCR0/dNQRag9tZsm7SSYOUi+xalLga2D92gKEEejCaA+hNuX14hHDX/Pe9I7V2ajn9EbjaRq+89QDXSzCbJUy9vqq8Cxgn1cgYdTY+aFRXDHmYQPwt9Ee+KylpqIG6JnEk4E4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778351648; c=relaxed/simple;
-	bh=ACNo50rRgsqgyyoSFxYGNE6RfpL7O9eTJNvtWV9VOv8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=j2gTGPW8NUhQXSah8QLe9Qq70x7slGNiL6ERpIZZ30faOA7hU1IJ38eaM/clU9Jo5manbCErHIAqUsrwbW871YaOFpObJiSiQmi3DsctTRBxDKf0B3kBhRNBb0e+fbRdczxjemy1jLg/0FFw4Q67GZ6sjeCjeNX1EikvmZLGuew=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com; spf=pass smtp.mailfrom=mpiricsoftware.com; dkim=fail (0-bit key) header.d=mpiricsoftware.com header.i=shardul.b@mpiricsoftware.com header.b=k3WkmHWr reason="key not found in DNS"; arc=pass smtp.client-ip=136.143.188.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mpiricsoftware.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE05F1E520A
+	for <mptcp@lists.linux.dev>; Sat,  9 May 2026 21:16:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1778361417; cv=none; b=c2a/YsotNBTT0PHOx0pxeWV1QrGKot6bTHOeF7gthVAWAVY9xAAc6uFNTwsQ30C3v2ilQodXeh3pIEOFEqxtAs11kafcE5Xc9CWLJvgyJZmFjVqNItNsj1qJbglREKvI1C1Ql5uQiev4IXcHs+Fx4+YPknfhRdUJ57Tn0syZGQ4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1778361417; c=relaxed/simple;
+	bh=QFZUKRiDyIIBRdVhT/3dXMRqfE3lzElutwD/T1nrEqc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=pnMoiTQT4XQGWTnGEdz54ZZqgA3gcK8t+mYelKJF/DeXKBfhzugKtOWYN6qE+2cuDnZI3KcGpAkwNqgp/mUaiTvpCI2JwqoDry8fYrMsU6vuYO/KWYQv+dAF4DcJfLj2oSw2Fxa77/zKeDzTyvkyu9D5Nae+LJT9LNIP87R2lxc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gWfZih/D; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mpiricsoftware.com header.i=shardul.b@mpiricsoftware.com header.b="k3WkmHWr"
-ARC-Seal: i=1; a=rsa-sha256; t=1778351636; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=imz1T6r9rAMKGkERFjfE36CRSC1voOGF/mIP+dDV9PIv3lV9hmqvny5voY9gBbr6xM8cRYxfP7wlAdkj7kFsIIsmbDyUNZ/4hhavml+dMLMhRQUZuEdwQBEIzSwEdHBIcz24DFdqN6rJ060pJLbWtyiTe0nK3T8nHv8ID8NaX3s=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1778351636; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=oMQAP5M6L/WK5YpRtiCGE08zQPRosT4HRjQpTyZzUFc=; 
-	b=MaWG+0HRfgqNwiKD5MiGqtBNXJu4wspA0EG+vHvhQpwlabCAgd35RzQRdu6yxKSYyik5/+f7vbmNOBPPUop90A4IjLehmKFHZhpWw+i+F91heHCrTrcydouPGTQXuNYqBQ61Qmw7nV3GdrEX1vLZxySS/s59DIdcGFuHCgh6CEM=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=mpiricsoftware.com;
-	spf=pass  smtp.mailfrom=shardul.b@mpiricsoftware.com;
-	dmarc=pass header.from=<shardul.b@mpiricsoftware.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1778351636;
-	s=mpiric; d=mpiricsoftware.com; i=shardul.b@mpiricsoftware.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Reply-To;
-	bh=oMQAP5M6L/WK5YpRtiCGE08zQPRosT4HRjQpTyZzUFc=;
-	b=k3WkmHWrDshLUMpQMU3GKeITSKe+KZIsqB1+akcX/6jNkKGV6e/4Cry5g63YdD9v
-	gB9m9w4LehbsNPyW//0TYBgyhI9AiGxrAVmoIvV8fDZ0bn+0y//1SdzO9Y7pKQNinJF
-	UlAQr6XqeJob4SbgDN59yvkFkEb6+MHtmPwXS0u0=
-Received: by mx.zohomail.com with SMTPS id 1778351634991540.3450645971392;
-	Sat, 9 May 2026 11:33:54 -0700 (PDT)
-From: Shardul Bankar <shardul.b@mpiricsoftware.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gWfZih/D"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-488a8ca4aadso27335485e9.3
+        for <mptcp@lists.linux.dev>; Sat, 09 May 2026 14:16:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1778361414; x=1778966214; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=OJLz+NaVsvmmrFieiWdnmgg0PPtTR1BJb6NdgzIF7hU=;
+        b=gWfZih/DP5FM6cB/38imfvjwk0inOJA187syVspvV2xY5rLPSFhQhylou4vXu195GJ
+         t5LMf4WA+x5PjAbYECQM8LLaCRROabFPusaKvcpfAOVg3ETuLs2sLhBcR+hYhiov6kok
+         onwpDfqu6FwHYCGka230dzqbbDB9BvfZ2f4Xu4C5poCUJgmx3YsJvnLf8aks6nfFUyKp
+         5rkr7KbAZeIY+K2I6SVvXRLS52e+n3R87oIfxKGyv5GOAh9c6nqxzTwHtX6QO5RI2tcO
+         T4TfCf4Jvm0aPRdRxvSPtM4Vf1xSaf0sFaW8y1DD/cLXHM8pzyR6JAoAVCx39GA8oJYY
+         8b/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1778361414; x=1778966214;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OJLz+NaVsvmmrFieiWdnmgg0PPtTR1BJb6NdgzIF7hU=;
+        b=pGwOQ+IIqbNDZyWoAMJVJLNAAA2rCdKKn+l2hNs1hLvIJuQyZqJN9JN0QnJVtHTzqY
+         02L2gAO3xvx2057SzPAE+I9yWsbBvzAcJaoLPO89FmJajaQ2jxLxz3PopRL2gwQUOdc7
+         ZtRijVxdy92X5Xjl70RKCbbMaJekJd/pUtBUtHwZcN8p4pWZpKW/OpBxWR8LvERhwwP6
+         +YQ5WUO8zfoC5o6LWffMr8vt7yAqxdWCdr9hvHr47O5wQ6J2bkjfwF9xJA86pDJKeKnN
+         lq0tINHpSDoYSDCybHK8TXpSWC7uBnC1mesfK8qtW00KjJvKPABgO6Q+KWSZR8vYKRrh
+         x9XQ==
+X-Gm-Message-State: AOJu0YwVRNHsm9Lrji2b4q/igAhaxdFrxt0kTJ90UzQcBx8+yPcMXqVv
+	BmtPOtek8cEaNnXtVpcrXLUul5xX91MDFqbuPRHP74TmweCzBnVwJzL6b+EXowXUyAs=
+X-Gm-Gg: Acq92OFQjn7mM7Ekw3MJ3BakViGSklMnJQugjZfNanRxPubuFYU2stSWm4YyzRMt0vU
+	k+i2Jp4z8GDHbC3rZ94rnIulmIa2jAsI/yN8vxYCgP1GDHcu9XtNdSPcvYLu+I1Zkzty8WzsX9o
+	jKBUGvQqSaOnTpwSG8ynsbekYV7slsKU3nDEoID4TpQ3nwa/abwmE2xbkTV04Mp9jJF3KqaLPRI
+	4zRZnVtbsiPJLNzfKj1DwZjqsQe1o2YlJHh71IGDNvdL+gkg+ha+1FfaDXnrPvRMdhp29zq1vFe
+	870XLirx2Ewz3gF2eAHHucn1G6Svpc8nytSoOAmZ+8QNl3oIKBdzmHshXcE5f/77Kfo/u4qtob4
+	5DpNKLDTbV2wXxzV3kY24QQCkt5mJ5H92Opx5wFI59FOyPDWVqNEPoKgPcFy4kzI+I2UIB+fEnP
+	XDMIMol9XQhs9IK7EtpXR0YJfkmcOSXj05lsfrHRiSEUJn9Nflmd+2NilQduumxlIkjlskfMAOM
+	eYvuMvUVMfGdkuwS4dU8g==
+X-Received: by 2002:a05:600c:26c8:b0:48a:9562:7a30 with SMTP id 5b1f17b1804b1-48e51f4934cmr183096355e9.24.1778361413615;
+        Sat, 09 May 2026 14:16:53 -0700 (PDT)
+Received: from dohko.chello.ie (188-141-5-72.dynamic.upc.ie. [188.141.5.72])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48e6d89af2esm30110455e9.0.2026.05.09.14.16.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 09 May 2026 14:16:53 -0700 (PDT)
+From: David Carlier <devnexen@gmail.com>
 To: mptcp@lists.linux.dev
 Cc: matttbe@kernel.org,
 	martineau@kernel.org,
 	geliang@kernel.org,
 	pabeni@redhat.com,
-	janak@mpiric.us,
-	kalpan.jani@mpiricsoftware.com,
-	shardulsb08@gmail.com,
-	Shardul Bankar <shardul.b@mpiricsoftware.com>
-Subject: [PATCH v2 2/2] selftests: mptcp: extend chk_rst_nr to validate per-event RST counters
-Date: Sun, 10 May 2026 00:03:35 +0530
-Message-Id: <20260509183335.969018-2-shardul.b@mpiricsoftware.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20260509183335.969018-1-shardul.b@mpiricsoftware.com>
-References: <20260509183335.969018-1-shardul.b@mpiricsoftware.com>
+	David Carlier <devnexen@gmail.com>
+Subject: [PATCH mptcp-next v7 0/4] mptcp: MSG_ERRQUEUE support on the parent socket
+Date: Sat,  9 May 2026 22:16:43 +0100
+Message-ID: <20260509211651.104934-1-devnexen@gmail.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
 
-Extend chk_rst_nr() with named env-var expectations for each
-per-event MPTCP_RST_EMPTCP counter, matching the pattern used by
-chk_join_nr().  Each counter defaults to 0 and is checked silently
-on success; mismatches print a check line and fail the test.
-Counters absent from the running kernel are skipped silently so
-older kernels do not false-fail.
+This series adds MSG_ERRQUEUE support on the MPTCP parent socket, so
+poll() and recvmsg(MSG_ERRQUEUE) observe TX timestamps and MSG_ZEROCOPY
+completion notifications through the standard inet ABI. IP_RECVERR /
+IPV6_RECVERR (and their RFC4884 variants) are propagated to existing
+and future subflows.
 
-Add a cross-namespace test that triggers MPJoinSynAckNoMPJoin: ns1
-announces an address belonging to a third namespace (ns3) where
-MPTCP is disabled, the client (ns2) JOINs to ns3 and receives a
-plain TCP SYN/ACK without MP_JOIN, and the new counter increments
-on the client side.
+Patch 1 factors per-flag inet_assign_bit() calls in
+sync_socket_options() into a mask-driven loop so future propagated
+flags only need to extend MPTCP_INET_FLAGS_MASK.
 
-Other per-event counters (MD5SigReset, MPJoinAckNoMPJoin,
-MPJoinAckNoCtx, DssReset, MPJoinNotEstablished) are not currently
-reachable from mptcp_join.sh; the env-var hooks are in place for
-future tests to set expectations explicitly.
+Patch 2 wires up RECVERR setsockopt/getsockopt: snapshot the value,
+apply it on the parent, and forward to every subflow under lock_sock()
+so concurrent setsockopt callers cannot leave parent and subflows
+desynchronized. Newly-joining subflows pick up the four RECVERR bits
+through sync_socket_options().
 
-Assisted-by: Claude:claude-opus-4-7
-Signed-off-by: Shardul Bankar <shardul.b@mpiricsoftware.com>
----
-v2:
-  New patch in this version, addressing the request from v1's
-  review to validate the per-event counters in mptcp_join.sh.
+Patch 3 splices forwardable err skbs (TIMESTAMPING / ZEROCOPY / LOCAL)
+from each subflow's error queue onto the parent's, so pollers see
+EPOLLERR and recvmsg(MSG_ERRQUEUE) on the parent drains them. Subflow
+ICMP errors are dropped — they will be carried by a future
+MPTCP_RECERR channel.
 
- .../testing/selftests/net/mptcp/mptcp_join.sh | 94 +++++++++++++++++++
- 1 file changed, 94 insertions(+)
+Patch 4 covers IP_RECVERR / IPV6_RECVERR propagation and the empty-
+errqueue EAGAIN contract on MSG_ERRQUEUE | MSG_DONTWAIT in selftest.
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 5d4d0f127f79..5d4fc8951f05 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -76,6 +76,13 @@ unset join_create_err
- unset join_bind_err
- unset join_connect_err
- 
-+unset rst_md5sig_reset
-+unset rst_synack_no_mpjoin
-+unset rst_ack_no_mpjoin
-+unset rst_ack_no_ctx
-+unset rst_dss_reset
-+unset rst_not_established
-+
- unset fb_ns1
- unset fb_ns2
- unset fb_infinite_map_tx
-@@ -1349,6 +1356,12 @@ chk_rst_nr()
- 	local rst_tx=$1
- 	local rst_rx=$2
- 	local ns_invert=${3:-""}
-+	local md5sig_reset=${rst_md5sig_reset:-0}
-+	local synack_no_mpjoin=${rst_synack_no_mpjoin:-0}
-+	local ack_no_mpjoin=${rst_ack_no_mpjoin:-0}
-+	local ack_no_ctx=${rst_ack_no_ctx:-0}
-+	local dss_reset=${rst_dss_reset:-0}
-+	local not_established=${rst_not_established:-0}
- 	local count
- 	local ns_tx=$ns1
- 	local ns_rx=$ns2
-@@ -1385,6 +1398,43 @@ chk_rst_nr()
- 	else
- 		print_ok
- 	fi
-+
-+	# Per-event MPTCP_RST_EMPTCP counters; default 0, gated on availability.
-+	count=$(mptcp_lib_get_counter ${ns_tx} "MPTcpExtMD5SigReset")
-+	if [ -n "$count" ] && [ "$count" != "$md5sig_reset" ]; then
-+		print_check "MD5SigReset ${tx}"
-+		fail_test "got $count MD5SigReset expected $md5sig_reset"
-+	fi
-+
-+	count=$(mptcp_lib_get_counter ${ns_rx} "MPTcpExtMPJoinSynAckNoMPJoin")
-+	if [ -n "$count" ] && [ "$count" != "$synack_no_mpjoin" ]; then
-+		print_check "MPJoinSynAckNoMPJoin ${rx}"
-+		fail_test "got $count MPJoinSynAckNoMPJoin expected $synack_no_mpjoin"
-+	fi
-+
-+	count=$(mptcp_lib_get_counter ${ns_tx} "MPTcpExtMPJoinAckNoMPJoin")
-+	if [ -n "$count" ] && [ "$count" != "$ack_no_mpjoin" ]; then
-+		print_check "MPJoinAckNoMPJoin ${tx}"
-+		fail_test "got $count MPJoinAckNoMPJoin expected $ack_no_mpjoin"
-+	fi
-+
-+	count=$(mptcp_lib_get_counter ${ns_tx} "MPTcpExtMPJoinAckNoCtx")
-+	if [ -n "$count" ] && [ "$count" != "$ack_no_ctx" ]; then
-+		print_check "MPJoinAckNoCtx ${tx}"
-+		fail_test "got $count MPJoinAckNoCtx expected $ack_no_ctx"
-+	fi
-+
-+	count=$(mptcp_lib_get_counter ${ns_rx} "MPTcpExtDssReset")
-+	if [ -n "$count" ] && [ "$count" != "$dss_reset" ]; then
-+		print_check "DssReset ${rx}"
-+		fail_test "got $count DssReset expected $dss_reset"
-+	fi
-+
-+	count=$(mptcp_lib_get_counter ${ns_rx} "MPTcpExtMPJoinNotEstablished")
-+	if [ -n "$count" ] && [ "$count" != "$not_established" ]; then
-+		print_check "MPJoinNotEstablished ${rx}"
-+		fail_test "got $count MPJoinNotEstablished expected $not_established"
-+	fi
- }
- 
- chk_infi_nr()
-@@ -4477,6 +4527,49 @@ endpoint_tests()
- 	fi
- }
- 
-+rst_emptcp_tests()
-+{
-+	# Validate per-event MPTCP_RST_EMPTCP counters.  Use a third
-+	# namespace (ns3) to trigger paths that aren't reachable in the
-+	# standard ns1/ns2 setup: ns1 announces an address belonging to
-+	# ns3, the client (ns2) JOINs to ns3 where the SYN/ACK arrives
-+	# without an MP_JOIN option (MPTCP disabled there), and the
-+	# MPJoinSynAckNoMPJoin counter increments on the client side.
-+	local ns3
-+
-+	if reset "rst per event no mpj"; then
-+		if ! setup_ns ns3; then
-+			print_check "create ns3"
-+			print_skip
-+			return
-+		fi
-+
-+		ip link add ns2eth5 netns "$ns2" type veth peer name ns3eth1 netns "$ns3"
-+		ip -net "$ns2" addr add 10.0.6.2/24 dev ns2eth5
-+		ip -net "$ns2" link set ns2eth5 up
-+		ip -net "$ns3" addr add 10.0.6.1/24 dev ns3eth1
-+		ip -net "$ns3" link set ns3eth1 up
-+		ip -net "$ns3" link set lo up
-+		ip netns exec $ns3 sysctl -q net.mptcp.enabled=0
-+
-+		pm_nl_add_endpoint $ns1 10.0.6.1 flags signal id 5
-+		pm_nl_set_limits $ns2 1 1
-+
-+		local tport=$(get_port)
-+		ip netns exec ${ns3} ./mptcp_connect -l -t -1 -s TCP \
-+			-p $tport 10.0.6.1 &
-+
-+		speed=slow \
-+			run_tests $ns1 $ns2 10.0.1.1
-+		wait_attempt_fail "$ns2"
-+
-+		rst_synack_no_mpjoin=1 \
-+			chk_rst_nr 0 0
-+
-+		cleanup_ns "$ns3"
-+	fi
-+}
-+
- # [$1: error message]
- usage()
- {
-@@ -4527,6 +4620,7 @@ all_tests_sorted=(
- 	F@fail_tests
- 	u@userspace_tests
- 	I@endpoint_tests
-+	R@rst_emptcp_tests
- )
- 
- all_tests_args=""
+v6 -> v7:
+ - patch 2: gate SOL_IPV6 setsockopt/getsockopt dispatch on
+   sk_family == AF_INET6, returning -ENOPROTOOPT otherwise, mirroring
+   plain TCP. Addresses the sashiko Medium finding on v6 where
+   IPV6_RECVERR silently succeeded on AF_INET MPTCP sockets.
+ - patch 3: track moved skbs in mptcp_recv_error() and retry
+   inet_recv_error() when ret == -EAGAIN && moved, so a successful
+   subflow splice is not masked by the initial drain returning EAGAIN
+   (sashiko High #2 on v6).
+ - patch 3: add mptcp_subflow_errqueue_pending() and OR it into the
+   EPOLLERR check in mptcp_poll(), so events stranded on a subflow
+   when the parent is under rmem pressure still wake userspace
+   (sashiko High #1 on v6).
+ - rebased on current export.
+
+Tested with KVM-validation auto-normal: 25/25 pass.
+
+David Carlier (4):
+  mptcp: sockopt: factor inet_flags propagation into a mask
+  mptcp: propagate RECVERR sockopts to subflows
+  mptcp: support MSG_ERRQUEUE on the parent socket
+  selftests: mptcp: cover IP_RECVERR sockopt propagation
+
+ net/mptcp/protocol.c                          |  92 ++++++++++-
+ net/mptcp/sockopt.c                           | 146 ++++++++++++++----
+ .../selftests/net/mptcp/mptcp_sockopt.c       |  55 +++++++
+ 3 files changed, 261 insertions(+), 32 deletions(-)
+
+
+base-commit: 63b133728231ebba5167bd1e53dda9bcf0bee7c7
 -- 
-2.34.1
+2.53.0
 
