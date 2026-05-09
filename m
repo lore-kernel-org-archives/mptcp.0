@@ -1,132 +1,106 @@
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C10FE36B06A
-	for <mptcp@lists.linux.dev>; Fri,  8 May 2026 20:49:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02BF023ED5B
+	for <mptcp@lists.linux.dev>; Sat,  9 May 2026 06:44:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778273356; cv=none; b=PHZqWm6PSDRVmmr5Rc5K0qNll6jqdRTqFAu0MQohVXJ6vj/k7kNEj+ztkduInGpbFfGBesC8B06jS/FkQcjdrFU2suyVgihdi1Xq/O0OFObybBcc5CnUe5ex3E4ds9dny6Cveh7r6ZrcS78jfCMfwvqyMn5V3qNUNnsnjymPsCo=
+	t=1778309087; cv=none; b=feX1VsXK/aga0RAmXrDvbrWdqmj00vRFlOyFeVgeYOLFSyWbSOWI+n7ahfegm/wCrglzQ1a4RzL+kzt1Wg1oo05jnt8G6zhVdC8jvSVpgHxo2W5URTlkp/EvTt3fjtUplw0qmJuseV9w4EJeFWExvVBCfW4QcJlb/gpyc78lgS8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778273356; c=relaxed/simple;
-	bh=RxgsS6wc7ZYtVJuxGm6kg2yhzNprjXyeoc0PNqte0JY=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
-	 MIME-Version:Content-Type; b=nNTM1p3WR1N4CpX49heVFa9LwY5CQdYECQfucwB2K9e2PNKN+CYwHhQe25Cirq5dUD93l3ZYd3Uz4/RxcXOwDrwuE/hWiRjKNQh8vcMm5L08J0Jok6IwgKex1Tvjd/zkvmfyqJ7lAVijbkaXn+Qffnlx/lZBMbtKr2LN7MZy6OQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z/gRDfJY; arc=none smtp.client-ip=209.85.160.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1778309087; c=relaxed/simple;
+	bh=f1IdNrF+AVoOoYG9eNkdaL4Yh/PVlBP2pf/GIlIdElU=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=MzhNuz67izZpLlndkjshomSYxPkZx+ZPZyUfYGR+FkCsy3Xk4h1zJcWkxi/1zAG3YttbkcH8QJPc+2lFTOENnbHmKdIhEeTLGe4wJ4RtkJdcppex/2hU0aEnHzUcx4fEXrfgb4JB7jCLhgaeHh9VZyQ53cAyck7dKCuawmdp90k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=q5Vupvnm; arc=none smtp.client-ip=91.218.175.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z/gRDfJY"
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-50e97863425so21983311cf.0
-        for <mptcp@lists.linux.dev>; Fri, 08 May 2026 13:49:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1778273354; x=1778878154; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aFq56XK1x9K1zfCOkf6gK1UhVulZnpAdDQerdIs4/tI=;
-        b=Z/gRDfJYvhiHfJ6UW09GDkjJo5CiyC6X5tdhKTmpxM+dsFDDf0AEdLndp/UgGZASCA
-         xSi1mVgD35LWB+O1WgRyeqxmZDj5b9GzdlZfNAX/17orpKJPVdMW85bqS4yt6el3f+86
-         58aomCQOu3yVVI2QKf3zLdEN4eqk7HrTS6u/FoFPAjssaSMXGzZuIB040w/4CEttUrNH
-         TVvueQtHGYrNtJ6grTcUp+eXv7Y90lqGYyV4KxBYuuoumdCtV8L07xjjHX6XrtG/N1R+
-         8Acu6ZSkGyHWKC3n9xRXkDhVM5pY+VN09gcrcpF+Cef4IVuD0Gn9mFBRr7Y4G+rx8QtK
-         kQ4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778273354; x=1778878154;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=aFq56XK1x9K1zfCOkf6gK1UhVulZnpAdDQerdIs4/tI=;
-        b=qJ6yCn3r03UC+jFM/acTfKOe91VA7m4jYubdQZQVroTGwJzSHlMgesElpmwbx0VKH3
-         FnfdB5k/zOrs36C008izEDNDk5QQiCLAHUzfm5Z+/LqG3qpF1gzMwN8EzuXLQD3mfGph
-         87k0uoBSp/sVK2r66avuzch43tXAqhNYOliTHFtgXbn1DEcJkCRxi/JdpfvFeH6D5BDQ
-         jYf8E79RyUDE44d8tR26A8xW5zr44qVeu38IMvwTgqooG0LrcT6vMpkHfOvdbLDiwNio
-         JHL/XAn9DmIvcVzPrEnp3VqR8eaOutu+JG3zPq7J61fsyXhlQsLImh84TGmO1jadYHVQ
-         HTNg==
-X-Gm-Message-State: AOJu0Ywu+MFJ2FL+BjgRGPWXxKZfZ4pDp0s/y9MKbM1VGUk4XwrBVh0N
-	FxHp3nYXzzuV/+8tLdG/Rgx2lZ1BFtXNa7KbCseVe2Tb+9VOjKU9Nlo=
-X-Gm-Gg: AeBDieuhrBvbaiwaDepb3Jcij3nLjSaZkBdlV/tIoIoig4BxZGqS92KEMKkBq0yQVRR
-	vxAM/Q9XTHe2tP9ktWFMsNUiDeCUgezT8eZTUOOiKF6zi0DWHLYsb2/d9hPXMomOyCE7Qn5RKJz
-	yond+JSfxTsukFVCdHf9RKt8ocwDz19gRJx1pRfJLA0Gc/AOnlYU8/3mOdVz/SFquKId0w3rDNv
-	GdwXJDFAjXzaRi87bG9Gl3rdXZzlbS7a/tWBZTgQfbjoCKciKPvXRpK0UQoIXS9JnYwUZdDu0qX
-	tgUaKvKzilMYv372IL6bd9Ho9Hbs1lBbuBaJ7/gF56IfHhAvCojVTwz9CMvT6GTh9fwEt7gx/Ik
-	+2ew7xP9Dc8GBBI+VSmAX/W/Q+SfP+FLL9zZs0twm474pMw7CQcqWS3lZ1ccSl7W65N1wXMv9Ah
-	6KCQGeOA5Ir8ISTYliikR80/cexUZVea56C+MOsfDZEp9UPA==
-X-Received: by 2002:ac8:5cc9:0:b0:50b:4778:ac60 with SMTP id d75a77b69052e-514619dddedmr192114641cf.10.1778273353758;
-        Fri, 08 May 2026 13:49:13 -0700 (PDT)
-Received: from [127.0.0.1] ([20.55.13.166])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-5148e83dd35sm25799471cf.29.2026.05.08.13.49.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 May 2026 13:49:13 -0700 (PDT)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <20260508-mptcp-sft-sflows-bufferbloat-v1-0-e9b0d25d9789@kernel.org>
-References:
- <20260508-mptcp-sft-sflows-bufferbloat-v1-0-e9b0d25d9789@kernel.org>
-Subject: Re: [PATCH mptcp-net 0/3] selftests: mptcp: simult_flows: reduce
- bufferbloat
-Message-ID: <b4dca8c0-df91-3cb9-a6f3-68733158f01a@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 08 May 2026 20:49:12 +0000
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="q5Vupvnm"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1778309082;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=fGTVRlQ+7gKI+p4sG81DqI/nDZFR126BfyeTW+HxU+I=;
+	b=q5VupvnmQljO6OpVl0rZwGwBqIJJ9HRpFGg6n1r/9YNPrSCtHYjvAl5z0nyTUQiESoT0cg
+	620M/9gl4y/V3i7Jcs/4SaJU+Lc06LYkDpWzzUtwK/KPiHALCBIYBWymJVr8CG7fwDpI9H
+	if7ODFZRKRyDeNN8z33/yUplEYmgJSo=
+From: Gang Yan <gang.yan@linux.dev>
+Subject: [PATCH mptcp-net v4 0/2] mptcp: convert to sockopt_lock_sock
+Date: Sat, 09 May 2026 14:44:21 +0800
+Message-Id: <20260509-sockopt_lock-v4-0-33f3a1c4d7a0@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAMXX/mkC/22NTQ7CIBCFr9LMWgwWnKor72Eao4B20goECLFpu
+ LuEtauXL+9vg2gCmQiXboNgMkVytoLcdaCmh30bRroy9LxHfuTIolOz8+m+VGVK4kkMGvVZD1A
+ rPpgXfdvcDT4+Kc+sSTBWa6KYXFjbURYt8H8zC8YZx6eWh0GhRnGd14Wsi3tlYSyl/ACwLwcJt
+ AAAAA==
+X-Change-ID: 20260506-sockopt_lock-c46837d6d9d7
+To: MPTCP Linux <mptcp@lists.linux.dev>
+Cc: Gang Yan <yangang@kylinos.cn>
+X-Migadu-Flow: FLOW_OUT
 
-Hi Matthieu,
+This small series makes the MPTCP sockopt codepaths consistent with
+TCP and the core socket layer by using the BPF-aware
+sockopt_lock_sock()/sockopt_release_sock() helpers introduced in
+commit 24426654ed3a ("bpf: net: Avoid sk_setsockopt() taking sk lock
+when called from bpf").
 
-Thank you for your modifications, that's great!
+Patch 1 switches all lock_sock()/release_sock()/lock_sock_fast() calls
+in MPTCP sockopt handlers to use the BPF-aware wrappers, avoiding the
+risk of sleeping in atomic context when lock_sock_fast() is used.
 
-Our CI did some validations and here is its report:
+Patch 2 switches ns_capable() to sockopt_ns_capable() in the
+congestion control setsockopt path, properly handling the case where
+BPF programs invoke setsockopt from softirq context.
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/255713=
-80159
+Both patches are fixes that should have been part of the original
+BPF sockopt series.
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/2bbcbfb2925e
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1091768
+Changelog:
+v4:
+  - As sashiko said, when processing BPF setsockopt requests, the
+    msk is already locked, but we need to use lock_sock() to
+    protect ssk. If we use sockopt_lock_sock(ssk), it will return
+    without acquiring the lock.
+  - In 'mptcp_setsockopt_sol_tcp_congestion', the load of
+    'tcp_set_congestion_control' is changed from 'true' to
+    '!has_current_bpf_ctx()' like tcp does. This determines whether
+    tcp_ca_find() or tcp_ca_find_autoload() is called. I agree we
+    should keep consistent with the TCP implementation. 
 
+v3:
+  - Remove the special symbols in v2.
+  - Use sockopt_ns_capable to replace ns_capable.
 
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
+v2:
+  Link: https://patchwork.kernel.org/project/mptcp/patch/20260422091927.77770-3-gang.yan@linux.dev/
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+Signed-off-by: Gang Yan <yangang@kylinos.cn>
+---
+Changes in v4:
+- EDITME: describe what is new in this series revision.
+- EDITME: use bulletpoints and terse descriptions.
+- Link to v3: https://lore.kernel.org/r/20260506-sockopt_lock-v3-0-06bd417c6d63@kylinos.cn
 
-For more details:
+---
+Gang Yan (2):
+      mptcp: use sockopt_lock(release)_sock in sockopt
+      mptcp: use sockopt_ns_capable() in setsockopt congestion control
 
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+ net/mptcp/sockopt.c | 101 ++++++++++++++++++++++++++--------------------------
+ 1 file changed, 50 insertions(+), 51 deletions(-)
+---
+base-commit: aa15c271d79edde595fb6f4eedb52fbc16325a83
+change-id: 20260506-sockopt_lock-c46837d6d9d7
 
+Best regards,
+--  
+Gang Yan <yangang@kylinos.cn>
 
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
