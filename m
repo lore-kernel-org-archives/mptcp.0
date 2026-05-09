@@ -1,149 +1,129 @@
-Received: from out-170.mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dl1-f45.google.com (mail-dl1-f45.google.com [74.125.82.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57C8B26B08F
-	for <mptcp@lists.linux.dev>; Sat,  9 May 2026 07:07:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1B153148D2
+	for <mptcp@lists.linux.dev>; Sat,  9 May 2026 07:47:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778310427; cv=none; b=Y4eOAny7mNtvZR3X3EXA4fj//9rNqB+z1phFIXM2jq922KEojk48oiPn5thLnHxduqV+ZncacIgYogpS38aQVVb//UtimaYyVeXqtTUnCMKS0MlYkAoyzF4K3ANqV3G6HlRhDrmR/qEwZk+qhRwEeJxAZHFZ3Iwy6mLdHGBmOzg=
+	t=1778312869; cv=none; b=cB/Y/VpkcoRFouk8AYk8jp5iY5zsiliOoyuHH6juUbmEsxqcf8HMm0648IzZaoWAcH7kKzub9VSF4HK4g18VaXFbxyooB70IIje9Xis7qJKGNGzUOl3sKkp5o5jPlBn1aTw8JbN++hHMB3/PjQ1i6zycerJV+G9/ijN1JB3A+rQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778310427; c=relaxed/simple;
-	bh=73/FNnZ0Zh50gqDjEksfnpL+6HIqsjFSIQjwKqQVe/w=;
-	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:
-	 In-Reply-To:References; b=IK/vP/FZqvRGnmVxKMviD9OLWiMvrwqVG5QUmSalD0LdaFFlfwnkVk9t/ZkFIlEkQWebm1TWyXbhrpOYPDfKLLvf7bgHifxmEkIm3YYTdGzGD1KOjZ/t8yJV6fBZyAYz1IU6JiIH92wlWxFytSmhGjhjoue6A4TddwrWaip/m8A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=hqV5jT8Q; arc=none smtp.client-ip=91.218.175.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1778312869; c=relaxed/simple;
+	bh=UzDU7gSP4OD1eiOFbpxACawCPmJaHCb0zBDuprK5DjE=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
+	 MIME-Version:Content-Type; b=S0f3AIlMhn6IQpGB5wOzs0YWlPByHlWFuvsmtg6r8Ei7CL3ERk5gv996li1gQuNNPDyM6uMJPWdP5K3DDU7oqNk/txOAjyUHgImbXTynoSEWMSY2lSz0S4jj2PMhSf6Lqafon6aV7uL+ir60/Ab0EMGHfNFgI3hZHM1ROLUXW08=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WvlC8Xvw; arc=none smtp.client-ip=74.125.82.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="hqV5jT8Q"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WvlC8Xvw"
+Received: by mail-dl1-f45.google.com with SMTP id a92af1059eb24-12db2e415a7so1955741c88.1
+        for <mptcp@lists.linux.dev>; Sat, 09 May 2026 00:47:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1778312867; x=1778917667; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=508xUpUCzKJkzBcwuq7HsZL3QUixH50dncGT89zU8uw=;
+        b=WvlC8XvwZY0/gTlIIhojhliLP3diF1FZmHtEEw0Mo23WwpoonHNG97OrAtrY/+xMg0
+         ZBfqqKlfoR3+itMwk/HfKXiTTr7esc8RsUj7AwMvZjKCRG9keAR3w2GGvgSvRWkPGk6D
+         5y5U8Ea9cXtHi2AaZpkjcHQPoB+8kJOh8WAaZPqHAv+uKYP/4oL+xzS3TRIv7avAg5+2
+         E/+5Kqxr5ybXXX+Z4iyheKm9LG/TjFMKedK/qUbhil5yZhCobXMHJ/gJ2KFdkH400Tdn
+         Xt7avPo2Vzpdwagp7W5po6qw84odF3bhQVKjT45qCq8Kq6lRJklcHM4mClUHiMpjbKpw
+         WfWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1778312867; x=1778917667;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=508xUpUCzKJkzBcwuq7HsZL3QUixH50dncGT89zU8uw=;
+        b=Syx11cYuiHwFY2e/oQQo5bPBxNhlXbPiX4Bp8EEKkrOv1HvNuqNpQtNnH140coDvnA
+         IDdpchkNfR5U9v9znFcCq2Mq74sk/M1LmyoMVHl2YF5txU/9Cz5Ip6F96BN2WSiSBBMt
+         NGqcjRwg2Ku5lVBHB8m9KLTSVEOMPXUe97ULnFOu4GDDSUZhgAcpuj7rVDOYRj+hJ6cd
+         CJqC/CLZpZHmxDGm+zfgJlbLIa0WpEAXyioJfIh/P+JvLnO0XJ/dllQ0inFkKTYj57hw
+         p3I1Nu/TEJPFBns16CDSP5caxrPpdfy4ddSTzyaPbJuq4DJXkLpRPJeIub5tbundqFK5
+         Si5A==
+X-Gm-Message-State: AOJu0Yx+EZAnb5n99n6Q+BE0yH4lSPPl+RWc+aEn9LuMK99mgEALynDb
+	Wve1z2IIFkfmSUy3ZH4LvpiaYPMOG5Xqd9t0zm68skaHHDTZWdywN3FfGsG3
+X-Gm-Gg: Acq92OH0K+mmg89WMm9yP511/Eh1HH42LZPIBQdhSpvVuSgPgumDNboftAhL2LrqXkn
+	w0CBBX9SLG8zQMecRZBG3KSg6Wog3E0rjCv1jbEJVYswhQt/LstDpVlaHSaFtGdPCEkOnhCHY0y
+	Uf4wIXGLvgyTC5wnoZtscuVslnIH6rFJVkYN59p5QZZ7voUx44cPUbKT1KN9NOiIXo6oKGPzWzI
+	7jRzhD8f4jwtvjLkkO6h0Cu647L7g4OjZAaH2Tkrkt6cNp7GSjybe1gzvghwvcDjT9higoaOgTC
+	NWnIC0Boa0OnGXYytHM3fP2quA8miq0kKaVsfq5satZqF4q+B2nZ/QOqUyhWqyBdXk9MNL2osIi
+	atR8P3f3ce6XnQRLEfLEH+Fwf3P5Rml7d/ghumTlHIbIr0CwmYh9+EJE71wp9G1/ffCwApV4Nht
+	fOVDsHrkUTgQRYnW+fVRa6Ht82pujH5i9Ee421Tw==
+X-Received: by 2002:a05:7022:123:b0:12d:ca32:5a7 with SMTP id a92af1059eb24-131969d27aemr7196395c88.10.1778312866758;
+        Sat, 09 May 2026 00:47:46 -0700 (PDT)
+Received: from [127.0.0.1] ([128.24.161.192])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-132781103e7sm6768545c88.1.2026.05.09.00.47.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 09 May 2026 00:47:46 -0700 (PDT)
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Gang Yan <yangang@kylinos.cn>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20260509-sockopt_lock-v4-0-33f3a1c4d7a0@kylinos.cn>
+References: <20260509-sockopt_lock-v4-0-33f3a1c4d7a0@kylinos.cn>
+Subject: Re: [PATCH mptcp-net v4 0/2] mptcp: convert to sockopt_lock_sock
+Message-ID: <44469e91-5340-3984-469e-b974eda9a704@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Sat, 09 May 2026 07:47:45 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1778310423;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ywYGMcsTYPyD0iod5NkNFxxEGNFL3WtqENBueKYmZdw=;
-	b=hqV5jT8Qk2f0+3cuGjepoMR5UmZA+jsMC3eOHpUgY50JMZo0cMvHxier+BzsL0o+67GFBU
-	Rm3tWLTlZ5Jy1X7Gi8L3L8Wa/NBVMSroqj5hkdaNPFfYDLjGe2gCOdbcWr3Xokm6CFfVea
-	PdHxrjjP25SS9eG6tuZCxul4U2O9PW4=
-Date: Sat, 09 May 2026 07:07:01 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: gang.yan@linux.dev
-Message-ID: <47cae42a6de0745a423098d1b15bdd71dc2937d6@linux.dev>
-TLS-Required: No
-Subject: Re: [PATCH v3 mptcp-next 00/10] mptcp: address stall under memory
- pressure
-To: "Matthieu Baerts" <matttbe@kernel.org>, mptcp@lists.linux.dev
-In-Reply-To: <cc137cc2-718f-41e9-aabd-e65b9fbfd4ee@kernel.org>
-References: <cover.1777908248.git.pabeni@redhat.com>
- <cc137cc2-718f-41e9-aabd-e65b9fbfd4ee@kernel.org>
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=utf-8
 
-May 8, 2026 at 6:49 PM, "Matthieu Baerts" <matttbe@kernel.org mailto:matt=
-tbe@kernel.org?to=3D%22Matthieu%20Baerts%22%20%3Cmatttbe%40kernel.org%3E =
-> wrote:
+Hi Gang,
+
+Thank you for your modifications, that's great!
+
+Our CI did some validations and here is its report:
+
+- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/255947=
+27876
+
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/81272fb3577a
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1091935
 
 
->=20
->=20Hi Geliang, Gang,
->=20
->=20On 04/05/2026 17:39, Paolo Abeni wrote:
->=20
->=20>=20
->=20> This an attempt to fix the data transfer stall reported by Geliang =
-and
-> >  Gang more carefully enforcing memory constraints at the MPTCP level.
-> >=20=20
->=20>  Patch 1/10 moves the bound check before entering the TCP socket.
-> >  Patch 2, 3, 4 and 5 are cleanups/refactors finalized to safely re-us=
-ing
-> >  TCP helpers on MPTCP skbs.
-> >  Patch 6 makes TCP pruning related helpers available to MPTCP and pat=
-ch 7
-> >  makes use of them. Patch 8 addresses an edge scenario that could sti=
-ll
-> >  lead to transfer stall under memory pressure.
-> >  Finally patch 9 and 10 improve the MPTCP-level retransmission schema=
- to
-> >  make recovery from memory pressure significanly faster.
-> >=20=20
->=20>  Note that the diffstat is biases by the quite large patch 4/9, whi=
-ch
-> >  contains mechanical transformation of existing code; "real" changes =
-are
-> >  noticiable smaller.
-> >=20=20
->=20>  Tested successfully vs the test cases proposed by Geliang and Gang=
- and
-> >  vs the selftests.
-> >=20
->=20At the last meeting on Wednesday, Geliang mentioned he validated this
-> series. Just to be sure, was it the v2 -- from last week -- or the v3 -=
--
-> from this week, while you were in EU -- that you validated? Because
-> Paolo couldn't reproduce the issue you mentioned on the v3 on his side.
->=20
-Hi,=20Matt
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
 
-The issue can also be reproduced on v3. I reproduced it using Docker's
-auto-debug mode with the mptcp_data.sh selftest:
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
 
-=E2=80=98=E2=80=99=E2=80=98
-	Not running all tests but:
+For more details:
 
--------- 8< --------
-run_loop run_selftest_one mptcp_data.sh
--------- 8< --------
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
 
 
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
 
-
-	=3D=3D=3D Attempt: 1 (Sat, 09 May 2026 06:55:44 +0000) =3D=3D=3D
-
-
-Selftest Test: ./mptcp_data.sh
-TAP version 13
-1..1
-# add_addr_accepted 4 subflows 4=20
-#=20id 1 flags signal 127.0.0.1 10001
-# id 2 flags signal 127.0.0.1 10002
-# id 3 flags signal 127.0.0.1 10003
-# id 4 flags signal 127.0.0.1 10004
-# TAP version 13
-# 1..48
-# # Starting 48 tests from 2 test cases.
-# #  RUN           global.mptcp_v6 ...
-# #            OK  global.mptcp_v6
-# ok 1 global.mptcp_v6
-# #  RUN           mptcp.shutdown_reuse ...
-# #            OK  mptcp.shutdown_reuse
-# ok 2 mptcp.shutdown_reuse
-...
-# ok 48 mptcp.sendfile
-# # FAILED: 41 / 48 tests passed.
-# # Totals: pass:41 fail:7 xfail:0 xpass:0 skip:0 error:0
-not ok 1 test: selftest_mptcp_data # FAIL
-# time=3D33
-=E2=80=99=E2=80=98=E2=80=99
-
-As Geliang mentioned in the weekly meeting, we will continue
-to debug and locate the problem based on Paolo's v3 patches.
-
-We will post any updates to the mailing list once we make
-some progess.
-
-Thanks
-Gang
-> Cheers,
-> Matt
-> --=20
->=20Sponsored by the NGI0 Core fund.
->
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
