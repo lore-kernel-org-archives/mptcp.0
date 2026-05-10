@@ -1,259 +1,131 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94EB4128395
-	for <mptcp@lists.linux.dev>; Sun, 10 May 2026 21:04:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C7172D6E72
+	for <mptcp@lists.linux.dev>; Sun, 10 May 2026 22:16:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778447066; cv=none; b=j328graux0KBOZ1zCWSpNsITTZXBbM4qBh/xcwE2d1KzJIgL+Yf6HvMgp7eOw6CtopuY42IXzyxTl99DX0XWq2VsNIwydaSQ1vwwbhCSkChThunFlymR/+tjuBE0bVmqR1qfG+yCUjrgMH4mqOvQQdCwbAyF2pd5F4NhtfMSKns=
+	t=1778451389; cv=none; b=aV6xzCRJCADPhYS6iiBxWUcUfqj4LQztiU8k00sVJrzvMdVJhJ/JD8/EAssAi85hZfsjW5JRll3Nr1hmaSK0FYGkwzb2qBC2rhQ0CyX1O6/vCtEs3Fp0ksQ6xvp5+1e2hYVJh66OyehPIVR3sJABHOqCLOU+vOP9n+ViTOoDxSs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778447066; c=relaxed/simple;
-	bh=0iVg84vxPLZlWkb8yySLkNqW8kk37K7V6CQNux9v6TI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=Hb0ot842baWGLmUNrzx6+OCrlCUtedXShlIbfYqmp4eHioB05F1AsIl+5tze833/pM3AMDrPARzqz8xUgIFgOwQ4k/hhKAhHWp44wENJzyx/6cj+W5iZreitnzn2YjyQi2TPFBliK3CwGjIn13yofgTlxHCZQQRA1rma64+c+D0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eYad/Etj; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1778451389; c=relaxed/simple;
+	bh=LYr+XY8V2+2QTJMG2oPh8fw/2gdzkQ+rMIczdv6iHrc=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
+	 MIME-Version:Content-Type; b=NX+ZQMFVW8iWQu7NolFGIzv37HYlSC18xqumrNpWmwAjYUxGlbFvWsbTQTXHNb7e5kFI0wE5K1O+KnpS1z94uvjUCG7y7XNP8ksfoWU+IG2RaRXpo/fo3sw//SyfLMeWF2w8o59/uj7R75WNxh+n+5hg6s4d/9TzcUq9kKrOzVc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GWBMJCV7; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eYad/Etj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1778447063;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4Pzn0/JyxjwqAh8CBGRunf0K/2bpPytkEIFN8E2ZNR8=;
-	b=eYad/EtjbQYA7ESCaQUX5DR8kaKMuu4fpif0xT61jtI0IDIraotW3qq80Vs58AgD0fuB3N
-	ml8/wJc6EQtJrrNsyq4ixwmdx6CTugbVDalYP6MEKwHc6U9UgoewYeTmQAGETKWQsNREVE
-	w2DD9iAtLOEJCbi/Gm5glgPd+TOr4Sg=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-36-wjFh_gM3NiCArFiZHR8NzQ-1; Sun,
- 10 May 2026 17:04:20 -0400
-X-MC-Unique: wjFh_gM3NiCArFiZHR8NzQ-1
-X-Mimecast-MFC-AGG-ID: wjFh_gM3NiCArFiZHR8NzQ_1778447059
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E4CC919560B4;
-	Sun, 10 May 2026 21:04:18 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.44.32.4])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id E4FF8180034E;
-	Sun, 10 May 2026 21:04:17 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Cc: Shardul Bankar <shardul.b@mpiricsoftware.com>
-Subject: [PATCH mptcp-next v5 12/12] mptcp: let the retrans scheduler do its job.
-Date: Sun, 10 May 2026 23:03:47 +0200
-Message-ID: <7a221d64155985242b28ad4009b0f5fe59a0639e.1778446731.git.pabeni@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GWBMJCV7"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-82fbf5d4dc2so2578139b3a.1
+        for <mptcp@lists.linux.dev>; Sun, 10 May 2026 15:16:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1778451388; x=1779056188; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BfZ0neci3l6+C+V5aAej6z3GSJdf73Wg2lkVbUtaTo0=;
+        b=GWBMJCV7L2gD8/bCAgN54PEqftgGwasfVbQdXUgBm7rAxSIdzcmoge0hEimdlfnJG3
+         TI4WcQitATKtKdMElp+WCE7nbdIIC4UsRw3ZrBw4xfenTvIAdeHQlj6VQInpf2yV79uS
+         3/yThLJpOC2cynt8KQNfGsdkfc6Ni2k701s2NGpns4qq+WhMX1NQLlfsORZqfPkrg0oF
+         kloE0orCHalUzh9Ll/fdE3aXu4OjQ/4tvoEih33FP4O21QOn47MBM/dq9H5xWVyxrpIh
+         ANctgKZNB96KLdeXly57YAFuCNqMloloVNx5LQ1NtOLVDM+NPL4fjlYl5FAyP5O9X2WJ
+         gXxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1778451388; x=1779056188;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=BfZ0neci3l6+C+V5aAej6z3GSJdf73Wg2lkVbUtaTo0=;
+        b=lAYUngl3X8PoEVXbTvandLfTHXhDUEiLRamrGcj/i+qISrVJmP3RGqoLnvHN1SGRVY
+         wtGDerRu+tltAHXGVy03kNmtjN4pEe+UEqDjSyDP5036WQPBm6J7sg9EaXtgzuQbDy4O
+         0PD/BPZCwErK4bx6U4fYgL9MQk3prjw8+35uDYPDpH27ZUgtg5qOx1eVbehtNFx1qmbY
+         5vZbA2j3r6T2Z0LyrsKrY2g/jCMwORJd3x4EgQjYwSGXYB+K9xvfxrQSF9LWJGImgU9e
+         N8ofs+TdXWPwAxRQN/K+DYsaVd+S7R1n1axvl25JxwL5MLW/gAXrnuQBl7Y+c6tyDZrI
+         j53Q==
+X-Gm-Message-State: AOJu0Yx1TippcLJBkMg/326Sve0eXuffpu/IhCnivfUEl0G7sPIc/uvV
+	x9NF/XXhRInmgGxyaBsTdm+zJKJkGTne8oP6H2868OpRT5SbVsrrc9kQl2AM4+U=
+X-Gm-Gg: Acq92OEhiH1ZFJhU7RtLND8eRQzcgPd4nYBTEe+A7cGFzjCVNkz+2P3UBBcIsYcAiAs
+	ACFZ9dIvTuYFLNLumvZxZvEJEd1xya/bUOj5rKJU/1fsTIhR0tD2uhSc60lpPml08Hr7BSedsxd
+	jKQLyVjE/sosQ35jmhE4CpVdNWTDmz6i4trzcZtlHOVIYGTbZCd7oBraJFSf3bSjIrghxHrbIqZ
+	4wh+eKFFgoMRRjrAU1or8PnQw31ALHshT3tbKfjQP3+kD161r5Nx08RARsBZJc+hMM0bVpSUjr/
+	g8YiNGfFr/8t5btbzP7p2voEamvv7j+0WcOOx7q0IP+NOKUZWHZLp4DjJtvBla4gg6zCrV9CjLh
+	LbfpoXCYgQQK3tCIq1wMS5EQBCol9tdYBW4fZIObROjAHuBKT68v7kBaX0FEMdk5YQLiqXpM8FS
+	SZGfcWFUqHBtJNk2ST8/KIYg/pJKtyXqK0QUmbuBi14dwa
+X-Received: by 2002:a05:6a00:4c13:b0:838:1636:e2d3 with SMTP id d2e1a72fcca58-83a5e356454mr21129607b3a.35.1778451387535;
+        Sun, 10 May 2026 15:16:27 -0700 (PDT)
+Received: from [127.0.0.1] ([4.154.76.22])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-83967dbcf36sm22124955b3a.41.2026.05.10.15.16.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 10 May 2026 15:16:26 -0700 (PDT)
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
 In-Reply-To: <cover.1778446731.git.pabeni@redhat.com>
 References: <cover.1778446731.git.pabeni@redhat.com>
+Subject: Re: [PATCH mptcp-next v5 00/12] mptcp: address stall under memory
+ pressure
+Message-ID: <f00bdac0-b544-87b8-2ef4-ca4de0f045de@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Sun, 10 May 2026 22:16:26 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: lUeDTNTYX3DCGdf2fSOkwWcvPy83_qKoI0KQC7NPDyQ_1778447059
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-content-type: text/plain; charset="US-ASCII"; x-default=true
+Content-Type: text/plain; charset=utf-8
 
-Currently the MPTCP core enforces that when MPTCP-level retrans timer
-fires, at most a single dfrag is retransmitted. If some corner-cases it
-may be necessary retransmit multiple dfrags, and the MPTCP socket will
-need to wait multiple retrans timeout to accomplish that.
+Hi Paolo,
 
-Remove the mentioned constraint, allowing to transmit multiple dfrags per
-retrans period, as long as the scheduler keeps selecting subflows for
-retransmissions and pending data is available in the rtx queue.
-The default scheduler will transmit a dfrag per available subflow.
+Thank you for your modifications, that's great!
 
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
----
-v4 -> v5:
-  - fixed already_sent update
+Our CI did some validations and here is its report:
 
-v3 -> v4:
-  - avoid quadratic behavior, fix retrans_seq update
-  - fix rtx timer re-schedule miss
+- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Unstable: 2 failed =
+test(s): packetdrill_fastopen packetdrill_sockopts =E2=9A=A0=EF=B8=8F=20
+- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/256401=
+83335
 
-v2 -> v3:
-  - fix infinite loop issue (should address tls tests failures)
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/49dce7f2f3dd
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1092385
 
-v1 -> v2:
-  - fix retrans sequence update (sashiko)
----
- net/mptcp/protocol.c | 105 +++++++++++++++++++++++++++++++------------
- 1 file changed, 77 insertions(+), 28 deletions(-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 6dc7899c6fc7..8204d29a844b 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1232,13 +1232,6 @@ static void __mptcp_clean_una_wakeup(struct sock *sk)
- 	mptcp_write_space(sk);
- }
- 
--static void mptcp_clean_una_wakeup(struct sock *sk)
--{
--	mptcp_data_lock(sk);
--	__mptcp_clean_una_wakeup(sk);
--	mptcp_data_unlock(sk);
--}
--
- static void mptcp_enter_memory_pressure(struct sock *sk)
- {
- 	struct mptcp_subflow_context *subflow;
-@@ -2851,8 +2844,12 @@ static void mptcp_check_fastclose(struct mptcp_sock *msk)
- 	sk_error_report(sk);
- }
- 
--/* Retransmit the specified data fragment on all the selected subflows. */
--static int __mptcp_push_retrans(struct sock *sk, struct mptcp_data_frag *dfrag)
-+/*
-+ * Retransmit the specified data fragment on all the selected subflows,
-+ * starting from the specified sequence
-+ */
-+static int __mptcp_push_retrans(struct sock *sk, struct mptcp_data_frag *dfrag,
-+				u64 sent_seq)
- {
- 	struct mptcp_sendmsg_info info = { .data_lock_held = true, };
- 	struct mptcp_sock *msk = mptcp_sk(sk);
-@@ -2862,6 +2859,7 @@ static int __mptcp_push_retrans(struct sock *sk, struct mptcp_data_frag *dfrag)
- 
- 	mptcp_for_each_subflow(msk, subflow) {
- 		if (READ_ONCE(subflow->scheduled)) {
-+			u16 offset = sent_seq - dfrag->data_seq;
- 			u16 copied = 0;
- 
- 			mptcp_subflow_set_scheduled(subflow, false);
-@@ -2871,9 +2869,12 @@ static int __mptcp_push_retrans(struct sock *sk, struct mptcp_data_frag *dfrag)
- 			lock_sock(ssk);
- 
- 			/* limit retransmission to the bytes already sent on some subflows */
--			info.sent = 0;
-+			info.sent = offset;
- 			info.limit = READ_ONCE(msk->csum_enabled) ? dfrag->data_len :
- 								    dfrag->already_sent;
-+			DEBUG_NET_WARN_ON_ONCE(!before64(sent_seq,
-+							 dfrag->data_seq +
-+							 info.limit));
- 
- 			/*
- 			 * make the whole retrans decision, xmit, disallow
-@@ -2917,41 +2918,89 @@ static void __mptcp_retrans(struct sock *sk)
- 	struct mptcp_sock *msk = mptcp_sk(sk);
- 	struct mptcp_subflow_context *subflow;
- 	struct mptcp_data_frag *dfrag;
-+	bool retransmitted = false;
-+	u64 retrans_seq;
- 	int err, len;
- 
--	mptcp_clean_una_wakeup(sk);
--
--	/* first check ssk: need to kick "stale" logic */
--	err = mptcp_sched_get_retrans(msk);
-+	mptcp_data_lock(sk);
-+	__mptcp_clean_una_wakeup(sk);
-+	retrans_seq = msk->snd_una;
- 	dfrag = mptcp_rtx_head(sk);
-+	mptcp_data_unlock(sk);
-+	if (!dfrag)
-+		goto check_data_fin;
-+
-+	for (;;) {
-+		bool already_retrans;
-+
-+		/* The scheduler may clean the RTX queue. */
-+		get_page(dfrag->page);
-+
-+		/* The default scheduler will kick "stale" logic. */
-+		err = mptcp_sched_get_retrans(msk);
-+		if (err) {
-+			put_page(dfrag->page);
-+			break;
-+		}
-+
-+		/* Incoming acks can have moved retrans sequence after
-+		 * the current dfrag, if so try to start again from RTX head.
-+		 */
-+		mptcp_data_lock(sk);
-+		already_retrans = !dfrag->already_sent ||
-+				  !before64(msk->snd_una, dfrag->data_seq +
-+					    dfrag->already_sent);
-+		put_page(dfrag->page);
-+		if (already_retrans) {
-+			__mptcp_clean_una_wakeup(sk);
-+			retrans_seq = msk->snd_una;
-+			dfrag = mptcp_rtx_head(sk);
-+		}
-+		mptcp_data_unlock(sk);
-+		if (!dfrag)
-+			break;
-+
-+		len = __mptcp_push_retrans(sk, dfrag, retrans_seq);
-+		if (len < 0)
-+			goto clear_scheduled;
-+
-+		retransmitted = true;
-+		retrans_seq += len;
-+		msk->bytes_retrans += len;
-+		dfrag->already_sent = max_t(u16, dfrag->already_sent,
-+					    retrans_seq - dfrag->data_seq);
-+
-+		/* Attempt the next fragment only if the current one is
-+		 * completely retransmitted.
-+		 */
-+		if (before64(retrans_seq, dfrag->data_seq + dfrag->data_len))
-+			break;
-+
-+		dfrag = list_is_last(&dfrag->list, &msk->rtx_queue) ?
-+				NULL : list_next_entry(dfrag, list);
-+		if (!dfrag || !dfrag->already_sent)
-+			break;
-+	}
-+
-+	/* Data fin retransmission needed only if no data retransmission took
-+	 * place, and RTX queue is empty.
-+	 */
-+check_data_fin:
- 	if (!dfrag) {
--		if (mptcp_data_fin_enabled(msk)) {
-+		if (!retransmitted && mptcp_data_fin_enabled(msk)) {
- 			struct inet_connection_sock *icsk = inet_csk(sk);
- 
- 			WRITE_ONCE(icsk->icsk_retransmits,
- 				   icsk->icsk_retransmits + 1);
- 			mptcp_set_datafin_timeout(sk);
- 			mptcp_send_ack(msk);
--
- 			goto reset_timer;
- 		}
- 
- 		if (!mptcp_send_head(sk))
- 			goto clear_scheduled;
--
--		goto reset_timer;
- 	}
- 
--	if (err)
--		goto reset_timer;
--
--	len = __mptcp_push_retrans(sk, dfrag);
--	if (len < 0)
--		goto clear_scheduled;
--
--	msk->bytes_retrans += len;
--	dfrag->already_sent = max(dfrag->already_sent, len);
--
- reset_timer:
- 	mptcp_check_and_set_pending(sk);
- 
--- 
-2.54.0
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
 
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
