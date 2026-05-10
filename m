@@ -1,71 +1,71 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB14533B6EF
-	for <mptcp@lists.linux.dev>; Sun, 10 May 2026 20:49:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75F2B29A9E9
+	for <mptcp@lists.linux.dev>; Sun, 10 May 2026 20:51:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778446142; cv=none; b=PyAQtXXyHQnOvf1vNeo9yzd06Y36J3EU2dPHcxROyobdH2orIQYVXeyeRRfGe9SwD4hBoIoma/tA7NYJ9WoViFAO6rr1MY964ZDyszLd03EeyhiayEwzB8nQIN1NaX0lECixTkYulya1KGb+KHc19gpwbNclh3VufDDI4bPG2Lc=
+	t=1778446268; cv=none; b=OXPcloSDOAEJY/FZk09ANJA29IWwbzaQahr+TUYWLUZD6xfDA8MyyRFklViEzRxD27pK9IhPD+oASItiXgkOVD/1idAL/9laBGbW594eFLbZhs7xyH1g96CteKA87D90Ami2marNrY/SH+B+bgy6q2ARCvTChRGYyLOwQDFaU0k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778446142; c=relaxed/simple;
-	bh=3WTaxlfGjGA/cnDsj6hiOcLNQ5jnRyDwNbeFSDk+q4k=;
+	s=arc-20240116; t=1778446268; c=relaxed/simple;
+	bh=A50e1Y41XxnCNYh2oHSmK062pSGA+AWp0fu4hZ4UJ4w=;
 	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=dSRgS/3jIJmyq6OgK68dbCLvc+lEn7sSOM6Ahhv2jGhNKeJrD4tcshrosoYPVWfHpFEcyiXK05h5rFvD7SBvgAnX2ucbnv7QwZiPlTJhy9aCbL8YNb327pMiV2jlr+iqTKO08PTThUM/ghFC0Zx/c6QuD5X8FsQig47O/mf9hKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dK5O1w8D; arc=none smtp.client-ip=170.10.133.124
+	 In-Reply-To:Content-Type; b=C1IG/oKbysL2b/5cl8Wcegqo3cgCAmzcNTbDHwOKi0Uep5afDWMkmFphslhePzx5lzwUarBHGK8+jJ3gQMz56czcVD+PI7apa7ffYQlgLKMJL6hA4l306tbIckUvI2/zqFJmsfKKxNL1ebk2wlOci6mFJMK5ZjYmRlnNE0qKSUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XOjxEM3/; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dK5O1w8D"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XOjxEM3/"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1778446139;
+	s=mimecast20190719; t=1778446266;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=bVGWVX09nwpG+x2FLeY297RFYPCKYpiASjoxf6gaYug=;
-	b=dK5O1w8DvRfNCFU+zCyO1R0kWkMI0OSg2+QL85SIvE1GSyV8sQY8hZuZoxTOYj4xVdL8M+
-	UGrRVvc0aqXCrI20XaHZ4ZIb+G67DTtqMNgzntTGn0KRfSdq3DRSRauqIrhIG5SpkJ7Y/M
-	LOw6q8biOR6kfoVBuRquWY2vXOUUedQ=
+	bh=lSusibQIimXAyT9q9jwIXdRlSegbsam6nyPts8zrU5I=;
+	b=XOjxEM3/PrEcCR03CHr8+/SWSgl4kMpkA5A55GTUarUQVLZeZu75HX8gl96n1t2XNmN1Xg
+	FgRHXnL1mGIEuSMpAeIwvPHdJzj8Ca1U6TS7GwUKqyTaFdtPT/m+/v3d2dfkWFT389Folm
+	K7hPYnXA6FSjdVH6XRm3Hr8eLK9oNfE=
 Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
  [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-650-H30paXH2NgSJAFC77b4Zow-1; Sun, 10 May 2026 16:48:58 -0400
-X-MC-Unique: H30paXH2NgSJAFC77b4Zow-1
-X-Mimecast-MFC-AGG-ID: H30paXH2NgSJAFC77b4Zow_1778446137
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-44b186b715aso2311835f8f.0
-        for <mptcp@lists.linux.dev>; Sun, 10 May 2026 13:48:58 -0700 (PDT)
+ us-mta-644-HN68ofsDPuWYtEs5cpHR-g-1; Sun, 10 May 2026 16:51:05 -0400
+X-MC-Unique: HN68ofsDPuWYtEs5cpHR-g-1
+X-Mimecast-MFC-AGG-ID: HN68ofsDPuWYtEs5cpHR-g_1778446264
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-44a122a5128so2735767f8f.0
+        for <mptcp@lists.linux.dev>; Sun, 10 May 2026 13:51:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778446137; x=1779050937;
+        d=1e100.net; s=20251104; t=1778446264; x=1779051064;
         h=content-transfer-encoding:in-reply-to:content-language:references
          :cc:to:from:subject:user-agent:mime-version:date:message-id:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bVGWVX09nwpG+x2FLeY297RFYPCKYpiASjoxf6gaYug=;
-        b=tSCrr4lndqz9yI2WSyRv3V979cL+euTOxCnNk0ydgjwRLSMc27QhaF0qQbpX+XymB8
-         p2V71dLesQ3qts4OpuCCloCN5egL4ffKohdLXbhsGM+i6QEI/F+Y2B0hFyUPrxoNmiG1
-         sFZsnIlFPbJpHatwg7jovEU58wVFPw0OBl9d+knxU/4TeRroE6yocMqE2yvfbQe8QW1c
-         cmEXa5Cyc4vqmA+Re7va84fgc7ORLo2bd+KZ9PUwhjvGB3SARrQJSXIyhF0DInAySwVu
-         XZ7Gv+hae2kuS8QVrAAWSR5Hl373eNCxHssMORyb/XKX4lckYIv5SoDJzM0yxYoIXpBv
-         TF1Q==
-X-Gm-Message-State: AOJu0Yxr5Oo6GbzeViFdYz2ZUhzLhvm7Zdq8THquC3Dxunv62Gy1SLTE
-	+A4T7v5YtJ9m12deDo64ndlktkW7GmLcjJOkRi/N7p91OK1zfamn55enDyQDLwOpHzcl13ZsR52
-	Cb8jEKV2td/ArHsvMGpGtVzxC1MdwrcB6ZsyJyWyK+iyYbPHLKJlS6b17GVUYa0JOT1a3OZNi/9
-	g1E8KAuXbwThJ5aYzUhebaqf2hTffsBgxjQ8GCDg==
-X-Gm-Gg: Acq92OEWVYUzaYYGqjesl7C79f43xA+lQNxgyBzF4CFW7xGfe1pw6aL4HRmUqvvPhPv
-	xtVmcG/m/qFvcDZVBE/5ByPW41jstOc+JGyQYNqoygY/EALYDZIysvVJOjHPxphdSij9v68L6BL
-	jU2GMIXf99o5SnAUwl2wKd9w3V87wycaoumdBTS3bBrpUYlOY3/IK0YQSXxQVJEy+i1XQphnKBj
-	/yssDHHnsdQAHFlPVfG/f6HLocheJetX3UlGAFEZljhPzofKgWDR7xXzGo2F/aOv+IGHcasnn8V
-	byTNVUVHVE5TFI3nayR00DUM5lbelMLjPASWWIk+IdxnlHSgWYC5aAlMIhVhDoJPvMGutEJ+Jxa
-	Ivnsw6omMYGEbT9XEVtxaiGOX2QEIK90/Y24WEb2GEtPbrks74S0nnokQ
-X-Received: by 2002:a5d:64e3:0:b0:43c:f52b:8003 with SMTP id ffacd0b85a97d-4515d6bbc06mr31931709f8f.36.1778446136998;
-        Sun, 10 May 2026 13:48:56 -0700 (PDT)
-X-Received: by 2002:a5d:64e3:0:b0:43c:f52b:8003 with SMTP id ffacd0b85a97d-4515d6bbc06mr31931686f8f.36.1778446136414;
-        Sun, 10 May 2026 13:48:56 -0700 (PDT)
+        bh=lSusibQIimXAyT9q9jwIXdRlSegbsam6nyPts8zrU5I=;
+        b=sVdakrj4goBzqRMNaGuql6ecqlmyMG2beS7rw5Yndrt0xiq11D3L2g7Y+sMklp2zGS
+         7zljG0CqQGdQJd7scrbDW9UtHxu7c41U7w1PofQ/+RMJNGhc5rCN+I/eG8smW1c/WZOk
+         lnj+SN4klI5OfWNn9WF4X7nzwNo3u9CWr5yCai6twkTFth9BcO1L2oT+oMpO4ilEjoH+
+         RFH1x0rUxYaeeQKdabOEpeeqwqkCeA3RUI87/qDH/9/jN2B2ifLDV7FOfYjfSOe5KEcu
+         EpI0rklGwhd9wEttc0s7wiUi0W9cQHQlxIU/kf6NeCcOLw4l1xiLxucAUU+xOLzPof89
+         7OGA==
+X-Gm-Message-State: AOJu0YyI6VRAaJGV1p47PjT8Mbx5RgeOc8r5Jji95OC98gEYzkUSCVFu
+	D5k1PaTREKU2/YcqjxkSctcZI1/iRKxhcsaRUbI6GL3SuHDJsfE9bIu1SUvBbHblIJOUlKufXoC
+	kA/cqEcN1peU2GL8rFWE7/wDk3u4rIiZNByI2BbZwYUp5d8dPIncw8co8XirsSUR6N1LOD18pAu
+	VdoGE9/ZrcDRysV75dAz+fiE4orafky1KzdrrJrg==
+X-Gm-Gg: Acq92OHW6Ci7yLyU0UB88K2YIkFlH2FKP55nCtUuInehrQCJbkLyvmEBPnuso00X7Jb
+	ChsUd3fgc4FwrWm5mzty72GRcQtxXLAoeHAjJtScWjh+Dldt5dX0f4E5gh3pPkdr3m2hvssRFQX
+	JoTEE5kHfQuaqGrZXxCPnv64aRUgNaxVD4dU/iCG+/wsy8qcfaL4v9W2eZpgbqRfTWHKhZUTDiw
+	5/6h++22Tls/dcebFc7Kcr9NVFkvdsXakAdBhUgAa70vcDuLOQLPUgIlQ9ooLA22dX8QwGjhVhq
+	MXIYPlN029VzR+8jRkiMyx97+3jez2pRmZqqG/gT24rbv45vFoNbVlpts3xlw/ploQpgQ2DSIV/
+	Xa0UuajrzXZCQzvwkAZdWtzhNMvlGRXxWOau+/yexoWCO7tl/V2bhoB4X
+X-Received: by 2002:a05:600c:8594:b0:48a:52ce:a4b1 with SMTP id 5b1f17b1804b1-48e676a4e1fmr135625325e9.15.1778446263766;
+        Sun, 10 May 2026 13:51:03 -0700 (PDT)
+X-Received: by 2002:a05:600c:8594:b0:48a:52ce:a4b1 with SMTP id 5b1f17b1804b1-48e676a4e1fmr135625115e9.15.1778446263198;
+        Sun, 10 May 2026 13:51:03 -0700 (PDT)
 Received: from [192.168.88.32] ([216.128.11.203])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-45492271510sm24697380f8f.37.2026.05.10.13.48.55
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48e6db1e945sm48906155e9.36.2026.05.10.13.51.02
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 10 May 2026 13:48:56 -0700 (PDT)
-Message-ID: <2e6d1ae5-9a11-4675-830a-ffa1ba44d1b4@redhat.com>
-Date: Sun, 10 May 2026 22:48:55 +0200
+        Sun, 10 May 2026 13:51:02 -0700 (PDT)
+Message-ID: <5475c74b-f435-4b59-966e-36408cf30a76@redhat.com>
+Date: Sun, 10 May 2026 22:51:01 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -73,103 +73,54 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next 09/12] mptcp: implemented OoO queue pruning
+Subject: Re: [PATCH mptcp-next 10/12] mptcp: track prune recovery status
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
 Cc: Shardul Bankar <shardul.b@mpiricsoftware.com>
 References: <cover.1778312843.git.pabeni@redhat.com>
- <2f2a0f359e54d949cf90ebb92cc3886693b00bda.1778312843.git.pabeni@redhat.com>
-In-Reply-To: <2f2a0f359e54d949cf90ebb92cc3886693b00bda.1778312843.git.pabeni@redhat.com>
+ <c9803bc25b3f40f87a3081b00093068ad66fac85.1778312843.git.pabeni@redhat.com>
+In-Reply-To: <c9803bc25b3f40f87a3081b00093068ad66fac85.1778312843.git.pabeni@redhat.com>
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: rUz-VOn8ilR_g9W1r9juvaSQpO5xhp_7kfBEd83RIwY_1778446137
+X-Mimecast-MFC-PROC-ID: lXUcw-3HwCr3BBPsF0YaID7UtVMXEP4uH-x7j4CUOGo_1778446264
 X-Mimecast-Originator: redhat.com
 Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 5/9/26 9:48 AM, Paolo Abeni wrote:
-> @@ -1207,7 +1238,11 @@ bool mptcp_incoming_options(struct sock *sk, struct sk_buff *skb)
->  		__mptcp_data_acked(subflow->conn);
->  		mptcp_data_unlock(subflow->conn);
->  
-> -		if (mptcp_over_limit(subflow->conn, sk, skb))
-> +		/* Will use ack_seq as limit for OoO pruning; any value would do
-> +		 * as OoO queue must be empty.
-> +		 */
-> +		mp_opt.use_map = 0;
-> +		if (mptcp_over_limit(subflow->conn, sk, skb, &mp_opt))
->  			return false;
->  		return true;
+> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+> index d7e712171d3b..9b8de027848b 100644
+> --- a/net/mptcp/options.c
+> +++ b/net/mptcp/options.c
+> @@ -1200,6 +1200,13 @@ static bool mptcp_over_limit(struct sock *sk, struct sock *ssk,
+>  		__set_bit(MPTCP_PRUNE, &msk->cb_flags);
 >  	}
+>  	ret = sk_rmem_alloc_get(sk) + msk->backlog_len > limit;
+> +
+> +	/* After pruning any packets ensure that MPTCP-driven drops do not
+> +	 * cause TCP-level retransmission.
+> +	 */
+> +	if (before((u32)(msk->ack_seq), READ_ONCE(msk->pruned_seq)))
+> +		ret = false;
 
 Sashiko says:
 
 ---
-Will this cause an uninitialized memory read?
-The mp_opt struct is allocated on the stack without initialization in
-mptcp_incoming_options(). Since use_map is a bitfield, assigning 0 to it
-results in a read-modify-write operation on the uninitialized word, which
-could trigger KMSAN warnings or other static analysis alerts.
+Does this read of msk->ack_seq need a READ_ONCE() annotation?
+If sock_owned_by_user(sk) is true, a concurrent thread releasing the socket
+might modify msk->ack_seq via WRITE_ONCE() during backlog processing where
+the lock is intentionally dropped.
+Since msk->ack_seq is a 64-bit value, reading it without READ_ONCE()
+while it
+is being concurrently updated could lead to a torn read or trigger KCSAN
+data
+race warnings.
+It looks like msk->pruned_seq is correctly protected with READ_ONCE() in the
+same expression.
 ---
 
-No, AFAICS KMSAN handles bitfiled just fine
-
-> @@ -1287,7 +1322,7 @@ bool mptcp_incoming_options(struct sock *sk, struct sk_buff *skb)
->  		return true;
->  	}
->  
-> -	if (mptcp_over_limit(subflow->conn, sk, skb))
-> +	if (mptcp_over_limit(subflow->conn, sk, skb, &mp_opt))
->  		return false;
->  
->  	mpext = skb_ext_add(skb, SKB_EXT_MPTCP);
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index f03f967d8679..d9aab7bbff98 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -386,6 +386,64 @@ void __mptcp_sync_rcv_sequence(struct sock *sk)
->  	MPTCP_SKB_CB(skb)->end_seq = MPTCP_SKB_CB(skb)->map_seq + skb->len;
->  }
->  
-> +/* "Inspired" from the TCP version */
-> +static void mptcp_prune_ofo_queue(struct sock *sk, u32 seq)
-> +{
-> +	struct mptcp_sock *msk = mptcp_sk(sk);
-> +	struct rb_node *node, *prev;
-> +	bool pruned = false;
-> +
-> +	if (RB_EMPTY_ROOT(&msk->out_of_order_queue))
-> +		return;
-> +
-> +	node = &msk->ooo_last_skb->rbnode;
-
-Sashiko says:
-
----
-Could msk->ooo_last_skb point to a freed skb here?
-Looking at __mptcp_check_prune() below, it calls xtcp_collapse_ofo_queue()
-which can collapse and free skbs in the out of order queue. However,
-xtcp_collapse_ofo_queue() only updates the ooo_last_skb pointer if it
-reaches
-the end of the queue.
-If xtcp_collapse_ofo_queue() hits its early exit condition:
-net/ipv4/tcp_input.c:xtcp_collapse_ofo_queue() {
-    ...
-			} else {
-				sum_tiny += range_truesize;
-				if (sum_tiny > sk->sk_rcvbuf >> 3)
-					return collapsed;
-			}
-    ...
-}
-It returns without updating the ooo_last_skb pointer. If the skb that
-ooo_last_skb originally pointed to was freed by a previous collapse
-operation
-in the same call, could this result in a use-after-free when dereferencing
-its rbnode here?
----
-
-No, xtcp_collapse_ofo_queue() does not currupt the rb tree status.
+No, this is under the msk data lock, and msk->ack_seq is updated under
+such lock, the access is race-less. (very strange sashiko's miss this one).
 
 /P
 
