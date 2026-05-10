@@ -1,71 +1,71 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7317F25A642
-	for <mptcp@lists.linux.dev>; Sun, 10 May 2026 20:38:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB14533B6EF
+	for <mptcp@lists.linux.dev>; Sun, 10 May 2026 20:49:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778445505; cv=none; b=LNSiFyeeV2pryfeb6/PVWKDeuiSIXAVPjwentMobGFK/47sk29fHSRUxodVYc4Q4JeszKd7keLv8AtFwcrBS//ai0TAc5ArDN/qov/FD6YJUtJtutd2tjwZCQf8wDrghXNqTwfaxVmW1aXA8l9dOFWkZ9CV+HF/H9gSSt5Vc+F0=
+	t=1778446142; cv=none; b=PyAQtXXyHQnOvf1vNeo9yzd06Y36J3EU2dPHcxROyobdH2orIQYVXeyeRRfGe9SwD4hBoIoma/tA7NYJ9WoViFAO6rr1MY964ZDyszLd03EeyhiayEwzB8nQIN1NaX0lECixTkYulya1KGb+KHc19gpwbNclh3VufDDI4bPG2Lc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778445505; c=relaxed/simple;
-	bh=BWYgK/yueKwuIjI5869eDxl55jnMMwS4D6wCINU1aHE=;
+	s=arc-20240116; t=1778446142; c=relaxed/simple;
+	bh=3WTaxlfGjGA/cnDsj6hiOcLNQ5jnRyDwNbeFSDk+q4k=;
 	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=VCmX4ONPxPfdfYTwvdlGZhR0BDuJCYXX0pd01TECxUCONkVfzuKA7UsASmFnH1wUW0G5tWYtDDEn23FSOrTA5F9VrhYF0005yBx2olrvTmo5jcUxvVSFpKL2CTG6MoF2jDwlMKs7s5ID+cEFaVJYhztNNqyO/R8GElB5obXH4ck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YDlP4TDi; arc=none smtp.client-ip=170.10.129.124
+	 In-Reply-To:Content-Type; b=dSRgS/3jIJmyq6OgK68dbCLvc+lEn7sSOM6Ahhv2jGhNKeJrD4tcshrosoYPVWfHpFEcyiXK05h5rFvD7SBvgAnX2ucbnv7QwZiPlTJhy9aCbL8YNb327pMiV2jlr+iqTKO08PTThUM/ghFC0Zx/c6QuD5X8FsQig47O/mf9hKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dK5O1w8D; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YDlP4TDi"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dK5O1w8D"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1778445503;
+	s=mimecast20190719; t=1778446139;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=9YvvZWai2wA9H/veFYK/P7Qfs2gyrK2wOrJK2epk33I=;
-	b=YDlP4TDiNc6ySsmiyPdbZXiIQ0mthzjUwXkAzhb2b4CVw9xFn8qqK7kL8nPjVn/xJ1J8u4
-	lCR+giXvYLX12cH/V564taTha/hMWrV0X33xepFQLVvfRK1ZHYcxxc0Ua0ZK4reVE1HsFU
-	BXKaNSahbg6Ri/GeXjoUm4RkNmfejbk=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=bVGWVX09nwpG+x2FLeY297RFYPCKYpiASjoxf6gaYug=;
+	b=dK5O1w8DvRfNCFU+zCyO1R0kWkMI0OSg2+QL85SIvE1GSyV8sQY8hZuZoxTOYj4xVdL8M+
+	UGrRVvc0aqXCrI20XaHZ4ZIb+G67DTtqMNgzntTGn0KRfSdq3DRSRauqIrhIG5SpkJ7Y/M
+	LOw6q8biOR6kfoVBuRquWY2vXOUUedQ=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-319-BVLrx2WhPwS8RvkojuyLEg-1; Sun, 10 May 2026 16:38:21 -0400
-X-MC-Unique: BVLrx2WhPwS8RvkojuyLEg-1
-X-Mimecast-MFC-AGG-ID: BVLrx2WhPwS8RvkojuyLEg_1778445500
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-44d79da8cf7so3585485f8f.2
-        for <mptcp@lists.linux.dev>; Sun, 10 May 2026 13:38:21 -0700 (PDT)
+ us-mta-650-H30paXH2NgSJAFC77b4Zow-1; Sun, 10 May 2026 16:48:58 -0400
+X-MC-Unique: H30paXH2NgSJAFC77b4Zow-1
+X-Mimecast-MFC-AGG-ID: H30paXH2NgSJAFC77b4Zow_1778446137
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-44b186b715aso2311835f8f.0
+        for <mptcp@lists.linux.dev>; Sun, 10 May 2026 13:48:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778445500; x=1779050300;
+        d=1e100.net; s=20251104; t=1778446137; x=1779050937;
         h=content-transfer-encoding:in-reply-to:content-language:references
          :cc:to:from:subject:user-agent:mime-version:date:message-id:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9YvvZWai2wA9H/veFYK/P7Qfs2gyrK2wOrJK2epk33I=;
-        b=SIB8bSWkIA46guqxzdiZsFktInUBBjRFbq0qMndZps66iLMccLaVJaCBigiH9Zndzf
-         X7r6q4O6KzIGxHp3ICc2gOnHqSmftItFiF3ChefqBwPXylx2Vz9Hw7YuoGk57a4tcmKl
-         ODORetI2K98cHYIU0TxKa+f/sk0cM+rnnB1r/xoLL2N14kinT1mgIshJhnxrry9RlG1v
-         2tXuPUHv5RwvY+mk0WkYgNnGt+9s4Ek3moY1ypqMc1BFXHf33LvAc0F4lANolbtnX8rb
-         h2zmYcdIDIz2sVHyxnsRbJzCcfbFBR5VMXthP0iMZ6uOBUoi/xegtiIxdrjNQGdjG5pj
-         JxXQ==
-X-Gm-Message-State: AOJu0YwF990fb9K8O9Er0KYptN5tbQ11XZotymuU3EtPcZqZ1OCXzXCw
-	KVnO7ATAp3Th7j8z8Dp0hNCdevhlRha4sj049AKmuxPnp4WqelZ9yxxUzd1B4R8oT+BVsCKNhDH
-	NsweUP31yXVFlcPssGKhzwRlMrvsxpQ/8x5JaDeKSXaAGMu/qy9ERNzescSN/382WTtp+L0Sy/e
-	8773n9c0FvM++Mxr4ujvrdwv8DhJEfUckLs0Oukw==
-X-Gm-Gg: Acq92OE4xtmi6292di8C89JnNyRtrEduj2gggP7Bn1baQCTbPkauQaJUagyy+lrDUoB
-	0lJy2nCdokMrtqyU8sGe2Uk9YK+CFPi8PIhWqfM3GIx9kSzoD5tvEpIsg3OW5Xp2WKF6YjQwgqe
-	BLCLf7EE9hkZtfCfO8j1Ske7D441GRf0oqMf6RorxTpFxpX8DwIpi5U1GdDNxOl8MPYdDaqPA60
-	vaaW97GkiBsWPzgltNmTpbTAugvs2uilQTyRP5ndLb2Dl9S+xy/nGE1AjukuUNucXwawwqAzWhl
-	yPcrs665/T00H6OTvJMbV9JZ3EUxJAp4zJXAp9AnOz9fqvF90nxhOcOBAqiLNc6zu1q+/70QbSh
-	WZLK59Lj5YV/4T5j5Glj7bTNSC1Co2wukY1ALDpfJ7Q/quWgJq7M5ZUQLoVSPi42qtLU=
-X-Received: by 2002:a5d:64c8:0:b0:43f:ea25:20ff with SMTP id ffacd0b85a97d-456a44fbcd9mr10919588f8f.29.1778445500197;
-        Sun, 10 May 2026 13:38:20 -0700 (PDT)
-X-Received: by 2002:a5d:64c8:0:b0:43f:ea25:20ff with SMTP id ffacd0b85a97d-456a44fbcd9mr10919560f8f.29.1778445499596;
-        Sun, 10 May 2026 13:38:19 -0700 (PDT)
+        bh=bVGWVX09nwpG+x2FLeY297RFYPCKYpiASjoxf6gaYug=;
+        b=tSCrr4lndqz9yI2WSyRv3V979cL+euTOxCnNk0ydgjwRLSMc27QhaF0qQbpX+XymB8
+         p2V71dLesQ3qts4OpuCCloCN5egL4ffKohdLXbhsGM+i6QEI/F+Y2B0hFyUPrxoNmiG1
+         sFZsnIlFPbJpHatwg7jovEU58wVFPw0OBl9d+knxU/4TeRroE6yocMqE2yvfbQe8QW1c
+         cmEXa5Cyc4vqmA+Re7va84fgc7ORLo2bd+KZ9PUwhjvGB3SARrQJSXIyhF0DInAySwVu
+         XZ7Gv+hae2kuS8QVrAAWSR5Hl373eNCxHssMORyb/XKX4lckYIv5SoDJzM0yxYoIXpBv
+         TF1Q==
+X-Gm-Message-State: AOJu0Yxr5Oo6GbzeViFdYz2ZUhzLhvm7Zdq8THquC3Dxunv62Gy1SLTE
+	+A4T7v5YtJ9m12deDo64ndlktkW7GmLcjJOkRi/N7p91OK1zfamn55enDyQDLwOpHzcl13ZsR52
+	Cb8jEKV2td/ArHsvMGpGtVzxC1MdwrcB6ZsyJyWyK+iyYbPHLKJlS6b17GVUYa0JOT1a3OZNi/9
+	g1E8KAuXbwThJ5aYzUhebaqf2hTffsBgxjQ8GCDg==
+X-Gm-Gg: Acq92OEWVYUzaYYGqjesl7C79f43xA+lQNxgyBzF4CFW7xGfe1pw6aL4HRmUqvvPhPv
+	xtVmcG/m/qFvcDZVBE/5ByPW41jstOc+JGyQYNqoygY/EALYDZIysvVJOjHPxphdSij9v68L6BL
+	jU2GMIXf99o5SnAUwl2wKd9w3V87wycaoumdBTS3bBrpUYlOY3/IK0YQSXxQVJEy+i1XQphnKBj
+	/yssDHHnsdQAHFlPVfG/f6HLocheJetX3UlGAFEZljhPzofKgWDR7xXzGo2F/aOv+IGHcasnn8V
+	byTNVUVHVE5TFI3nayR00DUM5lbelMLjPASWWIk+IdxnlHSgWYC5aAlMIhVhDoJPvMGutEJ+Jxa
+	Ivnsw6omMYGEbT9XEVtxaiGOX2QEIK90/Y24WEb2GEtPbrks74S0nnokQ
+X-Received: by 2002:a5d:64e3:0:b0:43c:f52b:8003 with SMTP id ffacd0b85a97d-4515d6bbc06mr31931709f8f.36.1778446136998;
+        Sun, 10 May 2026 13:48:56 -0700 (PDT)
+X-Received: by 2002:a5d:64e3:0:b0:43c:f52b:8003 with SMTP id ffacd0b85a97d-4515d6bbc06mr31931686f8f.36.1778446136414;
+        Sun, 10 May 2026 13:48:56 -0700 (PDT)
 Received: from [192.168.88.32] ([216.128.11.203])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4549130549bsm20525307f8f.18.2026.05.10.13.38.18
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-45492271510sm24697380f8f.37.2026.05.10.13.48.55
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 10 May 2026 13:38:19 -0700 (PDT)
-Message-ID: <55ea8256-31a7-455d-a56c-f7b6960572e8@redhat.com>
-Date: Sun, 10 May 2026 22:38:17 +0200
+        Sun, 10 May 2026 13:48:56 -0700 (PDT)
+Message-ID: <2e6d1ae5-9a11-4675-830a-ffa1ba44d1b4@redhat.com>
+Date: Sun, 10 May 2026 22:48:55 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -73,57 +73,103 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next 06/12] mptcp: remove CB offset field
+Subject: Re: [PATCH mptcp-next 09/12] mptcp: implemented OoO queue pruning
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
 Cc: Shardul Bankar <shardul.b@mpiricsoftware.com>
 References: <cover.1778312843.git.pabeni@redhat.com>
- <abe9923377952ae63c600c888512b0e8c835bcea.1778312843.git.pabeni@redhat.com>
-In-Reply-To: <abe9923377952ae63c600c888512b0e8c835bcea.1778312843.git.pabeni@redhat.com>
+ <2f2a0f359e54d949cf90ebb92cc3886693b00bda.1778312843.git.pabeni@redhat.com>
+In-Reply-To: <2f2a0f359e54d949cf90ebb92cc3886693b00bda.1778312843.git.pabeni@redhat.com>
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: WDrZ0kiv45ISfga4AyaocB4qnU5EW_Oa2G843mHGi1A_1778445500
+X-Mimecast-MFC-PROC-ID: rUz-VOn8ilR_g9W1r9juvaSQpO5xhp_7kfBEd83RIwY_1778446137
 X-Mimecast-Originator: redhat.com
 Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 5/9/26 9:48 AM, Paolo Abeni wrote:
-> @@ -4390,7 +4381,7 @@ static struct sk_buff *mptcp_recv_skb(struct sock *sk, u32 *off)
->  		mptcp_move_skbs(sk);
+> @@ -1207,7 +1238,11 @@ bool mptcp_incoming_options(struct sock *sk, struct sk_buff *skb)
+>  		__mptcp_data_acked(subflow->conn);
+>  		mptcp_data_unlock(subflow->conn);
 >  
->  	while ((skb = skb_peek(&sk->sk_receive_queue)) != NULL) {
-> -		offset = MPTCP_SKB_CB(skb)->offset;
-> +		offset = msk->copied_seq - MPTCP_SKB_CB(skb)->map_seq;
->  		if (offset < skb->len) {
->  			*off = offset;
->  			return skb;
+> -		if (mptcp_over_limit(subflow->conn, sk, skb))
+> +		/* Will use ack_seq as limit for OoO pruning; any value would do
+> +		 * as OoO queue must be empty.
+> +		 */
+> +		mp_opt.use_map = 0;
+> +		if (mptcp_over_limit(subflow->conn, sk, skb, &mp_opt))
+>  			return false;
+>  		return true;
+>  	}
 
 Sashiko says:
 
 ---
-Could this sequence lead to an integer underflow and data loss?
-When the remote key is received and the socket is owned by the user,
-subflow_set_remote_key() defers the copied_seq update by setting
-MPTCP_SYNC_SEQ.
-If synchronous backlog processing occurs via mptcp_move_skbs() before the
-release callback can run, __mptcp_sync_rcv_sequence() will update map_seq
-to iasn - skb->len.
-Because copied_seq remains at -skb->len, calculating offset in
-mptcp_recv_skb() as msk->copied_seq - MPTCP_SKB_CB(skb)->map_seq appears
-to result in -iasn.
-Since this causes offset to become a very large positive value, will
-offset < skb->len evaluate to false, causing mptcp_eat_recv_skb() to
-unintentionally drop the skb?
-Additionally, does this desynchronization affect mptcp_inq_hint(),
-causing it to calculate a hint_val that frequently exceeds INT_MAX
-and falsely report pending data?
+Will this cause an uninitialized memory read?
+The mp_opt struct is allocated on the stack without initialization in
+mptcp_incoming_options(). Since use_map is a bitfield, assigning 0 to it
+results in a read-modify-write operation on the uninitialized word, which
+could trigger KMSAN warnings or other static analysis alerts.
 ---
 
-It's allocinating WRT the integer overflow here: copied seq is
-explicitly kept in sync with the current queue head map_seq.
+No, AFAICS KMSAN handles bitfiled just fine
 
-The mptcp_inq_hint() race is real (even if IMHO not very relevant). I'll
-address it in the next iteration
+> @@ -1287,7 +1322,7 @@ bool mptcp_incoming_options(struct sock *sk, struct sk_buff *skb)
+>  		return true;
+>  	}
+>  
+> -	if (mptcp_over_limit(subflow->conn, sk, skb))
+> +	if (mptcp_over_limit(subflow->conn, sk, skb, &mp_opt))
+>  		return false;
+>  
+>  	mpext = skb_ext_add(skb, SKB_EXT_MPTCP);
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index f03f967d8679..d9aab7bbff98 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -386,6 +386,64 @@ void __mptcp_sync_rcv_sequence(struct sock *sk)
+>  	MPTCP_SKB_CB(skb)->end_seq = MPTCP_SKB_CB(skb)->map_seq + skb->len;
+>  }
+>  
+> +/* "Inspired" from the TCP version */
+> +static void mptcp_prune_ofo_queue(struct sock *sk, u32 seq)
+> +{
+> +	struct mptcp_sock *msk = mptcp_sk(sk);
+> +	struct rb_node *node, *prev;
+> +	bool pruned = false;
+> +
+> +	if (RB_EMPTY_ROOT(&msk->out_of_order_queue))
+> +		return;
+> +
+> +	node = &msk->ooo_last_skb->rbnode;
+
+Sashiko says:
+
+---
+Could msk->ooo_last_skb point to a freed skb here?
+Looking at __mptcp_check_prune() below, it calls xtcp_collapse_ofo_queue()
+which can collapse and free skbs in the out of order queue. However,
+xtcp_collapse_ofo_queue() only updates the ooo_last_skb pointer if it
+reaches
+the end of the queue.
+If xtcp_collapse_ofo_queue() hits its early exit condition:
+net/ipv4/tcp_input.c:xtcp_collapse_ofo_queue() {
+    ...
+			} else {
+				sum_tiny += range_truesize;
+				if (sum_tiny > sk->sk_rcvbuf >> 3)
+					return collapsed;
+			}
+    ...
+}
+It returns without updating the ooo_last_skb pointer. If the skb that
+ooo_last_skb originally pointed to was freed by a previous collapse
+operation
+in the same call, could this result in a use-after-free when dereferencing
+its rbnode here?
+---
+
+No, xtcp_collapse_ofo_queue() does not currupt the rb tree status.
 
 /P
 
