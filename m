@@ -1,53 +1,53 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBBF4128395
-	for <mptcp@lists.linux.dev>; Sun, 10 May 2026 21:04:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D1FE2FC876
+	for <mptcp@lists.linux.dev>; Sun, 10 May 2026 21:04:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778447048; cv=none; b=izGI2/h3IwFOTOL9TXAu43P541TrDLOu43SQ6G/X9qq55U41bZ4kOkx23QU8oquCdUhNKZYpzMuDr1h47ky5CjYjghIq4B3E2WQVkobHJZhogsO5l6sT3OZbV25lLinEY7M37c96qUN64jR2MbrRmpTzc+O/EoUK36zmaR1YifA=
+	t=1778447049; cv=none; b=foxV8KURnLBywnQTo81N89SJAyBJ9miIOzHKpKcqKX16KADYU1b2MUTtxwg9ATrF15cc2Pkd3DI34uNJz//gxU3Robp26VcWPac7ujT6PDPMXcD1IuJjBu+HW5Kco0IZQCn7x20kXCRkXhgjBujymsPpoK237MlBWO4aNeIVvsg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778447048; c=relaxed/simple;
-	bh=3VCa83AcpaacCx65vxHhpDCf+g+R7ZQ5GWRpiU2rC1w=;
+	s=arc-20240116; t=1778447049; c=relaxed/simple;
+	bh=PHFghZ4DqqVQwAHa/UJ8denGgnHRNF4zZJS3FqXYtVQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=WoJTjblJx2YfhIwauzEeDsqShpkuBvsRAFHSYXO4WbvJT6zWKAZhGGAvICmJw4ff6LnXql5plrKfstm320z8jteZJjja7kEugswusISqoGV1pLWkyZn3rp/+PH+8vv/lpSP+QpZDKODmFjAKsUZe/ON8DIHM7HpjSAvqPtb3Uqk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QPons/oJ; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version:content-type; b=cH5gw1Y6goSfNf3WN92BWBRmJz3oOK69qQIfeAQ3fFrvXFJgI9z2p4XAV1qWdAj9jBsVkpXfjExZvz3nb290UR6RmTH9GUePsgGgk91OKE11MZ6K+kclr4aHcbkd5KbkZF2qOicbKtj+Af9R/jTzfJ++bB3rv4OJJCWdXn1YuFA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hmGekjvR; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QPons/oJ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hmGekjvR"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1778447044;
+	s=mimecast20190719; t=1778447046;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=jJ8n5T+90W+nWBesYEPr/vtutLq1A528Fq/2kDkYXXg=;
-	b=QPons/oJzo+eeZOQNEuu9OKRFpFwpnK/wAPUABe43u+krpD8y1syi40LHYpL1UNP4uCY+M
-	l42bVTqsMHjJbX9ggAn8mbUnuWgc6hAcSPW4fvyfCievcRG8pDYRpxd0ObQxE+NBIQaiXa
-	342rwn6OpGDPoJHVew7IePGJWQLBDWs=
+	bh=tmRn7W6nDjWwOzv3SLr9sOJGFeLcMyoDD5d9uqHxgTo=;
+	b=hmGekjvRU2J/jab1x4EdzTu6b7y58mus0XxYidoppEn/vaqP0pd3d0mlyXBou+Vn/XCaTo
+	Kh+TQ/GNBYFOUE3l/0nu0CqZHOzmn6/M8mlLN/FlnmnL0cLRci4e8sBSaTwIWFiCrYS3g7
+	pSC3RluUZf8lAtmFGhVZYif/TJiVRvs=
 Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-327-dZSEd1_AM6-2P_r6ld5faA-1; Sun,
- 10 May 2026 17:04:03 -0400
-X-MC-Unique: dZSEd1_AM6-2P_r6ld5faA-1
-X-Mimecast-MFC-AGG-ID: dZSEd1_AM6-2P_r6ld5faA_1778447042
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-610-Dh0cIuMGNPOwGFeuQDWJbg-1; Sun,
+ 10 May 2026 17:04:05 -0400
+X-MC-Unique: Dh0cIuMGNPOwGFeuQDWJbg-1
+X-Mimecast-MFC-AGG-ID: Dh0cIuMGNPOwGFeuQDWJbg_1778447044
 Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 46B12195608E;
-	Sun, 10 May 2026 21:04:02 +0000 (UTC)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E99A11956089;
+	Sun, 10 May 2026 21:04:03 +0000 (UTC)
 Received: from gerbillo.redhat.com (unknown [10.44.32.4])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 3FC1E1800352;
-	Sun, 10 May 2026 21:04:01 +0000 (UTC)
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id DA4B21800352;
+	Sun, 10 May 2026 21:04:02 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
 Cc: Shardul Bankar <shardul.b@mpiricsoftware.com>
-Subject: [PATCH mptcp-next v5 01/12] mptcp: do not drop partial packets
-Date: Sun, 10 May 2026 23:03:36 +0200
-Message-ID: <2a88c5905617e57f9523a7a47c9f4e49e80ec81f.1778446731.git.pabeni@redhat.com>
+Subject: [PATCH mptcp-next v5 02/12] mptcp: explicitly drop over memory limits
+Date: Sun, 10 May 2026 23:03:37 +0200
+Message-ID: <4b39eaf72f7d29ac80592113c5393b4ca63e1916.1778446731.git.pabeni@redhat.com>
 In-Reply-To: <cover.1778446731.git.pabeni@redhat.com>
 References: <cover.1778446731.git.pabeni@redhat.com>
 Precedence: bulk
@@ -58,82 +58,188 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 90CtpLmeQfGdXAu4RNF4HQuKIDEIOSLOu_R0cQ_TFuw_1778447042
+X-Mimecast-MFC-PROC-ID: tigvMqtKoJdrjnNH5W-QzK-r3cxSSrDV0rgHSB9j0Es_1778447044
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 
-From: Shardul Bankar <shardul.b@mpiricsoftware.com>
+Currently the enforcement of the rcvbuf constraint is implemented
+when moving the skbs into the msk receive or OoO queue, keeping the
+incoming skbs in the subflow queue when over limit.
 
-When a packet arrives with map_seq < ack_seq < end_seq, the beginning
-of the packet has already been acknowledged but the end contains new
-data.  Currently the entire packet is dropped as "old data," forcing
-the sender to retransmit.
+Under significant memory pressure the above can cause permanent data
+transfer stalls. Hard enforce the memory limits as early as possible,
+before landing even in the subflow queues, and refine the check when
+owning the msk socket lock.
 
-Instead, skip the already-acked bytes by adjusting the skb offset and
-enqueue only the new portion.  Update bytes_received and ack_seq to
-reflect the new data consumed.
+Note that fallback socket must not drop on the later checks, as the
+incoming skb is already acked, and such drop would break the stream.
 
-A previous attempt at this fix (commit 1d2ce718811a ("mptcp: do not
-drop partial packets"), reverted in commit bf39160c4218 ("Revert
-"mptcp: do not drop partial packets"")) also added a zero-window
-check and changed rcv_wnd_sent initialization, which caused test
-regressions.  This version addresses only the partial packet handling
-without modifying receive window accounting.
-
-Fixes: ab174ad8ef76 ("mptcp: move ooo skbs into msk out of order queue.")
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/600
-Signed-off-by: Shardul Bankar <shardul.b@mpiricsoftware.com>
-[pabeni@redhat.com: update map]
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 ---
-v2 -> v3:
-  - update map_seq, too
-v2: https://lore.kernel.org/mptcp/20260422143931.43281-1-shardul.b@mpiricsoftware.com/
+v4 -> v5:
+ - fix possible u32 overflow in mptcp_over_limit
 
-Note:
- - this introduces some code duplication. will be cleaned-up in
-   later patches
+v3 -> v4:
+ - schedule TCP ack on drop
+ - enforce limits in __mptcp_move_skb() and __mptcp_add_backlog(), too
+   but only if not fallback.
+
+v1 -> v2:
+ - deal correctly with tcp fin and zero win probe
+
+RFC -> v1:
+ - limit vs actual buffer size
+ - use CB info instead of skb->len
+
+Note that:
+ - this needs the follow-up patches to really fix the stall
+ - sashiko can assume ZWP carries unacked data and may be silently dropped.
+   AFAIK that is false.
+ - sashiko apparently can't graps mptcp subflow never hit the tcp rx
+   fastpath, and the mptcp_incoming_options in tcp_rcv_state_process
+   is hit, the peer can't transmit any more data.
+ - the memory comparison is intentionally very rough, as
+   the msk socket lock is not currently held where the condition is
+   now enforced. This should require some refinement, shared as-is
+i   to avoid more latency on my side
 ---
- net/mptcp/protocol.c | 24 +++++++++++++++++++-----
- 1 file changed, 19 insertions(+), 5 deletions(-)
+ net/mptcp/options.c  | 32 ++++++++++++++++++++++++++++++--
+ net/mptcp/protocol.c | 29 +++++++++++++++++++++--------
+ 2 files changed, 51 insertions(+), 10 deletions(-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 93e7a42fc65c..ce8372fb3c6a 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -397,12 +397,26 @@ static bool __mptcp_move_skb(struct sock *sk, struct sk_buff *skb)
- 		return false;
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index 4cc583fdc7a9..36f12e5dfa92 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -1158,8 +1158,30 @@ static bool add_addr_hmac_valid(struct mptcp_sock *msk,
+ 	return hmac == mp_opt->ahmac;
+ }
+ 
+-/* Return false in case of error (or subflow has been reset),
+- * else return true.
++static bool mptcp_over_limit(struct sock *sk, struct sock *ssk,
++			     const struct sk_buff *skb)
++{
++	struct mptcp_sock *msk = mptcp_sk(sk);
++	u64 mem = sk_rmem_alloc_get(sk);
++
++	mem += READ_ONCE(msk->backlog_len);
++	if (likely(mem <= READ_ONCE(sk->sk_rcvbuf)))
++		return false;
++
++	/* Avoid silently dropping pure acks, fin or zero win probes. */
++	if (TCP_SKB_CB(skb)->seq == TCP_SKB_CB(skb)->end_seq ||
++	    TCP_SKB_CB(skb)->tcp_flags & TCPHDR_FIN ||
++	    !after(TCP_SKB_CB(skb)->end_seq, tcp_sk(ssk)->rcv_nxt))
++		return false;
++
++	/* Dropped due to memory constraints, schedule an ack. */
++	inet_csk(ssk)->icsk_ack.pending |= ICSK_ACK_NOMEM | ICSK_ACK_NOW;
++	inet_csk_schedule_ack(ssk);
++	return true;
++}
++
++/* Return false when the caller must drop the packet, i.e. in case of error,
++ * subflow has been reset, or over memory limits.
+  */
+ bool mptcp_incoming_options(struct sock *sk, struct sk_buff *skb)
+ {
+@@ -1185,6 +1207,9 @@ bool mptcp_incoming_options(struct sock *sk, struct sk_buff *skb)
+ 
+ 		__mptcp_data_acked(subflow->conn);
+ 		mptcp_data_unlock(subflow->conn);
++
++		if (mptcp_over_limit(subflow->conn, sk, skb))
++			return false;
+ 		return true;
  	}
  
--	/* old data, keep it simple and drop the whole pkt, sender
--	 * will retransmit as needed, if needed.
-+	/* Completely old data? */
-+	if (!after64(MPTCP_SKB_CB(skb)->end_seq, msk->ack_seq)) {
-+		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_DUPDATA);
+@@ -1263,6 +1288,9 @@ bool mptcp_incoming_options(struct sock *sk, struct sk_buff *skb)
+ 		return true;
+ 	}
+ 
++	if (mptcp_over_limit(subflow->conn, sk, skb))
++		return false;
++
+ 	mpext = skb_ext_add(skb, SKB_EXT_MPTCP);
+ 	if (!mpext)
+ 		return false;
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index ce8372fb3c6a..492ee9ca9c77 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -381,6 +381,15 @@ static bool __mptcp_move_skb(struct sock *sk, struct sk_buff *skb)
+ 
+ 	mptcp_borrow_fwdmem(sk, skb);
+ 
++	/* Can't drop packets for fallback socket this late, or the stream
++	 * will break.
++	 */
++	if (unlikely(sk_rmem_alloc_get(sk) > READ_ONCE(sk->sk_rcvbuf)) &&
++	    !__mptcp_check_fallback(msk)) {
 +		mptcp_drop(sk, skb);
 +		return false;
 +	}
 +
-+	/* Partial packet: map_seq < ack_seq < end_seq.
-+	 * Skip the already-acked bytes and enqueue the new data.
- 	 */
--	MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_DUPDATA);
--	mptcp_drop(sk, skb);
--	return false;
-+	copy_len = MPTCP_SKB_CB(skb)->end_seq - msk->ack_seq;
-+	MPTCP_SKB_CB(skb)->offset += msk->ack_seq - MPTCP_SKB_CB(skb)->map_seq;
-+	MPTCP_SKB_CB(skb)->map_seq += msk->ack_seq -
-+				      MPTCP_SKB_CB(skb)->map_seq;
-+	msk->bytes_received += copy_len;
-+	WRITE_ONCE(msk->ack_seq, msk->ack_seq + copy_len);
-+
-+	skb_set_owner_r(skb, sk);
-+	__skb_queue_tail(&sk->sk_receive_queue, skb);
-+	return true;
- }
+ 	if (MPTCP_SKB_CB(skb)->map_seq == msk->ack_seq) {
+ 		/* in sequence */
+ 		msk->bytes_received += copy_len;
+@@ -675,6 +684,7 @@ static void __mptcp_add_backlog(struct sock *sk,
+ 	struct sk_buff *tail = NULL;
+ 	struct sock *ssk = skb->sk;
+ 	bool fragstolen;
++	u64 limit;
+ 	int delta;
  
- static void mptcp_stop_rtx_timer(struct sock *sk)
+ 	if (unlikely(sk->sk_state == TCP_CLOSE)) {
+@@ -682,6 +692,15 @@ static void __mptcp_add_backlog(struct sock *sk,
+ 		return;
+ 	}
+ 
++	/* Similar additional allowance as plain TCP. */
++	limit = READ_ONCE(sk->sk_rcvbuf);
++	limit += (limit >> 1) + 64 * 1024;
++	limit = min_t(u64, limit, UINT_MAX);
++	if (msk->backlog_len > limit && !__mptcp_check_fallback(msk)) {
++		kfree_skb_reason(skb, SKB_DROP_REASON_SOCKET_RCVBUFF);
++		return;
++	}
++
+ 	/* Try to coalesce with the last skb in our backlog */
+ 	if (!list_empty(&msk->backlog_list))
+ 		tail = list_last_entry(&msk->backlog_list, struct sk_buff, list);
+@@ -753,7 +772,7 @@ static bool __mptcp_move_skbs_from_subflow(struct mptcp_sock *msk,
+ 
+ 			mptcp_init_skb(ssk, skb, offset, len);
+ 
+-			if (own_msk && sk_rmem_alloc_get(sk) < sk->sk_rcvbuf) {
++			if (own_msk) {
+ 				mptcp_subflow_lend_fwdmem(subflow, skb);
+ 				ret |= __mptcp_move_skb(sk, skb);
+ 			} else {
+@@ -2211,10 +2230,6 @@ static bool __mptcp_move_skbs(struct sock *sk, struct list_head *skbs, u32 *delt
+ 
+ 	*delta = 0;
+ 	while (1) {
+-		/* If the msk recvbuf is full stop, don't drop */
+-		if (sk_rmem_alloc_get(sk) > sk->sk_rcvbuf)
+-			break;
+-
+ 		prefetch(skb->next);
+ 		list_del(&skb->list);
+ 		*delta += skb->truesize;
+@@ -2242,9 +2257,7 @@ static bool mptcp_can_spool_backlog(struct sock *sk, struct list_head *skbs)
+ 	DEBUG_NET_WARN_ON_ONCE(msk->backlog_unaccounted && sk->sk_socket &&
+ 			       mem_cgroup_from_sk(sk));
+ 
+-	/* Don't spool the backlog if the rcvbuf is full. */
+-	if (list_empty(&msk->backlog_list) ||
+-	    sk_rmem_alloc_get(sk) > sk->sk_rcvbuf)
++	if (list_empty(&msk->backlog_list))
+ 		return false;
+ 
+ 	INIT_LIST_HEAD(skbs);
 -- 
 2.54.0
 
