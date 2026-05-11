@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E9A63C65FA
-	for <mptcp@lists.linux.dev>; Mon, 11 May 2026 10:14:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97A171E834E
+	for <mptcp@lists.linux.dev>; Mon, 11 May 2026 10:29:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778494478; cv=none; b=AJ7GvKrHJO9ZnOt/LOowewKo8oqcoXcpMP24OXl3zocPvpKx4oE6yeO56N1dDtcJh+CIuVNC8q4qObrKc8HEhErnt9q2BjblFCMo2/uGF2/pmDhu9+PcrU19z131Jb3w2F2/2yVsmOxuHfVAJ3e8IJEdt3HJoAatL5FODlnneQ0=
+	t=1778495343; cv=none; b=jmDAEQSGxqhROL8wvIeDdeD9nQj0nBPzPCQmqXfCbFVsAfhYdY8lGGO8pAw/qzbhfWvpjp5LZeD0Xpjtm+yvNPzXxYDF0oJ5C2VPXlQBmum6KZnMWq1gIjWi2srIVhFZ8iSPkfcVCfED8+rk/WDhLBZHfT8QjeoiA2HZHtlWNsw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778494478; c=relaxed/simple;
-	bh=KY1mlzuRljkb7B55l3/FfGpua2dqPiGgxsXop6ba4sg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=V2MkOFNT9SbTDm/Yewvk/NbVNrR382eK+CugUbtILt0ebJKDWcajMhRJoMH7ZGPB84J89xyUqGDMK7iaElITJ3sjtfB6GobahAz4hmGkBcg4PjhXi83r9wMWS4yLfMRIuQ3hHzcZgvOPKcmYFaG4Hj+rWrHnjob88NjPQrXRC98=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aSi2TVnF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1778495343; c=relaxed/simple;
+	bh=Wg+71e/aNG/xpNEotw1GJ4TbLOD+/QV2mej0Hx0FS1I=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=sbWOvN9NitLQ9y/q4s9KcJM0WfgTHIP9bAH2JYs3xZL39XZEk9a2xEtCjuLVTGnGlCWJPLs2Jn6fpZj+KFr+wX13/OjCaYcQtMQHS742aZWURCBpHQMc3KDyVE2W0LrwmABieFLDLuh8rTbOKFGTJ/T9ARSWeDe6z2fx3eyI6/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AHGGIedi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aSi2TVnF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C4FDC2BCB0;
-	Mon, 11 May 2026 10:14:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AHGGIedi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87B42C2BCB0;
+	Mon, 11 May 2026 10:29:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778494478;
-	bh=KY1mlzuRljkb7B55l3/FfGpua2dqPiGgxsXop6ba4sg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=aSi2TVnFpP3HUST74pqtgxsz6uWTIfOXJcX10D6BDhiJvlDzRMMaDJinyHAuDXDmg
-	 EX0+g0EbGJNs0raO7tPti0UWPNr3llhGdwHq5/SG3KtK1msU5Tm4qdprUf5zgLPADA
-	 TaTtW+UH6iBCIKTH15v9rLeQYRVA6T2ECR97Xqv6W94LCOIXpYwrBJqUeyuiwTsiWF
-	 bybjEm3JStkfmhCa8PedrJmQQdgBFVeslRsR5Nq177SNLWekIzGFUfDxex4rHSCGy0
-	 5R55/JF9kiN4P/y9jKgOV8JH6msnb0MtJc/RWKPvl8Zwf3BuCx6T7hMjDTvDxh4nI/
-	 gzEZHUhyfoWEw==
-Message-ID: <7a0a1b9c-dc6b-4053-b5dd-e927019ccdfc@kernel.org>
-Date: Mon, 11 May 2026 12:14:35 +0200
+	s=k20201202; t=1778495343;
+	bh=Wg+71e/aNG/xpNEotw1GJ4TbLOD+/QV2mej0Hx0FS1I=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=AHGGIediLCco56W0oZGtJaBS6PL06fsjm3L3R+mIl/DYH80OxljOsZIFG9tRnDaFF
+	 oYb3wpXhr+TgdZ2pbR4ATHNR0zBZ75OSnUhtQ+QRBjsTcFW5eOpCJVS0SmLy+EPCbM
+	 iyVjtci4iH6sY9NUyfChl4Wd84D+H/Sqrql3+QZJgIl9W0G9ETCnmmEgnWOLZNWdFW
+	 xcC70S8zEIvyUDC97E1S1R+3K1IWO0TnUjzJXDSfQPAZYcpW/2hN7OwVLOX0x0FojL
+	 VMzVNaU5TNvkAf9f55+3Dw69DE6/UmNWaQSB/oq/reUKtDDTJ/O8SqVva/kTniuK/S
+	 fhvAbhmTT97Og==
+Message-ID: <429816d1-c207-4829-9c06-c7c2c0b59c3b@kernel.org>
+Date: Mon, 11 May 2026 12:29:00 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -37,11 +37,12 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
 Subject: Re: [PATCH mptcp-next v5 01/12] mptcp: do not drop partial packets
 Content-Language: fr
+From: Matthieu Baerts <matttbe@kernel.org>
 To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
 Cc: Shardul Bankar <shardul.b@mpiricsoftware.com>
 References: <cover.1778446731.git.pabeni@redhat.com>
  <2a88c5905617e57f9523a7a47c9f4e49e80ec81f.1778446731.git.pabeni@redhat.com>
-From: Matthieu Baerts <matttbe@kernel.org>
+ <7a0a1b9c-dc6b-4053-b5dd-e927019ccdfc@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -86,45 +87,64 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <2a88c5905617e57f9523a7a47c9f4e49e80ec81f.1778446731.git.pabeni@redhat.com>
+In-Reply-To: <7a0a1b9c-dc6b-4053-b5dd-e927019ccdfc@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Paolo, Shardul,
+On 11/05/2026 12:14, Matthieu Baerts wrote:
+> Hi Paolo, Shardul,
+> 
+> On 10/05/2026 23:03, Paolo Abeni wrote:
+>> From: Shardul Bankar <shardul.b@mpiricsoftware.com>
+>>
+>> When a packet arrives with map_seq < ack_seq < end_seq, the beginning
+>> of the packet has already been acknowledged but the end contains new
+>> data.  Currently the entire packet is dropped as "old data," forcing
+>> the sender to retransmit.
+>>
+>> Instead, skip the already-acked bytes by adjusting the skb offset and
+>> enqueue only the new portion.  Update bytes_received and ack_seq to
+>> reflect the new data consumed.
+>>
+>> A previous attempt at this fix (commit 1d2ce718811a ("mptcp: do not
+>> drop partial packets"), reverted in commit bf39160c4218 ("Revert
+>> "mptcp: do not drop partial packets"")) also added a zero-window
+>> check and changed rcv_wnd_sent initialization, which caused test
+>> regressions.  This version addresses only the partial packet handling
+>> without modifying receive window accounting.
+>>
+>> Fixes: ab174ad8ef76 ("mptcp: move ooo skbs into msk out of order queue.")
+>> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/600
+>> Signed-off-by: Shardul Bankar <shardul.b@mpiricsoftware.com>
+>> [pabeni@redhat.com: update map]
+>> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+>> ---
+>> v2 -> v3:
+>>   - update map_seq, too
+>> v2: https://lore.kernel.org/mptcp/20260422143931.43281-1-shardul.b@mpiricsoftware.com/
+> 
+> Thank you for this new version!
+> 
+> I suggest already applying this patch to our tree, so I can send it soon
+> to netdev.
 
-On 10/05/2026 23:03, Paolo Abeni wrote:
-> From: Shardul Bankar <shardul.b@mpiricsoftware.com>
-> 
-> When a packet arrives with map_seq < ack_seq < end_seq, the beginning
-> of the packet has already been acknowledged but the end contains new
-> data.  Currently the entire packet is dropped as "old data," forcing
-> the sender to retransmit.
-> 
-> Instead, skip the already-acked bytes by adjusting the skb offset and
-> enqueue only the new portion.  Update bytes_received and ack_seq to
-> reflect the new data consumed.
-> 
-> A previous attempt at this fix (commit 1d2ce718811a ("mptcp: do not
-> drop partial packets"), reverted in commit bf39160c4218 ("Revert
-> "mptcp: do not drop partial packets"")) also added a zero-window
-> check and changed rcv_wnd_sent initialization, which caused test
-> regressions.  This version addresses only the partial packet handling
-> without modifying receive window accounting.
-> 
-> Fixes: ab174ad8ef76 ("mptcp: move ooo skbs into msk out of order queue.")
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/600
-> Signed-off-by: Shardul Bankar <shardul.b@mpiricsoftware.com>
-> [pabeni@redhat.com: update map]
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> ---
-> v2 -> v3:
->   - update map_seq, too
-> v2: https://lore.kernel.org/mptcp/20260422143931.43281-1-shardul.b@mpiricsoftware.com/
+I forgot:
 
-Thank you for this new version!
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-I suggest already applying this patch to our tree, so I can send it soon
-to netdev.
+Now in our tree:
+
+New patches for t/upstream-net and t/upstream:
+- 7c4bbb8f4f28: mptcp: do not drop partial packets
+- Results: 43f725eb6425..c7817ca73dd1 (export-net)
+- Results: 31aef5b7fcb7..335465cfffb4 (export)
+
+Tests are now in progress:
+
+- export-net:
+https://github.com/multipath-tcp/mptcp_net-next/commit/fe2e6c368bb7e0eaf46b51f4f7fa03a8223b9ea5/checks
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/52f68f13d42a1c3752de7a776b6f873988f48401/checks
 
 Cheers,
 Matt
