@@ -1,83 +1,77 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0DF2426EAB;
-	Mon, 11 May 2026 16:51:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D699743CEED;
+	Mon, 11 May 2026 16:52:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778518304; cv=none; b=UQl369QD9Qjr59tjm6E32ZkOf+sAl15tSGfF6cdxRlen6Cq6xDuNLE1EHs0as8qOW/RWycGNdIezi7Ks+LcSPDukhydh8TMxdQ/qcN/P4HeravnkbExTq6sTV5f2RzZg6WvkFC5wIMOty++PitYgyVWQUbthfzEispjng6FIn7o=
+	t=1778518375; cv=none; b=PCK8vXf4tCX2GK8YezK1sXrxZH50Q+hZgic6Eo/wmKjlYVcoH1iCsW9F9xKZsouCcfRXHN6EIsnb8qEnetJ1Ut3xZU07PtJXJhwRFBY6Um0Wpu97Th957eq1HXxQZxZobZZnd9oKy2JUoCo9JisE6ic0Ofjiyb3YixASoTKXOlU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778518304; c=relaxed/simple;
-	bh=zoSWnkqdd8MFJy0pV9VkPobwqV6Frbu3b0beuGHDFiY=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=A9uuOEWCwynjbocuuojqezXwLRww4tiuOpBbDu19xIALkGK8/W879LwrLEKeGRe69BjI2qZy8a9jHNEPl15KzdQGxxfjMh4xY3usJJp7dLDPaAm87yv0GplJX9SzD6ny8bAnDna0QhirgC9iIHHh2Q3iwyoq+pqp0bEOgp9EP44=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FjL80qn2; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1778518375; c=relaxed/simple;
+	bh=/XVTrJF8HWgk/OL2FKXqXG1ws+kAw96BlTcnE6Aovok=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Qverm30GkOhS8EE5/on5qQHhY7EHyDmWKVKl6OGY4U+gU9C6u5EbPGLc0LmY5AzKlV/b+SF/4Z6/7biRzxM130MMtnJjSCV67+Jf/F+ZK4S9f2aKYyNaBjqr1oLYoKBYq+i5GHctQ+bKfz7gpkKD9B1B/DURHNsvQeBKXZY6RGc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=K7aMYlqX; arc=none smtp.client-ip=82.195.75.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=debian.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FjL80qn2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1778518303; x=1810054303;
-  h=date:from:to:cc:subject:message-id;
-  bh=zoSWnkqdd8MFJy0pV9VkPobwqV6Frbu3b0beuGHDFiY=;
-  b=FjL80qn2E/VuTRIbRtSXE//NCe/fcx1g42be2i//AvtVXwrqkFjCvogx
-   CRkSACSq/PrN833EoboQ/saGx6ohsgcGfXlQLC6YXr97dnPNzu8rnde3m
-   MH8cCx5F1Em0Dznk8LyKh+VGITMz/0w7fxQdSXhCKrhSnmRY8B7A9vmB8
-   xaJiVtyZIsJMXvC+sFyW4PwKWIiwE7LSlF4DA+Dyf4dekSTLh9N0MPJvh
-   2ltNeS1wKrUZCoiDfZwL7dHQJXKnchuIZGYxLlFZ9I6LMdJHV2YgYYM3e
-   ZjQWVsW7+whSW/djSfhN7LcVUiJ8+jr1tiAhI2mScrqQMIvL5p7kh45md
-   g==;
-X-CSE-ConnectionGUID: OW3PciV7QpO2s85wDmXS8A==
-X-CSE-MsgGUID: 5ep/OFaURgGlN/CvfR0bhg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11783"; a="90878767"
-X-IronPort-AV: E=Sophos;i="6.23,229,1770624000"; 
-   d="scan'208";a="90878767"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2026 09:51:42 -0700
-X-CSE-ConnectionGUID: Mnd7uEURRWe8wXg67VC/mQ==
-X-CSE-MsgGUID: XOe+Rg3aT+CyFcMtoeaihA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,229,1770624000"; 
-   d="scan'208";a="231114404"
-Received: from lkp-server01.sh.intel.com (HELO dca79079c3eb) ([10.239.97.150])
-  by fmviesa009.fm.intel.com with ESMTP; 11 May 2026 09:51:40 -0700
-Received: from kbuild by dca79079c3eb with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1wMTr0-000000000sR-1deg;
-	Mon, 11 May 2026 16:51:38 +0000
-Date: Tue, 12 May 2026 00:51:15 +0800
-From: kernel test robot <lkp@intel.com>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
- mptcp@lists.linux.dev
-Subject: [mptcp:export 1/39] .b4-config: warning: ignored by one of
- the .gitignore files
-Message-ID: <202605120017.W42dqjAR-lkp@intel.com>
-User-Agent: s-nail v14.9.25
+	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="K7aMYlqX"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=1vM5Cx43ONmYVpMXTE4fDdvVZMhNnp8aOLqKkOwozh4=; b=K7aMYlqX99Fm4PIqR+NDM+I+qu
+	FbheTWTxnwz5vYGSIW5/s5fPr0me3ap4cx1QHl/ugXCgVygYXJiybWYQ+lAkesg/OYVSDWqOjgFFa
+	X+aHamO1OT4m/Gqu580Ju/ujRBgZ334n47CNYYp4D0vUmtrGqhn/EEEn0iOYPFvyn5N75MhNeIdoD
+	WkLMLnU3lawYQrGMjb37EGy25t9TQ6YUpQBkWGgVMz/nRZiIUqVagkAAG8oskE5f1YHU8cpsx+G2p
+	DhOGakPuN5m9VKgxIZlwjjbo8IxyqWaLDYMSaJfbexmYoMfTuNDBqgoVcLaYmHzztdwb514BIL25f
+	GHU2ts7A==;
+Received: from authenticated user
+	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.96)
+	(envelope-from <leitao@debian.org>)
+	id 1wMTs2-001k73-2o;
+	Mon, 11 May 2026 16:52:43 +0000
+Date: Mon, 11 May 2026 09:52:37 -0700
+From: Breno Leitao <leitao@debian.org>
+To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Cc: Mat Martineau <martineau@kernel.org>, 
+	Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	Eric Dumazet <edumaze@google.com>, netdev@vger.kernel.org, mptcp@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, Li Xiasong <lixiasong1@huawei.com>, 
+	Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH net 3/5] selftests: mptcp: join: cover ADD_ADDR tx drop
+ and list progress
+Message-ID: <agIJRAYJ372xnTtr@gmail.com>
+References: <20260511-net-mptcp-misc-fixes-7-1-rc4-v1-0-5ee57cb2b7eb@kernel.org>
+ <20260511-net-mptcp-misc-fixes-7-1-rc4-v1-3-5ee57cb2b7eb@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260511-net-mptcp-misc-fixes-7-1-rc4-v1-3-5ee57cb2b7eb@kernel.org>
+X-Debian-User: leitao
 
-tree:   https://github.com/multipath-tcp/mptcp_net-next.git export
-head:   52f68f13d42a1c3752de7a776b6f873988f48401
-commit: bffcdf4fc40a5044eb209e41eb662738fde65fa7 [1/39] DO-NOT-MERGE: git markup: net
-config: s390-defconfig (https://download.01.org/0day-ci/archive/20260512/202605120017.W42dqjAR-lkp@intel.com/config)
-compiler: clang version 23.0.0git (https://github.com/llvm/llvm-project 5bac06718f502014fade905512f1d26d578a18f3)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260512/202605120017.W42dqjAR-lkp@intel.com/reproduce)
+On Mon, May 11, 2026 at 05:46:29PM +0200, Matthieu Baerts (NGI0) wrote:
+> From: Li Xiasong <lixiasong1@huawei.com>
+> 
+> Extend add_addr_ports_tests with IPv6 signaling cases that exercise
+> ADD_ADDR tx-space shortage when tcp_timestamps are enabled.
+> 
+> Add one case to verify PM still progresses to later signal endpoints
+> after the first one is dropped.
+> 
+> This covers both failure accounting and the non-blocking behavior of
+> the announce list after a tx-space drop on pure ACK.
+> 
+> Signed-off-by: Li Xiasong <lixiasong1@huawei.com>
+> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202605120017.W42dqjAR-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> .b4-config: warning: ignored by one of the .gitignore files
-   .git_markup: warning: ignored by one of the .gitignore files
-   Documentation/.renames.txt: warning: ignored by one of the .gitignore files
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Reviewed-by: Breno Leitao <leitao@debian.org>
