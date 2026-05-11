@@ -1,34 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 736AF40DFBD;
-	Mon, 11 May 2026 15:47:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AC4140FDAE;
+	Mon, 11 May 2026 15:47:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778514421; cv=none; b=NgS3mitwjpvmkoWcdsRDYwJhHvsqHECAZEaKkPPZzpzvbLh1YvVS3oCoW708+EXonpOui23OmtLAFs3b2mV8QeDO3HxP0HcLJ9QHhk1/yOmkjQsTdxoW8+YDlRq3keXYKOHza9GRbtxlDSuYFiGnEMbZJgA/kiAT7uir35e1VQc=
+	t=1778514424; cv=none; b=TZJ5cMDL3Gncz0HKMNt6UnZ/Xt7CaKr4vmB0gWyFgSEe8RNFpInFjnl+mX0XqGHL4T3F7+hAJnPJ/ddEZzf7L6x8e1qPIKQD3iXdeuJcESsDTENUkPGoYQUSnJfdvCeYFodKqvtcx0CBc4aHdY8EqD9rMTAS7ZHdE1D7S4vcyNs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778514421; c=relaxed/simple;
-	bh=875ceNXWDGdvQ7I0OyeVxJ2mbgg70m3Ihld1Lkt9Y1g=;
+	s=arc-20240116; t=1778514424; c=relaxed/simple;
+	bh=Pvc4wGSjhVhIBgmeGHWrbxZecHGbRz8bUAOHQrD+mU8=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=l43w40n3b5qq8svcZTjv/o1yn1lrnZobDoQ9EoSpfbx7GVl5S8XR9moPoEyMKbr9eWFtKrveXg//pxzA58z7vG2hU+QyfGlKFk93iErgmGnC4PFqyMZVR4kuQ4c3z/JDJhyJM/hpU0AoaUJiZV/dZWsVp8qXP3Vb8L9uIHRq/Uk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AxU92nbn; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=Jc2Afoqoy8uTb99Dq7D6X1PcTz2jTds/e/HVZbTjJTDMgX7IzOIVKA4widWwnB+WKrCDf+8ugcd2/SMJ9hBGf2EA9OCPTPKUXMQBVkIFCWT65MTl7YH/lPURS7E8Mtcg+vPEvKtJkNyAoR3FYBI0w8011qoxquL5KmnhPHhOaXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RdVmIYXY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AxU92nbn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D972C2BCC9;
-	Mon, 11 May 2026 15:46:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RdVmIYXY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86B96C2BCF5;
+	Mon, 11 May 2026 15:47:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778514421;
-	bh=875ceNXWDGdvQ7I0OyeVxJ2mbgg70m3Ihld1Lkt9Y1g=;
+	s=k20201202; t=1778514423;
+	bh=Pvc4wGSjhVhIBgmeGHWrbxZecHGbRz8bUAOHQrD+mU8=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=AxU92nbnUi5RpyTlHE1q46LvAPGVPlkzn3B1sL8GGpYZD1UjHjeukqYS0yUbuF1VZ
-	 /vbDOCLiLx077JAwCsqEwaYXQsVZS93Pt7nb+eJULhs9ZFiUypfQH4QVycYClz9127
-	 8z6oQufxKdlj1kZl4x+EVbN6+qy3AKbWvYe7fKAjTAvE3EBBBGpFXtYyF7aSPFrB+P
-	 ul1NlZPQ1UrdbwcmeFEIbNuvH2RwXfpoPFmkVN8tJ5TgdsbwIrDfkkqj9QoaKh6JWA
-	 qZpC95O8aE3VTIF53P1FF5TP4LcK46QUCoTZuF5Hk0hCC3+o9G1NG10Byi5CIPgm0u
-	 fhl5Fnj/3Gu5w==
+	b=RdVmIYXYMb5VQdVjU8Wm2wH40QMtOTXfjdVFTdu38SYBLK227uBpOrrNEVVzHOdj/
+	 8RKyKW5eo/F6N45VG3B4S6SO822ScIb34L+ooaQgmRjIGmg5OpKV6nww/fbMv92MjZ
+	 28+qyfDQks1oGZkKfch2bja78iaSLrNrmumEUHUxJkpvPyB3lGw/Ym1op2NnV5EUcA
+	 8m4vpzMaTbRq+R6g6sIXfKIP+BDzIg2+yhg+BKeIzPpgWvFzotAat04nN89ZJ1Nx+p
+	 s66h0CipwMCEBJSqEgrsfvbs9TaUqn+JaY25v62vesNv5IHvzzSStwG/ZKcmA/vkUt
+	 CD4zc895xZwIg==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Mon, 11 May 2026 17:46:30 +0200
-Subject: [PATCH net 4/5] mptcp: reset rcv wnd on disconnect
+Date: Mon, 11 May 2026 17:46:31 +0200
+Subject: [PATCH net 5/5] mptcp: update window_clamp on subflows when
+ SO_RCVBUF is set
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -37,7 +38,7 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260511-net-mptcp-misc-fixes-7-1-rc4-v1-4-5ee57cb2b7eb@kernel.org>
+Message-Id: <20260511-net-mptcp-misc-fixes-7-1-rc4-v1-5-5ee57cb2b7eb@kernel.org>
 References: <20260511-net-mptcp-misc-fixes-7-1-rc4-v1-0-5ee57cb2b7eb@kernel.org>
 In-Reply-To: <20260511-net-mptcp-misc-fixes-7-1-rc4-v1-0-5ee57cb2b7eb@kernel.org>
 To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, 
@@ -46,52 +47,75 @@ To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
  Simon Horman <horms@kernel.org>
 Cc: Eric Dumazet <edumaze@google.com>, netdev@vger.kernel.org, 
  mptcp@lists.linux.dev, linux-kernel@vger.kernel.org, 
- "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, stable@vger.kernel.org
+ "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
+ Gang Yan <yangang@kylinos.cn>, stable@vger.kernel.org
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1366; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=mAbY17mEam5+3zBGBgEjswNy0Y5ydPBnaOl3wDshqq4=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLIYfz4rkL1bH6pvPvPktI2erEuilxq2T3yf8N7a8Y7m1
- G1T7JxDO0pZGMS4GGTFFFmk2yLzZz6v4i3x8rOAmcPKBDKEgYtTACbyaRojw81pepu8+HmD9zay
- zt+14eDlZerBFav1mO7f6jsk9aHW0p/hf+XGSsEEVvUjTM8Xaq59Y1ZlzHbhf7dZxKc3vOt2vdD
- czAEA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2246; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=ismW0iII4QhYJ6sgxMbjuN/Lcx0EQOH75zkJ2hNVKak=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLIYfz6vrhZ0eCB0QoWh7/CGShNTw57z+mKRcrXLXBcd7
+ W08fIK/o5SFQYyLQVZMkUW6LTJ/5vMq3hIvPwuYOaxMIEMYuDgFYCIxDowM0+ZuLDF6FGhxyeDa
+ 68WBoluOczWe+FkkuTVqEWPkpRwHUUaGObdqmLavOr5RI0Bh2icVgbIJSXZuEstmfxd+U3DJQus
+ WHwA=
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-From: Paolo Abeni <pabeni@redhat.com>
+From: Gang Yan <yangang@kylinos.cn>
 
-If the MPTCP socket fallback to TCP before the MP handshake completion,
-the IASN remain 0, and the rcv_wnd_sent field is not explicitly
-initialized, just incremented over time with the data transfer.
+Add __mptcp_subflow_set_rcvbuf() helper to write the subflow sk_rcvbuf,
+but also to call the recently added tcp_set_rcvbuf() helper to update
+window_clamp. This is needed because the window clap is updated when
+scaling_ratio changes, in tcp_measure_rcv_mss(). Until scaling_ratio
+changes, the subflow is stuck with the old window clamp which may be
+based on a small initial buffer.
 
-At disconnect time such value is not cleared. If the next connection falls
-back to TCP before the MP handshake completion, the data transfer will
-keep incrementing the receive window end sequence starting from the last
-value used in the previous connection: the announced window will be
-unrelated from the actual receiver buffer size and likely too big.
+Use this new helper in both mptcp_sol_socket_sync_intval() (setsockopt
+path) and sync_socket_options() (new subflow creation path).
 
-Address the issue zeroing the field at disconnect time.
-
-Fixes: b29fcfb54cd7 ("mptcp: full disconnect implementation")
+Fixes: b025461303d8 ("tcp: update window_clamp when SO_RCVBUF is set")
 Cc: stable@vger.kernel.org
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/619
+Signed-off-by: Gang Yan <yangang@kylinos.cn>
 Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- net/mptcp/protocol.c | 1 +
- 1 file changed, 1 insertion(+)
+ net/mptcp/sockopt.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 859df49e16dc..a72a6ad6ee8b 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -3487,6 +3487,7 @@ static int mptcp_disconnect(struct sock *sk, int flags)
+diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+index 1cf608e7357b..1544e3563852 100644
+--- a/net/mptcp/sockopt.c
++++ b/net/mptcp/sockopt.c
+@@ -67,6 +67,12 @@ static int mptcp_get_int_option(struct mptcp_sock *msk, sockptr_t optval,
+ 	return 0;
+ }
  
- 	/* for fallback's sake */
- 	WRITE_ONCE(msk->ack_seq, 0);
-+	atomic64_set(&msk->rcv_wnd_sent, 0);
++static inline void __mptcp_subflow_set_rcvbuf(struct sock *ssk, int val)
++{
++	WRITE_ONCE(ssk->sk_rcvbuf, val);
++	tcp_set_rcvbuf(ssk, val);
++}
++
+ static void mptcp_sol_socket_sync_intval(struct mptcp_sock *msk, int optname, int val)
+ {
+ 	struct mptcp_subflow_context *subflow;
+@@ -100,7 +106,7 @@ static void mptcp_sol_socket_sync_intval(struct mptcp_sock *msk, int optname, in
+ 		case SO_RCVBUF:
+ 		case SO_RCVBUFFORCE:
+ 			ssk->sk_userlocks |= SOCK_RCVBUF_LOCK;
+-			WRITE_ONCE(ssk->sk_rcvbuf, sk->sk_rcvbuf);
++			__mptcp_subflow_set_rcvbuf(ssk, sk->sk_rcvbuf);
+ 			break;
+ 		case SO_MARK:
+ 			if (READ_ONCE(ssk->sk_mark) != sk->sk_mark) {
+@@ -1560,7 +1566,7 @@ static void sync_socket_options(struct mptcp_sock *msk, struct sock *ssk)
+ 			mptcp_subflow_ctx(ssk)->cached_sndbuf = sk->sk_sndbuf;
+ 		}
+ 		if (sk->sk_userlocks & SOCK_RCVBUF_LOCK)
+-			WRITE_ONCE(ssk->sk_rcvbuf, sk->sk_rcvbuf);
++			__mptcp_subflow_set_rcvbuf(ssk, sk->sk_rcvbuf);
+ 	}
  
- 	WRITE_ONCE(sk->sk_shutdown, 0);
- 	sk_error_report(sk);
+ 	if (sock_flag(sk, SOCK_LINGER)) {
 
 -- 
 2.53.0
