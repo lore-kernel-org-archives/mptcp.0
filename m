@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5510B2C0299;
-	Mon, 11 May 2026 11:25:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35F9537757F
+	for <mptcp@lists.linux.dev>; Mon, 11 May 2026 11:57:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778498731; cv=none; b=sXMh21y5anfu6hY0wra3uZjVae0miADDM8eYm5v0/ggAFl8oW70Q6VvLxEDvSmOj+r12PxY6Rg2xqGNibekhM8WoE6W51+4bavJj2oYX1f+8ZmCqVooeCeZ80XyLIyGjUmyP5Uuple+g0K02YmBvXq7SECTldGp2uNP22mXA/ow=
+	t=1778500623; cv=none; b=kU7dyTT+3tKEDKc/13SRkFMzDenVaiC5Eia8jIMEwqC6sVPUTZGLOGf8gnq9cOdk4B/0imVgzAG8pSDq/LqPcGQQNihiF03ph1tPxP/KZpoPWQeb04NdNRQ/xbiAundBnm4Qwqy4j0Xwnx+TP9aqz0ABMj5UdX8S6bCLCdfO3y8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778498731; c=relaxed/simple;
-	bh=w3guzvyASfYrFyqBwE8/oBQLOP9kwSiWu56SinbzOCc=;
+	s=arc-20240116; t=1778500623; c=relaxed/simple;
+	bh=wMt0fh5j96gKBLa7dPoLntyU7Bdd/H+/+9v7AT2qXoI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QjwzUPUpmBzmyxw6VdQBuVHDBbD5u9ntCCdfBuj5QZHFwBHHVWKpyeGi4CH4JFZExtIZzxoa4+RdAn/YItFv3Usxwz6ErbJu0MV+Ijc7b9rHcDN7YWfQJCwXeR7ZNCO0JVF8eKyYPQroMMkDu/1bb4a5re+tQ5pZu3C1BRYja6g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M4vdMEtG; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=Trplpu3SZ+ENifhma1XkE+I8XemesGwcniJR7SKusBajU38nCJLOLc2Xz7Touq15jB98eNBulnMPsJt1qZNX4fUAah0GkJhmHrHiWpEoK6gD08Dx3hCK2xiDnVoNHIqwEEfqUicnjFhDZozJd/733UTQxTxR6/FAdt/7FDlcuSE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SwSZ4Cvm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M4vdMEtG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C361AC2BCB0;
-	Mon, 11 May 2026 11:25:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SwSZ4Cvm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8DD5C2BCB0;
+	Mon, 11 May 2026 11:56:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778498731;
-	bh=w3guzvyASfYrFyqBwE8/oBQLOP9kwSiWu56SinbzOCc=;
+	s=k20201202; t=1778500623;
+	bh=wMt0fh5j96gKBLa7dPoLntyU7Bdd/H+/+9v7AT2qXoI=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=M4vdMEtGh2R+yj/SAmYpboFuH2l06z1+b0WxW8D0CQtEHOr8YxVfelwjAxEqvOHPN
-	 vxJ4YnBUF836M8yWSS7fJwofG3o6X+B9Se491XvSI4j+awRJRUmjvtxFWJ/8GNZS1s
-	 DstTIdVELCmOhS91rtLMx4HmkdNTdMDKy8jjJ51lbVVm+2IMLwRKw0GABX6ozDrNeX
-	 gDO2mDFeFPNl0CeiFTVQFeL4v3j8LhtBLmEyckfiHUvOdy+NrFvgaDSNfQMyneUakh
-	 2U7NYC0RwmIs4Q2CKkHsJ22hZJ0p0PHwXEgI5s2xc6Qo+0M1Y4pCxS5qvybE7/iEVV
-	 Hiqg9cPttooHA==
-Message-ID: <549e318b-5f37-4b8b-b76a-563831525042@kernel.org>
-Date: Mon, 11 May 2026 13:25:25 +0200
+	b=SwSZ4CvmOSq3Nth1Ci7OgqHGh1hWie4RYPa4/mwTb6xt8p7wLpyhO0fJ93K+1gHra
+	 jMr3tpmvvxj6WCwkmB3h5w5+WcNDz1OOjx3fergTEGDo77UC512WF4ZjSFNVxW4Z5T
+	 YNyEwAGxrqlg549/7iGy6xNylxy/h31nMyYIwK0Yolc93TmqNGc4FlXEfffBDco5/e
+	 Z31s1moHmP/1mB8jcSApLJAw7yM/iNJKd3SyxMYtk5CBiSXbSQoxoHB1Z0dNVdYIfo
+	 m7nD6vkEM7/xvgKsrnLYU4T+mlYqnUNRUyBRKd1jOiiAFb46DnV4opvg630MMNCsyZ
+	 GorrbQJPB8S3w==
+Message-ID: <94cf17be-452b-4d63-a230-c0e657e02de7@kernel.org>
+Date: Mon, 11 May 2026 13:56:56 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,17 +35,14 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH net-next 3/8] mptcp: pm: kernel: allow flushing more than
- 8 endpoints
+Subject: Re: [PATCH v2 2/2] selftests: mptcp: extend chk_rst_nr to validate
+ per-event RST counters
 Content-Language: fr
-To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Simon Horman <horms@kernel.org>
-Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <20260508-net-next-mptcp-pm-inc-limits-v1-0-c84e3fdf9b6a@kernel.org>
- <20260508-net-next-mptcp-pm-inc-limits-v1-3-c84e3fdf9b6a@kernel.org>
+To: Shardul Bankar <shardul.b@mpiricsoftware.com>, mptcp@lists.linux.dev
+Cc: martineau@kernel.org, geliang@kernel.org, pabeni@redhat.com,
+ janak@mpiric.us, kalpan.jani@mpiricsoftware.com, shardulsb08@gmail.com
+References: <20260509183335.969018-1-shardul.b@mpiricsoftware.com>
+ <20260509183335.969018-2-shardul.b@mpiricsoftware.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -91,81 +88,119 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20260508-net-next-mptcp-pm-inc-limits-v1-3-c84e3fdf9b6a@kernel.org>
+In-Reply-To: <20260509183335.969018-2-shardul.b@mpiricsoftware.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hello,
+Hi Shardul,
 
-On 08/05/2026 17:40, Matthieu Baerts (NGI0) wrote:
-> The mptcp_rm_list structure contains an array of IDs of 8 entries: to be
-> able to send a RM_ADDR with 8 IDs. This limitation was OK so far because
-> there could maximum 8 endpoints.
+On 09/05/2026 20:33, Shardul Bankar wrote:
+> Extend chk_rst_nr() with named env-var expectations for each
+> per-event MPTCP_RST_EMPTCP counter, matching the pattern used by
+> chk_join_nr().  Each counter defaults to 0 and is checked silently
+> on success; mismatches print a check line and fail the test.
+> Counters absent from the running kernel are skipped silently so
+> older kernels do not false-fail.
+
+Thank you for adding a test. This part looks good to me!
+> Add a cross-namespace test that triggers MPJoinSynAckNoMPJoin: ns1
+> announces an address belonging to a third namespace (ns3) where
+> MPTCP is disabled, the client (ns2) JOINs to ns3 and receives a
+> plain TCP SYN/ACK without MP_JOIN, and the new counter increments
+> on the client side.
 > 
-> But this is going to change in the next commit. To cope with that, if
-> one of the arrays is full, the iteration stops, the lists are processed,
-> then the iteration continues where it previously stopped.
-> 
-> Note that if there are many endpoints to remove, and multiple RM_ADDR to
-> send, it might be more likely that some of these RM_ADDRs are dropped or
-> lost. This is a known limitation: RM_ADDR are not retransmitted in
-> MPTCPv1.
+> Other per-event counters (MD5SigReset, MPJoinAckNoMPJoin,
+> MPJoinAckNoCtx, DssReset, MPJoinNotEstablished) are not currently
+> reachable from mptcp_join.sh; the env-var hooks are in place for
+> future tests to set expectations explicitly.
+
+I guess packetdrill should be easier to hit some of these paths.
+
+> Assisted-by: Claude:claude-opus-4-7
+
+Thank you for mentioning this!
 
 (...)
 
-> diff --git a/net/mptcp/pm_kernel.c b/net/mptcp/pm_kernel.c
-> index aabd73d15c15..ea3a7ea82013 100644
-> --- a/net/mptcp/pm_kernel.c
-> +++ b/net/mptcp/pm_kernel.c
-> @@ -1223,19 +1223,30 @@ int mptcp_pm_nl_del_addr_doit(struct sk_buff *skb, struct genl_info *info)
->  }
->  
->  static void mptcp_pm_flush_addrs_and_subflows(struct mptcp_sock *msk,
-> -					      struct list_head *rm_list)
-> +					      struct list_head *rm_list,
-> +					      struct mptcp_pm_addr_entry *entry)
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> index 5d4d0f127f79..5d4fc8951f05 100755
+> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+
+(...)
+
+> +rst_emptcp_tests()
+> +{
+> +	# Validate per-event MPTCP_RST_EMPTCP counters.  Use a third
+> +	# namespace (ns3) to trigger paths that aren't reachable in the
+> +	# standard ns1/ns2 setup: ns1 announces an address belonging to
+> +	# ns3, the client (ns2) JOINs to ns3 where the SYN/ACK arrives
+> +	# without an MP_JOIN option (MPTCP disabled there), and the
+> +	# MPJoinSynAckNoMPJoin counter increments on the client side.
+> +	local ns3
+
+I'm not a big fan of adding a new netns here. Would it eventually work
+to have $ns1 announcing an address that is on $ns2 and with
+mptcp_connect listening on this address and port in TCP only?
+
+If yes, then you can move this test to the end of signal_address_tests I
+suppose.
+
+If no, I don't know if it is worth it to have a such different test
+here. Maybe it is enough to check the new RST counter like you did
+above? (Eventually, adding a new check on packetdrill side if there are
+already tests validating these paths.)
+
+> +
+> +	if reset "rst per event no mpj"; then
+> +		if ! setup_ns ns3; then
+> +			print_check "create ns3"
+> +			print_skip
+> +			return
+> +		fi
+> +
+> +		ip link add ns2eth5 netns "$ns2" type veth peer name ns3eth1 netns "$ns3"
+> +		ip -net "$ns2" addr add 10.0.6.2/24 dev ns2eth5
+> +		ip -net "$ns2" link set ns2eth5 up
+> +		ip -net "$ns3" addr add 10.0.6.1/24 dev ns3eth1
+> +		ip -net "$ns3" link set ns3eth1 up
+> +		ip -net "$ns3" link set lo up
+> +		ip netns exec $ns3 sysctl -q net.mptcp.enabled=0
+> +
+> +		pm_nl_add_endpoint $ns1 10.0.6.1 flags signal id 5
+> +		pm_nl_set_limits $ns2 1 1
+> +
+> +		local tport=$(get_port)
+> +		ip netns exec ${ns3} ./mptcp_connect -l -t -1 -s TCP \
+> +			-p $tport 10.0.6.1 &
+> +
+> +		speed=slow \
+
+Do you really need the "slow" mode? Usually used when > 3 ADD_ADDR are
+used or when actions need to be done during the connection. That's not
+the case here.
+
+> +			run_tests $ns1 $ns2 10.0.1.1
+> +		wait_attempt_fail "$ns2"
+> +
+> +		rst_synack_no_mpjoin=1 \
+> +			chk_rst_nr 0 0
+> +
+> +		cleanup_ns "$ns3"
+> +	fi
+> +}
+> +
+>  # [$1: error message]
+>  usage()
 >  {
-> -	struct mptcp_rm_list alist = { .nr = 0 }, slist = { .nr = 0 };
-> -	struct mptcp_pm_addr_entry *entry;
-> +	struct mptcp_rm_list alist, slist;
-> +	bool more;
+> @@ -4527,6 +4620,7 @@ all_tests_sorted=(
+>  	F@fail_tests
+>  	u@userspace_tests
+>  	I@endpoint_tests
+> +	R@rst_emptcp_tests
+>  )
 >  
-> -	list_for_each_entry(entry, rm_list, list) {
-> -		if (slist.nr < MPTCP_RM_IDS_MAX &&
-> -		    mptcp_lookup_subflow_by_saddr(&msk->conn_list, &entry->addr))
-> +again:
-> +	alist.nr = 0;
-> +	slist.nr = 0;
-
-FYI, Sashiko Gemini is saying:
-
-> Are the ids arrays in alist and slist left uninitialized on the stack here?
-> Later, in mptcp_pm_remove_addr(), a full struct assignment
-> (msk->pm.rm_list_tx = *rm_list) copies the structure. Could this copy
-> uninitialized stack memory into the persistent socket structure and
-> trigger KMSAN use-of-uninitialized-value warnings?
-
-It is not an issue, because if 'nr' are 0, nothing else is read from the
-structures. AFAICS KMSAN will then not complain if the uninitialized
-values are not used.
-
-> +	more = false;
-
-Sashiko Gemini is saying:
-
-> If "more" is true and the function loops back to process another batch,
-> mptcp_pm_remove_addr() will have already set the MPTCP_RM_ADDR_SIGNAL bit in
-> msk->pm.addr_signal during the first iteration.
-> Since mptcp_pm_flush_addrs_and_subflows() is called with lock_sock(sk) held,
-> the MPTCP TX path cannot run to transmit the RM_ADDR and clear the signal bit
-> between iterations.
-> When the loop processes the second batch and calls mptcp_pm_remove_addr()
-> again, msk->pm.addr_signal is still set.
-> Will this cause mptcp_pm_remove_addr() to return -EINVAL and silently drop all
-> batches after the first locally?
-
-That's fine: RM_ADDR are notifications that can be lost anyway. What is
-important is to remove the different addresses internally.
+>  all_tests_args=""
 
 Cheers,
 Matt
