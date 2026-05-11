@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35F9537757F
-	for <mptcp@lists.linux.dev>; Mon, 11 May 2026 11:57:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A821F377031
+	for <mptcp@lists.linux.dev>; Mon, 11 May 2026 11:57:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778500623; cv=none; b=kU7dyTT+3tKEDKc/13SRkFMzDenVaiC5Eia8jIMEwqC6sVPUTZGLOGf8gnq9cOdk4B/0imVgzAG8pSDq/LqPcGQQNihiF03ph1tPxP/KZpoPWQeb04NdNRQ/xbiAundBnm4Qwqy4j0Xwnx+TP9aqz0ABMj5UdX8S6bCLCdfO3y8=
+	t=1778500625; cv=none; b=LiQdFg4btJdy8AU1iKJKVIm8KNw7iKrLWJtcFOFOF1l4fl71rb2NBeCNJTD6XpnrVaxPZk9Ol7q9Y9Df/7g6ihDZSck90MYXH/Dofmwg2yQND7bJS0CrQR+io2XVszqf1ztyKGQ7UVXqCKW/ZH7B+IRpLQxYHnR5DK1IFZOd7bA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778500623; c=relaxed/simple;
-	bh=wMt0fh5j96gKBLa7dPoLntyU7Bdd/H+/+9v7AT2qXoI=;
+	s=arc-20240116; t=1778500625; c=relaxed/simple;
+	bh=5eKcvaP/TMGSNSOfCRoucS6Ur1m0WXOr/MTZrkI17VU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Trplpu3SZ+ENifhma1XkE+I8XemesGwcniJR7SKusBajU38nCJLOLc2Xz7Touq15jB98eNBulnMPsJt1qZNX4fUAah0GkJhmHrHiWpEoK6gD08Dx3hCK2xiDnVoNHIqwEEfqUicnjFhDZozJd/733UTQxTxR6/FAdt/7FDlcuSE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SwSZ4Cvm; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=VeersMktywqhCBL4VI55S0P3Sdqk6lGYvtyC4Aive40eyaoByGbn/kNNJ0fjBkciEAV/7gQc4TENQXC8/j55H5fj12yKfj5s46/kBmwieUrCF7H6f/7xMxO/s2eg+06DcO9fV5ugXY5XBrnSZWU0x4qYLwXh2o6+ME9Lr3bikiA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WjwU++2K; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SwSZ4Cvm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8DD5C2BCB0;
-	Mon, 11 May 2026 11:56:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WjwU++2K"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98B57C2BCF7;
+	Mon, 11 May 2026 11:57:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778500623;
-	bh=wMt0fh5j96gKBLa7dPoLntyU7Bdd/H+/+9v7AT2qXoI=;
+	s=k20201202; t=1778500625;
+	bh=5eKcvaP/TMGSNSOfCRoucS6Ur1m0WXOr/MTZrkI17VU=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=SwSZ4CvmOSq3Nth1Ci7OgqHGh1hWie4RYPa4/mwTb6xt8p7wLpyhO0fJ93K+1gHra
-	 jMr3tpmvvxj6WCwkmB3h5w5+WcNDz1OOjx3fergTEGDo77UC512WF4ZjSFNVxW4Z5T
-	 YNyEwAGxrqlg549/7iGy6xNylxy/h31nMyYIwK0Yolc93TmqNGc4FlXEfffBDco5/e
-	 Z31s1moHmP/1mB8jcSApLJAw7yM/iNJKd3SyxMYtk5CBiSXbSQoxoHB1Z0dNVdYIfo
-	 m7nD6vkEM7/xvgKsrnLYU4T+mlYqnUNRUyBRKd1jOiiAFb46DnV4opvg630MMNCsyZ
-	 GorrbQJPB8S3w==
-Message-ID: <94cf17be-452b-4d63-a230-c0e657e02de7@kernel.org>
-Date: Mon, 11 May 2026 13:56:56 +0200
+	b=WjwU++2K00HLXCs6A/PZyg2kVWStAFu1GgPYt15QrCgWVsSe2vU6c3PhLi29jPBQw
+	 +oTbds+usjNUZ58RYExfgKN87IyiJhfKbIkG/KnFIPwDVjF2NqyAFaC4RANukLM946
+	 rQsLYXrwnsW9757QSfUPRmDvJDZV3ohPv6N723c3Xy+Q7QLNFBMIvQTpjIbLa8Ca0V
+	 ugdjZEqAIzW+YmepzqWuwj5FNiTcEIBUkTmru2ccfkUSooIjYpSxYGqc9TbDyAMrRt
+	 F51lJwd8ebOrADnq1xclM/uwsatT2BN2y2mLZqivquTWuWN4p5SKabTTaPJFRW31R6
+	 sePGJmUtPFkfQ==
+Message-ID: <e6287703-53ad-48e8-9428-b19d5f9f902c@kernel.org>
+Date: Mon, 11 May 2026 13:57:01 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,14 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH v2 2/2] selftests: mptcp: extend chk_rst_nr to validate
- per-event RST counters
+Subject: Re: [PATCH v2 1/2] mptcp: add per-event MIB counters for
+ MPTCP_RST_EMPTCP resets
 Content-Language: fr
 To: Shardul Bankar <shardul.b@mpiricsoftware.com>, mptcp@lists.linux.dev
 Cc: martineau@kernel.org, geliang@kernel.org, pabeni@redhat.com,
  janak@mpiric.us, kalpan.jani@mpiricsoftware.com, shardulsb08@gmail.com
 References: <20260509183335.969018-1-shardul.b@mpiricsoftware.com>
- <20260509183335.969018-2-shardul.b@mpiricsoftware.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -88,119 +87,100 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20260509183335.969018-2-shardul.b@mpiricsoftware.com>
+In-Reply-To: <20260509183335.969018-1-shardul.b@mpiricsoftware.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Shardul,
 
 On 09/05/2026 20:33, Shardul Bankar wrote:
-> Extend chk_rst_nr() with named env-var expectations for each
-> per-event MPTCP_RST_EMPTCP counter, matching the pattern used by
-> chk_join_nr().  Each counter defaults to 0 and is checked silently
-> on success; mismatches print a check line and fail the test.
-> Counters absent from the running kernel are skipped silently so
-> older kernels do not false-fail.
-
-Thank you for adding a test. This part looks good to me!
-> Add a cross-namespace test that triggers MPJoinSynAckNoMPJoin: ns1
-> announces an address belonging to a third namespace (ns3) where
-> MPTCP is disabled, the client (ns2) JOINs to ns3 and receives a
-> plain TCP SYN/ACK without MP_JOIN, and the new counter increments
-> on the client side.
+> MPTCP_RST_EMPTCP (reset reason 1) is used as a catch-all for several
+> distinct error conditions across subflow setup, authentication, and
+> data-path validation.  The existing MPRstTx/MPRstRx counters only
+> track aggregate reset volume, making it difficult to diagnose which
+> code path is triggering subflow resets in production.
 > 
-> Other per-event counters (MD5SigReset, MPJoinAckNoMPJoin,
-> MPJoinAckNoCtx, DssReset, MPJoinNotEstablished) are not currently
-> reachable from mptcp_join.sh; the env-var hooks are in place for
-> future tests to set expectations explicitly.
+> Add per-event MIB counters covering each MPTCP_RST_EMPTCP use site
+> that is not already covered by an existing counter, named after the
+> underlying event or condition rather than the reset action:
+> 
+>   MD5SigReset           MD5SIG enabled on listener (incompatible)
+>   MPJoinSynAckNoMPJoin  SYN/ACK missing MP_JOIN option
+>   MPJoinAckNoMPJoin     server-side ACK missing MP_JOIN option
+>                           (fallback path, MPJoin required)
+>   MPJoinAckNoCtx        server-side ACK with no subflow context
+>   DssReset              data mapping invalid (also fires on
+>                           MAPPING_NODSS / EMIDDLEBOX path)
+>   MPJoinNotEstablished  JOIN attempted on a not-fully-established msk
+> 
+> The aggregate MPRstTx/MPRstRx counters are unchanged.
+> 
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/511
+> Signed-off-by: Shardul Bankar <shardul.b@mpiricsoftware.com>
+> ---
+> v2:
+>   - Drop MPRstNoToken (use MPTCP_MIB_JOINNOTOKEN)
+>   - Drop MPRstHMAC (use MPJoinSynAckHMacFailure; SynAck site
+>     fixed in c4a99a921949)
+>   - Rename MPRstMD5SIG -> MD5SigReset
+>   - Rename MPRstNoMPJ -> MPJoinSynAckNoMPJoin
+>   - Rename MPRstBadMap -> DssReset; also fire on EMIDDLEBOX branch
+>   - Split MPRstFatalFallback into MPJoinAckNoMPJoin (fallback)
+>     and MPJoinAckNoCtx (!ctx)
+>   - Rename MPRstNotEstablished -> MPJoinNotEstablished
+>     (mptcp_finish_join is reached from both SYN/ACK and ACK paths)
+> v1: https://lore.kernel.org/all/20260421095646.3741956-1-shardul.b@mpiricsoftware.com/
 
-I guess packetdrill should be easier to hit some of these paths.
+Thank you for the v2.
 
-> Assisted-by: Claude:claude-opus-4-7
-
-Thank you for mentioning this!
+For next time, do you mind always adding a cover-letter when you have
+more than one patch, please? That's what is usually done here, and some
+automated tools expect one, and wait for it before validating the series
+(e.g. our CI).
 
 (...)
 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> index 5d4d0f127f79..5d4fc8951f05 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> diff --git a/net/mptcp/mib.c b/net/mptcp/mib.c
+> index f23fda0c55a7..e44ae95c3e7e 100644
+> --- a/net/mptcp/mib.c
+> +++ b/net/mptcp/mib.c
+> @@ -71,6 +71,12 @@ static const struct snmp_mib mptcp_snmp_list[] = {
+>  	SNMP_MIB_ITEM("MPFastcloseRx", MPTCP_MIB_MPFASTCLOSERX),
+>  	SNMP_MIB_ITEM("MPRstTx", MPTCP_MIB_MPRSTTX),
+>  	SNMP_MIB_ITEM("MPRstRx", MPTCP_MIB_MPRSTRX),
+> +	SNMP_MIB_ITEM("MD5SigReset", MPTCP_MIB_MD5SIGRESET),
+> +	SNMP_MIB_ITEM("MPJoinSynAckNoMPJoin", MPTCP_MIB_MPJOINSYNACKNOMPJOIN),
+> +	SNMP_MIB_ITEM("MPJoinAckNoMPJoin", MPTCP_MIB_MPJOINACKNOMPJOIN),
+> +	SNMP_MIB_ITEM("MPJoinAckNoCtx", MPTCP_MIB_MPJOINACKNOCTX),
+> +	SNMP_MIB_ITEM("DssReset", MPTCP_MIB_DSSRESET),
+> +	SNMP_MIB_ITEM("MPJoinNotEstablished", MPTCP_MIB_MPJOINNOTESTABLISHED),
 
-(...)
+Do you mind moving the declaration next to similar ones, please?
 
-> +rst_emptcp_tests()
-> +{
-> +	# Validate per-event MPTCP_RST_EMPTCP counters.  Use a third
-> +	# namespace (ns3) to trigger paths that aren't reachable in the
-> +	# standard ns1/ns2 setup: ns1 announces an address belonging to
-> +	# ns3, the client (ns2) JOINs to ns3 where the SYN/ACK arrives
-> +	# without an MP_JOIN option (MPTCP disabled there), and the
-> +	# MPJoinSynAckNoMPJoin counter increments on the client side.
-> +	local ns3
+e.g. MD5SigReset after MD5SigFallback, MPJoinSynAckNoMPJoin after all
+the MPJoinSynAck(...) ones, etc.
 
-I'm not a big fan of adding a new netns here. Would it eventually work
-to have $ns1 announcing an address that is on $ns2 and with
-mptcp_connect listening on this address and port in TCP only?
+>  	SNMP_MIB_ITEM("SubflowStale", MPTCP_MIB_SUBFLOWSTALE),
+>  	SNMP_MIB_ITEM("SubflowRecover", MPTCP_MIB_SUBFLOWRECOVER),
+>  	SNMP_MIB_ITEM("SndWndShared", MPTCP_MIB_SNDWNDSHARED),
+> diff --git a/net/mptcp/mib.h b/net/mptcp/mib.h
+> index 812218b5ed2b..da0b08cfd35f 100644
+> --- a/net/mptcp/mib.h
+> +++ b/net/mptcp/mib.h
+> @@ -70,6 +70,12 @@ enum linux_mptcp_mib_field {
+>  	MPTCP_MIB_MPFASTCLOSERX,	/* Received a MP_FASTCLOSE */
+>  	MPTCP_MIB_MPRSTTX,		/* Transmit a MP_RST */
+>  	MPTCP_MIB_MPRSTRX,		/* Received a MP_RST */
+> +	MPTCP_MIB_MD5SIGRESET,		/* MP_RST: MD5SIG enabled on listener */
+> +	MPTCP_MIB_MPJOINSYNACKNOMPJOIN,	/* MP_RST: missing MP_JOIN in SYN/ACK */
+> +	MPTCP_MIB_MPJOINACKNOMPJOIN,	/* MP_RST: missing MP_JOIN in ACK */
+> +	MPTCP_MIB_MPJOINACKNOCTX,	/* MP_RST: no subflow context on ACK */
+> +	MPTCP_MIB_DSSRESET,		/* MP_RST: bad data mapping */
+> +	MPTCP_MIB_MPJOINNOTESTABLISHED,	/* MP_RST: JOIN on not-fully-established msk */
 
-If yes, then you can move this test to the end of signal_address_tests I
-suppose.
+Same here for the order.
 
-If no, I don't know if it is worth it to have a such different test
-here. Maybe it is enough to check the new RST counter like you did
-above? (Eventually, adding a new check on packetdrill side if there are
-already tests validating these paths.)
-
-> +
-> +	if reset "rst per event no mpj"; then
-> +		if ! setup_ns ns3; then
-> +			print_check "create ns3"
-> +			print_skip
-> +			return
-> +		fi
-> +
-> +		ip link add ns2eth5 netns "$ns2" type veth peer name ns3eth1 netns "$ns3"
-> +		ip -net "$ns2" addr add 10.0.6.2/24 dev ns2eth5
-> +		ip -net "$ns2" link set ns2eth5 up
-> +		ip -net "$ns3" addr add 10.0.6.1/24 dev ns3eth1
-> +		ip -net "$ns3" link set ns3eth1 up
-> +		ip -net "$ns3" link set lo up
-> +		ip netns exec $ns3 sysctl -q net.mptcp.enabled=0
-> +
-> +		pm_nl_add_endpoint $ns1 10.0.6.1 flags signal id 5
-> +		pm_nl_set_limits $ns2 1 1
-> +
-> +		local tport=$(get_port)
-> +		ip netns exec ${ns3} ./mptcp_connect -l -t -1 -s TCP \
-> +			-p $tport 10.0.6.1 &
-> +
-> +		speed=slow \
-
-Do you really need the "slow" mode? Usually used when > 3 ADD_ADDR are
-used or when actions need to be done during the connection. That's not
-the case here.
-
-> +			run_tests $ns1 $ns2 10.0.1.1
-> +		wait_attempt_fail "$ns2"
-> +
-> +		rst_synack_no_mpjoin=1 \
-> +			chk_rst_nr 0 0
-> +
-> +		cleanup_ns "$ns3"
-> +	fi
-> +}
-> +
->  # [$1: error message]
->  usage()
->  {
-> @@ -4527,6 +4620,7 @@ all_tests_sorted=(
->  	F@fail_tests
->  	u@userspace_tests
->  	I@endpoint_tests
-> +	R@rst_emptcp_tests
->  )
->  
->  all_tests_args=""
+The rest looks good to me!
 
 Cheers,
 Matt
