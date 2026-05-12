@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 847D937DAC1;
-	Tue, 12 May 2026 13:02:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3660A383986;
+	Tue, 12 May 2026 13:22:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778590948; cv=none; b=Lm3Ce/A6TTRirKxmyJ+bD/43XJrah5CCkg9M1LNOKkS+Q4LwLqGhLBtrBUjeur89uc4ECoZD0X6J/jh+PSzu1OoQVOUFcPSf11z5tJDNsC4wEf+8aCgfP3VAqMgzNl5DJX6KwApccu7qxRP38ZshuLe2g4wCEMNhakh+p251yhc=
+	t=1778592151; cv=none; b=Nf4H/ddLIxVghRbQaLsBYWNXhEABmvrmme/oz7s8ZpSUXrX6tvUAaGVfeDKzpNVdkZz/FVua+keaFf9VyLDv8vnj12qfWtnyF/V2uXWMzgkeXpxx4v7oU7t923y4oO8Sd2VjDOslXY4BtsfUBvAv/f+vhOPY6uDv7Bc9D+LM48E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778590948; c=relaxed/simple;
-	bh=f1Cmp6x7er93//nyD3TawZv0vsj07LKElhYzhE9mgUA=;
+	s=arc-20240116; t=1778592151; c=relaxed/simple;
+	bh=FNuf7M1vdOgHagEGaNCNEiJ3iCELXDAsc/C5AjbequE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TOMLeTq3kIExr8y5v+Xt9WbVWJRoRxWj1RKXabmHH8WYxcjvkcTtOG5yKa217bD6YUtBYsEgWl+eAct4bw7iIpIlrVkUa7ts4HnywBCPbtwEaFdEYhOSZQLydPjpl2JwXzE5CzsNk91fnZGmpLr3ygww/Lv43yDYEbxrOOi0zds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XsxOwoWF; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=UdVgHDKz2f5NryfPJUOSY0fxsPlY1FA/lsqKCJjsj7ccoaut8Ywv3025tjpgfw4gjkEb0EpLeCaYWWEebPPDOC/QHuZElLDfMLauQcl9TeB35i5N4XTe5he/If3E5Mba8HnWBmt18PIDIDJZzVs1P0FtXFy0QZjG2Nysv3NOdTI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GHUrMVzW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XsxOwoWF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47591C2BCB0;
-	Tue, 12 May 2026 13:02:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GHUrMVzW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E690C2BCB0;
+	Tue, 12 May 2026 13:22:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778590948;
-	bh=f1Cmp6x7er93//nyD3TawZv0vsj07LKElhYzhE9mgUA=;
+	s=k20201202; t=1778592150;
+	bh=FNuf7M1vdOgHagEGaNCNEiJ3iCELXDAsc/C5AjbequE=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=XsxOwoWF67H2XEf/xVTeAJlQVGVO5Cx0h5UifrJMBevWdPjUn7bKn5L+OouFDf4/M
-	 QtEt4YjpdDdBKFuzS6/cUvJ2XZUthYfLJJRylJu/q1Lr9FsbpAllICbkkyIS7qedF7
-	 IOntVcQbTvr2bUwEf8ANcKzrGJRt1PPPJ8lLWKCk/h4dGOTBFd6bTLToHJVT89r2bD
-	 N42V8CcbTkYvarUR2Fe6VZkwO4aoYgg30CkwRRkQZDbofLYTVYLvLHjHccLsswiD2l
-	 eJ0AdwHmzU/gf7pdBLKFYrUwzZs3Jgk2+KD5RxFfmanV96rFm1rJtzdDlG/w6GMsnM
-	 ZNTqinlGhvguQ==
-Message-ID: <03ad4927-6bde-45c4-a90c-92ecfa0a680f@kernel.org>
-Date: Tue, 12 May 2026 15:02:20 +0200
+	b=GHUrMVzWZ1mnwsMr6mZALcWQOUjwz0I15yA7G0VpxdtOp+wtyXghafYxfMZ/oU6yw
+	 XwwJpOClcwyuhvFAHyQFdp9sM9XvZad0CeoK0OQ/8uT8Uv6BfXN8m24krLHIsUlcL4
+	 gaWSo5QsNDo6EDd0tT+cSSi2gktDsKd8LkCkCJ0QpMaT7D5Essw0DX4MKBnm1XPlKM
+	 RzVpDQE2ujSXRI5fcC3s7QbembovEUO8FxujgUkGVXP0ztw6+p81uIy16XM2JRGUm1
+	 mSQVrDhVQscv3pJCEGdNfkeROGuBtxzuxMMNOEzOXJUvhLRaOYf5e/9asv7QMoD/aL
+	 3+izIMx4pp2SA==
+Message-ID: <a009da4e-35bf-4db1-b722-693a796f602d@kernel.org>
+Date: Tue, 12 May 2026 15:22:26 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,18 +35,21 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH net 5/5] mptcp: update window_clamp on subflows when
- SO_RCVBUF is set
+Subject: Re: [syzbot] [mptcp?] KMSAN: uninit-value in
+ mptcp_established_options
 Content-Language: fr
-To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Simon Horman <horms@kernel.org>
-Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev,
- linux-kernel@vger.kernel.org, Gang Yan <yangang@kylinos.cn>,
- stable@vger.kernel.org
-References: <20260511-net-mptcp-misc-fixes-7-1-rc4-v1-0-5ee57cb2b7eb@kernel.org>
- <20260511-net-mptcp-misc-fixes-7-1-rc4-v1-5-5ee57cb2b7eb@kernel.org>
+To: Alexander Potapenko <glider@google.com>
+Cc: Paolo Abeni <pabeni@redhat.com>, kuniyu@google.com,
+ syzbot <syzbot+ff020673c5e3d94d9478@syzkaller.appspotmail.com>,
+ linux-kernel@vger.kernel.org, mptcp@lists.linux.dev,
+ syzkaller-bugs@googlegroups.com
+References: <69f8e352.170a0220.bb392.0005.GAE@google.com>
+ <2a9bde65-d2de-44cc-9192-e7aa8a0935a7@kernel.org>
+ <672f5b7d-6fa0-41c5-a950-2890028c8572@redhat.com>
+ <CAG_fn=Ud-sXzebnwvsiwnu6e0uOHRAFzmUH91Du9pek7Fsx5bA@mail.gmail.com>
+ <43a84c8c-0d65-400e-b735-76210af4cddb@kernel.org>
+ <88d94464-9391-49f4-848f-f359b09b0500@kernel.org>
+ <CAG_fn=Wq87q5wGZt6_c_jutS1yKC+Yv1CsOOfcO03pZBVWzTdg@mail.gmail.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -92,42 +95,47 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20260511-net-mptcp-misc-fixes-7-1-rc4-v1-5-5ee57cb2b7eb@kernel.org>
+In-Reply-To: <CAG_fn=Wq87q5wGZt6_c_jutS1yKC+Yv1CsOOfcO03pZBVWzTdg@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hello,
+Hi Alexander,
 
-On 11/05/2026 17:46, Matthieu Baerts (NGI0) wrote:
-> From: Gang Yan <yangang@kylinos.cn>
+On 12/05/2026 11:31, Alexander Potapenko wrote:
+>>>>>> Plus I'm not exactly sure to understand the issue here: mp_opt is
+>>>>>> defined and used only in mptcp_incoming_options(), and I don't see
+>>>>>> anything using it after the end of this function. Or did I miss something?
+>>>>>
+>>>>> I also had hard time understanding the backtrace, I think some frames
+>>>>> are omitted/missing (it happens sometime, IDK why), specifically the one
+>>>>> related to mptcp_options_received() - which would be useful to
+>>>>> understand the issue.
+>>>>
+>>>> This is probably related to
+>>>> https://lore.kernel.org/all/69e7ee1f.a00a0220.17a17.001d.GAE@google.com/T/
+>>>
+>>> Ah yes, it looks similar.
+>>>
+>>>> Let me send the patch, perhaps this issue will also go away.
+>>>
+>>> That would be great, thank you!
+>>
+>> Thank you for having sent your patch.
+>>
+>> Here is one combining your modifications, and the ones from Paolo, for
+>> syzbot. If this one is OK, we can continue with Paolo's patch.
 > 
-> Add __mptcp_subflow_set_rcvbuf() helper to write the subflow sk_rcvbuf,
-> but also to call the recently added tcp_set_rcvbuf() helper to update
-> window_clamp. This is needed because the window clap is updated when
-> scaling_ratio changes, in tcp_measure_rcv_mss(). Until scaling_ratio
-> changes, the subflow is stuck with the old window clamp which may be
-> based on a small initial buffer.
 > 
-> Use this new helper in both mptcp_sol_socket_sync_intval() (setsockopt
-> path) and sync_socket_options() (new subflow creation path).
+> Hi Matt,
+> 
+> Unfortunately my approach was wrong: see tglx's response there.
+> Hope we'll figure something out (__no_kmsan_checks looks promising)
+Thank you for your reply, I just found the email thread you mentioned:
 
-(...)
+  https://lore.kernel.org/all/87v7cu876c.ffs@tglx
 
-> diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-> index 1cf608e7357b..1544e3563852 100644
-> --- a/net/mptcp/sockopt.c
-> +++ b/net/mptcp/sockopt.c
-> @@ -67,6 +67,12 @@ static int mptcp_get_int_option(struct mptcp_sock *msk, sockptr_t optval,
->  	return 0;
->  }
->  
-> +static inline void __mptcp_subflow_set_rcvbuf(struct sock *ssk, int val)
-
-Arf, I missed that when reviewing this patch: the 'inline' keyword
-should be dropped here.
-
-This patch can be dropped from the series as it is not related with the
-rest, or I can send a v2 for the whole series later on.
+If a v2 is not expected "soon", I'm sure we can continue with Paolo's
+patch, and double-check later to see if it was enough.
 
 Cheers,
 Matt
