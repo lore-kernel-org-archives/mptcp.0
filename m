@@ -1,128 +1,111 @@
-Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
+Received: from mail-ot1-f69.google.com (mail-ot1-f69.google.com [209.85.210.69])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FB0C4B8DF1
-	for <mptcp@lists.linux.dev>; Tue, 12 May 2026 09:32:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.219.44
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778578334; cv=pass; b=OI9GMXIK4ehnUYVM7NUp6aLRX4ybyeXD/WpiMmrqJgxzHPRyeljMSK5FziZy2gkWD2hfERBfSAcJJZYu0J7fEFKK31/VOWInwPVbOlQp19Db3QWq1y/coRnEj1JdCC1yRU8VVYnZVRzJzzEbvixqObuzJ8txZ+pg6Rln7BzXuJA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778578334; c=relaxed/simple;
-	bh=wUiZEKGGfBv6xOHsW9yd2mGB29/lS+EetheTvWe7K3E=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=q9Cmld6w9g/G6TEuzxCRGVjSZnpqxLTi/1HwgLpjnLCU8uMtJ/Wi4w4DivzrXybBetXIkLRHwMpR7P0HI57hF50JbHhRvWMuhxy8Q4KlJzThabkS9E4vPl3vpbdR88nYyffZsfrU+hLoltDzC/GL4QwB9hjLeHvppLOZF6HU/CQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DE6tEA+2; arc=pass smtp.client-ip=209.85.219.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DE6tEA+2"
-Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-8b6c9fdb68cso48066196d6.2
-        for <mptcp@lists.linux.dev>; Tue, 12 May 2026 02:32:11 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1778578330; cv=none;
-        d=google.com; s=arc-20240605;
-        b=OmriG12dZeNKwrw9z8jeBN7s0gne18nFUcomkhEAD1w2GUeq1yMNXR0mbFHEdfE7S/
-         LBCIhsAMsWH7qXcahR21c26EpP6JxeL+gsoi7NJcHCMyp8B0uY+fQ8sxYVcUtYNcbyT+
-         CknlQbnzDf2KfCm5lfNFwULiZBcMuD+oNkHcidyA48x9DaEtLQZJQIJHcf13kjHwfXXH
-         j520L4lpH86jqaYLJCuEhTCyghhuzyajjmsOA0BA//UF+lUvcKNXfGE1Y4Zk3hxNVMLV
-         WyUHJeRgSV4GYPk58MuPr4+5mfHF5hY7ZeXF3gTADtiwe4vINd8H7+IUo0DONN7PG2za
-         PzXQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=wUiZEKGGfBv6xOHsW9yd2mGB29/lS+EetheTvWe7K3E=;
-        fh=FVFzagSAg+pWg0qpEqvbHf+Qi04/GMJqw0x2cGSzrU8=;
-        b=aHvNx+rs2cJg1GCLNSFnOH+RZ+tpeb0NI9Wa29V/pt4Yvx0utT/evhgwtNwwdZywEo
-         j48YYn5Op/S8VWP3cRGhDzYqe6HxsucM3xOZYS9kWclwEiG5oz7M/kvvAKlMfkEJSDiE
-         6G1valube6q1c4JmEJc5pK+ls48VB5hmYMDCYXJoUyHjKqO2gZKx+9atigu+0zYeTkto
-         CIFdtaW5W7j5XuhUtqRRnV1iOAVHnDSv4I8qjSBpAoyRj8waML0bEjdhSbOVwIHqlodr
-         e1qtUdged6L+e8b+r0bhcZX/fLaZkoO9j5nSb8twdIK1UQVGxXtRKRzYg82sdZnF1Rxe
-         Vguw==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1778578330; x=1779183130; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=wUiZEKGGfBv6xOHsW9yd2mGB29/lS+EetheTvWe7K3E=;
-        b=DE6tEA+2hTyGTiLk6b5QSUhprWilCnLTlN+5A/LP2b54splTSg1564xXZKDBuFPZeI
-         zZROWs6PXb2gk9bPO7iyIZ6u+fuBXcvIxncXiB4ZEWKAb2lYOcmy/2D1pOKfSjNhm9zk
-         Lr9q3klYI+SJRl5mL2Izu0HtVqr8PxNgrgMTp0hmDP4YlpYTmwVEi84x7G1zjMcUnUki
-         wd6+UHfRBbBpp/Z0sgV4FFXw9ofv3cmnmw3vxwKN7wxpo5O/D+17vqeJomynfw6dZ7Mp
-         icIdUsTTBG4saD2VvtetK7gZPfPCmk2B7iCggbQsGXlq8FY7L+ratKihdpibynE/rVx4
-         R0Fg==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D143A4C77AA
+	for <mptcp@lists.linux.dev>; Tue, 12 May 2026 10:08:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.69
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1778580485; cv=none; b=EQbGFasvX+0ETFkRVHL6SeVFb833SMIzwU3OOUs3bUijAq9jC0Ta35Tb6cUkpsV2wId5B6ZoQqhwbcrO6sl+GtOchG5eHf/R3NrYoLnRiyHUuac+I0fRxjqCLEVy+77XUx1CZiUNozbd9Ra3lxBxnvfPiNsm6YVzvBJ2y0c6BMg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1778580485; c=relaxed/simple;
+	bh=RZ/bBeX0iUYn5lI2es9VtQr9K+kApUpdxWnpel9mU+c=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=HTQyVNp1C3DKusQr4EAJVuNcXihts3GhTsDlob1GtrQeWwaE/pf0/0oUsZ6APKzAWZYUiNFrAiuHQoDVBhcTvE2Us24p6JEImmP3rOXmhwgQP+dMyVYDNDQkoLjcDz3ZMaDqrlMNmaIDas4NZffVPNP1Phb/wUa1ES+1/3p3WhM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.210.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-ot1-f69.google.com with SMTP id 46e09a7af769-7dccdbdf5c2so6941656a34.3
+        for <mptcp@lists.linux.dev>; Tue, 12 May 2026 03:08:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778578330; x=1779183130;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wUiZEKGGfBv6xOHsW9yd2mGB29/lS+EetheTvWe7K3E=;
-        b=A5DasUySk8y1MKRx0KXaqvRGEt0Oo5h3WMws+ShRWJsIbm8ekpc8/ttAS8ZRkg0TAY
-         +1RsxoYN0WZ8j02q6UHA/dqBEUqw7tP49ZmyceM1E0a3Em/G8mwUM30IHTwmG/F3gITi
-         xZjGDWfX/PTymK6jYBQoSKjnzuSzCi0lZ7AFW8i5tpb1dPGMC8iLiED2U+YHoA28guGH
-         q087udIwqh2AuaKwVwPfONvVc2C8eIa+ahjGkt73opkGhdPzAuAJdgq8Qrkb+Bq/cBKI
-         ez3lmsuH6UIN/xkBASJrxkEZi1eEecDUYlfEWfs4SCZrcWaLBOkMe84TZXJFDtT3odX3
-         jdGg==
-X-Forwarded-Encrypted: i=1; AFNElJ//GWxTBn1cC7QfshjlnRjCQV7LI+AFmeW3i36GA/O+8wuRUBHxvMRUNhRgQszeoGAxHUqIdA==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxCtkLbNNk0cWsssuK+kFz9++gIxkD5MWraRy+J7bsqhqyk5sU8
-	DjGXRhL4v3dZJgFRjj22IakuI9QMi8BPLjFRVZ8R/FZXKcvDMl5ZxWpRodu7M4/dPHgbUlqtZ36
-	562nOqphH9iGoth890CRvZLaiUuXwaN+wNvNQkSGd
-X-Gm-Gg: Acq92OF9HssYHDa0/pEHb2D8GU0zimAg8iIzQWJV+5KP82vYoXFl6SXybCJaRvK1BkR
-	2DyR37T4X3OPVqw/mz6Mo5rEaxiw2JNwW5SnUcnYN7cSp54vG6OmdIjmx1MnFcpt2QvGxh0am4n
-	aiFUEFZQtC7uZqh00xkL3AYYlLwbRYiUfwhMCNnkmZc/+Hz/Y+Wx7CVXeCj2MQOW+X3p4CVtlbq
-	/5ti+fvPZf7ljcCn6SC1ijHt3HajiaMvo8/HaZpoDeA/wAYwQSDeSBQg8sC7eUlcGYOAaK7QFjc
-	2eWWpZkdavpIhUn2EMSDae2Tvl40F/8A1tmiZz7oxqFVIexg
-X-Received: by 2002:a05:6214:2f11:b0:8be:7ed5:477b with SMTP id
- 6a1803df08f44-8be7ed549famr341525756d6.22.1778578329364; Tue, 12 May 2026
- 02:32:09 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1778580483; x=1779185283;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bJXbmx1oVg5LK3fibdOuya8W9nsAxUoYlR408xm7E/c=;
+        b=YB3hnspa3lDUf5dnZdt2rwKAftF6h407c+cEYbTxA5RHsOkRmw3kjnpN9Wu6SpWPea
+         c8DDh/NMVOrJokL/pG9Z4Ge7KA3di6ABG73KcfhV+Dwnq0VTDj8+BtPfjj7zl/Gz/jLO
+         orclgK5TVG5X/yEBJyCKTXxVo5V0Uaj0RWlzhqPKf86Bw7PV2LYeh9ZYKbi5Txtvo6DM
+         XXZ0Vrq9U24eFsNai/yFYcNnZ8IdKnTqN3pv8x5xH4H4OIXmXQYiYbzWMmdQCeVXOxAN
+         ZFLe968OraPxJCrkucMmOTsxE8MvcJAk+rpnu5XLuXvwyLk+eOBb/JBBh7hAT9seRY2m
+         m0pA==
+X-Forwarded-Encrypted: i=1; AFNElJ8pQt7yzLMxsNWfUwxyNgv3kJkxpbaH8l7COZezp/S9U4YmDNcreN+OF3Q6qnElx0nmt80szg==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwBAsBntR411RFCt1TsBaUPLY/Uu88jSRvFVJCK39MxAxlmmSTf
+	nCDLmvAUUxIZTblY8pwGqu8cjuAqd5YCAlv3AtMsbfozApdXwZDXnLyl7PFHJBOprHwG1K2XBKL
+	rntKMSTPT/BzC3BrpIFAjhgPrjZcCtczqRiLFYMtXrXlt3a9yXWems159sIo=
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <69f8e352.170a0220.bb392.0005.GAE@google.com> <2a9bde65-d2de-44cc-9192-e7aa8a0935a7@kernel.org>
- <672f5b7d-6fa0-41c5-a950-2890028c8572@redhat.com> <CAG_fn=Ud-sXzebnwvsiwnu6e0uOHRAFzmUH91Du9pek7Fsx5bA@mail.gmail.com>
- <43a84c8c-0d65-400e-b735-76210af4cddb@kernel.org> <88d94464-9391-49f4-848f-f359b09b0500@kernel.org>
+X-Received: by 2002:a05:6820:c0c2:20b0:69b:4bff:d0a9 with SMTP id
+ 006d021491bc7-69b4bffd90emr3707222eaf.44.1778580482795; Tue, 12 May 2026
+ 03:08:02 -0700 (PDT)
+Date: Tue, 12 May 2026 03:08:02 -0700
 In-Reply-To: <88d94464-9391-49f4-848f-f359b09b0500@kernel.org>
-From: Alexander Potapenko <glider@google.com>
-Date: Tue, 12 May 2026 11:31:31 +0200
-X-Gm-Features: AVHnY4IOrVxDGYQ4vYi5rQd3-ddeK_kK0sCusaAX8iyMl0cEMNzC96RE_NjdxIU
-Message-ID: <CAG_fn=Wq87q5wGZt6_c_jutS1yKC+Yv1CsOOfcO03pZBVWzTdg@mail.gmail.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6a02fc02.050a0220.12f528.0142.GAE@google.com>
 Subject: Re: [syzbot] [mptcp?] KMSAN: uninit-value in mptcp_established_options
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: Paolo Abeni <pabeni@redhat.com>, kuniyu@google.com, 
-	syzbot <syzbot+ff020673c5e3d94d9478@syzkaller.appspotmail.com>, 
-	linux-kernel@vger.kernel.org, mptcp@lists.linux.dev, 
+From: syzbot <syzbot+ff020673c5e3d94d9478@syzkaller.appspotmail.com>
+To: glider@google.com, kuniyu@google.com, linux-kernel@vger.kernel.org, 
+	matttbe@kernel.org, mptcp@lists.linux.dev, pabeni@redhat.com, 
 	syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 
-> >>>> Plus I'm not exactly sure to understand the issue here: mp_opt is
-> >>>> defined and used only in mptcp_incoming_options(), and I don't see
-> >>>> anything using it after the end of this function. Or did I miss something?
-> >>>
-> >>> I also had hard time understanding the backtrace, I think some frames
-> >>> are omitted/missing (it happens sometime, IDK why), specifically the one
-> >>> related to mptcp_options_received() - which would be useful to
-> >>> understand the issue.
-> >>
-> >> This is probably related to
-> >> https://lore.kernel.org/all/69e7ee1f.a00a0220.17a17.001d.GAE@google.com/T/
-> >
-> > Ah yes, it looks similar.
-> >
-> >> Let me send the patch, perhaps this issue will also go away.
-> >
-> > That would be great, thank you!
->
-> Thank you for having sent your patch.
->
-> Here is one combining your modifications, and the ones from Paolo, for
-> syzbot. If this one is OK, we can continue with Paolo's patch.
+Hello,
+
+syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+KMSAN: uninit-value in irqentry_exit_to_kernel_mode_preempt
+
+=====================================================
+BUG: KMSAN: uninit-value in irqentry_exit_to_kernel_mode_preempt+0xb0/0xc0 include/linux/irq-entry-common.h:474
+ irqentry_exit_to_kernel_mode_preempt+0xb0/0xc0 include/linux/irq-entry-common.h:474
+ irqentry_exit_to_kernel_mode include/linux/irq-entry-common.h:549 [inline]
+ irqentry_exit+0x7b/0x820 kernel/entry/common.c:164
+ sysvec_apic_timer_interrupt+0x52/0x90 arch/x86/kernel/apic/apic.c:1061
+ asm_sysvec_apic_timer_interrupt+0x1f/0x30 arch/x86/include/asm/idtentry.h:697
+ __msan_metadata_ptr_for_load_4+0x5/0x40 mm/kmsan/instrumentation.c:93
+ tcp_rcv_established+0x19bb/0x3200 net/ipv4/tcp_input.c:6656
+ tcp_v4_do_rcv+0xc5b/0x1b70 net/ipv4/tcp_ipv4.c:1851
+ sk_backlog_rcv include/net/sock.h:1190 [inline]
+ __release_sock+0x360/0x7d0 net/core/sock.c:3216
+ release_sock+0x22d/0x300 net/core/sock.c:3815
+ mptcp_subflow_shutdown+0x358/0x690 net/mptcp/protocol.c:3144
+ mptcp_check_send_data_fin+0x31b/0x3d0 net/mptcp/protocol.c:3218
+ __mptcp_wr_shutdown net/mptcp/protocol.c:3234 [inline]
+ __mptcp_close+0x860/0x1360 net/mptcp/protocol.c:3313
+ mptcp_close+0x42/0x260 net/mptcp/protocol.c:3367
+ inet_release+0x1ee/0x2a0 net/ipv4/af_inet.c:442
+ __sock_release net/socket.c:722 [inline]
+ sock_close+0xd6/0x2f0 net/socket.c:1514
+ __fput+0x60e/0x1010 fs/file_table.c:510
+ ____fput+0x25/0x30 fs/file_table.c:538
+ task_work_run+0x208/0x2b0 kernel/task_work.c:233
+ resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
+ __exit_to_user_mode_loop kernel/entry/common.c:67 [inline]
+ exit_to_user_mode_loop+0x306/0x1ea0 kernel/entry/common.c:98
+ __exit_to_user_mode_prepare include/linux/irq-entry-common.h:207 [inline]
+ syscall_exit_to_user_mode_prepare include/linux/irq-entry-common.h:238 [inline]
+ syscall_exit_to_user_mode include/linux/entry-common.h:318 [inline]
+ do_syscall_64+0x236/0xf80 arch/x86/entry/syscall_64.c:100
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Local variable mp_opt created at:
+ mptcp_incoming_options+0x11d/0x43b0 net/mptcp/options.c:1171
+ tcp_data_queue+0x80/0x7c90 net/ipv4/tcp_input.c:5584
+
+CPU: 0 UID: 0 PID: 10313 Comm: syz.0.1815 Not tainted syzkaller #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/18/2026
+=====================================================
 
 
-Hi Matt,
+Tested on:
 
-Unfortunately my approach was wrong: see tglx's response there.
-Hope we'll figure something out (__no_kmsan_checks looks promising)
+commit:         50897c95 Merge tag 'linux_kselftest-kunit-fixes-7.1-rc..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=121c20c8580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=a9f364ffbbe4c1e9
+dashboard link: https://syzkaller.appspot.com/bug?extid=ff020673c5e3d94d9478
+compiler:       Debian clang version 21.1.8 (++20251221033036+2078da43e25a-1~exp1~20251221153213.50), Debian LLD 21.1.8
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=1555c7ce580000
 
-Alex
