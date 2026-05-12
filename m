@@ -1,128 +1,136 @@
-Received: from mail-oa1-f42.google.com (mail-oa1-f42.google.com [209.85.160.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3E7E360EC3
-	for <mptcp@lists.linux.dev>; Tue, 12 May 2026 11:47:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 847D937DAC1;
+	Tue, 12 May 2026 13:02:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778586474; cv=none; b=LJcdnWmL5y3cwPpmXp0Iqx+KWNbYEm05jWeD6/3mUPnJ3/QDi/N3LV5QTgKKK6A8vp0J2ZWeesjdTCk+SP/ivfdlF2o2BSb9+Om9RJkBqAlHc121GN0mWVlowRsSC+f1Y5eRYhh3i4HCWAcogP8OszcXsbzkNYkYJyV/QH3wnsc=
+	t=1778590948; cv=none; b=Lm3Ce/A6TTRirKxmyJ+bD/43XJrah5CCkg9M1LNOKkS+Q4LwLqGhLBtrBUjeur89uc4ECoZD0X6J/jh+PSzu1OoQVOUFcPSf11z5tJDNsC4wEf+8aCgfP3VAqMgzNl5DJX6KwApccu7qxRP38ZshuLe2g4wCEMNhakh+p251yhc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778586474; c=relaxed/simple;
-	bh=4j3djAJ+01KrkJcqzvJDy/GFtL2zJZVs4SRttsLZaww=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
-	 MIME-Version:Content-Type; b=n4fxm1bBsOPF5kVVwcHdoiT6IqReM686HYW4s6E0/r+glojy9yZZ5nSSaEtakuMaM4yayU9/4umyRShUKwK1xOGHzdoL3vheWV2Kfnpa6V52muzA8d/Uyplvm92H9zFMkCP7DF1HW4c3LakK+XM93sjxa5P7tU1agGloA/MQCtg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=I2TBqa3o; arc=none smtp.client-ip=209.85.160.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1778590948; c=relaxed/simple;
+	bh=f1Cmp6x7er93//nyD3TawZv0vsj07LKElhYzhE9mgUA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TOMLeTq3kIExr8y5v+Xt9WbVWJRoRxWj1RKXabmHH8WYxcjvkcTtOG5yKa217bD6YUtBYsEgWl+eAct4bw7iIpIlrVkUa7ts4HnywBCPbtwEaFdEYhOSZQLydPjpl2JwXzE5CzsNk91fnZGmpLr3ygww/Lv43yDYEbxrOOi0zds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XsxOwoWF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I2TBqa3o"
-Received: by mail-oa1-f42.google.com with SMTP id 586e51a60fabf-40f1a1f77a6so4160853fac.2
-        for <mptcp@lists.linux.dev>; Tue, 12 May 2026 04:47:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1778586472; x=1779191272; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HRsxnfHy4whEkyqn6hElDfR5Lq+Ct+L1gu1AkDxQ+SU=;
-        b=I2TBqa3o3quNx+16O7yAV2XIXfmUWBlkbB/mVLEQrQAwxb+WC/x8K5EFxgkLXBGjAM
-         e2h2Q6GzzUzhr/gVQ00Ib4JKKfyCrpISqjbfKiwuh4EnIV/2cm+mRvFrdD2QUCuNfGaj
-         5ZMxFpMkwzFFMD/+m3rKdGlErJKu6hn6BBKVpHRhXvrYdLhvo0z48HYSQKmteloJkWKs
-         wUBgY7qx5vo+dlkkKeLLiNNa+0gM60SjpSNjJds6MVXYjCN7OgfZoKhHt6AITICIisxo
-         2g35CC+UVwABpOWYuix2n7dpXuFCZNWIENoLH3+iQ8eKHPNdZxYtl9VD1O1Xji8kg4qI
-         dr4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778586472; x=1779191272;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=HRsxnfHy4whEkyqn6hElDfR5Lq+Ct+L1gu1AkDxQ+SU=;
-        b=aa924zVbJ+ZFKA9qUmjWEFxZ6KRcOXv3IZ+rYGkt+H6FhpuAF4Ui8w7E88tvVA/g2V
-         4F2zaaP27O3JmwiL5lDCym4qR9fdXZPOcWdjg78behKp0DiqM+KEYG1lH0sZKHlvCiTf
-         ZHafFjqUrfejYOP+KDI4PnBbgWJgJqdTDyD3yfc2CqfFUsasUjUpIZu40XMwUUEpBxpL
-         AHcEQgUj/8xw2F/7Po6R+yW+y5rXku0Npd5FzNc9NDmJeg9Mqm/+A8fHEa/JKKYGem0B
-         7bBEpp8Az/Hykv0rcg67yy9RGYXaYZPmApppOeRgsYgHQ7uG6SYdjtAgsDlhoqkv/n8z
-         W4Ug==
-X-Gm-Message-State: AOJu0YzHEHd4MKqsQUbPSl2v+TIShdSqZdUmfvJl1QJCv/gKMPfgIKkC
-	T9YAOrMAGIu+N2O9+1cCkhY7pJgrYgyLJQ0lakM2sgEy62mZHgIh/oE=
-X-Gm-Gg: Acq92OEaqsVf5tPYszF1Inh83iOutU98v1kmjo80StyjdqcvVfxh6VleVMwy5sXYhbS
-	zErbROCG6cdGpuo3p/dB8NXvvCxKSy43GCq+Cr3h0uWbUGvdDbWdCJLyuOb7KRnoDUAFsZind9+
-	H3RY1GjgbXxO/XD2MgomhGE0miyXmz6JVcip6qMaMp8Lq9tDJmMU5H+dShZ34BlLF0m/1A55yzF
-	EE8J7aKgbkLKTQmicCRAlSUs2AJi+/V7NigJgXuwZAnJQ5Kho9cNkaGrteyiNz4Q2owYBmB/Ce0
-	kFN6bXVB58y/MmlxxGKaOWOmjm/7dRH2TEFTwBuNrZ0a6YFYwIMDM7uGnu61nQC+0Vi71LdgVf8
-	d5zaeW0qUDTG+EcM/wVwAxEHk3snO9ZWPnmXHZbjcT9i1ds7qbG6NextbP1uUmLK5GJjtGGTYAh
-	c6gP9hmgFVdpauCG3QWFSrN/msBa6WX+qVuuI20fM=
-X-Received: by 2002:a05:6820:215:b0:69b:6d87:ad27 with SMTP id 006d021491bc7-69b6d87aecfmr939750eaf.25.1778586471736;
-        Tue, 12 May 2026 04:47:51 -0700 (PDT)
-Received: from [127.0.0.1] ([130.131.237.134])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-69b25c76cc4sm7574403eaf.6.2026.05.12.04.47.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2026 04:47:51 -0700 (PDT)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Shardul Bankar <shardulsb08@gmail.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20260512103331.1934343-1-shardul.b@mpiricsoftware.com>
-References: <20260512103331.1934343-1-shardul.b@mpiricsoftware.com>
-Subject: Re: [PATCH v3 0/2] mptcp: per-event MIB counters for
- MPTCP_RST_EMPTCP
-Message-ID: <a5b36431-80c7-95f3-c12a-9f9707f3cf6c@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 12 May 2026 11:47:49 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XsxOwoWF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47591C2BCB0;
+	Tue, 12 May 2026 13:02:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1778590948;
+	bh=f1Cmp6x7er93//nyD3TawZv0vsj07LKElhYzhE9mgUA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=XsxOwoWF67H2XEf/xVTeAJlQVGVO5Cx0h5UifrJMBevWdPjUn7bKn5L+OouFDf4/M
+	 QtEt4YjpdDdBKFuzS6/cUvJ2XZUthYfLJJRylJu/q1Lr9FsbpAllICbkkyIS7qedF7
+	 IOntVcQbTvr2bUwEf8ANcKzrGJRt1PPPJ8lLWKCk/h4dGOTBFd6bTLToHJVT89r2bD
+	 N42V8CcbTkYvarUR2Fe6VZkwO4aoYgg30CkwRRkQZDbofLYTVYLvLHjHccLsswiD2l
+	 eJ0AdwHmzU/gf7pdBLKFYrUwzZs3Jgk2+KD5RxFfmanV96rFm1rJtzdDlG/w6GMsnM
+	 ZNTqinlGhvguQ==
+Message-ID: <03ad4927-6bde-45c4-a90c-92ecfa0a680f@kernel.org>
+Date: Tue, 12 May 2026 15:02:20 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH net 5/5] mptcp: update window_clamp on subflows when
+ SO_RCVBUF is set
+Content-Language: fr
+To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Simon Horman <horms@kernel.org>
+Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev,
+ linux-kernel@vger.kernel.org, Gang Yan <yangang@kylinos.cn>,
+ stable@vger.kernel.org
+References: <20260511-net-mptcp-misc-fixes-7-1-rc4-v1-0-5ee57cb2b7eb@kernel.org>
+ <20260511-net-mptcp-misc-fixes-7-1-rc4-v1-5-5ee57cb2b7eb@kernel.org>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <20260511-net-mptcp-misc-fixes-7-1-rc4-v1-5-5ee57cb2b7eb@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Shardul,
+Hello,
 
-Thank you for your modifications, that's great!
+On 11/05/2026 17:46, Matthieu Baerts (NGI0) wrote:
+> From: Gang Yan <yangang@kylinos.cn>
+> 
+> Add __mptcp_subflow_set_rcvbuf() helper to write the subflow sk_rcvbuf,
+> but also to call the recently added tcp_set_rcvbuf() helper to update
+> window_clamp. This is needed because the window clap is updated when
+> scaling_ratio changes, in tcp_measure_rcv_mss(). Until scaling_ratio
+> changes, the subflow is stuck with the old window clamp which may be
+> based on a small initial buffer.
+> 
+> Use this new helper in both mptcp_sol_socket_sync_intval() (setsockopt
+> path) and sync_socket_options() (new subflow creation path).
 
-Our CI did some validations and here is its report:
+(...)
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Unstable: 1 failed test(s):=
- bpftest_test_progs_mptcp =E2=9A=A0=EF=B8=8F=20
-- Task: https://github.=
-com/multipath-tcp/mptcp_net-next/actions/runs/25729977608
+> diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+> index 1cf608e7357b..1544e3563852 100644
+> --- a/net/mptcp/sockopt.c
+> +++ b/net/mptcp/sockopt.c
+> @@ -67,6 +67,12 @@ static int mptcp_get_int_option(struct mptcp_sock *msk, sockptr_t optval,
+>  	return 0;
+>  }
+>  
+> +static inline void __mptcp_subflow_set_rcvbuf(struct sock *ssk, int val)
 
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/4634f0a9b732
-Patchwork: https://patchwork.kernel.=
-org/project/mptcp/list/?series=3D1093458
+Arf, I missed that when reviewing this patch: the 'inline' keyword
+should be dropped here.
 
-
-If there are some issues, you =
-can reproduce them using the same environment as
-the one used by the CI =
-thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
-
-
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
+This patch can be dropped from the series as it is not related with the
+rest, or I can send a v2 for the whole series later on.
 
 Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 Core)
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
+
