@@ -1,111 +1,127 @@
-Received: from mail-ot1-f69.google.com (mail-ot1-f69.google.com [209.85.210.69])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D143A4C77AA
-	for <mptcp@lists.linux.dev>; Tue, 12 May 2026 10:08:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.69
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E20DA3839A9
+	for <mptcp@lists.linux.dev>; Tue, 12 May 2026 10:33:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778580485; cv=none; b=EQbGFasvX+0ETFkRVHL6SeVFb833SMIzwU3OOUs3bUijAq9jC0Ta35Tb6cUkpsV2wId5B6ZoQqhwbcrO6sl+GtOchG5eHf/R3NrYoLnRiyHUuac+I0fRxjqCLEVy+77XUx1CZiUNozbd9Ra3lxBxnvfPiNsm6YVzvBJ2y0c6BMg=
+	t=1778582018; cv=none; b=fkX5gQ2xCW36jfBNFJlRzJVzlBjsonTnyp294/qJAJU8SUy+1YqQcYMcU1cr0RUaOCDzcU7VCm3pgwwavVN0OXnIbnigUzb9PR2IoEQrd1kTWeSCNYGiuic2BqT6R0Iw+gMMzzXoB6l5Urtm6SggA1xBeX56Z0eG6R2FRLchTW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778580485; c=relaxed/simple;
-	bh=RZ/bBeX0iUYn5lI2es9VtQr9K+kApUpdxWnpel9mU+c=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=HTQyVNp1C3DKusQr4EAJVuNcXihts3GhTsDlob1GtrQeWwaE/pf0/0oUsZ6APKzAWZYUiNFrAiuHQoDVBhcTvE2Us24p6JEImmP3rOXmhwgQP+dMyVYDNDQkoLjcDz3ZMaDqrlMNmaIDas4NZffVPNP1Phb/wUa1ES+1/3p3WhM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.210.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-ot1-f69.google.com with SMTP id 46e09a7af769-7dccdbdf5c2so6941656a34.3
-        for <mptcp@lists.linux.dev>; Tue, 12 May 2026 03:08:03 -0700 (PDT)
+	s=arc-20240116; t=1778582018; c=relaxed/simple;
+	bh=WdmqctYFViM5fA2xpBJeCWnZLDGxh536eXC4IsqG8ik=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=gCGFLFyWxAsqzq0e0OMtVNQQ9/rA7//coOXdue+DdtcoU54f+YHHsytcjdluQgwlcw6y/1dZbws0/RSLvUBaemcnjEmeVxdxo0XZmuapXrYFwswriLKsJtPJW0Y0oM4/Q5AsZO2zs2X/sEhRAG5K8PwW7xLs5s5GPe+OHq/378A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V7B58RtE; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V7B58RtE"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2ba0fc8b1f0so33777525ad.3
+        for <mptcp@lists.linux.dev>; Tue, 12 May 2026 03:33:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1778582016; x=1779186816; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=wMgf9zagQv/RoLAP3xHM+yAO6BER45h0YVhQWXppqko=;
+        b=V7B58RtE0uq+Ntoe78BFe1pxvuvr1xK3ir4vBIxOhFRo71CgHTJuNSPzZNkRgUcRq/
+         zlwvK8PyRscgUaGc3wPpyP2A3TICV4QCXJ25Dd7qRBa29XG24pNF/hIP1kRqERFNdEly
+         8X4vIZpykeu+VBl95Ox9Riy2ZUovOrJmVkw3IFj1XYKdIxOmfRa3ChhyG0FohD4Y4twQ
+         BnlE6kquh7vm06CiK/5bRIrGDM4NzgRIutsod4Ze9iNLMnh2iPT5wE620yTsGA0QZrdr
+         iNmotQXxAG83NDbLLV6VlZYXjazEflkU9bc6BDWra6dRMek8QdohPdAknYmLueJw47pc
+         +BiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778580483; x=1779185283;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bJXbmx1oVg5LK3fibdOuya8W9nsAxUoYlR408xm7E/c=;
-        b=YB3hnspa3lDUf5dnZdt2rwKAftF6h407c+cEYbTxA5RHsOkRmw3kjnpN9Wu6SpWPea
-         c8DDh/NMVOrJokL/pG9Z4Ge7KA3di6ABG73KcfhV+Dwnq0VTDj8+BtPfjj7zl/Gz/jLO
-         orclgK5TVG5X/yEBJyCKTXxVo5V0Uaj0RWlzhqPKf86Bw7PV2LYeh9ZYKbi5Txtvo6DM
-         XXZ0Vrq9U24eFsNai/yFYcNnZ8IdKnTqN3pv8x5xH4H4OIXmXQYiYbzWMmdQCeVXOxAN
-         ZFLe968OraPxJCrkucMmOTsxE8MvcJAk+rpnu5XLuXvwyLk+eOBb/JBBh7hAT9seRY2m
-         m0pA==
-X-Forwarded-Encrypted: i=1; AFNElJ8pQt7yzLMxsNWfUwxyNgv3kJkxpbaH8l7COZezp/S9U4YmDNcreN+OF3Q6qnElx0nmt80szg==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwBAsBntR411RFCt1TsBaUPLY/Uu88jSRvFVJCK39MxAxlmmSTf
-	nCDLmvAUUxIZTblY8pwGqu8cjuAqd5YCAlv3AtMsbfozApdXwZDXnLyl7PFHJBOprHwG1K2XBKL
-	rntKMSTPT/BzC3BrpIFAjhgPrjZcCtczqRiLFYMtXrXlt3a9yXWems159sIo=
+        d=1e100.net; s=20251104; t=1778582016; x=1779186816;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wMgf9zagQv/RoLAP3xHM+yAO6BER45h0YVhQWXppqko=;
+        b=Ge5yUAJuC87xOTdGPfB6GitD1D0OvntMgLXB7Ev6ceEtJOqpqOB2qWs6fY8TmSqWqu
+         rolmClFmWMQowbKWHaUiuwzZv82PQqhaQAATAHZA9d4rq/RGcEjeoCPJEUqx5Di/BKhH
+         OSIrD5u3PDnMz97b7fCE7d6pdS/9MTSKVCk5m2KlgbA2+CyyMvU/m5PivvrxzEohsDqp
+         0k5KQWgCtYQuPSTTkW1Ir9ZP5sWTsKwq/HLSFyQBgvL+xpslSVOKtW2ruoqA0w/YZSfE
+         mwFTXi/FSLiZ+3BbMCHZyQIUc1hw740InOZKXFzbIAajGhTQIX1C3aeUtjYEIZtkNUwp
+         Xf+Q==
+X-Gm-Message-State: AOJu0Yw7xah7QEK7ZlQ2Zyu7adGeJpeX0BcjDTIdaZ/qyNBzYIHFpnEw
+	A9nsQqpQ+61ErBbEPfXnup2mO67QtpPUc7j6hmcGfgcb4h/7RbmP+wCCwepCro8e
+X-Gm-Gg: Acq92OHatj1Ji0/Tnl4sfbhpspQ69KDHBvbqXVKLA8NXRjMuH1B/g953Lc3ov/BTK9V
+	WhKM76AohKZ+ao6ujBasKBv3iggNMg95Q31UutibaLrM23L+OtAjAlXAvx1W4lmWR80mAGB1ops
+	mRfwdPMf4laPV52d+KCZRBBI2cbNKVWiCB/JpacOq5lKXfgNIISCgfnT5m2wb/8x+g/I25P3Uj8
+	rvgj9jpR640/JgUgyPYi4t9pju1yRSYXARv0k3zyPzpjLmG5b77U6sgr3X0lmUK5HWEZjZyBbhp
+	tm4lgP2PMg3nIndq6k33DMh5Ab+DpC2d+T2GL68oUQbpIHweigdBDePCvLkwbXGjh4P8sIBZpIr
+	dncuoludj+EtY2FAC2gOzhvM1qvHAm+kdoaMa+Sc5RQD/LpBmco38f5ULHNKxz+6c7u47DBKlQD
+	7yNJg6DTkcdzCCM+t5NfFlaA==
+X-Received: by 2002:a17:903:9ce:b0:2ba:b5a3:1864 with SMTP id d9443c01a7336-2bab5a3210bmr268073555ad.20.1778582015772;
+        Tue, 12 May 2026 03:33:35 -0700 (PDT)
+Received: from localhost ([223.185.43.111])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2baf1e365a1sm127240585ad.44.2026.05.12.03.33.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 May 2026 03:33:35 -0700 (PDT)
+From: Shardul Bankar <shardulsb08@gmail.com>
+X-Google-Original-From: Shardul Bankar <shardul.b@mpiricsoftware.com>
+To: mptcp@lists.linux.dev
+Cc: matttbe@kernel.org,
+	martineau@kernel.org,
+	geliang@kernel.org,
+	pabeni@redhat.com,
+	janak@mpiric.us,
+	kalpan.jani@mpiricsoftware.com,
+	shardulsb08@gmail.com,
+	Shardul Bankar <shardul.b@mpiricsoftware.com>
+Subject: [PATCH v3 0/2] mptcp: per-event MIB counters for MPTCP_RST_EMPTCP
+Date: Tue, 12 May 2026 16:03:29 +0530
+Message-Id: <20260512103331.1934343-1-shardul.b@mpiricsoftware.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6820:c0c2:20b0:69b:4bff:d0a9 with SMTP id
- 006d021491bc7-69b4bffd90emr3707222eaf.44.1778580482795; Tue, 12 May 2026
- 03:08:02 -0700 (PDT)
-Date: Tue, 12 May 2026 03:08:02 -0700
-In-Reply-To: <88d94464-9391-49f4-848f-f359b09b0500@kernel.org>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6a02fc02.050a0220.12f528.0142.GAE@google.com>
-Subject: Re: [syzbot] [mptcp?] KMSAN: uninit-value in mptcp_established_options
-From: syzbot <syzbot+ff020673c5e3d94d9478@syzkaller.appspotmail.com>
-To: glider@google.com, kuniyu@google.com, linux-kernel@vger.kernel.org, 
-	matttbe@kernel.org, mptcp@lists.linux.dev, pabeni@redhat.com, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hello,
+MPTCP_RST_EMPTCP (reset reason 1) is currently used as a catch-all for
+several distinct conditions across subflow setup, authentication, and
+data-path validation.  This series adds per-event MIB counters at each
+of those use sites and extends mptcp_join.sh's chk_rst_nr() to validate
+them.
 
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-KMSAN: uninit-value in irqentry_exit_to_kernel_mode_preempt
+Patch 1 adds six new counters (MD5SigReset, MPJoinSynAckNoMPJoin,
+MPJoinAckNoMPJoin, MPJoinAckNoCtx, DssReset, MPJoinNotEstablished) and
+increments them in mib.c/mib.h, subflow.c and protocol.c.
 
-=====================================================
-BUG: KMSAN: uninit-value in irqentry_exit_to_kernel_mode_preempt+0xb0/0xc0 include/linux/irq-entry-common.h:474
- irqentry_exit_to_kernel_mode_preempt+0xb0/0xc0 include/linux/irq-entry-common.h:474
- irqentry_exit_to_kernel_mode include/linux/irq-entry-common.h:549 [inline]
- irqentry_exit+0x7b/0x820 kernel/entry/common.c:164
- sysvec_apic_timer_interrupt+0x52/0x90 arch/x86/kernel/apic/apic.c:1061
- asm_sysvec_apic_timer_interrupt+0x1f/0x30 arch/x86/include/asm/idtentry.h:697
- __msan_metadata_ptr_for_load_4+0x5/0x40 mm/kmsan/instrumentation.c:93
- tcp_rcv_established+0x19bb/0x3200 net/ipv4/tcp_input.c:6656
- tcp_v4_do_rcv+0xc5b/0x1b70 net/ipv4/tcp_ipv4.c:1851
- sk_backlog_rcv include/net/sock.h:1190 [inline]
- __release_sock+0x360/0x7d0 net/core/sock.c:3216
- release_sock+0x22d/0x300 net/core/sock.c:3815
- mptcp_subflow_shutdown+0x358/0x690 net/mptcp/protocol.c:3144
- mptcp_check_send_data_fin+0x31b/0x3d0 net/mptcp/protocol.c:3218
- __mptcp_wr_shutdown net/mptcp/protocol.c:3234 [inline]
- __mptcp_close+0x860/0x1360 net/mptcp/protocol.c:3313
- mptcp_close+0x42/0x260 net/mptcp/protocol.c:3367
- inet_release+0x1ee/0x2a0 net/ipv4/af_inet.c:442
- __sock_release net/socket.c:722 [inline]
- sock_close+0xd6/0x2f0 net/socket.c:1514
- __fput+0x60e/0x1010 fs/file_table.c:510
- ____fput+0x25/0x30 fs/file_table.c:538
- task_work_run+0x208/0x2b0 kernel/task_work.c:233
- resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
- __exit_to_user_mode_loop kernel/entry/common.c:67 [inline]
- exit_to_user_mode_loop+0x306/0x1ea0 kernel/entry/common.c:98
- __exit_to_user_mode_prepare include/linux/irq-entry-common.h:207 [inline]
- syscall_exit_to_user_mode_prepare include/linux/irq-entry-common.h:238 [inline]
- syscall_exit_to_user_mode include/linux/entry-common.h:318 [inline]
- do_syscall_64+0x236/0xf80 arch/x86/entry/syscall_64.c:100
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
+Patch 2 extends chk_rst_nr() with named env-var expectations for each
+new counter (silent on success, gated on availability) and adds one
+test inside signal_address_tests that triggers MPJoinSynAckNoMPJoin
+from within the existing ns1/ns2 setup.
 
-Local variable mp_opt created at:
- mptcp_incoming_options+0x11d/0x43b0 net/mptcp/options.c:1171
- tcp_data_queue+0x80/0x7c90 net/ipv4/tcp_input.c:5584
+v3 (this version):
+  patch 1: move new SNMP_MIB_ITEM entries and enum values next to
+           their semantic neighbors instead of appending them in a
+           single block after MPRst*.  No functional change.
+  patch 2: drop the third-netns approach for triggering
+           MPJoinSynAckNoMPJoin.  ns1 now signals an address that
+           is already bound on ns2 (10.0.2.2) with a TCP-only
+           mptcp_connect listener on ns2; the client's MP_JOIN
+           routes locally to that listener and the SYN/ACK arrives
+           without MP_JOIN.  The test moves into
+           signal_address_tests.  speed=slow dropped (not needed
+           here), and the local-and-assign that tripped shellcheck
+           SC2155 is gone with the old test.
+v2: https://lore.kernel.org/all/20260509183335.969018-1-shardul.b@mpiricsoftware.com/
+v1: https://lore.kernel.org/all/20260421095646.3741956-1-shardul.b@mpiricsoftware.com/
 
-CPU: 0 UID: 0 PID: 10313 Comm: syz.0.1815 Not tainted syzkaller #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/18/2026
-=====================================================
+Shardul Bankar (2):
+  mptcp: add per-event MIB counters for MPTCP_RST_EMPTCP resets
+  selftests: mptcp: extend chk_rst_nr to validate per-event RST counters
+
+ net/mptcp/mib.c                               |  6 ++
+ net/mptcp/mib.h                               |  6 ++
+ net/mptcp/protocol.c                          |  1 +
+ net/mptcp/subflow.c                           |  9 +++
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 72 +++++++++++++++++++
+ 5 files changed, 94 insertions(+)
 
 
-Tested on:
-
-commit:         50897c95 Merge tag 'linux_kselftest-kunit-fixes-7.1-rc..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=121c20c8580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a9f364ffbbe4c1e9
-dashboard link: https://syzkaller.appspot.com/bug?extid=ff020673c5e3d94d9478
-compiler:       Debian clang version 21.1.8 (++20251221033036+2078da43e25a-1~exp1~20251221153213.50), Debian LLD 21.1.8
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=1555c7ce580000
+base-commit: 52f68f13d42a1c3752de7a776b6f873988f48401
+-- 
+2.34.1
 
