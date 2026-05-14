@@ -1,130 +1,108 @@
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA95C3F412A
-	for <mptcp@lists.linux.dev>; Thu, 14 May 2026 11:09:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AF89CA5A
+	for <mptcp@lists.linux.dev>; Thu, 14 May 2026 13:28:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778756960; cv=none; b=gWOpmrlhduk8Wco91lRxWYEvZhB7F4kLNMaL1c6Jiyd72O2KPAXbMJxi7auv7TsM7f8JO9f6V++VrQhC1VtW8EUyOCpGiLkQqEuH8XxwFQJ2rGCwhbPfz8Q8bPQxocxh64AIJ+SEe0usCys0hLkvNrvvXcN/+A5cLYRrJ2BtcTc=
+	t=1778765289; cv=none; b=lypRYWhO5Uy5k1cPT+vh/KZz8m7bszJw5zuGWts4B7QPKZ7iSfhP7ZSmgAPB0iFBE5Ut3W1gudldrw7eplibgh6LHW5AbsPyDPUUYnfv3iiJW4aSsilSSIhN6Y4/Yc3vMyP9r7uI5RbTGHePtOlUktmQBAQZMlVpN/cPHj808yY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778756960; c=relaxed/simple;
-	bh=kyoamXUXmlRwFKVyLCV119qKfny+U8ARyltFUwVk88w=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
-	 MIME-Version:Content-Type; b=SYrSOtRakFTc48kFkr/zIQZFSRquMc7Fu+Dyon4fjUMPM5GVJgyTnGuSq2SveF4uFqG3A2ueWN09+F25rQoXVvlY5/MfLKJkA9pa0WgF+QwpAvICd+af/UgdnzK4Ds9lZxIWb+4Gtw0lDPsBJXLCTZI65t0LzqDZ91cwWxhU0Nk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=d1oZuy1v; arc=none smtp.client-ip=209.85.222.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d1oZuy1v"
-Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-8d560ede296so879066685a.0
-        for <mptcp@lists.linux.dev>; Thu, 14 May 2026 04:09:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1778756958; x=1779361758; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=G3cQvek2aoMQeqOj+TpV7s6bX62AfzlHDTc49UbjOcg=;
-        b=d1oZuy1vRivuh+X68+yR32EZ9sFDgcaJ6bS3FFERDqxVL6hOi/A/EUErwjFy+QQkML
-         KUogt3Oauc4bsi/930omK84cBdEj8EDnkgZu5a6fHyXHCYD4oLQ5RvoQGItl434tkcD8
-         xU8FH7Nj0rHWxo+wWJJDtloMMxkGVM1IxbCHEjx4scYLReanF7i/gouQRf2CcjM/0+KJ
-         k7VYVPfxiRN5IGj68Se+iSpUHTvumK7dMYjCPla9o+7o978TlNI6r+YuRkx/HKjchHai
-         84msGdCyxMUoB8LfXh9aWdFc9u4DsAB0ixxLYd8Tp+z33NQtbmhgW0bkVxfvX6l9Q467
-         E6/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778756958; x=1779361758;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=G3cQvek2aoMQeqOj+TpV7s6bX62AfzlHDTc49UbjOcg=;
-        b=XKDnk2/FuIY0sP3tP3jyl8c8U0Z4sgJyb7/0GHhI/nLg/mtLvFI4jN3mvbmSF0NLPp
-         eKmI0Wm0Knn8OLjwfTNfW3iANBJk8IG/QLzgbwOAMKVEAhvJljOxDz9+k1pfoXR8wkLK
-         7p/4h2rLO+WY9gh+vMPsf/31Tg46P44YuBeyJylvI/xEpJFjIuHTds6FLtNUfmkqa6Rm
-         tC9NnpLye7FpnrkTY9pmy0B5/7+vpXjAY2RX3yNAI1vfVs9LLlEm4e08mdhjZwzCg8Dk
-         vRoDR3CJUvqFtS1KUy2KEI4rrLfVp/XSNZ1CM97hdW0Dmuf3yYm4w5LEI34rpbXka5Gs
-         t02g==
-X-Gm-Message-State: AOJu0Yy1VQqu3LJX+NC+mzss84pNF3L5s6q0rjzQtNq7Ya6n+pbpvQ+U
-	ABrLxUHPlrWqXPvj/DQDqfSK1JiTcIjJfZS1CkMi49HbAA6awXzPvTrToDWR
-X-Gm-Gg: Acq92OH2wpJ1qs/+f0/7e7yatLDdERqfimSFjgW+vXi1CH0DWRsTV4lSKgASBoUxNkZ
-	QPrjvYRL0l0/BpwcBs49THBk9y6iJ+8UKVH3AE0BFLEQEbMp9r/BhQEgQ25Hy3iWOvjxPcR4ji3
-	fv+El8kC0SjkQD4O+hE16gJIzw1qnyJlk6uxPhmn5PywUo/fD+Ws3bZP3cU2WY0zyYIG0lBjWCR
-	5oihM7YbZT5aen3WS8ThCFZz3x2I4uInEmR/9K6vnnZOrgPmjxklfpXJAHLTXAaxgy4yW6HmFew
-	IMsmGT7Z0VJkDT2/9CwbHKyS8P3n55pI4ybAyEyuhjDOO4IJbdihMNANyOuJnNdrJ884IKuUyiJ
-	bGxL0g4zde2GM1SZdKqJaKgDg/2kFP7tyHTrf4SHqTuXqULT3/9uB44EStYjq62Qd8tKlCPJw/8
-	31GGPL+huhG6ro798xj4AjYTGa2gDdTjeFnw==
-X-Received: by 2002:a05:620a:d93:b0:8ee:1371:4f7c with SMTP id af79cd13be357-90f8966b09bmr1079857585a.24.1778756957663;
-        Thu, 14 May 2026 04:09:17 -0700 (PDT)
-Received: from [127.0.0.1] ([4.236.167.8])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-910bc83b85asm213460485a.25.2026.05.14.04.09.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 May 2026 04:09:17 -0700 (PDT)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Tao Cui <cuitao@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20260514095007.405475-1-cuitao@kylinos.cn>
-References: <20260514095007.405475-1-cuitao@kylinos.cn>
-Subject: Re: [PATCH v2 0/2] mptcp: pm: fix extra_subflows underflow for
- userspace PM
-Message-ID: <1b84ecd6-0a9c-d75f-1b84-110287d173f6@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 14 May 2026 11:09:16 +0000
+	s=arc-20240116; t=1778765289; c=relaxed/simple;
+	bh=8eIaajRt1GVNgdLqLs+emPy/RoziY8kpN5z+5B8Fz+s=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=OO0LcL4yllyaoumGGsc0uP1D7mjY4N2nBOB9zk/ovXfuwes1kvoNPU9TsoKXXHYqi07CTw4xc3P24wLG1e15s//z0iDspM+r2rH78+Bl7fcX7QG0wdnb7zo50FQ/85uHTYoEV2pwG3z6OXdEG84vMeJvKrTD9lG01eGCseL1Gik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: b8cca1b24f9811f1aa26b74ffac11d73-20260514
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.3.12,REQID:e21fdae8-ab89-49f1-81a1-9d56c106018b,IP:10,
+	URL:25,TC:0,Content:-5,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACT
+	ION:release,TS:25
+X-CID-INFO: VERSION:1.3.12,REQID:e21fdae8-ab89-49f1-81a1-9d56c106018b,IP:10,UR
+	L:25,TC:0,Content:-5,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:25
+X-CID-META: VersionHash:e7bac3a,CLOUDID:4c8841a849c6db49fa15ba9fea7b14fe,BulkI
+	D:260514180045Z0D3LEP4,BulkQuantity:2,Recheck:0,SF:17|19|38|64|66|78|80|81
+	|82|83|102|127|841|898,TC:nil,Content:0|15|52,EDM:-3,IP:-2,URL:11|93|82|99
+	|1,File:nil,RT:nil,Bulk:40,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR
+	:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 2,SSN|SDN
+X-CID-BAS: 2,SSN|SDN,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_ULN
+X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
+X-UUID: b8cca1b24f9811f1aa26b74ffac11d73-20260514
+X-User: cuitao@kylinos.cn
+Received: from [192.168.108.130] [(223.70.159.239)] by mailgw.kylinos.cn
+	(envelope-from <cuitao@kylinos.cn>)
+	(Generic MTA with TLSv1.3 TLS_AES_128_GCM_SHA256 128/128)
+	with ESMTP id 862943662; Thu, 14 May 2026 21:27:57 +0800
+Message-ID: <6fcd952e-3990-44fe-bd4e-6a26d0777589@kylinos.cn>
+Date: Thu, 14 May 2026 21:27:52 +0800
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/2] mptcp: pm: fix extra_subflows underflow for
+ userspace PM
+From: Tao Cui <cuitao@kylinos.cn>
+To: matttbe@kernel.org, martineau@kernel.org, geliang@kernel.org,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com
+Cc: horms@kernel.org, mptcp@lists.linux.dev
+References: <20260514095007.405475-1-cuitao@kylinos.cn>
+ <e658dfbb-cbe7-4d69-be76-806179a902d3@kylinos.cn>
+In-Reply-To: <e658dfbb-cbe7-4d69-be76-806179a902d3@kylinos.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Tao,
+Sorry everyone, please ignore this v2 patch submission.
+I missed the review note from Sashiko when preparing this update:
 
-Thank you for your modifications, that's great!
+  " sashiko adds some comments here, please address them in v2:
+    https://sashiko.dev/#/patchset/20260509075629.217791-2-cuitao@kylinos.cn "
 
-Our CI did some validations and here is its report:
+Besides, the race condition scenario pointed out by Sashiko also needs to be handled.
+I will send out the v3 patch later to fix all these issues.
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/258542=
-23893
+在 2026/5/14 18:00, Tao Cui 写道:
+> 
+> Sorry, I missed adding --subject-prefix="PATCH mptcp-next" when running git format-patch.
+> 
+> 在 2026/5/14 17:50, Tao Cui 写道:
+>> This is v2 of the series that fixes extra_subflows u8 underflow bugs
+>> in the MPTCP userspace path manager.
+>>
+>> extra_subflows is a u8 field in struct mptcp_pm_data. Two code paths
+>> in the userspace PM can cause it to underflow from 0 to 255, after
+>> which the counter is permanently corrupted and future subflow
+>> creation is blocked.
+>>
+>> Patch 1 skips the spurious mptcp_pm_close_subflow() call in
+>> __mptcp_subflow_connect() when the userspace PM is in use, since it
+>> does not pre-increment extra_subflows before attempting subflow
+>> creation.
+>>
+>> Patch 2 adds an underflow guard in mptcp_pm_subflow_check_next() to
+>> avoid decrementing extra_subflows when it is already zero.
+>>
+>> Tao Cui (2):
+>>   mptcp: pm: fix extra_subflows underflow on userspace PM connect
+>>     failure
+>>   mptcp: pm: add extra_subflows underflow guard for userspace PM
+>>
+>>  net/mptcp/pm.c      | 3 ++-
+>>  net/mptcp/subflow.c | 3 ++-
+>>  2 files changed, 4 insertions(+), 2 deletions(-)
+>>
+>> ---
+>> Changes in v2:
+>>   - Dropped the use-after-free fix.
+>>   - Split the underflow fix into two patches, one per code path.
+>> v1:
+>>   https://lore.kernel.org/all/20260509075629.217791-2-cuitao@kylinos.cn/
+>> --
+>> 2.43.0
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/34573f7001fb
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1094704
-
-
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
