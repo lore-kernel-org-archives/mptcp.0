@@ -1,70 +1,128 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 471123B47F7
-	for <mptcp@lists.linux.dev>; Fri, 15 May 2026 02:23:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B59A316905
+	for <mptcp@lists.linux.dev>; Fri, 15 May 2026 02:46:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778811824; cv=none; b=ZRiJKdUSxHPbaD03T922e1pv+TC0kFd7kg4cY1Veg0AfMG3Gk7/lQZ86xT8X93U6X0efBLxTuTwa2WevZMwHo7G/je0fatxgvA5rPM11NnSrvsZP+h7QtSXv7OR8IXeHuLdi7NesiA9DeoHyO0437iUBcK7KfXFv5cHJdbyC8Ls=
+	t=1778813181; cv=none; b=rT1ydFApRL07/EsbmnpqisqvYtLTR3YDaJ07ic+fQ9BThuFQw4TPKWU6oQOybLKBZWMUZDXGU3/hmW8qktQt7uCnN8IuBlmMtNM+B/HjOn2rDM2yQQKZZUMf5EXfwSF/tg+8wy9jPwyhkjHL0UO1VStZC83oCPLRohIOEzdKKyY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778811824; c=relaxed/simple;
-	bh=Qag9Nmk4dleI1XBDj2bnl9NsaNnosjzSXM6xlLVQHoo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=d9PRrVYe+KiA6JD1ojMzuys57OnmmVRadIEuvdv1s8gTmgpMQtH1cMamk5gYPUD30YoAcJ8GF4VVT9ZG13uQe87P8Uu0WV8N50JDX7DLm2mqRd5s0uTt/ZcOijXSQEY0yzEulbVnGgl0AiPRooHkBB6vfIElA7if91JIgTJz0ok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cUyznPRu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1778813181; c=relaxed/simple;
+	bh=jsA8Ohm/dPl24e1O3x8mVHwQCj//7gO2OT4oFK9t+Po=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hrd5Fl48G3qIjtyxBNhf4pQOjNM0B1+kNOTIfXElK7I8W4wjnnbqrhmTY/LC1/B2EL3DXgN7q7hvnTaAVHfQx8Lk6KfJQhHLBR0d+09TpTZriGGw0/f6hqldAdRZmaE30D3AnML6gYhVvO4gfvJcJH9T1Nw/X3oLFSCHvcK5kQQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vLhuzPgn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cUyznPRu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C435C2BCB3;
-	Fri, 15 May 2026 02:23:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vLhuzPgn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8238BC2BCB3;
+	Fri, 15 May 2026 02:46:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778811823;
-	bh=Qag9Nmk4dleI1XBDj2bnl9NsaNnosjzSXM6xlLVQHoo=;
-	h=From:To:Cc:Subject:Date:From;
-	b=cUyznPRuPZTZeFOPy8/S4UGsguPJDj9wZ2zIICBFblr0BvlRin2KN52tSfit/VEXo
-	 IMVicxaHYyKR7GFl75Jtdycw4MTV9XE5env+/g4ZQH5nmLstnGD0AXYFiOEJQgja7d
-	 axfaAtr6Jm27kg6BR3CEi8L6EaOYfnfGH+k43tOPUa36Hbn5lansseNlSegFraoS04
-	 5db7dA5MexLH2QSc0fmyMW+4fzgN87rTvpbsw3a+oKgZIwUiQepkHtO0g06FTpOAQq
-	 u2F8TzMfWZstrEaGNgsaFZ1rs4/j9X4Su+JPMZEhHBABL2N8M/UnaOaG8HwaePpx6N
-	 qYUytcN2aPPFg==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-To: MPTCP Upstream <mptcp@lists.linux.dev>
-Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Subject: [PATCH mptcp-net] Squash to "mptcp: update window_clamp on subflows when SO_RCVBUF is set"
-Date: Fri, 15 May 2026 04:23:33 +0200
-Message-ID: <20260515022332.55392-2-matttbe@kernel.org>
-X-Mailer: git-send-email 2.53.0
+	s=k20201202; t=1778813181;
+	bh=jsA8Ohm/dPl24e1O3x8mVHwQCj//7gO2OT4oFK9t+Po=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=vLhuzPgn4p8z3tIzKBqp24E7rcV2MiTes+PxblcLne84nG5qhJzXYWP9PJnChoDjp
+	 fU7Xg0V+nXO6BHHWixUlIGr9s4hEg6Q8iXTFb+1ADHn8p+/C8ncVnH+PhcwJUAQLN9
+	 3DAK3rdmTJMl1iPnrxWxdSfxHMlI1M3Q7+06h6gq3MnIc/ZCzpaSUtCZX7IeceUvlC
+	 75mTe8sUIZ0EezI1/JA9eul/k8Xpsc9Ep2LRxLyEfxvdEe5qzOdPaE0Of/dx0mu+tv
+	 vdUHXL6eY1Ch3k2IoX9ivbugAbougv367loqqTZ+If0o6hZJJfRQXJ4Zwslv3+CNth
+	 5H8QFNIm8gCNQ==
+Message-ID: <b3435d2f-30f4-4317-b6c0-363420774323@kernel.org>
+Date: Fri, 15 May 2026 04:46:16 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=876; i=matttbe@kernel.org; h=from:subject; bh=Qag9Nmk4dleI1XBDj2bnl9NsaNnosjzSXM6xlLVQHoo=; b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBqBoOkRfWRpEW3vqH19M+q8Mh/hntKHM2EIg5b+ 4+IHizVqGmJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCagaDpAAKCRD2t4JPQmmg cy/0EADQ84O+PHPTnTQ1TAbs2kXqoPBDKmlan4cyJeGEIEYQkAtj2A3WiNEFSmGmCHRJRo0kZQo bQeqi3KCpTo0nCBl8ikOQa4PhavKl4XVHQbC71Bsjyl8gqhv1wXCaOnqI72iy80rsgLlw313LHS inhQ0Z8i5A+RGJNYFjSTGwOvcGSrGBi4aRGbN7Td6ccCNuIHg6/P0A3KNWZNrKla+XAVeHJ41ry PDWJXiBMKs9twrdT9tCY6cI3rBtrUi/oJpZhXB7fRpIIdVoekfFUl+RZAod8OOaiZREv6pR03AM oKlyjpWSgWNFku1r1babBR9VWBzYACQ3cUHlbo539i9JWATRFN7W9gnugvheCtsHQPqv/D7RAm3 TTFdinlBSlC1hXVoYb2lvrGL0GxPu76xs2qQI9MQTk9oWQ42wc/F44apW79lZ1Cqcj9W6z5QG0L 7an3gsrS+5G4AwuKilyHx6wyFMyb4Id45UTgkgT6ZgYOrTlphDPV73GRzisveIA1IW6fmxPyE11 opKi/ZES1Yr9bPotR7EP0aSa7+xNhDwfPN+z6A2U0Fk3Cq3lgq16iwaYbAyV/OF2Jr/iTeHTzlM eCaZeZ9ku7D0r2CKWKUifqZtEKNyxFaoaR3CsTyG0XCMs3GTaILIj0BmETuhxDL0AxhAyrK5cfU fTU1E7F5bCX6UcQ==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-next 1/2] mptcp: pm: fix use-after-free in
+ mptcp_userspace_pm_delete_local_addr
+To: Tao Cui <cuitao@kylinos.cn>
+Cc: mptcp@lists.linux.dev, Geliang Tang <geliang@kernel.org>
+References: <20260509075629.217791-1-cuitao@kylinos.cn>
+ <de6caab069a04d0c968a5f3a59c0c2753f4d9147.camel@kernel.org>
+From: Matthieu Baerts <matttbe@kernel.org>
+Content-Language: fr
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <de6caab069a04d0c968a5f3a59c0c2753f4d9147.camel@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Remove the useless 'inline' keyword for a static function in a .c file.
+Hi Tao,
 
-Spot by NIPA when sending the patch.
+(- netdev maintainers)
 
-Link: https://patchwork.kernel.org/project/netdevbpf/patch/20260511-net-mptcp-misc-fixes-7-1-rc4-v1-5-5ee57cb2b7eb@kernel.org/
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- net/mptcp/sockopt.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 14/05/2026 05:07, Geliang Tang wrote:
+> Thanks for this set. It looks like the cover letter of this set is
+> missing. You can use "--cover-letter" to create it:
+> 
+> 	git format-patch -2 --cover-letter
 
-diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-index 1544e3563852..87b5796d0135 100644
---- a/net/mptcp/sockopt.c
-+++ b/net/mptcp/sockopt.c
-@@ -67,7 +67,7 @@ static int mptcp_get_int_option(struct mptcp_sock *msk, sockptr_t optval,
- 	return 0;
- }
- 
--static inline void __mptcp_subflow_set_rcvbuf(struct sock *ssk, int val)
-+static void __mptcp_subflow_set_rcvbuf(struct sock *ssk, int val)
- {
- 	WRITE_ONCE(ssk->sk_rcvbuf, val);
- 	tcp_set_rcvbuf(ssk, val);
+Feel free to use 'b4' to send patches, it is easy to use, and would
+avoid "common" mistakes:
+
+  https://b4.docs.kernel.org/en/latest/contributor/overview.html
+
+You can use it from the export/export-net and for-review/for-review-net
+branches, and, in this case, no need to run 'b4 prep --auto-to-cc'.
+
+> sashiko adds some comments here, please address them in v2:
+> 
+> https://sashiko.dev/#/patchset/20260509075629.217791-2-cuitao@kylinos.cn
+
+I didn't check here, but please keep in mind that AI reviews can be wrong.
+
+Also, if your patches are fixes, please use the 'mptcp-net' prefix, and
+add a Fixes tag:
+
+  https://www.mptcp.dev/contributing.html#code-style
+  https://docs.kernel.org/process/maintainer-netdev.html
+
+Cheers,
+Matt
 -- 
-2.53.0
+Sponsored by the NGI0 Core fund.
 
