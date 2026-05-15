@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B59A316905
-	for <mptcp@lists.linux.dev>; Fri, 15 May 2026 02:46:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00BB53CB918
+	for <mptcp@lists.linux.dev>; Fri, 15 May 2026 03:11:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778813181; cv=none; b=rT1ydFApRL07/EsbmnpqisqvYtLTR3YDaJ07ic+fQ9BThuFQw4TPKWU6oQOybLKBZWMUZDXGU3/hmW8qktQt7uCnN8IuBlmMtNM+B/HjOn2rDM2yQQKZZUMf5EXfwSF/tg+8wy9jPwyhkjHL0UO1VStZC83oCPLRohIOEzdKKyY=
+	t=1778814713; cv=none; b=WxkFuvGtWFWWs6gImq5yBQOAlYg0tvG74srYv9j1rKfw9m7J7ECFWMLtbhB20PNoEuU+qRZa43cRBI7NKxXD7cFh/0Mx9ZzZLSE3gYelVEm1MS7MuhZDiIYdTlCo48dd87AyscCajtlaQ6EognXJ2zuziv8MhuqofoviPh23eKs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778813181; c=relaxed/simple;
-	bh=jsA8Ohm/dPl24e1O3x8mVHwQCj//7gO2OT4oFK9t+Po=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hrd5Fl48G3qIjtyxBNhf4pQOjNM0B1+kNOTIfXElK7I8W4wjnnbqrhmTY/LC1/B2EL3DXgN7q7hvnTaAVHfQx8Lk6KfJQhHLBR0d+09TpTZriGGw0/f6hqldAdRZmaE30D3AnML6gYhVvO4gfvJcJH9T1Nw/X3oLFSCHvcK5kQQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vLhuzPgn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1778814713; c=relaxed/simple;
+	bh=9aOvIROWpM+/Krfihh8yy5jnONIsW3Eia6QgNhRnTBw=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:References:
+	 In-Reply-To:Content-Type; b=cWGNfCl6sCMreBKg/20R0FRg5w0Ycvx3qbYxijvaUG2T0B3FBnBMj3hZ9V71CgJxNvA54UeT1xT2k/5XS/foSvfGKDhnMqCsYJ5iXF5NnCgVyj7dkwZBdtRd5lxdwZtdh9TWoE2wboR7pJnzJ/fKnxVMvoLreb9xVlmRSL256Gw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=krPGmCMb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vLhuzPgn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8238BC2BCB3;
-	Fri, 15 May 2026 02:46:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="krPGmCMb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D491C2BCB0
+	for <mptcp@lists.linux.dev>; Fri, 15 May 2026 03:11:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778813181;
-	bh=jsA8Ohm/dPl24e1O3x8mVHwQCj//7gO2OT4oFK9t+Po=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=vLhuzPgn4p8z3tIzKBqp24E7rcV2MiTes+PxblcLne84nG5qhJzXYWP9PJnChoDjp
-	 fU7Xg0V+nXO6BHHWixUlIGr9s4hEg6Q8iXTFb+1ADHn8p+/C8ncVnH+PhcwJUAQLN9
-	 3DAK3rdmTJMl1iPnrxWxdSfxHMlI1M3Q7+06h6gq3MnIc/ZCzpaSUtCZX7IeceUvlC
-	 75mTe8sUIZ0EezI1/JA9eul/k8Xpsc9Ep2LRxLyEfxvdEe5qzOdPaE0Of/dx0mu+tv
-	 vdUHXL6eY1Ch3k2IoX9ivbugAbougv367loqqTZ+If0o6hZJJfRQXJ4Zwslv3+CNth
-	 5H8QFNIm8gCNQ==
-Message-ID: <b3435d2f-30f4-4317-b6c0-363420774323@kernel.org>
-Date: Fri, 15 May 2026 04:46:16 +0200
+	s=k20201202; t=1778814712;
+	bh=9aOvIROWpM+/Krfihh8yy5jnONIsW3Eia6QgNhRnTBw=;
+	h=Date:From:Subject:To:References:In-Reply-To:From;
+	b=krPGmCMbPne4zscbbcER8qeBV6U98ATrpoyt5ShyVPkeLuOd+bkyGo1usT2lroqXB
+	 JCwKiEU9iIqYFi5Q6dmbnvlu/zaJmts+jkOEHzB6nRlUgOhYDjhzgnhsPCzrDkLsYg
+	 dMig0Bz/mEGl+RBE4kD4kl1jR3tJ+e7ku1L3rnVL86Zss5ZmFSiaCXU3h8fSaBKfyy
+	 YaPxBsqOFMf6NA2ODzD8/lx6GjxGcM93uONigdGxYY0iF59wWUL5HqfFpLnX+aMUyW
+	 vA2E6TPvjUmMd7va0iQbbOBr4IqzvUfoxdUqdJ8PZgZNQJxG6iChNsentaisu17yVH
+	 oHKkC4UJJiZeA==
+Message-ID: <03428940-5fa7-41db-944d-86320b68ce66@kernel.org>
+Date: Fri, 15 May 2026 05:11:48 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,11 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next 1/2] mptcp: pm: fix use-after-free in
- mptcp_userspace_pm_delete_local_addr
-To: Tao Cui <cuitao@kylinos.cn>
-Cc: mptcp@lists.linux.dev, Geliang Tang <geliang@kernel.org>
-References: <20260509075629.217791-1-cuitao@kylinos.cn>
- <de6caab069a04d0c968a5f3a59c0c2753f4d9147.camel@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
+Subject: Re: [PATCH mptcp-net] Squash to "mptcp: update window_clamp on
+ subflows when SO_RCVBUF is set"
+To: MPTCP Linux <mptcp@lists.linux.dev>
+References: <20260515022332.55392-2-matttbe@kernel.org>
 Content-Language: fr
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,42 +85,30 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <de6caab069a04d0c968a5f3a59c0c2753f4d9147.camel@kernel.org>
+In-Reply-To: <20260515022332.55392-2-matttbe@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Tao,
-
-(- netdev maintainers)
-
-On 14/05/2026 05:07, Geliang Tang wrote:
-> Thanks for this set. It looks like the cover letter of this set is
-> missing. You can use "--cover-letter" to create it:
+On 15/05/2026 04:23, Matthieu Baerts (NGI0) wrote:
+> Remove the useless 'inline' keyword for a static function in a .c file.
 > 
-> 	git format-patch -2 --cover-letter
+> Spot by NIPA when sending the patch.
 
-Feel free to use 'b4' to send patches, it is easy to use, and would
-avoid "common" mistakes:
+No need to review this one, it is quite obvious. Just applied:
 
-  https://b4.docs.kernel.org/en/latest/contributor/overview.html
+New patches for t/upstream-net and t/upstream:
 
-You can use it from the export/export-net and for-review/for-review-net
-branches, and, in this case, no need to run 'b4 prep --auto-to-cc'.
+- Results: abcff95a440d..abcff95a440d (export-net)
+- Results: 564a2979a856..564a2979a856 (export)
 
-> sashiko adds some comments here, please address them in v2:
-> 
-> https://sashiko.dev/#/patchset/20260509075629.217791-2-cuitao@kylinos.cn
+Tests are now in progress:
 
-I didn't check here, but please keep in mind that AI reviews can be wrong.
-
-Also, if your patches are fixes, please use the 'mptcp-net' prefix, and
-add a Fixes tag:
-
-  https://www.mptcp.dev/contributing.html#code-style
-  https://docs.kernel.org/process/maintainer-netdev.html
+- export-net:
+https://github.com/multipath-tcp/mptcp_net-next/commit/25fac03b8a5e5bba4941858547159f14d545d805/checks
 
 Cheers,
 Matt
 -- 
 Sponsored by the NGI0 Core fund.
+
 
