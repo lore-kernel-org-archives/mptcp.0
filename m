@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED9B83CF02C
-	for <mptcp@lists.linux.dev>; Fri, 15 May 2026 03:59:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 675EE2EB10
+	for <mptcp@lists.linux.dev>; Fri, 15 May 2026 04:15:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778817594; cv=none; b=Dg/nbR7a2Rw2iny4BgKgYuFJKd7Hd3MCGjvaUMSsyRW01OAA3/qipRh6wZe6vC9BNKNLbhTL+HP/IqH/6IiDHUEJMf6qby9h7OAjP1erKQxBzx4H+kekafAkZoCL5zIqbSWC2vr0u7vdGGBBqHMs5bMlfOqcRDR4SG6OfvI1YCU=
+	t=1778818509; cv=none; b=D7NOL8vh9y0b7dXMRrKsgXmRDiwT9fMz7/9Phhabk7reHEGipGNv48DMC6LME/goOFmwkF2NWoEynpzTPNv1HT4XyxUQvrENtnBRMnRja7Q8ObI4e0GhpoR13RIFGORZWdhAhtoVPG3Q31bEP2EjP+E27ousONPybMrKLt7a1ow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778817594; c=relaxed/simple;
-	bh=3Od4kkRNLxlikYXuXlG/H5V7ye3/kSsGeS8rY1WZhKw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=tUR12DvNirWPtsJYjvF6dIa3455dzMC0AQiWHIDpx3zpg14w57DzP+dsQD23iOqmpUrLDkCBOXWXu5bI1pWSTcquMlO4oDuUMYwJuP0RWgCNM9gCdROn9LcW7WzZng0YaTaoRz7z/ns0k475E1jfL+jTpv4Y3wlUeC89eaHuBfM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PM18Uld/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1778818509; c=relaxed/simple;
+	bh=HGAh7OBbeMEYjE56YF1SEMrmhEhHJZ7Te7cSRNUI0EU=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=YL+7MaIFioC9O4quSiRV4GALr0hXxCri5iqnL1wZnkfKJTEf5O1gTH1EfOVCBD2Lro4TNeXJFje8P4MmkQPNvXGciy887rm1fOQfHlz2q1wWKI6FEWt+Ox5OnLv3/bEowFxOGaujCUNYvDIhyWoV2pUgmVzMbM0X1jL27+jLdWs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S86Vqftt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PM18Uld/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B93E2C2BCB0
-	for <mptcp@lists.linux.dev>; Fri, 15 May 2026 03:59:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S86Vqftt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 588D2C2BCB0
+	for <mptcp@lists.linux.dev>; Fri, 15 May 2026 04:15:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778817593;
-	bh=3Od4kkRNLxlikYXuXlG/H5V7ye3/kSsGeS8rY1WZhKw=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=PM18Uld/KmckCYdFAtWWu9hx3D9ecQbF+PNwFLVTKSjIK6Eipa/VzLTO33m1EMft3
-	 YaK85W/1JUijv0vuHr3Vcm55+bC7kNn2sgKPxXf6+jl09u+rR6IPYCQpx3a2LiwIZm
-	 mEhNXEavv00TLHvzd0j5DSuOLvvO9VOp055Ot8ArjBszrLhVUEgkqG2AXFfnVTqHMa
-	 WEz27cuktgz1Ph7yY5ObKjZPt5bFwhkMprEerS96shqPY8Nt6b3jEYZ2w3oA7d2y6g
-	 Uxi7ADGvTKMzCNG1Juh2hRTeKJyBfD7p9Nn3qNHDxMii4/iS+OOe4nsS7DKay8eAnH
-	 fZNqjWhGWOQaA==
-Message-ID: <822ad467-2d97-4c2f-8e5b-78be0bd0acf2@kernel.org>
-Date: Fri, 15 May 2026 05:59:49 +0200
+	s=k20201202; t=1778818508;
+	bh=HGAh7OBbeMEYjE56YF1SEMrmhEhHJZ7Te7cSRNUI0EU=;
+	h=Date:Subject:From:To:References:In-Reply-To:From;
+	b=S86VqfttYdSIJzamW7ParRcryTgnDN4dGFsBl6N9TZZ2/xxeDw8S+URz0kW6kXz1v
+	 bQgXmT8GBIiSAztZo4LISkh96lAyLrcC0aKDzo+PT/+CtG4W5ZSVfFSKZpml2zXVww
+	 ekJXR+Ho84Eo9SPfiX0Ui3zfnkp+rNPX15iqqMh3HplLjLsse5FxXG41zQqHzaR8a8
+	 Y/7pg9jW+ITYiPoxJe8baJ1cAxifzlCShfrKYXeLu51QuXfTytvsHksxg/vw95G9M0
+	 Bw5Rcrs0da8lYm51jjd4oeRFhEEyZlwvzzWmMNjOUgiA5rjJWmo+lTI9T2lm2cNXjd
+	 31jetwYl68yoQ==
+Message-ID: <596161e3-031e-47e1-a6ad-a9bf96abb119@kernel.org>
+Date: Fri, 15 May 2026 06:15:04 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,9 +38,10 @@ User-Agent: Mozilla Thunderbird Beta
 Subject: Re: [PATCH mptcp-net] selftests: mptcp: drop nanoseconds width
  specifier
 Content-Language: fr
+From: Matthieu Baerts <matttbe@kernel.org>
 To: MPTCP Linux <mptcp@lists.linux.dev>
 References: <20260515-mptcp-sft-uutils-0-8-0-v1-1-4801c8e16485@kernel.org>
-From: Matthieu Baerts <matttbe@kernel.org>
+ <822ad467-2d97-4c2f-8e5b-78be0bd0acf2@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -85,43 +86,43 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20260515-mptcp-sft-uutils-0-8-0-v1-1-4801c8e16485@kernel.org>
+In-Reply-To: <822ad467-2d97-4c2f-8e5b-78be0bd0acf2@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hello,
-
-On 15/05/2026 04:11, Matthieu Baerts (NGI0) wrote:
-> Using the format specifier +%s%3N with GNU date is honoured, and only
-> prints 3 digits of the nanoseconds portion of the seconds since epoch,
-> which corresponds to the milliseconds.
+On 15/05/2026 05:59, Matthieu Baerts wrote:
+> Hello,
 > 
-> The uutils implementation of date currently does not honour this, and
-> always prints all 9 digits. This is a known issue [1], but can be worked
-> around by adapting this test to use nanoseconds instead of microseconds,
-> and then divide it by 1e6.
+> On 15/05/2026 04:11, Matthieu Baerts (NGI0) wrote:
+>> Using the format specifier +%s%3N with GNU date is honoured, and only
+>> prints 3 digits of the nanoseconds portion of the seconds since epoch,
+>> which corresponds to the milliseconds.
+>>
+>> The uutils implementation of date currently does not honour this, and
+>> always prints all 9 digits. This is a known issue [1], but can be worked
+>> around by adapting this test to use nanoseconds instead of microseconds,
+>> and then divide it by 1e6.
+>>
+>> This fix is similar to what has been done on systemd side [2].
 > 
-> This fix is similar to what has been done on systemd side [2].
+> I suggest applying this patch, and sending to netdev-net, not to block
+> those using uutils, e.g. on Ubuntu 26.04.
+> 
+> I will apply a small change, see below.
 
-I suggest applying this patch, and sending to netdev-net, not to block
-those using uutils, e.g. on Ubuntu 26.04.
+Now in our tree:
 
-I will apply a small change, see below.
+New patches for t/upstream-net and t/upstream:
+- ddfbd0a8f455: selftests: mptcp: drop nanoseconds width specifier
+- Results: abcff95a440d..c6403a142d47 (export-net)
+- Results: 564a2979a856..17d8ed7a3a1c (export)
 
-(...)
+Tests are now in progress:
 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-> index 989a5975dcea..9d3efbfb3015 100644
-> --- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-> @@ -236,7 +236,7 @@ mptcp_lib_kversion_ge() {
->  }
->  
->  mptcp_lib_subtests_last_ts_reset() {
-> -	MPTCP_LIB_SUBTESTS_LAST_TS_MS="$(date +%s%3N)"
-> +	MPTCP_LIB_SUBTESTS_LAST_TS_MS="$(date +%s%N)"
-
-The suffix should then be _NS instead of _MS.
+- export-net:
+https://github.com/multipath-tcp/mptcp_net-next/commit/91d16c37e15ffff4ea145b5b7c897f2f4e5cfd3d/checks
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/bae8b1e40c2d814e5d571dfa0885a59722911bb6/checks
 
 Cheers,
 Matt
