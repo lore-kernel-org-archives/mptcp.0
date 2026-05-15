@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6148402B83
-	for <mptcp@lists.linux.dev>; Fri, 15 May 2026 09:46:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C1D1168BD
+	for <mptcp@lists.linux.dev>; Fri, 15 May 2026 09:46:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778838410; cv=none; b=aRo8kBVpGYpmSl5Jzygsi+W461Rkmjnub2cZMl8yKGoTSBmV5dHIAjnNfflcg+MMrQC7il668zV0jXwY1yHdzmFHuWAxjQ0i9KEi7/3zKuijVmDx8M4reBczh8lY/GkNoMOE3pyYawDkic20+Xs722fD0pRHMzELvDFnwXWEkDE=
+	t=1778838413; cv=none; b=htvl5fM0n11GT4x4hjqKRAR+l37qaTo8cLzn1p7UtMh6dh/WGtIvAeQIxlDG33Wt2BgV5y0yNx5tK+hEX2fyfFWM/bH8waLPd21KFT0/fJSp4fVBjt6HKgijALT3KRdodZ8PHBMxQdhleOGdpE5xZy42MjyGMEli4TnaWdKUkyE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778838410; c=relaxed/simple;
-	bh=LwZnNnls+BjVmCLfrNCXGJRG/desAp4dBblJ7nTUihI=;
+	s=arc-20240116; t=1778838413; c=relaxed/simple;
+	bh=5tlh6EF+C7J8EL+q9G5aYaaVediSwaQMs541K+xQ9WE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=eCHjwJRQ7DOSCmIfCrvtOYQmevauRVMA3hi/emMFJCPHGiMuXgIeMLXFrhmOyvOA3PAKSZxWUAkX+slKIqrRs8IF0uyVI9uIy64AznpztONFDsqQqSEMP2eU6CP4YeLYNFVgVh3Fokv2maei4qWbHcz8jRkM0wVJES7jBvXHEDk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=guPrNRvm; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Il0+pFXsXmoxBo7JqGO/F7E9OyybJih9HHLPbtqwiPXSGljZDjdyKWTvJZvhbngPniOpzFEFnycuV31Rl4peNkcYWBOkXrtkBlhl34F36zAPFt6mOAwLYk9mXe0Qnd1137ijHGbBW/ItSwPmfBaBItaz5YtBCDCmDiqlP3THfco=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Sw96XSmM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="guPrNRvm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23901C2BCB8;
-	Fri, 15 May 2026 09:46:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Sw96XSmM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3DE80C2BCB3;
+	Fri, 15 May 2026 09:46:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778838410;
-	bh=LwZnNnls+BjVmCLfrNCXGJRG/desAp4dBblJ7nTUihI=;
+	s=k20201202; t=1778838412;
+	bh=5tlh6EF+C7J8EL+q9G5aYaaVediSwaQMs541K+xQ9WE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=guPrNRvmjnw8RrwNTFBMM390DUAxWHs4zAYuGVmL1vT1j62d+sKhw5OGUUXhxUd6M
-	 Z1TMsIApwiG/HsE7bqsMDZEupeRQlzIoN35t79jHnb01wK7c3Pht4Ae2ZrKzmBD/mY
-	 oTr/2LlnB7mQiW/8RMxTNFy9YBkLjPt4ho4YKoGX/DRQZwAbGiMXc5KxNsn9C0F58E
-	 PczH6LqCIW3H2A0rcThHPDZb71zIesrBXoujH+Fw1jmjWqyB7YnFE6OXUtbdUO283d
-	 Av8XquDm7aY2dx58c8k4HVJF/IQmZ7jGbHL+htN9pRcHAA9mk1QLjgP8JLAtroOOr1
-	 rvR+U0bywPYOw==
+	b=Sw96XSmMExgHGlHvgNKn3cuMiExkgHYavn9+Okwg+M/DMkrpui+HN0U6iD8YPbaET
+	 ynx+b3JNNDbvF0PoRbN/pYJBuTJZ5atOr+HX99ln3T/GuRNDckgLnAsc3vhL3Z3vhj
+	 kleUX8wSv3Kz3Fwmep5qx7J/IQr4mHfcUoAcWAV345xGG7ZQsJgpbt7wNlsn3s1dxu
+	 HELQfOMRZewHLvylFbQN1cvAx4D6Ac5F81n0HTh6TpjcqGgSLVitV6IB0wyJCbi6qo
+	 SDIi9ECUVoqsDeS08hRjXxnWmDjKlIOdt5bgPngacSmM0Jew1oSsh+w61nyO0tGJTl
+	 YnqJJAydLWtnw==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>,
@@ -33,9 +33,9 @@ Cc: Geliang Tang <tanggeliang@kylinos.cn>,
 	zhenwei pi <zhenwei.pi@linux.dev>,
 	Hui Zhu <zhuhui@kylinos.cn>,
 	Gang Yan <yangang@kylinos.cn>
-Subject: [RFC mptcp-next v9 7/8] selftests: mptcp: add nvme over mptcp test
-Date: Fri, 15 May 2026 17:46:21 +0800
-Message-ID: <54e210e67f760869bd3f9a784d9b491cff1c4254.1778837549.git.tanggeliang@kylinos.cn>
+Subject: [RFC mptcp-next v9 8/8] selftests: mptcp: nvme: add iopolicy tests
+Date: Fri, 15 May 2026 17:46:22 +0800
+Message-ID: <80d0ca5057c03c24e5320c8194c1a94d48709e23.1778837549.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <cover.1778837549.git.tanggeliang@kylinos.cn>
 References: <cover.1778837549.git.tanggeliang@kylinos.cn>
@@ -49,34 +49,43 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-A test case for NVMe over MPTCP has been implemented. It verifies the
-proper functionality of nvme list, discover, connect, and disconnect
-commands. Additionally, read/write performance has been evaluated using
-fio.
+Add NVMe iopolicy testing to mptcp_nvme.sh, with the default set to "numa".
+It can be set to "round-robin" or "queue-depth".
 
-This script accepts two positional parameters:
+Test results with 4 NVMe multipath paths and round-robin iopolicy show that
+TCP and MPTCP achieve similar bandwidth:
 
-  trtype - Transport type (mptcp|tcp). Default: mptcp
-  path   - Number of multipath (1-4). Default: 1
+ # ./mptcp_nvme.sh tcp 4 round-robin
+   READ: bw=455MiB/s (478MB/s), 455MiB/s-455MiB/s (478MB/s-478MB/s),
+		io=4665MiB (4891MB), run=10242-10242msec
+  WRITE: bw=455MiB/s (477MB/s), 455MiB/s-455MiB/s (477MB/s-477MB/s),
+		io=4633MiB (4858MB), run=10184-10184msec
 
-This test simulates four NICs on both target and host sides, each limited
-to 125MB/s. It shows that 'NVMe over MPTCP' delivered bandwidth up to
-four times that of standard TCP with a single NVMe multipath configuration:
+ # ./mptcp_nvme.sh mptcp 4 round-robin
+   READ: bw=445MiB/s (466MB/s), 445MiB/s-445MiB/s (466MB/s-466MB/s),
+		io=4575MiB (4797MB), run=10287-10287msec
+  WRITE: bw=445MiB/s (467MB/s), 445MiB/s-445MiB/s (467MB/s-467MB/s),
+		io=4572MiB (4794MB), run=10267-10267msec
 
- # ./mptcp_nvme.sh tcp
-   READ: bw=112MiB/s (118MB/s), 112MiB/s-112MiB/s (118MB/s-118MB/s),
-		io=1123MiB (1177MB), run=10018-10018msec
-  WRITE: bw=112MiB/s (117MB/s), 112MiB/s-112MiB/s (117MB/s-117MB/s),
-		io=1118MiB (1173MB), run=10018-10018msec
+A "loss" argument is added to simulate network packet loss. When loss=1, each
+veth interface is configured with "delay 5ms loss 0.5%" using tc qdisc. Under
+this scenario, TCP performance is reduced by multiples compared to MPTCP:
 
- # ./mptcp_nvme.sh mptcp
-   READ: bw=427MiB/s (448MB/s), 427MiB/s-427MiB/s (448MB/s-448MB/s),
-		io=4286MiB (4494MB), run=10039-10039msec
-  WRITE: bw=387MiB/s (406MB/s), 387MiB/s-387MiB/s (406MB/s-406MB/s),
-		io=3885MiB (4073MB), run=10043-10043msec
+ # ./mptcp_nvme.sh tcp 4 round-robin 1
+   READ: bw=144MiB/s (151MB/s), 144MiB/s-144MiB/s (151MB/s-151MB/s),
+		io=1909MiB (2001MB), run=13231-13231msec
+  WRITE: bw=100.0MiB/s (105MB/s), 100.0MiB/s-100.0MiB/s (105MB/s-105MB/s),
+		io=1397MiB (1465MB), run=13980-13980msec
 
-It reflects that MPTCP has the same multi-interface bandwidth aggregation
-capability as NVMe multipath.
+ # ./mptcp_nvme.sh mptcp 4 round-robin 1
+   READ: bw=428MiB/s (449MB/s), 428MiB/s-428MiB/s (449MB/s-449MB/s),
+		io=4524MiB (4743MB), run=10564-10564msec
+  WRITE: bw=431MiB/s (452MB/s), 431MiB/s-431MiB/s (452MB/s-452MB/s),
+		io=4513MiB (4732MB), run=10481-10481msec
+
+These results demonstrate that MPTCP has better resilience against packet
+loss compared to TCP, as it can leverage multiple subflows to mitigate
+network degradation.
 
 Cc: Hannes Reinecke <hare@suse.de>
 Co-developed-by: zhenwei pi <zhenwei.pi@linux.dev>
@@ -87,380 +96,144 @@ Co-developed-by: Gang Yan <yangang@kylinos.cn>
 Signed-off-by: Gang Yan <yangang@kylinos.cn>
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- tools/testing/selftests/net/mptcp/Makefile    |   1 +
- tools/testing/selftests/net/mptcp/config      |   7 +
- .../testing/selftests/net/mptcp/mptcp_lib.sh  |  12 +
- .../testing/selftests/net/mptcp/mptcp_nvme.sh | 311 ++++++++++++++++++
- 4 files changed, 331 insertions(+)
- create mode 100755 tools/testing/selftests/net/mptcp/mptcp_nvme.sh
+ .../testing/selftests/net/mptcp/mptcp_nvme.sh | 65 ++++++++++++++++++-
+ 1 file changed, 62 insertions(+), 3 deletions(-)
 
-diff --git a/tools/testing/selftests/net/mptcp/Makefile b/tools/testing/selftests/net/mptcp/Makefile
-index 22ba0da2adb8..7b308447a58b 100644
---- a/tools/testing/selftests/net/mptcp/Makefile
-+++ b/tools/testing/selftests/net/mptcp/Makefile
-@@ -13,6 +13,7 @@ TEST_PROGS := \
- 	mptcp_connect_sendfile.sh \
- 	mptcp_connect_splice.sh \
- 	mptcp_join.sh \
-+	mptcp_nvme.sh \
- 	mptcp_sockopt.sh \
- 	pm_netlink.sh \
- 	simult_flows.sh \
-diff --git a/tools/testing/selftests/net/mptcp/config b/tools/testing/selftests/net/mptcp/config
-index 59051ee2a986..0eee348eff8b 100644
---- a/tools/testing/selftests/net/mptcp/config
-+++ b/tools/testing/selftests/net/mptcp/config
-@@ -34,3 +34,10 @@ CONFIG_NFT_SOCKET=m
- CONFIG_NFT_TPROXY=m
- CONFIG_SYN_COOKIES=y
- CONFIG_VETH=y
-+CONFIG_CONFIGFS_FS=y
-+CONFIG_NVME_CORE=y
-+CONFIG_NVME_FABRICS=y
-+CONFIG_NVME_TCP=y
-+CONFIG_NVME_TARGET=y
-+CONFIG_NVME_TARGET_TCP=y
-+CONFIG_NVME_MULTIPATH=y
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-index 989a5975dcea..3d04baa698f5 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-@@ -530,6 +530,18 @@ mptcp_lib_check_tools() {
- 				exit ${KSFT_SKIP}
- 			fi
- 			;;
-+		"nvme")
-+			if ! nvme --version &> /dev/null; then
-+				mptcp_lib_pr_skip "Could not run test without nvme tool"
-+				exit ${KSFT_SKIP}
-+			fi
-+			;;
-+		"fio")
-+			if ! fio -h &> /dev/null; then
-+				mptcp_lib_pr_skip "Could not run test without fio tool"
-+				exit ${KSFT_SKIP}
-+			fi
-+			;;
- 		*)
- 			mptcp_lib_pr_fail "Internal error: unsupported tool: ${tool}"
- 			exit ${KSFT_FAIL}
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_nvme.sh b/tools/testing/selftests/net/mptcp/mptcp_nvme.sh
-new file mode 100755
-index 000000000000..2dc948cbcb25
---- /dev/null
+index 2dc948cbcb25..1d1bf3f0780b 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_nvme.sh
 +++ b/tools/testing/selftests/net/mptcp/mptcp_nvme.sh
-@@ -0,0 +1,311 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0
+@@ -6,6 +6,8 @@
+ ret=0
+ trtype="${1:-mptcp}"
+ path="${2:-1}"
++iopolicy=${3:-"numa"} # round-robin, queue-depth
++loss=${4:-0}
+ nqn="nqn.2014-08.org.nvmexpress.${trtype}dev.$$.${RANDOM}"
+ ns=1
+ port=$((RANDOM % 10000 + 20000))
+@@ -21,10 +23,12 @@ usage()
+ 
+ Usage:
+ 
+-	$(basename "$0") [trtype] [path]
++	$(basename "$0") [trtype] [path] [iopolicy] [loss]
+ 
+ 	trtype		Transport type (mptcp|tcp) - default: mptcp
+ 	path		Number of multipath (1-4) - default: 4
++	iopolicy	I/O policy (numa|round-robin|queue-depth) - default: numa
++	loss		Enable packet loss (0|1) - default: 0
+ 
+ EOF
+ exit 0
+@@ -46,6 +50,16 @@ validate_params()
+ 		echo "Warning: path count ${path} > 4, limiting to 4"
+ 		path=4
+ 	fi
 +
-+. "$(dirname "$0")/mptcp_lib.sh"
-+
-+ret=0
-+trtype="${1:-mptcp}"
-+path="${2:-1}"
-+nqn="nqn.2014-08.org.nvmexpress.${trtype}dev.$$.${RANDOM}"
-+ns=1
-+port=$((RANDOM % 10000 + 20000))
-+trsvcid=$((RANDOM % 64512 + 1024))
-+ns1=""
-+ns2=""
-+temp_file=""
-+loop_dev=""
-+
-+usage()
-+{
-+	cat << EOF
-+
-+Usage:
-+
-+	$(basename "$0") [trtype] [path]
-+
-+	trtype		Transport type (mptcp|tcp) - default: mptcp
-+	path		Number of multipath (1-4) - default: 4
-+
-+EOF
-+exit 0
-+}
-+
-+validate_params()
-+{
-+	if [[ ! "${trtype}" =~ ^(mptcp|tcp)$ ]]; then
-+		echo "Error: Invalid trtype '${trtype}'."
++	if [[ ! "${iopolicy}" =~ ^(numa|round-robin|queue-depth)$ ]]; then
++		echo "Error: Invalid iopolicy '${iopolicy}'."
 +		usage
 +	fi
 +
-+	if [[ ! "${path}" =~ ^[0-9]+$ ]] || [ "${path}" -lt 1 ]; then
-+		echo "Error: Invalid path count '${path}'."
++	if [[ ! "${loss}" =~ ^[01]$ ]]; then
++		echo "Error: Invalid loss value '${loss}'. Must be 0 or 1"
 +		usage
 +	fi
-+
-+	if [ "${path}" -gt 4 ]; then
-+		echo "Warning: path count ${path} > 4, limiting to 4"
-+		path=4
-+	fi
-+}
-+
-+ns1_cleanup()
+ }
+ 
+ ns1_cleanup()
+@@ -103,6 +117,7 @@ cleanup()
+ 	wait "$monitor_pid_ns2" 2>/dev/null
+ 
+ 	unset -v trtype path nqn ns port trsvcid
++	unset iopolicy loss
+ }
+ 
+ init()
+@@ -131,8 +146,10 @@ init()
+ 					dev ns2eth"$i" metric 10"$i"
+ 
+ 		# Add tc qdisc to both namespaces for bandwidth limiting
+-		tc -n "$ns1" qdisc add dev ns1eth"$i" root netem rate 1000mbit
+-		tc -n "$ns2" qdisc add dev ns2eth"$i" root netem rate 1000mbit
++		tc -n "$ns1" qdisc add dev ns1eth"$i" root netem rate 1000mbit \
++			$([ ${loss} -eq 1 ] && echo "delay 5ms loss 0.5%")
++		tc -n "$ns2" qdisc add dev ns2eth"$i" root netem rate 1000mbit \
++			$([ ${loss} -eq 1 ] && echo "delay 5ms loss 0.5%")
+ 
+ 		tc -n "$ns1" qdisc show dev ns1eth"$i"
+ 		tc -n "$ns2" qdisc show dev ns2eth"$i"
+@@ -190,6 +207,41 @@ run_target()
+ 	done
+ }
+ 
++set_io_policy()
 +{
-+	pushd /sys/kernel/config/nvmet || exit 1
++	local nqn="$1"
++	local iopolicy="$2"
++	local subname
++	local policy
++	local current
 +
-+	for i in $(seq 1 ${path}); do
-+		local portdir=$((port + i))
-+
-+		rm -rf "ports/${portdir}/subsystems/${nqn}"
-+		rmdir "ports/${portdir}"
-+	done
-+
-+	echo 0 > "subsystems/${nqn}/namespaces/${ns}/enable"
-+	echo -n 0 > "subsystems/${nqn}/namespaces/${ns}/device_path"
-+	rmdir "subsystems/${nqn}/namespaces/${ns}"
-+	rmdir "subsystems/${nqn}"
-+
-+	popd || exit 1
-+}
-+
-+ns2_cleanup()
-+{
-+	nvme disconnect -n "${nqn}" || true
-+}
-+
-+# This function is used in the cleanup trap
-+#shellcheck disable=SC2317,SC2329
-+cleanup()
-+{
-+	ip netns exec "$ns2" bash <<- EOF
-+		$(declare -f ns2_cleanup)
-+		ns2_cleanup
-+	EOF
-+
-+	sleep 1
-+
-+	ip netns exec "$ns1" unshare -m bash <<- EOF
-+		mount -t configfs none /sys/kernel/config
-+		$(declare -f ns1_cleanup)
-+		ns1_cleanup
-+	EOF
-+
-+	if [ -n "${loop_dev}" ] && [ -b "${loop_dev}" ]; then
-+		losetup -d "${loop_dev}" 2>/dev/null || true
-+	fi
-+	rm -rf "${temp_file}"
-+
-+	mptcp_lib_ns_exit "$ns1" "$ns2"
-+
-+	kill "$monitor_pid_ns1" 2>/dev/null
-+	wait "$monitor_pid_ns1" 2>/dev/null
-+
-+	kill "$monitor_pid_ns2" 2>/dev/null
-+	wait "$monitor_pid_ns2" 2>/dev/null
-+
-+	unset -v trtype path nqn ns port trsvcid
-+}
-+
-+init()
-+{
-+	mptcp_lib_ns_init ns1 ns2
-+
-+	# ns1		ns2
-+	# 10.1.1.1	10.1.1.2
-+	# 10.1.2.1	10.1.2.2
-+	# 10.1.3.1	10.1.3.2
-+	# 10.1.4.1	10.1.4.2
-+	for i in {1..4}; do
-+		ip link add ns1eth"$i" netns "$ns1" type veth peer \
-+					name ns2eth"$i" netns "$ns2"
-+		ip -net "$ns1" addr add 10.1."$i".1/24 dev ns1eth"$i"
-+		ip -net "$ns1" addr add dead:beef:"$i"::1/64 \
-+					dev ns1eth"$i" nodad
-+		ip -net "$ns1" link set ns1eth"$i" up
-+		ip -net "$ns2" addr add 10.1."$i".2/24 dev ns2eth"$i"
-+		ip -net "$ns2" addr add dead:beef:"$i"::2/64 \
-+					dev ns2eth"$i" nodad
-+		ip -net "$ns2" link set ns2eth"$i" up
-+		ip -net "$ns2" route add default via 10.1."$i".1 \
-+					dev ns2eth"$i" metric 10"$i"
-+		ip -net "$ns2" route add default via dead:beef:"$i"::1 \
-+					dev ns2eth"$i" metric 10"$i"
-+
-+		# Add tc qdisc to both namespaces for bandwidth limiting
-+		tc -n "$ns1" qdisc add dev ns1eth"$i" root netem rate 1000mbit
-+		tc -n "$ns2" qdisc add dev ns2eth"$i" root netem rate 1000mbit
-+
-+		tc -n "$ns1" qdisc show dev ns1eth"$i"
-+		tc -n "$ns2" qdisc show dev ns2eth"$i"
-+	done
-+
-+	mptcp_lib_pm_nl_set_limits "${ns1}" 8 8
-+
-+	mptcp_lib_pm_nl_add_endpoint "$ns1" 10.1.1.1 flags signal
-+	mptcp_lib_pm_nl_add_endpoint "$ns1" 10.1.2.1 flags signal
-+	mptcp_lib_pm_nl_add_endpoint "$ns1" 10.1.3.1 flags signal
-+	mptcp_lib_pm_nl_add_endpoint "$ns1" 10.1.4.1 flags signal
-+
-+	mptcp_lib_pm_nl_set_limits "${ns2}" 8 8
-+
-+	mptcp_lib_pm_nl_add_endpoint "$ns2" 10.1.1.2 flags subflow
-+	mptcp_lib_pm_nl_add_endpoint "$ns2" 10.1.2.2 flags subflow
-+	mptcp_lib_pm_nl_add_endpoint "$ns2" 10.1.3.2 flags subflow
-+	mptcp_lib_pm_nl_add_endpoint "$ns2" 10.1.4.2 flags subflow
-+
-+	ip -n "${ns1}" mptcp monitor &
-+	monitor_pid_ns1=$!
-+	ip -n "${ns2}" mptcp monitor &
-+	monitor_pid_ns2=$!
-+}
-+
-+run_target()
-+{
-+	cd /sys/kernel/config/nvmet/subsystems || exit
-+	mkdir -p "${nqn}"
-+	cd "${nqn}" || exit
-+	echo 1 > attr_allow_any_host
-+	mkdir -p namespaces/"${ns}"
-+	echo "${loop_dev}" > namespaces/"${ns}"/device_path
-+	echo 1 > namespaces/"${ns}"/enable
-+
-+	# Create 4 ports, each on a different IP address
-+	for i in $(seq 1 ${path}); do
-+		local portdir=$((port + i))
-+
-+		cd /sys/kernel/config/nvmet/ports || exit
-+		mkdir -p "${portdir}"
-+		cd "${portdir}" || exit 1
-+		echo "${trtype}" > addr_trtype
-+		echo ipv4 > addr_adrfam
-+		if [ "${path}" -eq 1 ]; then
-+			echo "0.0.0.0" > addr_traddr
-+		else
-+			echo "10.1.${i}.1" > addr_traddr
-+		fi
-+		echo "${trsvcid}" > addr_trsvcid
-+
-+		mkdir -p subsystems
-+		ln -sf "../../subsystems/${nqn}" "subsystems/${nqn}"
-+		cd - >/dev/null
-+	done
-+}
-+
-+run_host()
-+{
-+	local traddr=10.1.1.1
-+	local devname
-+
-+	echo "nvme discover -a ${traddr}"
-+	nvme discover -t "${trtype}" -a "${traddr}" -s "${trsvcid}"
-+	if [ $? -ne 0 ]; then
++	subname=$(nvme list-subsys 2>/dev/null | grep -B 5 "${nqn}" |
++		  grep -o 'nvme-subsys[0-9]*' | head -1)
++	if [ -z "$subname" ]; then
 +		return 1
 +	fi
 +
-+	for i in $(seq 1 ${path}); do
-+		echo "Connecting to 10.1.${i}.1:${trsvcid}"
-+
-+		nvme connect -t "${trtype}" -a "10.1.${i}.1" \
-+			     -s "${trsvcid}" -n "${nqn}"
-+		if [ $? -ne 0 ]; then
-+			echo "Failed to connect to 10.1.${i}.1"
-+			return 1
-+		fi
-+	done
-+
-+	sleep 1
-+
-+	# Scan all NVMe block devices
-+	for dev in /dev/nvme*n1 /dev/nvme*cn1; do
-+		if [ -b "$dev" ] 2>/dev/null; then
-+			# Check if this device's controller matches our NQN
-+			if nvme id-ctrl "$dev" 2>/dev/null | grep -q "${nqn}"; then
-+				devname=$(basename "$dev")
-+				break 2
-+			fi
-+		fi
-+	done 2>/dev/null
-+
-+	if [ -z "$devname" ]; then
-+		echo "No block device found for NQN ${nqn}" >&2
++	policy="/sys/class/nvme-subsystem/${subname}/iopolicy"
++	if [ ! -w "$policy" ]; then
 +		return 1
 +	fi
 +
-+	sleep 1
-+
-+	echo "nvme list"
-+	nvme list
-+
-+	sleep 1
-+
-+	echo "fio randread /dev/${devname}"
-+	fio --name=global --direct=1 --norandommap --randrepeat=0 \
-+	    --ioengine=libaio --thread=1 --blocksize=128k --runtime=10 \
-+	    --time_based --rw=randread --numjobs=4 --iodepth=256 \
-+	    --group_reporting --size=100% --name=libaio_4_256_4k_randread \
-+	    --filename="/dev/${devname}"
-+	if [ $? -ne 0 ]; then
++	if ! echo "${iopolicy}" > "$policy" 2>/dev/null; then
 +		return 1
 +	fi
 +
-+	sleep 1
-+
-+	echo "fio randwrite /dev/${devname}"
-+	fio --name=global --direct=1 --norandommap --randrepeat=0 \
-+	    --ioengine=libaio --thread=1 --blocksize=128k --runtime=10 \
-+	    --time_based --rw=randwrite --numjobs=4 --iodepth=256 \
-+	    --group_reporting --size=100% --name=libaio_4_256_4k_randwrite \
-+	    --filename="/dev/${devname}"
-+	if [ $? -ne 0 ]; then
++	current=$(cat "$policy" 2>/dev/null)
++	if [ -z "$current" ]; then
 +		return 1
 +	fi
 +
-+	nvme flush "/dev/${devname}"
++	if [[ "$current" != *"${iopolicy}"* ]]; then
++		return 1
++	fi
++
++	return 0
 +}
 +
-+trap cleanup EXIT
-+
-+mptcp_lib_check_tools nvme fio
-+validate_params
-+
-+temp_file=$(mktemp /tmp/nvme_test.XXXXXX.raw)
-+if [ $? -ne 0 ]; then
-+	echo "Failed to create temp file"
-+	exit 1
-+fi
-+
-+dd if=/dev/zero of="${temp_file}" bs=1M count=0 seek=512
-+loop_dev=$(losetup -f --show "${temp_file}")
-+
-+init
-+
-+run_test()
-+{
-+	export trtype path nqn ns port trsvcid
-+	export loop_dev temp_file
-+
-+	if ! ip netns exec "$ns1" unshare -m bash <<- EOF
-+		mount -t configfs none /sys/kernel/config
-+		$(declare -f run_target)
-+		run_target
-+		exit \$?
-+	EOF
-+	then
-+		ret="${KSFT_FAIL}"
+ run_host()
+ {
+ 	local traddr=10.1.1.1
+@@ -235,6 +287,11 @@ run_host()
+ 	echo "nvme list"
+ 	nvme list
+ 
++	if ! set_io_policy "${nqn}" "${iopolicy}"; then
++		echo "Failed to set I/O policy to ${iopolicy}"
++		return 1
 +	fi
 +
-+	if ! ip netns exec "$ns2" bash <<- EOF
-+		$(declare -f run_host)
-+		run_host
-+		exit \$?
-+	EOF
-+	then
-+		ret="${KSFT_FAIL}"
-+	fi
-+
-+	sleep 1
-+}
-+
-+run_test "$@"
-+
-+mptcp_lib_result_print_all_tap
-+exit "$ret"
+ 	sleep 1
+ 
+ 	echo "fio randread /dev/${devname}"
+@@ -282,6 +339,7 @@ run_test()
+ {
+ 	export trtype path nqn ns port trsvcid
+ 	export loop_dev temp_file
++	export iopolicy loss
+ 
+ 	if ! ip netns exec "$ns1" unshare -m bash <<- EOF
+ 		mount -t configfs none /sys/kernel/config
+@@ -294,6 +352,7 @@ run_test()
+ 	fi
+ 
+ 	if ! ip netns exec "$ns2" bash <<- EOF
++		$(declare -f set_io_policy)
+ 		$(declare -f run_host)
+ 		run_host
+ 		exit \$?
 -- 
 2.53.0
 
