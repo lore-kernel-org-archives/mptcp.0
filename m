@@ -1,142 +1,245 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE77C73463;
-	Sun, 17 May 2026 05:51:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DF05309EE6
+	for <mptcp@lists.linux.dev>; Sun, 17 May 2026 06:06:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778997065; cv=none; b=bNi6Fv36ssseN0h7Lxj4C308ili/DQurMQku26MbxmVzUG8stJArcbfoU3DXUMsjZuxCFohXivdKi0hu4m1eQhaNWbmu3mygr0rt0PLpf+8pMMsLVT3Ilfl2B0kUWAVgfoYbqhwgw4FDGU1ksfQcbNXKa+x8AziW+ITzjHZfT1g=
+	t=1778997974; cv=none; b=hnBELBGXcMs/1iUil41MYp+d/fSIk7esbObPOGfSuhoF7muv56ExWjijZuV98+kbDmO7uyh7EoeLm9ga9dn49kHKUCC/MMuAaYaBkbaLg3vp+FyBpqnNYmVQgTqxEi0GxsQCvUK5ZXKQGHzdfjm7hmRjli4oQ87Fl+ScYILV/Kc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778997065; c=relaxed/simple;
-	bh=GfVo+wMcHFCWeSLaasazUP9yqDMCJT2bcGpLDxj8XgI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=S5lfw922hE9kZIlLlO2fVCmQJCZ7wpJHE6NnC2JfgSHkBtQ6SpEdR8zeQUEvSJNKIXuPGig1m0CBeuS6/fWiCGmpzcMVGYfCyxNqThCK+CBpS87S7U5oMlS68YbiCok7ivWPbUXnpX8M94jLwqCQ+6+g4v801IW9nX1FEJxOwd0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dzdgvaWQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1778997974; c=relaxed/simple;
+	bh=oJxFvj/tbCkLR4rp5wsA2Or7DSP0aSkLcARo+SCUjGY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CRDYgv0EuAa+doudwSLZjQPf8Vt8IFby7GuMuPisylNPhAId093LSV3ymWxlO/htk+wMfy8dZmCMQxRkpzqjfg9agC43j1ojf3kMkU9AQlayJxXwvz7zyp6z6hpgEgwEy//GG+f25f5nxZXsbcSHR2QDFXrI9MSmerM1+ChF6kg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u1K6Nox/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dzdgvaWQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FC57C2BCB0;
-	Sun, 17 May 2026 05:51:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u1K6Nox/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94556C2BCB0;
+	Sun, 17 May 2026 06:06:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778997065;
-	bh=GfVo+wMcHFCWeSLaasazUP9yqDMCJT2bcGpLDxj8XgI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=dzdgvaWQEtIpSc767EbmghV7oM5bpUIB1xp2jBMAjIQ4vtPQexPHnoXjNr4DL2QQz
-	 fa9EROOQ799zX9OD2bIDxslfxLgZWOdNKm/otYtNodib6H3WKAHu7pvuCwpkC6G5dK
-	 2lQaPy1GtKi+cwpDqAbmeD40E8v8EioPhBg/XXd56gtWDc0tl6WWhDp7sBh1eO2e03
-	 CEAZgRsrZJHvwvwcqcfRCmTnzMtfiS0EXH+Cf5Ay4DT9GDroI3AaiBeVer+bQTaTKX
-	 vzpZ9eVkrnLVjq0DIupMhiwjGZTjCAm356O8fS1H/GDem7yx7J7k40NT/QUJC27yeu
-	 TA8X9c74yd+tA==
-Message-ID: <85b89125-57f2-43ab-a834-4dca56881e26@kernel.org>
-Date: Sun, 17 May 2026 15:50:56 +1000
+	s=k20201202; t=1778997974;
+	bh=oJxFvj/tbCkLR4rp5wsA2Or7DSP0aSkLcARo+SCUjGY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=u1K6Nox/FE04WPV8OzAZYsUT/5+5e+17NpD9WN1HRgGxvX1VecPlzwWdiTK+bFr3t
+	 QtFBrUclZhOflWWmLtFOTKfy7M75WKUdE0VhxKMY2z2UeezM3nxGKvvTqeR/U5ClJe
+	 Oiz6Z3RTBRWOwZVB1msJh1i0GFtKpNHqN6HLGB7abH3Q+45McvSDCCQ5PDIDyyVIxM
+	 HMJos7zJR9jk/5wNmhqv5+30V2JYYWQqhoxyt1seatc2VpD5lMh+RGjQiE9yEFZDHB
+	 SGqFtekp8hO53ksdHwjGnl8sMApnlpUTHrU4PGMTTgB/Wh1yG3H7a9j1JD5JICG8Lb
+	 pSZFI+LwCLYYw==
+From: Geliang Tang <geliang@kernel.org>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>,
+	Hannes Reinecke <hare@suse.de>,
+	zhenwei pi <zhenwei.pi@linux.dev>,
+	Hui Zhu <zhuhui@kylinos.cn>,
+	Gang Yan <yangang@kylinos.cn>
+Subject: [RFC mptcp-next v11 00/10] NVME over MPTCP
+Date: Sun, 17 May 2026 14:05:04 +0800
+Message-ID: <cover.1778997507.git.tanggeliang@kylinos.cn>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH net v2 2/6] mptcp: pm: fix ADD_ADDR timer infinite retry
- on option space insufficient
-Content-Language: fr
-To: Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Li Xiasong <lixiasong1@huawei.com>
-Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev,
- linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
- Eric Dumazet <edumaze@google.com>, stable@vger.kernel.org,
- Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Simon Horman <horms@kernel.org>, Shuah Khan <shuah@kernel.org>
-References: <20260515-net-mptcp-misc-fixes-7-1-rc4-v2-0-701e96419f2f@kernel.org>
- <20260515-net-mptcp-misc-fixes-7-1-rc4-v2-2-701e96419f2f@kernel.org>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <20260515-net-mptcp-misc-fixes-7-1-rc4-v2-2-701e96419f2f@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hello,
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
-On 15/05/2026 06:27, Matthieu Baerts (NGI0) wrote:
-> From: Li Xiasong <lixiasong1@huawei.com>
-> 
-> When TCP option space is insufficient (e.g., when sending ADD_ADDR with an
-> IPv6 address and port while tcp_timestamps is enabled), the original code
-> jumped to out_unlock without clearing the addr_signal flag. This caused
-> mptcp_pm_add_timer to keep rescheduling indefinitely, not sending ADD_ADDR,
-> preventing subsequent addresses in the endpoint list from being announced.
+v11:
+ Patch 2 (new):
+ - Add RCU protection for host_iface validation to fix a pre-existing
+   use-after-free issue when validating network interface names.
+ Patch 3:
+ - Add RCU protection for queue->port access in nvmet_tcp_alloc_cmd
+   (previously missing).
+ - Cache proto pointer in nvmet_tcp_done_recv_pdu before releasing
+   RCU lock.
+ Patch 4:
+ - Remove nvmet_unregister_transport(&nvmet_tcp_ops) on MPTCP registration
+   failure (MPTCP is optional, TCP continues to work).
+ Patch 5:
+ - Update MPTCP helper functions to iterate over all subflows using
+   mptcp_for_each_subflow().
+ - Add sock_hold() with explanatory comment for concurrent subflow closure
+   protection.
+ - Fix priority synchronization in sync_socket_options: change condition
+   from priority > 0 to priority >= 0 to allow priority 0.
+ Patch 9:
+ - Simplify validate_params: use regex ^[1-4]$ for path validation.
+ - Remove tc_args quotes in init() to allow proper word splitting for netem
+   parameters.
 
-(...)
+v10:
+ Patch 1 (new):
+ - Add Fixes tag to the commit that checks return value of
+   nvmet_tcp_set_queue_sock.
+ Patch 2:
+ - Fix RCU read lock release issue in nvmet_tcp_done_recv_pdu:
+   move rcu_read_unlock() after nvmet_req_init().
+ - Fix RCU read lock release issue in nvmet_tcp_set_queue_sock:
+   cache proto pointer before releasing RCU lock.
+ - Add missing NULL checks for queue->port in nvmet_tcp_alloc_cmd,
+   nvmet_tcp_try_peek_pdu and nvmet_tcp_tls_handshake.
+ - Add __rcu annotation to queue->port in struct nvmet_tcp_queue.
+ - Use rcu_access_pointer() instead of rcu_dereference() in
+   nvmet_tcp_destroy_port_queues.
+ - Remove redundant kfree_rcu() in nvmet_tcp_remove_port, use kfree()
+   since synchronize_rcu() already guarantees safety.
+ Patch 4:
+ - Add lock_sock_nested(ssk, SINGLE_DEPTH_NESTING) to all MPTCP helpers
+   to avoid lockdep warnings.
+ - Fix mptcp_sock_no_linger to properly set linger on subflow inside the
+   lock.
+ Patch 8:
+ - Move init before trap cleanup to prevent cleanup errors when early
+   exit occurs.
+ - Fix usage text: change default path value from 4 to 1 to match actual
+   behavior.
+ - Fix break 2 to break (only one loop level).
+ Patch 9:
+ - Change grep -B 5 to grep (without -B) to avoid matching host NVMe
+   devices.
+ Link: https://patchwork.kernel.org/project/mptcp/cover/cover.1778919284.git.tanggeliang@kylinos.cn/
 
-> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-> index 3c152bf66cd5..3e770c7407e1 100644
-> --- a/net/mptcp/pm.c
-> +++ b/net/mptcp/pm.c
+v9:
+ Patch 1:
+  - add NULL pointer checks for RCU dereference in nvmet_tcp_done_recv_pdu
+  and nvmet_tcp_set_queue_sock.
+  - clear queue->port using rcu_assign_pointer and add synchronize_rcu in
+  nvmet_tcp_destroy_port_queues.
+  - use kfree_rcu for port structure in nvmet_tcp_remove_port.
+ Patch 2:
+  - change module init order, make MPTCP registration optional to prevent
+  UAF.
+ Patch 3:
+  - fix mptcp_sock_set_priority to save config on main socket first, use
+  READ_ONCE and sock_hold.
+  - fix mptcp_sock_no_linger to use READ_ONCE and sock_hold, call
+  sock_no_linger on ssk.
+  - fix mptcp_sock_set_tos to use READ_ONCE and sock_hold.
+ Patch 4:
+  - remove unnecessary RCU protection for ctrl->proto (points to static
+  data).
+  - remove rcu_head from nvme_tcp_ctrl, use kfree instead of kfree_rcu.
+ Patch 6:
+  - add msk->icsk_syn_retries check before calling tcp_sock_set_syncnt in
+  sync_socket_options.
+  - fix mptcp_sock_set_syncnt to always return 0 after saving config.
+ Patch 7:
+  - split selftests into two patches.
+  - fix tool check order (call mptcp_lib_check_tools before temp_file
+  creation).
+  - add unshare -m in cleanup to prevent configfs mount leakage.
+  - improve device name parsing from nvme connect output.
+ Patch 8:
+  - add iopolicy tests with set_io_policy function and error checking.
+  - add loss parameter for packet loss simulation (delay 5ms loss 0.5%).
+ Link: https://patchwork.kernel.org/project/mptcp/cover/cover.1778837549.git.tanggeliang@kylinos.cn/
 
-(...)
+v8:
+ - address comments reported by ai-review for v7.
+ - add RCU protection for queue->port on target side.
+ - add RCU protection ctrl->proto on host side.
+ - check !msk->first instead of "IS_ERR(msk->first)".
+ - fix return value of mptcp_sock_set_syncnt.
+ - update selftest.
+ - fix CI error: "[SKIP] Could not run all tests without nvme".
+ - Link: https://patchwork.kernel.org/project/mptcp/cover/cover.1775047736.git.tanggeliang@kylinos.cn/
 
-> @@ -414,8 +420,12 @@ mptcp_pm_del_add_timer(struct mptcp_sock *msk,
->  	/* Note: entry might have been removed by another thread.
->  	 * We hold rcu_read_lock() to ensure it is not freed under us.
->  	 */
-> -	if (stop_timer)
-> -		sk_stop_timer_sync(sk, &entry->add_timer);
-FYI, sashiko found a pre-existing issue here, but I guess that's not
-blocking this series.
+v7:
+ - address comments reported by ai-review.
+ - change sockops in nvmet_tcp_port and nvme_tcp_ctrl as a pointer.
+ - add null checks for queue->port->sockops in nvmet_tcp_set_queue_sock.
+ - add inline for mptcp_sock_set_priority and mptcp_sock_set_tos in
+   mptcp.h
+ - use "ssk = msk->first" instead of "ssk = __mptcp_nmpc_sk(msk)" in
+   mptcp_sock_set_priority, mptcp_sock_no_linger and mptcp_sock_set_tos.
+ - drop sk_is_tcp in nvmet_tcp_done_recv_pdu
+ - move ctrl->sockops setting before nvme_init_ctrl in
+   nvme_tcp_alloc_ctrl
+ - define nvme_mptcp_ctrl_ops
+ - add MODULE_ALIAS("nvme-mptcp")
+ - add more CONFIG_MPTCP checks
+ - update selftest
+ - Link: https://patchwork.kernel.org/project/mptcp/cover/cover.1774952107.git.tanggeliang@kylinos.cn/
 
-https://sashiko.dev/#/patchset/20260515-net-mptcp-misc-fixes-7-1-rc4-v2-0-701e96419f2f%40kernel.org
+v6:
+ - introduce nvmet_tcp_sockops and nvme_tcp_sockops structures
+ - fix set_reuseaddr, set_nodelay and set_syncnt, add sockopt_seq_inc
+ calls, only set the first subflow, and synchronize to other subflows in
+ sync_socket_options
+ - Add implementations for no_linger, set_priority and set_tos
+ - This version no longer depends on the "mptcp: fix stall because of
+ data_ready" series of fixes
+ - Link: https://patchwork.kernel.org/project/mptcp/cover/cover.1774862875.git.tanggeliang@kylinos.cn/
 
-@Li: just to know what I do with this pre-existing issue, do you plan to
-look at it?
+v5:
+ - address comments reported by ai-review: set msk->nodelay to true in
+   mptcp_sock_set_nodelay, set sk->sk_reuse to ssk->sk_reuse in
+   mptcp_sock_set_reuseaddr, add mptcp_nvme.sh to TEST_PROGS, and adjust
+   the order of patches.
+ - remove TLS-related options from .allowed_opts of
+   nvme_mptcp_transport.
+ - some cleanups for selftest.
+ - Link: https://patchwork.kernel.org/project/mptcp/cover/cover.1773374342.git.tanggeliang@kylinos.cn/
 
-Just in case, I just opened:
+v4:
+ - a new patch to set nvme iopolicy as Nilay suggested.
+ - resend all set to trigger AI review.
+ - Link: https://patchwork.kernel.org/project/mptcp/cover/cover.1772683110.git.tanggeliang@kylinos.cn/
 
-  https://github.com/multipath-tcp/mptcp_net-next/issues/623
+v3:
+ - update the implementation of sock_set_nodelay: originally it only set
+the first subflow, but now it sets every subflow.
+ - use sk_is_msk helper in this set.
+ - update the selftest to perform testing under a multi-interface
+environment.
+ - Link: https://patchwork.kernel.org/project/mptcp/cover/cover.1770627071.git.tanggeliang@kylinos.cn/
 
-Cheers,
-Matt
+v2:
+ - Patch 1 fixes the timeout issue reported in v1, thanks to Paolo and Gang
+Yan for their help.
+ - Patch 5 implements an MPTCP-specific sock_set_syncnt helper.
+ - Link: https://patchwork.kernel.org/project/mptcp/cover/cover.1764152990.git.tanggeliang@kylinos.cn/
+
+This series (previously named "MPTCP support to 'NVME over TCP'") had three
+RFC versions sent to Hannes in May, with subsequent revisions based on his
+input. Following that, I initiated the process of upstreaming the dependent
+"implement mptcp read_sock" series to the main MPTCP repository, which has
+been merged into net-next recently.
+
+Cc: Hannes Reinecke <hare@suse.de>
+Cc: zhenwei pi <zhenwei.pi@linux.dev>
+Cc: Hui Zhu <zhuhui@kylinos.cn>
+Cc: Gang Yan <yangang@kylinos.cn>
+
+Geliang Tang (10):
+  nvmet-tcp: check return value of set_queue_sock
+  nvme-tcp: add RCU protection for host_iface validation
+  nvmet-tcp: define target tcp_proto struct
+  nvmet-tcp: register target mptcp transport
+  nvmet-tcp: implement target mptcp proto
+  nvme-tcp: define host tcp_proto struct
+  nvme-tcp: register host mptcp transport
+  nvme-tcp: implement host mptcp proto
+  selftests: mptcp: add nvme over mptcp test
+  selftests: mptcp: nvme: add iopolicy tests
+
+ drivers/nvme/host/tcp.c                       | 104 ++++-
+ drivers/nvme/target/configfs.c                |   1 +
+ drivers/nvme/target/tcp.c                     | 162 ++++++-
+ include/linux/nvme.h                          |   1 +
+ include/net/mptcp.h                           |  27 ++
+ net/mptcp/protocol.h                          |   1 +
+ net/mptcp/sockopt.c                           | 146 +++++++
+ tools/testing/selftests/net/mptcp/Makefile    |   1 +
+ tools/testing/selftests/net/mptcp/config      |   7 +
+ .../testing/selftests/net/mptcp/mptcp_lib.sh  |  12 +
+ .../testing/selftests/net/mptcp/mptcp_nvme.sh | 402 ++++++++++++++++++
+ 11 files changed, 840 insertions(+), 24 deletions(-)
+ create mode 100755 tools/testing/selftests/net/mptcp/mptcp_nvme.sh
+
 -- 
-Sponsored by the NGI0 Core fund.
+2.53.0
 
