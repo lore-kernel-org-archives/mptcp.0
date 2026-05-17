@@ -1,239 +1,129 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f180.google.com (mail-dy1-f180.google.com [74.125.82.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93DC44502F
-	for <mptcp@lists.linux.dev>; Sun, 17 May 2026 06:06:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA892305692
+	for <mptcp@lists.linux.dev>; Sun, 17 May 2026 07:07:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778997996; cv=none; b=MdvH6aT/2pACYm+f1fqga9zwFr//L4h+/LGoo/2sLsSCJKTC+/bvnWPiGH9xRBNS1moNJbGerBJxghXzMVWSHSW0VxJ8pUCwHG/EDMb1ATuesf770GaU3pdxdDqWul+y5UDTLMjnFif2fj6yf19u0HbSuZtocP26UgA69SVwjLM=
+	t=1779001638; cv=none; b=I9XsgHclaK2+xS+bLp0p4HiXt2EkPPuWcOR9E1C2Vij6XdMucoLgrbz9f+cBt72DjURxbOfZjdtt2Chg8c1bmuwM2IHM09nMDEM4B2/1kw3uGhXynFghFLpDcR8j57VliuwmGCP+3f+W240Or4PMQMa6nnG372YvZqfJp1CJ/d0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778997996; c=relaxed/simple;
-	bh=H/9rvH8SPnV89KrWr5EDDV7ePngQ/W+Nw6YFuzkmqYw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=iNBKCZ4rsJlnL42wzWZEaor6zq4UJsPwli8eSYA+/cxxfLlqad4osQ2HWehYFabP0ZOydMNrg1afxg0h/KHhEeKnq1D2W/a7RUQin81ZH1/Wv7NcMIgPn6yvXkOCcejUk2EPUswU1zXCaN/JmU++HRdTRuTWN5iLp6VL7S2WNZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MZoQWOJ5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1779001638; c=relaxed/simple;
+	bh=y9Jd4qcgZgVbem10JHQBCxZ9rTS3U3QvuO1ojV/9HGI=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
+	 MIME-Version:Content-Type; b=c7j2ZiRbrYTPQJHM9KWyztpL9xgvcydMtaYbjyYRVaHRfbUneHteRQtR5zccslgc+2mZp0SFO2XtsLRHe+AumKPBxPZ07dTJtecQLlf/ld1MoHM+GxBthTBBm3bDVb0xFP5kjqYuSgK5yNZNnPfweViC1dW6N6vY/EFttnWfYWg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RBlTPpto; arc=none smtp.client-ip=74.125.82.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MZoQWOJ5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E27E8C2BCB3;
-	Sun, 17 May 2026 06:06:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778997996;
-	bh=H/9rvH8SPnV89KrWr5EDDV7ePngQ/W+Nw6YFuzkmqYw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=MZoQWOJ5oFOgqTUa8InZ4m+DoD55jWtF6ZJGPDlO0f4ZuAS+xcchxQKOO2+YOq+ou
-	 QoS4EfjqDz+cNpoSujoYZKNOHYT3T20NYuDkdFsB4z5dGXmSA7Q3wFmk6nBV/X9IXr
-	 0g72G5GtdxD8cRsLji5ixIyrr6MXbJFoyKHIa6S1XvpZRMMkwD1MvEdq+cqAZBJw2r
-	 SOAPtee6ktiVrg4lq40NwI3Et+WE36mlL6Lvn4e9iZNTif+ttuVjYK34NTbrwf1Ydz
-	 rdRX+WuNIq84R2kcl4eoRRl8wcYkiSNiUJqa75yIWpRN71/FgR/aZBr4MwmX/uCTJU
-	 rzIoMDb0U9kOA==
-From: Geliang Tang <geliang@kernel.org>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>,
-	Hannes Reinecke <hare@suse.de>,
-	zhenwei pi <zhenwei.pi@linux.dev>,
-	Hui Zhu <zhuhui@kylinos.cn>,
-	Gang Yan <yangang@kylinos.cn>
-Subject: [RFC mptcp-next v11 10/10] selftests: mptcp: nvme: add iopolicy tests
-Date: Sun, 17 May 2026 14:05:14 +0800
-Message-ID: <a57ea9b06690ac37b603d5f8eb78a5418fd9bcc7.1778997507.git.tanggeliang@kylinos.cn>
-X-Mailer: git-send-email 2.53.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RBlTPpto"
+Received: by mail-dy1-f180.google.com with SMTP id 5a478bee46e88-30246cfd41aso2669051eec.1
+        for <mptcp@lists.linux.dev>; Sun, 17 May 2026 00:07:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1779001637; x=1779606437; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=w5uDEYt65x8L7xZdywYlEqfzp0Jh2tDtxTL3czwArAw=;
+        b=RBlTPptoJpezRcblOs3f+4aL2rw9q0eLC9NMui/YtWJG24xdfl/iMOG4xnQJP3Qo+i
+         eLZNATkyHhO82wPKlBc+WwqYjPr85LQhX/AkCu5ZqnexueJkSMkvMo2vzYlNpwSneVu6
+         MQdB+Hcv9gnGyYH6fFqeZ2DTGc7b5uPkZ2DtJt0LFEOasUelySAVzlA5vuRfoNhBoIAH
+         PVmXSmxiA2ehOgy6r/nr5drR6ZKK1LVYa/7Ousj2PYBH9kFntY2r2Lo4+HAyRcuMpSU5
+         qiTzZQ8mK5ifSh5+IM/0cjXjZrlkoI4AWsNU6Z8IX6N5EZpH1OzQ783kg3FIuX9pfb64
+         EkKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779001637; x=1779606437;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=w5uDEYt65x8L7xZdywYlEqfzp0Jh2tDtxTL3czwArAw=;
+        b=Eu8le9mR9Jl1jjF6+XL/wK7N93XD35FBu73f/ygsoKTB2x08cHhiyKhz7rFoyFfquc
+         V3/UJFQBUJL66NhMbG5VW4kD0Ytnthzdyn2v8xjITq3CnDMVXtZgEIp/Hf34wErAlF5D
+         QXE00mPEz+71vnzN4h6s4oLQMtVClJssRguWaC2Ej8zx5tYv2T/SqPDPVSdpgh0QOd0f
+         2z1ahp3oFxf3TR0VOCs5/+7qw+KxpnHVsB76B/AUptj2ziN6qZQkjaDs1KggxNjeDPPR
+         aBLnYvsxW4Ruc81kXSnc0XTGvLedm1cKNyGQg3MTt1DZ1omLkSrQFyAyIIn0GMmiKh5c
+         isQA==
+X-Gm-Message-State: AOJu0YxSiGdbPgyGFLg/kWHJr4Q0rjOzVw2vMFouDYKVN1i3FPHW+y3q
+	aEfGYtBxGe6lB7K/ixo2/76sgqNOnBHl1SLsrRuKM72n06+1Yp3PANKg+TDD
+X-Gm-Gg: Acq92OFxHhB1/9WUx9L8eFysDP30XK7HyQxa3MZdl/xmVrQTgVCYzetecWd3cnHgQA8
+	5WHITRXWqmtDeOEDmkF2l/z0vHSqpYNjzg34kuUZs820CNuikWG+MbQ0FSAJHx3ufUpFd08Nq+d
+	UWnfX2YQ5a6M9S0714SKWyWIfPQFZkC4o+rALxmuDFlPCfrZk0bbpRDQVqvZRzZGIkkSHfucyUu
+	XKwWbBYrvAv+VlAOWnDAfIujh73C6AZHU3QmlrGZt2pv8/qKblmMtYIyjIOtZcPYGee8P5eEO72
+	XVF26kdKa3q1R8B8auhFHxHg3kBLmlotdrZ03z6R1aVPEnfPWUg6Wuz1X+oT4R/2qSbWp7s2NEp
+	KURAOZqSv6eqTj6q/oKSejiONYuHJ4+PzD6jpsHyxZm4Vqzk7AY2aVwRDj1rxqsNHpe/XPHAH86
+	hpVJQOP2XSlaodjV11L60uHh+EsfQWLbG6BRlh7N067D0i0b0=
+X-Received: by 2002:a05:7301:3d12:b0:2ea:5057:a304 with SMTP id 5a478bee46e88-3039818a65bmr4779240eec.2.1779001636666;
+        Sun, 17 May 2026 00:07:16 -0700 (PDT)
+Received: from [127.0.0.1] ([13.83.107.147])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-302973bc8ddsm10879895eec.21.2026.05.17.00.07.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 17 May 2026 00:07:16 -0700 (PDT)
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Geliang Tang <tanggeliang@kylinos.cn>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
 In-Reply-To: <cover.1778997507.git.tanggeliang@kylinos.cn>
 References: <cover.1778997507.git.tanggeliang@kylinos.cn>
+Subject: Re: [RFC mptcp-next v11 00/10] NVME over MPTCP
+Message-ID: <ac7720c8-9b46-6a2f-95af-f12058c79442@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Sun, 17 May 2026 07:07:15 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+Hi Geliang,
 
-Add NVMe iopolicy testing to mptcp_nvme.sh, with the default set to
-"numa". It can be set to "round-robin" or "queue-depth".
+Thank you for your modifications, that's great!
 
-Test results with 4 NVMe multipath paths and round-robin iopolicy show
-that TCP and MPTCP achieve similar bandwidth:
+Our CI did some validations and here is its report:
 
- # ./mptcp_nvme.sh tcp 4 round-robin
-   READ: bw=455MiB/s (478MB/s), 455MiB/s-455MiB/s (478MB/s-478MB/s),
-		io=4665MiB (4891MB), run=10242-10242msec
-  WRITE: bw=455MiB/s (477MB/s), 455MiB/s-455MiB/s (477MB/s-477MB/s),
-		io=4633MiB (4858MB), run=10184-10184msec
+- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/259831=
+62704
 
- # ./mptcp_nvme.sh mptcp 4 round-robin
-   READ: bw=445MiB/s (466MB/s), 445MiB/s-445MiB/s (466MB/s-466MB/s),
-		io=4575MiB (4797MB), run=10287-10287msec
-  WRITE: bw=445MiB/s (467MB/s), 445MiB/s-445MiB/s (467MB/s-467MB/s),
-		io=4572MiB (4794MB), run=10267-10267msec
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/9ad43e390366
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1095977
 
-A "loss" argument is added to simulate network packet loss. When loss=1,
-each veth interface is configured with "delay 5ms loss 0.5%" using tc
-qdisc. Under this scenario, TCP performance is reduced by multiples
-compared to MPTCP:
 
- # ./mptcp_nvme.sh tcp 4 round-robin 1
-   READ: bw=144MiB/s (151MB/s), 144MiB/s-144MiB/s (151MB/s-151MB/s),
-		io=1909MiB (2001MB), run=13231-13231msec
-  WRITE: bw=100.0MiB/s (105MB/s), 100.0MiB/s-100.0MiB/s (105MB/s-105MB/s),
-		io=1397MiB (1465MB), run=13980-13980msec
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
 
- # ./mptcp_nvme.sh mptcp 4 round-robin 1
-   READ: bw=428MiB/s (449MB/s), 428MiB/s-428MiB/s (449MB/s-449MB/s),
-		io=4524MiB (4743MB), run=10564-10564msec
-  WRITE: bw=431MiB/s (452MB/s), 431MiB/s-431MiB/s (452MB/s-452MB/s),
-		io=4513MiB (4732MB), run=10481-10481msec
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
 
-These results demonstrate that MPTCP has better resilience against
-packet loss compared to TCP, as it can leverage multiple subflows to
-mitigate network degradation.
+For more details:
 
-Cc: Hannes Reinecke <hare@suse.de>
-Co-developed-by: zhenwei pi <zhenwei.pi@linux.dev>
-Signed-off-by: zhenwei pi <zhenwei.pi@linux.dev>
-Co-developed-by: Hui Zhu <zhuhui@kylinos.cn>
-Signed-off-by: Hui Zhu <zhuhui@kylinos.cn>
-Co-developed-by: Gang Yan <yangang@kylinos.cn>
-Signed-off-by: Gang Yan <yangang@kylinos.cn>
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
----
- .../testing/selftests/net/mptcp/mptcp_nvme.sh | 65 ++++++++++++++++++-
- 1 file changed, 64 insertions(+), 1 deletion(-)
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_nvme.sh b/tools/testing/selftests/net/mptcp/mptcp_nvme.sh
-index 6c43c8727174..e823947c89a6 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_nvme.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_nvme.sh
-@@ -6,6 +6,8 @@
- ret=0
- trtype="${1:-mptcp}"
- path="${2:-1}"
-+iopolicy=${3:-"numa"} # round-robin, queue-depth
-+loss=${4:-0}
- nqn="nqn.2014-08.org.nvmexpress.${trtype}dev.$$.${RANDOM}"
- ns=1
- port=$((RANDOM % 10000 + 20000))
-@@ -21,10 +23,12 @@ usage()
- 
- Usage:
- 
--	$(basename "$0") [trtype] [path]
-+	$(basename "$0") [trtype] [path] [iopolicy] [loss]
- 
- 	trtype   Transport type (tcp|mptcp) - default: mptcp
- 	path     Number of multipath (1-4) - default: 1
-+	iopolicy I/O policy (numa|round-robin|queue-depth) - default: numa
-+	loss     Enable packet loss (0|1) - default: 0
- 
- EOF
- exit 0
-@@ -41,6 +45,16 @@ validate_params()
- 		echo "Invalid path count ${path}. Must be between 1 and 4"
- 		usage
- 	fi
-+
-+	if [[ ! "${iopolicy}" =~ ^(numa|round-robin|queue-depth)$ ]]; then
-+		echo "Invalid iopolicy ${iopolicy}."
-+		usage
-+	fi
-+
-+	if [[ ! "${loss}" =~ ^[01]$ ]]; then
-+		echo "Invalid loss value ${loss}. Must be 0 or 1"
-+		usage
-+	fi
- }
- 
- # This function is invoked indirectly
-@@ -108,12 +122,17 @@ cleanup()
- 	wait "$monitor_pid_ns2" 2>/dev/null
- 
- 	unset -v trtype path nqn ns port trsvcid
-+	unset iopolicy loss
- }
- 
- init()
- {
- 	local tc_args="rate 1000mbit"
- 
-+	if [ "${loss}" -eq 1 ]; then
-+		tc_args+=" delay 5ms loss 0.5%"
-+	fi
-+
- 	mptcp_lib_ns_init ns1 ns2
- 
- 	# ns1		ns2
-@@ -199,6 +218,43 @@ run_target()
- 	done
- }
- 
-+# This function is invoked indirectly
-+#shellcheck disable=SC2317,SC2329
-+set_io_policy()
-+{
-+	local nqn="$1"
-+	local iopolicy="$2"
-+	local subname
-+	local policy
-+	local current
-+
-+	subname=$(nvme list-subsys 2>/dev/null | grep "${nqn}" |
-+		  grep -o 'nvme-subsys[0-9]*' | head -1)
-+	if [ -z "$subname" ]; then
-+		return 1
-+	fi
-+
-+	policy="/sys/class/nvme-subsystem/${subname}/iopolicy"
-+	if [ ! -w "$policy" ]; then
-+		return 1
-+	fi
-+
-+	if ! echo "${iopolicy}" > "$policy" 2>/dev/null; then
-+		return 1
-+	fi
-+
-+	current=$(cat "$policy" 2>/dev/null)
-+	if [ -z "$current" ]; then
-+		return 1
-+	fi
-+
-+	if [[ "$current" != *"${iopolicy}"* ]]; then
-+		return 1
-+	fi
-+
-+	return 0
-+}
-+
- # This function is invoked indirectly
- #shellcheck disable=SC2317,SC2329
- run_host()
-@@ -248,6 +304,11 @@ run_host()
- 		return 1
- 	fi
- 
-+	if ! set_io_policy "${nqn}" "${iopolicy}"; then
-+		echo "Failed to set I/O policy to ${iopolicy}"
-+		return 1
-+	fi
-+
- 	sleep 1
- 
- 	echo "fio randread /dev/${devname}"
-@@ -304,6 +365,7 @@ run_test()
- {
- 	export trtype path nqn ns port trsvcid
- 	export loop_dev temp_file
-+	export iopolicy loss
- 
- 	if ! ip netns exec "$ns1" unshare -m bash <<- EOF
- 		mount -t configfs none /sys/kernel/config
-@@ -316,6 +378,7 @@ run_test()
- 	fi
- 
- 	if ! ip netns exec "$ns2" bash <<- EOF
-+		$(declare -f set_io_policy)
- 		$(declare -f run_host)
- 		run_host
- 		exit \$?
--- 
-2.53.0
 
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
