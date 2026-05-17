@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FF0536AF6
-	for <mptcp@lists.linux.dev>; Sun, 17 May 2026 06:06:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36B992E1EFC
+	for <mptcp@lists.linux.dev>; Sun, 17 May 2026 06:06:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778997981; cv=none; b=RkvscHSCSEr3ILEZ6A6lHN9/5Md0DPLoNSIJpkPD1YTb7ePLmyDhhGAZ9gKwVNamZHK7NoRpGkIemWOCJvKJFZV84e6qfww1WyJ+h2EKSsLj1VVvqKrIm+6A9F1ITrLInEDz/OfuK2F8YqURfitXe3FCTL3Y0iKVWjYOAOfk3lk=
+	t=1778997983; cv=none; b=ejUMLetsyS3Y81F4JTLLW2O3f4lOF+gP6c09TI4LQ59Vb+1Z1UiFAc0pfaFiDfUnrVwm6+UTV7M/mLY8vvx+y0pwLGjQoZUuhWyXgSptrnIvzQUKBOlpoyB72nYVbTzwTmbByN+3O4vRcbA3r6uIEzteF4XqLyUNjUjDzl5txs8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778997981; c=relaxed/simple;
-	bh=psEx0nb4bCMLmQGIAUSIXx9YeRyZNf2fNRG/If0FBwE=;
+	s=arc-20240116; t=1778997983; c=relaxed/simple;
+	bh=U6rCXeywXBBtjwzxOPtOmwBbkEGM5kP0MytkDdnsvKw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YW/gIeXrPP81LV21FEI1W2tssfQjoP9PPp0D4TqAT/3FdPkbsM9emOhbNMfNg4N6Li7MtXyqtBw9J0YZTVLs35xt0WwmSDEE1D0papfKGXnlDVfSuRkTJsstdg8Fdmg5FNCn+mk9H4Nk7iDrJxU9KYtD6DPeZ2cSqyGf6wfE6aE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lIASKMR8; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=muqkTZUcJrQLnyICtiPJr58ypbuL9bBinxdFWwyetHV72mfCBC8V7sYahNcI0F2aiUe9pezVjRButsxQIlFQ9SwJM9wJuuVQbN06qTT74ij/XDuj1SBSXme3pa3LH1pbcL2uAo7J5z/jPp9iJWoRGUIZsuGsuFtbtH7MlCB6ec0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O/6UobvK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lIASKMR8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BD46C2BCF6;
-	Sun, 17 May 2026 06:06:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O/6UobvK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65D8EC2BCB0;
+	Sun, 17 May 2026 06:06:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778997980;
-	bh=psEx0nb4bCMLmQGIAUSIXx9YeRyZNf2fNRG/If0FBwE=;
+	s=k20201202; t=1778997983;
+	bh=U6rCXeywXBBtjwzxOPtOmwBbkEGM5kP0MytkDdnsvKw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=lIASKMR8VmLyHsKLYzvP6ju9DFBnlWIB5VI8BWsCzEiytwhxKcZmjzgjpjSR4A8on
-	 zLxgClO1xtarjoXpuYKdWFJUkNzuxMwHO3Wpdg/DR9wXYAL9HMk244H3bkb5BfTAck
-	 YCvWQtCvaJPvmutC+/eBfaudnJwvrCknRtf2XP/Wggcwb4BZF3PPnWQQ3QSGA8q/Sv
-	 MwE5Rt5VI5CiUF/bqJwlX+ZbV8Pn4rw51VoAw7DC23k/nlRPhRzv0DWeC815a5CW6r
-	 ZIqUy5jYsg5sCUW+ppHymUcrRwdJ4uS0OOxyope3+rXHw3OjEazBoYHahFMGiSB2cf
-	 NzK2VVkmHWGAw==
+	b=O/6UobvKypTtA1oJ+c36M4DkqNF4RKUAPeC5IPLaiyELvbvTIeR/j4GnLcg3/cRvW
+	 dAiclCtq3ZxU8IpZOnM7Y2XQaeOSm9h7ZZ/nAsn6wSdZIWpDwoq9lcNY9CaZjAU1qj
+	 /y0JjzQc/tTeGOavdfIu3nwLzOBTXO4/Sg6rNziDGuy4YhKt/GkQAEgKIdgWRtrm01
+	 t8kbI11yAxcd+p0tddqTR/qGdc/j2Wx0MPkcrHMCf6/ChTEmUV0Q2+C8gxItohasDn
+	 EfgfTr8TWmwQeX+7Mns1cLHcnszmHMjL05x0/tFk2HCHVSLmBdBnqP6saao/WBJ+SH
+	 6Ml39W5nWvoLQ==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>,
@@ -33,9 +33,9 @@ Cc: Geliang Tang <tanggeliang@kylinos.cn>,
 	zhenwei pi <zhenwei.pi@linux.dev>,
 	Hui Zhu <zhuhui@kylinos.cn>,
 	Gang Yan <yangang@kylinos.cn>
-Subject: [RFC mptcp-next v11 03/10] nvmet-tcp: define target tcp_proto struct
-Date: Sun, 17 May 2026 14:05:07 +0800
-Message-ID: <51260b7724246471d5147c05ec8e620094561ec8.1778997507.git.tanggeliang@kylinos.cn>
+Subject: [RFC mptcp-next v11 04/10] nvmet-tcp: register target mptcp transport
+Date: Sun, 17 May 2026 14:05:08 +0800
+Message-ID: <5a5c6763cbe82f0cc29258390486105e03b45c8b.1778997507.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <cover.1778997507.git.tanggeliang@kylinos.cn>
 References: <cover.1778997507.git.tanggeliang@kylinos.cn>
@@ -49,33 +49,22 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-To add MPTCP support in "NVMe over TCP", the target side needs to pass
-IPPROTO_MPTCP to sock_create() instead of IPPROTO_TCP to create an MPTCP
-socket. Additionally, the setsockopt operations for this socket need to
-be switched to a set of MPTCP-specific functions.
+This patch adds a new nvme target transport type NVMF_TRTYPE_MPTCP for
+MPTCP. And defines a new nvmet_fabrics_ops named nvmet_mptcp_ops, which
+is almost the same as nvmet_tcp_ops except .type. It is registered in
+nvmet_tcp_init() and unregistered in nvmet_tcp_exit().
 
-This patch defines the nvmet_tcp_proto structure, which contains the
-protocol of the socket and a set of function pointers for these socket
-operations. A "proto" field is also added to struct nvmet_tcp_port.
+A MODULE_ALIAS for "nvmet-transport-4" is also added.
 
-A TCP-specific version of struct nvmet_tcp_proto is defined. In
-nvmet_tcp_add_port(), port->proto is set to nvmet_tcp_proto based on
-whether trtype is TCP. All locations that previously called TCP setsockopt
-functions are updated to call the corresponding function pointers in the
-nvmet_tcp_proto structure.
+v2:
+ - use trtype instead of tsas (Hannes).
 
-This new nvmet_fabrics_ops is selected in nvmet_tcp_done_recv_pdu() based
-on the protocol type.
+v3:
+ - check mptcp protocol from disc_addr.trtype instead of passing a
+parameter (Hannes).
 
-RCU protection is added when accessing queue->port in the I/O path to
-prevent use-after-free when a port is removed while asynchronous operations
-are pending. The queue->port pointer is cleared using RCU assignment and
-synchronized with RCU grace period, and the port structure is then released
-after all RCU readers have completed.
-
-Note: This is not a bug fix; it is a preparatory change for MPTCP support.
-The RCU conversion makes the code consistent with the __rcu annotation
-introduced here, and does not address any existing issue.
+v4:
+ - check CONFIG_MPTCP.
 
 Cc: Hannes Reinecke <hare@suse.de>
 Co-developed-by: zhenwei pi <zhenwei.pi@linux.dev>
@@ -86,273 +75,88 @@ Co-developed-by: Gang Yan <yangang@kylinos.cn>
 Signed-off-by: Gang Yan <yangang@kylinos.cn>
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- drivers/nvme/target/tcp.c | 114 +++++++++++++++++++++++++++++++++-----
- 1 file changed, 100 insertions(+), 14 deletions(-)
+ drivers/nvme/target/configfs.c |  1 +
+ drivers/nvme/target/tcp.c      | 24 ++++++++++++++++++++++++
+ include/linux/nvme.h           |  1 +
+ 3 files changed, 26 insertions(+)
 
+diff --git a/drivers/nvme/target/configfs.c b/drivers/nvme/target/configfs.c
+index b88f897f06e2..51fc0f4d0c32 100644
+--- a/drivers/nvme/target/configfs.c
++++ b/drivers/nvme/target/configfs.c
+@@ -37,6 +37,7 @@ static struct nvmet_type_name_map nvmet_transport[] = {
+ 	{ NVMF_TRTYPE_RDMA,	"rdma" },
+ 	{ NVMF_TRTYPE_FC,	"fc" },
+ 	{ NVMF_TRTYPE_TCP,	"tcp" },
++	{ NVMF_TRTYPE_MPTCP,	"mptcp" },
+ 	{ NVMF_TRTYPE_PCI,	"pci" },
+ 	{ NVMF_TRTYPE_LOOP,	"loop" },
+ };
 diff --git a/drivers/nvme/target/tcp.c b/drivers/nvme/target/tcp.c
-index 8a243d22a511..20b7b5447cfc 100644
+index 20b7b5447cfc..3ff5deac6779 100644
 --- a/drivers/nvme/target/tcp.c
 +++ b/drivers/nvme/target/tcp.c
-@@ -18,6 +18,7 @@
- #include <net/handshake.h>
- #include <linux/inet.h>
- #include <linux/llist.h>
-+#include <linux/rcupdate.h>
- #include <trace/events/sock.h>
- 
- #include "nvmet.h"
-@@ -147,7 +148,7 @@ enum nvmet_tcp_queue_state {
- 
- struct nvmet_tcp_queue {
- 	struct socket		*sock;
--	struct nvmet_tcp_port	*port;
-+	struct nvmet_tcp_port __rcu *port;
- 	struct work_struct	io_work;
- 	struct nvmet_cq		nvme_cq;
- 	struct nvmet_sq		nvme_sq;
-@@ -198,12 +199,23 @@ struct nvmet_tcp_queue {
- 	void (*write_space)(struct sock *);
+@@ -2318,6 +2318,21 @@ static const struct nvmet_fabrics_ops nvmet_tcp_ops = {
+ 	.host_traddr		= nvmet_tcp_host_port_addr,
  };
  
-+struct nvmet_tcp_proto {
-+	int			protocol;
-+	void (*set_reuseaddr)(struct sock *sk);
-+	void (*set_nodelay)(struct sock *sk);
-+	void (*set_priority)(struct sock *sk, u32 priority);
-+	void (*no_linger)(struct sock *sk);
-+	void (*set_tos)(struct sock *sk, int val);
-+	const struct nvmet_fabrics_ops *ops;
++#ifdef CONFIG_MPTCP
++static const struct nvmet_fabrics_ops nvmet_mptcp_ops = {
++	.owner			= THIS_MODULE,
++	.type			= NVMF_TRTYPE_MPTCP,
++	.msdbd			= 1,
++	.add_port		= nvmet_tcp_add_port,
++	.remove_port		= nvmet_tcp_remove_port,
++	.queue_response		= nvmet_tcp_queue_response,
++	.delete_ctrl		= nvmet_tcp_delete_ctrl,
++	.install_queue		= nvmet_tcp_install_queue,
++	.disc_traddr		= nvmet_tcp_disc_port_addr,
++	.host_traddr		= nvmet_tcp_host_port_addr,
 +};
++#endif
 +
- struct nvmet_tcp_port {
- 	struct socket		*sock;
- 	struct work_struct	accept_work;
- 	struct nvmet_port	*nport;
- 	struct sockaddr_storage addr;
- 	void (*data_ready)(struct sock *);
-+	const struct nvmet_tcp_proto *proto;
- };
- 
- static DEFINE_IDA(nvmet_tcp_queue_ida);
-@@ -1044,6 +1056,8 @@ static int nvmet_tcp_done_recv_pdu(struct nvmet_tcp_queue *queue)
+ static int __init nvmet_tcp_init(void)
  {
- 	struct nvme_tcp_hdr *hdr = &queue->pdu.cmd.hdr;
- 	struct nvme_command *nvme_cmd = &queue->pdu.cmd.cmd;
-+	const struct nvmet_tcp_proto *proto;
-+	struct nvmet_tcp_port *port;
- 	struct nvmet_req *req;
  	int ret;
+@@ -2331,6 +2346,11 @@ static int __init nvmet_tcp_init(void)
+ 	if (ret)
+ 		goto err;
  
-@@ -1081,7 +1095,16 @@ static int nvmet_tcp_done_recv_pdu(struct nvmet_tcp_queue *queue)
- 	req = &queue->cmd->req;
- 	memcpy(req->cmd, nvme_cmd, sizeof(*nvme_cmd));
- 
--	if (unlikely(!nvmet_req_init(req, &queue->nvme_sq, &nvmet_tcp_ops))) {
-+	rcu_read_lock();
-+	port = rcu_dereference(queue->port);
-+	if (!port || !port->proto) {
-+		rcu_read_unlock();
-+		return -EINVAL;
-+	}
-+	proto = port->proto;
-+	rcu_read_unlock();
++#ifdef CONFIG_MPTCP
++	if (nvmet_register_transport(&nvmet_mptcp_ops))
++		pr_warn("MPTCP transport not available (TCP only)\n");
++#endif
 +
-+	if (unlikely(!nvmet_req_init(req, &queue->nvme_sq, proto->ops))) {
- 		pr_err("failed cmd %p id %d opcode %d, data_len: %d, status: %04x\n",
- 			req->cmd, req->cmd->common.command_id,
- 			req->cmd->common.opcode,
-@@ -1466,9 +1489,17 @@ static int nvmet_tcp_alloc_cmd(struct nvmet_tcp_queue *queue,
- 		struct nvmet_tcp_cmd *c)
+ 	return 0;
+ err:
+ 	destroy_workqueue(nvmet_tcp_wq);
+@@ -2341,6 +2361,9 @@ static void __exit nvmet_tcp_exit(void)
  {
- 	u8 hdgst = nvmet_tcp_hdgst_len(queue);
-+	struct nvmet_tcp_port *port;
- 
- 	c->queue = queue;
--	c->req.port = queue->port->nport;
-+	rcu_read_lock();
-+	port = rcu_dereference(queue->port);
-+	if (!port || !port->nport) {
-+		rcu_read_unlock();
-+		return -EINVAL;
-+	}
-+	c->req.port = port->nport;
-+	rcu_read_unlock();
- 
- 	c->cmd_pdu = page_frag_alloc(&queue->pf_cache,
- 			sizeof(*c->cmd_pdu) + hdgst, GFP_KERNEL | __GFP_ZERO);
-@@ -1697,6 +1728,8 @@ static int nvmet_tcp_set_queue_sock(struct nvmet_tcp_queue *queue)
- {
- 	struct socket *sock = queue->sock;
- 	struct inet_sock *inet = inet_sk(sock->sk);
-+	const struct nvmet_tcp_proto *proto;
-+	struct nvmet_tcp_port *port;
- 	int ret;
- 
- 	ret = kernel_getsockname(sock,
-@@ -1709,19 +1742,29 @@ static int nvmet_tcp_set_queue_sock(struct nvmet_tcp_queue *queue)
- 	if (ret < 0)
- 		return ret;
- 
-+	rcu_read_lock();
-+	port = rcu_dereference(queue->port);
-+	if (!port || !port->proto ||
-+	    port->proto->protocol != sock->sk->sk_protocol) {
-+		rcu_read_unlock();
-+		return -EINVAL;
-+	}
-+	proto = port->proto;
-+	rcu_read_unlock();
-+
- 	/*
- 	 * Cleanup whatever is sitting in the TCP transmit queue on socket
- 	 * close. This is done to prevent stale data from being sent should
- 	 * the network connection be restored before TCP times out.
- 	 */
--	sock_no_linger(sock->sk);
-+	proto->no_linger(sock->sk);
- 
- 	if (so_priority > 0)
--		sock_set_priority(sock->sk, so_priority);
-+		proto->set_priority(sock->sk, so_priority);
- 
- 	/* Set socket type of service */
- 	if (inet->rcv_tos > 0)
--		ip_sock_set_tos(sock->sk, inet->rcv_tos);
-+		proto->set_tos(sock->sk, inet->rcv_tos);
- 
- 	ret = 0;
- 	write_lock_bh(&sock->sk->sk_callback_lock);
-@@ -1752,6 +1795,7 @@ static int nvmet_tcp_set_queue_sock(struct nvmet_tcp_queue *queue)
- static int nvmet_tcp_try_peek_pdu(struct nvmet_tcp_queue *queue)
- {
- 	struct nvme_tcp_hdr *hdr = &queue->pdu.cmd.hdr;
-+	struct nvmet_tcp_port *port;
- 	int len, ret;
- 	struct kvec iov = {
- 		.iov_base = (u8 *)&queue->pdu + queue->offset,
-@@ -1764,8 +1808,18 @@ static int nvmet_tcp_try_peek_pdu(struct nvmet_tcp_queue *queue)
- 		.msg_flags = MSG_PEEK,
- 	};
- 
--	if (nvmet_port_secure_channel_required(queue->port->nport))
-+	rcu_read_lock();
-+	port = rcu_dereference(queue->port);
-+	if (!port || !port->nport) {
-+		rcu_read_unlock();
-+		return 0;
-+	}
-+
-+	if (nvmet_port_secure_channel_required(port->nport)) {
-+		rcu_read_unlock();
- 		return 0;
-+	}
-+	rcu_read_unlock();
- 
- 	len = kernel_recvmsg(queue->sock, &msg, &iov, 1,
- 			iov.iov_len, msg.msg_flags);
-@@ -1876,19 +1930,30 @@ static int nvmet_tcp_tls_handshake(struct nvmet_tcp_queue *queue)
- {
- 	int ret = -EOPNOTSUPP;
- 	struct tls_handshake_args args;
-+	struct nvmet_tcp_port *port;
-+	key_serial_t keyring;
- 
- 	if (queue->state != NVMET_TCP_Q_TLS_HANDSHAKE) {
- 		pr_warn("cannot start TLS in state %d\n", queue->state);
- 		return -EINVAL;
- 	}
- 
-+	rcu_read_lock();
-+	port = rcu_dereference(queue->port);
-+	if (!port || !port->nport || !port->nport->keyring) {
-+		rcu_read_unlock();
-+		return -EINVAL;
-+	}
-+	keyring = key_serial(port->nport->keyring);
-+	rcu_read_unlock();
-+
- 	kref_get(&queue->kref);
- 	pr_debug("queue %d: TLS ServerHello\n", queue->idx);
- 	memset(&args, 0, sizeof(args));
- 	args.ta_sock = queue->sock;
- 	args.ta_done = nvmet_tcp_tls_handshake_done;
- 	args.ta_data = queue;
--	args.ta_keyring = key_serial(queue->port->nport->keyring);
-+	args.ta_keyring = keyring;
- 	args.ta_timeout_ms = tls_handshake_timeout * 1000;
- 
- 	ret = tls_server_hello_psk(&args, GFP_KERNEL);
-@@ -2042,6 +2107,16 @@ static void nvmet_tcp_listen_data_ready(struct sock *sk)
- 	read_unlock_bh(&sk->sk_callback_lock);
- }
- 
-+static const struct nvmet_tcp_proto nvmet_tcp_proto = {
-+	.protocol	= IPPROTO_TCP,
-+	.set_reuseaddr	= sock_set_reuseaddr,
-+	.set_nodelay	= tcp_sock_set_nodelay,
-+	.set_priority	= sock_set_priority,
-+	.no_linger	= sock_no_linger,
-+	.set_tos	= ip_sock_set_tos,
-+	.ops		= &nvmet_tcp_ops,
-+};
-+
- static int nvmet_tcp_add_port(struct nvmet_port *nport)
- {
- 	struct nvmet_tcp_port *port;
-@@ -2066,6 +2141,13 @@ static int nvmet_tcp_add_port(struct nvmet_port *nport)
- 		goto err_port;
- 	}
- 
-+	if (nport->disc_addr.trtype == NVMF_TRTYPE_TCP) {
-+		port->proto = &nvmet_tcp_proto;
-+	} else {
-+		ret = -EINVAL;
-+		goto err_port;
-+	}
-+
- 	ret = inet_pton_with_scope(&init_net, af, nport->disc_addr.traddr,
- 			nport->disc_addr.trsvcid, &port->addr);
- 	if (ret) {
-@@ -2080,7 +2162,7 @@ static int nvmet_tcp_add_port(struct nvmet_port *nport)
- 		port->nport->inline_data_size = NVMET_TCP_DEF_INLINE_DATA_SIZE;
- 
- 	ret = sock_create(port->addr.ss_family, SOCK_STREAM,
--				IPPROTO_TCP, &port->sock);
-+				port->proto->protocol, &port->sock);
- 	if (ret) {
- 		pr_err("failed to create a socket\n");
- 		goto err_port;
-@@ -2089,10 +2171,10 @@ static int nvmet_tcp_add_port(struct nvmet_port *nport)
- 	port->sock->sk->sk_user_data = port;
- 	port->data_ready = port->sock->sk->sk_data_ready;
- 	port->sock->sk->sk_data_ready = nvmet_tcp_listen_data_ready;
--	sock_set_reuseaddr(port->sock->sk);
--	tcp_sock_set_nodelay(port->sock->sk);
-+	port->proto->set_reuseaddr(port->sock->sk);
-+	port->proto->set_nodelay(port->sock->sk);
- 	if (so_priority > 0)
--		sock_set_priority(port->sock->sk, so_priority);
-+		port->proto->set_priority(port->sock->sk, so_priority);
- 
- 	ret = kernel_bind(port->sock, (struct sockaddr_unsized *)&port->addr,
- 			sizeof(port->addr));
-@@ -2125,10 +2207,14 @@ static void nvmet_tcp_destroy_port_queues(struct nvmet_tcp_port *port)
  	struct nvmet_tcp_queue *queue;
  
- 	mutex_lock(&nvmet_tcp_queue_mutex);
--	list_for_each_entry(queue, &nvmet_tcp_queue_list, queue_list)
--		if (queue->port == port)
-+	list_for_each_entry(queue, &nvmet_tcp_queue_list, queue_list) {
-+		if (rcu_access_pointer(queue->port) == port) {
-+			rcu_assign_pointer(queue->port, NULL);
- 			kernel_sock_shutdown(queue->sock, SHUT_RDWR);
-+		}
-+	}
- 	mutex_unlock(&nvmet_tcp_queue_mutex);
-+	synchronize_rcu();
- }
++#ifdef CONFIG_MPTCP
++	nvmet_unregister_transport(&nvmet_mptcp_ops);
++#endif
+ 	nvmet_unregister_transport(&nvmet_tcp_ops);
  
- static void nvmet_tcp_remove_port(struct nvmet_port *nport)
+ 	flush_workqueue(nvmet_wq);
+@@ -2360,3 +2383,4 @@ module_exit(nvmet_tcp_exit);
+ MODULE_DESCRIPTION("NVMe target TCP transport driver");
+ MODULE_LICENSE("GPL v2");
+ MODULE_ALIAS("nvmet-transport-3"); /* 3 == NVMF_TRTYPE_TCP */
++MODULE_ALIAS("nvmet-transport-4"); /* 4 == NVMF_TRTYPE_MPTCP */
+diff --git a/include/linux/nvme.h b/include/linux/nvme.h
+index 041f30931a90..0eada1e0c652 100644
+--- a/include/linux/nvme.h
++++ b/include/linux/nvme.h
+@@ -68,6 +68,7 @@ enum {
+ 	NVMF_TRTYPE_RDMA	= 1,	/* RDMA */
+ 	NVMF_TRTYPE_FC		= 2,	/* Fibre Channel */
+ 	NVMF_TRTYPE_TCP		= 3,	/* TCP/IP */
++	NVMF_TRTYPE_MPTCP	= 4,	/* Multipath TCP */
+ 	NVMF_TRTYPE_LOOP	= 254,	/* Reserved for host usage */
+ 	NVMF_TRTYPE_MAX,
+ };
 -- 
 2.53.0
 
