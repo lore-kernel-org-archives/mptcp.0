@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 269282F8E9A;
-	Sun, 17 May 2026 05:44:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE77C73463;
+	Sun, 17 May 2026 05:51:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778996669; cv=none; b=jBWiguSCYoo273grD+FZa7jvfuZhvEfk17qEeegbRgT+5pJS8P1yGW/JSHhYBUEQ8qVrLSdlqck0u4I5P+udjItpb/AOEYQZ8QGI65uBzr9lgfa0xTI+Gysg9GeWNnBdxOot8tsDynPVAoXm5ocFogz5lUA79vqxymYL+B1foVM=
+	t=1778997065; cv=none; b=bNi6Fv36ssseN0h7Lxj4C308ili/DQurMQku26MbxmVzUG8stJArcbfoU3DXUMsjZuxCFohXivdKi0hu4m1eQhaNWbmu3mygr0rt0PLpf+8pMMsLVT3Ilfl2B0kUWAVgfoYbqhwgw4FDGU1ksfQcbNXKa+x8AziW+ITzjHZfT1g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778996669; c=relaxed/simple;
-	bh=oop5U7nxXVqwQe95Zs308MFuJ638RAQq24XeUN6RnPs=;
+	s=arc-20240116; t=1778997065; c=relaxed/simple;
+	bh=GfVo+wMcHFCWeSLaasazUP9yqDMCJT2bcGpLDxj8XgI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AuR+J1p74aECLSqGdaq+NfVJDjSgV7C1u36R7EYJ+HUsmgoHWTWYZFN+pGJHrl4REKp9nsFe2ZQYFPBaFvITNSmC78ahft9JMmE53VNDfpxDyOborv34VLgIAe6f7w0kU4XPEq2Q/jSnoFtR8w9SoqPwtjhMTDRI8Iv4rzLih1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jAkToqma; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=S5lfw922hE9kZIlLlO2fVCmQJCZ7wpJHE6NnC2JfgSHkBtQ6SpEdR8zeQUEvSJNKIXuPGig1m0CBeuS6/fWiCGmpzcMVGYfCyxNqThCK+CBpS87S7U5oMlS68YbiCok7ivWPbUXnpX8M94jLwqCQ+6+g4v801IW9nX1FEJxOwd0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dzdgvaWQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jAkToqma"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD311C2BCB0;
-	Sun, 17 May 2026 05:44:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dzdgvaWQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FC57C2BCB0;
+	Sun, 17 May 2026 05:51:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778996668;
-	bh=oop5U7nxXVqwQe95Zs308MFuJ638RAQq24XeUN6RnPs=;
+	s=k20201202; t=1778997065;
+	bh=GfVo+wMcHFCWeSLaasazUP9yqDMCJT2bcGpLDxj8XgI=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=jAkToqmaJdtO8bnAbnIlATUeSd2QAuhkksTrABi1AAv4y7NFvwVi2qdMm2UHKTym2
-	 lzIF45PFX1gxAIkRBfLvCLg40yi7KJAe7vJzNcaO3+sJ5EZ8ToM4oj5j466WDgnm59
-	 Qe80+WbO6RIBDNwthdfR08Pt3PmR4WCqBv0FsDFRTaK/CB6HDou306MpyAtrQ75PoX
-	 E9c6e9WtmLESArkTpak9DIosXvd2GVMuA2nlCK/dQLtH1/sacMtQ4jjLeJAffPUFh1
-	 +fGSrvG5uPuKNTfSUe+76Aow5m/ug4zBkvh9ncZB7R0ui1tNjwj9jiKI5iBgMB02QU
-	 u+8g6SLdKjOHQ==
-Message-ID: <f5a568c9-f786-40d5-8faf-c41bbebccbff@kernel.org>
-Date: Sun, 17 May 2026 15:44:15 +1000
+	b=dzdgvaWQEtIpSc767EbmghV7oM5bpUIB1xp2jBMAjIQ4vtPQexPHnoXjNr4DL2QQz
+	 fa9EROOQ799zX9OD2bIDxslfxLgZWOdNKm/otYtNodib6H3WKAHu7pvuCwpkC6G5dK
+	 2lQaPy1GtKi+cwpDqAbmeD40E8v8EioPhBg/XXd56gtWDc0tl6WWhDp7sBh1eO2e03
+	 CEAZgRsrZJHvwvwcqcfRCmTnzMtfiS0EXH+Cf5Ay4DT9GDroI3AaiBeVer+bQTaTKX
+	 vzpZ9eVkrnLVjq0DIupMhiwjGZTjCAm356O8fS1H/GDem7yx7J7k40NT/QUJC27yeu
+	 TA8X9c74yd+tA==
+Message-ID: <85b89125-57f2-43ab-a834-4dca56881e26@kernel.org>
+Date: Sun, 17 May 2026 15:50:56 +1000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,18 +35,19 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH net v2 6/6] selftests: mptcp: drop nanoseconds width
- specifier
+Subject: Re: [PATCH net v2 2/6] mptcp: pm: fix ADD_ADDR timer infinite retry
+ on option space insufficient
 Content-Language: fr
-To: netdev@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, stable@vger.kernel.org,
+To: Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Li Xiasong <lixiasong1@huawei.com>
+Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev,
+ linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ Eric Dumazet <edumaze@google.com>, stable@vger.kernel.org,
  Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
  "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
  Simon Horman <horms@kernel.org>, Shuah Khan <shuah@kernel.org>
 References: <20260515-net-mptcp-misc-fixes-7-1-rc4-v2-0-701e96419f2f@kernel.org>
- <20260515-net-mptcp-misc-fixes-7-1-rc4-v2-6-701e96419f2f@kernel.org>
+ <20260515-net-mptcp-misc-fixes-7-1-rc4-v2-2-701e96419f2f@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -92,23 +93,47 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20260515-net-mptcp-misc-fixes-7-1-rc4-v2-6-701e96419f2f@kernel.org>
+In-Reply-To: <20260515-net-mptcp-misc-fixes-7-1-rc4-v2-2-701e96419f2f@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hello,
 
 On 15/05/2026 06:27, Matthieu Baerts (NGI0) wrote:
-> Using the format specifier +%s%3N with GNU date is honoured, and only
-> prints 3 digits of the nanoseconds portion of the seconds since epoch,
-> which corresponds to the milliseconds.
+> From: Li Xiasong <lixiasong1@huawei.com>
 > 
-> The uutils implementation of date currently does not honour this, and
-> always prints all 9 digits. This is a known issue [1], but can be worked
-> around by adapting this test to use nanoseconds instead of microseconds,
+> When TCP option space is insufficient (e.g., when sending ADD_ADDR with an
+> IPv6 address and port while tcp_timestamps is enabled), the original code
+> jumped to out_unlock without clearing the addr_signal flag. This caused
+> mptcp_pm_add_timer to keep rescheduling indefinitely, not sending ADD_ADDR,
+> preventing subsequent addresses in the endpoint list from being announced.
 
-Sashiko noticed that I wrote microseconds instead of milliseconds. Do I
-need to send a v3 just to fix this typo?
+(...)
+
+> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+> index 3c152bf66cd5..3e770c7407e1 100644
+> --- a/net/mptcp/pm.c
+> +++ b/net/mptcp/pm.c
+
+(...)
+
+> @@ -414,8 +420,12 @@ mptcp_pm_del_add_timer(struct mptcp_sock *msk,
+>  	/* Note: entry might have been removed by another thread.
+>  	 * We hold rcu_read_lock() to ensure it is not freed under us.
+>  	 */
+> -	if (stop_timer)
+> -		sk_stop_timer_sync(sk, &entry->add_timer);
+FYI, sashiko found a pre-existing issue here, but I guess that's not
+blocking this series.
+
+https://sashiko.dev/#/patchset/20260515-net-mptcp-misc-fixes-7-1-rc4-v2-0-701e96419f2f%40kernel.org
+
+@Li: just to know what I do with this pre-existing issue, do you plan to
+look at it?
+
+Just in case, I just opened:
+
+  https://github.com/multipath-tcp/mptcp_net-next/issues/623
 
 Cheers,
 Matt
