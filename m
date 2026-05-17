@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1F9C36AF6
-	for <mptcp@lists.linux.dev>; Sun, 17 May 2026 06:06:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC14C30DD2F
+	for <mptcp@lists.linux.dev>; Sun, 17 May 2026 06:06:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778997976; cv=none; b=vEoGvzko5RSb5lcYNPmlwZO9sN+/QKBEYTCGnJGIUGFzdBgIZkkwUxOJr3QoAtNl5PQ/fFYd81O0KsdMmoQpVF8Y+UPfzuEyaHp6MUd0iWg+NKTevQQV+n0tcNtJfS3VAwFCUWwJ6BmqJHqEnn/5loVdEwy4fTb7zbq7a1C7qBw=
+	t=1778997979; cv=none; b=fqDaeDqhPtuh+IjKmzbebo8UXiHaE1OiT3+Gsbg68bppQQbW8Lq5WzPMZevJI/17VhhGxNB/VQ1KuecV0PvKCODtBaTrDr2U0qA8nGkzsTGMwgwTMnyFnSnl4WK0SQeDbDpROQSkuiIpon9EOXHKJ/faxTEXhW2nnlMoRIFWv24=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778997976; c=relaxed/simple;
-	bh=UMbv0kJDGb4DqzP57rJf1RO7F6wW9TMuOGWKszzTj/o=;
+	s=arc-20240116; t=1778997979; c=relaxed/simple;
+	bh=0/1qDpnrEASKTyamgrZq3hiktwpNCegwlvl5LllEwVY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Wttfz6bdxHXCUAEJKNAR8KwC3RNqOnUOQJ5igOYHTM4aPY/VasWxkcfiipELt+W/sKcd4C+EffGdgsEDol2a9dMYE3xXYT6pAu7tfkRQ6EyA+kI7rDANG+wZI/frHOgF2gMQ9G2mBWOGppGPhE6BzdBAaix1s2PRZHLMJ8r/snc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qMJtl8mL; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Y66W2iBO73Q+8Y7ezP+APBGrrKtaOUq7qIv0pz+M4uUDTR1gCawz4WFv/WWTvB5oFCHQSsbTj7tKbSBZhcVDTy9nPjC6rxu8O9673RabFaM1/RKhK2VeK9TLA/STNe5BPREbLP5Ng5bjqiRPHkG3KDVbauX/mf9NyD4GXW2JBnA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AOnh59CI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qMJtl8mL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8523C2BCB0;
-	Sun, 17 May 2026 06:06:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AOnh59CI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20A7BC2BCB3;
+	Sun, 17 May 2026 06:06:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778997976;
-	bh=UMbv0kJDGb4DqzP57rJf1RO7F6wW9TMuOGWKszzTj/o=;
+	s=k20201202; t=1778997978;
+	bh=0/1qDpnrEASKTyamgrZq3hiktwpNCegwlvl5LllEwVY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=qMJtl8mLv7l0O6+20+5RivbCxRAY9IIhukn0WmQnfQjseyVXW1hasnuhIGYr3N6Ro
-	 TiXufoXeb9R5Z5VyLM8hR/PnTLmY+yCuCPjoa4n8Lf9vszlDNGJ/FFbIAt218I9J29
-	 9OYd7JH5yJuaJGNosF+9G6W6RKXFQXSu9xkLZlm5GKWR5in9hyDznMtBWf+2vUIG72
-	 HWMxCgWPdKKXfVxQMLVIzm0bhiGTIDBEfi3yxB1SEPX17GWkGc4sGsSMocckuxRteQ
-	 er+pKdXe1451GDAevYbZxsUblZ8QAYKwx41sDXn2Pr82fsKHb9zZ5SaexKOPtu4PRL
-	 FC7tw8u0Nsu3Q==
+	b=AOnh59CILpr7Akcfzk7nJz0jMoqtBZq0Zxn9zWjQ+XwMX/Mwtw7UbgcWa6FfgfbP/
+	 c0+pXRNX0rCD1bFZV2nUPJt10R0Yp7HWqdcuoqOiBf1nLZlYXEjorPvCuZ2nQQ3KaN
+	 b2+DTWa73/QAEN0VL5ZQC6eckvk4WYDBtlTHpfDxUzyANo+yZAFUFuJ8lftswIbRt6
+	 4Ma6Cvu/JBbXgdKAoAdCl5IzEp9iAEblNZGStOCY8PQw32pTWGhNPJ+ZOCRsaKwXpW
+	 YeyNS0nS9hKtfLcJJpi8iF32oAdqMDS/0uukU6Fi6HYBOFb4el2NO+XAaxClTXeTPv
+	 PyoKmuByUYmzQ==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>,
@@ -33,9 +33,9 @@ Cc: Geliang Tang <tanggeliang@kylinos.cn>,
 	zhenwei pi <zhenwei.pi@linux.dev>,
 	Hui Zhu <zhuhui@kylinos.cn>,
 	Gang Yan <yangang@kylinos.cn>
-Subject: [RFC mptcp-next v11 01/10] nvmet-tcp: check return value of set_queue_sock
-Date: Sun, 17 May 2026 14:05:05 +0800
-Message-ID: <6fe186acd68e1083e32fda1037f710f42539e660.1778997507.git.tanggeliang@kylinos.cn>
+Subject: [RFC mptcp-next v11 02/10] nvme-tcp: add RCU protection for host_iface validation
+Date: Sun, 17 May 2026 14:05:06 +0800
+Message-ID: <b5eb56ba1d08892243c307ca6c52bc5ba120cab8.1778997507.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <cover.1778997507.git.tanggeliang@kylinos.cn>
 References: <cover.1778997507.git.tanggeliang@kylinos.cn>
@@ -49,40 +49,51 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-The return value of nvmet_tcp_set_queue_sock() is currently ignored in
-nvmet_tcp_tls_handshake_done(). If it fails (e.g., due to concurrent port
-removal), the socket callbacks will not be properly set, leading to queue
-and socket leakage. Fix this by capturing the return value and calling
-nvmet_tcp_schedule_release_queue() on failure to ensure proper cleanup.
+When the host_iface option is specified, nvme_tcp_alloc_ctrl() calls
+__dev_get_by_name() to validate the network interface exists. However,
+__dev_get_by_name() requires RCU read lock protection as it traverses
+the RCU-protected device hash table.
+
+Without RCU read lock, the thread can be preempted during traversal.
+If a concurrent device unregistration occurs, the hash node can be
+freed via kfree_rcu() and the RCU grace period could end before the
+thread resumes, leading to a use-after-free when the freed memory is
+dereferenced.
+
+Fix this by using dev_get_by_name_rcu() instead of __dev_get_by_name()
+and wrapping the lookup with rcu_read_lock()/rcu_read_unlock().
 
 Cc: Hannes Reinecke <hare@suse.de>
 Cc: zhenwei pi <zhenwei.pi@linux.dev>
 Cc: Hui Zhu <zhuhui@kylinos.cn>
 Cc: Gang Yan <yangang@kylinos.cn>
-Fixes: 675b453e0241 ("nvmet-tcp: enable TLS handshake upcall")
+Fixes: 3ede8f72a9a2 ("nvme-tcp: allow selecting the network interface for connections")
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- drivers/nvme/target/tcp.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/nvme/host/tcp.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/nvme/target/tcp.c b/drivers/nvme/target/tcp.c
-index 164a564ba3b4..8a243d22a511 100644
---- a/drivers/nvme/target/tcp.c
-+++ b/drivers/nvme/target/tcp.c
-@@ -1842,10 +1842,11 @@ static void nvmet_tcp_tls_handshake_done(void *data, int status,
- 	if (!status)
- 		status = nvmet_tcp_tls_key_lookup(queue, peerid);
+diff --git a/drivers/nvme/host/tcp.c b/drivers/nvme/host/tcp.c
+index 15d36d6a728e..d1654a630897 100644
+--- a/drivers/nvme/host/tcp.c
++++ b/drivers/nvme/host/tcp.c
+@@ -2951,12 +2951,15 @@ static struct nvme_tcp_ctrl *nvme_tcp_alloc_ctrl(struct device *dev,
+ 	}
  
-+	if (!status)
-+		status = nvmet_tcp_set_queue_sock(queue);
-+
- 	if (status)
- 		nvmet_tcp_schedule_release_queue(queue);
--	else
--		nvmet_tcp_set_queue_sock(queue);
- 	kref_put(&queue->kref, nvmet_tcp_release_queue);
- }
+ 	if (opts->mask & NVMF_OPT_HOST_IFACE) {
+-		if (!__dev_get_by_name(&init_net, opts->host_iface)) {
++		rcu_read_lock();
++		if (!dev_get_by_name_rcu(&init_net, opts->host_iface)) {
++			rcu_read_unlock();
+ 			pr_err("invalid interface passed: %s\n",
+ 			       opts->host_iface);
+ 			ret = -ENODEV;
+ 			goto out_free_ctrl;
+ 		}
++		rcu_read_unlock();
+ 	}
  
+ 	if (!opts->duplicate_connect && nvme_tcp_existing_controller(opts)) {
 -- 
 2.53.0
 
