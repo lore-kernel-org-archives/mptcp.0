@@ -1,40 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14EBE3EEAD1
-	for <mptcp@lists.linux.dev>; Mon, 18 May 2026 12:07:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAC8F3FB7D1
+	for <mptcp@lists.linux.dev>; Mon, 18 May 2026 12:07:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779106073; cv=none; b=p0SLugYWf7jW1q52gZndycjHq/2yFqKwfzjc9fKPLoxS5lmFNZcxFCWIESp5l1Fry0R7853lvNRu6iyIR9aRopuriRjzJHbO8a3VckSW4I9bPIs5HlmM2NaFk/wnh8k2yBYqBMYGFNyRro5JztD/xCvagwxTXs4tv3zXrP3K9s4=
+	t=1779106075; cv=none; b=TzT/JWh6Ritu8ihxLvPMBjizmXR7GbUQZqB4cjxmhEOevJ42LilDCr5gevfCC2RPVBDWL2lVg5IN6BN7X/HeNOWrHstvVS1W1NKd9Jkb84TteeOGMP1CZe3oHjj7hZKEA8DnxOerxH7eCCdXALSxqVrytWkVTKRmrsOynSfNhw0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779106073; c=relaxed/simple;
-	bh=9/jOwsHCNZGpItBs/fPilEq+SRJ4g0fRVjKmJNsUFjo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=p+0Nv8kbSvuxgkT42OeBcKLNSd197ju1CfYxLulfZQILEV1NYH+ND+A+ujB+DdI6cZHTrVKkdf0W1Ql6NUYUIMi+daHzkStICxbEUPNR471OR2eAr0gxIxpAp3R0duXY5OFTfJd5NWhsqmx19Y0Selv3bkSJtfqQsi4OGTAhgSE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TZrQVQEF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1779106075; c=relaxed/simple;
+	bh=rwnGRzDABlIFb9UDOeW/VgtQjT7t1yElAKQ20huo3fI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=JnEbwyxdV/XS/J+BVdCFpdw7i27FgZNMvnOqg8YURRjLyZXwtqbFZo2GO2Cjbclb279VEF2fjdmPFgGCUYQsIfYGfTVWj1vizeHRGjjH9V1MkXYFabrFkp4qTxRrYmMAadYX5wZB4YS2aLRHcsQ6hcaZEKsowbu5zLzsCom+vYc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nuyewlO4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TZrQVQEF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1253C2BCB8;
-	Mon, 18 May 2026 12:07:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nuyewlO4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F297C2BCC6;
+	Mon, 18 May 2026 12:07:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1779106072;
-	bh=9/jOwsHCNZGpItBs/fPilEq+SRJ4g0fRVjKmJNsUFjo=;
-	h=From:To:Cc:Subject:Date:From;
-	b=TZrQVQEFpRwnPkQVyg1YTyP5YiQLcl5NtjjC7VgRrQDberbk44QtIhMvwEfdUacC6
-	 jbe6ePOC/25tHD3OxuH1nfP1G9qIfMN3Jy6Ay3MRVQ9mTtYSAS8TCCGXHEdiyNW457
-	 ZSQ7nXwxRFB7JmdW9mmTtDfVE8Tl+ExmS98tQEI00HYD3GY0fUWkJ2j6mUSvnT9lBC
-	 7OWmIKeFY9hFqBu41t1RKMEhHDNh6MWzdrd0if9niqC69wZwsTa8JWELofLHmXne2E
-	 EM33t2yv/v16cLiDaXEb9kmlBpRzHPFGTVgFzCMaLAF0yLGGVE7Jt2qllkYXZwXKTn
-	 VpxIDtF2Hf/OA==
+	s=k20201202; t=1779106075;
+	bh=rwnGRzDABlIFb9UDOeW/VgtQjT7t1yElAKQ20huo3fI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=nuyewlO4xnnL/i6Z0RhdW6RsFQYCLMUP2UjDS6+O8fZRqmSpCRMyTAnydKBUM1cbs
+	 7aCBJa0Ed2VpVvStwIRClW4Yx60Z49T0r6/ycv82Q6JdqHh03ZGLNHuMoyq3hFkegl
+	 OSD5rjBavcVKgoXmC1xfOYOVLU6zKZON7dkbqwxKPRNMEXFF5c0rLm2sfDWDxRN7ih
+	 Y4qYKZKapKYsSXBZB3/OICN0czOr7bAvz3gle8PJGlz+YLAmS4rOjLpLicPvc6mMBo
+	 zlDLuwtKTfYVW9oV/Zn+5IT8GH7HvwVDRMqlEF4tUP/yY5Dyt5WNdpAC33E/JA6DOn
+	 cjgBooaGd16hQ==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>,
 	zhenwei pi <zhenwei.pi@linux.dev>,
 	Hui Zhu <zhuhui@kylinos.cn>,
 	Gang Yan <yangang@kylinos.cn>
-Subject: [RFC mptcp-next v13 00/12] NVME over MPTCP
-Date: Mon, 18 May 2026 20:07:25 +0800
-Message-ID: <cover.1779104752.git.tanggeliang@kylinos.cn>
+Subject: [RFC mptcp-next v13 01/12] nvmet-tcp: use tr_ops from nport and add port refcounting
+Date: Mon, 18 May 2026 20:07:26 +0800
+Message-ID: <ae9bf77e12e0aee43bcf4cac00b33ccb36722dba.1779104752.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.53.0
+In-Reply-To: <cover.1779104752.git.tanggeliang@kylinos.cn>
+References: <cover.1779104752.git.tanggeliang@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -45,247 +48,123 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-v13:
- - Patch 1
-   - adds kref reference counting to struct nvmet_tcp_port
- - Patch 2
-   - add nvmet_tcp_done_recv_pdu to use tr_ops from nport structure
-     instead of hardcoded nvmet_tcp_ops (moved from v12 Patch 1)
- - Patch 4
-   - split mptcp_sock_set_tos into __mptcp_sock_set_tos (internal) and
-     mptcp_sock_set_tos (get rcv_tos from first subflow)
-   - add protocol validation to all MPTCP helpers
- - Patch 7
-   - export __mptcp_sock_set_tos
-   - add protocol validation to mptcp_sock_set_syncnt
- - Patch 12 (new)
-   - fix module unload race with concurrent sysfs controller deletion
+Replace hardcoded nvmet_tcp_ops with queue->port->nport->tr_ops in
+nvmet_tcp_done_recv_pdu() to support multiple transport types.
 
-v12:
- - Patch 1 (new):
-   - Add nvmet_tcp_done_recv_pdu to use tr_ops from nport structure instead
-     of hardcoded nvmet_tcp_ops
- - Patch 2:
-   - Remove RCU protection for proto access
-   - Store proto pointer directly in struct nvmet_tcp_queue instead of
-     struct nvmet_tcp_port
-   - Determine proto based on port->sock->sk->sk_protocol during queue
-     allocation
-   - Delete port->proto field from struct nvmet_tcp_port
-   - Remove RCU annotations and rcu_dereference() for proto access
- - Patch 3:
-   - Add nvmet_mptcp_registered flag to track successful MPTCP transport
-     registration
-   - Only unregister MPTCP transport during module exit if registration
-     succeeded
-   - Guard MODULE_ALIAS("nvmet-transport-4") with #ifdef CONFIG_MPTCP
- - Patch 4:
-   - Remove unnecessary sock_hold()/sock_put() pairs in MPTCP helpers
-   - Remove redundant priority >= 0 check in sync_socket_options()
- - Patch 8:
-   - Move trap cleanup EXIT before init() to ensure cleanup runs on early
-     failure
-   - Export variables (nqn, path, port, etc.) immediately upon definition
- - Patch 9:
-   - Skip iopolicy setting gracefully when iopolicy sysfs file does not
-     exist (kernel without NVMe multipath support)
- Link: https://patchwork.kernel.org/project/mptcp/cover/cover.1779087443.git.tanggeliang@kylinos.cn/
-
-v11:
- Patch 2 (new):
- - Add RCU protection for host_iface validation to fix a pre-existing
-   use-after-free issue when validating network interface names.
- Patch 3:
- - Add RCU protection for queue->port access in nvmet_tcp_alloc_cmd
-   (previously missing).
- - Cache proto pointer in nvmet_tcp_done_recv_pdu before releasing
-   RCU lock.
- Patch 4:
- - Remove nvmet_unregister_transport(&nvmet_tcp_ops) on MPTCP registration
-   failure (MPTCP is optional, TCP continues to work).
- Patch 5:
- - Update MPTCP helper functions to iterate over all subflows using
-   mptcp_for_each_subflow().
- - Add sock_hold() with explanatory comment for concurrent subflow closure
-   protection.
- - Fix priority synchronization in sync_socket_options: change condition
-   from priority > 0 to priority >= 0 to allow priority 0.
- Patch 9:
- - Simplify validate_params: use regex ^[1-4]$ for path validation.
- - Remove tc_args quotes in init() to allow proper word splitting for netem
-   parameters.
- Link: https://patchwork.kernel.org/project/mptcp/cover/cover.1778997507.git.tanggeliang@kylinos.cn/
-
-v10:
- Patch 1 (new):
- - Add Fixes tag to the commit that checks return value of
-   nvmet_tcp_set_queue_sock.
- Patch 2:
- - Fix RCU read lock release issue in nvmet_tcp_done_recv_pdu:
-   move rcu_read_unlock() after nvmet_req_init().
- - Fix RCU read lock release issue in nvmet_tcp_set_queue_sock:
-   cache proto pointer before releasing RCU lock.
- - Add missing NULL checks for queue->port in nvmet_tcp_alloc_cmd,
-   nvmet_tcp_try_peek_pdu and nvmet_tcp_tls_handshake.
- - Add __rcu annotation to queue->port in struct nvmet_tcp_queue.
- - Use rcu_access_pointer() instead of rcu_dereference() in
-   nvmet_tcp_destroy_port_queues.
- - Remove redundant kfree_rcu() in nvmet_tcp_remove_port, use kfree()
-   since synchronize_rcu() already guarantees safety.
- Patch 4:
- - Add lock_sock_nested(ssk, SINGLE_DEPTH_NESTING) to all MPTCP helpers
-   to avoid lockdep warnings.
- - Fix mptcp_sock_no_linger to properly set linger on subflow inside the
-   lock.
- Patch 8:
- - Move init before trap cleanup to prevent cleanup errors when early
-   exit occurs.
- - Fix usage text: change default path value from 4 to 1 to match actual
-   behavior.
- - Fix break 2 to break (only one loop level).
- Patch 9:
- - Change grep -B 5 to grep (without -B) to avoid matching host NVMe
-   devices.
- Link: https://patchwork.kernel.org/project/mptcp/cover/cover.1778919284.git.tanggeliang@kylinos.cn/
-
-v9:
- Patch 1:
-  - add NULL pointer checks for RCU dereference in nvmet_tcp_done_recv_pdu
-  and nvmet_tcp_set_queue_sock.
-  - clear queue->port using rcu_assign_pointer and add synchronize_rcu in
-  nvmet_tcp_destroy_port_queues.
-  - use kfree_rcu for port structure in nvmet_tcp_remove_port.
- Patch 2:
-  - change module init order, make MPTCP registration optional to prevent
-  UAF.
- Patch 3:
-  - fix mptcp_sock_set_priority to save config on main socket first, use
-  READ_ONCE and sock_hold.
-  - fix mptcp_sock_no_linger to use READ_ONCE and sock_hold, call
-  sock_no_linger on ssk.
-  - fix mptcp_sock_set_tos to use READ_ONCE and sock_hold.
- Patch 4:
-  - remove unnecessary RCU protection for ctrl->proto (points to static
-  data).
-  - remove rcu_head from nvme_tcp_ctrl, use kfree instead of kfree_rcu.
- Patch 6:
-  - add msk->icsk_syn_retries check before calling tcp_sock_set_syncnt in
-  sync_socket_options.
-  - fix mptcp_sock_set_syncnt to always return 0 after saving config.
- Patch 7:
-  - split selftests into two patches.
-  - fix tool check order (call mptcp_lib_check_tools before temp_file
-  creation).
-  - add unshare -m in cleanup to prevent configfs mount leakage.
-  - improve device name parsing from nvme connect output.
- Patch 8:
-  - add iopolicy tests with set_io_policy function and error checking.
-  - add loss parameter for packet loss simulation (delay 5ms loss 0.5%).
- Link: https://patchwork.kernel.org/project/mptcp/cover/cover.1778837549.git.tanggeliang@kylinos.cn/
-
-v8:
- - address comments reported by ai-review for v7.
- - add RCU protection for queue->port on target side.
- - add RCU protection ctrl->proto on host side.
- - check !msk->first instead of "IS_ERR(msk->first)".
- - fix return value of mptcp_sock_set_syncnt.
- - update selftest.
- - fix CI error: "[SKIP] Could not run all tests without nvme".
- - Link: https://patchwork.kernel.org/project/mptcp/cover/cover.1775047736.git.tanggeliang@kylinos.cn/
-
-v7:
- - address comments reported by ai-review.
- - change sockops in nvmet_tcp_port and nvme_tcp_ctrl as a pointer.
- - add null checks for queue->port->sockops in nvmet_tcp_set_queue_sock.
- - add inline for mptcp_sock_set_priority and mptcp_sock_set_tos in
-   mptcp.h
- - use "ssk = msk->first" instead of "ssk = __mptcp_nmpc_sk(msk)" in
-   mptcp_sock_set_priority, mptcp_sock_no_linger and mptcp_sock_set_tos.
- - drop sk_is_tcp in nvmet_tcp_done_recv_pdu
- - move ctrl->sockops setting before nvme_init_ctrl in
-   nvme_tcp_alloc_ctrl
- - define nvme_mptcp_ctrl_ops
- - add MODULE_ALIAS("nvme-mptcp")
- - add more CONFIG_MPTCP checks
- - update selftest
- - Link: https://patchwork.kernel.org/project/mptcp/cover/cover.1774952107.git.tanggeliang@kylinos.cn/
-
-v6:
- - introduce nvmet_tcp_sockops and nvme_tcp_sockops structures
- - fix set_reuseaddr, set_nodelay and set_syncnt, add sockopt_seq_inc
- calls, only set the first subflow, and synchronize to other subflows in
- sync_socket_options
- - Add implementations for no_linger, set_priority and set_tos
- - This version no longer depends on the "mptcp: fix stall because of
- data_ready" series of fixes
- - Link: https://patchwork.kernel.org/project/mptcp/cover/cover.1774862875.git.tanggeliang@kylinos.cn/
-
-v5:
- - address comments reported by ai-review: set msk->nodelay to true in
-   mptcp_sock_set_nodelay, set sk->sk_reuse to ssk->sk_reuse in
-   mptcp_sock_set_reuseaddr, add mptcp_nvme.sh to TEST_PROGS, and adjust
-   the order of patches.
- - remove TLS-related options from .allowed_opts of
-   nvme_mptcp_transport.
- - some cleanups for selftest.
- - Link: https://patchwork.kernel.org/project/mptcp/cover/cover.1773374342.git.tanggeliang@kylinos.cn/
-
-v4:
- - a new patch to set nvme iopolicy as Nilay suggested.
- - resend all set to trigger AI review.
- - Link: https://patchwork.kernel.org/project/mptcp/cover/cover.1772683110.git.tanggeliang@kylinos.cn/
-
-v3:
- - update the implementation of sock_set_nodelay: originally it only set
-the first subflow, but now it sets every subflow.
- - use sk_is_msk helper in this set.
- - update the selftest to perform testing under a multi-interface
-environment.
- - Link: https://patchwork.kernel.org/project/mptcp/cover/cover.1770627071.git.tanggeliang@kylinos.cn/
-
-v2:
- - Patch 1 fixes the timeout issue reported in v1, thanks to Paolo and Gang
-Yan for their help.
- - Patch 5 implements an MPTCP-specific sock_set_syncnt helper.
- - Link: https://patchwork.kernel.org/project/mptcp/cover/cover.1764152990.git.tanggeliang@kylinos.cn/
-
-This series (previously named "MPTCP support to 'NVME over TCP'") had three
-RFC versions sent to Hannes in May, with subsequent revisions based on his
-input. Following that, I initiated the process of upstreaming the dependent
-"implement mptcp read_sock" series to the main MPTCP repository, which has
-been merged into net-next recently.
+Add kref reference counting to struct nvmet_tcp_port to prevent
+use-after-free when a port is removed while queues still hold
+references to it.
 
 Cc: zhenwei pi <zhenwei.pi@linux.dev>
 Cc: Hui Zhu <zhuhui@kylinos.cn>
 Cc: Gang Yan <yangang@kylinos.cn>
+Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+---
+ drivers/nvme/target/tcp.c | 35 +++++++++++++++++++++++++++++++----
+ 1 file changed, 31 insertions(+), 4 deletions(-)
 
-Geliang Tang (12):
-  nvmet-tcp: use tr_ops from nport and add port refcounting
-  nvmet-tcp: define target tcp_proto struct
-  nvmet-tcp: register target mptcp transport
-  nvmet-tcp: implement target mptcp proto
-  nvme-tcp: define host tcp_proto struct
-  nvme-tcp: register host mptcp transport
-  nvme-tcp: implement host mptcp proto
-  selftests: mptcp: add nvme over mptcp test
-  selftests: mptcp: nvme: add iopolicy tests
-  nvmet-tcp: check return value of set_queue_sock
-  nvme-tcp: add RCU protection for host_iface validation
-  nvme-tcp: wait for synchronous controller deletion on module unload
-
- drivers/nvme/host/tcp.c                       | 122 +++++-
- drivers/nvme/target/configfs.c                |   1 +
- drivers/nvme/target/tcp.c                     | 134 +++++-
- include/linux/nvme.h                          |   1 +
- include/net/mptcp.h                           |  31 ++
- net/mptcp/sockopt.c                           | 186 ++++++++
- tools/testing/selftests/net/mptcp/Makefile    |   1 +
- tools/testing/selftests/net/mptcp/config      |   8 +
- .../testing/selftests/net/mptcp/mptcp_lib.sh  |  12 +
- .../testing/selftests/net/mptcp/mptcp_nvme.sh | 399 ++++++++++++++++++
- 10 files changed, 868 insertions(+), 27 deletions(-)
- create mode 100755 tools/testing/selftests/net/mptcp/mptcp_nvme.sh
-
+diff --git a/drivers/nvme/target/tcp.c b/drivers/nvme/target/tcp.c
+index 164a564ba3b4..7fc37ce2c050 100644
+--- a/drivers/nvme/target/tcp.c
++++ b/drivers/nvme/target/tcp.c
+@@ -202,6 +202,7 @@ struct nvmet_tcp_port {
+ 	struct socket		*sock;
+ 	struct work_struct	accept_work;
+ 	struct nvmet_port	*nport;
++	struct kref		kref;
+ 	struct sockaddr_storage addr;
+ 	void (*data_ready)(struct sock *);
+ };
+@@ -211,7 +212,6 @@ static LIST_HEAD(nvmet_tcp_queue_list);
+ static DEFINE_MUTEX(nvmet_tcp_queue_mutex);
+ 
+ static struct workqueue_struct *nvmet_tcp_wq;
+-static const struct nvmet_fabrics_ops nvmet_tcp_ops;
+ static void nvmet_tcp_free_cmd(struct nvmet_tcp_cmd *c);
+ static void nvmet_tcp_free_cmd_buffers(struct nvmet_tcp_cmd *cmd);
+ 
+@@ -1081,7 +1081,8 @@ static int nvmet_tcp_done_recv_pdu(struct nvmet_tcp_queue *queue)
+ 	req = &queue->cmd->req;
+ 	memcpy(req->cmd, nvme_cmd, sizeof(*nvme_cmd));
+ 
+-	if (unlikely(!nvmet_req_init(req, &queue->nvme_sq, &nvmet_tcp_ops))) {
++	if (unlikely(!nvmet_req_init(req, &queue->nvme_sq,
++				     queue->port->nport->tr_ops))) {
+ 		pr_err("failed cmd %p id %d opcode %d, data_len: %d, status: %04x\n",
+ 			req->cmd, req->cmd->common.command_id,
+ 			req->cmd->common.opcode,
+@@ -1597,6 +1598,21 @@ static void nvmet_tcp_free_cmd_data_in_buffers(struct nvmet_tcp_queue *queue)
+ 	nvmet_tcp_free_cmd_buffers(&queue->connect);
+ }
+ 
++static void nvmet_tcp_port_release(struct kref *kref)
++{
++	struct nvmet_tcp_port *port = container_of(kref,
++						   struct nvmet_tcp_port,
++						   kref);
++
++	kfree(port);
++}
++
++static void nvmet_tcp_port_put(struct nvmet_tcp_port *port)
++{
++	if (port)
++		kref_put(&port->kref, nvmet_tcp_port_release);
++}
++
+ static void nvmet_tcp_release_queue_work(struct work_struct *w)
+ {
+ 	struct nvmet_tcp_queue *queue =
+@@ -1623,6 +1639,8 @@ static void nvmet_tcp_release_queue_work(struct work_struct *w)
+ 	nvmet_tcp_free_cmds(queue);
+ 	ida_free(&nvmet_tcp_queue_ida, queue->idx);
+ 	page_frag_cache_drain(&queue->pf_cache);
++	nvmet_tcp_port_put(queue->port);
++	queue->port = NULL;
+ 	kfree(queue);
+ }
+ 
+@@ -1904,6 +1922,13 @@ static int nvmet_tcp_tls_handshake(struct nvmet_tcp_queue *queue)
+ static void nvmet_tcp_tls_handshake_timeout(struct work_struct *w) {}
+ #endif
+ 
++static struct nvmet_tcp_port *nvmet_tcp_port_get(struct nvmet_tcp_port *port)
++{
++	if (port)
++		kref_get(&port->kref);
++	return port;
++}
++
+ static void nvmet_tcp_alloc_queue(struct nvmet_tcp_port *port,
+ 		struct socket *newsock)
+ {
+@@ -1921,7 +1946,7 @@ static void nvmet_tcp_alloc_queue(struct nvmet_tcp_port *port,
+ 	INIT_WORK(&queue->io_work, nvmet_tcp_io_work);
+ 	kref_init(&queue->kref);
+ 	queue->sock = newsock;
+-	queue->port = port;
++	queue->port = nvmet_tcp_port_get(port);
+ 	queue->nr_cmds = 0;
+ 	spin_lock_init(&queue->state_lock);
+ 	if (queue->port->nport->disc_addr.tsas.tcp.sectype ==
+@@ -2051,6 +2076,8 @@ static int nvmet_tcp_add_port(struct nvmet_port *nport)
+ 	if (!port)
+ 		return -ENOMEM;
+ 
++	kref_init(&port->kref);
++
+ 	switch (nport->disc_addr.adrfam) {
+ 	case NVMF_ADDR_FAMILY_IP4:
+ 		af = AF_INET;
+@@ -2146,7 +2173,7 @@ static void nvmet_tcp_remove_port(struct nvmet_port *nport)
+ 	nvmet_tcp_destroy_port_queues(port);
+ 
+ 	sock_release(port->sock);
+-	kfree(port);
++	nvmet_tcp_port_put(port);
+ }
+ 
+ static void nvmet_tcp_delete_ctrl(struct nvmet_ctrl *ctrl)
 -- 
 2.53.0
 
