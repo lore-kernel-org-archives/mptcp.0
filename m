@@ -1,107 +1,118 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 466FC3C76A0
-	for <mptcp@lists.linux.dev>; Mon, 18 May 2026 07:02:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 553A13DEAFA
+	for <mptcp@lists.linux.dev>; Mon, 18 May 2026 07:28:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779087730; cv=none; b=fikEHUzFFusl5n/DpXWOJNDmavF9UmbkBNOvsJRfF3bx+DX6yPMG2+J3JthPIlnuPlrdw70VvaahBGpImI+5XAMhSc+soOk1kvggw8mAZsoQkjR7XKof6hV0U4ICU60mtt50/ioCLSsWyhT3po8X9nAa5MmDFuoPVCTrhJtUnlM=
+	t=1779089318; cv=none; b=kWTmDjfgkDurWVJnHC0u3TNda2lgOy8OoO/aSdB5z+fsZLOvLsnhpVLOvNNIKDMMh35dXkF1kAKnY1cDjUGBlrg6A92z6zwXSSiNnyIubeYFDkqA/3HeqIlzne5UwuPw7vP3c+nAfbNCNhIpcAl4l+NSclbv8UgkWMtcYRI3L8E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779087730; c=relaxed/simple;
-	bh=luxA/o3wJAhLv3r13hvUhK0hRhdT9n4Zba7jE298N5s=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hrBMFkb9e3+Pq7DRZdigchb6yrmtpv0eQMCnDMFxgBnOtjDuyDlKaevp0217JABzavMMZONO8EfXOCVobGRrpfBYJWOGKpXE5FCfwAwmQigQEVdx68W9sostaCGA0QXUtZz4r3PH86dBlJy2p6o1YbG/C+XT83Yimk3QAwJ1Z6M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B39hYLFg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1779089318; c=relaxed/simple;
+	bh=PiHn6nDPdxThHaKRCiDekpOT6nYjSGPWWK8UoCj9zjE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=Y4vdaiEClwLS1Oscx4l/rQkW55on2hatzhtr4JMmJ9P8sgl3WUy66dDV/axYOHf+Rp/aLJs4D2rED8Xt+YU8rzt9jnNa6k/CYqg1XdNw3tpsrEt5o2sKiQbZQd4CbPfiuIbcaoSC+XyVMOL7OaVxTahCxi1iLQaJyeuTZb4Emww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YOXt6DTp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B39hYLFg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F144C2BCB7;
-	Mon, 18 May 2026 07:02:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YOXt6DTp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 541CFC2BCB7
+	for <mptcp@lists.linux.dev>; Mon, 18 May 2026 07:28:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1779087729;
-	bh=luxA/o3wJAhLv3r13hvUhK0hRhdT9n4Zba7jE298N5s=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=B39hYLFgi48QKb5ovuD6PxgYZQ/nQml+mUqR0YSSv/PKg/BHiS6CoIgadG/UJ5d4J
-	 LwHzGBTsj5QslC00Eqr/7pc8ZL6XQkXc1N/9fx632SAUVPUdYoceuyNpvm0lKvXpLn
-	 8/YlOR/QVklWFhnJVHwapUdPDAepbyY+vRBd2jc5OWKeWWTAf0IlkFhkQgDFwM7qY2
-	 mM04T7bWNQoJPpO7tfbAflk5lxETrF9mzaXsjo6YQQyIgRLVDRaBTFGf+v8QRMZR6x
-	 IPlEr9ceIQqI3SgmIbExJOsqFsXgaxcLGdrVIkkd+MPZdcQat3pdg56tmtTYRcVaJb
-	 dVPNPgXCPmwGA==
-From: Geliang Tang <geliang@kernel.org>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>,
-	Hannes Reinecke <hare@suse.de>,
-	zhenwei pi <zhenwei.pi@linux.dev>,
-	Hui Zhu <zhuhui@kylinos.cn>,
-	Gang Yan <yangang@kylinos.cn>
-Subject: [RFC mptcp-next v12 11/11] nvme-tcp: add RCU protection for host_iface validation
-Date: Mon, 18 May 2026 15:01:30 +0800
-Message-ID: <b32bf6743493ecc45f3af79b4f1fa6caf9f5042b.1779087443.git.tanggeliang@kylinos.cn>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <cover.1779087443.git.tanggeliang@kylinos.cn>
-References: <cover.1779087443.git.tanggeliang@kylinos.cn>
+	s=k20201202; t=1779089318;
+	bh=PiHn6nDPdxThHaKRCiDekpOT6nYjSGPWWK8UoCj9zjE=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=YOXt6DTpSEprwbcLXZPpt4E8f1k7cGL0tcKM/vYkvV84l3OjcTOpJP5x/f3fN55w5
+	 /Ai6YlFbp6p9M4nanDpSuR92b7GX+5JJoBuYMAAjTxLTs9gvpbVwT9oJeAtyPAAYrQ
+	 et/X7jKAcGAkagAVgiCySzfaxRuFtw3Wxyi23Y8fRvT54kqoxhNwkXZNa99ur/m0XA
+	 i1WhhvOmqi3xWpcGycfB+FKaPANBh6jAC6HhiQANcaBAev0V3yYdpnmfj84Mo21E5i
+	 YB2emjI6bfv/EtfMPHrSOzbpFOHHErNJ5PqezeMdB8Lsxwfwc3WqLMUYBz5l9c+pFG
+	 hqhjxlpSCG53g==
+Message-ID: <8a4c5085-7dd7-4a1c-920b-2eb228d45f74@kernel.org>
+Date: Mon, 18 May 2026 17:28:34 +1000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-net 3/3] selftests: mptcp: simult_flows: disable
+ 'flaky' mark
+Content-Language: fr
+To: MPTCP Linux <mptcp@lists.linux.dev>
+References: <20260508-mptcp-sft-sflows-bufferbloat-v1-0-e9b0d25d9789@kernel.org>
+ <20260508-mptcp-sft-sflows-bufferbloat-v1-3-e9b0d25d9789@kernel.org>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <20260508-mptcp-sft-sflows-bufferbloat-v1-3-e9b0d25d9789@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+Hello,
 
-When the host_iface option is specified, nvme_tcp_alloc_ctrl() calls
-__dev_get_by_name() to validate the network interface exists. However,
-__dev_get_by_name() requires RCU read lock protection as it traverses
-the RCU-protected device hash table.
+On 08/05/2026 19:54, Matthieu Baerts (NGI0) wrote:
+> Thanks to recent commits removing high bufferbloat in this case, the
+> "unbalanced bwidth" subtest has a more stable transfer.
+> 
+> Thanks to that, it looks like the test is no longer flaky (hopefully).
+Too soon apparently: when validating something else, I managed to have
+this "unbalanced bwidth" subtest failing again... I then reverted this
+patch, keeping the flaky mark for the moment:
 
-Without RCU read lock, the thread can be preempted during traversal.
-If a concurrent device unregistration occurs, the hash node can be
-freed via kfree_rcu() and the RCU grace period could end before the
-thread resumes, leading to a use-after-free when the freed memory is
-dereferenced.
+New patches for t/upstream:
+- 584a6166fbf6: Revert "selftests: mptcp: simult_flows: disable 'flaky'
+mark"
+- Results: 0c8a93820ed7..23350e342bf2 (export)
 
-Fix this by using dev_get_by_name_rcu() instead of __dev_get_by_name()
-and wrapping the lookup with rcu_read_lock()/rcu_read_unlock().
+Tests are now in progress:
 
-Cc: Hannes Reinecke <hare@suse.de>
-Cc: zhenwei pi <zhenwei.pi@linux.dev>
-Cc: Hui Zhu <zhuhui@kylinos.cn>
-Cc: Gang Yan <yangang@kylinos.cn>
-Fixes: 3ede8f72a9a2 ("nvme-tcp: allow selecting the network interface for connections")
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
----
- drivers/nvme/host/tcp.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/c2a7d8421fcddc899e9ebd250112c5a70be01aa0/checks
 
-diff --git a/drivers/nvme/host/tcp.c b/drivers/nvme/host/tcp.c
-index 8816e98f4282..08ba99f1a3a8 100644
---- a/drivers/nvme/host/tcp.c
-+++ b/drivers/nvme/host/tcp.c
-@@ -11,6 +11,7 @@
- #include <linux/crc32.h>
- #include <linux/nvme-tcp.h>
- #include <linux/nvme-keyring.h>
-+#include <linux/rcupdate.h>
- #include <net/sock.h>
- #include <net/tcp.h>
- #include <net/tls.h>
-@@ -3004,12 +3005,15 @@ static struct nvme_tcp_ctrl *nvme_tcp_alloc_ctrl(struct device *dev,
- 	}
- 
- 	if (opts->mask & NVMF_OPT_HOST_IFACE) {
--		if (!__dev_get_by_name(&init_net, opts->host_iface)) {
-+		rcu_read_lock();
-+		if (!dev_get_by_name_rcu(&init_net, opts->host_iface)) {
-+			rcu_read_unlock();
- 			pr_err("invalid interface passed: %s\n",
- 			       opts->host_iface);
- 			ret = -ENODEV;
- 			goto out_free_ctrl;
- 		}
-+		rcu_read_unlock();
- 	}
- 
- 	if (!opts->duplicate_connect && nvme_tcp_existing_controller(opts)) {
+Cheers,
+Matt
 -- 
-2.53.0
+Sponsored by the NGI0 Core fund.
 
