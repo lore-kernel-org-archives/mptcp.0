@@ -1,118 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-185.mta0.migadu.com (out-185.mta0.migadu.com [91.218.175.185])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 553A13DEAFA
-	for <mptcp@lists.linux.dev>; Mon, 18 May 2026 07:28:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF90F3B7B79
+	for <mptcp@lists.linux.dev>; Mon, 18 May 2026 08:13:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.185
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779089318; cv=none; b=kWTmDjfgkDurWVJnHC0u3TNda2lgOy8OoO/aSdB5z+fsZLOvLsnhpVLOvNNIKDMMh35dXkF1kAKnY1cDjUGBlrg6A92z6zwXSSiNnyIubeYFDkqA/3HeqIlzne5UwuPw7vP3c+nAfbNCNhIpcAl4l+NSclbv8UgkWMtcYRI3L8E=
+	t=1779092027; cv=none; b=NoIDsFiR0VK748NX5XBM99io2g4Dbpc/w5W6QftzU+sX5Z/NQTyKvJi1nplYLOLLzHdoZkWhbyGFqWe5T8IKWeIbeg2PKWJfA9GCfVptOSTTNlQBxEY2OgEJig9FBK6l9YJctYbkQz+9mRTHlxM4Vk/hwkKU6a7wpFDe/bL5eag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779089318; c=relaxed/simple;
-	bh=PiHn6nDPdxThHaKRCiDekpOT6nYjSGPWWK8UoCj9zjE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=Y4vdaiEClwLS1Oscx4l/rQkW55on2hatzhtr4JMmJ9P8sgl3WUy66dDV/axYOHf+Rp/aLJs4D2rED8Xt+YU8rzt9jnNa6k/CYqg1XdNw3tpsrEt5o2sKiQbZQd4CbPfiuIbcaoSC+XyVMOL7OaVxTahCxi1iLQaJyeuTZb4Emww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YOXt6DTp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1779092027; c=relaxed/simple;
+	bh=Wsz9960Qnk+D5L+yGEtcjK4SzHNX499i+nx158nce2s=;
+	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
+	 In-Reply-To:References; b=fUCMYCxfqE9MJ6crtjJfPfV/isSYyolhdTuZ+b4hPPrKsBzSsulHkZPnqDMY8wI7EDv1HwYFu3S2Nv+Iczc69ltB+BZl9i77ENjSrsnyLHUvVFupZFXZpge4Td9liw/LIDVvHm6jvGAGM0Nmu4C1PyZ16h+AkjuAIXyRweUA0YM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Ps1YD9BD; arc=none smtp.client-ip=91.218.175.185
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YOXt6DTp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 541CFC2BCB7
-	for <mptcp@lists.linux.dev>; Mon, 18 May 2026 07:28:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1779089318;
-	bh=PiHn6nDPdxThHaKRCiDekpOT6nYjSGPWWK8UoCj9zjE=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=YOXt6DTpSEprwbcLXZPpt4E8f1k7cGL0tcKM/vYkvV84l3OjcTOpJP5x/f3fN55w5
-	 /Ai6YlFbp6p9M4nanDpSuR92b7GX+5JJoBuYMAAjTxLTs9gvpbVwT9oJeAtyPAAYrQ
-	 et/X7jKAcGAkagAVgiCySzfaxRuFtw3Wxyi23Y8fRvT54kqoxhNwkXZNa99ur/m0XA
-	 i1WhhvOmqi3xWpcGycfB+FKaPANBh6jAC6HhiQANcaBAev0V3yYdpnmfj84Mo21E5i
-	 YB2emjI6bfv/EtfMPHrSOzbpFOHHErNJ5PqezeMdB8Lsxwfwc3WqLMUYBz5l9c+pFG
-	 hqhjxlpSCG53g==
-Message-ID: <8a4c5085-7dd7-4a1c-920b-2eb228d45f74@kernel.org>
-Date: Mon, 18 May 2026 17:28:34 +1000
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Ps1YD9BD"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net 3/3] selftests: mptcp: simult_flows: disable
- 'flaky' mark
-Content-Language: fr
-To: MPTCP Linux <mptcp@lists.linux.dev>
-References: <20260508-mptcp-sft-sflows-bufferbloat-v1-0-e9b0d25d9789@kernel.org>
- <20260508-mptcp-sft-sflows-bufferbloat-v1-3-e9b0d25d9789@kernel.org>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <20260508-mptcp-sft-sflows-bufferbloat-v1-3-e9b0d25d9789@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1779092024;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=sSw4aB8NRQjolw4oaDbiwRqYoOURHUT2FztVQ+Tu46U=;
+	b=Ps1YD9BDDvstEHz/H1fsY5AEANprxtdfpwtexRu7g8MPF56ch74PuTKlTFu1dlHKXELI9E
+	rcQSQXXUTM6MUxiS507MbqpCQFXuDLTqOd/Sh55TiRVR0wqIKjxWn5Twvzy3n7V6PZTmTG
+	LWc4ZgpeK8Xo2se0IGVdaskmM1p7FdU=
+Date: Mon, 18 May 2026 08:13:42 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: gang.yan@linux.dev
+Message-ID: <a3331544d24acc69090b43bb44fa5087c33a6092@linux.dev>
+TLS-Required: No
+Subject: Re: [PATCH v6 mptcp-next 0/7] mptcp: address stall under memory
+ pressure
+To: "Paolo Abeni" <pabeni@redhat.com>, mptcp@lists.linux.dev
+Cc: "Geliang Tang" <geliang@kernel.org>
+In-Reply-To: <4a38eef7-0143-4980-b856-42591e521b13@redhat.com>
+References: <cover.1778835009.git.pabeni@redhat.com>
+ <4a38eef7-0143-4980-b856-42591e521b13@redhat.com>
+X-Migadu-Flow: FLOW_OUT
 
-Hello,
+May 15, 2026 at 5:29 PM, "Paolo Abeni" <pabeni@redhat.com mailto:pabeni@r=
+edhat.com?to=3D%22Paolo%20Abeni%22%20%3Cpabeni%40redhat.com%3E > wrote:
 
-On 08/05/2026 19:54, Matthieu Baerts (NGI0) wrote:
-> Thanks to recent commits removing high bufferbloat in this case, the
-> "unbalanced bwidth" subtest has a more stable transfer.
-> 
-> Thanks to that, it looks like the test is no longer flaky (hopefully).
-Too soon apparently: when validating something else, I managed to have
-this "unbalanced bwidth" subtest failing again... I then reverted this
-patch, keeping the flaky mark for the moment:
 
-New patches for t/upstream:
-- 584a6166fbf6: Revert "selftests: mptcp: simult_flows: disable 'flaky'
-mark"
-- Results: 0c8a93820ed7..23350e342bf2 (export)
+>=20
+>=20On 5/15/26 11:07 AM, Paolo Abeni wrote:
+>=20
+>=20>=20
+>=20> This an attempt to fix the data transfer stall reported by Geliang =
+and
+> >  Gang more carefully enforcing memory constraints at the MPTCP level.
+> >=20=20
+>=20>  This iteration presents a significant change WRT the previous one,
+> >  avoiding entirely the collapse attempt on memory pressure. Note that
+> >  this choice represent a trade off: collapsing allow much faster tran=
+sfer
+> >  (to be more accurate: order of magnitude less slow) under some extre=
+me
+> >  conditions, but makes transfer slower and much more CPU intensive fo=
+r
+> >  less unlikely conditions.
+> >=20=20
+>=20>  As a consequence of the above the `mptcp_data.multi_chunk_sendfile=
+`
+> >  test-case needs a 240 seconds timeout to complete successfully:
+> >=20=20
+>=20>  TEST_F_TIMEOUT(mptcp, multi_chunk_sendfile, 240)
+> >=20=20
+>=20>  The solution performing data collapsing would need similar long ti=
+meout
+> >  for the multiproc tests cases: mutliproc_even, mutliproc_readers,
+> >  mutliproc_writers, mutliproc_sendpage_even, mutliproc_sendpage_reade=
+rs,
+> >  mutliproc_sendpage_writers.
+> >=20=20
+>=20>  Patch 1 is new in v6, and is actually a fix for an old issue (targ=
+eting
+> >  net), included here just for my convenience.
+> >=20=20
+>=20>  Patch 2 and 3 makes the admission check much more strict for incom=
+ing
+> >  packets exceeding the memory limits, with some exception for fallbac=
+k
+> >  sockets.
+> >  Patch 4 makes implement OoO queue pruning for MPTCP and patch 5
+> >  addresses an edge scenario that could still lead to transfer stall
+> >  under memory pressure.
+> >  Finally patch 6 and 7 improve the MPTCP-level retransmission schema =
+to
+> >  make recovery from memory pressure/after MPTCP-level drop significan=
+ly
+> >  faster.
+> >=20
+>=20@Geliang, @Gang: could you please have a spin at this iteration? Note
+> that you must increase the timeout for the
+> mptcp_data.multi_chunk_sendfile test-case, as mentioned above.
+>=20
+Hi=20Paolo,
 
-Tests are now in progress:
+Thanks a lot for the new patch set. We have encountered some issues durin=
+g
+our testing. It will take us some time to analyze and locate the root cau=
+se.
+We will post updates on the mailing list as soon as we make progress.
 
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/c2a7d8421fcddc899e9ebd250112c5a70be01aa0/checks
+Best regards
+Gang
 
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
-
+> Side note: with the "collapse" code this revision also omitted a relate=
+d
+> few refactor patches, that I still plan to upstream later, since the
+> effect is a nice cleanup and reducing differences VS plain TCP.
+>=20
+>=20/P
+>
