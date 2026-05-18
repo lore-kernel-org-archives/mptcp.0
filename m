@@ -1,131 +1,115 @@
-Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from canpmsgout04.his.huawei.com (canpmsgout04.his.huawei.com [113.46.200.219])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 211A315665C
-	for <mptcp@lists.linux.dev>; Mon, 18 May 2026 06:03:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0DE43C3BF5
+	for <mptcp@lists.linux.dev>; Mon, 18 May 2026 06:34:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.219
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779084242; cv=none; b=TfN+Zu6BLPXb9Whak7mmZvjvfoYjk5xDXbUzUCB3qj6zGTder2S9+z2aYN3t/tmZpL/aUBCanYy4SH1B5kftYjNbaS/5TGnOoLrasaRCjXrx6MGUfB/I639bgVjuWYJKWFoLAKsy9o8UgFFgpLYlT0ycWn5PWguSq/kXWIo3wlU=
+	t=1779086100; cv=none; b=dawziUonkyquqhgfLJp2OIJLQLJ7EwBjL6CiE1JDVDN1QHC7f4iYYmBs7Gw/zEzgIzNS4fj3XzPaSb9FuziIT54Mt15vAP0+IXLUsRXZcxHAeQHmhCiaOjGSn2A0k2wO45x6kKrKCdaIP6WwrPQ6Jg/0sq7kaTB0YhFILgVyeXk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779084242; c=relaxed/simple;
-	bh=in3Ff33/5dgib40UA2M9aCwE+LQd955NiO7tdR0G4Ac=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
-	 MIME-Version:Content-Type; b=NED26mpkOmXQzsfF1O4R8yNdLwuUfKxBc+VA4jdpDkxXtIIE9vGvYDmWJFRKt8NxSQJqIgqICWtKnMg8DUHYEluVSm0JIj/1yCu6A2s4rdIkNNbtIQQswnR5T/HXtKv+sipdTjOUhjXepRUoylBRxf1mSm5MQ+89ltiU1YuHFzM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L3zP9yGT; arc=none smtp.client-ip=209.85.219.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1779086100; c=relaxed/simple;
+	bh=sibF+s6I00NkiIexv5eillM53CQ4gPHCtUOHSkRX6/w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=HcOfdJlIupTmOTx3H5ermlSmnzrwFaMgB21o9mgo1w+lKWwZVqqdb63B5Q+HKPffr2GzRIBjnWOuOOkI5lc4nVBBbpJJjAS2bZ7qUWxWe6RLddUQmxF862ZX+Tb2XUxtQPnEKmx27l+XY6w/d0H5XIE+KSnF+FcDqJPvnc/gs30=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=ZZekhNhU; arc=none smtp.client-ip=113.46.200.219
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L3zP9yGT"
-Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-8b98482b253so36904576d6.1
-        for <mptcp@lists.linux.dev>; Sun, 17 May 2026 23:03:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779084238; x=1779689038; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5mIoMB6KZfnGbmK5HC23ZZCzJ14LhaGEfSqYgg0YpTE=;
-        b=L3zP9yGTJbrcWec4uMrVvdfpi1SDzYgG4hnoGKrnTohD5lazR6LMoTnyOlBZcqRs9A
-         zM6g9s0yctJQyNNVJ1TmgnFnnoXUG4XDruDm1/B3XzkIhq/fc7msZnTbb2MVasIEaPGB
-         XIS+RCx9H4a9FI7Q40NEgJILy6aVBasNKSZn1kZRs9r1XtlnFwGbJ0UuOvZLbyiny5PC
-         AlXDDJCuWX2RsgjVWIUqcLac61Ch6aVy/XMktc3AeibxeDLEq5tAY4HBhiwdi1cM2Sm7
-         PNaY17iO7G9/wgDWVUjlqgkYIiS06GVX0M5Xucs72vRhMljD+tmAe6dHZjI/OmWlwPgk
-         L2qg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779084238; x=1779689038;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5mIoMB6KZfnGbmK5HC23ZZCzJ14LhaGEfSqYgg0YpTE=;
-        b=oNEo+zwVv0c2bpJqbFraATkBU0hXJIqxZv6Yxu9XtYmKRZXnCHxqzy+YdAO/qJ3itR
-         Vy/LFd647GV4MZGqUPzo93DUQR5GvmB5CPf3U0UMvUIo80TQJnqakpnKlO0F73j85Opt
-         B1c6pG2WyRgcvgpWiKVVa2zKM4StJaTmrbxGrvqw67vJUbJAY+RHxyVBILzyv/Da6T5j
-         clYtLkljrOe/WqSuCMqWIvf1iEiMglI12K44RIix87cfug9oXxZ6/B3WXtoeSIt5GPfP
-         xoFh/WYgS3iLyxHNxH/rBROQXfooTp7ZGHzXxKR0p+45Q5/18NXmZ1e2v2LKJQsS3Pue
-         SEXQ==
-X-Gm-Message-State: AOJu0YyVqBC3sTf95se+hTu53SHITYu8O5fNINTM6RppScmGKUJktj6O
-	etAZoDlTSOLX85I6ddAIgv8huZolp8XIDuzORktYZ7RnKjw8a6jIWCzXIoBv
-X-Gm-Gg: Acq92OESR6AurCHZVu4zrTPSxX3ylhJ6r15eALCwT2eDR8qV+po3722yJZhnBON+wAy
-	BcBJPy4Z1P3lHtr6LpRXqS+LDtK7/juA7YP1Tu+i+0DA0cUMUcr4UfAd4Rz4u+UVaX5VzBnnSMO
-	HQM8fx+yPtStXAMuFWWkkCm9oT5sTFVO6KyxaTwb+qflERSfxSX8yzlMyEmIqdqTorDrLd52V3O
-	5q/YUw3XwhgikXHGXy9YWNPRbc1VaKtCCCPvrNZ2j3CGYnfkaxBUfWMiyoUuJGp+5Nisfc38Dda
-	VXy5o0Q+iH2rJs+YAGvVcM8G5lgprqPALxefkg3NjWUH4Uk+ootnKL0uW/BaeIOHEl31l+oKmDh
-	y6CxzWXwGUWxRL7I3PZiBRSN5d1UQtLpx60tCK96TxsBXM0oidRVWM7a7PK7CCapGr5yoMqPI7a
-	mx3N5RzN7ht7Jnhw6RueKRsUeRPfCtahLNc6E4UA==
-X-Received: by 2002:a05:6214:468f:b0:8b1:f5da:f811 with SMTP id 6a1803df08f44-8ca0f706da0mr243599816d6.48.1779084238424;
-        Sun, 17 May 2026 23:03:58 -0700 (PDT)
-Received: from [127.0.0.1] ([172.183.95.149])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8ca361a7284sm47491096d6.40.2026.05.17.23.03.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 17 May 2026 23:03:57 -0700 (PDT)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20260518050048.161374-1-kalpan.jani@mpiricsoftware.com>
-References: <20260518050048.161374-1-kalpan.jani@mpiricsoftware.com>
-Subject: Re: [PATCH net v2] mptcp: prevent stale backlog references to
- closing subflows
-Message-ID: <5dce670a-c522-02e8-7b22-c0e77e6e6339@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 18 May 2026 06:03:56 +0000
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="ZZekhNhU"
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=RiBiEJoGO8e+ET2Ji/6JNkgdquRadWqYFE6AePCfdvc=;
+	b=ZZekhNhUzccfldwRZ1g4HTnF4cTQ7Sdid/wIe36HPbSYlfrs44ibdiY5rDzW6bW+iHuz7lt/f
+	kZcNRLZAKuQrPhnP7G5Y9AuSD28hTKVvUqlrEvcCqj36tNmIKuOjhIS/zyOlRG/NhMbLF/E9yEY
+	orqev7hPaTM0e6/izgAYgfU=
+Received: from mail.maildlp.com (unknown [172.19.162.223])
+	by canpmsgout04.his.huawei.com (SkyGuard) with ESMTPS id 4gJns26ppzz1prKB;
+	Mon, 18 May 2026 14:27:02 +0800 (CST)
+Received: from kwepemj500018.china.huawei.com (unknown [7.202.194.48])
+	by mail.maildlp.com (Postfix) with ESMTPS id 8603440571;
+	Mon, 18 May 2026 14:34:45 +0800 (CST)
+Received: from [10.174.178.79] (10.174.178.79) by
+ kwepemj500018.china.huawei.com (7.202.194.48) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Mon, 18 May 2026 14:34:44 +0800
+Message-ID: <a462e95c-6aad-4d70-8499-3aa5f090f0a2@huawei.com>
+Date: Mon, 18 May 2026 14:34:43 +0800
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net v2 2/6] mptcp: pm: fix ADD_ADDR timer infinite retry
+ on option space insufficient
+To: Matthieu Baerts <matttbe@kernel.org>
+CC: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "mptcp@lists.linux.dev"
+	<mptcp@lists.linux.dev>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-kselftest@vger.kernel.org"
+	<linux-kselftest@vger.kernel.org>, Eric Dumazet <edumaze@google.com>,
+	"stable@vger.kernel.org" <stable@vger.kernel.org>, Mat Martineau
+	<martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, "David S. Miller"
+	<davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Simon Horman
+	<horms@kernel.org>, Shuah Khan <shuah@kernel.org>, Jakub Kicinski
+	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, "weiyongjun (A)"
+	<weiyongjun1@huawei.com>, yuehaibing <yuehaibing@huawei.com>, zhangchangzhong
+	<zhangchangzhong@huawei.com>
+References: <20260515-net-mptcp-misc-fixes-7-1-rc4-v2-0-701e96419f2f@kernel.org>
+ <20260515-net-mptcp-misc-fixes-7-1-rc4-v2-2-701e96419f2f@kernel.org>
+ <85b89125-57f2-43ab-a834-4dca56881e26@kernel.org>
+From: Li Xiasong <lixiasong1@huawei.com>
+In-Reply-To: <85b89125-57f2-43ab-a834-4dca56881e26@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
+ kwepemj500018.china.huawei.com (7.202.194.48)
 
-Hi Kalpan,
+Hi, Matt
 
-Thank you for your modifications, that's great!
+On 5/17/2026 1:50 PM, Matthieu Baerts wrote:
+> Hello,
+> 
+> On 15/05/2026 06:27, Matthieu Baerts (NGI0) wrote:
+>> From: Li Xiasong <lixiasong1@huawei.com>
+>>
+>> When TCP option space is insufficient (e.g., when sending ADD_ADDR with an
+>> IPv6 address and port while tcp_timestamps is enabled), the original code
+>> jumped to out_unlock without clearing the addr_signal flag. This caused
+>> mptcp_pm_add_timer to keep rescheduling indefinitely, not sending ADD_ADDR,
+>> preventing subsequent addresses in the endpoint list from being announced.
+> 
+> (...)
+> 
+>> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+>> index 3c152bf66cd5..3e770c7407e1 100644
+>> --- a/net/mptcp/pm.c
+>> +++ b/net/mptcp/pm.c
+> 
+> (...)
+> 
+>> @@ -414,8 +420,12 @@ mptcp_pm_del_add_timer(struct mptcp_sock *msk,
+>>  	/* Note: entry might have been removed by another thread.
+>>  	 * We hold rcu_read_lock() to ensure it is not freed under us.
+>>  	 */
+>> -	if (stop_timer)
+>> -		sk_stop_timer_sync(sk, &entry->add_timer);
+> FYI, sashiko found a pre-existing issue here, but I guess that's not
+> blocking this series.
+> 
+> https://sashiko.dev/#/patchset/20260515-net-mptcp-misc-fixes-7-1-rc4-v2-0-701e96419f2f%40kernel.org
+> 
+> @Li: just to know what I do with this pre-existing issue, do you plan to
+> look at it?
+> 
+> Just in case, I just opened:
+> 
+>   https://github.com/multipath-tcp/mptcp_net-next/issues/623
+> 
 
-Our CI did some validations and here is its report:
+Thanks for the heads-up. I’ll take a look at #623 separately and follow up
+there.
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Unstable: 1 failed =
-test(s): packetdrill_dss =E2=9A=A0=EF=B8=8F=20
-- KVM Validation: debug =
-(only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal=
- (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only =
-bpftest_all): Success! =E2=9C=85
-- Task: https://github.=
-com/multipath-tcp/mptcp_net-next/actions/runs/26014931729
-
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/4991c3565d5d
-Patchwork: https://patchwork.kernel.=
-org/project/mptcp/list/?series=3D1096306
-
-
-If there are some issues, you =
-can reproduce them using the same environment as
-the one used by the CI =
-thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
-
-
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 Core)
+Best regards,
+Li Xiasong
