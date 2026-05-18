@@ -1,34 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1992A3290A5
-	for <mptcp@lists.linux.dev>; Mon, 18 May 2026 12:59:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80B643290A5
+	for <mptcp@lists.linux.dev>; Mon, 18 May 2026 12:59:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779109171; cv=none; b=T3GHVM+KfkVHECjVj8j2GMtk9LZorpJdg1ucIk2jcBjHiblV7OWZc7C7ZFWIZWiEHakIOSyZCbpkYq3HXnpEBYqv9MdU9gTvx0pJdmQ+mlUwZ41SHPu1EMqsKKj4edqKy6X2Uun1DezBVn9gsh0qqpiAJIUCk26C5GGHCSPq5ZM=
+	t=1779109172; cv=none; b=JvutPu/MB5R7U5Q6KVoVc1ev5MXwFHK9TnbYBRudhnF3cnUG1scZX/k9WI6o/SguKEMpXdzPiMu6bJ7jeZizJHTawK3R9WOuaZQgrgCdezgi+iiNShFVcI9Ncnnl+OJGrAf+bcc7y739NsaPmH14wlEGEG0Emhk/KVs1e4dZaCk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779109171; c=relaxed/simple;
-	bh=LP1ojt6bJlTdj3otDpNxbzTstWJmo46VDAB1gqRsFTo=;
+	s=arc-20240116; t=1779109172; c=relaxed/simple;
+	bh=hQz6YYZ+kAYwhqLrE1+Fab1nAo3HVOULmc4Cy5jqbzc=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=o5HB3Mgc4t2vHMhszZqLNRqAF/tE1wqJe/8DbMxWmnhDYNJOelbJ9SjA1734/Yh79JlXF0pNc7cdaE8sSzHGyFlVLRtfjvZ2J+b4Lrp1L9fKjWev00QLZhS+hBaI7eezT84h3+PaVmWkvlg/FcMG2TN4bL+YuB1ykt3LXuymXNE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XIkvkDVb; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=a1+Viglx6u9g380MYTJbH+uH8WS4Z4n+U/RyU/t7Va+Nm8apiD26D3PKwe/0iRPJhQCdAcjYTu8mb3N4Mew2H96Z9fZU5NrJE2+E9KSzmaLV+hD85r+mKv6K3cmk4z+sj5fTkZPXNiw9EyDjgygswn8AGRuVSPA/bAkpEkOu6rc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YmGUHyJ6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XIkvkDVb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFA88C2BCB8;
-	Mon, 18 May 2026 12:59:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YmGUHyJ6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 374F6C2BCC6;
+	Mon, 18 May 2026 12:59:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1779109170;
-	bh=LP1ojt6bJlTdj3otDpNxbzTstWJmo46VDAB1gqRsFTo=;
+	s=k20201202; t=1779109172;
+	bh=hQz6YYZ+kAYwhqLrE1+Fab1nAo3HVOULmc4Cy5jqbzc=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=XIkvkDVb8yTyag2AUhgoYYr9iRwoPx/86WAwXWi2zIIK7JEvwFH2O1QzQThB6KAS5
-	 MQTpK184JD4uXoVNdEjF615W2e6t1HDMqEGJ/PwFfnkgkbsZFSgATSM0xKVpUdg2/5
-	 wNNj8nTMJk5XHhxPQ6isMn2FZp0LxZprthl2hTF1LEWhGGM4580jI/IRohaL5Vm64h
-	 /ZHz4ak0S3SqeXpjMvEPlvqniF/CoJKJd9T7FQBm9l46au/4HS9NrPJ1F80qeqkN8f
-	 eY+SoAMp819yfwHTIu/z7yZG5j5956FyrNqgN28iQmSzA2rvJUX6B8PM9fuQNi25NM
-	 Vshcxjs9orh5Q==
+	b=YmGUHyJ6bGXqXADZfkgrcKsKF1rYUpJweaW0qKuqcgbyFgQ/jHR+KWlvYElPq5SEl
+	 /cOyDINQFWYRTW13zG/Y7RTts5iqejtV2zEle3aoDM6L1U8tPHVt6QTolhXYF+FzuZ
+	 Kfx5QFtsLca3SrhuAoKuaLga2jEWWr6sRcLm2N3bKC+W/lRQiCU6eovxU7nFB9hV+4
+	 Vv0Ajyt0lufGdDp1kaAQ+32RNhPM3Hp9gdyR2iHAagok5Kp+1RPtEyBg0PJozT56YG
+	 LEQp08OF2+b9Y4MQDRvQQMW64Dflt+XO7pLRVzMc6Y1M4JYEJ0knCDUYBbqak5ZuRu
+	 NIc6XFs0WAzow==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Mon, 18 May 2026 22:59:15 +1000
-Subject: [PATCH mptcp-next 11/12] mptcp: pm: avoid using del_timer directly
+Date: Mon, 18 May 2026 22:59:16 +1000
+Subject: [PATCH mptcp-next 12/12] mptcp: pm: avoid confusing check_id in
+ del_timer
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -37,184 +38,106 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260518-mptcp-add-addr6-port-ts-v1-11-f1ca26977fcd@kernel.org>
+Message-Id: <20260518-mptcp-add-addr6-port-ts-v1-12-f1ca26977fcd@kernel.org>
 References: <20260518-mptcp-add-addr6-port-ts-v1-0-f1ca26977fcd@kernel.org>
 In-Reply-To: <20260518-mptcp-add-addr6-port-ts-v1-0-f1ca26977fcd@kernel.org>
 To: MPTCP Linux <mptcp@lists.linux.dev>
 Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5286; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=LP1ojt6bJlTdj3otDpNxbzTstWJmo46VDAB1gqRsFTo=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBqCw0hXTAcW6pKODExQ2nflNxmqVgGWEShFZ0c+
- FZ/DE/FWDaJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCagsNIQAKCRD2t4JPQmmg
- cwJ9EADUCvaTBe8FbARUXms/TQlYORgG7vVLIyk0ZirHtQEq5CjQLBQ48lGS5cAH+ofvHbxx4xT
- iqZaE4W/sdpTx/Hmw0GPOUjNY6BRmfDUdRiG8ttGE9Bk359Mktpj03W86dHIEu3MEgF7L0C10Oz
- nLPFECEwXElupcpV2tVz6sRyctanA4mA/pEpXqzE9DpuZ8lG4VrVBETx3tmp9WKAqDCQyD7m9XP
- vpZyKBnXpis8vpkwFNP7Xd5wkJJL3Ud5UCqIwnR5IWrsPsIts/NADGFRbBGYo2HEqK1ptoeifkN
- u9grfOaCZTK5LjaatdFQfAsNhj1EBCvQuyw7/Hm5mzx4t+fHyNvtxWPAR83J501EpC5krzCj4M7
- 4GNGhlPvnNcnc/jn7IN1/SlojN0c6wfTyOAtT2wdsv6oLT26TqquyHwLFTAa6EDvMpa3wzPUHI2
- p8C6HE7nfj4bub87OKsPBVLHmmfF8QsEeQ3CJLWtMTPiOXo+YJQD39QdCfGmS5tptaBbqwfqNpK
- elyDIRMJlVdc/R8/67jn7hDhlzOEdJiEK9gRDMv8K9OrDavX6s4LtaEm2GgLuba+qi7bZ4wT9Gw
- 7fvP5nMvcwSwJQSlQdcsWklcZABvesE9YuKiS6KI1bwhwlSbVl96pBxQW39k7hjQasqohNoUaoZ
- ZSWVRzUVv3zhx7A==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2818; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=hQz6YYZ+kAYwhqLrE1+Fab1nAo3HVOULmc4Cy5jqbzc=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBqCw0hmgykSWGCdrGPj2TJOJgLvYBEFlKck3Y0z
+ BPY8iDjeYaJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCagsNIQAKCRD2t4JPQmmg
+ c3GvD/0czQUTeheultKM4XpKswgfRvgnNbwmW6oVk59nuw0YNoN/qikbNXTbyFmCUBbF9VOTLdU
+ mdVZa92ZVwmkCmgDY/uD+sSl2+qRpmytxzXzld+sEmaIrx8ydJE3j4Yp1JYVeg4s/NITwQ7/Vu6
+ StGdBkQN3yP7VkRY55ImZoRjdhKYUKVJf6gx6+zjeQAQWeae9k8dgCXoFYMH0SEEgCgn/Jkb/jw
+ 6t7j0M56jtdtN43jFzvdA5SA+NuBwVUL0931eA9bFeTankB0L0cEiHG0T655bhx7Bc/Wq2/Scfg
+ KsASp2MOgsRsDc6IunZUisMZRGxhMkK18xvqm0aDpe75rCghnUZdyFcCESuv5xnXkX8FSKdFgZ+
+ OCIzjdN/TQ/d3kr48KwTqmUEI7OZHldcugOu4NP0DHoDtSF/jjPz4T4wr7uzwTZr+c1QJDEZPMT
+ jBlzYbOd8pJEohFY9IXnMuRu/oopJYiEJtgrgU6XgmT8hQsV/dbBfkMS94ifLp+/9aCt+AVTFyu
+ 8Ray+ZQMqPEvWnAgB9mfrM1KaBUwgCfud/nZ5RJn4SUYZb3Bpku6S+RkS30BZrfKOU8mKyZvirg
+ aLvvTb1BYXEI4R2TKkfjSCZcpZlie/U/I1kiCZxAHXIMH17WqXZYDn6dN+tWiYzNiFDuo6WW+ZP
+ 1kwkPUjwHELy2hQ==
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-mptcp_pm_announced_del_timer() removes the matched ADD_ADDR entry (if
-found) from the ADD_ADDR list only if check_id is true. That's
-dangerous, and not clear, because it means the caller should be free the
-entry only in some cases, and it easy to miss that.
+We an always check the ID in mptcp_pm_announced_del_timer: this check is
+needed when an echo is received, but in other cases, the caller will use
+an entry that was previously added in the list, so they have to match
+too, otherwise that's not correct.
 
-Instead, make it static, and call it from mptcp_pm_add_addr_echoed,
-which is the only case where mptcp_pm_add_addr_del_timer should be
-called with check_id set to true. Bonus with that: a second call to
-mptcp_pm_add_addr_lookup_by_addr() can be avoided.
-
-Note that instead of adding the signature above to avoid a compilation
-issue because this helper is called before the definition of the
-function, the whole helper is moved above where it is first called. Its
-content is untouched, except the addition of the 'static' keyboard.
+After having removed this extra check, the variable is only used to know
+what to do with the list and the timer. Use del_list instead of
+check_id: clearer that the action will remove the entry from the list.
 
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- net/mptcp/options.c  |  1 -
- net/mptcp/pm.c       | 75 +++++++++++++++++++++++++++-------------------------
- net/mptcp/protocol.h |  3 ---
- 3 files changed, 39 insertions(+), 40 deletions(-)
+ net/mptcp/pm.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 6514776e9ce4..70ddde327511 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -1201,7 +1201,6 @@ bool mptcp_incoming_options(struct sock *sk, struct sk_buff *skb)
- 				MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_ADDADDR);
- 			} else {
- 				mptcp_pm_add_addr_echoed(msk, &mp_opt.addr);
--				mptcp_pm_announced_del_timer(msk, &mp_opt.addr, true);
- 				MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_ECHOADD);
- 			}
- 
 diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index ac9342f6e7b4..cf0a7b44e3ed 100644
+index cf0a7b44e3ed..5b4aad2a2b27 100644
 --- a/net/mptcp/pm.c
 +++ b/net/mptcp/pm.c
-@@ -149,6 +149,40 @@ mptcp_pm_announced_lookup(const struct mptcp_sock *msk,
- 	return NULL;
- }
+@@ -151,7 +151,7 @@ mptcp_pm_announced_lookup(const struct mptcp_sock *msk,
  
-+static struct mptcp_pm_add_addr *
-+mptcp_pm_announced_del_timer(struct mptcp_sock *msk,
-+			     const struct mptcp_addr_info *addr, bool check_id)
-+{
-+	struct mptcp_pm_add_addr *entry;
-+	struct sock *sk = (struct sock *)msk;
-+	bool stop_timer = false;
-+
-+	rcu_read_lock();
-+
-+	spin_lock_bh(&msk->pm.lock);
-+	entry = mptcp_pm_announced_lookup(msk, addr);
-+	if (entry && (!check_id || entry->addr.id == addr->id)) {
-+		entry->retrans_times = ADD_ADDR_RETRANS_MAX;
-+		stop_timer = true;
-+	}
-+	if (!check_id && entry)
-+		list_del(&entry->list);
-+	spin_unlock_bh(&msk->pm.lock);
-+
-+	/* Note: entry might have been removed by another thread.
-+	 * We hold rcu_read_lock() to ensure it is not freed under us.
-+	 */
-+	if (stop_timer) {
-+		if (check_id)
-+			sk_stop_timer(sk, &entry->timer);
-+		else
-+			sk_stop_timer_sync(sk, &entry->timer);
-+	}
-+
-+	rcu_read_unlock();
-+	return entry;
-+}
-+
- bool mptcp_pm_announced_remove(struct mptcp_sock *msk,
- 			       const struct mptcp_addr_info *addr)
- {
-@@ -398,40 +432,6 @@ static void mptcp_pm_add_addr_timer(struct timer_list *timer)
- 	sock_put(sk);
- }
- 
--struct mptcp_pm_add_addr *
--mptcp_pm_announced_del_timer(struct mptcp_sock *msk,
+ static struct mptcp_pm_add_addr *
+ mptcp_pm_announced_del_timer(struct mptcp_sock *msk,
 -			     const struct mptcp_addr_info *addr, bool check_id)
--{
--	struct mptcp_pm_add_addr *entry;
--	struct sock *sk = (struct sock *)msk;
--	bool stop_timer = false;
--
--	rcu_read_lock();
--
--	spin_lock_bh(&msk->pm.lock);
--	entry = mptcp_pm_announced_lookup(msk, addr);
++			     const struct mptcp_addr_info *addr, bool del_list)
+ {
+ 	struct mptcp_pm_add_addr *entry;
+ 	struct sock *sk = (struct sock *)msk;
+@@ -161,11 +161,11 @@ mptcp_pm_announced_del_timer(struct mptcp_sock *msk,
+ 
+ 	spin_lock_bh(&msk->pm.lock);
+ 	entry = mptcp_pm_announced_lookup(msk, addr);
 -	if (entry && (!check_id || entry->addr.id == addr->id)) {
--		entry->retrans_times = ADD_ADDR_RETRANS_MAX;
--		stop_timer = true;
--	}
++	if (entry && entry->addr.id == addr->id) {
+ 		entry->retrans_times = ADD_ADDR_RETRANS_MAX;
+ 		stop_timer = true;
+ 	}
 -	if (!check_id && entry)
--		list_del(&entry->list);
--	spin_unlock_bh(&msk->pm.lock);
--
--	/* Note: entry might have been removed by another thread.
--	 * We hold rcu_read_lock() to ensure it is not freed under us.
--	 */
--	if (stop_timer) {
++	if (del_list && entry)
+ 		list_del(&entry->list);
+ 	spin_unlock_bh(&msk->pm.lock);
+ 
+@@ -173,7 +173,7 @@ mptcp_pm_announced_del_timer(struct mptcp_sock *msk,
+ 	 * We hold rcu_read_lock() to ensure it is not freed under us.
+ 	 */
+ 	if (stop_timer) {
 -		if (check_id)
--			sk_stop_timer(sk, &entry->timer);
--		else
--			sk_stop_timer_sync(sk, &entry->timer);
--	}
--
--	rcu_read_unlock();
--	return entry;
--}
--
- bool mptcp_pm_announced_alloc(struct mptcp_sock *msk,
- 			      const struct mptcp_addr_info *addr)
- {
-@@ -730,15 +730,18 @@ void mptcp_pm_add_addr_echoed(struct mptcp_sock *msk,
- 			      const struct mptcp_addr_info *addr)
- {
- 	struct mptcp_pm_data *pm = &msk->pm;
-+	struct mptcp_pm_add_addr *entry;
++		if (del_list)
+ 			sk_stop_timer(sk, &entry->timer);
+ 		else
+ 			sk_stop_timer_sync(sk, &entry->timer);
+@@ -189,7 +189,7 @@ bool mptcp_pm_announced_remove(struct mptcp_sock *msk,
+ 	struct mptcp_pm_add_addr *entry;
+ 	bool ret;
+ 
+-	entry = mptcp_pm_announced_del_timer(msk, addr, false);
++	entry = mptcp_pm_announced_del_timer(msk, addr, true);
+ 	ret = entry;
+ 	kfree_rcu(entry, rcu);
+ 
+@@ -734,7 +734,7 @@ void mptcp_pm_add_addr_echoed(struct mptcp_sock *msk,
  
  	pr_debug("msk=%p\n", msk);
  
--	if (!READ_ONCE(pm->work_pending))
-+	entry = mptcp_pm_announced_del_timer(msk, addr, true);
-+
-+	if (!entry || !READ_ONCE(pm->work_pending))
+-	entry = mptcp_pm_announced_del_timer(msk, addr, true);
++	entry = mptcp_pm_announced_del_timer(msk, addr, false);
+ 
+ 	if (!entry || !READ_ONCE(pm->work_pending))
  		return;
- 
- 	spin_lock_bh(&pm->lock);
- 
--	if (mptcp_pm_announced_lookup(msk, addr) && READ_ONCE(pm->work_pending))
-+	if (READ_ONCE(pm->work_pending))
- 		mptcp_pm_schedule_work(msk, MPTCP_PM_SUBFLOW_ESTABLISHED);
- 
- 	spin_unlock_bh(&pm->lock);
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 448ba565611a..004f8b9c8fdd 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -1134,9 +1134,6 @@ int mptcp_pm_mp_prio_send_ack(struct mptcp_sock *msk,
- 			      u8 bkup);
- bool mptcp_pm_announced_alloc(struct mptcp_sock *msk,
- 			      const struct mptcp_addr_info *addr);
--struct mptcp_pm_add_addr *
--mptcp_pm_announced_del_timer(struct mptcp_sock *msk,
--			     const struct mptcp_addr_info *addr, bool check_id);
- bool mptcp_pm_announced_remove(struct mptcp_sock *msk,
- 			       const struct mptcp_addr_info *addr);
- bool mptcp_pm_announced_has_ssk(struct mptcp_sock *msk, const struct sock *ssk);
+@@ -985,7 +985,7 @@ bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, const struct sk_buff *skb,
+ 	 * let the PM state machine progress.
+ 	 */
+ 	if (skip_add_addr) {
+-		mptcp_pm_announced_del_timer(msk, addr, true);
++		mptcp_pm_announced_del_timer(msk, addr, false);
+ 		mptcp_pm_subflow_established(msk);
+ 	}
+ 	return ret;
 
 -- 
 2.53.0
