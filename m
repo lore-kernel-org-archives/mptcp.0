@@ -1,146 +1,146 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E7943FCB18
-	for <mptcp@lists.linux.dev>; Mon, 18 May 2026 16:30:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3D64382368
+	for <mptcp@lists.linux.dev>; Mon, 18 May 2026 17:18:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779121838; cv=none; b=QBzqU34wC37uOlL+KQ+LAKuTsw1zzlN2X/AkAkLXEvugv/ZHwKsHiUq4LAbGEJShDeQoEp+Sa0YsKUxYYfbD7PRx+7ICqT4axa2FX0v3Ia5xZ/XFdXxs+m4WPDIAXNN+zSJL6v+6I8NwYw5cWdqpnp8YCwcK1mvVu9dFcysWESw=
+	t=1779124681; cv=none; b=SKTw9pvc5yk6Brvr/ptQx5go26xN6Pi3d5USeT+l7QbHD0RQ10zmT2lCrl2uW5fHJ5OX5PHFs/TQn95EooFzwnSokpvByVBd3iD4lTzPGHh8VDRsilQEFOuaEY/62vUDt+xqI32rdTmuGDjOpol4aH52jczRqKdz9E8unYBmf6w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779121838; c=relaxed/simple;
-	bh=kGSdkLqVymO/Zr3G2I6yZlcRQZhx8NFUaFE5ni8KtPA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=twNABRFqJrORCkGS2kb7BOotx6xHgE8axV6kJzh7MLIHglnf+C/JxHJ4p5XGEZ06Cfq87IMabuNG3PkOix3jlW0vvF0nneBUZd23fwexZ4eCnzujRR/zFeOBOcc86nkBLKNliki7+s7a1919yoyn3Y3+1tefSHbZzq4W3V7PeV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UMRnExGH; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1779124681; c=relaxed/simple;
+	bh=zrHB6LKJpCBit2fHQLaBK4DJVcovR65v8TJqwl1VbMc=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=T0U3KuXPZMhOEifqR+g2wi4ycpZcmzj8L93qYIfQEYXDZ6tlKslUhcxkRw7pbgVXGW+LWAwF63Nevb1XjWoxY0ZSjazJYFSv/uwazL9rELHhodQrOMoop8yO0bgtBo72d1oioyWqBZNepTg5BSTp55UkQxkpDmQC5mX28MHbXQg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bJTLataG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UMRnExGH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1779121835;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2pch76HTKXURju5jf3KrROqeJQW7o65K/r/8pMhLgc8=;
-	b=UMRnExGH6uxntwnlbO+qqQL4pn/zn1a/ofs0sjjR9sbfgH0FG1D9Q2QRNRbnYd398fJtCc
-	rdHmklccqd+GFunw3F/BXArzRguf5eZXgVqPYPEY6/Ez04BM4AOK0rrKkL/3Cg28DcRYrj
-	NNhhU5Rm6QiMelHiUsfjbUr7KfOiT/M=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-133-wj-uSXxGNreZKMWebEKBSQ-1; Mon, 18 May 2026 12:30:33 -0400
-X-MC-Unique: wj-uSXxGNreZKMWebEKBSQ-1
-X-Mimecast-MFC-AGG-ID: wj-uSXxGNreZKMWebEKBSQ_1779121832
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-45e78dd7baaso1431218f8f.0
-        for <mptcp@lists.linux.dev>; Mon, 18 May 2026 09:30:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779121832; x=1779726632;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2pch76HTKXURju5jf3KrROqeJQW7o65K/r/8pMhLgc8=;
-        b=j6QWWUJ99Wot3rwh4WrgUDBuP95Z4a7h5+mU2VInY6nwOTRL2UgqXbX2NBWqz5QRee
-         XnIH6d8aSbeyU022fbsKFTFqjEUvlSKIlXDsziVsduW0v7mfs4awdouKrxoOY7HfjA3v
-         9/W9g3eS3sK1XZ7TSF1njO1I/wGxCNsJ0AAxCtvQ1aOim2iTwLLK0lRf/8BK5glIWnA4
-         mKeG3cBbWHYYVPPeikjWxdpsb7YsdYRefP8brramwpBswnFrkJfW1Xk7+4a8ht4Gq5rA
-         0rDAzSU27mP8A+H/7NQbzMBp45FhYMmRvC5aXfSf80leyWkiMeNtie235Pz0DHqFlYu5
-         4GUQ==
-X-Forwarded-Encrypted: i=1; AFNElJ/aDwp1fkGQx+WK/T3qyeVuDxcU5ZprNM9LMIj2XH+zK2EZebc+S8ytsCTVzakIFCCtNu/4bw==@lists.linux.dev
-X-Gm-Message-State: AOJu0YyD6EBdN7orDyWOjQoFs72K+uOowudE+7caNgaYRLMkCaonSAym
-	n+0hFXBYwsl/J0zK9rpwQvj+DgEokCtW+8IPuO8LCbLoBu8/hGtdO2kzn3PLPFgpHdL5qBWf6ol
-	usmTXG+Gl6z68cAX6Mgt6rH2KEFMGK4QPT/IOWeNwVMv3Cz6Ssg7PJg/YC7Rb45fx
-X-Gm-Gg: Acq92OGcJWcgWHarLj6TdhyyktqUwprFJyPyepo4rsUuih81gan20+E50cOlLyOV8nT
-	tSE3NtdXBdpxoBTfPCaoP2mfJmAzu/ex3r6gfOqkvyh9q4fBuTQP2+23cH3SNOjrG2ygI4xioy+
-	2tejpmCMt7Rcl3XXJFA0kMiTb6r+TljHh69E86z9fo/vm77dXNuaaChW4X/PdzmAfdUDdscBOzy
-	Qmp0ckGtTJuSxmK9cNeUBXUlCBqFVCvnuqFiKwT616FrmOljY9fpeHew0mbx411epInihtjBtNc
-	UQm+iyyQjfGT0PjUuFxDLSET04zADyB4IRaov8FToaJcSkjRPRJB54ZBfMrwNpLLZ1Bn3qOLsCZ
-	TgnzbBKgn0Ujw/oiGOeMnc5uicFsDrD3v8R/Bz+W1GSFow3pNugoPFvA=
-X-Received: by 2002:a05:600c:4e02:b0:48a:906a:9050 with SMTP id 5b1f17b1804b1-48fe5fdb076mr250533555e9.10.1779121831749;
-        Mon, 18 May 2026 09:30:31 -0700 (PDT)
-X-Received: by 2002:a05:600c:4e02:b0:48a:906a:9050 with SMTP id 5b1f17b1804b1-48fe5fdb076mr250533005e9.10.1779121831221;
-        Mon, 18 May 2026 09:30:31 -0700 (PDT)
-Received: from [192.168.88.32] ([150.228.25.33])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-45d9e768072sm37973907f8f.5.2026.05.18.09.30.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 18 May 2026 09:30:30 -0700 (PDT)
-Message-ID: <7f816ee8-6119-47ff-a10d-bbfa61a24e6a@redhat.com>
-Date: Mon, 18 May 2026 18:30:29 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bJTLataG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CADE2C2BCB7;
+	Mon, 18 May 2026 17:18:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1779124681;
+	bh=zrHB6LKJpCBit2fHQLaBK4DJVcovR65v8TJqwl1VbMc=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=bJTLataGZcyQkG0U3tWKd+e0BCANEtu4mPEUpkbSMuNjK4u32faU28JMeYRco60cJ
+	 lyz03BVn1qI9EWVpLywQoq+Fzl7w2w+CC6zuKnZ8wZ2S+jQJ2IbBADxIRYvwrC+OyE
+	 xFp4FkeZgJqrbsTA3QTc3iPXTZ6s3KbJUt5GowgzAD76bqzX3Lnet6rJ3ezHpTbKKJ
+	 51JlUfQ3gGYo+KSSpTRFKL4IAIvqi3c1gumF0fRnjUl6KG3DnEqWvFzk75Y8ypuyAo
+	 7yv32YUTCzWjLBag5jDKpk1B1g3MAPJqpPzxEvdEbz3JbDJXjQb0ieNinP3RdhKoAD
+	 D5u/xHp39hKBA==
+Date: Tue, 19 May 2026 03:17:53 +1000
+From: Matthieu Baerts <matttbe@kernel.org>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: MPTCP Linux <mptcp@lists.linux.dev>
+Message-ID: <e8eab089-38a9-4786-9052-b2d0a4d2aab4@kernel.org>
+In-Reply-To: <9878b113-59e9-4100-92b8-fed412466097@redhat.com>
+References: <20260518-mptcp-add-addr6-port-ts-v1-0-f1ca26977fcd@kernel.org> <20260518-mptcp-add-addr6-port-ts-v1-3-f1ca26977fcd@kernel.org> <9878b113-59e9-4100-92b8-fed412466097@redhat.com>
+Subject: Re: [PATCH mptcp-next 03/12] mptcp: pm: drop TCP TS with ADD_ADDRv6
+ + port
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 mptcp-next 0/7] mptcp: address stall under memory
- pressure
-To: gang.yan@linux.dev, mptcp@lists.linux.dev
-Cc: Geliang Tang <geliang@kernel.org>
-References: <cover.1778835009.git.pabeni@redhat.com>
- <4a38eef7-0143-4980-b856-42591e521b13@redhat.com>
- <a3331544d24acc69090b43bb44fa5087c33a6092@linux.dev>
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <a3331544d24acc69090b43bb44fa5087c33a6092@linux.dev>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: N6FQBJh0C4rWJbFR2x0G7KMjbAXwUMVP-3elac5Xqdw_1779121832
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-Correlation-ID: <e8eab089-38a9-4786-9052-b2d0a4d2aab4@kernel.org>
 
-On 5/18/26 10:13 AM, gang.yan@linux.dev wrote:
-> May 15, 2026 at 5:29 PM, "Paolo Abeni" <pabeni@redhat.com mailto:pabeni@redhat.com?to=%22Paolo%20Abeni%22%20%3Cpabeni%40redhat.com%3E > wrote:
->> On 5/15/26 11:07 AM, Paolo Abeni wrote:
->>> This an attempt to fix the data transfer stall reported by Geliang and
->>>  Gang more carefully enforcing memory constraints at the MPTCP level.
->>>  
->>>  This iteration presents a significant change WRT the previous one,
->>>  avoiding entirely the collapse attempt on memory pressure. Note that
->>>  this choice represent a trade off: collapsing allow much faster transfer
->>>  (to be more accurate: order of magnitude less slow) under some extreme
->>>  conditions, but makes transfer slower and much more CPU intensive for
->>>  less unlikely conditions.
->>>  
->>>  As a consequence of the above the `mptcp_data.multi_chunk_sendfile`
->>>  test-case needs a 240 seconds timeout to complete successfully:
->>>  
->>>  TEST_F_TIMEOUT(mptcp, multi_chunk_sendfile, 240)
->>>  
->>>  The solution performing data collapsing would need similar long timeout
->>>  for the multiproc tests cases: mutliproc_even, mutliproc_readers,
->>>  mutliproc_writers, mutliproc_sendpage_even, mutliproc_sendpage_readers,
->>>  mutliproc_sendpage_writers.
->>>  
->>>  Patch 1 is new in v6, and is actually a fix for an old issue (targeting
->>>  net), included here just for my convenience.
->>>  
->>>  Patch 2 and 3 makes the admission check much more strict for incoming
->>>  packets exceeding the memory limits, with some exception for fallback
->>>  sockets.
->>>  Patch 4 makes implement OoO queue pruning for MPTCP and patch 5
->>>  addresses an edge scenario that could still lead to transfer stall
->>>  under memory pressure.
->>>  Finally patch 6 and 7 improve the MPTCP-level retransmission schema to
->>>  make recovery from memory pressure/after MPTCP-level drop significanly
->>>  faster.
->>>
->> @Geliang, @Gang: could you please have a spin at this iteration? Note
->> that you must increase the timeout for the
->> mptcp_data.multi_chunk_sendfile test-case, as mentioned above.
+Hi Paolo,
+
+Thank you for the review!
+
+19 May 2026 01:19:36 Paolo Abeni <pabeni@redhat.com>:
+
+> On 5/18/26 2:59 PM, Matthieu Baerts (NGI0) wrote:
+>> diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
+>> index 47647a99e324..3dcc6880fd44 100644
+>> --- a/net/ipv4/tcp_output.c
+>> +++ b/net/ipv4/tcp_output.c
+>> @@ -1182,11 +1182,15 @@ static unsigned int tcp_established_options(stru=
+ct sock *sk, struct sk_buff *skb
+>> =C2=A0=C2=A0=C2=A0 if (sk_is_mptcp(sk)) {
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned int remaining =3D MA=
+X_TCP_OPTION_SPACE - size;
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned int opt_size =3D 0;
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bool drop_ts =3D opts->options & O=
+PTION_TS;
+>
+> Minor nit: reverse christmas tree order above.
+
+Oops, sorry, I forgot to reorder them after my quick PoC...
+
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (mptcp_established_options=
+(sk, skb, &optsize, remaining,
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+ &opts->mptcp)) {
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+ &drop_ts, &opts->mptcp)) {
+>
+> What about passing `opts` instead of both `drop_ts` and `opts->mptcp` ?
+
+I didn't do that because "struct tcp_out_options" is defined only in
+tcp_output.c. Do you think it would be worth it to export it?
+
+> Also possibly move this hooking change in a separate patch to help
+> reviewers?
+>
+>> @@ -825,15 +824,17 @@ static bool mptcp_established_options_mp_fail(stru=
+ct sock *sk,
 >>
-> Hi Paolo,
-> 
-> Thanks a lot for the new patch set. We have encountered some issues during
-> our testing. It will take us some time to analyze and locate the root cause.
-> We will post updates on the mailing list as soon as we make progress.
+>> bool mptcp_established_options(struct sock *sk, struct sk_buff *skb,
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned int *size, unsigned int remai=
+ning,
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct mptcp_out_options *opts)
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bool *drop_ts, struct mptcp_out_options *=
+opts)
+>> {
+>> =C2=A0=C2=A0=C2=A0 struct mptcp_subflow_context *subflow =3D mptcp_subfl=
+ow_ctx(sk);
+>> =C2=A0=C2=A0=C2=A0 struct mptcp_sock *msk =3D mptcp_sk(subflow->conn);
+>> =C2=A0=C2=A0=C2=A0 unsigned int opt_size =3D 0;
+>> =C2=A0=C2=A0=C2=A0 bool snd_data_fin;
+>> =C2=A0=C2=A0=C2=A0 bool ret =3D false;
+>> +=C2=A0=C2=A0 bool has_ts =3D *drop_ts;
+>
+> Minor nit: reverse christmas tree order above.
 
-I run a few hundred iterations of the mptcp_data test without observing
-any issue (still running). Can you please share which issue are you
-observing, the relevant tests case and the build type (debug/non debug)?
+ACK
 
-Thanks,
+>> @@ -948,6 +949,13 @@ bool mptcp_pm_add_addr_signal(struct mptcp_sock *ms=
+k, const struct sk_buff *skb,
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!*drop_other_suboptions)
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 goto =
+out_unlock;
+>>
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (*drop_ts && mptcp_add_addr_v6_=
+port_drop_ts(net)) {
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* OK with=
+out TCP Timestamp? */
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 *len -=3D =
+TCPOLEN_TSTAMP_ALIGNED;
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (remain=
+ing >=3D *len)
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 goto drop_ts;
+>
+> A label with the same name of a local variable is IMHO a little
+> confusing,
 
-Paolo
+Good point!
 
+> possibly pass here `opt`=C2=A0 (tcp options ptr) instead of `drop_ts`
+
+If we can (see above)
+
+> Side note: possibly even the sysctl changes deserve their own patch.
+
+Only its declaration in ctrl.c? (+Doc & export)
+No objection from me, I can do that if you prefer.
+
+Cheers,
+Matt
