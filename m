@@ -1,102 +1,137 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD8263E2778
-	for <mptcp@lists.linux.dev>; Mon, 18 May 2026 08:29:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A01A3E3165
+	for <mptcp@lists.linux.dev>; Mon, 18 May 2026 08:47:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779092952; cv=none; b=jEb6szUDDhwHRw8ua2PGoeyH8nAW4LCbBbp6bALwripHEFnOOB60BHuPSXZtmFhBW6bZkqedzT6RgflzjyKbG4AnZUhbegBgSE4qYUFRLQpKNyNyuGqtV3h7dvYjL+l33Ju3P3vXTC+ZoAV+GM1OqDA/bVASpQTyioQy/fPSLPs=
+	t=1779094072; cv=none; b=GawGS4mSMugooZ+2zBk9ZxR7pA/HlZPEKBdMVOnf4Q92X9zTYMypATVjFOn5Pk2MQJ7lJzW46fkPHL9caolEawo8wZRh3yCF8QmQNOS7QVlU45t8rMlfZFt573eQjHp2ka0fPaovePBALzSW9IDVamIbJemHHjc3Xuhu/BuDP7c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779092952; c=relaxed/simple;
-	bh=lwEuOqUOSfrsaKGydTWqz3qklTIqFJRZhvDDifguLyg=;
-	h=Message-ID:Date:MIME-Version:From:To:Cc:Subject:Content-Type; b=nAXt6u98lngFU+rtr97t01PsPG/k6J6BiXEwqRwRdoGlk2RBoC6otS3yPVLl/ww+bVriApVAWeUbcNVVCnHxByAT6N/4whRON6oHd5gIVr5J14WqFqR7712W6LM6ESBtBR+f6W/+KA+JUxEJvSvqZjGvPhvNoVkla60EL2UtM2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KyZkysBu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1779094072; c=relaxed/simple;
+	bh=0qRH9Nsr/xu9OrME//6ARZYnL/aUIzDzazLKmvHwfcg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FJ9xG3tbul6+6ZlzAR1X/dr17Rx4nWKYxqpaGqDvDfz3m6Kqbo+BFAf93sWJiL/fQKx1A9tZ7dbvMtbvPeVcOdBSR3kHwIIUW8j0IGz6q6FmHSuEdRuOfAdpkiY6dAr/8ek1PQi/kyO2pdKJ4dsngGSGUxcRhcWgUIYuMYChusA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=L3vhCxMW; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KyZkysBu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4416CC2BCB7;
-	Mon, 18 May 2026 08:29:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1779092952;
-	bh=lwEuOqUOSfrsaKGydTWqz3qklTIqFJRZhvDDifguLyg=;
-	h=Date:From:To:Cc:Subject:From;
-	b=KyZkysBujy7FVBg4MyC3uDZlOe109NfMwcSXllsw42Ai711tvGB+lE92A8Tyq6LD3
-	 f/1rhc8CP7+f3DLSBw/W8raO3o88VdcywPt7GiG6BKqYRlDAobX6WsaF4KWLlrAN8y
-	 SJBIzuY7Cc+WG8xyHqUVK7VwaofZVhpcds4lwpHJXavT76Dk6pjShMULQctG3TOA4w
-	 iRsf3YD/AQvXp8u19Dps+jfoJfUyBL2N+LGGfYqOrpIaAqjTOCK1cxQ0kAAhququo0
-	 UR2V0HkHq8IidQwNCUetAFo8ucGhnXg1NLPgfDul0CVrLPXwI94042Pi1BEw5aaO+I
-	 ClNtX6QskxjQg==
-Message-ID: <80db88ea-1e7e-4417-92d7-e2ddc12400af@kernel.org>
-Date: Mon, 18 May 2026 18:29:08 +1000
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="L3vhCxMW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1779094070;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4kSUq6PvVtts3x2WfBMp3XrKrkFsyfjW9wSgqKO7OPM=;
+	b=L3vhCxMWsUHcT/vam9BY0Aw3abfKIjvWmu+qbhd9JyiHCzzqH1SfVHq9HIFjcm51FTwAdA
+	scQxLqYrg27Je0WLy64asj1YUEgY54lePpZco0+rVa3xhhlC/6xyZFSDDiiLN7xSNO5n6f
+	7YJ9XxixMCrhYeOMY3wjRYaKgYnXKv4=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-360-FecINXfoPVKCNg_6Mhkt2w-1; Mon, 18 May 2026 04:47:48 -0400
+X-MC-Unique: FecINXfoPVKCNg_6Mhkt2w-1
+X-Mimecast-MFC-AGG-ID: FecINXfoPVKCNg_6Mhkt2w_1779094067
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-44ffa15dc8cso1088213f8f.1
+        for <mptcp@lists.linux.dev>; Mon, 18 May 2026 01:47:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779094067; x=1779698867;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4kSUq6PvVtts3x2WfBMp3XrKrkFsyfjW9wSgqKO7OPM=;
+        b=EHLDd4o07FbD5T4SQ5J8mSoolp/KFvWSyfRozfg2ci5HXikvGGqq6OmoIbtmOQ+Lbp
+         0g8rJ5WN/fyus1ZGv7511y/q26zaOfhtNRmpOw3tYhf+RggG2Tw0h9RRTMMCbxDXBQzp
+         PkgG/WlbWj7PggrfF0s1FlT+wbqiAg5ups4oAs7hawuLVdg+5qDW3jdY8mLD6Kudg90/
+         iCwAATgJU4344KLFzdHmB/4D79/7FEnMPvOBNQB7rF4SqB8/bReh03e7Wm+phxNIMgP+
+         +FOo989ehEcG/VvI85T7z4+zOWRcrEBcyosAsvFc4q2m4TIjOLsbpk3FvCJrq0kZ3MQK
+         sadg==
+X-Forwarded-Encrypted: i=1; AFNElJ8Q5FBAoVN2fU45aSCPFMZDBSMM/uy/Fs7jK5RLzahj+N97fAo1mTpv/jZufNJcKCz89kH3Fw==@lists.linux.dev
+X-Gm-Message-State: AOJu0YydFLjjT/qWgRmfvsLdh5Hs8xXxZFyTqx/O+jf5Dp+BHj6JYXei
+	bDIZbytQfpwN5/fAMLraTRgFgZpK3vqT7elnirPhkQYxOzIN/6au8snvPe82jSBlxKUFuYb4Ouf
+	i2Z4Yz2sIfpsnMmBR240W00orP9ttNmvMNNpBEKGiAwiiRBwUP05BmkV6W8lJVolo
+X-Gm-Gg: Acq92OF6+uEABZPAod01AtjhBXrCzcTIhPJoYYpq5UjCPmv4Zb+3x1HH2BfknW+2Sz9
+	ASyF3abOu83rXlQ7KDCUMfWxUEafMpz+zkkdTyFv/nwiswsCRmUF6BfLHqQwVdJjL1t59fJlC0P
+	q73FaBCJsI/SkTqV6ziSa5NdRLfdlCjvBxMqHmNv6vNpm/g/khjyozHNPk7hxclZo+mTdxkRC7u
+	NoK982i0Ci7O+nVpz2epE+K3slp+n2Zd912AJMUdaB8JWDHcxDEEGm32WJ95WOPSUwhEpNuyVFP
+	8z6cGqnBVWRkyjOxK3hZajZSZBhSTUtQ6ikmK0ch+9noJg42sbb6z9ytgQi/HI60oMfTXZbUxT1
+	UhsMSjDKE1fT7f7n2siK17WpUrOv8R9CmuQ4MPfxdDBZoeLlS+l2DyJ8=
+X-Received: by 2002:a05:6000:18c6:b0:45e:73a1:8db5 with SMTP id ffacd0b85a97d-45e73a18e91mr6396039f8f.40.1779094066978;
+        Mon, 18 May 2026 01:47:46 -0700 (PDT)
+X-Received: by 2002:a05:6000:18c6:b0:45e:73a1:8db5 with SMTP id ffacd0b85a97d-45e73a18e91mr6396007f8f.40.1779094066555;
+        Mon, 18 May 2026 01:47:46 -0700 (PDT)
+Received: from [192.168.88.32] ([150.228.25.33])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-45d9ec39ff1sm38261136f8f.10.2026.05.18.01.47.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 18 May 2026 01:47:46 -0700 (PDT)
+Message-ID: <46d5b8f3-4360-4743-bbc9-27b126531639@redhat.com>
+Date: Mon, 18 May 2026 10:47:44 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-From: Matthieu Baerts <matttbe@kernel.org>
-Content-Language: fr
-To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>
-Cc: MPTCP Linux <mptcp@lists.linux.dev>
-Subject: [Weekly meetings] Different time this week
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net v2] mptcp: prevent stale backlog references to closing
+ subflows
+To: Kalpan Jani <kalpan.jani@mpiricsoftware.com>, matttbe@kernel.org,
+ martineau@kernel.org, mptcp@lists.linux.dev, linux-kernel@vger.kernel.org
+Cc: shardul.b@mpiricsoftware.com, janak@mpiric.us, kalpanjani009@gmail.com,
+ shardulsb08@gmail.com
+References: <20260518050048.161374-1-kalpan.jani@mpiricsoftware.com>
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <20260518050048.161374-1-kalpan.jani@mpiricsoftware.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: UFRJYfVZWHdUqRqTUlLaNHo8QU4TP5H9tCbPyxjO5RE_1779094067
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hello,
+On 5/18/26 7:00 AM, Kalpan Jani wrote:
+> @@ -2549,6 +2566,22 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
+>  	 */
+>  	lock_sock_nested(ssk, SINGLE_DEPTH_NESTING);
+>  	subflow->closing = 1;
+> +
+> +	/* Remove any reference from the backlog to this ssk; backlog skbs
+> +	 * consume space in the msk receive queue, no need to touch
+> +	 * sk->sk_rmem_alloc. Serialize with mptcp_data_ready() under
+> +	 * mptcp_data_lock() while the ssk lock is still held, so the
+> +	 * cleanup is exhaustive: no new skb can be enqueued after this point.
+> +	 */
+> +	mptcp_data_lock(sk);
+> +	list_for_each_entry(skb, &msk->backlog_list, list) {
+> +		if (skb->sk != ssk)
+> +			continue;
+> +
+> +		atomic_sub(skb->truesize, &skb->sk->sk_rmem_alloc);
+> +		skb->sk = NULL;
+> +	}
+> +	mptcp_data_unlock(sk);
 
-This week, I'm not available at the usual time: 15:30 UTC (8.30am PST,
-5.30pm CEST, 12.30am CST).
+Here you should use the just defined helper, and only when `flags &
+MPTCP_CF_PUSH`, otherwise the backlog cleanup is already performed by
+the caller.
 
-I suggest either having it at a different time, e.g. on Wed/Thu at 0:30
-UTC (Tue/Wed 5.30pm PST, Wed/Thu 2.30am CEST, Wed/Thu 8.30am CST). Or
-cancelling it. WDYT?
+>  
+>  	/* Borrow the fwd allocated page left-over; fwd memory for the subflow
+>  	 * could be negative at this point, but will be reach zero soon - when
+> @@ -2587,6 +2620,7 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
+>  		__mptcp_subflow_disconnect(ssk, subflow, msk->fastclosing);
+>  		release_sock(ssk);
+>  
+> +		mptcp_cleanup_ssk_backlog(sk, ssk);
 
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
+Why are you cleaning the backlog again?
+
+Why you did not use the code I suggested?
+
+For the next iteration, please go trough the mptcp ML only, to reduce
+traffic on more busy places.
+
+/P
+/P
 
