@@ -1,92 +1,73 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 833382745E;
-	Tue, 19 May 2026 13:50:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49D5E3ED3A6
+	for <mptcp@lists.linux.dev>; Tue, 19 May 2026 14:14:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779198603; cv=none; b=F4MP9WcmDbaDwkWLILaYPa6eWq+Eo2WgyoZ63K6s3f3l/0DmTlQUw4MC6UuRhGAh2y4IiCNfkt/vWMSZiD5aucakJVyt9DQ+arYs8jO2jJemiDJaxpsnfF6NHpfbtr9Q1tP+oSxG01Q2pX+RIFiK8mZ9Q1DvRqAujNIREzYkApk=
+	t=1779200082; cv=none; b=UtUElkEL/riuo6mL7s4uEe9L9ZpQmSnGrcpxD7y+zuPMx2xFdT/33CrEOV+q9SWVXd+YTdsUTrErGh96Nn7Vk0ApKwMi4y9RmwCjwWX2yF1XPm+Ar0kPZpfzYyFg67r6uNDe5xxINNkqTgJXdKgR3HjFq7rB1DHdsB2lCuQit8I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779198603; c=relaxed/simple;
-	bh=m+pY3QiSglJPlMXpIGOaMIyHI2LjEnBNWUyr/O9b6ZE=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=DC5j5+tI+lckoR3yv8lzw9UjFMSIgc06FIA7eJqFh+5GSE9crX4PV/SwktkXOx+2nw0PW2x2LpNbJVyeSzn/gQwlW7hF2zr6FJCfz5yqfHBcP40SyPmbktGArQM5pW1tOxqAuXBrBF6443cM4XVS4V8LJ174zfYIODiRH/lQR9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UgEsuRVu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1779200082; c=relaxed/simple;
+	bh=/F691C61Fe4LRiURqPA83cr4nL7SiwJfn9tZnVGn3kY=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=N3QXa63d+NriA79Mc3J1LPvD3DzMyy/TVxg/yuthNa2fneyuNjOw4MriKoi2uTUuGAM0qL1mKYH5AR2SZfBiw6VFLUDtunB4ARF/sMBXnlQ3lg0nZdUp/HVGyslcXFx+gk/N0L35BHqMAWh0eZZeXug17JFCgbfgW3rTZICuuH8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=inNFW/fy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UgEsuRVu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25D47C2BCB8;
-	Tue, 19 May 2026 13:50:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="inNFW/fy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AF2CC2BCB8;
+	Tue, 19 May 2026 14:14:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1779198603;
-	bh=m+pY3QiSglJPlMXpIGOaMIyHI2LjEnBNWUyr/O9b6ZE=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=UgEsuRVuixNoeuKu8FRw3OiOYMA24BLRy/ROCKicacU0OVqc7fgCaM4rGq/dJk2Sr
-	 V6jmobj1r1phyHw0uSxTmXvLVWDyqbAmigFQgFL7qP6aHtU0x61bvN+5DFaI8wzClc
-	 pmjW9+Lmg77Ywn2vUd0AR8r4aGi4LAytQ68+wywuCy8dvFObAj/p/Hp9FEHKsytZkj
-	 urosy1g8zxyO9mQNh4tHUU3k+WTjID0M8tMWvMvTIWsvDZ5sWT5qZW3uvof8l2Ee7n
-	 so++/J+uASkJTKmCnPHG+ZMY5dcRtI0DksIyLv24phiMllwnEyKe5DblxpM3xff6Ui
-	 I6HLjhjJiynaw==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 56BC03930E1C;
-	Tue, 19 May 2026 13:50:15 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1779200081;
+	bh=/F691C61Fe4LRiURqPA83cr4nL7SiwJfn9tZnVGn3kY=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=inNFW/fygmMs7T8OW3jHWNQSWm99r2p5fzFN35/Ke/PMfq4TBjx9CtXasz+7wAhbi
+	 0g/LKLKWFQ4VK1P15P62xgpfCtEmk90XBLMTlF35CYMTlQA/tJ/UP3qhpZvWXnTPYz
+	 rwxyf1I5Z6uGayOoud341IXF93rL1Ax0R1JcwnRWUCd+ZicuKC9nXS+z6INKZhk37z
+	 TR5ehq265MoSD12QWNjIpqEOWuQA6ZNIeDuJ5Cq+l14JPvhskRlQQfspNI56KDncKa
+	 hk9vcO0616XjME4nXPzvTJEi3rj/5+9rgKyxEnrrGUuekHLC8xg5EgucKU0UWkxvg3
+	 JvfPn/tB9BGqg==
+Date: Wed, 20 May 2026 00:14:33 +1000
+From: Matthieu Baerts <matttbe@kernel.org>
+To: Geliang Tang <geliang@kernel.org>
+Cc: mptcp@lists.linux.dev
+Message-ID: <d279a587-970f-471a-bfe7-6fdc1d42126f@kernel.org>
+In-Reply-To: <463c1fe0ca198d7bcbd8446682181d421a24ed74.camel@kernel.org>
+References: <cover.1779159524.git.tanggeliang@kylinos.cn> <463c1fe0ca198d7bcbd8446682181d421a24ed74.camel@kernel.org>
+Subject: Re: [RFC mptcp-next v14 00/10] NVME over MPTCP
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net v2 0/6] mptcp: misc fixes for v7.1-rc4
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <177919861414.2727096.18153196932164930463.git-patchwork-notify@kernel.org>
-Date: Tue, 19 May 2026 13:50:14 +0000
-References: 
- <20260515-net-mptcp-misc-fixes-7-1-rc4-v2-0-701e96419f2f@kernel.org>
-In-Reply-To: 
- <20260515-net-mptcp-misc-fixes-7-1-rc4-v2-0-701e96419f2f@kernel.org>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: martineau@kernel.org, geliang@kernel.org, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
- shuah@kernel.org, netdev@vger.kernel.org, mptcp@lists.linux.dev,
- linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
- edumaze@google.com, shardul.b@mpiricsoftware.com, stable@vger.kernel.org,
- lixiasong1@huawei.com, yangang@kylinos.cn
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Correlation-ID: <d279a587-970f-471a-bfe7-6fdc1d42126f@kernel.org>
 
-Hello:
+Hi Geliang,
 
-This series was applied to netdev/net.git (main)
-by Paolo Abeni <pabeni@redhat.com>:
+19 May 2026 17:43:06 Geliang Tang <geliang@kernel.org>:
 
-On Fri, 15 May 2026 06:27:31 +0200 you wrote:
-> Here are various unrelated fixes:
-> 
-> - Patch 1: avoid dropping partial packets. A previous version has been
->   sent a few week ago. A fix for 5.10.
-> 
-> - Patches 2-3: stop ADD_ADDR timer when an ADD_ADDR can never been sent
->   due to insufficient option space. A fix for v5.10.
-> 
-> [...]
+> Not sure why, but this version didn't trigger CI and sashiko. Could you
+> help trigger them for me?
 
-Here is the summary with links:
-  - [net,v2,1/6] mptcp: do not drop partial packets
-    https://git.kernel.org/netdev/net/c/50c2d91c5dfa
-  - [net,v2,2/6] mptcp: pm: fix ADD_ADDR timer infinite retry on option space insufficient
-    https://git.kernel.org/netdev/net/c/51e398a3b896
-  - [net,v2,3/6] selftests: mptcp: join: cover ADD_ADDR tx drop and list progress
-    https://git.kernel.org/netdev/net/c/fc5ef4331810
-  - [net,v2,4/6] mptcp: reset rcv wnd on disconnect
-    https://git.kernel.org/netdev/net/c/0981f90e1a05
-  - [net,v2,5/6] mptcp: update window_clamp on subflows when SO_RCVBUF is set
-    https://git.kernel.org/netdev/net/c/3a543ae0e209
-  - [net,v2,6/6] selftests: mptcp: drop nanoseconds width specifier
-    https://git.kernel.org/netdev/net/c/01ff78e4b3d9
+It looks like patchew is missing one patch:
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+https://patchew.org/MPTCP/cover.1779159524.git.tanggeliang@kylinos.cn/
 
+Not sure why, I received it.
 
+But sashiko did a review:
+
+https://sashiko.dev/#/patchset/cover.1779159524.git.tanggeliang%40kylinos.cn
+
+I can force the CI to run when I'm back on my computer, if you still need the CI.
+
+> Sorry, the version has been iterated many times, since sashiko keeps
+> complaining.
+
+Are these complains often correct? If not, simply reply on the mailing list.
+Or add a note in the commit message.
+
+Cheers,
+Matt
