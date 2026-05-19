@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4979234D389
-	for <mptcp@lists.linux.dev>; Tue, 19 May 2026 05:51:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BB922DF68
+	for <mptcp@lists.linux.dev>; Tue, 19 May 2026 05:51:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779169877; cv=none; b=aogNiEAA9jV+TLpOZI/krFIatq+xy9WA6rtPYxVFQgJ4mqDQptbi9AwJSx1u/LfnYuwDcaaBAS/HhmXRbaXQIHYAGmbzy7Q441R0UJqQLBv123sMssw1W2aC4IIiMdTsYQ6mW7hx6ARJbvrluxAA2F5fQLii4lPWBVNoDyBVZTo=
+	t=1779169878; cv=none; b=QwK4r0J7pgW7EcnXbNgwFHdkiawfcaIGimWTNFQcbglcToztOgRPrpIddlq4/nvJcD2DYcU6gQ1fpYHVsyW8/TTgi/YSxA3UETJjlWtnqI8BkNVd3fpJWrkwm2GWO8lNkxO5rBGukYx6bXcpXC1bS8sOdoRQ35WtGuBh/j4Hm+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779169877; c=relaxed/simple;
-	bh=n4GKkhlcFdAsynPMvsd4dz62FjPXn4HCDMmHYQbI9OY=;
+	s=arc-20240116; t=1779169878; c=relaxed/simple;
+	bh=1V/0E2Fp6bqGFvlNXIDG5IseSYm9DVjOBS+MuA0YryQ=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=WetbUCwF4029sICIuNR8Tx7DmrrN37Ht6lcrgNdIncpi/X4OavqqE6qKoO0pBVOmwwIRrJu6Hr1sn7B7aKl0CpGOpDTF1SD58CqO3/FppqmQuQ8TB6odrEofqWnOvPhoSD/7hWgCvEhRMbh3hceCne+oZg0b7nPIboNee6/vSHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jX9MWURb; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=U9k2LpzOjvf/MXIig7lI1CLwpaFGR9M7eesPnOwoTr5i32igoAgtg51TvE4ztp5bejLijo5IGFCfEXlafEWlQKNrVpTvio2wgTjlsc0r3DjRcFaUbA9yIrgH22UQoCMC8sqatHgSxT1K4yfuE04BzWXqy2/RGYjkVD8BNqtsAi8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EYlm+1m1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jX9MWURb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D90FC2BCB3;
-	Tue, 19 May 2026 05:51:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EYlm+1m1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91048C2BCB3;
+	Tue, 19 May 2026 05:51:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1779169877;
-	bh=n4GKkhlcFdAsynPMvsd4dz62FjPXn4HCDMmHYQbI9OY=;
+	s=k20201202; t=1779169878;
+	bh=1V/0E2Fp6bqGFvlNXIDG5IseSYm9DVjOBS+MuA0YryQ=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=jX9MWURbZy/KdKx7H/Fo9N8n2VjfxrRe0JZZ2QXjeGl0CAs+5jiB0vtwIyOYwiJwC
-	 lK0FkBkAP/OvsIRTFV3XMduYKkmEu4j7U2hf2/vmWF9f1NCM8Wz9pyeIFWmNHmBu7m
-	 6IvWDJl/lrwx++pQgTpHh/c+ejJ8+JUgpmQORxHcUuarIicWfjdxbLAx932q11PjNw
-	 GGkLquJCvGP0ySmvYApMti7r9GWZuShry5MWSvcCC0NrrNMs4Nzf+kV90tUsGWHm/C
-	 fByPCVk7L3hIn/Z73oUpnE+EAvIr23aMe9LJgh2zZb+CLPaR6QHfyzQ9YNWTuSEIcY
-	 nn6YdCFuu1ZZA==
+	b=EYlm+1m1vpKbwRlTMAJzp+LyUNbUHJn+VWOQmyjQ51YbGmvJvuc0UBZu8G1x7fiO4
+	 k7O+EI+bApY7G7AWioktgV3TqvPXdGeGk3JevRQXI2tYcaKTs+wKpSSnxvOpubNhns
+	 OqUXadUR561i6m+r1AoisRyZhT5jMy5akBqcik8J/GtMk3Qi7rAqkS4FceRF69Yy83
+	 MvEg6Ib0ZPd7WxLs04ILn/e+XSNLQL47+jSX6ISJHeovHaxdM5DBQRKYINH9xbJrKh
+	 UOAZC1cr6jFiCxUUtyN8g61sRUu9wBWEJg52Ki2lx8kOpLxQdaAsNq67B46tqM/SbF
+	 rG2Bx2e2pniNA==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Tue, 19 May 2026 15:51:10 +1000
-Subject: [PATCH mptcp-net mptcp-next v2 01/15] mptcp: pm: avoid sleeping
- while holding rcu_read_lock
+Date: Tue, 19 May 2026 15:51:11 +1000
+Subject: [PATCH mptcp-next v2 02/15] mptcp: options: ADD_ADDR size can be
+ negative
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,91 +38,66 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260519-mptcp-add-addr6-port-ts-v2-1-3b36a51e6a86@kernel.org>
+Message-Id: <20260519-mptcp-add-addr6-port-ts-v2-2-3b36a51e6a86@kernel.org>
 References: <20260519-mptcp-add-addr6-port-ts-v2-0-3b36a51e6a86@kernel.org>
 In-Reply-To: <20260519-mptcp-add-addr6-port-ts-v2-0-3b36a51e6a86@kernel.org>
 To: MPTCP Linux <mptcp@lists.linux.dev>
 Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2030; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=n4GKkhlcFdAsynPMvsd4dz62FjPXn4HCDMmHYQbI9OY=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBqC/pSrj7Vvm0WBjG4H9g4W5UCGF8OIjpVzh+4V
- yFzKIQF+7+JAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCagv6UgAKCRD2t4JPQmmg
- c/mLEACXXisk1S1WzDbczB+eT9p/bBjEewL3/zXLR5wdFk81ypq2KBigXJ2xCoF+tc/uwqx4Oq4
- 5kwv/w3vazLYr7Huzv7T6KEcMAfpmOzq5LKfenqA14tfuwXMRGybW+eoBMq+zzwLhBxF3MneSaC
- rX9Zq5tD8pQvZIEvJQx+jyP4gldd/MaeScE5+Ma7DO/mYzY3iVMmdJkZibzrMA16kOMn027uqMU
- uqzDJYVM2Eig9J8qyCzLlk8KoydXPHepD992xmawxATEOCYqCiMIBdbfqCNGMgXP1fV862kNNht
- 2t6+GdRV+T0PpZrIr9TVsqiQwq7uo9XMPTd0wnnaHARmQcNmslboILHjFbyR9wcJMbx3JY+n8Ys
- rgQydJ6vKV9nXaL1pWyFDPgchBdL/h5qgouCG6MZMC+TArDzVu5bZBq+zhansLtTf9bd2uis8DP
- gPtqKTxuXph1P/ju+o/bEo17+JURU3SkNZoJhNqMHm4vyTWUUsCnmcWlqk6eH6tghOx+8sVk95z
- ZsbiPmBwo92C6D5HyWlrdi+p2U02qj9puQVJjdcUZ8sFHo7vzcFM3D2f+pFg+4Ksar+niapTzLO
- ZiObwd7WG7rhbLFqj0mqsXGjpSc2v5vg7d3Jhxdh3n6p90pY8lFjaWNWIsky7x/PCCEsMMYPdU9
- hhezcpl7ii09q3g==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1442; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=1V/0E2Fp6bqGFvlNXIDG5IseSYm9DVjOBS+MuA0YryQ=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBqC/pS37ijuFpb098tGmRLIADHl+ZKIL3c+YW/9
+ Pwqdcxpj0KJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCagv6UgAKCRD2t4JPQmmg
+ c/JfD/4wt8qiJy6hRhHYHHWwI3INmtlKBlIJfFLcLz9cn951bM2ze1IWlUFiqVWTNFUiLiVx+92
+ c1h/Pt/L4v3+yCYByjUQJnFOZKXhP6f1gNXr7MiHgAcAmm0zfASkdEZsh0J3dvrlp0I1/eFy/VG
+ 325GtLyYJzkX8F8+An0Llx9A4BpQbrfTyO8vQ3kfEubahEsOsJCGhtqkIO9hlxrbfCevyZRafR+
+ ux8zUC8Socl733o0l+dsyyrWXaKYEql/GohyMydOBV1YG4dCiC+ktayt0nEDXKfGjHxeV4sBsda
+ JhqKZmsu73txzbzQRG32WnpemYPEmuWfcoZ6eUbRtm6s6WSAzSIC6X0gs5N6/ko+uAjv5mN04S1
+ f+Ezb9Mxg3RY+O7lNUKhBoGXh6G9qDzwpUFmL04CMCBD/qlpKDheJIQVsu6JTyyOvA4JBfkJ2rP
+ hmie5p69/1Sh/TjDbFWIunuJsz+bmfl76tBPIpP9dfl4CYIL1/6Y3WsoI8Sv33l6niXorObmJrD
+ M4QwPsKU449kQf0qxDmdwGRDImsR+lQPRm55qIXm/0PIiS/LkuU6JMlUT713MRyQKv7hxpSXKbF
+ 4g5UrD5qGMgyiMunhBk0H/w4+HkMu4PX+OP7IPX3w18E9ZS6Y2iEguuV3ZpyTcsr3v7Bn4vYfpF
+ 778fXQZxAAQoY7A==
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-sk_stop_timer_sync() calls del_timer_sync(), which spin-waits for the
-timer callback to complete on non-RT kernels. But on PREEMPT_RT, it can
-sleep. Sleeping inside an RCU read-side critical section might trigger a
-lockdep splat.
+Use a signed int for the returned size, because if other options are
+dropped, the size can be negative, e.g. to send an echo ADD_ADDR with a
+v4 address, and no port.
 
-Instead, keep a reference to the timer, under rcu_read_lock, and call
-sk_stop_timer*() without the RCU lock.
+The behaviour is not changed, because it was working as expected with an
+overflow. But it is clearer like this, and it will help later on.
 
-While at it, apply the reversed Xmas order when declaring variables.
-
-Fixes: 426358d9be7c ("mptcp: fix a race in mptcp_pm_del_add_timer()")
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
-For -net.
----
- net/mptcp/pm.c | 15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
+ net/mptcp/options.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index b460b153dc0f..ba58d057d040 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -401,9 +401,9 @@ struct mptcp_pm_add_entry *
- mptcp_pm_del_add_timer(struct mptcp_sock *msk,
- 		       const struct mptcp_addr_info *addr, bool check_id)
- {
--	struct mptcp_pm_add_entry *entry;
- 	struct sock *sk = (struct sock *)msk;
--	bool stop_timer = false;
-+	struct mptcp_pm_add_entry *entry;
-+	struct timer_list *timer = NULL;
- 
- 	rcu_read_lock();
- 
-@@ -411,7 +411,7 @@ mptcp_pm_del_add_timer(struct mptcp_sock *msk,
- 	entry = mptcp_lookup_anno_list_by_saddr(msk, addr);
- 	if (entry && (!check_id || entry->addr.id == addr->id)) {
- 		entry->retrans_times = ADD_ADDR_RETRANS_MAX;
--		stop_timer = true;
-+		timer = &entry->add_timer;
- 	}
- 	if (!check_id && entry)
- 		list_del(&entry->list);
-@@ -420,14 +420,15 @@ mptcp_pm_del_add_timer(struct mptcp_sock *msk,
- 	/* Note: entry might have been removed by another thread.
- 	 * We hold rcu_read_lock() to ensure it is not freed under us.
- 	 */
--	if (stop_timer) {
-+	rcu_read_unlock();
-+
-+	if (timer) {
- 		if (check_id)
--			sk_stop_timer(sk, &entry->add_timer);
-+			sk_stop_timer(sk, timer);
- 		else
--			sk_stop_timer_sync(sk, &entry->add_timer);
-+			sk_stop_timer_sync(sk, timer);
- 	}
- 
--	rcu_read_unlock();
- 	return entry;
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index 4cc583fdc7a9..966f6a867287 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -651,8 +651,8 @@ static u64 add_addr_generate_hmac(u64 key1, u64 key2,
+ 	return get_unaligned_be64(&hmac[SHA256_DIGEST_SIZE - sizeof(u64)]);
  }
+ 
+-static bool mptcp_established_options_add_addr(struct sock *sk, struct sk_buff *skb,
+-					       unsigned int *size,
++static bool mptcp_established_options_add_addr(struct sock *sk,
++					       struct sk_buff *skb, int *size,
+ 					       unsigned int remaining,
+ 					       struct mptcp_out_options *opts)
+ {
+@@ -842,9 +842,9 @@ bool mptcp_established_options(struct sock *sk, struct sk_buff *skb,
+ {
+ 	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
+ 	struct mptcp_sock *msk = mptcp_sk(subflow->conn);
+-	unsigned int opt_size = 0;
+ 	bool snd_data_fin;
+ 	bool ret = false;
++	int opt_size = 0;
+ 
+ 	opts->suboptions = 0;
  
 
 -- 
