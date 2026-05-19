@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6044934D910
-	for <mptcp@lists.linux.dev>; Tue, 19 May 2026 05:51:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A45C34D910
+	for <mptcp@lists.linux.dev>; Tue, 19 May 2026 05:51:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779169884; cv=none; b=BdzWCSDqsWDSblzkiwQG4dESyjgx5LObWlFUE4vyubEU83CB8pmyHPWW4BfDFwtoyuHF4dzpXobUBKAosgLKNSni35LsCqhSNRuXBiVOiETMoXgooumxzxYDMd91EYbt7IQxk4dHDLdVnU1ZwbbUHDllvNHdqxeo1JKT30jvLu0=
+	t=1779169885; cv=none; b=cTdvKdY7Dsqyid3wWRC3lGJT8BcT9jO5AYV26qq+XoLbRhLcXmtcMQ8DrZQR+Jn7BTVgux9shiBXHGWsvkZZFP0MDl+1wcQQqCSBz4vom7ixP/5MNd0bo29DQCdKXKBHWGuWgQtS+95jvxwaJxuLdsQs1Mx2qI8ZpfGxaEoQe4k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779169884; c=relaxed/simple;
-	bh=QFJQTxhkD2AgZ9YctJ1WtjN2BjqjUAK9Ui/9GaTBWQo=;
+	s=arc-20240116; t=1779169885; c=relaxed/simple;
+	bh=mRUZ8fUJ0RdPTACYZ38omEzQSXZElas6fU7vIj+n7VU=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=rIoCNd+QnaJ+K76mtBBGcDcDK98pJO+LFRWV3y6OG6QcRHCLqsU57RDrpnvEznPDGYMzT7EvbhqFd3zzo/tigxAP2wU2aW9S3TbzXiUcO33VLP99H1JnQR1iUmO7WPelhhG3XbY1WHbO5T3kKuUTbs2fOwT4J2veXN7Tu9forYI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VgE5lJHi; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=osfZrzp7VnVyXlXS0QkJ7Qrv+7sqj26hCi+OueqrEuOyklYn+VlRACaqPx0T67Yy/+XI6FINoO6d8KLt7WrBl+mbPLW131XLW3kozwaaqdmHLvJNkPn1Oq/vTwZKVcndaHoJVgGZrM0MO9fDkiswVk/MIDWmKcHN1vkfFsElOxE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VrBvIA/V; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VgE5lJHi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 714DBC2BCC6;
-	Tue, 19 May 2026 05:51:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VrBvIA/V"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95D64C2BCC6;
+	Tue, 19 May 2026 05:51:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1779169884;
-	bh=QFJQTxhkD2AgZ9YctJ1WtjN2BjqjUAK9Ui/9GaTBWQo=;
+	s=k20201202; t=1779169885;
+	bh=mRUZ8fUJ0RdPTACYZ38omEzQSXZElas6fU7vIj+n7VU=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=VgE5lJHitZXcztH3ydZ62ibAyC97/AtIw3D9Y44nqaSNCrZrMb9uQ2EftzAv00qo5
-	 S0UF4ak86xCSZJJVDi/ynRqLQgohNXmwZAQ5FmyCUYuYVgNz3ewvJUu+I/XmdQar4v
-	 oRWKNfUR+25fahhPstkyWrLvmqzrgnT4xue99fYTctObR31xNKRPT7YRo+yv217SPi
-	 Kar10RQZRtlG6Lr6Bg9flhZvFMCdOtYyp4yAnDyy46NJ9pnwa5zcGJJv0RjOUYsjr3
-	 dEkHxjnZYj0X3u1ZJZeNNmna3ZQIKMak/8/T98yGyzopTwxbCKrn956rfumlZhDvYT
-	 PgS2M1eOnZ7cQ==
+	b=VrBvIA/VJ4EcYQSRWip/mNYV3wPeqmnlv43bG5EtDBTy7pVRnHXeQP8KIw8ayUNRG
+	 9PgAK69wWc+3TUlZ+XgpoZ182bAdtiEX3tbWtgfD0bWYQhjk36LqgZa9Lse7YMhDHn
+	 ykiqdV8Ir6Rd0sUQ+Hx0oQorSajhp9Jdc2da8sxs54YmnGfWWgHK6TPCG3Zn3U6wcM
+	 lx7NOExgib/Lpz0ECDQduByu9pYczGsFZg/YkfMu77TMBLvm4IWRfklZueESBZ47NJ
+	 Uk1Keid7Ar4mUtwXoMPCZWKlC92M1CtYxUEH/1Ft5gI7Q1QftsCYetUg2lVw53YgTd
+	 6QB6T5nWjJ7vg==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Tue, 19 May 2026 15:51:16 +1000
-Subject: [PATCH mptcp-next v2 07/15] selftests: mptcp: validate ADD_ADDRv6
- + TS + port
+Date: Tue, 19 May 2026 15:51:17 +1000
+Subject: [PATCH mptcp-next v2 08/15] selftests: mptcp: always check
+ sent/dropped ADD_ADDRs
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,67 +38,191 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260519-mptcp-add-addr6-port-ts-v2-7-3b36a51e6a86@kernel.org>
+Message-Id: <20260519-mptcp-add-addr6-port-ts-v2-8-3b36a51e6a86@kernel.org>
 References: <20260519-mptcp-add-addr6-port-ts-v2-0-3b36a51e6a86@kernel.org>
 In-Reply-To: <20260519-mptcp-add-addr6-port-ts-v2-0-3b36a51e6a86@kernel.org>
 To: MPTCP Linux <mptcp@lists.linux.dev>
 Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1566; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=QFJQTxhkD2AgZ9YctJ1WtjN2BjqjUAK9Ui/9GaTBWQo=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBqC/pS38ScJbpb/wKVIwQ79EcE5d/eEfmf1vUqk
- 5Ut+ADllMqJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCagv6UgAKCRD2t4JPQmmg
- cySoEACNXEIcfXnmKBWX3kLbJL7xX4WTPRab16LZ0Lxtq0rXkJwxQqbQr4PwKVYq3YMOK6Lvqas
- nCd+8vQ+kcQQSeJA8jJzvQo01NxA75g48JQm1QZJYqJaoqf0HoYvVFl4Hq+Jcpkaqve+t8bWDxl
- suXDHofkNgnfQAhnd+nHWRH2GMR76OihE+56VFntaMp1ZYoVd/+mZoK+5/3+IMlDDUiHjxl6uqD
- +EvTi/Ky2vE9skP/XHM8q1RDrg4U95+eGblEiJETG8OU7i1zeNLLK30BTCqYwDmu4mid/coRt5E
- vFQ69ZXCO2ODCWRx94X0TZwBHermRdMgK3Anf6UCcRlONtycmCA8FUXn8nTku6f6v2GqJtO6Bzu
- 004aw5BqX25eGQE+f3bbWVUazZgVvdNuTPhLptmgnzcT5Pho+h1MDZfacM362q/ZtJh0CYYJYCy
- 0XXyiKCp9m2rh0AXhABNZ+FW+xEpEhuobij7/1b8oDtc6hY50438mR0b+wJpjHNVDdTJ55oPG0Z
- 44QOTQP2w2zb3ly9MSGLkE/xbHXsa3vFEW3ENy/ZAQUppTDJvxtiDE1KGF9qrQi4clswwwrlzzu
- pW0YdJmuNYDArSyWBXRPUyNiP6Na+h971EqdpqvSo6YVBKzVXe9JJCckGFmRsJusDeEfB7p5vux
- rmi5COEnJirTvMg==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4863; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=mRUZ8fUJ0RdPTACYZ38omEzQSXZElas6fU7vIj+n7VU=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBqC/pS+F7/B+q2KVIX5dZHd5A60YzmNuMVOgdAr
+ JRV9oNP85KJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCagv6UgAKCRD2t4JPQmmg
+ c+c3D/9tDNw7W+HKYFstr2I+tfgwGRi5K8Hz2E7+Gye8B3XLmBpfKJK59bbQyl98jcbgkkug+dZ
+ 8DIPtV2ai9uAMUZT0OvPTtoclCCdefxGGMoKvJCpBQnSiNUdpliR/hD9ozajPMkpBxPKkaFu2XU
+ Ib00y6GZuZ+E1HjNvRuC/AAyFMUGw6Vq0ECz0gc/NaiJMTC/rTd/GixMo5vd3fmYxhPiYrrfSQS
+ EoA6lN9hPtD8uOVcFlFwfM6jkxCSxKwemyZctujlWTEkNOekA6RgRnIsNPcqMcqIyqEL5YSiZ4v
+ QwvBc1y1Dd/YOIczT1A4e+nibegb7sMRJSujT7eCBXqvxj3VTPVZBYlpB6mjjXZfPjPbY6QLvEe
+ OLa5ajaOo4DJ+5n5IvP9N9iu7GbLbtYPqTv7wqDgI0LZKfxEAUPxl/KXwvSD1lx+AbL9FdQcmli
+ FL4LKs8MbsMNdwngu0XhEWKgT3bzEJMoLAFX4UoNXRi0D9g2l64Xw2nLwirWWgrLVTPBuwEUSeD
+ JiK1k0GofJEa+7bOnh48IzdDIJmh44r7mJjO00OtS+giSLXCdwtV5kh0ybMIKZpCveAad4F9piD
+ i4x5MNdbGdcE6NZpMlFk71Mew7w1bUj4dpwycpnGiPv9q68oXyktmTpCmao1efa/i9w1+s4ngdY
+ 4hKJLbixRjibSZQ==
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-This validates the feature added by parent commit, where it is now
-possible to send an ADD_ADDR with a v6 IP address and a port number,
-while the connection is using TCP Timestamps.
+Before, they were only checked on demand, but it seems better to check
+them each time received ADD_ADDRs are checked.
 
-This test is simply a copy of the previous one: "signal address with
-port", but using IPv6 addresses. This test is only executed if the
-add_addr_v6_port_drop_ts sysctl knob is available. If not, it means the
-kernel doesn't support this feature.
+Errors are only reported when the counter exists, and the value is not
+the expected one. This is similar to what is done in chk_join_nr: it
+reduces the output, and avoids a lot of 'skip' when validating older
+kernels. Also here, some tests need to adapt the default expected
+counters, e.g. when ADD_ADDR echo are dropped on the reception side, or
+it is not possible to send an ADD_ADDR due to the limited option space.
 
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
-v2: switch back to IPv6 for the main connection to use a v6 socket.
----
- tools/testing/selftests/net/mptcp/mptcp_join.sh | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ tools/testing/selftests/net/mptcp/mptcp_join.sh | 71 ++++++++++---------------
+ 1 file changed, 27 insertions(+), 44 deletions(-)
 
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 23b17957686a..d491c3e964d6 100755
+index d491c3e964d6..82c0f7df3be2 100755
 --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
 +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -3214,6 +3214,17 @@ add_addr_ports_tests()
- 		chk_add_nr 1 1 1
+@@ -87,6 +87,10 @@ unset fb_mpc_data
+ unset fb_md5_sig
+ unset fb_dss
+ 
++unset add_addr_tx_nr
++unset add_addr_echo_tx_nr
++unset add_addr_drop_tx_nr
++
+ # generated using "nfbpf_compile '(ip && (ip[54] & 0xf0) == 0x30) ||
+ #				  (ip6 && (ip6[74] & 0xf0) == 0x30)'"
+ CBPF_MPTCP_SUBOPTION_ADD_ADDR="14,
+@@ -1710,6 +1714,9 @@ chk_add_nr()
+ 	local ack_nr=$port_nr
+ 	local mis_syn_nr=0
+ 	local mis_ack_nr=0
++	local add_tx_nr=${add_addr_tx_nr:-${add_nr}}
++	local echo_tx_nr=${add_addr_echo_tx_nr:-${echo_nr}}
++	local drop_tx_nr=${add_addr_drop_tx_nr:-0}
+ 	local ns_tx=$ns1
+ 	local ns_rx=$ns2
+ 	local tx=""
+@@ -1811,50 +1818,25 @@ chk_add_nr()
+ 			print_ok
+ 		fi
+ 	fi
+-}
+ 
+-chk_add_tx_nr()
+-{
+-	local add_tx_nr=$1
+-	local echo_tx_nr=$2
+-	local count
+-
+-	print_check "add addr tx"
+-	count=$(mptcp_lib_get_counter ${ns1} "MPTcpExtAddAddrTx")
+-	if [ -z "$count" ]; then
+-		print_skip
++	count=$(mptcp_lib_get_counter ${ns_tx} "MPTcpExtAddAddrTx")
+ 	# Tolerate more ADD_ADDR then expected (if any), due to retransmissions
+-	elif [ "$count" != "$add_tx_nr" ] &&
+-	     { [ "$add_tx_nr" -eq 0 ] || [ "$count" -lt "$add_tx_nr" ]; }; then
++	if [ -n "$count" ] && [ "$count" != "$add_tx_nr" ] &&
++	   { [ "$add_tx_nr" -eq 0 ] || [ "$count" -lt "$add_tx_nr" ]; }; then
++		print_check "add addr tx"
+ 		fail_test "got $count ADD_ADDR[s] TX, expected $add_tx_nr"
+-	else
+-		print_ok
  	fi
  
-+	# signal address v6 with port
-+	if reset "signal address v6 with port" &&
-+	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/add_addr_v6_port_drop_ts'; then
-+		pm_nl_set_limits $ns1 0 1
-+		pm_nl_set_limits $ns2 1 1
-+		pm_nl_add_endpoint $ns1 dead:beef:2::1 flags signal port 10100
-+		run_tests $ns1 $ns2 dead:beef:1::1
-+		chk_join_nr 1 1 1
-+		chk_add_nr 1 1 1
-+	fi
-+
- 	# subflow and signal with port
- 	if reset "subflow and signal with port"; then
- 		pm_nl_add_endpoint $ns1 10.0.2.1 flags signal port 10100
+-	print_check "add addr echo tx"
+-	count=$(mptcp_lib_get_counter ${ns2} "MPTcpExtEchoAddTx")
+-	if [ -z "$count" ]; then
+-		print_skip
+-	elif [ "$count" != "$echo_tx_nr" ]; then
++	count=$(mptcp_lib_get_counter ${ns_rx} "MPTcpExtEchoAddTx")
++	if [ -n "$count" ] && [ "$count" != "$echo_tx_nr" ]; then
++		print_check "add addr echo tx"
+ 		fail_test "got $count ADD_ADDR echo[s] TX, expected $echo_tx_nr"
+-	else
+-		print_ok
+ 	fi
+-}
+ 
+-chk_add_drop_tx_nr()
+-{
+-	local drop_tx_nr=$1
+-	local count
+-
+-	print_check "add addr tx drop"
+-	count=$(mptcp_lib_get_counter ${ns1} "MPTcpExtAddAddrTxDrop")
+-	if [ -z "$count" ]; then
+-		print_skip
+-	elif [ "$count" != "$drop_tx_nr" ]; then
++	count=$(mptcp_lib_get_counter ${ns_tx} "MPTcpExtAddAddrTxDrop")
++	if [ -n "$count" ] && [ "$count" != "$drop_tx_nr" ]; then
++		print_check "add addr tx drop"
+ 		fail_test "got $count ADD_ADDR drop[s] TX, expected $drop_tx_nr"
+-	else
+-		print_ok
+ 	fi
+ }
+ 
+@@ -2267,7 +2249,6 @@ signal_address_tests()
+ 		pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
+ 		run_tests $ns1 $ns2 10.0.1.1
+ 		chk_join_nr 0 0 0
+-		chk_add_tx_nr 1 1
+ 		chk_add_nr 1 1
+ 	fi
+ 
+@@ -2545,8 +2526,8 @@ add_addr_timeout_tests()
+ 		speed=slow \
+ 			run_tests $ns1 $ns2 10.0.1.1
+ 		chk_join_nr 1 1 1
+-		chk_add_tx_nr 4 4
+-		chk_add_nr 4 0
++		add_addr_echo_tx_nr=4 \
++			chk_add_nr 4 0
+ 	fi
+ 
+ 	# add_addr timeout IPv6
+@@ -2557,7 +2538,8 @@ add_addr_timeout_tests()
+ 		speed=slow \
+ 			run_tests $ns1 $ns2 dead:beef:1::1
+ 		chk_join_nr 1 1 1
+-		chk_add_nr 4 0
++		add_addr_echo_tx_nr=4 \
++			chk_add_nr 4 0
+ 	fi
+ 
+ 	# signal addresses timeout
+@@ -2569,7 +2551,8 @@ add_addr_timeout_tests()
+ 		speed=10 \
+ 			run_tests $ns1 $ns2 10.0.1.1
+ 		chk_join_nr 2 2 2
+-		chk_add_nr 8 0
++		add_addr_echo_tx_nr=8 \
++			chk_add_nr 8 0
+ 	fi
+ 
+ 	# signal invalid addresses timeout
+@@ -2582,7 +2565,8 @@ add_addr_timeout_tests()
+ 			run_tests $ns1 $ns2 10.0.1.1
+ 		join_syn_tx=2 \
+ 			chk_join_nr 1 1 1
+-		chk_add_nr 8 0
++		add_addr_echo_tx_nr=7 \
++			chk_add_nr 8 0
+ 	fi
+ }
+ 
+@@ -3331,9 +3315,8 @@ add_addr_ports_tests()
+ 		pm_nl_add_endpoint $ns1 dead:beef:2::1 flags signal port 10100
+ 		pm_nl_add_endpoint $ns1 dead:beef:3::1 flags signal
+ 		run_tests $ns1 $ns2 dead:beef:1::1
+-		chk_add_drop_tx_nr 1
+-		chk_add_tx_nr 1 1
+-		chk_add_nr 1 1 0
++		add_addr_drop_tx_nr=1 \
++			chk_add_nr 1 1 0
+ 	fi
+ }
+ 
 
 -- 
 2.53.0
