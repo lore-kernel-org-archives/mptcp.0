@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 118403E8351
-	for <mptcp@lists.linux.dev>; Tue, 19 May 2026 21:25:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7594C3E5A2F
+	for <mptcp@lists.linux.dev>; Tue, 19 May 2026 21:25:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779225930; cv=none; b=sYXqIGk131PqRMoPNZoEet4RJvKS/Kd3UhCESxvD88sGghERlUy7dzmih8BpJQ6LJlIwDP50UZyhr9U4W0qdKO//k6/CRaRchkB6R6Gk/XysO4hv8PaM3y0vJGETQnt6KlwgFheC/w7XoxNkoT0vmZympbUrax/5KN1gZLYTOcw=
+	t=1779225932; cv=none; b=BFcuRY+kdUSIqU4Hcoxefuw6rJH6nbmdnUoNdenKOwLhbrWtlTPJjZAE8GY5ZhhMnpJ+z4GPTulhXhxmZ5Km8pD8Kd3k71BCrkWHPl1JjmgODkMYEu++QkFDno3J8DQfOCCLb9YHZiLrEeVbex6IK98zyup2HIsx0RjyJtiOfMM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779225930; c=relaxed/simple;
-	bh=MRA/5S+yfCdHDYlhXMI4SHgvPdtDpzOdulmVjTbIzQ4=;
+	s=arc-20240116; t=1779225932; c=relaxed/simple;
+	bh=Lfapml52c4YxQaCIFzES2KyoPMvS4GYxDPJ6FVcELjc=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=lIEGqgK0ZyUmt5VwncA31tFGkQpE9e6wL4NGBjf/jx8jhrOjIKj87+uDXnoX5QPRC9lbT6N3Uk8VrGjWRE9vAkOnKK6xAqTsi12niQ8m1bx2KSUstQSDiXJtM4H4u0EJCRPNdWr/Y504HRQj2ttomnvzRwhim9mlzns8kNUIsII=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VD5xwwEF; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:To:Cc; b=UgqksyND6kR/Imls9Z0OQTwGwPnOj+URJ7baS/5+d1QJOrSTwLpuW88zd1uqDsk58delvmEehW+/ntGGVzpmXCGqEvwukPDFjYIpNhKtJHQSfESrZ0m2xvfctFCzflXiWthJFBh/rcaUV8uY3OCFc7//MZViVAZt0ad383Tpowc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GSL1/drw; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VD5xwwEF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D45361F000E9;
-	Tue, 19 May 2026 21:25:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GSL1/drw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62DC11F00893;
+	Tue, 19 May 2026 21:25:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779225928;
-	bh=/6eHH2Op8TmbbJIG2liZr4Hv+XSnAUtmEUnowncPPK8=;
+	s=k20260515; t=1779225930;
+	bh=RkIwGgkOb2a4tyhLeRzD84fwjk97EFA2htu9ktcQIR0=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=VD5xwwEF8n6/tTEYuDDnqdFzeMLcJfPbXTCIQMjnjkk/epnzH513xPwT+1VdgUqd0
-	 SMaLf7KMpDPKrrro6bxvYN0XU5ZvQzBCADUcTX1nK1kbH5u48IpAAVMmWX14yfa/x4
-	 7JUcK9b3qvnIGDHpTxaIPSHsiw8LyxPAZC9MvGNHE0VgSVcoTW77VcGv0jGSuY34gF
-	 W6h5CURKYaK3YLjKXi3J2E6FZtZOumrahiI8shKtZVcewwk5x2Es3KbUkwDUwT+xBD
-	 TH7FqMYSdipbC75uRONGdlDp6LCHnD5W1QH4TgjsVp4M0LIJeb6x62KLKrET+uuRfS
-	 tJZgu5hp/WBCA==
+	b=GSL1/drwHJrc3HMHuh/U64cWfNU4rjTR/i1wNv8EeEBthb15BTg8hY9r50zhwsZm9
+	 Meh5Y38u6kNFukoO9qPmJDhC/t7+T4t8DrhUwAKCmIzwdn3BnEykvG6HdFleLafbw9
+	 hQvwBadyZlsqZDDWQa4ZchlECsKGwq/IMgZLVC6EjaE6oDSD9GFC8g2wtWZVLAm/an
+	 Qknu0/gajxHYoTKEoQf7RoJNrgD/H6f75nsdIq243wADaMLSxEm8b4LBcAUSryNUxz
+	 bu3+Bb4+pXv1zR4hhWLTJSw/RdiCvKs5/e6xp5dspBhNcCy50eiPzfa+AOv5qp++2c
+	 uqdsAsrg8f2Gw==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Wed, 20 May 2026 07:25:15 +1000
-Subject: [PATCH mptcp-next v3 04/16] mptcp: pm: avoid computing add_addr
- size twice
+Date: Wed, 20 May 2026 07:25:16 +1000
+Subject: [PATCH mptcp-next v3 05/16] mptcp: introduce
+ add_addr_v6_port_drop_ts sysctl knob
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,197 +38,161 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260520-mptcp-add-addr6-port-ts-v3-4-bffa658a7678@kernel.org>
+Message-Id: <20260520-mptcp-add-addr6-port-ts-v3-5-bffa658a7678@kernel.org>
 References: <20260520-mptcp-add-addr6-port-ts-v3-0-bffa658a7678@kernel.org>
 In-Reply-To: <20260520-mptcp-add-addr6-port-ts-v3-0-bffa658a7678@kernel.org>
 To: MPTCP Linux <mptcp@lists.linux.dev>
 Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5802; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=MRA/5S+yfCdHDYlhXMI4SHgvPdtDpzOdulmVjTbIzQ4=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBqDNVBuywOe1/GiRR9R5VveTavrxWQCJXQ62U7+
- BWROIcWVnyJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCagzVQQAKCRD2t4JPQmmg
- cxduEADb6Mje99X1WScGpl+H+HEsLdr+brrFKLhJ/tFQsVcA8mSm5FZdbOJvyS0IUEohSXdr57v
- rR/AXnAnu1EXC2JWfbo4bSDdfvyfor5fbmradbZxCz+tQjI0HSlq7YrhZX1hbMn2OgxoRYk57Rb
- qF+RC5HF8o96zcfNShPDuXfie5Rgzz+V8If+B/iq4LB/bIfesn0OxH/J3vHjeiJ/iyQa8jK2rFw
- 54zjmSL5EGgoPKxkTsHRT4lYGK3vMLmHls6jNfVn6PHkGArPHTwq+Ttpksj1sonTqNMd0mAtF7/
- xyOxWvTgIwFug3nk6r1VM7VlMlz6Mz6f5zRJin04yx88kjCqKSlhTirRtioDpaoLHnaNsJnQVdy
- YL5zyLbpGKK0HMrpqmfkF8Ya0Ob6FsK6BPKw+Ru82ZcFkxvVF13/DVWp2KUHDSh0m5pWu0BY9Qk
- V2OX0hKfUoNOTYw0TN5ZS5Bv/LNyz+s6oarXcdqmdSvQyJ7rY7KAywQzoicCc9XohNM6WRyM8aF
- pNSb3vr1MRt2BEhVVByOHVCNootE57UkHJAXLiRtzn2vpcKifeTdIuR23DKMwyOBnjBvYPMzsIG
- PE8fb4VPQ/MX6wu2NlNT/Fw9RZJa40073GIPzJ2NufhlVPWOwwWfVgJbtARH53ZqIO0p/ZNl4kI
- V504jWikCHQOiIQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5509; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=Lfapml52c4YxQaCIFzES2KyoPMvS4GYxDPJ6FVcELjc=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBqDNVBN6a21V3Ble81rB9Ar3z/bJo1CT1x9Qxxt
+ uzF9a2DvFKJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCagzVQQAKCRD2t4JPQmmg
+ c5/mD/9qYt2PMvMfCpG+u9wJlpEdG6wKOUQtDGZcEnqjV/StYC5PzH2nWXrmsrfAkOBI7xdeIj5
+ T4DtUNqTaq6EriGYojAvJD4OTa1Gu5HYbil1dm9J4wiprYNMSWEAuJ3qcrfmAFbOysbEji4AZbO
+ zM5hK/habZikuZvxyw8DWYiBLBRGzFJSEJfW2bWiixuv8xfimS/tzyaCXXyouzM96wsPzcZ5u1J
+ WobTOpMhbj/vd9khO9RCdfN+pqDjKSvTCBRRStLtOW6Rf3v2abJ/j7iEI9x8YpgG/yAiI68woBW
+ hklTUE1+ma+J76gGj/yeVsRIfp5EqfwbEWPYoL9gj2phRbpW7uLcSrgJoXmN9ofviKLg/j6E3Il
+ heysSmQ2s5jZ3oUPoZuCtJZ71w0/lRlXYElR3Jiz5H3UY4mBx6CypsHA6+idhEWRZ6I2OWzs5mM
+ d0w0JoBxrsJYfmm2zP4JzWEC+CWOcDcbYSzudI7MYDISWUJGmxNgD+atLlHlStmwfXy+fmbCfxS
+ Ic/2KjiEhEZPgUWxc7H6L1qn72rX32NNhNhLWtudZ3d8ibb2oPo4sn/Eq7Sm5gatrsjnwRbjGVz
+ KdnTmF6RPhtPt3usT7M3HJTcdbv/PuUhbe+Q4yUyTKpYz/ir5AH6uCyafpD+jttrhI6Khhgu9nJ
+ vBooAefLKIzlijQ==
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-mptcp_add_addr_len helper was called twice: in mptcp_pm_add_addr_signal,
-then just after in mptcp_established_options_add_addr. Both to check
-the remaining space.
+This sysctl is going to be used in the next commits to drop TCP
+timestamps option, to be able to send an ADD_ADDR with a v6 IP address
+and a port number. It is enabled by default.
 
-The second call is not needed: if there is not enough space,
-mptcp_pm_add_addr_signal will return false, and the caller,
-mptcp_established_options_add_addr, will do the same without re-checking
-the size again. Instead, mptcp_pm_add_addr_signal can directly set the
-size.
+This knob is explicitly disabled in the MPTCP Join selftest, with the
+"signal addr list progresses after tx drop" subtest, to continue
+verifying the previous behaviour where the ADD_ADDR is not sent due to a
+lack of space.
 
-Note that the returned size can be negative when other suboptions are
-dropped, e.g. to send an echo ADD_ADDR with a v4 address, and no port.
-
-While at it, move mptcp_add_addr_len to pm.c, as it is now only used
-from there, once, and use a bool for 'ret' in mptcp_pm_add_addr_signal.
+While at it, move syn_retrans_before_tcp_fallback down from struct
+mptcp_pernet, to avoid creating another 3 bytes hole.
 
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
-v2: reset size in mptcp_pm_add_addr_signal if other options are dropped.
+v2: split (Paolo) + fix new sysctl name in selftests.
 ---
- net/mptcp/options.c  | 16 +++-------------
- net/mptcp/pm.c       | 26 ++++++++++++++++++++++----
- net/mptcp/protocol.h | 17 +----------------
- 3 files changed, 26 insertions(+), 33 deletions(-)
+ Documentation/networking/mptcp-sysctl.rst       | 13 +++++++++++++
+ net/mptcp/ctrl.c                                | 18 +++++++++++++++++-
+ net/mptcp/protocol.h                            |  1 +
+ tools/testing/selftests/net/mptcp/mptcp_join.sh |  1 +
+ 4 files changed, 32 insertions(+), 1 deletion(-)
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 231010aaf163..c6d57997110d 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -659,34 +659,25 @@ static bool mptcp_established_options_add_addr(struct sock *sk,
- 	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
- 	struct mptcp_sock *msk = mptcp_sk(subflow->conn);
- 	bool drop_other_suboptions = false;
--	unsigned int opt_size = *size;
- 	struct mptcp_addr_info addr;
- 	bool echo;
--	int len;
+diff --git a/Documentation/networking/mptcp-sysctl.rst b/Documentation/networking/mptcp-sysctl.rst
+index 1eb6af26b4a7..b9b5f58e0625 100644
+--- a/Documentation/networking/mptcp-sysctl.rst
++++ b/Documentation/networking/mptcp-sysctl.rst
+@@ -21,6 +21,19 @@ add_addr_timeout - INTEGER (seconds)
  
- 	/* add addr will strip the existing options, be sure to avoid breaking
- 	 * MPC/MPJ handshakes
- 	 */
- 	if (!mptcp_pm_should_add_signal(msk) ||
- 	    (opts->suboptions & (OPTION_MPTCP_MPJ_ACK | OPTION_MPTCP_MPC_ACK)) ||
--	    !mptcp_pm_add_addr_signal(msk, skb, opt_size, remaining, &addr,
--		    &echo, &drop_other_suboptions))
-+	    !mptcp_pm_add_addr_signal(msk, skb, size, remaining, &addr, &echo,
-+				      &drop_other_suboptions))
- 		return false;
+ 	Default: 120
  
- 	/*
- 	 * Later on, mptcp_write_options() will enforce mutually exclusion with
- 	 * DSS, bail out if such option is set and we can't drop it.
- 	 */
--	if (drop_other_suboptions)
--		remaining += opt_size;
--	else if (opts->suboptions & OPTION_MPTCP_DSS)
-+	if (!drop_other_suboptions && opts->suboptions & OPTION_MPTCP_DSS)
- 		return false;
- 
--	len = mptcp_add_addr_len(addr.family, echo, !!addr.port);
--	if (remaining < len)
--		return false;
--
--	*size = len;
- 	if (drop_other_suboptions) {
- 		pr_debug("drop other suboptions\n");
- 		opts->suboptions = 0;
-@@ -697,7 +688,6 @@ static bool mptcp_established_options_add_addr(struct sock *sk,
- 		 * options
- 		 */
- 		opts->ahmac = 0;
--		*size -= opt_size;
- 	}
- 	opts->addr = addr;
- 	opts->suboptions |= OPTION_MPTCP_ADD_ADDR;
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index e78a248414fb..07536d5ba1ab 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -887,14 +887,30 @@ void mptcp_pm_mp_fail_received(struct sock *sk, u64 fail_seq)
- 	}
++add_addr_v6_port_drop_ts - BOOLEAN
++	Control whether preparing an ADD_ADDR with an IPv6 address and a port
++	should drop the TCP timestamps option to have enough option space to
++	send the signal.
++
++	If there is not enough option space, and the TCP timestamps option
++	cannot be dropped, the signal cannot be sent. Note that dropping the TCP
++	timestamps option for one packet of the connection could disrupt some
++	middleboxes: even if it should be unlikely, they could drop the packet
++	or block the connection. This is a per-namespace sysctl.
++
++	Default: 1 (enabled)
++
+ allow_join_initial_addr_port - BOOLEAN
+ 	Allow peers to send join requests to the IP address and port number used
+ 	by the initial subflow if the value is 1. This controls a flag that is
+diff --git a/net/mptcp/ctrl.c b/net/mptcp/ctrl.c
+index d96130e49942..c94a192f4118 100644
+--- a/net/mptcp/ctrl.c
++++ b/net/mptcp/ctrl.c
+@@ -32,12 +32,13 @@ struct mptcp_pernet {
+ 	unsigned int close_timeout;
+ 	unsigned int stale_loss_cnt;
+ 	atomic_t active_disable_times;
+-	u8 syn_retrans_before_tcp_fallback;
+ 	unsigned long active_disable_stamp;
++	u8 syn_retrans_before_tcp_fallback;
+ 	u8 mptcp_enabled;
+ 	u8 checksum_enabled;
+ 	u8 allow_join_initial_addr_port;
+ 	u8 pm_type;
++	u8 add_addr_v6_port_drop_ts;
+ 	char scheduler[MPTCP_SCHED_NAME_MAX];
+ 	char path_manager[MPTCP_PM_NAME_MAX];
+ };
+@@ -94,6 +95,11 @@ const char *mptcp_get_scheduler(const struct net *net)
+ 	return mptcp_get_pernet(net)->scheduler;
  }
  
-+static unsigned int mptcp_add_addr_len(int family, bool echo, bool port)
++unsigned int mptcp_add_addr_v6_port_drop_ts(const struct net *net)
 +{
-+	u8 len = TCPOLEN_MPTCP_ADD_ADDR_BASE;
-+
-+	if (family == AF_INET6)
-+		len = TCPOLEN_MPTCP_ADD_ADDR6_BASE;
-+	if (!echo)
-+		len += MPTCPOPT_THMAC_LEN;
-+	/* account for 2 trailing 'nop' options */
-+	if (port)
-+		len += TCPOLEN_MPTCP_PORT_LEN + TCPOLEN_MPTCP_PORT_ALIGN;
-+
-+	return len;
++	return mptcp_get_pernet(net)->add_addr_v6_port_drop_ts;
 +}
 +
- bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, const struct sk_buff *skb,
--			      unsigned int opt_size, unsigned int remaining,
-+			      int *size, int remaining,
- 			      struct mptcp_addr_info *addr, bool *echo,
- 			      bool *drop_other_suboptions)
+ static void mptcp_pernet_set_defaults(struct mptcp_pernet *pernet)
  {
- 	bool skip_add_addr = false;
--	int ret = false;
-+	bool ret = false;
- 	u8 add_addr;
-+	int len = 0;
- 	u8 family;
- 	bool port;
- 
-@@ -909,7 +925,7 @@ bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, const struct sk_buff *skb,
- 	 * if any, will be carried by the 'original' TCP ack
- 	 */
- 	if (skb && skb_is_tcp_pure_ack(skb)) {
--		remaining += opt_size;
-+		len -= *size;
- 		*drop_other_suboptions = true;
- 	}
- 
-@@ -926,7 +942,8 @@ bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, const struct sk_buff *skb,
- 		family = msk->pm.local.family;
- 	}
- 
--	if (remaining < mptcp_add_addr_len(family, *echo, port)) {
-+	len += mptcp_add_addr_len(family, *echo, port);
-+	if (len > remaining) {
- 		struct net *net = sock_net((struct sock *)msk);
- 
- 		if (!*drop_other_suboptions)
-@@ -942,6 +959,7 @@ bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, const struct sk_buff *skb,
- 	}
- 
- 	ret = true;
-+	*size = len;
- 
- drop_signal_mark:
- 	WRITE_ONCE(msk->pm.addr_signal, add_addr);
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 6f3c73ad4284..6fb5caeebc35 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -1209,23 +1209,8 @@ static inline bool mptcp_pm_is_kernel(const struct mptcp_sock *msk)
- 	return READ_ONCE(msk->pm.pm_type) == MPTCP_PM_TYPE_KERNEL;
+ 	pernet->mptcp_enabled = 1;
+@@ -108,6 +114,7 @@ static void mptcp_pernet_set_defaults(struct mptcp_pernet *pernet)
+ 	pernet->pm_type = MPTCP_PM_TYPE_KERNEL;
+ 	strscpy(pernet->scheduler, "default", sizeof(pernet->scheduler));
+ 	strscpy(pernet->path_manager, "kernel", sizeof(pernet->path_manager));
++	pernet->add_addr_v6_port_drop_ts = 1;
  }
  
--static inline unsigned int mptcp_add_addr_len(int family, bool echo, bool port)
--{
--	u8 len = TCPOLEN_MPTCP_ADD_ADDR_BASE;
--
--	if (family == AF_INET6)
--		len = TCPOLEN_MPTCP_ADD_ADDR6_BASE;
--	if (!echo)
--		len += MPTCPOPT_THMAC_LEN;
--	/* account for 2 trailing 'nop' options */
--	if (port)
--		len += TCPOLEN_MPTCP_PORT_LEN + TCPOLEN_MPTCP_PORT_ALIGN;
--
--	return len;
--}
--
- bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, const struct sk_buff *skb,
--			      unsigned int opt_size, unsigned int remaining,
-+			      int *size, int remaining,
- 			      struct mptcp_addr_info *addr, bool *echo,
- 			      bool *drop_other_suboptions);
- bool mptcp_pm_rm_addr_signal(struct mptcp_sock *msk, unsigned int remaining,
+ #ifdef CONFIG_SYSCTL
+@@ -362,6 +369,14 @@ static struct ctl_table mptcp_sysctl_table[] = {
+ 		.mode = 0444,
+ 		.proc_handler = proc_available_path_managers,
+ 	},
++	{
++		.procname = "add_addr_v6_port_drop_ts",
++		.maxlen = sizeof(u8),
++		.mode = 0644,
++		.proc_handler = proc_dou8vec_minmax,
++		.extra1       = SYSCTL_ZERO,
++		.extra2       = SYSCTL_ONE
++	},
+ };
+ 
+ static int mptcp_pernet_new_table(struct net *net, struct mptcp_pernet *pernet)
+@@ -389,6 +404,7 @@ static int mptcp_pernet_new_table(struct net *net, struct mptcp_pernet *pernet)
+ 	table[10].data = &pernet->syn_retrans_before_tcp_fallback;
+ 	table[11].data = &pernet->path_manager;
+ 	/* table[12] is for available_path_managers which is read-only info */
++	table[13].data = &pernet->add_addr_v6_port_drop_ts;
+ 
+ 	hdr = register_net_sysctl_sz(net, MPTCP_SYSCTL_PATH, table,
+ 				     ARRAY_SIZE(mptcp_sysctl_table));
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 6fb5caeebc35..2d6c8b1829cd 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -799,6 +799,7 @@ unsigned int mptcp_close_timeout(const struct sock *sk);
+ int mptcp_get_pm_type(const struct net *net);
+ const char *mptcp_get_path_manager(const struct net *net);
+ const char *mptcp_get_scheduler(const struct net *net);
++unsigned int mptcp_add_addr_v6_port_drop_ts(const struct net *net);
+ 
+ void mptcp_active_disable(struct sock *sk);
+ bool mptcp_active_should_disable(struct sock *ssk);
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+index 5d4d0f127f79..23b17957686a 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -3313,6 +3313,7 @@ add_addr_ports_tests()
+ 	if reset "signal addr list progresses after tx drop"; then
+ 		pm_nl_set_limits $ns1 0 2
+ 		pm_nl_set_limits $ns2 1 0
++		ip netns exec $ns1 sysctl -q net.mptcp.add_addr_v6_port_drop_ts=0 2>/dev/null || true
+ 		ip netns exec $ns1 sysctl -q net.ipv4.tcp_timestamps=1
+ 		ip netns exec $ns2 sysctl -q net.ipv4.tcp_timestamps=1
+ 
 
 -- 
 2.53.0
