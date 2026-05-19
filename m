@@ -1,174 +1,131 @@
-Received: from sender4-of-o54.zoho.com (sender4-of-o54.zoho.com [136.143.188.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BB5E37189C
-	for <mptcp@lists.linux.dev>; Tue, 19 May 2026 19:12:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.54
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779217947; cv=pass; b=FtA5sZb8ZKierL6CCvTznT0PP3NdHrnMUolz6T1j2eozZ5ncmQJTkB2fu44n2sWIuIP8m6wOGYIDho7Xk/VdAe0fpTnk+v/yS8aTS5iQYxP0RD82F+J6n0jnDYgEI6rDP6Vydd/f2rIIZ/TdXnG022XAQso17Rm3ub8Hsl3y3sY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779217947; c=relaxed/simple;
-	bh=px00PjnmHQ302ytqURaLSHfsiyFPBwXhsZRFB+oQBo8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=EVa7T/dlArIhb4/S04HIt1KbzEoi/h2+0POdHsT6TvRyShHcRjPLuAqVNvcdMwPtGwOYqVPcG9ECF2gL8QAJjEROVTN5GuBWp3srJsQ8LzueBlrGrW8NUaiz51CYrB715v4RQMrLrd5EHnTnz0j8hutjNIm+w+N782ZdVhcxtwQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com; spf=pass smtp.mailfrom=mpiricsoftware.com; dkim=fail (0-bit key) header.d=mpiricsoftware.com header.i=shardul.b@mpiricsoftware.com header.b=pGMzDpCP reason="key not found in DNS"; arc=pass smtp.client-ip=136.143.188.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mpiricsoftware.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 863CD23393E
+	for <mptcp@lists.linux.dev>; Tue, 19 May 2026 20:14:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.178
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779221648; cv=none; b=pnDbQjLkzErkrZuZQlJcT30qClHIkN46BQ4KjIy6D2zKgQXcy8Vuec1cLdZIaK52P9Qlzj8zeV8sVF2xWBATuCF2pwJgYca47lSkdLXQ4Ldsfa+EO1WGVO0cAeSb0gxQfgO9XCu4d/xpNpVjffCZcsjhGnH0aUNJ9cZLCLUc+WA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779221648; c=relaxed/simple;
+	bh=9exlDx65OxEdtWy4u3nGhnhfualG2e5ycwjneHAHI5g=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
+	 MIME-Version:Content-Type; b=N03Zj88r8y5X+P84pdh494c5+ozF75bWOHRYO8Lqu201a1++4wu2ZcHi7hCMq6FLnbwUxbp9rcFjU1BNO+W2vKYHVa+lOnTM4uz8wcxC78Zwif7vA0U3X2XVipmf25iliDe+kzOhzgOTyoCNXGxE503wn02V1oyd6Y9mr+MLauE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T/CSD9cr; arc=none smtp.client-ip=209.85.222.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mpiricsoftware.com header.i=shardul.b@mpiricsoftware.com header.b="pGMzDpCP"
-ARC-Seal: i=1; a=rsa-sha256; t=1779217939; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=JlrDf+3o4FHfgAQmOkwO5t0k/X5+G8k2KXT0eQIGTPvRT0rOCW6RL2CsapyR2qQt8TndC1rWK75KdO6Kg84MKv/JZr4jJOh9fg/j07lX8wniGEqdOpzaM/I3tozTJvCoxn23nNUc9saHNKYkK+1Cq+mFkb+/od+m18LgNyldr8w=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1779217939; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=egFiJBzq1rsUljbagMXzY2X0xZsDM6E+zMWNQ+h+lyQ=; 
-	b=Yd9W+waftLjsVSGonCaUAJxcwQuSd1IC3uep+wVnUwWifPtCh6SA5QB0jPl/R8ViarRACZJOyg75BlmELU+VkRE9ZphB1pPFYrbgnAWifBGhnC8FVNJW1OZBShTJAwglvsEPY8txlLBk3OsiobQm84nf+O/7bzk1ot80vzcxwRA=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=mpiricsoftware.com;
-	spf=pass  smtp.mailfrom=shardul.b@mpiricsoftware.com;
-	dmarc=pass header.from=<shardul.b@mpiricsoftware.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1779217939;
-	s=mpiric; d=mpiricsoftware.com; i=shardul.b@mpiricsoftware.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:MIME-Version:Content-Transfer-Encoding:Reply-To;
-	bh=egFiJBzq1rsUljbagMXzY2X0xZsDM6E+zMWNQ+h+lyQ=;
-	b=pGMzDpCPDLYmw4OPwjxF5OnJyDxnDkX32OMmB7EobxO6Bp/PxaBcaWLtzQOp7eqv
-	feE+RxyNkZuXK04AkhIMfMFGyEhDlPndg5gdZxZv+M/VJH8qcRt0p0BoiXCZiQ6yio+
-	FzNbQSudwQdfYGH67bOHHd40LiucHphi9LQN8prM=
-Received: by mx.zohomail.com with SMTPS id 1779217936524692.5377344477154;
-	Tue, 19 May 2026 12:12:16 -0700 (PDT)
-From: Shardul Bankar <shardul.b@mpiricsoftware.com>
-To: mptcp@lists.linux.dev,
-	matttbe@kernel.org,
-	pabeni@redhat.com
-Cc: martineau@kernel.org,
-	geliang@kernel.org,
-	janak@mpiric.us,
-	kalpan.jani@mpiricsoftware.com,
-	shardulsb08@gmail.com,
-	Shardul Bankar <shardul.b@mpiricsoftware.com>
-Subject: [PATCH net] mptcp: pm: fix memory leak from alloc-during-teardown race
-Date: Wed, 20 May 2026 00:42:07 +0530
-Message-Id: <20260519191207.1110003-1-shardul.b@mpiricsoftware.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T/CSD9cr"
+Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-90fc979d84cso270181985a.1
+        for <mptcp@lists.linux.dev>; Tue, 19 May 2026 13:14:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1779221646; x=1779826446; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JktMHgQlEILvqAayWZe86G+RdzEsdFf5rzHTkYKBnOw=;
+        b=T/CSD9craJYx5Kkzn6LlFhAsINga8fj1sT7ENbK/5gPHbLbesDNVoB9uXq7S9VIiXq
+         kxt7xAHqqGU9KClUhHM3ONPPoNAapf01Ov9oH1FAgu3XQN0mRN5zOdqJhJHlnWQQZQSQ
+         +UUcUlj+9feWa4AeM8qGPQH5RiP5H0V/utIdRP7L/HucnKIZCRGtJqBF2sCaJEf+KisG
+         dOUGbeOHvM3Pdyt0UrWCjnqfHop1nbUCgqpSyC/6PtJjg8T8K8sPSFbEpBYdxV9JP+dU
+         eZIaYOUUOWeK6mRPNc/q+TfUarZOmpGoDOd851oEAr6MzdqF1TDrWEz2Ro7iwuOBxrXC
+         Bvxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779221646; x=1779826446;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=JktMHgQlEILvqAayWZe86G+RdzEsdFf5rzHTkYKBnOw=;
+        b=ENU+dEnCIkY7kyKHNkD5XzXHndnBw5dyhmqXImwznwbrz49rztb0b8swY0OfDtuR9U
+         pIt4v2PirLmoU3Et9ChXqbyp8Cj6hLf/U6tDRZuHt0o+aUF31D8CU/0/wFnYSqgK8XOF
+         1GabsvMFmbA5HEkK4gJeXIsPQQTUMOH3DpX+WjTAMo6InsVOtopHKC7tFVRbeKCqq26f
+         25BRFyLnDEa79m3rkHAGk2lRDaKLL05AiSBk3y+qORja6P4e50hjU9jJeBueo3OpDjjr
+         7PDNV+N8GyuSl7Keu4w2q3XXICwlRrM6cEEVeqVE+gd1Fqyp9rQiRhYl9wTao4VjWQOX
+         Kx+w==
+X-Gm-Message-State: AOJu0YzXPNbeOYcEOZPv7GoV/6rRWH0hvLXqwZa2AHmqIRqT4cz12ir6
+	jY77OmyVOKAZJt8kJLTu8qFyzN4tdKPVvtosSlzLaEuQCaX+xLHsp74=
+X-Gm-Gg: Acq92OGUK6qwZNSYE//IVa2TsQiEoySpIxbgvwxyh42AmW1RCVEQX8r4MXoj9zeKY0/
+	q1R7PsZTqeB1WwEB3saQD+6O1iz2GaHDt8j/pTzLyVxASWc+8y5RCuE37/yYK7D32WrELm5o9iJ
+	sCWOCZFTS/rVwuDEfzHxDRa9oVvRLgKdVo/MOk5XRnx1KrAmVC3VLAxiiQIwrzZu1Qlecur9RfE
+	WWUcE7AwnvJZCDuNS0i7JVxDjcFkYRSzBZ0OjCwvvYnyutQGoyFB/DA94cB4QAW2BEuDLo9A1vj
+	ghwY27MFQAxGVBXT6pIq/hXkrbZMbT24fiitaw+8XybZQ8SxXsw78jKGFJUFlRjqPI9DwAh3QhN
+	6SdUN4crnGdTZrCykudN5OWhDaEpZC+nLVQXxYI/xffOBRlFWkxjUWgxcUgpHjf24FRFOxCW/uL
+	lqXIG9nMpT0QRUDmfb4j3opYzVdWZlP3OV1lUOtBIcFT0UiQfD
+X-Received: by 2002:a05:620a:4453:b0:8f5:9a78:2fc with SMTP id af79cd13be357-911d01b24c8mr3127637885a.54.1779221646306;
+        Tue, 19 May 2026 13:14:06 -0700 (PDT)
+Received: from [127.0.0.1] ([48.217.251.178])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-910bcf37274sm1937358285a.37.2026.05.19.13.14.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 May 2026 13:14:05 -0700 (PDT)
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Shardul Bankar <shardul.b@mpiricsoftware.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20260519191207.1110003-1-shardul.b@mpiricsoftware.com>
+References: <20260519191207.1110003-1-shardul.b@mpiricsoftware.com>
+Subject: Re: [PATCH net] mptcp: pm: fix memory leak from
+ alloc-during-teardown race
+Message-ID: <12364e30-61c9-d92d-1d78-a5a188720521@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 19 May 2026 20:14:05 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=utf-8
 
-mptcp_pm_destroy() drains msk->pm.anno_list via list_splice_init()
-under msk->pm.lock and then, for the userspace PM, drains
-msk->pm.userspace_pm_local_addr_list under the same lock. Between
-the two splices, msk->pm.lock is released.
+Hi Shardul,
 
-A concurrent userspace PM genl ANNOUNCE on the same msk holds a
-sock reference via mptcp_token_get_sock() and, in
-mptcp_pm_nl_announce_doit(), calls
-mptcp_userspace_pm_append_new_local_addr() and
-mptcp_pm_alloc_anno_list(). Both take msk->pm.lock briefly to
-add to their respective lists. Because the genl handler holds a
-sock reference, mptcp_pm_destroy() may run on the same msk via
-mptcp_disconnect(), which invokes mptcp_destroy_common() without
-dropping the sock refcount, before the handler completes.
+Thank you for your modifications, that's great!
 
-If the lock acquisitions interleave such that mptcp_pm_destroy()'s
-splice runs first, the subsequent alloc paths land on a list head
-pointing to itself. Nothing else iterates that list for this msk,
-and the added entry leaks. kmemleak reports both 192-byte
-mptcp_pm_add_entry objects (from mptcp_pm_alloc_anno_list()) and
-64-byte mptcp_pm_addr_entry objects (from
-mptcp_userspace_pm_append_new_local_addr()) under sustained
-concurrent ANNOUNCE + close load against the userspace PM.
+Our CI did some validations and here is its report:
 
-Add a teardown flag set by mptcp_pm_destroy() before its
-pm.lock-held splice and checked under pm.lock by the alloc paths.
-Either the alloc takes pm.lock first, in which case its entry
-will be on the list when destroy's splice runs and will be freed
-normally; or destroy takes pm.lock first, in which case the
-subsequent alloc observes the flag and refuses. Either ordering
-is correct, and the race that orphans an entry is precluded. The
-flag is cleared in mptcp_pm_data_init() so the state is correct
-on slab reuse.
+- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Unstable: 1 failed =
+test(s): packetdrill_dss =E2=9A=A0=EF=B8=8F=20
+- KVM Validation: debug =
+(only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal=
+ (only bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only =
+bpftest_all): Success! =E2=9C=85
+- Task: https://github.=
+com/multipath-tcp/mptcp_net-next/actions/runs/26120116974
 
-Found by an MPTCP protocol-flow harness extending BRF
-(arXiv:2305.08782). Baseline ~0.3 kmemleak reports/minute on the
-userspace PM reduces to zero across multi-hour runs with this
-patch applied.
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/9d4635b60d0a
+Patchwork: https://patchwork.kernel.=
+org/project/mptcp/list/?series=3D1097575
 
-Assisted-by: Claude:claude-opus-4-7
-Signed-off-by: Shardul Bankar <shardul.b@mpiricsoftware.com>
----
- net/mptcp/pm.c           | 6 ++++++
- net/mptcp/pm_userspace.c | 4 ++++
- net/mptcp/protocol.h     | 7 +++++++
- 3 files changed, 17 insertions(+)
 
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index 3e770c7407e1f..5b5c5e0c38583 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -440,6 +440,9 @@ bool mptcp_pm_alloc_anno_list(struct mptcp_sock *msk,
- 
- 	lockdep_assert_held(&msk->pm.lock);
- 
-+	if (READ_ONCE(msk->pm.destroying))
-+		return false;
-+
- 	add_entry = mptcp_lookup_anno_list_by_saddr(msk, addr);
- 
- 	if (add_entry) {
-@@ -1109,6 +1112,8 @@ void mptcp_pm_worker(struct mptcp_sock *msk)
- 
- void mptcp_pm_destroy(struct mptcp_sock *msk)
- {
-+	WRITE_ONCE(msk->pm.destroying, true);
-+
- 	mptcp_pm_free_anno_list(msk);
- 
- 	if (mptcp_pm_is_userspace(msk))
-@@ -1149,6 +1154,7 @@ void mptcp_pm_data_init(struct mptcp_sock *msk)
- 	spin_lock_init(&msk->pm.lock);
- 	INIT_LIST_HEAD(&msk->pm.anno_list);
- 	INIT_LIST_HEAD(&msk->pm.userspace_pm_local_addr_list);
-+	msk->pm.destroying = false;
- 	mptcp_pm_data_reset(msk);
- }
- 
-diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-index 8cbc1920afb49..bf53db7307302 100644
---- a/net/mptcp/pm_userspace.c
-+++ b/net/mptcp/pm_userspace.c
-@@ -54,6 +54,10 @@ static int mptcp_userspace_pm_append_new_local_addr(struct mptcp_sock *msk,
- 	bitmap_zero(id_bitmap, MPTCP_PM_MAX_ADDR_ID + 1);
- 
- 	spin_lock_bh(&msk->pm.lock);
-+	if (READ_ONCE(msk->pm.destroying)) {
-+		ret = -EINVAL;
-+		goto append_err;
-+	}
- 	mptcp_for_each_userspace_pm_addr(msk, e) {
- 		addr_match = mptcp_addresses_equal(&e->addr, &entry->addr, true);
- 		if (addr_match && entry->addr.id == 0 && needs_id)
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index e4f5aba24da7d..c7a068ea71324 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -222,6 +222,13 @@ struct mptcp_pm_data {
- 
- 	spinlock_t	lock;		/*protects the whole PM data */
- 
-+	/* set by mptcp_pm_destroy() before its pm.lock-held splice;
-+	 * checked under pm.lock by alloc paths to refuse adds that would
-+	 * be orphaned by destroy's splice.  Cleared in mptcp_pm_data_init()
-+	 * so the field is correct after slab reuse.
-+	 */
-+	bool		destroying;
-+
- 	struct_group(reset,
- 
- 	u8		addr_signal;
--- 
-2.34.1
+If there are some issues, you =
+can reproduce them using the same environment as
+the one used by the CI =
+thanks to a docker image, e.g.:
 
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
+
+
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 Core)
