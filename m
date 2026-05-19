@@ -1,111 +1,136 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77CD83B5820
-	for <mptcp@lists.linux.dev>; Tue, 19 May 2026 07:10:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5374B3C5525
+	for <mptcp@lists.linux.dev>; Tue, 19 May 2026 07:19:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779174651; cv=none; b=RzPFcCiEJ9gLcwjSqJf6HQANKuLrdS2JZqKMrlxzTyv2oAhkjosZRr0mld/0OZl15Jw3iYbA/+UNGv61VEp1Lq+1P+5LjcOZtXo4I1BUeLl9Vegu4Fcp8bsdVyblHyWEOSG3u613FCd+pIAWR59dlO6LDrIz5agncJN29KGGfB4=
+	t=1779175176; cv=none; b=pmYlNkzpfPDTJ/7/guUeLGDz+rJWlQFS89N6AI5y2Wjea/NBeSDcgfmN1EccFxsD96B7QdJUQl2Wd8CKYNTSSJdXCTW031xt0nwGf/vmKrezUY7bwsffTUSWiabAtd/PdQdi3aVNzwm4NVV2cbwTIwFONLV1646A5mUT2nZW3uM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779174651; c=relaxed/simple;
-	bh=DNfz+RkFyCt8NqkPqDJBHs2lJq6fxj/YDGWrw6T6OiA=;
+	s=arc-20240116; t=1779175176; c=relaxed/simple;
+	bh=KO5d39OD0vVLdxyJzq+MuW6bHmD9/oeT/Q+wnA6jKbw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=p6rPZYItxXdBnYaVOHMGuvUcTJJ1yyxP9iBEzbhUTd/qpdae0IpkA4xPGTH+at5qwpml6vPETjy6ghd8LXpyxT7OxJy4TlpAVLQSNNBF2l/yK5mIf+u83feMO8EGuArenLAHB7QTFbEoryQPATG/j685mZJN8bL7CQaU3KtGJWs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FcWv/obK; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=f+INhjXZhf/vOfPYKw8UyNJ/nxIJjf36Q9za5FAtiLPHBQv1H5gTfzgMmZlKTCSVPZxJUGkeaijE3A8DIvgUNEjeikcsmiLDG0bD7J6JjGltgTCooySYAEOQ/vIALIbfXSUzxdALtv3eJvOHWaBc7v41S9loG1sju1WHpcMo1+U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u2ZTRKRb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FcWv/obK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1779174647;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YCfXOAap2ZwonWatsbBwYVaPs+ys+zdcFEcdb9jcBaM=;
-	b=FcWv/obKPVzGrAPtVr0l0wxchdaqKo88H7g19Z0oMnqXyVatQAe6auR4m9Gwa0RZqBcwKE
-	UQHWtkj0iU+tLAbwSlWriOp1qrbPdRB2ISiBMjzvD3U2geTF8x4Dc/+VlNEqyE920RPo00
-	oMdlD7MjMY5bBbjQLZaCeiaO5fuad28=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-674-H0-FQsy2PKu_dcaWGqyiIQ-1; Tue, 19 May 2026 03:10:43 -0400
-X-MC-Unique: H0-FQsy2PKu_dcaWGqyiIQ-1
-X-Mimecast-MFC-AGG-ID: H0-FQsy2PKu_dcaWGqyiIQ_1779174642
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-44a52d5e572so2495071f8f.3
-        for <mptcp@lists.linux.dev>; Tue, 19 May 2026 00:10:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779174642; x=1779779442;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=YCfXOAap2ZwonWatsbBwYVaPs+ys+zdcFEcdb9jcBaM=;
-        b=P0PUD+i/lUN228Gmh+RaFqXQthKwyd+NQHLro+6biWqADNK4AtP/tK/n0Yp0uF6MRe
-         n1KWvrC3gwtFSmm99J6hRAlhsL700v8IBMUZA+6iClce5UWr0CUKRAnpBljEDScV2DYB
-         Zx9cgHGOiVZhTjGRCIzR9WIhW6Jhh3+8ntNjiEm8qR+JQ9UWIj3j3+69ijCpPJBe/PBB
-         iVWNXn8l+3lqHMqrFJAKySnRDDvdBVxX3UD1P8vXqud9giyh5XpGEuZG+gc3pHIg63Mf
-         0Ae7csHQMaNpgws3l44JzqvuEwcF5VtZkzDxdMD4WhEYMceKaLGaw6ihumQms44G6DOq
-         9sWg==
-X-Gm-Message-State: AOJu0Yy5hir+qlJmpRoxqcI5lJjN+rG3+tR6qkT1tjlBG2QWztfJi0jj
-	ul8hTttnM+CSKo4LWOFbDCS1WotTWcHLfiFNWdI2sjEwt4pTSf69lUxs6mjtRjlHcdM3ApMzzZ4
-	r0zlR8qjeZlmdGqFSCPbIbzPNV7fwcCItkaIBucDekHdiC0sGLh0kWht5Rkn0QZo1
-X-Gm-Gg: Acq92OGrSNjqmOi4BM6wyWJZky68lFeDS1bRCV3W04tqNgiFD8lOMxztSsiUwyqHgj2
-	qcrmSCxh/ilhcN0ZYt5gBE36Xjtz9kSlvznCqv0NQ2aKO11o13eSbj7m6asewAT72z4gNFxdUAw
-	6FrTTM2gjfyIOucrMQrGDRAo37LnXNT8T75oau8ycvQTTDBA6LvFn4aOV05v92PxwGSsF4AXepJ
-	b4kyX9/9bJLFNz1fxRg5digbz3HWrdFlxuOhy9qp5szf3vqZLBRkjkfoOaDBJ9pHhXW+owzNl1u
-	BNOTy8TKwUXUyUvpLpbCVA8RhFpq6eUyGcvN/r5I1G8vSJH/+g/ULEbdisc4KX0jyVi+3dLcT5G
-	mYfmHc2mQpo8w8UPziCjwXvmbNxeNEqFn60SnLeFuKX3yAlwLGoR6B78=
-X-Received: by 2002:a05:600c:4e55:b0:488:ac01:72de with SMTP id 5b1f17b1804b1-48fe60e510bmr275968555e9.5.1779174642086;
-        Tue, 19 May 2026 00:10:42 -0700 (PDT)
-X-Received: by 2002:a05:600c:4e55:b0:488:ac01:72de with SMTP id 5b1f17b1804b1-48fe60e510bmr275968155e9.5.1779174641633;
-        Tue, 19 May 2026 00:10:41 -0700 (PDT)
-Received: from [192.168.88.32] ([150.228.25.33])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48febe67688sm126331525e9.5.2026.05.19.00.10.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 19 May 2026 00:10:41 -0700 (PDT)
-Message-ID: <d86df020-4976-4a34-9f27-6ef09fa9b2d5@redhat.com>
-Date: Tue, 19 May 2026 09:10:40 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u2ZTRKRb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C9EEC2BCB3;
+	Tue, 19 May 2026 07:19:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1779175176;
+	bh=KO5d39OD0vVLdxyJzq+MuW6bHmD9/oeT/Q+wnA6jKbw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=u2ZTRKRbUw5eJVXGjiqHcr0NtnKPPOUPU06tAZjy0c65xDXi8Gqc6vnhTYCLU1NWJ
+	 Wbr1kzjLrZZHaqe/c/QxZoz+f0FKYB6nfeOACttAe7dnR3IBqETW0oTDN0lyWoRecy
+	 0dGP6QlwH+1+mvy03DuNdHEnLRTmaYfF9/8qmZ4azfDzM4jUTevto9E5qrl04d+Uhf
+	 T02rQdNNpiQPie6ftpdprvw3mkM0V9wXKMx0GOcja+7OIf2eZUNkcFUJwCceC6ZWJL
+	 p78jNl5H8st3N9+YG1MF1g4QIoX0TfgrHhgbAU98lQomj0hVpPklP4j6IyKxmwDheV
+	 mtEK2S1I91iPg==
+Message-ID: <969cf245-ce26-40d5-9b5f-15c9b3e725aa@kernel.org>
+Date: Tue, 19 May 2026 17:19:32 +1000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
+User-Agent: Mozilla Thunderbird Beta
 Subject: Re: [PATCH mptcp-next 03/12] mptcp: pm: drop TCP TS with ADD_ADDRv6 +
  port
-To: Matthieu Baerts <matttbe@kernel.org>
+Content-Language: fr
+To: Paolo Abeni <pabeni@redhat.com>
 Cc: MPTCP Linux <mptcp@lists.linux.dev>
 References: <20260518-mptcp-add-addr6-port-ts-v1-0-f1ca26977fcd@kernel.org>
  <20260518-mptcp-add-addr6-port-ts-v1-3-f1ca26977fcd@kernel.org>
  <9878b113-59e9-4100-92b8-fed412466097@redhat.com>
  <e8eab089-38a9-4786-9052-b2d0a4d2aab4@kernel.org>
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <e8eab089-38a9-4786-9052-b2d0a4d2aab4@kernel.org>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: D2J-BYFqAkEc-XhXGEYDmz1C1QT8ZLYwLNyviN6HHP4_1779174642
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
+ <d86df020-4976-4a34-9f27-6ef09fa9b2d5@redhat.com>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
+ YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
+ c7SPFMpMesgpcu1xFt0F6bcxE+0ojRtSCZ5HDElKlHJNYtD1uwY4UYVGWUGCF/+cY1YLmtfb
+ WdNb/SFo+Mp0HItfBC12qtDIXYvbfNUGVnA5jXeWMEyYhSNktLnpDL2gBUCsdbkov5VjiOX7
+ CRTkX0UgNWRjyFZwThaZADEvAOo12M5uSBk7h07yJ97gqvBtcx45IsJwfUJE4hy8qZqsA62A
+ nTRflBvp647IXAiCcwWsEgE5AXKwA3aL6dcpVR17JXJ6nwHHnslVi8WesiqzUI9sbO/hXeXw
+ TDSB+YhErbNOxvHqCzZEnGAAFf6ges26fRVyuU119AzO40sjdLV0l6LE7GshddyazWZf0iac
+ nEhX9NKxGnuhMu5SXmo2poIQttJuYAvTVUNwQVEx/0yY5xmiuyqvXa+XT7NKJkOZSiAPlNt6
+ VffjgOP62S7M9wDShUghN3F7CPOrrRsOHWO/l6I/qJdUMW+MHSFYPfYiFXoLUZyPvNVCYSgs
+ 3oQaFhHapq1f345XBtfG3fOYp1K2wTXd4ThFraTLl8PHxCn4ywARAQABzSRNYXR0aGlldSBC
+ YWVydHMgPG1hdHR0YmVAa2VybmVsLm9yZz7CwZEEEwEIADsCGwMFCwkIBwIGFQoJCAsCBBYC
+ AwECHgECF4AWIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZUDpDAIZAQAKCRD2t4JPQmmgcz33
+ EACjROM3nj9FGclR5AlyPUbAq/txEX7E0EFQCDtdLPrjBcLAoaYJIQUV8IDCcPjZMJy2ADp7
+ /zSwYba2rE2C9vRgjXZJNt21mySvKnnkPbNQGkNRl3TZAinO1Ddq3fp2c/GmYaW1NWFSfOmw
+ MvB5CJaN0UK5l0/drnaA6Hxsu62V5UnpvxWgexqDuo0wfpEeP1PEqMNzyiVPvJ8bJxgM8qoC
+ cpXLp1Rq/jq7pbUycY8GeYw2j+FVZJHlhL0w0Zm9CFHThHxRAm1tsIPc+oTorx7haXP+nN0J
+ iqBXVAxLK2KxrHtMygim50xk2QpUotWYfZpRRv8dMygEPIB3f1Vi5JMwP4M47NZNdpqVkHrm
+ jvcNuLfDgf/vqUvuXs2eA2/BkIHcOuAAbsvreX1WX1rTHmx5ud3OhsWQQRVL2rt+0p1DpROI
+ 3Ob8F78W5rKr4HYvjX2Inpy3WahAm7FzUY184OyfPO/2zadKCqg8n01mWA9PXxs84bFEV2mP
+ VzC5j6K8U3RNA6cb9bpE5bzXut6T2gxj6j+7TsgMQFhbyH/tZgpDjWvAiPZHb3sV29t8XaOF
+ BwzqiI2AEkiWMySiHwCCMsIH9WUH7r7vpwROko89Tk+InpEbiphPjd7qAkyJ+tNIEWd1+MlX
+ ZPtOaFLVHhLQ3PLFLkrU3+Yi3tXqpvLE3gO3LM7BTQRV4/npARAA5+u/Sx1n9anIqcgHpA7l
+ 5SUCP1e/qF7n5DK8LiM10gYglgY0XHOBi0S7vHppH8hrtpizx+7t5DBdPJgVtR6SilyK0/mp
+ 9nWHDhc9rwU3KmHYgFFsnX58eEmZxz2qsIY8juFor5r7kpcM5dRR9aB+HjlOOJJgyDxcJTwM
+ 1ey4L/79P72wuXRhMibN14SX6TZzf+/XIOrM6TsULVJEIv1+NdczQbs6pBTpEK/G2apME7vf
+ mjTsZU26Ezn+LDMX16lHTmIJi7Hlh7eifCGGM+g/AlDV6aWKFS+sBbwy+YoS0Zc3Yz8zrdbi
+ Kzn3kbKd+99//mysSVsHaekQYyVvO0KD2KPKBs1S/ImrBb6XecqxGy/y/3HWHdngGEY2v2IP
+ Qox7mAPznyKyXEfG+0rrVseZSEssKmY01IsgwwbmN9ZcqUKYNhjv67WMX7tNwiVbSrGLZoqf
+ Xlgw4aAdnIMQyTW8nE6hH/Iwqay4S2str4HZtWwyWLitk7N+e+vxuK5qto4AxtB7VdimvKUs
+ x6kQO5F3YWcC3vCXCgPwyV8133+fIR2L81R1L1q3swaEuh95vWj6iskxeNWSTyFAVKYYVskG
+ V+OTtB71P1XCnb6AJCW9cKpC25+zxQqD2Zy0dK3u2RuKErajKBa/YWzuSaKAOkneFxG3LJIv
+ Hl7iqPF+JDCjB5sAEQEAAcLBXwQYAQIACQUCVeP56QIbDAAKCRD2t4JPQmmgc5VnD/9YgbCr
+ HR1FbMbm7td54UrYvZV/i7m3dIQNXK2e+Cbv5PXf19ce3XluaE+wA8D+vnIW5mbAAiojt3Mb
+ 6p0WJS3QzbObzHNgAp3zy/L4lXwc6WW5vnpWAzqXFHP8D9PTpqvBALbXqL06smP47JqbyQxj
+ Xf7D2rrPeIqbYmVY9da1KzMOVf3gReazYa89zZSdVkMojfWsbq05zwYU+SCWS3NiyF6QghbW
+ voxbFwX1i/0xRwJiX9NNbRj1huVKQuS4W7rbWA87TrVQPXUAdkyd7FRYICNW+0gddysIwPoa
+ KrLfx3Ba6Rpx0JznbrVOtXlihjl4KV8mtOPjYDY9u+8x412xXnlGl6AC4HLu2F3ECkamY4G6
+ UxejX+E6vW6Xe4n7H+rEX5UFgPRdYkS1TA/X3nMen9bouxNsvIJv7C6adZmMHqu/2azX7S7I
+ vrxxySzOw9GxjoVTuzWMKWpDGP8n71IFeOot8JuPZtJ8omz+DZel+WCNZMVdVNLPOd5frqOv
+ mpz0VhFAlNTjU1Vy0CnuxX3AM51J8dpdNyG0S8rADh6C8AKCDOfUstpq28/6oTaQv7QZdge0
+ JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <d86df020-4976-4a34-9f27-6ef09fa9b2d5@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On 5/18/26 7:17 PM, Matthieu Baerts wrote:
-> 19 May 2026 01:19:36 Paolo Abeni <pabeni@redhat.com>:
->> On 5/18/26 2:59 PM, Matthieu Baerts (NGI0) wrote:
->>>         if (mptcp_established_options(sk, skb, &optsize, remaining,
->>> -                         &opts->mptcp)) {
->>> +                         &drop_ts, &opts->mptcp)) {
+Hi Paolo,
+
+Thank you for your reply!
+
+On 19/05/2026 17:10, Paolo Abeni wrote:
+> On 5/18/26 7:17 PM, Matthieu Baerts wrote:
+>> 19 May 2026 01:19:36 Paolo Abeni <pabeni@redhat.com>:
+>>> On 5/18/26 2:59 PM, Matthieu Baerts (NGI0) wrote:
+>>>>         if (mptcp_established_options(sk, skb, &optsize, remaining,
+>>>> -                         &opts->mptcp)) {
+>>>> +                         &drop_ts, &opts->mptcp)) {
+>>>
+>>> What about passing `opts` instead of both `drop_ts` and `opts->mptcp` ?
 >>
->> What about passing `opts` instead of both `drop_ts` and `opts->mptcp` ?
+>> I didn't do that because "struct tcp_out_options" is defined only in
+>> tcp_output.c. Do you think it would be worth it to export it?
 > 
-> I didn't do that because "struct tcp_out_options" is defined only in
-> tcp_output.c. Do you think it would be worth it to export it?
+> I did not consider the above. I think it would make sense to move
+> `struct tcp_out_options` definition to an header file, possibly even in
+> net/ipv4/. I admit I'm not sure Eric will agree. Possibly an early check
+> could help.
 
-I did not consider the above. I think it would make sense to move
-`struct tcp_out_options` definition to an header file, possibly even in
-net/ipv4/. I admit I'm not sure Eric will agree. Possibly an early check
-could help.
+OK, I can ask. But before, and just to be sure: if I pass "opts", that
+means the removal of the TCP TS option will be done on MPTCP side, and
+not here on TCP side:
 
-/P
+  opts->options &= ~OPTION_TS;
+
+Would it be OK? I mean: it feels like hiding the fact we are mangling
+TCP options, and it might be better to keep doing that here.
+
+An alternative is to pass the size, and suggest dropping all other
+options, similar to what is done with ADD_ADDR where other MPTCP
+suboptions are dropped.
+
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
 
