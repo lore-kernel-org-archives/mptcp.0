@@ -1,129 +1,165 @@
-Received: from mail-oo1-f79.google.com (mail-oo1-f79.google.com [209.85.161.79])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BC83355F42
-	for <mptcp@lists.linux.dev>; Wed, 20 May 2026 11:55:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.79
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F41F2DCF46;
+	Wed, 20 May 2026 12:05:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779278138; cv=none; b=Vbo/TqunutSG4YB1PMdDeqH2nFreo0JsXr8vs6tU612fkb9udEUFkg7Sl4chLaN9Ti97ZdKNOkxvKyCj+Hs/3XHivc8PACuUJGgybbpBkH2jVUySr67C9tQLNANgBO+dQPML76VEsIj2ro6WoWBeSLgFNDbSlvArDZwb4yMJG4s=
+	t=1779278754; cv=none; b=DqYjfeAakBKih9O4sTdCY2MAqQAudRp07MZg2AU7Rnr0L4zALmCF6CIdPUzWmPsv45gLH1oEFdkHPgqvKln2zNjZD3RXcxkO3omZxRtM0lNfmuYiolC1CvZdsNspgf1+JM/P68sDNfgY7NnuAN9lbNRXfblMYpC6daKt9EdpMR8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779278138; c=relaxed/simple;
-	bh=hje88MKRm504VTdbSlvpEtbK/6SzAqPKYbeaWtiQV9I=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=cwDrDpoxyY95CxGA1xLMUta2LHgVh2Kx9J1uDPD1GrjC0QaPGQK2aZWrDzGUGFscq4iokqeshIjZmmdQ9+tr3I8pYuaAzBvOHjjbLE1aGEL9PPpBrkN522wqC4VczWHrFwO7n16wwG07srobW2kQzQMbaXj8Mn0c9BodvRS1UDk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.161.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-oo1-f79.google.com with SMTP id 006d021491bc7-6853c2438b9so11629312eaf.3
-        for <mptcp@lists.linux.dev>; Wed, 20 May 2026 04:55:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779278136; x=1779882936;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=8GZol9qQ+dw2DLZfx9vE3fAfJaHwkWrSoxo+SKKzVtw=;
-        b=md1EeTROvvMJAe2QzHzACUdFsmc8zLdhxgeSd1Z9Cu6U77CfWFOeWHPG6VPwT6uU/c
-         8sJeJjytc8U8BeFh24lAs3FUlvO/BPloKMhPv4b+SHp4pm4UwgLvt8ZJUUQLsq+ZLLph
-         11dJglpT61CvTVxDa3j73lQW5KuxWza973+tb8z17248+Zw9fk0fNohPKPNJ8Tb/ljD/
-         iAtKboYcfhdcMPbdBWv0+JAIejDEeL2osFnoFfMkJXg4CMnsr8NsMH9Sfm/174nLByY0
-         RudVaGqviM/PDOqQaI8lHU5HTUJysNJXl9FLZktmuNllvMcheUqGC0PV3MQuJjakP3D2
-         KueA==
-X-Forwarded-Encrypted: i=1; AFNElJ9Ho/LybO45XbY1XczpuTZRZjQwZa7hgwsQMDMajC/iVDskxqZ8lpTLJPZzzfPGx3L8ieV0Ew==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzQRQadm0LfZzjKAdfL6nq1x++vb5tu2bSFnpwcm+Li4K22n35a
-	RuGXzBQ1xevtwJfqx3yXRLUyY0HO/i7Il4Bh4dRvpjSoNIuRORFPkprhqOKIq1in3mUIIeiaHXW
-	AVFVHApI0sidDHvC5lzqe+T0eJXxJGNmQLWnnjlqryob3sCYoopzARJz7Jz8=
+	s=arc-20240116; t=1779278754; c=relaxed/simple;
+	bh=UYUOuk1VwSci2peHvj/JRnwtTW28xTWkrFGCFYL0ms0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
+	 In-Reply-To:Content-Type; b=NBaQ3PNy+irsL5uCU00bxG4Eux5rQiu0o+ygqKoCHXqfL8iGnqYpMX02siyujsYb8AUwS27qJzxl3MDHcSTM7ZpEQsz+rZkIWdB3qOvAbPgl5ItN8XcnBDgqKK+bo1W5B8FukfBin5JprmLYtG1oaGAj/Yw28gKBYTsPJ0LmzUY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oNY+b4wf; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oNY+b4wf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 371B81F000E9;
+	Wed, 20 May 2026 12:05:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1779278752;
+	bh=+zLIaM5TyiQu+/+rrgc9oimvpZ04kcixkpZqRos2n48=;
+	h=Date:Subject:To:References:From:Cc:In-Reply-To;
+	b=oNY+b4wfJ5QzUCJYtoiTXs0pKZHkqxUp9rmeM6I6QH05DF369WqJOsb1s2ZmKBXag
+	 IeNdQksgEpTAHGMSssOzO/qfpVJfHGX3JgeMZhhq7yJALCBV6r6pvFSUz0GaBYeiX/
+	 YcH83qVmwijn7c8YJ7uVilake1bg3r7ai0JKwpRn1h5GdtfBCXZx22BBL3YKFqBCiq
+	 UsVj8pA3Mrg6jK5mticpJvC3fJR9zDthRBsCGBVxyKg9+SpVoKKNvgoOR7AVGZIaVT
+	 h9iJs50jcFgDpDq6RuWf4fb+3z0a7C7kNY9oxqRFnT66Ax950na57xmNLcsP9piLtY
+	 3GG34xWS4vkog==
+Message-ID: <91a3a37b-7c4e-409b-b85c-36b530a738fe@kernel.org>
+Date: Wed, 20 May 2026 22:05:45 +1000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6820:f07:b0:67e:16b4:aa0d with SMTP id
- 006d021491bc7-69c9437c154mr13458890eaf.30.1779278136388; Wed, 20 May 2026
- 04:55:36 -0700 (PDT)
-Date: Wed, 20 May 2026 04:55:36 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6a0da138.170a0220.3cbd30.0141.GAE@google.com>
-Subject: [syzbot] [mptcp?] WARNING in mptcp_pm_alloc_anno_list (2)
-From: syzbot <syzbot+55c2a5c871441261ed14@syzkaller.appspotmail.com>
-To: davem@davemloft.net, edumazet@google.com, geliang@kernel.org, 
-	horms@kernel.org, kuba@kernel.org, linux-kernel@vger.kernel.org, 
-	martineau@kernel.org, matttbe@kernel.org, mptcp@lists.linux.dev, 
-	netdev@vger.kernel.org, pabeni@redhat.com, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [syzbot] [mptcp?] WARNING in mptcp_pm_alloc_anno_list (2)
+Content-Language: fr
+To: syzbot <syzbot+55c2a5c871441261ed14@syzkaller.appspotmail.com>
+References: <6a0da138.170a0220.3cbd30.0141.GAE@google.com>
+From: Matthieu Baerts <matttbe@kernel.org>
+Cc: davem@davemloft.net, edumazet@google.com, geliang@kernel.org,
+ horms@kernel.org, kuba@kernel.org, linux-kernel@vger.kernel.org,
+ martineau@kernel.org, mptcp@lists.linux.dev, netdev@vger.kernel.org,
+ pabeni@redhat.com, syzkaller-bugs@googlegroups.com
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <6a0da138.170a0220.3cbd30.0141.GAE@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 Hello,
 
-syzbot found the following issue on:
+On 20/05/2026 21:55, syzbot wrote:
+> Hello,
+> 
+> syzbot found the following issue on:
+> 
+> HEAD commit:    ab5fce87a778 Merge tag 'perf-tools-fixes-for-v7.1-2026-05-..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=175fcca6580000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=cb5b551cf65fa040
+> dashboard link: https://syzkaller.appspot.com/bug?extid=55c2a5c871441261ed14
+> compiler:       gcc (Debian 14.2.0-19) 14.2.0, GNU ld (GNU Binutils for Debian) 2.44
+> 
+> Unfortunately, I don't have any reproducer for this issue yet.
+> 
+> Downloadable assets:
+> disk image: https://storage.googleapis.com/syzbot-assets/e36518c61bd7/disk-ab5fce87.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/cd934c0c8950/vmlinux-ab5fce87.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/88cf18661142/bzImage-ab5fce87.xz
+> 
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+55c2a5c871441261ed14@syzkaller.appspotmail.com
+> 
+> ------------[ cut here ]------------
+> mptcp_pm_is_kernel(msk)
+> WARNING: net/mptcp/pm.c:436 at mptcp_pm_alloc_anno_list+0x408/0x4d0 net/mptcp/pm.c:436, CPU#1: kworker/1:6/5792
+> Modules linked in:
+> CPU: 1 UID: 0 PID: 5792 Comm: kworker/1:6 Tainted: G             L      syzkaller #0 PREEMPT(full) 
+> Tainted: [L]=SOFTLOCKUP
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/18/2026
+> Workqueue: events mptcp_worker
+> RIP: 0010:mptcp_pm_alloc_anno_list+0x408/0x4d0 net/mptcp/pm.c:436
+> Code: 8d 7b 30 49 c7 c0 00 6f 64 9b 48 c7 c1 40 f5 28 8d 31 d2 48 c7 c6 b0 43 77 8b e8 c3 b3 7c f6 e9 c6 fc ff ff e8 c9 5b 91 f6 90 <0f> 0b 90 31 db e9 09 fd ff ff 48 c7 c7 c4 39 d8 90 e8 22 27 fe f6
+> RSP: 0018:ffffc90004187818 EFLAGS: 00010293
+> RAX: 0000000000000000 RBX: ffff888079295f00 RCX: ffffffff8b772ecf
+> RDX: ffff888029de1ec0 RSI: ffffffff8b773217 RDI: ffff888029de1ec0
+> RBP: ffff88807e593100 R08: 0000000000000001 R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+> R13: dffffc0000000000 R14: ffff88807e593100 R15: ffff88806a3a5e80
+> FS:  0000000000000000(0000) GS:ffff88812446d000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 000020000035e030 CR3: 0000000068e39000 CR4: 0000000000350ef0
+> Call Trace:
+>  <TASK>
+>  mptcp_pm_create_subflow_or_signal_addr+0xa7a/0x18a0 net/mptcp/pm_kernel.c:373
+>  mptcp_pm_nl_subflow_established net/mptcp/pm_kernel.c:443 [inline]
+>  __mptcp_pm_kernel_worker+0xe5/0x1f0 net/mptcp/pm_kernel.c:1573
+>  mptcp_pm_worker+0x12b/0x320 net/mptcp/pm.c:1069
+>  mptcp_worker+0x15d/0x1420 net/mptcp/protocol.c:2976
+>  process_one_work+0xa0e/0x1980 kernel/workqueue.c:3314
+>  process_scheduled_works kernel/workqueue.c:3397 [inline]
+>  worker_thread+0x5ef/0xe50 kernel/workqueue.c:3478
+>  kthread+0x370/0x450 kernel/kthread.c:436
+>  ret_from_fork+0x72b/0xd50 arch/x86/kernel/process.c:158
+>  ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+This one looks similar to
 
-HEAD commit:    ab5fce87a778 Merge tag 'perf-tools-fixes-for-v7.1-2026-05-..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=175fcca6580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=cb5b551cf65fa040
-dashboard link: https://syzkaller.appspot.com/bug?extid=55c2a5c871441261ed14
-compiler:       gcc (Debian 14.2.0-19) 14.2.0, GNU ld (GNU Binutils for Debian) 2.44
+  https://github.com/multipath-tcp/mptcp_net-next/issues/620
 
-Unfortunately, I don't have any reproducer for this issue yet.
+Not sure how it happened, but it doesn't look serious. Probably an odd
+path switching between path-managers during the establishment of a
+connection, or a reconnect.
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/e36518c61bd7/disk-ab5fce87.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/cd934c0c8950/vmlinux-ab5fce87.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/88cf18661142/bzImage-ab5fce87.xz
+To be investigated, but a reproducer would help here.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+55c2a5c871441261ed14@syzkaller.appspotmail.com
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
 
-------------[ cut here ]------------
-mptcp_pm_is_kernel(msk)
-WARNING: net/mptcp/pm.c:436 at mptcp_pm_alloc_anno_list+0x408/0x4d0 net/mptcp/pm.c:436, CPU#1: kworker/1:6/5792
-Modules linked in:
-CPU: 1 UID: 0 PID: 5792 Comm: kworker/1:6 Tainted: G             L      syzkaller #0 PREEMPT(full) 
-Tainted: [L]=SOFTLOCKUP
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/18/2026
-Workqueue: events mptcp_worker
-RIP: 0010:mptcp_pm_alloc_anno_list+0x408/0x4d0 net/mptcp/pm.c:436
-Code: 8d 7b 30 49 c7 c0 00 6f 64 9b 48 c7 c1 40 f5 28 8d 31 d2 48 c7 c6 b0 43 77 8b e8 c3 b3 7c f6 e9 c6 fc ff ff e8 c9 5b 91 f6 90 <0f> 0b 90 31 db e9 09 fd ff ff 48 c7 c7 c4 39 d8 90 e8 22 27 fe f6
-RSP: 0018:ffffc90004187818 EFLAGS: 00010293
-RAX: 0000000000000000 RBX: ffff888079295f00 RCX: ffffffff8b772ecf
-RDX: ffff888029de1ec0 RSI: ffffffff8b773217 RDI: ffff888029de1ec0
-RBP: ffff88807e593100 R08: 0000000000000001 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-R13: dffffc0000000000 R14: ffff88807e593100 R15: ffff88806a3a5e80
-FS:  0000000000000000(0000) GS:ffff88812446d000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000020000035e030 CR3: 0000000068e39000 CR4: 0000000000350ef0
-Call Trace:
- <TASK>
- mptcp_pm_create_subflow_or_signal_addr+0xa7a/0x18a0 net/mptcp/pm_kernel.c:373
- mptcp_pm_nl_subflow_established net/mptcp/pm_kernel.c:443 [inline]
- __mptcp_pm_kernel_worker+0xe5/0x1f0 net/mptcp/pm_kernel.c:1573
- mptcp_pm_worker+0x12b/0x320 net/mptcp/pm.c:1069
- mptcp_worker+0x15d/0x1420 net/mptcp/protocol.c:2976
- process_one_work+0xa0e/0x1980 kernel/workqueue.c:3314
- process_scheduled_works kernel/workqueue.c:3397 [inline]
- worker_thread+0x5ef/0xe50 kernel/workqueue.c:3478
- kthread+0x370/0x450 kernel/kthread.c:436
- ret_from_fork+0x72b/0xd50 arch/x86/kernel/process.c:158
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
- </TASK>
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
