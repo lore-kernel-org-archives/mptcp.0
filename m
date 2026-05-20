@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7896933A032
-	for <mptcp@lists.linux.dev>; Wed, 20 May 2026 12:51:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1002033AD9D
+	for <mptcp@lists.linux.dev>; Wed, 20 May 2026 13:04:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779281513; cv=none; b=f59zsWvS0zh9vhgQ/x+/DL/9y6fbiufPFnV0gqMbuqm3NXNJt+zlPKRDihbsSnFk5PWifqGUwV7iJI5rMXMQcPzbhjiZUqN2lAKG7hEnp75t2W0+GShcRLrsmgYObtFipivD0KcB0V49MmQgXnR+iIXuzCHoWKGRK5pTa8cIEHg=
+	t=1779282295; cv=none; b=dvHwsrXnkZjcTKg3nI9Pf/mseYnxkX+vyoQkOXHeZMvuGxhHV9aklx7vj5Mkvocug4HHtjIQZr4f213L/35vKxJvymP/sWg03Spw7E+KWwg7MZQLwN1YaCa/dqhoUOB4zCxfnOTrYLK24qx1Sk6V2vElFyoQz5WQL54A8DP+fmc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779281513; c=relaxed/simple;
-	bh=8HsRHOqyCvj1Ycp/gjFyw+JcAbeLAANgyIHBHBfPdIs=;
+	s=arc-20240116; t=1779282295; c=relaxed/simple;
+	bh=Vr5lFF97fUgn+q6Ig/VBNPzjdBZ/9d6sjZNYIm3DjPI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aqLSWsWwJiu8/gPUV77jUZ0J3a2bmTPL5eGzo39RfmC0FYkz6Yfpt9XIkMYJRwMyIJD3xIzBJRUNNbI8l7kGqPUmJL40HuS3aTcYBkI9TcnkOM7iuAP9BNMa/6tIA8JaarIQ6lC+2DzeJSgnV+hV+MDii8bobvFR5yoK5eEEwF0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kas36HTQ; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=hAIo9Da639r3OjqMa6gePbB92rfg3mnoc4J6exp2T9Z2Ne3wseUvFhnNUHa8L4ief/y55KMJjKBTPQ7u8un2t3C9FvpEdNGID9fV+yaZFeBtlPWXKXjhb5rBPK/Kxie44cMmHK4RZttjYbvo44vy6l+xfEKDLHUvP0EXN3y2aMw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Npt+NN48; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kas36HTQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39FCD1F000E9;
-	Wed, 20 May 2026 12:51:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Npt+NN48"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C95FA1F000E9;
+	Wed, 20 May 2026 13:04:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779281512;
-	bh=tQ9czxhuqnLZpU2OmMuXU45mkCEU8y+u6wAkUC8JbTI=;
+	s=k20260515; t=1779282291;
+	bh=w0mFT9kHadYrP1Yk8LK41qqYVr5l+cqRC46UQZpsGl4=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=Kas36HTQxlDcRtiUMLaAp2XCQeMuG+fikQ8m34GB5N8qQaVbkKD5zXWMCczEJuIxn
-	 zbKj3E6kUjIYj6MjtF6gklGxcEBEvHKd5hHZL0w7nFFcJm9xSWJ5P/qtQ5B4tL3lUR
-	 +LJ/7xW/Xrd2ch3NVNbk86aeJM7w0bWAtDGTcanzoEeH48yW1/QRyxRxE9YsfH6Jt1
-	 CoH9Kmtw5Iuc+VomFrDlYpX6eer/gbnhRLAosPK+2kcCz85zo9FC5wTFDXs1VmtSRP
-	 MjU0+o/RUOFEIRLNDJoj9BT6CTOzz7jcTVuQgnvV48N76I+Sz3vNF/0v2X79SjKJ6l
-	 KodaRg8ohubEQ==
-Message-ID: <90151343-08ad-4886-b4fd-ced053e88042@kernel.org>
-Date: Wed, 20 May 2026 22:51:48 +1000
+	b=Npt+NN48veGxNGmDCV52YnrCmIBfVAEg+KVNW0RdxvtDuVNX7jJGwkNof3MUoX/Kt
+	 MaQYi8xD9Coo2l4YZzV+m2h1Yly8A4wP32iukKhqOadgwKpJppIW8ylpZMSAFqPsGH
+	 QF/9LTsNJZwS2J2qCfaD3qwcF0QLRIItkCfo3HW61v2ZX+onUIDQ6UjrujkC9fDwEY
+	 LJ8tg/aTtuhFPcZCJqz2FF+E/+5+SSsVGGNtwHAZCo4OS8auHzasIb845Vx+nP4DQT
+	 zX08qmyfGaUpNjUMzu4jktR5dDZ0Ignnb7MxZihYg4EhAnVpE9QCHetBGhvdG86h8v
+	 DJBrgB0GgWOqA==
+Message-ID: <5226f432-930e-463b-97db-95e687b2396e@kernel.org>
+Date: Wed, 20 May 2026 23:04:48 +1000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v3 1/2] mptcp: pm: fix extra_subflows underflow
- on userspace PM connect failure
+Subject: Re: [PATCH mptcp-next v3 2/2] mptcp: pm: fix extra_subflows leak on
+ userspace PM subflow close race
 Content-Language: fr
 To: Tao Cui <cuitao@kylinos.cn>
 Cc: mptcp@lists.linux.dev
 References: <20260514132925.410184-1-cuitao@kylinos.cn>
- <20260514132925.410184-2-cuitao@kylinos.cn>
+ <20260514132925.410184-3-cuitao@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,81 +87,98 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20260514132925.410184-2-cuitao@kylinos.cn>
+In-Reply-To: <20260514132925.410184-3-cuitao@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 Hi Tao,
 
 (only kept MPTCP ML in Cc)
 
 On 14/05/2026 23:29, Tao Cui wrote:
-> __mptcp_subflow_connect() calls mptcp_pm_close_subflow() on failure
-> to roll back the pre-increment done by kernel PM's fill_*() helpers.
-> The userspace PM does not pre-increment — it only increments after
-> __mptcp_subflow_connect() succeeds — so this decrement is spurious.
-
-Good catch!
-
-Could you add a test to validate this case and avoid regressions, please?
-
-e.g.
-
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 5acd12021e6e..38ba10527996 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -4100,6 +4100,10 @@ userspace_tests()
-                chk_rm_nr 0 1
-                chk_mptcp_info subflows 0 subflows 0
-                chk_subflows_total 1 1
-+               # also check counters with errors at creation time
-+               userspace_pm_add_sf $ns2 10.0.12.2 10 2>/dev/null
-+               chk_mptcp_info subflows 0 subflows 0
-+               chk_subflows_total 1 1
-                kill_events_pids
-                mptcp_lib_kill_group_wait $tests_pid
-        fi
-
-In a separated patch, using the same Fixes tag, like it is done in other
-"fix" commits.
-
-> Fix it by gating mptcp_pm_close_subflow() on the PM type.
+> In the userspace PM subflow creation path, extra_subflows is incremented
+> after release_sock(sk). If a TCP RST arrives for the newly created
+> subflow, mptcp_worker can acquire the socket lock during the gap between
+> release_sock(sk) and the subsequent spin_lock_bh(&msk->pm.lock), close
+> the subflow via mptcp_pm_subflow_check_next(), and decrement the counter
+> before it was incremented -- causing a u8 underflow from 0 to 255.
 > 
-
-Please add a Fixes tag, and use "mptcp-net" prefix for fixes.
-
-> Signed-off-by: Tao Cui <cuitao@kylinos.cn>
-> ---
->  net/mptcp/subflow.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+> Move extra_subflows++ into the lock_sock(sk) section, before
+> release_sock(sk), so that the worker always sees a non-zero counter and
+> decrements correctly. This also eliminates the transient underflow window
+> visible to lockless readers (e.g. sosockopt READ_ONCE).
 > 
-> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> index d562e149606f..c45ad67cb650 100644
-> --- a/net/mptcp/subflow.c
-> +++ b/net/mptcp/subflow.c
-> @@ -1716,7 +1716,8 @@ int __mptcp_subflow_connect(struct sock *sk, const struct mptcp_pm_local *local,
->  	/* we account subflows before the creation, and this failures will not
->  	 * be caught by sk_state_change()
->  	 */
-> -	mptcp_pm_close_subflow(msk);
-> +	if (!mptcp_pm_is_userspace(msk))
+> Additionally, add an underflow guard in mptcp_pm_subflow_check_next() as
+> a safety net for other edge cases.
 
-It feels wrong to call mptcp_pm_is_userspace() from subflow.c: only PM
-code should deal with the different PM.
+A Fixes tag is also needed if this is a fix.
 
-> +		mptcp_pm_close_subflow(msk);
+(...)
 
-When only looking at this diff, I would suggest moving the userspace
-check to this PM helper, but I don't think that's a good idea. Instead,
-I think it would be better if the userspace PM keeps the same behaviour
-as the kernel PM, and increments the extra_subflows counter before
-calling __mptcp_subflow_connect(). Would that work?
+> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+> index 3c152bf66cd5..a83a56b467f9 100644
+> --- a/net/mptcp/pm.c
+> +++ b/net/mptcp/pm.c
+> @@ -655,7 +655,8 @@ void mptcp_pm_subflow_check_next(struct mptcp_sock *msk,
+>  	if (mptcp_pm_is_userspace(msk)) {
+>  		if (update_subflows) {
+>  			spin_lock_bh(&pm->lock);
+> -			pm->extra_subflows--;
+> +			if (pm->extra_subflows)
 
->  	return err;
->  }
+Best not to ignore errors here: use a WARN_ON_ONCE() then.
+
+  if (!WARN_ON_ONCE(pm->extra_subflows == 0))
+
+Also, probably best to do the same in protocol.h, the other place where
+extra_subflows is decremented. Then, move that to a dedicated patch that
+can be applied in -next.
+
+> +				pm->extra_subflows--;
+>  			spin_unlock_bh(&pm->lock);
+>  		}
+>  		return;
+> diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
+> index 8cbc1920afb4..61c10ec00be0 100644
+> --- a/net/mptcp/pm_userspace.c
+> +++ b/net/mptcp/pm_userspace.c
+> @@ -410,6 +410,11 @@ int mptcp_pm_nl_subflow_create_doit(struct sk_buff *skb, struct genl_info *info)
 >  
+>  	lock_sock(sk);
+>  	err = __mptcp_subflow_connect(sk, &local, &addr_r);
+> +	if (!err) {
+
+See my previous comment on the previous patch: do it before calling
+__mptcp_subflow_connect(), unconditionally.
+
+> +		spin_lock_bh(&msk->pm.lock);
+> +		msk->pm.extra_subflows++;
+> +		spin_unlock_bh(&msk->pm.lock);
+> +	}
+>  	release_sock(sk);
+>  
+>  	if (err)
+> @@ -418,8 +423,6 @@ int mptcp_pm_nl_subflow_create_doit(struct sk_buff *skb, struct genl_info *info)
+>  	spin_lock_bh(&msk->pm.lock);
+>  	if (err)
+>  		mptcp_userspace_pm_delete_local_addr(msk, &entry);
+> -	else
+> -		msk->pm.extra_subflows++;
+
+Here, if only mptcp_userspace_pm_delete_local_addr() is called in case
+of error, best to have the spin_lock_bh taken only in case of error. You
+can merge everything with the previous condition:
+
+  if (err) {
+      GENL_SET_ERR_MSG_FMT(...);
+      spin_lock_bh(...);
+      mptcp_userspace_pm_delete_local_addr(...);
+      spin_unlock_bh(...);
+  }
+
+>  	spin_unlock_bh(&msk->pm.lock);
+>  
+>   create_err:
 
 Cheers,
 Matt
