@@ -1,169 +1,129 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f79.google.com (mail-oo1-f79.google.com [209.85.161.79])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ECD93AF678
-	for <mptcp@lists.linux.dev>; Wed, 20 May 2026 08:19:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BC83355F42
+	for <mptcp@lists.linux.dev>; Wed, 20 May 2026 11:55:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.79
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779265174; cv=none; b=kNbyxK16P6Vd0OTfRnFtFA+425ndFyxE1ENBwLse3iTRCxHeeCsrU+ou2DGJP3H+eXqsSznOjJ1UD5kJy2c9HZ3C39JWV0RI9P3mgj75ifk08Z9KzFv61t1NNOX8PGVUEieFQ3jvRC2DX4wZRjVY6nu9iLSFOc97J9RiHf0+QL8=
+	t=1779278138; cv=none; b=Vbo/TqunutSG4YB1PMdDeqH2nFreo0JsXr8vs6tU612fkb9udEUFkg7Sl4chLaN9Ti97ZdKNOkxvKyCj+Hs/3XHivc8PACuUJGgybbpBkH2jVUySr67C9tQLNANgBO+dQPML76VEsIj2ro6WoWBeSLgFNDbSlvArDZwb4yMJG4s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779265174; c=relaxed/simple;
-	bh=eR5Lv6/5aIUbZd9lZvmD7vRmfx4VYOEe+++dY1SAZ78=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fcqWzqbk50eiIvGbPUzfBZKWAhxeGMonZWK9J+Mcgsc6PAxKR+1zmASi5gXySVQ7oWhZBj/tiCrA0UbTndsrdiqPQfNTQjKME8Ir5RNhAbEcv9q1S6IG5SjFePXCxAt86FRHLacmF3RYfI2HAkKq3mNDdznDhJr/30zgJ+OF1K0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SYepq/8o; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SYepq/8o"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1779265171;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mftZB/6L0HviNbkfnf9d/CDhKlPg/UyNoJjXGNy6dMM=;
-	b=SYepq/8oSJzV10DYKj2lDyN3hXQWYfDXzQPuBOgYKgFmAKmdz63BGO9OWRE1zyf6VjMb1N
-	fSCf+w+EuhQyHjMW3z5704wYz3QaO0FpQ7TdqEFfY0aKI9onvCi2R2P3ZFATMd3wWbZs3+
-	wffMjKW2nLaiFC6TBNtjtJDrn3Zhl98=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-622-xtkj7H8APmCaZJZCFNLcng-1; Wed, 20 May 2026 04:19:29 -0400
-X-MC-Unique: xtkj7H8APmCaZJZCFNLcng-1
-X-Mimecast-MFC-AGG-ID: xtkj7H8APmCaZJZCFNLcng_1779265169
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-48919890a95so23903585e9.2
-        for <mptcp@lists.linux.dev>; Wed, 20 May 2026 01:19:29 -0700 (PDT)
+	s=arc-20240116; t=1779278138; c=relaxed/simple;
+	bh=hje88MKRm504VTdbSlvpEtbK/6SzAqPKYbeaWtiQV9I=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=cwDrDpoxyY95CxGA1xLMUta2LHgVh2Kx9J1uDPD1GrjC0QaPGQK2aZWrDzGUGFscq4iokqeshIjZmmdQ9+tr3I8pYuaAzBvOHjjbLE1aGEL9PPpBrkN522wqC4VczWHrFwO7n16wwG07srobW2kQzQMbaXj8Mn0c9BodvRS1UDk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.161.79
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-oo1-f79.google.com with SMTP id 006d021491bc7-6853c2438b9so11629312eaf.3
+        for <mptcp@lists.linux.dev>; Wed, 20 May 2026 04:55:37 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779265168; x=1779869968;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=mftZB/6L0HviNbkfnf9d/CDhKlPg/UyNoJjXGNy6dMM=;
-        b=N151kxpV+i/n/yCCx0j+/98w/5+wkYEPlSaynDqlUPpwCh3CATXD9wcFwkDDWFB5bV
-         GqZz5xYPhF4p/f9eKL17LkUg47oDKWmFFdOiv3fclyrhCl3KjvdMyIGj7a03d+HVWB7Z
-         vf8Uk7DyvCH5wudUuJdG2rBFReapQT3P5hkkw9yZfznxABlb3B+4bbXLIXaStX30CCfK
-         QYQqewnfTc79JLRUjxFuVqZKGXVVxBPEduX9lwpvyxWP98pgMM5WbkkEL5vSIfEQ+pGD
-         EfXpsAkbmTiysbINMJiy35daO/0m4xSwX+SlKdO/26VX5YrkBSx1FZGs94gHfzRqmNj/
-         6OVQ==
-X-Forwarded-Encrypted: i=1; AFNElJ/vnrLa61CMlSxDrKFiPlNYERLzwtmtvAyEIdMBzYgI+GWQc3z0fn7f7hL6zUM3HcXAzVEYOg==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzV0Amzs5Zvo+eUC40uEIT/+kl2xiBOZYhtMCuUSIJc5yMYREEW
-	QzW9+O6vGDR2GaEqLt6ChhWZwbU2i0MdqAMTK5BMiVE1x+I3O9SDJgcTTx+VOSENSMs3966k1Uw
-	fJkeYxnHlzt7kjcigabgNb172VC8pqmIZoV1jpbQIhPDU/qjQ36VMQ3dS
-X-Gm-Gg: Acq92OEIopcqcYcg+g6+2qx9YpOXCcM5zFWOMBVm3Brmy5s5e08X4aGdgnCZjd/MKKG
-	NdqmqxVj5lB/AaKSxRDB12U0B03mHnIvnEJlXH5haNPSSkWUmyNRrmtEtbG+WsMDGSAGG9SZA1Q
-	IzAEHQj7HODv4oAT6nSH8p/D1MLmw89mHNjY9TNEeKpoy3LP4KPNQDhkctx0uLvuZLhnwnBgLqt
-	2cmqW2NAietRrXSHZpMhFaaPWUQMR+zJnvJanMptJcASfKFdYKGZi0rMjhPsV+596Sz/pL4fzV7
-	EtUhxZ4saDd4D2GOGh4v8k5hhxLPeIVr87/f53NU6ROko4iKBr695ntfvOl0Q3Glr7pZ1noPVAo
-	Nl8vw6HVFmcrCLqynKlvOXKssxHCSdMxxmAEVh2LFc5UyunOHxampjpnn8g==
-X-Received: by 2002:a05:600c:821b:b0:488:b811:51c4 with SMTP id 5b1f17b1804b1-48fe6515831mr338698415e9.25.1779265168542;
-        Wed, 20 May 2026 01:19:28 -0700 (PDT)
-X-Received: by 2002:a05:600c:821b:b0:488:b811:51c4 with SMTP id 5b1f17b1804b1-48fe6515831mr338698035e9.25.1779265168083;
-        Wed, 20 May 2026 01:19:28 -0700 (PDT)
-Received: from [192.168.88.32] ([212.105.155.226])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48fead18659sm124877765e9.7.2026.05.20.01.19.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 20 May 2026 01:19:26 -0700 (PDT)
-Message-ID: <5b4149a2-fa05-4f72-bb8c-f3ee82f07d63@redhat.com>
-Date: Wed, 20 May 2026 10:19:25 +0200
+        d=1e100.net; s=20251104; t=1779278136; x=1779882936;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=8GZol9qQ+dw2DLZfx9vE3fAfJaHwkWrSoxo+SKKzVtw=;
+        b=md1EeTROvvMJAe2QzHzACUdFsmc8zLdhxgeSd1Z9Cu6U77CfWFOeWHPG6VPwT6uU/c
+         8sJeJjytc8U8BeFh24lAs3FUlvO/BPloKMhPv4b+SHp4pm4UwgLvt8ZJUUQLsq+ZLLph
+         11dJglpT61CvTVxDa3j73lQW5KuxWza973+tb8z17248+Zw9fk0fNohPKPNJ8Tb/ljD/
+         iAtKboYcfhdcMPbdBWv0+JAIejDEeL2osFnoFfMkJXg4CMnsr8NsMH9Sfm/174nLByY0
+         RudVaGqviM/PDOqQaI8lHU5HTUJysNJXl9FLZktmuNllvMcheUqGC0PV3MQuJjakP3D2
+         KueA==
+X-Forwarded-Encrypted: i=1; AFNElJ9Ho/LybO45XbY1XczpuTZRZjQwZa7hgwsQMDMajC/iVDskxqZ8lpTLJPZzzfPGx3L8ieV0Ew==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzQRQadm0LfZzjKAdfL6nq1x++vb5tu2bSFnpwcm+Li4K22n35a
+	RuGXzBQ1xevtwJfqx3yXRLUyY0HO/i7Il4Bh4dRvpjSoNIuRORFPkprhqOKIq1in3mUIIeiaHXW
+	AVFVHApI0sidDHvC5lzqe+T0eJXxJGNmQLWnnjlqryob3sCYoopzARJz7Jz8=
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 mptcp-next 0/7] mptcp: address stall under memory
- pressure
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: gang.yan@linux.dev
-References: <cover.1779210016.git.pabeni@redhat.com>
- <da87a06afe83a817fefdb86882b6d68169ba121e.camel@kernel.org>
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <da87a06afe83a817fefdb86882b6d68169ba121e.camel@kernel.org>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: XZBC7DnXylp_7oom5n-Wck1g48zCnOeAgEO9NsBlv-E_1779265169
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a05:6820:f07:b0:67e:16b4:aa0d with SMTP id
+ 006d021491bc7-69c9437c154mr13458890eaf.30.1779278136388; Wed, 20 May 2026
+ 04:55:36 -0700 (PDT)
+Date: Wed, 20 May 2026 04:55:36 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6a0da138.170a0220.3cbd30.0141.GAE@google.com>
+Subject: [syzbot] [mptcp?] WARNING in mptcp_pm_alloc_anno_list (2)
+From: syzbot <syzbot+55c2a5c871441261ed14@syzkaller.appspotmail.com>
+To: davem@davemloft.net, edumazet@google.com, geliang@kernel.org, 
+	horms@kernel.org, kuba@kernel.org, linux-kernel@vger.kernel.org, 
+	martineau@kernel.org, matttbe@kernel.org, mptcp@lists.linux.dev, 
+	netdev@vger.kernel.org, pabeni@redhat.com, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On 5/20/26 8:32 AM, Geliang Tang wrote:
-> On Tue, 2026-05-19 at 19:01 +0200, Paolo Abeni wrote:
->> This an attempt to fix the data transfer stall reported by Geliang
->> and
->> Gang more carefully enforcing memory constraints at the MPTCP level.
->>
->> This iteration presents a significant change WRT the previous one,
->> avoiding entirely the collapse attempt on memory pressure. Note that
->> this choice represent a trade off: collapsing allow much faster
->> transfer
->> (to be more accurate: order of magnitude less slow) under some
->> extreme
->> conditions, but makes transfer slower and much more CPU intensive for
->> less unlikely conditions.
->>
->> As a consequence of the above the `mptcp_data.multi_chunk_sendfile`
->> test-case needs a 240 seconds timeout to complete successfully:
->>
->> TEST_F_TIMEOUT(mptcp, multi_chunk_sendfile, 240)
->>
->> The solution performing data collapsing would need similar long
->> timeout
->> for the multiproc tests cases: mutliproc_even, mutliproc_readers,
->> mutliproc_writers, mutliproc_sendpage_even,
->> mutliproc_sendpage_readers,
->> mutliproc_sendpage_writers.
-> 
-> Based on this version, I actually tested the MPTCP TLS self-tests and
-> still encountered a few similar errors, with the test duration taking
-> several times longer than before.
+Hello,
 
-[...]
-> ... ...
-> # #  RUN           tls.12_aes_gcm_mptcp.multi_chunk_sendfile ...
-> # # multi_chunk_sendfile: Test terminated by timeout
-> # #          FAIL  tls.12_aes_gcm_mptcp.multi_chunk_sendfile
-> # not ok 3 tls.12_aes_gcm_mptcp.multi_chunk_sendfile
+syzbot found the following issue on:
 
-Without this series you should get some stall there, right?
+HEAD commit:    ab5fce87a778 Merge tag 'perf-tools-fixes-for-v7.1-2026-05-..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=175fcca6580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=cb5b551cf65fa040
+dashboard link: https://syzkaller.appspot.com/bug?extid=55c2a5c871441261ed14
+compiler:       gcc (Debian 14.2.0-19) 14.2.0, GNU ld (GNU Binutils for Debian) 2.44
 
-Note that the 'multi_chunk' test will require increasing the test-case timeout,
-as mentioned in v3:
+Unfortunately, I don't have any reproducer for this issue yet.
 
----
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_data.c b/tools/testing/selftests/net/mptcp/mptcp_data.c
-index 39d092e7888d..127d8b47bd39 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_data.c
-+++ b/tools/testing/selftests/net/mptcp/mptcp_data.c
-@@ -166,7 +166,7 @@ static void chunked_sendfile(struct __test_metadata *_metadata,
- 	close(fd);
- }
- 
--TEST_F(mptcp, multi_chunk_sendfile)
-+TEST_F_TIMEOUT(mptcp, multi_chunk_sendfile, 240)
- {
- 	chunked_sendfile(_metadata, self, 4096, 4096);
- 	chunked_sendfile(_metadata, self, 4096, 0);
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/e36518c61bd7/disk-ab5fce87.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/cd934c0c8950/vmlinux-ab5fce87.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/88cf18661142/bzImage-ab5fce87.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+55c2a5c871441261ed14@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+mptcp_pm_is_kernel(msk)
+WARNING: net/mptcp/pm.c:436 at mptcp_pm_alloc_anno_list+0x408/0x4d0 net/mptcp/pm.c:436, CPU#1: kworker/1:6/5792
+Modules linked in:
+CPU: 1 UID: 0 PID: 5792 Comm: kworker/1:6 Tainted: G             L      syzkaller #0 PREEMPT(full) 
+Tainted: [L]=SOFTLOCKUP
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/18/2026
+Workqueue: events mptcp_worker
+RIP: 0010:mptcp_pm_alloc_anno_list+0x408/0x4d0 net/mptcp/pm.c:436
+Code: 8d 7b 30 49 c7 c0 00 6f 64 9b 48 c7 c1 40 f5 28 8d 31 d2 48 c7 c6 b0 43 77 8b e8 c3 b3 7c f6 e9 c6 fc ff ff e8 c9 5b 91 f6 90 <0f> 0b 90 31 db e9 09 fd ff ff 48 c7 c7 c4 39 d8 90 e8 22 27 fe f6
+RSP: 0018:ffffc90004187818 EFLAGS: 00010293
+RAX: 0000000000000000 RBX: ffff888079295f00 RCX: ffffffff8b772ecf
+RDX: ffff888029de1ec0 RSI: ffffffff8b773217 RDI: ffff888029de1ec0
+RBP: ffff88807e593100 R08: 0000000000000001 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+R13: dffffc0000000000 R14: ffff88807e593100 R15: ffff88806a3a5e80
+FS:  0000000000000000(0000) GS:ffff88812446d000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000020000035e030 CR3: 0000000068e39000 CR4: 0000000000350ef0
+Call Trace:
+ <TASK>
+ mptcp_pm_create_subflow_or_signal_addr+0xa7a/0x18a0 net/mptcp/pm_kernel.c:373
+ mptcp_pm_nl_subflow_established net/mptcp/pm_kernel.c:443 [inline]
+ __mptcp_pm_kernel_worker+0xe5/0x1f0 net/mptcp/pm_kernel.c:1573
+ mptcp_pm_worker+0x12b/0x320 net/mptcp/pm.c:1069
+ mptcp_worker+0x15d/0x1420 net/mptcp/protocol.c:2976
+ process_one_work+0xa0e/0x1980 kernel/workqueue.c:3314
+ process_scheduled_works kernel/workqueue.c:3397 [inline]
+ worker_thread+0x5ef/0xe50 kernel/workqueue.c:3478
+ kthread+0x370/0x450 kernel/kthread.c:436
+ ret_from_fork+0x72b/0xd50 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+
 
 ---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-The timeout could be reduced/avoided, including the 'collapse' strategy from v5
-and previous revisions. As hinted by Eric, collapsing is a sort of weak spot
-for potential evil peers and in practice causes high CPU usage increase to the
-point that in debug build some other test-cases will still require an increased
-timeout. 
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-AFAICS the multi chunk is really a corner case, especially when sending
-1 byte chunk. As a trade off I prefer avoiding collapsing, and accept any
-solution that allow completion in the multi chunk test, even with very low
-tput. 
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
-Side note: I think/I'm reasonably sure even plain TCP will have hard time
-with such that case in comparable conditions, i.e. when OoO happens with
-very high probability _after_ that the sender start pushing data at high speed, 
-but the upstream self-tests (rightfully) do not include the OoO part.
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
 
-/P
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
 
+If you want to undo deduplication, reply with:
+#syz undup
