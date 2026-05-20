@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B674F3438B6
-	for <mptcp@lists.linux.dev>; Wed, 20 May 2026 04:18:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36F8D3438B6
+	for <mptcp@lists.linux.dev>; Wed, 20 May 2026 04:18:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779250698; cv=none; b=ZPayIRriuC4MbMs/4lvk5HfMEbslOXBvmaFPxdgkuaWcDoCtaqzCZ+dyKimSQyPkRETAASX1yS7iXmE3pIyrp8rVFyjB0gtv9Uv01SHi1+QtRLHo0Y60EHRBNnwghqnwZfBsE4jfglZxRaP501BLnnBX9VWx9qty9NToWnhMfRE=
+	t=1779250701; cv=none; b=Mq7C6+ZulTOqV6T14DKXZmPF4a7OCYeAZe4NhYEy5ESsFVb3Frhk/HP8sfLHAPibu8GWu7jJv/iFCso3CLd/jaDS1fPCC5Gf6Pz5z9Dy35jmLbyo4ymJvMSdKf6x7NCAnbXwjwS+iyDPWIAbIGuguAsJqNIATTIfQtbpsz/wVMw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779250698; c=relaxed/simple;
-	bh=ogWf/zrsOAL3UDKqkzALYnzC9lKAQzJkS2Xce2RI7N0=;
+	s=arc-20240116; t=1779250701; c=relaxed/simple;
+	bh=89N8l8gUrkR88Cge/PiwRhCZQFsRjD93+mGOWDLWrao=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=a87HfO4CWe6aH2sm8ab35yOkK6vrXS486Ykr/CjOWLYofhAXIWAYb2X2Hpo06ebhnOsEYGnc2tZq/T93nBa9X3AFl+k+h6s86ugfFjDkcijF5Bz8ppod7Va74ej7Xmog5i/2d5y2N9w6JUIGnGDAVrspDrfz5EfOnwqNdRfDB+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kwe6alXo; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=M+PgQ1RjmSapBXveI46vaeVPdpHG/hANuw2z2Jb9JzzLgA7ecH0dOp2s723qfL5DCNAf7ZjxlgBiseanW6XcSUSrNmob4pIYbSurv6jvadRzvO3YkOmKGN8GKsj5RK7ySxH1OWgwTxWISC6RAoi8UN/UeeQOS5cgvL9XzFCyyaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f7tG3HH4; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kwe6alXo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 366771F00893;
-	Wed, 20 May 2026 04:18:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f7tG3HH4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E18FD1F000E9;
+	Wed, 20 May 2026 04:18:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779250697;
-	bh=mKsJejwxSCf+qWQNdVFw5mhujB6ejWJryR5Pfq+OQBY=;
+	s=k20260515; t=1779250700;
+	bh=RREZ7gZwiTr7kbQKFuyz7C6nlscngn0yFIZ8jyRVJHU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=Kwe6alXoTJp0nW/twCFltg/j1gDI5Z4j9BJR2r+gK54XC1uoqxsTCNztFqxze6jq6
-	 /MLbDGtrzfnSNOxVlyNPVW3Y2GCMlS1A4fBpOxGAhb3wYZghiuA8vg/k6q44LvNUgJ
-	 2rX2HvI9dozGvmYxM5wvbdn/nVHo6FB16Zu0ZbQfS1AlR9sizJUe7+gxR1+/B97aGO
-	 vvvvGOSrcnLyUXuJCo6zCp7Vj4TdwiYHEYKRikugYJnPmcJ3E4WCfV+jnax5tmz05h
-	 rIJyW6WK81PkkCSKGjRXSOMDYoe3saqmcuLUAdQoxe8bRihkkjW65N/jmX9b0cjI8h
-	 csndySJ5JR5fA==
+	b=f7tG3HH4qNKFRDGlrg7mOE2O3e3k2YwWgyoHTaWAGZBe7LZnCRQgcBTg3RNymOycs
+	 sNlxkjOMsIMbmHLdgPw9wwj9LmqpxYeA+xX9PZ9LPO0XPKP1rYjkuqNDlF8NLbMity
+	 epX2Jh7U3aS1cyzVzvnnrAXq4LndHTgiWH/yFzOn0S3fTVzBeciK335q/RVCzQpAXz
+	 iXrjbwqfwUCdKKz1EZ86xtAn6HVZCOYEIFgbbgI/jS1WwYu34EZLf05vHJR6WBHZFF
+	 bvW4gD5NAKCp8fGvYvfRIBhuRVNdMXFJft0LQNDE7ATDNH/mZKxdZ9nfw1WRz7z/ri
+	 w5RXWe+f1r6Fw==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>,
 	zhenwei pi <zhenwei.pi@linux.dev>,
 	Hui Zhu <zhuhui@kylinos.cn>,
 	Gang Yan <yangang@kylinos.cn>
-Subject: [RFC mptcp-next v15 05/10] nvme-tcp: register host mptcp transport
-Date: Wed, 20 May 2026 12:17:38 +0800
-Message-ID: <9b559f953bed2d2ab41a10387e673e5ce878c424.1779249906.git.tanggeliang@kylinos.cn>
+Subject: [RFC mptcp-next v15 06/10] nvme-tcp: implement host mptcp proto
+Date: Wed, 20 May 2026 12:17:39 +0800
+Message-ID: <e9c79566a0fdd05cf9a3ae99587c69b76301411b.1779249906.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <cover.1779249906.git.tanggeliang@kylinos.cn>
 References: <cover.1779249906.git.tanggeliang@kylinos.cn>
@@ -48,29 +48,36 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-This patch defines a new nvmf_transport_ops named nvme_mptcp_transport,
-which is almost the same as nvme_tcp_transport except .name and
-.allowed_opts.
+An MPTCP-specific version of struct nvme_tcp_proto is implemented,
+and it is assigned to ctrl->proto when the transport string is "mptcp".
 
-MPTCP currently does not support TLS. The four TLS-related options
-(NVMF_OPT_TLS, NVMF_OPT_KEYRING, NVMF_OPT_TLS_KEY, and NVMF_OPT_CONCAT)
-have been removed from allowed_opts. They will be added back once MPTCP
-TLS is supported.
+The socket option setting logic is similar to the target side, except that
+mptcp_sock_set_syncnt is newly defined for the host side.
 
-It is registered in nvme_tcp_init_module() and unregistered in
-nvme_tcp_cleanup_module().
+These helpers set the values on all existing subflows of an MPTCP
+connection, except for set_reuseaddr which only applies to the first
+subflow. The values are then synchronized to other newly created
+subflows in sync_socket_options().
 
-A MODULE_ALIAS("nvme-mptcp") declaration is added at the end of the file.
+A separate nvme_mptcp_ctrl_ops structure with .name = "mptcp" is defined
+and used for MPTCP controllers.
 
-v2:
- - use 'trtype' instead of '--mptcp' (Hannes)
+"mptcp" is planned to be introduced as a new NVMe transport type into the
+NVMe Base Specification in the future.
 
-v3:
- - check mptcp protocol from opts->transport instead of passing a
-parameter (Hannes).
+Currently, the Discovery Log does not yet recognize trtype=4 (MPTCP), and
+will show "trtype: unrecognized" for such entries:
 
-v4:
- - check CONFIG_MPTCP.
+ =====Discovery Log Entry 0======
+ trtype:  unrecognized
+ adrfam:  ipv4
+ subtype: current discovery subsystem
+ treq:    not specified, sq flow control disable supported
+ portid:  23106
+ trsvcid: 23601
+ subnqn:  nqn.2014-08.org.nvmexpress.discovery
+ traddr:  10.1.1.1
+ eflags:  none
 
 Co-developed-by: zhenwei pi <zhenwei.pi@linux.dev>
 Signed-off-by: zhenwei pi <zhenwei.pi@linux.dev>
@@ -80,61 +87,160 @@ Co-developed-by: Gang Yan <yangang@kylinos.cn>
 Signed-off-by: Gang Yan <yangang@kylinos.cn>
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- drivers/nvme/host/tcp.c | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+ drivers/nvme/host/tcp.c | 34 ++++++++++++++++++++++++++++++++++
+ include/net/mptcp.h     | 11 +++++++++++
+ net/mptcp/sockopt.c     | 30 +++++++++++++++++++++++++++++-
+ 3 files changed, 74 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/nvme/host/tcp.c b/drivers/nvme/host/tcp.c
-index 13a5240623ef..305624d59c50 100644
+index 305624d59c50..2388a8c443cc 100644
 --- a/drivers/nvme/host/tcp.c
 +++ b/drivers/nvme/host/tcp.c
-@@ -3067,6 +3067,20 @@ static struct nvmf_transport_ops nvme_tcp_transport = {
- 	.create_ctrl	= nvme_tcp_create_ctrl,
+@@ -2895,6 +2895,24 @@ static const struct nvme_ctrl_ops nvme_tcp_ctrl_ops = {
+ 	.get_virt_boundary	= nvmf_get_virt_boundary,
  };
  
 +#ifdef CONFIG_MPTCP
-+static struct nvmf_transport_ops nvme_mptcp_transport = {
-+	.name		= "mptcp",
-+	.module		= THIS_MODULE,
-+	.required_opts	= NVMF_OPT_TRADDR,
-+	.allowed_opts	= NVMF_OPT_TRSVCID | NVMF_OPT_RECONNECT_DELAY |
-+			  NVMF_OPT_HOST_TRADDR | NVMF_OPT_CTRL_LOSS_TMO |
-+			  NVMF_OPT_HDR_DIGEST | NVMF_OPT_DATA_DIGEST |
-+			  NVMF_OPT_NR_WRITE_QUEUES | NVMF_OPT_NR_POLL_QUEUES |
-+			  NVMF_OPT_TOS | NVMF_OPT_HOST_IFACE,
-+	.create_ctrl	= nvme_tcp_create_ctrl,
++static const struct nvme_ctrl_ops nvme_mptcp_ctrl_ops = {
++	.name			= "mptcp",
++	.module			= THIS_MODULE,
++	.flags			= NVME_F_FABRICS | NVME_F_BLOCKING,
++	.reg_read32		= nvmf_reg_read32,
++	.reg_read64		= nvmf_reg_read64,
++	.reg_write32		= nvmf_reg_write32,
++	.subsystem_reset	= nvmf_subsystem_reset,
++	.free_ctrl		= nvme_tcp_free_ctrl,
++	.submit_async_event	= nvme_tcp_submit_async_event,
++	.delete_ctrl		= nvme_tcp_delete_ctrl,
++	.get_address		= nvme_tcp_get_address,
++	.stop_ctrl		= nvme_tcp_stop_ctrl,
++	.get_virt_boundary	= nvmf_get_virt_boundary,
 +};
 +#endif
 +
- static int __init nvme_tcp_init_module(void)
+ static bool
+ nvme_tcp_existing_controller(struct nvmf_ctrl_options *opts)
  {
- 	unsigned int wq_flags = WQ_MEM_RECLAIM | WQ_HIGHPRI | WQ_SYSFS;
-@@ -3092,6 +3106,9 @@ static int __init nvme_tcp_init_module(void)
- 		atomic_set(&nvme_tcp_cpu_queues[cpu], 0);
+@@ -2923,6 +2941,18 @@ static const struct nvme_tcp_proto nvme_tcp_proto = {
  
- 	nvmf_register_transport(&nvme_tcp_transport);
+ };
+ 
 +#ifdef CONFIG_MPTCP
-+	nvmf_register_transport(&nvme_mptcp_transport);
++static const struct nvme_tcp_proto nvme_mptcp_proto = {
++	.protocol	= IPPROTO_MPTCP,
++	.set_syncnt	= mptcp_sock_set_syncnt,
++	.set_nodelay	= mptcp_sock_set_nodelay,
++	.no_linger	= mptcp_sock_no_linger,
++	.set_priority	= mptcp_sock_set_priority,
++	.set_tos	= __mptcp_sock_set_tos,
++	.ops		= &nvme_mptcp_ctrl_ops,
++};
 +#endif
- 	return 0;
++
+ static struct nvme_tcp_ctrl *nvme_tcp_alloc_ctrl(struct device *dev,
+ 		struct nvmf_ctrl_options *opts)
+ {
+@@ -2989,6 +3019,10 @@ static struct nvme_tcp_ctrl *nvme_tcp_alloc_ctrl(struct device *dev,
+ 
+ 	if (!strcmp(ctrl->ctrl.opts->transport, "tcp")) {
+ 		ctrl->proto = &nvme_tcp_proto;
++#ifdef CONFIG_MPTCP
++	} else if (!strcmp(ctrl->ctrl.opts->transport, "mptcp")) {
++		ctrl->proto = &nvme_mptcp_proto;
++#endif
+ 	} else {
+ 		ret = -EINVAL;
+ 		goto out_free_ctrl;
+diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+index 8eacb9424b37..9d5f0bf49d31 100644
+--- a/include/net/mptcp.h
++++ b/include/net/mptcp.h
+@@ -246,7 +246,11 @@ void mptcp_sock_set_priority(struct sock *sk, u32 priority);
+ 
+ void mptcp_sock_no_linger(struct sock *sk);
+ 
++void __mptcp_sock_set_tos(struct sock *sk, int val);
++
+ void mptcp_sock_set_tos(struct sock *sk);
++
++int mptcp_sock_set_syncnt(struct sock *sk, int val);
+ #else
+ 
+ static inline void mptcp_init(void)
+@@ -342,7 +346,14 @@ static inline void mptcp_sock_set_priority(struct sock *sk, u32 priority) { }
+ 
+ static inline void mptcp_sock_no_linger(struct sock *sk) { }
+ 
++static inline void __mptcp_sock_set_tos(struct sock *sk, int val) { }
++
+ static inline void mptcp_sock_set_tos(struct sock *sk) { }
++
++static inline int mptcp_sock_set_syncnt(struct sock *sk, int val)
++{
++	return 0;
++}
+ #endif /* CONFIG_MPTCP */
+ 
+ #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+index 730e945bf8cd..8ed7c8b875ed 100644
+--- a/net/mptcp/sockopt.c
++++ b/net/mptcp/sockopt.c
+@@ -1598,6 +1598,8 @@ static void sync_socket_options(struct mptcp_sock *msk, struct sock *ssk)
+ 	WRITE_ONCE(inet_sk(ssk)->local_port_range, READ_ONCE(inet_sk(sk)->local_port_range));
+ 
+ 	ssk->sk_reuse = sk->sk_reuse;
++	if (inet_csk(sk)->icsk_syn_retries > 0)
++		tcp_sock_set_syncnt(ssk, inet_csk(sk)->icsk_syn_retries);
  }
  
-@@ -3099,6 +3116,9 @@ static void __exit nvme_tcp_cleanup_module(void)
+ void mptcp_sockopt_sync_locked(struct mptcp_sock *msk, struct sock *ssk)
+@@ -1749,7 +1751,7 @@ void mptcp_sock_no_linger(struct sock *sk)
+ }
+ EXPORT_SYMBOL(mptcp_sock_no_linger);
+ 
+-static void __mptcp_sock_set_tos(struct sock *sk, int val)
++void __mptcp_sock_set_tos(struct sock *sk, int val)
  {
- 	struct nvme_tcp_ctrl *ctrl;
+ 	struct mptcp_sock *msk = mptcp_sk(sk);
+ 	struct mptcp_subflow_context *subflow;
+@@ -1768,6 +1770,7 @@ static void __mptcp_sock_set_tos(struct sock *sk, int val)
+ 	}
+ 	release_sock(sk);
+ }
++EXPORT_SYMBOL(__mptcp_sock_set_tos);
  
-+#ifdef CONFIG_MPTCP
-+	nvmf_unregister_transport(&nvme_mptcp_transport);
-+#endif
- 	nvmf_unregister_transport(&nvme_tcp_transport);
- 
- 	mutex_lock(&nvme_tcp_ctrl_mutex);
-@@ -3116,3 +3136,6 @@ module_exit(nvme_tcp_cleanup_module);
- MODULE_DESCRIPTION("NVMe host TCP transport driver");
- MODULE_LICENSE("GPL v2");
- MODULE_ALIAS("nvme-tcp");
-+#ifdef CONFIG_MPTCP
-+MODULE_ALIAS("nvme-mptcp");
-+#endif
+ void mptcp_sock_set_tos(struct sock *sk)
+ {
+@@ -1783,3 +1786,28 @@ void mptcp_sock_set_tos(struct sock *sk)
+ 		__mptcp_sock_set_tos(sk, val);
+ }
+ EXPORT_SYMBOL(mptcp_sock_set_tos);
++
++int mptcp_sock_set_syncnt(struct sock *sk, int val)
++{
++	struct mptcp_sock *msk = mptcp_sk(sk);
++	struct mptcp_subflow_context *subflow;
++	struct sock *ssk;
++
++	if (val < 1 || val > MAX_TCP_SYNCNT)
++		return -EINVAL;
++
++	lock_sock(sk);
++	sockopt_seq_inc(msk);
++	inet_csk(sk)->icsk_syn_retries = val;
++	mptcp_for_each_subflow(msk, subflow) {
++		ssk = mptcp_subflow_tcp_sock(subflow);
++		if (ssk) {
++			lock_sock_nested(ssk, SINGLE_DEPTH_NESTING);
++			tcp_sock_set_syncnt(ssk, val);
++			release_sock(ssk);
++		}
++	}
++	release_sock(sk);
++	return 0;
++}
++EXPORT_SYMBOL(mptcp_sock_set_syncnt);
 -- 
 2.53.0
 
