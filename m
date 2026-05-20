@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F41F2DCF46;
-	Wed, 20 May 2026 12:05:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7896933A032
+	for <mptcp@lists.linux.dev>; Wed, 20 May 2026 12:51:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779278754; cv=none; b=DqYjfeAakBKih9O4sTdCY2MAqQAudRp07MZg2AU7Rnr0L4zALmCF6CIdPUzWmPsv45gLH1oEFdkHPgqvKln2zNjZD3RXcxkO3omZxRtM0lNfmuYiolC1CvZdsNspgf1+JM/P68sDNfgY7NnuAN9lbNRXfblMYpC6daKt9EdpMR8=
+	t=1779281513; cv=none; b=f59zsWvS0zh9vhgQ/x+/DL/9y6fbiufPFnV0gqMbuqm3NXNJt+zlPKRDihbsSnFk5PWifqGUwV7iJI5rMXMQcPzbhjiZUqN2lAKG7hEnp75t2W0+GShcRLrsmgYObtFipivD0KcB0V49MmQgXnR+iIXuzCHoWKGRK5pTa8cIEHg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779278754; c=relaxed/simple;
-	bh=UYUOuk1VwSci2peHvj/JRnwtTW28xTWkrFGCFYL0ms0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
-	 In-Reply-To:Content-Type; b=NBaQ3PNy+irsL5uCU00bxG4Eux5rQiu0o+ygqKoCHXqfL8iGnqYpMX02siyujsYb8AUwS27qJzxl3MDHcSTM7ZpEQsz+rZkIWdB3qOvAbPgl5ItN8XcnBDgqKK+bo1W5B8FukfBin5JprmLYtG1oaGAj/Yw28gKBYTsPJ0LmzUY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oNY+b4wf; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1779281513; c=relaxed/simple;
+	bh=8HsRHOqyCvj1Ycp/gjFyw+JcAbeLAANgyIHBHBfPdIs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aqLSWsWwJiu8/gPUV77jUZ0J3a2bmTPL5eGzo39RfmC0FYkz6Yfpt9XIkMYJRwMyIJD3xIzBJRUNNbI8l7kGqPUmJL40HuS3aTcYBkI9TcnkOM7iuAP9BNMa/6tIA8JaarIQ6lC+2DzeJSgnV+hV+MDii8bobvFR5yoK5eEEwF0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kas36HTQ; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oNY+b4wf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 371B81F000E9;
-	Wed, 20 May 2026 12:05:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kas36HTQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39FCD1F000E9;
+	Wed, 20 May 2026 12:51:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779278752;
-	bh=+zLIaM5TyiQu+/+rrgc9oimvpZ04kcixkpZqRos2n48=;
-	h=Date:Subject:To:References:From:Cc:In-Reply-To;
-	b=oNY+b4wfJ5QzUCJYtoiTXs0pKZHkqxUp9rmeM6I6QH05DF369WqJOsb1s2ZmKBXag
-	 IeNdQksgEpTAHGMSssOzO/qfpVJfHGX3JgeMZhhq7yJALCBV6r6pvFSUz0GaBYeiX/
-	 YcH83qVmwijn7c8YJ7uVilake1bg3r7ai0JKwpRn1h5GdtfBCXZx22BBL3YKFqBCiq
-	 UsVj8pA3Mrg6jK5mticpJvC3fJR9zDthRBsCGBVxyKg9+SpVoKKNvgoOR7AVGZIaVT
-	 h9iJs50jcFgDpDq6RuWf4fb+3z0a7C7kNY9oxqRFnT66Ax950na57xmNLcsP9piLtY
-	 3GG34xWS4vkog==
-Message-ID: <91a3a37b-7c4e-409b-b85c-36b530a738fe@kernel.org>
-Date: Wed, 20 May 2026 22:05:45 +1000
+	s=k20260515; t=1779281512;
+	bh=tQ9czxhuqnLZpU2OmMuXU45mkCEU8y+u6wAkUC8JbTI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=Kas36HTQxlDcRtiUMLaAp2XCQeMuG+fikQ8m34GB5N8qQaVbkKD5zXWMCczEJuIxn
+	 zbKj3E6kUjIYj6MjtF6gklGxcEBEvHKd5hHZL0w7nFFcJm9xSWJ5P/qtQ5B4tL3lUR
+	 +LJ/7xW/Xrd2ch3NVNbk86aeJM7w0bWAtDGTcanzoEeH48yW1/QRyxRxE9YsfH6Jt1
+	 CoH9Kmtw5Iuc+VomFrDlYpX6eer/gbnhRLAosPK+2kcCz85zo9FC5wTFDXs1VmtSRP
+	 MjU0+o/RUOFEIRLNDJoj9BT6CTOzz7jcTVuQgnvV48N76I+Sz3vNF/0v2X79SjKJ6l
+	 KodaRg8ohubEQ==
+Message-ID: <90151343-08ad-4886-b4fd-ced053e88042@kernel.org>
+Date: Wed, 20 May 2026 22:51:48 +1000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,15 +35,14 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [syzbot] [mptcp?] WARNING in mptcp_pm_alloc_anno_list (2)
+Subject: Re: [PATCH mptcp-next v3 1/2] mptcp: pm: fix extra_subflows underflow
+ on userspace PM connect failure
 Content-Language: fr
-To: syzbot <syzbot+55c2a5c871441261ed14@syzkaller.appspotmail.com>
-References: <6a0da138.170a0220.3cbd30.0141.GAE@google.com>
+To: Tao Cui <cuitao@kylinos.cn>
+Cc: mptcp@lists.linux.dev
+References: <20260514132925.410184-1-cuitao@kylinos.cn>
+ <20260514132925.410184-2-cuitao@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
-Cc: davem@davemloft.net, edumazet@google.com, geliang@kernel.org,
- horms@kernel.org, kuba@kernel.org, linux-kernel@vger.kernel.org,
- martineau@kernel.org, mptcp@lists.linux.dev, netdev@vger.kernel.org,
- pabeni@redhat.com, syzkaller-bugs@googlegroups.com
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -88,75 +87,81 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <6a0da138.170a0220.3cbd30.0141.GAE@google.com>
+In-Reply-To: <20260514132925.410184-2-cuitao@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hello,
+Hi Tao,
 
-On 20/05/2026 21:55, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following issue on:
-> 
-> HEAD commit:    ab5fce87a778 Merge tag 'perf-tools-fixes-for-v7.1-2026-05-..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=175fcca6580000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=cb5b551cf65fa040
-> dashboard link: https://syzkaller.appspot.com/bug?extid=55c2a5c871441261ed14
-> compiler:       gcc (Debian 14.2.0-19) 14.2.0, GNU ld (GNU Binutils for Debian) 2.44
-> 
-> Unfortunately, I don't have any reproducer for this issue yet.
-> 
-> Downloadable assets:
-> disk image: https://storage.googleapis.com/syzbot-assets/e36518c61bd7/disk-ab5fce87.raw.xz
-> vmlinux: https://storage.googleapis.com/syzbot-assets/cd934c0c8950/vmlinux-ab5fce87.xz
-> kernel image: https://storage.googleapis.com/syzbot-assets/88cf18661142/bzImage-ab5fce87.xz
-> 
-> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> Reported-by: syzbot+55c2a5c871441261ed14@syzkaller.appspotmail.com
-> 
-> ------------[ cut here ]------------
-> mptcp_pm_is_kernel(msk)
-> WARNING: net/mptcp/pm.c:436 at mptcp_pm_alloc_anno_list+0x408/0x4d0 net/mptcp/pm.c:436, CPU#1: kworker/1:6/5792
-> Modules linked in:
-> CPU: 1 UID: 0 PID: 5792 Comm: kworker/1:6 Tainted: G             L      syzkaller #0 PREEMPT(full) 
-> Tainted: [L]=SOFTLOCKUP
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/18/2026
-> Workqueue: events mptcp_worker
-> RIP: 0010:mptcp_pm_alloc_anno_list+0x408/0x4d0 net/mptcp/pm.c:436
-> Code: 8d 7b 30 49 c7 c0 00 6f 64 9b 48 c7 c1 40 f5 28 8d 31 d2 48 c7 c6 b0 43 77 8b e8 c3 b3 7c f6 e9 c6 fc ff ff e8 c9 5b 91 f6 90 <0f> 0b 90 31 db e9 09 fd ff ff 48 c7 c7 c4 39 d8 90 e8 22 27 fe f6
-> RSP: 0018:ffffc90004187818 EFLAGS: 00010293
-> RAX: 0000000000000000 RBX: ffff888079295f00 RCX: ffffffff8b772ecf
-> RDX: ffff888029de1ec0 RSI: ffffffff8b773217 RDI: ffff888029de1ec0
-> RBP: ffff88807e593100 R08: 0000000000000001 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-> R13: dffffc0000000000 R14: ffff88807e593100 R15: ffff88806a3a5e80
-> FS:  0000000000000000(0000) GS:ffff88812446d000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 000020000035e030 CR3: 0000000068e39000 CR4: 0000000000350ef0
-> Call Trace:
->  <TASK>
->  mptcp_pm_create_subflow_or_signal_addr+0xa7a/0x18a0 net/mptcp/pm_kernel.c:373
->  mptcp_pm_nl_subflow_established net/mptcp/pm_kernel.c:443 [inline]
->  __mptcp_pm_kernel_worker+0xe5/0x1f0 net/mptcp/pm_kernel.c:1573
->  mptcp_pm_worker+0x12b/0x320 net/mptcp/pm.c:1069
->  mptcp_worker+0x15d/0x1420 net/mptcp/protocol.c:2976
->  process_one_work+0xa0e/0x1980 kernel/workqueue.c:3314
->  process_scheduled_works kernel/workqueue.c:3397 [inline]
->  worker_thread+0x5ef/0xe50 kernel/workqueue.c:3478
->  kthread+0x370/0x450 kernel/kthread.c:436
->  ret_from_fork+0x72b/0xd50 arch/x86/kernel/process.c:158
->  ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
-This one looks similar to
+(only kept MPTCP ML in Cc)
 
-  https://github.com/multipath-tcp/mptcp_net-next/issues/620
+On 14/05/2026 23:29, Tao Cui wrote:
+> __mptcp_subflow_connect() calls mptcp_pm_close_subflow() on failure
+> to roll back the pre-increment done by kernel PM's fill_*() helpers.
+> The userspace PM does not pre-increment — it only increments after
+> __mptcp_subflow_connect() succeeds — so this decrement is spurious.
 
-Not sure how it happened, but it doesn't look serious. Probably an odd
-path switching between path-managers during the establishment of a
-connection, or a reconnect.
+Good catch!
 
-To be investigated, but a reproducer would help here.
+Could you add a test to validate this case and avoid regressions, please?
+
+e.g.
+
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+index 5acd12021e6e..38ba10527996 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -4100,6 +4100,10 @@ userspace_tests()
+                chk_rm_nr 0 1
+                chk_mptcp_info subflows 0 subflows 0
+                chk_subflows_total 1 1
++               # also check counters with errors at creation time
++               userspace_pm_add_sf $ns2 10.0.12.2 10 2>/dev/null
++               chk_mptcp_info subflows 0 subflows 0
++               chk_subflows_total 1 1
+                kill_events_pids
+                mptcp_lib_kill_group_wait $tests_pid
+        fi
+
+In a separated patch, using the same Fixes tag, like it is done in other
+"fix" commits.
+
+> Fix it by gating mptcp_pm_close_subflow() on the PM type.
+> 
+
+Please add a Fixes tag, and use "mptcp-net" prefix for fixes.
+
+> Signed-off-by: Tao Cui <cuitao@kylinos.cn>
+> ---
+>  net/mptcp/subflow.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> index d562e149606f..c45ad67cb650 100644
+> --- a/net/mptcp/subflow.c
+> +++ b/net/mptcp/subflow.c
+> @@ -1716,7 +1716,8 @@ int __mptcp_subflow_connect(struct sock *sk, const struct mptcp_pm_local *local,
+>  	/* we account subflows before the creation, and this failures will not
+>  	 * be caught by sk_state_change()
+>  	 */
+> -	mptcp_pm_close_subflow(msk);
+> +	if (!mptcp_pm_is_userspace(msk))
+
+It feels wrong to call mptcp_pm_is_userspace() from subflow.c: only PM
+code should deal with the different PM.
+
+> +		mptcp_pm_close_subflow(msk);
+
+When only looking at this diff, I would suggest moving the userspace
+check to this PM helper, but I don't think that's a good idea. Instead,
+I think it would be better if the userspace PM keeps the same behaviour
+as the kernel PM, and increments the extra_subflows counter before
+calling __mptcp_subflow_connect(). Would that work?
+
+>  	return err;
+>  }
+>  
 
 Cheers,
 Matt
