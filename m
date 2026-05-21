@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D546923D291
-	for <mptcp@lists.linux.dev>; Thu, 21 May 2026 01:57:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F132B16DEB1
+	for <mptcp@lists.linux.dev>; Thu, 21 May 2026 02:42:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779328657; cv=none; b=lieuhhBCATRc4q9aNNExfMAk6npSDfrT6JSYrJP3IwewFEEXwNXCPLcsR1iTAd8zIJ4gRnyUEYIHgguZ1tKuvsjyC2cXCo0OWVTRq3GbmP1Nr4bCnimERkx9HSindQvT9Dca4d8mZqTJnhh1hfPKZl3ugLMeUEZLzb1CRdui0kI=
+	t=1779331331; cv=none; b=D7oNR7ywTU+FTpSZ85mApAAHOwuvTa/ewC+MnMMG4DuvVu3iiOibZIAOKBJg+dX/4jmR25Hxko7yuUjwqJaV9IdmbaoiqHkgQBR8K0cSggpr0BpUt8vHNZuzH8QpZ9K5BFOzk3+OmM+dKnYHa1AIhca3PuSBCNxoY/BHnGM65LQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779328657; c=relaxed/simple;
-	bh=8RUyo3eKXddqRV/QXt47tR149ZC7BfB/tk7jPdxEjKo=;
+	s=arc-20240116; t=1779331331; c=relaxed/simple;
+	bh=+xBB7fJt1SR0ZcwiKOfiaxu6Mpi22Bb3Rcb163M8xBw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nH+V37bLt4+f0/+3f11CNlv83HgOfdgaUEb8FDbvmHlYgRcLzE/1+edteh2t12Jh/m1H+JS3PZ7wZO6m1tJ2MzayWIJNIO3vewAwX2kfExvhA00ql2TnskitJ+Xt7VICvMmH98gklYPxbuCNL6hL794hhUk+jmHw4ipwpt5SNbI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jHWrdNGU; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=Dc6jCoERKORWzhgNF0GBBSg96La2OzLp3fG/ZmSWF5eA5I+VO+rbsPnjSTKiHLQWY7osef3bN+W9VFPa1wVYnz15anu03qDQt/vS0MYYb/4/hUM+ZdHSryiV/EHZYojtgqh51YRJxH72Yc45IiNMwCwH928XXJPSZxC2vKG5N+k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y7aEnUsn; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jHWrdNGU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14ABB1F000E9;
-	Thu, 21 May 2026 01:57:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y7aEnUsn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D64DD1F000E9;
+	Thu, 21 May 2026 02:42:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779328656;
-	bh=xjSMtRs2+rDJZlLy0KYSAGKHveAar7xHxZU/eQl+bJ8=;
+	s=k20260515; t=1779331330;
+	bh=mOvohEAXSNFqDnHPPs6JXe9yNzkbFkxwHGqHDP+toXI=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=jHWrdNGU98iqckvdtF1Mrm27TBvf1ml6r2y/EIwwR3GeGI54xHyLQFssvOojHY/V4
-	 09LpovzM9zkLzF3TmabSoW1PnhH+pzvx1F9csVKrsE7LzwCMedNoiHBLvimndhyUJ1
-	 tXOZoWIIaO/agQk4MMbKAgG+f5Dbm9gNw2LHxjgnQoqWsZrqrOD64ycfNwF5nprgZt
-	 AY6DYK6AeAniqXz6z6wgvx/gX9X0ZDdDifmuexwazDWBD1VtOjJhcID/7yHvAlUcsR
-	 /GpC7o6/sAm0YtwKWG5QQ5cQ0Yu/3ZBbicgL9jSiHmqYY9uyBuIQVElDv6LdUimZXC
-	 na1XxouGueJIg==
-Message-ID: <2920ebf8-be75-434c-8566-e09910402325@kernel.org>
-Date: Thu, 21 May 2026 11:57:30 +1000
+	b=Y7aEnUsn1lgskN5cHhoTc6iy8HEP2ZXg7rSSi9at1eM/9NziFzTSUFjRc1X+DruMQ
+	 efKC8EDyoVeDQPnmToD3iztp6pL/Gojc7eKE3f9cGhJnuPZMSRvnd340iw6/Sk+613
+	 7k1qCAnanRjvB6p8CiQE4Z4nhinV2xMr0+3YYQy+stB+4XWhk/1S6HLxET/nQC7T8m
+	 Z0NRrGdt06CN6PIKg0UzhnCqD/Z9izE8TQspyRCNQnPdlaVFbrqErHUc4lsiy4Gp+g
+	 TOVizSoUwr9MP93DdJ9/jqQy8T8SlSyEqdYgYZi3P5hTm+qskziCGJDzJpvS+POTjc
+	 FEEukxv5dmIIA==
+Message-ID: <fa4bbe24-47d8-413c-9ce0-48773564e73b@kernel.org>
+Date: Thu, 21 May 2026 12:42:07 +1000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [RFC mptcp-next v15 00/10] NVME over MPTCP
+Subject: Re: [PATCH mptcp-next 0/3] selftests: mptcp: small pcap-related
+ improvements
 Content-Language: fr
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>, zhenwei pi <zhenwei.pi@linux.dev>,
- Hui Zhu <zhuhui@kylinos.cn>, Gang Yan <yangang@kylinos.cn>
-References: <cover.1779249906.git.tanggeliang@kylinos.cn>
+To: Mat Martineau <martineau@kernel.org>
+Cc: MPTCP Linux <mptcp@lists.linux.dev>
+References: <20260501-mptcp-sft-pcap-prefix-v1-0-27affca69415@kernel.org>
+ <ca03a705-9814-aca2-8466-05bb6d589c87@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,49 +87,33 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <cover.1779249906.git.tanggeliang@kylinos.cn>
+In-Reply-To: <ca03a705-9814-aca2-8466-05bb6d589c87@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+Hi Mat,
 
-On 20/05/2026 14:17, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
+On 21/05/2026 10:56, Mat Martineau wrote:
+> On Fri, 1 May 2026, Matthieu Baerts (NGI0) wrote:
 > 
-> v15:
->  - patch 3:
->    - simplify mptcp_sock_set_tos(): remove unnecessary ssk local variable
->      and state check (TCP_ESTABLISHED).
->  - patch 6:
->    - update commit log to explain regarding sashiko's concern about
->      introducing "mptcp" as a new transport type
->  - patch 7:
->    - fix mktemp template, use --suffix=.raw to ensure 'X'.
->    - move trap cleanup EXIT immediately after creating temp file.
->    - remove redundant rm -f "${temp_file}" in error paths since trap now
->      handles cleanup.
->  - patch 10:
->    - update Fixes tag.
+>> - Patches 1-2: add test name in pcap files.
+>>
+>> - Patch 3: drop payload from pcap by limiting the per packet size.
+>
+> Series LGTM, thanks Matthieu
 
-Thank you for the new version!
+Thank you for the review! Now in our tree:
 
-A follow-up of the discussion we had on the ML:
+New patches for t/upstream:
+- f61bf3c2aaee: selftests: mptcp: connect: test name in pcap file
+- 1c879ef9314d: selftests: mptcp: simult_flow: test name in pcap file
+- 6fce373a33a2: selftests: mptcp: pcap: drop most of the payload
+- Results: 1fa2f477d53d..676e99102442 (export)
 
-- How is NVME over TCP typically used? Is it in a data centre, with the
-NVME device being very closed to the server? In this case, there might
-not be any losses, and a very low latency.
+Tests are now in progress:
 
-- Also, do you know how is NVME over TCP being used with the multipath
-feature? If the different paths have the same network conditions, then a
-"bonding" (LAG, etc.) is something that would work better than MPTCP: no
-need to retransmit, reorder at MPTCP level, etc. → But this only works
-in specific conditions. MPTCP would work better if you take different
-paths, with different latency and losses. But is it how NVME over
-(MP)TCP is supposed to be used?
-
-(To me, NVME over TCP is a feature for data-centre, where the NVME
-devices are next to the servers, without many hops in between, but I
-might be wrong.)
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/02d6f438cb554cd30299e2857b36e4d3ff9b1735/checks
 
 Cheers,
 Matt
