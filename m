@@ -1,129 +1,76 @@
-Received: from mail-dy1-f174.google.com (mail-dy1-f174.google.com [74.125.82.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03D5C2D7DF1
-	for <mptcp@lists.linux.dev>; Thu, 21 May 2026 10:51:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9DC63C3BFF;
+	Thu, 21 May 2026 11:44:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779360708; cv=none; b=Q6jTOOolYrPcxSFfmRAn77ClSegGBjio0B/SLtaZcrDIYkprSRGInDwAkLc0VEVA1HcnuZNoCF6jPMkJswFYzqqv64D5PP4dot2RFZDkX8sck1KFx7ZlQyQceouyGyWC8xTdYXGmrmsjGst7c6nbm1PwJis2QlwAI1eY/ixJNBI=
+	t=1779363880; cv=none; b=lMXvMXmw0/tVCjq/3/hoFq0p4Y9kvLFrgbO+3jryhqcCzCPuz4EfnmnDlhLaQ7KIgM9uPcf+m7ahG1p2OU/R3CoAYimdaYHFhceWvdARdDToNK9hQq/Y7FNY0oPr2aAeiheeNtUfShnboVufO7pqVqFdii7ycOD5Vf/eI1PAA7o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779360708; c=relaxed/simple;
-	bh=ie8gFJ1tVRo4h+fTC8p7CktvVIGC8GqCkWVef6gjbew=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
-	 MIME-Version:Content-Type; b=Mx7wJUkb1RXIJKC4JHzC2p4WmEWHu8XmCDhtDtar2VPM6v/X8wYA33QygUtt6LODM440NG8uO53qjxI+RMXiDVrl80uprAkdcCvD+Pyx4PL+S9mZTBY2siy9dpd5dzY5U2uhpU4F7A50MGxwG+lWsjq6PNoVT3ua6jSBplPqsqY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bLJt2CDh; arc=none smtp.client-ip=74.125.82.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1779363880; c=relaxed/simple;
+	bh=hK0OLe1zddJ0BvIptcnAa4HJXke4ZAh26NCR2X5uQGo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OmBuYD/mTAwY876l/pKsdfImYJBK+bjU0ganKkm/f1+Un4SiqlZx51ziem1ym+2Yc6ktfQ+Qpgz6XZLr2kbEmC2OnKo3UHBAMDgalQRIZmBeQxOZSkF6Cl+Uo/Wrssas5UCIRNpqvBcQEQ+uF5X2oKVmtCtkXA1eQrd4ZDYe5UA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bIjXS8hf; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bLJt2CDh"
-Received: by mail-dy1-f174.google.com with SMTP id 5a478bee46e88-2f33ae12f97so4914345eec.1
-        for <mptcp@lists.linux.dev>; Thu, 21 May 2026 03:51:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779360706; x=1779965506; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UcITv1aLmQHZwrYDuxfuNGe0IPwswwZGjg6+RIKbUHY=;
-        b=bLJt2CDhcKHy4wx0PuK5QkBL+Wl0uR30wP6Fn/7GNcS0x97qO3+JlhIriKmJlY46c3
-         0qjisafiOpzspSednM/k72aZRdXQoAEibMGRWmAZHC4q7aBABhA6taexXFo0ynyRVp0K
-         i8YMmpwO2uLb26wCWVUZg6S7tAV/j8aGoS1anKpV1Gf0EDosnkriDN4NMnt3SBSb7IhL
-         AjwW8pPs9LDtpBNdR+Nfztx70sh0QUV19IxrzrPf4oBN4Z8dVcuwyOd2XhlE2rgt3xZE
-         zLg9FSdLmK5QmLlkhNe7WpLJvYtFvtScRRGz13n5/2I1wimeX9NpAW5IXqpGpVfoSa3D
-         aE6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779360706; x=1779965506;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=UcITv1aLmQHZwrYDuxfuNGe0IPwswwZGjg6+RIKbUHY=;
-        b=TJpO1hpv5vHPSwlqrmWPXTOSNPJMLuje1eSTT4fdhETJrAULo2zejlVEizNwZQiakl
-         xRFViRfFjLH4++FCsFWK7r5B2iJu5CRy+v423CM85aZCM+ZQ1kNSFtdrGAvLbyfILepk
-         CDYNp5SZvbyUt6PueDkSAYPIFWsIn4SsYBASm9IJaS9bnUFD5lNOK3cc+3sQr2sKAqDv
-         sByz10XwVm1dvK6kiA/LFMY4pbH+JNujp9mMVqKnxq1LOBoG2PSWxqcgrVeuDejT1k3L
-         ncWLpHaMjmB0nF7+7udgx8LEH9yvvxOTNIMtOM3/tmT62BVJYNO43tEPsNTY+3qvYhQ6
-         0XQA==
-X-Gm-Message-State: AOJu0YxGoKaGby8KISIH94Mh+QCNU5A9d0eUyQXcmtcPCfoh6ZpsLtLl
-	Ev+WvULBdav80coPjOjLyva/zvoPetsSsNuriIjqXZ6dv5Q9KsbGsM+kfT+3
-X-Gm-Gg: Acq92OHvERuoA8rh9Z0bex+Rw4fCqFrlR81YcMAVGOk2FQK9eVzSoinYT6nqKXbl0vn
-	Sshi81kXghVV4b8t09wrGxjiC9Zczabgs+7AKSa8QsP8fRWPpjngIWnDTGBxLiwZeet8APjCBp5
-	BKbLWn6GY/FQZCU0RVgPojzu+vWvyr/xZ5zjcfFcIdsO1t9thP8/3Lex3my6hvk63N7fkxRi9OF
-	/i+V6opPldzx0PLXn6Sc9UIz4hvgANwjFFIVhS2ETxguaSEmDdzbUAHwUsY2jdzlSsUpTUIbJz1
-	Etg6lds5e6u8qL9Uzp0pO6kS5kbCz7A9vXgbVybJfAwtk07qJNJzQ7StG45Ygfl2lNETPHvUSVk
-	+b1JHtrtO3VPmVTHtTnaVOnpYnGRf8GrH+LLPJZ+1isOMz07OhUJHf5Fh2IvX21OyXqtd2tt7UK
-	FDLMHs0ri0ws7GWg1bVFhmrMB0pXyKwwfS+Q0=
-X-Received: by 2002:a05:7300:ef89:b0:304:67:ba1c with SMTP id 5a478bee46e88-3042f43949amr1364895eec.6.1779360705987;
-        Thu, 21 May 2026 03:51:45 -0700 (PDT)
-Received: from [127.0.0.1] ([13.83.161.18])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-304432ddfcdsm196473eec.5.2026.05.21.03.51.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 May 2026 03:51:45 -0700 (PDT)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <tanggeliang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <cover.1779355169.git.tanggeliang@kylinos.cn>
-References: <cover.1779355169.git.tanggeliang@kylinos.cn>
-Subject: Re: [RFC mptcp-next v19 00/15] MPTCP KTLS support
-Message-ID: <ed81da6a-3ef1-5d02-24dd-80e0279eb9ff@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 21 May 2026 10:51:44 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bIjXS8hf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F2241F000E9;
+	Thu, 21 May 2026 11:44:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1779363879;
+	bh=TiqcdHFX0yDMrBD60DT4cQ7gt/Ic0YOEFSbvRDBHO7g=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=bIjXS8hfVSHOAevw1TTlBno/poe3j1jLXhvmbzzf3W6bZksyh2LYBmjtZjqnx0dp8
+	 jrsK5Zm48AhZgDQcOFFCxD1czwPytiv5FTvl2oDknc6eZyKh+KESfCPch5rpKTef4C
+	 U41dB2Vdrlh2F47b1rl2f02kyJ5nKnqgBqdgXQczHKWlEoaXulH9Xz1iWiM4Aqazfy
+	 bZmx1nvMrzTjSGU/3a1YgozUUgvWpPz59LpQUUYcme4Rvn3Yd95d1f/vrMA3lTk1jB
+	 pkKfylxWk63SHsPwLad0Wv8bPIYFebGCYUjtIs1ol5Ayl2vVHJ6oKqPXnYyrER4lfL
+	 Twqk8rcjw1xng==
+From: Christian Brauner <brauner@kernel.org>
+To: Kees Cook <kees@kernel.org>,
+	Andy Lutomirski <luto@amacapital.net>,
+	Will Drewry <wad@chromium.org>,
+	Shuah Khan <shuah@kernel.org>,
+	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
+	Geliang Tang <geliang@kernel.org>
+Cc: Christian Brauner <brauner@kernel.org>,
+	linux-kselftest@vger.kernel.org,
+	mptcp@lists.linux.dev
+Subject: Re: [PATCH v2] selftests: harness: fix pidfd leak in __wait_for_test
+Date: Thu, 21 May 2026 13:44:30 +0200
+Message-ID: <20260521-brauen-situation-171ecf2a273f@brauner>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <a82e275ccfb2609a1984d90ab559fa3af78f1e81.1776678050.git.tanggeliang@kylinos.cn>
+References: <a82e275ccfb2609a1984d90ab559fa3af78f1e81.1776678050.git.tanggeliang@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=962; i=brauner@kernel.org; h=from:subject:message-id; bh=hK0OLe1zddJ0BvIptcnAa4HJXke4ZAh26NCR2X5uQGo=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWTxfVBax7JrW/cXlVPP2ubeYlT9dfRJec7Bc7a5l2bu6 joRKdKS2FHKwiDGxSArpsji0G4SLrecp2KzUaYGzBxWJpAhDFycAjCRZ5MY/nCdL/n5q+DNZnbZ 0xc/fz8jtG/1ZrY5stv/cAeFt2iVbFrE8Ff2t0La/58zryyxZGOx57E6+OXcJGOWW9t53S9KLeZ 0TGMEAA==
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
 
-Hi Geliang,
+On Mon, 20 Apr 2026 17:45:28 +0800, Geliang Tang wrote:
+> Fix the pidfd leak in kselftest_harness.h's __wait_for_test() where
+> childfd = syscall(__NR_pidfd_open, t->pid, 0) is never closed.
 
-Thank you for your modifications, that's great!
+Applied to the vfs.fixes branch of the vfs/vfs.git tree.
+Patches in the vfs.fixes branch should appear in linux-next soon.
 
-Our CI did some validations and here is its report:
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/262185=
-27078
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/c990cc4d2f39
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1098625
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
 
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs.fixes
 
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+[1/1] selftests: harness: fix pidfd leak in __wait_for_test
+      https://git.kernel.org/vfs/vfs/c/0eb307d61317
