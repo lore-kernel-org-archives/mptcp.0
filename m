@@ -1,172 +1,124 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1E7A31ED81;
-	Thu, 21 May 2026 03:10:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53D3B349CD7
+	for <mptcp@lists.linux.dev>; Thu, 21 May 2026 03:18:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779333022; cv=none; b=jBZmxpzwU2aEQ95DKrwBNGDIsx2SOTi9AMyCGLaqiBRMgzmEPgBFgY99vnEg0JYmt/mPJvoY1oP0r/ee4/llMrVka9wBG0k4I1WkcQ3ODyOz+Z28Skt7P2CkWztBiKnLjlYOkXJHfe+5N5H3SvpTs4pWZIxx6XUTzCh0u2EO7T0=
+	t=1779333536; cv=none; b=q49vL0I9LPoP2KwuGOsyqGrBvr5rHUEUxAFjG2vF/ujV/Q2PxbdeT4Mj0bfX1ZYtgxPh2dSAx0KiZpNIvuI4J1lVBmSoc/yZtyFwJ616XgVj4gtLMEbhEllRf8zN+aXRbiPx1EvQuvMAwOtSZ56NXzwDLeTBncFUZWLBbSc7ZeU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779333022; c=relaxed/simple;
-	bh=K0ILoGJSDN/w1UabpH2sQKTwwGJIAI/IqgzRfDwRYaI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WzPFddKxoo2YOTtsuVlC3RAwmblCBowNIcmbzp3/uqw7yMl7GBecQ91wd5aybh3o62bF5Npg5Kg715KloMfVkaXXuGIbI7+lWFWRT2ZUnAwciAP25kF8roQcvPbTG9/rqDCQVfu/WpUYm+3HqboMwTHfOreY5UsxOfd6fOzyETw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bZIr3aNn; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1779333536; c=relaxed/simple;
+	bh=60XCvTELFuOW5fd15CELJkeDfB+pprn9a59XAUgpaPw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=tQw7luL5xeYN5Nbm8uMa7rRDJVsyveCE3Hm8jLjiwT9XIBREonFPHxfZWK0Hiexdd5rJ4uDUlFJ5qEQSXYhjqHBc2KvkHV8BCdswiz4mqeM4Mlc0ZU+lqz6PvEALz2mTUHd+XMNiY/wpCk9ywXLKk/DDlaJZLZl3DUZiZdozt+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dkin3xoX; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bZIr3aNn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 534741F00A3E;
-	Thu, 21 May 2026 03:10:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dkin3xoX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78F7C1F000E9
+	for <mptcp@lists.linux.dev>; Thu, 21 May 2026 03:18:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779333020;
-	bh=sHfglxnALvhhMQ7dRnIFBN97Faq61nbYYW4V3KO1NRE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=bZIr3aNnmXuJEqczqXAwBZ4FC+s+MWNZck0+IYymaF6g0ug6vSRJx5oWl/pnpZXam
-	 Vp5zdSM79BrZZrKBC9Y9ksaUEvnO5IRymnUhurvUqYO7rswtfeVmzVkdS1me1ZhKA3
-	 fCy6FZ5u8VPiuNG2aZiJ+5hS1k3dAVXqmJ+JzcEtHJWjiWCbei3/8NOnqXKsOyRtVl
-	 jaVu/1kl/ReYYZVQQC7Pz1e6NrE0ij6lQMWJXEjVL5Lyrsg+Fq6jwk0zLQTR8AqkWk
-	 rIlPowOf/xPjCaLQ2mhJOqjweMEQ9ZEMSUU4ZPZ8mkcf0MOPl70CwbfxjX2o4BmgZv
-	 WqnFZS9TBXiIQ==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-To: mptcp@lists.linux.dev,
-	stable@vger.kernel.org,
-	gregkh@linuxfoundation.org
-Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>,
-	sashal@kernel.org,
-	Mat Martineau <martineau@kernel.org>,
-	Jakub Kicinski <kuba@kernel.org>
-Subject: [PATCH 6.12.y 4/4] mptcp: pm: ADD_ADDR rtx: free sk if last
-Date: Thu, 21 May 2026 05:08:50 +0200
-Message-ID: <20260521030845.723267-10-matttbe@kernel.org>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260521030845.723267-6-matttbe@kernel.org>
-References: <20260521030845.723267-6-matttbe@kernel.org>
+	s=k20260515; t=1779333535;
+	bh=dDKjiz0d+rivGJF1LQNrIUKjTKIC6Qh8vYS1I8pmeB0=;
+	h=Date:Subject:To:References:From:In-Reply-To;
+	b=dkin3xoXwYU8aLRH8WYvkV84BccGHCNi36sV0XPSq9ygVmUDKcx0NHwiTxcJUsTUi
+	 gEiuuU0N8qvWk2dqsyQAEbc3wRC9JSkmeGqIfk82N6B/WoBTUOS3Ks9yDhjm7QND9j
+	 qG+5sHn8+AJMgr9P+Vw+kucIqeYhh3EP2ebcYR8YsHr4qqM0ph/MaZ38XCac5hmSbB
+	 ya2Q2VDviK7btIUKDVFJHtUzI8KdcOIt32Snj3fyJY/17zjhi1v3I5jQ6TDt7VcaXR
+	 A2D/mgiaKhizos12qfaYK0tkjEUTWbJcGH9c93p0mXtrEJb8UNWTP+4vP/M2l06vIn
+	 i+DPDgj0Y3C2A==
+Message-ID: <3c96ab59-d6d2-450c-a6bc-33c14d3ee1df@kernel.org>
+Date: Thu, 21 May 2026 13:18:51 +1000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4118; i=matttbe@kernel.org; h=from:subject; bh=K0ILoGJSDN/w1UabpH2sQKTwwGJIAI/IqgzRfDwRYaI=; b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLL4youmLIoL3/fpz+27nHGZv3e8C8j9862no//LE80f/ UrZ/x+e7yhlYRDjYpAVU2SRbovMn/m8irfEy88CZg4rE8gQBi5OAZjIzzZGhn8XxWJsa3ib3Uxn 2EzaqCuceG+95ZHtzJWxE3LE1tikLGb4zVJhI3LfkdlxZ4jixkZuCY7vx7ffnr7Q+sq27x9tNpS 6MQMA
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-next v3 05/16] mptcp: introduce
+ add_addr_v6_port_drop_ts sysctl knob
+Content-Language: fr
+To: MPTCP Linux <mptcp@lists.linux.dev>
+References: <20260520-mptcp-add-addr6-port-ts-v3-0-bffa658a7678@kernel.org>
+ <20260520-mptcp-add-addr6-port-ts-v3-5-bffa658a7678@kernel.org>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <20260520-mptcp-add-addr6-port-ts-v3-5-bffa658a7678@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-commit b7b9a461569734d33d3259d58d2507adfac107ed upstream.
+Hello,
 
-When an ADD_ADDR is retransmitted, the sk is held in sk_reset_timer(),
-and released at the end.
+On 20/05/2026 07:25, Matthieu Baerts (NGI0) wrote:
+> This sysctl is going to be used in the next commits to drop TCP
+> timestamps option, to be able to send an ADD_ADDR with a v6 IP address
+> and a port number. It is enabled by default.
+> 
+> This knob is explicitly disabled in the MPTCP Join selftest, with the
+> "signal addr list progresses after tx drop" subtest, to continue
+> verifying the previous behaviour where the ADD_ADDR is not sent due to a
+> lack of space.
 
-If at that moment, it was the last reference being held, the sk would
-not be freed. sock_put() should then be called instead of __sock_put().
+When re-thinking about that, I wonder if we really do need this sysctl.
+Indeed, the ADD_ADDR with v6 + port number are only sent because the
+userspace asked for them: either because a "signal" endpoint has been
+added, or via the userspace PM.
 
-But that's not enough: if it is the last reference, sock_put() will call
-sk_free(), which will end up calling sk_stop_timer_sync() on the same
-timer, and waiting indefinitely to finish. So it is needed to mark that
-the timer is done at the end of the timer handler when it has not been
-rescheduled, not to call sk_stop_timer_sync() on "itself".
+Then, do we really need this sysctl? If these ADD_ADDR cause issues,
+maybe the userspace can simply not ask to create them? Or a sysadmin
+could add netfilter rules?
 
-Fixes: 00cfd77b9063 ("mptcp: retransmit ADD_ADDR when timeout")
-Cc: stable@vger.kernel.org
-Reviewed-by: Mat Martineau <martineau@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Link: https://patch.msgid.link/20260505-net-mptcp-pm-fixes-7-1-rc3-v1-5-fca8091060a4@kernel.org
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-[ Applied to net/mptcp/pm_netlink.c instead of upstream's pm_kernel.c.
-  Also, there were conflicts, because commit 30549eebc4d8 ("mptcp: make
-  ADD_ADDR retransmission timeout adaptive") is not in this version and
-  changed the context. Also, other conflicts were due to newer patches
-  being backported with resolved conflicts before this one. ]
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- net/mptcp/pm_netlink.c | 30 ++++++++++++++++++------------
- 1 file changed, 18 insertions(+), 12 deletions(-)
+If the sysctl is dropped, the "signal addr list progresses after tx
+drop" test can be dropped as well. Or the new test in "selftests: mptcp:
+validate ADD_ADDRv6 + TS + port" could be adapted to check the old
+behaviour on older kernels. But then, we will need a way to detect that
+when the kernel supports the new feature. The sysctl is handy for that.
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index be531df02c37..4ff6721ad5c7 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -22,6 +22,7 @@ struct mptcp_pm_add_entry {
- 	struct list_head	list;
- 	struct mptcp_addr_info	addr;
- 	u8			retrans_times;
-+	bool			timer_done;
- 	struct timer_list	add_timer;
- 	struct mptcp_sock	*sock;
- 	struct rcu_head		rcu;
-@@ -294,22 +295,22 @@ static void mptcp_pm_add_timer(struct timer_list *timer)
- 	struct mptcp_pm_add_entry *entry = from_timer(entry, timer, add_timer);
- 	struct mptcp_sock *msk = entry->sock;
- 	struct sock *sk = (struct sock *)msk;
--	unsigned int timeout;
-+	unsigned int timeout = 0;
- 
- 	pr_debug("msk=%p\n", msk);
- 
--	if (unlikely(inet_sk_state_load(sk) == TCP_CLOSE))
--		goto exit;
--
- 	bh_lock_sock(sk);
-+	if (unlikely(inet_sk_state_load(sk) == TCP_CLOSE))
-+		goto out;
-+
- 	if (sock_owned_by_user(sk)) {
- 		/* Try again later. */
--		sk_reset_timer(sk, timer, jiffies + HZ / 20);
-+		timeout = HZ / 20;
- 		goto out;
- 	}
- 
- 	if (mptcp_pm_should_add_signal_addr(msk)) {
--		sk_reset_timer(sk, timer, jiffies + HZ);
-+		timeout = HZ;
- 		goto out;
- 	}
- 
-@@ -326,9 +327,8 @@ static void mptcp_pm_add_timer(struct timer_list *timer)
- 		entry->retrans_times++;
- 	}
- 
--	if (entry->retrans_times < ADD_ADDR_RETRANS_MAX)
--		sk_reset_timer(sk, timer,
--			       jiffies + timeout);
-+	if (entry->retrans_times >= ADD_ADDR_RETRANS_MAX)
-+		timeout = 0;
- 
- 	spin_unlock_bh(&msk->pm.lock);
- 
-@@ -336,9 +336,13 @@ static void mptcp_pm_add_timer(struct timer_list *timer)
- 		mptcp_pm_subflow_established(msk);
- 
- out:
-+	if (timeout)
-+		sk_reset_timer(sk, timer, jiffies + timeout);
-+	else
-+		/* if sock_put calls sk_free: avoid waiting for this timer */
-+		entry->timer_done = true;
- 	bh_unlock_sock(sk);
--exit:
--	__sock_put(sk);
-+	sock_put(sk);
- }
- 
- struct mptcp_pm_add_entry *
-@@ -402,6 +406,7 @@ bool mptcp_pm_alloc_anno_list(struct mptcp_sock *msk,
- 
- 	timer_setup(&add_entry->add_timer, mptcp_pm_add_timer, 0);
- reset_timer:
-+	add_entry->timer_done = false;
- 	timeout = mptcp_get_add_addr_timeout(net);
- 	if (timeout)
- 		sk_reset_timer(sk, &add_entry->add_timer, jiffies + timeout);
-@@ -422,7 +427,8 @@ void mptcp_pm_free_anno_list(struct mptcp_sock *msk)
- 	spin_unlock_bh(&msk->pm.lock);
- 
- 	list_for_each_entry_safe(entry, tmp, &free_list, list) {
--		sk_stop_timer_sync(sk, &entry->add_timer);
-+		if (!entry->timer_done)
-+			sk_stop_timer_sync(sk, &entry->add_timer);
- 		kfree_rcu(entry, rcu);
- 	}
- }
+Cheers,
+Matt
 -- 
-2.53.0
+Sponsored by the NGI0 Core fund.
 
