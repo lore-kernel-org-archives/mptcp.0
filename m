@@ -1,124 +1,192 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from out-188.mta1.migadu.com (out-188.mta1.migadu.com [95.215.58.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53D3B349CD7
-	for <mptcp@lists.linux.dev>; Thu, 21 May 2026 03:18:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A90DE368D43
+	for <mptcp@lists.linux.dev>; Thu, 21 May 2026 03:23:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779333536; cv=none; b=q49vL0I9LPoP2KwuGOsyqGrBvr5rHUEUxAFjG2vF/ujV/Q2PxbdeT4Mj0bfX1ZYtgxPh2dSAx0KiZpNIvuI4J1lVBmSoc/yZtyFwJ616XgVj4gtLMEbhEllRf8zN+aXRbiPx1EvQuvMAwOtSZ56NXzwDLeTBncFUZWLBbSc7ZeU=
+	t=1779333804; cv=none; b=kMKNCcU3gOQ87Umzl7QwbqbpQiKppYvLB67X1SsbEwOnJJbB3RCfjRgeHPSRf+AWzSQlORAgrRZ4cCHXPRQ5IaBqHmewuFQb/Wuk6EzdeFXGTQ6W4xsCGS7FK0IB4ckXd+DnlrkCvMqb77AmGVovG8NPMfpzRZtCZXDkaeBb3Nc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779333536; c=relaxed/simple;
-	bh=60XCvTELFuOW5fd15CELJkeDfB+pprn9a59XAUgpaPw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=tQw7luL5xeYN5Nbm8uMa7rRDJVsyveCE3Hm8jLjiwT9XIBREonFPHxfZWK0Hiexdd5rJ4uDUlFJ5qEQSXYhjqHBc2KvkHV8BCdswiz4mqeM4Mlc0ZU+lqz6PvEALz2mTUHd+XMNiY/wpCk9ywXLKk/DDlaJZLZl3DUZiZdozt+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dkin3xoX; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1779333804; c=relaxed/simple;
+	bh=cOC7ZqGtz59cqv+ouGNiUVA/7ubihZ4+LjJPTyUOuUA=;
+	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:
+	 In-Reply-To:References; b=SrelPlXuOGWTnz9HcPaXM8spGB9V+bglA8RtgfDrRxLw50pLRenInOEH/YihJW4ch2ekKtBS6veeDCPtUdhq7Z0IU7tzzMIaFw9vTnEwKnlbp1gC2v/TbTL+gtYZWbI70JG4i9miVDqVCcz9o6jzcVhr7dZyUADzVf+dOogWq0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=SdBd+ngt; arc=none smtp.client-ip=95.215.58.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dkin3xoX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78F7C1F000E9
-	for <mptcp@lists.linux.dev>; Thu, 21 May 2026 03:18:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779333535;
-	bh=dDKjiz0d+rivGJF1LQNrIUKjTKIC6Qh8vYS1I8pmeB0=;
-	h=Date:Subject:To:References:From:In-Reply-To;
-	b=dkin3xoXwYU8aLRH8WYvkV84BccGHCNi36sV0XPSq9ygVmUDKcx0NHwiTxcJUsTUi
-	 gEiuuU0N8qvWk2dqsyQAEbc3wRC9JSkmeGqIfk82N6B/WoBTUOS3Ks9yDhjm7QND9j
-	 qG+5sHn8+AJMgr9P+Vw+kucIqeYhh3EP2ebcYR8YsHr4qqM0ph/MaZ38XCac5hmSbB
-	 ya2Q2VDviK7btIUKDVFJHtUzI8KdcOIt32Snj3fyJY/17zjhi1v3I5jQ6TDt7VcaXR
-	 A2D/mgiaKhizos12qfaYK0tkjEUTWbJcGH9c93p0mXtrEJb8UNWTP+4vP/M2l06vIn
-	 i+DPDgj0Y3C2A==
-Message-ID: <3c96ab59-d6d2-450c-a6bc-33c14d3ee1df@kernel.org>
-Date: Thu, 21 May 2026 13:18:51 +1000
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="SdBd+ngt"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v3 05/16] mptcp: introduce
- add_addr_v6_port_drop_ts sysctl knob
-Content-Language: fr
-To: MPTCP Linux <mptcp@lists.linux.dev>
-References: <20260520-mptcp-add-addr6-port-ts-v3-0-bffa658a7678@kernel.org>
- <20260520-mptcp-add-addr6-port-ts-v3-5-bffa658a7678@kernel.org>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <20260520-mptcp-add-addr6-port-ts-v3-5-bffa658a7678@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1779333799;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=rRoLV7tMmLnxccjXrh0rcoWpYBzf19OYqU/VeyvdcKQ=;
+	b=SdBd+ngto5PA3frVhRz/lZC8zhL7tgiS3lN4rlfx1dx8J+lT0fFnGIZsSceTqQP855Yi/Z
+	ErrUjQRESxgcHGbUCdlebQEZaGAaSuZKrf0Tl1LNm+lRXsJIFnh8Ldo/zibCOz4pIf54S4
+	pb39lva4cgjouWjprL8FC83fgA1MmPY=
+Date: Thu, 21 May 2026 03:23:13 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: gang.yan@linux.dev
+Message-ID: <6eedf75be575a1db987ad5b7b8226bf0f412f37d@linux.dev>
+TLS-Required: No
+Subject: Re: [PATCH v7 mptcp-next 0/7] mptcp: address stall under memory
+ pressure
+To: "Paolo Abeni" <pabeni@redhat.com>, "Geliang Tang" <geliang@kernel.org>,
+ mptcp@lists.linux.dev
+In-Reply-To: <5b4149a2-fa05-4f72-bb8c-f3ee82f07d63@redhat.com>
+References: <cover.1779210016.git.pabeni@redhat.com>
+ <da87a06afe83a817fefdb86882b6d68169ba121e.camel@kernel.org>
+ <5b4149a2-fa05-4f72-bb8c-f3ee82f07d63@redhat.com>
+X-Migadu-Flow: FLOW_OUT
 
-Hello,
+May 20, 2026 at 4:19 PM, "Paolo Abeni" <pabeni@redhat.com mailto:pabeni@r=
+edhat.com?to=3D%22Paolo%20Abeni%22%20%3Cpabeni%40redhat.com%3E > wrote:
 
-On 20/05/2026 07:25, Matthieu Baerts (NGI0) wrote:
-> This sysctl is going to be used in the next commits to drop TCP
-> timestamps option, to be able to send an ADD_ADDR with a v6 IP address
-> and a port number. It is enabled by default.
-> 
-> This knob is explicitly disabled in the MPTCP Join selftest, with the
-> "signal addr list progresses after tx drop" subtest, to continue
-> verifying the previous behaviour where the ADD_ADDR is not sent due to a
-> lack of space.
 
-When re-thinking about that, I wonder if we really do need this sysctl.
-Indeed, the ADD_ADDR with v6 + port number are only sent because the
-userspace asked for them: either because a "signal" endpoint has been
-added, or via the userspace PM.
+>=20
+>=20On 5/20/26 8:32 AM, Geliang Tang wrote:
+>=20
+>=20>=20
+>=20> On Tue, 2026-05-19 at 19:01 +0200, Paolo Abeni wrote:
+> >=20
+>=20> >=20
+>=20> > This an attempt to fix the data transfer stall reported by Gelian=
+g
+> > >  and
+> > >  Gang more carefully enforcing memory constraints at the MPTCP leve=
+l.
+> > >=20
+>=20> >  This iteration presents a significant change WRT the previous on=
+e,
+> > >  avoiding entirely the collapse attempt on memory pressure. Note th=
+at
+> > >  this choice represent a trade off: collapsing allow much faster
+> > >  transfer
+> > >  (to be more accurate: order of magnitude less slow) under some
+> > >  extreme
+> > >  conditions, but makes transfer slower and much more CPU intensive =
+for
+> > >  less unlikely conditions.
+> > >=20
+>=20> >  As a consequence of the above the `mptcp_data.multi_chunk_sendfi=
+le`
+> > >  test-case needs a 240 seconds timeout to complete successfully:
+> > >=20
+>=20> >  TEST_F_TIMEOUT(mptcp, multi_chunk_sendfile, 240)
+> > >=20
+>=20> >  The solution performing data collapsing would need similar long
+> > >  timeout
+> > >  for the multiproc tests cases: mutliproc_even, mutliproc_readers,
+> > >  mutliproc_writers, mutliproc_sendpage_even,
+> > >  mutliproc_sendpage_readers,
+> > >  mutliproc_sendpage_writers.
+> > >=20
+>=20>=20=20
+>=20>  Based on this version, I actually tested the MPTCP TLS self-tests =
+and
+> >  still encountered a few similar errors, with the test duration takin=
+g
+> >  several times longer than before.
+> >=20
+>=20[...]
+>=20
+>=20>=20
+>=20> ... ...
+> >  # # RUN tls.12_aes_gcm_mptcp.multi_chunk_sendfile ...
+> >  # # multi_chunk_sendfile: Test terminated by timeout
+> >  # # FAIL tls.12_aes_gcm_mptcp.multi_chunk_sendfile
+> >  # not ok 3 tls.12_aes_gcm_mptcp.multi_chunk_sendfile
+> >=20
+>=20Without this series you should get some stall there, right?
+>=20
+>=20Note that the 'multi_chunk' test will require increasing the test-cas=
+e timeout,
+> as mentioned in v3:
+>=20
+>=20---
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_data.c b/tools/tes=
+ting/selftests/net/mptcp/mptcp_data.c
+> index 39d092e7888d..127d8b47bd39 100644
+> --- a/tools/testing/selftests/net/mptcp/mptcp_data.c
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_data.c
+> @@ -166,7 +166,7 @@ static void chunked_sendfile(struct __test_metadata=
+ *_metadata,
+>  close(fd);
+>  }
+>=20=20
+>=20-TEST_F(mptcp, multi_chunk_sendfile)
+> +TEST_F_TIMEOUT(mptcp, multi_chunk_sendfile, 240)
+>  {
+>  chunked_sendfile(_metadata, self, 4096, 4096);
+>  chunked_sendfile(_metadata, self, 4096, 0);
+>=20
+>=20---
+>=20
+Hi=20Paolo,
 
-Then, do we really need this sysctl? If these ADD_ADDR cause issues,
-maybe the userspace can simply not ask to create them? Or a sysadmin
-could add netfilter rules?
+No offense intended at all=E2=80=94 Geliang and I just wanted to confirm
+whether this performance regression is expected, acceptable, or
+something we can optimize further.
 
-If the sysctl is dropped, the "signal addr list progresses after tx
-drop" test can be dropped as well. Or the new test in "selftests: mptcp:
-validate ADD_ADDRv6 + TS + port" could be adapted to check the old
-behaviour on older kernels. But then, we will need a way to detect that
-when the kernel supports the new feature. The sysctl is handy for that.
+We tested the performance of mptcp_data.sh (time per run) 15 times
+under the v7 patch and [1], and the results are as follows:
 
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
+v7 results:
+5.82 4.72 5.38 6.18 6.52 6.04 5.05 6.49 4.78 5.62 5.52 4.91 8.07 3.87 5.6=
+1
 
+    Max: 8.07s, Min: 3.87s, Avg: 5.64s
+
+[1] results:
+2.98 3.44 3.11 3.06 3.78 3.23 3.28 2.88 3.52 3.33 2.89 3.33 3.91 3.20 3.4=
+5
+
+    Max: 3.91s, Min: 2.88s, Avg: 3.29s
+
+We=E2=80=99d appreciate your thoughts on whether this delta aligns with
+expectations, or if there are further optimizations we should explore.
+
+
+[1] https://patchwork.kernel.org/project/mptcp/cover/cover.1773735950.git=
+.yangang@kylinos.cn/
+
+Thanks
+Gang
+
+> The timeout could be reduced/avoided, including the 'collapse' strategy=
+ from v5
+> and previous revisions. As hinted by Eric, collapsing is a sort of weak=
+ spot
+> for potential evil peers and in practice causes high CPU usage increase=
+ to the
+> point that in debug build some other test-cases will still require an i=
+ncreased
+> timeout.=20
+>=20
+> AFAICS the multi chunk is really a corner case, especially when sending
+> 1 byte chunk. As a trade off I prefer avoiding collapsing, and accept a=
+ny
+> solution that allow completion in the multi chunk test, even with very =
+low
+> tput.=20
+>=20
+> Side note: I think/I'm reasonably sure even plain TCP will have hard ti=
+me
+> with such that case in comparable conditions, i.e. when OoO happens wit=
+h
+> very high probability _after_ that the sender start pushing data at hig=
+h speed,=20
+>=20but the upstream self-tests (rightfully) do not include the OoO part.
+>=20
+>=20/P
+>
