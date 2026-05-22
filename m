@@ -1,107 +1,117 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08527356743
-	for <mptcp@lists.linux.dev>; Fri, 22 May 2026 08:51:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C69CE81724
+	for <mptcp@lists.linux.dev>; Fri, 22 May 2026 09:12:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779439872; cv=none; b=HEJ2w73wbGyIwZ9M3B4VZmls7lb5kHbImKkmQYurNpZvKXW2nxhdt5pCFcbhiLruNBMb7WrU+5P1EPvegBcBEmjN4GIEO8NwwSnSaonQdfXkFFxKOc7yx93JfClX9G3qjQfc5AttIKE3w//SD5lKtW272eLvDo7ZBzIMsLHo/p4=
+	t=1779441173; cv=none; b=Yc+dP+VINhhKgonRRYbCe9LXCPwoFV5CLgLx8yAaNyTXUqqzI9+ZCfbcndXHImRG5wT6FaW7T9HBy1mogxJlNQuPqDfqRj7LZPVAbTXoYglXB+2fdIfvp42c1oc5vYaxEw/1O5ZKh00UVPsxUbDEEWs9lxk3XzzO7ea3EApNuMI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779439872; c=relaxed/simple;
-	bh=l9K2Xglkw8Xbw4iWP0iMJHqbJs9D3Ul3GGCHEDQ87eU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ULlFMmUVafctO16pXez3mNKSSV5n2/jf4j7veK60EDgAQcc+xyU1tVzhiOxQe6xd6hwgaSAQzl+DHS7lZNLvrXfGmbHKo7A2Ne7GjkD5GDBQtRBQ/PgxR0DEjp6VrvJUCYtH4mqaDffqcs84tV57F42NBMOIkBZQiJKD0i3vDrs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 5cb94c1255bb11f1aa26b74ffac11d73-20260522
-X-CTIC-Tags:
-	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CC_NO_NAME, HR_CTE_8B
-	HR_CTT_MISS, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME
-	HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM, HR_SJ_PHRASE
-	HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT, HR_TO_NO_NAME
-	IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED, SA_TRUSTED, SA_EXISTED
-	SN_TRUSTED, SN_EXISTED, SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS
-	CIE_BAD, CIE_GOOD, CIE_GOOD_SPF, GTI_FG_BS, GTI_RG_INFO
-	GTI_C_BU, AMN_GOOD, ABX_MISS_RDNS
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.12,REQID:55eb771e-d2ef-452d-b837-5b8d2c6bfd29,IP:10,
-	URL:0,TC:0,Content:0,EDM:25,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:35
-X-CID-INFO: VERSION:1.3.12,REQID:55eb771e-d2ef-452d-b837-5b8d2c6bfd29,IP:10,UR
-	L:0,TC:0,Content:0,EDM:25,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:35
-X-CID-META: VersionHash:e7bac3a,CLOUDID:430c4b44c71885b0b6089c4079ed1d69,BulkI
-	D:260522165104FAL3ACSQ,BulkQuantity:0,Recheck:0,SF:17|19|66|78|102|127|865
-	|898,TC:nil,Content:0|15|50,EDM:5,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil,QS:
-	nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,AR
-	C:0
-X-CID-BVR: 2,SSN|SDN
-X-CID-BAS: 2,SSN|SDN,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD
-X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: 5cb94c1255bb11f1aa26b74ffac11d73-20260522
-X-User: cuitao@kylinos.cn
-Received: from ctao-book.. [(223.70.159.239)] by mailgw.kylinos.cn
-	(envelope-from <cuitao@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 1841512658; Fri, 22 May 2026 16:51:02 +0800
-From: Tao Cui <cuitao@kylinos.cn>
-To: matttbe@kernel.org,
-	geliang@kernel.org
-Cc: mptcp@lists.linux.dev,
-	Tao Cui <cuitao@kylinos.cn>
-Subject: [PATCH mptcp-next] mptcp: pm: add WARN_ON_ONCE guards on extra_subflows underflow
-Date: Fri, 22 May 2026 16:50:49 +0800
-Message-ID: <20260522085049.1896537-1-cuitao@kylinos.cn>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1779441173; c=relaxed/simple;
+	bh=2/bBWZd22be/hHLvTQ/Sd5yhT9WHoNvvbJjx7ymCoSI=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=cdFogG7ikRbgIIUf5/BB/CA2DWyC2n5HyogiNB4Dia67jsSigzUgeqYbpHxsy8+oLllmR7wx9/PnGlpq4vswKfIL1JoHZp1VxkrTdsFqEyPh4qzcIu7W+UctJX87yLHu+W1RL3cYr/YAwi/IQEcNI7jp2XRWUzbcfRxBSus8M4c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=NU1uGbzx; arc=none smtp.client-ip=95.215.58.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="NU1uGbzx"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1779441169;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=L/LlwfEo28aHWojgfdX/jeB3RfUmb7+SrqpPJniODTE=;
+	b=NU1uGbzxrxerdijVBPQkDSJHRwF9QF/lSKFxlsf6HpI58xTzCUpdEiVM+AVNreXr2vilyu
+	Kie0Ko1T5qj3hG+hGY2cJBxh7iEIfkh2BNSmmgCV2lDJestaT2edX+DFpU3Xov8NPJWiid
+	46wkw3kdpL0joN7bcKH/D0XTIUfEO9Y=
+From: Gang Yan <gang.yan@linux.dev>
+Subject: [PATCH mptcp-next v5 0/6] mptcp: convert to sockopt_lock_sock
+Date: Fri, 22 May 2026 17:12:30 +0800
+Message-Id: <20260522-sockopt_lock-v5-0-108629a46e98@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAP4dEGoC/22NQQ7CIBBFr9LMWgwtFKwr72GMqUAtaQUChLRpe
+ ncJKzWuJj//vzcbBOW1CnCuNvAq6aCtyaE9VCDG3jwV0jJnaHDDcIsZClZM1sX7nC8SlJ0Il0x
+ 2kkNGnFeDXoruCi8XhUNGLRFuuRt1iNav5VMiZfFfmgjCCLOHpDUXTDJymdZZGxuOwhRTop909
+ 0PTTBMykL4WVPIef9H7vr8B9kfP6vMAAAA=
+To: MPTCP Linux <mptcp@lists.linux.dev>
+Cc: Gang Yan <yangang@kylinos.cn>, pabeni@redhat.com
+X-Migadu-Flow: FLOW_OUT
 
-extra_subflows is a u8 counter that can underflow if a decrement races
-with or precedes an increment. While the recently fixed userspace PM
-subflow creation path eliminated the primary cause, add defensive
-WARN_ON_ONCE guards at both decrement sites to catch any remaining edge
-cases rather than silently wrapping to 255.
+Hi Maintainers,
 
-Signed-off-by: Tao Cui <cuitao@kylinos.cn>
+This patch series fixes locking issues in the sockopt path and adds
+support for setting MPTCP sockopts in BPF context.
+
+Patch 1 can avoid accidentally introducing sleeping operations inside
+the lock_sock_fast() critical section like b5c52908d5("mptcp: fix
+scheduling with atomic in timestamp sockopt") does.
+
+Although patches 4 and 5 are marked DO-NOT-MERGE, I think they are
+ready for upstream submission, reviews are welcome.
+
+Thanks
+Gang
+
+Signed-off-by: Gang Yan <yangang@kylinos.cn>
 ---
- net/mptcp/pm.c       | 3 ++-
- net/mptcp/protocol.h | 3 ++-
- 2 files changed, 4 insertions(+), 2 deletions(-)
+Changelog:
+v5:
+  - Split patch 1 into two patches, one is to replace lock_sock_fast
+    with lock_sock to avoid 'sleeping in atomic context' issue in
+    regular path, and another one is using 'sockopt_lock_sock' for
+    mptcp socket like TCP does.
+  - Patch 3 prevents the sleeping issue from requiring ssks' lock
+    in BPF context, It will return -EOPNOTSUPP when application/BPF
+    programs trip on this.
+  - Patch 4 and 5 are temporary patches used to verify the validity
+    of the above functions.
+v4:
+  - As sashiko said, when processing BPF setsockopt requests, the
+    msk is already locked, but we need to use lock_sock() to
+    protect ssk. If we use sockopt_lock_sock(ssk), it will return
+    without acquiring the lock.
+  - In 'mptcp_setsockopt_sol_tcp_congestion', the load of
+    'tcp_set_congestion_control' is changed from 'true' to
+    '!has_current_bpf_ctx()' like tcp does. This determines whether
+    tcp_ca_find() or tcp_ca_find_autoload() is called. I agree we
+    should keep consistent with the TCP implementation. 
+  Link: https://patch.msgid.link/20260509-sockopt_lock-v4-0-33f3a1c4d7a0@kylinos.cn
 
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index 3c152bf66cd5..aa987366fb24 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -655,7 +655,8 @@ void mptcp_pm_subflow_check_next(struct mptcp_sock *msk,
- 	if (mptcp_pm_is_userspace(msk)) {
- 		if (update_subflows) {
- 			spin_lock_bh(&pm->lock);
--			pm->extra_subflows--;
-+			if (!WARN_ON_ONCE(pm->extra_subflows == 0))
-+				pm->extra_subflows--;
- 			spin_unlock_bh(&pm->lock);
- 		}
- 		return;
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index e4f5aba24da7..2cf6e3f66a95 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -1276,7 +1276,8 @@ u8 mptcp_pm_get_limit_extra_subflows(const struct mptcp_sock *msk);
- /* called under PM lock */
- static inline void __mptcp_pm_close_subflow(struct mptcp_sock *msk)
- {
--	if (--msk->pm.extra_subflows < mptcp_pm_get_limit_extra_subflows(msk))
-+	if (!WARN_ON_ONCE(msk->pm.extra_subflows == 0) &&
-+	    --msk->pm.extra_subflows < mptcp_pm_get_limit_extra_subflows(msk))
- 		WRITE_ONCE(msk->pm.accept_subflow, true);
- }
- 
+v3:
+  - Remove the special symbols in v2.
+  - Use sockopt_ns_capable to replace ns_capable.
+  Link: https://lore.kernel.org/r/20260506-sockopt_lock-v3-0-06bd417c6d63@kylinos.cn
+
+v2:
+  Link: https://patchwork.kernel.org/project/mptcp/patch/20260422091927.77770-3-gang.yan@linux.dev/
+
+---
+Gang Yan (6):
+      mptcp: replace lock_sock_fast with lock_sock in sockopt
+      mptcp: use sockopt_lock/release_sock in sockopt
+      mptcp: use sockopt_ns_capable in congestion control
+      mptcp: reject sockopt requiring ssks' lock in BPF context
+      DO-NOT-MERGE: mptcp: allow set some sockopt in BPF context
+      DO-NOT-MERGE: selftest: bpf: set mptcp sockopt in BPF context
+
+ net/core/filter.c                                  |   6 +
+ net/mptcp/sockopt.c                                | 133 ++++++++++++---------
+ tools/testing/selftests/bpf/prog_tests/mptcp.c     |  64 ++++++++++
+ .../testing/selftests/bpf/progs/mptcp_setsockopt.c |  71 +++++++++++
+ 4 files changed, 220 insertions(+), 54 deletions(-)
+---
+base-commit: aa15c271d79edde595fb6f4eedb52fbc16325a83
+change-id: 20260506-sockopt_lock-c46837d6d9d7
+
+Best regards,
 -- 
-2.43.0
+Gang Yan <yangang@kylinos.cn>
 
