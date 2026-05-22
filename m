@@ -1,130 +1,119 @@
-Received: from mail-dy1-f177.google.com (mail-dy1-f177.google.com [74.125.82.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25F7B3D3302
-	for <mptcp@lists.linux.dev>; Fri, 22 May 2026 10:50:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F053725A359
+	for <mptcp@lists.linux.dev>; Fri, 22 May 2026 21:44:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779447047; cv=none; b=fTvMdCWvxbrRt61IWz85P9OhYks3FGehSmdpW3rQVTzgtHfsUuDa+B4JAGM+EUlb2w5WrNZhvnkZk+3/dgUPw/+I23Y8x3F+OzGRQU3pcBMMcbwwDDAoMsX4e6aGJkc2n4ZxkjNHcGt8sQepjZj0Dmmn8w3qdAnifSEGu6yOY10=
+	t=1779486251; cv=none; b=J6rDQ+lI/bhIc+59wGevUAIgqvC8lUZttqUbaqRG/9KTfsfcFGlps5902i+4sA1fUp9hF7yYnQM+WD5QvDibwaLbPtkuhog+2nQ5CBJ7tHYEYp76WWvtJ6LdPV6cQ9WmYJ0XHwnn5QBmIzLj9XA2sIyzw4AWfI0RuKUIj9GYEVw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779447047; c=relaxed/simple;
-	bh=IlSUmH7BRucVs+2hFij54WaaDXaB1vrr3/0cZ2Ct1p4=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
-	 MIME-Version:Content-Type; b=W9QqG0IE7mw+A+BwWCKU/Nj+/MiQgPPTLafMIUxagiIfvC8+hZK7gZU9k9Kn5MuEwzXc+axXSdxppCycHMf5ZBTv8FCZLU8b5eUpcl06+ofcFVtlYch6eyc42Vhr5iKMdI/OAVKMCcWIL6e2n12Eq6mApyM5P4s6ecyTPxEtAog=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GkmcdIot; arc=none smtp.client-ip=74.125.82.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1779486251; c=relaxed/simple;
+	bh=+FWn06QxXFn8LNF8O8vXszH13qx5hX/Kdb0zGYW2KCE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:content-type; b=kg/C2Ov9y54nI0bNwW+h80sjCxnXKtFOuBtVmYQHWE3omzDJ8qU+4AcpQiEGEjpmfulbKsO2A9zInq1/WxXzYFIgpMwaOfgNDe7TUT3jBbg/J14qgHZFAxxEn6MGQyJe0gFL0fIbiLK/mOtj/l9u2jB0k8f8Aq/O32mfnHt0x08=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SoElb+N/; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GkmcdIot"
-Received: by mail-dy1-f177.google.com with SMTP id 5a478bee46e88-3044857f09aso1435548eec.1
-        for <mptcp@lists.linux.dev>; Fri, 22 May 2026 03:50:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779447045; x=1780051845; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UwNBxAsY2O6QyW4ri6aPCcHKQ97amyh6fpzG4C+Zi6Q=;
-        b=GkmcdIot9SAZkfp5Ya3hQzWspFSUHH+E0gC8f7WuK6k/b7CuwPzIVz/rYc8WTPmBIe
-         PDN9SVtSHJgrMZLQ3E1EZnIQRpWYJpdUa1cth5lxVn+ylIsN1Yx/ev0Tlbe+FIkmN3eh
-         oKobUBKIKl8NljprVljtS++4yhU4JTVyEgf/shp9JxwLiE/ZOdy2JlEHK4H/38HDsvyp
-         ODoQWJrZZcPJbD7eCkyfoYD8YjHSJmVPTb6/5AbBXatq3t75nYHN/fLgDFh8DWtWM7RV
-         lVzzKS/n1FBefAm+Mt2Tqm6kB8W1ep0VSIkJSnY15qF1NZw9UmheOcHhSNhqsnKfl+2p
-         x1ww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779447045; x=1780051845;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=UwNBxAsY2O6QyW4ri6aPCcHKQ97amyh6fpzG4C+Zi6Q=;
-        b=rE/RTObxoFmEqyaJu99OhnFRUsFnKjuY4WjMBC4YG4Y1h3XqD5VY7GjU7MJxHmPV6m
-         uGMvCUEBOiuE0yqS5tZIwwjXhCBbLajw72+mJfO4xu/o52mf4ygAPGJcyBzLKzMXVxSP
-         7EECCZjfI9T8V1oXU+wRClh+1TGg2oLDkfHE+oV2RkZHjXd+v4IbIOCzSrdUWvvdeZ9u
-         soNaDpll68hD+WzRNleD7YnPwWBlUqDC5JXjoL7sFnDQQK5GbChSLvMqqo6RXv8WHk9j
-         jnVf9a+8xrySo/jgks5zk/5GXRS4KGLfB9OyB5ZR6dEuY1kKt0Iwj30Q4Yb8ENwHK1oi
-         kAkQ==
-X-Gm-Message-State: AOJu0YxiqlxxNtOydb+AVqZo69/rtCAUCM+XB+1F89F/2Jmg74/4Z/Q0
-	qaLC3BsrkcTMnywJnvsOPlKkUaXvm+u5yRkZJQp/hRlUQvzQQUZzZC4q91we
-X-Gm-Gg: Acq92OHIjoR2MoDcPyFd1k+r9GqQqXLB0MvUxyegdFEVCHh/K3v39VDDthX1FjopZS8
-	MbQMbdHzmEucgPDb1QXgLzivH2b8/yv4oAODA5vU6DUx/Ou7Ffw2HefNbTYFV0v5C1sPyCjPTLV
-	IZ2497GQLH9L3GbrRFzMzdI8tO0u/vRWGk+XW9Y9DJqSpv5kZP2KAAEUQ/qToG9Z1YsbPqMh81W
-	qRnOftf7JwIgrIOGvRTDCV8p9eb0u+DW/PqaaCxiKjdyrRsduQ6fhgW+Thu84ZcXiDZfd9x6d7S
-	aJie1Y8VX89H/87taEEuaSWRgSzjaGkGIRe69XEE+PEiTiP2k8c7WS3iBTTpbR7SGvS1XB5ro/Y
-	WY7w4Ov1EOSJ1cki5NvJ8pqQ3ZsoFE0G9yp9AAjOtC2kWVJ3IrI3VguhNl/Nemxh6r0AEnAVKVL
-	LBZS+8xiRuTSS7gkAiJJgqDv06RoCVNAs8obJ6AhQ=
-X-Received: by 2002:a05:7301:e21:b0:303:f2dc:8ab4 with SMTP id 5a478bee46e88-30448f30810mr1632825eec.2.1779447045199;
-        Fri, 22 May 2026 03:50:45 -0700 (PDT)
-Received: from [127.0.0.1] ([172.215.231.122])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-3045223103bsm746243eec.16.2026.05.22.03.50.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 May 2026 03:50:44 -0700 (PDT)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Gang Yan <yangang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20260522-sockopt_lock-v5-0-108629a46e98@kylinos.cn>
-References: <20260522-sockopt_lock-v5-0-108629a46e98@kylinos.cn>
-Subject: Re: [PATCH mptcp-next v5 0/6] mptcp: convert to sockopt_lock_sock
-Message-ID: <6cfa46e1-2792-a3bd-2327-b42d3865b89e@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 22 May 2026 10:50:43 +0000
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SoElb+N/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1779486249;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=K0PbZf7QNX2Xkz78M2JKZcjDXQWPkefZ6f2GUQjlRug=;
+	b=SoElb+N/ehDjRn5VoDUmI8m8kCZb/5Z30cFnr/1cTozhJXWiyylVIBnTGuW0ZUUEegyzGT
+	S9ugfH+5EtCHEAXy7RiJ0wvvdv3mA0gU13IdzuFO0DaDnODPWlf/Vr/4zQ5NCyV1/OL3zJ
+	dJMpLJY57UHFqpgFkXsFBjfaINQNhtQ=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-101-n2G1i-uTOKOlxgyaRDB4Kw-1; Fri,
+ 22 May 2026 17:44:06 -0400
+X-MC-Unique: n2G1i-uTOKOlxgyaRDB4Kw-1
+X-Mimecast-MFC-AGG-ID: n2G1i-uTOKOlxgyaRDB4Kw_1779486245
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4D3DE195609E;
+	Fri, 22 May 2026 21:44:05 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.44.32.93])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id A62DA180056E;
+	Fri, 22 May 2026 21:44:03 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: mptcp@lists.linux.dev
+Cc: Matthieu Baerts <matttbe@kernel.org>,
+	Geliang Tang <geliang@kernel.org>,
+	gang.yan@linux.dev
+Subject: [PATCH v8 mptcp-next 0/9] mptcp: address stall under memory pressure
+Date: Fri, 22 May 2026 23:43:41 +0200
+Message-ID: <cover.1779485511.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: NiXqm2Ry4U7uhdd-ZS6MlSVH-ado2WRgp8P6Hv8aQkY_1779486245
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+content-type: text/plain; charset="US-ASCII"; x-default=true
 
-Hi Gang,
+This an attempt to fix the data transfer stall reported by Geliang and
+Gang more carefully enforcing memory constraints at the MPTCP level.
 
-Thank you for your modifications, that's great!
+This iteration introduces a few more fixes for pre-existing issues,
+and keep the same trade-off as before: avoiding entirely the collapse
+attempt on memory pressure. Collapsing allow faster transfer
+(to be more accurate: less slow) under some extreme conditions, but
+makes transfer slower and much more CPU intensive for less unlikely
+conditions.
 
-Our CI did some validations and here is its report:
+As a consequences `multi_chunk_sendfile` and `multiproc*` test cases in
+mptcp_data *may* require longer timeout than default[1].
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Unstable: 1 failed =
-test(s): packetdrill_dss =E2=9A=A0=EF=B8=8F=20
-- KVM Validation: debug =
-(only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal=
- (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only =
-bpftest_all): Success! =E2=9C=85
-- Task: https://github.=
-com/multipath-tcp/mptcp_net-next/actions/runs/26280262996
+Patch 1 - 4 are actually fixes for pre-existing issues targeting net,
+included here just for my convenience.
 
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/a95f90e437ae
-Patchwork: https://patchwork.kernel.=
-org/project/mptcp/list/?series=3D1099233
+Patch 5 and 6 make the admission check much more strict for incoming
+packets exceeding the memory limits, with some exception for fallback
+sockets.
+Patch 7 implements OoO queue pruning for MPTCP and patch 5
+addresses an edge scenario that could still lead to transfer stall
+under memory pressure.
+Finally patch 8 and 9 improve the MPTCP-level retransmission schema to
+make recovery from memory pressure/after MPTCP-level drop significantly
+faster.
 
+[1] In my testing on v8 mptcp_data survived a few hundred iterations
+with the default timeout. Some independent testing would be appreciated.
+---
+v7 -> v8:
+  - added patch 3 & 4
+  - some change for patch 5 avoiding dumb optimizations that added
+    complexity. this also allowed removing patch "mptcp: track prune
+    recovery status"
+  - address some of sashiko feedback
 
-If there are some issues, you =
-can reproduce them using the same environment as
-the one used by the CI =
-thanks to a docker image, e.g.:
+Paolo Abeni (9):
+  mptcp: fix missing wakeups in edge scenarios
+  mptcp: fix retransmission loop when csum is enabled
+  mptcp: close TOCTOU race while computing rcv_wnd
+  mptcp: allow subflow rcv wnd to shrink
+  mptcp: explicitly drop over memory limits
+  mptcp: enforce hard limit on backlog flushing
+  mptcp: implemented OoO queue pruning
+  mptcp: move the retrans loop to a separate helper
+  mptcp: let the retrans scheduler do its job.
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+ net/mptcp/mib.c      |   3 +
+ net/mptcp/mib.h      |   3 +
+ net/mptcp/options.c  |  71 +++++++++----
+ net/mptcp/protocol.c | 245 ++++++++++++++++++++++++++++++++-----------
+ 4 files changed, 237 insertions(+), 85 deletions(-)
 
-For more details:
+-- 
+2.54.0
 
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
-
-
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 Core)
