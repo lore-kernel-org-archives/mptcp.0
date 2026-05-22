@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88F101E5207
-	for <mptcp@lists.linux.dev>; Fri, 22 May 2026 01:24:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE9BE2D3739
+	for <mptcp@lists.linux.dev>; Fri, 22 May 2026 02:06:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779413077; cv=none; b=KAczftNtYNn+5zGELUdAoYqetALre/amMeiRY6krDn5Dgkmi1Fy0bEV57MzaDydxRu+PeAwfCegW3/X+GORv1zDXnwYGBV9KmIKDgMPOAPG+qt7XuLSLeOMah9dizuGnq9+QGmUH54sZHHn7fXbLdg9alDwhktn+cXxUWDlIRJY=
+	t=1779415591; cv=none; b=s8KPC99l8FaiO6J2YnBDkBy3BUL44dfDlGaynbYxRNoFnkSnr6DOJVQnSkclWXvqyqTnXlwbMSOLNiGR66a9Gqk7612rHv2AGmq2KT9aWBrS1rNbEc6U9zEx0vsOxu87GDS6sTHu3iLOyIbVQU2QTj9WjJEZFArQHqd99fhMcJs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779413077; c=relaxed/simple;
-	bh=1z1cj7zKDa3T0pJ1MS/Mcz7c4nDOdDrG5p8Z+ODW+u0=;
+	s=arc-20240116; t=1779415591; c=relaxed/simple;
+	bh=epuUcqzbcPaFLy9PDc4CpTrwqvIaMS41dEaHzLzNqaQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DT0iwMMWO7+/dRiNOW0qBzYw3ovF1jJQPK1P5xzSWzEwdNk4zvvJxX6ha1r52vc2t+T7X3fR5PfXtXFYzACMEheABOpL3ohqSvff163MzmMqr4DkaoLZH9aKAS+JNXQr0rla8lFn5V+FVSDrzZTDQjDcqobfHQ1gJshcjaHe+Mg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JhCKNfie; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=pXh/HygBdly+/nSRu/tr465ANCLA2kOlsNKIxbSSIQruSguSTZ2Lh2vouJlLYa+3O0fsfDgSNA9Y79TwZ9weBOKCCFTBJvc1HTZlhpn6ibDvGkrvhkYWoXPCrha8ukWR7ribv+xFMqhlKoW1ldmZvLSAXivM/4rWAGJWbMjKJy8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dHBXTP8r; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JhCKNfie"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBDAF1F000E9;
-	Fri, 22 May 2026 01:24:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dHBXTP8r"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7393C1F00A3D;
+	Fri, 22 May 2026 02:06:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779413076;
-	bh=rbTkc9+aFceskiZuw6fAcV+AUbJX+oG9r9jAWSiP3PI=;
+	s=k20260515; t=1779415590;
+	bh=01Xz+dEHgOs3vpJiYBHorTScB1R4VUarSVJK805QohE=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=JhCKNfieBKc+hI/+NAO130ZoFgQb0ZodJ7+u6+lfhdJ3ZvsUHRrg6/mZ5eRBIKDVn
-	 dRlG0iC6c4AhthH4RRe/HoNVSh1S8SorcxJU+J/C3Q54kNU78SIdFZD+vJ7IpObUK/
-	 A+g7txrwn8dmEd26QwfPi3FKomG+b7v9ePlrfeVfhwjv/FKzmLMHp04uyD5Svmx29N
-	 FC1z/R9FhRRBkOtBtGSFGwyTAPpuzJelmKhQDUAd85NyfaDz0jT1EaUTs0SfAh5ZB9
-	 MLpcqMwAR9kJ0M8UJ5hdQPlBwPo7gPD4Cqwlo/8fvqfKVmzMPP8YCv8EBvZ2X7r8Rp
-	 KUBDZENJ6pPIQ==
-Message-ID: <de6a7219-f5f8-467c-8492-07cd744eced7@kernel.org>
-Date: Fri, 22 May 2026 11:24:28 +1000
+	b=dHBXTP8r5LqIc8IjUft/iR/GRT73i+Ev4eR8IzsxI7/znhaatsFQZbeUv0MAajCpd
+	 jPYF8FDJUmSleQ0gVApQivQVBejKGaJVKSDZx95rPCZHFQ449k6XzEipWgMU7C48Ed
+	 Nbc8Vwl0hrqTiybEVJLwY0hssIJOqLVqR6IMqoApkkc//cvj+fe92uQIzbbJuTiFRv
+	 vucyN8X1UJ5Duz7D8CkMk6KIJ8PAl/hQTiRFxfER4qoYS5zdPwSbvhmnKYCFQs/rR1
+	 76Tk+4oI6yNlt3InB2ZHofQoGjCrsP7PFJDtOuFXDV1TRNT8Vtcw0XxtwbnvkuSPk7
+	 PE0bLlxQ3PILQ==
+Message-ID: <ab0a071a-719d-4099-bbd4-8f5aa19aaa70@kernel.org>
+Date: Fri, 22 May 2026 12:06:20 +1000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,15 +35,14 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [RFC mptcp-next v15 00/10] NVME over MPTCP
+Subject: Re: [PATCH net] mptcp: pm: fix memory leak from alloc-during-teardown
+ race
 Content-Language: fr
-To: zhenwei pi <zhenwei.pi@linux.dev>, Geliang Tang <geliang@kernel.org>,
- mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>, Hui Zhu <zhuhui@kylinos.cn>,
- Gang Yan <yangang@kylinos.cn>
-References: <cover.1779249906.git.tanggeliang@kylinos.cn>
- <2920ebf8-be75-434c-8566-e09910402325@kernel.org>
- <703f5090-c386-48c5-8678-1d318f50edfd@linux.dev>
+To: Shardul Bankar <shardul.b@mpiricsoftware.com>, mptcp@lists.linux.dev,
+ pabeni@redhat.com
+Cc: martineau@kernel.org, geliang@kernel.org, janak@mpiric.us,
+ kalpan.jani@mpiricsoftware.com, shardulsb08@gmail.com
+References: <20260519191207.1110003-1-shardul.b@mpiricsoftware.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -89,91 +88,140 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <703f5090-c386-48c5-8678-1d318f50edfd@linux.dev>
+In-Reply-To: <20260519191207.1110003-1-shardul.b@mpiricsoftware.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi zhenwei pi,
+Hi Shardul,
 
-On 22/05/2026 11:02, zhenwei pi wrote:
+On 20/05/2026 05:12, Shardul Bankar wrote:
+> mptcp_pm_destroy() drains msk->pm.anno_list via list_splice_init()
+> under msk->pm.lock and then, for the userspace PM, drains
+> msk->pm.userspace_pm_local_addr_list under the same lock. Between
+> the two splices, msk->pm.lock is released.
 > 
+> A concurrent userspace PM genl ANNOUNCE on the same msk holds a
+> sock reference via mptcp_token_get_sock() and, in
+> mptcp_pm_nl_announce_doit(), calls
+> mptcp_userspace_pm_append_new_local_addr() and
+> mptcp_pm_alloc_anno_list(). Both take msk->pm.lock briefly to
+> add to their respective lists. Because the genl handler holds a
+> sock reference, mptcp_pm_destroy() may run on the same msk via
+> mptcp_disconnect(), which invokes mptcp_destroy_common() without
+> dropping the sock refcount, before the handler completes.
 > 
-> On 5/21/26 09:57, Matthieu Baerts wrote:
->> Hi Geliang,
->>
->> On 20/05/2026 14:17, Geliang Tang wrote:
->>> From: Geliang Tang <tanggeliang@kylinos.cn>
->>>
->>> v15:
->>>   - patch 3:
->>>     - simplify mptcp_sock_set_tos(): remove unnecessary ssk local
->>> variable
->>>       and state check (TCP_ESTABLISHED).
->>>   - patch 6:
->>>     - update commit log to explain regarding sashiko's concern about
->>>       introducing "mptcp" as a new transport type
->>>   - patch 7:
->>>     - fix mktemp template, use --suffix=.raw to ensure 'X'.
->>>     - move trap cleanup EXIT immediately after creating temp file.
->>>     - remove redundant rm -f "${temp_file}" in error paths since trap
->>> now
->>>       handles cleanup.
->>>   - patch 10:
->>>     - update Fixes tag.
->>
->> Thank you for the new version!
->>
->> A follow-up of the discussion we had on the ML:
->>
->> - How is NVME over TCP typically used? Is it in a data centre, with the
->> NVME device being very closed to the server? In this case, there might
->> not be any losses, and a very low latency.
->>
->> - Also, do you know how is NVME over TCP being used with the multipath
->> feature? If the different paths have the same network conditions, then a
->> "bonding" (LAG, etc.) is something that would work better than MPTCP: no
->> need to retransmit, reorder at MPTCP level, etc. → But this only works
->> in specific conditions. MPTCP would work better if you take different
->> paths, with different latency and losses. But is it how NVME over
->> (MP)TCP is supposed to be used?
->>
->> (To me, NVME over TCP is a feature for data-centre, where the NVME
->> devices are next to the servers, without many hops in between, but I
->> might be wrong.)
->>
->> Cheers,
->> Matt
+> If the lock acquisitions interleave such that mptcp_pm_destroy()'s
+> splice runs first, the subsequent alloc paths land on a list head
+> pointing to itself. Nothing else iterates that list for this msk,
+> and the added entry leaks. kmemleak reports both 192-byte
+> mptcp_pm_add_entry objects (from mptcp_pm_alloc_anno_list()) and
+> 64-byte mptcp_pm_addr_entry objects (from
+> mptcp_userspace_pm_append_new_local_addr()) under sustained
+> concurrent ANNOUNCE + close load against the userspace PM.
 > 
-> To my knowledge, the NVMe-oF protocol is at the heart of this ecosystem.
-> Based on this protocol, there are already user-space and kernel-space
-> initiators and targets available. Both the Linux kernel target and the
-> SPDK target provide storage services, with no essential difference in
-> how they are used(except performance difference). The Linux kernel
-> initiator can emulate NVMe devices, interface with the kernel’s generic
-> block layer, and provide POSIX APIs through the file system, allowing
-> applications to use them seamlessly. A typical use case is leveraging
-> software-defined storage capabilities in cloud-native environments; the
-> Kubernetes community began working on a CSI[1] plugin for this in
-> September 2021.
+> Add a teardown flag set by mptcp_pm_destroy() before its
+> pm.lock-held splice and checked under pm.lock by the alloc paths.
+> Either the alloc takes pm.lock first, in which case its entry
+> will be on the list when destroy's splice runs and will be freed
+> normally; or destroy takes pm.lock first, in which case the
+> subsequent alloc observes the flag and refuses. Either ordering
+> is correct, and the race that orphans an entry is precluded. The
+> flag is cleared in mptcp_pm_data_init() so the state is correct
+> on slab reuse.
 > 
-> The user-space initiator is primarily used in virtualization scenarios.
-> QEMU, using libnvmf[2], delivers better performance for virtual machines
-> —approximately four times the IOPS compared to iSCSI. Unlike the kernel-
-> space NVMe multipath support, the user-space initiator lacks such
-> capabilities. However, if NVMe-oF supports MPTCP, it would greatly
-> simplify multipath support in user space.
+> Found by an MPTCP protocol-flow harness extending BRF
+> (arXiv:2305.08782). Baseline ~0.3 kmemleak reports/minute on the
+> userspace PM reduces to zero across multi-hour runs with this
+> patch applied.
+
+Nice, thank you for executing these tests, and fixing issues!
+
+I'm travelling, and I'm not able to do a full detailed review, but here
+is already a quick one.
+
+> Assisted-by: Claude:claude-opus-4-7
+
+Thank you for adding this tag. Can you also add a Fixes tag, pleases?
+
+> Signed-off-by: Shardul Bankar <shardul.b@mpiricsoftware.com>
+> ---
+>  net/mptcp/pm.c           | 6 ++++++
+>  net/mptcp/pm_userspace.c | 4 ++++
+>  net/mptcp/protocol.h     | 7 +++++++
+>  3 files changed, 17 insertions(+)
 > 
-> In data center environments where NVMe-oF is deployed, the expected
-> network distance is short, latency is typically low, and bandwidth is
-> relatively high. With the growing adoption of RDMA, mixed scenarios
-> involving RoCEv2 and TCP are common. RDMA traffic usually has higher
-> priority and larger volumes, leading to traffic contention between the
-> two. Additionally, low-probability switch hardware failures can occur in
-> data centers. In the worst case, when some ports on a switch fail, MPTCP
-> with ECMP-based uplink traffic increases the likelihood of keeping NVMe-
-> oF operational.
-Thank you for the explanations, I better understand there is not just
-one use-case :)
+> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+> index 3e770c7407e1f..5b5c5e0c38583 100644
+> --- a/net/mptcp/pm.c
+> +++ b/net/mptcp/pm.c
+> @@ -440,6 +440,9 @@ bool mptcp_pm_alloc_anno_list(struct mptcp_sock *msk,
+>  
+>  	lockdep_assert_held(&msk->pm.lock);
+>  
+> +	if (READ_ONCE(msk->pm.destroying))
+> +		return false;
+> +
+>  	add_entry = mptcp_lookup_anno_list_by_saddr(msk, addr);
+>  
+>  	if (add_entry) {
+> @@ -1109,6 +1112,8 @@ void mptcp_pm_worker(struct mptcp_sock *msk)
+>  
+>  void mptcp_pm_destroy(struct mptcp_sock *msk)
+>  {
+> +	WRITE_ONCE(msk->pm.destroying, true);
+> +
+>  	mptcp_pm_free_anno_list(msk);
+>  
+>  	if (mptcp_pm_is_userspace(msk))
+> @@ -1149,6 +1154,7 @@ void mptcp_pm_data_init(struct mptcp_sock *msk)
+>  	spin_lock_init(&msk->pm.lock);
+>  	INIT_LIST_HEAD(&msk->pm.anno_list);
+>  	INIT_LIST_HEAD(&msk->pm.userspace_pm_local_addr_list);
+> +	msk->pm.destroying = false;
+>  	mptcp_pm_data_reset(msk);
+
+I guess this field should be reset in mptcp_pm_data_reset(): to be able
+to re-use the socket after a disconnection (see mptcp_disconnect()).
+
+>  }
+>  
+> diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
+> index 8cbc1920afb49..bf53db7307302 100644
+> --- a/net/mptcp/pm_userspace.c
+> +++ b/net/mptcp/pm_userspace.c
+> @@ -54,6 +54,10 @@ static int mptcp_userspace_pm_append_new_local_addr(struct mptcp_sock *msk,
+>  	bitmap_zero(id_bitmap, MPTCP_PM_MAX_ADDR_ID + 1);
+>  
+>  	spin_lock_bh(&msk->pm.lock);
+> +	if (READ_ONCE(msk->pm.destroying)) {
+> +		ret = -EINVAL;
+> +		goto append_err;
+> +	}
+>  	mptcp_for_each_userspace_pm_addr(msk, e) {
+>  		addr_match = mptcp_addresses_equal(&e->addr, &entry->addr, true);
+>  		if (addr_match && entry->addr.id == 0 && needs_id)
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index e4f5aba24da7d..c7a068ea71324 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -222,6 +222,13 @@ struct mptcp_pm_data {
+>  
+>  	spinlock_t	lock;		/*protects the whole PM data */
+>  
+> +	/* set by mptcp_pm_destroy() before its pm.lock-held splice;
+> +	 * checked under pm.lock by alloc paths to refuse adds that would
+> +	 * be orphaned by destroy's splice.  Cleared in mptcp_pm_data_init()
+> +	 * so the field is correct after slab reuse.
+> +	 */
+> +	bool		destroying;
+
+Would it work to use a new bit in 'status' instead?
+You can add a *short* comment next to declaration of the new bit.
+
+> +
+>  	struct_group(reset,
+>  
+>  	u8		addr_signal;
 
 Cheers,
 Matt
