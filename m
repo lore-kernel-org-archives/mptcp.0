@@ -1,197 +1,141 @@
-Received: from outbound.st.icloud.com (p-east2-cluster6-host4-snip4-4.eps.apple.com [57.103.76.145])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C9553CBE78
-	for <mptcp@lists.linux.dev>; Tue, 26 May 2026 07:52:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=57.103.76.145
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ED512C181
+	for <mptcp@lists.linux.dev>; Tue, 26 May 2026 08:39:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779781970; cv=none; b=RTCOskfX2b8qYIYIetmoC7bzACMOrwIhqaz9UrGwkfYCuG0eecB7YTtGA33gag0vKm3ITH+72hbavIxfDJjqJmpZjaLWx5W5HaUk9lBXIvt5wkzY3EtEZHpSkzvg3ETYgZSfidRW+Oz7yWNgUqAY4MEFvZWCk47juObLfk7gsSU=
+	t=1779784773; cv=none; b=XXLL7eJZqfFogzCOSR0WyO19IG4HrgJUoi6tkLH39+MsZGizp2vDyIKcxctvg5u0wD2N0MljBLKmvgASOgosHxJmVc4Aw5wVIfC0/t8mqJoYEBWkGQWVFgvms1f6eaEQxbRkRwVubceduvZAGwd6IpDgrQlxQ/DgfnUh4qoFNIQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779781970; c=relaxed/simple;
-	bh=5kfE3zLZJxdHZRY8ufUqnCcmEDuT9BLvU6/O8HRqkpc=;
-	h=Content-Type:From:Mime-Version:Date:Message-Id:Cc:To; b=lmpUreD+XH53RiukB7B0sF9KUWQey22FflPLuLi3a18a4RgQ3Ur8WvSylLQP1ObX/yUXBOTXyuTp2qGT7igio6V6jKuPzjWK/RGV0vbINtOcs3JObH7UmSO9nH1cWf4cD6yPa0aUk31+Z8LqoBJA26674hqtT+yNaWSVCh+G+Zg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=gUYLNOpi; arc=none smtp.client-ip=57.103.76.145
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
+	s=arc-20240116; t=1779784773; c=relaxed/simple;
+	bh=gjJCeE5ZoHl9mWuglj5zDpq6uvzDqpIrZWpNyprf+Jc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fLD9nuBepH8mMB3Y/zbU4WN/DZRoOXCapEQHXa6hLWrhVkSLNExBgPGL3CD3Q/OvKfamt71W9cCtwxkToUotwgePlo53DzZh+82PPtrFzkSy78L4K2ECWnTT83VNskNnCneh6Ym9wxQT7wjXQqEVx2yuWMlgyISO9JmXbcNXFXk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L8qzL3JP; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="gUYLNOpi"
-Received: from outbound.st.icloud.com (unknown [127.0.0.2])
-	by p00-icloudmta-asmtp-us-east-1a-100-percent-7 (Postfix) with ESMTPS id 29BEE18000BA;
-	Tue, 26 May 2026 07:52:46 +0000 (UTC)
-X-ICL-Out-Info: HUtFAUMEWwJACUgBTUQeDx5WFlZNRAJCTQhACkMFWwFeCEgDQwZeAFBcHA4OXxlbAxcfRghFGVcCVkgEVAIrWxNVF0YJGQhdHRkeV1BeCF4fTBwdDlgGEgJaRQZNXw5eHwQXRhlVBEceXVZAGRkCURxWDVdDVARfUEkMQVBsWgBHF0gdXRlZb1BdHA4EVAddBV1WUAJaS18ZXUUPKQJcB0V4SwNAcSl3SBRMBFUARgs2ATseKXVYB0kBOQQoc1sKMFAbXwJCDxwTVhUNTUMSQhUEEVABWB5W
-Dkim-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com; s=1a1hai; t=1779781968; x=1782373968; bh=B33LzEFOGIOZ6fmveMhWRm6YRQOfoV49GCI+6pbIf5Y=; h=Content-Type:From:Mime-Version:Date:Message-Id:To:x-icloud-hme; b=gUYLNOpi+5PupIwEf26K215+v1Qu9oWufcBqbY5GFsArsNmQsBmXdiH/SWNSabWITcQ14y/B28y8v5DvJmQNxffLuzb4YSgd7kBRX4RSYXGIdvRg6JMcewrZ7T0uvyHl32ZR+17CDJ6RcPbdE4FI5v89zVLtrHD/i7eBRM3s44bzOZ+ImcN2i9qZLOm7pWDSng5SoPVj3JguYUvTApTE4w40ALsUKl7MLC1ZP+Mk7ICF6ORHolJI9s+MZMBZj9/bVGYxXrBpxzRTC7SHwVhk0d8bHPM2Ck5auqpboRsnrZeyA4DCpiegfLn7Jj8zUg/N5XFPmNgRk9WiJ/Y3uRx0WQ==
-Received: from smtpclient.apple (unknown [17.42.251.67])
-	by p00-icloudmta-asmtp-us-east-1a-100-percent-7 (Postfix) with ESMTPSA id 6D7491800BC1;
-	Tue, 26 May 2026 07:52:45 +0000 (UTC)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From: Christian C Guerrero <chris.guerrero0795@icloud.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L8qzL3JP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AAB181F000E9;
+	Tue, 26 May 2026 08:39:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1779784772;
+	bh=l0fribLA3ITytQFqCr/JcMelKMA66SkRlZ2VuNAhvK4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=L8qzL3JP0fayXd9FeoCyuD1CXWrrAC9Vzc9xykGN52UqciFhWdxd9h87KzhgaEtZm
+	 a1xwlFTWglFE0LfdVCdklObfhq0HmxO5mJWAZarFLyETEUWWB5F/VMzMjB3BqlQaaT
+	 4SbiF0glG3ucHA6h1xeEmU+zV3+G98AFUsknKmupkOsnaE/NNBpBvHtZT/bFfCm8dK
+	 Kq4bWM5NWxD1T0qseHJcNsZWRAXoT0uFETjLz+WydsBZw/hhYMcO0gFt3fnFshDnaB
+	 nyy8ZXzv9/WY99+oMqrQ61hXnRYT5QWCg7vc/iK13ZOGWyOok32HrIo9uMYONe627z
+	 0KPkh07KNl5Jw==
+Message-ID: <07bf06c0-20dd-4e31-960a-b79f6fffcecc@kernel.org>
+Date: Tue, 26 May 2026 18:39:26 +1000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0 (1.0)
-Date: Tue, 26 May 2026 01:52:35 -0600
-Message-Id: <D5755A30-FBE8-4787-9F8C-DB3598A7ED08@icloud.com>
-Cc: Abeni Paolo <pabeni@redhat.com>, mptcp@lists.linux.dev,
- Matthieu Baerts <matttbe@kernel.org>, gang.yan@linux.dev
-To: Geliang Tang <geliang@kernel.org>
-X-Mailer: iPhone Mail (23F77)
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTI2MDA2OCBTYWx0ZWRfXzmKeZewzZ7ua
- K4TpiPXAusXxPiruhyjUzEQyKgfFEvosco7W1HIBAoLqTTJfvYiuNiua5JLMgY6nTJfmH5EspVm
- +tYE7zUSU0TQWhPKhZLlQTUTPj+zlSqN7iDUoWbGhlflRSr7Qyeq7rnRKhBEd9PYfWF8yKX/0dh
- X16s+edmy/zexq/of9LHa7X89JtJj+rd0wOf3rdusoWWHFlP//fJ48jtyjH3iSqyT5+ZU7zuyp8
- F+wY95rDuYol0438HidmJMaV51MDUGNybewCAYdUhKnUEhkeUJFhbxfyKXePXSJHebRWBpUyuDj
- rAFmYByomdac7vNfQmWmbeqC3SuluEZASwbWYI+3JYN6tmOJUhjG1eWBHdKFQ4=
-X-Proofpoint-GUID: 5tPmj6UOqj2dbtXEEkIKxlTLnVYdY4sk
-X-Proofpoint-ORIG-GUID: 5tPmj6UOqj2dbtXEEkIKxlTLnVYdY4sk
-X-Authority-Info-Out: v=2.4 cv=UYxciaSN c=1 sm=1 tr=0 ts=6a15514e
- cx=c_apl:c_pps:t_out a=YrL12D//S6tul8v/L+6tKg==:117
- a=YrL12D//S6tul8v/L+6tKg==:17 a=s5jvgZ67dGcA:10 a=IkcTkHD0fZMA:10
- a=NGcC8JguVDcA:10 a=x7bEGLp0ZPQA:10 a=tn3to7fOw0sA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=VwQbUJbxAAAA:8 a=20KFwNOVAAAA:8
- a=V74gNzQc3zvTlL27lIIA:9 a=QEXdDO2ut3YA:10
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH] mptcp: pm: don't WARN on re-announced addr in kernel PM
+Content-Language: fr
+To: Kalpan Jani <kalpan.jani@mpiricsoftware.com>, mptcp@lists.linux.dev
+Cc: martineau@kernel.org, pabeni@redhat.com, janak@mpiric.us,
+ shardul.b@mpiricsoftware.com, kalpanjani009@gmail.com, shardulsb08@gmail.com
+References: <20260525121911.2410171-1-kalpan.jani@mpiricsoftware.com>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <20260525121911.2410171-1-kalpan.jani@mpiricsoftware.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+Hi Kalpan,
+
+On 25/05/2026 22:19, Kalpan Jani wrote:
+> syzkaller hit the WARN_ON_ONCE() in mptcp_pm_alloc_anno_list() with
+> the in-kernel path manager, reached via
+> mptcp_pm_create_subflow_or_signal_addr().
+> 
+> The WARN assumes the kernel PM can never reselect an address that is
+> still in msk->pm.anno_list. That is not true: when an endpoint is
+> removed and re-added while a previously sent ADD_ADDR is still
+> awaiting its echo, the endpoint id becomes available again in
+> id_avail_bitmap, but the matching anno_list entry (with its
+> retransmit timer) is still alive. The in-progress guard in
+> mptcp_pm_create_subflow_or_signal_addr() only checks
+> BIT(MPTCP_ADD_ADDR_SIGNAL), which is already cleared once the option
+> has been transmitted, so the address gets reselected and reaches
+> mptcp_pm_alloc_anno_list() a second time.
+
+From what I understand, it means that if a "signal" MPTCP endpoint is
+removed the echo got received, the in-kernel PM will continue
+retransmitting the ADD_ADDR. That doesn't seem correct. I didn't check
+in the code, but I thought that the retransmit timer was at least
+stopped, but maybe the entry was not removed from the list?
+
+Does it also mean that if an ADD_ADDR echo is never received, the entry
+is never removed, even after having reached the max retransmissions?
+> This is a benign transient state, so drop the WARN. For the kernel
+> PM, just bail out: the ADD_ADDR is already in flight, and the PM will
+> be rescheduled once it completes (or once the stale entry's timer
+> expires).
+
+If I understand correctly, the transient state is not benign, and the
+WARN should not be dropped.
 
 
+Also, it would be nice to add a new test to validate that. Here, it
+might be easier with a packetdrill test [1]: start with one sending an
+ADD_ADDR [2], but don't send the echo, and instead, remove and re-add
+the endpoint.
 
-> On May 26, 2026, at 12:11=E2=80=AFAM, Geliang Tang <geliang@kernel.org> wr=
-ote:
->=20
-> =EF=BB=BFHi Paolo,
->=20
->> On Fri, 2026-05-22 at 23:43 +0200, Paolo Abeni wrote:
->> The MPTCP output path access locklessly the MPTCP-level ack_seq
->> in multiple times, using possibly different values for the data_ack
->> in the DSS option and to compute the announced rcv wnd for the same
->> packet.
->>=20
->> Refactor the cote to avoid inconsistencies which may confuse the
->> peer. Also ensure that the MPTCP level rcv wnd is updated only when
->> the egress packet actually contains a DSS ack.
->>=20
->> Fixes: fa3fe2b15031 ("mptcp: track window announced to peer")
->> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
->> ---
->>  net/mptcp/options.c | 36 ++++++++++++++++++------------------
->>  1 file changed, 18 insertions(+), 18 deletions(-)
->>=20
->> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
->> index 4cc583fdc7a9..4d72f286a485 100644
->> --- a/net/mptcp/options.c
->> +++ b/net/mptcp/options.c
->> @@ -570,7 +570,6 @@ static bool mptcp_established_options_dss(struct
->> sock *sk, struct sk_buff *skb,
->>      struct mptcp_ext *mpext;
->>      unsigned int ack_size;
->>      bool ret =3D false;
->> -    u64 ack_seq;
->> =20
->>      opts->csum_reqd =3D READ_ONCE(msk->csum_enabled);
->>      mpext =3D skb ? mptcp_get_ext(skb) : NULL;
->> @@ -601,14 +600,11 @@ static bool
->> mptcp_established_options_dss(struct sock *sk, struct sk_buff *skb,
->>          return ret;
->>      }
->> =20
->> -    ack_seq =3D READ_ONCE(msk->ack_seq);
->>      if (READ_ONCE(msk->use_64bit_ack)) {
->>          ack_size =3D TCPOLEN_MPTCP_DSS_ACK64;
->> -        opts->ext_copy.data_ack =3D ack_seq;
->>          opts->ext_copy.ack64 =3D 1;
->>      } else {
->>          ack_size =3D TCPOLEN_MPTCP_DSS_ACK32;
->> -        opts->ext_copy.data_ack32 =3D (uint32_t)ack_seq;
->>          opts->ext_copy.ack64 =3D 0;
->>      }
->>      opts->ext_copy.use_ack =3D 1;
->> @@ -1298,19 +1294,14 @@ bool mptcp_incoming_options(struct sock *sk,
->> struct sk_buff *skb)
->>      return true;
->>  }
->> =20
->> -static void mptcp_set_rwin(struct tcp_sock *tp, struct tcphdr *th)
->> +static u64 mptcp_set_rwin(struct mptcp_sock *msk, struct tcp_sock
->> *tp,
->> +              struct tcphdr *th, u64 ack_seq)
->>  {
->>      const struct sock *ssk =3D (const struct sock *)tp;
->> -    struct mptcp_subflow_context *subflow;
->> -    u64 ack_seq, rcv_wnd_old, rcv_wnd_new;
->> -    struct mptcp_sock *msk;
->> +    u64 rcv_wnd_old, rcv_wnd_new;
->>      u32 new_win;
->>      u64 win;
->> =20
->> -    subflow =3D mptcp_subflow_ctx(ssk);
->> -    msk =3D mptcp_sk(subflow->conn);
->> -
->> -    ack_seq =3D READ_ONCE(msk->ack_seq);
->>      rcv_wnd_new =3D ack_seq + tp->rcv_wnd;
->> =20
->>      rcv_wnd_old =3D atomic64_read(&msk->rcv_wnd_sent);
->> @@ -1363,7 +1354,7 @@ static void mptcp_set_rwin(struct tcp_sock *tp,
->> struct tcphdr *th)
->> =20
->>  update_wspace:
->>      WRITE_ONCE(msk->old_wspace, tp->rcv_wnd);
->> -    subflow->rcv_wnd_sent =3D rcv_wnd_new;
->> +    return rcv_wnd_new;
->>  }
->> =20
->>  static void mptcp_track_rwin(struct tcp_sock *tp)
->> @@ -1475,13 +1466,25 @@ void mptcp_write_options(struct tcphdr *th,
->> __be32 *ptr, struct tcp_sock *tp,
->>          *ptr++ =3D mptcp_option(MPTCPOPT_DSS, len, 0, flags);
->> =20
->>          if (mpext->use_ack) {
->> +            struct mptcp_sock *msk;
->> +            u64 ack_seq;
->> +
->> +            /* DSS option is set only by
->> mptcp_established_option,
->> +             * the caller is __tcp_transmit_skb() and
->> ssk is always
->> +             * not NULL.
->> +             */
->> +            subflow =3D mptcp_subflow_ctx(ssk);
->> +            msk =3D mptcp_sk(subflow->conn);
->> +            ack_seq =3D READ_ONCE(msk->ack_seq);
->>              if (mpext->ack64) {
->> -                put_unaligned_be64(mpext->data_ack,
->> ptr);
->> +                put_unaligned_be64(ack_seq, ptr);
->>                  ptr +=3D 2;
->>              } else {
->> -                put_unaligned_be32(mpext-
->>> data_ack32, ptr);
->=20
-> This patch makes data_ack and data_ack32 in struct mptcp_ext no longer
-> used. Can they be removed from struct mptcp_ext, and update
-> mptcp_dump_mpext() in include/trace/events/mptcp.h accordingly?
->=20
-> Thanks,
-> -Geliang
->=20
->> +                put_unaligned_be32(ack_seq, ptr);
->>                  ptr +=3D 1;
->>              }
->> +            subflow->rcv_wnd_sent =3D mptcp_set_rwin(msk,
->> tp, th,
->> +                                 =20
->> ack_seq);
->>          }
->> =20
->>          if (mpext->use_map) {
->> @@ -1709,9 +1712,6 @@ void mptcp_write_options(struct tcphdr *th,
->> __be32 *ptr, struct tcp_sock *tp,
->>              i +=3D 4;
->>          }
->>      }
->> -
->> -    if (tp)
->> -        mptcp_set_rwin(tp, th);
->>  }
->> =20
->>  __be32 mptcp_get_reset_option(const struct sk_buff *skb)
->=20
+[1] https://github.com/multipath-tcp/packetdrill
+[2]
+https://github.com/multipath-tcp/packetdrill/blob/mptcp-net-next/gtests/net/mptcp/add_addr/add_addr4_server.pkt
+
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
+
