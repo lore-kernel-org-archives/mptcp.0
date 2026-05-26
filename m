@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFCEB379EF2
-	for <mptcp@lists.linux.dev>; Tue, 26 May 2026 07:02:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 732BF3542D1
+	for <mptcp@lists.linux.dev>; Tue, 26 May 2026 07:47:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779778941; cv=none; b=mm79W6nJjSALxEqCStNFe9cl4R22sB41FtLClqP1qlqkuROoYDkbSinRoMqjgkxyMBnt3PMsMLtKH+75Ef25M4obuyIUZ+O2bnNUULYJ+QrgFRVE/RZtgeuYC7vvGKf8gqJn/EIrHnnfHQVpTMr6SskcgFR4ZovvVuvutLdlzxU=
+	t=1779781672; cv=none; b=cycqfyjp9ru6bDSFTMeqBv51nNcOBG46c2eBksdzroCyhYUHN0RL/Ha3GymNuBzXjNPmDWb/qVASlST8k4z6ZirEyXYUun8iD6muhOIN+GHe5IjnjPAvxE6xgEjCS5sljaPiNvtOZAoDY0YSsNMTghJ5FMEnySVhjBDTdJf2+qA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779778941; c=relaxed/simple;
-	bh=W1h4ioEuIOR/+HzhVTwtFaU/W2Xxew6RkTPiC51O0Cs=;
+	s=arc-20240116; t=1779781672; c=relaxed/simple;
+	bh=LMgxpxV3Y/oXrx3zS8l+pVftmmehJ5uZMWuEGROjm9o=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bwgT6a+xVjM2/WNFczUm6vCzmwAAmDk34uxOHlYP+bzlO+bL5iTBiiityxNxMgWQzek25bT+impuuwBpd7l2QbSHj0oowRYesKt/39+oIOEQwzWDvj3N0MmPI2kCwXNZbGsVXWxCDzTjNm1SaVSFFE/LMnnQC06yokEB0Y3Ruvs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IcEy1JLT; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=cyYRYcVmuKPBSV2lnfWvYm4j9fB/EFGdZwm7Uhq7q/1BlMB3i8Uq6skKcoCT7XH71AJg+DKF906xz85rhRezIps7oeqU47CvOTrtioNvu6XWSv0V8U9jSfQV1FJ/jZGGFSkaopKPYZyAwx1sgtFdv39Cebodgu4qEXhney9lEhs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A+EVrttZ; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IcEy1JLT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F12781F000E9;
-	Tue, 26 May 2026 07:02:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A+EVrttZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AABBB1F000E9;
+	Tue, 26 May 2026 07:47:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779778940;
-	bh=s7s7/AJtfdGQbpPqC4eXD8etzq2sq3EvOlM2Mb81nM4=;
+	s=k20260515; t=1779781671;
+	bh=dilRQ8DZ0tF7mb5ZkGGCMXbdXpUuKYXAKKZzspX1n8s=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=IcEy1JLTmRSpYK5xaZvQpDLTRjJFOkDRWpY1MSljzsPZabeNjf6ykl8aFT+R1htss
-	 7aimHXprOjfqNxRGPNvCEsMEiv9U7Gz3HDM2UQmjDQ5hFCDzQLH4u0inBbmFoiNcta
-	 MuvatPmJBID5icj378a7psTSBdv7SRu4Ky3Fy9S/u5nU8wMXCOw0wQLbqZdIzHZFVT
-	 g/zdrv1BuErNe4KLhTNflmN28nZRye/ei7ifhY0mJKb9JgueX2zb9bQRiFWdFDBW9u
-	 +6GPfBS38NO8B8L43gsnzTjYwK4R+euFdXw7mHXWCUvu4ESMC4tjJijx7WcB73W7ds
-	 qee7uNsMe6d+g==
-Message-ID: <085ebc3e-0d49-4a82-aea9-a8b05a02c7ae@kernel.org>
-Date: Tue, 26 May 2026 17:02:15 +1000
+	b=A+EVrttZSWgSOlrw9cO/Xe2ZbQYU0cIhYdWDq2THUt9hHHJwZtc6hAY+OM23FuQL/
+	 eppvT5vKrP+p2Xq8qgWy9PG8VZaXN+tAwoV5b1RCBqt8sZIMvnuDhVAleg+24wuo3V
+	 SsVGswaNE5hgJ1JtIRqUZA0/0/xTKigcWsDMT4Xe6Nbk4Crc+FnNJ1W0BuFqCmbW9t
+	 JngAOuWtQhXEizIVZAE7tmT4ztv94s+ES5TvXrI0s5MLKsFvAZvunzQgG4vPhyVAIO
+	 TeAw5rgEWSbpurHVSiwrxTjXivuZQOvvrmvPY+NuyTgTRMiBWekLvz0KTSGET/Dv+V
+	 NQAuy7qiH4yBw==
+Message-ID: <2ca3575c-4837-4989-8796-9a48d8c761d0@kernel.org>
+Date: Tue, 26 May 2026 17:47:47 +1000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,14 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH v8 mptcp-next 4/9] mptcp: allow subflow rcv wnd to shrink
+Subject: Re: [PATCH v8 mptcp-next 1/9] mptcp: fix missing wakeups in edge
+ scenarios
 Content-Language: fr
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: Geliang Tang <geliang@kernel.org>, gang.yan@linux.dev,
- mptcp@lists.linux.dev
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+Cc: Geliang Tang <geliang@kernel.org>, gang.yan@linux.dev
 References: <cover.1779485511.git.pabeni@redhat.com>
- <661603fa10737a624bba854fb2515c7abb129a80.1779485511.git.pabeni@redhat.com>
- <a017ffa9-1dbe-4094-ae85-7c17e7b48b0d@redhat.com>
+ <a8674727a7a9cb80d6840c9ca11950caec74ff31.1779485511.git.pabeni@redhat.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -88,51 +87,58 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <a017ffa9-1dbe-4094-ae85-7c17e7b48b0d@redhat.com>
+In-Reply-To: <a8674727a7a9cb80d6840c9ca11950caec74ff31.1779485511.git.pabeni@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Paolo,
 
-On 24/05/2026 18:34, Paolo Abeni wrote:
-> On 5/22/26 11:43 PM, Paolo Abeni wrote:
->> In MPTCP connection, the `window` field in the TCP header refers to the
->> MPTCP-level rcv_nxt and it's right edge should not move backward. Such
->> constraint is enforced at DSS option generation time.
->>
->> At the same time, the TCP stack ensures independently that the TCP-level
->> rcv wnd right's edge does not move backward. That in turn causes artificial
->> inflating of the MPTCP rcv window when the incoming data is acked at the
->> TCP level and is OoO in the MPTCP sequence space (or lands in the backlog).
->>
->> As a consequence, the incoming traffic can exceed the receiver rcvbuf size
->> even when the sender is not misbehaving.
->>
->> Prevent such scenario forcibly allowing the TCP subflow to shrink the
->> TCP-level rcv wnd regardless of the current netns setting.
->>
->> Fixes: f3589be0c420 ("mptcp: never shrink offered window")
->> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> 
-> Sashiko failed to review this series from this patch included onward:
-> 
-> https://sashiko.dev/#/patchset/cover.1779485511.git.pabeni%40redhat.com
-> 
-> and it's not clear to me why.
+Thank you for this fix!
 
-It is not the first time I see failures. I guess it is not linked to
-your series.
+On 23/05/2026 07:43, Paolo Abeni wrote:
+> The mptcp_recvmsg() can fill MPTCP socket receive queue via
+> mptcp_move_skbs(), but currently does not try to wakeup any listener,
+> because the same process is going to check the receive queue soon.
+> 
+> When multiple threads are reading from the same fd, the above can
+> cause stall. Add the missing wakeup.
+> 
+> Fixes: 6771bfd9ee24 ("mptcp: update mptcp ack sequence from work queue")
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> ---
+> v6 -> v7
+>   - use mptcp_epollin_ready()
+> 
+> Notes:
+>  - sashiko may raise concerns about thundering herd problems. If
+>    application uses multiple threads to read on the same socket, that
+>    could/will happen. Application should not use multiple threads
+>    to read from the same socket if they want good performances.
+> ---
+>  net/mptcp/protocol.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index ce8372fb3c6a..f14572fb1975 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -2276,6 +2276,8 @@ static bool mptcp_move_skbs(struct sock *sk)
+>  		mptcp_backlog_spooled(sk, moved, &skbs);
+>  	}
+>  	mptcp_data_unlock(sk);
+> +	if (enqueued && mptcp_epollin_ready(sk))
+> +		sk->sk_data_ready(sk);
 
-> I think patch 1/3 are quite uncontroversial and reasonably even this one.
-> 
-> WRT the stall addressing patches, this iteration survives mptcp_data
-> testing without timeout tuning, hopefully should be fine for Geliang and
-> Gang usage.
-> 
-> @Matttbe: please LMK if you prefer a complete repost or if you could
-> apply patch 1-3 (or more).
-Sorry for the delay. Yes, on it. I guess patches 1-4 can already be
-applied to -net.
+Nit: I hope that's OK if I add new lines above and below this new block
+when applying the patch.
+
+Apart from that:
+
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+
+>  	return enqueued;
+>  }
+>  
 
 Cheers,
 Matt
