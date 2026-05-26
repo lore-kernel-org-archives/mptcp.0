@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1E093A0B3F
-	for <mptcp@lists.linux.dev>; Tue, 26 May 2026 09:47:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA4D03D88EB
+	for <mptcp@lists.linux.dev>; Tue, 26 May 2026 09:47:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779788828; cv=none; b=niFVIKPBGHBP+JrCE2UFxugtYf0gjRl6GTyy/sJT15QCtC75LKJ3EPRKC3Sj5P4mXIQQp2zDjzfwbKECmiWqh6AGENdRYnsJ2aFiKAm1gYTiPk7rN6knYdc6vsr7gfsiDngYjULsnjXL7cReert/e3YuRUmQowD03gksOJHvzS8=
+	t=1779788830; cv=none; b=NViioxDF2F0/d2m4PLZ66fIXH9vSUP4r1o/sakWWqeOVDg6rz+EWOU8ZqvQJgY8MvhP0mYmJBw2xE242PbnvAJBe1AMM8xMOCpsU3gMnGim/b3zDIdqHsh/5M/U/7JAVOc6yfPdPq2uI6g1vZV6ybnXxR8078YyF4jO0ki/FC7M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779788828; c=relaxed/simple;
-	bh=o4nnBXLG2pPoQO23y+8Bqj8kWJVmOSVJEbXcno1SML4=;
+	s=arc-20240116; t=1779788830; c=relaxed/simple;
+	bh=7CD16pridWv1NecT/Ev0tMgZ5GXOyfNZJyXS5YTEZFc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=boRDNDKOfUZzqXbK9DFdmg6hWyBjya99DqJPgZHwTwlk67d6rZjeWxKRbEB/fg42Uj6SQs/GF0xRA/7zmM+JeeEsmsxSge+A8xzcnN5WA/Cn/fJXxQJvKFCcRlEmjZzyzxhWXMCCGfky7Ze+o93IiVlrHDO+cXD2niC+PrcfiJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CvLI+X/s; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=TCMhL+ufSmhI3wSEvpyL2S6S/YwxMGLdxhWWyiilDmzT4Uwk8quLP5aydxrOMPnwtl65r5gpQeIcHhMDskr7q12Y0ZmpghrBNeHWUFPAQIz94cAWUeyx/ir5d5jFmwJxmmLhtj1IfEW2bLmMD7tWJnS1yo//Yvv13++yNqowmhY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JSXgVFDj; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CvLI+X/s"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AE221F00A3A;
-	Tue, 26 May 2026 09:47:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JSXgVFDj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6295A1F000E9;
+	Tue, 26 May 2026 09:47:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779788826;
-	bh=IYRoBv+hpmAy3FWPcEdvfIhbcYF4kBSk5Jsx8E7Py2E=;
+	s=k20260515; t=1779788828;
+	bh=DFPx1IVI7+zedMbOSoBM+L88CDux7VgKX6pYRLcly9k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=CvLI+X/se0g1LgNv+38s7rjaQCb3+QQcoFgQr6lnFTQ0C/I9QSJyN1ZgzXG0Rb7DW
-	 h1UOwLDFhvH0tiF/Ok6nZd/+kWGUqq78Iy9FHZ4CsyzfhNyPb7tDq+7MOYzOJ2GHNm
-	 DlfLO2rET8RSD9CJQgx1E61B6/Ka4EtDyBfb0j4boklSYIpz7izBPDUEqennu940Wy
-	 yfOVtsKra8d250h3nSnnN7aNsAopfbmh2x/ZkSK/M558xGTB+q5KN5DimhuAdmFmWv
-	 bu7+/iR2fLwKPdAbqBfS5i5K9jS/BKokCw+MmliECG2iQrg/qglbsuyVuUmKMYLIJg
-	 tBaBYSV+KWTHg==
+	b=JSXgVFDjMijI9VIZmL3DEy0poVTbvhSExvIh7b1xL7Had8+8VCWTRTm1Y9vbHG72W
+	 rtcv+NG9IT/EPP09ZgZdgw0sIWRU54ILGTr07lUFLaie1yHhhWiIf0qNf4w2tpH4lM
+	 mwtERIrUtiYpXU2+QC3vgc9E01+qtIHiqakF0DjewIGNoGXkpYKp603KGnBFfOO1Bl
+	 5n9V+7v85u8HOl3VlnB9JqO9n9v4ieLYtlC89ymU+zXdKDoaBwTssIqatHIJ/t/8Fk
+	 s1eNX77vjsqhdpo8M/W0giTqhEJkhoUoTFc92e0zW416+97e3KXI41EWiK5p+2KZU6
+	 5u0jArpHL9aaA==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>,
 	Gang Yan <yangang@kylinos.cn>
-Subject: [RFC mptcp-next v20 11/15] selftests: tls: increase pollin timeouts for mptcp
-Date: Tue, 26 May 2026 17:46:29 +0800
-Message-ID: <51c4987ead2423542d2dac49eba37ea0d64e8c02.1779788090.git.tanggeliang@kylinos.cn>
+Subject: [RFC mptcp-next v20 12/15] selftests: tls: increase nonblocking data size for mptcp
+Date: Tue, 26 May 2026 17:46:30 +0800
+Message-ID: <4687af4ca3f624fae2b758a45c659f61069187ce.1779788090.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <cover.1779788090.git.tanggeliang@kylinos.cn>
 References: <cover.1779788090.git.tanggeliang@kylinos.cn>
@@ -46,50 +46,35 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-MPTCP requires longer timeouts in pollin test due to subflow establishment
-delays and slower state transitions. Increase timeout values to prevent
-false failures:
+Increase the data size in nonblocking tests to accommodate MPTCP's
+multi-subflow behavior and ensure sufficient data for testing,
+avoiding the following errors:
 
- #  RUN           tls.13_sm4_ccm_mptcp.pollin ...
- # tls.c:1411:pollin:Expected poll(&fd, 1, 20) (0) == 1 (1)
- # tls.c:1412:pollin:Expected fd.revents & POLLIN (0) == 1 (1)
- # pollin: Test failed
- #          FAIL  tls.13_sm4_ccm_mptcp.pollin
- not ok 357 tls.13_sm4_ccm_mptcp.pollin
+ #  RUN           tls.12_aria_gcm_mptcp.nonblocking ...
+ # tls.c:1534:nonblocking:Expected 0 (0) != eagain (0)
+ # nonblocking: Test failed
 
 Co-developed-by: Gang Yan <yangang@kylinos.cn>
 Signed-off-by: Gang Yan <yangang@kylinos.cn>
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- tools/testing/selftests/net/tls.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ tools/testing/selftests/net/tls.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/tools/testing/selftests/net/tls.c b/tools/testing/selftests/net/tls.c
-index 5f8382a51558..95875e979ea7 100644
+index 95875e979ea7..1d2a5661785f 100644
 --- a/tools/testing/selftests/net/tls.c
 +++ b/tools/testing/selftests/net/tls.c
-@@ -1362,6 +1362,7 @@ TEST_F(tls, bidir)
+@@ -1468,6 +1468,9 @@ TEST_F(tls, nonblocking)
+ 	int flags;
+ 	int res;
  
- TEST_F(tls, pollin)
- {
-+	int timeout = variant->mptcp ? 100 : 20;
- 	char const *test_str = "test_poll";
- 	struct pollfd fd = { 0, 0, 0 };
- 	char buf[10];
-@@ -1371,11 +1372,11 @@ TEST_F(tls, pollin)
- 	fd.fd = self->cfd;
- 	fd.events = POLLIN;
- 
--	EXPECT_EQ(poll(&fd, 1, 20), 1);
-+	EXPECT_EQ(poll(&fd, 1, timeout), 1);
- 	EXPECT_EQ(fd.revents & POLLIN, 1);
- 	EXPECT_EQ(recv(self->cfd, buf, send_len, MSG_WAITALL), send_len);
- 	/* Test timing out */
--	EXPECT_EQ(poll(&fd, 1, 20), 0);
-+	EXPECT_EQ(poll(&fd, 1, timeout), 0);
- }
- 
- TEST_F(tls, poll_wait)
++	if (variant->mptcp)
++		data *= 4;
++
+ 	flags = fcntl(self->fd, F_GETFL, 0);
+ 	fcntl(self->fd, F_SETFL, flags | O_NONBLOCK);
+ 	fcntl(self->cfd, F_SETFL, flags | O_NONBLOCK);
 -- 
 2.53.0
 
