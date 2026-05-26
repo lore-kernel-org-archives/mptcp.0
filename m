@@ -1,41 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBBB73A0B3F
-	for <mptcp@lists.linux.dev>; Tue, 26 May 2026 09:47:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A02F3D88F1
+	for <mptcp@lists.linux.dev>; Tue, 26 May 2026 10:16:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779788836; cv=none; b=CAKblTrXhXSoZ7m4HSTbrPvjvjIl7+J2B2BT0imOurfVqh1PbNv2lB3QZVXCJBn8Rh+tSxCgSJxQKu0PWO+nwFBytBlwLrG5PbT+288IM3qRskUw3DYiKqmOWlLCviW/itZFEcaz+kIWRChMoDaLBE3QctUZnNDAtE4Disrur20=
+	t=1779790581; cv=none; b=sjyzGLb7xootPzYXvMlb2AahxWTcoGUgwz5vKXcUzY/8un1N7LYU6pt9b1S8QpYBiY7/e+l97eRQ3o4DOSAo5zv8QPIbAUscdlqFEP9Kf0LUeX/GEK7ltnaOnyumyWtXVTPwZLzbkGxOtOLu/XYLYaIbtmy9gtSwWt6ZgRKeE5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779788836; c=relaxed/simple;
-	bh=PhY3qPROuBdMTe1mar1KsTe9/5NIW6utDlbwPTZG1zw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ajocsR/0qqtAqMctq9nBU9Z9S+/tQASLWSedQr9SVmI6tgOQCiD+D2aV8cErs8lXv36XHG5Pi+6hI3BX1fp3okCp1Gzp6J6W9c+aUCZkTx58VPPKKb/kVpjr+nq8kZOlcFULUiqcIh0w41wJGmzZmAyBsd0t/AI2Me4vPUac0ik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bgWFR0RQ; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1779790581; c=relaxed/simple;
+	bh=rRRqgZdBgrN/0iJApeyUYFLSF3LpWS8tZy+Lb63wg0A=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=fVegbpYZ+l7e/eMsJhfUB9XuoLW5MIpFMXJ9QPlfUF7WVIBgWID2s7SHxAc7wBzom/ZDorg83jiEjdvmT3T7ccKNJT4ZIWpDZkVyQFf5eNQNrndMgjotaFphg+axdrfdPTddbsmLjPEQ/ctPLMq35z6/mePD/tr4I7X3zRpZWxw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WNQSziTV; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bgWFR0RQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 083C21F00A3A;
-	Tue, 26 May 2026 09:47:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WNQSziTV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA7291F00A3A;
+	Tue, 26 May 2026 10:16:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779788834;
-	bh=sWJEjWDeKaIU9OOSzE2K4YtJUgEwYbriDt4DkdnV7u0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=bgWFR0RQF3Dxz4yNig6mdwwxsGau0FaktDDefBJO3jA9n0SfoOheBugEKxJReU7Zq
-	 U4DFZj8YgGQlsCqBUmdrc/yHYP461KHatueeX5c2OrKl9et18GCOoGF0LkJYlx9kJj
-	 MaEoE6TBExBAVf7HlWhkPqnBP073HqOXrYoo4aPl5Drv6md+dR7zcPyvE7jbfkTYyF
-	 oJkYgFPMiW61rsYYBsR2cGFkvVyyee4kxvTsh/hLDex2BkcUUrZebVAbzUOGWgRChm
-	 FX/zWmAHuuAfldbwsx39sbYyUOITmfPL3dEVjWV+GuQuNNnKOhzK8QjgmftXMwFJ0Q
-	 V2OAyTVcIX1xg==
+	s=k20260515; t=1779790579;
+	bh=zzhHbQLqPxpkHuUuNKnAM9D6uFtNbONP+Q7veftd8Fw=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=WNQSziTV2XK5H5j/e6AP9KZVyvzFXD9jqeSBNYrfHMrVqrgPZer3n/RmFY6NTR0ah
+	 RvSyqbx+ovoJHcY6lQHj2T2n753FuvVt7YitIlKPiJjaNfKjpU6Ov70183+zq7QSCO
+	 znL+PN9VO/iosjQXiiK9N6K28Ren5V5hSrPwuw6cHTEX8Zlg6OdbW5TuYBjWrV2grt
+	 4u77rbYz279R2GSt26q/EOobA208Gm1MaYBDWw2bddSO0BCGTwdPinVGLFmn55/X1v
+	 mcmj72UbJK6XVh3fDGUHchRSZQYxrDZapsJBix52eNbgCm6F4MPDSlIK3IEUFF8LJf
+	 U5IqzauN3Hdug==
+Message-ID: <673a22df98d260e7bac1a5057de092014b3525d5.camel@kernel.org>
+Subject: Re: [LSF/MM/BPF TOPIC] NVMe over MPTCP: Multi-Fold Acceleration for
+ NVMe over TCP in Multi-NIC Environments
 From: Geliang Tang <geliang@kernel.org>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>,
-	Gang Yan <yangang@kylinos.cn>
-Subject: [RFC mptcp-next v20 15/15] selftests: mptcp: cover mptcp tls tests
-Date: Tue, 26 May 2026 17:46:33 +0800
-Message-ID: <f3b725705b84c43aa9432227fc636f04f182375f.1779788090.git.tanggeliang@kylinos.cn>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <cover.1779788090.git.tanggeliang@kylinos.cn>
-References: <cover.1779788090.git.tanggeliang@kylinos.cn>
+To: Nilay Shroff <nilay@linux.ibm.com>
+Cc: mptcp@lists.linux.dev, linux-nvme@lists.infradead.org
+Date: Tue, 26 May 2026 18:16:14 +0800
+In-Reply-To: <f902be73f83291b732a8e33361bfcdb7e75a0afd.camel@kernel.org>
+References: <a9f115aa5719e1088702a3fdeee766a3166611b1.camel@kernel.org>
+			 <48e429f3-e29f-4eac-b4d3-3bf9e0d1c245@linux.ibm.com>
+			 <ecb30d89b67b992bfc136186f18550f9fb974baa.camel@kernel.org>
+			 <ffc23fb3bc82988608237be48a3eea7fdd3a4dd7.camel@kernel.org>
+		 <6042b928aa8116d531c5e360ba19fa077af87bcc.camel@kernel.org>
+	 <f902be73f83291b732a8e33361bfcdb7e75a0afd.camel@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.56.2-9 
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -44,145 +50,297 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+Hi Nilay,
 
-The mptcp tests for tls.c is available now, this patch adds mptcp_tls.sh
-to test it in the MPTCP CI by default.
+Off-list.
 
-Co-developed-by: Gang Yan <yangang@kylinos.cn>
-Signed-off-by: Gang Yan <yangang@kylinos.cn>
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
----
- tools/testing/selftests/net/mptcp/.gitignore  |  1 +
- tools/testing/selftests/net/mptcp/Makefile    |  2 +
- tools/testing/selftests/net/mptcp/config      |  5 ++
- .../testing/selftests/net/mptcp/mptcp_tls.sh  | 64 +++++++++++++++++++
- tools/testing/selftests/net/mptcp/tls.c       |  1 +
- 5 files changed, 73 insertions(+)
- create mode 100755 tools/testing/selftests/net/mptcp/mptcp_tls.sh
- create mode 120000 tools/testing/selftests/net/mptcp/tls.c
+On Tue, 2026-05-19 at 15:31 +0800, Geliang Tang wrote:
+> Hi,
+> 
+> The performance test results of MPTCP under several NVMe multipath
+> settings are now ready.
+> 
+> On Wed, 2026-05-13 at 18:04 +0800, Geliang Tang wrote:
+> > Hello everyone,
+> > 
+> > Thank you for your interest in NVMe over MPTCP. I have attached the
+> > slides from the presentation to this email.
+> > 
+> > Please note that the demo in the slides only configured a single
+> > NVMe
+> > multipath. Subsequently, I will post the MPTCP performance test
+> > results
+> > under several NVMe multipaths here.
+> 
+> To test the performance of TCP and MPTCP under NVMe multipath, I
+> added
+> two more arguments, "path" and "loss", to the original NVMe MPTCP
+> self
+> test script. The latest code is available at [1].
+> 
+> The script now accepts the following four arguments:
+> 
+>   mptcp_nvme.sh [trtype] [path] [iopolicy] [loss]
+> 
+>   trtype   Transport type (tcp|mptcp) - default: mptcp
+>   path     Number of multipath (1-4) - default: 1
+>   iopolicy I/O policy (numa|round-robin|queue-depth) - default: numa
+>   loss     Enable packet loss (0|1) - default: 0
+> 
+> The first argument is the transport type. The second argument,
+> "path",
+> specifies how many NVMe multipaths to create. The third argument is
+> the
+> I/O policy. The fourth argument controls whether the network
+> environment is lossy. When set to 0, each NIC is rate-limited to 125
+> MB/s (tc arguments: rate 1000mbit). When set to 1, in addition to the
+> same rate limit of 125 MB/s, each NIC also experiences a 5 ms delay
+> and
+> 0.5% packet loss (tc arguments: rate 1000mbit delay 5ms loss 0.5%).
+> 
+> 
+> First set of tests: lossless network, path=4, loss=0. The tc output
+> is
+> as follows:
+> 
+>   qdisc netem 8031: root refcnt 25 limit 1000 rate 1Gbit
+> 			seed 1626193586047356330
+> 
+> Lossless network, comparison between TCP and MPTCP using the "numa"
+> policy - MPTCP is four times faster than TCP:
+> 
+> # ./mptcp_nvme.sh tcp 4 numa 0
+>    READ: bw=114MiB/s (119MB/s), 114MiB/s-114MiB/s (119MB/s-119MB/s),
+> 			io=1200MiB (1259MB), run=10533-10533msec
+>   WRITE: bw=114MiB/s (119MB/s), 114MiB/s-114MiB/s (119MB/s-119MB/s),
+> 			io=1203MiB (1261MB), run=10570-10570msec
+> 
+> # ./mptcp_nvme.sh mptcp 4 numa 0
+>    READ: bw=445MiB/s (467MB/s), 445MiB/s-445MiB/s (467MB/s-467MB/s),
+> 			io=4512MiB (4731MB), run=10130-10130msec
+>   WRITE: bw=443MiB/s (465MB/s), 443MiB/s-443MiB/s (465MB/s-465MB/s),
+> 			io=4504MiB (4723MB), run=10158-10158msec
+> 
+> Lossless network, comparison between TCP and MPTCP using the "round-
+> robin" policy - MPTCP and TCP show similar performance:
+> 
+> # ./mptcp_nvme.sh tcp 4 round-robin 0
+>    READ: bw=456MiB/s (478MB/s), 456MiB/s-456MiB/s (478MB/s-478MB/s),
+> 			io=4683MiB (4910MB), run=10278-10278msec
+>   WRITE: bw=455MiB/s (477MB/s), 455MiB/s-455MiB/s (477MB/s-477MB/s),
+> 			io=4660MiB (4887MB), run=10239-10239msec
+> 
+> # ./mptcp_nvme.sh mptcp 4 round-robin 0
+>    READ: bw=446MiB/s (467MB/s), 446MiB/s-446MiB/s (467MB/s-467MB/s),
+> 			io=4565MiB (4786MB), run=10239-10239msec
+>   WRITE: bw=445MiB/s (467MB/s), 445MiB/s-445MiB/s (467MB/s-467MB/s),
+> 			io=4575MiB (4797MB), run=10280-10280msec
+> 
+> Lossless network, comparison between TCP and MPTCP using the "queue-
+> depth" policy - MPTCP and TCP show similar performance:
+> 
+> # ./mptcp_nvme.sh tcp 4 queue-depth 0
+>    READ: bw=456MiB/s (478MB/s), 456MiB/s-456MiB/s (478MB/s-478MB/s),
+> 			io=4632MiB (4857MB), run=10169-10169msec
+>   WRITE: bw=455MiB/s (477MB/s), 455MiB/s-455MiB/s (477MB/s-477MB/s),
+> 			io=4666MiB (4893MB), run=10250-10250msec
+> 
+> # ./mptcp_nvme.sh mptcp 4 queue-depth 0
+>    READ: bw=446MiB/s (467MB/s), 446MiB/s-446MiB/s (467MB/s-467MB/s),
+> 			io=4568MiB (4790MB), run=10249-10249msec
+>   WRITE: bw=445MiB/s (467MB/s), 445MiB/s-445MiB/s (467MB/s-467MB/s),
+> 			io=4563MiB (4784MB), run=10245-10245msec
+> 
+> 
+> Second set of tests: lossy network, path=4, loss=1. The tc output is
+> as
+> follows:
+> 
+>   qdisc netem 8051: root refcnt 25 limit 1000 delay 5ms loss 0.5%
+> 			rate 1Gbit seed 14946049878654165618
+> 
+> Lossy network, comparison between TCP and MPTCP using the "round-
+> robin"
+> policy - MPTCP is four times faster than TCP:
+> 
+> # ./mptcp_nvme.sh tcp 4 round-robin 1
+>    READ: bw=106MiB/s (111MB/s), 106MiB/s-106MiB/s (111MB/s-111MB/s),
+> 			io=1574MiB (1650MB), run=14906-14906msec
+>   WRITE: bw=98.5MiB/s (103MB/s), 98.5MiB/s-98.5MiB/s (103MB/s-
+> 103MB/s),
+> 			io=1455MiB (1526MB), run=14770-14770msec
+> 
+> # ./mptcp_nvme.sh mptcp 4 round-robin 1
+>    READ: bw=426MiB/s (447MB/s), 426MiB/s-426MiB/s (447MB/s-447MB/s),
+> 			io=4533MiB (4753MB), run=10637-10637msec
+>   WRITE: bw=428MiB/s (449MB/s), 428MiB/s-428MiB/s (449MB/s-449MB/s),
+> 			io=4507MiB (4725MB), run=10522-10522msec
+> 
+> Lossy network, comparison between TCP and MPTCP using the "queue-
+> depth"
+> policy - MPTCP is four times faster than TCP:
+> 
+> # ./mptcp_nvme.sh tcp 4 queue-depth 1
+>    READ: bw=168MiB/s (176MB/s), 168MiB/s-168MiB/s (176MB/s-176MB/s),
+> 			io=2179MiB (2285MB), run=12965-12965msec
+>   WRITE: bw=128MiB/s (134MB/s), 128MiB/s-128MiB/s (134MB/s-134MB/s),
+> 			io=1590MiB (1667MB), run=12418-12418msec
+> 
+> # ./mptcp_nvme.sh mptcp 4 queue-depth 1
+>    READ: bw=425MiB/s (445MB/s), 425MiB/s-425MiB/s (445MB/s-445MB/s),
+> 			io=4536MiB (4756MB), run=10677-10677msec
+>   WRITE: bw=414MiB/s (434MB/s), 414MiB/s-414MiB/s (434MB/s-434MB/s),
+> 			io=4447MiB (4663MB), run=10733-10733msec
+> 
+> 
+> Conclusion: MPTCP achieves bandwidth aggregation comparable to that
+> of
+> NVMe multipath while offering better resilience against network
+> interference.
+> 
+> The full test results are in the attachment.
 
-diff --git a/tools/testing/selftests/net/mptcp/.gitignore b/tools/testing/selftests/net/mptcp/.gitignore
-index 833279fb34e2..f6defec6eeb5 100644
---- a/tools/testing/selftests/net/mptcp/.gitignore
-+++ b/tools/testing/selftests/net/mptcp/.gitignore
-@@ -4,4 +4,5 @@ mptcp_diag
- mptcp_inq
- mptcp_sockopt
- pm_nl_ctl
-+tls
- *.pcap
-diff --git a/tools/testing/selftests/net/mptcp/Makefile b/tools/testing/selftests/net/mptcp/Makefile
-index 22ba0da2adb8..f7c959a25b3b 100644
---- a/tools/testing/selftests/net/mptcp/Makefile
-+++ b/tools/testing/selftests/net/mptcp/Makefile
-@@ -14,6 +14,7 @@ TEST_PROGS := \
- 	mptcp_connect_splice.sh \
- 	mptcp_join.sh \
- 	mptcp_sockopt.sh \
-+	mptcp_tls.sh \
- 	pm_netlink.sh \
- 	simult_flows.sh \
- 	userspace_pm.sh \
-@@ -25,6 +26,7 @@ TEST_GEN_FILES := \
- 	mptcp_inq \
- 	mptcp_sockopt \
- 	pm_nl_ctl \
-+	tls \
- # end of TEST_GEN_FILES
- 
- TEST_FILES := \
-diff --git a/tools/testing/selftests/net/mptcp/config b/tools/testing/selftests/net/mptcp/config
-index b9960f227796..395f1d5b020a 100644
---- a/tools/testing/selftests/net/mptcp/config
-+++ b/tools/testing/selftests/net/mptcp/config
-@@ -35,3 +35,8 @@ CONFIG_NFT_TPROXY=m
- CONFIG_SYN_COOKIES=y
- CONFIG_VETH=y
- CONFIG_XFRM_ESPINTCP=m
-+CONFIG_TLS=m
-+CONFIG_CRYPTO_ARIA=m
-+CONFIG_CRYPTO_CCM=m
-+CONFIG_CRYPTO_CHACHA20POLY1305=m
-+CONFIG_CRYPTO_SM4_GENERIC=m
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_tls.sh b/tools/testing/selftests/net/mptcp/mptcp_tls.sh
-new file mode 100755
-index 000000000000..04a0cb6ab0f3
---- /dev/null
-+++ b/tools/testing/selftests/net/mptcp/mptcp_tls.sh
-@@ -0,0 +1,64 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+
-+. "$(dirname "${0}")/mptcp_lib.sh"
-+
-+ret=0
-+ns1=""
-+pid=""
-+
-+# This function is used in the cleanup trap
-+#shellcheck disable=SC2317,SC2329
-+cleanup()
-+{
-+	if [ -n "$pid" ] && kill -0 "$pid" 2>/dev/null; then
-+		kill "$pid" 2>/dev/null
-+		wait "$pid" 2>/dev/null
-+	fi
-+
-+	mptcp_lib_ns_exit "$ns1"
-+}
-+
-+init()
-+{
-+	local max="${1:-4}"
-+
-+	mptcp_lib_ns_init ns1
-+
-+	mptcp_lib_pm_nl_set_limits "$ns1" "$max" "$max"
-+
-+	local i
-+	for i in $(seq 1 "$max"); do
-+		mptcp_lib_pm_nl_add_endpoint "$ns1" \
-+			"127.0.0.1" flags signal port 1000"$i"
-+	done
-+}
-+
-+mptcp_lib_check_mptcp
-+
-+trap cleanup EXIT
-+
-+# Temporarily set max to '0' to disable multipath testing,
-+# as it depends on "mptcp: fix stall because of data_ready" series of fixes.
-+# It will be re-enabled together with that series later as a squash-to patch.
-+init 0
-+
-+ip netns exec "$ns1" ./tls -v 12_aes_gcm_mptcp \
-+			   -v 13_aes_gcm_mptcp \
-+			   -v 12_chacha_mptcp \
-+			   -v 13_chacha_mptcp \
-+			   -v 13_sm4_gcm_mptcp \
-+			   -v 13_sm4_ccm_mptcp \
-+			   -v 12_aes_ccm_mptcp \
-+			   -v 13_aes_ccm_mptcp \
-+			   -v 12_aes_gcm_256_mptcp \
-+			   -v 13_aes_gcm_256_mptcp \
-+			   -v 13_nopad_mptcp \
-+			   -v 12_aria_gcm_mptcp \
-+			   -v 12_aria_gcm_256_mptcp &
-+pid=$!
-+wait $pid
-+ret=$?
-+
-+mptcp_lib_result_print_all_tap
-+exit $ret
-diff --git a/tools/testing/selftests/net/mptcp/tls.c b/tools/testing/selftests/net/mptcp/tls.c
-new file mode 120000
-index 000000000000..724b1f047c89
---- /dev/null
-+++ b/tools/testing/selftests/net/mptcp/tls.c
-@@ -0,0 +1 @@
-+../tls.c
-\ No newline at end of file
--- 
-2.53.0
+Thank you very much for your interest in NVMe MPTCP. During my
+presentation, I mentioned that I would show you the performance test
+results of MPTCP when configuring several NVMe multipath paths. I spent
+some time updating the scripts, and here are the latest results. What
+do you think of these results? Please give me some suggestions.
 
+Thanks,
+-Geliang
+
+> 
+> Thanks,
+> -Geliang
+> 
+> [1]
+> https://patchwork.kernel.org/project/mptcp/cover/cover.1779159524.git.tanggeliang@kylinos.cn/
+> 
+> > 
+> > Thanks,
+> > -Geliang
+> > 
+> > On Thu, 2026-03-05 at 12:30 +0800, Geliang Tang wrote:
+> > > Hi Nilay, Ming,
+> > > 
+> > > Thank you again for your interest in NVMe over MPTCP.
+> > > 
+> > > On Thu, 2026-02-26 at 17:54 +0800, Geliang Tang wrote:
+> > > > Hi Nilay,
+> > > > 
+> > > > Thanks for your reply.
+> > > > 
+> > > > On Wed, 2026-02-25 at 20:37 +0530, Nilay Shroff wrote:
+> > > > > 
+> > > > > 
+> > > > > On 1/29/26 9:43 AM, Geliang Tang wrote:
+> > > > > > 3. Performance Benefits
+> > > > > > 
+> > > > > > This new feature has been evaluated in different
+> > > > > > environments:
+> > > > > > 
+> > > > > > I conducted 'NVMe over MPTCP' tests between two PCs, each
+> > > > > > equipped
+> > > > > > with
+> > > > > > two Gigabit NICs and directly connected via Ethernet
+> > > > > > cables.
+> > > > > > Using
+> > > > > > 'NVMe over TCP', the fio benchmark showed a speed of
+> > > > > > approximately
+> > > > > > 100
+> > > > > > MiB/s. In contrast, 'NVMe over MPTCP' achieved about 200
+> > > > > > MiB/s
+> > > > > > with
+> > > > > > fio, doubling the throughput.
+> > > > > > 
+> > > > > > In a virtual machine test environment simulating four NICs
+> > > > > > on
+> > > > > > both
+> > > > > > sides, 'NVMe over MPTCP' delivered bandwidth up to four
+> > > > > > times
+> > > > > > that
+> > > > > > of
+> > > > > > standard TCP.
+> > > > > 
+> > > > > This is interesting. Did you try using an NVMe multipath
+> > > > > iopolicy
+> > > > > other
+> > > > > than the default numa policy? Assuming both the host and
+> > > > > target
+> > > > > are
+> > > > > multihomed,
+> > > > > configuring round-robin or queue-depth may provide
+> > > > > performance
+> > > > > comparable
+> > > > > to what you are seeing with MPTCP.
+> > > > > 
+> > > > > I think MPTCP shall distribute traffic using transport-level
+> > > > > metrics
+> > > > > such as
+> > > > > RTT, cwnd, and packet loss, whereas the NVMe multipath layer
+> > > > > makes
+> > > > > decisions
+> > > > > based on ANA state, queue depth, and NUMA locality. In a
+> > > > > setup
+> > > > > with
+> > > > > multiple
+> > > > > active paths, switching the iopolicy from numa to round-robin
+> > > > > or
+> > > > > queue-depth
+> > > > > could improve load distribution across controllers and thus
+> > > > > improve
+> > > > > performance.
+> > > > > 
+> > > > > IMO, it would be useful to test with those policies and
+> > > > > compare
+> > > > > the
+> > > > > results
+> > > > > against the MPTCP setup.
+> > > > 
+> > > > Ming Lei also made a similar comment. In my experiments, I
+> > > > didn't
+> > > > set
+> > > > the multipath iopolicy, so I was using the default numa policy.
+> > > > In
+> > > > the
+> > > > follow-up, I'll adjust it to round-robin or queue-depth and
+> > > > rerun
+> > > > the
+> > > > experiments. I'll share the results in this email thread.
+> > > 
+> > > Based on your feedback, I have added iopolicy support to the NVMe
+> > > over
+> > > MPTCP selftest script (see patch 8 in [1]). We can set the
+> > > iopolicy
+> > > to
+> > > round-robin like this:
+> > > 
+> > >  # ./mptcp_nvme.sh mptcp round-robin
+> > > 
+> > > This demonstrates that "NVMe over MPTCP" and "NVMe multipath" can
+> > > work
+> > > simultaneously without conflict.
+> > > 
+> > > Using this test script, I compared three I/O policies: numa,
+> > > round-
+> > > robin, and queue-depth. The results for fio were very similar.
+> > > It's
+> > > possible that this test environment doesn't fully reflect the
+> > > differences in I/O policies. I will continue to follow up with
+> > > further
+> > > tests.
+> > > 
+> > > Thanks,
+> > > -Geliang
+> > > 
+> > > [1]
+> > > NVME over MPTCP, v4
+> > > https://patchwork.kernel.org/project/mptcp/cover/cover.1772683110.git.tanggeliang@kylinos.cn/
+> > > 
+> > > > 
+> > > > Thanks,
+> > > > -Geliang
+> > > > 
+> > > > > 
+> > > > > Thanks,
+> > > > > --Nilay
