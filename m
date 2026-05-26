@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 732BF3542D1
-	for <mptcp@lists.linux.dev>; Tue, 26 May 2026 07:47:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BB353164D8
+	for <mptcp@lists.linux.dev>; Tue, 26 May 2026 07:48:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779781672; cv=none; b=cycqfyjp9ru6bDSFTMeqBv51nNcOBG46c2eBksdzroCyhYUHN0RL/Ha3GymNuBzXjNPmDWb/qVASlST8k4z6ZirEyXYUun8iD6muhOIN+GHe5IjnjPAvxE6xgEjCS5sljaPiNvtOZAoDY0YSsNMTghJ5FMEnySVhjBDTdJf2+qA=
+	t=1779781686; cv=none; b=g6bI7XDDFUHDdsdsayIZIK4vdX8sS5UgRpL73dwfGbY/sd+xE9fJqmew7ghi11HxWc/NAA4TtmaWE0YSrHL8ymEHf+Lp+Zwi5i6GHqVaIlDwqIGFW2UDUBM6+LHBDZyErDzkFjaQGtJp7qUiNx16vHfK2BxgR6jMULdh2NcPN4I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779781672; c=relaxed/simple;
-	bh=LMgxpxV3Y/oXrx3zS8l+pVftmmehJ5uZMWuEGROjm9o=;
+	s=arc-20240116; t=1779781686; c=relaxed/simple;
+	bh=088RjeJOmv4uSTK9beDyNyoLZN5R5gKn85mQLpJatz4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cyYRYcVmuKPBSV2lnfWvYm4j9fB/EFGdZwm7Uhq7q/1BlMB3i8Uq6skKcoCT7XH71AJg+DKF906xz85rhRezIps7oeqU47CvOTrtioNvu6XWSv0V8U9jSfQV1FJ/jZGGFSkaopKPYZyAwx1sgtFdv39Cebodgu4qEXhney9lEhs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A+EVrttZ; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=H8Iv68VjI3et87oqY7d7ZO4QkfInmrLEovUX3O0VGrp1aFZqDNjKVKedJn03It4AshiRRvNeMbN996/xuNRaJ23JfEsG0fYsfAwmg5E0gotYAljZolfwk1lcJkwVU8l4KSfByUYsiT22IXjtcoKjhiCOwnWCGwIf7S0krb5jO8E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J/OLH9yx; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A+EVrttZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AABBB1F000E9;
-	Tue, 26 May 2026 07:47:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J/OLH9yx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BC661F000E9;
+	Tue, 26 May 2026 07:48:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779781671;
-	bh=dilRQ8DZ0tF7mb5ZkGGCMXbdXpUuKYXAKKZzspX1n8s=;
+	s=k20260515; t=1779781684;
+	bh=UH4j25+XbftFvNV8BptTPvhLTqmR+8HOQDgbDDGjHUk=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=A+EVrttZSWgSOlrw9cO/Xe2ZbQYU0cIhYdWDq2THUt9hHHJwZtc6hAY+OM23FuQL/
-	 eppvT5vKrP+p2Xq8qgWy9PG8VZaXN+tAwoV5b1RCBqt8sZIMvnuDhVAleg+24wuo3V
-	 SsVGswaNE5hgJ1JtIRqUZA0/0/xTKigcWsDMT4Xe6Nbk4Crc+FnNJ1W0BuFqCmbW9t
-	 JngAOuWtQhXEizIVZAE7tmT4ztv94s+ES5TvXrI0s5MLKsFvAZvunzQgG4vPhyVAIO
-	 TeAw5rgEWSbpurHVSiwrxTjXivuZQOvvrmvPY+NuyTgTRMiBWekLvz0KTSGET/Dv+V
-	 NQAuy7qiH4yBw==
-Message-ID: <2ca3575c-4837-4989-8796-9a48d8c761d0@kernel.org>
-Date: Tue, 26 May 2026 17:47:47 +1000
+	b=J/OLH9yx/TWfieapN9Wm5D3pmMlpjQ6SNdLUMaaKROPzaRJ9KZ1NS4TSJxuNTC0nN
+	 XwT8H5LLrJhyzf6a4zE/2B6ma6iEFmmZsXDarpbC9COFuvcbOLg0e24hSCy9AAD+9U
+	 /bXJqvrCG27cGcDBma9OvJlMP9bcMtmsGO7VOZK7FStt/1YsXSphyxj3h7PPw9ukca
+	 WXVxQFi7pUHg6rfcSNmWjKReFdJyxy9sqedLr8iQuHGil5/EaO9bByrVF5LxTUJel6
+	 BNb+TX4PQ9YA8RxIq8jBffVA6lPa2QvJlzA29MPi3JxpedpLq8HxJEHQYs9lPZ7dsD
+	 BS3W3J+26PWDw==
+Message-ID: <c622e923-631b-4117-838c-25298aa7d120@kernel.org>
+Date: Tue, 26 May 2026 17:48:00 +1000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH v8 mptcp-next 1/9] mptcp: fix missing wakeups in edge
- scenarios
+Subject: Re: [PATCH v8 mptcp-next 2/9] mptcp: fix retransmission loop when
+ csum is enabled
 Content-Language: fr
 To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
 Cc: Geliang Tang <geliang@kernel.org>, gang.yan@linux.dev
 References: <cover.1779485511.git.pabeni@redhat.com>
- <a8674727a7a9cb80d6840c9ca11950caec74ff31.1779485511.git.pabeni@redhat.com>
+ <eb3104033a7831b126ad918b7f6e5c06ac74c407.1779485511.git.pabeni@redhat.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,7 +87,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <a8674727a7a9cb80d6840c9ca11950caec74ff31.1779485511.git.pabeni@redhat.com>
+In-Reply-To: <eb3104033a7831b126ad918b7f6e5c06ac74c407.1779485511.git.pabeni@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -96,48 +96,44 @@ Hi Paolo,
 Thank you for this fix!
 
 On 23/05/2026 07:43, Paolo Abeni wrote:
-> The mptcp_recvmsg() can fill MPTCP socket receive queue via
-> mptcp_move_skbs(), but currently does not try to wakeup any listener,
-> because the same process is going to check the receive queue soon.
+> Sashiko noted that retransmission with csum enabled can actually
+> transmit new data, but currently the relevant code does not update
+> accordingly snd_nxt.
 > 
-> When multiple threads are reading from the same fd, the above can
-> cause stall. Add the missing wakeup.
+> The may cause incoming ack drop and an endless retransmission loop.
 > 
-> Fixes: 6771bfd9ee24 ("mptcp: update mptcp ack sequence from work queue")
+> Address the issue incrementing snd_nxt as needed.
+> 
+> Fixes: 4e14867d5e91 ("mptcp: tune re-injections for csum enabled mode")
 > Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 > ---
-> v6 -> v7
->   - use mptcp_epollin_ready()
-> 
-> Notes:
->  - sashiko may raise concerns about thundering herd problems. If
->    application uses multiple threads to read on the same socket, that
->    could/will happen. Application should not use multiple threads
->    to read from the same socket if they want good performances.
-> ---
->  net/mptcp/protocol.c | 2 ++
->  1 file changed, 2 insertions(+)
+>  net/mptcp/protocol.c | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
 > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index ce8372fb3c6a..f14572fb1975 100644
+> index f14572fb1975..4f2b2868031a 100644
 > --- a/net/mptcp/protocol.c
 > +++ b/net/mptcp/protocol.c
-> @@ -2276,6 +2276,8 @@ static bool mptcp_move_skbs(struct sock *sk)
->  		mptcp_backlog_spooled(sk, moved, &skbs);
->  	}
->  	mptcp_data_unlock(sk);
-> +	if (enqueued && mptcp_epollin_ready(sk))
-> +		sk->sk_data_ready(sk);
+> @@ -2867,6 +2867,10 @@ static void __mptcp_retrans(struct sock *sk)
+>  	msk->bytes_retrans += len;
+>  	dfrag->already_sent = max(dfrag->already_sent, len);
+>  
+> +	/* With csum enabled retransmission can send new data. */
+> +	if (after64(dfrag->already_sent + dfrag->data_seq, msk->snd_nxt))
+> +		msk->snd_nxt = dfrag->already_sent + dfrag->data_seq;
 
-Nit: I hope that's OK if I add new lines above and below this new block
-when applying the patch.
+Should we use WRITE_ONCE() here, similar to other places where it is
+updated?
+
+If yes, I can do the modification when applying the patch.
 
 Apart from that:
 
 Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
->  	return enqueued;
->  }
+> +
+>  reset_timer:
+>  	mptcp_check_and_set_pending(sk);
 >  
 
 Cheers,
