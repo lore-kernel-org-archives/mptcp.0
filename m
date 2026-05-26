@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E3623164D8
-	for <mptcp@lists.linux.dev>; Tue, 26 May 2026 07:48:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A4FE3CAA50
+	for <mptcp@lists.linux.dev>; Tue, 26 May 2026 07:48:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779781696; cv=none; b=D/QmRvMle+tX5l2CueXTUFsBKP5hCMalYSWD6eRvTkPlYF6jNcQ6Hr/JnGAa1ZZpiCoqaqoLlSiEnNtq8AxP30fSkBWIOTSsOzQPI6OKJb02EDpRVlLVWX56EcvAPu2y65AWFfebfeJjd45JAG0mkd/PygY3XM5OLVNuzgBxuTw=
+	t=1779781708; cv=none; b=jNrJyMQQZ1oD0FauJDeQNx6LGQIYaSfFrSENkH7NgP0MiCt39C2V3KTVOpnVdkFF1Co/IaF+/phDmKKb3KXHfIhnZeiJbJDbHpUXaohakfwsmm1OcdO7XmUlptTa6Wcwr/HMxTVIta7wAu5u1UApwGmnuUUyChU81It8o3RzfOg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779781696; c=relaxed/simple;
-	bh=vC2TgZ8L3IVHycijYu1YXU6ROmEygd1m4gCDspmaQ1I=;
+	s=arc-20240116; t=1779781708; c=relaxed/simple;
+	bh=877DW5zm9eYrSagFXzzZ27MlckS0PAXBoyjUE25WyP4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RCL1MK8d4Q+9YTI+/FVsb9dYsjvsPEzstWCVJW4qm0d3/O7n9F5nopnGO4g9WyQyDRNl9W4J6lQd3utooIz0XdUntuCRQrocRDDvftLGNPkvqxICO91Bubj1caIR79Z0QX2D75YfhxewDHWw5RksHnQ41tGSytLepzi+lK4v7d8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PSqXXPYY; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=ka6cF/LxOZNBd9PeZxR37B5BDKes9D/GygUdEvkWEn9SPHuKVBUr46R/ssrA84eTHN56rX/wXfr4VsxcFzBimRT3WJLjdrIRDWmgKBWP4PyCw4Be/7uAjn252IkLSfuCD8EoOfM8saxFoUCQDxmxnE4rViiUkz0vsZEBXYiENvs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hdxUbZE5; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PSqXXPYY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91D541F000E9;
-	Tue, 26 May 2026 07:48:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hdxUbZE5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C75421F00A3A;
+	Tue, 26 May 2026 07:48:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779781695;
-	bh=BzGLutJc0KZyuUHKiwBQvWJvX4CYAkjwK6SgX3Zp678=;
+	s=k20260515; t=1779781706;
+	bh=kvrpAxbiMNZ3sNGwiJC92247Bo0RuF8o+I8oVPPwrCs=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=PSqXXPYY765WwGwKDfCLCr0am3opPH65uP7Nd+p+f4b86w7vX/W7Ec4OAhYk3OM5t
-	 wjoV2VRxf35XIih9tiw68oAqQG+TWkJNI35pP71Gyt5z4WXMIRQ0FSwON1P/zupIEi
-	 Pr58Ws4tY2oVBDvuhvm6GsJ/fb5NA8VRR3GXRYb+YNuGuol8+Wg4UmD7qJqJQCpL1j
-	 GP41PhSv1qDlWzLM+Idqyo7VjFkmlIiC/KFtoUTWOb+oCiUltTJVOcSH5tK45wlCqG
-	 zO0SnlnSYdYxn0DrpehKjKP0KZlcAbIkWZ1OcPBrjWfkYwrC4dyfabZjnAf+CcxcN2
-	 1QhmhaOoMinWQ==
-Message-ID: <f3383a69-82e1-4210-ab15-369616c58716@kernel.org>
-Date: Tue, 26 May 2026 17:48:11 +1000
+	b=hdxUbZE5PpoCxvIvIkXK7GHkF/YcyGSNw4aK1NeDK23o52vUXUTqAWO3Onc+40/i1
+	 hA4+j/zYNEx/WgOaN+C3kt+J5fBow7GtfmK0WfxxGwf0axwhDyxROygOETveZAF6Lu
+	 EGufVbyvT0AOXoRkB3i2zKMTxeb7Je5TH3nRupeHiyNIQ0VhC/BfkYXtRSTIdLUp0A
+	 hA9BynapZsqd0GEn7lY1FPVnwupjXW0PYvcKWwEy79RGg62EySyu08Lt+F8//0yAtJ
+	 LQE3uxvVr+Xqlon1JF+Iw1jBzX6soFLxQYfnbFW0Gcc02SGqMQtoH8cyXTNVO2KgFJ
+	 A7pBRhGd7B2oA==
+Message-ID: <a3849de4-a4da-40e5-85bd-ebeb7e395fac@kernel.org>
+Date: Tue, 26 May 2026 17:48:22 +1000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,16 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH v8 mptcp-next 3/9] mptcp: close TOCTOU race while
- computing rcv_wnd
+Subject: Re: [PATCH v8 mptcp-next 4/9] mptcp: allow subflow rcv wnd to shrink
 Content-Language: fr
-To: Paolo Abeni <pabeni@redhat.com>, Geliang Tang <geliang@kernel.org>,
- mptcp@lists.linux.dev
-Cc: gang.yan@linux.dev
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+Cc: Geliang Tang <geliang@kernel.org>, gang.yan@linux.dev
 References: <cover.1779485511.git.pabeni@redhat.com>
- <a8ae9961db6c482c439b6cc7e16514d908af61f2.1779485511.git.pabeni@redhat.com>
- <ed237923f5af60e22739deb2d2bc924f62c1ace9.camel@kernel.org>
- <7523db9a-b95e-46a9-926f-cbd9be464b27@redhat.com>
+ <661603fa10737a624bba854fb2515c7abb129a80.1779485511.git.pabeni@redhat.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -90,139 +86,66 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <7523db9a-b95e-46a9-926f-cbd9be464b27@redhat.com>
+In-Reply-To: <661603fa10737a624bba854fb2515c7abb129a80.1779485511.git.pabeni@redhat.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Paolo, Geliang,
+Hi Paolo,
 
-Thank you for this fix!
-
-On 26/05/2026 16:34, Paolo Abeni wrote:
-> On 5/26/26 8:10 AM, Geliang Tang wrote:
->> On Fri, 2026-05-22 at 23:43 +0200, Paolo Abeni wrote:
->>> The MPTCP output path access locklessly the MPTCP-level ack_seq
->>> in multiple times, using possibly different values for the data_ack
->>> in the DSS option and to compute the announced rcv wnd for the same
->>> packet.
->>>
->>> Refactor the cote to avoid inconsistencies which may confuse the
->>> peer. Also ensure that the MPTCP level rcv wnd is updated only when
->>> the egress packet actually contains a DSS ack.
->>>
->>> Fixes: fa3fe2b15031 ("mptcp: track window announced to peer")
->>> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
->>> ---
->>>  net/mptcp/options.c | 36 ++++++++++++++++++------------------
->>>  1 file changed, 18 insertions(+), 18 deletions(-)
->>>
->>> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
->>> index 4cc583fdc7a9..4d72f286a485 100644
->>> --- a/net/mptcp/options.c
->>> +++ b/net/mptcp/options.c
->>> @@ -570,7 +570,6 @@ static bool mptcp_established_options_dss(struct
->>> sock *sk, struct sk_buff *skb,
->>>  	struct mptcp_ext *mpext;
->>>  	unsigned int ack_size;
->>>  	bool ret = false;
->>> -	u64 ack_seq;
->>>  
->>>  	opts->csum_reqd = READ_ONCE(msk->csum_enabled);
->>>  	mpext = skb ? mptcp_get_ext(skb) : NULL;
->>> @@ -601,14 +600,11 @@ static bool
->>> mptcp_established_options_dss(struct sock *sk, struct sk_buff *skb,
->>>  		return ret;
->>>  	}
->>>  
->>> -	ack_seq = READ_ONCE(msk->ack_seq);
->>>  	if (READ_ONCE(msk->use_64bit_ack)) {
->>>  		ack_size = TCPOLEN_MPTCP_DSS_ACK64;
->>> -		opts->ext_copy.data_ack = ack_seq;
->>>  		opts->ext_copy.ack64 = 1;
->>>  	} else {
->>>  		ack_size = TCPOLEN_MPTCP_DSS_ACK32;
->>> -		opts->ext_copy.data_ack32 = (uint32_t)ack_seq;
->>>  		opts->ext_copy.ack64 = 0;
->>>  	}
->>>  	opts->ext_copy.use_ack = 1;
->>> @@ -1298,19 +1294,14 @@ bool mptcp_incoming_options(struct sock *sk,
->>> struct sk_buff *skb)
->>>  	return true;
->>>  }
->>>  
->>> -static void mptcp_set_rwin(struct tcp_sock *tp, struct tcphdr *th)
->>> +static u64 mptcp_set_rwin(struct mptcp_sock *msk, struct tcp_sock
->>> *tp,
->>> +			  struct tcphdr *th, u64 ack_seq)
->>>  {
->>>  	const struct sock *ssk = (const struct sock *)tp;
->>> -	struct mptcp_subflow_context *subflow;
->>> -	u64 ack_seq, rcv_wnd_old, rcv_wnd_new;
->>> -	struct mptcp_sock *msk;
->>> +	u64 rcv_wnd_old, rcv_wnd_new;
->>>  	u32 new_win;
->>>  	u64 win;
->>>  
->>> -	subflow = mptcp_subflow_ctx(ssk);
->>> -	msk = mptcp_sk(subflow->conn);
->>> -
->>> -	ack_seq = READ_ONCE(msk->ack_seq);
->>>  	rcv_wnd_new = ack_seq + tp->rcv_wnd;
->>>  
->>>  	rcv_wnd_old = atomic64_read(&msk->rcv_wnd_sent);
->>> @@ -1363,7 +1354,7 @@ static void mptcp_set_rwin(struct tcp_sock *tp,
->>> struct tcphdr *th)
->>>  
->>>  update_wspace:
->>>  	WRITE_ONCE(msk->old_wspace, tp->rcv_wnd);
->>> -	subflow->rcv_wnd_sent = rcv_wnd_new;
->>> +	return rcv_wnd_new;
->>>  }
->>>  
->>>  static void mptcp_track_rwin(struct tcp_sock *tp)
->>> @@ -1475,13 +1466,25 @@ void mptcp_write_options(struct tcphdr *th,
->>> __be32 *ptr, struct tcp_sock *tp,
->>>  		*ptr++ = mptcp_option(MPTCPOPT_DSS, len, 0, flags);
->>>  
->>>  		if (mpext->use_ack) {
->>> +			struct mptcp_sock *msk;
->>> +			u64 ack_seq;
->>> +
->>> +			/* DSS option is set only by
->>> mptcp_established_option,
->>> +			 * the caller is __tcp_transmit_skb() and
->>> ssk is always
->>> +			 * not NULL.
->>> +			 */
->>> +			subflow = mptcp_subflow_ctx(ssk);
->>> +			msk = mptcp_sk(subflow->conn);
->>> +			ack_seq = READ_ONCE(msk->ack_seq);
->>>  			if (mpext->ack64) {
->>> -				put_unaligned_be64(mpext->data_ack,
->>> ptr);
->>> +				put_unaligned_be64(ack_seq, ptr);
->>>  				ptr += 2;
->>>  			} else {
->>> -				put_unaligned_be32(mpext-
->>>> data_ack32, ptr);
->>
->> This patch makes data_ack and data_ack32 in struct mptcp_ext no longer
->> used. Can they be removed from struct mptcp_ext, and update
->> mptcp_dump_mpext() in include/trace/events/mptcp.h accordingly?
+On 23/05/2026 07:43, Paolo Abeni wrote:
+> In MPTCP connection, the `window` field in the TCP header refers to the
+> MPTCP-level rcv_nxt and it's right edge should not move backward. Such
+> constraint is enforced at DSS option generation time.
 > 
-> Thanks for your review.
+> At the same time, the TCP stack ensures independently that the TCP-level
+> rcv wnd right's edge does not move backward. That in turn causes artificial
+> inflating of the MPTCP rcv window when the incoming data is acked at the
+> TCP level and is OoO in the MPTCP sequence space (or lands in the backlog).
 > 
-> It looks like mptcp_dump_mpext() always dumped data_ack, but such value
-> was always 0-set when that function was called? if so dropping the
-> fields and adjusting the helper could be a separate/later patch?
+> As a consequence, the incoming traffic can exceed the receiver rcvbuf size
+> even when the sender is not misbehaving.
+> 
+> Prevent such scenario forcibly allowing the TCP subflow to shrink the
+> TCP-level rcv wnd regardless of the current netns setting.
+> 
+> Fixes: f3589be0c420 ("mptcp: never shrink offered window")
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> ---
+>  net/mptcp/options.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+> index 4d72f286a485..97ea4aa37b33 100644
+> --- a/net/mptcp/options.c
+> +++ b/net/mptcp/options.c
+> @@ -566,6 +566,7 @@ static bool mptcp_established_options_dss(struct sock *sk, struct sk_buff *skb,
+>  {
+>  	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
+>  	struct mptcp_sock *msk = mptcp_sk(subflow->conn);
+> +	struct tcp_sock *tp = tcp_sk(sk);
+>  	unsigned int dss_size = 0;
+>  	struct mptcp_ext *mpext;
+>  	unsigned int ack_size;
+> @@ -614,6 +615,12 @@ static bool mptcp_established_options_dss(struct sock *sk, struct sk_buff *skb,
+>  	if (dss_size == 0)
+>  		ack_size += TCPOLEN_MPTCP_DSS_BASE;
+>  
+> +	/* The caller is __tcp_transmit_skb(), and will compute the new rcv
+> +	 * wnd soon: ensure that the window can shrink.
+> +	 */
+> +	if (skb)
+> +		tp->rcv_wnd = tp->rcv_nxt - tp->rcv_wup;
 
-If they have never been used elsewhere before -- which seems to be the
-case -- that should be fine to do that in a separate patch. In other
-cases, that's probably safer to do that in the same patch, to help to
-catch other usages when backporting such patches.
+Do you need to call tcp_update_max_rcv_wnd_seq() after having updated
+rcv_wnd?
 
-In other words, no need to change anything here, and a follow-up patch
-would be nice :)
+See 0e24d17bd966 ("tcp: implement RFC 7323 window retraction receiver
+requirements") for more details about it.
+
+If we do that, I guess we can declare "struct tcp_sock *tp" here in the
+if-statement.
+
+I can also update the patch when applying it. Apart from that:
 
 Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
