@@ -1,122 +1,133 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7384B3DD84D
-	for <mptcp@lists.linux.dev>; Tue, 26 May 2026 10:37:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0839438D006
+	for <mptcp@lists.linux.dev>; Tue, 26 May 2026 10:41:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779791856; cv=none; b=qkdM4t2EBg+SUyCSupJ2Fc+EiGPdsIlusCOkdnaee8FZyFAlLHzTTtyZuUV5MKWwi693dz7x6agMtAz05x8inWnWnqxAcZ/c2KWIDdg1E21irH8HqaNGaDAmPOPVA6sfLq5tmvaZNypZq2ldZEIu7xDxISb1iM8XVe67mmrsU+o=
+	t=1779792096; cv=none; b=Vxawwt/5x9eqampE42twdbkGltw8gvp1OLRGk00jbwt4j2Lu1R8XgaRf0cggNxFctwOuOT4ebvK3CRX+W6Zace7BcsRxMftoIaNDq6S2Difjg/MJqGHdLj0LEFEOQDEbffOinE4F+c7teWS4gcvxV6+NmHgIRXKdm+Umj1PKOXw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779791856; c=relaxed/simple;
-	bh=hmH/Oi2QGIFlJjYEODLTNxKSoE8uGKTAa7XlIDgZujI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aJbDBn1HIcOvqxgmO2UTMj0UahfwSlWyG2c3fsfzVjl7OpQSamoO5fUOfEMchVOO6/VrU/vFUp6biXRwqeOOK2qUNEDpLlPg+yswXP3eI7NFIhyfWpVO1aooJ6pzqbjejM2jtAAX8fbOg1gwjxgULzssrzWULp2eHfD4KU+RSQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nB/yXvT2; arc=none smtp.client-ip=209.85.214.181
+	s=arc-20240116; t=1779792096; c=relaxed/simple;
+	bh=oOUSZrWllrT/tfmw58ult5Hlf1m378X6dJuRbHmcykA=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
+	 MIME-Version:Content-Type; b=XNjvsEvoBHJn4mJb2aDGJx26cFzu4rX1B+9NzR5pIStXT6k42EEJackmrXkjVS14kzRtSMWk2bBn76fgnixvM+Y7aAEPNJaScmGSVMDNdI7kBMOQ4IKgSP5ZOYNF1Cg3mQETvHgSU4/tv9rq3Rb/3vyv9AgFSJnzeRNDK1oPpac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DckilVNb; arc=none smtp.client-ip=209.85.160.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nB/yXvT2"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2ba0714574fso56118605ad.2
-        for <mptcp@lists.linux.dev>; Tue, 26 May 2026 03:37:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DckilVNb"
+Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-512f09ecc67so72248931cf.3
+        for <mptcp@lists.linux.dev>; Tue, 26 May 2026 03:41:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779791854; x=1780396654; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=gmail.com; s=20251104; t=1779792094; x=1780396894; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Rn626pqSlYfIAr1r5qlNKqjBQBwqaIvW/F1bEAQ3UM8=;
-        b=nB/yXvT2QYS79jdo1/LA4dQcfLWu3oNHV2PDJ6TKHZ58/dzTgrSgBKPnIqWXZ5FBql
-         ihEHS6Kw3H3INZjZvARnq60bKtYbimOprdC6SrmcL0dt9R8TEfOemAKbacdhcVlWyVI+
-         71XgPFeVfOvQrbDaMs4HAGlVSLvZ5U6vABWsUGO0uDxhTdJ06IUyZ2rEFq7dN0iyl53t
-         DCdX8Fa30O1fQ5TDIr8n0yfFjs6Gk8qRQLTDU2OrbH0LJnmWR2ShKv3H7cpnHghY1TJW
-         6vrDtZLI2LNHd8LbGqwraKek93UREmZjNfq1iDZ06/OFm8JGBOE6+3As1fYFZyfxTWJr
-         baUA==
+        bh=Erqg4EzXOlz1VsloD5UmvrUzrDYGqZhQhQOaBb2Df3Y=;
+        b=DckilVNbPbENvAzgVIi1U03sP2PBnIQfEjChgDfJ6+tOVdTnIripeG1Oik/dREVcl0
+         xAYMMXvDUew1DbYTmOOMUXHi4dH45H5PCN8COi1AmP2fnl2zM6+qe/tT47+QDTiPZQbf
+         Gc61aO5k01XQSdErbs7ZhNpDeGxJZX6wvQopC6oob8yi0lnvgD78u7aOu0zq7ups2NM8
+         93/eQw5XiuV5bfxIV8D9CSW2DR8fYbwLuJz37zos+ZXhP6K5+uhEBy/LfWuoPt31f35i
+         RbIVdQsECiWU9iK2hiFubWWsr1JOG8EjJzqY8nyl8F07/IO7HKSQtSHEAWZZ7GWJEeSg
+         rPPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779791854; x=1780396654;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=Rn626pqSlYfIAr1r5qlNKqjBQBwqaIvW/F1bEAQ3UM8=;
-        b=arMhlNatOu8mVXpYJrC5x7W65VCnc7EZzk6EqemrZTBlDKNsNzlqJPCh9kKzLEki5z
-         FbRW7npWAhGnmo5zc9zYRId695uzjvr2+HYyXHZ/CZwjfZeSJ/IcWvB4sNts00A4xrQC
-         UxFkNHMoiGNxwjkdtfE7WDLGbOaU0e3/or9/EjVZRms+wkfYaX4HEqQDAaEWre/hGN6r
-         jDT6/HnoyA7e0p5s3v07qOP/v3ujCIOpB0OXNr8DGck6cPxBJ1ekZdYKfcrwZLiv453W
-         piiKeUrfRoapM9+WieXMa7LZVZuA5dfdKYpAhz+vEbhHdkcXafiB12xRHr5UZyzBleCO
-         1OgQ==
-X-Gm-Message-State: AOJu0YwCVWvXa5PGZYApKRbY1hMuN2Q3Slr1IimAmNKzg5HmNYOGQ0Uy
-	pFXJYQzAmXfTWVVp1UWJFYNHwn8alOdrsGZWOP8k/Jui2qgqA0CPKPfDuLQ092ISu30=
-X-Gm-Gg: Acq92OHycbdkvcMgql6+GXSsgIHt14hkH5Rmjl9+4dH/+HYhtyL7LNQKtcBUQGzsLbS
-	mOqy3DKhq9Z3je4mJM6lOeJIPDuJ1STyyayIB2gH2veuqMhbNXv7eDwxIkHDK6TFfMf30Zt42ft
-	zT2DetBosHW+N7HiTv9Qy8TI8YuRSkeq4xDjce76oda26Wy5oQZLMiQoY69tdymzAaHaKFuaosH
-	ko8vFRIXil3fjK0j0o7msf/ZyHtIri7Bo/e12YGvlMNdXvMeztyzzvJiZ34BvOHJ9ZE82xuMEkN
-	RY5avDUnzR3+kjwz5dUtRpiRcgAi0WK2BGhg1mJuEmQ7k0/Vz4vO3bqDfoboHeVgItUpJ3nhGWa
-	+GVgtjZr77zK4HjgRDGi7B/7WgvjBnIr/SA0ONe5hXcgbUVY946rk5Kmst5TRfzHyrfCO7bCfoP
-	Hd4dZ+oyOWmS+86Tcw2Q56Fqjjzf/r8Cc6BQc7u7+QAeey
-X-Received: by 2002:a17:903:b0f:b0:2b0:41bf:ca83 with SMTP id d9443c01a7336-2beb05e2c2amr211974435ad.23.1779791853796;
-        Tue, 26 May 2026 03:37:33 -0700 (PDT)
-Received: from iotshare.. ([183.159.55.179])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2beb58c49b2sm115615235ad.60.2026.05.26.03.37.32
+        d=1e100.net; s=20251104; t=1779792094; x=1780396894;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Erqg4EzXOlz1VsloD5UmvrUzrDYGqZhQhQOaBb2Df3Y=;
+        b=O+18fk95jyvgqArm74ytSQG5YQTu999KrbwXRSSx0w8pTBk9VFlfw/oLsF5weXdXwf
+         GV1fvYwQXZEqGRIsmimLeke9lvcjZpn5x2xYhoHLUxWYcaWdOMLRvpTy1F5W9Ti7657T
+         P6nvjVWYdBX4TJ6jIfr13NePP09ssTMtKtcHc3KkpGW6wXZC4XHF7ItgWTVPPtmsy4TP
+         OsX/zx/p43ztMXFAQEiV64YOXwIVZUY3ruArGpCnjTCGcAV4bTu5qNZaMmEPIemIrX9x
+         8Fbatm4Jy4E/In9ezoOyVXcA3b9Bds++Rb7cF2r4Iv/8AUNXuqfXmfw7zoBGzrphXKzM
+         Bk2w==
+X-Gm-Message-State: AOJu0YxsvczHzqtnnuNxiviM5Jp3DXvZg9gNXMgtFb5XpfdEfLGF+ZY9
+	BGjua5g/+dMMAeQ8i1a91dZoNTzgS8ekeiq2YPsBlLGxN/wLNOkzY+KHCjOv
+X-Gm-Gg: Acq92OH1O/BE752/PYKUk/wgf3j+xT0Q4uBycqN/ta0nQbBE0Lx6sMVO0lZu3cHJq5q
+	EWuMldXiTEt1MAuPBzm1XURoHWtL/dQDeXqSfwnxPamBopt2JI/clUGWjoPldZZL5xLIMelUfHC
+	bqcNILWZQl6cASAXTNb4fm0q/mSf6EMsY3AuI0NzrShDM7AOKDAQA5V9Z77hveXzsMCag1XF6K2
+	ApxutU6uIzhTtA7G31pMEAFeCfbfGh571ueBbVP1OpKZVVTcqL4Flu7DaHquYGdaRvm7M5Qubni
+	oevVBt7Q+G/75Obj2H2PuOB2fbYc95r77Mk+WWxQa1GUNfWz86H7RYlJd2y72aCCgPsOUBQ/Do7
+	A2Gv/aFFNYJAIkrmZp+VzG1BpL2sgbNQbvC1FEOjGssEUQccII3RQthQr6hCgkvEZXKVP/6oRge
+	bF/fTgwMOc9448o80fGWkEfrXrmo2N0EU83bvzOSL9wz14GJk=
+X-Received: by 2002:a05:622a:9011:b0:50d:6b13:bb14 with SMTP id d75a77b69052e-516d436db29mr198368301cf.34.1779792093786;
+        Tue, 26 May 2026 03:41:33 -0700 (PDT)
+Received: from [127.0.0.1] ([52.237.143.50])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8cc80df081asm137822716d6.18.2026.05.26.03.41.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2026 03:37:33 -0700 (PDT)
-From: Li Xiasong <xiasonglee@gmail.com>
-X-Google-Original-From: Li Xiasong <xiasong.lee@gmail.com>
-To: mptcp@lists.linux.dev
-Cc: lixiasong1@huawei.com
-Subject: [PATCH mptcp-net 2/2] mptcp: use sk_shutdown_timer_sync() for add_addr timer teardown
-Date: Tue, 26 May 2026 10:36:47 +0000
-Message-ID: <20260526103647.732350-3-xiasong.lee@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260526103647.732350-1-xiasong.lee@gmail.com>
-References: <20260526103647.732350-1-xiasong.lee@gmail.com>
+        Tue, 26 May 2026 03:41:33 -0700 (PDT)
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Geliang Tang <tanggeliang@kylinos.cn>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <59640df9a7c0528688419655e53cb4efc50aff41.1779786007.git.tanggeliang@kylinos.cn>
+References:
+ <59640df9a7c0528688419655e53cb4efc50aff41.1779786007.git.tanggeliang@kylinos.cn>
+Subject: Re: [PATCH mptcp-next] mptcp: remove unused data_ack from struct
+ mptcp_ext
+Message-ID: <2e380381-048a-7850-bf42-922af9bad706@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 26 May 2026 10:41:32 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
 
-From: Li Xiasong <lixiasong1@huawei.com>
+Hi Geliang,
 
-Sashiko reported a possible use-after-free in add_addr timer teardown.
+Thank you for your modifications, that's great!
 
-The add_addr timer callback can re-arm itself on the sock_owned_by_user()
-path. In final teardown paths, sk_stop_timer_sync() only waits for a
-running callback to finish, but does not prevent a concurrent callback
-from re-arming the timer.
+Our CI did some validations and here is its report:
 
-Use sk_shutdown_timer_sync() for add_addr timer teardown so the timer
-cannot be re-armed after teardown starts, preventing a possible
-use-after-free on a freed add entry.
+- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Unstable: 1 failed =
+test(s): packetdrill_dss =E2=9A=A0=EF=B8=8F=20
+- KVM Validation: debug =
+(only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal=
+ (only bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only =
+bpftest_all): Success! =E2=9C=85
+- Task: https://github.=
+com/multipath-tcp/mptcp_net-next/actions/runs/26444090803
 
-Link: https://github.com/multipath-tcp/mptcp_net-next/issues/623
-Fixes: 5cd6e0ad79d2 ("mptcp: pm: ADD_ADDR rtx: fix potential data-race")
-Signed-off-by: Li Xiasong <lixiasong1@huawei.com>
----
- net/mptcp/pm.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/7312cf56b3ce
+Patchwork: https://patchwork.kernel.=
+org/project/mptcp/list/?series=3D1100810
 
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index 3e770c7407e1..cda3efb2c206 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -424,7 +424,7 @@ mptcp_pm_del_add_timer(struct mptcp_sock *msk,
- 		if (check_id)
- 			sk_stop_timer(sk, &entry->add_timer);
- 		else
--			sk_stop_timer_sync(sk, &entry->add_timer);
-+			sk_shutdown_timer_sync(sk, &entry->add_timer);
- 	}
- 
- 	rcu_read_unlock();
-@@ -483,7 +483,7 @@ static void mptcp_pm_free_anno_list(struct mptcp_sock *msk)
- 
- 	list_for_each_entry_safe(entry, tmp, &free_list, list) {
- 		if (!entry->timer_done)
--			sk_stop_timer_sync(sk, &entry->add_timer);
-+			sk_shutdown_timer_sync(sk, &entry->add_timer);
- 		kfree_rcu(entry, rcu);
- 	}
- }
--- 
-2.43.0
 
+If there are some issues, you =
+can reproduce them using the same environment as
+the one used by the CI =
+thanks to a docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
+
+
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 Core)
