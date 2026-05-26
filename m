@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A4FE3CAA50
-	for <mptcp@lists.linux.dev>; Tue, 26 May 2026 07:48:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF96C3911B2
+	for <mptcp@lists.linux.dev>; Tue, 26 May 2026 07:49:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779781708; cv=none; b=jNrJyMQQZ1oD0FauJDeQNx6LGQIYaSfFrSENkH7NgP0MiCt39C2V3KTVOpnVdkFF1Co/IaF+/phDmKKb3KXHfIhnZeiJbJDbHpUXaohakfwsmm1OcdO7XmUlptTa6Wcwr/HMxTVIta7wAu5u1UApwGmnuUUyChU81It8o3RzfOg=
+	t=1779781767; cv=none; b=Nv/t5HmVjgUmekFTtILCZ411LDOe7SGXJeAXsbJ0euPf5FZGBMRTK96KGFwHEXsT57bLzpF8rSUOfTkG4UC3nQH65WUqRvoggkEUm//AcAvpoo8ZhLyqmWaxgq1I52h5yEGHjKxIE7oscOJz46RWxJfpR7vHtQbhOV5zTy5886o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779781708; c=relaxed/simple;
-	bh=877DW5zm9eYrSagFXzzZ27MlckS0PAXBoyjUE25WyP4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ka6cF/LxOZNBd9PeZxR37B5BDKes9D/GygUdEvkWEn9SPHuKVBUr46R/ssrA84eTHN56rX/wXfr4VsxcFzBimRT3WJLjdrIRDWmgKBWP4PyCw4Be/7uAjn252IkLSfuCD8EoOfM8saxFoUCQDxmxnE4rViiUkz0vsZEBXYiENvs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hdxUbZE5; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1779781767; c=relaxed/simple;
+	bh=jimEk3PHdeVkyBk+NDZHodd/0uy73YFsrTuChjXVx1o=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=rYPBJ5bt29CBVYiKPoPH7zEeMWppWweqlo2zcqXJAMi5nugX8FILFiMgLPTl+NfKFguJ0WxqG5rosTfl+QHWbbhmEZMKPg+mkYZGLIhdg3Y/hlSX8CN3pnII1/O5PYGcsj0eZU8MVVnZh2apP8+m3U8tdnZd/Go3W51sN/DFErw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hFU7Omqo; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hdxUbZE5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C75421F00A3A;
-	Tue, 26 May 2026 07:48:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hFU7Omqo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 893BA1F00A3A;
+	Tue, 26 May 2026 07:49:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779781706;
-	bh=kvrpAxbiMNZ3sNGwiJC92247Bo0RuF8o+I8oVPPwrCs=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=hdxUbZE5PpoCxvIvIkXK7GHkF/YcyGSNw4aK1NeDK23o52vUXUTqAWO3Onc+40/i1
-	 hA4+j/zYNEx/WgOaN+C3kt+J5fBow7GtfmK0WfxxGwf0axwhDyxROygOETveZAF6Lu
-	 EGufVbyvT0AOXoRkB3i2zKMTxeb7Je5TH3nRupeHiyNIQ0VhC/BfkYXtRSTIdLUp0A
-	 hA9BynapZsqd0GEn7lY1FPVnwupjXW0PYvcKWwEy79RGg62EySyu08Lt+F8//0yAtJ
-	 LQE3uxvVr+Xqlon1JF+Iw1jBzX6soFLxQYfnbFW0Gcc02SGqMQtoH8cyXTNVO2KgFJ
-	 A7pBRhGd7B2oA==
-Message-ID: <a3849de4-a4da-40e5-85bd-ebeb7e395fac@kernel.org>
-Date: Tue, 26 May 2026 17:48:22 +1000
+	s=k20260515; t=1779781765;
+	bh=nc75XnsntX1EHfjU8/6ffBwgBJ1+U0OyWBkzXDcOMt0=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To;
+	b=hFU7Omqo2eclN2dYKFUhNAhqbEflCSz70WIFthvvQZqH9eDhbycR500UUhznNhM8G
+	 pSE5Ri5A2AakVXDMP8hFJGlEFKCD86qz5vy1BXAfNOJwuEHDaOPZqXPAbMy6Mqu44/
+	 A4ywzu13STy6euuDxkq7OvMruk7TXW5GAus+nqVV3rrpve0Zf3hf8fzXEb1Je6PK4W
+	 VU0yDAAqyCF8lz4lUiRIxKoxbiJ52YvGdVnD6z4KoG2hlm+15GfJ097gNMENh44UIJ
+	 nu1/5G6tRkHZXdoWsmp3mL/FQBAAkKHdHb4z34dVHH7c+BVGppycdYYAUK+GWRZHUJ
+	 cyz7JlzLoH6hw==
+Message-ID: <0624d85c-1992-4b4f-bbdb-32c454ac7765@kernel.org>
+Date: Tue, 26 May 2026 17:49:20 +1000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -37,11 +37,14 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
 Subject: Re: [PATCH v8 mptcp-next 4/9] mptcp: allow subflow rcv wnd to shrink
 Content-Language: fr
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-Cc: Geliang Tang <geliang@kernel.org>, gang.yan@linux.dev
+From: Matthieu Baerts <matttbe@kernel.org>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: Geliang Tang <geliang@kernel.org>, gang.yan@linux.dev,
+ mptcp@lists.linux.dev
 References: <cover.1779485511.git.pabeni@redhat.com>
  <661603fa10737a624bba854fb2515c7abb129a80.1779485511.git.pabeni@redhat.com>
-From: Matthieu Baerts <matttbe@kernel.org>
+ <a017ffa9-1dbe-4094-ae85-7c17e7b48b0d@redhat.com>
+ <085ebc3e-0d49-4a82-aea9-a8b05a02c7ae@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -86,68 +89,56 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <661603fa10737a624bba854fb2515c7abb129a80.1779485511.git.pabeni@redhat.com>
+In-Reply-To: <085ebc3e-0d49-4a82-aea9-a8b05a02c7ae@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Paolo,
 
-On 23/05/2026 07:43, Paolo Abeni wrote:
-> In MPTCP connection, the `window` field in the TCP header refers to the
-> MPTCP-level rcv_nxt and it's right edge should not move backward. Such
-> constraint is enforced at DSS option generation time.
+On 26/05/2026 17:02, Matthieu Baerts wrote:
+> Hi Paolo,
 > 
-> At the same time, the TCP stack ensures independently that the TCP-level
-> rcv wnd right's edge does not move backward. That in turn causes artificial
-> inflating of the MPTCP rcv window when the incoming data is acked at the
-> TCP level and is OoO in the MPTCP sequence space (or lands in the backlog).
+> On 24/05/2026 18:34, Paolo Abeni wrote:
+>> On 5/22/26 11:43 PM, Paolo Abeni wrote:
+>>> In MPTCP connection, the `window` field in the TCP header refers to the
+>>> MPTCP-level rcv_nxt and it's right edge should not move backward. Such
+>>> constraint is enforced at DSS option generation time.
+>>>
+>>> At the same time, the TCP stack ensures independently that the TCP-level
+>>> rcv wnd right's edge does not move backward. That in turn causes artificial
+>>> inflating of the MPTCP rcv window when the incoming data is acked at the
+>>> TCP level and is OoO in the MPTCP sequence space (or lands in the backlog).
+>>>
+>>> As a consequence, the incoming traffic can exceed the receiver rcvbuf size
+>>> even when the sender is not misbehaving.
+>>>
+>>> Prevent such scenario forcibly allowing the TCP subflow to shrink the
+>>> TCP-level rcv wnd regardless of the current netns setting.
+>>>
+>>> Fixes: f3589be0c420 ("mptcp: never shrink offered window")
+>>> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+>>
+>> Sashiko failed to review this series from this patch included onward:
+>>
+>> https://sashiko.dev/#/patchset/cover.1779485511.git.pabeni%40redhat.com
+>>
+>> and it's not clear to me why.
 > 
-> As a consequence, the incoming traffic can exceed the receiver rcvbuf size
-> even when the sender is not misbehaving.
+> It is not the first time I see failures. I guess it is not linked to
+> your series.
 > 
-> Prevent such scenario forcibly allowing the TCP subflow to shrink the
-> TCP-level rcv wnd regardless of the current netns setting.
-> 
-> Fixes: f3589be0c420 ("mptcp: never shrink offered window")
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> ---
->  net/mptcp/options.c | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index 4d72f286a485..97ea4aa37b33 100644
-> --- a/net/mptcp/options.c
-> +++ b/net/mptcp/options.c
-> @@ -566,6 +566,7 @@ static bool mptcp_established_options_dss(struct sock *sk, struct sk_buff *skb,
->  {
->  	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
->  	struct mptcp_sock *msk = mptcp_sk(subflow->conn);
-> +	struct tcp_sock *tp = tcp_sk(sk);
->  	unsigned int dss_size = 0;
->  	struct mptcp_ext *mpext;
->  	unsigned int ack_size;
-> @@ -614,6 +615,12 @@ static bool mptcp_established_options_dss(struct sock *sk, struct sk_buff *skb,
->  	if (dss_size == 0)
->  		ack_size += TCPOLEN_MPTCP_DSS_BASE;
->  
-> +	/* The caller is __tcp_transmit_skb(), and will compute the new rcv
-> +	 * wnd soon: ensure that the window can shrink.
-> +	 */
-> +	if (skb)
-> +		tp->rcv_wnd = tp->rcv_nxt - tp->rcv_wup;
-
-Do you need to call tcp_update_max_rcv_wnd_seq() after having updated
-rcv_wnd?
-
-See 0e24d17bd966 ("tcp: implement RFC 7323 window retraction receiver
-requirements") for more details about it.
-
-If we do that, I guess we can declare "struct tcp_sock *tp" here in the
-if-statement.
-
-I can also update the patch when applying it. Apart from that:
-
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+>> I think patch 1/3 are quite uncontroversial and reasonably even this one.
+>>
+>> WRT the stall addressing patches, this iteration survives mptcp_data
+>> testing without timeout tuning, hopefully should be fine for Geliang and
+>> Gang usage.
+>>
+>> @Matttbe: please LMK if you prefer a complete repost or if you could
+>> apply patch 1-3 (or more).
+> Sorry for the delay. Yes, on it. I guess patches 1-4 can already be
+> applied to -net.
+Just reviewed them. Please tell me if you are OK with the suggested
+modifications, or if you prefer to send a new version.
 
 Cheers,
 Matt
