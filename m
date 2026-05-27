@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 857973FA5FD
-	for <mptcp@lists.linux.dev>; Wed, 27 May 2026 11:40:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CB2E3FC5A8
+	for <mptcp@lists.linux.dev>; Wed, 27 May 2026 11:44:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779882054; cv=none; b=ksQu+/E+Le85meMbOb29sM+BHWDPKBem+uOQ5MQklSJatxWjGkoHnv6nn7JqYWUmdWPFJw64Tu0lUE8uEkrOr+04m72kBm3Rqpio7a3B7vsylu1QxyTe3hZaGfr4uykR66H3aM7WdRnSPqX8q+I3EQdmbIpjgDHkXw8obq4Rabk=
+	t=1779882261; cv=none; b=MDMpd6gsDAmQ2vyNbHwMeR6stU/R6lI2kChJu0ES11CowzXswMV0H7GX6o+harj7D3vMsjG/6uLVsAJyhvSmotS4kkjFJYNVCKcJtVCQTCbJYTvARrjm/BZseoi2maHvT5LD03gl07zrqBfvfcAZHZoLPS3wlkBo3g32TX2GEQA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779882054; c=relaxed/simple;
-	bh=D43iGui75qq3vOS/WvLXMVvlV3fTHMPP3EFaLWDHuaA=;
+	s=arc-20240116; t=1779882261; c=relaxed/simple;
+	bh=dLpRfjVZdFY72L8ANdnsWqZ/s7TN36ayOb/sNfrVa0Y=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sYj19N9t8A7TAvc+C/SL2hiPPrHKsJJ5ul+3tBq36Mm4Nh3eCj5NT3m1j5eX1W1GOolVCsEZjk3EdXUnW2fvAZnBEGHuxI8Ek7pWzIdavh5OlgontHZLlBisMGFP1VHE/JlFHm65cJv+ObbbPJ0VFAhBlI4pO0BEPIX2HeQ6c34=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bFa9e5bh; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=Wb29tKStzppHJO2t3eCZOr3IhlnUGahl5jLQ4XBmw6i9E+WruHN0wsNre3THZKlEj6tkYpWbJy08SFEF9ULu9HglF3+z0iTht5qLSL6ME8C/9HajjPOZKTRbPmhrnqDxQa9kEbQ29cCrFf6/TrEl5KiB6R6T7FzBjZQcBqCimN4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LewKlG6s; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bFa9e5bh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01A5F1F00A3A;
-	Wed, 27 May 2026 11:40:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LewKlG6s"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 880C31F00A3C;
+	Wed, 27 May 2026 11:44:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779882052;
-	bh=SKAR8VnC2NuCK59K55giNATodWE90zQDDg29rioeYXI=;
+	s=k20260515; t=1779882257;
+	bh=pwz2ffDg9B306oYyvlpr5Oj9U9gLXb1pZiNVfo2DUew=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=bFa9e5bh2QTS+oBxJcFEBEeIsa4j7OD8Ga80rpPq1sDbX1LJMFec1TG1bxloCT+yU
-	 w+KKLtR7D1sN9UDNOubhjRU/TaltlbaioJzeAr2ZlmfqsuEp+TQcnPX05Pn7HK1RNQ
-	 O/yzwRpSodDjv2G54yefkdiZnNRsUgSCkEOX0gbFDP5d3Dyh73HpNlzo1siuDmxX2C
-	 qJ17c/Y/jNjpfkghtaky+2OZbjP4GYnGZl0LWLb7+zj+mD/8Lcm1kjwjYJhwnpc5hF
-	 NIGR69IP4u2E5ikikGXn5feRnDT1vJBDfDskt1JSyfqipOXygaxAOWo8Xc2F7HwB7n
-	 Q9VE2heNvNKyA==
-Message-ID: <4e5575e3-038b-43eb-9d63-9fcbd5116fcd@kernel.org>
-Date: Wed, 27 May 2026 21:40:48 +1000
+	b=LewKlG6sqm9PMdhXO8pjoK3GLI/Uuwh3HMqYTS9cslZFb+sCdDEvJ0VLgEu4Ld1TC
+	 MZ00ujjq8oEnUNLoLSW3RW2t9aNEnEjQKEZOh2RkFNTA8kXu+7fF1WOZc4VBem/RPv
+	 HcNIiWiuCWrpfrpNkpq+6ztUmC4iBhdV4mEHdN1sHKiwOSaUS+cSrVTe53IZBt3TwX
+	 HwX3CbCmQ9L7ifYosWmT0GsGb6ii5cucAJBfcjRq9mXpBRVzWYqeldCKFEUBaJ8u/r
+	 +nQIh4lejVdcmU1PG9O1FSkCzPz6FiA8Abs5Tm5sImGMnzj++BppXVeH93G+aRDbz6
+	 dMkcCC3kwc9/Q==
+Message-ID: <298da9ba-889e-4ff9-bb31-8cbd77166859@kernel.org>
+Date: Wed, 27 May 2026 21:44:12 +1000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next] mptcp: pm: add WARN_ON_ONCE guards on
- extra_subflows underflow
+Subject: Re: [PATCH mptcp-next] mptcp: remove unused data_ack from struct
+ mptcp_ext
 Content-Language: fr
-To: Tao Cui <cuitao@kylinos.cn>, geliang@kernel.org
-Cc: mptcp@lists.linux.dev
-References: <20260522085049.1896537-1-cuitao@kylinos.cn>
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>, Paolo Abeni <pabeni@redhat.com>
+References: <59640df9a7c0528688419655e53cb4efc50aff41.1779786007.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,31 +86,31 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20260522085049.1896537-1-cuitao@kylinos.cn>
+In-Reply-To: <59640df9a7c0528688419655e53cb4efc50aff41.1779786007.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Tao,
+Hi Geliang,
 
-On 22/05/2026 18:50, Tao Cui wrote:
-> extra_subflows is a u8 counter that can underflow if a decrement races
-> with or precedes an increment. While the recently fixed userspace PM
-> subflow creation path eliminated the primary cause, add defensive
-> WARN_ON_ONCE guards at both decrement sites to catch any remaining edge
-> cases rather than silently wrapping to 255.
-Thank you for the patch:
+On 26/05/2026 19:04, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
+> 
+> The data_ack and data_ack32 fields in struct mptcp_ext are no longer used
+> anywhere. Remove them from the structure and update mptcp_dump_mpext()
+> trace helper accordingly. Drop the data_ack field from the trace entry
+> and the corresponding output in TP_printk().
+Thank you for the follow-up patch!
 
 Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
 New patches for t/upstream:
-- abefe4ecdb46: mptcp: pm: add WARN_ON_ONCE guards on extra_subflows
-underflow
-- Results: c40ac68d9bc2..cde220b5fe28 (export)
+- f51ec6de6c5a: mptcp: remove unused data_ack from struct mptcp_ext
+- Results: cde220b5fe28..2b800cf792ef (export)
 
 Tests are now in progress:
 
 - export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/02fc64d2cebb020984c74fb4950be7a46909b4d9/checks
+https://github.com/multipath-tcp/mptcp_net-next/commit/8b808b715575367c7e00bcd76a597b7b57d674b8/checks
 
 Cheers,
 Matt
