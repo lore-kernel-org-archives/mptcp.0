@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9846D3F4109
-	for <mptcp@lists.linux.dev>; Wed, 27 May 2026 11:31:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16E8E3F9A0D
+	for <mptcp@lists.linux.dev>; Wed, 27 May 2026 11:35:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779881527; cv=none; b=U52Ru2pZ9xqU2Lkuww85gvubjLEJbOTKl8oomnlPOHJGFc3ExKxzNVzQixBtcGJMVjc1lGuIiE8vjIcYZ4XMwsHJuR+bbGbJ9YvEpih0ucqznGb95cczxpv4jsXdo4Gkw1h4t4pN3dWyY+xqHRMREtyW5nSKkhYPlOigGKJq/0o=
+	t=1779881709; cv=none; b=hLPPt6YFm1Sas9jMGsPM1eKGxQaE0pEHsWWXwCs+rq9rzEsNK1Yot5TzCxe4dpcR956XxO3ePFj3hVLwMFyV+uPUm1k/TF3zcNab1cL4kfaKvFHwMCy0LMipwKh6lxXORDjQjQQ8MlAusFh4YYDJtfgMy8eB27JLdDyUvaJbe58=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779881527; c=relaxed/simple;
-	bh=vgeQYMlU34i1i9RpKf+ohvqanTpsP+1Y5f/6gCzoLa0=;
+	s=arc-20240116; t=1779881709; c=relaxed/simple;
+	bh=Cf/O7ai47T7xHejiidVipezGVoG6fw2a4OZEQf2vEJE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HtCEj+WczN4PfUK7NijDx5jg3CMRxtofoUjpZCRngaslszeO+r9EBbgAECIbPb5lDe5U1oUngy2XQRo+K0Z8keODrCEOImQvbiOWwxBjWGV1By9LvCZtI8b89QapAeUzY+wZBBi6GylfpPlvTTgav4kmuhvVFEOv6X24RqWR2/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I5bW8nOf; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=JeTQEdckZyK8CP9gJ5f+0UzOwdCwdd6E9URury7YXT3eLxPlVaxOZ6tufGHDunD7hWS6VQhgtBk7btnGo91gwyAnka4uZVbrnYYivAd8tjI4noAcevjiCEvzgQ5Uy2DECPzcm71GyFuYrD3Sjl0nopgiwMSXLkBocHUwd9NOEIg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kSu4/jF+; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I5bW8nOf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 982E41F000E9;
-	Wed, 27 May 2026 11:31:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kSu4/jF+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CAB31F000E9;
+	Wed, 27 May 2026 11:35:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779881510;
-	bh=gJYWsjBiAaOPUZmQkNoSyXSM5VP92hD7oNP3EVR3S2E=;
+	s=k20260515; t=1779881702;
+	bh=eT1Y7QGO2h6bprGPxgQ1iGicUv7k2od6DP0H4fW9gpk=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=I5bW8nOfFHTsi/1SRlQPRBzMEEba5hsjXiNyBuDQrlsu7HuQm5wYfwvzUDCxxh4BR
-	 HKm4EXiSskHkIJdaMoJ5U0OCJXlKMN6mQ+PdBQbE1LFbaOAyZlbSSLcfo33QwZHYE2
-	 /g4lYbkU0WqeKwcJVwxPVR3TNV1W6+tqtq8AQ3LUWrLNt2PnHCpf5P3vWQ2jqB8EDz
-	 VfBFJOZFwtB+AF94FaZ77HVYMz05jFKS7Rjy09CSJy+BXtnNxO/LvIxtwgD6M4nRCH
-	 pgCjaRgzXvQAE9rZoqLOg87amctoK7DdrLien2QLnSoh6Lnx9xdoq267d133aLgQom
-	 Nblc/XtQF5cEg==
-Message-ID: <c3ae1aed-0ff6-4255-91c4-b0e18ea7dae7@kernel.org>
-Date: Wed, 27 May 2026 21:31:45 +1000
+	b=kSu4/jF+HAsVXCIT3Y2iv1Fa2Rgkwdkfla9kQ+vWvrbBH6r5skWGW2ncIun9FYQgi
+	 drVnuWEiWAtDwVt3MVe0Az/5A3fW5T+nERdvV95fRW9JwV0kp88WMtWlQZXgVZ44D9
+	 KaoIgj+KFeyKLRfUb2mUERzRFqxYYX8NrEAmHpsR70qH6qY27EN/gPV8c9EyYIn926
+	 l09Qsw1feZzyb+RrulT8hXtCRdvY6MO5QkAWhLBRc6sLRPEYOiBcPcu64DnaT99zQv
+	 9I8rasfNKZzVdGPLzB1AzgVxoJKFpPrkIO43Immnwl+ArdkfzfuPJvWLzJEa1BkNT0
+	 ntWhqzFT94Y+A==
+Message-ID: <f8034de8-4941-4b1a-a550-77d9a0937f65@kernel.org>
+Date: Wed, 27 May 2026 21:34:58 +1000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,16 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH net v3] mptcp: fix stale skb->sk reference on subflow
- close
+Subject: Re: [PATCH mptcp-net v4 0/2] mptcp: pm: fix extra_subflows underflow
+ for userspace PM
 Content-Language: fr
-To: Paolo Abeni <pabeni@redhat.com>,
- Kalpan Jani <kalpan.jani@mpiricsoftware.com>, mptcp <mptcp@lists.linux.dev>
-Cc: "shardul.b" <shardul.b@mpiricsoftware.com>, janak <janak@mpiric.us>,
- kalpanjani009 <kalpanjani009@gmail.com>
-References: <20260519092243.1242351-1-kalpan.jani@mpiricsoftware.com>
- <19e67fb067f.1c11e928628417.8560610860929896581@mpiricsoftware.com>
- <08d590f7-b825-47ce-bc68-c3ad2bd78bc2@redhat.com>
+To: Tao Cui <cuitao@kylinos.cn>, geliang@kernel.org
+Cc: mptcp@lists.linux.dev
+References: <20260522084658.1896374-1-cuitao@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -90,31 +86,47 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <08d590f7-b825-47ce-bc68-c3ad2bd78bc2@redhat.com>
+In-Reply-To: <20260522084658.1896374-1-cuitao@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Paolo,
+Hi Tao,
 
-Thank you for your review!
-
-On 27/05/2026 19:40, Paolo Abeni wrote:
-> On 5/27/26 7:49 AM, Kalpan Jani wrote:
->> Gentle ping on this patch sent on 19 May 2026 — I haven't seen any review feedback yet. If anyone has had a chance to look, I'd appreciate comments; otherwise I'm happy to rebase or resend if it slipped through.
+On 22/05/2026 18:46, Tao Cui wrote:
+> This is v4 of the series that fixes extra_subflows u8 underflow bugs
+> in the MPTCP userspace path manager.
 > 
-> Note that maintainers are under an ever increasing influx of AI
-> generated contents that make processing incoming patches more
-> challenging every day.
+> extra_subflows is a u8 field in struct mptcp_pm_data. The userspace PM
+> increments it after __mptcp_subflow_connect() succeeds, but
+> __mptcp_subflow_connect() calls mptcp_pm_close_subflow() on failure to
+> roll back the pre-increment done by the kernel PM. Because the userspace
+> PM hasn't incremented yet at that point, this decrement is spurious and
+> causes extra_subflows to underflow from 0 to 255.
+> 
+> Patch 1 fixes the underflow by aligning the userspace PM with the kernel
+> PM: increment extra_subflows before calling __mptcp_subflow_connect(),
+> so the existing error path in subflow.c correctly rolls it back on
+> failure. This also eliminates the race window described in v3 patch 2
+> where the worker could decrement before the user thread increments.
+> 
+> Patch 2 adds a selftest to validate that subflow creation failure with
+> an unreachable address does not corrupt the extra_subflows counter.
+Now in our tree:
 
-+1
+New patches for t/upstream-net and t/upstream:
+- 39532fa9ab3a: mptcp: pm: fix extra_subflows underflow on userspace PM
+subflow creation
+- f4c28694fcb2: selftests: mptcp: add test for extra_subflows underflow
+on userspace PM
+- Results: e4d7ed773e9a..a6fc1cc14ba0 (export-net)
+- Results: e10477e57c2f..c40ac68d9bc2 (export)
 
-> FTR this revision LGTM.
+Tests are now in progress:
 
-Just to be sure, does it mean that Sashiko was wrong?
-
- https://sashiko.dev/#/patchset/20260519092243.1242351-1-kalpan.jani%40mpiricsoftware.com
-
-If yes, can I convert this "LGTM" as an Acked-by? :)
+- export-net:
+https://github.com/multipath-tcp/mptcp_net-next/commit/a5802653c80bed89b89dfb2bcf7a1d27a9ccbb05/checks
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/c556587fb705370c99b07b8eae2f23e16e6bb145/checks
 
 Cheers,
 Matt
