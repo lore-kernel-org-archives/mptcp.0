@@ -1,179 +1,119 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69D4F3F167C
-	for <mptcp@lists.linux.dev>; Wed, 27 May 2026 10:46:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DE182641CA
+	for <mptcp@lists.linux.dev>; Wed, 27 May 2026 11:19:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779878794; cv=none; b=C4hPr8hmlRrES3Ng7H5v9fwxHQCt7Be62uFjhEolq4gs939LEeNJEmoI6cVzj+VGaZIwA4sKweelT29MDXF4OAupP9xvRsawB1VTMF+Afw4kj2u6UOd+P0iqNKEPTMJo6mDGReCFgkA980m1FXbTryZbOPPM8nNqdA/3VK16VpU=
+	t=1779880761; cv=none; b=Ovgd6niowyxdCUfLlLpb0mKz+M9Tl7QahYUV9qyg9tITWF8SRVL0Gydun3eE12P8XD/wSgp3ytvIRj5yQvW7NsvpOnyWcPKoeDW7fUTpK6Qsu78jUZ7xbAVCbY5gCrX2sm++sU36cu3vDoeXeLHEMqrjw6c9b2AwHsdXa6N6Tro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779878794; c=relaxed/simple;
-	bh=+2eHdt5xo3PxyAt1lRSd8jHkovb1kBrGbnzBirL4hIw=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=OvUfiREnfAEiE/oZwU1Bca30oMSiP7RQ8egpZySWIgYEwGJ0N6H4DbKG1ADrmdZuxxbgTYQDVf1CggXXkK2z7m9HmLrze7ECsZCNDj7CMyI+g43+OIXkPbL8xbK+wKZQF+HucgH7y+1X9WfxsgnVHoRlz6YAeEHkc09HE62gQGo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DQ9PQ5Gn; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1779880761; c=relaxed/simple;
+	bh=wjuI11+/wN5nsIj4jA/rxC9AtvS1FD2lwKp2Y6td85E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LgxB3BOGD+VwdD8rofKUB1wNda3rVNZSzAE3eQG2WugQB0aoflbjpYl5ToDj7EnkRm3m9b6GcR97dY5tdPGnw0pbQvBcmVsodEAVs8U5q88pjvk1HzVCge1HisxDU8+o3NFTYsirZ3Dsevje/iPsAKHsZNV1AewtYFBVt+PEvvw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cW5Q2E1Y; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DQ9PQ5Gn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1779878789;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DxUzqrkXgztsAtDvzCQ0yinO3IxUwiR5GcLa9GW9GhU=;
-	b=DQ9PQ5GnwkU/iGuyuADPBS2bfwpMMlQL/1iHfgPkX/0knrskkJK9yIPRyodvuH6qjg6gGQ
-	eAATJC2Y+c9LC9NMkGkniMpLJ4Z9b+A9dyfCwA70xgFEGuumY3Oi8QrXmhm5R2yh05jAEH
-	x3qvJkXfGPNR8kO39M0kM5DLocSHZRs=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-307-_wISqaL4PwWWO_TZ0t1NXg-1; Wed,
- 27 May 2026 06:46:28 -0400
-X-MC-Unique: _wISqaL4PwWWO_TZ0t1NXg-1
-X-Mimecast-MFC-AGG-ID: _wISqaL4PwWWO_TZ0t1NXg_1779878787
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 33803180047F
-	for <mptcp@lists.linux.dev>; Wed, 27 May 2026 10:46:27 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.44.48.107])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 567A019560AB
-	for <mptcp@lists.linux.dev>; Wed, 27 May 2026 10:46:26 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Subject: [PATCH v9 mptcp-next 5/6] mptcp: move the retrans loop to a separate helper
-Date: Wed, 27 May 2026 12:45:35 +0200
-Message-ID: <863c4d94afef82be90c91a9fe17a402aa76f2d06.1779876523.git.pabeni@redhat.com>
-In-Reply-To: <cover.1779876523.git.pabeni@redhat.com>
-References: <cover.1779876523.git.pabeni@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cW5Q2E1Y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 426541F000E9;
+	Wed, 27 May 2026 11:19:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1779880760;
+	bh=m9V8W1QsHQyA34uXhhAvwQgWHOFwXd29WlES2yhefj0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=cW5Q2E1YTiZah2+zYtGyVt5nKLutmtF9h7OaI1MjxJdPCQYkyWZFkEFAK5pzzgsx9
+	 VuUu19IZo3qaaztU3UkVdjtUF9r+XBi3ewMNld6loFwAhDSxjhdNCtdfY6hNlmnbIS
+	 JjICwg+/J+QANrrTZVJ5SkGnPozJqtKn86gGJFdOAW2C3maFx9kMVBjps3Hktf5akx
+	 TOmEtg0oew1pZUFUJTM/VLTn/QVrMc00cd/5DsMUHCpUDxU2ifXvw9IaV44d44dGaK
+	 vwAPiiiTthnRw3X+OM0tZn/wldV59P+P7l4NsDUmzmU81OgDnXsOm54IvKLWV+7tWs
+	 PTLanvjcTxkZQ==
+Message-ID: <48a705a4-c706-4f69-a86e-4a238667b6ca@kernel.org>
+Date: Wed, 27 May 2026 21:19:15 +1000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: VuLu6Xr-HupUiswsiY9hPjusLDDIOIbLYODjfwxzoJU_1779878787
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-content-type: text/plain; charset="US-ASCII"; x-default=true
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-next v4 0/3] only remove entry from local_addr_list
+ when sending a REMOVE_ADDR
+Content-Language: fr
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <cover.1776466833.git.tanggeliang@kylinos.cn>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <cover.1776466833.git.tanggeliang@kylinos.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-This is a cleanup in order to make the next patch simpler.
-No functional change intended.
+Hi Geliang,
 
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
----
- net/mptcp/protocol.c | 74 +++++++++++++++++++++++++-------------------
- 1 file changed, 43 insertions(+), 31 deletions(-)
+On 18/04/2026 09:06, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
+> 
+> v4:
+>  - rebased.
+Thank you for the v4. The modification looks good to me, even if the
+behaviour is slightly different:
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 29cb10c02ed8..e21ace787a32 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2828,41 +2828,14 @@ static void mptcp_check_fastclose(struct mptcp_sock *msk)
- 	sk_error_report(sk);
- }
- 
--static void __mptcp_retrans(struct sock *sk)
-+/* Retransmit the specified data fragment on all the selected subflows. */
-+static int __mptcp_push_retrans(struct sock *sk, struct mptcp_data_frag *dfrag)
- {
- 	struct mptcp_sendmsg_info info = { .data_lock_held = true, };
- 	struct mptcp_sock *msk = mptcp_sk(sk);
- 	struct mptcp_subflow_context *subflow;
--	struct mptcp_data_frag *dfrag;
- 	struct sock *ssk;
--	int ret, err;
--	u16 len = 0;
--
--	mptcp_clean_una_wakeup(sk);
--
--	/* first check ssk: need to kick "stale" logic */
--	err = mptcp_sched_get_retrans(msk);
--	dfrag = mptcp_rtx_head(sk);
--	if (!dfrag) {
--		if (mptcp_data_fin_enabled(msk)) {
--			struct inet_connection_sock *icsk = inet_csk(sk);
--
--			WRITE_ONCE(icsk->icsk_retransmits,
--				   icsk->icsk_retransmits + 1);
--			mptcp_set_datafin_timeout(sk);
--			mptcp_send_ack(msk);
--
--			goto reset_timer;
--		}
--
--		if (!mptcp_send_head(sk))
--			goto clear_scheduled;
--
--		goto reset_timer;
--	}
--
--	if (err)
--		goto reset_timer;
-+	int ret, len = 0;
- 
- 	mptcp_for_each_subflow(msk, subflow) {
- 		if (READ_ONCE(subflow->scheduled)) {
-@@ -2890,7 +2863,7 @@ static void __mptcp_retrans(struct sock *sk)
- 			    !msk->allow_subflows) {
- 				spin_unlock_bh(&msk->fallback_lock);
- 				release_sock(ssk);
--				goto clear_scheduled;
-+				return -1;
- 			}
- 
- 			while (info.sent < info.limit) {
-@@ -2913,6 +2886,45 @@ static void __mptcp_retrans(struct sock *sk)
- 			release_sock(ssk);
- 		}
- 	}
-+	return len;
-+}
-+
-+static void __mptcp_retrans(struct sock *sk)
-+{
-+	struct mptcp_sock *msk = mptcp_sk(sk);
-+	struct mptcp_subflow_context *subflow;
-+	struct mptcp_data_frag *dfrag;
-+	int err, len;
-+
-+	mptcp_clean_una_wakeup(sk);
-+
-+	/* first check ssk: need to kick "stale" logic */
-+	err = mptcp_sched_get_retrans(msk);
-+	dfrag = mptcp_rtx_head(sk);
-+	if (!dfrag) {
-+		if (mptcp_data_fin_enabled(msk)) {
-+			struct inet_connection_sock *icsk = inet_csk(sk);
-+
-+			WRITE_ONCE(icsk->icsk_retransmits,
-+				   icsk->icsk_retransmits + 1);
-+			mptcp_set_datafin_timeout(sk);
-+			mptcp_send_ack(msk);
-+
-+			goto reset_timer;
-+		}
-+
-+		if (!mptcp_send_head(sk))
-+			goto clear_scheduled;
-+
-+		goto reset_timer;
-+	}
-+
-+	if (err)
-+		goto reset_timer;
-+
-+	len = __mptcp_push_retrans(sk, dfrag);
-+	if (len < 0)
-+		goto clear_scheduled;
- 
- 	msk->bytes_retrans += len;
- 	dfrag->already_sent = max(dfrag->already_sent, len);
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+
+Note that Sashiko is saying that a RM_ADDR from the server to the client
+is maybe needed:
+
+  https://sashiko.dev/#/patchset/cover.1776466833.git.tanggeliang@kylinos.cn
+
+Not sure: it doesn't seem to cause issues for the other tests.
+
+When you have a chance, can you validate that mptcpd tests (make check)
+are still OK after this modification?
+
+Cheers,
+Matt
 -- 
-2.54.0
+Sponsored by the NGI0 Core fund.
 
