@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7846945039
-	for <mptcp@lists.linux.dev>; Wed, 27 May 2026 04:44:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48BB812F585
+	for <mptcp@lists.linux.dev>; Wed, 27 May 2026 05:02:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779857098; cv=none; b=giO1Lc3xvYhCoD+H5ZReaxEjR78NMQ+gx0mv7VwOBqHDZQ9ONEXjb1yoyJhjx67x68Olscx5tni1zb7oCuCLxePJ405YZsTMqeZGIl8SJj5FQ6uM84pBSPk/fK4Qvm+yLqODYu9WIxo6BPK6AKtZaF2mNf7jX9eXzF2S77ZvZAw=
+	t=1779858164; cv=none; b=kbmmrFMese5czq+CqNs5h7hv3l3BVE3DRLouEie8ABP6NLK0MK8Rhm6aoYrBTdnFAs4He8Za9FShBmxVUCISkBXuU8T9h84EsxCAxfD0Xl1kmGhleE9Eozg2lLkWi7ljofMkBohVJb+v/cb+kpV6tOFca+u+Y7mo+EKC4j8JQsg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779857098; c=relaxed/simple;
-	bh=drWlSRiQ//EEWu/U2lCk0ikN6dCSXdA68fI5nR8yYNs=;
+	s=arc-20240116; t=1779858164; c=relaxed/simple;
+	bh=s6DVj4vdbL1gsBNFdWPOIxPaHP73r1qsCWKQ0xoY4MQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EtISu+qgdu/r2PvcOG8uWBTeSyv6Ca703Q/ZQt0IOGdFLjgJFIE/AA1c/JugakPzdkaNcAj2MNz8JVdhGs57YQvZpGgtgh3or+H6ezN9rIxM+EEQbdZD5WMpCP6Gt/l889keSrX5SqsDGo8q8Yia7XDOIV9O7fwnUNao1SfIpYM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gQfzA1X0; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=O0i8BvvfWk0EY5JFgGtUpLe3agd7OmEmpnVwbyI3hazOdNPEtjXKC59RQbcvFHRsnY1KV2IYmh7ls3Xy/vctQXkJR0FwScjAofWkYxKKHDSSKJjBweyZb11eYgRySaGW5Lfy8DFQExX5CnKxOeryUAJxo6Lf6jVk/5OSIjvscXQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SViQa7K7; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gQfzA1X0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB9851F000E9;
-	Wed, 27 May 2026 04:44:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SViQa7K7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E8551F000E9;
+	Wed, 27 May 2026 05:02:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779857097;
-	bh=bUKcg1v4QWpyjhvqt6/XngwZJbSquPikL7FkJlWMDf4=;
+	s=k20260515; t=1779858162;
+	bh=cwStwD0J5LngTQvEbjv2rT8atfRfGlXaBFZB2GtAyNk=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=gQfzA1X0EBsflqTclg5SvpXR69MqA3M+3BYDipwyBxTpvDGXYlvpNs9hnVPHlgI00
-	 gAkqJWyzyybVZO9zvyjJBXi838xi11af1tCsOQnRlQpzexX7u3ZsJYd92vrBcdHU1R
-	 nOMdSAG6IWzYoHhmdXTQDDB9L9KhDXhtSn6jm4o8dVBtDAdF/SLFoIt3GX/hkjwpUC
-	 0ywMbIb8GLU2dmS2Fz8AqSn5zIx6hg/4A/9B1jKPzjUk2GVEe73aTgplMwyRFJnVlG
-	 MeYyh/HL+4+Xwv/HAWMpk0/RVhHHQ9PUc7GJkfScjw8N5hNd5nP90hmb6puOtz5bO9
-	 clOSMwQikDXog==
-Message-ID: <d5c58002-fbef-451f-aedc-1bdda5ebc9bd@kernel.org>
-Date: Wed, 27 May 2026 14:44:52 +1000
+	b=SViQa7K74jAqRgMmr8xVggtGCAkZuAkhs+pXn4PdcweedpQV/kqD6DIEz1z1eW35k
+	 kxu/8Ldm+N2kbeZtdYjVcwEBc2EVO0TiyOZitAG+E7wP9ugsY2FBlwfxSJY1dRaNQR
+	 Pw6zdfObUR+Xfzuw44O4E8FzjlLcodkqitSUMZOJwrn/FqUQ8aIn7sx8fdXqQAOyUA
+	 Negxx57EJuy/lXFUu9wxIw9huUgg5HeaPbpY+lDylKKIFIrKgFQ04n4coob6HKQkAw
+	 7mt+9G1VKfJjGQMDsq5WpFH/DrdoRLAryUbVmgsfeX8W0G/p6gFLUdaqKsqc52kxaE
+	 9rK9ucYnHB1sw==
+Message-ID: <6046a321-9f73-46d9-93d5-5bfe62416cc8@kernel.org>
+Date: Wed, 27 May 2026 15:02:37 +1000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net 2/2] mptcp: use sk_shutdown_timer_sync() for
- add_addr timer teardown
+Subject: Re: [PATCH net v2] mptcp: pm: fix memory leak from
+ alloc-during-teardown race
 Content-Language: fr
-To: Li Xiasong <xiasonglee@gmail.com>, mptcp@lists.linux.dev
-Cc: lixiasong1@huawei.com
-References: <20260526103647.732350-1-xiasong.lee@gmail.com>
- <20260526103647.732350-3-xiasong.lee@gmail.com>
+To: Shardul Bankar <shardul.b@mpiricsoftware.com>, mptcp@lists.linux.dev
+Cc: martineau@kernel.org, geliang@kernel.org, pabeni@redhat.com,
+ janak@mpiric.us, kalpan.jani@mpiricsoftware.com, shardulsb08@gmail.com
+References: <20260523212930.2957096-1-shardul.b@mpiricsoftware.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,36 +87,61 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20260526103647.732350-3-xiasong.lee@gmail.com>
+In-Reply-To: <20260523212930.2957096-1-shardul.b@mpiricsoftware.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Li,
+Hi Shardul,
 
-On 26/05/2026 20:36, Li Xiasong wrote:
-> From: Li Xiasong <lixiasong1@huawei.com>
+Thank you for the v2!
+
+On 24/05/2026 07:29, Shardul Bankar wrote:
+> mptcp_pm_destroy() drains msk->pm.anno_list via list_splice_init()
+> under msk->pm.lock and then, for the userspace PM, drains
+> msk->pm.userspace_pm_local_addr_list under the same lock. Between
+> the two splices, msk->pm.lock is released.
 > 
-> Sashiko reported a possible use-after-free in add_addr timer teardown.
+> A concurrent userspace PM genl ANNOUNCE on the same msk holds a
+> sock reference via mptcp_token_get_sock() and, in
+> mptcp_pm_nl_announce_doit(), calls
+> mptcp_userspace_pm_append_new_local_addr() and
+> mptcp_pm_alloc_anno_list(). Both take msk->pm.lock briefly to
+> add to their respective lists. Because the genl handler holds a
+> sock reference, mptcp_pm_destroy() may run on the same msk via
+> mptcp_disconnect(), which invokes mptcp_destroy_common() without
+> dropping the sock refcount, before the handler completes.
 > 
-> The add_addr timer callback can re-arm itself on the sock_owned_by_user()
-> path. In final teardown paths, sk_stop_timer_sync() only waits for a
-> running callback to finish, but does not prevent a concurrent callback
-> from re-arming the timer.
+> If the lock acquisitions interleave such that mptcp_pm_destroy()'s
+> splice runs first, the subsequent alloc paths land on a list head
+> pointing to itself. Nothing else iterates that list for this msk,
+> and the added entry leaks. kmemleak reports both 192-byte
+> mptcp_pm_add_entry objects (from mptcp_pm_alloc_anno_list()) and
+> 64-byte mptcp_pm_addr_entry objects (from
+> mptcp_userspace_pm_append_new_local_addr()) under sustained
+> concurrent ANNOUNCE + close load against the userspace PM.
 > 
-> Use sk_shutdown_timer_sync() for add_addr timer teardown so the timer
-> cannot be re-armed after teardown starts, preventing a possible
-> use-after-free on a freed add entry.
+> Add an MPTCP_PM_DESTROYING bit in msk->pm.status, set by
+> mptcp_pm_destroy() under pm.lock before the splice and checked
+> under pm.lock by the alloc paths. Either the alloc takes pm.lock
+> first, in which case its entry will be on the list when destroy's
+> splice runs and will be freed normally; or destroy takes pm.lock
+> first, in which case the subsequent alloc observes the bit and
+> refuses. Either ordering is correct, and the race that orphans
+> an entry is precluded. The bit lives in the pm data reset group,
+> so mptcp_pm_data_reset() clears it on the disconnect/reuse path
+> as well as on fresh socket init.
+> 
+> Found by an MPTCP protocol-flow harness extending BRF
+> (arXiv:2305.08782). Baseline ~0.3 kmemleak reports/minute on the
+> userspace PM reduces to zero across multi-hour runs with this
+> patch applied.
 
-Sashiko is saying that if sk_reset_timer() is called after
-sk_shutdown_timer_sync(), it will not re-arm the timer, but in this
-case, mod_timer() will also return 0, and the socket refcount will be
-incremented.
+I guess you also validated the v2 against your reproducer, right?
 
-https://sashiko.dev/#/patchset/20260526103647.732350-1-xiasong.lee%40gmail.com
+I'm asking, because sashiko thinks there is still a way to hit the issue
+if the userspace does a shutdown() (mptcp_disconnect()):
 
-It is not clear to me how to solve that without checking whether
-timer->function is set or not after having called mod_timer(), because
-that seems quite hackish...
+https://sashiko.dev/#/patchset/20260523212930.2957096-1-shardul.b@mpiricsoftware.com
 
 Cheers,
 Matt
