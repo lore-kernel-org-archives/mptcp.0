@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CB2E3FC5A8
-	for <mptcp@lists.linux.dev>; Wed, 27 May 2026 11:44:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6C6829B77E
+	for <mptcp@lists.linux.dev>; Wed, 27 May 2026 12:01:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779882261; cv=none; b=MDMpd6gsDAmQ2vyNbHwMeR6stU/R6lI2kChJu0ES11CowzXswMV0H7GX6o+harj7D3vMsjG/6uLVsAJyhvSmotS4kkjFJYNVCKcJtVCQTCbJYTvARrjm/BZseoi2maHvT5LD03gl07zrqBfvfcAZHZoLPS3wlkBo3g32TX2GEQA=
+	t=1779883267; cv=none; b=kHDfY3KVv6Y7/UY+qqmGPQMyuQP43aVpr3NXNs3SA8/VNSYn3VF8acrXvqT5HoahocaYWOTHu3EPx2cAoeiKtwUDWZ6sS0UyMMC5FCZGfpcmUGabNUsW1nLVGjVARoNCUDSmRGa90tfqsXsO/MaeWa2Qk2uUM7R3VcJ7NeFtL00=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779882261; c=relaxed/simple;
-	bh=dLpRfjVZdFY72L8ANdnsWqZ/s7TN36ayOb/sNfrVa0Y=;
+	s=arc-20240116; t=1779883267; c=relaxed/simple;
+	bh=O53ErbMogQlFjn6PJXjp63BXK04H0m+smqiJli716lw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Wb29tKStzppHJO2t3eCZOr3IhlnUGahl5jLQ4XBmw6i9E+WruHN0wsNre3THZKlEj6tkYpWbJy08SFEF9ULu9HglF3+z0iTht5qLSL6ME8C/9HajjPOZKTRbPmhrnqDxQa9kEbQ29cCrFf6/TrEl5KiB6R6T7FzBjZQcBqCimN4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LewKlG6s; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=OwSgFZtHkxf2dA9DsxlkLeySpCEvubEz9CYeXmGO1TqQYex0buDRe0HYkwDChhFpNAoBCBAvVdzoRlQktjT0Zz/rrVMnUVfPPGp0cqvwzxaNszHk4lEy3RbqbN4suLXx91Dl7CC0w4s2IRZOW5lV6I1/fggFZmChWhYRAvjYOWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DBWXU0kg; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LewKlG6s"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 880C31F00A3C;
-	Wed, 27 May 2026 11:44:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DBWXU0kg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D042B1F000E9;
+	Wed, 27 May 2026 12:00:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779882257;
-	bh=pwz2ffDg9B306oYyvlpr5Oj9U9gLXb1pZiNVfo2DUew=;
+	s=k20260515; t=1779883256;
+	bh=Szf/GnzwNLgOMlSljtv18HMIhcJARBHD3TVa2hWeaBo=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=LewKlG6sqm9PMdhXO8pjoK3GLI/Uuwh3HMqYTS9cslZFb+sCdDEvJ0VLgEu4Ld1TC
-	 MZ00ujjq8oEnUNLoLSW3RW2t9aNEnEjQKEZOh2RkFNTA8kXu+7fF1WOZc4VBem/RPv
-	 HcNIiWiuCWrpfrpNkpq+6ztUmC4iBhdV4mEHdN1sHKiwOSaUS+cSrVTe53IZBt3TwX
-	 HwX3CbCmQ9L7ifYosWmT0GsGb6ii5cucAJBfcjRq9mXpBRVzWYqeldCKFEUBaJ8u/r
-	 +nQIh4lejVdcmU1PG9O1FSkCzPz6FiA8Abs5Tm5sImGMnzj++BppXVeH93G+aRDbz6
-	 dMkcCC3kwc9/Q==
-Message-ID: <298da9ba-889e-4ff9-bb31-8cbd77166859@kernel.org>
-Date: Wed, 27 May 2026 21:44:12 +1000
+	b=DBWXU0kg/mCfyBGSahcmX0N9ybSjTKuojcH50dxf1ILxwctnl5huYAHdEAKKu17TW
+	 bP8agdoYQYmZIGGljAwpFfSL65F2i+rEpreeykvh7voXsZGjrgZM1ZV5fMCtDUSw/N
+	 S85hOuvGeIKoQKyUzyq4PWDIKbLWWRb9ki3L3YK3yUtl6jPSCHncjbXvyYEGArTpLn
+	 219ghG5WRdHhA2a5gVw2F3Ws4RkvfMqgcr18Z6bMYb4P0nI6R/dtby8kuiXtV5fJ7A
+	 6nmj9YBmI3maoTzLMTQ08w76WuEomW7OKrQvoaXnnmkIHNAyqr4+R1pLQzB/eJwlrz
+	 V/QGFTA/AEaYw==
+Message-ID: <565b8283-a179-43a5-aa67-2972f8bf3a13@kernel.org>
+Date: Wed, 27 May 2026 22:00:51 +1000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next] mptcp: remove unused data_ack from struct
- mptcp_ext
+Subject: Re: [PATCH mptcp-net] selftests: mptcp: sockopt: set EXIT trap
+ earlier
 Content-Language: fr
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>, Paolo Abeni <pabeni@redhat.com>
-References: <59640df9a7c0528688419655e53cb4efc50aff41.1779786007.git.tanggeliang@kylinos.cn>
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <b681d1061e68faeb0d4fd68c23c09852d90385da.1779185611.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,31 +86,34 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <59640df9a7c0528688419655e53cb4efc50aff41.1779786007.git.tanggeliang@kylinos.cn>
+In-Reply-To: <b681d1061e68faeb0d4fd68c23c09852d90385da.1779185611.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 26/05/2026 19:04, Geliang Tang wrote:
+On 19/05/2026 20:13, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> The data_ack and data_ack32 fields in struct mptcp_ext are no longer used
-> anywhere. Remove them from the structure and update mptcp_dump_mpext()
-> trace helper accordingly. Drop the data_ack field from the trace entry
-> and the corresponding output in TP_printk().
-Thank you for the follow-up patch!
+> Set the EXIT trap for cleanup immediately after creating temporary file
+> variables, before init and make_file, to ensure cleanup runs on any
+> failure or interruption during the early setup phase.
+
+Thanks!
 
 Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-New patches for t/upstream:
-- f51ec6de6c5a: mptcp: remove unused data_ack from struct mptcp_ext
-- Results: cde220b5fe28..2b800cf792ef (export)
+New patches for t/upstream-net and t/upstream:
+- 7114d1c41d05: selftests: mptcp: sockopt: set EXIT trap earlier
+- Results: a6fc1cc14ba0..9ed1e5bcaf67 (export-net)
+- Results: 2b800cf792ef..c154734ef126 (export)
 
 Tests are now in progress:
 
+- export-net:
+https://github.com/multipath-tcp/mptcp_net-next/commit/0f285d5a8a89d2f4d6134ce3fcc7a187b15f65bb/checks
 - export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/8b808b715575367c7e00bcd76a597b7b57d674b8/checks
+https://github.com/multipath-tcp/mptcp_net-next/commit/6ae41d6df6c12883277b2c9ab490b5c8b1a4fc85/checks
 
 Cheers,
 Matt
