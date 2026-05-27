@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 439AF35838B
-	for <mptcp@lists.linux.dev>; Wed, 27 May 2026 06:24:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 570B637755C
+	for <mptcp@lists.linux.dev>; Wed, 27 May 2026 06:28:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779863067; cv=none; b=tBlt/joJ33HchTvvakNYzx0kto/rxhbSKpL0mg09+YWMZnZTlgzmUwALav1IOzciqYndq7LHcAMGsgH7WfKhr7FYrjBBwS51VYUxaaXEQcid0YSig7wJZ9cb2JW3ybWmlFPlDLRbWL2tyHk09sA1Ft86Ag+nWFTnw1bVYX1AMIw=
+	t=1779863332; cv=none; b=EoSuKkkDtUrdko/HaSgwYct5IgrwhOehwdyj/CbjakTXDPUZ500iC/70xXkVtRqGviqBwQS4XKQslzd2oeggwzXrIbWquIhpFt0C+y4165JDJZ6oK0oilpy/00G7qpKgW0UNKoh0jGVJybqj5mUXih9Z3oRLxlK7jLthx1hwbm8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779863067; c=relaxed/simple;
-	bh=aznASPGp2kTqqUlqZPiv0ezGhdWJWgLi1QrK0s5DnhQ=;
+	s=arc-20240116; t=1779863332; c=relaxed/simple;
+	bh=X7ZL/eB/hUrJJDrGPTMI9nwJ4VueP5YYxIYfhsPImV8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=To5wvvLfN2xFrt4ZR8E0/dwJKqXl8XHLUek0dgXlxdaiRFHo0DuwL+zALYjayWmz7TQw+2mg4cfa8uSj1Cbpex/R/zsseCoZf424DdHPuSWbdHDzBo6/3MiLHGuE0Kfk2Gkf5KlSf2Y8ZwcJJdBLEN8GL3VpWkrBt5gOZypcG+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BWdC9Jif; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=fs2sTpDFxKbvpqzXCMkRxGlLzTimNPRxg3AWSaW5T3ZAL1WiccSEJR5wVHdMpy9wTREvCUZIcyIUZ6nQQ+Gw2Z0UiqqIeqXfQy5jj0l6sBg65srqS7WLdo0o65Qd7eH3nisbVdhEYbpMClMU3odnGeph7wC86YycnEVGjIUb6SE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B2F/7WHP; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BWdC9Jif"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 592D61F000E9;
-	Wed, 27 May 2026 06:24:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B2F/7WHP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BAD7A1F000E9;
+	Wed, 27 May 2026 06:28:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779863063;
-	bh=GW8adILk1zn74ty2oEFYlfdbUd6w3qx+mzLQAEggkpc=;
+	s=k20260515; t=1779863331;
+	bh=qaq9epCw3bdUWNjUzN8SVQZo5kX89uM5nyMB+ClvFgA=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=BWdC9Jif5Zv2MyJ1eD9yOW0wJJehkHmWBlc1iTZWrxmo11eLoynicEKwi7Iijn6az
-	 Ik3pWFTwJd5sR9x7WN42NwEpD9u1NSnu9fOiyKZTKAvaSHjVatR5SXuW4BeqsnnDZq
-	 NFjolSyOV5/yBNgOrQ76Ia7xGkMJvEIFPII6xsoC4Q3qTp+/zL8CUrxb2UuzLI7wfB
-	 KQgBRyKa/bWByXF/1Wtz3kfSQulrgUllcFulUucICJiuvl055XvhDTm4HXeIT9JicE
-	 MblqEva3SiSxtXKpQBm9cIrzL0FT4gsvq1CBNCdgUru/mHTmwzOXCj+nD7d2T4XuXp
-	 BvmOqYeySRuBA==
-Message-ID: <b69a2221-bd18-4435-a477-1ba830cc4f19@kernel.org>
-Date: Wed, 27 May 2026 16:24:17 +1000
+	b=B2F/7WHPD64I9qKXDDZs6DRKeRGUkXCc8n3XQ1iuctx1ijqewpNHNmvkeimqzc4eq
+	 MzOMiG7Nhg21OBYZ/hoSPoVnqbftwyhlTJkOuc1VlvVEXFeQPPqJZ4CWwDRsJWlnW8
+	 4kvr4LnN2SjOJXXOuIVSalQNfsCRsEutNFBuKzgfhCRTp/33dn8RZa7pVGTP6gTQDb
+	 c4UOOgYUjDtI0Mi6aHKqg6GkidQKxO4On8MD9GG3Uv2P4Fvmu0Pi5prqrQek6WJEfb
+	 fjdruULBrQkEJ+UbA4oFJwyZlQwyMxjAnPcOQS4RTi3TTyhg+Gjgj+GF4EJlHADhmJ
+	 neCO8leqHxBWQ==
+Message-ID: <921bb3fe-3c9b-44f8-9ad6-7bb30b383059@kernel.org>
+Date: Wed, 27 May 2026 16:28:47 +1000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,15 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH v3 2/2] selftests: mptcp: extend chk_rst_nr to validate
- per-event RST counters
+Subject: Re: [RFC mptcp-next v20 00/15] MPTCP KTLS support
 Content-Language: fr
-To: Shardul Bankar <shardulsb08@gmail.com>, mptcp@lists.linux.dev
-Cc: martineau@kernel.org, geliang@kernel.org, pabeni@redhat.com,
- janak@mpiric.us, kalpan.jani@mpiricsoftware.com,
- Shardul Bankar <shardul.b@mpiricsoftware.com>
-References: <20260512103331.1934343-1-shardul.b@mpiricsoftware.com>
- <20260512103331.1934343-3-shardul.b@mpiricsoftware.com>
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <cover.1779788090.git.tanggeliang@kylinos.cn>
+ <7e13ee6b75a2b2425cdcea7684638913782f998b.camel@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -89,179 +86,30 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20260512103331.1934343-3-shardul.b@mpiricsoftware.com>
+In-Reply-To: <7e13ee6b75a2b2425cdcea7684638913782f998b.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Shardul,
+Hi Geliang,
 
-On 12/05/2026 20:33, Shardul Bankar wrote:
-> Extend chk_rst_nr() with named env-var expectations for each
-> per-event MPTCP_RST_EMPTCP counter, matching the pattern used by
-> chk_join_nr().  Each counter defaults to 0 and is checked silently
-> on success; mismatches print a check line and fail the test.
-> Counters absent from the running kernel are skipped silently so
-> older kernels do not false-fail.
+On 27/05/2026 16:03, Geliang Tang wrote:
+> Hi Matt,
 > 
-> Add a test at the end of signal_address_tests that triggers
-> MPJoinSynAckNoMPJoin: ns1 signals an address that is already bound
-> on the client (ns2), where a TCP-only mptcp_connect listener is
-> started.  The client's MP_JOIN routes locally to the TCP listener,
-> which responds with a plain SYN/ACK without the MP_JOIN option, and
-> the new counter increments on the client side.
+> On Tue, 2026-05-26 at 17:46 +0800, Geliang Tang wrote:
+>> From: Geliang Tang <tanggeliang@kylinos.cn>
+>>
+>> v20:
 > 
-> Other per-event counters (MD5SigReset, MPJoinAckNoMPJoin,
-> MPJoinAckNoCtx, DssReset, MPJoinNotEstablished) are not currently
-> reachable from mptcp_join.sh; the env-var hooks are in place for
-> future tests to set expectations explicitly.
-> 
-> Assisted-by: Claude:claude-opus-4-7
-> Signed-off-by: Shardul Bankar <shardul.b@mpiricsoftware.com>
-> ---
-> v3:
->   - Drop the third-netns approach for triggering
->     MPJoinSynAckNoMPJoin.  Use ns1 signalling an address that is
->     already bound on ns2 (10.0.2.2) with a TCP-only mptcp_connect
->     listener on ns2; the client's MP_JOIN routes locally to that
->     listener and the SYN/ACK arrives without MP_JOIN.
->   - Move the test into signal_address_tests; drop the standalone
->     rst_emptcp_tests group and its sorted-list entry.
->   - Drop speed=slow (not needed: only one ADD_ADDR, no in-flight
->     actions).
->   - The local-and-assign that tripped shellcheck SC2155 is gone
->     with the old test.
-> v2: https://lore.kernel.org/all/20260509183335.969018-1-shardul.b@mpiricsoftware.com/
-> 
->  .../testing/selftests/net/mptcp/mptcp_join.sh | 72 +++++++++++++++++++
->  1 file changed, 72 insertions(+)
-> 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> index 5d4d0f127f795..c6ef7f785a558 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> @@ -76,6 +76,13 @@ unset join_create_err
->  unset join_bind_err
->  unset join_connect_err
->  
-> +unset rst_md5sig_reset
-> +unset rst_synack_no_mpjoin
-> +unset rst_ack_no_mpjoin
-> +unset rst_ack_no_ctx
-> +unset rst_dss_reset
-> +unset rst_not_established
+> This version did not trigger sashiko. I'm not sure if it's because the
+> patches couldn't be applied, as some code was merged into the export
+> branch yesterday. If possible, please help me trigger sashiko again.
+It was:
 
-See below: I think you can use the 'join_' prefix and attach them above,
-except for md5sig and dss that could also simply be called rst_dss and
-rst_md5sig.
+  https://sashiko.dev/#/patchset/cover.1779788090.git.tanggeliang@kylinos.cn
 
-> +
->  unset fb_ns1
->  unset fb_ns2
->  unset fb_infinite_map_tx
-> @@ -1349,6 +1356,12 @@ chk_rst_nr()
->  	local rst_tx=$1
->  	local rst_rx=$2
->  	local ns_invert=${3:-""}
-> +	local md5sig_reset=${rst_md5sig_reset:-0}
-> +	local synack_no_mpjoin=${rst_synack_no_mpjoin:-0}
-> +	local ack_no_mpjoin=${rst_ack_no_mpjoin:-0}
-> +	local ack_no_ctx=${rst_ack_no_ctx:-0}
-> +	local dss_reset=${rst_dss_reset:-0}
-> +	local not_established=${rst_not_established:-0}
->  	local count
->  	local ns_tx=$ns1
->  	local ns_rx=$ns2
-> @@ -1385,6 +1398,43 @@ chk_rst_nr()
->  	else
->  		print_ok
->  	fi
-> +
-> +	# Per-event MPTCP_RST_EMPTCP counters; default 0, gated on availability.
-> +	count=$(mptcp_lib_get_counter ${ns_tx} "MPTcpExtMD5SigReset")
-> +	if [ -n "$count" ] && [ "$count" != "$md5sig_reset" ]; then
-> +		print_check "MD5SigReset ${tx}"
-> +		fail_test "got $count MD5SigReset expected $md5sig_reset"
-> +	fi
-> +
-> +	count=$(mptcp_lib_get_counter ${ns_rx} "MPTcpExtMPJoinSynAckNoMPJoin")
-
-Here, the netns should be fixed: only the client should get it, and
-using "chk_rst_nr ... invert" will not check at the right netns.
-
-In fact, I think this counter and other MPJoin counters here below
-should probably be added to the chk_join_nr() helper, no? Leaving here
-only the MD5Sig and DSS related one. WDYT?
-
-> +	if [ -n "$count" ] && [ "$count" != "$synack_no_mpjoin" ]; then
-> +		print_check "MPJoinSynAckNoMPJoin ${rx}"
-> +		fail_test "got $count MPJoinSynAckNoMPJoin expected $synack_no_mpjoin"
-> +	fi
-> +
-> +	count=$(mptcp_lib_get_counter ${ns_tx} "MPTcpExtMPJoinAckNoMPJoin")
-> +	if [ -n "$count" ] && [ "$count" != "$ack_no_mpjoin" ]; then
-> +		print_check "MPJoinAckNoMPJoin ${tx}"
-> +		fail_test "got $count MPJoinAckNoMPJoin expected $ack_no_mpjoin"
-> +	fi
-> +
-> +	count=$(mptcp_lib_get_counter ${ns_tx} "MPTcpExtMPJoinAckNoCtx")
-> +	if [ -n "$count" ] && [ "$count" != "$ack_no_ctx" ]; then
-> +		print_check "MPJoinAckNoCtx ${tx}"
-> +		fail_test "got $count MPJoinAckNoCtx expected $ack_no_ctx"
-> +	fi
-> +
-> +	count=$(mptcp_lib_get_counter ${ns_rx} "MPTcpExtDssReset")
-> +	if [ -n "$count" ] && [ "$count" != "$dss_reset" ]; then
-> +		print_check "DssReset ${rx}"
-> +		fail_test "got $count DssReset expected $dss_reset"
-> +	fi
-> +
-> +	count=$(mptcp_lib_get_counter ${ns_rx} "MPTcpExtMPJoinNotEstablished")
-> +	if [ -n "$count" ] && [ "$count" != "$not_established" ]; then
-> +		print_check "MPJoinNotEstablished ${rx}"
-> +		fail_test "got $count MPJoinNotEstablished expected $not_established"
-> +	fi
->  }
->  
->  chk_infi_nr()
-> @@ -2378,6 +2428,28 @@ signal_address_tests()
->  			chk_add_nr 4 4
->  		fi
->  	fi
-> +
-> +	# signalled address belongs to the client, where a TCP-only
-> +	# listener is bound at it: the client's MP_JOIN routes locally
-> +	# to the listener and receives a SYN/ACK without MP_JOIN.
-> +	# MPJoinSynAckNoMPJoin increments on the client side.
-> +	if reset "signal address, TCP-only listener on client"; then
-> +		local extra_bind
-> +
-> +		pm_nl_set_limits $ns1 0 1
-> +		pm_nl_set_limits $ns2 1 1
-> +		pm_nl_add_endpoint $ns1 10.0.2.2 flags signal
-> +
-> +		ip netns exec ${ns2} ./mptcp_connect -l -t -1 -p "$(get_port)" \
-> +			-s TCP 10.0.2.2 &
-> +		extra_bind=$!
-
-It would be better to call mptcp_lib_wait_local_port_listen(), just to
-be sure it is listening. (Even if 'run_tests' will also call it on the
-other netns)
-
-On the other end, I see we didn't call it in similar other cases.
-
-> +		run_tests $ns1 $ns2 10.0.1.1
-
-See above: so here, call chk_join_nr() after, like in most tests, but
-here check with join_synack_no_mpjoin=1.
-
-> +		rst_synack_no_mpjoin=1 \
-> +			chk_rst_nr 0 0
-> +
-> +		kill ${extra_bind} 2>/dev/null
-> +	fi
->  }
->  
->  laminar_endp_tests()
+But not sure why GitHub Actions didn't start (quite a few issues there,
+so, probably just unlucky). I manually restarted it by overriding the
+tag after a rebase.
 
 Cheers,
 Matt
