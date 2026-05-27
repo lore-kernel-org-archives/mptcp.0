@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 570B637755C
-	for <mptcp@lists.linux.dev>; Wed, 27 May 2026 06:28:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B50E3B4EBD
+	for <mptcp@lists.linux.dev>; Wed, 27 May 2026 06:50:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779863332; cv=none; b=EoSuKkkDtUrdko/HaSgwYct5IgrwhOehwdyj/CbjakTXDPUZ500iC/70xXkVtRqGviqBwQS4XKQslzd2oeggwzXrIbWquIhpFt0C+y4165JDJZ6oK0oilpy/00G7qpKgW0UNKoh0jGVJybqj5mUXih9Z3oRLxlK7jLthx1hwbm8=
+	t=1779864641; cv=none; b=E9XHAQ1oVluR68ihuOE+KsGHgDavjPLG+FeVdh9Roh5ZeJUMZn/2J5fSZu+70gJyuak0THmx7nC5tYWlK2FXD/VafqtXETKy1rXnPWlUCCK76EHsQHAaW8opXd4JbptH7Nr7iWSQV4vuHl61KkCArbcozTwk34eJv1x6yAoWczc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779863332; c=relaxed/simple;
-	bh=X7ZL/eB/hUrJJDrGPTMI9nwJ4VueP5YYxIYfhsPImV8=;
+	s=arc-20240116; t=1779864641; c=relaxed/simple;
+	bh=u+ImwarEMXBSH8089QWnT2BS+0kaOiC1dukALs+Hocc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fs2sTpDFxKbvpqzXCMkRxGlLzTimNPRxg3AWSaW5T3ZAL1WiccSEJR5wVHdMpy9wTREvCUZIcyIUZ6nQQ+Gw2Z0UiqqIeqXfQy5jj0l6sBg65srqS7WLdo0o65Qd7eH3nisbVdhEYbpMClMU3odnGeph7wC86YycnEVGjIUb6SE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B2F/7WHP; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=SRbqnGWBo1yUNbTSq17XRcMZnv/cy+GNc07DFNTXscplGSK2GSj81ruJQ4dBq/IXdmxbprvSPhgKjJ5Fu4lJ+qylk0BtjHDFhqHGKogdjrAQepszJAzp145P0rnPzS+7RszcxefgZ0gd7bQZxcH3t7NfearX7S/KpC5Zd0gdCfM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OzAuu0Xg; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B2F/7WHP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BAD7A1F000E9;
-	Wed, 27 May 2026 06:28:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OzAuu0Xg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45D021F00A3A;
+	Wed, 27 May 2026 06:50:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779863331;
-	bh=qaq9epCw3bdUWNjUzN8SVQZo5kX89uM5nyMB+ClvFgA=;
+	s=k20260515; t=1779864640;
+	bh=f4sswhUmDqwfLubCi2GkiU2sPxRYp606yBQ6djuU/QY=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=B2F/7WHPD64I9qKXDDZs6DRKeRGUkXCc8n3XQ1iuctx1ijqewpNHNmvkeimqzc4eq
-	 MzOMiG7Nhg21OBYZ/hoSPoVnqbftwyhlTJkOuc1VlvVEXFeQPPqJZ4CWwDRsJWlnW8
-	 4kvr4LnN2SjOJXXOuIVSalQNfsCRsEutNFBuKzgfhCRTp/33dn8RZa7pVGTP6gTQDb
-	 c4UOOgYUjDtI0Mi6aHKqg6GkidQKxO4On8MD9GG3Uv2P4Fvmu0Pi5prqrQek6WJEfb
-	 fjdruULBrQkEJ+UbA4oFJwyZlQwyMxjAnPcOQS4RTi3TTyhg+Gjgj+GF4EJlHADhmJ
-	 neCO8leqHxBWQ==
-Message-ID: <921bb3fe-3c9b-44f8-9ad6-7bb30b383059@kernel.org>
-Date: Wed, 27 May 2026 16:28:47 +1000
+	b=OzAuu0Xge7muoWjjyOdZGbBKbq0UAjPTPnci56FC9c+zndu6kQc3Iol8bpJFEkH0s
+	 RjoLAARlRvlanYHXDyGIFh/93U5z8pXLNYn3EewIlPn7tRpwQibm5F6S2fCKRfsVmm
+	 TyvBooj0dl8DIcJZqCg/UZ8xaMEtv1TYVwxjx++RW01h32SIcZyMtk61Ki4eTqsTjE
+	 ybo4wacMoWgq/opUH0xVh05gjks9V3utwT7Cx5r0MFON1VrfG6JCZ1s83z2gcdNw5r
+	 JpVSx4KItUC6iO9WhciTz+cOZhX/s3iTglHcjMgnVcn3UhU84XijejuCEm3XeUXIHb
+	 CKGzDKNYanC7Q==
+Message-ID: <802598b4-1765-4cce-a29f-3cdbb3abfc26@kernel.org>
+Date: Wed, 27 May 2026 16:50:33 +1000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,15 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [RFC mptcp-next v20 00/15] MPTCP KTLS support
+Subject: Re: [PATCH v3 1/2] mptcp: add per-event MIB counters for
+ MPTCP_RST_EMPTCP resets
 Content-Language: fr
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1779788090.git.tanggeliang@kylinos.cn>
- <7e13ee6b75a2b2425cdcea7684638913782f998b.camel@kernel.org>
+To: Shardul Bankar <shardulsb08@gmail.com>, mptcp@lists.linux.dev
+Cc: martineau@kernel.org, geliang@kernel.org, pabeni@redhat.com,
+ janak@mpiric.us, kalpan.jani@mpiricsoftware.com,
+ Shardul Bankar <shardul.b@mpiricsoftware.com>
+References: <20260512103331.1934343-1-shardul.b@mpiricsoftware.com>
+ <20260512103331.1934343-2-shardul.b@mpiricsoftware.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,30 +89,42 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <7e13ee6b75a2b2425cdcea7684638913782f998b.camel@kernel.org>
+In-Reply-To: <20260512103331.1934343-2-shardul.b@mpiricsoftware.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+Hi Shardul,
 
-On 27/05/2026 16:03, Geliang Tang wrote:
-> Hi Matt,
-> 
-> On Tue, 2026-05-26 at 17:46 +0800, Geliang Tang wrote:
->> From: Geliang Tang <tanggeliang@kylinos.cn>
->>
->> v20:
-> 
-> This version did not trigger sashiko. I'm not sure if it's because the
-> patches couldn't be applied, as some code was merged into the export
-> branch yesterday. If possible, please help me trigger sashiko again.
-It was:
+On 12/05/2026 20:33, Shardul Bankar wrote:
+> MPTCP_RST_EMPTCP (reset reason 1) is used as a catch-all for several
+> distinct error conditions across subflow setup, authentication, and
+> data-path validation.  The existing MPRstTx/MPRstRx counters only
+> track aggregate reset volume, making it difficult to diagnose which
+> code path is triggering subflow resets in production.
 
-  https://sashiko.dev/#/patchset/cover.1779788090.git.tanggeliang@kylinos.cn
+(...)
 
-But not sure why GitHub Actions didn't start (quite a few issues there,
-so, probably just unlucky). I manually restarted it by overriding the
-tag after a rebase.
+> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> index d562e149606f6..6fce3f431667c 100644
+> --- a/net/mptcp/subflow.c
+> +++ b/net/mptcp/subflow.c
+> @@ -160,6 +160,7 @@ static int subflow_check_req(struct request_sock *req,
+>  	 * TCP option space.
+>  	 */
+>  	if (rcu_access_pointer(tcp_sk(sk_listener)->md5sig_info)) {
+> +		MPTCP_INC_STATS(sock_net(sk_listener), MPTCP_MIB_MD5SIGRESET);
+>  		subflow_add_reset_reason(skb, MPTCP_RST_EMPTCP);
+>  		return -EINVAL;
+>  	}
+
+In the v1, you also had another counter added in this helper, for the
+MPJOIN case with !subflow_req->msk: I thought that JOINNOTOKEN was
+always sent in this case. I just noticed another possible error that
+could come from the PM side if there is no local_id. I don't know if we
+should cover this case, but maybe "safer" to?
+
+Maybe adding a MPJoinNoIdFound and use it in subflow_token_join_request,
+similar to MPJoinNoTokenFound?
 
 Cheers,
 Matt
