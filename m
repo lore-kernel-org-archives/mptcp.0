@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74D6E2206A7
-	for <mptcp@lists.linux.dev>; Wed, 27 May 2026 00:51:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B82415C14F
+	for <mptcp@lists.linux.dev>; Wed, 27 May 2026 00:59:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779843112; cv=none; b=WXqIAjhT1xBi2VHXYdFZiVfUdw0bpVJZociZ3u2NvqdK+sMS5daHOO6u698P7H6rz2UyvvxT4SaWmDuCol8jcr+mALAaVaAkTvnbRyfAu+V2pn8h+lXDY/AZ8PRO4MD0Ia0mBnAQOQCuMSMRKASmYNC9+gnEeSxELOW8yzzzXqU=
+	t=1779843589; cv=none; b=X93Dw0+U4KcNSRFq0KamujfkH9v5JxgRDt52K6LMcVZzuW1oTlW3zsn6PJG0WPAl6Ip5ycvamu0VW31Alb2u7muaYPbf5qCmyLt4s1RAypEa+ezFiRiwKNT1Cu6S4q2dpY9U5OmXYAKPeS66jfGHeZ43kIbP2J2grQ6nT3ctaik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779843112; c=relaxed/simple;
-	bh=771CJBShlajB4y1TVr0o7ez3+p5o3+9lki4lJh5MsbY=;
+	s=arc-20240116; t=1779843589; c=relaxed/simple;
+	bh=qkLzQXN4luJLUnyBjqNfXSiRa1VXuLmX4B6Qve0azPs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WZJMtiecr2QWEcRoTw70XZL5LvWdpi7PCxh7GJOAsiMRCd0Xn1zxrFIPaIyY7tsBv2ZIup+0eMjg7V16HOz3TVhf3zFxCxkgIQ/H/F/KYEfPEIzICNarGsnyeQxn2NcajFfE5SxzRlmHDI6QSJHUQn1tAm3FnMCnrF0V8XM/6sg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f8iljoy8; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=KTi2N848l7ZABx06U75ZvGp7mEeNHFPcc6H9EvEz5XHDCyuzvGXJWFmMXEQlAjnq91qX6vyXwLC2ycIrYBQNh/7/ouSNTZweG/BN3hISKlMt/kgyutFFtIleQToAU4/JO17ugwASN2D+Aa295qX+2RwAxRtgT5rkFzJVz/YLBmA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kr5CFOu0; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f8iljoy8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1857D1F00A3A;
-	Wed, 27 May 2026 00:51:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kr5CFOu0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8186D1F000E9;
+	Wed, 27 May 2026 00:59:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779843110;
-	bh=txqIXcSaV/gSIKM46DdTZh0tZTY6E6P+eJYJo96eqGQ=;
+	s=k20260515; t=1779843588;
+	bh=k0LWpQXG3BKTJgYAJyuqgLaGYD6/oMecJAFUQdoQets=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=f8iljoy8NG13nZj6TQP6/STkORB9clWk+3z5PjF+xPaV8oBRTYkdT2s5xgtVxvmjm
-	 rJKXnyzNHfuH5Hl03SFEKDawrajuKUkXxbC06kgEfa4pxWS4cBB1vrdVINzRnB5Qkr
-	 PZU9FzDxCbz2cWYhsqTL2tFdvnDrulvQXg8Qsu9mA1ASmG74wWBru3sd5RtJ7luOLU
-	 //Gt+dP7GBKJE7mQtFVcetqFU7i8/ZbKaaK69ILIzf2QfSOL124PhwW8burVkLzgH/
-	 6YbvC6Uqd6ojzXr5n7uDTySE+rvu9n9U/fmBZbkbVx0tWqB2Zg5cAVgkxI/aom7ywM
-	 YOGzJvIzMoBNg==
-Message-ID: <8fb85b98-f677-48de-a9d1-72ac82c25c50@kernel.org>
-Date: Wed, 27 May 2026 10:51:46 +1000
+	b=kr5CFOu0+0o663ogb4gJyPJ7sfA0PfDnKyVcUrigzgy1xNeCb2UprLTxwC7YvXuMy
+	 mGtHiHa88ra3jWpb0/z226d4T/Hg/YdTU58GEuRDqKw1aNtlen5EMwwPZ0Kgh36eGl
+	 HDPp3hmXOqPZa9H/EtwJSp76LxrXZKNktyP18M1ZEYMlhFHkrj7gDM0IzRfIFaOglY
+	 85SiQTVxpvcSJJTNJ83sKJ7oZk+TtpJtNGzZ43f+IPnsEqqhKai/v5gIhG0V4dQWgH
+	 tabddLsYthZVYcz66YBk1TORK5tic0GTwsYCqYBZR075Llel43RUoJD1u+rKCCmSl5
+	 Yskcrjr/2OJig==
+Message-ID: <6dd054c7-63c6-4d50-8f03-52684a0d9e67@kernel.org>
+Date: Wed, 27 May 2026 10:59:42 +1000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,17 +35,17 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH v8 mptcp-next 4/9] mptcp: allow subflow rcv wnd to shrink
+Subject: Re: [PATCH net] mptcp: pm: don't WARN on re-announced addr in kernel
+ PM
 Content-Language: fr
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: Geliang Tang <geliang@kernel.org>, gang.yan@linux.dev,
- mptcp@lists.linux.dev
-References: <cover.1779485511.git.pabeni@redhat.com>
- <661603fa10737a624bba854fb2515c7abb129a80.1779485511.git.pabeni@redhat.com>
- <a017ffa9-1dbe-4094-ae85-7c17e7b48b0d@redhat.com>
- <085ebc3e-0d49-4a82-aea9-a8b05a02c7ae@kernel.org>
- <0624d85c-1992-4b4f-bbdb-32c454ac7765@kernel.org>
- <eede8443-e2d9-4bf4-8e66-76e4302706ad@redhat.com>
+To: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
+Cc: mptcp <mptcp@lists.linux.dev>, martineau <martineau@kernel.org>,
+ pabeni <pabeni@redhat.com>, janak <janak@mpiric.us>,
+ "shardul.b" <shardul.b@mpiricsoftware.com>,
+ kalpanjani009 <kalpanjani009@gmail.com>, shardulsb08 <shardulsb08@gmail.com>
+References: <20260525121911.2410171-1-kalpan.jani@mpiricsoftware.com>
+ <07bf06c0-20dd-4e31-960a-b79f6fffcecc@kernel.org>
+ <19e63fedc1e.19d76b97534353.4482082124048801251@mpiricsoftware.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -91,76 +91,85 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <eede8443-e2d9-4bf4-8e66-76e4302706ad@redhat.com>
+In-Reply-To: <19e63fedc1e.19d76b97534353.4482082124048801251@mpiricsoftware.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Paolo,
+Hi Kalpan,
 
-On 27/05/2026 01:17, Paolo Abeni wrote:
-> On 5/26/26 9:49 AM, Matthieu Baerts wrote:
->> On 26/05/2026 17:02, Matthieu Baerts wrote:
->>> On 24/05/2026 18:34, Paolo Abeni wrote:
->>>> On 5/22/26 11:43 PM, Paolo Abeni wrote:
->>>>> In MPTCP connection, the `window` field in the TCP header refers to the
->>>>> MPTCP-level rcv_nxt and it's right edge should not move backward. Such
->>>>> constraint is enforced at DSS option generation time.
->>>>>
->>>>> At the same time, the TCP stack ensures independently that the TCP-level
->>>>> rcv wnd right's edge does not move backward. That in turn causes artificial
->>>>> inflating of the MPTCP rcv window when the incoming data is acked at the
->>>>> TCP level and is OoO in the MPTCP sequence space (or lands in the backlog).
->>>>>
->>>>> As a consequence, the incoming traffic can exceed the receiver rcvbuf size
->>>>> even when the sender is not misbehaving.
->>>>>
->>>>> Prevent such scenario forcibly allowing the TCP subflow to shrink the
->>>>> TCP-level rcv wnd regardless of the current netns setting.
->>>>>
->>>>> Fixes: f3589be0c420 ("mptcp: never shrink offered window")
->>>>> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
->>>>
->>>> Sashiko failed to review this series from this patch included onward:
->>>>
->>>> https://sashiko.dev/#/patchset/cover.1779485511.git.pabeni%40redhat.com
->>>>
->>>> and it's not clear to me why.
->>>
->>> It is not the first time I see failures. I guess it is not linked to
->>> your series.
->>>
->>>> I think patch 1/3 are quite uncontroversial and reasonably even this one.
->>>>
->>>> WRT the stall addressing patches, this iteration survives mptcp_data
->>>> testing without timeout tuning, hopefully should be fine for Geliang and
->>>> Gang usage.
->>>>
->>>> @Matttbe: please LMK if you prefer a complete repost or if you could
->>>> apply patch 1-3 (or more).
->>> Sorry for the delay. Yes, on it. I guess patches 1-4 can already be
->>> applied to -net.
->> Just reviewed them. Please tell me if you are OK with the suggested
->> modifications, or if you prefer to send a new version.
+On 26/05/2026 21:15, Kalpan Jani wrote:
+> Hi Matt,
 > 
-> I think patch 4 does not need modifications. On the flip side that one
-> is a little delicate and has not gone through sashiko yet due to the
-> mentioned issue. I think you could apply patch 1-3 and I'll repost the
-> following ones.
-Fine by me. I just applied the 3 first patches with the 2 small fixes:
+> Thank you for the review.
+> 
+> On 26/05/2026 ..:.., Matthieu Baerts wrote:
+>>> The WARN assumes the kernel PM can never reselect an address that is
+>>> still in msk->pm.anno_list. That is not true: [...]
+>>
+>> From what I understand, it means that if a "signal" MPTCP endpoint is
+>> removed the echo got received, the in-kernel PM will continue
+>> retransmitting the ADD_ADDR. That doesn't seem correct. I didn't check
+>> in the code, but I thought that the retransmit timer was at least
+>> stopped, but maybe the entry was not removed from the list?
+> 
+> You are right to expect the teardown. I checked the code, and it is not
+> uniform across the two removal paths:
+> 
+> - For a non-zero id endpoint, mptcp_nl_remove_subflow_and_signal_addr()
+>   -> mptcp_pm_remove_anno_addr() -> mptcp_remove_anno_list_by_saddr()
+>   -> mptcp_pm_del_add_timer(.., false): the timer is stopped and the
+>   anno_list entry is unlinked and freed. This path is fine.
+> 
+> - For the id 0 endpoint, mptcp_nl_remove_id_zero_address() does NOT
+>   call that teardown. It only queues a RM_ADDR and marks the id as
+>   available again; the pending anno_list entry and its armed timer are
+>   left alive.
+> 
+> So a stale entry can only survive on the id 0 removal path. When that
+> endpoint is re-added, the kernel PM reselects id 0, reaches
+> mptcp_pm_alloc_anno_list() a second time, finds the stale entry and
+> hits the WARN. That is the actual bug here.
 
-New patches for t/upstream-net and t/upstream:
-- fc8fb422aae7: mptcp: fix missing wakeups in edge scenarios
-- 6219a0efdede: Squash to "mptcp: fix missing wakeups in edge scenarios"
-- 2950e9d2932a: mptcp: fix retransmission loop when csum is enabled
-- fcee762a0dc5: Squash to "mptcp: fix retransmission loop when csum is enabled"
-- 0f17b1705eee: mptcp: close TOCTOU race while computing rcv_wnd
-- Results: 1685899b9752..7865561e04f3 (export-net)
-- Results: 599cb099e01e..19d4169d0689 (export)
+I guess there were some confusions at some points that the ID 0 wouldn't
+be sent as an ADD_ADDR. But that can be the case when the linked address
+is removed, then re-added. Then, I guess to have the bug, you need to
+create a connection, with an extra subflow, then remove and re-add the
+endpoint linked to the initial subflow, and repeat this once more to hit
+the bug, no?
 
-Tests are now in progress:
+>> Does it also mean that if an ADD_ADDR echo is never received, the entry
+>> is never removed, even after having reached the max retransmissions?
+> 
+> Yes. In mptcp_pm_add_timer(), once retrans_times reaches
+> ADD_ADDR_RETRANS_MAX the timer stops re-arming (timeout = 0), but the
+> anno_list entry itself is not freed there; it stays on the list until
+> the endpoint is removed.
 
-- export-net: https://github.com/multipath-tcp/mptcp_net-next/commit/32c8161bff373b91be456498bcb8463c146460fe/checks
-- export: https://github.com/multipath-tcp/mptcp_net-next/commit/b41d3d0c1a32a4a80618b5898cf6f993ee9e8511/checks
+Only for the ID0, when re-added then.
+
+>>> This is a benign transient state, so drop the WARN. [...]
+>>
+>> If I understand correctly, the transient state is not benign, and the
+>> WARN should not be dropped.
+> 
+> Agreed. I will drop this patch. The WARN is a valid assertion; the fix
+> should keep it and instead make the id 0 removal path tear down the
+> pending ADD_ADDR, mirroring the non-zero id path (drop the anno_list
+> entry, stop its timer, and decrement add_addr_signaled if it had been
+> announced). I will send that as v2.
+
+Thanks!
+
+>> Also, it would be nice to add a new test to validate that. Here, it
+>> might be easier with a packetdrill test [1] [...]
+> 
+> Will do. I will add a packetdrill test that sends an ADD_ADDR, withholds
+> the echo, and then removes and re-adds the endpoint, based on
+> add_addr4_server.pkt.
+See above: you might need an extra subflow (see the tests in mp_join),
+and re-add the endpoint twice, because once is enough to trigger the
+fact the entry is not removed, but not enough to hit the WARN if I
+understood correctly.
 
 Cheers,
 Matt
