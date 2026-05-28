@@ -1,217 +1,146 @@
-Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C22F191
-	for <mptcp@lists.linux.dev>; Thu, 28 May 2026 01:18:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAC6418C933;
+	Thu, 28 May 2026 03:11:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779931108; cv=none; b=N39kICCF9Qtl1hZf+MYLAkQcKKByg2C/FTJC5gwihkzcUNduZ3k0UbDO5++w2GV8tElGblpbuc799kdGUoMYRcUpFrc6wBCLte/qH+kF8laXaX7COJZ7jP1WLLLpqjUX7pv6Az34mSOcyGaKV0FijVwidGMWKFvwkAKCeJo5Uk0=
+	t=1779937888; cv=none; b=gcs/S+fsi5XI83nB2Tr2UpbE1z0fYG6Fq9RFGT2VUY6fsDI3XYLtAgHEv20ThBql2FWL1bu57exBbmAmKdx3XDs2Q/PMfFRqnwwSxbxTQ9/ojFn7Mdexa0lJSqIS5n9faP/B4t7HbFrmWuJvRdHFmUbsoiHm+y3oVttwpKo97ws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779931108; c=relaxed/simple;
-	bh=0gyVLx6juYzV5G4lhPXZzN5aT1Lp/Kvg0lAxQNK4wDw=;
-	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
-	 In-Reply-To:References; b=Ti7kqjSgiZyvzp8w5MWv9tXKXExfbjS/JYVooA8JF/4/v1jcT+Jaf0+f3DM6nq6LnzfPOe2Dl9NlwoKXaL3F/kLfGf+kduBEim9/BL0HvD6jEOBTyFn5egktLK3F73+sCaH4Rkg7XinPPWCPSYotWi/xTiq1Bu1V9i5jFCz1EZ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=sK1N2NIi; arc=none smtp.client-ip=95.215.58.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1779937888; c=relaxed/simple;
+	bh=1y02pKwUZldBzTkxXv+DoJFfjLlZ+TQQncVV4iSp8BE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ae4kSzPunAG9ZHInPFvAHjye3dlZL3PANAfQwddU3vr+sWFMjCINYU+nX/ZWQLB728ZVbs+t8k7QRJqkT/W5leSy+bEkbusl9GoOSSKRdsU9w39gdOA+mYSEaV7VaDNztGNIeYZ7vmcVPtVs9KFhYEWF+uGlFeEZ1pDeQ6gCWtI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dejd0qhb; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="sK1N2NIi"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dejd0qhb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D65E11F000E9;
+	Thu, 28 May 2026 03:11:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1779937886;
+	bh=2LJir5NYveamozdEogI+01xu/ZbFXYpoE1MTH8bCSu8=;
+	h=From:To:Cc:Subject:Date;
+	b=Dejd0qhbEWMn6LN2R0CyuK49/u5lyOIhBYROqn3lwGDQ6OU9B48kD+Ow3PGcbdQna
+	 kha0836A0cQNMi3SHjvBSLHdoUUZGPKKD+1rNli9fhE01MZCh2lFgzikkyITxKAj4F
+	 xAsUcVdNkkfASv1Z54YGvrHVXlKilinraqZdhHeh8ZFonFNzRPNJZnoI1fleN3nZpX
+	 PMbM6Xjb+6iA1t/hJ+7nWTgvPx2XvsT8KFZpCED4/FIPoz/TtDvbyejEHjBi+cCpil
+	 EuMQzUEV737HxzZLxEj1GFT/cjGtqkjPj5CguYmHYPf1ISkj7e9LiM/gnHmv5OxnxW
+	 YmVdLlrSMJWxQ==
+From: Geliang Tang <geliang@kernel.org>
+To: Keith Busch <kbusch@kernel.org>,
+	Jens Axboe <axboe@kernel.dk>,
+	Christoph Hellwig <hch@lst.de>,
+	Sagi Grimberg <sagi@grimberg.me>,
+	Chaitanya Kulkarni <kch@nvidia.com>,
+	Matthieu Baerts <matttbe@kernel.org>,
+	Mat Martineau <martineau@kernel.org>,
+	Geliang Tang <geliang@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Shuah Khan <shuah@kernel.org>
+Cc: Geliang Tang <tanggeliang@kylinos.cn>,
+	linux-nvme@lists.infradead.org,
+	netdev@vger.kernel.org,
+	mptcp@lists.linux.dev,
+	linux-kselftest@vger.kernel.org,
+	Hannes Reinecke <hare@suse.de>,
+	John Meneghini <jmeneghi@redhat.com>,
+	Randy Jennings <randyj@purestorage.com>,
+	Nilay Shroff <nilay@linux.ibm.com>,
+	zhenwei pi <zhenwei.pi@linux.dev>,
+	Hui Zhu <zhuhui@kylinos.cn>,
+	Gang Yan <yangang@kylinos.cn>
+Subject: [PATCH 00/11] NVMe over MPTCP
+Date: Thu, 28 May 2026 11:10:34 +0800
+Message-ID: <cover.1779934709.git.tanggeliang@kylinos.cn>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1779931104;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=h/fEK8woeGvHlnjD+eYq9czaEPRMkwkqZicYNaEbhis=;
-	b=sK1N2NIiT9q16T4ezOLLQyQWvYx63FCG4hAySFwnDJTFbp73m7yTTRY1VHyuI3visKyphD
-	/TNNhVOb0VgS+RqcfCMEOs7No2uhJaahTN0Ds9oPh3rK6TAgQ451dINMUV8AJEhwqU0PXn
-	iFZquxvqfdW4LrlV0S1jGgijE57cwbQ=
-Date: Thu, 28 May 2026 01:18:21 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: gang.yan@linux.dev
-Message-ID: <9af2ada39337fd17da0740c117307876cb01beeb@linux.dev>
-TLS-Required: No
-Subject: Re: [PATCH v8 mptcp-next 7/9] mptcp: implemented OoO queue pruning
-To: "Paolo Abeni" <pabeni@redhat.com>
-Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, "Geliang Tang"
- <geliang@kernel.org>, "MPTCP Linux" <mptcp@lists.linux.dev>
-In-Reply-To: <76116a98-e6c3-4991-b4cd-d52c354e01ca@redhat.com>
-References: <cover.1779485511.git.pabeni@redhat.com>
- <b67f85e91abafcdc87d4b0b8e479f715489ed6f2.1779485511.git.pabeni@redhat.com>
- <9c1d28dbc379eff6cc09e9b02a6b77beafcdc4f2@linux.dev>
- <1445abca-9a84-46df-be7d-8f7b656772a1@redhat.com>
- <6d38bd40e238fa4e578a629e8db789f36fc46ebb@linux.dev>
- <76116a98-e6c3-4991-b4cd-d52c354e01ca@redhat.com>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
 
-May 27, 2026 at 6:01 PM, "Paolo Abeni" <pabeni@redhat.com mailto:pabeni@r=
-edhat.com?to=3D%22Paolo%20Abeni%22%20%3Cpabeni%40redhat.com%3E > wrote:
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
+This series (previously named "MPTCP support to NVMe over TCP") had three
+RFC versions sent to Hannes in May 2025, with subsequent revisions based on
+his input. Following that, I initiated the process of upstreaming the
+dependent "mptcp: implement .read_sock" series, which was merged into the
+Linux kernel in February 2026.
 
->=20
->=20On 5/27/26 7:30 AM, gang.yan@linux.dev wrote:
->=20
->=20>=20
->=20> May 26, 2026 at 2:50 PM, "Paolo Abeni" <pabeni@redhat.com mailto:pa=
-beni@redhat.com?to=3D%22Paolo%20Abeni%22%20%3Cpabeni%40redhat.com%3E > wr=
-ote:
-> >=20
->=20> >=20
->=20> > On 5/26/26 5:13 AM, gang.yan@linux.dev wrote:
-> > >=20
->=20>  May 23, 2026 at 5:43 AM, "Paolo Abeni" <pabeni@redhat.com mailto:p=
-abeni@redhat.com?to=3D%22Paolo%20Abeni%22%20%3Cpabeni%40redhat.com%3E > w=
-rote:
-> >  diff --git a/net/mptcp/mib.c b/net/mptcp/mib.c
-> >  index ef65e2df709f..d9bd4f4afcc0 100644
-> >  --- a/net/mptcp/mib.c
-> >  +++ b/net/mptcp/mib.c
-> >  @@ -87,6 +87,7 @@ static const struct snmp_mib mptcp_snmp_list[] =3D=
- {
-> >  SNMP_MIB_ITEM("WinProbe", MPTCP_MIB_WINPROBE),
-> >  SNMP_MIB_ITEM("BacklogDrop", MPTCP_MIB_BACKLOGDROP),
-> >  SNMP_MIB_ITEM("RcvPruned", MPTCP_MIB_RCVPRUNED),
-> >  + SNMP_MIB_ITEM("OfoPruned", MPTCP_MIB_OFO_PRUNED),
-> >  };
-> >=20=20
->=20>  /* mptcp_mib_alloc - allocate percpu mib counters
-> >  diff --git a/net/mptcp/mib.h b/net/mptcp/mib.h
-> >  index c84eb853d499..18f35f7e0a2d 100644
-> >  --- a/net/mptcp/mib.h
-> >  +++ b/net/mptcp/mib.h
-> >  @@ -90,6 +90,7 @@ enum linux_mptcp_mib_field {
-> >  MPTCP_MIB_WINPROBE, /* MPTCP-level zero window probe */
-> >  MPTCP_MIB_BACKLOGDROP, /* Backlog over memory limit */
-> >  MPTCP_MIB_RCVPRUNED, /* Dropped due to memory constrains */
-> >  + MPTCP_MIB_OFO_PRUNED, /* MPTCP-level OoO queue pruned */
-> >  __MPTCP_MIB_MAX
-> >  };
-> >=20=20
->=20>  diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> >  index 03d6f8658467..f446e22148b9 100644
-> >  --- a/net/mptcp/protocol.c
-> >  +++ b/net/mptcp/protocol.c
-> >  @@ -373,6 +373,43 @@ static void mptcp_init_skb(struct sock *ssk, st=
-ruct sk_buff *skb, int offset,
-> >  skb_dst_drop(skb);
-> >  }
-> >=20=20
->=20>  +/* "Inspired" from the TCP version */
-> >  +static void mptcp_prune_ofo_queue(struct sock *sk, u64 seq)
-> >  +{
-> >  + struct mptcp_sock *msk =3D mptcp_sk(sk);
-> >  + struct rb_node *node, *prev;
-> >  + bool pruned =3D false;
-> >  + u64 mem;
-> >  +
-> >  + if (RB_EMPTY_ROOT(&msk->out_of_order_queue))
-> >  + return;
-> >  +
-> >  + node =3D &msk->ooo_last_skb->rbnode;
-> >  +
-> >  + do {
-> >  + struct sk_buff *skb =3D rb_to_skb(node);
-> >  +
-> >  + /* Stop pruning if the incoming skb would land in OoO tail. */
-> >  + if (after64(seq, MPTCP_SKB_CB(skb)->map_seq))
-> >  + break;
-> >  +
-> >  + pruned =3D true;
-> >  + prev =3D rb_prev(node);
-> >  + rb_erase(node, &msk->out_of_order_queue);
-> >  + mptcp_drop(sk, skb);
-> >  + msk->ooo_last_skb =3D rb_to_skb(prev);
-> >  +
-> >  + mem =3D (unsigned int)atomic_read(&sk->sk_rmem_alloc);
-> >  + if (mem < sk->sk_rcvbuf)
-> >  + break;
-> >=20
->=20>  Hi Paolo,
-> >=20=20
->=20>  Thanks for the v8. While going through the code, I ran into a
-> >  point that I'm not entirely sure about.
-> >=20=20
->=20>  TCP=E2=80=98s design uses sk->sk_rcvbuf >> 3 (one eighth of the bu=
-ffer)
-> >  as a goal. It we use sk->sk_rcvbuf here, the loop may break after
-> >  deleting just one packet, right? This may fail to free enough space
-> >  for the incoming out=E2=80=91of=E2=80=91order packet, leading to rep=
-eated pruning
-> >  calls and potential packet drops.
-> >=20
->=20> >=20
->=20> > Thank you for your review.
-> > >=20
->=20> >  Yes, here there is some difference vs plain TCP and I think it's=
- for the
-> > >  better.
-> > >=20
->=20> >  TCP tries to make a "significant" amount of space in the receive=
-r buffer
-> > >  while MPTCP tries to make room for a single packet.
-> > >=20
->=20> >  Both strategies make sense in their respective context: TCP invo=
-kes
-> > >  tcp_prune_ofo_queue() only after collapsing, and the latter is ver=
-y CPU
-> > >  intensive; if tcp_prune_ofo_queue() would make room for a single p=
-acket,
-> > >  the next incoming one could still trigger collapsing and burn a lo=
-t of
-> > >  CPU cycles (note that this bad chain of events could still happen =
-if
-> > >  sk_rcvbuf / 8 is not bigger than 2 packets).
-> > >=20
->=20> >  MPTCP (intentionally, as per discussion in the last iterations h=
-ere)
-> > >  does not perform collapsing, and directly does pruning when over l=
-imit.
-> > >  Pruning is relatively cheap - computational complexity wise we cou=
-ld do
-> > >  it for each incoming packet with "no issues", at least compared to
-> > >  collapsing.
-> > >=20
->=20> >  Dropping the minimal amount of packets to fit the incoming one, =
-allows
-> > >  MPTCP to minimize the need for reinjections (for packets already a=
-cked
-> > >  at the TCP-level, which we really should avoid). I think overall t=
-his
-> > >  compromise is a better fit for MPTCP.
-> > >=20
->=20> >  BTW did you have the chance to perform testing on top of this re=
-vision?
-> > >=20
->=20>=20=20
->=20>  Hi Paolo,
-> >=20=20
->=20>  Yes, I've tested v8 many times =E2=80=94 hundreds of runs. And the=
- tls.c part works
-> >  fine too.
-> >=20=20
->=20>  I also spotted some issues with MPTCP TLS adaptation, but those ar=
-e unrelated
-> >  to v8. I'll reply in Geliang's thread about them soon.
-> >=20
->=20Thank you for testing. I'll send a v9 to try to get sashiko comments =
-on
-> remaining patches, but no real changes in it. Feel free to add your
-> formal Tested-by tag, if you want :)
+After several rounds of iteration on the MPTCP mailing list, this set
+addresses all the reviewer comments (including Sashiko's) and fixes the
+identified issues.
 
-Great, thank you.
+This topic was presented as a discussion item at LSF/MM/BPF 2026.
+During the "NVMe over MPTCP" [1] discussion at the conference, it was
+concluded that MPTCP should be treated as a new transport type, rather than
+a TCP variant. A request will be submitted to the NVMe working group to
+officially allocate a transport value for MPTCP.
 
-Tested-by: Gang Yan <yangang@kylinos.cn>
+This series runs without any user space changes (libnvme, nvme-cli).
+Later, MPTCP KTLS support will be added, and a follow-up series will be
+sent to enable TLS for NVMe over MPTCP.
 
->=20
->=20Thanks,
->=20
->=20Paolo
->
+Based on NVMe Multipath and Block Multiqueue, each TCP queue is converted
+into one MPTCP queue. This is achieved by abstracting six socket helpers
+(set_nodelay, set_reuseaddr, no_linger, etc.) into per-transport
+structures. Inside each MPTCP queue, multiple subflows using different
+IP addresses aggregate multi-NIC bandwidth and provide fail-over
+resilience.
+
+Patch 10 demonstrates that with a single NVMe multipath configuration and
+four network interfaces, MPTCP achieves four times the bandwidth of TCP.
+Patch 11 demonstrates that with four NVMe multipath paths, using the
+round-robin I/O policy and a lossy four-interface environment, MPTCP
+still achieves four times the bandwidth of TCP.
+
+[1]
+https://lore.kernel.org/linux-nvme/a9f115aa5719e1088702a3fdeee766a3166611b1.camel@kernel.org/
+
+Cc: Hannes Reinecke <hare@suse.de>
+Cc: John Meneghini <jmeneghi@redhat.com>
+Cc: Randy Jennings <randyj@purestorage.com>
+Cc: Nilay Shroff <nilay@linux.ibm.com>
+Co-developed-by: zhenwei pi <zhenwei.pi@linux.dev>
+Signed-off-by: zhenwei pi <zhenwei.pi@linux.dev>
+Co-developed-by: Hui Zhu <zhuhui@kylinos.cn>
+Signed-off-by: Hui Zhu <zhuhui@kylinos.cn>
+Co-developed-by: Gang Yan <yangang@kylinos.cn>
+Signed-off-by: Gang Yan <yangang@kylinos.cn>
+Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+
+Geliang Tang (11):
+  nvmet-tcp: define accept tcp_proto struct
+  nvmet-tcp: implement accept mptcp proto
+  nvmet-tcp: define listen socket ops
+  nvmet-tcp: register target mptcp transport
+  nvmet-tcp: implement mptcp listen socket ops
+  nvme-fabrics: compare transport in ip_options_match
+  nvme-tcp: define host tcp_proto struct
+  nvme-tcp: register host mptcp transport
+  nvme-tcp: implement host mptcp proto
+  selftests: mptcp: add nvme over mptcp test
+  selftests: mptcp: nvme: add iopolicy tests
+
+ drivers/nvme/host/fabrics.c                   |   1 +
+ drivers/nvme/host/tcp.c                       | 101 ++++-
+ drivers/nvme/target/configfs.c                |   1 +
+ drivers/nvme/target/tcp.c                     | 128 +++++-
+ include/linux/nvme.h                          |   1 +
+ include/net/mptcp.h                           |  31 ++
+ net/mptcp/sockopt.c                           | 149 +++++++
+ tools/testing/selftests/net/mptcp/Makefile    |   1 +
+ tools/testing/selftests/net/mptcp/config      |   8 +
+ .../testing/selftests/net/mptcp/mptcp_lib.sh  |  12 +
+ .../testing/selftests/net/mptcp/mptcp_nvme.sh | 397 ++++++++++++++++++
+ 11 files changed, 813 insertions(+), 17 deletions(-)
+ create mode 100755 tools/testing/selftests/net/mptcp/mptcp_nvme.sh
+
+-- 
+2.53.0
+
