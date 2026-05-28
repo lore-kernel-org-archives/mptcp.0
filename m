@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 198013AE195
-	for <mptcp@lists.linux.dev>; Thu, 28 May 2026 09:27:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FDB8390CBE
+	for <mptcp@lists.linux.dev>; Thu, 28 May 2026 09:27:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779960455; cv=none; b=XS4zM++T7aav8tTZbE/gNxeaSomfkr5mmqxTzuEHCOcyqg+uqzSFwk2QtvwjDuScT9wopE01fO1je4qoZxev1i9aeRtO8W4OuvjW5VJ3bvoYemESvOwoevQ0Tr3W2ZOglg43/V5kMXwDmkz/hcJNHkHuu5Krlxyn7gXeEaNB7mU=
+	t=1779960456; cv=none; b=Lbm5iIkJmA2Evmbs2nnWEpnAPuLk3N5tc55enN09Xtv1GEDErU1bPg2iRgYN8xazRy4mwnnuD4kH8K9c61FaolM+Z38k7kLd4D2gBGH/hyLV9dZUhMBoBBHXpQbGXf/sDMlZX4bPDqBBJquYLZ7KFMwcJ1tfc5ts5BgkuPyC2fQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779960455; c=relaxed/simple;
-	bh=IK0C/GZlOHo0QcI8yuMhPUHQEt0Y/udby3W879D/eAY=;
+	s=arc-20240116; t=1779960456; c=relaxed/simple;
+	bh=KCU7YwIvtG4/+w7KZqpnHpRPfcJZP1pjKvbBm5J7oLw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uPoDVVxPXMNsSAwA4p/IEU5uXGp0L9d3jg/kmz0enBkR/zioimtWks5OhHipDw6NH/Jor/liGD5yVECLS+zaXS00iENrA7hWfWVBw0mkjoHTqZ1yYiWAgYabvY0qAb6BRVYP7HOV11sNliHtsespUvHl4BofbwpxA++voWwzvyk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I1snOsEH; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=iQ/2ce/3IcQvGQOK8H8EFrU2jxAwFcttIsEpmbjeJiD+8qfknIyU97W0qT+24oplF1jWDggQ6mcEiHAH9rXkA9BK+PZFHztc1axSwe7nJ58Vp5BgRwwfNesqZc9CanXBvOL+083xkOVs3lx4DjDsWrkfeaI1i5wTuaxQD1KtlT0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SNNp6Jec; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I1snOsEH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 335051F00A3A;
-	Thu, 28 May 2026 09:27:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SNNp6Jec"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCC391F00A3C;
+	Thu, 28 May 2026 09:27:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779960452;
-	bh=7B4d8pf6FvYKR3lgfy1IJmPLFaTmVxB3JmqsO6iCS8A=;
+	s=k20260515; t=1779960453;
+	bh=8H7BUdeSDcR41hXnsnfzQUdPkXFX2J39t8GM9DTZxxM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=I1snOsEH/bvbFC5i9+vc1Y+Wp93/ssVzMojqIpHUHwcGZJRrilPe0A88KuQ4EKV7h
-	 DpPaGmidva7C2fhz9+UjobjwPWXIO1Miu5fNgL/Rrm0DmL2sjDvZ8RJINLAHqZh/6Y
-	 3l/m3s4mFK2e9nA2kdVq5XdF2/JDs1fJR4/U7LpmfIe7Z6I+TftI6a2lBhme+Q7gI+
-	 xEQ754MJ1RZvwX4WZ0ho/NOH27t3cyQlNc+ccyh9BdSAPb1hNdrDh7KM3dr/3sQhgb
-	 qGDl5FLMQE2iP7L38im5WMmEiuK0w1eBwWThaXKSy56IINFziU03XMnJGlZnwhtQmi
-	 PLwMpqARdB8cw==
+	b=SNNp6JecxaxLQ4oOPXgH/hYR/vJP6k43JC/Q0Or3JSYnudC1aJI4H8S5APNqdmVk+
+	 TPuUs+iHS1kzAJtxNO8ojCScDp4QT2IBHHTGNyk576d8mdOFHaVgRrjGWBEGtS0UkM
+	 NYQoblFqxU5arD9xKZK58Nx2J2q8A+ykGRTrqRh17fY/lmvv+GmKmmI4VPwtUidwud
+	 Ed0H7OmLKxxhBXlSiDzf9Efm8vRoDREQ2xeiplCF0w9fs2Ep/Cx5Cj+SRpB3MfjonE
+	 ONUWaPsqrTl7DgOXWZMliS16yvGFU3uJEd5B9qv4MFNnqfrNWsu2RDLjGBSj600UCP
+	 cj1b4r0YyGSJQ==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>,
-	Gang Yan <yangang@kylinos.cn>
-Subject: [RFC mptcp-next v21 05/18] tls: add memory barriers for lockless accesses
-Date: Thu, 28 May 2026 17:26:56 +0800
-Message-ID: <fa1b15224f2938fded78e178aff896f9c4955f8d.1779959644.git.tanggeliang@kylinos.cn>
+Cc: Gang Yan <yangang@kylinos.cn>,
+	Geliang Tang <geliang@kernel.org>
+Subject: [RFC mptcp-next v21 06/18] mptcp: update mptcp_check_readable helper
+Date: Thu, 28 May 2026 17:26:57 +0800
+Message-ID: <0c44d14e94050fb5ac4206d705e1c909cd42ee49.1779959644.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <cover.1779959644.git.tanggeliang@kylinos.cn>
 References: <cover.1779959644.git.tanggeliang@kylinos.cn>
@@ -44,86 +44,48 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+From: Gang Yan <yangang@kylinos.cn>
 
-Add smp_rmb() barriers in tls_sk_poll() and tls_sw_sock_is_readable()
-to ensure proper ordering when reading the TLS context. These pair with
-the smp_store_release() in update_sk_prot().
+This patch makes mptcp_check_readable() aligned with TCP, and renames it to
+mptcp_stream_is_readable(). It will be used in the case of KTLS, because
+'prot' will be modified, tls_sw_sock_is_readable() is expected to be called
+from prot->sock_is_readable().
 
-In tls_sk_poll(), replace the direct call to tcp_poll() with an indirect
-call via tls_ctx->prot->ops->poll. This allows the correct poll function
-to be used for both TCP and MPTCP sockets when TLS is enabled.
-
-Also add a NULL check for tls_ctx in tls_sw_sock_is_readable() to safely
-return false when the context is not yet initialized.
-
-Co-developed-by: Gang Yan <yangang@kylinos.cn>
+Co-developed-by: Geliang Tang <geliang@kernel.org>
+Signed-off-by: Geliang Tang <geliang@kernel.org>
 Signed-off-by: Gang Yan <yangang@kylinos.cn>
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- net/tls/tls_main.c | 11 +++++++++--
- net/tls/tls_sw.c   | 17 +++++++++++++++--
- 2 files changed, 24 insertions(+), 4 deletions(-)
+ net/mptcp/protocol.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/net/tls/tls_main.c b/net/tls/tls_main.c
-index dab69488214b..b463c9fc2908 100644
---- a/net/tls/tls_main.c
-+++ b/net/tls/tls_main.c
-@@ -482,14 +482,21 @@ static __poll_t tls_sk_poll(struct file *file, struct socket *sock,
- 	u8 shutdown;
- 	int state;
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 1d67728d4233..366ad42eb0a7 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -3284,9 +3284,11 @@ void __mptcp_unaccepted_force_close(struct sock *sk)
+ 	__mptcp_destroy_sock(sk);
+ }
  
--	mask = tcp_poll(file, sock, wait);
-+	/* Paired with smp_store_release() in update_sk_prot().
-+	 * Ensures that the read of icsk_ulp_data (tls_ctx) is ordered after
-+	 * the read of sk->sk_socket->ops inside tls_ctx->prot->ops->poll().
-+	 * Prevents seeing a new ops pointer but a stale (NULL) ulp_data.
-+	 */
-+	smp_rmb();
-+
-+	tls_ctx = tls_get_ctx(sk);
-+	mask = tls_ctx->prot->ops->poll(file, sock, wait);
- 
- 	state = inet_sk_state_load(sk);
- 	shutdown = READ_ONCE(sk->sk_shutdown);
- 	if (unlikely(state != TCP_ESTABLISHED || shutdown & RCV_SHUTDOWN))
- 		return mask;
- 
--	tls_ctx = tls_get_ctx(sk);
- 	ctx = tls_sw_ctx_rx(tls_ctx);
- 	psock = sk_psock_get(sk);
- 
-diff --git a/net/tls/tls_sw.c b/net/tls/tls_sw.c
-index 4cac7a90851a..f944a22b7873 100644
---- a/net/tls/tls_sw.c
-+++ b/net/tls/tls_sw.c
-@@ -2451,11 +2451,24 @@ int tls_sw_read_sock(struct sock *sk, read_descriptor_t *desc,
- 
- bool tls_sw_sock_is_readable(struct sock *sk)
+-static __poll_t mptcp_check_readable(struct sock *sk)
++static bool mptcp_stream_is_readable(struct sock *sk)
  {
--	struct tls_context *tls_ctx = tls_get_ctx(sk);
--	struct tls_sw_context_rx *ctx = tls_sw_ctx_rx(tls_ctx);
-+	struct tls_sw_context_rx *ctx;
-+	struct tls_context *tls_ctx;
- 	bool ingress_empty = true;
- 	struct sk_psock *psock;
+-	return mptcp_epollin_ready(sk) ? EPOLLIN | EPOLLRDNORM : 0;
++	if (mptcp_epollin_ready(sk))
++		return true;
++	return sk_is_readable(sk);
+ }
  
-+	/* Paired with smp_store_release() in update_sk_prot().
-+	 * Ensures that the read of icsk_ulp_data (tls_ctx) is ordered after
-+	 * the read of sk->sk_prot in sk_is_readable(). Prevents seeing a new
-+	 * sk->sk_prot (TLS ops) but stale (NULL) icsk_ulp_data.
-+	 */
-+	smp_rmb();
-+
-+	tls_ctx = tls_get_ctx(sk);
-+	if (!tls_ctx)
-+		return false;
-+
-+	ctx = tls_sw_ctx_rx(tls_ctx);
-+
- 	rcu_read_lock();
- 	psock = sk_psock(sk);
- 	if (psock)
+ static void mptcp_check_listen_stop(struct sock *sk)
+@@ -4350,7 +4352,8 @@ static __poll_t mptcp_poll(struct file *file, struct socket *sock,
+ 		mask |= EPOLLIN | EPOLLRDNORM | EPOLLRDHUP;
+ 
+ 	if (state != TCP_SYN_SENT && state != TCP_SYN_RECV) {
+-		mask |= mptcp_check_readable(sk);
++		if (mptcp_stream_is_readable(sk))
++			mask |= EPOLLIN | EPOLLRDNORM;
+ 		if (shutdown & SEND_SHUTDOWN)
+ 			mask |= EPOLLOUT | EPOLLWRNORM;
+ 		else
 -- 
 2.53.0
 
