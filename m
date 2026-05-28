@@ -1,112 +1,115 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98CC13EF664
-	for <mptcp@lists.linux.dev>; Thu, 28 May 2026 12:34:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8104E402BA9
+	for <mptcp@lists.linux.dev>; Thu, 28 May 2026 15:16:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779971701; cv=none; b=RgcmHsYrVe0Yl2R01GwJ0F5n0X13924p1eCLoUSHjNTKo3Ol1ni6PauMGUVHLG60N8iqb/frcXOrZ2bYErk+wC7uVqX95eOs31NZF+wVwus+yDy3Q3kuAgH9j12sinhtuSAKo9vqypJGSm7wMvL/+N8j/RvrOpD0mR0/jyFeBP8=
+	t=1779981374; cv=none; b=G8OgnohsZms+oOZCIJ+iaxDSshkQDDW4HwfeajyPkS5l9/aHfYZ4NJ3dk0/h0gMuZCALUdd3io1efNLpfO/gRUxce9ZVbuXOUE0jcKVFWpmsOTaCQN6ynznxxSOP4FdsIFBZ3baUfWfIAt5vQBWljlshR9yjEDcjIgdNeGTPVuM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779971701; c=relaxed/simple;
-	bh=SAT87z3CEBmvQnFn0phld8dcgGRLcueDYlCQqX9PYUg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=sd11HyihQeZGa3Se3kxQD5LguUNDD9zt+d/134BNXwEAEvxTRFJbXPwOWytMEUKtzhO7mehgeVnMH14tebRfV+MAVo2EfIcXrJQPPAQKgK8EMy39nf9zgaE0pY0mHBxuv7c8Jvu5qUs1quMXyrrqKA4XESRZS9U9gTocI19vuoA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WUw53Ukm; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1779981374; c=relaxed/simple;
+	bh=Zsx058F91r/vCz2OecmadAV9QyYcp7tnlq18zrmfcYo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=H/EcxEdbByxsApCKNuBv+XpteEgPJ7Q7EaKwm0slT6n6eTZiwhucTTf1eLGJq9Q5H5JzDhuCINdNzYJmqzE20OIwiiv1/S8Qo3KkSNEzh/Os7OpCOannztG6/auVob51HaGR/SVYpWQnIylNu2uhJcUyAgD/iQdSIR1Hw0ohhsQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UJT3ybpB; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WUw53Ukm"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2baca4df358so81441525ad.2
-        for <mptcp@lists.linux.dev>; Thu, 28 May 2026 05:34:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779971699; x=1780576499; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SAT87z3CEBmvQnFn0phld8dcgGRLcueDYlCQqX9PYUg=;
-        b=WUw53Ukm1Rm82xOCpg/NyO49YPeuEe3vAHiQfc3AHpIfT1Ckg6T7q+xXPy8nWxujxc
-         cgkFZvJxOLnTi2/5S6U8TfULmySZ/Fuk9Aoh0Ng0Ydpf8Hddzi7xGtb/a5H4DUoJ5Z2Q
-         xAIaF3Cf7JGCwPY7/xEGPaUnqRI+PagZ7keCbSZfWyxjJm9GEGvReZavJdQUDbg4VJDf
-         5SUZjDTck4rO8DJz/R8ug5Zq085yYUNsfcQfhBPRRAoye7Xs8a+VJvJ6+23xJe5u6em/
-         YA7sBefCMoPRlSXsUoqzQVsdNQqGAM0TjJX6HiF2TzdNy+AtxhpbNsANdn0/ih6WBuJF
-         +KfQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UJT3ybpB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1779981372;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZMA/Oxy96y6hMPjQK5FgU2BjjauAYJmB4PaoF3MH9w8=;
+	b=UJT3ybpBBPg4u0aysOqeplONmIngCgQTtBRfI3oEXgMBV4IM19gik5h50sYZcgDS2tsH5W
+	XW9K+ce/kenBrHHgBxCgD4CTmAkOAdh5BX7NPF8u+XP49xRWfGS9pHp072zMM3Py0BV4Nj
+	OYaXgzkVY24pN2JkISW1fUJ1voPb8m8=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-711-yF6Fd_X5PFCtAEGyKoi0oA-1; Thu, 28 May 2026 11:16:10 -0400
+X-MC-Unique: yF6Fd_X5PFCtAEGyKoi0oA-1
+X-Mimecast-MFC-AGG-ID: yF6Fd_X5PFCtAEGyKoi0oA_1779981369
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-45eef10d5ebso68876f8f.0
+        for <mptcp@lists.linux.dev>; Thu, 28 May 2026 08:16:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779971699; x=1780576499;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=SAT87z3CEBmvQnFn0phld8dcgGRLcueDYlCQqX9PYUg=;
-        b=pMlgB3B6PCx+CGRIMWTJg10y9Tc+vKR/P17GWgFhi2fBR5gh6wkSZh1dbxexT/4Xqx
-         d6TaTT7rrEENFx0Zg/L2v/UJH1DiouYD57Yyp91+SXYPO2GZwtf8HXioWoCvOp2ADt5n
-         jm0ccLh1y68UwM3qHC4X6ZPZCx2qHHHWx6flWuIUG/rq1+Jsh0zbNNJ+7cFfyDMcTJVx
-         PrD7bvowcoHNa38cV27VCdr9icOqrl5ynHCupk6ev8v9Sgk0gLBesFRenPPFqOv+vPD6
-         C0nsbaFy2A+pZPblklz1x7BdTrondfryRML5ctpE5hvcxSDFjAzkAn4BhG/N0hqvZZzK
-         wNaQ==
-X-Gm-Message-State: AOJu0Yx5Z5grhe1Z98SCMnuauxvlyA4qMajv0G+5OE8n4jBlA/1VEUF/
-	tDHqyhg3QNLacaIOcLtlTRbpV12HcQQNMzLyaGv3sO1zWzFAwnJobMdu
-X-Gm-Gg: Acq92OGAme8RJmLcsfn7sqG06fTyAOUkkg/Bf/3rOCxtNs6YAKor+6c/iuXXrdQa66V
-	FWlPHZgHAcooHmhwLjutbQS2Y98qFffMGJTpVJ3+oOWdzJ3Lrsqx2FkV8ZzB7ochmEwbwxXlUkp
-	sQQX3LU5I5++8kita76fsAs6CDgQCPn955SAfngJZhVVlCfG5MXKhF2hts9HWkjziineFsJMxxR
-	t9HT7yDyzUUgI7GOX9MmyuNL6zCh+Cha6BEwW0biZK4o8uMg3xE5gO3VDR7W4efwVvWt4RCNW7q
-	9IN/KSNIOrIkMBoSePG+vxOxSmpC+ts64Vj7djvpLW7IfQNZUQiX6R6HXsy7EkaUZJVWuS1aETP
-	lhv9yHCeaXqO9ybqPP1iepWP56DQEJiclu58xmEwvYIu6pHPAuMSs+buODWC6JrMVbInLo9cRNM
-	tjfp3V0+aRfezVDmWiWezZ1lOdcvKvfOhV4g==
-X-Received: by 2002:a17:903:230a:b0:2bf:ab5:cc24 with SMTP id d9443c01a7336-2bf0ab5cd03mr27510585ad.33.1779971698804;
-        Thu, 28 May 2026 05:34:58 -0700 (PDT)
-Received: from iotshare.. ([125.119.77.190])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2beb58d9ae2sm174706125ad.63.2026.05.28.05.34.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2026 05:34:58 -0700 (PDT)
-From: Li Xiasong <xiasonglee@gmail.com>
-X-Google-Original-From: Li Xiasong <xiasong.lee@gmail.com>
-To: matttbe@kernel.org
-Cc: mptcp@lists.linux.dev,
-	lixiasong1@huawei.com
-Subject: Re: [PATCH mptcp-net 2/2] mptcp: use sk_shutdown_timer_sync() for add_addr timer teardown
-Date: Thu, 28 May 2026 12:33:38 +0000
-Message-ID: <20260528123338.864181-1-xiasong.lee@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <d5c58002-fbef-451f-aedc-1bdda5ebc9bd@kernel.org>
-References: <d5c58002-fbef-451f-aedc-1bdda5ebc9bd@kernel.org>
+        d=1e100.net; s=20251104; t=1779981369; x=1780586169;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ZMA/Oxy96y6hMPjQK5FgU2BjjauAYJmB4PaoF3MH9w8=;
+        b=hrh0Rkl2IoQ9OfzstyZOnLAH6GCF+mPVVm35d04LHWvsOY28Lvx1Ar0kAUzGkiQ3TI
+         sDQGJk2hybsjlHVCDD09kUr6tkRv/N3UULII1QKzMtl1WYRrd55T/k9wqLcGaVvvnmna
+         RnsBXbwPB/jQDtcWx5LgdnTbQTtl2C02oEuWELjIuPfNA9zWXlyj+KPM0IDSbSlKgyKp
+         bJlTAOXuhPAUPtISaiSz6bwJ2hhQ/Qb7My6MrWXj2J0gH71UCfjUNHGYWynJpAVEn46i
+         PfhmM/bVN1MmGOTxXXexoJ8td/eHjLwTZhVRiKl8BTcwo21Ttjjvxb8n55vrJwUXE0+5
+         CP7A==
+X-Gm-Message-State: AOJu0Yw0catuWLlOOp4ngA93upo96hh9h5YXZX4So9IgKN7zYwgYS7vZ
+	qos7j6DuHgaz9AcgTGnbUwnkg8MA2uFLZNDktAycgsdRw+Iao/NV5foO5dU//f+kSmIFKDAZ9e2
+	1R/UbWUVJX95lQtcyOcUks5YCSrGWfOcybfxZR2CdHUuIhlurka41IVlmrywBNCsP
+X-Gm-Gg: Acq92OF+6EEXYXsuFl2DUfbrv2M7i82+/QB68ogwMf3VsAT5d5a97H1627lBm+sHUy5
+	QDnLLMOJ+49C19nL0VpDGFWxsDrMQCj6h30EG4Pse51+ttyv2wJykPVbV/217dBAN6MoASCo/Dz
+	tpsQukMjcHt6O6i7LA8wylJ8YEoVZmVjepjlBFixNduvB8h0R5MkM90Lw6H2GPEnxF9+9oevkNB
+	7EEkgpKHpo+PXkqYzM5XoYvQ0C3+ZUs7dWJgF/jhj829eCs+apl7r+6qlh4q6J4urvQ7moZyQ6K
+	BhWyuHueF1q/exGbIZ/D4a6MpRiScYA9z8EXis83Yzsjps5kO/DVXEQJpbWpks29kv5sxRMtnMx
+	iZiS5iIXs8JhC1+p741cZ+mlRP/MdY8Yx66BrbhUIKAn9wG6u9ZXs64tfvb8b8nG5HA==
+X-Received: by 2002:a05:6000:98f:b0:43f:e990:2f5d with SMTP id ffacd0b85a97d-45eb39fa487mr45409112f8f.35.1779981369284;
+        Thu, 28 May 2026 08:16:09 -0700 (PDT)
+X-Received: by 2002:a05:6000:98f:b0:43f:e990:2f5d with SMTP id ffacd0b85a97d-45eb39fa487mr45409032f8f.35.1779981368703;
+        Thu, 28 May 2026 08:16:08 -0700 (PDT)
+Received: from [192.168.88.32] ([216.128.11.12])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-45edb557679sm24951123f8f.10.2026.05.28.08.16.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 28 May 2026 08:16:08 -0700 (PDT)
+Message-ID: <b5244dd4-205d-4abd-8ea5-fd879a97038f@redhat.com>
+Date: Thu, 28 May 2026 17:16:07 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 mptcp-next 2/6] mptcp: explicitly drop over memory
+ limits
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev
+References: <cover.1779876523.git.pabeni@redhat.com>
+ <6ccf1a553f1e5a3ae63b5a5608f774623d71c9da.1779876523.git.pabeni@redhat.com>
+ <eed92bb8-8b77-44e4-9f1f-242db72177b9@kernel.org>
+ <c45eb641-3f97-4206-bb7a-60fc208b732a@redhat.com>
+ <8ac26189-453c-49e4-b1fc-a51c1818c468@kernel.org>
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <8ac26189-453c-49e4-b1fc-a51c1818c468@kernel.org>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: plJU6UbG2P9Uw2OPPlqM_ZAC6Tq8D-fmMo2U3AigFJA_1779981369
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Matt,
+On 5/28/26 10:32 AM, Matthieu Baerts wrote:
+> On 28/05/2026 18:26, Paolo Abeni wrote:
+>> I guess:
+>>
+>> 	NET_INC_STATS(sock_net(sk), LINUX_MIB_TCPRCVQDROP);
+>>
+>> could be added here, but still the caller will do __kfree_skb instead of
+>> using a proper drop reason.
+>
+> Or a new MPTCP specific one. Or abusing MPTCP_MIB_RCVPRUNED?
 
-> Sashiko is saying that if sk_reset_timer() is called after
-> sk_shutdown_timer_sync(), it will not re-arm the timer, but in this
-> case, mod_timer() will also return 0, and the socket refcount will be
-> incremented.
+The dropped skb is not pruned (removed from a queue were it was already
+sitting). In theory we could add a MPTCPRCVQDROP MIB, but technically
+the skb is dropped before reaching the _tcp_ receive queue, so I think
+LINUX_MIB_TCPRCVQDROP could make sense.
 
-Thanks for the review and for pointing this out.
+>> I think/guess an eventual follow-up patch could do?
+> 
+> Of course. It can also be a "Squash-to" patch if preferred.
 
-You are right, and sashiko's concern is valid: with current semantics,
-mod_timer() returns 0 both when an inactive timer is armed and when a
-shutdown timer rejects re-arming. As a result, sk_reset_timer() cannot
-reliably distinguish these two cases, which can break socket refcount
-accounting.
+/P
 
-So if we keep using shutdown on a socket timer, there is no simple fix
-in MPTCP alone. A proper fix likely needs timer-core support (e.g. a
-shutdown-aware API, or equivalent semantics).
-
-> It is not clear to me how to solve that without checking whether
-> timer->function is set or not after having called mod_timer(), because
-> that seems quite hackish...
-
-I also re-checked timer core behavior: timer_delete_sync() does more
-than waiting for a running callback. If a callback re-arms the timer
-before returning, timer_delete_sync() can still remove it before
-sk_stop_timer_sync() returns.
-
-I need to revisit the design with this in mind and do a deeper analysis
-before sending v2.
-
-Thanks again for the feedback.
-
-Li Xiasong
