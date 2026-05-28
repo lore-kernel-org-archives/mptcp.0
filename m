@@ -1,87 +1,85 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 488011DBB3A;
-	Thu, 28 May 2026 23:39:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3AC42C11F1;
+	Thu, 28 May 2026 23:50:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780011550; cv=none; b=fZqLOq59+mmOAu6VWWlSfu+gYfPs2C/azzyA6up5YyEmwi+rqxcOoBjgpYvavtLUvZ6wiibwHyhMlSLYCAb4shLA+0B/v9vWEwAFzcFPjOQA94vs0pMyWE2fZ4PRf8yuS8UTAFuyMQ3TkpgqqB+13Sd+R3yaQ7pvMxZwZyFNWtM=
+	t=1780012212; cv=none; b=IGvTlUNJM8QiRM5PabGduz9W5cTFnU1GU9WYziBdFPidBWj0lw1vOFYieS1B4AgjTqsD/AzIbaYBY4NbcAp3j2s8ZjB8O9MC0MERRZY/1/0uYnQA2Q2tALMXt0c1PbDdpvII2IOBmwP6cPdCwflmeRS5ITXoJdz1jxkJigzqSQQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780011550; c=relaxed/simple;
-	bh=iDrTPOX6GGDt+nbh9lhKPL6Ecpsqypq4y6HAaTEnrQQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hmoZWJHYbaYGEuyPZFNe9IFve7P4lLR5gRxKkd1kY4gKlqOOp8eXn2AKFLeljvR+FXLLkH6RKXRgphNmf0raahgXoleIOqd147bBpuZSOI196c4gPe4FTKutJsEDX8IE3g1iL/KZSRzuDbh+JkuGNfkNrkne3Y7OoujhX0tNbqo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RJu+1S94; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780012212; c=relaxed/simple;
+	bh=3FV31BSp+eZqefLczGdAKfSOo39mSALwfTNRoZu5iVk=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=Kz0y2YMbuYf7E6pAKl5Mrga5FjzFYYEv099iH2mYIqtDg6voXmGAJbyqFwQ5h1VrmHjJ06ZXOuQznPv2rtxIJFBKcn3s1xGJlxqHFU96DF/r3PgC79w0RrNwgL7jkEYMLOeIvyMFlinfnChAXxMzd9kSbkhX5TGmmrVocxJ0Hhw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BCZDp3/T; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RJu+1S94"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40B051F000E9;
-	Thu, 28 May 2026 23:39:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BCZDp3/T"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D0541F000E9;
+	Thu, 28 May 2026 23:50:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780011548;
-	bh=dmBIoxz66k2rHcSMbm0eP8qTyH3vYzffzxZnEsn0ck4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=RJu+1S94uLW4cQvcEK8SoMGPhXx44RpgTo0OfCuWQXiTAHfsWbNm+PRublWTU+NKE
-	 vDoQK+865o528s8QWzzsdGTESQXZJejtxmrghU8AJRmzuEJs2gIIBfha6e4qqOZHu7
-	 9D0FXdHDX5u0wmB9QpOvLPxyMV/99fV8KtzhuLZiJMsGdx7+w2+ntQyDgemmHt8g3P
-	 3rQJgPo5AFRxgXzF/TKi2Jg1WvJ5EXrrugkYpdnfxwpcQLsoZaw/WpeOYPwIlBzaO9
-	 DefqDbXlwI1Qxg8vAmWBzsACIAhMVqqT1YAQUCeWcpKgzbDKOZ8tQWOsjBk+mrzpC0
-	 Ra34TheMbeOaQ==
-Date: Thu, 28 May 2026 16:39:07 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Simon Horman
- <horms@kernel.org>, Shuah Khan <shuah@kernel.org>, Florian Westphal
- <fw@strlen.de>, netdev@vger.kernel.org, mptcp@lists.linux.dev,
- linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org
-Subject: Re: [PATCH net 0/3] selftests: mptcp: reduce bufferbloat and
- cleanup
-Message-ID: <20260528163907.619420c3@kernel.org>
-In-Reply-To: <0e676b57-ca1a-4f2b-8166-a085fe69e0f2@kernel.org>
-References: <20260527-net-mptcp-sft-bufferbloat-exit-v1-0-9afc4e742090@kernel.org>
-	<20260528144258.58bbc950@kernel.org>
-	<0e676b57-ca1a-4f2b-8166-a085fe69e0f2@kernel.org>
+	s=k20260515; t=1780012211;
+	bh=sY1IZ5Apy/pfqZgdmnIxpk47YIf5ZV18RMEp+0ZQZYc=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc;
+	b=BCZDp3/TphHAvs8dLhWXG+AO85OFHAXgX0ezSuOgwD/hzlzCKNM1Mz6EYR5o4DTA4
+	 hhvXdo5HTEJ8+LWO0USULD0yToQzM+oSrtKiExKDzFANsSzj6geH2SPlYRUJk9jZ+B
+	 IiMgd1EiGX2n9FJfH6Ovg2be+A/JXCwhWrBi1JVaSVAbaVeww2f5h3kBS/EEVhBmHo
+	 h9IOeAhjmHM9Avr3J8Hmhp7NMY8Uc+9h7Cc67Lv9MZCtWYkjU9i1K/D4HyrsT/8aA1
+	 XAcf1jmrp6I3uOvGU5bLHhyCZUAFEGEOXEuNpGlHqpcqjQnr2bDHAF5PqcdLJmIqGf
+	 CD0ck79EObpvQ==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 93E733811979;
+	Thu, 28 May 2026 23:50:16 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net 0/3] selftests: mptcp: reduce bufferbloat and cleanup
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <178001221513.1560944.5184668372188033491.git-patchwork-notify@kernel.org>
+Date: Thu, 28 May 2026 23:50:15 +0000
+References: 
+ <20260527-net-mptcp-sft-bufferbloat-exit-v1-0-9afc4e742090@kernel.org>
+In-Reply-To: 
+ <20260527-net-mptcp-sft-bufferbloat-exit-v1-0-9afc4e742090@kernel.org>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: martineau@kernel.org, geliang@kernel.org, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
+ shuah@kernel.org, fw@strlen.de, netdev@vger.kernel.org,
+ mptcp@lists.linux.dev, linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org
 
-On Fri, 29 May 2026 09:13:44 +1000 Matthieu Baerts wrote:
-> Hi Jakub,
-> 
-> On 29/05/2026 07:42, Jakub Kicinski wrote:
-> > On Wed, 27 May 2026 22:11:33 +1000 Matthieu Baerts (NGI0) wrote:  
-> >> Bufferbloat is baaaad, even in our selftests: let's kill it (or at least
-> >> reduce it). By doing that, the tests (seem to) have a more stable
-> >> transfer, and are then less unstable. That's what patches 1-2 are doing,
-> >> and they can be backported up to 5.10.  
-> > 
-> > Could you explain a little more what this is actually fixing?  
-> 
-> The simult_flows.sh test simulates very low speed links using netem
-> qdiscs. With the current configuration, still a large amount of packets
-> can be queued, which means high TCP RTT samples and then large receive
-> buffer size. Minimal inaccuracy in the pacing rate can lead to using
-> only one subflow towards the end of the connection for a considerable
-> amount of data, while the test expects to use the 2 available paths in
-> parallel.
-> 
-> > Does it give a huge increase in test stability?  
-> I would say no: the test was not that flaky, mainly on NIPA in fact, and
-> around 4% in the last 100 tests [1]. On my side, I had to get my system
-> busy to reproduce the issues. My hope is that the success rate on NIPA
-> switches from 96 to ~100%. No failure since its introduction in
-> "net-next-2026-05-27--15-00".
-> 
-> I sent them to net, just to increase the stability when validating
-> stable kernels as well. But all of this is not urgent, and this series
-> can be applied in net-next if preferred. Do you want me to resend this
-> series targeting net-next?
+Hello:
 
-Thanks for explaining, I will take these via net-next, no problem.
+This series was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
+
+On Wed, 27 May 2026 22:11:33 +1000 you wrote:
+> Bufferbloat is baaaad, even in our selftests: let's kill it (or at least
+> reduce it). By doing that, the tests (seem to) have a more stable
+> transfer, and are then less unstable. That's what patches 1-2 are doing,
+> and they can be backported up to 5.10.
+> 
+> Patch 3 is not related: a small fix in the selftests to remove temp
+> files that were not deleted in some conditions, since v5.13.
+> 
+> [...]
+
+Here is the summary with links:
+  - [net,1/3] selftests: mptcp: simult_flows: disable GSO
+    https://git.kernel.org/netdev/net-next/c/0f1fd73c2204
+  - [net,2/3] selftests: mptcp: simult_flows: adapt limits
+    https://git.kernel.org/netdev/net-next/c/b7c746a8eeea
+  - [net,3/3] selftests: mptcp: sockopt: set EXIT trap earlier
+    https://git.kernel.org/netdev/net-next/c/c8da80af2838
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
