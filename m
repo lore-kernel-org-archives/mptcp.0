@@ -1,130 +1,217 @@
-Received: from mail-ua1-f42.google.com (mail-ua1-f42.google.com [209.85.222.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 623D9428462
-	for <mptcp@lists.linux.dev>; Wed, 27 May 2026 15:14:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C22F191
+	for <mptcp@lists.linux.dev>; Thu, 28 May 2026 01:18:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779894898; cv=none; b=tJ9aBQjo8+Ez9bp6KqUSbjHDJy6u95Ra6lbPB0jsUV+BRnk99lBm8uHUiMPIQym2V3ykpGraIjMLKCPAzOV8lae6Guj4aFt5uZuhnKF4RHwRGWI4qYmrTZy2Q1fkU8lwgEQ/C9mD7x9yBqnVrqKjXtVW/qyw1yhJ0EOAhlfhLkM=
+	t=1779931108; cv=none; b=N39kICCF9Qtl1hZf+MYLAkQcKKByg2C/FTJC5gwihkzcUNduZ3k0UbDO5++w2GV8tElGblpbuc799kdGUoMYRcUpFrc6wBCLte/qH+kF8laXaX7COJZ7jP1WLLLpqjUX7pv6Az34mSOcyGaKV0FijVwidGMWKFvwkAKCeJo5Uk0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779894898; c=relaxed/simple;
-	bh=os52CiJ/qnfnhO8crAswrjOTsEXmQ2oXbNzrIcQl56I=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
-	 MIME-Version:Content-Type; b=oe+uXVN4lnCTQ4ad5z6qIrXdeQB6wYmyjj5S93H/3HYHuunnDvSzQiJvK1PvyK4Rh1cNmty2j25zTbkG6Pwwz80M2sATxjrIvJx3t/N1veI/ASemO3eh/gZ7CdOOMMPmo9lndksgaXEn1NFnPphI1MiVjp8dTxaueFnrU2ZOZxE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DZkjexMI; arc=none smtp.client-ip=209.85.222.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1779931108; c=relaxed/simple;
+	bh=0gyVLx6juYzV5G4lhPXZzN5aT1Lp/Kvg0lAxQNK4wDw=;
+	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
+	 In-Reply-To:References; b=Ti7kqjSgiZyvzp8w5MWv9tXKXExfbjS/JYVooA8JF/4/v1jcT+Jaf0+f3DM6nq6LnzfPOe2Dl9NlwoKXaL3F/kLfGf+kduBEim9/BL0HvD6jEOBTyFn5egktLK3F73+sCaH4Rkg7XinPPWCPSYotWi/xTiq1Bu1V9i5jFCz1EZ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=sK1N2NIi; arc=none smtp.client-ip=95.215.58.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DZkjexMI"
-Received: by mail-ua1-f42.google.com with SMTP id a1e0cc1a2514c-961780b0b98so4569390241.0
-        for <mptcp@lists.linux.dev>; Wed, 27 May 2026 08:14:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779894893; x=1780499693; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fHWzklS0AdpY8OeBWhrB7uoVU0QLtxTIcOHIFNjtfO4=;
-        b=DZkjexMINrUVwD9KapeAnM/ALqpkvsRYl+oyi/uWBllUk+Xaei3JLf15OCpG6j4Nt9
-         4/nUlebyCujQjNaXf1baQ8XHFCpV+AJp2vz+/f2AFyWa5qPCwuj1mIYbOnp2ynzbuMCa
-         p4AbmQ8DxhU3nkAmcYBtQ9mpbuI8JH03SChpRvKdaPYZcCjDPQDQDBz7vupW5FukQ46R
-         AqdbGWLcW6Bl0CmZCkT45GFWaSceLDMUcRwsbeayzNA4QERg5AQyVmeXJV6YzZ7Iz11+
-         iZEUN9zgPVOE3pdM8yUCDFeOtdMudZZ3H1F+1XhzncHJNA/3mPYoaYJw5i+1GYXu9SV/
-         8GBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779894893; x=1780499693;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fHWzklS0AdpY8OeBWhrB7uoVU0QLtxTIcOHIFNjtfO4=;
-        b=kU3i3pXIxRY+K03DnrKG2P9CBs6hBPcgxmjdKwnN7FU4sqvA0R3p9Vbsw4G8SnM0Lk
-         ZOLvRIuBUazLsDi37LmbYZDXzyuwG1v1Cz25Dx+JG3GKDdXu5xk3xWUVN4ZTW+o8M4PE
-         W8Xxo7OiebwpkVpTCln2QHFBYWU84LvhI5LrmFNj7fmSBJoYh/rTf4koJQfnUbOFRJFq
-         57NN3+xuI2vBTxCk0QAHsaDn9VGYAluD+ilMQOlTpeZ8NF2fltLr3JDjODgs2eUMnRbG
-         VDMKXV/FjvsWS8MfZnh2u5H/PfsgIQ/zff0WYweOjpYwtRsP4Vfi1BUZKGAwom175dKv
-         50EQ==
-X-Gm-Message-State: AOJu0Yx57WAX4Jw7/zWRMYYWdMkNPY8ROd/kK0hqIHI+8ij0X+P0S1po
-	ICsL5fjTLWwkoeN32hzDkqbDM65C+JAO8+GSD2bJX3qYwFDzPQ56dj8=
-X-Gm-Gg: Acq92OFBr6/yqQs+89StoHdOJKkMAN0ulD3LC5/6U3x2qWasCjaKp2t0OX1PNEYnugS
-	tYEpIYzgaq22YHOBwBPRJqhqkaRySwPay4rhEfWZLMe/tqUZUmIkPi0vbqa2ZdASzPi615Ds0pN
-	w9+kE5yY68gCsIMs4CDau4vMd/xeFELlxE/CKc5C7NkJbio+QyQMxMGJ+QOM8LIQoIU6l9bcWFk
-	zr7J3ZpAwTBu7QyNtdUXKL6le7se4tKaIFl7qbOScSB/0kwGAH9VjwgkeANRyo/EGWrox23ilVD
-	2rWe3FXy6hMCcS3CRw43an40sqfasrCPKvMMwL7E8YRove0buMZYmtf/VaHE2OUzXmnA78cTZkC
-	dNWmB/AnlxPuvyKAkBeOTio4FtO1BPylDF5r7O1jcFQ665igawduvHyND8WAfJuQgW2Ebme5KA4
-	N93NpL5u1zdZoSvYPQ1nc0SLHBviZKCMZW+vagNBHZ4A8X1uA=
-X-Received: by 2002:a05:6102:3faa:b0:633:4d1a:65e4 with SMTP id ada2fe7eead31-67c80b74b45mr13689855137.12.1779894892903;
-        Wed, 27 May 2026 08:14:52 -0700 (PDT)
-Received: from [127.0.0.1] ([74.249.78.160])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8cca4705c62sm83458746d6.27.2026.05.27.08.14.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 May 2026 08:14:52 -0700 (PDT)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: David Carlier <devnexen@gmail.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <cover.1779890764.git.devnexen@gmail.com>
-References: <cover.1779890764.git.devnexen@gmail.com>
-Subject: Re: [PATCH mptcp-next v8 0/4] mptcp: MSG_ERRQUEUE support on the
- parent socket
-Message-ID: <b0c79201-2571-2ed8-9541-7f16cf13b581@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 27 May 2026 15:14:51 +0000
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="sK1N2NIi"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1779931104;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=h/fEK8woeGvHlnjD+eYq9czaEPRMkwkqZicYNaEbhis=;
+	b=sK1N2NIiT9q16T4ezOLLQyQWvYx63FCG4hAySFwnDJTFbp73m7yTTRY1VHyuI3visKyphD
+	/TNNhVOb0VgS+RqcfCMEOs7No2uhJaahTN0Ds9oPh3rK6TAgQ451dINMUV8AJEhwqU0PXn
+	iFZquxvqfdW4LrlV0S1jGgijE57cwbQ=
+Date: Thu, 28 May 2026 01:18:21 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: gang.yan@linux.dev
+Message-ID: <9af2ada39337fd17da0740c117307876cb01beeb@linux.dev>
+TLS-Required: No
+Subject: Re: [PATCH v8 mptcp-next 7/9] mptcp: implemented OoO queue pruning
+To: "Paolo Abeni" <pabeni@redhat.com>
+Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, "Geliang Tang"
+ <geliang@kernel.org>, "MPTCP Linux" <mptcp@lists.linux.dev>
+In-Reply-To: <76116a98-e6c3-4991-b4cd-d52c354e01ca@redhat.com>
+References: <cover.1779485511.git.pabeni@redhat.com>
+ <b67f85e91abafcdc87d4b0b8e479f715489ed6f2.1779485511.git.pabeni@redhat.com>
+ <9c1d28dbc379eff6cc09e9b02a6b77beafcdc4f2@linux.dev>
+ <1445abca-9a84-46df-be7d-8f7b656772a1@redhat.com>
+ <6d38bd40e238fa4e578a629e8db789f36fc46ebb@linux.dev>
+ <76116a98-e6c3-4991-b4cd-d52c354e01ca@redhat.com>
+X-Migadu-Flow: FLOW_OUT
 
-Hi David,
-
-Thank you for your modifications, that's great!
-
-Our CI did some validations and here is its report:
-
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/265172=
-37171
-
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/38eae23373f9
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1101682
-
-
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+May 27, 2026 at 6:01 PM, "Paolo Abeni" <pabeni@redhat.com mailto:pabeni@r=
+edhat.com?to=3D%22Paolo%20Abeni%22%20%3Cpabeni%40redhat.com%3E > wrote:
 
 
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+>=20
+>=20On 5/27/26 7:30 AM, gang.yan@linux.dev wrote:
+>=20
+>=20>=20
+>=20> May 26, 2026 at 2:50 PM, "Paolo Abeni" <pabeni@redhat.com mailto:pa=
+beni@redhat.com?to=3D%22Paolo%20Abeni%22%20%3Cpabeni%40redhat.com%3E > wr=
+ote:
+> >=20
+>=20> >=20
+>=20> > On 5/26/26 5:13 AM, gang.yan@linux.dev wrote:
+> > >=20
+>=20>  May 23, 2026 at 5:43 AM, "Paolo Abeni" <pabeni@redhat.com mailto:p=
+abeni@redhat.com?to=3D%22Paolo%20Abeni%22%20%3Cpabeni%40redhat.com%3E > w=
+rote:
+> >  diff --git a/net/mptcp/mib.c b/net/mptcp/mib.c
+> >  index ef65e2df709f..d9bd4f4afcc0 100644
+> >  --- a/net/mptcp/mib.c
+> >  +++ b/net/mptcp/mib.c
+> >  @@ -87,6 +87,7 @@ static const struct snmp_mib mptcp_snmp_list[] =3D=
+ {
+> >  SNMP_MIB_ITEM("WinProbe", MPTCP_MIB_WINPROBE),
+> >  SNMP_MIB_ITEM("BacklogDrop", MPTCP_MIB_BACKLOGDROP),
+> >  SNMP_MIB_ITEM("RcvPruned", MPTCP_MIB_RCVPRUNED),
+> >  + SNMP_MIB_ITEM("OfoPruned", MPTCP_MIB_OFO_PRUNED),
+> >  };
+> >=20=20
+>=20>  /* mptcp_mib_alloc - allocate percpu mib counters
+> >  diff --git a/net/mptcp/mib.h b/net/mptcp/mib.h
+> >  index c84eb853d499..18f35f7e0a2d 100644
+> >  --- a/net/mptcp/mib.h
+> >  +++ b/net/mptcp/mib.h
+> >  @@ -90,6 +90,7 @@ enum linux_mptcp_mib_field {
+> >  MPTCP_MIB_WINPROBE, /* MPTCP-level zero window probe */
+> >  MPTCP_MIB_BACKLOGDROP, /* Backlog over memory limit */
+> >  MPTCP_MIB_RCVPRUNED, /* Dropped due to memory constrains */
+> >  + MPTCP_MIB_OFO_PRUNED, /* MPTCP-level OoO queue pruned */
+> >  __MPTCP_MIB_MAX
+> >  };
+> >=20=20
+>=20>  diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> >  index 03d6f8658467..f446e22148b9 100644
+> >  --- a/net/mptcp/protocol.c
+> >  +++ b/net/mptcp/protocol.c
+> >  @@ -373,6 +373,43 @@ static void mptcp_init_skb(struct sock *ssk, st=
+ruct sk_buff *skb, int offset,
+> >  skb_dst_drop(skb);
+> >  }
+> >=20=20
+>=20>  +/* "Inspired" from the TCP version */
+> >  +static void mptcp_prune_ofo_queue(struct sock *sk, u64 seq)
+> >  +{
+> >  + struct mptcp_sock *msk =3D mptcp_sk(sk);
+> >  + struct rb_node *node, *prev;
+> >  + bool pruned =3D false;
+> >  + u64 mem;
+> >  +
+> >  + if (RB_EMPTY_ROOT(&msk->out_of_order_queue))
+> >  + return;
+> >  +
+> >  + node =3D &msk->ooo_last_skb->rbnode;
+> >  +
+> >  + do {
+> >  + struct sk_buff *skb =3D rb_to_skb(node);
+> >  +
+> >  + /* Stop pruning if the incoming skb would land in OoO tail. */
+> >  + if (after64(seq, MPTCP_SKB_CB(skb)->map_seq))
+> >  + break;
+> >  +
+> >  + pruned =3D true;
+> >  + prev =3D rb_prev(node);
+> >  + rb_erase(node, &msk->out_of_order_queue);
+> >  + mptcp_drop(sk, skb);
+> >  + msk->ooo_last_skb =3D rb_to_skb(prev);
+> >  +
+> >  + mem =3D (unsigned int)atomic_read(&sk->sk_rmem_alloc);
+> >  + if (mem < sk->sk_rcvbuf)
+> >  + break;
+> >=20
+>=20>  Hi Paolo,
+> >=20=20
+>=20>  Thanks for the v8. While going through the code, I ran into a
+> >  point that I'm not entirely sure about.
+> >=20=20
+>=20>  TCP=E2=80=98s design uses sk->sk_rcvbuf >> 3 (one eighth of the bu=
+ffer)
+> >  as a goal. It we use sk->sk_rcvbuf here, the loop may break after
+> >  deleting just one packet, right? This may fail to free enough space
+> >  for the incoming out=E2=80=91of=E2=80=91order packet, leading to rep=
+eated pruning
+> >  calls and potential packet drops.
+> >=20
+>=20> >=20
+>=20> > Thank you for your review.
+> > >=20
+>=20> >  Yes, here there is some difference vs plain TCP and I think it's=
+ for the
+> > >  better.
+> > >=20
+>=20> >  TCP tries to make a "significant" amount of space in the receive=
+r buffer
+> > >  while MPTCP tries to make room for a single packet.
+> > >=20
+>=20> >  Both strategies make sense in their respective context: TCP invo=
+kes
+> > >  tcp_prune_ofo_queue() only after collapsing, and the latter is ver=
+y CPU
+> > >  intensive; if tcp_prune_ofo_queue() would make room for a single p=
+acket,
+> > >  the next incoming one could still trigger collapsing and burn a lo=
+t of
+> > >  CPU cycles (note that this bad chain of events could still happen =
+if
+> > >  sk_rcvbuf / 8 is not bigger than 2 packets).
+> > >=20
+>=20> >  MPTCP (intentionally, as per discussion in the last iterations h=
+ere)
+> > >  does not perform collapsing, and directly does pruning when over l=
+imit.
+> > >  Pruning is relatively cheap - computational complexity wise we cou=
+ld do
+> > >  it for each incoming packet with "no issues", at least compared to
+> > >  collapsing.
+> > >=20
+>=20> >  Dropping the minimal amount of packets to fit the incoming one, =
+allows
+> > >  MPTCP to minimize the need for reinjections (for packets already a=
+cked
+> > >  at the TCP-level, which we really should avoid). I think overall t=
+his
+> > >  compromise is a better fit for MPTCP.
+> > >=20
+>=20> >  BTW did you have the chance to perform testing on top of this re=
+vision?
+> > >=20
+>=20>=20=20
+>=20>  Hi Paolo,
+> >=20=20
+>=20>  Yes, I've tested v8 many times =E2=80=94 hundreds of runs. And the=
+ tls.c part works
+> >  fine too.
+> >=20=20
+>=20>  I also spotted some issues with MPTCP TLS adaptation, but those ar=
+e unrelated
+> >  to v8. I'll reply in Geliang's thread about them soon.
+> >=20
+>=20Thank you for testing. I'll send a v9 to try to get sashiko comments =
+on
+> remaining patches, but no real changes in it. Feel free to add your
+> formal Tested-by tag, if you want :)
 
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+Great, thank you.
+
+Tested-by: Gang Yan <yangang@kylinos.cn>
+
+>=20
+>=20Thanks,
+>=20
+>=20Paolo
+>
