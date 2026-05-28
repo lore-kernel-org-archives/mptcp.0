@@ -1,115 +1,65 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8104E402BA9
-	for <mptcp@lists.linux.dev>; Thu, 28 May 2026 15:16:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E7D32E738C;
+	Thu, 28 May 2026 15:23:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779981374; cv=none; b=G8OgnohsZms+oOZCIJ+iaxDSshkQDDW4HwfeajyPkS5l9/aHfYZ4NJ3dk0/h0gMuZCALUdd3io1efNLpfO/gRUxce9ZVbuXOUE0jcKVFWpmsOTaCQN6ynznxxSOP4FdsIFBZ3baUfWfIAt5vQBWljlshR9yjEDcjIgdNeGTPVuM=
+	t=1779981827; cv=none; b=Rs09ofggeNdJm04F6NMdbGga4V9rszFJs4Eu/yA6+t1eaiUyEXxEvVUX8cTu0noK9vsW2nI0fFAZx68sUXCWy0v3dSoXZn3vwvCGWoym6zLQS03UO/oOWE5B4N3xt4hOfWImcHroG3qXP7nCExjeIHm9lFkHG6hlPev7p5UQ7KY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779981374; c=relaxed/simple;
-	bh=Zsx058F91r/vCz2OecmadAV9QyYcp7tnlq18zrmfcYo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=H/EcxEdbByxsApCKNuBv+XpteEgPJ7Q7EaKwm0slT6n6eTZiwhucTTf1eLGJq9Q5H5JzDhuCINdNzYJmqzE20OIwiiv1/S8Qo3KkSNEzh/Os7OpCOannztG6/auVob51HaGR/SVYpWQnIylNu2uhJcUyAgD/iQdSIR1Hw0ohhsQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UJT3ybpB; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1779981827; c=relaxed/simple;
+	bh=XNVV5RSrjS7o4TZe/Jrrlts9X2T/sN3FLRhdTJhxOMw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=HdPbKeasuzNRDDSjblUO+sax7Dt4/znSGrs79mnDuSsOAMRhIUuod4W7+gH1IFvQpaqxTU1IPtPVHCZ00evqLLCcsvHDL3LQgb8/CCvWEbwlHNwhZD6v77SAx1LbF8fOjJrCP5fcdkLAXx/84y/GFFgn29uf651DogsalxpIb6E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D6PQ6Vwt; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UJT3ybpB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1779981372;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZMA/Oxy96y6hMPjQK5FgU2BjjauAYJmB4PaoF3MH9w8=;
-	b=UJT3ybpBBPg4u0aysOqeplONmIngCgQTtBRfI3oEXgMBV4IM19gik5h50sYZcgDS2tsH5W
-	XW9K+ce/kenBrHHgBxCgD4CTmAkOAdh5BX7NPF8u+XP49xRWfGS9pHp072zMM3Py0BV4Nj
-	OYaXgzkVY24pN2JkISW1fUJ1voPb8m8=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-711-yF6Fd_X5PFCtAEGyKoi0oA-1; Thu, 28 May 2026 11:16:10 -0400
-X-MC-Unique: yF6Fd_X5PFCtAEGyKoi0oA-1
-X-Mimecast-MFC-AGG-ID: yF6Fd_X5PFCtAEGyKoi0oA_1779981369
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-45eef10d5ebso68876f8f.0
-        for <mptcp@lists.linux.dev>; Thu, 28 May 2026 08:16:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779981369; x=1780586169;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ZMA/Oxy96y6hMPjQK5FgU2BjjauAYJmB4PaoF3MH9w8=;
-        b=hrh0Rkl2IoQ9OfzstyZOnLAH6GCF+mPVVm35d04LHWvsOY28Lvx1Ar0kAUzGkiQ3TI
-         sDQGJk2hybsjlHVCDD09kUr6tkRv/N3UULII1QKzMtl1WYRrd55T/k9wqLcGaVvvnmna
-         RnsBXbwPB/jQDtcWx5LgdnTbQTtl2C02oEuWELjIuPfNA9zWXlyj+KPM0IDSbSlKgyKp
-         bJlTAOXuhPAUPtISaiSz6bwJ2hhQ/Qb7My6MrWXj2J0gH71UCfjUNHGYWynJpAVEn46i
-         PfhmM/bVN1MmGOTxXXexoJ8td/eHjLwTZhVRiKl8BTcwo21Ttjjvxb8n55vrJwUXE0+5
-         CP7A==
-X-Gm-Message-State: AOJu0Yw0catuWLlOOp4ngA93upo96hh9h5YXZX4So9IgKN7zYwgYS7vZ
-	qos7j6DuHgaz9AcgTGnbUwnkg8MA2uFLZNDktAycgsdRw+Iao/NV5foO5dU//f+kSmIFKDAZ9e2
-	1R/UbWUVJX95lQtcyOcUks5YCSrGWfOcybfxZR2CdHUuIhlurka41IVlmrywBNCsP
-X-Gm-Gg: Acq92OF+6EEXYXsuFl2DUfbrv2M7i82+/QB68ogwMf3VsAT5d5a97H1627lBm+sHUy5
-	QDnLLMOJ+49C19nL0VpDGFWxsDrMQCj6h30EG4Pse51+ttyv2wJykPVbV/217dBAN6MoASCo/Dz
-	tpsQukMjcHt6O6i7LA8wylJ8YEoVZmVjepjlBFixNduvB8h0R5MkM90Lw6H2GPEnxF9+9oevkNB
-	7EEkgpKHpo+PXkqYzM5XoYvQ0C3+ZUs7dWJgF/jhj829eCs+apl7r+6qlh4q6J4urvQ7moZyQ6K
-	BhWyuHueF1q/exGbIZ/D4a6MpRiScYA9z8EXis83Yzsjps5kO/DVXEQJpbWpks29kv5sxRMtnMx
-	iZiS5iIXs8JhC1+p741cZ+mlRP/MdY8Yx66BrbhUIKAn9wG6u9ZXs64tfvb8b8nG5HA==
-X-Received: by 2002:a05:6000:98f:b0:43f:e990:2f5d with SMTP id ffacd0b85a97d-45eb39fa487mr45409112f8f.35.1779981369284;
-        Thu, 28 May 2026 08:16:09 -0700 (PDT)
-X-Received: by 2002:a05:6000:98f:b0:43f:e990:2f5d with SMTP id ffacd0b85a97d-45eb39fa487mr45409032f8f.35.1779981368703;
-        Thu, 28 May 2026 08:16:08 -0700 (PDT)
-Received: from [192.168.88.32] ([216.128.11.12])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-45edb557679sm24951123f8f.10.2026.05.28.08.16.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 28 May 2026 08:16:08 -0700 (PDT)
-Message-ID: <b5244dd4-205d-4abd-8ea5-fd879a97038f@redhat.com>
-Date: Thu, 28 May 2026 17:16:07 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D6PQ6Vwt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60C0A1F000E9;
+	Thu, 28 May 2026 15:23:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1779981826;
+	bh=XNVV5RSrjS7o4TZe/Jrrlts9X2T/sN3FLRhdTJhxOMw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=D6PQ6VwtW6cAq0yzywDit9p+dufchYyF+Ef8J4paq0mpWLghLZu/sdBNX6riFA9b3
+	 Y1F1hP5qh7w0UTdPEYH3sr/3hy42GlbcIYehzVP0wZEUWDTW7CeTzMd7tNBGqkoRxN
+	 ycYk/SHD3/JsTz9lapKL9K46+dbOUxujaYQQgzYIRcxcXSQyiVUNng37MOCkgh3BqU
+	 daOO6Zh88lKbt3XxtNyB1+1SQsY+HAIw1BBQN3YikJtv1Ix2CLQ10+wZWtESggLSmH
+	 8Eq39SMfiFfWJjKBJIWV4mEY74kxof0pQN6UfcFPQoDI6pphcJZ/7G3cKyeFRd42Du
+	 3BPWOHxHposNA==
+Date: Thu, 28 May 2026 08:23:44 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Geliang Tang <geliang@kernel.org>
+Cc: Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>, Christoph
+ Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>, Chaitanya Kulkarni
+ <kch@nvidia.com>, Matthieu Baerts <matttbe@kernel.org>, Mat Martineau
+ <martineau@kernel.org>, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Simon
+ Horman <horms@kernel.org>, Shuah Khan <shuah@kernel.org>, Geliang Tang
+ <tanggeliang@kylinos.cn>, linux-nvme@lists.infradead.org,
+ netdev@vger.kernel.org, mptcp@lists.linux.dev,
+ linux-kselftest@vger.kernel.org, Hannes Reinecke <hare@suse.de>, John
+ Meneghini <jmeneghi@redhat.com>, Randy Jennings <randyj@purestorage.com>,
+ Nilay Shroff <nilay@linux.ibm.com>, zhenwei pi <zhenwei.pi@linux.dev>, Hui
+ Zhu <zhuhui@kylinos.cn>, Gang Yan <yangang@kylinos.cn>
+Subject: Re: [PATCH 02/11] nvmet-tcp: implement accept mptcp proto
+Message-ID: <20260528082344.7e4cd1a1@kernel.org>
+In-Reply-To: <a1fa5dd3ebb0cafe1bf7948bf2a96436e9452e19.1779934709.git.tanggeliang@kylinos.cn>
+References: <cover.1779934709.git.tanggeliang@kylinos.cn>
+	<a1fa5dd3ebb0cafe1bf7948bf2a96436e9452e19.1779934709.git.tanggeliang@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 mptcp-next 2/6] mptcp: explicitly drop over memory
- limits
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev
-References: <cover.1779876523.git.pabeni@redhat.com>
- <6ccf1a553f1e5a3ae63b5a5608f774623d71c9da.1779876523.git.pabeni@redhat.com>
- <eed92bb8-8b77-44e4-9f1f-242db72177b9@kernel.org>
- <c45eb641-3f97-4206-bb7a-60fc208b732a@redhat.com>
- <8ac26189-453c-49e4-b1fc-a51c1818c468@kernel.org>
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <8ac26189-453c-49e4-b1fc-a51c1818c468@kernel.org>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: plJU6UbG2P9Uw2OPPlqM_ZAC6Tq8D-fmMo2U3AigFJA_1779981369
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On 5/28/26 10:32 AM, Matthieu Baerts wrote:
-> On 28/05/2026 18:26, Paolo Abeni wrote:
->> I guess:
->>
->> 	NET_INC_STATS(sock_net(sk), LINUX_MIB_TCPRCVQDROP);
->>
->> could be added here, but still the caller will do __kfree_skb instead of
->> using a proper drop reason.
->
-> Or a new MPTCP specific one. Or abusing MPTCP_MIB_RCVPRUNED?
+On Thu, 28 May 2026 11:10:36 +0800 Geliang Tang wrote:
+> Dedicated MPTCP helpers are introduced for setting accept socket options.
+> These helpers (no_linger, set_priority, set_tos) set the values on all
+> existing subflows using mptcp_for_each_subflow(). The values are then
+> synchronized to other newly created subflows in sync_socket_options().
 
-The dropped skb is not pruned (removed from a queue were it was already
-sitting). In theory we could add a MPTCPRCVQDROP MIB, but technically
-the skb is dropped before reaching the _tcp_ receive queue, so I think
-LINUX_MIB_TCPRCVQDROP could make sense.
-
->> I think/guess an eventual follow-up patch could do?
-> 
-> Of course. It can also be a "Squash-to" patch if preferred.
-
-/P
-
+These are not protocol specific options, why do we have to export
+MPTCP-specific functions for them?
