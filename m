@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5283A34F279
-	for <mptcp@lists.linux.dev>; Thu, 28 May 2026 08:45:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A6DD38BF9E
+	for <mptcp@lists.linux.dev>; Thu, 28 May 2026 08:57:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779957936; cv=none; b=Quix+pN8Xg1uKarvk89Unoy3bFQ1fk42nyCOAGe4dw8/87XGi3dgwqGX+LihmzIBcAOjAbfcWr0P9AlF4bIj4eMpPa4+88CK4g9XnAzkBLhNIqlFosX4sh6Oe66YE87aL9neZPeozN4ABqO5qbXK7uk3nhbiGkzW4RkLgIJK9No=
+	t=1779958658; cv=none; b=bCMkrMOd5TTVzlEU07iEwxKAgiv/wMEJkipNpC9MQUS8gQgBUTibVOUfzXYiEy9vzmaq2r9FDN6u5eNQnwoS1WVl9ohGctbl/pnAWqNfBy7Q2sI7ZASY3z9yZj0If4jKfPIdDGw4TdpJ0sKdiJQuPQEH63L0+57F3C7hZAPKlXU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779957936; c=relaxed/simple;
-	bh=udiw3j2R/AD3L1TOdE2YnE/CqYcDtzb9zWwi4tjzCsM=;
+	s=arc-20240116; t=1779958658; c=relaxed/simple;
+	bh=QP7m0lUJAg867agC282iNM6xu3YaGTEZOn7mkAuYOcM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=Zt7c4r5jbdMQxyQ2xkgnMorACJ6BIVjazp0yJ/1+XwNIhfm2UlLl4jQv+3ziFsTl9Lkj6y5hT4UtzKPkbSm7IArrYo2oNPqamCly/pijazdoKEk6C1YJRrdtnYFEFEB85GMOT8d8oBXUu7JOoEVhCS+b4FAj1l0bSVPNrpL84x4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cQ8AQsjn; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=ZlSdcixKgXX5gg1TPsocWJWI7BkLGefkH0Ubwe9issYKz203oitSV0qYxSoiqt0sJm+kpWo4Ia7ZKyIWRRb7pqgS1YY6SMFFvkNOGEj0Ud/NYe+vPY4qCzCkUp/m1A17EusSwY46/oQ0qYlHRjeFTpsdpX0189dCxpqI6s3EBl4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y1zexwUO; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cQ8AQsjn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0746C1F000E9;
-	Thu, 28 May 2026 08:45:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y1zexwUO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48CCE1F00A3A;
+	Thu, 28 May 2026 08:57:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779957934;
-	bh=VuhOK2mhbqMddkmMlL1yf09u6v0rTbag7S7AA2rZOgg=;
+	s=k20260515; t=1779958657;
+	bh=kOzeMDqxfTBaApn+cYgpJWKy4aDbKIJg8CHhRrNZ+0g=;
 	h=Date:Subject:To:References:From:In-Reply-To;
-	b=cQ8AQsjnbtfOr8UBq1ygXyNbtIVvweB8dL7PlSb+V30jDPuaFfdTiKT+1XLzOjITK
-	 fLsom/80hvrkAUCWVkA0ELJa+KIcpQr3jMLA805cP/SKP9RTiX+AlIRozabgNq07ST
-	 X6Ogvkel+HTOOP3ZKzYPGBSjRMyKEIlZV5fOEWhQllHJPlEosawNiNEAzcJvzPw+a1
-	 ZPykvEJJ/lEpCl9XklcXgQLhxyPpkmMKsjLKhBAcIkWPy9DRr1J9w0KmgT8nkBkLsg
-	 eqi4W/45caiK8xP51V8RFSYUYU6Z8S089GevF9enYxY4nYakA7BQ4P7dw5aX9JcmbJ
-	 w0rlGdunDG4FA==
-Message-ID: <f583b390-b5d3-4a4f-82a0-ecfb3bf71f9e@kernel.org>
-Date: Thu, 28 May 2026 18:45:31 +1000
+	b=Y1zexwUOC+jSyQWxOrldjkP26F+lTstillbeIBEviEcOSWiV5k9zXtHFEDeIw1nHN
+	 siushPZMpxhbCUvZRd4YDPZ08LRPf2f/Z//MhmplZWflw3cOsBiKplWWS/xChLdVNu
+	 Vd3mgvOMgR//ZBGXl5agUstNA5FaNhlfPtv8d0P6Iy+dtkYgbIUPdLlCeaQqnq/5Mg
+	 bcX6xFP/yIXDS7E0WUAtIty1n5JJoyQ4/b5OpR7ZMKiNI0sCVTF7uahT07n2Y9xsKH
+	 tnnwguOTFXhKwFXajqHRqSUNY+ciYQNTy/FFKCkr1WYXxiTCMZGQnXgiYMnPYRS5ni
+	 tlBkpgzs/DKfg==
+Message-ID: <6605c5c2-6d2b-4e3f-a863-9fd273f8146b@kernel.org>
+Date: Thu, 28 May 2026 18:57:33 +1000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,11 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH v9 mptcp-next 4/6] mptcp: implemented OoO queue pruning
+Subject: Re: [PATCH v9 mptcp-next 6/6] mptcp: let the retrans scheduler do its
+ job.
 Content-Language: fr
 To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
 References: <cover.1779876523.git.pabeni@redhat.com>
- <94af7b55233828311a361cdd70b837805448218a.1779876523.git.pabeni@redhat.com>
+ <f16e4cf87d041b650be81e6e0f072c3abfeeb29b.1779876523.git.pabeni@redhat.com>
+ <afc2b2d5-7093-409f-b037-b6afbc16863f@redhat.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -85,114 +87,51 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <94af7b55233828311a361cdd70b837805448218a.1779876523.git.pabeni@redhat.com>
+In-Reply-To: <afc2b2d5-7093-409f-b037-b6afbc16863f@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Paolo,
 
-On 27/05/2026 20:45, Paolo Abeni wrote:
-> When moving incoming skbs in the msk receive queue and the latter
-> is above limits, prune it as needed quite alike what TCP is doing
-> at the subflow level. The main difference relies in the stop condition:
-> since MPTCP does not perform collapsing, it's better off dropping the
-> bare minimum to fit the (newer) incoming packet.
+On 28/05/2026 17:45, Paolo Abeni wrote:
+>  5/27/26 12:45 PM, Paolo Abeni wrote:
+>> Currently the MPTCP core enforces that when MPTCP-level retrans timer
+>> fires, at most a single dfrag is retransmitted. If some corner-cases it
+>> may be necessary retransmit multiple dfrags, and the MPTCP socket will
+>> need to wait multiple retrans timeout to accomplish that.
+>>
+>> Remove the mentioned constraint, allowing to transmit multiple dfrags per
+>> retrans period, as long as the scheduler keeps selecting subflows for
+>> retransmissions and pending data is available in the rtx queue.
+>> The default scheduler will transmit a dfrag per available subflow.
+>>
+>> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> 
+> Sashiko concerns on this patch is real, and a new revision is needed.
+> @Matttbe: could you please apply patches 1-4, as they makes sense as a
+> whole? I'll resubmit a new version for the last 2. Patch 5 is correct,
+> but makes no sense without this one.
 
-Thank you for the patch!
+Just did a quick review (I have a comment on patch 4), and applied
+patches 1-4:
 
-I have two small ideas below, but they are not blocking. If you think
-they are valid, feel free to add a Squash-to patch in the v10, or ask me
-to do the modifications.
+New patches for t/upstream-net and t/upstream:
+- e1da5203df71: mptcp: allow subflow rcv wnd to shrink
+- Results: 9ed1e5bcaf67..9f3fb817e1a6 (export-net)
+- Results: c154734ef126..b0745f4933ef (export)
 
-I will apply the first 4 patches, adding this tag:
+New patches for t/upstream:
+- acd6981b76f5: mptcp: explicitly drop over memory limits
+- 152803991ff0: mptcp: enforce hard limit on backlog flushing
+- 58f9ba52dd21: mptcp: implemented OoO queue pruning
+- Results: b0745f4933ef..e439b5a4647e (export)
 
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Tests are now in progress:
 
-Plus this one only on this patch:
-
-Tested-by: Gang Yan <yangang@kylinos.cn>
-
-(...)
-
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index b0a0c51e0a13..29cb10c02ed8 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -373,6 +373,45 @@ static void mptcp_init_skb(struct sock *ssk, struct sk_buff *skb, int offset,
->  	skb_dst_drop(skb);
->  }
->  
-> +/* "Inspired" from the TCP version; main difference: stop as soon as the MPTCP
-> + * socket is under memory limit.
-> + */
-> +static void mptcp_prune_ofo_queue(struct sock *sk, u64 seq)
-> +{
-> +	struct mptcp_sock *msk = mptcp_sk(sk);
-> +	struct rb_node *node, *prev;
-> +	bool pruned = false;
-> +	u64 mem;
-> +
-> +	if (RB_EMPTY_ROOT(&msk->out_of_order_queue))
-> +		return;
-> +
-> +	node = &msk->ooo_last_skb->rbnode;
-> +
-> +	do {
-> +		struct sk_buff *skb = rb_to_skb(node);
-> +
-> +		/* Stop pruning if the incoming skb would land in OoO tail. */
-> +		if (after64(seq, MPTCP_SKB_CB(skb)->map_seq))
-> +			break;
-> +
-> +		pruned = true;
-> +		prev = rb_prev(node);
-> +		rb_erase(node, &msk->out_of_order_queue);
-> +		mptcp_drop(sk, skb);
-> +		msk->ooo_last_skb = rb_to_skb(prev);
-> +
-> +		mem = (unsigned int)atomic_read(&sk->sk_rmem_alloc);
-
-Detail: why not using sk_rmem_alloc_get() here, like you did in
-__mptcp_move_skb(). Also there, sk->sk_rcvbuf is used with READ_ONCE(),
-but not here. Is it on purpose?
-
-> +		if (mem < sk->sk_rcvbuf)
-> +			break;
-> +
-> +		node = prev;
-> +	} while (node);
-> +
-> +	if (pruned)
-> +		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_OFO_PRUNED);
-
-Here, why not returning sk_rmem_alloc_get(sk) > READ_ONCE(sk->sk_rcvbuf)
-...
-
-> +}
-> +
->  static bool __mptcp_move_skb(struct sock *sk, struct sk_buff *skb)
->  {
->  	u64 copy_len = MPTCP_SKB_CB(skb)->end_seq - MPTCP_SKB_CB(skb)->map_seq;
-> @@ -386,9 +425,12 @@ static bool __mptcp_move_skb(struct sock *sk, struct sk_buff *skb)
->  	 */
->  	if (unlikely(sk_rmem_alloc_get(sk) > READ_ONCE(sk->sk_rcvbuf)) &&
->  	    !__mptcp_check_fallback(msk)) {
-
-... so here you can simply add mptcp_prune_ofo_queue(...) and not change
-what is below?
-
-> -		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_RCVPRUNED);
-> -		mptcp_drop(sk, skb);
-> -		return false;
-> +		mptcp_prune_ofo_queue(sk, MPTCP_SKB_CB(skb)->map_seq);
-> +		if (sk_rmem_alloc_get(sk) > READ_ONCE(sk->sk_rcvbuf)) {
-> +			MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_RCVPRUNED);
-> +			mptcp_drop(sk, skb);
-> +			return false;
-> +		}
->  	}
->  
->  	if (MPTCP_SKB_CB(skb)->map_seq == msk->ack_seq) {
+- export-net:
+https://github.com/multipath-tcp/mptcp_net-next/commit/b581e1e5e4658bbef17e336e94acea9a7062244c/checks
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/6394b9805eeb481113927da4d259c2798685114a/checks
 
 Cheers,
 Matt
