@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE7422E7384
-	for <mptcp@lists.linux.dev>; Fri, 29 May 2026 11:14:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E4141C862F
+	for <mptcp@lists.linux.dev>; Fri, 29 May 2026 11:14:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780053259; cv=none; b=sbXo9ULKHyxSEgT2X9z9WeAft9boS8zlYtC4+L17F/GYx5ok70Fvw+mNFhHuWjDpFOEHV/BoAJwUAmtgDVlHzdDWEHFZ1fp8qZJ0zSwoPR7czHs+flPTRuPbl0tgW5U2n1xidwoBLnYWO1erXgFzgLf+3xkIL3ZPSt/9wrnxfUE=
+	t=1780053261; cv=none; b=tEmmorRyyVW2DOk7DGQhyvfZKTioblN5281J2HOOeTRVm20J3khQR0E/RiR2RiO57pEadrANxqa+sm76AyiX+1XRegjPZ47BozN4nZtC1+jAkldB35IphAbrVntSEb0gTO2yclXjKP5lJtdAWMODsk4o3XwKsTnbIh1bLXiDlg0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780053259; c=relaxed/simple;
-	bh=+9gjmTdNU7JtR8m5IpxhfOn7BhGUqIrQcGhQbnyKidw=;
+	s=arc-20240116; t=1780053261; c=relaxed/simple;
+	bh=s2CQBlnblQ9JBFQhSMtEwGgOCh0C2SDtC4WDSQgvZx4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=DwgrfRDynU2W2l+i/hoxBC5FsYFiDFSz3Mj4T/kls+uwFvmLXU7d4GEjX7HCrRx9J92iUQ8P1X8MzMHbQhH3Ywuj12Zc1Hn10hKxIn86GsX4eJdbP8YouyoSHlZ9pGQwNwMRmWrli1WqPQWsM96NbxOA1d2N8WE8Xqs1z6rH/7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CtAD3anq; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=UxIaWYmixZ9yTRsdWllYcQTLvhGh8RFAxs6RDkAzaTeeEnFaVotw3jjkjynw+12d9eutRLBzqr89X8QlfBJ4WXqykCD7XG/D0RW3BVfeh/4vqArndoh3xEJU1y1bWBrwfA4eV/PfKm14/SyXc9M5Ep/T5l+ikSirEU3WMTFRQzQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SD3+jW3R; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CtAD3anq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BA141F00893;
-	Fri, 29 May 2026 11:14:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SD3+jW3R"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 126CB1F00899;
+	Fri, 29 May 2026 11:14:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780053258;
-	bh=8MkRwn6UnTQGwiPU+AIFfHPCH3XrZXZwjUF3PQrmdV8=;
+	s=k20260515; t=1780053260;
+	bh=StnTNuvd8trV9Bp5cMPaZEAky9zIaIYtLYl08NI1+EA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=CtAD3anqVGUJJVcjcdwzBnm0cB5GSTDNX2Olp7SmeD8yR2RbZRuOCBJH8lwe/V26o
-	 iCuDQR56c7MXT+UlbvI7d/KcORaWa3/6gKzXWhgycFkFXsJtTGJagHxzHFKS9X2i8Z
-	 kYImfl2IbSNFm4xd6L85or8FTcSH045oiGue3Yd+zO5SOxsbixiULPfgHSw/Qlpbyw
-	 PAYm6BopcmR/hWTz3yIRSUgQ8zqFCQKFtjAGUmRJj4snDHVzOgBL5iaWhQN0BLgTa+
-	 vjmn4LNKwj/WRhAAa0Hrxz/0XNpR0ZkUMTSigAxmzqv9HVp8XuQxP6jqcn55+fdY9M
-	 d7crqESvG5CJw==
+	b=SD3+jW3RWKRDElVrkya9mOLTidCPj16QqYHJjZsxyY2is9e0komKbyjqJdTf7PfRs
+	 WkDnnRwGVXqlTNP3t/z1UL627ZJ/Fo0TyT4GlFrO3aU/xpf+1aXBUX64HAwXbhOHdZ
+	 vph9BtIpa4WeUeeI4Hi/VsVfmJSamjsVy45qUKt4lXOMA//a5BDyDVW3FeqQrHj9BB
+	 oA5K4ve6/RXlm9iSjDAC3y3ZFzFDMHVlCtNgzHnLlqPj7hcb+TnyoExFnoDTFo3Hl8
+	 6RN9LzrRgqOkTQBOFK+LPQ5pEsPNB64U75mhOnblpThi4fFX94FjMbydpV+UVlr+qX
+	 yUZh2f0+lsuJQ==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [RFC mptcp-next v22 02/20] tls: init mixed SW/TOE proto to prevent NULL call
-Date: Fri, 29 May 2026 19:13:44 +0800
-Message-ID: <4b3d22717387a6a8efb1bd948f4a6e6f8648eff2.1780052851.git.tanggeliang@kylinos.cn>
+Subject: [RFC mptcp-next v22 03/20] tls: add ESTABLISHED state check for TOE bypass
+Date: Fri, 29 May 2026 19:13:45 +0800
+Message-ID: <faecb7e60a6deda1415f10a20b38e218858e734b.1780052851.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <cover.1780052851.git.tanggeliang@kylinos.cn>
 References: <cover.1780052851.git.tanggeliang@kylinos.cn>
@@ -45,43 +45,53 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-When a TOE socket falls back to software offload, update_sk_prot() accesses
-prot->prots[TLS_SW][TLS_HW_RECORD] and proto_ops[TLS_SW][TLS_HW_RECORD].
-These entries were never initialized, causing NULL function pointers and
-kernel panic. Add the missing entries for [TLS_SW][TLS_HW_RECORD] and
-[TLS_HW_RECORD][TLS_SW] in both build_protos() and build_proto_ops().
+When CONFIG_TLS_TOE is enabled, tls_init() calls tls_toe_bypass()
+before checking the socket state. This allows a listening socket
+(TCP_LISTEN) to attach a TOE TLS context via setsockopt(TCP_ULP, "tls")
+after listen().
+
+Later when accept() clones the socket, inet_clone_ulp() dereferences
+the ULP's clone callback (which is NULL for TLS), causing a NULL
+pointer access and kernel panic.
+
+Move the state check before tls_toe_bypass() to ensure TOE bypass is
+only attempted on established sockets. This prevents unsafe attachment
+to listen sockets and aligns TOE behavior with the existing restriction
+applied to software TLS.
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- net/tls/tls_main.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ net/tls/tls_main.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
 diff --git a/net/tls/tls_main.c b/net/tls/tls_main.c
-index 51ae8925d891..6d1272dc3c34 100644
+index 6d1272dc3c34..8809b056290a 100644
 --- a/net/tls/tls_main.c
 +++ b/net/tls/tls_main.c
-@@ -965,6 +965,9 @@ static void build_proto_ops(struct proto_ops ops[TLS_NUM_CONFIG][TLS_NUM_CONFIG]
- #endif
- #ifdef CONFIG_TLS_TOE
- 	ops[TLS_HW_RECORD][TLS_HW_RECORD] = *base;
-+
-+	ops[TLS_SW][TLS_HW_RECORD] = ops[TLS_SW][TLS_SW];
-+	ops[TLS_HW_RECORD][TLS_SW] = ops[TLS_BASE][TLS_SW];
- #endif
- }
+@@ -1059,11 +1059,6 @@ static int tls_init(struct sock *sk)
  
-@@ -1041,6 +1044,11 @@ static void build_protos(struct proto prot[TLS_NUM_CONFIG][TLS_NUM_CONFIG],
- 	prot[TLS_HW_RECORD][TLS_HW_RECORD] = *base;
- 	prot[TLS_HW_RECORD][TLS_HW_RECORD].hash		= tls_toe_hash;
- 	prot[TLS_HW_RECORD][TLS_HW_RECORD].unhash	= tls_toe_unhash;
-+
-+	prot[TLS_SW][TLS_HW_RECORD] = prot[TLS_SW][TLS_SW];
-+	prot[TLS_HW_RECORD][TLS_SW] = prot[TLS_BASE][TLS_SW];
-+	prot[TLS_SW][TLS_HW_RECORD].hash = NULL;
-+	prot[TLS_HW_RECORD][TLS_SW].unhash = NULL;
- #endif
- }
+ 	tls_build_proto(sk);
  
+-#ifdef CONFIG_TLS_TOE
+-	if (tls_toe_bypass(sk))
+-		return 0;
+-#endif
+-
+ 	/* The TLS ulp is currently supported only for TCP sockets
+ 	 * in ESTABLISHED state.
+ 	 * Supporting sockets in LISTEN state will require us
+@@ -1073,6 +1068,11 @@ static int tls_init(struct sock *sk)
+ 	if (sk->sk_state != TCP_ESTABLISHED)
+ 		return -ENOTCONN;
+ 
++#ifdef CONFIG_TLS_TOE
++	if (tls_toe_bypass(sk))
++		return 0;
++#endif
++
+ 	/* allocate tls context */
+ 	write_lock_bh(&sk->sk_callback_lock);
+ 	ctx = tls_ctx_create(sk);
 -- 
 2.53.0
 
