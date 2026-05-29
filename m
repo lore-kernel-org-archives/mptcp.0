@@ -1,39 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C72E2853E9
-	for <mptcp@lists.linux.dev>; Fri, 29 May 2026 01:35:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6D043546C6
+	for <mptcp@lists.linux.dev>; Fri, 29 May 2026 01:36:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780018519; cv=none; b=OFZgwwMa6f3m69/3TwQf59rjpb8ztrbq7U5uS2JH84MamaQmCT3eF7Oxg/5ShDOgWrm3VbNDw0DhB2F7eza7YzpvoMzeVet1Wfqjg25oJbuzwGynXe3nVZygQu+5/w4+9jR4XkhVE1sGY+LTzBBpolDFEx2WtJK97Mh3GeShjxM=
+	t=1780018569; cv=none; b=hOWMEeQ4B5wv7OLusF4pDSfeD1nqIkSNAYnNwngdIFpLRLyAylM/z1TkpiDuqLV0p4MXZInPJn0poqMHmk87XNRo6xs0U5tdyvg+JNQEMGtkvCnC++8nehX5jBpP0Eu2wy91gQI8gg8Ct0RfPavj1qL3AMeV1/z6ejsQeHAnoSw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780018519; c=relaxed/simple;
-	bh=8GybPtfQ9v4sauOCmHc2pxyoeQwZucgAWSctO/Fqv6c=;
+	s=arc-20240116; t=1780018569; c=relaxed/simple;
+	bh=f1qFNYKUDClXPBCdbFRisRcGFtZJAtKSdTATvo2roQk=;
 	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=VoeHMgTvDJ5nn8oTcB5PxcxTKqbvJGXqhhMLW5nXCAqjna7k49l3zCfkvZvzOFhoQnBfopDpTveLm6BNwXX+tKLx/0i26cFLB3+PQzrLl15/DO5l8dB2olhMyJmUXwimJwnB2bm7CCvPRi/bEARmKSTIctQ8Fv4Jp3KH+T/SqDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G/oqdhGo; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=ZXWgO7RwPa0am4Y0pPHekr1dnuTRSoM9QnbeQL3FYLIBEyDblNSVz1+VL8uUW+EFxSjPZTXg1R+p3epgu2EekSfR5KIFaPh6hmxjSLLIKn3N4LCDuxfHUSb352LwudW46SfZZyWwTEy2OUjN2aDN2+nyAv/8vJwIt6nEC/47GQA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DHpW+nOw; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G/oqdhGo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4114B1F000E9;
-	Fri, 29 May 2026 01:35:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DHpW+nOw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43BC01F000E9;
+	Fri, 29 May 2026 01:36:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780018518;
-	bh=AMIH2vV8nSueOUT65mCyBEb5b5vCEud+Tg+NXsIeoYM=;
+	s=k20260515; t=1780018568;
+	bh=Q6SEbIThINxPvF9/h5rONW4skP4uzXnM40xN16vEfFI=;
 	h=Date:From:To:cc:Subject:In-Reply-To:References;
-	b=G/oqdhGoAS9/VS31qMYJuSUHe4EvG/vopBencIPV78dXAr79eWOlIWnW6r01pIlWm
-	 ivb+59iRTJI2HMYx8m5R4HXIxZEeGrCI3QZhuB9/qh/bf2LIfEe2sMWGWTNGZuaNx6
-	 LaKrbK5/XqJ9hyIWYPXKMAkrZm5pZLtkmiU1qZfWImKXjhwLChUOW/dkymPhSjPz86
-	 He6jXvytQtE5+8KF0KfuyMIpieXT9c9/afYEC5k1HiPQ1XbA3ZhvkxLmPXOgeDgbHZ
-	 qQOWtKHb+FHgDnspP7FoNJm2qB/qXUxsML0/Vs0E+WrsVfj/N4c5ad5WsTEhRfOI/v
-	 0bg7s/DkCSGIA==
-Date: Thu, 28 May 2026 18:35:17 -0700 (PDT)
+	b=DHpW+nOwV5L2qbUiimuBXo9beU1fFArDnkHvUWO+oR18zC3t9RuQIVZa6yxyTrxFI
+	 lx6SHOkN9TsF2Wa8xMbblZAUDu8UzBTg+wRBjp6u5ZPxr5OmZmR26Lh/K8V3hjmSe9
+	 SubkRxiH0aWb2yMD0TUM+5qnfTEfMUUI5Qd6Dz32H8B1vB+VpqtLtpa2VRDXQUOrRZ
+	 Eqmw6utBqbPa3NcqPmFCgaYRoN3G3jfPgYY+Q3L3xqGc2bbJqcZgmPBPKY+hhrR7Hs
+	 Cfj96FNotc+9anMl2bhkcChbABnwA1Qn8cVwu07UvHJUmBs5sis9Itl2Nmat+VvPqh
+	 7UlMgnKmevVSQ==
+Date: Thu, 28 May 2026 18:36:07 -0700 (PDT)
 From: Mat Martineau <martineau@kernel.org>
 To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 cc: MPTCP Linux <mptcp@lists.linux.dev>
-Subject: Re: [PATCH mptcp-net] mptcp: sockopt: check timestamping ret value
-In-Reply-To: <20260527-mptcp-sockopt-timestamping-ret-v1-1-8eda97e24562@kernel.org>
-Message-ID: <d0660d1a-b217-17ce-199f-dad0b65fd25c@kernel.org>
-References: <20260527-mptcp-sockopt-timestamping-ret-v1-1-8eda97e24562@kernel.org>
+Subject: Re: [PATCH mptcp-net] mptcp: sockopt: set sockopt on all subflows
+In-Reply-To: <20260527-mptcp-sockopt-all-sf-no-break-v1-1-4318be7b1e22@kernel.org>
+Message-ID: <b069734f-4343-05a3-1661-0fa4ae92da05@kernel.org>
+References: <20260527-mptcp-sockopt-all-sf-no-break-v1-1-4318be7b1e22@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -44,54 +44,45 @@ Content-Type: text/plain; charset=US-ASCII; format=flowed
 
 On Wed, 27 May 2026, Matthieu Baerts (NGI0) wrote:
 
-> sock_set_timestamping() can fail for different reasons. The returned
-> value should then be checked.
+> The mptcp_setsockopt_all_sf(), currently used only with TCP_MAXSEG,
+> stopped when one subflow returned an error.
 >
-> If sock_set_timestamping() fails for at least one subflow, the first
-> error is now reported to the userspace, similar to what is done with
-> other socket options.
+> Even if it is not wrong, this is different from the other helpers trying
+> to set the option on all subflows, and then returning an error if at
+> least one of them had an issue.
 >
-> Fixes: 9061f24bf82e ("mptcp: sockopt: propagate timestamp request to subflows")
-> Reported-by: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-> Closes: https://lore.kernel.org/willemdebruijn.kernel.178a41a53d041@gmail.com
+> Follow this behaviour, for a question of uniformity.
+>
+> Fixes: 51c5fd09e1b4 ("mptcp: add TCP_MAXSEG sockopt support")
 > Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 > ---
-> net/mptcp/sockopt.c | 8 ++++++--
-> 1 file changed, 6 insertions(+), 2 deletions(-)
+> net/mptcp/sockopt.c | 7 ++++---
+> 1 file changed, 4 insertions(+), 3 deletions(-)
 >
 > diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-> index 87b5796d0135..91aa57f1d0fd 100644
+> index 87b5796d0135..bc2cded00187 100644
 > --- a/net/mptcp/sockopt.c
 > +++ b/net/mptcp/sockopt.c
-> @@ -241,15 +241,19 @@ static int mptcp_setsockopt_sol_socket_timestamping(struct mptcp_sock *msk,
+> @@ -813,10 +813,11 @@ static int mptcp_setsockopt_all_sf(struct mptcp_sock *msk, int level,
 >
 > 	mptcp_for_each_subflow(msk, subflow) {
 > 		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
 > +		int err;
 >
-> 		lock_sock(ssk);
-> -		sock_set_timestamping(ssk, optname, timestamping);
-> +		err = sock_set_timestamping(ssk, optname, timestamping);
-> 		release_sock(ssk);
-> +
+> -		ret = tcp_setsockopt(ssk, level, optname, optval, optlen);
+> -		if (ret)
+> -			break;
+> +		err = tcp_setsockopt(ssk, level, optname, optval, optlen);
 > +		if (err < 0 && ret == 0)
 > +			ret = err;
 > 	}
 >
-> 	release_sock(sk);
->
-> -	return 0;
-> +	return ret;
-> }
->
-> static int mptcp_setsockopt_sol_socket_linger(struct mptcp_sock *msk, sockptr_t optval,
+> 	if (!ret)
 >
 > ---
-> base-commit: 599cb099e01efc713c7c120654ebd9fb49ac2782
-> change-id: 20260527-mptcp-sockopt-timestamping-ret-e2029bf0f24a
->
+> base-commit: 19d4169d06892e0c451ec370292ec71fa6bd8028
+> change-id: 20260527-mptcp-sockopt-all-sf-no-break-ad14ff690358
 
-Looks good to me, thanks Matthieu
+Thanks for the fix, good idea to stay consistent here.
 
 Reviewed-by: Mat Martineau <martineau@kernel.org>
-
