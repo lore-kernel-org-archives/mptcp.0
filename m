@@ -1,185 +1,130 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C07933A9E1
-	for <mptcp@lists.linux.dev>; Fri, 29 May 2026 11:14:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F102235202D
+	for <mptcp@lists.linux.dev>; Fri, 29 May 2026 12:00:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780053296; cv=none; b=AsKEo72LsTpw2iZ9WDIV3xN+O8bfYFB92xyNb9sNa1/ZmjBq/rSkATq0bAmkvh7gh6Gf/MDMs1XxZAN1OPNxLp6IViJk1i0ur9K4ul/vXgdkaqvJOy9Um3rFUDIq3dOSEs6p6guxMly0zpoXLwZIhVgfx/5SZdpQKwwI828NhSE=
+	t=1780056038; cv=none; b=tcJhyuij/mGUbTslya9Q7iimhHOTmfJ+dTLEy2GnGOiKWJrFsUV3j8AOPdZGdMg4CLzj6j+cuJR1EoW3CpikTXXb1UR+mQCJ5unCZmfV0FDYNMh4xU8pjF1jeYBSVWPA4xO6TPzJtvKl5J7nVjxJ8P/8UprvR5y+4B4puwhi3Ko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780053296; c=relaxed/simple;
-	bh=92H9x9yFNkbJgJjQ0eKxqkSzeLXxSN34dHUm+ZBI/Ec=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=q35sucQYtUDZIAPLUjTw2wruolGufSsfdZo3dDOgABooNfGZSeJ32rz33tc5+8Agf8OP19YiAs34+mxuiYaXTm9DAx6Dmt4PPUoD8Mu2ffvINaF8U3vNFPoJoHz4GJvEpPWIwEH/TiLecD8hWr/1RQJ2Ta+r3SUqkwyt3EdKyxo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H7M78kvE; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780056038; c=relaxed/simple;
+	bh=mYeaWW2AlSNsdQfS4rWH4XlaVDD4ZOrTY6j+TqJmjVA=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
+	 MIME-Version:Content-Type; b=riT9bqJqnQZzQcrSZfCYABI4Qk0RqZ/lgklnaqeFXu7wDpNxXaAz3auLFMT5h7rc8gKfJ3IO1sTIqt78y+kZvww3o+3lQZmw7TakguL8X9z6m2wS8BkFLfZ7oYExoADYQ6KD7SfxBdv5JS2UBsn6vnpBKanF92ig1FkM/sS/Pps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=rD+/ZGHu; arc=none smtp.client-ip=209.85.160.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H7M78kvE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F02D1F00898;
-	Fri, 29 May 2026 11:14:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780053295;
-	bh=EToo3lVyscBNTbcRYQRhh2LBDC9LSekOmA85iyM/VrY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=H7M78kvE78G6jG5wM/1gbY0/g3eBY3QJQlCp2tenVITXa5L3ikbhPV9KGohoheBL0
-	 QCGD5XQPxH5BIkPN8U0WyuZpnf698dI2FmMkr6vD3iY9PxZSyKqDs/DZOWmNIeSNAI
-	 qIg3OjOTHCTEJK3tU2W1ASyeLCKX3kyH97Q94J3khcSn36qfqyA3RZbuDkYbDvA80O
-	 2nwbE47g3J9+jyqQ8tEK+6Z7PQBYgtM1/1gDEekXbB1XMk84dyotSfrwqA1wFvFkg/
-	 0yRsgQHDiwlTz5iV/KDqBVFop27zAAiPiaaeJ7SHidxJBxeuBIE0hzVMiDOxSq2B3R
-	 yM93Dymane9+A==
-From: Geliang Tang <geliang@kernel.org>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>,
-	Gang Yan <yangang@kylinos.cn>
-Subject: [RFC mptcp-next v22 20/20] selftests: mptcp: cover mptcp tls tests
-Date: Fri, 29 May 2026 19:14:02 +0800
-Message-ID: <6aa2f2b3e4a6c3cd3a0731d4c9887aab98a25f2c.1780052851.git.tanggeliang@kylinos.cn>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <cover.1780052851.git.tanggeliang@kylinos.cn>
-References: <cover.1780052851.git.tanggeliang@kylinos.cn>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rD+/ZGHu"
+Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-50e5bea4045so108036651cf.3
+        for <mptcp@lists.linux.dev>; Fri, 29 May 2026 05:00:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1780056036; x=1780660836; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZagP2RE4Vj4jNBBZAYzbGG6a5gNNDNC91fmqslPQG1k=;
+        b=rD+/ZGHu10rJvbpEGPMNLtO1OWvIYU2+hHdkilZPGS9UpIg/6ef87f4KSTQ7IPDy6+
+         wUhnyaNznFLI7g5mAhH8T2cb6DAo+RUxARy7w5k6lI2GemXjdNA4aoJ1MBu6bsLEfP/w
+         qSYSNdVPcEFyxRuzBcngONuuvOwpTvCMmb6exCCoSlrOZwZP7UtIDQnQo+5gJuHfnKzJ
+         IEaks7tWkDAkySeY0kUy/ROhXfW7Q+TH7jKZUXwZ9U6borqONIzuotQgnC54mnPwsvMQ
+         Kb1KBIVELnSbaoxA1uMlcyEndGlWafOY4p0qWZrkPPFYOLRTqdq9XX/2OiixaPcejGsc
+         7c4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780056036; x=1780660836;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZagP2RE4Vj4jNBBZAYzbGG6a5gNNDNC91fmqslPQG1k=;
+        b=HmBw/H3E31TMjALVwl+yQmQE+a3GuZEwgNd0qR8b0S7JqYP8OmdB0WAehfWDF982u6
+         OaeTnnyRGfrdPWLMQKX6BS73DRACCtwtCxblR6JOBhS916nRtvtGJrJG9//ZlGkf5P2S
+         BBfyRt8hsYYpY25torYMgrqheEJrj/BqytD3Ud6GzWwfSvhglRZXQH+JHebfa5vhwSfx
+         pdZanHjF63A/sN4ksz4E+9WQLWbwVXNyG/8SRpAxuMxIgSSLntkJ+i284vwBqOGiVTsp
+         tE+DIQxHqzBnq50REbY5gkGBB6rHrruWrYYF96vH62qKMzdOIanCESNAb3KsDkiBdbVt
+         pOfQ==
+X-Gm-Message-State: AOJu0YzqChm3of6HO0O3vDAA4t5gVhAA+BpRUaByWwpIOqhIL/zCQ96p
+	3X0eGFlQYzrvb2RMONoghIlKEY12IvIFayJC66z+HZKZZTCiR89hx+8=
+X-Gm-Gg: Acq92OEqHMuvYxZBcoiY8iJAqUNBVuahptkqhh0jkFTtTkXWlwmeDMGNjlAc4WftMDt
+	vuThA+wvnyDTQmZyPwLvj0dz9HGyruuPq9IkGssqw/UtM+2donqJbFLa8mOlsIi/s+Pya6yXB9+
+	1td2byUeD4+BdhGhClNj/ciZQwdXlgNjP0r/d/KFxrE0m2ek6LRVBIqjO13TvXYBiJH0O7mVBmd
+	EOCLESR5rSACTcfUjU/pf2yDPS5HG2m6weJnHoZiBFSCZQkwmoF0JRp+Nleb5cpc5yk23FJMFgp
+	ENALs4b8EKG5LCZtgaxJEVap5GLFUHH5n2X9Ez2wMMT1G/8C08fHrzyXgiE5z2J1jfaTfF/8d18
+	nluBzXHtN0gI+owoLLGXajoj4duUyfsGlkzyz4SlFzVRBOvb1KnOILLtxcOFgPcl83U2xmwAUJx
+	g6KhP8aeF9Tv+IdCZlte/hHH3eX4yjFep+GySJYLcG2vGYY5t50+4AYoC8NlY=
+X-Received: by 2002:ac8:584f:0:b0:50f:ba44:ce4e with SMTP id d75a77b69052e-5172dc18bb7mr31484521cf.6.1780056027356;
+        Fri, 29 May 2026 05:00:27 -0700 (PDT)
+Received: from [127.0.0.1] ([74.235.102.248])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-5172e9e5715sm18423351cf.9.2026.05.29.05.00.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 May 2026 05:00:26 -0700 (PDT)
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <cover.1780049797.git.pabeni@redhat.com>
+References: <cover.1780049797.git.pabeni@redhat.com>
+Subject: Re: [PATCH v10 mptcp-next 0/3] mptcp: address stall under memory
+ pressure
+Message-ID: <dbb33390-5b3e-d71a-0d3e-b2efe28c4e6a@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 29 May 2026 12:00:26 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+Hi Paolo,
 
-The mptcp tests for tls.c is available now, this patch adds mptcp_tls.sh
-to test it in the MPTCP CI by default.
+Thank you for your modifications, that's great!
 
-Co-developed-by: Gang Yan <yangang@kylinos.cn>
-Signed-off-by: Gang Yan <yangang@kylinos.cn>
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
----
- tools/testing/selftests/net/mptcp/.gitignore  |  1 +
- tools/testing/selftests/net/mptcp/Makefile    |  2 +
- tools/testing/selftests/net/mptcp/config      |  5 ++
- .../testing/selftests/net/mptcp/mptcp_tls.sh  | 61 +++++++++++++++++++
- tools/testing/selftests/net/mptcp/tls.c       |  1 +
- 5 files changed, 70 insertions(+)
- create mode 100755 tools/testing/selftests/net/mptcp/mptcp_tls.sh
- create mode 120000 tools/testing/selftests/net/mptcp/tls.c
+Our CI did some validations and here is its report:
 
-diff --git a/tools/testing/selftests/net/mptcp/.gitignore b/tools/testing/selftests/net/mptcp/.gitignore
-index 833279fb34e2..f6defec6eeb5 100644
---- a/tools/testing/selftests/net/mptcp/.gitignore
-+++ b/tools/testing/selftests/net/mptcp/.gitignore
-@@ -4,4 +4,5 @@ mptcp_diag
- mptcp_inq
- mptcp_sockopt
- pm_nl_ctl
-+tls
- *.pcap
-diff --git a/tools/testing/selftests/net/mptcp/Makefile b/tools/testing/selftests/net/mptcp/Makefile
-index 22ba0da2adb8..f7c959a25b3b 100644
---- a/tools/testing/selftests/net/mptcp/Makefile
-+++ b/tools/testing/selftests/net/mptcp/Makefile
-@@ -14,6 +14,7 @@ TEST_PROGS := \
- 	mptcp_connect_splice.sh \
- 	mptcp_join.sh \
- 	mptcp_sockopt.sh \
-+	mptcp_tls.sh \
- 	pm_netlink.sh \
- 	simult_flows.sh \
- 	userspace_pm.sh \
-@@ -25,6 +26,7 @@ TEST_GEN_FILES := \
- 	mptcp_inq \
- 	mptcp_sockopt \
- 	pm_nl_ctl \
-+	tls \
- # end of TEST_GEN_FILES
- 
- TEST_FILES := \
-diff --git a/tools/testing/selftests/net/mptcp/config b/tools/testing/selftests/net/mptcp/config
-index f48bd5183fb3..bfc26bde0501 100644
---- a/tools/testing/selftests/net/mptcp/config
-+++ b/tools/testing/selftests/net/mptcp/config
-@@ -38,3 +38,8 @@ CONFIG_INET_ESP=y
- CONFIG_INET_ESPINTCP=y
- CONFIG_INET6_ESP=y
- CONFIG_INET6_ESPINTCP=y
-+CONFIG_TLS=m
-+CONFIG_CRYPTO_ARIA=m
-+CONFIG_CRYPTO_CCM=m
-+CONFIG_CRYPTO_CHACHA20POLY1305=m
-+CONFIG_CRYPTO_SM4_GENERIC=m
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_tls.sh b/tools/testing/selftests/net/mptcp/mptcp_tls.sh
-new file mode 100755
-index 000000000000..79d120cd4b16
---- /dev/null
-+++ b/tools/testing/selftests/net/mptcp/mptcp_tls.sh
-@@ -0,0 +1,61 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+
-+. "$(dirname "${0}")/mptcp_lib.sh"
-+
-+ret=0
-+ns1=""
-+pid=""
-+
-+# This function is used in the cleanup trap
-+#shellcheck disable=SC2317,SC2329
-+cleanup()
-+{
-+	if [ -n "$pid" ] && kill -0 "$pid" 2>/dev/null; then
-+		kill "$pid" 2>/dev/null
-+		wait "$pid" 2>/dev/null
-+	fi
-+
-+	mptcp_lib_ns_exit "$ns1"
-+}
-+
-+init()
-+{
-+	local max="${1:-4}"
-+
-+	mptcp_lib_ns_init ns1
-+
-+	mptcp_lib_pm_nl_set_limits "$ns1" "$max" "$max"
-+
-+	local i
-+	for i in $(seq 1 "$max"); do
-+		mptcp_lib_pm_nl_add_endpoint "$ns1" \
-+			"127.0.0.1" flags signal port 1000"$i"
-+	done
-+}
-+
-+mptcp_lib_check_mptcp
-+
-+trap cleanup EXIT
-+
-+init
-+
-+ip netns exec "$ns1" ./tls -v 12_aes_gcm_mptcp \
-+			   -v 13_aes_gcm_mptcp \
-+			   -v 12_chacha_mptcp \
-+			   -v 13_chacha_mptcp \
-+			   -v 13_sm4_gcm_mptcp \
-+			   -v 13_sm4_ccm_mptcp \
-+			   -v 12_aes_ccm_mptcp \
-+			   -v 13_aes_ccm_mptcp \
-+			   -v 12_aes_gcm_256_mptcp \
-+			   -v 13_aes_gcm_256_mptcp \
-+			   -v 13_nopad_mptcp \
-+			   -v 12_aria_gcm_mptcp \
-+			   -v 12_aria_gcm_256_mptcp &
-+pid=$!
-+wait $pid
-+ret=$?
-+
-+mptcp_lib_result_print_all_tap
-+exit $ret
-diff --git a/tools/testing/selftests/net/mptcp/tls.c b/tools/testing/selftests/net/mptcp/tls.c
-new file mode 120000
-index 000000000000..724b1f047c89
---- /dev/null
-+++ b/tools/testing/selftests/net/mptcp/tls.c
-@@ -0,0 +1 @@
-+../tls.c
-\ No newline at end of file
--- 
-2.53.0
+- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/266337=
+50821
 
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/8aeb83d616d6
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1102825
+
+
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
