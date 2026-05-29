@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47D753BE65C
-	for <mptcp@lists.linux.dev>; Fri, 29 May 2026 11:14:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 292E63016E7
+	for <mptcp@lists.linux.dev>; Fri, 29 May 2026 11:14:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780053279; cv=none; b=F457+OlU8TsbuZQsmJx2BXFCibKxuHzBOV7CHVIgNslCbYve7Dw1V+yurV29V4SMADEFuVezaOFIKihoScZ9gMhTgFwhHT5gphrHu7gdmEkqS7NCfiiIKomG6RbOK10DfqP65sHqG1kaHdNxCahqj4dynBGHf+K7FbH7ayjQGPA=
+	t=1780053281; cv=none; b=A1irYNoJwq96KPIBYQwl0w7GUnXO56C4n8yplfPfBNtju0t/tA+UiaOzJ+8ImbLa/bZId4dpwgqdHB9cDhLA3V1kuPnZhJOhhQLEmTo1yfKZ09fNfUWE4mh4iXGY0Nv5UxFA2TtIWCdH1tM6IIndmJfN5Cpa7/SLtpmdqQE4WOg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780053279; c=relaxed/simple;
-	bh=4izWaohbT9APxn0iR8ureinX623jq3pJmCSnPaSDjcY=;
+	s=arc-20240116; t=1780053281; c=relaxed/simple;
+	bh=3gl0K9I5PyXXoykIdu26iq4G+91su8cvRW6scifbKT8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CvuGl67pLqm1tkFY58+QvyYPDZACDUTDX067qjf9Q470xe7Xnl2fLJRfYLth2wwPUebdULfrPGWgrQccoExGgqsMiS/TrjUFa6cuWS/PfveH4R2aRidSRt8NPdeVzlh5mYxHJl+MZpDEVGmgppxNBa67/JXaXp4sQVXksIWyv7g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IDYU9VrJ; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=cFbn+ahR+J+aROD4/d+fkb/10Cllr36jIEiMPPcG5NCY6jcgDDJS7jz1+neH8Ju4FoziKJJZ5v7KJt3Oq1N2m/331CNqfDxgqIDaibf6nFTzc390pMdaKv85g7CAce7gtuhYPYF5rUsVNRz246pAH8vLyk9Xq9PiAIB+rYPJic4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L+wcn3wS; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IDYU9VrJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CA7C1F00899;
-	Fri, 29 May 2026 11:14:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L+wcn3wS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82B3B1F00893;
+	Fri, 29 May 2026 11:14:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780053277;
-	bh=GLT8fng9KbiEqiwXafGg/LxgIWTnPbGX0DiZpooAGoI=;
+	s=k20260515; t=1780053280;
+	bh=i1r228t++8Jx2HzWD9Lh3NCKCbWjqFm66UQqWx4jVMw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=IDYU9VrJs5NFOFYa+yDf4yLaoRmzcw4kTyjVDd/uQkddBSrLpMS5z+D1I39Rg/Cec
-	 ZXfnVfy2Yw55PqMvK4hNGNQhACW+odvt5HXJB4rn0rt68bRma8B+p7g8o+/wU1QEMF
-	 0Ts2dKA3HDTIvlOyyHOhRpBhoALyrtCKGN6+5R9N11Jwn2xqSDj/+lNDJIavIKHbhe
-	 kY3fd2mUloSZRelm7AwAQW42QkQICsZIkjTQiRxlscFG9pQ4kehN4lEzscZvij5l06
-	 +5q+uNssIv7u8NnhzZUyrSnSGJi8gpujL+sxskusXu7ADbIusTWH6uxj7V/U824OTg
-	 mzSkRvT/KaL8Q==
+	b=L+wcn3wSU1Q5nLdZaWtJv7LPSdFFHsxJDg33YnLhHn449u6lZmIf9MJtkuKwmfjWr
+	 DNNwqqYgLKPtES0gM3zQTy6XPbdnOfJtGu0COU5NgBUAyd8XqoGzvt+dCVY4MSIODY
+	 MaPVn/x+Ty/04iQxnuBLH6Vn5EahAbvvAvMB633cVGSRLwXyFPAwxP4WAEp2xlI8OL
+	 ZXrdsqkx5ZigxMVBRnAGxRQIODN/+R+OtSCJ6XWVm2waPYTHMJj5FzuU9htkMezCtV
+	 NIYmMaZG8CR1vBzkCbrbuI/vVlR/nXaLOwlRD1ACoLBWrBKrB474uUxunAWVpKSWvR
+	 QRKubG41P4yIQ==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>,
 	Gang Yan <yangang@kylinos.cn>
-Subject: [RFC mptcp-next v22 12/20] mptcp: enable ulp setsockopt for tls support
-Date: Fri, 29 May 2026 19:13:54 +0800
-Message-ID: <67118c759fba8945088e496c5dff2e8af7c1ca44.1780052851.git.tanggeliang@kylinos.cn>
+Subject: [RFC mptcp-next v22 13/20] selftests: mptcp: connect: use espintcp for ulp test
+Date: Fri, 29 May 2026 19:13:55 +0800
+Message-ID: <246842e2c9737d307f95f94b8dbf86c047b7ccea.1780052851.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <cover.1780052851.git.tanggeliang@kylinos.cn>
 References: <cover.1780052851.git.tanggeliang@kylinos.cn>
@@ -46,109 +46,48 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Allow MPTCP sockets to set the TCP_ULP socket option to enable TLS.
-Add mptcp_setsockopt_tcp_ulp() which validates the socket state (must
-not be CLOSE or LISTEN), only accepts "tls" as the ULP name, and then
-calls tcp_set_ulp().
-
-Include TCP_ULP in the list of supported options in supported_sockopt(),
-and handle it in setsockopt_sol_tcp() instead of returning -EOPNOTSUPP.
-
-Call tcp_cleanup_ulp() in mptcp_destroy_common() to release ULP module's
-reference count.
+With KTLS being implemented, "tls" should no longer be used in
+sock_test_tcpulp(), it breaks mptcp_connect.sh tests. Another ULP
+name, "espintcp", is set instead in this patch.
 
 Co-developed-by: Gang Yan <yangang@kylinos.cn>
 Signed-off-by: Gang Yan <yangang@kylinos.cn>
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- net/mptcp/protocol.c |  1 +
- net/mptcp/sockopt.c  | 40 +++++++++++++++++++++++++++++++++++++++-
- 2 files changed, 40 insertions(+), 1 deletion(-)
+ tools/testing/selftests/net/mptcp/config          | 4 ++++
+ tools/testing/selftests/net/mptcp/mptcp_connect.c | 4 ++--
+ 2 files changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index f9dbe3a1e57b..26a9b0df5808 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -3765,6 +3765,7 @@ static void mptcp_destroy(struct sock *sk)
- 	/* allow the following to close even the initial subflow */
- 	msk->free_first = 1;
- 	mptcp_destroy_common(msk);
-+	tcp_cleanup_ulp(sk);
- 	sk_sockets_allocated_dec(sk);
- }
- 
-diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-index b7eccade1f90..d692bca17adf 100644
---- a/net/mptcp/sockopt.c
-+++ b/net/mptcp/sockopt.c
-@@ -12,6 +12,7 @@
- #include <net/protocol.h>
- #include <net/tcp.h>
- #include <net/mptcp.h>
-+#include <net/tls.h>
- #include "protocol.h"
- 
- #define MIN_INFO_OPTLEN_SIZE		16
-@@ -577,6 +578,7 @@ static bool mptcp_supported_sockopt(int level, int optname)
- 		case TCP_FASTOPEN_CONNECT:
- 		case TCP_FASTOPEN_KEY:
- 		case TCP_FASTOPEN_NO_COOKIE:
-+		case TCP_ULP:
- 			return true;
- 		}
- 
-@@ -830,6 +832,42 @@ static int mptcp_setsockopt_all_sf(struct mptcp_sock *msk, int level,
- 	return ret;
- }
- 
-+static int mptcp_setsockopt_tcp_ulp(struct sock *sk, sockptr_t optval,
-+				    unsigned int optlen)
-+{
-+	struct mptcp_sock *msk = mptcp_sk(sk);
-+	char name[TCP_ULP_NAME_MAX];
-+	int err = 0;
-+	size_t len;
-+	int val;
-+
-+	if (optlen < 1)
-+		return -EINVAL;
-+
-+	len = min_t(long, TCP_ULP_NAME_MAX - 1, optlen);
-+	val = strncpy_from_sockptr(name, optval, len);
-+	if (val < 0)
-+		return -EFAULT;
-+	name[val] = 0;
-+
-+	if (strcmp(name, "tls"))
-+		return -EOPNOTSUPP;
-+
-+	sockopt_lock_sock(sk);
-+	if (__mptcp_check_fallback(msk)) {
-+		err = -EOPNOTSUPP;
-+		goto out;
-+	}
-+	if ((1 << sk->sk_state) & (TCPF_CLOSE | TCPF_LISTEN)) {
-+		err = -ENOTCONN;
-+		goto out;
-+	}
-+	err = tcp_set_ulp(sk, name);
-+out:
-+	sockopt_release_sock(sk);
-+	return err;
-+}
-+
- static int mptcp_setsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
- 				    sockptr_t optval, unsigned int optlen)
- {
-@@ -838,7 +876,7 @@ static int mptcp_setsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
- 
- 	switch (optname) {
- 	case TCP_ULP:
--		return -EOPNOTSUPP;
-+		return mptcp_setsockopt_tcp_ulp(sk, optval, optlen);
- 	case TCP_CONGESTION:
- 		return mptcp_setsockopt_sol_tcp_congestion(msk, optval, optlen);
- 	case TCP_DEFER_ACCEPT:
+diff --git a/tools/testing/selftests/net/mptcp/config b/tools/testing/selftests/net/mptcp/config
+index 59051ee2a986..f48bd5183fb3 100644
+--- a/tools/testing/selftests/net/mptcp/config
++++ b/tools/testing/selftests/net/mptcp/config
+@@ -34,3 +34,7 @@ CONFIG_NFT_SOCKET=m
+ CONFIG_NFT_TPROXY=m
+ CONFIG_SYN_COOKIES=y
+ CONFIG_VETH=y
++CONFIG_INET_ESP=y
++CONFIG_INET_ESPINTCP=y
++CONFIG_INET6_ESP=y
++CONFIG_INET6_ESPINTCP=y
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+index cbe573c4ab3a..299a7a02d6f5 100644
+--- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
++++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+@@ -285,11 +285,11 @@ static void sock_test_tcpulp(int sock, int proto, unsigned int line)
+ 	if (buflen > 0) {
+ 		if (strcmp(buf, "mptcp") != 0)
+ 			xerror("unexpected ULP '%s' for proto %d at line %u", buf, proto, line);
+-		ret = do_ulp_so(sock, "tls");
++		ret = do_ulp_so(sock, "espintcp");
+ 		if (ret == 0)
+ 			X("setsockopt");
+ 	} else if (proto == IPPROTO_MPTCP) {
+-		ret = do_ulp_so(sock, "tls");
++		ret = do_ulp_so(sock, "espintcp");
+ 		if (ret != -1)
+ 			X("setsockopt");
+ 	}
 -- 
 2.53.0
 
