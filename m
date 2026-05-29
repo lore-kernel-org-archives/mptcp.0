@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1360233067C
-	for <mptcp@lists.linux.dev>; Fri, 29 May 2026 11:14:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE7422E7384
+	for <mptcp@lists.linux.dev>; Fri, 29 May 2026 11:14:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780053258; cv=none; b=aG9l01UMqezz6KoMJQB92Kja7pXefcvpm+ckq7JdA0BqjZsnzwTJ0NDDyeQi2CyjWdlmN1m2aQwHO0E5m23TDKWOPzWrTQ34dMM1Ui95Nve4Io8G+6aw0JHihIkBbk7hBmoGwrJuEbJkarCE54fY+C8myOgoHbYTZp0WqLO0DAw=
+	t=1780053259; cv=none; b=sbXo9ULKHyxSEgT2X9z9WeAft9boS8zlYtC4+L17F/GYx5ok70Fvw+mNFhHuWjDpFOEHV/BoAJwUAmtgDVlHzdDWEHFZ1fp8qZJ0zSwoPR7czHs+flPTRuPbl0tgW5U2n1xidwoBLnYWO1erXgFzgLf+3xkIL3ZPSt/9wrnxfUE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780053258; c=relaxed/simple;
-	bh=pefUPGrJtQmpA7Mei7yXQD1BajBEZunb+ZJNbzi5vHE=;
+	s=arc-20240116; t=1780053259; c=relaxed/simple;
+	bh=+9gjmTdNU7JtR8m5IpxhfOn7BhGUqIrQcGhQbnyKidw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rbbHOeasjXYHbEgOGp6NBXRyGQ00BF/tD4aoTIb86Qwel6M3LHLeye9SQ5K6L4LtvDlMbUHlPnyMuVm1XWovGmx2KLuXv1F260A+28/D+bsIhdn9dnofE9ovE6F4iYk1UL8eURZ+d6lsT662iysS1TqhIMDKAaEEU7v3Z9PqZjE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YapUl8S6; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=DwgrfRDynU2W2l+i/hoxBC5FsYFiDFSz3Mj4T/kls+uwFvmLXU7d4GEjX7HCrRx9J92iUQ8P1X8MzMHbQhH3Ywuj12Zc1Hn10hKxIn86GsX4eJdbP8YouyoSHlZ9pGQwNwMRmWrli1WqPQWsM96NbxOA1d2N8WE8Xqs1z6rH/7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CtAD3anq; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YapUl8S6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 912221F00898;
-	Fri, 29 May 2026 11:14:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CtAD3anq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BA141F00893;
+	Fri, 29 May 2026 11:14:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780053256;
-	bh=WaVXx70jO+Cjdcsj6TsN53LD18R7K6tLhbg+q5ufX0g=;
+	s=k20260515; t=1780053258;
+	bh=8MkRwn6UnTQGwiPU+AIFfHPCH3XrZXZwjUF3PQrmdV8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=YapUl8S6F2aOBfTcoT5/77n2SjbsnZB2YWUT9w1uJpnDmXvImiy7kTG+YD1YL8M5t
-	 n3J1Op8r+2NuLuQQdZ+ITurIoz0yeQh9utKZl78tuOdKiQ1c94JyIXhUBQCb+xGHCH
-	 LsryjnT2lDL9bj7J6Kl2xdbStyZxNXTX60yfpA9iBmgmobitGqn6F7tj0Md/Gl0Ix8
-	 3UfZeUFBA8fpnuj6FRIYkp15Dhcp844bxHaMKs8or90jBnIE6NL/UKZ4GuXfk7523w
-	 ypbpNXbzstQPwD82PQLiiOe4Y9yczVZBf9cTxPZ+SWpWX8PeOhujCQPhbWxskX9o73
-	 hvTQHV8JeLPvg==
+	b=CtAD3anqVGUJJVcjcdwzBnm0cB5GSTDNX2Olp7SmeD8yR2RbZRuOCBJH8lwe/V26o
+	 iCuDQR56c7MXT+UlbvI7d/KcORaWa3/6gKzXWhgycFkFXsJtTGJagHxzHFKS9X2i8Z
+	 kYImfl2IbSNFm4xd6L85or8FTcSH045oiGue3Yd+zO5SOxsbixiULPfgHSw/Qlpbyw
+	 PAYm6BopcmR/hWTz3yIRSUgQ8zqFCQKFtjAGUmRJj4snDHVzOgBL5iaWhQN0BLgTa+
+	 vjmn4LNKwj/WRhAAa0Hrxz/0XNpR0ZkUMTSigAxmzqv9HVp8XuQxP6jqcn55+fdY9M
+	 d7crqESvG5CJw==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [RFC mptcp-next v22 01/20] tls: add clone callback to prevent NULL accept crash
-Date: Fri, 29 May 2026 19:13:43 +0800
-Message-ID: <52eca39c284a3831111fe790b74e5a78fceceb69.1780052851.git.tanggeliang@kylinos.cn>
+Subject: [RFC mptcp-next v22 02/20] tls: init mixed SW/TOE proto to prevent NULL call
+Date: Fri, 29 May 2026 19:13:44 +0800
+Message-ID: <4b3d22717387a6a8efb1bd948f4a6e6f8648eff2.1780052851.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <cover.1780052851.git.tanggeliang@kylinos.cn>
 References: <cover.1780052851.git.tanggeliang@kylinos.cn>
@@ -45,47 +45,43 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-When a TLS ULP context is attached to a listening socket (e.g., by
-calling setsockopt(TCP_ULP, "tls") before accept()), the subsequent
-accept() triggers inet_clone_ulp() which accesses ulp_ops->clone.
-Since tcp_tls_ulp_ops lacked a .clone member, this resulted in a NULL
-pointer access and kernel panic.
-
-Add an empty tls_clone() function and assign it to the .clone field.
-The existing ESTABLISHED state check in tls_init() already prevents
-TLS on listen sockets, so this serves as a safety net for any remaining
-paths.
+When a TOE socket falls back to software offload, update_sk_prot() accesses
+prot->prots[TLS_SW][TLS_HW_RECORD] and proto_ops[TLS_SW][TLS_HW_RECORD].
+These entries were never initialized, causing NULL function pointers and
+kernel panic. Add the missing entries for [TLS_SW][TLS_HW_RECORD] and
+[TLS_HW_RECORD][TLS_SW] in both build_protos() and build_proto_ops().
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- net/tls/tls_main.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ net/tls/tls_main.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
 diff --git a/net/tls/tls_main.c b/net/tls/tls_main.c
-index fd39acf41a61..51ae8925d891 100644
+index 51ae8925d891..6d1272dc3c34 100644
 --- a/net/tls/tls_main.c
 +++ b/net/tls/tls_main.c
-@@ -1082,6 +1082,12 @@ static int tls_init(struct sock *sk)
- 	return rc;
+@@ -965,6 +965,9 @@ static void build_proto_ops(struct proto_ops ops[TLS_NUM_CONFIG][TLS_NUM_CONFIG]
+ #endif
+ #ifdef CONFIG_TLS_TOE
+ 	ops[TLS_HW_RECORD][TLS_HW_RECORD] = *base;
++
++	ops[TLS_SW][TLS_HW_RECORD] = ops[TLS_SW][TLS_SW];
++	ops[TLS_HW_RECORD][TLS_SW] = ops[TLS_BASE][TLS_SW];
+ #endif
  }
  
-+static void tls_clone(const struct request_sock *req,
-+		      struct sock *newsk,
-+		      const gfp_t priority)
-+{
-+}
+@@ -1041,6 +1044,11 @@ static void build_protos(struct proto prot[TLS_NUM_CONFIG][TLS_NUM_CONFIG],
+ 	prot[TLS_HW_RECORD][TLS_HW_RECORD] = *base;
+ 	prot[TLS_HW_RECORD][TLS_HW_RECORD].hash		= tls_toe_hash;
+ 	prot[TLS_HW_RECORD][TLS_HW_RECORD].unhash	= tls_toe_unhash;
 +
- static void tls_update(struct sock *sk, struct proto *p,
- 		       void (*write_space)(struct sock *sk))
- {
-@@ -1231,6 +1237,7 @@ static struct tcp_ulp_ops tcp_tls_ulp_ops __read_mostly = {
- 	.name			= "tls",
- 	.owner			= THIS_MODULE,
- 	.init			= tls_init,
-+	.clone			= tls_clone,
- 	.update			= tls_update,
- 	.get_info		= tls_get_info,
- 	.get_info_size		= tls_get_info_size,
++	prot[TLS_SW][TLS_HW_RECORD] = prot[TLS_SW][TLS_SW];
++	prot[TLS_HW_RECORD][TLS_SW] = prot[TLS_BASE][TLS_SW];
++	prot[TLS_SW][TLS_HW_RECORD].hash = NULL;
++	prot[TLS_HW_RECORD][TLS_SW].unhash = NULL;
+ #endif
+ }
+ 
 -- 
 2.53.0
 
