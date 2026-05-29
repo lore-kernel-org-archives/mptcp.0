@@ -1,130 +1,329 @@
-Received: from mail-dl1-f49.google.com (mail-dl1-f49.google.com [74.125.82.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EB4A1FECAB
-	for <mptcp@lists.linux.dev>; Fri, 29 May 2026 12:46:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3842031F9B3
+	for <mptcp@lists.linux.dev>; Fri, 29 May 2026 13:27:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780058780; cv=none; b=ROn4/qkjqQ2e0PhQLdyS25N4cmyoY5WL43cPiFBufFxvJMtoSOWE/GWM/BAB4k1D9Zrw9XPUHxfDgapX2yV2VVme2ie3iN/HIcBKpxnrUN4w0ncb6khTnYBpfyWmIfahh5mqwkiyb5oRwAc0p23Lw0Qwvm4ZZNm6LF1C/+3QSYs=
+	t=1780061225; cv=none; b=gdlTK3UOCaUT7tJVWdE3Vlb7D1bOaZPHGrlVwy4+Eot5KHSAwq85sMQyH3C+l6JyP+1f9lSTPlUxxtYFtX5iDBdE6BpVL1fc3/6LqnUDHU6GwOXevTJvO9WrNcbtmQ4eaavp3ydPkhiZ+b1EiPBjMBSYmuIXjzkAJE/f46TuqBY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780058780; c=relaxed/simple;
-	bh=Ehrh5uJ/ADb+VO6siD6YyUuOLz2abUInZJU7qnKkSWs=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
-	 MIME-Version:Content-Type; b=UFfwPH7d0gpcH3ECPhbgCE5PtlWl82JFDi7ua/xbfpWjHDwtPr3awoyuAUQJsd5/rusfUXcTu+8tPJakqjRO8gZDMK2g32VKDb6VUg5+qEo1w3kJf/9L7K59f59HLTVa5Eyg5Yce73t3PexmIu7Bl8uX/rzfeSltNMnOKqJ4G2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Oo6HVl7V; arc=none smtp.client-ip=74.125.82.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1780061225; c=relaxed/simple;
+	bh=QxaObgIICADmL1fwr8smD3bJ5Oo8I10qwjXnsoVDqrA=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=NLJyat/pHjyWd+zZRAZg+M3cxodUQ/O7YGNiFhd1gUkGxy6JklG+RDvVY5V48RgfdtyfGN6gEQZo6/FEOfJqHBmpcbVjXBGxZitfpdOTuD2FLWs6gG8fBdsLDHongsb+gss1g8K4Kgz17YTED3y1bjiBhWHTnDktDPKhulU2pvI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bFHzfajc; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Oo6HVl7V"
-Received: by mail-dl1-f49.google.com with SMTP id a92af1059eb24-1370417c01cso6511349c88.1
-        for <mptcp@lists.linux.dev>; Fri, 29 May 2026 05:46:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1780058779; x=1780663579; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nT4Lpx0yZ5CRHImi6desmhOIb53PKwm3pTHTSNx5FhM=;
-        b=Oo6HVl7Vm5pr6N8eARWIOpB5Ufy1k1j3g3hXYTpllT6HF9GnJtHIg25rLtA3Wpc9Cb
-         1xslGck/2inl/u/nCOpioeYu9AVWwsQ6+9kFEzbtN1DFR6HMmba3do4fzdtfuopPj5q5
-         vWKfR4wLEfupQ+aKWJKFboFeOyXdsW7xZ51QKTKtLPwhwEikK6ryaj/OsU5T0buvKZ4K
-         JYuyJnisWCmFu+anNwjxOGshXIwoZgXyKpbL8LcYbJq7arQwkzet5AGwOJTwfzpMttDX
-         ZZ/XQvwMTnCtZ6p2srK0MpAM5smKG0Qu8keeKgCQB1g8ckKaULnQLGM7QmkmvkY1SMM0
-         yJjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780058779; x=1780663579;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nT4Lpx0yZ5CRHImi6desmhOIb53PKwm3pTHTSNx5FhM=;
-        b=G2KHWjodLuO4kfus7I4BOSz6DsBh0aGaZfdF5VDCqMMTBwKtC8/+mw/ClmhFMZtDCA
-         +5ac6w5t576Pq1gvCS7NLPpsNNUIal67AR5CuaV7OCa5mBj2zblry7pa3IC9sDjB09h0
-         bMBZDKDn9BrKSHg/wqWk89EIEeuarB+HtllW/taWv3XRjFGrEhngmAAqYxp2gR7EjmaY
-         RWTv+ODAijSuE3ynB45AvALQTiLMhNlPU8U9TfEQMfUbH1/TW6I3OIF1+0aUG8XzBPHs
-         4MYJmQeRNCRehXQf73sjAbDM3+yi3G7WlijXSFh5upIVd1WqOxZ14jDwLh0b5toGAM4v
-         4qHg==
-X-Gm-Message-State: AOJu0YyxMiRe4XhJ564NGH49O3S/gLjVRHaV7RSUdlrcw9LcdXmk09eg
-	oEPLivZrxsOO4lFrb5fXW6sOdRsiVyosS5pX8leBoQr1aFvjNMBEqEM7Vm3Q
-X-Gm-Gg: Acq92OHmBUdTVOVeiJJ/fvQOBBYFbs6fbR0xxgwnTzMUPMW2UP0gWXK1tm0/97nHGvG
-	hJ1BgIFzUT/TLty/nlSp52LWOnk6gak49HdRXRBbYgPrTcczpL0aoOrYchBKEUYbjZrJMDiO+mQ
-	nYC0wo7mVPwp2kw6CT+IUpSqsWnXc0+LK15mGfq/VRUfW5ZWAfU0hMEjNYWdfSrxTDqSo5hMr+m
-	vIMvXFd9E2niZNJPQtgN3j1msr8iRbFCJalQfIlJ3sCTqmie4OCMnTimRYajXZkQSdVewc3o8g/
-	dX8jWEWCaaq4cACQmWX2fMYWu70XfJy+LuksD+Zgf0HIfnnBENgrkTDSh/W7752kVn6qXGrcwUX
-	KhdaV9Wd29wn9n/Vvy/qfo7KQLK9NEMNkx1q9ouXuGDXJmtp+MV0VT46jhg/sXEbzigakXz6RcV
-	vkBPpMXC8sPlnDTnu1zi2dL1XN/dt1lc7ZSa2IHLAHJ0Jve1oH
-X-Received: by 2002:a05:7022:238e:b0:135:d7ab:7ebb with SMTP id a92af1059eb24-137af00c6fdmr1068473c88.29.1780058778587;
-        Fri, 29 May 2026 05:46:18 -0700 (PDT)
-Received: from [127.0.0.1] ([52.159.247.161])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-137b3c7e4ebsm1153886c88.12.2026.05.29.05.46.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2026 05:46:18 -0700 (PDT)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <tanggeliang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <cover.1780052851.git.tanggeliang@kylinos.cn>
-References: <cover.1780052851.git.tanggeliang@kylinos.cn>
-Subject: Re: [RFC mptcp-next v22 00/20] MPTCP KTLS support
-Message-ID: <eb31b639-67cc-04ad-7ca8-e34d18087c07@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 29 May 2026 12:46:17 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bFHzfajc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18B1A1F00893;
+	Fri, 29 May 2026 13:27:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780061223;
+	bh=OUp/dM1XC4UOs3Ko7uKH/FZxjPSoGUM/B+4hyDiEb+0=;
+	h=Subject:From:To:Date:In-Reply-To:References;
+	b=bFHzfajc3SEHwE/3MwAUHDPW6zxbcbA+6OxM5snJNgD0u7W553BLM4l+GWK5RVGv3
+	 fkH3RJYT+VH9A0e9o3Vga3rVelO2/RUtfy3L0bEqGUZTcIxUpZhHMRwg8JwSYuyDMI
+	 IphvJwI1oK+rmxU3xwFz3OBubBHqrwFuMaoaFY+lhWgwDCcG1qrtIIxNeSVRYuLDcg
+	 AeFOMwjsI02U6g8SxQu1Y1rNxAayvf0eRopQEkIwZaLh94FjgkMhLjgHobmuBau3y2
+	 AjhukOZcVUG960f7S9UB7urlsf3hEwrn9PgHYqFpU+Xn5wMXd0GY06vie5g29Mb1um
+	 XRWqpax3tkILw==
+Message-ID: <61de072a8e750ec6c7d7228cca6d7d55885e0abf.camel@kernel.org>
+Subject: Re: [PATCH v10 mptcp-next 3/3] mptcp: let the retrans scheduler do
+ its job.
+From: Geliang Tang <geliang@kernel.org>
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+Date: Fri, 29 May 2026 21:27:00 +0800
+In-Reply-To: <199d3b27cc1f092a1bca686963103f922d0d27cd.1780049797.git.pabeni@redhat.com>
+References: <cover.1780049797.git.pabeni@redhat.com>
+	 <199d3b27cc1f092a1bca686963103f922d0d27cd.1780049797.git.pabeni@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.56.2-9 
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 
-Hi Geliang,
+Hi Paolo,
 
-Thank you for your modifications, that's great!
+On Fri, 2026-05-29 at 12:44 +0200, Paolo Abeni wrote:
+> Currently the MPTCP core enforces that when MPTCP-level retrans timer
+> fires, at most a single dfrag is retransmitted. If some corner-cases
+> it
+> may be necessary retransmit multiple dfrags, and the MPTCP socket
+> will
+> need to wait multiple retrans timeout to accomplish that.
+> 
+> Remove the mentioned constraint, allowing to transmit multiple dfrags
+> per
+> retrans period, as long as the scheduler keeps selecting subflows for
+> retransmissions and pending data is available in the rtx queue.
+> The default scheduler will transmit a dfrag per available subflow.
+> 
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> ---
+> v9 -> v10:
+>   - simpler handling for data-fin rtx
+> 
+> v7 -> v8
+>   - fix corner-case retrans_seq update
+> 
+> v4 -> v5:
+>   - fixed already_sent update
+> 
+> v3 -> v4:
+>   - avoid quadratic behavior, fix retrans_seq update
+>   - fix rtx timer re-schedule miss
+> 
+> v2 -> v3:
+>   - fix infinite loop issue (should address tls tests failures)
+> 
+> v1 -> v2:
+>   - fix retrans sequence update (sashiko)
+> 
+> Note:
+>  - sashiko may see issues when dfrag = mptcp_rtx_head(sk) != NULL and
+>    dfrag->already_sent == 0. That condition should not possible: if
+>    mptcp_rtx_head() is not NULL there should be some data already
+>    sent.
+>  - sashiko may see missing data-fin rtx when the initial `dfrag` is
+>    not NULL. data-fin RTX is NOT needed in such scenario.
+> ---
+>  net/mptcp/protocol.c | 119 +++++++++++++++++++++++++++++++----------
+> --
+>  1 file changed, 87 insertions(+), 32 deletions(-)
+> 
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 51756800edc2..7fe618e22d1b 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -1201,13 +1201,6 @@ static void __mptcp_clean_una_wakeup(struct
+> sock *sk)
+>  	mptcp_write_space(sk);
+>  }
+>  
+> -static void mptcp_clean_una_wakeup(struct sock *sk)
+> -{
+> -	mptcp_data_lock(sk);
+> -	__mptcp_clean_una_wakeup(sk);
+> -	mptcp_data_unlock(sk);
+> -}
+> -
+>  static void mptcp_enter_memory_pressure(struct sock *sk)
+>  {
+>  	struct mptcp_subflow_context *subflow;
+> @@ -2830,8 +2823,12 @@ static void mptcp_check_fastclose(struct
+> mptcp_sock *msk)
+>  	sk_error_report(sk);
+>  }
+>  
+> -/* Retransmit the specified data fragment on all the selected
+> subflows. */
+> -static int __mptcp_push_retrans(struct sock *sk, struct
+> mptcp_data_frag *dfrag)
+> +/*
+> + * Retransmit the specified data fragment on all the selected
+> subflows,
+> + * starting from the specified sequence
+> + */
+> +static int __mptcp_push_retrans(struct sock *sk, struct
+> mptcp_data_frag *dfrag,
+> +				u64 sent_seq)
+>  {
+>  	struct mptcp_sendmsg_info info = { .data_lock_held = true,
+> };
+>  	struct mptcp_sock *msk = mptcp_sk(sk);
+> @@ -2841,6 +2838,7 @@ static int __mptcp_push_retrans(struct sock
+> *sk, struct mptcp_data_frag *dfrag)
+>  
+>  	mptcp_for_each_subflow(msk, subflow) {
+>  		if (READ_ONCE(subflow->scheduled)) {
+> +			u16 offset = sent_seq - dfrag->data_seq;
+>  			u16 copied = 0;
+>  
+>  			mptcp_subflow_set_scheduled(subflow, false);
+> @@ -2850,9 +2848,12 @@ static int __mptcp_push_retrans(struct sock
+> *sk, struct mptcp_data_frag *dfrag)
+>  			lock_sock(ssk);
+>  
+>  			/* limit retransmission to the bytes already
+> sent on some subflows */
+> -			info.sent = 0;
+> +			info.sent = offset;
+>  			info.limit = READ_ONCE(msk->csum_enabled) ?
+> dfrag->data_len :
+>  								   
+> dfrag->already_sent;
+> +			DEBUG_NET_WARN_ON_ONCE(!before64(sent_seq,
+> +							 dfrag-
+> >data_seq +
+> +							
+> info.limit));
 
-Our CI did some validations and here is its report:
+Same as I reported in v8 of this patch [1], when testing based on v10 I
+encountered the following error:
 
-- KVM Validation: normal (except selftest_mptcp_join): Unstable: 1 failed =
-test(s): selftest_simult_flows =E2=9A=A0=EF=B8=8F=20
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/266347=
-97129
+# Starting 4 threads
+[  879.268966][ T4341] ------------[ cut here ]------------
+[  879.269413][ T4341] !before64(sent_seq, dfrag->data_seq +
+info.limit)
+[  879.269417][ T4341] WARNING: net/mptcp/protocol.c:2883 at
+__mptcp_push_retrans+0x562/0x6f0, CPU#18: kworker/18:6H/4341
+[  879.271883][ T4341] Modules linked in: mptcp_diag tcp_diag inet_diag
+sch_netem
+[  879.272450][ T4341] CPU: 18 UID: 0 PID: 4341 Comm: kworker/18:6H Not
+tainted 7.1.0-rc5+ #94 PREEMPT(full) 
+[  879.272813][ T4341] Hardware name: Bochs Bochs, BIOS Bochs
+01/01/2011
+[  879.273225][ T4341] Workqueue: nvmet_tcp_wq nvmet_tcp_io_work
+[  879.273527][ T4341] RIP: 0010:__mptcp_push_retrans+0x562/0x6f0
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/1a53bf73533f
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1102837
+Thanks,
+-Geliang
 
+[1]
+https://patchwork.kernel.org/project/mptcp/patch/a35934164aad8a08ed8108853cff7a282e5c25ef.1779485511.git.pabeni@redhat.com/
 
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+>  
+>  			/*
+>  			 * make the whole retrans decision, xmit,
+> disallow
+> @@ -2896,14 +2897,85 @@ static void __mptcp_retrans(struct sock *sk)
+>  	struct mptcp_sock *msk = mptcp_sk(sk);
+>  	struct mptcp_subflow_context *subflow;
+>  	struct mptcp_data_frag *dfrag;
+> +	bool need_retrans;
+> +	u64 retrans_seq;
+>  	int err, len;
+>  
+> -	mptcp_clean_una_wakeup(sk);
+> -
+> -	/* first check ssk: need to kick "stale" logic */
+> -	err = mptcp_sched_get_retrans(msk);
+> +	mptcp_data_lock(sk);
+> +	__mptcp_clean_una_wakeup(sk);
+> +	retrans_seq = msk->snd_una;
+>  	dfrag = mptcp_rtx_head(sk);
+> -	if (!dfrag) {
+> +	need_retrans = !!dfrag;
+> +	mptcp_data_unlock(sk);
+> +	if (!dfrag)
+> +		goto check_data_fin;
+> +
+> +	for (;;) {
+> +		bool already_retrans;
+> +		u64 sent_seq;
+> +
+> +		/* The default scheduler will kick "stale" logic,
+> that in
+> +		 * turn can process incoming acks and clean the RTX
+> queue;
+> +		 * ensure that the current dfrag will still be
+> around
+> +		 * afterwards.
+> +		 */
+> +		get_page(dfrag->page);
+> +		err = mptcp_sched_get_retrans(msk);
+> +		if (err) {
+> +			put_page(dfrag->page);
+> +			break;
+> +		}
+> +
+> +		/* Incoming acks can have moved retrans sequence
+> after
+> +		 * the current dfrag, if so try to start again from
+> RTX head.
+> +		 */
+> +		mptcp_data_lock(sk);
+> +		already_retrans = !dfrag->already_sent ||
+> +				  !before64(msk->snd_una, dfrag-
+> >data_seq +
+> +					    dfrag->already_sent);
+> +		put_page(dfrag->page);
+> +		if (already_retrans) {
+> +			__mptcp_clean_una_wakeup(sk);
+> +			retrans_seq = msk->snd_una;
+> +			dfrag = mptcp_rtx_head(sk);
+> +			need_retrans = !!dfrag;
+> +		} else if (after64(msk->snd_una, retrans_seq)) {
+> +			retrans_seq = msk->snd_una;
+> +		}
+> +		mptcp_data_unlock(sk);
+> +		if (!dfrag)
+> +			break;
+> +
+> +		/* Can fail only in case of fallback. */
+> +		len = __mptcp_push_retrans(sk, dfrag, retrans_seq);
+> +		if (len < 0)
+> +			goto clear_scheduled;
+> +
+> +		retrans_seq += len;
+> +		msk->bytes_retrans += len;
+> +		dfrag->already_sent = max_t(u16, dfrag-
+> >already_sent,
+> +					    retrans_seq - dfrag-
+> >data_seq);
+> +
+> +		/* With csum enabled retransmission can send new
+> data. */
+> +		sent_seq = dfrag->already_sent + dfrag->data_seq;
+> +		if (after64(sent_seq, msk->snd_nxt))
+> +			WRITE_ONCE(msk->snd_nxt, sent_seq);
+> +
+> +		/* Attempt the next fragment only if the current one
+> is
+> +		 * completely retransmitted.
+> +		 */
+> +		if (before64(retrans_seq, dfrag->data_seq + dfrag-
+> >data_len))
+> +			break;
+> +
+> +		dfrag = list_is_last(&dfrag->list, &msk->rtx_queue)
+> ?
+> +				NULL : list_next_entry(dfrag, list);
+> +		if (!dfrag || !dfrag->already_sent)
+> +			break;
+> +	}
+> +
+> +	/* Attempt data-fin retransmission only when the RTX queue
+> is empty. */
+> +	if (!need_retrans) {
+> +check_data_fin:
+>  		if (mptcp_data_fin_enabled(msk)) {
+>  			struct inet_connection_sock *icsk =
+> inet_csk(sk);
+>  
+> @@ -2911,30 +2983,13 @@ static void __mptcp_retrans(struct sock *sk)
+>  				   icsk->icsk_retransmits + 1);
+>  			mptcp_set_datafin_timeout(sk);
+>  			mptcp_send_ack(msk);
+> -
+>  			goto reset_timer;
+>  		}
+>  
+>  		if (!mptcp_send_head(sk))
+>  			goto clear_scheduled;
+> -
+> -		goto reset_timer;
+>  	}
+>  
+> -	if (err)
+> -		goto reset_timer;
+> -
+> -	len = __mptcp_push_retrans(sk, dfrag);
+> -	if (len < 0)
+> -		goto clear_scheduled;
+> -
+> -	msk->bytes_retrans += len;
+> -	dfrag->already_sent = max(dfrag->already_sent, len);
+> -
+> -	/* With csum enabled retransmission can send new data. */
+> -	if (after64(dfrag->already_sent + dfrag->data_seq, msk-
+> >snd_nxt))
+> -		WRITE_ONCE(msk->snd_nxt, dfrag->already_sent +
+> dfrag->data_seq);
+> -
+>  reset_timer:
+>  	mptcp_check_and_set_pending(sk);
+>  
