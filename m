@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E4141C862F
-	for <mptcp@lists.linux.dev>; Fri, 29 May 2026 11:14:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB70433A9E1
+	for <mptcp@lists.linux.dev>; Fri, 29 May 2026 11:14:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780053261; cv=none; b=tEmmorRyyVW2DOk7DGQhyvfZKTioblN5281J2HOOeTRVm20J3khQR0E/RiR2RiO57pEadrANxqa+sm76AyiX+1XRegjPZ47BozN4nZtC1+jAkldB35IphAbrVntSEb0gTO2yclXjKP5lJtdAWMODsk4o3XwKsTnbIh1bLXiDlg0=
+	t=1780053262; cv=none; b=nZePrGm2mKO3c4PFSa+L364NhZuHQbMRY+tN+uUWHgAp2tDZxEHmIpHGZldu39vTAjM8TfP0BF1DvYi6KwgOgJuyMW0WRKOxqExoA0w5Cg6TwDyyMT0lTgQvNxseBYEWbgr7+JsJvMHhJlteKsf5mGuwJ3KpkWXP6rwJRliIl0g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780053261; c=relaxed/simple;
-	bh=s2CQBlnblQ9JBFQhSMtEwGgOCh0C2SDtC4WDSQgvZx4=;
+	s=arc-20240116; t=1780053262; c=relaxed/simple;
+	bh=md2W6E8hUS9PSeCFZeer557QYxVMsIiNkuHALsVaBms=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UxIaWYmixZ9yTRsdWllYcQTLvhGh8RFAxs6RDkAzaTeeEnFaVotw3jjkjynw+12d9eutRLBzqr89X8QlfBJ4WXqykCD7XG/D0RW3BVfeh/4vqArndoh3xEJU1y1bWBrwfA4eV/PfKm14/SyXc9M5Ep/T5l+ikSirEU3WMTFRQzQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SD3+jW3R; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=uCnMmin4b3hELd63JxA6ZWV6sWbNmnDFjo/xK2vtbmwGo5aU3ed+GtUqtjlUEYLOiqSQJzvS1HN8Izm+3hKJykAujfyB1AzLmVfyruO5ng6WYcC9m1EbhqpNxazgTQEwgJGzFJkE8VP9cCtD8dqPOu3NFGGnLVzQMzTsq+Y+eIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q6IBwmE4; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SD3+jW3R"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 126CB1F00899;
-	Fri, 29 May 2026 11:14:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q6IBwmE4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C75881F00893;
+	Fri, 29 May 2026 11:14:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780053260;
-	bh=StnTNuvd8trV9Bp5cMPaZEAky9zIaIYtLYl08NI1+EA=;
+	s=k20260515; t=1780053261;
+	bh=dh/9vtk0h6W+FRIK8g0S0seuCc09OIrdlemifKpOjUk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=SD3+jW3RWKRDElVrkya9mOLTidCPj16QqYHJjZsxyY2is9e0komKbyjqJdTf7PfRs
-	 WkDnnRwGVXqlTNP3t/z1UL627ZJ/Fo0TyT4GlFrO3aU/xpf+1aXBUX64HAwXbhOHdZ
-	 vph9BtIpa4WeUeeI4Hi/VsVfmJSamjsVy45qUKt4lXOMA//a5BDyDVW3FeqQrHj9BB
-	 oA5K4ve6/RXlm9iSjDAC3y3ZFzFDMHVlCtNgzHnLlqPj7hcb+TnyoExFnoDTFo3Hl8
-	 6RN9LzrRgqOkTQBOFK+LPQ5pEsPNB64U75mhOnblpThi4fFX94FjMbydpV+UVlr+qX
-	 yUZh2f0+lsuJQ==
+	b=Q6IBwmE4adcrTktNqIC4tTpFdrAGM6gpipuCteEv53jzlrNoSIHzvJxf6iKNh6KCV
+	 ECzof0DaqkTnicKYWKVftZwZ5IdjwiCHIgmNGSHOq/KTGS3aOhpjq9SnEk208j1h9h
+	 PnUxXPQ3LP99jmTb9Pki07usey5lGJ+3lH6NPiGYBVbmEc54K4vcJiAvj1VJMwBhOM
+	 Vle43TYxjU3y826Vp8NzgHS1B+ru5WWA5IZlX+UuGrbi14VWiOSEDd74K7oRQYqNRU
+	 qKvPXZwgsjNEWiqNJZ4FDSjpcmjDox/0gpb928IGB3EDqGNkcxffX9KusWzFuSsuIS
+	 bWX7jTjtG3EKQ==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [RFC mptcp-next v22 03/20] tls: add ESTABLISHED state check for TOE bypass
-Date: Fri, 29 May 2026 19:13:45 +0800
-Message-ID: <faecb7e60a6deda1415f10a20b38e218858e734b.1780052851.git.tanggeliang@kylinos.cn>
+Subject: [RFC mptcp-next v22 04/20] tcp: add socket lock to TCP_ULP getsockopt
+Date: Fri, 29 May 2026 19:13:46 +0800
+Message-ID: <831d466ed59c1195efe901a4132a453db88f1383.1780052851.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <cover.1780052851.git.tanggeliang@kylinos.cn>
 References: <cover.1780052851.git.tanggeliang@kylinos.cn>
@@ -45,53 +45,86 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-When CONFIG_TLS_TOE is enabled, tls_init() calls tls_toe_bypass()
-before checking the socket state. This allows a listening socket
-(TCP_LISTEN) to attach a TOE TLS context via setsockopt(TCP_ULP, "tls")
-after listen().
+When handling TCP_ULP getsockopt, do_tcp_getsockopt() accesses
+icsk->icsk_ulp_ops without holding the socket lock. A concurrent
+connect(AF_UNSPEC) (or other operation that calls tcp_cleanup_ulp())
+can set icsk_ulp_ops to NULL and release the module reference.
+If this occurs between the NULL check and the dereference of ->name,
+the kernel may access a NULL pointer or a stale pointer, leading to
+a crash or use-after-free.
 
-Later when accept() clones the socket, inet_clone_ulp() dereferences
-the ULP's clone callback (which is NULL for TLS), causing a NULL
-pointer access and kernel panic.
-
-Move the state check before tls_toe_bypass() to ensure TOE bypass is
-only attempted on established sockets. This prevents unsafe attachment
-to listen sockets and aligns TOE behavior with the existing restriction
-applied to software TLS.
+Extract the TCP_ULP getsockopt logic into a helper tcp_sock_get_ulp()
+and wrap the call with lock_sock()/release_sock() to ensure the ULP
+operation is protected against concurrent modification.
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- net/tls/tls_main.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ net/ipv4/tcp.c | 44 +++++++++++++++++++++++++++++---------------
+ 1 file changed, 29 insertions(+), 15 deletions(-)
 
-diff --git a/net/tls/tls_main.c b/net/tls/tls_main.c
-index 6d1272dc3c34..8809b056290a 100644
---- a/net/tls/tls_main.c
-+++ b/net/tls/tls_main.c
-@@ -1059,11 +1059,6 @@ static int tls_init(struct sock *sk)
+diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
+index a058f350a759..c01f97d5dfe8 100644
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -4481,6 +4481,28 @@ struct sk_buff *tcp_get_timestamping_opt_stats(const struct sock *sk,
+ 	return stats;
+ }
  
- 	tls_build_proto(sk);
- 
--#ifdef CONFIG_TLS_TOE
--	if (tls_toe_bypass(sk))
--		return 0;
--#endif
--
- 	/* The TLS ulp is currently supported only for TCP sockets
- 	 * in ESTABLISHED state.
- 	 * Supporting sockets in LISTEN state will require us
-@@ -1073,6 +1068,11 @@ static int tls_init(struct sock *sk)
- 	if (sk->sk_state != TCP_ESTABLISHED)
- 		return -ENOTCONN;
- 
-+#ifdef CONFIG_TLS_TOE
-+	if (tls_toe_bypass(sk))
-+		return 0;
-+#endif
++static int tcp_sock_get_ulp(struct sock *sk, sockptr_t optval,
++			    sockptr_t optlen)
++{
++	struct inet_connection_sock *icsk = inet_csk(sk);
++	int len;
 +
- 	/* allocate tls context */
- 	write_lock_bh(&sk->sk_callback_lock);
- 	ctx = tls_ctx_create(sk);
++	if (copy_from_sockptr(&len, optlen, sizeof(int)))
++		return -EFAULT;
++	len = min_t(unsigned int, len, TCP_ULP_NAME_MAX);
++	if (!icsk->icsk_ulp_ops) {
++		len = 0;
++		if (copy_to_sockptr(optlen, &len, sizeof(int)))
++			return -EFAULT;
++		return 0;
++	}
++	if (copy_to_sockptr(optlen, &len, sizeof(int)))
++		return -EFAULT;
++	if (copy_to_sockptr(optval, icsk->icsk_ulp_ops->name, len))
++		return -EFAULT;
++	return 0;
++}
++
+ int do_tcp_getsockopt(struct sock *sk, int level,
+ 		      int optname, sockptr_t optval, sockptr_t optlen)
+ {
+@@ -4589,22 +4611,14 @@ int do_tcp_getsockopt(struct sock *sk, int level,
+ 			return -EFAULT;
+ 		return 0;
+ 
+-	case TCP_ULP:
+-		if (copy_from_sockptr(&len, optlen, sizeof(int)))
+-			return -EFAULT;
+-		len = min_t(unsigned int, len, TCP_ULP_NAME_MAX);
+-		if (!icsk->icsk_ulp_ops) {
+-			len = 0;
+-			if (copy_to_sockptr(optlen, &len, sizeof(int)))
+-				return -EFAULT;
+-			return 0;
+-		}
+-		if (copy_to_sockptr(optlen, &len, sizeof(int)))
+-			return -EFAULT;
+-		if (copy_to_sockptr(optval, icsk->icsk_ulp_ops->name, len))
+-			return -EFAULT;
+-		return 0;
++	case TCP_ULP: {
++		int err;
+ 
++		lock_sock(sk);
++		err = tcp_sock_get_ulp(sk, optval, optlen);
++		release_sock(sk);
++		return err;
++	}
+ 	case TCP_FASTOPEN_KEY: {
+ 		u64 key[TCP_FASTOPEN_KEY_BUF_LENGTH / sizeof(u64)];
+ 		unsigned int key_len;
 -- 
 2.53.0
 
