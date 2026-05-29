@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCCAD2E4257
-	for <mptcp@lists.linux.dev>; Fri, 29 May 2026 02:00:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08141364E9A
+	for <mptcp@lists.linux.dev>; Fri, 29 May 2026 02:00:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780020010; cv=none; b=ltRoCKo9RkwE8Zcb74wgm4hRg50SjEk1m8I3shQz4ROVO1gGFuaoaeOS1YPrF2A+I6wq7g0BBMR6iFnEIwmk0VWyC6VRUH+FnXCQ44Kc9fK4BHWr5KwIJfka3s8+Y5s7tuRqktcb5hW1nG95i9ICkhmymAOqLcPqafOSaOdNlw8=
+	t=1780020029; cv=none; b=XUFbpdrsGV7UTA5AXghLPuYFibaouewh6gIw884UzaEu07X7Cjf9GWShXRDg8FRjobPB9O/GY0FnH/ygr6dJOGc5uCxkJSLHrVm9xMuv8T8FRASxdPJJ95dJEbA9GhHfnPLB6Q8xTkJLGhBhqTwcE6Yy9/P2c7+0Y2kgg7JLEMk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780020010; c=relaxed/simple;
-	bh=VgLYWOoDhJ3vWK4cwKGgek6O4LFZOKLzMOWb71I45PM=;
+	s=arc-20240116; t=1780020029; c=relaxed/simple;
+	bh=GoAKpUHoUq12r2ymoW2H5ADMQDagdoQCnOXJxTnvOiI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rVMFtkKcAghaXcV0hADpm7pZxye8VGGPOxenzMgf11MaIRnIFBz5RakuL6fBTodeECuQvgC6QuhVtdIEfwg197h2ot35jR8s2vXFGybjs9d1Ad7tQreihJuEqBqbzI613pkW7rrKI2jLBm+m8U1nM+Owql7fguFOYYQbwPVFQwc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nIRgwX99; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=auWoglYCxPckI5hXww9JRJ2UHJqxQPlTi1vmF9M267wCYnIJHa26KYjHx3rZDv5tbGczEGrxYgmOl9VMonyDIX+QRtehc84goPz3HZ7iUPZlg/Ck3SuC84ZPES66DFRGP/ec4Bpiq98gbp7dH0oWIxW2fiCvI7BxY3kLBw4l86M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n4qUD4Og; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nIRgwX99"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7D0A1F000E9;
-	Fri, 29 May 2026 02:00:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n4qUD4Og"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 082CC1F000E9;
+	Fri, 29 May 2026 02:00:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780020009;
-	bh=gLzs43kZA3D9nyG9OdczesIeLt3BHoPiUviRf8wPPUc=;
+	s=k20260515; t=1780020028;
+	bh=ZBMUYq5Xk5evUdGxjyfCf3ht+pJjMMfYMBzqeqy5kFY=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=nIRgwX99G+3YUhUfqnRwnEXFRpVPINMGoqskI75qTTEgU9UHM1lJmpInLT+wlDm0T
-	 /eBBkU3mnncbubqu/WSNC0aERomSpwltDOB4njFFwkHfxoczfPthotLnffHATb8vN6
-	 W3PqigKr/cFfcHpBUEuqUc1JaYsilidisoVynWaL4qGc+6jNCR0Wd2D1mGims7jHF8
-	 zy0JcPHdi8ficb2CBfPF5pWQO7oPrtcoLmnpGX1nd6Bqqq4w3YQR3P5/RU5HYeCNya
-	 dpmpTB4fuH0XnH/4yEfvpGOd+GNi154r59ipBqh08PmvOhjGAlBvbLRkG8yDsxDcFA
-	 SG8ss8OSSsV/Q==
-Message-ID: <4e199e8f-6915-4a55-a57f-6defae143c22@kernel.org>
-Date: Fri, 29 May 2026 12:00:06 +1000
+	b=n4qUD4Og097JL9jtVeSE3pCfpkYV+rtkM3gr82eKWn+DeqqYZsio/cPXMUqek6Vk6
+	 gK+t11OmNayLH0/mCBRSjqzXcP4Qq9BttSag6Cf6RITrPG+PVbDNtvhM0988n66PVM
+	 mfP8w9ZieDnkIuaUYkVX11L00jByEgNIwCpSzjy07qiEA3m8KUez44lehOEZ1tjyNH
+	 4U0Fd63jtrnQZSnju8WD77n7RDuAW99fQKsqqUaE+zjXP83iPDaQTqLbE7ceWjUOjX
+	 gWaUOWrqXTFxharNaJ2YHqlfmPIAdh08TEst6nSMF82GZJzVPWz6ZgFQnCuYpL60fb
+	 I/0F57x6pjaPA==
+Message-ID: <5e9e4158-1ce6-4c7a-82ac-27a8f7e936f6@kernel.org>
+Date: Fri, 29 May 2026 12:00:26 +1000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,14 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v3 02/16] mptcp: options: ADD_ADDR size can be
- negative
+Subject: Re: [PATCH mptcp-net] mptcp: sockopt: check timestamping ret value
 Content-Language: fr
 To: Mat Martineau <martineau@kernel.org>
 Cc: MPTCP Linux <mptcp@lists.linux.dev>
-References: <20260520-mptcp-add-addr6-port-ts-v3-0-bffa658a7678@kernel.org>
- <20260520-mptcp-add-addr6-port-ts-v3-2-bffa658a7678@kernel.org>
- <8df0d9e6-7428-9fe5-72f9-da5350053415@kernel.org>
+References: <20260527-mptcp-sockopt-timestamping-ret-v1-1-8eda97e24562@kernel.org>
+ <d0660d1a-b217-17ce-199f-dad0b65fd25c@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -88,49 +86,42 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <8df0d9e6-7428-9fe5-72f9-da5350053415@kernel.org>
+In-Reply-To: <d0660d1a-b217-17ce-199f-dad0b65fd25c@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 Hi Mat,
 
-On 29/05/2026 11:56, Mat Martineau wrote:
-> On Wed, 20 May 2026, Matthieu Baerts (NGI0) wrote:
+On 29/05/2026 11:35, Mat Martineau wrote:
+> On Wed, 27 May 2026, Matthieu Baerts (NGI0) wrote:
 > 
->> Use a signed int for the returned size, because if other options are
->> dropped, the size can be negative, e.g. to send an echo ADD_ADDR with a
->> v4 address, and no port.
+>> sock_set_timestamping() can fail for different reasons. The returned
+>> value should then be checked.
 >>
->> The behaviour is not changed, because it was working as expected with an
->> overflow. But it is clearer like this, and it will help later on.
->>
->> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
->> ---
->> net/mptcp/options.c | 6 +++---
->> 1 file changed, 3 insertions(+), 3 deletions(-)
->>
->> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
->> index 4cc583fdc7a9..966f6a867287 100644
->> --- a/net/mptcp/options.c
->> +++ b/net/mptcp/options.c
->> @@ -651,8 +651,8 @@ static u64 add_addr_generate_hmac(u64 key1, u64 key2,
->>     return get_unaligned_be64(&hmac[SHA256_DIGEST_SIZE - sizeof(u64)]);
->> }
->>
->> -static bool mptcp_established_options_add_addr(struct sock *sk,
->> struct sk_buff *skb,
->> -                           unsigned int *size,
->> +static bool mptcp_established_options_add_addr(struct sock *sk,
->> +                           struct sk_buff *skb, int *size,
->>                            unsigned int remaining,
->>                            struct mptcp_out_options *opts)
-> 
-> There are several other static mptcp_established_*() functions in this
-> file that have an unsigned int *size parameter - should update those as
-> well.
-Indeed, but only the ADD_ADDR one can be negative, when other options
-are dropped. Do you think it is worth it to also modified the others
-that cannot be negative?
+>> If sock_set_timestamping() fails for at least one subflow, the first
+>> error is now reported to the userspace, similar to what is done with
+>> other socket options.
+
+(...)
+
+> Looks good to me, thanks Matthieu
+Thank you for the review!
+
+This patch and "mptcp: sockopt: set sockopt on all subflows" are now in
+our tree:
+
+New patches for t/upstream-net and t/upstream:
+- 791012465bed: mptcp: sockopt: check timestamping ret value
+- ad61cc3c3388: mptcp: sockopt: set sockopt on all subflows
+- Results: 54d30f4ed501..ba5ea3e35898 (export-net)
+- Results: 830f9e3412a9..4d6bda29d05f (export)
+
+Tests are now in progress:
+
+- export-net:
+https://github.com/multipath-tcp/mptcp_net-next/commit/fbc7aa504c6a29aba0c3e5b563fb76de6ce7464a/checks
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/64a0f10e355310447acda9767d4fde746159172f/checks
 
 Cheers,
 Matt
