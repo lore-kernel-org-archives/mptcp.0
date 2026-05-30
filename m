@@ -1,134 +1,115 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9967038A722
-	for <mptcp@lists.linux.dev>; Sat, 30 May 2026 07:50:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 755372BEFF6
+	for <mptcp@lists.linux.dev>; Sat, 30 May 2026 08:52:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780127451; cv=none; b=LkuytV/3J+edTGxD7FH12qKN+TIHPaJb1PLNGstQ/tXSgA1WIMuhL1HfBHj1xyASqh8OaKmAqdcRd1wAwrYPvvDULOkSUIslO2zhKiQGo3JCP2yinejiQrzTZJZM11DKpAqC68oSMXwvvCPffk03VgsoRBoJb/vq5dMmK/S4v3o=
+	t=1780131130; cv=none; b=HuJz09ZVfanhKK3bwJ01lXjJnHjYLekX2FpZFHwIoWGgVAA0SElNQi0jNf+aVbqDI53Dlb0gfNTNXnaBm6e9MMZuJoGMhxN5IBnKuaRachEiFefGY+QVhKrFTv7vKbKpJGD91AqREl1hzQ2gKquL6e3PqMSI3Je7rV/rSnYuSBU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780127451; c=relaxed/simple;
-	bh=R7nQoxTl303r8AJmiK0qOoPGvJ4RhTGoGQyfhIokHxs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ea3otocSJMWgQJj9P0aSyu6gnWnDeCFgaiEQt3w5m2vWzUTslznUMP5XAWU6MNoqXpVvnKZE3GNLr+mGcK67U1RzXUoWdmzVxprYLIkWg7WR9W5Oqnad4gwDGX0WIx7WovVDAyOnLwJpq9ETl35vHsUzPc/mkxyq0UeZGFmOAR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FjC2ZmdN; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780131130; c=relaxed/simple;
+	bh=eJ9XQW+lbFaZw/8fZZbksSFRFtsdhPdGMu12EJTO2gM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=mKATQxeftaJapcbHlcnGkyDj45QZeL9F+hr9MDvNYDA5tl8kaCXxvqPGUw349rz2QCCPFqCiwL1a5YZA4UEoaRnCWoXr/eGj16+6x6VhIHqFSvL8uDKY5ZTKFfLQRs/0CPP/gRDACBcsocE7NSDq5yKOIt1A0mQs0uYEC4Vvj84=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HLDFKUe1; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FjC2ZmdN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33A811F00898;
-	Sat, 30 May 2026 07:50:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HLDFKUe1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3EA681F00893;
+	Sat, 30 May 2026 08:52:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780127450;
-	bh=7gemWASG8spRb7VwBUFZraypj2I/Q1VoEgsjVnCwK4Y=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=FjC2ZmdNDv8J4sDv3ttoZ+pzLNJ1dn6ZXjbgamQf4xPIwPWvfiKtGvjhis2p/Q5MH
-	 KAAikY1QYSS0nBSPSISuxk+ldZC+zZ3bfCQ2H4iJ4V0AibtjD5ZnzgjWsWHb1QUJ3Y
-	 eeO2XefE8bFlPxJG7kwgVTrZZuouRr+XZHQZRz+speJm4GZGA3d5dv86niglumfpLt
-	 iReScGaxIwpq6AfuaN3ZbfTrX00xvZ16GssIEzPwZbr7ejB07oWcHH/0NZeD0CNtRy
-	 S91DfSFz0l218BxwDL8sTSvterWV4kUaSaz6dJovpV+hCyIL/XhKX9rCMCJ7+lGXUy
-	 qm7Ba3sP5CvoA==
-From: Geliang Tang <geliang@kernel.org>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next 5/5] tcp: fix ULP diag race by RCU read locks properly
-Date: Sat, 30 May 2026 15:50:11 +0800
-Message-ID: <9c48fe51896f77bb03aca1c3511d88f85bb99736.1780127277.git.tanggeliang@kylinos.cn>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <cover.1780127277.git.tanggeliang@kylinos.cn>
-References: <cover.1780127277.git.tanggeliang@kylinos.cn>
+	s=k20260515; t=1780131129;
+	bh=WeBnEgXFhTZWDyleHJnjgR+YFNxQeqksqU3APpfNLJg=;
+	h=Date:Subject:To:References:From:In-Reply-To;
+	b=HLDFKUe1AcnOY1op7VpMISilIZgu+NDNtUaHLpI7Yt1bp2zETibtQovRA+pmE38zh
+	 +q5lqpFOBEFaecBS2spyVdnsar70zlCJ7WLeIULTArT9BjdpEpNoUiveAG/XbRKBbk
+	 xdbcYGEakWTGGk6PPj3NU+MJXZJrMq9Dicv0DUxWqAoBBxi7LeQlInvwfd9rcOt61u
+	 di+JaP/DftV+KK1gQqZIWliY9mk+wJnCZOA5g3bFTl+l7mI9B4I37775oL6TKxhpXJ
+	 Xt6WKmMZcRlS+Pl4OqHAQD7s5wLm+10uzgp9jPJDyLeRwM2MdyuilpcYjDgZeK9Evx
+	 M+yWQ4ndyo/sg==
+Message-ID: <d7d6789f-101e-4dac-a4a9-5cc90fa55ab5@kernel.org>
+Date: Sat, 30 May 2026 18:52:05 +1000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH v10 mptcp-next 1/3] Squash-to: "mptcp: implemented OoO
+ queue pruning"
+Content-Language: fr
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+References: <cover.1780049797.git.pabeni@redhat.com>
+ <34aad036969501b2e71025a68bd3925e478bc3c8.1780049797.git.pabeni@redhat.com>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <34aad036969501b2e71025a68bd3925e478bc3c8.1780049797.git.pabeni@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+Hi Paolo,
 
-Protect icsk->icsk_ulp_ops access in TCP diag with RCU read lock and
-rcu_dereference(). Use smp_store_release() when clearing the pointer
-in tcp_cleanup_ulp() to pair with readers, preventing use-after-free
-when a socket is aborted concurrently with a diag dump.
+On 29/05/2026 20:44, Paolo Abeni wrote:
+> As discussed in the original patch, use the proper helper to
+> get the currently used memory, and let mptcp_prune_ofo_queue()
+> return true when skb can be accepted, to avoid code churn in
+> the caller.
+I just applied this patch 1/3, but not 2-3/3.
 
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
----
- net/ipv4/tcp_diag.c | 15 ++++++++-------
- net/ipv4/tcp_ulp.c  | 14 ++++++++------
- 2 files changed, 16 insertions(+), 13 deletions(-)
+New patches for t/upstream:
+- cba0bf051b53: Squash-to: "mptcp: implemented OoO queue pruning"
+- Results: 4d6bda29d05f..24c473fa6c91 (export)
 
-diff --git a/net/ipv4/tcp_diag.c b/net/ipv4/tcp_diag.c
-index ba1fdbe9807f..6580bb8d190a 100644
---- a/net/ipv4/tcp_diag.c
-+++ b/net/ipv4/tcp_diag.c
-@@ -133,14 +133,13 @@ static int tcp_diag_get_aux(struct sock *sk, bool net_admin,
- 	}
- #endif
- 
--	ulp_ops = icsk->icsk_ulp_ops;
--	if (ulp_ops) {
-+	rcu_read_lock();
-+	ulp_ops = rcu_dereference(icsk->icsk_ulp_ops);
-+	if (ulp_ops)
- 		err = tcp_diag_put_ulp(skb, sk, ulp_ops, net_admin);
--		if (err < 0)
--			return err;
--	}
-+	rcu_read_unlock();
- 
--	return 0;
-+	return err;
- }
- 
- static size_t tcp_diag_get_aux_size(struct sock *sk, bool net_admin)
-@@ -169,13 +168,15 @@ static size_t tcp_diag_get_aux_size(struct sock *sk, bool net_admin)
- 	if (sk_fullsock(sk)) {
- 		const struct tcp_ulp_ops *ulp_ops;
- 
--		ulp_ops = icsk->icsk_ulp_ops;
-+		rcu_read_lock();
-+		ulp_ops = rcu_dereference(icsk->icsk_ulp_ops);
- 		if (ulp_ops) {
- 			size += nla_total_size(0) +
- 				nla_total_size(TCP_ULP_NAME_MAX);
- 			if (ulp_ops->get_info_size)
- 				size += ulp_ops->get_info_size(sk, net_admin);
- 		}
-+		rcu_read_unlock();
- 	}
- 
- 	return size
-diff --git a/net/ipv4/tcp_ulp.c b/net/ipv4/tcp_ulp.c
-index 2aa442128630..aa7fed4ffff2 100644
---- a/net/ipv4/tcp_ulp.c
-+++ b/net/ipv4/tcp_ulp.c
-@@ -112,19 +112,21 @@ void tcp_update_ulp(struct sock *sk, struct proto *proto,
- void tcp_cleanup_ulp(struct sock *sk)
- {
- 	struct inet_connection_sock *icsk = inet_csk(sk);
-+	const struct tcp_ulp_ops *ulp_ops;
- 
- 	/* No sock_owned_by_me() check here as at the time the
- 	 * stack calls this function, the socket is dead and
- 	 * about to be destroyed.
- 	 */
--	if (!icsk->icsk_ulp_ops)
-+	ulp_ops = icsk->icsk_ulp_ops;
-+	if (!ulp_ops)
- 		return;
- 
--	if (icsk->icsk_ulp_ops->release)
--		icsk->icsk_ulp_ops->release(sk);
--	module_put(icsk->icsk_ulp_ops->owner);
--
--	icsk->icsk_ulp_ops = NULL;
-+	if (ulp_ops->release)
-+		ulp_ops->release(sk);
-+	/* Pairs with rcu_dereference() in tcp_diag readers. */
-+	smp_store_release(&icsk->icsk_ulp_ops, NULL);
-+	module_put(ulp_ops->owner);
- }
- 
- static int __tcp_set_ulp(struct sock *sk, const struct tcp_ulp_ops *ulp_ops)
+Tests are now in progress:
+
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/9d89b8f76d6640109b7e412a3710c62c67000ac1/checks
+
+Cheers,
+Matt
 -- 
-2.53.0
+Sponsored by the NGI0 Core fund.
 
