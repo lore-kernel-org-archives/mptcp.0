@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2973337B97
-	for <mptcp@lists.linux.dev>; Sat, 30 May 2026 07:50:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9967038A722
+	for <mptcp@lists.linux.dev>; Sat, 30 May 2026 07:50:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780127449; cv=none; b=BsGxVSxW2T4KTBOCm0Wa1dSnHQDktev+a8JBc5adzNAFvHM18GlSh9Mkf9INi3iIYv+wghQTagOz/1tBuv0e31kt1lQdMz4RqWTPBUT3dnHp/p7xfkYuOLOpSrlJhBj80QiFkmdGewVVrrdiU1gHK6Id+sp3UygQIAnP8acNp7I=
+	t=1780127451; cv=none; b=LkuytV/3J+edTGxD7FH12qKN+TIHPaJb1PLNGstQ/tXSgA1WIMuhL1HfBHj1xyASqh8OaKmAqdcRd1wAwrYPvvDULOkSUIslO2zhKiQGo3JCP2yinejiQrzTZJZM11DKpAqC68oSMXwvvCPffk03VgsoRBoJb/vq5dMmK/S4v3o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780127449; c=relaxed/simple;
-	bh=md2W6E8hUS9PSeCFZeer557QYxVMsIiNkuHALsVaBms=;
+	s=arc-20240116; t=1780127451; c=relaxed/simple;
+	bh=R7nQoxTl303r8AJmiK0qOoPGvJ4RhTGoGQyfhIokHxs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oZjaaj7WPByh82JUamzI4jfbGIg/5RMZ4XY0M4iWDqNCZweCl+3bjpL+jeQ6znVytv6SeyDDOn9MXTtqSeDrF3BYl2cmO5ymT053tQY45+EJ6b6F4CivngrPHz+koocoFPE3uDWg8XJFz+BzSoxOJyZva8JGIrdilZglm7/zeE8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LpLH8o5h; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=ea3otocSJMWgQJj9P0aSyu6gnWnDeCFgaiEQt3w5m2vWzUTslznUMP5XAWU6MNoqXpVvnKZE3GNLr+mGcK67U1RzXUoWdmzVxprYLIkWg7WR9W5Oqnad4gwDGX0WIx7WovVDAyOnLwJpq9ETl35vHsUzPc/mkxyq0UeZGFmOAR8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FjC2ZmdN; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LpLH8o5h"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BF361F00893;
-	Sat, 30 May 2026 07:50:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FjC2ZmdN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33A811F00898;
+	Sat, 30 May 2026 07:50:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780127448;
-	bh=dh/9vtk0h6W+FRIK8g0S0seuCc09OIrdlemifKpOjUk=;
+	s=k20260515; t=1780127450;
+	bh=7gemWASG8spRb7VwBUFZraypj2I/Q1VoEgsjVnCwK4Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=LpLH8o5hkIVJhBrv6VOUXgGuNCp42oOJPw/65f/EUBst7C/fG5Z2NbTHqYqFMTmXx
-	 2v/eSKgSuYUZz9DJxA1Gz6wNOTTQum8VdAE0ujBZc6EaLzcqPf+23QQfttivh6aieD
-	 h6hvMd1tgisWZ+XJlPYmk8YZWUc9smQsYxnqTHhrFMSZHIJtKYLCuLVkLevrVWAhor
-	 RDbzA/b0rvFO7ThUpWjZGc3qBedFJ6i9muxYbXPYY9gGAxWa3z7+EC2LfXFPoWb//S
-	 0SAQyBSNlUleTUVBM/ySC8PIQOm7ZzkPx+1bGtkjBKhjk+OQ045kWUupDEZVd4UYdF
-	 SITWCVpAlFibA==
+	b=FjC2ZmdNDv8J4sDv3ttoZ+pzLNJ1dn6ZXjbgamQf4xPIwPWvfiKtGvjhis2p/Q5MH
+	 KAAikY1QYSS0nBSPSISuxk+ldZC+zZ3bfCQ2H4iJ4V0AibtjD5ZnzgjWsWHb1QUJ3Y
+	 eeO2XefE8bFlPxJG7kwgVTrZZuouRr+XZHQZRz+speJm4GZGA3d5dv86niglumfpLt
+	 iReScGaxIwpq6AfuaN3ZbfTrX00xvZ16GssIEzPwZbr7ejB07oWcHH/0NZeD0CNtRy
+	 S91DfSFz0l218BxwDL8sTSvterWV4kUaSaz6dJovpV+hCyIL/XhKX9rCMCJ7+lGXUy
+	 qm7Ba3sP5CvoA==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next 4/5] tcp: add socket lock to TCP_ULP getsockopt safely
-Date: Sat, 30 May 2026 15:50:10 +0800
-Message-ID: <e212d4ab9b48976c108716223bed9150d49e7783.1780127277.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next 5/5] tcp: fix ULP diag race by RCU read locks properly
+Date: Sat, 30 May 2026 15:50:11 +0800
+Message-ID: <9c48fe51896f77bb03aca1c3511d88f85bb99736.1780127277.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <cover.1780127277.git.tanggeliang@kylinos.cn>
 References: <cover.1780127277.git.tanggeliang@kylinos.cn>
@@ -45,86 +45,90 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-When handling TCP_ULP getsockopt, do_tcp_getsockopt() accesses
-icsk->icsk_ulp_ops without holding the socket lock. A concurrent
-connect(AF_UNSPEC) (or other operation that calls tcp_cleanup_ulp())
-can set icsk_ulp_ops to NULL and release the module reference.
-If this occurs between the NULL check and the dereference of ->name,
-the kernel may access a NULL pointer or a stale pointer, leading to
-a crash or use-after-free.
-
-Extract the TCP_ULP getsockopt logic into a helper tcp_sock_get_ulp()
-and wrap the call with lock_sock()/release_sock() to ensure the ULP
-operation is protected against concurrent modification.
+Protect icsk->icsk_ulp_ops access in TCP diag with RCU read lock and
+rcu_dereference(). Use smp_store_release() when clearing the pointer
+in tcp_cleanup_ulp() to pair with readers, preventing use-after-free
+when a socket is aborted concurrently with a diag dump.
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- net/ipv4/tcp.c | 44 +++++++++++++++++++++++++++++---------------
- 1 file changed, 29 insertions(+), 15 deletions(-)
+ net/ipv4/tcp_diag.c | 15 ++++++++-------
+ net/ipv4/tcp_ulp.c  | 14 ++++++++------
+ 2 files changed, 16 insertions(+), 13 deletions(-)
 
-diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
-index a058f350a759..c01f97d5dfe8 100644
---- a/net/ipv4/tcp.c
-+++ b/net/ipv4/tcp.c
-@@ -4481,6 +4481,28 @@ struct sk_buff *tcp_get_timestamping_opt_stats(const struct sock *sk,
- 	return stats;
+diff --git a/net/ipv4/tcp_diag.c b/net/ipv4/tcp_diag.c
+index ba1fdbe9807f..6580bb8d190a 100644
+--- a/net/ipv4/tcp_diag.c
++++ b/net/ipv4/tcp_diag.c
+@@ -133,14 +133,13 @@ static int tcp_diag_get_aux(struct sock *sk, bool net_admin,
+ 	}
+ #endif
+ 
+-	ulp_ops = icsk->icsk_ulp_ops;
+-	if (ulp_ops) {
++	rcu_read_lock();
++	ulp_ops = rcu_dereference(icsk->icsk_ulp_ops);
++	if (ulp_ops)
+ 		err = tcp_diag_put_ulp(skb, sk, ulp_ops, net_admin);
+-		if (err < 0)
+-			return err;
+-	}
++	rcu_read_unlock();
+ 
+-	return 0;
++	return err;
  }
  
-+static int tcp_sock_get_ulp(struct sock *sk, sockptr_t optval,
-+			    sockptr_t optlen)
-+{
-+	struct inet_connection_sock *icsk = inet_csk(sk);
-+	int len;
-+
-+	if (copy_from_sockptr(&len, optlen, sizeof(int)))
-+		return -EFAULT;
-+	len = min_t(unsigned int, len, TCP_ULP_NAME_MAX);
-+	if (!icsk->icsk_ulp_ops) {
-+		len = 0;
-+		if (copy_to_sockptr(optlen, &len, sizeof(int)))
-+			return -EFAULT;
-+		return 0;
-+	}
-+	if (copy_to_sockptr(optlen, &len, sizeof(int)))
-+		return -EFAULT;
-+	if (copy_to_sockptr(optval, icsk->icsk_ulp_ops->name, len))
-+		return -EFAULT;
-+	return 0;
-+}
-+
- int do_tcp_getsockopt(struct sock *sk, int level,
- 		      int optname, sockptr_t optval, sockptr_t optlen)
+ static size_t tcp_diag_get_aux_size(struct sock *sk, bool net_admin)
+@@ -169,13 +168,15 @@ static size_t tcp_diag_get_aux_size(struct sock *sk, bool net_admin)
+ 	if (sk_fullsock(sk)) {
+ 		const struct tcp_ulp_ops *ulp_ops;
+ 
+-		ulp_ops = icsk->icsk_ulp_ops;
++		rcu_read_lock();
++		ulp_ops = rcu_dereference(icsk->icsk_ulp_ops);
+ 		if (ulp_ops) {
+ 			size += nla_total_size(0) +
+ 				nla_total_size(TCP_ULP_NAME_MAX);
+ 			if (ulp_ops->get_info_size)
+ 				size += ulp_ops->get_info_size(sk, net_admin);
+ 		}
++		rcu_read_unlock();
+ 	}
+ 
+ 	return size
+diff --git a/net/ipv4/tcp_ulp.c b/net/ipv4/tcp_ulp.c
+index 2aa442128630..aa7fed4ffff2 100644
+--- a/net/ipv4/tcp_ulp.c
++++ b/net/ipv4/tcp_ulp.c
+@@ -112,19 +112,21 @@ void tcp_update_ulp(struct sock *sk, struct proto *proto,
+ void tcp_cleanup_ulp(struct sock *sk)
  {
-@@ -4589,22 +4611,14 @@ int do_tcp_getsockopt(struct sock *sk, int level,
- 			return -EFAULT;
- 		return 0;
+ 	struct inet_connection_sock *icsk = inet_csk(sk);
++	const struct tcp_ulp_ops *ulp_ops;
  
--	case TCP_ULP:
--		if (copy_from_sockptr(&len, optlen, sizeof(int)))
--			return -EFAULT;
--		len = min_t(unsigned int, len, TCP_ULP_NAME_MAX);
--		if (!icsk->icsk_ulp_ops) {
--			len = 0;
--			if (copy_to_sockptr(optlen, &len, sizeof(int)))
--				return -EFAULT;
--			return 0;
--		}
--		if (copy_to_sockptr(optlen, &len, sizeof(int)))
--			return -EFAULT;
--		if (copy_to_sockptr(optval, icsk->icsk_ulp_ops->name, len))
--			return -EFAULT;
--		return 0;
-+	case TCP_ULP: {
-+		int err;
+ 	/* No sock_owned_by_me() check here as at the time the
+ 	 * stack calls this function, the socket is dead and
+ 	 * about to be destroyed.
+ 	 */
+-	if (!icsk->icsk_ulp_ops)
++	ulp_ops = icsk->icsk_ulp_ops;
++	if (!ulp_ops)
+ 		return;
  
-+		lock_sock(sk);
-+		err = tcp_sock_get_ulp(sk, optval, optlen);
-+		release_sock(sk);
-+		return err;
-+	}
- 	case TCP_FASTOPEN_KEY: {
- 		u64 key[TCP_FASTOPEN_KEY_BUF_LENGTH / sizeof(u64)];
- 		unsigned int key_len;
+-	if (icsk->icsk_ulp_ops->release)
+-		icsk->icsk_ulp_ops->release(sk);
+-	module_put(icsk->icsk_ulp_ops->owner);
+-
+-	icsk->icsk_ulp_ops = NULL;
++	if (ulp_ops->release)
++		ulp_ops->release(sk);
++	/* Pairs with rcu_dereference() in tcp_diag readers. */
++	smp_store_release(&icsk->icsk_ulp_ops, NULL);
++	module_put(ulp_ops->owner);
+ }
+ 
+ static int __tcp_set_ulp(struct sock *sk, const struct tcp_ulp_ops *ulp_ops)
 -- 
 2.53.0
 
