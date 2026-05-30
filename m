@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 755372BEFF6
-	for <mptcp@lists.linux.dev>; Sat, 30 May 2026 08:52:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C2FC1B808
+	for <mptcp@lists.linux.dev>; Sat, 30 May 2026 09:04:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780131130; cv=none; b=HuJz09ZVfanhKK3bwJ01lXjJnHjYLekX2FpZFHwIoWGgVAA0SElNQi0jNf+aVbqDI53Dlb0gfNTNXnaBm6e9MMZuJoGMhxN5IBnKuaRachEiFefGY+QVhKrFTv7vKbKpJGD91AqREl1hzQ2gKquL6e3PqMSI3Je7rV/rSnYuSBU=
+	t=1780131866; cv=none; b=Ix+CkVXiYYTFWDizCcOfqA6bGozGJ1GNKfYL4TWGqchtR6wAo4P2u6VU1RCXzvQ5wrk3Yjmhz8FcCdYj4Q338SGdjZVLCj2DEgA+anks/KO0LWTwr4o3UFOlAMfdQ1CZuEBEFj9AHW2dNeK2VVo6iC41lsv7X9AjjS/2ngkB/QU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780131130; c=relaxed/simple;
-	bh=eJ9XQW+lbFaZw/8fZZbksSFRFtsdhPdGMu12EJTO2gM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=mKATQxeftaJapcbHlcnGkyDj45QZeL9F+hr9MDvNYDA5tl8kaCXxvqPGUw349rz2QCCPFqCiwL1a5YZA4UEoaRnCWoXr/eGj16+6x6VhIHqFSvL8uDKY5ZTKFfLQRs/0CPP/gRDACBcsocE7NSDq5yKOIt1A0mQs0uYEC4Vvj84=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HLDFKUe1; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780131866; c=relaxed/simple;
+	bh=jNBYuLHC5972e392r9GN4Ywe9VG5SdOA6QK3izVS+rw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bzme93Cndm84SynSjwRdH5k6iyK96+i8HFqhDx8irV1+MG8E8lqOT2jzshDq4MqwtRMY/sASLpy40MJYOlh94ZDDJmyea894kDAO3+GHWvdVH5ZIkAyzW528ofMA1gbh0WKamHc4TMHwrE2TMP7zzkzLM1fLznkGbtBN2JMqhUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i3iG5qGx; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HLDFKUe1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3EA681F00893;
-	Sat, 30 May 2026 08:52:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i3iG5qGx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 538F31F00893;
+	Sat, 30 May 2026 09:04:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780131129;
-	bh=WeBnEgXFhTZWDyleHJnjgR+YFNxQeqksqU3APpfNLJg=;
-	h=Date:Subject:To:References:From:In-Reply-To;
-	b=HLDFKUe1AcnOY1op7VpMISilIZgu+NDNtUaHLpI7Yt1bp2zETibtQovRA+pmE38zh
-	 +q5lqpFOBEFaecBS2spyVdnsar70zlCJ7WLeIULTArT9BjdpEpNoUiveAG/XbRKBbk
-	 xdbcYGEakWTGGk6PPj3NU+MJXZJrMq9Dicv0DUxWqAoBBxi7LeQlInvwfd9rcOt61u
-	 di+JaP/DftV+KK1gQqZIWliY9mk+wJnCZOA5g3bFTl+l7mI9B4I37775oL6TKxhpXJ
-	 Xt6WKmMZcRlS+Pl4OqHAQD7s5wLm+10uzgp9jPJDyLeRwM2MdyuilpcYjDgZeK9Evx
-	 M+yWQ4ndyo/sg==
-Message-ID: <d7d6789f-101e-4dac-a4a9-5cc90fa55ab5@kernel.org>
-Date: Sat, 30 May 2026 18:52:05 +1000
+	s=k20260515; t=1780131865;
+	bh=f+grcKTAKD2mRsdWW/fMh2pnTzONAzJzUogV7OH62G8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=i3iG5qGxZNArrE1/KC790+6Kfa3pOOrO6zXz4Y/RshdOlQHE3VvMTgbjMYhgXU3kM
+	 U6HC9/FTwm3/We5i/mhnIfEZNKE55bE2ZtjK3ueinyxiaNaemvC8xku0JiSTRa6y36
+	 wgOD1UUhLAUztspqVotKFjJ4gajvVvV2DTWD4gUXb7AXWGnrDGFJdRTDjaMr3GQ7oe
+	 PWGO7ysTAQIeAO8D2F3DzN6VKU4J9WKk9CEgvlM55a01/kXIRqDmY0bjIeG5h1++/P
+	 17pTnthbKfasA9s5GNXGukgubhBAMP7kbxiXWtu4bQhaUPT0uzFCHRbQ4E1Eh9UMjf
+	 LdKkhu9hzEI0w==
+Message-ID: <3ea430aa-cb75-40bb-ae9f-ada6649077bb@kernel.org>
+Date: Sat, 30 May 2026 19:04:21 +1000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH v10 mptcp-next 1/3] Squash-to: "mptcp: implemented OoO
- queue pruning"
+Subject: Re: [PATCH mptcp-net mptcp-next v4 00/15] mptcp: pm: drop TCP TS with
+ ADD_ADDRv6 + port
 Content-Language: fr
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-References: <cover.1780049797.git.pabeni@redhat.com>
- <34aad036969501b2e71025a68bd3925e478bc3c8.1780049797.git.pabeni@redhat.com>
+To: Mat Martineau <martineau@kernel.org>
+Cc: MPTCP Linux <mptcp@lists.linux.dev>
+References: <20260529-mptcp-add-addr6-port-ts-v4-0-cea393fa33a2@kernel.org>
+ <6b4b5e7d-1663-c84f-b09a-e2afeb7b866e@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,27 +87,95 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <34aad036969501b2e71025a68bd3925e478bc3c8.1780049797.git.pabeni@redhat.com>
+In-Reply-To: <6b4b5e7d-1663-c84f-b09a-e2afeb7b866e@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Paolo,
+Hi Mat,
 
-On 29/05/2026 20:44, Paolo Abeni wrote:
-> As discussed in the original patch, use the proper helper to
-> get the currently used memory, and let mptcp_prune_ofo_queue()
-> return true when skb can be accepted, to avoid code churn in
-> the caller.
-I just applied this patch 1/3, but not 2-3/3.
+On 30/05/2026 04:12, Mat Martineau wrote:
+> On Fri, 29 May 2026, Matthieu Baerts (NGI0) wrote:
+> 
+>> Currently, it is possible to add a "signal" MPTCP endpoint with a v6
+>> address and a port, or to directly request to send an ADD_ADDR with a v6
+>> address and a port, but such signalling option cannot be sent when TCP
+>> timestamps is used due to a lack of option space. Instead of simply
+>> dropping such ADD_ADDR, the TCP timestamps can be dropped only for this
+>> packet.
+>>
+>> - Patch 1: fix for PREEMPT_RT kernels, for -net.
+>>
+>> - Patches 2-4: small cleanups to avoid computing ADD/RM_ADDR twice.
+>>
+>> - Patches 5-8: the new feature, controlled by a new sysctl knob.
+>>
+>> - Patch 9: extra checks in the selftests.
+>>
+>> - Patches 10-15: refactoring/cleanups: some of them were part of a
+>>  previous patch: "mptcp: pm: clearer ADD_ADDR related helpers names"
+>>  [1].
+>>
+>> Note that the mptcp/add_addr/add_addr6_port_ts_server.pkt packetdrill
+>> test is supposed to fail with this series, until this PR is applied:
+>>
+>>  https://github.com/multipath-tcp/packetdrill/pull/198
+>>
+>> Link: https://lore.kernel.org/20260415-mptcp-inc-limits-v5-20-
+>> e54c3bf80e4e@kernel.org [1]
+>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+>> ---
+>> Changes in v4:
+>> - Patches 2-4: uniform "size" type: signed for all suboptions. (Mat)
+>> - Dropped previous patch 16.
+>> - Link to v3: https://patch.msgid.link/20260520-mptcp-add-addr6-port-
+>> ts-v3-0-bffa658a7678@kernel.org
+> 
+> Hi Matthieu -
+> 
+> Thank you for the updates in v4, all of my concerns are addressed and I
+> agree that this approach to fitting ADD_ADDR headers w/ IPv6 seems like
+> the best tradeoff.
+> 
+> I'll also give a +1 on the packetdrill PR.
+
+Thank you! Merged!
+> For the series:
+> 
+> Reviewed-by: Mat Martineau <martineau@kernel.org>
+
+Thank you for the review! Now in our tree:
+
+New patches for t/upstream-net and t/upstream:
+- c619bf382586: mptcp: pm: avoid sleeping while holding rcu_read_lock
+- Results: ba5ea3e35898..b744d5cbf545 (export-net)
+- Results: 24c473fa6c91..0a3014718f01 (export)
+
+Tests are now in progress:
+
+- export-net:
+https://github.com/multipath-tcp/mptcp_net-next/commit/8f01bd3c80a4051904fdb16bc4a7d2d56e01b102/checks
 
 New patches for t/upstream:
-- cba0bf051b53: Squash-to: "mptcp: implemented OoO queue pruning"
-- Results: 4d6bda29d05f..24c473fa6c91 (export)
+- 140b3313d086: mptcp: options: suboptions sizes can be negative
+- ecb59042f997: mptcp: pm: avoid computing rm_addr size twice
+- e152c63b3234: mptcp: pm: avoid computing add_addr size twice
+- 3e1f23bf6d20: mptcp: introduce add_addr_v6_port_drop_ts sysctl knob
+- be190e710733: tcp: allow mptcp to drop TS for some packets
+- 2bbbbbf511cf: mptcp: pm: drop TCP TS with ADD_ADDRv6 + port
+- 12de239a0b82: selftests: mptcp: validate ADD_ADDRv6 + TS + port
+- a701782ba7ce: selftests: mptcp: always check sent/dropped ADD_ADDRs
+- f72cd39ee480: mptcp: pm: use for_each_subflow helper
+- 29db124b818c: mptcp: pm: rename add_entry structure to add_addr
+- 35e6e38f8cad: mptcp: pm: uniform announced addresses helpers
+- 5b33e846c45a: mptcp: pm: remove add_ prefix from timer
+- 1c5f13b9f12e: mptcp: pm: make mptcp_pm_add_addr_send_ack static
+- 54551d64573b: mptcp: pm: avoid using del_timer directly
+- Results: 0a3014718f01..75370a1de11f (export)
 
 Tests are now in progress:
 
 - export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/9d89b8f76d6640109b7e412a3710c62c67000ac1/checks
+https://github.com/multipath-tcp/mptcp_net-next/commit/228692121494a157d7050d141422c9b49c19ca25/checks
 
 Cheers,
 Matt
