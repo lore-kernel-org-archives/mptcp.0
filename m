@@ -1,184 +1,130 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C2FC1B808
-	for <mptcp@lists.linux.dev>; Sat, 30 May 2026 09:04:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD5D51A682C
+	for <mptcp@lists.linux.dev>; Sat, 30 May 2026 09:14:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780131866; cv=none; b=Ix+CkVXiYYTFWDizCcOfqA6bGozGJ1GNKfYL4TWGqchtR6wAo4P2u6VU1RCXzvQ5wrk3Yjmhz8FcCdYj4Q338SGdjZVLCj2DEgA+anks/KO0LWTwr4o3UFOlAMfdQ1CZuEBEFj9AHW2dNeK2VVo6iC41lsv7X9AjjS/2ngkB/QU=
+	t=1780132479; cv=none; b=n30l99rcAVJADx30uBWfqk1GXpHQi8+HmhlKNJ6PPcSRuUK3DMCxXaoprn8JdSM9zcCRHfTcSL30fROkzI5/3vKy3V3SvOYrTvA9hxYO/DmEtYSM+mkyfm1otYi8O+3ZYWVB7hM+NpgxD8MjD/1PhN2ht+04eHyKk/p/YPd2tVA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780131866; c=relaxed/simple;
-	bh=jNBYuLHC5972e392r9GN4Ywe9VG5SdOA6QK3izVS+rw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bzme93Cndm84SynSjwRdH5k6iyK96+i8HFqhDx8irV1+MG8E8lqOT2jzshDq4MqwtRMY/sASLpy40MJYOlh94ZDDJmyea894kDAO3+GHWvdVH5ZIkAyzW528ofMA1gbh0WKamHc4TMHwrE2TMP7zzkzLM1fLznkGbtBN2JMqhUk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i3iG5qGx; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780132479; c=relaxed/simple;
+	bh=iimVomD/wyF8UjNH3AV1hEUOnvk1Z2ZA2LqHdPZlOIc=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
+	 MIME-Version:Content-Type; b=ZpvGB+OprMcot2tC+NY6/clLhm2ny71JWibX1wHGHxhrcTMWgbYzCD1DpHglst1FmLdtxTc+jPO043stZ6J4LKrAS/jjattW79os0XlNZHOfypK3h7ghiyg0zZ1cWyKYDrvXOm2L5P31Nht+rEgkB5cmZbM0oEMpLehtNKEppQA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nQruFCPI; arc=none smtp.client-ip=209.85.222.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i3iG5qGx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 538F31F00893;
-	Sat, 30 May 2026 09:04:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780131865;
-	bh=f+grcKTAKD2mRsdWW/fMh2pnTzONAzJzUogV7OH62G8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=i3iG5qGxZNArrE1/KC790+6Kfa3pOOrO6zXz4Y/RshdOlQHE3VvMTgbjMYhgXU3kM
-	 U6HC9/FTwm3/We5i/mhnIfEZNKE55bE2ZtjK3ueinyxiaNaemvC8xku0JiSTRa6y36
-	 wgOD1UUhLAUztspqVotKFjJ4gajvVvV2DTWD4gUXb7AXWGnrDGFJdRTDjaMr3GQ7oe
-	 PWGO7ysTAQIeAO8D2F3DzN6VKU4J9WKk9CEgvlM55a01/kXIRqDmY0bjIeG5h1++/P
-	 17pTnthbKfasA9s5GNXGukgubhBAMP7kbxiXWtu4bQhaUPT0uzFCHRbQ4E1Eh9UMjf
-	 LdKkhu9hzEI0w==
-Message-ID: <3ea430aa-cb75-40bb-ae9f-ada6649077bb@kernel.org>
-Date: Sat, 30 May 2026 19:04:21 +1000
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nQruFCPI"
+Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-9153e2708aeso71751185a.0
+        for <mptcp@lists.linux.dev>; Sat, 30 May 2026 02:14:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1780132477; x=1780737277; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=43HgAEXc7TJAow8oKEH0+3Q22hT3xakZtxxi0prlNvU=;
+        b=nQruFCPI34cfaXAxOsSsO4rPgY0kaC3aQEfa7UTNxOHqLNlwk9mBMTGfQ4i1h3CEOL
+         W1PM0jEuopqlgiQOCvTXrW5OiOYnJIrVF2Fwa5O3BRyqCnD+SmAMue8spNbnPjZWdJOw
+         1DlyuVlBYi+6n0/gz6ePRCM6vSVzfdWkLxiqjNO8luTlI3Jex5Z0qo1GsjcCxXTmZJip
+         Xsxu35Lehm36buei6pIUch6VCo3oe3TL1jqjheUDZ5XOJ/KYMD85t1SeP70N4kurwtIP
+         /Zj0j9sD65/iGOLokrOzTnSeOiK8fIEsHHlzh45nqqNsUpH3TzHs/TS9KtXIqZ1TCmwI
+         w49A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780132477; x=1780737277;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=43HgAEXc7TJAow8oKEH0+3Q22hT3xakZtxxi0prlNvU=;
+        b=nfBA9tOrwobgUcr+5smeoYcwU6YIS8OQMlW/Qj6+z2YvVFkapKyXLi9seilOg4mvbh
+         4x/w9OTutxGhFmWd2vX7vOvOItz1++8SY4WaTo35UHjM864Jt6QwRq9oyO08d7xPt8x+
+         ZFyQxEgkHpjOWMPN3wfLoEYpcn8hvya7xFSNWdiV45qhtSXAbGZbpAwkvkiKKfHaUTsG
+         PaH5QPZO57Xr8aJh2N3FD42s7UMu2++vxJEgaZV1he8+PKLpLnSUyy4z+hipRj/ZzL3g
+         vwgXcp1KCaaA8cuekRz+frfUC9uh6QIi02Ivai2W+QEOxKZD1cwXYPAGoOWeg/N03VPm
+         CaYA==
+X-Gm-Message-State: AOJu0YztS01OzQELDjUVXFihPqJTAagRKkX+afCTl393HY7XCzAXv3Pd
+	0xaUbboKp/deGcDhPklG7xIJb0TvKXVVKA83IMhiMjOUZijSklCfBivpqdAp
+X-Gm-Gg: Acq92OG5PLJAYlRBz0q35nAYnPVfMaMZK/ciuzaqOL4YZOcArtFK1q7BV79AQoj9XOn
+	Zl7huuGQJ6Yy1lILoUlx/zMlrWw9Ofs2XhrC1OwcP9V1BGS1OVZuIuUVozrmVakVm8Y65RTBqpw
+	GrY6M3T4tg5IfXlICVdafBxlU25wxa7YGRL2hiBwa5SYzQ0RYQxqd5cAau4WEKwTvFE+ZEEPJFp
+	ylWmsD0PFq3JK29Peg9SKdsDq7zdQrpPnEHDe70z23422rxh9YmVTSJ9Dup6LcGn7pQ27EW9/xO
+	3C++ECRlCbwwn0+5bXC8n4ZmA3f06UV/qMlATZAhdGOaJz9Ob98FSpybD8J+02pK9/FzO60Uy6H
+	BdIj/6gU+JLhVxA77uACuixL7Gky5nYqxpumTAwuVz7CTxVjRVP2/CpSMC09lRDCF5tVGurfSJH
+	30Z3Bu72Aw3GJpeEwFkCvBq6P3p1lVBOxOsOxOxHui6mi63O0W
+X-Received: by 2002:a05:620a:29d5:b0:915:29cd:306f with SMTP id af79cd13be357-9153dbca062mr478738585a.55.1780132477502;
+        Sat, 30 May 2026 02:14:37 -0700 (PDT)
+Received: from [127.0.0.1] ([64.236.187.243])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-91532480d9fsm482496485a.14.2026.05.30.02.14.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 30 May 2026 02:14:37 -0700 (PDT)
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Geliang Tang <tanggeliang@kylinos.cn>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <cover.1780127277.git.tanggeliang@kylinos.cn>
+References: <cover.1780127277.git.tanggeliang@kylinos.cn>
+Subject: Re: [PATCH mptcp-next 0/5] Fixes for TLS and ULP
+Message-ID: <0f24ea12-1cd6-21cb-1b92-08efc4d0e9db@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Sat, 30 May 2026 09:14:35 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net mptcp-next v4 00/15] mptcp: pm: drop TCP TS with
- ADD_ADDRv6 + port
-Content-Language: fr
-To: Mat Martineau <martineau@kernel.org>
-Cc: MPTCP Linux <mptcp@lists.linux.dev>
-References: <20260529-mptcp-add-addr6-port-ts-v4-0-cea393fa33a2@kernel.org>
- <6b4b5e7d-1663-c84f-b09a-e2afeb7b866e@kernel.org>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <6b4b5e7d-1663-c84f-b09a-e2afeb7b866e@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
 
-Hi Mat,
+Hi Geliang,
 
-On 30/05/2026 04:12, Mat Martineau wrote:
-> On Fri, 29 May 2026, Matthieu Baerts (NGI0) wrote:
-> 
->> Currently, it is possible to add a "signal" MPTCP endpoint with a v6
->> address and a port, or to directly request to send an ADD_ADDR with a v6
->> address and a port, but such signalling option cannot be sent when TCP
->> timestamps is used due to a lack of option space. Instead of simply
->> dropping such ADD_ADDR, the TCP timestamps can be dropped only for this
->> packet.
->>
->> - Patch 1: fix for PREEMPT_RT kernels, for -net.
->>
->> - Patches 2-4: small cleanups to avoid computing ADD/RM_ADDR twice.
->>
->> - Patches 5-8: the new feature, controlled by a new sysctl knob.
->>
->> - Patch 9: extra checks in the selftests.
->>
->> - Patches 10-15: refactoring/cleanups: some of them were part of a
->>  previous patch: "mptcp: pm: clearer ADD_ADDR related helpers names"
->>  [1].
->>
->> Note that the mptcp/add_addr/add_addr6_port_ts_server.pkt packetdrill
->> test is supposed to fail with this series, until this PR is applied:
->>
->>  https://github.com/multipath-tcp/packetdrill/pull/198
->>
->> Link: https://lore.kernel.org/20260415-mptcp-inc-limits-v5-20-
->> e54c3bf80e4e@kernel.org [1]
->> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
->> ---
->> Changes in v4:
->> - Patches 2-4: uniform "size" type: signed for all suboptions. (Mat)
->> - Dropped previous patch 16.
->> - Link to v3: https://patch.msgid.link/20260520-mptcp-add-addr6-port-
->> ts-v3-0-bffa658a7678@kernel.org
-> 
-> Hi Matthieu -
-> 
-> Thank you for the updates in v4, all of my concerns are addressed and I
-> agree that this approach to fitting ADD_ADDR headers w/ IPv6 seems like
-> the best tradeoff.
-> 
-> I'll also give a +1 on the packetdrill PR.
+Thank you for your modifications, that's great!
 
-Thank you! Merged!
-> For the series:
-> 
-> Reviewed-by: Mat Martineau <martineau@kernel.org>
+Our CI did some validations and here is its report:
 
-Thank you for the review! Now in our tree:
+- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Critical: 1 Call =
+Trace(s) =E2=9D=8C
+- KVM Validation: debug (only selftest_mptcp_join): =
+Critical: 19 Call Trace(s) =E2=9D=8C
+- KVM Validation: btf-normal (only =
+bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only =
+bpftest_all): Critical: 18 Call Trace(s) =E2=9D=8C
+- Task: https://github.=
+com/multipath-tcp/mptcp_net-next/actions/runs/26678939084
 
-New patches for t/upstream-net and t/upstream:
-- c619bf382586: mptcp: pm: avoid sleeping while holding rcu_read_lock
-- Results: ba5ea3e35898..b744d5cbf545 (export-net)
-- Results: 24c473fa6c91..0a3014718f01 (export)
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/fea5f9852187
+Patchwork: https://patchwork.kernel.=
+org/project/mptcp/list/?series=3D1103235
 
-Tests are now in progress:
 
-- export-net:
-https://github.com/multipath-tcp/mptcp_net-next/commit/8f01bd3c80a4051904fdb16bc4a7d2d56e01b102/checks
+If there are some issues, you =
+can reproduce them using the same environment as
+the one used by the CI =
+thanks to a docker image, e.g.:
 
-New patches for t/upstream:
-- 140b3313d086: mptcp: options: suboptions sizes can be negative
-- ecb59042f997: mptcp: pm: avoid computing rm_addr size twice
-- e152c63b3234: mptcp: pm: avoid computing add_addr size twice
-- 3e1f23bf6d20: mptcp: introduce add_addr_v6_port_drop_ts sysctl knob
-- be190e710733: tcp: allow mptcp to drop TS for some packets
-- 2bbbbbf511cf: mptcp: pm: drop TCP TS with ADD_ADDRv6 + port
-- 12de239a0b82: selftests: mptcp: validate ADD_ADDRv6 + TS + port
-- a701782ba7ce: selftests: mptcp: always check sent/dropped ADD_ADDRs
-- f72cd39ee480: mptcp: pm: use for_each_subflow helper
-- 29db124b818c: mptcp: pm: rename add_entry structure to add_addr
-- 35e6e38f8cad: mptcp: pm: uniform announced addresses helpers
-- 5b33e846c45a: mptcp: pm: remove add_ prefix from timer
-- 1c5f13b9f12e: mptcp: pm: make mptcp_pm_add_addr_send_ack static
-- 54551d64573b: mptcp: pm: avoid using del_timer directly
-- Results: 0a3014718f01..75370a1de11f (export)
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
 
-Tests are now in progress:
+For more details:
 
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/228692121494a157d7050d141422c9b49c19ca25/checks
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
+
+
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
 
 Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
-
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 Core)
