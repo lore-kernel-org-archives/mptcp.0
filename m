@@ -1,130 +1,112 @@
-Received: from mail-dy1-f169.google.com (mail-dy1-f169.google.com [74.125.82.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDED3341AC7
-	for <mptcp@lists.linux.dev>; Sat, 30 May 2026 16:28:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A48C13A258
+	for <mptcp@lists.linux.dev>; Sun, 31 May 2026 01:57:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780158489; cv=none; b=JZY0rFYZTau2pVpDnAxEjYxqSWTfLBfrw9V1TdCntA2dZcpPQBTujgmVNKfHgzY9MtgQDtRxoZeq3oPrXm6XQ7JcYAVgj+g7sYxuX7eCqlF5j7oAZoCXPYJJbQX+kqW+IpGEjS4gpYcYzhVhMyVIm+0Y6D6XiZbPwJ83NGtJbtw=
+	t=1780192656; cv=none; b=JVVo09f94o0VwVZuPXvxjBmy8v6WLbrNt+2oFQ20rUhTCVoKZW6LHzZb8No7LqWioyENgctoDtqc+vlOgAORomlhQ5pKjVLi5h24HsWnb66skTgiwPHmifeRFpxHyJwh5+c9XID2AThpJhMfAkli7kIci/MLqQwshHN6wmgxnZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780158489; c=relaxed/simple;
-	bh=rd9Q3e8AaM2DyK1TNCymOJ3fISFXPbSlO7Fs+ogvEsk=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
-	 MIME-Version:Content-Type; b=OQJKKkkuUtxTJJDplisYt9e+A6N4vNsXKN0AZKUpj9nr0w2m+LGW8722sS9H0Mi6CvliDzt/KhkOm9L+w9SEZLAeHY+5Yl4a3aTQKz8XFSz/TPMXMd+dv97QBlF9bGM/rYq+1sruBKuBwiLDCikU5IAaF/2e+As+6WfNy/BKBms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=as6H3eTH; arc=none smtp.client-ip=74.125.82.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1780192656; c=relaxed/simple;
+	bh=bLjZ0gmzFeB4+EKWD+esQ4gEDMQMdcer+6xnCHl8rII=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=iW0Fxq+mKgD1RQaFURtKj8WTl5hHIHq8yZllFac3w+Jt+P/oGk26rMdkvof57FU2L91cPNZE1m9Bk2V+6purPiPsJRMdtJ9AOQaSbni88PUJP7U17o35Mff+7bsueittHcXaQfSDDToOcbTldzoAuCmWFW4YNnVtONuVA8Ch76w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SMwJv2Jm; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="as6H3eTH"
-Received: by mail-dy1-f169.google.com with SMTP id 5a478bee46e88-304c520fe9aso7388266eec.0
-        for <mptcp@lists.linux.dev>; Sat, 30 May 2026 09:28:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1780158488; x=1780763288; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tIwRqGfLOUe15+3mRWYOtsjZt8ZhXARAfBKnXqw2s6U=;
-        b=as6H3eTHRNvWcGMzG11LUnOC/4CLTu0/gwLDgmmn8pB2ZGIB3pLfqtK124PeViKlGK
-         zT6Q+cBTsSiQWXMwNgVzOILUlAjoD9MDVTvd+FDhOI+xL4i8Y2cHxTGAXtUgEqD9+drt
-         3/3mS3+QUu5tBc+kDfd/9GC5rqvZD6A5Ha0/LjJWE7J81rQp3Xg1IKRkn3e2jLaKAgwq
-         8XBFpjgjI9tvhsE3p5RRc8txa89f2hmv9bYfN+rRrrEbDztWK4lGeJajHKp0Db21KO0C
-         3Sasn3FwGSUS+HZ5ZjKeeeRTR5dRufkLteLCFRIpzU4QV09PWfbo2HDEK87jdz8f5siD
-         vALg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780158488; x=1780763288;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tIwRqGfLOUe15+3mRWYOtsjZt8ZhXARAfBKnXqw2s6U=;
-        b=R2n9Pl4fIrT2107vEaGC7BDNKat8LWjvAgc8Pk4BzkYQEpUyVywYUusLFSZYGBRjXs
-         mHBSSdmvFtypOFYByLgYhhSO6DZyBLmOc2DP6PicBj3m+js8j0tWtG9SsgsyceqCQHrZ
-         cJB60xRgFPBspI57ozvkOpG+hM/SV8pIGOxOBw4nb9N8Zcupx9USf1arWk5YD0MryKRH
-         IYm/IbPzAHikt7JiBiQjWsV8mx8/ryK9ossmsbR0xFIY33w2nAFm6fWfCLCaOgQGYaL1
-         ZIhJ2uaRIMKNzTSicqkRsUZUIRYYA9gDp9nNndV3e/wKq+uhzUQpijIS30NmGQVLwHFJ
-         oHSg==
-X-Gm-Message-State: AOJu0Ywk8lkLac2cHUj8rxfbFQLQBoAdkWg2HnZNN0yJIjzF2qkgtg0T
-	kLwadlKuAQaWjC2KNtnlB6XJ/oc1b74uT5a58f1LKDKFiWGpl/K1fhc=
-X-Gm-Gg: Acq92OFFln2GCAYendl94mFUbNTWcB93geaf9SPXHI0Hy4dy4eSWKv2EwBsWwHakQG/
-	4vOMGhknI6tRJjeRW9v9q+ztEs0qg9u8RqDsSEOq19iwyqeWEfL605JhwYX+nS6QbWDIKc/zaBs
-	erpkBMlAgKh57ZH9lgGEqP1k7LQYSTlC0RUsGgBfg2soqPACvp4jF922jzuPKkWfNoajtbkjT9k
-	rLeR/pvW3jjVPWQyl1eSevgrsPUv+n7zmIoDonMc7cAc+2gbN/VbbPNmKjVgGowXVX+nUPrLxVM
-	Dqxmz69DLkFfb032ba5CVqpjT6RYayXFof7rWb8sjtKcPzYlnlYGM4dpQLxQmtmieLYOPoU1prA
-	9kCGBxmJypJSNmEq5gjokeDged+dZzJO0ZXa+SFAwDtz1Zvpt++95KiSRzSq3uItf6zdnt2+Z5J
-	wO5aOgWMvIkcUmW6AU2erJD0bSb+GrQ9ip0vQ+ajQFjGY3aHfE
-X-Received: by 2002:a05:7301:687:b0:2f0:c8b5:3dc7 with SMTP id 5a478bee46e88-304fa5a9b27mr2420570eec.22.1780158487783;
-        Sat, 30 May 2026 09:28:07 -0700 (PDT)
-Received: from [127.0.0.1] ([20.171.126.211])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-304ed5f6426sm4197002eec.31.2026.05.30.09.28.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 30 May 2026 09:28:07 -0700 (PDT)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <cover.1780152380.git.pabeni@redhat.com>
-References: <cover.1780152380.git.pabeni@redhat.com>
-Subject: Re: [PATCH v11 mptcp-next 0/2] mptcp: address stall under memory
- pressure
-Message-ID: <ee93cd75-a62d-b9bc-2faa-acdab3f019bd@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Sat, 30 May 2026 16:28:06 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SMwJv2Jm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C7D11F00893;
+	Sun, 31 May 2026 01:57:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780192655;
+	bh=oAv++cIQ5XUEIvnqK5e3i6m9q5f2uKWfJZRO1yMrWmU=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=SMwJv2Jml0RPNcF9VjK7/FUk0RnG+HLA9SXMSRKwk6LwzCDMkno+nzjw8j2Syg8SZ
+	 8RkM8fwPnjyyXTElvgznhv+bA0il6EecEZ6gWb283BHHg15axYvMFblxkwMsV1/aKm
+	 iuZjUue0hNoT3D5yAdnuwNnzTsKQGkgL6olGqmQHSjLO4FO9OB14Zf0/pTtwWAbq2l
+	 LUXwnKFZjyw+yhrGaLC4Gq0SKD3MuGu2jOO0+DRzrCAHdXS1k+oc/tcy2LP6ck3+U/
+	 jj6PmxYubgrE96JhiY9MCEW+TS1gG8ZuAFysNbFdgJ6Fap8titvCfGO6aEdXXTRvB5
+	 cY0TAmzOI+hVQ==
+Message-ID: <08c1a9151d66447db2805ef0248cbface496e383.camel@kernel.org>
+Subject: Re: [RFC mptcp-next v22 18/20] selftests: tls: set timeout for
+ multi_chunk_sendfile
+From: Geliang Tang <geliang@kernel.org>
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>, Gang Yan <yangang@kylinos.cn>
+Date: Sun, 31 May 2026 09:57:30 +0800
+In-Reply-To: <dccefbdd5d01b06263dca52a4197a575181803e6.camel@kernel.org>
+References: <cover.1780052851.git.tanggeliang@kylinos.cn>
+		 <1f8df4b64bc23644c48b25a8a3fc0a4ed8611cb9.1780052851.git.tanggeliang@kylinos.cn>
+		 <abaf1bd3-58fa-4161-a1c0-18bebf4608ae@redhat.com>
+	 <dccefbdd5d01b06263dca52a4197a575181803e6.camel@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.56.2-9 
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 
 Hi Paolo,
 
-Thank you for your modifications, that's great!
+On Sat, 2026-05-30 at 12:25 +0800, Geliang Tang wrote:
+> Hi Paolo,
+> 
+> On Fri, 2026-05-29 at 17:00 +0200, Paolo Abeni wrote:
+> > On 5/29/26 1:14 PM, Geliang Tang wrote:
+> > > From: Geliang Tang <tanggeliang@kylinos.cn>
+> > > 
+> > > The multi_chunk_sendfile test can time out with the default 30-
+> > > second
+> > > limit when run on certain configurations (e.g., MPTCP). Add a
+> > > 240-
+> > > second
+> > > timeout using TEST_F_TIMEOUT to prevent failure:
+> > > 
+> > >  # multi_chunk_sendfile: Test terminated by timeout 30
+> > >  #          FAIL  tls.13_chacha_mptcp.multi_chunk_sendfile
+> > >  not ok 204 tls.13_chacha_mptcp.multi_chunk_sendfile
+> > > 
+> > > Suggested-by: Paolo Abeni <pabeni@redhat.com>
+> > > Co-developed-by: Gang Yan <yangang@kylinos.cn>
+> > > Signed-off-by: Gang Yan <yangang@kylinos.cn>
+> > > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> > > ---
+> > >  tools/testing/selftests/net/tls.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > 
+> > > diff --git a/tools/testing/selftests/net/tls.c
+> > > b/tools/testing/selftests/net/tls.c
+> > > index 4ae7505846f9..6f51da27ef1e 100644
+> > > --- a/tools/testing/selftests/net/tls.c
+> > > +++ b/tools/testing/selftests/net/tls.c
+> > > @@ -536,7 +536,7 @@ static void chunked_sendfile(struct
+> > > __test_metadata *_metadata,
+> > >  	close(fd);
+> > >  }
+> > >  
+> > > -TEST_F(tls, multi_chunk_sendfile)
+> > > +TEST_F_TIMEOUT(tls, multi_chunk_sendfile, 240)
+> > >  {
+> > >  	chunked_sendfile(_metadata, self, 4096, 4096);
+> > >  	chunked_sendfile(_metadata, self, 4096, 0);
+> > 
+> > Is this still required? in my tests since v8 of the stall patch I
+> > could
+> > not observe any long timeout anymore.
+> 
+> Thank you for the reminder. I will double-check.
 
-Our CI did some validations and here is its report:
+I ran MPTCP TLS tests on the latest v11 of 'mptcp: address stall under
+memory pressure', and still infrequently encountered this timeout issue
+in debug mode, so we still need this patch.
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/266874=
-69839
+Thanks,
+-Geliang
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/89eb2ec6592a
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1103334
-
-
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+> 
+> -Geliang
+> 
+> > 
+> > /P
