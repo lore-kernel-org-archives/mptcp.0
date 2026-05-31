@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 617A2332635
-	for <mptcp@lists.linux.dev>; Sun, 31 May 2026 06:14:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 957A42DC357
+	for <mptcp@lists.linux.dev>; Sun, 31 May 2026 06:31:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780208083; cv=none; b=j8ju2xi8xlYFcz1Wgxh1vxXJYlr1jUe7htrQULKaPae9I6lJUSqueEDBM40+PQ5ccbOrSpj5Tkabqd1vlNYwb9r+KkDsh6Jelw1wXN/LYT7qoAyKRySo8gJm5pkt7928Uiu+2LZn6UGGdEi4B6Jc6w3pkcwCbcPfIg63HR8m7/k=
+	t=1780209096; cv=none; b=gF9OQ7020mpkcX/dc7TmzdowKlRMlLRL1XEm3q8MEHj6pwPyoEOKhGv2eKoCotYECLJu/AK9MTHowXaTEoZCrjume066zQ9c99IPIfSRVcpTVXlTPpMuom4OEZtEE/NMXS95s2KlGkwFNnZuFYLc5chd2fUktaPYKr1SCADMcRc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780208083; c=relaxed/simple;
-	bh=FyYwgi6PpYaR3nNb3Ttb3ZDx8brQx1K/+RwcoPbUWKA=;
+	s=arc-20240116; t=1780209096; c=relaxed/simple;
+	bh=ScOr5sn0/cJVaCmptMxDwG1Rv8d/ugyusduvnWCG/Jg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IFVK2tWDoTbMznaoNEGRS4h9706fnPyD+WrTWZv53fvCXbCXL3/PYgZnoVkpYxu+mvO8cqC9hmgKm+DOiaIMuT3l7Q3i+3BiqPrizIyb4Nn4auu01EWOQvMm06JYFiQJQIK4v6DX8se6sJeeN0VgGwPQDQEJNbjk+ePXXgN6FXw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JrJIu3pT; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=T32hhWPY08Gqt0yBQcuvMYkPod2SDB7WLMXG4uMhJ+V9PPKk4f8vqjax7haCoXWHxvJvwlllEBr3g4TvJf0Ocn5rFfdARmmkcGGeK5piBF3odjO1/oW8+MjajrXNk/72afQrDZoFlLQYQL/YkSiH1AdnvBwlm4LDBz2Lo6+qVZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BhISodd+; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JrJIu3pT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFBD61F00893;
-	Sun, 31 May 2026 06:14:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BhISodd+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C26D21F00893;
+	Sun, 31 May 2026 06:31:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780208082;
-	bh=amRauYozMOa+SrSMuhsDqk8P584s6TAv+ezbdMtr/qY=;
+	s=k20260515; t=1780209095;
+	bh=0Yjo0ig8akcRgkEI3dXH3W8yU6iGYt4wMlSAz+FGYTM=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=JrJIu3pTt049UUmdWFaTJ/KiBOI4GuQGjUGyrMTHSy7J/75aw+e4YH9dT8qZiGU56
-	 ZRc2t8Y+io9afqWHlaUPmwUuMGO14qUX/iiVP3HsYhDqxXweVgS8J1hmIr4B5RBheo
-	 0nOWCwBcimh1vN2rlAp/nnD+ctVcR01VkZM9+UFma7ai+8b4UzZdVHetP6oiCkzOnT
-	 23soQzrxj6lN6FE6juJwnd1LIQ3EIZ0fW7oddSws2BRyMYiFgojkaYovTQL2+xeYoL
-	 hH31LfyHUx5UlGDssA3RcrY7+ykohmh6HzoE9Su2QFM8qlnngzWzZu8sSeD3f+nmoG
-	 HShXHtFxCInog==
-Message-ID: <43d9232a-77f9-4678-85e6-59c93417a334@kernel.org>
-Date: Sun, 31 May 2026 16:14:36 +1000
+	b=BhISodd+VBqw59c83EOkWGheQ/JRs1POMDKIdmFLMoeJ7EkuTYQ6EPnR28YAEWYYd
+	 wA1waRZrfCwVp5LWTRBSYoy8Ym5BiwnwNeX7k6zZC1wQQwsxeI/P875Rf0Xz9S3MQ2
+	 BK6L514qgqvlBYH4SEWiJZrONL1RWcaaczMPRub8gjxbVSt1KMh06BX0Iwhfv2J88f
+	 igDD5gmD41rDmJeJPzDsVCxZBm3KKg8IyeZw8RaDMJU1Q1uxV4kZ4tQb4M0k/aThV2
+	 BADgDB8XgA2WheH8u97maEV4p7ixhuW8ClI2jtO7B4O4S5/R6ytdwaPFE8QQmic95P
+	 Cho1K+JKDN+gQ==
+Message-ID: <58b41b8c-8367-4593-b104-8fe5b9f6d59c@kernel.org>
+Date: Sun, 31 May 2026 16:31:30 +1000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,18 +35,11 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH net v3] mptcp: fix stale skb->sk reference on subflow
- close
+Subject: Re: [PATCH mptcp-net v3] mptcp: check desc->count in read_sock
 Content-Language: fr
-To: Paolo Abeni <pabeni@redhat.com>,
- Kalpan Jani <kalpan.jani@mpiricsoftware.com>, mptcp <mptcp@lists.linux.dev>
-Cc: "shardul.b" <shardul.b@mpiricsoftware.com>, janak <janak@mpiric.us>,
- kalpanjani009 <kalpanjani009@gmail.com>
-References: <20260519092243.1242351-1-kalpan.jani@mpiricsoftware.com>
- <19e67fb067f.1c11e928628417.8560610860929896581@mpiricsoftware.com>
- <08d590f7-b825-47ce-bc68-c3ad2bd78bc2@redhat.com>
- <c3ae1aed-0ff6-4255-91c4-b0e18ea7dae7@kernel.org>
- <b95faee7-e32b-40ac-8010-eb57948a3fbb@redhat.com>
+To: Gang Yan <gang.yan@linux.dev>, MPTCP Linux <mptcp@lists.linux.dev>
+Cc: Gang Yan <yangang@kylinos.cn>, Geliang Tang <geliang@kernel.org>
+References: <20260529-read_sock_fix-v3-1-bb3fc3f44b22@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -92,52 +85,41 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <b95faee7-e32b-40ac-8010-eb57948a3fbb@redhat.com>
+In-Reply-To: <20260529-read_sock_fix-v3-1-bb3fc3f44b22@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Paolo,
+Hi Gang,
 
-On 29/05/2026 20:38, Paolo Abeni wrote:
-> On 5/27/26 1:31 PM, Matthieu Baerts wrote:
->> Hi Paolo,
->>
->> Thank you for your review!
->>
->> On 27/05/2026 19:40, Paolo Abeni wrote:
->>> On 5/27/26 7:49 AM, Kalpan Jani wrote:
->>>> Gentle ping on this patch sent on 19 May 2026 — I haven't seen any review feedback yet. If anyone has had a chance to look, I'd appreciate comments; otherwise I'm happy to rebase or resend if it slipped through.
->>>
->>> Note that maintainers are under an ever increasing influx of AI
->>> generated contents that make processing incoming patches more
->>> challenging every day.
->>
->> +1
->>
->>> FTR this revision LGTM.
->>
->> Just to be sure, does it mean that Sashiko was wrong?
->>
->>  https://sashiko.dev/#/patchset/20260519092243.1242351-1-kalpan.jani%40mpiricsoftware.com
+On 29/05/2026 19:05, Gang Yan wrote:
+> From: Gang Yan <yangang@kylinos.cn>
 > 
-> AFAICS, yes: the msk socket is set to TCP_CLOSE status before calling
-> mptcp_backlog_purge(): __mptcp_add_backlog() can't add anything to the
-> backlog.
-
-Thank you for having checked!
-
-The code then looks good, but it seems the commit message is no longer
-correct with the last version (and a Fixes tag is still missing). I sent
-a dedicated message for that.
-
->> If yes, can I convert this "LGTM" as an Acked-by? :)
+> __tcp_read_sock() checks desc->count after each skb is consumed and
+> breaks the loop when it reaches 0. The MPTCP variant lacks this check.
 > 
-> There is already my Suggested-by: tag, I think the latter would be
-> redundant?!?
+> This is a functional bug, other subsystems also rely on this check:
+> TLS strparser sets desc->count to 0 once a full TLS record is assembled
+> and depends on this break to stop reading.
+> 
+> Add the same desc->count check to __mptcp_read_sock(), mirroring
+> __tcp_read_sock().
+Thank you for the v3, that's clearer!
 
-Personally, I think it is clearer with an extra Acked-by, just to say
-that what you had in mind (the suggestion) is what is actually done in
-the patch. But if you prefer without, fine by me :)
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+
+Now in our tree:
+
+New patches for t/upstream-net and t/upstream:
+- 712f17627662: mptcp: check desc->count in read_sock
+- Results: 8baa4a3c8611..62fe948e8800 (export-net)
+- Results: cfc728a98c10..99bd35126f64 (export)
+
+Tests are now in progress:
+
+- export-net:
+https://github.com/multipath-tcp/mptcp_net-next/commit/27a7d32aeb103a5c763966a494b141136c31cea0/checks
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/b5e39d0f9ca9baae6da2403900a1f57769b6c160/checks
 
 Cheers,
 Matt
