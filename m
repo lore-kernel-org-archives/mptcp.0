@@ -1,130 +1,190 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B8FE335BA;
-	Sun, 31 May 2026 13:04:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E46B4298CAB
+	for <mptcp@lists.linux.dev>; Sun, 31 May 2026 14:05:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780232678; cv=none; b=hIa8H+Ae/Imx/SdbzM/+p3tSoRGILdOAUVq76/4vjH0CR7KcGR8hHhDeIdeIooB4bzu3Wsx10vwiosU5JOxSR2nNPpKKztvX3pjBqfNAmlanlEauhRgcGw8/IHA+7JdL9E273nWOBYA31z5mJ0zD1Bj+Og8WAlTLfNGFCtB2AUM=
+	t=1780236340; cv=none; b=SGjcZPPGzuE86Ezj5NVoj6t14M5OMZpaYtGG9SbwLeiBiFT6T5uTJB1az+Y/w8yy0fwt0aQ/jUJRsPwxMX7ZVHLlqXKIPrn3rk/YTlpoBzgEcDAuvn+bRa/uB7x4zFLJ3t5FCLexOUTt50hpzYdipTu1Xq4fKAlv7tQnjegIAs8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780232678; c=relaxed/simple;
-	bh=KXYiQ/EWH/syonYMw6B3JK/DzVa3oSMhCPGIkAqHpc4=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=kjwzCAvdv0LYGyFZo4cz6chjNbJfBH371jy2zZievjFQzkkpjyteKP0IW9BYpfSM2lkzEnla/QeizlaR+Sfg/8Mt9PSySDcZlN4BdW09IEHi5xDxyWAQZMNaMHD0OdnhAEuDpfexr/jypCm9Y7dJw/jz914+CUnWL0D+t+H6/kI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YS7cep8w; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1780236340; c=relaxed/simple;
+	bh=IOLIFZmEP3IECrC9peB0l1WsjtP4Y6z0haGq8mSpVeQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HiXl+Ox1A/Esvgkt0stKcNcTVyCTizeJRBLTTsjoEXee2DCdrdwt46m3pKfqmk14QRc6UBr+1cjB8rwNqf5k5+gAFCv7zn73pCrk33tC+KeiuDBPdvDQLl4UEjq9kXD6PLI48OBvnP8jHGjKeDaIsgNcHy0HW26eQf1WOHgKt9w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=q2aBrQl4; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YS7cep8w"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1780232676; x=1811768676;
-  h=date:from:to:cc:subject:message-id;
-  bh=KXYiQ/EWH/syonYMw6B3JK/DzVa3oSMhCPGIkAqHpc4=;
-  b=YS7cep8wxEYPYch0ilPpVmpZ7CKXEXiWeLmvVcsvXm09jXNSjrWZrlXM
-   NvnVzCY/2l/pHnLoZ9meZYffK9xe9gyccFDhn/1HqBaP11C2PtL08BA7K
-   +SfC4lx6rA7HDNz9xxywvB3UkVLjXzFJxrtzyDSfMhoxEk2a4CpIlqdvN
-   I2/YlUriT4EU98iDFvx2IbX0nyECg9CjH3Dxq0ZXjAzXLNK2EtuE+Ip09
-   qlrS0pnsshBbs0PYYbn5/tQ4rc4X0DAK3g2zL5cnZF9Nz5Nw6181AStC7
-   dUk40MBulDOhBDM2pEVkw6ehmkpdQrt9h300Wmgn6E2gq5aBBIDUifCRW
-   w==;
-X-CSE-ConnectionGUID: wH7fWcQHR/aTmUB6NEXmMg==
-X-CSE-MsgGUID: H4vNSgd9ReWFV05QLdxlSg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11803"; a="81198258"
-X-IronPort-AV: E=Sophos;i="6.24,179,1774335600"; 
-   d="scan'208";a="81198258"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2026 06:04:36 -0700
-X-CSE-ConnectionGUID: 3bXJbdQRR5SH7cdyut+nyw==
-X-CSE-MsgGUID: z8Ux4JpPQOyJ7b05jkvyxQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,179,1774335600"; 
-   d="scan'208";a="239134440"
-Received: from lkp-server01.sh.intel.com (HELO f0d55cb201f0) ([10.239.97.150])
-  by fmviesa010.fm.intel.com with ESMTP; 31 May 2026 06:04:33 -0700
-Received: from kbuild by f0d55cb201f0 with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1wTfqA-000000009R8-1XqS;
-	Sun, 31 May 2026 13:04:30 +0000
-Date: Sun, 31 May 2026 21:04:27 +0800
-From: kernel test robot <lkp@intel.com>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: oe-kbuild-all@lists.linux.dev, mptcp@lists.linux.dev,
- matthieu.baerts@tessares.net,
- "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Subject: [mptcp:export-net 15/22]
- include/linux/compiler_types.h:699:45: error: call to
- '__compiletime_assert_784' declared with attribute error: BUILD_BUG_ON
- failed: sizeof_field(struct mptcp_ext, flags) != sizeof(u16)
-Message-ID: <202605312026.Srgsz7Tp-lkp@intel.com>
-User-Agent: s-nail v14.9.25
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="q2aBrQl4"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 64V4vbDh643123;
+	Sun, 31 May 2026 14:04:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=MwHa5Q
+	FcL7e+Jz9qqe6jS9Bm3L3BaWyTnC84DJoxaA0=; b=q2aBrQl4inBnbzCqSqjLab
+	mjj+RWSzO3fbELVdYSZPv+4X0JzsCuCF1zbTCKtdt+EhIMjIgPsZxTrhBaMC6OyR
+	+caZRR50xASV7W6mKeaCEKWzYUvN/FV7jCtVquwECOekX/xNx/85m5stOq8rpkYA
+	TQDw2hpOqdX8V/wGrkaN574Iux1LUrQAzAUz0IMGe6Vx/1pAJJRjsJcZPxau7QJE
+	z8jq09Krdc7iwQC035wpGMENV7XBvLmq+i6pOWp/n+VheMU4fwfEqieH5DjPgud0
+	XOQYBNDqzi3IA8ja5HbNjXdaNd78iPXO5bh6alXwU5AnlSsF7MqHWx9CFIXEfWuQ
+	==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4efqm4mqy5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 31 May 2026 14:04:19 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 64VDs5gC000442;
+	Sun, 31 May 2026 14:04:18 GMT
+Received: from smtprelay03.wdc07v.mail.ibm.com ([172.16.1.70])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4egakvj258-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 31 May 2026 14:04:18 +0000 (GMT)
+Received: from smtpav01.wdc07v.mail.ibm.com (smtpav01.wdc07v.mail.ibm.com [10.39.53.228])
+	by smtprelay03.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 64VE3mdC22741648
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sun, 31 May 2026 14:03:48 GMT
+Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 19C7E5804B;
+	Sun, 31 May 2026 14:04:18 +0000 (GMT)
+Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3A63458065;
+	Sun, 31 May 2026 14:04:09 +0000 (GMT)
+Received: from [9.43.126.202] (unknown [9.43.126.202])
+	by smtpav01.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Sun, 31 May 2026 14:04:08 +0000 (GMT)
+Message-ID: <d23bcec0-70e6-484b-8c41-0174d1b5d09d@linux.ibm.com>
+Date: Sun, 31 May 2026 19:34:07 +0530
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 11/11] selftests: mptcp: nvme: add iopolicy tests
+To: Geliang Tang <geliang@kernel.org>, Keith Busch <kbusch@kernel.org>,
+        Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>, Chaitanya Kulkarni <kch@nvidia.com>,
+        Matthieu Baerts <matttbe@kernel.org>,
+        Mat Martineau <martineau@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+        Shuah Khan <shuah@kernel.org>
+Cc: Geliang Tang <tanggeliang@kylinos.cn>, linux-nvme@lists.infradead.org,
+        netdev@vger.kernel.org, mptcp@lists.linux.dev,
+        linux-kselftest@vger.kernel.org, Hannes Reinecke <hare@suse.de>,
+        John Meneghini <jmeneghi@redhat.com>,
+        Randy Jennings
+ <randyj@purestorage.com>,
+        zhenwei pi <zhenwei.pi@linux.dev>, Hui Zhu <zhuhui@kylinos.cn>,
+        Gang Yan <yangang@kylinos.cn>
+References: <cover.1779934709.git.tanggeliang@kylinos.cn>
+ <51f054a6a573b9a771ed927eef34fa5ca083d009.1779934709.git.tanggeliang@kylinos.cn>
+Content-Language: en-US
+From: Nilay Shroff <nilay@linux.ibm.com>
+In-Reply-To: <51f054a6a573b9a771ed927eef34fa5ca083d009.1779934709.git.tanggeliang@kylinos.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Proofpoint-GUID: AR6tebVWWxaa8KQA2Bj_alLKaIjn9ftJ
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTMxMDE0OSBTYWx0ZWRfX9eY6H/WU7evb
+ P6dYLt0y7NWx2mmmxuZwERJVcmkW5uCVvNpqHn/K2i/1un4rnlivdU+KfQzvIvsgAsGDJJ6+T//
+ D0kgUJQEx7xTDqmZ9YQdgExxzoOR8L0a4rXIHNIzM5oZixme1m28DoIJnfIKYHY/f6Kamz+PbaF
+ +JNjZEMYW/XLw4wnJ4+JhlA/2Zh/cE86tdv+LzcmLoFXXOCSNPCi0ot9ZUqt6wf3VUSEjB1EE1L
+ MxLxDKA02VmGdg8ZPNufp1Us6IrgroS63P7wGzb+PKXXaceL+XauBs5cIc7TUSafocG4AOtXP4W
+ ygjSLcvsM6/ZiIesPQRV3V0WVohrRGQsU0zfPmncv2gB6+PY5u55anouy2cFOAkyzZq5f7OmZZI
+ +Kbwn4xfKUkEdSWwng7Eqv75DmazMqZSHKeF4DzBLwxHeBWwNJWKMAUuB/lL6ZPHJUgwAHG0g+k
+ ci56E6gHCkGqGcxi1xg==
+X-Proofpoint-ORIG-GUID: TpB7akq0zrDzyrYNaSIZWiDiL28sXsxH
+X-Authority-Analysis: v=2.4 cv=Vf3H+lp9 c=1 sm=1 tr=0 ts=6a1c3fe4 cx=c_pps
+ a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
+ a=IkcTkHD0fZMA:10 a=NGcC8JguVDcA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=U7nrCbtTmkRpXpFmAIza:22 a=c-RoEBXtFGQml9to_JoA:9
+ a=QEXdDO2ut3YA:10
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
+ definitions=2026-05-31_04,2026-05-28_03,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 suspectscore=0 adultscore=0 bulkscore=0 impostorscore=0
+ phishscore=0 lowpriorityscore=0 malwarescore=0 clxscore=1011 spamscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2605210000 definitions=main-2605310149
 
-tree:   https://github.com/multipath-tcp/mptcp_net-next.git export-net
-head:   27a7d32aeb103a5c763966a494b141136c31cea0
-commit: 206cf8c6e2bfce69eba0d463b3f6127d14f75abc [15/22] mptcp: fix uninit-value in mptcp_established_options
-config: arm-collie_defconfig (https://download.01.org/0day-ci/archive/20260531/202605312026.Srgsz7Tp-lkp@intel.com/config)
-compiler: arm-linux-gnueabi-gcc (GCC) 15.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260531/202605312026.Srgsz7Tp-lkp@intel.com/reproduce)
+On 5/28/26 8:40 AM, Geliang Tang wrote:
+> From: Geliang Tang<tanggeliang@kylinos.cn>
+> 
+> Add NVMe iopolicy testing to mptcp_nvme.sh, with the default set to
+> "numa". It can be set to "round-robin" or "queue-depth".
+> 
+> Test results with 4 NVMe multipath paths and round-robin iopolicy show
+> that TCP and MPTCP achieve similar bandwidth:
+> 
+>   # ./mptcp_nvme.sh tcp 4 round-robin
+>     READ: bw=455MiB/s (478MB/s), 455MiB/s-455MiB/s (478MB/s-478MB/s),
+> 		io=4665MiB (4891MB), run=10242-10242msec
+>    WRITE: bw=455MiB/s (477MB/s), 455MiB/s-455MiB/s (477MB/s-477MB/s),
+> 		io=4633MiB (4858MB), run=10184-10184msec
+> 
+>   # ./mptcp_nvme.sh mptcp 4 round-robin
+>     READ: bw=445MiB/s (466MB/s), 445MiB/s-445MiB/s (466MB/s-466MB/s),
+> 		io=4575MiB (4797MB), run=10287-10287msec
+>    WRITE: bw=445MiB/s (467MB/s), 445MiB/s-445MiB/s (467MB/s-467MB/s),
+> 		io=4572MiB (4794MB), run=10267-10267msec
+> 
+> A "loss" argument is added to simulate network packet loss. When loss=1,
+> each veth interface is configured with "delay 5ms loss 0.5%" using tc
+> qdisc. Under this scenario, TCP performance is reduced by multiples
+> compared to MPTCP:
+> 
+>   # ./mptcp_nvme.sh tcp 4 round-robin 1
+>     READ: bw=144MiB/s (151MB/s), 144MiB/s-144MiB/s (151MB/s-151MB/s),
+> 		io=1909MiB (2001MB), run=13231-13231msec
+>    WRITE: bw=100.0MiB/s (105MB/s), 100.0MiB/s-100.0MiB/s (105MB/s-105MB/s),
+> 		io=1397MiB (1465MB), run=13980-13980msec
+> 
+>   # ./mptcp_nvme.sh mptcp 4 round-robin 1
+>     READ: bw=428MiB/s (449MB/s), 428MiB/s-428MiB/s (449MB/s-449MB/s),
+> 		io=4524MiB (4743MB), run=10564-10564msec
+>    WRITE: bw=431MiB/s (452MB/s), 431MiB/s-431MiB/s (452MB/s-452MB/s),
+> 		io=4513MiB (4732MB), run=10481-10481msec
+> 
+> These results demonstrate that MPTCP has better resilience against
+> packet loss compared to TCP, as it can leverage multiple subflows to
+> mitigate network degradation.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202605312026.Srgsz7Tp-lkp@intel.com/
+There are a few observations I'd like to raise:
 
-All errors (new ones prefixed by >>):
+1. It is difficult to reason about the throughput results when NVMe native
+    multipath is enabled together with MPTCP. In this topology, four NVMe paths
+    are created and the round-robin I/O policy is configured. As a result, each
+    I/O first goes through the NVMe multipath scheduler, which selects a path,
+    and is then further subjected to the MPTCP scheduler, which selects a TCP
+    subflow. This means there are two independent schedulers influencing I/O
+    placement, making it difficult to attribute the observed throughput
+    improvements to either NVMe multipath or MPTCP.
 
-   In file included from <command-line>:
-   In function 'mptcp_established_options_dss',
-       inlined from 'mptcp_established_options' at net/mptcp/options.c:881:11:
->> include/linux/compiler_types.h:699:45: error: call to '__compiletime_assert_784' declared with attribute error: BUILD_BUG_ON failed: sizeof_field(struct mptcp_ext, flags) != sizeof(u16)
-     699 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-         |                                             ^
-   include/linux/compiler_types.h:680:25: note: in definition of macro '__compiletime_assert'
-     680 |                         prefix ## suffix();                             \
-         |                         ^~~~~~
-   include/linux/compiler_types.h:699:9: note: in expansion of macro '_compiletime_assert'
-     699 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-         |         ^~~~~~~~~~~~~~~~~~~
-   include/linux/build_bug.h:40:37: note: in expansion of macro 'compiletime_assert'
-      40 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
-         |                                     ^~~~~~~~~~~~~~~~~~
-   include/linux/build_bug.h:51:9: note: in expansion of macro 'BUILD_BUG_ON_MSG'
-      51 |         BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
-         |         ^~~~~~~~~~~~~~~~
-   net/mptcp/options.c:576:9: note: in expansion of macro 'BUILD_BUG_ON'
-     576 |         BUILD_BUG_ON(sizeof_field(struct mptcp_ext, flags) != sizeof(u16));
-         |         ^~~~~~~~~~~~
+    For throughput comparisons, it may be more meaningful to disable NVMe native
+    multipath (e.g., modprobe nvme_core multipath=n) when testing MPTCP. This would
+    ensure that all I/O is sent through a single NVMe/TCP path while allowing MPTCP
+    alone to distribute traffic across available subflows. Such a setup would
+    provide a clearer comparison between TCP and MPTCP.
 
+2. The current test uses only a 128 KiB I/O size. It would be useful to include
+    additional I/O sizes as well, such as 4 KiB, 8 KiB, and 32 KiB, since MPTCP and
+    NVMe multipath may behave differently under different workload characteristics.
 
-vim +/__compiletime_assert_784 +699 include/linux/compiler_types.h
+3. The fio runtime is only 10 seconds, which is relatively short for performance
+    evaluation. The results may be influenced by startup transients and may not
+    accurately reflect steady-state behavior. It would be preferable to run the tests
+    for a longer duration, for example 120 seconds, to obtain more stable measurements.
 
-eb5c2d4b45e3d2 Will Deacon 2020-07-21  685  
-eb5c2d4b45e3d2 Will Deacon 2020-07-21  686  #define _compiletime_assert(condition, msg, prefix, suffix) \
-eb5c2d4b45e3d2 Will Deacon 2020-07-21  687  	__compiletime_assert(condition, msg, prefix, suffix)
-eb5c2d4b45e3d2 Will Deacon 2020-07-21  688  
-eb5c2d4b45e3d2 Will Deacon 2020-07-21  689  /**
-eb5c2d4b45e3d2 Will Deacon 2020-07-21  690   * compiletime_assert - break build and emit msg if condition is false
-eb5c2d4b45e3d2 Will Deacon 2020-07-21  691   * @condition: a compile-time constant condition to check
-eb5c2d4b45e3d2 Will Deacon 2020-07-21  692   * @msg:       a message to emit if condition is false
-eb5c2d4b45e3d2 Will Deacon 2020-07-21  693   *
-eb5c2d4b45e3d2 Will Deacon 2020-07-21  694   * In tradition of POSIX assert, this macro will break the build if the
-eb5c2d4b45e3d2 Will Deacon 2020-07-21  695   * supplied condition is *false*, emitting the supplied error message if the
-eb5c2d4b45e3d2 Will Deacon 2020-07-21  696   * compiler has support to do so.
-eb5c2d4b45e3d2 Will Deacon 2020-07-21  697   */
-eb5c2d4b45e3d2 Will Deacon 2020-07-21  698  #define compiletime_assert(condition, msg) \
-eb5c2d4b45e3d2 Will Deacon 2020-07-21 @699  	_compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-eb5c2d4b45e3d2 Will Deacon 2020-07-21  700  
+4. The tests are run on the same host by setting up veth interfaces and running
+    host and target under different network namespaces. It'd be useful if you could
+    run this tests between real host and target systems.
 
-:::::: The code at line 699 was first introduced by commit
-:::::: eb5c2d4b45e3d2d5d052ea6b8f1463976b1020d5 compiler.h: Move compiletime_assert() macros into compiler_types.h
+Thanks,
+--Nilay
 
-:::::: TO: Will Deacon <will@kernel.org>
-:::::: CC: Will Deacon <will@kernel.org>
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
