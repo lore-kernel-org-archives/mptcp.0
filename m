@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1A85548EE
-	for <mptcp@lists.linux.dev>; Sun, 31 May 2026 06:39:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8863523EA97
+	for <mptcp@lists.linux.dev>; Sun, 31 May 2026 07:01:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780209600; cv=none; b=DBmOAxcs36FKZo0qut9n2iDxU0pDd3Saf+BtYIff9vhHVx5IkhlOTNTnI3WW5GR7NeG2oaKydP+s0Q4FOBxfbrXXUlp2k0RhHH9EZXM+4OljqhtoFK1wazgLvlZ0r3lgvcIsS73xxF+G7l2F0vK2wlGiniYgXAVri5Mn0cai/ug=
+	t=1780210912; cv=none; b=Gle26cWvtgVmlbrROSRQ8EGICo1djK/sD+4gYzlCs9jL0zBtddzLsJzdgV2NYYl58+Lu9Q0RIaWK1QBg0pcuJ86km0IGKepBRJ+RlBmxrD0OISv4MAuQatZ+wW/jll6sytTz9kPXTXL/DwwhPMtRcBd3PveZwZ6nfps1UmXdGFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780209600; c=relaxed/simple;
-	bh=6LGKeL/vyqBP6PIj9Gu4SZ5C5oEZsECaFqmJaYwO07M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KeAchN4pUomlhIVgfT38ucu8V5Hwr90xzWPJ48El3qQbmGO6byycHGKIJmaIA5IDXZbXHlGq0lhSVQq7tJOF9+IPl4eqtOmjnFjjCisCRyjP1q4RhjqCVHo1Hi+awkySJT402w3Uc0qjlr9g2uEAyVHWzskoCsNcaFLQGRaFc9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=keiFF9a6; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780210912; c=relaxed/simple;
+	bh=zqwRpmpFIzKWtNSZmsxGC3rQCs/Yvl5jIdsFNixJnGU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=NJs5Zvbt70Tslf7me8EnRgFQaSc48jclwuJcem8FU4x6s5iNsman0woDB5eZTPietNt1+FT73FIGHZwtx4nN/K4wuMhnrDKZsZsM7vvXDoLmCYotly5lpcZSB1eyD1ESm5xuOFS2CPDXUTJ0D4Plvp/IdN/3pqpNcuiFs6F1sN4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VrnskUQB; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="keiFF9a6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6AE71F00893;
-	Sun, 31 May 2026 06:39:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VrnskUQB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 133B71F00893;
+	Sun, 31 May 2026 07:01:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780209599;
-	bh=gV6pAlYxVSUeM3XAQkYsQULXb4G6GMw+cIbe1D1IZEU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=keiFF9a6GclN68hSfQE1LjS+gc37dtNGnpJaHkEysFOPH+SqUbmKHg6UlHkAwh5EZ
-	 UwfYet74CWR2M9yU6W0BjlEmCYICT/qCHCYN8uC1s7xNgmHF7cg8AE6eFynsXWevjE
-	 lWKRLW0lalp98IEAtbbp8piu74mlTE5KdGyXoLU5IGKdKY8SW63Si5QFOjrPAOaKWZ
-	 9+QRLRgy8lIDCsSbTZtcpBEIk8+24Exy5ERp7Zmq8pruD2UwY6bqLQNZk8ke+PSU1J
-	 LDO15uoTvimWpjM1Cg/Mu5PaQEQ32Sl4xzqz7hPhurZBUbS2J40dOYnut+YAi44NsX
-	 EzpeObo1UBl+g==
-Message-ID: <bca2ad2f-1f45-45e7-a8bd-7a08dd7100c2@kernel.org>
-Date: Sun, 31 May 2026 16:39:53 +1000
+	s=k20260515; t=1780210910;
+	bh=pdpSBJLTDpV7j61tSD6iXWfi2qqNKJ7dl6FOmfppNyM=;
+	h=Date:Subject:To:References:From:In-Reply-To;
+	b=VrnskUQBWN5izHNUUG3ZDWU6Pj9SSMFJh2cspLiMTfxOcp2WuXyLS/MoVLuE1RrXM
+	 YZIJ7bs4671MfOJKVEYrzcqv35oDWy6M9ZyGIYrW9qLJkXXxehBlRIJWkRGcLBspWe
+	 IBsfxTlpS6xT8lApI78foQDTt3sNgeSAHPHQFTJMW1DgJare4ZOaOAZOp9fCjiRPSp
+	 0QANAvquPSjOZLvCTS1h1uGHXFlwNykvWkKYDAbRmZ8bDc8pk3gqTEeveNSD4nTtYt
+	 AgbY0E86ZEG5JFKvgLEsn2juqrWouUUfpdhOa+Jok/XWzceLxVj3UQODFBs94KF98l
+	 kuo3YdZcJpRcA==
+Message-ID: <4201f38f-b5bf-4e8d-a855-8143fbb55f73@kernel.org>
+Date: Sun, 31 May 2026 17:01:47 +1000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,19 +35,11 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH net v2] mptcp: pm: drop pending ADD_ADDR when removing id
- 0 endpoint
+Subject: Re: [PATCH mptcp-net] mptcp: fix uninit-value in
+ mptcp_established_options
 Content-Language: fr
-To: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
-Cc: mptcp <mptcp@lists.linux.dev>, martineau <martineau@kernel.org>,
- pabeni <pabeni@redhat.com>, "shardul.b" <shardul.b@mpiricsoftware.com>,
- janak <janak@mpiric.us>, kalpanjani009 <kalpanjani009@gmail.com>,
- shardulsb08 <shardulsb08@gmail.com>,
- syzbot+55c2a5c871441261ed14
- <syzbot+55c2a5c871441261ed14@syzkaller.appspotmail.com>
-References: <20260529064355.922763-1-kalpan.jani@mpiricsoftware.com>
- <0f13954f-3bfa-4630-af9f-6f1f4b138a13@kernel.org>
- <19e72995d6d.89137929840232.7611532549298755137@mpiricsoftware.com>
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+References: <d776e14d19a313dd697e3715121f4e42e915287d.1780045909.git.pabeni@redhat.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -93,57 +85,40 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <19e72995d6d.89137929840232.7611532549298755137@mpiricsoftware.com>
+In-Reply-To: <d776e14d19a313dd697e3715121f4e42e915287d.1780045909.git.pabeni@redhat.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Kalpan,
+Hi Paolo,
 
-On 29/05/2026 17:18, Kalpan Jani wrote:
-> Hi Matt,
-> 
->> Did it work with packetdrill?
-> 
-> I worked on a packetdrill test based on add_addr4_server.pkt with the
-> MP_JOIN extra subflow and the delete/re-add sequence. The environment
-> is working (add_addr4_server.pkt passes cleanly), but I was not able
-> to reliably trigger the WARN through packetdrill within the test
-> timeframe.
-> 
-> The difficulty is that the id 0 ADD_ADDR is only sent when the
-> endpoint is re-added after the connection is established AND after
-> mptcp_nl_remove_id_zero_address() has run to restore the
-> id_avail_bitmap bit via __mark_subflow_endp_available(). Getting
-> packetdrill to control this timing precisely — while also keeping
-> conn_list non-empty so mptcp_nl_remove_id_zero_address() actually
-> processes the msk — proved tricky.
+On 29/05/2026 19:13, Paolo Abeni wrote:
+> syzbot reported the following uninit splat:
 
-I understand it might be tricky, but do you mind sharing what you have
-so far. Maybe someone else can help you to reproduce the issue. Also, it
-might be enough to have a test that can reproduce the WARN not 100% of
-the time, as long as it is not 0. I will wait for this test before
-applying the v3.
+(...)
 
-At least having something exercising new paths: here, having the new
-call to mptcp_remove_anno_list_by_saddr() returning true.
+> The output path currently omit initializing the mptcp extension `use_map`
+> flag in a few corner cases.
+> Address the issue always zeroing all the extensions flags before
+> eventually initializing the individual bits. To that extent, introduce
+> and use a struct_group to avoid multiple bitwise operations.
 
-> syzbot is reproducing the bug reliably on current upstream (3 crashes
-> between 2026/05/19 and 2026/05/22 on kernels including cca95436be15).
-> The syzbot reproducer is the most reliable pre-fix evidence available.
+Thank you for the fix!
 
-Because syzbot didn't manage to generate a reproducer, we cannot really
-rely on syzbot to say that the bug is fixed. 3 crashes out of how many
-thousands/millions attempts? :)
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-> I will continue working on the packetdrill test and send it as a
-> follow-up once I have a clean before/after result. For v3 I have
-> addressed your comment shortening request.
+Now in our tree:
 
-Thanks!
+New patches for t/upstream-net and t/upstream:
+- e1e4ec894331: mptcp: fix uninit-value in mptcp_established_options
+- Results: b744d5cbf545..8baa4a3c8611 (export-net)
+- Results: 294e9da8a098..cfc728a98c10 (export)
 
-Do not forget to wait ~1 day between submissions, otherwise it is even
-harder for reviewers and various tools to follow the modifications and
-discussions.
+Tests are now in progress:
+
+- export-net:
+https://github.com/multipath-tcp/mptcp_net-next/commit/857a3caa698c8e16b1dbc6d61976bbf17a8d864c/checks
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/05677a4add692ad12b601c1e0b9e5f9299c2a1f1/checks
 
 Cheers,
 Matt
