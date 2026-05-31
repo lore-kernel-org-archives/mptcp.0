@@ -1,200 +1,142 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51AD0343D8F
-	for <mptcp@lists.linux.dev>; Sun, 31 May 2026 14:51:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97D9D38F227
+	for <mptcp@lists.linux.dev>; Sun, 31 May 2026 15:00:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780239104; cv=none; b=qYNA9bYhZQ0pVCp9IFeGkX4eQK/7eh3jbGdkNfFdOgYDYL1lOQGCPSw9LL/y83okAn+SF6klUK+D52/Iz1Q9i8iVB42U2lESN3gq+O1/7g0uy9nwAy0uioy/M49CJg1l2RnLyyy40WeQ0mhee9WyIDRynr7ULJh4g1MAB7yZELs=
+	t=1780239603; cv=none; b=bcZlX5x1JvHG6i0QVHHjKfLnaqTe+28eniSjITUCoCGdfT9n3nLz/6ibEgf03pxefYnCz+viSTRlfgfRy2gWJcTge/JOwWUZEFmOnWV0o6SOuPTU4/XfKXsb3LRrjOivd8sP/PBcv1c/J40kuE/RjkmSXb2GoCrG+CFtyF+eTKI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780239104; c=relaxed/simple;
-	bh=nADtvSbxwkyG7uIPKZjvw90LakZ8dSHmT0hvP+smpEo=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=SjyQmTFB0do6Hc7uWxX1A8WX40AE8bKafITuf/jU4335sXnk/mAjiF66ABNmKixDyz460Qx4hBwu3uyFEP5gGkgKgxyulejiKl5OhrFWYP6UWvakq9U2MIbnu95dOclA4jsuqMwqMP0joug+0fe5w14Ay1VNTyoOguW5xQQRZHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=LuJVW/9x; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1780239603; c=relaxed/simple;
+	bh=/ZKkFSF089cFO4oAxpQ0rE+jSnBF8L5elTv7E2ExT4k=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FJlLvV+6QXDuL0r7guN4VasFelobvRGH2K73ZvbXzpgcCdJsuB5y5mfzXMQPPrNVQsAtx/zShSYUsHtH8Ut3nOnQjsOr+hpjj+N++5U2rGw9ZeMlRRBARLGox0rmSNGPRjRwmf0Thcu7tDUJjROvaroQkxC+bWKMC+J1ndyP+7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NFtrOLmx; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="LuJVW/9x"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 64UDF20D3018752;
-	Sun, 31 May 2026 14:51:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=fq46AE
-	+7jPfzsRmfmu+1wmuHUKMsVipvb8JZsj0osfg=; b=LuJVW/9x9IrnXfmogmPk8S
-	/AHS90wSPXxY/aNwduo3ui+Uh4dYK8B5exlXi+2ziPww5H0ahiJDvzzeyCNvVmtx
-	y5GmgWiZNRqRGz1X8+DDi0gO+q3KbYNRULyiLORemiIyv1dtps0ky5lY8eHBrqUw
-	po4OynEOa22+B5YKNyijR1a4MC6UawspumrSWYCel2ffw1uEfx8fWTSDl54QH6KC
-	IVQ++z/xl0qcO/ibTaN0y7cq10JlTb+XfeIbT1KDwEBHjwboU72A96S2cXGzLYRk
-	SvOBFc2Ssyr/WDrEb5Pfd4aMOYgd1aBMh4FjWNxAfviCi2/NIeWC58RS4/9Wfzpw
-	==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4efqm4mv31-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 31 May 2026 14:51:05 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 64VEda0L013909;
-	Sun, 31 May 2026 14:51:03 GMT
-Received: from smtprelay06.dal12v.mail.ibm.com ([172.16.1.8])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4egakvj6jt-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 31 May 2026 14:51:03 +0000 (GMT)
-Received: from smtpav01.wdc07v.mail.ibm.com (smtpav01.wdc07v.mail.ibm.com [10.39.53.228])
-	by smtprelay06.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 64VEp2ac18416368
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sun, 31 May 2026 14:51:03 GMT
-Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C308F58055;
-	Sun, 31 May 2026 14:51:02 +0000 (GMT)
-Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 78EE75804B;
-	Sun, 31 May 2026 14:50:53 +0000 (GMT)
-Received: from [9.43.126.202] (unknown [9.43.126.202])
-	by smtpav01.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Sun, 31 May 2026 14:50:53 +0000 (GMT)
-Message-ID: <872e80e9-ab11-461c-8b4b-630a8bd03bbc@linux.ibm.com>
-Date: Sun, 31 May 2026 20:20:51 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NFtrOLmx"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-490a762db7aso3376865e9.0
+        for <mptcp@lists.linux.dev>; Sun, 31 May 2026 08:00:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1780239599; x=1780844399; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/j3XZr4R//aN4oTHtVRnxWvBTtkJYT2w70QKJOgWgOc=;
+        b=NFtrOLmxF3vmnm581NgkmAwZVrizuvDcNn8Wr9i/H0UEF5DaKSCjz/9LP83+zRuaaX
+         8hMtooON8yAqIUyEbtgWedpVvMU1D5GGCtXl1pQ6uAOLOunSUp4i2vUPJNWwmq+5J0aR
+         H6FE3IIJGomtJBW93hXDNk1O7A/OSvaBiP6Cumn9N9WMitXeqNW52QB/jciERVochgik
+         c5nFBLyPZSLcoKwc1PfgOlLGH4xnk+XAjt8zcDLXPV978FwuE5XGwdSJc6NI98Syntsr
+         Gvo6qc3Gz5f5ANbDqnO6Gd7HEF0+Qrpqq1pPaYFbLlQa+w53E73unCfjPrtmCjVJ2wiV
+         cxbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780239599; x=1780844399;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/j3XZr4R//aN4oTHtVRnxWvBTtkJYT2w70QKJOgWgOc=;
+        b=A73xLWBmUrFB37+uYx99RS2H8RYLFb0wg5Erg72/4GytKwnKDUlfizz51TZ9aJXk44
+         uoClAXwQ44DcKTesODV68jahHfINyo+lsWvu8zBdnJW59Y7FP5PcRauEC5EDHFNRuV9K
+         1iL0NeZvQACPGfjqzasC1k4FSe9NeKbh2K45ZFDpMU4nS9F830/Z6NNcBcdWUExeu4Lq
+         6Zqrs4EQ5L6gU2/6fpA+8Etez6OH/tNv/fz/KC2yVGg15fJ4Jqjb7gRVhEV7tF9/Ndis
+         Ev06B++mVGgqH5VVY36ca3V7Tp9GflBHyzcV0TMoVmh5q7ZwA+1Eryw/zqtloG+HCOOE
+         Zmjw==
+X-Gm-Message-State: AOJu0Yzbua3Gqri2wwbotSvE4tn8uoUW2ns/CJHftpvvZ6ccyi5AYCpE
+	teRrh/Qd/vnOtesWG8240+K7xUNc6qg8TLjkxF+u2s6Z8VH6RvHGZrsDGpgu6w==
+X-Gm-Gg: Acq92OH9/n/y/2cavRsrQrmzx1Ur63jUPrUPGh8FAqyIFZqvUDZoztBEDxAv6TaYlyw
+	XiAiEcVQvc/vdWucU4wujzdTOyWTiapJc0VSQgMAW3h0dNhH7v0CVJ/KXRpKlA5oU8NEu3wdlxL
+	RaFTkWsjm5BjQ/06dH3Sn/Mm8yC24BjmBh6LL1f9E2iPeUKw/gwcWX+TAI9ZuHCwQvzRaOLiocV
+	IRc7ESTfuAqkPupj7EuZBaFM4ueW9swiaore+vMKSYUEnwEHP5G84DLnY6U9VKQ0mlPFUwtjL0I
+	h7rETj6THqpPKyGsb3J8xSq9SYBxcKWTQAxAGGDJFxVKGlHWUM3mGGa1FLEV6keYgI4PS7X0VdX
+	WQDhbb/UOlWyaB+FkUZAsByajtrtC+7IsppFQ/bHY8atqUkYlNK+JVcyPTRqM1htsiCT3Kvh3gh
+	S23K34WRJG52eSpBC14lmS1TxlIv/RDH2CqV5p4nq8IaP8T/vZ+0NRW1gYh8hWnKv6b3yAycQ1p
+	W7b6FeLVavghaNEoDUJ+g==
+X-Received: by 2002:a05:600c:3b14:b0:490:4b89:5361 with SMTP id 5b1f17b1804b1-490a2904d7fmr135745115e9.7.1780239598551;
+        Sun, 31 May 2026 07:59:58 -0700 (PDT)
+Received: from dohko.chello.ie (188-141-5-72.dynamic.upc.ie. [188.141.5.72])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-45ef3587072sm19133545f8f.34.2026.05.31.07.59.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 31 May 2026 07:59:57 -0700 (PDT)
+From: David Carlier <devnexen@gmail.com>
+To: mptcp@lists.linux.dev
+Cc: matttbe@kernel.org,
+	martineau@kernel.org,
+	geliang@kernel.org,
+	pabeni@redhat.com,
+	David Carlier <devnexen@gmail.com>
+Subject: [PATCH mptcp-next v11 0/4] mptcp: MSG_ERRQUEUE support on the parent socket
+Date: Sun, 31 May 2026 15:59:49 +0100
+Message-ID: <20260531145955.322337-1-devnexen@gmail.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 11/11] selftests: mptcp: nvme: add iopolicy tests
-From: Nilay Shroff <nilay@linux.ibm.com>
-To: Geliang Tang <geliang@kernel.org>, Keith Busch <kbusch@kernel.org>,
-        Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>, Chaitanya Kulkarni <kch@nvidia.com>,
-        Matthieu Baerts <matttbe@kernel.org>,
-        Mat Martineau <martineau@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
-        Shuah Khan <shuah@kernel.org>
-Cc: Geliang Tang <tanggeliang@kylinos.cn>, linux-nvme@lists.infradead.org,
-        netdev@vger.kernel.org, mptcp@lists.linux.dev,
-        linux-kselftest@vger.kernel.org, Hannes Reinecke <hare@suse.de>,
-        John Meneghini <jmeneghi@redhat.com>,
-        Randy Jennings
- <randyj@purestorage.com>,
-        zhenwei pi <zhenwei.pi@linux.dev>, Hui Zhu <zhuhui@kylinos.cn>,
-        Gang Yan <yangang@kylinos.cn>
-References: <cover.1779934709.git.tanggeliang@kylinos.cn>
- <51f054a6a573b9a771ed927eef34fa5ca083d009.1779934709.git.tanggeliang@kylinos.cn>
- <d23bcec0-70e6-484b-8c41-0174d1b5d09d@linux.ibm.com>
-Content-Language: en-US
-In-Reply-To: <d23bcec0-70e6-484b-8c41-0174d1b5d09d@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Proofpoint-GUID: 4uqHCHqil5OAiqmp-ZRdaOjvwooT4hu_
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTMxMDE1OSBTYWx0ZWRfX8LHa1n/vgrlu
- sriiZA4R/ctkA96fiKdKFM+qkvQ5XE+DbJwGa1z+8vygJ5X1eU+ANLxvFV+ovPs+jA8rxOnPsZO
- G496Z0bAHys7w/Fk18K5y94R/7BWbW9ApMwfIAj49DzaD82Pxk9B3+qqpW9TrpyW18N5MoPDFyx
- 4eV9v9Y3FS2aq5bJETxWyHT5f1ojRcXEP9N9oqa/b6ciA3pys+RPMXbwLglXd3OU/0E3D/DI6Wh
- Aavo9mQYQ2SDNaPa8EfkhbzeJH3SXFi4KZkgy/2QQD00fCsiEkGE2xA7bYJWBwuSrILRCY3BNAY
- Sk4S05NoXNdI+N80oFwKCCUdshjyVt6XJGj3NF/Y+L4fG8iN0Z4yMj/HFQVqSlynMsz8prulc5K
- TsfF7mPNhy/gwf7cx83OvA63q24Le8Y/+b/Yo1tss1pUwpI+jm03LnSDvzTyVOy9xmgVvoY1TwW
- x+dHcOIQyGjmqe9N+Hw==
-X-Proofpoint-ORIG-GUID: L_Klrh7BPvFMaGqu_uBtkcXYqxRL0wZx
-X-Authority-Analysis: v=2.4 cv=Vf3H+lp9 c=1 sm=1 tr=0 ts=6a1c4ad9 cx=c_pps
- a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
- a=IkcTkHD0fZMA:10 a=NGcC8JguVDcA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=U7nrCbtTmkRpXpFmAIza:22 a=tG9-xVZLEdW8CX7s4vEA:9
- a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
- definitions=2026-05-31_05,2026-05-28_03,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 suspectscore=0 adultscore=0 bulkscore=0 impostorscore=0
- phishscore=0 lowpriorityscore=0 malwarescore=0 clxscore=1015 spamscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2605210000 definitions=main-2605310159
 
-On 5/31/26 7:34 PM, Nilay Shroff wrote:
-> On 5/28/26 8:40 AM, Geliang Tang wrote:
->> From: Geliang Tang<tanggeliang@kylinos.cn>
->>
->> Add NVMe iopolicy testing to mptcp_nvme.sh, with the default set to
->> "numa". It can be set to "round-robin" or "queue-depth".
->>
->> Test results with 4 NVMe multipath paths and round-robin iopolicy show
->> that TCP and MPTCP achieve similar bandwidth:
->>
->>   # ./mptcp_nvme.sh tcp 4 round-robin
->>     READ: bw=455MiB/s (478MB/s), 455MiB/s-455MiB/s (478MB/s-478MB/s),
->>         io=4665MiB (4891MB), run=10242-10242msec
->>    WRITE: bw=455MiB/s (477MB/s), 455MiB/s-455MiB/s (477MB/s-477MB/s),
->>         io=4633MiB (4858MB), run=10184-10184msec
->>
->>   # ./mptcp_nvme.sh mptcp 4 round-robin
->>     READ: bw=445MiB/s (466MB/s), 445MiB/s-445MiB/s (466MB/s-466MB/s),
->>         io=4575MiB (4797MB), run=10287-10287msec
->>    WRITE: bw=445MiB/s (467MB/s), 445MiB/s-445MiB/s (467MB/s-467MB/s),
->>         io=4572MiB (4794MB), run=10267-10267msec
->>
->> A "loss" argument is added to simulate network packet loss. When loss=1,
->> each veth interface is configured with "delay 5ms loss 0.5%" using tc
->> qdisc. Under this scenario, TCP performance is reduced by multiples
->> compared to MPTCP:
->>
->>   # ./mptcp_nvme.sh tcp 4 round-robin 1
->>     READ: bw=144MiB/s (151MB/s), 144MiB/s-144MiB/s (151MB/s-151MB/s),
->>         io=1909MiB (2001MB), run=13231-13231msec
->>    WRITE: bw=100.0MiB/s (105MB/s), 100.0MiB/s-100.0MiB/s (105MB/s-105MB/s),
->>         io=1397MiB (1465MB), run=13980-13980msec
->>
->>   # ./mptcp_nvme.sh mptcp 4 round-robin 1
->>     READ: bw=428MiB/s (449MB/s), 428MiB/s-428MiB/s (449MB/s-449MB/s),
->>         io=4524MiB (4743MB), run=10564-10564msec
->>    WRITE: bw=431MiB/s (452MB/s), 431MiB/s-431MiB/s (452MB/s-452MB/s),
->>         io=4513MiB (4732MB), run=10481-10481msec
->>
->> These results demonstrate that MPTCP has better resilience against
->> packet loss compared to TCP, as it can leverage multiple subflows to
->> mitigate network degradation.
-> 
-> There are a few observations I'd like to raise:
-> 
-> 1. It is difficult to reason about the throughput results when NVMe native
->     multipath is enabled together with MPTCP. In this topology, four NVMe paths
->     are created and the round-robin I/O policy is configured. As a result, each
->     I/O first goes through the NVMe multipath scheduler, which selects a path,
->     and is then further subjected to the MPTCP scheduler, which selects a TCP
->     subflow. This means there are two independent schedulers influencing I/O
->     placement, making it difficult to attribute the observed throughput
->     improvements to either NVMe multipath or MPTCP.
-> 
->     For throughput comparisons, it may be more meaningful to disable NVMe native
->     multipath (e.g., modprobe nvme_core multipath=n) when testing MPTCP. This would
->     ensure that all I/O is sent through a single NVMe/TCP path while allowing MPTCP
->     alone to distribute traffic across available subflows. Such a setup would
->     provide a clearer comparison between TCP and MPTCP.
-> 
-> 2. The current test uses only a 128 KiB I/O size. It would be useful to include
->     additional I/O sizes as well, such as 4 KiB, 8 KiB, and 32 KiB, since MPTCP and
->     NVMe multipath may behave differently under different workload characteristics.
-> 
-> 3. The fio runtime is only 10 seconds, which is relatively short for performance
->     evaluation. The results may be influenced by startup transients and may not
->     accurately reflect steady-state behavior. It would be preferable to run the tests
->     for a longer duration, for example 120 seconds, to obtain more stable measurements.
-> 
-> 4. The tests are run on the same host by setting up veth interfaces and running
->     host and target under different network namespaces. It'd be useful if you could
->     run this tests between real host and target systems.
-> 
-One more point forgot to add:
-Current tests uses symmetric path characteristics (i.e. all paths experiences
-same loos or ratelimit). However it'd be useful to simulate a scenario where
-paths exhibit asymmetric behavior (for instance, one path experiences loss
-or increased latency compared to other). This would demonstrate the real world
-network failures and it'd be interesting to see how mptcp performs compared to
-native NVMe multiapth.
+This series lets MPTCP applications use poll(EPOLLERR) and
+recvmsg(MSG_ERRQUEUE) on the parent socket to drain TX timestamps,
+MSG_ZEROCOPY completion notifications and SO_EE_ORIGIN_LOCAL events
+through the standard inet ABI, the same way they would on a plain TCP
+socket. ICMP-derived errors stay on the subflow queue: the legacy
+RECVERR ABI cannot convey their per-subflow peer identity, and they
+are intended for a future MPTCP_RECERR channel.
 
-Thanks,
---Nilay
+Patch 1 factors the existing inet_flags subflow-propagation hard-coded
+list into a mask, so subsequent patches can extend it without churn.
+
+Patch 2 makes IP_RECVERR / IPV6_RECVERR (and the RFC4884 variants)
+propagate to the subflows. The parent stores the bit so MPTCP-aware
+helpers can branch on it.
+
+Patch 3 splices subflow err-skbs onto the parent's sk_error_queue at
+error-report time. All forwarded events go through sock_queue_err_skb(),
+which re-homes skb->sk onto the parent and charges sk_rmem_alloc, so the
+parent's error queue stays bounded by sk_rcvbuf and is dropped under rmem
+pressure, matching tcp's tx-timestamp path and ip_icmp_error() /
+ipv6_icmp_error(). MPTCP never originates MSG_ZEROCOPY or OPT_ID
+tx-timestamp completions -- its data path copies into msk-owned pages and
+bypasses tcp_sendmsg_locked() -- so no subflow-relative ee_data sequence
+is ever forwarded. mptcp_recvmsg(MSG_ERRQUEUE) forwards directly to
+inet_recv_error(), and mptcp_poll() advertises EPOLLERR purely on the
+parent's sk_err / sk_error_queue, matching tcp_poll().
+
+Patch 4 is a selftest covering the propagation path.
+
+Changes in v11 (addresses sashiko v10 review,
+https://sashiko.dev/#/patchset/20260529174524.260199-1-devnexen@gmail.com):
+ - patch 3/4: route MSG_ZEROCOPY completions through sock_queue_err_skb()
+   like every other forwarded event, rather than orphaning them and
+   queueing to the parent by hand. The hand-rolled path ran the subflow
+   destructor (refunding its memory charge) but never charged the parent,
+   so completions could pile up unbounded on the parent err queue and
+   exhaust memory (OOM). The "never drop or we leak pinned pages" premise
+   was also wrong: __msg_zerocopy_callback() calls
+   mm_unaccount_pinned_pages() before queueing, so a dropped notification
+   loses only the notification, not the pages. (sashiko v10, High)
+ - no functional change for the ee_data concern: MPTCP originates neither
+   MSG_ZEROCOPY nor OPT_ID tx-timestamp completions, so no subflow-relative
+   sequence is ever spliced to the parent. (sashiko v10, High)
+ - patch 2/4: initialise val in mptcp_setsockopt_recverr() to silence a
+   latent -Wmaybe-uninitialized on the switch without a default case.
+
+v10: https://lore.kernel.org/mptcp/20260529174524.260199-1-devnexen@gmail.com/
+v9: https://lore.kernel.org/mptcp/20260528055459.55133-1-devnexen@gmail.com/
+
+David Carlier (4):
+  mptcp: sockopt: factor inet_flags propagation into a mask
+  mptcp: propagate RECVERR sockopts to subflows
+  mptcp: support MSG_ERRQUEUE on the parent socket
+  selftests: mptcp: cover IP_RECVERR sockopt propagation
+
+ net/mptcp/protocol.c                          |  63 ++++++--
+ net/mptcp/sockopt.c                           | 153 +++++++++++++++---
+ .../selftests/net/mptcp/mptcp_sockopt.c       |  55 +++++++
+ 3 files changed, 237 insertions(+), 34 deletions(-)
+
+
+base-commit: e05cbdb611ff815528cdf90e29a96663b9af48c6
+-- 
+2.53.0
 
