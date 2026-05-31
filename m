@@ -1,127 +1,130 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8863523EA97
-	for <mptcp@lists.linux.dev>; Sun, 31 May 2026 07:01:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B8FE335BA;
+	Sun, 31 May 2026 13:04:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780210912; cv=none; b=Gle26cWvtgVmlbrROSRQ8EGICo1djK/sD+4gYzlCs9jL0zBtddzLsJzdgV2NYYl58+Lu9Q0RIaWK1QBg0pcuJ86km0IGKepBRJ+RlBmxrD0OISv4MAuQatZ+wW/jll6sytTz9kPXTXL/DwwhPMtRcBd3PveZwZ6nfps1UmXdGFo=
+	t=1780232678; cv=none; b=hIa8H+Ae/Imx/SdbzM/+p3tSoRGILdOAUVq76/4vjH0CR7KcGR8hHhDeIdeIooB4bzu3Wsx10vwiosU5JOxSR2nNPpKKztvX3pjBqfNAmlanlEauhRgcGw8/IHA+7JdL9E273nWOBYA31z5mJ0zD1Bj+Og8WAlTLfNGFCtB2AUM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780210912; c=relaxed/simple;
-	bh=zqwRpmpFIzKWtNSZmsxGC3rQCs/Yvl5jIdsFNixJnGU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=NJs5Zvbt70Tslf7me8EnRgFQaSc48jclwuJcem8FU4x6s5iNsman0woDB5eZTPietNt1+FT73FIGHZwtx4nN/K4wuMhnrDKZsZsM7vvXDoLmCYotly5lpcZSB1eyD1ESm5xuOFS2CPDXUTJ0D4Plvp/IdN/3pqpNcuiFs6F1sN4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VrnskUQB; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780232678; c=relaxed/simple;
+	bh=KXYiQ/EWH/syonYMw6B3JK/DzVa3oSMhCPGIkAqHpc4=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=kjwzCAvdv0LYGyFZo4cz6chjNbJfBH371jy2zZievjFQzkkpjyteKP0IW9BYpfSM2lkzEnla/QeizlaR+Sfg/8Mt9PSySDcZlN4BdW09IEHi5xDxyWAQZMNaMHD0OdnhAEuDpfexr/jypCm9Y7dJw/jz914+CUnWL0D+t+H6/kI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YS7cep8w; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VrnskUQB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 133B71F00893;
-	Sun, 31 May 2026 07:01:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780210910;
-	bh=pdpSBJLTDpV7j61tSD6iXWfi2qqNKJ7dl6FOmfppNyM=;
-	h=Date:Subject:To:References:From:In-Reply-To;
-	b=VrnskUQBWN5izHNUUG3ZDWU6Pj9SSMFJh2cspLiMTfxOcp2WuXyLS/MoVLuE1RrXM
-	 YZIJ7bs4671MfOJKVEYrzcqv35oDWy6M9ZyGIYrW9qLJkXXxehBlRIJWkRGcLBspWe
-	 IBsfxTlpS6xT8lApI78foQDTt3sNgeSAHPHQFTJMW1DgJare4ZOaOAZOp9fCjiRPSp
-	 0QANAvquPSjOZLvCTS1h1uGHXFlwNykvWkKYDAbRmZ8bDc8pk3gqTEeveNSD4nTtYt
-	 AgbY0E86ZEG5JFKvgLEsn2juqrWouUUfpdhOa+Jok/XWzceLxVj3UQODFBs94KF98l
-	 kuo3YdZcJpRcA==
-Message-ID: <4201f38f-b5bf-4e8d-a855-8143fbb55f73@kernel.org>
-Date: Sun, 31 May 2026 17:01:47 +1000
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YS7cep8w"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1780232676; x=1811768676;
+  h=date:from:to:cc:subject:message-id;
+  bh=KXYiQ/EWH/syonYMw6B3JK/DzVa3oSMhCPGIkAqHpc4=;
+  b=YS7cep8wxEYPYch0ilPpVmpZ7CKXEXiWeLmvVcsvXm09jXNSjrWZrlXM
+   NvnVzCY/2l/pHnLoZ9meZYffK9xe9gyccFDhn/1HqBaP11C2PtL08BA7K
+   +SfC4lx6rA7HDNz9xxywvB3UkVLjXzFJxrtzyDSfMhoxEk2a4CpIlqdvN
+   I2/YlUriT4EU98iDFvx2IbX0nyECg9CjH3Dxq0ZXjAzXLNK2EtuE+Ip09
+   qlrS0pnsshBbs0PYYbn5/tQ4rc4X0DAK3g2zL5cnZF9Nz5Nw6181AStC7
+   dUk40MBulDOhBDM2pEVkw6ehmkpdQrt9h300Wmgn6E2gq5aBBIDUifCRW
+   w==;
+X-CSE-ConnectionGUID: wH7fWcQHR/aTmUB6NEXmMg==
+X-CSE-MsgGUID: H4vNSgd9ReWFV05QLdxlSg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11803"; a="81198258"
+X-IronPort-AV: E=Sophos;i="6.24,179,1774335600"; 
+   d="scan'208";a="81198258"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2026 06:04:36 -0700
+X-CSE-ConnectionGUID: 3bXJbdQRR5SH7cdyut+nyw==
+X-CSE-MsgGUID: z8Ux4JpPQOyJ7b05jkvyxQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,179,1774335600"; 
+   d="scan'208";a="239134440"
+Received: from lkp-server01.sh.intel.com (HELO f0d55cb201f0) ([10.239.97.150])
+  by fmviesa010.fm.intel.com with ESMTP; 31 May 2026 06:04:33 -0700
+Received: from kbuild by f0d55cb201f0 with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1wTfqA-000000009R8-1XqS;
+	Sun, 31 May 2026 13:04:30 +0000
+Date: Sun, 31 May 2026 21:04:27 +0800
+From: kernel test robot <lkp@intel.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: oe-kbuild-all@lists.linux.dev, mptcp@lists.linux.dev,
+ matthieu.baerts@tessares.net,
+ "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [mptcp:export-net 15/22]
+ include/linux/compiler_types.h:699:45: error: call to
+ '__compiletime_assert_784' declared with attribute error: BUILD_BUG_ON
+ failed: sizeof_field(struct mptcp_ext, flags) != sizeof(u16)
+Message-ID: <202605312026.Srgsz7Tp-lkp@intel.com>
+User-Agent: s-nail v14.9.25
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net] mptcp: fix uninit-value in
- mptcp_established_options
-Content-Language: fr
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-References: <d776e14d19a313dd697e3715121f4e42e915287d.1780045909.git.pabeni@redhat.com>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <d776e14d19a313dd697e3715121f4e42e915287d.1780045909.git.pabeni@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-Hi Paolo,
+tree:   https://github.com/multipath-tcp/mptcp_net-next.git export-net
+head:   27a7d32aeb103a5c763966a494b141136c31cea0
+commit: 206cf8c6e2bfce69eba0d463b3f6127d14f75abc [15/22] mptcp: fix uninit-value in mptcp_established_options
+config: arm-collie_defconfig (https://download.01.org/0day-ci/archive/20260531/202605312026.Srgsz7Tp-lkp@intel.com/config)
+compiler: arm-linux-gnueabi-gcc (GCC) 15.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260531/202605312026.Srgsz7Tp-lkp@intel.com/reproduce)
 
-On 29/05/2026 19:13, Paolo Abeni wrote:
-> syzbot reported the following uninit splat:
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202605312026.Srgsz7Tp-lkp@intel.com/
 
-(...)
+All errors (new ones prefixed by >>):
 
-> The output path currently omit initializing the mptcp extension `use_map`
-> flag in a few corner cases.
-> Address the issue always zeroing all the extensions flags before
-> eventually initializing the individual bits. To that extent, introduce
-> and use a struct_group to avoid multiple bitwise operations.
+   In file included from <command-line>:
+   In function 'mptcp_established_options_dss',
+       inlined from 'mptcp_established_options' at net/mptcp/options.c:881:11:
+>> include/linux/compiler_types.h:699:45: error: call to '__compiletime_assert_784' declared with attribute error: BUILD_BUG_ON failed: sizeof_field(struct mptcp_ext, flags) != sizeof(u16)
+     699 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+         |                                             ^
+   include/linux/compiler_types.h:680:25: note: in definition of macro '__compiletime_assert'
+     680 |                         prefix ## suffix();                             \
+         |                         ^~~~~~
+   include/linux/compiler_types.h:699:9: note: in expansion of macro '_compiletime_assert'
+     699 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+         |         ^~~~~~~~~~~~~~~~~~~
+   include/linux/build_bug.h:40:37: note: in expansion of macro 'compiletime_assert'
+      40 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+         |                                     ^~~~~~~~~~~~~~~~~~
+   include/linux/build_bug.h:51:9: note: in expansion of macro 'BUILD_BUG_ON_MSG'
+      51 |         BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
+         |         ^~~~~~~~~~~~~~~~
+   net/mptcp/options.c:576:9: note: in expansion of macro 'BUILD_BUG_ON'
+     576 |         BUILD_BUG_ON(sizeof_field(struct mptcp_ext, flags) != sizeof(u16));
+         |         ^~~~~~~~~~~~
 
-Thank you for the fix!
 
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+vim +/__compiletime_assert_784 +699 include/linux/compiler_types.h
 
-Now in our tree:
+eb5c2d4b45e3d2 Will Deacon 2020-07-21  685  
+eb5c2d4b45e3d2 Will Deacon 2020-07-21  686  #define _compiletime_assert(condition, msg, prefix, suffix) \
+eb5c2d4b45e3d2 Will Deacon 2020-07-21  687  	__compiletime_assert(condition, msg, prefix, suffix)
+eb5c2d4b45e3d2 Will Deacon 2020-07-21  688  
+eb5c2d4b45e3d2 Will Deacon 2020-07-21  689  /**
+eb5c2d4b45e3d2 Will Deacon 2020-07-21  690   * compiletime_assert - break build and emit msg if condition is false
+eb5c2d4b45e3d2 Will Deacon 2020-07-21  691   * @condition: a compile-time constant condition to check
+eb5c2d4b45e3d2 Will Deacon 2020-07-21  692   * @msg:       a message to emit if condition is false
+eb5c2d4b45e3d2 Will Deacon 2020-07-21  693   *
+eb5c2d4b45e3d2 Will Deacon 2020-07-21  694   * In tradition of POSIX assert, this macro will break the build if the
+eb5c2d4b45e3d2 Will Deacon 2020-07-21  695   * supplied condition is *false*, emitting the supplied error message if the
+eb5c2d4b45e3d2 Will Deacon 2020-07-21  696   * compiler has support to do so.
+eb5c2d4b45e3d2 Will Deacon 2020-07-21  697   */
+eb5c2d4b45e3d2 Will Deacon 2020-07-21  698  #define compiletime_assert(condition, msg) \
+eb5c2d4b45e3d2 Will Deacon 2020-07-21 @699  	_compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+eb5c2d4b45e3d2 Will Deacon 2020-07-21  700  
 
-New patches for t/upstream-net and t/upstream:
-- e1e4ec894331: mptcp: fix uninit-value in mptcp_established_options
-- Results: b744d5cbf545..8baa4a3c8611 (export-net)
-- Results: 294e9da8a098..cfc728a98c10 (export)
+:::::: The code at line 699 was first introduced by commit
+:::::: eb5c2d4b45e3d2d5d052ea6b8f1463976b1020d5 compiler.h: Move compiletime_assert() macros into compiler_types.h
 
-Tests are now in progress:
+:::::: TO: Will Deacon <will@kernel.org>
+:::::: CC: Will Deacon <will@kernel.org>
 
-- export-net:
-https://github.com/multipath-tcp/mptcp_net-next/commit/857a3caa698c8e16b1dbc6d61976bbf17a8d864c/checks
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/05677a4add692ad12b601c1e0b9e5f9299c2a1f1/checks
-
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
-
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
