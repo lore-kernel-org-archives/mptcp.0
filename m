@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 957A42DC357
-	for <mptcp@lists.linux.dev>; Sun, 31 May 2026 06:31:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1A85548EE
+	for <mptcp@lists.linux.dev>; Sun, 31 May 2026 06:39:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780209096; cv=none; b=gF9OQ7020mpkcX/dc7TmzdowKlRMlLRL1XEm3q8MEHj6pwPyoEOKhGv2eKoCotYECLJu/AK9MTHowXaTEoZCrjume066zQ9c99IPIfSRVcpTVXlTPpMuom4OEZtEE/NMXS95s2KlGkwFNnZuFYLc5chd2fUktaPYKr1SCADMcRc=
+	t=1780209600; cv=none; b=DBmOAxcs36FKZo0qut9n2iDxU0pDd3Saf+BtYIff9vhHVx5IkhlOTNTnI3WW5GR7NeG2oaKydP+s0Q4FOBxfbrXXUlp2k0RhHH9EZXM+4OljqhtoFK1wazgLvlZ0r3lgvcIsS73xxF+G7l2F0vK2wlGiniYgXAVri5Mn0cai/ug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780209096; c=relaxed/simple;
-	bh=ScOr5sn0/cJVaCmptMxDwG1Rv8d/ugyusduvnWCG/Jg=;
+	s=arc-20240116; t=1780209600; c=relaxed/simple;
+	bh=6LGKeL/vyqBP6PIj9Gu4SZ5C5oEZsECaFqmJaYwO07M=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=T32hhWPY08Gqt0yBQcuvMYkPod2SDB7WLMXG4uMhJ+V9PPKk4f8vqjax7haCoXWHxvJvwlllEBr3g4TvJf0Ocn5rFfdARmmkcGGeK5piBF3odjO1/oW8+MjajrXNk/72afQrDZoFlLQYQL/YkSiH1AdnvBwlm4LDBz2Lo6+qVZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BhISodd+; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=KeAchN4pUomlhIVgfT38ucu8V5Hwr90xzWPJ48El3qQbmGO6byycHGKIJmaIA5IDXZbXHlGq0lhSVQq7tJOF9+IPl4eqtOmjnFjjCisCRyjP1q4RhjqCVHo1Hi+awkySJT402w3Uc0qjlr9g2uEAyVHWzskoCsNcaFLQGRaFc9c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=keiFF9a6; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BhISodd+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C26D21F00893;
-	Sun, 31 May 2026 06:31:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="keiFF9a6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6AE71F00893;
+	Sun, 31 May 2026 06:39:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780209095;
-	bh=0Yjo0ig8akcRgkEI3dXH3W8yU6iGYt4wMlSAz+FGYTM=;
+	s=k20260515; t=1780209599;
+	bh=gV6pAlYxVSUeM3XAQkYsQULXb4G6GMw+cIbe1D1IZEU=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=BhISodd+VBqw59c83EOkWGheQ/JRs1POMDKIdmFLMoeJ7EkuTYQ6EPnR28YAEWYYd
-	 wA1waRZrfCwVp5LWTRBSYoy8Ym5BiwnwNeX7k6zZC1wQQwsxeI/P875Rf0Xz9S3MQ2
-	 BK6L514qgqvlBYH4SEWiJZrONL1RWcaaczMPRub8gjxbVSt1KMh06BX0Iwhfv2J88f
-	 igDD5gmD41rDmJeJPzDsVCxZBm3KKg8IyeZw8RaDMJU1Q1uxV4kZ4tQb4M0k/aThV2
-	 BADgDB8XgA2WheH8u97maEV4p7ixhuW8ClI2jtO7B4O4S5/R6ytdwaPFE8QQmic95P
-	 Cho1K+JKDN+gQ==
-Message-ID: <58b41b8c-8367-4593-b104-8fe5b9f6d59c@kernel.org>
-Date: Sun, 31 May 2026 16:31:30 +1000
+	b=keiFF9a6GclN68hSfQE1LjS+gc37dtNGnpJaHkEysFOPH+SqUbmKHg6UlHkAwh5EZ
+	 UwfYet74CWR2M9yU6W0BjlEmCYICT/qCHCYN8uC1s7xNgmHF7cg8AE6eFynsXWevjE
+	 lWKRLW0lalp98IEAtbbp8piu74mlTE5KdGyXoLU5IGKdKY8SW63Si5QFOjrPAOaKWZ
+	 9+QRLRgy8lIDCsSbTZtcpBEIk8+24Exy5ERp7Zmq8pruD2UwY6bqLQNZk8ke+PSU1J
+	 LDO15uoTvimWpjM1Cg/Mu5PaQEQ32Sl4xzqz7hPhurZBUbS2J40dOYnut+YAi44NsX
+	 EzpeObo1UBl+g==
+Message-ID: <bca2ad2f-1f45-45e7-a8bd-7a08dd7100c2@kernel.org>
+Date: Sun, 31 May 2026 16:39:53 +1000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,11 +35,19 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net v3] mptcp: check desc->count in read_sock
+Subject: Re: [PATCH net v2] mptcp: pm: drop pending ADD_ADDR when removing id
+ 0 endpoint
 Content-Language: fr
-To: Gang Yan <gang.yan@linux.dev>, MPTCP Linux <mptcp@lists.linux.dev>
-Cc: Gang Yan <yangang@kylinos.cn>, Geliang Tang <geliang@kernel.org>
-References: <20260529-read_sock_fix-v3-1-bb3fc3f44b22@kylinos.cn>
+To: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
+Cc: mptcp <mptcp@lists.linux.dev>, martineau <martineau@kernel.org>,
+ pabeni <pabeni@redhat.com>, "shardul.b" <shardul.b@mpiricsoftware.com>,
+ janak <janak@mpiric.us>, kalpanjani009 <kalpanjani009@gmail.com>,
+ shardulsb08 <shardulsb08@gmail.com>,
+ syzbot+55c2a5c871441261ed14
+ <syzbot+55c2a5c871441261ed14@syzkaller.appspotmail.com>
+References: <20260529064355.922763-1-kalpan.jani@mpiricsoftware.com>
+ <0f13954f-3bfa-4630-af9f-6f1f4b138a13@kernel.org>
+ <19e72995d6d.89137929840232.7611532549298755137@mpiricsoftware.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -85,41 +93,57 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20260529-read_sock_fix-v3-1-bb3fc3f44b22@kylinos.cn>
+In-Reply-To: <19e72995d6d.89137929840232.7611532549298755137@mpiricsoftware.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Gang,
+Hi Kalpan,
 
-On 29/05/2026 19:05, Gang Yan wrote:
-> From: Gang Yan <yangang@kylinos.cn>
+On 29/05/2026 17:18, Kalpan Jani wrote:
+> Hi Matt,
 > 
-> __tcp_read_sock() checks desc->count after each skb is consumed and
-> breaks the loop when it reaches 0. The MPTCP variant lacks this check.
+>> Did it work with packetdrill?
 > 
-> This is a functional bug, other subsystems also rely on this check:
-> TLS strparser sets desc->count to 0 once a full TLS record is assembled
-> and depends on this break to stop reading.
+> I worked on a packetdrill test based on add_addr4_server.pkt with the
+> MP_JOIN extra subflow and the delete/re-add sequence. The environment
+> is working (add_addr4_server.pkt passes cleanly), but I was not able
+> to reliably trigger the WARN through packetdrill within the test
+> timeframe.
 > 
-> Add the same desc->count check to __mptcp_read_sock(), mirroring
-> __tcp_read_sock().
-Thank you for the v3, that's clearer!
+> The difficulty is that the id 0 ADD_ADDR is only sent when the
+> endpoint is re-added after the connection is established AND after
+> mptcp_nl_remove_id_zero_address() has run to restore the
+> id_avail_bitmap bit via __mark_subflow_endp_available(). Getting
+> packetdrill to control this timing precisely — while also keeping
+> conn_list non-empty so mptcp_nl_remove_id_zero_address() actually
+> processes the msk — proved tricky.
 
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+I understand it might be tricky, but do you mind sharing what you have
+so far. Maybe someone else can help you to reproduce the issue. Also, it
+might be enough to have a test that can reproduce the WARN not 100% of
+the time, as long as it is not 0. I will wait for this test before
+applying the v3.
 
-Now in our tree:
+At least having something exercising new paths: here, having the new
+call to mptcp_remove_anno_list_by_saddr() returning true.
 
-New patches for t/upstream-net and t/upstream:
-- 712f17627662: mptcp: check desc->count in read_sock
-- Results: 8baa4a3c8611..62fe948e8800 (export-net)
-- Results: cfc728a98c10..99bd35126f64 (export)
+> syzbot is reproducing the bug reliably on current upstream (3 crashes
+> between 2026/05/19 and 2026/05/22 on kernels including cca95436be15).
+> The syzbot reproducer is the most reliable pre-fix evidence available.
 
-Tests are now in progress:
+Because syzbot didn't manage to generate a reproducer, we cannot really
+rely on syzbot to say that the bug is fixed. 3 crashes out of how many
+thousands/millions attempts? :)
 
-- export-net:
-https://github.com/multipath-tcp/mptcp_net-next/commit/27a7d32aeb103a5c763966a494b141136c31cea0/checks
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/b5e39d0f9ca9baae6da2403900a1f57769b6c160/checks
+> I will continue working on the packetdrill test and send it as a
+> follow-up once I have a clean before/after result. For v3 I have
+> addressed your comment shortening request.
+
+Thanks!
+
+Do not forget to wait ~1 day between submissions, otherwise it is even
+harder for reviewers and various tools to follow the modifications and
+discussions.
 
 Cheers,
 Matt
