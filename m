@@ -1,193 +1,126 @@
-Received: from outbound.st.icloud.com (p-east2-cluster2-host1-snip4-8.eps.apple.com [57.103.78.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AEFB29D26E
-	for <mptcp@lists.linux.dev>; Mon,  1 Jun 2026 04:38:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=57.103.78.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A6EB1F0991;
+	Mon,  1 Jun 2026 05:24:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780288703; cv=none; b=mr6P6kl1u34HAOV2QNyqB3fxNhJ0vq313ls98dUHTIqaDfNTYJg84ucmiYJOmgpnO0t1WCMnpPbLXZYeqS8W3gclyavB2JG/7Er0oXTD5eHFsPGhwj0rpkKrl24lcXvQ8V+StnF5OvEflhWnvqy4zxFaFf9E6vV1oUGDuZcXUqU=
+	t=1780291482; cv=none; b=QvANGBlt6h7H1B8V9o2onoboiO1b/UHNAnHgq9SqXEJDDaJjyGy0DgrD7yWAeZdaFjg28XhlXyeDSYlevEiJq5Ljrsa66wDlQyWZHb/e2gAb600Le37dceBeBa30SJf9aIcCpfOEWL5wgWjIiQ1uSPTaWPmQh5nGv1uUvvNvrKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780288703; c=relaxed/simple;
-	bh=M5KXcHZLLCjiSOAXT/6Zty8mqvZnR+CJHcL1M48YmZg=;
-	h=Content-Type:From:Mime-Version:Date:Message-Id:Cc:To; b=bWB6kkzO4ZBDmiRJbCGitkVjg0JLno9Jf3fuePR/NME0QHYXhQzHW0qw/Zs1Pe3TGrLSSiTOT15u5IJRm5k/lIXq4zNoJbwu+lPQb6sGGycRNmUGPJUmuD0HClcw19X5i+YFtSqA/dwLwsRZp8Ijcs9U+OC2RZ/b2h9+hk3KMVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=p7RM5uWB; arc=none smtp.client-ip=57.103.78.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
+	s=arc-20240116; t=1780291482; c=relaxed/simple;
+	bh=HahcD1u1+FojtaEhXSSKdWBmlAsj5fU+MU7PgwzYArE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=hBpsPwgrAVLEs1vNRSyATuvObOx3fO8F6MUGJvlLLgxHvtZqaFwMHN60n3nYH5bUCYw5VocjFZruaDGEpLWmzj4Otmdp3paA8iv9dZ3peR3FIg0A9SLMuucgVCyLxGUlWNVHifl5maeRrWvpY5kS12A9JMOZIQ+WljsKkbXSxq4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X6gsa/B3; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="p7RM5uWB"
-Received: from outbound.st.icloud.com (unknown [127.0.0.2])
-	by p00-icloudmta-asmtp-us-east-1a-20-percent-1 (Postfix) with ESMTPS id 49107180035B;
-	Mon, 01 Jun 2026 04:38:19 +0000 (UTC)
-X-ICL-Out-Info: HUtFAUMEWwJACUgBTUQeDx5WFlZNRAJCTQhACkMFWwFeCEgFQwZeAFBcHA4OXxlbAxcfRghFGVcCVkgEVAIrWxNVF0YJGQhdHRkeV1BeCF4fTBwdDlgGEgJaRQJZFwNXHFZFXBhDCV0FVxwdHkNFWxNVF0YJGQhdHRkIRx8KMANCDlYDQwdFAC0ZHFdQXgheH0wcHQ5YBhIdUBwOUXIvCkcBPAFaGltxNHtVB1wGWB8xD0wLQHYuBkZ8OXBZASoDNHkRUAFYHlZeWhdeUxcfSwBcRVoOWwRHFA==
-Dkim-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com; s=1a1hai; t=1780288701; x=1782880701; bh=8HjiOho8L2jW+i0Jru4sQZRWcNoS66uzGYMY1giqctw=; h=Content-Type:From:Mime-Version:Date:Message-Id:To:x-icloud-hme; b=p7RM5uWBL+MIGMX8hVmyvr1btwE4BTJ1Z+qG+aHhVPcIqBI//Rm+IkIOCkeQ6fy5IXUd3v+ks3fgLqMiQZJh8BLy6PDyXL4At3Skh3LHNkfgsaREqQ34mhcmrnoiH9RVLKmVDc3TZBpKVUZFiNfK8IA5fga6A3AmwJqlABDiZS4xJ1CYezpG5xIHxQKh4y4uzj+32JQofU//wC7xrCiQAzjtoNlFh2sCwhtQXDmG1AJ+Au/sIaivuYmHxwD8GbxeCZLfz0oFFaa4tZjZHwvdh9gVpy9ckRIAipTwnrFPHEkrCySGtm8oRgIc4N6j2HKVkz9nnTPsGr5jvIPi89CuMw==
-Received: from smtpclient.apple (unknown [17.42.251.67])
-	by p00-icloudmta-asmtp-us-east-1a-20-percent-1 (Postfix) with ESMTPSA id 9C3661800176;
-	Mon, 01 Jun 2026 04:38:18 +0000 (UTC)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From: Christian C Guerrero <chris.guerrero0795@icloud.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X6gsa/B3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90C5E1F00893;
+	Mon,  1 Jun 2026 05:24:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780291481;
+	bh=RNBCl095uTrDn/8o8UiadOiayG3gB724BCnI+j/g8pY=;
+	h=From:Subject:Date:To:Cc;
+	b=X6gsa/B3KeGw4TcoWfvdwjFBDcdMSRqMYfaSfXDcEjV9iPGPuT7t01ZKpAPem1SqM
+	 q/KSICCKW9qzS2UvL96USjSZWqTOLwFOKy5JKjFE/9qPMz0yKwreULpw0KRI29Yo4W
+	 8/xQMcIrR3AHoBK6D+qqZKK+5rOj+95hwfDUgtG925GZeSzvUShxXykq2RgVQVVG3x
+	 F7NpFmeFkojkNJw4zNVhEVHJsOYonuYLNl349czAkyZ+HuW/6NF+4OVWyijFtWd8vx
+	 6OR/LnYMvBpmhroyHC2GyWvnV16zzXG0l4Dzv/pxSPjsmmw+t8yHXmbVCukRbO0C8p
+	 Dltf6t0TmMeJg==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH net-next 00/11] mptcp: pm: drop TCP TS with ADD_ADDRv6 +
+ port
+Date: Mon, 01 Jun 2026 15:22:07 +1000
+Message-Id: <20260601-net-next-mptcp-add-addr6-port-ts-v1-0-4fc25dfef62e@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0 (1.0)
-Date: Sun, 31 May 2026 22:38:15 -0600
-Message-Id: <ED878D27-0CDB-4113-A648-AE46EAC46A1D@icloud.com>
-Cc: Mat Martineau <martineau@kernel.org>,
- Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Abeni Paolo <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
- Florian Westphal <fw@strlen.de>, netdev@vger.kernel.org,
- mptcp@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, stable@vger.kernel.org,
- Matthieu Baerts <matttbe@kernel.org>
-To: Matthieu Baerts <matttbe@kernel.org>
-X-Mailer: iPhone Mail (23F77)
-X-Proofpoint-GUID: Nle5phvKo13CcyuSwDi8Wvtyg11rnvbW
-X-Authority-Info-Out: v=2.4 cv=E9fAZKdl c=1 sm=1 tr=0 ts=6a1d0cbc
- cx=c_apl:c_pps:t_out a=YrL12D//S6tul8v/L+6tKg==:117
- a=YrL12D//S6tul8v/L+6tKg==:17 a=s5jvgZ67dGcA:10 a=IkcTkHD0fZMA:10
- a=FelO9ux0wxsA:10 a=x7bEGLp0ZPQA:10 a=tn3to7fOw0sA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=VwQbUJbxAAAA:8 a=20KFwNOVAAAA:8
- a=KZnKJZhHIq7TdMh2gb4A:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjAxMDA0NCBTYWx0ZWRfXx6MmOzvelBFU
- K7e5nQMShm6ZI8yvEO9dySU9jr/YBSpxu0FMYDj/rTTVu6MxUxvy0TN1gPqEVZMAvjE1x2iQOnV
- GD7xuuhdyJPJXHVjmrM+1p6FOHXAqu4hPgVTIl4L/Uz7ad9tp9VTWkdlrQ2piGF48p90cxqgK7v
- Y1hAV3M2n/PpfT8zIkUP5hOaKIRptgSbm70HVhQKPJzF456O9mx32t2/LIRaTX7TbSA7xmgGFvE
- D/wcTUCcHhRTboUkoEU2qfF9A5BIUtuCiOh2jPoWgkska2bXfKRxvFiWCY9OcHQnbJAn95ma2So
- APN0ywtHBeBzjtbt6wpwCHxxAC5mOOcJLoKr2RReYJhNkPJP61aA92SHdm8WZo=
-X-Proofpoint-ORIG-GUID: Nle5phvKo13CcyuSwDi8Wvtyg11rnvbW
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/zWNwQrCMBBEf6Xs2YVtKLH4K+KhZte6gmlItlIo/
+ XdTpYc5PIaZt0KRrFLg0qyQ5aNFp1ihPTUQnkMcBZUrgyPnyVOLUaxmMXwnCwkH5j3ZY5qyoRX
+ siHs+d9yLI6g3KctDl5/iCscabv+mzPeXBNsNsG1fihrAkY4AAAA=
+X-Change-ID: 20260601-net-next-mptcp-add-addr6-port-ts-40d8d74d8e20
+To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Simon Horman <horms@kernel.org>
+Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, 
+ linux-kernel@vger.kernel.org, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
+ linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+ Neal Cardwell <ncardwell@google.com>, Kuniyuki Iwashima <kuniyu@google.com>, 
+ Shuah Khan <shuah@kernel.org>
+X-Mailer: b4 0.15.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2531; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=HahcD1u1+FojtaEhXSSKdWBmlAsj5fU+MU7PgwzYArE=;
+ b=kA0DAAgB9reCT0JpoHMByyZiAGodF5KixVMUi7zgzg5pDB4kpR979DGvbvj1bLpWbETBtMreQ
+ IkCMwQAAQgAHRYhBOjLhfdodwV6bif3eva3gk9CaaBzBQJqHReSAAoJEPa3gk9CaaBzp1wQAN2J
+ cXW6VW0+fHcK/4T5kxA4BU08U/53LNs5nUgJp6JdixiQxuqHKMLtf5vhdaQQPKsHDp1RXeuEdPB
+ eQSo15caInFbDw/C+9DlJ2PEyYhM2PsJg9nqRgEfH5GxgZgfV1g/ePmJcI6edQd1BEbv5VBr5rC
+ guLyHvy/4WG0Tg8BBVTj+sarKErPkzL0019V55LWzZyjyz4x63WAlIlBx4+eH7QcFLyBcyOhDT2
+ pCTn8CbYXqGBQx2JHbxA/H5tNkOxTvXWbSQ29vMQbiRSvkXcpIJLi5VkaBHej61gEzgDfi3awPd
+ TAo9IEo4wFJNcAFPa7lwVmiWf0T32lkJTyGAgpaXZAoqAAPWtBiih7OD6Tok0cdkAU5HkvSIpHO
+ 5YvTZhVvKl1+j38the3CNbAgc3N+Kj75UqO5SWT0XlWzo7iKa/PjNXpmjd0XRfQVrbiizZtV3EP
+ ZHRKe4/oku9Z8IXfKd3n50nPD0yY9MmCL1NmF4Nz7fJjqQnp8SfvIKfl0ek3sGaVCHFWzE6x1rX
+ 8Ih/tJiuPbOzGgK0i0oK0FdZ/duoqhjzhad9uqeGCr2Qb8f/FZaOsgJ1oVWai+J0xESmHF6R2WZ
+ MnKlLKXq+uILk/nAmY+YGQxTaJn8BR8dA+6BjsHZJmM05QpBquwVc0l78ku0Gj4gLD55G1oReLH
+ /9HCN
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
+Up to this series, it was possible to add a "signal" MPTCP endpoint with
+an IPv6 address and a port, or to directly request to send an ADD_ADDR
+with a v6 address and a port, but the expected ADD_ADDR wasn't sent when
+TCP timestamps was used for the connection.
 
-> On May 31, 2026, at 9:11=E2=80=AFPM, Matthieu Baerts (NGI0) <matttbe@kerne=
-l.org> wrote:
->=20
-> =EF=BB=BFFrom: Paolo Abeni <pabeni@redhat.com>
->=20
-> The MPTCP output path access locklessly the MPTCP-level ack_seq
-> in multiple times, using possibly different values for the data_ack
-> in the DSS option and to compute the announced rcv wnd for the same
-> packet.
->=20
-> Refactor the cote to avoid inconsistencies which may confuse the
-> peer. Also ensure that the MPTCP level rcv wnd is updated only when
-> the egress packet actually contains a DSS ack.
->=20
-> Fixes: fa3fe2b15031 ("mptcp: track window announced to peer")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> ---
-> net/mptcp/options.c | 36 ++++++++++++++++++------------------
-> 1 file changed, 18 insertions(+), 18 deletions(-)
->=20
-> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index 8a1c5698983c..5c228344e83f 100644
-> --- a/net/mptcp/options.c
-> +++ b/net/mptcp/options.c
-> @@ -570,7 +570,6 @@ static bool mptcp_established_options_dss(struct sock *=
-sk, struct sk_buff *skb,
->    struct mptcp_ext *mpext;
->    unsigned int ack_size;
->    bool ret =3D false;
-> -    u64 ack_seq;
->=20
->    opts->csum_reqd =3D READ_ONCE(msk->csum_enabled);
->    mpext =3D skb ? mptcp_get_ext(skb) : NULL;
-> @@ -601,14 +600,11 @@ static bool mptcp_established_options_dss(struct soc=
-k *sk, struct sk_buff *skb,
->        return ret;
->    }
->=20
-> -    ack_seq =3D READ_ONCE(msk->ack_seq);
->    if (READ_ONCE(msk->use_64bit_ack)) {
->        ack_size =3D TCPOLEN_MPTCP_DSS_ACK64;
-> -        opts->ext_copy.data_ack =3D ack_seq;
->        opts->ext_copy.ack64 =3D 1;
->    } else {
->        ack_size =3D TCPOLEN_MPTCP_DSS_ACK32;
-> -        opts->ext_copy.data_ack32 =3D (uint32_t)ack_seq;
->        opts->ext_copy.ack64 =3D 0;
->    }
->    opts->ext_copy.use_ack =3D 1;
-> @@ -1297,19 +1293,14 @@ bool mptcp_incoming_options(struct sock *sk, struc=
-t sk_buff *skb)
->    return true;
-> }
->=20
-> -static void mptcp_set_rwin(struct tcp_sock *tp, struct tcphdr *th)
-> +static u64 mptcp_set_rwin(struct mptcp_sock *msk, struct tcp_sock *tp,
-> +              struct tcphdr *th, u64 ack_seq)
-> {
->    const struct sock *ssk =3D (const struct sock *)tp;
-> -    struct mptcp_subflow_context *subflow;
-> -    u64 ack_seq, rcv_wnd_old, rcv_wnd_new;
-> -    struct mptcp_sock *msk;
-> +    u64 rcv_wnd_old, rcv_wnd_new;
->    u32 new_win;
->    u64 win;
->=20
-> -    subflow =3D mptcp_subflow_ctx(ssk);
-> -    msk =3D mptcp_sk(subflow->conn);
-> -
-> -    ack_seq =3D READ_ONCE(msk->ack_seq);
->    rcv_wnd_new =3D ack_seq + tp->rcv_wnd;
->=20
->    rcv_wnd_old =3D atomic64_read(&msk->rcv_wnd_sent);
-> @@ -1362,7 +1353,7 @@ static void mptcp_set_rwin(struct tcp_sock *tp, stru=
-ct tcphdr *th)
->=20
-> update_wspace:
->    WRITE_ONCE(msk->old_wspace, tp->rcv_wnd);
-> -    subflow->rcv_wnd_sent =3D rcv_wnd_new;
-> +    return rcv_wnd_new;
-> }
->=20
-> static void mptcp_track_rwin(struct tcp_sock *tp)
-> @@ -1474,13 +1465,25 @@ void mptcp_write_options(struct tcphdr *th, __be32=
- *ptr, struct tcp_sock *tp,
->        *ptr++ =3D mptcp_option(MPTCPOPT_DSS, len, 0, flags);
->=20
->        if (mpext->use_ack) {
-> +            struct mptcp_sock *msk;
-> +            u64 ack_seq;
-> +
-> +            /* DSS option is set only by mptcp_established_option,
-> +             * the caller is __tcp_transmit_skb() and ssk is always
-> +             * not NULL.
-> +             */
-> +            subflow =3D mptcp_subflow_ctx(ssk);
-> +            msk =3D mptcp_sk(subflow->conn);
-> +            ack_seq =3D READ_ONCE(msk->ack_seq);
->            if (mpext->ack64) {
-> -                put_unaligned_be64(mpext->data_ack, ptr);
-> +                put_unaligned_be64(ack_seq, ptr);
->                ptr +=3D 2;
->            } else {
-> -                put_unaligned_be32(mpext->data_ack32, ptr);
-> +                put_unaligned_be32(ack_seq, ptr);
->                ptr +=3D 1;
->            }
-> +            subflow->rcv_wnd_sent =3D mptcp_set_rwin(msk, tp, th,
-> +                                   ack_seq);
->        }
->=20
->        if (mpext->use_map) {
-> @@ -1708,9 +1711,6 @@ void mptcp_write_options(struct tcphdr *th, __be32 *=
-ptr, struct tcp_sock *tp,
->            i +=3D 4;
->        }
->    }
-> -
-> -    if (tp)
-> -        mptcp_set_rwin(tp, th);
-> }
->=20
-> __be32 mptcp_get_reset_option(const struct sk_buff *skb)
->=20
-> --
-> 2.53.0
->=20
->=20
+In fact, such signalling option cannot be sent when TCP timestamps is
+used due to a lack of option space: the limit is at 40 bytes, and, with
+padding, TCP timestamps is taking 12 bytes, while an ADD_ADDR IPv6 +
+port is taking 30 bytes. The selected solution here is to simply drop
+the TCP timestamps option when such ADD_ADDR of 30 bytes needs to be
+sent.
+
+- Patches 1-3: small cleanups to avoid computing ADD/RM_ADDR twice.
+
+- Patches 4-7: the new feature, controlled by a new sysctl knob.
+
+- Patch 8: extra checks in the MPTCP Join selftests.
+
+- Patches 9-11: small pcap-related improvements in the selftests.
+
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+Matthieu Baerts (NGI0) (11):
+      mptcp: options: suboptions sizes can be negative
+      mptcp: pm: avoid computing rm_addr size twice
+      mptcp: pm: avoid computing add_addr size twice
+      mptcp: introduce add_addr_v6_port_drop_ts sysctl knob
+      tcp: allow mptcp to drop TS for some packets
+      mptcp: pm: drop TCP TS with ADD_ADDRv6 + port
+      selftests: mptcp: validate ADD_ADDRv6 + TS + port
+      selftests: mptcp: always check sent/dropped ADD_ADDRs
+      selftests: mptcp: connect: test name in pcap file
+      selftests: mptcp: simult_flow: test name in pcap file
+      selftests: mptcp: pcap: drop most of the payload
+
+ Documentation/networking/mptcp-sysctl.rst          | 13 ++++
+ include/net/mptcp.h                                |  3 +-
+ net/ipv4/tcp_output.c                              |  6 +-
+ net/mptcp/ctrl.c                                   | 18 ++++-
+ net/mptcp/options.c                                | 64 ++++++----------
+ net/mptcp/pm.c                                     | 49 +++++++++++--
+ net/mptcp/protocol.h                               | 30 +-------
+ tools/testing/selftests/net/mptcp/mptcp_connect.sh |  8 +-
+ tools/testing/selftests/net/mptcp/mptcp_join.sh    | 85 ++++++++++------------
+ tools/testing/selftests/net/mptcp/simult_flows.sh  | 11 ++-
+ 10 files changed, 159 insertions(+), 128 deletions(-)
+---
+base-commit: 8415598365503ced2e3d019491b0a2756c85c494
+change-id: 20260601-net-next-mptcp-add-addr6-port-ts-40d8d74d8e20
+
+Best regards,
+--  
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
+
