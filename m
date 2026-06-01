@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C75A2571A9;
-	Mon,  1 Jun 2026 07:37:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC004385535;
+	Mon,  1 Jun 2026 08:07:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780299423; cv=none; b=DF5qAvzZOR8OiyEuYmpiwpJElJyWh43QB0SzrXHgmykHmAm+7bscQTWlvlesb4nY/OsZ7NfBUdK7OZ42TgykSmVizviCUT9GJmO2z3IcdNS+Gayrs0Em+wcYAokcYy/JP8MxCwI00lGc4HQiFEcYTw16WohYiiQFgVrUAlpXujo=
+	t=1780301237; cv=none; b=DyLJW/TOebql75wTSj6uB3Gp2/k1j7AIQFRzMqcEfTyVQqVc+xC51UT/mowChoVhSMoPUKE1MaCuUAwNNRiRu3qggf/jjY3MIX7gbHVJP+G/h1yfpd6LBjEIj7Uat9A2N29hTzC0R9ZYSLZW7P7yvzenzfwophyxZm3HAIVxA2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780299423; c=relaxed/simple;
-	bh=mC81qbgcmy38SViJX2b4S2Scv8I8BxByNoAREvN26Cc=;
+	s=arc-20240116; t=1780301237; c=relaxed/simple;
+	bh=pOu1ni6eXxtdYdrzTXhGYwNqER8RRW0+pAwnd19RC3M=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GSQex4UkIIwjHmPZpcG1RxRJHyZU8uqbJYBfi0nf2ZsqU2KW311y9PDyzypDiKDL+fdBlUCUert3ymw5gxSxyL3ROlApue/N8ctXIj3T+yFjjCb28cnM/d7nxAHkswZzhq3zCezzwVpAPX+Zj5f3Unj6G6wRRSJ2A8wUePC0N04=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GVP4LMsB; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=MVBi3kS215U1evl2bwammFEg8xTW5M2tYTFfiORJz0a0zUZiNIA7Y6AarITeIdsHCN+iuFWyYjkmJZa5DV8R/ej51IcfYAMEJUmYAd/8FYfs3QeXlNpAClR4kzN8pjEdjxOweu/ktQ0DXYuu2ZU9f3Kc3btw7Ouw/yJk3VBIZR0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bsDbJm4g; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GVP4LMsB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3E8C1F00898;
-	Mon,  1 Jun 2026 07:36:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bsDbJm4g"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEE931F00893;
+	Mon,  1 Jun 2026 08:07:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780299422;
-	bh=W3C0w43v+VUaqwsG+cLidNf+MHEhVD0SKjKR4LFNQIs=;
+	s=k20260515; t=1780301236;
+	bh=A33ovvMiaLqovH2MstY2gpU/wp9fHn5mUpwsIceuxtQ=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=GVP4LMsB1VBljXIETcjY0CUYSzcqEvtMlC4/IRVzDJbfTHIYrRdRrym0RWaWLkNqE
-	 L1CGUbYEUYA9ZNFUF/EvXJlnqemnesU+cM4qBxcGTGA2znhowzuEHkVJmXRRRwtIsM
-	 /6ySJSUEs24rpRizKKR5FFpUE7G0Br6/5QDpEvE4E1OnoaYrlc9JZ7pQDFJZEXvBS7
-	 W6yDMx5b0nUCZSvpY8fcuxd7D2E151fztzDnoS1W1DOquEni4ixzQaIxskv+cPuDHf
-	 SbkT/7XJs79pU7Agr1dCz499D6QCEiWJ4kO0pm7jAbx+/dTBahLiJlLo2Ur10me+vD
-	 o6nhqNeD0Nokw==
-Message-ID: <da187652-64c5-4775-a662-c52eb6cd8549@kernel.org>
-Date: Mon, 1 Jun 2026 17:36:54 +1000
+	b=bsDbJm4ghasDFELULiEyPe1Dl5BhmuGFVdInD1IPjxnl4MsiR9+mR+PsjEMQfWnZX
+	 U3GDloFannniTL+sYqkZkGNcI4nbk5jOtsHI4F36VPP1wsvWfmOqh16ZjN9IIYJcbU
+	 o+dwjqcRHNEY7wUc9AUw4y1bV5dPW42Rinxt1cOYXRoMJQSVw5QY4Z7E6hQ9EopSNy
+	 mTpK5ejEatGkdUZEDgEsDHNGqZyJYP/yj6MHiHAAYK7pW293VBpH3wxMcNPpoV3+pS
+	 wx3MX6yU7ey53sFSfG2HwPodXBsFJ3/0a7GHXHMkJKlpN9yIxN1UEpdOSPJpHe2kCN
+	 KkQP5iXXhpS7g==
+Message-ID: <9a86dcf5-da53-4ae2-b871-33e36856cde7@kernel.org>
+Date: Mon, 1 Jun 2026 18:07:09 +1000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -100,120 +100,9 @@ Content-Transfer-Encoding: 8bit
 
 On 01/06/2026 17:26, Eric Dumazet wrote:
 > On Sun, May 31, 2026 at 11:52 PM Matthieu Baerts <matttbe@kernel.org> wrote:
->>
->> Hi Eric,
->>
->> Thank you for the review!
->>
->> On 01/06/2026 16:04, Eric Dumazet wrote:
->>> On Sun, May 31, 2026 at 10:25 PM Matthieu Baerts (NGI0)
->>> <matttbe@kernel.org> wrote:
->>>>
->>>> With TCP-timestamps (padded) taking 12 bytes and ADD_ADDR IPv6 + port
->>>> taking 30 bytes, the 40-byte limit for the TCP options is reached. In
->>>> this case, it is then not possible to send the address signal.
->>>>
->>>> The idea is to let MPTCP dropping the TCP-timestamps option for some
->>>> specific packets, to be able to send some specific pure ACK carrying >28
->>>> bytes of MPTCP options, like with this specific ADD_ADDR. A new
->>>> parameter is passed from tcp_established_options to the MPTCP side to
->>>> indicate if the TCP TS option is used, and if it should be dropped. The
->>>> next commit implements the part on MPTCP side, but split into two
->>>> patches to help TCP maintainers to identify the modifications on TCP
->>>> side. This feature will be controlled by a new add_addr_v6_port_drop_ts
->>>> MPTCP sysctl knob.
->>>>
->>>> It is important to keep in mind that dropping the TCP timestamps option
->>>> for one packet of the connection could eventually disrupt some
->>>> middleboxes: even if it should be unlikely, they could drop the packet
->>>> or even block the connection. That's why this new feature will be
->>>> controlled by a sysctl knob.
->>>>
->>>> Note that it would be technically possible to squeeze both options into
->>>> the header if the ADD_ADDR is first written, and then the TCP timestamps
->>>> without the NOPs preceding it. But this means more modifications on TCP
->>>> side, plus some middleboxes could still be disrupted by that.
->>>>
->>>> About the implementation, instead of passing a new boolean (drop_ts),
->>>> another option would be to pass the whole option structure (opts),
->>>> but 'struct tcp_out_options' is currently defined in tcp_output.c, and
->>>> would need to be exported. Plus that means the removal of the TCP TS
->>>> option would be done on the MPTCP side, and not here on the TCP side.
->>>> It feels clearer to remove other TCP options from the TCP side, than
->>>> hiding that from the MPTCP side.
->>>>
->>>> Yet an other alternative would be to pass the size already taken by the
->>>> other TCP options, and have a way to drop them all when needed. But this
->>>> feels better to target only the timestamps option where dropping it
->>>> should be safe, even if it is currently the only option that would be
->>>> set before MPTCP, when MPTCP is used.
->>>>
->>>> Reviewed-by: Mat Martineau <martineau@kernel.org>
->>>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
->>>> ---
->>>> To: Neal Cardwell <ncardwell@google.com>
->>>> To: Kuniyuki Iwashima <kuniyu@google.com>
->>>> ---
->>>>  include/net/mptcp.h   | 3 ++-
->>>>  net/ipv4/tcp_output.c | 6 +++++-
->>>>  net/mptcp/options.c   | 3 ++-
->>>>  3 files changed, 9 insertions(+), 3 deletions(-)
->>>>
->>>> diff --git a/include/net/mptcp.h b/include/net/mptcp.h
->>>> index f7263fe2a2e4..000b6593bfa4 100644
->>>> --- a/include/net/mptcp.h
->>>> +++ b/include/net/mptcp.h
->>>> @@ -151,7 +151,7 @@ bool mptcp_synack_options(const struct request_sock *req, unsigned int *size,
->>>>                           struct mptcp_out_options *opts);
->>>>  bool mptcp_established_options(struct sock *sk, struct sk_buff *skb,
->>>>                                unsigned int *size, unsigned int remaining,
->>>> -                              struct mptcp_out_options *opts);
->>>> +                              bool *drop_ts, struct mptcp_out_options *opts);
->>>>  bool mptcp_incoming_options(struct sock *sk, struct sk_buff *skb);
->>>>
->>>>  void mptcp_write_options(struct tcphdr *th, __be32 *ptr, struct tcp_sock *tp,
->>>> @@ -270,6 +270,7 @@ static inline bool mptcp_established_options(struct sock *sk,
->>>>                                              struct sk_buff *skb,
->>>>                                              unsigned int *size,
->>>>                                              unsigned int remaining,
->>>> +                                            bool *drop_ts,
->>>>                                              struct mptcp_out_options *opts)
->>>>  {
->>>>         return false;
->>>> diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
->>>> index ef0c10cd31c7..53ee4c8f5f8c 100644
->>>> --- a/net/ipv4/tcp_output.c
->>>> +++ b/net/ipv4/tcp_output.c
->>>> @@ -1181,12 +1181,16 @@ static unsigned int tcp_established_options(struct sock *sk, struct sk_buff *skb
->>>>          */
->>>>         if (sk_is_mptcp(sk)) {
->>>>                 unsigned int remaining = MAX_TCP_OPTION_SPACE - size;
->>>> +               bool drop_ts = opts->options & OPTION_TS;
->>>>                 unsigned int opt_size = 0;
->>>>
->>>>                 if (mptcp_established_options(sk, skb, &opt_size, remaining,
->>>> -                                             &opts->mptcp)) {
->>>> +                                             &drop_ts, &opts->mptcp)) {
->>>>                         opts->options |= OPTION_MPTCP;
->>>>                         size += opt_size;
->>>> +
->>>> +                       if (drop_ts)
->>>> +                               opts->options &= ~OPTION_TS;
->>>>                 }
->>>>         }
->>>
->>> Passing local variables' addresses forces the compiler to use a stack
->>> canary in this hot function, even for non-MPTCP flows.
->>>
->>> I was about to test the following patch, which removes the current
->>> stack canary caused by MPTCP :/
->>
->> Sorry, I didn't know you were planning to do that.
->>
->> Would that be OK for you if I use an unused bit in opts->mptcp? It's a
->> bit "hackish", but it avoids adding a new local variable address. Or do
->> you have another idea?
->>
+
+(...)
+
 >> The modifications in net/ipv4/tcp_output.c would then be limited to:
 >>
 >>
@@ -242,66 +131,11 @@ On 01/06/2026 17:26, Eric Dumazet wrote:
 > SGTM, but maybe the IS_ENABLED() is not needed in this block,
 > guarded by  if (sk_is_mptcp(sk))  ?
 
-I didn't think about that, I will check.
+It looks like it is still needed, same if I use:
 
-> Also I am unsure opts->mptcp.drop_ts is cleared already before
-> reaching  tcp_established_options()?
+  if (IS_ENABLED(CONFIG_MPTCP) && sk_is_mptcp(sk)) {
 
-Indeed, it is not. I explicitly reset it in mptcp_established_options,
-but I could do it here, that would be clearer.
-
->>                 }
->>         }
->>
->>
->> I can also avoid adding a new parameter in mptcp_established_options
->> (bool has_ts) by setting opts->mptcp.drop_ts before calling it, but
->> that's clearer with this new parameter I think.
->>
->>> $ scripts/bloat-o-meter -t vmlinux.old vmlinux.new
->>> add/remove: 0/0 grow/shrink: 0/3 up/down: 0/-92 (-92)
->>> Function                                     old     new   delta
->>> tcp_options_write.isra                      1423    1407     -16
->>> mptcp_established_options                   2746    2720     -26
->>> tcp_established_options                      553     503     -50
->>> Total: Before=22110750, After=22110658, chg -0.00%
->>>
->>
->> Good reduction!
->>
->> (...)
->>
->>> diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
->>> index ef0c10cd31c71ff585a937fde37f2b08b1214b5a..594ec6ba02d5413d43842f79aefbf4d8355c4f3f
->>> 100644
->>> --- a/net/ipv4/tcp_output.c
->>> +++ b/net/ipv4/tcp_output.c
->>> @@ -1183,10 +1183,11 @@ static unsigned int
->>> tcp_established_options(struct sock *sk, struct sk_buff *skb
->>>                 unsigned int remaining = MAX_TCP_OPTION_SPACE - size;
->>>                 unsigned int opt_size = 0;
->>>
->>> -               if (mptcp_established_options(sk, skb, &opt_size, remaining,
->>> -                                             &opts->mptcp)) {
->>> +               opt_size = mptcp_established_options(sk, skb, remaining,
->>> +                                                    &opts->mptcp);
->>> +               if (opt_size) {
->>>                         opts->options |= OPTION_MPTCP;
->>> -                       size += opt_size;
->>> +                       size += (opt_size & 63);
->>
->> Nice trick! What about returning a negative number when the MPTCP option
->> is not needed? Just to avoid playing with masks in the code?
-> 
-> Yes, that would work, thanks.
-> 
-> I can provide a patch in a couple of hours.
-No hurry, thank you! I will wait for your patches to be applied before
-sending a v2.
-
-(While at it, no need to initialise opt_size to 0 here above, and there
-was a double ";;" in mptcp_established_options, around "return 64 +
-total_size;;" but this code will change anyway.)
+Or maybe I missed another technique to avoid an extra #if.
 
 Cheers,
 Matt
