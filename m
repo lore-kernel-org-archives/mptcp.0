@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7C8941C72;
-	Mon,  1 Jun 2026 02:22:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DFFD3A1CD
+	for <mptcp@lists.linux.dev>; Mon,  1 Jun 2026 02:42:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780280551; cv=none; b=cyAs5SssQ1EAXj+QJkNy0o1wMuxjEjOmyIHHNdcObQoNJN7K093izzfQXJBpN71kI51zmLsQW9/vldPwAe4tKh2D/aenNa5CzyQUv/UEk0vSUU0E2mb6TeGor1yvhSV8LqA/FN9KgvVzp7WmFFhLdJzwfMAsnX0BDaOQdTAEaRg=
+	t=1780281765; cv=none; b=LzvIItxl4DEkm6Oaq2DEIlI45faB0LHT9Z4BMiCZSoraDzcJ0yQDvnAHI/cfjcakAlUuC4NH2wkasyFxzFL+B5infs7yBopL6h52mdFrZX66wGNrgpIHnU83JSU3yCJ3ZCy3B4LD6XvhtSgJej9/cFQ06B5pt/Y7AnT6Mem1bZk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780280551; c=relaxed/simple;
-	bh=CSTIk+EYfgOQEmivd+6MNb6DKAwx2ykz1VGJCY1R/Dc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FjFhTiMztZx1HmrTrJYLN2Xlkv80GBSuA3NJZWbefKvL/SN7AXpGjEcFsBDciO7kddywWfuuPQDiqGQ1uBA1qEb/WJa2QQ6ZMyti2hpSi3sjwnY4oDyqkBiZGTSTXqnISN0pxd0n9hr9WB6NjoCHIBfxoV4qXQJA1vGry2pJcUU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R2KPmZi5; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780281765; c=relaxed/simple;
+	bh=S3XqV4zQZPiK+6/116PTqLUhJCB7hvbveDa7Ws15EOQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=P7Ia2Xp0AbFo9/nvWpkDCbswQvjW1uONchWisk411IXEwGknHG+zWBapL+oEdhoIHPZqeD9SUobLzFKgxFCkE0lUaCjErcZoOvpj2Sx+2pVnqVD6QiJ4yKmJLkDIioAY2q0S1W/SsW6WFbCmNgJlY80e1ufPPUjrjeldZ7aI4Ts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UwU2G+tQ; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R2KPmZi5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF8111F00893;
-	Mon,  1 Jun 2026 02:22:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UwU2G+tQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72FD41F00893;
+	Mon,  1 Jun 2026 02:42:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780280550;
-	bh=UeqB1s/dR7PI0sLE5Y2hToN0eFT/jD95ZWS/IPa4/qw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=R2KPmZi5qjCl1Jady3PJJnezK+1PkvNBRGXeSG29lialAThN4gAz6/wIkrinw3AzU
-	 1Pce2THCoPbL2kmkzb4FMSAiAHJIEArD4LDxVbZ77nOE5Zu/OosYaXpMksGEvbg1O4
-	 XUCHeH4nOLWiMApsoUnUMMKWO/Ht+iMSayYKoqAUOEJMXcenqhPmnP0ZGue6RrKYF+
-	 AiAxlbCXQ6g8EULC8ZE9p6MES7/N2a6kneEweLB6/EsEO/DIi+5yKLvZp6lD3acjjb
-	 CeeplhNYIRxHVBOBjvRtnyzxnxmBq16aZPDc6f7CkQvM4lHW8VuhpjPCS/RlykiIgA
-	 nefu7OpRMK6NA==
-Message-ID: <25fb125b-6b4d-4f46-b8be-0a34099d1696@kernel.org>
-Date: Mon, 1 Jun 2026 12:22:25 +1000
+	s=k20260515; t=1780281764;
+	bh=szu8Y/skno/0jokYNOSD5LUyXSNlFI8EhXMaQnZyuxY=;
+	h=Date:Subject:To:References:From:In-Reply-To;
+	b=UwU2G+tQlhGUSo1sPHd0szNIa1KlbwXv1cU+/yzoh5NORoLn3jNA3VtW3BSXC7i//
+	 uxcESGardvP6rjga+B5E2gENT1SwtMowkisXpTjlbyQ6oamHFPYdZ+KZwK2IY2yQMZ
+	 J3zParVtWOyUJBgwoihZy/rsMOcRkIMfJ4K54aGCNnzsM8H1cCIeVuMVphRBWHarqf
+	 LtUAOYaB/VJCxiR1447DnJymN0wTJhj5JU12KxKB01qLjuJFMfRTMM+4lpcuFRXQoR
+	 nD6EK4GBrGwVfX++MepXtSaoQG+GXN1Ep7DGeMzPEy5++8jHhMs4Knlv/A90rBxbIP
+	 xcbbT30iZ4dag==
+Message-ID: <e08df8df-a6cc-43f0-b6bd-fa68fcb6db47@kernel.org>
+Date: Mon, 1 Jun 2026 12:42:40 +1000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,11 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [mptcp:export-net 15/22] include/linux/compiler_types.h:699:45:
- error: call to '__compiletime_assert_784' declared with attribute error:
- BUILD_BUG_ON failed: sizeof_field(struct mptcp_ext, flags) != sizeof(u16)
+Subject: Re: [PATCH mptcp-net] mptcp: fix uninit-value in
+ mptcp_established_options
 Content-Language: fr
-To: oe-kbuild-all@lists.linux.dev, Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev, kernel test robot <lkp@intel.com>
-References: <202605312026.Srgsz7Tp-lkp@intel.com>
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+References: <d776e14d19a313dd697e3715121f4e42e915287d.1780045909.git.pabeni@redhat.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,53 +85,40 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <202605312026.Srgsz7Tp-lkp@intel.com>
+In-Reply-To: <d776e14d19a313dd697e3715121f4e42e915287d.1780045909.git.pabeni@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi LKP team,
+Hi Paolo,
 
-On 31/05/2026 23:04, kernel test robot wrote:
-> tree:   https://github.com/multipath-tcp/mptcp_net-next.git export-net
-> head:   27a7d32aeb103a5c763966a494b141136c31cea0
-> commit: 206cf8c6e2bfce69eba0d463b3f6127d14f75abc [15/22] mptcp: fix uninit-value in mptcp_established_options
-> config: arm-collie_defconfig (https://download.01.org/0day-ci/archive/20260531/202605312026.Srgsz7Tp-lkp@intel.com/config)
-> compiler: arm-linux-gnueabi-gcc (GCC) 15.2.0
-> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260531/202605312026.Srgsz7Tp-lkp@intel.com/reproduce)
+On 29/05/2026 19:13, Paolo Abeni wrote:
+> syzbot reported the following uninit splat:
 > 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202605312026.Srgsz7Tp-lkp@intel.com/
-> 
-> All errors (new ones prefixed by >>):
-
-Thank you for the report.
+> =====================================================
 
 (...)
 
->    net/mptcp/options.c:576:9: note: in expansion of macro 'BUILD_BUG_ON'
->      576 |         BUILD_BUG_ON(sizeof_field(struct mptcp_ext, flags) != sizeof(u16));
->          |         ^~~~~~~~~~~~
+> =====================================================
+> 
+> The output path currently omit initializing the mptcp extension `use_map`
+> flag in a few corner cases.
+> Address the issue always zeroing all the extensions flags before
+> eventually initializing the individual bits. To that extent, introduce
+> and use a struct_group to avoid multiple bitwise operations.
+> 
+> Reported-by: syzbot+ff020673c5e3d94d9478@syzkaller.appspotmail.com
+> Closes: https://syzkaller.appspot.com/bug?extid=ff020673c5e3d94d9478
+> Fixes: 6d0060f600ad ("mptcp: Write MPTCP DSS headers to outgoing data packets")
 
-Mmh, I wonder what size this struct group has on ARM 32bit. I tried to
-reproduce the issue with the config file and the instructions, but I
-didn't manage to. So I don't know what size was detected there.
+Small detail: I hope that's OK to use this one instead:
 
-  $ COMPILER_INSTALL_PATH=${HOME}/0day COMPILER=gcc-15.2.0 \
-    ~/lkp/kbuild/make.cross W=1 O=build_dir ARCH=arm SHELL=/bin/bash net/mptcp/
-  Compiler will be installed in ${HOME}/0day
-  PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-  make --keep-going CONFIG_OF_ALL_DTBS=y CONFIG_DTC=y CROSS_COMPILE=${HOME}/0day/gcc-15.2.0-nolibc/arm-linux-gnueabi/bin/arm-linux-gnueabi- --jobs=32 KCFLAGS= -Wno-error=return-type -Wreturn-type -funsigned-char -Wundef -falign-functions=64 W=1 O=build_dir ARCH=arm SHELL=/bin/bash net/mptcp/
-  (...)
-    CC      net/mptcp/options.o
-  (...)
+  cfcceb7a39fc ("tcp: shrink per-packet memset in __tcp_transmit_skb()")
 
-Any idea why I cannot reproduce the issue?
+Before this commit, the whole "opts" was set to 0. So no need to
+backport this "too far".
 
-It would be good to know the output of sizeof_field().
-
-@Paolo: or should we use memset()?
+Also, because of the issue reported by the 0day bot, I will wait a few
+more days before sending this patch upstream.
 
 Cheers,
 Matt
