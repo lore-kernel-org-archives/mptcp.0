@@ -1,174 +1,110 @@
-Received: from sender4-of-o54.zoho.com (sender4-of-o54.zoho.com [136.143.188.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBC8F2367CF
-	for <mptcp@lists.linux.dev>; Mon,  1 Jun 2026 08:31:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.54
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780302665; cv=pass; b=cluU4/mNQa90LLs6bADNX9Nxw1tWwiluU39MezyJFqwV0FlYm6QpRD1SqUFeHWlFqvSOT7+fYCXgeUxjusGEaAnWVnIuo1LW9FRdskQFJEbNqiPKmJjq9m8D4wYrs3lvdmaWJ21qSGJnzHOV6OuWZKXcmJ8MnuOwvXlX61hw/FI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780302665; c=relaxed/simple;
-	bh=4gr0UiT8SFS9xlf5JzP1QGxKdFto7+DFGJyBHsWmYXE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HUnZ9EiIKTLrYTIQXx4kLcB33M1lJ75AffXWITupQB/P1Hw11m3br4umbvMcoO0cgVxiy5GgJ8WkvjN+givAGTRo5es5YE52d4i1VSi7TVyWGFnbzd1/ciEuu6FvBMCiLSA4yisBdCcMw0SVgW6ogl4XHrGSMqlayR58+L11kdM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com; spf=pass smtp.mailfrom=mpiricsoftware.com; dkim=fail (0-bit key) header.d=mpiricsoftware.com header.i=kalpan.jani@mpiricsoftware.com header.b=VsTIMGOn reason="key not found in DNS"; arc=pass smtp.client-ip=136.143.188.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mpiricsoftware.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF02927A47F
+	for <mptcp@lists.linux.dev>; Mon,  1 Jun 2026 09:04:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1780304654; cv=none; b=D3HX2MfzZwKjJKc9ZSz6+s2FtDE5LbKsLo4v7itLZfSWqIvqGZcW98Id/1k0V8Oi4S3o/BebgFmK9QVeRuGnnuIBCOWPi33PKOAg45Aw2VfvwCr7CLNyZ0JUunf5DCLYo7KI0Wrcqquh3ET83pS9Qg4OmH9FMtOZ6bnTmIFHXhU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1780304654; c=relaxed/simple;
+	bh=h7UzXCN3auhPK5fYRx7iwupsGeyo7bWhM6VYPG4n7Jo=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
+	 MIME-Version:Content-Type; b=rESZDwmKG9eJpN9bYOvssGkEoPKrKcNlbj0CKr4XnMK+xxlBsOCbSQUX/vCYW39G6HzKq6y51sfUOvBoRsQXDdAnjThq+h4Je11UT+w8IxnB3f/QtG2cy5kWPb1/Jm2KEIfs+KwTy1/9qbQorGSl9O2hTQoQ9KXHRpZpIvMEbgE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S+Gp2iRW; arc=none smtp.client-ip=209.85.222.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mpiricsoftware.com header.i=kalpan.jani@mpiricsoftware.com header.b="VsTIMGOn"
-ARC-Seal: i=1; a=rsa-sha256; t=1780302658; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=GKX6FcLXhnP9PmN519EaiyQHjhQNhMWv29N+3V/G8AX2rLwfsr3bO5zWuW2Ta1AzbXLXE9kaTka1y9Ec4clK7U9t5YYr9/g0X4l4iS/FSHrDoKSucCIRNpwecx1oBh0I3Q67iciiKbanYUF2mzwarDXpQTHr0Ar1sqEZkdU+yPo=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1780302658; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=krr885sZSbRLGmiHMX77sJfLxIZNMo1ueE3a+pAE8bo=; 
-	b=RWZLGHonHFVWxYuP8CVEkke3XmOApj1QRHjoZV4J66/nqmRKq5dKnuqMC50YThmTbeoEOKZ5XnfTD2CbsrDx8iCksP+ZlnokOWfAKJDr2UjzE9SwfVCvfHMkT+1EyUFjCsCJew2Nr3C9jw5RZX1rrs28e+CybcW6Lcl3isUr4v4=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=mpiricsoftware.com;
-	spf=pass  smtp.mailfrom=kalpan.jani@mpiricsoftware.com;
-	dmarc=pass header.from=<kalpan.jani@mpiricsoftware.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1780302658;
-	s=mpiric; d=mpiricsoftware.com; i=kalpan.jani@mpiricsoftware.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=krr885sZSbRLGmiHMX77sJfLxIZNMo1ueE3a+pAE8bo=;
-	b=VsTIMGOnaK3qjLLyCtTmFfMAHjhmTf230OCGQTYzf84x4PAtRTH2tHlDggCVPu4H
-	BweK7aiW2Hkw2WEfCdQq8pRQPkC53Ck+mkZAqYnFLZufGgNEjhQ2GYqcxHzpllWXb4v
-	MSIVpIQ2y6byswAsNKy1TJKCeH16hcSBXyTtUqXo=
-Received: by mx.zohomail.com with SMTPS id 1780302654242846.8653708396714;
-	Mon, 1 Jun 2026 01:30:54 -0700 (PDT)
-From: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
-To: mptcp@lists.linux.dev
-Cc: matttbe@kernel.org,
-	martineau@kernel.org,
-	shardul.b@mpiricsoftware.com,
-	janak@mpiric.us,
-	kalpanjani009@gmail.com,
-	shardulsb08@gmail.com,
-	Kalpan Jani <kalpan.jani@mpiricsoftware.com>,
-	Paolo Abeni <pabeni@redhat.com>,
-	syzkaller <syzkaller@googlegroups.com>
-Subject: [PATCH net v4] mptcp: fix stale skb->sk reference on subflow close
-Date: Mon,  1 Jun 2026 14:00:10 +0530
-Message-ID: <20260601083010.924938-1-kalpan.jani@mpiricsoftware.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S+Gp2iRW"
+Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-91550eced6bso141600285a.1
+        for <mptcp@lists.linux.dev>; Mon, 01 Jun 2026 02:04:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1780304652; x=1780909452; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ftBl+EeHQnzpD9DBXCnqPDJmvCcvlJx/hwEBW6vPoYM=;
+        b=S+Gp2iRWjX52b+GLe5wS5ZUIjn63VRMCucLWMy0KZXsRi2IegX+1X5tq0GQHftQqL5
+         VPEys5HzaIXn6RbD0ucVwhH8+dto+kObBiBhmKrQMkb70mfTVhWAv4TXIwalR4nvPm3w
+         t+PqQIogE7AqRFrtDxduUya51LKC9C4cZjWlCcgFk0001XnAS0aYK6z/BBeP0g9Zjuqo
+         VNOksRlsM/NSI9a059HdIWr+YOb5BSMIMZ/B2Eh+yJG5EdGiGAAPOIOYX01Xs/t8j7rv
+         84UaN1UPZwm4EglLCYgwwtWaNk0z3uA/+V9XXpbbpLhIswWbiQamz8vPVVkx3RhFbbjq
+         TRUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780304652; x=1780909452;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ftBl+EeHQnzpD9DBXCnqPDJmvCcvlJx/hwEBW6vPoYM=;
+        b=XJK1CtMIHfCPoW2MkYFooa/mg3tQYpKY2K+Rzwzm0qGCxLeGG+JsrxvUiUviUdLCn3
+         kEHfKRpeW3WzjsbhJFNauM11DUNpujbmjay6e4Zvsik5yS7KhPgx9DZCyA5ZErKClG0I
+         EbtRZwEcmk2XnCEkoo/j2HvEa3b9Kk6Xd9vtbb6wLOzD9H1g/CGqmWr/dwTt2gxTgh8O
+         T6LKbA87nLsvKwk85o8mVxMhwYiC+RdHz0rQa1ef371s2REYeK37nYaBwGGeOoB+jrg1
+         BdwVGolsli8Yiz0kZEbcDVH8G4kc+sa4sZWugDl7Vy7LRV8eIEGj0/UqjcTpTAwTrTvQ
+         wlHQ==
+X-Gm-Message-State: AOJu0Yza1G0ggcP4d82j5Lq7A+NoavqCelzK0hMFUQhiQ2O5ncPOd9ve
+	wvE7rmL0oOlDCMI9VYqq8eQKsoT9+RfNt3tx3PJAWE3NnR1oIGbufCc=
+X-Gm-Gg: Acq92OHUTbdENdU7J00itZGv4ikDnSuyMydfkBO+pJ060pSL+J5CP97al/2GCtGL9KY
+	mDxvcTzQKMQOj2JX73DUT8smpVc4TdxNBz9ip0eIAkrIXbPye9/JKUl1eun9JpWiqRPn9b0pBwY
+	glCECatpZmkq455rvqPBCkSvRZpAXdpUNHZiVG48mMlvGfGog2HWWjuiE5IZprQK8+dnaptNqRs
+	iQLZlBm9ya4O4yo+Yf039/cXnu4lwDGmG03gDoYoybkA/GDs4w1kVQWClh6WvtLXfoEttI1slwT
+	YPBVKyrxx3mN8wMKr3oRCCHXYgyF60gZpJ+pumJQxAN3HPpA+1QZ9VvGPRjtIWzajKhCoNap2Dq
+	NSOjnZjMXegE/QQYnbBzciHfmPk1kl8zyzcqY9BB7LnYAcoI5C5b8onAdB5gXHm/ofgbJ5HNj/y
+	YXzSnrw6EVcLNOEfFDNC+dzL99PLGhYFdgI3XlCLnNoUAAdco=
+X-Received: by 2002:a05:620a:44d0:b0:8ee:e011:a777 with SMTP id af79cd13be357-9153d938abemr1568608085a.7.1780304651826;
+        Mon, 01 Jun 2026 02:04:11 -0700 (PDT)
+Received: from [127.0.0.1] ([20.115.95.129])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-915325fbaf7sm989492685a.31.2026.06.01.02.04.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Jun 2026 02:04:11 -0700 (PDT)
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <20260601-mptcp-add-addr6-port-ts-fixes-v2-v1-0-d7c842e80446@kernel.org>
+References:
+ <20260601-mptcp-add-addr6-port-ts-fixes-v2-v1-0-d7c842e80446@kernel.org>
+Subject: =?UTF-8?Q?Re=3A_=5BPATCH_mptcp-next_0/4=5D_Fixes_f?=
+ =?UTF-8?Q?or_=22mptcp=3A_pm=3A_drop_TCP_TS_with_AD?=
+ =?UTF-8?Q?D=5FADDRv6_+_port=22?=
+Message-ID: <cf1d3f81-4124-c530-65c1-b655c35c73f4@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 01 Jun 2026 09:04:10 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=utf-8
 
-The backlog list is updated by mptcp_data_ready() under
-mptcp_data_lock(). The cleanup of backlog references to a closing
-subflow, however, was performed in mptcp_close_ssk(), before
-__mptcp_close_ssk() acquires the ssk lock, and while holding neither
-the ssk lock nor mptcp_data_lock().
+Hi Matthieu,
 
-Because that traversal ran without mptcp_data_lock(), concurrent softirq
-RX processing on another CPU (subflow_data_ready() -> mptcp_data_ready()
--> __mptcp_add_backlog(), under mptcp_data_lock()) could add a backlog
-entry referencing the ssk while the cleanup loop was in progress. Such
-an entry could be missed by the cleanup, or the concurrent list update
-could corrupt the traversal, leaving skb->sk pointing at the ssk after
-it is freed.
+Thank you for your modifications, that's great!
 
-A later mptcp_backlog_purge() then dereferences the stale pointer,
-triggering a warning in inet_sock_destruct() (ssk->sk_rmem_alloc != 0)
-followed by a use-after-free in mptcp_backlog_purge().
+But sadly, our CI spotted some issues with it when trying to build it.
 
-Fix this by moving the backlog cleanup into __mptcp_close_ssk(), after
-subflow->closing is set to 1 and while the ssk lock is still held,
-serialized under mptcp_data_lock(). The cleanup runs only on the push
-path (MPTCP_CF_PUSH), where backlog references accumulate; on other
-teardown paths the caller already handles cleanup.
+You can find more details there:
 
-With subflow->closing set and mptcp_data_lock() held across the purge,
-any concurrent mptcp_data_ready() either completes its enqueue before
-the purge runs and is caught, or observes closing=1 and bails out. Once
-mptcp_data_unlock() is reached, no new skb referencing the ssk can be
-enqueued, so the cleanup is exhaustive.
+  https://github.com/multipath-tcp/mptcp_=
+net-next/actions/runs/26744856471
 
-Remove the unprotected traversal from mptcp_close_ssk() entirely.
+Status: failure
+Initiator: Patchew =
+Applier
+Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/1e=
+1fdfa4d98f
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1103837
 
-Tested with the MPTCP kernel selftests on the patched kernel:
-- tools/testing/selftests/net/mptcp/mptcp_join.sh: all tests pass
-- tools/testing/selftests/net/mptcp/mptcp_connect.sh: 68/68 pass
+Feel free to reply to this email if you cannot access =
+logs, if you need
+some support to fix the error, if this doesn't seem to be=
+ caused by your
+modifications or if the error is a false positive one.
 
-Fixes: ee458a3f314e ("mptcp: introduce mptcp-level backlog")
-Suggested-by: Paolo Abeni <pabeni@redhat.com>
-Reported-by: syzkaller <syzkaller@googlegroups.com>
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/621
-Signed-off-by: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
----
- net/mptcp/protocol.c | 34 ++++++++++++++++++++--------------
- 1 file changed, 20 insertions(+), 14 deletions(-)
-
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 4546a8b09884..37efcea99dc1 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2527,6 +2527,22 @@ static void __mptcp_subflow_disconnect(struct sock *ssk,
- 	}
- }
- 
-+static void mptcp_cleanup_ssk_backlog(struct sock *sk, struct sock *ssk)
-+{
-+	struct mptcp_sock *msk = mptcp_sk(sk);
-+	struct sk_buff *skb;
-+
-+	mptcp_data_lock(sk);
-+	list_for_each_entry(skb, &msk->backlog_list, list) {
-+		if (skb->sk != ssk)
-+			continue;
-+
-+		atomic_sub(skb->truesize, &skb->sk->sk_rmem_alloc);
-+		skb->sk = NULL;
-+	}
-+	mptcp_data_unlock(sk);
-+}
-+
- /* subflow sockets can be either outgoing (connect) or incoming
-  * (accept).
-  *
-@@ -2550,6 +2567,9 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
- 	lock_sock_nested(ssk, SINGLE_DEPTH_NESTING);
- 	subflow->closing = 1;
- 
-+	if (flags & MPTCP_CF_PUSH)
-+		mptcp_cleanup_ssk_backlog(sk, ssk);
-+
- 	/* Borrow the fwd allocated page left-over; fwd memory for the subflow
- 	 * could be negative at this point, but will be reach zero soon - when
- 	 * the data allocated using such fragment will be freed.
-@@ -2641,9 +2661,6 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
- void mptcp_close_ssk(struct sock *sk, struct sock *ssk,
- 		     struct mptcp_subflow_context *subflow)
- {
--	struct mptcp_sock *msk = mptcp_sk(sk);
--	struct sk_buff *skb;
--
- 	/* The first subflow can already be closed or disconnected */
- 	if (subflow->close_event_done || READ_ONCE(subflow->local_id) < 0)
- 		return;
-@@ -2653,17 +2670,6 @@ void mptcp_close_ssk(struct sock *sk, struct sock *ssk,
- 	if (sk->sk_state == TCP_ESTABLISHED)
- 		mptcp_event(MPTCP_EVENT_SUB_CLOSED, mptcp_sk(sk), ssk, GFP_KERNEL);
- 
--	/* Remove any reference from the backlog to this ssk; backlog skbs consume
--	 * space in the msk receive queue, no need to touch sk->sk_rmem_alloc
--	 */
--	list_for_each_entry(skb, &msk->backlog_list, list) {
--		if (skb->sk != ssk)
--			continue;
--
--		atomic_sub(skb->truesize, &skb->sk->sk_rmem_alloc);
--		skb->sk = NULL;
--	}
--
- 	/* subflow aborted before reaching the fully_established status
- 	 * attempt the creation of the next subflow
- 	 */
--- 
-2.43.0
-
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
