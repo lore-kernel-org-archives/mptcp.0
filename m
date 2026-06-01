@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F160237FF7F;
-	Mon,  1 Jun 2026 06:52:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B04BF381AF1;
+	Mon,  1 Jun 2026 06:55:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780296755; cv=none; b=n9PjZyzdbEPkT6JljoxBqfL703VC9znDxs7pqahG0OBK3G4E6Qt1RfrP/lpnKTdKkaKg2g/+odU4l40JM+K6RJDHT0V6mnHP8CzH9b0hMK8+LjM9FSxPX1fsJmfdFg/tKbecF9A9orxP+izWrFNBI8wAo25Y+T18vvB/N5ZIyeE=
+	t=1780296933; cv=none; b=gW4ldX3meFV6LYx/Ci6dHb90Pxotjr6Bfz/eAWBMyETSPZqC2W0tg6zyP1AowikhwEr6pJ1+4HyFzgE1ZPrzoCZyfiGbc5SMyAaWEUC7AKiQEkJGHkSji/EVtTLZWjoCW5HHOSHezPoyMzYFFjh2Z1psf0j67D9lnombdHuhUeg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780296755; c=relaxed/simple;
-	bh=+Ug0/Jy+//jBtRa0eUFStmHjEAlY5BInHV9s9TRp8M0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dGF2tZ77mtXUoWhqG1ZzbRYScmZjak7AI0y40dmP6Bp1YzPULp5MGkEmwG8gg7NLqo5i8daZ9q/K2vdoyYP4g7EXvayCdIdRoYLD3DWxZow9u4saNyRzHoGIubK5sDACEf5iyxq2lVbhwbDppQI3BJJJ+2pJpR7q2YbwwSnwOus=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cXDrHH7Q; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780296933; c=relaxed/simple;
+	bh=HsB7aVsNJtEEySl12PFqdonyJ4+nPqV+JWfWwrh+88Y=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=YQeuqjzv1+leVanY1TImt+Gf6pYcCmhwV1sH1UeLmbj8birjTLWxlgF+e+bHHrmVAti5SFo8Viln/+670TR6jEFcD666PAomhMSxInD5MfToBZu1QbNE0y9uYh7eYq8JYwXLnzgDD64kxcWPzMNdxYY+hxgIYE6c2UodyNS62UY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mzVsqmcq; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cXDrHH7Q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A53AE1F00893;
-	Mon,  1 Jun 2026 06:52:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mzVsqmcq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D98C1F00893;
+	Mon,  1 Jun 2026 06:55:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780296753;
-	bh=EHNnn+XXAYZpllC658QeNsc4YneQ6lB3Hen3/qyDP4Q=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=cXDrHH7QoLsLi/Zp+9FhCIInG38Tn7ioFbIqUhujbF4TfVJvVbX5/ym+r7MldeOg0
-	 2E43DrHeVWcMaFPyG8G0JtoPxHUiBoKKQVt0IFoEMKJ/M//8/vyN0F79YBLK+A/qZX
-	 vOVdIq29m+TYg3pse5/hlwXTPSfuLWbPK1N1rzRes0ZT4EF6FxHjsHHMIIxzmv43t/
-	 jXBaD0BRo4cXaucgy9mbZG8nAJVOJmrJMk47RKrXV2BS1e/1eyWCPnRVHvIZSJLS+K
-	 /u18DwmLfroMcrxjNk5krq8rCuk/pl4JpsoBkzTFyNAiFzAHu+LxBeSELvznfWeaAQ
-	 rRVjfwPUhpuIw==
-Message-ID: <1f3aea3b-1bb0-4584-8f6d-af14d73df81d@kernel.org>
-Date: Mon, 1 Jun 2026 16:52:25 +1000
+	s=k20260515; t=1780296931;
+	bh=l9K/2mOCmg6QiK/gAw/yJVFS/xHL0XjxT2uwWaRPFv4=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To;
+	b=mzVsqmcqaJ1wAteszWUiz/dT0yAvRRVLA1VfBtimr7jTV/l2ORcWDByAyAY4XBCD4
+	 QyVB5UR0PNcn6dtRuiHc1ypmU5vBKK3QW1CSu0s58diHjVAEw2bH4L1Lv2SdmQ0Bbg
+	 TK84zR7xzFLZhvs8NOnPlcOY0mfcnB4HsxA/xRYRp62bVZ6jl2ZBnZu799ax2dIOS1
+	 v9pRHSK/M/HfWdCBkdztsCLBnU0Zj5vuaVS2ajrNcrgk6PRP5XGgcU+MtO6YRjCx0r
+	 35Y4UC59F/awPs7zp+7eCef8sCUxCQajhNd4RPP4hSmpgBMs/sUbULdfQEadVgY143
+	 IjQM2ypN5S20A==
+Message-ID: <d5891e2b-2f88-480f-a61e-2fe192d413ad@kernel.org>
+Date: Mon, 1 Jun 2026 16:55:26 +1000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,19 +35,15 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH net-next 05/11] tcp: allow mptcp to drop TS for some
- packets
+Subject: Re: [mptcp:export-net 15/22] include/linux/compiler_types.h:699:45:
+ error: call to '__compiletime_assert_784' declared with attribute error:
+ BUILD_BUG_ON failed: sizeof_field(struct mptcp_ext, flags) != sizeof(u16)
 Content-Language: fr
-To: Eric Dumazet <edumazet@google.com>
-Cc: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
- "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
- netdev@vger.kernel.org, mptcp@lists.linux.dev, linux-kernel@vger.kernel.org,
- Neal Cardwell <ncardwell@google.com>, Kuniyuki Iwashima <kuniyu@google.com>
-References: <20260601-net-next-mptcp-add-addr6-port-ts-v1-0-4fc25dfef62e@kernel.org>
- <20260601-net-next-mptcp-add-addr6-port-ts-v1-5-4fc25dfef62e@kernel.org>
- <CANn89iLdwhhwLyO6zRjWMEY3t9g60ZE8ZhOVx33ucg_uRETbmQ@mail.gmail.com>
 From: Matthieu Baerts <matttbe@kernel.org>
+To: oe-kbuild-all@lists.linux.dev, Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev, kernel test robot <lkp@intel.com>
+References: <202605312026.Srgsz7Tp-lkp@intel.com>
+ <25fb125b-6b4d-4f46-b8be-0a34099d1696@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -92,189 +88,352 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <CANn89iLdwhhwLyO6zRjWMEY3t9g60ZE8ZhOVx33ucg_uRETbmQ@mail.gmail.com>
+In-Reply-To: <25fb125b-6b4d-4f46-b8be-0a34099d1696@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Eric,
+Hello,
 
-Thank you for the review!
-
-On 01/06/2026 16:04, Eric Dumazet wrote:
-> On Sun, May 31, 2026 at 10:25 PM Matthieu Baerts (NGI0)
-> <matttbe@kernel.org> wrote:
->>
->> With TCP-timestamps (padded) taking 12 bytes and ADD_ADDR IPv6 + port
->> taking 30 bytes, the 40-byte limit for the TCP options is reached. In
->> this case, it is then not possible to send the address signal.
->>
->> The idea is to let MPTCP dropping the TCP-timestamps option for some
->> specific packets, to be able to send some specific pure ACK carrying >28
->> bytes of MPTCP options, like with this specific ADD_ADDR. A new
->> parameter is passed from tcp_established_options to the MPTCP side to
->> indicate if the TCP TS option is used, and if it should be dropped. The
->> next commit implements the part on MPTCP side, but split into two
->> patches to help TCP maintainers to identify the modifications on TCP
->> side. This feature will be controlled by a new add_addr_v6_port_drop_ts
->> MPTCP sysctl knob.
->>
->> It is important to keep in mind that dropping the TCP timestamps option
->> for one packet of the connection could eventually disrupt some
->> middleboxes: even if it should be unlikely, they could drop the packet
->> or even block the connection. That's why this new feature will be
->> controlled by a sysctl knob.
->>
->> Note that it would be technically possible to squeeze both options into
->> the header if the ADD_ADDR is first written, and then the TCP timestamps
->> without the NOPs preceding it. But this means more modifications on TCP
->> side, plus some middleboxes could still be disrupted by that.
->>
->> About the implementation, instead of passing a new boolean (drop_ts),
->> another option would be to pass the whole option structure (opts),
->> but 'struct tcp_out_options' is currently defined in tcp_output.c, and
->> would need to be exported. Plus that means the removal of the TCP TS
->> option would be done on the MPTCP side, and not here on the TCP side.
->> It feels clearer to remove other TCP options from the TCP side, than
->> hiding that from the MPTCP side.
->>
->> Yet an other alternative would be to pass the size already taken by the
->> other TCP options, and have a way to drop them all when needed. But this
->> feels better to target only the timestamps option where dropping it
->> should be safe, even if it is currently the only option that would be
->> set before MPTCP, when MPTCP is used.
->>
->> Reviewed-by: Mat Martineau <martineau@kernel.org>
->> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
->> ---
->> To: Neal Cardwell <ncardwell@google.com>
->> To: Kuniyuki Iwashima <kuniyu@google.com>
->> ---
->>  include/net/mptcp.h   | 3 ++-
->>  net/ipv4/tcp_output.c | 6 +++++-
->>  net/mptcp/options.c   | 3 ++-
->>  3 files changed, 9 insertions(+), 3 deletions(-)
->>
->> diff --git a/include/net/mptcp.h b/include/net/mptcp.h
->> index f7263fe2a2e4..000b6593bfa4 100644
->> --- a/include/net/mptcp.h
->> +++ b/include/net/mptcp.h
->> @@ -151,7 +151,7 @@ bool mptcp_synack_options(const struct request_sock *req, unsigned int *size,
->>                           struct mptcp_out_options *opts);
->>  bool mptcp_established_options(struct sock *sk, struct sk_buff *skb,
->>                                unsigned int *size, unsigned int remaining,
->> -                              struct mptcp_out_options *opts);
->> +                              bool *drop_ts, struct mptcp_out_options *opts);
->>  bool mptcp_incoming_options(struct sock *sk, struct sk_buff *skb);
->>
->>  void mptcp_write_options(struct tcphdr *th, __be32 *ptr, struct tcp_sock *tp,
->> @@ -270,6 +270,7 @@ static inline bool mptcp_established_options(struct sock *sk,
->>                                              struct sk_buff *skb,
->>                                              unsigned int *size,
->>                                              unsigned int remaining,
->> +                                            bool *drop_ts,
->>                                              struct mptcp_out_options *opts)
->>  {
->>         return false;
->> diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
->> index ef0c10cd31c7..53ee4c8f5f8c 100644
->> --- a/net/ipv4/tcp_output.c
->> +++ b/net/ipv4/tcp_output.c
->> @@ -1181,12 +1181,16 @@ static unsigned int tcp_established_options(struct sock *sk, struct sk_buff *skb
->>          */
->>         if (sk_is_mptcp(sk)) {
->>                 unsigned int remaining = MAX_TCP_OPTION_SPACE - size;
->> +               bool drop_ts = opts->options & OPTION_TS;
->>                 unsigned int opt_size = 0;
->>
->>                 if (mptcp_established_options(sk, skb, &opt_size, remaining,
->> -                                             &opts->mptcp)) {
->> +                                             &drop_ts, &opts->mptcp)) {
->>                         opts->options |= OPTION_MPTCP;
->>                         size += opt_size;
->> +
->> +                       if (drop_ts)
->> +                               opts->options &= ~OPTION_TS;
->>                 }
->>         }
+On 01/06/2026 12:22, Matthieu Baerts wrote:
+> Hi LKP team,
 > 
-> Passing local variables' addresses forces the compiler to use a stack
-> canary in this hot function, even for non-MPTCP flows.
+> On 31/05/2026 23:04, kernel test robot wrote:
+>> tree:   https://github.com/multipath-tcp/mptcp_net-next.git export-net
+>> head:   27a7d32aeb103a5c763966a494b141136c31cea0
+>> commit: 206cf8c6e2bfce69eba0d463b3f6127d14f75abc [15/22] mptcp: fix uninit-value in mptcp_established_options
+>> config: arm-collie_defconfig (https://download.01.org/0day-ci/archive/20260531/202605312026.Srgsz7Tp-lkp@intel.com/config)
+>> compiler: arm-linux-gnueabi-gcc (GCC) 15.2.0
+>> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260531/202605312026.Srgsz7Tp-lkp@intel.com/reproduce)
+>>
+>> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+>> the same patch/commit), kindly add following tags
+>> | Reported-by: kernel test robot <lkp@intel.com>
+>> | Closes: https://lore.kernel.org/oe-kbuild-all/202605312026.Srgsz7Tp-lkp@intel.com/
+>>
+>> All errors (new ones prefixed by >>):
 > 
-> I was about to test the following patch, which removes the current
-> stack canary caused by MPTCP :/
-
-Sorry, I didn't know you were planning to do that.
-
-Would that be OK for you if I use an unused bit in opts->mptcp? It's a
-bit "hackish", but it avoids adding a new local variable address. Or do
-you have another idea?
-
-The modifications in net/ipv4/tcp_output.c would then be limited to:
-
-
-diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
-index ef0c10cd31c7..f4edc9c4f3fc 100644
---- a/net/ipv4/tcp_output.c
-+++ b/net/ipv4/tcp_output.c
-@@ -1181,12 +1181,18 @@ static unsigned int tcp_established_options(struct sock *sk, struct sk_buff *skb
-         */
-        if (sk_is_mptcp(sk)) {
-                unsigned int remaining = MAX_TCP_OPTION_SPACE - size;
-+               bool has_ts = opts->options & OPTION_TS;
-                unsigned int opt_size = 0;
- 
-                if (mptcp_established_options(sk, skb, &opt_size, remaining,
--                                             &opts->mptcp)) {
-+                                             has_ts, &opts->mptcp)) {
-                        opts->options |= OPTION_MPTCP;
-                        size += opt_size;
-+
-+#if IS_ENABLED(CONFIG_MPTCP)
-+                       if (opts->mptcp.drop_ts)
-+                               opts->options &= ~OPTION_TS;
-+#endif
-                }
-        }
- 
-
-I can also avoid adding a new parameter in mptcp_established_options
-(bool has_ts) by setting opts->mptcp.drop_ts before calling it, but
-that's clearer with this new parameter I think.
-
-> $ scripts/bloat-o-meter -t vmlinux.old vmlinux.new
-> add/remove: 0/0 grow/shrink: 0/3 up/down: 0/-92 (-92)
-> Function                                     old     new   delta
-> tcp_options_write.isra                      1423    1407     -16
-> mptcp_established_options                   2746    2720     -26
-> tcp_established_options                      553     503     -50
-> Total: Before=22110750, After=22110658, chg -0.00%
+> Thank you for the report.
 > 
-
-Good reduction!
-
-(...)
-
-> diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
-> index ef0c10cd31c71ff585a937fde37f2b08b1214b5a..594ec6ba02d5413d43842f79aefbf4d8355c4f3f
-> 100644
-> --- a/net/ipv4/tcp_output.c
-> +++ b/net/ipv4/tcp_output.c
-> @@ -1183,10 +1183,11 @@ static unsigned int
-> tcp_established_options(struct sock *sk, struct sk_buff *skb
->                 unsigned int remaining = MAX_TCP_OPTION_SPACE - size;
->                 unsigned int opt_size = 0;
+> (...)
 > 
-> -               if (mptcp_established_options(sk, skb, &opt_size, remaining,
-> -                                             &opts->mptcp)) {
-> +               opt_size = mptcp_established_options(sk, skb, remaining,
-> +                                                    &opts->mptcp);
-> +               if (opt_size) {
->                         opts->options |= OPTION_MPTCP;
-> -                       size += opt_size;
-> +                       size += (opt_size & 63);
+>>    net/mptcp/options.c:576:9: note: in expansion of macro 'BUILD_BUG_ON'
+>>      576 |         BUILD_BUG_ON(sizeof_field(struct mptcp_ext, flags) != sizeof(u16));
+>>          |         ^~~~~~~~~~~~
+> 
+> Mmh, I wonder what size this struct group has on ARM 32bit. I tried to
+> reproduce the issue with the config file and the instructions, but I
+> didn't manage to. So I don't know what size was detected there.
+> 
+>   $ COMPILER_INSTALL_PATH=${HOME}/0day COMPILER=gcc-15.2.0 \
+>     ~/lkp/kbuild/make.cross W=1 O=build_dir ARCH=arm SHELL=/bin/bash net/mptcp/
+>   Compiler will be installed in ${HOME}/0day
+>   PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+>   make --keep-going CONFIG_OF_ALL_DTBS=y CONFIG_DTC=y CROSS_COMPILE=${HOME}/0day/gcc-15.2.0-nolibc/arm-linux-gnueabi/bin/arm-linux-gnueabi- --jobs=32 KCFLAGS= -Wno-error=return-type -Wreturn-type -funsigned-char -Wundef -falign-functions=64 W=1 O=build_dir ARCH=arm SHELL=/bin/bash net/mptcp/
+>   (...)
+>     CC      net/mptcp/options.o
+>   (...)
+> 
+> Any idea why I cannot reproduce the issue?
 
-Nice trick! What about returning a negative number when the MPTCP option
-is not needed? Just to avoid playing with masks in the code?
+Earlier, I started a full build with LKP with all patches from the
+export-net tree, and it didn't find any issues:
+
+> elapsed time: 730m
+> 
+> configs tested: 285
+> configs skipped: 6
+> 
+> The following configs have been built successfully.
+> More configs may be tested in the coming days.
+> 
+> tested configs:
+> alpha                             allnoconfig    gcc-15.2.0
+> alpha                            allyesconfig    gcc-15.2.0
+> alpha                               defconfig    gcc-15.2.0
+> arc                              allmodconfig    clang-16
+> arc                              allmodconfig    gcc-15.2.0
+> arc                               allnoconfig    gcc-15.2.0
+> arc                              allyesconfig    clang-23
+> arc                              allyesconfig    gcc-15.2.0
+> arc                      axs103_smp_defconfig    gcc-15.2.0
+> arc                                 defconfig    gcc-15.2.0
+> arc                   randconfig-001-20260601    clang-23
+> arc                   randconfig-001-20260601    gcc-8.5.0
+> arc                   randconfig-002-20260601    clang-23
+> arc                   randconfig-002-20260601    gcc-14.3.0
+> arc                    vdk_hs38_smp_defconfig    gcc-15.2.0
+> arm                               allnoconfig    clang-23
+> arm                               allnoconfig    gcc-15.2.0
+> arm                              allyesconfig    clang-16
+> arm                              allyesconfig    gcc-15.2.0
+> arm                                 defconfig    clang-23
+> arm                                 defconfig    gcc-15.2.0
+> arm                   randconfig-001-20260601    clang-23
+> arm                   randconfig-001-20260601    gcc-15.2.0
+> arm                   randconfig-002-20260601    clang-23
+> arm                   randconfig-002-20260601    gcc-11.5.0
+> arm                   randconfig-003-20260601    clang-23
+> arm                   randconfig-004-20260601    clang-23
+> arm                   randconfig-004-20260601    gcc-8.5.0
+> arm64                            allmodconfig    clang-19
+> arm64                            allmodconfig    clang-23
+> arm64                             allnoconfig    gcc-15.2.0
+> arm64                               defconfig    gcc-15.2.0
+> arm64                          randconfig-001    clang-23
+> arm64                 randconfig-001-20260601    clang-23
+> arm64                 randconfig-001-20260601    gcc-14.3.0
+> arm64                 randconfig-001-20260601    gcc-8.5.0
+> arm64                          randconfig-002    clang-23
+> arm64                 randconfig-002-20260601    clang-23
+> arm64                 randconfig-002-20260601    gcc-8.5.0
+> arm64                          randconfig-003    clang-23
+> arm64                 randconfig-003-20260601    clang-23
+> arm64                 randconfig-003-20260601    gcc-15.2.0
+> arm64                 randconfig-003-20260601    gcc-8.5.0
+> arm64                          randconfig-004    clang-23
+> arm64                 randconfig-004-20260601    clang-23
+> arm64                 randconfig-004-20260601    gcc-14.3.0
+> arm64                 randconfig-004-20260601    gcc-8.5.0
+> csky                             allmodconfig    gcc-15.2.0
+> csky                              allnoconfig    gcc-15.2.0
+> csky                                defconfig    gcc-15.2.0
+> csky                           randconfig-001    clang-23
+> csky                  randconfig-001-20260601    clang-23
+> csky                  randconfig-001-20260601    gcc-14.3.0
+> csky                  randconfig-001-20260601    gcc-8.5.0
+> csky                           randconfig-002    clang-23
+> csky                  randconfig-002-20260601    clang-23
+> csky                  randconfig-002-20260601    gcc-16.1.0
+> csky                  randconfig-002-20260601    gcc-8.5.0
+> hexagon                          allmodconfig    clang-17
+> hexagon                           allnoconfig    clang-23
+> hexagon                           allnoconfig    gcc-15.2.0
+> hexagon                             defconfig    clang-23
+> hexagon                             defconfig    gcc-15.2.0
+> hexagon               randconfig-001-20260601    clang-18
+> hexagon               randconfig-001-20260601    gcc-8.5.0
+> hexagon               randconfig-002-20260601    clang-23
+> hexagon               randconfig-002-20260601    gcc-8.5.0
+> i386                             allmodconfig    clang-20
+> i386                             allmodconfig    gcc-14
+> i386                              allnoconfig    gcc-14
+> i386                              allnoconfig    gcc-15.2.0
+> i386                             allyesconfig    clang-20
+> i386                             allyesconfig    gcc-14
+> i386                 buildonly-randconfig-001    gcc-12
+> i386        buildonly-randconfig-001-20260601    gcc-12
+> i386        buildonly-randconfig-001-20260601    gcc-14
+> i386                 buildonly-randconfig-002    gcc-12
+> i386        buildonly-randconfig-002-20260601    clang-20
+> i386        buildonly-randconfig-002-20260601    gcc-12
+> i386                 buildonly-randconfig-003    gcc-12
+> i386        buildonly-randconfig-003-20260601    gcc-12
+> i386        buildonly-randconfig-003-20260601    gcc-14
+> i386                 buildonly-randconfig-004    gcc-12
+> i386        buildonly-randconfig-004-20260601    clang-20
+> i386        buildonly-randconfig-004-20260601    gcc-12
+> i386                 buildonly-randconfig-005    gcc-12
+> i386        buildonly-randconfig-005-20260601    gcc-12
+> i386        buildonly-randconfig-005-20260601    gcc-14
+> i386                 buildonly-randconfig-006    gcc-12
+> i386        buildonly-randconfig-006-20260601    gcc-12
+> i386                                defconfig    clang-20
+> i386                                defconfig    gcc-15.2.0
+> i386                  randconfig-001-20260601    gcc-14
+> i386                  randconfig-002-20260601    gcc-14
+> i386                  randconfig-003-20260601    gcc-14
+> i386                  randconfig-004-20260601    gcc-14
+> i386                  randconfig-005-20260601    gcc-14
+> i386                  randconfig-006-20260601    gcc-14
+> i386                  randconfig-007-20260601    gcc-14
+> i386                  randconfig-012-20260601    clang-20
+> loongarch                        allmodconfig    clang-19
+> loongarch                        allmodconfig    clang-23
+> loongarch                         allnoconfig    clang-23
+> loongarch                         allnoconfig    gcc-15.2.0
+> loongarch                           defconfig    clang-19
+> loongarch             randconfig-001-20260601    clang-23
+> loongarch             randconfig-001-20260601    gcc-8.5.0
+> loongarch             randconfig-002-20260601    clang-18
+> loongarch             randconfig-002-20260601    gcc-8.5.0
+> m68k                             allmodconfig    gcc-15.2.0
+> m68k                              allnoconfig    gcc-15.2.0
+> m68k                             allyesconfig    clang-16
+> m68k                             allyesconfig    gcc-15.2.0
+> m68k                                defconfig    clang-19
+> microblaze                        allnoconfig    gcc-15.2.0
+> microblaze                       allyesconfig    gcc-15.2.0
+> microblaze                          defconfig    clang-19
+> mips                             allmodconfig    gcc-15.2.0
+> mips                              allnoconfig    gcc-15.2.0
+> mips                             allyesconfig    gcc-15.2.0
+> mips                      malta_kvm_defconfig    gcc-15.2.0
+> nios2                            allmodconfig    clang-23
+> nios2                            allmodconfig    gcc-11.5.0
+> nios2                             allnoconfig    clang-23
+> nios2                             allnoconfig    gcc-11.5.0
+> nios2                               defconfig    clang-19
+> nios2                 randconfig-001-20260601    gcc-8.5.0
+> nios2                 randconfig-002-20260601    gcc-8.5.0
+> openrisc                         allmodconfig    clang-23
+> openrisc                         allmodconfig    gcc-15.2.0
+> openrisc                          allnoconfig    clang-23
+> openrisc                          allnoconfig    gcc-15.2.0
+> openrisc                            defconfig    gcc-15.2.0
+> parisc                           allmodconfig    gcc-15.2.0
+> parisc                            allnoconfig    clang-23
+> parisc                            allnoconfig    gcc-15.2.0
+> parisc                           allyesconfig    clang-19
+> parisc                           allyesconfig    gcc-15.2.0
+> parisc                              defconfig    gcc-15.2.0
+> parisc                         randconfig-001    gcc-10.5.0
+> parisc                         randconfig-001    gcc-13.4.0
+> parisc                randconfig-001-20260601    gcc-10.5.0
+> parisc                         randconfig-002    gcc-10.5.0
+> parisc                         randconfig-002    gcc-8.5.0
+> parisc                randconfig-002-20260601    gcc-10.5.0
+> parisc                randconfig-002-20260601    gcc-8.5.0
+> parisc64                         alldefconfig    gcc-15.2.0
+> parisc64                            defconfig    clang-19
+> powerpc                          allmodconfig    gcc-15.2.0
+> powerpc                           allnoconfig    clang-23
+> powerpc                           allnoconfig    gcc-15.2.0
+> powerpc                        randconfig-001    gcc-10.5.0
+> powerpc                        randconfig-001    gcc-13.4.0
+> powerpc               randconfig-001-20260601    gcc-10.5.0
+> powerpc               randconfig-001-20260601    gcc-14.3.0
+> powerpc                        randconfig-002    gcc-10.5.0
+> powerpc               randconfig-002-20260601    clang-23
+> powerpc               randconfig-002-20260601    gcc-10.5.0
+> powerpc64                      randconfig-001    clang-17
+> powerpc64                      randconfig-001    gcc-10.5.0
+> powerpc64             randconfig-001-20260601    gcc-10.5.0
+> powerpc64             randconfig-001-20260601    gcc-12.5.0
+> powerpc64                      randconfig-002    clang-23
+> powerpc64                      randconfig-002    gcc-10.5.0
+> powerpc64             randconfig-002-20260601    gcc-10.5.0
+> powerpc64             randconfig-002-20260601    gcc-13.4.0
+> riscv                            allmodconfig    clang-23
+> riscv                             allnoconfig    clang-23
+> riscv                             allnoconfig    gcc-15.2.0
+> riscv                            allyesconfig    clang-16
+> riscv                               defconfig    clang-23
+> riscv                               defconfig    gcc-15.2.0
+> riscv                          randconfig-001    clang-23
+> riscv                 randconfig-001-20260601    clang-23
+> riscv                 randconfig-001-20260601    gcc-10.5.0
+> riscv                          randconfig-002    clang-23
+> riscv                 randconfig-002-20260601    clang-23
+> riscv                 randconfig-002-20260601    gcc-10.5.0
+> s390                             allmodconfig    clang-18
+> s390                             allmodconfig    clang-19
+> s390                              allnoconfig    clang-23
+> s390                             allyesconfig    gcc-15.2.0
+> s390                                defconfig    clang-23
+> s390                                defconfig    gcc-15.2.0
+> s390                           randconfig-001    clang-23
+> s390                  randconfig-001-20260601    clang-23
+> s390                           randconfig-002    clang-23
+> s390                  randconfig-002-20260601    clang-23
+> sh                               allmodconfig    gcc-15.2.0
+> sh                                allnoconfig    clang-23
+> sh                                allnoconfig    gcc-15.2.0
+> sh                               allyesconfig    clang-19
+> sh                               allyesconfig    gcc-15.2.0
+> sh                                  defconfig    gcc-14
+> sh                                  defconfig    gcc-15.2.0
+> sh                        dreamcast_defconfig    gcc-15.2.0
+> sh                             randconfig-001    clang-23
+> sh                    randconfig-001-20260601    clang-23
+> sh                    randconfig-001-20260601    gcc-16.1.0
+> sh                             randconfig-002    clang-23
+> sh                    randconfig-002-20260601    clang-23
+> sh                    randconfig-002-20260601    gcc-16.1.0
+> sh                             shx3_defconfig    gcc-15.2.0
+> sparc                             allnoconfig    clang-23
+> sparc                             allnoconfig    gcc-15.2.0
+> sparc                               defconfig    gcc-15.2.0
+> sparc                 randconfig-001-20260601    gcc-15.2.0
+> sparc                 randconfig-001-20260601    gcc-8.5.0
+> sparc                 randconfig-002-20260601    gcc-15.2.0
+> sparc                 randconfig-002-20260601    gcc-8.5.0
+> sparc64                          allmodconfig    clang-23
+> sparc64                             defconfig    clang-20
+> sparc64                             defconfig    gcc-14
+> sparc64               randconfig-001-20260601    clang-20
+> sparc64               randconfig-001-20260601    gcc-15.2.0
+> sparc64               randconfig-002-20260601    clang-23
+> sparc64               randconfig-002-20260601    gcc-15.2.0
+> um                               allmodconfig    clang-19
+> um                                allnoconfig    clang-23
+> um                               allyesconfig    gcc-14
+> um                               allyesconfig    gcc-15.2.0
+> um                                  defconfig    clang-23
+> um                                  defconfig    gcc-14
+> um                             i386_defconfig    gcc-14
+> um                    randconfig-001-20260601    gcc-14
+> um                    randconfig-001-20260601    gcc-15.2.0
+> um                    randconfig-002-20260601    gcc-14
+> um                    randconfig-002-20260601    gcc-15.2.0
+> um                           x86_64_defconfig    clang-23
+> um                           x86_64_defconfig    gcc-14
+> x86_64                           allmodconfig    clang-20
+> x86_64                            allnoconfig    clang-20
+> x86_64                            allnoconfig    clang-23
+> x86_64                           allyesconfig    clang-20
+> x86_64      buildonly-randconfig-001-20260601    clang-20
+> x86_64      buildonly-randconfig-002-20260601    clang-20
+> x86_64      buildonly-randconfig-003-20260601    clang-20
+> x86_64      buildonly-randconfig-004-20260601    clang-20
+> x86_64      buildonly-randconfig-004-20260601    gcc-12
+> x86_64      buildonly-randconfig-005-20260601    clang-20
+> x86_64      buildonly-randconfig-006-20260601    clang-20
+> x86_64      buildonly-randconfig-006-20260601    gcc-14
+> x86_64                              defconfig    gcc-14
+> x86_64                                  kexec    clang-20
+> x86_64                randconfig-001-20260601    clang-20
+> x86_64                randconfig-001-20260601    gcc-14
+> x86_64                randconfig-002-20260601    clang-20
+> x86_64                randconfig-002-20260601    gcc-14
+> x86_64                randconfig-003-20260601    clang-20
+> x86_64                randconfig-004-20260601    clang-20
+> x86_64                randconfig-005-20260601    clang-20
+> x86_64                randconfig-006-20260601    clang-20
+> x86_64                randconfig-011-20260601    clang-20
+> x86_64                randconfig-012-20260601    clang-20
+> x86_64                randconfig-012-20260601    gcc-14
+> x86_64                randconfig-013-20260601    clang-20
+> x86_64                randconfig-014-20260601    clang-20
+> x86_64                randconfig-014-20260601    gcc-14
+> x86_64                randconfig-015-20260601    clang-20
+> x86_64                randconfig-015-20260601    gcc-14
+> x86_64                randconfig-016-20260601    clang-20
+> x86_64                randconfig-016-20260601    gcc-14
+> x86_64                randconfig-071-20260601    clang-20
+> x86_64                randconfig-071-20260601    gcc-14
+> x86_64                randconfig-072-20260601    gcc-14
+> x86_64                randconfig-073-20260601    clang-20
+> x86_64                randconfig-073-20260601    gcc-14
+> x86_64                randconfig-074-20260601    gcc-14
+> x86_64                randconfig-075-20260601    gcc-14
+> x86_64                randconfig-076-20260601    gcc-12
+> x86_64                randconfig-076-20260601    gcc-14
+> x86_64                               rhel-9.4    clang-20
+> x86_64                           rhel-9.4-bpf    gcc-14
+> x86_64                          rhel-9.4-func    clang-20
+> x86_64                    rhel-9.4-kselftests    clang-20
+> x86_64                         rhel-9.4-kunit    gcc-14
+> x86_64                           rhel-9.4-ltp    gcc-14
+> x86_64                          rhel-9.4-rust    clang-20
+> xtensa                            allnoconfig    clang-23
+> xtensa                            allnoconfig    gcc-15.2.0
+> xtensa                           allyesconfig    clang-23
+> xtensa                           allyesconfig    gcc-15.2.0
+> xtensa                randconfig-001-20260601    gcc-15.2.0
+> xtensa                randconfig-001-20260601    gcc-8.5.0
+> xtensa                randconfig-002-20260601    gcc-15.2.0
+
+Should I ignore this report then?
 
 Cheers,
 Matt
