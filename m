@@ -1,253 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f172.google.com (mail-dy1-f172.google.com [74.125.82.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08C45396D0A
-	for <mptcp@lists.linux.dev>; Mon,  1 Jun 2026 09:47:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8102139D6DA
+	for <mptcp@lists.linux.dev>; Mon,  1 Jun 2026 09:54:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780307236; cv=none; b=LKnyHEdk5Bl3xqlX5Y6QML7b/EcxF69vDAJRna/LDGNa6780F70E7p7fleK3fgGvdYoghJRB5KTMXFRLDHVSpICZAXQWLqTGp8LfdpX+0zLFM8yS8/l/QlCkgJmezO8p1ytOxOnHvTcGKfDP8MGgk2SqKrPQ6B7J9yNvqtuaP4s=
+	t=1780307669; cv=none; b=RA32utpeqfUpgyJwhKqjMWJ+9IZd0/YkgTIsCVIHC+pk7ilgIDAn7TB9WlYKc+lO0Bhk4EDI20PrnlROs+N5gscan4zy3OKezLbkKwCO3TWXfAr+RoQ6JAzCyfUi83QRWDq6JmPYSZMmzZumfXpimwZZo/XE0oXxxCIxKI1L5NE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780307236; c=relaxed/simple;
-	bh=Nnbvm3KJc5pJz3axRyuFx5NX5tC+6aGL322rgvxPN1o=;
-	h=Message-ID:Date:MIME-Version:From:Subject:References:To:
-	 In-Reply-To:Content-Type; b=FXd3PrAlcorWJ7EfqBsBeaT/Ii2whyrpK0IHFli/JpM9OggKlEJn1DGJHHc++yQlEPatTVtIQ57gFtyZW6KSsregfUZoPyiSVwt2I8lBF6em2DwZYKjpvdxqpBPA45O3HSzcTb9eib7lPjKrGv9UJjcugEmca84yz99dSikNUbY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gjsNCZ3D; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780307669; c=relaxed/simple;
+	bh=EfamwsU1FmGnIL1rCQsYIEw3cp0Z/rLsMiSaRsICmN0=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
+	 MIME-Version:Content-Type; b=nU7IjH0XUMjGykol3kldjTTyH9qznoakzVTIrAA45p081D4i4PhnK6EHUp+IdcCdO6ZF6pwLLb9NrhI9CwCSVWNBPVwaWGjRd2rwBREzz9jeW/CtyxR574CImC6HwgBUBSYdQsGE7FwkKh8Q6jq0s2CDmHSBcH1WRHrEzlAc7Xs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FcXRQUuR; arc=none smtp.client-ip=74.125.82.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gjsNCZ3D"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9D681F00893
-	for <mptcp@lists.linux.dev>; Mon,  1 Jun 2026 09:47:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780307223;
-	bh=9jcW5YWcJt1EBJ8h2uli8qTovIMy54Ws0O/8wEiLEt0=;
-	h=Date:From:Subject:References:To:In-Reply-To;
-	b=gjsNCZ3DpAycSLPkYMvt9XY+mL/0R5XyJI8SlsBQl2dPdRVsOk6EOmt7kQ7JfC15E
-	 rqZx2uVRN1YMZPpUMul/hgPG+sGk4CZkV4R4QmULK9FTRGWthgGn2CxLoNnDRQE2uX
-	 r1elgTzDI+1AuJsvbPOlF7MzEf33Ew5romAiAkRkPsxuc//alQvdKiA5SB8g7PB9kb
-	 wEPEagy6a4q9dWWvA9XXSsaHKOfFdrcmIdSqn31ZSt/fACzXoTe77hTfhCs8izVR89
-	 9huOaoNjJSA6qvvilQGOQSCL7z/j088Wbl3xIKSYqZc5ub34lvSteUeRKo4m4a5N7y
-	 Utn9KUfxd/M4A==
-Message-ID: <7a377984-5a2e-4981-96dc-c76076f93f4a@kernel.org>
-Date: Mon, 1 Jun 2026 19:47:00 +1000
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FcXRQUuR"
+Received: by mail-dy1-f172.google.com with SMTP id 5a478bee46e88-304d0ac5e3cso4947582eec.0
+        for <mptcp@lists.linux.dev>; Mon, 01 Jun 2026 02:54:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1780307656; x=1780912456; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=unHE869nyr54gHUZAHLRklsyk4hCGzsZh+nD789HjZk=;
+        b=FcXRQUuR45sEmaGh0y2pPQl2ZXwH9MZl+NTlE5xyENs5bj6FGi9xJTncCM0eV8doV/
+         POBHmWh4eihc2nkc+7i+0ik5KFDqN/DqK7aL/S8/ANoShMq6gytkrdf540fSv1f6jG0w
+         39syslHSLuR4AvKoQnYa84C48rfBP1BJAONH2AGpqmfxVlGNQ/ZYbQonMZH28m9verG0
+         Lt0qbbPqj+zTa7uMQmO+XNkcY7RDChOqKE9MpgAxPZT3sa5lrwAZzGDhklU1/I7pHn3n
+         OXHI3wU96N0PTGSGkZyXh8QxY+TjaOoESR0TP56bcETw3b9D7dq14epIWmqaeQ3jcJm6
+         IyGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780307656; x=1780912456;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=unHE869nyr54gHUZAHLRklsyk4hCGzsZh+nD789HjZk=;
+        b=plMCsA9DojY3auHiI3RUwIabS8Jr8pU+W9UzZV1Fug7iTOsf4F4ShscoswQipOKg4m
+         TtmHFW7mQce7yrvFwFBXBqUuEw5cl3pSc0KW62JkeEMw7JhGS+gk+TANF8lU73UWklVh
+         rWFYLn8xLZVCScBwgUEGsY1oGIQhTYqj3g2QhNdkzZ/IDvOnGvKZL55IULyn9mXmBpzm
+         UKG5pIZtKVUTsOzRK8BVN6hlgl5BxDGZmW83rYdG5uvBZSdcOWbF3XuWyTUdUIOsP2Rg
+         PTdqb1ulh0GsWxlSTE72GPUePRBIhg3Nh/QinOEUflVs8/zJxKABl07abwBuV3C9W2Va
+         CD+Q==
+X-Gm-Message-State: AOJu0Yz0y+FHDN+r6iPTIOiRJbiimwaWftCLQvqTIrdg5t9s2bSBf165
+	1ppfuuRSR627J/nSXbGDLHLSGplYFpYK51NC3zbQ1k7iE3b3E18SvdU=
+X-Gm-Gg: Acq92OFsrP5wlviQVtPT3ftIe+4iZYlgpX1LT37BKRFyflSfJQlRHCykPaWXd3jU6qh
+	AgLOrmQmA18Ed6egiYOYJrh9OQxbhbVne3Sr9+XwqpwwbqGmT/02CIBKYvSM9ZvwH4Tmgdvydlr
+	okX6HoHgGMnX7+f+6YQwvCVsROIMwLokUvkGR6wYBaJvNUkqB+dhfwHeVLdSLt28RIKv+xaKdud
+	pNLd2jBfkPAmoJJZcZ/1LI8eeONDpfAXN6Vpe8KHI5ZrJQVFGlJzCpGsQgULClPHBjmNvILni9y
+	twUJ+lWNhKoIqL5rrz0U7Mxht365/Qx56XnzD9v0tTcI8LMRvhCMaoIaPnZX/EpXHu96P90bxtl
+	k7n/hGJM7L18Teapa+MZefnPCP10DxvZ7fCRWzlrWr/YGLOiTnVl+9Vet+W73B5TNscCsA8ABz7
+	VvDJYopsOsKlC7ZBz3C0AhrbciGT06qghLDVzblFeO83fEo1Tj
+X-Received: by 2002:a05:7301:1293:b0:304:d14b:b706 with SMTP id 5a478bee46e88-304fa751469mr4198231eec.27.1780307656277;
+        Mon, 01 Jun 2026 02:54:16 -0700 (PDT)
+Received: from [127.0.0.1] ([172.215.239.54])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-304ed2c154fsm7673658eec.3.2026.06.01.02.54.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Jun 2026 02:54:15 -0700 (PDT)
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <20260601-mptcp-add-addr6-port-ts-fixes-v2-v1-0-d7c842e80446@kernel.org>
+References:
+ <20260601-mptcp-add-addr6-port-ts-fixes-v2-v1-0-d7c842e80446@kernel.org>
+Subject: =?UTF-8?Q?Re=3A_=5BPATCH_mptcp-next_0/4=5D_Fixes_f?=
+ =?UTF-8?Q?or_=22mptcp=3A_pm=3A_drop_TCP_TS_with_AD?=
+ =?UTF-8?Q?D=5FADDRv6_+_port=22?=
+Message-ID: <168dc48e-8eff-5a05-879f-f17fba612127@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 01 Jun 2026 09:54:15 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-From: Matthieu Baerts <matttbe@kernel.org>
-Subject: [PATCH net-next] mptcp: change mptcp_established_options() to return
- opt_size
-References: <20260601091816.444738-1-edumazet@google.com>
-Content-Language: fr
-To: MPTCP Linux <mptcp@lists.linux.dev>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <20260601091816.444738-1-edumazet@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
 
-From: Eric Dumazet <edumazet@google.com>
+Hi Matthieu,
 
-Instead of passing opt_size address to mptcp_established_options(),
-change this function to return it by value.
+Thank you for your modifications, that's great!
 
-This removes the need for an expensive stack canary in
-tcp_established_options() when CONFIG_STACKPROTECTOR_STRONG=y.
+Our CI did some validations and here is its report:
 
-$ scripts/bloat-o-meter -t vmlinux.old vmlinux.new
-add/remove: 0/0 grow/shrink: 0/3 up/down: 0/-92 (-92)
-Function                                     old     new   delta
-tcp_options_write.isra                      1423    1407     -16
-mptcp_established_options                   2746    2720     -26
-tcp_established_options                      553     503     -50
-Total: Before=22110750, After=22110658, chg -0.00%
+- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Unstable: 2 failed =
+test(s): selftest_mptcp_connect selftest_mptcp_connect_checksum =
+=E2=9A=A0=EF=B8=8F=20
+- KVM Validation: debug (only selftest_mptcp_join): =
+Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success=
+! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =
+=E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
+uns/26744856498
 
-Signed-off-by: Eric Dumazet <edumazet@google.com>
----
- include/net/mptcp.h   | 18 +++++++++---------
- net/ipv4/tcp_output.c |  7 ++++---
- net/mptcp/options.c   | 31 ++++++++++++++++---------------
- 3 files changed, 29 insertions(+), 27 deletions(-)
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/1e1fdfa4d98f
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1103837
 
-diff --git a/include/net/mptcp.h b/include/net/mptcp.h
-index f7263fe2a2e40b507257c3720cc2d78d37357d6d..cd4639beceaa53c573135ddaeb7528a80b4ca824 100644
---- a/include/net/mptcp.h
-+++ b/include/net/mptcp.h
-@@ -149,9 +149,9 @@ bool mptcp_syn_options(struct sock *sk, const struct sk_buff *skb,
- 		       unsigned int *size, struct mptcp_out_options *opts);
- bool mptcp_synack_options(const struct request_sock *req, unsigned int *size,
- 			  struct mptcp_out_options *opts);
--bool mptcp_established_options(struct sock *sk, struct sk_buff *skb,
--			       unsigned int *size, unsigned int remaining,
--			       struct mptcp_out_options *opts);
-+int mptcp_established_options(struct sock *sk, struct sk_buff *skb,
-+			      unsigned int remaining,
-+			      struct mptcp_out_options *opts);
- bool mptcp_incoming_options(struct sock *sk, struct sk_buff *skb);
-  void mptcp_write_options(struct tcphdr *th, __be32 *ptr, struct tcp_sock *tp,
-@@ -266,13 +266,13 @@ static inline bool mptcp_synack_options(const struct request_sock *req,
- 	return false;
- }
- -static inline bool mptcp_established_options(struct sock *sk,
--					     struct sk_buff *skb,
--					     unsigned int *size,
--					     unsigned int remaining,
--					     struct mptcp_out_options *opts)
-+static inline int mptcp_established_options(struct sock *sk,
-+					    struct sk_buff *skb,
-+					    unsigned int *size,
-+					    unsigned int remaining,
-+					    struct mptcp_out_options *opts)
- {
--	return false;
-+	return -1;
- }
-  static inline bool mptcp_incoming_options(struct sock *sk,
-diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
-index ef0c10cd31c71ff585a937fde37f2b08b1214b5a..31b459ecbe8307a8660623038fea6fa7b0860f7f 100644
---- a/net/ipv4/tcp_output.c
-+++ b/net/ipv4/tcp_output.c
-@@ -1181,10 +1181,11 @@ static unsigned int tcp_established_options(struct sock *sk, struct sk_buff *skb
- 	 */
- 	if (sk_is_mptcp(sk)) {
- 		unsigned int remaining = MAX_TCP_OPTION_SPACE - size;
--		unsigned int opt_size = 0;
-+		int opt_size;
- -		if (mptcp_established_options(sk, skb, &opt_size, remaining,
--					      &opts->mptcp)) {
-+		opt_size = mptcp_established_options(sk, skb, remaining,
-+						     &opts->mptcp);
-+		if (opt_size >= 0) {
- 			opts->options |= OPTION_MPTCP;
- 			size += opt_size;
- 		}
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 8a1c5698983cff3082d68290626dd8f1e044527f..53528301394d70072dde6614feca6128ea949436 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -836,13 +836,14 @@ static bool mptcp_established_options_mp_fail(struct sock *sk,
- 	return true;
- }
- -bool mptcp_established_options(struct sock *sk, struct sk_buff *skb,
--			       unsigned int *size, unsigned int remaining,
--			       struct mptcp_out_options *opts)
-+int mptcp_established_options(struct sock *sk, struct sk_buff *skb,
-+			      unsigned int remaining,
-+			      struct mptcp_out_options *opts)
- {
- 	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
- 	struct mptcp_sock *msk = mptcp_sk(subflow->conn);
- 	unsigned int opt_size = 0;
-+	int total_size = 0;
- 	bool snd_data_fin;
- 	bool ret = false;
- @@ -852,20 +853,20 @@ bool mptcp_established_options(struct sock *sk, struct sk_buff *skb,
- 	 * option space.
- 	 */
- 	if (unlikely(__mptcp_check_fallback(msk) && !mptcp_check_infinite_map(skb)))
--		return true;
-+		return 0;
-  	if (unlikely(skb && TCP_SKB_CB(skb)->tcp_flags & TCPHDR_RST)) {
- 		if (mptcp_established_options_fastclose(sk, &opt_size, remaining, opts) ||
- 		    mptcp_established_options_mp_fail(sk, &opt_size, remaining, opts)) {
--			*size += opt_size;
-+			total_size += opt_size;
- 			remaining -= opt_size;
- 		}
- 		/* MP_RST can be used with MP_FASTCLOSE and MP_FAIL if there is room */
- 		if (mptcp_established_options_rst(sk, skb, &opt_size, remaining, opts)) {
--			*size += opt_size;
-+			total_size += opt_size;
- 			remaining -= opt_size;
- 		}
--		return true;
-+		return total_size;
- 	}
-  	snd_data_fin = mptcp_data_fin_enabled(msk);
-@@ -877,9 +878,9 @@ bool mptcp_established_options(struct sock *sk, struct sk_buff *skb,
- 		ret = true;
- 		if (mptcp_established_options_mp_fail(sk, &mp_fail_size,
- 						      remaining - opt_size, opts)) {
--			*size += opt_size + mp_fail_size;
-+			total_size += opt_size + mp_fail_size;
- 			remaining -= opt_size - mp_fail_size;
--			return true;
-+			return total_size;
- 		}
- 	}
- @@ -887,27 +888,27 @@ bool mptcp_established_options(struct sock *sk, struct sk_buff *skb,
- 	 * TCP option space would be fatal
- 	 */
- 	if (WARN_ON_ONCE(opt_size > remaining))
--		return false;
-+		return -1;
- -	*size += opt_size;
-+	total_size += opt_size;
- 	remaining -= opt_size;
- 	if (mptcp_established_options_add_addr(sk, skb, &opt_size, remaining, opts)) {
--		*size += opt_size;
-+		total_size += opt_size;
- 		remaining -= opt_size;
- 		ret = true;
- 	} else if (mptcp_established_options_rm_addr(sk, &opt_size, remaining, opts)) {
--		*size += opt_size;
-+		total_size += opt_size;
- 		remaining -= opt_size;
- 		ret = true;
- 	}
-  	if (mptcp_established_options_mp_prio(sk, &opt_size, remaining, opts)) {
--		*size += opt_size;
-+		total_size += opt_size;
- 		remaining -= opt_size;
- 		ret = true;
- 	}
- -	return ret;
-+	return ret ? total_size : -1;
- }
-  bool mptcp_synack_options(const struct request_sock *req, unsigned int *size,
--- 
-2.54.0.1013.g208068f2d8-goog
 
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
