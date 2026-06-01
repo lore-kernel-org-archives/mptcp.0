@@ -1,80 +1,123 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0137333B6D0;
-	Mon,  1 Jun 2026 06:58:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49A853438AA
+	for <mptcp@lists.linux.dev>; Mon,  1 Jun 2026 07:17:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780297097; cv=none; b=lJTQXp2TCx+lN4oIOycMjm9pYk56oJKpfAolGPlN/KyowTjUqeG7cYg8+r7+IY4ugrvpA7czS4Q4ZnY2b6fFDPP4UhW7BzvNm+8DCFqqiczAKhyLJ5NUhkYhaus5yEjFE3xtmYCHef8hFg9/uhiO3RsLpq/PsDa7szCL5MXXONg=
+	t=1780298265; cv=none; b=SKsV9TzrIrOOTlg6iQpr5RbFSOqKP1eV9Ati0nQisjj8TxMFYE+rHWsTFyLv1rFcBKUHAkXQYmYkWd7/Z0tp5/bbO7PgEYtZbLbI4Y0Dd+z5mkLX1bzmOqiTTWLbHhOjsN/jb3S4bv7woDXbAteiVJjUWMXt91MznKNgfneYuxc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780297097; c=relaxed/simple;
-	bh=yJy0CmnIxJjAFp2xvW0lH2ZU1wwcYRyC/5qf0dtOaLU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z8eGHmq90KuXCMkVCPnC91orW5yYk59xMWW9Rr/kCDeX9RacMUe/Co1j+uScU1ja/FTJgzIrVmjzMIpepIK6GNuVUdlZixrOP5juEBSxOloGK66Uqinn1y9oNHChXuALaHQzrvmYlzRJzVEC2ck6w6fWGC1UHp5b3b+TNToDcvE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=zORcKruJ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=0FcOzPlV; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1780298265; c=relaxed/simple;
+	bh=BEmtnCpo2elsMmNc/elXXX+BVBMnci9PtDjLwKSUHEU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=F1cM/i/18dj5x3J5ouZmmXHkiu2h55VFxPf8QyphiV3MJqewFqlpynOSqrfZyCWz8UtX9aVzGdFMcIePtN373f0vfWqEm5dPLKwHvJN0kdg1gUrOmJsfy5HzKgmzzYSCAMpnRaLBgPSZi17j/RuZiVO7ctbpUmoKteVk4/fjtHs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gEVKSXDm; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="zORcKruJ";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0FcOzPlV"
-Date: Mon, 1 Jun 2026 08:58:13 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1780297094;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gEVKSXDm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1780298263;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=yJy0CmnIxJjAFp2xvW0lH2ZU1wwcYRyC/5qf0dtOaLU=;
-	b=zORcKruJ9QJOtW4JL1Pm23rr8Nn7859O839uqpFCiRaLhnVpt3vH5A45v3oD0GwU5zEKFp
-	5KoiJpX7ERkDuyC63RVc863tn+FhxNrbtSYDFuc9XRyXQKe098LP/duwnZ6B+DMlsG+va6
-	gBMoGhERg8d+Qryv1wRUdCzFR/nyy6IWl7NJxOE3QEiINHdZOIDw93MtX4O/A0Tg2Zl+Ot
-	VMBejWMXFzpGnedfK2hJIGqYdCc5QQYg+xqIBqUXRnN3N8J2NkblzOca2Dhpg2ox4QKjDM
-	vZpyeqt2EeCZ++90Cu00ZypywIJUdXYBZVkgN7cYdaIuJqTu3S3KeSTLp8qWZA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1780297094;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yJy0CmnIxJjAFp2xvW0lH2ZU1wwcYRyC/5qf0dtOaLU=;
-	b=0FcOzPlVIato7qS/odBjpYZVeForAreWqj7U1P+j8gvuU5FR/47koS4F5+qJ3QtgejkaMS
-	lLIMMvRIEAawgHAA==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Cc: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>, Florian Westphal <fw@strlen.de>,
-	netdev@vger.kernel.org, mptcp@lists.linux.dev,
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	stable@vger.kernel.org, Clark Williams <clrkwllms@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Hannes Reinecke <hare@kernel.org>, linux-rt-devel@lists.linux.dev
-Subject: Re: [PATCH net 09/10] mptcp: pm: avoid sleeping while holding
- rcu_read_lock
-Message-ID: <20260601065813.Z8V8Tb6d@linutronix.de>
-References: <20260601-net-mptcp-misc-fixes-7-1-rc7-v1-0-a5ae7791754b@kernel.org>
- <20260601-net-mptcp-misc-fixes-7-1-rc7-v1-9-a5ae7791754b@kernel.org>
+	bh=NzTCKpCHlK6BDrqWzsPgXek+KWkfoV5euMwcvLlDIBI=;
+	b=gEVKSXDmstxMGceGk/gqUTnOaH+/kUgZq8SNZj8SfCHBNotIcX2QkTqYJlgZTs1AeuhcWh
+	3fg+GC+7P/8cb3GAbLcPWMMUSQuU39ykZOyE3KlIbqZAXpVaoOkaJWK2Td7EteFK3PW22K
+	05/C5eouK+Ka8D7SgXnWKl5Pcxu5sGs=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-75-ITd-w4XbNAWf2aVZIB-rPw-1; Mon, 01 Jun 2026 03:17:42 -0400
+X-MC-Unique: ITd-w4XbNAWf2aVZIB-rPw-1
+X-Mimecast-MFC-AGG-ID: ITd-w4XbNAWf2aVZIB-rPw_1780298261
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-49045243094so122604855e9.2
+        for <mptcp@lists.linux.dev>; Mon, 01 Jun 2026 00:17:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780298261; x=1780903061;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=NzTCKpCHlK6BDrqWzsPgXek+KWkfoV5euMwcvLlDIBI=;
+        b=f9JBGQgY2ssJ19lWihTiMEuIp5C2fcZpxF6w/sJIgNjIe59xys5l6nhUN0udhvkw8Q
+         sm4IMR3tzhzL7Z9LVtLJWJuCrX1kzmOIGINrVPV1SByW8LeVNYx7vMlS1405IhqFh7GB
+         hpcllo/WXlZkVkCL0RDoBeUKwNf1veF4+LY9+9U4ix9QiHpB56oUaZbcOq30RcNuWQAw
+         baCcfXMQU2KtAEdmSPE+G+AkGc4LeqWji+164b/J9PRhznK+jU0rFnqjpZPv3WNt7EqV
+         TST7mIqjujOD4AkIUtlDAS6YucX5AqbOXHtcxaD2kJQ4ivJpwmyH4hiIWAgc14JQrnWu
+         Of5A==
+X-Forwarded-Encrypted: i=1; AFNElJ/x95HlwbLtSNWErMBoWUp3XPTijlWPBuy5VtY0usQ6X61ml5FrjBzYAaxe5uenjsP9iUQk9g==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxjGRwdnDPQB3YOyiWP8NJTP9y+j4p1ZliHR2rcot86vIZS5wIa
+	h0ysTz/WKdEYQT+bCzJ6x34vWordzCidIAaN0zcJYF7lTBBmOeM4rdI8C+QUxvTj4OAGYsRybZI
+	hcWwhBfMQfnxX9IO/2OyJMrlUIYBiR4qp08Y88Z5fvNflhscuYokyufWT
+X-Gm-Gg: Acq92OFjalb2u+43daYvgvrtqBhR39LHHiOpuLFE+KHpI+JIfy9QwvB3iZ5eqAndVJc
+	9xHKWG9WF87xrnevLBVeclb4QklkF+6kYQJjIqFR635x98mdZnQhk3B8t5vJhqGYqXcVfUYKnM4
+	m6erh9gK7LSxs+qWuDO3Kw+oqHKKB8H5wPuZxOVkg0Mw1EMtoM0ixQlOuKAZvxFejHJTw4cNNXa
+	wC2r4iP0sxvV4Pldyt4Si6i0maiae7aMgjn2o4uK8VxDqugWZlFj6gqeGPROazePJ9qiRQMwfZU
+	9ISUls4ay7ElvgBcMaasHtdfEESjynj1jeJgHYG2OqodvMdvhExuDAhK5Z9TMk8KeRnznWiTdY1
+	s4CKulzDXjf8jnBe24ReJTemszVA0iJdCaZyoEr8qAoZANpXmUFGkCkK5BIQevc+R+Ovc
+X-Received: by 2002:a05:600c:c098:b0:490:50ff:7943 with SMTP id 5b1f17b1804b1-490a2923a87mr154942685e9.5.1780298261074;
+        Mon, 01 Jun 2026 00:17:41 -0700 (PDT)
+X-Received: by 2002:a05:600c:c098:b0:490:50ff:7943 with SMTP id 5b1f17b1804b1-490a2923a87mr154942215e9.5.1780298260604;
+        Mon, 01 Jun 2026 00:17:40 -0700 (PDT)
+Received: from [192.168.88.32] ([169.155.232.197])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4909d7002e8sm254530635e9.15.2026.06.01.00.17.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 01 Jun 2026 00:17:39 -0700 (PDT)
+Message-ID: <5ec7e9c4-6985-4582-b0d0-124d3ff568e1@redhat.com>
+Date: Mon, 1 Jun 2026 09:17:39 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20260601-net-mptcp-misc-fixes-7-1-rc7-v1-9-a5ae7791754b@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH mptcp-net] mptcp: fix uninit-value in
+ mptcp_established_options
+To: Matthieu Baerts <matttbe@kernel.org>, mptcp@lists.linux.dev
+References: <d776e14d19a313dd697e3715121f4e42e915287d.1780045909.git.pabeni@redhat.com>
+ <e08df8df-a6cc-43f0-b6bd-fa68fcb6db47@kernel.org>
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <e08df8df-a6cc-43f0-b6bd-fa68fcb6db47@kernel.org>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: UlWAMrwWIHhzruYpL_rzek4bHUD17p11AAfE_sUVSRw_1780298261
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 2026-06-01 13:10:05 [+1000], Matthieu Baerts (NGI0) wrote:
-> sk_stop_timer_sync() calls del_timer_sync(), which spin-waits for the
-There is no del_timer_sync()
+On 6/1/26 4:42 AM, Matthieu Baerts wrote:
+> Hi Paolo,
+> 
+> On 29/05/2026 19:13, Paolo Abeni wrote:
+>> syzbot reported the following uninit splat:
+>>
+>> =====================================================
+> 
+> (...)
+> 
+>> =====================================================
+>>
+>> The output path currently omit initializing the mptcp extension `use_map`
+>> flag in a few corner cases.
+>> Address the issue always zeroing all the extensions flags before
+>> eventually initializing the individual bits. To that extent, introduce
+>> and use a struct_group to avoid multiple bitwise operations.
+>>
+>> Reported-by: syzbot+ff020673c5e3d94d9478@syzkaller.appspotmail.com
+>> Closes: https://syzkaller.appspot.com/bug?extid=ff020673c5e3d94d9478
+>> Fixes: 6d0060f600ad ("mptcp: Write MPTCP DSS headers to outgoing data packets")
+> 
+> Small detail: I hope that's OK to use this one instead:
+> 
+>   cfcceb7a39fc ("tcp: shrink per-packet memset in __tcp_transmit_skb()")
+> 
+> Before this commit, the whole "opts" was set to 0. So no need to
+> backport this "too far".
 
-> timer callback to complete on non-RT kernels. But on PREEMPT_RT, it can
-> sleep. Sleeping inside an RCU read-side critical section might trigger a
-> lockdep splat.
+Sure, thanks for doing the right archeology!
 
-It can not sleep. timer_delete_sync() does not sleep. It can block on
-spinlock_t and schedule but this is okay within a RCU read section.
+/P
 
-Do you have a report for this?
-
-Sebastian
