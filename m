@@ -1,144 +1,92 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC004385535;
-	Mon,  1 Jun 2026 08:07:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04E0238A736
+	for <mptcp@lists.linux.dev>; Mon,  1 Jun 2026 08:27:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780301237; cv=none; b=DyLJW/TOebql75wTSj6uB3Gp2/k1j7AIQFRzMqcEfTyVQqVc+xC51UT/mowChoVhSMoPUKE1MaCuUAwNNRiRu3qggf/jjY3MIX7gbHVJP+G/h1yfpd6LBjEIj7Uat9A2N29hTzC0R9ZYSLZW7P7yvzenzfwophyxZm3HAIVxA2Y=
+	t=1780302463; cv=none; b=D7UWYRHcymnFZaJU2dpQBp3RBRnTX7m4yfmr+9pLVbIM2e8MiwS2SgTPOiJwcA2Wh7AmeMiAdIYhCThXJPtP/kT6ihXFkMYrqe4eNhyBZV44De+1JhfkFxjQl6JWlFmXGJP9Izpq9J1wTioxgkbUVmqQk8JpiK98lK+AhhX1yE0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780301237; c=relaxed/simple;
-	bh=pOu1ni6eXxtdYdrzTXhGYwNqER8RRW0+pAwnd19RC3M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MVBi3kS215U1evl2bwammFEg8xTW5M2tYTFfiORJz0a0zUZiNIA7Y6AarITeIdsHCN+iuFWyYjkmJZa5DV8R/ej51IcfYAMEJUmYAd/8FYfs3QeXlNpAClR4kzN8pjEdjxOweu/ktQ0DXYuu2ZU9f3Kc3btw7Ouw/yJk3VBIZR0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bsDbJm4g; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780302463; c=relaxed/simple;
+	bh=UgnO8vkkPx7HUcxrA0wcnQS/a7sw1yM10ZUfKyCOSnw=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=I+2VRvAm2KLoVr/9T6twtP2NvakEkkR7ptq1ARxhcGD1uDO7dvB0f3CJd6d6ca+2Tc4wJJvCWB/3eDTvvj/W6nwhjx3gs9NkYuTJfG4LYb0NdOEj1e62Q/wlHg5X/Ce6HoEl4zV97Rca//Atci2FrK1ZFh6avn93XmLd1jqlqHI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A5i+YMhz; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bsDbJm4g"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEE931F00893;
-	Mon,  1 Jun 2026 08:07:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A5i+YMhz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C52531F00898;
+	Mon,  1 Jun 2026 08:27:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780301236;
-	bh=A33ovvMiaLqovH2MstY2gpU/wp9fHn5mUpwsIceuxtQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=bsDbJm4ghasDFELULiEyPe1Dl5BhmuGFVdInD1IPjxnl4MsiR9+mR+PsjEMQfWnZX
-	 U3GDloFannniTL+sYqkZkGNcI4nbk5jOtsHI4F36VPP1wsvWfmOqh16ZjN9IIYJcbU
-	 o+dwjqcRHNEY7wUc9AUw4y1bV5dPW42Rinxt1cOYXRoMJQSVw5QY4Z7E6hQ9EopSNy
-	 mTpK5ejEatGkdUZEDgEsDHNGqZyJYP/yj6MHiHAAYK7pW293VBpH3wxMcNPpoV3+pS
-	 wx3MX6yU7ey53sFSfG2HwPodXBsFJ3/0a7GHXHMkJKlpN9yIxN1UEpdOSPJpHe2kCN
-	 KkQP5iXXhpS7g==
-Message-ID: <9a86dcf5-da53-4ae2-b871-33e36856cde7@kernel.org>
-Date: Mon, 1 Jun 2026 18:07:09 +1000
+	s=k20260515; t=1780302462;
+	bh=9tU98f5IVrjxHBlQKzQ/ErjOmW7KGfaTHvpaNBeBPEE=;
+	h=From:Subject:Date:To:Cc;
+	b=A5i+YMhzKB6aU3xgQrkisd5dpyOCJfm8p0HIbHsQMwTywvXbFbxghLD/2wan9XkcN
+	 u9afgQtGjJj+k7lisoqa8UOTOla+J2AhUcsHnMstpFzHpk4KljPosbshYs5Y8Cvxbk
+	 eOLcUlaa2fcOyY0bpA5Caw6BdL+NSs02EfV1M04x7DrS+kyJRYBpc0pVHmkdsOf3t/
+	 CLLhVbycojXBKV015iqfMPCz0bigLLqBegX3fB6f+asDcrui9A6+LFWcpR62DCjZA/
+	 bI+6n4v7cYsj4owErIY2qfyQWikFoLR1wlmrdyj1GH8ozqEswl/IFWqc6EgV1B3Pav
+	 I2XA7spRkfvmA==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH mptcp-next 0/4] Fixes for "mptcp: pm: drop TCP TS with
+ ADD_ADDRv6 + port"
+Date: Mon, 01 Jun 2026 18:27:27 +1000
+Message-Id: <20260601-mptcp-add-addr6-port-ts-fixes-v2-v1-0-d7c842e80446@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH net-next 05/11] tcp: allow mptcp to drop TS for some
- packets
-Content-Language: fr
-To: Eric Dumazet <edumazet@google.com>
-Cc: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
- "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
- netdev@vger.kernel.org, mptcp@lists.linux.dev, linux-kernel@vger.kernel.org,
- Neal Cardwell <ncardwell@google.com>, Kuniyuki Iwashima <kuniyu@google.com>
-References: <20260601-net-next-mptcp-add-addr6-port-ts-v1-0-4fc25dfef62e@kernel.org>
- <20260601-net-next-mptcp-add-addr6-port-ts-v1-5-4fc25dfef62e@kernel.org>
- <CANn89iLdwhhwLyO6zRjWMEY3t9g60ZE8ZhOVx33ucg_uRETbmQ@mail.gmail.com>
- <1f3aea3b-1bb0-4584-8f6d-af14d73df81d@kernel.org>
- <CANn89iLBh-tSEzDuZce5G2dmC6An1agoJ9UNq2qwAAC0+oTuPg@mail.gmail.com>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <CANn89iLBh-tSEzDuZce5G2dmC6An1agoJ9UNq2qwAAC0+oTuPg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/yWNzQqDMBCEX0X23IUYJP15ldJDTLbtFhpDdhVBf
+ HejHubwMcw3CwgVJoFHs0ChiYWHVKG9NBC+Pn0IOVYGa6wzzrT4zxoy+hj3FId5KIoq+OaZBCe
+ LfXf31t+cDd0VqiYXOrpqecK5TjQrvM5Oxv5HQfcPWNcNKtvOT5AAAAA=
+X-Change-ID: 20260601-mptcp-add-addr6-port-ts-fixes-v2-b49a2a862c47
+To: MPTCP Linux <mptcp@lists.linux.dev>
+Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+X-Mailer: b4 0.15.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1099; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=UgnO8vkkPx7HUcxrA0wcnQS/a7sw1yM10ZUfKyCOSnw=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBqHUJ9LxFDIx1PXBEdfs/WLqlJ/IRaYxsXdt3SY
+ I94nQcDx86JAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCah1CfQAKCRD2t4JPQmmg
+ c5pREADFhKmF0aD5YGD+XENrdDKj3rq5P7POt3IktxGpCeLKJ19iXmxwrToY8YmUnOFmPEDjlSX
+ q7aGcf7OsosOa38NLmtfBpk/A0ReYxNjU3UQcOZERx5glaIYHaClPTd1TjF+vJwuzg1ZgtQ2/0m
+ tCJ54/FuMYQ3PRtPXmG5b+I1gQCZpq8UUrFZ4h4I94lt7vu7P+n7oEJZQfRE84IYCAJvv0ZYdRN
+ YBxLNo9xHeIndXn3AVZXgL5O061zo5J57yape0O1WU+gZlJ9awvbX0qi5GZS+9dT3Kv5B3Ourpp
+ PLcZo1+pgaFRKg2rdw7E+SQBHl3k1sD+VPWu6s1kzM00t7eH/Ag5MbmOtsWHsHbRufdwKlskmJa
+ kqub8AvBXo4E6ul3q4rSN3yMh1jlKFk34aAp7eu6SGApT14yqzD0dx0Ow77oO6A1AW7UMoQJnWT
+ e5IQNbvVAjc5DGTC5HY06mZGdiaiPWEKKE8JhsEJOIrTWuJnJckhF0S/ZQg2ptjaIReDnJM+YTl
+ GrSKXm1QxYJhltIxTuxrgy5hsGbvayXYw73axTBkquR/4RXh8/3enG+JUqxx0RWTogvPSEoAV+Q
+ 6GuRrhNUj3skBjQmfO4DL50MaBSnxy1/IjIAY6lMBkAavEYEBUriDit6qIa1K+7DX2Ai0pCdnL8
+ HX8GOSpOPKz6ONw==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-On 01/06/2026 17:26, Eric Dumazet wrote:
-> On Sun, May 31, 2026 at 11:52 PM Matthieu Baerts <matttbe@kernel.org> wrote:
+This address Eric's comments from [1].
 
-(...)
+Note that the CI will complain that not each patch can be built
+individually. That's normal: the fix from patch 2 has to be split in
+patch 3, to be applied in the right commit.
 
->> The modifications in net/ipv4/tcp_output.c would then be limited to:
->>
->>
->> diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
->> index ef0c10cd31c7..f4edc9c4f3fc 100644
->> --- a/net/ipv4/tcp_output.c
->> +++ b/net/ipv4/tcp_output.c
->> @@ -1181,12 +1181,18 @@ static unsigned int tcp_established_options(struct sock *sk, struct sk_buff *skb
->>          */
->>         if (sk_is_mptcp(sk)) {
->>                 unsigned int remaining = MAX_TCP_OPTION_SPACE - size;
->> +               bool has_ts = opts->options & OPTION_TS;
->>                 unsigned int opt_size = 0;
->>
->>                 if (mptcp_established_options(sk, skb, &opt_size, remaining,
->> -                                             &opts->mptcp)) {
->> +                                             has_ts, &opts->mptcp)) {
->>                         opts->options |= OPTION_MPTCP;
->>                         size += opt_size;
->> +
->> +#if IS_ENABLED(CONFIG_MPTCP)
->> +                       if (opts->mptcp.drop_ts)
->> +                               opts->options &= ~OPTION_TS;
->> +#endif
-> 
-> SGTM, but maybe the IS_ENABLED() is not needed in this block,
-> guarded by  if (sk_is_mptcp(sk))  ?
+Link: https://lore.kernel.org/mptcp/20260601-net-next-mptcp-add-addr6-port-ts-v1-0-4fc25dfef62e@kernel.org/T/#u [1]
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+Matthieu Baerts (NGI0) (4):
+      Squash to: "mptcp: introduce add_addr_v6_port_drop_ts sysctl knob"
+      Squash to "tcp: allow mptcp to drop TS for some packets"
+      Squash to "mptcp: pm: drop TCP TS with ADD_ADDRv6 + port"
+      mptcp: use READ_ONCE() over sysctls
 
-It looks like it is still needed, same if I use:
+ include/net/mptcp.h   |  7 ++++---
+ net/ipv4/tcp_output.c | 10 +++++++---
+ net/mptcp/ctrl.c      | 18 +++++++++---------
+ net/mptcp/options.c   | 13 ++++++-------
+ 4 files changed, 26 insertions(+), 22 deletions(-)
+---
+base-commit: 7676d254f320f9cce3ca42d8347334fe334dfe58
+change-id: 20260601-mptcp-add-addr6-port-ts-fixes-v2-b49a2a862c47
 
-  if (IS_ENABLED(CONFIG_MPTCP) && sk_is_mptcp(sk)) {
-
-Or maybe I missed another technique to avoid an extra #if.
-
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
+Best regards,
+--  
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
