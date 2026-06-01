@@ -1,133 +1,135 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6EEB32ABCD;
-	Mon,  1 Jun 2026 05:25:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780291530; cv=none; b=ihxqfc66oPXcdHRjl9sSkLOL2Rbxe6YLmTRs5LWLuJasBos8OfKCBj00tCdB4Qzb5uMkc56QUfdGyJ1k9FMHJpIvyNgt2/kAI9oYJq3ss4Ia1ObD7Z8XDCaX/xDEC8s58O2/mANf3EaMYxDJRSIuqBrD/ROOaB9F9aXGWxvuAGg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780291530; c=relaxed/simple;
-	bh=EiMZs2Sj7GeMUFETXfuoemuuMtoO87StFk8Crr3cmxY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Gmbf4cCezDw3m1XDK2Ess8B8FxKlwP1NgLk1S9dGjmuQv+lpjUx1VslnpVbosJuSl59lTxb0OEwKjLaib3YjNYJoUEg390YEfoEO+wE6IhvYI2sRBiORrxSHBR/y6o0FnxjIjTOa4kXPOnwDg06gDg6Dnlsp0K5T8A12xGy4gUA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nmxrRJ8K; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0C6F31715B
+	for <mptcp@lists.linux.dev>; Mon,  1 Jun 2026 05:44:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.169
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1780292688; cv=pass; b=OELKFdKW3czDagYuZw7/ky9Sy+6qSzrofxvu9D8xIWxO1emFDHObeO09LQqVVuZmqBO3HINORCL5ww+gz3AsEVfnWCVZZCpZzzxV0hXN22K4XUfap7CMD4+07LtpELmoqdYFPJmVVHqSjjU29Dp76i2+/7oZvZ91lIn8qaPbjms=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1780292688; c=relaxed/simple;
+	bh=3SEfUrGpOB+OrS2N/tF2ctbW+WT/uZ3USk5VMcVSXLA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=d7XnSKT7bC5kc6xDjRMg9mk45rMNhZpjRj2gJvmJE04GaJ5Gg1AI0fUu5CYL1OFe9+MN5HGrOFVuTQEMK76cpqt1qs71U7418Lnu4PWZUSTXIHjBr/OGhMak91YNPXpxBuR0F0SIH2s//XqVO5ZLH+pW0blX0ymExrHTFTwUkYc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JFavQMjQ; arc=pass smtp.client-ip=209.85.160.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nmxrRJ8K"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1D031F00893;
-	Mon,  1 Jun 2026 05:25:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780291529;
-	bh=7Z9XT0MMfLHkChXCdfot4uAPLLhV28bVyUYj6AsXbrk=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=nmxrRJ8Kacrkn1QYEGOwyQuXfPyTrmkpaGLJHXuLv1AwtYE1NglDs6xogIOKUlqCl
-	 emU9Na0cPgjq2Lj51zXWPiJwLNeel6zlLyVtu6+8K+FOf3yHmLLzDqymgZBuM1wIOL
-	 adQDnIPAJiCS3KebhAaZA6W69ARwSp4riGWA9t9RR6CLuo58NfWF+QLd6MdQXbnAVu
-	 NeNuo6lR3o9oElPXuA68xTtKYhtfCvMqZCpSwFQvLLaBwZ3I5c8l+xZQbq2R04jjua
-	 C3EZHD3pKOJCaWOZ6n13LuVdRPdjEjiTYU0/qYjWxN75Dpj5aHDJwsBRRwMa27Xnss
-	 R0JLRYVApKuIw==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Mon, 01 Jun 2026 15:22:18 +1000
-Subject: [PATCH net-next 11/11] selftests: mptcp: pcap: drop most of the
- payload
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JFavQMjQ"
+Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-5174a1f2d45so5100601cf.3
+        for <mptcp@lists.linux.dev>; Sun, 31 May 2026 22:44:45 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1780292685; cv=none;
+        d=google.com; s=arc-20240605;
+        b=Ylv9l8zAh8T8skoGFw8eaPgfha5GA6wEetig0e3wHJyHLnf7JSz8WZMfDPWxVsS8Bn
+         Mm/N6T/QwohIsjKibCwXpsm0Gx+yWd/S/sOdP5zNkqaQkwxUG5zljzl/3CFEZ/cqK0oB
+         FU+IJGBepNU3M4jheRV3czzYINgT/rmq4W3u92FWL5SQWOjOxCjGfwibFZ5raMAdzRXU
+         ixH9UR6XqmLlvom0iaCB49M0TuY6Ro4caZbpagkwjYa5gzPmC3RaW9b+rHvnCwqoj1Mx
+         EFCd5RJPhMMAp/cZc0DE+hXebrXy6c4e0dXgJQMcQ3fV3ZQK9+QKIuqoeReZMaKSf2C5
+         TT/w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=CYJ9us5FFWuw1Ubnqm5Mv6Rgk1trKuije/O9oTp1I54=;
+        fh=YU2wqw8wLwFD+cechH4cmMqMrpiQX5cQQZ9Ujjm80rk=;
+        b=NYQWLbX5Up5Y3tHgniwkKFsHdZ1H8GDBGU05fPOB+mwoTYCU2KFdokBd2D463M4QCy
+         5sXCFSUQI/acOggRs0stmz+RfKoff59PpTZ+Sffi4ZjFvT3LOaBgZkdAUkA7RmmSwVUn
+         m3l2eQUhGTsMlpASKLqAx5l5RAtDUHFcx9o1ySpVnbzdo/l2MvjtO5IisxmHk+OQGHWB
+         Pe6gib9D1N/JMJcckcyD1i1mDhQKrkh/WXwS340R3njlq1D3p/Xf30ob2vBehNpYMSgQ
+         wD9O+4ZkL2teu8qsfUr6ODJBLeLbDSpaHXCPUBQqMI71cfSOC25c3pWnAhNiBC/glB7J
+         bOOQ==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1780292685; x=1780897485; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CYJ9us5FFWuw1Ubnqm5Mv6Rgk1trKuije/O9oTp1I54=;
+        b=JFavQMjQoSruTD7h2dwjOERl3y76xFgm1w89tEg7CzROa97DzHiqxhC7CclwZo7Jnm
+         AoCMIoS6VF56b+8my2+iNBITc0yinnDxURpgwpgHvvjNQROHVO7rs+mHpnTKa2FcweGe
+         4AqaKY783mJXwE0/xMRDocSafwmXC5wqU3Dobh8iISnKC9rpRlIQEcMjXhnNIhZGyMpp
+         wLaeXMiO74TsbhpT5Lw71mEZIT85wDq1WZL025AVsZI85u3zqF5Aqn04Axea/gzvs59o
+         h9UERRGTjwHgDgPOPo0Vbw9oTNb8l4ikrPWy6yz2Ru4hfeiMTnaatddjaHVwsi6Ias8x
+         EYjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780292685; x=1780897485;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=CYJ9us5FFWuw1Ubnqm5Mv6Rgk1trKuije/O9oTp1I54=;
+        b=rLDoTU1dGXs+a9DG+aejh607nv0rezKkgez8chzgDAHy6VhaT+J/B1juerEk7TJ8ur
+         wnLIa3KdKoGRMCNayN9vcyj6iNZcjdNFORG5o4xJ/5j0kVul2nmj9NQRlno2hPeRylXm
+         fW0I93OffuifhWyQs6FnsH7J6ITdRXhyHaTbxkB3fvMCsyfQRlUkcyPCY4STd/48WCJu
+         rpLcWL+k4VIH3+S5M6eP96jfvHNx0wPfB+3CBiedniw5j6e1YmLWyn2g4Zra96goLS0z
+         6bnULG17FbhZ2KI4yvl63NHJIzpQYyfTjVorlS2w1TAyAfSQrscAw4gCNyBGQA3KjnWw
+         2vaA==
+X-Forwarded-Encrypted: i=1; AFNElJ/RD/YBgCloeKBj6aahWl9cu5rpUQzG/5SaaPASmBahUeE4+2Av0OApFNJLowP/nNWpc/9x5w==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yxs1aBp5k/0SK/8dI0hNJ3ne4/RK2N+Ygh7SknL5/5KARyLAAzK
+	GXzUqBgkqZ7zuhri46wrVgzv1wBely0OY3q3C8x7HAjVimHIRTuRvuWS08kklqxt2tlWvAIGaF8
+	5czUX9wf8d2Y2RJDtD5wT6AHvh+gaC8dcjZ+MkhXM
+X-Gm-Gg: Acq92OEzdmBgB9cjM5LfIHJXOsyzWXVb6lCx6j5SEQsA7b7JSKJR+eC0CH6+rBwWeN9
+	/u3Oxq4XC0Qx2/EOkFEZ/7YqObGVSIKJnjLduhMGcgDfOG7LNd/ywhJ0k65ibyhBC7ixOqGMIf0
+	g/nEMa+7wCXsEjvQcP5UoXPWxeI6A6FbWTWlyA3ksgqLz7WUJtLXmY9fIAcn+NmnosDYsRmXiVp
+	882ACfYW6ZKQasWFlp1vVt6a/g0M6QiLZNvpRBFJrgCZlxnxQhYpyFZDuQN2ge7KO4A8XAuySvC
+	It4J0ds5YnXS5EUyUdEGko7U/R0egdIDyJCJKknvBmChX+zZJ5PR5plW91rIUvCsBZkOPEBi7Pp
+	bDfWKYXQrvfIyvjbkeC/got5MiyJc
+X-Received: by 2002:a05:622a:1106:b0:517:5790:ff7b with SMTP id
+ d75a77b69052e-51757910b7amr22711931cf.57.1780292684284; Sun, 31 May 2026
+ 22:44:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260601-net-next-mptcp-add-addr6-port-ts-v1-11-4fc25dfef62e@kernel.org>
 References: <20260601-net-next-mptcp-add-addr6-port-ts-v1-0-4fc25dfef62e@kernel.org>
-In-Reply-To: <20260601-net-next-mptcp-add-addr6-port-ts-v1-0-4fc25dfef62e@kernel.org>
-To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Simon Horman <horms@kernel.org>
-Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, 
- linux-kernel@vger.kernel.org, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
- Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org
-X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2841; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=EiMZs2Sj7GeMUFETXfuoemuuMtoO87StFk8Crr3cmxY=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBqHReT/E3i69Y9c5t8bGKYawQeHnJNgq/uFUe02
- AvrqX09Iu+JAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCah0XkwAKCRD2t4JPQmmg
- c0heEADuCFdazGaU0f8a3MFngIlV9WSjoWn0BnY7cosDt9nYN4CamdJw6OXSp/CX9b9ytjOkPyY
- /xr1mC5TDrYksqHIW6zagcA+lK2sVq1k3hEQhkY76grBSIBK94rd+G4f/+HfFlMef2j1K9I0jpl
- cMU2CfoWHcS+l/QqNJE5c907n3LKTRR6xdRojC3xdabezHtscNRgD3fh63nqJiru6V0yQeJ5Pr/
- X770d6CB3XW5MB3Ubs+LP6CLdjd4d6WCRCD/+b/xkwAaVk7O01xutLiA95OcNaXH/6wxM64Wf2t
- rIZjRMfHC9Y6ki/2+AyY8Q+6Ts73l4yeRYbo39QtY7FNfPBPQRriFl4qGCFZm0KMSt5P4E1vNiV
- +2HXhcIuYUZrlpz4p35j3xrU1COoK1gbACNXTK0FpKgp0+Jz22ppnj+amIeyqMQrkVJo0or74S5
- s4gx38bt0e2MCJ9U42zppsULP/umWMUA/HJoNryHWNyvrwvV7S+zijnuqiRcbFMpiDockbVnm3A
- qBF8jtrVfl0MklIjthf/pJLHa3gTWJDWrwf/Viock8uUAKeN4dBMqvZobT6t3dC0vlEWSQ4lxnW
- NDls0xJTAYdyw5HuT0Qx5MQaC7P4Xy2B8DoTPtpA/4sWbsnl91oXVkCOSlF+ohw58ACLuYD6d2C
- 1gtTx1AyWCTbSPg==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+ <20260601-net-next-mptcp-add-addr6-port-ts-v1-4-4fc25dfef62e@kernel.org>
+In-Reply-To: <20260601-net-next-mptcp-add-addr6-port-ts-v1-4-4fc25dfef62e@kernel.org>
+From: Eric Dumazet <edumazet@google.com>
+Date: Sun, 31 May 2026 22:44:32 -0700
+X-Gm-Features: AVHnY4IayHyy6cMDi-nQDDjXrYJHGRD4C69UxZMSkBfLGuSFxlZymzrG3JPQpdU
+Message-ID: <CANn89iL=os-60kDKqMDdyiXuPF5CG=eejS0vmthwpDGXz_Bp8A@mail.gmail.com>
+Subject: Re: [PATCH net-next 04/11] mptcp: introduce add_addr_v6_port_drop_ts
+ sysctl knob
+To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Cc: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, 
+	"David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Simon Horman <horms@kernel.org>, netdev@vger.kernel.org, mptcp@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, 
+	Shuah Khan <skhan@linuxfoundation.org>, linux-doc@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Limit the size of each captured packet to 108B (IPv4 only) or 128B (a
-mix of v4 and v6): this should drop most of the payload that is
-generally not needed when debugging an issue.
+On Sun, May 31, 2026 at 10:24=E2=80=AFPM Matthieu Baerts (NGI0)
+<matttbe@kernel.org> wrote:
+>
+> This sysctl is going to be used in the next commits to drop TCP
+> timestamps option, to be able to send an ADD_ADDR with a v6 IP address
+> and a port number. It is enabled by default.
+>
+> This knob is explicitly disabled in the MPTCP Join selftest, with the
+> "signal addr list progresses after tx drop" subtest, to continue
+> verifying the previous behaviour where the ADD_ADDR is not sent due to a
+> lack of space.
+>
+> While at it, move syn_retrans_before_tcp_fallback down from struct
+> mptcp_pernet, to avoid creating another 3 bytes hole.
+>
+> Reviewed-by: Mat Martineau <martineau@kernel.org>
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-8 bytes are left in this payload, to be able to inspect the beginning,
-just in case.
+...
 
-Please also note that generally, this payload is usually mostly filled
-with 0, except at the end. This reduces the .pcap sizes, and reduce IO
-usage, which helps debugging issues.
+>  };
+> @@ -94,6 +95,11 @@ const char *mptcp_get_scheduler(const struct net *net)
+>         return mptcp_get_pernet(net)->scheduler;
+>  }
+>
+> +unsigned int mptcp_add_addr_v6_port_drop_ts(const struct net *net)
+> +{
+> +       return mptcp_get_pernet(net)->add_addr_v6_port_drop_ts;
+> +}
 
-Reviewed-by: Mat Martineau <martineau@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
-To: Shuah Khan <shuah@kernel.org>
-Cc: linux-kselftest@vger.kernel.org
----
- tools/testing/selftests/net/mptcp/mptcp_connect.sh | 2 +-
- tools/testing/selftests/net/mptcp/mptcp_join.sh    | 2 +-
- tools/testing/selftests/net/mptcp/simult_flows.sh  | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-index 5befd8584a4d..7a2a851fa0ad 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-@@ -373,7 +373,7 @@ do_transfer()
- 		fi
- 
- 		local capfile="${capprefix}-${connector_ns:0:3}-${listener_ns:0:3}-${cl_proto}-${srv_proto}-${connect_addr}-${port}"
--		local capopt="-i any -s 65535 -B 32768 ${capuser}"
-+		local capopt="-i any -s 128 -B 32768 ${capuser}"
- 
- 		ip netns exec ${listener_ns} tcpdump ${capopt} \
- 			-w "${capfile}-listener.pcap" >> "${capout}" 2>&1 &
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 82c0f7df3be2..600eddb1796f 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -971,7 +971,7 @@ cond_start_capture()
- 		capfile=$(printf "mp_join-%02u-%s.pcap" "$MPTCP_LIB_TEST_COUNTER" "$ns")
- 
- 		echo "Capturing traffic for test $MPTCP_LIB_TEST_COUNTER into $capfile"
--		ip netns exec "$ns" tcpdump -i any -s 65535 -B 32768 $capuser -w "$capfile" > "$capout" 2>&1 &
-+		ip netns exec "$ns" tcpdump -i any -s 128 -B 32768 $capuser -w "$capfile" > "$capout" 2>&1 &
- 		cappid=$!
- 
- 		sleep 1
-diff --git a/tools/testing/selftests/net/mptcp/simult_flows.sh b/tools/testing/selftests/net/mptcp/simult_flows.sh
-index d723261bdc62..3ea3d1efe32e 100755
---- a/tools/testing/selftests/net/mptcp/simult_flows.sh
-+++ b/tools/testing/selftests/net/mptcp/simult_flows.sh
-@@ -149,7 +149,7 @@ do_transfer()
- 		fi
- 
- 		local capfile="${capprefix}-${port}"
--		local capopt="-i any -s 65535 -B 32768 ${capuser}"
-+		local capopt="-i any -s 108 -B 32768 ${capuser}"
- 
- 		ip netns exec ${ns3}  tcpdump ${capopt} -w "${capfile}-listener.pcap"  >> "${capout}" 2>&1 &
- 		local cappid_listener=$!
-
--- 
-2.53.0
-
+Please use READ_ONCE() over sysctls.
+This will avoid future patches from KCSAN bots.
