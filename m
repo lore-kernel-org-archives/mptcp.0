@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81C9341C6A
-	for <mptcp@lists.linux.dev>; Mon,  1 Jun 2026 01:04:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7C8941C72;
+	Mon,  1 Jun 2026 02:22:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780275842; cv=none; b=iy+pkcmQBiVxrXCf4ZX8l8NR457utrbl/Z2EdvCMMiRQ+ejyi6I7OQsXIfqrwZKeROYuAW+/FQWI6TVSffmYyxMUYiaTTl8N+X93rVULvJtD+5G87TRcyNZZF4G4sq4A938d9zDbHVDqNi3pHEao06FDU4zZTPAUEyuSbNBJvUc=
+	t=1780280551; cv=none; b=cyAs5SssQ1EAXj+QJkNy0o1wMuxjEjOmyIHHNdcObQoNJN7K093izzfQXJBpN71kI51zmLsQW9/vldPwAe4tKh2D/aenNa5CzyQUv/UEk0vSUU0E2mb6TeGor1yvhSV8LqA/FN9KgvVzp7WmFFhLdJzwfMAsnX0BDaOQdTAEaRg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780275842; c=relaxed/simple;
-	bh=4Kk7krBzJy2AywR4XrSocOzpJIN7PpsAnkQ0M0QXzBE=;
+	s=arc-20240116; t=1780280551; c=relaxed/simple;
+	bh=CSTIk+EYfgOQEmivd+6MNb6DKAwx2ykz1VGJCY1R/Dc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jCX/CWbfCMEmm+lglt9GkUGo9ad/06g3t0DzsJ4WPJF7lHwIjYC9AY8WJtK1HC9kPybo1Yx60LPI85NcvY0WjXIuExvzOHgJZHBs/zWHQXvmb5NxFQNWVntbE5++leflaAYbuvl/UM3shN6Ssy+dyLc3GsQxBxpER/y8wdL4I0M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jijn4eqo; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=FjFhTiMztZx1HmrTrJYLN2Xlkv80GBSuA3NJZWbefKvL/SN7AXpGjEcFsBDciO7kddywWfuuPQDiqGQ1uBA1qEb/WJa2QQ6ZMyti2hpSi3sjwnY4oDyqkBiZGTSTXqnISN0pxd0n9hr9WB6NjoCHIBfxoV4qXQJA1vGry2pJcUU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R2KPmZi5; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jijn4eqo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29A491F00893;
-	Mon,  1 Jun 2026 01:03:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R2KPmZi5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF8111F00893;
+	Mon,  1 Jun 2026 02:22:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780275841;
-	bh=Mmah7Y6lqfTlUsi/5PntV8W5Op+cv2DQnCS9ckGLN7g=;
+	s=k20260515; t=1780280550;
+	bh=UeqB1s/dR7PI0sLE5Y2hToN0eFT/jD95ZWS/IPa4/qw=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=Jijn4eqonMvTBQNRXylIf8x/tq9w6oeYyrQ/qu34UGwdacLOgdQX1c26tRFtnVibR
-	 q5L53OOvpYJHtNvYpNoNdvjfZXJuwzTJNT1ak31w+QLuacr91THMKLg6hMI+5HSwFa
-	 EGiRYHqoPG5noy3ik7L7nBd9TYKfHDiJuNVuvqodUlbkCLeFb849sG8lYkm6cyM1PR
-	 aQ66q1meFjZh5cIpWKp+JSVOsaA2S47bLYVw51ROIn90qyawdb6s9shFIPBerecZY9
-	 abv81FmSMyZNqgWa4YtvJNJ5Kovo311YPa7qDo+PHZmcitkiLR44zna7Mo3QP8NXY4
-	 KCSoleLIZM8wQ==
-Message-ID: <438a2ba0-c250-4ba1-816d-b31ff5c8d7f9@kernel.org>
-Date: Mon, 1 Jun 2026 11:03:57 +1000
+	b=R2KPmZi5qjCl1Jady3PJJnezK+1PkvNBRGXeSG29lialAThN4gAz6/wIkrinw3AzU
+	 1Pce2THCoPbL2kmkzb4FMSAiAHJIEArD4LDxVbZ77nOE5Zu/OosYaXpMksGEvbg1O4
+	 XUCHeH4nOLWiMApsoUnUMMKWO/Ht+iMSayYKoqAUOEJMXcenqhPmnP0ZGue6RrKYF+
+	 AiAxlbCXQ6g8EULC8ZE9p6MES7/N2a6kneEweLB6/EsEO/DIi+5yKLvZp6lD3acjjb
+	 CeeplhNYIRxHVBOBjvRtnyzxnxmBq16aZPDc6f7CkQvM4lHW8VuhpjPCS/RlykiIgA
+	 nefu7OpRMK6NA==
+Message-ID: <25fb125b-6b4d-4f46-b8be-0a34099d1696@kernel.org>
+Date: Mon, 1 Jun 2026 12:22:25 +1000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,11 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next 0/5] Fixes for TLS and ULP
+Subject: Re: [mptcp:export-net 15/22] include/linux/compiler_types.h:699:45:
+ error: call to '__compiletime_assert_784' declared with attribute error:
+ BUILD_BUG_ON failed: sizeof_field(struct mptcp_ext, flags) != sizeof(u16)
 Content-Language: fr
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1780127277.git.tanggeliang@kylinos.cn>
+To: oe-kbuild-all@lists.linux.dev, Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev, kernel test robot <lkp@intel.com>
+References: <202605312026.Srgsz7Tp-lkp@intel.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -85,17 +87,53 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <cover.1780127277.git.tanggeliang@kylinos.cn>
+In-Reply-To: <202605312026.Srgsz7Tp-lkp@intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+Hi LKP team,
 
-On 30/05/2026 17:50, Geliang Tang wrote:
-> All fixes are independent of MPTCP and can be merged separately.
+On 31/05/2026 23:04, kernel test robot wrote:
+> tree:   https://github.com/multipath-tcp/mptcp_net-next.git export-net
+> head:   27a7d32aeb103a5c763966a494b141136c31cea0
+> commit: 206cf8c6e2bfce69eba0d463b3f6127d14f75abc [15/22] mptcp: fix uninit-value in mptcp_established_options
+> config: arm-collie_defconfig (https://download.01.org/0day-ci/archive/20260531/202605312026.Srgsz7Tp-lkp@intel.com/config)
+> compiler: arm-linux-gnueabi-gcc (GCC) 15.2.0
+> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260531/202605312026.Srgsz7Tp-lkp@intel.com/reproduce)
+> 
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202605312026.Srgsz7Tp-lkp@intel.com/
+> 
+> All errors (new ones prefixed by >>):
 
-Then, feel free to send them directly to netdev, for net directly. Don't
-forget the Fixes tag (and fix the issues reported by the CI and AI tools).
+Thank you for the report.
+
+(...)
+
+>    net/mptcp/options.c:576:9: note: in expansion of macro 'BUILD_BUG_ON'
+>      576 |         BUILD_BUG_ON(sizeof_field(struct mptcp_ext, flags) != sizeof(u16));
+>          |         ^~~~~~~~~~~~
+
+Mmh, I wonder what size this struct group has on ARM 32bit. I tried to
+reproduce the issue with the config file and the instructions, but I
+didn't manage to. So I don't know what size was detected there.
+
+  $ COMPILER_INSTALL_PATH=${HOME}/0day COMPILER=gcc-15.2.0 \
+    ~/lkp/kbuild/make.cross W=1 O=build_dir ARCH=arm SHELL=/bin/bash net/mptcp/
+  Compiler will be installed in ${HOME}/0day
+  PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+  make --keep-going CONFIG_OF_ALL_DTBS=y CONFIG_DTC=y CROSS_COMPILE=${HOME}/0day/gcc-15.2.0-nolibc/arm-linux-gnueabi/bin/arm-linux-gnueabi- --jobs=32 KCFLAGS= -Wno-error=return-type -Wreturn-type -funsigned-char -Wundef -falign-functions=64 W=1 O=build_dir ARCH=arm SHELL=/bin/bash net/mptcp/
+  (...)
+    CC      net/mptcp/options.o
+  (...)
+
+Any idea why I cannot reproduce the issue?
+
+It would be good to know the output of sizeof_field().
+
+@Paolo: or should we use memset()?
 
 Cheers,
 Matt
