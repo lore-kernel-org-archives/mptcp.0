@@ -1,108 +1,193 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from outbound.st.icloud.com (p-east2-cluster2-host1-snip4-8.eps.apple.com [57.103.78.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 882CB24A06A;
-	Mon,  1 Jun 2026 03:11:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AEFB29D26E
+	for <mptcp@lists.linux.dev>; Mon,  1 Jun 2026 04:38:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=57.103.78.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780283483; cv=none; b=P6d53FJfsXzeboE6cDyhUaPZjMzvdZE+9JZobgVd076tRzoc+EXteTqJM+9ozapyVKcIEihRIOoN2SgY/JIxJ6ll9LaZt+zuG9/yeyTszGoTQjTNfeY/piqtB970QrRq3CMTM2xj0Q0+CqWB2W8NOD9nRtNxXrkWLGiMW57+pv4=
+	t=1780288703; cv=none; b=mr6P6kl1u34HAOV2QNyqB3fxNhJ0vq313ls98dUHTIqaDfNTYJg84ucmiYJOmgpnO0t1WCMnpPbLXZYeqS8W3gclyavB2JG/7Er0oXTD5eHFsPGhwj0rpkKrl24lcXvQ8V+StnF5OvEflhWnvqy4zxFaFf9E6vV1oUGDuZcXUqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780283483; c=relaxed/simple;
-	bh=RT/E+puSLaZidPDXPx3TDleWNistOBZUBVAzhbx9FHw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=sH0rwjveHFwpvb0eCq22i2pQHCTMT0uvrXNIx0pZzTzUPlxFRzfM3ZOX3dpvxZ5RmQfi8FRrlvfRy/rjqUUzIh7prUIwfHyxgCIVc245bQ4zBjpB6bNVneTBXDPD/E9EPMWvRJ4OjD68bfdvaxeoVTneKqXHyFjBGGKH+vByxCA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D7+YuXA8; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780288703; c=relaxed/simple;
+	bh=M5KXcHZLLCjiSOAXT/6Zty8mqvZnR+CJHcL1M48YmZg=;
+	h=Content-Type:From:Mime-Version:Date:Message-Id:Cc:To; b=bWB6kkzO4ZBDmiRJbCGitkVjg0JLno9Jf3fuePR/NME0QHYXhQzHW0qw/Zs1Pe3TGrLSSiTOT15u5IJRm5k/lIXq4zNoJbwu+lPQb6sGGycRNmUGPJUmuD0HClcw19X5i+YFtSqA/dwLwsRZp8Ijcs9U+OC2RZ/b2h9+hk3KMVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=p7RM5uWB; arc=none smtp.client-ip=57.103.78.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D7+YuXA8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BACF21F00893;
-	Mon,  1 Jun 2026 03:11:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780283482;
-	bh=TE32s63FN7oiWP8Km/xUybIoPrIk9f292PR3zY9E4mU=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=D7+YuXA8/hANe0DEyFcvVWJ4I1LUJ+VsGacyuy4Gg6aF7u0B2434LWnlieWx6Z0On
-	 4A7xUOVqrTNH8vlYGZbfeKPId1vR98jVaLCaE6I5y9wnZ1PF+MWhAKu47iidaKMWA3
-	 vuJOzdG1vcMFT2iIaq3Yv+DboU5N6GJ7KEqnifPiwBUXkLeV5P+2HjDFmDkymEHf5N
-	 VSGSGPMHwnDZvVFrBDTK44r/Sg/nlThYA9PJGJzNpfOM69cxKh47k50t0mIhmDnWqF
-	 hg4KDHUP0jzRrclwlEFjghJkYJsiuNOInU9hoJjEAHuGe+5J+Roi7kWvNbXIMkvDE5
-	 17I3FAaMvYiuw==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Mon, 01 Jun 2026 13:10:06 +1000
-Subject: [PATCH net 10/10] mptcp: check desc->count in read_sock
+	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="p7RM5uWB"
+Received: from outbound.st.icloud.com (unknown [127.0.0.2])
+	by p00-icloudmta-asmtp-us-east-1a-20-percent-1 (Postfix) with ESMTPS id 49107180035B;
+	Mon, 01 Jun 2026 04:38:19 +0000 (UTC)
+X-ICL-Out-Info: HUtFAUMEWwJACUgBTUQeDx5WFlZNRAJCTQhACkMFWwFeCEgFQwZeAFBcHA4OXxlbAxcfRghFGVcCVkgEVAIrWxNVF0YJGQhdHRkeV1BeCF4fTBwdDlgGEgJaRQJZFwNXHFZFXBhDCV0FVxwdHkNFWxNVF0YJGQhdHRkIRx8KMANCDlYDQwdFAC0ZHFdQXgheH0wcHQ5YBhIdUBwOUXIvCkcBPAFaGltxNHtVB1wGWB8xD0wLQHYuBkZ8OXBZASoDNHkRUAFYHlZeWhdeUxcfSwBcRVoOWwRHFA==
+Dkim-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com; s=1a1hai; t=1780288701; x=1782880701; bh=8HjiOho8L2jW+i0Jru4sQZRWcNoS66uzGYMY1giqctw=; h=Content-Type:From:Mime-Version:Date:Message-Id:To:x-icloud-hme; b=p7RM5uWBL+MIGMX8hVmyvr1btwE4BTJ1Z+qG+aHhVPcIqBI//Rm+IkIOCkeQ6fy5IXUd3v+ks3fgLqMiQZJh8BLy6PDyXL4At3Skh3LHNkfgsaREqQ34mhcmrnoiH9RVLKmVDc3TZBpKVUZFiNfK8IA5fga6A3AmwJqlABDiZS4xJ1CYezpG5xIHxQKh4y4uzj+32JQofU//wC7xrCiQAzjtoNlFh2sCwhtQXDmG1AJ+Au/sIaivuYmHxwD8GbxeCZLfz0oFFaa4tZjZHwvdh9gVpy9ckRIAipTwnrFPHEkrCySGtm8oRgIc4N6j2HKVkz9nnTPsGr5jvIPi89CuMw==
+Received: from smtpclient.apple (unknown [17.42.251.67])
+	by p00-icloudmta-asmtp-us-east-1a-20-percent-1 (Postfix) with ESMTPSA id 9C3661800176;
+	Mon, 01 Jun 2026 04:38:18 +0000 (UTC)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From: Christian C Guerrero <chris.guerrero0795@icloud.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260601-net-mptcp-misc-fixes-7-1-rc7-v1-10-a5ae7791754b@kernel.org>
-References: <20260601-net-mptcp-misc-fixes-7-1-rc7-v1-0-a5ae7791754b@kernel.org>
-In-Reply-To: <20260601-net-mptcp-misc-fixes-7-1-rc7-v1-0-a5ae7791754b@kernel.org>
-To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Simon Horman <horms@kernel.org>, Florian Westphal <fw@strlen.de>
-Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, 
- linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
- "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
- Gang Yan <yangang@kylinos.cn>, stable@vger.kernel.org
-X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1199; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=ouh+8y0QVk20uitc41ZjPExokNTNSrOLDbO4PTnW4No=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBqHPgfPWYM9vCBC658ItD/tsv5LQUz+/8nLaps8
- Z6VvIX3bz6JAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCahz4HwAKCRD2t4JPQmmg
- c/T2D/9NKT/NKw81WzfQsMRXmA1ESwXdsFG3H/6mCVv4zqskxlBEkJLebZQOGopVl8adzJ3Pk8w
- +kjBEUh/Q+eLkKapvvr7lC/LeM6Wet34dIhx7HMuyYn2JVDqUWBETfwiB5WiU3uAor1qo6dJf//
- d5bf71N/LG0m3FvcamVvPJoYZMxxOVaqdWhwAlGICdvw0eLkeUjdOe8kijaFAvTsfnn96T0pFV8
- 4hTTCvVvVZiSDqE9HiSuPkdWgSoO8Y4OsjE563Jx71q/Qmu2/V6R3ouxS3BQ8oxo4sHfX61PIrG
- Lrk2NOzXU71R+Qj87RvVwUxUz1U+w5b3qDo2sVK4xgdN42Z9hnMwWnY6n2wvGMycUmlwy51WehF
- +fgqbeYRSKFm5p+Bel7JV6MphTOk7HbjxwTchpn8sdq7oXb9b3WoAPpEdvW3mrtvbMeaNw/MqtV
- TbvRDGtaQvFdRCMWG6/v3UTcxA2hqiu98uk62I1LhkFEIr/dnBmKNgZUcUy5VZtdIMTznDwga06
- xqPqKr9rtTHY/czXYZLAeAYmhRFK1i5kEWFD0oGONdqnqJb9G3/YsgzBng/i95HA3mG90rUhIXH
- st9LD6bv7OHIdoNP17U6HIyeyEexsqmGZTja7Si+qoHJPUCCVBAxx6LB7JBY7LyAzFwRzKnQm7J
- Eu9Vz0tSwFwFAjw==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+Mime-Version: 1.0 (1.0)
+Date: Sun, 31 May 2026 22:38:15 -0600
+Message-Id: <ED878D27-0CDB-4113-A648-AE46EAC46A1D@icloud.com>
+Cc: Mat Martineau <martineau@kernel.org>,
+ Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Abeni Paolo <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+ Florian Westphal <fw@strlen.de>, netdev@vger.kernel.org,
+ mptcp@lists.linux.dev, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, stable@vger.kernel.org,
+ Matthieu Baerts <matttbe@kernel.org>
+To: Matthieu Baerts <matttbe@kernel.org>
+X-Mailer: iPhone Mail (23F77)
+X-Proofpoint-GUID: Nle5phvKo13CcyuSwDi8Wvtyg11rnvbW
+X-Authority-Info-Out: v=2.4 cv=E9fAZKdl c=1 sm=1 tr=0 ts=6a1d0cbc
+ cx=c_apl:c_pps:t_out a=YrL12D//S6tul8v/L+6tKg==:117
+ a=YrL12D//S6tul8v/L+6tKg==:17 a=s5jvgZ67dGcA:10 a=IkcTkHD0fZMA:10
+ a=FelO9ux0wxsA:10 a=x7bEGLp0ZPQA:10 a=tn3to7fOw0sA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=VwQbUJbxAAAA:8 a=20KFwNOVAAAA:8
+ a=KZnKJZhHIq7TdMh2gb4A:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjAxMDA0NCBTYWx0ZWRfXx6MmOzvelBFU
+ K7e5nQMShm6ZI8yvEO9dySU9jr/YBSpxu0FMYDj/rTTVu6MxUxvy0TN1gPqEVZMAvjE1x2iQOnV
+ GD7xuuhdyJPJXHVjmrM+1p6FOHXAqu4hPgVTIl4L/Uz7ad9tp9VTWkdlrQ2piGF48p90cxqgK7v
+ Y1hAV3M2n/PpfT8zIkUP5hOaKIRptgSbm70HVhQKPJzF456O9mx32t2/LIRaTX7TbSA7xmgGFvE
+ D/wcTUCcHhRTboUkoEU2qfF9A5BIUtuCiOh2jPoWgkska2bXfKRxvFiWCY9OcHQnbJAn95ma2So
+ APN0ywtHBeBzjtbt6wpwCHxxAC5mOOcJLoKr2RReYJhNkPJP61aA92SHdm8WZo=
+X-Proofpoint-ORIG-GUID: Nle5phvKo13CcyuSwDi8Wvtyg11rnvbW
 
-From: Gang Yan <yangang@kylinos.cn>
 
-__tcp_read_sock() checks desc->count after each skb is consumed and
-breaks the loop when it reaches 0. The MPTCP variant lacks this check.
-
-This is a functional bug, other subsystems also rely on this check:
-TLS strparser sets desc->count to 0 once a full TLS record is assembled
-and depends on this break to stop reading.
-
-Add the same desc->count check to __mptcp_read_sock(), mirroring
-__tcp_read_sock().
-
-Fixes: 250d9766a984 ("mptcp: implement .read_sock")
-Cc: stable@vger.kernel.org
-Co-developed-by: Geliang Tang <geliang@kernel.org>
-Signed-off-by: Geliang Tang <geliang@kernel.org>
-Signed-off-by: Gang Yan <yangang@kylinos.cn>
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- net/mptcp/protocol.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 7fac5fac2097..cb9515f505aa 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -4428,6 +4428,8 @@ static int __mptcp_read_sock(struct sock *sk, read_descriptor_t *desc,
- 		}
- 
- 		mptcp_eat_recv_skb(sk, skb);
-+		if (!desc->count)
-+			break;
- 	}
- 
- 	if (noack)
-
--- 
-2.53.0
-
+> On May 31, 2026, at 9:11=E2=80=AFPM, Matthieu Baerts (NGI0) <matttbe@kerne=
+l.org> wrote:
+>=20
+> =EF=BB=BFFrom: Paolo Abeni <pabeni@redhat.com>
+>=20
+> The MPTCP output path access locklessly the MPTCP-level ack_seq
+> in multiple times, using possibly different values for the data_ack
+> in the DSS option and to compute the announced rcv wnd for the same
+> packet.
+>=20
+> Refactor the cote to avoid inconsistencies which may confuse the
+> peer. Also ensure that the MPTCP level rcv wnd is updated only when
+> the egress packet actually contains a DSS ack.
+>=20
+> Fixes: fa3fe2b15031 ("mptcp: track window announced to peer")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> ---
+> net/mptcp/options.c | 36 ++++++++++++++++++------------------
+> 1 file changed, 18 insertions(+), 18 deletions(-)
+>=20
+> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+> index 8a1c5698983c..5c228344e83f 100644
+> --- a/net/mptcp/options.c
+> +++ b/net/mptcp/options.c
+> @@ -570,7 +570,6 @@ static bool mptcp_established_options_dss(struct sock *=
+sk, struct sk_buff *skb,
+>    struct mptcp_ext *mpext;
+>    unsigned int ack_size;
+>    bool ret =3D false;
+> -    u64 ack_seq;
+>=20
+>    opts->csum_reqd =3D READ_ONCE(msk->csum_enabled);
+>    mpext =3D skb ? mptcp_get_ext(skb) : NULL;
+> @@ -601,14 +600,11 @@ static bool mptcp_established_options_dss(struct soc=
+k *sk, struct sk_buff *skb,
+>        return ret;
+>    }
+>=20
+> -    ack_seq =3D READ_ONCE(msk->ack_seq);
+>    if (READ_ONCE(msk->use_64bit_ack)) {
+>        ack_size =3D TCPOLEN_MPTCP_DSS_ACK64;
+> -        opts->ext_copy.data_ack =3D ack_seq;
+>        opts->ext_copy.ack64 =3D 1;
+>    } else {
+>        ack_size =3D TCPOLEN_MPTCP_DSS_ACK32;
+> -        opts->ext_copy.data_ack32 =3D (uint32_t)ack_seq;
+>        opts->ext_copy.ack64 =3D 0;
+>    }
+>    opts->ext_copy.use_ack =3D 1;
+> @@ -1297,19 +1293,14 @@ bool mptcp_incoming_options(struct sock *sk, struc=
+t sk_buff *skb)
+>    return true;
+> }
+>=20
+> -static void mptcp_set_rwin(struct tcp_sock *tp, struct tcphdr *th)
+> +static u64 mptcp_set_rwin(struct mptcp_sock *msk, struct tcp_sock *tp,
+> +              struct tcphdr *th, u64 ack_seq)
+> {
+>    const struct sock *ssk =3D (const struct sock *)tp;
+> -    struct mptcp_subflow_context *subflow;
+> -    u64 ack_seq, rcv_wnd_old, rcv_wnd_new;
+> -    struct mptcp_sock *msk;
+> +    u64 rcv_wnd_old, rcv_wnd_new;
+>    u32 new_win;
+>    u64 win;
+>=20
+> -    subflow =3D mptcp_subflow_ctx(ssk);
+> -    msk =3D mptcp_sk(subflow->conn);
+> -
+> -    ack_seq =3D READ_ONCE(msk->ack_seq);
+>    rcv_wnd_new =3D ack_seq + tp->rcv_wnd;
+>=20
+>    rcv_wnd_old =3D atomic64_read(&msk->rcv_wnd_sent);
+> @@ -1362,7 +1353,7 @@ static void mptcp_set_rwin(struct tcp_sock *tp, stru=
+ct tcphdr *th)
+>=20
+> update_wspace:
+>    WRITE_ONCE(msk->old_wspace, tp->rcv_wnd);
+> -    subflow->rcv_wnd_sent =3D rcv_wnd_new;
+> +    return rcv_wnd_new;
+> }
+>=20
+> static void mptcp_track_rwin(struct tcp_sock *tp)
+> @@ -1474,13 +1465,25 @@ void mptcp_write_options(struct tcphdr *th, __be32=
+ *ptr, struct tcp_sock *tp,
+>        *ptr++ =3D mptcp_option(MPTCPOPT_DSS, len, 0, flags);
+>=20
+>        if (mpext->use_ack) {
+> +            struct mptcp_sock *msk;
+> +            u64 ack_seq;
+> +
+> +            /* DSS option is set only by mptcp_established_option,
+> +             * the caller is __tcp_transmit_skb() and ssk is always
+> +             * not NULL.
+> +             */
+> +            subflow =3D mptcp_subflow_ctx(ssk);
+> +            msk =3D mptcp_sk(subflow->conn);
+> +            ack_seq =3D READ_ONCE(msk->ack_seq);
+>            if (mpext->ack64) {
+> -                put_unaligned_be64(mpext->data_ack, ptr);
+> +                put_unaligned_be64(ack_seq, ptr);
+>                ptr +=3D 2;
+>            } else {
+> -                put_unaligned_be32(mpext->data_ack32, ptr);
+> +                put_unaligned_be32(ack_seq, ptr);
+>                ptr +=3D 1;
+>            }
+> +            subflow->rcv_wnd_sent =3D mptcp_set_rwin(msk, tp, th,
+> +                                   ack_seq);
+>        }
+>=20
+>        if (mpext->use_map) {
+> @@ -1708,9 +1711,6 @@ void mptcp_write_options(struct tcphdr *th, __be32 *=
+ptr, struct tcp_sock *tp,
+>            i +=3D 4;
+>        }
+>    }
+> -
+> -    if (tp)
+> -        mptcp_set_rwin(tp, th);
+> }
+>=20
+> __be32 mptcp_get_reset_option(const struct sk_buff *skb)
+>=20
+> --
+> 2.53.0
+>=20
+>=20
