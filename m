@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB3FD1509AB
-	for <mptcp@lists.linux.dev>; Tue,  2 Jun 2026 07:21:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ECA83C1F
+	for <mptcp@lists.linux.dev>; Tue,  2 Jun 2026 07:25:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780384886; cv=none; b=gFaD+d041p3RRbB8IIDSUvmSmAU1hiSlYPDHuMeMwNId0Q7ZAgdNrLohepxJNh+H10VMxI/c44eAhcokUkkMmqRNXjSWVEcy/g0t2aQAMsifxMGiueK7wuWYm2glJ+yNHAfBwk1IncccjXmxTbbJd8mcYcFCA3hU+JgVoUaJorA=
+	t=1780385136; cv=none; b=N5LQIc/HPSYR4bkyNhBTjKCTsdJzzkOAoWC8d5EfltYdC/xkWuUOCQkm+bqHjZdoLuqtYj4eYU2mVLv+HRNDDBIiBBsUfAqUro2DUXab7Fd1GxZT8I4EOgQg/1w2K4T84CwtyeGlWOLyyAJFtoj6geXhFA3dYs9qXCjkxB4QzM0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780384886; c=relaxed/simple;
-	bh=RN+NcHynuv1yanICeSYX/3FAE/1ZEwNu7vVDy1VtxX8=;
+	s=arc-20240116; t=1780385136; c=relaxed/simple;
+	bh=PVBrtAO0auVQOViPXfWPiqCMZN29jt78ahxgnU3zvPw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=urz+maOvat6keXBUhsoBkQrIHDABTzjs0vN9eAoU9od9haMIyPeibU8AhXeg3iIo/MNdIiMbHUz5mcNcF2gzksxyQP9AwT4Xr4enTK/3NgcyHfekpttn3RTMgQleEcCIIvI24O4/pY7CX9f5v9alqC/Js8OmXkeZ4lFdZpf5NAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G4A8WBlY; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=QDo2i2zO/I6xBYslvynMGlDErBVk6XlI/TwZrUVwKzkRPlBDOn1oZwcV4Q+mkc9pG0SS99PU99OyLcMw+VT0US8+MamPltpB9/Z5W5+wb+40u0MJA127lUYSHKqsf7acYqKBEIPI5imb7hogBNSwVhWzoICgrwRxw+/KWBE/3uI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nlsiQy/G; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G4A8WBlY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDA551F00893;
-	Tue,  2 Jun 2026 07:21:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nlsiQy/G"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52F181F00898;
+	Tue,  2 Jun 2026 07:25:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780384884;
-	bh=7TcyeTPPvWxOxYnHnc9AkClCRVGdMQylxYpiu/M0Beg=;
+	s=k20260515; t=1780385135;
+	bh=bCyz90QcAn2hIy97evlWJyp2faq20hW5zhT8C8urzWc=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=G4A8WBlY2Dmic2cB/5kSAUV8i+anLIUWsxFkBI7a89ZyixLN3LM32JDSdEttSvG9c
-	 Fv9MB7EnOV3ngUV1dUcnVc+s8Xwcw+YhfxICT679X919o248Y8pXWd0ZaEpN0EDTmi
-	 m04d8SVG15Lh3KgchjNEfA4jn7qU378D5CQKfUb6xCTzt4ZHRvLQ2xoZvR41b966gn
-	 /F7woBOM8P6R6LR/gWO3174nDgbP1MsO6IJrucOj5wx4GZttqjrqWMMBQYi4wYwuAZ
-	 fRJu9q6Tp4o0SPX7PHWs2PjgJydL7yntLY+gjnvUw4fVsfpC0YiI64Wk2JcUw9KiCs
-	 yTYuyGPbifBoQ==
-Message-ID: <36a71a3f-9895-42e6-8dc6-02ce7b6cded2@kernel.org>
-Date: Tue, 2 Jun 2026 17:21:21 +1000
+	b=nlsiQy/GZxPP9VHWav0b767wfigcajMpOaPywz8q6Y/bCyg1JQNvhQQSQ7X9SZIY8
+	 7Z2is+tybzpxEY76A5ELxdRFbLXD5sD7lEGFN1+Vl3DxTCZK89GRbeVSMC15ut4He8
+	 gXnoaik8rWiT0TqSjC6qKB/GerBbLmdIneOhmUwWyLrELx3ZS7OXGfpPAtVHk4L253
+	 kOgjUoN2U7n+F5z48Y20mltDB6xRW7BwJXyR/U4qJIY8yrV918Ylu7itvSssWr8XO3
+	 puOOTqdwWSQsITTZpSkE5BV+tg44OMHAkXuWWsjC1VFRw6wKchQAuPwO7bWn0mDQe3
+	 T6AvMFxS2Oprg==
+Message-ID: <2caac8f2-f9b5-480b-9764-45ff9818be8c@kernel.org>
+Date: Tue, 2 Jun 2026 17:25:32 +1000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH net 03/10] mptcp: close TOCTOU race while computing
- rcv_wnd
+Subject: Re: [PATCH net 04/10] mptcp: allow subflow rcv wnd to shrink
 Content-Language: fr
 To: Paolo Abeni <pabeni@redhat.com>
 Cc: mptcp@lists.linux.dev
 References: <20260601-net-mptcp-misc-fixes-7-1-rc7-v1-0-a5ae7791754b@kernel.org>
- <20260601-net-mptcp-misc-fixes-7-1-rc7-v1-3-a5ae7791754b@kernel.org>
+ <20260601-net-mptcp-misc-fixes-7-1-rc7-v1-4-a5ae7791754b@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,7 +86,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20260601-net-mptcp-misc-fixes-7-1-rc7-v1-3-a5ae7791754b@kernel.org>
+In-Reply-To: <20260601-net-mptcp-misc-fixes-7-1-rc7-v1-4-a5ae7791754b@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -95,81 +94,89 @@ Hi Paolo,
 
 (-Cc Netdev)
 
-On 01/06/2026 13:09, Matthieu Baerts (NGI0) wrote:
+On 01/06/2026 13:10, Matthieu Baerts (NGI0) wrote:
 > From: Paolo Abeni <pabeni@redhat.com>
 > 
-> The MPTCP output path access locklessly the MPTCP-level ack_seq
-> in multiple times, using possibly different values for the data_ack
-> in the DSS option and to compute the announced rcv wnd for the same
-> packet.
+> In MPTCP connection, the `window` field in the TCP header refers to the
+> MPTCP-level rcv_nxt and it's right edge should not move backward. Such
+> constraint is enforced at DSS option generation time.
 > 
-> Refactor the cote to avoid inconsistencies which may confuse the
-> peer. Also ensure that the MPTCP level rcv wnd is updated only when
-> the egress packet actually contains a DSS ack.
+> At the same time, the TCP stack ensures independently that the TCP-level
+> rcv wnd right's edge does not move backward. That in turn causes artificial
+> inflating of the MPTCP rcv window when the incoming data is acked at the
+> TCP level and is OoO in the MPTCP sequence space (or lands in the backlog).
 > 
-> Fixes: fa3fe2b15031 ("mptcp: track window announced to peer")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> ---
->  net/mptcp/options.c | 36 ++++++++++++++++++------------------
->  1 file changed, 18 insertions(+), 18 deletions(-)
+> As a consequence, the incoming traffic can exceed the receiver rcvbuf size
+> even when the sender is not misbehaving.
 > 
-> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index 8a1c5698983c..5c228344e83f 100644
-> --- a/net/mptcp/options.c
-> +++ b/net/mptcp/options.c
+> Prevent such scenario forcibly allowing the TCP subflow to shrink the
+> TCP-level rcv wnd regardless of the current netns setting.
 
 (...)
 
-> @@ -1708,9 +1711,6 @@ void mptcp_write_options(struct tcphdr *th, __be32 *ptr, struct tcp_sock *tp,
->  			i += 4;
->  		}
->  	}
-> -
-> -	if (tp)
-> -		mptcp_set_rwin(tp, th);
-
-Claude has a comment about this line that is moved above:
-
----------------------------------- 8< ----------------------------------
-With this hunk, the call to mptcp_set_rwin() is now reachable only from
-the mpext->use_ack branch above. mptcp_set_rwin() does more than just
-update msk->rcv_wnd_sent; the update_wspace label also runs:
-
-	WRITE_ONCE(msk->old_wspace, tp->rcv_wnd);
-
-After this change, is old_wspace still refreshed for outgoing packets
-that carry MPTCP options without a DSS ack, for example MPC ACK without
-data, MPJ ACK, ADD_ADDR, RM_ADDR, or MP_PRIO?
-
-The fallback-to-TCP path keeps the old_wspace update via
-mptcp_track_rwin(), but the MPTCP-options-without-DSS-ack paths reach
-neither mptcp_track_rwin() nor mptcp_set_rwin().
-
-mptcp_cleanup_rbuf() consults old_wspace when deciding whether to send
-subflow-level window updates:
-
-	cleanup = space >= old_space << 1
-
-so a stale old_wspace can lead to delayed or spurious window-update
-ACKs. Is this intentional, and if so, should the commit message mention
-that the change also restricts old_wspace updates to DSS-ack-bearing
-packets?
----------------------------------- 8< ----------------------------------
-
-https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20260601-net-mptcp-misc-fixes-7-1-rc7-v1-0-a5ae7791754b%40kernel.org?part=3
-
-
-I think that's fine not to have window updates when sending MPTCP
-options without DSS ACK, but I wanted to have a confirmation from you,
-just in case.
-
->  }
+> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+> index 5c228344e83f..12cbd98c7111 100644
+> --- a/net/mptcp/options.c
+> +++ b/net/mptcp/options.c
+> @@ -566,6 +566,7 @@ static bool mptcp_established_options_dss(struct sock *sk, struct sk_buff *skb,
+>  {
+>  	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
+>  	struct mptcp_sock *msk = mptcp_sk(subflow->conn);
+> +	struct tcp_sock *tp = tcp_sk(sk);
+>  	unsigned int dss_size = 0;
+>  	struct mptcp_ext *mpext;
+>  	unsigned int ack_size;
+> @@ -614,6 +615,12 @@ static bool mptcp_established_options_dss(struct sock *sk, struct sk_buff *skb,
+>  	if (dss_size == 0)
+>  		ack_size += TCPOLEN_MPTCP_DSS_BASE;
 >  
->  __be32 mptcp_get_reset_option(const struct sk_buff *skb)
-> 
+> +	/* The caller is __tcp_transmit_skb(), and will compute the new rcv
+> +	 * wnd soon: ensure that the window can shrink.
+> +	 */
+> +	if (skb)
+> +		tp->rcv_wnd = tp->rcv_nxt - tp->rcv_wup;
+
+Claude has a comment about this new block:
+
+---------------------------------- 8< ----------------------------------
+Could this assignment perturb the old_win snapshot taken shortly after by tcp_select_window()?
+I
+n net/ipv4/tcp_output.c, tcp_select_window() begins with:
+
+    static u16 tcp_select_window(struct sock *sk)
+    {
+            struct tcp_sock *tp = tcp_sk(sk);
+            struct net *net = sock_net(sk);
+            u32 old_win = tp->rcv_wnd;
+            ...
+
+and later uses old_win to drive the zero-window transition counters:
+
+            if (new_win == 0) {
+                    tp->pred_flags = 0;
+                    if (old_win)
+                            NET_INC_STATS(net, LINUX_MIB_TCPTOZEROWINDOWADV);
+            } else if (old_win == 0) {
+                    NET_INC_STATS(net, LINUX_MIB_TCPFROMZEROWINDOWADV);
+            }
+
+After the new write in mptcp_established_options_dss(), tp->rcv_wnd no
+longer reflects the previously advertised window but the amount of data
+received since the last window update.
+
+Can this cause LINUX_MIB_TCPTOZEROWINDOWADV to be missed when rcv_nxt
+equals rcv_wup (old_win observed as 0 even though the previously
+advertised window was non-zero), and conversely cause a spurious
+LINUX_MIB_TCPFROMZEROWINDOWADV when the assignment yields a non-zero
+old_win on a subflow that had actually advertised a zero window?
+
+Would snapshotting tp->rcv_wnd before the assignment and restoring it,
+or moving the shrink into tcp_select_window() after old_win is captured,
+keep these counters accurate for MPTCP subflows?
+---------------------------------- 8< ----------------------------------
+
+I don't think that's a blocking comment, but I prefer to have your point
+of view if that's OK.
 
 Cheers,
 Matt
