@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C61B43A0EB3
-	for <mptcp@lists.linux.dev>; Tue,  2 Jun 2026 06:31:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 396123603DD
+	for <mptcp@lists.linux.dev>; Tue,  2 Jun 2026 06:59:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780381887; cv=none; b=cK1ODdAkPc7b/j5b2AD/NrGBwq+g6MQ8Iv2awhZc8LB1nsuU9HJP2bQHM04NLF0VisPrV8MLRsYe+XK/otnZ2DZqHPJ3lNjHyWf+kMh3kVnIcIuI26l1LN5vq+lS08VoMr5b8Q/AC5PkcrWHnxXdqZZjfQd5qIc1YC1gOYh4J4Q=
+	t=1780383572; cv=none; b=ZcDUEMyMTSvD2x21eXBc+vj80zAq7KtRWDpd6s0WQCpYJmoq8YTk8xCOvjXEVzyg5nA7tbtT3IAQXgEvH8b2WnHbkYaIlukclQvv4l7ne6yXRNjo7CvzEaNnD/3yFWdWAASsMOeikMi4dUE9q8R8poUwMDWXr1oFlraL3UTUEdw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780381887; c=relaxed/simple;
-	bh=OiZSLgALOQpFYZeUh0h1ZQ3uvfjAJsxDJI5UIL6mPmk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=qA17UY+RWQS/68VCjO+SohiJEp+Z+bykBMwuPhZyVXJDcShNItFNJbz/Z3Z4dsxJQwGoeR6pO9+VLBIhDda0s3dUgcbFQuTzy4cnfDhgA2uUfOUg4swUSK/vBn3MSyqRpRv77oILHKw+Tr0iXMf0SQnJG7Ai5/dv9PyEfHR6rC8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rnx581A/; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780383572; c=relaxed/simple;
+	bh=zs6cJxRjRiAvCSRB63u9fVnfJUTBHWnUZu0/4015mm0=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=edb5ujUg3A6SJY8QSHQgXPcyKhQFdYYICw5Y3M7+UmvO4Q14j78QITqZN4xeJGID8BbnsuYFca87+swFrb+qVIRu+0US+C2jUsDb32XFyXvLF/Vc5WO08QVZF1L/tolesmIZeuPmudFPz+3aHdJBAZJtJ0sAS0BZf+p/kje5fj0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZNqLCT/b; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rnx581A/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEDC51F00893
-	for <mptcp@lists.linux.dev>; Tue,  2 Jun 2026 06:31:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZNqLCT/b"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44D8C1F00893
+	for <mptcp@lists.linux.dev>; Tue,  2 Jun 2026 06:59:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780381886;
-	bh=OpoHU6fNuKuFdlfDg9l4Nmh7bCBn0UbVQC4tN3G2dxc=;
-	h=Date:Subject:To:References:From:In-Reply-To;
-	b=Rnx581A/GJZRKpMpwugLdDzOp8AeUzCD8P27sYJblajUOZVnN+dEbcEC4+iRYfXkN
-	 F15xNbSsIXIEidto8aZLtv+JEvU8FCSWUh2sT5tcwur6+hX34et6fJ+HBM/Dr/zpX/
-	 yGlzRZb250soRnryqK3beiu6bxbMeJlaAhYFwBWv394nle6IpAkuolgEPDjpy7Wupg
-	 B5iBGbB/gvg2G7wx8ig8agJKbMO0d5dFSOV+7uiwXzR8f631ZMqLotf6onrF7MhtEh
-	 d0txVdzxgkKNk46ScUNpQCj1TiI369iEWsAV87oUjsKgJv4Bg4jWa0mj5UkTOf1XAL
-	 qKv+FaZQkzCkw==
-Message-ID: <1294ddc5-94ec-4667-8765-baa184df0f32@kernel.org>
-Date: Tue, 2 Jun 2026 16:31:23 +1000
+	s=k20260515; t=1780383570;
+	bh=77/ulHSs4GjU6coYm265if/8r9kdwE+p0wsjKmYeDO8=;
+	h=Date:Subject:From:To:References:In-Reply-To;
+	b=ZNqLCT/b7nQxHJyrdTbpsLP9527OSBcNhL5nNUhXSKS7igIswIDXZ8Gcp/Q9WpSF0
+	 iaTUiNgmca5ZGjhMvcuKlGPo3ivBRtI+X0GJvdjLc1XQSf1GX1EEhxyy/2pgI2xrZa
+	 qZNBEQN9aDJ0KGLaUsnih2PSMCzlWnMiG+5HJv4/HkAJMNhX6Id0ZioQLsmzNbj+0k
+	 24rP7GBYs868JSsrAwmymDwnNZXHcDC4EB5AfOjCKDBr73JHd8G+oKj03gigJqn1IP
+	 DeNADMKLY5kg+Rc8AaMF3GZx+KbDlOXfdBTaqi4yikIwyg6eHgRs8e+5YuZK1P1pIx
+	 UGRQ2Dx8q8sIA==
+Message-ID: <0bab614d-ae6a-4ade-abf6-ffa62fab22f2@kernel.org>
+Date: Tue, 2 Jun 2026 16:59:27 +1000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,9 +38,10 @@ User-Agent: Mozilla Thunderbird Beta
 Subject: Re: [PATCH mptcp-next 0/4] Fixes for "mptcp: pm: drop TCP TS with
  ADD_ADDRv6 + port"
 Content-Language: fr
+From: Matthieu Baerts <matttbe@kernel.org>
 To: MPTCP Linux <mptcp@lists.linux.dev>
 References: <20260601-mptcp-add-addr6-port-ts-fixes-v2-v1-0-d7c842e80446@kernel.org>
-From: Matthieu Baerts <matttbe@kernel.org>
+ <1294ddc5-94ec-4667-8765-baa184df0f32@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -85,24 +86,55 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20260601-mptcp-add-addr6-port-ts-fixes-v2-v1-0-d7c842e80446@kernel.org>
+In-Reply-To: <1294ddc5-94ec-4667-8765-baa184df0f32@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hello,
-
-On 01/06/2026 18:27, Matthieu Baerts (NGI0) wrote:
-> This address Eric's comments from [1].
+On 02/06/2026 16:31, Matthieu Baerts wrote:
+> Hello,
 > 
-> Note that the CI will complain that not each patch can be built
-> individually. That's normal: the fix from patch 2 has to be split in
-> patch 3, to be applied in the right commit.
+> On 01/06/2026 18:27, Matthieu Baerts (NGI0) wrote:
+>> This address Eric's comments from [1].
+>>
+>> Note that the CI will complain that not each patch can be built
+>> individually. That's normal: the fix from patch 2 has to be split in
+>> patch 3, to be applied in the right commit.
+> 
+> I'm going to apply patches 1-3, because they have been requested by
+> Eric, I guess that's fine. After that, I will apply Eric's patch [1]
+> with the small fix in our tree, resolve conflicts, and send an extra fix.
 
-I'm going to apply patches 1-3, because they have been requested by
-Eric, I guess that's fine. After that, I will apply Eric's patch [1]
-with the small fix in our tree, resolve conflicts, and send an extra fix.
+*Eric's patch*
 
-[1] https://lore.kernel.org/20260601091816.444738-1-edumazet@google.com
+New patches for t/upstream:
+- ab84e16ad93d: mptcp: change mptcp_established_options() to return opt_size
+- 1ac623cbe9db: conflict in t/mptcp-options-suboptions-sizes-can-be-negative
+- 5876b14f5c8a: conflict in t/tcp-allow-mptcp-to-drop-TS-for-some-packets
+- 3dfc91dff1d0: conflict in t/mptcp-pm-drop-TCP-TS-with-ADD_ADDRv6-port
+- Results: 7676d254f320..00d928af360b (export)
+
+Tests are now in progress:
+
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/c7e8a9cddd2beb5eae02e8af51de83483f6b25aa/checks
+
+
+*Squash-to patches*
+
+New patches for t/upstream:
+- 2889b65f2e3a: "squashed" patch 1/4 in "mptcp: introduce
+add_addr_v6_port_drop_ts sysctl knob"
+- 8d5986a8c346: "squashed" (with conflicts) in "tcp: allow mptcp to drop
+TS for some packets"
+- f1a8e699dcb7: "squashed" (with conflicts) in "mptcp: pm: drop TCP TS
+with ADD_ADDRv6 + port"
+- Results: 00d928af360b..39cfd0474a57 (export)
+
+Tests are now in progress:
+
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/3c61701c6140a3b53e64a488ba135da8470d5de4/checks
+
 
 Cheers,
 Matt
