@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C4943D9046
-	for <mptcp@lists.linux.dev>; Tue,  2 Jun 2026 11:21:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D31CE376BF4
+	for <mptcp@lists.linux.dev>; Tue,  2 Jun 2026 11:24:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780399317; cv=none; b=q87E2k0tqwOxk+YXWhhEiv2rkYKZ0Ph4Dk40Ob1+Nm87KZe1WdeNI08AaRXqBOxG2f5z09LkKWRrr8vQ0zDSMYQDdK0/FiieY0bnJJCPt8FKCBgLqaS1eVyAjnBv/luQbbA5Xx+WbzSSlJRt+NvK9cLDDXYpTSbMRDEyd0ygm0c=
+	t=1780399455; cv=none; b=feTSVR2iRcP2VHesh7wpvzvTxkHahqIppaszz7xD6oEJl8FRx3UJ/iVj2it3m8gfUBM8yXv12UtjxHZO0jEDZCUK8O1x/SkAF330RTSxhi3Pqs7mm3jCOuKleZgLjKz1HVv04Hw50kHeK6ySbD4J+V5fesU5VAaTqjcOhpvNS9Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780399317; c=relaxed/simple;
-	bh=6k+DmBfjJ78Xxg1L1EK/M/eAGPoBXFm4Er8JPtg9ZOA=;
+	s=arc-20240116; t=1780399455; c=relaxed/simple;
+	bh=yLlTsyHLboWfFcdxNDeWnGp3pDa3lFN+aryhb5pgv8k=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=TyApijo11hzl3Eqwg4h5ehZHv3VVV9NpxSmK0fELOO+GwTiyJ6dJCwcVqy5oOv46t5OeWgjRcix0AmeW/Yw8QeszTOqL0P+f76gATH3c1TOWU5rNbbTXBugq1BqLeNm4y43ADU3cUVe//Q1nmIqZRgavkYORX2pu7yOAzN1JiyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FbcYld63; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=XxJw5Qd53hb9F62sNFVUmuX+HQPH5JTeyBNILffTkAYycRa1T4lE655D4GdBBxx8kriq8mtU4qUpTVkdY44XirM69DVb6FIxlo6uLdTei2OuWCAVdGbbBKDlgBf6grSILD7lxhIcrXq4AfEc9j5LwHRpurYALj0hPRZZvgjw0MQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DR9nmQis; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FbcYld63"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0322C1F00893;
-	Tue,  2 Jun 2026 11:21:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DR9nmQis"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 383181F00898
+	for <mptcp@lists.linux.dev>; Tue,  2 Jun 2026 11:24:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780399313;
-	bh=+ixj8gF+qE5F1wVFocifD+RyzFuM83A70vZQSK+SmlQ=;
+	s=k20260515; t=1780399454;
+	bh=W8uE1xizinCcIgPHiKSAedoo++vW6W370UvosF/2xmk=;
 	h=Date:Subject:To:References:From:In-Reply-To;
-	b=FbcYld63VfhSjgp20a+3VQWhUAenROO08VKpV6O10rKTFgNgyOs/R/RR5pVRLmFsL
-	 AM/Z5pHHnn46mnGTO7Ldv/4idC+THt/WrIRcs0pFK86fB341AWQD9MqIq3nh4klxXw
-	 JwoDZtc4DnYomyCTbwRQZVnY5YCfDqr3PPG7CFDZXUAMIZe9a9TBrTZTI0rMpV+yUx
-	 zw1lryRwYYoHs/wkCaitcaeDJpbOXzA5WVA28heT74Nq4R/TMwxSoBDhxtcPbCxyLI
-	 rkx4ML9xwC5M4pp9a+cJc91UQgPTjsp7OcgfREvZQPjBQH87TseoMlt/gOPZt8vi7Z
-	 ClE9iq3XGttRA==
-Message-ID: <94176982-9a7c-472e-9328-3e95fc586e73@kernel.org>
-Date: Tue, 2 Jun 2026 21:21:50 +1000
+	b=DR9nmQisZMtnMCWGP3ozlQFrReEaF0srCr3qfpo2XY08Ra8CPEkPrSOroZuNHcHvt
+	 DvN6R9isJr5r+tu5tAt7iPbDqJJI1I5bAZoa+LrJH7vw1VBjACPpQhrr0GgwXQapS5
+	 pCIqHc5r/qhIh5xmU1GJx7/1r/A4ahQ0X0jcCh2/O0cCLPVjYO//lN+K1GfB3m5Q5W
+	 uDTdSC4dn5IMQajjl0THXSbwpacw5+traVrZ8iyMxlNY06dJsQw1Rr736sqj3ws/zo
+	 GGxtIoLOP0mP5u9EzFHjgdoDp0aFZHuAnR6HVJNZkMZSZrAOE4ZqQgTeTDwGRW2Run
+	 EQf9MR4toMDig==
+Message-ID: <0e7c967b-5c99-4352-88ac-4b8cf1f3a08c@kernel.org>
+Date: Tue, 2 Jun 2026 21:24:11 +1000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,11 +35,11 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next] Squash-to: "mptcp: implemented OoO queue
- pruning"
+Subject: Re: [PATCH mptcp-net 0/2] mptcp: add-addr: always drop other
+ suboptions + unused param
 Content-Language: fr
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-References: <406ff2a2ec71581f6ea6e7882a8ea631c20e23c7.1780153732.git.pabeni@redhat.com>
+To: MPTCP Linux <mptcp@lists.linux.dev>
+References: <20260602-mptcp-add-addr-always-drop-subopt-v1-0-4cb4b5f446c2@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -85,36 +85,21 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <406ff2a2ec71581f6ea6e7882a8ea631c20e23c7.1780153732.git.pabeni@redhat.com>
+In-Reply-To: <20260602-mptcp-add-addr-always-drop-subopt-v1-0-4cb4b5f446c2@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Paolo,
+Hello,
 
-On 31/05/2026 01:08, Paolo Abeni wrote:
-> Sashiko noted that mptcp_prune_ofo_queue() is 1 byte too restrictive with
-> the bound check compared to the pre-existing code.
-
-The CI is reporting that mptcp_connect.sh is now flaky:
-
- - normal:
-https://github.com/multipath-tcp/mptcp_net-next/actions/runs/26704613812/attempts/1#summary-78703396420
-
-  - debug:
-https://github.com/multipath-tcp/mptcp_net-next/actions/runs/26706355990/attempts/1#summary-78708269694
-
-When it happens, MPTcpExtRcvPruned is not 0.
-
-I can reproduce the issue locally (~5% of the time), so I started a
-quick bisect running mptcp_connect.sh, but only MPTFO and disconnect
-subtests, in a loop, 25 times (maybe that was not enough). Apparently,
-the issue seems to come from:
-
-  mptcp: implemented OoO queue pruning
-
-I didn't check the intermediate versions without the squash-to patches,
-but I can run more tests if that helps. Do you have a rough idea what
-can cause this?
+On 02/06/2026 17:12, Matthieu Baerts (NGI0) wrote:
+> Here is a fix for an issue linked to something spot by Sashiko [1], even
+> if there was an issue even after the recent modification in how the out
+> options are initialised.
+> 
+> And another small fix, for net-next.
+I hope that's fine if I apply these patches and send them to netdev now,
+so they can hopefully be applied before the next sync, to avoid
+conflicts on net-next with future patches.
 
 Cheers,
 Matt
