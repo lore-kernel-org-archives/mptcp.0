@@ -1,229 +1,105 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 992583E3D9C;
-	Tue,  2 Jun 2026 12:15:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E49773DC4CD
+	for <mptcp@lists.linux.dev>; Tue,  2 Jun 2026 12:21:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780402535; cv=none; b=qabrrv52IFs8t+hs6ouz4s9mhWk/v9e4d8smQb7U3nOfOK/SoyhQWxnGGpup4edUWHTr8r1fZu7DYJ96GVCZ8tZQo2GGDz9RlZjhDvgXbpZBWk3ltwxxvJDI2fP38fs67m02ntb6t12F5YJrGg4Rh/eYj4EHM45KXi8FLqbFq40=
+	t=1780402894; cv=none; b=B2HywCKM+WYgpkLwTkOIuTydcQA2TplSWaTYxietpXrVDfNR6AxlYG4DXARbBt30vxZKGcoO7Yv1zJ7LCyha3tc8rQaka94DpMWpCWYxUVizeqVK72yBIbrZKL589yU4NtKJ87n+9tSoBrlfunjkdnQhWdmNhYC9TyHqh6q+muc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780402535; c=relaxed/simple;
-	bh=TDSlEQAI9aZlxLDOKTT6kcPR3WyjMWlmfwcB/s6gTuY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ofjhl7k6CL6ZgrHUBmX/ugC2ef29AzBOZh7l/Fkfo+WO6IrsNTZ9N2UfWz2KPGLS91ME9ie2ILxceLPyL2CdN9os644IEyOeMXgUta5A5X+4dUYjR65RkTqP+2/ZppGxaVguwY0AZ20uVh9j93ekvMVS9xDAKLpCDT7jtuDDaXw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RWOJcseP; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780402894; c=relaxed/simple;
+	bh=SP5RjwVTssDzceAqoTa/qasmeG7NlAmZMpLoQEAy5uw=;
+	h=Message-ID:Date:MIME-Version:From:To:Cc:Subject:Content-Type; b=RXM329OfidviCY1PQaYdOm1n3HDdhlNoFuMnbSQV8nHhn+3Tya6+ZBjZYw+9fFxbjEuJRJMPBKXGPqMuapdAGFSZFtGrU+4E5SxamOSqqMO1s7Pb3z1PgGXVZvT1Amkn59p6Q8rk7AcHtMelVnpKGBrV5Pu8OAwR8srLLZiI4ik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jjgpKFVV; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RWOJcseP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 972FA1F00898;
-	Tue,  2 Jun 2026 12:15:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jjgpKFVV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 858BE1F00898;
+	Tue,  2 Jun 2026 12:21:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780402534;
-	bh=7Ao7fz5le9HP7KQGswVTuk9qT9seYPLebT7V8Xvs21w=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=RWOJcsePeC8u1EeVDwb8O1Bsu7LbkIIsSbixSv1vIyNcucPemkZI4pIoJC4VFDWuO
-	 69MvMD7TXrnEahO1cGnWGbx0TYvdHNougqzMy/PdScLIIRRD9bIQ8lKgzma7OQZJWf
-	 RHgs6gAmNsqvIiagMWlctUsUIRFBgaWz+CdDDyAeSHXpf/BkESpsFosEExPRn8E/8a
-	 AAY8ems3bPMHhCWu83mZpp5VOaJGw0G87bJCJiNCf0NLVcbl9KVpbw7LBq5Iyl3iUr
-	 LwnjaOWXz2yLl8YfBTUV0Dkiv5lR671cj8c8kvsfUFRAyxDZm0+7kqBP7/5AYnoxDI
-	 B363Jc5FPMRLA==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Tue, 02 Jun 2026 22:14:18 +1000
-Subject: [PATCH net v2 11/11] mptcp: add-addr: always drop other suboptions
+	s=k20260515; t=1780402893;
+	bh=Z7+kN/ehfyQQtRP0PRBthPO24xpNzB155fIrSx2cYcU=;
+	h=Date:From:To:Cc:Subject;
+	b=jjgpKFVVrc0yfZs0ZSaYcHMzndyju0lXfbXBIJCnmXDeWKwJa83zv+eHD2/+4RlIJ
+	 l2SJMTQHS8AlZsQxjPD4CNs5KkqW1lfbQ45Snz3zMDMHdwokStM4m3ar62Oqt9Q2f8
+	 mlD3g1pJS6z68lHG07sQQYQMmAL/Wn6rJcSE579qW5QMd+axw32Ur9Lp7HZdThKbjj
+	 bTwJw9AJutd1V8K3kIt9hh+JSCpWKM64RSdkdk5CAX0IfXRBgooemk9qpzAihX+rSM
+	 UJi7+TRUMHVOz0HdaPSzwVN/OPnK6DQ9M6xZdJ3ZjUWVWDjgezBTBA6pF5k38yMJpX
+	 zla0nLV9NXMeA==
+Message-ID: <30da2c98-fa53-4cf5-917e-d692b8bece6c@kernel.org>
+Date: Tue, 2 Jun 2026 22:21:30 +1000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird Beta
+From: Matthieu Baerts <matttbe@kernel.org>
+Content-Language: fr
+To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>
+Cc: MPTCP Linux <mptcp@lists.linux.dev>
+Subject: [Weekly meetings] Different time this week or cancel?
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260602-net-mptcp-misc-fixes-7-1-rc7-v2-11-856831229976@kernel.org>
-References: <20260602-net-mptcp-misc-fixes-7-1-rc7-v2-0-856831229976@kernel.org>
-In-Reply-To: <20260602-net-mptcp-misc-fixes-7-1-rc7-v2-0-856831229976@kernel.org>
-To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Simon Horman <horms@kernel.org>, Florian Westphal <fw@strlen.de>
-Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, 
- linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
- "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, stable@vger.kernel.org
-X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6430; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=TDSlEQAI9aZlxLDOKTT6kcPR3WyjMWlmfwcB/s6gTuY=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBqHsksqWDt4HC5gmD0GfGLzgPVqwPwxcuwC+gOG
- AynpAuj02eJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCah7JLAAKCRD2t4JPQmmg
- c8WpD/9/b//jt2DzgRXft7nDV/WuvXc7F9mMAzIBEbXaUmVBGfahY9Xn8R58arqAuMJErt2YYIt
- 7Fo2EwR0I/Jh5hEavSez3PNP1D780a1a46lMdz9RLqBDZMM9GKGTzT7jK/tpk9PvyWX8bW8mV5Q
- xyYhBGsnO+v4ySzCHAUvhMdon1wLeCsdSMP8bw0cI6uFZmFCcntZMIvt8LmqcjH/w40V1r18Z/h
- Y/iYyeFR/VtwVbMhqHklQ0gWUZnOxURVR5s4IxgoORJUMy9mpdhnjxEUTn8oa57mfXNRj71kgLx
- o+jgWTyEt+Xh1nJKj2PDt8Glwz2r/Ffd+FBhl+imQQTQrhRn/bVipRLJa38LCBRpzrcZ4oC49Du
- krJhnU34iTOMGMtDSOvWubqjbuEccAkcq0wh9mFJj1nYMqPgKC+gaaon++Zr04MIlqXXe0oTJE+
- M61BK7Zd4FoRgR4YnkB7GNl5/+HNryhYnkm3+bWWXK0ZJOvWan81V59XOG5MlfKEX2r3Y5YwJjL
- QFRd1jk4ykgOkkXROmruDktXmd0LP+5McwqMkLDrw9sXNbNhpAa2Lgclieh4QDa/zyFHVe8D/on
- nDSvoAlpEh3ou6rBZX4dIwNcdrDvvWns6Hlm/1w2+pLs+YFRcRqbnaVQZOs7owZR8XVGZZDU0UF
- ANYgVL4tPVfCPYQ==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-When an ADD_ADDR needs to be sent, it could be prepared if there is
-enough remaining space and even if the packet is not a pure ACK. But it
-would be dropped soon after.
+Hello,
 
-Indeed, in mptcp_pm_add_addr_signal(), there is enough space to fit a
-DSS of 20 octets and an ADD_ADDR echo containing an IPv4 address on 8
-octets for example. In this case, the packet would be prepared, the
-MPTCP_ADD_ADDR_ECHO bit would be removed from pm->addr_signal, but the
-option would be silently dropped in mptcp_established_options_add_addr()
-not to override DSS info in the union from 'struct mptcp_out_options',
-and also because mptcp_write_options() will enforce mutually exclusion
-with DSS.
+Again this week, I'm not available at the usual time: 15:30 UTC (8.30am
+PST, 5.30pm CEST, 12.30am CST).
 
-Instead, don't even try to send an ADD_ADDR if it is not a pure ACK.
-Retry for each new packet until a pure-ACK is emitted. That's fine to do
-that, because each time an ADD_ADDR (echo) is scheduled, a pure ACK is
-queued.
+I suggest either having it at a different time, e.g. on Thu at 0:30 UTC
+(Wed 5.30pm PST, Thu 2.30am CEST, Thu 8.30am CST, Thu 10.30am AEST). Or
+cancelling it. WDYT?
 
-This also simplifies the code, and the skb checks can be done earlier,
-before the lock.
+If there are no new (major) topics compared to the last meeting, it is
+fine for me to cancel it.
 
-Note: also, since commit 6d0060f600ad ("mptcp: Write MPTCP DSS headers
-to outgoing data packets"), opts->ahmac would not have been set to 0
-when other suboptions were not dropped, and when sending an ADD_ADDR
-echo. That would have resulted in sending an ADD_ADDR using garbage
-info, where there was not enough space, instead of an echo one without
-the ADD_ADDR HMAC.
-
-Fixes: 1bff1e43a30e ("mptcp: optimize out option generation")
-Cc: stable@vger.kernel.org
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- net/mptcp/options.c  | 30 +++++++-----------------------
- net/mptcp/pm.c       | 15 ++++-----------
- net/mptcp/protocol.h |  7 +++----
- 3 files changed, 14 insertions(+), 38 deletions(-)
-
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index f9f587203c35..b3ea7854818f 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -665,7 +665,6 @@ static bool mptcp_established_options_add_addr(struct sock *sk, struct sk_buff *
- {
- 	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
- 	struct mptcp_sock *msk = mptcp_sk(subflow->conn);
--	bool drop_other_suboptions = false;
- 	unsigned int opt_size = *size;
- 	struct mptcp_addr_info addr;
- 	bool echo;
-@@ -676,36 +675,20 @@ static bool mptcp_established_options_add_addr(struct sock *sk, struct sk_buff *
- 	 */
- 	if (!mptcp_pm_should_add_signal(msk) ||
- 	    (opts->suboptions & (OPTION_MPTCP_MPJ_ACK | OPTION_MPTCP_MPC_ACK)) ||
--	    !mptcp_pm_add_addr_signal(msk, skb, opt_size, remaining, &addr,
--		    &echo, &drop_other_suboptions))
-+	    !skb || !skb_is_tcp_pure_ack(skb) ||
-+	    !mptcp_pm_add_addr_signal(msk, opt_size, remaining, &addr, &echo))
- 		return false;
- 
--	/*
--	 * Later on, mptcp_write_options() will enforce mutually exclusion with
--	 * DSS, bail out if such option is set and we can't drop it.
--	 */
--	if (drop_other_suboptions)
--		remaining += opt_size;
--	else if (opts->suboptions & OPTION_MPTCP_DSS)
--		return false;
-+	remaining += opt_size;
- 
- 	len = mptcp_add_addr_len(addr.family, echo, !!addr.port);
- 	if (remaining < len)
- 		return false;
- 
- 	*size = len;
--	if (drop_other_suboptions) {
--		pr_debug("drop other suboptions\n");
--		opts->suboptions = 0;
--
--		/* note that e.g. DSS could have written into the memory
--		 * aliased by ahmac, we must reset the field here
--		 * to avoid appending the hmac even for ADD_ADDR echo
--		 * options
--		 */
--		opts->ahmac = 0;
--		*size -= opt_size;
--	}
-+	pr_debug("drop other suboptions\n");
-+	opts->suboptions = 0;
-+	*size -= opt_size;
- 	opts->addr = addr;
- 	opts->suboptions |= OPTION_MPTCP_ADD_ADDR;
- 	if (!echo) {
-@@ -715,6 +698,7 @@ static bool mptcp_established_options_add_addr(struct sock *sk, struct sk_buff *
- 						     &opts->addr);
- 	} else {
- 		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_ECHOADDTX);
-+		opts->ahmac = 0;
- 	}
- 	pr_debug("addr_id=%d, ahmac=%llu, echo=%d, port=%d\n",
- 		 opts->addr.id, opts->ahmac, echo, ntohs(opts->addr.port));
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index 3e770c7407e1..470501470fe5 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -887,10 +887,9 @@ void mptcp_pm_mp_fail_received(struct sock *sk, u64 fail_seq)
- 	}
- }
- 
--bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, const struct sk_buff *skb,
--			      unsigned int opt_size, unsigned int remaining,
--			      struct mptcp_addr_info *addr, bool *echo,
--			      bool *drop_other_suboptions)
-+bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, unsigned int opt_size,
-+			      unsigned int remaining,
-+			      struct mptcp_addr_info *addr, bool *echo)
- {
- 	bool skip_add_addr = false;
- 	int ret = false;
-@@ -908,10 +907,7 @@ bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, const struct sk_buff *skb,
- 	 * plain dup-ack from TCP perspective. The other MPTCP-relevant info,
- 	 * if any, will be carried by the 'original' TCP ack
- 	 */
--	if (skb && skb_is_tcp_pure_ack(skb)) {
--		remaining += opt_size;
--		*drop_other_suboptions = true;
--	}
-+	remaining += opt_size;
- 
- 	*echo = mptcp_pm_should_add_signal_echo(msk);
- 	if (*echo) {
-@@ -929,9 +925,6 @@ bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, const struct sk_buff *skb,
- 	if (remaining < mptcp_add_addr_len(family, *echo, port)) {
- 		struct net *net = sock_net((struct sock *)msk);
- 
--		if (!*drop_other_suboptions)
--			goto out_unlock;
--
- 		if (*echo) {
- 			MPTCP_INC_STATS(net, MPTCP_MIB_ECHOADDTXDROP);
- 		} else {
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index e4f5aba24da7..b93b878478d2 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -1229,10 +1229,9 @@ static inline int mptcp_rm_addr_len(const struct mptcp_rm_list *rm_list)
- 	return TCPOLEN_MPTCP_RM_ADDR_BASE + roundup(rm_list->nr - 1, 4) + 1;
- }
- 
--bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, const struct sk_buff *skb,
--			      unsigned int opt_size, unsigned int remaining,
--			      struct mptcp_addr_info *addr, bool *echo,
--			      bool *drop_other_suboptions);
-+bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, unsigned int opt_size,
-+			      unsigned int remaining,
-+			      struct mptcp_addr_info *addr, bool *echo);
- bool mptcp_pm_rm_addr_signal(struct mptcp_sock *msk, unsigned int remaining,
- 			     struct mptcp_rm_list *rm_list);
- int mptcp_pm_get_local_id(struct mptcp_sock *msk, struct sock_common *skc);
-
+Cheers,
+Matt
 -- 
-2.53.0
+Sponsored by the NGI0 Core fund.
 
