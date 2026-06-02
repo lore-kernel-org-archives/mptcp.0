@@ -1,185 +1,133 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f180.google.com (mail-dy1-f180.google.com [74.125.82.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ECA83C1F
-	for <mptcp@lists.linux.dev>; Tue,  2 Jun 2026 07:25:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8B8A33D4E9
+	for <mptcp@lists.linux.dev>; Tue,  2 Jun 2026 08:46:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780385136; cv=none; b=N5LQIc/HPSYR4bkyNhBTjKCTsdJzzkOAoWC8d5EfltYdC/xkWuUOCQkm+bqHjZdoLuqtYj4eYU2mVLv+HRNDDBIiBBsUfAqUro2DUXab7Fd1GxZT8I4EOgQg/1w2K4T84CwtyeGlWOLyyAJFtoj6geXhFA3dYs9qXCjkxB4QzM0=
+	t=1780389991; cv=none; b=iBNzzb3IwA5bAuzMD0XatJToW7uDuM3devxj5/ecKEUd6VWdirkf3bZZq9VlnBnSM63AdyhIqx0SHHqh3FFURM7g99bKlT2Fgyqqr/5XrCA6W3lgJM/4dqFlOd1EklcdkTR6ldU3aFh164fG0jcULH3VOMFzfQNANlVBSdvmR8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780385136; c=relaxed/simple;
-	bh=PVBrtAO0auVQOViPXfWPiqCMZN29jt78ahxgnU3zvPw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QDo2i2zO/I6xBYslvynMGlDErBVk6XlI/TwZrUVwKzkRPlBDOn1oZwcV4Q+mkc9pG0SS99PU99OyLcMw+VT0US8+MamPltpB9/Z5W5+wb+40u0MJA127lUYSHKqsf7acYqKBEIPI5imb7hogBNSwVhWzoICgrwRxw+/KWBE/3uI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nlsiQy/G; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780389991; c=relaxed/simple;
+	bh=3w7TNsCtByETJQNCyF12AYi3FiwJNtylJVdaa9l4+Ag=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
+	 MIME-Version:Content-Type; b=fOQpL/TcH6W/Tk+DwfRpMJILDrqx0wnZRw/u3CXMurE3AN2k1d9k8H+bOCHWE/gBqzF3FYgITdL8jhuITkkPI09SiwkxO38J77TMPitRNKYmc5XSc+gbAZd6WzhdgThi6UEnWjL0nDagnfCa+k4KgjCdvuEMGlHZnPivVSM5mec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=p56gWoR6; arc=none smtp.client-ip=74.125.82.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nlsiQy/G"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52F181F00898;
-	Tue,  2 Jun 2026 07:25:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780385135;
-	bh=bCyz90QcAn2hIy97evlWJyp2faq20hW5zhT8C8urzWc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=nlsiQy/GZxPP9VHWav0b767wfigcajMpOaPywz8q6Y/bCyg1JQNvhQQSQ7X9SZIY8
-	 7Z2is+tybzpxEY76A5ELxdRFbLXD5sD7lEGFN1+Vl3DxTCZK89GRbeVSMC15ut4He8
-	 gXnoaik8rWiT0TqSjC6qKB/GerBbLmdIneOhmUwWyLrELx3ZS7OXGfpPAtVHk4L253
-	 kOgjUoN2U7n+F5z48Y20mltDB6xRW7BwJXyR/U4qJIY8yrV918Ylu7itvSssWr8XO3
-	 puOOTqdwWSQsITTZpSkE5BV+tg44OMHAkXuWWsjC1VFRw6wKchQAuPwO7bWn0mDQe3
-	 T6AvMFxS2Oprg==
-Message-ID: <2caac8f2-f9b5-480b-9764-45ff9818be8c@kernel.org>
-Date: Tue, 2 Jun 2026 17:25:32 +1000
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p56gWoR6"
+Received: by mail-dy1-f180.google.com with SMTP id 5a478bee46e88-304f590dd91so3554786eec.0
+        for <mptcp@lists.linux.dev>; Tue, 02 Jun 2026 01:46:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1780389990; x=1780994790; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CenaoQIYBlsDAe74jhUbAbCvhIcQBThnRuQ/i7CQSaY=;
+        b=p56gWoR6YUnzK/TktUO7qIYIK869aKlOm7/P2Pedue71G1uimDP6VFCqd9n1JGXK3v
+         68UXtjWrUwzpP+znOxzskXovANFh2WlbYZoR8BbJZrMRLrKsx633taiGGMlhWwUdZ8zq
+         cBRkjQg1JMWotWel6D67mGcpgmdrz2LCXBZoCvYWFB3/ETfP2dkETU/wPIr8QR17pqEO
+         qYliHQ0QoKM2o/qoR1KKULqpSiz8IWzMlhc7xHemxdf4tJQu/sJsc47Zr6M1qveW8pKC
+         pNwMoWDHwaam42aBt0aHSx1V4A1t4t/Ldh6Kz9rn0kA1fl0pGMpexbzjJCBpCwt9v97S
+         Iw5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780389990; x=1780994790;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=CenaoQIYBlsDAe74jhUbAbCvhIcQBThnRuQ/i7CQSaY=;
+        b=NnyViUS8ynVmy2hb+Vc7YUked6Qy8ipl1qsOHWzdonDDzalh6k2beqCuHWM81caqv7
+         PXy0G6M6k/wjQHQ9FKevYiqYIpY4giySLLQr/Cp/Lede1SswQANLC8x6VC6Mchmo6bYp
+         S70Re+dI9ELifquRP+m29C7U7yHk9D+1+CIAAs40zN7dPicW3r/qIUxRPhDQtpzHGBoN
+         ZdX+GEKTD7b+kebLw/jjbrIfYp/9K7x5YXeev34HZbZYyHf8fu/aZQOA+ED1K515dAAY
+         Smq5FwzzcN/SA7ld4x13iMnxLiws2WD0N+RBJeqgB8oEEcZHYCqi9GYm2EJxFFF8Wnt/
+         IC1g==
+X-Gm-Message-State: AOJu0YxkWVb7FZhAje87CSKm3VjczWr2aEaplIb0KqJ1/gu68RcCAZvj
+	QhOjwALOW82HmK+jxhAH05mhpTNS9ipEAyr7QJUHs5e4+2earbgMU5/nLOeq
+X-Gm-Gg: Acq92OGq4naPiHpkZUDXbnq4mYdDYrmi6SkUJZbteQoipmph65kXCpXU4wGM3daC33t
+	qwCEulbBRxOsnIDWAvHbthLJFrK7TIKvs9bv1qUd8YCDoHOB70sbnZlQXJ2OuC1Tv1Xi/fDi5dC
+	tc/2oyN65uTQm5wuD2G0rurG+tUF2IqDPe+M2v3xELRcfRmJ/d2EsQzo4hC25lLEnyG2j8joIjl
+	yO65LOt+d1wZkP26V9kqZuJOo9dLSqeB7/hSQBq86luvIIscQyHgOEzyosdUTLe1PzOLv5LwtFx
+	FPoCTvoxeabJunGRqmfRm76y1Rs2bgOiZnMbZyBL2+vABINKiJMDV/qFkWB7vnK3MiGXujxG2DN
+	tP4doOs3J5LdpzHDWTS34OlLkIzctrc4dmr5In9QzeqwVAXFEp3xtlf/Jm7F5FPNlirdbkjlCtO
+	1uIEuKktyHJyEeRpKa7zZLxmrt81/r9zaLjrhvMb+rDDajg/yZ
+X-Received: by 2002:a05:7300:730f:b0:304:d75b:f5df with SMTP id 5a478bee46e88-304fa64c151mr7108542eec.19.1780389989732;
+        Tue, 02 Jun 2026 01:46:29 -0700 (PDT)
+Received: from [127.0.0.1] ([128.24.162.211])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-304ed578c48sm10516330eec.20.2026.06.02.01.46.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Jun 2026 01:46:29 -0700 (PDT)
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <20260602-mptcp-add-addr-always-drop-subopt-v1-0-4cb4b5f446c2@kernel.org>
+References:
+ <20260602-mptcp-add-addr-always-drop-subopt-v1-0-4cb4b5f446c2@kernel.org>
+Subject: Re: [PATCH mptcp-net 0/2] mptcp: add-addr: always drop other
+ suboptions + unused param
+Message-ID: <bd5c9e54-95a5-9273-7fba-9adc8aa19712@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 02 Jun 2026 08:46:28 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH net 04/10] mptcp: allow subflow rcv wnd to shrink
-Content-Language: fr
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-References: <20260601-net-mptcp-misc-fixes-7-1-rc7-v1-0-a5ae7791754b@kernel.org>
- <20260601-net-mptcp-misc-fixes-7-1-rc7-v1-4-a5ae7791754b@kernel.org>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <20260601-net-mptcp-misc-fixes-7-1-rc7-v1-4-a5ae7791754b@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
 
-Hi Paolo,
+Hi Matthieu,
 
-(-Cc Netdev)
+Thank you for your modifications, that's great!
 
-On 01/06/2026 13:10, Matthieu Baerts (NGI0) wrote:
-> From: Paolo Abeni <pabeni@redhat.com>
-> 
-> In MPTCP connection, the `window` field in the TCP header refers to the
-> MPTCP-level rcv_nxt and it's right edge should not move backward. Such
-> constraint is enforced at DSS option generation time.
-> 
-> At the same time, the TCP stack ensures independently that the TCP-level
-> rcv wnd right's edge does not move backward. That in turn causes artificial
-> inflating of the MPTCP rcv window when the incoming data is acked at the
-> TCP level and is OoO in the MPTCP sequence space (or lands in the backlog).
-> 
-> As a consequence, the incoming traffic can exceed the receiver rcvbuf size
-> even when the sender is not misbehaving.
-> 
-> Prevent such scenario forcibly allowing the TCP subflow to shrink the
-> TCP-level rcv wnd regardless of the current netns setting.
+Our CI did some validations and here is its report:
 
-(...)
+- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Unstable: 1 failed =
+test(s): selftest_mptcp_connect_checksum =E2=9A=A0=EF=B8=8F=20
+- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/268053=
+50984
 
-> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index 5c228344e83f..12cbd98c7111 100644
-> --- a/net/mptcp/options.c
-> +++ b/net/mptcp/options.c
-> @@ -566,6 +566,7 @@ static bool mptcp_established_options_dss(struct sock *sk, struct sk_buff *skb,
->  {
->  	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
->  	struct mptcp_sock *msk = mptcp_sk(subflow->conn);
-> +	struct tcp_sock *tp = tcp_sk(sk);
->  	unsigned int dss_size = 0;
->  	struct mptcp_ext *mpext;
->  	unsigned int ack_size;
-> @@ -614,6 +615,12 @@ static bool mptcp_established_options_dss(struct sock *sk, struct sk_buff *skb,
->  	if (dss_size == 0)
->  		ack_size += TCPOLEN_MPTCP_DSS_BASE;
->  
-> +	/* The caller is __tcp_transmit_skb(), and will compute the new rcv
-> +	 * wnd soon: ensure that the window can shrink.
-> +	 */
-> +	if (skb)
-> +		tp->rcv_wnd = tp->rcv_nxt - tp->rcv_wup;
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/6bf804b82108
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1104427
 
-Claude has a comment about this new block:
 
----------------------------------- 8< ----------------------------------
-Could this assignment perturb the old_win snapshot taken shortly after by tcp_select_window()?
-I
-n net/ipv4/tcp_output.c, tcp_select_window() begins with:
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
 
-    static u16 tcp_select_window(struct sock *sk)
-    {
-            struct tcp_sock *tp = tcp_sk(sk);
-            struct net *net = sock_net(sk);
-            u32 old_win = tp->rcv_wnd;
-            ...
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
 
-and later uses old_win to drive the zero-window transition counters:
+For more details:
 
-            if (new_win == 0) {
-                    tp->pred_flags = 0;
-                    if (old_win)
-                            NET_INC_STATS(net, LINUX_MIB_TCPTOZEROWINDOWADV);
-            } else if (old_win == 0) {
-                    NET_INC_STATS(net, LINUX_MIB_TCPFROMZEROWINDOWADV);
-            }
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
 
-After the new write in mptcp_established_options_dss(), tp->rcv_wnd no
-longer reflects the previously advertised window but the amount of data
-received since the last window update.
 
-Can this cause LINUX_MIB_TCPTOZEROWINDOWADV to be missed when rcv_nxt
-equals rcv_wup (old_win observed as 0 even though the previously
-advertised window was non-zero), and conversely cause a spurious
-LINUX_MIB_TCPFROMZEROWINDOWADV when the assignment yields a non-zero
-old_win on a subflow that had actually advertised a zero window?
-
-Would snapshotting tp->rcv_wnd before the assignment and restoring it,
-or moving the shrink into tcp_select_window() after old_win is captured,
-keep these counters accurate for MPTCP subflows?
----------------------------------- 8< ----------------------------------
-
-I don't think that's a blocking comment, but I prefer to have your point
-of view if that's OK.
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
 
 Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
-
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
