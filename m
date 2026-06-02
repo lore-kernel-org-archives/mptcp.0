@@ -1,185 +1,72 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from outbound.qs.icloud.com (qs-2002a-snip4-4.eps.apple.com [57.103.87.135])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F595360EEA
-	for <mptcp@lists.linux.dev>; Tue,  2 Jun 2026 02:33:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FC0631F9A3
+	for <mptcp@lists.linux.dev>; Tue,  2 Jun 2026 03:44:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=57.103.87.135
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780367623; cv=none; b=hmbIEoEXcrTe3h2eCBEI3lsH5Kxh+Fo3ESnTAvWl/BJaArYMhzb0y7Htew+MZnhnY59TTiqZGUHC9FpmTlLElkGoLrrOrfmiMcSnkS+xWhvKDHeejDUV9HaE8otLNlI1q4GZbonuEnjGjGvqWxPitjeEPAexom4wcFbcMBRB3bE=
+	t=1780371847; cv=none; b=gptJY3D3b70K7n0RGBMsfrOg6pYe626YZPVOoE9MXXxM1C4tS0BXkpeZOuKIubcCvZsqq79G3KomgMZCXPxZ2rn/fcI4boEx5n+V0GVU4vN84jsBScbu/FLPrTthNkcqDes4544OSxIhU36t93Hrpnf6pcEBKP1gpxswC8JJLyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780367623; c=relaxed/simple;
-	bh=92H9x9yFNkbJgJjQ0eKxqkSzeLXxSN34dHUm+ZBI/Ec=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BtmNSVNyEvlgCbUZC1uIUNVEllXvgBNM7fcDFik+0QhZMP08skPUnG+Dl7y5i8LJbOo2if5QT4227dFdyyQ73DzGyH2vIhpA5iP6+oBrR+HuWpFcZp+ciDyc8FCUecFq+uakt/UbWElUOoOAzn7iKXJAfBcRV17xVjHJ/TXE+Ig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fL77tvE3; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780371847; c=relaxed/simple;
+	bh=wm/G5Eaq+6MAI8W4S8wjmjkpllI00PTImgvvIudJ9sE=;
+	h=Content-Type:From:Mime-Version:Date:Message-Id:Cc:To; b=pijqa7/0J/ng1idugFRe7FhgdvFv4dBKoIYXPh/addCDqsdirjk7gFqmnt8EXvPOxUKT3vVlF9XWIqiRGVp8WGS2b+aWQo77lIGOxYXjV3HcQxERsskP/gAiZZXsj+YeMhiJCRD3bBynMxqNd04ryrQbSodaX5Wgmp1ySz4ftt8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=jxVybDJN; arc=none smtp.client-ip=57.103.87.135
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fL77tvE3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 842E71F00893;
-	Tue,  2 Jun 2026 02:33:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780367622;
-	bh=EToo3lVyscBNTbcRYQRhh2LBDC9LSekOmA85iyM/VrY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=fL77tvE3XmmgO7YUJA9jf2MSL0R+nZGqDFbO9IsZafytBAE5FNmsOjlUfwnvMkwCt
-	 ZsP6Kg3qtExQM5sd9P7cIiYiOFaN1Vt6udh7YB8RDhp4Y2hqMflKOxspzR+AXPmCfF
-	 gPSviMaHkCpnVVNXKrn/QezkaaDO7Oq2anEoh+nswH85lamcs1giQhSoC5gTxufc3o
-	 D4I4Bw3BjuEC7zSRr6n85MpJyGwGio47T6WAka11t6r9ZiRdcRwQWOZS2r7ZBBiUav
-	 t/biOR6wNlerYXn4K6OjsLKXx+W3/83rg575sDHf0vK5HZ6JD90k/U0dFFKm2wytX0
-	 V+FVDh7mAQxVQ==
-From: Geliang Tang <geliang@kernel.org>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>,
-	Gang Yan <yangang@kylinos.cn>
-Subject: [RFC mptcp-next v23 16/16] selftests: mptcp: cover mptcp tls tests
-Date: Tue,  2 Jun 2026 10:32:57 +0800
-Message-ID: <5f95903d2649119f41745951ac586e5c58d416d5.1780362942.git.tanggeliang@kylinos.cn>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <cover.1780362942.git.tanggeliang@kylinos.cn>
-References: <cover.1780362942.git.tanggeliang@kylinos.cn>
+	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="jxVybDJN"
+Received: from outbound.qs.icloud.com (unknown [127.0.0.2])
+	by p00-icloudmta-asmtp-us-east-2d-60-percent-2 (Postfix) with ESMTPS id 65BD81800224;
+	Tue, 02 Jun 2026 03:44:04 +0000 (UTC)
+X-ICL-Out-Info: HUtFAUMEWwJACUgBTUQeDx5WFlZNRAJCTQhACkMFWwFeCEgFQwZeAFBcHA4KUgpAGF4NVh9FDkAfeRFQAVgeVl5aF15NUQ8PGVoUXBhTRVEfVFhBDgpYEhhcFFxQWB5GElYNXQkZGkFeUBtfAkIPHBNWFRMdQxkPKwhKBEMHRQJeCyUTCVNWWxNVF0YJGQhdHRkVWgkKVwJBCkh3WQcpH0kNSQRAA1gHRRRAcCsBRgtFDD0BXgBZdkB6TXMEVAddBV1WUAJaVRIEQAhWUF4IXh9MHA==
+Dkim-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com; s=1a1hai; t=1780371845; x=1782963845; bh=wm/G5Eaq+6MAI8W4S8wjmjkpllI00PTImgvvIudJ9sE=; h=Content-Type:From:Mime-Version:Date:Message-Id:To:x-icloud-hme; b=jxVybDJNxZFTIP3nFLqIIvGUOl6r3G3RkMwy1Nnw8+oPczxz79jQ3MOlhmoGCENb8MwHeKrPGAkudY+MTQxwqoFFceY4mpOyYsQv0xwAYLYzAxloOUUOWTd5lsoqW/kadFwQYJdzqbcj1gwAXQ2nrEXLmwDP28BT7fTxg33xDL/ldgyUvTxalBo6ZzVJINGEugMqx6pCFVbsSueFzQQdkJGV7zT9QpNnBkOS5V21EGhqAztaI7RJ96vcleFGrlozm1RH+u0hy1Hu2zOmycJwPd9Se22qxKI1B6OCh179+iQWwRvJbYeRqDhRrn4jc+JpP+D+n4UGuwKC5QZF6K1p7Q==
+mail-alias-created-date: 1755741129474
+Received: from smtpclient.apple (unknown [17.57.155.37])
+	by p00-icloudmta-asmtp-us-east-2d-60-percent-2 (Postfix) with ESMTPSA id 7B5271800109;
+	Tue, 02 Jun 2026 03:44:03 +0000 (UTC)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From: Chris Guerrero <gearhguerrero@icloud.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0 (1.0)
+Date: Mon, 1 Jun 2026 21:44:00 -0600
+Message-Id: <0130D40B-9417-4355-8CF6-955E2372D0C5@icloud.com>
+Cc: mptcp@lists.linux.dev, Eric Dumazet <edumazet@google.com>
+To: Matthieu Baerts <matttbe@kernel.org>
+X-Mailer: iPhone Mail (23F77)
+X-Proofpoint-GUID: JCpe9DgNO_LR1nvzHk9fjYBlefeD16R7
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjAyMDAzMCBTYWx0ZWRfX77aYL4kl3o7u
+ KKdaBczQjP5W2jnP4li4kHlDMhjT0zxiXnFTaXGLz/Ty3Gmt0Etnsis9Udr8TiORWVZ9bhX8pEK
+ ZR/rkfCODxuugeSd/2cLWPI7uwLWeSifkhEsRfZbPk/Jh3IMeD6SYj8b/hCyWcs/kAxeC2/1Rj5
+ sjWyKXwcpYXhrxsJm+QKW+ovQXUfxIAeMTYMM1vbhTgTQcBeVuPyIHItwnb3+A4yZjka4RSdy0E
+ IEtF9MQ76i/qBvwH5sihO5aJ0lfjT0G0PHMunfC7SFkrl/nS27AOn12qp90ZodlyzD4Qi9Tlja7
+ IEad8dx1D2JfuKFsaIV2mzgYuX/o01OifFs2FSPR5nGl3k+gKWRhYnFQn2DYE4=
+X-Authority-Info-Out: v=2.4 cv=MOdtWcZl c=1 sm=1 tr=0 ts=6a1e5184
+ cx=c_apl:c_pps:t_out a=bsP7O+dXZ5uKcj+dsLqiMw==:117
+ a=bsP7O+dXZ5uKcj+dsLqiMw==:17 a=s5jvgZ67dGcA:10 a=IkcTkHD0fZMA:10
+ a=FelO9ux0wxsA:10 a=x7bEGLp0ZPQA:10 a=8IWW5uUoFxMA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=VwQbUJbxAAAA:8 a=pGLkceISAAAA:8
+ a=HpEtpkEjWIJ7oRqy2ysA:9 a=QEXdDO2ut3YA:10 a=zZCYzV9kfG8A:10
+X-Proofpoint-ORIG-GUID: JCpe9DgNO_LR1nvzHk9fjYBlefeD16R7
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
 
-The mptcp tests for tls.c is available now, this patch adds mptcp_tls.sh
-to test it in the MPTCP CI by default.
-
-Co-developed-by: Gang Yan <yangang@kylinos.cn>
-Signed-off-by: Gang Yan <yangang@kylinos.cn>
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
----
- tools/testing/selftests/net/mptcp/.gitignore  |  1 +
- tools/testing/selftests/net/mptcp/Makefile    |  2 +
- tools/testing/selftests/net/mptcp/config      |  5 ++
- .../testing/selftests/net/mptcp/mptcp_tls.sh  | 61 +++++++++++++++++++
- tools/testing/selftests/net/mptcp/tls.c       |  1 +
- 5 files changed, 70 insertions(+)
- create mode 100755 tools/testing/selftests/net/mptcp/mptcp_tls.sh
- create mode 120000 tools/testing/selftests/net/mptcp/tls.c
-
-diff --git a/tools/testing/selftests/net/mptcp/.gitignore b/tools/testing/selftests/net/mptcp/.gitignore
-index 833279fb34e2..f6defec6eeb5 100644
---- a/tools/testing/selftests/net/mptcp/.gitignore
-+++ b/tools/testing/selftests/net/mptcp/.gitignore
-@@ -4,4 +4,5 @@ mptcp_diag
- mptcp_inq
- mptcp_sockopt
- pm_nl_ctl
-+tls
- *.pcap
-diff --git a/tools/testing/selftests/net/mptcp/Makefile b/tools/testing/selftests/net/mptcp/Makefile
-index 22ba0da2adb8..f7c959a25b3b 100644
---- a/tools/testing/selftests/net/mptcp/Makefile
-+++ b/tools/testing/selftests/net/mptcp/Makefile
-@@ -14,6 +14,7 @@ TEST_PROGS := \
- 	mptcp_connect_splice.sh \
- 	mptcp_join.sh \
- 	mptcp_sockopt.sh \
-+	mptcp_tls.sh \
- 	pm_netlink.sh \
- 	simult_flows.sh \
- 	userspace_pm.sh \
-@@ -25,6 +26,7 @@ TEST_GEN_FILES := \
- 	mptcp_inq \
- 	mptcp_sockopt \
- 	pm_nl_ctl \
-+	tls \
- # end of TEST_GEN_FILES
- 
- TEST_FILES := \
-diff --git a/tools/testing/selftests/net/mptcp/config b/tools/testing/selftests/net/mptcp/config
-index f48bd5183fb3..bfc26bde0501 100644
---- a/tools/testing/selftests/net/mptcp/config
-+++ b/tools/testing/selftests/net/mptcp/config
-@@ -38,3 +38,8 @@ CONFIG_INET_ESP=y
- CONFIG_INET_ESPINTCP=y
- CONFIG_INET6_ESP=y
- CONFIG_INET6_ESPINTCP=y
-+CONFIG_TLS=m
-+CONFIG_CRYPTO_ARIA=m
-+CONFIG_CRYPTO_CCM=m
-+CONFIG_CRYPTO_CHACHA20POLY1305=m
-+CONFIG_CRYPTO_SM4_GENERIC=m
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_tls.sh b/tools/testing/selftests/net/mptcp/mptcp_tls.sh
-new file mode 100755
-index 000000000000..79d120cd4b16
---- /dev/null
-+++ b/tools/testing/selftests/net/mptcp/mptcp_tls.sh
-@@ -0,0 +1,61 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+
-+. "$(dirname "${0}")/mptcp_lib.sh"
-+
-+ret=0
-+ns1=""
-+pid=""
-+
-+# This function is used in the cleanup trap
-+#shellcheck disable=SC2317,SC2329
-+cleanup()
-+{
-+	if [ -n "$pid" ] && kill -0 "$pid" 2>/dev/null; then
-+		kill "$pid" 2>/dev/null
-+		wait "$pid" 2>/dev/null
-+	fi
-+
-+	mptcp_lib_ns_exit "$ns1"
-+}
-+
-+init()
-+{
-+	local max="${1:-4}"
-+
-+	mptcp_lib_ns_init ns1
-+
-+	mptcp_lib_pm_nl_set_limits "$ns1" "$max" "$max"
-+
-+	local i
-+	for i in $(seq 1 "$max"); do
-+		mptcp_lib_pm_nl_add_endpoint "$ns1" \
-+			"127.0.0.1" flags signal port 1000"$i"
-+	done
-+}
-+
-+mptcp_lib_check_mptcp
-+
-+trap cleanup EXIT
-+
-+init
-+
-+ip netns exec "$ns1" ./tls -v 12_aes_gcm_mptcp \
-+			   -v 13_aes_gcm_mptcp \
-+			   -v 12_chacha_mptcp \
-+			   -v 13_chacha_mptcp \
-+			   -v 13_sm4_gcm_mptcp \
-+			   -v 13_sm4_ccm_mptcp \
-+			   -v 12_aes_ccm_mptcp \
-+			   -v 13_aes_ccm_mptcp \
-+			   -v 12_aes_gcm_256_mptcp \
-+			   -v 13_aes_gcm_256_mptcp \
-+			   -v 13_nopad_mptcp \
-+			   -v 12_aria_gcm_mptcp \
-+			   -v 12_aria_gcm_256_mptcp &
-+pid=$!
-+wait $pid
-+ret=$?
-+
-+mptcp_lib_result_print_all_tap
-+exit $ret
-diff --git a/tools/testing/selftests/net/mptcp/tls.c b/tools/testing/selftests/net/mptcp/tls.c
-new file mode 120000
-index 000000000000..724b1f047c89
---- /dev/null
-+++ b/tools/testing/selftests/net/mptcp/tls.c
-@@ -0,0 +1 @@
-+../tls.c
-\ No newline at end of file
--- 
-2.53.0
-
+> On Jun 1, 2026, at 5:22=E2=80=AFAM, Matthieu Baerts <matttbe@kernel.org> w=
+rote:
+>=20
+> =EF=BB=BFHello,
+>=20
+> 01 Jun 2026 21:13:02 MPTCP CI <wpasupplicant.patchew@gmail.com>:
+>=20
+>> - KVM Validation: normal (except selftest_mptcp_join): Unstable: 1 failed=
+ test(s): packetdrill_add_addr =E2=9A=A0=EF=B8=8F
+>=20
+> FYI, this failed test is expected: the patch has been applied on an
+> older base to avoid conflicts, and these tests depend on new features.
+>=20
+> Cheers,
+> Matt
+>=20
