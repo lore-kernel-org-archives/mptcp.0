@@ -1,130 +1,173 @@
-Received: from mail-dl1-f49.google.com (mail-dl1-f49.google.com [74.125.82.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-of-o54.zoho.com (sender4-of-o54.zoho.com [136.143.188.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4F1F30594F
-	for <mptcp@lists.linux.dev>; Wed,  3 Jun 2026 11:44:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.49
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780487064; cv=none; b=NULBNnf5Lf2m942si8tRZqhTAIAfSkK7XXJB5fszPrIqQGrWiwj4RI5MGKBIqW/UtcCjTV3Unvbx4D6h2ZMCFSlcOTd/5BZoy80i0s0MxB6dTIbXRtxfKlDThwWcseZVEJR0aEaC7oZSKR1/nZNdQUQC98WvyFd1DN/mGILXOWE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780487064; c=relaxed/simple;
-	bh=wkY2+B+6XPSeX26uPMYDUSu1sFJMF/IJQtZ8mhBEIwY=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
-	 MIME-Version:Content-Type; b=FZluynjbJV7lbfsici9ZKEEcbQG0SpYDiC1BoDqJNeC59gR0DVLRrVCIfLSHsieN7spzSkUisij097tuBMAgbeis3O2lNrlP+n/ctqGWRQ9ZwhosxJdxS6D8w1chR21YgNoYacqeYp6oUrDPzllont2k3n5FcvL3a3n0tRtl1M0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mI6uoLYL; arc=none smtp.client-ip=74.125.82.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6701B3806DB
+	for <mptcp@lists.linux.dev>; Wed,  3 Jun 2026 11:58:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.54
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1780487891; cv=pass; b=gQ4A5LuimvvXrh7LtijPghAPVarQT/hIwFhX1n5s4UiitOZRVV7CfsoOb+0x4zYRwOcWyKyNlkSd4eXYDDHWFZUPucdZDi4xYxmYoCgWngv4KeI/CtZoCzKUHQYhKAtKmDYFLtfUYUJz7+jDyW181jgxzfD9HbxoOnrazsjh0qI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1780487891; c=relaxed/simple;
+	bh=n3mLDITZhLvsaGoccIMAPTP8z2qZAbJLV7FfjDOg7mU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RfExlRD4ESX8Ldfd7tQu8eGcUOGC/U/xIx/CePq+vaStUzsVuySo094LvLzlr4i+tYzFVZPnp4xRKpnR2xqKClFgEFSgPVQHGaMsilFCEM/fkGCkLI/aBHLxvkhMv1e1FNOdIee0BreCuEipEysT+DY78cIWR++rag3n8GN2aP8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com; spf=pass smtp.mailfrom=mpiricsoftware.com; dkim=fail (0-bit key) header.d=mpiricsoftware.com header.i=kalpan.jani@mpiricsoftware.com header.b=kkSK4qOE reason="key not found in DNS"; arc=pass smtp.client-ip=136.143.188.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mpiricsoftware.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mI6uoLYL"
-Received: by mail-dl1-f49.google.com with SMTP id a92af1059eb24-13721dfd471so12299077c88.1
-        for <mptcp@lists.linux.dev>; Wed, 03 Jun 2026 04:44:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1780487062; x=1781091862; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oeicA9FYmOVA5yIZednS3Z7cC04ilZM1emkoSY7r8KA=;
-        b=mI6uoLYLytrrghkEyqW58gdUu3cay+zsSM2F9FCEsnbBb8wZEmIyLtkipIZRfaXjws
-         FqeNWloSqVtFQejWiEy1SJJlRR1Tuaw6Ydy+3qsS6y4WNoM0Mj1J6p08EsihzJNvH2Nc
-         aCB4t5SVFfdert2Zps++qxQVHU88i00m9Oq5OKuYuTBp52A5Wj98W50MBuBnITLnM+Cw
-         2kLer99J4A2SHKZspkWvpQrjp/O9Q1i4FqKkNeDkEHScvedrFqDgqe2cob6DLoum1Byf
-         bPK62v98gAToWT10jlxyDkS5Uqd03ChKImtdM5CNisvukT6gZPxzLV6m7Rck541jY5dS
-         PXYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780487062; x=1781091862;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=oeicA9FYmOVA5yIZednS3Z7cC04ilZM1emkoSY7r8KA=;
-        b=X+ACvjb4Hb5ls3PWkzHbtGh+yEAkYS4f72F/PebteMIZ+gEg2Hak0T4csT0nHOpOXz
-         eozG5J6zfI+OnisD5f1sYyWylAKGilRpag2snkDWIxyEXWrYjBbkSWx3K5+Cr4x0a3Z9
-         7qJ3d4znnmBmeEF5CpctQKhojc7WV2xmp1kzv5l6XdWEEHMaLNjwhGUrWaxd9+DRvzc/
-         9NrzvIwKeER3iVcQHNmW/OKvKujNsKs3F2p3lKNPOlQDee4d29Hs7qBe/+Pk3HGrepGf
-         ecFAdwGOKz+vkSCaCMKKkInNnyi6EJjgsJuw5TUrxoUQ+z38DlPZBeWP30qndKTz9WBE
-         pS8w==
-X-Gm-Message-State: AOJu0YwZ+9RROzu5J6TS8VTKjaJlNhEM7pEb+cD22iV3LePVzAPr1osB
-	B0xJGCRnfTlQ5ZYBAZKe0n8e5dKaSSvY2SujjX9Wzuewf11vRDHf+I8EHFc1UhM=
-X-Gm-Gg: Acq92OGq9ZUbwRi2XO1YbaZjLt5A5J5iE2g2yFfR7sbbU+xV0J3C6SIOelRb4g5Mh12
-	AxX/M/ucZQNUn5iJgvFXGRGL9uvjyk6Zd0D19/htvcVAfpvXwFzsSBWufPAr5hW/YAVa0sP/YhM
-	9a27oi/Q/ThmeRWHtnEWYha3DvdFV0iUpD2wr04xaRzzwrnJ7Cz8NyFWgoFJch3cPu9hKyN+vVT
-	klvcqWCxDfFp+MGzCP9JibTUSwaeQtCIBU/aDaqN6reU9pyg3UyJU71L2aPkEugrU5J2q3lwTkQ
-	J9s2wCjBjjtTJi0JaJzz4rM95tzhiSgdu8X6hSVOQff9ghajbgLLOD7Ly0XLC2c3NZsKQ6ye4ss
-	ufrjrEYhxJrbqbmDbz6Fato77/lgj8LFtGwJ7DoNBlApHQEcKjSTHYRTBmNKka0nV0QpvNzA0z/
-	K3zXvM5HkED4UGeMMNnFFUJxQy0VoXF35qhw6VWZMAT27RXmBM
-X-Received: by 2002:a05:7300:e8a4:b0:304:b14:ec53 with SMTP id 5a478bee46e88-3074fbd4634mr1377875eec.27.1780487061752;
-        Wed, 03 Jun 2026 04:44:21 -0700 (PDT)
-Received: from [127.0.0.1] ([20.168.115.115])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-3074deaab1asm2061377eec.17.2026.06.03.04.44.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Jun 2026 04:44:21 -0700 (PDT)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <cover.1780479980.git.pabeni@redhat.com>
-References: <cover.1780479980.git.pabeni@redhat.com>
-Subject: Re: [PATCH v12 mptcp-next 0/2] mptcp: address stall under memory
- pressure
-Message-ID: <54008a98-0768-c671-b63c-d7eed6715d03@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 03 Jun 2026 11:44:20 +0000
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mpiricsoftware.com header.i=kalpan.jani@mpiricsoftware.com header.b="kkSK4qOE"
+ARC-Seal: i=1; a=rsa-sha256; t=1780487886; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=iqk3ROgj6pk2Cti/otsFKr/wi4VsrLp+ex7oN5SD4iwP9KJmmtCewKEPqhgCVJoeoeU0SXeoAwxQfBgvt2kFu77VgM8NApZXCiRVNUN02MguJAlccjpfmisSdK3tGZcf2trA46ziyWF9ao0tTP+Kio0HrynX3KebOjiRdjDZlpY=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1780487886; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=O4nkeXToL6z0Eb+vF2qg1/B58ty94zCYdr3LLkyGWyI=; 
+	b=h9Blr6oLwz8bmpMDpQkvXvsVEnsYA4gmXz+2CQHoo3Ad83O+md/d9D/eVun11VGDJhT+RGzs7hDkhYHk3qbsTyWl3Cp+4g3T/0zWh3EzrethwvNhlw7OjgjJ/X1zGCmp0k6VmDT+Qk57Ke4WDDxKi65sE8mWUTvruq101T6qDVs=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=mpiricsoftware.com;
+	spf=pass  smtp.mailfrom=kalpan.jani@mpiricsoftware.com;
+	dmarc=pass header.from=<kalpan.jani@mpiricsoftware.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1780487886;
+	s=mpiric; d=mpiricsoftware.com; i=kalpan.jani@mpiricsoftware.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=O4nkeXToL6z0Eb+vF2qg1/B58ty94zCYdr3LLkyGWyI=;
+	b=kkSK4qOE1C6uE1yGdacVNy4eUcSJenmNWxl78QxUzj/V6Qb8z6n9ahJyXyOpd724
+	z+vNvuS6J3CPrmDSCP5f89sMNpPVgbgiNy8xW+yjWoh1uohLh0bW5n9qR25ArHTCyZM
+	xbUBuUpBv0aBoz5UJL4SMB7WJyNd7qXtohX7c1HE=
+Received: by mx.zohomail.com with SMTPS id 1780487883635613.776144100173;
+	Wed, 3 Jun 2026 04:58:03 -0700 (PDT)
+From: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
+To: mptcp@lists.linux.dev
+Cc: matttbe@kernel.org,
+	martineau@kernel.org,
+	pabeni@redhat.com,
+	shardul.b@mpiricsoftware.com,
+	janak@mpiric.us,
+	kalpanjani009@gmail.com,
+	shardulsb08@gmail.com,
+	Kalpan Jani <kalpan.jani@mpiricsoftware.com>
+Subject: [PATCH mptcp-net] mptcp: pm: use timer_shutdown_sync() on free paths
+Date: Wed,  3 Jun 2026 17:26:34 +0530
+Message-ID: <20260603115634.2292342-1-kalpan.jani@mpiricsoftware.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
 
-Hi Paolo,
+Replace sk_stop_timer_sync() (which wraps timer_delete_sync()) with
+timer_shutdown_sync() in mptcp_pm_del_add_timer() and
+mptcp_pm_free_anno_list() when freeing ADD_ADDR timer entries.
 
-Thank you for your modifications, that's great!
+Issue #623 identified potential re-arming of ADD_ADDR timers
+after cancellation. While the code is currently safe via RCU
+protection and timer_delete_sync() retry loop, it relies on
+implementation details rather than the documented timer API contract.
 
-Our CI did some validations and here is its report:
+The kernel's timer API documentation states: "Callers must prevent
+restarting of the timer, otherwise this function is meaningless."
+timer_shutdown_sync() is the documented API for this exact scenario
+- it sets timer->function = NULL, permanently preventing any
+re-arm attempts.
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/268786=
-25741
+Benefits of this change:
+- Uses the proper, documented kernel API for shutdown scenarios
+- Prevents re-arms at the core level (sets timer->function = NULL)
+- Eliminates unsynchronized timer_done check in
+  mptcp_pm_free_anno_list
+- More robust against future kernel changes to timer internals
+- Removes reliance on timer_delete_sync() retry loop mechanism
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/dad30f253e0b
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1105193
+The change is safe: current protections (RCU, timer_delete_sync
+retry loop) remain in place during the transition. This is a code
+quality improvement, not a bug fix for a live crash.
 
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/623
+Signed-off-by: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
+---
+ net/mptcp/pm.c | 34 +++++++++++++++++++++++++++++-----
+ 1 file changed, 29 insertions(+), 5 deletions(-)
 
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+index 3e770c7407e1..82785ae78c56 100644
+--- a/net/mptcp/pm.c
++++ b/net/mptcp/pm.c
+@@ -157,6 +157,9 @@ bool mptcp_remove_anno_list_by_saddr(struct mptcp_sock *msk,
+ 
+ 	entry = mptcp_pm_del_add_timer(msk, addr, false);
+ 	ret = entry;
++	/* timer_shutdown_sync() already called in mptcp_pm_del_add_timer.
++	 * Timer is permanently stopped and cannot re-arm. Safe to free.
++	 */
+ 	kfree_rcu(entry, rcu);
+ 
+ 	return ret;
+@@ -404,6 +407,7 @@ mptcp_pm_del_add_timer(struct mptcp_sock *msk,
+ 	struct mptcp_pm_add_entry *entry;
+ 	struct sock *sk = (struct sock *)msk;
+ 	bool stop_timer = false;
++	int timer_was_armed;
+ 
+ 	rcu_read_lock();
+ 
+@@ -421,13 +425,24 @@ mptcp_pm_del_add_timer(struct mptcp_sock *msk,
+ 	 * We hold rcu_read_lock() to ensure it is not freed under us.
+ 	 */
+ 	if (stop_timer) {
+-		if (check_id)
++		/* For check_id=false (entry about to be freed): use
++		 * timer_shutdown_sync() to permanently prevent re-arming.
++		 * This matches the kernel's documented pattern for shutdown
++		 * scenarios and eliminates reliance on timer_delete_sync
++		 * catching in-callback re-arms.
++		 *
++		 * For check_id=true (entry kept alive): use async stop.
++		 */
++		if (check_id) {
+ 			sk_stop_timer(sk, &entry->add_timer);
+-		else
+-			sk_stop_timer_sync(sk, &entry->add_timer);
++		} else {
++			timer_was_armed = timer_shutdown_sync(&entry->add_timer);
++			if (timer_was_armed)
++				__sock_put(sk);
++		}
+ 	}
+ 
+ 	rcu_read_unlock();
++
+ 	return entry;
+ }
+ 
+@@ -474,6 +489,7 @@ static void mptcp_pm_free_anno_list(struct mptcp_sock *msk)
+ 	struct mptcp_pm_add_entry *entry, *tmp;
+ 	struct sock *sk = (struct sock *)msk;
+ 	LIST_HEAD(free_list);
++	int timer_was_armed;
+ 
+ 	pr_debug("msk=%p\n", msk);
+ 
+@@ -482,8 +498,16 @@ static void mptcp_pm_free_anno_list(struct mptcp_sock *msk)
+ 	spin_unlock_bh(&msk->pm.lock);
+ 
+ 	list_for_each_entry_safe(entry, tmp, &free_list, list) {
+-		if (!entry->timer_done)
+-			sk_stop_timer_sync(sk, &entry->add_timer);
++		/* Always shutdown timer: no timer_done check needed.
++		 * timer_shutdown_sync() is idempotent and prevents future
++		 * re-arms. This eliminates the unsynchronized timer_done
++		 * read, making the shutdown intent explicit and matching
++		 * the kernel's documented pattern for cleanup scenarios.
++		 */
++		timer_was_armed = timer_shutdown_sync(&entry->add_timer);
++		if (timer_was_armed)
++			__sock_put(sk);
++
+ 		kfree_rcu(entry, rcu);
+ 	}
+ }
+-- 
+2.43.0
