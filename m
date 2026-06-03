@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02C43385515
-	for <mptcp@lists.linux.dev>; Wed,  3 Jun 2026 10:27:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5861C37F742
+	for <mptcp@lists.linux.dev>; Wed,  3 Jun 2026 10:37:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780482433; cv=none; b=FqBcsZzAHsjZ1ETMFwLbLAjAXvv4bs6V7BAItRcGnAjOuVJ0A4+bNdkQryrRvZMI8SMI4huJcQkQ1jjbpAszotcwZIB5JjDnmgHEtIKcUfPEb+8nYced2IQEU4hUBXq0wVhD5FVh1GI2AmD6e1I7LMRXVbOQ1onT/SlrhFk8jP0=
+	t=1780483051; cv=none; b=PR1FORl5SKj2KHt6+BWOcB3LY8a3al/X/Fz1SpKDYZMUdbQb3JBpryQeT1xYElVVCr3TDKMCzpk7Pgxwm9oX1g8JrqaqozyhBTXO5w7z1qq0GBXVWyabvl/hA+kLVj6AuYEJtJrqQHXcfiQho0vpwTeKsaYJSemcBRJwaaiKFtc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780482433; c=relaxed/simple;
-	bh=rh34SrA+lFWNe+J2UyfgtUHjeotM61DGmS6Kh7VePiQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
-	 In-Reply-To:Content-Type; b=T17WYl2k90HMio0+SQgRhuuh7RoBXuKjbRy3m9q9yiYHbBaifvqTKrzFmHfs+2ITyF5WEwXOQ+ol55tL1UOd+pAQOG5xX0IZ+VUjCNfiapIiaUhJyfgItLCul1vxA5fbQxJ5ODF0iwitI4urKbj07UTYmNBKmz2ZqVAEJxAeAYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HVe0RPii; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780483051; c=relaxed/simple;
+	bh=jHIgRASBocyEq/aIFDyt+SBTHPW6vNl/NWMmMPWkcLY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gVzEp5BPKntitbGdfju0Ve14dO7/A6ps8qtuCAmPlXyMtfDls6tRluJ318bidNaTlytK4elAfk2TGrZayDjsmIhugAQYwnniyy64DGD238oDgpiQRr0fpJxSpbkp+HjOpU0Da44FmqfNBUPWR0KH1zsZ1UkLcaT57wFqiPdkXgQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lVx4Cj3k; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HVe0RPii"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE9BD1F00893;
-	Wed,  3 Jun 2026 10:27:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lVx4Cj3k"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E505B1F00893;
+	Wed,  3 Jun 2026 10:37:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780482432;
-	bh=Tw1go2a5yGc1rrSMusxgh+GSdeDIJCET0aRvg/DSqbk=;
-	h=Date:Subject:To:References:From:Cc:In-Reply-To;
-	b=HVe0RPii2COFAQXbSyA3zAcL4Vy/aRzvxluU4hTO5Hgzl6y0I9VIJ4tgrT648EH35
-	 fQttbDL4QLrNSqecTSJz3LwR62qY0UxBdJrkbcZlFau/dVhtT8DSNP7k87N8hMNg7l
-	 FUlh22HsskEOLlKmiWKvsNhbYJeMck/PxIQ4k+mwotzW8GvTuOyI9FxmX7bYZNO59C
-	 Ygbq1QqYMUD7mHQK2r5j5dc96XvFv7VeOYkr5skTTSJway4c+Wl/Yx/VhJC7Orm0s8
-	 wNO3q2CU0ZWjgv8ARFBkdSWA5zsRwjqY+EbqS4lA+HLbSckMl2hiyVx20kuZj7enNe
-	 KM16NOxTQxrAw==
-Message-ID: <fe83c8c9-35bd-4e94-883b-3e141ebd41b8@kernel.org>
-Date: Wed, 3 Jun 2026 20:27:09 +1000
+	s=k20260515; t=1780483050;
+	bh=9di4X1ROVbPIwMg2yZCxVmwSsNieRNKRiKf+rE4aWs0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=lVx4Cj3kLZt2RxtYf8yKgyXW/IAA4dNhDw7Kp+xcfLctUD6R8eNd371wv0mxxkvh6
+	 m2732+SzSzdB1yWBIR8N1zwlXZkYeiVkkpkXntFXHgsTvM5dEAxCmF4Bspz/gcg/MB
+	 v8JXE7FP7zX9IOWy/1AAOUBHnkLDE2fZuxQl3/EQYsql70VpIu8ShlqF9PAyegl/W/
+	 8SIvGm7X9rImVgt+kqfhByZB7TvbrdlmY5k0fa6V+Jskt3MnX7PtGo2waR9nukwpdr
+	 LE7zfALvm3+jRvnimrt1+SPQ0YdpyrfZmqZjORnInBVzX6z9rPC8otvlZYYfLZmcY8
+	 xslD+rxToazxA==
+Message-ID: <7faaa733-327c-4039-8852-4568c9f1dc3a@kernel.org>
+Date: Wed, 3 Jun 2026 20:37:26 +1000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH v12 mptcp-next 0/2] mptcp: address stall under memory
- pressure
+Subject: Re: [Weekly meetings] Different time this week or cancel?
 Content-Language: fr
-To: Paolo Abeni <pabeni@redhat.com>
-References: <cover.1780479980.git.pabeni@redhat.com>
+To: Mat Martineau <martineau@kernel.org>
+Cc: Geliang Tang <geliang@kernel.org>, MPTCP Linux <mptcp@lists.linux.dev>
+References: <30da2c98-fa53-4cf5-917e-d692b8bece6c@kernel.org>
+ <d61c1cb5-5289-adb8-691a-bd2d77bbef7e@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -86,36 +86,34 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <cover.1780479980.git.pabeni@redhat.com>
+In-Reply-To: <d61c1cb5-5289-adb8-691a-bd2d77bbef7e@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Paolo,
+Hi Mat,
 
-On 03/06/2026 19:47, Paolo Abeni wrote:
-> This brings (hopefully) the final bits required to address the
-> data transfer stall reported by Geliang and Gang 
+On 03/06/2026 14:55, Mat Martineau wrote:
+> On Tue, 2 Jun 2026, Matthieu Baerts wrote:
 > 
-> This series improves mptcp retranmission to make them reliable:
-> pruning can require some of them.
+>> Hello,
+>>
+>> Again this week, I'm not available at the usual time: 15:30 UTC (8.30am
+>> PST, 5.30pm CEST, 12.30am CST).
+>>
+>> I suggest either having it at a different time, e.g. on Thu at 0:30 UTC
+>> (Wed 5.30pm PST, Thu 2.30am CEST, Thu 8.30am CST, Thu 10.30am AEST). Or
+>> cancelling it. WDYT?
+>>
+>> If there are no new (major) topics compared to the last meeting, it is
+>> fine for me to cancel it.
 > 
-> The only change over the previous iteration is in patch 2, addressing
->  sashiko feedback over the previous iteration (possible infinite rtx
-> loop).
-Thank you for the new version!
+> The Thursday 0:30 UTC time doesn't work with my schedule this week, I'd
+> prefer to cancel.
+> 
+> Thanks for checking in with us,
+Thank you for your reply!
 
-Now in our tree (applied before "mptcp: explicitly drop over memory
-limits"):
-
-New patches for t/upstream:
-- be1684baf0a2: mptcp: move the retrans loop to a separate helper
-- 9851d9d1f26c: mptcp: let the retrans scheduler do its job
-- Results: bbaffa2dac1b..148c8fb6decf (export)
-
-Tests are now in progress:
-
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/9c934666a4f898f1271d5788617d3ccb1d5e600a/checks
+I didn't get any new topics to discuss, so let's cancel it then.
 
 Cheers,
 Matt
