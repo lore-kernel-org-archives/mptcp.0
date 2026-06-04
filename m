@@ -1,58 +1,59 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B2D33BFAF2;
-	Thu,  4 Jun 2026 19:25:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EC2539BFE0;
+	Thu,  4 Jun 2026 19:46:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780601108; cv=none; b=N0AJr6aJiEyWK/BeDP/W4mdH9kc13F+hy9qmZiHOR1Cp5y9mSGQvkVC9TeiOH3ZOBSir0gX9Pi5RTbORavwuSjhKUzGM5ReuLJSLPUJNuMO8yzbPIdmkUwNWq1Pjg4SrylOcq2Yda1fEB6l8bVKF7ZIJKRVw0Jmpi0Au7bqqH4E=
+	t=1780602368; cv=none; b=iXWXjZeSqFtO0nWwdfn7/ngQgfc0lY+FKnDi3i9wnj8GGx9ifD5AUkXQTjuuHemEVaHcBKbkGfIc7VDWrY5svd3mpQxnUgjm51yI9/9oYbUGLfTyPBhR4bn1e3Ay8+NLCj3ZydiWQRfAa7s/Uz3jWeJ8auWvRBbumEi5Y9MHZM0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780601108; c=relaxed/simple;
-	bh=0a5DVrgepYEO8hAbzYE40hxpit13P21FDRQPl4sUCus=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=o8M/c3amImDiWv97eS7lDG5DXJ+jMvc2/lfa6sYKvjZ3v6hQPeR/0GR9870GrEYyjXff8VAQCXIuxMyYD7ag03sQkrQoaMz5wpHabM3eTncS8gE53Nsp7M2ZlcBxZgiOJTJYHE4k2lsGSvAMdLM0MKCbxj9ErhF/dLALZYQextk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OyXuq/MB; arc=none smtp.client-ip=198.175.65.12
+	s=arc-20240116; t=1780602368; c=relaxed/simple;
+	bh=zLXEj2QCVFve+ClEMYjT5NpI0ge/Nb+ocw7lHQnqcIA=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=j1IptqdIdpPPEVeGA1jzc/qMElXcN3T3WIW9yydLlOtbIDY95I5L4Sx1NpIn6vp9dNRAX2tY+yFQ1rz6WNxVn8WWO+Ow+KqNb44BqRMvornuKoRrOlqSs3ZPe2vZppAEirKXQBRIKhJMTGR+KmHQdxYkJhJPvKuLmQ1GpiO9Fcw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=j9Jnxzjj; arc=none smtp.client-ip=192.198.163.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OyXuq/MB"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="j9Jnxzjj"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1780601106; x=1812137106;
+  t=1780602366; x=1812138366;
   h=date:from:to:cc:subject:message-id;
-  bh=0a5DVrgepYEO8hAbzYE40hxpit13P21FDRQPl4sUCus=;
-  b=OyXuq/MBKHcp43ISXPmux9B88kT9ixqbjwsrc9eI+pP01JP0E8PFhdMi
-   ItKzFQMLgDHFRwKVo3/v8VzuQV91cBVu3/DElrzcZkEXP4DWnHtHCaTm1
-   /LwMRzCeHMHyl8LCmVDddORdAKiXR1wb+cCPFBVOVhXIknGYYG6ahhyz0
-   wfRPLTMEcRZnbIPyHZ9MQKrctbRRs+v+0ux7ZA3lU3zjM7J0wvi+Twtbp
-   +drTT0vHcsUQik0AycBxAJ0svIhsoodg53U87CHWDJsU2cAFXcn3nhW8y
-   XhziyLiejta8t6uoyrK2BlnNGh1d/3NzNzpd0olt5UQK9YvJpn4EnYjzC
+  bh=zLXEj2QCVFve+ClEMYjT5NpI0ge/Nb+ocw7lHQnqcIA=;
+  b=j9JnxzjjW6nGdrhV4ojaxMFE3sIEb6Ec2VN2pNQQCP2G6ZfGcYtRVr7Z
+   3NBCxNSp6q8NahcOzjPb1+vIudkaKRVys6Po8rhdK4IMmhmIF1jqxil+D
+   g8TJ8u+5PwYNRAfJmpHpp+mxnvKH7OgjInOKRrslKno6vvAwlF4XX3wJE
+   G+pkltF1xE+L0Cbz/rJ4F9EWvngOa/nfp0ppEsDIUBnEmIh4ZD3h+I8X1
+   Ua+8n1pNSt5vtsd8xBK34sX1vy7YOWPloji+ibPp3aRPqdnUdj72ZUwc1
+   IOCuso9Q7CUJJvcN9KNbSmq5LYXQ6KHsOuIzGU426zTrq0fzgXcx8tMl8
    g==;
-X-CSE-ConnectionGUID: TPc6qx6SRjm1a6D06hocAQ==
-X-CSE-MsgGUID: TfExWGbERYGx5cY1FeWVOQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11807"; a="92919038"
+X-CSE-ConnectionGUID: 8OdkYwDyT/GNGeS1SHpHaA==
+X-CSE-MsgGUID: 1VhRu+EZRviZm0M6H9dksQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11807"; a="92810913"
 X-IronPort-AV: E=Sophos;i="6.24,187,1774335600"; 
-   d="scan'208";a="92919038"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2026 12:25:04 -0700
-X-CSE-ConnectionGUID: RgJs0L04Swq6GpkNbchEJg==
-X-CSE-MsgGUID: 8sqwgQfeRFmgvkLpu6GyRA==
+   d="scan'208";a="92810913"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2026 12:46:05 -0700
+X-CSE-ConnectionGUID: WrcKWcaxRzmf/HMvsyDDuw==
+X-CSE-MsgGUID: LqIHHac8SHi7ehAoKggVbw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.24,187,1774335600"; 
-   d="scan'208";a="274883393"
+   d="scan'208";a="240172628"
 Received: from igk-lkp-server01.igk.intel.com (HELO 892db79562d4) ([10.211.93.152])
-  by orviesa002.jf.intel.com with ESMTP; 04 Jun 2026 12:25:03 -0700
+  by fmviesa006.fm.intel.com with ESMTP; 04 Jun 2026 12:46:03 -0700
 Received: from kbuild by 892db79562d4 with local (Exim 4.98.2)
 	(envelope-from <lkp@intel.com>)
-	id 1wVDga-000000002NX-3Ja3;
-	Thu, 04 Jun 2026 19:25:00 +0000
-Date: Thu, 04 Jun 2026 21:24:29 +0200
+	id 1wVE0u-000000002Nh-3shF;
+	Thu, 04 Jun 2026 19:46:00 +0000
+Date: Thu, 04 Jun 2026 21:45:04 +0200
 From: kernel test robot <lkp@intel.com>
 To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, mptcp@lists.linux.dev
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+ mptcp@lists.linux.dev
 Subject: [mptcp:export 6/52]
- drivers/net/wireless/intel/iwlwifi/pcie/drv.c:1236:20: error: 'Scratch'
- undeclared; did you mean 'watch'?
-Message-ID: <202606042103.IiGEqrkc-lkp@intel.com>
+ drivers/net/wireless/intel/iwlwifi/pcie/drv.c:1236:6: error: use of
+ undeclared identifier 'Scratch'
+Message-ID: <202606042127.VTFlq7M2-lkp@intel.com>
 User-Agent: s-nail v14.9.25
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -63,30 +64,24 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 tree:   https://github.com/multipath-tcp/mptcp_net-next.git export
 head:   0b9943d992a58cba5698da432d2e534c7a298222
 commit: f1ebf077eaba4bb12d44417d6d27fca8f2bbc0f1 [6/52] TopGit-driven merge of branches:
-config: x86_64-rhel-9.4 (https://download.01.org/0day-ci/archive/20260604/202606042103.IiGEqrkc-lkp@intel.com/config)
-compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260604/202606042103.IiGEqrkc-lkp@intel.com/reproduce)
+config: x86_64-rhel-9.4-rust (https://download.01.org/0day-ci/archive/20260604/202606042127.VTFlq7M2-lkp@intel.com/config)
+compiler: clang version 22.0.0git (https://github.com/llvm/llvm-project f43d6834093b19baf79beda8c0337ab020ac5f17)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260604/202606042127.VTFlq7M2-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202606042103.IiGEqrkc-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202606042127.VTFlq7M2-lkp@intel.com/
 
 All errors (new ones prefixed by >>):
 
-   drivers/net/wireless/intel/iwlwifi/pcie/drv.c: In function '_iwl_pci_resume':
->> drivers/net/wireless/intel/iwlwifi/pcie/drv.c:1236:20: error: 'Scratch' undeclared (first use in this function); did you mean 'watch'?
+>> drivers/net/wireless/intel/iwlwifi/pcie/drv.c:1236:6: error: use of undeclared identifier 'Scratch'
     1236 |                  * Scratch value was altered, this means the device was powered
          |                    ^~~~~~~
-         |                    watch
-   drivers/net/wireless/intel/iwlwifi/pcie/drv.c:1236:20: note: each undeclared identifier is reported only once for each function it appears in
->> drivers/net/wireless/intel/iwlwifi/pcie/drv.c:1236:27: error: expected ';' before 'value'
-    1236 |                  * Scratch value was altered, this means the device was powered
-         |                           ^~~~~~
-         |                           ;
+   1 error generated.
 
 
-vim +1236 drivers/net/wireless/intel/iwlwifi/pcie/drv.c
+vim +/Scratch +1236 drivers/net/wireless/intel/iwlwifi/pcie/drv.c
 
 48d1a2110ad9cb drivers/net/wireless/iwlwifi/iwl-pci.c        Emmanuel Grumbach      2011-05-24  1212  
 cb347bd29d0d10 drivers/net/wireless/intel/iwlwifi/pcie/drv.c Emmanuel Grumbach      2024-08-25  1213  static int _iwl_pci_resume(struct device *device, bool restore)
