@@ -1,102 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f181.google.com (mail-dy1-f181.google.com [74.125.82.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7B0F385D77;
-	Fri,  5 Jun 2026 12:57:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54D1440E8E2
+	for <mptcp@lists.linux.dev>; Fri,  5 Jun 2026 14:09:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780664239; cv=none; b=chQ8PUKLhG3K9cEQSlayvwDbySAPQuT0fdNwIvhIfwczWWRJYZcvOl80uNxYZpA6QEnueJV2iuKIfGIVSNYqCqNmnBmHbburUAx/Tn+SH4SYrteKv5DcnY5h8U+iQB2goRg7WkX0aEZft/zPmSV/YbFFiLRlnxEy6Mx/dRwA1nI=
+	t=1780668556; cv=none; b=oY9j6Ar+SugjmhM1V/zMv83eGEO34moLRT9ZRXgU75kFL4vyfxoF571mHAiv8rw2RGZW2G4L27LTfFFeUot3mCvgpsI1lrLYWNIOpVuLGPvz4ouxgsUx9JEzNDAvh1nUvc50ux92OfbS4dKxNMwI/cXWYLsFGD/2yUhHRM6fmJo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780664239; c=relaxed/simple;
-	bh=2gDsZLPkqY1uRIJkwjXi8LY2Nq7ONbmfCtUnxeK4UlU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nlv2/dAeBcTkbK49rBVh16wYHvuYaYnTPP8svqbg7Gy1L8FfvlJSoHCArjikjgHhb2IOyKeza7RnWTr2kRICV3V7Ra6k0o+uWLvMNJAdxsDcCLige/2TXZcxnQmCHm2RGYSZs9mKpeIYsUYsRZoH4G9iAC9QvpuRAjL+xPBkVlI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kzNFY45o; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780668556; c=relaxed/simple;
+	bh=czrM8YuWiubPGoVkyxyXQlK+4ncMCbf+X/OKVehGEHE=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
+	 MIME-Version:Content-Type; b=TnWkAGFxNwoOq8BbQIeiuvXXiGu9R4giBjO/yeZEg6MkG218v0IY5FRomiP6XnyuNCw9bucSTFfH4yQoJD41ODNNzzLIzjqYKykF5zveQsScnWd2i1rd3Y33Nx3aPcqhFm8p+kPY6bOo/oXfXi1g1fFHIHqVqEp8QFqz7vO2RSc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cOfXUkSR; arc=none smtp.client-ip=74.125.82.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kzNFY45o"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2BA151F00893;
-	Fri,  5 Jun 2026 12:57:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780664237;
-	bh=xW/9033em5tyQ+Y/zDCFngnNCH0QAduSUxtG+Zo2vwc=;
-	h=From:To:Cc:Subject:Date;
-	b=kzNFY45oBMUoIxr6I22HWDdOGfNjKoCc04rg8fWPJ9xBh2Gpw1XCFNVXdHJuyQdlj
-	 WNRE8XdUQWo8dfzD8DZLVV7ohvBjGTclKrvTN0ZvLHSabMghqMTS7lNgzRDkDE8nZT
-	 Vl8yOeJzk0/Tm6qlxIDNZ0/8RLnIsUmOfoCDhvcP5vAgeYiVCliynCgKH/R9FmELWg
-	 BiTYHJz6eatjVNKzXDqslgp6YHJ+ud8uA5wOeIg6g4sDynvTQuN2xXeK7im9vqo+Iy
-	 DEUZS7YqME4AZPClAwqw01TvKZ1kvUmRELc2O+sisR7d1KuAsijtzwCdbcehh9GMdK
-	 wnE46jnsWVZxg==
-From: Geliang Tang <geliang@kernel.org>
-To: John Fastabend <john.fastabend@gmail.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Sabrina Dubroca <sd@queasysnail.net>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Atul Gupta <atul.gupta@chelsio.com>
-Cc: Geliang Tang <tanggeliang@kylinos.cn>,
-	netdev@vger.kernel.org,
-	mptcp@lists.linux.dev,
-	Gang Yan <yangang@kylinos.cn>
-Subject: [PATCH net] tls: restore sk_prot before calling original destructor
-Date: Fri,  5 Jun 2026 20:57:07 +0800
-Message-ID: <158c0562b4969c61574633e5d22c962d50e5bc31.1780663476.git.tanggeliang@kylinos.cn>
-X-Mailer: git-send-email 2.53.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cOfXUkSR"
+Received: by mail-dy1-f181.google.com with SMTP id 5a478bee46e88-304d8362a58so1160279eec.1
+        for <mptcp@lists.linux.dev>; Fri, 05 Jun 2026 07:09:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1780668554; x=1781273354; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iKX+1B4jgvpq9ZUPGO8naVhGN6XJNgLVR1QRjEZEJII=;
+        b=cOfXUkSROrR82rvYtzG7Yu1SrPL4xtBhDiwjGvuVujJS2+o3nLlvgUSwsd4XWkraLf
+         IijveyaEY74GZM4EesUKYUHH1GluC0DuK9tt/Iq3iogtJi9ODoDleQTSMJ52ak8whKgb
+         Gp/rr4SUPnmDB8MzZAYGpJDTsTLrhNwKSVEj1y/I2ioMv6KCTrtpqJsnlQ72vvQHWDyW
+         HHCKpkFtds98+UgbRmeb2Pan7IGaJ193soli0egOmxGEVtxWILdpbR4loYYuBTOnb2Pm
+         bqbUMfs0pNjRiTQVtmg8VallhUPSFhKGtuFjzdnGwDkXkKqD0MQo0JY60x7NbdirkvkF
+         tpGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780668554; x=1781273354;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=iKX+1B4jgvpq9ZUPGO8naVhGN6XJNgLVR1QRjEZEJII=;
+        b=EIPPrKYI3YGQTsuSzZ2SfU/hvuVvUxYxB2PKbAS7kNrZoR0CKyn6sGpmQa52Bmz7QL
+         Y936bHvHzs0I0sacj5310g3cTjCzP130CGOkDZABHY74dswPU/E9zsXjUckIZGwX+teV
+         TJK+gspCQeACB2OjeVqBuXQWGxIpuZ3HN1SzL9bbAbrF5gLBYBN/zDR8otUDnzAaHuCj
+         +jmusfA4eCJWXSGmUjpRIgu03r2LMOtePecX+2cibQoTPi8wjYxMMPtBezUoqDrBEAJm
+         7ijzXZSAKqMe9Gx8o+TLc04rbzsH+0dm1zVG6auSKfg+/VNPvxkk3gdJd8Hw8QLvO7Tc
+         P5Lg==
+X-Gm-Message-State: AOJu0YyNqfKqnmamWuJowrbtKrIFpf5xYR7pH4B8zmjQlzdRopzt3r8w
+	yPw10qFx/CQFjKnezW+f0migc0IkUNiQmUVzltYa8HrmiR5yAduImsSSRoBR
+X-Gm-Gg: Acq92OEXoanfxNLUVHI/hQSEYpDOI1AjpmqZvCjONTKqBMsCu6tX4apKZu5ih0CGKyx
+	J/crN9QafPeZw/GZ6rmA2gi7fBMG+Sh8OefrRKz+sAXoXbfUlQsbCwpQ5QvE782vVuiVtIpPzhi
+	dxpnLk15MVibPm/mNZN4tCJAcx5Uo6Ekiwxu9ECrGKU4HjSfgTvgzPTlmhibNHL3OzdCUPV1L/k
+	izj5itGxgWdsRDHRFTSjzPjdLaCAqG/C8WLgtgaw7xdEjuOVqZeQ4ez2Sf4oicmX4XD3pEx/97X
+	4Erdw/zsUoQLiS3x24qG9F1cw9IqLOUWvPQGCNvVYOn9ttyQ67D9wTY/RkQIlzBLs2l6m53vy4+
+	k0EWSt+Ya6L6z8SMmX2c/M53S8BCXalR3NcdbAB+k/TFNecKATQqMKe8Tg0DH8R3C5MbDJzleZ4
+	lTnPFD+iHD86nBFT3JDgxwly+RTE3RYQZrrqCSgQP9xHpMzaVu1iRMt0kI
+X-Received: by 2002:a05:7300:dc05:b0:2be:17b1:e49f with SMTP id 5a478bee46e88-3077fd76b6dmr1488843eec.4.1780668554009;
+        Fri, 05 Jun 2026 07:09:14 -0700 (PDT)
+Received: from [127.0.0.1] ([128.24.162.7])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-3074deaab1asm7533235eec.17.2026.06.05.07.09.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 05 Jun 2026 07:09:13 -0700 (PDT)
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Geliang Tang <tanggeliang@kylinos.cn>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <158c0562b4969c61574633e5d22c962d50e5bc31.1780663476.git.tanggeliang@kylinos.cn>
+References:
+ <158c0562b4969c61574633e5d22c962d50e5bc31.1780663476.git.tanggeliang@kylinos.cn>
+Subject: Re: [PATCH net] tls: restore sk_prot before calling original
+ destructor
+Message-ID: <afc2d34e-eb9b-55d4-b5fc-3023714b9bd4@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 05 Jun 2026 14:09:12 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+Hi Geliang,
 
-When a TLS socket is offloaded to a TOE device, tls_toe_bypass() replaces
-sk->sk_prot with a TLS-specific protocol table. On socket destruction,
-tls_toe_sk_destruct() calls the original sk_destruct callback
-(ctx->sk_destruct), which may rely on the original sk_prot (e.g., for
-memory accounting or close handling). Without restoring sk->sk_prot
-before calling ctx->sk_destruct, the destructor may access stale or
-incorrect protocol functions, leading to use-after-free or kernel panic.
+Thank you for your modifications, that's great!
 
-Add WRITE_ONCE(sk->sk_prot, ctx->sk_proto) before invoking
-ctx->sk_destruct to restore the original protocol pointer. This mirrors
-the restoration already done in tls_sk_proto_close() for the software
-and device offload paths.
+Our CI did some validations and here is its report:
 
-Fixes: 76f7164d02d4 ("net/tls: free ctx in sock destruct")
-Co-developed-by: Gang Yan <yangang@kylinos.cn>
-Signed-off-by: Gang Yan <yangang@kylinos.cn>
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
----
-Hi,
+- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/270171=
+57085
 
-This bug was identified by Sashiko during my development of "MPTCP KTLS
-support" [1]. I am sending this fix separately for now.
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/854fb4e76a75
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1106620
 
-Thanks,
--Geliang
 
-[1]
-https://patchwork.kernel.org/project/mptcp/cover/cover.1780621326.git.tanggeliang@kylinos.cn/
----
- net/tls/tls_toe.c | 2 ++
- 1 file changed, 2 insertions(+)
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
 
-diff --git a/net/tls/tls_toe.c b/net/tls/tls_toe.c
-index 825669e1ab47..c9c1a0952f4b 100644
---- a/net/tls/tls_toe.c
-+++ b/net/tls/tls_toe.c
-@@ -48,6 +48,8 @@ static void tls_toe_sk_destruct(struct sock *sk)
- 	struct inet_connection_sock *icsk = inet_csk(sk);
- 	struct tls_context *ctx = tls_get_ctx(sk);
- 
-+	WRITE_ONCE(sk->sk_prot, ctx->sk_proto);
-+
- 	ctx->sk_destruct(sk);
- 	/* Free ctx */
- 	rcu_assign_pointer(icsk->icsk_ulp_data, NULL);
--- 
-2.53.0
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
 
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
