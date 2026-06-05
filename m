@@ -1,129 +1,145 @@
-Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from canpmsgout12.his.huawei.com (canpmsgout12.his.huawei.com [113.46.200.227])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D9AA36C9F0
-	for <mptcp@lists.linux.dev>; Fri,  5 Jun 2026 02:48:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B67983BD25A
+	for <mptcp@lists.linux.dev>; Fri,  5 Jun 2026 07:32:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.227
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780627699; cv=none; b=YLUM4j5aM5flk0AAYZKvDN9qMiiI0ZiXaAvseW2G6OQxRA/RfZoBQb9KR2KjUh/9UfnZag9Kfkvxe4KdnMU3eJ8SQjkVz+x/AFjrg/YGHk+yak/R4zAmbDI6MarI4cBtyWSqd0msSlw6oFDlJhHuddj6ozqh2L1cqUrMoHTlvCA=
+	t=1780644730; cv=none; b=eFXaytQ7yFv1/aBxRYGhqGDqFaYkldFoNCjzqXTIqewKBQWCI/hyTbxSOGA5x1EycFL47RZl8akVYpqqdSg5KmGI3TL/t7cndvDIRDFswJ0SvCh7J8K1PhNFq1ocwseKXXGinEBiyDYNa70ILVpC4lE3accl2yoC5aNJnfFwhNU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780627699; c=relaxed/simple;
-	bh=OdueOsFrXRm8MNykKLqdv6YvuwljlWrl77vhedlqAfA=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
-	 MIME-Version:Content-Type; b=dYVaLEH6r1vorm1xTdc6HF/pm4vI0rHgTvB5Dqsr7pdE9kOOv8CxiSWnpzLtjcYpX48reSYo0g0B+38Klt0EwqdnSgwj73b5S07oJaq9jwJOwk9fjqf563swX9t9wz1iylgQZe4BjFG69vib+ECDJuxbDSp4v1KJwFIJZPyjbis=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TqISkNGy; arc=none smtp.client-ip=209.85.222.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1780644730; c=relaxed/simple;
+	bh=oFiDkIB50evWnIkyh4zM5TGPFRrJRtqb3YL1990OiOU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=nVsnlLyCKIS/MBaJPauaEiA3sK62EhNeNm4kjtbMmDEQF8Xz66G0XrFjxPFRmSK8v6XQI2OGtSlngiGQ3gbWyoCeoccBcBBkf4YbMNg/06gG3cdcDuEcAk28mrYVOLFKUWAvfRL57CuOdcCcQOn1TWY4om9RyBxMR+oGEG3z42M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=r4A8QZ9q; arc=none smtp.client-ip=113.46.200.227
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TqISkNGy"
-Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-9157f7c1c0eso139367885a.1
-        for <mptcp@lists.linux.dev>; Thu, 04 Jun 2026 19:48:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1780627690; x=1781232490; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XEXvxzro88BgDn/VpROU+1VGpB7eYwGqKiIpqEjcjP4=;
-        b=TqISkNGylOUxpAzeOewzX3odqWyqjoYRyyCxApmq4mYBh5ounA13i3NXaknIS1nAoC
-         BjNipEpC45F+4l3IwvjRF44R8U4hXBvtvcD+FAAchhH7i8Tzxz7NLsSArReBc0ib688n
-         hIc7uuoKNnjIWXTBY8u/F82fNAzo2SGgkq//ODsDSqqp9UlEtw7OyxTxTQCGKm2r0Q3/
-         ENR3/olMuONhyMfTEYEsGz+jc2vF3QPsRVdJCAs/FDya1/LJLhEMhSBYMkYfDjbT09UH
-         J/K8FXjv6ou7KIJVS0prdwaYxfMMdAWD3flTTUfERTV7FkffrwyzftpkX59BK69XMBni
-         sn4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780627690; x=1781232490;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XEXvxzro88BgDn/VpROU+1VGpB7eYwGqKiIpqEjcjP4=;
-        b=HH5vKXaDRlqAr0DOvH6da9vy/Wi8zXUHqzJz8LyTsu2iA9pIs0z9m7UBTgDMmh8BbY
-         IUsh9aWaA37cF1lhlrSbIOrU9mMD0LVubH2scWgXZ5Sgqmxc9cO8Mt2nORfl2MTzE8ZC
-         Ls7RoVZQqCQQvdKpSFDRQnnatnmOdd6hrHD1962YOHJo0wxSWOPtkAIbTiQJdgfN2s4h
-         D+9nh8soeFCftpzXQX5d7tDjsqT0pD8X2CwTSdx/GKy8/0D8VLwE8C3X/SSHFqzr4eck
-         W21M0wdZukgDT7n5HbVLXortzJfeqaQuj+K/3vV/dPB729/UJGI+k3V68937TCtOik6O
-         YLqA==
-X-Gm-Message-State: AOJu0Yzg9jwJbS1rBq7mfRDszo3vRtThFkpYY1+TZKMO9ZzNeUFroZKW
-	At6E6wobbDvNP36mI9H0ZZMa6GdnQlv2Lqy+HfWgPhb/xM0rmH9t83wYzceJ
-X-Gm-Gg: Acq92OHaoarhbha9QxvW3C6wDiBpfP6zJ25/qB7ly3yrc6tljfPmmd1XtEcVPqsIurA
-	mVoEaQ00hihiu1NZisqD1sRLn+jcm0aW73uS9C6oDbaT0/hglDpUhLUIzXh0kbYktftQ4649/eD
-	o4l9HhcHZiF1fmCW2DcUVr/7+X/p9RwVPFpYDTMqj48DPdQK1WtoHmJE60AaSU77yjEhSzpu0bS
-	Xt+HS7MUG1zeBNWZXbuhruryWZqXWFgzvLWJlTUgvtNK7ULLLn22dyqH8HrDElgqnx7zAgeVXEg
-	ItmPQM1CVC0jOeQNtGv/A+Jfh3My+EhQaLfZSZ+Qym6D6gS6Up6wThiRZPmDl3y/PjgUZwhIofv
-	ZhOK7zhZe3m40oxnI37syDFJbwtSskLswH/tv9ReJnbsCPpagqEtr8MdDjPJw/CF5UETQBdTIhL
-	82mPE3OZiAtoQl2XjiLEtRA7OqOLbYK3tLCp1RflLiHnJsypQ=
-X-Received: by 2002:a05:620a:254a:b0:915:6758:24d8 with SMTP id af79cd13be357-915a9dea2b0mr350720785a.42.1780627690293;
-        Thu, 04 Jun 2026 19:48:10 -0700 (PDT)
-Received: from [127.0.0.1] ([172.183.91.36])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-9158a3d250dsm761027485a.38.2026.06.04.19.48.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jun 2026 19:48:09 -0700 (PDT)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <tanggeliang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <cover.1780621326.git.tanggeliang@kylinos.cn>
-References: <cover.1780621326.git.tanggeliang@kylinos.cn>
-Subject: Re: [RFC mptcp-next v24 00/18] MPTCP KTLS support
-Message-ID: <94b59e63-5545-094e-6ed8-ef048344809c@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 05 Jun 2026 02:48:09 +0000
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="r4A8QZ9q"
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=iZ0AfxDuLRaEVDCppEcdOIE9kJNMXqof9Pt2mKJmrOg=;
+	b=r4A8QZ9qsj5CGQT/9kr8qh0vRPO8wYVAUPTK1b+h1VwcyfqIZIUQP1Wl45kJe6eHJnaSSXDYa
+	KNaV477M4LvukFya8I7wVgxsPjQtwp7iSyObkzYhGTFpoIt92ykUhQMCn4aZ/T0yAFIeXdfF1dz
+	W+VuvVB1OVCJngERGTn048I=
+Received: from mail.maildlp.com (unknown [172.19.163.163])
+	by canpmsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4gWtGb23p4znTWL;
+	Fri,  5 Jun 2026 15:24:07 +0800 (CST)
+Received: from kwepemj500018.china.huawei.com (unknown [7.202.194.48])
+	by mail.maildlp.com (Postfix) with ESMTPS id 47BD14048B;
+	Fri,  5 Jun 2026 15:31:59 +0800 (CST)
+Received: from [10.174.178.79] (10.174.178.79) by
+ kwepemj500018.china.huawei.com (7.202.194.48) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Fri, 5 Jun 2026 15:31:58 +0800
+Message-ID: <c7d0b579-85d5-4a8c-8baf-25843dee1fae@huawei.com>
+Date: Fri, 5 Jun 2026 15:31:57 +0800
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH mptcp-net] mptcp: prevent add_addr timer rearm during
+ teardown
+To: Kalpan Jani <kalpan.jani@mpiricsoftware.com>, "matttbe@kernel.org"
+	<matttbe@kernel.org>
+CC: "mptcp@lists.linux.dev" <mptcp@lists.linux.dev>, "janak@mpiric.us"
+	<janak@mpiric.us>, "shardul.b@mpiricsoftware.com"
+	<shardul.b@mpiricsoftware.com>, zhangchangzhong <zhangchangzhong@huawei.com>,
+	"weiyongjun (A)" <weiyongjun1@huawei.com>, yuehaibing
+	<yuehaibing@huawei.com>, "xiasong.lee@gmail.com" <xiasong.lee@gmail.com>
+References: <20260526103647.732350-1-xiasong.lee@gmail.com>
+ <20260604071909.3260023-1-kalpan.jani@mpiricsoftware.com>
+From: Li Xiasong <lixiasong1@huawei.com>
+In-Reply-To: <20260604071909.3260023-1-kalpan.jani@mpiricsoftware.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
+ kwepemj500018.china.huawei.com (7.202.194.48)
 
-Hi Geliang,
+Hi Matt, Hi Kalpan,
 
-Thank you for your modifications, that's great!
+Thank you for your review and suggestion.
 
-Our CI did some validations and here is its report:
+The main reason I have been hesitating to send a v2 is that,
+after re-checking the code paths more carefully, I am no longer
+sure that the original issue reported by Sashiko can actually
+happen in this add_addr timer path.
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/269902=
-00448
+My current understanding is that both sk_stop_timer_sync() and
+sk_shutdown_timer_sync() synchronously stop the timer: if the
+callback is running, they wait for it to finish, and if the
+callback re-arms the timer before returning, the pending timer
+is then deleted before the helper returns.
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/d313aac2bb3e
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1106279
+So for this specific add_addr timer, I do not currently see a
+path where teardown completes and a re-armed timer is still
+left behind afterward. That is why I have not sent a v2 based
+on sk_shutdown_timer_sync() so far.
 
+That said, I think tightening this teardown path could still be
+useful for robustness and could help avoid similar issues after
+future changes.
 
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
+On 6/4/2026 3:19 PM, Kalpan Jani wrote:
+> Hi Li,
+>  
+> Great work on this patch series! Your approach of creating sk_shutdown_timer_sync()
+> helper is the right pattern.
+>  
+> I noticed one additional issue: in mptcp_pm_free_anno_list(), the timer_done check
+> is unsynchronized:
+>  
+>     if (!entry->timer_done)  // Data race: no lock protecting this read
+>         sk_stop_timer_sync(sk, &entry->add_timer);
+>  
+> This is a classic data race. Your patch keeps it as-is, but I think we should
+> also fix it by removing this check entirely and always calling timer_shutdown_sync().
+>  
+> Would you be open to adding this improvement to your patch? The benefit:
+> - Eliminates the data race
+> - Simplifies the code (unconditional shutdown)
+> - timer_shutdown_sync() is idempotent anyway
+>  
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+Yes, I think this would be a good direction if timer_done can
+be removed safely.
 
-For more details:
+I agree that it would avoid the unsynchronized timer_done check
+and simplify the teardown path.
 
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+Before removing timer_done, I would like to better understand
+the original scenario for which it was introduced.
 
+Matt, if I am understanding it correctly, timer_done was added
+to avoid the case where the socket reference held by the timer
+becomes the last one, and then sock_put() from the timer
+callback triggers socket destruction, which in turn reaches
+sk_stop_timer_sync() for the same timer.
 
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+If that understanding is correct, my concern is that removing
+timer_done without addressing that original case might
+re-introduce the self-wait issue during teardown from the timer
+callback path.
 
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+So overall, I agree with Kalpan's suggestion if timer_done is
+indeed no longer needed for that last-reference case. I would
+just like to clarify that point first before sending a new
+version.
+
+> I'd be happy to:
+> 1. Test the updated patch
+> 2. Help refine the implementation
+> 3. Co-author if you'd like
+>  
+> What do you think?
+>  
+
+Thanks a lot for the offer, I really appreciate it.
+
+Thanks,
+Li Xiasong
+
