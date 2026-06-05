@@ -1,39 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C855D2EEE81
-	for <mptcp@lists.linux.dev>; Fri,  5 Jun 2026 01:24:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68DB13BADB5
+	for <mptcp@lists.linux.dev>; Fri,  5 Jun 2026 01:24:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780622683; cv=none; b=YvLbiOuREtHJSz7D9jjxLFeCSel4uoHE6Pq3pp9Cgd+/DsxegHsbTTBTp3oR0K1lQseCT5nULBB1OsGAVSViMZAIrTLOdHVdHgD4OoQUW1ONv/T0FbFKeOWhC6YQ8oovTOEdh89xqsqGH8ZB1m78oxbGa12b7CK9l5zpLbERV54=
+	t=1780622687; cv=none; b=OdwD5VvFQ2MGsDr45GTpB874QQ+p2YOw7vUEqB+T/usIUgrFM38jrE4CxqYQZyZL1vykYzO0k0aWT0XHfBDJW5db2Mc0e8s/0FyQWh1sAoZUe4aknHUTyxA1sxvZVfghWHMt1V9nDIiYh2c/oZ+zkTCfbwVyevXrd73rLnhIub4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780622683; c=relaxed/simple;
-	bh=x++q9UrygcGpWHorzTl/tCCzY48BIP0kiZ0SE56jM4o=;
+	s=arc-20240116; t=1780622687; c=relaxed/simple;
+	bh=oqContIvSwDjBBUvCDlGJnboNlniQ4AqWa16l/Stl9A=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QDjrrcJpbQXssWVhjneOsMStU57DaOIqr5Fpxj6189jCUTrt3oTgTBvGsHKwzKSomNEa9zF7odHXoI5tU1va2+tZVZMxc/EVrWd9OXPlEMDd4DxeIyGzo4UWleAGnGG7YHRwQKRPgnfjvPApkFQRvZ5UCGED19tu8bDaKOjSw38=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EkKpgn0W; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=HSo1XEJ9Nw+qjWCbrNtINLxIuRgiU5x4pWpZuHbd8U+PJo/Iknr32IeEQ+JrDnNxfXEQdaP13H3ksMXSgPXxotoQiihvorjhuh5iCQ+LJHc2SeXGPHNIPuD/8hF3wUwz4GHre9RUg8Sfg9l/tqOSpmtiVwxvJizIGqj+xVvAS2I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f37ef4gy; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EkKpgn0W"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3F101F00893;
-	Fri,  5 Jun 2026 01:24:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f37ef4gy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C9091F0089A;
+	Fri,  5 Jun 2026 01:24:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780622675;
-	bh=fKDRQclkJ626atSWNQktztDQZTZsZwJhifMsbK6XASA=;
+	s=k20260515; t=1780622679;
+	bh=jNixIy30UgWwxn53isZSW3yVS4d5nxvceDL4X9ngrNM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=EkKpgn0WbB7wzQiMew82PljhADPaZuOceCQBZaSsrGHQHcJmoGy6WtHGN1iLh8Bvf
-	 wwN0Cl21fm9cY8pgNFPVeUWDllHAczrLxcHbid3pJY0U91kawO/omWudJnam3ntkzw
-	 X4ixqFv+AQFloWGNyIBBOWiTB02WXPzhRUonnSZxm2/gDTnf4KACTFc3qaSL5uKyzV
-	 d/2NplUkBoTaBagTtbMnGRIMqv0umLnsK1V0pNjEllFxVCdR+F1mBh84Lo7mzGU9v1
-	 XeAP3PLZJDPUtDS4pnNdKrwolZyIC6QhiTIBxQXEspxPJ49h79Uj44AdyyuNxN2Gj2
-	 VDyGQ+o5C/Fag==
+	b=f37ef4gyDo+B4fxnSvZdFbwzJz7GJ8bpOJIc1AdgSU5buznGMMC4UCwr6bOtzw6OV
+	 lBLHoKNSQYoJAbVBwYNuK83NerOdCjJWEfe1lRWgm6gqp1T2gVXAKVK65q2cBxoiml
+	 B+ZiY7/aQJhbsxG9mrbmrIFzey0vZmQVibuCigV+vQVGSeivQpp5EgX4ebfF7ff1os
+	 nsAIOcGcD/w77qmJbUN3cqM9NAmrBfniVyB9qPwgnVzDHdKTc/4exP36xpKMzin3N/
+	 pIKxCcNZvlBW2/IiZdXf5ihH5NAgZvTal4lznrmwUMc/Jms22AksuETRlnUz8lqjS+
+	 YScNGEzhe61LQ==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev,
 	yangang@kylinos.cn,
 	qiang.zhang@linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [RFC mptcp-next v24 15/18] selftests: tls: retry bind for mptcp in shutdown_reuse
-Date: Fri,  5 Jun 2026 09:22:55 +0800
-Message-ID: <8e89c02b8c36105a39908fec0d551d913a50c4fc.1780621326.git.tanggeliang@kylinos.cn>
+Cc: Geliang Tang <tanggeliang@kylinos.cn>,
+	Paolo Abeni <pabeni@redhat.com>
+Subject: [RFC mptcp-next v24 16/18] selftests: tls: set timeout for multi_chunk_sendfile
+Date: Fri,  5 Jun 2026 09:22:56 +0800
+Message-ID: <cc31a55db4500b08fe4089fd0c07ab5beca6d850.1780621326.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <cover.1780621326.git.tanggeliang@kylinos.cn>
 References: <cover.1780621326.git.tanggeliang@kylinos.cn>
@@ -47,70 +48,35 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-In the shutdown_reuse test, after shutdown and close, bind() may fail
-with EINVAL for MPTCP sockets due to asynchronous state transition of
-the top-level MPTCP socket. Retry bind() on EINVAL for up to 1000
-iterations (1 second) to allow the MPTCP socket to complete its state
-transition. This fixes the following intermittent failures:
+The multi_chunk_sendfile test can time out with the default 30-second
+limit when run on certain configurations (e.g., MPTCP). Add a 240-second
+timeout using TEST_F_TIMEOUT to prevent failure:
 
- #  RUN           tls.12_aes_gcm_mptcp.shutdown_reuse ...
- # tls.c:1790:shutdown_reuse:Expected ret (-1) == 0 (0)
- # shutdown_reuse: Test failed
- #          FAIL  tls.12_aes_gcm_mptcp.shutdown_reuse
- not ok 14 tls.12_aes_gcm_mptcp.shutdown_reuse
- #  RUN           tls.13_aes_gcm_mptcp.shutdown_reuse ...
- # tls.c:1790:shutdown_reuse:Expected ret (-1) == 0 (0)
- # shutdown_reuse: Test failed
- #          FAIL  tls.13_aes_gcm_mptcp.shutdown_reuse
- not ok 15 tls.13_aes_gcm_mptcp.shutdown_reuse
- #  RUN           tls.12_chacha_mptcp.shutdown_reuse ...
- #            OK  tls.12_chacha_mptcp.shutdown_reuse
- ok 16 tls.12_chacha_mptcp.shutdown_reuse
- #  RUN           tls.13_chacha_mptcp.shutdown_reuse ...
- #            OK  tls.13_chacha_mptcp.shutdown_reuse
- ok 17 tls.13_chacha_mptcp.shutdown_reuse
- #  RUN           tls.13_sm4_gcm_mptcp.shutdown_reuse ...
- # tls.c:1790:shutdown_reuse:Expected ret (-1) == 0 (0)
- # shutdown_reuse: Test failed
- #          FAIL  tls.13_sm4_gcm_mptcp.shutdown_reuse
- not ok 18 tls.13_sm4_gcm_mptcp.shutdown_reuse
+ # multi_chunk_sendfile: Test terminated by timeout 30
+ #          FAIL  tls.13_chacha_mptcp.multi_chunk_sendfile
+ not ok 204 tls.13_chacha_mptcp.multi_chunk_sendfile
 
-This is only done for MPTCP variants to avoid slowing down plain TCP
-tests.
-
+Suggested-by: Paolo Abeni <pabeni@redhat.com>
 Co-developed-by: Gang Yan <yangang@kylinos.cn>
 Signed-off-by: Gang Yan <yangang@kylinos.cn>
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- tools/testing/selftests/net/tls.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ tools/testing/selftests/net/tls.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/tools/testing/selftests/net/tls.c b/tools/testing/selftests/net/tls.c
-index 64aad661a1b4..4ae7505846f9 100644
+index 4ae7505846f9..6f51da27ef1e 100644
 --- a/tools/testing/selftests/net/tls.c
 +++ b/tools/testing/selftests/net/tls.c
-@@ -1744,6 +1744,7 @@ TEST_F(tls, shutdown_unsent)
- TEST_F(tls, shutdown_reuse)
+@@ -536,7 +536,7 @@ static void chunked_sendfile(struct __test_metadata *_metadata,
+ 	close(fd);
+ }
+ 
+-TEST_F(tls, multi_chunk_sendfile)
++TEST_F_TIMEOUT(tls, multi_chunk_sendfile, 240)
  {
- 	struct sockaddr_in addr;
-+	int i = 0;
- 	int ret;
- 
- 	shutdown(self->fd, SHUT_RDWR);
-@@ -1754,7 +1755,13 @@ TEST_F(tls, shutdown_reuse)
- 	addr.sin_addr.s_addr = htonl(INADDR_ANY);
- 	addr.sin_port = 0;
- 
-+retry:
- 	ret = bind(self->fd, &addr, sizeof(addr));
-+	if (variant->mptcp &&
-+	    ret < 0 && errno == EINVAL && i++ < 1000) {
-+		usleep(1000);
-+		goto retry;
-+	}
- 	EXPECT_EQ(ret, 0);
- 	ret = listen(self->fd, 10);
- 	EXPECT_EQ(ret, -1);
+ 	chunked_sendfile(_metadata, self, 4096, 4096);
+ 	chunked_sendfile(_metadata, self, 4096, 0);
 -- 
 2.53.0
 
