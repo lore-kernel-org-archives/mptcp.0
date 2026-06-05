@@ -1,34 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 684294C8FE7;
-	Fri,  5 Jun 2026 09:22:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC1664C901B;
+	Fri,  5 Jun 2026 09:22:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780651353; cv=none; b=GPKeQxrMKatZ2RMl5yk/HWUgi66sOILqcnEEwVbpladBcnNyrqGjElC9ShTPnIECeRs2d0FKodE88BDZ0SJlOYd4h0kC5kSbdHyz3yI8jHZn/k5q1rsJBkzKrVRKz87eSBTCsWGulOmM0sCWxz9Qfc/F3ClehnK1i9Y8LtT07jU=
+	t=1780651356; cv=none; b=UI0nQ3XdzY7gKih7DkbC54uIemW6GSkc04sawTs2RLvhujCYV6rm6KhQrn7cwwomWGG42/LVI2weAqfL4PsCRI87+jTt5ryM49J5F07AB2F5UtYpVxWew76p/e6PR2ABCZPocEUZg+RSmcNP0RBNgmBuLdfesJJLUwdYwSo8UpM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780651353; c=relaxed/simple;
-	bh=NWdWRgUPdLZ/TMOK7lPB2Vbn1tWwagVGX/sjKI2sOvQ=;
+	s=arc-20240116; t=1780651356; c=relaxed/simple;
+	bh=9181yk0ayuMVbgJ69zukIsGR51jBPbyOjkhivphxgxs=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=cP/zLVlhEmSX/RzghbytpSGh0Gkam/TxNPpu4CIIBTSiVZjPbXjJsI5UhShD8U66nl/0b3p49EQAPLFMMJ54bd2l/68UVaLzUiL6V06d/626uL2cjZyL3sQIxt0ogVhSCz5Emd/otN4nDVfl1k503r/xVQWwziMToC7Tfk+429c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IM2buOX4; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:To:Cc; b=P4bcXkZ2MMJuSHmuB3flV721STrJiFFRiuljTJm04KkTqT67dlYlc6PHx+0QYcSanu6MdmsA58mrosXC2PtHb8xWmHQFexJvuaz8Eej804hli7/7OegeLI56AIX/Ua9StknFd2NYPTVJ2O4FW4qUWuG3SugZ5mw4B/8i8BtEofI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i1Rik7rL; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IM2buOX4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8AD2D1F00893;
-	Fri,  5 Jun 2026 09:22:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i1Rik7rL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEEDC1F00898;
+	Fri,  5 Jun 2026 09:22:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780651352;
-	bh=q+H+eN5PkQlAEZZ0oef9i8ESFlL38H8XYzrcLI6JsPw=;
+	s=k20260515; t=1780651355;
+	bh=Bh9Fy5epNwKTbczwKcjUFpXak+cZttJmj6KWR8ggP3s=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=IM2buOX4aiPJjjZYOnyX3CHUsoJfCat6/wFbqBZDWLMZZXvucOXOr3TMv/RFo5DTn
-	 QpAl2fclY/BiuCO3L/UXBEBqC+NUnsbWuBlcuEP7+LIajUIC3RKJlwf+z5p6xJhjiQ
-	 LfjhXVmd9A0PGYDI5MYsAu4pMRyBwIs5nYGwtumD671CdLIxoMTV8N0FJtp3Hr/rpO
-	 PVtYcd6rP/6QdUrtPdaULvRI+TEkI04bDj1g14btOmey14tY8ONQRF4EEMBPRdbUqA
-	 tNa37Nc8vs44fIICHZ+Rv6q28xtY0CuGBcI6Kk1PMh1PW7nupFX8stjbjZCe20B1Ip
-	 ZINIWAx5kWoug==
+	b=i1Rik7rLC/fgk3Au1w5/suwtBeXo2HXnw3vwZpXAFXJCLBop+9EEqAApzUCqwiLXv
+	 2dw/Grzq3ALNxg2uuk0wYZBxOUzPCy4O8ms7m6XasqgXEuazrk0t7G0l3z+N1zoR6l
+	 OFHCOGuLq+C5SmD7YiUuXPzrAADeuCkwRLr9VPpEL9N8iQvzidPkLMIcZv6Z890zXE
+	 QFmOiSzSKXgFhj0vDThsyCoZxxNAlGIuwmdwrnM4er8MQ8WW4ep7p3HoU48HBrwBo4
+	 d6SLfgDKIZo0KxOMHqKmrSPO1p8mRvztO9sdLTSmNMY9uh6z1XqeF4bKB+iGAH+UIJ
+	 MuutVWj+xtFPw==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Fri, 05 Jun 2026 19:21:53 +1000
-Subject: [PATCH net-next v2 09/15] mptcp: pm: use for_each_subflow helper
+Date: Fri, 05 Jun 2026 19:21:54 +1000
+Subject: [PATCH net-next v2 10/15] mptcp: pm: rename add_entry structure to
+ add_addr
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -37,7 +38,7 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260605-net-next-mptcp-add-addr6-port-ts-v2-9-758e7ca73f4d@kernel.org>
+Message-Id: <20260605-net-next-mptcp-add-addr6-port-ts-v2-10-758e7ca73f4d@kernel.org>
 References: <20260605-net-next-mptcp-add-addr6-port-ts-v2-0-758e7ca73f4d@kernel.org>
 In-Reply-To: <20260605-net-next-mptcp-add-addr6-port-ts-v2-0-758e7ca73f4d@kernel.org>
 To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, 
@@ -47,139 +48,136 @@ To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
 Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, 
  linux-kernel@vger.kernel.org, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4909; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=NWdWRgUPdLZ/TMOK7lPB2Vbn1tWwagVGX/sjKI2sOvQ=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBqIpUxmKXZPDX+cm479KlTWfqkecljGebPeau3p
- 1KW8zNbqZ2JAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCaiKVMQAKCRD2t4JPQmmg
- c5oAD/4iGhHt498aILHw6V8o2VUKOXMuENgJEU+BcaUvsduX/AOZzlC36XA2hakXXMoeTdmlJYc
- aTBayT7xTlvwjju/g3JJjUa9aZQ9Bs+Y7Nh0ZBpVbb8xEv9oXfaZuB5LbEXd/mr3/o/GY9W+U2l
- 20+3rVu5P5E1maa1E6Vkzgwz7KCy6XNe0qq5jWU3Tpe0sb0kqL6ZNoZJKXy0KCcsIiWR+uuUj+x
- WwZ1oiVQTknBm25/+vV6lFTdOqmz+W5lnDAFwF+3i3b5ZmQJjnl7WexQoV8kG3shsQHQPmvZmD1
- zcdWx0S7aDk9l2v8fQi1vxEimvPatwSsA5sNpCYgAlRS9z76yaId8vqnhxM9MVxY3xkzHz+ZxO7
- agJSEsIrG783bDdboAj7YgVPwRfoz+Wl5pU4bSoyvAV32YiwjhDmY87POgdnFBeZVi3Om0KbXpO
- N7//mg57vyU5O88ONYd7/XG9Aa+IeAxSOlBx5WnADI4po3o4+9sUac78C+O2Nac+q9d4Fu3IaQ4
- nRGXdOgTzs9zjL/9LearIcjkrNyZVay8BHu++yrW7qVgC7Ome73I6ZIycSEu5mhIE/+7wZE69/8
- 1A0FXNVLGIwjrAxUjNx0sps9uH3NoruPaL13JWg/5aQ1miIjb3JuESJeNzeisfzKquG9NUH4468
- dueph70/w4ZOv+A==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4014; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=9181yk0ayuMVbgJ69zukIsGR51jBPbyOjkhivphxgxs=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBqIpUx/QSRwSSrNVj/y933e3BF2zdT39fmUplBn
+ liHmCQcIreJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCaiKVMQAKCRD2t4JPQmmg
+ c3adD/9HJ6GWp7xYY7utb53tTRxOOfQDX6spAFjHoJXTQFmPThuwbtABpQxD87XL3bgulVlMxov
+ q6RIs8hsJVHeuvps2W/9GMWyBaHvXZsZr2IHoXQA1gxAFEU/kMokr8qZMWazJcTZYxVCQq0+L8v
+ D3wDVaziobHlx8LDBdROaOBtmuXc244XvFSyVzH7n+0+z6olS2CjT8OQx9StDJZdupnsyQGsasm
+ T/7k51ezdfS277uotIjI8AzpUZUh301dkGezz3i2+QBDwU3cCwWta3c+U6n3/OLZAHByS4xWC7I
+ Tcmkt2LsbEbdI9fv+3h1aL6WwuVt74y0+A3Ao89U8yJnpAFscK1Gx2luWL95fRRf9ea/AzSjEke
+ 79hCzmIFZvZXaQeOf7bcoi2gzxNLwGXRdba0qrlfFmQUIl7PklKnWBL5bxrCDzzLdnuflDS2+U0
+ EK/tJb3vE8YotvOMb9OvO50XUGLYLhxcyTchZjj/DnvUVZ8aLypkqy1x7KQ3YS9KW9NCxi2tCaZ
+ K7faX4NyoyrtKgWNKN5cnL8UwKf2Eitr6d2qfYf8m4uLXSITC+ZoTqj5VqW5FFTXfMD77FyWBY1
+ 0W/vTz6kf+XE/69TSouKiMql+rQEDTaxCBjS58gn9ZodSLyEyUTgI29bp7zjd77qlpnMC2R1z8f
+ UT2c/PUmvcO6Iow==
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Similar to most places in the MPTCP code. So instead of passing the
-subflow list and use list_for_each_entry(subflow, list, node), pass the
-msk and use mptcp_for_each_subflow(msk, subflow).
-
-That's clearer and more uniform with the rest.
-
-While at it, add 'pm_' prefix for the exported one to easily identify
-the origin. Plus replace 'lookup' by 'has', because a bool is returned.
+Using only the 'add' prefix is confusing: does it refer to a generic
+added entry or address, or specifically to ADD_ADDRs. Using add_addr
+removes this confusion.
 
 Reviewed-by: Mat Martineau <martineau@kernel.org>
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- net/mptcp/pm.c           |  6 +++---
- net/mptcp/pm_kernel.c    | 12 ++++++------
- net/mptcp/pm_userspace.c |  2 +-
- net/mptcp/protocol.h     |  4 ++--
- 4 files changed, 12 insertions(+), 12 deletions(-)
+ net/mptcp/pm.c       | 22 +++++++++++-----------
+ net/mptcp/protocol.h |  2 +-
+ 2 files changed, 12 insertions(+), 12 deletions(-)
 
 diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index ac7de4141738..09fb64954351 100644
+index 09fb64954351..cd26505cf41e 100644
 --- a/net/mptcp/pm.c
 +++ b/net/mptcp/pm.c
-@@ -115,14 +115,14 @@ static bool mptcp_pm_is_init_remote_addr(struct mptcp_sock *msk,
- 	return mptcp_addresses_equal(&mpc_remote, remote, remote->port);
+@@ -12,7 +12,7 @@
+ 
+ #define ADD_ADDR_RETRANS_MAX	3
+ 
+-struct mptcp_pm_add_entry {
++struct mptcp_pm_add_addr {
+ 	struct list_head	list;
+ 	struct mptcp_addr_info	addr;
+ 	u8			retrans_times;
+@@ -133,11 +133,11 @@ bool mptcp_pm_has_subflow_saddr(const struct mptcp_sock *msk,
+ 	return false;
  }
  
--bool mptcp_lookup_subflow_by_saddr(const struct list_head *list,
--				   const struct mptcp_addr_info *saddr)
-+bool mptcp_pm_has_subflow_saddr(const struct mptcp_sock *msk,
-+				const struct mptcp_addr_info *saddr)
+-static struct mptcp_pm_add_entry *
++static struct mptcp_pm_add_addr *
+ mptcp_lookup_anno_list_by_saddr(const struct mptcp_sock *msk,
+ 				const struct mptcp_addr_info *addr)
  {
- 	struct mptcp_subflow_context *subflow;
- 	struct mptcp_addr_info cur;
- 	struct sock_common *skc;
+-	struct mptcp_pm_add_entry *entry;
++	struct mptcp_pm_add_addr *entry;
  
--	list_for_each_entry(subflow, list, node) {
-+	mptcp_for_each_subflow(msk, subflow) {
- 		skc = (struct sock_common *)mptcp_subflow_tcp_sock(subflow);
+ 	lockdep_assert_held(&msk->pm.lock);
  
- 		mptcp_local_address(skc, &cur);
-diff --git a/net/mptcp/pm_kernel.c b/net/mptcp/pm_kernel.c
-index 4ba4346d7adc..484f99a9c5b2 100644
---- a/net/mptcp/pm_kernel.c
-+++ b/net/mptcp/pm_kernel.c
-@@ -96,13 +96,13 @@ u8 mptcp_pm_get_limit_extra_subflows(const struct mptcp_sock *msk)
+@@ -152,7 +152,7 @@ mptcp_lookup_anno_list_by_saddr(const struct mptcp_sock *msk,
+ bool mptcp_remove_anno_list_by_saddr(struct mptcp_sock *msk,
+ 				     const struct mptcp_addr_info *addr)
+ {
+-	struct mptcp_pm_add_entry *entry;
++	struct mptcp_pm_add_addr *entry;
+ 	bool ret;
+ 
+ 	entry = mptcp_pm_del_add_timer(msk, addr, false);
+@@ -164,7 +164,7 @@ bool mptcp_remove_anno_list_by_saddr(struct mptcp_sock *msk,
+ 
+ bool mptcp_pm_sport_in_anno_list(struct mptcp_sock *msk, const struct sock *sk)
+ {
+-	struct mptcp_pm_add_entry *entry;
++	struct mptcp_pm_add_addr *entry;
+ 	struct mptcp_addr_info saddr;
+ 	bool ret = false;
+ 
+@@ -340,8 +340,8 @@ static unsigned int mptcp_adjust_add_addr_timeout(struct mptcp_sock *msk)
+ 
+ static void mptcp_pm_add_timer(struct timer_list *timer)
+ {
+-	struct mptcp_pm_add_entry *entry = timer_container_of(entry, timer,
+-							      add_timer);
++	struct mptcp_pm_add_addr *entry = timer_container_of(entry, timer,
++							     add_timer);
+ 	struct mptcp_sock *msk = entry->sock;
+ 	struct sock *sk = (struct sock *)msk;
+ 	unsigned int timeout = 0;
+@@ -397,12 +397,12 @@ static void mptcp_pm_add_timer(struct timer_list *timer)
+ 	sock_put(sk);
  }
- EXPORT_SYMBOL_GPL(mptcp_pm_get_limit_extra_subflows);
  
--static bool lookup_subflow_by_daddr(const struct list_head *list,
--				    const struct mptcp_addr_info *daddr)
-+static bool has_subflow_daddr(const struct mptcp_sock *msk,
-+			      const struct mptcp_addr_info *daddr)
+-struct mptcp_pm_add_entry *
++struct mptcp_pm_add_addr *
+ mptcp_pm_del_add_timer(struct mptcp_sock *msk,
+ 		       const struct mptcp_addr_info *addr, bool check_id)
  {
- 	struct mptcp_subflow_context *subflow;
- 	struct mptcp_addr_info cur;
+-	struct mptcp_pm_add_entry *entry;
+ 	struct sock *sk = (struct sock *)msk;
++	struct mptcp_pm_add_addr *entry;
+ 	bool stop_timer = false;
  
--	list_for_each_entry(subflow, list, node) {
-+	mptcp_for_each_subflow(msk, subflow) {
- 		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
+ 	rcu_read_lock();
+@@ -434,7 +434,7 @@ mptcp_pm_del_add_timer(struct mptcp_sock *msk,
+ bool mptcp_pm_alloc_anno_list(struct mptcp_sock *msk,
+ 			      const struct mptcp_addr_info *addr)
+ {
+-	struct mptcp_pm_add_entry *add_entry = NULL;
++	struct mptcp_pm_add_addr *add_entry = NULL;
+ 	struct sock *sk = (struct sock *)msk;
+ 	unsigned int timeout;
  
- 		if (!((1 << inet_sk_state_load(ssk)) &
-@@ -673,7 +673,7 @@ static void mptcp_pm_nl_add_addr_received(struct mptcp_sock *msk)
- 	mptcp_pm_addr_send_ack(msk);
- 	mptcp_mpc_endpoint_setup(msk);
+@@ -471,7 +471,7 @@ bool mptcp_pm_alloc_anno_list(struct mptcp_sock *msk,
  
--	if (lookup_subflow_by_daddr(&msk->conn_list, &remote))
-+	if (has_subflow_daddr(msk, &remote))
- 		return;
+ static void mptcp_pm_free_anno_list(struct mptcp_sock *msk)
+ {
+-	struct mptcp_pm_add_entry *entry, *tmp;
++	struct mptcp_pm_add_addr *entry, *tmp;
+ 	struct sock *sk = (struct sock *)msk;
+ 	LIST_HEAD(free_list);
  
- 	/* pick id 0 port, if none is provided the remote address */
-@@ -1098,7 +1098,7 @@ static int mptcp_nl_remove_subflow_and_signal_addr(struct net *net,
- 			goto next;
- 
- 		lock_sock(sk);
--		remove_subflow = mptcp_lookup_subflow_by_saddr(&msk->conn_list, addr);
-+		remove_subflow = mptcp_pm_has_subflow_saddr(msk, addr);
- 		mptcp_pm_remove_anno_addr(msk, addr, remove_subflow &&
- 					  !(entry->flags & MPTCP_PM_ADDR_FLAG_IMPLICIT));
- 
-@@ -1236,7 +1236,7 @@ static void mptcp_pm_flush_addrs_and_subflows(struct mptcp_sock *msk,
- 
- 	entry = list_prepare_entry(entry, rm_list, list);
- 	list_for_each_entry_continue(entry, rm_list, list) {
--		if (mptcp_lookup_subflow_by_saddr(&msk->conn_list, &entry->addr))
-+		if (mptcp_pm_has_subflow_saddr(msk, &entry->addr))
- 			slist.ids[slist.nr++] = mptcp_endp_get_local_id(msk, &entry->addr);
- 
- 		if (mptcp_remove_anno_list_by_saddr(msk, &entry->addr))
-diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-index 0d3a95e676f1..b2b74a339d88 100644
---- a/net/mptcp/pm_userspace.c
-+++ b/net/mptcp/pm_userspace.c
-@@ -283,7 +283,7 @@ void mptcp_pm_remove_addr_entry(struct mptcp_sock *msk,
- 	/* only delete if either announced or matching a subflow */
- 	if (mptcp_remove_anno_list_by_saddr(msk, &entry->addr))
- 		anno_nr++;
--	else if (!mptcp_lookup_subflow_by_saddr(&msk->conn_list, &entry->addr))
-+	else if (!mptcp_pm_has_subflow_saddr(msk, &entry->addr))
- 		return;
- 
- 	alist.ids[alist.nr++] = entry->addr.id;
 diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index e69fcb4d48af..62d37d5c63f4 100644
+index 62d37d5c63f4..f3c2ab71737e 100644
 --- a/net/mptcp/protocol.h
 +++ b/net/mptcp/protocol.h
-@@ -1136,8 +1136,8 @@ bool mptcp_pm_sport_in_anno_list(struct mptcp_sock *msk, const struct sock *sk);
- struct mptcp_pm_add_entry *
+@@ -1133,7 +1133,7 @@ int mptcp_pm_mp_prio_send_ack(struct mptcp_sock *msk,
+ bool mptcp_pm_alloc_anno_list(struct mptcp_sock *msk,
+ 			      const struct mptcp_addr_info *addr);
+ bool mptcp_pm_sport_in_anno_list(struct mptcp_sock *msk, const struct sock *sk);
+-struct mptcp_pm_add_entry *
++struct mptcp_pm_add_addr *
  mptcp_pm_del_add_timer(struct mptcp_sock *msk,
  		       const struct mptcp_addr_info *addr, bool check_id);
--bool mptcp_lookup_subflow_by_saddr(const struct list_head *list,
--				   const struct mptcp_addr_info *saddr);
-+bool mptcp_pm_has_subflow_saddr(const struct mptcp_sock *msk,
-+				const struct mptcp_addr_info *saddr);
- bool mptcp_remove_anno_list_by_saddr(struct mptcp_sock *msk,
- 				     const struct mptcp_addr_info *addr);
- int mptcp_pm_nl_set_flags(struct mptcp_pm_addr_entry *local,
+ bool mptcp_pm_has_subflow_saddr(const struct mptcp_sock *msk,
 
 -- 
 2.53.0
