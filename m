@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C7F1264A97
-	for <mptcp@lists.linux.dev>; Tue,  9 Jun 2026 02:19:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33FB6264A97
+	for <mptcp@lists.linux.dev>; Tue,  9 Jun 2026 02:19:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780971590; cv=none; b=eioFoCDj9IMcRwdEKdsBLupsSe+K+JuZm4dzGNPdfu0qSeb8ohXsb5ePzLK/H+33xHSV85cHfbR+0hu508B1OdcgZOwzBZ8fUYpLg9wCP4od2f4Z0UNqkWIFjrUiSzRqrtX461PkzkgSBA3YYgOEInvScycSOGobL8WYTpzEt3g=
+	t=1780971593; cv=none; b=jErF+ekYnSgbQtIwmnQPuaFBkCxnS1He2hUF3DB6Tt8ReTCeu1f1ip/NWUldtVLLncbSx/giLQ7TebmHbzHTpXhInuB9Ts765PBtows2iKeA3hPn0g1JfikUe3aLHH4p1T5tOrCn7HZrzYp5cgnoY4GXA6Af0EgrRGz3oylWrx8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780971590; c=relaxed/simple;
-	bh=sGz3OO2IgIUsz7E0+PlicNJvuOcjAbshlgLTXQ3g6uU=;
+	s=arc-20240116; t=1780971593; c=relaxed/simple;
+	bh=bO6B+1SluKm3Fw4taOXgPM5SMlFY5aRwgTQ1l1lJoCA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FMtoQ5ItHm3x8JBg/YraAFwpOPrIq8kj6qnFvBhiS3XDRyj6OzQ+D4XCjNZJy4ssV6T4Zlu4ZwXCiyUvZwMHZSZ8dVt/Xg/Pnwxrmkj8IZLSRgilvWW71y31fCpHfbj29XfDQDyjJ2PS9PahonWu94GanDChRTlWOnCJ0C2FHjQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AI+OtRjE; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=JUe+6Zx4dUf4C2jrlujYWAeSQywCYTXfLmoZJ2HHBxL8dq3ENO6NRjbSMY1nVFyJiceE4WDD8aXBGSY6zuxbo+wuoSQxi14w5366ElfvcYhUx3Ln2PBfiMu8YTC/Al1OG5DPZzw20jmZTAfLkAusbNjG0qnX+1FOr78q9X6kAuo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=APMrcSCu; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AI+OtRjE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1CD81F00893;
-	Tue,  9 Jun 2026 02:19:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="APMrcSCu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AACFA1F00898;
+	Tue,  9 Jun 2026 02:19:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780971589;
-	bh=zIjPeZmlfN3afVBgqzrgpnKBqA/zf/ZD+cs5aWtqvgs=;
+	s=k20260515; t=1780971591;
+	bh=O3IyzByKGZyq1ImxFokF6iMKoQ4GCf3i+PH0uhmv9pg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=AI+OtRjEbiIq8eTIf5UtVoY5bc6W3IlGuDUWcS7tPpCGlTVvfOaDN88tYIvonwOCR
-	 88Jq2K8A596h+3jiyToeMLHL1PS9BQAv5snWLcx2nLmyLptb4j0buJHXu59e5yZlSl
-	 JNk8ZjIgtg84pHkmfFU2FV6m1DczYq7R9KPblbCU3X3PuJFy7VriTKxBiBjbFGCFfd
-	 HfXu/WQC+O0nK6Gy1Rp4gqLR/C41+wA43CW/07lTrQHeLB0DDtk6dgC6ZA2lKUdsSa
-	 sLVPM3L9vhQ7pQM5kaOmCEVMQH7Qaa7TGhOct6sWPtkrcltOG4Xwl982lkEAlGQwik
-	 M9Jc7OzPABieg==
+	b=APMrcSCuFqptwjz5Yc2y8mzksl37cr1dWKAYqT4Hkl5k9dfaD3UKwUNkwHzHhp2K6
+	 Ub975pWTaJLbR9yW0srs5ZomINdjUcDxpd8zSk6pp+jyngyuj35XocrQtImx+fBAkX
+	 VPYx/illT2o8sgFxWdsxLSR7/sHTrjQehdvM31wS4His0qd0HnHWEeYl6wKFqDOaHP
+	 g7Nxt4DvxTngEgl5J2O00ZrPufsktSREzhvuXzTyj21mw+P3ngvo3P0DgnBBZCHrLN
+	 pfp+tijPmQXcFXdeCTjqZZtiG3quc4g1ORpFHjw4QO24hIqVGhYrhjF1KDBWrE9USh
+	 GY9hVPShS74mg==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
-Cc: Gang Yan <yangang@kylinos.cn>,
-	Geliang Tang <geliang@kernel.org>
-Subject: [RFC mptcp-next v25 12/22] mptcp: update mptcp_check_readable helper
-Date: Tue,  9 Jun 2026 10:18:38 +0800
-Message-ID: <11d376b04e2b0f440da0513b76c19acc0ef6d577.1780970284.git.tanggeliang@kylinos.cn>
+Cc: Geliang Tang <tanggeliang@kylinos.cn>,
+	Gang Yan <yangang@kylinos.cn>
+Subject: [RFC mptcp-next v25 13/22] mptcp: implement ulp getsockopt for tls support
+Date: Tue,  9 Jun 2026 10:18:39 +0800
+Message-ID: <ad33553bf44ad3e3f1280fd16bfb8bb57038ea33.1780970284.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1780970284.git.tanggeliang@kylinos.cn>
 References: <cover.1780970284.git.tanggeliang@kylinos.cn>
@@ -44,48 +44,73 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Gang Yan <yangang@kylinos.cn>
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
-This patch makes mptcp_check_readable() aligned with TCP, and renames it to
-mptcp_stream_is_readable(). It will be used in the case of KTLS, because
-'prot' will be modified, tls_sw_sock_is_readable() is expected to be called
-from prot->sock_is_readable().
+Add mptcp_getsockopt_tcp_ulp() to handle TCP_ULP getsockopt on MPTCP
+sockets. The helper reads the user length once, checks for negative
+value, takes the socket lock, caps the length to TCP_ULP_NAME_MAX, and
+copies the ULP name (or sets the length to zero if no ULP is attached)
+to userspace. The lock ensures safe access to icsk->icsk_ulp_ops.
 
-Co-developed-by: Geliang Tang <geliang@kernel.org>
-Signed-off-by: Geliang Tang <geliang@kernel.org>
+Co-developed-by: Gang Yan <yangang@kylinos.cn>
 Signed-off-by: Gang Yan <yangang@kylinos.cn>
+Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- net/mptcp/protocol.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ net/mptcp/sockopt.c | 34 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index f4cd7a6e5770..88504af790f9 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -3410,9 +3410,11 @@ void __mptcp_unaccepted_force_close(struct sock *sk)
- 	__mptcp_destroy_sock(sk);
+diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+index fcf6feb2a9eb..cc45491cd3b2 100644
+--- a/net/mptcp/sockopt.c
++++ b/net/mptcp/sockopt.c
+@@ -1408,6 +1408,39 @@ static int mptcp_put_int_option(struct mptcp_sock *msk, char __user *optval,
+ 	return 0;
  }
  
--static __poll_t mptcp_check_readable(struct sock *sk)
-+static bool mptcp_stream_is_readable(struct sock *sk)
++static int mptcp_getsockopt_tcp_ulp(struct sock *sk,
++				    char __user *optval,
++				    int __user *optlen)
++{
++	struct inet_connection_sock *icsk = inet_csk(sk);
++	int ret = 0, len;
++
++	if (copy_from_sockptr(&len, USER_SOCKPTR(optlen), sizeof(int)))
++		return -EFAULT;
++
++	if (len < 0)
++		return -EINVAL;
++
++	lock_sock(sk);
++	len = min_t(unsigned int, len, TCP_ULP_NAME_MAX);
++	if (!icsk->icsk_ulp_ops) {
++		len = 0;
++		if (copy_to_sockptr(USER_SOCKPTR(optlen), &len, sizeof(int)))
++			ret = -EFAULT;
++		goto out;
++	}
++	if (copy_to_sockptr(USER_SOCKPTR(optlen), &len, sizeof(int))) {
++		ret = -EFAULT;
++		goto out;
++	}
++	if (copy_to_sockptr(USER_SOCKPTR(optval), icsk->icsk_ulp_ops->name,
++			    len))
++		ret = -EFAULT;
++out:
++	release_sock(sk);
++	return ret;
++}
++
+ static int mptcp_getsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
+ 				    char __user *optval, int __user *optlen)
  {
--	return mptcp_epollin_ready(sk) ? EPOLLIN | EPOLLRDNORM : 0;
-+	if (mptcp_epollin_ready(sk))
-+		return true;
-+	return sk_is_readable(sk);
- }
+@@ -1415,6 +1448,7 @@ static int mptcp_getsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
  
- static void mptcp_check_listen_stop(struct sock *sk)
-@@ -4476,7 +4478,8 @@ static __poll_t mptcp_poll(struct file *file, struct socket *sock,
- 		mask |= EPOLLIN | EPOLLRDNORM | EPOLLRDHUP;
- 
- 	if (state != TCP_SYN_SENT && state != TCP_SYN_RECV) {
--		mask |= mptcp_check_readable(sk);
-+		if (mptcp_stream_is_readable(sk))
-+			mask |= EPOLLIN | EPOLLRDNORM;
- 		if (shutdown & SEND_SHUTDOWN)
- 			mask |= EPOLLOUT | EPOLLWRNORM;
- 		else
+ 	switch (optname) {
+ 	case TCP_ULP:
++		return mptcp_getsockopt_tcp_ulp(sk, optval, optlen);
+ 	case TCP_CONGESTION:
+ 	case TCP_INFO:
+ 	case TCP_CC_INFO:
 -- 
 2.43.0
 
