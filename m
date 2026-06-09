@@ -1,39 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EEE635B634
-	for <mptcp@lists.linux.dev>; Tue,  9 Jun 2026 02:20:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 643DA264A97
+	for <mptcp@lists.linux.dev>; Tue,  9 Jun 2026 02:20:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780971610; cv=none; b=Zp5yg0kN1L6l0ayG4KgeufYjYoaTb3CFsz0FT4yeSn68FCs98a6/ka75EXwVyeN69pe04XsSjaCQTV7WsmMfXT8JACkSQOE3tnGg4nL9VrDCNQxtW3rz4tU6nzvXAbOzbwWiHl2yacx4J8Hh3EsBH25c9vSH2spT6hwhA0WIuZE=
+	t=1780971612; cv=none; b=o+bEquuhH+wxa79ukefXTnzxTS+o05vmBCJ9ClQIdFSRpYKzxy5eYMxXm4VepE910i02jMbeG+FotZ/78OKQW5X57BTo0mv1Z7CvyAJe0oFXyGnI1v5+qz/wFCdl8t6BeNvd3IbA3k3mM0YX8kvMkpuiIY5ebxq19k8QcYL2vaE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780971610; c=relaxed/simple;
-	bh=3IsquAv4YDxMPBzDcFjkvuRls51Rw/lTNaNmpziy6To=;
+	s=arc-20240116; t=1780971612; c=relaxed/simple;
+	bh=0Y0TwTXxolaDx7c2k5LdGVFkxBOEMIsf4pu32Nl0Tow=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SF62fa+O4D/3yRR+Z+5HgipLGFe5+9+jkPr+4H5BvLxoFiNFzfdyhaBdTatjcOCrb8QuiHi/5HGBcHURsdoF+v2mn8kvhzcYpJ2bMZvTkKBeLT1EUX7yALB4Lz0xLoS/r+a2tyCjnC7ySQGrqh6FN2IwChMhMNj4dh7nuuBWKy0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nzOAoJ2y; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=VQ6ZnjmaFEUSH/jP9xAjBis0jbJMZtPvflipLeyfgOqbJUEfg1QBcdnMGZECjmYLoNPYcI45s7xGdC4RzxfGPam6ZTMklP6G4wVUX8pQSHBfnzD/P5Hjy666f/ZRV6r+vcUn7HYXVuoTHp/yYnljLa3pkTePPfESvCpdS8Q6OkY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fn5URPRe; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nzOAoJ2y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46AEC1F00893;
-	Tue,  9 Jun 2026 02:20:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fn5URPRe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6A021F00898;
+	Tue,  9 Jun 2026 02:20:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780971609;
-	bh=Gxkqt+h6izqRYrlC/RzMeNRphQ6RNv+N6Om0PZ/RFQM=;
+	s=k20260515; t=1780971611;
+	bh=/wQmDE5lHgxqc7cZ7Rk26YaG+K0NxtZ2F66qRcTGmo8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=nzOAoJ2yL6tFoC3x16bQoeVGNR5vDKIP5kbSvmrw9GUY5QR86fVH0GhiI/FfCxbp8
-	 1ilM27U+gVgFE5t0mEjChFKk8gluFQmTvFX607oiZozsPtFOXJxzQs2RP+L1jn1YGr
-	 SN8EBTwTyoMouWLcB7TxbOYd5OnfcsOk6o3757LmCr8h6CI+SJVlPjalicfcR1bJh0
-	 H5Hkx7aD3PW+DCxXLv+ZjYZNqKOGu0VG8nwxsof50JhoEB6DMLkY9ICQlqCFBP+EiJ
-	 pU63iED72h0no4ML9f6D2mY8jF5qCiokgzp/F5vXdRMYRwURAObv9XJNqljYJh49rh
-	 7ZAXbBYEjJdmQ==
+	b=Fn5URPReqxpO9SIhecA8RtQPLPZYV5uwumabaJOoT1aTaz2HJAc2mWevJgFOdIDOG
+	 TlSZ4NobOzUVM38gQc4W8AoVZ7FyvOfgGBJhowIdH6SaVAv6YHrDkE6BoNnmmvQxg1
+	 6tPHzYbJjXq750OqvxzdqM18y7U4qRidHMGINosVJ2Li6mA7VvLgF6Wy3UjIR6btMQ
+	 7kD38LyjEQrFFFPdTEe51+wD3x+1fw9/Q7JTPlFgqpG49rY4Q2dwxFqDhw9k8GVEgm
+	 u8RSH0kZpIdvpAPdCSAaassSR7WXXs4Y0jtnf0sTlzYNL22Q39pnnYUQcUcCDqd9Bp
+	 Pr3JAXjv4V+GA==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>,
-	Paolo Abeni <pabeni@redhat.com>,
 	Gang Yan <yangang@kylinos.cn>
-Subject: [RFC mptcp-next v25 20/22] selftests: tls: set timeout for multi_chunk_sendfile
-Date: Tue,  9 Jun 2026 10:18:46 +0800
-Message-ID: <0599263dc958f9c7d6b04ebba42a480a4d19fe80.1780970284.git.tanggeliang@kylinos.cn>
+Subject: [RFC mptcp-next v25 21/22] selftests: tls: add mptcp test cases
+Date: Tue,  9 Jun 2026 10:18:47 +0800
+Message-ID: <2951f244bada95f791127e893b8827225e91cc13.1780970284.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1780970284.git.tanggeliang@kylinos.cn>
 References: <cover.1780970284.git.tanggeliang@kylinos.cn>
@@ -47,35 +46,124 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-The multi_chunk_sendfile test can time out with the default 30-second
-limit when run on certain configurations (e.g., MPTCP). Add a 240-second
-timeout using TEST_F_TIMEOUT to prevent failure:
+This patch introduces MPTCP test cases for the TLS fixture. These "mptcp"
+variants are configured to create MPTCP sockets specifically for MPTCP TLS
+testing purposes.
 
- # multi_chunk_sendfile: Test terminated by timeout 30
- #          FAIL  tls.13_chacha_mptcp.multi_chunk_sendfile
- not ok 204 tls.13_chacha_mptcp.multi_chunk_sendfile
-
-Suggested-by: Paolo Abeni <pabeni@redhat.com>
 Co-developed-by: Gang Yan <yangang@kylinos.cn>
 Signed-off-by: Gang Yan <yangang@kylinos.cn>
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- tools/testing/selftests/net/tls.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/testing/selftests/net/tls.c | 96 +++++++++++++++++++++++++++++++
+ 1 file changed, 96 insertions(+)
 
 diff --git a/tools/testing/selftests/net/tls.c b/tools/testing/selftests/net/tls.c
-index 4ae7505846f9..6f51da27ef1e 100644
+index 6f51da27ef1e..83cdb06da587 100644
 --- a/tools/testing/selftests/net/tls.c
 +++ b/tools/testing/selftests/net/tls.c
-@@ -536,7 +536,7 @@ static void chunked_sendfile(struct __test_metadata *_metadata,
- 	close(fd);
- }
+@@ -407,6 +407,102 @@ FIXTURE_VARIANT_ADD(tls, 12_aria_gcm_256)
+ 	.cipher_type = TLS_CIPHER_ARIA_GCM_256,
+ };
  
--TEST_F(tls, multi_chunk_sendfile)
-+TEST_F_TIMEOUT(tls, multi_chunk_sendfile, 240)
++FIXTURE_VARIANT_ADD(tls, 12_aes_gcm_mptcp)
++{
++	.tls_version = TLS_1_2_VERSION,
++	.cipher_type = TLS_CIPHER_AES_GCM_128,
++	.mptcp = true,
++};
++
++FIXTURE_VARIANT_ADD(tls, 13_aes_gcm_mptcp)
++{
++	.tls_version = TLS_1_3_VERSION,
++	.cipher_type = TLS_CIPHER_AES_GCM_128,
++	.mptcp = true,
++};
++
++FIXTURE_VARIANT_ADD(tls, 12_chacha_mptcp)
++{
++	.tls_version = TLS_1_2_VERSION,
++	.cipher_type = TLS_CIPHER_CHACHA20_POLY1305,
++	.fips_non_compliant = true,
++	.mptcp = true,
++};
++
++FIXTURE_VARIANT_ADD(tls, 13_chacha_mptcp)
++{
++	.tls_version = TLS_1_3_VERSION,
++	.cipher_type = TLS_CIPHER_CHACHA20_POLY1305,
++	.fips_non_compliant = true,
++	.mptcp = true,
++};
++
++FIXTURE_VARIANT_ADD(tls, 13_sm4_gcm_mptcp)
++{
++	.tls_version = TLS_1_3_VERSION,
++	.cipher_type = TLS_CIPHER_SM4_GCM,
++	.fips_non_compliant = true,
++	.mptcp = true,
++};
++
++FIXTURE_VARIANT_ADD(tls, 13_sm4_ccm_mptcp)
++{
++	.tls_version = TLS_1_3_VERSION,
++	.cipher_type = TLS_CIPHER_SM4_CCM,
++	.fips_non_compliant = true,
++	.mptcp = true,
++};
++
++FIXTURE_VARIANT_ADD(tls, 12_aes_ccm_mptcp)
++{
++	.tls_version = TLS_1_2_VERSION,
++	.cipher_type = TLS_CIPHER_AES_CCM_128,
++	.mptcp = true,
++};
++
++FIXTURE_VARIANT_ADD(tls, 13_aes_ccm_mptcp)
++{
++	.tls_version = TLS_1_3_VERSION,
++	.cipher_type = TLS_CIPHER_AES_CCM_128,
++	.mptcp = true,
++};
++
++FIXTURE_VARIANT_ADD(tls, 12_aes_gcm_256_mptcp)
++{
++	.tls_version = TLS_1_2_VERSION,
++	.cipher_type = TLS_CIPHER_AES_GCM_256,
++	.mptcp = true,
++};
++
++FIXTURE_VARIANT_ADD(tls, 13_aes_gcm_256_mptcp)
++{
++	.tls_version = TLS_1_3_VERSION,
++	.cipher_type = TLS_CIPHER_AES_GCM_256,
++	.mptcp = true,
++};
++
++FIXTURE_VARIANT_ADD(tls, 13_nopad_mptcp)
++{
++	.tls_version = TLS_1_3_VERSION,
++	.cipher_type = TLS_CIPHER_AES_GCM_128,
++	.nopad = true,
++	.mptcp = true,
++};
++
++FIXTURE_VARIANT_ADD(tls, 12_aria_gcm_mptcp)
++{
++	.tls_version = TLS_1_2_VERSION,
++	.cipher_type = TLS_CIPHER_ARIA_GCM_128,
++	.mptcp = true,
++};
++
++FIXTURE_VARIANT_ADD(tls, 12_aria_gcm_256_mptcp)
++{
++	.tls_version = TLS_1_2_VERSION,
++	.cipher_type = TLS_CIPHER_ARIA_GCM_256,
++	.mptcp = true,
++};
++
+ static bool is_mptcp_enable(void)
  {
- 	chunked_sendfile(_metadata, self, 4096, 4096);
- 	chunked_sendfile(_metadata, self, 4096, 0);
+ 	char buf[16] = { 0 };
 -- 
 2.43.0
 
