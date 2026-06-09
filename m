@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 428E526CE32
-	for <mptcp@lists.linux.dev>; Tue,  9 Jun 2026 02:19:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 973D12EA480
+	for <mptcp@lists.linux.dev>; Tue,  9 Jun 2026 02:19:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780971563; cv=none; b=orq3DPIoQawrkN4GQEitS/oKdztuX+K8BplI2+fABoRF/KEt0EDlaTB0GYA8U5Vok6+wxgahBCPsTrUlvI7Q/16n5sKXV6wq37Wimi7diwrWP+KrnY+yjs/ZUbKpF+9PRCmi77gpVT+ggiutnWfh6Xu43EaXsTpDqz6JXy9F9KA=
+	t=1780971567; cv=none; b=sMoKKvVnDyZvpq4uiYKst0UEhlxSXwHXvdNnpg2/HI1UFWz2xFxgItf5A3JjeURdenErv5+4GY/1+/cjbVt902/SiJJHcEIjySocmJ/9UXUuLyn+xBSY7HiwJ/kph3gKM4RRDywcWgosQaIS1sRsyUAUUNcfAp+udubiIDUF8qU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780971563; c=relaxed/simple;
-	bh=8OcwG1w3JD2kkjVs4gyvVCgMQIzZ3LgHLy2RSK3ithU=;
+	s=arc-20240116; t=1780971567; c=relaxed/simple;
+	bh=VHTysyCT+QHPcWheBGQ7vWkBA+p9OB64Q+D1pAXfcPI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PiJNUY5VBPiS2nWUcDG1MY0xAEo/uTCrr1QxKxrBFTyVFhWGq7OuvAnon+ZfebF8HNsHu1KR05uP3zYUUnSIn03NmMRx/pIJhVL4qvBryGbn44wp8geqJnMNULKA5xT0qu6tZIBxNqXo0YeropmfQDbSr5xKxgcqNNfUYE76jks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e1yYygIz; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=sE3OOrYzRaVsqWn7ZkWIvgiA7IcOHe5/J+ox03OTbV/gbml6+2556SxEgiNR4GVg/vqSJAnsqjCBN8BmyIHJjNGmHPgWI6HOUi/tWIVzk6jmeA1/ttLckPcix2gQ6qoej0569W/lt2MWjCJeTaTnMuzlt5qIbY7gpZ9axtx06xU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JS7Z1Heb; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e1yYygIz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0498B1F00898;
-	Tue,  9 Jun 2026 02:19:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JS7Z1Heb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A50F1F00893;
+	Tue,  9 Jun 2026 02:19:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780971562;
-	bh=BNWUb5CXXfh5aHD+Fkqba6f/U6vQMRu8EU0v+Z5kXiI=;
+	s=k20260515; t=1780971566;
+	bh=UqwTny8lm73e/bg9bgWS1ZWlJFjYzPr3AJUZtW4HQ4s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=e1yYygIzpeErLpDR3+eHTQOIXx12HOe/8hgci3IJel9agnSyofc/8eeBuU94yusKc
-	 +nX43B+UPlfMaQcz7tWVfcYrCWxYTlaS/kDEUfpEo3KmkXGVgdmarD57eOb6OIdYa0
-	 ymZ4jBOYJuiY/ZL71Tk7FOy8BlR7NE/7UzgUzFRIL42RhHji/GEoDSdBcedAtvoVx5
-	 /mgoYAxyvljTmdgvHLxBF1JhyToqQqDITx65ofY8HtEUORa/dQGdGCeyxhql2BT+zP
-	 56M8MOZZp+3WYo+yUR6sojMOytQtIpItyrkVL6G6JNi6CdPrJQalXdhkKlSDSZherT
-	 z5XC9oP1Q54Dg==
+	b=JS7Z1HebSiEbNq53eLawmPe8oNtiOrCX6MGkf68sIPlzvXaptI7L6eJSR7jUz64Pz
+	 0eyZa6soPh5c0Dj5DsOLcguxvdKsXcelclelOG6gEAYXfOi3mcu4MbX0+jOtaEG1uH
+	 rty/ZCSIsfYV6foUw06DZG9mWHSD8eB1S4BQ3JzNPUb7mII/lenovs28mYUGm/nSWD
+	 XxUKA+gY/+9aea0D4gcDV+85PI5dPPD9ulWFzTKWAN5WLaclOCVTtQ4+cxz5cVE/nI
+	 JCWioqstezOMX8k07KmK1WJ9HMKq05G7levLLeHngF3eFgSjIMc5c6nxbI1Eb/+dJK
+	 HdXtA169Sq5+A==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [RFC mptcp-next v25 03/22] mptcp: implement peek_len for proto_ops
-Date: Tue,  9 Jun 2026 10:18:29 +0800
-Message-ID: <b17eb93495413decd9e4f5f1f02dec677d749663.1780970284.git.tanggeliang@kylinos.cn>
+Subject: [RFC mptcp-next v25 04/22] tls: replace tcp_inq with socket peek_len
+Date: Tue,  9 Jun 2026 10:18:30 +0800
+Message-ID: <f6cb04f09158dbd072e6f35ae21ff6662b1cf622.1780970284.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1780970284.git.tanggeliang@kylinos.cn>
 References: <cover.1780970284.git.tanggeliang@kylinos.cn>
@@ -45,85 +45,97 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-The TLS stack uses tcp_inq() to query the amount of data available
-in the receive queue without consuming it. For MPTCP sockets, this
-information is not directly available from a TCP subflow; it must be
-computed from the MPTCP receive queue and the current mapping.
+TLS (device, strparser, and software) calls tcp_inq() directly to
+determine how much data is still pending in the socket receive queue.
+This breaks when the underlying socket is not TCP (e.g., MPTCP).
 
-Introduce mptcp_peek_len() which returns the number of bytes that
-can be peeked from the MPTCP socket. It reuses the existing
-mptcp_inq() helper (used by ioctl SIOCINQ). The implementation
-considers the first skb in the receive queue, the current ack_seq,
-and handles the FIN case.
+Switch all occurrences of tcp_inq(sk) to sk->sk_socket->ops->
+peek_len(sk->sk_socket). This operation is implemented for both TCP
+and MPTCP (after the previous commits), making TLS transparently
+usable over MPTCP connections.
 
-Assign .peek_len in both mptcp_stream_ops and mptcp_v6_stream_ops
-so that upper layers (e.g., TLS) can obtain the correct in-queue
-byte count for an MPTCP connection.
+The change is straightforward: every place where TLS needed the
+available in-queue bytes now uses the protocol-specific peek_len
+method instead of assuming a TCP socket.
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- net/mptcp/protocol.c | 34 ++++++++++++++++++++++++++++++++++
- 1 file changed, 34 insertions(+)
+ net/tls/tls_device.c | 4 ++--
+ net/tls/tls_strp.c   | 6 ++++--
+ net/tls/tls_sw.c     | 4 +++-
+ 3 files changed, 9 insertions(+), 5 deletions(-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 7f0c560f6b7e..18c8b6c64c3f 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -4689,6 +4689,38 @@ static ssize_t mptcp_splice_read(struct socket *sock, loff_t *ppos,
- 	return ret;
- }
+diff --git a/net/tls/tls_device.c b/net/tls/tls_device.c
+index 741aef09bfd3..c44a59d9d715 100644
+--- a/net/tls/tls_device.c
++++ b/net/tls/tls_device.c
+@@ -805,7 +805,7 @@ void tls_device_rx_resync_new_rec(struct sock *sk, u32 rcd_len, u32 seq)
+ 		/* head of next rec is already in, note that the sock_inq will
+ 		 * include the currently parsed message when called from parser
+ 		 */
+-		sock_data = tcp_inq(sk);
++		sock_data = sk->sk_socket->ops->peek_len(sk->sk_socket);
+ 		if (sock_data > rcd_len) {
+ 			trace_tls_device_rx_resync_nh_delay(sk, sock_data,
+ 							    rcd_len);
+@@ -864,7 +864,7 @@ static void tls_device_core_ctrl_rx_resync(struct tls_context *tls_ctx,
+ 	rxm = strp_msg(skb);
  
-+static int mptcp_inq(struct sock *sk)
-+{
-+	const struct mptcp_sock *msk = mptcp_sk(sk);
-+	const struct sk_buff *skb;
-+
-+	if ((1 << sk->sk_state) & (TCPF_SYN_SENT | TCPF_SYN_RECV))
-+		return 0;
-+
-+	skb = skb_peek(&sk->sk_receive_queue);
-+	if (skb) {
-+		u64 answ = READ_ONCE(msk->ack_seq) - MPTCP_SKB_CB(skb)->map_seq;
-+
-+		if (answ >= INT_MAX)
-+			answ = INT_MAX;
-+
-+		/* Subtract 1, if FIN was received */
-+		if (answ &&
-+		    (sk->sk_state == TCP_CLOSE ||
-+		     (sk->sk_shutdown & RCV_SHUTDOWN)))
-+			answ--;
-+
-+		return (int)answ;
-+	}
-+
-+	return 0;
-+}
-+
-+static int mptcp_peek_len(struct socket *sock)
-+{
-+	return mptcp_inq(sock->sk);
-+}
-+
- static const struct proto_ops mptcp_stream_ops = {
- 	.family		   = PF_INET,
- 	.owner		   = THIS_MODULE,
-@@ -4712,6 +4744,7 @@ static const struct proto_ops mptcp_stream_ops = {
- 	.read_sock	   = mptcp_read_sock,
- 	.splice_read	   = mptcp_splice_read,
- 	.sendmsg_locked	   = mptcp_sendmsg_locked,
-+	.peek_len	   = mptcp_peek_len,
- };
+ 	/* head of next rec is already in, parser will sync for us */
+-	if (tcp_inq(sk) > rxm->full_len) {
++	if (sk->sk_socket->ops->peek_len(sk->sk_socket) > rxm->full_len) {
+ 		trace_tls_device_rx_resync_nh_schedule(sk);
+ 		ctx->resync_nh_do_now = 1;
+ 	} else {
+diff --git a/net/tls/tls_strp.c b/net/tls/tls_strp.c
+index c72e88317627..c14dab13edf3 100644
+--- a/net/tls/tls_strp.c
++++ b/net/tls/tls_strp.c
+@@ -485,12 +485,14 @@ bool tls_strp_msg_load(struct tls_strparser *strp, bool force_refresh)
+ {
+ 	struct strp_msg *rxm;
+ 	struct tls_msg *tlm;
++	int inq;
  
- static struct inet_protosw mptcp_protosw = {
-@@ -4825,6 +4858,7 @@ static const struct proto_ops mptcp_v6_stream_ops = {
- 	.read_sock	   = mptcp_read_sock,
- 	.splice_read	   = mptcp_splice_read,
- 	.sendmsg_locked	   = mptcp_sendmsg_locked,
-+	.peek_len	   = mptcp_peek_len,
- };
+ 	DEBUG_NET_WARN_ON_ONCE(!strp->msg_ready);
+ 	DEBUG_NET_WARN_ON_ONCE(!strp->stm.full_len);
  
- static struct proto mptcp_v6_prot;
+ 	if (!strp->copy_mode && force_refresh) {
+-		if (unlikely(tcp_inq(strp->sk) < strp->stm.full_len)) {
++		inq = strp->sk->sk_socket->ops->peek_len(strp->sk->sk_socket);
++		if (unlikely(inq < strp->stm.full_len)) {
+ 			WRITE_ONCE(strp->msg_ready, 0);
+ 			memset(&strp->stm, 0, sizeof(strp->stm));
+ 			return false;
+@@ -513,7 +515,7 @@ static int tls_strp_read_sock(struct tls_strparser *strp)
+ {
+ 	int sz, inq;
+ 
+-	inq = tcp_inq(strp->sk);
++	inq = strp->sk->sk_socket->ops->peek_len(strp->sk->sk_socket);
+ 	if (inq < 1)
+ 		return 0;
+ 
+diff --git a/net/tls/tls_sw.c b/net/tls/tls_sw.c
+index 964ebc268ee4..d833ee14d62e 100644
+--- a/net/tls/tls_sw.c
++++ b/net/tls/tls_sw.c
+@@ -1982,12 +1982,14 @@ tls_read_flush_backlog(struct sock *sk, struct tls_prot_info *prot,
+ 		       size_t *flushed_at)
+ {
+ 	size_t max_rec;
++	int inq;
+ 
+ 	if (len_left <= decrypted)
+ 		return false;
+ 
++	inq = sk->sk_socket->ops->peek_len(sk->sk_socket);
+ 	max_rec = prot->overhead_size - prot->tail_size + TLS_MAX_PAYLOAD_SIZE;
+-	if (done - *flushed_at < SZ_128K && tcp_inq(sk) > max_rec)
++	if (done - *flushed_at < SZ_128K && inq > max_rec)
+ 		return false;
+ 
+ 	*flushed_at = done;
 -- 
 2.43.0
 
