@@ -1,118 +1,140 @@
-Received: from fout-b8-smtp.messagingengine.com (fout-b8-smtp.messagingengine.com [202.12.124.151])
+Received: from sender4-of-o54.zoho.com (sender4-of-o54.zoho.com [136.143.188.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4FC440DFAF
-	for <mptcp@lists.linux.dev>; Tue,  9 Jun 2026 12:13:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.151
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781007186; cv=none; b=ai52UvGDjOs4wYNZNOl3MbMjSEV9HJNwTKVSR97RtAMaM0NFR+yJBlkclscbpDROactnE6odlYYXLHslPAfUGMLxv9rUY1N7Ix0PxqmQTjAdWJ8Gu62bhCeRh3snAqeht/0Xjy4IhUeW1wG9uHqfepyOndqffrxPfnNgycuspPo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781007186; c=relaxed/simple;
-	bh=G+vHkhOQyvX2lmekbnAv6Ywkb+ODNa78R7s251UQToU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kq7YhSz3UjlZrb/zQZMFoQMsoi0S++t9w1+eU6ZQBqZX34V8VggXIcXlSi4Ywm3sho3LDstxUXkazVho/Zn86sTrUrlx2Sw3J+jH8HDs4gMEOY11wGppobiSTSM8TAUSCHtFsfPUDE3RCRtubi56D9Bg1zIxTGxeIT/QLs/Euqc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=queasysnail.net; spf=pass smtp.mailfrom=queasysnail.net; dkim=pass (2048-bit key) header.d=queasysnail.net header.i=@queasysnail.net header.b=lwj4AgJH; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=dxpvdnPI; arc=none smtp.client-ip=202.12.124.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=queasysnail.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=queasysnail.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2B533E866B
+	for <mptcp@lists.linux.dev>; Wed, 10 Jun 2026 10:11:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.54
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1781086303; cv=pass; b=P5C4XWaUBb9m+XZjOZOMk1d9MFwPSuMP7MMD5D0o1IHP1ir6tw8mX0bzCO70iAoF+AcrY3NKNi46Ap09q8FV/vZhqvWe6f11uCAp0An9O/exBOc4Qe6irT01Jv516QW49FxR0ugyATmKBKKtpokR+/5i5NKjI1bzAtinwoFE6O8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1781086303; c=relaxed/simple;
+	bh=JPtIwqSb368w8V7Z8pgXj133Mcnx8Gc8s0rVvWhZH1E=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PqVH2VUkVMPzAVNgw6VSq4N9ESfMqcy3R62V6dye0Xd07HexbIT+8br1Ehh/mLYQxYWZ6lZcdTKFOwzaNLs7TI88gLRfyx87b7cfPryx8WJLTpRhakxogpODW5nrCn6Llpqq8Z2dn6zXldfWGr6fb4NX1WGaWIhnBddznTMmKQ0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com; spf=pass smtp.mailfrom=mpiricsoftware.com; dkim=fail (0-bit key) header.d=mpiricsoftware.com header.i=kalpan.jani@mpiricsoftware.com header.b=KR0zux2x reason="key not found in DNS"; arc=pass smtp.client-ip=136.143.188.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mpiricsoftware.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=queasysnail.net header.i=@queasysnail.net header.b="lwj4AgJH";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="dxpvdnPI"
-Received: from phl-compute-06.internal (phl-compute-06.internal [10.202.2.46])
-	by mailfout.stl.internal (Postfix) with ESMTP id 83B401D00131;
-	Tue,  9 Jun 2026 08:13:02 -0400 (EDT)
-Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-06.internal (MEProxy); Tue, 09 Jun 2026 08:13:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=queasysnail.net;
-	 h=cc:cc:content-type:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm2; t=1781007182; x=
-	1781093582; bh=4DKX5bDGTzVNeK9Ona+JNrqFwEcAU1ZbrrtAEpOhs6M=; b=l
-	wj4AgJHVguL4xMYYDdth4JYognTCap74E5Fd3WjamFZJTd7uFy5GJXWoC9O+zMp7
-	YWRQ9Hr2smEQ0p6aR8n16ZbeRVqLbE1BkXz3IeIZzLpYEviK4VFmrUozbkb00m27
-	ekENwNi5pBKwyhGE/Xdt7kYiSEom4qejArx5Q3aOhoPfOiN6iL1xbV+Or/lZf3HE
-	83kyhROaKVt5m7JsyPzuXXZE6eWFLsgecCXT7Str8s96E9GT4NHz1Sz7fhjBVdYv
-	k9Yi6/QSkz8Md7lFq8SAApYsuhdkq2WlTD/rDW8YpiJ7Hu/bkvWNUYOqx78GOiPu
-	+9J768WS5B2MbWbYfU22w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
-	1781007182; x=1781093582; bh=4DKX5bDGTzVNeK9Ona+JNrqFwEcAU1Zbrrt
-	AEpOhs6M=; b=dxpvdnPIxvrkOm/Wx606TBlhjX67Ure4Jk90g/y3+A9A4w5JJeY
-	HvmunRovsZbiX3wCcNYRIiuIx8VDICWSGCDdoTvc6XelfGiw0NRWktPN7uWw30ls
-	dwjh7hLXct/iidkcl7ouO8qEwHqEIPrEfAOUQbeB7QoUdg+cI7hPydC+WTZ6zXFb
-	k8Rb6gZx85rOyTaEKNakLkR9m3qsjzR/PBWVvrsclyUYtb3DF5MajQ/eyWkTDOeJ
-	pHHCHPuMlqmJ5VFVdmyvWU6x9/ULp2Vn90grNG7dQ7LGp4jof1gjGfWoV76N5GOW
-	XywRqePzBa9fYYnOvtDWrEonI/DbUtJ8aPA==
-X-ME-Sender: <xms:TQMoaj9p7SFQDDue_M7hHRwTX22bZqGlv-Vo_HDqV3qdVmrzsKKEXA>
-    <xme:TQMoahSnZpmIMMLaLPNdLcHg0AH9KHM82LrbhVSz5WvQex06_GCIk4adReFbmJAdz
-    8xtKa1YhXO_5sNriu8wMi3awVHQ1N1EqdYOk6wYXVmmngdgKdjo4SCU>
-X-ME-Received: <xmr:TQMoagSyyy---EULH95Lj7MoS8BL4_nQjThbS5DYZFwrL5xTGK4yBifiNzijolt9x06nnkVf_kTxhWTSxmne2nY>
-X-ME-Proxy-Cause: dmFkZTFBYXm/+Yk5a+LVIvXPE+WgdUmcYXfyJ6+z1jaKtAJYdKcOrEJ3Im6UmG6F2r2k1l
-    23aLRp0a5jfBLU7R4KD/n9voZXAIncB5XJMS82spkGQx9wLRUNgIIegmssaF14t+D+oWe6
-    3XqVATEcZsmcEmDBtp57QzSDI+HJDxQPQe+/4UJVEdKKLq1b5QfZ4CSPGy1x7jcZcuMTqw
-    qttXSwHFgaIwmHFFPVm8XpdEBbNl3rUp2nNdzyNsx7G5ZiHaXPDcTBIRZOMaVo1YiDF7gL
-    7yCXiXUSd/j/u8nAkJVP2BfJpqwDu5oBHfi8EUL+5LV74btlJ/FtJzcb1dvu8PUG91kLhS
-    8whIrBZwa4bpbkkPw2BcC4yyiNrPABxcn2VjvbjWlzA9Gc6ppVv27A0k/gn718l8JxS/NR
-    pUL8Zw3M+eB+JlzRwY5IJPKmlvWe5rm1Fq6XBTmSX+8S2VsG+06YmXEg3cAbwoWyykatBb
-    OCylq2JXrhPi46R/+FEAX4Hlr7u2m6SpO8tWSWMGh2hzurwu69xK5tRTzNM+vTigh+t1Ra
-    12+i/pdwXZcuhvzYRH1at+l+YIdupz5nSDRGV0wr7csHRCFnOkFQur7s7/yWi++Ch9vLhT
-    xDTjcZ2vSd/Vjmx9dnlb7/itWLIPSkayCuzx7VmSAY3iSFWZYk5c2BCcglMw
-X-ME-Proxy: <xmx:TQMoal41WRr5yJk96trBcoAlZsjg-3_141-rr_urAoj99NV-7evH4A>
-    <xmx:TQMoatU6L96XdICYTGV7ctran5szrVe1hxbLPT53C1E1nEDhPbSQlA>
-    <xmx:TQMoaj_pvU24azqdJoiohgkcrVXFYURgeWo_brOBnN71F3eOv8mbig>
-    <xmx:TQMoaloLb97sLiZ894qMGKshT1V62WFirC4usl2S-_OKz0xoTlFP4w>
-    <xmx:TgMoaux5AacP8Ju3CM2T3Q5xE_ITGv3zUVXaty9c13R00KJno8qEI7BG>
-Feedback-ID: i934648bf:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 9 Jun 2026 08:13:00 -0400 (EDT)
-Date: Tue, 9 Jun 2026 14:12:58 +0200
-From: Sabrina Dubroca <sd@queasysnail.net>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Geliang Tang <geliang@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Atul Gupta <atul.gupta@chelsio.com>,
-	Geliang Tang <tanggeliang@kylinos.cn>, netdev@vger.kernel.org,
-	mptcp@lists.linux.dev, Gang Yan <yangang@kylinos.cn>
-Subject: Re: [PATCH net] tls: restore sk_prot before calling original
- destructor
-Message-ID: <aigDShl67-mqMs2S@krikkit>
-References: <158c0562b4969c61574633e5d22c962d50e5bc31.1780663476.git.tanggeliang@kylinos.cn>
- <aiZ9PZxNyp9jik2v@krikkit>
- <20260608200254.3be56aa7@kernel.org>
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mpiricsoftware.com header.i=kalpan.jani@mpiricsoftware.com header.b="KR0zux2x"
+ARC-Seal: i=1; a=rsa-sha256; t=1781086296; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=cIttSW5dgHB8OMoGz8aKgTqj8Rdw7nz6mLvs9o5mf9slWYUlJfLn2BrQNmzV126YEfL/OvjT3INSzijMESf7qM40tRzGt3iO49D1vrrY9nH8gcGn+4gw2EF3Q+HUGRBSEWqYbhCSTTru8r6zzu7wj/7y/O/y3kl9syVEV2M5Fpo=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1781086296; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=FddC0Y4jLLiJpbKtocbd1CBeCWgO+Yyjig/4QcI+OIo=; 
+	b=X0bT4L4KrwUsThFaBVIFzSzQRFDPXHTpuKM90JhDimzAImaYz5uQgM0fI06W7XRhnZDz4FfzSUIAE44TlA4ckGtGA9AH3pxgpAmorcDC6f24eiAxtrrohPkCn5h4JM2MlEOfo8Nwy++pGPYj66i7ivPmTrJCIeuCKKOBdKktfq4=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=mpiricsoftware.com;
+	spf=pass  smtp.mailfrom=kalpan.jani@mpiricsoftware.com;
+	dmarc=pass header.from=<kalpan.jani@mpiricsoftware.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1781086296;
+	s=mpiric; d=mpiricsoftware.com; i=kalpan.jani@mpiricsoftware.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=FddC0Y4jLLiJpbKtocbd1CBeCWgO+Yyjig/4QcI+OIo=;
+	b=KR0zux2xwTE3d1GdxKGOkMreQH5/77xpJ8d8JjOItJtFyXWAo4V/R4MzjKYCG1nf
+	HGrOXWIM1xP5TzMKfKaegtqy90eFuVp0ZF3UdJqrWmjG7h6VqsJxSlFRY1ddMEI7G1A
+	PdWSjgCMqHH/5HChItSSNPL0yGmFmMXXWCuJ4/UA=
+Received: by mx.zohomail.com with SMTPS id 1781086293485802.9252304335502;
+	Wed, 10 Jun 2026 03:11:33 -0700 (PDT)
+From: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
+To: mptcp@lists.linux.dev
+Cc: matttbe@kernel.org,
+	martineau@kernel.org,
+	pabeni@redhat.com,
+	shardul.b@mpiricsoftware.com,
+	janak@mpiric.us,
+	kalpanjani009@gmail.com,
+	shardulsb08@gmail.com,
+	Kalpan Jani <kalpan.jani@mpiricsoftware.com>
+Subject: [PATCH mptcp-next] mptcp: use configured TCP RTO min/max values
+Date: Wed, 10 Jun 2026 15:41:23 +0530
+Message-ID: <20260610101123.765958-1-kalpan.jani@mpiricsoftware.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20260608200254.3be56aa7@kernel.org>
+Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
 
-2026-06-08, 20:02:54 -0700, Jakub Kicinski wrote:
-> On Mon, 8 Jun 2026 10:28:45 +0200 Sabrina Dubroca wrote:
-> > 2026-06-05, 20:57:07 +0800, Geliang Tang wrote:
-> > > From: Geliang Tang <tanggeliang@kylinos.cn>
-> > > 
-> > > When a TLS socket is offloaded to a TOE device, tls_toe_bypass() replaces  
-> > 
-> > Or maybe it's time to simply drop tls_toe? There's only one driver
-> > that uses it (chelsio/chtls), and it hasn't been touched by someone at
-> > chelsio since 2021 (2355a6773a2c [1]). Since then, there have been a
-> > few fixes by people who I doubt are actually using this (Eric, Dan
-> > Carpenter), everything else is treewide/refactoring patches.
-> 
-> Yup, tls_toe is unsalvageable. Sabrina, could you float a net-next
-> patch to nuke it?
+On the TCP side, the min/max RTO can be configured via the route
+rto_min option, the TCP_BPF_RTO_MIN and TCP_RTO_MIN_US socket options,
+and the tcp_rto_min_us / tcp_rto_max_ms sysctls, in that order of
+precedence. MPTCP did not honour any of these because its retransmit
+logic still used the hard-coded TCP_RTO_MIN / TCP_RTO_MAX constants.
 
-Good, I'm on it. I'm also removing a bunch of EXPORT_SYMBOL* that are
-no longer used (and should never have been used outside of net/ipv6,
-but well).
+Replace the constants with the tcp_rto_min() / tcp_rto_max() helpers
+in the three MPTCP-level retransmit paths:
 
+  - mptcp_set_datafin_timeout(): both the backoff cap computation
+    and the resulting timer_ival now follow the configured values.
+    Guard against a pathological rto_min >= rto_max (e.g. via BPF
+    or racing sysctl writers) which would otherwise feed ilog2(0).
+
+  - __mptcp_set_timeout(): the fallback when no subflow timeout is
+    available now uses tcp_rto_min().
+
+  - __mptcp_init_sock(): MPTCP does not invoke tcp_init_sock() on
+    the msk, so inet_csk(sk)->icsk_rto_min and icsk_rto_max remain
+    zero by default. Seed them from the per-netns sysctls before
+    using them, then set the initial timer_ival via tcp_rto_min().
+
+The remaining uses of TCP_RTO_MAX in net/mptcp/ctrl.c (ADD_ADDR
+default add_addr_timeout) and net/mptcp/subflow.c (mptcp_subflow_fail()
+MP_FAIL timeout) are intentionally left unchanged: they use the
+constant as a default duration, not as an RTO bound on a retransmit
+timer.
+
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/618
+Signed-off-by: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
+---
+ net/mptcp/protocol.c | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
+
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index a4f7e99b30db..7e5eff25735d 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -563,12 +563,14 @@ static bool mptcp_pending_data_fin(struct sock *sk, u64 *seq)
+ static void mptcp_set_datafin_timeout(struct sock *sk)
+ {
+ 	struct inet_connection_sock *icsk = inet_csk(sk);
++	u32 rto_min = tcp_rto_min(sk);
++	u32 rto_max = tcp_rto_max(sk);
+ 	u32 retransmits;
+ 
+ 	retransmits = min_t(u32, icsk->icsk_retransmits,
+-			    ilog2(TCP_RTO_MAX / TCP_RTO_MIN));
++			    ilog2(max_t(u32, rto_max / rto_min, 1)));
+ 
+-	mptcp_sk(sk)->timer_ival = TCP_RTO_MIN << retransmits;
++	mptcp_sk(sk)->timer_ival = rto_min << retransmits;
+ }
+ 
+ static void __mptcp_set_timeout(struct sock *sk, long tout)
+@@ -3150,6 +3152,8 @@ static void mptcp_worker(struct work_struct *work)
+ static void __mptcp_init_sock(struct sock *sk)
+ {
+ 	struct mptcp_sock *msk = mptcp_sk(sk);
++	struct inet_connection_sock *icsk = inet_csk(sk);
++	struct net *net = sock_net(sk);
+ 
+ 	INIT_LIST_HEAD(&msk->conn_list);
+ 	INIT_LIST_HEAD(&msk->join_list);
+@@ -3158,7 +3162,11 @@ static void __mptcp_init_sock(struct sock *sk)
+ 	INIT_WORK(&msk->work, mptcp_worker);
+ 	msk->out_of_order_queue = RB_ROOT;
+ 	msk->first_pending = NULL;
+-	msk->timer_ival = TCP_RTO_MIN;
++
++	/* msk does not go through tcp_init_sock(); seed RTO bounds. */
++	icsk->icsk_rto_min = usecs_to_jiffies(READ_ONCE(net->ipv4.sysctl_tcp_rto_min_us));
++	icsk->icsk_rto_max = msecs_to_jiffies(READ_ONCE(net->ipv4.sysctl_tcp_rto_max_ms));
++	msk->timer_ival = tcp_rto_min(sk);
+ 	msk->scaling_ratio = TCP_DEFAULT_SCALING_RATIO;
+ 	msk->backlog_len = 0;
+ 	mptcp_init_rtt_est(msk);
 -- 
-Sabrina
+2.43.0
+
