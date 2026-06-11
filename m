@@ -1,134 +1,119 @@
-Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 975DB253B58
-	for <mptcp@lists.linux.dev>; Thu, 11 Jun 2026 18:07:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52A40376A0F;
+	Thu, 11 Jun 2026 19:40:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781201232; cv=none; b=o2hP9gHnuauW+kzV5ECVi5JH3/HcVHJgeJlMQM4CGG0gLfd2aEDGvJFKrQ8FP9GgvtluD+QGSbVOjaHbyltTl6UYAUVe1PFj1mIiuAXMBp/1Lb0uPayAXCp+K1S71s/dQIP9jXt3+RCGUjCZ9PtoJmojKt7F4CH1CVCwlSgCMU0=
+	t=1781206834; cv=none; b=ik5VyfC8jMoq1B+LjZrKCaQb0nm8r3cWWjOHudud7FFDXfw773j6TSkDK0aIWPRmuPhkt9ZGonG4e/3eWR0PjpJGNQOMG6jJMCEsvyls7qFwa3+M0fDDvsMI/OC36lkXEnise6W/VIZFRfSsK8qHxzLJvqqP2lu3yQq/kQmQRUk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781201232; c=relaxed/simple;
-	bh=R83nnlAORyqq9QURbensmWlLCcqbKxKCH3T7uiVCDSE=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
-	 MIME-Version:Content-Type; b=Cvda1V1DHFoOGiH0sQ8wPi/w7/VDoOg5TXF+6Xsl0lXzXJ9fEK7phK8t++/LWzFoG+YNu/wCh08/vXjI2YTWSUMX5Ikhod9lkvA9Sr1HKhV6g4yCMak2xKCXCEqiUCunOU0N563RKZ32KXISv6GwNjUiR4Jsd4XZSg5Ey9OW+yg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ORQcyqbK; arc=none smtp.client-ip=209.85.219.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1781206834; c=relaxed/simple;
+	bh=U4Xj1hQqU/3M4nuoS+3S0SUI0tNKy4XUROHbzbDE9tA=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=FVUDnZ9gANtU8o+bqV3EvmA1j9rD8WsWVpw9Ou0aWDR3eOcqOv7qVGCDgcoR4mVBgu8qR/fjnZhZY4OMtoWe0ysgo5WJ0t2WPaCG3XZVqvNL5YiwSJoPeDxFSTePuLNP9gTHoxDGpnZ2QHFeup7MOGADs7+4tivIQyzHFahkM2w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=etSC55gK; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ORQcyqbK"
-Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-8cce22e029cso16798636d6.0
-        for <mptcp@lists.linux.dev>; Thu, 11 Jun 2026 11:07:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1781201230; x=1781806030; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ii0hXD/fShjq1PUMqM5M9rr14LajJ5pChxiF1bF29UU=;
-        b=ORQcyqbKNhtGG0rlUpwLYfRrkCsWzQ3zYnHGjvp6ki4BCDN928ACMFegfpaZVNuGIF
-         7Vf/ofDCLsC0QbiApnVr8qkHVVuamKuvh4m/2gBBNYCtfEpjaNm3qRq9/roWtpTSAdOg
-         KlCXkWFkFQZFwJ3nOXj5eLt6putY9l8ufEq9Jd5itXYYofcMQhjMr65gtvi/KObs5PxE
-         NO4R+mW4Pm7Se5iwLF437LGopL5GOHd7XjCBGxf9rvxAq+W0+JsiytOKzKxXdxd+VahS
-         jPhwuwDvMW+PidYSI23b+1BEZavWwxJXV7l3+pnPLqiLo1kH440GVHT+fCen31CJQye4
-         E7iA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781201230; x=1781806030;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ii0hXD/fShjq1PUMqM5M9rr14LajJ5pChxiF1bF29UU=;
-        b=fXlqiSzyS3tXvxbaTop71yjg3HsfCXtEgGZqd9VeJEC4qSqf6kT5/68oRwbainj9P2
-         abB/sLqMi71RCyuWkZniIE429zYqwoOd292hAG4ujFMeBxRKo6rLIHob7j9mBDgId9Py
-         Gr8e0j/uqNyPGPHL+TQ7b0SlxGOCxtEqQAWcgqfxCz7NmhWX+yDAEhQZC/NebXcljAZ0
-         EOtPFYK5acFOVGCorJp6B05fCmDOZTJJ07pAN/fbgLuAQW5jwhKGuYNT/B6+sTnv4urm
-         BNz7SYZUb0PE7xas8H3pTQ8mp7Noft1bapJzc+gH+FY6uxTnFw/JfzFUrqkgCUKsdcq0
-         U/Xg==
-X-Gm-Message-State: AOJu0YznSZ2/d67/0IjrQtGu+yO9vdJNRLFzIb8g8TT07pzAAU70U0NM
-	LpTVZuplFo2u5SGfLtFuT5pufOsnGRSn6vqM9hSdOECcdUGvEJ6M/ZYZX86J
-X-Gm-Gg: Acq92OG5ej1RHHxqYDwXxNblLNd4LyS1gdLcq0FgqIxKQQxJUZ31S7kGPPuU6ZCJGgJ
-	lNf/8Ao5S++jSh9lGRv3FrApAOzvNz0X7aQz2rkU6acT76mc8XABYNvbmm6JgVcT33pkudvK+bO
-	01100Yo+aNeZToDd//sTMWbSdx8qVbX70WyyHbrBTsPh6e/ugVCNWEY1+cXIQmA+cKCVVbWYc8F
-	Z4YDHtJTzhvvIixMH1oUlWxYCXNPC5bZsqFUHsWfVzZ0IRLwDYh2fJnHc69KKK+/F0BjAeM0nV+
-	RH/39z4Vh/veqJJx9zSlAp3zhI3zIqiTgwhcdTIpUPwa8mStFjH2RwSO2/G+dSAGrJH+U0cWLHn
-	VFdCiPW0ivhzagwvz3WFw9TCqeT9BprQ3Y5MyLgTXuQJMVjnlbwvvxH0VRZmbW3oyO8ZyiDccZf
-	dbANEImvxTxeLGSe0KNnW9ClXweJsOW4QL59uhKQ==
-X-Received: by 2002:a05:6214:5f09:b0:8cb:e78f:21de with SMTP id 6a1803df08f44-8d1e9245564mr57854896d6.11.1781201229929;
-        Thu, 11 Jun 2026 11:07:09 -0700 (PDT)
-Received: from [127.0.0.1] ([135.232.193.35])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8d300f6b962sm589466d6.9.2026.06.11.11.07.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jun 2026 11:07:09 -0700 (PDT)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Gang Yan <yangang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <cover.1781196828.git.yangang@kylinos.cn>
-References: <cover.1781196828.git.yangang@kylinos.cn>
-Subject: Re: [PATCH, mptcp-next 0/9] selftests: mptcp: skip the v6 subtests
- when CONFIG_MPTCP_IPV6=n
-Message-ID: <4a756e97-a153-3ae2-0db8-735d14f03390@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 11 Jun 2026 18:07:08 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="etSC55gK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DD701F000E9;
+	Thu, 11 Jun 2026 19:40:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1781206831;
+	bh=U4Xj1hQqU/3M4nuoS+3S0SUI0tNKy4XUROHbzbDE9tA=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject;
+	b=etSC55gKPX3QoSmuTW0MmDBogGaYjXiWndd8YvtlSdOrGUL6n2egruf3H9pHQz9Bl
+	 Fr0BnYioyPB2rQQPqJrx8jmg7kYeyhELTIaiicB+H6yriHlPqPG/SzrwqduLW89o7U
+	 XjMjHAE5Dxsgn2n3qzuPPoEkMKqlj+rkj/c55xX8SbZzlRiNIfe5JjYau2DN8Aluvi
+	 76U/k13hBa7zSZ6Fqcg04+DWqkopBoIIdO6ACw2xTy6EFSnpnF843ZO955nGGRsRYI
+	 Cz6kcw+TXZsVl2p5KboZBRrAlORrYJdnt/rO8vI1eux5pfEnYihz7s+Y8z1eTNDsiv
+	 YbYE3T3SEkGtw==
+Date: Thu, 11 Jun 2026 21:40:23 +0200
+From: Matthieu Baerts <matttbe@kernel.org>
+To: Simon Baatz <gmbnomis@gmail.com>
+Cc: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+	netdev@vger.kernel.org, mptcp@lists.linux.dev,
+	linux-kernel@vger.kernel.org, Neal Cardwell <ncardwell@google.com>,
+	Kuniyuki Iwashima <kuniyu@google.com>
+Message-ID: <8d744049-65b7-4652-ae9f-a4a159fff56c@kernel.org>
+In-Reply-To: <airt3_dPSfV54Aph@gandalf.schnuecks.de>
+References: <20260605-net-next-mptcp-add-addr6-port-ts-v2-0-758e7ca73f4d@kernel.org> <20260605-net-next-mptcp-add-addr6-port-ts-v2-5-758e7ca73f4d@kernel.org> <airt3_dPSfV54Aph@gandalf.schnuecks.de>
+Subject: Re: [PATCH net-next v2 05/15] tcp: allow mptcp to drop TS for some
+ packets
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Correlation-ID: <8d744049-65b7-4652-ae9f-a4a159fff56c@kernel.org>
 
-Hi Gang,
+Hi Simon,
 
-Thank you for your modifications, that's great!
+Thank you for you review.
 
-Our CI did some validations and here is its report:
+11 Jun 2026 19:18:29 Simon Baatz <gmbnomis@gmail.com>:
 
-- KVM Validation: normal (except selftest_mptcp_join): Unstable: 11 failed =
-test(s): packetdrill_add_addr packetdrill_dss packetdrill_fastclose =
-packetdrill_fastopen packetdrill_mp_capable packetdrill_mp_join =
-packetdrill_mp_prio packetdrill_mp_reset packetdrill_regressions =
-packetdrill_sockopts packetdrill_syscalls =E2=9A=A0=EF=B8=8F=20
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/273648=
-18369
+> Hi Matt,
+>
+> On Fri, Jun 05, 2026 at 07:21:49PM +1000, Matthieu Baerts (NGI0) wrote:
+>> With TCP-timestamps (padded) taking 12 bytes and ADD_ADDR IPv6 + port
+>> taking 30 bytes, the 40-byte limit for the TCP options is reached. In
+>> this case, it is then not possible to send the address signal.
+>>
+>> The idea is to let MPTCP dropping the TCP-timestamps option for some
+>> specific packets, to be able to send some specific pure ACK carrying >28
+>> bytes of MPTCP options, like with this specific ADD_ADDR. A new
+>> parameter is passed from tcp_established_options to the MPTCP side to
+>> indicate if the TCP TS option is used, and if it should be dropped. The
+>> next commit implements the part on MPTCP side, but split into two
+>> patches to help TCP maintainers to identify the modifications on TCP
+>> side. This feature will be controlled by a new add_addr_v6_port_drop_ts
+>> MPTCP sysctl knob.
+>>
+>> It is important to keep in mind that dropping the TCP timestamps option
+>> for one packet of the connection could eventually disrupt some
+>> middleboxes: even if it should be unlikely, they could drop the packet
+>> or even block the connection. That's why this new feature will be
+>> controlled by a sysctl knob.
+>
+> RFC 7323 (which obsoletes RFC 1323) specifies an "all or nothing"
+> approach for the TS option.=C2=A0 Section 3.2 states:
+>
+> =C2=A0=C2=A0 Once TSopt has been successfully negotiated, that is both <S=
+YN> and
+> =C2=A0=C2=A0 <SYN,ACK> contain TSopt, the TSopt MUST be sent in every non=
+-<RST>
+> =C2=A0=C2=A0 segment for the duration of the connection, [...] If a
+> =C2=A0=C2=A0 non-<RST> segment is received without a TSopt, a TCP SHOULD =
+silently
+> =C2=A0=C2=A0 drop the segment.
+>
+> So, selectively omitting the TS option on established subflows
+> appears to go against RFC 7323 at the TCP level.=C2=A0 Do we consider tha=
+t
+> an acceptable deviation for MPTCP subflows?
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/127e9ba80ff5
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1110208
+Yes, to me, it is acceptable. Please note that here, TCP TS is only
+dropped on some specific packets -- ADD_ADDR with v6 + port --
+which are TCP pure ACK acking the same sequence as the previous
+one (dupack from a TCP point of view). So it is just a signalling packet,
+specific to MPTCP. If it is dropped by a middlebox, that's not nice, but
+that's OK.
 
+Or do you think something would break when this happens?
 
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
+One last thing: sending an ADD_ADDR with v6 + port is certainly
+specific to some use-cases, most connections will not do that.
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+> (Maybe I am missing something obvious here, but I couldn't find any
+> prior discussion on this aspect.)
 
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+The discussions were on the MPTCP mailing list and bug tracker.
 
 Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+Matt
+
