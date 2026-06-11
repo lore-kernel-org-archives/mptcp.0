@@ -1,184 +1,104 @@
-Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com [209.85.210.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-of-o54.zoho.com (sender4-of-o54.zoho.com [136.143.188.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F366435675A
-	for <mptcp@lists.linux.dev>; Thu, 11 Jun 2026 20:22:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.210.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FCCE372ECE
+	for <mptcp@lists.linux.dev>; Thu, 11 Jun 2026 20:32:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.54
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781209339; cv=pass; b=VIkIFXyhco4Qzl9S7Cxr26iy0dNjKj8D8CApokwfWxETdYnhM7rvgwoydj6mIuDoadsl0VxlDqxFj7XcyINUO/HGpKUPmU3PE4uERBfYZgUfFZMUbTfeKcEAbA24qDQvFHpdiIZp2NKLqzL55m79C0N0WaY3ilQXBY7DsP12Zm4=
+	t=1781209956; cv=pass; b=sHdx2IbgFF+pwXiKPG04hknJAFk5dwt8fzRfFpsDoJSol4Erp8vPpNmh2AehtKuwipyavl293OJlniWJ0yFrJJtHxlZTAn3WrZbfcoMQqd1pjZMPEAi/LJdhi1qXnUQJ5+oSAlSsIeXhUDSc5p0tnf9RXcMu5Q4WQHeItBKk8hQ=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781209339; c=relaxed/simple;
-	bh=zCrMsrTixrqND3VBChgTMQBuDDR6SIJkYaFnU0QbEAI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=T3GFO+TBKnoUxUygtsa3EggNlAUpmbVfwJRThpygw8vU6jJCL0TNrcSP7o2g7TllFmQHBMWsVjV6rQviBNwJX8AvGjRbBLurFOfY6euulVpgAejP/oMRM4okpq41y6PrqeY9t2/UqIEvKlhPcEgWzINpSBIDeJ7n+TcOGNk26fo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QqFiHK7T; arc=pass smtp.client-ip=209.85.210.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1781209956; c=relaxed/simple;
+	bh=oRPuLed9+y0UX2fZLaQ2QHQ9cZz8PH4WwAuyWhoYGfY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=pMlJ4dxLkc0LKp9rfES4E+AoLFETmQpV+1vYaz0EH2G8bI3WvUZdmz5zA8vGHFSarEPzT+RLKva3COCjShD48iuRNcsCAD80tza2vQTHEzmD7vuz7plcTZIhb3Yo8DZIDKnz+IGq/rPwiV13wt9IJQvOAyz5HNnofGtcajZkMTk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com; spf=pass smtp.mailfrom=mpiricsoftware.com; dkim=fail (0-bit key) header.d=mpiricsoftware.com header.i=shardul.b@mpiricsoftware.com header.b=VXi6/m7v reason="key not found in DNS"; arc=pass smtp.client-ip=136.143.188.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mpiricsoftware.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QqFiHK7T"
-Received: by mail-ot1-f51.google.com with SMTP id 46e09a7af769-7e6deacafa8so893638a34.0
-        for <mptcp@lists.linux.dev>; Thu, 11 Jun 2026 13:22:17 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1781209337; cv=none;
-        d=google.com; s=arc-20240605;
-        b=JdaK8WriMbi1xsLFN3Je4UIs+Ts/GKESJeWht9o0Sb0DeT4ytkDnIc809F6tjIjvRz
-         qqzf+HKMJyqUrEetYyiYyc0mTvsAR0C5UxHrgp4qPKdktCNs3QvH8XOBSuelClkQlHFs
-         cJzvTkWbdQblUDt5v8V0UMiwzanBcj8iUeSbSF0XVSqIrcsBKGeljDbImXOxZCVJvA4Z
-         tLeU7i+A3fpUZ8BrFSLv/olwuW2RaByAbbqgwATAmXfNoIFMmm3xDA8JLjRrQdV3DusE
-         SkT71lEsh3tDPHT/UP+U6kZHi9pYzpXlK6IwmQHHvP0rUagPebH8yhBcULGDkd7RqBBt
-         bd5Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=LR9YVhm/y7UwOaN1njgcgonOyt7uAb3/AL0v7Fq2xzk=;
-        fh=mNe8Cc+s+tjSdDSmhUasC2c5XSFgoh7a1VdCA0QO2RU=;
-        b=DbrLCS1ohaXqDrcN6RtdWZGJIUzZaKvz7zzichxzI5wUraTu60t7oqHtXUm+R0a57+
-         UitM7G5feL4p94MndNklOfbaVKD6Tg7/IrIlgL+WVNlq7C+6rOyy98JK2amnfVAmXPyg
-         /DMdb5aLGZYkZkIGJIPqZMb7g8iuoTOhnIjZBW5jHOYtJ308dxCuZxgGawsqOUxKaj+7
-         +nG32xuZLM7TNIaQLiFiyvE07TcNIchE3ti4WO5D2bz05nSb5z4GEKL46aAk+8pYXaRr
-         sus/78BAf/x3mZYXFGLL5bhWMPZnp2T7BZhcLJoRop4rDvmCXyqWcW7UPLD5bzvQD8vP
-         ZFkQ==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1781209337; x=1781814137; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LR9YVhm/y7UwOaN1njgcgonOyt7uAb3/AL0v7Fq2xzk=;
-        b=QqFiHK7TSKcsE0JC8sXd1N9ZsN9xwEmcvxFzrodwrrXzKaQ0jHmMFRxD59AvzrH/IA
-         6SZd2M7vhkmYqHqLJxBMzSeZdTiplUd9hoe4vUEd1xl4zYg3VI39+MIi62698ymXrwzj
-         o7FYJYhi55OFTS6nokBrkuAbK1ck+HgiWY20fP+JAiy27wEBNqCe1l+3Uz05PFKhhQNa
-         Y2/d1zWbf5ms5Rd1KksSCjTmh5p8iV+dRBFgd5zJqRkQVu8cxTHfeWwVy6qHqDczRv8d
-         O/uMhjNDkWml1gICDvdxHDkqNO2Cil7vX6ot3LEkY/LK0k4RYzjDeVRW4JzsORx2zB3B
-         VV0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781209337; x=1781814137;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=LR9YVhm/y7UwOaN1njgcgonOyt7uAb3/AL0v7Fq2xzk=;
-        b=LVruBBIG8DBsf3w6ZOXRYkbacfRWTdzUVFviZUSnMa2pB84Qey5+EJso0ysY5VuKCv
-         laxYJ4LvZd/k3IAMdrjzovvVkvAwtDlNcx7bvj7XenZrW7yGF+obnEaeMEfNz1XBlskT
-         hMwSk2zL0xaUMVGML669zINIKVSLNwVnyH40HHDcAPpIch5twPbVBpmXZb4xpaSyQ7ey
-         r3jkT9fuwYR46jtoRPMp3m5oM/3Wv+E6uPy+7OPboAYbaNSEkt1zhb57bmSED29dZ7Ro
-         vIjr/13jLBYoeKAVAKWG1v8ek7IQnPG/pvR+ySB5lv52ygNAHIHCJ2Y7Ymdjzntn4TDO
-         I6pw==
-X-Gm-Message-State: AOJu0YwPCmVLIP1rsMp8i3cyTVe5bfLngBLtPrXA75C1m1xp9Fu2mpHE
-	eKMnfywT0BZh89bPaeTcP1U3TnB5dywx9NXmqwtYMGADY1M12FzAlEIxyNnP53VuSDki1gQTibe
-	5Bmex0X+yIVckgbn6ZDre9rxlTdoZH0OAMELjvT8=
-X-Gm-Gg: Acq92OFSA4mLae8fYIk0PMxkj4Df30UkM30DGTrLZE/TFfvA0GSfll7Hk/q4sN1fkpt
-	26ABsEIaxULFI0Li1cqHpq3elKH6uFKc1yaIdosl6cOSoVdwItH/ptasKrR0ub5mCG+UfeNAyFE
-	OgdB3iUH4sNnB2nRPQElFR4fUrhQOIqiU+oyBzdem3B+o0VrRX7c7yGiYGhpaJbPH9ft7hq5FOg
-	bGTeZgu/5OlDbEo0WONkXIDPRjH2gqCtn896DuaspnvMNkKP+vg3vsIvZDdI7Z+dWMkmNQ11mP0
-	Wck58CXPwMV6LDOToO7aYQhiQAW3ZzpGXNsXJA==
-X-Received: by 2002:a05:6820:4b05:b0:69d:ecb9:4a2 with SMTP id
- 006d021491bc7-69edb016375mr79778eaf.4.1781209336622; Thu, 11 Jun 2026
- 13:22:16 -0700 (PDT)
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mpiricsoftware.com header.i=shardul.b@mpiricsoftware.com header.b="VXi6/m7v"
+ARC-Seal: i=1; a=rsa-sha256; t=1781209947; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=X4F9TVs0FESRnmw8bz4+inWdotkQAwOnEyGJPHerFIaAtssWb5TagGrn9zCKFYT5422SlknNUT+jRoxZhTBbBczrdgtZPx8pIL1wboRydJbA+6pa5+oDCQGcaO4EDZTU+MFP75NwRBHe4xnDuEjJaj5doiY94Mcvhwgt/QWKsEc=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1781209947; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=FH5J8FewfSuNQ/RD80r6Im9uTxwF8oJSwZYrPgEqIjw=; 
+	b=VLuqnapPezpgfw+Go7zc7PSUFgRfIPKswPIIBoUGWH1gc8hUVHWvn6wq/eHmokRBBxIU3h4UWV2Q4Fvo/mkWtTFQt6Ouw+81NOEo5HenqK+y7tiX+WrcPvSX6GZoX44hz6PJjnft1W7KFQMePAMYmUKx3UJrfTMQCtzzjvPTPtI=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=mpiricsoftware.com;
+	spf=pass  smtp.mailfrom=shardul.b@mpiricsoftware.com;
+	dmarc=pass header.from=<shardul.b@mpiricsoftware.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1781209947;
+	s=mpiric; d=mpiricsoftware.com; i=shardul.b@mpiricsoftware.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:MIME-Version:Content-Transfer-Encoding:Reply-To;
+	bh=FH5J8FewfSuNQ/RD80r6Im9uTxwF8oJSwZYrPgEqIjw=;
+	b=VXi6/m7v7OBL4K0JgME1L419vqxN0hy5d+KPhLj7B5GAfMQ64JoG9DZUXzWLkT7Z
+	pL3kBDS/Yljcdczyyg4JIP7KnS64DLV8PxY8k4qerRfbVmXdaqO7UIZjJxgwW9lriUY
+	NT6+34DjdJ8e5+zuqLqEPpTReh/56LAWdp6smgds=
+Received: by mx.zohomail.com with SMTPS id 1781209946628949.758724462893;
+	Thu, 11 Jun 2026 13:32:26 -0700 (PDT)
+From: Shardul Bankar <shardul.b@mpiricsoftware.com>
+To: mptcp@lists.linux.dev
+Cc: Matthieu Baerts <matttbe@kernel.org>,
+	Mat Martineau <martineau@kernel.org>,
+	Geliang Tang <geliang@kernel.org>,
+	pabeni@redhat.com,
+	kalpan.jani@mpiricsoftware.com,
+	janak@mpiric.us,
+	shardulsb08@gmail.com,
+	Shardul Bankar <shardul.b@mpiricsoftware.com>
+Subject: [PATCH v4 0/2] mptcp: per-event MIB counters for MPTCP_RST_EMPTCP
+Date: Fri, 12 Jun 2026 02:02:17 +0530
+Message-Id: <20260611203219.3448354-1-shardul.b@mpiricsoftware.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260531145955.322337-1-devnexen@gmail.com>
-In-Reply-To: <20260531145955.322337-1-devnexen@gmail.com>
-From: David CARLIER <devnexen@gmail.com>
-Date: Thu, 11 Jun 2026 21:22:03 +0100
-X-Gm-Features: AVVi8CcDJ8EOE2Rdhn2uk8wiXI2YVUWx-VCC2xABwrKVuSPql0QDyPh4g7S3NG4
-Message-ID: <CA+XhMqzaF09MgEgEvPrE=eKv6kT_WcW_bCQSPSpuAA50KmgS5w@mail.gmail.com>
-Subject: Re: [PATCH mptcp-next v11 0/4] mptcp: MSG_ERRQUEUE support on the
- parent socket
-To: mptcp@lists.linux.dev
-Cc: matttbe@kernel.org, martineau@kernel.org, geliang@kernel.org, 
-	pabeni@redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
 
-Hi Matthieu,
+MPTCP_RST_EMPTCP (reset reason 1) is currently used as a catch-all for
+several distinct conditions across subflow setup, authentication, and
+data-path validation.  This series adds per-event MIB counters at each
+of those use sites and validates them from mptcp_join.sh.
 
-The lone Medium (patch 2) is self-resolving =E2=80=94 sashiko itself notes
-it's fixed by patch 3 within the same series:
+Patch 1 adds seven counters (MD5SigReset, MPJoinSynAckNoMPJoin,
+MPJoinAckNoMPJoin, MPJoinAckNoCtx, MPJoinNoIdFound, DssReset,
+MPJoinNotEstablished) and increments them in mib.c/mib.h, subflow.c and
+protocol.c.
 
-  =E2=96=8E Propagating IP_RECVERR to subflows queues ICMP errors into
-sk_error_queue, but MPTCP recvmsg() doesn't implement MSG_ERRQUEUE=E2=80=A6
-Note: This regression is fixed later
-  =E2=96=8E in the patch series by ("mptcp: support MSG_ERRQUEUE on the par=
-ent
-socket"), which splices and drains the subflow error queues.
+Patch 2 adds named env-var expectations for each counter: the
+JOIN-related ones in chk_join_nr() and the two reset ones in
+chk_rst_nr(), both on fixed namespaces.  It also adds one test inside
+signal_address_tests that triggers MPJoinSynAckNoMPJoin from the
+existing ns1/ns2 setup.
 
+v4 (this version):
+  patch 1: add MPJoinNoIdFound for an MP_JOIN that carries a valid token
+           but for which the path manager returns no local id; it
+           reaches the same MPTCP_RST_EMPTCP that MPJoinNoTokenFound
+           only counts the no-token half of (Matt).
+  patch 2: move the MPJoin* checks into chk_join_nr() with fixed
+           namespaces, leaving only MD5SigReset and DssReset in
+           chk_rst_nr() (Matt); rename the env vars (join_* / rst_md5sig
+           / rst_dss); the new test uses mptcp_lib_wait_local_port_listen()
+           and asserts with chk_join_nr().
+v3: https://lore.kernel.org/all/20260512103331.1934343-1-shardul.b@mpiricsoftware.com/
+v2: https://lore.kernel.org/all/20260509183335.969018-1-shardul.b@mpiricsoftware.com/
+v1: https://lore.kernel.org/all/20260421095646.3741956-1-shardul.b@mpiricsoftware.com/
 
-So I think it is ok ?
+Shardul Bankar (2):
+  mptcp: add per-event MIB counters for MPTCP_RST_EMPTCP resets
+  selftests: mptcp: check per-event MPTCP_RST_EMPTCP counters
 
-Cheers.
+ net/mptcp/mib.c                               |  7 ++
+ net/mptcp/mib.h                               |  7 ++
+ net/mptcp/protocol.c                          |  1 +
+ net/mptcp/subflow.c                           | 10 ++
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 93 +++++++++++++++++++
+ 5 files changed, 118 insertions(+)
 
-On Sun, 31 May 2026 at 15:59, David Carlier <devnexen@gmail.com> wrote:
->
-> This series lets MPTCP applications use poll(EPOLLERR) and
-> recvmsg(MSG_ERRQUEUE) on the parent socket to drain TX timestamps,
-> MSG_ZEROCOPY completion notifications and SO_EE_ORIGIN_LOCAL events
-> through the standard inet ABI, the same way they would on a plain TCP
-> socket. ICMP-derived errors stay on the subflow queue: the legacy
-> RECVERR ABI cannot convey their per-subflow peer identity, and they
-> are intended for a future MPTCP_RECERR channel.
->
-> Patch 1 factors the existing inet_flags subflow-propagation hard-coded
-> list into a mask, so subsequent patches can extend it without churn.
->
-> Patch 2 makes IP_RECVERR / IPV6_RECVERR (and the RFC4884 variants)
-> propagate to the subflows. The parent stores the bit so MPTCP-aware
-> helpers can branch on it.
->
-> Patch 3 splices subflow err-skbs onto the parent's sk_error_queue at
-> error-report time. All forwarded events go through sock_queue_err_skb(),
-> which re-homes skb->sk onto the parent and charges sk_rmem_alloc, so the
-> parent's error queue stays bounded by sk_rcvbuf and is dropped under rmem
-> pressure, matching tcp's tx-timestamp path and ip_icmp_error() /
-> ipv6_icmp_error(). MPTCP never originates MSG_ZEROCOPY or OPT_ID
-> tx-timestamp completions -- its data path copies into msk-owned pages and
-> bypasses tcp_sendmsg_locked() -- so no subflow-relative ee_data sequence
-> is ever forwarded. mptcp_recvmsg(MSG_ERRQUEUE) forwards directly to
-> inet_recv_error(), and mptcp_poll() advertises EPOLLERR purely on the
-> parent's sk_err / sk_error_queue, matching tcp_poll().
->
-> Patch 4 is a selftest covering the propagation path.
->
-> Changes in v11 (addresses sashiko v10 review,
-> https://sashiko.dev/#/patchset/20260529174524.260199-1-devnexen@gmail.com=
-):
->  - patch 3/4: route MSG_ZEROCOPY completions through sock_queue_err_skb()
->    like every other forwarded event, rather than orphaning them and
->    queueing to the parent by hand. The hand-rolled path ran the subflow
->    destructor (refunding its memory charge) but never charged the parent,
->    so completions could pile up unbounded on the parent err queue and
->    exhaust memory (OOM). The "never drop or we leak pinned pages" premise
->    was also wrong: __msg_zerocopy_callback() calls
->    mm_unaccount_pinned_pages() before queueing, so a dropped notification
->    loses only the notification, not the pages. (sashiko v10, High)
->  - no functional change for the ee_data concern: MPTCP originates neither
->    MSG_ZEROCOPY nor OPT_ID tx-timestamp completions, so no subflow-relati=
-ve
->    sequence is ever spliced to the parent. (sashiko v10, High)
->  - patch 2/4: initialise val in mptcp_setsockopt_recverr() to silence a
->    latent -Wmaybe-uninitialized on the switch without a default case.
->
-> v10: https://lore.kernel.org/mptcp/20260529174524.260199-1-devnexen@gmail=
-.com/
-> v9: https://lore.kernel.org/mptcp/20260528055459.55133-1-devnexen@gmail.c=
-om/
->
-> David Carlier (4):
->   mptcp: sockopt: factor inet_flags propagation into a mask
->   mptcp: propagate RECVERR sockopts to subflows
->   mptcp: support MSG_ERRQUEUE on the parent socket
->   selftests: mptcp: cover IP_RECVERR sockopt propagation
->
->  net/mptcp/protocol.c                          |  63 ++++++--
->  net/mptcp/sockopt.c                           | 153 +++++++++++++++---
->  .../selftests/net/mptcp/mptcp_sockopt.c       |  55 +++++++
->  3 files changed, 237 insertions(+), 34 deletions(-)
->
->
-> base-commit: e05cbdb611ff815528cdf90e29a96663b9af48c6
-> --
-> 2.53.0
->
+-- 
+2.34.1
+
