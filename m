@@ -1,252 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97A0230C366;
-	Thu, 11 Jun 2026 08:49:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781167787; cv=none; b=UnKi4orS7OTLaofmAgVQqnkLU1MjWNlGnpDuQY22X7LfoQb3+zHKHKL7Rvw2Cr1vOTbV6DAcKE+Ha0gdeNG48wlBCGYHj3JDZxRPhhUE5NvcJNEEz9GGs6SmckplPei6dkvhuoprm99GrpMRfYSPbuzQeSswR2XjBEoy6bkMsEE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781167787; c=relaxed/simple;
-	bh=GeUC8+xemqPGEoaXIeRvXCM5236BY9QRiaYPx1Y9bzQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tdmseCwxp1TTyx9hLjyA2V2z6Tvk82m9WBTUw8gqEa8MWxIM3V2OLyZ8TMflV1vFPWBqo63jq6HyVdifNFU8X/cv7cPokbtGEla7HpXxuHheGZNYZHx8fLM+4duruC5qn1Nd7sfeuCNzASMCMbEkUretw5t5X84HKoFL1z4c7p4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FTPvoN4z; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1430F3F9F48
+	for <mptcp@lists.linux.dev>; Thu, 11 Jun 2026 12:38:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.171
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1781181501; cv=pass; b=pH+Ts2LNQCsqzlt7O7Si7NLyMIMjJUYGvIMRSn9tNh7eVGLXZ7Os87qSlwtPUg7DK7JxVXhRNwenfzPlv6NfdqwHoAp0ls9tizRaOduB10vmsZpG7G6VWQuGR1sB+FwC0Oi/yB9mbBcU+TtO9GGe1s4Uub1KUPJVxExI9GTelws=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1781181501; c=relaxed/simple;
+	bh=ojsKbpJZqsF4mqMN6JdK1iLxFv+TqfVytC3MxmRt82U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tOToC88VAQf8KppdlKWmTbRWYWWikU5jgmG4i9+2Hik7CKMMQvLIUkc1zstp+UER8sKg7hIcb4im78If4tAnprulU2US96lt9VYbJlT2Qh8Z6bsT4lSzc2h8goy6eo4VoifsmMb72u4Pt9yA1hsFTB2PsC/5v+ZTYtEsmiVtrgs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eYZWAafT; arc=pass smtp.client-ip=209.85.160.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FTPvoN4z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A1FA1F00899;
-	Thu, 11 Jun 2026 08:49:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781167786;
-	bh=dgCHkfsDYTb+PLoUOahbDNE1Y1mu3UmrNxGmUg1qxyQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=FTPvoN4z3/wgCcL9zZQ/0e7BgjicCtGoYqDRicIsI4WkE0WBFes5W/ZaSETICFcRi
-	 GB6qk6sXcGaBqDUaIvZLOY1LEpO0kHBc9G9w5Ez6KVWSDShiBQ/fSkV7NF5Xcy3qNZ
-	 YQcAlk9hA+Zpz0Bz8Eh6SyQ/T9DnHLW9gfyWQoUeAo86B8J7rOwxlwqjxvRQe+nDyM
-	 k93QRGGfa5By8f8xhZiQ66hsBgBG36AfHLoZq0Prw0KxBOhPlbz1/okY/TBzTO+bM6
-	 20KnlZXEMbwnkw0cdHdNGJNnsZqxX+YT2DO8J8+Rj9qbwnrp2kewK4jCdcg9oXl3sZ
-	 qh8Ym0SWvAAUQ==
-Message-ID: <1014329c-d60f-432a-b165-62866ca6a4b4@kernel.org>
-Date: Thu, 11 Jun 2026 10:49:39 +0200
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eYZWAafT"
+Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-51761d27612so92242691cf.3
+        for <mptcp@lists.linux.dev>; Thu, 11 Jun 2026 05:38:19 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1781181499; cv=none;
+        d=google.com; s=arc-20240605;
+        b=DkGXBJyicsd/KI+NBTgWhJt7TBLFEiOuZV9MQxvENsV2wVJKP6Rcxwb4tEaLpI6TIL
+         9P/Cdvuz3jqXaiIlHiKP9LWxAWxyEF4KlLxoZfQDpYgpV1kISOPFUthX+S8YxWmxY+3W
+         tsBJNsdpPYni1EMAfg49YdLmn4q8U2VHGSoGIz752Hq0o2uHM60/pUgBrY/7EKr82Nki
+         rr2OROLmYf1IE4aWs77CcpUwz9VegvjjcuE0Uwe8lNgZjTwOg65dlfLevlAocSG0EKEI
+         qRWI/dIFPtYoe9MvEjpcdzFFLVAU8qBfY4sLAfil9wOF/ohu0kkqu4l+u3Zb2RyuTvgQ
+         a9IA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=ojsKbpJZqsF4mqMN6JdK1iLxFv+TqfVytC3MxmRt82U=;
+        fh=BH3PDRJACwU23uSgPDtrhZjzNdHN96YS2yYPRTcOdoA=;
+        b=Y+ox4Tn1x2ZSFxEx9UAuiw1n2Yo6pU48x4/ZVQ/RXeYRf79RYoJhX3f6tZU3zFk34a
+         jxlMuZruvS583hXE56++7n7PtSUHZF2quKZ4klyMiVIlfbUgk1626lUB1P8NIu4YkrBO
+         RJESungr4WSBH/s5nkNsLb59NfTzMUZhcaDEQaO+RzsJ0oY62/+4Hs6YRpy3T19tCCUF
+         Y2ATyabgvO7e1m0ir9f5BMw31pR8JZU1Ap5zXiIRFmpFm8pdReX5Ft3iWM9Vyu8T+/IQ
+         vqkiOLzLz4NoFZRG5EI+EivRXFfg2TEMTmBU2tjnwuG/4YlKzxNQ4H/1CqHlQYEDcEaQ
+         /CQQ==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1781181499; x=1781786299; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ojsKbpJZqsF4mqMN6JdK1iLxFv+TqfVytC3MxmRt82U=;
+        b=eYZWAafTuTYrCJ/Oix4TaB8z4Oww3r7xQkoRYMOdpK7VV60pcUwFTfyvR71gQGCPbw
+         unBdJj3XV2L3PeInTz4N9bQJR5w/3DJBlezrSAQUXAdJwSs5w/240SGXmnSq7zSM0Ido
+         9PvzIiUmaEqONCG4pLjA9wWhRbymZbYK1RMMDENbh8ulqPYE58JrLOap/jSv82ClOQpN
+         6RYPSa8jvTXdq8UgdZJp5DonTOGyvgtVLPws52aipF5a1A1XGTbAIwEUPpCiB7RTo4bn
+         Q0JTkiIjyIU5HEkUKfaISsdGB7Ong4GRJAKjCCRMcubsjFxMn9VEFVB4df6et3vkb42j
+         tSww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781181499; x=1781786299;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=ojsKbpJZqsF4mqMN6JdK1iLxFv+TqfVytC3MxmRt82U=;
+        b=BnzE1cL6BTXJVJFAG+W73dauxLYABhLkBEvxWXTzS+0Ib6ianWDHXcqymjHs3f1NoX
+         7y9D8ms+XUKRhsv9dxw5M3AhpqZTJSoPIZ7i68Vq6sz3J5QiTev33DriqftdVIoY5nHv
+         51Eeaa5Pv6RhJ0bjalXAzqSCnnp9KpC/PVt83jfyyurpxs5KjOLmxK/zpP24u5vlsDrP
+         kl5/HkrLkZqho8VyrT4OdzMHU18VhAAw7cGLae3gzalJjzEX+MCbKrRx/JWYBanKPJ8j
+         FH9XPJqq3cIyxm3a1KysM84RYXe3A5p8gjRvnNxrkSw/V5GLyES8Igxbod9fMyXAluyC
+         JgJA==
+X-Forwarded-Encrypted: i=1; AFNElJ/89IVpm18kfazMrkRJHMtnLE6yIMXS2J60tLRJGRdnrgZ9h1udzPFwIMFpfrjEr0BLTDyAdQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yx4kt2wO9v5cM2oQQOovUfYvh9YLlsWco3yUBCEflEiip/kiEAl
+	0hUt6LJOuE+/dFHnceY46SWeaA8hwfThrImAe2EfHvl7QtU4gIRB/eMfkcWme4dvJzGG6T8wIqd
+	nq6KdoQCXEahW2KI1pvRduDVhfpGfhIGODhO+uF9v
+X-Gm-Gg: Acq92OFVqFKp1uokd0C0esFQ89OCga+1woqxp2zzJtylBmri6wT1iahHa1BOTluz8tO
+	kjtEyVdwTlqCPc6XuChcg96Xa4JYSa5Iy8lmsDrPqkpUdxhc/19bPTydbkDpTnF0CWNrQaOwkNw
+	buOLyyq2vB+8YT43WlKrMEoMunT5j3vAKFM5QvkamJGgY7V2fzpVw40FA/oHqHgTgeyc7IEazFl
+	XoYGhJqWq7FWsKnrN6rtUnWzfIlWvPOGontw8bEorc/HgQZcjL4xQVcJbSQ3GTIhM5jg6M18IKd
+	BTpdLeJZc1Sy8ueVtTKruhF43C+RoD+I9OF4o5CHnaYrsPyWlmarJAO3K9xLGHNF4TVUI4J7Nyj
+	6qf/Peznr055g+oZQkOjBdOlda1qguM4iAy9siHKY
+X-Received: by 2002:a05:622a:54a:b0:517:8541:8b70 with SMTP id
+ d75a77b69052e-517ee2144afmr39725381cf.45.1781181498220; Thu, 11 Jun 2026
+ 05:38:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH net-next v2 05/15] tcp: allow mptcp to drop TS for some
- packets
-Content-Language: fr
-To: Paolo Abeni <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>
-Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev,
- linux-kernel@vger.kernel.org, Neal Cardwell <ncardwell@google.com>,
- Kuniyuki Iwashima <kuniyu@google.com>, Mat Martineau <martineau@kernel.org>,
- Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>,
- Jakub Kicinski <kuba@kernel.org>, Simon Horman <horms@kernel.org>
 References: <20260605-net-next-mptcp-add-addr6-port-ts-v2-0-758e7ca73f4d@kernel.org>
  <20260605-net-next-mptcp-add-addr6-port-ts-v2-5-758e7ca73f4d@kernel.org>
- <fb96d949-dcf5-494d-8076-eb4a972fa5e4@redhat.com>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <fb96d949-dcf5-494d-8076-eb4a972fa5e4@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+ <fb96d949-dcf5-494d-8076-eb4a972fa5e4@redhat.com> <1014329c-d60f-432a-b165-62866ca6a4b4@kernel.org>
+In-Reply-To: <1014329c-d60f-432a-b165-62866ca6a4b4@kernel.org>
+From: Eric Dumazet <edumazet@google.com>
+Date: Thu, 11 Jun 2026 05:38:07 -0700
+X-Gm-Features: AVVi8CeWcYBSHusf8PMPiwu6R-DABtcuuO6WPLkteSYaC0gxDZcGsCxGDjDoZO4
+Message-ID: <CANn89iKZRmLfjO_9JURrx_6Hr9pMaQwD2zABc+dHyXiENXHNVg@mail.gmail.com>
+Subject: Re: [PATCH net-next v2 05/15] tcp: allow mptcp to drop TS for some packets
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org, mptcp@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, Neal Cardwell <ncardwell@google.com>, 
+	Kuniyuki Iwashima <kuniyu@google.com>, Mat Martineau <martineau@kernel.org>, 
+	Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
+	Jakub Kicinski <kuba@kernel.org>, Simon Horman <horms@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo, Eric,
+On Thu, Jun 11, 2026 at 1:49=E2=80=AFAM Matthieu Baerts <matttbe@kernel.org=
+> wrote:
+>
+> Hi Paolo, Eric,
+>
+> On 11/06/2026 09:39, Paolo Abeni wrote:
+> > Hi Eric,
 
-On 11/06/2026 09:39, Paolo Abeni wrote:
-> Hi Eric,
-> 
-> On 6/5/26 11:21 AM, Matthieu Baerts (NGI0) wrote:
->> With TCP-timestamps (padded) taking 12 bytes and ADD_ADDR IPv6 + port
->> taking 30 bytes, the 40-byte limit for the TCP options is reached. In
->> this case, it is then not possible to send the address signal.
->>
->> The idea is to let MPTCP dropping the TCP-timestamps option for some
->> specific packets, to be able to send some specific pure ACK carrying >28
->> bytes of MPTCP options, like with this specific ADD_ADDR. A new
->> parameter is passed from tcp_established_options to the MPTCP side to
->> indicate if the TCP TS option is used, and if it should be dropped. The
->> next commit implements the part on MPTCP side, but split into two
->> patches to help TCP maintainers to identify the modifications on TCP
->> side. This feature will be controlled by a new add_addr_v6_port_drop_ts
->> MPTCP sysctl knob.
->>
->> It is important to keep in mind that dropping the TCP timestamps option
->> for one packet of the connection could eventually disrupt some
->> middleboxes: even if it should be unlikely, they could drop the packet
->> or even block the connection. That's why this new feature will be
->> controlled by a sysctl knob.
->>
->> Note that it would be technically possible to squeeze both options into
->> the header if the ADD_ADDR is first written, and then the TCP timestamps
->> without the NOPs preceding it. But this means more modifications on TCP
->> side, plus some middleboxes could still be disrupted by that.
->>
->> In this implementation, an unused bit is used in mptcp_out_options
->> structure to avoid passing an address to a local variable. Reading and
->> setting it needs CONFIG_MPTCP, so the whole block now has this #if
->> condition: mptcp_established_options() is then no longer used without
->> CONFIG_MPTCP.
->>
->> About alternatives, instead of passing a new boolean (has_ts), another
->> option would be to pass the whole option structure (opts), but
->> 'struct tcp_out_options' is currently defined in tcp_output.c, and it
->> would need to be exported. Plus that means the removal of the TCP TS
->> option would be done on the MPTCP side, and not here on the TCP side.
->> It feels clearer to remove other TCP options from the TCP side, than
->> hiding that from the MPTCP side.
->>
->> Yet an other alternative would be to pass the size already taken by the
->> other TCP options, and have a way to drop them all when needed. But this
->> feels better to target only the timestamps option where dropping it
->> should be safe, even if it is currently the only option that would be
->> set before MPTCP, when MPTCP is used.
->>
->> Reviewed-by: Mat Martineau <martineau@kernel.org>
->> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
->> ---
->> - v2: Avoid passing local variables' addresses to
->>   mptcp_established_options not to force the compiler to use a stack
->>   canary in this hot function, even for non-MPTCP flows. (Eric Dumazet)
->> To: Neal Cardwell <ncardwell@google.com>
->> To: Kuniyuki Iwashima <kuniyu@google.com>
->> ---
->>  include/net/mptcp.h   | 13 +++----------
->>  net/ipv4/tcp_output.c | 10 +++++++++-
->>  net/mptcp/options.c   |  2 +-
->>  3 files changed, 13 insertions(+), 12 deletions(-)
->>
->> diff --git a/include/net/mptcp.h b/include/net/mptcp.h
->> index 24d1016a4664..71b9fc5a5796 100644
->> --- a/include/net/mptcp.h
->> +++ b/include/net/mptcp.h
->> @@ -72,7 +72,8 @@ struct mptcp_out_options {
->>  	u8 reset_reason:4,
->>  	   reset_transient:1,
->>  	   csum_reqd:1,
->> -	   allow_join_id0:1;
->> +	   allow_join_id0:1,
->> +	   drop_ts:1;
->>  	union {
->>  		struct {
->>  			u64 sndr_key;
->> @@ -153,7 +154,7 @@ bool mptcp_syn_options(struct sock *sk, const struct sk_buff *skb,
->>  bool mptcp_synack_options(const struct request_sock *req, unsigned int *size,
->>  			  struct mptcp_out_options *opts);
->>  int mptcp_established_options(struct sock *sk, struct sk_buff *skb,
->> -			      unsigned int remaining,
->> +			      unsigned int remaining, bool has_ts,
->>  			      struct mptcp_out_options *opts);
->>  bool mptcp_incoming_options(struct sock *sk, struct sk_buff *skb);
->>  
->> @@ -269,14 +270,6 @@ static inline bool mptcp_synack_options(const struct request_sock *req,
->>  	return false;
->>  }
->>  
->> -static inline int mptcp_established_options(struct sock *sk,
->> -					    struct sk_buff *skb,
->> -					    unsigned int remaining,
->> -					    struct mptcp_out_options *opts)
->> -{
->> -	return -1;
->> -}
->> -
->>  static inline bool mptcp_incoming_options(struct sock *sk,
->>  					  struct sk_buff *skb)
->>  {
->> diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
->> index d3b8e61d3c5e..26dd751ec72a 100644
->> --- a/net/ipv4/tcp_output.c
->> +++ b/net/ipv4/tcp_output.c
->> @@ -1175,6 +1175,7 @@ static unsigned int tcp_established_options(struct sock *sk, struct sk_buff *skb
->>  		size += TCPOLEN_TSTAMP_ALIGNED;
->>  	}
->>  
->> +#if IS_ENABLED(CONFIG_MPTCP)
->>  	/* MPTCP options have precedence over SACK for the limited TCP
->>  	 * option space because a MPTCP connection would be forced to
->>  	 * fall back to regular TCP if a required multipath option is
->> @@ -1183,15 +1184,22 @@ static unsigned int tcp_established_options(struct sock *sk, struct sk_buff *skb
->>  	 */
->>  	if (sk_is_mptcp(sk)) {
->>  		unsigned int remaining = MAX_TCP_OPTION_SPACE - size;
->> +		bool has_ts = opts->options & OPTION_TS;
->>  		int opt_size;
->>  
->> -		opt_size = mptcp_established_options(sk, skb, remaining,
->> +		opts->mptcp.drop_ts = 0;
->> +
->> +		opt_size = mptcp_established_options(sk, skb, remaining, has_ts,
->>  						     &opts->mptcp);
->>  		if (opt_size >= 0) {
->>  			opts->options |= OPTION_MPTCP;
->>  			size += opt_size;
->> +
->> +			if (opts->mptcp.drop_ts)
->> +				opts->options &= ~OPTION_TS;
-> 
-> I'm wondering if you are ok with this patch in the current form?
-> 
-> One thing that was discussed on the mptcp ML was exposing the
-> tcp_out_options layout so that mptcp_established_options() could receive
-> such argument and likely clean-up a bit this code.
-> 
-> Not done here because placing tcp_out_options under `include` felt a bit
-> "too much". Perhaps adding a `net/ipv4/tcp_option.h` header (and
-> including it from the mptcp code) would be more palatable?
+> > I'm wondering if you are ok with this patch in the current form?
+> >
+> > One thing that was discussed on the mptcp ML was exposing the
+> > tcp_out_options layout so that mptcp_established_options() could receiv=
+e
+> > such argument and likely clean-up a bit this code.
+> >
+> > Not done here because placing tcp_out_options under `include` felt a bi=
+t
+> > "too much". Perhaps adding a `net/ipv4/tcp_option.h` header (and
+> > including it from the mptcp code) would be more palatable?
+>
+> Note that I also didn't do this because that would mean the removal of
+> the TCP TS option would be done from the MPTCP side, and not here from
+> the TCP side. That didn't feel right to hide this from the MPTCP side.
+> But I'm fine to change if preferred.
+>
 
-Note that I also didn't do this because that would mean the removal of
-the TCP TS option would be done from the MPTCP side, and not here from
-the TCP side. That didn't feel right to hide this from the MPTCP side.
-But I'm fine to change if preferred.
+Current patch LGTM, thanks!
 
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
-
+Reviewed-by: Eric Dumazet <edumazet@google.com>
