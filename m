@@ -1,379 +1,129 @@
-Received: from out-170.mta1.migadu.com (out-170.mta1.migadu.com [95.215.58.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E58B43438B0
-	for <mptcp@lists.linux.dev>; Thu, 11 Jun 2026 17:08:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69DFD409E01
+	for <mptcp@lists.linux.dev>; Thu, 11 Jun 2026 17:18:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781197720; cv=none; b=Zfy2DxhDcdszo/EMMf043SDu4wvXwQNP+jrKcBIbOGXKx9IX8OOn+WpABtPZbd3JC9nnOinhjYkvY1oeAi3A2eKxWapa+soQE1iEpwDo3Jx9c9JK87l5SbSHabhoEW9eJMpHDP5H9/dtjSe5Phel+3e8PgCBUzwO2aFQuBC6x84=
+	t=1781198313; cv=none; b=X2iEvFnsUJ/OSI5VgSeHhQXtvjzN2KHcpcTgedZWmdwefyKyVgYQbGQZSjw1+8B1iEKLp9vwFcFo9L5RKpyiGX08YWQXSMibTYpt4OoE4WBYywofyDXhxit2dBDRezw01fW8mI6n1LnyiMO+TC+447uZOdLYAHVlYqzinLxLb/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781197720; c=relaxed/simple;
-	bh=sIOIYbfnHU8OsBGh4S0mrg+4/jEbLqNaDqrDE2KQ8sU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tRYJaAytBW3sHf1zT0Sn4w8vKf0GemmK83MEpvWBl+rU9dzUVJl+5jq3eN2Q0U3SR8tzW6a+u0qIT3fjXNYCMgbWEyiFHlaGu6/1qv2FrTSPBDk3NjcqzN0XXHsO1+m6CebUOjSrMEnvzX8otCufbszkX7uh0BamOSV6g2Ah/EU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=qFXb+m4O; arc=none smtp.client-ip=95.215.58.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1781198313; c=relaxed/simple;
+	bh=kAobYEkJDMjkUITJUMNyBriLzXiAe6UXFHqVuVHGqxw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jE83Q93KH2sR/9RFLce7zUFPKSz2M+LEB2+EiHosIL5fmY1HpZSJWaZKM82WfU/yxVx1SbqkABnOSYZF/15IOMPCtg0yCA28X3CUoeyZmyjJPi/MijOTvwj4eI/JbO2Y0T5h5h9+rL/hkMYJhvf1tx+A5jpB6fohAta1B6Ish4c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F9IXq1t5; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="qFXb+m4O"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1781197717;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=H08o38Dqr4IqCIvuvya0WQqq1WwF/V9rHnyWC2WcSL0=;
-	b=qFXb+m4OrWKm5DlGsfnOqG1I0YEj5XTUm/jn/Al/mQH6+4oP0rhSoOOVkB33vPKmdyMVoQ
-	aiIzasGUuTAj1sLhVdTivC7hNsAcWfUEa0OUKS1NrRxXbxknJrgopyZnGs1DjNi7yBz09b
-	qOo6yCHIZXv64Grdx3J2wnU9u+LuzkQ=
-From: Gang Yan <gang.yan@linux.dev>
-To: mptcp@lists.linux.dev
-Cc: Gang Yan <yangang@kylinos.cn>
-Subject: [PATCH, mptcp-next 9/9] selftests: mptcp: userspace_pm.sh skips v6 paths when MPTCP IPv6 is missing
-Date: Fri, 12 Jun 2026 01:07:59 +0800
-Message-ID: <b2f0e3c79cc12c87348611fdb5559da8e6a623a9.1781196828.git.yangang@kylinos.cn>
-In-Reply-To: <cover.1781196828.git.yangang@kylinos.cn>
-References: <cover.1781196828.git.yangang@kylinos.cn>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F9IXq1t5"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4903d730b1fso548265e9.2
+        for <mptcp@lists.linux.dev>; Thu, 11 Jun 2026 10:18:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1781198305; x=1781803105; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=AoP+cy2ffp1XgHOvwchIi8ndfKfAxNydtkxTWle4y9Q=;
+        b=F9IXq1t5ta6wF04WmYzmV704mpJOzEzD19t/csr9F0gHN1T9p9EQnYpVUIgiXUzCIs
+         G40qu/UUg7MOYLZhqKp/9ot2sBOuKikdtdugPlzSS4EtrcYnCigu4oK3OLrDZMih8xSZ
+         HL98gICaZ+sxm+TYWwFV+LhukA9H1z+Zajma5EqJUnZkFknjQTEX6dfhwbXsAM0Ngb+b
+         T1l8raDM9f+2nuP9zLwnrWWsghbMDaaQFv7EYGCHB5rsNxcDJy0QG2bVgu039dzXNDTN
+         QDgLPOUmUcCVHy5PNv2AqTxTtP4Zpks9F98G0DxC9ZfMQUF71Cyod0dfew0NrNg54Wu+
+         hEzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781198305; x=1781803105;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=AoP+cy2ffp1XgHOvwchIi8ndfKfAxNydtkxTWle4y9Q=;
+        b=eyxcKOuIILChAKxhVr7NrpPZkxq9D6ul32s5MxXQw9jQgHIqZ2rxJ/q54DFg0x+ucQ
+         MCN0+CMmVPc/7Q6GsBwuMIdHU3RRDdOuItXMqzzlRPtSVUwvksU0cDUFvJ1ng9ZDWBbn
+         y29pCmKu+2L8E3xj8sDcFTBIfmZSt4C50vLn6K1ecFajoMFLyxKfiJG8u9pcwZ6ayYee
+         mX20FNOZgXBGhdSA36zMUP9GnTm2cmpgAgwyQqlV1NI7xlkNXfyUmEmKzFY9MIlJCdRL
+         rp+VvCRMCXuDos2tkTABWYhpWXBvnc1xLKz/GmU5tOqXjtK+leMCqH2myn5Gb15G2NLz
+         G7fQ==
+X-Forwarded-Encrypted: i=1; AFNElJ9DZLeDHCskWTNpSw6SogzDmP3gBVZuDWWLjwKQMIeOVGyXEK8K/gXXXgzy4ot4JsardHWjZQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yx7YGGkZoS/gba9yBqLTpiFnblxL9aPPg+4/zr/j4QKqtbv6ckJ
+	xb6XnRdkD8Z2xy1eu2UQw+yMQbl3Do3aFLmOT4EYUlVNk91zxkILUo5D
+X-Gm-Gg: Acq92OH/afAZocTkiekmFwYIolkmWUX74OcJr3ATrFMW6EZar4+5+Y7A7/OhvZvFkuz
+	Hnj9uV5nswVYAjAMM3FCLa0JSE/JKRsqEa/HJZvj4hys3Q2S1DumZnSk+URYNWyVcPQeahgmef+
+	sglR5DGn9mE29Eo/77ZXhCJLffNvJAZB5HJVzP3qlXQwC8fTCQCw08fEqUR//MAxpeZQwPr14ZW
+	F9IGTgTDAoPz/KiHIJ51nvJTWJiNKPTu3sBRfWPs/hrGlR4xDYlcPAKxaHJy/So1pwDHfUylEt+
+	PJJ/us4kcgtkFUxAYFRC8FcvUlyeEg1GQ2fVLixhv8UQGQ8DWkBsfnJy2pTn171MP1Z15ZZCCRk
+	0WpogIOGy6fSEu4G6htEEvDd1bzkAE6IeNx2kdOAH59WOWqfVLxP0+jE67skne+AJgKKUKHO7kg
+	d1/VkdhMsEGgZIVBnySa176sQOmZEvBkVklhvyTJH3W1hd25mvCggLd4hsIWE=
+X-Received: by 2002:a05:600c:4e04:b0:490:b9d3:a9ce with SMTP id 5b1f17b1804b1-490e5640aa8mr56905655e9.30.1781198305135;
+        Thu, 11 Jun 2026 10:18:25 -0700 (PDT)
+Received: from gandalf.schnuecks.de (p5b2e2404.dip0.t-ipconnect.de. [91.46.36.4])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4606c10435dsm335137f8f.35.2026.06.11.10.18.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jun 2026 10:18:24 -0700 (PDT)
+Received: by gandalf.schnuecks.de (Postfix, from userid 500)
+	id 0C018319F7E6; Thu, 11 Jun 2026 19:18:24 +0200 (CEST)
+Date: Thu, 11 Jun 2026 19:18:23 +0200
+From: Simon Baatz <gmbnomis@gmail.com>
+To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Cc: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>, netdev@vger.kernel.org,
+	mptcp@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Neal Cardwell <ncardwell@google.com>,
+	Kuniyuki Iwashima <kuniyu@google.com>
+Subject: Re: [PATCH net-next v2 05/15] tcp: allow mptcp to drop TS for some
+ packets
+Message-ID: <airt3_dPSfV54Aph@gandalf.schnuecks.de>
+References: <20260605-net-next-mptcp-add-addr6-port-ts-v2-0-758e7ca73f4d@kernel.org>
+ <20260605-net-next-mptcp-add-addr6-port-ts-v2-5-758e7ca73f4d@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260605-net-next-mptcp-add-addr6-port-ts-v2-5-758e7ca73f4d@kernel.org>
 
-From: Gang Yan <yangang@kylinos.cn>
+Hi Matt,
 
-Call mptcp_lib_check_ipv6() at script init, then guard every v6
-step — the init-time dead:beef:* assignments, the v6 PM sequences
-inside test_announce()/test_remove()/test_subflows(), and the
-top-level make_connection "v6" / test_subflows_v4_v6_mix() calls —
-with mptcp_lib_is_v6_enabled. Each v6-only subtest emits a SKIP TAP
-line under its existing name when v6 is unavailable. v4 paths and
-the pass/fail behaviour on a full-featured kernel are unchanged.
+On Fri, Jun 05, 2026 at 07:21:49PM +1000, Matthieu Baerts (NGI0) wrote:
+> With TCP-timestamps (padded) taking 12 bytes and ADD_ADDR IPv6 + port
+> taking 30 bytes, the 40-byte limit for the TCP options is reached. In
+> this case, it is then not possible to send the address signal.
+> 
+> The idea is to let MPTCP dropping the TCP-timestamps option for some
+> specific packets, to be able to send some specific pure ACK carrying >28
+> bytes of MPTCP options, like with this specific ADD_ADDR. A new
+> parameter is passed from tcp_established_options to the MPTCP side to
+> indicate if the TCP TS option is used, and if it should be dropped. The
+> next commit implements the part on MPTCP side, but split into two
+> patches to help TCP maintainers to identify the modifications on TCP
+> side. This feature will be controlled by a new add_addr_v6_port_drop_ts
+> MPTCP sysctl knob.
+> 
+> It is important to keep in mind that dropping the TCP timestamps option
+> for one packet of the connection could eventually disrupt some
+> middleboxes: even if it should be unlikely, they could drop the packet
+> or even block the connection. That's why this new feature will be
+> controlled by a sysctl knob.
 
-Assisted-by: GLM:5.1 Z.ai
-Signed-off-by: Gang Yan <yangang@kylinos.cn>
----
- .../selftests/net/mptcp/userspace_pm.sh       | 237 ++++++++++--------
- 1 file changed, 131 insertions(+), 106 deletions(-)
+RFC 7323 (which obsoletes RFC 1323) specifies an "all or nothing"
+approach for the TS option.  Section 3.2 states:
 
-diff --git a/tools/testing/selftests/net/mptcp/userspace_pm.sh b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-index e9ae1806ab07..8a20d33b1f03 100755
---- a/tools/testing/selftests/net/mptcp/userspace_pm.sh
-+++ b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-@@ -18,6 +18,7 @@ if ! mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
- 	exit ${KSFT_SKIP}
- fi
- mptcp_lib_check_tools ip
-+mptcp_lib_check_ipv6
- 
- ANNOUNCED=${MPTCP_LIB_EVENT_ANNOUNCED}
- REMOVED=${MPTCP_LIB_EVENT_REMOVED}
-@@ -159,14 +160,18 @@ ip link add ns1eth2 netns "$ns1" type veth peer name ns2eth1 netns "$ns2"
- # Add IPv4/v6 addresses to the namespaces
- ip -net "$ns1" addr add 10.0.1.1/24 dev ns1eth2
- ip -net "$ns1" addr add 10.0.2.1/24 dev ns1eth2
--ip -net "$ns1" addr add dead:beef:1::1/64 dev ns1eth2 nodad
--ip -net "$ns1" addr add dead:beef:2::1/64 dev ns1eth2 nodad
-+if mptcp_lib_is_v6_enabled; then
-+	ip -net "$ns1" addr add dead:beef:1::1/64 dev ns1eth2 nodad
-+	ip -net "$ns1" addr add dead:beef:2::1/64 dev ns1eth2 nodad
-+fi
- ip -net "$ns1" link set ns1eth2 up
- 
- ip -net "$ns2" addr add 10.0.1.2/24 dev ns2eth1
- ip -net "$ns2" addr add 10.0.2.2/24 dev ns2eth1
--ip -net "$ns2" addr add dead:beef:1::2/64 dev ns2eth1 nodad
--ip -net "$ns2" addr add dead:beef:2::2/64 dev ns2eth1 nodad
-+if mptcp_lib_is_v6_enabled; then
-+	ip -net "$ns2" addr add dead:beef:1::2/64 dev ns2eth1 nodad
-+	ip -net "$ns2" addr add dead:beef:2::2/64 dev ns2eth1 nodad
-+fi
- ip -net "$ns2" link set ns2eth1 up
- 
- file=$(mktemp)
-@@ -344,13 +349,15 @@ test_announce()
- 			      "$client4_port"
- 
- 	# ADD_ADDR6 from the client to server machine reusing the subflow port
--	:>"$server_evts"
--	ip netns exec "$ns2" ./pm_nl_ctl ann\
--	   dead:beef:2::2 token "$client6_token" id $client_addr_id dev ns2eth1
--	print_test "ADD_ADDR6 id:client dead:beef:2::2 (ns2) => ns1, reuse port"
--	sleep 0.5
--	verify_announce_event "$server_evts" "$ANNOUNCED" "$server6_token" "dead:beef:2::2"\
--			      "$client_addr_id" "$client6_port" "v6"
-+	if mptcp_lib_is_v6_enabled; then
-+		:>"$server_evts"
-+		ip netns exec "$ns2" ./pm_nl_ctl ann\
-+		   dead:beef:2::2 token "$client6_token" id $client_addr_id dev ns2eth1
-+		print_test "ADD_ADDR6 id:client dead:beef:2::2 (ns2) => ns1, reuse port"
-+		sleep 0.5
-+		verify_announce_event "$server_evts" "$ANNOUNCED" "$server6_token" "dead:beef:2::2"\
-+				      "$client_addr_id" "$client6_port" "v6"
-+	fi
- 
- 	# ADD_ADDR from the client to server machine using a new port
- 	:>"$server_evts"
-@@ -374,13 +381,15 @@ test_announce()
- 			      "$server_addr_id" "$app4_port"
- 
- 	# ADD_ADDR6 from the server to client machine reusing the subflow port
--	:>"$client_evts"
--	ip netns exec "$ns1" ./pm_nl_ctl ann dead:beef:2::1 token "$server6_token" id\
--	   $server_addr_id dev ns1eth2
--	print_test "ADD_ADDR6 id:server dead:beef:2::1 (ns1) => ns2, reuse port"
--	sleep 0.5
--	verify_announce_event "$client_evts" "$ANNOUNCED" "$client6_token" "dead:beef:2::1"\
--			      "$server_addr_id" "$app6_port" "v6"
-+	if mptcp_lib_is_v6_enabled; then
-+		:>"$client_evts"
-+		ip netns exec "$ns1" ./pm_nl_ctl ann dead:beef:2::1 token "$server6_token" id\
-+		   $server_addr_id dev ns1eth2
-+		print_test "ADD_ADDR6 id:server dead:beef:2::1 (ns1) => ns2, reuse port"
-+		sleep 0.5
-+		verify_announce_event "$client_evts" "$ANNOUNCED" "$client6_token" "dead:beef:2::1"\
-+				      "$server_addr_id" "$app6_port" "v6"
-+	fi
- 
- 	# ADD_ADDR from the server to client machine using a new port
- 	:>"$client_evts"
-@@ -462,12 +471,14 @@ test_remove()
- 	verify_remove_event "$server_evts" "$REMOVED" "$server4_token" "$client_addr_id"
- 
- 	# RM_ADDR6 from the client to server machine
--	:>"$server_evts"
--	ip netns exec "$ns2" ./pm_nl_ctl rem token "$client6_token" id\
--	   $client_addr_id
--	print_test "RM_ADDR6 id:client-1 ns2 => ns1"
--	sleep 0.5
--	verify_remove_event "$server_evts" "$REMOVED" "$server6_token" "$client_addr_id"
-+	if mptcp_lib_is_v6_enabled; then
-+		:>"$server_evts"
-+		ip netns exec "$ns2" ./pm_nl_ctl rem token "$client6_token" id\
-+		   $client_addr_id
-+		print_test "RM_ADDR6 id:client-1 ns2 => ns1"
-+		sleep 0.5
-+		verify_remove_event "$server_evts" "$REMOVED" "$server6_token" "$client_addr_id"
-+	fi
- 
- 	# Capture events on the network namespace running the client
- 	:>"$client_evts"
-@@ -489,12 +500,14 @@ test_remove()
- 	verify_remove_event "$client_evts" "$REMOVED" "$client4_token" "$server_addr_id"
- 
- 	# RM_ADDR6 from the server to client machine
--	:>"$client_evts"
--	ip netns exec "$ns1" ./pm_nl_ctl rem token "$server6_token" id\
--	   $server_addr_id
--	print_test "RM_ADDR6 id:server-1 ns1 => ns2"
--	sleep 0.5
--	verify_remove_event "$client_evts" "$REMOVED" "$client6_token" "$server_addr_id"
-+	if mptcp_lib_is_v6_enabled; then
-+		:>"$client_evts"
-+		ip netns exec "$ns1" ./pm_nl_ctl rem token "$server6_token" id\
-+		   $server_addr_id
-+		print_test "RM_ADDR6 id:server-1 ns1 => ns2"
-+		sleep 0.5
-+		verify_remove_event "$client_evts" "$REMOVED" "$client6_token" "$server_addr_id"
-+	fi
- }
- 
- verify_subflow_events()
-@@ -609,43 +622,45 @@ test_subflows()
- 	sleep 0.5
- 
- 	# Attempt to add a listener at dead:beef:2::2:<subflow-port>
--	ip netns exec "$ns2" ./pm_nl_ctl listen dead:beef:2::2\
--	   "$client6_port" &
--	listener_pid=$!
--
--	# ADD_ADDR6 from client to server machine reusing the subflow port
--	:>"$server_evts"
--	ip netns exec "$ns2" ./pm_nl_ctl ann dead:beef:2::2 token "$client6_token" id\
--	   $client_addr_id
--	sleep 0.5
--
--	# CREATE_SUBFLOW6 from server to client machine
--	:>"$server_evts"
--	ip netns exec "$ns1" ./pm_nl_ctl csf lip dead:beef:2::1 lid 23 rip\
--	   dead:beef:2::2 rport "$client6_port" token "$server6_token"
--	sleep 0.5
--	verify_subflow_events "$server_evts" "$SUB_ESTABLISHED" "$server6_token" "$AF_INET6"\
--			      "dead:beef:2::1" "dead:beef:2::2" "$client6_port" "23"\
--			      "$client_addr_id" "ns1" "ns2"
--
--	# Delete the listener from the client ns, if one was created
--	mptcp_lib_kill_wait $listener_pid
--
--	sport=$(mptcp_lib_evts_get_info sport "$server_evts" $SUB_ESTABLISHED)
--
--	# DESTROY_SUBFLOW6 from server to client machine
--	:>"$server_evts"
--	ip netns exec "$ns1" ./pm_nl_ctl dsf lip dead:beef:2::1 lport "$sport" rip\
--	   dead:beef:2::2 rport "$client6_port" token "$server6_token"
--	sleep 0.5
--	verify_subflow_events "$server_evts" "$SUB_CLOSED" "$server6_token" "$AF_INET6"\
--			      "dead:beef:2::1" "dead:beef:2::2" "$client6_port" "23"\
--			      "$client_addr_id" "ns1" "ns2"
--
--	# RM_ADDR from client to server machine
--	ip netns exec "$ns2" ./pm_nl_ctl rem id $client_addr_id token\
--	   "$client6_token"
--	sleep 0.5
-+	if mptcp_lib_is_v6_enabled; then
-+		ip netns exec "$ns2" ./pm_nl_ctl listen dead:beef:2::2\
-+		   "$client6_port" &
-+		listener_pid=$!
-+
-+		# ADD_ADDR6 from client to server machine reusing the subflow port
-+		:>"$server_evts"
-+		ip netns exec "$ns2" ./pm_nl_ctl ann dead:beef:2::2 token "$client6_token" id\
-+		   $client_addr_id
-+		sleep 0.5
-+
-+		# CREATE_SUBFLOW6 from server to client machine
-+		:>"$server_evts"
-+		ip netns exec "$ns1" ./pm_nl_ctl csf lip dead:beef:2::1 lid 23 rip\
-+		   dead:beef:2::2 rport "$client6_port" token "$server6_token"
-+		sleep 0.5
-+		verify_subflow_events "$server_evts" "$SUB_ESTABLISHED" "$server6_token" "$AF_INET6"\
-+				      "dead:beef:2::1" "dead:beef:2::2" "$client6_port" "23"\
-+				      "$client_addr_id" "ns1" "ns2"
-+
-+		# Delete the listener from the client ns, if one was created
-+		mptcp_lib_kill_wait $listener_pid
-+
-+		sport=$(mptcp_lib_evts_get_info sport "$server_evts" $SUB_ESTABLISHED)
-+
-+		# DESTROY_SUBFLOW6 from server to client machine
-+		:>"$server_evts"
-+		ip netns exec "$ns1" ./pm_nl_ctl dsf lip dead:beef:2::1 lport "$sport" rip\
-+		   dead:beef:2::2 rport "$client6_port" token "$server6_token"
-+		sleep 0.5
-+		verify_subflow_events "$server_evts" "$SUB_CLOSED" "$server6_token" "$AF_INET6"\
-+				      "dead:beef:2::1" "dead:beef:2::2" "$client6_port" "23"\
-+				      "$client_addr_id" "ns1" "ns2"
-+
-+		# RM_ADDR from client to server machine
-+		ip netns exec "$ns2" ./pm_nl_ctl rem id $client_addr_id token\
-+		   "$client6_token"
-+		sleep 0.5
-+	fi
- 
- 	# Attempt to add a listener at 10.0.2.2:<new-port>
- 	ip netns exec "$ns2" ./pm_nl_ctl listen 10.0.2.2\
-@@ -724,43 +739,45 @@ test_subflows()
- 	sleep 0.5
- 
- 	# Attempt to add a listener at dead:beef:2::1:<subflow-port>
--	ip netns exec "$ns1" ./pm_nl_ctl listen dead:beef:2::1\
--	   $app6_port &
--	listener_pid=$!
--
--	# ADD_ADDR6 from server to client machine reusing the subflow port
--	:>"$client_evts"
--	ip netns exec "$ns1" ./pm_nl_ctl ann dead:beef:2::1 token "$server6_token" id\
--	   $server_addr_id
--	sleep 0.5
--
--	# CREATE_SUBFLOW6 from client to server machine
--	:>"$client_evts"
--	ip netns exec "$ns2" ./pm_nl_ctl csf lip dead:beef:2::2 lid 23 rip\
--	   dead:beef:2::1 rport $app6_port token "$client6_token"
--	sleep 0.5
--	verify_subflow_events "$client_evts" "$SUB_ESTABLISHED" "$client6_token"\
--			      "$AF_INET6" "dead:beef:2::2"\
--			      "dead:beef:2::1" "$app6_port" "23"\
--			      "$server_addr_id" "ns2" "ns1"
--
--	# Delete the listener from the server ns, if one was created
--	mptcp_lib_kill_wait $listener_pid
--
--	sport=$(mptcp_lib_evts_get_info sport "$client_evts" $SUB_ESTABLISHED)
--
--	# DESTROY_SUBFLOW6 from client to server machine
--	:>"$client_evts"
--	ip netns exec "$ns2" ./pm_nl_ctl dsf lip dead:beef:2::2 lport "$sport" rip\
--	   dead:beef:2::1 rport $app6_port token "$client6_token"
--	sleep 0.5
--	verify_subflow_events $client_evts $SUB_CLOSED $client6_token $AF_INET6 "dead:beef:2::2"\
--			      "dead:beef:2::1" "$app6_port" "23" "$server_addr_id" "ns2" "ns1"
--
--	# RM_ADDR6 from server to client machine
--	ip netns exec "$ns1" ./pm_nl_ctl rem id $server_addr_id token\
--	   "$server6_token"
--	sleep 0.5
-+	if mptcp_lib_is_v6_enabled; then
-+		ip netns exec "$ns1" ./pm_nl_ctl listen dead:beef:2::1\
-+		   $app6_port &
-+		listener_pid=$!
-+
-+		# ADD_ADDR6 from server to client machine reusing the subflow port
-+		:>"$client_evts"
-+		ip netns exec "$ns1" ./pm_nl_ctl ann dead:beef:2::1 token "$server6_token" id\
-+		   $server_addr_id
-+		sleep 0.5
-+
-+		# CREATE_SUBFLOW6 from client to server machine
-+		:>"$client_evts"
-+		ip netns exec "$ns2" ./pm_nl_ctl csf lip dead:beef:2::2 lid 23 rip\
-+		   dead:beef:2::1 rport $app6_port token "$client6_token"
-+		sleep 0.5
-+		verify_subflow_events "$client_evts" "$SUB_ESTABLISHED" "$client6_token"\
-+				      "$AF_INET6" "dead:beef:2::2"\
-+				      "dead:beef:2::1" "$app6_port" "23"\
-+				      "$server_addr_id" "ns2" "ns1"
-+
-+		# Delete the listener from the server ns, if one was created
-+		mptcp_lib_kill_wait $listener_pid
-+
-+		sport=$(mptcp_lib_evts_get_info sport "$client_evts" $SUB_ESTABLISHED)
-+
-+		# DESTROY_SUBFLOW6 from client to server machine
-+		:>"$client_evts"
-+		ip netns exec "$ns2" ./pm_nl_ctl dsf lip dead:beef:2::2 lport "$sport" rip\
-+		   dead:beef:2::1 rport $app6_port token "$client6_token"
-+		sleep 0.5
-+		verify_subflow_events $client_evts $SUB_CLOSED $client6_token $AF_INET6 "dead:beef:2::2"\
-+				      "dead:beef:2::1" "$app6_port" "23" "$server_addr_id" "ns2" "ns1"
-+
-+		# RM_ADDR6 from server to client machine
-+		ip netns exec "$ns1" ./pm_nl_ctl rem id $server_addr_id token\
-+		   "$server6_token"
-+		sleep 0.5
-+	fi
- 
- 	# Attempt to add a listener at 10.0.2.1:<new-port>
- 	ip netns exec "$ns1" ./pm_nl_ctl listen 10.0.2.1\
-@@ -931,13 +948,21 @@ test_listener()
- 
- print_title "Make connections"
- make_connection
--make_connection "v6"
-+if mptcp_lib_is_v6_enabled; then
-+	make_connection "v6"
-+else
-+	# Track this as a skipped test for TAP output
-+	test_name="Established IPv6 MPTCP Connection ns2 => ns1"
-+	test_skip
-+fi
- print_title "Will be using address IDs ${client_addr_id} (client) and ${server_addr_id} (server)"
- 
- test_announce
- test_remove
- test_subflows
--test_subflows_v4_v6_mix
-+if mptcp_lib_is_v6_enabled; then
-+	test_subflows_v4_v6_mix
-+fi
- test_prio
- test_listener
+   Once TSopt has been successfully negotiated, that is both <SYN> and
+   <SYN,ACK> contain TSopt, the TSopt MUST be sent in every non-<RST>
+   segment for the duration of the connection, [...] If a
+   non-<RST> segment is received without a TSopt, a TCP SHOULD silently
+   drop the segment.
+
+So, selectively omitting the TS option on established subflows
+appears to go against RFC 7323 at the TCP level.  Do we consider that
+an acceptable deviation for MPTCP subflows?
+
+(Maybe I am missing something obvious here, but I couldn't find any
+prior discussion on this aspect.)
+
  
 -- 
-2.43.0
-
+Simon Baatz <gmbnomis@gmail.com>
