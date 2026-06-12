@@ -1,127 +1,83 @@
-Received: from sender4-of-o54.zoho.com (sender4-of-o54.zoho.com [136.143.188.54])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C6D833F8C4
-	for <mptcp@lists.linux.dev>; Fri, 12 Jun 2026 18:34:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.54
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781289247; cv=pass; b=lSLw5MIWo7QQ4CkLVJdW0uYiWT3Di5pXjd4EaVXz9bXoQz2/zUv9qhI259MKNPRQlCSt4+/ERck6hCBLFfH5tZdtPGBdZn59z88zT7LnSS/HGwSt7Uw3t5P+rs9PQ7emo6/yu9I3N8wr0CK6dB6OWNPPbQI8PcN4Yr/NkowZJZM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781289247; c=relaxed/simple;
-	bh=56G2Zfb0Ghw7z7N8z+5BeuihoQW7UTc+1qEqLKxgnfY=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=OT3ROttTUndMlEuK5DNoVFSnhdr5rxUhKRj7QuwpUYvTilJS1avDnXm+8h2cst+13xGxEMq8apAeNLnHQpWFWp+nyVcK4C47ttuo5jBDiZctT9wL1UtZ4YRMtDbKss8fcO4O0FqEuo123GHlrB66W/ScnpXkQ6WFfUjZ5wxVn3s=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com; spf=pass smtp.mailfrom=mpiricsoftware.com; dkim=fail (0-bit key) header.d=mpiricsoftware.com header.i=shardul.b@mpiricsoftware.com header.b=XMstYZ42 reason="key not found in DNS"; arc=pass smtp.client-ip=136.143.188.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mpiricsoftware.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B96A39B481;
+	Fri, 12 Jun 2026 18:53:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1781290400; cv=none; b=Y2LBxkVFGdY+/He0gOUrePM5NTeQrae04hWU01ChtRbnd+XdBJl7EQxIw3+sEQqwHX0UhzbXJF40zxBJP0YEESI92SS+BWis5ei1WL0/asfYXTGrnGGyHnMYNL4ANAl6kUZ8Jj/gJ4/EIEIbpLvUqrmgVUz6O376rnHzkxvcVXs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1781290400; c=relaxed/simple;
+	bh=1qHBgcEp2AfXud2IgtO//8m4ITPJUGeGH27EOeCwIJc=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=ZgNVPIibbVbwpTQBgUmrZ9i1YEUGW9CpFzDDkYGwMe8T/J7P0jfcnJh5iKL1JJC9OZ3KM38kTrNzhyrU1DuNB6JaGXFWusfFOMynQ+oY9oGpk2mdiwGNoQQFQXi1tAr707s7vvKBmgLMVbZDxy7nWLFKcshW6Tt7d/iky9UUgkM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XzYrImBy; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mpiricsoftware.com header.i=shardul.b@mpiricsoftware.com header.b="XMstYZ42"
-ARC-Seal: i=1; a=rsa-sha256; t=1781289242; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=Sv0OLvRa6KXwoIdnWfjSSD6h/FcBxaByMKvRbUbHCFiM/DoXSja3Z0NKSyJ36DQm8ARRNVvKkaMZRWn4+s2CpiYAcSfVT8OG7NUemJLFPt/i8Mobx6oxRzd9f8teoDWlt5iZA+TGinAGcinYdsAlvR03cIkGJtgUv1RxPdgjxo4=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1781289242; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=56G2Zfb0Ghw7z7N8z+5BeuihoQW7UTc+1qEqLKxgnfY=; 
-	b=YbgRvjeUhPJ69z437+C+W5oQsCWC6Ys2l4POxzheXzMrbELRdxNCeb6snhATsy0XUDF9/1AYkrMsqMjfa6xkSvebc6+HsShAjqmmT1h+K217RkRbyVn/kYFDGYn67LXeIijXJEidpmjvo8eVht2mjBS5lEt3ltsxERM8aOI2n1k=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=mpiricsoftware.com;
-	spf=pass  smtp.mailfrom=shardul.b@mpiricsoftware.com;
-	dmarc=pass header.from=<shardul.b@mpiricsoftware.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1781289242;
-	s=mpiric; d=mpiricsoftware.com; i=shardul.b@mpiricsoftware.com;
-	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:Date:Date:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:MIME-Version:Message-Id:Reply-To;
-	bh=56G2Zfb0Ghw7z7N8z+5BeuihoQW7UTc+1qEqLKxgnfY=;
-	b=XMstYZ42rgR+cJFckcM5CsrorVuAh+Gh3nuuBAVUXadn3w3oH3H8mCBtXVium8IL
-	FnzeyW3b5RxHPEpHeIupVJZd3zKMfTiYThtzOFhvVac6x9Clns6+R7trBU/X52zrCa5
-	3NSxwDhzcz1jTtQQoVdHCa9Aj2fNLr6gqPzbivB4=
-Received: by mx.zohomail.com with SMTPS id 1781289240627551.0962121601511;
-	Fri, 12 Jun 2026 11:34:00 -0700 (PDT)
-Message-ID: <470388a78561b920c51697c162e3f7f210d9cc1e.camel@mpiricsoftware.com>
-Subject: Re: [PATCH mptcp-net v3] mptcp: fix divide-by-zero in
- __mptcp_push_pending close path
-From: Shardul Bankar <shardul.b@mpiricsoftware.com>
-To: mptcp@lists.linux.dev, pabeni@redhat.com, matttbe@kernel.org
-Cc: martineau@kernel.org, geliang@kernel.org, janak@mpiric.us, 
-	kalpan.jani@mpiricsoftware.com
-Date: Sat, 13 Jun 2026 00:03:49 +0530
-In-Reply-To: <cd1fd42a-5a45-6d8c-051a-fc1be8e613c7@gmail.com>
-References: <20260525194828.1137119-1-shardul.b@mpiricsoftware.com>
-	 <cd1fd42a-5a45-6d8c-051a-fc1be8e613c7@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4-0ubuntu2.1 
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XzYrImBy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1781290398; x=1812826398;
+  h=date:from:to:cc:subject:message-id;
+  bh=1qHBgcEp2AfXud2IgtO//8m4ITPJUGeGH27EOeCwIJc=;
+  b=XzYrImByALg2CEAskFlyTVNI4cj9rLMQ8Pi58WYrTB0mfg1GN3TJJqSv
+   w0E3+FkON3m+PvGNYvqMFah1WINdg5WszCJjVkbAdQpux3YvSOXqK/Lq/
+   mdvd9K1fMw6vzGwV/pcJ2B+OKxRFtAgnkKDFxPTa0mNkRp39+4iB2+j70
+   7L1+oiubS6PyGVXZEMBooh9cbMMgli7wUs8Ki8F/6iSLPWilWmsUSRsq2
+   hbVNhARfQxMY5HgYbkC61+FIOjdR2lbjSU5sVXlt7EeW/wkGTf18xPYH6
+   GJukean1GQ4BY38rLDcHehmKBQBPmsUG3IocTrd+knoY47aml2CShmlYW
+   A==;
+X-CSE-ConnectionGUID: eWdClDErRPOqqYXZJC+Hcw==
+X-CSE-MsgGUID: M2OJENWqQe+EJYfRimeEYQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11815"; a="92692071"
+X-IronPort-AV: E=Sophos;i="6.24,201,1774335600"; 
+   d="scan'208";a="92692071"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2026 11:53:17 -0700
+X-CSE-ConnectionGUID: hI4bhqExTMihLVy58lswTw==
+X-CSE-MsgGUID: o8N+LWaBTJGMGqY23Zn+IQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,201,1774335600"; 
+   d="scan'208";a="284993051"
+Received: from lkp-server01.sh.intel.com (HELO f0d55cb201f0) ([10.239.97.150])
+  by orviesa001.jf.intel.com with ESMTP; 12 Jun 2026 11:53:14 -0700
+Received: from kbuild by f0d55cb201f0 with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1wY70B-00000000PDl-1ZpM;
+	Fri, 12 Jun 2026 18:53:11 +0000
+Date: Sat, 13 Jun 2026 02:53:00 +0800
+From: kernel test robot <lkp@intel.com>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+ mptcp@lists.linux.dev
+Subject: [mptcp:export-net 1/8] .b4-config: warning: ignored by one
+ of the .gitignore files
+Message-ID: <202606130208.C1fSJoF1-lkp@intel.com>
+User-Agent: s-nail v14.9.25
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-X-ZohoMailClient: External
 
-On Mon, 2026-05-25 at 21:19 +0000, MPTCP CI wrote:
-> Hi Shardul,
->=20
-> Thank you for your modifications, that's great!
->=20
-> Our CI did some validations and here is its report:
->=20
-> - KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-> - KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-> - KVM Validation: debug (except selftest_mptcp_join): Unstable: 1
-> failed test(s): packetdrill_dss =E2=9A=A0=EF=B8=8F=20
-> - KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-> - KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-> - KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-> - Task:
-> https://github.com/multipath-tcp/mptcp_net-next/actions/runs/26417985120
->=20
-> Initiator: Patchew Applier
-> Commits:
-> https://github.com/multipath-tcp/mptcp_net-next/commits/a19f79759720
-> Patchwork:
-> https://patchwork.kernel.org/project/mptcp/list/?series=3D1100586
->=20
->=20
-> If there are some issues, you can reproduce them using the same
-> environment as
-> the one used by the CI thanks to a docker image, e.g.:
->=20
-> =C2=A0=C2=A0=C2=A0 $ cd [kernel source code]
-> =C2=A0=C2=A0=C2=A0 $ docker run -v "${PWD}:${PWD}:rw" -w "${PWD}" --privi=
-leged --rm
-> -it \
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 --pull always mptcp/mptcp-upst=
-ream-virtme-docker:latest \
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 auto-normal
->=20
-> For more details:
->=20
-> =C2=A0=C2=A0=C2=A0 https://github.com/multipath-tcp/mptcp-upstream-virtme=
--docker
->=20
->=20
-> Please note that despite all the efforts that have been already done
-> to have a
-> stable tests suite when executed on a public CI like here, it is
-> possible some
-> reported issues are not due to your modifications. Still, do not
-> hesitate to
-> help us improve that ;-)
->=20
-> Cheers,
-> MPTCP GH Action bot
-> Bot operated by Matthieu Baerts (NGI0 Core)
+tree:   https://github.com/multipath-tcp/mptcp_net-next.git export-net
+head:   848e2cfaada38b718951741563f6b24496e5f587
+commit: 247dd0138908e56ae4f7b3b7bb8b3d5c0101c2b9 [1/8] DO-NOT-MERGE: git markup: net
+config: x86_64-allmodconfig (https://download.01.org/0day-ci/archive/20260613/202606130208.C1fSJoF1-lkp@intel.com/config)
+compiler: clang version 22.1.3 (https://github.com/llvm/llvm-project e9846648fd6183ee6d8cbdb4502213fcf902a211)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260613/202606130208.C1fSJoF1-lkp@intel.com/reproduce)
 
-Hi Paolo, Matt,
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202606130208.C1fSJoF1-lkp@intel.com/
 
-Gentle ping on v3. It refines the v2 check that tripped the
-regressions, scoping it to just the divide-by-zero close-path case. CI
-on v3 was green except for a single Unstable flag (packetdrill_dss on
-the debug config) a flaky test unrelated to this change (it passed on
-normal).
+All warnings (new ones prefixed by >>):
 
-Does v3 look acceptable as-is, or is there anything else you'd like
-adjusted?
+>> .b4-config: warning: ignored by one of the .gitignore files
+   .git_markup: warning: ignored by one of the .gitignore files
+   Documentation/.renames.txt: warning: ignored by one of the .gitignore files
 
-Thanks,
-Shardul
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
