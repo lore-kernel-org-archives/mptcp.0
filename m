@@ -1,109 +1,130 @@
-Received: from sender4-of-o54.zoho.com (sender4-of-o54.zoho.com [136.143.188.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B3E83D75BC
-	for <mptcp@lists.linux.dev>; Fri, 12 Jun 2026 07:26:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.54
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781249219; cv=pass; b=DLSJL+K8TxAxOZYn1dgA4NFC6d5jUGpqw1cJMI1s4eoCr5gN3SR3iyo5K0Nkq3qZ8a+kuejDOtI4P871TsocdHwrGZg/MXDAzf71Q0VzqYMA78/LpERvUhtiTv+P/hapt6TdeUky/4N1Z9jAJtw4Cu4I6LhjCfgB1fFN6EmKZ9U=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781249219; c=relaxed/simple;
-	bh=IEesS/sQrr1myuvbbtBRDv4pVhaHVSnCkYns0U66VOc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oLLTci4MAIX9ujrFb4ivuJNcnFVNVeV2t1Th2sdG9v6qjG+mlu5mUdzwlH+MrlewnJ9Ca59wqKrkEdnq30cq40uNdQphniCfwNEYAuVQvJWqch9/1gWIdtUAxgpBNHd1X4hNQv6rML2I1kKDjSxa+ukqP4zHslXptuZDYsrdN+E=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com; spf=pass smtp.mailfrom=mpiricsoftware.com; dkim=fail (0-bit key) header.d=mpiricsoftware.com header.i=kalpan.jani@mpiricsoftware.com header.b=tzWRBhJR reason="key not found in DNS"; arc=pass smtp.client-ip=136.143.188.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mpiricsoftware.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00990360ED5
+	for <mptcp@lists.linux.dev>; Fri, 12 Jun 2026 08:50:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.169
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1781254243; cv=none; b=dGKHnPBHfcacthsiDXGaoBVG7YrjiomzPWpGpR1JBIS2jgMS4+Y6FaFkaKpFdMKOQoIwdctSvuxdwFL6sNQfMgd2GBHd/FNUhPZTTke04BVprfUjfPwKe5D5w4fV6d7xat15DCH1BW3cRUZjfP8Z2zOhqWMTnhOilqJnOZa6yfc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1781254243; c=relaxed/simple;
+	bh=Cte7wOTilxDE/XLhJ2wL5xydWsT5uu+p5Sry/BMor0U=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
+	 MIME-Version:Content-Type; b=CSJSazVVwla6jIlDcsBlJa/P3vTmF0Ep5a1J6TNwWW4XmhoqqfcEQK/IhFNY7uoiuWP8uHItP7lXIlg0mVssk3FHdUtpSZbQe5T680iEAEmRZXZqEcaa1u91mlglEjfQQ/kH+kRRrXGrTDnAQocJ2e18xcoRa3dDZlh2mvEON9o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AEPjjMLQ; arc=none smtp.client-ip=209.85.222.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mpiricsoftware.com header.i=kalpan.jani@mpiricsoftware.com header.b="tzWRBhJR"
-ARC-Seal: i=1; a=rsa-sha256; t=1781249213; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=FYIQvq9fGpUy944McJNSQuRbtAhS6LfwIUeEE/xzCz3b4JdxS8jNWxDe+YE/AkAEsPaJVV6o3PjJMdNaB5ChxyDpLOqI9NQcPx+LV5JEqkIJY+yi8ccOT7T3VNcD2rzmqjUzIi7coIiAf679GcBq8ThFBkqL15Kzj0COIlj2jxQ=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1781249213; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=Z2WBeKNcGM0bbLT1X0FMBWVf+Ku6Dky3a8b2K5wIV2A=; 
-	b=BZitOrTGiSoD1zpf6qiiXSuw77zAJ6U5lCdPX2j8repiZ4odUOp2H/46T96znyIvQiqtlMvqPGqKVILC1ZJ8q5+swDiu5J6bbR2QJpJfN5VRKVmHdT0XWiXC/RBlPvt17Gyq4H8L0PaURJ5dWzUiUY77SxBmQRZLywYdrvXJxmU=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=mpiricsoftware.com;
-	spf=pass  smtp.mailfrom=kalpan.jani@mpiricsoftware.com;
-	dmarc=pass header.from=<kalpan.jani@mpiricsoftware.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1781249213;
-	s=mpiric; d=mpiricsoftware.com; i=kalpan.jani@mpiricsoftware.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=Z2WBeKNcGM0bbLT1X0FMBWVf+Ku6Dky3a8b2K5wIV2A=;
-	b=tzWRBhJRD5N1iBU67rmElQGaVcXVAIwBZSq8WxPc0X6SK3STm2OGT4suUHJiu+5S
-	Vm3maY+8IkeVNUHLYRvmOz22KPJfwbpNsv8QIeyO5Yc5iFelucCKJkw76wUYBOrixnM
-	QmeL7VsYecoVVRk4tbHIhch24n/To+WY/leVbhTI=
-Received: by mx.zohomail.com with SMTPS id 178124921175738.76880767523619;
-	Fri, 12 Jun 2026 00:26:51 -0700 (PDT)
-From: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
-To: mptcp@lists.linux.dev
-Cc: matttbe@kernel.org,
-	martineau@kernel.org,
-	pabeni@redhat.com,
-	shardul.b@mpiricsoftware.com,
-	janak@mpiric.us,
-	kalpanjani009@gmail.com,
-	shardulsb08@gmail.com,
-	Kalpan Jani <kalpan.jani@mpiricsoftware.com>
-Subject: [PATCH mptcp-next] mptcp: bpf: fix NULL derefs in bpf_mptcp_sock_from_subflow()
-Date: Fri, 12 Jun 2026 12:56:43 +0530
-Message-ID: <20260612072643.2313900-1-kalpan.jani@mpiricsoftware.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AEPjjMLQ"
+Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-91591f19c30so106573185a.1
+        for <mptcp@lists.linux.dev>; Fri, 12 Jun 2026 01:50:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1781254241; x=1781859041; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ittYOA2+yyF3Q2b5Xr2T/ufDSCR0h4hZv4/gW5yATH0=;
+        b=AEPjjMLQ2pSYOVEDoM7WoN4+jxjGuoJrNszIAEBfND9HF6kZ/lFdqFE1wNp6vgteJH
+         Hu92sV9BCw7wI29fUPPcOGX3cvgZTRTr4x72HWuWIJ5BwEgWk+9o7qG/JYiMKqo+N7Lb
+         jE4UztmrLsC3QWSiiBoYWRLbwTdfKNCh3ZKEu8aDeam3jat4oOowUowJ/XGh7cGiY4I1
+         QlmYDRe/X4O1FKWaK3dSjjM8lB6rd+RHgVuSnIy4GbfZ+EYadosdLGKnR+DSLLOQmBoD
+         DciNKkQexLoQju6A9H9VOzuFZjcr+q7gB6Sy8lYLK8AH4mNKWbLARX+SiUxbbcsfaN+W
+         ljoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781254241; x=1781859041;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ittYOA2+yyF3Q2b5Xr2T/ufDSCR0h4hZv4/gW5yATH0=;
+        b=RjzkfTzGs+82UTcQQcHqnXZw4jrcBYsEAwY6lKVryWs4JHTqjcvadzdC2s7Vp+lJ94
+         7ZUoZbqoPBi+jpHXTWQ/qnaAOT2QXnxSDoQrlshsmEppqcYNNDLZZkIz9NIelnu83rpW
+         H9gjd+PPjE+yGcn1trvVl45vJOheE3iVlBv1A05B9bfjG7SuNcLF3ppAif8bubQhy7rE
+         qRHLKI6y5czzIqGEEHKtQ/3+iiqKUE9+n7+oW7gaPkbLu/2/f2PkZ2aIal5C5vtkWcoM
+         EIjq4C4eZAz9zydECBmVL7VccbV1ktXwowLy63ZMRTQ5WooMszZZpvzko5E6+6BqPtv/
+         cHMg==
+X-Gm-Message-State: AOJu0Ywg+hXzmLHHV7HAp1y4rnfQiaz+JrbUuPOixqECp5EeNadE9KdE
+	uF0VASrukyYNAI0Mw6ncvyR7Ca36NfIhk5/++ctle78aJSQoCdsiaa0=
+X-Gm-Gg: Acq92OGDoXW7JNWtdqNnD6La8we5XoNVOxPqmOl/WIfx+w/oWcGzF6ccbCMfQUjLCSK
+	rJlJ0wDmNKd0atOQON3wIdYh4j1jhVoLl1steUxY8tFsKepiUoAU7haHpnimbpCG0wMfgWmY+a0
+	FAg2tM5UkUPDBdMoy18JPb5KJk4lMAgt3Edr8mNGHIj09W3b/rx/TkAZPOHwHIMyTZPr5SR/obM
+	VfuFCQQIyoh+5HI/0AP9EXt+gluLypnalY5Hov3EA83NfI57lT5lN7A6yX3YPRjtorx6oEOWJlF
+	vpZ3YNJBIAupfpaguF4NMfUxGAPgXldf+ZEP/2QpqjXSyde4Nz5Hu4BPfIPW5OguY+xhhwA92nr
+	4sY4Z2pHMV8Hx1+7t6NuYnEvksF16D/KVYdk6Q6pCNVLlcfifTbtXAk4rHG8U7CEmubh2waMOeZ
+	zSM70xzLBjOvpK+8JRHqgd6iYTEmunmbRDEQ==
+X-Received: by 2002:a05:620a:4720:b0:915:efa6:d718 with SMTP id af79cd13be357-9161bf65518mr243903485a.47.1781254240821;
+        Fri, 12 Jun 2026 01:50:40 -0700 (PDT)
+Received: from [127.0.0.1] ([20.25.10.69])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8d304b57a94sm17019436d6.36.2026.06.12.01.50.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Jun 2026 01:50:40 -0700 (PDT)
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20260612072643.2313900-1-kalpan.jani@mpiricsoftware.com>
+References: <20260612072643.2313900-1-kalpan.jani@mpiricsoftware.com>
+Subject: Re: [PATCH mptcp-next] mptcp: bpf: fix NULL derefs in
+ bpf_mptcp_sock_from_subflow()
+Message-ID: <4b574718-2e4f-97c3-2656-3f9847efbc0d@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 12 Jun 2026 08:50:39 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=utf-8
 
-bpf_mptcp_sock_from_subflow() is reachable from tracing BPF programs via
-bpf_skc_to_mptcp_sock() on an arbitrary socket, without the socket lock
-held. It assumes sk_is_mptcp(sk) implies a valid subflow context whose
-->conn points to a parent mptcp_sock. That invariant does not hold in
-two lifecycle windows:
+Hi Kalpan,
 
-- Fallback: subflow_ulp_fallback() clears icsk_ulp_data before clearing
-  tcp_sk(sk)->is_mptcp, so a concurrent reader can observe is_mptcp == 1
-  with a NULL context, dereferencing NULL via mptcp_subflow_ctx(sk)->conn.
+Thank you for your modifications, that's great!
 
-- Init: subflow_ulp_init() sets is_mptcp = 1 while ctx->conn is still
-  NULL. As mptcp_sk() is a container_of() on a non-zero offset member,
-  mptcp_sk(NULL) yields a non-NULL bogus pointer that passes the verifier
-  NULL check (RET_PTR_TO_BTF_ID_OR_NULL); on CONFIG_DEBUG_NET the
-  mptcp_sk() WARN_ON dereferences it directly.
+Our CI did some validations and here is its report:
 
-Load the context once and reject a NULL context or NULL ->conn before
-casting.
+- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/274020=
+19958
 
-Fixes: 3bc253c2e652 ("bpf: Add bpf_skc_to_mptcp_sock_proto")
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/622
-Signed-off-by: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
----
- net/mptcp/bpf.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/910803a3a0e4
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1110481
 
-diff --git a/net/mptcp/bpf.c b/net/mptcp/bpf.c
-index 08bb037f0951..f40905fbe7d4 100644
---- a/net/mptcp/bpf.c
-+++ b/net/mptcp/bpf.c
-@@ -193,8 +193,13 @@ static struct bpf_struct_ops bpf_mptcp_sched_ops = {
- 
- struct mptcp_sock *bpf_mptcp_sock_from_subflow(struct sock *sk)
- {
--	if (sk && sk_fullsock(sk) && sk_is_tcp(sk) && sk_is_mptcp(sk))
--		return mptcp_sk(mptcp_subflow_ctx(sk)->conn);
-+	struct mptcp_subflow_context *ctx;
-+
-+	if (sk && sk_fullsock(sk) && sk_is_tcp(sk) && sk_is_mptcp(sk)) {
-+		ctx = mptcp_subflow_ctx(sk);
-+		if (ctx && ctx->conn)
-+			return mptcp_sk(ctx->conn);
-+	}
- 
- 	return NULL;
- }
--- 
-2.43.0
 
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
