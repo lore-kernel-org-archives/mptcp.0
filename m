@@ -1,83 +1,157 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B96A39B481;
-	Fri, 12 Jun 2026 18:53:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 087723DD855
+	for <mptcp@lists.linux.dev>; Sat, 13 Jun 2026 11:16:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781290400; cv=none; b=Y2LBxkVFGdY+/He0gOUrePM5NTeQrae04hWU01ChtRbnd+XdBJl7EQxIw3+sEQqwHX0UhzbXJF40zxBJP0YEESI92SS+BWis5ei1WL0/asfYXTGrnGGyHnMYNL4ANAl6kUZ8Jj/gJ4/EIEIbpLvUqrmgVUz6O376rnHzkxvcVXs=
+	t=1781349389; cv=none; b=o9EV4Hai3nTqIU2hMrC3mHTcDRfKs5Fs4JfsKl2BYAfmzXrHqONoRkjoFa6NiGmdzHt+iMLPrw++EGqsdV3+MCTyPv4GPTNrIhiGY0zqh5UIfemSVmmgNXc7YA9n1jLGaQ0DtUcaUAvJJp1gRfVTxup+GX1QdMQ2aWNyS25G3es=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781290400; c=relaxed/simple;
-	bh=1qHBgcEp2AfXud2IgtO//8m4ITPJUGeGH27EOeCwIJc=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=ZgNVPIibbVbwpTQBgUmrZ9i1YEUGW9CpFzDDkYGwMe8T/J7P0jfcnJh5iKL1JJC9OZ3KM38kTrNzhyrU1DuNB6JaGXFWusfFOMynQ+oY9oGpk2mdiwGNoQQFQXi1tAr707s7vvKBmgLMVbZDxy7nWLFKcshW6Tt7d/iky9UUgkM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XzYrImBy; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1781349389; c=relaxed/simple;
+	bh=mbelUA9ampyYa4CbvEWtyIDmWwuprT1EWZUBsr2YrII=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WkbXb8f8+oDoMQM8K49Z+nOSS68ykEA9CV3fnhrXcqX0JIbLg8HZWmRkVr+i8aMPGYc8gUhsIkB9C5q4Yeam8oJtTMpM2Mn3pgFCNFWjXRF1vRWN+dKNBZEIxXP1vJhJZgrFW475j2mojYS/v1Dk13qNQIUQRBscnFLYWv6P6iw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SwCung4J; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XzYrImBy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1781290398; x=1812826398;
-  h=date:from:to:cc:subject:message-id;
-  bh=1qHBgcEp2AfXud2IgtO//8m4ITPJUGeGH27EOeCwIJc=;
-  b=XzYrImByALg2CEAskFlyTVNI4cj9rLMQ8Pi58WYrTB0mfg1GN3TJJqSv
-   w0E3+FkON3m+PvGNYvqMFah1WINdg5WszCJjVkbAdQpux3YvSOXqK/Lq/
-   mdvd9K1fMw6vzGwV/pcJ2B+OKxRFtAgnkKDFxPTa0mNkRp39+4iB2+j70
-   7L1+oiubS6PyGVXZEMBooh9cbMMgli7wUs8Ki8F/6iSLPWilWmsUSRsq2
-   hbVNhARfQxMY5HgYbkC61+FIOjdR2lbjSU5sVXlt7EeW/wkGTf18xPYH6
-   GJukean1GQ4BY38rLDcHehmKBQBPmsUG3IocTrd+knoY47aml2CShmlYW
-   A==;
-X-CSE-ConnectionGUID: eWdClDErRPOqqYXZJC+Hcw==
-X-CSE-MsgGUID: M2OJENWqQe+EJYfRimeEYQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11815"; a="92692071"
-X-IronPort-AV: E=Sophos;i="6.24,201,1774335600"; 
-   d="scan'208";a="92692071"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2026 11:53:17 -0700
-X-CSE-ConnectionGUID: hI4bhqExTMihLVy58lswTw==
-X-CSE-MsgGUID: o8N+LWaBTJGMGqY23Zn+IQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,201,1774335600"; 
-   d="scan'208";a="284993051"
-Received: from lkp-server01.sh.intel.com (HELO f0d55cb201f0) ([10.239.97.150])
-  by orviesa001.jf.intel.com with ESMTP; 12 Jun 2026 11:53:14 -0700
-Received: from kbuild by f0d55cb201f0 with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1wY70B-00000000PDl-1ZpM;
-	Fri, 12 Jun 2026 18:53:11 +0000
-Date: Sat, 13 Jun 2026 02:53:00 +0800
-From: kernel test robot <lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SwCung4J"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-490bb83a3f6so14096735e9.0
+        for <mptcp@lists.linux.dev>; Sat, 13 Jun 2026 04:16:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1781349386; x=1781954186; darn=lists.linux.dev;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=8QOOlnMRvxmfl//EENHYWi6g2FxXLw74yKxLSW4RBeo=;
+        b=SwCung4JGu317H4opB2lEjSDs/6oKB/mdhtG1U8f/uRnjjX2dOCb0GDsxyRly5q0fl
+         xkHFE5EnLBku8M/JPfE7akHmwFKhxTTQsGQdtU9Zer+fD5dJbc7KrW1ulSXWnQROZEF6
+         PlG8i9FEfW3VpFyagLZplnRkVoberWXQqRRe6ZyeIpGavNKFIGZ7XIRivbzFQ9KfXxEs
+         en/NHqVLO6d6S6GGvHKbOn+T3LC/gSFoQCskvNwJO4JrK6SbAioPhtlPlJz8CMGIpYUf
+         uBUkuJdZxfEAaFIfp+oH7XHnUPMGZX6XDboQJ1q3rW9UQLVRBh2Z+xq+prOXk/nMErk5
+         fGHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781349386; x=1781954186;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=8QOOlnMRvxmfl//EENHYWi6g2FxXLw74yKxLSW4RBeo=;
+        b=D8eoJHqsmjiwJ8+EzQSJdGd/8FP0wuG6xTo/QgbfuXr5h7lFIBLWNxqjnwjTZTctjN
+         hPgw3ALP87FpnNyuO/k0IQG0E+Lq0Nf2PEWpj2r3QAffZPdW0Z8IEztTKsshpRc2OVMd
+         ZBg5UDBDi88ZEL6y7krXp+Gxdo9p+3OAM4KYQTnIu0P8RLrTxbD4yekZBOLFi9yqx3MZ
+         t0OY1isgEzRXXt+KyPsZAAaeQEFIeUV5ZfmtQKBNyEcvkkdGD2M0DoiQwYKAwRamKr7Z
+         2JomSwmSplDgxWNq+FNBjKf5dm5HnY12vlPG7atrh2Ddw6hRwxbnK5j8Ct4U+Rm9BJRK
+         y3Lw==
+X-Forwarded-Encrypted: i=1; AFNElJ+ehfamno9hUPkRNZxYEL3C1PEs/VcOV6kQyRtxCjFMGAF4F5gwYsud68ZZFA1GM9S04kqlAQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0YweTKtiwqoTza8pAcejO+bjJ3aVTcxrDY795TvtGH8BPJTGPKEP
+	qkHU69Y6TlIitfOP3nh3rD7Vwb7PfjKSQE6r487TBaiRn2N+1a414ky8
+X-Gm-Gg: Acq92OGK+QSG2NaMEnOLH78L688FcQJxlL3NQ2PzCMfID8G74CgmDCgQPo7XXSdCVql
+	zqBEnaeoUQegclO1x5T/ogQ2FW9Asz4B7L3kVbXMppYwuJzBTnnnM3k3nTeSPb7YpxMuBCp+o6+
+	3qxHKj1C34GVcGGSJpSChH69LUV0HPjhO+IxE4VAWvbBlz+oFc7L50eLpPci+bzQz7HAy0TWLBc
+	wVBoAaBXtpC3JWOeGlU3kkm9xYgcLTtynDbPtShNZSEThLL9SY6sDk3Vnex8lXacGwbrIfTfZyu
+	jL6NF9pEsPTghTfpSFUQdT0RKK9fUfz1XOnkox32TRFN/CDjKmnH30VoAV7LImxMC4xnyS7L9gp
+	LmsgVYcF9i5o79g9hnyfPK3c7loqj8JSrtc9wY752xdhxAbqnXvg18PIidIr4rWxJVbtbwMfZyc
+	QGej5ieuxUAMaMJBsij778/BNSCn/fcNoRgfbuteBQDhKEj1BD/Lo1qzzHgPClcZfqzVgbgAbpQ
+	As2icHleWHMY9xfLlzHfj9cVVvoQSVjoy4=
+X-Received: by 2002:a05:600c:3b15:b0:490:ec79:3077 with SMTP id 5b1f17b1804b1-490ec79315dmr96114205e9.16.1781349386167;
+        Sat, 13 Jun 2026 04:16:26 -0700 (PDT)
+Received: from gandalf.schnuecks.de (p200300c14f38df00921b0efffe889e28.dip0.t-ipconnect.de. [2003:c1:4f38:df00:921b:eff:fe88:9e28])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49220207efesm59902115e9.0.2026.06.13.04.16.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 13 Jun 2026 04:16:25 -0700 (PDT)
+Received: by gandalf.schnuecks.de (Postfix, from userid 500)
+	id EF94431BC505; Sat, 13 Jun 2026 13:16:24 +0200 (CEST)
+Date: Sat, 13 Jun 2026 13:16:24 +0200
+From: Simon Baatz <gmbnomis@gmail.com>
 To: Matthieu Baerts <matttbe@kernel.org>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
- mptcp@lists.linux.dev
-Subject: [mptcp:export-net 1/8] .b4-config: warning: ignored by one
- of the .gitignore files
-Message-ID: <202606130208.C1fSJoF1-lkp@intel.com>
-User-Agent: s-nail v14.9.25
+Cc: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>, netdev@vger.kernel.org,
+	mptcp@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Neal Cardwell <ncardwell@google.com>,
+	Kuniyuki Iwashima <kuniyu@google.com>
+Subject: Re: [PATCH net-next v2 05/15] tcp: allow mptcp to drop TS for some
+ packets
+Message-ID: <ai08CJDkKzQIeCRK@gandalf.schnuecks.de>
+References: <20260605-net-next-mptcp-add-addr6-port-ts-v2-0-758e7ca73f4d@kernel.org>
+ <20260605-net-next-mptcp-add-addr6-port-ts-v2-5-758e7ca73f4d@kernel.org>
+ <airt3_dPSfV54Aph@gandalf.schnuecks.de>
+ <8d744049-65b7-4652-ae9f-a4a159fff56c@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <8d744049-65b7-4652-ae9f-a4a159fff56c@kernel.org>
 
-tree:   https://github.com/multipath-tcp/mptcp_net-next.git export-net
-head:   848e2cfaada38b718951741563f6b24496e5f587
-commit: 247dd0138908e56ae4f7b3b7bb8b3d5c0101c2b9 [1/8] DO-NOT-MERGE: git markup: net
-config: x86_64-allmodconfig (https://download.01.org/0day-ci/archive/20260613/202606130208.C1fSJoF1-lkp@intel.com/config)
-compiler: clang version 22.1.3 (https://github.com/llvm/llvm-project e9846648fd6183ee6d8cbdb4502213fcf902a211)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260613/202606130208.C1fSJoF1-lkp@intel.com/reproduce)
+Hi Matt,
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202606130208.C1fSJoF1-lkp@intel.com/
+On Thu, Jun 11, 2026 at 09:40:23PM +0200, Matthieu Baerts wrote:
+> Hi Simon,
+> 
+> Thank you for you review.
+> 
+> 11 Jun 2026 19:18:29 Simon Baatz <gmbnomis@gmail.com>:
+> 
+> > Hi Matt,
+> >
+> > On Fri, Jun 05, 2026 at 07:21:49PM +1000, Matthieu Baerts (NGI0) wrote:
+> >> With TCP-timestamps (padded) taking 12 bytes and ADD_ADDR IPv6 + port
+> >> taking 30 bytes, the 40-byte limit for the TCP options is reached. In
+> >> this case, it is then not possible to send the address signal.
+> >>
+> >> The idea is to let MPTCP dropping the TCP-timestamps option for some
+> >> specific packets, to be able to send some specific pure ACK carrying >28
+> >> bytes of MPTCP options, like with this specific ADD_ADDR. A new
+> >> parameter is passed from tcp_established_options to the MPTCP side to
+> >> indicate if the TCP TS option is used, and if it should be dropped. The
+> >> next commit implements the part on MPTCP side, but split into two
+> >> patches to help TCP maintainers to identify the modifications on TCP
+> >> side. This feature will be controlled by a new add_addr_v6_port_drop_ts
+> >> MPTCP sysctl knob.
+> >>
+> >> It is important to keep in mind that dropping the TCP timestamps option
+> >> for one packet of the connection could eventually disrupt some
+> >> middleboxes: even if it should be unlikely, they could drop the packet
+> >> or even block the connection. That's why this new feature will be
+> >> controlled by a sysctl knob.
+> >
+> > RFC 7323 (which obsoletes RFC 1323) specifies an "all or nothing"
+> > approach for the TS option.  Section 3.2 states:
+> >
+> >    Once TSopt has been successfully negotiated, that is both <SYN> and
+> >    <SYN,ACK> contain TSopt, the TSopt MUST be sent in every non-<RST>
+> >    segment for the duration of the connection, [...] If a
+> >    non-<RST> segment is received without a TSopt, a TCP SHOULD silently
+> >    drop the segment.
+> >
+> > So, selectively omitting the TS option on established subflows
+> > appears to go against RFC 7323 at the TCP level.  Do we consider that
+> > an acceptable deviation for MPTCP subflows?
+> 
+> Yes, to me, it is acceptable. Please note that here, TCP TS is only
+> dropped on some specific packets -- ADD_ADDR with v6 + port --
+> which are TCP pure ACK acking the same sequence as the previous
+> one (dupack from a TCP point of view). So it is just a signalling packet,
+> specific to MPTCP. If it is dropped by a middlebox, that's not nice, but
+> that's OK.
+> 
+> Or do you think something would break when this happens?
 
-All warnings (new ones prefixed by >>):
+No, I just wanted to point out that an MPTCP peer with an underlying
+TCP implementation that follows RFC 7323 strictly might drop these
+packets (not only middleboxes).  But given your explanation, this
+sounds more like "bad luck" than a real breakage.
 
->> .b4-config: warning: ignored by one of the .gitignore files
-   .git_markup: warning: ignored by one of the .gitignore files
-   Documentation/.renames.txt: warning: ignored by one of the .gitignore files
+Thanks for the clarification.
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+- Simon
+
+-- 
+Simon Baatz <gmbnomis@gmail.com>
