@@ -1,140 +1,131 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f177.google.com (mail-dy1-f177.google.com [74.125.82.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF623286405;
-	Tue, 16 Jun 2026 13:18:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8999378D72
+	for <mptcp@lists.linux.dev>; Tue, 16 Jun 2026 14:32:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781615906; cv=none; b=JgUmJqQOaN5LWPFXikJ/ez1hXgkwyKLWYoU8fwjja3bEnu5RZydwfu/Px5aTMR2/nonFSLBhQcoNee7xEqRJt7l6zP1VmSfWgQj3JoIUNdVFv94xnn1tbLHlkgDQzux9JY4WNKF2BtKRBRqU3fRcl0nf3ZrO7Lj1h4k8dhZWZcg=
+	t=1781620344; cv=none; b=qINxBvhobfPmCdSp9xL++PVsyq23EwoU+6ondRd0AB6XIFV840AaLAsPiGj2JDW1FzH1+nMB1zbATwvDwU/r8MohuiPSUl96VmCkiNZ+PSRZ7PcQefYkwp9Q57qtIk8/bBPJvAeCyPm03W9mu6SWdJg4OC9xxyAkZTqIhSzZkNU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781615906; c=relaxed/simple;
-	bh=aYT749C1vcGzeZrJIgaMPF8X2TruvSOZYXbVC/9svjM=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=VG7suZv7W4KjuAXzgLA8UwpA/gOC9gch/2/7BkbVlClqWyZAQ7ZzWtRv7SotXzC57bSiN7Bt5sfIG7Sw+rsr1Ray24p667P6nbPSr3HKUjB/4GqWgj3qsfr64iJOo8hX+rJryOH/wtNFaqPk3gpdjBLtfzOFv2dsP0Nehyitngs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XJwDB7Gm; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1781620344; c=relaxed/simple;
+	bh=o7sIPBZXb1mkdi7Y/qMj9wXfyPFsA4Rc+HgvHQz94Yw=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
+	 MIME-Version:Content-Type; b=IUp8Dd77k79fVHuwbRj1fofGCq091BW3NMpOmOm+tP6V565976cXg08IP9KYLO3p3GjnwlxDneScBJaINJLWJptEzVh0Er1FoLQZxhbPFa3NIfBBVo5xkcQ0RaCQkj1+nAwZh9qLVq9iaOvFJQpYDC9hoL6/fSUQerUbPQv2qEI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DAOGSl1B; arc=none smtp.client-ip=74.125.82.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XJwDB7Gm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1781615905; x=1813151905;
-  h=date:from:to:cc:subject:message-id;
-  bh=aYT749C1vcGzeZrJIgaMPF8X2TruvSOZYXbVC/9svjM=;
-  b=XJwDB7GmmZU4aXMW5ZsPaOAYNinY4h8FRghizUekZ9/bXSJmIDPWTJId
-   l25fCq1EXc3YE3z7HGlt/RYNodRB7X92LYnCroxOMxCXY1jBmWlEjhXUc
-   tDZ8ang0dPHUGRJ6tGPdLIkJJWogPTOcWWKviWPT91DOzpR+uyhsGK+pz
-   d/mRNkf5yCSw2R9mwR+z2D0wC58wCkfVHikkvLe9PwgaYGv6c6ckahoNP
-   w0ADMEJvGc3vqbb/175jr8MZ/X9RjBygOeWuPCazBTFQ7IyCVu3D12ca2
-   rYtQengWXBs5koTy7+xPzV177CTH9QvRLPkNx3KhFXiyTFRIGwf8KIbRQ
-   A==;
-X-CSE-ConnectionGUID: U09g3krCRju+Sx+4FSMlfg==
-X-CSE-MsgGUID: LFK+mBe2TlG9kRI06jMjsw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11818"; a="82485032"
-X-IronPort-AV: E=Sophos;i="6.24,208,1774335600"; 
-   d="scan'208";a="82485032"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2026 06:18:24 -0700
-X-CSE-ConnectionGUID: UOvvaDaFQmuHL/Kg1yVqQQ==
-X-CSE-MsgGUID: nv0d2GS5R3a/y7UMJZGTNg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,208,1774335600"; 
-   d="scan'208";a="277971679"
-Received: from lkp-server01.sh.intel.com (HELO f0d55cb201f0) ([10.239.97.150])
-  by orviesa002.jf.intel.com with ESMTP; 16 Jun 2026 06:18:23 -0700
-Received: from kbuild by f0d55cb201f0 with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1wZTgJ-00000000TCW-45nA;
-	Tue, 16 Jun 2026 13:18:19 +0000
-Date: Tue, 16 Jun 2026 21:17:48 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
- mptcp@lists.linux.dev
-Subject: [mptcp:export 6/37]
- drivers/net/ethernet/microsoft/mana/mana_en.c:2406:4: warning: misleading
- indentation; statement is not part of the previous 'if'
-Message-ID: <202606162155.rSSbzs8P-lkp@intel.com>
-User-Agent: s-nail v14.9.25
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DAOGSl1B"
+Received: by mail-dy1-f177.google.com with SMTP id 5a478bee46e88-30b6dad2382so4599325eec.0
+        for <mptcp@lists.linux.dev>; Tue, 16 Jun 2026 07:32:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1781620343; x=1782225143; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=y9d9o/vRJdrvCAun+wmY5C4nEqvwHhmzuRyDGhKRSn0=;
+        b=DAOGSl1B0ZjKM+gmGFMrPYfTek2L1mAsOzSN3Of21Hm4kL0zNyWQ/+Ro3+i4beJBb3
+         sofkTrdlyBoouXDxPzlOAQhFfa1s7hJMF4T1jfopgYhdjxSzj9fi421rrBP2aAANakaO
+         huYqHeZcPT0WXP91/7fKhcTIS1K7RZbFwR+hmUdc6ObwCxxb6JmnKMiV8ugqcYVuWk/L
+         iCxmPXgaLx2qOgqq4UAgK1HycyxDUn8iKAJarFBWNK//OU3wf2kxjK5dSzCrRmimyDH1
+         +a/6vIiomap2dq54GuVrXO5GBdGa1jRbAtTkRY94n/fpTloAaaRs02WJR2qpNBpihHvm
+         vUBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781620343; x=1782225143;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=y9d9o/vRJdrvCAun+wmY5C4nEqvwHhmzuRyDGhKRSn0=;
+        b=rIrqF7eoUgMreEJLb1sq9vPw6SZQKZMeD+wFaT3gUrCCE8qM+m2wcDSMaV1qKMrC8l
+         Lz2cYycZDrlh97h1MJyllIRm52c6XJXyToX/Fgc59WB6J33hsjnxVPkSpESJbqrcT7j0
+         q7uTacrtAlQr4C/viLwTdtw2Tpe3+f0xyFHOR9yDEGNXK2DqysOJ999wbvHKw6J6pY89
+         vpj/duGPzCpTQVgYfSnCvc0u5JXSyHMbYX/1yVk86JepmzHuw/lfQiNeyfDa0CQoIgWX
+         0zdEbNkYmoODUaYYDn1/50HD1Vw2kQ8YABTlh5pfAfJ8CORfCTa+5fi+HsVvcfuun8tV
+         l7Ww==
+X-Gm-Message-State: AOJu0Yw6S7PwVJdB512eY1mgBvBCmPjfsoeMW5Gu4UVK2+7PFeUEVqoR
+	R84XEzWuzK4oKlSPiXBYb50o5WR0K/Pws+/0p8iMv+sBOoN95sOlCE1jOE0f
+X-Gm-Gg: Acq92OEU/TSU+WAerzwCqpUSMU3Ixy0clai8CifWbCb32jPK7sBkuMEw96lkTffTHE0
+	0RDfKIb+JkSBuu8mN/diJWJXN5nnKe1Gqrbetapfc/0UNkPwwahkRTIlJ91P72R/Zl0LFE3z+2J
+	oTLws8EtO5j8TU3AvT09xRCKIpdWWObOt/kWyYRTRNjq6jW5r6U1lh8+s1fN5Zv2BkxXPIRIhVh
+	Vh9rOpQumUXMNoN6BlYg3iayLSJqWytBrheNdWxX+UWB1Ipwmw+gpHQV1Y/zEBMiRCIVx9+Alz5
+	uusOuBKPycRjoT0fAw06DaLriKPT8z+WoWPLbUusEuN8YOZ57uQwaPCsPO6Y2C4WEAn+Q4S2KPA
+	NbF+GTUbpMdL5rfz69ypgGJlMO7QEU4440Kb5FEyGOWP1HDi84q6mjDWG9p6tSzwqODqg1V/V2P
+	4UmUF5mXM1e6Giki65cFmRYC2hDAQyZD38NZZWtQ==
+X-Received: by 2002:a05:7300:641b:b0:2ef:8b72:1b9 with SMTP id 5a478bee46e88-3081fcd0213mr9384410eec.0.1781620342507;
+        Tue, 16 Jun 2026 07:32:22 -0700 (PDT)
+Received: from [127.0.0.1] ([128.24.160.236])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-3081e91f88bsm19524868eec.16.2026.06.16.07.32.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jun 2026 07:32:22 -0700 (PDT)
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20260616124801.2282199-1-kalpan.jani@mpiricsoftware.com>
+References: <20260616124801.2282199-1-kalpan.jani@mpiricsoftware.com>
+Subject: Re: [PATCH mptcp-next] mptcp: fix lockdep splat by using
+ GFP_ATOMIC in sk_net_refcnt_upgrade
+Message-ID: <1d48f40d-e702-4b2e-38a4-2d437bc7b5c3@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 16 Jun 2026 14:32:21 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 
-tree:   https://github.com/multipath-tcp/mptcp_net-next.git export
-head:   f539e897493cd0b5c3745ec4b33a2690afc7c7de
-commit: 508cdf985e09fe14eb5e1da1d2e2a124b2cbae23 [6/37] TopGit-driven merge of branches:
-config: arm64-allmodconfig (https://download.01.org/0day-ci/archive/20260616/202606162155.rSSbzs8P-lkp@intel.com/config)
-compiler: clang version 23.0.0git (https://github.com/llvm/llvm-project e19d1f51a2c80b63cd8ca95bcc757b7077112808)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260616/202606162155.rSSbzs8P-lkp@intel.com/reproduce)
+Hi Kalpan,
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202606162155.rSSbzs8P-lkp@intel.com/
+Thank you for your modifications, that's great!
 
-All warnings (new ones prefixed by >>):
+Our CI did some validations and here is its report:
 
-   drivers/net/ethernet/microsoft/mana/mana_en.c:2405:51: error: member reference type 'struct mana_tx_qp *' is a pointer; did you mean to use '->'?
-    2405 |                         mana_destroy_wq_obj(apc, GDMA_SQ, apc->tx_qp[i].tx_object);
-         |                                                           ~~~~~~~~~~~~~^
-         |                                                                        ->
->> drivers/net/ethernet/microsoft/mana/mana_en.c:2406:4: warning: misleading indentation; statement is not part of the previous 'if' [-Wmisleading-indentation]
-    2406 |                         mana_destroy_wq_obj(apc, GDMA_SQ, apc->tx_qp[i]->tx_object);
-         |                         ^
-   drivers/net/ethernet/microsoft/mana/mana_en.c:2404:3: note: previous statement is here
-    2404 |                 if (apc->tx_qp[i]->tx_object != INVALID_MANA_HANDLE)
-         |                 ^
-   1 warning and 1 error generated.
+- KVM Validation: normal (except selftest_mptcp_join): Unstable: 1 failed =
+test(s): packetdrill_add_addr =E2=9A=A0=EF=B8=8F=20
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/276218=
+62119
+
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/f101eea8485b
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1112313
 
 
-vim +/if +2406 drivers/net/ethernet/microsoft/mana/mana_en.c
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
 
-ca9c54d2d6a5ab Dexuan Cui             2021-04-16  2381  
-ca9c54d2d6a5ab Dexuan Cui             2021-04-16  2382  static void mana_destroy_txq(struct mana_port_context *apc)
-ca9c54d2d6a5ab Dexuan Cui             2021-04-16  2383  {
-e1b5683ff62e7b Haiyang Zhang          2021-08-24  2384  	struct napi_struct *napi;
-ca9c54d2d6a5ab Dexuan Cui             2021-04-16  2385  	int i;
-ca9c54d2d6a5ab Dexuan Cui             2021-04-16  2386  
-ca9c54d2d6a5ab Dexuan Cui             2021-04-16  2387  	if (!apc->tx_qp)
-ca9c54d2d6a5ab Dexuan Cui             2021-04-16  2388  		return;
-ca9c54d2d6a5ab Dexuan Cui             2021-04-16  2389  
-ca9c54d2d6a5ab Dexuan Cui             2021-04-16  2390  	for (i = 0; i < apc->num_queues; i++) {
-d07efe5a6e641a Aditya Garg            2026-05-02  2391  		if (!apc->tx_qp[i])
-d07efe5a6e641a Aditya Garg            2026-05-02  2392  			continue;
-d07efe5a6e641a Aditya Garg            2026-05-02  2393  
-d07efe5a6e641a Aditya Garg            2026-05-02  2394  		debugfs_remove_recursive(apc->tx_qp[i]->mana_tx_debugfs);
-d07efe5a6e641a Aditya Garg            2026-05-02  2395  		apc->tx_qp[i]->mana_tx_debugfs = NULL;
-6607c17c6c5e02 Shradha Gupta          2024-10-08  2396  
-d07efe5a6e641a Aditya Garg            2026-05-02  2397  		napi = &apc->tx_qp[i]->tx_cq.napi;
-d07efe5a6e641a Aditya Garg            2026-05-02  2398  		if (apc->tx_qp[i]->txq.napi_initialized) {
-e1b5683ff62e7b Haiyang Zhang          2021-08-24  2399  			napi_synchronize(napi);
-d5c8f0e4e0cb0a Erni Sri Satya Vennela 2025-06-17  2400  			napi_disable_locked(napi);
-d5c8f0e4e0cb0a Erni Sri Satya Vennela 2025-06-17  2401  			netif_napi_del_locked(napi);
-d07efe5a6e641a Aditya Garg            2026-05-02  2402  			apc->tx_qp[i]->txq.napi_initialized = false;
-b6ecc662037694 Souradeep Chakrabarti  2024-09-02  2403  		}
-508cdf985e09fe Matthieu Baerts (NGI0  2026-06-15  2404) 		if (apc->tx_qp[i]->tx_object != INVALID_MANA_HANDLE)
-ca9c54d2d6a5ab Dexuan Cui             2021-04-16 @2405  			mana_destroy_wq_obj(apc, GDMA_SQ, apc->tx_qp[i].tx_object);
-d07efe5a6e641a Aditya Garg            2026-05-02 @2406  			mana_destroy_wq_obj(apc, GDMA_SQ, apc->tx_qp[i]->tx_object);
-ca9c54d2d6a5ab Dexuan Cui             2021-04-16  2407  
-d07efe5a6e641a Aditya Garg            2026-05-02  2408  		mana_deinit_cq(apc, &apc->tx_qp[i]->tx_cq);
-ca9c54d2d6a5ab Dexuan Cui             2021-04-16  2409  
-d07efe5a6e641a Aditya Garg            2026-05-02  2410  		mana_deinit_txq(apc, &apc->tx_qp[i]->txq);
-d07efe5a6e641a Aditya Garg            2026-05-02  2411  
-d07efe5a6e641a Aditya Garg            2026-05-02  2412  		kvfree(apc->tx_qp[i]);
-ca9c54d2d6a5ab Dexuan Cui             2021-04-16  2413  	}
-ca9c54d2d6a5ab Dexuan Cui             2021-04-16  2414  
-ca9c54d2d6a5ab Dexuan Cui             2021-04-16  2415  	kfree(apc->tx_qp);
-ca9c54d2d6a5ab Dexuan Cui             2021-04-16  2416  	apc->tx_qp = NULL;
-ca9c54d2d6a5ab Dexuan Cui             2021-04-16  2417  }
-ca9c54d2d6a5ab Dexuan Cui             2021-04-16  2418  
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
 
-:::::: The code at line 2406 was first introduced by commit
-:::::: d07efe5a6e641af59f2dbbef4a748fab6d967747 net: mana: Use per-queue allocation for tx_qp to reduce allocation size
+For more details:
 
-:::::: TO: Aditya Garg <gargaditya@linux.microsoft.com>
-:::::: CC: Jakub Kicinski <kuba@kernel.org>
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
