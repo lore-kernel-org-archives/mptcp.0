@@ -1,113 +1,97 @@
-Received: from canpmsgout12.his.huawei.com (canpmsgout12.his.huawei.com [113.46.200.227])
+Received: from sender4-of-o54.zoho.com (sender4-of-o54.zoho.com [136.143.188.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92E173DA7C2
-	for <mptcp@lists.linux.dev>; Tue, 16 Jun 2026 06:28:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.227
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781591329; cv=none; b=cE+njRCPqR8ardUbhM5JbwLm3wbAu8baKLGWQA6P7BrnZpxsPgHaUOqOIeiOcP6zHieT6/Za7CT0Ly01D9azbq9jM5GOvHIH2KNRIAmCAF2PWBgbeND7ABoCnVq05ij0F63hqSdtCQ2mD2XAuesRrRYfOO+OTxQRYmWENy/oasA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781591329; c=relaxed/simple;
-	bh=lvfOSZQbKY5/jk48tnFGy9Kvxw4bexxa/cECyc8STXM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=jawJWSPyqdq58ODDfLgwT+8ZVXSphJVntS1KA0S1vaXDDPDKoiD0d7FH3JAQyUMvvjjXIhusTqAqdW2bQRqNWg0YzItxL6Il9u8u0kEoVuqeAW4V4cEaAjrG/D7IgzPNdGebCBIKghVfkBqet6q7t/4Ejbf9C//kWnYTMV2TvOU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=AuaRL27F; arc=none smtp.client-ip=113.46.200.227
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 070BE366DB9
+	for <mptcp@lists.linux.dev>; Tue, 16 Jun 2026 12:48:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.54
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1781614097; cv=pass; b=nTXL3n/ynbcIJFHe1oYL3Kf4MvAZ9No4EGVwg0hk9+6IPh6LqP3VooPllmE/sxpLEuxcbU926lRaSSG2lojdj8q+A8+pCjCAyLigU+MLbBoW97jzxwZN9EaJlWu4htKy+0125ItqNIbljxnuURbYX4T09hx8gXHqGKhiD7fS3aU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1781614097; c=relaxed/simple;
+	bh=/dDcIvrFkRr9qtEgJdl7QzhAtXL7oLj3AJm0nXBEFPM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=p5lsqa2rWW04DqgluntSsDP79QVZouyTOQ2DNHOQKUSWG0QYutmyoA+EDngFNPqE5nFNYIXgWYaAkVRK0uAMZofAkRaetQ24PHoiCnu6V+ROamOGldNa4YZUJ1RGH+WwcoprmJvVSUCe9ZMNzJPgfBMksNNYJnPf+udp897/vG4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com; spf=pass smtp.mailfrom=mpiricsoftware.com; dkim=fail (0-bit key) header.d=mpiricsoftware.com header.i=kalpan.jani@mpiricsoftware.com header.b=Xp2+g52b reason="key not found in DNS"; arc=pass smtp.client-ip=136.143.188.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mpiricsoftware.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="AuaRL27F"
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=aYxGXpFAt+32492HrsCZrJhTUMpEHQ/ilnan+pMUHyQ=;
-	b=AuaRL27Far9kG5VouEfKVwRTf4PAiCpZRg0tYB0fkrMmBeWysWOuypdUA8wkvgCX7d6ZV0nS6
-	RLuafYvdF9l0DR2pStOClt8DQP1+watOuQ+ybiN8clK5uR2Po8QLhDFapkegamIecHG3iKg5zuu
-	I9zonk+DmsT9dLGN+J1iJOc=
-Received: from mail.maildlp.com (unknown [172.19.163.163])
-	by canpmsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4gfcKB2HCWznTvW;
-	Tue, 16 Jun 2026 14:19:42 +0800 (CST)
-Received: from kwepemj500018.china.huawei.com (unknown [7.202.194.48])
-	by mail.maildlp.com (Postfix) with ESMTPS id C9A30405D1;
-	Tue, 16 Jun 2026 14:28:30 +0800 (CST)
-Received: from [10.174.178.79] (10.174.178.79) by
- kwepemj500018.china.huawei.com (7.202.194.48) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Tue, 16 Jun 2026 14:28:29 +0800
-Message-ID: <95552642-7b60-410b-9953-70e0b31a90e1@huawei.com>
-Date: Tue, 16 Jun 2026 14:28:28 +0800
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mpiricsoftware.com header.i=kalpan.jani@mpiricsoftware.com header.b="Xp2+g52b"
+ARC-Seal: i=1; a=rsa-sha256; t=1781614091; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=lNYWXgOx4O1A0J7vTY8w7KNzSn4dOQ9Ra3MrfsRimO1nCO7YRqKbGsoM9hqsbH0+NLts6GBY6lz5utWc/LBSY4p4hmdacMVZrl0qn4CouSqw7TGVRBZm900mSNwOLWgp5PzEUFG9A9Yg/ecLAngViJzv1LTWZIT7WioLPv1KdRs=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1781614091; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=IgfqegLSQBdGQbEpXmpHmC1cNl6LS34pN2QtnJE22NM=; 
+	b=d+e9lKBQ5vT66jLaV8nea+0iOK1azSzjuxKX43iJkgrLiaVEhfLNLnkqLmbyDQOWGn7lXRRP7roa/OSTiSKHU1cViq3SN+rdEyNN3Tcty7vP8Kv77uda5BpfTnhxhSJrw+8yMyxTzwwWNLEqrFku5uE2SAU2AF/OujY1B3h3My8=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=mpiricsoftware.com;
+	spf=pass  smtp.mailfrom=kalpan.jani@mpiricsoftware.com;
+	dmarc=pass header.from=<kalpan.jani@mpiricsoftware.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1781614091;
+	s=mpiric; d=mpiricsoftware.com; i=kalpan.jani@mpiricsoftware.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=IgfqegLSQBdGQbEpXmpHmC1cNl6LS34pN2QtnJE22NM=;
+	b=Xp2+g52bmOQkATGLvdD0XY5VsVqlFp/TgfQMkxnTW7HoN9uVErNDAeYDNnYe/73u
+	WP2aplOXeQU62dPv3BHiqAG8aBZB96APNG8s4UctKbOJeffZqD51PxTrO/kQxMOjZ4w
+	D7fco4hlVaDL/hxsYmSakcfqSBX4tBDfX1HxgfT4=
+Received: by mx.zohomail.com with SMTPS id 1781614089656226.7623322258056;
+	Tue, 16 Jun 2026 05:48:09 -0700 (PDT)
+From: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
+To: mptcp@lists.linux.dev
+Cc: matthieu.baerts@tessares.net,
+	Kalpan Jani <kalpan.jani@mpiricsoftware.com>,
+	syzbot+fb2c3fa2ba28aec94627@syzkaller.appspotmail.com
+Subject: [PATCH mptcp-next] mptcp: fix lockdep splat by using GFP_ATOMIC in sk_net_refcnt_upgrade
+Date: Tue, 16 Jun 2026 18:18:01 +0530
+Message-ID: <20260616124801.2282199-1-kalpan.jani@mpiricsoftware.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v2] mptcp: use configured TCP RTO min/max
- values
-To: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
-CC: <matttbe@kernel.org>, <martineau@kernel.org>, <pabeni@redhat.com>,
-	<shardul.b@mpiricsoftware.com>, <janak@mpiric.us>, <kalpanjani009@gmail.com>,
-	<shardulsb08@gmail.com>, <mptcp@lists.linux.dev>, zhangchangzhong
-	<zhangchangzhong@huawei.com>, yuehaibing <yuehaibing@huawei.com>, "weiyongjun
- (A)" <weiyongjun1@huawei.com>
-References: <20260611064937.422416-1-kalpan.jani@mpiricsoftware.com>
-From: Li Xiasong <lixiasong1@huawei.com>
-In-Reply-To: <20260611064937.422416-1-kalpan.jani@mpiricsoftware.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
- kwepemj500018.china.huawei.com (7.202.194.48)
+Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
 
-Hi, Kalpan
+The function sk_net_refcnt_upgrade() is called while holding a socket lock
+in mptcp_subflow_create_socket(). This function performs an allocation via
+ref_tracker_alloc(gfp), which was using GFP_KERNEL.
 
-On 6/11/2026 2:49 PM, Kalpan Jani wrote:
-> On the TCP side, the min/max RTO can be configured via the route
-> ...
-> ---
-> Link to v1: https://lore.kernel.org/mptcp/20260610101123.765958-1-kalpan.jani@mpiricsoftware.com/
-> 
-> Changes since v1:
->  - __mptcp_init_sock(): seed icsk_rto_min / icsk_rto_max from the
->    per-netns sysctls so that the helpers return meaningful values
->    on the msk (MPTCP does not call tcp_init_sock() on the msk).
->  - __mptcp_init_sock(): use icsk->icsk_rto_min directly for the
->    initial timer_ival instead of tcp_rto_min(sk), to avoid a
->    lockdep_rcu_suspicious() splat from __sk_dst_get() at socket
->    init time. Reported by the mptcp CI on v1.
->  - mptcp_set_datafin_timeout(): add an ilog2(0) shift-safety guard
->    for the rto_min >= rto_max corner case.
-> 
+GFP_KERNEL can trigger page reclaim, which creates a lockdep edge with
+fs_reclaim, leading to a circular dependency when combined with other
+lock chains from the block layer (nbd driver).
 
-Just a small note, in case I'm not missing something: this still seems to
-leave the rto_min == 0 case uncovered.
+Change the allocation to use GFP_ATOMIC instead. This is safe because:
+- The ref_tracker struct is small (~200 bytes)
+- GFP_ATOMIC allocation failure is extremely unlikely
+- GFP_ATOMIC is commonly used in other locked contexts
 
-This can be triggered from userspace with a route metric, for example:
+Tested with mptcp/mptcp-upstream-virtme-docker CI: all 24 tests pass.
 
-  ip route replace 192.0.2.0/24 dev lo rto_min 0
+Circular dependency chain detected:
+  fs_reclaim --> sk_lock-AF_INET --> k-sk_lock-AF_INET/1
 
-If that route is used by the socket, tcp_rto_min() can resolve to 0, and
-mptcp_set_datafin_timeout() would divide by zero before the max_t() clamp.
+Fixes: 0cafd77dcd03 ("net: add a refcount tracker for kernel sockets")
+Reported-by: syzbot+fb2c3fa2ba28aec94627@syzkaller.appspotmail.com
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/599
+Signed-off-by: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
+---
+ net/core/sock.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
->  net/mptcp/protocol.c | 16 ++++++++++++----
->  1 file changed, 12 insertions(+), 4 deletions(-)
-> 
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index a4f7e99b30db..878a0c023f90 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -563,17 +563,19 @@ static bool mptcp_pending_data_fin(struct sock *sk, u64 *seq)
->  static void mptcp_set_datafin_timeout(struct sock *sk)
->  {
->  	struct inet_connection_sock *icsk = inet_csk(sk);
-> +	u32 rto_min = tcp_rto_min(sk);
-> +	u32 rto_max = tcp_rto_max(sk);
->  	u32 retransmits;
->  
->  	retransmits = min_t(u32, icsk->icsk_retransmits,
-> -			    ilog2(TCP_RTO_MAX / TCP_RTO_MIN));
-> +			    ilog2(max_t(u32, rto_max / rto_min, 1)));
->  
-
-Thanks,
-Li Xiasong
+diff --git a/net/core/sock.c b/net/core/sock.c
+index 8a59bfaa8096..8458c304dabc 100644
+--- a/net/core/sock.c
++++ b/net/core/sock.c
+@@ -2399,7 +2399,7 @@ void sk_net_refcnt_upgrade(struct sock *sk)
+ 	__netns_tracker_free(net, &sk->ns_tracker, false);
+ 	net_passive_dec(net);
+ 	sk->sk_net_refcnt = 1;
+-	get_net_track(net, &sk->ns_tracker, GFP_KERNEL);
++	get_net_track(net, &sk->ns_tracker, GFP_ATOMIC);
+ 	sock_inuse_add(net, 1);
+ }
+ EXPORT_SYMBOL_GPL(sk_net_refcnt_upgrade);
+-- 
+2.43.0
 
