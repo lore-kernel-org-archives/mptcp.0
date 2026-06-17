@@ -1,131 +1,122 @@
-Received: from mail-dy1-f177.google.com (mail-dy1-f177.google.com [74.125.82.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-of-o54.zoho.com (sender4-of-o54.zoho.com [136.143.188.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8999378D72
-	for <mptcp@lists.linux.dev>; Tue, 16 Jun 2026 14:32:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.177
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781620344; cv=none; b=qINxBvhobfPmCdSp9xL++PVsyq23EwoU+6ondRd0AB6XIFV840AaLAsPiGj2JDW1FzH1+nMB1zbATwvDwU/r8MohuiPSUl96VmCkiNZ+PSRZ7PcQefYkwp9Q57qtIk8/bBPJvAeCyPm03W9mu6SWdJg4OC9xxyAkZTqIhSzZkNU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781620344; c=relaxed/simple;
-	bh=o7sIPBZXb1mkdi7Y/qMj9wXfyPFsA4Rc+HgvHQz94Yw=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
-	 MIME-Version:Content-Type; b=IUp8Dd77k79fVHuwbRj1fofGCq091BW3NMpOmOm+tP6V565976cXg08IP9KYLO3p3GjnwlxDneScBJaINJLWJptEzVh0Er1FoLQZxhbPFa3NIfBBVo5xkcQ0RaCQkj1+nAwZh9qLVq9iaOvFJQpYDC9hoL6/fSUQerUbPQv2qEI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DAOGSl1B; arc=none smtp.client-ip=74.125.82.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1237535DA49
+	for <mptcp@lists.linux.dev>; Wed, 17 Jun 2026 05:28:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.54
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1781674140; cv=pass; b=D39mD57V6pms/k3Ul5E5D7E8bc3vR4mqaF2pPUfPXr/w+3fVDm7iUsncwROeYhoQfMWO8x/+hk2Un9rr4At6AOrNDsEBQfU7HTkCoMHWC1uVKd/UzdbuAj4j0mw5a+NiRPpn+LXvvzQFAqBX3yzRPmW7x0SnTva5MLMQnzIc74U=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1781674140; c=relaxed/simple;
+	bh=0yepSpmw7xhTUgoAfd3AsL8m7KxpJ1mXDzAwcGiHcZ4=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=fXy/0NoX/YhVvovw6WlLc+qTo1oxoifT9J9mOdFKLoRkF9gyYS5z7jR85NzVRYA1Feeawpwe0tfbqEtt7L6X7S2JVl+eleALe3kyNVwcCU3otIN8W7qLh6wh1Fn181U8refKhIbGR0jw7sxNG5as9Dqp6/j1g5X1F2ll8xRKEu0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com; spf=pass smtp.mailfrom=mpiricsoftware.com; dkim=fail (0-bit key) header.d=mpiricsoftware.com header.i=kalpan.jani@mpiricsoftware.com header.b=kLLmf3RU reason="key not found in DNS"; arc=pass smtp.client-ip=136.143.188.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mpiricsoftware.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DAOGSl1B"
-Received: by mail-dy1-f177.google.com with SMTP id 5a478bee46e88-30b6dad2382so4599325eec.0
-        for <mptcp@lists.linux.dev>; Tue, 16 Jun 2026 07:32:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1781620343; x=1782225143; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=y9d9o/vRJdrvCAun+wmY5C4nEqvwHhmzuRyDGhKRSn0=;
-        b=DAOGSl1B0ZjKM+gmGFMrPYfTek2L1mAsOzSN3Of21Hm4kL0zNyWQ/+Ro3+i4beJBb3
-         sofkTrdlyBoouXDxPzlOAQhFfa1s7hJMF4T1jfopgYhdjxSzj9fi421rrBP2aAANakaO
-         huYqHeZcPT0WXP91/7fKhcTIS1K7RZbFwR+hmUdc6ObwCxxb6JmnKMiV8ugqcYVuWk/L
-         iCxmPXgaLx2qOgqq4UAgK1HycyxDUn8iKAJarFBWNK//OU3wf2kxjK5dSzCrRmimyDH1
-         +a/6vIiomap2dq54GuVrXO5GBdGa1jRbAtTkRY94n/fpTloAaaRs02WJR2qpNBpihHvm
-         vUBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781620343; x=1782225143;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=y9d9o/vRJdrvCAun+wmY5C4nEqvwHhmzuRyDGhKRSn0=;
-        b=rIrqF7eoUgMreEJLb1sq9vPw6SZQKZMeD+wFaT3gUrCCE8qM+m2wcDSMaV1qKMrC8l
-         Lz2cYycZDrlh97h1MJyllIRm52c6XJXyToX/Fgc59WB6J33hsjnxVPkSpESJbqrcT7j0
-         q7uTacrtAlQr4C/viLwTdtw2Tpe3+f0xyFHOR9yDEGNXK2DqysOJ999wbvHKw6J6pY89
-         vpj/duGPzCpTQVgYfSnCvc0u5JXSyHMbYX/1yVk86JepmzHuw/lfQiNeyfDa0CQoIgWX
-         0zdEbNkYmoODUaYYDn1/50HD1Vw2kQ8YABTlh5pfAfJ8CORfCTa+5fi+HsVvcfuun8tV
-         l7Ww==
-X-Gm-Message-State: AOJu0Yw6S7PwVJdB512eY1mgBvBCmPjfsoeMW5Gu4UVK2+7PFeUEVqoR
-	R84XEzWuzK4oKlSPiXBYb50o5WR0K/Pws+/0p8iMv+sBOoN95sOlCE1jOE0f
-X-Gm-Gg: Acq92OEU/TSU+WAerzwCqpUSMU3Ixy0clai8CifWbCb32jPK7sBkuMEw96lkTffTHE0
-	0RDfKIb+JkSBuu8mN/diJWJXN5nnKe1Gqrbetapfc/0UNkPwwahkRTIlJ91P72R/Zl0LFE3z+2J
-	oTLws8EtO5j8TU3AvT09xRCKIpdWWObOt/kWyYRTRNjq6jW5r6U1lh8+s1fN5Zv2BkxXPIRIhVh
-	Vh9rOpQumUXMNoN6BlYg3iayLSJqWytBrheNdWxX+UWB1Ipwmw+gpHQV1Y/zEBMiRCIVx9+Alz5
-	uusOuBKPycRjoT0fAw06DaLriKPT8z+WoWPLbUusEuN8YOZ57uQwaPCsPO6Y2C4WEAn+Q4S2KPA
-	NbF+GTUbpMdL5rfz69ypgGJlMO7QEU4440Kb5FEyGOWP1HDi84q6mjDWG9p6tSzwqODqg1V/V2P
-	4UmUF5mXM1e6Giki65cFmRYC2hDAQyZD38NZZWtQ==
-X-Received: by 2002:a05:7300:641b:b0:2ef:8b72:1b9 with SMTP id 5a478bee46e88-3081fcd0213mr9384410eec.0.1781620342507;
-        Tue, 16 Jun 2026 07:32:22 -0700 (PDT)
-Received: from [127.0.0.1] ([128.24.160.236])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-3081e91f88bsm19524868eec.16.2026.06.16.07.32.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jun 2026 07:32:22 -0700 (PDT)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mpiricsoftware.com header.i=kalpan.jani@mpiricsoftware.com header.b="kLLmf3RU"
+ARC-Seal: i=1; a=rsa-sha256; t=1781674134; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=h0KBrVnv9BUpS91wHUeshZa2R1rxWTPbztz/caCa2gg0vZI4/oSfjPVNfW1NrdH/ZwmlozqH3coR27PKvgkCMp7U+oNpgoBAsk0IVrnDEjRhoukQnijnFz+84lWWn4BrdaCHwWSLzQFbwveQYN68Kb1hAEPc2QSV7ymxkdIgWSg=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1781674134; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=rXSnXH8WRsbFulXjkwMH1kSSo4KwLSOmnSHRwKPbqGs=; 
+	b=GEeqfZZwhcDN0PzeFbzzwSVoDTvhKcXFWURZvrWMXLzDAj2CX2AXT/XNkShpQcIwQhGpISTYjAwdliH+IC3BcCHDmQuxJFvxe2IGzTlDo59dZrzM65yi201eE0RUM7JgxvSz1ETap3uZwiem/xe5kdrmMcvu/Gi9in/ly9IVm0o=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=mpiricsoftware.com;
+	spf=pass  smtp.mailfrom=kalpan.jani@mpiricsoftware.com;
+	dmarc=pass header.from=<kalpan.jani@mpiricsoftware.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1781674134;
+	s=mpiric; d=mpiricsoftware.com; i=kalpan.jani@mpiricsoftware.com;
+	h=Date:Date:From:From:To:To:Cc:Cc:Message-ID:In-Reply-To:References:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=rXSnXH8WRsbFulXjkwMH1kSSo4KwLSOmnSHRwKPbqGs=;
+	b=kLLmf3RUTnH93lA4BZJ9zcejBhRV079tnI6324wq5GaUrgTxwAPpOA2DvIMOl+q5
+	xO3maqaL4FPYc60RCqKGLAIfkASjsWayt8Grg0PNtTDm4fXH6IXCdgrJW0zxbteyn3z
+	kuGKeNF3XX82wmFf7yNkSCfWjoiKtTLOwx79kOZE=
+Received: from mail.zoho.com by mx.zohomail.com
+	with SMTP id 1781674132684988.07072176918; Tue, 16 Jun 2026 22:28:52 -0700 (PDT)
+Date: Wed, 17 Jun 2026 10:58:52 +0530
+From: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
+To: "mptcp" <mptcp@lists.linux.dev>
+Cc: "matthieu.baerts" <matthieu.baerts@tessares.net>,
+	"Kalpan Jani" <kalpan.jani@mpiricsoftware.com>,
+	"syzbot+fb2c3fa2ba28aec94627"
+ <syzbot+fb2c3fa2ba28aec94627@syzkaller.appspotmail.com>
+Message-ID: <19ed40dc4bb.2d437dcd1096555.9183844211674571079@mpiricsoftware.com>
 In-Reply-To: <20260616124801.2282199-1-kalpan.jani@mpiricsoftware.com>
 References: <20260616124801.2282199-1-kalpan.jani@mpiricsoftware.com>
-Subject: Re: [PATCH mptcp-next] mptcp: fix lockdep splat by using
- GFP_ATOMIC in sk_net_refcnt_upgrade
-Message-ID: <1d48f40d-e702-4b2e-38a4-2d437bc7b5c3@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 16 Jun 2026 14:32:21 +0000
+Subject: Re:[PATCH mptcp-next] mptcp: fix lockdep splat by using GFP_ATOMIC
+ in sk_net_refcnt_upgrade
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Importance: Medium
+User-Agent: Zoho Mail
+X-Mailer: Zoho Mail
 
-Hi Kalpan,
+Please ignore the previous patch. I sent the wrong version (GFP_ATOMIC workaround).
 
-Thank you for your modifications, that's great!
+This is a workaround solution, not the proper fix. I'm sending a proper fix that moves sk_net_refcnt_upgrade() outside the socket lock, which is the correct architectural approach.
 
-Our CI did some validations and here is its report:
+Please wait for the next patch (Version 1: move code outside lock).
 
-- KVM Validation: normal (except selftest_mptcp_join): Unstable: 1 failed =
-test(s): packetdrill_add_addr =E2=9A=A0=EF=B8=8F=20
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/276218=
-62119
-
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/f101eea8485b
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1112313
+Thanks,
+Kalpan Jani
 
 
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
+From: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
+To: <mptcp@lists.linux.dev>
+Cc: <matthieu.baerts@tessares.net>, "Kalpan Jani"<kalpan.jani@mpiricsoftware.com>, <syzbot+fb2c3fa2ba28aec94627@syzkaller.appspotmail.com>
+Date: Tue, 16 Jun 2026 18:18:01 +0530
+Subject: [PATCH mptcp-next] mptcp: fix lockdep splat by using GFP_ATOMIC in sk_net_refcnt_upgrade
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+ > The function sk_net_refcnt_upgrade() is called while holding a socket lock
+ > in mptcp_subflow_create_socket(). This function performs an allocation via
+ > ref_tracker_alloc(gfp), which was using GFP_KERNEL.
+ > 
+ > GFP_KERNEL can trigger page reclaim, which creates a lockdep edge with
+ > fs_reclaim, leading to a circular dependency when combined with other
+ > lock chains from the block layer (nbd driver).
+ > 
+ > Change the allocation to use GFP_ATOMIC instead. This is safe because:
+ > - The ref_tracker struct is small (~200 bytes)
+ > - GFP_ATOMIC allocation failure is extremely unlikely
+ > - GFP_ATOMIC is commonly used in other locked contexts
+ > 
+ > Tested with mptcp/mptcp-upstream-virtme-docker CI: all 24 tests pass.
+ > 
+ > Circular dependency chain detected:
+ >   fs_reclaim --> sk_lock-AF_INET --> k-sk_lock-AF_INET/1
+ > 
+ > Fixes: 0cafd77dcd03 ("net: add a refcount tracker for kernel sockets")
+ > Reported-by: syzbot+fb2c3fa2ba28aec94627@syzkaller.appspotmail.com
+ > Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/599
+ > Signed-off-by: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
+ > ---
+ >  net/core/sock.c | 2 +-
+ >  1 file changed, 1 insertion(+), 1 deletion(-)
+ > 
+ > diff --git a/net/core/sock.c b/net/core/sock.c
+ > index 8a59bfaa8096..8458c304dabc 100644
+ > --- a/net/core/sock.c
+ > +++ b/net/core/sock.c
+ > @@ -2399,7 +2399,7 @@ void sk_net_refcnt_upgrade(struct sock *sk)
+ >      __netns_tracker_free(net, &sk->ns_tracker, false);
+ >      net_passive_dec(net);
+ >      sk->sk_net_refcnt = 1;
+ > -    get_net_track(net, &sk->ns_tracker, GFP_KERNEL);
+ > +    get_net_track(net, &sk->ns_tracker, GFP_ATOMIC);
+ >      sock_inuse_add(net, 1);
+ >  }
+ >  EXPORT_SYMBOL_GPL(sk_net_refcnt_upgrade);
+ > -- 
+ > 2.43.0
+ > 
+ > 
 
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
