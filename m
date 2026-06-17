@@ -1,133 +1,215 @@
-Received: from mail-dl1-f49.google.com (mail-dl1-f49.google.com [74.125.82.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-183.mta0.migadu.com (out-183.mta0.migadu.com [91.218.175.183])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F2A13F1670
-	for <mptcp@lists.linux.dev>; Wed, 17 Jun 2026 13:32:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20F07288D0
+	for <mptcp@lists.linux.dev>; Wed, 17 Jun 2026 14:46:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781703137; cv=none; b=gQ3sMThyevEctlooPj9jv40I1YfNlonqcP0t//ooBJYBVk2MDArxzdS1HobBzBa5I+EJLSl1g6qj4o8FAupRQGaZSeWH9jjVP+4k5A7PZehlLJAioMuOh8A6McJB/pPpfwkv5VRaCPVQV3CAAXXhonH+UwN0DpL4SUndD3XgVLs=
+	t=1781707591; cv=none; b=QBIGvrqfSB2j7v4YnbtZunXZhiIidtPUDmhOVBQ/PevkYdl/y1QjbrHvHasHjjfxRJ2jphDSWFIl9TH8v8Ebmrf0c7f4KRPXj8pOh0kUt87z0B/lUGh5KVKjouTq3K0BiC6Z/5Fx7/yYsYaire+no7Yz2Li3I7JCo4D/w11Xhu8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781703137; c=relaxed/simple;
-	bh=cBs2RJOn4/u1D6MDJv7+FzTurvstt8MXfc0qcxAc4bQ=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
-	 MIME-Version:Content-Type; b=I2Y57JNAzNEOBtpJXWPNQTmiTsItZPV61BICCwh0XiZAdQ1Tu9KWchap55ilGR1v39mCzbV9sHYUB6iMRfnDd53Hh6dOqGbQofo8oNtS0g832Pa9jHb7Mch/y3E30za5dzKbOmfwBH44IE/XFzVGxgH1pNsu+78xhYpY+dgeejk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dbDX3+N6; arc=none smtp.client-ip=74.125.82.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1781707591; c=relaxed/simple;
+	bh=/FYIEvqyxYaXKHEhTcAq2zJuDeIz+33LQpwBKVENEg0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=in2afoFhXx/OHsU3NWjopnQjErWTFIIPijKv8TvS4mSmy4T0/Gfh2OQ9o1vGRbus12G01M6gJWgT0nJ6kvxEJtGuOWgtO4AJmcJbeWDRfXtGTMbBSWbirse/pMfTPtcm6hFmH9/zcwPPZYOwUlZGwIQbbOcaIaTd2ITCxJG8efc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=AdBthS8p; arc=none smtp.client-ip=91.218.175.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dbDX3+N6"
-Received: by mail-dl1-f49.google.com with SMTP id a92af1059eb24-138501f8c04so3157162c88.1
-        for <mptcp@lists.linux.dev>; Wed, 17 Jun 2026 06:32:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1781703135; x=1782307935; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3/KVbGDEcfnSZStMnvbW6h06dpmP9XkkoQzDnaJVHkQ=;
-        b=dbDX3+N69XsOpaOwqpz5s4tU6I4t54PlJa4Wn8KbN+tckec1R9gLxKY5bub+umhMw0
-         vX9oxYPDU5Moh4GpRiOn9cQ3Ilv7Ed2p7DJuxfsmWX5tx+CyeOp2f3+LcKfGsdikOH8x
-         /ewfNigusui+bIwv3IeGRxQwdVmaOzw6gCkUhM67YnzT4H3Da+E2r8TS8b43DrFQQGAO
-         sZa+ysFk5Gp6/HJoJgYPmY1vMuSUKmWI8t6R63+GfG2pJ6qcv8RrN3TPpZErQzAbxuqH
-         H3uhUbaqvleIcJDrWtOWPY/lnXKYPA+hxtPD3izDn5jBnteOKip8+kzhyH7iO5O2k12E
-         Ygeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781703135; x=1782307935;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3/KVbGDEcfnSZStMnvbW6h06dpmP9XkkoQzDnaJVHkQ=;
-        b=L7ajFh72Hvc0H6r67E+hwKEO8G0QWX7uUYcaj6NIvnygw5Jh6+dXivihm4BGQEaKsf
-         MoWFlTtoB3T29C+jyWpwzLMjv9+KnYSJxBfw72WNyDosu1NkrCyVxuSAx92o+r8Nts8Q
-         U7R6L0SMY1cE/ceDKzMX/p+GFeOmrang08Q6bWfO5dph09SMVD0llHRC7+QSFYuwGUPJ
-         Gjh0jJJfJoiFSdEndhLAxcJD0SYkXKfWgWf4pDdOCKrW3P8TdF3bSPrHmyi7ZAyl7vv+
-         6GG0hIbceS71lBNAyKesxp64vNO22iQn/C09LlD6RMixNuECVVus+sanYtZzuBLkDjpg
-         0b8Q==
-X-Gm-Message-State: AOJu0YyZGHBJDowuNZph3xde8gIBnHREIlPb/2/ecEWVgvNNBEbgMigD
-	Y0352SXDc5QWHh0B+xax/NzEBWi1O0xYfSQtIpbndYXmoXNy2RfImugE522Z
-X-Gm-Gg: Acq92OEQi/RAcqu7+k3Y6FbRQ/h5QvwJYiEZ/0SW6N+Hp/EU4VxbEi1/mJUByxuOiXC
-	UIrhNsbRqC06+t7tnR+qMYqeaD1ncEoeaLy/GzJ496PEeVo3+RreBCwdtF/RblijkVU9pAIW7Lp
-	kSnG7Y00Th9qDVZlbEErllYlUK/KqI2Z4Ala1/LgPftV0SWBbarqtQB63af8WrIa9q8DzqVGHBz
-	/1yyjBIuxabmX+u8AJ4O+HSeiYxwtwkV0gR8QH8jMzKxgeYp1LXdrdyenSUTYW2jqKNeiXF/I8r
-	89NW1FpPsM5/6gdKcoxyDsbI8JfnqeMtFyd1G1KT2N3UjrT5ltCVlwGB3OWJFsHlgVWWTPfI5go
-	brldX92c0mFcPV/ntj7xyDcEsJNrPzicivK9DTrIhpFBa+hbyCH2G5ySG0piYDWrEA0b1fJxS0u
-	xp9y41yaELKw3bI0OP7ugQl6B29mc+
-X-Received: by 2002:a05:7022:672c:b0:136:e639:9c05 with SMTP id a92af1059eb24-1398f6de9efmr1798692c88.31.1781703135065;
-        Wed, 17 Jun 2026 06:32:15 -0700 (PDT)
-Received: from [127.0.0.1] ([172.182.194.217])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1384b964862sm16797118c88.10.2026.06.17.06.32.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2026 06:32:14 -0700 (PDT)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <tanggeliang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <10a30ed6484cc4d48009625f1ed8e12802e78e94.1781699193.git.tanggeliang@kylinos.cn>
-References:
- <10a30ed6484cc4d48009625f1ed8e12802e78e94.1781699193.git.tanggeliang@kylinos.cn>
-Subject: =?UTF-8?Q?Re=3A_=5BPATCH_mptcp-next=5D_Squash_to_?=
- =?UTF-8?Q?=22bpf=3A_Export_mptcp_packet_scheduler_?=
- =?UTF-8?Q?helpers=22?=
-Message-ID: <c1a9dee6-059c-fcba-1284-056de6d6c397@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 17 Jun 2026 13:32:13 +0000
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="AdBthS8p"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1781707587;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=GB8EFPk/V8wOx9FZP35I495eNWE9po00fnV7OHp/+Kw=;
+	b=AdBthS8pVJJc2UxLEFUmTGzDjwnCuLwPeCrp21JK4qrYY7w72AxOoxpUjT1XkCFIKm8MmT
+	qArwjffrgLefrD5a4aGiL7NbAa6BXyWvNe0azGqkwPHLVKtsHTKyCiGqkpuEhofughdtnx
+	K4+Yj/D5DAfsQDMgk30EdYUAChTgHs0=
+From: Gang Yan <gang.yan@linux.dev>
+To: mptcp@lists.linux.dev
+Cc: Gang Yan <yangang@kylinos.cn>
+Subject: [PATCH mptcp-next v2 0/9] selftests: mptcp: skip the v6 subtests when CONFIG_MPTCP_IPV6=n
+Date: Wed, 17 Jun 2026 22:46:07 +0800
+Message-ID: <cover.1781707101.git.yangang@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Hi Geliang,
+From: Gang Yan <yangang@kylinos.cn>
 
-Thank you for your modifications, that's great!
+This series is for make the selftest useful in the kernel which IPV6 is
+compiled as a module.
 
-Our CI did some validations and here is its report:
+With this series applied, the output with CONFIG_IPV6=m will be like:
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/276899=
-66207
+mptcp_connect.sh:
+'''
+Selftest Test: ./mptcp_connect.sh
+TAP version 13
+1..1
+# [SKIP] MPTCP IPv6 support is not available
+# INFO: MPTCP IPv6 not available, running IPv4-only tests
+# INFO: set ns3-Ij7oet dev ns3eth2: ethtool -K  gro off
+# INFO: set ns4-MNMck3 dev ns4eth3: ethtool -K tso off gso off
+# Created /tmp/tmp.MPGwnjy7S8 (size 7478906 B) containing data sent by client
+# Created /tmp/tmp.xLzF6OOxGG (size 1934300 B) containing data sent by server
+# 01 New MPTCP socket can be blocked via sysctl                           [ OK ]
+...
+# 31 ns2 MPTCP -> ns1 (10.0.1.1:10028      ) MPTCP     (duration   141ms) [ OK ]
+# INFO: with MPTFO end
+# /dev/stdin:2:1-2: Error: Could not process rule: Operation not supported
+# table inet mangle {
+# ^^
+# /dev/stdin:2:12-17: Error: Could not process rule: No such file or directory
+# table inet mangle {
+#            ^^^^^^
+# /dev/stdin:2:12-17: Error: Could not process rule: No such file or directory
+# table inet mangle {
+#            ^^^^^^
+# /dev/stdin:2:12-17: Error: Could not process rule: No such file or directory
+# table inet mangle {
+#            ^^^^^^
+# [SKIP] tproxy ipv4, could not load nft ruleset
+# INFO: nft inet table needs CONFIG_IPV6=y
+# INFO: disconnect
+# 32 ns1 MPTCP -> ns1 (10.0.1.1:10029      ) MPTCP     (duration   276ms) [ OK ]
+# 33 ns1 MPTCP -> ns1 (10.0.1.1:10030      ) TCP       (duration   232ms) [ OK ]
+# 34 ns1 TCP   -> ns1 (10.0.1.1:10031      ) MPTCP     (duration   223ms) [ OK ]
+# Time: 55 seconds
+ok 1 test: selftest_mptcp_connect
+'''
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/50d9d6a3a2cf
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1112923
+mptcp_sockopt.sh:
+'''
+Selftest Test: ./mptcp_sockopt.sh
+TAP version 13
+1..1
+# [SKIP] MPTCP IPv6 support is not available
+# Created /tmp/tmp.xrhCxOCqCb (size 1 KB) containing data sent by client
+# Created /tmp/tmp.u2QBzkEsfF (size 1 KB) containing data sent by server
+# 01 Transfer v4                                       [ OK ]
+# 02 Mark v4                                           [ OK ]
+# 03 Transfer v6                                       [SKIP] MPTCP IPv6 not available
+# 04 Mark v6                                           [SKIP] MPTCP IPv6 not available
+# 05 SOL_MPTCP sockopt v4                              [ OK ]
+# 06 SOL_MPTCP sockopt v6                              [SKIP] MPTCP IPv6 not available
+# 07 TCP_INQ cmsg/ioctl -t tcp                         [ OK ]
+# 08 TCP_INQ cmsg/ioctl -6 -t tcp                      [SKIP] MPTCP IPv6 not available
+# 09 TCP_INQ cmsg/ioctl -r tcp                         [ OK ]
+# 10 TCP_INQ cmsg/ioctl -6 -r tcp                      [SKIP] MPTCP IPv6 not available
+# 11 TCP_INQ cmsg/ioctl -r tcp -t tcp                  [ OK ]
+ok 1 test: selftest_mptcp_sockopt
+# time=17
+'''
 
+simult_subflow.sh:
+'''
+Selftest Test: ./simult_flows.sh
+TAP version 13
+1..1
+# [SKIP] MPTCP IPv6 support is not available
+# 01 balanced bwidth                                             7383 max 7906       [ OK ]
+# 02 balanced bwidth - reverse direction                         7380 max 7906       [ OK ]
+# 03 balanced bwidth with unbalanced delay                       7493 max 7906       [ OK ]
+# 04 balanced bwidth with unbalanced delay - reverse direction   7442 max 7906       [ OK ]
+# 05 unbalanced bwidth                                           11426 max 11921      [ OK ]
+# 06 unbalanced bwidth - reverse direction                       11391 max 11921      [ OK ]
+# 07 unbalanced bwidth with unbalanced delay                     11424 max 11921      [ OK ]
+# 08 unbalanced bwidth with unbalanced delay - reverse direction 11573 max 11921      [ OK ]
+# 09 unbalanced bwidth with opposed, unbalanced delay            11584 max 11921      [ OK ]
+# 10 unbalanced bwidth with opposed, unbalanced delay - reverse direction11559 max 11921      [ OK ]
+ok 1 test: selftest_simult_flows
+# time=105
+'''
 
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
+./mptcp_join.sh:
+'''
+Selftest Test: ./mptcp_join.sh
+TAP version 13
+1..1
+# [SKIP] MPTCP IPv6 support is not available
+# 001 no JOIN
+#       join Rx                             [ OK ]
+#       join Tx                             [ OK ]
+...
+# 022 with multiple laminar endpoints
+#       MPTCP IPv6 support is not available [SKIP]
+...
+'''
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+userspace_pm.sh:
+'''
+Selftest Test: ./userspace_pm.sh
+TAP version 13
+1..1
+# [SKIP] MPTCP IPv6 support is not available
+# INFO: Init
+# 01 Created network namespaces ns1, ns2                                 [ OK ]
+# INFO: Make connections
+# INFO: Connection info: 10.0.1.2:47434 -> 10.0.1.1:50002
+# 03 Established IPv6 MPTCP Connection ns2 => ns1                        [SKIP]
+# INFO: Will be using address IDs 27 (client) and 31 (server)
+# INFO: Announce tests
+...
+# 32 CREATE_LISTENER 10.0.2.2 (client port)                              [ OK ]
+# 33 CLOSE_LISTENER 10.0.2.2 (client port)                               [ OK ]
+# INFO: Cleanup
+# INFO: Done
+ok 1 test: selftest_userspace_pm
+# time=23
+'''
+---
+Changelog:
+v2:
+  - Patch2 uses " mptcpv6_init(\.|$)" to replace " mptcpv6_init$", and
+    trims some code comments and commit message.
+  - Patch5 refactors IPv6 guards in mptcp_sockopt.sh, unifies skip logic,
+    removes redundant wrappers and duplicated title prints, and adds an
+    early v6 check for TCP_INQ tests.
+  - Patch6 removes 2 lines of redundant inline comment.
+  - Patch8 adds 'skip_if' helper, and rewrites all 29 IPv6 subtest guards
+    in mptcp_join.sh to fix TAP log misordering and updates its commit
+    message with accurate test group info.
+  - Patch9 adds missing skip branches for seven IPv6 code paths in
+    userspace_pm.sh to generate proper TAP skip entries.
 
-For more details:
+v1:
+  Link: https://patchwork.kernel.org/project/mptcp/cover/cover.1781196828.git.yangang@kylinos.cn/
 
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+Gang Yan (9):
+  DO-NOT-MERGE: mptcp: test IPV6=m in docker-virtme
+  selftests: mptcp: mptcp_lib add runtime IPv6 availability detection
+    helper
+  selftests: mptcp: mptcp_connect.sh degrades to v4-only when MPTCP IPv6
+    is missing
+  selftests: mptcp: mptcp_connect.sh don't fail because of nft rules in
+    IPV6-less kernel
+  selftests: mptcp: mptcp_sockopt.sh skips v6 paths when MPTCP IPv6 is
+    missing
+  selftests: mptcp: simult_flows.sh skips v6 setup when MPTCP IPv6 is
+    missing
+  selftests: mptcp: mptcp_join.sh: pick v4 bind default when MPTCP IPv6
+    is missing
+  selftests: mptcp: mptcp_join.sh skips v6 subtests when MPTCP IPv6 is
+    missing
+  selftests: mptcp: userspace_pm.sh skips v6 paths when MPTCP IPv6 is
+    missing
 
+ tools/testing/selftests/net/mptcp/config      |   5 +-
+ .../selftests/net/mptcp/mptcp_connect.sh      |  48 +++-
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 111 ++++++--
+ .../testing/selftests/net/mptcp/mptcp_lib.sh  |  23 ++
+ .../selftests/net/mptcp/mptcp_sockopt.sh      |  94 +++++--
+ .../selftests/net/mptcp/simult_flows.sh       |  28 +-
+ .../selftests/net/mptcp/userspace_pm.sh       | 257 ++++++++++--------
+ 7 files changed, 391 insertions(+), 175 deletions(-)
 
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+-- 
+2.43.0
 
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
