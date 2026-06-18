@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D36463C6A2B
-	for <mptcp@lists.linux.dev>; Thu, 18 Jun 2026 09:30:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 102793DB626
+	for <mptcp@lists.linux.dev>; Thu, 18 Jun 2026 09:31:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781775058; cv=none; b=dfNc3dRzuYQw7likHwfk/LqtprDaUt9COK0cVEE0xUKOBV9FeftuYAQ9YWqmajJBvW154etTZKGp61Qb9iRjOd4CrZo0o02nE+TbibuHBmvzESb0Dfusgyddn9t8PPr8QgEQQiol4r5HVY79nYuq3VjaZ5kE/aUc7znh1LwWUSM=
+	t=1781775062; cv=none; b=r/Ue/3qq2SXh481+42pmnIgIc9M8E+GXbN+Df0qbsiY/qa4vlddVpo2rUWQnzUoYgRKh8BxWhkiWFoXSCGW9yFyIG06Oo5yWSslGY1CSb9XD8AJGcdpLAGOEoFJAbAGf1cikwLHSTPb6FeuEm+E5qMEKK3VeDJUx+WidEYOEelY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781775058; c=relaxed/simple;
-	bh=neNY1L6ZVXQlvdds7yBHQiASe01uHv63HJbIM6GidZY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=SoDdHfD3e7UKP8od4tn2gkBTCG+k49qc2Y+VykjW3tFksMysTrjqxEvapjOhp1/n9YkrqTkTqXAYN5cQw2omteexU/Qs+jgo2fYSmz7Zii6XK8NxlD/4zR4dv3cqbT+zkxHCRf0KTxn2WVpP1qH1SOExAXlRh0qZVqJedZhGcSY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zl0fg3VX; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1781775062; c=relaxed/simple;
+	bh=+GObux1eVv2EEJTrKAozKjqiI8LAKPC/RBuHGnduABE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KqkxtjZ6KZZDgP5uYvD1tFoU+dllJjGL5gbwUs3bMHDUTsNn7/anzdhkD/q9W04sB/A8kAXTj+YrSU3tJaZ5PQPlb5BfYlN/C5AvbzVY5xscbt/2JijtBrORCoCG2hMUbzMr47SdKXLDkus4VPEpJNSiskb7lwR06JmVfOCVwYw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cFIVQfUV; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zl0fg3VX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3C281F00A3D;
-	Thu, 18 Jun 2026 09:30:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cFIVQfUV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C58A71F00A3F;
+	Thu, 18 Jun 2026 09:30:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781775057;
-	bh=oDQiH1PhpZT/+W3HEVuQCbwVSDxzHDTjdnQi1JOA3/U=;
-	h=Date:Subject:To:References:From:In-Reply-To;
-	b=Zl0fg3VXxYAQ95sUyooGzoQDrSQFCKlmksG58lh1rGxPxGBs8p640VUJJf74ErA3T
-	 fXAD5QKDTbNhsMSHXOO3DuGCScUblI3hOKLTtIfdlaVwEu+2gSJogy8tSCyJ1CIRKc
-	 nc+B4N3e1rEPte3Pq/YS0Z0k86DlIdU06QCwbWtEjUPYfIygteTCQUEl+RWVVnA8BZ
-	 2krDFPppXSDHuhPL4lKMs+hutWG8Z6VXIBUbMDkgHBvdcv2VapeMvfdram7qsC55+m
-	 cLVxz++sSo4/wrh3EQBSGVG8TJUUesIQk94HnNOlBUC4im5hP7X2fNp5Yr1WBA6usr
-	 eI8xFZ3DcXCFA==
-Message-ID: <f61d6d7c-19ee-466f-b514-77f687392644@kernel.org>
-Date: Thu, 18 Jun 2026 11:30:54 +0200
+	s=k20260515; t=1781775060;
+	bh=Ak3X6PIRfGNFMWczfAX04bCNYWAn3/RTsG/YAKYb00E=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=cFIVQfUVJt/e61ciRjwP3ME6hfIK9T8Q6mPHEW4yvsnNP5/9/aKjZ5Tn7RP4NyDVh
+	 tpTafUdVAnijFKeGR7EPH7F+EW3rWXQIIGnFx5aMcbpj8+mBJiskz8RZ+XFoHRQfME
+	 p7SLXSBGXuo/J3LyaLteS8/jpt+L5ICrobS024f6cvzUv0WLgVbdAPuPzKEnDnhKyk
+	 hBIec3LhzazOPtqwRZ6+C9YcyaEvYrHX0+WD5HU/9CCpoabNwaY8DVSiTRLwc+VMrh
+	 824LSLX2Ge7AAxSGx+PzJbfbvQ15UYKIsFbAG3a1lSk1L0m2tZij0DDAcpvFoY2Zuf
+	 ZenlG2mKkCLOA==
+Message-ID: <f153357a-1c0c-4cfd-a2e0-44666a1e4f87@kernel.org>
+Date: Thu, 18 Jun 2026 11:30:59 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v2 0/9] selftests: mptcp: skip the v6 subtests
- when CONFIG_MPTCP_IPV6=n
+Subject: Re: [PATCH mptcp-next v2 5/9] selftests: mptcp: mptcp_sockopt.sh
+ skips v6 paths when MPTCP IPv6 is missing
 Content-Language: fr
-To: gang.yan@linux.dev, mptcp@lists.linux.dev
+To: Gang Yan <gang.yan@linux.dev>, mptcp@lists.linux.dev
+Cc: Gang Yan <yangang@kylinos.cn>
 References: <cover.1781707101.git.yangang@kylinos.cn>
- <5e2e5ded267ad207d84932c653bbfa4b701f5e59@linux.dev>
+ <b65affe40258762c96d6d6e48d3b3d35d72ad8c8.1781707101.git.yangang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,43 +87,223 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <5e2e5ded267ad207d84932c653bbfa4b701f5e59@linux.dev>
+In-Reply-To: <b65affe40258762c96d6d6e48d3b3d35d72ad8c8.1781707101.git.yangang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Gang,
-
-On 18/06/2026 04:55, gang.yan@linux.dev wrote:
-> June 17, 2026 at 10:46 PM, "Gang Yan" <gang.yan@linux.dev mailto:gang.yan@linux.dev?to=%22Gang%20Yan%22%20%3Cgang.yan%40linux.dev%3E > wrote:
+On 17/06/2026 16:46, Gang Yan wrote:
+> From: Gang Yan <yangang@kylinos.cn>
 > 
+> Confine all of ipv6-related commands to mptcp_lib_is_v6_enabled:
+>   - call mptcp_lib_check_ipv6() once after the existing init-time
+>     mptcp_lib_check_*() calls to populate the cached flag;
+>   - guard the ip6tables loop in add_mark_rules() and every v6
+>     "ip addr add" / mptcp_lib_pm_nl_add_endpoint() in init();
+>   - in do_mptcp_sockopt_tests(), do_tcpinq_tests() and the top-level
+>     run_tests dispatcher, emit a SKIP TAP line for each v6 subtest
+>     instead of running it.
 > 
-> Hi Matt,
+> v4 transfers, v4 mark checks and the AF_INET sockopt / TCP_INQ tests
+> are untouched. In a full-featured kernel the new guards always take
+> their v6 branch and the test set runs as before.
 > 
-> As we discussed during yesterday's Weekly Meeting, I’ve quickly gone
-> through this patch series thread[1].
+> Assisted-by: GLM:5.1 Z.ai
+> Signed-off-by: Gang Yan <yangang@kylinos.cn>
+> ---
+>  .../selftests/net/mptcp/mptcp_sockopt.sh      | 94 +++++++++++++++----
+>  1 file changed, 75 insertions(+), 19 deletions(-)
 > 
-> This patch converts CONFIG_IPV6 from a tristate option to a bool. From the
-> discussion in the thread v1, ARM-based devices like mobile phones can still
-> set CONFIG_IPV6=n. In such cases, our CONFIG_MPTCP_IPV6 will also be disabled,
-> which results in kselftest failures even when CONFIG_MPTCP=y.
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
+> index e850a87429b6..ae7776b17c33 100755
+> --- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
+> @@ -50,7 +50,7 @@ add_mark_rules()
+>  	local m=$2
+>  
+>  	local t
+> -	for t in ${iptables} ${ip6tables}; do
+> +	for t in ${iptables}; do
 
-I don't think that will be the case :)
-The trend is more to have IPv6 only, than v4 only.
-> Given that, I believe it’s still valuable to mark and skip all IPv6-dependent
-> test cases within our self-test suite. 
+Instead, you could keep most of the code here, and have something like:
 
-I don't know. I did a quick review, and maybe the code could be reduced,
-but still I don't think such modification would be accepted, and it
-would probably be easier not to introduce all these extra checks in the
-selftests, and maintain that with new tests that will be added later on.
+  if [ ${t} = ${ip6tables} ] && ! mptcp_lib_is_v6_enabled; then
+      continue
+  fi
 
-I do think the best is to talk to people still using CONFIG_IPV6=m. The
-thread you mentioned explains why it is likely a bad idea. In short: the
-IPv6 module will certainly be loaded very early in the boot process
-simply to have IPv6 on the localhost interface. The IPv6 module is just
-an overhead, and more prone to (security) bugs. Could you then please
-first check if CONFIG_IPV6 could be set to =y on your side, because that
-will be the new value anyway when switching to a more recent kernel version?
+>  		# just to debug: check we have multiple subflows connection requests
+>  		ip netns exec $ns $t -A OUTPUT -p tcp --syn -m mark --mark $m -j ACCEPT
+>  
+> @@ -60,6 +60,21 @@ add_mark_rules()
+>  		ip netns exec $ns $t -A OUTPUT -p tcp -m mark --mark $m -j ACCEPT
+>  		ip netns exec $ns $t -A OUTPUT -p tcp -m mark --mark 0 -j DROP
+>  	done
+> +	# ip6tables rules require MPTCP IPv6 support in the kernel, otherwise
+> +	# ip6tables will reject them (or, in some environments, the binary itself
+> +	# may behave oddly without IPv6 available).
+
+I'm not sure to understand here: what's the link between ip6tables and
+MPTCP IPv6 support? Or only check if the binary is there. Still it looks
+like this modification is not needed.
+
+> +	if mptcp_lib_is_v6_enabled; then
+> +		for t in ${ip6tables}; do
+> +			# just to debug: check we have multiple subflows connection requests
+> +			ip netns exec $ns $t -A OUTPUT -p tcp --syn -m mark --mark $m -j ACCEPT
+> +
+> +			# RST packets might be handled by a internal dummy socket
+> +			ip netns exec $ns $t -A OUTPUT -p tcp --tcp-flags RST RST -m mark --mark 0 -j ACCEPT
+> +
+> +			ip netns exec $ns $t -A OUTPUT -p tcp -m mark --mark $m -j ACCEPT
+> +			ip netns exec $ns $t -A OUTPUT -p tcp -m mark --mark 0 -j DROP
+> +		done
+> +	fi
+>  }
+>  
+>  init()
+> @@ -70,21 +85,29 @@ init()
+>  	for i in $(seq 1 4); do
+>  		ip link add ns1eth$i netns "$ns1" type veth peer name ns2eth$i netns "$ns2"
+>  		ip -net "$ns1" addr add 10.0.$i.1/24 dev ns1eth$i
+> -		ip -net "$ns1" addr add dead:beef:$i::1/64 dev ns1eth$i nodad
+> +		if mptcp_lib_is_v6_enabled; then
+> +			ip -net "$ns1" addr add dead:beef:$i::1/64 dev ns1eth$i nodad
+> +		fi
+>  		ip -net "$ns1" link set ns1eth$i up
+>  
+>  		ip -net "$ns2" addr add 10.0.$i.2/24 dev ns2eth$i
+> -		ip -net "$ns2" addr add dead:beef:$i::2/64 dev ns2eth$i nodad
+> +		if mptcp_lib_is_v6_enabled; then
+> +			ip -net "$ns2" addr add dead:beef:$i::2/64 dev ns2eth$i nodad
+> +		fi
+>  		ip -net "$ns2" link set ns2eth$i up
+>  
+>  		# let $ns2 reach any $ns1 address from any interface
+>  		ip -net "$ns2" route add default via 10.0.$i.1 dev ns2eth$i metric 10$i
+>  
+>  		mptcp_lib_pm_nl_add_endpoint "${ns1}" "10.0.${i}.1" flags signal
+> -		mptcp_lib_pm_nl_add_endpoint "${ns1}" "dead:beef:${i}::1" flags signal
+> +		if mptcp_lib_is_v6_enabled; then
+> +			mptcp_lib_pm_nl_add_endpoint "${ns1}" "dead:beef:${i}::1" flags signal
+> +		fi
+>  
+>  		mptcp_lib_pm_nl_add_endpoint "${ns2}" "10.0.${i}.2" flags signal
+> -		mptcp_lib_pm_nl_add_endpoint "${ns2}" "dead:beef:${i}::2" flags signal
+> +		if mptcp_lib_is_v6_enabled; then
+> +			mptcp_lib_pm_nl_add_endpoint "${ns2}" "dead:beef:${i}::2" flags signal
+> +		fi
+
+Maybe better to regroup all commands under on "if v6".
+
+>  	done
+>  
+>  	mptcp_lib_pm_nl_set_limits "${ns1}" 8 8
+> @@ -106,6 +129,7 @@ cleanup()
+>  mptcp_lib_check_mptcp
+>  mptcp_lib_check_kallsyms
+>  mptcp_lib_check_tools ip "${iptables}" "${ip6tables}"
+> +mptcp_lib_check_ipv6
+>  
+>  check_mark()
+>  {
+> @@ -164,6 +188,20 @@ do_transfer()
+>  		ip=ipv4
+>  	fi
+>  
+> +	# Skip v6 subtests when the running kernel has no MPTCP IPv6 support.
+> +	# Reuses the same ${ip}/${ip:2} naming as the normal path below so the
+> +	# console counter (MPTCP_LIB_TEST_COUNTER, bumped by print_title) and
+> +	# the TAP index (bumped by mptcp_lib_result_skip) stay in lock-step.
+> +	if [ "${ip}" = "ipv6" ] && ! mptcp_lib_is_v6_enabled; then
+> +		print_title "Transfer ${ip:2}"
+> +		mptcp_lib_pr_skip "MPTCP IPv6 not available"
+> +		mptcp_lib_result_skip "transfer ${ip}"
+> +		print_title "Mark ${ip:2}"
+> +		mptcp_lib_pr_skip "MPTCP IPv6 not available"
+> +		mptcp_lib_result_skip "mark ${ip}"
+> +		return 0
+> +	fi
+> +
+>  	cmsg="TIMESTAMPNS"
+>  	if mptcp_lib_kallsyms_has "mptcp_ioctl$"; then
+>  		cmsg+=",TCPINQ"
+> @@ -274,18 +312,23 @@ do_mptcp_sockopt_tests()
+>  	mptcp_lib_pr_ok
+>  	mptcp_lib_result_pass "sockopt v4"
+>  
+> -	ip netns exec "$ns_sbox" ./mptcp_sockopt -6
+> -	lret=$?
+> -
+>  	print_title "SOL_MPTCP sockopt v6"
+> -	if [ $lret -ne 0 ]; then
+> -		mptcp_lib_pr_fail
+> -		mptcp_lib_result_fail "sockopt v6"
+> -		ret=$lret
+> -		return
+> +	if ! mptcp_lib_is_v6_enabled; then
+> +		mptcp_lib_pr_skip "MPTCP IPv6 not available"
+> +		mptcp_lib_result_skip "sockopt v6"
+> +	else
+> +		ip netns exec "$ns_sbox" ./mptcp_sockopt -6
+> +		lret=$?
+> +
+> +		if [ $lret -ne 0 ]; then
+> +			mptcp_lib_pr_fail
+> +			mptcp_lib_result_fail "sockopt v6"
+> +			ret=$lret
+> +			return
+> +		fi
+> +		mptcp_lib_pr_ok
+> +		mptcp_lib_result_pass "sockopt v6"
+>  	fi
+> -	mptcp_lib_pr_ok
+> -	mptcp_lib_result_pass "sockopt v6"
+
+Maybe this chunk can be reduced?
+
+  if ! mptcp_lib_is_v6_enabled; then
+     skip
+     return
+  fi
+
+and the rest is not modified, no?
+>  }
+>  
+>  run_tests()
+> @@ -308,6 +351,13 @@ run_tests()
+>  do_tcpinq_test()
+>  {
+>  	print_title "TCP_INQ cmsg/ioctl $*"
+> +
+> +	if [ "${1}" = "-6" ] && ! mptcp_lib_is_v6_enabled; then
+> +		mptcp_lib_pr_skip "MPTCP IPv6 not available"
+> +		mptcp_lib_result_skip "TCP_INQ: $*"
+> +		return 0
+> +	fi
+> +
+>  	ip netns exec "$ns_sbox" ./mptcp_inq "$@"
+>  	local lret=$?
+>  	if [ $lret -ne 0 ];then
+> @@ -339,10 +389,16 @@ do_tcpinq_tests()
+>  		if [ $lret -ne 0 ] ; then
+>  			return $lret
+>  		fi
+> -		do_tcpinq_test -6 $args
+> -		lret=$?
+> -		if [ $lret -ne 0 ] ; then
+> -			return $lret
+> +		if mptcp_lib_is_v6_enabled; then
+> +			do_tcpinq_test -6 $args
+> +			lret=$?
+> +			if [ $lret -ne 0 ] ; then
+> +				return $lret
+> +			fi
+> +		else
+> +			print_title "TCP_INQ cmsg/ioctl -6 $args"
+> +			mptcp_lib_pr_skip "MPTCP IPv6 not available"
+> +			mptcp_lib_result_skip "TCP_INQ: -6 $args"
+>  		fi
+>  	done
+>  
 
 Cheers,
 Matt
