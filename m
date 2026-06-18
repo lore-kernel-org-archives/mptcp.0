@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B2153C6A2B
-	for <mptcp@lists.linux.dev>; Thu, 18 Jun 2026 09:31:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D09EE3BED46
+	for <mptcp@lists.linux.dev>; Thu, 18 Jun 2026 09:31:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781775065; cv=none; b=hQk+c8/Qo83qz9ViWC9Jx+A1WH8yZx2si24Rys6duzYfeiNnaHf19TEPguyBwLFq8gDP4Zdqw6y9MZORsNFFLpmZYH/l8v24JA7Htc6gVVDkyFqyseocj562m2RUINxOUxyGDXwcZP/4w628VXUVVSyX8B9dPSAVTZuSuDgnFbc=
+	t=1781775070; cv=none; b=GynFZNcRC/ug005TwA0gRlfNEG1oYez7vGaJXPwFKWLTpf/SjhA3X/NXjzgCPI5J/niQ699qN1YfpN9V4PUnUGTkfqRd3WLoWafaWP6fDMtMCfHeqVeRDcZQtBbSN6UBgfDc5p+f8gE2wZW4Q2U+DDc9zif3KA5QrI7LAlQkeNo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781775065; c=relaxed/simple;
-	bh=VN/iT4Vyt2zQ/Lt0lxydJdOBBLErLtP81sU2rzfVrIA=;
+	s=arc-20240116; t=1781775070; c=relaxed/simple;
+	bh=x3AVTqogt5VUdeMKhwJGZS0NNx/zBtu6V9GqW09RF74=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IbqqvHqais4qvGrSHIEIGXDdUzXRFs15zwTmKCnU2lF4uOttX9wqIIYlvS90/+mZgKG9CM4K+25gkP9lc0fgkUZe8yxjLyaZeYWzPKqe4dtZltlfxnGy45a5Z/NUvtdQy4wbCDhyVO5MDA9zTetB9aU6PubaS8bzeKZ4FS/b65w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MX4+lT74; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=E26cB2fKyHCD5g11Zo1tArV7yNI0pHI6SNSx01Me19tlPm2Eh9K/gCCuXHdFJ/aclbVP3KEeFwu/SEGo6piRDF5M8kHmampMzBi05IcUYI53z1l2MzYCt2iqztPiLOB72HmDLrGmc9rwnG2EZxsezkgHqGklHd0Ees2wHCLEjcs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YWMMF8iB; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MX4+lT74"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E5501F00A3D;
-	Thu, 18 Jun 2026 09:31:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YWMMF8iB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17DA91F00A3A;
+	Thu, 18 Jun 2026 09:31:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781775064;
-	bh=6ImceKI8pD0ThU+BaPovabLqemQc6VRC4eq3maq3iLY=;
+	s=k20260515; t=1781775069;
+	bh=zGgcRuElCEyPMv7vLyvUfoZAii5RntXA+NpUSHUNJyw=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=MX4+lT7422AfMFs4LYFR9gGv22IUJFGOzmgnYmo+FfTq2FAK0k6Hv+Pb4Wyy/6ZPz
-	 lUXqxJroIrnplKgMVX2AY1S+d8reWqAFo+IMFUxqnXAgg1yQnQMd2URr8kM1uc6JrD
-	 UjShHXsfgUy+UnMRUn00g7qjdA+1I8qOZoMQpgNXSWF8P02Lm5no9MUxZSL7aPqInv
-	 S3qZAjOwaLsiZD5pSKMGTQxSwAAwVrpv4UgH1i+43ijTZTfvewHskubcB4Lk4eQ/4+
-	 +EudhYnrJyPpvkui7YsgGKWlT3Fznzuv0vWKy6VUM7VAfqxP6pDJ+Z2US9SmdX2jkt
-	 jDDx/QXmUAOgg==
-Message-ID: <3b88b9f7-a08f-409b-9f89-ace7368f7124@kernel.org>
-Date: Thu, 18 Jun 2026 11:31:02 +0200
+	b=YWMMF8iBHc7uVvGj//PMD+etrpq5ApseUeREdjz1jRgY0BZXs+lIfHm6IxFLqxIem
+	 q+gS99kpjXiOWXDVqDt35whYd1zWDPZpE4ty/h5ERo7RmhItuS6BxBeDhcKfIkL1Lq
+	 Rtt7qaF0wdhMO4jcnf8wAR8uYuu9VIVz5+mvEE4cBsJyYDiolT9aXu3onBd9Dzf/pI
+	 W6Ywa7cGH0iEcs/nPmG0DvVW1sKp98Wrm7xUgEIwhEJSMj8gaRnv6sip1Aua7ukWg8
+	 +fOhVaq7iAm/CdszhZR2QzE7oH2DLvq4iJGsx/F4yYC3DAdG3T4ewgCV5+tuQVKZL9
+	 BKwyXOYw0mdUw==
+Message-ID: <3ea8b460-a0ad-452b-ac2d-895c57b8ec39@kernel.org>
+Date: Thu, 18 Jun 2026 11:31:07 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v2 8/9] selftests: mptcp: mptcp_join.sh skips
- v6 subtests when MPTCP IPv6 is missing
+Subject: Re: [PATCH mptcp-next v2 9/9] selftests: mptcp: userspace_pm.sh skips
+ v6 paths when MPTCP IPv6 is missing
 Content-Language: fr
 To: Gang Yan <gang.yan@linux.dev>, mptcp@lists.linux.dev
 Cc: Gang Yan <yangang@kylinos.cn>
 References: <cover.1781707101.git.yangang@kylinos.cn>
- <acbcf0efa677685ac782dd6360d191a8d23c6dc2.1781707101.git.yangang@kylinos.cn>
+ <08a86e9d1eedf80576d791c03165f772db5eca11.1781707101.git.yangang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,39 +87,31 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <acbcf0efa677685ac782dd6360d191a8d23c6dc2.1781707101.git.yangang@kylinos.cn>
+In-Reply-To: <08a86e9d1eedf80576d791c03165f772db5eca11.1781707101.git.yangang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+
+
 
 On 17/06/2026 16:46, Gang Yan wrote:
 > From: Gang Yan <yangang@kylinos.cn>
 > 
-> mptcp_join.sh configures dedicated dead:beef:*::1/2 IPv6 addresses
-> and IPv6 default routes inside init_partial(). A large number of
-> subtest groups rely on IPv6 or IPv4-mapped IPv6 endpoints:
-> ipv6_tests, v4mapped_tests, mixed_tests, add_addr_timeout_tests,
-> laminar_endp_tests, plus one v4-mapped case in userspace_tests.
-> 
-> All these IPv6-related routines fail on kernels built with
-> CONFIG_IPV6=m, which implicitly disables CONFIG_MPTCP_IPV6.
-> 
-> This patch adds a helper named 'skip_if' which doesn't call
-> mptcp_lib_fail_if_expected_feature, and can be used for guarding
->  the v6 subtests in userspace_tests.
+> Call mptcp_lib_check_ipv6() at script init, then guard every v6
+> step — the init-time dead:beef:* assignments, the v6 PM sequences
+> inside test_announce()/test_remove()/test_subflows(), and the
+> top-level make_connection "v6" / test_subflows_v4_v6_mix() calls —
+> with mptcp_lib_is_v6_enabled. Each v6-only subtest emits a SKIP TAP
+> line under its existing name when v6 is unavailable. v4 paths and
+> the pass/fail behaviour on a full-featured kernel are unchanged.
 > 
 > Assisted-by: GLM:5.1 Z.ai
 > Signed-off-by: Gang Yan <yangang@kylinos.cn>
 > ---
->  .../testing/selftests/net/mptcp/mptcp_join.sh | 102 +++++++++++++-----
+>  .../selftests/net/mptcp/userspace_pm.sh       | 257 ++++++++++--------
 
-I don't know if there is a shorter way, but that's a lot of
-modification, and not something easy to maintain: each time a new test
-is added, we will need to remember about skipping it if v6 is not available.
+That's also a lot, making the code hard to read.
 
-Instead, we could add IPv6 support only to the tests that require it: so
-adding the v6 addresses to the different interfaces in a different
-function, called after reset. This function can then check if it is
-available.
+Maybe the verify_* functions could do the skip when v6 is required?
 
 Cheers,
 Matt
