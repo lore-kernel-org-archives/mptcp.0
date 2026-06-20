@@ -1,135 +1,92 @@
-Received: from mail-dl1-f45.google.com (mail-dl1-f45.google.com [74.125.82.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-of-o54.zoho.com (sender4-of-o54.zoho.com [136.143.188.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48F722C86D
-	for <mptcp@lists.linux.dev>; Sat, 20 Jun 2026 00:30:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.45
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781915412; cv=none; b=K2cGP4KWQAztKCkfuuq4wG5kHl+SmGolbIdUJ34bJUHJ9TkbeglBQDGPvsf+gohD0DiZ6CMg5q/sFOB6N/FEYga55//A7GcwkYnZI51l+ltzQNU7ml0lUWWR8++cefKLyNCkn8ag7q7wawHRRIAGuvoX0TbqYqItGcZzaHqWe98=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781915412; c=relaxed/simple;
-	bh=s+ThBPJjZSx2UN38w42RRLyvdrXPx0i+Kc1D769GWRc=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
-	 MIME-Version:Content-Type; b=GttkZxbzyBN6KPtQVFAK+jwErd07anfWyJdNrRZogAOrCrho3cq5yyeTHn8gMwMYw1B81HY1AxpBbGN+kIj2f9CIDpqAkbEDnQTJJuEdjM20tTsFjiSMfGNeaJB55WGoUmbSM9AIhgyTWUrhHNkQdmCNJFZkTW+W+HCQRHyx5FU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hgBxYmP/; arc=none smtp.client-ip=74.125.82.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEA201FD4
+	for <mptcp@lists.linux.dev>; Sat, 20 Jun 2026 08:44:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.54
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1781945096; cv=pass; b=DFHUpVcGZbneopWZUwdXULtF2dcjqBw0QgoJ0JWT/NyTiDNQqxcGSDWs3MEfC5gbgnuM8Br0GsZPUqnQdjPdD1bYJLrsuX2sUpMOU8jY2woTpVT1ypkVLiFkWvmllpvoTB+qRMTcZOLgOkk4QV2AA+e4JztS6zMDZnQMuZDhdpg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1781945096; c=relaxed/simple;
+	bh=RlZe4NcNypaezTl1zjoXqgLEWnnK/WyqF8nmCzoJqSE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=aFZ+57GaUeLlEW9CLACPira6XtXhMmteGin4PbNN/JJY8T9HqKpV7VeTDf02AQo0HrjwYFjOOA4u0GNcYas6dt9Dpu6nf30WYlQIkqIeOSPDqacGsaaI7EwnsVQtjxb6E2ABYLKOu7cBew7MlkdGA84Nh9Ph3zIrWX/7vHDyuIk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com; spf=pass smtp.mailfrom=mpiricsoftware.com; dkim=fail (0-bit key) header.d=mpiricsoftware.com header.i=shardul.b@mpiricsoftware.com header.b=kewkXiVT reason="key not found in DNS"; arc=pass smtp.client-ip=136.143.188.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mpiricsoftware.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hgBxYmP/"
-Received: by mail-dl1-f45.google.com with SMTP id a92af1059eb24-1363fe80fe8so3464184c88.0
-        for <mptcp@lists.linux.dev>; Fri, 19 Jun 2026 17:30:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1781915410; x=1782520210; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AZFCYnWt7IA48KpX8ZVKEBNiiz93nw5S/vAvNwMhIMg=;
-        b=hgBxYmP/MvrsIjAXOk5KOQxGhDaGOk6RBgDhVDmFjGt9CQOZX6aCpQ1H85fGtimRK4
-         ul0Z3QRUxtHko5KYSq6dHz6p+c03+AeIUwiiONqHX+BXNHNVP8cKSB/+lYKOC7Xwta07
-         9LDpt6fS28jCN5ZoYHvyi7ZSZSBmyV5LIybzc8o6OPHkivEhVMwSpxjvGZfqnZfxT3Vj
-         99ncAmW1iSS8+jES3HDlM58vubYMcBrPt8rhQhGqWWGTkpyqRWQg5WBmnQ0FQj+ftp5Y
-         cJ1s5t80T6StX3acGb3F+1wnLfIpR+Ei29ZtCa5smbjA7fNzIWSOzpV1lBqRmnluA/Qr
-         NPhg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781915410; x=1782520210;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=AZFCYnWt7IA48KpX8ZVKEBNiiz93nw5S/vAvNwMhIMg=;
-        b=JTG3jByQKHk37rGERRlciQpBqR2JkmoOvdRnpAoRn1AE4Qoql5N1L5ju6xTjHaYWHm
-         fVdEz76yFidmf9Z/B5jCV4GT+JOqditmPC6Ptizon+y0yI5Y1RTfLSffvudOP8FWOIcU
-         UQPlyeBhWPfAfVXGMtLTH8+IrlFuT+AYCDAEX66akU50BQb0pYwCANIsiLzwV0zVpY5G
-         whYIaQpUhcMMehbMG865ImNLv64l58mZkrY1+SclAshVEskqEWTZQuznwbwVaBBD0HFN
-         WfYuqAI/JEKdoWUxdOgXAUjqXS6Sn+YiKWZCV+9LJ3XmzP7ToyqFruagOXGbe7eD+Hb2
-         mE+A==
-X-Gm-Message-State: AOJu0Yz/j08ihmzHLhWR88FAe1H8bdBwSZ3/hmiTHXoK8hnWTmPLVO6O
-	HPAYUvXMKg4kG+D2yekV7SAHrjdskKJlQSVG52Yf5cMoRNs6vHNGRZqu0Ura
-X-Gm-Gg: AfdE7ckGJdSQe+kqW8ApsvIFueVjD8V8NREDmhGhICzixScLl22qcu9ePIS4GL0X4F9
-	DWGDFX2HgQnFM5DcNF8Zu9Kl1QnhqgbmrxJhZtAJx5q00scYByLbEg8g/9RTEw/X3QrEZCn0YpC
-	pRadS9FcY7zouRSOhPXlxqE6OrWSlaajxcdfAFDIBivHDwE+OS8J5dmc6HPq7fKf6QDNz2gW3BT
-	GhQCHcuL/3K7fUidry134JchcI7FITdqqDjQ8kY9LRziz+pie/UOXaX1d+WoaluChbdOcaN7WiS
-	A5TA9tveLSsvlgxyXO+Lr0Gc98Cw/2Deg8siHduHh4r5BAf920Z0aCOfb12ifps93GCWgAulZAB
-	rsD0BI3Kx6Gl0bxDxax5FbPDR4xVjs4a2Hzk28fL1obuMCT48N69XKqU9Q7MkgOfOazv0kpojE+
-	nLHlnhXvI2iaTR7NTRkrTwlnqd
-X-Received: by 2002:a05:7022:6894:b0:137:e6a9:b998 with SMTP id a92af1059eb24-139a38812ccmr2468836c88.31.1781915410151;
-        Fri, 19 Jun 2026 17:30:10 -0700 (PDT)
-Received: from [127.0.0.1] ([13.64.25.176])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-139adcce488sm834508c88.8.2026.06.19.17.30.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Jun 2026 17:30:09 -0700 (PDT)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <tanggeliang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <3b746802bcc4b08e9a6d2f2fb2f7622197a2d25a.1781911900.git.tanggeliang@kylinos.cn>
-References:
- <3b746802bcc4b08e9a6d2f2fb2f7622197a2d25a.1781911900.git.tanggeliang@kylinos.cn>
-Subject: Re: [PATCH mptcp-next] selftests: mptcp: fix const qualifier
- warnings in strchr usage
-Message-ID: <f1e84106-8647-c483-7237-0993c39605ab@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Sat, 20 Jun 2026 00:30:08 +0000
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mpiricsoftware.com header.i=shardul.b@mpiricsoftware.com header.b="kewkXiVT"
+ARC-Seal: i=1; a=rsa-sha256; t=1781945089; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=R4k1h0prExxpZ561JCVZHY33Stk3Qz6YfkkYPaPdD6mLZggiQaD+PTDX0mjC+tqqcMLlhCfyJD/7zI8XsAlRcFhHfhx47I3JkeL6GOtVYHZmdXUTAUUUBxPQO3x6j1916gqQqxrF9vSAS+lLdndqZUs0rnjOzlfiX+UaQsQAQ7k=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1781945089; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=GnS3AG4scfFutrkBxWSCGu80+IvAa7nw5ZgT6JaGF88=; 
+	b=O56z209ArcOxYWXqwrkyPCOEiX+Ebr6RkmLot7IraXIli8KryYt/1MQByjI/fKyh446E6GEERciKzcH9w8n6Pys9vovfVFca+TCk4ylFHfABv+HGiS3IGbVJJ/mg+C0kpN5vbjVRp/z0KGUZ9SJKuGLYKSrluhpnl9+DnGtQty8=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=mpiricsoftware.com;
+	spf=pass  smtp.mailfrom=shardul.b@mpiricsoftware.com;
+	dmarc=pass header.from=<shardul.b@mpiricsoftware.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1781945089;
+	s=mpiric; d=mpiricsoftware.com; i=shardul.b@mpiricsoftware.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:MIME-Version:Content-Transfer-Encoding:Reply-To;
+	bh=GnS3AG4scfFutrkBxWSCGu80+IvAa7nw5ZgT6JaGF88=;
+	b=kewkXiVTcwd2+LIzbxODTzupnVZC2RxgvlBC2NrziF1WUQUJgsE0Z+dfDk5xGe22
+	nunpcs2DbWPKePeQMvvkYOgp0N6z9mEUjUWZcowaUDCYC4VINAr59QS7scnxZLzmxL2
+	zpGq5+PJyoEy5X8eUIBXVxqKPcEeJ3p1R7yjTytM=
+Received: by mx.zohomail.com with SMTPS id 1781945088085155.4695709881928;
+	Sat, 20 Jun 2026 01:44:48 -0700 (PDT)
+From: Shardul Bankar <shardul.b@mpiricsoftware.com>
+To: mptcp@lists.linux.dev
+Cc: Matthieu Baerts <matttbe@kernel.org>,
+	Mat Martineau <martineau@kernel.org>,
+	Geliang Tang <geliang@kernel.org>,
+	pabeni@redhat.com,
+	kalpan.jani@mpiricsoftware.com,
+	janak@mpiric.us,
+	shardulsb08@gmail.com,
+	Shardul Bankar <shardul.b@mpiricsoftware.com>
+Subject: [PATCH mptcp-next 0/2] mptcp: pm: net-next port of the alloc-during-teardown leak fix
+Date: Sat, 20 Jun 2026 14:14:22 +0530
+Message-Id: <20260620084424.3072634-1-shardul.b@mpiricsoftware.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
 
-Hi Geliang,
+This is the net-next counterpart of the net fix "mptcp: pm: fix memory
+leak from alloc-during-teardown race" (v3):
+https://lore.kernel.org/all/20260611003613.3184956-1-shardul.b@mpiricsoftware.com/
 
-Thank you for your modifications, that's great!
+v3 remains the canonical fix for net; it applies as-is on export-net. It
+does not apply on export, because the userspace local address list free
+moved into the userspace path manager .release callback in "mptcp: pm:
+init and release mptcp_pm_ops". This series ports the fix to net-next:
 
-Our CI did some validations and here is its report:
+  1/2 squashes the unconditional free into that refactor commit (covering
+      the disconnect/reuse path).
+  2/2 is the MPTCP_PM_DESTROYING fence (the alloc-during-teardown race),
+      rebased onto the renamed mptcp_pm_announced_alloc() /
+      mptcp_pm_destroy().
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Notice: Call Traces =
-at boot time, rebooted and continued =E2=9A=A0=EF=B8=8F=20
-- KVM Validation: debug (only selftest_mptcp_join): Notice: Call Traces at =
-boot time, rebooted and continued =E2=9A=A0=EF=B8=8F=20
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Notice: Call Traces at boot=
- time, rebooted and continued =E2=9A=A0=EF=B8=8F=20
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/278536=
-96726
+The net fix was validated with an MPTCP protocol-flow harness (BRF) over
+multi-hour runs with zero kmemleak reports (reported on the v3 thread).
+This port is structurally equivalent and is sent so the CI can exercise
+it on net-next.
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/5b68cf5259c8
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1114094
+Shardul Bankar (2):
+  Squash to "mptcp: pm: init and release mptcp_pm_ops"
+  mptcp: pm: fix memory leak from alloc-during-teardown race
 
+ net/mptcp/pm.c           | 13 +++++++++++++
+ net/mptcp/pm_userspace.c | 10 ++++------
+ net/mptcp/protocol.h     |  8 ++++++--
+ 3 files changed, 23 insertions(+), 8 deletions(-)
 
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
+-- 
+2.34.1
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
