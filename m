@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C43AC33120A
-	for <mptcp@lists.linux.dev>; Mon, 22 Jun 2026 16:47:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11C48322A
+	for <mptcp@lists.linux.dev>; Mon, 22 Jun 2026 17:22:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782146864; cv=none; b=F1xCe4xYT/HAqKHsrehPDX+B1KpZ+SCP711el59427R1GS3xmkv5DkDvalU7JGLNVEF/ApQ9SfJ0W47L9fzqIA1IOyo3/YEha4bJL1A5m6oJNQgC/UbBVOhsv/l60QnE9XSOA5gT9NCnLrqxQzwWFG22vLXw/F65VJFS1jdhNS4=
+	t=1782148947; cv=none; b=SkUGzjirqMXb6yJNWuIokzNYtsHY7sWu51eg3mgb33lSl2VKYgCPoKyfp6qoJXYmHIzU0k+b7o8caPRf3EsTKFplKd5gfMI/lpHj98YCkxCuUJo+UZ1+mh4cqVovmhRWs1CwRkctc9wtlCRqwBctBSm+siFnSwP9FSCvBSdXNbg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782146864; c=relaxed/simple;
-	bh=Gn2Zu+TIk7QKnhnMia6ppjgcgsCV7lpBwOIVmOn0zXA=;
+	s=arc-20240116; t=1782148947; c=relaxed/simple;
+	bh=Auh4W8DBIw8MWylaX4dpSeCVz3YRZtMDGx2HtJq1dis=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tNm4nKzlaFbh7EvMFRANL77YNoBuaumkrX04KtkQK62WyzeSQxdRZ/CCKdoVkN/GBJT56HPwKr9dwQUWDl7uKVHhGL1Xk2417sFDzwzMwf3reQ/snbVaq3m32g1I2gAuZRksqX0BumLApep/8vWRy5A0wn/+IyC2ViS0q7BQPAg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gpF7y4xg; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=AdCHRP1v593pTJS4v7tP+0AAfcpM4I3Q3OR8Y6suCnU08ZdVr69J4F3ubSYkxzPTJwqcx1Se82d4lc3cS1DXwszU+2NOAPLFnyq2t9Yw05jM78bgh5jfwuMH6fQ5xyGg0jBgEpNJ5VrqRkZLeKdUV9USVh205aFKgGHY4GJLhq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lyPhUPnD; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gpF7y4xg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 085671F000E9;
-	Mon, 22 Jun 2026 16:47:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lyPhUPnD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F39BC1F000E9;
+	Mon, 22 Jun 2026 17:22:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782146863;
-	bh=aE+abUW8GGcWXPXPzm3LJLNlViTAY5FLW3YrKDv3S/0=;
+	s=k20260515; t=1782148945;
+	bh=Reenm3To5BvZsOPpGyw7nzeXuqlPKnsMFiN89EIFCnQ=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=gpF7y4xgiu/xHGwdVRouawiA4Y1HZdsoX9+OtcNnZXCmdSX88KdZpMr/lm7gKoGNw
-	 c8cmuZ87PUscq5Pc13Z8Bst79lh3TWlQ+5ClEYBQ0ePdzpPAbN/DWnjuDQoQ7hwmLK
-	 0aqnSH6sDPjnvE/PvAjuPIlC99u1W6LpbjzPJk3SFzuYG+VDGvCNp1h8PqLA0vtJXs
-	 JlQ8lt5XoeLBkw2M7rznbILnWlxbKXZXSe5Mbue4GFIn/RufzsUzP6ik5zpFSKc4h8
-	 ANWZNHq67wHFwCMWRBRb7GAOghBrfK8h05bxepTc/EMjn+bNwXPORaTLBLLFGAy3er
-	 slnwQtyvkNC0A==
-Message-ID: <3ba18b31-e511-4c79-94c1-6d14f83bc980@kernel.org>
-Date: Mon, 22 Jun 2026 18:47:39 +0200
+	b=lyPhUPnDymEz+RpSA7fdFUIJ+HGPwh/IrXL+gjfADDUS/2+GqltXZdkvNfL2PaVOl
+	 u6aJtHGoM97K7llx5xR8pDXm1ixHqF6QyE2PXzBw5qRM2DiJO5h7esjbhTbqc7AKwH
+	 nzLUtnd+/RtcZYFRvgmI2Z36k7DAS5mctEM8g+rrPLJtf6g0i8OU1fRe/xiI+4QXNa
+	 TiRGgp9m0DeLaGYSvLzDPWKX3J1qBkp1sHewioybklQ9m7eoTQMBoG/T2F1doHZCvM
+	 YyR2dfyqJ7ASN+YfkJGTTLKTsT2TKlYxZC1mMXTEonpni5puCKNfDjXV7jtclPjhYx
+	 1j97wdb2mJ02A==
+Message-ID: <c2a423fe-6d4c-466e-8e24-194438c40d80@kernel.org>
+Date: Mon, 22 Jun 2026 19:22:20 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,11 +35,16 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v3 0/6] bpf sched updates
+Subject: Re: [PATCH net v4 2/2] selftests: mptcp: add regression test for
+ stale ADD_ADDR on id 0 removal
 Content-Language: fr
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1782120674.git.tanggeliang@kylinos.cn>
+To: Kalpan Jani <kalpan.jani@mpiricsoftware.com>, mptcp@lists.linux.dev
+Cc: martineau@kernel.org, pabeni@redhat.com, cuitao@kylinos.cn,
+ syzbot+55c2a5c871441261ed14@syzkaller.appspotmail.com,
+ shardul.b@mpiricsoftware.com, janak@mpiric.us, kalpanjani009@gmail.com,
+ shardulsb08@gmail.com
+References: <20260622092838.1267134-1-kalpan.jani@mpiricsoftware.com>
+ <20260622092838.1267134-3-kalpan.jani@mpiricsoftware.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -85,49 +90,73 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <cover.1782120674.git.tanggeliang@kylinos.cn>
+In-Reply-To: <20260622092838.1267134-3-kalpan.jani@mpiricsoftware.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+Hi Kalpan,
 
-On 22/06/2026 11:38, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
+On 22/06/2026 11:28, Kalpan Jani wrote:
+> Add a kselftest that reproduces the bug fixed in the previous patch:
+> removing the id 0 endpoint while a pending ADD_ADDR echo is outstanding
+> left a stale anno_list entry alive, and a subsequent PM reselection
+> re-announced that address and tripped the WARN_ON_ONCE() in
+> mptcp_pm_alloc_anno_list().
 > 
-> v3:
->  - Add sk_type == SOCK_STREAM check in bpf_iter_mptcp_subflow_new() to
->    prevent raw sockets from bypassing validation (new patch 1).
->  - Zero iterator state (kit->msk, kit->pos) on error paths in
->    bpf_iter_mptcp_subflow_new() to avoid uninitialized dereference.
->  - Change bpf_sk_stream_memory_free() signature to accept
->    struct mptcp_subflow_context * instead of struct sock *, to make it
->    work with burst scheduler.
-(slowly trying to get back to the reviews, sorry for the delay on older
-series, it might take a while...)
+> The sequence is deterministic:
+>   1. Establish a fully-established MPTCP connection kept alive by a
+>      bidirectional /dev/zero stream.
+>   2. Signal 10.0.2.1 so the peer joins: the second subflow keeps the
+>      connection alive across the id 0 removal.
+>   3. Signal the MPC address 10.0.1.1: an anno_list entry is created.
+>   4. Delete id 0 (10.0.1.1): on an unfixed kernel the stale entry
+>      survives.
+>   5. Signal 10.0.3.1 to force a PM reselection: on an unfixed kernel
+>      this hits the stale entry and fires the WARN.
 
-Thanks! Sashiko may have found existing issues with other helpers
-introduced in our export branch, please see:
+Thank you for having added a reproducer, but in general:
 
-https://sashiko.dev/#/patchset/cover.1782120674.git.tanggeliang%40kylinos.cn?part=4
+- We try to avoid new "main" tests for maintainability reasons.
 
-New patches for t/upstream:
-- beb6482d3d18: "squashed" patch 1/6 in "bpf: Add mptcp_subflow bpf_iter"
-- 21533dcb5a8a: "squashed" patch 2/6 in "bpf: Export mptcp packet
-scheduler helpers"
-- 0f4ed15e3a62: "squashed" patch 4/6 in "bpf: Export mptcp packet
-scheduler helpers"
-- 0d8c9711887c: "squashed" patch 5/6 in "selftests/bpf: Add bpf_first
-scheduler & test"
-- 4824dc0f98f1: "squashed" patch 6/6 in "selftests/bpf: Add bpf_rr
-scheduler & test"
-- b077032985ac: "squashed" patch 3/6 in "selftests/bpf: Add bpf_burst
-scheduler & test"
-- Results: bc8075b182f4..7fc976a6891c (export)
+- If possible, please prefer packetdrill [1] for the reproducers: that's
+easier to read (shorter, focussed on the essential to reproducer an
+issue), faster to execute, and easier to maintain. Please try to use it,
+and do not hesitate to ask for help if needed. Mastering packetdrill is
+really helpful in this area of the kernel.
 
-Tests are now in progress:
+- If not, please check if adding a subtest to an existing selftest is
+not possible, e.g. mptcp_join.sh
 
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/366d3bd40f3e2dbc4d7ffe0816c0c657d6d7c54c/checks
+- We try to avoid using "sleep": it is either waiting for a too long
+time, or not enough depending on the kernel config and test environment.
+Prefer waiting for an action instead, e.g. checking if a connection has
+been established, the number of subflows, etc.
+
+[1] https://github.com/multipath-tcp/packetdrill/
+
+> The test counts WARNING: net/mptcp/pm lines in dmesg before and after
+> the sequence and fails if new ones appear.
+
+That's not needed, the executor (i.e. CIs) will monitor that.
+
+A few more requests about this series, please:
+
+- base your patches on top of the export branch (or "for-review" or
+"t/upstream" branches), but not the "export-net" one: the CI will always
+try to apply them on top of the "export" branch, and that's easier for
+me when I have to resolve conflicts. (Note that the "export" branch
+contains both "net-next" and "net", plus all patches applied in our tree.)
+
+- ideally, avoid renaming the patches, or at least the cover-letter,
+between versions, so it is easier for reviewers and bots to follow. Here
+for example, you switched to one patch to multiple ones: it would be
+easier if the cover-letter has same title as your previous single patch.
+If renaming is required, please add a note in the patch/cover-letter.
+Note that b4 automatically adds a link to the previous version, that's
+also helpful.
+
+- use "mptcp-ne(x)t" prefixes instead of "ne(x)t" when you send patches
+only to the MPTCP ML (which is what we prefer).
 
 Cheers,
 Matt
