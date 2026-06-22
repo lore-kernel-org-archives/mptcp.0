@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBBFA34028B
-	for <mptcp@lists.linux.dev>; Mon, 22 Jun 2026 17:37:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA12934028B
+	for <mptcp@lists.linux.dev>; Mon, 22 Jun 2026 17:40:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782149869; cv=none; b=gUEpiEL9Pgd3Cc0vi0YJyIxWmKwiXhgpxmp1wexMBpWgaeXv2wkvm+CHdqaE8YkrTXroizCZHJR1dGeusjPMQliYH1g0YlybVF8vaWZmFhup4hU/4hSoEWAKHYQOsmm5CXrsO+GaW9bqPq0EYGybXNqR76I11vDYCLkzVw4TaAM=
+	t=1782150021; cv=none; b=Ctyq6HuXbdOJMfxnJs4yXo++cGU+h9UtsDw+6pfHYXdD/zIkiK6Ohuh+PsaVfEWEPdTqiC0ajCcDLY5N3VYO/+K1QXYbQII/kDgd8NBReFPF5PZM4XtdrJZCAEracbzkE3zQXWHm9YMghfI7o3RLhow6aboAxGxs6VBN6tjOuwc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782149869; c=relaxed/simple;
-	bh=sAZwzcnK0cMoZ/EQDdtP3dxJFvuj3lwWPyTfYtmfMaQ=;
+	s=arc-20240116; t=1782150021; c=relaxed/simple;
+	bh=qvsOUiK3zMRWZzvmPozpiQLD8wtkEGLQYbE+Mw05nbo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qeobXlPREg0qDRgjeND29WJnImThpTs4bioCjdR0hNQTtddlTx3xQZBb4vasK/TlHzwq/P3Wb3sQ42rgR8G/SP902lPMQ/3JalVRhNmvQ5tFBN+9zSrHpb/Vdk0J/5myIOrj2q5W5dWJY8+pwJT/7ccANyX21nlSizRyoTvkYaI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GikRI6Bb; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=IOqqNyPY8Tf/H6STXbFHM91K2eRoMsHKwOqXv1HIW4WvoKE+q9IlU8jV643YiBSopIp/cVVl2K6vBmmqTWqxzo4UHNi0NQwACqvtJqzzB5kc20zT+KuN9fk1i0I6wzbRBjINoBsriFdOhjXZNnlaUtj9kaXFcnf7VHBPifQdiXA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C4UfDuGR; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GikRI6Bb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 874E11F000E9;
-	Mon, 22 Jun 2026 17:37:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C4UfDuGR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 967921F00A3A;
+	Mon, 22 Jun 2026 17:40:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782149868;
-	bh=5iKepNHhNEF+2mG9YfoDzhk9K8e0qF4v5bL/THkt7ec=;
+	s=k20260515; t=1782150020;
+	bh=mUrH5NwYvB2YS1NFMAws8XmyxsjeWdo8Lgc0/isrASc=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=GikRI6BbcrLLZ2a5JSo8kju/4nbUP9x2VLy28AA48GgE3t4WN4mJkJ98vRaYAN2rx
-	 bQl9Maio+gJkJ0E9UUK4LrgM1bnqg1i8BOzA6y5ui9tfe6PfPdAvwxAGgJdv0jt2bz
-	 82L6gJsEBWmpdgX+Ay/ffiNQG+vzDEgur8GY/HyhoUpicPoiU52DALImZSlrIIEhvT
-	 vxyA5mFeD3NF111fTpEix0eaQr1GrAICuV7TcLav8jUVKAQ4gBa5D9Upioe991UNN9
-	 mcH7h0WJddezAGfMFtoNi4IubBSB4bmfmC2mrI66Bg+J0cYsZSLuwDnA0Xjt5FYW2F
-	 POpR2Kvknyurg==
-Message-ID: <b0dccb83-b9de-4207-9132-f3944bc3d5e6@kernel.org>
-Date: Mon, 22 Jun 2026 19:37:43 +0200
+	b=C4UfDuGRnh/Z/fd819knCSHRH5P9jcbWhxjqAlsLN7QEKoub8OATtcjmIwxhjwlla
+	 QQaOcv6R71pOLGldLeQh3VpmptyeG5zGLBe5zTgISeYP4Fvp35SDKPSKR1k0Y7OobX
+	 TjzJ7/e6iDaMqhY7PTdxwyYBRj9bhtrO7zcte00txmQBjUBNH9BJ6GQzlf55OUnOt8
+	 Mc3LVuCNxbWXmsieg+gLs+qSDWmpL0OQwBIyxEwAAYcwL1q6XzHkQfX12CsGi3LeeV
+	 sV1dFJ9MgIv1vlGxyFELz6oeStL3zRUGaKD0nFRoIW1B6hsMErCpES/uCyWd+YAx1a
+	 FV3SKWuM2X7Gg==
+Message-ID: <0647e1d1-a985-442e-b1d3-416a45867be9@kernel.org>
+Date: Mon, 22 Jun 2026 19:40:18 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,15 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next 2/2] mptcp: pm: fix memory leak from
- alloc-during-teardown race
+Subject: Re: [PATCH mptcp-next] selftests: mptcp: fix const qualifier warnings
+ in strchr usage
 Content-Language: fr
-To: Shardul Bankar <shardul.b@mpiricsoftware.com>, mptcp@lists.linux.dev
-Cc: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
- pabeni@redhat.com, kalpan.jani@mpiricsoftware.com, janak@mpiric.us,
- shardulsb08@gmail.com
-References: <20260620084424.3072634-1-shardul.b@mpiricsoftware.com>
- <20260620084424.3072634-3-shardul.b@mpiricsoftware.com>
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <3b746802bcc4b08e9a6d2f2fb2f7622197a2d25a.1781911900.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -89,40 +86,49 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20260620084424.3072634-3-shardul.b@mpiricsoftware.com>
+In-Reply-To: <3b746802bcc4b08e9a6d2f2fb2f7622197a2d25a.1781911900.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Shardul,
+Hi Geliang,
 
-Thank you for the v4!
-
-(Note: please make sure to keep the version in the prefix -- b4 does
-that for you automatically ;) -- to help with the patch tracking)
-
-On 20/06/2026 10:44, Shardul Bankar wrote:
-> mptcp_pm_destroy() empties msk->pm.anno_list and
-> msk->pm.userspace_pm_local_addr_list under msk->pm.lock during socket
-> teardown, dropping the lock between the two.
+On 20/06/2026 01:32, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> A concurrent userspace PM genl ANNOUNCE on the same msk holds a sock
-> reference via mptcp_token_get_sock() and, in
-> mptcp_pm_nl_announce_doit(), calls
-> mptcp_userspace_pm_append_new_local_addr() and
-> mptcp_pm_announced_alloc(). Both take msk->pm.lock briefly to add to
-> their respective lists. Because the genl handler holds a sock reference,
-> mptcp_pm_destroy() may run on the same msk via mptcp_disconnect(), which
-> invokes mptcp_destroy_common() without dropping the sock refcount,
-> before the handler completes.
+> In mptcp_connect.c, strchr() returns a pointer to a character within
+> the input string, which is declared as const char *. Assigning this
+> return value to a non-const char * discards the const qualifier,
+> triggering compiler warnings:
+> 
+>  make: Entering directory 'tools/testing/selftests/net/mptcp'
+>    CC       mptcp_connect
+>  mptcp_connect.c: In function 'parse_cmsg_types':
+>  mptcp_connect.c:1267:22: warning: initialization discards 'const'
+> 	qualifier from pointer target type [-Wdiscarded-qualifiers]
+>   1267 |         char *next = strchr(type, ',');
+>        |                      ^~~~~~
+>  mptcp_connect.c: In function 'parse_setsock_options':
+>  mptcp_connect.c:1295:22: warning: initialization discards 'const'
+> 	qualifier from pointer target type [-Wdiscarded-qualifiers]
+>   1295 |         char *next = strchr(name, ',');
+>        |                      ^~~~~~
+>  make: Leaving directory 'tools/testing/selftests/net/mptcp'
+> 
+> Fix these warnings by declaring the 'next' variable as const char *,
+> as it is only used for read-only parsing.
+Thanks!
 
-Sashiko seems to say [1] that the mptcp_disconnect() path is not covered
-(when 'shutdown()' then 'connect()' is called from the userspace), but
-it looks like that's what you are covering it. Just to be sure: is it a
-false positive? (I didn't check the different code path to see if that's
-possible)
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-[1]
-https://sashiko.dev/#/patchset/20260620084424.3072634-1-shardul.b%40mpiricsoftware.com?part=2
+New patches for t/upstream:
+- 7fb42c115a57: selftests: mptcp: fix const qualifier warnings in strchr
+usage
+- Results: 7fc976a6891c..23524644cc06 (export)
+
+Tests are now in progress:
+
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/83be48a0589e16868a5c7e58173046507a3084d1/checks
 
 Cheers,
 Matt
