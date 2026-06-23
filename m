@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66A693CFF51
-	for <mptcp@lists.linux.dev>; Tue, 23 Jun 2026 08:54:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A45002C21E6
+	for <mptcp@lists.linux.dev>; Tue, 23 Jun 2026 09:03:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782204879; cv=none; b=D1rLHsphTqgkey75bBXAdYtvnLR0oksnN0veV7YYAMimSJfaZTtaQgTI5y4zaVgxDDcN9Q7fbPmnFNgC7FjYbuA62LqQHnmSvSeWIaACJHF5ta7GTDlCyV62kXMlhDFa/fLbZKRizA+HlPwxzSpI3KS3KLkyFYafs9u5l1h23kw=
+	t=1782205400; cv=none; b=dTG8RIKA2sgGsyd1qWXi6akmljzX3/gFKFmzFc3UlvXNsuP5PvwzXt1PGx5VFSKkJhLHklWA+nYC/MamVaqu8A9RkP1bLejK+M5PXPW1tlFljUs7m1wKMaYB2fIE5ErBdq1HvTasfr/0EHNNoA126uRwXGAJiZhB9AsknFKPA7k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782204879; c=relaxed/simple;
-	bh=ILtrqd4tWrYVcDWmgCyq6sNuk4UwhPQQ21QfixUhlRY=;
+	s=arc-20240116; t=1782205400; c=relaxed/simple;
+	bh=jsxfxcqOnrNvCUb7LR1HHAb5941+FMimb/mvYMUjjrc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=R8Cj2pMYOrmsSsB7kdE0Tl/RF/Q1QVeE9cGPhw3eYmiu7KMXPnktXI3StJeVA1oVHYqcDDj3e49LeKcLCimm/fEUVchv+KDirbjXrNShw6UE5vbhhCKfFzY55asKN7XnIC3EK4k5+hQ1x65HvHxouQ5ESffGMgnTBOtGTgmUF0I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FBoTQ8WG; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=CnIEg2B4phnZnzLigwQ/kwzXOyY9frYPqOGibiM8P9e6z5oLSfL7bWfxq2QYkM2Zk7ywyrIccnEqFWt7TOry+ZPr+yBfLdGaBZq182CL3FcNeL4xevXEXR6+HdKwOA5oyPFgPZKi7/IcC/OGAhG3wUEnVX8aIXg8Uyvy7pjMlFU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ezkoQrUh; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FBoTQ8WG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2981C1F00A3A;
-	Tue, 23 Jun 2026 08:54:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ezkoQrUh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FD2B1F000E9;
+	Tue, 23 Jun 2026 09:03:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782204878;
-	bh=Buqo+9ttYLom23qiNbNROjr9vgk1PB4NYslcdPh+tlY=;
+	s=k20260515; t=1782205399;
+	bh=q82P2Lib/tS9ukLzM+MgkRQN/kEc8IR+X4e3/HrMQW0=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=FBoTQ8WG3l/1QBaUxUJY2LCeI/WNiQWKfEUz3HhLnt4TTb59vCR+SBE424bzPvdKW
-	 9iuRsrQ6/slJ19QRfCUvgaZr+AE6hWgnVHjnSg3XU7oRIoFBeC9axqU6nIuCTtEZj3
-	 OazqGEOoibz+9kHy7h7HSutdQZVTbZDiPHLrkhRL1WQ9AZzPQmwiGdaCV0W8lsRNrF
-	 3gcwkGUAtyl7Y0r6gkMFt2RsEsMgH1LnJWbrT+ZrbuRKeXeE2R8rNtUpMMNbtVVKsn
-	 2nICdabK2DUyUvxftXY1clyhr4cNUsu9j/JGJ19MJ3qLKn6OS12QZ45SeKAopFd6Ud
-	 Td9bXyd9yrWYw==
-Message-ID: <05d0dbe6-b2d8-415d-9ded-cb5c4f073812@kernel.org>
-Date: Tue, 23 Jun 2026 10:54:31 +0200
+	b=ezkoQrUhS9nQYmCbr6H/t+TztR7FLs5mZkjmeOpyYNNFx6WzEh8KlXcqmrMZClilI
+	 Fgr8MIHtDCPi6jDPytxM1Y5FglHmb9OG3FnUviHNken4UdzipPadprRbMptpLo5HO1
+	 VSM8RzQpcRANiDVC5YEYXc4KBYNM4QfP/2l7RKQAC24g24FK6SoQ/dDkHaRbxR65GH
+	 IRZqaFFdXAg9EJFnC4Rx1jKzq8PKCUpQY1m+HtoUn6IRC9MC1D7HxzZAxHMS51lQno
+	 DfuafBfbJpv5qdYWwyANU4yk7RImzowsAiZIiI+tNX4ixFwOQKFRn+xrhMlu/3CgJ+
+	 AamTxIRY6yKKw==
+Message-ID: <8672690b-d0f1-47c5-87ff-79bba54ac9cb@kernel.org>
+Date: Tue, 23 Jun 2026 11:03:16 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,19 +35,11 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next] mptcp: fix lockdep splat in
- mptcp_subflow_create_socket
+Subject: Re: [PATCH mptcp-next 0/2] remove bpf_mptcp_subflow_queues_empty
 Content-Language: fr
-To: Li Xiasong <lixiasong1@huawei.com>,
- Kalpan Jani <kalpan.jani@mpiricsoftware.com>
-Cc: martineau@kernel.org, pabeni@redhat.com, shardul.b@mpiricsoftware.com,
- janak@mpiric.us, kalpanjani009@gmail.com, akshit@mpiricsoftware.com,
- syzbot+fb2c3fa2ba28aec94627@syzkaller.appspotmail.com,
- "mptcp@lists.linux.dev" <mptcp@lists.linux.dev>,
- zhangchangzhong <zhangchangzhong@huawei.com>,
- yuehaibing <yuehaibing@huawei.com>, "weiyongjun (A)" <weiyongjun1@huawei.com>
-References: <20260617064835.2957303-1-kalpan.jani@mpiricsoftware.com>
- <c45810a3-5a87-4080-a8c4-4846d0fc74ed@huawei.com>
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <cover.1782183266.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -93,57 +85,37 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <c45810a3-5a87-4080-a8c4-4846d0fc74ed@huawei.com>
+In-Reply-To: <cover.1782183266.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Li, Kalpan,
+Hi Geliang,
 
-On 23/06/2026 06:50, Li Xiasong wrote:
-> Hi, Kalpan
+On 23/06/2026 04:56, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> On 6/17/2026 2:48 PM, Kalpan Jani wrote:
->> Move sk_net_refcnt_upgrade() outside the socket lock to avoid GFP_KERNEL
->> allocation under lock_sock_nested(), which can trigger page reclaim and
->> create a circular locking dependency detected by lockdep.
->>
+> This set removes bpf_mptcp_subflow_queues_empty() kfunc and updates
+> burst scheduler to implement tcp_rtx_queue_empty() inline.
 > 
-> Thanks for the patch.
+> Geliang Tang (2):
+>   Squash to "bpf: Export mptcp packet scheduler helpers"
+>   Squash to "selftests/bpf: Add bpf_burst scheduler & test"
 > 
-> I might be missing something, but I wonder if this is still needed after:
-> 
->   d532cddb6c60 ("nbd: Reclassify sockets to avoid lockdep circular dependency")
-> 
-> The reported chain seems to involve NBD sockets sharing the generic TCP lock
-> classes, and that patch should address it more directly.
+>  net/mptcp/bpf.c                                     | 6 ------
+>  tools/testing/selftests/bpf/progs/mptcp_bpf.h       | 1 +
+>  tools/testing/selftests/bpf/progs/mptcp_bpf_burst.c | 9 +++++++--
+>  3 files changed, 8 insertions(+), 8 deletions(-)
 
-@Li: Thank you for pointing to this commit. Indeed, that seems to be the
-required fix for this issue.
+Thanks!
 
-@Kalpan: were you able to reproduce the issue pointed out by syzbot? If
-yes, can you check if Eric's fix is enough? Or did you try to fix it by
-analysing the code?
+New patches for t/upstream:
+- d3a97b387059: "squashed" patch 1/2 in "bpf: Export mptcp packet scheduler helpers"
+- 493ba0146d5d: "squashed" patch 2/2 in "selftests/bpf: Add bpf_burst scheduler & test"
+- Results: 3e97a465b882..9fa996efa8d3 (export)
 
->> The circular dependency chain detected:
->>   fs_reclaim --> sk_lock-AF_INET --> k-sk_lock-AF_INET/1
->>
->> This operation is safe after lock release since the socket is fully
->> initialized and no other references to it exist yet.
->>
-> 
-> Even with this change, the locked section still contains GFP_KERNEL
-> allocations: tcp_set_ulp() is called under lock_sock_nested(), and the MPTCP
-> ULP init path allocates the subflow context with GFP_KERNEL.
-> 
-> So if the NBD dependency is still present, I am not sure this fixes the
-> reported lockdep dependency rather than moving it to another allocation site.
+Tests are now in progress:
 
-Indeed, the fix might not be enough to fix the issue.
-
-> It might be worth retesting this report with the NBD reclassification patch in
-> the tree before changing the MPTCP locking here.
-If it is not possible to reproduce the bug, I suggest closing the
-corresponding bug, and drop this patch. WDYT?
+- export: https://github.com/multipath-tcp/mptcp_net-next/commit/24b2dd50c2614d8ac7086cb7c59f52523c9103f7/checks
 
 Cheers,
 Matt
