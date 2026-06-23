@@ -1,150 +1,175 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from sender4-of-o54.zoho.com (sender4-of-o54.zoho.com [136.143.188.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 604B8378823;
-	Tue, 23 Jun 2026 10:24:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782210249; cv=none; b=lxnRxcnFaTzw+EjrChEw1hyFVCijoAwYBsGrA/zcAmTnDoYvOzBjsUKB8vVwe2M9VVs7rOutVeDBqSZWiwtJbz61M/lUyROMRybHsuqiVQT017pRK8fyR74sweY1i89YbHyPywo9Dknob8hEenUoJfbOC62ZndmS7ca/q6i11J8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782210249; c=relaxed/simple;
-	bh=wwZXkqFSnEiaLN8CIYwpCsyYEguUbHw0Izyw5ktNuOk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JDbbyKrq1aNE5Jxy4AWSRnjSAMLSgwaesuzM06VPTMX5oELKRAK9786BhUUxfzh/RTY4hSpO1sNfETVt9dO15/cW19hVPO7qLAKcT+ZlsBFoDFInkguZcEuSWdxplhLemh/uAODg+HLLF2zPeHq8PEsTf4181xs4maNtBSbfIvM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fsNZns8U; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFC442772D
+	for <mptcp@lists.linux.dev>; Tue, 23 Jun 2026 11:39:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.54
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782214800; cv=pass; b=CwhCcGwqNajx1GQzUB0BoIThjFzN4kY1jC5IqHp8eXrbVuMB/tTYc1J6kxDVnheXnUr7KuiqXZI5Qmrbsa1dlJ0qJaicsDRk4Cnn8OG9Y8XQo3yPfDB3sjroaZArMClc5NcZzBRKtefv2FP/i7HjidXGp0tMOBLep1gPunvyFZ0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782214800; c=relaxed/simple;
+	bh=4MH7sLrogvS6NkXCAmVqBAh1/+684UniyCn3ZhWkXP8=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=SLpCQuyWUm1+/5jm1SVpY0rw41aqno7aFuuyAOWwPW/UgNcjmd6+lcQgeUz8Lc5ORJsMrjmGYcwD4hh1lx57oyU8vn2pBS8erRMUQdSUNcvf1wPOkBPrbYsYI1vCc8jrcyvFlL/OOswakIfq0p3VoaEEXH7atQpykWo7ql9gdLM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com; spf=pass smtp.mailfrom=mpiricsoftware.com; dkim=fail (0-bit key) header.d=mpiricsoftware.com header.i=kalpan.jani@mpiricsoftware.com header.b=KTnfStKZ reason="key not found in DNS"; arc=pass smtp.client-ip=136.143.188.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mpiricsoftware.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fsNZns8U"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1782210248; x=1813746248;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=wwZXkqFSnEiaLN8CIYwpCsyYEguUbHw0Izyw5ktNuOk=;
-  b=fsNZns8U+fws271aH6IiWXqnsbkdi+Csbm07gAXuJs0gn3TCj9FBjXZ/
-   mzF2EbAT80f48lA1SbWxLQEL+Ynh1FyS3cHoSOPHaQmCJUh+LzcQPorwM
-   JzWIqLPZ7hpphPUhElupKBY3m3WhUILyq+rN3cfPhr0xbn6axDHlqR8/7
-   Y/bn8UonvPKLdB0B0184xOC0gJbKj2Q3SgG+v+pRLGvIH72ogXtWPsrT6
-   Er9Mn5llZkoCcQcMtlIPp9M7MwBVvLAmM04JASd0mZcbW/BkMWDSxA4mQ
-   J8Y+Ytn3j21NTm8XcpjUrS6ItFANwwrnvtl6lr2X5rk2DbKkKiLd/OnSA
-   A==;
-X-CSE-ConnectionGUID: QKACltclQ+S/NuEH1im5hA==
-X-CSE-MsgGUID: 7Pg7Ywx/R8eJL4o9io6H9g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11825"; a="93313789"
-X-IronPort-AV: E=Sophos;i="6.24,220,1774335600"; 
-   d="scan'208";a="93313789"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2026 03:24:02 -0700
-X-CSE-ConnectionGUID: eISYuP0mSg+qEduzU4O5iA==
-X-CSE-MsgGUID: bS9h01+VQ5ihWzvyU+nyEg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,220,1774335600"; 
-   d="scan'208";a="248332976"
-Received: from igk-lkp-server01.igk.intel.com (HELO 892db79562d4) ([10.211.93.152])
-  by orviesa006.jf.intel.com with ESMTP; 23 Jun 2026 03:24:00 -0700
-Received: from kbuild by 892db79562d4 with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1wbyIP-000000006BP-36Rs;
-	Tue, 23 Jun 2026 10:23:57 +0000
-Date: Tue, 23 Jun 2026 12:23:15 +0200
-From: kernel test robot <lkp@intel.com>
-To: Kalpan Jani <kalpan.jani@mpiricsoftware.com>, mptcp@lists.linux.dev
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev, matttbe@kernel.org,
-	martineau@kernel.org, pabeni@redhat.com, cuitao@kylinos.cn,
-	syzbot+55c2a5c871441261ed14@syzkaller.appspotmail.com,
-	shardul.b@mpiricsoftware.com, janak@mpiric.us,
-	kalpanjani009@gmail.com, shardulsb08@gmail.com,
-	Kalpan Jani <kalpan.jani@mpiricsoftware.com>
-Subject: Re: [PATCH net v4 2/2] selftests: mptcp: add regression test for
- stale ADD_ADDR on id 0 removal
-Message-ID: <202606231240.AR0wvSEl-lkp@intel.com>
-References: <20260622092838.1267134-3-kalpan.jani@mpiricsoftware.com>
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mpiricsoftware.com header.i=kalpan.jani@mpiricsoftware.com header.b="KTnfStKZ"
+ARC-Seal: i=1; a=rsa-sha256; t=1782214795; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=C4m28srliElorNcDqsnbQQSzGNIQEC+kM7vH9MrTF7uOWGPqd5JiQv56RLiv7quP4v11yjNUdJfSS6vB69R0f0N4H2/T9Dk6R833M1zrAe5TuggfmEbDVYLzwf7Md1d3Aas0OAh9l7gJ2OyuaiPYXUhnZtWoqmrdtwWwtfzeYaE=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1782214795; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=eDIvpW8X81ecJhuDD8DpmrGhFvMxoQ+cVMlizpzLgtE=; 
+	b=TTD/ERudpes4iOY2oYzUPpFWtkYmUcKPNGmb0nnft6BogefnA+5cTPDqGcQWQSpdGaW/j4GBAmld3hH2RwO8ubEWP9tRFoe8YCMai2abU80HxCOm2tO6qZmb46sDjaNob1e5KxUhlnd776Qfx1AxYtBseNyYg1EUb141QgGuv28=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=mpiricsoftware.com;
+	spf=pass  smtp.mailfrom=kalpan.jani@mpiricsoftware.com;
+	dmarc=pass header.from=<kalpan.jani@mpiricsoftware.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1782214795;
+	s=mpiric; d=mpiricsoftware.com; i=kalpan.jani@mpiricsoftware.com;
+	h=Date:Date:From:From:To:To:Cc:Cc:Message-ID:In-Reply-To:References:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=eDIvpW8X81ecJhuDD8DpmrGhFvMxoQ+cVMlizpzLgtE=;
+	b=KTnfStKZ+Yt0WZDAmZKdcn5IAnniEV533aRIIBLUMTa09XMPkmWVWa01oy/XoZxy
+	SFKSM2xCu5amxYUQzuavuVlRbMEEuI+4XWf9Phk955yIGioGvlj+BEwbttc4dZgCG8e
+	yHCIYbAJA0Unx9KRp5UlgfcdpAJVHZWfmBGx4ncg=
+Received: from mail.zoho.com by mx.zohomail.com
+	with SMTP id 178221479291751.69283249608361; Tue, 23 Jun 2026 04:39:52 -0700 (PDT)
+Date: Tue, 23 Jun 2026 17:09:52 +0530
+From: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
+To: "Matthieu Baerts" <matttbe@kernel.org>
+Cc: "Li Xiasong" <lixiasong1@huawei.com>, "martineau" <martineau@kernel.org>,
+	"pabeni" <pabeni@redhat.com>,
+	"shardul.b" <shardul.b@mpiricsoftware.com>,
+	"janak" <janak@mpiric.us>, "kalpanjani009" <kalpanjani009@gmail.com>,
+	"akshit" <akshit@mpiricsoftware.com>, "syzbot+fb2c3fa2ba28aec94627"
+ <syzbot+fb2c3fa2ba28aec94627@syzkaller.appspotmail.com>,
+	"mptcp@lists.linux.dev" <mptcp@lists.linux.dev>,
+	"zhangchangzhong" <zhangchangzhong@huawei.com>,
+	"yuehaibing" <yuehaibing@huawei.com>,
+	"weiyongjun" <weiyongjun1@huawei.com>
+Message-ID: <19ef44796c3.794cb169432307.366490776961059119@mpiricsoftware.com>
+In-Reply-To: <05d0dbe6-b2d8-415d-9ded-cb5c4f073812@kernel.org>
+References: <20260617064835.2957303-1-kalpan.jani@mpiricsoftware.com>
+ <c45810a3-5a87-4080-a8c4-4846d0fc74ed@huawei.com> <05d0dbe6-b2d8-415d-9ded-cb5c4f073812@kernel.org>
+Subject: Re: [PATCH mptcp-next] mptcp: fix lockdep splat in
+ mptcp_subflow_create_socket
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260622092838.1267134-3-kalpan.jani@mpiricsoftware.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Importance: Medium
+User-Agent: Zoho Mail
+X-Mailer: Zoho Mail
 
-Hi Kalpan,
+Hi Matt, Li,
 
-kernel test robot noticed the following build errors:
+Thank you both for the review.
 
-[auto build test ERROR on net/main]
+To be transparent: I did not attempt to reproduce the issue locally =E2=80=
+=94
+the patch was based purely on analysis of the lockdep report and the
+allocation path through sk_net_refcnt_upgrade().
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Kalpan-Jani/mptcp-pm-drop-pending-ADD_ADDR-when-removing-id-0-endpoint/20260623-033836
-base:   net/main
-patch link:    https://lore.kernel.org/r/20260622092838.1267134-3-kalpan.jani%40mpiricsoftware.com
-patch subject: [PATCH net v4 2/2] selftests: mptcp: add regression test for stale ADD_ADDR on id 0 removal
-config: x86_64-kexec (https://download.01.org/0day-ci/archive/20260623/202606231240.AR0wvSEl-lkp@intel.com/config)
-compiler: clang version 22.1.8 (https://github.com/llvm/llvm-project ca7933e47d3a3451d81e72ac174dcb5aa28b59d1)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260623/202606231240.AR0wvSEl-lkp@intel.com/reproduce)
+Li's point is well taken on two counts:
+1. d532cddb6c60 ("nbd: Reclassify sockets to avoid lockdep circular
+   dependency") may already address the root cause by fixing the NBD
+   lock class confusion.
+2. Even with my change, tcp_set_ulp() and the MPTCP ULP init path
+   still perform GFP_KERNEL allocations under lock_sock_nested(), so
+   the fix would be incomplete at best.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202606231240.AR0wvSEl-lkp@intel.com/
+I will test against a tree containing d532cddb6c60 this week and check
+whether the lockdep warning can still be triggered. If Eric's fix is
+sufficient, I will close issue #599 and drop this patch.
 
-All errors (new ones prefixed by >>):
+I will report back with results.
 
->> net/mptcp/pm_kernel.c:1154:15: error: call to undeclared function 'mptcp_remove_anno_list_by_saddr'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-    1154 |                 announced = mptcp_remove_anno_list_by_saddr(msk, &anno_addr);
-         |                             ^
-   1 error generated.
+Cheers,
+Kalpan Jani
 
 
-vim +/mptcp_remove_anno_list_by_saddr +1154 net/mptcp/pm_kernel.c
 
-  1127	
-  1128	static int mptcp_nl_remove_id_zero_address(struct net *net,
-  1129						   struct mptcp_addr_info *addr)
-  1130	{
-  1131		struct mptcp_rm_list list = { .nr = 0 };
-  1132		long s_slot = 0, s_num = 0;
-  1133		struct mptcp_sock *msk;
-  1134	
-  1135		list.ids[list.nr++] = 0;
-  1136	
-  1137		while ((msk = mptcp_token_iter_next(net, &s_slot, &s_num)) != NULL) {
-  1138			struct sock *sk = (struct sock *)msk;
-  1139			struct mptcp_addr_info msk_local;
-  1140			struct mptcp_addr_info anno_addr;
-  1141			bool announced;
-  1142	
-  1143			if (list_empty(&msk->conn_list) || mptcp_pm_is_userspace(msk))
-  1144				goto next;
-  1145	
-  1146			mptcp_local_address((struct sock_common *)msk, &msk_local);
-  1147			if (!mptcp_addresses_equal(&msk_local, addr, addr->port))
-  1148				goto next;
-  1149	
-  1150			lock_sock(sk);
-  1151			/* Drop a possibly pending ADD_ADDR for this address. */
-  1152			anno_addr = msk_local;
-  1153			anno_addr.port = 0;
-> 1154			announced = mptcp_remove_anno_list_by_saddr(msk, &anno_addr);
-  1155			spin_lock_bh(&msk->pm.lock);
-  1156			if (announced)
-  1157				msk->pm.add_addr_signaled--;
-  1158			mptcp_pm_remove_addr(msk, &list);
-  1159			mptcp_pm_rm_subflow(msk, &list);
-  1160			__mark_subflow_endp_available(msk, 0);
-  1161			spin_unlock_bh(&msk->pm.lock);
-  1162			release_sock(sk);
-  1163	
-  1164	next:
-  1165			sock_put(sk);
-  1166			cond_resched();
-  1167		}
-  1168	
-  1169		return 0;
-  1170	}
-  1171	
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+From: Matthieu Baerts <matttbe@kernel.org>
+To: "Li Xiasong"<lixiasong1@huawei.com>, "Kalpan Jani"<kalpan.jani@mpiricso=
+ftware.com>
+Cc: <martineau@kernel.org>, <pabeni@redhat.com>, <shardul.b@mpiricsoftware.=
+com>, <janak@mpiric.us>, <kalpanjani009@gmail.com>, <akshit@mpiricsoftware.=
+com>, <syzbot+fb2c3fa2ba28aec94627@syzkaller.appspotmail.com>, "mptcp@lists=
+.linux.dev"<mptcp@lists.linux.dev>, "zhangchangzhong"<zhangchangzhong@huawe=
+i.com>, "yuehaibing"<yuehaibing@huawei.com>, "weiyongjun (A)"<weiyongjun1@h=
+uawei.com>
+Date: Tue, 23 Jun 2026 14:24:31 +0530
+Subject: Re: [PATCH mptcp-next] mptcp: fix lockdep splat in mptcp_subflow_c=
+reate_socket
+
+ > Hi Li, Kalpan,
+ >=20
+ > On 23/06/2026 06:50, Li Xiasong wrote:
+ > > Hi, Kalpan
+ > >=20
+ > > On 6/17/2026 2:48 PM, Kalpan Jani wrote:
+ > >> Move sk_net_refcnt_upgrade() outside the socket lock to avoid GFP_KER=
+NEL
+ > >> allocation under lock_sock_nested(), which can trigger page reclaim a=
+nd
+ > >> create a circular locking dependency detected by lockdep.
+ > >>
+ > >=20
+ > > Thanks for the patch.
+ > >=20
+ > > I might be missing something, but I wonder if this is still needed aft=
+er:
+ > >=20
+ > >   d532cddb6c60 ("nbd: Reclassify sockets to avoid lockdep circular dep=
+endency")
+ > >=20
+ > > The reported chain seems to involve NBD sockets sharing the generic TC=
+P lock
+ > > classes, and that patch should address it more directly.
+ >=20
+ > @Li: Thank you for pointing to this commit. Indeed, that seems to be the
+ > required fix for this issue.
+ >=20
+ > @Kalpan: were you able to reproduce the issue pointed out by syzbot? If
+ > yes, can you check if Eric's fix is enough? Or did you try to fix it by
+ > analysing the code?
+ >=20
+ > >> The circular dependency chain detected:
+ > >>   fs_reclaim --> sk_lock-AF_INET --> k-sk_lock-AF_INET/1
+ > >>
+ > >> This operation is safe after lock release since the socket is fully
+ > >> initialized and no other references to it exist yet.
+ > >>
+ > >=20
+ > > Even with this change, the locked section still contains GFP_KERNEL
+ > > allocations: tcp_set_ulp() is called under lock_sock_nested(), and the=
+ MPTCP
+ > > ULP init path allocates the subflow context with GFP_KERNEL.
+ > >=20
+ > > So if the NBD dependency is still present, I am not sure this fixes th=
+e
+ > > reported lockdep dependency rather than moving it to another allocatio=
+n site.
+ >=20
+ > Indeed, the fix might not be enough to fix the issue.
+ >=20
+ > > It might be worth retesting this report with the NBD reclassification =
+patch in
+ > > the tree before changing the MPTCP locking here.
+ > If it is not possible to reproduce the bug, I suggest closing the
+ > corresponding bug, and drop this patch. WDYT?
+ >=20
+ > Cheers,
+ > Matt
+ > --=20
+ > Sponsored by the NGI0 Core fund.
+ >=20
+ >=20
+
