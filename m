@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 822B6346E56
-	for <mptcp@lists.linux.dev>; Thu, 25 Jun 2026 08:06:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C07B331EDF
+	for <mptcp@lists.linux.dev>; Thu, 25 Jun 2026 08:39:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782374813; cv=none; b=e7XjAEWffzt934CBa6OLrxptJP8fHURPWiJa19hHJOJ+ZtYvQPVeJ4ROTl4cNFGeHX6RscDAoaY6Qlaz2/ckec4pPjICFETrOlXkHLYyFA43eIslqUPEOUBTGK7moE2F5I4/co5boOSpOFyKsGTBlzuw+AnBCqXOk97NtLA1Y0o=
+	t=1782376790; cv=none; b=Tp01yWKZj91GLZrHwxv1dAWYCD1bnhJ1YgsWM/uprayBgGb/XyKLrTgKZjxTu0vsojnnIqpBDcjWhJ71Kb9Isl3bjIJ23oOvKIiGPHKqXNm58liKRNZbFe0siOqwn8XrdvRvHDiHBQgEXeBYshnZkkNh2rfcc8BUGvq3Mdcof2w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782374813; c=relaxed/simple;
-	bh=UZorJyRJCbjLFU0v57JVCEwuxeyqGU5zoYPDWorPND8=;
+	s=arc-20240116; t=1782376790; c=relaxed/simple;
+	bh=bxk87GCQuWyYT8xcghnTFyx1OZPJqi/nlrhLVn3xuJw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eYBTWRuFXGptJUYm5nNomtelWqxc/7V0QuYN8ux+V8///3zCUletS+mOsRdHSOdN/ny3Mu8CLl7CUa9Ed55KpGYyKBuMyGPyEE33IZmDt6iBJ4AYPikApI14gwDsT7WOEtUnv+f18tS+JHLtY2MKQ5zoixA9CMz9+XDOK8p3qLw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TwX8YFnr; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=PjFeSL0wrN7b27KWAJ0SuwHlOGKnYmOf88l6QQLWhE/4ALd0v4OeJOFPEJoEbyzRo79W5WZv68TwgSQHKVPDqr+r9RAK6W/5QcnQM0iNI/WsigRej5oJXxNPKrLLrmcV2y7dBSfkCIZFCWKDgKhM3K8GIqKreWipihKuBwacBFU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZZMimUdI; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TwX8YFnr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 056FE1F000E9;
-	Thu, 25 Jun 2026 08:06:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZZMimUdI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F66D1F00A3D;
+	Thu, 25 Jun 2026 08:39:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782374812;
-	bh=yLIufNj5YV41SuqrDw4KB4nFAZ20h6o5/nheUz1DE+A=;
+	s=k20260515; t=1782376789;
+	bh=OeMzLk05E59pN6Hi0RS59HSsnlKhBsMMonrzgROdlpA=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=TwX8YFnrt2PFPKt3YeDnUxGjLsPWjdGoRQISc7KRpbenPrPHHgAYpWTLHxY7kWGON
-	 1oAa21GBQMMDOnKMKOf5lzv5XohdBM0aHikVYZ7Ur2NtDCSCcp9TulnRnfZNrjxIV7
-	 14mRgeyIL/4El65HdkDFnXKPbcR8XsBWbskZC7WxyXgbDUm5qfOkonCOQipdJBhnHO
-	 FjwHgla3ViMRcjLPhlfge8qk9heKvtJnty2OWJrXRBcWX1xMjaT2QcBxyVBN13Wi8i
-	 mmj1qyYOYrri0C32SVB3GfT0M8JQII7c2gG75/86zlq9VNsPOXWItCNnJ9LF06ywba
-	 Gr2AKv/3/LAeQ==
-Message-ID: <ee4535dc-81e9-43a8-9b4c-e43be89e1628@kernel.org>
-Date: Thu, 25 Jun 2026 10:06:47 +0200
+	b=ZZMimUdIqJ7zpKEZRDeuc/nKhZkUM8BcfrSYhWY6VjojcMR0MyMo3JPW/0qWqcJ2q
+	 dEXit6JJ8tXRuL8x4w8ZwrFDOUbx2BrWNivirjfPRXU2Dn5CE6QnquyYJgW7XocvMK
+	 SWXzzGguc0rmEXADWbtVd+1q3A3ZwLqG26DrlnfXxd0gorbQ4w+g06L+JhkIvNqigB
+	 WUTSCbMClkabO/j8ZxTKkYlvmbb16Zejbw4X6A0HLqNernV0sHV6TV23Dgbi24GkhP
+	 Mzl+RjymNn56CdRsU6UEcmJIWt3S8l2JdBdfrPLTIGLb6jD7aM4NV1xqzkcV7A5sK5
+	 DJK45GWJu/0mA==
+Message-ID: <f644447b-87de-4e9f-81de-d43811f39a4e@kernel.org>
+Date: Thu, 25 Jun 2026 10:39:43 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,16 +38,11 @@ User-Agent: Mozilla Thunderbird Beta
 Subject: Re: [PATCH net v4] mptcp: fix stale skb->sk reference on subflow
  close
 Content-Language: fr
-To: Kalpan Jani <kalpan.jani@mpiricsoftware.com>,
- mptcp <mptcp@lists.linux.dev>
-Cc: martineau <martineau@kernel.org>, "shardul.b"
- <shardul.b@mpiricsoftware.com>, janak <janak@mpiric.us>,
- kalpanjani009 <kalpanjani009@gmail.com>, shardulsb08
- <shardulsb08@gmail.com>, Paolo Abeni <pabeni@redhat.com>,
- syzkaller <syzkaller@googlegroups.com>,
- Akshit Patadiya <akshit@mpiricsoftware.com>
+To: Kalpan Jani <kalpan.jani@mpiricsoftware.com>, mptcp@lists.linux.dev
+Cc: martineau@kernel.org, shardul.b@mpiricsoftware.com, janak@mpiric.us,
+ kalpanjani009@gmail.com, shardulsb08@gmail.com,
+ Paolo Abeni <pabeni@redhat.com>, syzkaller <syzkaller@googlegroups.com>
 References: <20260601083010.924938-1-kalpan.jani@mpiricsoftware.com>
- <19efd82a727.5577df63663915.5557063534077196375@mpiricsoftware.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -93,34 +88,77 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <19efd82a727.5577df63663915.5557063534077196375@mpiricsoftware.com>
+In-Reply-To: <20260601083010.924938-1-kalpan.jani@mpiricsoftware.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Kalpan,
 
-On 25/06/2026 08:40, Kalpan Jani wrote:
-> Hi Paolo, Matt,
+On 01/06/2026 10:30, Kalpan Jani wrote:
+> The backlog list is updated by mptcp_data_ready() under
+> mptcp_data_lock(). The cleanup of backlog references to a closing
+> subflow, however, was performed in mptcp_close_ssk(), before
+> __mptcp_close_ssk() acquires the ssk lock, and while holding neither
+> the ssk lock nor mptcp_data_lock().
 > 
-> Gentle ping on this patch.
+> Because that traversal ran without mptcp_data_lock(), concurrent softirq
+> RX processing on another CPU (subflow_data_ready() -> mptcp_data_ready()
+> -> __mptcp_add_backlog(), under mptcp_data_lock()) could add a backlog
+> entry referencing the ssk while the cleanup loop was in progress. Such
+> an entry could be missed by the cleanup, or the concurrent list update
+> could corrupt the traversal, leaving skb->sk pointing at the ssk after
+> it is freed.
 > 
-> https://lore.kernel.org/all/20260601083010.924938-1-kalpan.jani@mpiricsoftware.com/
+> A later mptcp_backlog_purge() then dereferences the stale pointer,
+> triggering a warning in inet_sock_destruct() (ssk->sk_rmem_alloc != 0)
+> followed by a use-after-free in mptcp_backlog_purge().
 > 
-> I haven't seen any further feedback on v4, so I just wanted to bring it back to your attention in case it was missed.
+> Fix this by moving the backlog cleanup into __mptcp_close_ssk(), after
+> subflow->closing is set to 1 and while the ssk lock is still held,
+> serialized under mptcp_data_lock(). The cleanup runs only on the push
+> path (MPTCP_CF_PUSH), where backlog references accumulate; on other
+> teardown paths the caller already handles cleanup.
+> 
+> With subflow->closing set and mptcp_data_lock() held across the purge,
+> any concurrent mptcp_data_ready() either completes its enqueue before
+> the purge runs and is caught, or observes closing=1 and bails out. Once
+> mptcp_data_unlock() is reached, no new skb referencing the ssk can be
+> enqueued, so the cleanup is exhaustive.
+> 
+> Remove the unprotected traversal from mptcp_close_ssk() entirely.
 
-Sorry for the delay, your patch has not been missed, it is tracked on
-patchwork. The delay is due to unfortunate timing from most of us at the
-same time, hopefully this will get better at the point, and the load
-will decrease!
+Thank you for the patch. Now in our tree (fixes for -net)
 
-I will apply the patch, the v4 looks good to me.
+New patches for t/upstream-net and t/upstream:
+- 3462c6e4c363: mptcp: fix stale skb->sk reference on subflow close
+- Results: b4e31a1d879f..3ca09a35eeb2 (export-net)
+- Results: beb02b81dcc9..de7eb4dc952e (export)
 
-> Changes since v3:
-> - Rewrote the commit message: the old backlog traversal in mptcp_close_ssk() ran before __mptcp_close_ssk() took the ssk lock, holding neither the ssk lock nor mptcp_data_lock(). The race is a concurrent softirq RX path (subflow_data_ready() -> mptcp_data_ready() -> __mptcp_add_backlog(), under mptcp_data_lock()) adding to the backlog mid-traversal, not anything tied to a release_sock(ssk).
-> - Added the missing Fixes tag (ee458a3f314e).
+Tests are now in progress:
 
-Thank you for the changelog. It is always useful to keep it in the note
-section (under '---') to help reviewers.
+- export-net:
+https://github.com/multipath-tcp/mptcp_net-next/commit/3c5df8d7e52fe1bca30ed7f1358cd0d51c438800/checks
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/ed605c82f0536e49e42d77d6e77366d59888b4f1/checks
+
+> Tested with the MPTCP kernel selftests on the patched kernel:
+> - tools/testing/selftests/net/mptcp/mptcp_join.sh: all tests pass
+> - tools/testing/selftests/net/mptcp/mptcp_connect.sh: 68/68 pass
+
+Note that you don't need to specify this: for MPTCP patches, we assume
+all kernel selftests and packetdrill tests are passing. If you did other
+"unusual" tests -- e.g. running many times a reproducer mentioned in the
+issue -- then that's interesting to add that in the commit message.>
+> Fixes: ee458a3f314e ("mptcp: introduce mptcp-level backlog")
+> Suggested-by: Paolo Abeni <pabeni@redhat.com>
+> Reported-by: syzkaller <syzkaller@googlegroups.com>
+
+Detail: it might be confusing to add this: the issue has not been
+reported by the public syzbot instance [1], but by a private one
+dedicated to MPTCP. People on this mailing list will likely not find the
+related issue.
+
+https://syzkaller.appspot.com/upstream/s/mptcp
 
 Cheers,
 Matt
