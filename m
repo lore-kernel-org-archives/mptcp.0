@@ -1,211 +1,129 @@
-Received: from sender4-of-o54.zoho.com (sender4-of-o54.zoho.com [136.143.188.54])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE431332623
-	for <mptcp@lists.linux.dev>; Thu, 25 Jun 2026 06:41:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.54
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782369668; cv=pass; b=nCgFs0aWkme2CDFwjRHWcpioBpnAlL7i1EHykgrdGDiba2OJ493dfm7gHYtTcHBJMQpDd83sO5vb8oKwIMV/Z1ouDdK/3XlP1xilCjvdnrIx0z2qnjpmmUvETXsODIEk8H6MHw7s4rIxtYukCMCLIRt7UqeEr1CoF61x5ln33MU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782369668; c=relaxed/simple;
-	bh=LtrTYX2fyn4Ng8CNTCLbh41vAXlxY2iVDU5x0ozRVtE=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=YSi108fTtGdYiyFO3PhckhlXlvcKd+JSvfWfuRmpEfvg1irLDU9uIfO4h/Yr69tEsgFFKDF+966A14NvaH/tn4FHzhMc6HuzKI2EWgJgx7+ENPQLqYwPvWFwP8Gq0fnLSdBLL4v5gIQEgxVKLxOp40B62lx+3L2sUcr7mvpGJ28=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com; spf=pass smtp.mailfrom=mpiricsoftware.com; dkim=fail (0-bit key) header.d=mpiricsoftware.com header.i=kalpan.jani@mpiricsoftware.com header.b=kSXIqkoS reason="key not found in DNS"; arc=pass smtp.client-ip=136.143.188.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mpiricsoftware.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 822B6346E56
+	for <mptcp@lists.linux.dev>; Thu, 25 Jun 2026 08:06:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782374813; cv=none; b=e7XjAEWffzt934CBa6OLrxptJP8fHURPWiJa19hHJOJ+ZtYvQPVeJ4ROTl4cNFGeHX6RscDAoaY6Qlaz2/ckec4pPjICFETrOlXkHLYyFA43eIslqUPEOUBTGK7moE2F5I4/co5boOSpOFyKsGTBlzuw+AnBCqXOk97NtLA1Y0o=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782374813; c=relaxed/simple;
+	bh=UZorJyRJCbjLFU0v57JVCEwuxeyqGU5zoYPDWorPND8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eYBTWRuFXGptJUYm5nNomtelWqxc/7V0QuYN8ux+V8///3zCUletS+mOsRdHSOdN/ny3Mu8CLl7CUa9Ed55KpGYyKBuMyGPyEE33IZmDt6iBJ4AYPikApI14gwDsT7WOEtUnv+f18tS+JHLtY2MKQ5zoixA9CMz9+XDOK8p3qLw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TwX8YFnr; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mpiricsoftware.com header.i=kalpan.jani@mpiricsoftware.com header.b="kSXIqkoS"
-ARC-Seal: i=1; a=rsa-sha256; t=1782369661; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=gnKCRbXYnWNpzDoyGOb6TOkMZ2oRCBpsWBG4K8L2PR+pHW2NRwihsaE3nMw7UJyc9F9ix/jGZ+9nl9RahJ4PkEx79C3XAbGQYAMpcOffgzrtCeYLcW7d0jNfBrVaLMkkKc9RxL1lYpflTS6UugK2G1OLkeH+MXC2DlGtr8hLc10=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1782369661; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=wG5qUDiUHXZAD01GJ7nhrxZjMQ7KfmXdUQ/D88UDy5o=; 
-	b=bQl1WuEMEY89Gztgo0pTce+wrnEA7irmzQjgIO4wOp1zLRIVujKhFFXxkCofvd1YXvSDhCl3VJzj48xZ74VOHktJWJcvUJ1JSAjhwGnHuheitK0FtM6LTNtLaMQkcYOm7Uj42owfzrKNlN9O6qPlXBpx86UF0rjg2tU295wpwX4=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=mpiricsoftware.com;
-	spf=pass  smtp.mailfrom=kalpan.jani@mpiricsoftware.com;
-	dmarc=pass header.from=<kalpan.jani@mpiricsoftware.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1782369661;
-	s=mpiric; d=mpiricsoftware.com; i=kalpan.jani@mpiricsoftware.com;
-	h=Date:Date:From:From:To:To:Cc:Cc:Message-ID:In-Reply-To:References:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=wG5qUDiUHXZAD01GJ7nhrxZjMQ7KfmXdUQ/D88UDy5o=;
-	b=kSXIqkoSboh/NGvGxRryvqWVvf1gYIiUK6PhTaOhcuipHZROmOsvsz39hUb3TkjZ
-	fvuGDs8wPyha4lbyNu+1bmoEMRcQWOf441Pm/VXS55qBfzSo1HEWtc3Q/kLil5e8qw+
-	WNKlhuHMINTLi5ibaDUbH8KNX0k+f4woAyDYNmeo=
-Received: from mail.zoho.com by mx.zohomail.com
-	with SMTP id 1782369660839134.73248361679828; Wed, 24 Jun 2026 23:41:00 -0700 (PDT)
-Received: from mail.zoho.com by mx.zohomail.com
-	with SMTP id 1782369658679586.5934427031217; Wed, 24 Jun 2026 23:40:58 -0700 (PDT)
-Date: Thu, 25 Jun 2026 12:10:58 +0530
-From: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
-To: "mptcp" <mptcp@lists.linux.dev>
-Cc: "matttbe" <matttbe@kernel.org>, "martineau" <martineau@kernel.org>,
-	"shardul.b" <shardul.b@mpiricsoftware.com>,
-	"janak" <janak@mpiric.us>, "kalpanjani009" <kalpanjani009@gmail.com>,
-	"shardulsb08" <shardulsb08@gmail.com>,
-	"Kalpan Jani" <kalpan.jani@mpiricsoftware.com>,
-	"Paolo Abeni" <pabeni@redhat.com>,
-	"syzkaller" <syzkaller@googlegroups.com>,
-	"Akshit Patadiya" <akshit@mpiricsoftware.com>
-Message-ID: <19efd82a727.5577df63663915.5557063534077196375@mpiricsoftware.com>
-In-Reply-To: <20260601083010.924938-1-kalpan.jani@mpiricsoftware.com>
-References: <20260601083010.924938-1-kalpan.jani@mpiricsoftware.com>
-Subject: Re:[PATCH net v4] mptcp: fix stale skb->sk reference on subflow
- close
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TwX8YFnr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 056FE1F000E9;
+	Thu, 25 Jun 2026 08:06:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1782374812;
+	bh=yLIufNj5YV41SuqrDw4KB4nFAZ20h6o5/nheUz1DE+A=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=TwX8YFnrt2PFPKt3YeDnUxGjLsPWjdGoRQISc7KRpbenPrPHHgAYpWTLHxY7kWGON
+	 1oAa21GBQMMDOnKMKOf5lzv5XohdBM0aHikVYZ7Ur2NtDCSCcp9TulnRnfZNrjxIV7
+	 14mRgeyIL/4El65HdkDFnXKPbcR8XsBWbskZC7WxyXgbDUm5qfOkonCOQipdJBhnHO
+	 FjwHgla3ViMRcjLPhlfge8qk9heKvtJnty2OWJrXRBcWX1xMjaT2QcBxyVBN13Wi8i
+	 mmj1qyYOYrri0C32SVB3GfT0M8JQII7c2gG75/86zlq9VNsPOXWItCNnJ9LF06ywba
+	 Gr2AKv/3/LAeQ==
+Message-ID: <ee4535dc-81e9-43a8-9b4c-e43be89e1628@kernel.org>
+Date: Thu, 25 Jun 2026 10:06:47 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH net v4] mptcp: fix stale skb->sk reference on subflow
+ close
+Content-Language: fr
+To: Kalpan Jani <kalpan.jani@mpiricsoftware.com>,
+ mptcp <mptcp@lists.linux.dev>
+Cc: martineau <martineau@kernel.org>, "shardul.b"
+ <shardul.b@mpiricsoftware.com>, janak <janak@mpiric.us>,
+ kalpanjani009 <kalpanjani009@gmail.com>, shardulsb08
+ <shardulsb08@gmail.com>, Paolo Abeni <pabeni@redhat.com>,
+ syzkaller <syzkaller@googlegroups.com>,
+ Akshit Patadiya <akshit@mpiricsoftware.com>
+References: <20260601083010.924938-1-kalpan.jani@mpiricsoftware.com>
+ <19efd82a727.5577df63663915.5557063534077196375@mpiricsoftware.com>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
+ YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
+ c7SPFMpMesgpcu1xFt0F6bcxE+0ojRtSCZ5HDElKlHJNYtD1uwY4UYVGWUGCF/+cY1YLmtfb
+ WdNb/SFo+Mp0HItfBC12qtDIXYvbfNUGVnA5jXeWMEyYhSNktLnpDL2gBUCsdbkov5VjiOX7
+ CRTkX0UgNWRjyFZwThaZADEvAOo12M5uSBk7h07yJ97gqvBtcx45IsJwfUJE4hy8qZqsA62A
+ nTRflBvp647IXAiCcwWsEgE5AXKwA3aL6dcpVR17JXJ6nwHHnslVi8WesiqzUI9sbO/hXeXw
+ TDSB+YhErbNOxvHqCzZEnGAAFf6ges26fRVyuU119AzO40sjdLV0l6LE7GshddyazWZf0iac
+ nEhX9NKxGnuhMu5SXmo2poIQttJuYAvTVUNwQVEx/0yY5xmiuyqvXa+XT7NKJkOZSiAPlNt6
+ VffjgOP62S7M9wDShUghN3F7CPOrrRsOHWO/l6I/qJdUMW+MHSFYPfYiFXoLUZyPvNVCYSgs
+ 3oQaFhHapq1f345XBtfG3fOYp1K2wTXd4ThFraTLl8PHxCn4ywARAQABzSRNYXR0aGlldSBC
+ YWVydHMgPG1hdHR0YmVAa2VybmVsLm9yZz7CwZEEEwEIADsCGwMFCwkIBwIGFQoJCAsCBBYC
+ AwECHgECF4AWIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZUDpDAIZAQAKCRD2t4JPQmmgcz33
+ EACjROM3nj9FGclR5AlyPUbAq/txEX7E0EFQCDtdLPrjBcLAoaYJIQUV8IDCcPjZMJy2ADp7
+ /zSwYba2rE2C9vRgjXZJNt21mySvKnnkPbNQGkNRl3TZAinO1Ddq3fp2c/GmYaW1NWFSfOmw
+ MvB5CJaN0UK5l0/drnaA6Hxsu62V5UnpvxWgexqDuo0wfpEeP1PEqMNzyiVPvJ8bJxgM8qoC
+ cpXLp1Rq/jq7pbUycY8GeYw2j+FVZJHlhL0w0Zm9CFHThHxRAm1tsIPc+oTorx7haXP+nN0J
+ iqBXVAxLK2KxrHtMygim50xk2QpUotWYfZpRRv8dMygEPIB3f1Vi5JMwP4M47NZNdpqVkHrm
+ jvcNuLfDgf/vqUvuXs2eA2/BkIHcOuAAbsvreX1WX1rTHmx5ud3OhsWQQRVL2rt+0p1DpROI
+ 3Ob8F78W5rKr4HYvjX2Inpy3WahAm7FzUY184OyfPO/2zadKCqg8n01mWA9PXxs84bFEV2mP
+ VzC5j6K8U3RNA6cb9bpE5bzXut6T2gxj6j+7TsgMQFhbyH/tZgpDjWvAiPZHb3sV29t8XaOF
+ BwzqiI2AEkiWMySiHwCCMsIH9WUH7r7vpwROko89Tk+InpEbiphPjd7qAkyJ+tNIEWd1+MlX
+ ZPtOaFLVHhLQ3PLFLkrU3+Yi3tXqpvLE3gO3LM7BTQRV4/npARAA5+u/Sx1n9anIqcgHpA7l
+ 5SUCP1e/qF7n5DK8LiM10gYglgY0XHOBi0S7vHppH8hrtpizx+7t5DBdPJgVtR6SilyK0/mp
+ 9nWHDhc9rwU3KmHYgFFsnX58eEmZxz2qsIY8juFor5r7kpcM5dRR9aB+HjlOOJJgyDxcJTwM
+ 1ey4L/79P72wuXRhMibN14SX6TZzf+/XIOrM6TsULVJEIv1+NdczQbs6pBTpEK/G2apME7vf
+ mjTsZU26Ezn+LDMX16lHTmIJi7Hlh7eifCGGM+g/AlDV6aWKFS+sBbwy+YoS0Zc3Yz8zrdbi
+ Kzn3kbKd+99//mysSVsHaekQYyVvO0KD2KPKBs1S/ImrBb6XecqxGy/y/3HWHdngGEY2v2IP
+ Qox7mAPznyKyXEfG+0rrVseZSEssKmY01IsgwwbmN9ZcqUKYNhjv67WMX7tNwiVbSrGLZoqf
+ Xlgw4aAdnIMQyTW8nE6hH/Iwqay4S2str4HZtWwyWLitk7N+e+vxuK5qto4AxtB7VdimvKUs
+ x6kQO5F3YWcC3vCXCgPwyV8133+fIR2L81R1L1q3swaEuh95vWj6iskxeNWSTyFAVKYYVskG
+ V+OTtB71P1XCnb6AJCW9cKpC25+zxQqD2Zy0dK3u2RuKErajKBa/YWzuSaKAOkneFxG3LJIv
+ Hl7iqPF+JDCjB5sAEQEAAcLBXwQYAQIACQUCVeP56QIbDAAKCRD2t4JPQmmgc5VnD/9YgbCr
+ HR1FbMbm7td54UrYvZV/i7m3dIQNXK2e+Cbv5PXf19ce3XluaE+wA8D+vnIW5mbAAiojt3Mb
+ 6p0WJS3QzbObzHNgAp3zy/L4lXwc6WW5vnpWAzqXFHP8D9PTpqvBALbXqL06smP47JqbyQxj
+ Xf7D2rrPeIqbYmVY9da1KzMOVf3gReazYa89zZSdVkMojfWsbq05zwYU+SCWS3NiyF6QghbW
+ voxbFwX1i/0xRwJiX9NNbRj1huVKQuS4W7rbWA87TrVQPXUAdkyd7FRYICNW+0gddysIwPoa
+ KrLfx3Ba6Rpx0JznbrVOtXlihjl4KV8mtOPjYDY9u+8x412xXnlGl6AC4HLu2F3ECkamY4G6
+ UxejX+E6vW6Xe4n7H+rEX5UFgPRdYkS1TA/X3nMen9bouxNsvIJv7C6adZmMHqu/2azX7S7I
+ vrxxySzOw9GxjoVTuzWMKWpDGP8n71IFeOot8JuPZtJ8omz+DZel+WCNZMVdVNLPOd5frqOv
+ mpz0VhFAlNTjU1Vy0CnuxX3AM51J8dpdNyG0S8rADh6C8AKCDOfUstpq28/6oTaQv7QZdge0
+ JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <19efd82a727.5577df63663915.5557063534077196375@mpiricsoftware.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Importance: Medium
-User-Agent: Zoho Mail
-X-Mailer: Zoho Mail
 
-Hi Paolo, Matt,
+Hi Kalpan,
 
-Gentle ping on this patch.
+On 25/06/2026 08:40, Kalpan Jani wrote:
+> Hi Paolo, Matt,
+> 
+> Gentle ping on this patch.
+> 
+> https://lore.kernel.org/all/20260601083010.924938-1-kalpan.jani@mpiricsoftware.com/
+> 
+> I haven't seen any further feedback on v4, so I just wanted to bring it back to your attention in case it was missed.
 
-https://lore.kernel.org/all/20260601083010.924938-1-kalpan.jani@mpiricsoftware.com/
+Sorry for the delay, your patch has not been missed, it is tracked on
+patchwork. The delay is due to unfortunate timing from most of us at the
+same time, hopefully this will get better at the point, and the load
+will decrease!
 
-I haven't seen any further feedback on v4, so I just wanted to bring it back to your attention in case it was missed.
+I will apply the patch, the v4 looks good to me.
 
-Changes since v3:
-- Rewrote the commit message: the old backlog traversal in mptcp_close_ssk() ran before __mptcp_close_ssk() took the ssk lock, holding neither the ssk lock nor mptcp_data_lock(). The race is a concurrent softirq RX path (subflow_data_ready() -> mptcp_data_ready() -> __mptcp_add_backlog(), under mptcp_data_lock()) adding to the backlog mid-traversal, not anything tied to a release_sock(ssk).
-- Added the missing Fixes tag (ee458a3f314e).
+> Changes since v3:
+> - Rewrote the commit message: the old backlog traversal in mptcp_close_ssk() ran before __mptcp_close_ssk() took the ssk lock, holding neither the ssk lock nor mptcp_data_lock(). The race is a concurrent softirq RX path (subflow_data_ready() -> mptcp_data_ready() -> __mptcp_add_backlog(), under mptcp_data_lock()) adding to the backlog mid-traversal, not anything tied to a release_sock(ssk).
+> - Added the missing Fixes tag (ee458a3f314e).
 
-The diff is otherwise unchanged from v3. I kept your Suggested-by, Paolo; happy to add an Acked-by too if you'd rather it be explicit.
-
-Thanks for your time.
+Thank you for the changelog. It is always useful to keep it in the note
+section (under '---') to help reviewers.
 
 Cheers,
-Kalpan Jani
-
-
-
-From: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
-To: <mptcp@lists.linux.dev>
-Cc: <matttbe@kernel.org>, <martineau@kernel.org>, <shardul.b@mpiricsoftware.com>, <janak@mpiric.us>, <kalpanjani009@gmail.com>, <shardulsb08@gmail.com>, "Kalpan Jani"<kalpan.jani@mpiricsoftware.com>, "Paolo Abeni"<pabeni@redhat.com>, "syzkaller"<syzkaller@googlegroups.com>
-Date: Mon, 01 Jun 2026 14:00:10 +0530
-Subject: [PATCH net v4] mptcp: fix stale skb->sk reference on subflow close
-
- > The backlog list is updated by mptcp_data_ready() under
- > mptcp_data_lock(). The cleanup of backlog references to a closing
- > subflow, however, was performed in mptcp_close_ssk(), before
- > __mptcp_close_ssk() acquires the ssk lock, and while holding neither
- > the ssk lock nor mptcp_data_lock().
- > 
- > Because that traversal ran without mptcp_data_lock(), concurrent softirq
- > RX processing on another CPU (subflow_data_ready() -> mptcp_data_ready()
- > -> __mptcp_add_backlog(), under mptcp_data_lock()) could add a backlog
- > entry referencing the ssk while the cleanup loop was in progress. Such
- > an entry could be missed by the cleanup, or the concurrent list update
- > could corrupt the traversal, leaving skb->sk pointing at the ssk after
- > it is freed.
- > 
- > A later mptcp_backlog_purge() then dereferences the stale pointer,
- > triggering a warning in inet_sock_destruct() (ssk->sk_rmem_alloc != 0)
- > followed by a use-after-free in mptcp_backlog_purge().
- > 
- > Fix this by moving the backlog cleanup into __mptcp_close_ssk(), after
- > subflow->closing is set to 1 and while the ssk lock is still held,
- > serialized under mptcp_data_lock(). The cleanup runs only on the push
- > path (MPTCP_CF_PUSH), where backlog references accumulate; on other
- > teardown paths the caller already handles cleanup.
- > 
- > With subflow->closing set and mptcp_data_lock() held across the purge,
- > any concurrent mptcp_data_ready() either completes its enqueue before
- > the purge runs and is caught, or observes closing=1 and bails out. Once
- > mptcp_data_unlock() is reached, no new skb referencing the ssk can be
- > enqueued, so the cleanup is exhaustive.
- > 
- > Remove the unprotected traversal from mptcp_close_ssk() entirely.
- > 
- > Tested with the MPTCP kernel selftests on the patched kernel:
- > - tools/testing/selftests/net/mptcp/mptcp_join.sh: all tests pass
- > - tools/testing/selftests/net/mptcp/mptcp_connect.sh: 68/68 pass
- > 
- > Fixes: ee458a3f314e ("mptcp: introduce mptcp-level backlog")
- > Suggested-by: Paolo Abeni <pabeni@redhat.com>
- > Reported-by: syzkaller <syzkaller@googlegroups.com>
- > Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/621
- > Signed-off-by: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
- > ---
- >  net/mptcp/protocol.c | 34 ++++++++++++++++++++--------------
- >  1 file changed, 20 insertions(+), 14 deletions(-)
- > 
- > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
- > index 4546a8b09884..37efcea99dc1 100644
- > --- a/net/mptcp/protocol.c
- > +++ b/net/mptcp/protocol.c
- > @@ -2527,6 +2527,22 @@ static void __mptcp_subflow_disconnect(struct sock *ssk,
- >      }
- >  }
- >  
- > +static void mptcp_cleanup_ssk_backlog(struct sock *sk, struct sock *ssk)
- > +{
- > +    struct mptcp_sock *msk = mptcp_sk(sk);
- > +    struct sk_buff *skb;
- > +
- > +    mptcp_data_lock(sk);
- > +    list_for_each_entry(skb, &msk->backlog_list, list) {
- > +        if (skb->sk != ssk)
- > +            continue;
- > +
- > +        atomic_sub(skb->truesize, &skb->sk->sk_rmem_alloc);
- > +        skb->sk = NULL;
- > +    }
- > +    mptcp_data_unlock(sk);
- > +}
- > +
- >  /* subflow sockets can be either outgoing (connect) or incoming
- >   * (accept).
- >   *
- > @@ -2550,6 +2567,9 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
- >      lock_sock_nested(ssk, SINGLE_DEPTH_NESTING);
- >      subflow->closing = 1;
- >  
- > +    if (flags & MPTCP_CF_PUSH)
- > +        mptcp_cleanup_ssk_backlog(sk, ssk);
- > +
- >      /* Borrow the fwd allocated page left-over; fwd memory for the subflow
- >       * could be negative at this point, but will be reach zero soon - when
- >       * the data allocated using such fragment will be freed.
- > @@ -2641,9 +2661,6 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
- >  void mptcp_close_ssk(struct sock *sk, struct sock *ssk,
- >               struct mptcp_subflow_context *subflow)
- >  {
- > -    struct mptcp_sock *msk = mptcp_sk(sk);
- > -    struct sk_buff *skb;
- > -
- >      /* The first subflow can already be closed or disconnected */
- >      if (subflow->close_event_done || READ_ONCE(subflow->local_id) < 0)
- >          return;
- > @@ -2653,17 +2670,6 @@ void mptcp_close_ssk(struct sock *sk, struct sock *ssk,
- >      if (sk->sk_state == TCP_ESTABLISHED)
- >          mptcp_event(MPTCP_EVENT_SUB_CLOSED, mptcp_sk(sk), ssk, GFP_KERNEL);
- >  
- > -    /* Remove any reference from the backlog to this ssk; backlog skbs consume
- > -     * space in the msk receive queue, no need to touch sk->sk_rmem_alloc
- > -     */
- > -    list_for_each_entry(skb, &msk->backlog_list, list) {
- > -        if (skb->sk != ssk)
- > -            continue;
- > -
- > -        atomic_sub(skb->truesize, &skb->sk->sk_rmem_alloc);
- > -        skb->sk = NULL;
- > -    }
- > -
- >      /* subflow aborted before reaching the fully_established status
- >       * attempt the creation of the next subflow
- >       */
- > -- 
- > 2.43.0
- > 
- > 
-
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
 
