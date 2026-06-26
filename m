@@ -1,77 +1,86 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 581B83FC5A7;
-	Fri, 26 Jun 2026 16:32:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8F3121CC71
+	for <mptcp@lists.linux.dev>; Fri, 26 Jun 2026 22:46:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782491577; cv=none; b=a708+akEdUCDxpIzQocam8ylWUwJR6lkAsSTbrbOgU6utI+e/CXfMX6iGAI3B6S7APhitEvuKoDGWFXYbe2sYxCrtPBgT8RlL73wRHW09M+stZ0mTGC6KxzR/9RynoK5BSLHNUZFz41BDIz5imV6/KDbwuyECSMUwJX/xsi97yk=
+	t=1782513982; cv=none; b=kswP/twCkifjc5jGpJEk+1IHeU60y3QGyeSwo4mzMszLIdA1j2jEHOc8TfP071aMBRZ9yYuu+7wOtqsszQByhCXgW/AxzoklcrlYCFGn/LUcGyDh659l2flwt3IbPoXDQUPBdqCHyAFrAqwbkVYCWwTe+r7nLt/CXBEe/Bu/aP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782491577; c=relaxed/simple;
-	bh=tG6J2GY+4jXTir/Fox0Z0bwsDCMHan1veiHDMjutll8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=K9PKW7HpokfOkcfIFdg3kIjxL3QWiGutwSADRgIvXVH8fbhHnmG3QIGllg+ABlt199bFq8DgnRmmq8ZIp5YHJSwxhqpP7BVgaXBkNhG/KHMZS6DEFNH5dtcqPraJkCUmyMBI6QmrJNBVxmUsa8b/rDEJgxi3nVkOjyrcbV0II9I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GY9TLwMy; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1782513982; c=relaxed/simple;
+	bh=VjJCIcKvMJAIwVsv0WNGNO1Zlz6yk4yMGGY5HWtFdvc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RuiEVxeZ8R05b0zr7/scG8sg96LEorKPslz5BZAoBCr9F93UOkJWTq8Yh5OST9A73VoLJVRgoXAc1XNCKggzj73WESOiWHqV4bsiCGobWqJx3/t/QG2h7DaywJ3og8RDd/TknQIFmeHPVKTibY2G98G0B8Uypv9VmQW0vemZsh8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e4+XZj81; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GY9TLwMy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DB5C1F000E9;
-	Fri, 26 Jun 2026 16:32:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e4+XZj81"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E56D1F000E9;
+	Fri, 26 Jun 2026 22:46:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782491576;
-	bh=7s3t+HgFUoid2HXcYb60+6re4RXT2/C56sdjNS8djm4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=GY9TLwMyro/2WA0H9oXIsm3mscusHmvezbIXGXWhgkLKQK4EcdlHgc91WmtZCiOPl
-	 V9k7kQ6iZs9+c5iTtRC66YvCdBF89ifHBy58rnny+YvTVGCg2XQhLM3eqWHGeh0y74
-	 3Ut4ZKdDhlhL7P8MikZ4Vt1ObGon2RqVStPd8zMPfDEb5v+6RmbEgIpPxsHxYceVRw
-	 madmhuNkZC+OC11CpCntxKCU9XhBLyItA5D9lWLzDC2KRMIVInT1sUBFZKMLhIIIRo
-	 25j/qUzX5JxxzoMGapW6YL4MT3KT2FNy1UeY6Mk4hfFf6VquLT1AGYAMT8cEpMeMrQ
-	 /kywlUh8OKy2w==
-Date: Fri, 26 Jun 2026 09:32:54 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Geliang Tang <geliang@kernel.org>
-Cc: Matthieu Baerts <matttbe@kernel.org>, Mat Martineau
- <martineau@kernel.org>, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Simon
- Horman <horms@kernel.org>, Neal Cardwell <ncardwell@google.com>, Kuniyuki
- Iwashima	 <kuniyu@google.com>, John Fastabend <john.fastabend@gmail.com>,
- Sabrina Dubroca	 <sd@queasysnail.net>, Hannes Reinecke <hare@suse.de>,
- Geliang Tang	 <tanggeliang@kylinos.cn>, netdev@vger.kernel.org,
- mptcp@lists.linux.dev, Gang Yan	 <yangang@kylinos.cn>, Zqiang
- <qiang.zhang@linux.dev>
-Subject: Re: [RFC net-next 00/17] MPTCP KTLS support
-Message-ID: <20260626093254.19ee6485@kernel.org>
-In-Reply-To: <a0358bb3aa8e2d45bd1e74851416728c3f08ddff.camel@kernel.org>
-References: <cover.1782123118.git.tanggeliang@kylinos.cn>
-	<20260622090059.5d1813dd@kernel.org>
-	<a0358bb3aa8e2d45bd1e74851416728c3f08ddff.camel@kernel.org>
+	s=k20260515; t=1782513981;
+	bh=vdOCBFhRw5SHsMSskvR+lyMCy1dijwZ33wFpUt9DAK0=;
+	h=From:To:Cc:Subject:Date;
+	b=e4+XZj81LGbsnidFulg/+i1JdNhEtM2bAy5Ad30o6I+lFvmYQt6cNxWNzaMJ8E9RF
+	 BP3lfcwAAn9IKi1bMOIlCk1KuErRsX0Ou+pWG0OuukuvVJkrfkZ/AZjAU65fpOLbR+
+	 8wJK5thSAoYczhu1fqLFpd2bytU8+Ex9gbGQ3UuAT85ldqD7WSFwGX58wdlxi2Mc+c
+	 nGc6dCV0nwRgEOoURj9d6r051y99Rnsk1nWL8ykkYGxoU7+nP/bTE1nKLMv0G4HLWT
+	 KhC41k1FtBovAzbIdJMfhAgpD4b5NYae7VTkcuQL6n1kYMsCG9cWtFbCm6LKLOHWuT
+	 eJUu27e+qPXiQ==
+From: Geliang Tang <geliang@kernel.org>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v6 0/3] only remove entry from local_addr_list when sending a REMOVE_ADDR
+Date: Sat, 27 Jun 2026 06:45:52 +0800
+Message-ID: <cover.1782513313.git.tanggeliang@kylinos.cn>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Fri, 26 Jun 2026 15:56:53 +0800 Geliang Tang wrote:
-> On Mon, 2026-06-22 at 09:00 -0700, Jakub Kicinski wrote:
-> > On Mon, 22 Jun 2026 18:43:20 +0800 Geliang Tang wrote:  
-> > > Subject: [RFC net-next 00/17] MPTCP KTLS support  
-> > 
-> > Please no. We have a ton of unfixed bugs and may have to revert some
-> > of
-> > the features we dropped back in. I'd prefer to avoid large new bug
-> > surfaces until we reach an LTS release.  
-> 
-> Sure, I can wait. During this time, I'll go over the implementation
-> more carefully to make sure there are no issues on the MPTCP side.
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
-The two things that I'd be most interested in understanding better are
-1) perf impact on all the pointer chasing and indirect calls you're
-   adding
-2) what's your plan on implementing HW offload? I understand that _you_
-   may not care, but if you follow the ML you'll discover that sooner
-   or later some well meaning person will slop code such support.
-   We have pretty solid (by kernel standards) documentation for the
-   offload. Please read if you haven't already. And then you should
-   hopefully realize the huge issue with the layering you chose...
+v6:
+ - patch 2: now explicitly removes userspace pm addresses using
+   userspace_pm_rm_addr, instead of merely updating dump_addr expectations.
+ - patch 3: dropped duplicate "sleep 0.5".
+ - The pre-existing issue Sashiko mentioned in v5, "it's not safe to
+   decrement sk->sk_omem_alloc synchronously while deferring the actual
+   memory free via kfree_rcu_mightsleep(match)", will be addressed in a
+   separate patch.
+
+v5:
+ - rebased.
+ - add Matt's reviewed tags.
+ - add a RM_ADDR from the server to the client as Sashiko suggested.
+ - mptcpd tests (make check) are still OK after this modification.
+ - Link: https://patchwork.kernel.org/project/mptcp/cover/cover.1782457962.git.tanggeliang@kylinos.cn/
+
+v4:
+ - rebased.
+ - Link: https://patchwork.kernel.org/project/mptcp/cover/cover.1776466833.git.tanggeliang@kylinos.cn/
+
+v3:
+ - update userspace selftests.
+ - Link: https://patchwork.kernel.org/project/mptcp/cover/cover.1744787273.git.tanggeliang@kylinos.cn/
+
+v2:
+ - squash patch 1 into patch 2 as Mat suggested.
+
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/403
+
+Geliang Tang (3):
+  mptcp: pm: userspace: drop delete_local_addr helper
+  selftests: mptcp: join: explicitly remove userspace pm addresses
+  selftests: mptcp: userspace: send RM_ADDR between server and client
+
+ net/mptcp/pm_userspace.c                      | 35 ++-----------------
+ .../testing/selftests/net/mptcp/mptcp_join.sh |  4 ++-
+ .../selftests/net/mptcp/userspace_pm.sh       | 14 ++++++++
+ 3 files changed, 19 insertions(+), 34 deletions(-)
+
+-- 
+2.53.0
+
