@@ -1,132 +1,95 @@
-Received: from mail-dy1-f172.google.com (mail-dy1-f172.google.com [74.125.82.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-185.mta0.migadu.com (out-185.mta0.migadu.com [91.218.175.185])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2171426B742
-	for <mptcp@lists.linux.dev>; Tue, 30 Jun 2026 07:17:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2FBB39D6FA
+	for <mptcp@lists.linux.dev>; Tue, 30 Jun 2026 07:42:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.185
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782803845; cv=none; b=IpCBDOPU8qGITl45vFpI+GnRyc/iGfibBfi4u2PJB6lT1Rql5/l18XaX6ghpE+vaNaUIHMuR+34nSA+ROYMmGYEcFKkqLW/9EzjSefb+8P/158w/zbtANihAG7PLOOKIXJqMF9QOiPDHddiQ0s0lu/TmriWPuTH6WLlHG1gGEQM=
+	t=1782805377; cv=none; b=GHsdWm1ofislyQNnIRr13dXX9Q7czU2EMdN+bbyDck/efZFe5JGLqRULp4qnHCrw6SY1BQAetoccQJkKOpBFFDZ8cVO8wtPx88/k4JmPekVTV0P/gZ5s4aUkbVPjjjB6L8xvQCLJsrRbMjm11tr/1mn0ZD/H/8uEwAbiK9yBywA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782803845; c=relaxed/simple;
-	bh=ttK34wglBMfkuSOFIbKcPL2cinPyi5WYDDeMds0g4qU=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
-	 MIME-Version:Content-Type; b=ZT0nNyLGgeEo9kf8afmqSEcgfK3pol6XF/yrKgnVoUVNf3Wr+EHa/gFi2uiD0ho3c+s4H1jQxQgITLAqdpvJxLd/l3JCqXj/34iq7GmpyWtZlVHkThQiBNp5AFpProXNArAGiek/7spkooOnd57xv0+UBDB8V0SXNaSrJIJIqxw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Yqc2bYnP; arc=none smtp.client-ip=74.125.82.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1782805377; c=relaxed/simple;
+	bh=ScQQyHRvcuf2aB8+68qfGlYMq3fr8knt8/dwIXL846w=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rapcaKYgNJtiNGFIidYsC/v77IZRpklVCRA8848ymfwVN4iY4e7riieGMdDi1hjzGcveH4aeev1CCGsD8g5jyiN8zuzSWqJiJrrktE9hBf14HFxoFMSOcDlEuxDLeJlcG6sp2Lw/8yU86l+cuWxTIE83HD9tGg0hLLPir9xWl0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=hSnXmBbe; arc=none smtp.client-ip=91.218.175.185
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yqc2bYnP"
-Received: by mail-dy1-f172.google.com with SMTP id 5a478bee46e88-30b9e755555so7545574eec.1
-        for <mptcp@lists.linux.dev>; Tue, 30 Jun 2026 00:17:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1782803843; x=1783408643; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xWBXNrwov5y5IjtJOk2VZq400pGCfjKd1V1uHlPkFj4=;
-        b=Yqc2bYnPSMNMimyT34xt374GM3EA7vVI6JMAcMZkNbVEwC8mLJ7et9+voeaz8KN+y2
-         m9HUUkC/8XcjvRrwFrRoi+ZX6LGO6CqRHIUl3AoPbEQhMctRPqdfvOZHsSjjAJGf0ZuB
-         5w26NL10y6vq6/fTupl0ZGL+PYTBjDtuvEfVfY6sgf5Z+KaVtMFfvhDn16VsVFF7sG6J
-         yTVNYjYOkhn2wbSEQfYFOrsjqlFiG6fbkZ/5DIEOnYIJhSzWmG39HJHhY4fLcdj62l8d
-         ShSZX5KxPDfPlai1JSDhxXQ+E7dXWjRxF6bTp2P1NiyvaWRpI2Z1eRSipxR0Fhq5ex4y
-         ueDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782803843; x=1783408643;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xWBXNrwov5y5IjtJOk2VZq400pGCfjKd1V1uHlPkFj4=;
-        b=R6XXWJy2IIRdIQDOMeodoyUDwa4anlt9WZm+si3FuYH+m5a1eqakZbV3Z4/2R2kFnv
-         J1pXGZx+jOA4aQL26md9c2Y8m+0LDPrsnF1Nmf2XaSC7kbCoh7pHJbT8GnE1T+ji7Sus
-         i1T1BGfAkNrCCxPLirAGu7cahBiHRboSiYYWBvXRtfqzIEKqWKWjQKga3lSttK4uLVHx
-         +Cj/sJjGa6mvXHRcNYCRPrtEDij4KvZ7iwYIho1GpdqSoTC7CHbaIERugSIBD2eP1Wu/
-         BRV5uoWKzxAZTQBYZ2JspeREZGJnqisBy2oOKxlNH2Q7iSY55i5W0W+21sy7/8iSLYWh
-         kIPg==
-X-Gm-Message-State: AOJu0YxC2dSs6dXvH1aNLA037gs+Osvmrwzq07ULzD1ShYdDW3JgKYe+
-	WSj6yCEHc/70mODaI14wF43LjYN0VB0i68gZU8SL7wGF5Q1W1PfTpRqzUFKl
-X-Gm-Gg: AfdE7cnnh+7wFi5hvVOspWRmH73qEWxpWKjothZj3PUvzIrLrLlmuReNDhGXd3KhaZP
-	55/rnE2vePTrk0/m59KQfRiUB40ecSDr7+5erbRJYZAXJYW2tQ7uMJtu5QRlfgLxp0I7zcybD+T
-	sG4Y2Ob8mSavmaQ1XbvlQ9eva6V15ASw29hQn4gOEWRZdQrTLA93wMONf+YhPSLizqk1Tv9xYBJ
-	67KH4+PTOZaa3lXYnXI2kHae6Jfx+insXMkkQ5rEGKgudDfdvXWGAATmZI9g810uf+NrKskWqb9
-	BIBtWBP83EGSjaywNNlcgMxLrYQGurTcO9gUC+GVgQRQ5G3TkvQdrmMSsH5yzzqpG7Al0vEYSpm
-	nmpXdBIF1/v0b5UAJ6nHAKoSIQnqa26ibJgXNwMfujgjOCgin1D92fCZeTSmX6TNX2GBk9mmm+h
-	/JWDOMlhFvr5EZBXqSlr3Tx9hv
-X-Received: by 2002:a05:7300:181e:b0:304:886b:b07a with SMTP id 5a478bee46e88-30ee1225e75mr2288498eec.14.1782803842946;
-        Tue, 30 Jun 2026 00:17:22 -0700 (PDT)
-Received: from [127.0.0.1] ([20.189.186.1])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-30ee2fb6514sm4292977eec.7.2026.06.30.00.17.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jun 2026 00:17:22 -0700 (PDT)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <tanggeliang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <df199842d10185a73084c79aee9cdc91888adb6a.1782799160.git.tanggeliang@kylinos.cn>
-References:
- <df199842d10185a73084c79aee9cdc91888adb6a.1782799160.git.tanggeliang@kylinos.cn>
-Subject: Re: [PATCH mptcp-net v2] mptcp: pm: userspace: fix memory quota
- with RCU delayed free
-Message-ID: <ca3d130c-edde-15a8-095e-a2a2460665f7@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 30 Jun 2026 07:17:21 +0000
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="hSnXmBbe"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1782805372;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=2FUU0f2DajN9sieHVybx8HhBETvwJJyO+g8NeLRjH1E=;
+	b=hSnXmBbeTbsHLXUmX7bIuZaqPkyxzk628Sl9OGxYhkf7MGPMAmVwDZiuArOxoptA9AUyrk
+	/dHJwSCO4v+2vemwDokH6kfL6BB+OLd/o0t7ieUqOmyeKFFfQYcyIKjQFnSBtPSpDFbx3s
+	6775X3aBweo7uoKHM0m5bd2aecNAGyA=
+From: Gang Yan <gang.yan@linux.dev>
+To: mptcp@lists.linux.dev
+Cc: matttbe@kernel.org,
+	geliang@kernel.org,
+	Gang Yan <yangang@kylinos.cn>
+Subject: [PATCH mptcp-net] mptcp: pm: fix potential NULL deref in mptcp_pm_ops_init
+Date: Tue, 30 Jun 2026 15:42:37 +0800
+Message-ID: <20260630074237.166076-1-gang.yan@linux.dev>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Hi Geliang,
+From: Gang Yan <yangang@kylinos.cn>
 
-Thank you for your modifications, that's great!
+mptcp_pm_find will return NULL when the PM is not registered. In that
+case, mptcp_pm_ops_init will make it fallback to kernel_pm, and the
+pr_warn_once will dereferences pm_ops->name.
 
-Our CI did some validations and here is its report:
+This patch uses 'UNKNOWN' in pr_war_once to avoid this issue when the
+pm_ops is NULL.
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (only selftest_mptcp_join): Unstable: 1 failed =
-test(s): selftest_mptcp_join =E2=9A=A0=EF=B8=8F=20
-- KVM Validation: =
-btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: =
-btf-debug (only bpftest_all): Success! =E2=9C=85
-- Task: https://github.=
-com/multipath-tcp/mptcp_net-next/actions/runs/28424924302
+Signed-off-by: Gang Yan <yangang@kylinos.cn>
+---
 
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/a56918fdc117
-Patchwork: https://patchwork.kernel.=
-org/project/mptcp/list/?series=3D1118650
+Notes:
+    Hi Matt, Geliang
+    
+    This patch fixes a potential issue that might be encountered by the
+    future eBPF path manager. However, as far as I know, this issue should
+    not be triggered in the current codebase.
+    
+    That said, it could potentially be triggered in the future when the BPF
+    Path Manager is in use. For example, in our current self-test
+    environment, within a network namespace, we use a BPF-type path manager
+    (specified via sysctl). If the path manager is unregistered and a new
+    msk is created in that namespace, the code path would hit this and
+    trigger a NULL pointer dereference.
+    
+    Therefore, I would suggest adding a simple check/handling here to make
+    it more robust. WDYT?
+    
+    Thanks
+    Gang
 
+ net/mptcp/pm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-If there are some issues, you =
-can reproduce them using the same environment as
-the one used by the CI =
-thanks to a docker image, e.g.:
+diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+index 9dc7b41fb562..0ba6dd25ba49 100644
+--- a/net/mptcp/pm.c
++++ b/net/mptcp/pm.c
+@@ -1142,7 +1142,7 @@ static void mptcp_pm_ops_init(struct mptcp_sock *msk,
+ {
+ 	if (!pm_ops || !bpf_try_module_get(pm_ops, pm_ops->owner)) {
+ 		pr_warn_once("pm %s fails, fallback to default pm",
+-			     pm_ops->name);
++			     pm_ops ? pm_ops->name : "UNKNOWN");
+ 		pm_ops = &mptcp_pm_kernel;
+ 	}
+ 
+-- 
+2.43.0
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
-
-
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 Core)
