@@ -1,40 +1,41 @@
 Received: from sender4-of-o54.zoho.com (sender4-of-o54.zoho.com [136.143.188.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFDCA27467F
-	for <mptcp@lists.linux.dev>; Tue, 30 Jun 2026 15:06:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2185B2DECCB
+	for <mptcp@lists.linux.dev>; Tue, 30 Jun 2026 15:07:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.54
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782832012; cv=pass; b=u/3q5km/rnN457yReENEun0lo6DMglHmnbXy8h+5cC872U66gd/GD56vLFATHRoGKhWQdpksH6tmqWpGlkqwxgyuqBCoOMjFdtrG8WXtEbf4oVLfx5vQB59YQ1tAVGkqGa42C1k7D7BjmMqy9S7TRkCkPM9V7Crfajr6vdTxQds=
+	t=1782832028; cv=pass; b=bJ5klpX6golecgi8bTDFy+gMI2QWBK1RnENiFv4+1NUNvgOlyIHVgq+xVCbvmZ/kvYmShhd8TLRGuC8KPUg4AKiPyanhwgMavmCjIaxxJvICu5DTdNwBVkYHIhN4OHXHqPe9KnZX0L/M/1O4mL4kvsmBlZVHluILE0HntnYjiSg=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782832012; c=relaxed/simple;
-	bh=LuQsXWOaHc3AD29DR4VoNKnhk0aOqW/TmHbvyEPhy0s=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Rt9bKtjkHecjm8aB4RX0k9cPalyYzKXCniAFYEm6ulQL5k+9o2cXcKhRbTCPMLKtuTmvzwCfpe3/PEH0k9F1Lz3XsRQEvQV7qAaw2PK4S+NjIO0HTksalg31wBXWeaxlzSgHAw73MJP0v6znCRONEzMCywptHAOtjwSafgux4Ps=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com; spf=pass smtp.mailfrom=mpiricsoftware.com; dkim=fail (0-bit key) header.d=mpiricsoftware.com header.i=kalpan.jani@mpiricsoftware.com header.b=RJmQqzYD reason="key not found in DNS"; arc=pass smtp.client-ip=136.143.188.54
+	s=arc-20240116; t=1782832028; c=relaxed/simple;
+	bh=Up3ZDwApkdxTgtbSeMmDIdRtnMrA+b19I3/+YDcmI4c=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=qgXlgxcfQRA3Bhc29RDk+mnDPYM20xZyrNIY1jjrtGS/YvuquVJYBhFOSzSpOKN9I066qxYVMlaJHul3t0o1Hdvr8koIxvILn7n6Lrnd7JXxBBhxpN4n+yTrnMYg2xh2Qs4Oe9dj/6gBeGzR6UT/wuctBcDcyNc5hsumKoC2hUc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com; spf=pass smtp.mailfrom=mpiricsoftware.com; dkim=fail (0-bit key) header.d=mpiricsoftware.com header.i=kalpan.jani@mpiricsoftware.com header.b=oFfb5jPo reason="key not found in DNS"; arc=pass smtp.client-ip=136.143.188.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mpiricsoftware.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mpiricsoftware.com header.i=kalpan.jani@mpiricsoftware.com header.b="RJmQqzYD"
-ARC-Seal: i=1; a=rsa-sha256; t=1782832005; cv=none; 
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mpiricsoftware.com header.i=kalpan.jani@mpiricsoftware.com header.b="oFfb5jPo"
+ARC-Seal: i=1; a=rsa-sha256; t=1782832011; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=WzTpLJg1A7sdomk1+m0+mhrZj0i2P57sf0f9/5O9OckVIs06LDLR3eCpMtaJWTqvKgrNLwOBq7ri6IbuANbG/1EazxaDxyPNzmJHf4KknSjikBG+QJskFtGEb/PPBX4FRA2pSWZngkJuKPt0eGP+5z/1mRyiB8wHMU7h/EM11JM=
+	b=EjdkKRagfKBKAOh2gKzzvlGcpHll9gyFb0YE5xSJP67AJ4JEpsMmguzOLlaO1ufq1i6k2/yVNbu874xF03OrYBHpElVsEgG6JhZS78Yt+ejH+fAI5YErGl40GvOJbeuDa96iegORA5zSe2NgeY48Ar0YfjoV5QE2HlHwYooUnak=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1782832005; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=v1UzxH2RDDXkfunkJ6g6hBrPh0ECpc5If4DcGph+44A=; 
-	b=fP7p5cNGAGu/1pLZpM3z1NipCA/cvJaAznBdzZ5W/WNnNwc0MTcNHoD3drDDr6n+gHl6a+SuMCQ2kUNkh96TLWozAmRguiYjWewIlynrmvNCYv9tgKjkwaRLiTe+lFa2u89wDNZEJ9j2pioIFHbg21i5cDMAcFoAyoLKWQgNEDo=
+	t=1782832011; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=s7yKRg9/9Oi9C3gzjcSZR+m8myxKY6EU5ULgRbIQpxI=; 
+	b=HXVGHj4TRppZmBsHvD+U17m8pta5OObEleHoA+OkfTA6zR4y7mN+ZQVSSSxzExZeaZV0gHn0Z35xsLsk1RopYR37tu/5uu1xTHEIV7v9fw/srBcfbny3rEVkKAhsfLBG2787V07TypVtweMd8TVkWc9bCPlC61A1yJPwn79iwt0=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=mpiricsoftware.com;
 	spf=pass  smtp.mailfrom=kalpan.jani@mpiricsoftware.com;
 	dmarc=pass header.from=<kalpan.jani@mpiricsoftware.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1782832005;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1782832011;
 	s=mpiric; d=mpiricsoftware.com; i=kalpan.jani@mpiricsoftware.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=v1UzxH2RDDXkfunkJ6g6hBrPh0ECpc5If4DcGph+44A=;
-	b=RJmQqzYDBkuFqCBWlln0L9mNUnUoh55EIvjazJ4HA/subHnYbWbBxzmOxjXrd7hj
-	AU6woUPnFnZ+CjIuwLLRU+gj7Y2tshgHvLHATPQSwAjqYp2kpa7j8oSynqDmU3W58si
-	YQuLOED6DWxCw4Ayvvf3fZwHx1/6lr+grRnOK8VE=
-Received: by mx.zohomail.com with SMTPS id 1782832002725417.1013901033183;
-	Tue, 30 Jun 2026 08:06:42 -0700 (PDT)
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=s7yKRg9/9Oi9C3gzjcSZR+m8myxKY6EU5ULgRbIQpxI=;
+	b=oFfb5jPoB1Cu0MYIPb3Uuwvdd6D7U4ZRXkokKCWNkkonN+UsHvdV8mqltqztgF/4
+	HabRM6sYZpxt1Q9acCh+vHOU8NS/8cbQFYBbO5A10P4DO+JYN1RmU28bClaYFzJWac5
+	HTS6w9A44oUBixi/XMRdncoJi7rIyLdlOXqW/Bkc=
+Received: by mx.zohomail.com with SMTPS id 1782832008784984.89779295814;
+	Tue, 30 Jun 2026 08:06:48 -0700 (PDT)
 From: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
 To: mptcp@lists.linux.dev
 Cc: matttbe@kernel.org,
@@ -43,11 +44,16 @@ Cc: matttbe@kernel.org,
 	shardul.b@mpiricsoftware.com,
 	janak@mpiric.us,
 	kalpanjani009@gmail.com,
-	akshit@mpiricsoftware.com
-Subject: [PATCH net v5 0/2] mptcp: pm: fix stale ADD_ADDR anno_list entry on id 0 removal
-Date: Tue, 30 Jun 2026 20:36:30 +0530
-Message-ID: <20260630150632.899750-1-kalpan.jani@mpiricsoftware.com>
+	akshit@mpiricsoftware.com,
+	Kalpan Jani <kalpan.jani@mpiricsoftware.com>,
+	syzbot+55c2a5c871441261ed14@syzkaller.appspotmail.com,
+	Tao Cui <cuitao@kylinos.cn>
+Subject: [PATCH net v5 1/2] mptcp: pm: drop pending ADD_ADDR when removing id 0 endpoint
+Date: Tue, 30 Jun 2026 20:36:31 +0530
+Message-ID: <20260630150632.899750-2-kalpan.jani@mpiricsoftware.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20260630150632.899750-1-kalpan.jani@mpiricsoftware.com>
+References: <20260630150632.899750-1-kalpan.jani@mpiricsoftware.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -58,63 +64,62 @@ Content-Transfer-Encoding: 8bit
 X-ZohoMailClient: External
 
 The in-kernel MPTCP path manager can leave a stale ADD_ADDR announcement
-entry alive when removing the id 0 endpoint, causing WARN_ON_ONCE() to fire
-on subsequent PM reselection (issue #620).
+entry alive when removing the id 0 endpoint. This happens because the id 0
+removal path does not tear down pending announcements, unlike the non-zero
+id path.
 
-**The Problem:**
-When the in-kernel PM removes a signal endpoint, it must cancel any pending
-ADD_ADDR announcement: stop the retransmit timer and unlink the anno_list
-entry. For non-zero id endpoints, this is done correctly via
-mptcp_nl_remove_subflow_and_signal_addr() -> mptcp_pm_remove_anno_addr() ->
-mptcp_pm_announced_remove().
+When the PM later reselects id 0 after adding another signal endpoint, it
+finds the stale anno_list entry and hits WARN_ON_ONCE(mptcp_pm_is_kernel())
+in mptcp_pm_alloc_anno_list().
 
-However, the id 0 removal path (mptcp_nl_remove_id_zero_address()) skips
-this cleanup, only queuing an RM_ADDR and marking the id available. If an
-ADD_ADDR for that address was previously announced but the echo hasn't
-arrived yet, the anno_list entry survives.
+Root cause: asymmetry between removal paths.
+- Non-zero id path: mptcp_nl_remove_subflow_and_signal_addr() calls
+  mptcp_pm_remove_anno_addr() to clean up.
+- Id 0 path: mptcp_nl_remove_id_zero_address() skips cleanup entirely.
 
-When the kernel PM later reselects id 0 (after adding another signal
-endpoint to satisfy the PM's endpoint limits), it finds this stale entry
-and hits the WARN_ON_ONCE(mptcp_pm_is_kernel()) assertion in
-mptcp_pm_alloc_anno_list().
+Fix by making the id 0 path symmetric: call mptcp_pm_announced_remove()
+and decrement add_addr_signaled before queuing the RM_ADDR.
 
-**How It Was Found:**
-syzkaller detected this via an MPTCP protocol-flow harness. Three crashes
-were reported between 2026/05/19 and 2026/05/22 on kernels including commit
-cca95436be15 ("mptcp: remove id 0 address"). The root cause was confirmed
-through code inspection:
-asymmetry between the id 0 and non-zero id removal paths.
+Subtle detail: signal endpoints are stored in anno_list with port 0, but
+msk_local carries the connection's local port. mptcp_pm_announced_remove()
+uses use_port=true for comparison, so clear the port before the lookup.
 
-**The Fix:**
-Patch 1 makes mptcp_nl_remove_id_zero_address() symmetric with the
-non-zero id path by calling mptcp_pm_announced_remove() before queuing
-RM_ADDR, and decrementing add_addr_signaled if the address had been
-announced. The fix is minimal (8 lines) and mirrors existing correct code.
-
-A subtle detail: signal endpoints are stored in anno_list with port 0, but
-msk_local carries the connection's actual local port. The lookup in
-mptcp_pm_announced_remove() uses use_port=true, so the port must be
-cleared before the call to match the stored entry key.
-
-Patch 2 adds a regression test integrated into mptcp_join.sh (per
-maintainer feedback, avoiding new test files). The test verifies no WARNING
-appears when removing id 0 from a fully-established MPTCP connection.
-
-**Verification:**
-- syzkaller: 3 crashes, issue #620 reproducible
-- Docker CI: 23/24 tests pass, no new failures introduced
-- Code review: Fix is minimal, correct, and mirrors existing patterns
-- Suggested-by: Tao Cui <cuitao@kylinos.cn> identified the port mismatch
-  (v4 -> v5 fix)
-
-Kalpan Jani (2):
-  mptcp: pm: drop pending ADD_ADDR when removing id 0 endpoint
-  selftests: mptcp: add id 0 stale ADD_ADDR regression test
-
- net/mptcp/pm_kernel.c                    |  8 ++++++++
- tools/testing/selftests/net/mptcp/mptcp_join.sh | 11 +++++++++++
- 2 files changed, 19 insertions(+)
-
+Fixes: 740d798e8767 ("mptcp: remove id 0 address")
+Reported-by: syzbot+55c2a5c871441261ed14@syzkaller.appspotmail.com
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/620
+Suggested-by: Tao Cui <cuitao@kylinos.cn>
+Signed-off-by: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
 ---
-base-commit: net/main
-change-id: 20260630-mptcp-id0-stale-anno-fix-kalpanj
+ net/mptcp/pm_kernel.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/net/mptcp/pm_kernel.c b/net/mptcp/pm_kernel.c
+index 331f6fa99014..d3014bf57bf3 100644
+--- a/net/mptcp/pm_kernel.c
++++ b/net/mptcp/pm_kernel.c
+@@ -1138,6 +1138,8 @@ static int mptcp_nl_remove_id_zero_address(struct net *net,
+ 	while ((msk = mptcp_token_iter_next(net, &s_slot, &s_num)) != NULL) {
+ 		struct sock *sk = (struct sock *)msk;
+ 		struct mptcp_addr_info msk_local;
++		struct mptcp_addr_info anno_addr;
++		bool announced;
+ 
+ 		if (list_empty(&msk->conn_list) || mptcp_pm_is_userspace(msk))
+ 			goto next;
+@@ -1147,7 +1149,13 @@ static int mptcp_nl_remove_id_zero_address(struct net *net,
+ 			goto next;
+ 
+ 		lock_sock(sk);
++		/* Drop a possibly pending ADD_ADDR for this address. */
++		anno_addr = msk_local;
++		anno_addr.port = 0;
++		announced = mptcp_pm_announced_remove(msk, &anno_addr);
+ 		spin_lock_bh(&msk->pm.lock);
++		if (announced)
++			msk->pm.add_addr_signaled--;
+ 		mptcp_pm_remove_addr(msk, &list);
+ 		mptcp_pm_rm_subflow(msk, &list);
+ 		__mark_subflow_endp_available(msk, 0);
+-- 
+2.43.0
+
