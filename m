@@ -1,130 +1,120 @@
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-of-o54.zoho.com (sender4-of-o54.zoho.com [136.143.188.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03BC934A3DB
-	for <mptcp@lists.linux.dev>; Tue, 30 Jun 2026 11:22:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782818575; cv=none; b=meMBJa0Duh4B7OWeHKBhslLVrZHvVvkFGM/THk9bKIRlDCoR8KIZPvKsmNfY9hw2/Ckm09a+LZ66gJLqjwv3pRrP15kMZFiNfM5fEfDC68rNISGC9lC/WXEI8HPBC1SSYZnLsxrUK2trBAIsQ3hhiMtripCg3VG58WELMOg5XfE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782818575; c=relaxed/simple;
-	bh=vkg1qY4OAWQMAuOjBKLq7fesyGAvd+y/cQSDRcQO7/0=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
-	 MIME-Version:Content-Type; b=NkrOAG696ud5CfRI67gs+oe6O91/JWjg4EnU+61mgkSyV7M4ZVryZa8c4/uMUXTkKQlcaN+xAQnWGeJcJIR5iUbzSSn+mAqug19usqxBvDmTvwyo1Bybcy8LH3k7KGrB6Bao7o/zefWmslYR3NwKTnRYLPY4/G98vo9vvk4M4g8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Yh6WUbuG; arc=none smtp.client-ip=209.85.160.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFDCA27467F
+	for <mptcp@lists.linux.dev>; Tue, 30 Jun 2026 15:06:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.54
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782832012; cv=pass; b=u/3q5km/rnN457yReENEun0lo6DMglHmnbXy8h+5cC872U66gd/GD56vLFATHRoGKhWQdpksH6tmqWpGlkqwxgyuqBCoOMjFdtrG8WXtEbf4oVLfx5vQB59YQ1tAVGkqGa42C1k7D7BjmMqy9S7TRkCkPM9V7Crfajr6vdTxQds=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782832012; c=relaxed/simple;
+	bh=LuQsXWOaHc3AD29DR4VoNKnhk0aOqW/TmHbvyEPhy0s=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Rt9bKtjkHecjm8aB4RX0k9cPalyYzKXCniAFYEm6ulQL5k+9o2cXcKhRbTCPMLKtuTmvzwCfpe3/PEH0k9F1Lz3XsRQEvQV7qAaw2PK4S+NjIO0HTksalg31wBXWeaxlzSgHAw73MJP0v6znCRONEzMCywptHAOtjwSafgux4Ps=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com; spf=pass smtp.mailfrom=mpiricsoftware.com; dkim=fail (0-bit key) header.d=mpiricsoftware.com header.i=kalpan.jani@mpiricsoftware.com header.b=RJmQqzYD reason="key not found in DNS"; arc=pass smtp.client-ip=136.143.188.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mpiricsoftware.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yh6WUbuG"
-Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-51c0006ea8eso15611071cf.1
-        for <mptcp@lists.linux.dev>; Tue, 30 Jun 2026 04:22:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1782818573; x=1783423373; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VcjCsU631rfE3u6Vr2KE+JxZeBWqdh9jm2q/2K3JH8M=;
-        b=Yh6WUbuG9vRdPmi3EdZduUWCd0Xod7u9SS2ffmXRvdHqw1M4FqIePHzkIpTtnqm2Q0
-         5qdKqdD3gZRUTU/VA1x+Tdk/DpZWnCszpOR/QBksbLfDt9vE3+bESdg+RJb84+9Qduj4
-         RMqIY7CDaIzNKVbCLF57eNtEaMBN9xVHXQ86eIzhj23RE4Coqf+diieYV4Wj7ase182Y
-         4wi5nsup2h5W/ENxv2kVUhKueemHsTwkHAqao3SxmzXO8BJnBn/EUS1/YFGInE58puyq
-         WO56JMygY9hnDuPQsKya+lXEW6N4gmPaioCOmqjIWiUznxeP8GA0LwdEwyn/D/LrJiJu
-         YpFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782818573; x=1783423373;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=VcjCsU631rfE3u6Vr2KE+JxZeBWqdh9jm2q/2K3JH8M=;
-        b=P9Y1Rp6DQxAspvc8A7tFbJ315Kc5Nn7nKpC5U/SkZQ/rCMCZot2fXsGVoSYFeV5Q2N
-         bvqDwaZU9YfnRXTG9B9+MRDLRqukxQNBUSfPPPIXw+uo8GSiMyFs0GCD3PMTASMBLkCE
-         /YCslahTCWnbhgR+Van+cOxnIFy/39nQAb9RivYsjv/0qqIfjNmj5Lsa7+zHsuC1Q2T+
-         ayMXoNFBZdlxB4EdnDi+x1gaJVXH+ddS8srqsOjQM7Oqzv4+ph4rSUx9zmVtUwi0Jkw3
-         NZBWDJvbD6wKg3ebEav8gUpWv0qBKZevkA4B64L50TM533+cqZmSH6RMxASbV2gTbgq0
-         vluQ==
-X-Gm-Message-State: AOJu0YxcRcVVp87Q0YZXC+23B658TMAHttFn/gBYM2uGBMCvNc5wXK9B
-	w0FgPPUToIO4vFOfUj/4wuOECagAQ5EopYLn3JWZRkllUdwQjQM03ngCBkC0ox0=
-X-Gm-Gg: AfdE7cnInNZiW92Jvf4kKLZgCFCos3pO+scsoeFz5eub8Ia4KCYth5WBnvzq73cOoAM
-	0tIcMxA2w8arjCfhdSVSyZwNVswWwo1D7SsCQHgrnjmn7TddXIAyV/AqTDGyMabXFXv407tGhrk
-	N5SxUYrTrjh1V9W2YqzECrvULYjxUZxMa91w8QDEuOz37JD5CPFdSrc0yAXJZB+PrPSwecgRczi
-	cfBibRE+0dMCd8+mL6Ii8Of5DknadtxmLHWcBQ2BfjUYPKl4pdbq9BoltQh/IjnZg2TVN2IcaS/
-	zmY2VMHZFd9QuZiF4WZWhmvcdrEVc4iaKS3ddCfTPN+XUlP/+04Zsv7WOmnHTu7YR5+rPCwu6IF
-	eHe4KTBSX8itr//9GgiqRbAWTf7xfEh1bOy560B5vri8SOdBFClHowK4/JrPwT0YdkVC0Yu4nqE
-	+GKr3/ECgpLcGvVLUoNduPZvgytA==
-X-Received: by 2002:a05:622a:4d:b0:51a:8c86:bd42 with SMTP id d75a77b69052e-51c1ca696c3mr2136931cf.63.1782818569556;
-        Tue, 30 Jun 2026 04:22:49 -0700 (PDT)
-Received: from [127.0.0.1] ([20.81.158.149])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-51c1080d50bsm16855331cf.3.2026.06.30.04.22.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jun 2026 04:22:49 -0700 (PDT)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Chenguang Zhao <zhaochenguang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20260630095432.1340629-1-chenguang.zhao@linux.dev>
-References: <20260630095432.1340629-1-chenguang.zhao@linux.dev>
-Subject: Re: [PATCH mptcp-net] mptcp: fix extra_subflows leak on failed
- passive join
-Message-ID: <bc8e29db-1fa6-5122-7d42-3bb373158969@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 30 Jun 2026 11:22:48 +0000
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mpiricsoftware.com header.i=kalpan.jani@mpiricsoftware.com header.b="RJmQqzYD"
+ARC-Seal: i=1; a=rsa-sha256; t=1782832005; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=WzTpLJg1A7sdomk1+m0+mhrZj0i2P57sf0f9/5O9OckVIs06LDLR3eCpMtaJWTqvKgrNLwOBq7ri6IbuANbG/1EazxaDxyPNzmJHf4KknSjikBG+QJskFtGEb/PPBX4FRA2pSWZngkJuKPt0eGP+5z/1mRyiB8wHMU7h/EM11JM=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1782832005; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=v1UzxH2RDDXkfunkJ6g6hBrPh0ECpc5If4DcGph+44A=; 
+	b=fP7p5cNGAGu/1pLZpM3z1NipCA/cvJaAznBdzZ5W/WNnNwc0MTcNHoD3drDDr6n+gHl6a+SuMCQ2kUNkh96TLWozAmRguiYjWewIlynrmvNCYv9tgKjkwaRLiTe+lFa2u89wDNZEJ9j2pioIFHbg21i5cDMAcFoAyoLKWQgNEDo=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=mpiricsoftware.com;
+	spf=pass  smtp.mailfrom=kalpan.jani@mpiricsoftware.com;
+	dmarc=pass header.from=<kalpan.jani@mpiricsoftware.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1782832005;
+	s=mpiric; d=mpiricsoftware.com; i=kalpan.jani@mpiricsoftware.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=v1UzxH2RDDXkfunkJ6g6hBrPh0ECpc5If4DcGph+44A=;
+	b=RJmQqzYDBkuFqCBWlln0L9mNUnUoh55EIvjazJ4HA/subHnYbWbBxzmOxjXrd7hj
+	AU6woUPnFnZ+CjIuwLLRU+gj7Y2tshgHvLHATPQSwAjqYp2kpa7j8oSynqDmU3W58si
+	YQuLOED6DWxCw4Ayvvf3fZwHx1/6lr+grRnOK8VE=
+Received: by mx.zohomail.com with SMTPS id 1782832002725417.1013901033183;
+	Tue, 30 Jun 2026 08:06:42 -0700 (PDT)
+From: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
+To: mptcp@lists.linux.dev
+Cc: matttbe@kernel.org,
+	martineau@kernel.org,
+	pabeni@redhat.com,
+	shardul.b@mpiricsoftware.com,
+	janak@mpiric.us,
+	kalpanjani009@gmail.com,
+	akshit@mpiricsoftware.com
+Subject: [PATCH net v5 0/2] mptcp: pm: fix stale ADD_ADDR anno_list entry on id 0 removal
+Date: Tue, 30 Jun 2026 20:36:30 +0530
+Message-ID: <20260630150632.899750-1-kalpan.jani@mpiricsoftware.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
 
-Hi Chenguang,
+The in-kernel MPTCP path manager can leave a stale ADD_ADDR announcement
+entry alive when removing the id 0 endpoint, causing WARN_ON_ONCE() to fire
+on subsequent PM reselection (issue #620).
 
-Thank you for your modifications, that's great!
+**The Problem:**
+When the in-kernel PM removes a signal endpoint, it must cancel any pending
+ADD_ADDR announcement: stop the retransmit timer and unlink the anno_list
+entry. For non-zero id endpoints, this is done correctly via
+mptcp_nl_remove_subflow_and_signal_addr() -> mptcp_pm_remove_anno_addr() ->
+mptcp_pm_announced_remove().
 
-Our CI did some validations and here is its report:
+However, the id 0 removal path (mptcp_nl_remove_id_zero_address()) skips
+this cleanup, only queuing an RM_ADDR and marking the id available. If an
+ADD_ADDR for that address was previously announced but the echo hasn't
+arrived yet, the anno_list entry survives.
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/284381=
-79349
+When the kernel PM later reselects id 0 (after adding another signal
+endpoint to satisfy the PM's endpoint limits), it finds this stale entry
+and hits the WARN_ON_ONCE(mptcp_pm_is_kernel()) assertion in
+mptcp_pm_alloc_anno_list().
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/654ae3cf6532
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1118853
+**How It Was Found:**
+syzkaller detected this via an MPTCP protocol-flow harness. Three crashes
+were reported between 2026/05/19 and 2026/05/22 on kernels including commit
+cca95436be15 ("mptcp: remove id 0 address"). The root cause was confirmed
+through code inspection:
+asymmetry between the id 0 and non-zero id removal paths.
 
+**The Fix:**
+Patch 1 makes mptcp_nl_remove_id_zero_address() symmetric with the
+non-zero id path by calling mptcp_pm_announced_remove() before queuing
+RM_ADDR, and decrementing add_addr_signaled if the address had been
+announced. The fix is minimal (8 lines) and mirrors existing correct code.
 
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
+A subtle detail: signal endpoints are stored in anno_list with port 0, but
+msk_local carries the connection's actual local port. The lookup in
+mptcp_pm_announced_remove() uses use_port=true, so the port must be
+cleared before the call to match the stored entry key.
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+Patch 2 adds a regression test integrated into mptcp_join.sh (per
+maintainer feedback, avoiding new test files). The test verifies no WARNING
+appears when removing id 0 from a fully-established MPTCP connection.
 
-For more details:
+**Verification:**
+- syzkaller: 3 crashes, issue #620 reproducible
+- Docker CI: 23/24 tests pass, no new failures introduced
+- Code review: Fix is minimal, correct, and mirrors existing patterns
+- Suggested-by: Tao Cui <cuitao@kylinos.cn> identified the port mismatch
+  (v4 -> v5 fix)
 
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+Kalpan Jani (2):
+  mptcp: pm: drop pending ADD_ADDR when removing id 0 endpoint
+  selftests: mptcp: add id 0 stale ADD_ADDR regression test
 
+ net/mptcp/pm_kernel.c                    |  8 ++++++++
+ tools/testing/selftests/net/mptcp/mptcp_join.sh | 11 +++++++++++
+ 2 files changed, 19 insertions(+)
 
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+---
+base-commit: net/main
+change-id: 20260630-mptcp-id0-stale-anno-fix-kalpanj
