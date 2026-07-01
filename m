@@ -1,37 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F089312807
-	for <mptcp@lists.linux.dev>; Wed,  1 Jul 2026 06:11:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B60EE3B0AE7
+	for <mptcp@lists.linux.dev>; Wed,  1 Jul 2026 06:32:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782886303; cv=none; b=qaVqcC4xShWRpx8p04PhvWYUBvw3cy1Y4cUgz1z1n5t8GczpbIeQtxvQtD79AizDF6RDlcb3+rhSrNLx6hYamJ+EDAK1p7eii/6GtIRsQIgXbOzLdWFglTBFADIDd0Ntvb3sujvjii7SOQPZ+tSsBPjA5re1tmQAsIwORV7i3B4=
+	t=1782887576; cv=none; b=Yv3oj8uoqe75VQUhftPhK1sMwhx2cLJY0hVMottjMf+ht5c2SzilVrNTERP5wvuUQazjvjlCf/6q629/qCpN7Q14yj1Dpraiq5jMtc3q7y9y+7WYpG1YuYMa4xEcryCq++ZgzhdvtVYtqHLA8rY44PSWjueA80RKjn5nqN7d9K4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782886303; c=relaxed/simple;
-	bh=DJjsOZ0KWefuPBop08pDgz1l3DxsTlhmRWuG2PwI4Jk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rGqA0gtPlXNvHzrOycAMtydNE0JsPAsdWNPyicD2H/X3Uj5uinHV8b1qhY9j/7sVButJtfw4j+SezygpLdHssUbOAJiBpUApwK0DY48qOhHEZciOdBXaHbni1h9urCbSZpmNxXgbquPYQby+t8VsyWKefaxOAis/vwb3AZCM7qU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ekihdcnu; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1782887576; c=relaxed/simple;
+	bh=oaW2F3N9adDVym8OesiiqT9rv1+rQNga2S7AfeeyHGE=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=tLAMStqlIajUEyHLfyscQoBtbJPYpdCJAhorzBhyC+eX9FE05cuQU+D/g1g4t2VCC+RATTa6opyeKBAaJypG0xpSJX50TG1dZ5KBfRhDhoMNb+PCA/rgXC4wYV+mZxeuSsLWUY8psbsAMDVxxFTwim9dwgBHORGYYPabhNvVAuk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AtS87FOO; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ekihdcnu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74A7E1F00A3A;
-	Wed,  1 Jul 2026 06:11:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AtS87FOO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 112C81F000E9;
+	Wed,  1 Jul 2026 06:32:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782886301;
-	bh=CysB/YES5aPBDzR4z/r8nB2ZQ57IoEu/jdQGfUbkiKw=;
-	h=From:To:Cc:Subject:Date;
-	b=Ekihdcnul/EayaRNNYDrWKf4s4RSiRD/Jbp2wbgOQI3N21L63FG20q5VTTSbKxqaZ
-	 B4N1pNaG+SDKetEglFcxnu28ygDSMz4/FxVq+clk05MUhFcpB667pzIoM6u1ViBeUz
-	 EE005SS1xg2EjXyl1cbiXAy6Q0IfFJ8ptBfsxL0GInHl2vrvhs74zHIrRVMRLON2HC
-	 yyz/oJRwVcPjjwsjdfmFcgAs6XQP/vXzhxnM69caxXUlpqMSQ6zzlIfdn9OAEZJSWW
-	 zinlbRXPpzR5s/SlfLHYInXQLBm40/dDiBAa18idNe1CjcnW1mRaS4q6cvZzamHVcq
-	 Od3bMjfXnQcjw==
+	s=k20260515; t=1782887574;
+	bh=vctk6OkMOJu6GIE7B5FvSbITfRioJ1woFvVUIKt8heU=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=AtS87FOO7lWwHWFInaIsKXpYz7Aomvef1rtK01iBtAGKNdFnZ4minjWQ3rLOImzUG
+	 dEdkzXsLVTkXLT6shsUuaQalMC2behpi6TgalrOMKapJCfoaRMzJY07z9T7NCBHk9W
+	 t3JtE9AG/VJrB9hfmexUI73QCs92bQxA160ecVzVU2SnEQKwXmKo43JaxL88OXTxs0
+	 huSSP5RvFRPQmKjfNo80NKNDheTiBOJgxa786DrHIyUJfiqzVAk199L09HFvf3TMil
+	 GjUTLHB/Y9PmDFhFDUo7zvSY1x0UCqgi5LZSiz734CIN3gao7kLTMQ0FGk5Bp9B4Me
+	 hBtNqh+yw7ifg==
+Message-ID: <86e9b7f9ac5d630a0bb7b127652544176921a491.camel@kernel.org>
+Subject: Re: [PATCH mptcp-net v2] mptcp: fix extra_subflows leak on failed
+ passive join
 From: Geliang Tang <geliang@kernel.org>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-net v3] mptcp: pm: userspace: unify entry free path via RCU callback
-Date: Wed,  1 Jul 2026 14:11:32 +0800
-Message-ID: <de8555fcb235d0e93c02c20bf47231846d30841d.1782886142.git.tanggeliang@kylinos.cn>
-X-Mailer: git-send-email 2.53.0
+To: Chenguang Zhao <chenguang.zhao@linux.dev>, mptcp@lists.linux.dev
+Cc: Chenguang Zhao <zhaochenguang@kylinos.cn>, Matthieu Baerts
+	 <matttbe@kernel.org>
+Date: Wed, 01 Jul 2026 14:32:43 +0800
+In-Reply-To: <20260701032011.358940-1-chenguang.zhao@linux.dev>
+References: <20260630095432.1340629-1-chenguang.zhao@linux.dev>
+	 <20260701032011.358940-1-chenguang.zhao@linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.56.2-9 
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -40,155 +47,66 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+Hi Chenguang,
 
-In mptcp_pm_nl_remove_doit(), sk_omem_alloc is decremented immediately
-but the memory is freed later via kfree_rcu(). This allows a CAP_NET_ADMIN
-user to bypass the socket memory quota and exhaust kernel memory by
-accumulating RCU callbacks.
+Thanks for this v2. However, if there are no code changes, there is no
+need to send a v2; we can just reply to the email thread on v1 to
+discuss it. 
 
-Fix by using call_rcu() with a custom callback that uses sock_kfree_s()
-to free the entry and decrement sk_omem_alloc atomically. To ensure the
-socket remains valid until the callback runs, take a reference with
-sock_hold() when storing the socket pointer in the entry, and release it
-with sock_put() in the callback.
+On Wed, 2026-07-01 at 11:20 +0800, Chenguang Zhao wrote:
+> From: Chenguang Zhao <zhaochenguang@kylinos.cn>
+> 
+> mptcp_pm_allow_new_subflow() increments extra_subflows
+> before __mptcp_finish_join() on the passive MP_JOIN path.
+> On synchronous join failure the subflow is dropped without
+> calling mptcp_close_ssk(), so the counter is not rolled back.
+> 
+> Call mptcp_pm_close_subflow() when the join completion fails.
+> 
+> Fixes: 3e5014909b56 ("mptcp: cleanup MPJ subflow list handling")
+> Signed-off-by: Chenguang Zhao <zhaochenguang@kylinos.cn>
+> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> ---
+> v2:
+>  Hi Matthieu,
+>  Thanks for the review.
+>  - I spotted this by reading the code. I don't have a reproducer
+>    yet. I also see we already have a Packetdrill test for
+>    synchronous connect failure (simult_connect.pkt), but not for
+>    synchronous join failure. I'll add a similar Packetdrill test
+>    for that case and send it in a follow-up patch.
+>  - Add Fixes and Reviewd-by tag.
+>  - I looked again at the history, and I think the Fixes tag
+>    should point to 3e5014909b56 ("mptcp: cleanup MPJ subflow list
+>    handling"), not 10f6d46c943d ("mptcp: fix race between MP_JOIN and
+> close"). 
 
-Convert the synchronous freeing paths in free_local_addr_list() and
-delete_local_addr() to use the same RCU callback, ensuring the socket
-reference is properly released.
+The Fixes tag is incorrect and should be 10f6d46c943d ("mptcp: fix race
+between MP_JOIN and close"), because that commit introduced the call to
+mptcp_pm_allow_new_subflow. There is no need to send a v3, as this can
+be updated when applying.
 
-Additionally, mptcp_userspace_pm_append_new_local_addr() now checks
-SOCK_DEAD under the spinlock before allocating. A SYN+JOIN handler
-holding an msk reference from mptcp_token_get_sock() could otherwise
-race with __mptcp_destroy_sock() - sock_orphan() sets SOCK_DEAD and
-then mptcp_userspace_pm_release() clears the list, so a new entry
-allocated after that point would never be freed and its sock_hold()
-would leak the msk permanently.
+I have changed the status of v2 to "Queued" and v1 to "Superseded".
 
-Fixes: 13b4ece33cf9 ("mptcp: pm: Defer freeing of MPTCP userspace path manager entries")
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
----
-v3:
- - checking sock_flag(sk, SOCK_DEAD)) before holding the reference.
- - update the subject.
+Thanks,
+-Geliang
 
-v2:
- - call mptcp_userspace_pm_free_entry in free_local_addr_list and
-   delete_local_addr.
- - Link: https://patchwork.kernel.org/project/mptcp/patch/df199842d10185a73084c79aee9cdc91888adb6a.1782799160.git.tanggeliang@kylinos.cn/
-
-v1:
- - Link: https://patchwork.kernel.org/project/mptcp/patch/9b443bafa57f40a51eb6a43f088ff37d71b39973.1782528088.git.tanggeliang@kylinos.cn/
-
-This patch addresses the pre-existing issue Sashiko mentioned in
-https://sashiko.dev/#/patchset/cover.1782457962.git.tanggeliang@kylinos.cn.
----
- net/mptcp/pm_userspace.c | 33 ++++++++++++++++++++++++---------
- net/mptcp/protocol.h     |  2 ++
- 2 files changed, 26 insertions(+), 9 deletions(-)
-
-diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-index ad6ba658e5a5..c024c5cd5da1 100644
---- a/net/mptcp/pm_userspace.c
-+++ b/net/mptcp/pm_userspace.c
-@@ -12,10 +12,19 @@
- 	list_for_each_entry(__entry,						\
- 			    &((__msk)->pm.userspace_pm_local_addr_list), list)
- 
-+static void mptcp_userspace_pm_free_entry(struct rcu_head *head)
-+{
-+	struct mptcp_pm_addr_entry *entry =
-+		container_of(head, struct mptcp_pm_addr_entry, rcu);
-+	struct sock *sk = entry->sk;
-+
-+	sock_kfree_s(sk, entry, sizeof(*entry));
-+	sock_put(sk);
-+}
-+
- void mptcp_userspace_pm_free_local_addr_list(struct mptcp_sock *msk)
- {
- 	struct mptcp_pm_addr_entry *entry, *tmp;
--	struct sock *sk = (struct sock *)msk;
- 	LIST_HEAD(free_list);
- 
- 	spin_lock_bh(&msk->pm.lock);
-@@ -23,7 +32,7 @@ void mptcp_userspace_pm_free_local_addr_list(struct mptcp_sock *msk)
- 	spin_unlock_bh(&msk->pm.lock);
- 
- 	list_for_each_entry_safe(entry, tmp, &free_list, list) {
--		sock_kfree_s(sk, entry, sizeof(*entry));
-+		call_rcu(&entry->rcu, mptcp_userspace_pm_free_entry);
- 	}
- }
- 
-@@ -54,6 +63,15 @@ static int mptcp_userspace_pm_append_new_local_addr(struct mptcp_sock *msk,
- 	bitmap_zero(id_bitmap, MPTCP_PM_MAX_ADDR_ID + 1);
- 
- 	spin_lock_bh(&msk->pm.lock);
-+	/* sock_orphan() has been called and mptcp_userspace_pm_release()
-+	 * has cleared userspace_pm_local_addr_list. Any entry we allocate
-+	 * here would never be freed via the list, leaking the sock_hold().
-+	 */
-+	if (sock_flag(sk, SOCK_DEAD)) {
-+		ret = -EINVAL;
-+		goto append_err;
-+	}
-+
- 	mptcp_for_each_userspace_pm_addr(msk, e) {
- 		addr_match = mptcp_addresses_equal(&e->addr, &entry->addr, true);
- 		if (addr_match && entry->addr.id == 0 && needs_id)
-@@ -73,6 +91,8 @@ static int mptcp_userspace_pm_append_new_local_addr(struct mptcp_sock *msk,
- 			ret = -ENOMEM;
- 			goto append_err;
- 		}
-+		sock_hold(sk);
-+		e->sk = sk;
- 
- 		if (!e->addr.id && needs_id)
- 			e->addr.id = find_next_zero_bit(id_bitmap,
-@@ -98,7 +118,6 @@ static int mptcp_userspace_pm_append_new_local_addr(struct mptcp_sock *msk,
- static int mptcp_userspace_pm_delete_local_addr(struct mptcp_sock *msk,
- 						struct mptcp_pm_addr_entry *addr)
- {
--	struct sock *sk = (struct sock *)msk;
- 	struct mptcp_pm_addr_entry *entry;
- 
- 	entry = mptcp_userspace_pm_lookup_addr(msk, &addr->addr);
-@@ -109,7 +128,7 @@ static int mptcp_userspace_pm_delete_local_addr(struct mptcp_sock *msk,
- 	 * be used multiple times (e.g. fullmesh mode).
- 	 */
- 	list_del_rcu(&entry->list);
--	sock_kfree_s(sk, entry, sizeof(*entry));
-+	call_rcu(&entry->rcu, mptcp_userspace_pm_free_entry);
- 	msk->pm.local_addr_used--;
- 	return 0;
- }
-@@ -337,11 +356,7 @@ int mptcp_pm_nl_remove_doit(struct sk_buff *skb, struct genl_info *info)
- 
- 	release_sock(sk);
- 
--	kfree_rcu_mightsleep(match);
--	/* Adjust sk_omem_alloc like sock_kfree_s() does, to match
--	 * with allocation of this memory by sock_kmemdup()
--	 */
--	atomic_sub(sizeof(*match), &sk->sk_omem_alloc);
-+	call_rcu(&match->rcu, mptcp_userspace_pm_free_entry);
- 
- 	err = 0;
- out:
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index da40c6f3705f..250736eae0be 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -257,6 +257,8 @@ struct mptcp_pm_addr_entry {
- 	u32			flags;
- 	int			ifindex;
- 	struct socket		*lsk;
-+	struct sock		*sk;
-+	struct rcu_head		rcu;
- };
- 
- struct mptcp_data_frag {
--- 
-2.53.0
-
+> v1:
+>  -
+> https://lore.kernel.org/all/20260630095432.1340629-1-chenguang.zhao@linux.dev/
+> 
+>  net/mptcp/protocol.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index cb9515f505aa..b32f0cd262a7 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -3907,6 +3907,7 @@ bool mptcp_finish_join(struct sock *ssk)
+>  	mptcp_data_unlock(parent);
+>  
+>  	if (!ret) {
+> +		mptcp_pm_close_subflow(msk);
+>  err_prohibited:
+>  		subflow->reset_reason = MPTCP_RST_EPROHIBIT;
+>  		return false;
