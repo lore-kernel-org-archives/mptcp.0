@@ -1,105 +1,130 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76B64426EAE
-	for <mptcp@lists.linux.dev>; Wed,  1 Jul 2026 10:38:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DF61480952
+	for <mptcp@lists.linux.dev>; Wed,  1 Jul 2026 11:53:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782902306; cv=none; b=Dqo9e0XoM24nh2EdZUrGmodvtzs5ILKyj9ArJ4Nnqv6wGyfpZGF6IF+f5fJuy3zV/RCNCGq/j9Uxzh+zL8HtbPa+YONIxDSPvJYgPHbUORmfs4O0FGHHNXrABFX1g6raOHwdqkcI+QhpuXYjUJNJIVZop9zjxo91iWyLHJwijWE=
+	t=1782906804; cv=none; b=sVuDuNwTo0slJtLio3ezYxiWX1Q6ttf3b7pJVD5Ex2kaONhUShSjPJ2ZBkROCAAaYv/NoI1gy5iEjFhRFhz76H8PbWVcLLdVkGlbIscnSPnOH1Wi+FMale/j6W2Pq7tD1R5AdB9wS+7iSyqdXy2yNdMaGNR5kXDcSlkRFPaE5v0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782902306; c=relaxed/simple;
-	bh=/viK3Nd+7xZV4w6XcuB2tRZQ2EjZ5ngGTvToKYdql7o=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=BsVA9w41pk8oeGKpaM8dpiDwAHVCCEPGYrDK1ZW9iEG3izXPrj47aITfrRl2uW8AtCulbICRPb9KJccmsKGAq+9flhcg7CenjhwQpEKO3gr0PdmXUtkufPlp6ejjIK5mHFWByqivpXyygRtzyoy3JNO33qciTC07abUqOZFkY5o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: f67ed0aa753811f1aa26b74ffac11d73-20260701
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.12,REQID:77648119-f14a-49de-a12e-057d135df188,IP:0,U
-	RL:0,TC:0,Content:0,EDM:25,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:25
-X-CID-META: VersionHash:e7bac3a,CLOUDID:101142069bfd13c8603bea6829cfe43f,BulkI
-	D:nil,BulkQuantity:0,Recheck:0,SF:102|850|865|898,TC:nil,Content:0|15|50,E
-	DM:5,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:
-	0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 2,SSN|SDN
-X-CID-BAS: 2,SSN|SDN,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: f67ed0aa753811f1aa26b74ffac11d73-20260701
-X-User: yijiangshan@kylinos.cn
-Received: from localhost.localdomain [(10.44.16.150)] by mailgw.kylinos.cn
-	(envelope-from <yijiangshan@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 1628733620; Wed, 01 Jul 2026 18:38:13 +0800
-From: Jiangshan Yi <yijiangshan@kylinos.cn>
-To: geliang@kernel.org,
-	martineau@kernel.org,
-	matttbe@kernel.org
-Cc: davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	horms@kernel.org,
-	shuah@kernel.org,
-	netdev@vger.kernel.org,
-	mptcp@lists.linux.dev,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	13667453960@163.com,
-	Jiangshan Yi <yijiangshan@kylinos.cn>
-Subject: [PATCH] selftests: mptcp: mptcp_diag: fix stack buffer overflow in get_subflow_info()
-Date: Wed,  1 Jul 2026 18:38:09 +0800
-Message-Id: <20260701103809.4051377-1-yijiangshan@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1782906804; c=relaxed/simple;
+	bh=2mCGWkbnvVH7Rtn3VQA9tMT2Kchqoy5BHas5BNMSPuA=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
+	 MIME-Version:Content-Type; b=WPz2nVKbQFyDTV4xkhjJP292Jyb005LjGNY9ALLhqIkb18k2Zxx8hlIgXOfesjJR6A7qFytX04F44zs4xcVwkuG7yMRPPq1qBIg+KEMxICQfUzbHOVYsucINvjxlTh13pR7YOSajcb7H8hhdhkpzxKSiniiY0Vg6vfnlCnZo0QY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=d0dVATV6; arc=none smtp.client-ip=209.85.219.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d0dVATV6"
+Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-8ea93125ad1so4241546d6.2
+        for <mptcp@lists.linux.dev>; Wed, 01 Jul 2026 04:53:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1782906800; x=1783511600; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=obBUgAjhUGZFw7oFw2jj4U8TPRs9JMW0IlrS5wj8fPc=;
+        b=d0dVATV6h3AikuspnquhW5t0vG8Nc6D5vKwGP7uRQng5/VtrrUPRoH7exi9mRqtL5H
+         m5jTlEx3lGWxLigQ5DMn5ZADAUIlFFEBSBBAorIM3HHyeqTI0rlx+YojL1asILkEpiWt
+         pUJSEV6lhC4e3yDexHie9NIyEVG1b/voHYcqHbGB3PNFbnZgTmBLE9nu1qGhRH0RexEi
+         rUEh3+mY7I+CGjYWxXrT2IpVCDl8fawqnJ7cvNSsqcTbrpc7NEM1dXExtkABRBVtEUPi
+         A1P8Awmd+q2Ytr4PPPgqc6y2zQX5rlqcCJJtwVg7ep3CDsxy06Q+nLDG58+SJVRvzgj9
+         Xzlg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782906800; x=1783511600;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=obBUgAjhUGZFw7oFw2jj4U8TPRs9JMW0IlrS5wj8fPc=;
+        b=Nks539R4Kc7MIZAzY3TXh0ZZJy8Hu7EvUO4Vsla5VEdJUPg+3oZbKidpQ0wVckUN8e
+         Ka1Bw7PF1+6/lVR1F4QqOddUyYuuCxvK05nornP4Ta3jCky38zeDBiKknIDRaMUaQpTJ
+         Dlvf8GC4wIikS96QfZk2GaP/h8STErfpJDvhEz8Wfik7MZnIWCkUVco5NRgAISCCzeXJ
+         9dLorxTHTWXyFV3Jv7BApW7C5w4J3XOYrnYdGE7o8bNgt16GN0HkXUBYu2GbVwMXUDxm
+         8wo/cJOCJ7D6pZ850gT9bn6qkPjlrely7qaxDs5e4cW/Z2lV1slWhjouDvMDR5zAecsH
+         y7RA==
+X-Gm-Message-State: AOJu0YyoPR98UW21pc/BJkYATlolQdbEsHWvdTzZmTuIH5Jms3Bs2OV8
+	B6XWGxCnJylwM7N672u9xzL9LtbTwDhgen8vrLqNCIlrEcZ5SQipb0cZUx4F
+X-Gm-Gg: AfdE7cnaNJJ5H16G4orQnWSBcja9zOGX6I0QvxuepxPA7NzcOUMyO0Vjl1/gEIyBjq2
+	Zrl1YupzR7BkorZa8SHOrnxkUDIXwcRI7/hYTiAs/mZ4loCBNFn4LGVf518icXQsugAH0P8+rjr
+	sEjhocxDC6mufrqQ9tvTVFcm6gBpASOWHkUbto5x6ookcRn2PTSjT9m3xDpFg6B5EKDr+Aztbkh
+	/pJ4a+XVdSQGjmojTpN4QZ/hYnTTXjAc+beAIauKYJADHgYKx/ropEYI0BWhHIdYfCu+AwlhoFx
+	RwTJjAmIQAOVkax8fCOh5oWKmuYBoppqL5buGe01+qxq1DNO4E0F2k1fj8x/Wsr/d1KH4rbfp7Q
+	paHuVpAted5IyfEQPrmiYffiDg7XMnDUdy2Hpn1U5B5HOuD6G24ynPyGPiDfWo/k/UPN/qAjcwm
+	YsftgQCb1ZKb3qznWeuEz0X3IvSQ==
+X-Received: by 2002:a05:6214:4349:b0:8f1:440c:7f81 with SMTP id 6a1803df08f44-8f3c64d5dabmr16019536d6.4.1782906800415;
+        Wed, 01 Jul 2026 04:53:20 -0700 (PDT)
+Received: from [127.0.0.1] ([20.62.207.242])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8f35ee5b59fsm19477776d6.13.2026.07.01.04.53.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Jul 2026 04:53:19 -0700 (PDT)
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Jiangshan Yi <yijiangshan@kylinos.cn>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20260701103809.4051377-1-yijiangshan@kylinos.cn>
+References: <20260701103809.4051377-1-yijiangshan@kylinos.cn>
+Subject: Re: [PATCH] selftests: mptcp: mptcp_diag: fix stack buffer
+ overflow in get_subflow_info()
+Message-ID: <f8466d7e-5b6c-98cf-c6ab-7a2d1140e6b7@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 01 Jul 2026 11:53:19 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
 
-get_subflow_info() parses the subflow address string with:
+Hi Jiangshan,
 
-	char saddr[64], daddr[64];
+Thank you for your modifications, that's great!
 
-	ret = sscanf(subflow_addrs, "%[^:]:%d %[^:]:%d",
-		     saddr, &sport, daddr, &dport);
+Our CI did some validations and here is its report:
 
-The subflow_addrs buffer holds up to 1024 bytes and is taken directly
-from the command line ("-c" argument). The "%[^:]" conversions have no
-maximum field width, so if the address substring before the ':' exceeds
-63 bytes, sscanf() writes past the end of the 64-byte saddr/daddr stack
-buffers. This overflows the stack, corrupting adjacent stack data such
-as the saved return address, and can crash the tool or lead to
-out-of-bounds writes controlled by user-supplied input.
+- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/285128=
+99070
 
-Bound both string conversions to the destination buffer size by adding
-an explicit maximum field width of 63 (leaving room for the terminating
-NUL), so at most 63 bytes are written into each 64-byte buffer:
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/d8b74a418073
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1119638
 
-	ret = sscanf(subflow_addrs, "%63[^:]:%d %63[^:]:%d",
-		     saddr, &sport, daddr, &dport);
 
-Signed-off-by: Jiangshan Yi <yijiangshan@kylinos.cn>
----
- tools/testing/selftests/net/mptcp/mptcp_diag.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_diag.c b/tools/testing/selftests/net/mptcp/mptcp_diag.c
-index 5e222ba977e4..02ac93f794fe 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_diag.c
-+++ b/tools/testing/selftests/net/mptcp/mptcp_diag.c
-@@ -377,7 +377,7 @@ static void get_subflow_info(char *subflow_addrs)
- 	int ret;
- 	int fd;
- 
--	ret = sscanf(subflow_addrs, "%[^:]:%d %[^:]:%d", saddr, &sport, daddr, &dport);
-+	ret = sscanf(subflow_addrs, "%63[^:]:%d %63[^:]:%d", saddr, &sport, daddr, &dport);
- 	if (ret != 4)
- 		die_perror("IP PORT Pairs has style problems!");
- 
--- 
-2.25.1
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
 
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
