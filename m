@@ -1,40 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EC50248F57
-	for <mptcp@lists.linux.dev>; Thu,  2 Jul 2026 02:15:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DDB3305664;
+	Thu,  2 Jul 2026 03:06:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782958526; cv=none; b=VixpkelUGg3Koe4sS7iUWyNoNdp61IGOx3M42Zj23/ZNTFySgVeW72Lwqyp4neY5kA4ScViE9Ud3kBub96485OR+j25qS5/SVwNzAKeM5MD0FJwL1z+Y+iBtJG4tVcW+eyhAkVmJlmTws/whn1e2ao3mJZphjjD0atOLHFhnxfI=
+	t=1782961606; cv=none; b=ud3dVlxB+AtWunrVhrnDR7p5M5QxhtPrRQeVaxC4GhcCKIjQPJm6y3Umu730Q7in8LQ+Ljxz4OR/GMChRCxaStLFL6xTHE0uWkTYp6FuywyHMi4frxbxyxDuPCw1qB4wYrFvj2z4J2mvT+R6KjUS27Wq425UMkTYMRBnEHdIKYk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782958526; c=relaxed/simple;
-	bh=TqWaTiYAQOl3rBwjQkr+itdws0qbo9i9BU8xWO3PTGw=;
+	s=arc-20240116; t=1782961606; c=relaxed/simple;
+	bh=2m77gO09Rh6LkNCbW3gVNexMJYzr4UQsWjPtXffs2Mg=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=jKz4G+OWjSG19sZwuYbs3xFsugA07Zpl8EYBKunT0LWZ971oA7w52K6jqJJLLSwAsnGc2JtaVc+ecgaRGm1BS28nG8mHJ4QLZxtFm3wG1UC8Bvwsk6uVJMigSOoOfvDDX8BDWwaQFYvOuswI9Y8FFUAlHUnQrJ0zV9Z5/KMKBEs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q50xxlRb; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:MIME-Version; b=naMa45g2Ef8szsYq/jrwadRBDfpbAn7f0ONEaPmyTEYMlrhJ4qSou+8iI1Vi0qYr1jTNlsAkkdTnwNMR6PyBitPBjKynCJIxyPVSuL1wQIREAkV87Ui7gvOL4JSP2aK9oZCEQd9kvWjzutozDGxwbByrv+TK7bhtDEHoRJBi/Nc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L8k4QDoj; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q50xxlRb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F05751F000E9;
-	Thu,  2 Jul 2026 02:15:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L8k4QDoj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E0851F000E9;
+	Thu,  2 Jul 2026 03:06:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782958525;
-	bh=09F9aqNVg7DsJmehdLGJRsFMqf09QRNYyCRP5vOtxHA=;
+	s=k20260515; t=1782961605;
+	bh=g4ufrb1H9XwSdoFmaoTbnMnS9Qdl5FV0n+ui0fmlGdM=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=Q50xxlRbrIOnC2c8zV3xI9Y6XkCow0ll3vz/Jtuz3Yq2RSIYRQOp6whIlswIwaBxw
-	 XlUmFYZbHgxjWJqgcffSWg/JBS3L8Um9zu7d3NxDXwDLDZaFzEMB8stAaW+Q/zJ+oD
-	 RCkzPo4y1Ha+iWUzR2dYWilZ/+62MHv9T4gHsiX7uRm0iAEbKwNRcnJWdR/IqlZYvI
-	 lw4uROqOUwZL90FLCsYTtlTccSLX9/6dV/mOLUcpBIH7s4Rr3CofUo3hmXGLCd/uyO
-	 qBvQ+ktpQ4wFOE0T8DYvUdFmYU38FfVBEuA+4jfXOVDRNSV3TXyWfltbRUoaYksBLc
-	 mgxFTItLUxMEA==
-Message-ID: <e35e67705a9c50e30ad5486e197162501d9cf90a.camel@kernel.org>
-Subject: Re: [PATCH mptcp-next v2] Squash-to "mptcp: pm: init and release
- mptcp_pm_ops"
+	b=L8k4QDoj4iyqBHASzsLr23rMk6msePs0lQkj1ePt37LlQEhDhXW83DZ7uXYn693D1
+	 ZTJY8n/GNkLaNvJM/baH+HM13ETIZg8S8LkcJWK1TpZNJt2bJmELMgCd9Mnq6MQ2zD
+	 GN3XHc0nK4dDAbSeMOE7n3kUztQFeRf7u/9Q+VTmZPWbUQpG/kp/2+3Mtbzy0ieH7i
+	 kCLai+O268P1fJ7Vn3R43adBWLGryJWN2crW3w5GYPJXsLJiavTr1ufR/9G6MzzkC4
+	 A2p6+Lz2IY4UOEFwd0UEJWyYjSo2mY/IK/8Jqn0Urz7YCB7MiKpGbGEiMcNvcwzlrF
+	 vEWzUIHdZChnw==
+Message-ID: <8ac216a4fbdfe35b6cbd2a2e9373495cbc009ee7.camel@kernel.org>
+Subject: Re: [PATCH] selftests: mptcp: mptcp_diag: fix stack buffer overflow
+ in get_subflow_info()
 From: Geliang Tang <geliang@kernel.org>
-To: Gang Yan <gang.yan@linux.dev>, mptcp@lists.linux.dev
-Cc: matttbe@kernel.org, Gang Yan <yangang@kylinos.cn>
-Date: Thu, 02 Jul 2026 10:15:18 +0800
-In-Reply-To: <20260701073713.197616-1-gang.yan@linux.dev>
-References: <20260701073713.197616-1-gang.yan@linux.dev>
+To: Jiangshan Yi <yijiangshan@kylinos.cn>, martineau@kernel.org, 
+	matttbe@kernel.org
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com,  horms@kernel.org, shuah@kernel.org,
+ netdev@vger.kernel.org, mptcp@lists.linux.dev, 
+ linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ 13667453960@163.com
+Date: Thu, 02 Jul 2026 11:06:35 +0800
+In-Reply-To: <20260701103809.4051377-1-yijiangshan@kylinos.cn>
+References: <20260701103809.4051377-1-yijiangshan@kylinos.cn>
 Content-Type: text/plain; charset="UTF-8"
 User-Agent: Evolution 3.52.3-0ubuntu1.1 
 Precedence: bulk
@@ -45,96 +50,69 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi Gang,
+Hi Jiangshan,
 
-Thanks for this v2.
-
-On Wed, 2026-07-01 at 15:37 +0800, Gang Yan wrote:
-> From: Gang Yan <yangang@kylinos.cn>
+On Wed, 2026-07-01 at 18:38 +0800, Jiangshan Yi wrote:
+> get_subflow_info() parses the subflow address string with:
 > 
-> This patch removes the need to handle a NULL pm_ops in the fallback
-> path, and moves the rcu_read_lock\unlock into mptcp_pm_ops_init.
+> 	char saddr[64], daddr[64];
 > 
-> Following sashiko's comments, it also moves the pr_debug() before
-> bpf_module_put() in mptcp_pm_ops_release.
+> 	ret = sscanf(subflow_addrs, "%[^:]:%d %[^:]:%d",
+> 		     saddr, &sport, daddr, &dport);
 > 
-> Signed-off-by: Gang Yan <yangang@kylinos.cn>
+> The subflow_addrs buffer holds up to 1024 bytes and is taken directly
+> from the command line ("-c" argument). The "%[^:]" conversions have
+> no
+> maximum field width, so if the address substring before the ':'
+> exceeds
+> 63 bytes, sscanf() writes past the end of the 64-byte saddr/daddr
+> stack
+> buffers. This overflows the stack, corrupting adjacent stack data
+> such
+> as the saved return address, and can crash the tool or lead to
+> out-of-bounds writes controlled by user-supplied input.
+> 
+> Bound both string conversions to the destination buffer size by
+> adding
+> an explicit maximum field width of 63 (leaving room for the
+> terminating
+> NUL), so at most 63 bytes are written into each 64-byte buffer:
+> 
+> 	ret = sscanf(subflow_addrs, "%63[^:]:%d %63[^:]:%d",
+> 		     saddr, &sport, daddr, &dport);
+> 
+> Signed-off-by: Jiangshan Yi <yijiangshan@kylinos.cn>
 > ---
->  net/mptcp/pm.c | 19 ++++++++++---------
->  1 file changed, 10 insertions(+), 9 deletions(-)
+>  tools/testing/selftests/net/mptcp/mptcp_diag.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-> index 9dc7b41fb562..5fe4276cf895 100644
-> --- a/net/mptcp/pm.c
-> +++ b/net/mptcp/pm.c
-> @@ -1137,12 +1137,14 @@ void mptcp_pm_worker(struct mptcp_sock *msk)
->  	spin_unlock_bh(&msk->pm.lock);
->  }
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_diag.c
+> b/tools/testing/selftests/net/mptcp/mptcp_diag.c
+> index 5e222ba977e4..02ac93f794fe 100644
+> --- a/tools/testing/selftests/net/mptcp/mptcp_diag.c
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_diag.c
+> @@ -377,7 +377,7 @@ static void get_subflow_info(char *subflow_addrs)
+>  	int ret;
+>  	int fd;
 >  
-> -static void mptcp_pm_ops_init(struct mptcp_sock *msk,
-> -			      struct mptcp_pm_ops *pm_ops)
-> +static void mptcp_pm_ops_init(struct mptcp_sock *msk, const char
-> *pm_name)
->  {
-> +	struct mptcp_pm_ops *pm_ops;
-> +
-> +	rcu_read_lock();
-> +	pm_ops = mptcp_pm_find(pm_name);
->  	if (!pm_ops || !bpf_try_module_get(pm_ops, pm_ops->owner)) {
-> -		pr_warn_once("pm %s fails, fallback to default pm",
-> -			     pm_ops->name);
-> +		pr_warn_once("pm %s fails, fallback to default pm",
-> pm_name);
->  		pm_ops = &mptcp_pm_kernel;
->  	}
->  
-> @@ -1151,6 +1153,7 @@ static void mptcp_pm_ops_init(struct mptcp_sock
-> *msk,
->  		msk->pm.ops->init(msk);
->  
->  	pr_debug("pm %s initialized\n", pm_ops->name);
+> -	ret = sscanf(subflow_addrs, "%[^:]:%d %[^:]:%d", saddr,
+> &sport, daddr, &dport);
+> +	ret = sscanf(subflow_addrs, "%63[^:]:%d %63[^:]:%d", saddr,
+> &sport, daddr, &dport);
 
-nit: Here we can also print "pm_name" to keep it consistent with
-pr_warn_once().
+Thanks for this patch. MPTCP CI complains:
 
-> +	rcu_read_unlock();
+WARNING: line length of 91 exceeds 80 columns
+#44: FILE: tools/testing/selftests/net/mptcp/mptcp_diag.c:380:
 
-Then this unlock line can be moved ahead of the previous pr_debug()
-line.
-
->  }
->  
->  static void mptcp_pm_ops_release(struct mptcp_sock *msk)
-> @@ -1161,9 +1164,9 @@ static void mptcp_pm_ops_release(struct
-> mptcp_sock *msk)
->  	if (pm_ops->release)
->  		pm_ops->release(msk);
->  
-> -	bpf_module_put(pm_ops, pm_ops->owner);
-> -
->  	pr_debug("pm %s released\n", pm_ops->name);
-> +
-> +	bpf_module_put(pm_ops, pm_ops->owner);
->  }
->  
->  void mptcp_pm_destroy(struct mptcp_sock *msk)
-> @@ -1184,9 +1187,7 @@ void mptcp_pm_data_reset(struct mptcp_sock
-> *msk)
->  	pm->rm_list_rx.nr = 0;
->  	WRITE_ONCE(pm->pm_type, pm_type);
->  
-> -	rcu_read_lock();
-> -	mptcp_pm_ops_init(msk, mptcp_pm_find(pm_name));
-> -	rcu_read_unlock();
-
-Or we leave rcu_read_lock() and rcu_read_unlock() where they are,
-without moving them into mptcp_pm_ops_init().
+Also, for the subject prefix, we usually use "selftests: mptcp: diag:"
+instead of "selftests: mptcp: mptcp_diag:". Please consider updating it
+if you spin a v2.
 
 Thanks,
 -Geliang
 
-> +	mptcp_pm_ops_init(msk, pm_name);
->  }
+>  	if (ret != 4)
+>  		die_perror("IP PORT Pairs has style problems!");
 >  
->  void mptcp_pm_data_init(struct mptcp_sock *msk)
 
