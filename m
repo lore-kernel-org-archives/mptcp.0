@@ -1,46 +1,48 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F7A6386C12
-	for <mptcp@lists.linux.dev>; Thu,  2 Jul 2026 06:23:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8270038757C
+	for <mptcp@lists.linux.dev>; Thu,  2 Jul 2026 06:29:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782973434; cv=none; b=qEJmgvGZhqV9DC/I5O4OBMp3/q6vcqayhYYkg9SOPUqykmN7eyEpXg2raJYJL3XY+gNZGwizWdVCIcTwGKbNRGHMH+T1CukmEwRU7vRbj4TrAkEFSEs7wNIEvKGA2+LmttrgcEAWEM1k2bQ3py3NBKOYqRaQGDOKDuwHTJ1J+jE=
+	t=1782973777; cv=none; b=BX0U5mXHunUGqLfKSEt6Wru5Cg2XqYavsU2aN7lfBr/w9F4L/cOf5sTWF1CE7YXUfyB4eEvl/dXv7yaRdAc9lqlNZdyX++rE++ZzQdR8BlWiK/6PLi6EbcQvb6IYaWaphqMHYIEwignk48D9+7xmuJiKVjs197WYl20AZgAkQXU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782973434; c=relaxed/simple;
-	bh=Cu1P8FC1KfSdN5JOXbua45ot5lTwqX0lgWOB89cUTNU=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=gQRqYEkHfhs6+dw3Z946tV7WSu3psX0UAvtfCpd75OII4KxRtyshpeUY1DBGTbUMoqnV3hXjtuN3xrROhrbAjsK+80FXpAbwtJSNgDdH09bBV2S8LN8U9BqdiI+TBnQcFItQ8CFSyEv/86uCK8irD5n8G2vNpmqAELt6Eh6TMuQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZN9nP0Un; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZN9nP0Un"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AE021F000E9;
-	Thu,  2 Jul 2026 06:23:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782973432;
-	bh=dkaWcF6lPhlXDHR/l/1Bc9EwwG7U7AdPwG8pQN5l78g=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=ZN9nP0UnOuhJO2wkbHzyfhcAJeayHgkPZ41M/bDL7Si+fiXbStRubdMrJFAqQe26J
-	 /OSXrEevt/sKteoTxJ4wqwkcNZFskipD133DOsiD2KL1ByuNcNZvw8sWPzFeRAi37v
-	 KxSOzDblsvfobDmmLj/xp++bxGXWhdGr9Pe0J24xns8NbwzvRmMOBpEyGdvp6SqWeG
-	 GBHFc01NF6AxMJv72aiq5liDFJzKVsxszHOYsr8MYFh2UJuMhdK6HNAOx1l/hHI8ys
-	 UlKmIw8U5AdLn2D9xCjXACoRNUhbfOKc2ZGd9Xl9I/tMRJRPkETZaruF+9ocsYYeEc
-	 b7REp/Y++06+g==
-Message-ID: <5188aca74aaa8ce3024e5661cb493f49cb690170.camel@kernel.org>
-Subject: Re: [PATCH mptcp-next 3/4] selftests/bpf: mptcp: verify scheduler
- rejects non-msk socket to set_timeout
-From: Geliang Tang <geliang@kernel.org>
-To: Shardul Bankar <shardul.b@mpiricsoftware.com>, mptcp@lists.linux.dev
-Cc: Matthieu Baerts <matttbe@kernel.org>, Mat Martineau
- <martineau@kernel.org>,  Paolo Abeni <pabeni@redhat.com>,
- kalpan.jani@mpiricsoftware.com, janak@mpiric.us, shardulsb08@gmail.com
-Date: Thu, 02 Jul 2026 14:23:38 +0800
-In-Reply-To: <20260629-mptcp_bpf_kfunc_fixes-v1-3-8cc875f36f53@mpiricsoftware.com>
-References: 
-	<20260629-mptcp_bpf_kfunc_fixes-v1-0-8cc875f36f53@mpiricsoftware.com>
-	 <20260629-mptcp_bpf_kfunc_fixes-v1-3-8cc875f36f53@mpiricsoftware.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.52.3-0ubuntu1.1 
+	s=arc-20240116; t=1782973777; c=relaxed/simple;
+	bh=rTujbHuGrjuFT+r/WmDsrXTLxMSKR/9oK18VpERj3Q4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=WThKx417vmNvJsyIy8vYGdWAEqZG/1tcD1ffKfHNvD2zbAPcb66qsah+h8uroO7nIGWebrD9dls/CGimSdX+31AnIx5TGQJRM3suGo1b0+KYshvH6jJ+xIdhW/LB4xVOXT2xsNz7R1yS++j3ZDPG4gawg5qWrsNjqLQ+Tc7AQm8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 6090a26a75df11f1aa26b74ffac11d73-20260702
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.3.12,REQID:73651228-c5d8-4bc0-87c0-819cf03ca1c3,IP:0,U
+	RL:0,TC:0,Content:0,EDM:25,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:25
+X-CID-META: VersionHash:e7bac3a,CLOUDID:4e1ca82c8d27e055e0a9a2812ac9ff8b,BulkI
+	D:nil,BulkQuantity:0,Recheck:0,SF:81|82|102|850|865|898,TC:nil,Content:0|1
+	5|50,EDM:5,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:
+	0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 2,SSN|SDN
+X-CID-BAS: 2,SSN|SDN,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
+X-UUID: 6090a26a75df11f1aa26b74ffac11d73-20260702
+X-User: yijiangshan@kylinos.cn
+Received: from localhost.localdomain [(10.44.16.150)] by mailgw.kylinos.cn
+	(envelope-from <yijiangshan@kylinos.cn>)
+	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
+	with ESMTP id 580479447; Thu, 02 Jul 2026 14:29:28 +0800
+From: Jiangshan Yi <yijiangshan@kylinos.cn>
+To: geliang@kernel.org
+Cc: mptcp@lists.linux.dev,
+	yijiangshan@kylinos.cn
+Subject: [PATCH mptcp-next v3] selftests: mptcp: diag: fix stack buffer overflow in get_subflow_info()
+Date: Thu,  2 Jul 2026 14:29:09 +0800
+Message-Id: <20260702062909.4147641-1-yijiangshan@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <f66bcc626255440b7fc7ef8c2a9b9dde0675f30e.camel@kernel.org>
+References: <f66bcc626255440b7fc7ef8c2a9b9dde0675f30e.camel@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -49,167 +51,57 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On Mon, 2026-06-29 at 17:37 +0530, Shardul Bankar wrote:
-> Add a negative test for the bpf_mptcp_set_timeout() kfunc: a BPF
-> MPTCP
-> scheduler whose get_send() passes a subflow TCP socket to it, where
-> the
-> kfunc takes a struct mptcp_sock *, must be rejected by the verifier
-> at
-> program load time. This guards against widening the kfunc argument
-> back
-> to a generic struct sock *, which would reintroduce the socket type
-> confusion between an MPTCP-level socket and a subflow TCP socket.
-> 
-> Assisted-by: Claude:claude-opus-4-8
-> Signed-off-by: Shardul Bankar <shardul.b@mpiricsoftware.com>
-> ---
->  tools/testing/selftests/bpf/prog_tests/mptcp.c     | 31
-> +++++++++++++
->  .../selftests/bpf/progs/mptcp_bpf_bad_sched.c      | 54
-> ++++++++++++++++++++++
+get_subflow_info() parses the subflow address string with:
 
-I don't think it's necessary to add a dedicated "bad_sched" BPF
-scheduler, at least not for upstream. It can be kept locally for
-verification purposes, which is sufficient. Therefore, I suggest
-dropping patch 3 and patch 4 from this series. Alternatively, if they
-are intended solely to validate patch 1 and patch 2, please prefix
-their subjects with a "DO-NOT-MERGE:" tag to clearly indicate they are
-not meant for integration.
+	char saddr[64], daddr[64];
 
-WDYT?
+	ret = sscanf(subflow_addrs, "%[^:]:%d %[^:]:%d",
+		     saddr, &sport, daddr, &dport);
 
-Thanks,
--Geliang
+The subflow_addrs buffer holds up to 1024 bytes and is taken directly
+from the command line ("-c" argument). The "%[^:]" conversions have no
+maximum field width, so if the address substring before the ':' exceeds
+63 bytes, sscanf() writes past the end of the 64-byte saddr/daddr stack
+buffers. This overflows the stack, corrupting adjacent stack data such
+as the saved return address, and can crash the tool or lead to
+out-of-bounds writes controlled by user-supplied input.
 
->  2 files changed, 85 insertions(+)
-> 
-> diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c
-> b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-> index 7f48fd9e94e1e..ff8209ebc8388 100644
-> --- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
-> +++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-> @@ -18,6 +18,7 @@
->  #include "mptcp_bpf_rr.skel.h"
->  #include "mptcp_bpf_red.skel.h"
->  #include "mptcp_bpf_burst.skel.h"
-> +#include "mptcp_bpf_bad_sched.skel.h"
->  
->  #define NS_TEST "mptcp_ns"
->  #define ADDR_1	"10.0.1.1"
-> @@ -813,6 +814,34 @@ static void test_burst(void)
->  	mptcp_bpf_burst__destroy(skel);
->  }
->  
-> +static void test_bad_sched(void)
-> +{
-> +	struct mptcp_bpf_bad_sched *skel;
-> +	char *log = NULL;
-> +	int err;
-> +
-> +	/* bad_sched_get_send() passes a subflow TCP socket to
-> +	 * bpf_mptcp_set_timeout(), which takes a struct mptcp_sock
-> *. The
-> +	 * verifier must reject this socket type confusion at load
-> time, and
-> +	 * for the right reason -- assert the specific verifier
-> message.
-> +	 */
-> +	skel = mptcp_bpf_bad_sched__open();
-> +	if (!ASSERT_OK_PTR(skel, "open: bad_sched"))
-> +		return;
-> +
-> +	if (start_libbpf_log_capture())
-> +		goto destroy;
-> +
-> +	err = mptcp_bpf_bad_sched__load(skel);
-> +	log = stop_libbpf_log_capture();
-> +	ASSERT_ERR(err, "load: bad_sched must be rejected");
-> +	ASSERT_HAS_SUBSTR(log, "expected pointer to STRUCT
-> mptcp_sock",
-> +			  "verifier rejects subflow sock to
-> bpf_mptcp_set_timeout");
-> +	free(log);
-> +destroy:
-> +	mptcp_bpf_bad_sched__destroy(skel);
-> +}
-> +
->  void test_mptcp(void)
->  {
->  	if (test__start_subtest("base"))
-> @@ -835,4 +864,6 @@ void test_mptcp(void)
->  		test_red();
->  	if (test__start_subtest("burst"))
->  		test_burst();
-> +	if (test__start_subtest("bad_sched"))
-> +		test_bad_sched();
->  }
-> diff --git a/tools/testing/selftests/bpf/progs/mptcp_bpf_bad_sched.c
-> b/tools/testing/selftests/bpf/progs/mptcp_bpf_bad_sched.c
-> new file mode 100644
-> index 0000000000000..14041c1e5ffd7
-> --- /dev/null
-> +++ b/tools/testing/selftests/bpf/progs/mptcp_bpf_bad_sched.c
-> @@ -0,0 +1,54 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/* Copyright (c) 2026, Mpiric Software. */
-> +
-> +/* A scheduler that passes a subflow TCP socket to
-> bpf_mptcp_set_timeout(),
-> + * which takes a struct mptcp_sock *. The verifier must reject this
-> at load
-> + * time; see the bad_sched subtest in prog_tests/mptcp.c.
-> + */
-> +#include "mptcp_bpf.h"
-> +#include <bpf/bpf_tracing.h>
-> +
-> +char _license[] SEC("license") = "GPL";
-> +
-> +extern void bpf_mptcp_set_timeout(struct mptcp_sock *msk) __ksym;
-> +
-> +SEC("struct_ops")
-> +void BPF_PROG(bad_sched_init, struct mptcp_sock *msk)
-> +{
-> +}
-> +
-> +SEC("struct_ops")
-> +void BPF_PROG(bad_sched_release, struct mptcp_sock *msk)
-> +{
-> +}
-> +
-> +SEC("struct_ops")
-> +int BPF_PROG(bad_sched_get_send, struct mptcp_sock *msk)
-> +{
-> +	struct mptcp_subflow_context *subflow;
-> +	struct sock *ssk;
-> +
-> +	bpf_for_each(mptcp_subflow, subflow, (struct sock *)msk) {
-> +		ssk = bpf_mptcp_subflow_tcp_sock(subflow);
-> +		if (!ssk)
-> +			return -1;
-> +		/* ssk is a subflow TCP socket (struct sock *), not
-> an msk.
-> +		 * Passing it to bpf_mptcp_set_timeout(), which
-> takes a
-> +		 * struct mptcp_sock *, is a socket type confusion
-> that the
-> +		 * verifier must reject at load time ("expected
-> pointer to
-> +		 * STRUCT mptcp_sock").
-> +		 */
-> +		bpf_mptcp_set_timeout((struct mptcp_sock *)ssk);
-> +		mptcp_subflow_set_scheduled(subflow, true);
-> +		return 0;
-> +	}
-> +	return -1;
-> +}
-> +
-> +SEC(".struct_ops.link")
-> +struct mptcp_sched_ops bad_sched = {
-> +	.init		= (void *)bad_sched_init,
-> +	.release	= (void *)bad_sched_release,
-> +	.get_send	= (void *)bad_sched_get_send,
-> +	.name		= "bpf_bad_sched",
-> +};
-> 
+Bound both string conversions to the destination buffer size by adding
+an explicit maximum field width of 63 (leaving room for the terminating
+NUL), so at most 63 bytes are written into each 64-byte buffer:
+
+	ret = sscanf(subflow_addrs, "%63[^:]:%d %63[^:]:%d",
+		     saddr, &sport, daddr, &dport);
+
+Reviewed-by: Geliang Tang <geliang@kernel.org>
+Signed-off-by: Jiangshan Yi <yijiangshan@kylinos.cn>
+---
+v3:
+ - drop the Fixes tag: this is a cleanup/hardening, not a fix (Geliang)
+ - drop the Suggested-by tag, keep Geliang's Reviewed-by (Geliang)
+v2:
+ - add field width to sscanf() (fix >80 col warning, MPTCP CI)
+ - fix subject prefix: mptcp_diag: -> diag: (Geliang)
+v1: 
+ - initial submission
+
+ tools/testing/selftests/net/mptcp/mptcp_diag.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_diag.c b/tools/testing/selftests/net/mptcp/mptcp_diag.c
+index 5e222ba977e4..3b8d2c8a6216 100644
+--- a/tools/testing/selftests/net/mptcp/mptcp_diag.c
++++ b/tools/testing/selftests/net/mptcp/mptcp_diag.c
+@@ -377,7 +377,8 @@ static void get_subflow_info(char *subflow_addrs)
+ 	int ret;
+ 	int fd;
+ 
+-	ret = sscanf(subflow_addrs, "%[^:]:%d %[^:]:%d", saddr, &sport, daddr, &dport);
++	ret = sscanf(subflow_addrs, "%63[^:]:%d %63[^:]:%d",
++		     saddr, &sport, daddr, &dport);
+ 	if (ret != 4)
+ 		die_perror("IP PORT Pairs has style problems!");
+ 
+-- 
+2.25.1
 
