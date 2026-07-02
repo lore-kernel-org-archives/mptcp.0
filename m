@@ -1,48 +1,36 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from out-186.mta1.migadu.com (out-186.mta1.migadu.com [95.215.58.186])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8270038757C
-	for <mptcp@lists.linux.dev>; Thu,  2 Jul 2026 06:29:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 837D3372063
+	for <mptcp@lists.linux.dev>; Thu,  2 Jul 2026 06:30:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782973777; cv=none; b=BX0U5mXHunUGqLfKSEt6Wru5Cg2XqYavsU2aN7lfBr/w9F4L/cOf5sTWF1CE7YXUfyB4eEvl/dXv7yaRdAc9lqlNZdyX++rE++ZzQdR8BlWiK/6PLi6EbcQvb6IYaWaphqMHYIEwignk48D9+7xmuJiKVjs197WYl20AZgAkQXU=
+	t=1782973830; cv=none; b=AxNWINsM4DdTiW9VDUy1yRSqbFTs7UPmobP8HcEsQbSpfSe2jUi9rX7hQR+usdLKFKe5LJIIkos8hV+d5bPsK6Lwt5VqlyW3k+Xr3esFwcZdR/97XXImBy/xUK/yIUjk6/CrhRiOcq3N1DbLrFU/z2Qt+5OnhSwuE3TAqdoRVLI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782973777; c=relaxed/simple;
-	bh=rTujbHuGrjuFT+r/WmDsrXTLxMSKR/9oK18VpERj3Q4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=WThKx417vmNvJsyIy8vYGdWAEqZG/1tcD1ffKfHNvD2zbAPcb66qsah+h8uroO7nIGWebrD9dls/CGimSdX+31AnIx5TGQJRM3suGo1b0+KYshvH6jJ+xIdhW/LB4xVOXT2xsNz7R1yS++j3ZDPG4gawg5qWrsNjqLQ+Tc7AQm8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 6090a26a75df11f1aa26b74ffac11d73-20260702
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.12,REQID:73651228-c5d8-4bc0-87c0-819cf03ca1c3,IP:0,U
-	RL:0,TC:0,Content:0,EDM:25,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:25
-X-CID-META: VersionHash:e7bac3a,CLOUDID:4e1ca82c8d27e055e0a9a2812ac9ff8b,BulkI
-	D:nil,BulkQuantity:0,Recheck:0,SF:81|82|102|850|865|898,TC:nil,Content:0|1
-	5|50,EDM:5,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:
-	0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 2,SSN|SDN
-X-CID-BAS: 2,SSN|SDN,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: 6090a26a75df11f1aa26b74ffac11d73-20260702
-X-User: yijiangshan@kylinos.cn
-Received: from localhost.localdomain [(10.44.16.150)] by mailgw.kylinos.cn
-	(envelope-from <yijiangshan@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 580479447; Thu, 02 Jul 2026 14:29:28 +0800
-From: Jiangshan Yi <yijiangshan@kylinos.cn>
-To: geliang@kernel.org
-Cc: mptcp@lists.linux.dev,
-	yijiangshan@kylinos.cn
-Subject: [PATCH mptcp-next v3] selftests: mptcp: diag: fix stack buffer overflow in get_subflow_info()
-Date: Thu,  2 Jul 2026 14:29:09 +0800
-Message-Id: <20260702062909.4147641-1-yijiangshan@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <f66bcc626255440b7fc7ef8c2a9b9dde0675f30e.camel@kernel.org>
-References: <f66bcc626255440b7fc7ef8c2a9b9dde0675f30e.camel@kernel.org>
+	s=arc-20240116; t=1782973830; c=relaxed/simple;
+	bh=bZX7iAIMlp2yVtSKyZgmpen4+RQHQG338k/7iMEGaaI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=V6tPPwtZAtRtptqf7j/9BfDl82Y/LADbyZd1pOJRC8eqll6sWA7XOHzsShzaBtn++vVW3ZkcDxptjwSvYObrtCH/xDA0/M1mOzMJwM1f1OB8AE0KOMzwNgJMM/04WgAd5oOh4HKh2tEthOc8Rm2Ryt3e4aiOHRfM+voSkz9AnRY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=cmVNrKaY; arc=none smtp.client-ip=95.215.58.186
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="cmVNrKaY"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1782973825;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=2CyGOSjew59j+chx/NvPx+qw+mCWuePDNWIIY4v92AY=;
+	b=cmVNrKaY0k+FIg5YxO7Ugi3Vi0Io2MtwIT6v45y6a/Gpk0b1kGC8RYILrA4WiVpM1sfc7U
+	d8wzs+KOH6n18sW84YWAv4S5UxvqD1SbAM0/VizjcIJOZVM4ukHnqI1Z6OI2o10PY4GrNc
+	GQJXRKOQC8YmScaVTLLTpXjMpsUoNvQ=
+From: Gang Yan <gang.yan@linux.dev>
+To: mptcp@lists.linux.dev
+Cc: Gang Yan <yangang@kylinos.cn>
+Subject: [PATCH mptcp-next v3] Squash-to "mptcp: pm: init and release mptcp_pm_ops"
+Date: Thu,  2 Jul 2026 14:30:02 +0800
+Message-ID: <20260702063002.127027-1-gang.yan@linux.dev>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -50,58 +38,64 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-get_subflow_info() parses the subflow address string with:
+From: Gang Yan <yangang@kylinos.cn>
 
-	char saddr[64], daddr[64];
+This patch removes the need to handle a NULL pm_ops in the fallback
+path, and moves the rcu_read_lock\unlock into mptcp_pm_ops_init.
 
-	ret = sscanf(subflow_addrs, "%[^:]:%d %[^:]:%d",
-		     saddr, &sport, daddr, &dport);
+Following sashiko's comments, it also moves the pr_debug() before
+bpf_module_put() in mptcp_pm_ops_release.
 
-The subflow_addrs buffer holds up to 1024 bytes and is taken directly
-from the command line ("-c" argument). The "%[^:]" conversions have no
-maximum field width, so if the address substring before the ':' exceeds
-63 bytes, sscanf() writes past the end of the 64-byte saddr/daddr stack
-buffers. This overflows the stack, corrupting adjacent stack data such
-as the saved return address, and can crash the tool or lead to
-out-of-bounds writes controlled by user-supplied input.
-
-Bound both string conversions to the destination buffer size by adding
-an explicit maximum field width of 63 (leaving room for the terminating
-NUL), so at most 63 bytes are written into each 64-byte buffer:
-
-	ret = sscanf(subflow_addrs, "%63[^:]:%d %63[^:]:%d",
-		     saddr, &sport, daddr, &dport);
-
-Reviewed-by: Geliang Tang <geliang@kernel.org>
-Signed-off-by: Jiangshan Yi <yijiangshan@kylinos.cn>
+Signed-off-by: Gang Yan <yangang@kylinos.cn>
 ---
-v3:
- - drop the Fixes tag: this is a cleanup/hardening, not a fix (Geliang)
- - drop the Suggested-by tag, keep Geliang's Reviewed-by (Geliang)
-v2:
- - add field width to sscanf() (fix >80 col warning, MPTCP CI)
- - fix subject prefix: mptcp_diag: -> diag: (Geliang)
-v1: 
- - initial submission
+ net/mptcp/pm.c | 15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
 
- tools/testing/selftests/net/mptcp/mptcp_diag.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_diag.c b/tools/testing/selftests/net/mptcp/mptcp_diag.c
-index 5e222ba977e4..3b8d2c8a6216 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_diag.c
-+++ b/tools/testing/selftests/net/mptcp/mptcp_diag.c
-@@ -377,7 +377,8 @@ static void get_subflow_info(char *subflow_addrs)
- 	int ret;
- 	int fd;
+diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+index 9dc7b41fb562..033f783d4990 100644
+--- a/net/mptcp/pm.c
++++ b/net/mptcp/pm.c
+@@ -1137,12 +1137,13 @@ void mptcp_pm_worker(struct mptcp_sock *msk)
+ 	spin_unlock_bh(&msk->pm.lock);
+ }
  
--	ret = sscanf(subflow_addrs, "%[^:]:%d %[^:]:%d", saddr, &sport, daddr, &dport);
-+	ret = sscanf(subflow_addrs, "%63[^:]:%d %63[^:]:%d",
-+		     saddr, &sport, daddr, &dport);
- 	if (ret != 4)
- 		die_perror("IP PORT Pairs has style problems!");
+-static void mptcp_pm_ops_init(struct mptcp_sock *msk,
+-			      struct mptcp_pm_ops *pm_ops)
++static void mptcp_pm_ops_init(struct mptcp_sock *msk, const char *pm_name)
+ {
++	struct mptcp_pm_ops *pm_ops;
++
++	pm_ops = mptcp_pm_find(pm_name);
+ 	if (!pm_ops || !bpf_try_module_get(pm_ops, pm_ops->owner)) {
+-		pr_warn_once("pm %s fails, fallback to default pm",
+-			     pm_ops->name);
++		pr_warn_once("pm %s fails, fallback to default pm", pm_name);
+ 		pm_ops = &mptcp_pm_kernel;
+ 	}
+ 
+@@ -1161,9 +1162,9 @@ static void mptcp_pm_ops_release(struct mptcp_sock *msk)
+ 	if (pm_ops->release)
+ 		pm_ops->release(msk);
+ 
+-	bpf_module_put(pm_ops, pm_ops->owner);
+-
+ 	pr_debug("pm %s released\n", pm_ops->name);
++
++	bpf_module_put(pm_ops, pm_ops->owner);
+ }
+ 
+ void mptcp_pm_destroy(struct mptcp_sock *msk)
+@@ -1185,7 +1186,7 @@ void mptcp_pm_data_reset(struct mptcp_sock *msk)
+ 	WRITE_ONCE(pm->pm_type, pm_type);
+ 
+ 	rcu_read_lock();
+-	mptcp_pm_ops_init(msk, mptcp_pm_find(pm_name));
++	mptcp_pm_ops_init(msk, pm_name);
+ 	rcu_read_unlock();
+ }
  
 -- 
-2.25.1
+2.43.0
 
