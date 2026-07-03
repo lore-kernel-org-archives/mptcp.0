@@ -1,45 +1,45 @@
 Received: from sender4-of-o54.zoho.com (sender4-of-o54.zoho.com [136.143.188.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D400B2F25F0
-	for <mptcp@lists.linux.dev>; Fri,  3 Jul 2026 16:57:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C483A2F25F0
+	for <mptcp@lists.linux.dev>; Fri,  3 Jul 2026 16:57:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.54
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783097872; cv=pass; b=AsdNh+nqZ9Eak6rbayfwWSI8W0ggOtiG80SDHZk7kEctlycPs+W39uD9Lc5LV+06zr/GnG8E0THVfJrW1Hxe4YDZj275ZiWJ8PwZN6eaNmBySc+OBW/ZJYcbLXIplsI8TzS/ZcWYeQlk1ccRh5YCS1XJALthyuboCZOTl9w63mM=
+	t=1783097880; cv=pass; b=mAMvhnMfL2v98l2adYysYeVZI53mi12+PuOmMZibuo1QBe1oNPWCrwzmzCyZ4TIyhLqo3l/LUgVacWi3+ghoyv4nPz+662cUOp+BrUqZBDeYvffx38fX8jl1r+Cw762q05C93UboFG1Y1WfhF05vTfp5hLE54okEMP6Tssgbth8=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783097872; c=relaxed/simple;
-	bh=jitpQd2+8qWaDrPhdre+KCi8xQcPh0sEIVxHTwUPKqI=;
+	s=arc-20240116; t=1783097880; c=relaxed/simple;
+	bh=x3FOASwRgJ9JiR3X/540C2XI/QabO5fA8OFY+akqCos=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=LCXEr+CaZWHZAXVrAkNJiGtO/Ia8iR3hkgFLgsTsLgC6ZXRePwqwc+5SIo55eqEy+kSIJEoXUmrxT7DeAoPPQyi9aHAvrtKvvm/m2oNQ0Yih9f1igU45+hTY9UUm5xz6ooXi3DEkKfG53Ez/Txs4skspQF9GuNbGdP7TFU5F8d8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com; spf=pass smtp.mailfrom=mpiricsoftware.com; dkim=fail (0-bit key) header.d=mpiricsoftware.com header.i=shardul.b@mpiricsoftware.com header.b=u25YVHoC reason="key not found in DNS"; arc=pass smtp.client-ip=136.143.188.54
+	 In-Reply-To:To:Cc; b=DzH+lqLIQiuFSk2LEAdKXvWAa2ji+PtJpTI5QdIvA/p6feYivklKrKEs+ycdfRmv0uArRNEREXWUNfxYACqazMYgArqp39Lfan19luGbPqVme56xB4CYU23KJ6cNTTdQ4ZLb4t7OeVCHnXnoPpDLvJ7y01HhgJAxZzy+xFjJlE4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com; spf=pass smtp.mailfrom=mpiricsoftware.com; dkim=fail (0-bit key) header.d=mpiricsoftware.com header.i=shardul.b@mpiricsoftware.com header.b=V2dT9T2f reason="key not found in DNS"; arc=pass smtp.client-ip=136.143.188.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mpiricsoftware.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mpiricsoftware.com header.i=shardul.b@mpiricsoftware.com header.b="u25YVHoC"
-ARC-Seal: i=1; a=rsa-sha256; t=1783097851; cv=none; 
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mpiricsoftware.com header.i=shardul.b@mpiricsoftware.com header.b="V2dT9T2f"
+ARC-Seal: i=1; a=rsa-sha256; t=1783097855; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=eylmZ+r8DzB/RaGtT8j2jg79X8870YluLoVLsVE+MKt5dLe4IRyCdEbcQDO5H/g/Z2XmtbPOZbx/ZLR0/sKeWygEucFNjRxMMIQAIsVa2/WJ0Oatcz0OCEuYoP5xR0NjT6hJCT4Muyl3qVPoFprkW5RL04fVQZZxOW/A+LPNu9w=
+	b=WpBLZ8unb+BIeSZ8umszvPmRV3fqNuF4HNOBUktyfavxBuDbtsg+iCSJj4s1N9Hp0OKTH5qppegN953LKLxwdrwxJGV1sHbzyk1wWj43IfagJjKV4OIh/3KvTlrYb0j90+0FM/JZs3+QLpPeGe68eRRik7aIu1ky3+S01lCcF/A=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1783097851; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=oAz/coNgtv/PXSMi7xpEgJ38onaRCDNm5A7nN60kG5w=; 
-	b=FvEibQf4fQoTxqGL6cK+pj7E9wMUYIpY97fuE6igSj9Me2I8bBDw3GIUaOrhFYDcjN6w5fhLLmYbZGInGQ3O/j3JL4tiHdW0/f/pT7GF1zgO5YPfHjdOv3dLywdQBM0wkCFqxauUsyTOrwR5NWY9P2a1qTobxG9xVpXbV9mAMv4=
+	t=1783097855; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=NKHSLkH/TJRsSbq7fyp/wMx2DN5jrBz2S57uFZ/hzqk=; 
+	b=fotL2vcY8hNJZDNFaoJZehpo3EDi1n72zec5UlOgQONgGZxAJVg13xPbLPAaBlWvO2KMIe9gwQWBsOl/R9GhjzEkgi/TH1It6icB58uKViBsBtYxdfQ05jxq/Xa3/LyMmGCouKlHOLR6kKEqL/WZMtKQtMFFDWDubb01v9e24bQ=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=mpiricsoftware.com;
 	spf=pass  smtp.mailfrom=shardul.b@mpiricsoftware.com;
 	dmarc=pass header.from=<shardul.b@mpiricsoftware.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1783097851;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1783097855;
 	s=mpiric; d=mpiricsoftware.com; i=shardul.b@mpiricsoftware.com;
 	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:References:In-Reply-To:To:To:Cc:Cc:Reply-To;
-	bh=oAz/coNgtv/PXSMi7xpEgJ38onaRCDNm5A7nN60kG5w=;
-	b=u25YVHoCKZywlXovXuLUfuSEPrb3MpyGL5Ys1/Y7Csri/nT3T+RhsQyVDMBbONJK
-	Hgf8AnMyeuXVDA7EsTTqkjlhtbGb+hcigffReZYZxnN2SJ2EAuXVYxW5DhziEmQybx4
-	3BHS09l8g9q4Pvq51jR9YBU8mQK+S70WHmMtO+Ok=
-Received: by mx.zohomail.com with SMTPS id 1783097849791117.08005737241285;
-	Fri, 3 Jul 2026 09:57:29 -0700 (PDT)
+	bh=NKHSLkH/TJRsSbq7fyp/wMx2DN5jrBz2S57uFZ/hzqk=;
+	b=V2dT9T2fGQ0pbs3ZMiLVRNsIaIpduhIcMw7bCBXYRfI/mqo2XZeps0HfbmDnMjjM
+	ygwAbw3vSLe+yunJUWes4Zohi7vrVf3IK4T/LQ9YiW1WT5x7ziN8tVnX1erhqKJVfvz
+	LiW2zxXIVKkV1jdV3rrDELxEGFOkvyZC44tTHPYw=
+Received: by mx.zohomail.com with SMTPS id 1783097853491389.2793988394534;
+	Fri, 3 Jul 2026 09:57:33 -0700 (PDT)
 From: Shardul Bankar <shardul.b@mpiricsoftware.com>
-Date: Fri, 03 Jul 2026 22:27:10 +0530
-Subject: [PATCH mptcp-next v2 2/5] Squash to "bpf: Export mptcp packet
- scheduler helpers"
+Date: Fri, 03 Jul 2026 22:27:11 +0530
+Subject: [PATCH mptcp-next v2 3/5] Squash to "selftests/bpf: Add bpf_burst
+ scheduler & test"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -48,7 +48,7 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260703-mptcp_bpf_kfunc_fixes-v2-2-87ae3c64dc7e@mpiricsoftware.com>
+Message-Id: <20260703-mptcp_bpf_kfunc_fixes-v2-3-87ae3c64dc7e@mpiricsoftware.com>
 References: <20260703-mptcp_bpf_kfunc_fixes-v2-0-87ae3c64dc7e@mpiricsoftware.com>
 In-Reply-To: <20260703-mptcp_bpf_kfunc_fixes-v2-0-87ae3c64dc7e@mpiricsoftware.com>
 To: mptcp@lists.linux.dev, Geliang Tang <geliang@kernel.org>
@@ -59,59 +59,55 @@ Cc: Matthieu Baerts <matttbe@kernel.org>,
 X-Mailer: b4 0.15.2
 X-ZohoMailClient: External
 
-mptcp_pm_subflow_chk_stale() is exposed to BPF MPTCP packet schedulers as
-a kfunc taking a generic "struct sock *ssk", but it treats ssk as a
-subflow TCP socket: it derives the subflow context with
-mptcp_subflow_ctx(), an unchecked cast of inet_csk(ssk)->icsk_ulp_data,
-then reads and writes through it. The verifier only proves ssk is a
-trusted struct sock, not that it is one of msk's subflows, so a mistyped
-or foreign socket would make the helper operate on a bogus context.
-
-Register a bpf_mptcp_pm_subflow_chk_stale() wrapper that validates ssk is
-a full MPTCP subflow TCP socket belonging to the passed msk before calling
-the helper, which assumes both but checks neither. This mirrors
-bpf_mptcp_subflow_ctx(). A scheduler passing one of its own subflows is
-unaffected; the in-tree burst scheduler selftest is updated to the wrapper
-name in a separate squash-to.
+The bpf_burst scheduler selftest calls the mptcp_set_timeout() and
+mptcp_pm_subflow_chk_stale() kfuncs by their raw names. The companion
+squash-to patches to "bpf: Export mptcp packet scheduler helpers" narrow
+those kfuncs behind bpf_mptcp_set_timeout() and
+bpf_mptcp_pm_subflow_chk_stale() wrappers. Update the burst scheduler's
+extern declarations and call sites to the wrapper names so it keeps
+building and loading.
 
 Assisted-by: Claude:claude-opus-4-8
 Signed-off-by: Shardul Bankar <shardul.b@mpiricsoftware.com>
 ---
- net/mptcp/bpf.c | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+ tools/testing/selftests/bpf/progs/mptcp_bpf_burst.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/net/mptcp/bpf.c b/net/mptcp/bpf.c
-index 9355fb53e89d5..e2d2c3394ad71 100644
---- a/net/mptcp/bpf.c
-+++ b/net/mptcp/bpf.c
-@@ -306,6 +306,18 @@ __bpf_kfunc static void bpf_mptcp_set_timeout(struct mptcp_sock *msk)
- 	mptcp_set_timeout((struct sock *)msk);
- }
+diff --git a/tools/testing/selftests/bpf/progs/mptcp_bpf_burst.c b/tools/testing/selftests/bpf/progs/mptcp_bpf_burst.c
+index 8ff529d38a595..408c65ed897b5 100644
+--- a/tools/testing/selftests/bpf/progs/mptcp_bpf_burst.c
++++ b/tools/testing/selftests/bpf/progs/mptcp_bpf_burst.c
+@@ -22,10 +22,10 @@ struct bpf_subflow_send_info {
+ #define RB_EMPTY_ROOT(root)  (READ_ONCE((root)->rb_node) == NULL)
  
-+__bpf_kfunc static void
-+bpf_mptcp_pm_subflow_chk_stale(const struct mptcp_sock *msk, struct sock *ssk)
-+{
-+	if (ssk && sk_fullsock(ssk) && ssk->sk_type == SOCK_STREAM &&
-+	    ssk->sk_protocol == IPPROTO_TCP && sk_is_mptcp(ssk)) {
-+		struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk);
-+
-+		if (subflow && subflow->conn == (const struct sock *)msk)
-+			mptcp_pm_subflow_chk_stale(msk, ssk);
-+	}
-+}
-+
- __bpf_kfunc_end_defs();
+ extern bool mptcp_subflow_active(struct mptcp_subflow_context *subflow) __ksym;
+-extern void mptcp_set_timeout(struct sock *sk) __ksym;
++extern void bpf_mptcp_set_timeout(struct mptcp_sock *msk) __ksym;
+ extern __u64 mptcp_wnd_end(const struct mptcp_sock *msk) __ksym;
+ extern bool bpf_sk_stream_memory_free(const struct mptcp_subflow_context *subflow) __ksym;
+-extern void mptcp_pm_subflow_chk_stale(const struct mptcp_sock *msk, struct sock *ssk) __ksym;
++extern void bpf_mptcp_pm_subflow_chk_stale(const struct mptcp_sock *msk, struct sock *ssk) __ksym;
  
- BTF_KFUNCS_START(bpf_mptcp_iter_kfunc_ids)
-@@ -327,7 +339,7 @@ BTF_ID_FLAGS(func, mptcp_subflow_active)
- BTF_ID_FLAGS(func, bpf_mptcp_set_timeout)
- BTF_ID_FLAGS(func, mptcp_wnd_end)
- BTF_ID_FLAGS(func, bpf_sk_stream_memory_free)
--BTF_ID_FLAGS(func, mptcp_pm_subflow_chk_stale, KF_SLEEPABLE)
-+BTF_ID_FLAGS(func, bpf_mptcp_pm_subflow_chk_stale, KF_SLEEPABLE)
- BTF_KFUNCS_END(bpf_mptcp_common_kfunc_ids)
+ static __always_inline __u64 div_u64(__u64 dividend, __u32 divisor)
+ {
+@@ -99,7 +99,7 @@ int BPF_PROG(bpf_burst_get_send, struct mptcp_sock *msk)
+ 			send_info[backup].linger_time = linger_time;
+ 		}
+ 	}
+-	mptcp_set_timeout(sk);
++	bpf_mptcp_set_timeout(msk);
  
- static int bpf_mptcp_common_kfunc_filter(const struct bpf_prog *prog, u32 kfunc_id)
+ 	/* pick the best backup if no other subflow is active */
+ 	if (!nr_active)
+@@ -140,7 +140,7 @@ int BPF_PROG(bpf_burst_get_retrans, struct mptcp_sock *msk)
+ 
+ 		/* still data outstanding at TCP level? skip this */
+ 		if (!tcp_rtx_and_write_queues_empty(ssk)) {
+-			mptcp_pm_subflow_chk_stale(msk, ssk);
++			bpf_mptcp_pm_subflow_chk_stale(msk, ssk);
+ 			min_stale_count = min(min_stale_count, subflow->stale_count);
+ 			continue;
+ 		}
 
 -- 
 2.34.1
