@@ -1,45 +1,45 @@
 Received: from sender4-of-o54.zoho.com (sender4-of-o54.zoho.com [136.143.188.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 675FA307481
-	for <mptcp@lists.linux.dev>; Fri,  3 Jul 2026 16:57:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6813C30676C
+	for <mptcp@lists.linux.dev>; Fri,  3 Jul 2026 16:57:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.54
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783097850; cv=pass; b=SyxSIgUHPjLD/s+RnTSRBa4d1rJMUbiWZqpkeeK2xrrOVCG3UppOp/42rM4PKjwfIBINmyqF5fTBY8HNWXIGr73xHg4UM59ok1Lq9Cz8v5gicclue3HM9EvniB/2LgotpQA8vGWICeGPc1zGrUSTcqc1w9uwSFUZCUhic4jjvqg=
+	t=1783097861; cv=pass; b=rbQ3DFX4Nm6I5UTv62WftbdLS2P5gPag9CaBx/rbLD99lTZP+6ZBm04fnanbOOAXBFRUDaBrkc5pFmZW33eDUu0M65ChJwCpe1q2r+Suc00lVy7gqoYI4lxhDaBmBNDw0+sDb5289sbvx7AlVAbV9lpo1ggr/Gi3+gKtYTjBowc=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783097850; c=relaxed/simple;
-	bh=k97E3BJCL7bx29ez/mY8JjeTqa/Qnzk4h8X4P05aa6M=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=q2XlETYuEXMLr44twPQJfTthEIQ+0IfVXfFIcMBtfE4L8FfWEzcgYzMEH7bNwBfEROCj495Rp7gbcUOfiylrAKl7foh9ZOnZIFjOl2pLi/4zwO2FWLiXOcCw+pqc5dlxRCKrtzSVEjFauYZoDsRarygall/exzVHuiBvmegzDHo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com; spf=pass smtp.mailfrom=mpiricsoftware.com; dkim=fail (0-bit key) header.d=mpiricsoftware.com header.i=shardul.b@mpiricsoftware.com header.b=bhRmjUOB reason="key not found in DNS"; arc=pass smtp.client-ip=136.143.188.54
+	s=arc-20240116; t=1783097861; c=relaxed/simple;
+	bh=XuqcazP8+8FDqXMByHdO7ztJJVq/eyaMt1v0Y89fTg8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=DSXhkurM3GWFv0TGxocdgwHzcvNGZ/gQD9oCqbSU5eA+xxQMdmDbPc0hxwmgmlhBLPmZIEFj8H2JmiDbPzmHcu/mnipXbcyLMz5uSEb1MgRrHTnbBv41PrWSdh0mNJ6Wter7b+Ik17t0J3AYKCw4tTZEXodUiRj1W7ixFzqsnEE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com; spf=pass smtp.mailfrom=mpiricsoftware.com; dkim=fail (0-bit key) header.d=mpiricsoftware.com header.i=shardul.b@mpiricsoftware.com header.b=LkIN4QSS reason="key not found in DNS"; arc=pass smtp.client-ip=136.143.188.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mpiricsoftware.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mpiricsoftware.com header.i=shardul.b@mpiricsoftware.com header.b="bhRmjUOB"
-ARC-Seal: i=1; a=rsa-sha256; t=1783097843; cv=none; 
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mpiricsoftware.com header.i=shardul.b@mpiricsoftware.com header.b="LkIN4QSS"
+ARC-Seal: i=1; a=rsa-sha256; t=1783097849; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=B4B9tX03UOEXMVtmIu6QdQqujygaYXVv8GCPamhfJ0waMPIvTjrAXnHsU4FB9ltSFZBKqHWEwZqf1mSyEdTTpDSTHi9AWyen4VqGIanS3CavN/HwcQIHDBHL8k9YE5q+Yqnk3P3QvdjyxtSycDcWSHexmViIdSj30Tm3MQtT5vY=
+	b=LRNJFWeBFTCiQ5K5u2NqPG4avgzzFK4dR1iOD90FakSGj1QyzilDqaw9antGdgoN2vnJ61WzU4udBFp3UCYzUzLDIzGJtk+nXs9nfA7K1tlDG4XPBUXi9so7Hbi+JN5F2IGQkbWneEHu+UZl4dTmvXGpvnPt6XSXqK9ynsrjhJs=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1783097843; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=D3BjUXQV3UCZIvigAanm52bNLFe2Zf73L4PNCsgFyq4=; 
-	b=CoSvoQlb2MywMpl1GhO/5934YV+wU+PwXfGWGPTsq4HfGi8BlfcxnQEJdZ2pFY7gXVMupl5JYyh/JAydXosPeymXO0C6qWoZewpwq/gEcLL6rWWRTSocPTOAxD8xBSROj+e0Hfl7+NLQVwJ2aFIgtF/mKt2YCUl4CjtyHUvz+4Y=
+	t=1783097849; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=T5NEEPyFFIc9t8KgWhQPC75QblX0ePkupywQO2Uenm8=; 
+	b=U/pH5d807sAdTGF3s1cB7uHhjWliMsua46UMC9O0RvYQbUc8y7Ck4xSfgJYTRqiPfxRY+6gf/8XQrPOM+aJ+umD4FJ8aQoanCQir8PkI2GWyRuRHKBjcJm3ywgXrgbPdqWaz8cGOL0CvwWfnbvA8gv5vPK9QTHHIFqH4w5CdWzg=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=mpiricsoftware.com;
 	spf=pass  smtp.mailfrom=shardul.b@mpiricsoftware.com;
 	dmarc=pass header.from=<shardul.b@mpiricsoftware.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1783097843;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1783097849;
 	s=mpiric; d=mpiricsoftware.com; i=shardul.b@mpiricsoftware.com;
-	h=From:From:Subject:Subject:Date:Date:Message-Id:Message-Id:MIME-Version:Content-Type:Content-Transfer-Encoding:To:To:Cc:Cc:Reply-To;
-	bh=D3BjUXQV3UCZIvigAanm52bNLFe2Zf73L4PNCsgFyq4=;
-	b=bhRmjUOB+fJF0z1cQDfFBiUtigBy+cRLQYyQkyC2G8a3eESdrDOLDFxA7KLQoaPP
-	muuH3wKMsrGXY0f3lRm8LmjuB8nU3rxxoTQrSWTwMWqGBSfGi0d6mjFdOaN6l55PyB0
-	G5SkgjaH1SNGcGJ5lFAmJbzqQDw+JoNSEIdrJlh8=
-Received: by mx.zohomail.com with SMTPS id 1783097842067135.09057339370872;
-	Fri, 3 Jul 2026 09:57:22 -0700 (PDT)
+	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:References:In-Reply-To:To:To:Cc:Cc:Reply-To;
+	bh=T5NEEPyFFIc9t8KgWhQPC75QblX0ePkupywQO2Uenm8=;
+	b=LkIN4QSShe6K8E9cYFWcy0hi+CuwIAOlurmE3+BEFEiaPvLf+pgz18LTwm3jIQO2
+	ibEjfBCijq5ZeEWIPfOK6OziUA5XW1bkFswaTsjUycyWCHDMdFPoQHDgZDMYhDF8ZW1
+	lPeiWM9dEBYq3Hh4MMibH+3pLd6rz7SU9SSI7nck=
+Received: by mx.zohomail.com with SMTPS id 1783097846010703.9697947227534;
+	Fri, 3 Jul 2026 09:57:26 -0700 (PDT)
 From: Shardul Bankar <shardul.b@mpiricsoftware.com>
-Subject: [PATCH mptcp-next v2 0/5] mptcp: bpf: fix scheduler kfunc socket
- type confusion
-Date: Fri, 03 Jul 2026 22:27:08 +0530
-Message-Id: <20260703-mptcp_bpf_kfunc_fixes-v2-0-87ae3c64dc7e@mpiricsoftware.com>
+Date: Fri, 03 Jul 2026 22:27:09 +0530
+Subject: [PATCH mptcp-next v2 1/5] Squash to "bpf: Export mptcp packet
+ scheduler helpers"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -48,11 +48,9 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAOTpR2oC/4WOQQ6CMBREr2L+2ppSQgFX3sMQAp9fqYbStAUxh
- LsL9QAuJzNvZlbw5DR5uJ5WcDRrr0ezC3E+AfaNeRDT3a5BcCG5FCUbbEBbt1bVLzUZrJVeyLO
- 8aSWnDkXJBeysdRSNHb1DRJihJUD18/zUPgnDUXyke+3D6D7xxJxE5s/enDDOCsQiz1QqVZbeB
- qudRj+q8G4cXXAcoNq27QtiPI6J4QAAAA==
-X-Change-ID: 20260629-mptcp_bpf_kfunc_fixes-7ab60edc2902
+Message-Id: <20260703-mptcp_bpf_kfunc_fixes-v2-1-87ae3c64dc7e@mpiricsoftware.com>
+References: <20260703-mptcp_bpf_kfunc_fixes-v2-0-87ae3c64dc7e@mpiricsoftware.com>
+In-Reply-To: <20260703-mptcp_bpf_kfunc_fixes-v2-0-87ae3c64dc7e@mpiricsoftware.com>
 To: mptcp@lists.linux.dev, Geliang Tang <geliang@kernel.org>
 Cc: Matthieu Baerts <matttbe@kernel.org>, 
  Mat Martineau <martineau@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
@@ -61,74 +59,58 @@ Cc: Matthieu Baerts <matttbe@kernel.org>,
 X-Mailer: b4 0.15.2
 X-ZohoMailClient: External
 
-Two BPF MPTCP packet-scheduler kfuncs accept a generic "struct sock *"
-but internally reinterpret it as a specific role (the MPTCP-level
-socket, or a subflow's TCP socket). The verifier only enforces that the
-argument is a trusted struct sock, so a scheduler struct_ops program can
-pass the wrong kind of socket; the kfunc then upcasts and dereferences
-it, causing wild pointer use. Both are reachable from a scheduler hook
-with no privilege beyond loading the scheduler.
+mptcp_set_timeout() is exposed to BPF MPTCP packet schedulers as a kfunc
+taking a generic "struct sock *". The verifier only checks that the
+argument is a trusted struct sock; it cannot distinguish an MPTCP-level
+socket (msk) from a subflow's TCP socket. A scheduler get_send() program
+can therefore pass a subflow socket (e.g. msk->first, or the result of
+bpf_mptcp_subflow_tcp_sock()), which mptcp_set_timeout() upcasts via
+mptcp_sk() and iterates as msk->conn_list. On a subflow socket those
+bytes are live TCP state, so the walk yields a wild mptcp_subflow_context
+and the subsequent subflow->tcp_sock dereference faults (GPF / KASAN
+user-memory-access).
 
-Patch 1 (squash-to "bpf: Export mptcp packet scheduler helpers"):
-  mptcp_set_timeout() expects the msk. A subflow socket passed
-  instead is cast via mptcp_sk() and walked as msk->conn_list, causing a
-  GPF. Found by an MPTCP protocol-flow harness extending BRF
-  (arXiv:2305.08782). Fixed by narrowing the kfunc arg to
-  struct mptcp_sock *, so the verifier rejects a non-msk socket at load.
+Narrow the kfunc-facing type: register a bpf_mptcp_set_timeout() wrapper
+taking "struct mptcp_sock *" instead of the raw mptcp_set_timeout()
+symbol, so the verifier's BTF-id check rejects a non-msk socket at
+program load time. A scheduler that passes its msk is unaffected. The
+in-tree burst scheduler selftest is updated to the wrapper name in a
+separate squash-to.
 
-Patch 2 (squash-to "bpf: Export mptcp packet scheduler helpers"):
-  mptcp_pm_subflow_chk_stale()'s ssk arg is a subflow TCP
-  socket; a non-subflow socket passed in is reinterpreted via
-  mptcp_subflow_ctx() and both read and written through. This kfunc
-  legitimately takes a generic socket, so it is fixed with a runtime
-  role check in a __bpf_kfunc wrapper, like bpf_mptcp_subflow_ctx().
-  The wrapper also confirms ssk belongs to the passed msk; this is
-  hardening for a currently-unreachable surface, kept correct if it
-  widens.
+Found by an MPTCP protocol-flow harness extending BRF (arXiv:2305.08782).
 
-Patch 3 (squash-to "selftests/bpf: Add bpf_burst scheduler & test"):
-  update the in-tree burst scheduler selftest to the new wrapper kfunc
-  names so it keeps building and loading. Split from patches 1 and 2 so
-  each squash-to lands on the commit it fixes.
-
-Patches 4 and 5 (DO-NOT-MERGE): negative selftests validating the
-  verifier rejects the type confusion. Not intended for propagation to
-  net-next; like the other DO-NOT-MERGE checks they can live in the
-  MPTCP tree so the CI keeps exercising the kfunc type contract (per the
-  v1 review).
-
+Assisted-by: Claude:claude-opus-4-8
 Signed-off-by: Shardul Bankar <shardul.b@mpiricsoftware.com>
 ---
-Changes in v2:
-- Split the burst-scheduler selftest kfunc rename out of the two
-  net/mptcp/bpf.c squash-tos into its own squash-to targeting
-  "selftests/bpf: Add bpf_burst scheduler & test" (Geliang).
-- Patch 2: the wrapper now also verifies the subflow belongs to the
-  msk (subflow->conn == msk) and NULL-checks the context (the
-  Sashiko/Geliang ownership point).
-- Marked the two negative selftests DO-NOT-MERGE so they are not
-  propagated to net-next (Geliang: the dedicated bad scheduler is not
-  for integration).
-- Link to v1: https://patch.msgid.link/20260629-mptcp_bpf_kfunc_fixes-v1-0-8cc875f36f53@mpiricsoftware.com
+ net/mptcp/bpf.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
----
-Shardul Bankar (5):
-      Squash to "bpf: Export mptcp packet scheduler helpers"
-      Squash to "bpf: Export mptcp packet scheduler helpers"
-      Squash to "selftests/bpf: Add bpf_burst scheduler & test"
-      DO-NOT-MERGE: selftests/bpf: mptcp: verify scheduler rejects non-msk socket to set_timeout
-      DO-NOT-MERGE: selftests/bpf: mptcp: extend bad scheduler test to the kfunc type contract
+diff --git a/net/mptcp/bpf.c b/net/mptcp/bpf.c
+index 0845061ddc65c..9355fb53e89d5 100644
+--- a/net/mptcp/bpf.c
++++ b/net/mptcp/bpf.c
+@@ -301,6 +301,11 @@ bpf_sk_stream_memory_free(const struct mptcp_subflow_context *subflow)
+ 	return false;
+ }
+ 
++__bpf_kfunc static void bpf_mptcp_set_timeout(struct mptcp_sock *msk)
++{
++	mptcp_set_timeout((struct sock *)msk);
++}
++
+ __bpf_kfunc_end_defs();
+ 
+ BTF_KFUNCS_START(bpf_mptcp_iter_kfunc_ids)
+@@ -319,7 +324,7 @@ BTF_ID_FLAGS(func, bpf_mptcp_subflow_ctx, KF_RET_NULL)
+ BTF_ID_FLAGS(func, bpf_mptcp_subflow_tcp_sock, KF_RET_NULL)
+ BTF_ID_FLAGS(func, mptcp_subflow_set_scheduled)
+ BTF_ID_FLAGS(func, mptcp_subflow_active)
+-BTF_ID_FLAGS(func, mptcp_set_timeout)
++BTF_ID_FLAGS(func, bpf_mptcp_set_timeout)
+ BTF_ID_FLAGS(func, mptcp_wnd_end)
+ BTF_ID_FLAGS(func, bpf_sk_stream_memory_free)
+ BTF_ID_FLAGS(func, mptcp_pm_subflow_chk_stale, KF_SLEEPABLE)
 
- net/mptcp/bpf.c                                    |  21 ++++-
- tools/testing/selftests/bpf/prog_tests/mptcp.c     |  58 ++++++++++++
- .../selftests/bpf/progs/mptcp_bpf_bad_sched.c      | 104 +++++++++++++++++++++
- .../testing/selftests/bpf/progs/mptcp_bpf_burst.c  |   8 +-
- 4 files changed, 185 insertions(+), 6 deletions(-)
----
-base-commit: 0d7f76b2394b7a20a1ec100557cd7905ee0ab40e
-change-id: 20260629-mptcp_bpf_kfunc_fixes-7ab60edc2902
-
-Best regards,
---  
-Shardul Bankar <shardul.b@mpiricsoftware.com>
+-- 
+2.34.1
 
