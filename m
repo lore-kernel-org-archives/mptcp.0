@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C48E37CD20
-	for <mptcp@lists.linux.dev>; Mon,  6 Jul 2026 15:07:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFA743C1090
+	for <mptcp@lists.linux.dev>; Mon,  6 Jul 2026 16:46:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783350469; cv=none; b=IgOmVX/gVVz2Swdz61ZrkUEFWShdzdZlFSf77imQF03xdgRTI9KMt5KdMuifRiAxtoTc5LFbYl1OZGLzzvzFH/w/i/bID45C5y2KjfAsTA3wCLPvLkWSftyrg3jfdkWaj+Ub6cCBX91x1ZsxD0slMIfbzuXbuXIInXJkqJTDET0=
+	t=1783356421; cv=none; b=FCP3rLs+Fg9fZ2H9a1SxUA53adutUufBhMt4OjIoAXaF2Lu3fckE7/jOu0Ag3Y2eZgI26NOxwl6EWjecN009jv3JD+fWW9gcnvV56wzceLbGOVA7HxX3WbkvVU8V6himjUyD5/F75CJS41ao7ENpfwfM+niHOdme54Ya6qhLGPE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783350469; c=relaxed/simple;
-	bh=dagzFoxf2pMZVfGjGf0T46LtGX3Rtygp8nZpz3V1zQQ=;
+	s=arc-20240116; t=1783356421; c=relaxed/simple;
+	bh=l/gTMhdc/NsEyuv1toPi4xVZ7iyCWS9mgzffjqk1z9o=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=l1ZQGEq3aJENr8DeDq8dZJzojCc5Mcj//0AW4yi+Ee8enaguUP5ysDjt3iA6f6OzsQY37OHN1XUbii9tgzZb/L7KReZjSk8jtMgsYe3J/ra55Qb4WDSdZAXglfIL4ky9o6Q7l5/7t7ATnP5oCEtTBHV6m1OXYBePYelpbFLJrdQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kk/uXFCO; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=NfSf8NO3WX6u+YwnGfLmr3h4zy0tvS73tls6JGbZ6+M8sSCNsr560S6yFiNf0f/56ArhJUnVxwD/lgMB09YGHUeNV1s33LnP+ZskFi3nEVHWHvb+P0jS6urJMTVXMWCgZuPrGQILVuDyxzcFxR6NUW4InjlMAhowt9W0gRPOjAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GqgFRaQD; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kk/uXFCO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE0A41F000E9;
-	Mon,  6 Jul 2026 15:07:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GqgFRaQD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 661EB1F000E9;
+	Mon,  6 Jul 2026 16:46:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783350467;
-	bh=X1QgJqjjS3k0ii9I4cU9Inqo6zzrbVmibV/P46QbOuU=;
+	s=k20260515; t=1783356419;
+	bh=XZwnnm2WePFJrIkNWLdlK+HDv0tPTQQ0p/8nODJwFJ4=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=Kk/uXFCOw3WhR9Tz/gJp2Nc8NyE9xcfMZADgfPEHtk+v227QS81J9lY8VYfv/zN/F
-	 stwC9fxVe1U3K3/vaEZShYlfHqqOnvJleO6KpP2lvZcgg5Z8wbuGen8ubvM919bUzL
-	 WkByuEn4EelP8RLyLcQXZJN5OOo7uYnG1gfrwHjBKPreWxkXbjS+faOm5BeGDr6GGu
-	 CPa8XkPeyApiZJ0YrHQRvXKtgpd9umjmnnlk2eHYc82jxAbUlPuyxGFQkAdcr3ibPm
-	 FwL/X/ZZX5Kxab5cIqbT5bhzfwlGcL+l7WxKnyOWX0kQGz2jY9yqWXOP78ohsOJLj/
-	 UZZuMd3N7mAWA==
-Message-ID: <775e5b9e-2f00-4316-a5a2-5a333c44ae20@kernel.org>
-Date: Mon, 6 Jul 2026 17:07:44 +0200
+	b=GqgFRaQD2p/2Y+izCwsSTN/sTAbQ84+MdZdGcox2/xpWBmecAxTsRhrwSWM2bJPF0
+	 BkAuR+hnHDm8yUh9KD9JNt25ydb3iYWPbjmPjl3lscNaU8vT72JLda+53DST3rALRD
+	 a/0IBckTCRJyUjlGdtsQ6AIFwYR/FeZqGDruHFWQ7is9Ziglmgx81wKhu9aXFSyrph
+	 z68Te8oZ77mdTXvkPUfd5lRmEVOIYpBXvWESi6vt8jm6PdEHt237HJLAO56cthAVq2
+	 n0OlnTFElG34cvJ9gI4tNoIyiFz5L35VjXI1QmcZY2ob2yp15a7KQOTTcrip1NEh4l
+	 +UOPAnuzRCM8w==
+Message-ID: <6d0b954c-4028-4c1e-bf02-5bf5f43f58af@kernel.org>
+Date: Mon, 6 Jul 2026 18:46:55 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,15 +35,19 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net v2] mptcp: fix extra_subflows leak on failed
- passive join
+Subject: Re: [PATCH net v2] mptcp: pm: drop pending ADD_ADDR when removing id
+ 0 endpoint
 Content-Language: fr
-To: Geliang Tang <geliang@kernel.org>,
- Chenguang Zhao <chenguang.zhao@linux.dev>, mptcp@lists.linux.dev
-Cc: Chenguang Zhao <zhaochenguang@kylinos.cn>
-References: <20260630095432.1340629-1-chenguang.zhao@linux.dev>
- <20260701032011.358940-1-chenguang.zhao@linux.dev>
- <86e9b7f9ac5d630a0bb7b127652544176921a491.camel@kernel.org>
+To: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
+Cc: mptcp <mptcp@lists.linux.dev>, martineau <martineau@kernel.org>,
+ pabeni <pabeni@redhat.com>, "shardul.b" <shardul.b@mpiricsoftware.com>,
+ janak <janak@mpiric.us>, kalpanjani009 <kalpanjani009@gmail.com>,
+ shardulsb08 <shardulsb08@gmail.com>
+References: <20260529064355.922763-1-kalpan.jani@mpiricsoftware.com>
+ <0f13954f-3bfa-4630-af9f-6f1f4b138a13@kernel.org>
+ <19e72995d6d.89137929840232.7611532549298755137@mpiricsoftware.com>
+ <bca2ad2f-1f45-45e7-a8bd-7a08dd7100c2@kernel.org>
+ <19e830d30d7.701114c6187254.5018026155515510877@mpiricsoftware.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -89,63 +93,84 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <86e9b7f9ac5d630a0bb7b127652544176921a491.camel@kernel.org>
+In-Reply-To: <19e830d30d7.701114c6187254.5018026155515510877@mpiricsoftware.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Geliang, Chenguang,
+Hi Kalpan,
 
-On 01/07/2026 08:32, Geliang Tang wrote:
-> Hi Chenguang,
+Sorry for the delay.
+
+On 01/06/2026 13:59, Kalpan Jani wrote:
+>> do you mind sharing what you have so far. Maybe someone else can help
+>> you to reproduce the issue.
 > 
-> Thanks for this v2. However, if there are no code changes, there is no
-> need to send a v2; we can just reply to the email thread on v1 to
-> discuss it. 
-
-Indeed. Also, it is easier if you start a new thread with a link to the
-previous version, than replying to a previous version.
-
-> On Wed, 2026-07-01 at 11:20 +0800, Chenguang Zhao wrote:
->> From: Chenguang Zhao <zhaochenguang@kylinos.cn>
->>
->> mptcp_pm_allow_new_subflow() increments extra_subflows
->> before __mptcp_finish_join() on the passive MP_JOIN path.
->> On synchronous join failure the subflow is dropped without
->> calling mptcp_close_ssk(), so the counter is not rolled back.
-
-What do you mean by saying "On synchronous join failure"? When I look at
-the packetdrill test, we are not talking about synchronous MP_JOIN (SYN
-+ MP_JOIN packets in both directions), right?
-
->> Call mptcp_pm_close_subflow() when the join completion fails.
->>
->> Fixes: 3e5014909b56 ("mptcp: cleanup MPJ subflow list handling")
->> Signed-off-by: Chenguang Zhao <zhaochenguang@kylinos.cn>
->> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
->> ---
->> v2:
->>  Hi Matthieu,
->>  Thanks for the review.
->>  - I spotted this by reading the code. I don't have a reproducer
->>    yet. I also see we already have a Packetdrill test for
->>    synchronous connect failure (simult_connect.pkt), but not for
->>    synchronous join failure. I'll add a similar Packetdrill test
->>    for that case and send it in a follow-up patch.
->>  - Add Fixes and Reviewd-by tag.
->>  - I looked again at the history, and I think the Fixes tag
->>    should point to 3e5014909b56 ("mptcp: cleanup MPJ subflow list
->>    handling"), not 10f6d46c943d ("mptcp: fix race between MP_JOIN and
->> close"). 
+> Attached is the WIP packetdrill test (server side, based on the existing
+> add_addr/mp_join server tests, with an extra MP_JOIN subflow). I have not
+> been able to reproduce the WARN with it yet, so please treat it as a
+> work-in-progress rather than a finished test -- the status and the open
+> question are written at the top of the file.
 > 
-> The Fixes tag is incorrect and should be 10f6d46c943d ("mptcp: fix race
-> between MP_JOIN and close"), because that commit introduced the call to
-> mptcp_pm_allow_new_subflow. There is no need to send a v3, as this can
-> be updated when applying.
+> The trigger is "ip mptcp endpoint delete id 0 <saddr>", which is the only
+> op that reaches mptcp_nl_remove_id_zero_address(). (flush is not usable: it
+> goes through mptcp_pm_flush_addrs_and_subflows(), which already calls
+> mptcp_pm_announced_remove(), so that path was never buggy.)
+> 
+> Where I am stuck is getting ADD_ADDR(id 0) announced in the first place.
+> The signal endpoint on the MPC address has its id bit cleared by
+> mptcp_mpc_endpoint_setup(), so it is not announced on connect. "delete id 0"
+> frees the bit again, but I could not confirm that the PM worker re-runs and
+> announces id 0 on an otherwise idle connection. Without that announcement no
+> pending anno_list entry is created, so the second "delete id 0" has nothing
+> stale to leave behind and the WARN does not trigger.
+> 
+> So my question: what is the minimal way to get the id-0 address actually
+> announced via packetdrill? Does this need the MP_JOIN subflow and/or a data
+> exchange to wake the PM worker between the operations, or is there a simpler
+> approach I am missing?
 
-+1
+With the in-kernel PM, I think you need to:
 
-> I have changed the status of v2 to "Queued" and v1 to "Superseded".
-I will wait to get the packetdrill test ready before applying this patch.
+- create a subflow using a second local IP address (maybe optional): use
+  multi-ep.sh (or add an IP address and inject a SYN+MPJ)
+
+- remove the endpoint linked to the initial subflow: ip mptcp endp del
+
+- re-create the same endpoint: ip mptcp endp add (or adapt multi-ep.sh
+  to avoid the flush)
+
+That's what the mptcp_join.sh's "delete re-add signal" subtest does if I
+remember well.
+
+>> I will wait for this test before applying the v3.
+> 
+> Understood, I will keep working on it. One thing I wanted to ask directly:
+> is a deterministic packetdrill test a hard requirement for applying v3, or
+> could the fix go in on the reasoning + the syzbot report alone? The change
+> only makes the id-0 removal path symmetric with the non-zero id path (tear
+> down the pending ADD_ADDR and decrement add_addr_signaled), so it is fairly
+> contained and independent of whether I can script a reliable trigger.
+
+Having a reproducer (packetdrill, selftests, syzbot repro) are not just
+added to avoid having the same issue later on, but it also helps the
+reviewers to understand what is being fixed. Here, we don't have a
+syzbot reproducer, so I think it is even more important to prove that
+something is being fixed here: maybe syzbot found another path, and
+having such test here would really help for later to exercise one "known
+path".
+
+> (Note: the anno-list helpers were renamed in current export, so v3 no longer
+> applies as-is; I can send a trivially rebased v4 that swaps
+> mptcp_remove_anno_list_by_saddr() for mptcp_pm_announced_remove() if useful.)
+I see that you sent a v5 for this. I guess you did the rebase, and you
+added a reproducer in the selftest. It should be enough for now. But
+here, I would like to get your feedback if you don't mind: now that you
+have a clearer view on what needed to be tested, do you think there
+was/is a blocking point to get such validation in packetdrill? I do
+think Packetdrill tests are often better in terms of maintenance,
+clarity, and execution time to reproduce exactly what is needed (not
+just with MPTCP), so I think it is important to make sure this tool is
+still adapted, and understood by multiple people.
 
 Cheers,
 Matt
