@@ -1,133 +1,141 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37147305666
-	for <mptcp@lists.linux.dev>; Fri,  3 Jul 2026 18:18:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEAA13E6DCA
+	for <mptcp@lists.linux.dev>; Mon,  6 Jul 2026 06:34:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783102726; cv=none; b=snOJtGy7jAJdJfbcthCozi+EInSq7074JGy0wr415P7Ei/8K47mxmHVJF5r3jUH/WcQesTkiUqWGkBOf0nsyZagHfa+OZIcuvd0GrXe6zXWeOAH+RrxdLnsJ2j6rt8ca6mVlAQPt8DzOhKbtSa9zb9Rko33/sNSH0Vz3B6A8pD4=
+	t=1783319684; cv=none; b=WytjRywv/lfiQlQTTmSAnaqN3MfK5QOJjxjVPqOBJM1TAxElv3DbC8oZKFHONeNdRWxj+7WEVllvSRnltlKm2+DLedXwSWnJU12ADtDuFeDHeu/BGw+kwdL+4H7EVby4bNiM1X5xRaqnsEBQapD7zSTFCczUkjLtw+pELcQXlpY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783102726; c=relaxed/simple;
-	bh=3trxmfJJzrU7jKuFuulb/9+CbpwavueKqCDAkbs1WDo=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
-	 MIME-Version:Content-Type; b=LUxtc8OH/4Hj6PkmyWeHrRHsgl0sf8V70kGl1HZ8Gc8qpsGqipTde2m8sYy0lt6ot2ChtJlPeOHB6GNm9Z0S789eC7NMJAjSsAssB6fVtMI3Z5dsR1z++3aRHPO6araqf7Y8dVzpnY6e9QeLKl1Fo/6HuTdvMT0lDVCK5TdLvHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KmWLedow; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1783319684; c=relaxed/simple;
+	bh=9ffiCBJFzttWzHHs4pI+EhMn0IE7+vKVlPqEAdNIXKE=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=nu7ozMYMxRZqO9SASCWKsyxxLIqf2491C6D7wWx0g6n9ZR3nO5KraPVTxnwBe03PLiw2yVyJr0fHETwd9bUTxKbwD/APb33gqZEZLC/z7R1sHUiwvoYCrqHxF1lbW7m1BwM7Xs5sAx5e/TkRGk1oQNxB4rp2A4x+7s4EnqoJdII=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FxQWo2Kc; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KmWLedow"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2caced6038eso9154445ad.0
-        for <mptcp@lists.linux.dev>; Fri, 03 Jul 2026 11:18:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1783102724; x=1783707524; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Zvpj4tOMELPp9DIHH2azUD3sy2LSW+n62guFqhj21j4=;
-        b=KmWLedowOpbklZKBVbD+38icHNP2WYn68UAoeqtXT59/3HEYG5HpPLN23QppMyZagb
-         oYwA9LlklXWNrENfkS3CuQJKZIB64oDDhhgpzy23IRQEJQs8Nju0zm8VJ6ppYr7vEcFS
-         AGNE2n8uPdKgvZuZLoDNq44IBFkw5LGNmfdr1KTUybQ4qQSCURq5w9ZDszuuraY2CRgr
-         aMXbqwXNMrVL6bmnuMOQ4agL0aGW/A4BK2rnM/6g2Ivg4w0xkGsrXfqxXVtzudXy26bu
-         mbm2kGe08DgpnLEh3qq9fnAmkJCM6tKVPnEAwV2uQh9prx5qKmEDp5A+Ehx3htzFMz/h
-         l36A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783102724; x=1783707524;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Zvpj4tOMELPp9DIHH2azUD3sy2LSW+n62guFqhj21j4=;
-        b=EXnAi1VPJI9vlGPGReoQ13XaeyrvwATNpt5ro9FqfWL3K4Zi0iMJAShSuUYSXtXugw
-         PAY9MdyGduZmv5e399wPhkQMfqOB8zAeC9igYBXFmz6/6J1UYUDRueMCSc42vLzCBeN8
-         r3DVuR53pmEn3PSopN65IN+36apRxMGttgSQRYdJqFnWWiRN6nVVXAKbcg+UBhkkyXtN
-         lXt8tVJJIzSuXcka+jNiQkXAH66MwFI3lJ78ulwVbPotw7+BTzRk8uHrqNhsuCbSb+rb
-         n0acAno3bsaeKeRXv1CU+s72pkH3NN20/4ASD3juLqweWNJUbmxE4s3q2dQ3xYx6f8mf
-         1bzQ==
-X-Gm-Message-State: AOJu0YzM0e5JYSpQfa6G8rccVGowckgi3iibt2G8sqk5JmniZqW0QTWk
-	Dm416/LYXa0eZ9Ed4vgZVkmWL4gycAYtx9jsl3vewaiRZqfUc9fGBwM=
-X-Gm-Gg: AfdE7ckXxtuF3h6cJquOG9Z2EE1mO4trYKwh1PxwwvEMP9KB+PfAH7V0WPkjPrGUgag
-	Kiqg2ZC2FN8KkNJxE0iZDFocGezLsqOXpGe1u5W9f9MXBdJT1j9IdIqc8iA4kjOZaTAgK1bQtIp
-	uFV7BsMQDCH5SlVy13axPAyBdN5yIOmqFs+nvnYuJOuvzHbONJE8njMB0DG75WX68yR1CMywxKs
-	QSZtNTAwBlC0d2KrtlzFN0sM/Ae/7+LKsnafKE6n6lNTNiCjsLlH9997ogJ+cZPU7+1fbJAlLGF
-	R2fF2YQ42S6uhaulSAlbfEpUvYJj1KdFvBGJ8z1hlv+NnxI6Vznr+euOYq2/zNjq+Ho4SdKYI4D
-	R/wQf2PDpqgG5iT0lTBr68X9NzabxV70PorDXlxiz/k6C9Bgoen7bsqXtoz8nInSWkrV9eeKIin
-	72v7v25WRBOp+4rVkYRyUKQDgUGE/y7KgFx/dy3Vo=
-X-Received: by 2002:a17:902:da4f:b0:2ca:d034:ee7d with SMTP id d9443c01a7336-2cad034f41emr43134035ad.4.1783102724240;
-        Fri, 03 Jul 2026 11:18:44 -0700 (PDT)
-Received: from [127.0.0.1] ([172.184.239.226])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-13b3ececfe4sm24864233c88.8.2026.07.03.11.18.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jul 2026 11:18:43 -0700 (PDT)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Shardul Bankar <shardul.b@mpiricsoftware.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <20260703-mptcp_bpf_kfunc_fixes-v2-0-87ae3c64dc7e@mpiricsoftware.com>
-References:
- <20260703-mptcp_bpf_kfunc_fixes-v2-0-87ae3c64dc7e@mpiricsoftware.com>
-Subject: Re: [PATCH mptcp-next v2 0/5] mptcp: bpf: fix scheduler kfunc
- socket type confusion
-Message-ID: <f7dd2c6f-53a6-004c-83db-d8e922c46793@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 03 Jul 2026 18:18:43 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FxQWo2Kc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43DF11F000E9;
+	Mon,  6 Jul 2026 06:34:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783319673;
+	bh=v1Y0pmT7PnH1cbC844KaWqHfMf8ytseIDYxMaHv0+Y0=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=FxQWo2Kc1E/fdwLyvvFPGg9pls139tuOPZfgHqxb6n0RflFp3Rh+eqBRPpE82huoQ
+	 DLnlCA2qjoyoxMThcZcXzen6MrKuIjFzSHS0W5MXJXOH1NDINmwC542bWCMG/YvpNu
+	 oZFtYrwNUAbWmb9BZbDrLpuDeeRvI0Ds7S++rUXkkuBZrT/N2HzLjubud9LMFSDfzQ
+	 GjKnxfhzg5sV21UUPDhkWZ2l1GTuL0nkvnSlGVT4HvK6NGyKsNH0HmhPOVXoKmnF3d
+	 Xbz+XjZGwW8+iksyG6rpc9v7uBkLrQhF0ofI7/uVbjedoosye2cUZoXQcYXWTeFVJY
+	 V7TEeCMdN10eQ==
+Message-ID: <0dc8e723ee2af76224d2fe23eca6c4891207fbe0.camel@kernel.org>
+Subject: Re: [PATCH mptcp-next v2 2/5] Squash to "bpf: Export mptcp packet
+ scheduler helpers"
+From: Geliang Tang <geliang@kernel.org>
+To: Shardul Bankar <shardul.b@mpiricsoftware.com>, mptcp@lists.linux.dev
+Cc: Matthieu Baerts <matttbe@kernel.org>, Mat Martineau
+ <martineau@kernel.org>,  Paolo Abeni <pabeni@redhat.com>,
+ kalpan.jani@mpiricsoftware.com, janak@mpiric.us, shardulsb08@gmail.com
+Date: Mon, 06 Jul 2026 14:34:14 +0800
+In-Reply-To: <20260703-mptcp_bpf_kfunc_fixes-v2-2-87ae3c64dc7e@mpiricsoftware.com>
+References: 
+	<20260703-mptcp_bpf_kfunc_fixes-v2-0-87ae3c64dc7e@mpiricsoftware.com>
+	 <20260703-mptcp_bpf_kfunc_fixes-v2-2-87ae3c64dc7e@mpiricsoftware.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.56.2-9 
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 
 Hi Shardul,
 
-Thank you for your modifications, that's great!
+Thanks for this v2. It's much better now.
 
-Our CI did some validations and here is its report:
+On Fri, 2026-07-03 at 22:27 +0530, Shardul Bankar wrote:
+> mptcp_pm_subflow_chk_stale() is exposed to BPF MPTCP packet
+> schedulers as
+> a kfunc taking a generic "struct sock *ssk", but it treats ssk as a
+> subflow TCP socket: it derives the subflow context with
+> mptcp_subflow_ctx(), an unchecked cast of inet_csk(ssk)-
+> >icsk_ulp_data,
+> then reads and writes through it. The verifier only proves ssk is a
+> trusted struct sock, not that it is one of msk's subflows, so a
+> mistyped
+> or foreign socket would make the helper operate on a bogus context.
+> 
+> Register a bpf_mptcp_pm_subflow_chk_stale() wrapper that validates
+> ssk is
+> a full MPTCP subflow TCP socket belonging to the passed msk before
+> calling
+> the helper, which assumes both but checks neither. This mirrors
+> bpf_mptcp_subflow_ctx(). A scheduler passing one of its own subflows
+> is
+> unaffected; the in-tree burst scheduler selftest is updated to the
+> wrapper
+> name in a separate squash-to.
+> 
+> Assisted-by: Claude:claude-opus-4-8
+> Signed-off-by: Shardul Bankar <shardul.b@mpiricsoftware.com>
+> ---
+>  net/mptcp/bpf.c | 14 +++++++++++++-
+>  1 file changed, 13 insertions(+), 1 deletion(-)
+> 
+> diff --git a/net/mptcp/bpf.c b/net/mptcp/bpf.c
+> index 9355fb53e89d5..e2d2c3394ad71 100644
+> --- a/net/mptcp/bpf.c
+> +++ b/net/mptcp/bpf.c
+> @@ -306,6 +306,18 @@ __bpf_kfunc static void
+> bpf_mptcp_set_timeout(struct mptcp_sock *msk)
+>  	mptcp_set_timeout((struct sock *)msk);
+>  }
+>  
+> +__bpf_kfunc static void
+> +bpf_mptcp_pm_subflow_chk_stale(const struct mptcp_sock *msk, struct
+> sock *ssk)
+> +{
+> +	if (ssk && sk_fullsock(ssk) && ssk->sk_type == SOCK_STREAM
+> &&
+> +	    ssk->sk_protocol == IPPROTO_TCP && sk_is_mptcp(ssk)) {
+> +		struct mptcp_subflow_context *subflow =
+> mptcp_subflow_ctx(ssk);
+> +
+> +		if (subflow && subflow->conn == (const struct sock
+> *)msk)
 
-- KVM Validation: normal (except selftest_mptcp_join): Unstable: 1 failed =
-test(s): selftest_simult_flows =E2=9A=A0=EF=B8=8F=20
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/286748=
-88575
+Sashiko complained that the rcu lock is not held here [1]. It seems we
+can add the lock, something like:
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/89669fffbd45
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1121285
+    rcu_read_lock();
+    subflow = mptcp_subflow_ctx(ssk);
+    if (subflow && subflow->conn == (const struct sock *)msk)
+            mptcp_pm_subflow_chk_stale(msk, ssk);
+    rcu_read_unlock();
 
 
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
+WDYT?
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+Thanks,
+-Geliang
 
-For more details:
+[1]
+https://sashiko.dev/#/patchset/20260703-mptcp_bpf_kfunc_fixes-v2-0-87ae3c64dc7e@mpiricsoftware.com?part=2
 
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+> +			mptcp_pm_subflow_chk_stale(msk, ssk);
+> +	}
+> +}
+> +
+>  __bpf_kfunc_end_defs();
+>  
+>  BTF_KFUNCS_START(bpf_mptcp_iter_kfunc_ids)
+> @@ -327,7 +339,7 @@ BTF_ID_FLAGS(func, mptcp_subflow_active)
+>  BTF_ID_FLAGS(func, bpf_mptcp_set_timeout)
+>  BTF_ID_FLAGS(func, mptcp_wnd_end)
+>  BTF_ID_FLAGS(func, bpf_sk_stream_memory_free)
+> -BTF_ID_FLAGS(func, mptcp_pm_subflow_chk_stale, KF_SLEEPABLE)
+> +BTF_ID_FLAGS(func, bpf_mptcp_pm_subflow_chk_stale, KF_SLEEPABLE)
+>  BTF_KFUNCS_END(bpf_mptcp_common_kfunc_ids)
+>  
+>  static int bpf_mptcp_common_kfunc_filter(const struct bpf_prog
+> *prog, u32 kfunc_id)
