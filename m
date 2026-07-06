@@ -1,128 +1,123 @@
-Received: from sender4-of-o54.zoho.com (sender4-of-o54.zoho.com [136.143.188.54])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD4A534BA33
-	for <mptcp@lists.linux.dev>; Mon,  6 Jul 2026 11:04:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.54
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783335852; cv=pass; b=seQbWSI5pus0ZNN0C0AZ4LeiymyT1zO6MNbAzdORCKcy98pFm5Gpmg7MpPLK7jKYf160Ek5qkXAp5Ukn1r0lGsHrmM3TZv+puz+qg8KSj8K0xjZz8MsUtfFrwf/cumbgOBI3bh3phgkrQF6KHwx7MIAPl5l84ox/WzoNJMShZhU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783335852; c=relaxed/simple;
-	bh=1imx64ZrpyRSFQZsb0a2InZGG2NtpdSFBVbGK3/rwH4=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=aPk8IBEIo81R5/BXWvbLCEjjZg6UqOofcZDMAj/Lj89sQZDv2DbkQn8URnaOETls7tUpdX37RuSthPY25+er9bzeHxBo++7PhZFofpXjUrnAR94KfI+INQ+7n848zL4kPWFP5OagLm5PpERP4hPGJc6fcH7YnZBNgkwHFyaqEoU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com; spf=pass smtp.mailfrom=mpiricsoftware.com; dkim=fail (0-bit key) header.d=mpiricsoftware.com header.i=shardul.b@mpiricsoftware.com header.b=oFhv2Vzb reason="key not found in DNS"; arc=pass smtp.client-ip=136.143.188.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mpiricsoftware.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B8E437C912
+	for <mptcp@lists.linux.dev>; Mon,  6 Jul 2026 14:33:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1783348407; cv=none; b=fZkhT9o69cvMtqz/3/whShIP7gJuW0KqPM1bv/NMaBF0zTMX+o3bQoKNk8SNxeo06wHsbWkMSzvV2762JAwI7npQEKwKyfJapx/SQWA3gvIxH8jxt0kBhlGgkxXrMyiJtV6w0RPPRvEhgCDW5vvEQKGUzUwWo7bTdFFGTqAamS4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1783348407; c=relaxed/simple;
+	bh=Q0FjquzxI2JMiqEpfICsH7Ru6sbap8G5EterQLmADXk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LCrSNdV1UI7Otkywx9h2qDb9Xi0hMN+88DsVzqwfve1cGin4o2jE5WgCYFy+IzyLAgo39UuBJLhkD2ePrn/pCh+qcmhdkG2UEdFzeCkaISuEBNUDgFyrFMOqQszANlzoMXAzzObxih4JntMcyp3VjWwejz4nfHYXSaQqGm4QV+U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lnCF0nVi; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mpiricsoftware.com header.i=shardul.b@mpiricsoftware.com header.b="oFhv2Vzb"
-ARC-Seal: i=1; a=rsa-sha256; t=1783335844; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=mGGN1SetT9DZJS7p0uWGdkFZwtK+zeaEAm8DEls0X2xUc/aEkpjBMPsHjXG/A8D2CM8y0ltIp1RXUEXngf7S3bOzMxy71tm293u390XOcOAy86cRTmwbHtMj1k5VFTe8GrfcBbivBPgSNvoI6mMAh4hk+7Dq0udo4U9YjCDIiOI=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1783335844; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=1imx64ZrpyRSFQZsb0a2InZGG2NtpdSFBVbGK3/rwH4=; 
-	b=kgfhVNW2ikPG6m9b/hcxjoSRHs0h3kpbZ9Gj1jmv4D7tX4KxBpfcKtVOQZvlG5s1QmROm/wKA0p13worhERkKGg2Bu14s+J6/r2eJQehTB/ye8GiKhl9+xMZdmtESs0mARV4RggbWYbtCFEBTeLJaiq5uIBdW8WhFTZQjiBmoFc=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=mpiricsoftware.com;
-	spf=pass  smtp.mailfrom=shardul.b@mpiricsoftware.com;
-	dmarc=pass header.from=<shardul.b@mpiricsoftware.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1783335844;
-	s=mpiric; d=mpiricsoftware.com; i=shardul.b@mpiricsoftware.com;
-	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:Date:Date:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:MIME-Version:Message-Id:Reply-To;
-	bh=1imx64ZrpyRSFQZsb0a2InZGG2NtpdSFBVbGK3/rwH4=;
-	b=oFhv2Vzb6DSYkh212q21YPbh2I+7tv2BhkAJa9e1d4nyL37Z5VclqtEmcGfRw/Fa
-	Xfd8bF2CfgtB9bMWR++hRgcbski/rZ8Iju0RKx68aqbPlup0ZNyUpHRrv7EA8rag4Gp
-	yUWyI0VoJpXXEf/SCo/6TCE34n0gGRV4+y2cZMUA=
-Received: by mx.zohomail.com with SMTPS id 178333584121749.64622623077287;
-	Mon, 6 Jul 2026 04:04:01 -0700 (PDT)
-Message-ID: <2ec98c9e15ef4f96d01be048c59b160069cb3923.camel@mpiricsoftware.com>
-Subject: Re: [PATCH mptcp-next v2 2/5] Squash to "bpf: Export mptcp packet
- scheduler helpers"
-From: Shardul Bankar <shardul.b@mpiricsoftware.com>
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Matthieu Baerts <matttbe@kernel.org>, Mat Martineau
- <martineau@kernel.org>,  Paolo Abeni <pabeni@redhat.com>,
- kalpan.jani@mpiricsoftware.com, janak@mpiric.us, shardulsb08@gmail.com
-Date: Mon, 06 Jul 2026 16:33:54 +0530
-In-Reply-To: <0dc8e723ee2af76224d2fe23eca6c4891207fbe0.camel@kernel.org>
-References: 
-	<20260703-mptcp_bpf_kfunc_fixes-v2-0-87ae3c64dc7e@mpiricsoftware.com>
-	 <20260703-mptcp_bpf_kfunc_fixes-v2-2-87ae3c64dc7e@mpiricsoftware.com>
-	 <0dc8e723ee2af76224d2fe23eca6c4891207fbe0.camel@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4-0ubuntu2.1 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lnCF0nVi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39A911F000E9;
+	Mon,  6 Jul 2026 14:33:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783348406;
+	bh=d46Ptqxm8oyWF+sUsA9HE3e9RgggchWSQJnsC3JPE68=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=lnCF0nVieWPBTCUOhIZuYHHHGL0pfsz5q6FRZkCqhvp16DZ3GFR4wXCrdGF75Ul9L
+	 PK0/9o4lu7cpSEkw1AoIBEzvXckkMFdwWdQq7bwlWtiF5K1g7ZTmx3wcTQ2xKdfhTS
+	 FvnvpIOcULMOvWYaTLfptL7iDmDILT3aaqUmCJY/j6QYB68fRp5933OpVrwuEbJzuS
+	 Hjrr4B8NdNAxuApMQaZ+WbKMJcR2Nf2Ky4uOwX5DyrR5oOLqZ6j2CRhGS2i3TC5Uk1
+	 HkCemturO5kOg+uH9LnRUVdMGG3SKjCGJEKrROz0cJD4+pYpg+WMLHXPInAyo6h5Ue
+	 sRnwICIcQeKOg==
+Message-ID: <0b5f1978-4762-455f-a776-1fa991085d16@kernel.org>
+Date: Mon, 6 Jul 2026 16:33:22 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-ZohoMailClient: External
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-next v3] Squash-to "mptcp: pm: init and release
+ mptcp_pm_ops"
+To: Gang Yan <gang.yan@linux.dev>, mptcp@lists.linux.dev
+Cc: Gang Yan <yangang@kylinos.cn>
+References: <20260702063002.127027-1-gang.yan@linux.dev>
+From: Matthieu Baerts <matttbe@kernel.org>
+Content-Language: fr
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <20260702063002.127027-1-gang.yan@linux.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+Hi Gang, Geliang,
 
-Thanks for taking a look.
+On 02/07/2026 08:30, Gang Yan wrote:
+> From: Gang Yan <yangang@kylinos.cn>
+> 
+> This patch removes the need to handle a NULL pm_ops in the fallback
+> path, and moves the rcu_read_lock\unlock into mptcp_pm_ops_init.
+> 
+> Following sashiko's comments, it also moves the pr_debug() before
+> bpf_module_put() in mptcp_pm_ops_release.
 
-On Mon, 2026-07-06 at 14:34 +0800, Geliang Tang wrote:
-> Hi Shardul,
->=20
-> Thanks for this v2. It's much better now.
->=20
-> On Fri, 2026-07-03 at 22:27 +0530, Shardul Bankar wrote:
-> > ...
-> > ...
->=20
-> Sashiko complained that the rcu lock is not held here [1]. It seems
-> we
-> can add the lock, something like:
->=20
-> =C2=A0=C2=A0=C2=A0 rcu_read_lock();
-> =C2=A0=C2=A0=C2=A0 subflow =3D mptcp_subflow_ctx(ssk);
-> =C2=A0=C2=A0=C2=A0 if (subflow && subflow->conn =3D=3D (const struct sock=
- *)msk)
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mptcp_=
-pm_subflow_chk_stale(msk, ssk);
-> =C2=A0=C2=A0=C2=A0 rcu_read_unlock();
->=20
->=20
-> WDYT?
->=20
-> Thanks,
-> -Geliang
->=20
-> [1]
-> https://sashiko.dev/#/patchset/20260703-mptcp_bpf_kfunc_fixes-v2-0-87ae3c=
-64dc7e@mpiricsoftware.com?part=3D2
->=20
->=20
+Thank you for the v3, and the review!
 
-I don't think we need the rcu_read_lock() here, and I think it would
-actually be unsafe.
+Now in our tree:
 
-The subflow context is freed with kfree_rcu(), but in this path the msk
-socket lock prevents that free, so rcu_read_lock() is not needed.
-get_retrans() runs with the msk lock held (msk_owned_by_me() in
-mptcp_sched_get_retrans()). A subflow is removed from msk->conn_list by
-__mptcp_close_ssk() under that same lock, and only then can it be torn
-down and its context freed, so it cannot be freed while get_retrans()
-is running. The in-kernel mptcp_subflow_get_retrans() relies on exactly
-this: it dereferences the subflow and calls
-mptcp_pm_subflow_chk_stale() under the msk lock, without
-rcu_read_lock().
+New patches for t/upstream:
+- 7d1ab340593f: "squashed" in "mptcp: pm: init and release mptcp_pm_ops"
+- e7a8a2a1215d: "Signed-off-by" + "Co-developed-by"
+- Results: 653c410fe0bb..3c824013edcf (export)
 
-rcu_read_lock() would also not be the right call here:
-mptcp_pm_subflow_chk_stale() is not a pure reader (it updates subflow-
->stale_count and can trigger a retransmit), so it needs the msk lock
-for serialization, which rcu_read_lock() would not provide. It is also
-KF_SLEEPABLE and can sleep (its stale path takes lock_sock_fast() and
-calls __mptcp_push_pending()), so it cannot run inside an RCU
-read-side critical section anyway.
+Tests are now in progress:
 
-So I'd prefer to keep the code as is. If it helps, I can add a short
-comment noting that the msk lock keeps the subflow context alive. Does
-this address the concern?
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/00c0b1f484bfd2a20ad6bf70f19a812a38d6922e/checks
 
-Thanks,
-Shardul
+
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
+
