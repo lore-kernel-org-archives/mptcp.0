@@ -1,106 +1,147 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0261334A3A5
-	for <mptcp@lists.linux.dev>; Tue,  7 Jul 2026 16:49:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4318843786F
+	for <mptcp@lists.linux.dev>; Tue,  7 Jul 2026 17:17:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783442943; cv=none; b=LHedDyafSZJ59c1HzGQtY64B4MU4hddjHr+asH/kqozlQpkOEbsqomoGNy7gUlM6SPVd5Xmk1J2QhLs/xAy0D1UZer8tmm1vO7WvxqdLoFrBIQSVrlSz/NqyqBeZFxW3MZHZLQjEXZYRt/GFqyibC61cwcZ6h/LNP+TXXNdge/E=
+	t=1783444667; cv=none; b=oGqxJILFdlnze70opnDpj5317I5EzColj3eeXH9XpRah8D0l6wWs3tXjswgiKnyHZlbiShda5twJKXG0uXSPypZMJE4dLvss//Sdi7M1iAdprs7vj7pVsujzjwnkZdqdZXJPypcSwO3dIuzhzy/VR/3BCoTpeYR0vAgebzFA5uU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783442943; c=relaxed/simple;
-	bh=tXP1wN8jtwmL05FRcpvwLFuDaw7xOIG+w1zGsZ3TRyo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=m/9R2qAlvgrU+8JkkeOli+bJSC5ReGFfvyDYdZhTMU+hoMnTRN56sPwJ9ZuEXnqSNWNOOfKBvMpicDNj9KSakXNxnI2F2q4a0hxzjubm2fr2yIif1GB9oO6BZuM5Mw2Mu6QzHEhXi89VqWJqMtPUQn45XFEKNXcYazUAuAP5WBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jAXqFa7n; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1783444667; c=relaxed/simple;
+	bh=nu6ZSgb2jRk2Ndie2s2jUBHTDDESXJco+T6QJqejMAk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=qXaIWVhhsUy388SYsjbu+Hp3kyk6n13MKGDKfMkEX41slsctlQlUiL5rT2aDAqJEAV7zMMBxxqsJJhNO/Mi7XZarxQmmmPctG4Hb7EXBkroxht1aVLtCMe0iTNl6FqtgNK/44zcEvux//vNzZtdhuUZ+4+Ja96JCfMG3xSSUJas=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=qkiHYXnA; arc=none smtp.client-ip=209.85.222.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jAXqFa7n"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4FB11F000E9;
-	Tue,  7 Jul 2026 16:49:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783442941;
-	bh=BzcYekZioZyp1BCvfqtZqBsRrgmCU5ByGU9JnNH1YxU=;
-	h=From:Date:Subject:To:Cc;
-	b=jAXqFa7nQS+IqP8PmgYoddKED3vD45mAKzxCFbHGawJGc+08w1T426K43wevuVniD
-	 ly5b18k700VjmNO+nsqUA+uCLEt5sX8Jf+Y6ENBE58nEMIDGnlGm/tXvTtAsY/wfTC
-	 om/7xkR13VL8CTpNw0eX/y2N1Jl1/EKmlCQbEOz5f4Y0mtF+Rkdc8pfJvg/UUM3FDR
-	 ztDRDM86QtyfdBQGpzL8jDDfESfVvpUpxCaJ33HXpVwv7e0I9FKSVJSLlks5tax+Nr
-	 FkT/N5l36bu//2+2MdrZN1wVCK3Ag+AU4pC4bHAtG4NIQW6ZRGEIGpREDY16k4rK+S
-	 xoA+1uXqOTqWA==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Tue, 07 Jul 2026 18:48:49 +0200
-Subject: [PATCH mptcp-net] mptcp: fix BUILD_BUG_ON on legacy ARM config
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qkiHYXnA"
+Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-92e51d3d83cso228036285a.2
+        for <mptcp@lists.linux.dev>; Tue, 07 Jul 2026 10:17:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1783444665; x=1784049465; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=oUCStv+mG3q24BIMvpoJICyGa6vMwC+AFAbHW03keOc=;
+        b=qkiHYXnAJpMjmUw4s7R95BMSemiesKaf6GKW+/VsX9MRvt0svavMkcZo2GONjlM7xX
+         wb+5eHmVRfbKHktZMu1M0Bg/qouLWVDJn9BVADc8xSNc+kf5wcJrSc5oWOUrzLVSKizD
+         F1KW64qJMVZKZN5PWqsg7Tv008JwNGrv4AS0mWycaI0i3IIdTxj5I2ZhtsZcvC43pSTp
+         eATQeb5k5p5GgQ6SxqPSToZ9viJMyZr2i2+fmOEmW9Sd2qNvACc+5WmveaALLj/0P7tJ
+         jflI0FVxKB4uFcv4KDWFa/ddv5/n3GobCNDK2W1kVcvkaZq5Eb9IrspST+pUEKM7bznW
+         q6cQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1783444665; x=1784049465;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=oUCStv+mG3q24BIMvpoJICyGa6vMwC+AFAbHW03keOc=;
+        b=lUHk5HOJmhfn5Pado9n/fLC06rTyCwx4CJsYOx28YhQ3FUg4r3MUPwx5dYfmqJ86rv
+         DAlIJ+QQsWkcUEFnmZHggxFbsOIc0y/cBKhr1iyyqIiVzbtvAhySL5mu/6Tmu4WAO3le
+         Z/VHS7ejo3mArxW1m0IkPV6vA1t6HuN7sgfsI9d01CXJpd4IUHwTQAgijHkVB4pM3XYD
+         93ArLUIPtlmTAVDQdj/eI0tM3iEG9x0VWomI7jOboVFUhI2JL5t03P0SWMdYp1FmYQ9n
+         EVgAZSH33RAxSk/D1fXl1/OTDCM6uUa34ar6mPHWImo6X8tmCa5NMmShhb8BxKKasXKc
+         jEtQ==
+X-Forwarded-Encrypted: i=1; AHgh+RqdiCWr1k4vJ6JWpTgmQwqX1wm11yWbB+wNjkVGNKFruIIMr2tsrW1VDPPE6KJPU7DD/cpr4A==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yx1Xf1WAbjd9bA+QW9K9UFqpk+uHxNbeHJ8VmWtgHZyUw9zt1ae
+	rnbJgDXKhIOPPrjb0WX5BSGnRxjb9lIEML4pqZp9a5x3sh7l2M6emE9O
+X-Gm-Gg: AfdE7cncJKNMPM2/qxgHhT5w0lSppUa3Bu9uOgGPRVElBrJtWpEqdt8rPD6tEMd4zKh
+	0xIvObroALGWGWSq2SYhhkFhfg1+SKg7ikXgAkL8yJczeUGqikZxrNp/GQiust6VhbHJ8GVuoy9
+	0SaMpY5TKI8U6uHEpH4EUTPkTkVh0gIEmfSWvdCzR2xV2JncKNvZdzYeaqnWjfD7az6nheisThV
+	/bFStz9wSwC+SIwSCZtIGl6xrNY7OUL43jSjcA6m3jHyIRAO8SWaOWyuLOfd6WZQWfR8dPRFw0B
+	ItH/VWT73vz2z4M0WIsGj0ayVrnDh2w13KmsPe9lt1IA5gUZnkQaw/Y/+Gx8btWV+xu2V7t7U2h
+	PKjdkC4h45PFwPKlJh4h9tOOBiWDvs9ygviSdSWN1Z+4ng6Y1vxvUBP6QjHUKHFj3u9vlTEW4Tk
+	rt+KCPAQzQxXTjiqJLCLP025w2nFOHi+rHKNWbloA5zOqePLUtOTRrw0NJQrZzhGcoas4O71OwZ
+	nwmq7+UuBM7tG6jWz3je+FAnxN+LxUx
+X-Received: by 2002:a05:620a:4102:b0:92e:8a88:ab27 with SMTP id af79cd13be357-92ebb528e65mr702327185a.14.1783444665081;
+        Tue, 07 Jul 2026 10:17:45 -0700 (PDT)
+Received: from server0.tail6e7dd.ts.net (c-68-48-65-54.hsd1.mi.comcast.net. [68.48.65.54])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-92e90ccde4fsm1220363385a.39.2026.07.07.10.17.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jul 2026 10:17:44 -0700 (PDT)
+From: Michael Bommarito <michael.bommarito@gmail.com>
+To: Matthieu Baerts <matttbe@kernel.org>,
+	Mat Martineau <martineau@kernel.org>
+Cc: Geliang Tang <geliang@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	mptcp@lists.linux.dev,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] mptcp: only set DATA_FIN when a mapping is present
+Date: Tue,  7 Jul 2026 13:17:30 -0400
+Message-ID: <20260707171730.2679013-1-michael.bommarito@gmail.com>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <2edcb1cd-f2db-4d0c-a0e3-fd2b4dd820fe@redhat.com>
+References: <2edcb1cd-f2db-4d0c-a0e3-fd2b4dd820fe@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260707-mptcp-opt-fix-config_aeabi-v1-1-f428d0aa0318@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/yWMUQrCMBAFr1L224UYoUGvIiJp8lJXMAlJKkLp3
- Y32c3hvZqWKIqh0GVYqeEuVFDscDwO5h40zWHxn0kqPyijDr9xc5pQbB/mwSzHIfLewk/DJjzq
- cNWC8oR7IBf3zj19p9yIa3fapLtMTrv3itG1f5wy2kYkAAAA=
-X-Change-ID: 20260707-mptcp-opt-fix-config_aeabi-3d62f92ee7d7
-To: MPTCP Linux <mptcp@lists.linux.dev>
-Cc: Frank Ranner <frank.ranner@intel.com>, 
- kernel test robot <lkp@intel.com>, 
- "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2070; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=tXP1wN8jtwmL05FRcpvwLFuDaw7xOIG+w1zGsZ3TRyo=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLJ8df9we68obLT7WKik6mJxXe/V9zff5AqPaTxq4qz13
- 2C/J62ko5SFQYyLQVZMkUW6LTJ/5vMq3hIvPwuYOaxMIEMYuDgFYCJemxj+F5TKF1ypYsgvqPg0
- IyZ6+QSl2gaO45UXroh3BQnNr5/UycjwQ89cqEfk4P7URwvbX1YKeu/6FLLF3WeHrNj3LEumlxc
- YAA==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-The 0-day bot managed to find kernel configs that cause build failures,
-e.g. when using the StrongARM SA1100 target (ARMv4).
+mptcp_get_options() clears only the status group of struct
+mptcp_options_received; data_seq, subflow_seq and data_len are filled in
+by mptcp_parse_option() exclusively inside the DSS mapping block, which
+runs only when the DSS M (mapping present) bit is set.
 
-On such legacy ARM architecture, all structures are apparently aligned
-to 32 bits, causing build issue here. Indeed, on such architecture,
-'flags' size is not equivalent to sizeof(u16) as expected, but to
-sizeof(u32).
+A peer can send a DSS option with the DATA_FIN flag set but the mapping
+bit clear. The parser then records mp_opt->data_fin while leaving
+data_len and data_seq uninitialized. For a zero-length segment
+mptcp_incoming_options() evaluates
 
-Instead, use memset(). It was not used before to ensure a simple clear
-operation was used by the compiler. But at the end, it shouldn't matter,
-and the compiler should optimise this to the same operation with or
-without memset() when -O above 0 is used. So let's switch to memset() to
-fix this issue, and reduce this complexity.
+	if (mp_opt.data_fin && mp_opt.data_len == 1 &&
+	    mptcp_update_rcv_data_fin(msk, mp_opt.data_seq, mp_opt.dsn64))
 
-Fixes: 5e939544f9d2 ("mptcp: fix uninit-value in mptcp_established_options")
-Suggested-by: Frank Ranner <frank.ranner@intel.com>
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202605312026.Srgsz7Tp-lkp@intel.com/
-Closes: https://lore.kernel.org/oe-kbuild-all/202607031100.upQfRZTM-lkp@intel.com/
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+which reads the uninitialized data_len and data_seq; KMSAN reports an
+uninit-value in mptcp_incoming_options(). The stale data_seq can also be
+fed into the receive-side DATA_FIN sequence tracking.
+
+Record the DATA_FIN flag only when the DSS option carries a mapping, so
+data_fin is never set without data_seq and data_len also being present.
+data_fin is part of the status group that mptcp_get_options() clears up
+front, so on the no-map path it stays zero and the zero-length DATA_FIN
+branch is simply skipped. A DATA_FIN is always transmitted together with
+a mapping (mptcp_write_data_fin() sets use_map along with data_seq and
+data_len), so legitimate DATA_FIN handling is unaffected.
+
+Fixes: 43b54c6ee382 ("mptcp: Use full MPTCP-level disconnect state machine")
+Suggested-by: Paolo Abeni <pabeni@redhat.com>
+Cc: stable@vger.kernel.org
+Assisted-by: Claude:claude-opus-4-8
+Signed-off-by: Michael Bommarito <michael.bommarito@gmail.com>
 ---
- net/mptcp/options.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+v2: adopt Paolo Abeni's suggested approach - do not set mp_opt->data_fin
+    at all unless a mapping is present, rather than gating the consumer in
+    mptcp_incoming_options() (v1). data_fin then defaults to the value
+    mptcp_get_options() already clears it to (0) on the no-map path, so
+    the uninitialized data_len/data_seq are never read.
+
+ net/mptcp/options.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 0ca60314d667..47d4a1b520d8 100644
+index dff3fd5d3b559..6d003b24b969f 100644
 --- a/net/mptcp/options.c
 +++ b/net/mptcp/options.c
-@@ -571,10 +571,7 @@ static bool mptcp_established_options_dss(struct sock *sk, struct sk_buff *skb,
- 	bool ret = false;
- 
- 	/* Zero `use_ack` and `use_map` flags with one shot. */
--	BUILD_BUG_ON(sizeof_field(struct mptcp_ext, flags) != sizeof(u16));
--	BUILD_BUG_ON(!IS_ALIGNED(offsetof(struct mptcp_ext, flags),
--				 sizeof(u16)));
--	*(u16 *)&opts->ext_copy.flags = 0;
-+	memset(&opts->ext_copy.flags, 0, sizeof(opts->ext_copy.flags));
- 	opts->csum_reqd = READ_ONCE(msk->csum_enabled);
- 	mpext = skb ? mptcp_get_ext(skb) : NULL;
- 
+@@ -157,7 +157,6 @@ static void mptcp_parse_option(const struct sk_buff *skb,
+ 		ptr++;
 
----
-base-commit: 44982139bcde9e34b46ddca0f91f3da9226ebf9a
-change-id: 20260707-mptcp-opt-fix-config_aeabi-3d62f92ee7d7
+ 		flags = (*ptr++) & MPTCP_DSS_FLAG_MASK;
+-		mp_opt->data_fin = (flags & MPTCP_DSS_DATA_FIN) != 0;
+ 		mp_opt->dsn64 = (flags & MPTCP_DSS_DSN64) != 0;
+ 		mp_opt->use_map = (flags & MPTCP_DSS_HAS_MAP) != 0;
+ 		mp_opt->ack64 = (flags & MPTCP_DSS_ACK64) != 0;
+@@ -178,6 +177,7 @@ static void mptcp_parse_option(const struct sk_buff *skb,
+ 		}
 
-Best regards,
---  
-Matthieu Baerts (NGI0) <matttbe@kernel.org>
-
+ 		if (mp_opt->use_map) {
++			mp_opt->data_fin = (flags & MPTCP_DSS_DATA_FIN) != 0;
+ 			if (mp_opt->dsn64)
+ 				expected_opsize += TCPOLEN_MPTCP_DSS_MAP64;
+ 			else
+--
+2.53.0
