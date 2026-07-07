@@ -1,126 +1,106 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E1B73C1F3A
-	for <mptcp@lists.linux.dev>; Tue,  7 Jul 2026 14:15:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0261334A3A5
+	for <mptcp@lists.linux.dev>; Tue,  7 Jul 2026 16:49:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783433703; cv=none; b=FPkS7ommw1b+Klv9yXghqowEHXx6DUitgJHZ3uCYEy0/XW0VM2MSEiXLAVG4ypiOJs20yqiNmjh/1+P2sxzme6yuU6vEttaUyNegkJia0Wuqr9nx6hfPBNrG/4kbLlADLa6kAdAuKb8djDUllp139G4HoF0waTiRmXWQf3UIME4=
+	t=1783442943; cv=none; b=LHedDyafSZJ59c1HzGQtY64B4MU4hddjHr+asH/kqozlQpkOEbsqomoGNy7gUlM6SPVd5Xmk1J2QhLs/xAy0D1UZer8tmm1vO7WvxqdLoFrBIQSVrlSz/NqyqBeZFxW3MZHZLQjEXZYRt/GFqyibC61cwcZ6h/LNP+TXXNdge/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783433703; c=relaxed/simple;
-	bh=lYd2Us7LnfN8QgILvkErpAgQilyW8tDhK4bA7iaO8AE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ePudV3sgtIrETCAzpYujTTmmACXMEOdz98tuqrQs3YD5IEkN/xFfNl+LkygxK/cGM0L7fN6UA2MHpEzME6m0doUPGi8GOmOV/SI8+4od/AL3VcbNRe7/R+Zh5fde7IiDWUyXHqWrCM2S629bWXbr2YUzTcg9VjTu3gv5jEoxudQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nkeMt0Hh; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1783442943; c=relaxed/simple;
+	bh=tXP1wN8jtwmL05FRcpvwLFuDaw7xOIG+w1zGsZ3TRyo=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=m/9R2qAlvgrU+8JkkeOli+bJSC5ReGFfvyDYdZhTMU+hoMnTRN56sPwJ9ZuEXnqSNWNOOfKBvMpicDNj9KSakXNxnI2F2q4a0hxzjubm2fr2yIif1GB9oO6BZuM5Mw2Mu6QzHEhXi89VqWJqMtPUQn45XFEKNXcYazUAuAP5WBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jAXqFa7n; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nkeMt0Hh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 251241F000E9;
-	Tue,  7 Jul 2026 14:14:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jAXqFa7n"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4FB11F000E9;
+	Tue,  7 Jul 2026 16:49:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783433701;
-	bh=2NKIYjeo520Bm2HsVBhzB5MUsgnI9Kqu9XPU6cmnMq4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=nkeMt0HhABXNx69NubMuMC2O4PNiM2YFrSzQWN12hV7XmfcipJnP1JNWrmVzXIlpx
-	 necPfQEb4jFOzUEFSUgIFaUjXV8eedVuQC/nIgWwiyLrHq++taWqaDYhav6mMC4/lz
-	 hzrS8tuTaaCQ28fl4mNwm04np9+nmzbpve1gr2DNbucazk6ajsU0+AQtzd36jWqCcH
-	 2yf4Pp7Bl0lhFvBwgqvsBagGkaBKn1zPtHXdNOWTwPSv+OzWgxiuvBpabmMkZtAB3X
-	 nf8lNxWU6DDk2nKhoeF7+8K+8IYmXlwG+by1pWzdAWy6YXLqGUmwif51KLMXwJq1Mc
-	 kJig7KCcNYtxA==
-Message-ID: <3fa5bb51-f140-4cbb-b748-d264232c3eae@kernel.org>
-Date: Tue, 7 Jul 2026 16:14:57 +0200
+	s=k20260515; t=1783442941;
+	bh=BzcYekZioZyp1BCvfqtZqBsRrgmCU5ByGU9JnNH1YxU=;
+	h=From:Date:Subject:To:Cc;
+	b=jAXqFa7nQS+IqP8PmgYoddKED3vD45mAKzxCFbHGawJGc+08w1T426K43wevuVniD
+	 ly5b18k700VjmNO+nsqUA+uCLEt5sX8Jf+Y6ENBE58nEMIDGnlGm/tXvTtAsY/wfTC
+	 om/7xkR13VL8CTpNw0eX/y2N1Jl1/EKmlCQbEOz5f4Y0mtF+Rkdc8pfJvg/UUM3FDR
+	 ztDRDM86QtyfdBQGpzL8jDDfESfVvpUpxCaJ33HXpVwv7e0I9FKSVJSLlks5tax+Nr
+	 FkT/N5l36bu//2+2MdrZN1wVCK3Ag+AU4pC4bHAtG4NIQW6ZRGEIGpREDY16k4rK+S
+	 xoA+1uXqOTqWA==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Date: Tue, 07 Jul 2026 18:48:49 +0200
+Subject: [PATCH mptcp-net] mptcp: fix BUILD_BUG_ON on legacy ARM config
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH net v2] mptcp: pm: drop pending ADD_ADDR when removing id
- 0 endpoint
-Content-Language: fr
-To: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
-Cc: mptcp <mptcp@lists.linux.dev>, martineau <martineau@kernel.org>,
- pabeni <pabeni@redhat.com>, "shardul.b" <shardul.b@mpiricsoftware.com>,
- janak <janak@mpiric.us>, kalpanjani009 <kalpanjani009@gmail.com>,
- shardulsb08 <shardulsb08@gmail.com>
-References: <20260529064355.922763-1-kalpan.jani@mpiricsoftware.com>
- <0f13954f-3bfa-4630-af9f-6f1f4b138a13@kernel.org>
- <19e72995d6d.89137929840232.7611532549298755137@mpiricsoftware.com>
- <bca2ad2f-1f45-45e7-a8bd-7a08dd7100c2@kernel.org>
- <19e830d30d7.701114c6187254.5018026155515510877@mpiricsoftware.com>
- <6d0b954c-4028-4c1e-bf02-5bf5f43f58af@kernel.org>
- <19f3b374a41.2132097d1809464.3759794617307044756@mpiricsoftware.com>
- <ad9044cd-ff6d-4a88-ba3f-fbba7d40b092@kernel.org>
- <19f3cca8500.ef8eb681856418.2642565239132356618@mpiricsoftware.com>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <19f3cca8500.ef8eb681856418.2642565239132356618@mpiricsoftware.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260707-mptcp-opt-fix-config_aeabi-v1-1-f428d0aa0318@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/yWMUQrCMBAFr1L224UYoUGvIiJp8lJXMAlJKkLp3
+ Y32c3hvZqWKIqh0GVYqeEuVFDscDwO5h40zWHxn0kqPyijDr9xc5pQbB/mwSzHIfLewk/DJjzq
+ cNWC8oR7IBf3zj19p9yIa3fapLtMTrv3itG1f5wy2kYkAAAA=
+X-Change-ID: 20260707-mptcp-opt-fix-config_aeabi-3d62f92ee7d7
+To: MPTCP Linux <mptcp@lists.linux.dev>
+Cc: Frank Ranner <frank.ranner@intel.com>, 
+ kernel test robot <lkp@intel.com>, 
+ "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+X-Mailer: b4 0.15.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2070; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=tXP1wN8jtwmL05FRcpvwLFuDaw7xOIG+w1zGsZ3TRyo=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLJ8df9we68obLT7WKik6mJxXe/V9zff5AqPaTxq4qz13
+ 2C/J62ko5SFQYyLQVZMkUW6LTJ/5vMq3hIvPwuYOaxMIEMYuDgFYCJemxj+F5TKF1ypYsgvqPg0
+ IyZ6+QSl2gaO45UXroh3BQnNr5/UycjwQ89cqEfk4P7URwvbX1YKeu/6FLLF3WeHrNj3LEumlxc
+ YAA==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-On 07/07/2026 15:35, Kalpan Jani wrote:
-> Hi Matt,
-> Thank you for pointing me to add_addr_retry_errors.pkt — that makes the idiom clear. Inject a data packet after the del+re-add sequence and expect a plain DSS ACK back with no add_address option piggybacked. On an unfixed kernel the stale entry causes a spurious ADD_ADDR(id=0) retransmit to appear on that ACK, which packetdrill catches as an unexpected option.
+The 0-day bot managed to find kernel configs that cause build failures,
+e.g. when using the StrongARM SA1100 target (ARMv4).
 
-Great!
+On such legacy ARM architecture, all structures are apparently aligned
+to 32 bits, causing build issue here. Indeed, on such architecture,
+'flags' size is not equivalent to sizeof(u16) as expected, but to
+sizeof(u32).
 
-> I will write the packetdrill test using that pattern and send v6 with:
-> 
-> Patch 1: kernel fix (also correcting the addr argument — the &anno_addr copy in v5 is fragile for with-port endpoints)
+Instead, use memset(). It was not used before to ensure a simple clear
+operation was used by the compiler. But at the end, it shouldn't matter,
+and the compiler should optimise this to the same operation with or
+without memset() when -O above 0 is used. So let's switch to memset() to
+fix this issue, and reduce this complexity.
 
-If that's the same version as the v5, no need to resend it.
+Fixes: 5e939544f9d2 ("mptcp: fix uninit-value in mptcp_established_options")
+Suggested-by: Frank Ranner <frank.ranner@intel.com>
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202605312026.Srgsz7Tp-lkp@intel.com/
+Closes: https://lore.kernel.org/oe-kbuild-all/202607031100.upQfRZTM-lkp@intel.com/
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+ net/mptcp/options.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-> Patch 2: packetdrill regression test in gtests/net/mptcp/regressions/
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index 0ca60314d667..47d4a1b520d8 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -571,10 +571,7 @@ static bool mptcp_established_options_dss(struct sock *sk, struct sk_buff *skb,
+ 	bool ret = false;
+ 
+ 	/* Zero `use_ack` and `use_map` flags with one shot. */
+-	BUILD_BUG_ON(sizeof_field(struct mptcp_ext, flags) != sizeof(u16));
+-	BUILD_BUG_ON(!IS_ALIGNED(offsetof(struct mptcp_ext, flags),
+-				 sizeof(u16)));
+-	*(u16 *)&opts->ext_copy.flags = 0;
++	memset(&opts->ext_copy.flags, 0, sizeof(opts->ext_copy.flags));
+ 	opts->csum_reqd = READ_ONCE(msk->csum_enabled);
+ 	mpext = skb ? mptcp_get_ext(skb) : NULL;
+ 
 
-Can you open a PR instead, please?
+---
+base-commit: 44982139bcde9e34b46ddca0f91f3da9226ebf9a
+change-id: 20260707-mptcp-opt-fix-config_aeabi-3d62f92ee7d7
 
-https://github.com/multipath-tcp/packetdrill/
-
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
+Best regards,
+--  
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
