@@ -1,128 +1,207 @@
-Received: from sender4-of-o54.zoho.com (sender4-of-o54.zoho.com [136.143.188.54])
+Received: from out-185.mta0.migadu.com (out-185.mta0.migadu.com [91.218.175.185])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 440AF377558
-	for <mptcp@lists.linux.dev>; Wed,  8 Jul 2026 05:31:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.54
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783488688; cv=pass; b=PZFjdyn1/xAvEesuJDlcVyv4ROj/28DuSiZBlxeP5ZaAGWVBBpKZY5TUW+NlLfBnWWHGFvMlIOxznP57/YOsefvR5JyZUjm2yV2CPX8glk6fN/FJ/foRrbNfV+UV/XJhVZKyHUeXToHw2eK9IChC3uGGqKhtPdxwyZWk3HHEMDU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783488688; c=relaxed/simple;
-	bh=q0xnivoPD6gGsJAg8mxLZ44gc9NFQeN7FXhSXLwC+VA=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=jnS63O8OY2EBX5rMvsUhyT4S3UG0arzExm5n6CRkUlUYlJbZpJ9WMv/tgR2dUD5SNXhop0dPfO75C1hX05MIIhqDsDyjog3x6Idv23iarTHjjhBqRU2/PCdcE+UoSXvYCyfGJ/uSN3+vtfdIL8255KB/YQwFxUKp7deHMAoB9dg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com; spf=pass smtp.mailfrom=mpiricsoftware.com; dkim=fail (0-bit key) header.d=mpiricsoftware.com header.i=kalpan.jani@mpiricsoftware.com header.b=bHim12hn reason="key not found in DNS"; arc=pass smtp.client-ip=136.143.188.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mpiricsoftware.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DFF843932C
+	for <mptcp@lists.linux.dev>; Thu,  9 Jul 2026 05:43:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.185
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1783575793; cv=none; b=s2J4wksZkcjQewNbVY1Dllu3bt0NtWac7JEhJzm1yNix2QoWqvaaZfEWrf2bSbO7JmRkHbRPgWnntSP4pAq9Oe17GIj18RNEjYTZ75doADZqjhi1GjFimom29bEGsBHBQL2L7ZIEpEAaLtVNK+JF1yRS5ARR2ZU0urM52eXM5qg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1783575793; c=relaxed/simple;
+	bh=6h5p7n5No64QiJEYCYCEU+E9AgD/KFjcbLGyq0ar2ak=;
+	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
+	 In-Reply-To:References; b=Xs3j3AWZUc8VTVyQGOF72lJODcbcQIuC5bLl1zXbLi3yamHfri4t91dPu85nE+ux/NIvmdOnLGHPVnDz/AV9qfpSonNfCZV6+Q4rjSBWo2daaMw3c0vV2AMJiwPFgaKrvptgxIYi+CbS6qLRKjeIHRSdyWQQOyPWPZJyE+AMmT4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=gjsb3iVN; arc=none smtp.client-ip=91.218.175.185
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mpiricsoftware.com header.i=kalpan.jani@mpiricsoftware.com header.b="bHim12hn"
-ARC-Seal: i=1; a=rsa-sha256; t=1783488684; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=J1uNvd8YWkdTw/+vrR+ChamPP3QEILZW9ui50klhvQ2m532tLPXLoc5ec9RUmv4bQPzl/FDkUn2NI66r2IV7cLEKggAyS+Nuyp3HEj1SZiI86LoScVqDGH0lEQYffntD4KcYj3rVnoB+rZa+e/AU1KQAx5XcIWzNtJAyvHoIInI=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1783488684; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=q0xnivoPD6gGsJAg8mxLZ44gc9NFQeN7FXhSXLwC+VA=; 
-	b=JAtrKNRv+gcAwdqezntgaY3NOPpqy8MHz1LgrRxf6tO3gehSQSJA11k0DEVT6y9venpPeQHAVujX8lFZcafKE7Rj9zDYtj2jo/jHb/G7EqLkZknEDkmm54BqJ7s7EvHq+Ovzg7FVlXZ9qC9LcU82W4bPc645cQB8fUdQBGJetvw=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=mpiricsoftware.com;
-	spf=pass  smtp.mailfrom=kalpan.jani@mpiricsoftware.com;
-	dmarc=pass header.from=<kalpan.jani@mpiricsoftware.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1783488684;
-	s=mpiric; d=mpiricsoftware.com; i=kalpan.jani@mpiricsoftware.com;
-	h=Date:Date:From:From:To:To:Cc:Cc:Message-ID:In-Reply-To:References:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=q0xnivoPD6gGsJAg8mxLZ44gc9NFQeN7FXhSXLwC+VA=;
-	b=bHim12hnL2EWQrQw2T2ODSkbtCQCXvOwRMVTNiKXvk+ubRP8ezpXGqS2Gi1OnO8+
-	M541O5TsnM5ERSxeO6VNS8mTt+JhzZNcED2AInPuqwM0rG/B6Yhxsn1rS/DJ3NO1kDV
-	I7Xnobt3J8TQn1cXY7xnSX/L5XU03UCo7BLg8IzY=
-Received: from mail.zoho.com by mx.zohomail.com
-	with SMTP id 1783488683736380.56333902628023; Tue, 7 Jul 2026 22:31:23 -0700 (PDT)
-Received: from mail.zoho.com by mx.zohomail.com
-	with SMTP id 1783488681527919.3357198695397; Tue, 7 Jul 2026 22:31:21 -0700 (PDT)
-Date: Wed, 08 Jul 2026 11:01:21 +0530
-From: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
-To: "Matthieu Baerts" <matttbe@kernel.org>
-Cc: "mptcp" <mptcp@lists.linux.dev>, "martineau" <martineau@kernel.org>,
-	"pabeni" <pabeni@redhat.com>,
-	"shardul.b" <shardul.b@mpiricsoftware.com>,
-	"janak" <janak@mpiric.us>, "kalpanjani009" <kalpanjani009@gmail.com>,
-	"shardulsb08" <shardulsb08@gmail.com>
-Message-ID: <19f403595bc.42f51a311935197.9099603416352376121@mpiricsoftware.com>
-In-Reply-To: <3fa5bb51-f140-4cbb-b748-d264232c3eae@kernel.org>
-References: <20260529064355.922763-1-kalpan.jani@mpiricsoftware.com>
- <0f13954f-3bfa-4630-af9f-6f1f4b138a13@kernel.org>
- <19e72995d6d.89137929840232.7611532549298755137@mpiricsoftware.com>
- <bca2ad2f-1f45-45e7-a8bd-7a08dd7100c2@kernel.org>
- <19e830d30d7.701114c6187254.5018026155515510877@mpiricsoftware.com>
- <6d0b954c-4028-4c1e-bf02-5bf5f43f58af@kernel.org>
- <19f3b374a41.2132097d1809464.3759794617307044756@mpiricsoftware.com>
- <ad9044cd-ff6d-4a88-ba3f-fbba7d40b092@kernel.org>
- <19f3cca8500.ef8eb681856418.2642565239132356618@mpiricsoftware.com> <3fa5bb51-f140-4cbb-b748-d264232c3eae@kernel.org>
-Subject: Re: [PATCH net v2] mptcp: pm: drop pending ADD_ADDR when removing
- id 0 endpoint
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="gjsb3iVN"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1783575788;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OifTvRzURu2dVot9IJ7DSNor84sK2OfO99KNA1PqW3o=;
+	b=gjsb3iVNpJg/gmcCx0Qy34R7WBozs3vsPK68JOyg0MagmcNwIFUdHKAhk5RsQVcMXghLDw
+	tp+20OZUINZu6ZR8ZPElq2PdqMK/UlIrl5nJOKYjUVv6dB2RgilM3FFLUrd/g6/MwnL3QL
+	8RDGR/CLBTvt6R47KXfJ8MyOaSELXyY=
+Date: Thu, 09 Jul 2026 05:43:02 +0000
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
-Importance: Medium
-User-Agent: Zoho Mail
-X-Mailer: Zoho Mail
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: gang.yan@linux.dev
+Message-ID: <8155514655323d8c4a07da86d2b2ccdd7244c125@linux.dev>
+TLS-Required: No
+Subject: Re: [PATCH v2] mptcp: only set DATA_FIN when a mapping is present
+To: "Michael Bommarito" <michael.bommarito@gmail.com>, "Matthieu Baerts"
+ <matttbe@kernel.org>, "Mat Martineau" <martineau@kernel.org>
+Cc: "Geliang Tang" <geliang@kernel.org>, "Paolo Abeni" <pabeni@redhat.com>,
+ "Eric Dumazet" <edumazet@google.com>, "Jakub Kicinski" <kuba@kernel.org>,
+ mptcp@lists.linux.dev, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20260707171730.2679013-1-michael.bommarito@gmail.com>
+References: <2edcb1cd-f2db-4d0c-a0e3-fd2b4dd820fe@redhat.com>
+ <20260707171730.2679013-1-michael.bommarito@gmail.com>
+X-Migadu-Flow: FLOW_OUT
 
-Hi Matt,
+July 8, 2026 at 1:17 AM, "Michael Bommarito" <michael.bommarito@gmail.com=
+ mailto:michael.bommarito@gmail.com?to=3D%22Michael%20Bommarito%22%20%3Cm=
+ichael.bommarito%40gmail.com%3E > wrote:
 
-PR opened: https://github.com/multipath-tcp/packetdrill/pull/201
+Hi Michael
 
-One note on patch 1: v5 passes &anno_addr (a zeroed copy of msk_local)
-instead of addr directly. This works for no-port endpoints but is
-fragile for with-port ones. Should I send a corrected v6 for patch 1,
-or can you fix it up while applying?
-
-Cheers,
-Kalpan Jani
-
-
-From: Matthieu Baerts <matttbe@kernel.org>
-To: "Kalpan Jani"<kalpan.jani@mpiricsoftware.com>
-Cc: "mptcp"<mptcp@lists.linux.dev>, "martineau"<martineau@kernel.org>, "pab=
-eni"<pabeni@redhat.com>, "shardul.b"<shardul.b@mpiricsoftware.com>, "janak"=
-<janak@mpiric.us>, "kalpanjani009"<kalpanjani009@gmail.com>, "shardulsb08"<=
-shardulsb08@gmail.com>
-Date: Tue, 07 Jul 2026 19:44:57 +0530
-Subject: Re: [PATCH net v2] mptcp: pm: drop pending ADD_ADDR when removing =
-id 0 endpoint
-
- > On 07/07/2026 15:35, Kalpan Jani wrote:
- > > Hi Matt,
- > > Thank you for pointing me to add_addr_retry_errors.pkt =E2=80=94 that =
-makes the idiom clear. Inject a data packet after the del+re-add sequence a=
-nd expect a plain DSS ACK back with no add_address option piggybacked. On a=
-n unfixed kernel the stale entry causes a spurious ADD_ADDR(id=3D0) retrans=
-mit to appear on that ACK, which packetdrill catches as an unexpected optio=
-n.
- >=20
- > Great!
- >=20
- > > I will write the packetdrill test using that pattern and send v6 with:
- > >=20
- > > Patch 1: kernel fix (also correcting the addr argument =E2=80=94 the &=
-anno_addr copy in v5 is fragile for with-port endpoints)
- >=20
- > If that's the same version as the v5, no need to resend it.
- >=20
- > > Patch 2: packetdrill regression test in gtests/net/mptcp/regressions/
- >=20
- > Can you open a PR instead, please?
- >=20
- > https://github.com/multipath-tcp/packetdrill/
- >=20
- > Cheers,
- > Matt
- > --=20
- > Sponsored by the NGI0 Core fund.
- >=20
- >=20
+Thanks for the patch.
 
 
+>=20
+>=20mptcp_get_options() clears only the status group of struct
+> mptcp_options_received; data_seq, subflow_seq and data_len are filled i=
+n
+> by mptcp_parse_option() exclusively inside the DSS mapping block, which
+> runs only when the DSS M (mapping present) bit is set.
+>=20
+>=20A peer can send a DSS option with the DATA_FIN flag set but the mappi=
+ng
+> bit clear. The parser then records mp_opt->data_fin while leaving
+> data_len and data_seq uninitialized. For a zero-length segment
+> mptcp_incoming_options() evaluates
+>=20
+>=20 if (mp_opt.data_fin && mp_opt.data_len =3D=3D 1 &&
+>  mptcp_update_rcv_data_fin(msk, mp_opt.data_seq, mp_opt.dsn64))
+>=20
+>=20which reads the uninitialized data_len and data_seq; KMSAN reports an
+> uninit-value in mptcp_incoming_options(). The stale data_seq can also b=
+e
+> fed into the receive-side DATA_FIN sequence tracking.
+>=20
+>=20Record the DATA_FIN flag only when the DSS option carries a mapping, =
+so
+> data_fin is never set without data_seq and data_len also being present.
+> data_fin is part of the status group that mptcp_get_options() clears up
+> front, so on the no-map path it stays zero and the zero-length DATA_FIN
+> branch is simply skipped. A DATA_FIN is always transmitted together wit=
+h
+> a mapping (mptcp_write_data_fin() sets use_map along with data_seq and
+> data_len), so legitimate DATA_FIN handling is unaffected.
+>=20
+>=20Fixes: 43b54c6ee382 ("mptcp: Use full MPTCP-level disconnect state ma=
+chine")
+> Suggested-by: Paolo Abeni <pabeni@redhat.com>
+> Cc: stable@vger.kernel.org
+> Assisted-by: Claude:claude-opus-4-8
+> Signed-off-by: Michael Bommarito <michael.bommarito@gmail.com>
+> ---
+> v2: adopt Paolo Abeni's suggested approach - do not set mp_opt->data_fi=
+n
+>  at all unless a mapping is present, rather than gating the consumer in
+>  mptcp_incoming_options() (v1). data_fin then defaults to the value
+>  mptcp_get_options() already clears it to (0) on the no-map path, so
+>  the uninitialized data_len/data_seq are never read.
+>=20
+>=20 net/mptcp/options.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+>=20diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+> index dff3fd5d3b559..6d003b24b969f 100644
+> --- a/net/mptcp/options.c
+> +++ b/net/mptcp/options.c
+> @@ -157,7 +157,6 @@ static void mptcp_parse_option(const struct sk_buff=
+ *skb,
+>  ptr++;
+>=20
+>=20 flags =3D (*ptr++) & MPTCP_DSS_FLAG_MASK;
+> - mp_opt->data_fin =3D (flags & MPTCP_DSS_DATA_FIN) !=3D 0;
+>  mp_opt->dsn64 =3D (flags & MPTCP_DSS_DSN64) !=3D 0;
+>  mp_opt->use_map =3D (flags & MPTCP_DSS_HAS_MAP) !=3D 0;
+>  mp_opt->ack64 =3D (flags & MPTCP_DSS_ACK64) !=3D 0;
+> @@ -178,6 +177,7 @@ static void mptcp_parse_option(const struct sk_buff=
+ *skb,
+>  }
+>=20
+>=20 if (mp_opt->use_map) {
+> + mp_opt->data_fin =3D (flags & MPTCP_DSS_DATA_FIN) !=3D 0;
+>  if (mp_opt->dsn64)
+>  expected_opsize +=3D TCPOLEN_MPTCP_DSS_MAP64;
+>  else
+
+One minor thing I noticed while reviewing: Sashiko previously pointed out
+in a comment that the 'pr_debug' logging 'mp_opt->data_fin' might be
+problematic because it's printed before data_fin is actually assigned
+(since data_fin is now set only inside the if (mp_opt->use_map) block).=
+=20
+
+I=20think it would be cleaner to move the pr_debug call after the data_fi=
+n
+assignment, so the logged value is always meaningful and consistent with
+the actual parsed state, like:
+
+'''
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index b924209a9b74..f58eb24f4d35 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -162,11 +162,6 @@ static void mptcp_parse_option(const struct sk_buff =
+*skb,
+                mp_opt->ack64 =3D (flags & MPTCP_DSS_ACK64) !=3D 0;
+                mp_opt->use_ack =3D (flags & MPTCP_DSS_HAS_ACK);
+=20
+-=20              pr_debug("data_fin=3D%d dsn64=3D%d use_map=3D%d ack64=
+=3D%d use_ack=3D%d\n",
+-                        mp_opt->data_fin, mp_opt->dsn64,
+-                        mp_opt->use_map, mp_opt->ack64,
+-                        mp_opt->use_ack);
+-
+                expected_opsize =3D TCPOLEN_MPTCP_DSS_BASE;
+=20
+=20               if (mp_opt->use_ack) {
+@@ -184,6 +179,11 @@ static void mptcp_parse_option(const struct sk_buff =
+*skb,
+                                expected_opsize +=3D TCPOLEN_MPTCP_DSS_MA=
+P32;
+                }
+=20
++=20              pr_debug("data_fin=3D%d dsn64=3D%d use_map=3D%d ack64=
+=3D%d use_ack=3D%d\n",
++                        mp_opt->data_fin, mp_opt->dsn64,
++                        mp_opt->use_map, mp_opt->ack64,
++                        mp_opt->use_ack);
++
+                /* Always parse any csum presence combination, we will en=
+force
+                 * RFC 8684 Section 3.3.0 checks later in subflow_data_re=
+ady
+                 */
+'''
+
+This change isn't critical to the fix itself, so feel free to let Paolo/M=
+att and
+other Maintainers decide if it should go in now, later, or not at all.
+
+A couple of additional notes for future submissions (just friendly remind=
+ers):
+
+- The subject-prefix convention for MPTCP patches is typically [PATCH mpt=
+cp-net]
+  for bug fixes targeting the net tree, or [PATCH mptcp-next] for new fea=
+tures.
+  Since this is a fix, something like [PATCH mptcp-net v2] would be more =
+appropriate.
+
+- It's also helpful to include a Link: to the previous version (v1) in th=
+e changelog,
+  so reviewers can easily track the discussion history.
+
+Looking forward to seeing more of your work on the MPTCP mailing list!
+
+Thanks,
+Gang
+> --
+> 2.53.0
+>
