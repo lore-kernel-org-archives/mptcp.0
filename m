@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 752FA3DBD47
-	for <mptcp@lists.linux.dev>; Thu,  9 Jul 2026 07:07:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 698AD3DDDB8
+	for <mptcp@lists.linux.dev>; Thu,  9 Jul 2026 07:07:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783580827; cv=none; b=s5TsUGS/j5vPxEWgYVhH6W+rUVu72IjW3LJ2c3iaXTKf9O10I7D0IUwrYeJ17/NyEjF/faFBzPczZqollI4woby8ACqx0bQPsf9FEPwtgaPQ2YK7+pNVVDjiAFhMtTr+XTXpMah/KKUMvK8qMDUhUdiwdZhIAp1RRa+tN6DbC6M=
+	t=1783580827; cv=none; b=KZCcnsmv7/0VbHpExYatsDa4efYX3+C/Mve6+kusVWKomAIQgAzukzrzArtxhS940J5kwOgYVjVA/n7kQCZBI3EXxaQ2pxwHONOUxvRUUypeB1NeTyZjRoXRm816eVzVeh+Uql3mkBE5kwUL4TwCcJIoluocYR9PU7bTPdwNXE4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1783580827; c=relaxed/simple;
-	bh=HHWgYdeLvN6aOakvRE9hGyicdrRASmOxiT0XvmYZ+oo=;
+	bh=BdnTCPjlXR6bjdNAYKpaamtQgkfulfiTu1eHR3d1HQk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FpDNizNQdUD3C0/g3t3+ajLp/v8tbY2T339lTI8h9V7b4ZbM8z9EwuqNdEWW7cEciog1OB/H6FKgMt/xQZBWnl/h6mVjXjbjomgzqGCwKFaxjQ7sXN64KtMR+72LWSqtgG+bi9om3pW3ceKyEOauGi+B97JpCC0HC6j+8+V/xtw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mJ51KhzE; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=cloxl1k8Q0+AguAGuKeze5mHkyG50Gg6s6Es0kg3Jg1uJLmkLbMdfrpkapN4k2Q7k5YvztuLM/e9V+YfaFtChc8B5Vad3MGoB3vzzrDYCHSnhI1ghvRO7Y2VwWVfTOOyfFwlvQR8No0ghnG7p1eLnIquNUlhlfvS5/EecTatSME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PzATAZT5; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mJ51KhzE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25AAE1F00ACA;
-	Thu,  9 Jul 2026 07:07:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PzATAZT5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F280C1F00A3D;
+	Thu,  9 Jul 2026 07:07:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783580823;
-	bh=9egIk76lj8tPOGSN6ZuRCjdNcoN4FCpgbxGdcdIYXCA=;
+	s=k20260515; t=1783580825;
+	bh=pHvnr71QJwENXLvoJedloCMOxpR9IVA+nEr8EXMaMG0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=mJ51KhzEdnqXH0VZr2CYjFT8EUiJThPtT25BHU6beVTFmZikaJqhXgsjgBmlVu/ML
-	 cd2WjH4ZFWOrWgmJgFSTQd09W1D17eYfKg1LEv7jNPpyy9eS0EalmnQpaX6t18gu2q
-	 YN6PqDPsLzZVIa2wzY1Fn2sxog9ExuZf7GZjrlcnglaopMmy1Em0op6DNG5ognnV5Z
-	 cbltKn3SOpyzd6nR7mxDmPNUYborKJr+aP+/goixGic4dRWSZ1HodPBbonJWTsg+P0
-	 D0R3H+O7uLbU1nkjT07U6ZuL/81/Z2liqndab9sflPTaOBEQl8l7ZTnTaIpZG5Ox32
-	 KsD5DOu9si9ng==
+	b=PzATAZT59HvvqjEMo0U0KNgfYnclBKRKc3s2IuGpixvVXetUgML7sYCNHlzCAVWJu
+	 oVfLyWojcsE0aDRAmTpsCpmVJ9et8bjNTh3+T9cHju5B3LDK4mXcGFyO4sEJGz/Fx5
+	 M4/5CKgd3Zq2dsnTLTUV5mD/S1Rf9WD/x4fsPUgCYS06l9mdjWPJFqT5BFySfCWHd5
+	 ZfaAclDtrFceT/5Z87Ez8Ktydg36a79JFwjvZ88URTbJ8SLIldVMy6rS6RuGISAkKq
+	 SbJrm/iRS3bKJKyMOWOHsOUBDS40cdp9yeAgwDt23xGSOILRYVNjbA3Xpf1lpZ3jMj
+	 rtY8CGpN5pZHA==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v5 04/12] selftests: mptcp: sockopt: use unix socket instead of pipe
-Date: Thu,  9 Jul 2026 15:06:13 +0800
-Message-ID: <1b241d5da44a9dc841f3485974d5169c72c0a9f4.1783579976.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v5 05/12] selftests: mptcp: sockopt: pass echo length over unixfd
+Date: Thu,  9 Jul 2026 15:06:14 +0800
+Message-ID: <9c55800b7800971f03600521d5841589452f5db2.1783579976.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <cover.1783579976.git.tanggeliang@kylinos.cn>
 References: <cover.1783579976.git.tanggeliang@kylinos.cn>
@@ -45,149 +45,77 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Replace pipe-based synchronization with Unix domain socket pairs
-(SOCK_DGRAM) for better bidirectional communication reliability between
-server and client processes.
+Pass 'len' from the server to the client over the unixfd control channel so
+that the client knows the server's payload size in advance for the FIONREAD
+loop and TCP_CM_INQ validation. Also keep the unixfd open for the second
+write by moving 'close(unixfd)' to the end of connect_one_server().
 
 These codes are from mptcp_inq.c.
 
+Note: Additionally, silence a -Wstringop-overflow false positive by using
+'len - total' as the read size, which lets GCC prove the destination is
+large enough.
+
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- .../selftests/net/mptcp/mptcp_sockopt.c       | 40 +++++++++----------
- 1 file changed, 20 insertions(+), 20 deletions(-)
+ tools/testing/selftests/net/mptcp/mptcp_sockopt.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-index c6ced79e5814..6738ad45b9eb 100644
+index 6738ad45b9eb..15c9f8dbae47 100644
 --- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
 +++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-@@ -592,7 +592,7 @@ static void do_getsockopts(struct so_state *s, int fd, size_t r, size_t w)
- 		do_getsockopt_mptcp_full_info(s, fd);
- }
- 
--static void connect_one_server(int fd, int pipefd)
-+static void connect_one_server(int fd, int unixfd)
- {
- 	char buf[4096], buf2[4096];
- 	size_t len, i, total;
-@@ -617,9 +617,9 @@ static void connect_one_server(int fd, int pipefd)
- 	do_getsockopts(&s, fd, 0, 0);
- 
+@@ -619,10 +619,12 @@ static void connect_one_server(int fd, int unixfd)
  	/* un-block server */
--	ret = read(pipefd, buf2, 4);
-+	ret = read(unixfd, buf2, 4);
+ 	ret = read(unixfd, buf2, 4);
  	assert(ret == 4);
--	close(pipefd);
-+	close(unixfd);
+-	close(unixfd);
  
  	assert(strncmp(buf2, "xmit", 4) == 0);
  
-@@ -661,7 +661,7 @@ static void connect_one_server(int fd, int pipefd)
++	ret = write(unixfd, &len, sizeof(len));
++	assert(ret == (ssize_t)sizeof(len));
++
+ 	ret = write(fd, buf, len);
+ 	if (ret < 0)
+ 		die_perror("write");
+@@ -632,7 +634,7 @@ static void connect_one_server(int fd, int unixfd)
+ 
+ 	total = 0;
+ 	do {
+-		ret = read(fd, buf2 + total, sizeof(buf2) - total);
++		ret = read(fd, buf2 + total, len - total);
+ 		if (ret < 0)
+ 			die_perror("read");
+ 		if (ret == 0) {
+@@ -659,12 +661,14 @@ static void connect_one_server(int fd, int unixfd)
+ 
+ 	assert(s.mptcpi_rcv_delta == (uint64_t)total);
  	close(fd);
++	close(unixfd);
  }
  
--static void process_one_client(int fd, int pipefd)
-+static void process_one_client(int fd, int unixfd)
+ static void process_one_client(int fd, int unixfd)
  {
  	ssize_t ret, ret2, ret3;
  	struct so_state s;
-@@ -670,7 +670,7 @@ static void process_one_client(int fd, int pipefd)
- 	memset(&s, 0, sizeof(s));
- 	do_getsockopts(&s, fd, 0, 0);
++	size_t expect_len;
+ 	char buf[4096];
  
--	ret = write(pipefd, "xmit", 4);
-+	ret = write(unixfd, "xmit", 4);
+ 	memset(&s, 0, sizeof(s));
+@@ -673,6 +677,12 @@ static void process_one_client(int fd, int unixfd)
+ 	ret = write(unixfd, "xmit", 4);
  	assert(ret == 4);
  
++	ret = read(unixfd, &expect_len, sizeof(expect_len));
++	assert(ret == (ssize_t)sizeof(expect_len));
++
++	if (expect_len > sizeof(buf))
++		xerror("expect len %zu exceeds buffer size", expect_len);
++
  	ret = read(fd, buf, sizeof(buf));
-@@ -739,7 +739,7 @@ static int xaccept(int s)
- 	return fd;
- }
- 
--static int server(int pipefd)
-+static int server(int unixfd)
- {
- 	int fd = -1, r;
- 
-@@ -755,13 +755,13 @@ static int server(int pipefd)
- 		break;
- 	}
- 
--	r = write(pipefd, "conn", 4);
-+	r = write(unixfd, "conn", 4);
- 	assert(r == 4);
- 
- 	alarm(15);
- 	r = xaccept(fd);
- 
--	process_one_client(r, pipefd);
-+	process_one_client(r, unixfd);
- 
- 	close(fd);
- 	return 0;
-@@ -805,7 +805,7 @@ static void test_ip_tos_sockopt(int fd)
- 		xerror("expect socklen_t == -1");
- }
- 
--static int client(int pipefd)
-+static int client(int unixfd)
- {
- 	int fd = -1;
- 
-@@ -824,7 +824,7 @@ static int client(int pipefd)
- 
- 	test_ip_tos_sockopt(fd);
- 
--	connect_one_server(fd, pipefd);
-+	connect_one_server(fd, unixfd);
- 
- 	return 0;
- }
-@@ -878,35 +878,35 @@ int main(int argc, char *argv[])
- {
- 	int e1, e2, wstatus;
- 	pid_t s, c, ret;
--	int pipefds[2];
-+	int unixfds[2];
- 
- 	parse_opts(argc, argv);
- 
- 	init_rng();
- 
--	e1 = pipe(pipefds);
-+	e1 = socketpair(AF_UNIX, SOCK_DGRAM, 0, unixfds);
- 	if (e1 < 0)
--		die_perror("pipe");
-+		die_perror("socketpair");
- 
- 	s = xfork();
- 	if (s == 0) {
--		close(pipefds[0]);
--		ret = server(pipefds[1]);
--		close(pipefds[1]);
-+		close(unixfds[0]);
-+		ret = server(unixfds[1]);
-+		close(unixfds[1]);
- 		return ret;
- 	}
- 
--	close(pipefds[1]);
-+	close(unixfds[1]);
- 
- 	/* wait until server bound a socket */
--	e1 = read(pipefds[0], &e1, 4);
-+	e1 = read(unixfds[0], &e1, 4);
- 	assert(e1 == 4);
- 
- 	c = xfork();
- 	if (c == 0)
--		return client(pipefds[0]);
-+		return client(unixfds[0]);
- 
--	close(pipefds[0]);
-+	close(unixfds[0]);
- 
- 	ret = waitpid(s, &wstatus, 0);
- 	if (ret == -1)
+ 	if (ret < 0)
+ 		die_perror("read");
 -- 
 2.53.0
 
