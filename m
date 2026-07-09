@@ -1,229 +1,133 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9AE9426EA0
-	for <mptcp@lists.linux.dev>; Thu,  9 Jul 2026 16:07:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E2F830567C
+	for <mptcp@lists.linux.dev>; Thu,  9 Jul 2026 17:34:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783613241; cv=none; b=YdwaR6uvNH2cmeRfoc9ByAvjV+3rREubSAFYJd5GKAdY1Ej32Hlu5cC3dr8934DeN7lAj8ruToi9mlzO4wI8uzUA0E00ARFytPbMa+zRPdtj8ui/dUsec5IqdI8hl/W+W3Z4ax/+s0Bu7+zST2LQ90KhmbpsifZajspwe4gL714=
+	t=1783618482; cv=none; b=u6nBd7viZzvhdz4vInGTBTmNB6mBRmTjbCnhz2sRVcBGMTWs57xmMshPPRrDDTOrCbihtxeVMx4+rEsbcrcbdD/+nu2X1/gJw0DkikM4vUYBz/fsSrwsd73UIvAGRK4NV13gSqBozNJyxjMd62lVwPro+AipWhub77MSri5N4OE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783613241; c=relaxed/simple;
-	bh=BVUJlpvvmDJOujGyrHtGzu0mkqGHEkbfifPmgmytbQk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=tLZfVJTUSTrvuVDBeEpubBlUl+yuTBk+/PmcqcQ4YDoOiGA5FqX5ROeeOYax56MspRDX/R1SdI0qNlkaR8n7EcyTEjRKZk5FqBkFt3UobouLW2r1XEb0rzMoZkGcV0HKIC5naqiDQS66neI98hQV0kdX7dMb2hVQ+u0/gvoUAY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GEpfigDc; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1783618482; c=relaxed/simple;
+	bh=acnldvUNeT74JR15pjOM3WH0K49MdaRkGBIbsuAJHs8=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
+	 MIME-Version:Content-Type; b=iJFPNP//JjOeY/NibiGe5zF/S35wC5DKBhVO62x8EyBBcaAsqqm+BtAp6PbzT3SEsJ1aHwZOy4jizd/jQK1ZZN0A1PXxyBRozBwYVFUjS0wpHjYNjMpDGvmLA56WorQzgp5/0hxD01zYxp9Q3rKdcw9brvD1PdDlKGmPg5IcDos=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=sIH3iR0O; arc=none smtp.client-ip=209.85.215.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GEpfigDc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E5551F000E9;
-	Thu,  9 Jul 2026 16:07:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783613239;
-	bh=tPXGBPKFIoQPym4XvzGinXLvLPE3deAyTa0+qjjse0s=;
-	h=From:Date:Subject:To:Cc;
-	b=GEpfigDcswOBKcQileEi+Jk3oZSl+kKgFfKuCFk9V5aLxyPMytib41eZZCi11sRyR
-	 lEUJvNx+VS21akxSzPDkKzFDDnJoK00qg4dVDthwH5PiUPZ61UrhfhubfPbSEXm4IZ
-	 cPw2RMFbGeFNQeB6KzNqeMSeRjK/Zfhfaq6GX/ZMjfe1GE8ECfszf1C09mh+Bg1HGq
-	 Xr+kosI5/gCleUCi8+EAD+b2FN3+DQnlXbJ/Zgmsida06PjqfCFVunw8Sy3cJGfXLH
-	 STgYTDia+hyY8Vmy60dSJQTsLijpZ8aO0M+LKuVeB+Ri2jC4g5XhumMGGp/GOLxL6r
-	 I0IZwiQ3rdKaw==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Thu, 09 Jul 2026 18:07:07 +0200
-Subject: [PATCH mptcp-net] mptcp: avoid combining some incoming suboptions
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sIH3iR0O"
+Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-ca12086c06eso93853a12.0
+        for <mptcp@lists.linux.dev>; Thu, 09 Jul 2026 10:34:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1783618481; x=1784223281; darn=lists.linux.dev;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=tK0LdFSVZLpOOQcJW9McXj2K4RqXueHUPP9KbkE52lc=;
+        b=sIH3iR0OkFZ2SRvr1WB/Fi5xp2tAaunxTYbG91OePDe2M9MkCzyT3rh3DdhjRROshf
+         oxF24lAbHQfFEvOOII6CcNdyuSpiS8LaRfE5asRNLepR8tSqk+5WQGDhXbef4BVXv7U3
+         mUOQf6ghFXEcNSbIObIuawbKyNjOCsAwe/6vZWe86zgF7bJYaFVzte3j8MMQIueR1Pe6
+         XOxJ/00w9N/XOb8DRoyaWbdo1gJnBu+3OTlq93mhx02mjLbW+CVjdao/rlSjJwr8NIvd
+         b82jcAJkuvdY5kJ5ZwdpgCDZS695/Rcmb9sqgqefE5fMixePbsN7CX7vAheR6wstek7R
+         2SOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1783618481; x=1784223281;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=tK0LdFSVZLpOOQcJW9McXj2K4RqXueHUPP9KbkE52lc=;
+        b=BMPrlTCzHue/HO0qp8dC3p3SaYttTTZ+Fi9kCMgkUAWiUTgIJCl5MS8yqteo3LUaH5
+         F9TNbkX8fExoPr9+D1W7fWO2nWNLetENLLyQsiZkXNjGFUnrhsum8wpzCsEBJj32HvtL
+         k3UQC24iKdbt6lGxOHXFJqpoD0NEX8vAnhiu88Nhb6jDARsEquJG6xSEOn44sHk9eQ5C
+         kjbgMIoF/eg77qI2pK+VBR2pyPdZdvaoz46IB4MFaOdt78GRtM7NKouL978PuR3Sp8fi
+         vdkcBS7E/hkW2ffNFWxp6tjaduQiStytS6vtZUCjLMOTxzKbaRzaLpZw7uX0l78KsO+C
+         Cyqw==
+X-Gm-Message-State: AOJu0Yyi4h6XyvCXPt4MGeGA/IlUXqYujRRm1Axxz5LFrsI/eLN7Uxf9
+	awBHieRUmHhQ+ficu6Z/qsqDtnrV4fXmM8eF/VihV8HfQGLjbesrG5c=
+X-Gm-Gg: AfdE7cnlkb4ANFckfvqrDtY6FRJ53BGSsZsk7xJRASHUWEYi6kXNGesMgEAu/DICgXc
+	gvPzyGLi/49pjpEk74OTQ4OvuK9uNNwBpiaBWkNMPUABSYFgYOk7OIqsUmb4Fz1oR1Zaj4UfI7G
+	PlA9QgR4rozljN4bAQqEWkSHWGxzFLq6oEqkfTrz+WGPCG1YlJVB4/ZfywTvS1GF69Mh1EVQiVI
+	07DRb7icDSArV7npR5sgLE6nzEp1u8nmZzKLukMSRvP/nc2EJZAMulDlrJ+Q16Gde60+El2XFQB
+	xS2CAUjdwiuekkC/fbt1AVdnrkI23yksImFyVOMjl0pRCbDntTnjtCkI0eyOrrnZdP0twV9G4pZ
+	53GXxz0HmRCU/rnJk6q/Dt2zDDUBSONv41Ktgo5th/d7EJbxmPstSY/6xDK3wy8m/OqqrjH5AvW
+	4puLvIU6P+J1Ddx8RMhFjGLF7SSf4bRZtPE4MA90U=
+X-Received: by 2002:a05:6a20:a11c:b0:3c0:b4f8:bbe3 with SMTP id adf61e73a8af0-3c0bc9ba23dmr10987815637.23.1783618480637;
+        Thu, 09 Jul 2026 10:34:40 -0700 (PDT)
+Received: from [127.0.0.1] ([172.184.214.227])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-13b659d87a2sm30510323c88.13.2026.07.09.10.34.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jul 2026 10:34:40 -0700 (PDT)
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <20260709-mptcp-harden-combine-opt-v1-1-378b0a47c1b5@kernel.org>
+References:
+ <20260709-mptcp-harden-combine-opt-v1-1-378b0a47c1b5@kernel.org>
+Subject: Re: [PATCH mptcp-net] mptcp: avoid combining some incoming
+ suboptions
+Message-ID: <acbf948a-d557-ade1-6fdb-89d6fc968a81@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 09 Jul 2026 17:34:39 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260709-mptcp-harden-combine-opt-v1-1-378b0a47c1b5@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/yWMQQrCMBAAv1L27EISWot+RTykm9Wu0E1Iogilf
- ze2x2GYWaFwFi5w7VbI/JEiURvYUwc0e30ySmgMzrizGc0Fl1Qp4exzYEWKyyTKGFPF4K2x3NP
- g+hFanjI/5Luvb3BUyhXuhyrv6cVU/2vYth8CcuJUhwAAAA==
-X-Change-ID: 20260709-mptcp-harden-combine-opt-da101e4c5247
-To: MPTCP Linux <mptcp@lists.linux.dev>
-Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6059; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=BVUJlpvvmDJOujGyrHtGzu0mkqGHEkbfifPmgmytbQk=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLL8j5u9fdDyzX/r7olftzS3rp5QmMAm5B726r6UEGPmv
- Vc37z1T6yhlYRDjYpAVU2SRbovMn/m8irfEy88CZg4rE8gQBi5OAZiI7glGhpXqEuw9MtKHi9SL
- 836EfAk/Ne+26aR6qRl/Pnvwcr3J8GX4w3fQQ2n7/SnbjWUNW2c8uhbynP2doU6z7nF2jpTNChf
- suQE=
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+Content-Type: text/plain; charset=utf-8
 
-Some MPTCP suboptions are mutually exclusive according to the RFC8684,
-but also because in different places, the code doesn't expect some
-combinations to be present. That's specially true for suboptions that
-would be present twice, but with different attributes.
+Hi Matthieu,
 
-The new restrictions are the same as the ones applied on the output
-side, with mptcp_write_options. The same rules can be reused:
+Thank you for your modifications, that's great!
 
-  Which options can be used together?
+Our CI did some validations and here is its report:
 
-  X: mutually exclusive
-  O: often used together
-  C: can be used together in some cases
-  P: could be used together but we prefer not to (optimisations)
+- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/290339=
+74586
 
-  | Opt: | MPC  | MPJ  | DSS  | ADD  |  RM  | PRIO | FAIL |  FC  |
-  |------|------|------|------|------|------|------|------|------|
-  | MPC  |------|------|------|------|------|------|------|------|
-  | MPJ  |  X   |------|------|------|------|------|------|------|
-  | DSS  |  X   |  X   |------|------|------|------|------|------|
-  | ADD  |  X   |  X   |  P   |------|------|------|------|------|
-  | RM   |  C   |  C   |  C   |  P   |------|------|------|------|
-  | PRIO |  X   |  C   |  C   |  C   |  C   |------|------|------|
-  | FAIL |  X   |  X   |  C   |  X   |  X   |  X   |------|------|
-  | FC   |  X   |  X   |  X   |  X   |  X   |  X   |  X   |------|
-  | RST  |  X   |  X   |  X   |  X   |  X   |  X   |  O   |  O   |
-  |------|------|------|------|------|------|------|------|------|
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/cea92aeb202b
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1124826
 
-The only difference is with the 'P': another stack could send and
-ADD_ADDR with other suboptions (DSS, RM_ADDR), and this should be
-allowed.
 
-A point of attention is with the MP_CAPABLE: it could be used with a
-RM_ADDR, but there is no reason to add it with a SYN. Note that even
-with a 4th ACK, it doesn't seem to be useful, except when IDs are known
-in advance via another channel. Better not to break that.
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
 
-Fixes: eda7acddf808 ("mptcp: Handle MPTCP TCP options")
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- net/mptcp/options.c | 55 +++++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 55 insertions(+)
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 0ca60314d667..3fc368eb96d0 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -50,6 +50,14 @@ static void mptcp_parse_option(const struct sk_buff *skb,
- 			}
- 		}
- 
-+		/* Only the MPC + ACK can be used with a RM_ADDR */
-+		if (subopt == OPTION_MPTCP_MPC_ACK) {
-+			if ((mp_opt->suboptions & ~OPTION_MPTCP_RM_ADDR) != 0)
-+				break;
-+		} else if (mp_opt->suboptions != 0) {
-+			break;
-+		}
-+
- 		/* Cfr RFC 8684 Section 3.3.0:
- 		 * If a checksum is present but its use had
- 		 * not been negotiated in the MP_CAPABLE handshake, the receiver MUST
-@@ -122,6 +130,11 @@ static void mptcp_parse_option(const struct sk_buff *skb,
- 		break;
- 
- 	case MPTCPOPT_MP_JOIN:
-+		/* Can be used with a restricted number of other options */
-+		if ((mp_opt->suboptions & ~(OPTION_MPTCP_RM_ADDR |
-+					    OPTION_MPTCP_PRIO)) != 0)
-+			break;
-+
- 		if (opsize == TCPOLEN_MPTCP_MPJ_SYN) {
- 			mp_opt->suboptions |= OPTION_MPTCP_MPJ_SYN;
- 			mp_opt->backup = *ptr++ & MPTCPOPT_BACKUP;
-@@ -153,6 +166,13 @@ static void mptcp_parse_option(const struct sk_buff *skb,
- 		break;
- 
- 	case MPTCPOPT_DSS:
-+		/* Can be used with a restricted number of other options */
-+		if ((mp_opt->suboptions & ~(OPTION_MPTCP_ADD_ADDR |
-+					    OPTION_MPTCP_RM_ADDR |
-+					    OPTION_MPTCP_PRIO |
-+					    OPTION_MPTCP_FAIL)) != 0)
-+			break;
-+
- 		pr_debug("DSS\n");
- 		ptr++;
- 
-@@ -234,6 +254,12 @@ static void mptcp_parse_option(const struct sk_buff *skb,
- 		break;
- 
- 	case MPTCPOPT_ADD_ADDR:
-+		/* Can be used with a restricted number of other options */
-+		if ((mp_opt->suboptions & ~(OPTION_MPTCP_DSS |
-+					    OPTION_MPTCP_RM_ADDR |
-+					    OPTION_MPTCP_PRIO)) != 0)
-+			break;
-+
- 		mp_opt->echo = (*ptr++) & MPTCP_ADDR_ECHO;
- 		if (!mp_opt->echo) {
- 			if (opsize == TCPOLEN_MPTCP_ADD_ADDR ||
-@@ -293,6 +319,14 @@ static void mptcp_parse_option(const struct sk_buff *skb,
- 		break;
- 
- 	case MPTCPOPT_RM_ADDR:
-+		/* Can be used with a restricted number of other options */
-+		if ((mp_opt->suboptions & ~(OPTION_MPTCP_MPC_ACK |
-+					    OPTIONS_MPTCP_MPJ |
-+					    OPTION_MPTCP_DSS |
-+					    OPTION_MPTCP_ADD_ADDR |
-+					    OPTION_MPTCP_PRIO)) != 0)
-+			break;
-+
- 		if (opsize < TCPOLEN_MPTCP_RM_ADDR_BASE + 1 ||
- 		    opsize > TCPOLEN_MPTCP_RM_ADDR_BASE + MPTCP_RM_IDS_MAX)
- 			break;
-@@ -307,6 +341,13 @@ static void mptcp_parse_option(const struct sk_buff *skb,
- 		break;
- 
- 	case MPTCPOPT_MP_PRIO:
-+		/* Can be used with a restricted number of other options */
-+		if ((mp_opt->suboptions & ~(OPTIONS_MPTCP_MPJ |
-+					    OPTION_MPTCP_DSS |
-+					    OPTION_MPTCP_ADD_ADDR |
-+					    OPTION_MPTCP_RM_ADDR)) != 0)
-+			break;
-+
- 		if (opsize != TCPOLEN_MPTCP_PRIO)
- 			break;
- 
-@@ -316,6 +357,10 @@ static void mptcp_parse_option(const struct sk_buff *skb,
- 		break;
- 
- 	case MPTCPOPT_MP_FASTCLOSE:
-+		/* Can be used only with RST */
-+		if ((mp_opt->suboptions & ~OPTION_MPTCP_RST) != 0)
-+			break;
-+
- 		if (opsize != TCPOLEN_MPTCP_FASTCLOSE)
- 			break;
- 
-@@ -327,6 +372,11 @@ static void mptcp_parse_option(const struct sk_buff *skb,
- 		break;
- 
- 	case MPTCPOPT_RST:
-+		/* Can be used with a restricted number of other options */
-+		if ((mp_opt->suboptions & ~(OPTION_MPTCP_FAIL |
-+					    OPTION_MPTCP_FASTCLOSE)) != 0)
-+			break;
-+
- 		if (opsize != TCPOLEN_MPTCP_RST)
- 			break;
- 
-@@ -342,6 +392,11 @@ static void mptcp_parse_option(const struct sk_buff *skb,
- 		break;
- 
- 	case MPTCPOPT_MP_FAIL:
-+		/* Can be used with a restricted number of other options */
-+		if ((mp_opt->suboptions & ~(OPTION_MPTCP_DSS |
-+					    OPTION_MPTCP_RST)) != 0)
-+			break;
-+
- 		if (opsize != TCPOLEN_MPTCP_FAIL)
- 			break;
- 
+For more details:
 
----
-base-commit: 32300613e740604f4f64881581f74c508d4e412b
-change-id: 20260709-mptcp-harden-combine-opt-da101e4c5247
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
 
-Best regards,
---  
-Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
