@@ -1,216 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC7FE3F23AF;
-	Thu,  9 Jul 2026 12:27:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783600023; cv=none; b=P2MOHpyQdKYgsBHrSCEikN7rJv/3JyCwAyiPDD9B57Krg7MqUlNcD35tIThQVOn0RNUdQ7W8+nxEk563sm/XNmiGEWIOU9ArL8NbcT/px58DS6VvR8Ae3KkCO6ZooSyB20WlOZaG/18vRPghGG8nvJSfennm+piujyuZVZQ1yNk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783600023; c=relaxed/simple;
-	bh=v1Fh7OWmq/hgyatfTis5Tnl4T9pLqRXS/pUE1Bio3gs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WDXTxznTcvKnda1I3PB8MpZKx4xg29AGVwGuG4KI3rt2vvnGeU3rLUWMtziPi3X7/S5UshaE6LJ3FmrLX8NAJIDH5oCUjNxfvgI8qJ5JkQtaqYnt9sYlAwKuMCUlncGWg+Piy2Y7J/iaNTIc2AC9jY9Zn1364YRTQXTjnMcLxBA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JQFdS78B; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B1BE1FC0EA
+	for <mptcp@lists.linux.dev>; Thu,  9 Jul 2026 13:12:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.128.177
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1783602771; cv=pass; b=ORCLKad06vVWlT5WgedWrOVyU9XiJOnGjHkM2PWvAX96tJbtyZGPTQUm9dsLqjd6l+TpzOcNG6nSNq9RbsKLbjKCTXn6wQNX9/y8jP5TE730QDYIItVj9Xu5lopKsLPMKJft0sZwTcQZ0r/vtXsSakSPSxXciKz3XaI6lGg8y7Q=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1783602771; c=relaxed/simple;
+	bh=LuPyH45JluGUsFbICdv0dPPjeFb1YqiZhn15J0rMzCo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fQrJIIy1Ndvy7MehLpc0NUzZ+A5U3NLdAC5ytFJDuflSDZRTqTiejDiqV09RWQO92upYmVy8F/yFOsDqCWXPCa6NddicNgDmwOaciWjcapPVjfzHdkjXuAh8lCmq/iXcpJMRQa9Kxu48U+bTRweOykkdcyMTNgc/SspWWuhUaaI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OWRx9lNA; arc=pass smtp.client-ip=209.85.128.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JQFdS78B"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 128771F000E9;
-	Thu,  9 Jul 2026 12:26:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783600022;
-	bh=xVHh7g8SYwYGJGtfysLs07tEzq4wF0oBi4U8l3YY2Xc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=JQFdS78BckhReHmupxhHrvodd7wWnuHp3wRPS/TNTgf3GSf1wjG1i/1JBAILu20qo
-	 vCja3fQCT91vNvUOnZWkYHl7J+m2sUsE4ui/BOVqsY/DPELxBDUYnEy981fYuN/Yk5
-	 TbmV6jjo0rW/j9qrKqAi4dvys1IK5Qv3Fiap2SDeTJjsFG9l8ntkPV+5uCLvL01rmI
-	 i70oQfltPnA+7L3O/e5WnB8oiIu7yzmpWabl1FRWGU8E0AILItBI0Ca55bgmau/tnT
-	 qQvHUdH8rtg6mMrcuZJi8OVKUCu3asPQJOZg14yipSb5pqwL4YRyXHNArsGjw4lWrl
-	 Qeaknd+5Hqs6Q==
-Message-ID: <8d735844-dccb-4a65-b7fc-468d144ebc02@kernel.org>
-Date: Thu, 9 Jul 2026 14:26:57 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OWRx9lNA"
+Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-81e763fb7bbso2931257b3.0
+        for <mptcp@lists.linux.dev>; Thu, 09 Jul 2026 06:12:49 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1783602768; cv=none;
+        d=google.com; s=arc-20260327;
+        b=G90INXp0QLXs/zExS4XVLVIErwTJVPNcy3BClvlpvLr+J3BtaPI9X24UjNE2q7d47g
+         ZvYMIjSONG//VWoPAkPZM8XLvAKhBwUi/C0uBCU+3maAxkYKirgpPk0CY36n2w19v3DA
+         K/BEMtegcTcWhwEA/v985jjQHfZvi9NPZ7No3Pqyx6Kn//tTTd8a/IxuBpEzs5k1vUot
+         vydFXe2jMvfJz+2+iaOKR/9adnQDJBXrA5QpQUea9kjKxmx5pvuuJWqOQAOjq3uKguYH
+         tt3OJorfpcixAoojhKZ1pGu5HtRpPEJsbfdRps/18iMGWevOOA67w0/hu7svJ0FTkNsW
+         dsTA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=Jjrc/YslrI9jNEKvWNKtjZOydztcYkfUnEU0y2FxQDk=;
+        fh=gaWcupY6dHTQ4NjPfkmtDn418zSI2ME8nc3bj7BbZ5Y=;
+        b=qiJiE+iwPS5gmfD/4DEUDRqr38Z0WWHXsp4Chl24SWlt3XyESwXsqs6RKahxCUkEpT
+         mFjj8m1hAeGzis7qY9pbeK6C82cLEawkLyDs8cN4IC9x3Z0/CZAgEi6RCobK/oqnp/jC
+         kT4nXu02nxb8onFhme3GwLcZ4Gt6U+IkiuDqPLZSZSmrgOA+tX/LinbtFhJO5a3se/wk
+         Ojrd0PwdgajomdaUm5Zm8gnZqjpCHNpLH6daTG4uHFkyMz/H1MlktanMKBS+kD1/5z+N
+         yqos1s6v3R2l3sE1CtSajIaW98Xgq8A+27+WGfxQ9w2IbnSgN+jj9DFnLvN9EOb2t3x8
+         lHJg==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1783602768; x=1784207568; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=Jjrc/YslrI9jNEKvWNKtjZOydztcYkfUnEU0y2FxQDk=;
+        b=OWRx9lNAioq08iUdX3rVvQqZMbzyQObS+i4DeCwhlHC/97JrpT2BsgCh2Y1IFaRvW3
+         45THrUm10aUtDxr443g+VvnLJy+mQOXm/q7KuVQWzDBulfQgv+TBbTYcrYpkjobpjUuB
+         K6lzLDmZEAn7589+oyq39lgPAHNbtrsZ1Mf/4eGs732hMNG+dtcm2lpbdbreMQRacQmf
+         AbdwZ8QaCAF/lzIVZOzbJZUWQZ8/OrqvwXEwPoEmjIKKDeW9AzXUPPasDRHbz8rSm4xK
+         OKw+uMlMIE6IUd00Mr8vITI7AzkBbRKHxK7p0ysho2nEQucFEwv+YRlOcpkk1Ab7KcWN
+         VObA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1783602768; x=1784207568;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=Jjrc/YslrI9jNEKvWNKtjZOydztcYkfUnEU0y2FxQDk=;
+        b=YXiViThM3xx5gbZGA9q7OFLdPXEpThAkmbYRRcZroqdH0FGsdEl3j380gIg2eGleux
+         hktKcUTc6igPHmz3kMFucJgReuPmlKzpgHtDOuH7Drcd8UqQ7ENuJutF3vlXC5UQPLqX
+         0YpsaaAWvJ74RWiP1DTse7Oi+1BPHbdehYQixUl8b/g+ZWz9nIl4wR+f8OyT2gkYZwk3
+         6s6IM2m3sH3hg2aOEQh7Sm+uF438e3UaIMarud9WWoqgDQbN3wxuolpccNeiqNo3rAKi
+         SBNLkfR8NOgv81LoAueruFsSU0W619rxaI1dNFze7bJQ9rBTKz9KRVA7sSH4/ZhP9XG3
+         FyGg==
+X-Forwarded-Encrypted: i=1; AHgh+RoXAonfIuckq17tkHuPDG9GxDIauBcVNqZeKvLGR5aImatK42Ti9cn17rmmFydSCBpDh0f8sA==@lists.linux.dev
+X-Gm-Message-State: AOJu0YyRPWF8+CafF7JFm8ElLtzSJvAzcIshf6U8P7snZjzIgHEBTq9J
+	Lem2tB53HIPyitSvGbd4Y9HDzYyt6PeEOciyNvy1b/En9TjSzyUdOMCTaX4gHv9uj5o8D+sODQt
+	2aJiYJqUylOJNleoCDecabruXLZ5QVRk=
+X-Gm-Gg: AfdE7cn2H9YVqWG9yP0YZUmDf0J0J5E65S52rdt/Ic9TcpDpyTH4BW2pkSSFNJNhakS
+	nIttJv+b+FEB0+E7zXeu4aR19db+C0mAhA1qA3+6pNWJeLzv2oQwEb8u3hGpDca46pFV4Xh29mU
+	nHWYsWhyQLKF9ST259HfaNuaQ3mxdqK2NQwN2c0mzISVjcs2uzwf6wr4M8EB/6nCeweE1mchVtF
+	C2Buck99XIU18Rb2sSy1Ix+jk4eL2cCTwdiBY0UrWsC4dUyMdQaelHDhAC/Cwp3XI+G27bVtEfk
+	OFxsaiKZScWf+Be2dMzhyVR5BtVDI4wlDTqU
+X-Received: by 2002:a05:690c:c0f:b0:80c:1df8:7c14 with SMTP id
+ 00721157ae682-81dbeb5c467mr57573557b3.48.1783602768316; Thu, 09 Jul 2026
+ 06:12:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH v2] mptcp: only set DATA_FIN when a mapping is present
-Content-Language: fr
-To: gang.yan@linux.dev, Michael Bommarito <michael.bommarito@gmail.com>
-Cc: Geliang Tang <geliang@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- mptcp@lists.linux.dev, netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- Mat Martineau <martineau@kernel.org>
 References: <2edcb1cd-f2db-4d0c-a0e3-fd2b4dd820fe@redhat.com>
- <20260707171730.2679013-1-michael.bommarito@gmail.com>
- <8155514655323d8c4a07da86d2b2ccdd7244c125@linux.dev>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <8155514655323d8c4a07da86d2b2ccdd7244c125@linux.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+ <20260707171730.2679013-1-michael.bommarito@gmail.com> <8155514655323d8c4a07da86d2b2ccdd7244c125@linux.dev>
+ <8d735844-dccb-4a65-b7fc-468d144ebc02@kernel.org>
+In-Reply-To: <8d735844-dccb-4a65-b7fc-468d144ebc02@kernel.org>
+From: Michael Bommarito <michael.bommarito@gmail.com>
+Date: Thu, 9 Jul 2026 09:12:37 -0400
+X-Gm-Features: AVVi8CdRFgA4cFXf-n4mZkaXWRsJYRCw57JUJkCLnvRfnyRQQEi4EQVk8jwdwKs
+Message-ID: <CAJJ9bXy29+cwu+Me8WNrf=f4qc=uoXSMCrUG3NJbR-xANJxseA@mail.gmail.com>
+Subject: Re: [PATCH v2] mptcp: only set DATA_FIN when a mapping is present
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: gang.yan@linux.dev, Geliang Tang <geliang@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, mptcp@lists.linux.dev, 
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Mat Martineau <martineau@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Michael, Gang,
+On Thu, Jul 9, 2026 at 8:27=E2=80=AFAM Matthieu Baerts <matttbe@kernel.org>=
+ wrote:
 
-On 09/07/2026 07:43, gang.yan@linux.dev wrote:
-> July 8, 2026 at 1:17 AM, "Michael Bommarito" <michael.bommarito@gmail.com> wrote:
+> By chance, do you have a reproducer? Maybe using Packetdrill with MPTCP
+> support? [1]
+> If not, how did you discover this issue?
 
-Thank you for this patch and the review!
+Yup, I'll send to you offlist.  It's a custom Python/TUN/qemu setup,
+not Packetdrill, but I'm guessing it could be ported or extended for
+testing/fuzzing.
 
->> mptcp_get_options() clears only the status group of struct
->> mptcp_options_received; data_seq, subflow_seq and data_len are filled in
->> by mptcp_parse_option() exclusively inside the DSS mapping block, which
->> runs only when the DSS M (mapping present) bit is set.
->>
->> A peer can send a DSS option with the DATA_FIN flag set but the mapping
->> bit clear. The parser then records mp_opt->data_fin while leaving
->> data_len and data_seq uninitialized. For a zero-length segment
->> mptcp_incoming_options() evaluates
+I discovered it with my homegrown agentic stack, which is a Rube
+Goldberg machine full of various tools (like cocci, semgrep) and
+knowledge graphs (built with libclang).  The agent logs suggest that
+it came from a family of rules that surfaces suspicious struct init
+candidates, which I can share too.
 
-By chance, do you have a reproducer? Maybe using Packetdrill with MPTCP
-support? [1]
-If not, how did you discover this issue?
+> If I may add, please also send new version in a separate thread, not as
+> a reply, not to confuse various tools, as mentioned in the same doc.
 
-[1] https://github.com/multipath-tcp/packetdrill/
+Sure, thanks to both you and Gang for the feedback.  I'll send a v3
+based on your suggestions later today.
 
->>  if (mp_opt.data_fin && mp_opt.data_len == 1 &&
->>  mptcp_update_rcv_data_fin(msk, mp_opt.data_seq, mp_opt.dsn64))
->>
->> which reads the uninitialized data_len and data_seq; KMSAN reports an
->> uninit-value in mptcp_incoming_options(). The stale data_seq can also be
->> fed into the receive-side DATA_FIN sequence tracking.
->>
->> Record the DATA_FIN flag only when the DSS option carries a mapping, so
->> data_fin is never set without data_seq and data_len also being present.
->> data_fin is part of the status group that mptcp_get_options() clears up
->> front, so on the no-map path it stays zero and the zero-length DATA_FIN
->> branch is simply skipped. A DATA_FIN is always transmitted together with
->> a mapping (mptcp_write_data_fin() sets use_map along with data_seq and
->> data_len), so legitimate DATA_FIN handling is unaffected.
->>
->> Fixes: 43b54c6ee382 ("mptcp: Use full MPTCP-level disconnect state machine")
->> Suggested-by: Paolo Abeni <pabeni@redhat.com>
->> Cc: stable@vger.kernel.org
->> Assisted-by: Claude:claude-opus-4-8
->> Signed-off-by: Michael Bommarito <michael.bommarito@gmail.com>
->> ---
->> v2: adopt Paolo Abeni's suggested approach - do not set mp_opt->data_fin
->>  at all unless a mapping is present, rather than gating the consumer in
->>  mptcp_incoming_options() (v1). data_fin then defaults to the value
->>  mptcp_get_options() already clears it to (0) on the no-map path, so
->>  the uninitialized data_len/data_seq are never read.
->>
->>  net/mptcp/options.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
->> index dff3fd5d3b559..6d003b24b969f 100644
->> --- a/net/mptcp/options.c
->> +++ b/net/mptcp/options.c
->> @@ -157,7 +157,6 @@ static void mptcp_parse_option(const struct sk_buff *skb,
->>  ptr++;
->>
->>  flags = (*ptr++) & MPTCP_DSS_FLAG_MASK;
->> - mp_opt->data_fin = (flags & MPTCP_DSS_DATA_FIN) != 0;
->>  mp_opt->dsn64 = (flags & MPTCP_DSS_DSN64) != 0;
->>  mp_opt->use_map = (flags & MPTCP_DSS_HAS_MAP) != 0;
->>  mp_opt->ack64 = (flags & MPTCP_DSS_ACK64) != 0;
->> @@ -178,6 +177,7 @@ static void mptcp_parse_option(const struct sk_buff *skb,
->>  }
->>
->>  if (mp_opt->use_map) {
->> + mp_opt->data_fin = (flags & MPTCP_DSS_DATA_FIN) != 0;
->>  if (mp_opt->dsn64)
->>  expected_opsize += TCPOLEN_MPTCP_DSS_MAP64;
->>  else
-> 
-> One minor thing I noticed while reviewing: Sashiko previously pointed out
-> in a comment that the 'pr_debug' logging 'mp_opt->data_fin' might be
-> problematic because it's printed before data_fin is actually assigned
-> (since data_fin is now set only inside the if (mp_opt->use_map) block). 
-> 
-> I think it would be cleaner to move the pr_debug call after the data_fin
-> assignment, so the logged value is always meaningful and consistent with
-> the actual parsed state, like:
-
-(...)
-> This change isn't critical to the fix itself, so feel free to let Paolo/Matt and
-> other Maintainers decide if it should go in now, later, or not at all.
-
-Probably best to fix that now, to avoid getting confused when looking at
-debug info. Do you mind doing that in a v3, please?
-
-pw-bot: changes-requested
-
-> A couple of additional notes for future submissions (just friendly reminders):
-> 
-> - The subject-prefix convention for MPTCP patches is typically [PATCH mptcp-net]
->   for bug fixes targeting the net tree, or [PATCH mptcp-next] for new features.
->   Since this is a fix, something like [PATCH mptcp-net v2] would be more appropriate.
-
-For a "one-off" or urgent fix for MPTCP, that's OK to send patches to
-the netdev ML directly. In this case, please use the "net" prefix, see:
-
-  https://docs.kernel.org/process/maintainer-netdev.html
-
-For other kind of patches specific to MPTCP, please send them only to
-the MPTCP ML with the 'mptcp-net' or 'mptcp-next' prefixes. Just to be
-clear: here you can send the v3 to the same people and lists -- you
-missed Simon apparently, did you not use get_maintainer.pl script? --
-with the 'net' prefix ([PATCH net v3]).
-
-> - It's also helpful to include a Link: to the previous version (v1) in the changelog,
->   so reviewers can easily track the discussion history.
-
-If I may add, please also send new version in a separate thread, not as
-a reply, not to confuse various tools, as mentioned in the same doc.
-
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
-
+Thanks,
+Mike
