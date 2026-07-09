@@ -1,207 +1,99 @@
-Received: from out-185.mta0.migadu.com (out-185.mta0.migadu.com [91.218.175.185])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DFF843932C
-	for <mptcp@lists.linux.dev>; Thu,  9 Jul 2026 05:43:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.185
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FA313D47D3
+	for <mptcp@lists.linux.dev>; Thu,  9 Jul 2026 07:06:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783575793; cv=none; b=s2J4wksZkcjQewNbVY1Dllu3bt0NtWac7JEhJzm1yNix2QoWqvaaZfEWrf2bSbO7JmRkHbRPgWnntSP4pAq9Oe17GIj18RNEjYTZ75doADZqjhi1GjFimom29bEGsBHBQL2L7ZIEpEAaLtVNK+JF1yRS5ARR2ZU0urM52eXM5qg=
+	t=1783580820; cv=none; b=LngaKpKIPjj4Rt/WG1MnuspOahIU426CK3/e3nKGjorKwM4MD6qz5TauSxJQ12cf5l3YgVAf7maGNYPmVTHUmq36MMmjHm/TFe6r3GE3LHO/R2KC+CJpCfKGNaJ67Qjg10YR3OGyllaBx2EnTUNs2isT+mJxXSF01WAzH4F2Rj8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783575793; c=relaxed/simple;
-	bh=6h5p7n5No64QiJEYCYCEU+E9AgD/KFjcbLGyq0ar2ak=;
-	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
-	 In-Reply-To:References; b=Xs3j3AWZUc8VTVyQGOF72lJODcbcQIuC5bLl1zXbLi3yamHfri4t91dPu85nE+ux/NIvmdOnLGHPVnDz/AV9qfpSonNfCZV6+Q4rjSBWo2daaMw3c0vV2AMJiwPFgaKrvptgxIYi+CbS6qLRKjeIHRSdyWQQOyPWPZJyE+AMmT4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=gjsb3iVN; arc=none smtp.client-ip=91.218.175.185
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1783580820; c=relaxed/simple;
+	bh=GNyNfxxEK9j808rxbRDFIflOv2xO9Txy1vAkqXOIjEc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dYOmZy0EDOfMTQrpfV+3FHUsVW/hPfwiKSH+x7QDtk6TYCxwQ5wFancpAEu8K5otGzUOfTih3/Xtn4iWJ2avBUfvr9EX1pZT4tnIoPcf/3NxZV+gRV7o3NcLFVxDbjBV5tvRQmaZTTdUnS03x2dw/995RRa2K1ryTLCj+oZ+FHE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ko967IRR; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="gjsb3iVN"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ko967IRR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D6451F000E9;
+	Thu,  9 Jul 2026 07:06:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783580816;
+	bh=5zJR3TXDdxIU74fXcaM8+VqrAsc5n5JJsyCO5NaF66U=;
+	h=From:To:Cc:Subject:Date;
+	b=ko967IRRnReEqmHE7+Ec2cunlpCfjzAEAjgk7B6OXS1CAyi41TT9D+gHxwd52SORb
+	 g0gKJ8l3lzyrSGTKuHlwBqthqpghM33c5rf17f+mievyTxL9UPB307lGqgnAQCCXuI
+	 hEs2E6QDL5As+EbKc/mhy9+1AiFmPHAtbNasReqeqUBoHntrJmx3huvDnuvRaqnBCd
+	 dHU7dkydvBDEkb7HO7PE/SD3MrwalshbKf7fdWESaKb8HSOB2jLN3H5yf512ZKmegW
+	 T8K5jy8EzkInzzI0UXGbLs3M0dkkrYsmUPBZy4kKPCtNJTrBEeVfa+p2v0UIFSwFxk
+	 k0vfZ1F8+FYPg==
+From: Geliang Tang <geliang@kernel.org>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v5 00/12] selftests: consolidate TCP_INQ testing into sockopt
+Date: Thu,  9 Jul 2026 15:06:09 +0800
+Message-ID: <cover.1783579976.git.tanggeliang@kylinos.cn>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1783575788;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OifTvRzURu2dVot9IJ7DSNor84sK2OfO99KNA1PqW3o=;
-	b=gjsb3iVNpJg/gmcCx0Qy34R7WBozs3vsPK68JOyg0MagmcNwIFUdHKAhk5RsQVcMXghLDw
-	tp+20OZUINZu6ZR8ZPElq2PdqMK/UlIrl5nJOKYjUVv6dB2RgilM3FFLUrd/g6/MwnL3QL
-	8RDGR/CLBTvt6R47KXfJ8MyOaSELXyY=
-Date: Thu, 09 Jul 2026 05:43:02 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: gang.yan@linux.dev
-Message-ID: <8155514655323d8c4a07da86d2b2ccdd7244c125@linux.dev>
-TLS-Required: No
-Subject: Re: [PATCH v2] mptcp: only set DATA_FIN when a mapping is present
-To: "Michael Bommarito" <michael.bommarito@gmail.com>, "Matthieu Baerts"
- <matttbe@kernel.org>, "Mat Martineau" <martineau@kernel.org>
-Cc: "Geliang Tang" <geliang@kernel.org>, "Paolo Abeni" <pabeni@redhat.com>,
- "Eric Dumazet" <edumazet@google.com>, "Jakub Kicinski" <kuba@kernel.org>,
- mptcp@lists.linux.dev, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20260707171730.2679013-1-michael.bommarito@gmail.com>
-References: <2edcb1cd-f2db-4d0c-a0e3-fd2b4dd820fe@redhat.com>
- <20260707171730.2679013-1-michael.bommarito@gmail.com>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
 
-July 8, 2026 at 1:17 AM, "Michael Bommarito" <michael.bommarito@gmail.com=
- mailto:michael.bommarito@gmail.com?to=3D%22Michael%20Bommarito%22%20%3Cm=
-ichael.bommarito%40gmail.com%3E > wrote:
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Hi Michael
+v5:
+ - Continue using the approach from v3 and fix the instability issues.
+   This version has undergone extensive loop testing.
+ - The new two separate functions, server_huge_transfer() and
+   client_huge_transfer(), improve code structure.
 
-Thanks for the patch.
+v4:
+ - v3 changed the behavior of process_one_client and connect_one_server,
+   causing intermittent failures during loop testing. Revert to using the
+   v2 approach, along with some cleanups.
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1757686538.git.tanggeliang@kylinos.cn/
 
+v3:
+ - No longer using process_one_client_inq() and connect_one_server_inq()
+   for switching; instead, the inq-related code has been merged into
+   process_one_client() and connect_one_server().
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1756200029.git.tanggeliang@kylinos.cn/
 
->=20
->=20mptcp_get_options() clears only the status group of struct
-> mptcp_options_received; data_seq, subflow_seq and data_len are filled i=
-n
-> by mptcp_parse_option() exclusively inside the DSS mapping block, which
-> runs only when the DSS M (mapping present) bit is set.
->=20
->=20A peer can send a DSS option with the DATA_FIN flag set but the mappi=
-ng
-> bit clear. The parser then records mp_opt->data_fin while leaving
-> data_len and data_seq uninitialized. For a zero-length segment
-> mptcp_incoming_options() evaluates
->=20
->=20 if (mp_opt.data_fin && mp_opt.data_len =3D=3D 1 &&
->  mptcp_update_rcv_data_fin(msk, mp_opt.data_seq, mp_opt.dsn64))
->=20
->=20which reads the uninitialized data_len and data_seq; KMSAN reports an
-> uninit-value in mptcp_incoming_options(). The stale data_seq can also b=
-e
-> fed into the receive-side DATA_FIN sequence tracking.
->=20
->=20Record the DATA_FIN flag only when the DSS option carries a mapping, =
-so
-> data_fin is never set without data_seq and data_len also being present.
-> data_fin is part of the status group that mptcp_get_options() clears up
-> front, so on the no-map path it stays zero and the zero-length DATA_FIN
-> branch is simply skipped. A DATA_FIN is always transmitted together wit=
-h
-> a mapping (mptcp_write_data_fin() sets use_map along with data_seq and
-> data_len), so legitimate DATA_FIN handling is unaffected.
->=20
->=20Fixes: 43b54c6ee382 ("mptcp: Use full MPTCP-level disconnect state ma=
-chine")
-> Suggested-by: Paolo Abeni <pabeni@redhat.com>
-> Cc: stable@vger.kernel.org
-> Assisted-by: Claude:claude-opus-4-8
-> Signed-off-by: Michael Bommarito <michael.bommarito@gmail.com>
-> ---
-> v2: adopt Paolo Abeni's suggested approach - do not set mp_opt->data_fi=
-n
->  at all unless a mapping is present, rather than gating the consumer in
->  mptcp_incoming_options() (v1). data_fin then defaults to the value
->  mptcp_get_options() already clears it to (0) on the no-map path, so
->  the uninitialized data_len/data_seq are never read.
->=20
->=20 net/mptcp/options.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
->=20diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index dff3fd5d3b559..6d003b24b969f 100644
-> --- a/net/mptcp/options.c
-> +++ b/net/mptcp/options.c
-> @@ -157,7 +157,6 @@ static void mptcp_parse_option(const struct sk_buff=
- *skb,
->  ptr++;
->=20
->=20 flags =3D (*ptr++) & MPTCP_DSS_FLAG_MASK;
-> - mp_opt->data_fin =3D (flags & MPTCP_DSS_DATA_FIN) !=3D 0;
->  mp_opt->dsn64 =3D (flags & MPTCP_DSS_DSN64) !=3D 0;
->  mp_opt->use_map =3D (flags & MPTCP_DSS_HAS_MAP) !=3D 0;
->  mp_opt->ack64 =3D (flags & MPTCP_DSS_ACK64) !=3D 0;
-> @@ -178,6 +177,7 @@ static void mptcp_parse_option(const struct sk_buff=
- *skb,
->  }
->=20
->=20 if (mp_opt->use_map) {
-> + mp_opt->data_fin =3D (flags & MPTCP_DSS_DATA_FIN) !=3D 0;
->  if (mp_opt->dsn64)
->  expected_opsize +=3D TCPOLEN_MPTCP_DSS_MAP64;
->  else
+v2:
+ - patch 4, a new patch, add do_setsockopt_inq helper.
+ - cleanups.
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1754664106.git.tanggeliang@kylinos.cn/
 
-One minor thing I noticed while reviewing: Sashiko previously pointed out
-in a comment that the 'pr_debug' logging 'mp_opt->data_fin' might be
-problematic because it's printed before data_fin is actually assigned
-(since data_fin is now set only inside the if (mp_opt->use_map) block).=
-=20
+v1:
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1754620968.git.tanggeliang@kylinos.cn/
 
-I=20think it would be cleaner to move the pr_debug call after the data_fi=
-n
-assignment, so the logged value is always meaningful and consistent with
-the actual parsed state, like:
+This series consolidates the TCP_INQ test functionality from mptcp_inq
+into mptcp_sockopt, simplifying the test suite while maintaining full
+test coverage.
 
-'''
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index b924209a9b74..f58eb24f4d35 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -162,11 +162,6 @@ static void mptcp_parse_option(const struct sk_buff =
-*skb,
-                mp_opt->ack64 =3D (flags & MPTCP_DSS_ACK64) !=3D 0;
-                mp_opt->use_ack =3D (flags & MPTCP_DSS_HAS_ACK);
-=20
--=20              pr_debug("data_fin=3D%d dsn64=3D%d use_map=3D%d ack64=
-=3D%d use_ack=3D%d\n",
--                        mp_opt->data_fin, mp_opt->dsn64,
--                        mp_opt->use_map, mp_opt->ack64,
--                        mp_opt->use_ack);
--
-                expected_opsize =3D TCPOLEN_MPTCP_DSS_BASE;
-=20
-=20               if (mp_opt->use_ack) {
-@@ -184,6 +179,11 @@ static void mptcp_parse_option(const struct sk_buff =
-*skb,
-                                expected_opsize +=3D TCPOLEN_MPTCP_DSS_MA=
-P32;
-                }
-=20
-+=20              pr_debug("data_fin=3D%d dsn64=3D%d use_map=3D%d ack64=
-=3D%d use_ack=3D%d\n",
-+                        mp_opt->data_fin, mp_opt->dsn64,
-+                        mp_opt->use_map, mp_opt->ack64,
-+                        mp_opt->use_ack);
-+
-                /* Always parse any csum presence combination, we will en=
-force
-                 * RFC 8684 Section 3.3.0 checks later in subflow_data_re=
-ady
-                 */
-'''
+Geliang Tang (12):
+  selftests: mptcp: sockopt: add tx/rx protocol options
+  selftests: mptcp: sockopt: add TCP_INQ test option
+  selftests: mptcp: sockopt: set TCP_INQ on accepted sockets
+  selftests: mptcp: sockopt: use unix socket instead of pipe
+  selftests: mptcp: sockopt: pass echo length over unixfd
+  selftests: mptcp: sockopt: set FIONREAD ioctl
+  selftests: mptcp: sockopt: add huge data transfer tests
+  selftests: mptcp: sockopt: add wait_for_ack helper
+  selftests: mptcp: sockopt: add get_tcp_inq helper
+  selftests: mptcp: sockopt: skip MPTCP opts for TCP tests
+  selftests: mptcp: sockopt: replace mptcp_inq with sockopt
+  selftests: mptcp: sockopt: remove obsolete mptcp_inq
 
-This change isn't critical to the fix itself, so feel free to let Paolo/M=
-att and
-other Maintainers decide if it should go in now, later, or not at all.
+ tools/testing/selftests/net/mptcp/.gitignore  |   1 -
+ tools/testing/selftests/net/mptcp/Makefile    |   1 -
+ tools/testing/selftests/net/mptcp/mptcp_inq.c | 614 ------------------
+ .../selftests/net/mptcp/mptcp_sockopt.c       | 297 ++++++++-
+ .../selftests/net/mptcp/mptcp_sockopt.sh      |   8 +-
+ 5 files changed, 274 insertions(+), 647 deletions(-)
+ delete mode 100644 tools/testing/selftests/net/mptcp/mptcp_inq.c
 
-A couple of additional notes for future submissions (just friendly remind=
-ers):
+-- 
+2.53.0
 
-- The subject-prefix convention for MPTCP patches is typically [PATCH mpt=
-cp-net]
-  for bug fixes targeting the net tree, or [PATCH mptcp-next] for new fea=
-tures.
-  Since this is a fix, something like [PATCH mptcp-net v2] would be more =
-appropriate.
-
-- It's also helpful to include a Link: to the previous version (v1) in th=
-e changelog,
-  so reviewers can easily track the discussion history.
-
-Looking forward to seeing more of your work on the MPTCP mailing list!
-
-Thanks,
-Gang
-> --
-> 2.53.0
->
