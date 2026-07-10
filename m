@@ -1,93 +1,144 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 764BB264619;
-	Fri, 10 Jul 2026 14:30:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58B74368D59;
+	Fri, 10 Jul 2026 16:19:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783693854; cv=none; b=qQkCNSoBdRkq/DatvTi/X4CemGzqnANu0HQRMnmb1qbOjw52iluVwuzMtr/iUZTRrajY2o479ave4FOAGaHSUzbvNY/3s7Zi7S0QfRR1knwhLLmyWpWV9l5gzlhzhuGOIgAYFm+ywkkcIQq6zjOH8pkxjqvGbKy/jGq/hj7FpVM=
+	t=1783700397; cv=none; b=AdPrKe1/FnyGGiOIn0kmq0t7OgZ6/y/6XiQcZkJbzZUxGaWsFui7h0AmJCGIEKgumynDKFKfdaHGiwXdQfMcioFmxccyWk5YA/z7kNa4yyUCXf8N9DsDxnWArJny2hmBx21TGG/WgjzXWXs2SnKe/o1xFdPTGiNzsJmDj3DFR7Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783693854; c=relaxed/simple;
-	bh=BBd2jpoQfJoYh66l59f8fnRCUabNYQcVFWqh1k7vXac=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=ZFq7Bb23Zu8UvDtY1W8w3yNJY8gXMzcJtzcGvtoCV1nGlGSUZhT3vrP32lICZtftjCZudf20eNi9m4PZ7u11ivnzjb+MM7q8tDvzS6mcx27wtNA6WO1fRV8T2dEubrTSrcpF13ZVugWk6grxquB2ymzPyyvrSvQW2huHEYGimHA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=D8TUY1ZG; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1783700397; c=relaxed/simple;
+	bh=gwc1Zl5mINekUhb39fjvwrNJVc+2AXdQ8ZH/ukfVtFQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=avAJ0gwX9rybHuTpQWs98kJ8tTKuf5QmgwTtpE9+P4/ci7bh1uR6r8yty3Saqhs+YwbUl33mSDqNS4SpRVtn/k8RpRMG/R5upo7VFEdupP/ywQCTaQ91G9ZWZxM8LWDmPXr7m0eIzLlAW6Nppp4YpyNp/gdkof5m/VJ7LtcBHvQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CMIuPEV+; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="D8TUY1ZG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1783693852; x=1815229852;
-  h=date:from:to:cc:subject:message-id;
-  bh=BBd2jpoQfJoYh66l59f8fnRCUabNYQcVFWqh1k7vXac=;
-  b=D8TUY1ZGttYoPMiIPhVCiQARidiyl+RhqBTyDgz7f4aFdgXlT9kMv9U2
-   SaXxNZygXwzC59WTevvXCZZFGU9wkCYF0NUlqkODcAO3wMGnZJc48T0YN
-   QEeRLV93sWw+M2bH9vsfWcwG8J0HOmWfrv6s1h0gNzSltGvYDgjj0SJ5h
-   HF73fUF04mhASP6Rm4Q6/84zApUAT5G7lLQ1c1gvFMOaluJidXLI5kgV+
-   ycAiHKmBUe5UShoyKfDjJpoK5OyuKdoiru9gvrZRxuPRTQSXgLmXiJ3um
-   ZisrhKz4tOxiEyZznyyX3iq9XQ1YrJB/kITKJDXwS93scweuzX9aqRvjn
-   w==;
-X-CSE-ConnectionGUID: MS4fV4OQR3+sX98JQfoh+A==
-X-CSE-MsgGUID: djcFzoU/Q1WMwQyKDAV0Aw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11841"; a="71916051"
-X-IronPort-AV: E=Sophos;i="6.25,154,1779174000"; 
-   d="scan'208";a="71916051"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2026 07:30:52 -0700
-X-CSE-ConnectionGUID: ssS7/uLWSg6K3xVUKNh5mQ==
-X-CSE-MsgGUID: iDIbgkR+THOvhzAfBJBCLQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,154,1779174000"; 
-   d="scan'208";a="255555596"
-Received: from lkp-server02.sh.intel.com (HELO ea128546eb3d) ([10.239.97.151])
-  by orviesa009.jf.intel.com with ESMTP; 10 Jul 2026 07:30:50 -0700
-Received: from kbuild by ea128546eb3d with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1wiCFb-00000000J0p-0WCy;
-	Fri, 10 Jul 2026 14:30:47 +0000
-Date: Fri, 10 Jul 2026 22:29:54 +0800
-From: kernel test robot <lkp@intel.com>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
- mptcp@lists.linux.dev, matthieu.baerts@tessares.net
-Subject: [mptcp:export-net 5/9] .github/ISSUE_TEMPLATE/01-bug.yml:
- warning: ignored by one of the .gitignore files
-Message-ID: <202607102243.qOGZxnoE-lkp@intel.com>
-User-Agent: s-nail v14.9.25
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CMIuPEV+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA5331F000E9;
+	Fri, 10 Jul 2026 16:19:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783700394;
+	bh=Nu3Wp1wI0A1+Gn22afTscrgbYWwQ7DDpD4i0bGHPoUM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=CMIuPEV+ylHfmxqQaUJKod/WwjhVwUqlSKdgUj44kPWSTdEm+ue7I8k6mVjUa0czF
+	 uCaY1RPhxK4e0Vw+XU0jV0OKp5Dllq4qJp3k1LKYpx8+zQMD4znkevWtt3ygVJlb8b
+	 nmo6u8URlbTO4ox5smDZxL7k1fHZ+yh0gy38Xhl6+qSI//jdjmk4pzZRm3QkV16abB
+	 kK+O8fUVE7tqfA95s9jbCp1tT+Fa7zulqKkNgRLbVyQVUnKEX5P9wd9N7zUpV4Ss8u
+	 tlntoHD64jaTXxqLoKjqZ2aTKw0EzlvsVjrRG2+7TERLP0std6g3hjYLTJP5KzRAqy
+	 f+bWGrXDVylWQ==
+Message-ID: <5bb0177a-8d42-4301-8cf1-db4630f18437@kernel.org>
+Date: Fri, 10 Jul 2026 18:19:49 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH net v3] mptcp: only set DATA_FIN when a mapping is present
+Content-Language: fr
+To: Michael Bommarito <michael.bommarito@gmail.com>,
+ Mat Martineau <martineau@kernel.org>
+Cc: Geliang Tang <geliang@kernel.org>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Simon Horman <horms@kernel.org>, Gang Yan <gang.yan@linux.dev>,
+ mptcp@lists.linux.dev, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20260709191925.2811195-1-michael.bommarito@gmail.com>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <20260709191925.2811195-1-michael.bommarito@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-tree:   https://github.com/multipath-tcp/mptcp_net-next.git export-net
-head:   8a5c23d533d1691aadfed5c6324c68228ba7f24b
-commit: 9e002ca3e688e4248d6337c1b9945d8b9237b3f8 [5/9] DO-NOT-MERGE: mptcp: add CI support
-config: sparc64-randconfig-002-20260708 (https://download.01.org/0day-ci/archive/20260710/202607102243.qOGZxnoE-lkp@intel.com/config)
-compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260710/202607102243.qOGZxnoE-lkp@intel.com/reproduce)
+Hi Michael,
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202607102243.qOGZxnoE-lkp@intel.com/
+On 09/07/2026 21:19, Michael Bommarito wrote:
+> mptcp_get_options() clears only the status group of struct
+> mptcp_options_received; data_seq, subflow_seq and data_len are filled in
+> by mptcp_parse_option() exclusively inside the DSS mapping block, which
+> runs only when the DSS M (mapping present) bit is set.
+> 
+> A peer can send a DSS option with the DATA_FIN flag set but the mapping
+> bit clear. The parser then records mp_opt->data_fin while leaving
+> data_len and data_seq uninitialized. For a zero-length segment
+> mptcp_incoming_options() evaluates
+> 
+> 	if (mp_opt.data_fin && mp_opt.data_len == 1 &&
+> 	    mptcp_update_rcv_data_fin(msk, mp_opt.data_seq, mp_opt.dsn64))
+> 
+> which reads the uninitialized data_len and data_seq; KMSAN reports an
+> uninit-value in mptcp_incoming_options(). The stale data_seq can also be
+> fed into the receive-side DATA_FIN sequence tracking.
+> 
+> Record the DATA_FIN flag only when the DSS option carries a mapping, so
+> data_fin is never set without data_seq and data_len also being present.
+> data_fin is part of the status group that mptcp_get_options() clears up
+> front, so on the no-map path it stays zero and the zero-length DATA_FIN
+> branch is simply skipped. A DATA_FIN is always transmitted together with
+> a mapping (mptcp_write_data_fin() sets use_map along with data_seq and
+> data_len), so legitimate DATA_FIN handling is unaffected.
+> 
+> Move the pr_debug() that logs the parsed DSS flags below the mapping
+> block, so it reports the final data_fin value instead of the stale one
+> it would otherwise print before the assignment.
 
-All warnings (new ones prefixed by >>):
+Thank you for the v3, it looks good to me:
 
-   .b4-config: warning: ignored by one of the .gitignore files
-   .git_markup: warning: ignored by one of the .gitignore files
-   .github/FUNDING.yml: warning: ignored by one of the .gitignore files
->> .github/ISSUE_TEMPLATE/01-bug.yml: warning: ignored by one of the .gitignore files
->> .github/ISSUE_TEMPLATE/02-feature.yml: warning: ignored by one of the .gitignore files
->> .github/ISSUE_TEMPLATE/03-question.yml: warning: ignored by one of the .gitignore files
-   .github/workflows/build-validation.yml: warning: ignored by one of the .gitignore files
-   .github/workflows/checkpatch.yml: warning: ignored by one of the .gitignore files
-   .github/workflows/notif.yml: warning: ignored by one of the .gitignore files
-   .github/workflows/stable.yml: warning: ignored by one of the .gitignore files
-   .github/workflows/tests.yml: warning: ignored by one of the .gitignore files
-   .github/workflows/update-tg-tree.yml: warning: ignored by one of the .gitignore files
-   Documentation/.renames.txt: warning: ignored by one of the .gitignore files
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+I tried to reproduce it on my side using packetdrill-mptcp [1], but I
+was not able to test with KMSAN: my kernel boot, but is stuck when KMSAN
+is enabled... By chance, if you can try this reproducer on your side,
+with and without your patched kernel, that would be great :)
+
+[1] https://github.com/multipath-tcp/packetdrill/pull/203
+
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
+
