@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 975073A451E
-	for <mptcp@lists.linux.dev>; Fri, 10 Jul 2026 08:59:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E35B03C8182
+	for <mptcp@lists.linux.dev>; Fri, 10 Jul 2026 08:59:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783673975; cv=none; b=NtT8ODvWEwlsqY5ZiTxgQfrlsWbdi/s9Gm4FbSKdjzixc7zoyvGLqNVCBbCng6laC2B59ikOsG6hYp7gPXGRVYn5g+yM0jUaxeIv4ljbAogTd46jR6d5e8h3Cvtm6SOaGZGgdkQ7G/4ma3UvAhOmFlOPeXO3yYWjfReGAnz2fJQ=
+	t=1783673976; cv=none; b=UhzoPAjAgBlo7M1C4s5AQfQiuR+e24Mt6nPKCg7yeFCQRMjbAs8GIgnPmVxdv80HwbHYiodFfZv+hxkUf3kKHlAFv6dlB8wOrIoRJxcx6IlcqyrJyxNa5yDVO3Dt1xZvO2KEDoRY6q036ga/+npyIKCTJ7IBl7vDomO9y3gYSFU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783673975; c=relaxed/simple;
-	bh=+8N5vwlrtwG9DQ4AM8fzWYh9Pb2zp8sJ9SzcNOEtA/w=;
+	s=arc-20240116; t=1783673976; c=relaxed/simple;
+	bh=M029lbGzAkMEP+nQtfI1E9GVZ5Yxlk81bMtYkjJ99os=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oOg+OjIL+2b49wQ9HJILqD0ntcfRtbvM0SMbR4I3fgNh/mRoiPQ1A6PpafpvUajZRG2QVk4Wuq5XL7qveqYBpjp0tS8apHb1Tul78TPvADOQY9lnnEpQykFYGsrZY6FPdopbtDYWC3FUA61eE8GnZrW5BrRZStYH+5Anc5sRc0g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hD4fmcdd; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=qmFL7pUSiQQ46eUBMacrh9B1WOXUo2l/IBpOc4NPiLfHCj+4HRaqOVW+/MWRVGI+J6nQgunnocivorHgfItQ1zZltWgRZryH3lfPY8g2R0zXIZxosFtUCBPgh2RiDBKZxNx9KG5HoBxHV57o27nFtNZvWk+FsPcUt0ex18Qdbj0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dhrqn0xo; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hD4fmcdd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A32FE1F000E9;
-	Fri, 10 Jul 2026 08:59:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dhrqn0xo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7CAA31F00A3A;
+	Fri, 10 Jul 2026 08:59:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783673972;
-	bh=2HWcyXxsgQ2XqhMb4o0HVs91veWFCFp94TkkzfEURcY=;
+	s=k20260515; t=1783673974;
+	bh=hup+mlI7ipn8n1l4qPCTi18I+4c0oU5a9VFd++yfVCM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=hD4fmcddCKc4ZoSYO0aO81nDAZDZyxgVPGOoa8w9ruf2n8NJc09ucQqnkotKHK4lI
-	 +78l5IKypoabC34wqY5f3//9z8OtuMeLlh7Ae42eAo7Si5gDslkHFvvZHjb3OJMjt3
-	 ReogQlRaVZ5fPpcVPCzIGzUvVl/p/zLkVkeLohNeE9/lHEJ43X7qaiB8xcmMrori/g
-	 PdNfOUWPZPD42IBpp/Z8l+mFXdRFe3QRNn6iKlDXt63RBbfzSrOEYhbsBODfkbuXtp
-	 lnU/yu5Vw3wVnsrhmDRNaQOjMGCCf/2j8AUx+pZUkXPr2qaL/SQHdmj/kkolBhhwrW
-	 86tZwr5qFfYXg==
+	b=dhrqn0xo9f80Fzon7OwHzFU3kYJLqaGJ9Er96sG8KI44a1eylbkb9iN+MWNM8IXTq
+	 vltMJ+cqcI3g+YY2EjwLfUxEm/BsPT3Rpbr34+e/dJAEjplPxi0hd/jgfnZIzjCbJz
+	 3MheIlriVrF32n7MErtBhF12pECtqYy8au7aeoWMi7D6yVVF1IWgaDwcn89F9lI7Gs
+	 HomUR1KaWS+sUPvbTfJAROjn3uEcFptisWb2jA70erkgnFOhS6jeYIxb+HB6eIM3au
+	 xB6OwYWE70SZhqZqdMrq+rKp5rJI1qd3SVzRhukklbn+Wszbp1qkU0mu3MGazUiKPV
+	 pRJOmU2UVePyw==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v6 06/10] selftests: mptcp: sockopt: add huge data transfer tests
-Date: Fri, 10 Jul 2026 16:59:09 +0800
-Message-ID: <b807f8eb4a8058832ca2cf824c298c9c7063b63d.1783673158.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v6 07/10] selftests: mptcp: sockopt: add wait_for_ack helper
+Date: Fri, 10 Jul 2026 16:59:10 +0800
+Message-ID: <1cf028e5469b5e041d05b18fcf8271300c983d3a.1783673158.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <cover.1783673158.git.tanggeliang@kylinos.cn>
 References: <cover.1783673158.git.tanggeliang@kylinos.cn>
@@ -45,201 +45,97 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Introduce huge data transfer tests (1-17 MB) to validate MPTCP socket
-options under high-volume conditions, including proper EOF handling,
-preparing for TCP_INQ support in subsequent patches.
+Add wait_for_ack() helper using TIOCOUTQ/SIOCOUTQNSD ioctls to synchronize
+tests by waiting for data acknowledgment before proceeding.
 
-These codes are from mptcp_inq.c, but here they have been placed into
-two separate functions.
+These codes are from mptcp_inq.c.
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- .../selftests/net/mptcp/mptcp_sockopt.c       | 132 +++++++++++++++++-
- 1 file changed, 126 insertions(+), 6 deletions(-)
+ .../selftests/net/mptcp/mptcp_sockopt.c       | 42 ++++++++++++++++++-
+ 1 file changed, 41 insertions(+), 1 deletion(-)
 
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-index 0bd5a9c51332..16b58f6ac7b7 100644
+index 16b58f6ac7b7..bc2cb3db3264 100644
 --- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
 +++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-@@ -596,6 +596,55 @@ static void do_getsockopts(struct so_state *s, int fd, size_t r, size_t w)
+@@ -26,6 +26,7 @@
+ #include <netinet/in.h>
+ 
+ #include <linux/tcp.h>
++#include <linux/sockios.h>
+ #include <linux/compiler.h>
+ 
+ static int pf = AF_INET;
+@@ -596,10 +597,44 @@ static void do_getsockopts(struct so_state *s, int fd, size_t r, size_t w)
  		do_getsockopt_mptcp_full_info(s, fd);
  }
  
-+static void server_huge_transfer(int fd, int unixfd, size_t len)
++/* wait up to timeout milliseconds */
++static void wait_for_ack(int fd, int timeout, size_t total)
 +{
-+	char buf[4096], buf2[4];
-+	size_t i, total;
-+	ssize_t ret;
++	int i;
 +
-+	for (i = 0; i < len ; i++) {
-+		buf[i] = rand() % 26;
-+		buf[i] += 'A';
++	for (i = 0; i < timeout; i++) {
++		int nsd, ret, queued = -1;
++		struct timespec req;
++
++		ret = ioctl(fd, TIOCOUTQ, &queued);
++		if (ret < 0)
++			die_perror("TIOCOUTQ");
++
++		ret = ioctl(fd, SIOCOUTQNSD, &nsd);
++		if (ret < 0)
++			die_perror("SIOCOUTQNSD");
++
++		if ((size_t)queued > total)
++			xerror("TIOCOUTQ %u, but only %zu expected\n",
++			       queued, total);
++		assert(nsd <= queued);
++
++		if (queued == 0)
++			return;
++
++		/* wait for peer to ack rx of all data */
++		req.tv_sec = 0;
++		req.tv_nsec = 1 * 1000 * 1000ul; /* 1ms */
++		nanosleep(&req, NULL);
 +	}
 +
-+	buf[i] = '\n';
-+
-+	ret = read(unixfd, buf2, 4);
-+	assert(ret == 4);
-+	assert(strncmp(buf2, "huge", 4) == 0);
-+
-+	total = rand() % (16 * 1024 * 1024);
-+	total += (1 * 1024 * 1024);
-+
-+	ret = write(unixfd, &total, sizeof(total));
-+	assert(ret == (ssize_t)sizeof(total));
-+
-+	while (total > 0) {
-+		if (total > sizeof(buf))
-+			len = sizeof(buf);
-+		else
-+			len = total;
-+
-+		ret = write(fd, buf, len);
-+		if (ret < 0)
-+			die_perror("write");
-+		total -= ret;
-+
-+		/* we don't have to care about buf content, only
-+		 * number of total bytes sent
-+		 */
-+	}
-+
-+	ret = read(unixfd, buf2, 4);
-+	assert(ret == 4);
-+	assert(strncmp(buf2, "shut", 4) == 0);
-+
-+	ret = write(fd, buf, 1);
-+	assert(ret == 1);
-+	ret = write(unixfd, "closed", 6);
-+	assert(ret == 6);
++	xerror("still tx data queued after %u ms\n", timeout);
 +}
 +
- static void connect_one_server(int fd, int unixfd)
+ static void server_huge_transfer(int fd, int unixfd, size_t len)
  {
- 	char buf[4096], buf2[4096];
-@@ -665,16 +714,83 @@ static void connect_one_server(int fd, int unixfd)
+ 	char buf[4096], buf2[4];
+-	size_t i, total;
++	size_t i, total, sent;
+ 	ssize_t ret;
  
- 	if (proto_tx == IPPROTO_MPTCP && proto_rx == IPPROTO_MPTCP)
- 		assert(s.mptcpi_rcv_delta == (uint64_t)total);
-+
-+	if (inq)
-+		server_huge_transfer(fd, unixfd, len);
-+
- 	close(fd);
- 	close(unixfd);
- }
+ 	for (i = 0; i < len ; i++) {
+@@ -615,10 +650,13 @@ static void server_huge_transfer(int fd, int unixfd, size_t len)
  
-+static size_t client_huge_transfer(int fd, int unixfd)
-+{
-+	char msg_buf[4096];
-+	size_t expect_len;
-+	ssize_t ret, tot;
-+	char buf[4096];
-+	char tmp[16];
-+	struct iovec iov = {
-+		.iov_base = buf,
-+		.iov_len = 1,
-+	};
-+	struct msghdr msg = {
-+		.msg_iov = &iov,
-+		.msg_iovlen = 1,
-+		.msg_control = msg_buf,
-+		.msg_controllen = sizeof(msg_buf),
-+	};
-+
-+	/* request a large swath of data. */
-+	ret = write(unixfd, "huge", 4);
-+	assert(ret == 4);
-+
-+	ret = read(unixfd, &expect_len, sizeof(expect_len));
-+	assert(ret == (ssize_t)sizeof(expect_len));
-+
-+	/* peer should send us a few mb of data */
-+	if (expect_len <= sizeof(buf))
-+		xerror("expect len %zu too small\n", expect_len);
-+
-+	tot = 0;
-+	do {
-+		iov.iov_len = sizeof(buf);
-+		msg.msg_controllen = sizeof(msg_buf);
-+		ret = recvmsg(fd, &msg, 0);
-+		if (ret < 0)
-+			die_perror("recvmsg");
-+		if (ret == 0)
-+			xerror("unexpected EOF in huge recv");
-+
-+		tot += ret;
-+	} while ((size_t)tot < expect_len);
-+
-+	ret = write(unixfd, "shut", 4);
-+	assert(ret == 4);
-+
-+	/* wait for hangup. Should have received one more byte of data. */
-+	ret = read(unixfd, tmp, sizeof(tmp));
-+	assert(ret == 6);
-+	assert(strncmp(tmp, "closed", 6) == 0);
-+
-+	sleep(1);
-+
-+	iov.iov_len = 1;
-+	msg.msg_controllen = sizeof(msg_buf);
-+	ret = recvmsg(fd, &msg, 0);
-+	if (ret < 0)
-+		die_perror("recvmsg");
-+	assert(ret == 1);
-+
-+	return tot + 1;
-+}
-+
- static void process_one_client(int fd, int unixfd)
- {
- 	ssize_t ret, ret2, ret3;
- 	struct so_state s;
- 	size_t expect_len;
- 	char buf[4096];
-+	size_t r = 0;
+ 	total = rand() % (16 * 1024 * 1024);
+ 	total += (1 * 1024 * 1024);
++	sent = total;
  
- 	memset(&s, 0, sizeof(s));
- 	do_getsockopts(&s, fd, 0, 0);
-@@ -719,16 +835,20 @@ static void process_one_client(int fd, int unixfd)
- 	if (ret2 < 0)
- 		die_perror("write");
+ 	ret = write(unixfd, &total, sizeof(total));
+ 	assert(ret == (ssize_t)sizeof(total));
  
-+	if (inq)
-+		r = client_huge_transfer(fd, unixfd);
++	wait_for_ack(fd, 5000, len);
 +
- 	/* wait for hangup */
- 	ret3 = read(fd, buf, 1);
- 	if (ret3 != 0)
- 		xerror("expected EOF, got %lu", ret3);
+ 	while (total > 0) {
+ 		if (total > sizeof(buf))
+ 			len = sizeof(buf);
+@@ -639,6 +677,8 @@ static void server_huge_transfer(int fd, int unixfd, size_t len)
+ 	assert(ret == 4);
+ 	assert(strncmp(buf2, "shut", 4) == 0);
  
--	do_getsockopts(&s, fd, ret, ret2);
-+	do_getsockopts(&s, fd, ret + r, ret2);
- 	if (proto_tx == IPPROTO_MPTCP && proto_rx == IPPROTO_MPTCP &&
--	    s.mptcpi_rcv_delta != (uint64_t)ret + 1)
-+	    s.mptcpi_rcv_delta != (uint64_t)ret + r + 1)
- 		xerror("mptcpi_rcv_delta %" PRIu64 ", expect %" PRIu64 ", diff %" PRId64,
--		       s.mptcpi_rcv_delta, ret + 1, s.mptcpi_rcv_delta - (ret + 1));
-+		       s.mptcpi_rcv_delta, ret + r + 1,
-+		       s.mptcpi_rcv_delta - (ret + r + 1));
- 
- 	/* be nice when running on top of older kernel */
- 	if (s.pkt_stats_avail) {
-@@ -737,11 +857,11 @@ static void process_one_client(int fd, int unixfd)
- 			       ", diff %" PRId64,
- 			       s.last_sample.mptcpi_bytes_sent, ret2,
- 			       s.last_sample.mptcpi_bytes_sent - ret2);
--		if (s.last_sample.mptcpi_bytes_received != ret)
-+		if (s.last_sample.mptcpi_bytes_received != ret + r)
- 			xerror("mptcpi_bytes_received %" PRIu64 ", expect %" PRIu64
- 			       ", diff %" PRId64,
--			       s.last_sample.mptcpi_bytes_received, ret,
--			       s.last_sample.mptcpi_bytes_received - ret);
-+			       s.last_sample.mptcpi_bytes_received, ret + r,
-+			       s.last_sample.mptcpi_bytes_received - (ret + r));
- 		if (s.last_sample.mptcpi_bytes_acked != ret)
- 			xerror("mptcpi_bytes_acked %" PRIu64 ", expect %" PRIu64
- 			       ", diff %" PRId64,
++	wait_for_ack(fd, 5000, sent);
++
+ 	ret = write(fd, buf, 1);
+ 	assert(ret == 1);
+ 	ret = write(unixfd, "closed", 6);
 -- 
 2.53.0
 
