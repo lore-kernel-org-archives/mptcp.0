@@ -1,45 +1,45 @@
 Received: from sender4-of-o54.zoho.com (sender4-of-o54.zoho.com [136.143.188.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD90123392E
-	for <mptcp@lists.linux.dev>; Sat, 11 Jul 2026 08:39:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B91376025
+	for <mptcp@lists.linux.dev>; Sat, 11 Jul 2026 08:39:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.54
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783759174; cv=pass; b=gM5oYS/APvH4Giow6FlAdX1PynjUFtO0W4HPGYmZLjCC0WWz4HGsvcktxtEhk83OCVhvJvdjFys2h3+vVaRaTnyA9LbSeP3A9Br9NHW/F9EDSfoAhIrA6U1XLLZOEkOUsE1gS08bIgftwgsvlL5qX8Ts7KhFLi4rNajDI+MsBdQ=
+	t=1783759184; cv=pass; b=Ujawv1W60bSfc1kqeqgRDUcPaGK6kZXP7VCzHhaRHYXtwhCseQQZbXEx2FRAlw0zIKrL9bXaE5oDSXVl1OIdKAux8jzMGE+DJx6IBphaVaKJT8iM59XbdD+nddrWLvioZxWFdIVK3FsIyUVmErHMQ3059uF7Ssu4z6Wxn4quDF4=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783759174; c=relaxed/simple;
-	bh=DkdQenwevlcseMkHN0/iAxXm5NhrnQAnE2s64ZD3FsA=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=hRqyi91uISx54RrcoVPVZOFxMFZnsZ52aUN98SZ0PFKjohm2nGst58ypnY1HNVFKc6MWlq+6fslQZ9S1zbeHbgbxPrSaQ6Ph5nX4J6Lq1hBA1BzUCYGSv+HQSM3qyRbdRL1gs80dw2chs5vghA59Q9WvDjjK+46NUE6wANDI0jI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com; spf=pass smtp.mailfrom=mpiricsoftware.com; dkim=fail (0-bit key) header.d=mpiricsoftware.com header.i=shardul.b@mpiricsoftware.com header.b=f239HMRS reason="key not found in DNS"; arc=pass smtp.client-ip=136.143.188.54
+	s=arc-20240116; t=1783759184; c=relaxed/simple;
+	bh=vOVV4Nq8xLoVDzWwHZbf3pIZ5RdvC+VyrXsdFD7nIRQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=fTFX6Zv+fHjUnwzhcRffyH7RbC71GKUNA3TCCjW2mrsgfuVTJKjEauHUsTl8RI+JYz4znFAG5mKXwx/y1ZUw5xv6BwbK7t73sk3aqrBXJbQ1NE3cs7L87BmVwuSTaMr+DXAsl9km75YUlsmjohraOrnHx29Rn5h5Ccs6BpqVPiE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com; spf=pass smtp.mailfrom=mpiricsoftware.com; dkim=fail (0-bit key) header.d=mpiricsoftware.com header.i=shardul.b@mpiricsoftware.com header.b=rWKhQFsA reason="key not found in DNS"; arc=pass smtp.client-ip=136.143.188.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mpiricsoftware.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mpiricsoftware.com header.i=shardul.b@mpiricsoftware.com header.b="f239HMRS"
-ARC-Seal: i=1; a=rsa-sha256; t=1783759164; cv=none; 
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mpiricsoftware.com header.i=shardul.b@mpiricsoftware.com header.b="rWKhQFsA"
+ARC-Seal: i=1; a=rsa-sha256; t=1783759166; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=lbqDvasYGdx6nDrsuBr1yprAi/H875DqoVh6KYNJToIn0ol7oa6+YSHdI46QHCseHyuA0FOo7OcRdSwBG6D7vFVd1DNJ6oIWXWBkpUI5QuMUUVzMt7FftoR8LdTdLodODPFj6WHObPOrJ6XBY4myyer72nKVqv2tOAGMeqtRqwQ=
+	b=jwmCZYPkanZLP6iFHMsGCGsOzt9kvqylQh9X3Mqdo+UwHLALWAeCTIJE1PRyzMF3gyijkKDRiwbr4Izeu6bq2fEzVCk8GVB66zY8icVS+IzIS2hQHxG6XL1pqoBth5/tHCjBwL5wbfAxE0X319dPTZarc2XOdJFMlVggcQvmfJc=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1783759164; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=mbYEgtcTD6a6JbXJOPlvBXucS309KrzDOgIFCvfdYfo=; 
-	b=f4N2M8LeZEoRxl4mTGa+Zvu0zb7hgrjizSisBHYnjCYBFRq7unHyzfvD/72Q6o6BHMkXxzANFK8HfxK5CDauXYXvAN/Xj4MiLl+83sR0vRNzE8kjri35w0Dv6gcyNrLXqYGbSrl34yDwlC9XRVitT+uJbI3Er8gYHZZM35tA1kc=
+	t=1783759166; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=JgKNGzKwEPTCNFdiK2pJ4noGSKYLVL5tPQd4kCy1LUQ=; 
+	b=S2u6QUlg/Np4+BIKeLHkZSTrmVg+/dWxll08X8WuSygLxe7XBeGgTxH8mJT0OMeohzYKZFFcbUBhB7crGbirI1XCFrU4SnkAWv1k/opEUnlOr2O7jnfsa+dq7OwthYQR7TyJzyu861A0xHQteeIfc3Kks6dKod7C+sAv7bDjBac=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=mpiricsoftware.com;
 	spf=pass  smtp.mailfrom=shardul.b@mpiricsoftware.com;
 	dmarc=pass header.from=<shardul.b@mpiricsoftware.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1783759164;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1783759166;
 	s=mpiric; d=mpiricsoftware.com; i=shardul.b@mpiricsoftware.com;
-	h=From:From:Subject:Subject:Date:Date:Message-Id:Message-Id:MIME-Version:Content-Type:Content-Transfer-Encoding:To:To:Cc:Cc:Reply-To;
-	bh=mbYEgtcTD6a6JbXJOPlvBXucS309KrzDOgIFCvfdYfo=;
-	b=f239HMRS6/PHVVHjDjSSknLgJHmN30nFSbQ774R0mPKZk88Rx1xpvVfcNuvbiWmf
-	V8eG924+U6TtuI81bzmJXdvAliHgukTP2lOn5rPwFyggIbhcfaVH5TedamHOcsFcU4k
-	FVcikDStpgTZLhdV/bIfD4UeexAfh7JXjaecurpM=
-Received: by mx.zohomail.com with SMTPS id 1783759161149415.6654243530869;
-	Sat, 11 Jul 2026 01:39:21 -0700 (PDT)
+	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:References:In-Reply-To:To:To:Cc:Cc:Reply-To;
+	bh=JgKNGzKwEPTCNFdiK2pJ4noGSKYLVL5tPQd4kCy1LUQ=;
+	b=rWKhQFsA0XTtERBlF1mlQPLBcDce6C5h3MrqItuLYFnWCfMtvZwWg0+IFi7LKoRf
+	OHosFJHD7CGWImPPOZMx9hYiuubjj8hl6Mbm6F5vaAhTDUjSK5F6hjGYZyQZR5qnd7b
+	RgQwu7Fv5RYKg8fXKpqFNh8dq2TQUtnv+fo+G7vw=
+Received: by mx.zohomail.com with SMTPS id 1783759164990138.62137875120504;
+	Sat, 11 Jul 2026 01:39:24 -0700 (PDT)
 From: Shardul Bankar <shardul.b@mpiricsoftware.com>
-Subject: [PATCH mptcp-next 0/3] mptcp: pm: guard the lockless MP_JOIN path
- against a NULL pm.ops
-Date: Sat, 11 Jul 2026 14:09:14 +0530
-Message-Id: <20260711-mptcp_pm_ops_null_deref_join-v1-0-843ebd7ac0cf@mpiricsoftware.com>
+Date: Sat, 11 Jul 2026 14:09:15 +0530
+Subject: [PATCH mptcp-next 1/3] Squash to "mptcp: pm: init and release
+ mptcp_pm_ops"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -48,10 +48,9 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIADIBUmoC/yWMQQqDMBAAvyJ7bsCkrZV+pZRF49quaBKysQji3
- 432OAwzKwhFJoFnsUKkHwt7l0FfCrDfxn1IcZcZTGmq8qG1mkKyAcOEPgi6eRyxo0g9Dp6dakx
- f072qr6a9QV6EbHg59y84S+VoSfD+O5nbgWw6/rBtO3ZfU6qMAAAA
-X-Change-ID: 20260711-mptcp_pm_ops_null_deref_join-a2f8e56832b4
+Message-Id: <20260711-mptcp_pm_ops_null_deref_join-v1-1-843ebd7ac0cf@mpiricsoftware.com>
+References: <20260711-mptcp_pm_ops_null_deref_join-v1-0-843ebd7ac0cf@mpiricsoftware.com>
+In-Reply-To: <20260711-mptcp_pm_ops_null_deref_join-v1-0-843ebd7ac0cf@mpiricsoftware.com>
 To: mptcp@lists.linux.dev, Geliang Tang <geliang@kernel.org>
 Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
  Mat Martineau <martineau@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
@@ -60,35 +59,36 @@ Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>,
 X-Mailer: b4 0.15.2
 X-ZohoMailClient: External
 
-The pluggable path-manager series converts mptcp_pm_get_local_id() and
-mptcp_pm_is_backup() to dereference msk->pm.ops. Both are reached from
-subflow_token_join_request() on an inbound MP_JOIN, in softirq and holding
-only a reference to the target msk (from mptcp_token_get_sock()), without the
-socket lock. A concurrent close()/disconnect() can clear pm.ops via
-mptcp_pm_ops_release() in between, so the join path dereferences a NULL
-pm.ops (a KASAN null-ptr-deref of ->get_priority in softirq).
+msk->pm.ops is cleared here on the teardown path, but it is read
+locklessly from the softirq MP_JOIN path: mptcp_pm_get_local_id() and
+mptcp_pm_is_backup() are reached from subflow_token_join_request() on an
+inbound MP_JOIN, holding only a reference to the target msk (from
+mptcp_token_get_sock()) and without the socket lock. Annotate the store
+with WRITE_ONCE() to pair with the READ_ONCE() on those readers.
 
-Found by an MPTCP protocol-flow harness extending BRF (arXiv:2305.08782),
-which drives inbound MP_JOINs against a connection under teardown.
-
-Guard both readers with READ_ONCE() and bail out when pm.ops is NULL, paired
-with WRITE_ONCE() in mptcp_pm_ops_release(). The affected commits are still in
-the export tree, so this is three squash-to fixups, one per introducing commit.
-
+Assisted-by: Claude:claude-opus-4-8
 Signed-off-by: Shardul Bankar <shardul.b@mpiricsoftware.com>
 ---
-Shardul Bankar (3):
-      Squash to "mptcp: pm: init and release mptcp_pm_ops"
-      Squash to "mptcp: pm: add get_local_id() interface"
-      Squash to "mptcp: pm: add get_priority() interface"
+ net/mptcp/pm.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
- net/mptcp/pm.c | 27 ++++++++++++++++++++++++---
- 1 file changed, 24 insertions(+), 3 deletions(-)
----
-base-commit: e6ce9ffe5d02034a38e8bca7b78a7f58aff8caae
-change-id: 20260711-mptcp_pm_ops_null_deref_join-a2f8e56832b4
+diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+index 033f783d49902..4d8f8c999b1de 100644
+--- a/net/mptcp/pm.c
++++ b/net/mptcp/pm.c
+@@ -1158,7 +1158,10 @@ static void mptcp_pm_ops_release(struct mptcp_sock *msk)
+ {
+ 	struct mptcp_pm_ops *pm_ops = msk->pm.ops;
+ 
+-	msk->pm.ops = NULL;
++	/* Paired with READ_ONCE() in the lockless softirq MP_JOIN readers
++	 * mptcp_pm_is_backup() / mptcp_pm_get_local_id().
++	 */
++	WRITE_ONCE(msk->pm.ops, NULL);
+ 	if (pm_ops->release)
+ 		pm_ops->release(msk);
+ 
 
-Best regards,
---  
-Shardul Bankar <shardul.b@mpiricsoftware.com>
+-- 
+2.34.1
 
