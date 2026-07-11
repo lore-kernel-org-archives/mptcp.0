@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D841372EE9
-	for <mptcp@lists.linux.dev>; Sat, 11 Jul 2026 13:08:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E39B4372EE9
+	for <mptcp@lists.linux.dev>; Sat, 11 Jul 2026 13:08:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783775305; cv=none; b=WM3u+8CwoQm0N6uKz6T6gzYDptrOSyuOaS+jZeZ7I11rYXJ4uE1+ZnjYRYBdbhCSwj55WlHiIJt0Fl/ebqXnZrxKoodw4PY1eNuaSJcSRYfSKgo9KI0izmgcVSvm6G+mDhOLoJCYUHLzlBZcN6ROPYVHV+gMy55V25hjicqtq2c=
+	t=1783775307; cv=none; b=fuq66Lo7Pa1I0w95xOqP2eFTc3NzvuzCyoW1Bs52O3gF2XBnL1DU8BpZ6JgZvEid3SSOFztxpjUKkRwoSI0vyNxP2YCBUwVQ9LMJLUiM8N3eSoOVrXL1ukH38Sw0TeTgSDVQz+zPbgWpk/XRyqJeGpP6TaYaRWaN1RWVwvOl01g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783775305; c=relaxed/simple;
-	bh=cUl+ifhQtAvu2p705/Kpo1p2gGhlSUdD0eIPwl04ZFI=;
+	s=arc-20240116; t=1783775307; c=relaxed/simple;
+	bh=wGGj4mfCekdUcK3drDu8dMrZN9KG53Vze9S7YhqWi/c=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=m4OJvoUeaLOiirdqY1heEq+bW6e8zKacy5AIo/Z3kNNlT12k8mHgiLeee29riSRkEYnN2W7ZlE7dneC0tiTmF2t+rvaGaMLoYG4L5oJbIOG9RkxlPPxztooAIjjC2iOM6efvQkGVDBPMvu0K61OX3iWCcSmBQ78+hUsDoFb/U/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RFePjpEZ; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=oFyw8Bp2l5xYOiYFNhPczTbYnX4b2aXsX4HRyqzBxJIq2AEPOHls5JEmbeGlDmG4uCDKnu5EjZXAlFeKaCxFNrWNvwLanP4Lup37YimqwstyFl4JljPpCTYsx7Ef7CB8bV/U+b921bqsScO/hP12DKnhC6YbZmfbVypFydgUmFs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N94QaTKm; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RFePjpEZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 870A21F000E9;
-	Sat, 11 Jul 2026 13:08:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N94QaTKm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64B721F00A3A;
+	Sat, 11 Jul 2026 13:08:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783775303;
-	bh=J/ou15/XGar8qmzLaBWuz+NeFJ8E28le7yaLynG4TQw=;
+	s=k20260515; t=1783775305;
+	bh=ynSNWd+QM95V3Q6eGhh4RYN57Qzluk1RKKihArqL+LQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=RFePjpEZ8c7yLV3+/Fz9JG43beGIINyYDMJYimEJ/WpDjnK+GLW7somug2AVuDz6F
-	 s638SNuCMWmAol2h78/NkA6vB5wlJNx3DRgHhnfbmTBC4TdyBvZAkEhqgBuwuDHFNy
-	 FkZnBdbnbAplMSwMofY7CLG9U1zWY7jJZLZL/7e6xgr4FNkzj1p/CCRNIe5hBHPNWX
-	 ZcejtKQK3Cq+HexZZ3tagzi6xoMdvQ8sM6fWhTv12VmXIHgAnSbhGksr63VGJJom0X
-	 IF1Y0PclyIL10Bn1q6zYcsx32fHGmLlSsEK2qk0NPy/7RVWOI0a3VifAv2naapWKCU
-	 tgl9nx7hg1orQ==
+	b=N94QaTKmT3gEnzteDrbGqg7F31ZW3GXnB6+vwD1A08ru4GV4Fqq8p+bRFVUZ3kYTC
+	 Ax+/Zntx/WyBxO35O1vvOiMrYsYBTZ7jYXgQJa/0t7VrB3jZ16np3gX+BpqR2naThG
+	 avUYz/E8T1xECcenjFfmjD7Q72ZyFDS8fgEE0aBjlPX8ulOhtq52YIn1UDoWR4C3HR
+	 GBu32X1ea93NtLnJjAb1fjtmekjAyWJdZs9wuGO+pV9TvN4IzvD1Fu2rMZKhPCvmir
+	 /iqdfIotgFZ4SMlmJlxz8UzhExiPW7SrZ3HgqO000QksnZv1ACmg/CtaPrHMzoQX0t
+	 U71sjgwc+FAug==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next 2/4] mptcp: add msg zerocopy support
-Date: Sat, 11 Jul 2026 21:07:50 +0800
-Message-ID: <a22bc67e322663d47d0f39d5afb5edefe1550320.1783774784.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next 3/4] selftests: mptcp: connect: add zerocopy io mode
+Date: Sat, 11 Jul 2026 21:07:51 +0800
+Message-ID: <40bcb0d6fc245cc063cd1ff3360eafbe4facdd79.1783774784.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <cover.1783774784.git.tanggeliang@kylinos.cn>
 References: <cover.1783774784.git.tanggeliang@kylinos.cn>
@@ -45,242 +45,128 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-This patch enables MSG_ZEROCOPY support for MPTCP sockets, allowing
-user-space to transmit data without intermediate kernel copies.
+Add a new I/O mode 'zerocopy' to the mptcp_connect selftest, which uses
+sendmsg() with the MSG_ZEROCOPY flag to transmit data. This enables
+testing and performance validation of the zero-copy send path for both
+TCP and MPTCP connections.
 
-The implementation follows the same lifecycle model as TCP:
-
-A single ubuf_info_msgzc is allocated per sendmsg via
-msg_zerocopy_realloc(). Its reference count consists of three parts:
-one 'caller' reference held until sendmsg returns, one reference per
-MPTCP dfrag in the retransmission queue (released when the dfrag is
-acked and cleared), and one reference per subflow skb that consumes
-dfrag bytes (released by TCP's skb_zcopy_clear() when the skb is
-acked). Completion is reported only after all bytes are acknowledged
-at both MPTCP and subflow levels.
-
-User pages are pinned via iov_iter_get_pages2() and stored directly
-in a newly allocated mptcp_data_frag. The dfrag takes one reference
-on the ubuf_info and one on the page. Subflow skbs take additional
-page references via get_page() and are marked with skb_zcopy_set()
-and SKBFL_PURE_ZEROCOPY, mirroring TCP's behavior and bypassing
-kernel memory accounting for those pages.
-
-The feature is silently downgraded to regular copy when MSG_FASTOPEN
-is set, the MPTCP socket is in fallback mode, or msg_zerocopy_realloc()
-fails (e.g. RLIMIT_MEMLOCK pressure)
+This mode is useful for benchmarking and for verifying correctness of
+MSG_ZEROCOPY handling in the MPTCP stack.
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- net/mptcp/protocol.c | 97 ++++++++++++++++++++++++++++++++++++++++----
- net/mptcp/protocol.h |  1 +
- 2 files changed, 91 insertions(+), 7 deletions(-)
+ .../selftests/net/mptcp/mptcp_connect.c       | 63 ++++++++++++++++++-
+ 1 file changed, 62 insertions(+), 1 deletion(-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 1cab07b1b9b1..6428a1652377 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1118,9 +1118,11 @@ static bool mptcp_frag_can_collapse_to(const struct mptcp_sock *msk,
- 		df->data_seq + df->data_len == msk->write_seq;
- }
- 
--static void dfrag_uncharge(struct sock *sk, int len)
-+static void dfrag_uncharge(struct sock *sk, int len,
-+			   struct mptcp_data_frag *dfrag)
- {
--	sk_mem_uncharge(sk, len);
-+	if (!dfrag->ubuf)
-+		sk_mem_uncharge(sk, len);
- 	sk_wmem_queued_add(sk, -len);
- }
- 
-@@ -1129,7 +1131,13 @@ static void dfrag_clear(struct sock *sk, struct mptcp_data_frag *dfrag)
- 	int len = dfrag->data_len + dfrag->overhead;
- 
- 	list_del(&dfrag->list);
--	dfrag_uncharge(sk, len);
-+	dfrag_uncharge(sk, len, dfrag);
-+	if (dfrag->ubuf) {
-+		net_zcopy_put(dfrag->ubuf);
-+		put_page(dfrag->page);
-+		kfree(dfrag);
-+		return;
-+	}
- 	put_page(dfrag->page);
- }
- 
-@@ -1174,7 +1182,7 @@ static void __mptcp_clean_una(struct sock *sk)
- 		dfrag->data_len -= delta;
- 		dfrag->already_sent -= delta;
- 
--		dfrag_uncharge(sk, delta);
-+		dfrag_uncharge(sk, delta, dfrag);
- 	}
- 
- 	/* all retransmitted data acked, recovery completed */
-@@ -1248,6 +1256,7 @@ mptcp_carve_data_frag(const struct mptcp_sock *msk, struct page_frag *pfrag,
- 	dfrag->already_sent = 0;
- 	dfrag->page = pfrag->page;
- 	dfrag->eor = 0;
-+	dfrag->ubuf = NULL;
- 
- 	return dfrag;
- }
-@@ -1455,7 +1464,7 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
- 	}
- 
- 	copy = min_t(size_t, copy, info->limit - info->sent);
--	if (!sk_wmem_schedule(ssk, copy)) {
-+	if (!dfrag->ubuf && !sk_wmem_schedule(ssk, copy)) {
- 		tcp_remove_empty_skb(ssk);
- 		return -ENOMEM;
- 	}
-@@ -1465,13 +1474,19 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
- 	} else {
- 		get_page(dfrag->page);
- 		skb_fill_page_desc(skb, i, dfrag->page, offset, copy);
-+
-+		if (dfrag->ubuf && !skb_zcopy(skb)) {
-+			skb_zcopy_set(skb, dfrag->ubuf, NULL);
-+			skb_shinfo(skb)->flags |= SKBFL_PURE_ZEROCOPY;
-+		}
- 	}
- 
- 	skb->len += copy;
- 	skb->data_len += copy;
- 	skb->truesize += copy;
- 	sk_wmem_queued_add(ssk, copy);
--	sk_mem_charge(ssk, copy);
-+	if (!skb_zcopy_pure(skb))
-+		sk_mem_charge(ssk, copy);
- 	WRITE_ONCE(tp->write_seq, tp->write_seq + copy);
- 	TCP_SKB_CB(skb)->end_seq += copy;
- 	tcp_skb_pcount_set(skb, 0);
-@@ -1968,22 +1983,77 @@ static void mptcp_rps_record_subflows(const struct mptcp_sock *msk)
- 	}
- }
- 
-+static int mptcp_sendmsg_zerocopy_iter(struct sock *sk, struct msghdr *msg,
-+				       struct ubuf_info *ubuf, u32 copy_limit,
-+				       ssize_t *copied, long *timeo)
-+{
-+	struct mptcp_sock *msk = mptcp_sk(sk);
-+	struct mptcp_data_frag *dfrag;
-+	struct page *pages[1] = {};
-+	size_t pg_off = 0;
-+	ssize_t pg_len;
-+
-+	pg_len = iov_iter_get_pages2(&msg->msg_iter, pages,
-+				     copy_limit, 1, &pg_off);
-+	if (pg_len <= 0)
-+		return pg_len;
-+
-+	dfrag = kzalloc_obj(*dfrag, GFP_KERNEL_ACCOUNT);
-+	if (!dfrag) {
-+		put_page(pages[0]);
-+		return pg_len;
-+	}
-+	dfrag->data_len = pg_len;
-+	dfrag->data_seq = msk->write_seq;
-+	dfrag->offset = pg_off;
-+	dfrag->page = pages[0];
-+	dfrag->ubuf = ubuf;
-+
-+	/* one ref for the dfrag; released in dfrag_clear */
-+	net_zcopy_get(ubuf);
-+
-+	*copied += pg_len;
-+	WRITE_ONCE(msk->write_seq, msk->write_seq + pg_len);
-+	sk_wmem_queued_add(sk, pg_len);
-+
-+	list_add_tail(&dfrag->list, &msk->rtx_queue);
-+	if (!msk->first_pending)
-+		msk->first_pending = dfrag;
-+
-+	return 0;
-+}
-+
- static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
- {
- 	struct mptcp_sock *msk = mptcp_sk(sk);
-+	struct ubuf_info *ubuf = NULL;
- 	struct page_frag *pfrag;
- 	size_t copied = 0;
-+	bool zc = false;
- 	int ret = 0;
- 	long timeo;
- 
- 	/* silently ignore everything else */
- 	msg->msg_flags &= MSG_MORE | MSG_DONTWAIT | MSG_NOSIGNAL |
--			  MSG_FASTOPEN | MSG_EOR;
-+			  MSG_FASTOPEN | MSG_EOR | MSG_ZEROCOPY;
- 
- 	lock_sock(sk);
- 
- 	mptcp_rps_record_subflows(msk);
- 
-+	if (msg->msg_flags & MSG_FASTOPEN || __mptcp_check_fallback(msk))
-+		msg->msg_flags &= ~MSG_ZEROCOPY;
-+
-+	if ((msg->msg_flags & MSG_ZEROCOPY) && len) {
-+		ubuf = msg_zerocopy_realloc(sk, len, NULL, false);
-+		if (!ubuf) {
-+			ret = -ENOBUFS;
-+			goto do_error;
-+		}
-+		sock_set_flag(sk, SOCK_ZEROCOPY);
-+		zc = true;
-+	}
-+
- 	if (unlikely(inet_test_bit(DEFER_CONNECT, sk) ||
- 		     msg->msg_flags & MSG_FASTOPEN)) {
- 		int copied_syn = 0;
-@@ -2022,6 +2092,15 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
- 		if (!copy_limit)
- 			goto wait_for_memory;
- 
-+		if (zc) {
-+			ret = mptcp_sendmsg_zerocopy_iter(sk, msg,
-+							  ubuf, copy_limit,
-+							  &copied, &timeo);
-+			if (ret)
-+				goto do_error;
-+			continue;
-+		}
-+
- 		/* reuse tail pfrag, if possible, or carve a new one from the
- 		 * page allocator
- 		 */
-@@ -2097,6 +2176,8 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
- 	}
- 
- out:
-+	if (zc)
-+		net_zcopy_put(ubuf);
- 	release_sock(sk);
- 	return copied;
- 
-@@ -2105,6 +2186,8 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
- 		goto out;
- 
- 	copied = sk_stream_error(sk, msg->msg_flags, ret);
-+	if (zc)
-+		net_zcopy_put_abort(ubuf, true);
- 	goto out;
- }
- 
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index da40c6f3705f..f4e69ea51a94 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -268,6 +268,7 @@ struct mptcp_data_frag {
- 	u8 eor;			/* currently using 1 bit */
- 	u16 already_sent;
- 	struct page *page;
-+	struct ubuf_info *ubuf;
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+index ea4cb6c1bd5e..11012dadfa70 100644
+--- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
++++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+@@ -53,6 +53,7 @@ enum cfg_mode {
+ 	CFG_MODE_MMAP,
+ 	CFG_MODE_SENDFILE,
+ 	CFG_MODE_SPLICE,
++	CFG_MODE_ZEROCOPY,
  };
  
- /* Arbitrary compromise between as low as possible to react timely to subflow
+ enum cfg_peek {
+@@ -125,7 +126,7 @@ static void die_usage(void)
+ 	fprintf(stderr, "\t-j     -- add additional sleep at connection start and tear down "
+ 		"-- for MPJ tests\n");
+ 	fprintf(stderr, "\t-l     -- listens mode, accepts incoming connection\n");
+-	fprintf(stderr, "\t-m [poll|mmap|sendfile|splice] -- use poll(default)/mmap+write/sendfile/splice\n");
++	fprintf(stderr, "\t-m [poll|mmap|sendfile|splice|zerocopy] -- use poll(default)/mmap+write/sendfile/splice/zerocopy\n");
+ 	fprintf(stderr, "\t-M mark -- set socket packet mark\n");
+ 	fprintf(stderr, "\t-o option -- test sockopt <option>\n");
+ 	fprintf(stderr, "\t-p num -- use port num\n");
+@@ -998,6 +999,52 @@ static int copyfd_io_splice(int infd, int peerfd, int outfd, unsigned int size,
+ 	return err;
+ }
+ 
++static int copyfd_io_zc(int infd, int peerfd, int outfd, unsigned int size,
++			bool *in_closed_after_out, struct wstate *winfo)
++{
++	struct msghdr msg = {};
++	int sndbuf = size * 2;
++	struct iovec iov;
++	char *buf;
++	int err;
++
++	buf = malloc(size);
++	if (!buf) {
++		perror("malloc");
++		return 1;
++	}
++
++	if (read(infd, buf, size) != size) {
++		perror("read input");
++		free(buf);
++		return 1;
++	}
++
++	iov.iov_base = buf;
++	iov.iov_len = size;
++	msg.msg_iov = &iov;
++	msg.msg_iovlen = 1;
++
++	if (setsockopt(peerfd, SOL_SOCKET, SO_SNDBUF, &sndbuf, sizeof(sndbuf)))
++		perror("setsockopt SO_SNDBUF");
++
++	err = sendmsg(peerfd, &msg, MSG_ZEROCOPY);
++	if (err < 0 || err != size) {
++		perror("sendmsg MSG_ZEROCOPY");
++		free(buf);
++		return 1;
++	}
++
++	err = 0;
++	shut_wr(peerfd);
++	if (do_recvfile(peerfd, outfd) < 0)
++		err = 1;
++	*in_closed_after_out = true;
++
++	free(buf);
++	return err;
++}
++
+ static int copyfd_io(int infd, int peerfd, int outfd, bool close_peerfd, struct wstate *winfo)
+ {
+ 	bool in_closed_after_out = false;
+@@ -1038,6 +1085,17 @@ static int copyfd_io(int infd, int peerfd, int outfd, bool close_peerfd, struct
+ 				       &in_closed_after_out, winfo);
+ 		break;
+ 
++	case CFG_MODE_ZEROCOPY:
++		file_size = get_infd_size(infd);
++		if (file_size < 0)
++			return file_size;
++		if (cfg_sockopt_types.mptfo && winfo->total_len &&
++		    file_size > winfo->total_len)
++			file_size -= winfo->total_len;
++		ret = copyfd_io_zc(infd, peerfd, outfd, file_size,
++				   &in_closed_after_out, winfo);
++		break;
++
+ 	default:
+ 		fprintf(stderr, "Invalid mode %d\n", cfg_mode);
+ 
+@@ -1453,6 +1511,8 @@ int parse_mode(const char *mode)
+ 		return CFG_MODE_SENDFILE;
+ 	if (!strcasecmp(mode, "splice"))
+ 		return CFG_MODE_SPLICE;
++	if (!strcasecmp(mode, "zerocopy"))
++		return CFG_MODE_ZEROCOPY;
+ 
+ 	fprintf(stderr, "Unknown test mode: %s\n", mode);
+ 	fprintf(stderr, "Supported modes are:\n");
+@@ -1460,6 +1520,7 @@ int parse_mode(const char *mode)
+ 	fprintf(stderr, "\t\t\"mmap\" - send entire input file (mmap+write), then read response (-l will read input first)\n");
+ 	fprintf(stderr, "\t\t\"sendfile\" - send entire input file (sendfile), then read response (-l will read input first)\n");
+ 	fprintf(stderr, "\t\t\"splice\" - send entire input file (splice), then read response (-l will read input first)\n");
++	fprintf(stderr, "\t\t\"zerocopy\" - send entire input file (zerocopy), then read response (-l will read input first)\n");
+ 
+ 	die_usage();
+ 
 -- 
 2.53.0
 
