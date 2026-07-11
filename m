@@ -1,37 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75BDD23B62B
-	for <mptcp@lists.linux.dev>; Sat, 11 Jul 2026 03:44:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FE7D255F2C
+	for <mptcp@lists.linux.dev>; Sat, 11 Jul 2026 03:44:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783741470; cv=none; b=VYdfBdEvrcU8qNacrX2m6YWBGnIaovvSsmEqM42E8tXV3iFEPeaFQ/UY2Q/Go/oTTZfvWO5KLLWiOZY2fKBHRyxPY2hNdK7/RzWq3VQI1JNRsVNXYo59CPUbpbW7rPA0wBoW3+o29qQeI/4KPoF7DDhs3gRwXCO1jl27jeNRnKA=
+	t=1783741471; cv=none; b=KbSEg5ES4wUyRbMBihmGEaXxpOso0OK8ZFDgDg97RbHi02iutUjLkHJQ1zdWPp+KRK6EZzVHCguUcYwHYZyatEEmgqt+2cfBzFa91+cv6Gv6YNNO9CdrPC7UyfFLAnjkqvtnDbfq+T7BLjpouupt4z3XKEQV57mSM7W3zi2A4cs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783741470; c=relaxed/simple;
-	bh=epRUm09AnTFc3iUlbyfmJ1swH4Ngp4K914CXG2BhCzc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LX+hvgjUIdJhhtrimJmckp+QwWW1fcIXVlVO0f7DomGTuibJsI5zRdBplYObB91wx/ku9GonorN1QCx2Ki9KTC91hHBDUB6emb9rMzSYvFT8lrywbn6L7EJ4rxs03qUPFcrUXLboVmGhOP6h0Q37uzrZL4jqEyi42Z8Q7N2zXt4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FV3zRkRu; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1783741471; c=relaxed/simple;
+	bh=8cTcpANFISVzd/UkTlSvjt6Sffb3tRIft7Hf/f0QSgU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=mDNrRaSEEsM6kHGgPjhwzjzFEA9Ysxi7RxKbSNGIgeqNn9rBrtqUvkIKaF2OESsLUDN93+KPPn4KyB3bZTORRI9je12gwE1btY+WdmMMrUU6T72OTep1BzVBjUVSUR0LT/sz0wcoQkHRkKEaILOtetcV2nwwbYEBi91d3zgdPcI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L6CVxEEu; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FV3zRkRu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48E891F000E9;
-	Sat, 11 Jul 2026 03:44:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L6CVxEEu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C9331F00A3A;
+	Sat, 11 Jul 2026 03:44:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783741469;
-	bh=1/fLjoIMdqwnB5CnwsjgLRzAlcpUjsNe/tJGi4xGzL8=;
-	h=From:To:Cc:Subject:Date;
-	b=FV3zRkRuiQObEWSQ6NbM6St0JLj+h6T5gJm06PErjajJ8u72l8k6q5o/SNsUWmjXY
-	 6tJ62UoHWsmma+s6Z2LxTs5ScvoCT7umCTU2VSUhJpY3FTFAb4Zx1H5Io8c80yqQ69
-	 vBeAZrORej4lTV4XPjuWPGr1DgqXiWnkDRorYL03eksrMS3iNL5Tv+dH0nFPWWQyIR
-	 9ozFkgKaa4KECgIadXZqh3S7F/GHpDgf4twmPkHXH4W9ZYAXnnC7OtWrJQMPA2vqkh
-	 wYUokFShLlQ8ECScY7gcnpweEMDaxGU5gtmqgM20LDZuxRTFuaogevgG5uHfqL2+HJ
-	 Dqo8JE4K7R5Qg==
+	s=k20260515; t=1783741470;
+	bh=V2En2bUH7kGZxRN5hLT4yY6yPs5AIwn4jjpk0vIxQeU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=L6CVxEEu2kZ2T7cxUd33YNlNErqm8e8MOWDnJVRoYE0PzYg1v9CmRVs95EC08pnuz
+	 UlLN1DLl/1cOzn6YMlHjNoqHxZI0bFLyhR21AyFFieecREJ5UP6J6OZ5colKSHXxEE
+	 GqLyM9uKSqh8TjRl/uZrIVswXvxOtLhsV6L/AmAoOKbGhqbps1ISwPaqrYJ7IUuMs+
+	 xn1+BKRB4bFEpWmqxacAWdtJjnLqDNP6hmh5+TpKgapROAsmPY+g+1GFJQYFj3NoDs
+	 A5fGwNAGshycKKuoRz0j8GlMaOjGSk4Qc0YyxHdSgI6dDXgmwCXbpnkZ6h8qdYkzz6
+	 d5Ho2D91JMEYw==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v7 00/14] selftests: consolidate TCP_INQ testing into sockopt
-Date: Sat, 11 Jul 2026 11:43:28 +0800
-Message-ID: <cover.1783740443.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v7 01/14] selftests: mptcp: sockopt: reseed RNG after fork
+Date: Sat, 11 Jul 2026 11:43:29 +0800
+Message-ID: <0b0e71be5930e970b6ec8693854ad79cfd620edf.1783740443.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.53.0
+In-Reply-To: <cover.1783740443.git.tanggeliang@kylinos.cn>
+References: <cover.1783740443.git.tanggeliang@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -42,84 +45,43 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-v7:
- - Add a new patch to reseed RNG in child after fork.
- - Add a new patch to fix bytes_acked validation against sent bytes.
- - Add a new patch to use r/w for byte counts in process_one_client().
- - Split v6-0004 into two separate patches: read exact payload length,
-   and pass len over unixfd.
- - Change socketpair type from SOCK_DGRAM to SOCK_STREAM to avoid
-   indefinite blocking when peer exits.
- - Fully initialize buf in server_huge_transfer() to silence MSAN/Valgrind
-   warnings.
- - Use a union containing struct cmsghdr for control message buffers to
-   prevent unaligned access on strict-alignment architectures.
- - Reorder and renumber patches accordingly.
+xfork() leaves the child sharing its parent's srand() state, so server
+and client processes drive rand() off the same seed. After the recent
+consolidation of mptcp_inq.c into mptcp_sockopt.c, mptcp_inq's
+per-fork reseed was lost. Restore it: have the child call init_rng()
+again so each fork gets an independent seed from /dev/urandom.
 
-v6:
- - A new patch to use recvmsg instead of read.
- - Squash the four original patches into two.
- - Reset msg.msg_controllen.
- - Check cmsg_len in get_tcp_inq.
- - Check return value of client_huge_transfer.
- - Address other comments from Sashiko.
- - https://patchwork.kernel.org/project/mptcp/cover/cover.1783673158.git.tanggeliang@kylinos.cn/
+This mirrors what the standalone mptcp_inq binary used to do, and
+keeps buffer-filling and huge-transfer sizes uncorrelated across the
+two processes.
 
-v5:
- - Continue using the approach from v3 and fix the instability issues.
-   This version has undergone extensive loop testing.
- - The new two separate functions, server_huge_transfer() and 
-   client_huge_transfer(), improve code structure.
- - https://patchwork.kernel.org/project/mptcp/cover/cover.1783579976.git.tanggeliang@kylinos.cn/
+Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+---
+ tools/testing/selftests/net/mptcp/mptcp_sockopt.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-v4:
- - v3 changed the behavior of process_one_client and connect_one_server,
-   causing intermittent failures during loop testing. Revert to using the 
-   v2 approach, along with some cleanups.
- - https://patchwork.kernel.org/project/mptcp/cover/cover.1757686538.git.tanggeliang@kylinos.cn/
-
-v3:
- - No longer using process_one_client_inq() and connect_one_server_inq()
-   for switching; instead, the inq-related code has been merged into
-   process_one_client() and connect_one_server().
- - https://patchwork.kernel.org/project/mptcp/cover/cover.1756200029.git.tanggeliang@kylinos.cn/
-
-v2:
- - patch 4, a new patch, add do_setsockopt_inq helper.
- - cleanups.
- - https://patchwork.kernel.org/project/mptcp/cover/cover.1754664106.git.tanggeliang@kylinos.cn/
-
-v1:
- - https://patchwork.kernel.org/project/mptcp/cover/cover.1754620968.git.tanggeliang@kylinos.cn/
-
-This series consolidates the TCP_INQ test functionality from mptcp_inq
-into mptcp_sockopt, simplifying the test suite while maintaining full
-test coverage.
-
-Geliang Tang (14):
-  selftests: mptcp: sockopt: reseed RNG after fork
-  selftests: mptcp: sockopt: validate bytes_acked against sent bytes
-  selftests: mptcp: sockopt: use r and w for byte counts
-  selftests: mptcp: sockopt: add tx/rx protocol options
-  selftests: mptcp: sockopt: add TCP_INQ test option
-  selftests: mptcp: sockopt: use unix socket instead of pipe
-  selftests: mptcp: sockopt: read exact payload length
-  selftests: mptcp: sockopt: pass echo length over unixfd
-  selftests: mptcp: sockopt: set FIONREAD ioctl
-  selftests: mptcp: sockopt: add huge data transfer tests
-  selftests: mptcp: sockopt: wait ack for huge transfer
-  selftests: mptcp: sockopt: use recvmsg instead of read
-  selftests: mptcp: sockopt: get and verify TCP_INQ
-  selftests: mptcp: sockopt: replace mptcp_inq with sockopt
-
- tools/testing/selftests/net/mptcp/.gitignore  |   1 -
- tools/testing/selftests/net/mptcp/Makefile    |   1 -
- tools/testing/selftests/net/mptcp/mptcp_inq.c | 614 ------------------
- .../selftests/net/mptcp/mptcp_sockopt.c       | 415 ++++++++++--
- .../selftests/net/mptcp/mptcp_sockopt.sh      |   8 +-
- 5 files changed, 372 insertions(+), 667 deletions(-)
- delete mode 100644 tools/testing/selftests/net/mptcp/mptcp_inq.c
-
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
+index b6e58d936ebe..05afe8dd1381 100644
+--- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
++++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
+@@ -128,6 +128,8 @@ struct so_state {
+ #define MIN(a, b) ((a) < (b) ? (a) : (b))
+ #endif
+ 
++static void init_rng(void);
++
+ static void __noreturn die_perror(const char *msg)
+ {
+ 	perror(msg);
+@@ -799,6 +801,8 @@ static pid_t xfork(void)
+ 
+ 	if (p < 0)
+ 		die_perror("fork");
++	else if (p == 0)
++		init_rng();
+ 
+ 	return p;
+ }
 -- 
 2.53.0
 
