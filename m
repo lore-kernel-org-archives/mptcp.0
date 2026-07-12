@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55916373BEE
-	for <mptcp@lists.linux.dev>; Sun, 12 Jul 2026 09:55:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47F302F39B5
+	for <mptcp@lists.linux.dev>; Sun, 12 Jul 2026 09:55:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783850103; cv=none; b=NG7W8yLw954zs1RY2jciQHeFjnHIQozBYpXKtiurw3bvdWoO4p4Atxh8mRd4qaMdtrndT2MdnUlgl3arm/A7jr03vD2JgzTecvqEq92c5e1X97n6hbl45ILReIpt+72VeTjJwWWzs+qzjm98myd00k/4jaBkHrL35qHN1ZbJhfY=
+	t=1783850104; cv=none; b=JW31Jcwt7Jic5tQcDx5TWGoXzk+KI1CJt8nThLBQimlN3sM+yKtmt7aGVEZxksgGqTk1Br2VlOI6CBU2Ds4K1g54fBovV1mYX1I45asy7v8Qfx+N03rl9uSnisJ0FGGICdYTUKsejMBWIqsF6DmUiIpZkDdqL2igRjJ3NsFFdps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783850103; c=relaxed/simple;
-	bh=/RrrCrRv8+e84cE1JmIKiobD2c8QFIDMJqwPH93BwIA=;
+	s=arc-20240116; t=1783850104; c=relaxed/simple;
+	bh=vAHzquK1/9RiobeAb1B1mcpgQOpilNa0CSznpUpptn4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bhg1W6sTunAk4tztb2cGB3o3XP4j5XEcnp0MmjyiSLCKtB36zoEVq+ibYquqig5vYvL1l4sEgfXle0rJQvD6400qfhXLk/jswBlrT/EoSAyOaN9qqZtCDAcmZ1QoKlo88mNWtXGLTRAtOrF+9VxYpzly/CbQQOPpYkf21wzsiZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QL+SDG5O; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=NJ3k3M3n+uD+JUIHtn9DRIG7rmMYir13vVF3Dh8p+G3kHCDhQHjOA4Xfd9WBXHxc9J+yiJp/9oXOXEmxJjd0GWtnwaIL8ZHBELuPrFfQjqy0lVPZ00tqbDyxiQV9AmlyqX76PxRsmveCvGYWT7XIDzPftgYIqi7tOhyDF4Ztc0E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m6w9fU2F; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QL+SDG5O"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4123C1F000E9;
-	Sun, 12 Jul 2026 09:55:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m6w9fU2F"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 573F01F00A3A;
+	Sun, 12 Jul 2026 09:55:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783850101;
-	bh=Q/s0UPbkn5SRhC2cwk0HTX4ntEsHsEoSFmTicKFg9Qc=;
+	s=k20260515; t=1783850103;
+	bh=ezgykU1fYbc26AkgsqIVEMYQH/yT7CapDrWSqxVSm2o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=QL+SDG5OWKfuSUo+pFC5nLyiWeqi0scp8/QwX2E/2lauxZerVuePT9ax7get1K2QR
-	 0uLltXiUh+ESNe1AtGHIXe9r6ApArKSIcYv0Eh4ukxMVkZgFRDU8iLGte5Bf5UJP68
-	 wpu5bo7IHREwpBpKaUsiU8chX19P7XRmlovY2flKV1onTxIQgakVLIut9X5iFNQCnI
-	 CeEur8fGS9JUHzdeqvJRSQkOy9QOycQ+rEcIaCAlD6hIPLrnS8OhQIst/jf5LUOWE6
-	 LXG8Xc4Oo5eiJ5lPM4riQjK/aLe8nlft57rF4KwkiR8So1zg2mW2kaAaAPOuV7Of68
-	 OBH3iYUYmbegw==
+	b=m6w9fU2F/BpV2Jxm7pjkzfFvFRITIAMK9X9I+gaSNlVFEjmxpaQGigdfWP9aW4K56
+	 9RXTYGD9VdKcFDA4SLzMYo3/ZWBcy168vqAvotgd+COmjqSo/m1HwqgqKhHOKu29ce
+	 yAFzHh74Py+xJd4hmgQcpqINnbeRDPBWN5UuSf0exPtiyBJa1pi7+BNc2l9UFq689u
+	 mHIVupgmm4slCxk5Ehso0pugHdW340oPZPL0zl4erVlt0S1EUaipwQXZBxJ9xHYLdQ
+	 9BuvbFqNEzJkswIeEuOON9xmuqtC8x8Kf14UiIJVncpCbItMCUcedeZioYJEXQQr7r
+	 3nohlDebP1Wfw==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v8 09/15] selftests: mptcp: sockopt: pass echo length over unixfd
-Date: Sun, 12 Jul 2026 17:54:15 +0800
-Message-ID: <bbf92a00eba167df9fe69f037f019fdffafcd66c.1783849522.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v8 10/15] selftests: mptcp: sockopt: set FIONREAD ioctl
+Date: Sun, 12 Jul 2026 17:54:16 +0800
+Message-ID: <6eeeda460ce7c4cfcc84e51d969f84a76da16379.1783849522.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <cover.1783849522.git.tanggeliang@kylinos.cn>
 References: <cover.1783849522.git.tanggeliang@kylinos.cn>
@@ -45,62 +45,49 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Pass the payload length ('len') from the client to the server via the
-unixfd control channel. This allows the server to know the exact amount
-of data to expect, enabling precise FIONREAD loop and later TCP_CM_INQ
-validation.
+Implement FIONREAD ioctl checks to validate available data size, ensuring
+synchronization between write and read operations with non-blocking waits.
 
-Also keep the unixfd open for the second write by moving 'close(unixfd)'
-to the end of connect_one_server(), so that the same control channel
-remains available for subsequent huge data transfer tests.
+These codes are from mptcp_inq.c.
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- tools/testing/selftests/net/mptcp/mptcp_sockopt.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ .../selftests/net/mptcp/mptcp_sockopt.c       | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-index e717dddc6734..610e3af040c3 100644
+index 610e3af040c3..165ff2c884c4 100644
 --- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
 +++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-@@ -625,10 +625,12 @@ static void connect_one_server(int fd, int unixfd)
- 	/* un-block server */
- 	ret = read(unixfd, buf2, 4);
- 	assert(ret == 4);
--	close(unixfd);
+@@ -21,6 +21,7 @@
+ #include <sys/types.h>
+ #include <sys/wait.h>
+ #include <sys/random.h>
++#include <sys/ioctl.h>
  
- 	assert(strncmp(buf2, "xmit", 4) == 0);
+ #include <netdb.h>
+ #include <netinet/in.h>
+@@ -690,6 +691,24 @@ static void process_one_client(int fd, int unixfd)
+ 	if (expect_len > sizeof(buf))
+ 		xerror("expect len %zu exceeds buffer size", expect_len);
  
-+	ret = write(unixfd, &len, sizeof(len));
-+	assert(ret == (ssize_t)sizeof(len));
++	for (;;) {
++		struct timespec req;
++		unsigned int queued;
 +
- 	ret = write(fd, buf, len);
- 	if (ret < 0)
- 		die_perror("write");
-@@ -666,12 +668,14 @@ static void connect_one_server(int fd, int unixfd)
- 	if (proto_tx == IPPROTO_MPTCP && proto_rx == IPPROTO_MPTCP)
- 		assert(s.mptcpi_rcv_delta == (uint64_t)total);
- 	close(fd);
-+	close(unixfd);
- }
- 
- static void process_one_client(int fd, int unixfd)
- {
- 	ssize_t ret, r, w;
- 	struct so_state s;
-+	size_t expect_len;
- 	char buf[4096];
- 
- 	memset(&s, 0, sizeof(s));
-@@ -680,6 +684,12 @@ static void process_one_client(int fd, int unixfd)
- 	ret = write(unixfd, "xmit", 4);
- 	assert(ret == 4);
- 
-+	ret = read(unixfd, &expect_len, sizeof(expect_len));
-+	assert(ret == (ssize_t)sizeof(expect_len));
++		ret = ioctl(fd, FIONREAD, &queued);
++		if (ret < 0)
++			die_perror("FIONREAD");
++		if (queued > expect_len)
++			xerror("FIONREAD returned %u, but only %zu expected\n",
++			       queued, expect_len);
++		if (queued == expect_len)
++			break;
 +
-+	if (expect_len > sizeof(buf))
-+		xerror("expect len %zu exceeds buffer size", expect_len);
++		req.tv_sec = 0;
++		req.tv_nsec = 1000 * 1000ul;
++		nanosleep(&req, NULL);
++	}
 +
  	ret = read(fd, buf, sizeof(buf));
  	if (ret < 0)
