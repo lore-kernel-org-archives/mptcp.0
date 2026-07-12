@@ -1,131 +1,222 @@
-Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from flow-a4-smtp.messagingengine.com (flow-a4-smtp.messagingengine.com [103.168.172.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE4452AE7A
-	for <mptcp@lists.linux.dev>; Sun, 12 Jul 2026 11:00:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1906B149DF1;
+	Sun, 12 Jul 2026 11:02:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783854040; cv=none; b=g3AsmwnYNzC1TQlO1yklzYJ9uUwx8Cv3bT4GUwLQGoTOYkFKozMr+qWcC3I8rXrqCY6olzSVbe9Kotb7I+B96FGksq2McU+iPhChZB2nqHCueKR/tvGMNSYJhMWVPWlImwHAnEUKri81DDzRLoxC2MrOYQ+19csWK6fT+JaFD0Q=
+	t=1783854167; cv=none; b=c2lMRux2fYZI++c/ofiocbPwpRD9hPGEd/3AKP3YCyyw2amkrxzd1UmQg7kZyMkRobNrqqXk7gxyoa9a3+w0sn7O9C40LIPuPyq6u6h5EHVHQiaFAlVjBfTEwaVgBYeZhBERPhQ+0ZMqF1I8ZNMe8IvUYvoZLpVPw/hrsoGTizM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783854040; c=relaxed/simple;
-	bh=8F9aeM/xrjAGto+hDzczoY8oJKJ18gAu2PhW6zTCSb0=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
-	 MIME-Version:Content-Type; b=JNUlQK9C4Boof+NvPyV+pbtU2cQ5U/xAX3g7CFnTND/tWH8sYyYO+NQbPF++cpjhNiCYKvvE2P7Lf55e4n34EmckVlgMZwDcgtHsEuhhUzHpr72CenjjMcrWU28res1D6HXpubUMaaKBDfxsm4Ql4JaKeFXG9tZddrMTQcpdqn8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bRMP5vVr; arc=none smtp.client-ip=209.85.219.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1783854167; c=relaxed/simple;
+	bh=QFAERGkwm7FFeWB0LrovUamDAkSprs7aihtdoZvXuKE=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=NqgIS4ekU3rs6svmcYyHYobl1gY2MT8uxc8rVDnAtFhFu1SYhIIrBsqI57OOgiUjO/W4F3pXIW385MigTN3+7HlG3YaLs506tKaBA3s2p9/ltiMNKv7GXVwstG9gCiQ25sEmjMDDTxunLKlexwqJxBeG1AL04LIL9jdrEIbWKrY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=WxzzMJFR; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=UjYqDSeL; arc=none smtp.client-ip=103.168.172.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bRMP5vVr"
-Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-90004d2f7b7so34641116d6.1
-        for <mptcp@lists.linux.dev>; Sun, 12 Jul 2026 04:00:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1783854038; x=1784458838; darn=lists.linux.dev;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=xHhxO3VtPC/1lE/63PdD0sBF4G1NZPmyEq6Ll/R4Uro=;
-        b=bRMP5vVrVs0EafKc0EEFDg/jhA2STBs2IPlFJjmNJXFoLQqw4yUh0qikCTlr04tFc/
-         bQz5Tu8pxQ23C4zWe9buJz/QyizUOto+UUOsXHmAf+bS+iQ3RBD0X67HVUdoA4N1U1UC
-         YVNUIDRNrYlnyI+s6O7LII4ealhBRgBnojrImCNIjH5y5wXC2lUTVuVk3PHjFsvv0r3D
-         7A35cW1mzbHHRjtPZAu8ceTURcoP8zoOYyHhE5qtsIUDjxyoZ/GbFkF8hKQgGcCw0gG9
-         j1q3qFs2ahETVdkzWWBw5voJOuyUbKkS6HcM6Whw4KBz8RPG3eoh///8e50cO7ZvI9yk
-         owLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783854038; x=1784458838;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=xHhxO3VtPC/1lE/63PdD0sBF4G1NZPmyEq6Ll/R4Uro=;
-        b=pCMR1B9GoZOIhPGxyLs1aKEfhzv/t3Gqn39sFwtXRtegqTjzngh9MDfItIEMyu7fAa
-         /IzTinyYCgLbk8LLRMzg3BK9c8+p/DJkysCdXZWowQPRKPw5aPbk0Qg9T5lnmP8PwYUJ
-         jzdxhwjZqs/V+mUy6kb/cY4gjMTikfw0VFbZxQM2lcWgOKa9h6hY5UL2jrW3YR2qFsoF
-         tnWcjqN9VMx4LrPTtJXnfbCi+vcVoIejOynFfsOog3obe27grMv8s2Tu6i9ZWgtrMRLW
-         yY/X/2+7QGvgH8rAxGYSGi46cqh80SGgpBTWcovSi2TL29oIq/Yb8W/9RTE9hLNaLAl7
-         eOqw==
-X-Gm-Message-State: AOJu0Yy6Cn3ZYj7l0NQm9qcLBSqQuyTcSLTzeHqFx4AaqAvU/Wji4dIZ
-	YkKIbuTk6E18sPbfgsAcQpj2RVoEtEKNV7bGzljJxAvlhQFpFpkH16YRc6gA
-X-Gm-Gg: AfdE7cmAqT1nq+Lb9oHehh1FBz8Pbsp8yzuy40MQHSblRRwzwByvcWYxCrKJV8TgFVh
-	EyqB4F+xoCI5u9OhDeGWRKh0mBUKHk43+GjIlLmfa2BfuxW66xOLMD/0sVhv0dBzvsY10+08OhH
-	U2pwyCo87QOmOoWz1vLeWfzpUjdf1LMIOSwDb61IWWig9Q05W7c5DdLSdBcdCAwn7gVyFuu/jVB
-	+6x3NC6Jr48iV8SmbLH8yimwxCr8wwBdlCWR8GgVjwrgqvapPvmKRdOs7npP928k84tNap85ywQ
-	o0vDuOPtcK13UC8MW6VyFQFnOa8NgI9CW6f5/kqF4+0uTT6YoG4KaeiAxAvspwYTx0c5DSC6lm0
-	7Gf5sZuaL62I2DP/NvS7G78IiOn6xZus92WCCVjAudxr3wZ1fbR0b+7qEjDmc5ug5ZexGntk1t6
-	HCKAoURPZnPGdGQidZYE62nxyMtw==
-X-Received: by 2002:a05:6214:19ca:b0:8ee:39bc:8fb4 with SMTP id 6a1803df08f44-90401f6e6fdmr63501656d6.33.1783854037458;
-        Sun, 12 Jul 2026 04:00:37 -0700 (PDT)
-Received: from [127.0.0.1] ([48.217.227.85])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8ffd80fe218sm99414546d6.33.2026.07.12.04.00.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 12 Jul 2026 04:00:36 -0700 (PDT)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <tanggeliang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <cover.1783849522.git.tanggeliang@kylinos.cn>
-References: <cover.1783849522.git.tanggeliang@kylinos.cn>
-Subject: Re: [PATCH mptcp-next v8 00/15] selftests: consolidate TCP_INQ
- testing into sockopt
-Message-ID: <3c4848e0-07e4-dc83-2448-ed7bd6733b0a@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Sun, 12 Jul 2026 11:00:36 +0000
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="WxzzMJFR";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="UjYqDSeL"
+Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
+	by mailflow.phl.internal (Postfix) with ESMTP id 0B75A138025E;
+	Sun, 12 Jul 2026 07:02:45 -0400 (EDT)
+Received: from phl-imap-05 ([10.202.2.95])
+  by phl-compute-04.internal (MEProxy); Sun, 12 Jul 2026 07:02:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1783854165;
+	 x=1783861365; bh=VmtnK3tqoDU1aIaol+aWaActTb6DTRuQA5S8IlUXC6U=; b=
+	WxzzMJFRBMefM70b/YtDS4TGQzae1Lt/rly/upptZh5fiBQ/fgL1t0EVfjBFGBN8
+	y3oHExa9YWDQRMyr7UQAu8Svx/w4tjxqi8/PSOMY6DvjDwL0TZKwHwZA9Ozd2pYf
+	s0ypipZNS8YGe2m4DOJe+38aDBHK+jcODlukRpagOVHD9KEJkdoQqgev21V8Bgb3
+	TCdD201xrmKe4YIQ1qTBGr8mMYvetvHkQoCSb6jHBr01wyoKlmdhQmLjG7/Wa4aa
+	rs8eKVjx7yIIkxGCiHi9M1kuHiEPyUx1LiHzPOCzYk3arkdLbjWPxJP8Byp5TUOQ
+	GxF66xEjwQreUjXukLkCxg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1783854165; x=
+	1783861365; bh=VmtnK3tqoDU1aIaol+aWaActTb6DTRuQA5S8IlUXC6U=; b=U
+	jYqDSeLxMU5ePSUGPDE9I0O+Exrzvenmm34qVl7yGd9kO5OjZM4Nba5EIOkF9dv3
+	xbKJusquIu/RrdrD6CtBzIv0EDEmxbAhThdwGvQHTnpo2TDIjQEKyKCx0zVgVG4v
+	MwbaQlaY/YSKqvHcswOF7zPh5R8hrBjf645qkfqkcQmWRXgi/k7HA1iEQiok67Xm
+	69YEfw3juGlJftC0DsXryuUIhIaOjq2ddjeAdhPFtfFc045xVKuzffiJ8QKSF2UW
+	O7Asl8sBFDCyqLasMb974+9PXhLP/sU+LeqELU777jCsaUXHy5EIQlONJRbvQD0l
+	nsD4pCYVBIlHyFjN/7Jsw==
+X-ME-Sender: <xms:SXRTagVsyQ8TX1iEIAxFTrUnBBvg3ouWIpLBpPooAqGRyR2NZALW9Q>
+    <xme:SXRTavZP-nXVqS1pChO9GStBCMnL0eeMY-iAfuLUn6Dud2aygQe_POwJXvQ-rGkj1
+    899by3cZoizkZNHBE50WoNoIx-Ocnc8el2ENhnhSOyttQHye1fMY64>
+X-ME-Proxy-Cause: dmFkZTFFbWNFV8UtK7PJ0YbSmA1A6l1wZb8N5iMZiv4PmzggaXO+c+HZuMN5dbOW4/LwO4
+    YrukvejgOijtkueKJtcp4wgn4EhO63TCyyzHULfYQ2kFzWvDfUC3HWcVgv98a9p3wmqOoP
+    w4qayiqS0HMo3Jap3E4pumgiQ3lyrAKF9DlQo0/x7Vy2uECt+Jy4NACfXefBg4WHXnMK2A
+    UENjemuL/g1YRCyXvDovMaGyHuMBa5JymL5nwjoOE3I2qwrEWoBlVH7JlrO1b+WcK48apy
+    0bh/8MaX95lIq8caXuYf9xgC2zt9vvdMfjxFmpJdLGcSI6sCp93t5lGDrR6djFw1SGbSH9
+    DJwEGK6oflC0+CJsijysvViaYJFn3czJOJ8wT4taro4O3sdXQE4YW1tubTULU31gMU6HDI
+    npWKA0QFVWKK3PC5QuzFhriKLeIyPk0XlEhysD/nSStZ7x0lKeUDYwnJvvSAIigLSn8nWf
+    PyAidznJn1v5eQA/hAL2gj9KhOqesySOSlWonQ+mNx9JRj+A/jnejg8SlNlhLkce3uj5+O
+    /r9MtC7Kknkp+lg03SNpnmqr8+d7VdpV/I/EEDURuqzaOT8bFhRzha5fO5kjgbTdv/NvEG
+    LeDxahJFEmmzScN38liLw+1/3K9JakxlQk2CYCzd0cMpr9LXzeOrR/yxM4wA
+X-ME-Proxy: <xmx:UXRTaj0sSmZd0VqAg1Ab8vc217-LONz6IRtUmshppkUdvY60mSRlZw>
+    <xmx:UXRTaork14UHHg7w8fqQyE86kpW_mANgES-srmAP6Z44K5DH5HjSwg>
+    <xmx:UXRTahF3AcH9RhNQsb3uaMj_kkgPVZA8vLCVaaE8_vKD1PG-G4UdyA>
+    <xmx:UXRTaq7ZeQ01Sj7O-hgfgLPJxURhNMS9O3pblaTcSMXqSYfUUfP1Rg>
+    <xmx:VXRTajwxpExOzP0me6ntckPmhFUoyUd4EPzl75I2G2v1oTlEJtNxvefy>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 29B00182007E; Sun, 12 Jul 2026 07:02:33 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+X-ThreadId: ARmmoW1aQeCk
+Date: Sun, 12 Jul 2026 13:01:52 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Fernando Fernandez Mancera" <fmancera@suse.de>,
+ Netdev <netdev@vger.kernel.org>
+Cc: "David S . Miller" <davem@davemloft.net>,
+ "Eric Dumazet" <edumazet@google.com>, "Jakub Kicinski" <kuba@kernel.org>,
+ "Paolo Abeni" <pabeni@redhat.com>, "David Ahern" <dsahern@kernel.org>,
+ "Simon Horman" <horms@kernel.org>, "Ido Schimmel" <idosch@nvidia.com>,
+ "Jason Gunthorpe" <jgg@ziepe.ca>, "Leon Romanovsky" <leon@kernel.org>,
+ "Andrew Lunn" <andrew+netdev@lunn.ch>,
+ "Anthony L Nguyen" <anthony.l.nguyen@intel.com>,
+ "Przemek Kitszel" <przemyslaw.kitszel@intel.com>,
+ "Elad Nachman" <enachman@marvell.com>,
+ "Saeed Mahameed" <saeedm@nvidia.com>, "Tariq Toukan" <tariqt@nvidia.com>,
+ "Mark Bloch" <mbloch@nvidia.com>, "Petr Machata" <petrm@nvidia.com>,
+ "Edward Cree" <ecree.xilinx@gmail.com>,
+ "Maxime Coquelin" <mcoquelin.stm32@gmail.com>,
+ "Alexandre Torgue" <alexandre.torgue@foss.st.com>,
+ "Arend van Spriel" <arend.vanspriel@broadcom.com>,
+ "Miri Korenblit" <miriam.rachel.korenblit@intel.com>,
+ "Keith Busch" <kbusch@kernel.org>, "Jens Axboe" <axboe@kernel.dk>,
+ "Christoph Hellwig" <hch@lst.de>, "Sagi Grimberg" <sagi@grimberg.me>,
+ "Chaitanya Kulkarni" <kch@nvidia.com>,
+ "Saurav Kashyap" <skashyap@marvell.com>,
+ "Javed Hasan" <jhasan@marvell.com>,
+ GR-QLogic-Storage-Upstream@marvell.com,
+ "James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>,
+ "Martin K. Petersen" <martin.petersen@oracle.com>,
+ "Nilesh Javali" <njavali@marvell.com>,
+ "Manish Rangankar" <mrangankar@marvell.com>,
+ "Varun Prakash" <varun@chelsio.com>,
+ "Alexander Viro" <viro@zeniv.linux.org.uk>,
+ "Christian Brauner" <brauner@kernel.org>, "Jan Kara" <jack@suse.cz>,
+ "David Howells" <dhowells@redhat.com>,
+ "Marc Dionne" <marc.dionne@auristor.com>,
+ "Trond Myklebust" <trondmy@kernel.org>,
+ "Anna Schumaker" <anna@kernel.org>, "Chuck Lever" <cel@kernel.org>,
+ "Jeff Layton" <jlayton@kernel.org>, NeilBrown <neil@brown.name>,
+ "Olga Kornievskaia" <okorniev@redhat.com>,
+ "Dai Ngo" <Dai.Ngo@oracle.com>, "Tom Talpey" <tom@talpey.com>,
+ "Marek Lindner" <marek.lindner@mailbox.org>,
+ "Simon Wunderlich" <sw@simonwunderlich.de>,
+ "Antonio Quartulli" <antonio@mandelbit.com>,
+ "Sven Eckelmann" <sven@narfation.org>,
+ "Nikolay Aleksandrov" <razor@blackwall.org>,
+ "Pablo Neira Ayuso" <pablo@netfilter.org>,
+ "Florian Westphal" <fw@strlen.de>, "Phil Sutter" <phil@nwl.cc>,
+ "Johannes Berg" <johannes@sipsolutions.net>,
+ "Matthieu Baerts" <matttbe@kernel.org>,
+ "Mat Martineau" <martineau@kernel.org>,
+ "Geliang Tang" <geliang@kernel.org>, "Julian Anastasov" <ja@ssi.bg>,
+ "Aaron Conole" <aconole@redhat.com>,
+ "Eelco Chaudron" <echaudro@redhat.com>,
+ "Ilya Maximets" <i.maximets@ovn.org>,
+ "Allison Henderson" <achender@kernel.org>,
+ "Jamal Hadi Salim" <jhs@mojatatu.com>, "Jiri Pirko" <jiri@resnulli.us>,
+ "Marcelo Ricardo Leitner" <marcelo.leitner@gmail.com>,
+ "Xin Long" <lucien.xin@gmail.com>,
+ "D. Wythe" <alibuda@linux.alibaba.com>,
+ "Dust Li" <dust.li@linux.alibaba.com>,
+ "Sidraya Jayagond" <sidraya@linux.ibm.com>,
+ "Wenjia Zhang" <wenjia@linux.ibm.com>,
+ "Mahanta Jambigi" <mjambigi@linux.ibm.com>,
+ "Tony Lu" <tonylu@linux.alibaba.com>, "Wen Gu" <guwen@linux.alibaba.com>,
+ "Jon Maloy" <jmaloy@redhat.com>,
+ "Steffen Klassert" <steffen.klassert@secunet.com>,
+ "Herbert Xu" <herbert@gondor.apana.org.au>,
+ "Vikas Gupta" <vikas.gupta@broadcom.com>,
+ "Rajashekar Hudumula" <rajashekar.hudumula@broadcom.com>,
+ "Justin Chen" <justin.chen@broadcom.com>,
+ "Bhargava Marreddy" <bhargava.marreddy@broadcom.com>,
+ "Nicolai Buchwitz" <nb@tipi-net.de>,
+ "Florian Fainelli" <florian.fainelli@broadcom.com>,
+ "Heiner Kallweit" <hkallweit1@gmail.com>,
+ "Krzysztof Kozlowski" <krzk@kernel.org>,
+ "Russell King" <rmk+kernel@armlinux.org.uk>, "Yao Zi" <me@ziyao.cc>,
+ "Yanteng Si" <siyanteng@cqsoftware.com.cn>,
+ "Maxime Chevallier" <maxime.chevallier@bootlin.com>,
+ "Julian Braha" <julianbraha@gmail.com>,
+ "Joey Lu" <a0987203069@gmail.com>,
+ "Shangjuan Wei" <weishangjuan@eswincomputing.com>,
+ "Chen-Yu Tsai" <wens@kernel.org>, "Inochi Amaoto" <inochiama@gmail.com>,
+ "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+ "Qingfang Deng" <qingfang.deng@linux.dev>,
+ "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+ "Eric Biggers" <ebiggers@kernel.org>,
+ "Ethan Nelson-Moore" <enelsonmoore@gmail.com>,
+ "Ard Biesheuvel" <ardb@kernel.org>,
+ "Dmitry Safonov" <0x7f454c46@gmail.com>,
+ "Kuniyuki Iwashima" <kuniyu@google.com>, "Alyssa Ross" <hi@alyssa.is>,
+ linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+ "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
+ "open list:NETRONOME ETHERNET DRIVERS" <oss-drivers@corigine.com>,
+ linux-net-drivers@amd.com, linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org, linux-wireless@vger.kernel.org,
+ brcm80211@lists.linux.dev, brcm80211-dev-list.pdl@broadcom.com,
+ linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org,
+ target-devel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
+ b.a.t.m.a.n@lists.open-mesh.org,
+ "open list:ETHERNET BRIDGE" <bridge@lists.linux.dev>,
+ netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+ mptcp@lists.linux.dev, lvs-devel@vger.kernel.org, dev@openvswitch.org,
+ rds-devel@oss.oracle.com, linux-sctp@vger.kernel.org,
+ linux-s390@vger.kernel.org,
+ "open list:TIPC NETWORK LAYER" <tipc-discussion@lists.sourceforge.net>
+Message-Id: <12ffac6a-649a-4e4a-8d12-0b48171e1d95@app.fastmail.com>
+In-Reply-To: <20260712013941.4570-2-fmancera@suse.de>
+References: <20260712013941.4570-1-fmancera@suse.de>
+ <20260712013941.4570-2-fmancera@suse.de>
+Subject: Re: [PATCH 01/13 RFC net-next] net: ipv4: introduce CONFIG_IPV4 to decouple
+ the IPv4 stack
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+On Sun, Jul 12, 2026, at 03:38, Fernando Fernandez Mancera wrote:
+> Historically, the IPv4 protocol has been linked to the core INET
+> subsystem. Because shared infrastructure like the TCP/UDP engine,
+> routing or INET hashtables live inside net/ipv4/, it has been impossible
+> to compile a kernel with only IPv6 support.
+>
+> This patch introduces the CONFIG_IPV4 Kconfig symbol, which is set to
+> 'def_bool y' for now. This does not allow to completely disable the
+> IPv4 stack yet but it lays the necessary build-system work for that
+> goal.
 
-Thank you for your modifications, that's great!
+I expect this will cause additional (trivial) build regression in the
+next step when randconfig builds run into obscure corner cases, either
+with INET=y IPV4=n IPV6=y or with INET=y IPV4=n IPV6=n.
 
-Our CI did some validations and here is its report:
+I can probably give your patch (with IPV4 visible or disabled) an
+early go on the randconfig tree to find these more quickly.
+If I run into regressions, should I just add more 'depends on IPV4',
+or do you have other plans?
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/291887=
-14062
+Should we have some logic to ensure that at least one of IPV4 or
+IPV6 is enabled? I think this would work
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/a09e965284b4
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1126049
+config IPV4
+      bool "The IPv4 protocol" if IPV6
+      default INET
 
+which only allows turning IPV4 off if IPV6 has enabled.
 
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+       Arnd
