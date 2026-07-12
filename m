@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BB6C373BEE
-	for <mptcp@lists.linux.dev>; Sun, 12 Jul 2026 09:54:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F7102F39B5
+	for <mptcp@lists.linux.dev>; Sun, 12 Jul 2026 09:54:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783850095; cv=none; b=cADamKNgrH4ypPYz73hpZjHdhaySPQ9Cj07d1Ha7IxIpSSf2UKbKCm1RVe58wJkA/hJ0T7WvxbSsxs/OcIMZCQ+sMcgQsbFducBm74KqknAm/jkgiIWopQokV1aSyYKf+uWXkpFY0VNuBdu1IOjJBtkQPR3RJSbJE1o7PclooRg=
+	t=1783850096; cv=none; b=j09nT4guQxCl4uZgWU+30l5OWzHRnuJBPZbO0FF4a4kGfjz98u+6J8G+jObTEi44bUOx2dn91F6vli/6QTgSeAJAcH1NVMs0qK/okat2gKFaTKmlsLgHYcxJA7Iw06N5gLgO10MIiFgUyj7KdZymMnvkV3jCw+lb+hqdom9K6LQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783850095; c=relaxed/simple;
-	bh=nMMjQDBfE2ogYwxp8gSqZKFzX9zGkK070yqIdqFUeXM=;
+	s=arc-20240116; t=1783850096; c=relaxed/simple;
+	bh=9lfwrFuLNblC7KI/9rXve3uu1ZE3kVaXnmRxYwHgRks=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JEQVMsPGnuC72YyA0aCYLg6SpxiJrAq57mMJU4I87gbjNXc+AkQROdpN/gGRripEhb71jbeV+VXDN9sYe0ZMGOPWxwy3AdnmVANIn8L1aty2Kbb3ukacdGbC8rZD9v/nf00TpjcTMUQS4YRAwPN2AAY4RczLdF4dAelEh4omi8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kANwr82M; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=AyrbCcKfv2acqrD1dCTB2vJegfwZefOY7h+1UbTjp3aC5UudZWycpR1wQfHSL97tvHxEj2xEcWKd+3Xskzce3SJOVdiJiOpk9rPNe8kEITQdoUoyq9tYdJE0dOlE/wQxvOxNq7x2Ewol1stMTRJKv7UHd2Jg7afoyjRwP94suJ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MrMqER3P; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kANwr82M"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FC291F00A3D;
-	Sun, 12 Jul 2026 09:54:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MrMqER3P"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D5B01F000E9;
+	Sun, 12 Jul 2026 09:54:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783850094;
-	bh=6FHv24WUaJgGvOEGiQs8y5BDrWtl+De7QHF1+lUQohw=;
+	s=k20260515; t=1783850095;
+	bh=r9L7lHw8DH9GW9XTF6xmbJ/Kplnl3oZMxtIjEPkVU6A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=kANwr82MZ97zMYAgcnqtknyJ4F4V10Vc75Jh0QDloY/fRuv+SY0sOP006Ej3KXVQt
-	 0MnjXiTuGpFmd0408srq6GAwr4TVrzSmDN0T1tdNu5TREzp2tvOw59nptZjmMa3f2N
-	 WsaJ6PTJhXJXjuvOO+h5vLQuhhARPj6n8GrY4eg1q37dr/TbhL4Ln/IBIgCjgdPYef
-	 7a4HaB8Ab6MHRsMsVbKY5My2i/xI5/by18FDgs7Hhk1bPMwLLWrr37mFOSvfz4a4+B
-	 NXVYcmgJzV4v48783cD+qjRbFqWJSEuaQwOcw5c4382E7UOiPn+3MEWO9rWz60mYEd
-	 zicEcjArpY1jw==
+	b=MrMqER3POD4KvEt5GuKnMippy2xX91lGIVOxM/Gnka9Ro5R2lxMk8qiVztTuMUGWr
+	 KlPJ9bEme6QQBLiT0yM98CkbAK+tA486Gx6jXzsISsYPJ91Ya8wTtCGqSYnMnQQ2f8
+	 wQtOhxAqGHCk1TttuJLoycVgdtxRsQkXbAHhqJskyuej63gqD/fdFWORQJQtvceRRs
+	 9eH4v/xfNXLDX12wBTJDNFHxPNwlhi+A9QGWvaHyldtjG5Q/QB8VgzcJHfLMrPTTom
+	 wazsh/j6JYJUmvXCOKtGcChcFiVwpU7oIGtFz3JDE1TfYQAKTWN++dYWrllunHlhm8
+	 yX59qOa1e5u7Q==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v8 02/15] selftests: mptcp: sockopt: replace /dev/urandom with getrandom
-Date: Sun, 12 Jul 2026 17:54:08 +0800
-Message-ID: <de253253b5ab7ba076bd5b560aa4a014b4a94093.1783849522.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v8 03/15] selftests: mptcp: sockopt: reseed RNG after fork
+Date: Sun, 12 Jul 2026 17:54:09 +0800
+Message-ID: <3ac32a0cfeef2ea8c0b97f498ef19e286ee77a7f.1783849522.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <cover.1783849522.git.tanggeliang@kylinos.cn>
 References: <cover.1783849522.git.tanggeliang@kylinos.cn>
@@ -45,57 +45,40 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Replace /dev/urandom with getrandom() for initializing the RNG. This
-simplifies the code and avoids potential failures from opening device
-files while maintaining cryptographic quality randomness.
+xfork() does not reseed the RNG in the child, so server and client
+processes use the same rand() sequence. Restore the per-fork reseed
+from mptcp_inq.c by calling init_rng() in the child, ensuring
+independent random values for buffer contents and transfer sizes.
 
 These codes are from mptcp_inq.c.
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- .../selftests/net/mptcp/mptcp_sockopt.c       | 20 +++++++------------
- 1 file changed, 7 insertions(+), 13 deletions(-)
+ tools/testing/selftests/net/mptcp/mptcp_sockopt.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-index d4ad03ed64ef..1f719885cd47 100644
+index 1f719885cd47..d4bc5d879abd 100644
 --- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
 +++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-@@ -20,6 +20,7 @@
- #include <sys/socket.h>
- #include <sys/types.h>
- #include <sys/wait.h>
-+#include <sys/random.h>
+@@ -129,6 +129,8 @@ struct so_state {
+ #define MIN(a, b) ((a) < (b) ? (a) : (b))
+ #endif
  
- #include <netdb.h>
- #include <netinet/in.h>
-@@ -821,21 +822,14 @@ static int rcheck(int wstatus, const char *what)
- 
- static void init_rng(void)
- {
--	int fd = open("/dev/urandom", O_RDONLY);
-+	unsigned int foo;
- 
--	if (fd >= 0) {
--		unsigned int foo;
--		ssize_t ret;
--
--		/* can't fail */
--		ret = read(fd, &foo, sizeof(foo));
--		assert(ret == sizeof(foo));
--
--		close(fd);
--		srand(foo);
--	} else {
--		srand(time(NULL));
-+	if (getrandom(&foo, sizeof(foo), 0) == -1) {
-+		perror("getrandom");
-+		exit(1);
- 	}
++static void init_rng(void);
 +
-+	srand(foo);
- }
+ static void __noreturn die_perror(const char *msg)
+ {
+ 	perror(msg);
+@@ -800,6 +802,8 @@ static pid_t xfork(void)
  
- int main(int argc, char *argv[])
+ 	if (p < 0)
+ 		die_perror("fork");
++	else if (p == 0)
++		init_rng();
+ 
+ 	return p;
+ }
 -- 
 2.53.0
 
