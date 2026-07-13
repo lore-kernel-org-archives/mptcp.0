@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32BF231691A
-	for <mptcp@lists.linux.dev>; Mon, 13 Jul 2026 03:25:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A67A73164D8
+	for <mptcp@lists.linux.dev>; Mon, 13 Jul 2026 03:25:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783913152; cv=none; b=stbIADH5zqhUtlaAe2JwmssewHJ7/TmoJBoXr6fuLVhDCQB7J0x6ecXOzP+ljiGiw7L1jiPx1moRPSoJLU3oSRs5cyXwGPY+JiEDFEOGN5goK8RpvmqquHqyII3EXY8BlDphS72JAB3oFEKJIN2e+bdYqqA6oFTB1My3iu8yifk=
+	t=1783913154; cv=none; b=cYijLfMhrURWnC33wFgW6xiO093DsQ1RzpfuN6kb0ktOf2uld2fC08vQaDY/5RnQQXiPAkkg/+MEekTs7f9vnqRqILm1H6y+9LHfnJhIujIHRJXtvX+j2jFAo8WuKnjY7lfR6Is4XhEUrz47KV0G+BvXSxFqh4aXihjzaZeLmTY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783913152; c=relaxed/simple;
-	bh=DAfLqgvxTWKwYHelPPJglYTF4Tpd2Gp8qe70KI+SlIs=;
+	s=arc-20240116; t=1783913154; c=relaxed/simple;
+	bh=gdqdyDMEC0LwQ7Xn9XWFtOSJ+xl8tX/6YkHMSO7zZuw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NkXMtBohWqsh+RaAlOmPRDSSyTYHwJtGTnR2ppJxfXis9VoFwwx90me3hSS8l95sAyT5tXGKUCyuRWMd3KXObBefoEzCzFauikkEN93Tc8BSqFwehThZs6vLbpLCuzwjRtgE+ZkPCgbMAHun1dWciOdaGEe/vCE2cRUHfAAicPk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ms3GPDEc; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=Nslkk5lb7MKPJ3vZFSRJvA13cxkvCJNuUGnbrf/CtayQjx8TUol9oZp9TOGzrlWezPdHtnlIfp/ZtVK+GBBpY0q0pQsvo3pvWV3OFCE1aqzh679lqMbb3vaqzw4PDbEa9PhTDb8tR+KDua1hdER7oQJb+OGGZOxgH9gZmkpQvY8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L6xCotKw; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ms3GPDEc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9EDC41F000E9;
-	Mon, 13 Jul 2026 03:25:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L6xCotKw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC7141F00A3A;
+	Mon, 13 Jul 2026 03:25:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783913151;
-	bh=FTtbw7o/KO8T79rV33JtAhR7yx6gOyY8IdmiNn2GcvQ=;
+	s=k20260515; t=1783913153;
+	bh=EVNQEdWaEc+19+FWypIlzPbWRFSj8sLzCR08vuaHHDQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=ms3GPDEc3b7+EzW+5/JPELnYoS5Rj7TSUEBv/2yftJkV9cA+Ka5qpkr0HGRPfOgs9
-	 92Qex5tBksAk5tLSItd6fDY/6+BdBLv4m1zx2EaXFFbhOvrRxfu1GeFgx5ZsY9IwI5
-	 rvuDU1XgdS/tCdomS9gZbN3R1ttKLStduMlkJMcaXE7XzicKjvn2DwUvUDHqOeF0V4
-	 G2wFkMoAwtyvBxI/CLQcrmrea86Ib91MXASwXbFbW2OybUZ9TaFTmsanylCwVvbga1
-	 0lubLW6V5FuNVwa4yEh79RAVY70eORmbNWo6uJPzivmv6NefmS0ByIGsf1ALqLBkFA
-	 tVcNzozcpomfQ==
+	b=L6xCotKwpLWq7Qg4PtRg/gqGAsYVFHFDbGxL0Dt3PXxU4LtOM/cmw2gi4uYTIu4Ch
+	 Qq16IwfBhjbbkbqua89SQO+tXkx3NHNL9SCPe9bFQY3B7j1XfZMRUkg+T+XAzsfrOQ
+	 SjPSPxi+Hmwokp4qEn921pL0+parGJEx19WKB484zk8LmRD42n4merrH7+veCNYjGF
+	 JyQERteXRN63BpsTFaTseigGeOUMvbH1oEe+nbYc0QnmmaF9r5yJ8R6k2UytICLUDV
+	 5ZJoMswGuo3D7A3OdDLKHHTlJBlxLFLKxekD8n8knrHkrVTUC2XjfGoloAZrDt7mss
+	 IOpEGpEefds6w==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v9 02/12] selftests: mptcp: sockopt: use r/w for byte counts
-Date: Mon, 13 Jul 2026 11:25:26 +0800
-Message-ID: <b94a91549c52594c58a2ad52999a830fa831b2d7.1783913010.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v9 03/12] selftests: mptcp: sockopt: replace /dev/urandom with getrandom
+Date: Mon, 13 Jul 2026 11:25:27 +0800
+Message-ID: <2897025f4df37c36a355d8bad2fa4a356247a76a.1783913010.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <cover.1783913010.git.tanggeliang@kylinos.cn>
 References: <cover.1783913010.git.tanggeliang@kylinos.cn>
@@ -45,93 +45,57 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Replace ret/ret2/ret3 with r (received) and w (sent) for readability.
-This prepares for future updates where r will be modified via '+='.
+Replace /dev/urandom with getrandom() for initializing the RNG. This
+simplifies the code and avoids potential failures from opening device
+files while maintaining cryptographic quality randomness.
+
+These codes are from mptcp_inq.c.
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- .../selftests/net/mptcp/mptcp_sockopt.c       | 43 ++++++++++---------
- 1 file changed, 23 insertions(+), 20 deletions(-)
+ .../selftests/net/mptcp/mptcp_sockopt.c       | 20 +++++++------------
+ 1 file changed, 7 insertions(+), 13 deletions(-)
 
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-index d4ad03ed64ef..941af179867e 100644
+index 941af179867e..9442ed5239f1 100644
 --- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
 +++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-@@ -638,7 +638,7 @@ static void connect_one_server(int fd, int pipefd)
+@@ -20,6 +20,7 @@
+ #include <sys/socket.h>
+ #include <sys/types.h>
+ #include <sys/wait.h>
++#include <sys/random.h>
  
- static void process_one_client(int fd, int pipefd)
+ #include <netdb.h>
+ #include <netinet/in.h>
+@@ -824,21 +825,14 @@ static int rcheck(int wstatus, const char *what)
+ 
+ static void init_rng(void)
  {
--	ssize_t ret, ret2, ret3;
-+	ssize_t ret, r, w;
- 	struct so_state s;
- 	char buf[4096];
+-	int fd = open("/dev/urandom", O_RDONLY);
++	unsigned int foo;
  
-@@ -651,43 +651,46 @@ static void process_one_client(int fd, int pipefd)
- 	ret = read(fd, buf, sizeof(buf));
- 	if (ret < 0)
- 		die_perror("read");
-+	r = ret;
- 
--	assert(s.mptcpi_rcv_delta <= (uint64_t)ret);
-+	assert(s.mptcpi_rcv_delta <= (uint64_t)r);
- 
- 	if (s.tcpi_rcv_delta)
--		assert(s.tcpi_rcv_delta == (uint64_t)ret);
-+		assert(s.tcpi_rcv_delta == (uint64_t)r);
- 
--	ret2 = write(fd, buf, ret);
--	if (ret2 < 0)
-+	ret = write(fd, buf, r);
-+	if (ret < 0)
- 		die_perror("write");
-+	w = ret;
- 
- 	/* wait for hangup */
--	ret3 = read(fd, buf, 1);
--	if (ret3 != 0)
--		xerror("expected EOF, got %lu", ret3);
-+	ret = read(fd, buf, 1);
-+	if (ret != 0)
-+		xerror("expected EOF, got %lu", ret);
-+	r += ret;
- 
--	do_getsockopts(&s, fd, ret, ret2);
--	if (s.mptcpi_rcv_delta != (uint64_t)ret + 1)
-+	do_getsockopts(&s, fd, r, w);
-+	if (s.mptcpi_rcv_delta != (uint64_t)r + 1) /* +1 for FIN */
- 		xerror("mptcpi_rcv_delta %" PRIu64 ", expect %" PRIu64 ", diff %" PRId64,
--		       s.mptcpi_rcv_delta, ret + 1, s.mptcpi_rcv_delta - (ret + 1));
-+		       s.mptcpi_rcv_delta, r + 1, s.mptcpi_rcv_delta - (r + 1));
- 
- 	/* be nice when running on top of older kernel */
- 	if (s.pkt_stats_avail) {
--		if (s.last_sample.mptcpi_bytes_sent != ret2)
-+		if (s.last_sample.mptcpi_bytes_sent != w)
- 			xerror("mptcpi_bytes_sent %" PRIu64 ", expect %" PRIu64
- 			       ", diff %" PRId64,
--			       s.last_sample.mptcpi_bytes_sent, ret2,
--			       s.last_sample.mptcpi_bytes_sent - ret2);
--		if (s.last_sample.mptcpi_bytes_received != ret)
-+			       s.last_sample.mptcpi_bytes_sent, w,
-+			       s.last_sample.mptcpi_bytes_sent - w);
-+		if (s.last_sample.mptcpi_bytes_received != r)
- 			xerror("mptcpi_bytes_received %" PRIu64 ", expect %" PRIu64
- 			       ", diff %" PRId64,
--			       s.last_sample.mptcpi_bytes_received, ret,
--			       s.last_sample.mptcpi_bytes_received - ret);
--		if (s.last_sample.mptcpi_bytes_acked != ret2)
-+			       s.last_sample.mptcpi_bytes_received, r,
-+			       s.last_sample.mptcpi_bytes_received - r);
-+		if (s.last_sample.mptcpi_bytes_acked != w)
- 			xerror("mptcpi_bytes_acked %" PRIu64 ", expect %" PRIu64
- 			       ", diff %" PRId64,
--			       s.last_sample.mptcpi_bytes_acked, ret2,
--			       s.last_sample.mptcpi_bytes_acked - ret2);
-+			       s.last_sample.mptcpi_bytes_acked, w,
-+			       s.last_sample.mptcpi_bytes_acked - w);
+-	if (fd >= 0) {
+-		unsigned int foo;
+-		ssize_t ret;
+-
+-		/* can't fail */
+-		ret = read(fd, &foo, sizeof(foo));
+-		assert(ret == sizeof(foo));
+-
+-		close(fd);
+-		srand(foo);
+-	} else {
+-		srand(time(NULL));
++	if (getrandom(&foo, sizeof(foo), 0) == -1) {
++		perror("getrandom");
++		exit(1);
  	}
++
++	srand(foo);
+ }
  
- 	close(fd);
+ int main(int argc, char *argv[])
 -- 
 2.53.0
 
