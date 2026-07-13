@@ -1,127 +1,75 @@
-Received: from eidolon.nox.tf (eidolon.nox.tf [185.142.180.128])
+Received: from out-176.mta1.migadu.com (out-176.mta1.migadu.com [95.215.58.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 923193B1032;
-	Mon, 13 Jul 2026 08:12:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.142.180.128
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3487C3A6EF0
+	for <mptcp@lists.linux.dev>; Mon, 13 Jul 2026 08:22:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783930335; cv=none; b=DCXIelrclab8/k+JdOsrLUS6QfW8aNQxtNwRnPswSap6oBEtHkyv+EydUUSy4coNnI4WkkRZItSuavtDfOGZ1M4OpWGYwQldp/XkprIF/TjQTU5ZFlNtMsBgo/wmCgVTR7Hhn1KPzJg4GS4qi2YC5k+syIspOzpKEDCQWEocfoU=
+	t=1783930931; cv=none; b=Q+DBhHNC1Z/g4YfINA+UKzbYGKSfXlKk0pPT92wGnw0uWP4yPs3feOQC9FSrqxYggHmm3rl6GgOlNOM19tH5HdcIFw9A55si0xvUB2UlBcgvKfh/xmn3DS2UXW/wPYQZQ+9Y5WzQc3J+FtmQ/58maeQBOLZJlLu4iQtxkn+ZywU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783930335; c=relaxed/simple;
-	bh=3ajd/nAcGp77st83VI1YpV+CMBbB7AcCAMs7VZKKiqE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=igS/+vtTUGWV9+4qYdjBxfu4hLMYQzuaiSRQxPbMnIl6FJ+ufrtufyDPy/+CJ45cVhejnNXhBioKWp0ppYrNh8ie2tmC5VS+91IWBDnDRriB1MBuJQRPjHE1u0Rx4ao3ZQsVCmA5WfwR2Mjoga/mHQ6eYr+NHLZO8ZW6YIFlapY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=diac24.net; spf=pass smtp.mailfrom=diac24.net; arc=none smtp.client-ip=185.142.180.128
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=diac24.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=diac24.net
-Received: from nat-wifi0.uniroma3.it ([193.204.167.180] helo=alea)
-	by eidolon.nox.tf with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.98.2)
-	(envelope-from <equinox@diac24.net>)
-	id 1wjBh1-00000001NmY-1iGv;
-	Mon, 13 Jul 2026 10:07:11 +0200
-Received: from equinox by alea with local (Exim 4.99.2)
-	(envelope-from <equinox@diac24.net>)
-	id 1wjBgd-00000001FAn-2Qy8;
-	Mon, 13 Jul 2026 10:06:47 +0200
-From: David 'equinox' Lamparter <equinox@diac24.net>
-To: Matthieu Baerts <matttbe@kernel.org>,
-	Mat Martineau <martineau@kernel.org>,
-	Geliang Tang <geliang@kernel.org>
-Cc: netdev@vger.kernel.org,
-	mptcp@lists.linux.dev,
-	David 'equinox' Lamparter <equinox@diac24.net>
-Subject: [PATCH net-next] mptcp: sockopt: implement IPV6_TCLASS
-Date: Mon, 13 Jul 2026 10:04:37 +0200
-Message-ID: <20260713080634.296011-1-equinox@diac24.net>
-X-Mailer: git-send-email 2.53.0
+	s=arc-20240116; t=1783930931; c=relaxed/simple;
+	bh=exD0nCyrIBd7fxxnQjMwqMRgDo3qY8S5mDQ4XuqLoWQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jLn5NoUKli2FUjsz9dpN1FpfqBObqy7NqMOKPL7CLUhATgpDJIKlp3QU4MCG+jiCS+n0EFehUxUr+zkBOGYpCsQu/PqLzUxiR/ZqyeXV4TQDOAyAxquGlMowB8gEvcyN1LjOyELiDb9MW5Z1TntcR4cDJLbdHDO5J/TRUEhNF4c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Wwk61q+H; arc=none smtp.client-ip=95.215.58.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Wwk61q+H"
+Message-ID: <0754e3fd-bb76-4acc-905b-17fcf59905ec@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1783930927;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3TNVa47K7vdoSbFnpv6cNo/aVqY6M7TgTufOlocLZaU=;
+	b=Wwk61q+HPGOhmJHKmcdw+K74KOJQ2Xdyh0NISkj45iR8RPrELsv747eyg30zf2anUKzUSL
+	4ll0StniBxEAfoEyZAeya15s3XpQB2OHoRNexnQsi34Izoar8ltyY+2G9/QNC1Iptgbiau
+	oN9FarpZa0p5FJe/Fw7dI/+pJopwXr4=
+Date: Mon, 13 Jul 2026 16:21:14 +0800
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Subject: Re: [PATCH net v1] mptcp: pm: fix use-after-free in
+ userspace_pm_get_local_id()
+To: gang.yan@linux.dev, mptcp@lists.linux.dev
+Cc: matttbe@kernel.org, martineau@kernel.org, geliang@kernel.org,
+ Xuanqiang Luo <luoxuanqiang@kylinos.cn>, stable@vger.kernel.org
+References: <20260713074722.47921-1-xuanqiang.luo@linux.dev>
+ <b3c317fda3d8d3efa349933723e549933ffc0bf2@linux.dev>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: luoxuanqiang <xuanqiang.luo@linux.dev>
+In-Reply-To: <b3c317fda3d8d3efa349933723e549933ffc0bf2@linux.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-The IPV6_TCLASS setsockopt just needs to be forwarded to the individual
-TCP sockets, like IP_TOS is already handled for IPv4.  The code here is
-pretty much identical, except there's no helper for IPv6 like IPv4's
-__ip_sock_set_tos().
 
-Coincidentally, ssh uses this sockopt and prints an error in the middle
-of your ongoing SSH session when it doesn't work (very annoying when
-doing SCP/SFTP on a multiplexed session.)
+在 2026/7/13 16:03, gang.yan@linux.dev 写道:
+> July 13, 2026 at 3:47 PM, xuanqiang.luo@linux.dev mailto:xuanqiang.luo@linux.dev  wrote:
+>
+>
+> Hi xuanqiang,
+>
+> Thanks for the patch.
+>
+> But AFAIK, geliang has fixed this in [1], and your test verified this issues.
+>
+> @Matt, it seems that [1](geliang's patch) can be merged.
+>
+> [1]https://patchwork.kernel.org/project/mptcp/patch/4e50adfde3b80f433e13b86919596be229045edc.1782799876.git.tanggeliang@kylinos.cn/
+>
+> Thanks
+> Gang
 
-Signed-off-by: David 'equinox' Lamparter <equinox@diac24.net>
-Cc: Matthieu Baerts <matttbe@kernel.org>
-Cc: Mat Martineau <martineau@kernel.org>
-Cc: Geliang Tang <geliang@kernel.org>
----
-note: I wasn't entirely sure what tree this should be on top of, with the
-mptcp trees on github & kernel.org;  this is on top of net-next.  It
-shouldn't really matter though.
----
- net/mptcp/sockopt.c | 34 ++++++++++++++++++++++++++++++++++
- 1 file changed, 34 insertions(+)
+I see it now.
+Indeed, I missed the pending patch;
+Thank you for pointing it out!
 
-diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-index fcf6feb2a9eb..edddafebb8de 100644
---- a/net/mptcp/sockopt.c
-+++ b/net/mptcp/sockopt.c
-@@ -394,6 +394,35 @@ static int mptcp_setsockopt_sol_socket(struct mptcp_sock *msk, int optname,
- 	return -EOPNOTSUPP;
- }
- 
-+static int mptcp_setsockopt_v6_set_tclass(struct mptcp_sock *msk, int optname,
-+					  sockptr_t optval, unsigned int optlen)
-+{
-+	struct mptcp_subflow_context *subflow;
-+	struct sock *sk = (struct sock *)msk;
-+	int err, val;
-+
-+	err = ipv6_setsockopt(sk, SOL_IPV6, optname, optval, optlen);
-+
-+	if (err != 0)
-+		return err;
-+
-+	lock_sock(sk);
-+	sockopt_seq_inc(msk);
-+	val = READ_ONCE(inet6_sk(sk)->tclass);
-+	mptcp_for_each_subflow(msk, subflow) {
-+		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
-+		bool slow;
-+
-+		slow = lock_sock_fast(ssk);
-+		inet6_sk(ssk)->tclass = val;
-+		sk_dst_reset(ssk);
-+		unlock_sock_fast(ssk, slow);
-+	}
-+	release_sock(sk);
-+
-+	return 0;
-+}
-+
- static int mptcp_setsockopt_v6(struct mptcp_sock *msk, int optname,
- 			       sockptr_t optval, unsigned int optlen)
- {
-@@ -436,6 +465,8 @@ static int mptcp_setsockopt_v6(struct mptcp_sock *msk, int optname,
- 
- 		release_sock(sk);
- 		break;
-+	case IPV6_TCLASS:
-+		return mptcp_setsockopt_v6_set_tclass(msk, optname, optval, optlen);
- 	}
- 
- 	return ret;
-@@ -1485,6 +1516,9 @@ static int mptcp_getsockopt_v6(struct mptcp_sock *msk, int optname,
- 	struct sock *sk = (void *)msk;
- 
- 	switch (optname) {
-+	case IPV6_TCLASS:
-+		return mptcp_put_int_option(msk, optval, optlen,
-+					    READ_ONCE(inet6_sk(sk)->tclass));
- 	case IPV6_V6ONLY:
- 		return mptcp_put_int_option(msk, optval, optlen,
- 					    sk->sk_ipv6only);
--- 
-2.53.0
+Thanks
+Xuanqiang
 
