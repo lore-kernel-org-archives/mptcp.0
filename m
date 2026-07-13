@@ -1,361 +1,128 @@
-Received: from out-174.mta1.migadu.com (out-174.mta1.migadu.com [95.215.58.174])
+Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6899C3563E1
-	for <mptcp@lists.linux.dev>; Mon, 13 Jul 2026 07:32:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AC423939A2
+	for <mptcp@lists.linux.dev>; Mon, 13 Jul 2026 07:49:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783927936; cv=none; b=qIAy69dECKZdAtHSnI1Dkoaqj/wrKTk+WHsynpDq8TZ+k+cLbfXhkBhVtGpzSKBRkL06v0NIL4Y4BulzGrYxI+iwnVJ1Zke9iOF8rREMDMsm7IOcN6QKGVibRXto823ELRuAz8xBST9epLmSblL6o2VrX2xtY2oqjUKgLGAmBac=
+	t=1783928944; cv=none; b=b2wPGsU4UEwm11doHC6BlbwQftPOr5otvn04Q/FnOKbQckq8BF/AAM9pcSfzPY1kCI9ZGA6mJ6X+mTm8F/6J3GfCVQja/G7mG/IVQnsV7tQ1yd59GfCfEVZDl0pRSzcoJLjHEcW9vr/dK5ZvGWr5cY0S/uhFyKyJKMzHQFpOqCE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783927936; c=relaxed/simple;
-	bh=0fP1GKhJXSZDTrNqEws+YoURj9sSqP4UdNW5BtZjVro=;
-	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
-	 In-Reply-To:References; b=i9XKC8VHx/3RyQOXYcbtGEFkLvR4EkQbjijnjV+bwQlLS1eJD0sWk0RkqgW0hxi/j4PVqxtMyi7yGYbDvDm9ul1VDFvMyAqnLmFU9wEj+vKJXYczXfRy5F34e2bqdG9up6qA7c6VnSb3bhM3zFE0VjcwIlacK5wmQiTNHQuos28=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=b/HsPvyz; arc=none smtp.client-ip=95.215.58.174
+	s=arc-20240116; t=1783928944; c=relaxed/simple;
+	bh=2n+dYW2fLiiihhjQLvWQ/E9v6N6d5+ppDnJL2OOQWCc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LUKYVAyv+qTo3G16uSXPC1pFkjxZ2PjufsxmsC/2O49zutJHbTVbmT8U2oetAbkJK6LjeCmg9x0kVwDflBCBeGk5OwhQJ81QNBSYbU/kkJ8UOH0PniNd3wEHZ7lbrAUi/8DHHF3xNyUZF2KOxrAdNd/9oveN6RR5hbotXvHBxLE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=lTPI9zt/; arc=none smtp.client-ip=95.215.58.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="b/HsPvyz"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="lTPI9zt/"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1783928941;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=8XQ7D2c2pe32qfx1N7E397Gh3r4n4PmZEhbDOAq/Knk=;
+	b=lTPI9zt/vwPUa56eNId5rCDp3kusAOuh0q1lSympqIJSjKKrf9kkIalcac6zH04dIOxz7k
+	wnXUpBLnUtI/FMghlfKzOS8zYNKgxwC6j+uz0NrlpitqrQ5rIc3XTiBEzLa+57ErQ0X/6F
+	YuxjDrdUVkkazB2WEjk04i4fbq1AfJs=
+From: xuanqiang.luo@linux.dev
+To: mptcp@lists.linux.dev
+Cc: matttbe@kernel.org,
+	martineau@kernel.org,
+	geliang@kernel.org,
+	Xuanqiang Luo <luoxuanqiang@kylinos.cn>,
+	stable@vger.kernel.org
+Subject: [PATCH net v1] mptcp: pm: fix use-after-free in userspace_pm_get_local_id()
+Date: Mon, 13 Jul 2026 15:47:22 +0800
+Message-ID: <20260713074722.47921-1-xuanqiang.luo@linux.dev>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1783927932;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IQQQHHCXRG/T91dr/CijUM3UqP7NbjujFAutlezPVeI=;
-	b=b/HsPvyzYOgAUENG9r9xNekvz5A6UK/9taC41ryoCQpN2etlBmo4mIngNnKn1XrXvEkHG2
-	lQMVNXXlyORXgJsYb0+CcyEKG9RVbn7rhp3gdB8sUx9vOAejFS7hN2aYAJD2arGx2otGhG
-	L8pn18d0lWmCM74CanFFrDIOzuTXLSI=
-Date: Mon, 13 Jul 2026 07:32:06 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: gang.yan@linux.dev
-Message-ID: <95176484537f19de5115a8d83d4ad4bc9c31c4cd@linux.dev>
-TLS-Required: No
-Subject: Re: [PATCH mptcp-next] mptcp: fallback to TCP on MP_FAIL with a
- single subflow
-To: "Chenguang Zhao" <chenguang.zhao@linux.dev>, mptcp@lists.linux.dev
-Cc: chenguang.zhao@linux.dev, "Chenguang Zhao" <zhaochenguang@kylinos.cn>
-In-Reply-To: <20260713064134.914507-1-chenguang.zhao@linux.dev>
-References: <20260713064134.914507-1-chenguang.zhao@linux.dev>
+Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-July 13, 2026 at 2:41 PM, "Chenguang Zhao" <chenguang.zhao@linux.dev mail=
-to:chenguang.zhao@linux.dev?to=3D%22Chenguang%20Zhao%22%20%3Cchenguang.zh=
-ao%40linux.dev%3E > wrote:
+From: Xuanqiang Luo <luoxuanqiang@kylinos.cn>
 
+mptcp_userspace_pm_get_local_id() looks up an address entry with
+pm.lock held, but drops the lock before reading its ID. A concurrent
+subflow destroy command can remove and free the entry in between,
+resulting in a use-after-free while processing an MP_JOIN SYN.
 
-Hi chenguang,
+Read the ID while holding pm.lock, then use the copied value after
+unlocking.
 
+Fixes: f012d796a6de ("mptcp: check addrs list in userspace_pm_get_local_id")
+Cc: stable@vger.kernel.org
+Signed-off-by: Xuanqiang Luo <luoxuanqiang@kylinos.cn>
+---
+The race window is narrow. It was reproduced only with a locally
+constructed stress test that repeatedly overlaps an MP_JOIN SYN with a
+MPTCP_PM_CMD_SUBFLOW_DESTROY request.
 
-This patch is rather large and would benefit from being split into a few =
-smaller
-patches for easier review. For instance:
+However, the KASAN report below confirms that the race is reachable:
 
-    Patch 1: fix the kernel issues you mentioned.
+[  666.319362] ==================================================================
+[  666.319376] BUG: KASAN: slab-use-after-free in mptcp_userspace_pm_get_local_id+0x1dc/0x1f0
+[  666.319386] Read of size 1 at addr ffff888124845610 by task swapper/0/0
+...
+[  666.319401] Call Trace:
+[  666.319405]  <IRQ>
+[  666.319408]  dump_stack_lvl+0x53/0x70
+[  666.319412]  print_address_description.constprop.0+0x2c/0x3b0
+[  666.319418]  print_report+0xbe/0x2b0
+[  666.319421]  ? mptcp_userspace_pm_get_local_id+0x1dc/0x1f0
+[  666.319423]  kasan_report+0xce/0x100
+[  666.319426]  ? mptcp_userspace_pm_get_local_id+0x1dc/0x1f0
+[  666.319429]  mptcp_userspace_pm_get_local_id+0x1dc/0x1f0
+[  666.319433]  mptcp_pm_get_local_id+0x371/0x440
+...
+[  666.319821] Allocated by task 45539:
+[  666.319844]  kasan_save_stack+0x33/0x60
+[  666.319855]  kasan_save_track+0x14/0x30
+[  666.319858]  __kasan_kmalloc+0x8f/0xa0
+[  666.319863]  __kmalloc_noprof+0x1e7/0x520
+[  666.319867]  sock_kmalloc+0xdf/0x130
+[  666.319885]  sock_kmemdup+0x1b/0x40
+[  666.319888]  mptcp_userspace_pm_append_new_local_addr+0x261/0x500
+[  666.319910]  mptcp_pm_nl_announce_doit+0x16a/0x610
+...
+[  666.319967] Freed by task 45560:
+[  666.319988]  kasan_save_stack+0x33/0x60
+[  666.319991]  kasan_save_track+0x14/0x30
+[  666.319994]  kasan_save_free_info+0x3b/0x60
+[  666.319998]  __kasan_slab_free+0x43/0x70
+[  666.320000]  kfree+0x166/0x440
+[  666.320003]  sock_kfree_s+0x1d/0x50
+[  666.320007]  mptcp_userspace_pm_delete_local_addr.isra.0+0x157/0x200
+[  666.320011]  mptcp_pm_nl_subflow_destroy_doit+0x51d/0xea0
 
-    Patch 2: use WRITE_ONCE/READ_ONCE in allow_subflows.
+ net/mptcp/pm_userspace.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-    Patch 3: add a new MIB counter.
-
-@Matt, WDYT?
-
-But I'm not sure we need the new MIB counter just yet; it may be too earl=
-y.
-I would suggest adding the MIB counters only after the fix commit has bee=
-n
-merged. However, the final decision rests with you.
-
-Thanks
-Gang
->=20
->=20From: Chenguang Zhao <zhaochenguang@kylinos.cn>
->=20
->=20When a valid MP_FAIL is received and infinite fallback is still allow=
-ed
-> (single contiguous subflow), RFC8684 =C2=A73.7 requires leaving MPTCP m=
-ode.
-> The stack only cleared allow_subflows and deferred the real fallback to
-> the later infinite-map transmit path. Before any data is sent, a peer
-> could still complete the 4th ACK as MPTCP and keep using MPTCP options.
->=20
->=20Fall back immediately after sending the MP_FAIL response, teach
-> mptcp_is_fully_established() to reject joins after fallback or when
-> subflows are disallowed, and annotate allow_subflows with READ/WRITE_ON=
-CE.
->=20
->=20Fixes: 1e39e5a32ad7 ("mptcp: infinite mapping sending")
-> Signed-off-by: Chenguang Zhao <zhaochenguang@kylinos.cn>
-> ---
->  - On a valid MP_FAIL while infinite fallback is still allowed (single
->  subflow, contiguous data), comply with RFC 8684 =C2=A73.7 by calling
->  mptcp_try_fallback() immediately after the MP_FAIL response, instead
->  of deferring fallback until the infinite-map transmit path runs.
->=20
->=20 - Send the MP_FAIL ACK before setting FALLBACK_DONE, so MPTCP option=
-s
->  are not dropped from that ACK by mptcp_established_options().
->=20
->=20 - If the out-of-order queue is non-empty, fallback cannot proceed sa=
-fely:
->  increment the FallbackFailed MIB and reset the subflow, rather than le=
-aving
->  allow_subflows=3Dfalse without completing fallback.
->=20
->=20 - Add the MPTcpExtMPFailFallback MIB to count fallbacks triggered by=
- MP_FAIL.
->=20
->=20 - In mptcp_update_infinite_map(), if fallback was already completed =
-on MP_FAIL
->  reception, only account for InfiniteMapTx and do not attempt fallback =
-again.
->=20
->=20 - Extend mptcp_is_fully_established() to require that the socket is =
-not in
->  fallback and that allow_subflows is true, so new subflow joins are rej=
-ected
->  after fallback.
->=20
->=20 - Use READ_ONCE/WRITE_ONCE for all allow_subflows accesses to avoid =
-concurrent read/write issues.
->=20
->=20 - Fix the fallback_lock comment: allow_join =E2=86=92 allow_subflows=
-.
->=20
->=20 net/mptcp/mib.c | 1 +
->  net/mptcp/mib.h | 1 +
->  net/mptcp/pm.c | 33 +++++++++++++++++++++++++++++++--
->  net/mptcp/protocol.c | 19 ++++++++++++-------
->  net/mptcp/protocol.h | 18 +++++++++++-------
->  net/mptcp/subflow.c | 2 +-
->  6 files changed, 57 insertions(+), 17 deletions(-)
->=20
->=20diff --git a/net/mptcp/mib.c b/net/mptcp/mib.c
-> index f23fda0c55a7..4dc107ab1aec 100644
-> --- a/net/mptcp/mib.c
-> +++ b/net/mptcp/mib.c
-> @@ -83,6 +83,7 @@ static const struct snmp_mib mptcp_snmp_list[] =3D {
->  SNMP_MIB_ITEM("MD5SigFallback", MPTCP_MIB_MD5SIGFALLBACK),
->  SNMP_MIB_ITEM("DssFallback", MPTCP_MIB_DSSFALLBACK),
->  SNMP_MIB_ITEM("SimultConnectFallback", MPTCP_MIB_SIMULTCONNFALLBACK),
-> + SNMP_MIB_ITEM("MPFailFallback", MPTCP_MIB_MPFAILFALLBACK),
->  SNMP_MIB_ITEM("FallbackFailed", MPTCP_MIB_FALLBACKFAILED),
->  SNMP_MIB_ITEM("WinProbe", MPTCP_MIB_WINPROBE),
->  };
-> diff --git a/net/mptcp/mib.h b/net/mptcp/mib.h
-> index 812218b5ed2b..9db8812d8e04 100644
-> --- a/net/mptcp/mib.h
-> +++ b/net/mptcp/mib.h
-> @@ -86,6 +86,7 @@ enum linux_mptcp_mib_field {
->  MPTCP_MIB_MD5SIGFALLBACK, /* Conflicting TCP option enabled */
->  MPTCP_MIB_DSSFALLBACK, /* Bad or missing DSS */
->  MPTCP_MIB_SIMULTCONNFALLBACK, /* Simultaneous connect */
-> + MPTCP_MIB_MPFAILFALLBACK, /* Received MP_FAIL, fallback to TCP */
->  MPTCP_MIB_FALLBACKFAILED, /* Can't fallback due to msk status */
->  MPTCP_MIB_WINPROBE, /* MPTCP-level zero window probe */
->  __MPTCP_MIB_MAX
-> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-> index 6afd39aea110..82d3dbedd603 100644
-> --- a/net/mptcp/pm.c
-> +++ b/net/mptcp/pm.c
-> @@ -870,21 +870,50 @@ void mptcp_pm_mp_fail_received(struct sock *sk, u=
-64 fail_seq)
->=20=20
->=20 pr_debug("fail_seq=3D%llu\n", fail_seq);
->=20=20
->=20- /* After accepting the fail, we can't create any other subflows */
-> + /* MP_FAIL on a single contiguous subflow: fall back to TCP.
-> + * allow_infinite_fallback is cleared once other subflows join or
-> + * non-contiguous data is retransmitted; in that case ignore MP_FAIL
-> + * here (the peer should reset the failing subflow instead).
-> + *
-> + * Send the MP_FAIL (+ DSS) response before setting FALLBACK_DONE,
-> + * otherwise mptcp_established_options() would drop all MPTCP options
-> + * on this ACK. InfiniteMapTx is accounted later when the map is sent.
-> + */
->  spin_lock_bh(&msk->fallback_lock);
->  if (!msk->allow_infinite_fallback) {
->  spin_unlock_bh(&msk->fallback_lock);
->  return;
->  }
-> - msk->allow_subflows =3D false;
-> + WRITE_ONCE(msk->allow_subflows, false);
->  spin_unlock_bh(&msk->fallback_lock);
->=20=20
->=20 if (!subflow->fail_tout) {
->  pr_debug("send MP_FAIL response and infinite map\n");
->=20=20
->=20+ /* Infinite mapping requires contiguous data. With OoO still
-> + * queued, do not leave allow_subflows=3Dfalse without
-> + * FALLBACK_DONE; tear the subflow down instead (RFC8684 =C2=A73.7).
-> + */
-> + if (!RB_EMPTY_ROOT(&msk->out_of_order_queue)) {
-> + MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_FALLBACKFAILED);
-> + subflow->send_mp_fail =3D 1;
-> + mptcp_subflow_reset(sk);
-> + return;
-> + }
-> +
->  subflow->send_mp_fail =3D 1;
->  subflow->send_infinite_map =3D 1;
->  tcp_send_ack(sk);
-> +
-> + /* RFC8684 =C2=A73.7: after accepting MP_FAIL with a single
-> + * subflow, leave MPTCP mode and never revert. Use
-> + * mptcp_try_fallback() so pending DATA_FIN is handled.
-> + * InfiniteMapTx is counted when the map is transmitted.
-> + */
-> + if (!mptcp_try_fallback(sk, MPTCP_MIB_MPFAILFALLBACK)) {
-> + MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_FALLBACKFAILED);
-> + mptcp_subflow_reset(sk);
-> + }
->  } else {
->  pr_debug("MP_FAIL response received\n");
->  WRITE_ONCE(subflow->fail_tout, 0);
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index b32f0cd262a7..181403f43e54 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -93,7 +93,7 @@ bool __mptcp_try_fallback(struct mptcp_sock *msk, int=
- fb_mib)
->  return false;
->  }
->=20=20
->=20- msk->allow_subflows =3D false;
-> + WRITE_ONCE(msk->allow_subflows, false);
->  set_bit(MPTCP_FALLBACK_DONE, &msk->flags);
->  __MPTCP_INC_STATS(net, fb_mib);
->  spin_unlock_bh(&msk->fallback_lock);
-> @@ -958,7 +958,7 @@ static bool __mptcp_finish_join(struct mptcp_sock *=
-msk, struct sock *ssk)
->  return false;
->=20=20
->=20 spin_lock_bh(&msk->fallback_lock);
-> - if (!msk->allow_subflows) {
-> + if (!READ_ONCE(msk->allow_subflows)) {
->  spin_unlock_bh(&msk->fallback_lock);
->  return false;
->  }
-> @@ -1299,7 +1299,12 @@ static void mptcp_update_infinite_map(struct mpt=
-cp_sock *msk,
->  mpext->infinite_map =3D 1;
->  mpext->data_len =3D 0;
->=20=20
->=20- if (!mptcp_try_fallback(ssk, MPTCP_MIB_INFINITEMAPTX)) {
-> + /* Fallback may already have been completed on MP_FAIL reception;
-> + * still account for the infinite mapping being transmitted.
-> + */
-> + if (__mptcp_check_fallback(msk)) {
-> + MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_INFINITEMAPTX);
-> + } else if (!mptcp_try_fallback(ssk, MPTCP_MIB_INFINITEMAPTX)) {
->  MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_FALLBACKFAILED);
->  mptcp_subflow_reset(ssk);
->  return;
-> @@ -2839,7 +2844,7 @@ static void __mptcp_retrans(struct sock *sk)
->  */
->  spin_lock_bh(&msk->fallback_lock);
->  if (__mptcp_check_fallback(msk) ||
-> - !msk->allow_subflows) {
-> + !READ_ONCE(msk->allow_subflows)) {
->  spin_unlock_bh(&msk->fallback_lock);
->  release_sock(ssk);
->  goto clear_scheduled;
-> @@ -3050,7 +3055,7 @@ static void __mptcp_init_sock(struct sock *sk)
->  inet_csk(sk)->icsk_sync_mss =3D mptcp_sync_mss;
->  WRITE_ONCE(msk->csum_enabled, mptcp_is_checksum_enabled(sock_net(sk)))=
-;
->  msk->allow_infinite_fallback =3D true;
-> - msk->allow_subflows =3D true;
-> + WRITE_ONCE(msk->allow_subflows, true);
->  msk->recovery =3D false;
->  msk->subflow_id =3D 1;
->  msk->last_data_sent =3D tcp_jiffies32;
-> @@ -3468,7 +3473,7 @@ static int mptcp_disconnect(struct sock *sk, int =
-flags)
->  * can't overlap with a fallback anymore
->  */
->  spin_lock_bh(&msk->fallback_lock);
-> - msk->allow_subflows =3D true;
-> + WRITE_ONCE(msk->allow_subflows, true);
->  msk->allow_infinite_fallback =3D true;
->  WRITE_ONCE(msk->flags, 0);
->  spin_unlock_bh(&msk->fallback_lock);
-> @@ -3868,7 +3873,7 @@ bool mptcp_finish_join(struct sock *ssk)
->  */
->  if (!list_empty(&subflow->node)) {
->  spin_lock_bh(&msk->fallback_lock);
-> - if (!msk->allow_subflows) {
-> + if (!READ_ONCE(msk->allow_subflows)) {
->  spin_unlock_bh(&msk->fallback_lock);
->  return false;
->  }
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index 4a2d40cd7b13..833c76c41768 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -369,7 +369,7 @@ struct mptcp_sock {
->=20=20
->=20 spinlock_t fallback_lock; /* protects fallback,
->  * allow_infinite_fallback and
-> - * allow_join
-> + * allow_subflows
->  */
->=20=20
->=20 struct list_head backlog_list; /* protected by the data lock */
-> @@ -947,12 +947,6 @@ static inline void mptcp_start_tout_timer(struct s=
-ock *sk)
->  mptcp_reset_tout_timer(mptcp_sk(sk), 0);
->  }
->=20=20
->=20-static inline bool mptcp_is_fully_established(struct sock *sk)
-> -{
-> - return inet_sk_state_load(sk) =3D=3D TCP_ESTABLISHED &&
-> - READ_ONCE(mptcp_sk(sk)->fully_established);
-> -}
-> -
->  static inline u64 mptcp_stamp(void)
->  {
->  return div_u64(tcp_clock_ns(), NSEC_PER_USEC);
-> @@ -1290,6 +1284,16 @@ static inline bool mptcp_check_fallback(const st=
-ruct sock *sk)
->  return __mptcp_check_fallback(msk);
->  }
->=20=20
->=20+static inline bool mptcp_is_fully_established(struct sock *sk)
-> +{
-> + struct mptcp_sock *msk =3D mptcp_sk(sk);
-> +
-> + return inet_sk_state_load(sk) =3D=3D TCP_ESTABLISHED &&
-> + READ_ONCE(msk->fully_established) &&
-> + !__mptcp_check_fallback(msk) &&
-> + READ_ONCE(msk->allow_subflows);
-> +}
-> +
->  static inline bool __mptcp_has_initial_subflow(const struct mptcp_sock=
- *msk)
->  {
->  struct sock *ssk =3D READ_ONCE(msk->first);
-> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> index 8e386899ceb9..b04d6edb9be3 100644
-> --- a/net/mptcp/subflow.c
-> +++ b/net/mptcp/subflow.c
-> @@ -1323,7 +1323,7 @@ static bool mptcp_subflow_fail(struct mptcp_sock =
-*msk, struct sock *ssk)
->  spin_unlock_bh(&msk->fallback_lock);
->  return false;
->  }
-> - msk->allow_subflows =3D false;
-> + WRITE_ONCE(msk->allow_subflows, false);
->  spin_unlock_bh(&msk->fallback_lock);
->=20=20
->=20 /* graceful failure can happen only on the MPC subflow */
-> --=20
->=202.25.1
->
+diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
+index d100867e9202f..27fa8dc757b4f 100644
+--- a/net/mptcp/pm_userspace.c
++++ b/net/mptcp/pm_userspace.c
+@@ -132,12 +132,15 @@ int mptcp_userspace_pm_get_local_id(struct mptcp_sock *msk,
+ 	__be16 msk_sport =  ((struct inet_sock *)
+ 			     inet_sk((struct sock *)msk))->inet_sport;
+ 	struct mptcp_pm_addr_entry *entry;
++	int id = -1;
+ 
+ 	spin_lock_bh(&msk->pm.lock);
+ 	entry = mptcp_userspace_pm_lookup_addr(msk, &skc->addr);
+-	spin_unlock_bh(&msk->pm.lock);
+ 	if (entry)
+-		return entry->addr.id;
++		id = entry->addr.id;
++	spin_unlock_bh(&msk->pm.lock);
++	if (id >= 0)
++		return id;
+ 
+ 	if (skc->addr.port == msk_sport)
+ 		skc->addr.port = 0;
+-- 
+2.43.0
