@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA7973148D9
-	for <mptcp@lists.linux.dev>; Mon, 13 Jul 2026 03:25:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BE2E314B9A
+	for <mptcp@lists.linux.dev>; Mon, 13 Jul 2026 03:25:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783913158; cv=none; b=TDMuIjAUk1L0ZIqKXutfwreeugkigB+sb0oHJXMOV5IzBFUhiaSH3aygtrBPSQ0Qze9yKC13MtahdM5ex/1U3v6Qp2+kzWv6W5r5aUaRvC57Ss/KvsS+9B20w990K04rV1m+lP2m881ESn4AKV6KodXc0ot8y0w1+5wCIoRlvxk=
+	t=1783913159; cv=none; b=Qw1v1RK72rOWBv8CK/pTC9UyEnJl8YkEZyFPdBMjXPQBiB13j+wP1dSxOj/Noon+Zpl2KxNF8Fe0+jIF5dQ63+VJ+C0HlfvkVRNzM0c+7sXeKa+GRov8ZWuSCXFZN+qAzQGIC9W39//BwQ/b3b/qazBQns7IH4o0WO3isPmfH6c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783913158; c=relaxed/simple;
-	bh=4awVUK1Xkm+H+Ktpf52m8XoxGTGoEL7QvelIxCmsQIE=;
+	s=arc-20240116; t=1783913159; c=relaxed/simple;
+	bh=wvYxkoXBtG/Jbq8dqCH8wGG+eUglq4YD5pIsApsCOu4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IxB9nkCuYixN2BBj102ufb6a2/0iediaPDoBdz7mDxx7xMoQ+JFBPQmLWmWV7RAdZdjdPKYh1GlLxUPUvFXivqwckDfubmnrTsvUUt2bUyLZap7z6cNPAgkXnBwsukyhFWsnjBnA07u5a7r42Mq4jF1GpHrfQ6CE4PoCIdhu/mE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CusQXfi+; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=phKwZwW+Mz+L+MVHRprwRv7dIjH1ARu8RLP7hk61un0q++ubMjcJ7+uGlkU6coUVudsCUyvIDR3oEz6oA0qO7qf6CB8eQci/cCkLGIsM6N2QfCOSST3FdX1Szdh/poz/G+ur2lJP0TzYvYADLzmKzZUbxcOvyHbGOHpLm98IsYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dDy+7MAj; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CusQXfi+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFEF61F00A3A;
-	Mon, 13 Jul 2026 03:25:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dDy+7MAj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51EE61F000E9;
+	Mon, 13 Jul 2026 03:25:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783913156;
-	bh=J1MDITCjlc0JLil0q013vmYlB/pgNsTdi5ySY2xWSK0=;
+	s=k20260515; t=1783913158;
+	bh=sWARq10Hm6eLkwVkMLWENcKfZGI8n5t7L0+/2yCXwjE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=CusQXfi+WIAmDHbsZWPjWJw20dU/mGle65RmVmjKG+bdZxtaXGev3Fus5eXi4BCnW
-	 RtVnHX1kxG6u840G0gIj3Fk9bvuUtS65qSMvJXUE1FeExhENE5P6q9xy4ondZb7SEt
-	 udi5EBxNlk9BcFfK1s2rfK038z1EgYKkMi7i74P29D71jGY9FjVn6jOI9LbSQIwEPf
-	 iCSXHH0umjJ4KE3ujbOBw34FGBZqogAbcimnsV0TS7BTQhytH94M8+nMO1zUU04SzV
-	 BcMDOGYcjdExrPO4cUQOih77obhG65R+9hJ2uXCcO/6DQBPxetgmBL9rvYcM90288u
-	 L1cgySww9dOvA==
+	b=dDy+7MAjkMn6X9xJ88wIqUGnO+FfTYB81UuPebM0Fd+fdC+PQQXBOG7Aq1/fOCVV7
+	 NDUQzvGMYbEEkG8YjkYqXw5ikfUHyT+FheJNgxbJeTVb4YAN8MTXj5/T5UuTBnQfPr
+	 ZeW84TxruGN93ddzWz+sQWC2XBoim+yczA8N6Cgb0+ZC5BV6HGUrfbKdSgX0CFUDdd
+	 y45XVtYZw6uNtnP5FJrZcNsaaTb0ytpiIStAmyDeWg+XqTUIYD3m4ASg+kmcjdQRBt
+	 PrHFn6JGPPTKUOWGN5yFRhih8Bj15ODL0yeRZMYlYsTf2iBhb4u/eroNSWfrYL239E
+	 XODlr3w/j1FWQ==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v9 05/12] selftests: mptcp: sockopt: add tx/rx protocol options
-Date: Mon, 13 Jul 2026 11:25:29 +0800
-Message-ID: <90ef5682b66ef639ee2bb1041724410a6d1e581c.1783913010.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v9 06/12] selftests: mptcp: sockopt: add TCP_INQ test option
+Date: Mon, 13 Jul 2026 11:25:30 +0800
+Message-ID: <ca180f43dfe8d069382c9f98893124749122f678.1783913010.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <cover.1783913010.git.tanggeliang@kylinos.cn>
 References: <cover.1783913010.git.tanggeliang@kylinos.cn>
@@ -45,130 +45,86 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Add -t and -r options to specify tx/rx protocols (TCP/MPTCP). This
-increases testing flexibility by allowing explicit protocol selection
-for both transmission and reception paths.
+Add -i option to enable TCP_INQ testing. This prepares for consolidating
+TCP_INQ tests into a single binary by adding the necessary command-line
+interface.
+
+Add helper functions to conditionally set TCP_INQ sockopt on accepted
+sockets when running in inq mode. This ensures proper testing of TCP_CM_INQ
+functionality by enabling the required socket option on the incoming server
+connection.
 
 These codes are from mptcp_inq.c.
 
-Enhance compatibility with TCP tests by skipping MPTCP getsockopt checks
-during TCP tests since MPTCP socket options are not available.
-
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- .../selftests/net/mptcp/mptcp_sockopt.c       | 37 ++++++++++++++++---
- 1 file changed, 31 insertions(+), 6 deletions(-)
+ .../selftests/net/mptcp/mptcp_sockopt.c        | 18 +++++++++++++++++-
+ 1 file changed, 17 insertions(+), 1 deletion(-)
 
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-index 8781dfd50ba0..5e0392fdf0e4 100644
+index 5e0392fdf0e4..5c9a63ed6703 100644
 --- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
 +++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-@@ -29,6 +29,8 @@
- #include <linux/compiler.h>
- 
+@@ -31,6 +31,7 @@
  static int pf = AF_INET;
-+static int proto_tx = IPPROTO_MPTCP;
-+static int proto_rx = IPPROTO_MPTCP;
+ static int proto_tx = IPPROTO_MPTCP;
+ static int proto_rx = IPPROTO_MPTCP;
++static bool inq;
  
  #ifndef IPPROTO_MPTCP
  #define IPPROTO_MPTCP 262
-@@ -140,6 +142,7 @@ static void __noreturn die_perror(const char *msg)
- static void die_usage(int r)
+@@ -143,6 +144,7 @@ static void die_usage(int r)
  {
  	fprintf(stderr, "Usage: mptcp_sockopt [-6]\n");
-+	fprintf(stderr, "                     [-t tcp|mptcp] [-r tcp|mptcp]\n");
+ 	fprintf(stderr, "                     [-t tcp|mptcp] [-r tcp|mptcp]\n");
++	fprintf(stderr, "                     [-i]\n");
  	exit(r);
  }
  
-@@ -205,7 +208,7 @@ static int sock_listen_mptcp(const char * const listenaddr,
- 	hints.ai_family = pf;
- 
- 	for (a = addr; a; a = a->ai_next) {
--		sock = socket(a->ai_family, a->ai_socktype, IPPROTO_MPTCP);
-+		sock = socket(a->ai_family, a->ai_socktype, proto_rx);
- 		if (sock < 0)
- 			continue;
- 
-@@ -263,11 +266,22 @@ static int sock_connect_mptcp(const char * const remoteaddr,
- 	return sock;
- }
- 
-+static int protostr_to_num(const char *s)
-+{
-+	if (strcasecmp(s, "tcp") == 0)
-+		return IPPROTO_TCP;
-+	if (strcasecmp(s, "mptcp") == 0)
-+		return IPPROTO_MPTCP;
-+
-+	die_usage(1);
-+	return 0;
-+}
-+
- static void parse_opts(int argc, char **argv)
+@@ -281,7 +283,7 @@ static void parse_opts(int argc, char **argv)
  {
  	int c;
  
--	while ((c = getopt(argc, argv, "h6")) != -1) {
-+	while ((c = getopt(argc, argv, "h6t:r:")) != -1) {
+-	while ((c = getopt(argc, argv, "h6t:r:")) != -1) {
++	while ((c = getopt(argc, argv, "h6t:r:i")) != -1) {
  		switch (c) {
  		case 'h':
  			die_usage(0);
-@@ -275,6 +289,12 @@ static void parse_opts(int argc, char **argv)
- 		case '6':
- 			pf = AF_INET6;
+@@ -295,6 +297,9 @@ static void parse_opts(int argc, char **argv)
+ 		case 'r':
+ 			proto_rx = protostr_to_num(optarg);
  			break;
-+		case 't':
-+			proto_tx = protostr_to_num(optarg);
-+			break;
-+		case 'r':
-+			proto_rx = protostr_to_num(optarg);
++		case 'i':
++			inq = true;
 +			break;
  		default:
  			die_usage(1);
  			break;
-@@ -560,6 +580,9 @@ static void do_getsockopt_mptcp_full_info(struct so_state *s, int fd)
- 
- static void do_getsockopts(struct so_state *s, int fd, size_t r, size_t w)
- {
-+	if (proto_tx != IPPROTO_MPTCP || proto_rx != IPPROTO_MPTCP)
-+		return;
-+
- 	do_getsockopt_mptcp_info(s, fd, w);
- 
- 	do_getsockopt_tcp_info(s, fd, r, w);
-@@ -635,7 +658,8 @@ static void connect_one_server(int fd, int pipefd)
- 	if (eof)
- 		total += 1; /* sequence advances due to FIN */
- 
--	assert(s.mptcpi_rcv_delta == (uint64_t)total);
-+	if (proto_tx == IPPROTO_MPTCP && proto_rx == IPPROTO_MPTCP)
-+		assert(s.mptcpi_rcv_delta == (uint64_t)total);
+@@ -724,6 +729,14 @@ static void process_one_client(int fd, int pipefd)
  	close(fd);
  }
  
-@@ -673,7 +697,8 @@ static void process_one_client(int fd, int pipefd)
- 	r += ret;
++static void do_setsockopt_inq(int fd)
++{
++	int on = 1;
++
++	if (setsockopt(fd, IPPROTO_TCP, TCP_INQ, &on, sizeof(on)))
++		die_perror("setsockopt(TCP_INQ)");
++}
++
+ static int xaccept(int s)
+ {
+ 	int fd = accept(s, NULL, 0);
+@@ -731,6 +744,9 @@ static int xaccept(int s)
+ 	if (fd < 0)
+ 		die_perror("accept");
  
- 	do_getsockopts(&s, fd, r, w);
--	if (s.mptcpi_rcv_delta != (uint64_t)r + 1) /* +1 for FIN */
-+	if (proto_tx == IPPROTO_MPTCP && proto_rx == IPPROTO_MPTCP &&
-+	    s.mptcpi_rcv_delta != (uint64_t)r + 1) /* +1 for FIN */
- 		xerror("mptcpi_rcv_delta %" PRIu64 ", expect %" PRIu64 ", diff %" PRId64,
- 		       s.mptcpi_rcv_delta, r + 1, s.mptcpi_rcv_delta - (r + 1));
++	if (inq)
++		do_setsockopt_inq(fd);
++
+ 	return fd;
+ }
  
-@@ -783,10 +808,10 @@ static int client(int pipefd)
- 
- 	switch (pf) {
- 	case AF_INET:
--		fd = sock_connect_mptcp("127.0.0.1", "15432", IPPROTO_MPTCP);
-+		fd = sock_connect_mptcp("127.0.0.1", "15432", proto_tx);
- 		break;
- 	case AF_INET6:
--		fd = sock_connect_mptcp("::1", "15432", IPPROTO_MPTCP);
-+		fd = sock_connect_mptcp("::1", "15432", proto_tx);
- 		break;
- 	default:
- 		xerror("Unknown pf %d\n", pf);
 -- 
 2.53.0
 
