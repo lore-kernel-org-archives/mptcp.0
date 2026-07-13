@@ -1,41 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43A5629D29F
-	for <mptcp@lists.linux.dev>; Mon, 13 Jul 2026 03:32:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D89A12FFFA4
+	for <mptcp@lists.linux.dev>; Mon, 13 Jul 2026 03:32:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783913545; cv=none; b=ahXztbQwyVe4LaNdSmY/Tc+dvTHNOKhTuVGgVUbscZYzRrIfAu3EJbQ7W9sNh67P+VLIFjQfAwt4GHnPzYabsN2Y6IyjGfr7SZhcKR8LqiJnfXdLPU8bqA/6EPOUy4OewenHeLPZP58zAhXcvddBMQbbs8L5jnm2sy9biGkfeqE=
+	t=1783913545; cv=none; b=HaEZ4XFalYUTeEOD3N+Bs/WZG6lymsDq2k3fEh0iXInEIuIqBGSPrpgAotNhtav3ed8Iv/W7slzsqwP5dOkOFhzHcLKMX+kPGP7aC5Ju2YXxfp1DYe0QZriC+kfkENhgFMqSxyKoerQQLFccsb+ZjStcIZvM2uZKc7/0WL+mxOg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1783913545; c=relaxed/simple;
-	bh=jME7UwAhFGdpy0DC+LD1XLRwwMwYlVOX++7xseGcuGo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=A5/JLJiddpCIHOb3ZklBFKGL+YJHTkrXeTu1jDIksKRRTqvToLvToYeF9Vaxo/mfJ6MTJdgoSncYWpGPTfbdGM03SUw7Yxvqx/WXNs/BXvyD6hO/5+WlbogDaaBv65psrn6/iZ23G+ALnv88ln0PmsFkriwBXKqa/PeFdlzPqHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MoDjj4wR; arc=none smtp.client-ip=100.103.45.18
+	bh=myieSN7Rfa2GUFngwy1fIOXfiVhtIWrt7pN5/V+ND4A=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tbJzJMP0ue8vel5csBmhKi5aR23Tx6BdjVVoHYgUIHuuwsUgff/+PYOLBgbKmqPfUWDq6lKC+RF+rCBK2bsDF1ZV1MpvRbRCM9+ZsITEhpKyK6MlGOKyfRuK3BXhcyhbh1fLdw04lLIyZ0ZfmRuNaKB3XYFlKuDBhI2jz1uopSU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eBUlycLb; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MoDjj4wR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFB9A1F00A3A;
-	Mon, 13 Jul 2026 03:32:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eBUlycLb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93DCD1F000E9;
+	Mon, 13 Jul 2026 03:32:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783913543;
-	bh=EYeyAMGYwgrEvRqPliDbY8/sG7cAJUpla97WO7oBIDM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=MoDjj4wRDk247KmD8b8yMQ6Y+DRupetutrEhSdLqBGcoCsyXd0Dg/LSqv3cT+r5+T
-	 W1AIhEbP/ZoU+ZE9XNC0zzC/gu68cqDeRQt1LEEu9H/mjb2SWb/dUeeL4LApZqli+z
-	 acforAajqtCBR6ksk8GswG2w8rP3z29Keun+g6ltBKCerkDe72hbOCJxRDyPnCeASV
-	 5kvZpwP/9PpVoDph+u6/QT0UTb4JxO6CfmvpikiEyENWWd++W/oVobJE6HBYWtdCzu
-	 UWB8DczshyWm2UcNIN/foD80+jJ58nqLHrwq2NvZT9Q1URXUhVKCxpQ117wGZqoleI
-	 F3rrtmq6nWkRQ==
+	s=k20260515; t=1783913542;
+	bh=zu8pbvSi9sawrVmV1JANnQiJA36EIK0nCl+c625pGGM=;
+	h=From:To:Cc:Subject:Date;
+	b=eBUlycLbRu5vcNK3s0iRe9luI2fwMyOF/dRxYfZEWHlhovafkINKwnjIx2QNSNyXO
+	 ohjQpMMgC8X7nSTvicOScMlcgjRLrSZqeSFmtmVYGo4qKthIs8PgOtUwzfsEpeAC9D
+	 v8HC2MYsfoP1uLKr3EQq3KWQ05Am1+N9RAQ8IMBcEclg60Pm0Yrq/mE2+XvtR9sqiQ
+	 BK5EhK6Qa1c+zHIA7o8DR6lG1iF81naHu8PKbbPhRqcRlEtM3nTx1EfyWj80fr3ePl
+	 0WZCtmmWdOHICGnqtlgpQVtpCudBr/eoR7J/ID/v/boCMF0d31xAma/W5OFvIMVwYu
+	 RGU5wbT/1yB6Q==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>,
-	Paolo Abeni <pabeni@redhat.com>
-Subject: [PATCH mptcp-next v3 1/5] mptcp: use local variable tp in sendmsg_frag
-Date: Mon, 13 Jul 2026 11:32:09 +0800
-Message-ID: <e6a13a0f7be0f1b536fbe690bf41b1c62305707e.1783913332.git.tanggeliang@kylinos.cn>
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v3 0/5] mptcp: add MSG_ZEROCOPY support
+Date: Mon, 13 Jul 2026 11:32:08 +0800
+Message-ID: <cover.1783913332.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.53.0
-In-Reply-To: <cover.1783913332.git.tanggeliang@kylinos.cn>
-References: <cover.1783913332.git.tanggeliang@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -46,55 +42,64 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-In mptcp_sendmsg_frag(), tcp_sk(ssk) is called multiple times.
-Introduce a local variable 'tp' to hold the tcp_sock pointer and
-use it throughout the function. This avoids repeated dereferencing
-and improves code readability, with no functional change.
+This series adds MSG_ZEROCOPY support for MPTCP sockets, allowing
+userspace to transmit data without intermediate kernel copies, and
+provides corresponding selftests to exercise the new path.
 
-Suggested-by: Paolo Abeni <pabeni@redhat.com>
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
----
- net/mptcp/protocol.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+The first patch is a small cleanup that introduces a local 'tp'
+variable in mptcp_sendmsg_frag() to avoid repeated tcp_sk()
+dereferencing, preparing for the subsequent zero-copy changes.
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index ffcf5a1788f6..1cab07b1b9b1 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1375,6 +1375,7 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
- 	u64 data_seq = dfrag->data_seq + info->sent;
- 	int offset = dfrag->offset + info->sent;
- 	struct mptcp_sock *msk = mptcp_sk(sk);
-+	struct tcp_sock *tp = tcp_sk(ssk);
- 	bool zero_window_probe = false;
- 	struct mptcp_ext *mpext = NULL;
- 	bool can_coalesce = false;
-@@ -1410,14 +1411,14 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
- 		mpext = mptcp_get_ext(skb);
- 		if (!mptcp_skb_can_collapse_to(data_seq, skb, mpext)) {
- 			TCP_SKB_CB(skb)->eor = 1;
--			tcp_mark_push(tcp_sk(ssk), skb);
-+			tcp_mark_push(tp, skb);
- 			goto alloc_skb;
- 		}
- 
- 		i = skb_shinfo(skb)->nr_frags;
- 		can_coalesce = skb_can_coalesce(skb, i, dfrag->page, offset);
- 		if (!can_coalesce && i >= READ_ONCE(net_hotdata.sysctl_max_skb_frags)) {
--			tcp_mark_push(tcp_sk(ssk), skb);
-+			tcp_mark_push(tp, skb);
- 			goto alloc_skb;
- 		}
- 
-@@ -1471,7 +1472,7 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
- 	skb->truesize += copy;
- 	sk_wmem_queued_add(ssk, copy);
- 	sk_mem_charge(ssk, copy);
--	WRITE_ONCE(tcp_sk(ssk)->write_seq, tcp_sk(ssk)->write_seq + copy);
-+	WRITE_ONCE(tp->write_seq, tp->write_seq + copy);
- 	TCP_SKB_CB(skb)->end_seq += copy;
- 	tcp_skb_pcount_set(skb, 0);
- 
+The second patch implements the core MSG_ZEROCOPY support. The design
+follows TCP's reference-counting model, with a single ubuf_info per
+sendmsg tracked by three reference buckets: one held by sendmsg itself,
+one per MPTCP dfrag in the retransmission queue, and one per subflow
+skb. Completion is reported only after all bytes are acknowledged at
+both MPTCP and subflow levels. The feature is silently downgraded to
+regular copy in cases where zero-copy cannot be safely performed
+(MSG_FASTOPEN, fallback mode, or memory pressure).
+
+The third patch handles SO_ZEROCOPY in setsockopt.
+
+The last two patches add a new 'zerocopy' I/O mode to the mptcp_connect
+selftest, and a wrapper script to run it as part of the regular test
+suite, ensuring the zero-copy path is exercised in CI.
+
+v3:
+ - Force fresh skb when mixing zerocopy and kernel-copy fragments.
+ - Simplify zero-copy availability check by using SOCK_ZEROCOPY flag
+   directly.
+ - Validate SO_ZEROCOPY value in setsockopt and avoid affecting
+   fallback subflow.
+ - In selftests, drain MPTFO partial data, use poll+recvmsg for completion
+   notifications with timeout, and verify getsockopt round-trip.
+
+v2:
+ - patch 2, never mix PURE_ZEROCOPY frags with kernel-copy frags in the
+   same skb; handle fallback, return values.
+ - patch 3, a new patch to handle SO_ZEROCOPY in setsockopt.
+ - patch 4, set SO_ZEROCOPY, handle listen_mode, error queue.
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1783821830.git.tanggeliang@kylinos.cn/
+
+v1:
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1783774784.git.tanggeliang@kylinos.cn/
+
+Geliang Tang (5):
+  mptcp: use local variable tp in sendmsg_frag
+  mptcp: add MSG_ZEROCOPY support
+  mptcp: handle SO_ZEROCOPY in setsockopt
+  selftests: mptcp: connect: add zerocopy io mode
+  selftests: mptcp: connect: cover zerocopy mode
+
+ net/mptcp/protocol.c                          | 117 +++++++++++++++--
+ net/mptcp/protocol.h                          |   1 +
+ net/mptcp/sockopt.c                           |  17 ++-
+ tools/testing/selftests/net/mptcp/Makefile    |   1 +
+ .../selftests/net/mptcp/mptcp_connect.c       | 120 +++++++++++++++++-
+ .../net/mptcp/mptcp_connect_zerocopy.sh       |   5 +
+ 6 files changed, 249 insertions(+), 12 deletions(-)
+ create mode 100755 tools/testing/selftests/net/mptcp/mptcp_connect_zerocopy.sh
+
 -- 
 2.53.0
 
