@@ -1,38 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 357E5360EE8
-	for <mptcp@lists.linux.dev>; Tue, 14 Jul 2026 01:41:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91CF1360EE8
+	for <mptcp@lists.linux.dev>; Tue, 14 Jul 2026 01:41:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783993281; cv=none; b=pgc+SPJdqp9w4OmE/wNofKr3HUDhdSpDgtKhOpe9LEWkAKbtIIcqqEc275SG4MzXfiXuhWkXCiFKSZL3NSa6YdPD/tnrB+lhdbXNQS57IZf85eOxHsXuhueQlvfMEhcH0QY1LtOY/pDDvO3eUywYik7UtQPu85VHWPRCHejT0Po=
+	t=1783993282; cv=none; b=KCPIKTfW4hibQMYjo5+rpI+UI7n2Thm9aJZJNuXsnTQQMQgBD6c6m9LSWxLXxYi+JYKmezfcGz/udOx71ukPWFJMuA1/+KZi6AAXAh3KT/O6dCnkLJgUtr0nBe4jXLvnSjT+ChY592gxQn0wtpTp1KAJ4ccMmpZO2733oeXcH8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783993281; c=relaxed/simple;
-	bh=jME7UwAhFGdpy0DC+LD1XLRwwMwYlVOX++7xseGcuGo=;
+	s=arc-20240116; t=1783993282; c=relaxed/simple;
+	bh=kBi0yLOv/oI2k5sq55OaIAlOFS1OXgl4ObwpZc8E4uk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=eTQHE82lN5WDGoSnWLEqW5bmuA27nTJK7rgU4hxnBRGhN+FUQCZCV1+kUCq7OK9l56GA5gT0NVrXQ3d2cuRdm+FSPbLF7XCJEli4IuyR7X8A2zUSfT5hZy6biA6gO1/bfo9y4N2wozv9VfM4/naGvmTt7UhiyHSMW9RLNrlh42g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CsutLHcC; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=WMlCc56QoyBlavS6SuNyWr17TM3BX2kNFcDEtGm7S8Qf6mgDy/UQ7+il4O4LUeHpsvFtDx8K96SjzKltJ02IamLGT+52Yrnsq9D2giHT82rM/fVaHdR4R4U4r14qBjO/dgGMldSZO/S1/+Nx2tIBJshg6i+G00EhYn5musyHgh0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KwC9/uw6; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CsutLHcC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9EACF1F00A3A;
-	Tue, 14 Jul 2026 01:41:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KwC9/uw6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91FAA1F000E9;
+	Tue, 14 Jul 2026 01:41:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783993280;
-	bh=EYeyAMGYwgrEvRqPliDbY8/sG7cAJUpla97WO7oBIDM=;
+	s=k20260515; t=1783993281;
+	bh=YupAB59tw+FVXwy+ZOzTZAeHm3llU1gWIUKkYa6d06c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=CsutLHcCRzlKNKj2DViWlid+pKZ5GBDxj6MKQlnzbJ/67UmuChIsHNZ4fC9Ia140L
-	 /vOZE4HbnKAVRAOfOK3265WJCwPy/MOT2Dxaem4aLRbL+FJLmBcKInrBp0QN8Uph0K
-	 xfRSOv4B11wLQ3ya2ZCAsK6+uPBzwY/BLd82cxd4Nm1Zig8/ntSz4TiQnvK0cyLHn8
-	 Va6BOSpCvenuCs1FkRXlUnhjKzNXtFoE59BNoXJMgOiI3ccbL/YwK9/nUj0zTWYGcV
-	 L7HSZ4tABatpI0wX5okpWwqrLUWpegBO7KlD0G1jG/habGNLS0Zf2NYjZZHvxZSnPs
-	 pxFvYKpGieBzw==
+	b=KwC9/uw6TadkaZRNiXJ3/wYN+yPu5VxkMIyU4DBb6rOtVJeSmOHke0A+W4I7f/yha
+	 9PybQhtsA62ZsxnFLCJ8lew596zCjVB8+5yRpmw8f3hjnkH8i1OZjse5MJOzmCmIl3
+	 tgEBGjHbNwZv/dw9dcUHC/p6gmNaqcCKk3/k3GIjoOK/Lrgk5ZnfY7K9jETsDf9Dp4
+	 iWM4hdhx7uU7ULdGK7Y5eD7+P0PvWXvv3h38kNgVToqTIj8dz2+pMANLDhOIXTGU8u
+	 /pL0vMcXHRFYgPRXOvX6J8A082ZUs8M6B3+m9JvvVaT1JkNQpuBFxce3RCpSVQhNRh
+	 4MZ4jX+TU4JXg==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>,
-	Paolo Abeni <pabeni@redhat.com>
-Subject: [PATCH mptcp-next v4 1/7] mptcp: use local variable tp in sendmsg_frag
-Date: Tue, 14 Jul 2026 09:40:56 +0800
-Message-ID: <e7f83ae2dfea26db0766ec66648fe33517d89459.1783992745.git.tanggeliang@kylinos.cn>
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v4 2/7] mptcp: remove redundant orig_offset in carve_data_frag
+Date: Tue, 14 Jul 2026 09:40:57 +0800
+Message-ID: <457631a70151d3ee143f806dbe45e15ca9c0db16.1783992745.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <cover.1783992745.git.tanggeliang@kylinos.cn>
 References: <cover.1783992745.git.tanggeliang@kylinos.cn>
@@ -46,54 +45,42 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-In mptcp_sendmsg_frag(), tcp_sk(ssk) is called multiple times.
-Introduce a local variable 'tp' to hold the tcp_sock pointer and
-use it throughout the function. This avoids repeated dereferencing
-and improves code readability, with no functional change.
+mptcp_carve_data_frag() already receives struct page_frag via its 'pfrag'
+parameter, making the separate 'orig_offset' parameter redundant since it
+merely duplicates pfrag->offset.
 
-Suggested-by: Paolo Abeni <pabeni@redhat.com>
+Simplify the function signature by removing this unnecessary parameter
+and directly accessing the offset from struct pfrag internally.
+
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- net/mptcp/protocol.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ net/mptcp/protocol.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index ffcf5a1788f6..1cab07b1b9b1 100644
+index 1cab07b1b9b1..111da68d5875 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -1375,6 +1375,7 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
- 	u64 data_seq = dfrag->data_seq + info->sent;
- 	int offset = dfrag->offset + info->sent;
- 	struct mptcp_sock *msk = mptcp_sk(sk);
-+	struct tcp_sock *tp = tcp_sk(ssk);
- 	bool zero_window_probe = false;
- 	struct mptcp_ext *mpext = NULL;
- 	bool can_coalesce = false;
-@@ -1410,14 +1411,14 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
- 		mpext = mptcp_get_ext(skb);
- 		if (!mptcp_skb_can_collapse_to(data_seq, skb, mpext)) {
- 			TCP_SKB_CB(skb)->eor = 1;
--			tcp_mark_push(tcp_sk(ssk), skb);
-+			tcp_mark_push(tp, skb);
- 			goto alloc_skb;
- 		}
+@@ -1234,9 +1234,9 @@ static bool mptcp_page_frag_refill(struct sock *sk, struct page_frag *pfrag)
+ }
  
- 		i = skb_shinfo(skb)->nr_frags;
- 		can_coalesce = skb_can_coalesce(skb, i, dfrag->page, offset);
- 		if (!can_coalesce && i >= READ_ONCE(net_hotdata.sysctl_max_skb_frags)) {
--			tcp_mark_push(tcp_sk(ssk), skb);
-+			tcp_mark_push(tp, skb);
- 			goto alloc_skb;
- 		}
+ static struct mptcp_data_frag *
+-mptcp_carve_data_frag(const struct mptcp_sock *msk, struct page_frag *pfrag,
+-		      int orig_offset)
++mptcp_carve_data_frag(const struct mptcp_sock *msk, struct page_frag *pfrag)
+ {
++	int orig_offset = pfrag->offset;
+ 	int offset = ALIGN(orig_offset, sizeof(long));
+ 	struct mptcp_data_frag *dfrag;
  
-@@ -1471,7 +1472,7 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
- 	skb->truesize += copy;
- 	sk_wmem_queued_add(ssk, copy);
- 	sk_mem_charge(ssk, copy);
--	WRITE_ONCE(tcp_sk(ssk)->write_seq, tcp_sk(ssk)->write_seq + copy);
-+	WRITE_ONCE(tp->write_seq, tp->write_seq + copy);
- 	TCP_SKB_CB(skb)->end_seq += copy;
- 	tcp_skb_pcount_set(skb, 0);
+@@ -2031,7 +2031,7 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
+ 			if (!mptcp_page_frag_refill(sk, pfrag))
+ 				goto wait_for_memory;
+ 
+-			dfrag = mptcp_carve_data_frag(msk, pfrag, pfrag->offset);
++			dfrag = mptcp_carve_data_frag(msk, pfrag);
+ 			frag_truesize = dfrag->overhead;
+ 		}
  
 -- 
 2.53.0
