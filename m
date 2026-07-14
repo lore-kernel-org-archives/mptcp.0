@@ -1,40 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 653EF30C161
-	for <mptcp@lists.linux.dev>; Tue, 14 Jul 2026 02:09:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31E7021ABD7;
+	Tue, 14 Jul 2026 02:22:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783994970; cv=none; b=FBeR5btxY/MlwKcwo+0NaRPj+gkMhuoZu5AWmm4gLN0t9mIRu3gp46vQI9DrHPC5SlrJBd88ICHjxkqIcCHtVjWXgF8l/7mxxgyTDbJfIvkmewhHTo/Dfa2/X0CRBSY05foDZ+q0GWq99fXJCjDrVU124byalKUY+IUBe0PQDuY=
+	t=1783995738; cv=none; b=U8vtlF38Ibqny6+2D81+JfokYQuQJOrVC77uWaLVF7reE8FQSrp/eX96uDVWxxB8xqHGLlkQq2Mr+38KMkFgxDZ37VlkPhbcX3QpqhZnsccctwsZBvMcXLO6gh+BUF8UK0c0qDtvHvpKaYxjZevSxcsdimagviswTU90Xhu+q48=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783994970; c=relaxed/simple;
-	bh=2bwW6ciRIH3COpsPHrszcvWHu356hB6/G9ZwJy+7FNo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LULIosiSHLSRNSK/+qivxzYv/IWfM3tEWsOy2RwmcdWBWewW1RrpOC1PEKY4uBxWBFY0dZVeoOR6GNZYj+Z3wmlG9EfpqErtvjx3os5oqc/qMOzldC+MV3M/j2nv5PBRvg3sl6yNBEUg7UuZ9PD3MyzKjy/bEPVHZFdWX240n7I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kw8+evS/; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1783995738; c=relaxed/simple;
+	bh=Q3PL6OREjtCHX20dFolGJy3noRev7G8fgAJ3W6EcbD4=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=pdEdqGpLm+kLRceVVY8Xzk2gkptlsfKick3gaqoJu0RmpQD1/K+I9O1G6F5zl+THgsgLUC1vx4ojTj2H6vzAfI8HxDqfoEuNU8ThGITUG1rZzlvNjuGZqyjlLOarlgaweH4ecMvrVJm5eNMgYV9SoHTHPDDjRVs4YzKubr3Ye+E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m6R5dQhP; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kw8+evS/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 174051F00A3A;
-	Tue, 14 Jul 2026 02:09:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m6R5dQhP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A69401F000E9;
+	Tue, 14 Jul 2026 02:22:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783994968;
-	bh=WsSuguUvTthLy/VyB8nBwxFIykuODS47uLsaIaG/41w=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=kw8+evS/q/16I8CsSNSKEP5PEH76AUcGOPov3MQp8blUjd8Es3XNHnhp5ptMGeCab
-	 ExKqn1ZoQ+iiFXyr7NFPbWoSa3DIGgkFeWOraQPT77CDq6ipteRatxDQuvnW/jbULA
-	 19HjlxqKLwpjoJhWy4EeOlUVCJs4wkOz/F7b1Ou2/qzwox01DisKQkwkKOzHukltV8
-	 JBfPQcgEq6a+fLe/7V2Oo3CGO7cfb2Lt6oKJH8+EEKozN+eGU4X2JPqV0sOydRGNJf
-	 CFb52koMbssalxuLIlrX+y4JSaTWNQtRaqAgLN+CsCtBHqTGhHZsH72KHYSE51fq0S
-	 kFEVNki8f+GDQ==
+	s=k20260515; t=1783995736;
+	bh=fKGsXxGIq8JhLYyL/PNxqs8d2jziD2sNSoKakr1IH+w=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=m6R5dQhPyRGnYUI2k6+c1JldvROY4qFqj/xCb3a3eotT+UV0CLqR7VvIvKVXysZlD
+	 bKnskP/jvIWpUzjFPNpH9B6U9b+G+xyK/MBLDUmIWohF4theXK5rBOdQizG9MYIyBT
+	 cj93R8DZtLDjJL2Dnb1gZ2rDCFZ3nQNp+8HIKmPllWY2UyYfI8DYaJ2M3q0mVgYALy
+	 drrr0SZ/3Cb7p0FYa6kDjx99FB8YqposQjJZa0LmC2lAC/EKlnxUWivKHnEnYan/7e
+	 qRpSuXIkztwUYA7JTdn7yj2prZ6OjHYb9pehmGQ/tmclAOHFDvTASuqE9HzVK6Kdyc
+	 wwRGX0SGRk8xA==
+Message-ID: <c3b017e1c96cdafce15012e737389108d7cbf8f6.camel@kernel.org>
+Subject: Re: [PATCH net-next v2] mptcp: sockopt: implement IPV6_TCLASS
 From: Geliang Tang <geliang@kernel.org>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v10 13/13] selftests: mptcp: sockopt: replace mptcp_inq with sockopt
-Date: Tue, 14 Jul 2026 10:08:58 +0800
-Message-ID: <8c6e499ef56bc8f447535b7b74006d069c0dad0d.1783994494.git.tanggeliang@kylinos.cn>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <cover.1783994494.git.tanggeliang@kylinos.cn>
-References: <cover.1783994494.git.tanggeliang@kylinos.cn>
+To: David 'equinox' Lamparter <equinox@diac24.net>, Matthieu Baerts
+	 <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>
+Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev
+Date: Tue, 14 Jul 2026 10:22:12 +0800
+In-Reply-To: <20260713135551.569365-1-equinox@diac24.net>
+References: <20260713135551.569365-1-equinox@diac24.net>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.56.2-9 
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -43,705 +45,110 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+Hi David,
 
-Update mptcp_sockopt.sh to use mptcp_sockopt binary instead of
-mptcp_inq. This consolidates TCP_INQ testing into a single test binary
-while maintaining equivalent test coverage.
+Thanks for your patch. However there is already a version under review
+on the MPTCP mailing list that adds IPV6_TCLASS [1] (as well as IP_TTL
+and IPV6_UNICAST_HOPS).
 
-Delete mptcp_inq binary and references since its functionality has been
-fully integrated into mptcp_sockopt. This simplifies the test suite
-structure and reduces maintenance overhead.
+Thanks,
+-Geliang
 
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
----
- tools/testing/selftests/net/mptcp/.gitignore  |   1 -
- tools/testing/selftests/net/mptcp/Makefile    |   1 -
- tools/testing/selftests/net/mptcp/mptcp_inq.c | 614 ------------------
- .../selftests/net/mptcp/mptcp_sockopt.sh      |   8 +-
- 4 files changed, 4 insertions(+), 620 deletions(-)
- delete mode 100644 tools/testing/selftests/net/mptcp/mptcp_inq.c
+https://patchwork.kernel.org/project/mptcp/patch/2617b8684039574734b8622936ef126d6a7cd519.1754986785.git.tanggeliang@kylinos.cn/
 
-diff --git a/tools/testing/selftests/net/mptcp/.gitignore b/tools/testing/selftests/net/mptcp/.gitignore
-index 833279fb34e2..c62e91ce385d 100644
---- a/tools/testing/selftests/net/mptcp/.gitignore
-+++ b/tools/testing/selftests/net/mptcp/.gitignore
-@@ -1,7 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0-only
- mptcp_connect
- mptcp_diag
--mptcp_inq
- mptcp_sockopt
- pm_nl_ctl
- *.pcap
-diff --git a/tools/testing/selftests/net/mptcp/Makefile b/tools/testing/selftests/net/mptcp/Makefile
-index 9e47ecfe58e2..d5fab4d26de7 100644
---- a/tools/testing/selftests/net/mptcp/Makefile
-+++ b/tools/testing/selftests/net/mptcp/Makefile
-@@ -23,7 +23,6 @@ TEST_PROGS := \
- TEST_GEN_FILES := \
- 	mptcp_connect \
- 	mptcp_diag \
--	mptcp_inq \
- 	mptcp_sockopt \
- 	pm_nl_ctl \
- # end of TEST_GEN_FILES
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_inq.c b/tools/testing/selftests/net/mptcp/mptcp_inq.c
-deleted file mode 100644
-index 5716998da192..000000000000
---- a/tools/testing/selftests/net/mptcp/mptcp_inq.c
-+++ /dev/null
-@@ -1,614 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--
--#define _GNU_SOURCE
--
--#include <assert.h>
--#include <errno.h>
--#include <fcntl.h>
--#include <limits.h>
--#include <string.h>
--#include <stdarg.h>
--#include <stdbool.h>
--#include <stdint.h>
--#include <inttypes.h>
--#include <stdio.h>
--#include <stdlib.h>
--#include <strings.h>
--#include <unistd.h>
--#include <time.h>
--
--#include <sys/ioctl.h>
--#include <sys/random.h>
--#include <sys/socket.h>
--#include <sys/types.h>
--#include <sys/wait.h>
--
--#include <netdb.h>
--#include <netinet/in.h>
--
--#include <linux/tcp.h>
--#include <linux/sockios.h>
--#include <linux/compiler.h>
--
--#ifndef IPPROTO_MPTCP
--#define IPPROTO_MPTCP 262
--#endif
--#ifndef SOL_MPTCP
--#define SOL_MPTCP 284
--#endif
--
--static int pf = AF_INET;
--static int proto_tx = IPPROTO_MPTCP;
--static int proto_rx = IPPROTO_MPTCP;
--
--static void __noreturn die_perror(const char *msg)
--{
--	perror(msg);
--	exit(1);
--}
--
--static void die_usage(int r)
--{
--	fprintf(stderr, "Usage: mptcp_inq [-6] [ -t tcp|mptcp ] [ -r tcp|mptcp]\n");
--	exit(r);
--}
--
--static void __noreturn xerror(const char *fmt, ...)
--{
--	va_list ap;
--
--	va_start(ap, fmt);
--	vfprintf(stderr, fmt, ap);
--	va_end(ap);
--	fputc('\n', stderr);
--	exit(1);
--}
--
--static const char *getxinfo_strerr(int err)
--{
--	if (err == EAI_SYSTEM)
--		return strerror(errno);
--
--	return gai_strerror(err);
--}
--
--static void xgetaddrinfo(const char *node, const char *service,
--			 struct addrinfo *hints,
--			 struct addrinfo **res)
--{
--	int err;
--
--again:
--	err = getaddrinfo(node, service, hints, res);
--	if (err) {
--		const char *errstr;
--
--		if (err == EAI_SOCKTYPE) {
--			hints->ai_protocol = IPPROTO_TCP;
--			goto again;
--		}
--
--		errstr = getxinfo_strerr(err);
--
--		fprintf(stderr, "Fatal: getaddrinfo(%s:%s): %s\n",
--			node ? node : "", service ? service : "", errstr);
--		exit(1);
--	}
--}
--
--static int sock_listen_mptcp(const char * const listenaddr,
--			     const char * const port)
--{
--	int sock = -1;
--	struct addrinfo hints = {
--		.ai_protocol = IPPROTO_MPTCP,
--		.ai_socktype = SOCK_STREAM,
--		.ai_flags = AI_PASSIVE | AI_NUMERICHOST
--	};
--
--	hints.ai_family = pf;
--
--	struct addrinfo *a, *addr;
--	int one = 1;
--
--	xgetaddrinfo(listenaddr, port, &hints, &addr);
--	hints.ai_family = pf;
--
--	for (a = addr; a; a = a->ai_next) {
--		sock = socket(a->ai_family, a->ai_socktype, proto_rx);
--		if (sock < 0)
--			continue;
--
--		if (-1 == setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &one,
--				     sizeof(one)))
--			perror("setsockopt");
--
--		if (bind(sock, a->ai_addr, a->ai_addrlen) == 0)
--			break; /* success */
--
--		perror("bind");
--		close(sock);
--		sock = -1;
--	}
--
--	freeaddrinfo(addr);
--
--	if (sock < 0)
--		xerror("could not create listen socket");
--
--	if (listen(sock, 20))
--		die_perror("listen");
--
--	return sock;
--}
--
--static int sock_connect_mptcp(const char * const remoteaddr,
--			      const char * const port, int proto)
--{
--	struct addrinfo hints = {
--		.ai_protocol = IPPROTO_MPTCP,
--		.ai_socktype = SOCK_STREAM,
--	};
--	struct addrinfo *a, *addr;
--	int sock = -1;
--
--	hints.ai_family = pf;
--
--	xgetaddrinfo(remoteaddr, port, &hints, &addr);
--	for (a = addr; a; a = a->ai_next) {
--		sock = socket(a->ai_family, a->ai_socktype, proto);
--		if (sock < 0)
--			continue;
--
--		if (connect(sock, a->ai_addr, a->ai_addrlen) == 0)
--			break; /* success */
--
--		die_perror("connect");
--	}
--
--	if (sock < 0)
--		xerror("could not create connect socket");
--
--	freeaddrinfo(addr);
--	return sock;
--}
--
--static int protostr_to_num(const char *s)
--{
--	if (strcasecmp(s, "tcp") == 0)
--		return IPPROTO_TCP;
--	if (strcasecmp(s, "mptcp") == 0)
--		return IPPROTO_MPTCP;
--
--	die_usage(1);
--	return 0;
--}
--
--static void parse_opts(int argc, char **argv)
--{
--	int c;
--
--	while ((c = getopt(argc, argv, "h6t:r:")) != -1) {
--		switch (c) {
--		case 'h':
--			die_usage(0);
--			break;
--		case '6':
--			pf = AF_INET6;
--			break;
--		case 't':
--			proto_tx = protostr_to_num(optarg);
--			break;
--		case 'r':
--			proto_rx = protostr_to_num(optarg);
--			break;
--		default:
--			die_usage(1);
--			break;
--		}
--	}
--}
--
--/* wait up to timeout milliseconds */
--static void wait_for_ack(int fd, int timeout, size_t total)
--{
--	int i;
--
--	for (i = 0; i < timeout; i++) {
--		int nsd, ret, queued = -1;
--		struct timespec req;
--
--		ret = ioctl(fd, TIOCOUTQ, &queued);
--		if (ret < 0)
--			die_perror("TIOCOUTQ");
--
--		ret = ioctl(fd, SIOCOUTQNSD, &nsd);
--		if (ret < 0)
--			die_perror("SIOCOUTQNSD");
--
--		if ((size_t)queued > total)
--			xerror("TIOCOUTQ %u, but only %zu expected\n", queued, total);
--		assert(nsd <= queued);
--
--		if (queued == 0)
--			return;
--
--		/* wait for peer to ack rx of all data */
--		req.tv_sec = 0;
--		req.tv_nsec = 1 * 1000 * 1000ul; /* 1ms */
--		nanosleep(&req, NULL);
--	}
--
--	xerror("still tx data queued after %u ms\n", timeout);
--}
--
--static void connect_one_server(int fd, int unixfd)
--{
--	size_t len, i, total, sent;
--	char buf[4096], buf2[4096];
--	ssize_t ret;
--
--	len = rand() % (sizeof(buf) - 1);
--
--	if (len < 128)
--		len = 128;
--
--	for (i = 0; i < len ; i++) {
--		buf[i] = rand() % 26;
--		buf[i] += 'A';
--	}
--
--	buf[i] = '\n';
--
--	/* un-block server */
--	ret = read(unixfd, buf2, 4);
--	assert(ret == 4);
--
--	assert(strncmp(buf2, "xmit", 4) == 0);
--
--	ret = write(unixfd, &len, sizeof(len));
--	assert(ret == (ssize_t)sizeof(len));
--
--	ret = write(fd, buf, len);
--	if (ret < 0)
--		die_perror("write");
--
--	if (ret != (ssize_t)len)
--		xerror("short write");
--
--	ret = read(unixfd, buf2, 4);
--	assert(strncmp(buf2, "huge", 4) == 0);
--
--	total = rand() % (16 * 1024 * 1024);
--	total += (1 * 1024 * 1024);
--	sent = total;
--
--	ret = write(unixfd, &total, sizeof(total));
--	assert(ret == (ssize_t)sizeof(total));
--
--	wait_for_ack(fd, 5000, len);
--
--	while (total > 0) {
--		if (total > sizeof(buf))
--			len = sizeof(buf);
--		else
--			len = total;
--
--		ret = write(fd, buf, len);
--		if (ret < 0)
--			die_perror("write");
--		total -= ret;
--
--		/* we don't have to care about buf content, only
--		 * number of total bytes sent
--		 */
--	}
--
--	ret = read(unixfd, buf2, 4);
--	assert(ret == 4);
--	assert(strncmp(buf2, "shut", 4) == 0);
--
--	wait_for_ack(fd, 5000, sent);
--
--	ret = write(fd, buf, 1);
--	assert(ret == 1);
--	close(fd);
--	ret = write(unixfd, "closed", 6);
--	assert(ret == 6);
--
--	close(unixfd);
--}
--
--static void get_tcp_inq(struct msghdr *msgh, unsigned int *inqv)
--{
--	struct cmsghdr *cmsg;
--
--	for (cmsg = CMSG_FIRSTHDR(msgh); cmsg ; cmsg = CMSG_NXTHDR(msgh, cmsg)) {
--		if (cmsg->cmsg_level == IPPROTO_TCP && cmsg->cmsg_type == TCP_CM_INQ) {
--			memcpy(inqv, CMSG_DATA(cmsg), sizeof(*inqv));
--			return;
--		}
--	}
--
--	xerror("could not find TCP_CM_INQ cmsg type");
--}
--
--static void process_one_client(int fd, int unixfd)
--{
--	unsigned int tcp_inq;
--	size_t expect_len;
--	char msg_buf[4096];
--	char buf[4096];
--	char tmp[16];
--	struct iovec iov = {
--		.iov_base = buf,
--		.iov_len = 1,
--	};
--	struct msghdr msg = {
--		.msg_iov = &iov,
--		.msg_iovlen = 1,
--		.msg_control = msg_buf,
--		.msg_controllen = sizeof(msg_buf),
--	};
--	ssize_t ret, tot;
--
--	ret = write(unixfd, "xmit", 4);
--	assert(ret == 4);
--
--	ret = read(unixfd, &expect_len, sizeof(expect_len));
--	assert(ret == (ssize_t)sizeof(expect_len));
--
--	if (expect_len > sizeof(buf))
--		xerror("expect len %zu exceeds buffer size", expect_len);
--
--	for (;;) {
--		struct timespec req;
--		unsigned int queued;
--
--		ret = ioctl(fd, FIONREAD, &queued);
--		if (ret < 0)
--			die_perror("FIONREAD");
--		if (queued > expect_len)
--			xerror("FIONREAD returned %u, but only %zu expected\n",
--			       queued, expect_len);
--		if (queued == expect_len)
--			break;
--
--		req.tv_sec = 0;
--		req.tv_nsec = 1000 * 1000ul;
--		nanosleep(&req, NULL);
--	}
--
--	/* read one byte, expect cmsg to return expected - 1 */
--	ret = recvmsg(fd, &msg, 0);
--	if (ret < 0)
--		die_perror("recvmsg");
--
--	if (msg.msg_controllen == 0)
--		xerror("msg_controllen is 0");
--
--	get_tcp_inq(&msg, &tcp_inq);
--
--	assert((size_t)tcp_inq == (expect_len - 1));
--
--	iov.iov_len = sizeof(buf);
--	ret = recvmsg(fd, &msg, 0);
--	if (ret < 0)
--		die_perror("recvmsg");
--
--	/* should have gotten exact remainder of all pending data */
--	assert(ret == (ssize_t)tcp_inq);
--
--	/* should be 0, all drained */
--	get_tcp_inq(&msg, &tcp_inq);
--	assert(tcp_inq == 0);
--
--	/* request a large swath of data. */
--	ret = write(unixfd, "huge", 4);
--	assert(ret == 4);
--
--	ret = read(unixfd, &expect_len, sizeof(expect_len));
--	assert(ret == (ssize_t)sizeof(expect_len));
--
--	/* peer should send us a few mb of data */
--	if (expect_len <= sizeof(buf))
--		xerror("expect len %zu too small\n", expect_len);
--
--	tot = 0;
--	do {
--		iov.iov_len = sizeof(buf);
--		ret = recvmsg(fd, &msg, 0);
--		if (ret < 0)
--			die_perror("recvmsg");
--
--		tot += ret;
--
--		get_tcp_inq(&msg, &tcp_inq);
--
--		if (tcp_inq > expect_len - tot)
--			xerror("inq %d, remaining %d total_len %d\n",
--			       tcp_inq, expect_len - tot, (int)expect_len);
--
--		assert(tcp_inq <= expect_len - tot);
--	} while ((size_t)tot < expect_len);
--
--	ret = write(unixfd, "shut", 4);
--	assert(ret == 4);
--
--	/* wait for hangup. Should have received one more byte of data. */
--	ret = read(unixfd, tmp, sizeof(tmp));
--	assert(ret == 6);
--	assert(strncmp(tmp, "closed", 6) == 0);
--
--	sleep(1);
--
--	iov.iov_len = 1;
--	ret = recvmsg(fd, &msg, 0);
--	if (ret < 0)
--		die_perror("recvmsg");
--	assert(ret == 1);
--
--	get_tcp_inq(&msg, &tcp_inq);
--
--	/* tcp_inq should be 1 due to received fin. */
--	assert(tcp_inq == 1);
--
--	iov.iov_len = 1;
--	ret = recvmsg(fd, &msg, 0);
--	if (ret < 0)
--		die_perror("recvmsg");
--
--	/* expect EOF */
--	assert(ret == 0);
--	get_tcp_inq(&msg, &tcp_inq);
--	assert(tcp_inq == 1);
--
--	close(fd);
--}
--
--static int xaccept(int s)
--{
--	int fd = accept(s, NULL, 0);
--
--	if (fd < 0)
--		die_perror("accept");
--
--	return fd;
--}
--
--static int server(int unixfd)
--{
--	int fd = -1, r, on = 1;
--
--	switch (pf) {
--	case AF_INET:
--		fd = sock_listen_mptcp("127.0.0.1", "15432");
--		break;
--	case AF_INET6:
--		fd = sock_listen_mptcp("::1", "15432");
--		break;
--	default:
--		xerror("Unknown pf %d\n", pf);
--		break;
--	}
--
--	r = write(unixfd, "conn", 4);
--	assert(r == 4);
--
--	alarm(15);
--	r = xaccept(fd);
--
--	if (-1 == setsockopt(r, IPPROTO_TCP, TCP_INQ, &on, sizeof(on)))
--		die_perror("setsockopt");
--
--	process_one_client(r, unixfd);
--
--	close(fd);
--	return 0;
--}
--
--static int client(int unixfd)
--{
--	int fd = -1;
--
--	alarm(15);
--
--	switch (pf) {
--	case AF_INET:
--		fd = sock_connect_mptcp("127.0.0.1", "15432", proto_tx);
--		break;
--	case AF_INET6:
--		fd = sock_connect_mptcp("::1", "15432", proto_tx);
--		break;
--	default:
--		xerror("Unknown pf %d\n", pf);
--	}
--
--	connect_one_server(fd, unixfd);
--
--	return 0;
--}
--
--static void init_rng(void)
--{
--	unsigned int foo;
--
--	if (getrandom(&foo, sizeof(foo), 0) == -1) {
--		perror("getrandom");
--		exit(1);
--	}
--
--	srand(foo);
--}
--
--static pid_t xfork(void)
--{
--	pid_t p = fork();
--
--	if (p < 0)
--		die_perror("fork");
--	else if (p == 0)
--		init_rng();
--
--	return p;
--}
--
--static int rcheck(int wstatus, const char *what)
--{
--	if (WIFEXITED(wstatus)) {
--		if (WEXITSTATUS(wstatus) == 0)
--			return 0;
--		fprintf(stderr, "%s exited, status=%d\n", what, WEXITSTATUS(wstatus));
--		return WEXITSTATUS(wstatus);
--	} else if (WIFSIGNALED(wstatus)) {
--		xerror("%s killed by signal %d\n", what, WTERMSIG(wstatus));
--	} else if (WIFSTOPPED(wstatus)) {
--		xerror("%s stopped by signal %d\n", what, WSTOPSIG(wstatus));
--	}
--
--	return 111;
--}
--
--int main(int argc, char *argv[])
--{
--	int e1, e2, wstatus;
--	pid_t s, c, ret;
--	int unixfds[2];
--
--	parse_opts(argc, argv);
--
--	e1 = socketpair(AF_UNIX, SOCK_DGRAM, 0, unixfds);
--	if (e1 < 0)
--		die_perror("pipe");
--
--	s = xfork();
--	if (s == 0) {
--		close(unixfds[0]);
--		ret = server(unixfds[1]);
--		close(unixfds[1]);
--		return ret;
--	}
--
--	close(unixfds[1]);
--
--	/* wait until server bound a socket */
--	e1 = read(unixfds[0], &e1, 4);
--	assert(e1 == 4);
--
--	c = xfork();
--	if (c == 0)
--		return client(unixfds[0]);
--
--	close(unixfds[0]);
--
--	ret = waitpid(s, &wstatus, 0);
--	if (ret == -1)
--		die_perror("waitpid");
--	e1 = rcheck(wstatus, "server");
--	ret = waitpid(c, &wstatus, 0);
--	if (ret == -1)
--		die_perror("waitpid");
--	e2 = rcheck(wstatus, "client");
--
--	return e1 ? e1 : e2;
--}
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-index e850a87429b6..a39265555438 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-@@ -308,7 +308,7 @@ run_tests()
- do_tcpinq_test()
- {
- 	print_title "TCP_INQ cmsg/ioctl $*"
--	ip netns exec "$ns_sbox" ./mptcp_inq "$@"
-+	ip netns exec "$ns_sbox" ./mptcp_sockopt "$@"
- 	local lret=$?
- 	if [ $lret -ne 0 ];then
- 		ret=$lret
-@@ -334,19 +334,19 @@ do_tcpinq_tests()
- 
- 	local args
- 	for args in "-t tcp" "-r tcp"; do
--		do_tcpinq_test $args
-+		do_tcpinq_test $args -i
- 		lret=$?
- 		if [ $lret -ne 0 ] ; then
- 			return $lret
- 		fi
--		do_tcpinq_test -6 $args
-+		do_tcpinq_test -6 $args -i
- 		lret=$?
- 		if [ $lret -ne 0 ] ; then
- 			return $lret
- 		fi
- 	done
- 
--	do_tcpinq_test -r tcp -t tcp
-+	do_tcpinq_test -r tcp -t tcp -i
- 
- 	return $?
- }
--- 
-2.53.0
-
+On Mon, 2026-07-13 at 15:51 +0200, David 'equinox' Lamparter wrote:
+> The IPV6_TCLASS setsockopt just needs to be forwarded to the
+> individual
+> TCP sockets, like IP_TOS is already handled for IPv4.  The code here
+> is
+> pretty much identical, except there's no helper for IPv6 like IPv4's
+> __ip_sock_set_tos().
+> 
+> Coincidentally, ssh uses this sockopt and prints an error in the
+> middle
+> of your ongoing SSH session when it doesn't work (very annoying when
+> doing SCP/SFTP on a multiplexed session.)
+> 
+> Signed-off-by: David 'equinox' Lamparter <equinox@diac24.net>
+> Cc: Matthieu Baerts <matttbe@kernel.org>
+> Cc: Mat Martineau <martineau@kernel.org>
+> Cc: Geliang Tang <geliang@kernel.org>
+> ---
+> [v2: added guard for CONFIG_IPV6=n.  I could also add a stub for
+> ipv6_setsockopt() in include/net/ipv6.h, that might be prettier?]
+> ---
+>  net/mptcp/sockopt.c | 38 ++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 38 insertions(+)
+> 
+> diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+> index fcf6feb2a9eb..1b83bba0b58e 100644
+> --- a/net/mptcp/sockopt.c
+> +++ b/net/mptcp/sockopt.c
+> @@ -394,6 +394,39 @@ static int mptcp_setsockopt_sol_socket(struct
+> mptcp_sock *msk, int optname,
+>  	return -EOPNOTSUPP;
+>  }
+>  
+> +static int mptcp_setsockopt_v6_set_tclass(struct mptcp_sock *msk,
+> int optname,
+> +					  sockptr_t optval, unsigned
+> int optlen)
+> +{
+> +#if !IS_ENABLED(CONFIG_IPV6)
+> +	return -EOPNOTSUPP;
+> +#else
+> +	struct mptcp_subflow_context *subflow;
+> +	struct sock *sk = (struct sock *)msk;
+> +	int err, val;
+> +
+> +	err = ipv6_setsockopt(sk, SOL_IPV6, optname, optval,
+> optlen);
+> +
+> +	if (err != 0)
+> +		return err;
+> +
+> +	lock_sock(sk);
+> +	sockopt_seq_inc(msk);
+> +	val = READ_ONCE(inet6_sk(sk)->tclass);
+> +	mptcp_for_each_subflow(msk, subflow) {
+> +		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
+> +		bool slow;
+> +
+> +		slow = lock_sock_fast(ssk);
+> +		inet6_sk(ssk)->tclass = val;
+> +		sk_dst_reset(ssk);
+> +		unlock_sock_fast(ssk, slow);
+> +	}
+> +	release_sock(sk);
+> +
+> +	return 0;
+> +#endif
+> +}
+> +
+>  static int mptcp_setsockopt_v6(struct mptcp_sock *msk, int optname,
+>  			       sockptr_t optval, unsigned int
+> optlen)
+>  {
+> @@ -436,6 +469,8 @@ static int mptcp_setsockopt_v6(struct mptcp_sock
+> *msk, int optname,
+>  
+>  		release_sock(sk);
+>  		break;
+> +	case IPV6_TCLASS:
+> +		return mptcp_setsockopt_v6_set_tclass(msk, optname,
+> optval, optlen);
+>  	}
+>  
+>  	return ret;
+> @@ -1485,6 +1520,9 @@ static int mptcp_getsockopt_v6(struct
+> mptcp_sock *msk, int optname,
+>  	struct sock *sk = (void *)msk;
+>  
+>  	switch (optname) {
+> +	case IPV6_TCLASS:
+> +		return mptcp_put_int_option(msk, optval, optlen,
+> +					    READ_ONCE(inet6_sk(sk)-
+> >tclass));
+>  	case IPV6_V6ONLY:
+>  		return mptcp_put_int_option(msk, optval, optlen,
+>  					    sk->sk_ipv6only);
