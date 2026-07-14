@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCFE6360EE8
-	for <mptcp@lists.linux.dev>; Tue, 14 Jul 2026 01:41:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2B9A304972
+	for <mptcp@lists.linux.dev>; Tue, 14 Jul 2026 01:41:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783993285; cv=none; b=pywt0qVyI1N7mkz7b8EyrjRBqKgPPwH8QxcZc5bOJh3eU2haI6GeJfiGffxSRKXKoQt8bnmRq4J0x/3L5dQ/vc8Drxuroo9SaoGD253C8IIcF7bhU6bTdxoQXnJIr9j+O6Vp7obQr0bcgC2x8X+4CD39kZ3bxVTs6UXmiUwzxtI=
+	t=1783993287; cv=none; b=mbtx5gPmg70uhiJYjIUGN3OkyfcGAmHfPvmILzHB+mqdBcLohjhrBGBfjbou3rLh9h49MERoHc16vQ09T8DpiKnl8v5Yt3IhNxI/hVwybM4RQDr94bsg2mPqPeRp4UywOHLxSgBxCrqVKUTR7gEycI2g4iy+j+xHwuJ8HaDkM0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783993285; c=relaxed/simple;
-	bh=h0KHbTdRLXfAQDlm+Mzn4sOSwJyxsp1fPSLu/6K0DEU=;
+	s=arc-20240116; t=1783993287; c=relaxed/simple;
+	bh=+5gECfAasnY7FjAd33wleEiN68JRNA7MFYQTlVrn6e0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=l+Qyj9VExt6ssn5jv49GI2YVJbxXE1sjSLIACOnj8cCY77OPMV6EIRjiCDyt1IyKgoe4S7y6GNjkc3PL5wRH53lYPd10WSfpDE7xAIL12vzUgksi8munY3tfZ6Hexs49qeuXp4O6kuXd34oKzGh08lFX0VSqemdNHc9EjH+y57M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iKeHhBu1; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=qNo6Q7ZiJf6A/i1AcSGJEm0MtH//dDOtIQ3nvrjrZu+uXEB62L0/k7XnVbh4W2DkYtnJLztv/66ILKcN1qqDbk4Lem+aLt7d+PT9vOQTRPWGklka3YczVs+PVt0dvPym4aaS6CdBvm32zXAXraGWeko7T61YXg4BE2qRxNq1SW4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=evRlXHYw; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iKeHhBu1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96E3D1F000E9;
-	Tue, 14 Jul 2026 01:41:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="evRlXHYw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18E5A1F00A3A;
+	Tue, 14 Jul 2026 01:41:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783993284;
-	bh=1aL2W8PM3bCKMiZfqkj5j62ROsq0aloJ4VBeqLorDFw=;
+	s=k20260515; t=1783993286;
+	bh=hLr/ccAJbC9rJxh6YAwf4gmARJvi2ew9pa3yx7p+AoA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=iKeHhBu1CX5yA0mFdpEeKHQe3We4uMd0GhjeA0pvYJfcaNXD+SCDcO3ft7OUF2M5f
-	 Rau1Kq3/RDcIkKLwBmsDPtshWD6h/pEfQ9r6JVfvq+TLq6+9CjbCRowIv5+D0S0pLM
-	 EtiYBVZ9tNtvMQZ4T/vI0ydForTdD42/mbA5UsUj6o1y5QOfoPPXrNdryryB0dQAl5
-	 3kNMmWdHLQcES0YKcQvkQmwmcJjiszQ7VryGQG4qxLSzXJwiWw18jrr5aZooEn/gzL
-	 KM9dS7IyJImZGiJ3d+xQk5tVz6GmjX8r00KmQvc6P73fNt5AdPEscXnEUp4v/Im4z+
-	 +ZnIgBUlzUqdQ==
+	b=evRlXHYwA9GYZRG1Cjx8k4SYbK1iIZXJ3FHn8Hmp8wat4rsvBzyBlroxft2ps1Grq
+	 V84qYU7FJ81x2v75UGDiw8XrCrKvGaa90ZiSgtAXh64UrftnpZXXvKqVIwknhcWcvp
+	 n5RdKFV2ywyXvLLtGe+EWvWK7zU99atYfj/7y12kmps3DbyJDkP6IJrikel0FdI6ga
+	 ibR6EBi5YzLcpW0iCAyF8UCLogw0bzrzMxjHlKVJQjD+utXYgrcZ36r2wh0Y4fM72d
+	 xY7sLSv7EaOnobcuiKPzuKKFX6PPkoJJblNef8qYu1zBXr2D9VCSwM3JeU1Ku3c0lH
+	 UE48b4qX3jvGw==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v4 4/7] mptcp: handle SO_ZEROCOPY in setsockopt
-Date: Tue, 14 Jul 2026 09:40:59 +0800
-Message-ID: <ad34fd2e73131ec1310e35332f66b584cc02b5a4.1783992745.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v4 5/7] selftests: mptcp: connect: add zerocopy io mode
+Date: Tue, 14 Jul 2026 09:41:00 +0800
+Message-ID: <e219366c24247deb1192adcce382cce8ece250c0.1783992745.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <cover.1783992745.git.tanggeliang@kylinos.cn>
 References: <cover.1783992745.git.tanggeliang@kylinos.cn>
@@ -45,72 +45,192 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-SO_ZEROCOPY is currently rejected by MPTCP setsockopt with
--EOPNOTSUPP, even though the matching MSG_ZEROCOPY path in
-mptcp_sendmsg() is wired up. As a result MSG_ZEROCOPY silently
-falls back to a copy on MPTCP sockets because the opt-in flag
-is never set.
+Add a new I/O mode 'zerocopy' to the mptcp_connect selftest, which uses
+sendmsg() with the MSG_ZEROCOPY flag to transmit data. This enables
+testing and performance validation of the zero-copy send path for both
+TCP and MPTCP connections.
 
-Expose SO_ZEROCOPY through the SOL_SOCKET setsockopt dispatcher.
-The new mptcp_setsockopt_sol_socket_zerocopy() helper validates
-that val is 0 or 1 (matching standard TCP sk_setsockopt) and flips
-SOCK_ZEROCOPY on the msk only. mptcp_sendmsg() consults the same
-flag directly, so opt-in is honoured on every data path without
-any cross-socket propagation.
+This mode is useful for benchmarking and for verifying correctness of
+MSG_ZEROCOPY handling in the MPTCP stack.
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- net/mptcp/sockopt.c | 17 ++++++++++++++++-
- 1 file changed, 16 insertions(+), 1 deletion(-)
+ .../selftests/net/mptcp/mptcp_connect.c       | 121 +++++++++++++++++-
+ 1 file changed, 120 insertions(+), 1 deletion(-)
 
-diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-index fcf6feb2a9eb..abcc7d4452b4 100644
---- a/net/mptcp/sockopt.c
-+++ b/net/mptcp/sockopt.c
-@@ -175,6 +175,19 @@ static int mptcp_setsockopt_sol_socket_tstamp(struct mptcp_sock *msk, int optnam
- 	return 0;
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+index ea4cb6c1bd5e..4a941a780620 100644
+--- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
++++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+@@ -33,6 +33,7 @@
+ #include <linux/tcp.h>
+ #include <linux/time_types.h>
+ #include <linux/sockios.h>
++#include <linux/errqueue.h>
+ #include <linux/compiler.h>
+ 
+ extern int optind;
+@@ -53,6 +54,7 @@ enum cfg_mode {
+ 	CFG_MODE_MMAP,
+ 	CFG_MODE_SENDFILE,
+ 	CFG_MODE_SPLICE,
++	CFG_MODE_ZEROCOPY,
+ };
+ 
+ enum cfg_peek {
+@@ -125,7 +127,7 @@ static void die_usage(void)
+ 	fprintf(stderr, "\t-j     -- add additional sleep at connection start and tear down "
+ 		"-- for MPJ tests\n");
+ 	fprintf(stderr, "\t-l     -- listens mode, accepts incoming connection\n");
+-	fprintf(stderr, "\t-m [poll|mmap|sendfile|splice] -- use poll(default)/mmap+write/sendfile/splice\n");
++	fprintf(stderr, "\t-m [poll|mmap|sendfile|splice|zerocopy] -- use poll(default)/mmap+write/sendfile/splice/zerocopy\n");
+ 	fprintf(stderr, "\t-M mark -- set socket packet mark\n");
+ 	fprintf(stderr, "\t-o option -- test sockopt <option>\n");
+ 	fprintf(stderr, "\t-p num -- use port num\n");
+@@ -998,6 +1000,109 @@ static int copyfd_io_splice(int infd, int peerfd, int outfd, unsigned int size,
+ 	return err;
  }
  
-+static int mptcp_setsockopt_sol_socket_zerocopy(struct mptcp_sock *msk, int val)
++static int copyfd_io_zc(int infd, int peerfd, int outfd, unsigned int size,
++			bool *in_closed_after_out, struct wstate *winfo)
 +{
-+	struct sock *sk = (struct sock *)msk;
++	size_t ctl_len = CMSG_SPACE(sizeof(struct sock_extended_err));
++	struct pollfd pfd = { .fd = peerfd, .events = POLLERR };
++	struct msghdr errmsg = {}, msg = {};
++	int sndbuf = size * 2;
++	int timeout_ms = 200;
++	struct iovec iov;
++	char *buf, *ctl;
++	socklen_t len;
++	int on = 1;
++	int err;
 +
-+	if (val != 0 && val != 1)
-+		return -EINVAL;
++	if (spool_buf(peerfd, winfo) < 0) {
++		perror("spool_buf");
++		return 1;
++	}
 +
-+	lock_sock(sk);
-+	sock_valbool_flag(sk, SOCK_ZEROCOPY, val);
-+	release_sock(sk);
-+	return 0;
++	ctl = malloc(ctl_len);
++	if (!ctl) {
++		perror("malloc ctl");
++		return 1;
++	}
++
++	errmsg.msg_control = ctl;
++	errmsg.msg_controllen = ctl_len;
++
++	buf = malloc(size);
++	if (!buf) {
++		perror("malloc");
++		free(ctl);
++		return 1;
++	}
++
++	if (read(infd, buf, size) != size) {
++		perror("read input");
++		err = 1;
++		goto free_bufs;
++	}
++
++	iov.iov_base = buf;
++	iov.iov_len = size;
++	msg.msg_iov = &iov;
++	msg.msg_iovlen = 1;
++
++	if (setsockopt(peerfd, SOL_SOCKET, SO_SNDBUF, &sndbuf, sizeof(sndbuf)))
++		perror("setsockopt SO_SNDBUF");
++
++	len = sizeof(on);
++	if (setsockopt(peerfd, SOL_SOCKET, SO_ZEROCOPY, &on, len)) {
++		perror("setsockopt SO_ZEROCOPY");
++		err = 1;
++		goto free_bufs;
++	}
++
++	on = -1;
++	if (getsockopt(peerfd, SOL_SOCKET, SO_ZEROCOPY, &on, &len) ||
++	    on != 1) {
++		perror("getsockopt SO_ZEROCOPY");
++		err = 1;
++		goto free_bufs;
++	}
++
++	if (listen_mode) {
++		if (do_recvfile(peerfd, outfd) < 0) {
++			err = 1;
++			goto free_bufs;
++		}
++	}
++
++	err = sendmsg(peerfd, &msg, MSG_ZEROCOPY);
++	if (err < 0 || (unsigned int)err != size) {
++		perror("sendmsg MSG_ZEROCOPY");
++		err = 1;
++		goto free_bufs;
++	}
++	err = 0;
++
++	if (!listen_mode) {
++		shut_wr(peerfd);
++		if (do_recvfile(peerfd, outfd) < 0)
++			err = 1;
++		*in_closed_after_out = true;
++	}
++
++	while (timeout_ms > 0) {
++		int n = poll(&pfd, 1, timeout_ms);
++
++		if (n <= 0)
++			break;
++		do {
++			errmsg.msg_controllen = ctl_len;
++		} while (recvmsg(peerfd, &errmsg, MSG_ERRQUEUE) >= 0);
++		timeout_ms = 0;
++	}
++
++free_bufs:
++	free(buf);
++	free(ctl);
++	return err;
 +}
 +
- static int mptcp_setsockopt_sol_socket_int(struct mptcp_sock *msk, int optname,
- 					   sockptr_t optval,
- 					   unsigned int optlen)
-@@ -203,6 +216,8 @@ static int mptcp_setsockopt_sol_socket_int(struct mptcp_sock *msk, int optname,
- 	case SO_TIMESTAMPNS_OLD:
- 	case SO_TIMESTAMPNS_NEW:
- 		return mptcp_setsockopt_sol_socket_tstamp(msk, optname, val);
-+	case SO_ZEROCOPY:
-+		return mptcp_setsockopt_sol_socket_zerocopy(msk, val);
- 	}
+ static int copyfd_io(int infd, int peerfd, int outfd, bool close_peerfd, struct wstate *winfo)
+ {
+ 	bool in_closed_after_out = false;
+@@ -1038,6 +1143,17 @@ static int copyfd_io(int infd, int peerfd, int outfd, bool close_peerfd, struct
+ 				       &in_closed_after_out, winfo);
+ 		break;
  
- 	return -ENOPROTOOPT;
-@@ -342,6 +357,7 @@ static int mptcp_setsockopt_sol_socket(struct mptcp_sock *msk, int optname,
- 	case SO_TIMESTAMP_NEW:
- 	case SO_TIMESTAMPNS_OLD:
- 	case SO_TIMESTAMPNS_NEW:
-+	case SO_ZEROCOPY:
- 		return mptcp_setsockopt_sol_socket_int(msk, optname, optval,
- 						       optlen);
- 	case SO_TIMESTAMPING_OLD:
-@@ -387,7 +403,6 @@ static int mptcp_setsockopt_sol_socket(struct mptcp_sock *msk, int optname,
- 	 * SO_CNX_ADVICE is currently unsupported, could possibly be relevant,
- 	 * but likely needs careful design
- 	 *
--	 * SO_ZEROCOPY is currently unsupported, TODO in sndmsg
- 	 * SO_TXTIME is currently unsupported
- 	 */
++	case CFG_MODE_ZEROCOPY:
++		file_size = get_infd_size(infd);
++		if (file_size < 0)
++			return file_size;
++		if (cfg_sockopt_types.mptfo && winfo->total_len &&
++		    file_size >= winfo->total_len)
++			file_size -= winfo->total_len;
++		ret = copyfd_io_zc(infd, peerfd, outfd, file_size,
++				   &in_closed_after_out, winfo);
++		break;
++
+ 	default:
+ 		fprintf(stderr, "Invalid mode %d\n", cfg_mode);
+ 
+@@ -1453,6 +1569,8 @@ int parse_mode(const char *mode)
+ 		return CFG_MODE_SENDFILE;
+ 	if (!strcasecmp(mode, "splice"))
+ 		return CFG_MODE_SPLICE;
++	if (!strcasecmp(mode, "zerocopy"))
++		return CFG_MODE_ZEROCOPY;
+ 
+ 	fprintf(stderr, "Unknown test mode: %s\n", mode);
+ 	fprintf(stderr, "Supported modes are:\n");
+@@ -1460,6 +1578,7 @@ int parse_mode(const char *mode)
+ 	fprintf(stderr, "\t\t\"mmap\" - send entire input file (mmap+write), then read response (-l will read input first)\n");
+ 	fprintf(stderr, "\t\t\"sendfile\" - send entire input file (sendfile), then read response (-l will read input first)\n");
+ 	fprintf(stderr, "\t\t\"splice\" - send entire input file (splice), then read response (-l will read input first)\n");
++	fprintf(stderr, "\t\t\"zerocopy\" - send entire input file (zerocopy), then read response (-l will read input first)\n");
+ 
+ 	die_usage();
  
 -- 
 2.53.0
