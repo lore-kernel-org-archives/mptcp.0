@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 151233655C0
-	for <mptcp@lists.linux.dev>; Tue, 14 Jul 2026 02:09:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD09327FD51
+	for <mptcp@lists.linux.dev>; Tue, 14 Jul 2026 02:09:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783994961; cv=none; b=OQqChzyT8aGBzdrYlFgv+PBDxc6fE2gvU4m8WfdMGHc6FXx1XVXditXdrfK7gNdBUQkjW7NnmdoM5zja+bE61yom+vJeFepfeu7rZwPytQXcDcMEddFAXkSVzM6ipApJX+1gvwWxdALk+quPfYxTEL1F9piG6R7H7PrDszSYMpE=
+	t=1783994962; cv=none; b=TxZkI3NEvjTw0VMZrkYbrS3i8BM3RU9qbisIC3I3zTAy8slyrMWlDHrWZpMMcP3gMuVkuBN0ww29wHJmraMpEwSTiM0E/HuoqokMfpqb8j80HiFOjsoZyKt+9zhXZTHf4GXKFyZHRCVMt3m4LXzq5jchzd2L5FJFVeWMCcuyFw8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783994961; c=relaxed/simple;
-	bh=PQG2+RYvEuYVEusU5ghWIhKMd3gObQT59O+pC0+kiQs=;
+	s=arc-20240116; t=1783994962; c=relaxed/simple;
+	bh=1lToBpP4v6Pt+zkWkiaD8y3VY/ItDN2sjMSY7TyyC1E=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nP2hlRKLzywj2DadriRr+vcMoYJoIp4PmApx8VhLE3CPOSwxpLzKDpwAEPM+7kWJZ2gU2iWszPJSrMlGXaRPoK831xwsRHDPuun/sLKE8t1/FroU1bB1neFMfmAI0tuux+b64UNiVDLtDFnG7Avq2ndro25eefG0ipICi+wvZAE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hl0C7yzR; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=q0LWLLl1UiLDmtUCwFTSbnddHD+Pe5yv7aCrpEzcyET0BVCb5b0jxMQ0Y2iguGe6mvcGcBZbQ8vz3k6ARwSOyZ2nGBmG4V5YwomFygjcl6F4DNgY3CcdW2wOJ5PL0mxqgYMiMPvYLBjzIw0yrhL0JdghnBdI7a9saPBWF/UXQGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bExDVOMN; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hl0C7yzR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8974E1F000E9;
-	Tue, 14 Jul 2026 02:09:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bExDVOMN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DB8F1F00A3A;
+	Tue, 14 Jul 2026 02:09:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783994959;
-	bh=xENSgfz4sXSBBuvgWRNv/zBxxsghBkRIwFcg3dj/ahY=;
+	s=k20260515; t=1783994961;
+	bh=YN8mkl9xwkJthpi3jXgkzEDo9ltUOsgPjbcsf0TA8PY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=hl0C7yzRoaDpgBOAnFxaBAhDlndyL5WaQEDn8unvEm8Id8xIimpabIMNgyTXuMtNs
-	 zTp5MB/gG1yJ5w46/WEfqy2sJrPQH0F5UxbXy3WuswZAn5BxK6QjjOEj7fouvzQWUd
-	 o8woGyBKJL5abTGWAYpFTQnxk77e7I5UFp/jrSmmUOBCqU7OXZK62wMDndmgcMEceZ
-	 AZ4+FiMxLgAiArDb10ciMulgaXBMvsbAXfxZo7S5hQhTGYD9ZexceR8jnA/4ayeIwq
-	 7cu9a3xSjHtWfpHXUZSi9o84i5HOtiZoSw3SZGGHCpSafpq6Z/alxWlsx4hV3esYa8
-	 EeGnla08HkksA==
+	b=bExDVOMN7jbciZsIwtuw6CpvHEsBgnNf3VyYiz+30P1RqXoZ7ax+rLjadYYDKjHKj
+	 VHGqB0zFhdBEW99HMPobYRM1QFtXFEwJhPWrthOL8JQjrxNsmFIQOnR22ET426FDjM
+	 lhiTiPbAVn26PcM42EAoVNMrFi4ObTjHhCFnPPBHDQwJZXTbEiq4+88gTXxd02DdI7
+	 Tjbwbqqy7uaHDh+y4lQquasPDftS+9A4OVPzMcyLPOz0zgs0tmo9znbn2w9nyVsvcv
+	 J4xFj3o7WMg4hmESeFDE+l+84ZC4OU4zsFxLZ6zpbYHaGwO2m2wUmaDGmeunYM1rqj
+	 iWRIhxBUC5RDg==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v10 08/13] selftests: mptcp: sockopt: use unix socket instead of pipe
-Date: Tue, 14 Jul 2026 10:08:53 +0800
-Message-ID: <ff1a75f49200db000a145418dee35e72d3519e55.1783994494.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v10 09/13] selftests: mptcp: sockopt: use recvmsg instead of read
+Date: Tue, 14 Jul 2026 10:08:54 +0800
+Message-ID: <d4299c7af784b68aaac535c3cb190675b7133f51.1783994494.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <cover.1783994494.git.tanggeliang@kylinos.cn>
 References: <cover.1783994494.git.tanggeliang@kylinos.cn>
@@ -45,151 +45,105 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Replace the pipe() with socketpair(AF_UNIX, SOCK_STREAM) for
-inter-process communication. This prepares for upcoming patches that
-will require bidirectional communication and reliable EOF behavior,
-which a pipe does not fully support.
+Replace read() with recvmsg() in process_one_client() to enable control
+message (CMSG) handling. The original read(fd, buf, sizeof(buf)) is split
+into two recvmsg() calls: the first reads exactly one byte, and the second
+reads the remaining bytes. This allows the code to access CMSG data for
+each received segment, facilitating the upcoming TCP_INQ validation.
 
-Use SOCK_STREAM over SOCK_DGRAM (used in the original mptcp_inq.c)
-to reliably detect peer closure via EOF, avoiding indefinite hangs.
+Introduce inq_msg_init() and inq_msg_reset() helpers to manage the
+struct inq_msg control buffer and iovec, enabling reuse of the same
+msghdr across multiple recvmsg() calls with different payload buffers.
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- .../selftests/net/mptcp/mptcp_sockopt.c       | 40 +++++++++----------
- 1 file changed, 20 insertions(+), 20 deletions(-)
+ .../selftests/net/mptcp/mptcp_sockopt.c       | 48 +++++++++++++++++--
+ 1 file changed, 43 insertions(+), 5 deletions(-)
 
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-index 0a80d505dc4c..e4fc9f12f164 100644
+index e4fc9f12f164..cc1d45e85fb2 100644
 --- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
 +++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-@@ -598,7 +598,7 @@ static void do_getsockopts(struct so_state *s, int fd, size_t r, size_t w)
- 		do_getsockopt_mptcp_full_info(s, fd);
- }
- 
--static void connect_one_server(int fd, int pipefd)
-+static void connect_one_server(int fd, int unixfd)
- {
- 	char buf[4096], buf2[4096];
- 	size_t len, i, total;
-@@ -623,9 +623,9 @@ static void connect_one_server(int fd, int pipefd)
- 	do_getsockopts(&s, fd, 0, 0);
- 
- 	/* un-block server */
--	ret = read(pipefd, buf2, 4);
-+	ret = read(unixfd, buf2, 4);
- 	assert(ret == 4);
--	close(pipefd);
-+	close(unixfd);
- 
- 	assert(strncmp(buf2, "xmit", 4) == 0);
- 
-@@ -668,7 +668,7 @@ static void connect_one_server(int fd, int pipefd)
+@@ -668,36 +668,74 @@ static void connect_one_server(int fd, int unixfd)
  	close(fd);
  }
  
--static void process_one_client(int fd, int pipefd)
-+static void process_one_client(int fd, int unixfd)
++struct inq_msg {
++	char buf[4096];
++	union {
++		struct cmsghdr cmsg;
++		char msg_buf[4096];
++	} control;
++	struct iovec iov;
++	struct msghdr hdr;
++};
++
++static void inq_msg_init(struct inq_msg *m, size_t iov_len)
++{
++	memset(m, 0, sizeof(*m));
++	m->iov.iov_base = m->buf;
++	m->iov.iov_len = iov_len;
++	m->hdr.msg_iov = &m->iov;
++	m->hdr.msg_iovlen = 1;
++	m->hdr.msg_control = m->control.msg_buf;
++	m->hdr.msg_controllen = sizeof(m->control.msg_buf);
++}
++
++static void inq_msg_reset(struct inq_msg *m, size_t iov_len, void *base)
++{
++	m->iov.iov_base = base;
++	m->iov.iov_len = iov_len;
++	m->hdr.msg_controllen = sizeof(m->control.msg_buf);
++}
++
+ static void process_one_client(int fd, int unixfd)
  {
  	struct so_state s;
- 	char buf[4096];
-@@ -678,7 +678,7 @@ static void process_one_client(int fd, int pipefd)
+-	char buf[4096];
++	struct inq_msg m;
+ 	size_t r, w;
+ 	ssize_t ret;
+ 
++	inq_msg_init(&m, 1);
++
  	memset(&s, 0, sizeof(s));
  	do_getsockopts(&s, fd, 0, 0);
  
--	ret = write(pipefd, "xmit", 4);
-+	ret = write(unixfd, "xmit", 4);
+ 	ret = write(unixfd, "xmit", 4);
  	assert(ret == 4);
  
- 	ret = read(fd, buf, sizeof(buf));
-@@ -751,7 +751,7 @@ static int xaccept(int s)
- 	return fd;
- }
+-	ret = read(fd, buf, sizeof(buf));
++	/* read one byte */
++	ret = recvmsg(fd, &m.hdr, 0);
+ 	if (ret < 0)
+-		die_perror("read");
++		die_perror("recvmsg");
+ 	r = ret;
  
--static int server(int pipefd)
-+static int server(int unixfd)
- {
- 	int fd = -1, r;
++	inq_msg_reset(&m, sizeof(m.buf) - 1, m.buf + 1);
++	ret = recvmsg(fd, &m.hdr, 0);
++	if (ret < 0)
++		die_perror("recvmsg");
++	r += ret;
++
+ 	assert(s.mptcpi_rcv_delta <= (uint64_t)r);
  
-@@ -767,13 +767,13 @@ static int server(int pipefd)
- 		break;
- 	}
+ 	if (s.tcpi_rcv_delta)
+ 		assert(s.tcpi_rcv_delta == (uint64_t)r);
  
--	r = write(pipefd, "conn", 4);
-+	r = write(unixfd, "conn", 4);
- 	assert(r == 4);
+-	ret = write(fd, buf, r);
++	ret = write(fd, m.buf, r);
+ 	if (ret < 0)
+ 		die_perror("write");
+ 	w = ret;
  
- 	alarm(15);
- 	r = xaccept(fd);
- 
--	process_one_client(r, pipefd);
-+	process_one_client(r, unixfd);
- 
- 	close(fd);
- 	return 0;
-@@ -817,7 +817,7 @@ static void test_ip_tos_sockopt(int fd)
- 		xerror("expect socklen_t == -1");
- }
- 
--static int client(int pipefd)
-+static int client(int unixfd)
- {
- 	int fd = -1;
- 
-@@ -836,7 +836,7 @@ static int client(int pipefd)
- 
- 	test_ip_tos_sockopt(fd);
- 
--	connect_one_server(fd, pipefd);
-+	connect_one_server(fd, unixfd);
- 
- 	return 0;
- }
-@@ -885,35 +885,35 @@ int main(int argc, char *argv[])
- {
- 	int e1, e2, wstatus;
- 	pid_t s, c, ret;
--	int pipefds[2];
-+	int unixfds[2];
- 
- 	parse_opts(argc, argv);
- 
- 	init_rng();
- 
--	e1 = pipe(pipefds);
-+	e1 = socketpair(AF_UNIX, SOCK_STREAM, 0, unixfds);
- 	if (e1 < 0)
--		die_perror("pipe");
-+		die_perror("socketpair");
- 
- 	s = xfork();
- 	if (s == 0) {
--		close(pipefds[0]);
--		ret = server(pipefds[1]);
--		close(pipefds[1]);
-+		close(unixfds[0]);
-+		ret = server(unixfds[1]);
-+		close(unixfds[1]);
- 		return ret;
- 	}
- 
--	close(pipefds[1]);
-+	close(unixfds[1]);
- 
- 	/* wait until server bound a socket */
--	e1 = read(pipefds[0], &e1, 4);
-+	e1 = read(unixfds[0], &e1, 4);
- 	assert(e1 == 4);
- 
- 	c = xfork();
- 	if (c == 0)
--		return client(pipefds[0]);
-+		return client(unixfds[0]);
- 
--	close(pipefds[0]);
-+	close(unixfds[0]);
- 
- 	ret = waitpid(s, &wstatus, 0);
- 	if (ret == -1)
+ 	/* wait for hangup */
+-	ret = read(fd, buf, 1);
++	inq_msg_reset(&m, 1, m.buf);
++	ret = recvmsg(fd, &m.hdr, 0);
+ 	if (ret != 0)
+ 		xerror("expected EOF, got %lu", ret);
+ 	r += ret;
 -- 
 2.53.0
 
