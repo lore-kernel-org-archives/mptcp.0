@@ -1,116 +1,108 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90B6B18D636
-	for <mptcp@lists.linux.dev>; Tue, 14 Jul 2026 08:04:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BF0E43B494
+	for <mptcp@lists.linux.dev>; Tue, 14 Jul 2026 09:25:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784016270; cv=none; b=A9sTvcEFXq9hWhSR7IJZU+N1Ltfdc3gO16JF1wEO0/AM1AcR23UHBwrdMfXbEKLI2xwsoj3yt2Ta0fExhQL7grFF7gd0SmVPFGnDn7/PXJjmY4tCxbBF70Hq6cy1ZVmTUepiHnLyiEwYFird1hflXxEHuJn/ZkdtcmTN2whCqJ4=
+	t=1784021109; cv=none; b=F3bW2yRQvdKXp416ZBeKkVOhW1IlYa6aAfy20KxoPcdKW6whKEZsMxvR45e2poU6oTHpiTchJEGswGMEjWPwsGoaM+ZQSwtaTzvCfxQ2vWUEHxr2j6AuYKFEz2HHl2MUmI6ZKVGN1xLEalwl9UnXDYIjfN994PQbsF3/sEWBaRw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784016270; c=relaxed/simple;
-	bh=Ak3oSZyOMV2D5pbG+7d9OwMOWUSuAVRak4PfawoGf/o=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=tkbrRNXwjyF6VS4o48TqKi1oaKgHbVjIokhK6ztUf/oz8vJdctSX3VVful78erlaqKVr/+T8TRi5N0cOa829tAYx3yeTLHFcwxD2u8Ufqv7e9b2QuzorIXFVwAy326ttMTt1nikjUTttzy/Eeu8fM7I1KohU5EIk28ECm1Qn0+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=fJaFqJ/P; arc=none smtp.client-ip=117.135.210.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1784021109; c=relaxed/simple;
+	bh=qtKSmAupiizGz+BSvfElNgttVQEukknBVTov4x6h3Pg=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
+	 MIME-Version:Content-Type; b=asN/brwawkm0Ab3jGi6exK3RrsdUGUAIZTEe0/72WLnYAYEdKTj4/0l0XJXhJAPPji8lmVeMulG6GPEZY5U8RWAu0Z1gmNxExarRtFSrBpbIsHEjf8KpTI1puyRxVlXRyNyiWJt18QsbJQ7ISodpYK8SRDcqXS6fsWG6FI5l7fA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FoqhQHM6; arc=none smtp.client-ip=209.85.219.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="fJaFqJ/P"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=QW
-	F8DefYjbOsjfIh06Zw3He8FjN3h6ZlYYVGCpQA/fY=; b=fJaFqJ/Pmhzp8SaW5j
-	UAH5LLERfq893ykuhDUVeMilE/MGfzLqXyK+U9goUhQTaK6Mvk5jNNhZfpZbQx3N
-	3EYzfpKp3+HJc3uWW5WqHP25H6tnkZjswhTpM45iGrAas+NfWSmaaQAnvJrkJqZs
-	X4TIM/RGZQvO1RTKFoGIdnOQE=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g1-2 (Coremail) with SMTP id _____wDna5Ft7VVq6WzAJQ--.33654S2;
-	Tue, 14 Jul 2026 16:03:59 +0800 (CST)
-From: luoqing <l1138897701@163.com>
-To: mptcp@lists.linux.dev
-Cc: pabeni@redhat.com,
-	matttbe@kernel.org,
-	davem@davemloft.net
-Subject: [PATCH] mptcp: pm: Fix address ID overflow when all IDs are exhausted
-Date: Tue, 14 Jul 2026 16:03:56 +0800
-Message-Id: <20260714080356.805839-1-l1138897701@163.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FoqhQHM6"
+Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-8f23e851626so41665646d6.3
+        for <mptcp@lists.linux.dev>; Tue, 14 Jul 2026 02:25:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1784021107; x=1784625907; darn=lists.linux.dev;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=7eObRB4Q0a5CnfJ7KS4L+otDGrLKz19g8pP/DSbmxsk=;
+        b=FoqhQHM6WR+KWPP+3sGS1GXl7uEfAXDGUSq17CGW/OUl7/PZabXSLDU0UXEamhtFdB
+         KC9wwia4muMG57Kz5Mh6jUh9BNm9Ta1n77D4auAxpmrweAOmfVbDA575dGlkNV9/7xpR
+         +gVLaMAfZ5pPnO9COVrXF5PrfXZqPdJ0hM2ZsKYLnHBYtaR+zbu6G5vZ6Y/3ZC1GgTZc
+         h07D98WT0hA3HvpvbLMbIM5PaPhJ2oYJKerCmAEhptPYPujSCbr2Y4H6WwJbEmVWpxBg
+         2Lp0IUpOjZO+bkcbpK93sB3mkSJKJU7Eb/d/LkhBpAp6rmM9VB9oI2ijYUWb1NJt0gAk
+         rqCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1784021107; x=1784625907;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=7eObRB4Q0a5CnfJ7KS4L+otDGrLKz19g8pP/DSbmxsk=;
+        b=Sd2f2ZwJ/lvQ7+dcUCH3CoUWFFGXGhtllVULxDOdM+nhQGE7hmHFzwoIulFJ4wDcCV
+         qnAyOV0lBkjXlf71V5Z0G2fWbR/iwJn4iHkCQHUUwm2O2bOzZ7HBtnpFrWpgFSbBnRjF
+         WK+96Tk87NUTSEI9YHgYRUHr0FZiZ0DS8ksDyjUhXQWLlSKN2y2/2klJYGQ8ioN27Wrv
+         m339kDE0+SDWPvvHEIzD7qR8ruOB0I1GSiwVcTPWmGGyCtd+KoEhPTCjAHGiP49C1ug/
+         UnT9fpQBQnyT3SmBjR10zHtISV/AYTEiDeR9S81Dj+g8qSL+w34jpI5MmTny7SpMAR5I
+         fdGg==
+X-Gm-Message-State: AOJu0Yymc5ZnzJpX6uK1Gc6AWnDXoFXv4u0DtXrRCs+XCqNrlvUgT/xi
+	jN11yDTIbR4UjZBrQLY34duX3zCqYmqQt4z0qAYTKBDiCo+sw/nTRoEbTtYS5f0=
+X-Gm-Gg: AfdE7ck2+50hqD0H8OdJzRl2QbwK6HgqL2GinZm47YxfXoLzl1U+eE3lKHPg2HVBEvI
+	ZaJmIKspA3/Qlm/4p1BTrzowWvVDDfj4xksqUqHIQTW6k9LOaXKUqtdgGJFrNJ9AZf7UHvpxRzW
+	XRSKcZChkJCZSLIRTLiyEDrrYysk4UhxvLPBUDcm1g28HxUkHEEfUE/UU/p0tS/D0em7ODAbclb
+	Z8uoUfBsYDvYHgnOoMtrDY5xx7mASVJMU1/4MtqeRuMQLKJUKiuhdNZXnR3OBMF3Sz5CZYTk5Tl
+	RTZNZ/nqPtBpQjw7+1WgWJ7xmBn3YQEIQudLfPgjPDp7OLrXJjzM04xwTRQ+IRkwWZ+CIIqsrLY
+	28rKhs/U3Igb87SPo8Hj2FFELLJxlYUOi78jwUuVsrUMb2RskaZVw1NEEKCqn3U4jyz88yB83jZ
+	T90lA+rNG+7nscMD3Y0PL7w9gokuw=
+X-Received: by 2002:a05:620a:19a6:b0:92e:c118:18e6 with SMTP id af79cd13be357-93083dfb6afmr209861885a.93.1784021107134;
+        Tue, 14 Jul 2026 02:25:07 -0700 (PDT)
+Received: from [127.0.0.1] ([20.127.238.129])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-92ee5d61facsm1421059585a.42.2026.07.14.02.25.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jul 2026 02:25:06 -0700 (PDT)
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: luoqing <luoqing@kylinos.cn>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20260714080356.805839-1-l1138897701@163.com>
+References: <20260714080356.805839-1-l1138897701@163.com>
+Subject: Re: [PATCH] mptcp: pm: Fix address ID overflow when all IDs are
+ exhausted
+Message-ID: <fe91b6cd-80dc-c162-0009-88fdf46cc1fb@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 14 Jul 2026 09:25:06 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDna5Ft7VVq6WzAJQ--.33654S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7Cr4UKryxZF45Ww15Cw18uFg_yoW8tr1xpa
-	13Jas3Wr18WryfKanavFs7KF1fuwnYkryxK39Ikwsa9F4agF1DA340gry3WFW7Kr47KFW5
-	JrWDJ3y5Gw4xuaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UIPfLUUUUU=
-X-CM-SenderInfo: jorrjmiyzxliqr6rljoofrz/xtbC+Q+GympV7W8B4QAA3n
+Content-Type: text/plain; charset=utf-8
 
-From: luoqing <luoqing@kylinos.cn>
+Hi luoqing,
 
-When all MPTCP address IDs (1-255) are exhausted, find_next_zero_bit()
-returns MPTCP_PM_MAX_ADDR_ID + 1 (256). This value overflows when stored
-in the u8 field e->addr.id, resulting in ID 0 being stored.
+Thank you for your modifications, that's great!
 
-ID 0 has special meaning in MPTCP (it's reserved for the initial connection),
-so this overflow can cause confusion and incorrect behavior, including
-unintentional ID 0 reuse or address conflicts.
+But sadly, our CI spotted some issues with it when trying to build it.
 
-Signed-off-by: luoqing <luoqing@kylinos.cn>
----
- net/mptcp/pm_kernel.c    | 11 ++++++++---
- net/mptcp/pm_userspace.c | 15 +++++++++++----
- 2 files changed, 19 insertions(+), 7 deletions(-)
+You can find more details there:
 
-diff --git a/net/mptcp/pm_kernel.c b/net/mptcp/pm_kernel.c
-index 424f1a7f9248..a0fc9cabd770 100644
---- a/net/mptcp/pm_kernel.c
-+++ b/net/mptcp/pm_kernel.c
-@@ -795,9 +795,14 @@ static int mptcp_pm_nl_append_new_local_addr(struct pm_nl_pernet *pernet,
- 
- 	if (!entry->addr.id) {
- find_next:
--		entry->addr.id = find_next_zero_bit(pernet->id_bitmap,
--						    MPTCP_PM_MAX_ADDR_ID + 1,
--						    pernet->next_id);
-+		unsigned int id = find_next_zero_bit(pernet->id_bitmap,
-+						     MPTCP_PM_MAX_ADDR_ID + 1,
-+						     pernet->next_id);
-+		if (id > MPTCP_PM_MAX_ADDR_ID) {
-+			ret = -ENOSPC;
-+			goto out;
-+		}
-+		entry->addr.id = id;
- 		if (!entry->addr.id && pernet->next_id != 1) {
- 			pernet->next_id = 1;
- 			goto find_next;
-diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-index d100867e9202..c48fd905f7a0 100644
---- a/net/mptcp/pm_userspace.c
-+++ b/net/mptcp/pm_userspace.c
-@@ -74,10 +74,17 @@ static int mptcp_userspace_pm_append_new_local_addr(struct mptcp_sock *msk,
- 			goto append_err;
- 		}
- 
--		if (!e->addr.id && needs_id)
--			e->addr.id = find_next_zero_bit(id_bitmap,
--							MPTCP_PM_MAX_ADDR_ID + 1,
--							1);
-+		if (!e->addr.id && needs_id) {
-+			unsigned int id = find_next_zero_bit(id_bitmap,
-+							     MPTCP_PM_MAX_ADDR_ID + 1,
-+							     1);
-+			if (id > MPTCP_PM_MAX_ADDR_ID) {
-+				sock_kfree_s(sk, e, sizeof(*e));
-+				ret = -ENOSPC;
-+				goto append_err;
-+			}
-+			e->addr.id = id;
-+		}
- 		list_add_tail_rcu(&e->list, &msk->pm.userspace_pm_local_addr_list);
- 		msk->pm.local_addr_used++;
- 		ret = e->addr.id;
--- 
-2.25.1
+  https://github.com/multipath-tcp/mptcp_=
+net-next/actions/runs/29320601476
 
+Status: failure
+Initiator: Patchew =
+Applier
+Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/78=
+32e6717726
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1127208
+
+Feel free to reply to this email if you cannot access =
+logs, if you need
+some support to fix the error, if this doesn't seem to be=
+ caused by your
+modifications or if the error is a false positive one.
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
