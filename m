@@ -1,144 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32A00432BC5
-	for <mptcp@lists.linux.dev>; Wed, 15 Jul 2026 11:04:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1B6F334692
+	for <mptcp@lists.linux.dev>; Wed, 15 Jul 2026 11:35:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784113454; cv=none; b=XJVQPURZiw89zSsqwYR159TX5EyC32Wz6aCHYfn4Uk7kuNxV7Rx7KMXWviK457vSgcNxPsdVpPdVaabARRvB64jnJ8Y5eW6hbCD9KpkwPwo0dxhdKJAbdgNjPNiBegTx4fGx2Y7OyM4HfoIdApZIvzx/JZBKwlIbF0r0CBFZgkE=
+	t=1784115337; cv=none; b=ZqqXuII/lm1RootjrlbOb5gBQvpjy3dHzyFy9Ll31YrYgaPcCUEBBcOkRu1H2/edxA2IVsa8PRVAIHbQ9ad8lGSUVBs5PsDu8Ev08Myl0ydLpR4aaT0OS0fZNQUq00Mz+gLNcYEYyj+XTonZLc3r8YvNV/I5qLgSzxMkBfcdJzQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784113454; c=relaxed/simple;
-	bh=BRIxQLQYpx/joM/9BXyET37s4yuV0K5Vq7cHbOPWrys=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BzgszycugxgGBX6dybG+0ukudxnmm1zW82GAOlGgHR2daHJLFAuhUdmt+01VqCqH1MZL5/6HvlYzxbigmuiycEhD0NY36xD4Kg1eOFzF/KGFu75i9NCUT2IYnlQt1NdmggWIsaiOvExvInELlbVzb6vRgWHU5N/9UtsLDRfwXtA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JsDW3JSi; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1784115337; c=relaxed/simple;
+	bh=k5cZ85hv8wADyLQoc8FmQn7WG9qsvhKip/aKixe1VSA=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
+	 MIME-Version:Content-Type; b=F1lDgvNq4JOGBCRg2Udyhc7PDLokhzw472jc56mvYTU22P82wf9gBgwQl0DImiI+P+2Vwl5E4kSiryMQ3n5UisvXAxLnaqGhsszWCz9hCJnwdJ/zEeaIKXOFcCUYjSM+V46068ttfDUtWDohy7x6xR7GzRswiC/uA0z4guS3zn0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=feezR0m0; arc=none smtp.client-ip=209.85.215.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JsDW3JSi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D6C71F000E9;
-	Wed, 15 Jul 2026 11:04:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784113453;
-	bh=VriNWCx46Dl4a3RjJkpqBv61fpE7Ui/PUI9/FLlEpKU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=JsDW3JSiA/3ivOOw98ZMfMh7AO6Sp7741kf/4imN/++RWZTgS2k+7TKUYXeli7ybs
-	 ISDR2D/uTaDimmnALrAeZJVSNDaQoMVbWSGL19BE3Uz5LfivyzXOy5SNDetXnJr/fn
-	 Xay1JoxrOeB+I2HhOSotVVXjesAe714rtuK80bklqXu+lwPs/X4ovjGWtYJTp9i6uN
-	 CqRF5JvWP/bYRPTSkgOlAUsy8Ff/8OtpgtoUYFbN8W/suJJKU+5jG9mvat2yD+hILp
-	 /nDtjfCh0DQWiHLSOTV6z+hE7AsOGRM/AZxyCsPaknh2FA4BbIuSbb9lc0YkUy0/CI
-	 FBwl33e7yzM+A==
-From: Geliang Tang <geliang@kernel.org>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v5 8/8] selftests: mptcp: connect: close listensock deterministically
-Date: Wed, 15 Jul 2026 19:03:53 +0800
-Message-ID: <a3f7428b09ba287fb78a8df916d9b1aac589c42d.1784113088.git.tanggeliang@kylinos.cn>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <cover.1784113088.git.tanggeliang@kylinos.cn>
-References: <cover.1784113088.git.tanggeliang@kylinos.cn>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="feezR0m0"
+Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-c9aea40d799so928456a12.0
+        for <mptcp@lists.linux.dev>; Wed, 15 Jul 2026 04:35:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1784115333; x=1784720133; darn=lists.linux.dev;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=mnzX5owLgTVPtZt7vlvCh1w1XFCjjdiYuwHbJC3ImBU=;
+        b=feezR0m0ITgZpDwhSXGd1mpyHAvL30W6hCuZPQim2aGOD0Q1BIp5YXWS6SUrAKMuU1
+         fNhFOxN5JBWNUy1xf1ZZf1hA11vsMMsDPWxypl/JwxzmRKS1TyqnAuz5PgZ+JLBuIIZI
+         PZ388s3nJPCbVjPJ+ovAcMM7PWe8ZOuw+y5UKhaPjcZBNa6IciB1VsntNaSMX+eUKBVS
+         /h3B107EpT2EnSzsWirOq8DXI0JKCfK1DsaGnMJOWR66OMr/aP2r+6cfN6KC8YHhES2y
+         Bkv8/DA1jiavrhxy9puafCaFFDEhe9rLYw8IV4rQNr0e6Cb+liKlsVMklorLCzf9AtJZ
+         1V+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1784115333; x=1784720133;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=mnzX5owLgTVPtZt7vlvCh1w1XFCjjdiYuwHbJC3ImBU=;
+        b=GLOFMTZc17dp+tqFqoIaZnic5jYHYH/J06sRmPo7dI65TCyrn2fCrJ8p4NVhv1NqGI
+         h/RobVTgyrSpumiJIjsbFtcAP53F6jawNpOg/H8eK/YV2sqBEKPByeQipTPXWS9JnmoH
+         XC4tbVnZ54nUH/Koij/mKddxL0N7iiNZKwcLSCdVFeMR4fmphyiFKrU1yfJxkp3Wza6U
+         P3Hsujbu8nRRmgHggMN7qCd1apIfvZ0le42UjBtG4z/vITvwxVkKEGmNkaykdpdLux26
+         Qh/nZVzfEiDU0RTeSqZ61wQ+R3raHPVHBIoSEgoZZj0wAA8R8IwGUXiYVfo0jwcUi0MU
+         2Mpg==
+X-Gm-Message-State: AOJu0YwMu83Um60sURCEaWHFjHZkKJKpiBSNVoxl0ydpbxts+aL+Kp5Y
+	IfwyNz6wI0UFrPqcuU8mHt6+6MdPbVRmKnDwOWLf3Xd41kWV+CJFTHiv1g8/
+X-Gm-Gg: AfdE7cmFcE80/N0VisjHwhmUdiBRoANgUv+azqmcDQxuDzuGBPxwVKkYJWwRKp9CLuZ
+	f2k5g0RHjS217vpIIQhAeyleR8XRMEIA3O4ThAHU+0PdfxWbXxNowCNQXUMxdciemMdh5SbASSU
+	okGFSQcpvaxaiGfyNtN+xhAm0sWoj/jNv3pntP3OmOYHncVZaC1sK4LWGgJo4NoVSfrn7DmQbRy
+	CByxaaGWny+e87ok1Ty1r6EH7xTz7U6DU3QfAaOKhMdo/OFT0zrRJ3vlMcGLpQ2rPvEsk7FsVBx
+	zZvnLsOD6tIFC72o0R7lWdqP60OczgOMvv/Y/yBYRq5UeeVdtmsNqFe0hwQi3cd4fMZNg0rj77A
+	LcmloXKiwgJsEMqBmqeJMaLzE8raPiFbCEHzuyXWfmDdApjT7jdUs3Os9Ul9DRWktW0cW2MvAnU
+	vDDfQaUVdsL9IIMx5mRBgIqUr06xHP7+wrvMRYWuw=
+X-Received: by 2002:a05:6a21:4d8f:b0:3c0:9c1a:894f with SMTP id adf61e73a8af0-3c110b33403mr19342727637.71.1784115333411;
+        Wed, 15 Jul 2026 04:35:33 -0700 (PDT)
+Received: from [127.0.0.1] ([172.182.226.229])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-13cd428b2d3sm648589c88.5.2026.07.15.04.35.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jul 2026 04:35:32 -0700 (PDT)
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20260715101148.2601045-1-kalpan.jani@mpiricsoftware.com>
+References: <20260715101148.2601045-1-kalpan.jani@mpiricsoftware.com>
+Subject: Re: [PATCH mptcp-next 0/2] mptcp: sched: let schedulers mark a
+ subflow to avoid
+Message-ID: <50cfda78-fed5-c866-2690-97167cab686e@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 15 Jul 2026 11:35:32 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+Hi Kalpan,
 
-In main_loop_s(), listensock was closed nondeterministically inside
-maybe_close() during the accept loop, and error paths closed it without
-tracking, leading to double-close or leaks across repeated iterations
-(via goto again).
+Thank you for your modifications, that's great!
 
-Fix by making maybe_close() return a bool indicating whether it closed
-the fd, and track that per iteration. Funnel poll/accept error paths
-through a single 'goto out' label and close the socket there only
-if not already closed. Reset 'closed' at the 'again:' label so each
-iteration starts with a fresh tracking state. This ensures exactly one
-close per iteration in all cases.
+Our CI did some validations and here is its report:
 
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
----
- .../selftests/net/mptcp/mptcp_connect.c       | 24 +++++++++++++------
- 1 file changed, 17 insertions(+), 7 deletions(-)
+- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/294094=
+72750
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-index 4670c194672d..b2380008c905 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-@@ -1283,12 +1283,15 @@ static void check_getpeername_connect(int fd)
- 			cfg_host, a, cfg_port, b);
- }
- 
--static void maybe_close(int fd)
-+static bool maybe_close(int fd)
- {
- 	unsigned int r = rand();
- 
--	if (!(cfg_join || cfg_remove || cfg_repeat > 1) && (r & 1))
-+	if (!(cfg_join || cfg_remove || cfg_repeat > 1) && (r & 1)) {
- 		close(fd);
-+		return true;
-+	}
-+	return false;
- }
- 
- int main_loop_s(int listensock)
-@@ -1298,27 +1301,30 @@ int main_loop_s(int listensock)
- 	struct pollfd polls;
- 	socklen_t salen;
- 	int remotesock;
-+	bool closed;
- 	int err = 0;
- 	int fd = 0;
- 
- again:
-+	closed = false;
- 	polls.fd = listensock;
- 	polls.events = POLLIN;
- 
- 	switch (poll(&polls, 1, poll_timeout)) {
- 	case -1:
- 		perror("poll");
--		return 1;
-+		err = 1;
-+		goto out;
- 	case 0:
- 		fprintf(stderr, "%s: timed out\n", __func__);
--		close(listensock);
--		return 2;
-+		err = 2;
-+		goto out;
- 	}
- 
- 	salen = sizeof(ss);
- 	remotesock = accept(listensock, (struct sockaddr *)&ss, &salen);
- 	if (remotesock >= 0) {
--		maybe_close(listensock);
-+		closed = maybe_close(listensock);
- 		check_sockaddr(pf, &ss, salen);
- 		check_getpeername(remotesock, &ss, salen);
- 
-@@ -1334,7 +1340,8 @@ int main_loop_s(int listensock)
- 		err = copyfd_io(fd, remotesock, 1, true, &winfo);
- 	} else {
- 		perror("accept");
--		return 1;
-+		err = 1;
-+		goto out;
- 	}
- 
- 	if (cfg_input)
-@@ -1343,6 +1350,9 @@ int main_loop_s(int listensock)
- 	if (!err && --cfg_repeat > 0)
- 		goto again;
- 
-+out:
-+	if (!closed)
-+		close(listensock);
- 	return err;
- }
- 
--- 
-2.53.0
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/11781b9663bb
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1128052
 
+
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
