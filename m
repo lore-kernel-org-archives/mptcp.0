@@ -1,41 +1,41 @@
 Received: from sender4-of-o54.zoho.com (sender4-of-o54.zoho.com [136.143.188.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D279743B6E3
-	for <mptcp@lists.linux.dev>; Wed, 15 Jul 2026 10:12:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2F3D43C05C
+	for <mptcp@lists.linux.dev>; Wed, 15 Jul 2026 10:12:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.54
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784110337; cv=pass; b=gNKGHlqyBudxIQkG4gug+FLU2Z5x8ZaLwb1XqaqjcTwv42HE3nGdLUkBwT7O9IigZ/atYvsxO0/mk+B8AXjSk3KJkKvn+U5eBmrKewOUoUwCkyEtvcdBfKXsmvaQ9P3lPTW2bfGnd4hG9XPiB9CUcbaE5uwLuj3lhg01uqyoV9s=
+	t=1784110348; cv=pass; b=VcJ/+f4Hz7ea24XvNGphfeeCR24SMqA52Mn9aSs067x2r5m214NoXfGUFUpGLcday5K1LIBJ7eamKBl+SMfJvS+6SrVwkKV8S9d7G4KK++iUD0PU6uOoJJsCZyQxYLhD/5OFZPXqvBWwXCIImr7P4/2Acs0IVW5tsNsjh29a+/M=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784110337; c=relaxed/simple;
-	bh=IwR9m2j2add3z/XBeSIajuz4GTbw+bCHTHPBC8eNiUw=;
+	s=arc-20240116; t=1784110348; c=relaxed/simple;
+	bh=dFrRjVkZILMjot8qM85CT16bIODOee03C0604vL3jXA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=J1C29mNB02JxP4s0Wz2zHyPDtEsSGja07vbSp0KcrH9ikCl2R7DDx7BQMkWNO76zJXtMANJ/2/oeXbFweq9wTrwkcUt0EoUU5OrMwkhczdXi5YISWnQh7/NSyNzxlvGLJNOZ3Uy9i2d6/0lt2etrumLeKt71auZ9L/W0b4KZ2Cg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com; spf=pass smtp.mailfrom=mpiricsoftware.com; dkim=fail (0-bit key) header.d=mpiricsoftware.com header.i=kalpan.jani@mpiricsoftware.com header.b=tf+Zm5jx reason="key not found in DNS"; arc=pass smtp.client-ip=136.143.188.54
+	 MIME-Version; b=FVuMoUC00VpjvGZsYdgzy0/nDRV4h0UkQud/QZUNcxtiAt2BIGooklwek0/tlupZGez9qxWMmsANEAKWouX4ofbjUplz8LdrrkTZWCHrR9f6xm8ECPbGSSYJMYDInXr8wQe2Vwp5p0jioIttll5Lw4jEp4tLtB6aWcV2TX+63M4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com; spf=pass smtp.mailfrom=mpiricsoftware.com; dkim=fail (0-bit key) header.d=mpiricsoftware.com header.i=kalpan.jani@mpiricsoftware.com header.b=G57iG0z+ reason="key not found in DNS"; arc=pass smtp.client-ip=136.143.188.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mpiricsoftware.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mpiricsoftware.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mpiricsoftware.com header.i=kalpan.jani@mpiricsoftware.com header.b="tf+Zm5jx"
-ARC-Seal: i=1; a=rsa-sha256; t=1784110325; cv=none; 
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mpiricsoftware.com header.i=kalpan.jani@mpiricsoftware.com header.b="G57iG0z+"
+ARC-Seal: i=1; a=rsa-sha256; t=1784110329; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=ZjOdk71SKGhl/cqBqug402D4xdwAwGgUvS9zvZFBNWjq/Crr8tfNDGoddrBXdNjIutQMwJLLw7dSHaU4VIRQxistGOa2trISjQNE/crMllExnedXWnH3hN79X+idOJv/TbRmOQCnl+k/7msfUDG/A8+HnQnD7KgEvDn/G8lI0wo=
+	b=Kd38xewy279gJH9WcfruhoGfv0u/lqYxVT5H+bHuyH95R4s1GJ+JIoHPsMMoJaSLrebvMkTnpjrU1ixJmppdyT7FFC33b/PRxv+i9tS6a7f2RAnHo6ZgoYDRg2nNEXgitFh9+z5kGWn8D+wRU2/kbOAOW3vyiXpRph34I1BJEvY=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1784110325; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=Ijw1ShYjQ2W8OgkzFXnqZjzKP6K/NiSscggCXaTVklI=; 
-	b=G//n9bewuvPE5ELdKqSNW7xWIqKuUS96c8FJr8D4nRI5oz2f6jbY3VRFbBSFVnMk7ezRPUVLPCJ1TbZX/ltrPDwRiYO+tl6wkp9cS18ofCIyNPlIH/urE5EcsDOV7rla8Lvdd+9wECyc1iAlPsBpjDIIZldtuPprTrJ+Nwjbcfo=
+	t=1784110329; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=yJ/9zBmpzEg3UnueOe1BYVlDazqPAZ5NECaXzojnB2g=; 
+	b=Kmiln8bue+TfxyAEz2BIv4hWyq3NCfXeMwPbGVN997OTVK0H8Ed4Ly1LOl5pb4y4LauSx1xsOdhdgyWrjbes/06yCdHlqxS6wWAZ52bwn6gSZujBAglvlbzk6l1cqnAVj2PwY5rWkjwFFCMJGc9EQuAVZMln2C56qhWUc0bBq2s=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=mpiricsoftware.com;
 	spf=pass  smtp.mailfrom=kalpan.jani@mpiricsoftware.com;
 	dmarc=pass header.from=<kalpan.jani@mpiricsoftware.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1784110325;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1784110328;
 	s=mpiric; d=mpiricsoftware.com; i=kalpan.jani@mpiricsoftware.com;
 	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=Ijw1ShYjQ2W8OgkzFXnqZjzKP6K/NiSscggCXaTVklI=;
-	b=tf+Zm5jxx/4iexTKyLsotTtXemvN2Z1r5AM+ZnivDRG5l3/InYvCXldnOsU3AjQC
-	MKTwZhJOMawmr4moZoLPn47Ujxmro7giGGe092lyJ1xyVagDo7oNEofofAf86NIlVYq
-	eM4CMGsf7qFJjdPotSedydzyQvUcTJdlXTpIQRes=
-Received: by mx.zohomail.com with SMTPS id 1784110322161139.0277025904428;
-	Wed, 15 Jul 2026 03:12:02 -0700 (PDT)
+	bh=yJ/9zBmpzEg3UnueOe1BYVlDazqPAZ5NECaXzojnB2g=;
+	b=G57iG0z+hU84t7PszNZov6Asm2on5cDo9exxdX0bgHTZoCEb2pTMNl7wD+GMNYyB
+	dxgLL9tNQk9kEB/xRs4We6vcZCZPI+C2D11H9qt7OecVZRZe+CCU6LAZiTZm4luW/c1
+	BZWnaqu8UMrkCg74KEONAU+4pAtxefkomXtsvDPY=
+Received: by mx.zohomail.com with SMTPS id 1784110327128824.119895923827;
+	Wed, 15 Jul 2026 03:12:07 -0700 (PDT)
 From: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
 To: mptcp@lists.linux.dev
 Cc: matttbe@kernel.org,
@@ -45,9 +45,9 @@ Cc: matttbe@kernel.org,
 	janak@mpiric.us,
 	kalpanjani009@gmail.com,
 	akshit@mpiricsoftware.com
-Subject: [PATCH mptcp-next 1/2] mptcp: sched: add subflow avoid flag and kfunc
-Date: Wed, 15 Jul 2026 15:41:47 +0530
-Message-ID: <20260715101148.2601045-2-kalpan.jani@mpiricsoftware.com>
+Subject: [PATCH mptcp-next 2/2] selftests: mptcp: bpf: exercise the subflow avoid flag
+Date: Wed, 15 Jul 2026 15:41:48 +0530
+Message-ID: <20260715101148.2601045-3-kalpan.jani@mpiricsoftware.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260715101148.2601045-1-kalpan.jani@mpiricsoftware.com>
 References: <20260715101148.2601045-1-kalpan.jani@mpiricsoftware.com>
@@ -60,90 +60,131 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-ZohoMailClient: External
 
-The core benches a subflow via the "stale" bit after
-net.mptcp.stale_loss_cnt retransmission intervals without progress. That
-bit is owned by the core and tightly coupled to the RTO: it is cleared
-automatically as soon as a packet is acked on the subflow
-(mptcp_subflow_active() calls mptcp_subflow_set_active() when rcv_tstamp
-advances).
+Add a BPF struct_ops scheduler selftest for the new
+mptcp_subflow_set_avoid() kfunc. The scheduler marks every subflow except
+the first as "avoid", then schedules only a subflow whose avoid flag is
+clear. The existing send_data_and_verify() harness confirms the avoided
+path carried no data, exercising the kfunc round-trip from eBPF: set the
+flag, read it back, and honour it.
 
-A packet scheduler may want to bench a subflow for unrelated reasons
-(too high latency, too unstable) and keep it benched until it decides
-otherwise. Reusing the stale bit does not work: the core would clear it
-on the next incoming ack.
-
-Add a separate, scheduler-owned "avoid" flag to mptcp_subflow_context:
-
- - it is never set or cleared by the core, only through
-   mptcp_subflow_set_avoid(), exposed to BPF struct_ops schedulers as a
-   kfunc, with the same registration and filter as
-   mptcp_subflow_set_scheduled() so only schedulers can call it;
-
- - it lives in the struct_group(reset) block and is therefore cleared
-   when the subflow is reset, so a re-established path is re-evaluated.
-
-The flag is scheduler-local state: a scheduler sets it to remember that a
-subflow should be skipped, and consults it when picking a subflow to send
-on. The core send and retransmit paths are left unchanged.
+This also adds the BPF-side extern declaration for
+mptcp_subflow_set_avoid(); without it a BPF program cannot compile a call
+to the kfunc, as the kernel-side BTF registration alone is not enough.
 
 Link: https://github.com/multipath-tcp/mptcp_net-next/issues/349
 Signed-off-by: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
 ---
- net/mptcp/bpf.c      | 1 +
- net/mptcp/protocol.h | 3 +++
- net/mptcp/sched.c    | 6 ++++++
- 3 files changed, 10 insertions(+)
+ .../testing/selftests/bpf/prog_tests/mptcp.c  | 15 ++++++
+ tools/testing/selftests/bpf/progs/mptcp_bpf.h |  2 +
+ .../selftests/bpf/progs/mptcp_bpf_avoid.c     | 49 +++++++++++++++++++
+ 3 files changed, 66 insertions(+)
+ create mode 100644 tools/testing/selftests/bpf/progs/mptcp_bpf_avoid.c
 
-diff --git a/net/mptcp/bpf.c b/net/mptcp/bpf.c
-index 0845061ddc65..ca6e3e2c3c60 100644
---- a/net/mptcp/bpf.c
-+++ b/net/mptcp/bpf.c
-@@ -318,6 +318,7 @@ BTF_KFUNCS_START(bpf_mptcp_common_kfunc_ids)
- BTF_ID_FLAGS(func, bpf_mptcp_subflow_ctx, KF_RET_NULL)
- BTF_ID_FLAGS(func, bpf_mptcp_subflow_tcp_sock, KF_RET_NULL)
- BTF_ID_FLAGS(func, mptcp_subflow_set_scheduled)
-+BTF_ID_FLAGS(func, mptcp_subflow_set_avoid)
- BTF_ID_FLAGS(func, mptcp_subflow_active)
- BTF_ID_FLAGS(func, mptcp_set_timeout)
- BTF_ID_FLAGS(func, mptcp_wnd_end)
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index da40c6f3705f..6485629acd63 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -587,6 +587,7 @@ struct mptcp_subflow_context {
- 		__unused : 8;
- 	bool	data_avail;
- 	bool	scheduled;
-+	bool	avoid;		    /* pkt scheduler: skip subflow if possible */
- 	bool	pm_listener;	    /* a listener managed by the kernel PM? */
- 	bool	fully_established;  /* path validated */
- 	u32	lent_mem_frag;
-@@ -897,6 +898,8 @@ static inline bool __mptcp_subflow_active(struct mptcp_subflow_context *subflow)
+diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools/testing/selftests/bpf/prog_tests/mptcp.c
+index 7f48fd9e94e1..1b88806a7a86 100644
+--- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
++++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
+@@ -17,6 +17,7 @@
+ #include "mptcp_bpf_bkup.skel.h"
+ #include "mptcp_bpf_rr.skel.h"
+ #include "mptcp_bpf_red.skel.h"
++#include "mptcp_bpf_avoid.skel.h"
+ #include "mptcp_bpf_burst.skel.h"
  
- void mptcp_subflow_set_active(struct mptcp_subflow_context *subflow);
- 
-+void mptcp_subflow_set_avoid(struct mptcp_subflow_context *subflow, bool avoid);
-+
- bool mptcp_subflow_active(struct mptcp_subflow_context *subflow);
- 
- void mptcp_subflow_drop_ctx(struct sock *ssk);
-diff --git a/net/mptcp/sched.c b/net/mptcp/sched.c
-index 1e59072d478c..09163f9742b9 100644
---- a/net/mptcp/sched.c
-+++ b/net/mptcp/sched.c
-@@ -165,6 +165,12 @@ void mptcp_subflow_set_scheduled(struct mptcp_subflow_context *subflow,
- 	WRITE_ONCE(subflow->scheduled, scheduled);
+ #define NS_TEST "mptcp_ns"
+@@ -813,6 +814,18 @@ static void test_burst(void)
+ 	mptcp_bpf_burst__destroy(skel);
  }
  
-+void mptcp_subflow_set_avoid(struct mptcp_subflow_context *subflow,
-+			     bool avoid)
++static void test_avoid(void)
 +{
-+	WRITE_ONCE(subflow->avoid, avoid);
++	struct mptcp_bpf_avoid *skel;
++
++	skel = mptcp_bpf_avoid__open_and_load();
++	if (!ASSERT_OK_PTR(skel, "open_and_load: avoid"))
++		return;
++
++	test_bpf_sched(skel->maps.avoid, "avoid", WITH_DATA, WITHOUT_DATA);
++	mptcp_bpf_avoid__destroy(skel);
 +}
 +
- int mptcp_sched_get_send(struct mptcp_sock *msk)
+ void test_mptcp(void)
  {
- 	struct mptcp_subflow_context *subflow;
+ 	if (test__start_subtest("base"))
+@@ -835,4 +848,6 @@ void test_mptcp(void)
+ 		test_red();
+ 	if (test__start_subtest("burst"))
+ 		test_burst();
++	if (test__start_subtest("avoid"))
++		test_avoid();
+ }
+diff --git a/tools/testing/selftests/bpf/progs/mptcp_bpf.h b/tools/testing/selftests/bpf/progs/mptcp_bpf.h
+index de450b2eaf0f..a60b66762274 100644
+--- a/tools/testing/selftests/bpf/progs/mptcp_bpf.h
++++ b/tools/testing/selftests/bpf/progs/mptcp_bpf.h
+@@ -48,5 +48,7 @@ bpf_mptcp_subflow_tcp_sock(const struct mptcp_subflow_context *subflow) __ksym;
+ 
+ extern void mptcp_subflow_set_scheduled(struct mptcp_subflow_context *subflow,
+ 					bool scheduled) __ksym;
++extern void mptcp_subflow_set_avoid(struct mptcp_subflow_context *subflow,
++				    bool avoid) __ksym;
+ 
+ #endif
+diff --git a/tools/testing/selftests/bpf/progs/mptcp_bpf_avoid.c b/tools/testing/selftests/bpf/progs/mptcp_bpf_avoid.c
+new file mode 100644
+index 000000000000..3678781f346a
+--- /dev/null
++++ b/tools/testing/selftests/bpf/progs/mptcp_bpf_avoid.c
+@@ -0,0 +1,49 @@
++// SPDX-License-Identifier: GPL-2.0
++/* Copyright (c) 2026, MPTCP. */
++
++#include "mptcp_bpf.h"
++#include <bpf/bpf_tracing.h>
++
++char _license[] SEC("license") = "GPL";
++
++SEC("struct_ops")
++void BPF_PROG(mptcp_sched_avoid_init, struct mptcp_sock *msk)
++{
++}
++
++SEC("struct_ops")
++void BPF_PROG(mptcp_sched_avoid_release, struct mptcp_sock *msk)
++{
++}
++
++SEC("struct_ops")
++int BPF_PROG(bpf_avoid_get_send, struct mptcp_sock *msk)
++{
++	struct mptcp_subflow_context *subflow;
++	int i = 0;
++
++	/* bench every subflow except the first one */
++	bpf_for_each(mptcp_subflow, subflow, (struct sock *)msk) {
++		if (i++ > 0)
++			mptcp_subflow_set_avoid(subflow, true);
++	}
++
++	/* only schedule a subflow that is NOT avoided */
++	bpf_for_each(mptcp_subflow, subflow, (struct sock *)msk) {
++		if (subflow->avoid)
++			continue;
++		if (mptcp_subflow_active(subflow)) {
++			mptcp_subflow_set_scheduled(subflow, true);
++			break;
++		}
++	}
++	return 0;
++}
++
++SEC(".struct_ops.link")
++struct mptcp_sched_ops avoid = {
++	.init		= (void *)mptcp_sched_avoid_init,
++	.release	= (void *)mptcp_sched_avoid_release,
++	.get_send	= (void *)bpf_avoid_get_send,
++	.name		= "bpf_avoid",
++};
 -- 
 2.43.0
 
