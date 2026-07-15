@@ -1,131 +1,120 @@
-Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8682D378D8C
-	for <mptcp@lists.linux.dev>; Wed, 15 Jul 2026 03:52:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2763D308F23
+	for <mptcp@lists.linux.dev>; Wed, 15 Jul 2026 06:05:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784087564; cv=none; b=GOX6dfqS2NrZC30zt7qmkY42IRWnLm1KWHXFt8grKKvzV+ycRa4kdQ64D4wHU8/WU1+TUGSjaDbQNh7F3quUMUXdbXT0DAYUMwvhzd9UQlHdlg8cHIwXmSBVnLIYdfWF69I/BiaUQPHgjKHnzezCKQZDmjOTv6/jKvBsRp7wwNE=
+	t=1784095561; cv=none; b=hveV8m2E0rwSRy8ll1/+KqRvPb5JcQHXWUXN5BDwpWHOiR44yigt1S3GS2sQ0Fg7OwnB4SZYn0ZMGFnCXJyw0P/7nUTuyWYMJR+Yu735Clk0v3N9aD4RuHGw5O71nSZF1wnMbLHhYTCTmDo2NkV/OsBiv04dC1/4wJGj1zeQ8rI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784087564; c=relaxed/simple;
-	bh=RQLdhDe9OPriqJAC4IJXIJFkHcuacITUQv1sH50abyw=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
-	 MIME-Version:Content-Type; b=EC6gJdGD3lIsNSd4oRbQYo5ezUVffd/Y5NChcyXF0qdadqhKE/w3gSOqB6YX41U2p849DihfiUmJVRinZgTQ9ewJIiTKrfcFBzN63mqOj/Q5PpXQj5uMrgnGq+GTvI6weeGJjfbiZG4m34a3EUSPQExyQBvTcHXIDE8nkh7Mfq8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TX2bvk6v; arc=none smtp.client-ip=209.85.219.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1784095561; c=relaxed/simple;
+	bh=15uX4DlKxDBXMMV0ty2ziRLun/3gN1i+UHxq21jgqN0=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version; b=pN993VeswxLFk1aOgKxdgVRyZyfXuEHv7vcv/YyJQN8RXwaFgEM+LMf3GdO6627ReWh5q9fbDAkJ7RDft5aklCnbMysFk5yStLOJTJGjtHKO37kG0W/LptxYMk6JOshoPyv7bVlnVRke6dhmjhYFrQ89LiAtNvuldSgRTrM7Pmo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=S2ulA/BK; arc=none smtp.client-ip=220.197.31.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TX2bvk6v"
-Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-8ee6912d86dso13457506d6.1
-        for <mptcp@lists.linux.dev>; Tue, 14 Jul 2026 20:52:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1784087562; x=1784692362; darn=lists.linux.dev;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=jvlwyJzzWae5wDazopaFAaXhJw7q7ZgTTScMHkBoDp0=;
-        b=TX2bvk6vQxcv3eOJaI5DW4ixFY6PO9oSjLqEEbsPIA96VlXMYmO4sS9xD95HPK0udC
-         0B5TtZ/JcWSe/xwLaJEYEE1RH4u/6LPREfTRNBGsypjdv3x1CORz95dhQNGkxFs/kH3k
-         azUVVE9GfZepI98cbIYHkoVt6O7jvRHNMCTrdJq1v/y3/q3gfmodsM2rUU+N0iVWrzeV
-         d5qNUJY87mlQBLv/ReK7d/FOyqsYKIq9V6z2Oj1xQA+4+3T993Vs0LbRU6aA2W6H8ooN
-         lIWlrE//IK6rbPtsbj/9xxZiJSfiNGYnkDRRmZuGu74M4uzq4Un+CNAfmd3aezKc81ot
-         pvZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784087562; x=1784692362;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=jvlwyJzzWae5wDazopaFAaXhJw7q7ZgTTScMHkBoDp0=;
-        b=W2QxmehzUYIkfQpEE7N3PdhYF8fj1RsC+KpqVqnha4ZaxcY9Nx7eA/Hzo0mGYKXJ9P
-         5poSmgCHh733u5y2BgecI1RNCXUTArVmxwUeKVby5LZm+plrGSrX+SaG3PUKiYjS33TC
-         jES1bPF6O/u8bE5fSC6hv2ySItpkeEcdRpvSH7ZcUW/IkfOsJ5shJOdGcYszX9voYFII
-         ZVt5k8yDxj48lqqG7+4LcXklFqWsq1etvw9lC8aLWYuU0H8U6aiCE0gchLLFRY8LlWGq
-         8g2tnXhgFS7M0IzoP4t6o1V5pYtlJJYf4e6S60NdjZvOa1RbpREGRZ3KrbqC99+R/15j
-         N78A==
-X-Gm-Message-State: AOJu0YxpsANKkOoQq84+LDaydPYaAX9ja0Ldgd/7oxrGM6b6kw+RXvdF
-	6gO6bxdduPWVvswQMipIX3JTDCAaY0yWoyFOLX0jHlZrJ89e2XMJ8OvzeDWj7EM=
-X-Gm-Gg: AfdE7cmKo6K2mv4AFVe+zw85yri+02KG+Ka9jSuCZSIXC21WeEWaTl/mFwHTasm7ipt
-	2sR8sRQTPw/YFVU2LxPFACR+1u+mZc4c6ImPLNcEUVC2GOkMvfHG92vnPh/Q+qxvg8DtRc6Egiz
-	KVnIRgLRKBZZ8ZAjRX/jCqFXyz2eSBBVxZMeKxjerhDXSNMqlPZhVweoeiSWSwO6sNu1s0sOL0K
-	Z3soyu62Rskh1Ke4UfVieyZz7UB/R4GneVUBlzT2pa095DfY3VQn4kqrKB+fgYXhQp4QxfstOl2
-	fWHzm/TaobxY0yVv48RWCO37M7hgzAa+Qg2BhRujkycgSvNsaBhEVXIjC3EbVORfweiqhVZdsPW
-	SHNv93/HzQH1844NkucUDdkWVfI1uyREmHNS71jdIiPkR3BcFyehEyNdHWHcHXPHqx2sOpMw5tl
-	Dhx3XCMd6ogtAF66DUAdMgHgIR
-X-Received: by 2002:a05:620a:a199:10b0:930:91f1:44d with SMTP id af79cd13be357-93091f1072bmr227127785a.44.1784087562244;
-        Tue, 14 Jul 2026 20:52:42 -0700 (PDT)
-Received: from [127.0.0.1] ([20.119.103.2])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-92ee5b88e40sm1592685585a.14.2026.07.14.20.52.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jul 2026 20:52:41 -0700 (PDT)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <tanggeliang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <cover.1784082850.git.tanggeliang@kylinos.cn>
-References: <cover.1784082850.git.tanggeliang@kylinos.cn>
-Subject: Re: [PATCH mptcp-next v11 00/11] selftests: consolidate TCP_INQ
- testing into sockopt
-Message-ID: <78df61a0-8652-e8ee-e4aa-8a0be5bdb81d@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 15 Jul 2026 03:52:41 +0000
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="S2ulA/BK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=qH
+	RPdsKA8DAbHGTu/KlfZVpM+L2eBVWtBcRqFCUp/qM=; b=S2ulA/BKKVs8GYD451
+	IRTaVzII2Il7Mwfk1LMI7fhBROk1VDBoqtf5UhzZ5m2RA5CGHT093KxBNJ2DrgKf
+	h7eRoSngKFucupXEzFnWVttDU+cLzY/YZmkwLvFbAIyhZ2xhQTAGfa8fAIrug1uY
+	xAu89r+Ib+3rA6o+7YsRJ7eKA=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g0-1 (Coremail) with SMTP id _____wD3Xyk+I1dqfHMpJQ--.13861S2;
+	Wed, 15 Jul 2026 14:05:52 +0800 (CST)
+From: luoqing <l1138897701@163.com>
+To: mptcp@lists.linux.dev
+Subject: [PATCH] mptcp: pm: fix data race in add_addr timer callback
+Date: Wed, 15 Jul 2026 14:05:50 +0800
+Message-Id: <20260715060550.655299-1-l1138897701@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wD3Xyk+I1dqfHMpJQ--.13861S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7ZrWrGryDArWUtF18Zw18Krg_yoW5JFW5pF
+	45Wan5Jr1kJr4Ivr1xAF4DuryjgFZYyryfGw4Y9390yFs5JFyDJay5GF45tFW7JFsYvrn2
+	yFW0va98Xw4kCaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07Uo5lnUUUUU=
+X-CM-SenderInfo: jorrjmiyzxliqr6rljoofrz/xtbC3QBJjWpXI0DhngAA34
 
-Hi Geliang,
+From: luoqing <luoqing@kylinos.cn>
 
-Thank you for your modifications, that's great!
+The timer callback reads entry->retrans_times outside pm.lock to decide
+whether to call mptcp_pm_subflow_established(). Since
+mptcp_pm_announced_del_timer() can concurrently set retrans_times =
+ADD_ADDR_RETRANS_MAX under pm.lock, a race condition exists.
 
-Our CI did some validations and here is its report:
+Use a local 'schedule_work' flag set inside pm.lock only when the timer
+callback itself increments retrans_times to ADD_ADDR_RETRANS_MAX. This
+ensures that mptcp_pm_subflow_established() is only called when the
+retransmission naturally exhausts.
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/293856=
-76727
+Additionally, use READ_ONCE/WRITE_ONCE for retrans_times and timer_done
+to prevent compiler optimizations.
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/ecf3e45a76bb
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1127842
+Signed-off-by: luoqing <luoqing@kylinos.cn>
+---
+ net/mptcp/pm.c | 16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
 
+diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+index 6afd39aea110..4c039e7843d3 100644
+--- a/net/mptcp/pm.c
++++ b/net/mptcp/pm.c
+@@ -380,6 +380,8 @@ static void mptcp_pm_add_addr_timer(struct timer_list *timer)
+ 	struct mptcp_sock *msk = entry->sock;
+ 	struct sock *sk = (struct sock *)msk;
+ 	unsigned int timeout = 0;
++	bool completed = false;
++	u8 retrans_times;
+ 
+ 	pr_debug("msk=%p\n", msk);
+ 
+@@ -399,27 +401,33 @@ static void mptcp_pm_add_addr_timer(struct timer_list *timer)
+ 
+ 	spin_lock_bh(&msk->pm.lock);
+ 
++	retrans_times = READ_ONCE(entry->retrans_times);
++
+ 	/* The cancel path (mptcp_pm_announced_del_timer()) can race with this
+ 	 * callback. Once cancel updates retrans_times to MAX, suppress further
+ 	 * retransmissions here. If this callback acquires pm.lock first, one
+ 	 * final transmit attempt is still possible.
+ 	 */
+-	if (entry->retrans_times < ADD_ADDR_RETRANS_MAX &&
++	if (retrans_times < ADD_ADDR_RETRANS_MAX &&
+ 	    !mptcp_pm_should_add_signal_addr(msk)) {
+ 		pr_debug("retransmit ADD_ADDR id=%d\n", entry->addr.id);
+ 		mptcp_pm_announce_addr(msk, &entry->addr, false);
+ 		mptcp_pm_add_addr_send_ack(msk);
+-		entry->retrans_times++;
++		retrans_times++;
++		WRITE_ONCE(entry->retrans_times, retrans_times);
+ 	}
+ 
+-	if (entry->retrans_times < ADD_ADDR_RETRANS_MAX)
++	if (retrans_times >= ADD_ADDR_RETRANS_MAX)
++		completed = true;
++
++	if (retrans_times < ADD_ADDR_RETRANS_MAX)
+ 		timeout <<= entry->retrans_times;
+ 	else
+ 		timeout = 0;
+ 
+ 	spin_unlock_bh(&msk->pm.lock);
+ 
+-	if (entry->retrans_times == ADD_ADDR_RETRANS_MAX)
++	if (completed)
+ 		mptcp_pm_subflow_established(msk);
+ 
+ out:
+-- 
+2.25.1
 
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
