@@ -1,38 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C67592931D7
-	for <mptcp@lists.linux.dev>; Wed, 15 Jul 2026 11:04:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A4D22931D7
+	for <mptcp@lists.linux.dev>; Wed, 15 Jul 2026 11:04:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784113444; cv=none; b=TgfgOVDivG1APW/yNKjn/5NeR4fsew3fTj/I1mV73gT9H34cR+39LyJe8RnDtV/Qj42NDHQHm9L5+MH2+QrCSFp1LwE90eoxWRxOEn/E+yq9OQgyf9R8pJjzebgwDLVYC3wznp/kQQ2WgG1bB20f4aZOZsJNHjUNs5SCKa+6vok=
+	t=1784113446; cv=none; b=oEnLpV64Shqjrw/c3B1SZzuZbvijE5cQyPV7ygDjN9c1dgUElasOdwtipCIcbqtCAahP/sg3z+WznhBijlgNa8KN0goGMqJa78h/p5HemwNdOFulsvkckhX9Yh3bLmd00Wlq9PJpSWA20WQOraI0gkkGABb3Wl8bopEvOfYii1s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784113444; c=relaxed/simple;
-	bh=jME7UwAhFGdpy0DC+LD1XLRwwMwYlVOX++7xseGcuGo=;
+	s=arc-20240116; t=1784113446; c=relaxed/simple;
+	bh=cs9ZDRNpHUGOZhVgZLHEw9C7VMUcJdt8rlQlk1KLNQw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SMQ4ojtp3+xpjEz3Dpx6tPOGjuT+gK+dah2tDyexJ7xAl0F1JrZj6CV80lWIupm1sfI3drK2K0xZRFuLZ0H05+Acu5pYg5vlkl1qjxPiSFpROvel6E3ytUO95tv5qEGUq2dNFncVSI267a9iymr76AbSkIs66hHzuQGdQ/q/FMU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D2xeuj4f; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=ZGIzrhIJCSXyvTdgC1fN4jeliYIM+zPuqBsQeNxQdrNwJEVK2EGDo1g7i0O5d8337KNpzB7r+3XoGQKegDtmWTG3qZ9cQQpDlFtutVpAx5JgiYoucGSfFXSzmaDgstYsbShjLcjROYZjklRTTS65cIhlC19omS8+qOIaujlt+xw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VCDUJE06; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D2xeuj4f"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55D351F00A3A;
-	Wed, 15 Jul 2026 11:04:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VCDUJE06"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D071C1F000E9;
+	Wed, 15 Jul 2026 11:04:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784113443;
-	bh=EYeyAMGYwgrEvRqPliDbY8/sG7cAJUpla97WO7oBIDM=;
+	s=k20260515; t=1784113444;
+	bh=ElSZlA4Rb1X0Hy0iYkwooMfxGtyLfN6d3LNYXmaf+tE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=D2xeuj4fkwb4w8qJLyDjmZwufiWzwX+SAKmztQuRCnzjFK/7t5aJnhFGJ/DNSkbZJ
-	 srQUU3AcNeVMQ7M01Q8MDrCHExxD5ze8CF/LfjBMIDFtzkvgpy7FHBW4Gn3h5Fh4+L
-	 Obc/xYexE7nSnI/quw/fYWu+M7Kqdsb5hPRWsKJmreb/xzja5UpAD+7NqEfKR4NbQA
-	 fDxD21qYDb00kpR88G1i6h582T78Q4YGrm61P31KrlFon/OXP6f9rOLTb66LrYXbbT
-	 IM0rskgh5SvfVJ+ygvoKtVp4/3gAk6u4FfoMJ15dnFp0tc79DuXhClEAN35wIQVWZ6
-	 2t6xP/BKxUL+w==
+	b=VCDUJE06+cMzau7YyzBvmqK9d/hnSVrgdrvBZ5QjrQ81gjV/TZ4+EBcg9KK3Eod44
+	 wQaqnK4LBUFAgwFZEg9/OmmY6FdhokhO2EzYudOJCSlWywkAQ3hWGmyGzqJ3pu19Ua
+	 JGYtpUkmQsTP7Os/FSTvq7A4tldoIWKUkOe2880BGsNbays6urvKYrnmGwMMaTrWZk
+	 ZcY+wNEhi0UHO5tT085rChANVI7TO8Hp3ogZf8XJANYbF5WqZzRUmesCbRLm4B/Ls6
+	 +0WXJ8rF2PA52qCyn5/v1wI7IWVR81tG3YBI4eBzXDg55xld+zeYeUAKKwWG8cBbxr
+	 kpwpfE1tvnWSg==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>,
-	Paolo Abeni <pabeni@redhat.com>
-Subject: [PATCH mptcp-next v5 1/8] mptcp: use local variable tp in sendmsg_frag
-Date: Wed, 15 Jul 2026 19:03:46 +0800
-Message-ID: <e7f83ae2dfea26db0766ec66648fe33517d89459.1784113088.git.tanggeliang@kylinos.cn>
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v5 2/8] mptcp: align struct mptcp_data_frag to 8 bytes on 32-bit
+Date: Wed, 15 Jul 2026 19:03:47 +0800
+Message-ID: <05eacad4eb98fd960fde99acda2e339c6f64649e.1784113088.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <cover.1784113088.git.tanggeliang@kylinos.cn>
 References: <cover.1784113088.git.tanggeliang@kylinos.cn>
@@ -46,54 +45,54 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-In mptcp_sendmsg_frag(), tcp_sk(ssk) is called multiple times.
-Introduce a local variable 'tp' to hold the tcp_sock pointer and
-use it throughout the function. This avoids repeated dereferencing
-and improves code readability, with no functional change.
+mptcp_carve_data_frag() places a struct mptcp_data_frag inside a
+page-frag region, using ALIGN(orig_offset, sizeof(long)) to compute
+the offset where the struct lives. On 64-bit Linux sizeof(long) is 8
+and this works as intended. On 32-bit Linux sizeof(long) is 4, which
+only guarantees 4-byte alignment for the struct.
 
-Suggested-by: Paolo Abeni <pabeni@redhat.com>
+struct mptcp_data_frag contains a u64 data_seq member, which requires
+8-byte alignment. 4-byte-aligned 64-bit loads fault on 32-bit
+architectures that do not handle unaligned 64-bit accesses in
+hardware (armv7, mips, sparc, ...). The in-source comment near
+BUILD_BUG_ON that states "ALIGN(1, sizeof(long)) - 1, so 8-1" is
+misleading because it implicitly assumes sizeof(long) is always 8.
+
+Switch both the ALIGN() and the matching BUILD_BUG_ON to sizeof(u64)
+so the 8-byte alignment is enforced on every architecture, and the
+overhead u8 budget still fits the worst-case 7-byte padding plus the
+struct size. This is a no-op on 64-bit and a correctness fix on
+32-bit.
+
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- net/mptcp/protocol.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ net/mptcp/protocol.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index ffcf5a1788f6..1cab07b1b9b1 100644
+index 1cab07b1b9b1..ca0c02f3bfd3 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -1375,6 +1375,7 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
- 	u64 data_seq = dfrag->data_seq + info->sent;
- 	int offset = dfrag->offset + info->sent;
- 	struct mptcp_sock *msk = mptcp_sk(sk);
-+	struct tcp_sock *tp = tcp_sk(ssk);
- 	bool zero_window_probe = false;
- 	struct mptcp_ext *mpext = NULL;
- 	bool can_coalesce = false;
-@@ -1410,14 +1411,14 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
- 		mpext = mptcp_get_ext(skb);
- 		if (!mptcp_skb_can_collapse_to(data_seq, skb, mpext)) {
- 			TCP_SKB_CB(skb)->eor = 1;
--			tcp_mark_push(tcp_sk(ssk), skb);
-+			tcp_mark_push(tp, skb);
- 			goto alloc_skb;
- 		}
+@@ -1237,7 +1237,7 @@ static struct mptcp_data_frag *
+ mptcp_carve_data_frag(const struct mptcp_sock *msk, struct page_frag *pfrag,
+ 		      int orig_offset)
+ {
+-	int offset = ALIGN(orig_offset, sizeof(long));
++	int offset = ALIGN(orig_offset, sizeof(u64));
+ 	struct mptcp_data_frag *dfrag;
  
- 		i = skb_shinfo(skb)->nr_frags;
- 		can_coalesce = skb_can_coalesce(skb, i, dfrag->page, offset);
- 		if (!can_coalesce && i >= READ_ONCE(net_hotdata.sysctl_max_skb_frags)) {
--			tcp_mark_push(tcp_sk(ssk), skb);
-+			tcp_mark_push(tp, skb);
- 			goto alloc_skb;
- 		}
+ 	dfrag = (struct mptcp_data_frag *)(page_to_virt(pfrag->page) + offset);
+@@ -4789,9 +4789,9 @@ void __init mptcp_proto_init(void)
+ 	BUILD_BUG_ON(sizeof(struct mptcp_skb_cb) > sizeof_field(struct sk_buff, cb));
  
-@@ -1471,7 +1472,7 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
- 	skb->truesize += copy;
- 	sk_wmem_queued_add(ssk, copy);
- 	sk_mem_charge(ssk, copy);
--	WRITE_ONCE(tcp_sk(ssk)->write_seq, tcp_sk(ssk)->write_seq + copy);
-+	WRITE_ONCE(tp->write_seq, tp->write_seq + copy);
- 	TCP_SKB_CB(skb)->end_seq += copy;
- 	tcp_skb_pcount_set(skb, 0);
+ 	/* struct mptcp_data_frag: 'overhead' corresponds to the alignment
+-	 * (ALIGN(1, sizeof(long)) - 1, so 8-1) + the struct's size
++	 * (ALIGN(1, sizeof(u64)) - 1, so 8-1) + the struct's size
+ 	 */
+-	BUILD_BUG_ON(ALIGN(1, sizeof(long)) - 1 + sizeof(struct mptcp_data_frag)
++	BUILD_BUG_ON(ALIGN(1, sizeof(u64)) - 1 + sizeof(struct mptcp_data_frag)
+ 		     > U8_MAX);
+ }
  
 -- 
 2.53.0
