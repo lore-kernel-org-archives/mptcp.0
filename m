@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34CBE41D63E
-	for <mptcp@lists.linux.dev>; Wed, 15 Jul 2026 11:04:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32A00432BC5
+	for <mptcp@lists.linux.dev>; Wed, 15 Jul 2026 11:04:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784113453; cv=none; b=WV8GWazx5FuTpfIQvnj/el3zsUf4Hys/FTW9sN8sHj7qdRJ6uHOCAuVvq5QmM9DofJvow+yQJxLKsFPIdGeDoQMjUZpN0VV1zWF1k+Vy6ujv58DFY025mok0XVKqF6kGd0sAm2gfmqCC7Qw0sEuAdULGSKF1cT3eM1r/YHcWxiU=
+	t=1784113454; cv=none; b=XJVQPURZiw89zSsqwYR159TX5EyC32Wz6aCHYfn4Uk7kuNxV7Rx7KMXWviK457vSgcNxPsdVpPdVaabARRvB64jnJ8Y5eW6hbCD9KpkwPwo0dxhdKJAbdgNjPNiBegTx4fGx2Y7OyM4HfoIdApZIvzx/JZBKwlIbF0r0CBFZgkE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784113453; c=relaxed/simple;
-	bh=gXWmEM4LFpuxOAMuCUM6NaMQDK0W28QcsZPP0A7MkB8=;
+	s=arc-20240116; t=1784113454; c=relaxed/simple;
+	bh=BRIxQLQYpx/joM/9BXyET37s4yuV0K5Vq7cHbOPWrys=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AFBDFWTdMX41vAzVN7ePab8aod8ZbqzuIEMPWNucFSnuYiAlYMXIjNr/+nMPnLMK3zmB299oDjI7RDnX1kw9Lzl8Zpk8ukUfS3X2E8bTO3ZIzqOBnS64wuvqhsuw2VEdrol253AaXVykXbmVZDHyyD3r6+dtPw8mRtYhoCxpy04=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DuRf60co; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=BzgszycugxgGBX6dybG+0ukudxnmm1zW82GAOlGgHR2daHJLFAuhUdmt+01VqCqH1MZL5/6HvlYzxbigmuiycEhD0NY36xD4Kg1eOFzF/KGFu75i9NCUT2IYnlQt1NdmggWIsaiOvExvInELlbVzb6vRgWHU5N/9UtsLDRfwXtA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JsDW3JSi; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DuRf60co"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 058A31F00A3A;
-	Wed, 15 Jul 2026 11:04:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JsDW3JSi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D6C71F000E9;
+	Wed, 15 Jul 2026 11:04:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784113451;
-	bh=BV7dLguDmKvmHGtOUgdSiWteNsUaNM1pfyH4C0rn6ac=;
+	s=k20260515; t=1784113453;
+	bh=VriNWCx46Dl4a3RjJkpqBv61fpE7Ui/PUI9/FLlEpKU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=DuRf60cohBC0lVTzE1BxVdX+msWfWJX70CSxnqUqZwBrDQdoE6jhqJeWii7CMuOwx
-	 ZUoSOjrhNv/WxwMUV/mBjO9lEEKZ+yUArvFryL+1gDEbGhFaJ5LEQ2tWtWGQAXxPeM
-	 qV1t1eQ2+J743R1mooC/BOE2v05/og4w+/AEptAQNSso0cpmuSz3Sk7ukf/Ii+Uuef
-	 7qfEyHIx88KJU/HUIrhnc/0hyJNitDQALt8p1XpCtkLgFq4vLjijZtL3Uzlk8dU4Sp
-	 td7hIBBK4fpBjI4o8kWsa+8FZ+r/Xxqx+mmtkWgoVpP+3/TushdlXGmHA6l4n0D+xp
-	 BvvlHRAwA5w+A==
+	b=JsDW3JSiA/3ivOOw98ZMfMh7AO6Sp7741kf/4imN/++RWZTgS2k+7TKUYXeli7ybs
+	 ISDR2D/uTaDimmnALrAeZJVSNDaQoMVbWSGL19BE3Uz5LfivyzXOy5SNDetXnJr/fn
+	 Xay1JoxrOeB+I2HhOSotVVXjesAe714rtuK80bklqXu+lwPs/X4ovjGWtYJTp9i6uN
+	 CqRF5JvWP/bYRPTSkgOlAUsy8Ff/8OtpgtoUYFbN8W/suJJKU+5jG9mvat2yD+hILp
+	 /nDtjfCh0DQWiHLSOTV6z+hE7AsOGRM/AZxyCsPaknh2FA4BbIuSbb9lc0YkUy0/CI
+	 FBwl33e7yzM+A==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v5 7/8] selftests: mptcp: connect: cover zerocopy mode
-Date: Wed, 15 Jul 2026 19:03:52 +0800
-Message-ID: <e882a387e24b968dc187d9b0c15ab655e489fb05.1784113088.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v5 8/8] selftests: mptcp: connect: close listensock deterministically
+Date: Wed, 15 Jul 2026 19:03:53 +0800
+Message-ID: <a3f7428b09ba287fb78a8df916d9b1aac589c42d.1784113088.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <cover.1784113088.git.tanggeliang@kylinos.cn>
 References: <cover.1784113088.git.tanggeliang@kylinos.cn>
@@ -45,44 +45,100 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Add a new test script mptcp_connect_zerocopy.sh to run the mptcp_connect
-selftest with the zerocopy I/O mode. This ensures the MSG_ZEROCOPY path
-is exercised in the regular test suite.
+In main_loop_s(), listensock was closed nondeterministically inside
+maybe_close() during the accept loop, and error paths closed it without
+tracking, leading to double-close or leaks across repeated iterations
+(via goto again).
 
-The script follows the same pattern as the existing mmap, sendfile, and
-splice test wrappers, invoking mptcp_connect.sh with the -m zerocopy
-option.
+Fix by making maybe_close() return a bool indicating whether it closed
+the fd, and track that per iteration. Funnel poll/accept error paths
+through a single 'goto out' label and close the socket there only
+if not already closed. Reset 'closed' at the 'again:' label so each
+iteration starts with a fresh tracking state. This ensures exactly one
+close per iteration in all cases.
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- tools/testing/selftests/net/mptcp/Makefile                  | 1 +
- tools/testing/selftests/net/mptcp/mptcp_connect_zerocopy.sh | 5 +++++
- 2 files changed, 6 insertions(+)
- create mode 100755 tools/testing/selftests/net/mptcp/mptcp_connect_zerocopy.sh
+ .../selftests/net/mptcp/mptcp_connect.c       | 24 +++++++++++++------
+ 1 file changed, 17 insertions(+), 7 deletions(-)
 
-diff --git a/tools/testing/selftests/net/mptcp/Makefile b/tools/testing/selftests/net/mptcp/Makefile
-index 22ba0da2adb8..9e47ecfe58e2 100644
---- a/tools/testing/selftests/net/mptcp/Makefile
-+++ b/tools/testing/selftests/net/mptcp/Makefile
-@@ -12,6 +12,7 @@ TEST_PROGS := \
- 	mptcp_connect_mmap.sh \
- 	mptcp_connect_sendfile.sh \
- 	mptcp_connect_splice.sh \
-+	mptcp_connect_zerocopy.sh \
- 	mptcp_join.sh \
- 	mptcp_sockopt.sh \
- 	pm_netlink.sh \
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect_zerocopy.sh b/tools/testing/selftests/net/mptcp/mptcp_connect_zerocopy.sh
-new file mode 100755
-index 000000000000..0220d29ad68e
---- /dev/null
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect_zerocopy.sh
-@@ -0,0 +1,5 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+
-+MPTCP_LIB_KSFT_TEST="$(basename "${0}" .sh)" \
-+	"$(dirname "${0}")/mptcp_connect.sh" -m zerocopy "${@}"
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+index 4670c194672d..b2380008c905 100644
+--- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
++++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+@@ -1283,12 +1283,15 @@ static void check_getpeername_connect(int fd)
+ 			cfg_host, a, cfg_port, b);
+ }
+ 
+-static void maybe_close(int fd)
++static bool maybe_close(int fd)
+ {
+ 	unsigned int r = rand();
+ 
+-	if (!(cfg_join || cfg_remove || cfg_repeat > 1) && (r & 1))
++	if (!(cfg_join || cfg_remove || cfg_repeat > 1) && (r & 1)) {
+ 		close(fd);
++		return true;
++	}
++	return false;
+ }
+ 
+ int main_loop_s(int listensock)
+@@ -1298,27 +1301,30 @@ int main_loop_s(int listensock)
+ 	struct pollfd polls;
+ 	socklen_t salen;
+ 	int remotesock;
++	bool closed;
+ 	int err = 0;
+ 	int fd = 0;
+ 
+ again:
++	closed = false;
+ 	polls.fd = listensock;
+ 	polls.events = POLLIN;
+ 
+ 	switch (poll(&polls, 1, poll_timeout)) {
+ 	case -1:
+ 		perror("poll");
+-		return 1;
++		err = 1;
++		goto out;
+ 	case 0:
+ 		fprintf(stderr, "%s: timed out\n", __func__);
+-		close(listensock);
+-		return 2;
++		err = 2;
++		goto out;
+ 	}
+ 
+ 	salen = sizeof(ss);
+ 	remotesock = accept(listensock, (struct sockaddr *)&ss, &salen);
+ 	if (remotesock >= 0) {
+-		maybe_close(listensock);
++		closed = maybe_close(listensock);
+ 		check_sockaddr(pf, &ss, salen);
+ 		check_getpeername(remotesock, &ss, salen);
+ 
+@@ -1334,7 +1340,8 @@ int main_loop_s(int listensock)
+ 		err = copyfd_io(fd, remotesock, 1, true, &winfo);
+ 	} else {
+ 		perror("accept");
+-		return 1;
++		err = 1;
++		goto out;
+ 	}
+ 
+ 	if (cfg_input)
+@@ -1343,6 +1350,9 @@ int main_loop_s(int listensock)
+ 	if (!err && --cfg_repeat > 0)
+ 		goto again;
+ 
++out:
++	if (!closed)
++		close(listensock);
+ 	return err;
+ }
+ 
 -- 
 2.53.0
 
