@@ -1,39 +1,39 @@
-Received: from out-176.mta1.migadu.com (out-176.mta1.migadu.com [95.215.58.176])
+Received: from out-174.mta1.migadu.com (out-174.mta1.migadu.com [95.215.58.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32AB21A9F87
-	for <mptcp@lists.linux.dev>; Wed, 15 Jul 2026 06:19:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4150C1A9F87
+	for <mptcp@lists.linux.dev>; Wed, 15 Jul 2026 06:19:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784096384; cv=none; b=GeIZq7a2bjFL9WJdxByWzrePww+6HPq4AyMAMqbGNTkLjrjzyOCGPzr4YoluHxKkgwR3HfVbwgB6QrDnBLYm5JMAgpGVHJ7m40yC1K8SPVNWzECXFmAb9RlZ9W94BaQ/7KJkkYkTOYz8PlfcLyjJdp0kC3Dwug/nbSJxaf4wyPU=
+	t=1784096387; cv=none; b=BZPlTpWuT33gQD2IDJiKjyLq+EBfo5XQ2UT4CO6eDpogTgJvV4m5H8mxTBgUUIDJEIQ7x4i83SsgwSiqf2pX/TpLqEWFttYey1rGUFr7K45gf53+owoaKgCG3ifzw6GmW9hHjSNmI4ODLCSWnXB9Fzz0xhntDmfwJSbAmom6nN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784096384; c=relaxed/simple;
-	bh=/sUZRm5acvptBbOZV2oLVlZ0OhVUv/7012XK7iAkDro=;
+	s=arc-20240116; t=1784096387; c=relaxed/simple;
+	bh=wSyANPMvvTEUlyOHy8WN4MigwgykeReb4MW8Jz4jGYc=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=r0AmBoaVTzPVbsD6htca7dAXFTL4Vsd7eG7+5PAIf2oFWKjgt9Je7HkizllVBz1368okjODBWtzV1m43P1fQp/M07cdT78Uc3z+PVFuEPPsqHpXcEKr4+D9d9D4gg5E/2QlrYlQjIL3k39lxbCE6y1nvLhJQuwYxJOl+u+cUU74=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=h5JeUiXr; arc=none smtp.client-ip=95.215.58.176
+	 MIME-Version:Content-Type; b=IhAoL5Gn6GggZFXR6cEKOjxn09CcMxZHx+mDN9REJsIZqk79hVw4OI1AjwAzVJcxQ4INEaspO80hxXGvTokzvSwExjjbYQqOC7r6gnGgOIO3C5poaklGRV/hKBFzuoCDhktPe/tMLBbXFRyz6UQDfj0vaNrGW7n1i3K1gjNoi3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=TjUyQXbS; arc=none smtp.client-ip=95.215.58.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="h5JeUiXr"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="TjUyQXbS"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1784096380;
+	t=1784096383;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ISVTaR4m+RS9JKFYLVmjBjlLkKSh6nxHr1oV7/Vwl1M=;
-	b=h5JeUiXroeEGIWywGvpu35FhRwV+TUCQhEP7fxXTxc/orfI87bNnmhSRBUTl3RSfRRmU+c
-	Vo5BFut7Qlq1Ssgms/GdJJbkn44nSia0G8g/0qhYqj5icc4PVV7iQ5x1/pKvjixnNWRZ0h
-	wY/Klb8weImmuNxYhdVLIxTSciA4CmU=
+	bh=HIBygXDUOUELjVRXL2x111P0YqKWluCyM0rc/9+nJUc=;
+	b=TjUyQXbSIyFmASEKtrOfUCk/hIEsj0ctfyB3GRLx1yD/adrMEi5/YyMJCxJOJpzw3EnrsC
+	JtU+VKbfviAK0uPQAg5UztXKSrqadYCjemuoEsePlwCiIZ3oqeXTO1HLy9xR7WRwWiYeMK
+	1RfC47NUHPuv0hRHKT1lW/jniH/gEJs=
 From: Chenguang Zhao <chenguang.zhao@linux.dev>
 To: mptcp@lists.linux.dev
 Cc: chenguang.zhao@linux.dev,
 	Chenguang Zhao <zhaochenguang@kylinos.cn>
-Subject: [PATCH mptcp-net v2 2/3] mptcp: use READ/WRITE_ONCE for allow_subflows
-Date: Wed, 15 Jul 2026 14:18:29 +0800
-Message-Id: <20260715061830.1057851-3-chenguang.zhao@linux.dev>
+Subject: [PATCH mptcp-net v2 3/3] mptcp: add MPFailFallback MIB for MP_FAIL TCP fallback
+Date: Wed, 15 Jul 2026 14:18:30 +0800
+Message-Id: <20260715061830.1057851-4-chenguang.zhao@linux.dev>
 In-Reply-To: <20260715061830.1057851-1-chenguang.zhao@linux.dev>
 References: <20260715061830.1057851-1-chenguang.zhao@linux.dev>
 Precedence: bulk
@@ -42,121 +42,90 @@ List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
 From: Chenguang Zhao <zhaochenguang@kylinos.cn>
 
-mptcp_is_fully_established() may read allow_subflows without holding
-fallback_lock. Annotate all allow_subflows accesses with READ_ONCE and
-WRITE_ONCE to avoid data-race warnings and make the concurrency model
-explicit.
+Track fallbacks triggered by receiving MP_FAIL with a dedicated MIB, and
+switch mptcp_pm_mp_fail_received() to mptcp_try_fallback() so the counter
+is updated and pending DATA_FIN is handled through the common path.
+InfiniteMapTx remains counted when the infinite mapping is transmitted.
 
 Signed-off-by: Chenguang Zhao <zhaochenguang@kylinos.cn>
 ---
- net/mptcp/pm.c       |  2 +-
- net/mptcp/protocol.c | 12 ++++++------
- net/mptcp/protocol.h |  2 +-
- net/mptcp/subflow.c  |  2 +-
- 4 files changed, 9 insertions(+), 9 deletions(-)
+ net/mptcp/mib.c |  1 +
+ net/mptcp/mib.h |  1 +
+ net/mptcp/pm.c  | 28 ++++------------------------
+ 3 files changed, 6 insertions(+), 24 deletions(-)
 
+diff --git a/net/mptcp/mib.c b/net/mptcp/mib.c
+index f23fda0c55a7..4dc107ab1aec 100644
+--- a/net/mptcp/mib.c
++++ b/net/mptcp/mib.c
+@@ -83,6 +83,7 @@ static const struct snmp_mib mptcp_snmp_list[] = {
+ 	SNMP_MIB_ITEM("MD5SigFallback", MPTCP_MIB_MD5SIGFALLBACK),
+ 	SNMP_MIB_ITEM("DssFallback", MPTCP_MIB_DSSFALLBACK),
+ 	SNMP_MIB_ITEM("SimultConnectFallback", MPTCP_MIB_SIMULTCONNFALLBACK),
++	SNMP_MIB_ITEM("MPFailFallback", MPTCP_MIB_MPFAILFALLBACK),
+ 	SNMP_MIB_ITEM("FallbackFailed", MPTCP_MIB_FALLBACKFAILED),
+ 	SNMP_MIB_ITEM("WinProbe", MPTCP_MIB_WINPROBE),
+ };
+diff --git a/net/mptcp/mib.h b/net/mptcp/mib.h
+index 812218b5ed2b..9db8812d8e04 100644
+--- a/net/mptcp/mib.h
++++ b/net/mptcp/mib.h
+@@ -86,6 +86,7 @@ enum linux_mptcp_mib_field {
+ 	MPTCP_MIB_MD5SIGFALLBACK,	/* Conflicting TCP option enabled */
+ 	MPTCP_MIB_DSSFALLBACK,		/* Bad or missing DSS */
+ 	MPTCP_MIB_SIMULTCONNFALLBACK,	/* Simultaneous connect */
++	MPTCP_MIB_MPFAILFALLBACK,	/* Received MP_FAIL, fallback to TCP */
+ 	MPTCP_MIB_FALLBACKFAILED,	/* Can't fallback due to msk status */
+ 	MPTCP_MIB_WINPROBE,		/* MPTCP-level zero window probe */
+ 	__MPTCP_MIB_MAX
 diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index c1f5c3ced4ee..869876a06493 100644
+index 869876a06493..82d3dbedd603 100644
 --- a/net/mptcp/pm.c
 +++ b/net/mptcp/pm.c
-@@ -884,7 +884,7 @@ void mptcp_pm_mp_fail_received(struct sock *sk, u64 fail_seq)
- 		spin_unlock_bh(&msk->fallback_lock);
- 		return;
- 	}
--	msk->allow_subflows = false;
-+	WRITE_ONCE(msk->allow_subflows, false);
- 	spin_unlock_bh(&msk->fallback_lock);
+@@ -906,33 +906,13 @@ void mptcp_pm_mp_fail_received(struct sock *sk, u64 fail_seq)
+ 		tcp_send_ack(sk);
  
- 	if (!subflow->fail_tout) {
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 5b9522caaf43..13a8d16c657a 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -93,7 +93,7 @@ bool __mptcp_try_fallback(struct mptcp_sock *msk, int fb_mib)
- 		return false;
- 	}
- 
--	msk->allow_subflows = false;
-+	WRITE_ONCE(msk->allow_subflows, false);
- 	set_bit(MPTCP_FALLBACK_DONE, &msk->flags);
- 	__MPTCP_INC_STATS(net, fb_mib);
- 	spin_unlock_bh(&msk->fallback_lock);
-@@ -958,7 +958,7 @@ static bool __mptcp_finish_join(struct mptcp_sock *msk, struct sock *ssk)
- 		return false;
- 
- 	spin_lock_bh(&msk->fallback_lock);
--	if (!msk->allow_subflows) {
-+	if (!READ_ONCE(msk->allow_subflows)) {
- 		spin_unlock_bh(&msk->fallback_lock);
- 		return false;
- 	}
-@@ -2844,7 +2844,7 @@ static void __mptcp_retrans(struct sock *sk)
- 			 */
- 			spin_lock_bh(&msk->fallback_lock);
- 			if (__mptcp_check_fallback(msk) ||
--			    !msk->allow_subflows) {
-+			    !READ_ONCE(msk->allow_subflows)) {
- 				spin_unlock_bh(&msk->fallback_lock);
- 				release_sock(ssk);
- 				goto clear_scheduled;
-@@ -3055,7 +3055,7 @@ static void __mptcp_init_sock(struct sock *sk)
- 	inet_csk(sk)->icsk_sync_mss = mptcp_sync_mss;
- 	WRITE_ONCE(msk->csum_enabled, mptcp_is_checksum_enabled(sock_net(sk)));
- 	msk->allow_infinite_fallback = true;
--	msk->allow_subflows = true;
-+	WRITE_ONCE(msk->allow_subflows, true);
- 	msk->recovery = false;
- 	msk->subflow_id = 1;
- 	msk->last_data_sent = tcp_jiffies32;
-@@ -3473,7 +3473,7 @@ static int mptcp_disconnect(struct sock *sk, int flags)
- 	 * can't overlap with a fallback anymore
- 	 */
- 	spin_lock_bh(&msk->fallback_lock);
--	msk->allow_subflows = true;
-+	WRITE_ONCE(msk->allow_subflows, true);
- 	msk->allow_infinite_fallback = true;
- 	WRITE_ONCE(msk->flags, 0);
- 	spin_unlock_bh(&msk->fallback_lock);
-@@ -3873,7 +3873,7 @@ bool mptcp_finish_join(struct sock *ssk)
- 	 */
- 	if (!list_empty(&subflow->node)) {
- 		spin_lock_bh(&msk->fallback_lock);
--		if (!msk->allow_subflows) {
-+		if (!READ_ONCE(msk->allow_subflows)) {
- 			spin_unlock_bh(&msk->fallback_lock);
- 			return false;
+ 		/* RFC8684 §3.7: after accepting MP_FAIL with a single
+-		 * subflow, leave MPTCP mode and never revert. No dedicated
+-		 * fallback MIB yet; InfiniteMapTx is counted when the map
+-		 * is transmitted. Handle pending DATA_FIN like
+-		 * mptcp_try_fallback().
++		 * subflow, leave MPTCP mode and never revert. Use
++		 * mptcp_try_fallback() so pending DATA_FIN is handled.
++		 * InfiniteMapTx is counted when the map is transmitted.
+ 		 */
+-		spin_lock_bh(&msk->fallback_lock);
+-		if (__mptcp_check_fallback(msk)) {
+-			spin_unlock_bh(&msk->fallback_lock);
+-			return;
+-		}
+-		if (!msk->allow_infinite_fallback) {
+-			spin_unlock_bh(&msk->fallback_lock);
++		if (!mptcp_try_fallback(sk, MPTCP_MIB_MPFAILFALLBACK)) {
+ 			MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_FALLBACKFAILED);
+ 			mptcp_subflow_reset(sk);
+-			return;
+-		}
+-		set_bit(MPTCP_FALLBACK_DONE, &msk->flags);
+-		spin_unlock_bh(&msk->fallback_lock);
+-
+-		if (READ_ONCE(msk->snd_data_fin_enable) &&
+-		    !(sk->sk_shutdown & SEND_SHUTDOWN)) {
+-			gfp_t saved_allocation = sk->sk_allocation;
+-
+-			sk->sk_allocation = GFP_ATOMIC;
+-			sk->sk_shutdown |= SEND_SHUTDOWN;
+-			tcp_shutdown(sk, SEND_SHUTDOWN);
+-			sk->sk_allocation = saved_allocation;
  		}
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 03f0b33694d7..833c76c41768 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -1291,7 +1291,7 @@ static inline bool mptcp_is_fully_established(struct sock *sk)
- 	return inet_sk_state_load(sk) == TCP_ESTABLISHED &&
- 	       READ_ONCE(msk->fully_established) &&
- 	       !__mptcp_check_fallback(msk) &&
--	       msk->allow_subflows;
-+	       READ_ONCE(msk->allow_subflows);
- }
- 
- static inline bool __mptcp_has_initial_subflow(const struct mptcp_sock *msk)
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 8e386899ceb9..b04d6edb9be3 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -1323,7 +1323,7 @@ static bool mptcp_subflow_fail(struct mptcp_sock *msk, struct sock *ssk)
- 		spin_unlock_bh(&msk->fallback_lock);
- 		return false;
- 	}
--	msk->allow_subflows = false;
-+	WRITE_ONCE(msk->allow_subflows, false);
- 	spin_unlock_bh(&msk->fallback_lock);
- 
- 	/* graceful failure can happen only on the MPC subflow */
+ 	} else {
+ 		pr_debug("MP_FAIL response received\n");
 -- 
 2.25.1
 
