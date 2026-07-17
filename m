@@ -1,130 +1,169 @@
-Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-174.mta1.migadu.com (out-174.mta1.migadu.com [95.215.58.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D3FA3596E1
-	for <mptcp@lists.linux.dev>; Thu, 16 Jul 2026 09:06:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07F2A37C929
+	for <mptcp@lists.linux.dev>; Fri, 17 Jul 2026 04:29:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784192798; cv=none; b=uoLKvPOx5Mv4T0uT8h4rYYLqKwpQ4QHET0p+OkvHpl/+72kFNXPQEdunBoEA5HvQ+QJc2X5pXyvYvdIuAsmXDXhPOiQBieEby5tfe0eCf2eiaE6ivl0MEX9AVDgUrj+WC4iqevIueFMqsf7gBie0lqu6Bm+LowBm4omhHdmsNc4=
+	t=1784262554; cv=none; b=frKpSjTFaN69Z01ULTqmPHh6FPSmgbpQL7Tx8gswZO/BzW74gH6a5cDOhyOCiubHQfRhQ6jr3b4d5NKOdIjy9efIWaXOSa6RYyeAe3JTTgNAaNYSL/9JfbqiEICQ8bOGOve2pYtDBd7JrXcyG7FZOx4Grq7J3/nXBWvsskfo2ew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784192798; c=relaxed/simple;
-	bh=MZSk0QD4fv5N0FGMc+6CokHCxGToFU05AbSGVf9ISPs=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
-	 MIME-Version:Content-Type; b=Xe6kIl7mz/lcXETbEINwZGXe01nQCyroApkoiVWz/kifqAuXPe4/7AdoP9q5Fx5nk8zl0HvbSlIi7C+X6eHgYkhzeKb+ZhkyegFLH9LtO1AFEam+al1qBH0Vwsq0J1i69NDPcbLIL+PPq8AsfIz4PG0OQNOd3ce3GVYPLll7gco=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DZ+cWwSw; arc=none smtp.client-ip=209.85.219.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1784262554; c=relaxed/simple;
+	bh=Yk7P5CLJpmD+tktqd143LsZExhWR854MnFjsTY3nKXk=;
+	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:
+	 In-Reply-To:References; b=sOIupYbGOsqvC+6pbBrth8jjc9Wg5cxedXY/hBBZwf6VIv0zBxD8CMTo8LerunKqlAWQK2YWGWkqgonGAdUMdYNyyUYG2IwAsbmYXF0PEd2/zwSO6kLbA4RR/macE1s5MAeXL73IttzNS1UxT8LLbGPhEW1XXSW/ip2dCnqY6A4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=FCvisuis; arc=none smtp.client-ip=95.215.58.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DZ+cWwSw"
-Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-8ee6912d86dso23002696d6.1
-        for <mptcp@lists.linux.dev>; Thu, 16 Jul 2026 02:06:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1784192796; x=1784797596; darn=lists.linux.dev;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=ubVXod3zq1kUZPqas3xHRIETPWhBKW0tzXd/R9+PxGU=;
-        b=DZ+cWwSwj6xlPGpaUN6Ee5PD4avWj6e+2XFEnnwx634CYNTQj7Z9IyA4bzmfjSr0EQ
-         gwqCjuUUIpR02cb8o423YBJaUDBY5Ql9NbVCcZIeKyu1x5hRLA5vphDIwohnnoc1e4KH
-         9+JHDDZ4XuneKgr6Xwtmz7DPHhifhYJ9jKAxmxNKdKY80QEcpLkL5lwGmXGcoaWaFpgv
-         AjqZzMaBZpRsm7VnPcWUNi3I9zYjGUjSgOtMZ5sUU72FAX0AiAPu+2sy8w9yH7cOpOre
-         /IpHwDgtSU7o+pN+GLlLeBj/nTLbEgggEV+mHeJojRhta68kEkBgfdju7Yij6QwEYQV2
-         f1VQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784192796; x=1784797596;
-        h=content-type:mime-version:date:content-transfer-encoding:message-id
-         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=ubVXod3zq1kUZPqas3xHRIETPWhBKW0tzXd/R9+PxGU=;
-        b=TtIuhfnJ+aN+DxMbdXvErkJmBdzWkX8CeIFPP33vuYtlWiKcjb8vJfb3I305VaP8km
-         9nGzZAMC3tpSNYvoX2wqgr8IwqFdrb9ZwDYcPbXtGbaZ5ziec5bHWcvWzpAYzheCjO1W
-         Ycm4y0oNetCjcdWYMxr/Mr5QKcpIzHGw3jnDxG97Fsat+ArYL/1QrXQE1flSMp03WWw7
-         KN2rtB97/i6H5M3NmCiQlwdbX3Fct1XNuBDmOpBgT3BkQh99pwxB2A/OlbpfQ8FlR/KO
-         ParT83FZ+fe3OXF2FUMN4HuVDOmudxSSjDE56NEwZ3wBjOyxBYq8p/Hs/oEkgeaQGj5E
-         ZpQA==
-X-Gm-Message-State: AOJu0YzCzIJRMcdBX4JHvBY8S7kgbk1p++Vl8Q2kcROKRqWuBH54uv6M
-	2Wa4+IQEv8I45dEk0Hu3W/DmUhj2SWxCryZRjKWb5eaLth2YnXWUZvhhVWFX
-X-Gm-Gg: AfdE7cmAgbGu88snm6b86BSibfem1FcWX00qMXDiUPDFt5rA918IhgJECbpmSuLZv0n
-	HOccE487zlYQkiuvBdBX5JJyx3FgXF/dMO3zpdirSGgxN6v9E13tZFDkbAvSOXl0tSiTu7K+m2b
-	csZXnscy/IHZE5uMpUQVUGHxQX+BYmUb7JlAM5+yiPwaYA/4za7FcYuRMNUA89HirxyFcVOs7Wx
-	P/9e5Kl7yqmPcuw8R2SA0nmDEfNJ2bREU5kQZtcYXwm3DEXSBgJKtZd9JJ4LD+BK7EV2qOcU61Q
-	+6yAaKFTls2K8O4RsPYVgS89j8I55mPfT2ptL1TPwkhRvTsw8CIkhO3V3Ldtmh24GrTOpK0PnVM
-	55rogZyTblvxmmI4kB85As+WxjnnJekIrPvGQiVmuwsqW1NX+UJMh9WE3TP8F8cMVDL8EofgbDl
-	I3/DxEGMvidp9V54Me
-X-Received: by 2002:a05:6214:4e16:b0:8ef:5103:df9e with SMTP id 6a1803df08f44-903fe54570fmr228526146d6.8.1784192795944;
-        Thu, 16 Jul 2026 02:06:35 -0700 (PDT)
-Received: from [127.0.0.1] ([172.214.156.85])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-90313c322c7sm185098946d6.26.2026.07.16.02.06.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jul 2026 02:06:35 -0700 (PDT)
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <tanggeliang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <cover.1784188064.git.tanggeliang@kylinos.cn>
-References: <cover.1784188064.git.tanggeliang@kylinos.cn>
-Subject: Re: [PATCH mptcp-next v6 00/10] mptcp: add MSG_ZEROCOPY support
-Message-ID: <f5afe964-8346-c6a2-5f72-fc969713fa00@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 16 Jul 2026 09:06:34 +0000
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="FCvisuis"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1784262551;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pTUpRrrhfo8PM067cQugZZNcuL1AbvXr2cMDeVvXD8Q=;
+	b=FCvisuisBicnuKZsBfu7fr7ceh+T1CPckXtK8OFH4TkWCSv4abEhWNuZkbi2l8tngn68sW
+	2phpjOhRsMU1BOEFGQ6W3BIelCdyhU1NuwBXQWu07osai0VkS1ABV76uHgQjH9B5kgkSez
+	Qe852JSVV34mNfsuwBI9oJg3ekeR8Dk=
+Date: Fri, 17 Jul 2026 04:29:07 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: gang.yan@linux.dev
+Message-ID: <fb5a37e794fc4753e1ea17a69bfbc2797d99af9f@linux.dev>
+TLS-Required: No
+Subject: Re: [PATCH] mptcp: pm: fix data race in add_addr timer callback
+To: "luoqing" <l1138897701@163.com>, mptcp@lists.linux.dev
+In-Reply-To: <20260715060550.655299-1-l1138897701@163.com>
+References: <20260715060550.655299-1-l1138897701@163.com>
+X-Migadu-Flow: FLOW_OUT
 
-Hi Geliang,
+July 15, 2026 at 2:05 PM, "luoqing" <l1138897701@163.com mailto:l11388977=
+01@163.com?to=3D%22luoqing%22%20%3Cl1138897701%40163.com%3E > wrote:
 
-Thank you for your modifications, that's great!
+Hi luoqin,
 
-Our CI did some validations and here is its report:
+Thanks for your patch.
 
-- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/294828=
-90291
+>=20
+>=20From: luoqing <luoqing@kylinos.cn>
+>=20
+>=20The timer callback reads entry->retrans_times outside pm.lock to deci=
+de
+> whether to call mptcp_pm_subflow_established(). Since
+> mptcp_pm_announced_del_timer() can concurrently set retrans_times =3D
+> ADD_ADDR_RETRANS_MAX under pm.lock, a race condition exists.
+>=20
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/6890940ec099
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D1128612
+@Matt,@geliang.=20AFAIK, this could happen when ADD_ADDR is echoed by the=
+ peer,
+and at the same time the timer is woke up. 'mptcp_pm_add_addr_echoed' wil=
+l call
+'mptcp_pm_announced_del_timer' and set 'retrans_times' as 'ADD_ADDR_RETRA=
+NS_MAX',
+but the timer callback then reads entry->retrans_times outside of pm.lock=
+.
 
+> Use a local 'schedule_work' flag set inside pm.lock only when the timer
+> callback itself increments retrans_times to ADD_ADDR_RETRANS_MAX. This
+> ensures that mptcp_pm_subflow_established() is only called when the
+> retransmission naturally exhausts.
+>=20
+>=20Additionally, use READ_ONCE/WRITE_ONCE for retrans_times and timer_do=
+ne
+> to prevent compiler optimizations.
 
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
+@luo
+'timer_done' is not fixed in your code, and 'schedule_work' is not seen
+either, do you mean 'completed'?  Please make sure the commit message
+matches the code.
+>=20
+>=20Signed-off-by: luoqing <luoqing@kylinos.cn>
+> ---
+>  net/mptcp/pm.c | 16 ++++++++++++----
+>  1 file changed, 12 insertions(+), 4 deletions(-)
+>=20
+>=20diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+> index 6afd39aea110..4c039e7843d3 100644
+> --- a/net/mptcp/pm.c
+> +++ b/net/mptcp/pm.c
+> @@ -380,6 +380,8 @@ static void mptcp_pm_add_addr_timer(struct timer_li=
+st *timer)
+>  struct mptcp_sock *msk =3D entry->sock;
+>  struct sock *sk =3D (struct sock *)msk;
+>  unsigned int timeout =3D 0;
+> + bool completed =3D false;
+> + u8 retrans_times;
+>=20=20
+>=20 pr_debug("msk=3D%p\n", msk);
+>=20=20
+>=20@@ -399,27 +401,33 @@ static void mptcp_pm_add_addr_timer(struct time=
+r_list *timer)
+>=20=20
+>=20 spin_lock_bh(&msk->pm.lock);
+>=20=20
+>=20+ retrans_times =3D READ_ONCE(entry->retrans_times);
+> +
+>  /* The cancel path (mptcp_pm_announced_del_timer()) can race with this
+>  * callback. Once cancel updates retrans_times to MAX, suppress further
+>  * retransmissions here. If this callback acquires pm.lock first, one
+>  * final transmit attempt is still possible.
+>  */
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+Maybe just drop the comments here, I don't think it is worth explaining
+separately.
 
-For more details:
+> - if (entry->retrans_times < ADD_ADDR_RETRANS_MAX &&
+> + if (retrans_times < ADD_ADDR_RETRANS_MAX &&
+>  !mptcp_pm_should_add_signal_addr(msk)) {
+>  pr_debug("retransmit ADD_ADDR id=3D%d\n", entry->addr.id);
+>  mptcp_pm_announce_addr(msk, &entry->addr, false);
+>  mptcp_pm_add_addr_send_ack(msk);
+> - entry->retrans_times++;
+> + retrans_times++;
+> + WRITE_ONCE(entry->retrans_times, retrans_times);
+>  }
+>=20=20
+>=20- if (entry->retrans_times < ADD_ADDR_RETRANS_MAX)
+> + if (retrans_times >=3D ADD_ADDR_RETRANS_MAX)
+> + completed =3D true;
+> +
+> + if (retrans_times < ADD_ADDR_RETRANS_MAX)
+>  timeout <<=3D entry->retrans_times;
+>  else
+>  timeout =3D 0;
 
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+These two if branch could be combined into one, like:
 
+'''
+if (retrans_times < ADD_ADDR_RETRANS_MAX)
+        timeout <<=3D entry->retrans_times;
+else {
+        timeout =3D 0;
+        completed =3D true;
+}
+'''
+Note: this snippet is untested =E2=80=94 please double-check the coding s=
+tyle
+and make sure it compiles before submitting.
 
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+Thanks
+Gang
+>=20=20
+>=20 spin_unlock_bh(&msk->pm.lock);
+>=20=20
+>=20- if (entry->retrans_times =3D=3D ADD_ADDR_RETRANS_MAX)
+> + if (completed)
+>  mptcp_pm_subflow_established(msk);
+>=20=20
+>=20 out:
+> --=20
+>=202.25.1
+>
