@@ -1,35 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A628443AAF;
-	Tue, 21 Jul 2026 22:15:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C4E4445AE4;
+	Tue, 21 Jul 2026 22:15:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784672118; cv=none; b=Pu57AQdIdvQ/X8ml8g87f+/ash+r2yPPn2rHmbbafVkWqKqjMlJcvGFGQjiZpX+rMRa/G80r/9bLg+ZnxUYhFw9Q8Ig9c6PBTV2Apx+uhChvVOwRulYJhVT9q05kI2gA+Uw1EdRndozD8MEv7ZC82FD29HLe23LeEberedu3VaM=
+	t=1784672120; cv=none; b=QZxqn+gZByCikME9ikseI8xYPbXtTIMJaPIDqRHkCDKlOSkKnKepO5wB2Tj5KqT0UWvAZorfEKOvf/zTIkiIKBJy6FqTeGfY89epDvGJlagXGUjSz28tl58O22gkKGqr471dXkURsOg0CQnvSDWKb1GA43UmyRN0wPZwcUR5HxM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784672118; c=relaxed/simple;
-	bh=cQebUUc3b4trxwzXFkPnBUl35n/3pGClyHHp+w9wnHE=;
+	s=arc-20240116; t=1784672120; c=relaxed/simple;
+	bh=tSKdsuqUcnutK73kjhNzdNGzUK+YT2RybfzYqFoiXRE=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=l5i4HJkDyXaCptSRGaOVxE08ybjpXUZWy/4+T4mo/AixiJftEchQo3BHgzHBmpV/xVBZHUC42aQ2kK629Y3EqRKDQsxbsMZSDBZ1GjvaTjqJ4QGAbE1c3zP2X2AeonvWeRGZWATzU3V7UiG71rd5EwS7h7/5teblyBryd22101E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E9QOAxV8; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:To:Cc; b=nE5ICDOPugV8OdEjPNuqD2CN/MTDvXPnsrg/PjszOc49zGy6KUBJbtvrin0SOYzcgO07hqWD4zEBk3VD2Q9WqdAxuSC68ZLXeYKGwTmIpnOcdjdtpxnlbCjgnLi27f4znkWJCHmza/ow+LsOO1pAzLk5j6FkEWdei4SoVYzCLZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fu3RwrtD; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E9QOAxV8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22D431F00A3A;
-	Tue, 21 Jul 2026 22:15:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fu3RwrtD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C582B1F00A3D;
+	Tue, 21 Jul 2026 22:15:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784672116;
-	bh=LA1GN88xFwR/n7V23hRxm12Z3KevDKUurEIo5L4Unic=;
+	s=k20260515; t=1784672119;
+	bh=eDNl95CZQ/T901YSIPfRI4wV+4KqYKa1GvmpSJZDq10=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=E9QOAxV8AEuVIl2eI/NS9SD6Fa83K9SYKz3OOc+eOd1cnZucKEG/N1hcTv2gZkIzV
-	 7AypNaLHOYJykI6Kn9qK5hMImnmcZSCsParRJLhCdWQ2pOj38Fl9KUcPhIZRfV2dGp
-	 12/i5GGDrjA6cQYouT6PWQJppzVVbHlLO3GLbD8DfgM6OHHilOnz/1VXUVOICIJlOk
-	 pCHg7Yug997qB4ayD2kMqUNmzGS/ccER7z05AlkSAaz313OB8YxqdptOIa0UoeGZWC
-	 TuJYfpGMCPMUtHOswAAXNQ4HlPXHfA4YxomUbAHccs8HFzFPveMNXJ8Fmx2jePNv8v
-	 gXwhhooPdQ60g==
+	b=Fu3RwrtDdBp7DxmxD3qqiqk3jcIcnK6yNdKYxLVVrPMUIF2eMb/4kZpQvjOKugO2m
+	 BqQjrOTa3bfRLFj/kQFHFkGc7D5d1wwzZzd6QJk42aZyLBsXiCXhrshFRVD5Xq5Rg7
+	 pgNBDRvVr1ZWVRC9WxqpiS8Z7RrAbjxITjRqIvKaAbcKvkKTlVkBko5JTCROa/desn
+	 XiGWEvtel96JpZQeXsM0lw35DD3Qg5vm8Hw6XPrT1HCTXNTUpxwvgIqrB5xnwoYBGz
+	 /dRH6qOwNOo+q936hjSl2jnfTnuMdWWkEQPUBUSpptyDi2FJOr0dXm8W2HYhr/bBeo
+	 NccHvd8eas9bw==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Wed, 22 Jul 2026 00:14:41 +0200
-Subject: [PATCH net 4/5] selftests: mptcp: userspace_pm: fix undefined
- variable port
+Date: Wed, 22 Jul 2026 00:14:42 +0200
+Subject: [PATCH net 5/5] mptcp: fix BUILD_BUG_ON on legacy ARM config
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,7 +37,7 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260722-net-mptcp-misc-fixes-7-2-rc5-v1-4-6fb595bc86ef@kernel.org>
+Message-Id: <20260722-net-mptcp-misc-fixes-7-2-rc5-v1-5-6fb595bc86ef@kernel.org>
 References: <20260722-net-mptcp-misc-fixes-7-2-rc5-v1-0-6fb595bc86ef@kernel.org>
 In-Reply-To: <20260722-net-mptcp-misc-fixes-7-2-rc5-v1-0-6fb595bc86ef@kernel.org>
 To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, 
@@ -47,61 +46,60 @@ To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
  Simon Horman <horms@kernel.org>
 Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, 
  linux-kernel@vger.kernel.org, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
- stable@vger.kernel.org, Shuah Khan <shuah@kernel.org>, 
- linux-kselftest@vger.kernel.org, Geliang Tang <geliang@kernel.org>
+ stable@vger.kernel.org, Frank Ranner <frank.ranner@intel.com>, 
+ kernel test robot <lkp@intel.com>
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1857; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=AAR5vqT0rqrRZnOlgAxMfAI48G7bJDKuLQu6poOze3I=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLLi36eeWXXTOoxDVJLpzLO5DyxWetyzc153WcX9l/iDV
- 6dkHUNdO0pZGMS4GGTFFFmk2yLzZz6v4i3x8rOAmcPKBDKEgYtTACZiNoPhn8KUKUu/mvTz6Ie+
- zdsQnSXTfP4dg+ey7jQpQY639k+CXzD8T/6f2psfrl/3oeLRgnBupia2teJPJS+/cbkY3qhwnse
- VAwA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1973; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=tSKdsuqUcnutK73kjhNzdNGzUK+YT2RybfzYqFoiXRE=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLLi36dV2+zMla1sWiTPtfNaWMOE+ijGS75RczsetVTdK
+ a1OZbDrKGVhEONikBVTZJFui8yf+byKt8TLzwJmDisTyBAGLk4BmEhwAcP/DKYniqrsF6r8pps2
+ LV2+/2f/tfU3uYVc8uITtrRma5S8YGR4ONdz06y1hzae3/ezxsrW3OY6851XT5cy3doU/a+Ci0W
+ aGwA=
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+The 0-day bot managed to find kernel configs that cause build failures,
+e.g. when using the StrongARM SA1100 target (ARMv4).
 
-In make_connection(), the variable "port" is used but never defined.
-This leads to an empty argument being passed to wait_local_port_listen(),
-causing "printf: : invalid number" errors:
+On such legacy ARM architecture, all structures are apparently aligned
+to 32 bits, causing build issue here. Indeed, on such architecture,
+'flags' size is not equivalent to sizeof(u16) as expected, but to
+sizeof(u32).
 
- # INFO: Init
- # 01 Created network namespaces ns1, ns2                          [ OK ]
- # INFO: Make connections
- # ./../lib.sh: line 651: printf: : invalid number
- # 02 Established IPv4 MPTCP Connection ns2 => ns1                 [ OK ]
- # INFO: Connection info: 10.0.1.2:59516 -> 10.0.1.1:50002
- # ./../lib.sh: line 651: printf: : invalid number
- # 03 Established IPv6 MPTCP Connection ns2 => ns1                 [ OK ]
+Instead, use memset(). It was not used before to ensure a simple clear
+operation was used by the compiler. But at the end, it shouldn't matter,
+and the compiler should optimise this to the same operation with or
+without memset() when -O above 0 is used. So let's switch to memset() to
+fix this issue, and reduce this complexity.
 
-Fix it by using the correctly defined variable "app_port", which holds the
-appropriate port number for the connection.
-
-Fixes: 39348f5f2f13 ("selftests: mptcp: wait for port instead of sleep")
+Fixes: 5e939544f9d2 ("mptcp: fix uninit-value in mptcp_established_options")
 Cc: stable@vger.kernel.org
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Suggested-by: Frank Ranner <frank.ranner@intel.com>
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202605312026.Srgsz7Tp-lkp@intel.com/
+Closes: https://lore.kernel.org/oe-kbuild-all/202607031100.upQfRZTM-lkp@intel.com/
+Reviewed-by: Mat Martineau <martineau@kernel.org>
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
-To: Shuah Khan <shuah@kernel.org>
-Cc: linux-kselftest@vger.kernel.org
----
- tools/testing/selftests/net/mptcp/userspace_pm.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/mptcp/options.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-diff --git a/tools/testing/selftests/net/mptcp/userspace_pm.sh b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-index e9ae1806ab07..30a809752d1b 100755
---- a/tools/testing/selftests/net/mptcp/userspace_pm.sh
-+++ b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-@@ -212,7 +212,7 @@ make_connection()
- 	   ./mptcp_connect -s MPTCP -w 300 -p $app_port -l $listen_addr > /dev/null 2>&1 &
- 	local server_pid=$!
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index 1b74ca5b6a59..c664023d37ba 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -571,10 +571,7 @@ static bool mptcp_established_options_dss(struct sock *sk, struct sk_buff *skb,
+ 	bool ret = false;
  
--	mptcp_lib_wait_local_port_listen "${ns1}" "${port}"
-+	mptcp_lib_wait_local_port_listen "${ns1}" "${app_port}"
+ 	/* Zero `use_ack` and `use_map` flags with one shot. */
+-	BUILD_BUG_ON(sizeof_field(struct mptcp_ext, flags) != sizeof(u16));
+-	BUILD_BUG_ON(!IS_ALIGNED(offsetof(struct mptcp_ext, flags),
+-				 sizeof(u16)));
+-	*(u16 *)&opts->ext_copy.flags = 0;
++	memset(&opts->ext_copy.flags, 0, sizeof(opts->ext_copy.flags));
+ 	opts->csum_reqd = READ_ONCE(msk->csum_enabled);
+ 	mpext = skb ? mptcp_get_ext(skb) : NULL;
  
- 	# Run the client, transfer $file and stay connected to the server
- 	# to conduct tests
 
 -- 
 2.53.0
