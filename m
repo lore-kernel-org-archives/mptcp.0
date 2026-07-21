@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AC0643F8C9;
-	Tue, 21 Jul 2026 22:15:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF944442FBB;
+	Tue, 21 Jul 2026 22:15:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784672112; cv=none; b=Kth1Z+gIeOV3/fx6kQLVNzV+htOZqPmLpPkNNaCymSALgtBuYMa7OIDD4RLabEEkznlW2Vu3gUFN8n/Cm44RWJSc+SpVzVaPuz0n0RXLF+n7ZtWK8aXMzzY4P8rEyCpuW1KMHXxwvPOE8X6p7OEx68OFg2jXR0/dJzhFITXDfqY=
+	t=1784672115; cv=none; b=TBI18vAG2Uz1FsKlKuWPTvJBhuDrBo4X2+DwsB5x8BmFzkZ79YIWsC6P7NZTcndV1uIL8fhzEZ2I0bJrAFttiQ01POzOOK407w1EVWFmSPiJ9oad5rEG54ns/ncckEwyFK8tcypBHS3X24ZPJR1xNld+fq7W96Nj2Ns+eOToWpY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784672112; c=relaxed/simple;
-	bh=ZtaW8oB5hy7mvoPP6JzZWBB7H//QrhxnvarhkX8e+Gw=;
+	s=arc-20240116; t=1784672115; c=relaxed/simple;
+	bh=Hh/p/HQrYpss/cNZlPsOY5elFfI/RGjcLL6kRaGP9Yo=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ffmu56Tk5e632Nv/2IaOcedtCJtFNfYtwKKpVIRppvaCuU/OhmIOAXANzVCA5daQ9662M3wCidV0XqQEAorzrvryPjuPxKGWkmETXmm99Kyw8XcvXMW+oO5RFhamo2CvrstjdrKzinhHJ4u/w6xHcI4HqeF3hlzsT0CIzvAUhYg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k/jIsuIm; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:To:Cc; b=BH2sn8ru4YZu7pc6sUZdFAzUwFmpdlCHBe57gXw66CrWQOLvUHaVjeeedlZs1v95N5bYcRdrnQhn26dxtnUpQg/ZMcW9E4EkSCQhQY50ShiWvkmt4KrbYWXtAri41m71eG2K5MXFh/TaOkzDvpiGVPwqCqr2mo1kquEAAqI6CNs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kvSdE/Q0; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k/jIsuIm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C9CA1F00A3D;
-	Tue, 21 Jul 2026 22:15:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kvSdE/Q0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A27C1F00ACF;
+	Tue, 21 Jul 2026 22:15:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784672111;
-	bh=CMinFyqr5njRocBeZqP8BIJeE385Om6zUZZvJdLn7Ns=;
+	s=k20260515; t=1784672113;
+	bh=ae4TnEnjRXKPyebXdwKey77J7n0LdGkmT+eRp+yVczk=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=k/jIsuImzJNPitK2Pwg2zK45BxZ568L2PwSSRa85MJiRmPdDOZQDiHwZMOcLoXQ3v
-	 6412Saz4X6Phcz++YT8h6R8lXXiMBu2QXlMMYHShmsVluLTYuyat9cqMsKUwjUOlAe
-	 haVLfbUBhvOKmo4pdIb4gALMHWEADhc9SjgY24qV/1+eKoVQGm9B84+SGYyFFTZ41i
-	 LqB/BGvWCnZSk+8Jl/rU07wvwo1V919f5u9bl3IXokB8pyu8SnAPhAeIs5PgYBdsFf
-	 K5BFKtwvF9vkXMtpblhfUDheOoy0OxfaKYbsyox7v0LS14ZC0PI71J0ShiWPKTYdrn
-	 3vARhF8QjJeWQ==
+	b=kvSdE/Q0UXLke++yKv/arkXHmkZgrabKCetERpspki+9fyVNiMJz9B/uPhir3aHcN
+	 AyFmYmfQKzDj1zzKAIjGzeCL6NCguNgn6VfeUhCz+DVwX9cRfElneTZO2O145/I0JC
+	 w0XIBkPGUt8pWV17M9GcT3rn7cHq7N5GHq0oXD5b8xWXRs08PuZBwj63wuuuPrY3dE
+	 2zWNL21QQgPhnwR8DQ8x31kX45dAzAOnqvtIQI0PQyEyZdooPzUlivAQyf7X4LIohZ
+	 rthaZ1nSlqPm4oH6QWDrIYnalXv1UmIw1XGZsyjZ9gy6crtV80B34sVSJF3SMWMFq9
+	 N1XTADAG9tEHg==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Wed, 22 Jul 2026 00:14:39 +0200
-Subject: [PATCH net 2/5] mptcp: pm: userspace: fix use-after-free in
- get_local_id
+Date: Wed, 22 Jul 2026 00:14:40 +0200
+Subject: [PATCH net 3/5] mptcp: fix stale skb->sk reference on subflow
+ close
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,7 +38,7 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260722-net-mptcp-misc-fixes-7-2-rc5-v1-2-6fb595bc86ef@kernel.org>
+Message-Id: <20260722-net-mptcp-misc-fixes-7-2-rc5-v1-3-6fb595bc86ef@kernel.org>
 References: <20260722-net-mptcp-misc-fixes-7-2-rc5-v1-0-6fb595bc86ef@kernel.org>
 In-Reply-To: <20260722-net-mptcp-misc-fixes-7-2-rc5-v1-0-6fb595bc86ef@kernel.org>
 To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, 
@@ -47,99 +47,128 @@ To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
  Simon Horman <horms@kernel.org>
 Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, 
  linux-kernel@vger.kernel.org, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
- stable@vger.kernel.org, Xuanqiang Luo <luoxuanqiang@kylinos.cn>, 
- Geliang Tang <geliang@kernel.org>
+ Kalpan Jani <kalpan.jani@mpiricsoftware.com>, stable@vger.kernel.org
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3322; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=8DCHTVbUXEUEAILN1E701JGgPjN3FeF+obur5MPG3d8=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLLi36coqCntjvt3U3L1Of5ZThJHXghrPeSWTJ/o9GmV8
- H2V0vbojlIWBjEuBlkxRRbptsj8mc+reEu8/Cxg5rAygQxh4OIUgJv8kJHhkelupuXsB+t2GfdY
- 78tRcbj91Vnq6Pn0cOunR8/f0zpSzsjwxris9bSH8Z8V2aYP7n2amHFbZppGYH+fGHOVVGOqrAw
- zAA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4474; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=mIspUK790P4bSDJmTLrkzE/XviU2aKy8rWd6/M7/pQM=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLLi36dGZ9qcufuKe/PRFlP+iOMXxKeJ/48I9Ju5ouvL+
+ xrLjVend5SyMIhxMciKKbJIt0Xmz3xexVvi5WcBM4eVCWQIAxenAEzEsoORYf/pPfcsVrtuWHW4
+ 5JTgLalYR2vJ10w7yh0de5fx9KRfKmNkOLW2lSMy476kfb3p24ZjX9YHMVne4rm4oeGhan0G2xY
+ hdgA=
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+From: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
 
-In mptcp_pm_userspace_get_local_id(), the address entry is looked up under
-spinlock, but its id is read after dropping the lock. A concurrent deletion
-can free the entry between the unlock and the read, leading to UAF.
+The backlog list is updated by mptcp_data_ready() under
+mptcp_data_lock(). The cleanup of backlog references to a closing
+subflow, however, was performed in mptcp_close_ssk(), before
+__mptcp_close_ssk() acquires the ssk lock, and while holding neither
+the ssk lock nor mptcp_data_lock().
 
-The race window is narrow. It was reproduced only with a locally
-constructed stress test that repeatedly overlaps an MP_JOIN SYN with a
-MPTCP_PM_CMD_SUBFLOW_DESTROY request.
+Because that traversal ran without mptcp_data_lock(), concurrent softirq
+RX processing on another CPU (subflow_data_ready() -> mptcp_data_ready()
+-> __mptcp_add_backlog(), under mptcp_data_lock()) could add a backlog
+entry referencing the ssk while the cleanup loop was in progress. Such
+an entry could be missed by the cleanup, or the concurrent list update
+could corrupt the traversal, leaving skb->sk pointing at the ssk after
+it is freed.
 
-However, the KASAN report below confirms that the race is reachable:
+A later mptcp_backlog_purge() then dereferences the stale pointer,
+triggering a warning in inet_sock_destruct() (ssk->sk_rmem_alloc != 0)
+followed by a use-after-free in mptcp_backlog_purge().
 
-  [  666.319376] BUG: KASAN: slab-use-after-free in mptcp_userspace_pm_get_local_id+0x1dc/0x1f0
-  [  666.319386] Read of size 1 at addr ffff888124845610 by task swapper/0/0
-  ...
-  [  666.319401] Call Trace:
-  [  666.319405]  <IRQ>
-  [  666.319408]  dump_stack_lvl+0x53/0x70
-  [  666.319412]  print_address_description.constprop.0+0x2c/0x3b0
-  [  666.319418]  print_report+0xbe/0x2b0
-  [  666.319421]  ? mptcp_userspace_pm_get_local_id+0x1dc/0x1f0
-  [  666.319423]  kasan_report+0xce/0x100
-  [  666.319426]  ? mptcp_userspace_pm_get_local_id+0x1dc/0x1f0
-  [  666.319429]  mptcp_userspace_pm_get_local_id+0x1dc/0x1f0
-  [  666.319433]  mptcp_pm_get_local_id+0x371/0x440
-  ...
-  [  666.319821] Allocated by task 45539:
-  [  666.319844]  kasan_save_stack+0x33/0x60
-  [  666.319855]  kasan_save_track+0x14/0x30
-  [  666.319858]  __kasan_kmalloc+0x8f/0xa0
-  [  666.319863]  __kmalloc_noprof+0x1e7/0x520
-  [  666.319867]  sock_kmalloc+0xdf/0x130
-  [  666.319885]  sock_kmemdup+0x1b/0x40
-  [  666.319888]  mptcp_userspace_pm_append_new_local_addr+0x261/0x500
-  [  666.319910]  mptcp_pm_nl_announce_doit+0x16a/0x610
-  ...
-  [  666.319967] Freed by task 45560:
-  [  666.319988]  kasan_save_stack+0x33/0x60
-  [  666.319991]  kasan_save_track+0x14/0x30
-  [  666.319994]  kasan_save_free_info+0x3b/0x60
-  [  666.319998]  __kasan_slab_free+0x43/0x70
-  [  666.320000]  kfree+0x166/0x440
-  [  666.320003]  sock_kfree_s+0x1d/0x50
-  [  666.320007]  mptcp_userspace_pm_delete_local_addr.isra.0+0x157/0x200
-  [  666.320011]  mptcp_pm_nl_subflow_destroy_doit+0x51d/0xea0
+Fix this by moving the backlog cleanup into __mptcp_close_ssk(), after
+subflow->closing is set to 1 and while the ssk lock is still held,
+serialized under mptcp_data_lock(). The cleanup runs only on the push
+path (MPTCP_CF_PUSH), where backlog references accumulate; on other
+teardown paths the caller already handles cleanup.
 
-Fix by copying the id into a local variable while still holding the lock,
-and use -1 as a "not found" sentinel.
+With subflow->closing set and mptcp_data_lock() held across the purge,
+any concurrent mptcp_data_ready() either completes its enqueue before
+the purge runs and is caught, or observes closing=1 and bails out. Once
+mptcp_data_unlock() is reached, no new skb referencing the ssk can be
+enqueued, so the cleanup is exhaustive.
 
-Fixes: f012d796a6de ("mptcp: check addrs list in userspace_pm_get_local_id")
+Remove the unprotected traversal from mptcp_close_ssk() entirely.
+
+Fixes: ee458a3f314e ("mptcp: introduce mptcp-level backlog")
 Cc: stable@vger.kernel.org
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-Tested-by: Xuanqiang Luo <luoxuanqiang@kylinos.cn>
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Suggested-by: Paolo Abeni <pabeni@redhat.com>
+Reported-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/621
+Signed-off-by: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
+Acked-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- net/mptcp/pm_userspace.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ net/mptcp/protocol.c | 33 +++++++++++++++++++--------------
+ 1 file changed, 19 insertions(+), 14 deletions(-)
 
-diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-index d100867e9202..945aa5afc2dd 100644
---- a/net/mptcp/pm_userspace.c
-+++ b/net/mptcp/pm_userspace.c
-@@ -132,12 +132,15 @@ int mptcp_userspace_pm_get_local_id(struct mptcp_sock *msk,
- 	__be16 msk_sport =  ((struct inet_sock *)
- 			     inet_sk((struct sock *)msk))->inet_sport;
- 	struct mptcp_pm_addr_entry *entry;
-+	int id;
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index b32f0cd262a7..ca644ec53eed 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -2545,6 +2545,22 @@ static void __mptcp_subflow_disconnect(struct sock *ssk,
+ 	}
+ }
  
- 	spin_lock_bh(&msk->pm.lock);
- 	entry = mptcp_userspace_pm_lookup_addr(msk, &skc->addr);
-+	id = entry ? entry->addr.id : -1;
- 	spin_unlock_bh(&msk->pm.lock);
--	if (entry)
--		return entry->addr.id;
++static void mptcp_cleanup_ssk_backlog(struct sock *sk, struct sock *ssk)
++{
++	struct mptcp_sock *msk = mptcp_sk(sk);
++	struct sk_buff *skb;
 +
-+	if (id != -1)
-+		return id;
++	mptcp_data_lock(sk);
++	list_for_each_entry(skb, &msk->backlog_list, list) {
++		if (skb->sk != ssk)
++			continue;
++
++		atomic_sub(skb->truesize, &skb->sk->sk_rmem_alloc);
++		skb->sk = NULL;
++	}
++	mptcp_data_unlock(sk);
++}
++
+ /* subflow sockets can be either outgoing (connect) or incoming
+  * (accept).
+  *
+@@ -2568,6 +2584,9 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
+ 	lock_sock_nested(ssk, SINGLE_DEPTH_NESTING);
+ 	subflow->closing = 1;
  
- 	if (skc->addr.port == msk_sport)
- 		skc->addr.port = 0;
++	if (flags & MPTCP_CF_PUSH)
++		mptcp_cleanup_ssk_backlog(sk, ssk);
++
+ 	/* Borrow the fwd allocated page left-over; fwd memory for the subflow
+ 	 * could be negative at this point, but will be reach zero soon - when
+ 	 * the data allocated using such fragment will be freed.
+@@ -2659,9 +2678,6 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
+ void mptcp_close_ssk(struct sock *sk, struct sock *ssk,
+ 		     struct mptcp_subflow_context *subflow)
+ {
+-	struct mptcp_sock *msk = mptcp_sk(sk);
+-	struct sk_buff *skb;
+-
+ 	/* The first subflow can already be closed or disconnected */
+ 	if (subflow->close_event_done || READ_ONCE(subflow->local_id) < 0)
+ 		return;
+@@ -2671,17 +2687,6 @@ void mptcp_close_ssk(struct sock *sk, struct sock *ssk,
+ 	if (sk->sk_state == TCP_ESTABLISHED)
+ 		mptcp_event(MPTCP_EVENT_SUB_CLOSED, mptcp_sk(sk), ssk, GFP_KERNEL);
+ 
+-	/* Remove any reference from the backlog to this ssk; backlog skbs consume
+-	 * space in the msk receive queue, no need to touch sk->sk_rmem_alloc
+-	 */
+-	list_for_each_entry(skb, &msk->backlog_list, list) {
+-		if (skb->sk != ssk)
+-			continue;
+-
+-		atomic_sub(skb->truesize, &skb->sk->sk_rmem_alloc);
+-		skb->sk = NULL;
+-	}
+-
+ 	/* subflow aborted before reaching the fully_established status
+ 	 * attempt the creation of the next subflow
+ 	 */
 
 -- 
 2.53.0
