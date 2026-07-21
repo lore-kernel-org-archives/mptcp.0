@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1E183264D9
-	for <mptcp@lists.linux.dev>; Tue, 21 Jul 2026 16:43:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B92F38BF7A
+	for <mptcp@lists.linux.dev>; Tue, 21 Jul 2026 17:22:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784652206; cv=none; b=WCUyTGtTx4/MuNvOcpqAZwsIwSrqLlrR3NCdqQtb4O3u/VSAEWl4ptvhrfXkI3ImgqSrXtH41Ar9Y7hOueW7vruIqmCcOIUtYjDCeyMPWeK2mucAq5yOCuL94Ym4TMsYv5fnNn/xi38dTZxJc+5IpwDmUE8f7qdZu6g2jY7FryM=
+	t=1784654529; cv=none; b=LDBbto+IoMFjZuB5Ui57/CJt3oFOirVKpESUEZW8Ulj2wdljcBuxYvVvVTIECZ22fOykYzpa6FHzNbTTex5fjWpuFnfrUS/zJV02U9vhbkArDw5GvLKMiiXjsePAh5nU3GUjthDTZOAC4EHYwdr8mrIfhb+agwAOSRVwbpnI550=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784652206; c=relaxed/simple;
-	bh=rKZVIXKhbvkjEL/XTm7oel9kBNHRY7ImxLpfS+yumEw=;
+	s=arc-20240116; t=1784654529; c=relaxed/simple;
+	bh=6sskYALA+hTN+vIs4Ly5zuLM1v4cvA2nOOYdqad6p/4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ohhx/uKXsmx0CzXkkG2r6Y24kMLGgkjqAb7NDL7QLe2dMJdPyadb2wnf2DcyEuNqV2UUaM6RYstphOc3Rm2U2fQ5ppRzVkohwZX520mov2fAfFHzjKd5+v7RJ0oChM2++MYqbEzhXOMAAhowRaHLm8NoaPYuTZFit7D/c0ZhGwQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kwh1BUTj; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=N8sbY0LyR1HwOBSeNCu9FMh+qEmmne949HLkQx13K1VKh+xUC7gcpdN9AYdNw6TFvMFjpd/hzxMp/d5+cG2Kjb4VFJe8svekgNv7Ujj51loGPvMR9fbkZYMilKHR27uqcvT17PgTbRlC4RpDHYq/zTDqTKG9/Nr3KRpUkLUwATk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Shve4EzC; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kwh1BUTj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9221D1F000E9;
-	Tue, 21 Jul 2026 16:43:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Shve4EzC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 627191F000E9;
+	Tue, 21 Jul 2026 17:22:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784652204;
-	bh=Fyht48DFwPE5GiGKaF3aVGRMep5NFNa1VG0OFh+DIyc=;
+	s=k20260515; t=1784654528;
+	bh=ftml05nqq8IKEF9BaPfoLMi3wlc17AAk4TrKYyblhhE=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=Kwh1BUTjY37UXTALa4JLvOXjB1QSPm1UycNVkJysYcbeKxvLiQN7eL2xNFM2iiu0d
-	 damN+fYGcSzR5djsfumoXRbDRPFrmus9Fbt/BKF7A+MosBLpt3eZiV1SpO8aLVew9i
-	 o0XVDtP0/6ISfmn+s5fBTlZpLQxm4kpvLiKL5qF1WKSI26zhDyQlorW3d3trXAvtHi
-	 L2VL1WynksABrNxR4WAeagyP0dDDpFp+KCj5JY03RQTTSqBuJg/qCVReG0ZBk7zhab
-	 jrJIPixJhgtqHxeDhap7O3hQ4jOJ1Nev4+s19YVsNhJiizlHV0eYNTcEIDmVqTUcWY
-	 T6kz+PgfxKOwg==
-Message-ID: <0d88a445-a8cf-4f4e-8944-8c17d8d12416@kernel.org>
-Date: Tue, 21 Jul 2026 18:43:21 +0200
+	b=Shve4EzChZp167WECDQnLJkZVPaHbreOQzPwIqB8bzJMl5H+ziKtz2cxObuOHsz39
+	 z6k9jclaYFPd+/O/4Kx5MxgBza/IF4wcfb1dBYkkyey9kmGVpPJ16fPFJwU1hL4qTX
+	 selCPvweTGJqGcHF4Pw06wS2DSoRA2o8ZCOkNF0Xg5reDMSd2giu4M7vWz92v2dTPb
+	 aIbcX7IrjUCkGZa6tVdQctS5K2borjh8RL2ADEKgu7wtpZPUmqQ1upIX72FwaQf/Ft
+	 V1T/3x+I3jRZWclINbXT5tG5BsA3hEmXAqiTY7swPHXniIWc3hsCA1EYGVUSXQUAZR
+	 8gjdAR+LBm0Cw==
+Message-ID: <22890800-5878-4a5b-8b57-a68f0dabd0ae@kernel.org>
+Date: Tue, 21 Jul 2026 19:22:05 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,14 +35,14 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net] mptcp: fix BUILD_BUG_ON on legacy ARM config
-To: Mat Martineau <martineau@kernel.org>
-Cc: MPTCP Linux <mptcp@lists.linux.dev>, Frank Ranner
- <frank.ranner@intel.com>, kernel test robot <lkp@intel.com>
-References: <20260707-mptcp-opt-fix-config_aeabi-v1-1-f428d0aa0318@kernel.org>
- <96b90ef0-7786-ee9b-063e-83498e8e3dc7@kernel.org>
-From: Matthieu Baerts <matttbe@kernel.org>
+Subject: Re: [PATCH mptcp-net v2] mptcp: fix extra_subflows leak on failed
+ passive join
 Content-Language: fr
+To: Chenguang Zhao <chenguang.zhao@linux.dev>, mptcp@lists.linux.dev
+Cc: Chenguang Zhao <zhaochenguang@kylinos.cn>
+References: <20260630095432.1340629-1-chenguang.zhao@linux.dev>
+ <20260701032011.358940-1-chenguang.zhao@linux.dev>
+From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -87,41 +87,40 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <96b90ef0-7786-ee9b-063e-83498e8e3dc7@kernel.org>
+In-Reply-To: <20260701032011.358940-1-chenguang.zhao@linux.dev>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Mat,
+Hi Chenguang,
 
-On 17/07/2026 20:58, Mat Martineau wrote:
-> On Tue, 7 Jul 2026, Matthieu Baerts (NGI0) wrote:
+On 01/07/2026 05:20, Chenguang Zhao wrote:
+> From: Chenguang Zhao <zhaochenguang@kylinos.cn>
 > 
->> The 0-day bot managed to find kernel configs that cause build failures,
->> e.g. when using the StrongARM SA1100 target (ARMv4).
->>
->> On such legacy ARM architecture, all structures are apparently aligned
->> to 32 bits, causing build issue here. Indeed, on such architecture,
->> 'flags' size is not equivalent to sizeof(u16) as expected, but to
->> sizeof(u32).
-
-(...)
-> This change LGTM, thanks Matthieu
+> mptcp_pm_allow_new_subflow() increments extra_subflows
+> before __mptcp_finish_join() on the passive MP_JOIN path.
+> On synchronous join failure the subflow is dropped without
+> calling mptcp_close_ssk(), so the counter is not rolled back.
 > 
-> Reviewed-by: Mat Martineau <martineau@kernel.org>
+> Call mptcp_pm_close_subflow() when the join completion fails.
+> 
+> Fixes: 3e5014909b56 ("mptcp: cleanup MPJ subflow list handling")
+> Signed-off-by: Chenguang Zhao <zhaochenguang@kylinos.cn>
+> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-Thank you for the review, now in our tree:
+Thank you for the patch. Now in our tree (with small adaptations in the
+commit message):
 
 New patches for t/upstream-net and t/upstream:
-- 415e2360863e: mptcp: fix BUILD_BUG_ON on legacy ARM config
-- Results: 8a872e28cb1f..6e75226ac108 (export-net)
-- Results: 097e8a6a6720..4c2752580a3e (export)
+- 5cc023a79ad5: mptcp: decrement subflows counter on failed passive join
+- Results: 6e75226ac108..4c2362a7db02 (export-net)
+- Results: 4c2752580a3e..4285a4fe811b (export)
 
 Tests are now in progress:
 
 - export-net:
-https://github.com/multipath-tcp/mptcp_net-next/commit/48a61d295983942723614a8001a83eb4ab615f2c/checks
+https://github.com/multipath-tcp/mptcp_net-next/commit/bc033e934bd44ead5a065f26cb78af76769e90de/checks
 - export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/7566bcc19c2d8bdb40f5198185b347e85576fae8/checks
+https://github.com/multipath-tcp/mptcp_net-next/commit/254350c480d5cc9124500ba3588f2d24a1905608/checks
 
 Cheers,
 Matt
