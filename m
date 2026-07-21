@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B92F38BF7A
-	for <mptcp@lists.linux.dev>; Tue, 21 Jul 2026 17:22:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68EB846C4DE
+	for <mptcp@lists.linux.dev>; Tue, 21 Jul 2026 17:28:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784654529; cv=none; b=LDBbto+IoMFjZuB5Ui57/CJt3oFOirVKpESUEZW8Ulj2wdljcBuxYvVvVTIECZ22fOykYzpa6FHzNbTTex5fjWpuFnfrUS/zJV02U9vhbkArDw5GvLKMiiXjsePAh5nU3GUjthDTZOAC4EHYwdr8mrIfhb+agwAOSRVwbpnI550=
+	t=1784654924; cv=none; b=s3TqlBoCB/917ZLDqPqcGb7rP/zrrkpRBrJ6c5P7BSIsqmt/9degdPdeYuK165AKs+fk993sayP7FZfc+pUTZabEI/hTzOzZASMMGdnMc2IbLBvQltR44/jYZL+xtKnojbBYupfL9px0JG4OfdXDe7vxYf+WDoRk0FhL0Q/trJ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784654529; c=relaxed/simple;
-	bh=6sskYALA+hTN+vIs4Ly5zuLM1v4cvA2nOOYdqad6p/4=;
+	s=arc-20240116; t=1784654924; c=relaxed/simple;
+	bh=oGFlurauW0vy2xr/ep3EzULbH9EoqX4fPrPLD7ylxYs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=N8sbY0LyR1HwOBSeNCu9FMh+qEmmne949HLkQx13K1VKh+xUC7gcpdN9AYdNw6TFvMFjpd/hzxMp/d5+cG2Kjb4VFJe8svekgNv7Ujj51loGPvMR9fbkZYMilKHR27uqcvT17PgTbRlC4RpDHYq/zTDqTKG9/Nr3KRpUkLUwATk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Shve4EzC; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=pei+hNQIQp0UTgxbcjb8MhUr9TRsYw/sW/LVedkjK5tnRz6zTVolaPRN5Q5dr8heZDfeP6LgA0KkUhMU5nDykAv3eipWERxryhONZVyq2Znkr5hOq3EY/TYKR5+bvj4pLMGbrEMpfTD1PIoRsrb5IgPv4AZUEfJdnyGrt4FeBs0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cw8M+Eqc; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Shve4EzC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 627191F000E9;
-	Tue, 21 Jul 2026 17:22:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cw8M+Eqc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 383591F000E9;
+	Tue, 21 Jul 2026 17:28:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784654528;
-	bh=ftml05nqq8IKEF9BaPfoLMi3wlc17AAk4TrKYyblhhE=;
+	s=k20260515; t=1784654923;
+	bh=kjkFhYoB1Ev0kpsBtGDB1sE4s/m+orvsz81sW+bZqeQ=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=Shve4EzChZp167WECDQnLJkZVPaHbreOQzPwIqB8bzJMl5H+ziKtz2cxObuOHsz39
-	 z6k9jclaYFPd+/O/4Kx5MxgBza/IF4wcfb1dBYkkyey9kmGVpPJ16fPFJwU1hL4qTX
-	 selCPvweTGJqGcHF4Pw06wS2DSoRA2o8ZCOkNF0Xg5reDMSd2giu4M7vWz92v2dTPb
-	 aIbcX7IrjUCkGZa6tVdQctS5K2borjh8RL2ADEKgu7wtpZPUmqQ1upIX72FwaQf/Ft
-	 V1T/3x+I3jRZWclINbXT5tG5BsA3hEmXAqiTY7swPHXniIWc3hsCA1EYGVUSXQUAZR
-	 8gjdAR+LBm0Cw==
-Message-ID: <22890800-5878-4a5b-8b57-a68f0dabd0ae@kernel.org>
-Date: Tue, 21 Jul 2026 19:22:05 +0200
+	b=cw8M+EqcwqvFfAhgchBX4Dlv1dcef5k/Xe5CkPTL/GofWNUsyYcPKkRoKHWR4n28K
+	 hMqXsTblcisTPehyA9P0R/U4GXsBtsFN6WFzBFe8UPY9HuKOpMiCCuuB0+1hpAXjD/
+	 3YtMB60Lj/Uj9fDpNKbZ07DW7qf7oaDH5938EYwlvxLA0TvZQADlEYDn+dRolNvJIc
+	 M1HGK92nUj8ENQxJPs4slnzdlF4sDQWj3aolelg+8r+rxi+vVf9dYFxGtaklq3E/+g
+	 LDNnzCsUmG2PQipSGWDr3gRGZxrql8275uWwSyvgCh4tCWYTPPK4tpNnBx8xm9XT3Y
+	 Oay7QQFZxWaNA==
+Message-ID: <0a61cf2d-d0bb-4986-a2c2-a05ee046571c@kernel.org>
+Date: Tue, 21 Jul 2026 19:28:40 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net v2] mptcp: fix extra_subflows leak on failed
- passive join
+Subject: Re: [PATCH mptcp-net] selftests: mptcp: userspace_pm: fix undefined
+ variable port
 Content-Language: fr
-To: Chenguang Zhao <chenguang.zhao@linux.dev>, mptcp@lists.linux.dev
-Cc: Chenguang Zhao <zhaochenguang@kylinos.cn>
-References: <20260630095432.1340629-1-chenguang.zhao@linux.dev>
- <20260701032011.358940-1-chenguang.zhao@linux.dev>
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <24cb3786d7ce0e7bb1397ef14c98c78fd4a9ecb1.1782457344.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,40 +86,49 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20260701032011.358940-1-chenguang.zhao@linux.dev>
+In-Reply-To: <24cb3786d7ce0e7bb1397ef14c98c78fd4a9ecb1.1782457344.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Chenguang,
+Hi Geliang,
 
-On 01/07/2026 05:20, Chenguang Zhao wrote:
-> From: Chenguang Zhao <zhaochenguang@kylinos.cn>
+On 26/06/2026 09:04, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> mptcp_pm_allow_new_subflow() increments extra_subflows
-> before __mptcp_finish_join() on the passive MP_JOIN path.
-> On synchronous join failure the subflow is dropped without
-> calling mptcp_close_ssk(), so the counter is not rolled back.
+> In make_connection(), the variable "port" is used but never defined.
+> This leads to an empty argument being passed to wait_local_port_listen(),
+> causing "printf: : invalid number" errors:
 > 
-> Call mptcp_pm_close_subflow() when the join completion fails.
+>  # INFO: Init
+>  # 01 Created network namespaces ns1, ns2                          [ OK ]
+>  # INFO: Make connections
+>  # ./../lib.sh: line 651: printf: : invalid number
+>  # 02 Established IPv4 MPTCP Connection ns2 => ns1                 [ OK ]
+>  # INFO: Connection info: 10.0.1.2:59516 -> 10.0.1.1:50002
+>  # ./../lib.sh: line 651: printf: : invalid number
+>  # 03 Established IPv6 MPTCP Connection ns2 => ns1                 [ OK ]
 > 
-> Fixes: 3e5014909b56 ("mptcp: cleanup MPJ subflow list handling")
-> Signed-off-by: Chenguang Zhao <zhaochenguang@kylinos.cn>
-> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> Fix it by using the correctly defined variable "app_port", which holds the
+> appropriate port number for the connection.
 
-Thank you for the patch. Now in our tree (with small adaptations in the
-commit message):
+Thank you for the fix, and sorry for the delay!
+
+Arf, I think remember I had this issue, and I thought I fixed it before
+sending the patches, but no.
+
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
 New patches for t/upstream-net and t/upstream:
-- 5cc023a79ad5: mptcp: decrement subflows counter on failed passive join
-- Results: 6e75226ac108..4c2362a7db02 (export-net)
-- Results: 4c2752580a3e..4285a4fe811b (export)
+- ebaa2571aeaa: selftests: mptcp: userspace_pm: fix undefined variable port
+- Results: 4c2362a7db02..08c6392dbaf1 (export-net)
+- Results: 4285a4fe811b..ea196b8ada26 (export)
 
 Tests are now in progress:
 
 - export-net:
-https://github.com/multipath-tcp/mptcp_net-next/commit/bc033e934bd44ead5a065f26cb78af76769e90de/checks
+https://github.com/multipath-tcp/mptcp_net-next/commit/1ef110cb2b759cde24642c71416460cd328469cf/checks
 - export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/254350c480d5cc9124500ba3588f2d24a1905608/checks
+https://github.com/multipath-tcp/mptcp_net-next/commit/9d33b57982424bae6bd4e53ffe848dc8043fc2d8/checks
 
 Cheers,
 Matt
