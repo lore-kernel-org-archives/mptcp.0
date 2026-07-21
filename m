@@ -1,191 +1,145 @@
-Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
+Received: from out-188.mta1.migadu.com (out-188.mta1.migadu.com [95.215.58.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0F312D7393
-	for <mptcp@lists.linux.dev>; Tue, 21 Jul 2026 02:41:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 040801E0E14
+	for <mptcp@lists.linux.dev>; Tue, 21 Jul 2026 02:49:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784601697; cv=none; b=Pd+/W5RX6Rs96igMCIgjCvTNNv0w53jAnqHvneC0r5Mvgqpqj09WZKEdOAxEKGr6gYsijVxqbjMgmOXfRz6SSU6qV7ISfTZX+xGdXBWurnUXO+cCQHqrWfhPVMtfowZEPrCvp8Fw9gEHDCJMW+EgE+D9PlDBdQV213wCe/F4sRM=
+	t=1784602174; cv=none; b=rl5T1KmDFy/l9eEtFMTFEmyiWAHE5aborxZtGyo/V5CDtyjVhcgZlU8yf9GG6g0XxyzCuhTrZJmbEXfUZXvOsnkrdbDNl1tD+rrGDccVqJ4dNeTVF7NCpobLXcDZ0mFSxCMosT0cF2i7B7tVIFgW5yj+Fx7qRTj/pCn8p6yoEoo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784601697; c=relaxed/simple;
-	bh=5ENV5Fd57hzmb7xSW4bYLIJnGboG3xK5zWrvvfpNfQU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MssDmRnkcm3dA93/dJm0b3v7Uw4dlota7+33ZkD7Z3Jx87cQh4JaAQjqG3QTP3I5KfWBtPaONcjaWYuNOUm0wNFv0MBpXNJkXU5scjdk4t2ywa98gY/nP3sJgGLtN3h2xGaK+b+6IQBLQsmV4VtmQ+Uh20OBiJY5wUpsNpEfS1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=UlTyH8kC; arc=none smtp.client-ip=91.218.175.179
+	s=arc-20240116; t=1784602174; c=relaxed/simple;
+	bh=m4ksK9zxSlp7J+mRxbPkEYb+cx6tEJBazpyEM7KT62s=;
+	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:
+	 In-Reply-To:References; b=B5wfdIfJ+F5ihvdcw7gNOdagzJwZyUQ76rWLe/V8cEgN942swrZ4I0NENMGkOtwHWVlOhpH2OzVKPLpeAYTbEL7T0FDBdBvzte/s36zxcA1OMmZVyw2jbegJbUZ8q3O/MqbITPoWmrnr7/9XdRBUEtx245dfLDCJ5FZL8aMM/5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=S9Vga66H; arc=none smtp.client-ip=95.215.58.188
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="UlTyH8kC"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1784601693;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=u5KSWnznuuD2BQAMxk3d2zE+dJZ+HCdUDIt7xKsPYug=;
-	b=UlTyH8kCdWAsQWw7lWHIlHqWTimNNc33PDKaAywgojxik0oezk5nLNSUJOt33KjYXO+hWt
-	H+QH6ZJ5WdbJ2RgROz4QfUFNKp0XYIkHd9RkrP9kD+8lKuXSw4PZ8nCsL3VYr6DgGEEJ0f
-	8Eu4etBPAHaCVLjy3DbzdnMJ5+ccfaU=
-From: Gang Yan <gang.yan@linux.dev>
-To: mptcp@lists.linux.dev
-Cc: pabeni@redhat.com,
-	Gang Yan <yangang@kylinos.cn>
-Subject: [PATCH mptcp-next v2 7/7] selftests: bpf: verify mptcp bpf_setsockopt from TCP_CONNECT_CB
-Date: Tue, 21 Jul 2026 10:41:02 +0800
-Message-ID: <f1a6cd5ef0a5424dc48bf32e8a1362f22f80d1eb.1784601268.git.yangang@kylinos.cn>
-In-Reply-To: <cover.1784601268.git.yangang@kylinos.cn>
-References: <cover.1784601268.git.yangang@kylinos.cn>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="S9Vga66H"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1784602170;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vlFT490BzJWVBKvKf1xCUOH6eWOWHbnFj9C9hkYfuJ8=;
+	b=S9Vga66HtAziUTA1eWi7m0tQvoEC/1k7DqSh/HjSVPcwEdD4YMkHCRb/tdbcfOnLcDmZzN
+	Ly5Q9PTKwvBXZ/p4FErnO7xtv6bV9Db2ODwkA3NxHPGtlvTvsmKzqDuc5Ba7GsFUkyX2g7
+	LdKi8SRDqfTgdNz8Iw/oajiuas6Duuc=
+Date: Tue, 21 Jul 2026 02:49:28 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: gang.yan@linux.dev
+Message-ID: <960e57f4f9a7a3c73ac7f1216ff38c77b0d38ea1@linux.dev>
+TLS-Required: No
+Subject: Re: [PATCH mptcp-net v2] mptcp: pm: fix data race in add_addr timer
+ callback
+To: "luoqing" <l1138897701@163.com>, mptcp@lists.linux.dev
+In-Reply-To: <20260717064028.767876-1-l1138897701@163.com>
+References: <20260717064028.767876-1-l1138897701@163.com>
 X-Migadu-Flow: FLOW_OUT
 
-From: Gang Yan <yangang@kylinos.cn>
+July 17, 2026 at 2:40 PM, "luoqing" <l1138897701@163.com mailto:l11388977=
+01@163.com?to=3D%22luoqing%22%20%3Cl1138897701%40163.com%3E > wrote:
 
-Add a BPF sockops program attached to BPF_CGROUP_SOCK_OPS that fires
-on BPF_SOCK_OPS_TCP_CONNECT_CB and exercises bpf_setsockopt() on the
-mptcp master socket (msk).
 
-Two scenarios are covered by the new "setsockopt" subtest:
- - TCP_INQ must succeed and the value (1) must be observable from
-   userspace via getsockopt() on the mptcp socket.
- - TCP_CONGESTION needs the subflow lock and is therefore rejected
-   in bpf context with -EOPNOTSUPP.
+>=20
+>=20From: luoqing <luoqing@kylinos.cn>
+>=20
+>=20The timer callback reads entry->retrans_times outside pm.lock to deci=
+de
+> whether to call mptcp_pm_subflow_established(). Since
+> mptcp_pm_announced_del_timer() can concurrently set retrans_times =3D
+> ADD_ADDR_RETRANS_MAX under pm.lock, a race condition exists.
+>=20
+>=20Use a local 'completed' flag set inside pm.lock only when the timer
+> callback itself increments retrans_times to ADD_ADDR_RETRANS_MAX. This
+> ensures that mptcp_pm_subflow_established() is only called when the
+> retransmission naturally exhausts.
+>=20
+>=20Signed-off-by: luoqing <luoqing@kylinos.cn>
+> ---
+>  net/mptcp/pm.c | 19 +++++++++++++------
+>  1 file changed, 13 insertions(+), 6 deletions(-)
+>=20
+>=20diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+> index 6afd39aea110..ed39a1241ffd 100644
+> --- a/net/mptcp/pm.c
+> +++ b/net/mptcp/pm.c
+> @@ -380,6 +380,8 @@ static void mptcp_pm_add_addr_timer(struct timer_li=
+st *timer)
+>  struct mptcp_sock *msk =3D entry->sock;
+>  struct sock *sk =3D (struct sock *)msk;
+>  unsigned int timeout =3D 0;
+> + bool completed =3D false;
+> + u8 retrans_times;
+>=20=20
+>=20 pr_debug("msk=3D%p\n", msk);
+>=20=20
+>=20@@ -399,27 +401,32 @@ static void mptcp_pm_add_addr_timer(struct time=
+r_list *timer)
+>=20=20
+>=20 spin_lock_bh(&msk->pm.lock);
+>=20=20
+>=20+ retrans_times =3D READ_ONCE(entry->retrans_times);
+> +
+>  /* The cancel path (mptcp_pm_announced_del_timer()) can race with this
+>  * callback. Once cancel updates retrans_times to MAX, suppress further
+>  * retransmissions here. If this callback acquires pm.lock first, one
+>  * final transmit attempt is still possible.
+>  */
+> - if (entry->retrans_times < ADD_ADDR_RETRANS_MAX &&
+> + if (retrans_times < ADD_ADDR_RETRANS_MAX &&
+>  !mptcp_pm_should_add_signal_addr(msk)) {
+>  pr_debug("retransmit ADD_ADDR id=3D%d\n", entry->addr.id);
+>  mptcp_pm_announce_addr(msk, &entry->addr, false);
+>  mptcp_pm_add_addr_send_ack(msk);
+> - entry->retrans_times++;
+> + retrans_times++;
+> + WRITE_ONCE(entry->retrans_times, retrans_times);
+>  }
+>=20=20
+>=20- if (entry->retrans_times < ADD_ADDR_RETRANS_MAX)
+> - timeout <<=3D entry->retrans_times;
+> - else
+> + if (retrans_times < ADD_ADDR_RETRANS_MAX)
+> + timeout <<=3D retrans_times;
+> + else {
+>  timeout =3D 0;
+> + completed =3D true;
+> + }
+Hi,=20
 
-Signed-off-by: Gang Yan <yangang@kylinos.cn>
----
- .../testing/selftests/bpf/prog_tests/mptcp.c  | 61 +++++++++++++++++++
- .../selftests/bpf/progs/mptcp_setsockopt.c    | 32 ++++++++++
- 2 files changed, 93 insertions(+)
- create mode 100644 tools/testing/selftests/bpf/progs/mptcp_setsockopt.c
+'checkpatch'=20has reported a 'checks' for this:
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-index 7f48fd9e94e1..ad59f8fcbb68 100644
---- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
-+++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-@@ -18,6 +18,7 @@
- #include "mptcp_bpf_rr.skel.h"
- #include "mptcp_bpf_red.skel.h"
- #include "mptcp_bpf_burst.skel.h"
-+#include "mptcp_setsockopt.skel.h"
- 
- #define NS_TEST "mptcp_ns"
- #define ADDR_1	"10.0.1.1"
-@@ -813,6 +814,64 @@ static void test_burst(void)
- 	mptcp_bpf_burst__destroy(skel);
- }
- 
-+static void test_setsockopt(void)
-+{
-+	struct mptcp_setsockopt *skel;
-+	struct netns_obj *netns;
-+	int cgroup_fd, server_fd, client_fd;
-+	int err;
-+	int inq;
-+	socklen_t len;
-+
-+	cgroup_fd = test__join_cgroup("/mptcp_setsockopt");
-+	if (!ASSERT_OK_FD(cgroup_fd, "join_cgroup"))
-+		return;
-+
-+	skel = mptcp_setsockopt__open_and_load();
-+	if (!ASSERT_OK_PTR(skel, "skel_open_load"))
-+		goto close_cgroup;
-+
-+	skel->links.mptcp_connect_cb =
-+		bpf_program__attach_cgroup(skel->progs.mptcp_connect_cb,
-+					   cgroup_fd);
-+	if (!ASSERT_OK_PTR(skel->links.mptcp_connect_cb, "attach connect_cb"))
-+		goto skel_destroy;
-+
-+	netns = netns_new(NS_TEST, true);
-+	if (!ASSERT_OK_PTR(netns, "netns_new"))
-+		goto skel_destroy;
-+
-+	server_fd = start_mptcp_server(AF_INET, NULL, 0, 0);
-+	if (!ASSERT_OK_FD(server_fd, "start_mptcp_server"))
-+		goto close_netns;
-+
-+	client_fd = connect_to_fd(server_fd, 0);
-+	if (!ASSERT_OK_FD(client_fd, "connect_to_fd"))
-+		goto close_server;
-+
-+	/* TCP_INQ should be set successfullly */
-+	ASSERT_EQ(skel->bss->connect_cb_inq_ret, 0, "connect_cb TCP_INQ ret");
-+
-+	len = sizeof(inq);
-+	err = getsockopt(client_fd, SOL_TCP, TCP_INQ, &inq, &len);
-+	if (ASSERT_OK(err, "getsockopt TCP_INQ"))
-+		ASSERT_EQ(inq, 1, "TCP_INQ value");
-+
-+	/* TCP_CONGESTION should be -EOPNOTSUPP */
-+	ASSERT_EQ(skel->bss->connect_cb_cc_ret, -EOPNOTSUPP,
-+		  "connect_cb TCP_CONGESTION ret");
-+
-+	close(client_fd);
-+close_server:
-+	close(server_fd);
-+close_netns:
-+	netns_free(netns);
-+skel_destroy:
-+	mptcp_setsockopt__destroy(skel);
-+close_cgroup:
-+	close(cgroup_fd);
-+}
-+
- void test_mptcp(void)
- {
- 	if (test__start_subtest("base"))
-@@ -835,4 +894,6 @@ void test_mptcp(void)
- 		test_red();
- 	if (test__start_subtest("burst"))
- 		test_burst();
-+	if (test__start_subtest("setsockopt"))
-+		test_setsockopt();
- }
-diff --git a/tools/testing/selftests/bpf/progs/mptcp_setsockopt.c b/tools/testing/selftests/bpf/progs/mptcp_setsockopt.c
-new file mode 100644
-index 000000000000..f54b77ea6c5f
---- /dev/null
-+++ b/tools/testing/selftests/bpf/progs/mptcp_setsockopt.c
-@@ -0,0 +1,32 @@
-+#include "bpf_tracing_net.h"
-+#include "mptcp_bpf.h"
-+
-+#ifndef TCP_INQ
-+#define TCP_INQ 36
-+#endif
-+
-+int connect_cb_inq_ret;
-+int connect_cb_cc_ret;
-+
-+char cc_reno[TCP_CA_NAME_MAX] = "reno";
-+
-+SEC("sockops")
-+int mptcp_connect_cb(struct bpf_sock_ops *skops)
-+{
-+	struct bpf_sock *sk = skops->sk;
-+	int one = 1;
-+
-+	if (skops->op != BPF_SOCK_OPS_TCP_CONNECT_CB)
-+		return 1;
-+
-+	if (!sk || sk->protocol != IPPROTO_MPTCP)
-+		return 1;
-+
-+	connect_cb_inq_ret =
-+		bpf_setsockopt(skops, SOL_TCP, TCP_INQ, &one, sizeof(one));
-+	connect_cb_cc_ret =
-+		bpf_setsockopt(skops, SOL_TCP, TCP_CONGESTION,
-+			       cc_reno, sizeof(cc_reno));
-+
-+	return 1;
-+}
--- 
-2.43.0
+'''
+CHECK: braces {} should be used on all arms of this statement
+#60: FILE: net/mptcp/pm.c:420:
+'''
 
+But I think a v3 is not necessary for such a minor change. The patch
+itself looks good to me=EF=BC=81
+
+It's okay to wait for other reviewers' feedback.
+
+Thanks
+Gang
+
+>=20=20
+>=20 spin_unlock_bh(&msk->pm.lock);
+>=20=20
+>=20- if (entry->retrans_times =3D=3D ADD_ADDR_RETRANS_MAX)
+> + if (completed)
+>  mptcp_pm_subflow_established(msk);
+>=20=20
+>=20 out:
+> --=20
+>=202.25.1
+>
