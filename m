@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF944442FBB;
-	Tue, 21 Jul 2026 22:15:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A628443AAF;
+	Tue, 21 Jul 2026 22:15:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784672115; cv=none; b=TBI18vAG2Uz1FsKlKuWPTvJBhuDrBo4X2+DwsB5x8BmFzkZ79YIWsC6P7NZTcndV1uIL8fhzEZ2I0bJrAFttiQ01POzOOK407w1EVWFmSPiJ9oad5rEG54ns/ncckEwyFK8tcypBHS3X24ZPJR1xNld+fq7W96Nj2Ns+eOToWpY=
+	t=1784672118; cv=none; b=Pu57AQdIdvQ/X8ml8g87f+/ash+r2yPPn2rHmbbafVkWqKqjMlJcvGFGQjiZpX+rMRa/G80r/9bLg+ZnxUYhFw9Q8Ig9c6PBTV2Apx+uhChvVOwRulYJhVT9q05kI2gA+Uw1EdRndozD8MEv7ZC82FD29HLe23LeEberedu3VaM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784672115; c=relaxed/simple;
-	bh=Hh/p/HQrYpss/cNZlPsOY5elFfI/RGjcLL6kRaGP9Yo=;
+	s=arc-20240116; t=1784672118; c=relaxed/simple;
+	bh=cQebUUc3b4trxwzXFkPnBUl35n/3pGClyHHp+w9wnHE=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=BH2sn8ru4YZu7pc6sUZdFAzUwFmpdlCHBe57gXw66CrWQOLvUHaVjeeedlZs1v95N5bYcRdrnQhn26dxtnUpQg/ZMcW9E4EkSCQhQY50ShiWvkmt4KrbYWXtAri41m71eG2K5MXFh/TaOkzDvpiGVPwqCqr2mo1kquEAAqI6CNs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kvSdE/Q0; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:To:Cc; b=l5i4HJkDyXaCptSRGaOVxE08ybjpXUZWy/4+T4mo/AixiJftEchQo3BHgzHBmpV/xVBZHUC42aQ2kK629Y3EqRKDQsxbsMZSDBZ1GjvaTjqJ4QGAbE1c3zP2X2AeonvWeRGZWATzU3V7UiG71rd5EwS7h7/5teblyBryd22101E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E9QOAxV8; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kvSdE/Q0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A27C1F00ACF;
-	Tue, 21 Jul 2026 22:15:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E9QOAxV8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22D431F00A3A;
+	Tue, 21 Jul 2026 22:15:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784672113;
-	bh=ae4TnEnjRXKPyebXdwKey77J7n0LdGkmT+eRp+yVczk=;
+	s=k20260515; t=1784672116;
+	bh=LA1GN88xFwR/n7V23hRxm12Z3KevDKUurEIo5L4Unic=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=kvSdE/Q0UXLke++yKv/arkXHmkZgrabKCetERpspki+9fyVNiMJz9B/uPhir3aHcN
-	 AyFmYmfQKzDj1zzKAIjGzeCL6NCguNgn6VfeUhCz+DVwX9cRfElneTZO2O145/I0JC
-	 w0XIBkPGUt8pWV17M9GcT3rn7cHq7N5GHq0oXD5b8xWXRs08PuZBwj63wuuuPrY3dE
-	 2zWNL21QQgPhnwR8DQ8x31kX45dAzAOnqvtIQI0PQyEyZdooPzUlivAQyf7X4LIohZ
-	 rthaZ1nSlqPm4oH6QWDrIYnalXv1UmIw1XGZsyjZ9gy6crtV80B34sVSJF3SMWMFq9
-	 N1XTADAG9tEHg==
+	b=E9QOAxV8AEuVIl2eI/NS9SD6Fa83K9SYKz3OOc+eOd1cnZucKEG/N1hcTv2gZkIzV
+	 7AypNaLHOYJykI6Kn9qK5hMImnmcZSCsParRJLhCdWQ2pOj38Fl9KUcPhIZRfV2dGp
+	 12/i5GGDrjA6cQYouT6PWQJppzVVbHlLO3GLbD8DfgM6OHHilOnz/1VXUVOICIJlOk
+	 pCHg7Yug997qB4ayD2kMqUNmzGS/ccER7z05AlkSAaz313OB8YxqdptOIa0UoeGZWC
+	 TuJYfpGMCPMUtHOswAAXNQ4HlPXHfA4YxomUbAHccs8HFzFPveMNXJ8Fmx2jePNv8v
+	 gXwhhooPdQ60g==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Wed, 22 Jul 2026 00:14:40 +0200
-Subject: [PATCH net 3/5] mptcp: fix stale skb->sk reference on subflow
- close
+Date: Wed, 22 Jul 2026 00:14:41 +0200
+Subject: [PATCH net 4/5] selftests: mptcp: userspace_pm: fix undefined
+ variable port
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,7 +38,7 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260722-net-mptcp-misc-fixes-7-2-rc5-v1-3-6fb595bc86ef@kernel.org>
+Message-Id: <20260722-net-mptcp-misc-fixes-7-2-rc5-v1-4-6fb595bc86ef@kernel.org>
 References: <20260722-net-mptcp-misc-fixes-7-2-rc5-v1-0-6fb595bc86ef@kernel.org>
 In-Reply-To: <20260722-net-mptcp-misc-fixes-7-2-rc5-v1-0-6fb595bc86ef@kernel.org>
 To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, 
@@ -47,128 +47,61 @@ To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
  Simon Horman <horms@kernel.org>
 Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, 
  linux-kernel@vger.kernel.org, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
- Kalpan Jani <kalpan.jani@mpiricsoftware.com>, stable@vger.kernel.org
+ stable@vger.kernel.org, Shuah Khan <shuah@kernel.org>, 
+ linux-kselftest@vger.kernel.org, Geliang Tang <geliang@kernel.org>
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4474; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=mIspUK790P4bSDJmTLrkzE/XviU2aKy8rWd6/M7/pQM=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLLi36dGZ9qcufuKe/PRFlP+iOMXxKeJ/48I9Ju5ouvL+
- xrLjVend5SyMIhxMciKKbJIt0Xmz3xexVvi5WcBM4eVCWQIAxenAEzEsoORYf/pPfcsVrtuWHW4
- 5JTgLalYR2vJ10w7yh0de5fx9KRfKmNkOLW2lSMy476kfb3p24ZjX9YHMVne4rm4oeGhan0G2xY
- hdgA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1857; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=AAR5vqT0rqrRZnOlgAxMfAI48G7bJDKuLQu6poOze3I=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLLi36eeWXXTOoxDVJLpzLO5DyxWetyzc153WcX9l/iDV
+ 6dkHUNdO0pZGMS4GGTFFFmk2yLzZz6v4i3x8rOAmcPKBDKEgYtTACZiNoPhn8KUKUu/mvTz6Ie+
+ zdsQnSXTfP4dg+ey7jQpQY639k+CXzD8T/6f2psfrl/3oeLRgnBupia2teJPJS+/cbkY3qhwnse
+ VAwA=
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-From: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
-The backlog list is updated by mptcp_data_ready() under
-mptcp_data_lock(). The cleanup of backlog references to a closing
-subflow, however, was performed in mptcp_close_ssk(), before
-__mptcp_close_ssk() acquires the ssk lock, and while holding neither
-the ssk lock nor mptcp_data_lock().
+In make_connection(), the variable "port" is used but never defined.
+This leads to an empty argument being passed to wait_local_port_listen(),
+causing "printf: : invalid number" errors:
 
-Because that traversal ran without mptcp_data_lock(), concurrent softirq
-RX processing on another CPU (subflow_data_ready() -> mptcp_data_ready()
--> __mptcp_add_backlog(), under mptcp_data_lock()) could add a backlog
-entry referencing the ssk while the cleanup loop was in progress. Such
-an entry could be missed by the cleanup, or the concurrent list update
-could corrupt the traversal, leaving skb->sk pointing at the ssk after
-it is freed.
+ # INFO: Init
+ # 01 Created network namespaces ns1, ns2                          [ OK ]
+ # INFO: Make connections
+ # ./../lib.sh: line 651: printf: : invalid number
+ # 02 Established IPv4 MPTCP Connection ns2 => ns1                 [ OK ]
+ # INFO: Connection info: 10.0.1.2:59516 -> 10.0.1.1:50002
+ # ./../lib.sh: line 651: printf: : invalid number
+ # 03 Established IPv6 MPTCP Connection ns2 => ns1                 [ OK ]
 
-A later mptcp_backlog_purge() then dereferences the stale pointer,
-triggering a warning in inet_sock_destruct() (ssk->sk_rmem_alloc != 0)
-followed by a use-after-free in mptcp_backlog_purge().
+Fix it by using the correctly defined variable "app_port", which holds the
+appropriate port number for the connection.
 
-Fix this by moving the backlog cleanup into __mptcp_close_ssk(), after
-subflow->closing is set to 1 and while the ssk lock is still held,
-serialized under mptcp_data_lock(). The cleanup runs only on the push
-path (MPTCP_CF_PUSH), where backlog references accumulate; on other
-teardown paths the caller already handles cleanup.
-
-With subflow->closing set and mptcp_data_lock() held across the purge,
-any concurrent mptcp_data_ready() either completes its enqueue before
-the purge runs and is caught, or observes closing=1 and bails out. Once
-mptcp_data_unlock() is reached, no new skb referencing the ssk can be
-enqueued, so the cleanup is exhaustive.
-
-Remove the unprotected traversal from mptcp_close_ssk() entirely.
-
-Fixes: ee458a3f314e ("mptcp: introduce mptcp-level backlog")
+Fixes: 39348f5f2f13 ("selftests: mptcp: wait for port instead of sleep")
 Cc: stable@vger.kernel.org
-Suggested-by: Paolo Abeni <pabeni@redhat.com>
-Reported-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/621
-Signed-off-by: Kalpan Jani <kalpan.jani@mpiricsoftware.com>
-Acked-by: Paolo Abeni <pabeni@redhat.com>
+Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- net/mptcp/protocol.c | 33 +++++++++++++++++++--------------
- 1 file changed, 19 insertions(+), 14 deletions(-)
+To: Shuah Khan <shuah@kernel.org>
+Cc: linux-kselftest@vger.kernel.org
+---
+ tools/testing/selftests/net/mptcp/userspace_pm.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index b32f0cd262a7..ca644ec53eed 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2545,6 +2545,22 @@ static void __mptcp_subflow_disconnect(struct sock *ssk,
- 	}
- }
+diff --git a/tools/testing/selftests/net/mptcp/userspace_pm.sh b/tools/testing/selftests/net/mptcp/userspace_pm.sh
+index e9ae1806ab07..30a809752d1b 100755
+--- a/tools/testing/selftests/net/mptcp/userspace_pm.sh
++++ b/tools/testing/selftests/net/mptcp/userspace_pm.sh
+@@ -212,7 +212,7 @@ make_connection()
+ 	   ./mptcp_connect -s MPTCP -w 300 -p $app_port -l $listen_addr > /dev/null 2>&1 &
+ 	local server_pid=$!
  
-+static void mptcp_cleanup_ssk_backlog(struct sock *sk, struct sock *ssk)
-+{
-+	struct mptcp_sock *msk = mptcp_sk(sk);
-+	struct sk_buff *skb;
-+
-+	mptcp_data_lock(sk);
-+	list_for_each_entry(skb, &msk->backlog_list, list) {
-+		if (skb->sk != ssk)
-+			continue;
-+
-+		atomic_sub(skb->truesize, &skb->sk->sk_rmem_alloc);
-+		skb->sk = NULL;
-+	}
-+	mptcp_data_unlock(sk);
-+}
-+
- /* subflow sockets can be either outgoing (connect) or incoming
-  * (accept).
-  *
-@@ -2568,6 +2584,9 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
- 	lock_sock_nested(ssk, SINGLE_DEPTH_NESTING);
- 	subflow->closing = 1;
+-	mptcp_lib_wait_local_port_listen "${ns1}" "${port}"
++	mptcp_lib_wait_local_port_listen "${ns1}" "${app_port}"
  
-+	if (flags & MPTCP_CF_PUSH)
-+		mptcp_cleanup_ssk_backlog(sk, ssk);
-+
- 	/* Borrow the fwd allocated page left-over; fwd memory for the subflow
- 	 * could be negative at this point, but will be reach zero soon - when
- 	 * the data allocated using such fragment will be freed.
-@@ -2659,9 +2678,6 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
- void mptcp_close_ssk(struct sock *sk, struct sock *ssk,
- 		     struct mptcp_subflow_context *subflow)
- {
--	struct mptcp_sock *msk = mptcp_sk(sk);
--	struct sk_buff *skb;
--
- 	/* The first subflow can already be closed or disconnected */
- 	if (subflow->close_event_done || READ_ONCE(subflow->local_id) < 0)
- 		return;
-@@ -2671,17 +2687,6 @@ void mptcp_close_ssk(struct sock *sk, struct sock *ssk,
- 	if (sk->sk_state == TCP_ESTABLISHED)
- 		mptcp_event(MPTCP_EVENT_SUB_CLOSED, mptcp_sk(sk), ssk, GFP_KERNEL);
- 
--	/* Remove any reference from the backlog to this ssk; backlog skbs consume
--	 * space in the msk receive queue, no need to touch sk->sk_rmem_alloc
--	 */
--	list_for_each_entry(skb, &msk->backlog_list, list) {
--		if (skb->sk != ssk)
--			continue;
--
--		atomic_sub(skb->truesize, &skb->sk->sk_rmem_alloc);
--		skb->sk = NULL;
--	}
--
- 	/* subflow aborted before reaching the fully_established status
- 	 * attempt the creation of the next subflow
- 	 */
+ 	# Run the client, transfer $file and stay connected to the server
+ 	# to conduct tests
 
 -- 
 2.53.0
