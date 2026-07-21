@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68EB846C4DE
-	for <mptcp@lists.linux.dev>; Tue, 21 Jul 2026 17:28:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EA7D3E49EF
+	for <mptcp@lists.linux.dev>; Tue, 21 Jul 2026 17:44:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784654924; cv=none; b=s3TqlBoCB/917ZLDqPqcGb7rP/zrrkpRBrJ6c5P7BSIsqmt/9degdPdeYuK165AKs+fk993sayP7FZfc+pUTZabEI/hTzOzZASMMGdnMc2IbLBvQltR44/jYZL+xtKnojbBYupfL9px0JG4OfdXDe7vxYf+WDoRk0FhL0Q/trJ8=
+	t=1784655852; cv=none; b=RR6SaEj19vJk0BgyryDZbL8916D4gXXngCWv6DfHKeyqOXb7lBwMa2KYdiD8HjKk6d3OIRPmWxhaDyvosUPxHS8RGwpYC3ejkM52vVhtiT9n8Pe9JwUcFpj/D/Db2MEYhtGE8ZwevVdpXDA7Vrsw9eCKsVE1Y8gS2pOvtnpyLww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784654924; c=relaxed/simple;
-	bh=oGFlurauW0vy2xr/ep3EzULbH9EoqX4fPrPLD7ylxYs=;
+	s=arc-20240116; t=1784655852; c=relaxed/simple;
+	bh=riOloDyTxY/85C2hiT1xoqmuVNoe/5TBFzrh3ZPg/yQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pei+hNQIQp0UTgxbcjb8MhUr9TRsYw/sW/LVedkjK5tnRz6zTVolaPRN5Q5dr8heZDfeP6LgA0KkUhMU5nDykAv3eipWERxryhONZVyq2Znkr5hOq3EY/TYKR5+bvj4pLMGbrEMpfTD1PIoRsrb5IgPv4AZUEfJdnyGrt4FeBs0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cw8M+Eqc; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=j/eaQN/s3K73qkINe7KeyvgJVA0kLQnclIyH0tU/bQKG716tCz+K9LpykgQZk9eerimhXQB0fq8w+xSuSIAwiyxa/RRedX8p2SgRoUGS6m/YepmGUjeAGd5RLAQMMLAYYn1DHfW2Dr7fQuSc/EQ+EqkvqDVcSNz7asKA6LG4mdg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qyu9aRiv; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cw8M+Eqc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 383591F000E9;
-	Tue, 21 Jul 2026 17:28:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qyu9aRiv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB29C1F000E9;
+	Tue, 21 Jul 2026 17:44:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784654923;
-	bh=kjkFhYoB1Ev0kpsBtGDB1sE4s/m+orvsz81sW+bZqeQ=;
+	s=k20260515; t=1784655850;
+	bh=3WxDFGPiu2T4+UAaYYGx9wlBUqX7mKevZJcsgyszGE0=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=cw8M+EqcwqvFfAhgchBX4Dlv1dcef5k/Xe5CkPTL/GofWNUsyYcPKkRoKHWR4n28K
-	 hMqXsTblcisTPehyA9P0R/U4GXsBtsFN6WFzBFe8UPY9HuKOpMiCCuuB0+1hpAXjD/
-	 3YtMB60Lj/Uj9fDpNKbZ07DW7qf7oaDH5938EYwlvxLA0TvZQADlEYDn+dRolNvJIc
-	 M1HGK92nUj8ENQxJPs4slnzdlF4sDQWj3aolelg+8r+rxi+vVf9dYFxGtaklq3E/+g
-	 LDNnzCsUmG2PQipSGWDr3gRGZxrql8275uWwSyvgCh4tCWYTPPK4tpNnBx8xm9XT3Y
-	 Oay7QQFZxWaNA==
-Message-ID: <0a61cf2d-d0bb-4986-a2c2-a05ee046571c@kernel.org>
-Date: Tue, 21 Jul 2026 19:28:40 +0200
+	b=Qyu9aRiv1IVGgA9Q7MKsrNLIf3lSJGgscq2q/qhz8Lbo0HXTPLySxsUuIZtddtnVq
+	 n4atV/sP9fK+3X4DBi1dc4dvD5BaJe2X3WsIceOrm3qhNP6/N63staw4BqjWp5EGSV
+	 hvDdLwD57IEw6nj9otuoLVsHYnrnRMa3EuaTIlZAS4zkdoE8wCyOEfvPLvipBYPWfh
+	 dBnpWNcvhEhm9PN31wa8f6yycMF6UBL/NKwKQyS1HHKzYayB8PCR34qzcztmmPh9g1
+	 nK3LcTBqo1uT1FCHyruEoQrN6naJFIVdfL876O0dT+w/C1QE0Qx6/2mQQZ2tXGQ9+g
+	 wXQdJkFqsp3jQ==
+Message-ID: <e4babe34-97a6-48aa-a564-a11da1136384@kernel.org>
+Date: Tue, 21 Jul 2026 19:44:07 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net] selftests: mptcp: userspace_pm: fix undefined
- variable port
+Subject: Re: [PATCH mptcp-net] mptcp: pm: userspace: fix use-after-free in
+ get_local_id
 Content-Language: fr
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <24cb3786d7ce0e7bb1397ef14c98c78fd4a9ecb1.1782457344.git.tanggeliang@kylinos.cn>
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev,
+ Xuanqiang Luo <luoxuanqiang@kylinos.cn>
+Cc: Geliang Tang <tanggeliang@kylinos.cn>, GangYan <gang.yan@linux.dev>
+References: <4e50adfde3b80f433e13b86919596be229045edc.1782799876.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,49 +87,45 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <24cb3786d7ce0e7bb1397ef14c98c78fd4a9ecb1.1782457344.git.tanggeliang@kylinos.cn>
+In-Reply-To: <4e50adfde3b80f433e13b86919596be229045edc.1782799876.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 26/06/2026 09:04, Geliang Tang wrote:
+On 30/06/2026 08:11, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> In make_connection(), the variable "port" is used but never defined.
-> This leads to an empty argument being passed to wait_local_port_listen(),
-> causing "printf: : invalid number" errors:
+> In mptcp_pm_userspace_get_local_id(), the address entry is looked up under
+> spinlock, but its id is read after dropping the lock. A concurrent deletion
+> can free the entry between the unlock and the read, leading to UAF.
 > 
->  # INFO: Init
->  # 01 Created network namespaces ns1, ns2                          [ OK ]
->  # INFO: Make connections
->  # ./../lib.sh: line 651: printf: : invalid number
->  # 02 Established IPv4 MPTCP Connection ns2 => ns1                 [ OK ]
->  # INFO: Connection info: 10.0.1.2:59516 -> 10.0.1.1:50002
->  # ./../lib.sh: line 651: printf: : invalid number
->  # 03 Established IPv6 MPTCP Connection ns2 => ns1                 [ OK ]
-> 
-> Fix it by using the correctly defined variable "app_port", which holds the
-> appropriate port number for the connection.
+> Fix by copying the id into a local variable while still holding the lock,
+> and use -1 as a "not found" sentinel.
 
-Thank you for the fix, and sorry for the delay!
-
-Arf, I think remember I had this issue, and I thought I fixed it before
-sending the patches, but no.
+Thank you for the fix, it looks good to me!
 
 Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
+I hope that's OK, but I added Xuanqiang Luo's Tested-by tag, as he sent
+almost the same patch recently (BTW, thank you Gang for spotting that):
+
+  https://lore.kernel.org/20260713074722.47921-1-xuanqiang.luo@linux.dev
+
+While at it, I also added the KASAN report in the commit message, that's
+helpful to prove this issue can happen and was tested.
+
 New patches for t/upstream-net and t/upstream:
-- ebaa2571aeaa: selftests: mptcp: userspace_pm: fix undefined variable port
-- Results: 4c2362a7db02..08c6392dbaf1 (export-net)
-- Results: 4285a4fe811b..ea196b8ada26 (export)
+- 6b5c6ac1e2fe: mptcp: pm: userspace: fix use-after-free in get_local_id
+- Results: 08c6392dbaf1..fef06e990c6c (export-net)
+- Results: ea196b8ada26..f984839d1257 (export)
 
 Tests are now in progress:
 
 - export-net:
-https://github.com/multipath-tcp/mptcp_net-next/commit/1ef110cb2b759cde24642c71416460cd328469cf/checks
+https://github.com/multipath-tcp/mptcp_net-next/commit/05643696039e56609f35092206657c6cdb725baf/checks
 - export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/9d33b57982424bae6bd4e53ffe848dc8043fc2d8/checks
+https://github.com/multipath-tcp/mptcp_net-next/commit/97ce11d2793f114ca652a565a8d2795c085d8ff1/checks
 
 Cheers,
 Matt
