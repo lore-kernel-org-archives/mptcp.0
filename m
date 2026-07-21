@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B55546AA68
-	for <mptcp@lists.linux.dev>; Tue, 21 Jul 2026 15:32:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1E183264D9
+	for <mptcp@lists.linux.dev>; Tue, 21 Jul 2026 16:43:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784647936; cv=none; b=Vz9fYYHsWLBvpM/CR4MT3KTPVBCUyYKEbtz1EdDFJ7t0vHyIKEoPrakeIuI9Mbb/re14NpM5lU/G6jda+3pl+du15fQ/PLku3To1WZy/iVckYCXWh7HuJfT5orFhPEVnKFNRptXn3ZlqHKhRXi+Zx7o4Bcl70bIJEtPloT245cg=
+	t=1784652206; cv=none; b=WCUyTGtTx4/MuNvOcpqAZwsIwSrqLlrR3NCdqQtb4O3u/VSAEWl4ptvhrfXkI3ImgqSrXtH41Ar9Y7hOueW7vruIqmCcOIUtYjDCeyMPWeK2mucAq5yOCuL94Ym4TMsYv5fnNn/xi38dTZxJc+5IpwDmUE8f7qdZu6g2jY7FryM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784647936; c=relaxed/simple;
-	bh=FAouj4DJQsSL177U3PztIpS40g6ZLZq07pNm2m8o5iY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
-	 In-Reply-To:Content-Type; b=KTdXqddnAqGSXoWvatYd8w8x6WJ1EI0S3tFqmPYiGb8Yc0IDicDsaVx7luYxPIoVDJSRlLwXgyiiHKyV0CrNjTX/8+bXZUAzF3n768qcqEnUkKLYeDS+Wy6bFlwG3D5wFFoJNDzjXUlInhjd2GSs3D9TUfVAbKPv7AYQNIM8Jsw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MahIJnGs; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1784652206; c=relaxed/simple;
+	bh=rKZVIXKhbvkjEL/XTm7oel9kBNHRY7ImxLpfS+yumEw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ohhx/uKXsmx0CzXkkG2r6Y24kMLGgkjqAb7NDL7QLe2dMJdPyadb2wnf2DcyEuNqV2UUaM6RYstphOc3Rm2U2fQ5ppRzVkohwZX520mov2fAfFHzjKd5+v7RJ0oChM2++MYqbEzhXOMAAhowRaHLm8NoaPYuTZFit7D/c0ZhGwQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kwh1BUTj; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MahIJnGs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA7BC1F000E9;
-	Tue, 21 Jul 2026 15:32:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kwh1BUTj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9221D1F000E9;
+	Tue, 21 Jul 2026 16:43:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784647935;
-	bh=WrYvLMv1hdIePlAKuyeYLDeHqVuCYr+gC4eT/4t81BI=;
-	h=Date:Subject:To:References:From:Cc:In-Reply-To;
-	b=MahIJnGsx/7e2GBE8+1A6AocAlprphqZYD5kqJVwv6shB87yNo4C+Xf6Q8SLozJbL
-	 7HiUvvCDCOdJr7zkbvObTiuESxx+OnV9BzurWmnTgWJOz0BXtFFFckIjvpYstuCa4c
-	 eVMoHHtiq3MpiFObB3XIw5Xartkhe8QnHpzqWXyS5ffY4NkN1WmUwtAwaQ5B2UAGe5
-	 5ktWSuUk00Rgugd/h3VysVjT9tjRWPTTFg5bNtepkyVJxKwAi6LS9J2z2De3Od+b9u
-	 8VWYatLfRXJxBWUf6Zfj7tfHYd+PjYyk0jadOi8rmF/OHVjOlYI0jNOlQXqj8g3GDG
-	 fhWdjCLh5vC1w==
-Message-ID: <061288be-4e92-4060-a7ac-24d329f4186f@kernel.org>
-Date: Tue, 21 Jul 2026 17:32:12 +0200
+	s=k20260515; t=1784652204;
+	bh=Fyht48DFwPE5GiGKaF3aVGRMep5NFNa1VG0OFh+DIyc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=Kwh1BUTjY37UXTALa4JLvOXjB1QSPm1UycNVkJysYcbeKxvLiQN7eL2xNFM2iiu0d
+	 damN+fYGcSzR5djsfumoXRbDRPFrmus9Fbt/BKF7A+MosBLpt3eZiV1SpO8aLVew9i
+	 o0XVDtP0/6ISfmn+s5fBTlZpLQxm4kpvLiKL5qF1WKSI26zhDyQlorW3d3trXAvtHi
+	 L2VL1WynksABrNxR4WAeagyP0dDDpFp+KCj5JY03RQTTSqBuJg/qCVReG0ZBk7zhab
+	 jrJIPixJhgtqHxeDhap7O3hQ4jOJ1Nev4+s19YVsNhJiizlHV0eYNTcEIDmVqTUcWY
+	 T6kz+PgfxKOwg==
+Message-ID: <0d88a445-a8cf-4f4e-8944-8c17d8d12416@kernel.org>
+Date: Tue, 21 Jul 2026 18:43:21 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,14 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net v2] mptcp: pm: fix data race in add_addr timer
- callback
-Content-Language: fr
-To: luoqing <l1138897701@163.com>
-References: <20260717064028.767876-1-l1138897701@163.com>
+Subject: Re: [PATCH mptcp-net] mptcp: fix BUILD_BUG_ON on legacy ARM config
+To: Mat Martineau <martineau@kernel.org>
+Cc: MPTCP Linux <mptcp@lists.linux.dev>, Frank Ranner
+ <frank.ranner@intel.com>, kernel test robot <lkp@intel.com>
+References: <20260707-mptcp-opt-fix-config_aeabi-v1-1-f428d0aa0318@kernel.org>
+ <96b90ef0-7786-ee9b-063e-83498e8e3dc7@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev
+Content-Language: fr
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -86,127 +87,41 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20260717064028.767876-1-l1138897701@163.com>
+In-Reply-To: <96b90ef0-7786-ee9b-063e-83498e8e3dc7@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi,
+Hi Mat,
 
-Thank you for sharing this patch.
-
-I have similar comments than the ones I sent on:
-
-https://lore.kernel.org/178410664361.3802972.16804879942885801851.b4-review@b4
-
-On 17/07/2026 08:40, luoqing wrote:
-> From: luoqing <luoqing@kylinos.cn>
+On 17/07/2026 20:58, Mat Martineau wrote:
+> On Tue, 7 Jul 2026, Matthieu Baerts (NGI0) wrote:
 > 
-> The timer callback reads entry->retrans_times outside pm.lock to decide
-> whether to call mptcp_pm_subflow_established(). Since
-> mptcp_pm_announced_del_timer() can concurrently set retrans_times =
-> ADD_ADDR_RETRANS_MAX under pm.lock, a race condition exists.
+>> The 0-day bot managed to find kernel configs that cause build failures,
+>> e.g. when using the StrongARM SA1100 target (ARMv4).
+>>
+>> On such legacy ARM architecture, all structures are apparently aligned
+>> to 32 bits, causing build issue here. Indeed, on such architecture,
+>> 'flags' size is not equivalent to sizeof(u16) as expected, but to
+>> sizeof(u32).
 
-How did you find the bug? Do you have a reproducer or is it by analysing
-the code?
+(...)
+> This change LGTM, thanks Matthieu
+> 
+> Reviewed-by: Mat Martineau <martineau@kernel.org>
 
-Were you assisted by a tool/LLM? If yes, please add the Assisted-by tag.
+Thank you for the review, now in our tree:
 
-> Use a local 'completed' flag set inside pm.lock only when the timer
-> callback itself increments retrans_times to ADD_ADDR_RETRANS_MAX. This
-> ensures that mptcp_pm_subflow_established() is only called when the
-> retransmission naturally exhausts.
+New patches for t/upstream-net and t/upstream:
+- 415e2360863e: mptcp: fix BUILD_BUG_ON on legacy ARM config
+- Results: 8a872e28cb1f..6e75226ac108 (export-net)
+- Results: 097e8a6a6720..4c2752580a3e (export)
 
-A fix should have a Fixes tag, please add one.
+Tests are now in progress:
 
-> Signed-off-by: luoqing <luoqing@kylinos.cn>
-
-For legal reasons, you are supposed to put your full name. Having only
-one "word" for your full name, without capital letters looks wrong, no?
-
-> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-> index 6afd39aea110..ed39a1241ffd 100644
-> --- a/net/mptcp/pm.c
-> +++ b/net/mptcp/pm.c
-> @@ -380,6 +380,8 @@ static void mptcp_pm_add_addr_timer(struct timer_list *timer)
->  	struct mptcp_sock *msk = entry->sock;
->  	struct sock *sk = (struct sock *)msk;
->  	unsigned int timeout = 0;
-> +	bool completed = false;
-> +	u8 retrans_times;
-
-Do you need two new variables? One should be enough.
-
->  
->  	pr_debug("msk=%p\n", msk);
->  
-> @@ -399,27 +401,32 @@ static void mptcp_pm_add_addr_timer(struct timer_list *timer)
->  
->  	spin_lock_bh(&msk->pm.lock);
->  
-> +	retrans_times = READ_ONCE(entry->retrans_times);
-
-Why do you require READ_ONCE() here? Can retrans_times be modified
-without the pm lock?
-
-> +
->  	/* The cancel path (mptcp_pm_announced_del_timer()) can race with this
->  	 * callback. Once cancel updates retrans_times to MAX, suppress further
->  	 * retransmissions here. If this callback acquires pm.lock first, one
->  	 * final transmit attempt is still possible.
->  	 */
-> -	if (entry->retrans_times < ADD_ADDR_RETRANS_MAX &&
-> +	if (retrans_times < ADD_ADDR_RETRANS_MAX &&
->  	    !mptcp_pm_should_add_signal_addr(msk)) {
->  		pr_debug("retransmit ADD_ADDR id=%d\n", entry->addr.id);
->  		mptcp_pm_announce_addr(msk, &entry->addr, false);
->  		mptcp_pm_add_addr_send_ack(msk);
-> -		entry->retrans_times++;
-> +		retrans_times++;
-> +		WRITE_ONCE(entry->retrans_times, retrans_times);
-
-Same here, why WRITE_ONCE()?
->  	}
->  
-> -	if (entry->retrans_times < ADD_ADDR_RETRANS_MAX)
-> -		timeout <<= entry->retrans_times;
-> -	else
-> +	if (retrans_times < ADD_ADDR_RETRANS_MAX)
-> +		timeout <<= retrans_times;
-> +	else {
->  		timeout = 0;
-> +		completed = true;
-> +	}
-
-Either you have:
-
-  completed = entry->retrans_times >= ADD_ADDR_RETRANS_MAX;
-  if (!completed)
-      timeout <<= retrans_times;
-  else
-      timeout = 0;
-
-(preferred)
-
-or
-
-  if (entry->retrans_times < ADD_ADDR_RETRANS_MAX)
-      timeout <<= retrans_times;
-  else
-      timeout = 0;
-
-  retrans_times = entry->retrans_times;
-
-But I don't think you need to have both "completed" and "retrans_times".
-With only "completed", you can minimise this patch.
-
->  
->  	spin_unlock_bh(&msk->pm.lock);
->  
-> -	if (entry->retrans_times == ADD_ADDR_RETRANS_MAX)
-> +	if (completed)
->  		mptcp_pm_subflow_established(msk);
->  
->  out:
+- export-net:
+https://github.com/multipath-tcp/mptcp_net-next/commit/48a61d295983942723614a8001a83eb4ab615f2c/checks
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/7566bcc19c2d8bdb40f5198185b347e85576fae8/checks
 
 Cheers,
 Matt
