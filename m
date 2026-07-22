@@ -1,104 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE2A34BCAC9
-	for <mptcp@lists.linux.dev>; Wed, 22 Jul 2026 10:01:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21D0B47043D
+	for <mptcp@lists.linux.dev>; Wed, 22 Jul 2026 10:17:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784714476; cv=none; b=R0U2Z3bV2vibyCEqa/FJtVCuUd5JKBXm6QxQeTyhGitXhAlpKwT4cgTd21ayqIel2cnttfwTxikCZBGaYY1AXCEPZVUt+dkdNV26evN4Uesf4C/3bVlocVO1h2sJpesOmBaE3YJeKKGp1owdp7sNWAfDwMuWNVeFCCZC71RVqL4=
+	t=1784715468; cv=none; b=EYBzFLBc7EvGgESzlDFowF0fhiKbcNJGZqbl18fvQN9JCfmP0FDT4sa7vdB30nwsMDA8xX/JSeLdyqv5bZaB7IBMxXCv2rHYdiLvj/6/c109yY4+VcMNl0uWD3JyEvT6oj5smsV/l4gA6dzAWQB2tWnDIx0U/jhE8ueyElk+76g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784714476; c=relaxed/simple;
-	bh=wkNFlhqtTqEVne7ZZFFOXvI6D3+hmGpHKYGWgeSnQgU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MU9XE+5n0K3TidBmPKc/Dlaq0QNxpeKG/r3ciSJILYNWu28RGKzw+fdEJt5e9Jl4qLR43g2dpKTF8pxvSuXzstOyddnvnFeDx/bQHISblnlaItS4UTNWreRkTIPMKOlUq4oMGWttRZpjtjo6u79n+GXpep5HeT55IL6Id31fp58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T+HJ0qI+; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1784715468; c=relaxed/simple;
+	bh=q5PwC6xahcQrNywFz4ycoj170oo7e8oq4lhEqcLQEJw=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-ID:Date:
+	 MIME-Version:Content-Type; b=RsJowo/aq3ffx0rcn5w1OiUtuS7zxEAKQtVmPsaTU7IcY4seNKHE3TBfBrp2HsYfvj7ezInH68p4Lwzun9ORHaFuvK8rprj9Iuo29Q4ewGdRSrAhe2lkjKlfN0ByV65/xRgqDgoaSVZ/vED9t2tNHgAPnDeIRgDE+lHibjCeLg4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MgVwTnDO; arc=none smtp.client-ip=209.85.219.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T+HJ0qI+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A62E1F000E9;
-	Wed, 22 Jul 2026 10:01:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784714473;
-	bh=9Pq1QrxZLvVdZLKUqTn1+mr2dsECbgun9SGiw0W/748=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=T+HJ0qI+GYMvlcFwscJSpaCxOxSjz48bfYL/7aTjrF9tHgVlSXEgCZr527RVEiw75
-	 aTbS62dT1rZXy4wU5pgPTCw7ekcv01Ut9xzxDQaqCLek7wSB1nSUYagrzZ4c3pB9JP
-	 avqe3C/w2hZKOTTy/NcBlobTWmyQRg6V3gbHON7ypzfvC9lmgGE8CdK+2x7aPoVJfv
-	 6JFqq+OX8dD4FKL7MaB7l5E+jFOLNkAwYplEwVgsSF2TkMxpW1XC3nqxpABmSz/vtL
-	 CYZ01vI0WJDSpRmEpbsZY+6i3zAb0nN+LntOh4KZJSz+Gkg37KQ7Rh23ikWHexZn+Z
-	 sTSfRpXVwfB2w==
-From: Geliang Tang <geliang@kernel.org>
-To: pabeni@redhat.com
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MgVwTnDO"
+Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-8ef7b7651ecso61009376d6.1
+        for <mptcp@lists.linux.dev>; Wed, 22 Jul 2026 03:17:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1784715466; x=1785320266; darn=lists.linux.dev;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=9pnYf0NNh+DuAonfEXU8npLAy6yCawOK8t5RrUJwz84=;
+        b=MgVwTnDOXjUNQKP1MVibUyfA6sydL/WWQ13UJJLqLwh1zGClsq0xwL8rZe7DNarn/d
+         pVtumBJbUOjLUz6oAw+jQHFd4pSAJJ0EzxAvFvgB4Qv8PL6rfApy4CFaxzR6r0qX+/0c
+         dSTtWHdM19moUna7XKvWhSCas5B+HSpiOKLGfz2aIYTPAku6o0BdVOtXA0YYE8QUD3nS
+         wA9SwzUssQIA6jAnaW/LvLLh0Fn3aBkXxqxFfCcX9kz2IbhvG+06/6NzhQQDwLxoaET/
+         Znfl/rk53/A/R0kh5BNLy+m4jhv/5k4T4vgVXOP/M8ce51EFUwZ6mXWXd1/s1G4jG6Qn
+         GZOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1784715466; x=1785320266;
+        h=content-type:mime-version:date:content-transfer-encoding:message-id
+         :subject:references:in-reply-to:reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=9pnYf0NNh+DuAonfEXU8npLAy6yCawOK8t5RrUJwz84=;
+        b=BDIgPOnHOB/DXrDaV9MnlBOYXckGmCPhe0V453dvBs6RG0fX5LZQXVNSELtlBgDs4c
+         sXX+IRLlv3vaNsiW38gs9uWAV4efrbpPSxCB86HaSXwgwLXxSX5nuFAepvEnQHQm/1/E
+         Gn5ADo4iTDr83IOwhvtSQ3EQ4E74nrzTNbxw91t78/5/76VPXxKZc3SmPOawKaQFTmEt
+         19+gJShkvxiph8wAAECRCjeb+6cYFhkSCKvuUPtVtg3rkUCCSgUIj3kq2iFW22ux4uJP
+         A5S5y71T8doTXb2zgYcB9SVQDcyhUdCZX4TIXn84/vgUQ3zb/o1e0DYCaHVuCZmY+xOO
+         k3vw==
+X-Gm-Message-State: AOJu0YxFmBhuBOYF2Ih39znboZXDIkjDFUAKAzdTxA3/Gdt16EUjNXnS
+	q0kp2aXFZnY74Xylto2J+K8N1Qa3lchLSweJ9WnhVfFlnn5usKN/PUy7IA1KO14=
+X-Gm-Gg: AR+sD103SbuLw5fSoV/qJZHROHtzB2LxKmsThLqDB5nf2PlQQVD0HZdSKNJsrJlgw0q
+	aC2nsxv9FstyZ8J2fLISA3lym94Suf50/QcdaYuDjEyqCoF9o7fIm+xH4wHCnND2zrjhqZzeSfM
+	3sWg9c7jrdFohYKca6kB4O3PYruZo3FQCTLGyGp18FxHSxnCbjWAsIMpMJwMF+MyXBM+kySG2Ov
+	z+QiediZruepvMwM18xEFW0XbG234OOatLWNpYfwASmH+VDdCpqVzadBqnSu7MqkVSlF5duocln
+	L8iNBei0xQgjlfgIKK1an55w5G2ODnZQaFIkOt6Upa3MzFqsvBKPBA3X/6RtKCljV/9ahVbsnFh
+	++qhQ2cMV1mRdp78h/s+eD38XbdWoWXDQKyeJDbb4m87SvldwHFybMldid/tRxef3eEeNZZmiXc
+	T2bHvfwxxl/Bvy7NbmXw==
+X-Received: by 2002:ac8:5750:0:b0:516:dc75:1aca with SMTP id d75a77b69052e-527a8178ad4mr33878151cf.26.1784715465636;
+        Wed, 22 Jul 2026 03:17:45 -0700 (PDT)
+Received: from [127.0.0.1] ([172.178.118.200])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-527d3555e86sm12328201cf.20.2026.07.22.03.17.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Jul 2026 03:17:44 -0700 (PDT)
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Qing Luo <luoqing@kylinos.cn>
 Cc: mptcp@lists.linux.dev
-Subject: Re: [mptcp-next,v5,07/12] mptcp: sync mptcp skb cb layout with tcp one
-Date: Wed, 22 Jul 2026 18:01:04 +0800
-Message-ID: <20260722100104.1241778-1-geliang@kernel.org>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <8acd04596a44fa0a03e39f9f3d10a2e301b52763.1778446731.git.pabeni@redhat.com>
-References: <8acd04596a44fa0a03e39f9f3d10a2e301b52763.1778446731.git.pabeni@redhat.com>
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20260722091311.1218738-1-l1138897701@163.com>
+References: <20260722091311.1218738-1-l1138897701@163.com>
+Subject: Re: [PATCH mptcp-net v3] mptcp: pm: fix data race in add_addr
+ timer callback
+Message-ID: <5149b409-609b-dc97-7274-1b06c4e0000c@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 22 Jul 2026 10:17:44 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
 
-Hi Paolo,
+Hi Qing,
 
-Patches 6 and 7 turn out to be very helpful for simplifying my MPTCP KTLS
-support implementation.
+Thank you for your modifications, that's great!
 
-To let KTLS obtain an skb's sequence number, I had defined a get_skb_seq
-operation in [1]. The TCP implementation was:
+Our CI did some validations and here is its report:
 
-static u32 tcp_get_skb_seq(struct sk_buff *skb)
-{
-      return TCP_SKB_CB(skb)->seq;
-}
+- KVM Validation: normal (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: normal (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (except selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: debug (only selftest_mptcp_join): Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/299084=
+53593
 
-and the MPTCP one was:
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/a649cafbecc4
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D1132281
 
-static u32 mptcp_get_skb_seq(struct sk_buff *skb)
-{
-      return MPTCP_SKB_CB(skb)->map_seq - MPTCP_SKB_CB(skb)->offset;
-}
 
-After Patch 6 removes the CB offset field, the MPTCP implementation collapses
-to simply:
+If there are some issues, you can reproduce them using =
+the same environment as
+the one used by the CI thanks to a docker image, e.=
+g.:
 
-      return MPTCP_SKB_CB(skb)->map_seq;
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" =
+-w "${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
 
-And after Patch 7 changes map_seq from u64 to u32, the get_skb_seq operation
-is no longer needed at all. The two control blocks now expose the sequence
-number identically (same type, same offset), so I can define a single
-TLS_SKB_CB accessor that works for both TCP and MPTCP without any
-per-protocol dispatch:
+For more details:
 
-struct tls_skb_cb {
-      u32 seq;
-};
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
 
-#define TLS_SKB_CB(__skb)     ((struct tls_skb_cb *)&((__skb)->cb[0]))
 
-static_assert(offsetof(struct tcp_skb_cb, seq) == 0);
-static_assert(offsetof(struct mptcp_skb_cb, map_seq) == 0);
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
 
-The static_asserts guarantee at compile time that both layouts keep the
-sequence number at offset 0, so TLS_SKB_CB(skb)->seq reads the correct
-value regardless of the underlying protocol.
-
-I have reworked the entire MPTCP KTLS series on top of patches 4-8 of this
-series. Building on the removal of the CB offset field, I also added a patch
-that trims the duplicated skb head at receive enqueue. With that in place,
-KTLS can retrieve the record header via skb_copy_bits() directly, so there
-is no longer any need for a dedicated MPTCP helper like the
-mptcp_skb_get_header() I introduced in [2].
-
-Looking forward to your next version of patches 4-8. Happy to help out with
-them if that's useful.
-
-Thanks,
--Geliang
-
-[1] https://patchwork.kernel.org/project/mptcp/patch/eacfe3e5929c07d35d08cab6663c61d40fac8649.1782123118.git.tanggeliang@kylinos.cn/
-[2] https://patchwork.kernel.org/project/mptcp/patch/447fc4384ba0d4b0f78c452239dbb3e87e021578.1782123118.git.tanggeliang@kylinos.cn/
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
